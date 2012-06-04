@@ -57,7 +57,7 @@
 
 PROCEDURE hbqt_ErrorSys()
 
-   ErrorBlock( { | oError | DefError( oError ) } )
+   ErrorBlock( {| oError | DefError( oError ) } )
 
    RETURN
 
@@ -202,7 +202,7 @@ STATIC FUNCTION ErrorMessage( oError )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbqt_messageBox( cMsg, cInfo, cTitle, nIcon )
+STATIC PROCEDURE hbqt_messageBox( cMsg, cInfo, cTitle, nIcon )
    LOCAL oMB
 
    IF hbqt_IsActiveApplication()
@@ -216,15 +216,14 @@ STATIC FUNCTION hbqt_messageBox( cMsg, cInfo, cTitle, nIcon )
       ENDIF
       oMB:setIcon( nIcon )
       oMB:setWindowTitle( cTitle )
-   
+
       oMB:exec()
-      
-   ELSE 
+
+   ELSE
       #include "hbtrace.ch"
       HB_TRACE( HB_TR_ALWAYS, cMsg )
-      
-   ENDIF 
-   
-   RETURN nil
+   ENDIF
+
+   RETURN
 
 /*----------------------------------------------------------------------*/

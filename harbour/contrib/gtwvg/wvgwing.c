@@ -1228,13 +1228,14 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
    HWND     hwndTip;
    TOOLINFO toolInfo;
 
-   hwndTip = CreateWindowEx( ( DWORD ) NULL, TOOLTIPS_CLASS, NULL,
-                              WS_POPUP | TTS_ALWAYSTIP,  // | TTS_BALLOON,
-                              CW_USEDEFAULT, CW_USEDEFAULT,
-                              CW_USEDEFAULT, CW_USEDEFAULT,
-                              wvg_parhwnd( 1 ), ( HMENU ) NULL,
-                              ( HINSTANCE ) wvg_hInstance(), 
-                              ( LPVOID ) NULL);
+   hwndTip = CreateWindowEx( 0, TOOLTIPS_CLASS, 0,
+                             WS_POPUP | TTS_ALWAYSTIP,  // | TTS_BALLOON,
+                             CW_USEDEFAULT, CW_USEDEFAULT,
+                             CW_USEDEFAULT, CW_USEDEFAULT,
+                             wvg_parhwnd( 1 ),
+                             NULL,
+                             wvg_hInstance(),
+                             NULL );
    if( ! hwndTip )
       return;
 
@@ -1271,4 +1272,3 @@ HB_FUNC( WVG_SETTOOLTIPTEXT )
 }
 
 /*----------------------------------------------------------------------*/
-

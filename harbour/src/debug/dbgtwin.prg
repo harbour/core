@@ -73,7 +73,6 @@
 #include "hbmemvar.ch"
 
 #include "box.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -123,7 +122,7 @@ ENDCLASS
 
 METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS HBDbWindow
 
-   DEFAULT cColor TO __DbgColors()[ 1 ]
+   hb_default( @cColor, __DbgColors()[ 1 ] )
 
    ::nTop     := nTop
    ::nLeft    := nLeft
@@ -157,7 +156,7 @@ METHOD IsOver( nRow, nCol ) CLASS HBDbWindow
 
 METHOD ScrollUp( nLines ) CLASS HBDbWindow
 
-   DEFAULT nLines TO 1
+   hb_default( @nLines, 1 )
 
    SetColor( ::cColor )
    Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1, nLines )
@@ -215,7 +214,7 @@ METHOD Show( lFocused ) CLASS HBDbWindow
    LOCAL nRow := Row()
    LOCAL nCol := Col()
 
-   DEFAULT lFocused TO ::lFocused
+   hb_default( @lFocused, ::lFocused )
 
    ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ),;
                                ::nRight + iif( ::lShadow, 2, 0 ) )

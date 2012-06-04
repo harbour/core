@@ -125,7 +125,7 @@ PROCEDURE Main()
 
    QApplication():exec()
 
-   HB_TRACE( HB_TR_ALWAYS, ".............. E X I T I N G ...................", valtype( oLabel ) )
+   HB_TRACE( HB_TR_DEBUG, ".............. E X I T I N G ...................", valtype( oLabel ) )
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
 
    RETURN
@@ -545,7 +545,7 @@ STATIC FUNCTION FileDialog()
    oFD:setWindowTitle( "Select a File" )
    oFD:exec()
 
-   RETURN NIL 
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -628,7 +628,7 @@ STATIC FUNCTION MenuRePaint( oPaintEvent, oPainter )
    oPainter:drawText( 3, 3, "File" )
    oPainter:setPen( QColor( 255,255,255 ) )
    oPainter:drawRect( qRect:adjusted( 0,0,-1,-1 ) )
- 
+
    RETURN .T.
 
 /*----------------------------------------------------------------------*/
@@ -681,4 +681,3 @@ STATIC FUNCTION SetButtonColor( qClr )
    RETURN l_clr
 
 /*----------------------------------------------------------------------*/
-

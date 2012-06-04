@@ -1370,6 +1370,7 @@ DYNAMIC __HBArray
 DYNAMIC __HBBlock
 DYNAMIC __HBCharacter
 DYNAMIC __HBDate
+DYNAMIC __defaultNIL
 DYNAMIC __hbdoc_FilterOut
 DYNAMIC __hbdoc_FromSource
 DYNAMIC __hbdoc_LoadDir

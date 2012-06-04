@@ -96,7 +96,7 @@ HBQT_BIND, * PHBQT_BIND;
 
 static PHBQT_BIND s_hbqt_binds = NULL;
 static HBQDestroyer * s_destroyer = NULL;
-   
+
 static PHB_DYNS s_dynsym_NEW      = NULL;
 static PHB_DYNS s_dynsym___CHILDS = NULL;
 static PHB_DYNS s_dynsym___SLOTS  = NULL;
@@ -125,16 +125,16 @@ static PHB_ITEM hb_arrayCreateClone( PHB_ITEM pItem,
 PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, PHB_SYMB pClassFunc, PHBQT_DEL_FUNC pDelFunc, int iFlags )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetHbObject( %p )", qtObject ) );
-   
+
    PHBQT_BIND bind;
-   PHB_ITEM pObject = NULL; 
+   PHB_ITEM pObject = NULL;
    HBQT_BIND_LOCK
    bind = s_hbqt_binds;
    while( bind )
    {
       if( bind->qtObject == qtObject )
       {
-         HB_TRACE( HB_TR_ALWAYS, ( "hbqt_bindGetHbObject( %p ):if( bind->qtObject == qtObject )", qtObject ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetHbObject( %p ):if( bind->qtObject == qtObject )", qtObject ) );
          pObject = hb_arrayCreateClone( pItem, ( PHB_BASEARRAY ) bind->hbObject );
          break;
       }
@@ -157,8 +157,8 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, PHB_SYMB pClassF
          }
          if( bind == NULL )
          {
-            HB_TRACE( HB_TR_ALWAYS, ( "hbqt_bindGetHbObject( %p )", qtObject ) );
-            
+            HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetHbObject( %p )", qtObject ) );
+
             bind = ( PHBQT_BIND ) hb_xgrab( sizeof( HBQT_BIND ) );
             memset( bind, 0, sizeof( HBQT_BIND ) );
             bind->qtObject = qtObject;
@@ -172,7 +172,7 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, PHB_SYMB pClassF
          {
             if( s_destroyer == NULL )
                s_destroyer = new HBQDestroyer();
-               
+
             QObject::connect( ( QObject * ) qtObject, SIGNAL(destroyed(QObject*)), s_destroyer, SLOT(destroyer()) );
          }
       }
@@ -185,7 +185,7 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, PHB_SYMB pClassF
 void * hbqt_bindGetQtObject( PHB_ITEM pObject )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetQtObject()" ) );
-   
+
    void * hbObject = hb_arrayId( pObject );
    void * qtObject = NULL;
 
@@ -198,7 +198,7 @@ void * hbqt_bindGetQtObject( PHB_ITEM pObject )
       while( bind )
       {
          HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetQtObject( %p )", bind->qtObject ) );
-         
+
          if( bind->hbObject == hbObject )
          {
             qtObject = bind->qtObject;
@@ -404,14 +404,14 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
                   QObject * obj = ( QObject * ) bind->qtObject;
                   if( obj && obj->parent() == NULL )
                   {
-                     HB_TRACE( HB_TR_ALWAYS, ( "hbqt_bindDestroyHbObject( %p )", bind->qtObject ) );
+                     HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindDestroyHbObject( %p )", bind->qtObject ) );
                      bind->pDelFunc( bind->qtObject, bind->iFlags );
-                  }   
+                  }
                }
                else
-               {      
+               {
                   bind->pDelFunc( bind->qtObject, bind->iFlags );
-               }   
+               }
             }
             hb_xfree( bind );   /* By all means we need to clean Harbour ocuupied memory */
             break;
@@ -432,7 +432,7 @@ void hbqt_bindDestroyQtObject( void * qtObject )
    {
       if( bind->qtObject == qtObject )
       {
-         HB_TRACE( HB_TR_ALWAYS, ( "hbqt_bindDestroyQtObject( %p )", bind->qtObject ) );
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindDestroyQtObject( %p )", bind->qtObject ) );
          * bind_ptr = bind->next;
          hb_xfree( bind );
          break;
@@ -460,7 +460,7 @@ HB_FUNC( __HBQT_DESTROY )
    PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
    if( pObject )
       hbqt_bindDestroyHbObject( pObject );
-#endif      
+#endif
 }
 
 HB_CALL_ON_STARTUP_BEGIN( _hbqt_bind_init_ )
@@ -473,4 +473,3 @@ HB_CALL_ON_STARTUP_END( _hbqt_bind_init_ )
    #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hbqt_bind_init_ )
    #include "hbiniseg.h"
 #endif
-

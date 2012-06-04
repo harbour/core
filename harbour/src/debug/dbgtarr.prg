@@ -55,7 +55,6 @@
 #define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
 #include "hbclass.ch"
 
-#include "common.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -77,7 +76,7 @@ ENDCLASS
 
 METHOD New( aArray, cVarName, lEditable ) CLASS HBDbArray
 
-   DEFAULT lEditable TO .T.
+   hb_default( @lEditable, .T. )
 
    ::arrayName := cVarName
    ::TheArray := aArray

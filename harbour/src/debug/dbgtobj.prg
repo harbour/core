@@ -55,7 +55,6 @@
 #define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
 #include "hbclass.ch"
 
-#include "common.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -84,7 +83,7 @@ METHOD New( oObject, cVarName, lEditable ) CLASS HBDbObject
    LOCAL aMessages, aMethods
    LOCAL xValue
 
-   DEFAULT lEditable TO .T.
+   hb_default( @lEditable, .T. )
 
    /* create list of object messages */
    aMessages := oObject:classSel()

@@ -1620,8 +1620,8 @@ STATIC FUNCTION PutValue( xValue, cType, nLen, nDec )
 STATIC FUNCTION EmptyValue( cType, nLen, nDec )
    LOCAL xVal
 
-   DEFAULT nLen TO 0
-   DEFAULT nDec TO 0
+   hb_default( @nLen, 0 )
+   hb_default( @nDec, 0 )
 
    DO CASE
    CASE cType == "C" .OR. cType == "M"

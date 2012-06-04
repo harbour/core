@@ -81,7 +81,6 @@
 #include "hbmemvar.ch"
 
 #include "box.ch"
-#include "common.ch"
 #include "getexit.ch"
 #include "inkey.ch"
 #include "set.ch"
@@ -1499,7 +1498,7 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
    LOCAL lExit
    LOCAL oWndInput := HBDbWindow():New( nTop, nLeft, nBottom, nRight, cMsg,;
                                        ::oPullDown:cClrPopup )
-   DEFAULT lEditable TO .T.
+   hb_default( @lEditable, .T. )
 
    oWndInput:lShadow := .T.
    oWndInput:Show()
@@ -1587,7 +1586,7 @@ METHOD IsValidStopLine( cName, nLine ) CLASS HBDebugger
 
 METHOD LineNumbers( lLineNumbers ) CLASS HBDebugger
 
-   DEFAULT lLineNumbers TO !::lLineNumbers
+   hb_default( @lLineNumbers, !::lLineNumbers )
 
    ::lLineNumbers := lLineNumbers
    ::oPulldown:GetItemByIdent( "LINE" ):checked := ::lLineNumbers
@@ -1798,7 +1797,7 @@ METHOD Locate( nMode, cValue ) CLASS HBDebugger
 
    LOCAL lFound
 
-   DEFAULT nMode TO 0
+   hb_default( @nMode, 0 )
 
    IF Empty( cValue )
       ::cSearchString := PadR( ::cSearchString, 256 )
@@ -3290,7 +3289,7 @@ STATIC FUNCTION strip_path( cFileName )
    LOCAL cName
    LOCAL cExt
 
-   DEFAULT cFileName TO ""
+   hb_default( @cFileName, "" )
 
    hb_FNameSplit( cFileName, NIL, @cName, @cExt )
 

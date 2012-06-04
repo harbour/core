@@ -466,7 +466,7 @@ FUNCTION __LabelForm( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
 
 STATIC PROCEDURE PrintIt( cString )
 
-   DEFAULT cString TO ""
+   hb_default( @cString, "" )
 
    QQOut( cString )
    QOut()
@@ -479,7 +479,7 @@ STATIC FUNCTION ListAsArray( cList, cDelimiter )
    LOCAL aList := {}                  // Define an empty array
    LOCAL lDelimLast := .F.
 
-   DEFAULT cDelimiter TO ","
+   hb_default( @cDelimiter, "," )
 
    DO WHILE Len( cList ) != 0
 

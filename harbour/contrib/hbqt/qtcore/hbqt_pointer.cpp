@@ -122,18 +122,18 @@ void * hbqt_par_ptr( int iParam )
    HB_TRACE( HB_TR_DEBUG, ( "hbqt_par_ptr( %d )", iParam ) );
 #ifdef __HBQT_REVAMP__
    return hbqt_bindGetQtObject( hb_param( iParam, HB_IT_OBJECT ) );
-#else   
+#else
    return s_hbqt_GCPointerFromItem( hb_param( iParam, HB_IT_ANY ) );
-#endif   
+#endif
 }
 
 void * hbqt_get_ptr( PHB_ITEM pObj )
 {
 #ifdef __HBQT_REVAMP__
    return hbqt_bindGetQtObject( pObj );
-#else   
+#else
    return s_hbqt_GCPointerFromItem( pObj );
-#endif   
+#endif
 }
 
 static void s_hbqt_set_ptr( PHB_ITEM pSelf, void * ptr )
@@ -273,12 +273,12 @@ HB_FUNC( __HBQT_ISPOINTER )
       pObject = hb_param( 1, HB_IT_OBJECT );
    if( pObject )
       hb_retl( ! ( hbqt_bindGetQtObject( pObject ) == NULL ) );
-   else  
+   else
       hb_retl( HB_FALSE );
 #else
    HBQT_GC_T * p = ( HBQT_GC_T * ) hb_parptrGC( hbqt_gcFuncs(), 1 );
    hb_retl( p && p->ph );
-#endif   
+#endif
 }
 
 HB_FUNC( HBQT_ISEQUAL )
@@ -408,7 +408,7 @@ PHB_ITEM hbqt_create_object( void * pObject, const char * pszObjectName )
    PHB_ITEM pRetVal;
    PHB_ITEM pItem;
 
-   HB_TRACE( HB_TR_ALWAYS, ( "create_object %s", pszObjectName ) );
+   HB_TRACE( HB_TR_DEBUG, ( "create_object %s", pszObjectName ) );
 
    hb_vmPushDynSym( hb_dynsymGet( pszObjectName ) );
    hb_vmPushNil();
@@ -427,22 +427,22 @@ PHB_ITEM hbqt_create_objectGC( void * pObject, const char * pszObjectName )
 {
    PHB_ITEM pItem, pRetVal;
 
-   //HB_TRACE( HB_TR_ALWAYS, ( "create_object_GC %s", pszObjectName ) );
+   //HB_TRACE( HB_TR_DEBUG, ( "create_object_GC %s", pszObjectName ) );
 
    hb_vmPushDynSym( hb_dynsymGet( pszObjectName ) );
    hb_vmPushNil();
    hb_vmDo( 0 );
 
    pRetVal = hb_itemNew( hb_stackReturnItem() );
-   
+
    pItem = hb_itemPutPtrGC( NULL, pObject );
    hb_objSendMsg( pRetVal, "_PPTR", 1, pItem );
    hb_itemReturnRelease( pRetVal );
    //hb_itemReturn( pRetVal );
    hb_itemRelease( pItem );
 
-   //HB_TRACE( HB_TR_ALWAYS, ( ".............................create_object_GC %s", pszObjectName ) );
-   
+   //HB_TRACE( HB_TR_DEBUG, ( ".............................create_object_GC %s", pszObjectName ) );
+
    return hb_stackReturnItem();
 }
 
@@ -465,13 +465,13 @@ HB_BOOL hbqt_par_isDerivedFrom( int iParam, const char * pszClsName )
          hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       else
          return hbqt_obj_isDerivedFrom( pItem, pszClsName );
-#else   
+#else
       if( s_hbqt_GCPointerFromItem( pItem ) == NULL )
          hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       else
          return hbqt_obj_isDerivedFrom( pItem, pszClsName );
-#endif         
-   }   
+#endif
+   }
    return HB_FALSE;
 }
 
@@ -531,7 +531,7 @@ HB_FUNC( HBQT_CONNECT )
       if( hbqt_QtConnect( ( QObject* ) hbqt_par_ptr( 1 ), hb_parstr_utf8( 2, &pText01, NULL ), ( QObject* ) hbqt_par_ptr( 3 ), hb_parstr_utf8( 4, &pText02, NULL ) ) == 0 )
       {
          ret = HB_TRUE;
-      }  
+      }
       hb_strfree( pText01 );
       hb_strfree( pText02 );
    }

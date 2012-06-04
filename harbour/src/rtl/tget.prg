@@ -1156,7 +1156,7 @@ METHOD PutMask( xValue, lEdit ) CLASS GET
    LOCAL cPicMask := ::cPicMask
    LOCAL nFor
 
-   DEFAULT lEdit TO ::hasFocus
+   hb_default( @lEdit, ::hasFocus )
 
    IF !( ValType( xValue ) $ "CNDTL" )
       xValue := ""

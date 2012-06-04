@@ -62,7 +62,6 @@
          redirection, and is also slower. [vszakats] */
 
 #include "box.ch"
-#include "common.ch"
 #include "inkey.ch"
 
 PROCEDURE __dbgHelp( nTopic )
@@ -72,7 +71,7 @@ PROCEDURE __dbgHelp( nTopic )
    LOCAL oBrw
    LOCAL aTopics := GetTopics()
 
-   DEFAULT nTopic TO 1
+   hb_default( @nTopic, 1 )
 
    oDlg := HBDbWindow():New( 2, 2, MaxRow() - 2, MaxCol() - 2, "Help", cColor )
 

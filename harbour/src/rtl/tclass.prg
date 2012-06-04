@@ -170,7 +170,7 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
    LOCAL Self := QSelf()
    LOCAL i
 
-   DEFAULT lModuleFriendly TO .F.
+   hb_default( @lModuleFriendly, .F. )
 
    IF HB_ISSYMBOL( xSuper )
       ::asSuper := { xSuper }
@@ -304,8 +304,8 @@ STATIC FUNCTION Instance()
 
 STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
 
-   DEFAULT lNoInit TO .F.
-   DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
+   hb_default( @lNoInit, .F. )
+   hb_default( @nScope, HB_OO_CLSTP_EXPORTED )
 
    /* Default Init for Logical and numeric */
    IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
@@ -349,8 +349,8 @@ STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit )
 
 STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
 
-   DEFAULT lNoInit TO .F.
-   DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
+   hb_default( @lNoInit, .F. )
+   hb_default( @nScope, HB_OO_CLSTP_EXPORTED )
 
    nScope := hb_bitOr( nScope, HB_OO_CLSTP_CLASS )
 
@@ -396,7 +396,7 @@ STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData, lNoInit )
 
 STATIC PROCEDURE AddInline( cMethod, bCode, nScope )
 
-   DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
+   hb_default( @nScope, HB_OO_CLSTP_EXPORTED )
 
    AAdd( QSelf():aInlines, { cMethod, bCode, nScope } )
 
@@ -404,7 +404,7 @@ STATIC PROCEDURE AddInline( cMethod, bCode, nScope )
 
 STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope )
 
-   DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
+   hb_default( @nScope, HB_OO_CLSTP_EXPORTED )
 
    AAdd( QSelf():aMethods, { cMethod, nFuncPtr, nScope } )
 
@@ -412,7 +412,7 @@ STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope )
 
 STATIC PROCEDURE AddClsMethod( cMethod, nFuncPtr, nScope )
 
-   DEFAULT nScope TO HB_OO_CLSTP_EXPORTED
+   hb_default( @nScope, HB_OO_CLSTP_EXPORTED )
 
    nScope := hb_bitOr( nScope, HB_OO_CLSTP_CLASS )
 

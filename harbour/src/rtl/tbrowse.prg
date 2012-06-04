@@ -2666,7 +2666,7 @@ METHOD setStyle( nStyle, lNewValue ) CLASS TBROWSE
    /* NOTE: CA-Cl*pper 5.3 will initialize this var on the first
             :setStyle() method call. [vszakats] */
 
-   DEFAULT ::styles TO { .F., .F., .F., .F., .F., NIL }
+   hb_default( @::styles, { .F., .F., .F., .F., .F., NIL } )
 
    /* NOTE: CA-Cl*pper 5.3 does no checks on the value of nStyle, so in case
             it is zero or non-numeric, a regular RTE will happen. [vszakats] */

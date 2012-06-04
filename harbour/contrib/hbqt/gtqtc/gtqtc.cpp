@@ -1415,7 +1415,7 @@ bool DrawingArea::createCaret( int iWidth, int iHeight )
 {
    _crtWidth  = iWidth;
    _crtHeight = iHeight;
-//HB_TRACE( HB_TR_ALWAYS, ( "bool DrawingArea::createCaret() %i %i %i %i", _crtLastRow, _crtLastCol, iWidth, iHeight ) );
+//HB_TRACE( HB_TR_DEBUG, ( "bool DrawingArea::createCaret() %i %i %i %i", _crtLastRow, _crtLastCol, iWidth, iHeight ) );
    _bCaretOn = HB_TRUE;
    _bBlinking = HB_FALSE;
    displayCell( _crtLastRow, _crtLastCol );
@@ -1428,13 +1428,13 @@ bool DrawingArea::createCaret( int iWidth, int iHeight )
 }
 void DrawingArea::hideCaret( void )
 {
-//HB_TRACE( HB_TR_ALWAYS, ( "bool DrawingArea::hideCaret() %i %i", _crtLastRow, _crtLastCol ) );
+//HB_TRACE( HB_TR_DEBUG, ( "bool DrawingArea::hideCaret() %i %i", _crtLastRow, _crtLastCol ) );
    _bCaretOn = HB_FALSE;
    displayCell( _crtLastRow, _crtLastCol );
 }
 void DrawingArea::showCaret( void )
 {
-//HB_TRACE( HB_TR_ALWAYS, ( "bool DrawingArea::showCaret() %i %i", _crtLastRow, _crtLastCol ) );
+//HB_TRACE( HB_TR_DEBUG, ( "bool DrawingArea::showCaret() %i %i", _crtLastRow, _crtLastCol ) );
    if( ! _basicTimer->isActive() )
    {
       _basicTimer->start( 500, this );
@@ -1447,7 +1447,7 @@ void DrawingArea::destroyCaret( void )
    _basicTimer->stop();
    _bCaretOn = HB_FALSE;
    displayCell( _crtLastRow, _crtLastCol );
-//HB_TRACE( HB_TR_ALWAYS, ( "void DrawingArea::destroyCaret( void )" ) );
+//HB_TRACE( HB_TR_DEBUG, ( "void DrawingArea::destroyCaret( void )" ) );
 }
 void DrawingArea::setCaretPos( int iCol, int iRow )
 {
@@ -1650,7 +1650,7 @@ void DrawingArea::focusInEvent( QFocusEvent *event )
 
 void DrawingArea::focusOutEvent( QFocusEvent *event )
 {
-//HB_TRACE( HB_TR_ALWAYS, ( "void DrawingArea::focusOutEvent( QFocusEvent *event )" ) );
+//HB_TRACE( HB_TR_DEBUG, ( "void DrawingArea::focusOutEvent( QFocusEvent *event )" ) );
 //   this->hideCaret();           /* Disableing for the time being */
    HB_SYMBOL_UNUSED( event );
    /* Either of IN or OUT messagess */

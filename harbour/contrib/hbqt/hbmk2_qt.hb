@@ -1241,7 +1241,7 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
    ::isObject          := qth_is_QObject( ::cQtObject )
 #else
    ::isObject          := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "qobject"     .AND. Lower( e_[ 2 ] ) == "no"  } ) == 0
-#endif   
+#endif
    ::areMethodsClubbed := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "clubmethods" .AND. Lower( e_[ 2 ] ) == "no"  } ) == 0
    /* Determine Constructor - but this is hacky a bit. What could be easiest ? */
    IF ! ::isConstructor
@@ -1413,7 +1413,7 @@ METHOD HbQtSource:build()
    FOR EACH s IN ::hRef
       AAdd( aLine, "extern HB_EXPORT void * hbqt_gcAllocate_" + s:__enumKey() + "( void * pObj, bool bNew );" )
    NEXT
-      
+
 #ifdef __HBQT_REVAMP__
    AAdd( aLine, '' )
    AAdd( aLine, "/*.............. HBQT2 SPECIFIC DECLARATIONS ...............*/" )
@@ -1424,7 +1424,7 @@ METHOD HbQtSource:build()
    AAdd( aLine, '' )
    AAdd( aLine, "/*..........................................................*/" )
    AAdd( aLine, '' )
-#endif 
+#endif
 
    n := AScan( ::cls_, {| e_ | Left( Lower( e_[ 1 ] ), 7 ) == "inherit" .and. ! Empty( e_[ 2 ] ) } )
    IF n > 0
@@ -1432,21 +1432,21 @@ METHOD HbQtSource:build()
    ELSE
       s := "HBQTOBJECTHANDLER"
    ENDIF
-   
-   AAdd( aLine, "" )   
-   AAdd( aLine, "extern HB_EXPORT void hbqt_register_" + lower( uQtObject ) + "();" )      
-   AAdd( aLine, "" )   
-   
+
+   AAdd( aLine, "" )
+   AAdd( aLine, "extern HB_EXPORT void hbqt_register_" + lower( uQtObject ) + "();" )
+   AAdd( aLine, "" )
+
    FOR EACH k IN hb_aTokens( s, "," )
       k := lower( AllTrim( k ) )
       IF k == "hbqtobjecthandler"
          AAdd( aLine, "HB_FUNC_EXTERN( " + Upper( k ) + " );" )
-      ELSE    
+      ELSE
          AAdd( aLine, "extern HB_EXPORT void hbqt_register_" + substr( k,4 ) + "();" )
-      ENDIF    
+      ENDIF
    NEXT
    AAdd( aLine, "" )
-      
+
    IF ::cQtVer > "0x040500"
       AAdd( aLine, "#endif" )
    ENDIF
@@ -1502,7 +1502,7 @@ METHOD HbQtSource:build()
    ENDIF
 
 #define __GCMARK__
-   
+
    ::buildExtendedSource( aLine )   /* Insert protected functions */
 
    IF ::cQtVer > "0x040500"
@@ -1652,7 +1652,7 @@ METHOD HbQtSource:build()
    else
       AAdd( aLine, "   p->mark = NULL;" )
    ENDIF
-   
+
    AAdd( aLine, "" )
 #ifdef _GEN_TRACE_
    AAdd( aLine, "   if( bNew )" )
@@ -1670,7 +1670,7 @@ METHOD HbQtSource:build()
       AAdd( aLine, "#endif" )
    ENDIF
    AAdd( aLine, "" )
-   
+
    AAdd( aLine, 'static PHB_ITEM s_oClass = NULL;' )
    AAdd( aLine, "" )
 
@@ -1694,17 +1694,17 @@ METHOD HbQtSource:build()
       AAdd( aLine, "         }" )
       AAdd( aLine, "      }" )
       AAdd( aLine, "      delete ( ( " + ::cQtObject + "< void * >" + " * ) pObj );" )
-   ELSE 
+   ELSE
       IF ::isConstructor .and. ::isDestructor
          AAdd( aLine, '      delete ( ' + ::cQtObject + ' * ) pObj;' )
-      ENDIF    
-   ENDIF 
+      ENDIF
+   ENDIF
    AAdd( aLine, '      pObj = NULL;' )
-   AAdd( aLine, '   }' )   
+   AAdd( aLine, '   }' )
    AAdd( aLine, '}' )
    AAdd( aLine, "/*..........................................................*/" )
    AAdd( aLine, '' )
-#endif      
+#endif
 
    AAdd( aLine, 'void hbqt_register_' + lower( uQtObject ) + '()' )
    AAdd( aLine, "{" )
@@ -1718,9 +1718,9 @@ METHOD HbQtSource:build()
       k := lower( AllTrim( k ) )
       IF k == "hbqtobjecthandler"
          AAdd( aLine, "      HB_FUNC_EXEC( " + Upper( k ) + " );" )
-      ELSE    
+      ELSE
          AAdd( aLine, "      hbqt_register_" + substr( k, 4 ) + "();" )
-      ENDIF    
+      ENDIF
    NEXT
    AAdd( aLine, '      PHB_ITEM oClass = hbqt_defineClassBegin( "' + uQtObject + '", s_oClass, "' + s + '" );' )
    AAdd( aLine, "      if( oClass )" )
@@ -1732,17 +1732,17 @@ METHOD HbQtSource:build()
    AAdd( aLine, "   HB_HBQT_UNLOCK" )
    AAdd( aLine, "}" )
    AAdd( aLine, "" )
-      
+
    AAdd( aLine, "HB_FUNC( HB_" + uQtObject + " )" )
-   AAdd( aLine, "{" ) 
-   AAdd( aLine, '   HB_TRACE( HB_TR_DEBUG, ( "HB_' +  uQtObject + '" ) );' ) 
-   AAdd( aLine, "   if( s_oClass == NULL )" ) 
+   AAdd( aLine, "{" )
+   AAdd( aLine, '   HB_TRACE( HB_TR_DEBUG, ( "HB_' +  uQtObject + '" ) );' )
+   AAdd( aLine, "   if( s_oClass == NULL )" )
    AAdd( aLine, "   {" )
    AAdd( aLine, "       hbqt_register_" + lower( uQtObject ) + "();" )
-   AAdd( aLine, "   }" ) 
-   AAdd( aLine, '   hb_objSendMsg( s_oClass, "INSTANCE", 0 );' ) 
-   AAdd( aLine, "}" ) 
-   AAdd( aLine, "" ) 
+   AAdd( aLine, "   }" )
+   AAdd( aLine, '   hb_objSendMsg( s_oClass, "INSTANCE", 0 );' )
+   AAdd( aLine, "}" )
+   AAdd( aLine, "" )
 
    /* Build PRG level constructor */
    AAdd( aLine, ::newW_[ 1 ] )           // Func definition
@@ -2001,9 +2001,9 @@ METHOD HbQtSource:getConstructor()
       AAdd( aLine, " " )
 #ifdef __HBQT_REVAMP__
       AAdd( aLine, '   hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, pObj, hb_dynsymGetSymbol( "' + 'HB_' + upper( ::cQtObject ) +'" ), hbqt_del_' + ::cQtObject + ', ' + qth_get_bits( ::cQtObject, .t. ) + ' ) );' )
-#else      
+#else
       AAdd( aLine, "   hbqt_itemPushReturn( hbqt_gcAllocate_" + ::cQtObject + "( ( void * ) pObj, " + iif( ::isDetached, "false", "true" ) + " ), hb_stackSelfItem() );" )
-#endif      
+#endif
    ELSE
       FOR i := 3 TO Len( ::new_ ) - 1
          AAdd( aLine, ::new_[ i ] )
@@ -2407,9 +2407,9 @@ STATIC FUNCTION hbqtgen_paramCheckStrCpp( cType, nArg, cCast, lObj )
    CASE "O"
       IF lObj
          RETURN "HB_ISOBJECT( " + hb_ntos( nArg ) + " )"
-      ELSE    
+      ELSE
          RETURN "hbqt_par_isDerivedFrom( " + hb_ntos( nArg ) + ', "' + upper( cCast ) +'" )'
-      ENDIF    
+      ENDIF
    CASE "N*"
       RETURN  "HB_ISBYREF( " + hb_ntos( nArg ) + " )"
    CASE "N"
@@ -2573,7 +2573,7 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
                   EXIT
                CASE "R"
                   oMtd:nDetachRet := val( cVal )
-                  EXIT 
+                  EXIT
                CASE "xxx"
                   EXIT
                ENDSWITCH
@@ -2980,9 +2980,9 @@ METHOD HbQtSource:buildCppCode( oMtd )
       cRef := oRet:cCast
 #ifdef __HBQT_REVAMP__
       oMtd:cCmd := 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + "( void * ) " + oMtd:cCmn + ', hb_dynsymGetSymbol( "' + 'HB_' + Upper( ::cQtObject ) + '" ), hbqt_del_' +  ::cQtObject + ', ' + qth_get_bits( ::cQtObject, .f. ) + ' ) )'
-#else      
+#else
       oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) " + ', "HB_' + Upper( ::cQtObject ) + '" )'
-#endif       
+#endif
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE hbqtgen_isAqtObject( oRet:cCast )  .AND. ;
@@ -2992,9 +2992,9 @@ METHOD HbQtSource:buildCppCode( oMtd )
       cRef := oRet:cCast
 #ifdef __HBQT_REVAMP__
       oMtd:cCmd := 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + "( void * ) " + oMtd:cCmn + ', hb_dynsymGetSymbol( "' + 'HB_' + Upper( ::cQtObject ) + '" ), hbqt_del_' +  ::cQtObject + ', ' + qth_get_bits( ::cQtObject, .f. ) + ' ) )'
-#else      
+#else
       oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) " + ', "HB_' + Upper( ::cQtObject ) + '" )'
-#endif      
+#endif
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE hbqtgen_isAqtObject( oRet:cCast )  .AND. ;
@@ -3218,7 +3218,7 @@ METHOD HbqtArgument:new( cTxt, cQtObject, enum_, lConstL, lIsRetArg )
 STATIC FUNCTION hbqtgen_Get_Command_1( cWgt, cCmn )
 #ifdef __HBQT_REVAMP__
    RETURN 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + 'new ' + cWgt + '( *( ' + cCmn + ' ) )' + ', hb_dynsymGetSymbol( "' + 'HB_' + Upper( cWgt ) + '" ), hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, .t. ) + ' ) )'
-#else      
+#else
    RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( *( " + cCmn + " ) ), true ), " + '"HB_' + Upper( cWgt ) + '")'
 #endif
 /*----------------------------------------------------------------------*/
@@ -3235,16 +3235,16 @@ STATIC FUNCTION hbqtgen_Get_Command( cWgt, cCmn, lNew, isRetDetached )
 #ifdef __HBQT_REVAMP__
    IF lNew
       RETURN 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + 'new ' + cWgt + '( ' + cCmn + ' )' + ', hb_dynsymGetSymbol( "' + 'HB_' + Upper( cWgt ) + '" ), hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, .t. ) + ' ) )'
-   ELSE 
+   ELSE
       RETURN 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + cCmn + ', hb_dynsymGetSymbol( "' + 'HB_' + Upper( cWgt ) + '" ), hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, isRetDetached ) + ' ) )'
-   ENDIF        
-#else      
+   ENDIF
+#else
    IF lNew
       RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( " + cCmn + " ), true ), " + '"HB_' + Upper( cWgt ) +'" )'
    ELSE
       RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( " + cCmn + ", " + iif( isRetDetached, "true", "false" ) + " ), " + '"HB_' + Upper( cWgt ) +'" )'
    ENDIF
-#endif   
+#endif
    RETURN ""
 
 /*----------------------------------------------------------------------*/
@@ -3418,41 +3418,44 @@ STATIC FUNCTION qth_is_extended( cQTHFileName )
 
 STATIC FUNCTION qth_is_QObject( cWidget )
    STATIC aQObjects := {}
-   
+
    IF lower( left( cWidget, 3 ) ) == "hbq"
       cWidget := substr( cWidget, 3 )
-   ENDIF 
+   ENDIF
 
+   /* TOFIX: add this information to .qth.
+             it breaks modularity and split the same king of information between
+             this plugin and .qth files. */
    IF empty( aQObjects )
-      aadd( aQObjects, "QObject" )            
-      
-      aadd( aQObjects, "QAbstractAnimation" )           
+      aadd( aQObjects, "QObject" )
+
+      aadd( aQObjects, "QAbstractAnimation" )
       aadd( aQObjects, "QAbstractEventDispatcher" )
       aadd( aQObjects, "QAbstractFontEngine" )
-      aadd( aQObjects, "QAbstractItemDelegate" )  
-      aadd( aQObjects, "QAbstractItemModel" )     
+      aadd( aQObjects, "QAbstractItemDelegate" )
+      aadd( aQObjects, "QAbstractItemModel" )
       aadd( aQObjects, "QAbstractMessageHandler" )
-      aadd( aQObjects, "QAbstractNetworkCache" )    
-      aadd( aQObjects, "QAbstractState" )          
+      aadd( aQObjects, "QAbstractNetworkCache" )
+      aadd( aQObjects, "QAbstractState" )
       aadd( aQObjects, "QAbstractTextDocumentLayout" )
-      aadd( aQObjects, "QAbstractTransition" )   
+      aadd( aQObjects, "QAbstractTransition" )
       aadd( aQObjects, "QAbstractUriResolver" )
       aadd( aQObjects, "QAbstractVideoSurface" )
       aadd( aQObjects, "QAccessibleBridgePlugin" )
       aadd( aQObjects, "QAccessiblePlugin" )
-      aadd( aQObjects, "QAction" )               
+      aadd( aQObjects, "QAction" )
       aadd( aQObjects, "QActionGroup" )
       aadd( aQObjects, "QAudioInput" )
       aadd( aQObjects, "QAudioOutput" )
       aadd( aQObjects, "QAxFactory" )
-      aadd( aQObjects, "QAxObject" )   
+      aadd( aQObjects, "QAxObject" )
       aadd( aQObjects, "QAxScript" )
       aadd( aQObjects, "QAxScriptManager" )
       aadd( aQObjects, "QButtonGroup" )
       aadd( aQObjects, "QClipboard" )
       aadd( aQObjects, "QCompleter" )
       aadd( aQObjects, "QCopChannel" )
-      aadd( aQObjects, "QCoreApplication" ) 
+      aadd( aQObjects, "QCoreApplication" )
       aadd( aQObjects, "QDataWidgetMapper" )
       aadd( aQObjects, "QDBusAbstractAdaptor" )
       aadd( aQObjects, "QDBusAbstractInterface" )
@@ -3477,7 +3480,7 @@ STATIC FUNCTION qth_is_QObject( cWidget )
       aadd( aQObjects, "QFtp" )
       aadd( aQObjects, "QFutureWatcher" )
       aadd( aQObjects, "QGenericPlugin" )
-      aadd( aQObjects, "QGesture" ) 
+      aadd( aQObjects, "QGesture" )
       aadd( aQObjects, "QGLShader" )
       aadd( aQObjects, "QGLShaderProgram" )
       aadd( aQObjects, "QGraphicsAnchor" )
@@ -3565,7 +3568,7 @@ STATIC FUNCTION qth_is_QObject( cWidget )
       aadd( aQObjects, "QDesignerPropertyEditorInterface" )
       aadd( aQObjects, "QDesignerWidgetBoxInterface" )
       aadd( aQObjects, "QDesktopWidget" )
-      aadd( aQObjects, "QDialog" ) 
+      aadd( aQObjects, "QDialog" )
       aadd( aQObjects, "QDialogButtonBox" )
       aadd( aQObjects, "QDockWidget" )
       aadd( aQObjects, "QFocusFrame" )
@@ -3599,18 +3602,18 @@ STATIC FUNCTION qth_is_QObject( cWidget )
       aadd( aQObjects, "QWSEmbedWidget" )
       aadd( aQObjects, "QX11EmbedContainer" )
       aadd( aQObjects, "QX11EmbedWidget" )
-      
+
       aadd( aQObjects, "QAnimationGroup" )
       aadd( aQObjects, "QPauseAnimation" )
       aadd( aQObjects, "QVariantAnimation" )
       aadd( aQObjects, "QParallelAnimationGroup" )
       aadd( aQObjects, "QSequentialAnimationGroup" )
       aadd( aQObjects, "QPropertyAnimation" )
-      
+
       aadd( aQObjects, "QItemDelegate" )
       aadd( aQObjects, "QStyledItemDelegate" )
       aadd( aQObjects, "QSqlRelationalDelegate" )
-      
+
       aadd( aQObjects, "QSqlRelationalTableModel" )
       aadd( aQObjects, "QSqlTableModel" )
       aadd( aQObjects, "QSqlQueryModel" )
@@ -3626,54 +3629,54 @@ STATIC FUNCTION qth_is_QObject( cWidget )
       aadd( aQObjects, "QHelpContentModel" )
       aadd( aQObjects, "QProxyModel" )
       aadd( aQObjects, "QStandardItemModel" )
-      
+
       aadd( aQObjects, "QNetworkDiskCache" )
-      
+
       aadd( aQObjects, "QFinalState" )
       aadd( aQObjects, "QHistoryState" )
       aadd( aQObjects, "QState" )
       aadd( aQObjects, "QStateMachine" )
-      
+
       aadd( aQObjects, "QPlainTextDocumentLayout" )
-      
+
       aadd( aQObjects, "QEventTransition" )
       aadd( aQObjects, "QSignalTransition" )
       aadd( aQObjects, "QKeyEventTransition" )
       aadd( aQObjects, "QMouseEventTransition" )
-      
+
       aadd( aQObjects, "QMenuItem" )
       aadd( aQObjects, "QWidgetAction" )
-      
+
       aadd( aQObjects, "QAxScriptEngine" )
-      
+
       aadd( aQObjects, "QApplication" )
-      
+
       aadd( aQObjects, "QDBusConnectionInterface" )
       aadd( aQObjects, "QDBusInterface" )
-      
+
       aadd( aQObjects, "QPanGesture" )
       aadd( aQObjects, "QPinchGesture" )
       aadd( aQObjects, "QSwipeGesture" )
       aadd( aQObjects, "QTapAndHoldGesture" )
       aadd( aQObjects, "QTapGesture" )
-      
+
       aadd( aQObjects, "QGraphicsBlurEffect" )
       aadd( aQObjects, "QGraphicsColorizeEffect" )
       aadd( aQObjects, "QGraphicsDropShadowEffect" )
       aadd( aQObjects, "QGraphicsOpacityEffect" )
-      
+
       aadd( aQObjects, "QDeclarativeItem" )
       aadd( aQObjects, "QGraphicsSvgItem" )
       aadd( aQObjects, "QGraphicsTextItem" )
       aadd( aQObjects, "QGraphicsWidget" )
       aadd( aQObjects, "QGraphicsProxyWidget" )
       aadd( aQObjects, "QGraphicsWebView" )
-      
+
       aadd( aQObjects, "QGraphicsRotation" )
       aadd( aQObjects, "QGraphicsScale" )
-      
+
       aadd( aQObjects, "QHelpEngine" )
-      
+
       aadd( aQObjects, "QAbstractSocket" )
       aadd( aQObjects, "QBuffer" )
       aadd( aQObjects, "QFile" )
@@ -3684,42 +3687,42 @@ STATIC FUNCTION qth_is_QObject( cWidget )
       aadd( aQObjects, "QUdpSocket" )
       aadd( aQObjects, "QSslSocket" )
       aadd( aQObjects, "QTemporaryFile" )
-      
+
       aadd( aQObjects, "QBoxLayout" )
       aadd( aQObjects, "QFormLayout" )
       aadd( aQObjects, "QGridLayout" )
       aadd( aQObjects, "QStackedLayout" )
       aadd( aQObjects, "QHBoxLayout" )
       aadd( aQObjects, "QVBoxLayout" )
-      
+
       aadd( aQObjects, "QTextBlockGroup" )
       aadd( aQObjects, "QTextFrame" )
       aadd( aQObjects, "QTextList" )
       aadd( aQObjects, "QTextTable" )
-      
+
       aadd( aQObjects, "QDoubleValidator" )
       aadd( aQObjects, "QIntValidator" )
       aadd( aQObjects, "QRegExpValidator" )
-      
+
       aadd( aQObjects, "QCheckBox" )
       aadd( aQObjects, "QPushButton" )
       aadd( aQObjects, "QRadioButton" )
       aadd( aQObjects, "Q3Button" )
       aadd( aQObjects, "QToolButton" )
       aadd( aQObjects, "QCommandLinkButton" )
-      
+
       aadd( aQObjects, "QDial" )
       aadd( aQObjects, "QScrollBar" )
       aadd( aQObjects, "QSlider" )
-      
+
       aadd( aQObjects, "QDateTimeEdit" )
       aadd( aQObjects, "QDoubleSpinBox" )
       aadd( aQObjects, "QSpinBox" )
       aadd( aQObjects, "QDateEdit" )
       aadd( aQObjects, "QTimeEdit" )
-      
+
       aadd( aQObjects, "QFontComboBox" )
-      
+
       aadd( aQObjects, "QAbstractPrintDialog" )
       aadd( aQObjects, "QColorDialog" )
       aadd( aQObjects, "QErrorMessage" )
@@ -3732,7 +3735,7 @@ STATIC FUNCTION qth_is_QObject( cWidget )
       aadd( aQObjects, "QProgressDialog" )
       aadd( aQObjects, "QWizard" )
       aadd( aQObjects, "QPrintDialog" )
-      
+
       aadd( aQObjects, "QAbstractScrollArea" )
       aadd( aQObjects, "QLabel" )
       aadd( aQObjects, "QLCDNumber" )
@@ -3758,12 +3761,12 @@ STATIC FUNCTION qth_is_QObject( cWidget )
       aadd( aQObjects, "QTreeWidget" )
       aadd( aQObjects, "QDeclarativeView" )
       aadd( aQObjects, "QTextBrowser" )
-   ENDIF 
+   ENDIF
 
    RETURN ascan( aQObjects, {|e| e == cWidget } ) > 0
-   
+
 /*----------------------------------------------------------------------*/
-   
+
 #define HBQT_BIT_NONE                             0
 #define HBQT_BIT_OWNER                            1
 #define HBQT_BIT_QOBJECT                          2
@@ -3773,16 +3776,15 @@ STATIC FUNCTION qth_is_QObject( cWidget )
 
 STATIC FUNCTION qth_get_bits( cWidget, lNew )
    LOCAL nBits := HBQT_BIT_NONE
-   
+
    IF lNew
       nBits := hb_bitOr( nBits, HBQT_BIT_OWNER )
-   ENDIF 
+   ENDIF
    IF qth_is_QObject( cWidget )
       nBits := hb_bitOr( nBits, HBQT_BIT_QOBJECT )
-   ENDIF      
-   
+   ENDIF
+
    RETURN hb_ntos( nBits )
 
 #endif
 /*----------------------------------------------------------------------*/
-   

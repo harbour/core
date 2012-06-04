@@ -59,8 +59,6 @@
 #define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
 #include "hbclass.ch"
 
-#include "common.ch"
-
 CREATE CLASS HBDbMenuItem
 
    VAR nRow
@@ -81,7 +79,7 @@ ENDCLASS
 
 METHOD New( cPrompt, bAction, lChecked, xIdent ) CLASS HBDbMenuItem
 
-   DEFAULT lChecked TO .F.
+   hb_default( @lChecked, .F. )
 
    ::cPrompt  := cPrompt
    ::bAction  := bAction

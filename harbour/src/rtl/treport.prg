@@ -450,7 +450,7 @@ METHOD New( cFrmName AS STRING,;
 
 METHOD PrintIt( cString AS STRING ) CLASS HBReportForm
 
-   DEFAULT cString TO ""
+   hb_default( @cString, "" )
 
    QQOut( cString )
    QOut()
@@ -1207,9 +1207,9 @@ STATIC FUNCTION Occurs( cSearch, cTarget )
 
 STATIC FUNCTION XMLCOUNT( cString, nLineLength, nTabSize, lWrap )
 
-   DEFAULT nLineLength TO 79
-   DEFAULT nTabSize TO 4
-   DEFAULT lWrap TO .T.
+   hb_default( @nLineLength, 79 )
+   hb_default( @nTabSize, 4 )
+   hb_default( @lWrap, .T. )
 
    IF nTabSize >= nLineLength
       nTabSize := nLineLength - 1
@@ -1225,10 +1225,10 @@ STATIC FUNCTION XMLCOUNT( cString, nLineLength, nTabSize, lWrap )
 */
 STATIC FUNCTION XMEMOLINE( cString, nLineLength, nLineNumber, nTabSize, lWrap )
 
-   DEFAULT nLineLength TO 79
-   DEFAULT nLineNumber TO 1
-   DEFAULT nTabSize TO 4
-   DEFAULT lWrap TO .T.
+   hb_default( @nLineLength, 79 )
+   hb_default( @nLineNumber, 1 )
+   hb_default( @nTabSize, 4 )
+   hb_default( @lWrap, .T. )
 
    IF nTabSize >= nLineLength
       nTabSize := nLineLength - 1
@@ -1362,7 +1362,7 @@ STATIC FUNCTION ListAsArray( cList, cDelimiter )
    LOCAL aList := {}                  // Define an empty array
    LOCAL lDelimLast := .F.
 
-   DEFAULT cDelimiter TO ","
+   hb_default( @cDelimiter, "," )
 
    DO WHILE Len( cList ) != 0
 

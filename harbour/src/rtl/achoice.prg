@@ -608,7 +608,7 @@ STATIC PROCEDURE DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPo
    LOCAL nRow                              // Screen row
    LOCAL nIndex                            // Array index
 
-   DEFAULT nRowsClr TO nNumRows
+   hb_default( @nRowsClr, nNumRows )
 
    DispBegin()
 

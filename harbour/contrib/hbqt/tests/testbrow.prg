@@ -26,7 +26,7 @@ STATIC oColorLY
 STATIC oColorLN
 
 #define _method_local_
-  
+
 PROCEDURE Main()
    LOCAL tb1, mo1, lay1, lay2, bt1, bt2, bt3, hd1, i
    LOCAL oWnd, oDA
@@ -63,10 +63,10 @@ PROCEDURE Main()
    oID := tb1:itemDelegate()
    oID:connect( "commitData(QWidget*)", {| w | my_save( w, 1, aStru1, @nCX1, @nCY1 ) } )
    oID := NIL
-      
+
    oSM := tb1:selectionModel()
    oSM:connect( "currentChanged(QModelIndex,QModelIndex)", {| n | my_select( n, @nCX1, @nCY1 ) } )
-#else   
+#else
    connect( tb1, aStru1, @nCX1, @nCY1 )
 #endif
 
@@ -92,14 +92,14 @@ PROCEDURE Main()
    lay2:addWidget( bt2 )
    lay2:addWidget( bt3 )
 
-   HB_TRACE( HB_TR_ALWAYS, "AAAAA" ) 
+   HB_TRACE( HB_TR_DEBUG, "AAAAA" )
    oWnd:Show()
-   HB_TRACE( HB_TR_ALWAYS, "BBBBB" ) 
+   HB_TRACE( HB_TR_DEBUG, "BBBBB" )
    QApplication():exec()
-   HB_TRACE( HB_TR_ALWAYS, "CCCCC" ) 
+   HB_TRACE( HB_TR_DEBUG, "CCCCC" )
 
-   HB_TRACE( HB_TR_ALWAYS, ( "my_select "+hb_ntos( nCX1 )+ "/"+hb_ntos( nCY1 ) ) ) 
-   
+   HB_TRACE( HB_TR_DEBUG, ( "my_select "+hb_ntos( nCX1 )+ "/"+hb_ntos( nCY1 ) ) )
+
    RETURN
 
 STATIC PROCEDURE my_save( qWidget, nArea, aStru, nCX, nCY )
@@ -225,15 +225,15 @@ STATIC FUNCTION my_browse( nArea, aStru, t, role, x, y )
 
    RETURN NIL
 
-STATIC FUNCTION connect( tb1, aStru1, nCX1, nCY1 )   
+STATIC FUNCTION connect( tb1, aStru1, nCX1, nCY1 )
    LOCAL oID, oSM
-   
+
    oID := tb1:itemDelegate()
    oID:connect( "commitData(QWidget*)", {| w | my_save( w, 1, aStru1, @nCX1, @nCY1 ) } )
-   
-   HB_TRACE( HB_TR_ALWAYS, "00000" ) 
+
+   HB_TRACE( HB_TR_DEBUG, "00000" )
    oSM := tb1:selectionModel()
    oSM:connect( "currentChanged(QModelIndex,QModelIndex)", {| n | my_select( n, @nCX1, @nCY1 ) } )
-   HB_TRACE( HB_TR_ALWAYS, "11111" ) 
-   
-   RETURN NIL 
+   HB_TRACE( HB_TR_DEBUG, "11111" )
+
+   RETURN NIL
