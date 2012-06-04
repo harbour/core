@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 PROCEDURE Main()
 
    LOCAL cCmd := win_GetCommandLineParam()
@@ -67,4 +65,4 @@ PROCEDURE Main()
       ? nRet
    ENDIF
 
-RETURN
+   RETURN

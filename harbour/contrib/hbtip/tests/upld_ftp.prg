@@ -7,7 +7,6 @@
  * Send an file or list of files to ftp server
  */
 
-#include "common.ch"
 #include "directry.ch"
 
 PROCEDURE MAIN( cMask )

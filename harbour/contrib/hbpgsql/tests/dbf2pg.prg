@@ -52,7 +52,6 @@
  */
 
 #include "inkey.ch"
-#include "common.ch"
 
 PROCEDURE Main( ... )
 

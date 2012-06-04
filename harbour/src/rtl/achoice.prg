@@ -22,7 +22,6 @@
 
 #include "achoice.ch"
 #include "color.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 

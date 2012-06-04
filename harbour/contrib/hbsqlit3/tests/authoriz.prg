@@ -76,7 +76,6 @@
  * that contain additional details about the action to be authorized.
  */
 
-#include "common.ch"
 #include "hbsqlit3.ch"
 
 PROCEDURE main()
@@ -107,7 +106,7 @@ PROCEDURE main()
    Qout( cErrorMsg(sqlite3_set_authorizer(pDb, @Authorizer3() /*"Authorizer3"*/)) )
 
    QOut( cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40" )
-   Qout( cErrorMsg(sqlite3_exec(pDb, cSQLTEXT, cb), FALSE) )
+   Qout( cErrorMsg(sqlite3_exec(pDb, cSQLTEXT, cb), .F. ) )
 
    sqlite3_sleep( 3000 )
    //
@@ -196,9 +195,9 @@ STATIC FUNCTION cErrorMsg( nError, lShortMsg )
       { SQLITE_DONE       , "SQLITE_DONE"       , "sqlite3_step() has finished executing"       } ;
    }, nIndex, cErrorMsg := "UNKNOWN"
 
-   DEFAULT lShortMsg TO .T.
+   hb_default( @lShortMsg, .T. )
 
-   IF hb_IsNumeric( nError )
+   IF HB_ISNUMERIC( nError )
       IF nError == 0
          cErrorMsg := "SQLITE_OK"
       ELSE

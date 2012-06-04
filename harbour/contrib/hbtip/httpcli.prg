@@ -52,7 +52,6 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
 #include "fileio.ch"
 
 CREATE CLASS tIPClientHTTP FROM tIPClient
@@ -414,7 +413,7 @@ METHOD getcookies( cHost, cPath ) CLASS tIPClientHTTP
    LOCAL x, y, aDomKeys := {}, aKeys, z, cKey, aPathKeys, nPath
    LOCAL a, b, cOut := "", c, d
 
-   DEFAULT cHost TO ::oUrl:cServer
+   hb_default( @cHost, ::oUrl:cServer )
 
    IF cPath == NIL
       cPath := ::oUrl:cPath
@@ -481,7 +480,7 @@ METHOD Boundary( nType ) CLASS tIPClientHTTP
 
    LOCAL cBound := ::cBoundary
    LOCAL i
-   DEFAULT nType TO 0
+   hb_default( @nType, 0 )
    IF Empty( cBound )
       cBound := Replicate( "-", 27 ) + Space( 11 )
       FOR i := 28 TO 38

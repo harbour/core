@@ -12,7 +12,6 @@
  */
 
 #include "gd.ch"
-#include "common.ch"
 
 /* Some digits images from:
    http://www.digitmania.holowww.com/all.html */
@@ -30,8 +29,8 @@ PROCEDURE Main( cValue, cBaseImage )
    LOCAL n, nValue
 
    // A value if not passed
-   DEFAULT cValue     TO Str( hb_RandomInt( 1, 10^DISPLAY_NUM ), DISPLAY_NUM )
-   DEFAULT cBaseImage TO "57chevy.gif"
+   hb_default( @cValue    , Str( hb_RandomInt( 1, 10^DISPLAY_NUM ), DISPLAY_NUM ) )
+   hb_default( @cBaseImage, "57chevy.gif" )
 
    IF !File( IMAGES_IN + cBaseImage )
       ? "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' not found"

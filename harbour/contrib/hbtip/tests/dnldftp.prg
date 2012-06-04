@@ -6,9 +6,7 @@
  * Download an file from an ftp server
  */
 
-#include "common.ch"
-
-PROCEDURE MAIN( cFile )
+PROCEDURE Main( cFile )
 
    ? TRP20FTPEnv( cFile )
 

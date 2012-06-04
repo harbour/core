@@ -77,7 +77,6 @@
 #include "fileio.ch"
 #include "error.ch"
 #include "adordd.ch"
-#include "common.ch"
 #include "dbstruct.ch"
 #include "dbinfo.ch"
 

@@ -61,8 +61,6 @@
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 
-#include "common.ch"
-
 //#include "wvtwin.ch"
 
 #define WSABASEERR              10000
@@ -101,8 +99,8 @@ Function RmtSvrInitialize( cServerInfo, nTimeoutClient, nTimeRefresh )
    s_srvrSocket := NIL
    s_commSocket := NIL
 
-   DEFAULT nTimeoutClient TO 60     // 60 SECONDS
-   DEFAULT nTimeRefresh   TO .5     // 0.5 SECONDS
+   hb_default( @nTimeoutClient, 60 )     // in seconds
+   hb_default( @nTimeRefresh  , 0.5 )    // in seconds
 
    nTimeRefresh := 0.1
 
@@ -229,7 +227,7 @@ Function RmtSvrSendClient( nMode, xData )
             endif
 
             t_:= xData
-            DEFAULT t_ TO { 0, 0, maxrow( .t. ), maxcol( .t. ) }
+            hb_default( @t_, { 0, 0, maxrow( .t. ), maxcol( .t. ) } )
 
             cOdd := ""
             cEvn := ""

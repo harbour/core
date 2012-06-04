@@ -189,7 +189,7 @@ method executeUpdate( cSql ) class hdbcSQLTStatement
 
 method Close() class hdbcSQLTStatement
 
-   if !ISNIL( ::pRes )
+   if !HB_ISNIL( ::pRes )
 
       sqlite3_finalize( ::pRes )
 

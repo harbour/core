@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 MEMVAR _REQUEST
 
 FUNCTION HRBMAIN()
@@ -64,6 +62,4 @@ FUNCTION HRBMAIN()
       ENDIF
    ENDIF
 
-RETURN cHtml
-
-
+   RETURN cHtml

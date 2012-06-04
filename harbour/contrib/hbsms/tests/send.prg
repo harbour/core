@@ -7,14 +7,12 @@
  * www - http://www.harbour-project.org
  */
 
-#include "common.ch"
-
 PROCEDURE Main( cPort )
 
 #if   defined( __PLATFORM__WINDOWS )
-   DEFAULT cPort TO "\\.\COM22"
+   hb_default( @cPort, "\\.\COM22" )
 #elif defined( __PLATFORM__DARWIN )
-   DEFAULT cPort TO "/dev/cu.myport-COM1-1"
+   hb_default( @cPort, "/dev/cu.myport-COM1-1" )
 #endif
 
    ? "start"

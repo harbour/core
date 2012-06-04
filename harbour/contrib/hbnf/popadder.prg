@@ -34,7 +34,6 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 #include "achoice.ch"
-#include "common.ch"
 
 // Set up manifest constants to access the window colors in the array aWinColor
 #define W_BORDER 1

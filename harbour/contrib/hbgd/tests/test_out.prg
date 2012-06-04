@@ -9,7 +9,6 @@
  */
 
 #include "gd.ch"
-#include "common.ch"
 
 #command WRITE <c> => FWrite( 1, <c> + CHR(13)+CHR(10) )
 #command OutHTML <c> => WRITE <c>
@@ -21,7 +20,8 @@ PROCEDURE Main(...)
    LOCAL cQuery  := GetEnv( "QUERY_STRING" )
    LOCAL hParams := { => }
 
-   LOCAL cText, cImg, nPt, nWidth, nHeight, cPhoto
+   LOCAL cImg, nPt, nWidth, nHeight, cPhoto
+   // LOCAL cText
 
    IF Empty( aParams )
       IF !Empty( cQuery )
@@ -39,7 +39,7 @@ PROCEDURE Main(...)
 
         do case
         case cPar == "txt"
-             cText := hb_hGet( hParams, cPar )
+             // cText := hb_hGet( hParams, cPar )
 
         case cPar == "img"
              cImg := hb_hGet( hParams, cPar )
@@ -63,8 +63,8 @@ PROCEDURE Main(...)
   //__OutDebug( cQuery, ValToPrg( hParams ) )
 
   //-----------------------------------------------------------------------------------------
-   //DEFAULT cText TO "Testo di Prova"
-   DEFAULT nPt TO 30
+   //hb_default( @cText, "Testo di Prova" )
+   hb_default( @nPt, 30 )
 
    IF cImg != NIL
       //OutJpg( cImg, nPt )
@@ -104,7 +104,7 @@ RETURN
 
 PROCEDURE StartHTML( cTitle )
 
-   DEFAULT cTitle TO ""
+   hb_default( @cTitle, "" )
 
    WRITE 'content-type: text/html'
    WRITE 'Pragma: no-cache'
@@ -116,7 +116,7 @@ PROCEDURE StartHTML( cTitle )
    WRITE "<body>"
 RETURN
 
-PROCEDURE EndHTML( cTitle )
+PROCEDURE EndHTML()
    WRITE "</body>"
    WRITE "</html>"
 RETURN
@@ -159,22 +159,23 @@ RETURN
 PROCEDURE OutJpg( cText, nPitch )
    LOCAL cOS := OS()
    LOCAL cPath := IIF( Left( cOS, 10 ) == "Windows NT", "C:\winnt\fonts\", "C:\windows\fonts\" )
-   LOCAL oI, cyan, blue
+   LOCAL oI
+   // LOCAL cyan
+   LOCAL blue
    LOCAL aSize, nWidth, nHeight, nX, nY
    LOCAL cFont := cPath + "verdana.ttf"
 
-
-   DEFAULT cText  TO "Sample TEXT"
-   DEFAULT nPitch TO 30
+   hb_default( @cText , "Sample TEXT" )
+   hb_default( @nPitch, 30 )
 
    /* Create an image in memory */
    oI := GDImage( 400, 100 )
 
    /* Allocate background */
-   cyan  := oI:SetColor(0, 255, 255)
+   // cyan  := oI:SetColor(0, 255, 255)
 
    /* Allocate drawing color */
-   blue := oI:SetColor(0, 0, 200)
+   // blue := oI:SetColor(0, 0, 200)
 
    //oI:SetTransparent( blue )
    oI:SetFontName( cFont )
@@ -214,7 +215,8 @@ FUNCTION GetVars( cFields, cSeparator )
    LOCAL hHashVars := { => }
    LOCAL aField, cField, aFields
    LOCAL cName, xValue
-   DEFAULT cSeparator TO "&"
+
+   hb_default( @cSeparator, "&" )
 
    aFields := HB_RegExSplit( cSeparator, cFields )
 
@@ -287,7 +289,7 @@ RETURN hHashVars
 *
 FUNCTION URLDecode( cStr )
    LOCAL cRet := "", i, cCar
-   LOCAL lNumeric := .T.
+   // LOCAL lNumeric := .T.
 
    FOR i := 1 TO Len( cStr )
       cCar := cStr[i]
@@ -306,14 +308,14 @@ FUNCTION URLDecode( cStr )
 
       ENDCASE
 
-      IF (cRet[i] > "9" .or. cRet[i] < "0") .and. cRet[i] != "."
-         lNumeric := .F.
-      ENDIF
+      // IF (cRet[i] > "9" .or. cRet[i] < "0") .and. cRet[i] != "."
+      //    lNumeric := .F.
+      // ENDIF
    NEXT
 
-   *IF lNumeric
-   *   cRet := Val( cRet )
-   *ENDIF
+   // IF lNumeric
+   //    cRet := Val( cRet )
+   // ENDIF
 
 RETURN cRet
 

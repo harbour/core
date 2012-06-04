@@ -52,8 +52,6 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
-
 CREATE CLASS xpp_Get INHERIT Get
 
    EXPORTED:

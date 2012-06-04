@@ -52,15 +52,13 @@
 
 #include "hbwin.ch"
 
-#include "common.ch"
-
 #define _SERVICE_NAME "Harbour_Test_Service"
 
 PROCEDURE Main( cMode )
    LOCAL nError
    LOCAL cMsg
 
-   DEFAULT cMode TO "S" /* NOTE: Must be the default action */
+   hb_default( @cMode, "S" ) /* NOTE: Must be the default action */
 
    SWITCH Upper( cMode )
    CASE "I"

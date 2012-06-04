@@ -7,14 +7,13 @@
  * www - http://harbour-project.org
  */
 
-#include "common.ch"
 #include "simpleio.ch"
 
 PROCEDURE Main( cFrom, cPassword, cTo )
 
-   DEFAULT cFrom     TO "<myname@gmail.com>"
-   DEFAULT cPassword TO "<mypassword>"
-   DEFAULT cTo       TO "addressee@domain.com"
+   hb_default( @cFrom    , "<myname@gmail.com>" )
+   hb_default( @cPassword, "<mypassword>" )
+   hb_default( @cTo      , "addressee@domain.com" )
 
    ? hb_SendMail( "smtp.gmail.com",;
                   465,;

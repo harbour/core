@@ -8,7 +8,6 @@
  * resource editor (Pelles C)
  * 06/10/2010 - 00:16:41 - [vailtom]
  */
-#include "common.ch"
 
 // Some constants
 #define IDD_DIALOG1                         101

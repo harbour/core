@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "error.ch"
 
 #include "hbqtgui.ch"
@@ -206,8 +205,9 @@ STATIC PROCEDURE hbqt_messageBox( cMsg, cInfo, cTitle, nIcon )
    LOCAL oMB
 
    IF hbqt_IsActiveApplication()
-      DEFAULT cTitle TO "Information"
-      DEFAULT nIcon  TO QMessageBox_Information
+
+      hb_default( @cTitle, "Information" )
+      hb_default( @nIcon, QMessageBox_Information )
 
       oMB := QMessageBox()
       oMB:setText( cMsg )

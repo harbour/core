@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "directry.ch"
 
 ANNOUNCE HB_GTSYS

@@ -51,7 +51,6 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
 
 #define CODEC            100
 #define CODEB            101
@@ -433,7 +432,7 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
    Local cBarCode   := ""
    Local cconc      := ""
 
-   DEFAULT cModeCode TO "B"
+   hb_default( @cModeCode, "B" )
 
    ::settext( cText )
 

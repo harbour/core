@@ -51,7 +51,6 @@
  */
 
 
-#include "common.ch"
 #include "hbblat.ch"
 
 #define ADDRESS_FROM   "yourname@domain.com"         // put here your address from
@@ -115,9 +114,7 @@ PROCEDURE Main()
    ? "Blat Error String: ", oBlat:BlatErrorString()
 
    ?
-   ? IIF( nRet == 0, "mail sent correctly!", "mail NOT sent" )
+   ? iif( nRet == 0, "mail sent correctly!", "mail NOT sent" )
    ?
 
-RETURN
-
-//-----------------------------------------
+   RETURN

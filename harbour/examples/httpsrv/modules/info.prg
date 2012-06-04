@@ -56,7 +56,6 @@
 */
 
 
-#include "common.ch"
 #include "hbclass.ch"
 
 MEMVAR _SERVER, _REQUEST, _GET, _POST, _COOKIE, _SESSION, _HTTP_REQUEST, _HTTP_RESPONSE

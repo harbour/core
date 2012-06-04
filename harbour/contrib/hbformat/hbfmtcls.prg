@@ -52,7 +52,6 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
 #include "fileio.ch"
 
 #define RF_STATE_FUNC   1
@@ -464,7 +463,7 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFORMATCODE
       RETURN cLine
    ENDIF
 
-   DEFAULT lContinued TO .F.
+   hb_default( @lContinued, .F. )
    lFirst := !lContinued
 
    nLen := Len( cLine )
@@ -635,7 +634,7 @@ METHOD ConvertCmd( cLine, nBegin, nEnd, lFirstOnly ) CLASS HBFORMATCODE
    LOCAL nPos, cToken := Upper( SubStr( cLine, nBegin, nEnd - nBegin ) )
 
    IF ::lCase
-      DEFAULT lFirstOnly TO .F.
+      hb_default( @lFirstOnly, .F. )
       IF ( ( nPos := At( "," + cToken, ::cCommands ) ) != 0 .AND. ( Len(cToken ) >= 4 ;
             .OR. SubStr( ::cCommands, nPos + Len( cToken ) + 1, 1 ) == "," ) ) ;
             .OR. ;
@@ -851,7 +850,7 @@ STATIC FUNCTION FindNotQuoted( subs, stroka, nPos2 )
 
    LOCAL nPos1, i, c, nState := 0, cSymb
 
-   DEFAULT nPos2 TO 1
+   hb_default( @nPos2, 1 )
 
    DO WHILE .T.
       IF ( nPos1 := hb_At( subs, stroka, nPos2 ) ) == 0

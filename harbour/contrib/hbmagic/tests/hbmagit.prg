@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "hbmagic.ch"
 #include "simpleio.ch"
 

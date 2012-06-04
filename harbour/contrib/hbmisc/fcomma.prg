@@ -65,7 +65,6 @@
 #include "hbusrrdd.ch"
 #include "fileio.ch"
 #include "error.ch"
-#include "common.ch"
 
 ANNOUNCE FCOMMA
 

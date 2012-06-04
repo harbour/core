@@ -6,7 +6,6 @@
  * VERY IMPORTANT: Don't use this querys as sample, they are used for stress tests !!!
  */
 
-#include "common.ch"
 #include "postgres.ch"
 
 PROCEDURE Main( cServer, cDatabase, cUser, cPass )

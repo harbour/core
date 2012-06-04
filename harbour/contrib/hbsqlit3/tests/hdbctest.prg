@@ -2,8 +2,6 @@
  * $Id$
  */
 
-#include "common.ch"
-
 PROCEDURE Main()
 
    LOCAL oConn, oMeta, oStmt, cSql, n, oRs

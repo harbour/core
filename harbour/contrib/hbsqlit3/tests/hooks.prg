@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "hbsqlit3.ch"
 
 PROCEDURE main()
@@ -184,9 +183,9 @@ STATIC FUNCTION cErrorMsg( nError, lShortMsg )
       { SQLITE_DONE       , "SQLITE_DONE"       , "sqlite3_step() has finished executing"       } ;
    }, nIndex, cErrorMsg := "UNKNOWN"
 
-   DEFAULT lShortMsg TO .T.
+   hb_default( @lShortMsg, .T. )
 
-   IF hb_IsNumeric( nError )
+   IF HB_ISNUMERIC( nError )
       IF nError == 0
          cErrorMsg := "SQLITE_OK"
       ELSE

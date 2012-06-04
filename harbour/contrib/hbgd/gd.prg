@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 FUNCTION gdImageChar( im, font, x, y, char, color )
    RETURN gdImageString( im, font, x, y, char, color )
 
@@ -72,9 +70,9 @@ FUNCTION gdImageFTWidth( fontname, ptsize, angle )
    LOCAL cErr
    LOCAL aRect := Array( 8 )
 
-   DEFAULT fontname TO "Arial"
-   DEFAULT ptsize   TO 8
-   DEFAULT angle    TO 0
+   hb_default( @fontname, "Arial" )
+   hb_default( @ptsize  , 8 )
+   hb_default( @angle   , 0 )
 
    cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, "M" )
 
@@ -89,9 +87,9 @@ FUNCTION gdImageFTHeight( fontname, ptsize, angle )
    LOCAL cErr
    LOCAL aRect := Array( 8 )
 
-   DEFAULT fontname TO "Arial"
-   DEFAULT ptsize   TO 8
-   DEFAULT angle    TO 0
+   hb_default( @fontname, "Arial" )
+   hb_default( @ptsize  , 8 )
+   hb_default( @angle   , 0 )
 
    cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, "M" )
    IF cErr == ""
@@ -107,9 +105,9 @@ FUNCTION gdImageFTSize( string, fontname, ptsize, angle )
    LOCAL cErr
    LOCAL aRect := Array( 8 )
 
-   DEFAULT fontname TO "Arial"
-   DEFAULT ptsize   TO 8
-   DEFAULT angle    TO 0
+   hb_default( @fontname, "Arial" )
+   hb_default( @ptsize  , 8 )
+   hb_default( @angle   , 0 )
 
    cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, string )
 
@@ -135,7 +133,7 @@ FUNCTION gdImageStringFT( im, fg, fontname, ptsize, angle, x, y, string, ;
 FUNCTION gdImageFromFile( cFile )
    LOCAL cPath, cName, cExt, cDrive
    LOCAL cType, cMime
-   LOCAL hFile := {=>}
+   LOCAL hFile := { => }
    LOCAL oImage
 
    IF hb_FileExists( cFile )

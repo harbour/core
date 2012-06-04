@@ -10,7 +10,6 @@
  */
 
 #include "gd.ch"
-#include "common.ch"
 
 #define IMAGES_IN  "imgs_in" + hb_ps()
 #define IMAGES_OUT "imgs_out" + hb_ps()
@@ -39,4 +38,3 @@ PROCEDURE Main()
  oI:SaveGif(  IMAGES_OUT + "testdpi.gif" )
 
  RETURN
-

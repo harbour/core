@@ -93,7 +93,6 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
 #include "directry.ch"
 
 #include "tip.ch"
@@ -389,10 +388,10 @@ METHOD List( cSpec ) CLASS tIPClientFTP
 
 METHOD UserCommand( cCommand, lPasv, lReadPort, lGetReply ) CLASS tIPClientFTP
 
-   DEFAULT cCommand  TO ""
-   DEFAULT lPasv     TO .T.
-   DEFAULT lReadPort TO .T.
-   DEFAULT lGetReply TO .F.
+   hb_default( @cCommand , "" )
+   hb_default( @lPasv    , .T. )
+   hb_default( @lReadPort, .T. )
+   hb_default( @lGetReply, .F. )
 
    IF ::bUsePasv .AND. lPasv .AND. !::Pasv()
       RETURN .F.
@@ -568,8 +567,8 @@ METHOD MGET( cSpec, cLocalPath ) CLASS tIPClientFTP
 
    LOCAL cStr, cFile
 
-   DEFAULT cSpec TO ""
-   DEFAULT cLocalPath TO ""
+   hb_default( @cSpec, "" )
+   hb_default( @cLocalPath, "" )
 
    IF ::bUsePasv
       IF ! ::Pasv()
@@ -619,7 +618,7 @@ METHOD UpLoadFile( cLocalFile, cRemoteFile ) CLASS tIPClientFTP
 
    hb_FNameSplit( cLocalFile, @cPath, @cFile,@cExt  )
 
-   DEFAULT cRemoteFile TO cFile + cExt
+   hb_default( @cRemoteFile, cFile + cExt )
 
    ::bEof := .F.
    ::oUrl:cFile := cRemoteFile
@@ -656,7 +655,7 @@ METHOD LS( cSpec ) CLASS tIPClientFTP
 
    LOCAL cStr
 
-   DEFAULT cSpec TO ""
+   hb_default( @cSpec, "" )
 
    IF ::bUsePasv .AND. ! ::Pasv()
       //::bUsePasv := .F.
@@ -697,7 +696,7 @@ METHOD DownLoadFile( cLocalFile, cRemoteFile ) CLASS tIPClientFTP
 
    hb_FNameSplit( cLocalFile, @cPath, @cFile, @cExt  )
 
-   DEFAULT cRemoteFile TO cFile + cExt
+   hb_default( @cRemoteFile, cFile + cExt )
 
    ::bEof := .F.
    ::oUrl:cFile := cRemoteFile

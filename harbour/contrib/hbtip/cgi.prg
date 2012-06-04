@@ -62,7 +62,6 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
 #include "fileio.ch"
 
 #define CGI_IN  0
@@ -419,7 +418,7 @@ STATIC FUNCTION HtmlTag( xVal, cKey, cDefault )
 
    LOCAL cVal := ""
 
-   DEFAULT cDefault TO ""
+   hb_default( @cDefault, "" )
 
    IF ! Empty( xVal ) .AND. ! Empty( cKey )
       IF hb_HHasKey( xVal, cKey )
@@ -442,7 +441,7 @@ STATIC FUNCTION HtmlAllTag( hTags, cSep )
 
    LOCAL cVal := ""
 
-   DEFAULT cSep TO " "
+   hb_default( @cSep, " " )
 
    hb_HEval( hTags, {| k | cVal += HtmlTag( hTags, k ) + cSep } )
 
@@ -477,7 +476,7 @@ STATIC FUNCTION HtmlAllOption( hOptions, cSep )
    LOCAL cVal := ""
 
    IF ! Empty( hOptions )
-      DEFAULT cSep TO " "
+      hb_default( @cSep, " " )
 
       hb_HEval( hOptions, {| k | cVal += HtmlOption( hOptions, k,,, .T. ) + cSep } )
    ENDIF
@@ -488,7 +487,7 @@ STATIC FUNCTION HtmlValue( xVal, cKey, cDefault )
 
    LOCAL cVal := ""
 
-   DEFAULT cDefault TO ""
+   hb_default( @cDefault, "" )
 
    IF ! Empty( xVal ) .AND. ! Empty( cKey )
       IF hb_HHasKey( xVal, cKey )
@@ -508,7 +507,7 @@ STATIC FUNCTION HtmlAllValue( hValues, cSep )
    LOCAL cVal := ""
 
    IF ! Empty( hValues )
-      DEFAULT cSep TO " "
+      hb_default( @cSep, " " )
 
       hb_HEval( hValues, {| k | cVal += HtmlValue( hValues, k ) + cSep } )
    ENDIF
@@ -523,7 +522,7 @@ STATIC FUNCTION HtmlScript( hVal, cKey )
    LOCAL nPos
    LOCAL cTmp
 
-   DEFAULT cKey TO "script"
+   hb_default( @cKey, "script" )
 
    IF ! Empty( hVal )
       IF ( nPos := hb_HPos( hVal, cKey ) ) != 0
@@ -566,7 +565,7 @@ STATIC FUNCTION HtmlStyle( hVal, cKey )
    LOCAL nPos
    LOCAL cTmp
 
-   DEFAULT cKey TO "style"
+   hb_default( @cKey, "style" )
 
    IF ! Empty( hVal )
       IF ( nPos := hb_HPos( hVal, cKey ) ) != 0
@@ -609,7 +608,7 @@ STATIC FUNCTION HtmlLinkRel( hVal, cKey )
    LOCAL nPos
    LOCAL cTmp
 
-   DEFAULT cKey TO "link"
+   hb_default( @cKey, "link" )
 
    IF ! Empty( hVal )
       IF ( nPos := hb_HPos( hVal, cKey ) ) != 0

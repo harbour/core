@@ -2,7 +2,6 @@
  * $Id$
  */
 
-#include "common.ch"
 #include "dbinfo.ch"
 #include "hbusrrdd.ch"
 

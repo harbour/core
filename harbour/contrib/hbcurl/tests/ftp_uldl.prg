@@ -6,7 +6,6 @@
 
 #include "hbcurl.ch"
 
-#include "common.ch"
 #include "fileio.ch"
 
 #define UPLOAD_FILE_AS      "test_ul.bin"
@@ -54,7 +53,7 @@ PROCEDURE Main( cDL, cUL )
       ? "Press key..."
       Inkey( 0 )
 
-      DEFAULT cUL TO "ftp_uldl.prg"
+      hb_default( @cUL, "ftp_uldl.prg" )
 
       ? curl_easy_setopt( curl, HB_CURLOPT_UPLOAD )
       ? curl_easy_setopt( curl, HB_CURLOPT_URL, REMOTE_URL )
@@ -122,7 +121,7 @@ PROCEDURE Main( cDL, cUL )
       ? "Press key..."
       Inkey( 0 )
 
-      DEFAULT cDL TO "ftp://ftp.cisco.com/README"
+      hb_default( @cDL, "ftp://ftp.cisco.com/README" )
 
       /* Now let's download to a file */
 
@@ -168,7 +167,7 @@ PROCEDURE Main( cDL, cUL )
       ? "Press key..."
       Inkey( 0 )
 
-      DEFAULT cDL TO "ftp://ftp.cisco.com/"
+      hb_default( @cDL, "ftp://ftp.cisco.com/" )
 
       /* Now let's download a dirlist to memory */
 

@@ -93,15 +93,14 @@
 
 #else
 
-  #include "common.ch"
   #include "fileio.ch"
 
   FUNCTION FT_TEMPFIL( cPath, lHide, nHandle )
 
   LOCAL cFile
 
-  Default cPath to ".\"
-  Default lHide to .f.
+  hb_default( @cPath, ".\" )
+  hb_default( @lHide, .F. )
 
   cPath := alltrim( cPath )
 

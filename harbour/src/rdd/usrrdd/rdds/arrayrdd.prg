@@ -66,7 +66,6 @@
 #include "fileio.ch"
 #include "error.ch"
 #include "dbstruct.ch"
-#include "common.ch"
 #include "dbinfo.ch"
 
 #include "hbtrace.ch"
@@ -421,7 +420,7 @@ STATIC FUNCTION AR_CLOSE( nWA )
 
    HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d", nWA ) )
 
-   IF HB_HB_ISARRAY( aDBFData )
+   IF HB_ISARRAY( aDBFData )
       /* decrease open number */
       aDBFData[ DATABASE_OPENNUMBER ]--
 
@@ -1171,7 +1170,7 @@ STATIC FUNCTION AR_ORDCREATE( nWA, aOrderCreate )
    aWAData   := USRRDD_AREADATA( nWA )
    aDBFData  := aWAData[ WADATA_DATABASE ]
 
-   IF HB_HB_ISARRAY( aOrderCreate[ UR_ORCR_CONDINFO ] )
+   IF HB_ISARRAY( aOrderCreate[ UR_ORCR_CONDINFO ] )
       aOCInfo   := aOrderCreate[ UR_ORCR_CONDINFO ]
    ELSE
       aOCInfo   := aOrderCreate[ UR_ORCR_CONDINFO ] := ;

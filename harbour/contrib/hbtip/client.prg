@@ -70,7 +70,6 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
 #include "error.ch"
 #include "fileio.ch"
 
@@ -719,7 +718,7 @@ METHOD InetErrorCode( SocketCon ) CLASS tIPClient
 METHOD InetErrorDesc( SocketCon ) CLASS tIPClient
    LOCAL cMsg := ""
 
-   DEFAULT SocketCon TO ::SocketCon
+   hb_default( @SocketCon, ::SocketCon )
 
    IF ! Empty( SocketCon )
       IF ::lTLS

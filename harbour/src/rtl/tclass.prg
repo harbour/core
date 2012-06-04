@@ -78,7 +78,6 @@
 
 /* Harbour Class HBClass to build classes */
 
-#include "common.ch"
 #include "hboo.ch"
 
 REQUEST HBObject

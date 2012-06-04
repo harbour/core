@@ -34,10 +34,9 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "hb_btree.ch"
 
-CLASS TBTree STATIC
+CREATE CLASS TBTree STATIC
 
    HIDDEN:
       DATA nHandle  /* hb_btree handle */
@@ -66,7 +65,7 @@ METHOD New( cFileName, nPageSize, nKeySize, nFlags, nBuffers ) CLASS TBTree
    RETURN NIL
 
 METHOD Open( cFileName, nFlags, nBuffers ) CLASS TBTree
-  ::nHandle := hb_btreeopen( cFileName, nFlags, nBuffers )
+   ::nHandle := hb_btreeopen( cFileName, nFlags, nBuffers )
    IF ::nHandle >= 1
       RETURN SELF
    ENDIF

@@ -6,7 +6,6 @@
  * This samples show how to use dbf to cache postgres records.
  */
 
-#include "common.ch"
 #include "postgres.ch"
 
 #define DB_ALIAS                        1
@@ -221,7 +220,7 @@ FUNCTION SQLFetch( fetchall )
    LOCAL nPos
    LOCAL lEof := .F.
 
-   DEFAULT Fetchall TO .F.
+   hb_default( @Fetchall, .F. )
 
    /* Procura pela tabela no array */
    i := AScan( s_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } )
@@ -511,7 +510,7 @@ FUNCTION QuickQuery( cQuery )
 PROCEDURE MakeDBF( cAlias, aStructure, aIndex )
    LOCAL cFile, i, cIndex, cKey
 
-   DEFAULT aIndex TO {}
+   hb_default( @aIndex, {} )
 
    cFile := TempFile()
    dbCreate( cFile, aStructure )
@@ -536,8 +535,8 @@ PROCEDURE MakeDBF( cAlias, aStructure, aIndex )
 FUNCTION TempFile( cPath, cExt )
    LOCAL cString
 
-   DEFAULT cPath TO hb_DirTemp()
-   DEFAULT cExt  TO "tmp"
+   hb_default( @cPath, hb_DirTemp() )
+   hb_default( @cExt, "tmp" )
 
    cString := cPath + StrZero( Int( hb_random( Val( StrTran( Time(), ":", "" ) ) ) ), 8 ) + "." + cExt
 

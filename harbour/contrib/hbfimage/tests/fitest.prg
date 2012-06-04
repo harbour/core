@@ -10,7 +10,6 @@
 
 #include "freeimag.ch"
 
-#include "common.ch"
 #include "fileio.ch"
 
 #define IMAGES_IN  ""
@@ -224,13 +223,13 @@ PROCEDURE Main()
    ? "Look at " + IMAGES_OUT + " folder for output images"
    ?
 
-RETURN
+   RETURN
 
 PROCEDURE fi_Error( cFormat, cMessage )
    ? "ERROR!..."
    ? "Format  : ", cFormat
    ? "Message : ", cMessage
-RETURN
+   RETURN
 
 PROCEDURE TraceLog( c )
    HB_SYMBOL_UNUSED( c )

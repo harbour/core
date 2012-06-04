@@ -75,7 +75,7 @@ FUNCTION TIP_GENERATESID( cCRCKey )
    LOCAL cRet
    LOCAL nRand, nKey := 0
 
-   DEFAULT cCRCKey  TO CRC_KEY_STRING
+   hb_default( @cCRCKey, CRC_KEY_STRING )
 
    cCRCKey := Left( cCRCKey, 10 )      // Max Lenght must to be of 10 chars
 
@@ -105,7 +105,7 @@ FUNCTION TIP_CHECKSID( cSID, cCRCKey )
    LOCAL cBaseKeys   := BASE_KEY_STRING
    LOCAL nRand, nKey := 0
 
-   DEFAULT cCRCKey  TO CRC_KEY_STRING
+   hb_default( @cCRCKey, CRC_KEY_STRING )
 
    cCRCKey := Left( cCRCKey, 10 )      // Max Lenght must to be of 10 chars
 
@@ -132,8 +132,8 @@ FUNCTION TIP_DATETOGMT( dDate, cTime )
    LOCAL aDays   := { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }
    LOCAL aMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
 
-   DEFAULT dDate TO DATE()
-   DEFAULT cTime TO TIME()
+   hb_default( @dDate, Date() )
+   hb_default( @cTime, Time() )
 
    nDay   := Day( dDate )
    nMonth := Month( dDate )

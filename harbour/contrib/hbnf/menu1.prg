@@ -36,8 +36,6 @@
      PASS "VGA" OR "VGA" AS A COMMAND LINE PARAMETER FOR 50-LINE MODE.
  */
 
-#include "common.ch"
-
 #define LEFTARROW  19
 #define RIGHTARROW  4
 #define ENTER      13

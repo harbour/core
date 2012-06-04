@@ -28,20 +28,19 @@
  */
 
 #include "set.ch"
-#include "common.ch"
 
-#Define FT_EXTRA_SETS    2
-#DEFINE FT_SET_CENTURY   _SET_COUNT + 1
-#DEFINE FT_SET_BLINK     _SET_COUNT + 2
+#define FT_EXTRA_SETS    2
+#define FT_SET_CENTURY   _SET_COUNT + 1
+#define FT_SET_BLINK     _SET_COUNT + 2
 
-#IFDEF FT_TEST
+#ifdef FT_TEST
   FUNCTION MAIN
      LOCAL ASETS := FT_SAVESETS()
      INKEY(0)
      RETURN Nil
 #endif
 
-FUNCTION  FT_SAVESETS()
+FUNCTION FT_SAVESETS()
 
    LOCAL aOldSets := ARRAY(_SET_COUNT + FT_EXTRA_SETS)
 
