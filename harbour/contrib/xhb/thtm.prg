@@ -2276,7 +2276,7 @@ FUNCTION HTMLANY2STR( xVal )
    ELSEIF HB_ISOBJECT( xVal )
       xRet := "<" + xVal:CLASSNAME() + ">"
 
-   ELSEIF ISDATE( xVal )
+   ELSEIF HB_ISDATE( xVal )
       xRet := Dtoc( xVal )
 
    ELSEIF HB_ISLOGICAL( xVal )

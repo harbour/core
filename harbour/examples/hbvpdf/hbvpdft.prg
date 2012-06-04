@@ -2536,7 +2536,7 @@ local cData  := valtype(xData)
        cData += i2bin( len( xData ) ) + xData
    elseif HB_ISNUMERIC(xData)
        cData += i2bin( len( alltrim( str( xData ) ) ) ) + alltrim( str( xData ) )
-   elseif ISDATE( xData )
+   elseif HB_ISDATE( xData )
        cData += i2bin( 8 )+dtos(xData)
    elseif HB_ISLOGICAL(xData)
        cData += i2bin( 1 )+iif( xData,"T","F" )

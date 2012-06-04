@@ -73,7 +73,7 @@ PROCEDURE HB_BLIVERNUM( cString )
    RETURN
 
 PROCEDURE HB_BLIDEMDTE( dDate )
-   IF ISDATE( dDate )
+   IF HB_ISDATE( dDate )
       s_cDemoDate := DToS( dDate )
    ENDIF
    RETURN
