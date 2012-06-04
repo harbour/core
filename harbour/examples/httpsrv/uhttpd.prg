@@ -2294,13 +2294,13 @@ STATIC FUNCTION ParseIni( cConfig )
 
                     IF cSection == "SCRIPTALIASES"
                        xVal := hSect[ cKey ]
-                       IF xVal <> NIL
+                       IF xVal != NIL
                           hDefault[ cSection ][ cKey ] := xVal
                        ENDIF
 
                     ELSEIF cSection == "ALIASES"
                        xVal := hSect[ cKey ]
-                       IF xVal <> NIL
+                       IF xVal != NIL
                           hDefault[ cSection ][ cKey ] := xVal
                        ENDIF
 
@@ -2361,7 +2361,7 @@ STATIC FUNCTION ParseIni( cConfig )
                                           xVal := Val( cVal )
                                   ENDCASE
                           ENDCASE
-                          IF xVal <> NIL
+                          IF xVal != NIL
                              hDefault[ cSection ][ cKey ] := xVal
                           ENDIF
                        ENDIF

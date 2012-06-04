@@ -330,7 +330,7 @@ RDDTESTF NIL, {14,.f.,.f.,.f.}, DBGOTO(14)
 RDDTESTF NIL, {7,.t.,.f.,.f.}, DBSKIP(-1)
 RDDTESTF NIL, {16,.t.,.t.,.f.}, DBGOTO(16)
 RDDTESTF NIL, {12,.f.,.f.,.f.}, DBSKIP(-1)
-RDDTESTC {1,.f.,.f.,.f.}, INDEX on FSTR tag TG_C to "_tst" FOR FNUM<>2 .AND. FNUM<4
+RDDTESTC {1,.f.,.f.,.f.}, INDEX on FSTR tag TG_C to "_tst" FOR FNUM!=2 .AND. FNUM<4
 RDDTESTF NIL, {1,.f.,.f.,.f.}, DBGOTO(1)
 RDDTESTF NIL, {2,.f.,.f.,.f.}, DBSKIP(1)
 RDDTESTF NIL, {1,.f.,.f.,.f.}, DBGOTO(1)
@@ -402,12 +402,12 @@ RDDTESTF "4", {16,.t.,.t.,.f.}, ORDSCOPE(1)
 RDDTESTF "4", {16,.t.,.t.,.f.}, ORDSCOPE(2)
 RDDTESTF "4", {16,.t.,.t.,.f.}, ORDSCOPE(3)
 RDDTESTF .t., {16,.t.,.t.,.f.}, ORDSCOPE(0,NIL)
-RDDTESTC {15,.f.,.f.,.f.}, INDEX on FSTR tag TG_C to "_tst" FOR RECNO()<>5 DESCEND
+RDDTESTC {15,.f.,.f.,.f.}, INDEX on FSTR tag TG_C to "_tst" FOR RECNO()!=5 DESCEND
 RDDTESTF NIL, {5,.f.,.f.,.f.}, DBGOTO(5)
 RDDTESTF NIL, {6,.f.,.f.,.f.}, DBSKIP(-1)
 RDDTESTF NIL, {5,.f.,.f.,.f.}, DBGOTO(5)
 RDDTESTF NIL, {4,.f.,.f.,.f.}, DBSKIP(1)
-RDDTESTC {1,.f.,.f.,.f.}, INDEX on FSTR tag TG_C to "_tst" FOR RECNO()<>5
+RDDTESTC {1,.f.,.f.,.f.}, INDEX on FSTR tag TG_C to "_tst" FOR RECNO()!=5
 RDDTESTF NIL, {5,.f.,.f.,.f.}, DBGOTO(5)
 RDDTESTF NIL, {4,.f.,.f.,.f.}, DBSKIP(-1)
 RDDTESTF NIL, {5,.f.,.f.,.f.}, DBGOTO(5)

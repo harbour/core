@@ -90,10 +90,10 @@ ENDCLASS
 // ------------------------------ ***************************** -----------------------------------
 
 METHOD SetCookieDefaults( cDomain, cPath, nExpireDays, nExpireSecs ) CLASS uhttpd_Cookie
-   IF cDomain     <> NIL THEN ::cDomain     := cDomain
-   IF cPath       <> NIL THEN ::cPath       := cPath
-   IF nExpireDays <> NIL THEN ::nExpireDays := nExpireDays
-   IF nExpireSecs <> NIL THEN ::nExpireSecs := nExpireSecs
+   IF cDomain     != NIL THEN ::cDomain     := cDomain
+   IF cPath       != NIL THEN ::cPath       := cPath
+   IF nExpireDays != NIL THEN ::nExpireDays := nExpireDays
+   IF nExpireSecs != NIL THEN ::nExpireSecs := nExpireSecs
    RETURN NIL
 
 METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpOnly ) CLASS uhttpd_Cookie
@@ -127,13 +127,13 @@ METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpO
 
    //cStr := cCookieName + "=" + uhttpd_UrlEncode( hb_cStr( xValue ) )
 
-   IF cDomain <> NIL
+   IF cDomain != NIL
       cStr += "; domain=" + cDomain
    ENDIF
-   IF cPath <> NIL
+   IF cPath != NIL
       cStr += "; path=" + cPath
    ENDIF
-   IF cExpires <> NIL
+   IF cExpires != NIL
       cStr += "; expires=" + cExpires
    ENDIF
    IF ValType( lSecure ) == "L" .AND. lSecure

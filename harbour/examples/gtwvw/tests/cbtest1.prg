@@ -63,7 +63,7 @@ local ch,ncursor
    wvw_ShowWindow()
 
    nPos := 1
-   do while (ch:=inkey(0))<>_SECRET_KEY
+   do while (ch:=inkey(0))!=_SECRET_KEY
       do case
          case ch==K_TAB .or. ch==K_ENTER
             if nPos==2 .and. ch==K_ENTER .and. wvw_pbEnable(NIL, nPBid)

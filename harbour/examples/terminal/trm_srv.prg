@@ -382,34 +382,34 @@ Function BuildScreen()
 Function uiDebug( p1,p2,p3,p4,p5,p6,p7,p8,p9,p10 )
    Local cDebug := ''
 
-   if p1 <> nil
+   if p1 != nil
       cDebug += uiXtos( p1 )
    endif
-   if p2 <> nil
+   if p2 != nil
       cDebug += '   ' + uiXtos( p2 )
    endif
-   if p3 <> nil
+   if p3 != nil
       cDebug += '   ' + uiXtos( p3 )
    endif
-   if p4 <> nil
+   if p4 != nil
       cDebug += '   ' + uiXtos( p4 )
    endif
-   if p5 <> nil
+   if p5 != nil
       cDebug += '   ' + uiXtos( p5 )
    endif
-   if p6 <> nil
+   if p6 != nil
       cDebug += '   ' + uiXtos( p6 )
    endif
-   if p7 <> nil
+   if p7 != nil
       cDebug += '   ' + uiXtos( p7 )
    endif
-   if p8 <> nil
+   if p8 != nil
       cDebug += '   ' + uiXtos( p8 )
    endif
-   if p9 <> nil
+   if p9 != nil
       cDebug += '   ' + uiXtos( p9 )
    endif
-   if p10 <> nil
+   if p10 != nil
       cDebug += '   ' + uiXtos( p10 )
    endif
 

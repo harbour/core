@@ -60,7 +60,7 @@ local ch
    CreateStatusbar(0)
 
    ch := inkey(0)
-   do while ch<>K_ESC
+   do while ch!=K_ESC
       if ch==wvw_setMenuKeyEvent(0)
          MenuAction(0, wvw_GetLastMenuEvent(0))
       endif
@@ -143,7 +143,7 @@ local ch
 
    * open a window whose parent is Main Window
    setcolor("W+/N")
-   if wvw_nOpenWindow(ctitle, nrow1, ncol1, nrow2, ncol2, NIL, 0) <> nWinNum
+   if wvw_nOpenWindow(ctitle, nrow1, ncol1, nrow2, ncol2, NIL, 0) != nWinNum
       * currently wvw_nOpenWindow() will always return sequentially numbered window
       wvw_messagebox(0, "Something horrible has happened, program aborted",;
                         "Internal Error", MB_OK+MB_ICONHAND)
@@ -159,7 +159,7 @@ local ch
    * then echoing user input, until user press ESC
    setcursor(SC_NORMAL)
    ch := inkey(0)
-   do while ch<>K_ESC
+   do while ch!=K_ESC
       typing(ch)
       ch := inkey(0)
    enddo

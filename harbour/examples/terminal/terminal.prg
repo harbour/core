@@ -284,7 +284,7 @@ Function RmtSvrSendClient( nMode, xData )
             nBytesToSend := len( cData )
             nBytesSent   := hb_INetSendAll( s_commSocket, cData, nBytesToSend )
 
-            if nBytesSent <> nBytesToSend
+            if nBytesSent != nBytesToSend
                nError := hb_INetErrorCode( s_commSocket )
 TrmDebug( n,'E','VouchServer - SvrSendClient : ', nError, nBytesSent, nBytesToSend )
 
@@ -451,34 +451,34 @@ Function TrmStr2A( cStr, cDel )
 Function TrmDebug( p1,p2,p3,p4,p5,p6,p7,p8,p9,p10 )
    Local cDebug := ''
 
-   if p1 <> nil
+   if p1 != nil
       cDebug += TrmXtoS( p1 )
    endif
-   if p2 <> nil
+   if p2 != nil
       cDebug += '   ' + TrmXtoS( p2 )
    endif
-   if p3 <> nil
+   if p3 != nil
       cDebug += '   ' + TrmXtoS( p3 )
    endif
-   if p4 <> nil
+   if p4 != nil
       cDebug += '   ' + TrmXtoS( p4 )
    endif
-   if p5 <> nil
+   if p5 != nil
       cDebug += '   ' + TrmXtoS( p5 )
    endif
-   if p6 <> nil
+   if p6 != nil
       cDebug += '   ' + TrmXtoS( p6 )
    endif
-   if p7 <> nil
+   if p7 != nil
       cDebug += '   ' + TrmXtoS( p7 )
    endif
-   if p8 <> nil
+   if p8 != nil
       cDebug += '   ' + TrmXtoS( p8 )
    endif
-   if p9 <> nil
+   if p9 != nil
       cDebug += '   ' + TrmXtoS( p9 )
    endif
-   if p10 <> nil
+   if p10 != nil
       cDebug += '   ' + TrmXtoS( p10 )
    endif
 

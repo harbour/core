@@ -285,7 +285,7 @@ if sp_init()
 else
    ok := .F.
 endif
-if !ok .and. EXTRA_CODE_BLOCK <> NIL
+if !ok .and. EXTRA_CODE_BLOCK != NIL
    ok := eval( EXTRA_CODE_BLOCK,cWord )
 endif
 return ok
@@ -357,7 +357,7 @@ LOCAL xOld := NIL
 **DEBUG**
 @24,30 SAY "At SP_getset"
 
-if nWhich <> NIL .and. (nWhich>0 .and. nWhich<=len(aGlobal))
+if nWhich != NIL .and. (nWhich>0 .and. nWhich<=len(aGlobal))
     xOld := aGlobal[nWhich]
     if valtype(xNewSetting) == valtype(xOld)
        aGlobal[nWhich] := xNewSetting
@@ -1269,7 +1269,7 @@ if nH >= 0
 		   @ 10,41 say (nCurRec/nSize) * 100   picture "999.9%"   color "W+/R"
 	       endif
 	    enddo
-	    if !empty(temp) .or. cBits <> FOUR_BYTES
+	    if !empty(temp) .or. cBits != FOUR_BYTES
 
 	       nWhere := fseek(nH,0,2)
 
@@ -1588,8 +1588,8 @@ else
       if nPatSize == nStrSize
 	 lMatch := .T.
 	 for y := 1 to nPatSize
-	    if substr(cPattern,y,1)<>"?" .and. ;
-	       substr(cPattern,y,1)<> substr(cString,y,1)
+	    if substr(cPattern,y,1)!="?" .and. ;
+	       substr(cPattern,y,1)!= substr(cString,y,1)
 		  lMatch := .F.
 		  exit
 	    endif

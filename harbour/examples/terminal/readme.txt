@@ -1,3 +1,6 @@
+/*
+ * $Id$
+ */
 
 Welcome in the world of Harbour Terminal Protocol
 =================================================
@@ -78,7 +81,7 @@ Harbour Application
          //
          RmtSvrSetInfo( cServerInfo )
 
-         IF ( nServerPort := RmtSvrSetInfo( 1 ) ) <> NIL .and. nServerPort > 0
+         IF ( nServerPort := RmtSvrSetInfo( 1 ) ) != NIL .and. nServerPort > 0
             IF !RmtSvrInitialize( NTRIM( nServerPort ), 60/*nTimeoutClient*/, 0.5 /*nTimeRefresh*/ )
                Quit
             ENDIF

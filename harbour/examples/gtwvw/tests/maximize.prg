@@ -31,7 +31,7 @@ local ch
    wvw_maximize(0)
 
    updatescr()
-   do while (ch := inkey(0))<>K_ESC
+   do while (ch := inkey(0))!=K_ESC
       * refresh screen, probably in a new dimension
       * (You may alternatively call updatescr() from WVW_SIZE instead)
       updatescr()
@@ -76,7 +76,7 @@ local lNeedReset := .f., ;
       * (or this function is currently running)
       return NIL
    endif
-   if nWinNum<>0
+   if nWinNum!=0
       * only care about Main Window
       return NIL
    endif
@@ -88,8 +88,8 @@ local lNeedReset := .f., ;
       case wParam == 2 //SIZE_MAXIMIZED
          //alert("MAXIMIZE")
          * reset is required only if we are changing size
-         lNeedReset := maxcol() <> wvw_maxmaxcol();
-                       .or. maxrow() <> wvw_maxmaxrow()
+         lNeedReset := maxcol() != wvw_maxmaxcol();
+                       .or. maxrow() != wvw_maxmaxrow()
 
          if lNeedReset
             maxsavedscrrow := min(min(s_nNormalMaxrow, wvw_maxmaxrow()),maxrow())
@@ -102,8 +102,8 @@ local lNeedReset := .f., ;
          endif
       case wParam == 0 //SIZE_RESTORED
          //alert("RESTORE")
-         lNeedReset := maxcol() <> s_nNormalMaxcol .or.;
-                       maxrow() <> s_nNormalMaxrow
+         lNeedReset := maxcol() != s_nNormalMaxcol .or.;
+                       maxrow() != s_nNormalMaxrow
          if lNeedReset
             maxsavedscrrow := min(s_nNormalMaxrow, maxrow())
             maxsavedscrcol := min(s_nNormalMaxcol, maxcol())

@@ -61,7 +61,7 @@
 #command IF <lexpr> THEN <statement1> ELSE <statement2> =>;
          IF (<lexpr>) ; <statement1> ; ELSE ; <statement2> ; END
 
-#xtranslate SetNewValueReturnOld( <p>, <v> ) => LOCAL xOld, xOld := <p>, IIF( <v> <> NIL, <p> := <v>,  ), xOld
+#xtranslate SetNewValueReturnOld( <p>, <v> ) => LOCAL xOld, xOld := <p>, IIF( <v> != NIL, <p> := <v>,  ), xOld
 #xtranslate DEFAULT( <p>, <v> ) => ( <p> := IIF( <p> == NIL, <v>, <p> ) )
 
 
@@ -203,7 +203,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
   LOCAL xVal, nRand, nPos
   LOCAL hUrl
 
-  IF cSID <> NIL
+  IF cSID != NIL
      ::cSID := cSID
   ENDIF
 
@@ -211,7 +211,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
 
   //TraceLog( "Active Sessions : " + hb_cStr( ::nActiveSessions ) )
 
-  IF ::nActiveSessions <> 0
+  IF ::nActiveSessions != 0
      RETURN .F.
   ENDIF
 
@@ -372,7 +372,7 @@ RETURN lRegistered
 
 METHOD CacheLimiter( cNewLimiter ) CLASS uhttpd_Session
   LOCAL cOldLimiter := ::cCache_Limiter
-  IF cNewLimiter <> NIL
+  IF cNewLimiter != NIL
      IF cNewLimiter $ "none/nocache/private/private_no_expire/public"
         ::cCache_Limiter := cNewLimiter
      ELSE
@@ -382,10 +382,10 @@ METHOD CacheLimiter( cNewLimiter ) CLASS uhttpd_Session
 RETURN cOldLimiter
 
 METHOD SetCookieParams( nLifeTime, cPath, cDomain, lSecure  ) CLASS uhttpd_Session
-  IF nLifeTime <> NIL THEN ::nCookie_LifeTime := nLifeTime
-  IF cPath     <> NIL THEN ::cCookie_Path     := cPath
-  IF cDomain   <> NIL THEN ::cCookie_Domain   := cDomain
-  IF lSecure   <> NIL THEN ::lCookie_Secure   := lSecure
+  IF nLifeTime != NIL THEN ::nCookie_LifeTime := nLifeTime
+  IF cPath     != NIL THEN ::cCookie_Path     := cPath
+  IF cDomain   != NIL THEN ::cCookie_Domain   := cDomain
+  IF lSecure   != NIL THEN ::lCookie_Secure   := lSecure
 RETURN NIL
 
 METHOD RegenerateID() CLASS uhttpd_Session
@@ -566,18 +566,18 @@ RETURN lOk
 // -------------------------------*************************-----------------------------------------
 
 METHOD SetSaveHandler( bOpen, bClose, bRead, bWrite, bDestroy, bGC ) CLASS uhttpd_Session
-   IF bOpen    <> NIL THEN ::bOpen    := bOpen
-   IF bClose   <> NIL THEN ::bClose   := bClose
-   IF bRead    <> NIL THEN ::bRead    := bRead
-   IF bWrite   <> NIL THEN ::bWrite   := bWrite
-   IF bDestroy <> NIL THEN ::bDestroy := bDestroy
-   IF bGC      <> NIL THEN ::bGC      := bGC
+   IF bOpen    != NIL THEN ::bOpen    := bOpen
+   IF bClose   != NIL THEN ::bClose   := bClose
+   IF bRead    != NIL THEN ::bRead    := bRead
+   IF bWrite   != NIL THEN ::bWrite   := bWrite
+   IF bDestroy != NIL THEN ::bDestroy := bDestroy
+   IF bGC      != NIL THEN ::bGC      := bGC
 RETURN NIL
 
 METHOD SessionOpen( cPath, cName ) CLASS uhttpd_Session
   //TraceLog( "SessionOpen() - cName", cName )
-  IF cPath <> NIL THEN ::cSavePath := cPath
-  IF cName <> NIL THEN ::cName     := cName
+  IF cPath != NIL THEN ::cSavePath := cPath
+  IF cName != NIL THEN ::cName     := cName
 
 RETURN .T.
 
@@ -598,14 +598,14 @@ METHOD SessionRead( cID ) CLASS uhttpd_Session
   //TraceLog( "SessionRead: cFile", cFile )
   IF File( cFile )
      DO WHILE nRetry++ <= ::nFileRetry
-        IF ( nH := FOpen( cFile, FO_READ + FO_DENYWRITE ) ) <> -1
+        IF ( nH := FOpen( cFile, FO_READ + FO_DENYWRITE ) ) != -1
 
            nRetry := 0
            DO WHILE nRetry++ <= ::nFileRetry
               nFileSize := FSeek( nH, 0, FS_END )
               FSeek( nH, 0, FS_SET )
               cBuffer := Space( nFileSize )
-              IF ( FRead( nH, @cBuffer,  nFileSize ) ) <> nFileSize
+              IF ( FRead( nH, @cBuffer,  nFileSize ) ) != nFileSize
                  //uhttpd_Die( "ERROR: On reading session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
                  hb_idleSleep( ::nFileWait / 1000 )
                  LOOP
@@ -642,8 +642,8 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
   //TraceLog( "SessionWrite() - cFile", cFile )
   IF nFileSize > 0
      DO WHILE nRetry++ <= ::nFileRetry
-        IF ( nH := hb_FCreate( cFile, FC_NORMAL, FO_READWRITE + FO_DENYWRITE ) ) <> -1
-           IF ( FWrite( nH, @cData,  nFileSize ) ) <> nFileSize
+        IF ( nH := hb_FCreate( cFile, FC_NORMAL, FO_READWRITE + FO_DENYWRITE ) ) != -1
+           IF ( FWrite( nH, @cData,  nFileSize ) ) != nFileSize
               uhttpd_Die( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
            ELSE
               lOk := .T.
@@ -786,7 +786,7 @@ METHOD Encode() CLASS uhttpd_Session
 
      FOR EACH cKey IN _SESSION:Keys
          xVal := _SESSION[ cKey ]
-         IF xVal <> NIL THEN aAdd( aSerial, { cKey, xVal } )
+         IF xVal != NIL THEN aAdd( aSerial, { cKey, xVal } )
      NEXT
 
   ENDIF
@@ -802,7 +802,7 @@ METHOD Decode( cData ) CLASS uhttpd_Session
   //TraceLog( "Decode - cSerial", cSerial )
   //::oCGI:ToLogFile( "Decode - cSerial = " + hb_cStr( cSerial ), "/pointtoit/tmp/log.txt" )
 
-  DO WHILE ( xVal := HB_Deserialize( @cSerial ) ) <> NIL
+  DO WHILE ( xVal := HB_Deserialize( @cSerial ) ) != NIL
      //TraceLog( "Decode - xVal", DumpValue( xVal ) )
      //::oCGI:ToLogFile( "Decode - xVal = " + hb_cStr( xVal ) + ", ValType( xVal ) = " + ValType( xVal ), "/pointtoit/tmp/log.txt" )
 

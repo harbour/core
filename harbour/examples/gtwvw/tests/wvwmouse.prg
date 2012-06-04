@@ -390,7 +390,7 @@ return s_amouseobjlist[ nWinNum+1 ][nObjNum][1]
 function wvwm_SetKeyRepeater( lSet )
 * returns .t. if KeyRepeater is active
 * if lSet is supplied, KeyRepeater is enable/disable accordingly
-local lWasSet := (s_nkeyrepeater <> NIL)
+local lWasSet := (s_nkeyrepeater != NIL)
    if !(lSet==NIL)
       if lSet
          if !lWasSet

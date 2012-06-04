@@ -34,7 +34,7 @@ local i,j
      next
   next
   ?? "Done. Press ESC to exit."
-  do while inkey(0)<>27
+  do while inkey(0)!=27
   enddo
   WVW_lCloseWindow()
   WVW_lCloseWindow()

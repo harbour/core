@@ -442,7 +442,7 @@ FUNCTION uhttpd_AddSecondsToTime( cTime, nSecsToAdd, nDaysAdded )
   DEFAULT nSecsToAdd TO 0
   DEFAULT nDaysAdded TO 0      // nDaysAdded can be already valued, so below i add to this value
 
-  IF nSecsToAdd <> 0
+  IF nSecsToAdd != 0
      nSecs      := Secs( cTime ) + nSecsToAdd
      nDaysAdded += Int( nSecs / nOneDaySeconds )  // Attention! nDaysAdded can be already filled
      nSecs      := nSecs - nDaysAdded
@@ -631,7 +631,7 @@ RETURN uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
 
 PROCEDURE uhttpd_Die( cError )
   LOCAL oErr, lError
-  IF cError <> NIL //THEN OutStd( cError )
+  IF cError != NIL //THEN OutStd( cError )
      //__OutDebug( "cError: ", cError )
      //IF !oCGI:HeaderSent()
      //   oCGI:WriteLN( CRLF2BR( cError ), CRLF2BR( CRLF() ) )
@@ -713,7 +713,7 @@ PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
   DEFAULT cLog    TO cSep + "tmp" + cSep + "logfile.log"
   DEFAULT lCreate TO .F.
 
-  IF cLog <> NIL
+  IF cLog != NIL
 
      IF !lCreate .AND. FILE( cLog )
         nHandle := FOpen( cLog, FO_READWRITE + FO_SHARED )
@@ -835,7 +835,7 @@ FUNCTION uhttpd_GetField( cVar, cType )
       IF Empty( xVal )
          xVal := NIL
       ENDIF
-      IF cType <> NIL .AND. cType $ "NLD"
+      IF cType != NIL .AND. cType $ "NLD"
          xVal := uhttpd_CStrToVal( xVal, cType )
       ENDIF
    ENDIF
@@ -850,7 +850,7 @@ RETURN xVal
 FUNCTION uhttpd_HGetValue( hHash, cKey )
    LOCAL nPos
    LOCAL xVal
-   IF hHash <> NIL
+   IF hHash != NIL
       xVal := IIF( ( nPos := hb_HPos( hHash, cKey )) == 0, NIL, hb_HValueAt( hHash, nPos) )
    ENDIF
    //RETURN IIF( cKey IN hHash:Keys, hHash[ cKey ], NIL )

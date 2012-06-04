@@ -96,7 +96,7 @@ local __nCBid__,__temp__  //these two are temporary var required by CB get creat
    ? "Comboboxes have now been removed"
    ? "Now press ESC to exit"
 
-   do while inkey(0)<>K_ESC
+   do while inkey(0)!=K_ESC
    enddo
 return  //main
 
@@ -265,7 +265,7 @@ local oGet
    * leave current active get
    oGet := GetActive()
 
-   if oGet<>NIL .and. oGet:HasFocus
+   if oGet!=NIL .and. oGet:HasFocus
       if oGet:changed
          if GetPostValidate(oGet)
             oGet:updatebuffer()

@@ -332,7 +332,7 @@ RDDTESTF NIL, {14,.f.,.f.,.f.}, DBGOTO(14)
 RDDTESTF NIL, {7,.t.,.f.,.f.}, DBSKIP(-1)
 RDDTESTF NIL, {16,.t.,.t.,.f.}, DBGOTO(16)
 RDDTESTF NIL, {12,.f.,.f.,.f.}, DBSKIP(-1)
-RDDTESTC {1,.f.,.f.,.f.}, INDEX on FSTR tag TG_C to "_tst" FOR FNUM<>2 .AND. FNUM<4
+RDDTESTC {1,.f.,.f.,.f.}, INDEX on FSTR tag TG_C to "_tst" FOR FNUM!=2 .AND. FNUM<4
 RDDTESTF NIL, {1,.f.,.f.,.f.}, DBGOTO(1)
 RDDTESTF NIL, {2,.f.,.f.,.f.}, DBSKIP(1)
 RDDTESTF NIL, {1,.f.,.f.,.f.}, DBGOTO(1)
@@ -429,7 +429,7 @@ RDDTESTF "TG_C", {15,.f.,.f.,.f.}, ORDSETFOCUS(0)
 RDDTESTF NIL, {1,.f.,.f.,.f.}, DBGOTO(1)
 RDDTESTF .t., {2,.f.,.f.,.f.}, ORDSKIPUNIQUE()
 RDDTESTF .t., {1,.f.,.f.,.f.}, ORDSKIPUNIQUE(-1)
-RDDTESTC {1,.f.,.f.,.f.}, INDEX on FSTR tag TG_C to "_tst" FOR FNUM<>2 .AND. FNUM<4
+RDDTESTC {1,.f.,.f.,.f.}, INDEX on FSTR tag TG_C to "_tst" FOR FNUM!=2 .AND. FNUM<4
 RDDTESTF NIL, {4,.f.,.f.,.f.}, DBGOTO(4)
 RDDTESTF .t., {3,.f.,.f.,.f.}, ORDSKIPUNIQUE(-1)
 RDDTESTF NIL, {4,.f.,.f.,.f.}, DBGOTO(4)
@@ -438,7 +438,7 @@ RDDTESTF NIL, {13,.f.,.f.,.f.}, DBGOTO(13)
 RDDTESTF .t., {1,.t.,.f.,.f.}, ORDSKIPUNIQUE(-1)
 RDDTESTF NIL, {13,.f.,.f.,.f.}, DBGOTO(13)
 RDDTESTF .t., {16,.f.,.t.,.f.}, ORDSKIPUNIQUE()
-RDDTESTC {15,.f.,.f.,.f.}, INDEX on FSTR tag TG_C to "_tst" FOR RECNO()<>5 DESCEND
+RDDTESTC {15,.f.,.f.,.f.}, INDEX on FSTR tag TG_C to "_tst" FOR RECNO()!=5 DESCEND
 RDDTESTF NIL, {5,.f.,.f.,.f.}, DBGOTO(5)
 RDDTESTF NIL, {6,.f.,.f.,.f.}, DBSKIP(-1)
 RDDTESTF NIL, {5,.f.,.f.,.f.}, DBGOTO(5)
@@ -447,7 +447,7 @@ RDDTESTF NIL, {5,.f.,.f.,.f.}, DBGOTO(5)
 RDDTESTF .t., {7,.f.,.f.,.f.}, ORDSKIPUNIQUE(-1)
 RDDTESTF NIL, {5,.f.,.f.,.f.}, DBGOTO(5)
 RDDTESTF .t., {3,.f.,.f.,.f.}, ORDSKIPUNIQUE()
-RDDTESTC {1,.f.,.f.,.f.}, INDEX on FSTR tag TG_C to "_tst" FOR RECNO()<>5
+RDDTESTC {1,.f.,.f.,.f.}, INDEX on FSTR tag TG_C to "_tst" FOR RECNO()!=5
 RDDTESTF NIL, {5,.f.,.f.,.f.}, DBGOTO(5)
 RDDTESTF NIL, {4,.f.,.f.,.f.}, DBSKIP(-1)
 RDDTESTF NIL, {5,.f.,.f.,.f.}, DBGOTO(5)

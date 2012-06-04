@@ -100,7 +100,7 @@ FUNCTION Main( cServerInfo )
       //
       RmtSvrSetInfo( cServerInfo )
 
-      IF ( nServerPort := RmtSvrSetInfo( 1 ) ) <> NIL .and. nServerPort > 0
+      IF ( nServerPort := RmtSvrSetInfo( 1 ) ) != NIL .and. nServerPort > 0
          IF !RmtSvrInitialize( hb_ntos( nServerPort ), 60/*nTimeoutClient*/, 0.5 /*nTimeRefresh*/ )
             Quit
          ENDIF

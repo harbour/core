@@ -158,7 +158,7 @@ local ccallstack,i
 return NIL
 
 function WVW_SETFOCUS(nWinNum, hWnd)
-   if nwinnum<>0
+   if nwinnum!=0
       wvw_nsetcurwindow(nwinnum)
    endif
 return NIL
@@ -290,7 +290,7 @@ local nfocus, lchangefocus
    do while !lDone
       if valtype(setkey(ch))=="B"
          eval(setkey(ch))
-      elseif ch<>0
+      elseif ch!=0
          lchangefocus := .t.
          do case
             case ch==K_TAB .or. ch==K_DOWN .or. ch==K_ENTER
@@ -516,7 +516,7 @@ local nwasfocus
         endif
         wvw_ebsetsel(nwinnum, nid, 0, -1)
         nwasFocus := nFocused(aEBGets)
-        if nwasFocus<>0
+        if nwasFocus!=0
            aEBGets[nwasFocus][__GET_LFOCUSED] := .f.
         endif
         aEBGets[nIndex][__GET_LFOCUSED] := .t.

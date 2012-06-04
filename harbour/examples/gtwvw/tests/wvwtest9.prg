@@ -673,7 +673,7 @@ local nOldWin
 local lNeedStabilize
 
 //if we can't handle non topmost window we must return right away
-//if nWinNum <> wvw_nNumWindows()-1 ; return ; endif
+//if nWinNum != wvw_nNumWindows()-1 ; return ; endif
 
    nOldWin := wvw_nSetCurWindow(nWinNum)
 
@@ -716,7 +716,7 @@ local nOldWin
 local lNeedStabilize
 
 //if we can't handle non topmost window we must return right away
-//if nWinNum <> wvw_nNumWindows()-1 ; return ; endif
+//if nWinNum != wvw_nNumWindows()-1 ; return ; endif
 
    nOldWin := wvw_nSetCurWindow(nWinNum)
 
