@@ -210,7 +210,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::oWidget:setWindowTitle( ::title )
    ENDIF
    IF hb_isChar( ::icon )
-      ::oWidget:setWindowIcon( ::icon )
+      ::oWidget:setWindowIcon( QIcon( ::icon ) )
    ENDIF
 
    ::setPosAndSize()
@@ -274,9 +274,9 @@ METHOD XbpDialog:destroy()
    ::oWidget:disconnect( QEvent_WindowActivate   )
    ::oWidget:disconnect( QEvent_WindowDeactivate )
 
-   IF !empty( ::oEventLoop )
-      hbxbp_SetEventLoop( NIL )
+   IF ! empty( ::oEventLoop )
       ::oEventLoop:exit( 0 )
+      hbxbp_SetEventLoop( NIL )
       ::oEventLoop := NIL
    ENDIF
    ::oMenu := NIL
@@ -288,7 +288,7 @@ METHOD XbpDialog:destroy()
       ::oMdi := NIL
    ENDIF
 
-   RETURN Self
+   RETURN NIL 
 
 /*----------------------------------------------------------------------*/
 

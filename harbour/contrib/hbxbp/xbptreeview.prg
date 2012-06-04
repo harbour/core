@@ -164,7 +164,7 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF ::visible
       ::show()
    ENDIF
-   ::oParent:AddChild( SELF )
+   ::oParent:AddChild( Self )
    ::postCreate()
 
    RETURN Self
@@ -172,7 +172,7 @@ METHOD XbpTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpTreeView:execSlot( cSlot, p )
-   LOCAL n, qPt, qItem, oItem, qPos
+   LOCAL n, qPt, qItem, oItem
 
    IF ( n := ascan( ::aItems, {|o| iif( empty( o ), .f., hbqt_IsEqual( o:oWidget, p ) ) } ) ) > 0
       oItem := ::aItems[ n ]
@@ -191,10 +191,9 @@ METHOD XbpTreeView:execSlot( cSlot, p )
       ::oWidget:setToolTip( iif( empty( oItem:tooltipText ), oItem:caption, oItem:tooltipText ) )
    CASE cSlot == "customContextMenuRequested(QPoint)"
       IF HB_ISBLOCK( ::hb_contextMenu )
-         qPos := QPoint( p )
-         IF ( qItem := ::oWidget:itemAt( qPos ) ):hasValidPointer()
+         IF ! empty( qItem := ::oWidget:itemAt( p ) )
             IF ( n := ascan( ::aItems, {|o| hbqt_IsEqual( o:oWidget, qItem ) } ) ) > 0
-               qPt := ::oWidget:mapToGlobal( QPoint( p ) )
+               qPt := ::oWidget:mapToGlobal( p )
                eval( ::hb_contextMenu, { qPt:x(), qPt:y() }, NIL, ::aItems[ n ] )
             ENDIF
          ENDIF
@@ -472,7 +471,7 @@ METHOD XbpTreeViewItem:setExpandedImage( nResIdoBitmap )
 
 METHOD XbpTreeViewItem:setImage( xIcon )
 
-   ::oWidget:setIcon( 0, xIcon )
+   ::oWidget:setIcon( 0, iif( hb_isChar( xIcon ), QIcon( xIcon ), xIcon ) )
 
    RETURN self
 

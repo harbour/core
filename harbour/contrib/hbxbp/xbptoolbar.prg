@@ -258,7 +258,7 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
          oBtn:oAction:setText( cCaption )
 
          IF valtype( xImage ) == "C"
-            oBtn:oAction:setIcon( xImage )
+            oBtn:oAction:setIcon( QIcon( xImage ) )
          ENDIF
 
       ENDIF

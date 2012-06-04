@@ -91,7 +91,7 @@ CLASS XbpComboBox  INHERIT  XbpWindow
    METHOD   sleSize()                             VIRTUAL      // -> aOldSize
 
    METHOD   addItem( cItem )                      INLINE  ::oWidget:addItem( cItem )
-   METHOD   setIcon( nItem,cIcon )                INLINE  ::oWidget:setItemIcon( nItem-1,cIcon )
+   METHOD   setIcon( nItem,cIcon )                INLINE  ::oWidget:setItemIcon( nItem-1, QIcon( cIcon ) )
 
    #if 0
    METHOD   clear()                               INLINE  ::oStrList:clear(),;

@@ -365,7 +365,7 @@ PROTECTED:
    DATA     oDbfModel
    DATA     oModelIndex                           INIT      QModelIndex()
    DATA     oVHeaderView
-   DATA     oHeaderView                           INIT      QHeaderView()
+   DATA     oHeaderView                           
    DATA     oVScrollBar                           INIT      QScrollBar()
    DATA     oHScrollBar                           INIT      QScrollBar()
    DATA     oViewport                             INIT      QWidget()
@@ -1062,7 +1062,8 @@ METHOD XbpBrowse:manageMouseWheel( oWheelEvent )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpBrowse:manageMousePress( oMouseEvent )
-
+   HB_TRACE( HB_TR_DEBUG, __objGetClsName( oMouseEvent ), valtype( oMouseEvent:pos() ), ProcName( 1 ), procName( 2 ), ProcName( 3 ) )
+   
    ::oModelIndex := ::oTableView:indexAt( oMouseEvent:pos() )
    IF ::oModelIndex:isValid()      /* Reposition the record pointer */
       SetAppEvent( xbeBRW_Navigate, XBPBRW_Navigate_Skip, ( ::oModelIndex:row() + 1 ) - ::rowPos, Self )
@@ -1842,6 +1843,8 @@ METHOD XbpBrowse:doConfigure()
 
             nwVal := oFontMetrics:width( xVal, -1 )
             nwHead := oFontMetrics:width( ::columns[ i ]:heading(), -1 )
+            
+            ::columns[ i ]:nColWidth := max( nwVal, nwHead ) + 8
 
             ::oHeaderView:resizeSection( i-1, max( nwVal, nwHead ) + 8 )
             ::oFooterView:resizeSection( i-1, max( nwVal, nwHead ) + 8 )

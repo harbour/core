@@ -227,7 +227,7 @@ METHOD XbpPushButton:setCaption( xCaption, cDll )
       ::caption := xCaption
 
       IF hb_FileExists( xCaption )
-         ::oWidget:setIcon( xCaption )
+         ::oWidget:setIcon( QIcon( xCaption ) )
       ELSE
          ::oWidget:setText( xCaption )
       ENDIF

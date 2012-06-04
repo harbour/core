@@ -506,7 +506,7 @@ METHOD XbpWindow:destroy()
    ENDIF
 
    ::oWidget := NIL
-
+   HB_TRACE( HB_TR_DEBUG, "DESTROYED", __objGetClsName( Self ) )
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
@@ -564,6 +564,8 @@ METHOD XbpWindow:clearSlots()
 
 METHOD XbpWindow:grabEvent( nEvent, oEvent )
    LOCAL nXbpKey, oP0, oP1, oObj_O, oObj_N
+
+   HB_TRACE( HB_TR_DEBUG, nEvent, valtype( oEvent ), __objGetClsName( oEvent ) )   
 
    SWITCH ( nEvent )
 

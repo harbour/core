@@ -276,7 +276,7 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
       ENDIF
       oAction:setText( cCaption )
       IF hb_FileExists( cIcon )
-         oAction:setIcon( cIcon )
+         oAction:setIcon( QIcon( cIcon ) )
       ENDIF
       IF !empty( cKey )
          oKey := QKeySequence( cKey )
