@@ -41,7 +41,9 @@ HB_FUNC( QT_QSCISTYLE )
    }
    else if( hb_pcount() >= 5 )
    {
-      __HB_RETPTRGC__( new QsciStyle( hb_parni( 1 ), hbqt_par_QString( 2 ), *hbqt_par_QColor( 3 ), *hbqt_par_QColor( 4 ), * hbqt_par_QFont( 5 ), HB_ISLOG( 6 ) ? hb_parl( 6 ) : false ) );
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QsciStyle( hb_parni( 1 ), hb_parstr_utf8( 2, &pText01, NULL ), *hbqt_par_QColor( 3 ), *hbqt_par_QColor( 4 ), * hbqt_par_QFont( 5 ), HB_ISLOG( 6 ) ? hb_parl( 6 ) : false ) );
+      hb_strfree( pText01 );
    }
    else
    {
