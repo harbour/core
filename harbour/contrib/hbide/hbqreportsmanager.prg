@@ -1054,7 +1054,7 @@ METHOD HbqReportsManager:updateObjectsTree( cType, cParent, cName, cSubType )
    DO CASE
    CASE cType == "ReportName"
       qItem := QTreeWidgetItem() ; qItem:setText( 0, cName )
-      qItem:setIcon( 0, app_image( "r-report" ) )
+      qItem:setIcon( 0, QIcon( app_image( "r-report" ) ) )
       ::qTreeObjects:addTopLevelItem( qItem )
       ::hObjTree[ cName ] := qItem
       qItem:setExpanded( .t. )
@@ -1072,11 +1072,11 @@ METHOD HbqReportsManager:updateObjectsTree( cType, cParent, cName, cSubType )
          ::hObjTree[ cName ] := qItem
 
          IF cType == "Page"
-            qItem:setIcon( 0, app_image( "r-page" ) )
+            qItem:setIcon( 0, QIcon( app_image( "r-page" ) ) )
          ELSEIF cType == "Object"
-            qItem:setIcon( 0, ::getImageOfType( cSubType ) )
+            qItem:setIcon( 0, QIcon( ::getImageOfType( cSubType ) ) )
          ELSEIF cType == "Field"
-            qItem:setIcon( 0, ::getImageOfType( "Field" ) )
+            qItem:setIcon( 0, QIcon( ::getImageOfType( "Field" ) ) )
          ENDIF
 
          qParent:setExpanded( .t. )

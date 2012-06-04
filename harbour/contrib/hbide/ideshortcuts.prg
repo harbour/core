@@ -483,7 +483,7 @@ METHOD IdeShortcuts:array2table( nRow, a_ )
    LOCAL n := nRow - 1
 
    q0 := QTableWidgetItem()
-   q0:setIcon( hbide_image( a_[ 8 ] ) )
+   q0:setIcon( QIcon( hbide_image( a_[ 8 ] ) ) )
    oTbl:setItem( n, 0, q0 )
 
    q1 := QTableWidgetItem()
@@ -495,15 +495,15 @@ METHOD IdeShortcuts:array2table( nRow, a_ )
    oTbl:setItem( n, 2, q2 )
 
    q3 := QTableWidgetItem()
-   q3:setIcon( iif( a_[ 3 ] == "YES", hbide_image( "check" ), "" ) )
+   q3:setIcon( QIcon( iif( a_[ 3 ] == "YES", hbide_image( "check" ), "" ) ) )
    oTbl:setItem( n, 3, q3 )
 
    q4 := QTableWidgetItem()
-   q4:setIcon( iif( a_[ 4 ] == "YES", hbide_image( "check" ), "" ) )
+   q4:setIcon( QIcon( iif( a_[ 4 ] == "YES", hbide_image( "check" ), "" ) ) )
    oTbl:setItem( n, 4, q4 )
 
    q5 := QTableWidgetItem()
-   q5:setIcon( iif( a_[ 5 ] == "YES", hbide_image( "check" ), "" ) )
+   q5:setIcon( QIcon( iif( a_[ 5 ] == "YES", hbide_image( "check" ), "" ) ) )
    oTbl:setItem( n, 5, q5 )
 
    oTbl:setRowHeight( n, 16 )
@@ -563,7 +563,7 @@ METHOD IdeShortcuts:buildUI()
    LOCAL hdr_:= { { "Img", 30 }, { "Name", 190 }, { "Key", 50 }, { "Alt", 30 }, { "Ctrl", 30 }, { "Shift", 30 } }
 
    ::oUI := hbide_getUI( "shortcuts" )
-   ::oUI:setWindowIcon( hbide_image( "hbide" ) )
+   ::oUI:setWindowIcon( QIcon( hbide_image( "hbide" ) ) )
    ::oUI:setParent( ::oDlg:oWidget )
    ::oUI:setWindowFlags( Qt_Sheet )
 

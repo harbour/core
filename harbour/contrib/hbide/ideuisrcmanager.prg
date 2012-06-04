@@ -862,7 +862,7 @@ METHOD IdeUISrcManager:buildToolButton( qToolbar, aBtn )
       qBtn := QToolButton()
       qBtn:setTooltip( aBtn[ 1 ] )
       qBtn:setAutoRaise( .t. )
-      qBtn:setIcon( hbide_image( aBtn[ 2 ] ) )
+      qBtn:setIcon( QIcon( hbide_image( aBtn[ 2 ] ) ) )
       IF aBtn[ 4 ]
          qBtn:setCheckable( .t. )
       ENDIF

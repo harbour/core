@@ -408,7 +408,7 @@ METHOD IdeEditsManager:addSourceInTree( cSourceFile, cView )
 
    oItem := oParent:addItem( cFile + cExt )
    oItem:tooltipText := cSourceFile
-   oItem:oWidget:setIcon( 0, ::oDK:getPanelIcon( cView ) )
+   oItem:oWidget:setIcon( 0, QIcon( ::oDK:getPanelIcon( cView ) ) )
    aadd( ::aProjData, { oItem, "Opened Source", oParent, ;
                                    cSourceFile, hbide_pathNormalized( cSourceFile ) } )
 
@@ -1388,7 +1388,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
 
    ::qDocument:setModified( .f. )
    ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oTab:oWidget ), ;
-                                hbide_image( iif( ::lReadOnly, "tabreadonly", "tabunmodified" ) ) )
+                                QIcon( hbide_image( iif( ::lReadOnly, "tabreadonly", "tabunmodified" ) ) ) )
 
    RETURN Self
 
@@ -1643,7 +1643,7 @@ METHOD IdeEditor:setDocumentProperties()
       ::qEdit:document():setModified( .f. )
 
       ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oTab:oWidget ), ;
-                                hbide_image( iif( ::lReadOnly, "tabreadonly", "tabunmodified" ) ) )
+                                QIcon( hbide_image( iif( ::lReadOnly, "tabreadonly", "tabunmodified" ) ) ) )
       ::lLoaded := .T.
 
       IF hb_isObject( ::qHiliter )
@@ -1790,7 +1790,7 @@ METHOD IdeEditor:setTabImage( qEdit )
       ENDIF
    ENDIF
 
-   ::qTabWidget:setTabIcon( nIndex, hbide_image( cIcon ) )
+   ::qTabWidget:setTabIcon( nIndex, QIcon( hbide_image( cIcon ) ) )
    ::oDK:setStatusText( SB_PNL_MODIFIED, iif( lModified, "Modified", iif( lReadOnly, "ReadOnly", " " ) ) )
 
    RETURN Self

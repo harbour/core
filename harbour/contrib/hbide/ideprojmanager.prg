@@ -824,18 +824,18 @@ METHOD IdeProjManager:buildInterface()
 
    cLukupPng := hbide_image( "folder" )
    //
-   ::oUI:q_buttonChoosePrjLoc:setIcon( cLukupPng )
-   ::oUI:q_buttonChooseWd    :setIcon( cLukupPng )
-   ::oUI:q_buttonChooseDest  :setIcon( cLukupPng )
-   ::oUI:q_buttonBackup      :setIcon( cLukupPng )
+   ::oUI:q_buttonChoosePrjLoc:setIcon( QIcon( cLukupPng ) )
+   ::oUI:q_buttonChooseWd    :setIcon( QIcon( cLukupPng ) )
+   ::oUI:q_buttonChooseDest  :setIcon( QIcon( cLukupPng ) )
+   ::oUI:q_buttonBackup      :setIcon( QIcon( cLukupPng ) )
 
-   ::oUI:q_buttonSelect :setIcon( hbide_image( "open"        ) )
-   ::oUI:q_buttonUp     :setIcon( hbide_image( "dc_up"       ) )
-   ::oUI:q_buttonDown   :setIcon( hbide_image( "dc_down"     ) )
+   ::oUI:q_buttonSelect :setIcon( QIcon( hbide_image( "open"        ) ) )
+   ::oUI:q_buttonUp     :setIcon( QIcon( hbide_image( "dc_up"       ) ) )
+   ::oUI:q_buttonDown   :setIcon( QIcon( hbide_image( "dc_down"     ) ) )
 
-   ::oUI:q_buttonSort   :setIcon( hbide_image( "sort"        ) )
-   ::oUI:q_buttonSortZA :setIcon( hbide_image( "sortdescend" ) )
-   ::oUI:q_buttonSortOrg:setIcon( hbide_image( "invertcase"  ) )
+   ::oUI:q_buttonSort   :setIcon( QIcon( hbide_image( "sort"        ) ) )
+   ::oUI:q_buttonSortZA :setIcon( QIcon( hbide_image( "sortdescend" ) ) )
+   ::oUI:q_buttonSortOrg:setIcon( QIcon( hbide_image( "invertcase"  ) ) )
 
    ::oUI:q_buttonSort   :hide()
    ::oUI:q_buttonSortZA :hide()

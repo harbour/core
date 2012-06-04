@@ -1163,42 +1163,42 @@ METHOD IdeSetup:eol()
 
 METHOD IdeSetup:setIcons()
 
-   ::oUI:q_buttonAddTextExt    : setIcon( hbide_image( "dc_plus"   ) )
-   ::oUI:q_buttonDelTextExt    : setIcon( hbide_image( "dc_delete" ) )
+   ::oUI:q_buttonAddTextExt    : setIcon( QIcon( hbide_image( "dc_plus"   ) ) )
+   ::oUI:q_buttonDelTextExt    : setIcon( QIcon( hbide_image( "dc_delete" ) ) )
 
-   ::oUI:q_buttonKeyAdd        : setIcon( hbide_image( "dc_plus"   ) )
-   ::oUI:q_buttonKeyDel        : setIcon( hbide_image( "dc_delete" ) )
-   ::oUI:q_buttonKeyUp         : setIcon( hbide_image( "dc_up"     ) )
-   ::oUI:q_buttonKeyDown       : setIcon( hbide_image( "dc_down"   ) )
+   ::oUI:q_buttonKeyAdd        : setIcon( QIcon( hbide_image( "dc_plus"   ) ) )
+   ::oUI:q_buttonKeyDel        : setIcon( QIcon( hbide_image( "dc_delete" ) ) )
+   ::oUI:q_buttonKeyUp         : setIcon( QIcon( hbide_image( "dc_up"     ) ) )
+   ::oUI:q_buttonKeyDown       : setIcon( QIcon( hbide_image( "dc_down"   ) ) )
 
-   /* Paths */
-   ::oUI:q_buttonPathHrbRoot   : setIcon( hbide_image( "open"      ) )
-   ::oUI:q_buttonPathHbmk2     : setIcon( hbide_image( "open"      ) )
-   ::oUI:q_buttonPathEnv       : setIcon( hbide_image( "open"      ) )
-   ::oUI:q_buttonPathResources : setIcon( hbide_image( "open"      ) )
-   ::oUI:q_buttonPathTemp      : setIcon( hbide_image( "open"      ) )
-   ::oUI:q_buttonPathShortcuts : setIcon( hbide_image( "open"      ) )
-   ::oUI:q_buttonPathSnippets  : setIcon( hbide_image( "open"      ) )
-   ::oUI:q_buttonPathThemes    : setIcon( hbide_image( "open"      ) )
+   /* Paths */        
+   ::oUI:q_buttonPathHrbRoot   : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:q_buttonPathHbmk2     : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:q_buttonPathEnv       : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:q_buttonPathResources : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:q_buttonPathTemp      : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:q_buttonPathShortcuts : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:q_buttonPathSnippets  : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:q_buttonPathThemes    : setIcon( QIcon( hbide_image( "open"      ) ) )
 
-   ::oUI:q_buttonViewIni       : setIcon( hbide_image( "file-open" ) )
-   ::oUI:q_buttonViewEnv       : setIcon( hbide_image( "file-open" ) )
-   ::oUI:q_buttonViewSnippets  : setIcon( hbide_image( "file-open" ) )
-   ::oUI:q_buttonViewThemes    : setIcon( hbide_image( "file-open" ) )
+   ::oUI:q_buttonViewIni       : setIcon( QIcon( hbide_image( "file-open" ) ) )
+   ::oUI:q_buttonViewEnv       : setIcon( QIcon( hbide_image( "file-open" ) ) )
+   ::oUI:q_buttonViewSnippets  : setIcon( QIcon( hbide_image( "file-open" ) ) )
+   ::oUI:q_buttonViewThemes    : setIcon( QIcon( hbide_image( "file-open" ) ) )
 
-   ::oUI:q_buttonSelFont       : setIcon( hbide_image( "font"      ) )
+   ::oUI:q_buttonSelFont       : setIcon( QIcon( hbide_image( "font"      ) ) )
 
-   ::oUI:q_buttonThmAdd        : setIcon( hbide_image( "dc_plus"   ) )
-   ::oUI:q_buttonThmDel        : setIcon( hbide_image( "dc_delete" ) )
-   ::oUI:q_buttonThmApp        : setIcon( hbide_image( "copy"      ) )
-   ::oUI:q_buttonThmSav        : setIcon( hbide_image( "save"      ) )
+   ::oUI:q_buttonThmAdd        : setIcon( QIcon( hbide_image( "dc_plus"   ) ) )
+   ::oUI:q_buttonThmDel        : setIcon( QIcon( hbide_image( "dc_delete" ) ) )
+   ::oUI:q_buttonThmApp        : setIcon( QIcon( hbide_image( "copy"      ) ) )
+   ::oUI:q_buttonThmSav        : setIcon( QIcon( hbide_image( "save"      ) ) )
 
-   /* Dictionaries */
-   ::oUI:q_buttonDictPath      : setIcon( hbide_image( "open"      ) )
+   /* Dictionaries */ 
+   ::oUI:q_buttonDictPath      : setIcon( QIcon( hbide_image( "open"      ) ) )
 
-   /* VSS */
-   ::oUI:q_buttonVSSExe        : setIcon( hbide_image( "open"      ) )
-   ::oUI:q_buttonVSSDatabase   : setIcon( hbide_image( "open"      ) )
+   /* VSS */ 
+   ::oUI:q_buttonVSSExe        : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:q_buttonVSSDatabase   : setIcon( QIcon( hbide_image( "open"      ) ) )
 
    RETURN Self
 

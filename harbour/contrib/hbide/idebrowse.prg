@@ -123,8 +123,6 @@ CLASS IdeBrowseManager INHERIT IdeObject
 
    DATA   aStatusPnls                             INIT  {}
    DATA   aPanels                                 INIT  {}
-   DATA   aToolBtns                               INIT  {}
-   DATA   aButtons                                INIT  {}
    DATA   aIndexAct                               INIT  {}
    DATA   aRdds                                   INIT  { "DBFCDX", "DBFNTX", "DBFNSX" }
    DATA   aConxns                                 INIT  {}
@@ -261,7 +259,7 @@ METHOD IdeBrowseManager:create( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:destroy()
-   LOCAL oPanel, qDock, qAct, qBtn
+   LOCAL oPanel, qDock, qAct
 
    ::qRddCombo:disconnect( "currentIndexChanged(QString)" )
    ::qTablesButton:disconnect( "clicked()" )
@@ -300,11 +298,6 @@ METHOD IdeBrowseManager:destroy()
       qAct := NIL
    NEXT
 
-   FOR EACH qBtn IN ::aToolBtns
-      qBtn:disconnect( "clicked()" )
-      qBtn := NIL
-   NEXT
-
    FOR EACH oPanel IN ::aPanels
       oPanel:destroy()
    NEXT
@@ -323,8 +316,6 @@ METHOD IdeBrowseManager:destroy()
    ::qTimer              := NIL
    ::aStatusPnls         := NIL
    ::aPanels             := NIL
-   ::aToolBtns           := NIL
-   ::aButtons            := NIL
    ::aIndexAct           := NIL
    ::aRdds               := NIL
    ::aConxns             := NIL
@@ -536,7 +527,7 @@ METHOD IdeBrowseManager:addPanelsMenu( cPanel )
    LOCAL qAct
 IF hb_isObject( ::qPanelsMenu )
    qAct := ::qPanelsMenu:addAction( cPanel )
-   qAct:setIcon( hbide_image( "panel_7" ) )
+   qAct:setIcon( QIcon( hbide_image( "panel_7" ) ) )
    qAct:connect( "triggered(bool)", {|| ::setPanel( cPanel ) } )
    aadd( ::aPanelsAct, qAct )
 ENDIF 
@@ -597,10 +588,10 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
       IF !empty( ::oCurBrw )
          IF ::oCurBrw:qScrollArea:isHidden()
             ::oCurBrw:qScrollArea:show()
-            ::aToolBtns[ 3 ]:setChecked( .t. )
+            ::qToolBar:setItemChecked( "Toggle", .t. )
          ELSE
             ::oCurBrw:qScrollArea:hide()
-            ::aToolBtns[ 3 ]:setChecked( .f. )
+            ::qToolBar:setItemChecked( "Toggle", .f. )
          ENDIF
       ENDIF
       EXIT
@@ -1076,7 +1067,7 @@ METHOD IdeBrowseManager:buildPanelsButton()
 
    ::qPanelsButton := QToolButton()
    ::qPanelsButton:setTooltip( "ideDBU Panels" )
-   ::qPanelsButton:setIcon( hbide_image( "panel_8" ) )
+   ::qPanelsButton:setIcon( QIcon( hbide_image( "panel_8" ) ) )
    ::qPanelsButton:setPopupMode( QToolButton_MenuButtonPopup )
    ::qPanelsButton:setMenu( ::qPanelsMenu )
 
@@ -1125,7 +1116,7 @@ METHOD IdeBrowseManager:buildTablesButton()
 
    ::qTablesButton := QToolButton()
    ::qTablesButton:setTooltip( "Tables" )
-   ::qTablesButton:setIcon( hbide_image( "database" ) )
+   ::qTablesButton:setIcon( QIcon( hbide_image( "database" ) ) )
    ::qTablesButton:setPopupMode( QToolButton_MenuButtonPopup )
    ::qTablesButton:setMenu( ::qTablesMenu )
 
@@ -1144,7 +1135,7 @@ METHOD IdeBrowseManager:buildIndexButton()
 
    ::qIndexButton := QToolButton()
    ::qIndexButton:setTooltip( "Indexes" )
-   ::qIndexButton:setIcon( hbide_image( "sort" ) )
+   ::qIndexButton:setIcon( QIcon( hbide_image( "sort" ) ) )
    ::qIndexButton:setPopupMode( QToolButton_MenuButtonPopup )
    ::qIndexButton:setMenu( ::qIndexMenu )
 
@@ -1932,7 +1923,7 @@ METHOD IdeBrowse:buildMdiWindow()
 
    ::qMdi:setWindowTitle( ::cTable )
    ::qMdi:setObjectName( hb_ntos( nID ) )
-   ::qMdi:setWindowIcon( hbide_image( "dbf_p" + hb_ntos( ::nID ) ) )
+   ::qMdi:setWindowIcon( QIcon( hbide_image( "dbf_p" + hb_ntos( ::nID ) ) ) )
 
    IF ! empty( ::aInfo[ TBL_GEOMETRY ] )
       qRect := hb_aTokens( ::aInfo[ TBL_GEOMETRY ], " " )
@@ -1993,7 +1984,7 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
       ::dispInfo()
       ::populateForm()
       ::oManager:oCurBrw := Self
-      ::oManager:aToolBtns[ 3 ]:setChecked( ! ::qForm:isHidden() )
+      ::oManager:qToolbar:setItemChecked( "Toggle", ! ::qForm:isHidden() )
       EXIT
 
    CASE "browse_keyboard"

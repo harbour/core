@@ -298,7 +298,7 @@ METHOD HbqToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDra
    oButton := QToolButton() // ::oWidget )
    oButton:setObjectName( cName )
    oButton:setTooltip( cDesc )
-   oButton:setIcon( cImage )
+   oButton:setIcon( QIcon( cImage ) )
    oButton:setCheckable( lCheckable )
    oButton:setFocusPolicy( Qt_NoFocus )
 

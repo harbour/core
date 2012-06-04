@@ -223,7 +223,7 @@ METHOD IdeToolsManager:show()
 
       ::oUI:setWindowFlags( Qt_Sheet )
 
-      ::oUI:setWindowIcon( hbide_image( "hbide" ) )
+      ::oUI:setWindowIcon( QIcon( hbide_image( "hbide" ) ) )
       ::oUI:setMaximumWidth( ::oUI:width() )
       ::oUI:setMinimumWidth( ::oUI:width() )
       ::oUI:setMaximumHeight( ::oUI:height() )
@@ -240,10 +240,10 @@ METHOD IdeToolsManager:show()
 
       ::oUI:q_listNames   :connect( "itemSelectionChanged()", {|| ::execEvent( "listNames_itemSelectionChanged" ) } )
 
-      ::oUI:q_buttonBtnDown :setIcon( hbide_image( "dc_down" ) )
-      ::oUI:q_buttonBtnUp   :setIcon( hbide_image( "dc_up"   ) )
+      ::oUI:q_buttonBtnDown :setIcon( QIcon( hbide_image( "dc_down" ) ) )
+      ::oUI:q_buttonBtnUp   :setIcon( QIcon( hbide_image( "dc_up"   ) ) )
 
-      ::oUI:q_buttonSetImage:setIcon( hbide_image( "open"    ) )
+      ::oUI:q_buttonSetImage:setIcon( QIcon( hbide_image( "open"    ) ) )
       ::oUI:q_buttonSetImage:connect( "clicked()", {|| ::execEvent( "buttonSetImage_clicked" ) } )
 
       ::oUI:q_buttonUserToolbarUpd:connect( "clicked()", {|| ::execEvent( "buttonUserToolbarUpd_clicked" ) } )
@@ -675,7 +675,7 @@ METHOD IdeToolsManager:buildToolsButton()
    NEXT
    ::qToolsButton := QToolButton()
    ::qToolsButton:setTooltip( "Tools & Utilities" )
-   ::qToolsButton:setIcon( hbide_image( "tools" ) )
+   ::qToolsButton:setIcon( QIcon( hbide_image( "tools" ) ) )
    ::qToolsButton:setPopupMode( QToolButton_MenuButtonPopup )
    ::qToolsButton:setMenu( ::qToolsMenu )
 
@@ -696,7 +696,7 @@ METHOD IdeToolsManager:buildPanelsButton()
    NEXT
    ::qPanelsButton := QToolButton()
    ::qPanelsButton:setTooltip( "Panels" )
-   ::qPanelsButton:setIcon( hbide_image( "panel_8" ) )
+   ::qPanelsButton:setIcon( QIcon( hbide_image( "panel_8" ) ) )
    ::qPanelsButton:setPopupMode( QToolButton_MenuButtonPopup )
    ::qPanelsButton:setMenu( ::qPanelsMenu )
 
@@ -710,7 +710,7 @@ METHOD IdeToolsManager:addPanelsMenu( cPrompt )
    LOCAL qAct
 
    qAct := ::qPanelsMenu:addAction( cPrompt )
-   qAct:setIcon( ::oDK:getPanelIcon( cPrompt ) )
+   qAct:setIcon( QIcon( ::oDK:getPanelIcon( cPrompt ) ) )
    qAct:connect( "triggered(bool)", {|| ::oDK:setView( cPrompt ) } )
    aadd( ::aPanelsAct, qAct )
 

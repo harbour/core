@@ -138,23 +138,23 @@ METHOD IdeUpDown:create( oIde )
    ::oUI:setWindowFlags( hb_bitOr( Qt_Tool, Qt_FramelessWindowHint ) )
    ::oUI:setFocusPolicy( Qt_NoFocus )
 
-   ::oUI:q_buttonPrev:setIcon( hbide_image( "go-prev" ) )
+   ::oUI:q_buttonPrev:setIcon( QIcon( hbide_image( "go-prev" ) ) )
    ::oUI:q_buttonPrev:setToolTip( "Find Previous" )
    ::oUI:q_buttonPrev:connect( "clicked()", {|| ::execEvent( "buttonPrev_clicked" ) } )
    //
-   ::oUI:q_buttonNext:setIcon( hbide_image( "go-next" ) )
+   ::oUI:q_buttonNext:setIcon( QIcon( hbide_image( "go-next" ) ) )
    ::oUI:q_buttonNext:setToolTip( "Find Next" )
    ::oUI:q_buttonNext:connect( "clicked()", {|| ::execEvent( "buttonNext_clicked" ) } )
    //
-   ::oUI:q_buttonFirst:setIcon( hbide_image( "go-first" ) )
+   ::oUI:q_buttonFirst:setIcon( QIcon( hbide_image( "go-first" ) ) )
    ::oUI:q_buttonFirst:setToolTip( "Find First" )
    ::oUI:q_buttonFirst:connect( "clicked()", {|| ::execEvent( "buttonFirst_clicked" ) } )
    //
-   ::oUI:q_buttonLast:setIcon( hbide_image( "go-last" ) )
+   ::oUI:q_buttonLast:setIcon( QIcon( hbide_image( "go-last" ) ) )
    ::oUI:q_buttonLast:setToolTip( "Find Last" )
    ::oUI:q_buttonLast:connect( "clicked()", {|| ::execEvent( "buttonLast_clicked" ) } )
    //
-   ::oUI:q_buttonAll:setIcon( hbide_image( "hilight-all" ) )
+   ::oUI:q_buttonAll:setIcon( QIcon( hbide_image( "hilight-all" ) ) )
    ::oUI:q_buttonAll:setToolTip( "Highlight All" )
    ::oUI:q_buttonAll:connect( "clicked()", {|| ::execEvent( "buttonAll_clicked" ) } )
 
@@ -250,15 +250,15 @@ METHOD IdeSearchReplace:create( oIde )
    ::oUI:q_frameFind:setStyleSheet( "" )
    ::oUI:q_frameReplace:setStyleSheet( "" )
 
-   ::oUI:q_buttonClose:setIcon( hbide_image( "closetab" ) )
+   ::oUI:q_buttonClose:setIcon( QIcon( hbide_image( "closetab" ) ) )
    ::oUI:q_buttonClose:setToolTip( "Close" )
    ::oUI:q_buttonClose:connect( "clicked()", {|| ::oUI:hide() } )
 
-   ::oUI:q_buttonNext:setIcon( hbide_image( "next" ) )
+   ::oUI:q_buttonNext:setIcon( QIcon( hbide_image( "next" ) ) )
    ::oUI:q_buttonNext:setToolTip( "Find Next" )
    ::oUI:q_buttonNext:connect( "clicked()", {|| ::find( ::cFind ), ::oIde:manageFocusInEditor() } )
 
-   ::oUI:q_buttonPrev:setIcon( hbide_image( "previous" ) )
+   ::oUI:q_buttonPrev:setIcon( QIcon( hbide_image( "previous" ) ) )
    ::oUI:q_buttonPrev:setToolTip( "Find Previous" )
    ::oUI:q_buttonPrev:connect( "clicked()", {|| ::find( ::cFind, .t. ), ::oIde:manageFocusInEditor() } )
 

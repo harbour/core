@@ -229,23 +229,23 @@ METHOD IdeDocWriter:show()
 
 METHOD IdeDocWriter:setImages()
 
-   ::oUI:q_buttonLoadFromDocFile :setIcon( hbide_image( "load_3"      ) )
-   ::oUI:q_buttonLoadFromSource  :setIcon( hbide_image( "load_2"      ) )
-   ::oUI:q_buttonLoadFromCurFunc :setIcon( hbide_image( "load_1"      ) )
+   ::oUI:q_buttonLoadFromDocFile :setIcon( QIcon( hbide_image( "load_3"      ) ) )
+   ::oUI:q_buttonLoadFromSource  :setIcon( QIcon( hbide_image( "load_2"      ) ) )
+   ::oUI:q_buttonLoadFromCurFunc :setIcon( QIcon( hbide_image( "load_1"      ) ) )
 
-   ::oUI:q_buttonArgs            :setIcon( hbide_image( "arguments"   ) )
-   ::oUI:q_buttonDesc            :setIcon( hbide_image( "description" ) )
-   ::oUI:q_buttonExamples        :setIcon( hbide_image( "example"     ) )
-   ::oUI:q_buttonTests           :setIcon( hbide_image( "tests"       ) )
+   ::oUI:q_buttonArgs            :setIcon( QIcon( hbide_image( "arguments"   ) ) )
+   ::oUI:q_buttonDesc            :setIcon( QIcon( hbide_image( "description" ) ) )
+   ::oUI:q_buttonExamples        :setIcon( QIcon( hbide_image( "example"     ) ) )
+   ::oUI:q_buttonTests           :setIcon( QIcon( hbide_image( "tests"       ) ) )
 
-   ::oUI:q_buttonClear           :setIcon( hbide_image( "clean"       ) )
-   ::oUI:q_buttonSaveInFunc      :setIcon( hbide_image( "unload_1"    ) )
-   ::oUI:q_buttonSave            :setIcon( hbide_image( "helpdoc"     ) )
+   ::oUI:q_buttonClear           :setIcon( QIcon( hbide_image( "clean"       ) ) )
+   ::oUI:q_buttonSaveInFunc      :setIcon( QIcon( hbide_image( "unload_1"    ) ) )
+   ::oUI:q_buttonSave            :setIcon( QIcon( hbide_image( "helpdoc"     ) ) )
 
-   ::oUI:q_buttonCloseArgs       :setIcon( hbide_image( "closetab"    ) )
-   ::oUI:q_buttonCloseDesc       :setIcon( hbide_image( "closetab"    ) )
-   ::oUI:q_buttonCloseExamples   :setIcon( hbide_image( "closetab"    ) )
-   ::oUI:q_buttonCloseTests      :setIcon( hbide_image( "closetab"    ) )
+   ::oUI:q_buttonCloseArgs       :setIcon( QIcon( hbide_image( "closetab"    ) ) )
+   ::oUI:q_buttonCloseDesc       :setIcon( QIcon( hbide_image( "closetab"    ) ) )
+   ::oUI:q_buttonCloseExamples   :setIcon( QIcon( hbide_image( "closetab"    ) ) )
+   ::oUI:q_buttonCloseTests      :setIcon( QIcon( hbide_image( "closetab"    ) ) )
 
    RETURN Self
 

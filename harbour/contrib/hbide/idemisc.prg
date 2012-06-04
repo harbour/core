@@ -157,28 +157,30 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
    ELSEIF hb_isObject( aqPos )
       qPoint := aqPos
    ENDIF
-   IF ( qAct := qPop:exec( qPoint ) ):hasValidPointer()
-      cAct := qAct:text()
-      FOR EACH a_ IN aPops
-         IF hb_isObject( a_[ 1 ] )
-            IF a_[ 1 ]:text() == cAct
-               xRet := eval( aPops[ a_:__enumIndex(), 2 ] )
-               EXIT
-            ENDIF
-         ELSEIF hb_isArray( a_[ 1 ] )
-            FOR EACH b_ IN a_[ 1 ]
-               IF b_[ 1 ] == cAct
-                  xRet := eval( b_[ 2 ], cAct )
+
+   IF __objGetClsName( qAct := qPop:exec( qPoint ) ) == "QACTION"
+      IF valtype( cAct := qAct:text() ) == "C"
+         FOR EACH a_ IN aPops
+            IF hb_isObject( a_[ 1 ] )
+               IF a_[ 1 ]:text() == cAct
+                  xRet := eval( aPops[ a_:__enumIndex(), 2 ] )
                   EXIT
                ENDIF
-            NEXT
-         ELSE
-            IF a_[ 1 ] == cAct
-               xRet := eval( aPops[ a_:__enumIndex(), 2 ], cAct )
-               EXIT
+            ELSEIF hb_isArray( a_[ 1 ] )
+               FOR EACH b_ IN a_[ 1 ]
+                  IF b_[ 1 ] == cAct
+                     xRet := eval( b_[ 2 ], cAct )
+                     EXIT
+                  ENDIF
+               NEXT
+            ELSE
+               IF a_[ 1 ] == cAct
+                  xRet := eval( aPops[ a_:__enumIndex(), 2 ], cAct )
+                  EXIT
+               ENDIF
             ENDIF
-         ENDIF
-      NEXT
+         NEXT
+      ENDIF    
    ENDIF
    qPop := NIL
    HB_SYMBOL_UNUSED( xRet )

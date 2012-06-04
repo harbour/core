@@ -1345,7 +1345,7 @@ METHOD HbIde:updateProjectTree( aPrj )
       oSource := b_[ 3 ]
       oItem := oP:addItem( oSource:file + oSource:ext )
       oItem:tooltipText := oSource:original
-      oItem:oWidget:setIcon( 0, hbide_image( hbide_imageForFileType( oSource:ext ) ) )
+      oItem:oWidget:setIcon( 0, QIcon( hbide_image( hbide_imageForFileType( oSource:ext ) ) ) )
       aadd( ::aProjData, { oItem, "Source File", oP, oSource:original, oProject:title } )
    NEXT
 

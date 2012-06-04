@@ -144,7 +144,7 @@ METHOD IdeActions:buildActions()
          qAction:setCheckable( iif( empty( a_[ ACT_CHECKABLE ] ), .F., upper( a_[ ACT_CHECKABLE ] ) == "YES" ) )
          qAction:setText( strtran( a_[ ACT_TEXT ], "~", "&" ) )
          IF !empty( a_[ ACT_IMAGE ] )
-            qAction:setIcon( hbide_image( a_[ ACT_IMAGE ] ) )
+            qAction:setIcon( QIcon( hbide_image( a_[ ACT_IMAGE ] ) ) )
          ENDIF
 
          #if 0
@@ -384,7 +384,7 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu2:addItem( { ::getAction( "New"        ), {|| oIde:execAction( "New"            ) } } )
    oSubMenu2:addItem( { ::getAction( "NewProject" ), {|| oIde:execAction( "NewProject"     ) } } )
    oMenuBar:addItem( { oSubMenu2,  _T( "~New" ) } )
-   oMenuBar:aMenuItems[ oMenuBar:numItems(), 2 ]:setIcon( oIde:resPath + 'new.png' )
+   oMenuBar:aMenuItems[ oMenuBar:numItems(), 2 ]:setIcon( QIcon( oIde:resPath + 'new.png' ) )
 
    oSubMenu:addItem( { ::getAction( "Open"        ), {|| oIde:execAction( "Open"           ) } } )
    oSubMenu:addItem( { ::getAction( "LoadProject" ), {|| oIde:execAction( "LoadProject"    ) } } )
