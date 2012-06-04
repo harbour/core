@@ -1044,7 +1044,7 @@ METHOD hbCUIEditor:operate()
 
       DO WHILE .t.
          ::nLastKey := inkey( 0, INKEY_ALL + HB_INKEY_GTEVENT )
-         IF ::nLastKey <> 0 .OR. ::nLastKey <> K_MOUSEMOVE
+         IF ::nLastKey != 0 .OR. ::nLastKey != K_MOUSEMOVE
             EXIT
          ENDIF
       ENDDO
@@ -1143,7 +1143,7 @@ METHOD hbCUIEditor:operate()
             ::scrMsg()
          ENDIF
 
-      CASE VouchInRange( ::nLastKey, K_SPACE, 254 ) .AND. ::nMode <> OBJ_MODE_SELECT
+      CASE VouchInRange( ::nLastKey, K_SPACE, 254 ) .AND. ::nMode != OBJ_MODE_SELECT
          ::scrAddTxt( 1 )
 
       CASE ::nLastKey == K_F1                           //  Help
@@ -1181,7 +1181,7 @@ METHOD hbCUIEditor:operate()
             ENDIF
          ENDIF
       CASE ::nLastKey == K_BS
-         IF ::nMode <> OBJ_MODE_SELECT
+         IF ::nMode != OBJ_MODE_SELECT
             IF ::scrMovLft()
                IF ::scrIsTxt()
                   ::scrAddTxt( 3 )
@@ -1225,7 +1225,7 @@ METHOD hbCUIEditor:operate()
          ::scrGetProperty( nObj )
       ENDIF
 
-      IF nObj > 0 .AND. ::nMode <> OBJ_MODE_SELECT
+      IF nObj > 0 .AND. ::nMode != OBJ_MODE_SELECT
          ::xRefresh   := iif( ::xRefresh == OBJ_REFRESH_NIL, OBJ_REFRESH_LINE, ::xRefresh )
          ::nObjHilite := nObj
          ::scrOnFirstCol( nObj, { OBJ_O_FIELD, OBJ_O_EXP } )
@@ -1581,7 +1581,7 @@ METHOD hbCUIEditor:scrMouse()
    IF nEvent == K_LDBLCLK
 
    ELSEIF nEvent == K_MMLEFTDOWN /*K_LBUTTONDOWN */ .AND. ! lAnchored
-      IF ::scrChkObj() > 0 .AND. ::nMode <> OBJ_MODE_SELECT
+      IF ::scrChkObj() > 0 .AND. ::nMode != OBJ_MODE_SELECT
          nCursor    := SetCursor( 0 )
          lAnchored  := .t.
          ::nLastKey := K_F6
@@ -1606,13 +1606,13 @@ METHOD hbCUIEditor:scrToMouse( nmRow, nmCol )
    LOCAL nRowOff, nColOff
 
    nRowOff := nmRow - ::nRowCur
-   IF nRowOff <> 0
+   IF nRowOff != 0
       ::nRowCur += nRowOff
       ::nRowRep += nRowOff
    ENDIF
 
    nColOff := nmCol - ::nColCur
-   IF nColOff <> 0
+   IF nColOff != 0
       ::nColCur += nColOff
       ::nColRep += nColOff
    ENDIF
@@ -2044,7 +2044,7 @@ METHOD hbCUIEditor:scrOnLastCol( nObj )
 METHOD hbCUIEditor:scrOnFirstCol( nObj, type_ )
    LOCAL nCur, nOff
 
-   IF ::nColRep <> ::obj_[ nObj,OBJ_COL ]
+   IF ::nColRep != ::obj_[ nObj,OBJ_COL ]
       IF VouchInArray( ::obj_[ nObj, OBJ_TYPE ], type_ )
          IF ::objIsBox( nObj )
             nCur := ::nColCur
@@ -2420,7 +2420,7 @@ METHOD hbCUIEditor:scrTextPost( gst_, nMode )
       nn++
    NEXT
 
-   IF nMode <> 0
+   IF nMode != 0
       del_:={}
    ENDIF
    aeval( ddd_,{|e| aadd( del_, e ) } )
@@ -2919,7 +2919,7 @@ METHOD hbCUIEditor:scrAddFld( nObj )
 
    w_[ 2 ] := {| | VouchMenuM( 'MN_TYFLD' ) }
    w_[ 3 ] := {|v| v := oAchGet( 2 ), iif( v == 'D', !oCPut( 8 ), iif( v == 'L', !oCPut( 1 ), .t. ) ) }
-   w_[ 4 ] := {|v| v := oAchGet( 2 ), iif( v <> 'N', !oCPut( 0 ), .t. ) }
+   w_[ 4 ] := {|v| v := oAchGet( 2 ), iif( !( v == 'N' ), !oCPut( 0 ), .t. ) }
 
    ::scrMsg( "ENTER: Starts Editing Current Selection.  CTRL_ENTER: When Done." )
    B_GETS HEADERS h_ VALUES v_ TITLE 'Configure Field' WHEN w_ INTO v_
@@ -2931,7 +2931,7 @@ METHOD hbCUIEditor:scrAddFld( nObj )
       RETURN NIL
    ENDIF
 
-   IF lastkey() <> K_ESC
+   IF lastkey() != K_ESC
       ::scrUpdateUndo()
 
       IF nObj == 0
@@ -3249,7 +3249,7 @@ FUNCTION VouchGetArray( h_,vv_, sel_, nTop, nLft, nBtm, nRgt, title, bWhen_, bVa
    HB_SYMBOL_UNUSED( hlp )
    HB_SYMBOL_UNUSED( ord_ )
 
-   IF h_== NIL .OR. valtype(h_)<>'A' .OR. vv_== NIL .OR. valtype(vv_)<>'A'
+   IF h_== NIL .OR. !( valtype(h_) == 'A' ) .OR. vv_== NIL .OR. !( valtype(vv_) == 'A' )
       RETURN {vv_, 0}
    ENDIF
 
@@ -3380,7 +3380,7 @@ FUNCTION VouchGetArray( h_,vv_, sel_, nTop, nLft, nBtm, nRgt, title, bWhen_, bVa
 FUNCTION VouchFunc1( mode, nElem, nRow, nKey, cgo_ )
    LOCAL ret := AC_CONT
 
-   IF nKey <> 0
+   IF nKey != 0
       ScrolBarUpdate( cgo_[CGO_SCROL], nElem, cgo_[CGO_LENSCR], .t. )
    ENDIF
 
@@ -3562,7 +3562,7 @@ FUNCTION VouchYN( msg, nInit )
    B_MSG msg CHOOSE 'Yes','No ' TRIGGER {1,1} INITIAL nInit ;
    RESTORE SHADOW AT g:row - 3, g:col INTO sel
 
-   IF g <> NIL
+   IF g != NIL
       g:varPut( iif( sel == 1, .t., .f. ) )
    ENDIF
 
@@ -3930,9 +3930,9 @@ FUNCTION VouchMsgBox(r1, c1, r2, c2, width, depth, msg_, msgClr, ;
 FUNCTION VouchFunc2( nMode, nElem, nRel, nKey, cgo_ )
    LOCAL n, i, nn, s
 
-   IF nKey <> 0 .AND. nKey <> K_MOUSEMOVE
+   IF nKey != 0 .AND. nKey != K_MOUSEMOVE
       ScrolBarUpdate( cgo_[ CGO_SCROL ], nElem, cgo_[ CGO_LENSCR ], .t. )
-      IF cgo_[ CGO_EXE_ ] <> NIL
+      IF cgo_[ CGO_EXE_ ] != NIL
          eval( cgo_[ CGO_EXE_,nElem ] )
       ENDIF
    ENDIF
@@ -4047,7 +4047,7 @@ STATIC FUNCTION scan_f( elem, a_, key, nFrom )
    IF na == 0
       na := ascan( a_,{|e| lower( substr( e, nFrom, 1 ) ) == c },1,elem-1 )
    ENDIF
-   IF na <> 0
+   IF na != 0
       n := na
    ENDIF
    RETURN n
@@ -4149,7 +4149,7 @@ FUNCTION help( cToken )
    nRows := maxrow()
    nCols := maxcol()
    aScr  := VouchWndSave( 0, 0, maxrow(), maxcol() )
-   lSetMode := nRows <> 27 .or. nCols <> 79
+   lSetMode := nRows != 27 .or. nCols != 79
    Vstk_push()
 
    IF lSetMode
@@ -4688,7 +4688,7 @@ METHOD AChoiceNew:Exe()
       ENDIF
 
    #ifdef __WVT__
-      IF nLastPos <> ::nPos
+      IF nLastPos != ::nPos
          Wvt_DrawFocusRect( ::nTop + ( ::nPos - ::nAtTop ), ::nLeft, ;
                             ::nTop + ( ::nPos - ::nAtTop ), ::nRight )
          nLastPos := ::nPos
@@ -5146,7 +5146,7 @@ METHOD AChoiceNew:DispAtNew()
                                  .AND. ;
             ::mrc_[ 4 ] >= ::nLeft .AND. ::mrc_[ 4 ] <= ::nRight
 
-      IF ( nNewPos := ::nAtTop + ( ::mrc_[ 3 ] - ::nTop ) ) <> ::nPos
+      IF ( nNewPos := ::nAtTop + ( ::mrc_[ 3 ] - ::nTop ) ) != ::nPos
          IF ::alSelect[ nNewPos ]
             ::DeHilite()
             ::nPos    := nNewPos

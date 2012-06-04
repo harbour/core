@@ -182,7 +182,7 @@ METHOD WvgPartHandler:childFromName( nNameId )
    LOCAL i, oWvg
 
    FOR i := 1 TO len( ::aChildren )
-      IF ::aChildren[ i ]:nNameID <> NIL .and. ::aChildren[ i ]:nNameID == nNameID
+      IF ::aChildren[ i ]:nNameID != NIL .and. ::aChildren[ i ]:nNameID == nNameID
          oWvg := ::aChildren[ i ]
       ENDIF
    NEXT
@@ -594,4 +594,3 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
    RETURN WVG_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
 
 /*----------------------------------------------------------------------*/
-

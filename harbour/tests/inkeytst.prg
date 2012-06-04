@@ -1,73 +1,77 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
-// Testing Harbour keyboard input.
+   /* Testing Harbour keyboard input. */
+
 /* Harbour Project source code
    http://harbour-project.org/
    Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>
-   
+
    Modularization and display improvements by
    Alejandro de Garate <alex_degarate@hotmail.com>
 */
 
 #include "inkey.ch"
 
-PROCEDURE main( cSkip, cRaw )
+PROCEDURE Main( cSkip, cRaw )
 
-ALTD(0)
+   AltD( 0 )
 
-IF EMPTY( cSkip )
+   IF Empty( cSkip )
 
-   TEST1()
-   NextTest()
+      TEST1()
+      NextTest()
 
-   TEST2()
-   NextTest()
+      TEST2()
+      NextTest()
 
 
-   TEST3()
-   NextTest()
+      TEST3()
+      NextTest()
 
-   TEST4()
-   NextTest()
+      TEST4()
+      NextTest()
 
-   TEST5()
-   NextTest()
+      TEST5()
+      NextTest()
 
-   TEST6()
-   NextTest()
-ENDIF
+      TEST6()
+      NextTest()
+   ENDIF
 
    TEST7( cSkip, cRaw )
    ?
-QUIT
-
+   QUIT
 
 PROCEDURE Results()
-   ? "Wait 2 seconds or press most any key to see the results of this test."
-   INKEY( 2 )
-RETURN
 
+   ? "Wait 2 seconds or press most any key to see the results of this test."
+   Inkey( 2 )
+
+   RETURN
 
 PROCEDURE NextTest()
-   ? "Press any key to continue on to the next test."
-   INKEY( 0 )
-RETURN
 
+   ? "Press any key to continue on to the next test."
+   Inkey( 0 )
+
+   RETURN
 
 FUNCTION TEST( cText )
-LOCAL cResult := ""
-   INKEY( 2 )
+
+   LOCAL cResult := ""
+
+   Inkey( 2 )
    KEYBOARD cText
-   WHILE NEXTKEY() <> 0
-      cResult += CHR( INKEY () )
-   END WHILE
-RETURN "'" + cResult + "'"
+   DO WHILE NextKey() != 0
+      cResult += Chr( Inkey () )
+   ENDDO
 
-
+   RETURN "'" + cResult + "'"
 
 PROCEDURE TEST1
+
    CLS
    ?
    ? "Testing the KEYBOARD and CLEAR TYPEAHEAD commands and the"
@@ -81,12 +85,13 @@ PROCEDURE TEST1
    Results()
    ?
    KEYBOARD "AB"
-   ? INKEY(), INKEY()
+   ? Inkey(), Inkey()
    ?
-RETURN
 
+   RETURN
 
 PROCEDURE TEST2
+
    CLS
    ?
    ? "For the second test, the keyboard will be stuffed with the"
@@ -99,12 +104,13 @@ PROCEDURE TEST2
    ?
    KEYBOARD "HELLO"
    CLEAR TYPEAHEAD
-   ? INKEY()
+   ? Inkey()
    ?
-RETURN
 
+   RETURN
 
 PROCEDURE TEST3
+
    CLS
    ?
    ? "For the third test, the keyboard will be stuffed with the"
@@ -116,13 +122,13 @@ PROCEDURE TEST3
    Results()
    ?
    KEYBOARD "AB"
-   ? NEXTKEY(), NEXTKEY(), INKEY(), INKEY()
+   ? NextKey(), NextKey(), Inkey(), Inkey()
    ?
-RETURN
 
-
+   RETURN
 
 PROCEDURE TEST4
+
    CLS
    ?
    ? "For the fourth test, the keyboard will be stuffed with the"
@@ -135,14 +141,15 @@ PROCEDURE TEST4
    Results()
    ?
    KEYBOARD "AB"
-   ? INKEY(), LASTKEY(), LASTKEY(), NEXTKEY(), INKEY()
+   ? Inkey(), LastKey(), LastKey(), NextKey(), Inkey()
    ?
-RETURN
 
-
+   RETURN
 
 PROCEDURE TEST5
-LOCAL cText
+
+   LOCAL cText
+
    CLS
    cText := "THIS IS A TEST. THIS IS ONLY A TEST. DO NOT PANIC!"
    ?? "For the fifth test, the keyboard will be stuffed with the"
@@ -152,9 +159,9 @@ LOCAL cText
    ? "the buffer will be emptied using NEXTKEY() and INKEY() and"
    ? "the ASCII text that was extracted will be displayed."
    ?
-   ? "For the default size, which is 50, all but '" + RIGHT( cText, LEN( cText ) - 49 ) + "' should be"
-   ? "displayed. For size 25, '" + LEFT( cText, 24 ) + "' should"
-   ? "be displayed. Size 16 should display '" + LEFT( cText, 15 ) + "',"
+   ? "For the default size, which is 50, all but '" + Right( cText, Len( cText ) - 49 ) + "' should be"
+   ? "displayed. For size 25, '" + Left( cText, 24 ) + "' should"
+   ? "be displayed. Size 16 should display '" + Left( cText, 15 ) + "',"
    ? "while size 0 should display ''."
    ?
    ? "Default TYPEAHEAD (50)"
@@ -174,26 +181,27 @@ LOCAL cText
    ? "SET TYPEAHEAD TO 0"
    SET TYPEAHEAD TO 0
    ? TEST( cText )
-RETURN
 
-
+   RETURN
 
 PROCEDURE TEST6
-CLS
+
+   CLS
    ? "For the sixth test"
    ? "The typeahead is now being set to a value greater than the maximum,"
    ? "which is 4096 and is the value that will both be used and reported."
    ? "SET TYPEAHEAD TO 5000"
    ?
    SET TYPEAHEAD TO 5000
-   ? SET(_SET_TYPEAHEAD)
+   ? Set( _SET_TYPEAHEAD )
    ?
-RETURN
 
-
+   RETURN
 
 PROCEDURE TEST7( cSkip, cRaw )
-LOCAL nKey, nMask, cText
+
+   LOCAL nKey, nMask, cText
+
    CLS
    ? "For the last test, a loop is started and all keyboard and mouse"
    ? "events are allowed. Each event will be displayed. Press the TAB"
@@ -203,49 +211,49 @@ LOCAL nKey, nMask, cText
    ? "Press any key."
    nMask := HB_INKEY_ALL
 
-   IF ! EMPTY( cRaw )
-       IF UPPER( LEFT( cRaw, 1 ) ) == "R"
-          nMask += HB_INKEY_RAW
-       END IF
-   END IF
+   IF ! Empty( cRaw )
+      IF Upper( Left( cRaw, 1 ) ) == "R"
+         nMask += HB_INKEY_RAW
+      ENDIF
+   ENDIF
 
-   SET(_SET_EVENTMASK, nMask)
+   SET( _SET_EVENTMASK, nMask )
 
-   IF ! EMPTY( cSkip )
-      IF UPPER( cSkip ) == "BREAK"
-         SETCANCEL(.T.)
-         ALTD(1)
-         tone( 440, 6 )
+   IF ! Empty( cSkip )
+      IF Upper( cSkip ) == "BREAK"
+         SetCancel( .T. )
+         AltD( 1 )
+         Tone( 440, 6 )
       ELSE
-         SETCANCEL(.F.)
-         ALTD(0)
-         tone( 660, 6 )
-      END IF
-   END IF
+         SetCancel( .F. )
+         AltD( 0 )
+         Tone( 660, 6 )
+      ENDIF
+   ENDIF
 
 
-   WHILE (nKey := INKEY( 0, nMask )) != K_TAB
+   DO WHILE ( nKey := Inkey( 0, nMask ) ) != K_TAB
       DO CASE
-         CASE nKey == K_MOUSEMOVE
-            ? "The mouse moved."
-         CASE nKey == K_LBUTTONDOWN
-            ? "The left mouse button was pushed."
-         CASE nKey == K_LBUTTONUP
-            ? "The left mouse button was released."
-         CASE nKey == K_RBUTTONDOWN
-            ? "The right mouse button was pushed."
-         CASE nKey == K_RBUTTONUP
-            ? "The right mouse button was released."
-         CASE nKey == K_LDBLCLK
-            ? "The left mouse button was double-clicked."
-         CASE nKey == K_RDBLCLK
-            ? "The right mouse button was double-clicked."
+      CASE nKey == K_MOUSEMOVE
+         ? "The mouse moved."
+      CASE nKey == K_LBUTTONDOWN
+         ? "The left mouse button was pushed."
+      CASE nKey == K_LBUTTONUP
+         ? "The left mouse button was released."
+      CASE nKey == K_RBUTTONDOWN
+         ? "The right mouse button was pushed."
+      CASE nKey == K_RBUTTONUP
+         ? "The right mouse button was released."
+      CASE nKey == K_LDBLCLK
+         ? "The left mouse button was double-clicked."
+      CASE nKey == K_RDBLCLK
+         ? "The right mouse button was double-clicked."
          OTHERWISE
-            ? "A keyboard key was pressed: ", nKey,;
-            IIF( nKey >= 32 .AND. nKey <= 255, CHR( nKey ), "" )
+         ? "A keyboard key was pressed: ", nKey, ;
+            iif( nKey >= 32 .AND. nKey <= 255, Chr( nKey ), "" )
       END CASE
 
-   END WHILE
-   ? "The TAB key ("+LTRIM(STR(nKey))+") was pressed. Exiting..."
+   ENDDO
+   ? "The TAB key (" + LTrim( Str( nKey ) ) + ") was pressed. Exiting..."
 
-RETURN
+   RETURN

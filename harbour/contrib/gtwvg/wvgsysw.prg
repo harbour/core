@@ -569,7 +569,7 @@ METHOD configure( cFontName ) CLASS WvgFont
 
 METHOD destroy() CLASS WvgFont
 
-   IF ::hFont <> NIL
+   IF ::hFont != NIL
       WVG_DeleteObject( ::hFont )
    ENDIF
 
@@ -587,12 +587,12 @@ METHOD list() CLASS WvgFont
 METHOD createFont() CLASS WvgFont
    LOCAL aFont
 
-   IF ::hFont <> NIL
+   IF ::hFont != NIL
       WVG_DeleteObject( ::hFont )
       ::hFont := NIL
    ENDIF
 
-   IF ::oPS <> NIL
+   IF ::oPS != NIL
       ::height := Wvg_PointSizeToHeight( ::oPS:hdc, ::nominalPointSize )
    ENDIF
 

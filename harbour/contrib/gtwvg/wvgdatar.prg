@@ -154,7 +154,7 @@ METHOD WvgDataRef:setData( xValue, mp2 )
 
    IF hb_isBlock( ::dataLink )
       ::sl_editBuffer := eval( ::dataLink  )
-   ELSEIF xValue <> NIL
+   ELSEIF xValue != NIL
       ::sl_editBuffer := xValue
    ENDIF
 
@@ -169,7 +169,7 @@ METHOD WvgDataRef:setData( xValue, mp2 )
       ENDIF
 
    CASE ::className == "SysTreeView32"
-      IF ::sl_editBuffer <> NIL .and. ::sl_editBuffer:hItem <> NIL
+      IF ::sl_editBuffer != NIL .and. ::sl_editBuffer:hItem != NIL
          WVG_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
       ENDIF
 
@@ -179,7 +179,7 @@ METHOD WvgDataRef:setData( xValue, mp2 )
       ENDIF
 
    CASE ::className == "SCROLLBAR"
-      IF ::sl_editBuffer <> NIL
+      IF ::sl_editBuffer != NIL
          WAPI_SetScrollPos( ::pWnd, SB_CTL, ::sl_editBuffer, .t. )
       ENDIF
 

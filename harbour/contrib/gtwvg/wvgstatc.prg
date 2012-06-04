@@ -278,7 +278,7 @@ METHOD WvgStatic:handleEvent( nMessage, aNM )
 
 METHOD WvgStatic:destroy()
 
-   IF ::hBitmap <> nil
+   IF ::hBitmap != nil
       WVG_DeleteObject( ::hBitmap )
    ENDIF
    ::wvgWindow:destroy()
@@ -305,7 +305,7 @@ METHOD WvgStatic:setCaption( xCaption, cDll )
       WVG_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
 
    CASE ::type == WVGSTATIC_TYPE_BITMAP
-      IF ::hBitmap <> nil
+      IF ::hBitmap != nil
          WVG_DeleteObject( ::hBitmap )
       ENDIF
 

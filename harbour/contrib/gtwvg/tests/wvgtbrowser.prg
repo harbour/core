@@ -311,7 +311,7 @@ STATIC FUNCTION BrwBuildTree( oCrt /*, oBrw*/ )
    oTree:create( , , { -24, -1 }, { {|| -( maxrow()-1-24 ) }, -10 } )
    oTree:setColorFG( "W+" )
    oTree:setColorBG( "R*" )
-   oTree:itemSelected := {|oItem| WVG_MessageBox( , iif( oItem <> NIL, oItem:caption, "Some Problem" ) ) }
+   oTree:itemSelected := {|oItem| WVG_MessageBox( , iif( oItem != NIL, oItem:caption, "Some Problem" ) ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
 
@@ -1033,4 +1033,3 @@ FUNCTION ConfigBrowser( aFields, cUseAlias, aTLBR, cDesc, oParent, cColorSpec, n
    RETURN oWvtBrw
 
 //-------------------------------------------------------------------//
-

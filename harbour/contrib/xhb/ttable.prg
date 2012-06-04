@@ -588,7 +588,7 @@ METHOD PROCEDURE Put() CLASS HBRecord
    LOCAL xField
 
    FOR EACH xField IN ::aFields
-      IF xField:Value <> ::buffer[ xField:__EnumIndex() ]
+      IF !( xField:Value == ::buffer[ xField:__EnumIndex() ] )
          xField:PUT( ::buffer[ xField:__EnumIndex() ] )
          ::buffer[ xField:__EnumIndex() ] := xField:value
       ENDIF
@@ -1461,12 +1461,12 @@ METHOD OnError( uParam ) CLASS HBTable
    LOCAL nPos
    LOCAL uRet, oErr
 
-   if uParam <> nil .and. LEFT( cMsg, 1 ) == '_'
+   if uParam != nil .and. LEFT( cMsg, 1 ) == '_'
       cMsg := SubStr( cMsg, 2 )
    endif
    nPos := (::Alias)->( FieldPos(cMsg) )
 
-   if nPos <> 0
+   if nPos != 0
       uRet := (::Alias)->( if(uParam == nil, FieldGet(nPos), FieldPut(nPos, uParam)) )
    else
 

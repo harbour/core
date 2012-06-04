@@ -91,7 +91,7 @@ function WvtPaintObjects()
       for i := 1 to nBlocks
          lExe := .t.
 
-         if aBlocks[ i,3 ] <> nil .and. !empty( aBlocks[ i,3 ] )
+         if aBlocks[ i,3 ] != nil .and. !empty( aBlocks[ i,3 ] )
             /*  Check parameters against tlbr_ depending upon the
              *  type of object and attributes contained in aAttr
              */
@@ -152,7 +152,7 @@ function WvtSetPaint( a_ )
 
    o := t
 
-   if a_ <> nil
+   if a_ != nil
       t := a_
    endif
 
@@ -163,7 +163,7 @@ function WvtSetPaint( a_ )
 function wvg_SetPaint( cID, nAction, xData, aAttr )
    local n, n1, oldData
 
-   if xData <> nil
+   if xData != nil
       if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
          if ( n1 := ascan( t_paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
             oldData := t_paint_[ n,2,n1,2 ]
@@ -436,8 +436,8 @@ Function Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
 
    hDlg := Wvt_CreateDialogDynamic( xTemplate, lOnTop, cbDlgProc, nDlgMode )
 
-   if hDlg <> 0
-      if ncIcon <> nil
+   if hDlg != 0
+      if ncIcon != nil
          Wvt_DlgSetIcon( hDlg, ncIcon )
 
       endif
@@ -447,7 +447,7 @@ Function Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
 
       endif
 
-      if hMenu <> nil
+      if hMenu != nil
          WVG_SetMenu( hDlg, hMenu )
 
       endif

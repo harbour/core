@@ -169,7 +169,7 @@ METHOD WvgMenuBar:create( oParent, aPresParams, lVisible )
 
    ::hMenu := WVG_CreateMenu()
 
-   IF ::hMenu <> 0
+   IF ::hMenu != 0
       /*  check for if the parent already has a menu
           we need to destroy that first
           TO DO

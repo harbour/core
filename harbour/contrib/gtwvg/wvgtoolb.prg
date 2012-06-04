@@ -251,13 +251,13 @@ METHOD WvgToolBar:destroy()
 
    IF ( nItems := Len( ::aItems ) ) > 0
       FOR i := 1 TO nItems
-         IF ::aItems[ i,2 ]:image <> NIL
+         IF ::aItems[ i,2 ]:image != NIL
             WVG_DeleteObject( ::aItems[ i,2 ]:image )
          ENDIF
-         IF ::aItems[ i,2 ]:disabledImage <> NIL
+         IF ::aItems[ i,2 ]:disabledImage != NIL
             WVG_DeleteObject( ::aItems[ i,2 ]:disabledImage )
          ENDIF
-         IF ::aItems[ i,2 ]:hotImage <> NIL
+         IF ::aItems[ i,2 ]:hotImage != NIL
             WVG_DeleteObject( ::aItems[ i,2 ]:hotImage )
          ENDIF
       NEXT

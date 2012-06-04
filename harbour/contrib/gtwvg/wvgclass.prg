@@ -252,13 +252,13 @@ METHOD wvtDialog:Create()
    LOCAL aPalette, i, j
 
    ::oldToolTipActive := Wvt_SetToolTipActive( .t. )
-   IF ::nTooltipWidth <> nil
+   IF ::nTooltipWidth != nil
       Wvt_setTooltipWidth( ::nTooltipWidth )
    ENDIF
-   IF ::nTooltipBkColor <> nil
+   IF ::nTooltipBkColor != nil
       Wvt_SetTooltipBkColor( ::nTooltipBkColor )
    ENDIF
-   IF ::nTooltipTextColor <> nil
+   IF ::nTooltipTextColor != nil
       Wvt_SetTooltipTextColor( ::nTooltipTextColor )
    ENDIF
 
@@ -343,7 +343,7 @@ METHOD wvtDialog:Destroy()
    SetColor( ::cOldColor )
    SetCursor( ::nOldCursor )
 
-   IF ::oldMenuHandle <> nil .and. ::oldMenuHandle <> 0
+   IF ::oldMenuHandle != nil .and. ::oldMenuHandle != 0
       Wvt_SetMenu( ::oldMenuHandle )
    ENDIF
    SetKey( Wvt_SetMenuKeyEvent(), ::oldMenuBlock )
@@ -380,7 +380,7 @@ METHOD wvtDialog:Execute()
          ENDIF
       ENDDO
    ELSE
-      DO WHILE ( ::Inkey() <> K_ESC )
+      DO WHILE ( ::Inkey() != K_ESC )
       ENDDO
    ENDIF
 
@@ -397,7 +397,7 @@ METHOD wvtDialog:Inkey()
    ::nKey := ::Event()
    ::OnTimer()
 
-   IF ::nKey <> 0
+   IF ::nKey != 0
       IF ::nKey == K_ESC .or. ::nKey == K_CTRL_ENTER
          RETURN K_ESC
       ENDIF
@@ -438,7 +438,7 @@ METHOD wvtDialog:Inkey()
          ::MouseOver()
          IF ::nObjOver == 0
             Wvt_SetPointer( WVT_IDC_ARROW )
-         ELSEIF ::oObjOver:nPointer <> nil .and. ::oObjOver:lActive
+         ELSEIF ::oObjOver:nPointer != nil .and. ::oObjOver:lActive
             Wvt_SetPointer( ::oObjOver:nPointer )
          ELSE
             Wvt_SetPointer( WVT_IDC_ARROW )
@@ -480,7 +480,7 @@ METHOD wvtDialog:Inkey()
          ENDIF
       ENDIF
 
-      IF ::nLastOver <> ::nObjOver
+      IF ::nLastOver != ::nObjOver
          IF ::nLastOver > 0
             ::aObjects[ ::nLastOver ]:HoverOff()
          ENDIF
@@ -503,7 +503,7 @@ METHOD wvtDialog:Inkey()
          ENDIF
       ENDIF
 
-      IF ::nCurObj <> ::nLastObj
+      IF ::nCurObj != ::nLastObj
          IF ::nLastObj == 0
             ::aObjects[ ::nCurObj  ]:Hilite()
 
@@ -613,8 +613,8 @@ METHOD wvtDialog:MouseOver()
    LOCAL nObj
 
    nObj := ascan( ::aObjects, ;
-                    {|o| o:nType <> DLG_OBJ_STATIC               .AND. ;
-                         o:nType <> DLG_OBJ_TOOLBAR              .AND. ;
+                    {|o| o:nType != DLG_OBJ_STATIC               .AND. ;
+                         o:nType != DLG_OBJ_TOOLBAR              .AND. ;
                          mRow >= o:nTop  .AND. mRow <= o:nBottom .AND. ;
                          mCol >= o:nLeft .AND. mCol <= o:nRight      } )
 
@@ -939,12 +939,12 @@ METHOD WvtObject:Create()
 
 METHOD WvtObject:Destroy()
 
-   IF ::hFont <> nil
+   IF ::hFont != nil
       WVG_DeleteObject( ::hFont )
       ::hFont := nil
    ENDIF
 
-   IF ::hPopup <> nil
+   IF ::hPopup != nil
       Wvt_DestroyMenu( ::hPopup )
       ::hPopup := nil
    ENDIF
@@ -976,7 +976,7 @@ METHOD WvtObject:CreatePopup()
 METHOD WvtObject:ShowPopup()
    LOCAL lRet := .f., nRet, n, aPos
 
-   IF ::hPopup <> nil
+   IF ::hPopup != nil
       aPos := Wvt_GetCursorPos()
 
       nRet := Wvt_TrackPopupMenu( ::hPopup, TPM_CENTERALIGN +TPM_RETURNCMD, ;
@@ -1239,7 +1239,7 @@ METHOD WvtBrowse:SetTooltip()
       ::RestSettings()
    ENDIF
 
-   IF cTip <> nil
+   IF cTip != nil
       ::Tooltip := cTip
    ENDIF
 
@@ -1261,7 +1261,7 @@ METHOD WvtBrowse:SaveSettings()
 
 METHOD WvtBrowse:RestSettings()
 
-   IF ::xSettings <> nil .and. ISBLOCK( ::bRestSettings )
+   IF ::xSettings != nil .and. ISBLOCK( ::bRestSettings )
       Eval( ::bRestSettings, self )
    ENDIF
 
@@ -1381,7 +1381,7 @@ METHOD WvtStatusBar:SetPanels( aPanels )
 
    aadd( ::aPanels, oPanel )
 
-   IF aPanels <> nil
+   IF aPanels != nil
       FOR i := 1 to len( aPanels )
          IF ::oParent:MaxCol() > aPanels[ i ]
             oPanel := WvtPanel():New( ::oParent, ++nID, ::nTop, aPanels[ i ] )
@@ -1486,7 +1486,7 @@ METHOD WvtPanel:New( oParent, nId, nTop, nLeft )
 
 METHOD WvtPanel:Refresh()
 
-   IF ::Text <> nil
+   IF ::Text != nil
       DispOutAt( ::nTop, ::nLeft+1, ::Text, ::cColor )
    ENDIF
 
@@ -1542,7 +1542,7 @@ METHOD WvtLabel:Create( lConfg )
 
    ::hFont := Wvt_CreateFont( ::cFont, ::nFontHeight, ::nFontWidth, ::nFontWeight, ::lItalic,;
                               ::lUnderline, ::lStrikeout, ::nCharSet, ::nFontQuality, ::nAngle )
-   IF ::hFont <> 0
+   IF ::hFont != 0
       IF !( lConfg )
          ::bPaint := {|| Wvt_DrawLabelObj( ::nTop, ::nLeft, ::nBottom, ::nRight,;
                        ::Text, ::nAlignHorz, ::nAlignVert, ::nTextColor, ::nBackColor, ::hFont ) }
@@ -1604,7 +1604,7 @@ METHOD WvtLabel:Configure()
    ::nTextColorHoverOff := ::nTextColor
    ::nBackColorHoverOff := ::nBackColor
 
-   IF ::hFont <> 0
+   IF ::hFont != 0
       WVG_DeleteObject( ::hFont )
    ENDIF
 
@@ -1618,11 +1618,11 @@ METHOD WvtLabel:Configure()
 METHOD WvtLabel:HoverOn()
    LOCAL lOn := .f.
 
-   IF ::nTextColorHoverOn <> nil
+   IF ::nTextColorHoverOn != nil
       lOn := .t.
       ::nTextColor := ::nTextColorHoverOn
    ENDIF
-   IF ::nBackColorHoverOn <> nil
+   IF ::nBackColorHoverOn != nil
       lOn := .t.
       ::nBackColor := ::nBackColorHoverOn
    ENDIF
@@ -1638,11 +1638,11 @@ METHOD WvtLabel:HoverOn()
 METHOD WvtLabel:HoverOff()
    LOCAL lOn := .f.
 
-   IF ::nTextColorHoverOn <> nil
+   IF ::nTextColorHoverOn != nil
       lOn := .t.
       ::nTextColor := ::nTextColorHoverOff
    ENDIF
-   IF ::nBackColorHoverOn <> nil
+   IF ::nBackColorHoverOn != nil
       lOn := .t.
       ::nBackColor := ::nBackColorHoverOff
    ENDIF
@@ -1985,7 +1985,7 @@ METHOD WvtImage:Create()
 
 METHOD WvtImage:SetImage( cImage )
 
-   IF cImage <> nil .and. file( cImage )
+   IF cImage != nil .and. file( cImage )
       ::cImageFile := cImage
       ::Refresh()
    ENDIF
@@ -2721,7 +2721,7 @@ METHOD wvtScrollbar:HandleEvent( nKey )
 
       DO CASE
       CASE ::lAnchored .and. nKey == K_MMLEFTDOWN
-         IF nmRow <> ::nThumbPos
+         IF nmRow != ::nThumbPos
             nOff := ::nThumbPos - nmRow
             IF nOff > 0
                ::nThumbPos := max( ::nTop+1, nmRow )
@@ -3018,7 +3018,7 @@ METHOD WvtBanner:OnTimer()
 
 METHOD WvtBanner:SetText( cText )
 
-   IF cText <> nil
+   IF cText != nil
       ::cText := cText
       ::Refresh()
    ENDIF
@@ -3124,7 +3124,7 @@ METHOD WvtTextBox:Create()
                   ::nFontWeight, ::lItalic, ::lUnderline, ::lStrikeout, ;
                   ::nCharSet, ::nFontQuality, 0 )
 
-   IF ::hFont <> 0
+   IF ::hFont != 0
       ::bPaint := {|| Wvt_DrawTextBox( ::nTop, ::nLeft, ::nBottom, ::nRight, ;
             ::aPxlTLBR, ::cText, ::nAlignHorz, ::nAlignVert, ;
             ::nTextColor, ::nBackColor, ::nBackMode, ::hFont ) }
@@ -3154,7 +3154,7 @@ METHOD WvtTextBox:Configure()
 
 METHOD WvtTextBox:SetText( cText )
 
-   IF cText <> nil
+   IF cText != nil
       ::cText := cText
       ::Refresh()
    ENDIF
@@ -3165,7 +3165,7 @@ METHOD WvtTextBox:SetText( cText )
 
 METHOD WvtTextBox:HoverOn( /*cText*/ )
 
-   IF ::nTextColorHoverOn <> nil
+   IF ::nTextColorHoverOn != nil
       ::nTextColor := ::nTextColorHoverOn
       ::Refresh()
    ENDIF
@@ -3176,7 +3176,7 @@ METHOD WvtTextBox:HoverOn( /*cText*/ )
 
 METHOD WvtTextBox:HoverOff( /*cText*/ )
 
-   IF ::nTextColorHoverOn <> nil
+   IF ::nTextColorHoverOn != nil
       ::nTextColor := ::nTextColorHoverOff
       ::Refresh()
    ENDIF
@@ -3517,7 +3517,7 @@ METHOD WvtConsole:New( oParent )
 METHOD WvtConsole:Say( nRow, nCol, xExp, cColor )
    LOCAL nCRow, nCCol, nCursor
 
-   IF nRow >=0 .and. nCol >= 0 .and. xExp <> nil
+   IF nRow >=0 .and. nCol >= 0 .and. xExp != nil
       nCursor := SetCursor( SC_NONE )
       nCRow   := Row()
       nCCol   := Col()

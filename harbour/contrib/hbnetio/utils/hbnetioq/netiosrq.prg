@@ -237,7 +237,7 @@ METHOD NetIOMgmtClient:create( cIP, nPort, cPassword )
       SetAppWindow( ::oDlg )
       SetAppFocus( ::oDlg )
 
-      DO WHILE nEvent <> xbeP_Quit
+      DO WHILE nEvent != xbeP_Quit
          nEvent := AppEvent( @mp1, @mp2, @oXbp )
          oXbp:handleEvent( nEvent, mp1, mp2 )
       ENDDO

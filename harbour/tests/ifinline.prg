@@ -1,27 +1,26 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
-// Testing Harbour If inline
+/* Testing Harbour If inline */
 
-function Main()
-
-   local n := 1
+PROCEDURE Main()
+   LOCAL n := 1
 
    QOut( "Testing Harbour If inline" )
 
-   If( n == 1, QOut( 1 ), QOut( 2 ) )
+   if( n == 1, QOut( 1 ), QOut( 2 ) )
 
-   IIf( n <> nil, QOut( "not nil" ),)
+   iif( n != NIL, QOut( "not NIL" ), )
 
    QOut( "Now changing n to 2" )
 
    n = 2
 
-   If( n == 1, QOut( 1 ), QOut( 2 ) )
+   if( n == 1, QOut( 1 ), QOut( 2 ) )
 
-   IIf( n <> nil, QOut( "not nil" ),)
+   iif( n != NIL, QOut( "not NIL" ), )
 
    QOut( "ok!" )
 
-return nil
+   RETURN

@@ -122,7 +122,7 @@ FUNCTION Main()
    oTree:create()
    oTree:setColorBG( RGB( 120,15,240 ) )
    oTree:setColorFG( RGB( 15,240,120 ) )
-   oTree:itemSelected := {|oItem| IF( oItem <> NIL, WVG_MessageBox( , oItem:caption ), NIL ) }
+   oTree:itemSelected := {|oItem| IF( oItem != NIL, WVG_MessageBox( , oItem:caption ), NIL ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
 

@@ -137,7 +137,7 @@ METHOD create( oPScompat ) CLASS WvgBitmap
 
 METHOD destroy() CLASS WvgBitmap
 
-   IF ::hBitmap <> nil
+   IF ::hBitmap != nil
       WVG_DeleteObject( ::hBitmap )
    ENDIF
    IF ::lDCtoDestroy

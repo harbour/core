@@ -263,7 +263,7 @@ CLASS WvgWindow  INHERIT  WvgPartHandler
    METHOD   dragMotion( xParam )                  SETGET
    METHOD   dragLeave( xParam )                   SETGET
    METHOD   dragDrop( xParam, xParam1 )           SETGET
-PROTECTED:   
+PROTECTED:
    METHOD   getPosAndSize( aPs, aSz )
    METHOD   isParentCrt()                         INLINE ( ::oParent:objType == objTypeCrt )
    METHOD   rePosition()
@@ -356,7 +356,7 @@ METHOD WvgWindow:destroy()
       WVG_DestroyWindow( ::hWnd )
    ENDIF
 
-   IF ::hBrushBG <> NIL
+   IF ::hBrushBG != NIL
       WVG_DeleteObject( ::hBrushBG )
    ENDIF
 
@@ -496,7 +496,7 @@ METHOD WvgWindow:setColorBG( nRGB )
    ENDIF
    IF hb_isNumeric( nRGB )
       hBrush := WVG_CreateBrush( BS_SOLID, nRGB, 0 )
-      IF hBrush <> 0
+      IF hBrush != 0
          ::clr_BG := nRGB
          ::hBrushBG := hBrush
 
@@ -1387,4 +1387,3 @@ METHOD WvgWindow:createControl()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
