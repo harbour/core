@@ -60,8 +60,6 @@
  *
  */
 
-#include "common.ch"
-
 #define SID_LENGTH      25
 #define BASE_KEY_STRING "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 #define CRC_KEY_STRING  "Ak3yStR1Ng"  // Max Length must be 10 chars

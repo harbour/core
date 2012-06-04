@@ -426,7 +426,10 @@ METHOD select( xValue ) CLASS RADIOGROUP
       FOR nPos := 1 TO nLen
          IF ::aItems[ nPos ]:data == xValue
 
-            hb_default( @::xBuffer, "" )
+            IF ::xBuffer == NIL
+               ::xBuffer := ""
+            ENDIF
+
             ::changeButton( ::nValue, nPos )
 
             EXIT
@@ -439,7 +442,10 @@ METHOD select( xValue ) CLASS RADIOGROUP
 
    ELSEIF cType == "N" .AND. xValue >= 1 .AND. xValue <= ::nItemCount
 
-      hb_default( @::xBuffer, 0 )
+      IF ::xBuffer == NIL
+         ::xBuffer := 0
+      ENDIF
+
       ::changeButton( ::nValue, xValue )
 
    ENDIF
