@@ -82,7 +82,7 @@
 
 EXIT PROCEDURE KillGTChildren()
 
-   IF hb_isObject( s_oCrt ) .AND. __objGetClsName( s_oCrt ) == "WVGCRT" .AND. s_oCrt:isGT
+   IF HB_ISOBJECT( s_oCrt ) .AND. __objGetClsName( s_oCrt ) == "WVGCRT" .AND. s_oCrt:isGT
       s_oCrt:destroy()
       s_oCrt := NIL
    ENDIF

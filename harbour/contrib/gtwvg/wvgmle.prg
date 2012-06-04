@@ -198,22 +198,22 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
    CASE nMessage == HB_GTE_COMMAND
       DO CASE
       CASE aNM[ NMH_code ] == EN_KILLFOCUS
-         IF hb_isBlock( ::sl_killInputFocus )
+         IF HB_ISBLOCK( ::sl_killInputFocus )
             eval( ::sl_killInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_SETFOCUS
-         IF hb_isBlock( ::sl_setInputFocus )
+         IF HB_ISBLOCK( ::sl_setInputFocus )
             eval( ::sl_setInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_HSCROLL
-         IF hb_isBlock( ::sl_hScroll )
+         IF HB_ISBLOCK( ::sl_hScroll )
             eval( ::sl_hScroll, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_VSCROLL
-         IF hb_isBlock( ::sl_vScroll )
+         IF HB_ISBLOCK( ::sl_vScroll )
             eval( ::sl_vScroll, NIL, NIL, Self )
          ENDIF
 
@@ -224,10 +224,10 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
       ENDCASE
 
    CASE nMessage ==  HB_GTE_CTLCOLOR
-      IF hb_isNumeric( ::clr_FG )
+      IF HB_ISNUMERIC( ::clr_FG )
          WVG_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
-      IF hb_isNumeric( ::hBrushBG )
+      IF HB_ISNUMERIC( ::hBrushBG )
          WVG_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ELSE
@@ -245,22 +245,22 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_KILLFOCUS
-            IF hb_isBlock( ::sl_killInputFocus )
+            IF HB_ISBLOCK( ::sl_killInputFocus )
                eval( ::sl_killInputFocus, NIL, NIL, Self )
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_SETFOCUS
-            IF hb_isBlock( ::sl_setInputFocus )
+            IF HB_ISBLOCK( ::sl_setInputFocus )
                eval( ::sl_setInputFocus, NIL, NIL, Self )
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_HSCROLL
-            IF hb_isBlock( ::sl_hScroll )
+            IF HB_ISBLOCK( ::sl_hScroll )
                eval( ::sl_hScroll, NIL, NIL, Self )
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_VSCROLL
-            IF hb_isBlock( ::sl_vScroll )
+            IF HB_ISBLOCK( ::sl_vScroll )
                eval( ::sl_vScroll, NIL, NIL, Self )
             ENDIF
 
@@ -286,7 +286,7 @@ METHOD WvgMLE:destroy()
 METHOD WvgMLE:changed( lChanged )
    LOCAL lChg := ::sendMessage( EM_GETMODIFY, 0, 0 )
 
-   IF hb_isLogical( lChanged )
+   IF HB_ISLOGICAL( lChanged )
       ::sendMessage( EM_SETMODIFY, iif( lChanged, 0, 1 ), 0 )
    ENDIF
 

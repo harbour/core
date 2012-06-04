@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 THREAD STATIC t_hIdle
 
 FUNCTION KeySec( nKey, nTime, nCounter, lMode )
@@ -62,17 +60,17 @@ FUNCTION KeySec( nKey, nTime, nCounter, lMode )
       t_hIdle := NIL
    ENDIF
 
-   IF ISNUMBER( nKey )
-      IF ! ISNUMBER( nTime )
+   IF HB_ISNUMERIC( nKey )
+      IF ! HB_ISNUMERIC( nTime )
          nTime := 0
       ELSEIF nTime < 0
          nTime := -nTime / 18.2
       ENDIF
       nTime *= 1000
-      IF ! ISNUMBER( nCounter )
+      IF ! HB_ISNUMERIC( nCounter )
          nCounter := 1
       ENDIF
-      IF ! ISLOGICAL( lMode )
+      IF ! HB_ISLOGICAL( lMode )
          lMode := .F.
       ENDIF
 

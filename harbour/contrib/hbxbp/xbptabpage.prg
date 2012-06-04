@@ -179,7 +179,7 @@ METHOD XbpTabPage:execSlot( cSlot, p )
    HB_SYMBOL_UNUSED( cSlot )
 
    IF iIndex >= 0  .and. len( ::oParent:aTabs ) > 0
-      IF hb_isBlock( ::oParent:aTabs[ iIndex+1 ]:sl_tabActivate )
+      IF HB_ISBLOCK( ::oParent:aTabs[ iIndex+1 ]:sl_tabActivate )
          eval( ::oParent:aTabs[ iIndex+1 ]:sl_tabActivate, NIL, NIL, ::oParent:aTabs[ iIndex+1 ] )
       ENDIF
    ENDIF
@@ -199,9 +199,9 @@ METHOD XbpTabPage:handleEvent( nEvent, mp1, mp2 )
 
 METHOD XbpTabPage:tabActivate( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_tabActivate := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_tabActivate )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_tabActivate )
       eval( ::sl_tabActivate, NIL, NIL, Self )
    ENDIF
    RETURN self
@@ -210,9 +210,9 @@ METHOD XbpTabPage:tabActivate( ... )
 
 METHOD XbpTabPage:closeRequested( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_closeRequested := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_closeRequested )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_closeRequested )
       eval( ::sl_closeRequested, NIL, NIL, Self )
    ENDIF
    RETURN self
@@ -319,7 +319,7 @@ METHOD XbpTabWidget:destroy()
 METHOD XbpTabWidget:execSlot( cSlot, p )
    LOCAL qTab, nIndex, oTab, qWidget, qPoint, iIndex
 
-   IF hb_isObject( p )
+   IF HB_ISOBJECT( p )
       qPoint  := ::oWidget:mapToGlobal( p )
       qWidget := QApplication():widgetAt( qPoint )
 

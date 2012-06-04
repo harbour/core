@@ -156,7 +156,7 @@ ENDCLASS
 
 METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClientFTP
 
-   ::super:new( oUrl, iif( ISLOGICAL( xTrace ) .AND. xTrace, "ftp", xTrace ), oCredentials )
+   ::super:new( oUrl, iif( HB_ISLOGICAL( xTrace ) .AND. xTrace, "ftp", xTrace ), oCredentials )
 
    ::nDefaultPort := 21
    ::nConnTimeout := 3000
@@ -173,7 +173,7 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClientFTP
 
 METHOD Open( cUrl ) CLASS tIPClientFTP
 
-   IF hb_isString( cUrl )
+   IF HB_ISSTRING( cUrl )
       ::oUrl := tUrl():New( cUrl )
    ENDIF
 
@@ -212,7 +212,7 @@ METHOD GetReply() CLASS tIPClientFTP
    // now, if the reply has a "-" as fourth character, we need to proceed...
    DO WHILE ! Empty( cRep ) .AND. SubStr( cRep, 4, 1 ) == "-"
       ::cReply := ::InetRecvLine( ::SocketCon, @nLen, 128 )
-      cRep := iif( ISCHARACTER( ::cReply ), ::cReply, "" )
+      cRep := iif( HB_ISSTRING( ::cReply ), ::cReply, "" )
    ENDDO
 
    // 4 and 5 are error codes
@@ -596,7 +596,7 @@ METHOD MPUT( cFileSpec, cAttr ) CLASS tIPClientFTP
    LOCAL cPath, cFile, cExt, aFile
    LOCAL cStr := ""
 
-   IF ! ISCHARACTER( cFileSpec )
+   IF ! HB_ISSTRING( cFileSpec )
       RETURN 0
    ENDIF
 

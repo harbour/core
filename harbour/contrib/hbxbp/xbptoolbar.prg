@@ -231,7 +231,7 @@ METHOD XbpToolbar:sendToolbarMessage()
 
 METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB )
    LOCAL oBtn
-   LOCAL isAction := hb_isObject( cCaption ) .AND. __ObjGetClsName( cCaption ) == "QACTION"
+   LOCAL isAction := HB_ISOBJECT( cCaption ) .AND. __ObjGetClsName( cCaption ) == "QACTION"
 
    HB_SYMBOL_UNUSED( xDisabledImage )
    HB_SYMBOL_UNUSED( xHotImage )
@@ -345,9 +345,9 @@ METHOD XbpToolbar:setSize()
 
 METHOD XbpToolbar:buttonClick( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_lbClick := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbClick )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_lbClick )
       eval( ::sl_lbClick, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -356,9 +356,9 @@ METHOD XbpToolbar:buttonClick( ... )
 
 METHOD XbpToolbar:change( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_change := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_change )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_change )
       eval( ::sl_change, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -367,9 +367,9 @@ METHOD XbpToolbar:change( ... )
 
 METHOD XbpToolbar:buttonMenuClick( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_buttonMenuClick := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_buttonMenuClick )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_buttonMenuClick )
       eval( ::sl_buttonMenuClick, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -378,9 +378,9 @@ METHOD XbpToolbar:buttonMenuClick( ... )
 
 METHOD XbpToolbar:buttonDropDown( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_buttonDropDown := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_buttonDropDown )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_buttonDropDown )
       eval( ::sl_buttonDropDown, NIL, NIL, Self )
    ENDIF
    RETURN Self

@@ -44,7 +44,6 @@
  *
  */
 
-#include "common.ch"
 #include "error.ch"
 #include "cgi.ch"
 
@@ -80,7 +79,7 @@ STATIC FUNC xhb_cgi_DefError( e )
    ENDIF
 
    IF e:genCode == EG_CORRUPTION
-      IF ISBLOCK( s_bFixCorrupt )
+      IF HB_ISBLOCK( s_bFixCorrupt )
          Eval( s_bFixCorrupt, e )
          RETURN .F.
       ELSE
@@ -184,7 +183,7 @@ RETURN .F.
 
 FUNCTION SetCorruptFunc( bFunc )
 
-   IF ISBLOCK( bFunc )
+   IF HB_ISBLOCK( bFunc )
       s_bFixCorrupt := bFunc
    ENDIF
 
@@ -207,21 +206,21 @@ STATIC FUNC ErrorMessage( e )
    cMessage += IF( e:severity > ES_WARNING, "Error ", "Warning " )
 
    // add subsystem name if available
-   IF ISCHARACTER( e:subsystem )
+   IF HB_ISSTRING( e:subsystem )
       cMessage += e:subsystem()
    ELSE
       cMessage += "???"
    ENDIF
 
    // add subsystem's error code if available
-   IF ISNUMBER( e:subCode )
+   IF HB_ISNUMERIC( e:subCode )
       cMessage += "/" + hb_ntos( e:subCode )
    ELSE
       cMessage += "/???"
    ENDIF
 
    // add error description if available
-   IF ISCHARACTER( e:description )
+   IF HB_ISSTRING( e:description )
       cMessage += "<BR>  " + e:description
    ENDIF
 

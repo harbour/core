@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "error.ch"
 
 #include "hbzlib.ch"
@@ -73,7 +72,7 @@ FUNCTION HB_COMPRESS( xPar1, xPar2, xPar3, xPar4, xPar5 )
 
    LOCAL oError
 
-   IF ISNUMBER( xPar1 )
+   IF HB_ISNUMERIC( xPar1 )
       nComprFactor := xPar1
       cSource      := xPar2
       nSourceLen   := xPar3
@@ -87,7 +86,7 @@ FUNCTION HB_COMPRESS( xPar1, xPar2, xPar3, xPar4, xPar5 )
       lReturnByRef := PCount() >= 3
    ENDIF
 
-   IF ! ISCHARACTER( cSource )
+   IF ! HB_ISSTRING( cSource )
       oError := ErrorNew()
 
       oError:severity    := ES_ERROR
@@ -100,24 +99,24 @@ FUNCTION HB_COMPRESS( xPar1, xPar2, xPar3, xPar4, xPar5 )
       RETURN NIL
    ENDIF
 
-   IF ! ISNUMBER( nDestLen )
+   IF ! HB_ISNUMERIC( nDestLen )
       nDestLen := NIL
    ENDIF
 
-   IF ISNUMBER( nSourceLen ) .AND. nSourceLen >= 0 .AND. nSourceLen < Len( cSource )
+   IF HB_ISNUMERIC( nSourceLen ) .AND. nSourceLen >= 0 .AND. nSourceLen < Len( cSource )
       cSource := Left( cSource, nSourceLen )
    ENDIF
 
    IF lReturnByRef
-      IF ISNUMBER( xPar1 )
+      IF HB_ISNUMERIC( xPar1 )
          xPar4 := HB_ZCOMPRESS( cSource, nDestLen, @s_nLastError, nComprFactor )
-         IF ! ISCHARACTER( xPar4 )
+         IF ! HB_ISSTRING( xPar4 )
             xPar4 := ""
          ENDIF
          xPar5 := Len( xPar4 )
       ELSE
          xPar3 := HB_ZCOMPRESS( cSource, nDestLen, @s_nLastError, nComprFactor )
-         IF ! ISCHARACTER( xPar3 )
+         IF ! HB_ISSTRING( xPar3 )
             xPar3 := ""
          ENDIF
          xPar4 := Len( xPar3 )
@@ -134,8 +133,8 @@ FUNCTION HB_COMPRESS( xPar1, xPar2, xPar3, xPar4, xPar5 )
 FUNCTION HB_UNCOMPRESS( nDestLen, cSource, nSourceLen, /* @ */ cDest )
    LOCAL oError
 
-   IF ! ISNUMBER( nDestLen ) .OR. ;
-      ! ISCHARACTER( cSource )
+   IF ! HB_ISNUMERIC( nDestLen ) .OR. ;
+      ! HB_ISSTRING( cSource )
 
       oError := ErrorNew()
 
@@ -149,7 +148,7 @@ FUNCTION HB_UNCOMPRESS( nDestLen, cSource, nSourceLen, /* @ */ cDest )
       RETURN NIL
    ENDIF
 
-   IF ISNUMBER( nSourceLen ) .AND. nSourceLen >= 0 .AND. nSourceLen < Len( cSource )
+   IF HB_ISNUMERIC( nSourceLen ) .AND. nSourceLen >= 0 .AND. nSourceLen < Len( cSource )
       cSource := Left( cSource, nSourceLen )
    ENDIF
 
@@ -178,7 +177,7 @@ FUNCTION HB_COMPRESSERRORDESC( nError )
 FUNCTION HB_COMPRESSBUFLEN( nSrcLen )
    LOCAL nRet
 
-   IF ! ISNUMBER( nSrcLen )
+   IF ! HB_ISNUMERIC( nSrcLen )
       nSrcLen := 0
    ENDIF
 

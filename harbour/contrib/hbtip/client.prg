@@ -192,15 +192,15 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClient
    LOCAL aProtoAcceptedSSL := {}
 #endif
 
-   IF ISCHARACTER( xTrace ) .OR. ;
-      ( ISLOGICAL( xTrace ) .AND. xTrace )
-      oLog := tIPLog():New( iif( ISCHARACTER( xTrace ), xTrace, NIL ) )
+   IF HB_ISSTRING( xTrace ) .OR. ;
+      ( HB_ISLOGICAL( xTrace ) .AND. xTrace )
+      oLog := tIPLog():New( iif( HB_ISSTRING( xTrace ), xTrace, NIL ) )
       ::bTrace := {| cMsg | iif( PCount() > 0, oLog:Add( cMsg ), oLog:Close() ) }
-   ELSEIF ISBLOCK( xTrace )
+   ELSEIF HB_ISBLOCK( xTrace )
       ::bTrace := xTrace
    ENDIF
 
-   IF ISCHARACTER( oUrl )
+   IF HB_ISSTRING( oUrl )
       oUrl := tUrl():New( oUrl )
    ENDIF
 
@@ -248,7 +248,7 @@ METHOD Open( cUrl ) CLASS tIPClient
    LOCAL nPort
    LOCAL cResp
 
-   IF ISCHARACTER( cUrl )
+   IF HB_ISSTRING( cUrl )
       ::oUrl := tUrl():New( cUrl )
    ENDIF
 
@@ -380,7 +380,7 @@ METHOD Close() CLASS tIPClient
       ::isOpen := .F.
    ENDIF
 
-   IF ISBLOCK( ::bTrace )
+   IF HB_ISBLOCK( ::bTrace )
       /* Call with no parameter to signal end of logging session */
       Eval( ::bTrace )
    ENDIF
@@ -454,7 +454,7 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS tIPClient
    LOCAL cData
    LOCAL nSent
 
-   IF ! ISNUMBER( nMode )
+   IF ! HB_ISNUMERIC( nMode )
       nMode := FC_NORMAL
    ENDIF
 
@@ -603,7 +603,7 @@ METHOD InetSendAll( SocketCon, cData, nLen ) CLASS tIPClient
       nRet := hb_inetSendAll( SocketCon, cData, nLen )
    ENDIF
 
-   IF ISBLOCK( ::bTrace )
+   IF HB_ISBLOCK( ::bTrace )
       ::Log( SocketCon, nlen, cData, nRet )
    ENDIF
 
@@ -612,7 +612,7 @@ METHOD InetSendAll( SocketCon, cData, nLen ) CLASS tIPClient
 METHOD InetCount( SocketCon ) CLASS tIPClient
    LOCAL nRet := hb_inetCount( SocketCon )
 
-   IF ISBLOCK( ::bTrace )
+   IF HB_ISBLOCK( ::bTrace )
       ::Log( SocketCon, nRet )
    ENDIF
 
@@ -635,7 +635,7 @@ METHOD InetRecv( SocketCon, cStr1, len ) CLASS tIPClient
       nRet := hb_inetRecv( SocketCon, @cStr1, len )
    ENDIF
 
-   IF ISBLOCK( ::bTrace )
+   IF HB_ISBLOCK( ::bTrace )
       ::Log( SocketCon, "", len, iif( nRet >= 0, cStr1, nRet ) )
    ENDIF
 
@@ -662,7 +662,7 @@ METHOD InetRecvLine( SocketCon, nRet, size ) CLASS tIPClient
       cRet := hb_inetRecvLine( SocketCon, @nRet, size )
    ENDIF
 
-   IF ISBLOCK( ::bTrace )
+   IF HB_ISBLOCK( ::bTrace )
       ::Log( SocketCon, "", size, cRet )
    ENDIF
 
@@ -689,7 +689,7 @@ METHOD InetRecvAll( SocketCon, cRet, size ) CLASS tIPClient
       nRet := hb_inetRecvAll( SocketCon, @cRet, size )
    ENDIF
 
-   IF ISBLOCK( ::bTrace )
+   IF HB_ISBLOCK( ::bTrace )
       ::Log( SocketCon, "", size, iif( nRet >= 0, cRet, nRet ) )
    ENDIF
 
@@ -710,7 +710,7 @@ METHOD InetErrorCode( SocketCon ) CLASS tIPClient
 
    ::nLastError := nRet
 
-   IF ISBLOCK( ::bTrace )
+   IF HB_ISBLOCK( ::bTrace )
       ::Log( SocketCon, nRet )
    ENDIF
 
@@ -757,7 +757,7 @@ METHOD InetConnect( cServer, nPort, SocketCon ) CLASS tIPClient
    ENDIF
 #endif
 
-   IF ISBLOCK( ::bTrace )
+   IF HB_ISBLOCK( ::bTrace )
       ::Log( cServer, nPort, SocketCon )
    ENDIF
 
@@ -777,10 +777,10 @@ METHOD InetSndBufSize( SocketCon, nSizeBuff ) CLASS tIPClient
    RETURN hb_inetGetSndBufSize( SocketCon )
 
 METHOD InetTimeOut( SocketCon, nConnTimeout ) CLASS tIPClient
-   IF ISNUMBER( nConnTimeout )
+   IF HB_ISNUMERIC( nConnTimeout )
       ::nConnTimeout := nConnTimeout
    ENDIF
-   IF ISNUMBER( ::nConnTimeout )
+   IF HB_ISNUMERIC( ::nConnTimeout )
       RETURN hb_inetTimeout( SocketCon, ::nConnTimeout )
    ENDIF
    RETURN NIL
@@ -795,7 +795,7 @@ METHOD Log( ... ) CLASS tIPClient
    LOCAL xVar
    LOCAL cMsg
 
-   IF ISBLOCK( ::bTrace )
+   IF HB_ISBLOCK( ::bTrace )
 
       cMsg := DToS( Date() ) + "-" + Time() + Space( 2 ) + ;
                  SubStr( ProcName( 1 ), RAt( ":", ProcName( 1 ) ) ) +;

@@ -105,7 +105,7 @@ METHOD XbpStyle:create()
 
    IF !empty( ::colorFG )
       s += 'color: '
-      IF hb_isNumeric( ::colorFG )
+      IF HB_ISNUMERIC( ::colorFG )
          s += hb_ntos( ::colorFG )
       ELSE
          s += ::colorFG
@@ -115,7 +115,7 @@ METHOD XbpStyle:create()
 
    IF !empty( ::colorBG )
       s += 'background-color: '
-      IF hb_isNumeric( ::colorBG )
+      IF HB_ISNUMERIC( ::colorBG )
          s += hb_ntos( ::colorBG )
       ELSE
          s += ::colorBG

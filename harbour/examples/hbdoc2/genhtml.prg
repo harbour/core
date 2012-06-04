@@ -159,7 +159,7 @@ HB_SYMBOL_UNUSED( cFilename )
    RETURN self
 
 METHOD AddReference( oEntry, cReference, cSubReference ) CLASS GenerateHTML
-   IF HB_IsObject( oEntry ) .AND. oEntry:ClassName == "ENTRY"
+   IF HB_ISOBJECT( oEntry ) .AND. oEntry:ClassName == "ENTRY"
       ::OpenTag( "a", "href", ::TargetFilename + ::cExtension + "#" + oEntry:Filename ):Append( oEntry:Name ):CloseTag( "a" ):Append( oEntry:OneLiner ):Newline()
    ELSE
       IF cSubReference == NIL

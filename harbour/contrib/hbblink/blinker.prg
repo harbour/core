@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 #include "hbhrb.ch"
 #include "hbmemory.ch"
 
@@ -69,7 +67,7 @@ THREAD STATIC t_nErrorMaj := 0
 THREAD STATIC t_nErrorMin := 0
 
 PROCEDURE HB_BLIVERNUM( cString )
-   IF ISCHARACTER( cString )
+   IF HB_ISSTRING( cString )
       s_cSerialNum := cString
    ENDIF
    RETURN
@@ -81,7 +79,7 @@ PROCEDURE HB_BLIDEMDTE( dDate )
    RETURN
 
 PROCEDURE HB_BLIDEMMIN( nValue )
-   IF ISNUMBER( nValue )
+   IF HB_ISNUMERIC( nValue )
       s_nDemoMinutes := nValue
    ENDIF
    RETURN
@@ -89,7 +87,7 @@ PROCEDURE HB_BLIDEMMIN( nValue )
 FUNCTION BLIDBGHAN( nValue )
    STATIC s_nDebugHandle := 1
    LOCAL nOldValue := s_nDebugHandle
-   IF ISNUMBER( nValue )
+   IF HB_ISNUMERIC( nValue )
       s_nDebugHandle := nValue
    ENDIF
    RETURN nOldValue
@@ -102,7 +100,7 @@ FUNCTION BLIDEMDTEBAS()
 
 FUNCTION BLIDEMMIN( nValue )
    LOCAL nOldValue := s_nDemoMinutes
-   IF ISNUMBER( nValue )
+   IF HB_ISNUMERIC( nValue )
       s_nDemoMinutes := nValue
    ENDIF
    RETURN nOldValue
@@ -143,7 +141,7 @@ PROCEDURE BLILIBFRE( pLib )
    RETURN
 
 PROCEDURE BLILIBOVR( lValue )
-   IF ISLOGICAL( lValue )
+   IF HB_ISLOGICAL( lValue )
       s_lLibOverrides := lValue
    ENDIF
    RETURN
@@ -165,7 +163,7 @@ FUNCTION BLIMEMBLK( nBlockSize )
 FUNCTION BLIMEMPAK( nValue )
    STATIC s_nGCFrequency := 0
    LOCAL nOldValue := s_nDemoMinutes
-   IF ISNUMBER( nValue )
+   IF HB_ISNUMERIC( nValue )
       s_nGCFrequency := nValue
    ENDIF
    RETURN nOldValue

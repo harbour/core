@@ -200,9 +200,9 @@ METHOD XbpComboBox:execSlot( cSlot, p )
 
 METHOD XbpComboBox:itemMarked( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_itemMarked := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_itemMarked )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_itemMarked )
       eval( ::sl_itemMarked, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -211,9 +211,9 @@ METHOD XbpComboBox:itemMarked( ... )
 
 METHOD XbpComboBox:itemSelected( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_itemSelected := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_itemSelected )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_itemSelected )
       eval( ::sl_itemSelected, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -222,9 +222,9 @@ METHOD XbpComboBox:itemSelected( ... )
 
 METHOD XbpComboBox:drawItem( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_xbePDrawItem := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_xbePDrawItem )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_xbePDrawItem )
       eval( ::sl_xbePDrawItem, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self

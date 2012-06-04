@@ -50,7 +50,6 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "hblog.ch"
 #include "fileio.ch"
 
@@ -188,9 +187,9 @@ FUNCTION HB_BldLogMsg( ... )
    LOCAL cMsg := ""
 
    FOR EACH xVar IN HB_aParams()
-      IF ISNUMBER( xVar )
+      IF HB_ISNUMERIC( xVar )
          cMsg += AllTrim( HB_CStr( xVar ) )
-      ELSEIF ! ISCHARACTER( xVar )
+      ELSEIF ! HB_ISSTRING( xVar )
          cMsg += HB_CStr( xVar )
       ELSE
          cMsg += xVar
@@ -612,7 +611,7 @@ METHOD New( nLevel, cDBFName, cIndexName, aStruct, cDriver ) CLASS HB_LogDbf
    LOCAL cPath, cName, cExt, cDrive
 
    ::Super:New( nLevel )
-   IF ISCHARACTER( cDBFName )
+   IF HB_ISSTRING( cDBFName )
       HB_FnameSplit( cDBFName, @cPath, @cName, @cExt, @cDrive )
       IF Empty( cExt )
          cExt := "dbf"
@@ -623,7 +622,7 @@ METHOD New( nLevel, cDBFName, cIndexName, aStruct, cDriver ) CLASS HB_LogDbf
       //__OutDebug( "::cDBFName", ::cDBFName )
    ENDIF
 
-   IF ISCHARACTER( cIndexName )
+   IF HB_ISSTRING( cIndexName )
       HB_FnameSplit( cIndexName, @cPath, @cName, @cExt, @cDrive )
       IF Empty( cExt )
          cExt := "cdx"

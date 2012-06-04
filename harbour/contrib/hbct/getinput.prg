@@ -53,20 +53,18 @@
  *
  */
 
-#include "common.ch"
-
 FUNCTION GETINPUT( xVar, nRow, nCol, lSay, xPrompt )
    LOCAL nCursorRow := ROW()
    LOCAL nCursorCol := COL()
    LOCAL GetList := {}
 
-   IF ! ISNUMBER( nRow )
+   IF ! HB_ISNUMERIC( nRow )
       nRow := nCursorRow
    ENDIF
-   IF ! ISNUMBER( nCol )
+   IF ! HB_ISNUMERIC( nCol )
       nCol := nCursorCol
    ENDIF
-   IF ! ISLOGICAL( lSay )
+   IF ! HB_ISLOGICAL( lSay )
       lSay := .F.
    ENDIF
 

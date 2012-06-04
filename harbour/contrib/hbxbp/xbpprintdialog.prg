@@ -134,7 +134,7 @@ METHOD XbpPrintDialog:destroy()
 METHOD XbpPrintDialog:display( oXbpPrinter )
    LOCAL nResult, nOpt, n
 
-   IF hb_isObject( oXbpPrinter )
+   IF HB_ISOBJECT( oXbpPrinter )
       // Parameters be based onto that
 
    ENDIF
@@ -162,7 +162,7 @@ METHOD XbpPrintDialog:display( oXbpPrinter )
    nResult := ::oWidget:exec()
 
    IF nResult == QDialog_Accepted
-      IF !hb_isObject( oXbpPrinter )
+      IF !HB_ISOBJECT( oXbpPrinter )
          oXbpPrinter := XbpPrinter():new()
          oXbpPrinter:oWidget := QPrinter()
       ENDIF

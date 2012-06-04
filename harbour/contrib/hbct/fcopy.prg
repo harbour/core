@@ -66,7 +66,6 @@
  *
  */
 
-#include "common.ch"
 #include "fileio.ch"
 
 #define F_BLOCK   512
@@ -87,7 +86,7 @@ FUNCTION FILECOPY( cSource, cDest, lMode )
    LOCAL lDone := .F.
    LOCAL nSrcBytes, nDstBytes, nTotBytes := 0
 
-   IF ! ISLOGICAL( lMode )
+   IF ! HB_ISLOGICAL( lMode )
       lMode := .F.
    ENDIF
    IF t_hSrcFile != F_ERROR
@@ -134,7 +133,7 @@ FUNCTION FILECOPEN()
 FUNCTION FILECDATI( lNewMode )
    LOCAL lOldMode := t_lSetDaTi
 
-   IF ISLOGICAL( lNewMode )
+   IF HB_ISLOGICAL( lNewMode )
       t_lSetDaTi := lNewMode
    ENDIF
 

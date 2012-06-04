@@ -294,7 +294,7 @@ METHOD CheckCode() CLASS TBarCode
    LOCAL i
 
    For i := 1 To Len( ::text )
-       If ISCHARACTER( ::CheckValInArray( SubStr( ::text, i, 1 ) ) )
+       If HB_ISSTRING( ::CheckValInArray( SubStr( ::text, i, 1 ) ) )
            ::DrawError("Character  "+SubStr( ::text, i, 1 )+" not allowed .")
            lRet := .F.
        EndIf

@@ -51,7 +51,6 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
 
 #include "hbwin.ch"
 
@@ -89,7 +88,7 @@ METHOD LoadFile( cFileName, aDimXY ) CLASS WIN_BMP
       ::DimXY := { 0, 0 }
    ELSE
       ::Type := win_bitmapType( ::Bitmap )
-      IF ISARRAY( aDimXY )
+      IF HB_ISARRAY( aDimXY )
         ::DimXY := aDimXY
       ELSEIF ! win_BitMapDimensions( ::Bitmap, @::DimXY[ 1 ], @::DimXY[ 2 ] )
         ::DimXY := { 1, 1 } // Driver may use the original dimensions
@@ -107,7 +106,7 @@ METHOD IsSupported( oPrn, /* @ */ nError ) CLASS WIN_BMP
    RETURN ( nError := win_BitmapIsSupported( oPrn:hPrinterDc, ::Bitmap ) ) == 0
 
 METHOD Draw( oPrn, aRectangle, /* @ */ nError ) CLASS WIN_BMP // Pass a WIN_PRN object reference & Rectangle array
-   IF ISARRAY( aRectangle )
+   IF HB_ISARRAY( aRectangle )
       ::Rect := aRectangle
    ENDIF
    RETURN iif( ::IsSupported( oPrn, @nError ), oPrn:DrawBitMap( Self ), .F. )

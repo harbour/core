@@ -2285,7 +2285,7 @@ STATIC FUNCTION ParseIni( cConfig )
 
              //hb_ToOutDebug( "hSect = %s\n\r", hb_ValToExp( hSect ) )
 
-             IF HB_IsHash( hSect )
+             IF HB_ISHASH( hSect )
                 FOR EACH cKey IN hSect:Keys
 
                     // Please, below check values MUST be uppercase
@@ -2534,21 +2534,21 @@ STATIC FUNCTION ErrorMessage( oError )
    LOCAL cMessage := iif( oError:severity > ES_WARNING, "Error", "Warning" ) + " "
 
    // add subsystem name if available
-   IF ISCHARACTER( oError:subsystem )
+   IF HB_ISSTRING( oError:subsystem )
       cMessage += oError:subsystem()
    ELSE
       cMessage += "???"
    ENDIF
 
    // add subsystem's error code if available
-   IF ISNUMBER( oError:subCode )
+   IF HB_ISNUMERIC( oError:subCode )
       cMessage += "/" + hb_NToS( oError:subCode )
    ELSE
       cMessage += "/???"
    ENDIF
 
    // add error description if available
-   IF ISCHARACTER( oError:description )
+   IF HB_ISSTRING( oError:description )
       cMessage += "  " + oError:description
    ENDIF
 

@@ -167,10 +167,10 @@ METHOD XbpPresSpace:create( oDevice, aPageSize, nUnits )
 
    DEFAULT nUnits TO GRA_PU_PIXEL
 
-   IF hb_isObject( oDevice )
+   IF HB_ISOBJECT( oDevice )
       ::oDevice := oDevice
    ENDIF
-   IF hb_isArray( aPageSize ) .AND. len( aPageSize ) == 2
+   IF HB_ISARRAY( aPageSize ) .AND. len( aPageSize ) == 2
       ::aPageSize := aPageSize
    ENDIF
 
@@ -183,7 +183,7 @@ METHOD XbpPresSpace:create( oDevice, aPageSize, nUnits )
 METHOD XbpPresSpace:drawMode( nDrawMode )
    LOCAL nOldMode := ::nDrawMode
 
-   IF hb_isNumeric( nDrawMode ) .AND. nDrawMode >= GRA_DM_DRAW .AND. nDrawMode <= GRA_DM_DRAWANDRETAIN
+   IF HB_ISNUMERIC( nDrawMode ) .AND. nDrawMode >= GRA_DM_DRAW .AND. nDrawMode <= GRA_DM_DRAWANDRETAIN
       ::nDrawMode := nDrawMode
    ENDIF
 
@@ -207,7 +207,7 @@ METHOD XbpPresSpace:mapPoint( aPoint, lMapToDevice )
 
    DEFAULT  lMapToDevice TO .t.
 
-   IF hb_isArray( aPoint )
+   IF HB_ISARRAY( aPoint )
       IF lMapToDevice
          aPoint := { 0,0 }
       ENDIF
@@ -241,7 +241,7 @@ METHOD XbpPresSpace:setAttrArea( aAttributes )
    LOCAL v
    LOCAL aOldAttr := ::aGRA_AA_ATTR
 
-   IF hb_isArray( aAttributes ) .AND. len( aAttributes ) == GRA_AA_COUNT
+   IF HB_ISARRAY( aAttributes ) .AND. len( aAttributes ) == GRA_AA_COUNT
       FOR EACH v IN aAttributes
          IF !empty( v )
              ::aGRA_AA_ATTR[ v:__enumIndex() ] := v
@@ -257,7 +257,7 @@ METHOD XbpPresSpace:setAttrLine( aAttributes )
    LOCAL v
    LOCAL aOldAttr := ::aGRA_AL_ATTR
 
-   IF hb_isArray( aAttributes ) .AND. len( aAttributes ) == GRA_AL_COUNT
+   IF HB_ISARRAY( aAttributes ) .AND. len( aAttributes ) == GRA_AL_COUNT
       FOR EACH v IN aAttributes
          IF !empty( v )
              ::aGRA_AL_ATTR[ v:__enumIndex() ] := v
@@ -273,7 +273,7 @@ METHOD XbpPresSpace:setAttrMarker( aAttributes )
    LOCAL v
    LOCAL aOldAttr := ::aGRA_AM_ATTR
 
-   IF hb_isArray( aAttributes ) .AND. len( aAttributes ) == GRA_AM_COUNT
+   IF HB_ISARRAY( aAttributes ) .AND. len( aAttributes ) == GRA_AM_COUNT
       FOR EACH v IN aAttributes
          IF !empty( v )
              ::aGRA_AM_ATTR[ v:__enumIndex() ] := v
@@ -289,7 +289,7 @@ METHOD XbpPresSpace:setAttrString( aAttributes )
    LOCAL v
    LOCAL aOldAttr := ::aGRA_AS_ATTR
 
-   IF hb_isArray( aAttributes ) .AND. len( aAttributes ) == GRA_AS_COUNT
+   IF HB_ISARRAY( aAttributes ) .AND. len( aAttributes ) == GRA_AS_COUNT
       FOR EACH v IN aAttributes
          IF !empty( v )
              ::aGRA_AS_ATTR[ v:__enumIndex() ] := v
@@ -319,10 +319,10 @@ METHOD XbpPresSpace:setColorIndex( nColorIndex, aRGB )
    LOCAL a_
    LOCAL aOldAttr := {}
 
-   IF hb_isNumeric( nColorIndex ) .AND. nColorIndex > 15 .AND. nColorIndex <= 255 .AND. nColorIndex < len( ::aPalette )
+   IF HB_ISNUMERIC( nColorIndex ) .AND. nColorIndex > 15 .AND. nColorIndex <= 255 .AND. nColorIndex < len( ::aPalette )
       aOldAttr := ::aPalette[ nColorIndex ]
-      IF hb_isArray( aRGB )
-         IF hb_isArray( aRGB[ 1 ] )
+      IF HB_ISARRAY( aRGB )
+         IF HB_ISARRAY( aRGB[ 1 ] )
             FOR EACH a_ IN aRGB
                ::aPalette[ nColorIndex + a_:__enumIndex() - 1 ] := a_
             NEXT
@@ -339,7 +339,7 @@ METHOD XbpPresSpace:setColorIndex( nColorIndex, aRGB )
 METHOD XbpPresSpace:setFont( oXbpFont )
    LOCAL oOldFont := ::oXbpFont
 
-   IF hb_isObject( oXbpFont )
+   IF HB_ISOBJECT( oXbpFont )
       ::oXbpFont := oXbpFont
    ENDIF
 
@@ -352,7 +352,7 @@ METHOD XbpPresSpace:setGraTransform( aMatrix, nMode )
 
    DEFAULT nMode TO GRA_TRANSFORM_REPLACE
 
-   IF hb_isArray( aMatrix )
+   IF HB_ISARRAY( aMatrix )
       IF nMode == GRA_TRANSFORM_REPLACE
          ::aMatrix := aMatrix
       ELSE
@@ -367,10 +367,10 @@ METHOD XbpPresSpace:setGraTransform( aMatrix, nMode )
 METHOD XbpPresSpace:setPageSize( aPageSize, nUnits )
    LOCAL aOldSize := ::aPageSize
 
-   IF hb_isArray( aPageSize ) .AND. len( aPageSize ) == 2
+   IF HB_ISARRAY( aPageSize ) .AND. len( aPageSize ) == 2
       ::aPageSize := aPageSize
    ENDIF
-   IF hb_isNumeric( nUnits )
+   IF HB_ISNUMERIC( nUnits )
       ::nUnits := nUnits
    ENDIF
 
@@ -381,7 +381,7 @@ METHOD XbpPresSpace:setPageSize( aPageSize, nUnits )
 METHOD XbpPresSpace:setViewPort( aViewPort )
    LOCAL aOldViewPort := ::aViewPort
 
-   IF hb_isArray( aViewPort )
+   IF HB_ISARRAY( aViewPort )
       ::aViewPort := aViewPort
    ENDIF
 

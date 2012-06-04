@@ -214,7 +214,7 @@ METHOD XbpFontDialog:execSlot( cSlot, p )
       ::activateOk( ::XbpFontObject() )
 
    CASE cSlot == "rejected()"
-      IF hb_isBlock( ::sl_quit )
+      IF HB_ISBLOCK( ::sl_quit )
          nRet := eval( ::sl_quit, 0, 0, Self )
       ENDIF
       IF nRet == XBP_REJECT
@@ -273,9 +273,9 @@ METHOD XbpFontDialog:destroy()
 
 METHOD XbpFontDialog:activateApply( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_activateApply := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_activateApply )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_activateApply )
       eval( ::sl_activateApply, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -284,9 +284,9 @@ METHOD XbpFontDialog:activateApply( ... )
 
 METHOD XbpFontDialog:activateCancel( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_activateCancel := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_activateCancel )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_activateCancel )
       eval( ::sl_activateCancel, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self
@@ -295,9 +295,9 @@ METHOD XbpFontDialog:activateCancel( ... )
 
 METHOD XbpFontDialog:activateOk( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_activateOk := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_activateOk )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_activateOk )
       eval( ::sl_activateOk, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -306,9 +306,9 @@ METHOD XbpFontDialog:activateOk( ... )
 
 METHOD XbpFontDialog:activateReset( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_activateReset := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_activateReset )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_activateReset )
       eval( ::sl_activateReset, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self

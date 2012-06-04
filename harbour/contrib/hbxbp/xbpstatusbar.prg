@@ -205,9 +205,9 @@ METHOD XbpStatusBar:addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
 METHOD XbpStatusBar:delItem( nItemORcKey )
    LOCAL nIndex := 0
 
-   IF hb_isNumeric( nItemORcKey )
+   IF HB_ISNUMERIC( nItemORcKey )
       nIndex := ascan( ::aItems, {|o| o:key == nItemORcKey } )
-   ELSEIF hb_isNumeric( nItemORcKey )
+   ELSEIF HB_ISNUMERIC( nItemORcKey )
       nIndex := nItemORcKey
    ENDIF
 
@@ -227,7 +227,7 @@ METHOD XbpStatusBar:getItem( nItemORcKey )
    IF hb_isChar( nItemORcKey  )
       nIndex := ascan( ::aItems, {|o| o:key == nItemORcKey } )
 
-   ELSEIF hb_isNumeric(  nItemORcKey  )
+   ELSEIF HB_ISNUMERIC(  nItemORcKey  )
       nIndex := nItemORcKey
 
    ENDIF
@@ -250,9 +250,9 @@ METHOD XbpStatusBar:clear()
 
 METHOD XbpStatusBar:panelClick( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_lbClick := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbClick )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_lbClick )
       eval( ::sl_lbClick, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -261,9 +261,9 @@ METHOD XbpStatusBar:panelClick( ... )
 
 METHOD XbpStatusBar:panelDblClick( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_lbDblClick := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbDblClick )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_lbDblClick )
       eval( ::sl_lbDblClick, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self

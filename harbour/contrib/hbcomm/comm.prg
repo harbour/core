@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 #include "hbcom.ch"
 
 STATIC s_hPort := { => }
@@ -69,7 +67,7 @@ FUNCTION INIT_PORT( cPort, nBaud, nData, nParity, nStop, nBufferSize )
              compatibility interface. [vszakats] */
    nPort := Len( s_hPort ) + 1
 
-   IF ISCHARACTER( cPort )
+   IF HB_ISSTRING( cPort )
       cOldPortName := hb_comGetDevice( nPort )
       hb_comSetDevice( nPort, cPort )
    ENDIF
@@ -78,12 +76,12 @@ FUNCTION INIT_PORT( cPort, nBaud, nData, nParity, nStop, nBufferSize )
 
    IF hb_comOpen( nPort )
 
-      IF ! ISNUMBER( nBaud )
+      IF ! HB_ISNUMERIC( nBaud )
          nBaud := 9600
       ENDIF
 
       cParity := "N"
-      IF ISNUMBER( nParity )
+      IF HB_ISNUMERIC( nParity )
          SWITCH nParity
          CASE 0 ; cParity := "N" ; EXIT
          CASE 1 ; cParity := "O" ; EXIT
@@ -92,7 +90,7 @@ FUNCTION INIT_PORT( cPort, nBaud, nData, nParity, nStop, nBufferSize )
          ENDSWITCH
       ENDIF
 
-      IF ! ISNUMBER( nStop )
+      IF ! HB_ISNUMERIC( nStop )
          nStop := 1
       ENDIF
 
@@ -129,7 +127,7 @@ FUNCTION ISWORKING( nPort )
          [vszakats] */
 /* Fetch <nCount> chars into <cData> */
 FUNCTION INCHR( nPort, nCount, /* @ */ cData )
-   cData := iif( ISNUMBER( nCount ), Space( nCount ), "" )
+   cData := iif( HB_ISNUMERIC( nCount ), Space( nCount ), "" )
    RETURN hb_comRecv( nPort, @cData, nCount )
 
 /* Send out characters. Returns .T. if successful. */

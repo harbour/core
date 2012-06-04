@@ -61,8 +61,6 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
-
 CREATE CLASS TipMail
    VAR hHeaders
    // received fields may be more than once.
@@ -87,7 +85,7 @@ CREATE CLASS TipMail
    METHOD GetFieldOption( cPart, cOption )
    METHOD SetFieldPart( cPart, cValue )
    METHOD SetFieldOption( cPart, cOption, cValue )
-   METHOD SetCharset( cCharset ) INLINE ::cCharset := iif( ISCHARACTER( cCharset ), cCharset, "ISO-8859-1" )
+   METHOD SetCharset( cCharset ) INLINE ::cCharset := iif( HB_ISSTRING( cCharset ), cCharset, "ISO-8859-1" )
 
    METHOD GetContentType() INLINE ::GetFieldPart( "Content-Type" )
    METHOD GetCharEncoding() INLINE ::GetFieldOption( "Content-Type", "encoding" )
@@ -138,7 +136,7 @@ METHOD New( cBody, oEncoder ) CLASS TipMail
    RETURN Self
 
 METHOD SetEncoder( cEncoder ) CLASS TipMail
-   IF hb_isString( cEncoder )
+   IF HB_ISSTRING( cEncoder )
       ::oEncoder := TIp_GetEncoder( cEncoder )
    ELSE
       ::oEncoder := cEncoder
@@ -242,7 +240,7 @@ METHOD SetFieldOption( cPart, cOption, cValue ) CLASS TipMail
 
 METHOD Attach( oSubPart ) CLASS TipMail
 
-   IF hb_isObject( oSubPart ) .AND. oSubPart:ClassName == "TIPMAIL"
+   IF HB_ISOBJECT( oSubPart ) .AND. oSubPart:ClassName == "TIPMAIL"
       // reset wrong content-type
       IF At( "multipart/", Lower( ::GetFieldPart( "Content-Type" ) ) ) == 0
          ::hHeaders[ "Content-Type" ] := "multipart/mixed"
@@ -386,7 +384,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
    ENDIF
 
    // Part 1: parsing header
-   IF ! ISNUMBER( nPos )
+   IF ! HB_ISNUMERIC( nPos )
       nPos := 1
    ENDIF
 
@@ -519,17 +517,17 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TipMail
    LOCAL aTo, aCC, aBCC, i, imax
    LOCAL cTo, cCC, cBCC
 
-   IF ! ISCHARACTER( cSubject )
+   IF ! HB_ISSTRING( cSubject )
       cSubject := ""
    ENDIF
 
-   IF ! ISCHARACTER( cFrom )
+   IF ! HB_ISSTRING( cFrom )
       RETURN .F.
    ENDIF
 
-   IF ISCHARACTER( xTo )
+   IF HB_ISSTRING( xTo )
       aTo := { xTo }
-   ELSEIF ISARRAY( xTo )
+   ELSEIF HB_ISARRAY( xTo )
       aTo := xTo
    ENDIF
 
@@ -537,15 +535,15 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TipMail
       RETURN .F.
    ENDIF
 
-   IF ISCHARACTER( xCC )
+   IF HB_ISSTRING( xCC )
       aCC := { xCC }
-   ELSEIF ISARRAY( xCC )
+   ELSEIF HB_ISARRAY( xCC )
       aCC := xCC
    ENDIF
 
-   IF ISCHARACTER( xBCC )
+   IF HB_ISSTRING( xBCC )
       aBCC := { xBCC }
-   ELSEIF ISARRAY( xBCC )
+   ELSEIF HB_ISARRAY( xBCC )
       aBCC := xBCC
    ENDIF
 
@@ -638,7 +636,7 @@ METHOD detachFile( cPath ) CLASS TipMail
       RETURN .F.
    ENDIF
 
-   IF ISCHARACTER( cPath )
+   IF HB_ISSTRING( cPath )
       cFileName := StrTran( cPath + cDelim + cFileName, cDelim + cDelim, cDelim )
    ENDIF
 
@@ -663,7 +661,7 @@ METHOD getMultiParts( aParts ) CLASS TipMail
 
    ::resetAttachment()
 
-   IF ! ISARRAY( aParts )
+   IF ! HB_ISARRAY( aParts )
       aParts := {}
    ENDIF
 

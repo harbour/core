@@ -184,10 +184,10 @@ METHOD WvgComboBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
 METHOD WvgComboBox:destroy()
 #if 0
-   IF hb_isObject( ::oSLE )
+   IF HB_ISOBJECT( ::oSLE )
       ::oSLE:destroy()
    ENDIF
-   IF hb_isObject( ::oListBox )
+   IF HB_ISOBJECT( ::oListBox )
       ::oListBox:destroy()
    ENDIF
 #endif
@@ -253,10 +253,10 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
       ENDIF
 
    CASE nMessage == HB_GTE_CTLCOLOR
-      IF hb_isNumeric( ::clr_FG )
+      IF HB_ISNUMERIC( ::clr_FG )
          WVG_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
-      IF hb_isNumeric( ::hBrushBG )
+      IF HB_ISNUMERIC( ::hBrushBG )
          WVG_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ELSE
@@ -282,7 +282,7 @@ METHOD WvgComboBox:addItem( cItem )
 METHOD WvgComboBox:listBoxFocus( lFocus )
    LOCAL lOldFocus := ::sendCBMessage( CB_GETDROPPEDSTATE )
 
-   IF hb_isLogical( lFocus )
+   IF HB_ISLOGICAL( lFocus )
       ::sendCBMessage( CB_SHOWDROPDOWN, lFocus )
    ENDIF
 
@@ -292,7 +292,7 @@ METHOD WvgComboBox:listBoxFocus( lFocus )
 
 METHOD WvgComboBox:sleSize()
 
-   IF hb_isObject( ::oSLE )
+   IF HB_ISOBJECT( ::oSLE )
       RETURN ::oSLE:currentSize()
    ENDIF
 
@@ -302,7 +302,7 @@ METHOD WvgComboBox:sleSize()
 
 METHOD WvgComboBox:listBoxSize()
 
-   IF hb_isObject( ::oListBox )
+   IF HB_ISOBJECT( ::oListBox )
       RETURN ::oListBox:currentSize()
    ENDIF
 
@@ -319,9 +319,9 @@ METHOD WvgComboBox:setIcon( nItem, cIcon )
 
 METHOD WvgComboBox:itemMarked( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_itemMarked := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_itemMarked )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_itemMarked )
       eval( ::sl_itemMarked, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -330,9 +330,9 @@ METHOD WvgComboBox:itemMarked( ... )
 
 METHOD WvgComboBox:itemSelected( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_itemSelected := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_itemSelected )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_itemSelected )
       eval( ::sl_itemSelected, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -341,9 +341,9 @@ METHOD WvgComboBox:itemSelected( ... )
 
 METHOD WvgComboBox:drawItem( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_xbePDrawItem := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_xbePDrawItem )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_xbePDrawItem )
       eval( ::sl_xbePDrawItem, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self

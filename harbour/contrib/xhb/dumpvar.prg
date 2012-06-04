@@ -51,7 +51,6 @@
  */
 
 #include "hbclass.ch"
-
 #include "common.ch"
 
 /*
@@ -94,8 +93,8 @@ STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursion
    LOCAL cString := "", cKey
    LOCAL nEolLen
 
-   DEFAULT lAssocAsObj        TO FALSE
-   DEFAULT lRecursive         TO FALSE
+   DEFAULT lAssocAsObj        TO .F.
+   DEFAULT lRecursive         TO .F.
 
    //TraceLog( "Recursion: xVar, nRecursionLevel, nMaxRecursionLevel", xVar, nRecursionLevel, nMaxRecursionLevel )
 
@@ -174,7 +173,7 @@ STATIC FUNCTION DShowProperties( oVar, nScope, lRecursive, nIndent, nRecursionLe
 
    DEFAULT nIndent TO 0
 
-   IF ISOBJECT( oVar )
+   IF HB_ISOBJECT( oVar )
 //      lOldScope := __SetClassScope( .F. )
       aMethods  := __objGetMsgFullList( oVar, .F., HB_MSGLISTALL, nScope )
       aProps    := __objGetValueFullList( oVar, NIL, nScope )
@@ -213,7 +212,7 @@ STATIC FUNCTION DShowArray( aVar, lRecursive, nIndent, nRecursionLevel, nMaxRecu
 
    //TraceLog( "DShowArray: aVar, lRecursive", aVar, lRecursive )
 
-   IF ISARRAY( aVar )
+   IF HB_ISARRAY( aVar )
       nEolLen := Len( hb_eol() )
       nChar := Len( LTrim( Str( Len( aVar ) ) ) )  // return number of chars to display that value
                                                    // i.e. if Len( aVar ) == 99, then nChar := 2
@@ -362,15 +361,15 @@ STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
    LOCAL aReturn
    LOCAL nFirstProperty, aMsg
 
-   IF ! ISOBJECT( oObject )
+   IF ! HB_ISOBJECT( oObject )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName() )
    ENDIF
 
-   IF ! ISLOGICAL( lData )
+   IF ! HB_ISLOGICAL( lData )
       lData := .T.
    ENDIF
 
-   IF ! ISNUMBER( nNoScope )
+   IF ! HB_ISNUMERIC( nNoScope )
       nNoScope := 0
    ENDIF
 
@@ -406,11 +405,11 @@ STATIC FUNCTION __objGetValueFullList( oObject, aExcept, nScope, nNoScope )
    LOCAL aReturn
    LOCAL aVar
 
-   IF ! ISOBJECT( oObject )
+   IF ! HB_ISOBJECT( oObject )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 
-   IF ! ISARRAY( aExcept )
+   IF ! HB_ISARRAY( aExcept )
       aExcept := {}
    ENDIF
 

@@ -137,7 +137,7 @@ METHOD XbpScrollBar:execSlot( cSlot, p )
 
    HB_SYMBOL_UNUSED( cSlot )
 
-   IF !hb_isBlock( ::sl_xbeSB_Scroll )
+   IF !HB_ISBLOCK( ::sl_xbeSB_Scroll )
       RETURN NIL
    ENDIF
 
@@ -207,9 +207,9 @@ METHOD XbpScrollBar:destroy()
 
 METHOD XbpScrollBar:scroll( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_xbeSB_Scroll := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_xbeSB_Scroll )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_xbeSB_Scroll )
       eval( ::sl_xbeSB_Scroll, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN self

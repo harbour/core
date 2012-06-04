@@ -70,8 +70,6 @@
  * [druzus]
  */
 
-#include "common.ch"
-
 FUNCTION DirectoryRecurse( cPath, cAttr )
 
    LOCAL aResult
@@ -79,7 +77,7 @@ FUNCTION DirectoryRecurse( cPath, cAttr )
 
    hb_FNameSplit( cPath, @cFilePath, @cMask, @cExt )
    cMask += cExt
-   IF ! ISCHARACTER( cAttr )
+   IF ! HB_ISSTRING( cAttr )
       cAttr := ""
    ENDIF
    /* The trick with StrTran() below if for strict xHarbour

@@ -57,8 +57,6 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
-
 #include "tip.ch"
 
 CREATE CLASS tIPClientSMTP FROM tIPClient
@@ -90,7 +88,7 @@ ENDCLASS
 
 METHOD New( oUrl, xTrace, oCredentials, cClientHost ) CLASS tIPClientSMTP
 
-   ::super:new( oUrl, iif( ISLOGICAL( xTrace ) .AND. xTrace, "smtp", xTrace ), oCredentials )
+   ::super:new( oUrl, iif( HB_ISLOGICAL( xTrace ) .AND. xTrace, "smtp", xTrace ), oCredentials )
 
    ::nDefaultPort := iif( ::oUrl:cProto == "smtps", 465, 25 )
    ::nConnTimeout := 50000
@@ -109,7 +107,7 @@ METHOD Open( cUrl, lTLS ) CLASS tIPClientSMTP
       RETURN .F.
    ENDIF
 
-   IF ! ISLOGICAL( lTLS )
+   IF ! HB_ISLOGICAL( lTLS )
       lTLS := .F.
    ENDIF
 
@@ -134,7 +132,7 @@ METHOD OpenSecure( cUrl, lTLS ) CLASS tIPClientSMTP
       RETURN .F.
    ENDIF
 
-   IF ! ISLOGICAL( lTLS )
+   IF ! HB_ISLOGICAL( lTLS )
       lTLS := .F.
    ENDIF
 
@@ -152,7 +150,7 @@ METHOD OpenSecure( cUrl, lTLS ) CLASS tIPClientSMTP
 METHOD GetOk() CLASS tIPClientSMTP
 
    ::cReply := ::InetRecvLine( ::SocketCon,, 512 )
-   IF ::InetErrorCode( ::SocketCon ) != 0 .OR. ! ISCHARACTER( ::cReply ) .OR. Left( ::cReply, 1 ) == "5"
+   IF ::InetErrorCode( ::SocketCon ) != 0 .OR. ! HB_ISSTRING( ::cReply ) .OR. Left( ::cReply, 1 ) == "5"
       RETURN .F.
    ENDIF
 

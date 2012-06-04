@@ -128,7 +128,7 @@ METHOD XbpPartHandler:create( oParent, oOwner )
    ::oParent := oParent
    ::oOwner  := oOwner
 
-   IF hb_isObject( ::oOwner )
+   IF HB_ISOBJECT( ::oOwner )
       ::oOwner:addAsOwned( Self )
    ENDIF
 
@@ -177,7 +177,7 @@ METHOD XbpPartHandler:handleEvent( hEvent, mp1, mp2 )
 METHOD XbpPartHandler:status( nStatus )
    LOCAL nOldStatus := ::nStatus
 
-   IF hb_isNumeric( nStatus )
+   IF HB_ISNUMERIC( nStatus )
       ::nStatus := nStatus
    ENDIF
 

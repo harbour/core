@@ -157,7 +157,7 @@ METHOD HbpProcess:workingPath( cPath )
 
 METHOD HbpProcess:finished( bBlock )
 
-   IF hb_isBlock( bBlock )
+   IF HB_ISBLOCK( bBlock )
       ::bFinish := bBlock
    ENDIF
 
@@ -167,7 +167,7 @@ METHOD HbpProcess:finished( bBlock )
 
 METHOD HbpProcess:output( bBlock )
 
-   IF hb_isBlock( bBlock )
+   IF HB_ISBLOCK( bBlock )
       ::bOutput := bBlock
    ENDIF
 
@@ -282,7 +282,7 @@ METHOD HbpProcess:outputMe( cLine, nMode )
 
    HB_SYMBOL_UNUSED( nMode )
 
-   IF hb_isBlock( ::bOutput ) .AND. !empty( cLine )
+   IF HB_ISBLOCK( ::bOutput ) .AND. !empty( cLine )
       eval( ::bOutput, trim( cLine ), NIL, Self )
    ENDIF
 
@@ -305,7 +305,7 @@ METHOD HbpProcess:finish()
    ::qProcess:disconnect( "readyReadStandardError()"  )
    ::qProcess:disconnect( "finished(int,QProcess::ExitStatus)" )
 
-   IF hb_isBlock( ::bFinish )
+   IF HB_ISBLOCK( ::bFinish )
       eval( ::bFinish, ::nExitCode, ::nExitStatus, Self )
    ENDIF
 

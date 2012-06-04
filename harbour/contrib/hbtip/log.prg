@@ -52,7 +52,6 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
 #include "fileio.ch"
 
 CREATE CLASS TIPLOG
@@ -72,7 +71,7 @@ ENDCLASS
 METHOD New( cFileName ) CLASS TIPLOG
    LOCAL cExt
 
-   IF ! ISCHARACTER( cFileName )
+   IF ! HB_ISSTRING( cFileName )
       cFileName := "hbtip"
    ENDIF
 

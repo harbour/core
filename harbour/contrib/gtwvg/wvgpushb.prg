@@ -120,7 +120,7 @@ METHOD WvgPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   IF hb_isNumeric( ::caption )
+   IF HB_ISNUMERIC( ::caption )
       ::style += BS_BITMAP
    ELSEIF hb_isChar( ::caption )
       IF ".ICO" == upper( right( ::caption, 4 ) )
@@ -159,13 +159,13 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
          ::rePosition()
       ENDIF
       ::sendMessage( WM_SIZE, 0, 0 )
-      IF hb_isBlock( ::sl_resize )
+      IF HB_ISBLOCK( ::sl_resize )
          eval( ::sl_resize, NIL, NIL, self )
       ENDIF
 
    CASE nMessage == HB_GTE_COMMAND
       IF aNM[ 1 ] == BN_CLICKED
-         IF hb_isBlock( ::sl_lbClick )
+         IF HB_ISBLOCK( ::sl_lbClick )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
@@ -181,10 +181,10 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
       // Will never be issued because pushbutton sends WM_COMMAND
 
    CASE nMessage == HB_GTE_CTLCOLOR
-      IF hb_isNumeric( ::clr_FG )
+      IF HB_ISNUMERIC( ::clr_FG )
          WVG_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
-      IF hb_isNumeric( ::hBrushBG )
+      IF HB_ISNUMERIC( ::hBrushBG )
          WVG_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ENDIF
@@ -192,7 +192,7 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
 #if 0  /* Must not reach here if WndProc is not installed */
    CASE nMessage == HB_GTE_ANY
       IF aNM[ 1 ] == WM_LBUTTONUP
-         IF hb_isBlock( ::sl_lbClick )
+         IF HB_ISBLOCK( ::sl_lbClick )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
@@ -233,7 +233,7 @@ METHOD WvgPushButton:setCaption( xCaption, cDll )
          WVG_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
       ENDIF
 
-   ELSEIF hb_isNumeric( xCaption )  /* Handle to the bitmap */
+   ELSEIF HB_ISNUMERIC( xCaption )  /* Handle to the bitmap */
       ::caption := xCaption
       WVG_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_BITMAP, ::caption )
 
@@ -245,7 +245,7 @@ METHOD WvgPushButton:setCaption( xCaption, cDll )
 
 METHOD WvgPushButton:activate( xParam )
 
-   IF hb_isBlock( xParam ) .OR. ( xParam == NIL )
+   IF HB_ISBLOCK( xParam ) .OR. ( xParam == NIL )
       ::sl_lbClick := xParam
    ENDIF
 
@@ -255,7 +255,7 @@ METHOD WvgPushButton:activate( xParam )
 
 METHOD WvgPushButton:draw( xParam )
 
-   IF hb_isBlock( xParam ) .or. ( xParam == NIL )
+   IF HB_ISBLOCK( xParam ) .or. ( xParam == NIL )
       ::sl_paint := xParam
    ENDIF
 

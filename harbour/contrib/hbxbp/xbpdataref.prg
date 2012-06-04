@@ -127,7 +127,7 @@ METHOD DataRef:getData()
 
    ENDCASE
 
-   IF hb_isBlock( ::dataLink )
+   IF HB_ISBLOCK( ::dataLink )
       eval( ::dataLink, ::sl_editBuffer )
    ENDIF
 
@@ -142,7 +142,7 @@ METHOD DataRef:setData( xValue, mp2 )
 
 //HB_TRACE( HB_TR_DEBUG, cClass +' '+ ::cargo +"..."+ IIF(empty(xValue)," empty ",valtype(xValue)) )
 
-   IF hb_isBlock( ::dataLink )
+   IF HB_ISBLOCK( ::dataLink )
       ::sl_editBuffer := eval( ::dataLink, xValue )
 
    ELSEIF xValue != NIL
@@ -183,12 +183,12 @@ METHOD DataRef:setData( xValue, mp2 )
       ENDIF
    #endif
    CASE cClass == "XBPSPINBUTTON"
-      IF hb_isNumeric( ::sl_editBuffer )
+      IF HB_ISNUMERIC( ::sl_editBuffer )
          ::oWidget:setValue( ::sl_editBuffer )
       ENDIF
 
    CASE cClass == "XBPSCROLLBAR"
-      IF hb_isNumeric( ::sl_editBuffer )
+      IF HB_ISNUMERIC( ::sl_editBuffer )
          ::oWidget:setValue( ::sl_editBuffer )
       ENDIF
 
@@ -206,9 +206,9 @@ METHOD DataRef:undo()
 
 METHOD DataRef:validate( xParam )
 
-   IF PCount() == 0 .AND. hb_isBlock( ::sl_validate )
+   IF PCount() == 0 .AND. HB_ISBLOCK( ::sl_validate )
       RETURN eval( ::sl_validate, self )
-   ELSEIF hb_isBlock( xParam )
+   ELSEIF HB_ISBLOCK( xParam )
       ::sl_validate := xParam
    ENDIF
 

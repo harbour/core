@@ -50,17 +50,16 @@
  *
  */
 
-#include "common.ch"
 #include "fileio.ch"
 
 FUNCTION TempFile( cDir, cExt, nAttr )
    LOCAL cName
    LOCAL fhnd
 
-   IF ISCHARACTER( cExt ) .AND. !( Left( cExt, 1 ) == "." )
+   IF HB_ISSTRING( cExt ) .AND. !( Left( cExt, 1 ) == "." )
       cExt := "." + cExt
    ENDIF
-   IF ! ISNUMBER( nAttr )
+   IF ! HB_ISNUMERIC( nAttr )
       nAttr := SetFCreate()
    ENDIF
 

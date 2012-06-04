@@ -52,7 +52,6 @@
  */
 
 #include "color.ch"
-#include "common.ch"
 #include "fileio.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -360,7 +359,7 @@ STATIC PROCEDURE hbrun_Prompt( aParams, cCommand )
    AAdd( s_aHistory, PadR( "quit", HB_LINE_LEN ) )
    nHistIndex := Len( s_aHistory ) + 1
 
-   IF ISCHARACTER( cCommand )
+   IF HB_ISSTRING( cCommand )
       AAdd( s_aHistory, PadR( cCommand, HB_LINE_LEN ) )
       hbrun_Info( cCommand )
       hbrun_Exec( cCommand )
@@ -576,13 +575,13 @@ STATIC PROCEDURE hbrun_Err( oErr, cCommand )
       IF !Empty( oErr:Operation )
          cMessage += " " + oErr:Operation
       ENDIF
-      IF ISARRAY( oErr:Args ) .AND. Len( oErr:Args ) > 0
+      IF HB_ISARRAY( oErr:Args ) .AND. Len( oErr:Args ) > 0
          cMessage += ";Arguments:"
          FOR EACH xArg IN oErr:Args
             cMessage += ";" + hb_CStr( xArg )
          NEXT
       ENDIF
-   ELSEIF ISCHARACTER( oErr )
+   ELSEIF HB_ISSTRING( oErr )
       cMessage += oErr
    ENDIF
    cMessage += ";;" + ProcName( 2 ) + "(" + hb_ntos( ProcLine( 2 ) ) + ")"
@@ -762,7 +761,7 @@ STATIC FUNCTION win_reg_self( lRegister, lAllUser )
    RETURN win_reg_app( lRegister, lAllUser, hb_ProgName() )
 
 STATIC FUNCTION win_reg_app( lRegister, lAllUser, cAppPath )
-   LOCAL cHive := iif( hb_isLogical( lAllUser ) .AND. lAllUser, "HKEY_CLASSES_ROOT", "HKEY_CURRENT_USER\Software\Classes" )
+   LOCAL cHive := iif( HB_ISLOGICAL( lAllUser ) .AND. lAllUser, "HKEY_CLASSES_ROOT", "HKEY_CURRENT_USER\Software\Classes" )
    LOCAL lSuccess := .T.
    LOCAL tmp
 

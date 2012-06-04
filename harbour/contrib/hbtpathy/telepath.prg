@@ -58,7 +58,6 @@
    so you can always retrieve them (see CVS docs on how to)
 */
 
-#include "common.ch"
 #include "telepath.ch"
 
 #include "hbcom.ch"
@@ -81,7 +80,7 @@ THREAD STATIC t_nErrorCode := 0      // Error code from last operation, 0 if no 
 
 FUNCTION tp_baud( nPort, nNewBaud )
 
-   IF ! ISNUMBER( nNewBaud )
+   IF ! HB_ISNUMERIC( nNewBaud )
       nNewBaud := 0
    ENDIF
 
@@ -115,7 +114,7 @@ FUNCTION tp_idle( lNewval )
 
 PROCEDURE tp_delay( nTime )
 
-   IF ! ISNUMBER( nTime )
+   IF ! HB_ISNUMERIC( nTime )
       nTime := 0
    ENDIF
 
@@ -131,7 +130,7 @@ PROCEDURE tp_delay( nTime )
 
 FUNCTION tp_close( nPort, nTimeout )
 
-   IF ! ISNUMBER( nTimeout )
+   IF ! HB_ISNUMERIC( nTimeout )
       nTimeout := 0
    ENDIF
 
@@ -180,25 +179,25 @@ FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
       RETURN TE_NOPORT
    ENDIF
 
-   IF ! ISNUMBER( nInSize )
+   IF ! HB_ISNUMERIC( nInSize )
       nInSize := 1536
    ENDIF
-   IF ! ISNUMBER( nOutSize )
+   IF ! HB_ISNUMERIC( nOutSize )
       nOutSize := 1536
    ENDIF
-   IF ! ISNUMBER( nBaud )
+   IF ! HB_ISNUMERIC( nBaud )
       nBaud := 1200
    ENDIF
-   IF ! ISNUMBER( nData )
+   IF ! HB_ISNUMERIC( nData )
       nData := 8
    ENDIF
-   IF ! ISCHARACTER( cParity )
+   IF ! HB_ISSTRING( cParity )
       cParity := "N"
    ENDIF
-   IF ! ISNUMBER( nStop )
+   IF ! HB_ISNUMERIC( nStop )
       nStop := 1
    ENDIF
-   IF ISCHARACTER( cPortname )
+   IF HB_ISSTRING( cPortname )
       hb_comSetDevice( nPort, cPortname )
    ENDIF
 
@@ -242,10 +241,10 @@ FUNCTION tp_recv( nPort, nLength, nTimeout )
    LOCAL nDone
    LOCAL cRet
 
-   IF ! ISNUMBER( nLength )
+   IF ! HB_ISNUMERIC( nLength )
       nLength := t_aPorts[ nPort, TPFP_INBUF_SIZE ]
    ENDIF
-   IF ! ISNUMBER( nTimeout )
+   IF ! HB_ISNUMERIC( nTimeout )
       nTimeout := 0
    ENDIF
 
@@ -275,10 +274,10 @@ FUNCTION tp_recv( nPort, nLength, nTimeout )
 
 FUNCTION tp_send( nPort, cString, nTimeout )
 
-   IF ! ISCHARACTER( cString )
+   IF ! HB_ISSTRING( cString )
       cString := ""
    ENDIF
-   IF ! ISNUMBER( nTimeout )
+   IF ! HB_ISNUMERIC( nTimeout )
       nTimeout := 0
    ENDIF
    IF ! isopenport( nPort )
@@ -293,10 +292,10 @@ FUNCTION tp_send( nPort, cString, nTimeout )
 
 FUNCTION tp_sendsub( nPort, cString, nStart, nLength, nTimeout )
 
-   IF ! ISNUMBER( nStart )
+   IF ! HB_ISNUMERIC( nStart )
       nStart := 1
    ENDIF
-   IF ! ISNUMBER( nLength )
+   IF ! HB_ISNUMERIC( nLength )
       nLength := Len( cString )
    ENDIF
 
@@ -314,14 +313,14 @@ FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
       RETURN ""
    ENDIF
 
-   IF ! ISCHARACTER( cDelim ) .OR. Len( cDelim ) == 0
+   IF ! HB_ISSTRING( cDelim ) .OR. Len( cDelim ) == 0
       RETURN ""
    ENDIF
 
-   IF ! ISNUMBER( nMaxlen )
+   IF ! HB_ISNUMERIC( nMaxlen )
       nMaxlen := 64999    /* dos telepathy def. on xharbour could be higher */
    ENDIF
-   IF ! ISNUMBER( nTimeout )
+   IF ! HB_ISNUMERIC( nTimeout )
       nTimeout := 0
    ENDIF
 
@@ -469,10 +468,10 @@ FUNCTION tp_waitfor( ... )
       RETURN 0
    ENDIF
 
-   // IF ! ISNUMBER( nTimeout )
+   // IF ! HB_ISNUMERIC( nTimeout )
    //    nTimeout := -1
    // ENDIF
-   // IF ! ISLOGICAL( lIgnorecase )
+   // IF ! HB_ISLOGICAL( lIgnorecase )
    //    lIgnorecase := .F.
    // ENDIF
 
@@ -536,7 +535,7 @@ FUNCTION tp_ctrlcts( nPort, nNewCtrl )
 
    IF hb_comFlowControl( t_aPorts[ nPort, TPFP_HANDLE ], @nCurValue )
       nFlag := hb_bitOr( HB_COM_FLOW_IRTSCTS, HB_COM_FLOW_ORTSCTS )
-      IF ISNUMBER( nNewCtrl )
+      IF HB_ISNUMERIC( nNewCtrl )
          IF nNewCtrl == 0
             nNewCtrl := hb_bitAnd( nCurValue, hb_bitNot( nFlag ) )
          ELSE
@@ -570,7 +569,7 @@ FUNCTION tp_ctrldtr( nPort, nNewCtrl )
 
    IF hb_comFlowControl( t_aPorts[ nPort, TPFP_HANDLE ], @nCurValue )
       nFlag := hb_bitOr( HB_COM_FLOW_IDTRDSR, HB_COM_FLOW_ODTRDSR )
-      IF ISNUMBER( nNewCtrl )
+      IF HB_ISNUMERIC( nNewCtrl )
          IF nNewCtrl == 0
             nNewCtrl := hb_bitAnd( nCurValue, hb_bitNot( nFlag ) )
          ELSE
@@ -632,7 +631,7 @@ FUNCTION tp_flush( nPort, nTimeout )
 
    LOCAL nDone
 
-   IF ! ISNUMBER( nTimeout )
+   IF ! HB_ISNUMERIC( nTimeout )
       nTimeout := -1
    ENDIF
 
@@ -681,7 +680,7 @@ STATIC FUNCTION isopenport( nPort )
 
 STATIC FUNCTION isport( nPort )
 
-   IF ! ISNUMBER( nPort ) .OR. nPort < 1 .OR. nPort > TP_MAXPORTS
+   IF ! HB_ISNUMERIC( nPort ) .OR. nPort < 1 .OR. nPort > TP_MAXPORTS
       RETURN .F.
    ENDIF
 

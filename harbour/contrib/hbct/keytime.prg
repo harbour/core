@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 THREAD STATIC t_hIdle
 
 FUNCTION KeyTime( nKey, cClockTime )
@@ -62,7 +60,7 @@ FUNCTION KeyTime( nKey, cClockTime )
       t_hIdle := NIL
    ENDIF
 
-   IF ISNUMBER( nKey ) .AND. ISCHARACTER( cClockTime )
+   IF HB_ISNUMERIC( nKey ) .AND. HB_ISSTRING( cClockTime )
       nHour := Val( SubStr( cClockTime, 1, 2 ) )
       nMin  := Val( SubStr( cClockTime, 4, 2 ) )
       nSec  := Val( SubStr( cClockTime, 7, 2 ) )

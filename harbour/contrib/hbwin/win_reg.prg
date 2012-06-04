@@ -51,7 +51,6 @@
  *
  */
 
-#include "common.ch"
 #include "hbwin.ch"
 
 /* ------------------------------------------------------------------- */
@@ -132,7 +131,7 @@ FUNCTION win_regDelete( cRegPath, nRegSam )
    IF Empty( cEntry )
       lRetVal := win_regDeleteKey( nHKEY, cKey )
    ELSE
-      IF ! hb_isNumeric( nRegSam )
+      IF ! HB_ISNUMERIC( nRegSam )
          nRegSam := 0
       ENDIF
 
@@ -152,7 +151,7 @@ FUNCTION win_regQuery( nHKEY, cKeyName, cEntryName, xValue, lSetIt, nRegSam )
    LOCAL cValType := ValType( xValue )
    LOCAL lRetVal
 
-   IF ! ISLOGICAL( lSetIt )
+   IF ! HB_ISLOGICAL( lSetIt )
       lSetIt := .F.
    ENDIF
 
@@ -180,7 +179,7 @@ FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault, nRegSam )
    LOCAL pKeyHandle
    LOCAL nValueType
 
-   IF ! hb_isNumeric( nRegSam )
+   IF ! HB_ISNUMERIC( nRegSam )
       nRegSam := 0
    ENDIF
 
@@ -190,7 +189,7 @@ FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault, nRegSam )
 
       win_regQueryValueEx( pKeyHandle, cEntryName, 0, @nValueType, @xRetVal )
 
-      IF ISCHARACTER( xRetVal )
+      IF HB_ISSTRING( xRetVal )
          DO CASE
          CASE nValueType == WIN_REG_DWORD .OR. ;
               nValueType == WIN_REG_DWORD_LITTLE_ENDIAN
@@ -223,7 +222,7 @@ FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue, nValueType, nRegSam )
    LOCAL lRetVal := .F.
    LOCAL pKeyHandle
 
-   IF ! hb_isNumeric( nRegSam )
+   IF ! HB_ISNUMERIC( nRegSam )
       nRegSam := 0
    ENDIF
 
@@ -240,7 +239,7 @@ FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue, nValueType, nRegSam )
          cName := DToS( xValue )
          EXIT
       CASE "N"
-         IF ! hb_isNumeric( nValueType ) .OR. ;
+         IF ! HB_ISNUMERIC( nValueType ) .OR. ;
             !( nValueType == WIN_REG_DWORD .OR. ;
                nValueType == WIN_REG_DWORD_LITTLE_ENDIAN .OR. ;
                nValueType == WIN_REG_DWORD_BIG_ENDIAN .OR. ;
@@ -252,7 +251,7 @@ FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue, nValueType, nRegSam )
          EXIT
       CASE "C"
       CASE "M"
-         IF ! hb_isNumeric( nValueType ) .OR. ;
+         IF ! HB_ISNUMERIC( nValueType ) .OR. ;
             !( nValueType == WIN_REG_SZ .OR. ;
                nValueType == WIN_REG_EXPAND_SZ .OR. ;
                nValueType == WIN_REG_MULTI_SZ )

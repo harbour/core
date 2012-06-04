@@ -206,21 +206,21 @@ METHOD XbpHTMLViewer:execSlot( cSlot, p )
 
    DO CASE
    CASE cSlot == "iconChanged()"
-      IF hb_isBlock( ::sl_beforeNavigate )
+      IF HB_ISBLOCK( ::sl_beforeNavigate )
          eval( ::sl_beforeNavigate, /*cURL*/, NIL, Self )
       ENDIF
    CASE cSlot == "linkClicked(QUrl)"
    CASE cSlot == "loadFinished(bool)"
-      IF hb_isBlock( ::sl_documentComplete )
+      IF HB_ISBLOCK( ::sl_documentComplete )
          eval( ::sl_documentComplete, /*cURI*/, p, Self )
       ENDIF
    CASE cSlot == "loadProgress(int)"
-      IF hb_isBlock( ::sl_progressChange )
+      IF HB_ISBLOCK( ::sl_progressChange )
          eval( ::sl_progressChange, p, 100, Self )
       ENDIF
    CASE cSlot == "loadStarted()"
    CASE cSlot == "titleChanged(QString)"
-      IF hb_isBlock( ::sl_titleChange )
+      IF HB_ISBLOCK( ::sl_titleChange )
          eval( ::sl_titleChange, p, NIL, Self )
       ENDIF
    CASE cSlot == "urlChanged(QUrl)"
@@ -228,7 +228,7 @@ METHOD XbpHTMLViewer:execSlot( cSlot, p )
       ::cSelectedText := ::oWidget:selectedText()
 HB_TRACE( HB_TR_DEBUG, ::cSelectedText )
    CASE cSlot == "statusBarMessage(QString)"
-      IF hb_isBlock( ::sl_statusTextChange )
+      IF HB_ISBLOCK( ::sl_statusTextChange )
          eval( ::sl_statusTextChange, p, NIL, Self )
       ENDIF
    ENDCASE

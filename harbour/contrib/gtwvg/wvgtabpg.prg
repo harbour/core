@@ -164,7 +164,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
    DO CASE
 
    CASE nMessage == HB_GTE_SETFOCUS
-      IF hb_isBlock( ::sl_tabActivate )
+      IF HB_ISBLOCK( ::sl_tabActivate )
 
          RETURN EVENT_HANDELLED
       ENDIF
@@ -195,7 +195,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
 
 METHOD tabActivate( xParam ) CLASS WvgTabPage
 
-   IF hb_isBlock( xParam )
+   IF HB_ISBLOCK( xParam )
       ::sl_tabActivate := xParam
    ENDIF
 

@@ -52,8 +52,6 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
-
 #include "hbsim.ch"
 
 CREATE CLASS wce_sim
@@ -113,7 +111,7 @@ METHOD lNumberOfPhoneBookEntries( nType, /* @ */ nTotal, /* @ */ nUsed ) CLASS w
       RETURN .F.
    ENDIF
 
-   IF ! ISNUMBER( nType )
+   IF ! HB_ISNUMERIC( nType )
       nType := SIM_PBSTORAGE_SIM
    ENDIF
 
@@ -136,10 +134,10 @@ METHOD aGetAllPhoneBookEntries( nType ) CLASS wce_sim
       RETURN .F.
    ENDIF
 
-   IF ! ISNUMBER( nType )
+   IF ! HB_ISNUMERIC( nType )
       nType := SIM_PBSTORAGE_SIM
    ENDIF
-   IF ! ISARRAY( aEntries )
+   IF ! HB_ISARRAY( aEntries )
       aEntries := {}
    ENDIF
 
@@ -172,7 +170,7 @@ METHOD lGetSimPhoneEntry( nPos, nType, /* @ */ aEntry ) CLASS wce_sim
       RETURN .F.
    ENDIF
 
-   IF ! ISNUMBER( nType )
+   IF ! HB_ISNUMERIC( nType )
       nType := SIM_PBSTORAGE_SIM
    ENDIF
 
@@ -192,10 +190,10 @@ METHOD lSetSimPhoneEntry( nPos, nType, cNumber, cName, nPlan, nAddrType ) CLASS 
       RETURN .F.
    ENDIF
 
-   IF ! ISNUMBER( nType )
+   IF ! HB_ISNUMERIC( nType )
       nPos := SIM_PBINDEX_FIRSTAVAILABLE
    ENDIF
-   IF ! ISNUMBER( nType )
+   IF ! HB_ISNUMERIC( nType )
       nType := SIM_PBSTORAGE_SIM
    ENDIF
 
@@ -213,7 +211,7 @@ METHOD lDelSimPhoneEntry( nPos, nType ) CLASS wce_sim
       RETURN .F.
    ENDIF
 
-   IF ! ISNUMBER( nType )
+   IF ! HB_ISNUMERIC( nType )
       nType := SIM_PBSTORAGE_SIM
    ENDIF
 

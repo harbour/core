@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 #include "hbdyn.ch"
 
 STATIC s_hDLL := { => }
@@ -75,14 +73,14 @@ FUNCTION CALLDLL32( cFunction, cLibrary, ... )
 FUNCTION HB_DYNACALL1( cFunction, cLibrary, nCount, ... )
    LOCAL aParams
 
-   IF ISCHARACTER( cFunction ) .AND. ;
-      ISCHARACTER( cLibrary )
+   IF HB_ISSTRING( cFunction ) .AND. ;
+      HB_ISSTRING( cLibrary )
 
       IF !( cLibrary $ s_hDLL )
          s_hDLL[ cLibrary ] := hb_LibLoad( cLibrary )
       ENDIF
 
-      IF ISNUMBER( nCount ) .AND. nCount >= 0 .AND. nCount < PCount() - 3
+      IF HB_ISNUMERIC( nCount ) .AND. nCount >= 0 .AND. nCount < PCount() - 3
          aParams := ASize( hb_AParams(), nCount )
          RETURN hb_dynCall( { cFunction, s_hDLL[ cLibrary ], _DEF_CALLCONV_ }, hb_arrayToParams( aParams ) )
       ELSE

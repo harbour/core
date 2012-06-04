@@ -318,7 +318,7 @@ METHOD SessionDecode( cData ) CLASS TIpCgi
 
    ::hSession := hb_Deserialize( cData )
 
-   RETURN hb_isHash( ::hSession )
+   RETURN HB_ISHASH( ::hSession )
 
 METHOD DestroySession( cID ) CLASS TIpCgi
 
@@ -358,12 +358,12 @@ METHOD ErrHandler( xError ) CLASS TIpCgi
 
    cErrMsg += '<tr><td>SCRIPT NAME:</td><td>' + GetEnv( "SCRIPT_NAME" ) + '</td></tr>'
 
-   IF ISOBJECT( xError )
+   IF HB_ISOBJECT( xError )
       cErrMsg += '<tr><td>CRITICAL ERROR:</td><td>' + xError:Description + '</td></tr>'
       cErrMsg += '<tr><td>OPERATION:</td><td>' + xError:Operation + '</td></tr>'
       cErrMsg += '<tr><td>OS ERROR:</td><td>' + hb_ntos( xError:OsCode ) + ' IN ' + xError:SubSystem + '/' + hb_ntos( xError:SubCode ) + '</td></tr>'
       cErrMsg += '<tr><td>FILENAME:</td><td>' + right( xError:FileName, 40 ) + '</td></tr>'
-   ELSEIF ISCHARACTER( xError )
+   ELSEIF HB_ISSTRING( xError )
       cErrMsg += '<tr><td>ERROR MESSAGE:</td><td>' + TIP_HTMLSPECIALCHARS( xError ) + '</td></tr>'
    ENDIF
 
@@ -528,13 +528,13 @@ STATIC FUNCTION HtmlScript( hVal, cKey )
    IF ! Empty( hVal )
       IF ( nPos := hb_HPos( hVal, cKey ) ) != 0
          hTmp := hb_HValueAt( hVal, nPos )
-         IF hb_isHash( hTmp )
+         IF HB_ISHASH( hTmp )
             IF ( nPos := hb_HPos( hTmp, "src" ) ) != 0
                cVal := hb_HValueAt( hTmp, nPos )
-               IF ISCHARACTER( cVal )
+               IF HB_ISSTRING( cVal )
                   cVal := { cVal }
                ENDIF
-               IF ISARRAY( cVal )
+               IF HB_ISARRAY( cVal )
                   cTmp := ""
                   AScan( cVal, {| cFile | cTmp += '<script src="' + cFile + '" type="text/javascript"></script>' + _CRLF } )
                   cRet += cTmp
@@ -542,10 +542,10 @@ STATIC FUNCTION HtmlScript( hVal, cKey )
             ENDIF
             IF ( nPos := hb_HPos( hTmp, "var" ) ) != 0
                cVal := hb_HValueAt( hTmp, nPos )
-               IF ISCHARACTER( cVal )
+               IF HB_ISSTRING( cVal )
                   cVal := { cVal }
                ENDIF
-               IF ISARRAY( cVal )
+               IF HB_ISARRAY( cVal )
                   cTmp := ""
                   AScan( cVal, {| cVar | cTmp += cVar } )
                   cRet += '<script type="text/javascript">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</script>' + _CRLF
@@ -571,13 +571,13 @@ STATIC FUNCTION HtmlStyle( hVal, cKey )
    IF ! Empty( hVal )
       IF ( nPos := hb_HPos( hVal, cKey ) ) != 0
          hTmp := hb_HValueAt( hVal, nPos )
-         IF hb_isHash( hTmp )
+         IF HB_ISHASH( hTmp )
             IF ( nPos := hb_HPos( hTmp, "src" ) ) != 0
                cVal := hb_HValueAt( hTmp, nPos )
-               IF ISCHARACTER( cVal )
+               IF HB_ISSTRING( cVal )
                   cVal := { cVal }
                ENDIF
-               IF ISARRAY( cVal )
+               IF HB_ISARRAY( cVal )
                   cTmp := ""
                   AScan( cVal, {| cFile | cTmp += '<link rel="StyleSheet" href="' + cFile + '" type="text/css">' + _CRLF } )
                   cRet += cTmp
@@ -585,10 +585,10 @@ STATIC FUNCTION HtmlStyle( hVal, cKey )
             ENDIF
             IF ( nPos := hb_HPos( hTmp, "var" ) ) != 0
                cVal := hb_HValueAt( hTmp, nPos )
-               IF ISCHARACTER( cVal )
+               IF HB_ISSTRING( cVal )
                   cVal := { cVal }
                ENDIF
-               IF ISARRAY( cVal )
+               IF HB_ISARRAY( cVal )
                   cTmp := ""
                   AScan( cVal, {| cVar | cTmp += cVar } )
                   cRet += '<style type="text/css">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</style>' + _CRLF
@@ -614,13 +614,13 @@ STATIC FUNCTION HtmlLinkRel( hVal, cKey )
    IF ! Empty( hVal )
       IF ( nPos := hb_HPos( hVal, cKey ) ) != 0
          hTmp := hb_HValueAt( hVal, nPos )
-         IF hb_isHash( hTmp )
+         IF HB_ISHASH( hTmp )
             IF ( nPos := hb_HPos( hTmp, "rel" ) ) != 0
                cVal := hb_HValueAt( hTmp, nPos )
-               IF ISCHARACTER( cVal )
+               IF HB_ISSTRING( cVal )
                   cVal := { cVal, cVal }
                ENDIF
-               IF ISARRAY( cVal )
+               IF HB_ISARRAY( cVal )
                   cTmp := ""
                   AScan( cVal, {| aVal | cTmp += '<link rel="' + aVal[ 1 ] + '" href="' + aVal[ 2 ] + '"/>' + _CRLF } )
                   cRet += cTmp

@@ -2424,7 +2424,7 @@ RETURN ( nLength )
 static function Array2File(cFile,aRay,nDepth,hFile)
 local nBytes := 0
 local i
-nDepth := iif(ISNUMBER(nDepth),nDepth,0)
+nDepth := iif(HB_ISNUMERIC(nDepth),nDepth,0)
 if hFile == NIL
    if (hFile := fCreate(cFile,FC_NORMAL)) == -1
       return nBytes
@@ -2432,7 +2432,7 @@ if hFile == NIL
 endif
 nDepth++
 nBytes += WriteData(hFile,aRay)
-if ISARRAY(aRay)
+if HB_ISARRAY(aRay)
    for i := 1 to len(aRay)
       nBytes += Array2File(cFile,aRay[i],nDepth,hFile)
    next
@@ -2445,15 +2445,15 @@ return nBytes
 
 static function WriteData(hFile,xData)
 local cData  := valtype(xData)
-   if ISCHARACTER(xData)
+   if HB_ISSTRING(xData)
        cData += i2bin(len(xData))+xData
-   elseif ISNUMBER(xData)
+   elseif HB_ISNUMERIC(xData)
        cData += i2bin(len(alltrim(str(xData))) )+alltrim(str(xData))
    elseif ISDATE(xData)
        cData += i2bin(8)+dtos(xData)
-   elseif ISLOGICAL(xData)
+   elseif HB_ISLOGICAL(xData)
        cData += i2bin(1)+iif(xData,'T','F')
-   elseif ISARRAY(xData)
+   elseif HB_ISARRAY(xData)
        cData += i2bin(len(xData))
    else
        cData += i2bin(0)   // NIL

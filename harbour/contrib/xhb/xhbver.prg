@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "hbver.ch"
 
 #include "xhbver.ch"
@@ -113,4 +112,4 @@ FUNCTION hb_buildinfo( n )
    v[ _HB_ARRAY_MODE             ] := 0   /* Emulate xhb */
    v[ _HB_CREDITS                ] := { "See 'harbour -credits'" }
 
-   RETURN iif( ISNUMBER( n ), iif( n <= Len( v ), v[ n ], NIL ), v )
+   RETURN iif( HB_ISNUMERIC( n ), iif( n <= Len( v ), v[ n ], NIL ), v )

@@ -239,9 +239,9 @@ METHOD XbpPushButton:setCaption( xCaption, cDll )
 
 METHOD XbpPushButton:activate( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_lbClick := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_lbClick )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_lbClick )
       eval( ::sl_lbClick, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -250,9 +250,9 @@ METHOD XbpPushButton:activate( ... )
 
 METHOD XbpPushButton:draw( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_draw := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_draw )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_draw )
       eval( ::sl_draw, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self

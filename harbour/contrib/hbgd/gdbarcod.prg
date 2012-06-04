@@ -438,7 +438,7 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
    ::settext( cText )
 
    If !Empty( cModeCode )
-      If ISCHARACTER( cModeCode ) .and. Upper(cModeCode) $'ABC'
+      If HB_ISSTRING( cModeCode ) .and. Upper(cModeCode) $'ABC'
           cModeCode := Upper(cModeCode)
       Else
          ::DrawError("Code 128 Modes are A,B o C. Character values.")

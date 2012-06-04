@@ -51,8 +51,6 @@
  *
  */
 
-#include "common.ch"
-
 FUNCTION sprintf( ... )
    LOCAL aPar, cReturn, nPar, nPos, cTok
    LOCAL nLen := 0, lUnsigned, l0 := .F., lSign := .F., nDec, xVal
@@ -150,7 +148,7 @@ FUNCTION sprintf( ... )
          CASE "f"
          CASE "i"
             xVal := aPar[nPar++]
-            IF !ISNUMBER( xVal )
+            IF !HB_ISNUMERIC( xVal )
                xVal := 0
             ENDIF
             IF nLen != 0

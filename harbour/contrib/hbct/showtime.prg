@@ -51,12 +51,10 @@
  *
  */
 
-#include "common.ch"
-
 FUNCTION SHOWTIME( nRow, nCol, lNoSec, cColor, l12, lAmPm )
    THREAD STATIC t_hTimer := NIL
 
-   IF ISNUMBER( nRow ) .AND. nRow >= 0 .AND. nRow <= MAXROW( .T. )
+   IF HB_ISNUMERIC( nRow ) .AND. nRow >= 0 .AND. nRow <= MAXROW( .T. )
       IF t_hTimer != NIL
          HB_IDLEDEL( t_hTimer )
       ENDIF

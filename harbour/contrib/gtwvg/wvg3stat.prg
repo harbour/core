@@ -156,7 +156,7 @@ METHOD Wvg3State:handleEvent( nMessage, aNM )
       IF aNM[ NMH_code ] == BN_CLICKED
          ::editBuffer := WVG_Button_GetCheck( ::hWnd )
 
-         IF hb_isBlock( ::sl_lbClick )
+         IF HB_ISBLOCK( ::sl_lbClick )
             eval( ::sl_lbClick, ::editBuffer, NIL, self )
             RETURN 0
 
@@ -164,10 +164,10 @@ METHOD Wvg3State:handleEvent( nMessage, aNM )
       ENDIF
 
    CASE nMessage ==  HB_GTE_CTLCOLOR
-      IF hb_isNumeric( ::clr_FG )
+      IF HB_ISNUMERIC( ::clr_FG )
          WVG_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
-      IF hb_isNumeric( ::hBrushBG )
+      IF HB_ISNUMERIC( ::hBrushBG )
          WVG_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ELSE

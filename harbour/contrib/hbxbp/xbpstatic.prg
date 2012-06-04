@@ -290,7 +290,7 @@ METHOD XbpStatic:setCaption( xCaption, cDll )
          ::oWidget:setText( ::caption )
 
       CASE ::type == XBPSTATIC_TYPE_BITMAP
-         IF hb_isObject( ::caption )                 /* XbpBitmap() */
+         IF HB_ISOBJECT( ::caption )                 /* XbpBitmap() */
             IF ::options == XBPSTATIC_BITMAP_SCALED
                ::oWidget:setScaledContents( .t. )
             ENDIF

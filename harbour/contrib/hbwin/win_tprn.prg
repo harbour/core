@@ -67,7 +67,6 @@
 */
 
 #include "hbclass.ch"
-#include "common.ch"
 
 #include "hbwin.ch"
 
@@ -304,7 +303,7 @@ METHOD PROCEDURE Destruct() CLASS WIN_PRN
 METHOD StartDoc( cDocName ) CLASS WIN_PRN
    LOCAL lResult
 
-   IF ! ISCHARACTER( cDocName )
+   IF ! HB_ISSTRING( cDocName )
       cDocName := hb_ArgV( 0 ) + " [" + DToC( Date() ) + " - " + Time() + "]"
    ENDIF
 
@@ -319,7 +318,7 @@ METHOD StartDoc( cDocName ) CLASS WIN_PRN
 
 METHOD EndDoc( lAbortDoc ) CLASS WIN_PRN
    IF ::HavePrinted
-      IF ! ISLOGICAL( lAbortDoc )
+      IF ! HB_ISLOGICAL( lAbortDoc )
          lAbortDoc := .F.
       ENDIF
    ELSE
@@ -401,7 +400,7 @@ METHOD CheckPage() CLASS WIN_PRN
 
 METHOD EndPage( lStartNewPage ) CLASS WIN_PRN
 
-   IF ! ISLOGICAL( lStartNewPage )
+   IF ! HB_ISLOGICAL( lStartNewPage )
       lStartNewPage := .T.
    ENDIF
 
@@ -427,7 +426,7 @@ METHOD NewLine() CLASS WIN_PRN
 
 METHOD NewPage( lDelay ) CLASS WIN_PRN
 
-   IF ! ISLOGICAL( lDelay )
+   IF ! HB_ISLOGICAL( lDelay )
       lDelay := .F.
    ENDIF
 
@@ -604,13 +603,13 @@ METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS WIN_PRN
 
    IF cString != NIL .AND. ::CheckPage()
 
-      IF ! ISLOGICAL( lNewLine )
+      IF ! HB_ISLOGICAL( lNewLine )
          lNewLine := .F.
       ENDIF
-      IF ! ISLOGICAL( lUpdatePosX )
+      IF ! HB_ISLOGICAL( lUpdatePosX )
          lUpdatePosX := .T.
       ENDIF
-      IF ! ISNUMBER( nAlign )
+      IF ! HB_ISNUMERIC( nAlign )
          nAlign := HB_BITOR( WIN_TA_BOTTOM, WIN_TA_LEFT )
       ENDIF
 
@@ -641,7 +640,7 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, nWidth, nBold, lUnd
 
    IF ::CheckPage()
 
-      IF ! ISNUMBER( nPointSize )
+      IF ! HB_ISNUMERIC( nPointSize )
          nPointSize := ::FontPointSize
       ENDIF
 

@@ -240,9 +240,9 @@ METHOD XbpSpinButton:destroy()
 
 METHOD XbpSpinButton:down( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_xbeSpinDown := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_xbeSpinDown )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_xbeSpinDown )
       eval( ::sl_xbeSpinDown, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -251,9 +251,9 @@ METHOD XbpSpinButton:down( ... )
 
 METHOD XbpSpinButton:up( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_xbeSpinUp := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_xbeSpinUp )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_xbeSpinUp )
       eval( ::sl_xbeSpinUp, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -262,9 +262,9 @@ METHOD XbpSpinButton:up( ... )
 
 METHOD XbpSpinButton:endSpin( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_xbeSpinEndSpin := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_xbeSpinEndSpin )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_xbeSpinEndSpin )
       eval( ::sl_xbeSpinEndSpin, NIL, NIL, Self )
    ENDIF
    RETURN Self

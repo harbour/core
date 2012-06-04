@@ -49,7 +49,6 @@
  *
  */
 
-#include "common.ch"
 #include "error.ch"
 
 #include "hbclass.ch"
@@ -258,7 +257,7 @@ RETURN &( cExp )
 //--------------------------------------------------------------//
 FUNCTION ValToArray( xVal )
 
-   IF ISARRAY( xVal )
+   IF HB_ISARRAY( xVal )
       RETURN xVal
    ENDIF
 
@@ -267,7 +266,7 @@ RETURN { xVal }
 //--------------------------------------------------------------//
 FUNCTION ValToBlock( xVal )
 
-   IF ISBLOCK( xVal )
+   IF HB_ISBLOCK( xVal )
       RETURN xVal
    ENDIF
 
@@ -323,7 +322,7 @@ RETURN hb_SToD()
 //--------------------------------------------------------------//
 FUNCTION ValToHash( xVal )
 
-   IF hb_IsHash( xVal )
+   IF HB_ISHASH( xVal )
       RETURN xVal
    ENDIF
 

@@ -51,7 +51,6 @@
  */
 
 #include "color.ch"
-#include "common.ch"
 #include "setcurs.ch"
 
 #include "hbmemory.ch"
@@ -60,7 +59,7 @@ MEMVAR GetList
 
 FUNCTION AlloFree( lMode )
 
-   IF ! ISLOGICAL( lMode )
+   IF ! HB_ISLOGICAL( lMode )
       lMode := .F.
    ENDIF
 
@@ -69,18 +68,18 @@ FUNCTION AlloFree( lMode )
 FUNCTION CENTER( c, n, p, lMode )
    LOCAL cRet
 
-   IF ! ISNUMBER( n )
+   IF ! HB_ISNUMERIC( n )
       n := MaxCol() + 1 - Col() * 2
    ENDIF
-   IF ! ISCHARACTER( c )
+   IF ! HB_ISSTRING( c )
       c := ""
    ENDIF
 
-   IF ISLOGICAL( p )
+   IF HB_ISLOGICAL( p )
       lMode := p
       p := NIL
    ELSE
-      IF ! ISLOGICAL( lMode )
+      IF ! HB_ISLOGICAL( lMode )
          lMode := .F.
       ENDIF
    ENDIF
@@ -91,7 +90,7 @@ FUNCTION CENTER( c, n, p, lMode )
 
 FUNCTION CSETCURS( l )
 
-   IF ! ISLOGICAL( l )
+   IF ! HB_ISLOGICAL( l )
       RETURN SetCursor() != SC_NONE
    ENDIF
 

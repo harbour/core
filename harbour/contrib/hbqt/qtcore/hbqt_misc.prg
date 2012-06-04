@@ -120,12 +120,12 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
       RETURN .f.
    ENDIF  
 
-   IF ! hb_isBlock( bBlock )
+   IF ! HB_ISBLOCK( bBlock )
       RETURN .f.
    ENDIF
 
    IF hb_hHasKey( ::hEvents, cnEvent )
-      IF hb_isNumeric( ::hEvents[ cnEvent ] )
+      IF HB_ISNUMERIC( ::hEvents[ cnEvent ] )
          ::__pEvents:hbDisconnect( Self, cnEvent )
       ELSE 
          ::__pSlots:hbDisconnect( Self, cnEvent )
@@ -257,7 +257,7 @@ METHOD HbQtObjectHandler:_destroy()
    HB_TRACE( HB_TR_DEBUG, "  _destroy()", __objDerivedFrom( Self, "QOBJECT" ), "pSlots", valtype( ::__pSlots ), "pEvents", valtype( ::__pEvents ) )
       
    FOR EACH cnEvent IN ::hEvents
-      IF hb_isNumeric( cnEvent ) .AND. ! empty( ::__pEvents ) 
+      IF HB_ISNUMERIC( cnEvent ) .AND. ! empty( ::__pEvents ) 
          HB_TRACE( HB_TR_DEBUG, "  _destroy()", ".....N.....", cnEvent )
          ::__pEvents:hbDisconnect( Self, cnEvent )
       ELSEIF hb_isChar( cnEvent ) .AND. ! empty( ::__pSlots )

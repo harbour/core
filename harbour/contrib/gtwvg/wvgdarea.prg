@@ -127,17 +127,17 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
 
    DO CASE
    CASE nMessage == HB_GTE_RESIZED
-      IF hb_isBlock( ::sl_resize )
+      IF HB_ISBLOCK( ::sl_resize )
          eval( ::sl_resize, NIL, NIL, self )
       ENDIF
       aeval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
       RETURN EVENT_HANDELLED
 
    CASE nMessage == HB_GTE_CTLCOLOR
-      IF hb_isNumeric( ::clr_FG )
+      IF HB_ISNUMERIC( ::clr_FG )
          WVG_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
-      IF hb_isNumeric( ::hBrushBG )
+      IF HB_ISNUMERIC( ::hBrushBG )
          WVG_SetBkMode( aNM[ 1 ], 1 )
          WVG_FillRect( aNM[ 1 ], { 0,0,::currentSize()[1],::currentSize()[2]}, ::hBrushBG )
          RETURN EVENT_HANDELLED

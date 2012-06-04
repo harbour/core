@@ -67,7 +67,6 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "sql.ch"
 
 *+--------------------------------------------------------------------
@@ -179,13 +178,13 @@ METHOD New( cODBCStr, cUserName, cPassword, lCache ) CLASS TODBC
    LOCAL xBuf
    LOCAL nRet
 
-   IF ISCHARACTER( cUserName )
-      IF ! ISCHARACTER( cPassword )
+   IF HB_ISSTRING( cUserName )
+      IF ! HB_ISSTRING( cPassword )
          cPassword := ""
       ENDIF
    ENDIF
 
-   IF ! ISLOGICAL( lCache )
+   IF ! HB_ISLOGICAL( lCache )
       lCache := .T.
    ENDIF
 
@@ -203,7 +202,7 @@ METHOD New( cODBCStr, cUserName, cPassword, lCache ) CLASS TODBC
    SQLAllocConnect( ::hEnv, @xBuf )                 // Allocates SQL Connection
    ::hDbc := xBuf
 
-   IF ISCHARACTER( cUserName )
+   IF HB_ISSTRING( cUserName )
       IF ! ( ( nRet := SQLConnect( ::hDbc, cODBCStr, cUserName, cPassword ) ) == SQL_SUCCESS .OR. nRet == SQL_SUCCESS_WITH_INFO )
          // TODO: Some error here
       ENDIF
@@ -220,7 +219,7 @@ METHOD SetAutocommit( lEnable ) CLASS TODBC
 
    LOCAL lOld := ::lAutoCommit
 
-   IF ! ISLOGICAL( lEnable )
+   IF ! HB_ISLOGICAL( lEnable )
       lEnable := .T.
    ENDIF
 
@@ -452,7 +451,7 @@ METHOD FieldByName( cField ) CLASS TODBC
    LOCAL nRet
    LOCAL xRet := NIL
 
-   IF ISCHARACTER( cField )
+   IF HB_ISSTRING( cField )
       nRet := AScan( ::Fields, { | x | Upper( x:FieldName ) == Upper( cField ) } )
 
       IF nRet != 0

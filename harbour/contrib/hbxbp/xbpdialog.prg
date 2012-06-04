@@ -150,7 +150,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    hbxbp_InitializeEventBuffer()
 
    IF !empty( ::qtObject )
-      IF hb_isObject( ::qtObject )
+      IF HB_ISOBJECT( ::qtObject )
          ::isViaQtObject := .t.
          ::oWidget       := ::qtObject:oWidget
          ::qtObject      := NIL
@@ -325,7 +325,7 @@ METHOD XbpDialog:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
 METHOD XbpDialog:maxSize( aSize )
 
-   IF hb_isArray( aSize ) .AND. len( aSize ) == 2 .AND. hb_isNumeric( aSize[ 1 ] ) .AND. hb_isNumeric( aSize[ 2 ] )
+   IF HB_ISARRAY( aSize ) .AND. len( aSize ) == 2 .AND. HB_ISNUMERIC( aSize[ 1 ] ) .AND. HB_ISNUMERIC( aSize[ 2 ] )
       ::aMaxSize := aSize
       ::oWidget:setMaximumWidth( aSize[ 1 ] )
       ::oWidget:setMaximumHeight( aSize[ 2 ] )
@@ -337,7 +337,7 @@ METHOD XbpDialog:maxSize( aSize )
 
 METHOD XbpDialog:minSize( aSize )
 
-   IF hb_isArray( aSize ) .AND. len( aSize ) == 2 .AND. hb_isNumeric( aSize[ 1 ] ) .AND. hb_isNumeric( aSize[ 2 ] )
+   IF HB_ISARRAY( aSize ) .AND. len( aSize ) == 2 .AND. HB_ISNUMERIC( aSize[ 1 ] ) .AND. HB_ISNUMERIC( aSize[ 2 ] )
       ::aMinSize := aSize
       ::oWidget:setMinimumWidth( aSize[ 1 ] )
       ::oWidget:setMinimumHeight( aSize[ 2 ] )
@@ -381,7 +381,7 @@ METHOD XbpDialog:showModal()
 METHOD XbpDialog:setFrameState( nState )
    LOCAL lSuccess := .T.
    LOCAL nCurState := ::getFrameState()
-   LOCAL oWidget := iif( hb_isObject( ::oMdi ), ::oMdi, ::oWidget )
+   LOCAL oWidget := iif( HB_ISOBJECT( ::oMdi ), ::oMdi, ::oWidget )
 
    DO CASE
    CASE nState == XBPDLG_FRAMESTAT_MINIMIZED
@@ -407,7 +407,7 @@ METHOD XbpDialog:setFrameState( nState )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpDialog:getFrameState()
-   LOCAL nState := iif( hb_isObject( ::oMdi ), ::oMdi, ::oWidget ):windowState()
+   LOCAL nState := iif( HB_ISOBJECT( ::oMdi ), ::oMdi, ::oWidget ):windowState()
 
    IF ( hb_bitAnd( nState, Qt_WindowMinimized ) == Qt_WindowMinimized )
       RETURN XBPDLG_FRAMESTAT_MINIMIZED
@@ -421,7 +421,7 @@ METHOD XbpDialog:getFrameState()
 
 METHOD XbpDialog:menuBar()
 
-   IF !( hb_isObject( ::oMenu ) )
+   IF !( HB_ISOBJECT( ::oMenu ) )
       XbpMenuBar():New( self ):create()
    ENDIF
 

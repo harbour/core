@@ -51,8 +51,6 @@
  *
  */
 
-#include "common.ch"
-
 #translate ( <exp1> LIKE <exp2> )   => ( hb_regexLike( (<exp2>), (<exp1>) ) )
 
 FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
@@ -102,36 +100,36 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    LOCAL lConnect      := .T.
    LOCAL oPop
 
-   IF ! ISCHARACTER( cServer ) .OR. Empty( cServer )
+   IF ! HB_ISSTRING( cServer ) .OR. Empty( cServer )
       cServer := "localhost"
    ENDIF
-   IF ! ISCHARACTER( cUser )
+   IF ! HB_ISSTRING( cUser )
       cUser := ""
    ENDIF
-   IF ! ISCHARACTER( cPass )
+   IF ! HB_ISSTRING( cPass )
       cPass := ""
    ENDIF
-   IF ! ISNUMBER( nPort ) .OR. Empty( nPort )
+   IF ! HB_ISNUMERIC( nPort ) .OR. Empty( nPort )
       nPort := 25
    ENDIF
-   IF ! ISLOGICAL( lPopAuth )
+   IF ! HB_ISLOGICAL( lPopAuth )
       lPopAuth := .T.
    ENDIF
-   IF ! ISLOGICAL( lNoAuth )
+   IF ! HB_ISLOGICAL( lNoAuth )
       lNoAuth := .F.
    ENDIF
-   IF ! ISNUMBER( nTimeOut )
+   IF ! HB_ISNUMERIC( nTimeOut )
       nTimeOut := 10000
    ENDIF
-   IF ! ISLOGICAL( lTLS )
+   IF ! HB_ISLOGICAL( lTLS )
       lTLS := .F.
    ENDIF
-   IF ! ISCHARACTER( cSMTPPass )
+   IF ! HB_ISSTRING( cSMTPPass )
       cSMTPPass := cPass
    ENDIF
 
    // cTo
-   IF ISARRAY( xTo )
+   IF HB_ISARRAY( xTo )
       FOR tmp := Len( xTo ) TO 1 STEP -1
          IF Empty( xTo[ tmp ] )
             hb_ADel( xTo, tmp, .T. )
@@ -151,13 +149,13 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       IF Len( cTmp ) > 0
          cTo += "," + cTmp
       ENDIF
-   ELSEIF ISCHARACTER( xTo )
+   ELSEIF HB_ISSTRING( xTo )
       cTo := tip_GetRawEMail( AllTrim( xTo ) )
    ENDIF
 
 
    // CC (Carbon Copy)
-   IF ISARRAY( xCC )
+   IF HB_ISARRAY( xCC )
       FOR tmp := Len( xCC ) TO 1 STEP -1
          IF Empty( xCC[ tmp ] )
             hb_ADel( xCC, tmp, .T. )
@@ -170,13 +168,13 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
          NEXT
          cCC := SubStr( cCC, 1, Len( cCC ) - 1 )
       ENDIF
-   ELSEIF ISCHARACTER( xCC )
+   ELSEIF HB_ISSTRING( xCC )
       cCC := tip_GetRawEMail( AllTrim( xCC ) )
    ENDIF
 
 
    // BCC (Blind Carbon Copy)
-   IF ISARRAY( xBCC )
+   IF HB_ISARRAY( xBCC )
       FOR tmp := Len( xBCC ) TO 1 STEP -1
          IF Empty( xBCC[ tmp ] )
             hb_ADel( xBCC, tmp, .T. )
@@ -189,7 +187,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
          NEXT
          cBCC := SubStr( cBCC, 1, Len( cBCC ) - 1 )
       ENDIF
-   ELSEIF ISCHARACTER( xBCC )
+   ELSEIF HB_ISSTRING( xBCC )
       cBCC := tip_GetRawEMail( AllTrim( xBCC ) )
    ENDIF
 
@@ -355,22 +353,22 @@ FUNCTION hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, ;
    LOCAL cFext
    LOCAL cData
 
-   IF ! ISARRAY( aFiles )
+   IF ! HB_ISARRAY( aFiles )
       aFiles := {}
    ENDIF
-   IF ! ISNUMBER( nPriority )
+   IF ! HB_ISNUMERIC( nPriority )
       nPriority := 3
    ENDIF
-   IF ! ISLOGICAL( lRead )
+   IF ! HB_ISLOGICAL( lRead )
       lRead := .F.
    ENDIF
-   IF ! ISCHARACTER( cReplyTo )
+   IF ! HB_ISSTRING( cReplyTo )
       cReplyTo := ""
    ENDIF
-   IF ! ISCHARACTER( cCharset )
+   IF ! HB_ISSTRING( cCharset )
       cCharset := "ISO-8859-1"
    ENDIF
-   IF ! ISCHARACTER( cEncoding )
+   IF ! HB_ISSTRING( cEncoding )
       cEncoding := "quoted-printable"
    ENDIF
 
@@ -418,18 +416,18 @@ FUNCTION hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, ;
 
    FOR EACH aThisFile IN aFiles
 
-      IF ISCHARACTER( aThisFile )
+      IF HB_ISSTRING( aThisFile )
          cFile := aThisFile
          cData := hb_MemoRead( cFile )
-      ELSEIF ISARRAY( aThisFile ) .AND. Len( aThisFile ) >= 2
+      ELSEIF HB_ISARRAY( aThisFile ) .AND. Len( aThisFile ) >= 2
          cFile := aThisFile[ 1 ]
-         IF ISCHARACTER( aThisFile[ 2 ] )
+         IF HB_ISSTRING( aThisFile[ 2 ] )
             cData := aThisFile[ 2 ]
-            IF ! ISCHARACTER( cFile )
+            IF ! HB_ISSTRING( cFile )
                cFile := "unnamed"
             ENDIF
          ELSE
-            IF ! ISCHARACTER( cFile )
+            IF ! HB_ISSTRING( cFile )
                LOOP /* No filename and no content. */
             ELSE
                cData := hb_MemoRead( cFile )

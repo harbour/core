@@ -51,15 +51,13 @@
  *
  */
 
-#include "common.ch"
-
 FUNCTION TIMETOSEC( cTime )
    LOCAL nSec := 0
    LOCAL nLen, i, aLim, aMod, nInd, n
 
    IF cTime == NIL
       nSec := Seconds()
-   ELSEIF ISCHARACTER( cTime )
+   ELSEIF HB_ISSTRING( cTime )
       nLen := Len( cTime )
       IF ( nLen + 1 ) % 3 == 0 .AND. nLen <= 11
          nInd := 1
@@ -85,9 +83,9 @@ FUNCTION TIMETOSEC( cTime )
 FUNCTION SECTOTIME( nSec, lHundr )
    LOCAL i, h, n
 
-   n := iif( ! ISNUMBER( nSec ), Seconds(), nSec )
+   n := iif( ! HB_ISNUMERIC( nSec ), Seconds(), nSec )
 
-   IF ISLOGICAL( lHundr ) .AND. lHundr
+   IF HB_ISLOGICAL( lHundr ) .AND. lHundr
       h := ":" + StrZero( ( nSec * 100 ) % 100, 2 )
    ELSE
       h := ""

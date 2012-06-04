@@ -110,13 +110,13 @@ METHOD AddData( hData ) CLASS GDChart
 RETURN Self
 
 METHOD SetData( aData ) CLASS GDChart
-   IF ISARRAY( aData )
+   IF HB_ISARRAY( aData )
       ::aDataOfHashes := aData
    ENDIF
 RETURN Self
 
 METHOD AddDef( cDefKey, xDefVal ) CLASS GDChart
-   IF ISCHARACTER( cDefKey )
+   IF HB_ISSTRING( cDefKey )
       HB_hSet( ::hDefs, Upper( cDefKey ), xDefVal )
    ENDIF
 RETURN Self
@@ -208,7 +208,7 @@ METHOD PieChart() CLASS GDChart
          ::SetTile( pTile )
          colorp := gdTiled
       ELSE
-         if ISARRAY( colorp )
+         if HB_ISARRAY( colorp )
             colorp := ::SetColor( colorp[1], colorp[2], colorp[3] )
          endif
       ENDIF
@@ -422,7 +422,7 @@ METHOD VerticalBarChart() CLASS GDChart
          ::SetTile( pTile )
          colorp := gdTiled
       ELSE
-         if ISARRAY( colorp )
+         if HB_ISARRAY( colorp )
             colorp := ::SetColor( colorp[1], colorp[2], colorp[3] )
          endif
       ENDIF
@@ -605,7 +605,7 @@ METHOD HorizontalBarChart() CLASS GDChart
          ::SetTile( pTile )
          colorp := gdTiled
       ELSE
-         if ISARRAY( colorp )
+         if HB_ISARRAY( colorp )
             colorp := ::SetColor( colorp[1], colorp[2], colorp[3] )
          endif
       ENDIF
@@ -830,7 +830,7 @@ METHOD LineChart() CLASS GDChart
          ::SetTile( pTile )
          colorp := gdTiled
       ELSE
-         if ISARRAY( colorp )
+         if HB_ISARRAY( colorp )
             colorp := ::SetColor( colorp[1], colorp[2], colorp[3] )
          endif
       ENDIF

@@ -162,7 +162,7 @@
    // READINSERT(), ::lInsert must check in it.
    // DATA  lInsert        INIT .F.              // Is editor in Insert mode or in Overstrike one? Default : Overstrike - Clipper
    METHOD lInsert()              BLOCK { | | Set( _SET_INSERT ) }
-   METHOD _lInsert( lInsert )    BLOCK { | Self, lInsert | HB_SYMBOL_UNUSED( Self ), iif( ISLOGICAL( lInsert ), Set( _SET_INSERT, lInsert ), Set( _SET_INSERT ) ) }
+   METHOD _lInsert( lInsert )    BLOCK { | Self, lInsert | HB_SYMBOL_UNUSED( Self ), iif( HB_ISLOGICAL( lInsert ), Set( _SET_INSERT, lInsert ), Set( _SET_INSERT ) ) }
 
    METHOD  New( cString, nTop, nLeft, nBottom, ;             // Converts a string to an array of strings splitting input string at EOL boundaries
                 nRight, lEditMode, nLineLength, nTabSize, nTextRow, nTextCol, nWndRow, nWndCol )
@@ -303,7 +303,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 
    // 2006/AUG/18 - E.F. Adjusted nLineLenght in accordance with Clipper's
    //                    memoedit.
-   IF !Hb_IsNumeric( nLineLength )
+   IF !HB_ISNUMERIC( nLineLength )
       nLineLength := ::nNumCols
    ELSE
       IF nLineLength < 0
@@ -2367,7 +2367,7 @@ METHOD SetPos( nRow, nCol ) CLASS XHBEditor
 METHOD InsertState( lInsState ) CLASS XHBEditor
 
    // 2006/JUL/22 - E.F. - Insert only in edit mode.
-   IF ::lEditAllow .AND. ISLOGICAL( lInsState ) .AND. ::lInsert != lInsState
+   IF ::lEditAllow .AND. HB_ISLOGICAL( lInsState ) .AND. ::lInsert != lInsState
 
       ::lInsert := lInsState
 
@@ -3065,7 +3065,7 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
       ENDIF
       nRetLen += Len( cLine ) + nEOLLen
 
-      IF HB_IsNumeric( nWordWrapCol ) .AND. Len( cLine ) > nWordWrapCol
+      IF HB_ISNUMERIC( nWordWrapCol ) .AND. Len( cLine ) > nWordWrapCol
          DO WHILE .T.
             // Split line at nWordWrapCol boundary
             IF Len( cLine ) > nWordWrapCol

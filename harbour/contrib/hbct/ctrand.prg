@@ -50,10 +50,8 @@
  *
  */
 
-#include "common.ch"
-
 FUNCTION Random( lMode )
-   RETURN IIF( ISLOGICAL( lMode ) .AND. lMode, ;
+   RETURN IIF( HB_ISLOGICAL( lMode ) .AND. lMode, ;
                HB_RandomInt( -32768, 32767 ), HB_RandomInt( 0, 65535 ) )
 
 FUNCTION Rand( nStart )

@@ -58,7 +58,6 @@
  * and fieldbl.prg. Only minor changes were needed to adapt them to ODBC.
  */
 
-#include "common.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -239,7 +238,7 @@ STATIC FUNCTION Skipped( nRecs, oDataSource )
 
 STATIC FUNCTION ODBCFGet( cFieldName, oDataSource )
 
-   IF ISCHARACTER( cFieldName )
+   IF HB_ISSTRING( cFieldName )
       // For changing value rather write a decent SQL statement
       RETURN {| x | iif( x == NIL, oDataSource:FieldByName( cFieldName ):value, NIL ) }
    ENDIF

@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 FUNCTION _dbExport( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, cXPP_Driver, cDelimiter )
 
    DO CASE
@@ -71,8 +69,8 @@ FUNCTION xpp_dbUseArea( lNewArea, cDriver, cName, xcAlias, lShared, lReadonly )
    LOCAL nOldArea
    LOCAL nArea
 
-   IF ISLOGICAL( lNewArea ) .AND. lNewArea
-      IF ! ISCHARACTER( xcAlias )
+   IF HB_ISLOGICAL( lNewArea ) .AND. lNewArea
+      IF ! HB_ISSTRING( xcAlias )
          xcAlias := ""
       ENDIF
 
@@ -80,7 +78,7 @@ FUNCTION xpp_dbUseArea( lNewArea, cDriver, cName, xcAlias, lShared, lReadonly )
          xcAlias := cName
       ENDIF
 
-      IF ISCHARACTER( xcAlias )
+      IF HB_ISSTRING( xcAlias )
          nOldArea := Select()
          IF ( nArea := Select( xcAlias ) ) > 0
              xcAlias += "_" + hb_ntos( nArea )

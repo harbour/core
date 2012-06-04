@@ -811,7 +811,7 @@ METHOD XbpWindow:onError( ... )
 METHOD XbpWindow:captureMouse( lCapture )
    LOCAL lSuccess := .f.
 
-   IF hb_isLogical( lCapture )
+   IF HB_ISLOGICAL( lCapture )
       IF lCapture
          ::oWidget:grabMouse()
       ELSE
@@ -844,7 +844,7 @@ METHOD XbpWindow:enable()
 
 METHOD XbpWindow:hide()
 
-   IF hb_isObject( ::oWidget )
+   IF HB_ISOBJECT( ::oWidget )
       ::oWidget:hide()
    ENDIF
    ::is_hidden := ::oWidget:isHidden()
@@ -969,7 +969,7 @@ METHOD XbpWindow:getCSS( nAttr, xValue )
 METHOD XbpWindow:setColorBG( nRGB )
    LOCAL oldRGB := hbxbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR )
 
-   IF hb_isNumeric( nRGB )
+   IF HB_ISNUMERIC( nRGB )
       hbxbp_SetPresParam( ::aPresParams, XBP_PP_BGCLR, nRGB )
       ::setCSSAttribute( "XBP_PP_BGCLR", ::getCSS( XBP_PP_BGCLR, nRGB ) )
       ::setStyleSheet()
@@ -982,7 +982,7 @@ METHOD XbpWindow:setColorBG( nRGB )
 METHOD XbpWindow:setColorFG( nRGB )
    LOCAL oldRGB := hbxbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR )
 
-   IF hb_isNumeric( nRGB )
+   IF HB_ISNUMERIC( nRGB )
       hbxbp_SetPresParam( ::aPresParams, XBP_PP_FGCLR, nRGB )
       ::setCSSAttribute( "XBP_PP_FGCLR", ::getCSS( XBP_PP_FGCLR, nRGB ) )
       ::setStyleSheet()
@@ -1012,7 +1012,7 @@ METHOD XbpWindow:setFont( oFont )
 METHOD XbpWindow:setFontCompoundName( xFont )
    LOCAL cOldFont := hbxbp_SetPresParam( ::aPresParams, XBP_PP_COMPOUNDNAME )
 
-   IF ! hb_isNumeric( xFont )
+   IF ! HB_ISNUMERIC( xFont )
       IF ! empty( xFont )
          ::setCSSAttribute( "XBP_PP_COMPOUNDNAME", ::getCSS( XBP_PP_COMPOUNDNAME, xFont ) )
          ::setStyleSheet()
@@ -1139,7 +1139,7 @@ METHOD XbpWindow:setPointer( cDllName, xResID, nType )
 METHOD XbpWindow:setTrackPointer( lTrack )
    LOCAL lRet := .f.
 
-   IF hb_isLogical( lTrack )
+   IF HB_ISLOGICAL( lTrack )
       ::lTrack := lTrack
       lRet := .T.
    ENDIF
@@ -1170,7 +1170,7 @@ METHOD XbpWindow:setPos( aPos, lPaint )
 
    DEFAULT aPos TO ::aPos
 
-   IF hb_isArray( aPos )
+   IF HB_ISARRAY( aPos )
       DEFAULT lPaint TO .T.
       ::oWidget:move( aPos[ 1 ], aPos[ 2 ] )
    ENDIF
@@ -1185,7 +1185,7 @@ METHOD XbpWindow:setPosAndSize( aPos, aSize, lPaint )
       DEFAULT aPos  TO ::aPos
       DEFAULT aSize TO ::aSize
 
-      IF hb_isArray( aPos ) .and. hb_isArray( aSize )
+      IF HB_ISARRAY( aPos ) .and. HB_ISARRAY( aSize )
          DEFAULT lPaint TO .T.
 
          ::oWidget:move( aPos[ 1 ], aPos[ 2 ] )
@@ -1201,7 +1201,7 @@ METHOD XbpWindow:setSize( aSize, lPaint )
 
    DEFAULT aSize TO ::aSize
 
-   IF hb_isArray( aSize )
+   IF HB_ISARRAY( aSize )
       DEFAULT lPaint TO .T.
 
       ::oWidget:resize( aSize[ 1 ], aSize[ 2 ] )
@@ -1219,14 +1219,14 @@ METHOD XbpWindow:isDerivedFrom( cClassORoObject )
    IF hb_isChar( cClassORoObject )
       RETURN __clsParent( Self:classH, cClassORoObject )
 
-   ELSEIF hb_isObject( cClassORoObject )
+   ELSEIF HB_ISOBJECT( cClassORoObject )
       IF upper( substr( cClassORoObject:className,4 ) ) == upper( substr( cCls,4 ) )
          lTrue := .t.
       ENDIF
    ENDIF
 
    IF !( lTrue )
-      IF hb_isObject( ::oParent )
+      IF HB_ISOBJECT( ::oParent )
          lTrue := ::oParent:isDerivedFrom( cClassORoObject )
       ENDIF
    ENDIF
@@ -1281,7 +1281,7 @@ METHOD XbpWindow:winDevice()
 METHOD XbpWindow:setPresParam( aPPNew )
    LOCAL i
 
-   IF hb_isArray( aPPNew )
+   IF HB_ISARRAY( aPPNew )
       FOR i := 1 TO len( aPPNew )
          hbxbp_SetPresParam( ::aPresParams, aPPNew[ i,1 ], aPPNew[ i,2 ] )
       NEXT
@@ -1337,7 +1337,7 @@ METHOD XbpWindow:title( cTitle )
 
    IF hb_isChar( cTitle )
       ::cTitle := cTitle
-      IF hb_isObject( ::oWidget )
+      IF HB_ISOBJECT( ::oWidget )
          ::oWidget:setWindowTitle( ::cTitle )
       ENDIF
    ENDIF
@@ -1350,9 +1350,9 @@ METHOD XbpWindow:title( cTitle )
 
 METHOD XbpWindow:enter( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_enter := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_enter )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_enter )
       eval( ::sl_enter, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1361,9 +1361,9 @@ METHOD XbpWindow:enter( ... )
 
 METHOD XbpWindow:leave( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_leave := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_leave )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_leave )
       eval( ::sl_leave, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1372,9 +1372,9 @@ METHOD XbpWindow:leave( ... )
 
 METHOD XbpWindow:lbClick( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_lbClick := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbClick )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_lbClick )
       eval( ::sl_lbClick, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1383,9 +1383,9 @@ METHOD XbpWindow:lbClick( ... )
 
 METHOD XbpWindow:lbDblClick( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_lbDblClick := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbDblClick )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_lbDblClick )
       eval( ::sl_lbDblClick, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1394,9 +1394,9 @@ METHOD XbpWindow:lbDblClick( ... )
 
 METHOD XbpWindow:lbDown( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_lbDown := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbDown )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_lbDown )
       eval( ::sl_lbDown, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1405,9 +1405,9 @@ METHOD XbpWindow:lbDown( ... )
 
 METHOD XbpWindow:lbUp( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_lbUp := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbUp )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_lbUp )
       eval( ::sl_lbUp, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1416,9 +1416,9 @@ METHOD XbpWindow:lbUp( ... )
 
 METHOD XbpWindow:mbClick( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_mbClick := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_mbClick )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_mbClick )
       eval( ::sl_mbClick, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1427,9 +1427,9 @@ METHOD XbpWindow:mbClick( ... )
 
 METHOD XbpWindow:mbDblClick( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_mbDblClick := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_mbDblClick )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_mbDblClick )
       eval( ::sl_mbDblClick, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1438,9 +1438,9 @@ METHOD XbpWindow:mbDblClick( ... )
 
 METHOD XbpWindow:mbDown( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_mbDown := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_mbDown )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_mbDown )
       eval( ::sl_mbDown, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1449,9 +1449,9 @@ METHOD XbpWindow:mbDown( ... )
 
 METHOD XbpWindow:mbUp( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_mbUp := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_mbUp )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_mbUp )
       eval( ::sl_mbUp, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1460,9 +1460,9 @@ METHOD XbpWindow:mbUp( ... )
 
 METHOD XbpWindow:motion( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_motion := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_motion )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_motion )
       eval( ::sl_motion, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1471,9 +1471,9 @@ METHOD XbpWindow:motion( ... )
 
 METHOD XbpWindow:rbClick( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_rbClick := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_rbClick )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_rbClick )
       eval( ::sl_rbClick, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1482,9 +1482,9 @@ METHOD XbpWindow:rbClick( ... )
 
 METHOD XbpWindow:rbDblClick( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_rbDblClick := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_rbDblClick )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_rbDblClick )
       eval( ::sl_rbDblClick, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1493,9 +1493,9 @@ METHOD XbpWindow:rbDblClick( ... )
 
 METHOD XbpWindow:rbDown( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_rbDown := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_rbDown )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_rbDown )
       eval( ::sl_rbDown, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1504,9 +1504,9 @@ METHOD XbpWindow:rbDown( ... )
 
 METHOD XbpWindow:rbUp( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_rbUp := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_rbUp )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_rbUp )
       eval( ::sl_rbUp, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1515,9 +1515,9 @@ METHOD XbpWindow:rbUp( ... )
 
 METHOD XbpWindow:wheel( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_wheel := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_wheel )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_wheel )
       eval( ::sl_wheel, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self
@@ -1528,9 +1528,9 @@ METHOD XbpWindow:wheel( ... )
 
 METHOD XbpWindow:close( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_close := a_[ 1 ]
-   ELSEIF len( a_ ) == 0 .AND. hb_isBlock( ::sl_close )
+   ELSEIF len( a_ ) == 0 .AND. HB_ISBLOCK( ::sl_close )
       eval( ::sl_close, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -1539,9 +1539,9 @@ METHOD XbpWindow:close( ... )
 
 METHOD XbpWindow:helpRequest( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_helpRequest := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_helpRequest )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_helpRequest )
       eval( ::sl_helpRequest, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -1550,9 +1550,9 @@ METHOD XbpWindow:helpRequest( ... )
 
 METHOD XbpWindow:keyboard( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_keyboard := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_keyboard )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_keyboard )
       eval( ::sl_keyboard, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1561,9 +1561,9 @@ METHOD XbpWindow:keyboard( ... )
 
 METHOD XbpWindow:killDisplayFocus( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_killDisplayFocus := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_killDisplayFocus )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_killDisplayFocus )
       eval( ::sl_killDisplayFocus, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -1572,9 +1572,9 @@ METHOD XbpWindow:killDisplayFocus( ... )
 
 METHOD XbpWindow:killInputFocus( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_killInputFocus := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_killInputFocus )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_killInputFocus )
       eval( ::sl_killInputFocus, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -1583,9 +1583,9 @@ METHOD XbpWindow:killInputFocus( ... )
 
 METHOD XbpWindow:move( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_move := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_move )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_move )
       eval( ::sl_move, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1594,9 +1594,9 @@ METHOD XbpWindow:move( ... )
 
 METHOD XbpWindow:paint( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_paint := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_paint )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_paint )
       eval( ::sl_paint, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1605,9 +1605,9 @@ METHOD XbpWindow:paint( ... )
 
 METHOD XbpWindow:quit( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_quit := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_quit )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_quit )
       eval( ::sl_quit, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self
@@ -1616,9 +1616,9 @@ METHOD XbpWindow:quit( ... )
 
 METHOD XbpWindow:resize( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_resize := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_resize )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_resize )
       eval( ::sl_resize, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self
@@ -1627,9 +1627,9 @@ METHOD XbpWindow:resize( ... )
 
 METHOD XbpWindow:setDisplayFocus( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_setDisplayFocus := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_setDisplayFocus )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_setDisplayFocus )
       eval( ::sl_setDisplayFocus, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -1638,9 +1638,9 @@ METHOD XbpWindow:setDisplayFocus( ... )
 
 METHOD XbpWindow:setInputFocus( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_setInputFocus := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_setInputFocus )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_setInputFocus )
       eval( ::sl_setInputFocus, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -1649,9 +1649,9 @@ METHOD XbpWindow:setInputFocus( ... )
 
 METHOD XbpWindow:dragEnter( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_dragEnter := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_dragEnter )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_dragEnter )
       eval( ::sl_dragEnter, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self
@@ -1660,9 +1660,9 @@ METHOD XbpWindow:dragEnter( ... )
 
 METHOD XbpWindow:dragMotion( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_dragMotion := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_dragMotion )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_dragMotion )
       eval( ::sl_dragMotion, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1671,9 +1671,9 @@ METHOD XbpWindow:dragMotion( ... )
 
 METHOD XbpWindow:dragLeave( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_dragLeave := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_dragLeave )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_dragLeave )
       eval( ::sl_dragLeave, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -1682,9 +1682,9 @@ METHOD XbpWindow:dragLeave( ... )
 
 METHOD XbpWindow:dragDrop( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_dragDrop := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_dragDrop )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_dragDrop )
       eval( ::sl_dragDrop, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self
@@ -1693,9 +1693,9 @@ METHOD XbpWindow:dragDrop( ... )
 
 METHOD XbpWindow:hbContextMenu( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::hb_contextMenu := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::hb_contextMenu )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::hb_contextMenu )
       eval( ::hb_contextMenu, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -1742,7 +1742,7 @@ METHOD XbpWindow:hbLayout( nTypeLayout )
 
    oldLayout := ::nLayout
 
-   IF hb_isNumeric( nTypeLayout ) .AND. nTypeLayout > 0 .AND. nTypeLayout <= HBPLAYOUT_TYPE_MAX
+   IF HB_ISNUMERIC( nTypeLayout ) .AND. nTypeLayout > 0 .AND. nTypeLayout <= HBPLAYOUT_TYPE_MAX
       ::nLayout := nTypeLayout
       lApply := .t.
    ELSEIF !empty( ::nLayout )

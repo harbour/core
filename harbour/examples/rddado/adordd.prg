@@ -1598,7 +1598,7 @@ PROCEDURE HB_AdoSetPassword( cPassword )
 
 PROCEDURE HB_AdoSetQuery( cQuery )
 
-   IF ! ISCHARACTER( cQuery )
+   IF ! HB_ISSTRING( cQuery )
       cQuery := "SELECT * FROM "
    ENDIF
 
@@ -1631,7 +1631,7 @@ STATIC FUNCTION SQLTranslate( cExpr )
 
 FUNCTION HB_AdoRddGetConnection( nWA )
 
-   IF ! ISNUMBER( nWA )
+   IF ! HB_ISNUMERIC( nWA )
       nWA := Select()
    ENDIF
 
@@ -1639,7 +1639,7 @@ FUNCTION HB_AdoRddGetConnection( nWA )
 
 FUNCTION HB_AdoRddGetCatalog( nWA )
 
-   IF ! ISNUMBER( nWA )
+   IF ! HB_ISNUMERIC( nWA )
       nWA := Select()
    ENDIF
 
@@ -1649,7 +1649,7 @@ FUNCTION HB_AdoRddGetRecordSet( nWA )
 
    LOCAL aWAData
 
-   IF ! ISNUMBER( nWA )
+   IF ! HB_ISNUMERIC( nWA )
       nWA := Select()
    ENDIF
 

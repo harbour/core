@@ -199,8 +199,6 @@
 
 #include "hbrpc.ch"
 
-#include "common.ch"
-
 /************************************
 * RPC FUNCTION
 *************************************/
@@ -287,7 +285,7 @@ RETURN Self
 
 METHOD SetCallable( oExec, oMeth ) CLASS tRPCFunction
    // If the callable is an object, we need to store the method
-   IF ISOBJECT( oExec )
+   IF HB_ISOBJECT( oExec )
       ::aCall := Array( Len( ::aParameters ) + 3 )
       ::aCall[2] := oMeth
    ELSE
@@ -305,7 +303,7 @@ METHOD Run( aParams, oClient ) CLASS tRPCFunction
       RETURN NIL
    ENDIF
 
-   nStart := IIF( ISOBJECT( ::aCall[1] ), 3, 2 )
+   nStart := IIF( HB_ISOBJECT( ::aCall[1] ), 3, 2 )
 
    FOR nCount := 1 TO Len( aParams )
       ::aCall[ nStart ] := aParams[ nCount ]
@@ -329,7 +327,7 @@ RETURN .T.
 METHOD CheckTypes( aParams ) CLASS tRPCFunction
    LOCAL oElem, i := 0
 
-   IF ! ISARRAY( aParams )
+   IF ! HB_ISARRAY( aParams )
       RETURN .F.
    ENDIF
 
@@ -964,7 +962,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
 
       CASE nMode == 1 // run in loop
          aSubst := AClone( aParams )
-         nSubstPos := AScan( aParams, {|x| ISCHARACTER( x ) .and. x == "$."} )
+         nSubstPos := AScan( aParams, {|x| HB_ISSTRING( x ) .and. x == "$."} )
 
          SWITCH aDesc[1]
             CASE 'A' // all results
@@ -1017,7 +1015,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
 
       CASE nMode == 2 // Run in a foreach loop
          aSubst := AClone( aParams )
-         nSubstPos := AScan( aParams, {|x| ISCHARACTER( x ) .and. x == "$."} )
+         nSubstPos := AScan( aParams, {|x| HB_ISSTRING( x ) .and. x == "$."} )
 
          SWITCH aDesc[1]
             CASE 'A' // all results
@@ -1261,7 +1259,7 @@ METHOD Add( xFunction, cVersion, nLevel, oExec, oMethod )
    LOCAL nElem, lRet := .F.
    LOCAL oFunction
 
-   IF ISCHARACTER( xFunction )
+   IF HB_ISSTRING( xFunction )
       oFunction := TRpcFunction():New( xFunction, cVersion, nLevel, oExec, oMethod )
    ELSE
       oFunction := xFunction

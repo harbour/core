@@ -50,14 +50,12 @@
  *
  */
 
-#include "common.ch"
-
 FUNCTION RunShell( cCommand, cProgram, lAsync, lBackground )
 
    /* Not supported (yet?) */
    HB_SYMBOL_UNUSED( lBackground )
 
-   IF ! ISCHARACTER( cProgram )
+   IF ! HB_ISSTRING( cProgram )
       #if defined( __PLATFORM__UNIX )
          cProgram := hb_getenv( "SHELL" )
       #elif defined( __PLATFORM__OS2 )
@@ -82,7 +80,7 @@ FUNCTION RunShell( cCommand, cProgram, lAsync, lBackground )
       ENDIF
    ENDIF
 
-   IF ISCHARACTER( cCommand )
+   IF HB_ISSTRING( cCommand )
       cProgram += " " + cCommand
    ENDIF
 

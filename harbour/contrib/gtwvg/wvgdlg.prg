@@ -147,7 +147,7 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    hb_gtInfo( HB_GTI_WINTITLE  , ::title     )
 
    if !empty( ::icon )
-      if hb_isNumeric( ::icon )
+      if HB_ISNUMERIC( ::icon )
          hb_gtInfo( HB_GTI_ICONRES, ::icon )
 
       elseif hb_isChar( ::icon )
@@ -187,7 +187,7 @@ METHOD WvgDialog:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
 METHOD WvgDialog:destroy()
 
-   IF hb_isObject( ::oMenu )
+   IF HB_ISOBJECT( ::oMenu )
       ::oMenu:destroy()
    ENDIF
 
@@ -241,7 +241,7 @@ METHOD WvgDialog:getFrameState()
 
 METHOD WvgDialog:menuBar()
 
-   IF !( hb_isObject( ::oMenu ) )
+   IF !( HB_ISOBJECT( ::oMenu ) )
       ::oMenu := WvgMenuBar():New( self ):create()
    ENDIF
 

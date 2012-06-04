@@ -55,8 +55,6 @@
 
 #include "hbrpc.ch"
 
-#include "common.ch"
-
 CLASS tRPCClient
 
    DATA aServers
@@ -546,7 +544,7 @@ METHOD SetLoopMode( nMethod, xData, nEnd, nStep ) CLASS tRPCClient
       RETURN .T.
    ENDIF
 
-   IF ISARRAY( xData )
+   IF HB_ISARRAY( xData )
       ::aLoopData := xData
    ELSE
       IF ValType( xData ) == "NI"
@@ -599,7 +597,7 @@ METHOD Call( ... ) CLASS tRPCClient
    ENDIF
 
    oCalling := hb_PValue( 1 )
-   IF ISARRAY( oCalling )
+   IF HB_ISARRAY( oCalling )
       cFunction := oCalling[1]
       ADel( oCalling, 1 )
       ASize( oCalling, Len( oCalling ) -1 )
@@ -657,7 +655,7 @@ METHOD SetPeriodCallback( ... ) CLASS tRPCClient
    ::nTimeLimit := hb_PValue( 2 )
 
    caCalling := hb_PValue( 3 )
-   IF ! ISARRAY( caCalling )
+   IF ! HB_ISARRAY( caCalling )
       caCalling := Array( Pcount() -2 )
       FOR nCount := 3 TO Pcount()
          caCalling[nCount - 2] :=  hb_PValue( nCount )
@@ -955,7 +953,7 @@ RETURN lContinue
 METHOD GetFunctionName( xId ) CLASS tRpcClient
    LOCAL cData, nPos
 
-   IF ISARRAY( xID )
+   IF HB_ISARRAY( xID )
       cData := xId[3]
    ELSEIF Len( ::aFunctions ) > 0
       cData := ::aFunctions[xId][3]
@@ -974,7 +972,7 @@ RETURN cData
 METHOD GetServerName( xId ) CLASS tRpcClient
    LOCAL cData
 
-   IF ISARRAY( xID )
+   IF HB_ISARRAY( xID )
       cData := xId[2]
    ELSE
       IF Len( ::aFunctions ) > 0
@@ -991,7 +989,7 @@ RETURN cData
 METHOD GetServerAddress( xId ) CLASS tRpcClient
    LOCAL cData
 
-   IF ISARRAY( xID )
+   IF HB_ISARRAY( xID )
       cData := xId[1]
    ELSE
       IF ! Empty( ::aFunctions )

@@ -106,7 +106,7 @@ EXIT PROCEDURE hbxbp_End()
 
    t_oAppWindow := NIL
 
-   IF hb_isObject( s_oDeskTop )
+   IF HB_ISOBJECT( s_oDeskTop )
       s_oDeskTop:oWidget := NIL
    ENDIF
 
@@ -143,7 +143,7 @@ FUNCTION hbxbp_SetEventLoop( oELoop )
    LOCAL oLoop := t_oEventLoop
 
    IF PCount() == 1
-      IF hb_isObject( oELoop ) .OR. oELoop == NIL
+      IF HB_ISOBJECT( oELoop ) .OR. oELoop == NIL
          t_oEventLoop := oELoop
       ENDIF
    ENDIF
@@ -344,7 +344,7 @@ FUNCTION AppEvent( mp1, mp2, oXbp, nTimeout )
 FUNCTION SetAppWindow( oXbp )
    LOCAL oldAppWindow := t_oAppWindow
 
-   IF hb_isObject( oXbp )
+   IF HB_ISOBJECT( oXbp )
       t_oAppWindow := oXbp
    ENDIF
 
@@ -357,7 +357,7 @@ FUNCTION SetAppFocus( oXbp )
 
    oldXbpInFocus := t_oXbpInFocus
 
-   IF hb_isObject( oXbp )
+   IF HB_ISOBJECT( oXbp )
       t_oXbpInFocus := oXbp
       oXbp:setFocus()
    ENDIF
@@ -388,7 +388,7 @@ FUNCTION MsgBox( cMsg, cTitle )
    oMB := QMessageBox()
    oMB:setText( /* "<b>" + */ cMsg /* + "</b>" */ )
    oMB:setIcon( QMessageBox_Information )
-   IF hb_isObject( SetAppWindow() )
+   IF HB_ISOBJECT( SetAppWindow() )
       oMB:setParent( SetAppWindow():oWidget )
    ENDIF
    oMB:setWindowFlags( Qt_Dialog )
@@ -565,7 +565,7 @@ FUNCTION ConfirmBox( oOwner, cMessage, cTitle, nButtons, nStyle, nStartBtn )
       oMB:setIcon( QMessageBox_Critical )
    ENDIF
 
-   IF hb_isObject( oOwner )
+   IF HB_ISOBJECT( oOwner )
       oMB:setParent( oOwner:oWidget )
    ENDIF
    oMB:setWindowFlags( Qt_Dialog )

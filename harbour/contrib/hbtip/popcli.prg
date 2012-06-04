@@ -56,7 +56,6 @@
 */
 
 #include "hbclass.ch"
-#include "common.ch"
 
 /**
 * Inet service manager: pop3
@@ -86,7 +85,7 @@ ENDCLASS
 
 METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClientPOP
 
-   ::super:new( oUrl, iif( ISLOGICAL( xTrace ) .AND. xTrace, "pop3", xTrace ), oCredentials )
+   ::super:new( oUrl, iif( HB_ISLOGICAL( xTrace ) .AND. xTrace, "pop3", xTrace ), oCredentials )
 
    ::nDefaultPort := iif( ::oUrl:cProto == "pop3s" .OR. ::oUrl:cProto == "pops", 995, 110 )
    ::nConnTimeout := 10000
@@ -146,7 +145,7 @@ METHOD OpenDigest( cUrl ) CLASS tIPClientPOP
 
 METHOD Close( lAutoQuit ) CLASS tIPClientPOP
 
-   IF ! ISLOGICAL( lAutoQuit )
+   IF ! HB_ISLOGICAL( lAutoQuit )
       lAutoQuit := .t.
    ENDIF
 
@@ -362,7 +361,7 @@ METHOD Read( nLen ) CLASS tIPClientPOP
 METHOD retrieveAll( lDelete )
    LOCAL aMails, i, imax, cMail
 
-   IF ! ISLOGICAL( lDelete )
+   IF ! HB_ISLOGICAL( lDelete )
       lDelete := .F.
    ENDIF
 

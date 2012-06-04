@@ -218,7 +218,7 @@ METHOD xbpMenuBar:delAllItems()
 METHOD xbpMenuBar:delItem( aItem )
    LOCAL n, oAction
 
-   IF hb_isNumeric( aItem )
+   IF HB_ISNUMERIC( aItem )
       n := aItem
       aItem := ::aMenuItems[ n ]  /* Will polish later */
       hb_adel( ::aMenuItems, n, .t. )
@@ -227,7 +227,7 @@ METHOD xbpMenuBar:delItem( aItem )
    oAction := aItem[ 5 ]
    aItem := NIL
 
-   IF hb_isObject( oAction ) .AND. __ObjGetClsName( oAction ) == "QACTION"
+   IF HB_ISOBJECT( oAction ) .AND. __ObjGetClsName( oAction ) == "QACTION"
       IF !( oAction:isSeparator() )
          oAction:disConnect( "triggered(bool)" )
          oAction:disConnect( "hovered()"       )
@@ -382,7 +382,7 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
 METHOD xbpMenuBar:addItem( aItem )
    LOCAL xCaption, bAction, nStyle, nAttrib
 
-   IF PCount() == 1 .AND. hb_isArray( aItem )
+   IF PCount() == 1 .AND. HB_ISARRAY( aItem )
       ASize( aItem, 4 )
 
       xCaption := aItem[ 1 ]
@@ -403,7 +403,7 @@ METHOD xbpMenuBar:addItem( aItem )
 METHOD xbpMenuBar:insItem( nItemIndex, aItem )
    LOCAL xCaption, bAction, nStyle, nAttrib
 
-   IF nItemIndex > 0 .and. nItemIndex <= ::numItems .and. hb_isArray( aItem )
+   IF nItemIndex > 0 .and. nItemIndex <= ::numItems .and. HB_ISARRAY( aItem )
       ASize( aItem, 4 )
 
       xCaption := aItem[ 1 ]
@@ -514,9 +514,9 @@ METHOD xbpMenuBar:selectItem( nItemIndex )
 METHOD xbpMenuBar:execSlot( cSlot, p )
    LOCAL nIndex
 
-   IF ! empty( p ) .AND. ( nIndex := ascan( ::aMenuItems, {|e_| iif( hb_isNumeric( e_[ 2 ] ), e_[ 2 ] == p, .f. ) } ) ) > 0
+   IF ! empty( p ) .AND. ( nIndex := ascan( ::aMenuItems, {|e_| iif( HB_ISNUMERIC( e_[ 2 ] ), e_[ 2 ] == p, .f. ) } ) ) > 0
       IF cSlot == "triggered(bool)"
-         IF hb_isBlock( ::aMenuItems[ nIndex,4 ] )
+         IF HB_ISBLOCK( ::aMenuItems[ nIndex,4 ] )
             eval( ::aMenuItems[ nIndex,4 ], nIndex, NIL, Self )
 
          ELSE
@@ -538,9 +538,9 @@ METHOD xbpMenuBar:execSlot( cSlot, p )
 
 METHOD xbpMenuBar:beginMenu( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_beginMenu := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_beginMenu )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_beginMenu )
       eval( ::sl_beginMenu, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -549,9 +549,9 @@ METHOD xbpMenuBar:beginMenu( ... )
 
 METHOD XbpMenuBar:endMenu( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_endMenu := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_endMenu )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_endMenu )
       eval( ::sl_endMenu, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -560,9 +560,9 @@ METHOD XbpMenuBar:endMenu( ... )
 
 METHOD XbpMenuBar:itemMarked( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_itemMarked := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_itemMarked )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_itemMarked )
       eval( ::sl_itemMarked, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -571,9 +571,9 @@ METHOD XbpMenuBar:itemMarked( ... )
 
 METHOD XbpMenuBar:itemSelected( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_itemSelected := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_itemSelected )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_itemSelected )
       eval( ::sl_itemSelected, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -582,9 +582,9 @@ METHOD XbpMenuBar:itemSelected( ... )
 
 METHOD XbpMenuBar:drawItem( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_drawItem := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_drawItem )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_drawItem )
       eval( ::sl_drawItem, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self
@@ -593,9 +593,9 @@ METHOD XbpMenuBar:drawItem( ... )
 
 METHOD XbpMenuBar:measureItem( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_measureItem := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_measureItem )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_measureItem )
       eval( ::sl_measureItem, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self
@@ -604,9 +604,9 @@ METHOD XbpMenuBar:measureItem( ... )
 
 METHOD XbpMenuBar:onMenuKey( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_onMenuKey := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_onMenuKey )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_onMenuKey )
       eval( ::sl_onMenuKey, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self
@@ -667,8 +667,8 @@ CLASS xbpMenu INHERIT xbpMenuBar
    METHOD   popUp( oXbp, aPos, nDefaultItem, nControl )
    METHOD   setStyle()
    METHOD   normalize( cCaption )
-   METHOD   show()                                 INLINE iif( hb_isObject( ::oAction ), ::oAction:setVisible( .t. ), NIL )
-   METHOD   hide()                                 INLINE iif( hb_isObject( ::oAction ), ::oAction:setVisible( .f. ), NIL )
+   METHOD   show()                                 INLINE iif( HB_ISOBJECT( ::oAction ), ::oAction:setVisible( .t. ), NIL )
+   METHOD   hide()                                 INLINE iif( HB_ISOBJECT( ::oAction ), ::oAction:setVisible( .f. ), NIL )
 
    ENDCLASS
 
@@ -693,7 +693,7 @@ METHOD xbpMenu:create( oParent, aPresParams, lVisible )
    ::oWidget := QMenu()
    ::oWidget:setTitle( ::normalize( ::title ) )
 
-   IF hb_isObject( ::oParent )
+   IF HB_ISOBJECT( ::oParent )
       ::oAction := ::oParent:oWidget:addMenu( ::oWidget )
       ::oParent:addChild( self )
       ::oAction:setVisible( ::visible )

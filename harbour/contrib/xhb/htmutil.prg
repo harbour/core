@@ -115,7 +115,7 @@ FUNCTION PutCounter( oHtm, nNumber, cDir, nDigits, nWidth, bgColor, nBorder )
    DEFAULT nBorder TO 1
    DEFAULT BGCOLOR TO "black"
 
-   IF ISNUMBER( nNumber )
+   IF HB_ISNUMERIC( nNumber )
       cStr := Strzero( nNumber, nDigits )
    ENDIF
 
@@ -554,7 +554,7 @@ METHOD Put() Class JWindow
       ::setFeatures()
    ENDIF
 
-   IF ! ISCHARACTER( ::name )
+   IF ! HB_ISSTRING( ::name )
       ::name := "newWin"
    ENDIF
 

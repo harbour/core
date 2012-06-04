@@ -494,7 +494,7 @@ METHOD WvgWindow:setColorBG( nRGB )
    IF hb_isChar( nRGB )
       nRGB := Wvt_GetRGBColorByString( nRGB, 1 )
    ENDIF
-   IF hb_isNumeric( nRGB )
+   IF HB_ISNUMERIC( nRGB )
       hBrush := WVG_CreateBrush( BS_SOLID, nRGB, 0 )
       IF hBrush != 0
          ::clr_BG := nRGB
@@ -531,7 +531,7 @@ METHOD WvgWindow:setTrackPointer()
 METHOD WvgWindow:setPos( aPos, lPaint )
    LOCAL aPosSz
 
-   IF hb_isArray( aPos )
+   IF HB_ISARRAY( aPos )
       DEFAULT lPaint TO .T.
 
       SWITCH ::objType
@@ -565,7 +565,7 @@ METHOD WvgWindow:setPosAndSize( aPos, aSize, lPaint )
    DEFAULT aPos  TO ::aPos
    DEFAULT aSize TO ::aSize
 
-   IF hb_isArray( aPos ) .AND. hb_isArray( aSize )
+   IF HB_ISARRAY( aPos ) .AND. HB_ISARRAY( aSize )
       DEFAULT lPaint TO .T.
 
       SWITCH ::objType
@@ -588,7 +588,7 @@ METHOD WvgWindow:setPosAndSize( aPos, aSize, lPaint )
 METHOD WvgWindow:setSize( aSize, lPaint )
    LOCAL aPosSz
 
-   IF hb_isArray( aSize )
+   IF HB_ISARRAY( aSize )
       DEFAULT lPaint TO .T.
 
       SWITCH ::objType
@@ -618,7 +618,7 @@ METHOD WvgWindow:isDerivedFrom( cClassORoObject )
          lTrue := .t.
       ENDIF
 
-   ELSEIF hb_isObject( cClassORoObject )
+   ELSEIF HB_ISOBJECT( cClassORoObject )
       IF upper( substr( cClassORoObject:className,4 ) ) == upper( substr( cCls,4 ) )
          lTrue := .t.
       ENDIF
@@ -675,7 +675,7 @@ METHOD WvgWindow:setFontCompoundName( xFont )
 
    cOldFont := ::fnt_COMMPOUNDNAME
 
-   IF hb_isNumeric( cFont )
+   IF HB_ISNUMERIC( cFont )
 
    ELSE
       IF !empty( xFont )
@@ -753,12 +753,12 @@ METHOD WvgWindow:hasInputFocus()
 
 METHOD WvgWindow:enter( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_enter )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_enter )
       eval( ::sl_enter, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_enter := xParam
       RETURN NIL
    endif
@@ -769,12 +769,12 @@ METHOD WvgWindow:enter( xParam )
 
 METHOD WvgWindow:leave( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_leave )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_leave )
       eval( ::sl_leave, NIL, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_leave := xParam
       RETURN NIL
    endif
@@ -785,12 +785,12 @@ METHOD WvgWindow:leave( xParam )
 
 METHOD WvgWindow:lbClick( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbClick )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_lbClick )
       eval( ::sl_lbClick, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_lbClick := xParam
       RETURN NIL
    endif
@@ -801,12 +801,12 @@ METHOD WvgWindow:lbClick( xParam )
 
 METHOD WvgWindow:lbDblClick( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbDblClick )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_lbDblClick )
       eval( ::sl_lbDblClick, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_lbDblClick := xParam
       RETURN NIL
    endif
@@ -817,12 +817,12 @@ METHOD WvgWindow:lbDblClick( xParam )
 
 METHOD WvgWindow:lbDown( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbDown )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_lbDown )
       eval( ::sl_lbDown, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_lbDown := xParam
       RETURN NIL
    endif
@@ -833,12 +833,12 @@ METHOD WvgWindow:lbDown( xParam )
 
 METHOD WvgWindow:lbUp( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_lbUp )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_lbUp )
       eval( ::sl_lbUp, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_lbUp := xParam
       RETURN NIL
    endif
@@ -849,12 +849,12 @@ METHOD WvgWindow:lbUp( xParam )
 
 METHOD WvgWindow:mbClick( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbClick )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_mbClick )
       eval( ::sl_mbClick, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_mbClick := xParam
       RETURN NIL
    endif
@@ -865,12 +865,12 @@ METHOD WvgWindow:mbClick( xParam )
 
 METHOD WvgWindow:mbDblClick( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbDblClick )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_mbDblClick )
       eval( ::sl_mbDblClick, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_mbDblClick := xParam
       RETURN NIL
    endif
@@ -881,12 +881,12 @@ METHOD WvgWindow:mbDblClick( xParam )
 
 METHOD WvgWindow:mbDown( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbDown )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_mbDown )
       eval( ::sl_mbDown, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_mbDown := xParam
       RETURN NIL
    endif
@@ -897,12 +897,12 @@ METHOD WvgWindow:mbDown( xParam )
 
 METHOD WvgWindow:mbUp( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_mbUp )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_mbUp )
       eval( ::sl_mbUp, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_mbUp := xParam
       RETURN NIL
    endif
@@ -913,12 +913,12 @@ METHOD WvgWindow:mbUp( xParam )
 
 METHOD WvgWindow:motion( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_motion )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_motion )
       eval( ::sl_motion, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_motion := xParam
       RETURN NIL
    endif
@@ -929,12 +929,12 @@ METHOD WvgWindow:motion( xParam )
 
 METHOD WvgWindow:rbClick( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbClick )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_rbClick )
       eval( ::sl_rbClick, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_rbClick := xParam
       RETURN NIL
    endif
@@ -945,12 +945,12 @@ METHOD WvgWindow:rbClick( xParam )
 
 METHOD WvgWindow:rbDblClick( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbDblClick )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_rbDblClick )
       eval( ::sl_rbDblClick, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_rbDblClick := xParam
       RETURN NIL
    endif
@@ -961,12 +961,12 @@ METHOD WvgWindow:rbDblClick( xParam )
 
 METHOD WvgWindow:rbDown( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbDown )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_rbDown )
       eval( ::sl_rbDown, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_rbDown := xParam
       RETURN NIL
    endif
@@ -977,12 +977,12 @@ METHOD WvgWindow:rbDown( xParam )
 
 METHOD WvgWindow:rbUp( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_rbUp )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_rbUp )
       eval( ::sl_rbUp, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_rbUp := xParam
       RETURN NIL
    endif
@@ -993,12 +993,12 @@ METHOD WvgWindow:rbUp( xParam )
 
 METHOD WvgWindow:wheel( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_wheel )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_wheel )
       eval( ::sl_wheel, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_wheel := xParam
       RETURN NIL
    endif
@@ -1011,12 +1011,12 @@ METHOD WvgWindow:wheel( xParam )
 
 METHOD WvgWindow:close( xParam )
    if ::objType == objTypeCrt
-      if hb_isNil( xParam ) .and. hb_isBlock( ::sl_close )
+      if HB_ISNIL( xParam ) .and. HB_ISBLOCK( ::sl_close )
          eval( ::sl_close, NIL, NIL, Self )
          RETURN Self
       endif
 
-      if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+      if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
          ::sl_close := xParam
          RETURN NIL
       endif
@@ -1027,12 +1027,12 @@ METHOD WvgWindow:close( xParam )
 
 METHOD WvgWindow:helpRequest( xParam )
 
-   if hb_isNil( xParam ) .and. hb_isBlock( ::sl_helpRequest )
+   if HB_ISNIL( xParam ) .and. HB_ISBLOCK( ::sl_helpRequest )
       eval( ::sl_helpRequest, NIL, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_helpRequest := xParam
       RETURN NIL
    endif
@@ -1043,12 +1043,12 @@ METHOD WvgWindow:helpRequest( xParam )
 
 METHOD WvgWindow:keyboard( xParam )
 
-   if hb_isNumeric( xParam ) .and. hb_isBlock( ::sl_keyboard )
+   if HB_ISNUMERIC( xParam ) .and. HB_ISBLOCK( ::sl_keyboard )
       eval( ::sl_keyboard, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_keyboard := xParam
       RETURN NIL
    endif
@@ -1059,12 +1059,12 @@ METHOD WvgWindow:keyboard( xParam )
 
 METHOD WvgWindow:killDisplayFocus( xParam )
    if ::objType == objTypeCrt
-      if hb_isNil( xParam ) .and. hb_isBlock( ::sl_killDisplayFocus )
+      if HB_ISNIL( xParam ) .and. HB_ISBLOCK( ::sl_killDisplayFocus )
          eval( ::sl_killDisplayFocus, NIL, NIL, Self )
          RETURN Self
       endif
 
-      if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+      if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
          ::sl_killDisplayFocus := xParam
          RETURN NIL
       endif
@@ -1075,12 +1075,12 @@ METHOD WvgWindow:killDisplayFocus( xParam )
 
 METHOD WvgWindow:killInputFocus( xParam )
 
-   if hb_isNil( xParam ) .and. hb_isBlock( ::sl_killInputFocus )
+   if HB_ISNIL( xParam ) .and. HB_ISBLOCK( ::sl_killInputFocus )
       eval( ::sl_killInputFocus, NIL, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_killInputFocus := xParam
       RETURN NIL
    endif
@@ -1091,12 +1091,12 @@ METHOD WvgWindow:killInputFocus( xParam )
 
 METHOD WvgWindow:move( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_move )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_move )
       eval( ::sl_move, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_move := xParam
       RETURN NIL
    endif
@@ -1107,12 +1107,12 @@ METHOD WvgWindow:move( xParam )
 
 METHOD WvgWindow:paint( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_paint )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_paint )
       eval( ::sl_paint, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_paint := xParam
       RETURN NIL
    endif
@@ -1123,12 +1123,12 @@ METHOD WvgWindow:paint( xParam )
 
 METHOD WvgWindow:quit( xParam, xParam1 )
 
-   if hb_isNumeric( xParam ) .and. hb_isBlock( ::sl_quit )
+   if HB_ISNUMERIC( xParam ) .and. HB_ISBLOCK( ::sl_quit )
       eval( ::sl_quit, xParam, xParam1, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_quit := xParam
       RETURN NIL
    endif
@@ -1139,12 +1139,12 @@ METHOD WvgWindow:quit( xParam, xParam1 )
 
 METHOD WvgWindow:resize( xParam, xParam1 )
 
-   if hb_isArray( xParam ) .and. hb_isArray( xParam1 ) .and. hb_isBlock( ::sl_resize )
+   if HB_ISARRAY( xParam ) .and. HB_ISARRAY( xParam1 ) .and. HB_ISBLOCK( ::sl_resize )
       eval( ::sl_resize, xParam, xParam1, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) /*.or. hb_isNil( xParam )*/
+   if HB_ISBLOCK( xParam ) /*.or. HB_ISNIL( xParam )*/
       ::sl_resize := xParam
       RETURN NIL
    endif
@@ -1156,12 +1156,12 @@ METHOD WvgWindow:resize( xParam, xParam1 )
 METHOD WvgWindow:setDisplayFocus( xParam )
 
    if ::objType == objTypeCrt
-      if hb_isNil( xParam ) .and. hb_isBlock( ::setDisplayFocus )
+      if HB_ISNIL( xParam ) .and. HB_ISBLOCK( ::setDisplayFocus )
          eval( ::setDisplayFocus, NIL, NIL, Self )
          RETURN Self
       endif
 
-      if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+      if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
          ::setDisplayFocus := xParam
          RETURN NIL
       endif
@@ -1172,12 +1172,12 @@ METHOD WvgWindow:setDisplayFocus( xParam )
 
 METHOD WvgWindow:setInputFocus( xParam )
 
-   if hb_isNil( xParam ) .and. hb_isBlock( ::sl_setInputFocus )
+   if HB_ISNIL( xParam ) .and. HB_ISBLOCK( ::sl_setInputFocus )
       eval( ::sl_setInputFocus, NIL, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_setInputFocus := xParam
       RETURN NIL
    endif
@@ -1188,12 +1188,12 @@ METHOD WvgWindow:setInputFocus( xParam )
 
 METHOD WvgWindow:dragEnter( xParam, xParam1 )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_dragEnter )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_dragEnter )
       eval( ::sl_dragEnter, xParam, xParam1, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_dragEnter := xParam
       RETURN NIL
    endif
@@ -1204,12 +1204,12 @@ METHOD WvgWindow:dragEnter( xParam, xParam1 )
 
 METHOD WvgWindow:dragMotion( xParam )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_dragMotion )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_dragMotion )
       eval( ::sl_dragMotion, xParam, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_dragMotion := xParam
       RETURN NIL
    endif
@@ -1220,12 +1220,12 @@ METHOD WvgWindow:dragMotion( xParam )
 
 METHOD WvgWindow:dragLeave( xParam )
 
-   if hb_isNil( xParam ) .and. hb_isBlock( ::sl_dragLeave )
+   if HB_ISNIL( xParam ) .and. HB_ISBLOCK( ::sl_dragLeave )
       eval( ::sl_dragLeave, NIL, NIL, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_dragLeave := xParam
       RETURN NIL
    endif
@@ -1236,12 +1236,12 @@ METHOD WvgWindow:dragLeave( xParam )
 
 METHOD WvgWindow:dragDrop( xParam, xParam1 )
 
-   if hb_isArray( xParam ) .and. hb_isBlock( ::sl_dragDrop )
+   if HB_ISARRAY( xParam ) .and. HB_ISBLOCK( ::sl_dragDrop )
       eval( ::sl_dragDrop, xParam, xParam1, Self )
       RETURN Self
    endif
 
-   if hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   if HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_dragDrop := xParam
       RETURN NIL
    endif
@@ -1306,16 +1306,16 @@ METHOD WvgWindow:getPosAndSize( aPs, aSz )
    aSize := aclone( aSz )
 
    IF ::isParentCrt()
-      IF hb_isBlock( aPos[ 1 ] )
+      IF HB_ISBLOCK( aPos[ 1 ] )
          aPos[ 1 ] := eval( aPos[ 1 ] )
       ENDIF
-      IF hb_isBlock( aPos[ 2 ] )
+      IF HB_ISBLOCK( aPos[ 2 ] )
          aPos[ 2 ] := eval( aPos[ 2 ] )
       ENDIF
-      IF hb_isBlock( aSize[ 1 ] )
+      IF HB_ISBLOCK( aSize[ 1 ] )
          aSize[ 1 ] := eval( aSize[ 1 ] )
       ENDIF
-      IF hb_isBlock( aSize[ 2 ] )
+      IF HB_ISBLOCK( aSize[ 2 ] )
          aSize[ 2 ] := eval( aSize[ 2 ] )
       ENDIF
 

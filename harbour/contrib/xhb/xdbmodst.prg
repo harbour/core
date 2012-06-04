@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "dbstruct.ch"
 
 #include "dbinfo.ch"
@@ -192,14 +191,14 @@ FUNCTION dbMerge( xSource, lAppend )
 
    // Validate args
    //-------------------------------------------------------------//
-   IF ISCHARACTER( xSource )
+   IF HB_ISSTRING( xSource )
       nArea := Select()
 
       USE ( xSource ) ALIAS MergeSource EXCLUSIVE NEW
       nSource := Select()
 
       SELECT ( nArea )
-   ELSEIF ISNUMBER( xSource )
+   ELSEIF HB_ISNUMERIC( xSource )
       nSource := xSource
    ELSE
       RETURN .F.

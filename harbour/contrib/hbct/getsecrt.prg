@@ -53,7 +53,6 @@
  *
  */
 
-#include "common.ch"
 #include "getexit.ch"
 
 FUNCTION GETSECRET( cVar, nRow, nCol, lSay, xPrompt )
@@ -63,13 +62,13 @@ FUNCTION GETSECRET( cVar, nRow, nCol, lSay, xPrompt )
    LOCAL _cGetSecret := cVar
    LOCAL lHide := .T.
 
-   IF ! ISNUMBER( nRow )
+   IF ! HB_ISNUMERIC( nRow )
       nRow := ROW()
    ENDIF
-   IF ! ISNUMBER( nCol )
+   IF ! HB_ISNUMERIC( nCol )
       nCol := COL()
    ENDIF
-   IF ! ISLOGICAL( lSay )
+   IF ! HB_ISLOGICAL( lSay )
       lSay := .F.
    ENDIF
 

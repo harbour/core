@@ -361,11 +361,11 @@ METHOD XbpRtf:paste()
 
 METHOD XbpRtf:print( oXbpPrinter, lOnlySelection )
 
-   IF !hb_isObject( oXbpPrinter )
+   IF !HB_ISOBJECT( oXbpPrinter )
       oXbpPrinter := XbpPrinter():new():create()
    ENDIF
 
-   IF hb_isLogical( lOnlySelection ) .and. lOnlySelection
+   IF HB_ISLOGICAL( lOnlySelection ) .and. lOnlySelection
       ::oWidget:print( oXbpPrinter:oWidget )
    ELSE
       ::oWidget:print( oXbpPrinter:oWidget )
@@ -406,9 +406,9 @@ METHOD XbpRtf:span( cCharacters, bForward, bExclude )
 METHOD XbpRtf:change( ... )
    LOCAL aP := hb_aParams()
 
-   IF len( aP ) >= 1 .and. hb_isBlock( aP[ 1 ] )
+   IF len( aP ) >= 1 .and. HB_ISBLOCK( aP[ 1 ] )
       ::sl_xbeRTF_Change := aP[ 1 ]
-   ELSEIF hb_isBlock( ::sl_xbeRTF_Change )
+   ELSEIF HB_ISBLOCK( ::sl_xbeRTF_Change )
       asize( aP, 2 )
       eval( ::sl_xbeRTF_Change, aP[ 1 ], aP[ 2 ], Self )
    ENDIF
@@ -420,9 +420,9 @@ METHOD XbpRtf:change( ... )
 METHOD XbpRtf:selChange( ... )
    LOCAL aP := hb_aParams()
 
-   IF len( aP ) >= 1 .and. hb_isBlock( aP[ 1 ] )
+   IF len( aP ) >= 1 .and. HB_ISBLOCK( aP[ 1 ] )
       ::sl_xbeRTF_SelChange := aP[ 1 ]
-   ELSEIF hb_isBlock( ::sl_xbeRTF_SelChange )
+   ELSEIF HB_ISBLOCK( ::sl_xbeRTF_SelChange )
       asize( aP, 2 )
       eval( ::sl_xbeRTF_SelChange, aP[ 1 ], aP[ 2 ], Self )
    ENDIF
@@ -436,7 +436,7 @@ METHOD XbpRtf:selAlignment( ... )                           // XBPRTF_ALIGN_LEFT
    LOCAL aP   := hb_aParams()
    LOCAL oTBFormat
 
-   IF len( aP ) >= 1 .and. hb_isNumeric( aP[ 1 ] )
+   IF len( aP ) >= 1 .and. HB_ISNUMERIC( aP[ 1 ] )
       oTBFormat := ::oCurCursor:blockFormat()
       xRet := oTBFormat:alignment()
       oTBFormat:setAlignment( hbxbp_ConvertAFactFromXBP( "RTFSELALIGNMENT", aP[ 1 ] ) )
@@ -450,7 +450,7 @@ METHOD XbpRtf:selBold( ... )                                // .F.
    LOCAL xRet := .f.
    LOCAL aP := hb_aParams()
 
-   IF len( aP ) >= 1 .and. hb_isLogical( aP[ 1 ] )
+   IF len( aP ) >= 1 .and. HB_ISLOGICAL( aP[ 1 ] )
       ::oTextCharFormat := ::oCurCursor:charFormat()
       IF ::oTextCharFormat:isValid()
          ::oTextCharFormat:setFontWeight( QFont_Bold )
@@ -478,7 +478,7 @@ METHOD XbpRtf:selCharOffset( ... )                          // 0
    LOCAL xRet := 0, nAlign
    LOCAL aP := hb_aParams()
 
-   IF len( aP ) >= 1 .and. hb_isNumeric( aP[ 1 ] )
+   IF len( aP ) >= 1 .and. HB_ISNUMERIC( aP[ 1 ] )
       ::oTextCharFormat := ::oCurCursor:charFormat()
       IF ::oTextCharFormat:isValid()
          nAlign := IIF( aP[ 1 ] < 0, -1, IIF( aP[ 1 ] > 0, 1, 0 ) )
@@ -496,7 +496,7 @@ METHOD XbpRtf:selColor( ... )
    LOCAL oBrush, nColor, oColor
    LOCAL aP := hb_aParams()
 
-   IF len( aP ) >= 1 .AND. hb_isNumeric( aP[ 1 ] )
+   IF len( aP ) >= 1 .AND. HB_ISNUMERIC( aP[ 1 ] )
       ::oTextCharFormat := ::oCurCursor:charFormat()
       IF ::oTextCharFormat:isValid()
          xRet   := ::oTextCharFormat:foreground()
@@ -516,7 +516,7 @@ METHOD XbpRtf:selFont( ... )                            // ""
    LOCAL xRet := NIL
    LOCAL aP := hb_aParams()
 
-   IF len( aP ) >= 1 .and. hb_isObject( aP[ 1 ] )
+   IF len( aP ) >= 1 .and. HB_ISOBJECT( aP[ 1 ] )
       ::oTextCharFormat := ::oCurCursor:charFormat()
       IF ::oTextCharFormat:isValid()
          ::oTextCharFormat:setFont( aP[ 1 ]:oWidget )
@@ -550,7 +550,7 @@ METHOD XbpRtf:selFontSize( ... )                            // 0
    ::oTextCharFormat := ::oCurCursor:charFormat()
    IF ::oTextCharFormat:isValid()
       xRet := ::oTextCharFormat:fontPointSize()
-      IF len( aP ) >= 1 .and. hb_isNumeric( aP[ 1 ] )
+      IF len( aP ) >= 1 .and. HB_ISNUMERIC( aP[ 1 ] )
          ::oTextCharFormat:setFontPointSize( aP[ 1 ] )
          ::oCurCursor:setCharFormat( ::oTextCharFormat )
       ENDIF
@@ -585,7 +585,7 @@ METHOD XbpRtf:selItalic( ... )                              // .F.
    LOCAL xRet := .f.
    LOCAL aP := hb_aParams()
 
-   IF len( aP ) >= 1 .and. hb_isLogical( aP[ 1 ] )
+   IF len( aP ) >= 1 .and. HB_ISLOGICAL( aP[ 1 ] )
       ::oTextCharFormat := ::oCurCursor:charFormat()
       IF ::oTextCharFormat:isValid()
          ::oTextCharFormat:setFontItalic( aP[ 1 ] )
@@ -600,7 +600,7 @@ METHOD XbpRtf:selLength( ... )                              // 0
    LOCAL xRet := 0
    LOCAL aP := hb_aParams()
 
-   IF len( aP ) >= 1 .and. hb_isNumeric( ap[ 1 ] )
+   IF len( aP ) >= 1 .and. HB_ISNUMERIC( ap[ 1 ] )
       ::oCurCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, aP[ 1 ] )
    ENDIF
    RETURN xRet
@@ -622,7 +622,7 @@ METHOD XbpRtf:selStart( ... )                               // 0
    LOCAL xRet := 0
    LOCAL aP := hb_aParams()
 
-   IF len( aP ) >= 1 .and. hb_isNumeric( aP[ 1 ] )
+   IF len( aP ) >= 1 .and. HB_ISNUMERIC( aP[ 1 ] )
       ::oTextCursor := ::oWidget:textCursor()
       ::oCurCursor := ::oTextCursor
       xRet := ::oCurCursor:position()
@@ -636,7 +636,7 @@ METHOD XbpRtf:selStrikeThru( ... )                          // .F.
    LOCAL xRet := .f.
    LOCAL aP := hb_aParams()
 
-   IF len( aP ) >= 1 .and. hb_isLogical( aP[ 1 ] )
+   IF len( aP ) >= 1 .and. HB_ISLOGICAL( aP[ 1 ] )
       ::oTextCharFormat := ::oCurCursor:charFormat()
       IF ::oTextCharFormat:isValid()
          ::oTextCharFormat:setFontStrikeOut( aP[ 1 ] )
@@ -688,7 +688,7 @@ METHOD XbpRtf:selUnderline( ... )                           // .F.
    LOCAL xRet := .f.
    LOCAL aP := hb_aParams()
 
-   IF len( aP ) >= 1 .and. hb_isLogical( aP[ 1 ] )
+   IF len( aP ) >= 1 .and. HB_ISLOGICAL( aP[ 1 ] )
       ::oTextCharFormat := ::oCurCursor:charFormat()
       IF ::oTextCharFormat:isValid()
          ::oTextCharFormat:setFontUnderline( aP[ 1 ] )

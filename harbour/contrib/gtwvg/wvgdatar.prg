@@ -113,11 +113,11 @@ METHOD WvgDataRef:getData()
 
    DO CASE
    CASE ::className == "COMBOBOX"
-      IF hb_isObject( ::XbpListBox ) .AND. hb_isBlock( ::XbpListBox:dataLink )
+      IF HB_ISOBJECT( ::XbpListBox ) .AND. HB_ISBLOCK( ::XbpListBox:dataLink )
          ::sl_editBuffer := ::XbpListBox:getData()
-      ELSEIF hb_isObject( ::XbpSLE ) .AND. hb_isBlock( ::XbpSLE:dataLink )
+      ELSEIF HB_ISOBJECT( ::XbpSLE ) .AND. HB_ISBLOCK( ::XbpSLE:dataLink )
          ::sl_editBuffer := ::XbpSLE:getData()
-      ELSEIF hb_isObject( ::XbpListBox )
+      ELSEIF HB_ISOBJECT( ::XbpListBox )
          ::sl_editBuffer := ::XbpListBox:getData()
       ENDIF
 
@@ -139,7 +139,7 @@ METHOD WvgDataRef:getData()
 #endif
    ENDCASE
 
-   IF hb_isBlock( ::dataLink )
+   IF HB_ISBLOCK( ::dataLink )
       eval( ::dataLink, ::sl_editBuffer )
    ENDIF
 
@@ -152,7 +152,7 @@ METHOD WvgDataRef:setData( xValue, mp2 )
 
    HB_SYMBOL_UNUSED( mp2 )
 
-   IF hb_isBlock( ::dataLink )
+   IF HB_ISBLOCK( ::dataLink )
       ::sl_editBuffer := eval( ::dataLink  )
    ELSEIF xValue != NIL
       ::sl_editBuffer := xValue
@@ -164,7 +164,7 @@ METHOD WvgDataRef:setData( xValue, mp2 )
       ::sendMessage( BM_SETCHECK, iif( ::sl_editBuffer, BST_CHECKED, BST_UNCHECKED ), 0 )
 
    CASE ::className == "LISTBOX"    /* Single Selection */
-      IF hb_isNumeric( ::sl_editBuffer )
+      IF HB_ISNUMERIC( ::sl_editBuffer )
          RETURN WVG_LBSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
       ENDIF
 
@@ -184,7 +184,7 @@ METHOD WvgDataRef:setData( xValue, mp2 )
       ENDIF
 
    CASE ::className == "COMBOBOX"
-      IF hb_isArray( ::sl_editBuffer )
+      IF HB_ISARRAY( ::sl_editBuffer )
          // NOT sure which way it should behave.
          // XBase++ documentation IN this regard is crappy.
          FOR EACH s IN ::sl_editBuffer
@@ -206,9 +206,9 @@ METHOD WvgDataRef:undo()
 
 METHOD WvgDataRef:validate( xParam )
 
-   IF PCount() == 0 .and. hb_isBlock( ::sl_validate )
+   IF PCount() == 0 .and. HB_ISBLOCK( ::sl_validate )
       RETURN eval( ::sl_validate, self )
-   ELSEIF hb_isBlock( xParam )
+   ELSEIF HB_ISBLOCK( xParam )
       ::sl_validate := xParam
    ENDIF
 

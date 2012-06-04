@@ -93,7 +93,7 @@ ENDCLASS
 
 METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClientHTTP
 
-   ::super:new( oUrl, iif( ISLOGICAL( xTrace ) .AND. xTrace, "http", xTrace ), oCredentials )
+   ::super:new( oUrl, iif( HB_ISLOGICAL( xTrace ) .AND. xTrace, "http", xTrace ), oCredentials )
 
    ::nDefaultPort := iif( ::oUrl:cProto == "https", 443, 80 )
    ::nConnTimeout := 5000
@@ -105,7 +105,7 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClientHTTP
 
 METHOD Get( cQuery ) CLASS tIPClientHTTP
 
-   IF ! hb_isString( cQuery )
+   IF ! HB_ISSTRING( cQuery )
       cQuery := ::oUrl:BuildQuery()
    ENDIF
 
@@ -121,7 +121,7 @@ METHOD Get( cQuery ) CLASS tIPClientHTTP
 METHOD Post( xPostData, cQuery ) CLASS tIPClientHTTP
    LOCAL cData, nI, cTmp, y
 
-   IF hb_isHash( xPostData )
+   IF HB_ISHASH( xPostData )
       cData := ""
       y := Len( xPostData )
       FOR nI := 1 TO y
@@ -133,7 +133,7 @@ METHOD Post( xPostData, cQuery ) CLASS tIPClientHTTP
             cData += "&"
          ENDIF
       NEXT
-   ELSEIF hb_isArray( xPostData )
+   ELSEIF HB_ISARRAY( xPostData )
       cData := ""
       y := Len( xPostData )
       FOR nI := 1 TO y
@@ -145,13 +145,13 @@ METHOD Post( xPostData, cQuery ) CLASS tIPClientHTTP
             cData += "&"
          ENDIF
       NEXT
-   ELSEIF hb_isString( xPostData )
+   ELSEIF HB_ISSTRING( xPostData )
       cData := xPostData
    ELSE
       RETURN .F.
    ENDIF
 
-   IF ! hb_isString( cQuery )
+   IF ! HB_ISSTRING( cQuery )
       cQuery := ::oUrl:BuildQuery()
    ENDIF
 
@@ -504,7 +504,7 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS tIPClientHTTP
    LOCAL nFile, cBuf, nBuf, nRead
 
    IF Empty( xPostData )
-   ELSEIF hb_isHash( xPostData )
+   ELSEIF HB_ISHASH( xPostData )
       y := Len( xPostData )
       FOR nI := 1 TO y
          cTmp := tip_URLEncode( AllTrim( hb_CStr( hb_HKeyAt( xPostData, nI ) ) ) )
@@ -512,7 +512,7 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS tIPClientHTTP
          cTmp := tip_URLEncode( AllTrim( hb_CStr( hb_HValueAt( xPostData, nI ) ) ) )
          cData += cTmp + cCrLf
       NEXT
-   ELSEIF hb_isArray( xPostData )
+   ELSEIF HB_ISARRAY( xPostData )
       y := Len( xPostData )
       FOR nI := 1 TO y
          cTmp := tip_URLEncode( AllTrim( hb_CStr( xPostData[ nI, 1 ] ) ) )
@@ -521,7 +521,7 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS tIPClientHTTP
          cData += cTmp + cCrLf
       NEXT
 
-   ELSEIF hb_isString( xPostData )
+   ELSEIF HB_ISSTRING( xPostData )
       cData := xPostData
    ENDIF
 
@@ -562,7 +562,7 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS tIPClientHTTP
       cData += cCrlf
    NEXT
    cData += cBound + "--" + cCrlf
-   IF ! hb_isString( cQuery )
+   IF ! HB_ISSTRING( cQuery )
       cQuery := ::oUrl:BuildQuery()
    ENDIF
 

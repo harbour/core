@@ -50,14 +50,12 @@
  *
  */
 
-#include "common.ch"
-
 /* real functions used as wrappers in above translations */
 
 function StartThread( p1, p2, ... )
    if PCount() < 2
       return hb_threadStart( p1 )
-   elseif ISOBJECT( p1 ) .and. ISCHARACTER( p2 )
+   elseif HB_ISOBJECT( p1 ) .and. HB_ISSTRING( p2 )
       return hb_threadStart( {|...| p1:&p2( ... ) }, ... )
    endif
    return hb_threadStart( p1, p2, ... )
@@ -66,7 +64,7 @@ function StartThread( p1, p2, ... )
 function Subscribe( mtx, nTimeOut, lSubscribed )
    local xSubscribed
    lSubscribed := hb_mutexSubscribe( mtx, ;
-                                     iif( ISNUMBER( nTimeOut ), nTimeOut / 1000, ), ;
+                                     iif( HB_ISNUMERIC( nTimeOut ), nTimeOut / 1000, ), ;
                                      @xSubscribed )
    return xSubscribed
 
@@ -74,7 +72,7 @@ function Subscribe( mtx, nTimeOut, lSubscribed )
 function SubscribeNow( mtx, nTimeOut, lSubscribed )
    local xSubscribed
    lSubscribed := hb_mutexSubscribeNow( mtx, ;
-                                        iif( ISNUMBER( nTimeOut ), nTimeOut / 1000, ), ;
+                                        iif( HB_ISNUMERIC( nTimeOut ), nTimeOut / 1000, ), ;
                                         @xSubscribed )
    return xSubscribed
 
@@ -116,7 +114,7 @@ function hb_MutexTryLock( mtx )
 
 
 function hb_MutexTimeOutLock( mtx, nTimeOut )
-   return hb_mutexLock( mtx, IIF( hb_isNumeric( nTimeOut ), nTimeOut / 1000, 0 ) )
+   return hb_mutexLock( mtx, IIF( HB_ISNUMERIC( nTimeOut ), nTimeOut / 1000, 0 ) )
 
 
 function GetSystemThreadId( pThID )

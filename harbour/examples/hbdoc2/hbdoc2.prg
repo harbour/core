@@ -711,12 +711,12 @@ STATIC PROCEDURE FileEval( acFile, bBlock, nMaxLine )
 
    DEFAULT nMaxLine TO 256
 
-   IF ISCHARACTER( acFile )
+   IF HB_ISSTRING( acFile )
       lCloseFile := .T.
       IF ( aHandle[ 1 ] := FOpen( acFile ) ) < 0
          RETURN
       ENDIF
-   ELSEIF ISNUMBER( acFile )
+   ELSEIF HB_ISNUMERIC( acFile )
       aHandle[ 1 ] := acFile
    ELSE
       aHandle := acFile
@@ -724,7 +724,7 @@ STATIC PROCEDURE FileEval( acFile, bBlock, nMaxLine )
 
    DO WHILE FReadLn( @aHandle, @cBuffer, nMaxLine )
       xResult := Eval( bBlock, cBuffer )
-      IF xResult != NIL .AND. ISLOGICAL( ValType( xResult ) ) .AND. ! xResult
+      IF xResult != NIL .AND. HB_ISLOGICAL( ValType( xResult ) ) .AND. ! xResult
          EXIT
       ENDIF
    ENDDO
@@ -905,11 +905,11 @@ PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
 
    IF xLine != NIL
       DO CASE
-      CASE ISNUMBER( xLine )
+      CASE HB_ISNUMERIC( xLine )
          nMode := xLine
-      CASE ISBLOCK( xLine )
+      CASE HB_ISBLOCK( xLine )
          Eval( xLine )
-      CASE ISARRAY( xLine )
+      CASE HB_ISARRAY( xLine )
          IF nMode == 2
             OutStd( cIndent + Space( 2 ) )
          ENDIF

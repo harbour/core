@@ -262,7 +262,7 @@ FUNCTION Wvt_SetDlgCoMode( nMode )
    STATIC sMode := 0
 
    nOldMode := sMode
-   IF hb_isNumeric( nMode ) .and. nMode <= 1 .and. nMode >= 0
+   IF HB_ISNUMERIC( nMode ) .and. nMode <= 1 .and. nMode >= 0
       sMode := nMode
    ENDIF
 
@@ -322,7 +322,7 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
       nH  := nRows
    ENDIF
 
-   If !ISNUMBER( nStyle )
+   If !HB_ISNUMERIC( nStyle )
       nStyle := + WS_CAPTION    + WS_SYSMENU              ;
                 + WS_GROUP      + WS_TABSTOP + DS_SETFONT ;
                 + WS_THICKFRAME + WS_VISIBLE + WS_POPUP   ;
@@ -409,7 +409,7 @@ Function Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet,;
    aAdd( aDlg[  8 ] , nH         )
    aAdd( aDlg[  9 ] , cnId       )
    aAdd( aDlg[ 10 ] , cnDlgClass )
-   aAdd( aDlg[ 11 ] , iif( ISCHARACTER( cText ), cText, iif( ISNUMBER( cText ), cText, "" ) ) )
+   aAdd( aDlg[ 11 ] , iif( HB_ISSTRING( cText ), cText, iif( HB_ISNUMERIC( cText ), cText, "" ) ) )
    aAdd( aDlg[ 12 ] , 0 )
 
    Return aDlg
@@ -670,7 +670,7 @@ FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
    LOCAL nIndex := 0
    LOCAL a_:= { "N", "B", "G", "BG", "R", "RB", "GR", "W" }
 
-   nForeBack := iif( hb_isNumeric( nForeBack ), nForeBack, 0 )
+   nForeBack := iif( HB_ISNUMERIC( nForeBack ), nForeBack, 0 )
 
    IF hb_isChar( cColor )
       IF ( n := at( cColor, "/" ) ) > 0

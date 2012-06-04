@@ -55,24 +55,22 @@
  *
  */
 
-#include "common.ch"
-
 FUNCTION SCREENMARK( cSearch, xAttr, lUpperLower, lAll, cForward, cTrailing )
    LOCAL lFound := .F.
    LOCAL nCount := 1
    LOCAL nAt, nLen, nLast, nRow, nCol, nEnd, nCols
    LOCAL cScreen
 
-   IF ! ISLOGICAL( lUpperLower )
+   IF ! HB_ISLOGICAL( lUpperLower )
       lUpperLower := .F.
    ENDIF
-   IF ! ISLOGICAL( lAll )
+   IF ! HB_ISLOGICAL( lAll )
       lAll := .F.
    ENDIF
-   IF ! ISCHARACTER( cForward ) .OR. cForward == ""
+   IF ! HB_ISSTRING( cForward ) .OR. cForward == ""
       cForward := NIL
    ENDIF
-   IF ! ISCHARACTER( cTrailing ) .OR. cTrailing == ""
+   IF ! HB_ISSTRING( cTrailing ) .OR. cTrailing == ""
       cTrailing := NIL
    ENDIF
 

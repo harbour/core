@@ -52,7 +52,6 @@
  *
  */
 
-#include "common.ch"
 #include "hbclass.ch"
 
 #define SQL_TEXT                        452
@@ -106,7 +105,7 @@ ENDCLASS
 
 METHOD New( cServer, cUser, cPassword, nDialect ) CLASS TFbServer
 
-   IF ! ISNUMBER( nDialect )
+   IF ! HB_ISNUMERIC( nDialect )
       nDialect := 1
    ENDIF
 
@@ -117,7 +116,7 @@ METHOD New( cServer, cUser, cPassword, nDialect ) CLASS TFbServer
 
    ::db := FBConnect( cServer, cUser, cPassword )
 
-   IF ISNUMBER( ::db )
+   IF HB_ISNUMERIC( ::db )
       ::lError := .T.
       ::nError := ::db
    ENDIF
@@ -130,7 +129,7 @@ METHOD StartTransaction() CLASS TFbServer
 
    ::trans := FBStartTransaction( ::db )
 
-   IF ISNUMBER( ::trans )
+   IF HB_ISNUMERIC( ::trans )
       ::lError := .T.
       ::nError := ::trans
    ELSE
@@ -218,7 +217,7 @@ METHOD TableExists( cTable ) CLASS TFbServer
 
    qry := FBQuery( ::db, cQuery, ::dialect )
 
-   IF ISARRAY( qry )
+   IF HB_ISARRAY( qry )
       result := ( FBFetch( qry ) == 0 )
 
       FBFree( qry )
@@ -240,7 +239,7 @@ METHOD ListTables() CLASS TFbServer
 
    qry := FBQuery( ::db, RemoveSpaces( cQuery ), ::dialect )
 
-   IF ISARRAY( qry )
+   IF HB_ISARRAY( qry )
       DO WHILE FBFetch( qry ) == 0
          AAdd( result, FBGetdata( qry, 1 ) )
       ENDDO
@@ -272,7 +271,7 @@ METHOD TableStruct( cTable ) CLASS TFbServer
 
    qry := FBQuery( ::db, RemoveSpaces( cQuery ), ::dialect )
 
-   IF ISARRAY( qry )
+   IF HB_ISARRAY( qry )
       DO WHILE FBFetch( qry ) == 0
          cField  := FBGetData( qry, 1 )
          nType   := Val( FBGetData( qry, 2 ) )
@@ -365,7 +364,7 @@ METHOD Delete( oRow, cWhere ) CLASS TFbServer
 
    aTables := oRow:GetTables()
 
-   IF ! ISNUMBER( ::db ) .AND. Len( aTables ) == 1
+   IF ! HB_ISNUMERIC( ::db ) .AND. Len( aTables ) == 1
       // Cannot delete joined tables
 
       IF cWhere == NIL
@@ -400,7 +399,7 @@ METHOD Append( oRow ) CLASS TFbServer
 
    aTables := oRow:GetTables()
 
-   IF ! ISNUMBER( ::db ) .AND. Len( aTables ) == 1
+   IF ! HB_ISNUMERIC( ::db ) .AND. Len( aTables ) == 1
       // Can insert only one table, not in joined tables
 
       cQuery := 'INSERT INTO ' + aTables[ 1 ] + '('
@@ -433,7 +432,7 @@ METHOD Update( oRow, cWhere ) CLASS TFbServer
 
    aTables := oRow:GetTables()
 
-   IF ! ISNUMBER( ::db ) .AND. Len( aTables ) == 1
+   IF ! HB_ISNUMERIC( ::db ) .AND. Len( aTables ) == 1
       // Can't insert joined tables
 
       IF cWhere == NIL
@@ -549,7 +548,7 @@ METHOD Refresh() CLASS TFbQuery
 
    qry := FBQuery( ::db, ::query, ::dialect )
 
-   IF ISARRAY( qry )
+   IF HB_ISARRAY( qry )
       ::numcols := qry[ 4 ]
 
       /* TOFIX: This is faulty code. ::aStruct will become zero length, out of sync with ::numcols. */
@@ -914,7 +913,7 @@ STATIC FUNCTION KeyField( aTables, db, dialect )
 
       qry := FBQuery(db, RemoveSpaces(cQuery), dialect)
 
-      IF ISARRAY( qry )
+      IF HB_ISARRAY( qry )
          DO WHILE FBFetch( qry ) == 0
             AAdd( aKeys, RTrim( FBGetdata( qry, 1 ) ) )
          ENDDO
@@ -980,7 +979,7 @@ STATIC FUNCTION StructConvert( aStru, db, dialect )
 
    qry := FBQuery( db, RemoveSpaces( cQuery ), dialect )
 
-   IF ISARRAY( qry )
+   IF HB_ISARRAY( qry )
 
       DO WHILE FBFetch( qry ) == 0
          AAdd( aDomains, { FBGetdata( qry, 1 ), FBGetdata( qry, 2 ), FBGetdata( qry, 3 ) } )

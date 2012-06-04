@@ -204,7 +204,7 @@ METHOD AddGetForm( xPostData )
    LOCAL y
    LOCAL cRet
 
-   IF hb_isHash( xPostData )
+   IF HB_ISHASH( xPostData )
       y := Len( xPostData )
       FOR nI := 1 TO y
          cData += tip_URLEncode( AllTrim( hb_CStr( hb_HKeyAt( xPostData, nI ) ) ) ) + "="
@@ -213,7 +213,7 @@ METHOD AddGetForm( xPostData )
             cData += "&"
          ENDIF
       NEXT
-   ELSEIF hb_isArray( xPostData )
+   ELSEIF HB_ISARRAY( xPostData )
       y := Len( xPostData )
       FOR nI := 1 TO y
          cData += tip_URLEncode( AllTrim( hb_CStr( xPostData[ nI, 1 ] ) ) ) + "="
@@ -222,7 +222,7 @@ METHOD AddGetForm( xPostData )
             cData += "&"
          ENDIF
       NEXT
-   ELSEIF hb_isString( xPostData )
+   ELSEIF HB_ISSTRING( xPostData )
       cData := xPostData
    ENDIF
 

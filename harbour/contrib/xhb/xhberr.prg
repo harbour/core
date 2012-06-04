@@ -81,10 +81,10 @@ STATIC s_lErrorLogAppend := .F.
 FUNCTION xhb_ErrorLog( cErrorLog, lErrorLogAppend )
    LOCAL aValueOld := { s_cErrorLog, s_lErrorLogAppend }
 
-   IF hb_isString( cErrorLog )
+   IF HB_ISSTRING( cErrorLog )
       s_cErrorLog := cErrorLog
    ENDIF
-   IF hb_isLogical( lErrorLogAppend )
+   IF HB_ISLOGICAL( lErrorLogAppend )
       s_lErrorLogAppend := lErrorLogAppend
    ENDIF
 
@@ -164,7 +164,7 @@ STATIC FUNCTION xhb_DefError( oError )
    Endif
 
 
-   If ISARRAY( oError:Args )
+   If HB_ISARRAY( oError:Args )
      cMessage += " Arguments: (" + Arguments( oError ) + ")"
    Endif
 
@@ -253,21 +253,21 @@ STATIC FUNCTION ErrorMessage( oError )
      cMessage := Iif( oError:severity > ES_WARNING, "Error", "Warning" ) + " "
 
      // add subsystem name if available
-     If Ischaracter( oError:subsystem )
+     If HB_ISSTRING( oError:subsystem )
         cMessage += oError:subsystem()
      Else
         cMessage += "???"
      Endif
 
      // add subsystem's error code if available
-     If Isnumber( oError:subCode )
+     If HB_ISNUMERIC( oError:subCode )
         cMessage += "/" + Ltrim( Str( oError:subCode ) )
      Else
         cMessage += "/???"
      Endif
 
      // add error description if available
-     If Ischaracter( oError:description )
+     If HB_ISSTRING( oError:description )
         cMessage += "  " + oError:description
      Endif
 
@@ -538,7 +538,7 @@ STATIC FUNCTION LogError( oerr )
         FWriteLine( nHandle, "" )
         FWriteLine( nHandle, "" )
 
-        IF ISCHARACTER( cScreen )
+        IF HB_ISSTRING( cScreen )
             FWriteLine( nHandle, Padc( " Video Screen Dump ", nCols, "#" ) )
             FWriteLine( nHandle, "" )
             //FWriteLine( nHandle, "" )
@@ -667,7 +667,7 @@ STATIC FUNCTION Arguments( oErr )
 
    LOCAL xArg, cArguments := ""
 
-   IF ISARRAY( oErr:Args )
+   IF HB_ISARRAY( oErr:Args )
       FOR EACH xArg IN oErr:Args
          cArguments += " [" + Str( xArg:__EnumIndex(), 2 ) + "] = Type: " + ValType( xArg )
 
@@ -691,24 +691,24 @@ PROCEDURE __MinimalErrorHandler( oError )
    LOCAL xData
 
    cError := "Error"
-   IF ISNUMBER( oError:SubCode )
+   IF HB_ISNUMERIC( oError:SubCode )
       cError += ": " + hb_ntos( oError:SubCode )
    ENDIF
    cError += "!" + hb_eol()
 
-   IF ISCHARACTER( oError:Operation )
+   IF HB_ISSTRING( oError:Operation )
       cError += "Operation: " + oError:Operation + hb_eol()
    ENDIF
-   IF ISCHARACTER( oError:Description )
+   IF HB_ISSTRING( oError:Description )
       cError += "Description: " + oError:Description + hb_eol()
    ENDIF
-   IF ISCHARACTER( xData := err_ModuleName( oError ) )
+   IF HB_ISSTRING( xData := err_ModuleName( oError ) )
       cError += "Source: " + xData + hb_eol()
    ENDIF
-   IF ISCHARACTER( xData := err_ProcName( oError ) )
+   IF HB_ISSTRING( xData := err_ProcName( oError ) )
       cError += "Procedure: " + xData + hb_eol()
    ENDIF
-   IF ISNUMBER( xData := err_ProcLine( oError ) )
+   IF HB_ISNUMERIC( xData := err_ProcLine( oError ) )
       cError += "Line: " + hb_ntos( xData ) + hb_eol()
    ENDIF
 
@@ -725,27 +725,27 @@ FUNCTION xhb_ErrorNew( cSubSystem, nGenCode, nSubCode, ;
    LOCAL oError := ErrorNew()
    LOCAL aStack, n
 
-   IF ISCHARACTER( cSubSystem )
+   IF HB_ISSTRING( cSubSystem )
       oError:SubSystem := cSubSystem
    ENDIF
-   IF ISNUMBER( nGenCode )
+   IF HB_ISNUMERIC( nGenCode )
       oError:GenCode := nGenCode
    ENDIF
-   IF ISNUMBER( nSubCode )
+   IF HB_ISNUMERIC( nSubCode )
       oError:SubCode := nSubCode
    ENDIF
-   IF ISCHARACTER( cOperation )
+   IF HB_ISSTRING( cOperation )
       oError:Operation := cOperation
    ENDIF
-   IF ISCHARACTER( cDescription )
+   IF HB_ISSTRING( cDescription )
       oError:Description := cDescription
    ENDIF
-   IF ISARRAY( aArgs )
+   IF HB_ISARRAY( aArgs )
       oError:Args := aArgs
    ENDIF
 
    IF __objHasMsg( oError, "MODULENAME" )
-      IF ISCHARACTER( cModuleName )
+      IF HB_ISSTRING( cModuleName )
          oError:ModuleName := cModuleName
       ELSE
          oError:ModuleName := ProcFile( 1 )
@@ -753,7 +753,7 @@ FUNCTION xhb_ErrorNew( cSubSystem, nGenCode, nSubCode, ;
    ENDIF
 
    IF __objHasMsg( oError, "PROCNAME" )
-      IF ISCHARACTER( cProcName )
+      IF HB_ISSTRING( cProcName )
          oError:ProcName := cProcName
       ELSE
          oError:ProcName := ProcName( 1 )
@@ -761,7 +761,7 @@ FUNCTION xhb_ErrorNew( cSubSystem, nGenCode, nSubCode, ;
    ENDIF
 
    IF __objHasMsg( oError, "PROCLINE" )
-      IF ISNUMBER( nProcLine )
+      IF HB_ISNUMERIC( nProcLine )
          oError:ProcLine := nProcLine
       ELSE
          oError:ProcLine := ProcLine( 1 )

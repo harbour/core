@@ -157,7 +157,7 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
       RETURN 0
 
    CASE nMessage == HB_GTE_COMMAND
-      IF hb_isBlock( ::sl_lbClick )
+      IF HB_ISBLOCK( ::sl_lbClick )
          eval( ::sl_lbClick, NIL, NIL, self )
          RETURN 0
       ENDIF
@@ -169,7 +169,7 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
 
       CASE aNMH[ NMH_code ] == NM_CLICK
 
-         IF hb_isBlock( ::sl_lbClick )
+         IF HB_ISBLOCK( ::sl_lbClick )
             IF aNMH[ NMH_dwItemSpec ] >= 0
                nObj := aNMH[ NMH_dwItemSpec ] + 1
 
@@ -183,10 +183,10 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
       ENDCASE
 
    CASE nMessage == HB_GTE_CTLCOLOR
-      IF hb_isNumeric( ::clr_FG )
+      IF HB_ISNUMERIC( ::clr_FG )
          WVG_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
-      IF hb_isNumeric( ::hBrushBG )
+      IF HB_ISNUMERIC( ::hBrushBG )
          WVG_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ELSE
@@ -252,9 +252,9 @@ METHOD WvgStatusBar:addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
 METHOD WvgStatusBar:delItem( nItemORcKey )
    LOCAL nIndex := 0
 
-   IF hb_isNumeric( nItemORcKey )
+   IF HB_ISNUMERIC( nItemORcKey )
       nIndex := ascan( ::aItems, {|o| o:key == nItemORcKey } )
-   ELSEIF hb_isNumeric( nItemORcKey )
+   ELSEIF HB_ISNUMERIC( nItemORcKey )
       nIndex := nItemORcKey
    ENDIF
 
@@ -274,7 +274,7 @@ METHOD WvgStatusBar:getItem( nItemORcKey )
    IF hb_isChar( nItemORcKey  )
       nIndex := ascan( ::aItems, {|o| o:key == nItemORcKey } )
 
-   ELSEIF hb_isNumeric(  nItemORcKey  )
+   ELSEIF HB_ISNUMERIC(  nItemORcKey  )
       nIndex := nItemORcKey
 
    ENDIF
@@ -302,7 +302,7 @@ METHOD WvgStatusBar:clear()
 
 METHOD WvgStatusBar:panelClick( xParam )
 
-   IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   IF HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_lbClick := xParam
    ENDIF
 
@@ -312,7 +312,7 @@ METHOD WvgStatusBar:panelClick( xParam )
 
 METHOD WvgStatusBar:panelDblClick( xParam )
 
-   IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   IF HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_lbDblClick := xParam
    ENDIF
 

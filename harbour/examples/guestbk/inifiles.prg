@@ -2,8 +2,6 @@
  * $Id$
  */
 
-#include "common.ch"
-
 function TIniFile()
    static oClass
 
@@ -116,7 +114,7 @@ static function ReadString(cSection, cIdent, cDefault)
 
    if Empty(cSection)
       cFind := lower(cIdent)
-      j := AScan( ::Contents, {|x| ISCHARACTER(x[1]) .and. lower(x[1]) == cFind .and. ISCHARACTER(x[2]) } )
+      j := AScan( ::Contents, {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cFind .and. HB_ISSTRING(x[2]) } )
 
       if j > 0
           cResult := ::Contents[j][2]
@@ -124,11 +122,11 @@ static function ReadString(cSection, cIdent, cDefault)
 
    else
       cFind := lower(cSection)
-      i := AScan( ::Contents, {|x| ISCHARACTER(x[1]) .and. lower(x[1]) == cFind} )
+      i := AScan( ::Contents, {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cFind} )
 
       if i > 0
          cFind := lower(cIdent)
-         j := AScan( ::Contents[i][2], {|x| ISCHARACTER(x[1]) .and. lower(x[1]) == cFind} )
+         j := AScan( ::Contents[i][2], {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cFind} )
 
          if j > 0
             cResult := ::Contents[i][2][j][2]
@@ -146,7 +144,7 @@ static procedure WriteString(cSection, cIdent, cString)
 
    elseif Empty(cSection)
       cFind := lower(cIdent)
-      j := AScan( ::Contents, {|x| ISCHARACTER(x[1]) .and. lower(x[1]) == cFind .and. ISCHARACTER(x[2]) } )
+      j := AScan( ::Contents, {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cFind .and. HB_ISSTRING(x[2]) } )
 
       if j > 0
          ::Contents[j][2] := cString
@@ -159,9 +157,9 @@ static procedure WriteString(cSection, cIdent, cString)
 
    else
       cFind := lower(cSection)
-      if (i := AScan( ::Contents, {|x| ISCHARACTER(x[1]) .and. lower(x[1]) == cFind .and. ISARRAY(x[2]) })) > 0
+      if (i := AScan( ::Contents, {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cFind .and. HB_ISARRAY(x[2]) })) > 0
          cFind := lower(cIdent)
-         j := AScan( ::Contents[i][2], {|x| ISCHARACTER(x[1]) .and. lower(x[1]) == cFind} )
+         j := AScan( ::Contents[i][2], {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cFind} )
 
          if j > 0
             ::Contents[i][2][j][2] := cString
@@ -213,11 +211,11 @@ static procedure DeleteKey(cSection, cIdent)
    local i, j
 
    cSection := lower(cSection)
-   i := AScan( ::Contents, {|x| ISCHARACTER(x[1]) .and. lower(x[1]) == cSection} )
+   i := AScan( ::Contents, {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cSection} )
 
    if i > 0
       cIdent := lower(cIdent)
-      j := AScan( ::Contents[i][2], {|x| ISCHARACTER(x[1]) .and. lower(x[1]) == cIdent} )
+      j := AScan( ::Contents[i][2], {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cIdent} )
 
       ADel( ::Contents[i][2], j )
       ASize( ::Contents[i][2], Len(::Contents[i][2]) - 1 )
@@ -229,14 +227,14 @@ static procedure EraseSection(cSection)
    local i
 
    if Empty(cSection)
-      while (i := AScan( ::Contents, {|x| ISCHARACTER(x[1]) .and. ISCHARACTER(x[2]) })) > 0
+      while (i := AScan( ::Contents, {|x| HB_ISSTRING(x[1]) .and. HB_ISSTRING(x[2]) })) > 0
          ADel( ::Contents, i )
          ASize( ::Contents, len(::Contents) - 1 )
       end
 
    else
       cSection := lower(cSection)
-      if (i := AScan( ::Contents, {|x| ISCHARACTER(x[1]) .and. lower(x[1]) == cSection .and. ISARRAY(x[2]) })) > 0
+      if (i := AScan( ::Contents, {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cSection .and. HB_ISARRAY(x[2]) })) > 0
          ADel( ::Contents, i )
          ASize( ::Contents, Len(::Contents) - 1 )
       endif
@@ -249,14 +247,14 @@ static function ReadSection(cSection)
 
    if Empty(cSection)
       for i := 1 to len(::Contents)
-         if ISCHARACTER(::Contents[i][1]) .and. ISCHARACTER(::Contents[i][2])
+         if HB_ISSTRING(::Contents[i][1]) .and. HB_ISSTRING(::Contents[i][2])
             aadd(aSection, ::Contents[i][1])
          endif
       next
 
    else
       cSection := lower(cSection)
-      if (i := AScan( ::Contents, {|x| ISCHARACTER(x[1]) .and. x[1] == cSection .and. ISARRAY(x[2]) })) > 0
+      if (i := AScan( ::Contents, {|x| HB_ISSTRING(x[1]) .and. x[1] == cSection .and. HB_ISARRAY(x[2]) })) > 0
 
          for j := 1 to Len(::Contents[i][2])
 
@@ -274,7 +272,7 @@ static function ReadSections()
 
    for i := 1 to Len(::Contents)
 
-      if ISARRAY(::Contents[i][2])
+      if HB_ISARRAY(::Contents[i][2])
          AAdd(aSections, ::Contents[i][1])
       endif
    next
@@ -290,7 +288,7 @@ static procedure UpdateFile()
       if ::Contents[i][1] == NIL
          fwrite(hFile, ::Contents[i][2] + Chr(13) + Chr(10))
 
-      elseif ISARRAY(::Contents[i][2])
+      elseif HB_ISARRAY(::Contents[i][2])
          fwrite(hFile, "[" + ::Contents[i][1] + "]" + Chr(13) + Chr(10))
          for j := 1 to Len(::Contents[i][2])
 
@@ -303,7 +301,7 @@ static procedure UpdateFile()
          next
          fwrite(hFile, Chr(13) + Chr(10))
 
-      elseif ISCHARACTER(::Contents[i][2])
+      elseif HB_ISSTRING(::Contents[i][2])
          fwrite(hFile, ::Contents[i][1] + "=" + ::Contents[i][2] + Chr(13) + Chr(10))
 
       endif

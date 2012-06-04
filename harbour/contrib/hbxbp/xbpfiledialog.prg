@@ -192,7 +192,7 @@ METHOD XbpFileDialog:execSlot( cSlot, p )
 
    DO CASE
    CASE cSlot == "rejected()"
-      IF hb_isBlock( ::sl_quit )
+      IF HB_ISBLOCK( ::sl_quit )
          nRet := eval( ::sl_quit, 0, 0, Self )
       ENDIF
       IF nRet == XBP_REJECT
@@ -219,7 +219,7 @@ METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFile
 
    DEFAULT lAllowMultiple TO .F.
 
-   IF !( hb_isLogical( lCenter ) )
+   IF !( HB_ISLOGICAL( lCenter ) )
       lCenter := ::center
    ENDIF
 
@@ -257,7 +257,7 @@ METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFile
       ENDIF
    ENDIF
 
-   IF hb_isLogical( ::openReadOnly )
+   IF HB_ISLOGICAL( ::openReadOnly )
       ::oWidget:setOption( QFileDialog_ReadOnly, .T. )
    ENDIF
 
@@ -280,7 +280,7 @@ METHOD XbpFileDialog:saveAs( cDefaultFile, lFileList, lCenter )
 
    DEFAULT lFileList TO .T.
 
-   IF !( hb_isLogical( lCenter ) )
+   IF !( HB_ISLOGICAL( lCenter ) )
       lCenter := ::center
    ENDIF
 

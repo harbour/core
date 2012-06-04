@@ -185,7 +185,7 @@ FUNCTION gdImageFromFile( cFile )
 FUNCTION gdImageToString( oImage )
    LOCAL cString
 
-   IF ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
+   IF HB_ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
       IF oImage:cType != NIL
          SWITCH oImage:cType
          CASE "jpeg"
@@ -205,11 +205,11 @@ FUNCTION gdImageToString( oImage )
 PROCEDURE gdImageToFile( oImage, cFile )
    LOCAL cString, cExt
 
-   IF ! ISCHARACTER( cFile )
+   IF ! HB_ISSTRING( cFile )
       cFile := "image"
    ENDIF
 
-   IF ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
+   IF HB_ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
       IF oImage:cType != NIL
          SWITCH oImage:cType
          CASE "jpeg"
@@ -237,11 +237,11 @@ PROCEDURE gdImageToFile( oImage, cFile )
 
 PROCEDURE gdImageToHandle( oImage, nHandle )
 
-   IF ! ISNUMBER( nHandle )
+   IF ! HB_ISNUMERIC( nHandle )
       nHandle := 1
    ENDIF
 
-   IF ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
+   IF HB_ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
       IF oImage:cType != NIL
          SWITCH oImage:cType
          CASE "jpeg"

@@ -53,8 +53,6 @@
  *
  */
 
-#include "common.ch"
-
 MEMVAR GetList
 
 FUNCTION SAVEGETS()
@@ -74,7 +72,7 @@ FUNCTION CURRENTGET()
 
 FUNCTION GETFLDROW( nField )
    LOCAL oGet
-   IF ! ISNUMBER( nField )
+   IF ! HB_ISNUMERIC( nField )
       oGet := GetActive()
    ELSEIF nField >= 1 .AND. nField <= LEN( GetList )
       oGet := GetList[ nField ]
@@ -83,7 +81,7 @@ FUNCTION GETFLDROW( nField )
 
 FUNCTION GETFLDCOL( nField )
    LOCAL oGet
-   IF ! ISNUMBER( nField )
+   IF ! HB_ISNUMERIC( nField )
       oGet := GetActive()
    ELSEIF nField >= 1 .AND. nField <= LEN( GetList )
       oGet := GetList[ nField ]
@@ -92,7 +90,7 @@ FUNCTION GETFLDCOL( nField )
 
 FUNCTION GETFLDVAR( nField )
    LOCAL oGet
-   IF ! ISNUMBER( nField )
+   IF ! HB_ISNUMERIC( nField )
       oGet := GetActive()
    ELSEIF nField >= 1 .AND. nField <= LEN( GetList )
       oGet := GetList[ nField ]

@@ -6,7 +6,6 @@
 #include "setcurs.ch"
 #include "fileio.ch"
 #include "box.ch"
-#include "common.ch"
 
 
 #define IIFNIL( isnil, notnil ) IIF(notnil==NIL, isnil, notnil)
@@ -63,7 +62,7 @@ FUNCTION EditorNew( nTop, nLeft, nBottom, nRight, nLength, ;
                     cFrame, cTitle, cColor, nSize, nEscape )
    LOCAL pEdit, oEdit
 
-   IF ! ISNUMBER( nLength )
+   IF ! HB_ISNUMERIC( nLength )
       nLength := 80
    ENDIF
 
@@ -113,7 +112,7 @@ FUNCTION EditorCargo( oEdit, xCargo )
 FUNCTION EditorTitle( oEdit, cTitle )
    LOCAL _cTitle := oEdit[ E_TITLE ]
 
-   IF ISCHARACTER( cTitle )
+   IF HB_ISSTRING( cTitle )
       oEdit[ E_TITLE ] := cTitle
    ENDIF
 
@@ -129,7 +128,7 @@ FUNCTION EditorTitle( oEdit, cTitle )
 FUNCTION EditorMode( oEdit, lMode )
    LOCAL _lMode := oEdit[ E_MODE ]
 
-   IF ISLOGICAL( lMode )
+   IF HB_ISLOGICAL( lMode )
       oEdit[ E_MODE ] := lMode
    ENDIF
 
@@ -190,7 +189,7 @@ PROCEDURE EditorInsText( oEdit, cText, nLine )
 //
 FUNCTION EditorGetText( oEdit, nCarret )
 
-   IF ! ISNUMBER( nCarret )
+   IF ! HB_ISNUMERIC( nCarret )
       nCarret := EDIT_HARD
    ENDIF
 
@@ -249,11 +248,11 @@ FUNCTION EditorFile( xInput, cOutput, nLineLen, ;
    LOCAL nHandle, nLen, oEdit, lSaved, lClose := .F.
    LOCAL nSize
 
-   IF ! ISLOGICAL( lSave )
+   IF ! HB_ISLOGICAL( lSave )
       lSave := .T.
    ENDIF
 
-   IF ISCHARACTER(xInput)
+   IF HB_ISSTRING(xInput)
       nHandle := FOPEN( xInput )
       lClose := .T.
    ELSE
@@ -326,7 +325,7 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
    oEdit[E_INSERT] := SET( _SET_INSERT )
 //   SayInsert()
    nCursor := SetCursor( IIF(oEdit[E_INSERT], SC_NORMAL, SC_SPECIAL1) )
-   IF ISLOGICAL( lEdit )
+   IF HB_ISLOGICAL( lEdit )
       oEdit[E_MODE] := lEdit
    ENDIF
    lSaveAllowed :=( SETKEY(K_F2) == NIL )
@@ -399,7 +398,7 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
 
       OTHERWISE
          bKey := SETKEY( nKey )
-         IF ISBLOCK( bKey )
+         IF HB_ISBLOCK( bKey )
             EVAL( bKey, oEdit )
          ELSE
             IF oEdit[E_MODE]

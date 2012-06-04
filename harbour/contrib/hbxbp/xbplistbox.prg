@@ -259,7 +259,7 @@ METHOD XbpListBox:execSlot( cSlot, p )
    LOCAL qPos, qItm, nIndex, n, qPt
 
    IF cSlot == "customContextMenuRequested(QPoint)"
-      IF hb_isBlock( ::hb_contextMenu )
+      IF HB_ISBLOCK( ::hb_contextMenu )
          qPos := p
          IF ( qItm := ::oWidget:itemAt( qPos ) ):hasValidPointer()
             IF ( n := ascan( ::aItems, {|o| hbqt_IsEqual( o, qItm ) } ) ) > 0
@@ -271,7 +271,7 @@ METHOD XbpListBox:execSlot( cSlot, p )
       RETURN Self
    ENDIF
 
-   IF hb_isObject( p )
+   IF HB_ISOBJECT( p )
       IF ( nIndex := ::getItemIndex( p ) ) > 0
          qItm := ::aItems[ nIndex ]
       ENDIF
@@ -379,7 +379,7 @@ METHOD XbpListBox:addItem( cItem )
 
 METHOD XbpListBox:delItem( nIndex )
 
-   IF hb_isNumeric( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems )
+   IF HB_ISNUMERIC( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems )
       ::aItems[ nIndex ] := NIL
       hb_adel( ::aItems, nIndex, .t. )
    ENDIF
@@ -390,7 +390,7 @@ METHOD XbpListBox:delItem( nIndex )
 
 METHOD XbpListBox:getItem( nIndex )
 
-   IF hb_isNumeric( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems )
+   IF HB_ISNUMERIC( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems )
       RETURN ::aItems[ nIndex ]:text()
    ENDIF
 
@@ -403,7 +403,7 @@ METHOD XbpListBox:insItem( nIndex, cItem )
 
    qItm:setText( cItem )
 
-   IF hb_isNumeric( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems )
+   IF HB_ISNUMERIC( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems )
       ::oWidget:insertItem( nIndex - 1, qItm )
       hb_aIns( ::aItems, qItm, .t. )
    ELSE
@@ -418,7 +418,7 @@ METHOD XbpListBox:insItem( nIndex, cItem )
 METHOD XbpListBox:setItem( nIndex, cItem )
    LOCAL cText := ""
 
-   IF hb_isNumeric( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems )
+   IF HB_ISNUMERIC( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems )
       cText := ::aItems[ nIndex ]:text()
       ::aItems[ nIndex ]:setText( cItem )
    ENDIF
@@ -440,7 +440,7 @@ METHOD XbpListBox:setVisible( cItem )
 
 METHOD XbpListBox:setItemColorFG( nIndex, aRGB )
 
-   IF hb_isNumeric( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems )
+   IF HB_ISNUMERIC( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems )
       IF ::nOldIndex > 0  .AND. ::nOldIndex <= len( ::aItems )
          ::aItems[ ::nOldIndex ]:setForeGround( QBrush( QColor( 0,0,0 ) ) )
       ENDIF
@@ -462,9 +462,9 @@ METHOD XbpListBox:setItemColorFG( nIndex, aRGB )
 
 METHOD XbpListBox:itemMarked( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_itemMarked := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_itemMarked )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_itemMarked )
       eval( ::sl_itemMarked, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -473,9 +473,9 @@ METHOD XbpListBox:itemMarked( ... )
 
 METHOD XbpListBox:itemSelected( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_itemSelected := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_itemSelected )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_itemSelected )
       eval( ::sl_itemSelected, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -484,9 +484,9 @@ METHOD XbpListBox:itemSelected( ... )
 
 METHOD XbpListBox:drawItem( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_xbePDrawItem := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_xbePDrawItem )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_xbePDrawItem )
       eval( ::sl_xbePDrawItem, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self
@@ -495,9 +495,9 @@ METHOD XbpListBox:drawItem( ... )
 
 METHOD XbpListBox:measureItem( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_measureItem := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_measureItem )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_measureItem )
       eval( ::sl_measureItem, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self
@@ -506,9 +506,9 @@ METHOD XbpListBox:measureItem( ... )
 
 METHOD XbpListBox:hScroll( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_hScroll := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_hScroll )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_hScroll )
       eval( ::sl_hScroll, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -517,9 +517,9 @@ METHOD XbpListBox:hScroll( ... )
 
 METHOD XbpListBox:vScroll( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_vScroll := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_vScroll )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_vScroll )
       eval( ::sl_vScroll, NIL, NIL, Self )
    ENDIF
    RETURN Self

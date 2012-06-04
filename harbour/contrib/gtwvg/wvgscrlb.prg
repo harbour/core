@@ -204,7 +204,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
       ::sendMessage( WM_SIZE, 0, 0 )
 
    CASE nMessage == HB_GTE_CTLCOLOR
-      IF hb_isNumeric( ::hBrushBG )
+      IF HB_ISNUMERIC( ::hBrushBG )
          WVG_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ENDIF
@@ -214,7 +214,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
          ::oParent:setFocus()
       ENDIF
 
-      IF ! hb_isBlock( ::sl_xbeSB_Scroll )
+      IF ! HB_ISBLOCK( ::sl_xbeSB_Scroll )
          RETURN EVENT_UNHANDELLED
       ENDIF
 
@@ -293,7 +293,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
          nScrPos := WAPI_GetScrollPos( ::pWnd, SB_CTL )
       ENDIF
 
-      IF ! hb_isBlock( ::sl_xbeSB_Scroll )
+      IF ! HB_ISBLOCK( ::sl_xbeSB_Scroll )
          RETURN EVENT_UNHANDELLED
       ENDIF
 
@@ -370,7 +370,7 @@ METHOD destroy() CLASS WvgScrollBar
 
 METHOD scroll( xParam ) CLASS WvgScrollBar
 
-   IF hb_isBlock( xParam )
+   IF HB_ISBLOCK( xParam )
       ::sl_xbeSB_Scroll := xParam
    ENDIF
 

@@ -80,10 +80,10 @@ FUNCTION TIP_BASE64ENCODE( cBinary, nLineLength, cCRLF )
    LOCAL cText
    LOCAL tmp
 
-   IF ! hb_isNumeric( nLineLength )
+   IF ! HB_ISNUMERIC( nLineLength )
        RETURN cTextIn
    ENDIF
-   IF ! hb_isString( cCRLF )
+   IF ! HB_ISSTRING( cCRLF )
       cCRLF := hb_eol()
    ENDIF
 

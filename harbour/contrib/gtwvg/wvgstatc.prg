@@ -247,17 +247,17 @@ METHOD WvgStatic:handleEvent( nMessage, aNM )
       IF ::isParentCrt()
          ::rePosition()
       ENDIF
-      IF hb_isBlock( ::sl_resize )
+      IF HB_ISBLOCK( ::sl_resize )
          eval( ::sl_resize, NIL, NIL, self )
       ENDIF
       aeval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
       RETURN EVENT_HANDELLED
 
    CASE nMessage == HB_GTE_CTLCOLOR
-      IF hb_isNumeric( ::clr_FG )
+      IF HB_ISNUMERIC( ::clr_FG )
          WVG_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
-      IF hb_isNumeric( ::hBrushBG )
+      IF HB_ISNUMERIC( ::hBrushBG )
          WVG_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ELSE
@@ -309,7 +309,7 @@ METHOD WvgStatic:setCaption( xCaption, cDll )
          WVG_DeleteObject( ::hBitmap )
       ENDIF
 
-      ::hBitmap := WVG_LoadImage( ::caption, iif( hb_isNUmeric( ::caption ), 1, 2 ) )
+      ::hBitmap := WVG_LoadImage( ::caption, iif( HB_ISNUMERIC( ::caption ), 1, 2 ) )
 
       WVG_SendMessage( ::hWnd, STM_SETIMAGE, IMAGE_BITMAP, ::hBitmap )
 

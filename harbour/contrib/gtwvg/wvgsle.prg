@@ -170,7 +170,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSL
    ENDIF
    ::setPosAndSize()
 
-   IF hb_isObject( ::datalink )
+   IF HB_ISOBJECT( ::datalink )
       eval( ::datalink )
    ENDIF
 
@@ -199,22 +199,22 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
       CASE aNM[ NMH_code ] == EN_MAXTEXT
 
       CASE aNM[ NMH_code ] == EN_KILLFOCUS
-         IF hb_isBlock( ::sl_killInputFocus )
+         IF HB_ISBLOCK( ::sl_killInputFocus )
             eval( ::sl_killInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_SETFOCUS
-         IF hb_isBlock( ::sl_setInputFocus )
+         IF HB_ISBLOCK( ::sl_setInputFocus )
             eval( ::sl_setInputFocus, NIL, NIL, Self )
          ENDIF
 
       ENDCASE
 
    CASE nMessage == HB_GTE_CTLCOLOR
-      IF hb_isNumeric( ::clr_FG )
+      IF HB_ISNUMERIC( ::clr_FG )
          WVG_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
-      IF hb_isNumeric( ::hBrushBG )
+      IF HB_ISNUMERIC( ::hBrushBG )
          WVG_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ELSE
@@ -224,12 +224,12 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
    CASE nMessage == HB_GTE_ANY
       DO CASE
       CASE aNM[ NMH_code ] == WM_KILLFOCUS
-         IF hb_isBlock( ::sl_killInputFocus )
+         IF HB_ISBLOCK( ::sl_killInputFocus )
             eval( ::sl_killInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == WM_SETFOCUS
-         IF hb_isBlock( ::sl_setInputFocus )
+         IF HB_ISBLOCK( ::sl_setInputFocus )
             eval( ::sl_setInputFocus, NIL, NIL, Self )
          ENDIF
 
@@ -238,7 +238,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
-            IF hb_isBlock( ::sl_returnPressed )
+            IF HB_ISBLOCK( ::sl_returnPressed )
                eval( ::sl_returnPressed, NIL, NIL, Self )
             ENDIF
          ELSEIF aNM[ 2 ] == VK_TAB
@@ -271,7 +271,7 @@ METHOD destroy() CLASS WvgSLE
 METHOD WvgSLE:changed( lChanged )
    LOCAL lChg := ::sendMessage( EM_GETMODIFY, 0, 0 )
 
-   IF hb_isLogical( lChanged )
+   IF HB_ISLOGICAL( lChanged )
       ::sendMessage( EM_SETMODIFY, iif( lChanged, 0, 1 ), 0 )
    ENDIF
 
@@ -321,9 +321,9 @@ METHOD WvgSLE:cutMarked()
 
 METHOD WvgSLE:returnPressed( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_returnPressed := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_returnPressed )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_returnPressed )
       eval( ::sl_returnPressed, NIL, NIL, Self )
    ENDIF
    RETURN Self

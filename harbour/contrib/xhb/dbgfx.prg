@@ -59,7 +59,7 @@ STATIC s_lEmptyLogFile := .T.
 
 FUNCTION HB_ToOutDebugOnOff( lOnOff )
    LOCAL lOld := s_lToOutDebug
-   IF hb_isLogical( lOnOff )
+   IF HB_ISLOGICAL( lOnOff )
       s_lToOutDebug := lOnOff
    ENDIF
 RETURN lOld
@@ -72,14 +72,14 @@ RETURN
 
 FUNCTION HB_ToLogFileOnOff( lOnOff )
    LOCAL lOld := s_lToLogFile
-   IF hb_isLogical( lOnOff )
+   IF HB_ISLOGICAL( lOnOff )
       s_lToLogFile := lOnOff
    ENDIF
 RETURN lOld
 
 FUNCTION HB_EmptyLogFileOnOff( lOnOff )
    LOCAL lOld := s_lEmptyLogFile
-   IF hb_isLogical( lOnOff )
+   IF HB_ISLOGICAL( lOnOff )
       s_lEmptyLogFile := lOnOff
    ENDIF
 RETURN lOld

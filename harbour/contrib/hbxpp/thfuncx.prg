@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 FUNCTION ThreadID()
    RETURN hb_threadId()
 
@@ -69,14 +67,14 @@ FUNCTION ThreadWait( aThreads, nTimeOut )
 
    apThIDs := {}
    FOR EACH th IN aThreads
-      IF ISOBJECT( th )
+      IF HB_ISOBJECT( th )
          AAdd( apThIDs, th:threadSelf )
       ELSE
          AAdd( apThIDs, th )
       ENDIF
    NEXT
 
-   nPos := hb_threadWait( apThIDs, iif( ISNUMBER( nTimeOut ) .AND. nTimeOut != 0, ;
+   nPos := hb_threadWait( apThIDs, iif( HB_ISNUMERIC( nTimeOut ) .AND. nTimeOut != 0, ;
                                         nTimeOut / 100, ) )
    IF nPos != 0
       xResult := aThreads[ nPos ]
@@ -90,14 +88,14 @@ FUNCTION ThreadWaitAll( aThreads, nTimeOut )
 
    apThIDs := {}
    FOR EACH th IN aThreads
-      IF ISOBJECT( th )
+      IF HB_ISOBJECT( th )
          AAdd( apThIDs, th:threadSelf )
       ELSE
          AAdd( apThIDs, th )
       ENDIF
    NEXT
 
-   RETURN hb_threadWait( apThIDs, iif( ISNUMBER( nTimeOut ) .AND. nTimeOut != 0, ;
+   RETURN hb_threadWait( apThIDs, iif( HB_ISNUMERIC( nTimeOut ) .AND. nTimeOut != 0, ;
                                        nTimeOut / 100, ), .T. ) == Len( apThIDs )
 
 /* TODO: ThreadInfo() */

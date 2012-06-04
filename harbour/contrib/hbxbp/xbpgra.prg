@@ -184,10 +184,10 @@ FUNCTION GraLine( oPS, aStartPoint, aEndPoint )
 FUNCTION GraMakeRGBColor( aRGB )
    LOCAL nRGB
 
-   IF hb_isArray( aRGB ) .AND. Len( aRGB ) == 3
-      IF hb_isNumeric( aRGB[ 1 ] ) .AND. ( aRGB[ 1 ] >= 0 ) .AND. ( aRGB[ 1 ] <= 255 )
-         IF hb_isNumeric( aRGB[ 2 ] ) .AND. ( aRGB[ 2 ] >= 0 ) .AND. ( aRGB[ 2 ] <= 255 )
-            IF hb_isNumeric( aRGB[ 3 ] ) .AND. ( aRGB[ 3 ] >= 0 ) .AND. ( aRGB[ 3 ] <= 255 )
+   IF HB_ISARRAY( aRGB ) .AND. Len( aRGB ) == 3
+      IF HB_ISNUMERIC( aRGB[ 1 ] ) .AND. ( aRGB[ 1 ] >= 0 ) .AND. ( aRGB[ 1 ] <= 255 )
+         IF HB_ISNUMERIC( aRGB[ 2 ] ) .AND. ( aRGB[ 2 ] >= 0 ) .AND. ( aRGB[ 2 ] <= 255 )
+            IF HB_ISNUMERIC( aRGB[ 3 ] ) .AND. ( aRGB[ 3 ] >= 0 ) .AND. ( aRGB[ 3 ] <= 255 )
                nRGB := ( aRGB[ 1 ] + ( aRGB[ 2 ] * 256 ) + ( aRGB[ 3 ] * 256 * 256 ) ) + ( 256 * 256 * 256 )
             ENDIF
          ENDIF

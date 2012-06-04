@@ -415,7 +415,7 @@ METHOD WvgMenuBar:checkItem( nItemNum, lCheck )
 
    DEFAULT lCheck TO .T.
 
-   IF !empty( ::hMenu ) .AND. hb_isNumeric( nItemNum )
+   IF !empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum )
       nRet := WVG_CheckMenuItem( ::hMenu, nItemNum-1, MF_BYPOSITION + iif( lCheck, MF_CHECKED, MF_UNCHECKED ) )
    ENDIF
 
@@ -426,7 +426,7 @@ METHOD WvgMenuBar:checkItem( nItemNum, lCheck )
 METHOD WvgMenuBar:enableItem( nItemNum )
    LOCAL lSuccess := .f.
 
-   IF !empty( ::hMenu ) .AND. hb_isNumeric( nItemNum )
+   IF !empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum )
       lSuccess := WVG_EnableMenuItem( ::hMenu, nItemNum-1, MF_BYPOSITION + MF_ENABLED )
    ENDIF
 
@@ -447,7 +447,7 @@ METHOD WvgMenuBar:disableItem( nItemNum )
 
 METHOD WvgMenuBar:getItem( nItemNum )
 
-   IF hb_isNumeric( nItemNum ) .AND. nItemNum > 0 .AND. nItemNum <= len( ::aMenuItems )
+   IF HB_ISNUMERIC( nItemNum ) .AND. nItemNum > 0 .AND. nItemNum <= len( ::aMenuItems )
       RETURN { ::aMenuItems[ nItemNum, 3 ], ::aMenuItems[ nItemNum, 4 ], ::aMenuItems[ nItemNum, 5 ], ::aMenuItems[ nItemNum, 6 ] }
    ENDIF
 
@@ -477,7 +477,7 @@ METHOD WvgMenuBar:isItemEnabled( nItemNum )
 
 METHOD WvgMenuBar:selectItem( nItemNum )
 
-   IF hb_isNumeric( nItemNum )
+   IF HB_ISNUMERIC( nItemNum )
       RETURN .f.
    ENDIF
 
@@ -495,7 +495,7 @@ METHOD WvgMenuBar:setItem( nItemNum, aItem )
 
 METHOD WvgMenuBar:beginMenu( xParam )
 
-   IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   IF HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_beginMenu := xParam
       RETURN NIL
    ENDIF
@@ -506,7 +506,7 @@ METHOD WvgMenuBar:beginMenu( xParam )
 
 METHOD WvgMenuBar:endMenu( xParam )
 
-   IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   IF HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_endMenu := xParam
       RETURN NIL
    ENDIF
@@ -517,7 +517,7 @@ METHOD WvgMenuBar:endMenu( xParam )
 
 METHOD WvgMenuBar:itemMarked( xParam )
 
-   IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   IF HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_itemMarked := xParam
       RETURN NIL
    ENDIF
@@ -528,7 +528,7 @@ METHOD WvgMenuBar:itemMarked( xParam )
 
 METHOD WvgMenuBar:itemSelected( xParam )
 
-   IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   IF HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_itemSelected := xParam
       RETURN NIL
    ENDIF
@@ -539,7 +539,7 @@ METHOD WvgMenuBar:itemSelected( xParam )
 
 METHOD WvgMenuBar:drawItem( xParam )
 
-   IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   IF HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_drawItem := xParam
       RETURN NIL
    ENDIF
@@ -550,7 +550,7 @@ METHOD WvgMenuBar:drawItem( xParam )
 
 METHOD WvgMenuBar:measureItem( xParam )
 
-   IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   IF HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_measureItem := xParam
       RETURN NIL
    ENDIF
@@ -561,7 +561,7 @@ METHOD WvgMenuBar:measureItem( xParam )
 
 METHOD WvgMenuBar:onMenuKey( xParam )
 
-   IF hb_isBlock( xParam ) .or. hb_isNil( xParam )
+   IF HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
       ::sl_onMenuKey := xParam
       RETURN NIL
    ENDIF
@@ -646,7 +646,7 @@ METHOD WvgMenu:popUp( oXbp, aPos, nDefaultItem, nControl )
    nCmd := WVG_TrackPopupMenu( ::hMenu, TPM_LEFTALIGN + TPM_TOPALIGN + TPM_RETURNCMD, aPos[ 1 ], aPos[ 2 ], oXbp:hWnd )
 
    aMenuItem := ::findMenuItemById( nCmd )
-   IF hb_isArray( aMenuItem ) .and. hb_isBlock( aMenuItem[ 2 ] )
+   IF HB_ISARRAY( aMenuItem ) .and. HB_ISBLOCK( aMenuItem[ 2 ] )
       Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
    ENDIF
 

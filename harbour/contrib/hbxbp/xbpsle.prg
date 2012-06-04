@@ -154,7 +154,7 @@ METHOD XbpSLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
 
-   IF hb_isBlock( ::datalink )
+   IF HB_ISBLOCK( ::datalink )
       eval( ::datalink )
    ENDIF
 
@@ -253,9 +253,9 @@ METHOD XbpSLE:handleEvent( nEvent, mp1, mp2 )
 
 METHOD XbpSLE:returnPressed( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_returnPressed := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_returnPressed )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_returnPressed )
       eval( ::sl_returnPressed, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -264,9 +264,9 @@ METHOD XbpSLE:returnPressed( ... )
 
 METHOD XbpSLE:hScroll( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_hScroll := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_hScroll )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_hScroll )
       eval( ::sl_hScroll, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -275,9 +275,9 @@ METHOD XbpSLE:hScroll( ... )
 
 METHOD XbpSLE:typeOut( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_typeOut := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_typeOut )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_typeOut )
       eval( ::sl_typeOut, NIL, NIL, Self )
    ENDIF
    RETURN Self

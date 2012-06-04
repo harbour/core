@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "inkey.ch"
 
 #include "hbgtinfo.ch"
@@ -324,7 +323,7 @@ STATIC sc_hCnv := {;
 
 FUNCTION __hbct_key_c_to_n( cKey )
 
-   IF hb_isString( cKey )
+   IF HB_ISSTRING( cKey )
       RETURN hb_HGetDef( sc_hCnv, cKey, 0 )
    ENDIF
 
@@ -333,7 +332,7 @@ FUNCTION __hbct_key_c_to_n( cKey )
 FUNCTION __hbct_key_n_to_c( nKey )
    LOCAL hKey
 
-   IF hb_isNumeric( nKey )
+   IF HB_ISNUMERIC( nKey )
       FOR EACH hKey IN sc_hCnv
          IF hKey:__enumValue() == nKey
             RETURN hKey:__enumKey()
@@ -356,7 +355,7 @@ FUNCTION getkxlat( cKeyValue )
    LOCAL xKey := hbct_getkxlat( __hbct_key_c_to_n( cKeyValue ) )
 
    /* doc is unclear. should this return a numeric in these cases? */
-   IF hb_isNumeric( xKey )
+   IF HB_ISNUMERIC( xKey )
       RETURN xKey
    ENDIF
 
@@ -366,7 +365,7 @@ FUNCTION setkxtab( cTrs )
    LOCAL hTrs := { => }
    LOCAL tmp
 
-   IF hb_isString( cTrs )
+   IF HB_ISSTRING( cTrs )
       FOR tmp := 1 TO hb_BLen( cTrs ) STEP 4
          hTrs[ __hbct_key_c_to_n( hb_BSubStr( cTrs, tmp, 2 ) ) ] := __hbct_key_c_to_n( hb_BSubStr( cTrs, tmp + 2, 2 ) )
       NEXT
@@ -400,7 +399,7 @@ FUNCTION hbct_setkxlat( nOrgKeyValue, nNewKeyValue )
          hb_mutexUnlock( s_hMutex )
       ENDIF
    ELSE
-      IF hb_isNumeric( nOrgKeyValue ) .AND. nOrgKeyValue != 0
+      IF HB_ISNUMERIC( nOrgKeyValue ) .AND. nOrgKeyValue != 0
          IF hb_mutexLock( s_hMutex )
             IF PCount() == 1
                IF nOrgKeyValue $ s_hTrs
@@ -410,7 +409,7 @@ FUNCTION hbct_setkxlat( nOrgKeyValue, nNewKeyValue )
                      hb_gtInfo( HB_GTI_INKEYFILTER, NIL )
                   ENDIF
                ENDIF
-            ELSEIF hb_isNumeric( nNewKeyValue )
+            ELSEIF HB_ISNUMERIC( nNewKeyValue )
                /* refuse overwriting custom HB_GTI_INKEYFILTER */
                IF hb_gtInfo( HB_GTI_INKEYFILTER ) == NIL .OR. ! Empty( s_hTrs )
                   lAccepted := .T.
@@ -430,7 +429,7 @@ FUNCTION hbct_setkxlat( nOrgKeyValue, nNewKeyValue )
 FUNCTION hbct_getkxlat( nKeyValue )
    LOCAL nNewValue := 0
 
-   IF hb_isNumeric( nKeyValue )
+   IF HB_ISNUMERIC( nKeyValue )
       IF hb_mutexLock( s_hMutex )
          IF nKeyValue $ s_hTrs
             nNewValue := s_hTrs[ nKeyValue ]
@@ -447,7 +446,7 @@ FUNCTION hbct_getkxlat( nKeyValue )
 FUNCTION hbct_setkxtab( hTrs )
    LOCAL lAccepted := .F.
 
-   IF hb_isHash( hTrs )
+   IF HB_ISHASH( hTrs )
       IF hb_mutexLock( s_hMutex )
          IF hb_gtInfo( HB_GTI_INKEYFILTER ) == NIL .OR. ! Empty( s_hTrs )
             lAccepted := .T.

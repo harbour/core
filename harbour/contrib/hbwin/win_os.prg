@@ -60,7 +60,6 @@
  * and if the correct patch file is found - run it.
  */
 
-#include "common.ch"
 #include "directry.ch"
 #include "hbwin.ch"
 
@@ -72,10 +71,10 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
    LOCAL cKeySrv
    LOCAL cKeyWks
 
-   IF ! ISLOGICAL( lSetIt )
+   IF ! HB_ISLOGICAL( lSetIt )
       lSetIt := .F.
    ENDIF
-   IF ! ISLOGICAL( lDoVista )
+   IF ! HB_ISLOGICAL( lDoVista )
       lDoVista := .T.
    ENDIF
 

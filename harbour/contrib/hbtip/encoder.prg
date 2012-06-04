@@ -60,13 +60,12 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
 #include "fileio.ch"
 
 FUNCTION TIp_GetEncoder( cModel )
    LOCAL oEncoder
 
-   IF ! ISCHARACTER( cModel )
+   IF ! HB_ISSTRING( cModel )
       cModel := "as-is"
    ENDIF
 
@@ -102,7 +101,7 @@ CREATE CLASS TIPEncoder
 ENDCLASS
 
 METHOD New( cModel ) CLASS TIPEncoder
-   IF ! ISCHARACTER( cModel )
+   IF ! HB_ISSTRING( cModel )
       cModel := "as-is"
    ENDIF
    ::cName := cModel

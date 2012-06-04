@@ -174,7 +174,7 @@ METHOD XbpMLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::show()
    ENDIF
 
-   IF hb_isBlock( ::datalink )
+   IF HB_ISBLOCK( ::datalink )
       eval( ::datalink )
    ENDIF
 
@@ -294,7 +294,7 @@ METHOD XbpMLE:setFirstChar( nBufferPos )
 METHOD XbpMLE:setMarked( aStartEnd )
    LOCAL qCursor, cText
 
-   IF hb_isArray( aStartEnd ) .AND. len( aStartEnd ) == 2 .AND. aStartEnd[ 1 ] >= 0 .AND. aStartEnd[ 2 ] > aStartEnd[ 1 ]
+   IF HB_ISARRAY( aStartEnd ) .AND. len( aStartEnd ) == 2 .AND. aStartEnd[ 1 ] >= 0 .AND. aStartEnd[ 2 ] > aStartEnd[ 1 ]
       qCursor := ::oWidget:textCursor()
       qCursor:setPosition( aStartEnd[ 1 ] )
       qCursor:movePosition( QTextCursor_Right, QTextCursor_KeepAnchor, aStartEnd[ 2 ] - aStartEnd[ 1 ] )
@@ -314,7 +314,7 @@ METHOD XbpMLE:insert( nPos, cString )
 
    IF hb_isChar( cString )
       qCursor := ::oWidget:textCursor()
-      IF hb_isNumeric( nPos ) .AND. nPos >= 0
+      IF HB_ISNUMERIC( nPos ) .AND. nPos >= 0
          qCursor:setPosition( nPos )
       ENDIF
       qCursor:insertText( cString )
@@ -330,7 +330,7 @@ METHOD XbpMLE:charFromLine( nLine )
    LOCAL qCursor, nPos
 
    qCursor := ::oWidget:textCursor()
-   IF hb_isNumeric( nLine )
+   IF HB_ISNUMERIC( nLine )
       qCursor:movePosition( QTextCursor_Start )
       qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine )
       nPos := qCursor:position()
@@ -347,7 +347,7 @@ METHOD XbpMLE:lineFromChar( nPos )
    LOCAL qCursor, nLine
 
    qCursor := ::oWidget:textCursor()
-   IF hb_isNumeric( nPos )
+   IF HB_ISNUMERIC( nPos )
       qCursor:setPosition( nPos )
       nLine := qCursor:blockNumber()
    ELSE
@@ -365,9 +365,9 @@ METHOD XbpMLE:pos()
 
 METHOD XbpMLE:hScroll( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_hScroll := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_hScroll )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_hScroll )
       eval( ::sl_hScroll, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -376,9 +376,9 @@ METHOD XbpMLE:hScroll( ... )
 
 METHOD XbpMLE:vScroll( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_vScroll := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. hb_isBlock( ::sl_vScroll )
+   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_vScroll )
       eval( ::sl_vScroll, NIL, NIL, Self )
    ENDIF
    RETURN Self
@@ -387,9 +387,9 @@ METHOD XbpMLE:vScroll( ... )
 
 METHOD XbpMLE:undo( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_undo := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_undo )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_undo )
       eval( ::sl_undo, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self

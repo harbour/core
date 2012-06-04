@@ -52,7 +52,6 @@
  *
  */
 
-#include "common.ch"
 #include "hbclass.ch"
 #include "error.ch"
 #include "hbsqlit3.ch"
@@ -168,7 +167,7 @@ method executeQuery( cSql ) class hdbcSQLTStatement
 
    ::pRes := sqlite3_prepare( ::pDB, cSql )
 
-   if ! hb_isPointer( ::pRes )
+   if ! HB_ISPOINTER( ::pRes )
       raiseError( sqlite3_errmsg( ::pDb ) )
    else
       ::oRs := hdbcSQLTResultSet():new( ::pDB, Self )
@@ -454,7 +453,7 @@ method findColumn( cField ) class hdbcSQLTResultSet
 
 method getString( nField ) class hdbcSQLTResultSet
 
-   if ISCHARACTER( nField )
+   if HB_ISSTRING( nField )
       nField := ::findColumn( nField )
    endif
 
@@ -480,7 +479,7 @@ method moveToCurrentRow() class hdbcSQLTResultSet
 
 method updateBuffer( nField, xValue, cType ) class hdbcSQLTResultSet
 
-   if ISCHARACTER( nField )
+   if HB_ISSTRING( nField )
       nField := ::findColumn( nField )
    endif
 

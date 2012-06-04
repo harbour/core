@@ -191,9 +191,9 @@ METHOD XbpRadioButton:setCaption( xCaption )
 
 METHOD XbpRadioButton:selected( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_lbClick := a_[ 1 ]
-   ELSEIF len( a_ ) >= 1 .AND. hb_isBlock( ::sl_lbClick )
+   ELSEIF len( a_ ) >= 1 .AND. HB_ISBLOCK( ::sl_lbClick )
       eval( ::sl_lbClick, a_[ 1 ], NIL, Self )
    ENDIF
    RETURN Self

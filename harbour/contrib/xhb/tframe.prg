@@ -80,7 +80,7 @@ METHOD New( cFName, cTitle ) CLASS THtmlFrameSet
    ::FName := cFName
    ::Title := cTitle
 
-   IF ISCHARACTER( ::FName )
+   IF HB_ISSTRING( ::FName )
       cStr := ""
       ::nH := FCreate( ::FName )
    ELSE
@@ -104,7 +104,7 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
 
    cStr := CRLF() + " <frameset "
 
-   IF ISARRAY( aRows ) .AND. !Empty( aRows )
+   IF HB_ISARRAY( aRows ) .AND. !Empty( aRows )
 
       cStr += ' rows="'
 
@@ -118,7 +118,7 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
       cStr += '"'
    ENDIF
 
-   IF ISARRAY( aCols ) .AND. !Empty( aCols )
+   IF HB_ISARRAY( aCols ) .AND. !Empty( aCols )
 
       cStr += ' cols="'
 
@@ -132,11 +132,11 @@ METHOD StartSet( aRows, aCols, onLoad, onUnload ) CLASS THtmlFrameSet
       cStr += '"'
    ENDIF
 
-   IF ISCHARACTER( onLoad )
+   IF HB_ISSTRING( onLoad )
       cStr += Space( 7 ) + ' onLoad="' + onLoad + '"'
    ENDIF
 
-   IF ISCHARACTER( onUnLoad )
+   IF HB_ISSTRING( onUnLoad )
       cStr += Space( 5 ) + ' onUnLoad="' + onUnLoad + '"'
    ENDIF
 
@@ -180,15 +180,15 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
 
    cStr := "  <frame "
 
-   IF ISCHARACTER( cName )
+   IF HB_ISSTRING( cName )
       cStr += ' name="' + cName + '"'
    ENDIF
 
-   IF ISCHARACTER( cUrl )
+   IF HB_ISSTRING( cUrl )
       cStr += ' src="' + cURL + '"'
    ENDIF
 
-   IF ISCHARACTER( cTarget )
+   IF HB_ISSTRING( cTarget )
       cStr += ' target="' + cTarget + '"'
    ENDIF
 
@@ -202,7 +202,7 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
       cStr += " noresize"
    ENDIF
 
-   IF ISCHARACTER( cScrolling )
+   IF HB_ISSTRING( cScrolling )
       cStr += ' scrolling="' + cScrolling + '"'
    ELSE
       IF lScrolling != NIL
@@ -212,11 +212,11 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
       ENDIF
    ENDIF
 
-   IF ISNUMBER( marginwidth )
+   IF HB_ISNUMERIC( marginwidth )
       cStr += " marginwidth= " + hb_ntos( marginwidth )
    ENDIF
 
-   IF ISNUMBER( marginheight )
+   IF HB_ISNUMERIC( marginheight )
       cStr += " marginheight= " + hb_ntos( marginheight )
    ENDIF
 

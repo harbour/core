@@ -300,7 +300,7 @@ METHOD Put() CLASS TJsWindow
       ::setFeatures()
    ENDIF
 
-   IF ! ISCHARACTER( ::name )
+   IF ! HB_ISSTRING( ::name )
       ::name := "newWin"
    ENDIF
 

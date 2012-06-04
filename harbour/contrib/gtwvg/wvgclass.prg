@@ -597,7 +597,7 @@ METHOD wvtDialog:Inkey()
       ENDIF
 
       IF !( ::lEventHandled )
-         IF ISBLOCK( SetKey( ::nKey ) )
+         IF HB_ISBLOCK( SetKey( ::nKey ) )
             Eval( SetKey( ::nKey ) )
          ENDIF
       ENDIF
@@ -697,7 +697,7 @@ METHOD wvtDialog:CreateObjects()
 METHOD wvtDialog:Eval( bBlock, p1,p2,p3,p4,p5 )
    LOCAL lRet
 
-   IF ( lRet := ISBLOCK( bBlock ) )
+   IF ( lRet := HB_ISBLOCK( bBlock ) )
       eval( bBlock, p1,p2,p3,p4,p5 )
    ENDIF
 
@@ -821,7 +821,7 @@ CLASS WvtObject
 
    METHOD SetToolTip()                            INLINE Wvt_SetToolTip( ::nTop, ::nLeft, ::nBottom, ::nRight, ::Tooltip )
    METHOD Refresh()                               INLINE Wvt_InvalidateRect( ::nTop, ::nLeft, ::nTop, ::nLeft )
-   METHOD Eval( bBlock )                          INLINE iif( ISBLOCK( bBlock ), Eval( bBlock, self ), nil )
+   METHOD Eval( bBlock )                          INLINE iif( HB_ISBLOCK( bBlock ), Eval( bBlock, self ), nil )
    METHOD AddChild( aChild )                      INLINE aadd( ::aChildren, aChild )
    METHOD AddParent( aParent )                    INLINE aadd( ::aParent, aParent )
 
@@ -985,7 +985,7 @@ METHOD WvtObject:ShowPopup()
          IF ( n := ascan( ::aPopup, {|e_| e_[ 3 ] == nRet } ) ) > 0
             lRet := .t.
 
-            IF ISBLOCK( ::aPopup[ n,2 ] )
+            IF HB_ISBLOCK( ::aPopup[ n,2 ] )
                Eval( ::aPopup[ n,2 ] )
             ENDIF
          ENDIF
@@ -1147,7 +1147,7 @@ METHOD WvtBrowse:SetHBar()
 METHOD WvtBrowse:Refresh()
    LOCAL nWorkArea := Select()
 
-   IF ISBLOCK( ::bOnRefresh )
+   IF HB_ISBLOCK( ::bOnRefresh )
       eval( ::bOnRefresh, self )
    ELSE
       Select( ::cAlias )
@@ -1226,7 +1226,7 @@ METHOD WvtBrowse:DeHilite()
 METHOD WvtBrowse:SetTooltip()
    LOCAL cTip, nArea
 
-   IF ISBLOCK( ::bTooltip )
+   IF HB_ISBLOCK( ::bTooltip )
       ::SaveSettings()
       nArea := Select( ::cAlias )
 
@@ -1251,7 +1251,7 @@ METHOD WvtBrowse:SetTooltip()
 
 METHOD WvtBrowse:SaveSettings()
 
-   IF ISBLOCK( ::bSaveSettings )
+   IF HB_ISBLOCK( ::bSaveSettings )
       ::xSettings := Eval( ::bSaveSettings, self )
    ENDIF
 
@@ -1261,7 +1261,7 @@ METHOD WvtBrowse:SaveSettings()
 
 METHOD WvtBrowse:RestSettings()
 
-   IF ::xSettings != nil .and. ISBLOCK( ::bRestSettings )
+   IF ::xSettings != nil .and. HB_ISBLOCK( ::bRestSettings )
       Eval( ::bRestSettings, self )
    ENDIF
 

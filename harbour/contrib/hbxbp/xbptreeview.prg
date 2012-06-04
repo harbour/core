@@ -117,7 +117,7 @@ CLASS XbpTreeView  INHERIT  XbpWindow, DataRef
    METHOD   setColorBG( nRGB )                    INLINE WVG_TreeView_SetBkColor( ::hWnd, nRGB )
    METHOD   setColorLines( nRGB )                 INLINE WVG_TreeView_SetLineColor( ::hWnd, nRGB )
    METHOD   showExpanded( lExpanded, nLevels )    INLINE Wvg_TreeView_ShowExpanded( ::hWnd, ;
-                                                         IF( hb_isNil( lExpanded ), .f., lExpanded ), nLevels )
+                                                         IF( HB_ISNIL( lExpanded ), .f., lExpanded ), nLevels )
    #endif
    ENDCLASS
 
@@ -190,7 +190,7 @@ METHOD XbpTreeView:execSlot( cSlot, p )
    CASE cSlot == "itemEntered(QTreeWidgetItem*,int)"
       ::oWidget:setToolTip( iif( empty( oItem:tooltipText ), oItem:caption, oItem:tooltipText ) )
    CASE cSlot == "customContextMenuRequested(QPoint)"
-      IF hb_isBlock( ::hb_contextMenu )
+      IF HB_ISBLOCK( ::hb_contextMenu )
          qPos := QPoint( p )
          IF ( qItem := ::oWidget:itemAt( qPos ) ):hasValidPointer()
             IF ( n := ascan( ::aItems, {|o| hbqt_IsEqual( o:oWidget, qItem ) } ) ) > 0
@@ -302,9 +302,9 @@ METHOD XbpTreeView:itemFromPos( aPos )
 
 METHOD XbpTreeView:itemCollapsed( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_itemCollapsed := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_itemCollapsed )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_itemCollapsed )
       eval( ::sl_itemCollapsed, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self
@@ -313,9 +313,9 @@ METHOD XbpTreeView:itemCollapsed( ... )
 
 METHOD XbpTreeView:itemExpanded( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_itemExpanded := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_itemExpanded )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_itemExpanded )
       eval( ::sl_itemExpanded, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self
@@ -324,9 +324,9 @@ METHOD XbpTreeView:itemExpanded( ... )
 
 METHOD XbpTreeView:itemMarked( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_itemMarked := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_itemMarked )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_itemMarked )
       eval( ::sl_itemMarked, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self
@@ -335,9 +335,9 @@ METHOD XbpTreeView:itemMarked( ... )
 
 METHOD XbpTreeView:itemSelected( ... )
    LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. hb_isBlock( a_[ 1 ] )
+   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_itemSelected := a_[ 1 ]
-   ELSEIF len( a_ ) >= 2 .AND. hb_isBlock( ::sl_itemSelected )
+   ELSEIF len( a_ ) >= 2 .AND. HB_ISBLOCK( ::sl_itemSelected )
       eval( ::sl_itemSelected, a_[ 1 ], a_[ 2 ], Self )
    ENDIF
    RETURN Self

@@ -52,7 +52,6 @@
  *
  */
 
-#include "common.ch"
 #include "hbclass.ch"
 #include "postgres.ch"
 
@@ -104,7 +103,7 @@ ENDCLASS
 METHOD New( cHost, cDatabase, cUser, cPass, nPort, Schema ) CLASS TPQserver
    LOCAL res
 
-   IF ! ISNUMBER( nPort )
+   IF ! HB_ISNUMERIC( nPort )
       nPort := 5432
    ENDIF
 
@@ -554,10 +553,10 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
    LOCAL i
    LOCAL cType, nDec, nSize
 
-   IF ! ISLOGICAL( lQuery )
+   IF ! HB_ISLOGICAL( lQuery )
       lQuery := .T.
    ENDIF
-   IF ! ISLOGICAL( lMeta )
+   IF ! HB_ISLOGICAL( lMeta )
       lMeta := .T.
    ENDIF
 
@@ -588,7 +587,7 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
          /* Get some information about metadata */
          aTemp := PQmetadata( res )
 
-         IF ISARRAY( aTemp )
+         IF HB_ISARRAY( aTemp )
 
             FOR i := 1 TO Len( aTemp )
 
@@ -728,7 +727,7 @@ METHOD Read() CLASS TPQquery
 
 METHOD Skip( nrecno ) CLASS TPQquery
 
-   IF ! ISNUMBER( nRecno )
+   IF ! HB_ISNUMERIC( nRecno )
       nRecno := 1
    ENDIF
 
@@ -768,7 +767,7 @@ METHOD FieldPos( cField ) CLASS TPQquery
 METHOD FieldName( nField ) CLASS TPQquery
    LOCAL result
 
-   IF ISCHARACTER( nField )
+   IF HB_ISSTRING( nField )
       nField := ::Fieldpos( nField )
    ELSEIF nField < 1 .OR. nField > Len( ::aStruct )
       nField := 0
@@ -783,7 +782,7 @@ METHOD FieldName( nField ) CLASS TPQquery
 METHOD FieldType( nField ) CLASS TPQquery
    LOCAL result
 
-   IF ISCHARACTER( nField )
+   IF HB_ISSTRING( nField )
       nField := ::Fieldpos( nField )
    ELSEIF nField < 1 .OR. nField > Len( ::aStruct )
       nField := 0
@@ -798,7 +797,7 @@ METHOD FieldType( nField ) CLASS TPQquery
 METHOD FieldLen( nField ) CLASS TPQquery
    LOCAL result
 
-   IF ISCHARACTER( nField )
+   IF HB_ISSTRING( nField )
       nField := ::Fieldpos( nField )
    ELSEIF nField < 1 .OR. nField > Len( ::aStruct )
       nField := 0
@@ -813,7 +812,7 @@ METHOD FieldLen( nField ) CLASS TPQquery
 METHOD FieldDec( nField ) CLASS TPQquery
    LOCAL result
 
-   IF ISCHARACTER( nField )
+   IF HB_ISSTRING( nField )
       nField := ::Fieldpos( nField )
    ELSEIF nField < 1 .OR. nField > Len( ::aStruct )
       nField := 0
@@ -990,7 +989,7 @@ METHOD Update( oRow ) CLASS TPQquery
 METHOD FieldGet( nField, nRow ) CLASS TPQquery
    LOCAL result
 
-   IF ISCHARACTER( nField )
+   IF HB_ISSTRING( nField )
       nField := ::Fieldpos( nField )
    ELSEIF nField < 1 .OR. nField > ::nFields
       nField := 0
@@ -998,7 +997,7 @@ METHOD FieldGet( nField, nRow ) CLASS TPQquery
 
    IF nField > 0 .AND. ::nResultStatus == PGRES_TUPLES_OK
 
-      IF ! ISNUMBER( nRow )
+      IF ! HB_ISNUMERIC( nRow )
          nRow := ::nRecno
       ENDIF
 
@@ -1048,7 +1047,7 @@ METHOD Getrow( nRow ) CLASS TPQquery
    LOCAL aOld
    LOCAL nCol
 
-   IF ! ISNUMBER( nRow )
+   IF ! HB_ISNUMERIC( nRow )
       nRow := ::nRecno
    ENDIF
 
@@ -1211,7 +1210,7 @@ METHOD new( row, old, struct) CLASS TPQrow
 METHOD FieldGet( nField ) CLASS TPQrow
    LOCAL result
 
-   IF ISCHARACTER( nField )
+   IF HB_ISSTRING( nField )
       nField := ::Fieldpos( nField )
    ENDIF
 
@@ -1224,7 +1223,7 @@ METHOD FieldGet( nField ) CLASS TPQrow
 METHOD FieldPut( nField, Value ) CLASS TPQrow
    LOCAL result
 
-   IF ISCHARACTER( nField )
+   IF HB_ISSTRING( nField )
       nField := ::Fieldpos( nField )
    ENDIF
 
@@ -1237,7 +1236,7 @@ METHOD FieldPut( nField, Value ) CLASS TPQrow
 METHOD FieldName( nField ) CLASS TPQrow
    LOCAL result
 
-   IF ISCHARACTER( nField )
+   IF HB_ISSTRING( nField )
       nField := ::Fieldpos( nField )
    ENDIF
 
@@ -1256,7 +1255,7 @@ METHOD FieldPos( cField ) CLASS TPQrow
 METHOD FieldType( nField ) CLASS TPQrow
    LOCAL result
 
-   IF ISCHARACTER( nField )
+   IF HB_ISSTRING( nField )
       nField := ::Fieldpos( nField )
    ENDIF
 
@@ -1269,7 +1268,7 @@ METHOD FieldType( nField ) CLASS TPQrow
 METHOD FieldLen( nField ) CLASS TPQrow
    LOCAL result
 
-   IF ISCHARACTER( nField )
+   IF HB_ISSTRING( nField )
       nField := ::Fieldpos( nField )
    ENDIF
 
@@ -1282,7 +1281,7 @@ METHOD FieldLen( nField ) CLASS TPQrow
 METHOD FieldDec( nField ) CLASS TPQrow
    LOCAL result
 
-   IF ISCHARACTER( nField )
+   IF HB_ISSTRING( nField )
       nField := ::Fieldpos( nField )
    ENDIF
 

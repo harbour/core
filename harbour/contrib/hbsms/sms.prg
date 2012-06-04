@@ -58,19 +58,17 @@
          http://www.developershome.com/sms/readSmsByAtCommands.asp
          [vszakats] */
 
-#include "common.ch"
-
 STATIC FUNCTION port_send( h, s )
    RETURN hb_comSend( h, s )
 
 STATIC FUNCTION port_rece( h, n, t )
    LOCAL cString
 
-   IF ! ISNUMBER( n )
+   IF ! HB_ISNUMERIC( n )
       n := 64
    ENDIF
 
-   IF ! ISNUMBER( t )
+   IF ! HB_ISNUMERIC( t )
       t := 5
    ENDIF
 
@@ -118,10 +116,10 @@ FUNCTION sms_ReceiveAll( cPort, cPIN )
 FUNCTION smsctx_New( xPort )
    LOCAL smsctx[ _SMSCTX_MAX_ ]
 
-   IF ISNUMBER( xPort )
+   IF HB_ISNUMERIC( xPort )
       smsctx[ _SMSCTX_xHnd ] := xPort
       smsctx[ _SMSCTX_cPrevName ] := NIL
-   ELSEIF ISCHARACTER( xPort )
+   ELSEIF HB_ISSTRING( xPort )
       smsctx[ _SMSCTX_xHnd ] := 1
       smsctx[ _SMSCTX_cPrevName ] := hb_comGetDevice( smsctx[ _SMSCTX_xHnd ] )
       hb_comSetDevice( smsctx[ _SMSCTX_xHnd ], xPort )
@@ -143,7 +141,7 @@ FUNCTION smsctx_New( xPort )
 
 FUNCTION smsctx_Close( smsctx )
 
-   IF ! ISARRAY( smsctx ) .OR. Len( smsctx ) != _SMSCTX_MAX_
+   IF ! HB_ISARRAY( smsctx ) .OR. Len( smsctx ) != _SMSCTX_MAX_
       RETURN .F.
    ENDIF
 
@@ -161,7 +159,7 @@ FUNCTION smsctx_Close( smsctx )
 FUNCTION smsctx_Send( smsctx, cPhoneNo, cText, lNotification )
    LOCAL tmp
 
-   IF ! ISARRAY( smsctx ) .OR. Len( smsctx ) != _SMSCTX_MAX_
+   IF ! HB_ISARRAY( smsctx ) .OR. Len( smsctx ) != _SMSCTX_MAX_
       RETURN -1
    ENDIF
 
@@ -181,7 +179,7 @@ FUNCTION smsctx_Send( smsctx, cPhoneNo, cText, lNotification )
          port_send( smsctx[ _SMSCTX_xHnd ], "AT+CMGF=1" + Chr( 13 ) )
          IF StripCRLF( port_rece( smsctx[ _SMSCTX_xHnd ] ) ) == "OK"
 
-            IF ISLOGICAL( lNotification )
+            IF HB_ISLOGICAL( lNotification )
                port_send( smsctx[ _SMSCTX_xHnd ], "AT+CSMP?" + Chr( 13 ) )
                tmp := GetLines( port_rece( smsctx[ _SMSCTX_xHnd ] ) )
                IF Len( tmp ) < 2
@@ -233,7 +231,7 @@ FUNCTION smsctx_Send( smsctx, cPhoneNo, cText, lNotification )
 
 FUNCTION smsctx_Receive( smsctx )
 
-   IF ! ISARRAY( smsctx ) .OR. Len( smsctx ) != _SMSCTX_MAX_
+   IF ! HB_ISARRAY( smsctx ) .OR. Len( smsctx ) != _SMSCTX_MAX_
       RETURN NIL
    ENDIF
 
@@ -244,12 +242,12 @@ FUNCTION smsctx_Receive( smsctx )
 FUNCTION smsctx_PIN( smsctx, cPIN )
    LOCAL cOldValue
 
-   IF ! ISARRAY( smsctx ) .OR. Len( smsctx ) != _SMSCTX_MAX_
+   IF ! HB_ISARRAY( smsctx ) .OR. Len( smsctx ) != _SMSCTX_MAX_
       RETURN NIL
    ENDIF
 
    cOldValue := smsctx[ _SMSCTX_cPIN ]
-   IF cPIN == NIL .OR. ( ISCHARACTER( cPIN ) .AND. Len( cPIN ) == 4 )
+   IF cPIN == NIL .OR. ( HB_ISSTRING( cPIN ) .AND. Len( cPIN ) == 4 )
       smsctx[ _SMSCTX_cPIN ] := cPIN
    ENDIF
 

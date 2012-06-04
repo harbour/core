@@ -53,7 +53,6 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
 #include "dbstruct.ch"
 #include "set.ch"
 
@@ -90,10 +89,10 @@ ENDCLASS
 
 METHOD New( aRow, aFStruct, cTableName ) CLASS TMySQLRow
 
-   IF ! ISCHARACTER( cTableName )
+   IF ! HB_ISSTRING( cTableName )
       cTableName := ""
    ENDIF
-   IF ! ISARRAY( aFStruct )
+   IF ! HB_ISARRAY( aFStruct )
       aFStruct := {}
    ENDIF
 
@@ -114,7 +113,7 @@ METHOD New( aRow, aFStruct, cTableName ) CLASS TMySQLRow
 
 METHOD FieldGet( cnField ) CLASS TMySQLRow
 
-   LOCAL nNum := iif( ISCHARACTER( cnField ), ::FieldPos( cnField ), cnField )
+   LOCAL nNum := iif( HB_ISSTRING( cnField ), ::FieldPos( cnField ), cnField )
 
    IF nNum > 0 .AND. nNum <= Len( ::aRow )
 
@@ -131,14 +130,14 @@ METHOD FieldGet( cnField ) CLASS TMySQLRow
 
 METHOD FieldPut( cnField, Value ) CLASS TMySQLRow
 
-   LOCAL nNum := iif( ISCHARACTER( cnField ), ::FieldPos( cnField ), cnField )
+   LOCAL nNum := iif( HB_ISSTRING( cnField ), ::FieldPos( cnField ), cnField )
 
    IF nNum > 0 .AND. nNum <= Len( ::aRow )
 
       IF Valtype( Value ) == Valtype( ::aRow[ nNum ] ) .OR. ::aRow[ nNum ] == NIL
 
          // if it is a char field remove trailing spaces
-         IF ISCHARACTER( Value )
+         IF HB_ISSTRING( Value )
             Value := RTrim( Value )
          ENDIF
 
@@ -181,7 +180,7 @@ METHOD FieldLen( nNum ) CLASS TMySQLRow
 */
 METHOD FieldDec( nNum, lFormat ) CLASS TMySQLRow
 
-   IF ! ISLOGICAL( lFormat )
+   IF ! HB_ISLOGICAL( lFormat )
       lFormat := .F.
    ENDIF
 
@@ -416,7 +415,7 @@ METHOD Skip( nRows ) CLASS TMySQLQuery
    LOCAL lbof
 
    // NOTE: MySQL row count starts from 0
-   IF ! ISNUMBER( nRows )
+   IF ! HB_ISNUMERIC( nRows )
       nRows := 1
    ENDIF
 
@@ -476,7 +475,7 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
    LOCAL i
 
    //DAVID: use current row DEFAULT nRow TO 0
-   IF ! ISNUMBER( nRow )
+   IF ! HB_ISNUMERIC( nRow )
       nRow := ::nCurRow
    ENDIF
 
@@ -646,7 +645,7 @@ METHOD FieldGet( cnField ) CLASS TMySQLQuery
 
    LOCAL nNum, Value
 
-   IF ISCHARACTER( cnField )
+   IF HB_ISSTRING( cnField )
       nNum := ::FieldPos( cnField )
    ELSE
       nNum := cnField
@@ -682,7 +681,7 @@ METHOD FieldLen( nNum ) CLASS TMySQLQuery
 */
 METHOD FieldDec( nNum, lFormat ) CLASS TMySQLQuery
 
-   IF ! ISLOGICAL( lFormat )
+   IF ! HB_ISLOGICAL( lFormat )
       lFormat := .F.
    ENDIF
 
@@ -820,11 +819,11 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
    //DAVID:
    LOCAL ni, cWhere := " WHERE "
 
-   IF ! ISLOGICAL( lOldRecord )
+   IF ! HB_ISLOGICAL( lOldRecord )
       lOldRecord := .F.
    ENDIF
    //DAVID: too many ::refresh() can slow some processes, so we can desactivate it by parameter
-   IF ! ISLOGICAL( lRefresh )
+   IF ! HB_ISLOGICAL( lRefresh )
       lRefresh := .T.
    ENDIF
 
@@ -943,11 +942,11 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
    //DAVID:
    LOCAL ni, cWhere := " WHERE "
 
-   IF ! ISLOGICAL( lOldRecord )
+   IF ! HB_ISLOGICAL( lOldRecord )
       lOldRecord := .F.
    ENDIF
    //DAVID: too many ::refresh() can slow some processes, so we can desactivate it by parameter
-   IF ! ISLOGICAL( lRefresh )
+   IF ! HB_ISLOGICAL( lRefresh )
       lRefresh := .T.
    ENDIF
 
@@ -1041,7 +1040,7 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
    LOCAL i
 
    //DAVID: too many ::refresh() can slow some processes, so we can desactivate it by parameter
-   IF ! ISLOGICAL( lRefresh )
+   IF ! HB_ISLOGICAL( lRefresh )
       lRefresh := .T.
    ENDIF
 
@@ -1149,7 +1148,7 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
    LOCAL aRow := Array( ::nNumFields )
 
    //DAVID: It is not current row, so do not change it
-   IF ! ISLOGICAL( lSetValues )
+   IF ! HB_ISLOGICAL( lSetValues )
       lSetValues := .F.
    ENDIF
 
@@ -1203,7 +1202,7 @@ METHOD FieldPut( cnField, Value ) CLASS TMySQLTable
 
    LOCAL nNum
 
-   IF ISCHARACTER( cnField )
+   IF HB_ISSTRING( cnField )
       nNum := ::FieldPos( cnField )
    ELSE
       nNum := cnField
@@ -1215,7 +1214,7 @@ METHOD FieldPut( cnField, Value ) CLASS TMySQLTable
       IF Valtype( Value ) == Valtype( ::aRow[ nNum ] ) .OR. ::aRow[ nNum ] == NIL
 
          // if it is a char field remove trailing spaces
-         IF ISCHARACTER( Value )
+         IF HB_ISSTRING( Value )
             Value := RTrim( Value )
          ENDIF
 
@@ -1499,7 +1498,7 @@ METHOD CreateIndex( cName, cTable, aFNames, lUnique ) CLASS TMySQLServer
    LOCAL cCreateQuery := "CREATE "
    LOCAL i
 
-   IF ! ISLOGICAL( lUnique )
+   IF ! HB_ISLOGICAL( lUnique )
       lUnique := .F.
    ENDIF
 
@@ -1562,7 +1561,7 @@ METHOD Query( cQuery ) CLASS TMySQLServer
 
    LOCAL oQuery, cTableName, i, cUpperQuery, nNumTables, cToken
 
-   IF ! ISCHARACTER( cQuery )
+   IF ! HB_ISSTRING( cQuery )
       cQuery := ""
    ENDIF
 
