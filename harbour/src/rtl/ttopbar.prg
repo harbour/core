@@ -54,7 +54,6 @@
 
 #include "button.ch"
 #include "color.ch"
-#include "common.ch"
 #include "inkey.ch"
 
 /* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
@@ -108,7 +107,7 @@ ENDCLASS
 
 METHOD addItem( oItem ) CLASS TOPBARMENU
 
-   IF ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
+   IF HB_ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
 
       ::nItemCount++
       AAdd( ::aItems, oItem )
@@ -347,7 +346,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS TOPBARMENU
 METHOD insItem( nPos, oItem ) CLASS TOPBARMENU
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
-      ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
+      HB_ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
 
       ASize( ::aItems, ++::nItemCount )
       AIns( ::aItems, nPos )
@@ -379,7 +378,7 @@ METHOD select( nPos ) CLASS TOPBARMENU
 METHOD setItem( nPos, oItem ) CLASS TOPBARMENU
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
-      ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
+      HB_ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
 
       ::aItems[ nPos ] := oItem
 
@@ -434,9 +433,9 @@ METHOD New( nRow, nLeft, nRight ) CLASS TOPBARMENU
 
    LOCAL cColor
 
-   IF !ISNUMBER( nRow ) .OR. ;
-      !ISNUMBER( nLeft ) .OR. ;
-      !ISNUMBER( nRight )
+   IF !HB_ISNUMERIC( nRow ) .OR. ;
+      !HB_ISNUMERIC( nLeft ) .OR. ;
+      !HB_ISNUMERIC( nRight )
       RETURN NIL
    ENDIF
 

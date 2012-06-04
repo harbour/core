@@ -51,7 +51,6 @@
  *
  */
 
-#include "common.ch"
 #include "error.ch"
 
 /* NOTE: In CA-Cl*pper 5.2/5.3 the cMethod argument seems to be ignored. */

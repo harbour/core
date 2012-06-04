@@ -172,18 +172,18 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
 
    DEFAULT lModuleFriendly TO .F.
 
-   IF hb_isSymbol( xSuper )
+   IF HB_ISSYMBOL( xSuper )
       ::asSuper := { xSuper }
    ELSEIF Empty( xSuper )
       ::asSuper := {}
-   ELSEIF ISCHARACTER( xSuper )
+   ELSEIF HB_ISSTRING( xSuper )
       ::asSuper := { __DynsN2Sym( xSuper ) }
-   ELSEIF ISARRAY( xSuper )
+   ELSEIF HB_ISARRAY( xSuper )
       ::asSuper := {}
       FOR EACH i IN xSuper
-         IF hb_isSymbol( i )
+         IF HB_ISSYMBOL( i )
             AAdd( ::asSuper, i )
-         ELSEIF ISCHARACTER( i ) .AND. ! Empty( i )
+         ELSEIF HB_ISSTRING( i ) .AND. ! Empty( i )
             AAdd( ::asSuper, __DynsN2Sym( i ) )
          ENDIF
       NEXT
@@ -340,7 +340,7 @@ STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit )
    LOCAL data
 
    FOR EACH data IN aData
-      IF ISCHARACTER( data )
+      IF HB_ISSTRING( data )
          QSelf():AddData( data, xInit, cType, nScope, lNoInit )
       ENDIF
    NEXT
@@ -387,7 +387,7 @@ STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData, lNoInit )
    LOCAL data
 
    FOR EACH data IN aData
-      IF ISCHARACTER( data )
+      IF HB_ISSTRING( data )
          QSelf():AddClassData( data, xInit, cType, nScope, lNoInit )
       ENDIF
    NEXT
@@ -430,9 +430,9 @@ STATIC PROCEDURE AddDelegate( xMethod, cDelegMsg, cObject, nScope )
 
    LOCAL mth
 
-   IF ISCHARACTER( xMethod )
+   IF HB_ISSTRING( xMethod )
       AAdd( QSelf():aDelegates, { xMethod, cDelegMsg, cObject, nScope } )
-   ELSEIF ISARRAY( xMethod )
+   ELSEIF HB_ISARRAY( xMethod )
       FOR EACH mth IN xMethod
          AAdd( QSelf():aDelegates, { mth, cDelegMsg, cObject, nScope } )
       NEXT

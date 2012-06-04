@@ -53,16 +53,16 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    LOCAL cKey
    LOCAL nAux
 
-   IF ! ISNUMBER( nTop )
+   IF ! HB_ISNUMERIC( nTop )
       nTop := 0
    ENDIF
-   IF ! ISNUMBER( nLeft )
+   IF ! HB_ISNUMERIC( nLeft )
       nLeft := 0
    ENDIF
-   IF ! ISNUMBER( nBottom )
+   IF ! HB_ISNUMERIC( nBottom )
       nBottom := 0
    ENDIF
-   IF ! ISNUMBER( nRight )
+   IF ! HB_ISNUMERIC( nRight )
       nRight := 0
    ENDIF
 
@@ -74,7 +74,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
       nBottom := MaxRow()
    ENDIF
 
-   IF ! ISARRAY( acItems ) .OR. Len( acItems ) == 0
+   IF ! HB_ISARRAY( acItems ) .OR. Len( acItems ) == 0
       SetPos( nTop, nRight + 1 )
       RETURN 0
    ENDIF
@@ -95,13 +95,13 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
    lUserFunc := !Empty( xUserFunc ) .AND. ValType( xUserFunc ) $ "CB"
 
-   IF ! ISARRAY( xSelect ) .AND. ! ISLOGICAL( xSelect )
+   IF ! HB_ISARRAY( xSelect ) .AND. ! HB_ISLOGICAL( xSelect )
       xSelect := .T.               // Array or logical, what is selectable
    ENDIF
-   IF ! ISNUMBER( nPos )
+   IF ! HB_ISNUMERIC( nPos )
       nPos := 1                    // The number of the selected item
    ENDIF
-   IF ! ISNUMBER( nHiLiteRow )
+   IF ! HB_ISNUMERIC( nHiLiteRow )
       nHiLiteRow := 0              // The row to be highlighted
    ENDIF
 
@@ -109,7 +109,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    nNumRows := nBottom - nTop + 1
 
 
-   IF ISARRAY( xSelect )
+   IF HB_ISARRAY( xSelect )
       alSelect := xSelect
    ELSE
       alSelect := Array( Len( acItems ) )
@@ -519,7 +519,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
          nUserFunc := Do( xUserFunc, nMode, nPos, nPos - nAtTop )
 
-         IF ISNUMBER( nUserFunc )
+         IF HB_ISNUMERIC( nUserFunc )
 
             DO CASE
             CASE nUserFunc == AC_ABORT .OR. nMode == AC_NOITEM
@@ -631,10 +631,10 @@ STATIC PROCEDURE DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPo
 
 STATIC PROCEDURE DispLine( cLine, nRow, nCol, lSelect, lHiLite, nNumCols )
 
-   ColorSelect( iif( lSelect .AND. ISCHARACTER( cLine ), ;
+   ColorSelect( iif( lSelect .AND. HB_ISSTRING( cLine ), ;
                 iif( lHiLite, CLR_ENHANCED, CLR_STANDARD ), CLR_UNSELECTED ) )
 
-   hb_dispOutAt( nRow, nCol, iif( ISCHARACTER( cLine ), PadR( cLine, nNumCols ), Space( nNumCols ) ) )
+   hb_dispOutAt( nRow, nCol, iif( HB_ISSTRING( cLine ), PadR( cLine, nNumCols ), Space( nNumCols ) ) )
    IF lHiLite
       SetPos( nRow, nCol )
    ENDIF
@@ -651,7 +651,7 @@ STATIC FUNCTION Ach_Limits( nFrstItem, nLastItem, nItems, alSelect, acItems )
    nFrstItem := nLastItem := nItems := 0
 
    FOR nCntr := 1 TO Len( acItems )
-      IF ISCHARACTER( acItems[ nCntr ] ) .AND. Len( acItems[ nCntr ] ) > 0
+      IF HB_ISSTRING( acItems[ nCntr ] ) .AND. Len( acItems[ nCntr ] ) > 0
          nItems++
          IF Ach_Select( alSelect, nCntr )
             IF nFrstItem == 0
@@ -678,10 +678,10 @@ STATIC FUNCTION Ach_Select( alSelect, nPos )
    LOCAL sel
    IF nPos >= 1 .AND. nPos <= Len( alSelect )
       sel := alSelect[ nPos ]
-      IF ISCHARACTER( sel ) .AND. !Empty( sel )
+      IF HB_ISSTRING( sel ) .AND. !Empty( sel )
          sel := &sel
       ENDIF
-      IF ISLOGICAL( sel )
+      IF HB_ISLOGICAL( sel )
          RETURN sel
       ENDIF
    ENDIF

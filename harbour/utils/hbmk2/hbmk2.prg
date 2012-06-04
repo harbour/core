@@ -1738,7 +1738,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   hbmk[ _HBMK_cCOMP ] := aCOMPDET_EMBED[ tmp ][ _COMPDETE_cCOMP ]
                   hbmk[ _HBMK_cCCPREFIX ] := aCOMPDET_EMBED[ tmp ][ _COMPDETE_cCCPREFIX ]
                   hbmk[ _HBMK_cCCPATH ] := cPath_CompC
-                  IF ISBLOCK( aCOMPDET_EMBED[ tmp ][ _COMPDETE_bSetup ] )
+                  IF HB_ISBLOCK( aCOMPDET_EMBED[ tmp ][ _COMPDETE_bSetup ] )
                      Eval( aCOMPDET_EMBED[ tmp ][ _COMPDETE_bSetup ], hbmk[ _HBMK_cPLAT ], hbmk[ _HBMK_cCOMP ], cPath_CompC )
                   ENDIF
                   EXIT
@@ -1769,7 +1769,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                ! Empty( cPath_CompC := Eval( aCOMPDET_EMBED[ tmp ][ _COMPDETE_bBlock ], aCOMPDET_EMBED[ tmp ][ _COMPDETE_cCCPREFIX ], aCOMPDET_EMBED[ tmp ][ _COMPDETE_cCCPATH ] ) )
                hbmk[ _HBMK_cCCPATH ] := cPath_CompC
                hbmk[ _HBMK_cCCPREFIX ] := aCOMPDET_EMBED[ tmp ][ _COMPDETE_cCCPREFIX ]
-               IF ISBLOCK( aCOMPDET_EMBED[ tmp ][ _COMPDETE_bSetup ] )
+               IF HB_ISBLOCK( aCOMPDET_EMBED[ tmp ][ _COMPDETE_bSetup ] )
                   Eval( aCOMPDET_EMBED[ tmp ][ _COMPDETE_bSetup ], hbmk[ _HBMK_cPLAT ], hbmk[ _HBMK_cCOMP ], cPath_CompC )
                ENDIF
                EXIT
@@ -5296,7 +5296,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Creating implibs requested in dependency specification */
 
-   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. hbmk[ _HBMK_lDEPIMPLIB ] .AND. ISBLOCK( bBlk_ImpLib )
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. hbmk[ _HBMK_lDEPIMPLIB ] .AND. HB_ISBLOCK( bBlk_ImpLib )
       FOR EACH tmp IN hbmk[ _HBMK_hDEP ]
          IF tmp[ _HBMKDEP_lFound ] .AND. ! Empty( tmp[ _HBMKDEP_aIMPLIBSRC ] )
             DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, tmp[ _HBMKDEP_aIMPLIBSRC ], tmp[ _HBMKDEP_cIMPLIBDST ], "depimplib" )
@@ -7118,7 +7118,7 @@ STATIC FUNCTION DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, aIMPLIBS
    LOCAL aToDelete
    LOCAL lRetVal := .F.
 
-   IF ISBLOCK( bBlk_ImpLib )
+   IF HB_ISBLOCK( bBlk_ImpLib )
       IF ! Empty( aIMPLIBSRC )
          aToDelete := {}
          nNotFound := 0
@@ -7192,7 +7192,7 @@ STATIC PROCEDURE DoInstCopy( hbmk )
          nCopied := 0 /* files copied */
          FOR EACH aInstFile IN hbmk[ _HBMK_aINSTFILE ]
 
-            IF ISARRAY( aInstFile[ _INST_cData ] )
+            IF HB_ISARRAY( aInstFile[ _INST_cData ] )
                cInstFile := aInstFile[ _INST_cData ][ 1 ]
                cLink := aInstFile[ _INST_cData ][ 2 ]
             ELSE
@@ -7456,7 +7456,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
                                 ListToArray( iif( ! Empty( GetEnv( "HB_USER_PRGFLAGS" ) ), " " + GetEnv( "HB_USER_PRGFLAGS" ), "" ) ),;
                                 hbmk[ _HBMK_aOPTPRG ] } )
 
-      IF ! hb_isString( tmp := hbmk2_hb_compileBuf( hbmk, "harbour", aCommand ) )
+      IF ! HB_ISSTRING( tmp := hbmk2_hb_compileBuf( hbmk, "harbour", aCommand ) )
          RETURN .F.
       ENDIF
 
@@ -8566,7 +8566,7 @@ FUNCTION hbmk2_ArrayToList( array, cSeparator )
    LOCAL cString := ""
    LOCAL tmp
 
-   IF ! hb_isString( cSeparator )
+   IF ! HB_ISSTRING( cSeparator )
       cSeparator := " "
    ENDIF
 
@@ -8581,9 +8581,9 @@ FUNCTION hbmk2_ArrayToList( array, cSeparator )
 
 STATIC FUNCTION ctx_to_hbmk( ctx )
    LOCAL hbmk
-   IF hb_isHash( ctx ) .AND. s_cSecToken $ ctx
+   IF HB_ISHASH( ctx ) .AND. s_cSecToken $ ctx
       hbmk := ctx[ s_cSecToken ]
-      IF ISARRAY( hbmk ) .AND. Len( hbmk ) == _HBMK_MAX_
+      IF HB_ISARRAY( hbmk ) .AND. Len( hbmk ) == _HBMK_MAX_
          RETURN hbmk
       ENDIF
    ENDIF
@@ -8626,7 +8626,7 @@ FUNCTION hbmk2_PathSepToTarget( ctx, ... )
 
 FUNCTION hbmk2_AddInput_PRG( ctx, cFileName )
    LOCAL hbmk := ctx_to_hbmk( ctx )
-   IF hbmk != NIL .AND. hb_isString( cFileName )
+   IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
       AAdd( hbmk[ _HBMK_aPRG ], PathSepToSelf( cFileName ) )
       DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cFileName )
    ENDIF
@@ -8634,7 +8634,7 @@ FUNCTION hbmk2_AddInput_PRG( ctx, cFileName )
 
 FUNCTION hbmk2_AddInput_C( ctx, cFileName )
    LOCAL hbmk := ctx_to_hbmk( ctx )
-   IF hbmk != NIL .AND. hb_isString( cFileName )
+   IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
       AAdd( hbmk[ _HBMK_aC ], PathSepToSelf( cFileName ) )
       DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cFileName )
    ENDIF
@@ -8642,7 +8642,7 @@ FUNCTION hbmk2_AddInput_C( ctx, cFileName )
 
 FUNCTION hbmk2_AddInput_CPP( ctx, cFileName )
    LOCAL hbmk := ctx_to_hbmk( ctx )
-   IF hbmk != NIL .AND. hb_isString( cFileName )
+   IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
       AAdd( hbmk[ _HBMK_aCPP ], PathSepToSelf( cFileName ) )
       DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cFileName )
    ENDIF
@@ -8650,22 +8650,22 @@ FUNCTION hbmk2_AddInput_CPP( ctx, cFileName )
 
 FUNCTION hbmk2_AddInput_RC( ctx, cFileName )
    LOCAL hbmk := ctx_to_hbmk( ctx )
-   IF hbmk != NIL .AND. hb_isString( cFileName )
+   IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
       AAdd( hbmk[ _HBMK_aRESSRC ], PathSepToSelf( cFileName ) )
    ENDIF
    RETURN NIL
 
 FUNCTION hbmk2_AddInput_OBJ( ctx, cFileName )
    LOCAL hbmk := ctx_to_hbmk( ctx )
-   IF hbmk != NIL .AND. hb_isString( cFileName )
+   IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
       AAdd( hbmk[ _HBMK_aOBJUSER ], PathSepToSelf( cFileName ) )
    ENDIF
    RETURN NIL
 
 FUNCTION hbmk2_AddInput_INSTFILE( ctx, cFileName, cGroup )
    LOCAL hbmk := ctx_to_hbmk( ctx )
-   IF hbmk != NIL .AND. hb_isString( cFileName )
-      IF ! hb_isString( cGroup )
+   IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
+      IF ! HB_ISSTRING( cGroup )
          cGroup := ""
       ENDIF
       AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { cGroup, PathSepToSelf( cFileName ) } )
@@ -8674,7 +8674,7 @@ FUNCTION hbmk2_AddInput_INSTFILE( ctx, cFileName, cGroup )
 
 FUNCTION hbmk2_Register_Input_File_Extension( ctx, cExt )
    LOCAL hbmk := ctx_to_hbmk( ctx )
-   IF hbmk != NIL .AND. hb_isString( cExt )
+   IF hbmk != NIL .AND. HB_ISSTRING( cExt )
       IF ! Empty( cExt )
          IF !( Left( cExt, 1 ) == "." )
             cExt := "." + cExt
@@ -8771,13 +8771,13 @@ STATIC FUNCTION hbmk_ErrorMessage( oError )
    LOCAL cMessage := iif( oError:severity > ES_WARNING, "Error", "Warning" ) + " "
 
    /* add subsystem name if available */
-   cMessage += iif( hb_isString( oError:subsystem ), oError:subsystem(), "???" )
+   cMessage += iif( HB_ISSTRING( oError:subsystem ), oError:subsystem(), "???" )
 
    /* add subsystem's error code if available */
-   cMessage += "/" + iif( hb_isNumeric( oError:subCode ), hb_ntos( oError:subCode ), "???" )
+   cMessage += "/" + iif( HB_ISNUMERIC( oError:subCode ), hb_ntos( oError:subCode ), "???" )
 
    /* add error description if available */
-   IF hb_isString( oError:description )
+   IF HB_ISSTRING( oError:description )
       cMessage += "  " + oError:description
    ENDIF
 
@@ -8836,7 +8836,7 @@ STATIC FUNCTION FindInPath( cFileName, cPath )
       ENDIF
    ENDIF
 
-   IF ! hb_isString( cPath )
+   IF ! HB_ISSTRING( cPath )
       cPath := GetEnv( "PATH" )
    ENDIF
 
@@ -8975,7 +8975,7 @@ STATIC PROCEDURE DepTreeWorker( aList, aTree )
    LOCAL xItem
 
    FOR EACH xItem IN aTree DESCEND
-      IF ISARRAY( xItem ) .AND. Len( xItem ) == 2
+      IF HB_ISARRAY( xItem ) .AND. Len( xItem ) == 2
          DepTreeWorker( aList, xItem[ 2 ] )
          AAddNew( aList, xItem[ 1 ] )
       ELSE
@@ -9141,7 +9141,7 @@ STATIC FUNCTION PathSepToSelf( cFileName, nStart )
 
 STATIC FUNCTION PathSepToTarget( hbmk, cFileName, nStart )
 
-   IF ! hb_isNumeric( nStart )
+   IF ! HB_ISNUMERIC( nStart )
       nStart := 1
    ENDIF
 
@@ -9154,10 +9154,10 @@ STATIC FUNCTION PathSepToTarget( hbmk, cFileName, nStart )
 STATIC FUNCTION FNameEscape( cFileName, nEscapeMode, nFNNotation )
    LOCAL cDir, cName, cExt, cDrive
 
-   IF ! hb_isNumeric( nEscapeMode )
+   IF ! HB_ISNUMERIC( nEscapeMode )
       nEscapeMode := _ESC_NONE
    ENDIF
-   IF ! hb_isNumeric( nFNNotation )
+   IF ! HB_ISNUMERIC( nFNNotation )
 #if defined( __PLATFORM__WINDOWS ) .OR. ;
     defined( __PLATFORM__DOS ) .OR. ;
     defined( __PLATFORM__OS2 )
@@ -10185,7 +10185,7 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
          /* Evaluate filter */
          BEGIN SEQUENCE WITH {| oError | Break( oError ) }
             bFilter := &( "{| hbmk, cFileName |" + cFilterHarb + "}" )
-            IF hb_isLogical( xResult := Eval( bFilter, hbmk, cFileName ) ) .AND. xResult
+            IF HB_ISLOGICAL( xResult := Eval( bFilter, hbmk, cFileName ) ) .AND. xResult
                cRetVal := cItem
             ENDIF
          RECOVER
@@ -10205,7 +10205,7 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
    LOCAL nEnd
    LOCAL cMacro
 
-   LOCAL cStart := iif( hb_isString( cMacroPrefix ), cMacroPrefix, _MACRO_NORM_PREFIX ) + _MACRO_OPEN
+   LOCAL cStart := iif( HB_ISSTRING( cMacroPrefix ), cMacroPrefix, _MACRO_NORM_PREFIX ) + _MACRO_OPEN
 
    LOCAL cStdOut
 
@@ -10318,9 +10318,9 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
    CASE "HB_FIRST"
       cMacro := hb_FNameName( hbmk[ _HBMK_cFIRST ] ) ; EXIT
    CASE "HB_OUTPUTDIR"
-      cMacro := iif( hb_isString( hbmk[ _HBMK_cPROGDIR ] ), hb_FNameDir( hbmk[ _HBMK_cPROGDIR ] ), "" ) ; EXIT
+      cMacro := iif( HB_ISSTRING( hbmk[ _HBMK_cPROGDIR ] ), hb_FNameDir( hbmk[ _HBMK_cPROGDIR ] ), "" ) ; EXIT
    CASE "HB_OUTPUTNAME"
-      cMacro := iif( hb_isString( hbmk[ _HBMK_cPROGNAME ] ), hb_FNameName( hbmk[ _HBMK_cPROGNAME ] ), "" ) ; EXIT
+      cMacro := iif( HB_ISSTRING( hbmk[ _HBMK_cPROGNAME ] ), hb_FNameName( hbmk[ _HBMK_cPROGNAME ] ), "" ) ; EXIT
    CASE "HB_LEVEL"
       cMacro := hb_ntos( hbmk[ _HBMK_nLevel ] ) ; EXIT
    OTHERWISE
@@ -10338,7 +10338,7 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
       ENDIF
    ENDSWITCH
 
-   IF ! hb_isString( cMacro )
+   IF ! HB_ISSTRING( cMacro )
       cMacro := ""
    ENDIF
 
@@ -10754,7 +10754,7 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
    cCommands := StrTran( StrTran( cCommands, Chr( 13 ) ), "//", "# " )
 
    nMode := RTLNK_MODE_NONE
-   IF ! ISARRAY( aPrevFiles )
+   IF ! HB_ISARRAY( aPrevFiles )
       aPrevFiles := {}
    ENDIF
    FOR EACH cLine IN hb_ATokens( cCommands, Chr( 10 ) )
@@ -11068,7 +11068,7 @@ STATIC FUNCTION GenHBL( hbmk, aFiles, cFileOut, lEmpty )
    LOCAL aTrans := LoadPOTFiles( hbmk, aFiles, NIL, .F. )
    LOCAL lRetVal := .F.
 
-   IF ISARRAY( aTrans )
+   IF HB_ISARRAY( aTrans )
       pI18N := __i18n_hashTable( __i18n_potArrayToHash( aTrans, lEmpty ) )
       cHBLBody := hb_i18n_SaveTable( pI18N )
       IF hb_MemoWrit( cFileOut, cHBLBody )
@@ -12533,7 +12533,7 @@ STATIC FUNCTION __UnixParseLangCP( cString, /* @ */ cCP, /* @ */ cLang )
 
 STATIC FUNCTION __CPUnixToCPStd( cCPUnix )
 
-   IF hb_isString( cCPUnix )
+   IF HB_ISSTRING( cCPUnix )
 
       cCPUnix := StrTran( cCPUnix, "_" )
       cCPUnix := StrTran( cCPUnix, "-" )
@@ -12581,7 +12581,7 @@ STATIC FUNCTION __CPUnixToCPStd( cCPUnix )
 
 STATIC FUNCTION __CPWinToCPStd( nCPWin )
 
-   IF hb_isNumeric( nCPWin )
+   IF HB_ISNUMERIC( nCPWin )
       SWITCH nCPWin
       CASE 437   ; RETURN "cp437"
       CASE 737   ; RETURN "cp737"
@@ -12650,7 +12650,7 @@ STATIC FUNCTION __CPStdToHarbour( cCPStd, cCtryStd )
 STATIC FUNCTION __CtryStdToCtry( cCtryStd )
    LOCAL cCtryHb := Left( hb_cdpSelect(), 2 )
 
-   IF hb_isString( cCtryStd )
+   IF HB_ISSTRING( cCtryStd )
       SWITCH Lower( cCtryStd )
       CASE "af-za"      ; EXIT
       CASE "af"         ; EXIT

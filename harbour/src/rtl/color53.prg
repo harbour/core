@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 #ifdef HB_COMPAT_C53
 
 FUNCTION GetClrPair( cColor, nColor )
@@ -200,15 +198,15 @@ FUNCTION ApplyDefau( cColor, xClr1, xClr2, xClr3, xClr4, xClr5, xClr6, xClr7, xC
       IF "/" $ cClrToSet
 
          IF ( cClrFore := GetClrFore( cClrToSet ) ) == ""
-            cClrFore := GetClrFore( iif( ISNUMBER( xNewColor ), aSetColor[ xNewColor ], xNewColor ) )
+            cClrFore := GetClrFore( iif( HB_ISNUMERIC( xNewColor ), aSetColor[ xNewColor ], xNewColor ) )
          ENDIF
          IF ( cClrBack := GetClrBack( cClrToSet ) ) == ""
-            cClrBack := GetClrBack( iif( ISNUMBER( xNewColor ), aSetColor[ xNewColor ], xNewColor ) )
+            cClrBack := GetClrBack( iif( HB_ISNUMERIC( xNewColor ), aSetColor[ xNewColor ], xNewColor ) )
          ENDIF
 
          cClrDefa := SetClrPair( cClrDefa, n, cClrFore + "/" + cClrBack )
       ELSE
-         cClrDefa := SetClrPair( cClrDefa, n, iif( ISNUMBER( xNewColor ), aSetColor[ xNewColor ], xNewColor ) )
+         cClrDefa := SetClrPair( cClrDefa, n, iif( HB_ISNUMERIC( xNewColor ), aSetColor[ xNewColor ], xNewColor ) )
       ENDIF
    NEXT
 

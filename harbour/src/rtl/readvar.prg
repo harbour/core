@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 FUNCTION ReadVar( cVarName )
    THREAD STATIC t_cVarName := ""
 
@@ -64,7 +62,7 @@ FUNCTION ReadVar( cVarName )
 
    cOldVarName := t_cVarName
 
-   IF ISCHARACTER( cVarName )
+   IF HB_ISSTRING( cVarName )
       t_cVarName := cVarName
    ENDIF
 

@@ -61,13 +61,11 @@
  *
  */
 
-#include "common.ch"
-
 #ifdef HB_COMPAT_C53
 
 PROCEDURE GUIReader( oGet, oGetlist, oMenu, aMsg )
 
-   IF !ISOBJECT( oGetList )
+   IF !HB_ISOBJECT( oGetList )
       oGetList := __GetListActive()
    ENDIF
 
@@ -79,7 +77,7 @@ PROCEDURE GUIReader( oGet, oGetlist, oMenu, aMsg )
 
 PROCEDURE GUIApplyKey( oGet, oGUI, oGetList, nKey, oMenu, aMsg )
 
-   IF !ISOBJECT( oGetList )
+   IF !HB_ISOBJECT( oGetList )
       oGetList := __GetListActive()
    ENDIF
 
@@ -101,7 +99,7 @@ FUNCTION GUIPostValidate( oGet, oGUI, aMsg )
 
 PROCEDURE TBReader( oGet, oGetList, oMenu, aMsg )
 
-   IF !ISOBJECT( oGetList )
+   IF !HB_ISOBJECT( oGetList )
       oGetList := __GetListActive()
    ENDIF
 
@@ -113,7 +111,7 @@ PROCEDURE TBReader( oGet, oGetList, oMenu, aMsg )
 
 PROCEDURE TBApplyKey( oGet, oTB, oGetList, nKey, aMsg )
 
-   IF !ISOBJECT( oGetList )
+   IF !HB_ISOBJECT( oGetList )
       oGetList := __GetListActive()
    ENDIF
 
@@ -125,7 +123,7 @@ PROCEDURE TBApplyKey( oGet, oTB, oGetList, nKey, aMsg )
 
 FUNCTION Accelerator( oGetList, nKey, aMsg )
 
-   IF !ISOBJECT( oGetList )
+   IF !HB_ISOBJECT( oGetList )
       oGetList := __GetListActive()
    ENDIF
 
@@ -133,7 +131,7 @@ FUNCTION Accelerator( oGetList, nKey, aMsg )
 
 FUNCTION HitTest( oGetList, nMRow, nMCol, aMsg )
 
-   IF !ISOBJECT( oGetList )
+   IF !HB_ISOBJECT( oGetList )
       oGetList := __GetListActive()
    ENDIF
 

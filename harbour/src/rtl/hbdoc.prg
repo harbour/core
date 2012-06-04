@@ -50,19 +50,18 @@
  *
  */
 
-#include "common.ch"
 #include "directry.ch"
 #include "fileio.ch"
 
 #define _HBDOC_SRC_SUBDIR       "doc"
 #define _HBDOC_SRC_EXT          ".txt"
 
-#define _HBDOC_ADD_MSG( a, m )  IF ISARRAY( a ); AAdd( a, m ); ENDIF
+#define _HBDOC_ADD_MSG( a, m )  IF HB_ISARRAY( a ); AAdd( a, m ); ENDIF
 
 FUNCTION __hbdoc_FromSource( cFile, aErrMsg )
    LOCAL aEntry := {}
 
-   IF ISCHARACTER( cFile )
+   IF HB_ISSTRING( cFile )
       __hbdoc__read_stream( aEntry, cFile, "(stream)",, aErrMsg )
    ENDIF
 
@@ -74,7 +73,7 @@ FUNCTION __hbdoc_LoadDir( cDir, cName, aErrMsg )
    LOCAL aFile
    LOCAL aEntry
 
-   IF ISCHARACTER( cDir )
+   IF HB_ISSTRING( cDir )
 
       cDir := hb_DirSepAdd( cDir )
 
@@ -83,7 +82,7 @@ FUNCTION __hbdoc_LoadDir( cDir, cName, aErrMsg )
          aEntry := {}
          hMeta := { => }
 
-         IF ISCHARACTER( cName )
+         IF HB_ISSTRING( cName )
             hMeta[ "_COMPONENT" ] := cName
          ENDIF
 
@@ -176,7 +175,7 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
          ENDIF
          hEntry := { => }
          hb_HKeepOrder( hEntry, .T. )
-         IF hb_isHash( hMeta )
+         IF HB_ISHASH( hMeta )
             FOR EACH tmp IN hMeta
                hEntry[ tmp:__enumKey() ] := tmp
             NEXT
@@ -229,12 +228,12 @@ FUNCTION __hbdoc_ToSource( aEntry )
    LOCAL item
    LOCAL cLine
 
-   IF ISARRAY( aEntry )
+   IF HB_ISARRAY( aEntry )
       FOR EACH hEntry IN aEntry
          cSource += hb_eol()
          cSource += "/*  $DOC$" + hb_eol()
          FOR EACH item IN hEntry
-            IF ISCHARACTER( item ) .AND. ;
+            IF HB_ISSTRING( item ) .AND. ;
                !( Left( item:__enumKey(), 1 ) == "_" )
                cSource += " *  $" + item:__enumKey() + "$" + hb_eol()
                FOR EACH cLine IN hb_ATokens( StrTran( item, Chr( 13 ) ), Chr( 10 ) )
@@ -316,8 +315,8 @@ FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
    LOCAL fhnd
    LOCAL cExt
 
-   IF ISCHARACTER( cFileName ) .AND. ;
-      ISARRAY( aEntry )
+   IF HB_ISSTRING( cFileName ) .AND. ;
+      HB_ISARRAY( aEntry )
 
       IF Set( _SET_DEFEXTENSIONS )
          hb_FNameSplit( cFileName, NIL, NIL, @cExt )
@@ -344,7 +343,7 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
 
    LOCAL cBuffer
 
-   IF ISCHARACTER( cFileName )
+   IF HB_ISSTRING( cFileName )
 
       IF Set( _SET_DEFEXTENSIONS )
          hb_FNameSplit( cFileName, NIL, NIL, @cExt )
@@ -368,7 +367,7 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
             aEntry := hb_deserialize( hb_ZUncompress( cBuffer ) )
             cBuffer := NIL
 
-            IF ! ISARRAY( aEntry )
+            IF ! HB_ISARRAY( aEntry )
                aEntry := NIL
             ENDIF
          ELSE

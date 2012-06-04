@@ -60,7 +60,6 @@
 
 #include "rddsys.ch"
 #include "hbusrrdd.ch"
-#include "common.ch"
 
 ANNOUNCE RLCDX
 
@@ -155,7 +154,7 @@ STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
 STATIC FUNCTION RLCDX_UNLOCK( nWA, xRecID )
    LOCAL aWData := USRRDD_AREADATA( nWA ), i
 
-   IF ISNUMBER( xRecID ) .AND. xRecID > 0
+   IF HB_ISNUMERIC( xRecID ) .AND. xRecID > 0
       IF ( i:= ASCAN( aWData[ 2 ], { |x| x[ 1 ] == xRecID } ) ) != 0
          IF --aWData[ 2, i, 2 ] > 0
             RETURN HB_SUCCESS

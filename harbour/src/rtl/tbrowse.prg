@@ -322,7 +322,7 @@ METHOD new( nTop, nLeft, nBottom, nRight ) CLASS TBROWSE
 
 STATIC FUNCTION _SKIP_RESULT( xResult )
 
-   RETURN iif( ISNUMBER( xResult ), Int( xResult ), 0 )
+   RETURN iif( HB_ISNUMERIC( xResult ), Int( xResult ), 0 )
 
 
 STATIC PROCEDURE _DISP_FHSEP( nRow, nType, cColor, aColData )
@@ -525,16 +525,16 @@ METHOD colorRect( aRect, aColors ) CLASS TBROWSE
    LOCAL nCol := ::colCount
 
    /* CA-Cl*pper checks all this conditions */
-   IF ISARRAY( aRect ) .AND. Len( aRect ) >= 4 .AND. ;
-      ISNUMBER( aRect[ 1 ] ) .AND. ISNUMBER( aRect[ 2 ] ) .AND. ;
-      ISNUMBER( aRect[ 3 ] ) .AND. ISNUMBER( aRect[ 4 ] ) .AND. ;
+   IF HB_ISARRAY( aRect ) .AND. Len( aRect ) >= 4 .AND. ;
+      HB_ISNUMERIC( aRect[ 1 ] ) .AND. HB_ISNUMERIC( aRect[ 2 ] ) .AND. ;
+      HB_ISNUMERIC( aRect[ 3 ] ) .AND. HB_ISNUMERIC( aRect[ 4 ] ) .AND. ;
       aRect[ 1 ] >= 1 .AND. aRect[ 1 ] <= nRow .AND. ;
       aRect[ 2 ] >= 1 .AND. aRect[ 2 ] <= nCol .AND. ;
       aRect[ 3 ] >= aRect[ 1 ] .AND. aRect[ 3 ] <= nRow .AND. ;
       aRect[ 4 ] >= aRect[ 2 ] .AND. aRect[ 4 ] <= nCol .AND. ;
       ;
-      ISARRAY( aColors ) .AND. Len( aColors ) >= 2 .AND. ;
-      ISNUMBER( aColors[ 1 ] ) .AND. ISNUMBER( aColors[ 2 ] ) .AND. ;
+      HB_ISARRAY( aColors ) .AND. Len( aColors ) >= 2 .AND. ;
+      HB_ISNUMERIC( aColors[ 1 ] ) .AND. HB_ISNUMERIC( aColors[ 2 ] ) .AND. ;
       ; /* in colorRect() index 0 is not supported */
       aColors[ 1 ] >= 1 .AND. aColors[ 1 ] <= Len( ::aColors ) .AND. ;
       aColors[ 2 ] >= 1 .AND. aColors[ 2 ] <= Len( ::aColors )
@@ -640,7 +640,7 @@ METHOD readRecord( nRow ) CLASS TBROWSE
             cValue := Eval( oCol:block )
             aColor := _CELLCOLORS( aCol, cValue, nColors )
             IF ValType( cValue ) $ "CMNDTL"
-               cValue := PadR( Transform( cValue, iif( ISCHARACTER( oCol:picture ), oCol:picture, NIL ) ), aCol[ _TBCI_CELLWIDTH ] )
+               cValue := PadR( Transform( cValue, iif( HB_ISSTRING( oCol:picture ), oCol:picture, NIL ) ), aCol[ _TBCI_CELLWIDTH ] )
             ELSE
                cValue := Space( aCol[ _TBCI_CELLWIDTH ] )
             ENDIF
@@ -860,7 +860,7 @@ METHOD colorValue( nColorIndex ) CLASS TBROWSE
       ::doConfigure()
    ENDIF
 
-   IF ISNUMBER( nColorIndex )
+   IF HB_ISNUMERIC( nColorIndex )
       IF nColorIndex >= 1 .AND. nColorIndex <= Len( ::aColors )
          RETURN ::aColors[ nColorIndex ]
       /* In CA-Cl*pper index 0 has special meaning - it's always N/N color */
@@ -945,10 +945,10 @@ STATIC FUNCTION _COLDEFCOLORS( aDefColorsIdx, nMaxColorIndex )
    LOCAL nColorIndex
    LOCAL nPos
 
-   IF ISARRAY( aDefColorsIdx )
+   IF HB_ISARRAY( aDefColorsIdx )
       FOR nPos := 1 TO _TBC_CLR_MAX
          IF nPos <= Len( aDefColorsIdx ) .AND. ;
-            ISNUMBER( nColorIndex := aDefColorsIdx[ nPos ] ) .AND. ;
+            HB_ISNUMERIC( nColorIndex := aDefColorsIdx[ nPos ] ) .AND. ;
             ( nColorIndex := Int( nColorIndex ) ) >= 0 .AND. ;
             nColorIndex <= nMaxColorIndex
 
@@ -974,11 +974,11 @@ STATIC FUNCTION _CELLCOLORS( aCol, xValue, nMaxColorIndex )
    LOCAL nColorIndex
    LOCAL nPos, nMax
 
-   IF ISARRAY( xColor )
+   IF HB_ISARRAY( xColor )
       nMax := Min( Len( xColor ), 2 )
       FOR nPos := 1 TO nMax
          nColorIndex := xColor[ nPos ]
-         IF ISNUMBER( nColorIndex )
+         IF HB_ISNUMERIC( nColorIndex )
             nColorIndex := Int( nColorIndex )
             IF nColorIndex >= 0 .AND. nColorIndex <= nMaxColorIndex
                aColors[ nPos ] := nColorIndex
@@ -1249,7 +1249,7 @@ METHOD configure( nMode ) CLASS TBROWSE
     * accessing [druzus]
     */
 
-   IF !ISNUMBER( nMode ) .OR. nMode == 0 .OR. nMode > _TBR_CONF_ALL
+   IF !HB_ISNUMERIC( nMode ) .OR. nMode == 0 .OR. nMode > _TBR_CONF_ALL
       nMode := _TBR_CONF_ALL
    ENDIF
    ::nConfigure := HB_BITOR( ::nConfigure, nMode )
@@ -1293,22 +1293,22 @@ METHOD doConfigure() CLASS TBROWSE
       xValue := Eval( oCol:block )
       cType  := ValType( xValue )
       nWidth := iif( cType $ "CMNDTL", ;
-                     Len( Transform( xValue, iif( ISCHARACTER( oCol:picture ), oCol:picture, NIL ) ) ), 0 )
+                     Len( Transform( xValue, iif( HB_ISSTRING( oCol:picture ), oCol:picture, NIL ) ) ), 0 )
       cColSep := oCol:colSep
       IF cColSep == NIL
          cColSep := ::cColSep
       ENDIF
       cHeadSep := oCol:headSep
-      IF !ISCHARACTER( cHeadSep ) .OR. cHeadSep == ""
+      IF !HB_ISSTRING( cHeadSep ) .OR. cHeadSep == ""
          cHeadSep := ::cHeadSep
-         IF !ISCHARACTER( cHeadSep )
+         IF !HB_ISSTRING( cHeadSep )
             cHeadSep := ""
          ENDIF
       ENDIF
       cFootSep := oCol:footSep
-      IF !ISCHARACTER( cFootSep ) .OR. cFootSep == ""
+      IF !HB_ISSTRING( cFootSep ) .OR. cFootSep == ""
          cFootSep := ::cFootSep
-         IF !ISCHARACTER( cFootSep )
+         IF !HB_ISSTRING( cFootSep )
             cFootSep := ""
          ENDIF
       ENDIF
@@ -1500,7 +1500,7 @@ STATIC FUNCTION _DECODE_FH( cName, nHeight, nWidth )
    LOCAL i
 
    nHeight := nWidth := 0
-   IF ISCHARACTER( cName )
+   IF HB_ISSTRING( cName )
 
       IF Len( cName ) > 0
          /* When last character of heading/footing is ';' then CA-Cl*pper
@@ -1871,7 +1871,7 @@ METHOD colWidth( nColumn ) CLASS TBROWSE
       ::doConfigure()
    ENDIF
 
-   IF ISNUMBER( nColumn ) .AND. nColumn >= 1 .AND. nColumn <= ::colCount
+   IF HB_ISNUMERIC( nColumn ) .AND. nColumn >= 1 .AND. nColumn <= ::colCount
       RETURN ::aColData[ nColumn ][ _TBCI_COLWIDTH ]
    ENDIF
 
@@ -1897,7 +1897,7 @@ METHOD freeze( nColumns ) CLASS TBROWSE
       ::doConfigure()
    ENDIF
 
-   IF ISNUMBER( nColumns )
+   IF HB_ISNUMERIC( nColumns )
 
       nCols := Int( nColumns )
       IF _MAXFREEZE( nCols, ::aColData, _TBR_COORD( ::n_Right ) - _TBR_COORD( ::n_Left ) + 1 ) == nCols
@@ -1957,7 +1957,7 @@ METHOD setRowPos( nRowPos ) CLASS TBROWSE
    LOCAL nRow
    LOCAL nRowCount := ::rowCount    /* executes doConfigure internally */
 
-   IF ISNUMBER( nRowPos )
+   IF HB_ISNUMERIC( nRowPos )
       nRow := Int( nRowPos )
       ::nRowPos := iif( nRow > nRowCount, nRowCount, ;
                      iif( nRow < 1, 1, nRow ) )
@@ -1988,7 +1988,7 @@ METHOD setColPos( nColPos ) CLASS TBROWSE
       ::doConfigure()
    ENDIF
 
-   IF ISNUMBER( nColPos )
+   IF HB_ISNUMERIC( nColPos )
       ::nColPos := nColPos
    ELSE
       ::nColPos := 0
@@ -2021,7 +2021,7 @@ METHOD setTopFlag( lTop ) CLASS TBROWSE
       ::doConfigure()
    ENDIF
 
-   IF !ISLOGICAL( lTop )
+   IF !HB_ISLOGICAL( lTop )
       RETURN .T.
    ENDIF
 
@@ -2045,7 +2045,7 @@ METHOD setBottomFlag( lBottom ) CLASS TBROWSE
       ::doConfigure()
    ENDIF
 
-   IF !ISLOGICAL( lBottom )
+   IF !HB_ISLOGICAL( lBottom )
       RETURN .T.
    ENDIF
 
@@ -2069,7 +2069,7 @@ METHOD setAutoLite( lAutoLite ) CLASS TBROWSE
       ::doConfigure()
    ENDIF
 
-   IF !ISLOGICAL( lAutoLite )
+   IF !HB_ISLOGICAL( lAutoLite )
       RETURN .T.
    ENDIF
 
@@ -2093,7 +2093,7 @@ METHOD setStableFlag( lStable ) CLASS TBROWSE
       ::doConfigure()
    ENDIF
 
-   IF !ISLOGICAL( lStable )
+   IF !HB_ISLOGICAL( lStable )
       RETURN .T.
    ENDIF
 
@@ -2390,7 +2390,7 @@ METHOD hitTest( mRow, mCol ) CLASS TBROWSE
    ::mRowPos := ::mColPos := 0
 #endif
 
-   IF !ISNUMBER( mRow ) .OR. !ISNUMBER( mCol ) .OR. ;
+   IF !HB_ISNUMERIC( mRow ) .OR. !HB_ISNUMERIC( mCol ) .OR. ;
       mRow < ( nTop    := _TBR_COORD( ::n_Top    ) ) .OR. ;
       mRow > ( nBottom := _TBR_COORD( ::n_Bottom ) ) .OR. ;
       mCol < ( nLeft   := _TBR_COORD( ::n_Left   ) ) .OR. ;
@@ -2641,11 +2641,11 @@ METHOD setKey( nKey, bBlock ) CLASS TBROWSE
    ENDIF
 
    IF ( nPos := AScan( ::keys, {| x | x[ _TBC_SETKEY_KEY ] == nKey } ) ) == 0
-      IF ISBLOCK( bBlock )
+      IF HB_ISBLOCK( bBlock )
          AAdd( ::keys, { nKey, bBlock } )
       ENDIF
       bReturn := bBlock
-   ELSEIF ISBLOCK( bBlock )
+   ELSEIF HB_ISBLOCK( bBlock )
       ::keys[ nPos ][ _TBC_SETKEY_BLOCK ] := bBlock
       bReturn := bBlock
    ELSEIF PCount() == 1
@@ -2676,7 +2676,7 @@ METHOD setStyle( nStyle, lNewValue ) CLASS TBROWSE
       ASize( ::styles, nStyle )
    ENDIF
 
-   IF ISLOGICAL( lNewValue )
+   IF HB_ISLOGICAL( lNewValue )
       ::styles[ nStyle ] := lNewValue
    ENDIF
 

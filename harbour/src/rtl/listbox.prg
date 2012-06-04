@@ -55,7 +55,6 @@
 #include "box.ch"
 #include "button.ch"
 #include "color.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -167,7 +166,7 @@ ENDCLASS
 
 METHOD addItem( cText, cData ) CLASS LISTBOX
 
-   IF ISCHARACTER( cText ) .AND. Valtype( cData ) $ "CU"
+   IF HB_ISSTRING( cText ) .AND. Valtype( cData ) $ "CU"
 
       AAdd( ::aItems, { cText, cData } )
 
@@ -206,7 +205,7 @@ METHOD delItem( nPos )
          ::cTextValue := iif( ::nValue == 0, "", _LISTBOX_ITEMDATA( ::aItems[ ::nItemCount ] ) )
 
          IF ::xBuffer == NIL
-         ELSEIF ISNUMBER( ::xBuffer )
+         ELSEIF HB_ISNUMERIC( ::xBuffer )
             ::xBuffer := ::nItemCount
          ELSEIF ::nValue > 0
             ::xBuffer := ::cTextValue
@@ -322,16 +321,16 @@ METHOD findText( cText, nPos, lCaseSensitive, lExact ) CLASS LISTBOX
    LOCAL nLen
    LOCAL bSearch
 
-   IF !ISCHARACTER( cText ) .OR. Len( cText ) == 0
+   IF !HB_ISSTRING( cText ) .OR. Len( cText ) == 0
       RETURN 0
    ENDIF
-   IF !ISNUMBER( nPos )
+   IF !HB_ISNUMERIC( nPos )
       nPos := 1
    ENDIF
-   IF !ISLOGICAL( lCaseSensitive )
+   IF !HB_ISLOGICAL( lCaseSensitive )
       lCaseSensitive := .T.
    ENDIF
-   IF !ISLOGICAL( lExact )
+   IF !HB_ISLOGICAL( lExact )
       lExact := Set( _SET_EXACT )
    ENDIF
 
@@ -366,16 +365,16 @@ METHOD findData( cData, nPos, lCaseSensitive, lExact ) CLASS LISTBOX
    LOCAL nLen
    LOCAL bSearch
 
-   IF !ISCHARACTER( cData )
+   IF !HB_ISSTRING( cData )
       RETURN 0
    ENDIF
-   IF !ISNUMBER( nPos )
+   IF !HB_ISNUMERIC( nPos )
       nPos := 1
    ENDIF
-   IF !ISLOGICAL( lCaseSensitive )
+   IF !HB_ISLOGICAL( lCaseSensitive )
       lCaseSensitive := .T.
    ENDIF
-   IF !ISLOGICAL( lExact )
+   IF !HB_ISLOGICAL( lExact )
       lExact := Set( _SET_EXACT )
    ENDIF
 
@@ -499,8 +498,8 @@ METHOD hitTest( nMRow, nMCol ) CLASS LISTBOX
 
 METHOD insItem( nPos, cText, cData )
 
-   IF ISCHARACTER( cText ) .AND. ;
-      ISNUMBER( nPos ) .AND. ;
+   IF HB_ISSTRING( cText ) .AND. ;
+      HB_ISNUMERIC( nPos ) .AND. ;
       nPos < ::nItemCount
 
       ASize( ::aItems, ++::nItemCount )
@@ -524,7 +523,7 @@ METHOD killFocus() CLASS LISTBOX
    IF ::lHasFocus
       ::lHasFocus := .F.
 
-      IF ISBLOCK( ::bFBlock )
+      IF HB_ISBLOCK( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
 
@@ -742,7 +741,7 @@ METHOD select( xPos ) CLASS LISTBOX
 
    ::display()
 
-   IF ISBLOCK( ::bSBlock )
+   IF HB_ISBLOCK( ::bSBlock )
       Eval( ::bSBlock )
    ENDIF
 
@@ -765,7 +764,7 @@ METHOD setFocus() CLASS LISTBOX
 
       ::display()
 
-      IF ISBLOCK( ::bFBlock )
+      IF HB_ISBLOCK( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
 
@@ -777,7 +776,7 @@ METHOD setItem( nPos, aItem ) CLASS LISTBOX
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
       Len( aItem ) == 2 .AND. ;
-      ISCHARACTER( aItem[ _ITEM_cTEXT ] )
+      HB_ISSTRING( aItem[ _ITEM_cTEXT ] )
 
       ::aItems[ nPos ] := aItem
    ENDIF
@@ -804,7 +803,7 @@ METHOD changeItem( nOldPos, nNewPos ) CLASS LISTBOX
       ::cTextValue := iif( ::nValue == 0, "", _LISTBOX_ITEMDATA( ::aItems[ ::nValue ] ) )
 
       IF ::xBuffer == NIL
-      ELSEIF ISNUMBER( ::xBuffer )
+      ELSEIF HB_ISNUMERIC( ::xBuffer )
          ::xBuffer := ::nValue
       ELSEIF ::nValue > 0
          ::xBuffer := ::cTextValue
@@ -828,7 +827,7 @@ METHOD changeItem( nOldPos, nNewPos ) CLASS LISTBOX
 
       ::display()
 
-      IF ISBLOCK( ::bSBlock )
+      IF HB_ISBLOCK( ::bSBlock )
          Eval( ::bSBlock )
       ENDIF
    ENDIF
@@ -1057,14 +1056,14 @@ METHOD New( nTop, nLeft, nBottom, nRight, lDropDown )
 
    LOCAL cColor
 
-   IF !ISNUMBER( nTop ) .OR. ;
-      !ISNUMBER( nLeft ) .OR. ;
-      !ISNUMBER( nBottom ) .OR. ;
-      !ISNUMBER( nRight )
+   IF !HB_ISNUMERIC( nTop ) .OR. ;
+      !HB_ISNUMERIC( nLeft ) .OR. ;
+      !HB_ISNUMERIC( nBottom ) .OR. ;
+      !HB_ISNUMERIC( nRight )
       RETURN NIL
    ENDIF
 
-   IF !ISLOGICAL( lDropDown )
+   IF !HB_ISLOGICAL( lDropDown )
       lDropDown := .F.
    ENDIF
 
@@ -1107,7 +1106,7 @@ FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption,;
 
    IF o != NIL
 
-      IF ISCHARACTER( cCaption )
+      IF HB_ISSTRING( cCaption )
          o:caption := cCaption
          o:capCol  := nLeft - __CapLength( cCaption )
       ENDIF
@@ -1122,7 +1121,7 @@ FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption,;
 
          xItem := aItems[ nPos ]
 
-         IF ! ISARRAY( xItem )
+         IF ! HB_ISARRAY( xItem )
             o:addItem( xItem )
          ELSEIF Len( xItem ) == _ITEM_cTEXT
             o:addItem( xItem[ _ITEM_cTEXT ] )
@@ -1131,14 +1130,14 @@ FUNCTION _LISTBOX_( nTop, nLeft, nBottom, nRight, xPos, aItems, cCaption,;
          ENDIF
       NEXT
 
-      IF ISLOGICAL( lScrollBar ) .AND. lScrollBar
-         IF ISLOGICAL( lDropDown ) .AND. lDropDown
+      IF HB_ISLOGICAL( lScrollBar ) .AND. lScrollBar
+         IF HB_ISLOGICAL( lDropDown ) .AND. lDropDown
             nTop++
          ENDIF
          o:VScroll := ScrollBar( nTop + 1, nBottom - 1, nRight )
       ENDIF
 
-      IF ISCHARACTER( cBitmap )
+      IF HB_ISSTRING( cBitmap )
          o:bitmap := cBitmap
       ENDIF
 

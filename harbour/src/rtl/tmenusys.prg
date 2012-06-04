@@ -52,7 +52,6 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
 #include "getexit.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -134,11 +133,11 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
    ::nMsgRight  := nMsgRight
    ::cMsgColor  := cMsgColor
 
-   IF ( ::lMsgFlag := ISNUMBER( ::nMsgRow ) .AND. ;
-                      ISNUMBER( ::nMsgLeft ) .AND. ;
-                      ISNUMBER( ::nMsgRight ) )
+   IF ( ::lMsgFlag := HB_ISNUMERIC( ::nMsgRow ) .AND. ;
+                      HB_ISNUMERIC( ::nMsgLeft ) .AND. ;
+                      HB_ISNUMERIC( ::nMsgRight ) )
 
-      IF !ISCHARACTER( ::cMsgColor )
+      IF !HB_ISSTRING( ::cMsgColor )
          ::cMsgColor := GetClrPair( SetColor(), 1 )
       ENDIF
 
@@ -466,7 +465,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 METHOD PushMenu() CLASS HBMenuSys
    LOCAL oNewMenu := ::oMenu:getItem( ::oMenu:current )
 
-   IF ISOBJECT( oNewMenu ) .AND. oNewMenu:IsPopUp
+   IF HB_ISOBJECT( oNewMenu ) .AND. oNewMenu:IsPopUp
 
       ::oMenu := oNewMenu:data
       ::aMenuList[ ++::nMenuLevel ] := ::oMenu
@@ -545,7 +544,7 @@ METHOD Execute() CLASS HBMenuSys
    LOCAL lPas := .T.
 
    // Execute the Data block if selected MenuItem is !IsPopUp:
-   IF ISOBJECT( oNewMenu ) .AND. !oNewMenu:IsPopUp
+   IF HB_ISOBJECT( oNewMenu ) .AND. !oNewMenu:IsPopUp
 
       IF ::oMenu:ClassName() $ "TOPBARMENU|POPUPMENU|HB_POPUPMENU"
          SetPos( ::nOldRow, ::nOldCol )
@@ -616,12 +615,12 @@ METHOD ShowMsg( lMode ) CLASS HBMenuSys
    LOCAL nCurrent
    LOCAL cMsg
 
-   IF ISLOGICAL( ::lOldMsgFlag ) .AND. ::lOldMsgFlag
+   IF HB_ISLOGICAL( ::lOldMsgFlag ) .AND. ::lOldMsgFlag
       RestScreen( ::nMsgRow, ::nMsgLeft, ::nMsgRow, ::nMsgRight, ::cMsgSaveS )
    ENDIF
 
    IF lMode
-      IF !ISCHARACTER( ::cMsgColor )
+      IF !HB_ISSTRING( ::cMsgColor )
          ::cMsgColor := GetClrPair( SetColor(), 1 )
       ENDIF
 

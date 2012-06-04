@@ -10,7 +10,6 @@
  *
  */
 
-#include "common.ch"
 #include "directry.ch"
 
 PROCEDURE Main( cRoot )
@@ -25,7 +24,7 @@ PROCEDURE Main( cRoot )
    LOCAL aErrMsg
    LOCAL tmp
 
-   IF ! ISCHARACTER( cRoot )
+   IF ! HB_ISSTRING( cRoot )
       /* Detect Harbour root */
       cRoot := "." + hb_ps()
       DO WHILE hb_DirExists( cRoot + ".." )

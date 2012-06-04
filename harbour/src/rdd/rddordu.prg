@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 /* NOTE: Undocumented Clipper function */
 
 #ifdef HB_CLP_UNDOC

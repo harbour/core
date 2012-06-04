@@ -7,10 +7,8 @@
  * The Debugger
  *
  * Copyright 1999 Antonio Linares <alinares@fivetechsoft.com>
- * www - http://harbour-project.org
- *
  * Copyright 2003-2006 Phil Krylov <phil@newstar.rinet.ru>
- * www - http://www.xharbour.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -1194,7 +1192,7 @@ METHOD GetExprValue( xExpr, lValid ) CLASS HBDebugger
       ENDIF
    RECOVER USING oErr
       xResult := oErr:operation + ": " + oErr:description
-      IF ISARRAY( oErr:args )
+      IF HB_ISARRAY( oErr:args )
          xResult += "; arguments:"
          AEval( oErr:args, { | x | xResult += " " + AllTrim( __dbgCStr( x ) ) } )
       ENDIF
@@ -3306,7 +3304,7 @@ FUNCTION __dbgInput( nRow, nCol, nWidth, cValue, bValid, cColor, nSize )
    LOCAL nKey
    LOCAL oGet
 
-   IF !ISNUMBER( nWidth )
+   IF !HB_ISNUMERIC( nWidth )
       nWidth := Len( cValue )
    ENDIF
    oGet := HbDbInput():new( nRow, nCol, nWidth, cValue, cColor, nSize )
@@ -3340,7 +3338,7 @@ FUNCTION __dbgAchoice( nTop, nLeft, nBottom, nRight, aItems, cColors )
    LOCAL nLen
 
    oBrw := HBDbBrowser():New( nTop, nLeft, nBottom, nRight )
-   oBrw:colorSpec := IIF( ISCHARACTER( cColors ), cColors, SetColor() )
+   oBrw:colorSpec := IIF( HB_ISSTRING( cColors ), cColors, SetColor() )
    nLen := nRight - nLeft + 1
    nRow := 1
    oCol := HBDbColumnNew( "", {|| PadR( aItems[ nRow ], nLen ) } )

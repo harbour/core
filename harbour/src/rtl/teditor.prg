@@ -54,7 +54,6 @@
 
 #include "button.ch"
 #include "color.ch"
-#include "common.ch"
 #include "error.ch"
 #include "fileio.ch"
 #include "inkey.ch"
@@ -160,16 +159,16 @@ ENDCLASS
 METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBEditor
 
    // don't change coordinates not given
-   IF ! ISNUMBER( nTop )
+   IF ! HB_ISNUMERIC( nTop )
       nTop := ::nTop
    ENDIF
-   IF ! ISNUMBER( nLeft )
+   IF ! HB_ISNUMERIC( nLeft )
       nLeft := ::nLeft
    ENDIF
-   IF ! ISNUMBER( nBottom )
+   IF ! HB_ISNUMERIC( nBottom )
       nBottom := ::nBottom
    ENDIF
-   IF ! ISNUMBER( nRight )
+   IF ! HB_ISNUMERIC( nRight )
       nRight := ::nRight
    ENDIF
 
@@ -659,7 +658,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
 // Changes insert state and insertion / overstrike mode of editor
 METHOD InsertState( lInsState ) CLASS HBEditor
 
-   IF ISLOGICAL( lInsState )
+   IF HB_ISLOGICAL( lInsState )
       Set( _SET_INSERT, lInsState )
       IF ::lEditAllow
          SetCursor( iif( lInsState, SC_INSERT, SC_NORMAL ) )
@@ -851,7 +850,7 @@ METHOD SetColor( cColorString ) CLASS HBEditor
 
    LOCAL cOldColor := ::cColorSpec
 
-   IF ISCHARACTER( cColorString )
+   IF HB_ISSTRING( cColorString )
       ::cColorSpec := cColorString
    ENDIF
 
@@ -879,10 +878,10 @@ METHOD DeHilite() CLASS HBEditor
 
 METHOD SetPos( nRow, nCol ) CLASS HBEditor
 
-   IF ! ISNUMBER( nRow )
+   IF ! HB_ISNUMERIC( nRow )
       nRow := ::nPhysRow
    ENDIF
-   IF ! ISNUMBER( nCol )
+   IF ! HB_ISNUMERIC( nCol )
       nCol := ::nPhysCol
    ENDIF
 
@@ -998,18 +997,18 @@ METHOD BrowseText( nPassedKey )
 
 METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextRow, nTextCol, nWndRow, nWndCol ) CLASS HBEditor
 
-   IF ! ISCHARACTER( cString )      ; cString         := ""       ; ENDIF
-   IF ! ISNUMBER( nTop )            ; nTop            := 0        ; ENDIF
-   IF ! ISNUMBER( nLeft )           ; nLeft           := 0        ; ENDIF
-   IF ! ISNUMBER( nBottom )         ; nBottom         := MaxRow() ; ENDIF
-   IF ! ISNUMBER( nRight )          ; nRight          := MaxCol() ; ENDIF
-   IF ! ISLOGICAL( lEditMode )      ; lEditMode       := .T.      ; ENDIF
-   IF ! ISNUMBER( nLineLength )     ; nLineLength     := NIL      ; ENDIF
-   IF ! ISNUMBER( nTabSize )        ; nTabSize        := NIL      ; ENDIF
-   IF ! ISNUMBER( nTextRow )        ; nTextRow        := 1        ; ENDIF
-   IF ! ISNUMBER( nTextCol )        ; nTextCol        := 0        ; ENDIF
-   IF ! ISNUMBER( nWndRow )         ; nWndRow         := 0        ; ENDIF
-   IF ! ISNUMBER( nWndCol )         ; nWndCol         := 0        ; ENDIF
+   IF ! HB_ISSTRING( cString )      ; cString         := ""       ; ENDIF
+   IF ! HB_ISNUMERIC( nTop )        ; nTop            := 0        ; ENDIF
+   IF ! HB_ISNUMERIC( nLeft )       ; nLeft           := 0        ; ENDIF
+   IF ! HB_ISNUMERIC( nBottom )     ; nBottom         := MaxRow() ; ENDIF
+   IF ! HB_ISNUMERIC( nRight )      ; nRight          := MaxCol() ; ENDIF
+   IF ! HB_ISLOGICAL( lEditMode )   ; lEditMode       := .T.      ; ENDIF
+   IF ! HB_ISNUMERIC( nLineLength ) ; nLineLength     := NIL      ; ENDIF
+   IF ! HB_ISNUMERIC( nTabSize )    ; nTabSize        := NIL      ; ENDIF
+   IF ! HB_ISNUMERIC( nTextRow )    ; nTextRow        := 1        ; ENDIF
+   IF ! HB_ISNUMERIC( nTextCol )    ; nTextCol        := 0        ; ENDIF
+   IF ! HB_ISNUMERIC( nWndRow )     ; nWndRow         := 0        ; ENDIF
+   IF ! HB_ISNUMERIC( nWndCol )     ; nWndCol         := 0        ; ENDIF
 
    ::aText := Text2Array( cString, nLineLength )
    ::naTextLen := Len( ::aText )
@@ -1031,18 +1030,18 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    ::nNumCols := nRight - nLeft + 1
    ::nNumRows := nBottom - nTop + 1
 
-   IF ISLOGICAL( lEditMode )
+   IF HB_ISLOGICAL( lEditMode )
       ::lEditAllow := lEditMode
    ENDIF
 
    // is word wrap required?
-   IF ISNUMBER( nLineLength )
+   IF HB_ISNUMERIC( nLineLength )
       ::lWordWrap := .T.
       ::nWordWrapCol := nLineLength
    ENDIF
 
    // how many spaces for each tab?
-   IF ISNUMBER( nTabSize )
+   IF HB_ISNUMERIC( nTabSize )
       ::nTabWidth := nTabSize
    ENDIF
 

@@ -163,7 +163,7 @@ METHOD update() CLASS SCROLLBAR
 
    LOCAL nOldThumbPos := ::nThumbPos
 
-   IF ISBLOCK( ::bSBlock )
+   IF HB_ISBLOCK( ::bSBlock )
       Eval( ::bSBlock )
    ENDIF
 
@@ -253,7 +253,7 @@ METHOD barLength() CLASS SCROLLBAR
 
 METHOD bitmaps( aBitmaps ) CLASS SCROLLBAR
 
-   IF ISARRAY( aBitmaps ) .AND. ;
+   IF HB_ISARRAY( aBitmaps ) .AND. ;
       Len( aBitmaps ) == 3
 
       ::aBitmaps := aBitmaps
@@ -263,7 +263,7 @@ METHOD bitmaps( aBitmaps ) CLASS SCROLLBAR
 
 METHOD colorSpec( cColorSpec ) CLASS SCROLLBAR
 
-   IF ISCHARACTER( cColorSpec ) .AND. ;
+   IF HB_ISSTRING( cColorSpec ) .AND. ;
       !Empty( hb_ColorIndex( cColorSpec, 1 ) ) .AND. ;
        Empty( hb_ColorIndex( cColorSpec, 2 ) )
 
@@ -274,7 +274,7 @@ METHOD colorSpec( cColorSpec ) CLASS SCROLLBAR
 
 METHOD current( nCurrent ) CLASS SCROLLBAR
 
-   IF ISNUMBER( nCurrent ) .AND. ;
+   IF HB_ISNUMERIC( nCurrent ) .AND. ;
       nCurrent <= ::nTotal .AND. ;
       nCurrent != ::nCurrent
 
@@ -285,7 +285,7 @@ METHOD current( nCurrent ) CLASS SCROLLBAR
 
 METHOD end( nEnd ) CLASS SCROLLBAR
 
-   IF ISNUMBER( nEnd ) .AND. ;
+   IF HB_ISNUMERIC( nEnd ) .AND. ;
       nEnd >= ::nStart .AND. ;
       nEnd != ::nEnd
 
@@ -297,7 +297,7 @@ METHOD end( nEnd ) CLASS SCROLLBAR
 
 METHOD offset( nOffset ) CLASS SCROLLBAR
 
-   IF ISNUMBER( nOffset ) .AND. ;
+   IF HB_ISNUMERIC( nOffset ) .AND. ;
       nOffset != ::nOffset
 
       ::nOffset := nOffset
@@ -307,7 +307,7 @@ METHOD offset( nOffset ) CLASS SCROLLBAR
 
 METHOD orient( nOrient ) CLASS SCROLLBAR
 
-   IF ISNUMBER( nOrient ) .AND. ;
+   IF HB_ISNUMERIC( nOrient ) .AND. ;
       ( nOrient == SCROLL_VERTICAL .OR. nOrient == SCROLL_HORIZONTAL )
 
       ::nOrient := nOrient
@@ -317,7 +317,7 @@ METHOD orient( nOrient ) CLASS SCROLLBAR
 
 METHOD sBlock( bSBlock ) CLASS SCROLLBAR
 
-   IF ISBLOCK( bSBlock )
+   IF HB_ISBLOCK( bSBlock )
       ::bSBlock := bSBlock
    ENDIF
 
@@ -325,7 +325,7 @@ METHOD sBlock( bSBlock ) CLASS SCROLLBAR
 
 METHOD start( nStart ) CLASS SCROLLBAR
 
-   IF ISNUMBER( nStart ) .AND. ;
+   IF HB_ISNUMERIC( nStart ) .AND. ;
       nStart <= ::nEnd .AND. ;
       nStart != ::nStart
 
@@ -337,7 +337,7 @@ METHOD start( nStart ) CLASS SCROLLBAR
 
 METHOD style( cStyle ) CLASS SCROLLBAR
 
-   IF ISCHARACTER( cStyle ) .AND. ;
+   IF HB_ISSTRING( cStyle ) .AND. ;
       Len( cStyle ) == 4
 
       ::cStyle := cStyle
@@ -347,7 +347,7 @@ METHOD style( cStyle ) CLASS SCROLLBAR
 
 METHOD thumbPos( nThumbPos ) CLASS SCROLLBAR
 
-   IF ISNUMBER( nThumbPos )
+   IF HB_ISNUMERIC( nThumbPos )
 
       IF nThumbPos < 1
          ::nThumbPos := 1
@@ -366,7 +366,7 @@ METHOD thumbPos( nThumbPos ) CLASS SCROLLBAR
 
 METHOD total( nTotal ) CLASS SCROLLBAR
 
-   IF ISNUMBER( nTotal ) .AND. ;
+   IF HB_ISNUMERIC( nTotal ) .AND. ;
       nTotal >= 2 .AND. ;
       nTotal != ::nTotal
 
@@ -406,11 +406,11 @@ METHOD New( nStart, nEnd, nOffset, bSBlock, nOrient ) CLASS SCROLLBAR
 
    DEFAULT nOrient TO SCROLL_VERTICAL
 
-   IF !ISNUMBER( nStart ) .OR. ;
-      !ISNUMBER( nEnd ) .OR. ;
-      !ISNUMBER( nOffset ) .OR. ;
+   IF !HB_ISNUMERIC( nStart ) .OR. ;
+      !HB_ISNUMERIC( nEnd ) .OR. ;
+      !HB_ISNUMERIC( nOffset ) .OR. ;
       !ValType( bSBlock ) $ "BU" .OR. ;
-      !ISNUMBER( nOrient ) .OR. ;
+      !HB_ISNUMERIC( nOrient ) .OR. ;
       ( nOrient != SCROLL_VERTICAL .AND. nOrient != SCROLL_HORIZONTAL )
       RETURN NIL
    ENDIF

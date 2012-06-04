@@ -61,8 +61,6 @@
  *
  */
 
-#include "common.ch"
-
 #ifdef HB_COMPAT_C53
 
 #define SLUPDATED       1
@@ -167,7 +165,7 @@ PROCEDURE GetDoSetKey( bKeyBlock, oGet )
 
 #ifdef HB_COMPAT_C53
 PROCEDURE GetApplyKey( oGet, nKey, oGetList, oMenu, aMsg )
-   IF !ISOBJECT( oGetList )
+   IF !HB_ISOBJECT( oGetList )
       oGetList := __GetListActive()
    ENDIF
 #else
@@ -282,7 +280,7 @@ PROCEDURE __SetFormat( bFormat )
    LOCAL oGetList := __GetListActive()
 
    IF oGetList != NIL
-      IF ISBLOCK( bFormat )
+      IF HB_ISBLOCK( bFormat )
          oGetList:SetFormat( bFormat )
       ELSE
          oGetList:SetFormat()

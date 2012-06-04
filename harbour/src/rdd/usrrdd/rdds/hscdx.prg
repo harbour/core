@@ -62,7 +62,6 @@
 #include "hbusrrdd.ch"
 #include "fileio.ch"
 #include "dbinfo.ch"
-#include "common.ch"
 
 ANNOUNCE HSCDX
 
@@ -193,9 +192,9 @@ FUNCTION HSX_CLOSE( xHSX )
 
    IF USED() .AND. RDDNAME() == "HSCDX"
       aWData:= USRRDD_AREADATA( SELECT() )
-      IF ISNUMBER( xHSX )
+      IF HB_ISNUMERIC( xHSX )
          nSlot := ASCAN( aWData[ 2 ], xHSX )
-      ELSEIF ISCHARACTER( xHSX )
+      ELSEIF HB_ISSTRING( xHSX )
          nSlot := ASCAN( aWData[ 3 ], { |_1| _1 == xHSX } )
       ELSE
          nSlot := 0

@@ -505,9 +505,9 @@ METHOD varPut( xValue ) CLASS GET
    LOCAL i
    LOCAL aValue
 
-   IF ISBLOCK( ::bBlock ) .AND. ValType( xValue ) $ "CNDTLU"
+   IF HB_ISBLOCK( ::bBlock ) .AND. ValType( xValue ) $ "CNDTLU"
       aSubs := ::xSubScript
-      IF ISARRAY( aSubs ) .AND. ! Empty( aSubs )
+      IF HB_ISARRAY( aSubs ) .AND. ! Empty( aSubs )
          nLen := Len( aSubs )
          aValue := Eval( ::bBlock )
          FOR i := 1 TO nLen - 1
@@ -536,9 +536,9 @@ METHOD varGet() CLASS GET
    LOCAL i
    LOCAL xValue
 
-   IF ISBLOCK( ::bBlock )
+   IF HB_ISBLOCK( ::bBlock )
       aSubs := ::xSubScript
-      IF ISARRAY( aSubs ) .AND. ! Empty( aSubs )
+      IF HB_ISARRAY( aSubs ) .AND. ! Empty( aSubs )
          nLen := Len( aSubs )
          xValue := Eval( ::bBlock )
          FOR i := 1 TO nLen
@@ -907,7 +907,7 @@ METHOD setColorSpec( cColorSpec ) CLASS GET
    LOCAL nClrUns
    LOCAL nClrOth
 
-   IF ISCHARACTER( cColorSpec )
+   IF HB_ISSTRING( cColorSpec )
 
 #ifdef HB_COMPAT_C53
       ::cColorSpec := hb_NToColor( nClrUns := Max( hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ), 0 ) ) +;
@@ -951,7 +951,7 @@ METHOD setPos( nPos ) CLASS GET
 
    LOCAL tmp
 
-   IF ISNUMBER( nPos )
+   IF HB_ISNUMERIC( nPos )
 
       nPos := Int( nPos )
 
@@ -1019,7 +1019,7 @@ METHOD picture( cPicture ) CLASS GET
          ::cPicMask      := ""
          ::lPicBlankZero := .F.
 
-         IF ISCHARACTER( cPicture )
+         IF HB_ISSTRING( cPicture )
 
             cNum := ""
 
@@ -1242,7 +1242,7 @@ METHOD unTransform() CLASS GET
 
       cBuffer := ::cBuffer
 
-      IF ISCHARACTER( cBuffer ) .AND. ::cType != NIL
+      IF HB_ISSTRING( cBuffer ) .AND. ::cType != NIL
 
          SWITCH ::cType
          CASE "C"
@@ -1470,7 +1470,7 @@ METHOD reform() CLASS GET
 
 METHOD hitTest( nMRow, nMCol ) CLASS GET
 
-   IF ISOBJECT( ::oControl )
+   IF HB_ISOBJECT( ::oControl )
       RETURN ::oControl:hitTest( nMRow, nMCol )
    ELSE
       DO CASE
@@ -1489,7 +1489,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS GET
 
 METHOD control( oControl ) CLASS GET
 
-   IF PCount() == 1 .AND. ( oControl == NIL .OR. ISOBJECT( oControl ) )
+   IF PCount() == 1 .AND. ( oControl == NIL .OR. HB_ISOBJECT( oControl ) )
       ::oControl := oControl
    ENDIF
 
@@ -1497,7 +1497,7 @@ METHOD control( oControl ) CLASS GET
 
 METHOD caption( cCaption ) CLASS GET
 
-   IF ISCHARACTER( cCaption )
+   IF HB_ISSTRING( cCaption )
       ::cCaption := cCaption
    ENDIF
 
@@ -1505,7 +1505,7 @@ METHOD caption( cCaption ) CLASS GET
 
 METHOD capRow( nCapRow ) CLASS GET
 
-   IF ISNUMBER( nCapRow )
+   IF HB_ISNUMERIC( nCapRow )
       ::nCapRow := Int( nCapRow )
    ENDIF
 
@@ -1513,7 +1513,7 @@ METHOD capRow( nCapRow ) CLASS GET
 
 METHOD capCol( nCapCol ) CLASS GET
 
-   IF ISNUMBER( nCapCol )
+   IF HB_ISNUMERIC( nCapCol )
       ::nCapCol := Int( nCapCol )
    ENDIF
 
@@ -1521,7 +1521,7 @@ METHOD capCol( nCapCol ) CLASS GET
 
 METHOD message( cMessage ) CLASS GET
 
-   IF ISCHARACTER( cMessage )
+   IF HB_ISSTRING( cMessage )
       ::cMessage := cMessage
    ENDIF
 
@@ -1825,7 +1825,7 @@ METHOD getChanged() CLASS GET
 
 METHOD setChanged( lChanged ) CLASS GET
 
-   IF ISLOGICAL( lChanged )
+   IF HB_ISLOGICAL( lChanged )
       RETURN iif( ::hasFocus, ::lChanged := lChanged, lChanged )
    ENDIF
 
@@ -1836,7 +1836,7 @@ METHOD getClear() CLASS GET
 
 METHOD setClear( lClear ) CLASS GET
 
-   IF ISLOGICAL( lClear )
+   IF HB_ISLOGICAL( lClear )
       RETURN iif( ::hasFocus, ::lClear := lClear, lClear )
    ENDIF
 
@@ -1847,7 +1847,7 @@ METHOD getMinus() CLASS GET
 
 METHOD setMinus( lMinus ) CLASS GET
 
-   IF ISLOGICAL( lMinus )
+   IF HB_ISLOGICAL( lMinus )
       RETURN iif( ::hasFocus, ::lMinus := lMinus, lMinus )
    ENDIF
 
@@ -1860,7 +1860,7 @@ METHOD getRow() CLASS GET
    RETURN ::nRow
 
 METHOD setRow( nRow ) CLASS GET
-   RETURN ::nRow := iif( ISNUMBER( nRow ), Int( nRow ), 0 )
+   RETURN ::nRow := iif( HB_ISNUMERIC( nRow ), Int( nRow ), 0 )
 
 /* NOTE: CA-Cl*pper has a bug where negative nCol value will be translated to 16bit unsigned int,
          so the behaviour will be different in this case. [vszakats] */
@@ -1869,7 +1869,7 @@ METHOD getCol() CLASS GET
    RETURN ::nCol
 
 METHOD setCol( nCol ) CLASS GET
-   RETURN ::nCol := iif( ISNUMBER( nCol ), Int( nCol ), 0 )
+   RETURN ::nCol := iif( HB_ISNUMERIC( nCol ), Int( nCol ), 0 )
 
 METHOD name( cName ) CLASS GET
 
@@ -1934,7 +1934,7 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS GET
    DEFAULT nRow       TO Row()
    DEFAULT nCol       TO Col() + iif( Set( _SET_DELIMITERS ), 1, 0 )
    DEFAULT cVarName   TO ""
-   DEFAULT bVarBlock  TO iif( ISCHARACTER( cVarName ), MemvarBlock( cVarName ), NIL )
+   DEFAULT bVarBlock  TO iif( HB_ISSTRING( cVarName ), MemvarBlock( cVarName ), NIL )
 #ifdef HB_COMPAT_C53
    DEFAULT cColorSpec TO hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," +;
                          hb_ColorIndex( SetColor(), CLR_ENHANCED ) + "," +;

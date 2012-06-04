@@ -53,7 +53,6 @@
 #include "hbclass.ch"
 
 #include "button.ch"
-#include "common.ch"
 
 /* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
@@ -121,7 +120,7 @@ METHOD checked( lChecked ) CLASS MENUITEM
 METHOD data( boData ) CLASS MENUITEM
 
    IF boData != NIL
-      IF ISBLOCK( boData )
+      IF HB_ISBLOCK( boData )
          ::boData := boData
       ELSE
          ::boData := __eInstVar53( Self, "DATA", boData, "O", 1001, {|| boData:ClassName() $ "POPUPMENU|HB_POPUPMENU" } )
@@ -171,17 +170,17 @@ METHOD style( cStyle ) CLASS MENUITEM
    RETURN ::cStyle
 
 METHOD isPopUp() CLASS MENUITEM
-   RETURN ISOBJECT( ::data ) .AND. ::data:ClassName() $ "POPUPMENU|HB_POPUPMENU"
+   RETURN HB_ISOBJECT( ::data ) .AND. ::data:ClassName() $ "POPUPMENU|HB_POPUPMENU"
 
 METHOD New( cCaption, boData, nShortcut, cMessage, nID ) CLASS MENUITEM
 
-   IF !ISNUMBER( nShortcut )
+   IF !HB_ISNUMERIC( nShortcut )
       nShortcut := 0
    ENDIF
-   IF !ISCHARACTER( cMessage )
+   IF !HB_ISSTRING( cMessage )
       cMessage := ""
    ENDIF
-   IF !ISNUMBER( nID )
+   IF !HB_ISNUMERIC( nID )
       nID := 0
    ENDIF
 
@@ -200,9 +199,9 @@ FUNCTION MenuItem( cCaption, boData, nShortcut, cMessage, nID )
 
 FUNCTION __miColumn( o, nColumn )
 
-   IF ISOBJECT( o ) .AND. o:ClassName() == "MENUITEM"
+   IF HB_ISOBJECT( o ) .AND. o:ClassName() == "MENUITEM"
 
-      IF ISNUMBER( nColumn )
+      IF HB_ISNUMERIC( nColumn )
          o:__col := nColumn
       ENDIF
 
@@ -213,9 +212,9 @@ FUNCTION __miColumn( o, nColumn )
 
 FUNCTION __miRow( o, nRow )
 
-   IF ISOBJECT( o ) .AND. o:ClassName() == "MENUITEM"
+   IF HB_ISOBJECT( o ) .AND. o:ClassName() == "MENUITEM"
 
-      IF ISNUMBER( nRow )
+      IF HB_ISNUMERIC( nRow )
          o:__row := nRow
       ENDIF
 

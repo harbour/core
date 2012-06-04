@@ -81,7 +81,6 @@
  *
  */
 
-#include "common.ch"
 #include "dbinfo.ch"
 #include "ord.ch"
 #include "hbsxdef.ch"
@@ -102,11 +101,11 @@ FUNCTION sxChar( nLen, xKeyVal )
          xKeyVal := iif( xKeyVal, "T", "F" )
          EXIT
       OTHERWISE
-         xKeyVal := iif( ISNUMBER( nLen ), "", Space( 10 ) )
+         xKeyVal := iif( HB_ISNUMERIC( nLen ), "", Space( 10 ) )
          EXIT
    ENDSWITCH
 
-   RETURN iif( ISNUMBER( nLen ), PadR( LTrim( xKeyVal ), nLen ), xKeyVal )
+   RETURN iif( HB_ISNUMERIC( nLen ), PadR( LTrim( xKeyVal ), nLen ), xKeyVal )
 
 FUNCTION sxNum( xKeyVal )
 
@@ -205,7 +204,7 @@ FUNCTION Sx_TagInfo( cIndex )
 
    IF Used() .AND. ( nOrds := OrdCount( cIndex ) ) > 0
       aInfo := Array( nOrds, 6 )
-      IF ISCHARACTER( cIndex )
+      IF HB_ISSTRING( cIndex )
          nFirst := dbOrderInfo( DBOI_BAGORDER, cIndex )
          nOrds += nFirst - 1
       ELSE
@@ -227,12 +226,12 @@ FUNCTION Sx_TagInfo( cIndex )
 FUNCTION Sx_TagCount( xIndex )
    LOCAL nTags := 0, cIndex, nOrder
    IF Used()
-      IF ISNUMBER( xIndex )
+      IF HB_ISNUMERIC( xIndex )
          nOrder := Sx_TagOrder( 1, xIndex )
          IF nOrder != 0
             cIndex := dbOrderInfo( DBOI_FULLPATH,, nOrder )
          ENDIF
-      ELSEIF ISCHARACTER( xIndex ) .AND. !Empty( xIndex )
+      ELSEIF HB_ISSTRING( xIndex ) .AND. !Empty( xIndex )
          cIndex := xIndex
       ELSE
          cIndex := dbOrderInfo( DBOI_FULLPATH )
@@ -246,9 +245,9 @@ FUNCTION Sx_TagCount( xIndex )
 FUNCTION Sx_Tags( xIndex )
    LOCAL aTagNames := {}, nOrder, nTags
    IF Used()
-      IF ISNUMBER( xIndex )
+      IF HB_ISNUMERIC( xIndex )
          nOrder := Sx_TagOrder( 1, xIndex )
-      ELSEIF ISCHARACTER( xIndex ) .AND. !Empty( xIndex )
+      ELSEIF HB_ISSTRING( xIndex ) .AND. !Empty( xIndex )
          nOrder := dbOrderInfo( DBOI_BAGORDER, xIndex )
       ELSE
          nOrder := OrdNumber()
@@ -265,10 +264,10 @@ FUNCTION Sx_Tags( xIndex )
 FUNCTION Sx_SetTag( xTag, xIndex )
    LOCAL lRet := .F., nOrder := 0, nOldOrd, cIndex
    IF Used() .AND. ValType( xTag ) $ "CN"
-      IF ISNUMBER( xTag )
+      IF HB_ISNUMERIC( xTag )
          IF Empty( xIndex ) .OR. !ValType( xIndex ) $ "CN"
             nOrder := xTag
-         ELSEIF ISCHARACTER( xIndex )
+         ELSEIF HB_ISSTRING( xIndex )
             IF xTag >= 1 .AND. xTag <= ordCount( xIndex )
                nOrder := dbOrderInfo( DBOI_BAGORDER, xIndex ) + xTag - 1
             ENDIF
@@ -278,7 +277,7 @@ FUNCTION Sx_SetTag( xTag, xIndex )
       ELSE
          IF Empty( xIndex ) .OR. !ValType( xIndex ) $ "CN"
             nOrder := OrdNumber( xTag )
-         ELSEIF ISCHARACTER( xIndex )
+         ELSEIF HB_ISSTRING( xIndex )
             nOrder := Sx_TagOrder( xTag, xIndex )
          ELSE
             nOrder := Sx_TagOrder( 1, xIndex )
@@ -308,13 +307,13 @@ FUNCTION Sx_SetTag( xTag, xIndex )
 
 FUNCTION Sx_KillTag( xTag, xIndex )
    LOCAL lRet := .F., nOrder, cIndex
-   IF ISLOGICAL( xTag )
+   IF HB_ISLOGICAL( xTag )
       IF xTag
          IF Empty( xIndex )
             cIndex := Sx_IndexName()
-         ELSEIF ISNUMBER( xIndex )
+         ELSEIF HB_ISNUMERIC( xIndex )
             cIndex := Sx_IndexName( 1, xIndex )
-         ELSEIF ISCHARACTER( xIndex )
+         ELSEIF HB_ISSTRING( xIndex )
             nOrder := dbOrderInfo( DBOI_BAGORDER, xIndex )
             IF nOrder != 0
                cIndex := dbOrderInfo( DBOI_FULLPATH,, nOrder )
@@ -327,10 +326,10 @@ FUNCTION Sx_KillTag( xTag, xIndex )
          ENDIF
       ENDIF
    ELSE
-      IF ISNUMBER( xTag )
+      IF HB_ISNUMERIC( xTag )
          IF Empty( xIndex ) .OR. !ValType( xIndex ) $ "CN"
             nOrder := xTag
-         ELSEIF ISCHARACTER( xIndex )
+         ELSEIF HB_ISSTRING( xIndex )
             IF xTag >= 1 .AND. xTag <= ordCount( xIndex )
                nOrder := dbOrderInfo( DBOI_BAGORDER, xIndex ) + xTag - 1
             ELSE
@@ -342,7 +341,7 @@ FUNCTION Sx_KillTag( xTag, xIndex )
       ELSE
          IF Empty( xIndex ) .OR. !ValType( xIndex ) $ "CN"
             nOrder := OrdNumber( xTag )
-         ELSEIF ISCHARACTER( xIndex )
+         ELSEIF HB_ISSTRING( xIndex )
             nOrder := Sx_TagOrder( xTag, xIndex )
          ELSE
             nOrder := Sx_TagOrder( 1, xIndex )
@@ -366,7 +365,7 @@ FUNCTION Sx_FileOrder()
    RETURN dbOrderInfo( DBOI_BAGNUMBER )
 
 FUNCTION Sx_SetFileOrd( nIndex )
-   RETURN iif( ISNUMBER( nIndex ), ;
+   RETURN iif( HB_ISNUMERIC( nIndex ), ;
                OrdSetFocus( Sx_TagOrder( 1, nIndex ) ), ;
                OrdSetFocus() )
 
@@ -376,7 +375,7 @@ FUNCTION RDD_Count()
 FUNCTION RDD_Name( nRDD )
    LOCAL aRDD
 
-   IF ISNUMBER( nRDD ) .AND. nRDD >= 1
+   IF HB_ISNUMERIC( nRDD ) .AND. nRDD >= 1
       aRDD := RDDList()
       IF nRDD <= Len( aRDD )
          RETURN aRDD[ nRDD ]
@@ -387,11 +386,11 @@ FUNCTION RDD_Name( nRDD )
 FUNCTION RDD_Info( xID )
    LOCAL aInfo, cRDD
 
-   IF ISNUMBER( xID )
+   IF HB_ISNUMERIC( xID )
       IF !Empty( Alias( xID ) )
          ( xID )->( rddName() )
       ENDIF
-   ELSEIF ISCHARACTER( xID )
+   ELSEIF HB_ISSTRING( xID )
       cRDD := Upper( AllTrim( xID ) )
       IF AScan( rddList(), {|x| Upper( x ) == cRDD } ) == 0
          cRDD := NIL
@@ -478,9 +477,9 @@ FUNCTION Sx_VSigLen( xField )
    LOCAL nResult := 0, nField := 0
 
    IF Used()
-      IF ISCHARACTER( xField )
+      IF HB_ISSTRING( xField )
          nField := FieldPos( xField )
-      ELSEIF ISNUMBER( xField )
+      ELSEIF HB_ISNUMERIC( xField )
          nField := xField
       ENDIF
       IF nField >= 1 .AND. nField <= FCount()
@@ -526,9 +525,9 @@ FUNCTION Sx_IsLocked( xRec )
 FUNCTION Sx_SetTrigger( nAction, cTriggerName, cRDD /* Harbour extensions */ )
    LOCAL cPrevTrigger := ""
 
-   IF ISNUMBER( nAction )
+   IF HB_ISNUMERIC( nAction )
       IF nAction == TRIGGER_PENDING
-         IF ISCHARACTER( cTriggerName )
+         IF HB_ISSTRING( cTriggerName )
             hb_rddInfo( RDDI_PENDINGTRIGGER, cTriggerName, cRDD )
          ENDIF
       ELSEIF Used()
@@ -544,7 +543,7 @@ FUNCTION Sx_SetTrigger( nAction, cTriggerName, cRDD /* Harbour extensions */ )
                dbInfo( DBI_TRIGGER, "" )
                EXIT
             CASE TRIGGER_INSTALL
-               IF ISCHARACTER( cTriggerName )
+               IF HB_ISSTRING( cTriggerName )
                   dbInfo( DBI_TRIGGER, cTriggerName )
                ENDIF
                EXIT

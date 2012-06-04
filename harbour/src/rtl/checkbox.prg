@@ -122,7 +122,7 @@ METHOD setFocus() CLASS CHECKBOX
       ::lHasFocus := .T.
       ::display()
 
-      IF ISBLOCK( ::bFBlock )
+      IF HB_ISBLOCK( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
    ENDIF
@@ -133,12 +133,12 @@ METHOD select( lState ) CLASS CHECKBOX
 
    LOCAL lOldState := ::lBuffer
 
-   ::lBuffer := iif( ISLOGICAL( lState ), lState, !::lBuffer )
+   ::lBuffer := iif( HB_ISLOGICAL( lState ), lState, !::lBuffer )
 
    IF lOldState != ::lBuffer
       ::display()
 
-      IF ISBLOCK( ::bSBlock )
+      IF HB_ISBLOCK( ::bSBlock )
          Eval( ::bSBlock )
       ENDIF
    ENDIF
@@ -150,7 +150,7 @@ METHOD killFocus() CLASS CHECKBOX
    IF ::lHasFocus
       ::lHasFocus := .F.
 
-      IF ISBLOCK( ::bFBlock )
+      IF HB_ISBLOCK( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
 

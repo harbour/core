@@ -156,7 +156,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
    oCol:ColorBlock := { || { iif( ::Arrayindex == oBrwSets:Cargo, 2, 1 ), 2 } }
    oBrwSets:Freeze := 1
 
-   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", { || iif( ISCHARACTER( ::ArrayReference[ ::ArrayIndex, 2 ] ) .AND. !::ArrayReference[ ::ArrayIndex, 3 ],;
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", { || iif( HB_ISSTRING( ::ArrayReference[ ::ArrayIndex, 2 ] ) .AND. !::ArrayReference[ ::ArrayIndex, 3 ],;
       ::ArrayReference[ ::ArrayIndex, 2 ],;
       PadR( __dbgValToStr( __dbgObjGetValue( ::TheObj, ::ArrayReference[ ::arrayindex, 1 ] ) ), nWidth  - 12 ) ) } ) )
 
@@ -263,20 +263,20 @@ METHOD SetsKeyPressed( nKey, oBrwSets, nSets, aArray ) CLASS HBDbObject
    CASE nKey == K_ENTER
 
       IF nSet == oBrwSets:Cargo
-         IF ISARRAY( aArray[ nSet, 2 ] )
+         IF HB_ISARRAY( aArray[ nSet, 2 ] )
             IF Len( aArray[ nSet, 2 ] ) > 0
                HBDbArray():New( aArray[ nSet, 2 ], ::pitems[ nSet, 1 ] )
             ENDIF
-         ELSEIF hb_isHash( aArray[ nSet, 2 ] )
+         ELSEIF HB_ISHASH( aArray[ nSet, 2 ] )
             IF Len( aArray[ nSet, 2 ] ) > 0
                HBDbHash():New( aArray[ nSet, 2 ], ::pitems[ nSet, 1 ] )
             ENDIF
-         ELSEIF ISOBJECT( aArray[ nSet, 2 ] )
+         ELSEIF HB_ISOBJECT( aArray[ nSet, 2 ] )
             HBDbObject():New( aArray[ nSet, 2 ], ::pitems[ nSet, 1 ] )
-         ELSEIF ( ISCHARACTER( aArray[ nSet, 2 ] ) .AND. ;
+         ELSEIF ( HB_ISSTRING( aArray[ nSet, 2 ] ) .AND. ;
                   !aArray[ nSet, 3 ] ) .OR. ;
-                ISBLOCK( aArray[ nSet, 2 ] ) .OR. ;
-                hb_isPointer( aArray[ nSet, 2 ] )
+                HB_ISBLOCK( aArray[ nSet, 2 ] ) .OR. ;
+                HB_ISPOINTER( aArray[ nSet, 2 ] )
             __dbgAlert( "Value cannot be edited" )
          ELSE
             IF ::lEditable

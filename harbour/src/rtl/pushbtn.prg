@@ -123,7 +123,7 @@ METHOD setFocus() CLASS PUSHBUTTON
       ::lHasFocus := .T.
       ::display()
 
-      IF ISBLOCK( ::bFBlock )
+      IF HB_ISBLOCK( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
    ENDIF
@@ -138,7 +138,7 @@ METHOD select( nPos ) CLASS PUSHBUTTON
       ::lbuffer := .T.
       ::display()
 
-      IF ISNUMBER( nPos )
+      IF HB_ISNUMERIC( nPos )
 
          IF nPos == 32
 
@@ -152,7 +152,7 @@ METHOD select( nPos ) CLASS PUSHBUTTON
          ENDIF
       ENDIF
 
-      IF ISBLOCK( ::bSBlock )
+      IF HB_ISBLOCK( ::bSBlock )
          Eval( ::bSBlock )
       ENDIF
 
@@ -167,7 +167,7 @@ METHOD killFocus() CLASS PUSHBUTTON
    IF ::lHasFocus
       ::lHasFocus := .F.
 
-      IF ISBLOCK( ::bFBlock )
+      IF HB_ISBLOCK( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
 
@@ -342,8 +342,8 @@ METHOD New( nRow, nCol, cCaption ) CLASS PUSHBUTTON
 
    LOCAL cColor
 
-   IF !ISNUMBER( nRow ) .OR. ;
-      !ISNUMBER( nCol )
+   IF !HB_ISNUMERIC( nRow ) .OR. ;
+      !HB_ISNUMERIC( nCol )
       RETURN NIL
    ENDIF
 

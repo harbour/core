@@ -58,7 +58,6 @@
 #include "inkey.ch"
 #include "color.ch"
 #include "setcurs.ch"
-#include "common.ch"
 
 
 CREATE CLASS HbDbInput
@@ -92,7 +91,7 @@ METHOD new( nRow, nCol, nWidth, cValue, cColor, nSize ) CLASS HbDbInput
    ::nRow   := nRow
    ::nCol   := nCol
    ::nWidth := nWidth
-   ::nSize  := IIF( ISNUMBER( nSize ), nSize, nWidth )
+   ::nSize  := IIF( HB_ISNUMERIC( nSize ), nSize, nWidth )
    ::cValue := PadR( cValue, ::nSize )
    ::nRow   := nRow
 

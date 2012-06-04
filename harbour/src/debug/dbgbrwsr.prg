@@ -7,9 +7,8 @@
  * The Debugger Browser
  *
  * Copyright 2004 Ryszard Glab <rglab@imid.med.pl>
- * www - http://harbour-project.org
  * Copyright 2007 Phil Krylov <phil a t newstar.rinet.ru>
- * www - http://xharbour.org
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -56,8 +55,6 @@
 
 #define HB_CLS_NOTOBJECT      /* do not inherit from HBObject calss */
 #include "hbclass.ch"
-
-#include "common.ch"
 
 /* HBDbBrowser
  *
@@ -136,7 +133,7 @@ METHOD Configure()
    RETURN Self
 
 METHOD SetColorSpec( cColors )
-   IF ISCHARACTER( cColors )
+   IF HB_ISSTRING( cColors )
       ::cColorSpec := cColors
       ::aColorSpec := hb_aTokens( ::cColorSpec, "," )
    ENDIF
@@ -178,7 +175,7 @@ METHOD ForceStable()
                   xData := Eval( oCol:block )
                   nClr := iif( nRow == ::rowPos, 2, 1 )
                   aClr := Eval( oCol:colorBlock, xData )
-                  IF ISARRAY( aClr )
+                  IF HB_ISARRAY( aClr )
                      nClr := aClr[ nClr ]
                   ELSE
                      nClr := oCol:defColor[ nClr ]

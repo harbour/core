@@ -51,7 +51,6 @@
  */
 
 #include "hbmemvar.ch"
-#include "common.ch"
 #include "error.ch"
 #include "fileio.ch"
 
@@ -93,7 +92,7 @@ FUNCTION HB_MVSAVE( cFileName, cMask, lIncludeMask )
    LOCAL xRecover
    LOCAL nRetries
 
-   IF ISCHARACTER( cFileName )
+   IF HB_ISSTRING( cFileName )
 
       IF Set( _SET_DEFEXTENSIONS )
          hb_FNameSplit( cFileName, NIL, NIL, @cExt )
@@ -102,12 +101,12 @@ FUNCTION HB_MVSAVE( cFileName, cMask, lIncludeMask )
          ENDIF
       ENDIF
 
-      IF ! ISCHARACTER( cMask ) .OR. ;
+      IF ! HB_ISSTRING( cMask ) .OR. ;
          Empty( cMask ) .OR. Left( cMask, 1 ) == "*"
          cMask := "*"
       ENDIF
 
-      IF ! ISLOGICAL( lIncludeMask )
+      IF ! HB_ISLOGICAL( lIncludeMask )
          lIncludeMask := .T.
       ENDIF
 
@@ -143,7 +142,7 @@ FUNCTION HB_MVSAVE( cFileName, cMask, lIncludeMask )
             oError:tries       := ++nRetries
 
             xRecover := Eval( ErrorBlock(), oError )
-            IF ISLOGICAL( xRecover ) .AND. xRecover
+            IF HB_ISLOGICAL( xRecover ) .AND. xRecover
                LOOP
             ENDIF
          ENDIF
@@ -188,9 +187,9 @@ FUNCTION HB_MVRESTORE( cFileName, lAdditive, cMask, lIncludeMask )
    LOCAL xRecover
    LOCAL nRetries
 
-   IF ISCHARACTER( cFileName )
+   IF HB_ISSTRING( cFileName )
 
-      IF ! ISLOGICAL( lAdditive )
+      IF ! HB_ISLOGICAL( lAdditive )
          lAdditive := .T.
       ENDIF
 
@@ -205,12 +204,12 @@ FUNCTION HB_MVRESTORE( cFileName, lAdditive, cMask, lIncludeMask )
          ENDIF
       ENDIF
 
-      IF ! ISCHARACTER( cFileName ) .OR. ;
+      IF ! HB_ISSTRING( cFileName ) .OR. ;
          Empty( cMask ) .OR. Left( cMask, 1 ) == "*"
          cMask := "*"
       ENDIF
 
-      IF ! ISLOGICAL( lIncludeMask )
+      IF ! HB_ISLOGICAL( lIncludeMask )
          lIncludeMask := .T.
       ENDIF
 
@@ -231,7 +230,7 @@ FUNCTION HB_MVRESTORE( cFileName, lAdditive, cMask, lIncludeMask )
             oError:tries       := ++nRetries
 
             xRecover := Eval( ErrorBlock(), oError )
-            IF ISLOGICAL( xRecover ) .AND. xRecover
+            IF HB_ISLOGICAL( xRecover ) .AND. xRecover
                LOOP
             ENDIF
          ENDIF
@@ -256,10 +255,10 @@ FUNCTION HB_MVRESTORE( cFileName, lAdditive, cMask, lIncludeMask )
          aVars := hb_deserialize( cBuffer )
          cBuffer := NIL
 
-         IF ISARRAY( aVars )
+         IF HB_ISARRAY( aVars )
             FOR EACH item IN aVars
-               IF ISARRAY( item ) .AND. Len( item ) == 2 .AND. ;
-                  ISCHARACTER( item[ 1 ] ) .AND. ;
+               IF HB_ISARRAY( item ) .AND. Len( item ) == 2 .AND. ;
+                  HB_ISSTRING( item[ 1 ] ) .AND. ;
                   ! Empty( item[ 1 ] )
 
                   cName := item[ 1 ]

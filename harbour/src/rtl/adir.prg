@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "directry.ch"
 
 FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
@@ -69,7 +68,7 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
 
    // ; CA-Cl*pper would fail on this case.
 
-   IF !ISCHARACTER( cFileMask )
+   IF !HB_ISSTRING( cFileMask )
       RETURN 0
    ENDIF
 
@@ -83,25 +82,25 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
 
    // ;
 
-   IF ISARRAY( aAttr )
+   IF HB_ISARRAY( aAttr )
       aDir := Directory( cFileMask, "HSD" )
    ELSE
       aDir := Directory( cFileMask )
    ENDIF
 
-   IF ISARRAY( aName )
+   IF HB_ISARRAY( aName )
       nNameLen := Len( aName )
    ENDIF
-   IF ISARRAY( aSize )
+   IF HB_ISARRAY( aSize )
       nSizeLen := Len( aSize )
    ENDIF
-   IF ISARRAY( aDate )
+   IF HB_ISARRAY( aDate )
       nDateLen := Len( aDate )
    ENDIF
-   IF ISARRAY( aTime )
+   IF HB_ISARRAY( aTime )
       nTimeLen := Len( aTime )
    ENDIF
-   IF ISARRAY( aAttr )
+   IF HB_ISARRAY( aAttr )
       nAttrLen := Len( aAttr )
    ENDIF
 

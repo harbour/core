@@ -52,11 +52,9 @@
 
 #include "hbmemvar.ch"
 
-#include "common.ch"
-
 FUNCTION MEMVARBLOCK( cMemvar )
 
-   IF ISCHARACTER( cMemvar ) .AND. __mvEXIST( cMemvar )
+   IF HB_ISSTRING( cMemvar ) .AND. __mvEXIST( cMemvar )
       RETURN {| x | iif( x == NIL, __mvGET( cMemvar ), __mvPUT( cMemvar, x ) ) }
    ENDIF
 

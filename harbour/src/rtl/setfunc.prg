@@ -51,7 +51,6 @@
  */
 
 #include "inkey.ch"
-#include "common.ch"
 
 PROCEDURE __SetFunction( nFunctionKey, xKeySeq )
 
@@ -67,7 +66,7 @@ PROCEDURE __SetFunction( nFunctionKey, xKeySeq )
    OTHERWISE               ; nFunctionKey := -nFunctionKey + 1
    ENDCASE
 
-   IF ISCHARACTER( xKeySeq )
+   IF HB_ISSTRING( xKeySeq )
       SetKey( nFunctionKey, {|| __Keyboard(), hb_KeyPut( xKeySeq ) } )
    ELSE
       SetKey( nFunctionKey, NIL )

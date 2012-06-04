@@ -24,7 +24,6 @@
  */
 
 #include "box.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 #include "hbgtinfo.ch"
@@ -58,17 +57,17 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
 
 #endif
 
-   IF ! ISCHARACTER( cMessage )
+   IF ! HB_ISSTRING( cMessage )
       RETURN NIL
    ENDIF
 
    cMessage := StrTran( cMessage, ";", Chr( 10 ) )
 
-   IF ! ISARRAY( aOptions )
+   IF ! HB_ISARRAY( aOptions )
       aOptions := {}
    ENDIF
 
-   IF ! ISCHARACTER( cColorNorm ) .OR. Empty( cColorNorm )
+   IF ! HB_ISSTRING( cColorNorm ) .OR. Empty( cColorNorm )
       cColorNorm := "W+/R" // first pair color (Box line and Text)
       cColorHigh := "W+/B" // second pair color (Options buttons)
    ELSE
@@ -78,7 +77,7 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
 
    aOptionsOK := {}
    FOR nEval := 1 TO Len( aOptions )
-      IF ISCHARACTER( aOptions[ nEval ] ) .AND. ! Empty( aOptions[ nEval ] )
+      IF HB_ISSTRING( aOptions[ nEval ] ) .AND. ! Empty( aOptions[ nEval ] )
          AAdd( aOptionsOK, aOptions[ nEval ] )
       ENDIF
    NEXT
@@ -119,22 +118,22 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
       RETURN NIL
    ENDIF
 
-   IF ISARRAY( xMessage )
+   IF HB_ISARRAY( xMessage )
       cMessage := ""
       FOR nEval := 1 TO Len( xMessage )
          cMessage += iif( nEval == 1, "", Chr( 10 ) ) + hb_CStr( xMessage[ nEval ] )
       NEXT
-   ELSEIF ISCHARACTER( xMessage )
+   ELSEIF HB_ISSTRING( xMessage )
       cMessage := StrTran( xMessage, ";", Chr( 10 ) )
    ELSE
       cMessage := hb_CStr( xMessage )
    ENDIF
 
-   IF ! ISARRAY( aOptions )
+   IF ! HB_ISARRAY( aOptions )
       aOptions := {}
    ENDIF
 
-   IF !ISCHARACTER( cColorNorm ) .OR. Empty( cColorNorm )
+   IF !HB_ISSTRING( cColorNorm ) .OR. Empty( cColorNorm )
       cColorNorm := "W+/R" // first pair color (Box line and Text)
       cColorHigh := "W+/B" // second pair color (Options buttons)
    ELSE
@@ -144,7 +143,7 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
 
    aOptionsOK := {}
    FOR nEval := 1 TO Len( aOptions )
-      IF ISCHARACTER( aOptions[ nEval ] ) .AND. ! Empty( aOptions[ nEval ] )
+      IF HB_ISSTRING( aOptions[ nEval ] ) .AND. ! Empty( aOptions[ nEval ] )
          AAdd( aOptionsOK, aOptions[ nEval ] )
       ENDIF
    NEXT

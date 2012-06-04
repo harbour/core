@@ -74,7 +74,6 @@
  *
  */
 
-#include "common.ch"
 #include "fileio.ch"
 
 
@@ -84,11 +83,11 @@ STATIC s_cHalfLineComment := "#"
 
 PROCEDURE hb_IniSetComment( cLc, cHlc )
 
-   IF ISCHARACTER( cLc )
+   IF HB_ISSTRING( cLc )
       s_cLineComment := cLc
    ENDIF
 
-   IF ISCHARACTER( cHlc )
+   IF HB_ISSTRING( cHlc )
       s_cHalfLineComment := cHlc
    ENDIF
 
@@ -99,7 +98,7 @@ FUNCTION HB_IniNew( lAutoMain )
 
    hb_HKeepOrder( hIni, .T. )
 
-   IF ! ISLOGICAL( lAutoMain )
+   IF ! HB_ISLOGICAL( lAutoMain )
       lAutoMain := .T.
    ENDIF
 
@@ -111,7 +110,7 @@ FUNCTION HB_IniNew( lAutoMain )
    RETURN hIni
 
 FUNCTION hb_IniRead( cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
-   RETURN hb_IniReadStr( iif( ISCHARACTER( cFileSpec ), hb_IniFileLow( cFileSpec ), "" ), lKeyCaseSens, cSplitters, lAutoMain )
+   RETURN hb_IniReadStr( iif( HB_ISSTRING( cFileSpec ), hb_IniFileLow( cFileSpec ), "" ), lKeyCaseSens, cSplitters, lAutoMain )
 
 FUNCTION hb_IniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
    LOCAL hIni := { => }
@@ -119,16 +118,16 @@ FUNCTION hb_IniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
    hb_HKeepOrder( hIni, .T. )
 
    /* Default case sensitiveness for keys */
-   IF ! ISLOGICAL( lKeyCaseSens )
+   IF ! HB_ISLOGICAL( lKeyCaseSens )
       lKeyCaseSens := .T.
    ENDIF
-   IF ! ISCHARACTER( cSplitters )
+   IF ! HB_ISSTRING( cSplitters )
       cSplitters := "="
    ENDIF
-   IF ! ISLOGICAL( lAutoMain )
+   IF ! HB_ISLOGICAL( lAutoMain )
       lAutoMain := .T.
    ENDIF
-   IF ! ISCHARACTER( cData )
+   IF ! HB_ISSTRING( cData )
       cData := ""
    ENDIF
 
@@ -299,14 +298,14 @@ FUNCTION hb_IniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
    cBuffer := hb_IniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
 
    // if cBuffer == NIL I have to stop here
-   IF !ISCHARACTER( cBuffer )
+   IF !HB_ISSTRING( cBuffer )
       RETURN .F.
    ENDIF
 
-   IF ISCHARACTER( xFileName )
+   IF HB_ISSTRING( xFileName )
       hFile := FCreate( xFileName )
       lClose := .T.
-   ELSEIF ISNUMBER( xFileName )
+   ELSEIF HB_ISNUMERIC( xFileName )
       hFile := xFileName
       lClose := .F.
    ELSE
@@ -339,11 +338,11 @@ FUNCTION hb_IniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
       RETURN NIL
    ENDIF
 
-   IF ISCHARACTER( cCommentBegin ) .AND. ! Empty( cCommentBegin )
+   IF HB_ISSTRING( cCommentBegin ) .AND. ! Empty( cCommentBegin )
       cBuffer += cCommentBegin + cNewLine
    ENDIF
 
-   IF ! ISLOGICAL( lAutoMain )
+   IF ! HB_ISLOGICAL( lAutoMain )
       lAutoMain := .T.
    ENDIF
 
@@ -361,7 +360,7 @@ FUNCTION hb_IniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
 
    ELSE
       /* When automain is off, just write all the toplevel variables. */
-      hb_HEval( hIni, { |cKey, xVal| iif( ! hb_isHash( xVal ),;
+      hb_HEval( hIni, { |cKey, xVal| iif( ! HB_ISHASH( xVal ),;
                 cBuffer += hb_CStr( cKey ) + " = " + ;
                            hb_CStr( xVal ) + cNewLine, /* nothing */ ) } )
    ENDIF
@@ -376,7 +375,7 @@ FUNCTION hb_IniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
          ENDIF
       ELSE
          /* When automain is off, skip all the toplevel variables. */
-         IF ! hb_isHash( cSection )
+         IF ! HB_ISHASH( cSection )
             LOOP
          ENDIF
       ENDIF
@@ -388,7 +387,7 @@ FUNCTION hb_IniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
                                           hb_CStr( xVal ) + cNewLine } )
    NEXT
 
-   IF ISCHARACTER( cCommentEnd ) .AND. ! Empty( cCommentEnd )
+   IF HB_ISSTRING( cCommentEnd ) .AND. ! Empty( cCommentEnd )
       cBuffer += cCommentEnd + cNewLine
    ENDIF
 

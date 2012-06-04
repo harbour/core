@@ -201,7 +201,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
       oBrwSets:PageUp()
 
    CASE nKey == K_ENTER
-      IF ISARRAY( aArray[ nSet ] )
+      IF HB_ISARRAY( aArray[ nSet ] )
          IF Len( aArray[ nSet ] ) == 0
             __dbgAlert( "Array is empty" )
          ELSE
@@ -219,14 +219,14 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
                ::nCurWindow--
             ENDIF
          ENDIF
-      ELSEIF ISBLOCK( aArray[ nSet ] ) .OR. hb_isPointer( aArray[ nSet ] )
+      ELSEIF HB_ISBLOCK( aArray[ nSet ] ) .OR. HB_ISPOINTER( aArray[ nSet ] )
          __dbgAlert( "Value cannot be edited" )
       ELSE
          IF ::lEditable
             oBrwSets:RefreshCurrent()
-            IF ISOBJECT( aArray[ nSet ] )
+            IF HB_ISOBJECT( aArray[ nSet ] )
                __DbgObject( aArray[ nSet ], cName + "[" + hb_NToS( nSet ) + "]" )
-            ELSEIF hb_isHash( aArray[ nSet ] )
+            ELSEIF HB_ISHASH( aArray[ nSet ] )
                __DbgHashes( aArray[ nSet ], cName + "[" + hb_NToS( nSet ) + "]" )
             ELSE
                ::doGet( oBrwsets, aArray, nSet )

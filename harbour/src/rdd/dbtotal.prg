@@ -81,19 +81,19 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
    LOCAL oError
    LOCAL lError := .F.
 
-   IF ISCHARACTER( xWhile )
+   IF HB_ISSTRING( xWhile )
       bWhileBlock := hb_macroBlock( xWhile )
       lRest := .T.
-   ELSEIF ISBLOCK( xWhile )
+   ELSEIF HB_ISBLOCK( xWhile )
       bWhileBlock := xWhile
       lRest := .T.
    ELSE
       bWhileBlock := {|| .T. }
    ENDIF
 
-   IF ISCHARACTER( xFor )
+   IF HB_ISSTRING( xFor )
       bForBlock := hb_macroBlock( xFor )
-   ELSEIF ISBLOCK( xFor )
+   ELSEIF HB_ISBLOCK( xFor )
       bForBlock := xFor
    ELSE
       bForBlock := {|| .T. }
@@ -129,9 +129,9 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
          xKey := ordKey()
       ENDIF
 
-      IF ISCHARACTER( xKey )
+      IF HB_ISSTRING( xKey )
          bKeyBlock := hb_macroBlock( xKey )
-      ELSEIF ISBLOCK( xKey )
+      ELSEIF HB_ISBLOCK( xKey )
          bKeyBlock := xKey
       ELSE
          bKeyBlock := {|| .T. }
@@ -214,7 +214,7 @@ STATIC FUNCTION __GetField( cField )
          oError:subCode    := 1101
 
          lError := Eval( ErrorBlock(), oError )
-         IF !ISLOGICAL( lError ) .OR. lError
+         IF !HB_ISLOGICAL( lError ) .OR. lError
             __ErrInHandler()
          ENDIF
 

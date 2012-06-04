@@ -98,7 +98,6 @@
 
 #include "hbclass.ch"
 #include "fileio.ch"
-#include "common.ch"
 
 #ifdef __TEST__
 
@@ -611,7 +610,7 @@ METHOD emitLine( oEntity ) CLASS HBProfileReport
 METHOD generate( bFilter ) CLASS HBProfileReport
    LOCAL lProfile := __setProfiler( .F. )
 
-   IF ! ISBLOCK( bFilter )
+   IF ! HB_ISBLOCK( bFilter )
       bFilter := {|| .T. }
    ENDIF
 
@@ -651,7 +650,7 @@ METHOD writeLines( aLines ) CLASS HBProfileReportToFile
 METHOD generate( bFilter, cFile ) CLASS HBProfileReportToFile
    LOCAL lProfile := __setProfiler( .F. )
 
-   IF ! ISCHARACTER( cFile )
+   IF ! HB_ISSTRING( cFile )
       cFile := "hbprof.txt"
    ENDIF
 

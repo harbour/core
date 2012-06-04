@@ -53,7 +53,6 @@
 #ifdef HB_COMPAT_C53
 
 #include "button.ch"
-#include "common.ch"
 #include "tbrowse.ch"
 
 FUNCTION TApplyKey( nKey, oBrowse )

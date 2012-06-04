@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "fileio.ch"
 
 #define _I18N_NONE         0
@@ -326,10 +325,10 @@ FUNCTION __I18N_POTARRAYSAVE( cFile, aTrans, cErrorMsg, lVersionNo, lSourceRef )
    LOCAL cEol, cPOT, cFlg
    LOCAL msg
 
-   IF ! ISLOGICAL( lVersionNo )
+   IF ! HB_ISLOGICAL( lVersionNo )
       lVersionNo := .T.
    ENDIF
-   IF ! ISLOGICAL( lSourceRef )
+   IF ! HB_ISLOGICAL( lSourceRef )
       lSourceRef := .T.
    ENDIF
 
@@ -443,10 +442,10 @@ FUNCTION __I18N_POTARRAYTRANS( aTrans, hI18N )
             IF aItem[ _I18N_MSGID, 1 ] $ hContext
                xTrans := hContext[ aItem[ _I18N_MSGID, 1 ] ]
                IF aItem[ _I18N_PLURAL ]
-                  aItem[ _I18N_MSGSTR ] := IIF( HB_ISARRAY( xTrans ), ;
+                  aItem[ _I18N_MSGSTR ] := iif( HB_ISARRAY( xTrans ), ;
                                                 AClone( xTrans ), { xTrans } )
                ELSE
-                  aItem[ _I18N_MSGSTR ] := IIF( HB_ISARRAY( xTrans ), ;
+                  aItem[ _I18N_MSGSTR ] := iif( HB_ISARRAY( xTrans ), ;
                                                 { xTrans[ 1 ] }, { xTrans } )
                ENDIF
             ENDIF
@@ -471,7 +470,7 @@ FUNCTION __I18N_HASHJOIN( hTrans, hTrans2 )
             IF !Empty( xTrans ) .AND. ;
                ( ! xTrans:__enumKey() $ hDstCtx .OR. ;
                  Empty( hDstCtx[ xTrans:__enumKey() ] ) )
-               hDstCtx[ xTrans:__enumKey() ] := IIF( HB_ISARRAY( xTrans ), ;
+               hDstCtx[ xTrans:__enumKey() ] := iif( HB_ISARRAY( xTrans ), ;
                                                      AClone( xTrans ), xTrans )
             ENDIF
          NEXT

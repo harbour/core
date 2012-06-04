@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "dbinfo.ch"
 
 /* NOTE: The fifth parameters (cOrderName) is undocumented. */
@@ -69,7 +68,7 @@ FUNCTION dbReindex()
 
 PROCEDURE dbSetOrder( nOrderNum )
 
-   IF ISCHARACTER( nOrderNum ) .AND. !Empty( Val( nOrderNum ) )
+   IF HB_ISSTRING( nOrderNum ) .AND. !Empty( Val( nOrderNum ) )
       nOrderNum := Val( nOrderNum )
    ENDIF
 
@@ -82,7 +81,7 @@ FUNCTION IndexExt()
 
 FUNCTION IndexKey( nOrder )
 
-   IF !ISNUMBER( nOrder )
+   IF !HB_ISNUMERIC( nOrder )
       RETURN ordKey( nOrder )
    ENDIF
 

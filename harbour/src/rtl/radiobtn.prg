@@ -54,7 +54,6 @@
 
 #include "button.ch"
 #include "color.ch"
-#include "common.ch"
 
 /* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
@@ -118,7 +117,7 @@ METHOD setFocus() CLASS RADIOBUTTN
       ::lHasFocus := .T.
       ::display()
 
-      IF ISBLOCK( ::bFBlock )
+      IF HB_ISBLOCK( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
    ENDIF
@@ -129,10 +128,10 @@ METHOD select( lState ) CLASS RADIOBUTTN
 
    LOCAL lOldState := ::lBuffer
 
-   ::lBuffer := iif( ISLOGICAL( lState ), lState, !::lBuffer )
+   ::lBuffer := iif( HB_ISLOGICAL( lState ), lState, !::lBuffer )
 
    IF lOldState != ::lBuffer .AND. ;
-      ISBLOCK( ::bSBlock )
+      HB_ISBLOCK( ::bSBlock )
 
       Eval( ::bSBlock )
    ENDIF
@@ -144,7 +143,7 @@ METHOD killFocus() CLASS RADIOBUTTN
    IF ::lHasFocus
       ::lHasFocus := .F.
 
-      IF ISBLOCK( ::bFBlock )
+      IF HB_ISBLOCK( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
 
@@ -191,9 +190,9 @@ METHOD isAccel( xKey ) CLASS RADIOBUTTN
 
    LOCAL cKey
 
-   IF ISCHARACTER( xKey )
+   IF HB_ISSTRING( xKey )
       cKey := xKey
-   ELSEIF ISNUMBER( xKey )
+   ELSEIF HB_ISNUMERIC( xKey )
       cKey := hb_KeyChar( xKey )
    ELSE
       RETURN .F.
@@ -325,12 +324,12 @@ METHOD New( nRow, nCol, cCaption, cData ) CLASS RADIOBUTTN
 
    LOCAL cColor
 
-   IF !ISNUMBER( nRow ) .OR. ;
-      !ISNUMBER( nCol )
+   IF !HB_ISNUMERIC( nRow ) .OR. ;
+      !HB_ISNUMERIC( nCol )
       RETURN NIL
    ENDIF
 
-   IF !ISCHARACTER( cCaption )
+   IF !HB_ISSTRING( cCaption )
       cCaption := ""
    ENDIF
 

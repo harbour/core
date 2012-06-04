@@ -51,7 +51,6 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
 
 REQUEST ARRAY
 
@@ -138,11 +137,11 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
    LOCAL cObject
    LOCAL cType
 
-   IF ! ISCHARACTER( cObjectName )
+   IF ! HB_ISSTRING( cObjectName )
       cObjectName := "o" + ::ClassName()
    ENDIF
 
-   IF ISNUMBER( nIndent )
+   IF HB_ISNUMERIC( nIndent )
       nIndent += 3
    ELSE
       nIndent := 0

@@ -137,7 +137,7 @@ ENDCLASS
 
 METHOD addItem( oRadioButton ) CLASS RADIOGROUP
 
-   IF ISOBJECT( oRadioButton ) .AND. oRadioButton:ClassName() == "RADIOBUTTN"
+   IF HB_ISOBJECT( oRadioButton ) .AND. oRadioButton:ClassName() == "RADIOBUTTN"
       AAdd( ::aItems, oRadioButton )
       ::nItemCount++
    ENDIF
@@ -154,7 +154,7 @@ METHOD delItem( nPos ) CLASS RADIOGROUP
    IF ::lHasFocus .AND. ::nItemCount < ::nValue
       ::nValue := ::nItemCount
       ::cTextValue := ::aItems[ ::nValue ]:data
-      ::xBuffer := iif( ISNUMBER( ::xBuffer ), ::nValue, ::cTextValue )
+      ::xBuffer := iif( HB_ISNUMERIC( ::xBuffer ), ::nValue, ::cTextValue )
    ENDIF
 
    RETURN Self
@@ -210,9 +210,9 @@ METHOD getAccel( xValue ) CLASS RADIOGROUP
 
    LOCAL cValue
 
-   IF ISCHARACTER( xValue )
+   IF HB_ISSTRING( xValue )
       cValue := xValue
-   ELSEIF ISNUMBER( xValue )
+   ELSEIF HB_ISNUMERIC( xValue )
       cValue := hb_KeyChar( xValue )
    ELSE
       RETURN 0
@@ -300,7 +300,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS RADIOGROUP
 
 METHOD insItem( nPos, oRadioButton ) CLASS RADIOGROUP
 
-   IF ISOBJECT( oRadioButton ) .AND. oRadioButton:ClassName() == "RADIOBUTTN" .AND. ;
+   IF HB_ISOBJECT( oRadioButton ) .AND. oRadioButton:ClassName() == "RADIOBUTTN" .AND. ;
       nPos < ::nItemCount
 
       ASize( ::aItems, ++::nItemCount )
@@ -322,7 +322,7 @@ METHOD killFocus() CLASS RADIOGROUP
 
       ::lHasFocus := .F.
 
-      IF ISBLOCK( ::bFBlock )
+      IF HB_ISBLOCK( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
 
@@ -378,7 +378,7 @@ METHOD setFocus() CLASS RADIOGROUP
 
       MSetCursor( nOldMCur )
 
-      IF ISBLOCK( ::bFBlock )
+      IF HB_ISBLOCK( ::bFBlock )
          Eval( ::bFBlock )
       ENDIF
    ENDIF
@@ -491,7 +491,7 @@ METHOD changeButton( nUnselect, nSelect ) CLASS RADIOGROUP
 
       ::nValue := nSelect
       ::cTextValue := ::aItems[ nSelect ]:data
-      ::xBuffer := iif( ISNUMBER( ::xBuffer ), nSelect, ::cTextValue )
+      ::xBuffer := iif( HB_ISNUMERIC( ::xBuffer ), nSelect, ::cTextValue )
 
    ENDIF
 
@@ -618,10 +618,10 @@ METHOD New( nTop, nLeft, nBottom, nRight ) CLASS RADIOGROUP
 
    LOCAL cColor
 
-   IF !ISNUMBER( nTop ) .OR. ;
-      !ISNUMBER( nLeft ) .OR. ;
-      !ISNUMBER( nBottom ) .OR. ;
-      !ISNUMBER( nRight )
+   IF !HB_ISNUMERIC( nTop ) .OR. ;
+      !HB_ISNUMERIC( nLeft ) .OR. ;
+      !HB_ISNUMERIC( nBottom ) .OR. ;
+      !HB_ISNUMERIC( nRight )
       RETURN NIL
    ENDIF
 

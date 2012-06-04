@@ -52,7 +52,6 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
 #include "inkey.ch"
 #include "memoedit.ch"
 #include "setcurs.ch"
@@ -84,7 +83,7 @@ METHOD MemoInit( xUserFunction ) CLASS HBMemoEditor
    // Save/Init object internal representation of user function
    ::xUserFunction := xUserFunction
 
-   IF ISCHARACTER( ::xUserFunction )
+   IF HB_ISSTRING( ::xUserFunction )
       // Keep calling user function until it returns ME_DEFAULT
       DO WHILE ( nKey := ::xDo( ME_INIT ) ) != ME_DEFAULT
 
@@ -110,7 +109,7 @@ METHOD Edit() CLASS HBMemoEditor
 
    // If I have an user function I need to trap configurable keys and ask to
    // user function if handle them the standard way or not
-   IF ::lEditAllow .AND. ISCHARACTER( ::xUserFunction )
+   IF ::lEditAllow .AND. HB_ISSTRING( ::xUserFunction )
 
       DO WHILE ! ::lExitEdit
 
@@ -151,7 +150,7 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
    LOCAL nRow
    LOCAL nCol
 
-   IF ISCHARACTER( ::xUserFunction )
+   IF HB_ISSTRING( ::xUserFunction )
       IF ! ::lCallKeyboardHook // To avoid recursive calls in endless loop. [jarabal]
          ::lCallKeyboardHook := .T.
          ::HandleUserKey( nKey, ::xDo( iif( ::lDirty, ME_UNKEYX, ME_UNKEY ) ) )
@@ -188,7 +187,7 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
 
 METHOD IdleHook() CLASS HBMemoEditor
 
-   IF ISCHARACTER( ::xUserFunction )
+   IF HB_ISSTRING( ::xUserFunction )
       ::xDo( ME_IDLE )
    ENDIF
 
@@ -250,7 +249,7 @@ METHOD xDo( nStatus ) CLASS HBMemoEditor
 
    LOCAL xResult := Do( ::xUserFunction, nStatus, ::nRow, ::nCol - 1 )
 
-   IF ! ISNUMBER( xResult )
+   IF ! HB_ISNUMERIC( xResult )
       xResult := ME_DEFAULT
    ENDIF
 
@@ -292,25 +291,25 @@ FUNCTION MemoEdit( cString,;
 
    LOCAL nOldCursor
 
-   IF ! ISNUMBER( nTop )            ; nTop            := 0                  ; ENDIF
-   IF ! ISNUMBER( nLeft )           ; nLeft           := 0                  ; ENDIF
-   IF ! ISNUMBER( nBottom )         ; nBottom         := MaxRow()           ; ENDIF
-   IF ! ISNUMBER( nRight )          ; nRight          := MaxCol()           ; ENDIF
-   IF ! ISLOGICAL( lEditMode )      ; lEditMode       := .T.                ; ENDIF
-   IF ! ISNUMBER( nLineLength )     ; nLineLength     := nRight - nLeft + 1 ; ENDIF
-   IF ! ISNUMBER( nTabSize )        ; nTabSize        := 4                  ; ENDIF
-   IF ! ISNUMBER( nTextBuffRow )    ; nTextBuffRow    := 1                  ; ENDIF
-   IF ! ISNUMBER( nTextBuffColumn ) ; nTextBuffColumn := 0                  ; ENDIF
-   IF ! ISNUMBER( nWindowRow )      ; nWindowRow      := 0                  ; ENDIF
-   IF ! ISNUMBER( nWindowColumn )   ; nWindowColumn   := nTextBuffColumn    ; ENDIF
-   IF ! ISCHARACTER( cString )      ; cString         := ""                 ; ENDIF
+   IF ! HB_ISNUMERIC( nTop )            ; nTop            := 0                  ; ENDIF
+   IF ! HB_ISNUMERIC( nLeft )           ; nLeft           := 0                  ; ENDIF
+   IF ! HB_ISNUMERIC( nBottom )         ; nBottom         := MaxRow()           ; ENDIF
+   IF ! HB_ISNUMERIC( nRight )          ; nRight          := MaxCol()           ; ENDIF
+   IF ! HB_ISLOGICAL( lEditMode )       ; lEditMode       := .T.                ; ENDIF
+   IF ! HB_ISNUMERIC( nLineLength )     ; nLineLength     := nRight - nLeft + 1 ; ENDIF
+   IF ! HB_ISNUMERIC( nTabSize )        ; nTabSize        := 4                  ; ENDIF
+   IF ! HB_ISNUMERIC( nTextBuffRow )    ; nTextBuffRow    := 1                  ; ENDIF
+   IF ! HB_ISNUMERIC( nTextBuffColumn ) ; nTextBuffColumn := 0                  ; ENDIF
+   IF ! HB_ISNUMERIC( nWindowRow )      ; nWindowRow      := 0                  ; ENDIF
+   IF ! HB_ISNUMERIC( nWindowColumn )   ; nWindowColumn   := nTextBuffColumn    ; ENDIF
+   IF ! HB_ISSTRING( cString )          ; cString         := ""                 ; ENDIF
 
    // Original MemoEdit() converts Tabs into spaces;
    oEd := HBMemoEditor():New( StrTran( cString, Chr( K_TAB ), Space( 1 ) ), nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextBuffRow, nTextBuffColumn, nWindowRow, nWindowColumn )
    oEd:MemoInit( xUserFunction )
    oEd:display()
 
-   IF ! ISLOGICAL( xUserFunction ) .OR. xUserFunction == .T.
+   IF ! HB_ISLOGICAL( xUserFunction ) .OR. xUserFunction == .T.
       nOldCursor := SetCursor( iif( Set( _SET_INSERT ), SC_INSERT, SC_NORMAL ) )
       oEd:Edit()
       IF oEd:Changed() .AND. oEd:Saved()

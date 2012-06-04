@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "error.ch"
 #include "fileio.ch"
 
@@ -73,11 +72,11 @@ PROCEDURE __TypeFile( cFile, lPrint )
    LOCAL aPath
    LOCAL i
 
-   IF ! ISLOGICAL( lPrint )
+   IF ! HB_ISLOGICAL( lPrint )
       lPrint := .F.
    ENDIF
 
-   IF ! ISCHARACTER( cFile )
+   IF ! HB_ISSTRING( cFile )
       oErr := ErrorNew()
       oErr:severity    := ES_ERROR
       oErr:genCode     := EG_ARG
@@ -119,7 +118,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
       oErr:OsCode      := FError()
       oErr:tries       := ++nRetries
       xRecover := Eval( ErrorBlock(), oErr )
-      IF ISLOGICAL( xRecover ) .AND. !xRecover      /* user select "Default" */
+      IF HB_ISLOGICAL( xRecover ) .AND. !xRecover      /* user select "Default" */
          RETURN
       ENDIF
    ENDDO

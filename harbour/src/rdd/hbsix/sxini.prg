@@ -126,7 +126,7 @@ FUNCTION _sx_INIinit( nArea )
 
       /* convert hash array into normal array */
       FOR EACH item IN hIni
-         IF hb_isHash( item )
+         IF HB_ISHASH( item )
             sect := Array( Len( item ) )
             FOR EACH h, a IN item, sect
                a := { h:__enumKey(), h }

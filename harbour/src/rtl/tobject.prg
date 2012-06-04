@@ -71,7 +71,6 @@
 /* WARNING: Can not use the preprocessor, otherwise
             it will auto inherit from itself. */
 
-#include "common.ch"
 #include "hboo.ch"
 #include "error.ch"
 
@@ -173,7 +172,7 @@ STATIC FUNCTION HBObject_Dftonerror( ... )
 
 STATIC FUNCTION HBObject_Error( cDesc, cClass, cMsg, nCode )
 
-   IF ! ISNUMBER( nCode )
+   IF ! HB_ISNUMERIC( nCode )
       nCode := 1004
    ENDIF
 

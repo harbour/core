@@ -51,7 +51,6 @@
  *
  */
 
-#include "common.ch"
 #include "hbsxdef.ch"
 
 FUNCTION Sx_DefTrigger( nEvent, nArea, nFieldPos, xTrigVal )

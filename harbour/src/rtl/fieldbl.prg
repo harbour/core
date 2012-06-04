@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 FUNCTION FIELDBLOCK( cFieldName )
    LOCAL bField
 

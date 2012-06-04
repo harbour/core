@@ -62,7 +62,6 @@
 #include "hbmemvar.ch"
 
 #include "box.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -203,7 +202,7 @@ METHOD ClosePopup( nPopup ) CLASS HBDbMenu
 
    IF nPopup != 0
       oPopup := ::aItems[ nPopup ]:bAction
-      IF ISOBJECT( oPopup )
+      IF HB_ISOBJECT( oPopup )
          RestScreen( oPopup:nTop, oPopup:nLeft, oPopup:nBottom + 1, oPopup:nRight + 2,;
                      oPopup:cBackImage )
          oPopup:cBackImage := NIL
@@ -293,7 +292,7 @@ METHOD GetItemByIdent( uIdent ) CLASS HBDbMenu
    LOCAL oItem
 
    FOR n := 1 TO Len( ::aItems )
-      IF ISOBJECT( ::aItems[ n ]:bAction )
+      IF HB_ISOBJECT( ::aItems[ n ]:bAction )
          oItem := ::aItems[ n ]:bAction:GetItemByIdent( uIdent )
          IF oItem != NIL
             RETURN oItem
@@ -391,7 +390,7 @@ METHOD LoadColors() CLASS HBDbMenu
    ::cClrHotFocus := aColors[ 11 ]
 
    FOR n := 1 TO Len( ::aItems )
-      IF ISOBJECT( ::aItems[ n ]:bAction )
+      IF HB_ISOBJECT( ::aItems[ n ]:bAction )
          ::aItems[ n ]:bAction:LoadColors()
       ENDIF
    NEXT
@@ -422,7 +421,7 @@ METHOD ShowPopup( nPopup ) CLASS HBDbMenu
    ::aItems[ nPopup ]:Display( ::cClrHilite, ::cClrHotFocus )
    ::nOpenPopup := nPopup
 
-   IF ISOBJECT( ::aItems[ nPopup ]:bAction )
+   IF HB_ISOBJECT( ::aItems[ nPopup ]:bAction )
       ::aItems[ nPopup ]:bAction:Display()
       ::aItems[ nPopup ]:bAction:ShowPopup( 1 )
    ENDIF

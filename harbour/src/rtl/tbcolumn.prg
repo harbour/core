@@ -53,7 +53,6 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
 #include "tbrowse.ch"
 
 /* NOTE: In CA-Cl*pper TBCOLUMN class does not inherit from any other classes. */
@@ -199,7 +198,7 @@ METHOD setStyle( nStyle, lNewValue ) CLASS TBCOLUMN
       ASize( ::aSetStyle, nStyle )
    ENDIF
 
-   IF ISLOGICAL( lNewValue )
+   IF HB_ISLOGICAL( lNewValue )
       ::aSetStyle[ nStyle ] := lNewValue
    ENDIF
 

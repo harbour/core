@@ -14,7 +14,6 @@
 /* NOTE: Recursive use is supported. */
 
 #include "color.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "hbmemvar.ch"
 #include "setcurs.ch"
@@ -95,7 +94,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
 
       // put choice in a valid range
 
-      IF !ISNUMBER( n ) .OR. n < 1
+      IF !HB_ISNUMERIC( n ) .OR. n < 1
          n := 1
       ENDIF
 
@@ -126,11 +125,11 @@ FUNCTION __MenuTo( bBlock, cVariable )
             xMsg := t_aLevel[ nPointer - 1, n, 4 ]
 
             // Code Block messages ( yes, they are documented! )
-            IF ISBLOCK( xMsg )
+            IF HB_ISBLOCK( xMsg )
                xMsg := Eval( xMsg )
             ENDIF
 
-            IF !ISCHARACTER( xMsg )
+            IF !HB_ISSTRING( xMsg )
                xMsg := ""
             ENDIF
 

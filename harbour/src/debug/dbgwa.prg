@@ -53,7 +53,6 @@
 #pragma DEBUGINFO=OFF
 
 #include "box.ch"
-#include "common.ch"
 #include "setcurs.ch"
 #include "inkey.ch"
 

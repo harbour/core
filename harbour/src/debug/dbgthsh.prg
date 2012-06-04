@@ -7,7 +7,6 @@
  * The Debugger Hash Inspector
  *
  * Copyright 2006 Francesco Saverio Giudice <info / at / fsgiudice / dot / com>
- * www - http://www.xharbour.org
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -210,7 +209,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
 
       uValue := HB_HValueAt( hHash, nSet )
 
-      IF hb_isHash( uValue )
+      IF HB_ISHASH( uValue )
 
          IF Len( uValue ) == 0
             __dbgAlert( "Hash is empty" )
@@ -230,14 +229,14 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
                ::nCurwindow--
             ENDIF
          ENDIF
-      ELSEIF ISBLOCK( uValue ) .OR. hb_isPointer( uValue )
+      ELSEIF HB_ISBLOCK( uValue ) .OR. HB_ISPOINTER( uValue )
          __dbgAlert( "Value cannot be edited" )
       ELSE
          IF ::lEditable
             oBrwSets:RefreshCurrent()
-            IF ISOBJECT( uValue )
+            IF HB_ISOBJECT( uValue )
                __DbgObject( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
-            ELSEIF ISARRAY( uValue )
+            ELSEIF HB_ISARRAY( uValue )
                __DbgArrays( uValue, cName + "[" + HashKeyString( hHash, nSet ) + "]" )
             ELSE
                ::doGet( oBrwSets, hHash, nSet )

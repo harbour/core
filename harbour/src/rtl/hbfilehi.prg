@@ -52,7 +52,7 @@
 
 /* QUESTION: How to return success/failure when dir is passed? */
 FUNCTION hb_cwd( cNewDir )
-   IF hb_isString( cNewDir )
+   IF HB_ISSTRING( cNewDir )
       /* TODO */
    ENDIF
    RETURN hb_DirSepAdd( hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
@@ -64,7 +64,7 @@ FUNCTION hb_PathNormalize( cPath )
    LOCAL aDir
    LOCAL cDir
 
-   IF ! hb_isString( cPath )
+   IF ! HB_ISSTRING( cPath )
       RETURN ""
    ENDIF
 
@@ -109,11 +109,11 @@ FUNCTION hb_PathJoin( cPathA, cPathR )
    LOCAL cDirA
    LOCAL cDirR, cDriveR, cNameR, cExtR
 
-   IF ! hb_isString( cPathR )
+   IF ! HB_ISSTRING( cPathR )
       RETURN ""
    ENDIF
 
-   IF ! hb_isString( cPathA ) .OR. Empty( cPathA )
+   IF ! HB_ISSTRING( cPathA ) .OR. Empty( cPathA )
       RETURN cPathR
    ENDIF
 
@@ -142,11 +142,11 @@ FUNCTION hb_PathRelativize( cPathBase, cPathTarget, lForceRelative )
 
    LOCAL cTargetFileName
 
-   IF ! hb_isString( cPathBase ) .OR. ! hb_isString( cPathTarget )
+   IF ! HB_ISSTRING( cPathBase ) .OR. ! HB_ISSTRING( cPathTarget )
       RETURN ""
    ENDIF
 
-   IF ! hb_isLogical( lForceRelative )
+   IF ! HB_ISLOGICAL( lForceRelative )
       lForceRelative := .T.
    ENDIF
 
@@ -229,7 +229,7 @@ STATIC FUNCTION s_FN_FromArray( aPath, nFrom, cFileName, cDirPrefix )
 
 FUNCTION hb_DirSepAdd( cDir )
 
-   IF ! hb_isString( cDir )
+   IF ! HB_ISSTRING( cDir )
       RETURN ""
    ENDIF
 
@@ -244,7 +244,7 @@ FUNCTION hb_DirSepAdd( cDir )
 
 FUNCTION hb_DirSepDel( cDir )
 
-   IF ! hb_isString( cDir )
+   IF ! HB_ISSTRING( cDir )
       RETURN ""
    ENDIF
 
@@ -268,7 +268,7 @@ FUNCTION hb_DirBuild( cDir )
    LOCAL cDirItem
    LOCAL tmp
 
-   IF ! hb_isString( cDir )
+   IF ! HB_ISSTRING( cDir )
       RETURN .F.
    ENDIF
 
@@ -312,7 +312,7 @@ FUNCTION hb_DirUnbuild( cDir )
    LOCAL cDirTemp
    LOCAL tmp
 
-   IF ! hb_isString( cDir )
+   IF ! HB_ISSTRING( cDir )
       RETURN .F.
    ENDIF
 
