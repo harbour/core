@@ -92,7 +92,7 @@ PROCEDURE Main()
 
    oWnd:setMouseTracking( .t. )
    oWnd:setWindowTitle( "Harbour-Qt Implementation Test Dialog" )
-   oWnd:setWindowIcon( "test" )
+   oWnd:setWindowIcon( QIcon( "test" ) )
    oWnd:resize( 900, 500 )
 
    oDA    := QWidget( oWnd )
@@ -117,7 +117,7 @@ PROCEDURE Main()
 
    oBtn:connect( QEvent_Enter, {|oEvent| RePaintHover( oEvent, oBtn, QEvent_Enter ) } )
    oBtn:connect( QEvent_Leave, {|oEvent| RePaintHover( oEvent, oBtn, QEvent_Leave ) } )
-   oBtn:connect( QEvent_Paint, {|oEvent,oPainter| RePaint( oEvent, oPainter, oBtn ) } )
+//   oBtn:connect( QEvent_Paint, {|oEvent,oPainter| RePaint( oEvent, oPainter, oBtn ) } )
 
    oWnd:connect( QEvent_KeyPress, {|e| My_Events( e ) } )
    oWnd:connect( QEvent_Close, {|| QApplication():quit() } )
@@ -125,7 +125,7 @@ PROCEDURE Main()
 
    QApplication():exec()
 
-   HB_TRACE( HB_TR_ALWAYS, ".............. E X I T I N G ..................." )
+   HB_TRACE( HB_TR_ALWAYS, ".............. E X I T I N G ...................", valtype( oLabel ) )
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
 
    RETURN
@@ -158,7 +158,7 @@ PROCEDURE ExecOneMore()
 
    oWnd:setMouseTracking( .t. )
    oWnd:setWindowTitle( "Harbour-Qt Implementation Test Dialog" )
-   oWnd:setWindowIcon( "test" )
+   oWnd:setWindowIcon( QIcon( "test" ) )
    oWnd:resize( 900, 500 )
 
    oDA    := QWidget( oWnd )
@@ -211,16 +211,16 @@ STATIC FUNCTION Build_MenuBar( oWnd )
 
    oActNew := QAction( oMenu1 )
    oActNew:setText( "&New" )
-   oActNew:setIcon( hb_dirBase() + "new.png" )
+   oActNew:setIcon( QIcon( hb_dirBase() + "new.png" ) )
    oActNew:connect( "triggered(bool)", {|w,l| FileDialog( "New" , w, l ) } )
    oMenu1:addAction( oActNew )
 
-   oActOpen := oMenu1:addAction( hb_dirBase() + "open.png", "&Open" )
+   oActOpen := oMenu1:addAction( QIcon( hb_dirBase() + "open.png" ), "&Open" )
    oActOpen:connect( "triggered(bool)", {|w,l| FileDialog( "Open" , w, l ) } )
 
    oS1 := oMenu1:addSeparator()
 
-   oActSave := oMenu1:addAction( hb_dirBase() + "save.png", "&Save" )
+   oActSave := oMenu1:addAction( QIcon( hb_dirBase() + "save.png" ), "&Save" )
    oActSave:connect( "triggered(bool)", {|w,l| FileDialog( "Save" , w, l ) } )
 
    oS2 := oMenu1:addSeparator()
@@ -279,7 +279,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    /* Create an action */
    oActNew := QAction( oWnd )
    oActNew:setText( "&New" )
-   oActNew:setIcon( hb_dirBase() + "new.png" )
+   oActNew:setIcon( QIcon( hb_dirBase() + "new.png" ) )
    oActNew:setToolTip( "A New File" )
    oActNew:connect( "triggered(bool)", {|w,l| FileDialog( "New" , w, l ) } )
    /* Attach Action with Toolbar */
@@ -288,7 +288,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    /* Create another action */
    oActOpen := QAction( oWnd )
    oActOpen:setText( "&Open" )
-   oActOpen:setIcon( hb_dirBase() + "open.png" )
+   oActOpen:setIcon( QIcon( hb_dirBase() + "open.png" ) )
    oActOpen:setToolTip( "Select a file to be opened!" )
    oActOpen:connect( "triggered(bool)", {|w,l| FileDialog( "Open" , w, l ) } )
    /* Attach Action with Toolbar */
@@ -299,7 +299,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    /* Create another action */
    oActSave := QAction( oWnd )
    oActSave:setText( "&Save" )
-   oActSave:setIcon( hb_dirBase() + "save.png" )
+   oActSave:setIcon( QIcon( hb_dirBase() + "save.png" ) )
    oActSave:setToolTip( "Save this file!" )
    oActSave:connect( "triggered(bool)", {|w,l| FileDialog( "Save" , w, l ) } )
    /* Attach Action with Toolbar */
@@ -541,12 +541,11 @@ STATIC FUNCTION FileDialog()
    LOCAL oFD
 
    oFD := QFileDialog()
+   oFD:setOption( QFileDialog_DontResolveSymlinks, .t. )
    oFD:setWindowTitle( "Select a File" )
    oFD:exec()
 
-   oFD := NIL
-
-   RETURN nil
+   RETURN NIL 
 
 /*----------------------------------------------------------------------*/
 
@@ -612,7 +611,7 @@ FUNCTION ShowInSystemTray( oWnd )
    oActHide:connect( "triggered(bool)", {|| oWnd:hide() } )
 
    oSys := QSystemTrayIcon( oWnd )
-   oSys:setIcon( hb_dirBase() + "new.png" )
+   oSys:setIcon( QIcon( hb_dirBase() + "new.png" ) )
    oSys:setContextMenu( oMenuSys )
    oSys:showMessage( "Harbour-QT", "This is Harbour-QT System Tray" )
    oSys:show()

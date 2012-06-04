@@ -89,12 +89,37 @@ STATIC oMLE
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main()
-
-   //hb_threadStart( {|| _BuildADialog() } )
+#if 0
+   LOCAL q, a_, j
+   LOCAL nTimes := 20
+   LOCAL nLoops := 5
+   
+   FOR j := 1 TO nLoops   
+      msgbox( hb_ntos( j ) + " : Building start..." )
+      a_:= {}
+      FOR q := 1 TO nTimes
+         //aadd( a_, QColor() )
+         aadd( a_, QFileDialog() )
+         //aadd( a_, QImage() )
+         //aadd( a_, QPixmap(100,100) )
+         //aadd( a_, QMessageBox() )
+         //aadd( a_, QTreeWidget() )
+         //aadd( a_, QMainWindow() )
+         //aadd( a_, QWidget() )
+      NEXT 
+      msgbox( "Destroying Starts..." )
+      FOR q := 1 TO nTimes
+         __hbqt_destroy( a_[ q ] )   
+         a_[ q ] := NIL 
+      NEXT 
+   NEXT 
+   msgbox( "Done" )   
+#else
    _BuildADialog()
-
-   RETURN
-
+#endif   
+   
+   RETURN 
+   
 /*----------------------------------------------------------------------*/
 
 FUNCTION _BuildADialog()
@@ -108,7 +133,7 @@ FUNCTION _BuildADialog()
 
 PROCEDURE DispMem( cMessage )
    HB_SYMBOL_UNUSED( cMessage )
-   HB_TRACE( HB_TR_DEBUG, cMessage )
+   HB_TRACE( HB_TR_ALWAYS, cMessage )
    RETURN
 
 /*----------------------------------------------------------------------*/
@@ -139,7 +164,7 @@ DispMem( "oDlg := GuiStdDialog" )
 
    /* Make background color of :drawingArea different */
    oDa:setFontCompoundName( "10.Tohama italics" )
-   oDa:setColorBG( GraMakeRGBColor( { 134,128,200 } ) )
+   //oDa:setColorBG( GraMakeRGBColor( { 134,128,200 } ) )
    //oDa:setColorFG( GraMakeRGBColor( { 255,255,255 } ) )
 
    #ifdef __HARBOUR__
@@ -359,8 +384,8 @@ STATIC FUNCTION Build_MenuBar( oDlg )
    oSubMenu:itemMarked := {|mp1| IF( mp1 == 5, MsgBox( "WOW - ::itemMarked - Activated" ), NIL ) }
 
    /* Menu colors are being honored in Harbour only */
-   oSubMenu:setColorBG( GraMakeRGBColor( { 134,128,250 } ) )
-   oSubMenu:setColorFG( GraMakeRGBColor( { 255,  1,  1 } ) )
+//   oSubMenu:setColorBG( GraMakeRGBColor( { 134,128,250 } ) )
+//   oSubMenu:setColorFG( GraMakeRGBColor( { 255,  1,  1 } ) )
 
    #ifdef __HARBOUR__
    #if 1
@@ -368,7 +393,7 @@ STATIC FUNCTION Build_MenuBar( oDlg )
       oSubMenu:title := "~Dialogs"
       #if 1             /*  T H R E D E D   D I A L O G */
          oSubMenu:addItem( { "~One More Instance"+ chr( K_TAB ) +"Ctrl+M", ;
-                                    {|| hb_threadStart( {|| BuildADialog() } ) } } )
+                                    {|| hb_threadStart( {|| _BuildADialog() } ) } } )
       #else
          oSubMenu:addItem( { "~One More Instance"+ chr( K_TAB )+ "Ctrl+M", {|| _BuildADialog() } } )
       #endif
@@ -553,7 +578,7 @@ FUNCTION Build_TabPages( oWnd )
    aTabs[ TAB_4 ]:postOffset := 80
    aTabs[ TAB_4 ]:create()
    aTabs[ TAB_4 ]:TabActivate := SetMaximized( aTabs, 4 )
-   aTabs[ TAB_4 ]:setColorBG( GraMakeRGBColor( {198,198,198} ) )
+//   aTabs[ TAB_4 ]:setColorBG( GraMakeRGBColor( {198,198,198} ) )
    #ifdef __HARBOUR__
    aTabs[ TAB_4 ]:hbLayout := HBPLAYOUT_TYPE_HORZBOX
    #endif
@@ -708,8 +733,8 @@ FUNCTION Build_ListBox( oWnd )
    oListBox:ItemSelected := {|mp1, mp2, obj| HB_SYMBOL_UNUSED( obj ), mp1 := oListBox:getData(), ;
                                iif( !empty( mp1 ), mp2 := oListBox:getItem( mp1[ 1 ] ), mp2 := "Nothing" ), ;
                                    MsgBox( "itemSelected: " + mp2 ) }
-   oListBox:setColorFG( GraMakeRGBColor( {227,12,110} ) )
-   oListBox:setColorBG( GraMakeRGBColor( {50,45,170} ) )
+//   oListBox:setColorFG( GraMakeRGBColor( {227,12,110} ) )
+//   oListBox:setColorBG( GraMakeRGBColor( {50,45,170} ) )
 
    oListBox:setPointer( , XBPSTATIC_SYSICON_MOVE, XBPWINDOW_POINTERTYPE_SYSPOINTER )
 
@@ -767,14 +792,14 @@ FUNCTION Build_PushButton( oDA )
     oXbp:create( , , {180,200}, {90,40} )
     oXbp:activate:= {|| MsgBox( "Pushbutton A" ) }
     /* Harbour supports presentation colors */
-    oXbp:setColorBG( GraMakeRGBColor( {0,0,255} ) )
+//    oXbp:setColorBG( GraMakeRGBColor( {0,0,255} ) )
 
     oXbp := XbpPushButton():new( oDA )
     oXbp:caption := hb_DirBase() + "new.png"
     oXbp:create( , , {290,200}, {90,40} )
     oXbp:activate:= {|| MsgBox( "Pushbutton B" ) }
     /* Harbour supports presentation colors */
-    oXbp:setColorBG( GraMakeRGBColor( {255,255,0} ) )
+//    oXbp:setColorBG( GraMakeRGBColor( {255,255,0} ) )
 
     RETURN nil
 
@@ -794,7 +819,7 @@ FUNCTION Build_SLEs( oWnd )
    //oXbp:setInputFocus  := { |x,y,oSLE| oSLE:getData(), Qt_QDebug( "Var A =" + cVarA ) }
    //oXbp:setInputFocus  := { |x,y,oSLE| oSLE:getData() }
 
-   oXbp:setColorBG( GraMakeRGBColor( { 170,170,170 } ) )
+//   oXbp:setColorBG( GraMakeRGBColor( { 170,170,170 } ) )
 
    oXbp              := XbpSLE():new()
    oXbp:autoTab      := .T.
@@ -807,7 +832,7 @@ FUNCTION Build_SLEs( oWnd )
    // when the input focus is lost
    oXbp:killInputFocus := { |mp1,mp2,oSLE| HB_SYMBOL_UNUSED( mp1 ), HB_SYMBOL_UNUSED( mp2 ),  oSLE:getData() }
 
-   oXbp:setColorBG( GraMakeRGBColor( { 190,190,190 } ) )
+//   oXbp:setColorBG( GraMakeRGBColor( { 190,190,190 } ) )
 
    RETURN nil
 
@@ -850,8 +875,8 @@ FUNCTION Build_MLE( oWnd )
    // via :dataLink
    oMLE:setData()
 
-   oMLE:setColorBG( GraMakeRGBColor( { 190,190,0 } ) )
-   oMLE:setColorFG( GraMakeRGBColor( { 0,0,0 } ) )
+//   oMLE:setColorBG( GraMakeRGBColor( { 190,190,0 } ) )
+//   oMLE:setColorFG( GraMakeRGBColor( { 0,0,0 } ) )
    oMLE:setFontCompoundName( "14.Courier bold" )
 
    RETURN oMLE
@@ -1112,8 +1137,8 @@ FUNCTION Build_Statics( oWnd )
    oGrp:type := XBPSTATIC_TYPE_GROUPBOX
    oGrp:caption := " Harbour-QT-Statics "
    oGrp:create()
-   oGrp:setColorFG( GraMakeRGBColor( {   0,255,255 } ) )
-   oGrp:setColorBG( GraMakeRGBColor( { 134,128,220 } ) )
+//   oGrp:setColorFG( GraMakeRGBColor( {   0,255,255 } ) )
+//   oGrp:setColorBG( GraMakeRGBColor( { 134,128,220 } ) )
    #ifdef __HARBOUR__
    oGrp:setPointer( , hb_DirBase() + "abs3.png", XBPWINDOW_POINTERTYPE_ICON )
    #endif
@@ -1124,7 +1149,7 @@ FUNCTION Build_Statics( oWnd )
    oLbl:caption := "Harbour-QT"
    oLbl:create()
    oLbl:setFontCompoundName( "18.Courier normal" )
-   oLbl:setColorFG( GraMakeRGBColor( { 255,0,0 } ) )
+//   oLbl:setColorFG( GraMakeRGBColor( { 255,0,0 } ) )
 
    oLbl := XbpStatic():new( oWnd, , {10,oWnd:currentSize[ 2 ]-45-25}, {240,40} )
    oLbl:type    := XBPSTATIC_TYPE_TEXT
@@ -1132,7 +1157,7 @@ FUNCTION Build_Statics( oWnd )
    oLbl:caption := "Welcome"
    oLbl:create()
    oLbl:setFontCompoundName( "30.Courier normal" )
-   oLbl:setColorFG( GraMakeRGBColor( { 255,255,0 } ) )
+//   oLbl:setColorFG( GraMakeRGBColor( { 255,255,0 } ) )
 
 
    // Horizontal Lines
@@ -1212,7 +1237,7 @@ FUNCTION Build_Statics( oWnd )
    oBmp:loadFile( hb_DirBase() + "paste.png" )
    oBox:caption := oBmp
    oBox:create()
-   oBox:setColorBG( GraMakeRGBColor( { 0,100,100 } ) )
+//   oBox:setColorBG( GraMakeRGBColor( { 0,100,100 } ) )
 
    oBox := XbpStatic():new( oGrp, , {nC4,nT+(nH+nG)*2}, {nW,nH} )
    oBox:type := XBPSTATIC_TYPE_BITMAP
@@ -1225,7 +1250,7 @@ FUNCTION Build_Statics( oWnd )
    oBox:caption := oBmp1
    #endif
    oBox:create()
-   oBox:setColorBG( GraMakeRGBColor( { 100,0,100 } ) )
+//   oBox:setColorBG( GraMakeRGBColor( { 100,0,100 } ) )
 
 
    #ifdef __HARBOUR__ /* Differes from Xbase++ by Disk File | Resource Name, ID */
@@ -1233,7 +1258,7 @@ FUNCTION Build_Statics( oWnd )
    oBox:type := XBPSTATIC_TYPE_ICON
    oBox:caption := hb_DirBase() + "vr.png"
    oBox:create()
-   oBox:setColorBG( GraMakeRGBColor( { 255,255,187 } ) )
+//   oBox:setColorBG( GraMakeRGBColor( { 255,255,187 } ) )
    #endif
 
    oBox := XbpStatic():new( oGrp, , {nC4,nT+(nH+nG)*4}, {nW,nH} )
@@ -1260,8 +1285,8 @@ FUNCTION Build_Statics( oWnd )
 
    oLbl:create()
    oLbl:setFontCompoundName( "8.Times normal" )
-   oLbl:setColorBG( GraMakeRGBColor( { 100,0,150 } ) )
-   oLbl:setColorFG( GraMakeRGBColor( { 255,255,0 } ) )
+//   oLbl:setColorBG( GraMakeRGBColor( { 100,0,150 } ) )
+//   oLbl:setColorFG( GraMakeRGBColor( { 255,255,0 } ) )
    oLbl:setPointer( , XBPSTATIC_SYSICON_SIZE, XBPWINDOW_POINTERTYPE_SYSPOINTER )
 
    RETURN nil
@@ -1291,7 +1316,7 @@ FUNCTION Build_HTMLViewer( oWnd )
 /*----------------------------------------------------------------------*/
 
 FUNCTION Build_FileDialog( oWnd, cMode )
-   LOCAL oDlg, aFiles
+   LOCAL oDlg, aFiles, x
 
    oDlg := XbpFileDialog():new():create( oWnd, , { 10,10 } )
    IF cMode == "open"
@@ -1302,13 +1327,16 @@ FUNCTION Build_FileDialog( oWnd, cMode )
       aFiles := oDlg:open( "c:\temp", , .t. )
       IF !empty( aFiles )
          aeval( aFiles, {|e| HB_SYMBOL_UNUSED( e ) } )
-      ENDIF
+      ENDIF 
    ELSE
       oDlg:title       := "Save this Database"
       oDlg:fileFilters := { { "Database Files", "*.dbf" } }
       oDlg:quit        := {|| MsgBox( "Quitting the Dialog" ), 1 }
       oDlg:saveAs( "c:\temp\myfile.dbf" )
    ENDIF
+
+   x := oDlg:oWidget:proxyModel()
+   x:setSourceModel()
 
    RETURN nil
 
@@ -1520,7 +1548,7 @@ FUNCTION Build_Rtf( oWnd )
    //-----------------------------------//
    oRTF := XbpRtf():new( oWnd )
    oRTF:create( , , { 10,10 }, { sz_[ 1 ]-23, sz_[ 2 ]-125 } )
-   oRTF:setColorBG( GraMakeRGBColor( {255,255,200} ) )
+//   oRTF:setColorBG( GraMakeRGBColor( {255,255,200} ) )
 
    oRTF:setFontCompoundName( "12.Times" )
 
@@ -1593,7 +1621,7 @@ STATIC FUNCTION RtfLoadDocument( oRTF )
    oDlg:title       := "Open an RTF Document"
    oDlg:center      := .t.
    oDlg:fileFilters := aFiltr
-   oDlg:setColorBG( GraMakeRGBColor( { 255,255,200 } ) )
+//   oDlg:setColorBG( GraMakeRGBColor( { 255,255,200 } ) )
 
    cFile := oDlg:open()
    IF !empty( cFile )
@@ -1614,7 +1642,7 @@ STATIC FUNCTION RtfSaveDocument( oRTF )
    oDlg:title       := "Open an RTF Document"
    oDlg:center      := .t.
    oDlg:fileFilters := aFiltr
-   oDlg:setColorBG( GraMakeRGBColor( { 255,200,200 } ) )
+//   oDlg:setColorBG( GraMakeRGBColor( { 255,200,200 } ) )
 
    cFile := oDlg:saveAs()
    IF !empty( cFile )
@@ -1634,6 +1662,60 @@ STATIC FUNCTION RtfApplyFont( oRTF )
    oDlg:display( 0 )
 
    RETURN nil
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Build_Browse_Y( oWnd )
+   LOCAL cPath := hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps()
+   LOCAL oXbpBrowse, aStruct, a_, oXbpColumn , aPresParam
+   
+   USE ( cPath + "test.dbf" ) NEW SHARED READONLY VIA 'DBFCDX'
+   dbGotop()
+   aStruct := DbStruct()
+
+   /* Browse View */
+   oXbpBrowse := XbpBrowse():new():create( oWnd, , { 0,0 }, oWnd:currentSize() )
+   oXbpBrowse:setFontCompoundName( "10.Courier" )
+
+   oXbpBrowse:cursorMode    := XBPBRW_CURSOR_ROW
+
+   /* Navigation Blocks */
+   oXbpBrowse:skipBlock     := {|n| DbSkipBlock( n ) }
+   oXbpBrowse:goTopBlock    := {| | DbGoTop()        }
+   oXbpBrowse:goBottomBlock := {| | DbGoBottom()     }
+   //
+   oXbpBrowse:firstPosBlock := {| | 1                }
+   oXbpBrowse:lastPosBlock  := {| | LastRec()        }
+   oXbpBrowse:posBlock      := {| | RecNo()          }
+   oXbpBrowse:goPosBlock    := {|n| DbGoto( n )      }
+   oXbpBrowse:phyPosBlock   := {| | RecNo()          }
+   
+   FOR EACH a_ IN aStruct
+      aPresParam := getPP( a_ )
+
+      oXbpColumn          := XbpColumn():new()
+      oXbpColumn:dataLink := dataLink( a_:__enumIndex() )
+      oXbpColumn:create( , , , , aPresParam )
+
+      oXbpBrowse:addColumn( oXbpColumn )
+   NEXT
+   
+   RETURN NIL
+   
+/*----------------------------------------------------------------------*/
+   
+FUNCTION dataLink( nField )
+   RETURN {|| fieldget( nField ) }
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION getPP( aStruct )
+   LOCAL aPresParam := {}
+
+   aadd( aPresParam, { XBP_PP_COL_HA_CAPTION      , aStruct[ 1 ]  } )
+   aadd( aPresParam, { XBP_PP_COL_DA_ROWHEIGHT    , 20            } )
+
+   RETURN aPresParam
 
 /*----------------------------------------------------------------------*/
 
@@ -1722,7 +1804,7 @@ FUNCTION Build_Browse( oWnd )
    aadd( aPresParam, { XBP_PP_COL_FA_FGCLR        , GRA_CLR_BLACK              } )
    aadd( aPresParam, { XBP_PP_COL_FA_BGCLR        , GRA_CLR_DARKGRAY           } )
    aadd( aPresParam, { XBP_PP_COL_FA_HEIGHT       , 25                         } )
-
+   //   
    oXbpColumn            := XbpColumn():new()
    oXbpColumn:dataLink   := {|| test->Last }
    oXbpColumn:colorBlock := {|x| iif( left( x,1 ) $ "L,H", { GRA_CLR_BLUE, GRA_CLR_YELLOW }, { NIL, NIL } ) }

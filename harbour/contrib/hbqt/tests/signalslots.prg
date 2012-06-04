@@ -11,18 +11,17 @@
 #include "hbqtgui.ch"
 
 PROCEDURE main()
-   LOCAL oMain, oLabel, oScrollBar, oLayout
+   LOCAL oMain, oLabel, oScrollBar, oLayout, qApp
 
    oMain := QWidget()
    oMain:setMinimumHeight( 300 )
    oMain:setMinimumHeight( 300 )
 
-   oLayout := QVBoxLayout( oMain )
+   oLayout := QVBoxLayout()
 
-   oScrollBar := QScrollBar(  )
+   oScrollBar := QScrollBar()
 
-   oLabel := QLabel( )
-   oLabel:show()
+   oLabel := QLabel()
    oLabel:setText("Move the slider")
 
    oLayout:addWidget( oScrollBar )
@@ -30,9 +29,11 @@ PROCEDURE main()
 
    hbqt_Connect( oScrollBar, "valueChanged(int)", oLabel, "setNum(int)" )
 
+   oMain:setLayout( oLayout )
    oMain:show()
 
-   QApplication():exec()
+   qApp := QApplication()
+   qApp:exec()
 
    RETURN
 
