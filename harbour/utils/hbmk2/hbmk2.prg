@@ -74,7 +74,6 @@
       http://cm.bell-labs.com/sys/doc/troff.pdf
  */
 
-#include "common.ch"
 #include "directry.ch"
 #include "error.ch"
 #include "fileio.ch"
@@ -2108,7 +2107,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF !( Lower( hb_FNameExt( cParam ) ) == ".hbm" ) .AND. lAcceptLDClipper
             rtlnk_process( hbmk, MemoRead( PathSepToSelf( cParam ) ), @hbmk[ _HBMK_cPROGNAME ], @hbmk[ _HBMK_aOBJUSER ], @hbmk[ _HBMK_aLIBUSER ] )
             IF ! Empty( hbmk[ _HBMK_aOBJUSER ] )
-               DEFAULT hbmk[ _HBMK_cFIRST ] TO hbmk[ _HBMK_aOBJUSER ][ 1 ]
+               hb_default( @hbmk[ _HBMK_cFIRST ], hbmk[ _HBMK_aOBJUSER ][ 1 ] )
             ENDIF
          ELSE
             tmp := HBM_Load( hbmk, aParams, PathSepToSelf( cParam ), 1, .T. ) /* Load parameters from script file */
@@ -3090,7 +3089,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          FOR EACH cParam IN FN_Expand( PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aPRG ], cParam )
-            DEFAULT hbmk[ _HBMK_cFIRST ] TO cParam
+            hb_default( @hbmk[ _HBMK_cFIRST ], cParam )
          NEXT
 
       CASE hb_FNameExt( cParamL ) == ".rc"
@@ -3131,7 +3130,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          FOR EACH cParam IN FN_Expand( PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aOBJUSER ], cParam )
-            DEFAULT hbmk[ _HBMK_cFIRST ] TO cParam
+            hb_default( @hbmk[ _HBMK_cFIRST ], cParam )
          NEXT
 
       CASE hb_FNameExt( cParamL ) == ".cpp" .OR. ;
@@ -3141,7 +3140,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          FOR EACH cParam IN FN_Expand( PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aCPP ], cParam )
-            DEFAULT hbmk[ _HBMK_cFIRST ] TO cParam
+            hb_default( @hbmk[ _HBMK_cFIRST ], cParam )
          NEXT
 
       CASE hb_FNameExt( cParamL ) == ".c" .OR. ;
@@ -3149,7 +3148,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          FOR EACH cParam IN FN_Expand( PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
             AAdd( hbmk[ _HBMK_aC ], cParam )
-            DEFAULT hbmk[ _HBMK_cFIRST ] TO cParam
+            hb_default( @hbmk[ _HBMK_cFIRST ], cParam )
          NEXT
 
       CASE hb_FNameExt( cParamL ) == ".d"
@@ -3190,7 +3189,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             LOOP
          ENDIF
          AAdd( hbmk[ _HBMK_aPRG ], cParam )
-         DEFAULT hbmk[ _HBMK_cFIRST ] TO cParam
+         hb_default( @hbmk[ _HBMK_cFIRST ], cParam )
 
       ENDCASE
    NEXT
@@ -3257,7 +3256,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       IF ! hbmk[ _HBMK_lCreateHRB ]
          /* If -o with full name wasn't specified, let's
             make it the first source file specified. */
-         DEFAULT hbmk[ _HBMK_cPROGNAME ] TO hb_FNameName( hbmk[ _HBMK_cFIRST ] )
+         hb_default( @hbmk[ _HBMK_cPROGNAME ], hb_FNameName( hbmk[ _HBMK_cFIRST ] ) )
 
          /* Combine output dir with output name. */
          IF ! Empty( hbmk[ _HBMK_cPROGDIR ] )
@@ -3270,7 +3269,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    /* Decide about working dir */
    IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ] .AND. ! lDumpInfo
       IF hbmk[ _HBMK_lINC ]
-         DEFAULT hbmk[ _HBMK_cWorkDir ] TO hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ) + _WORKDIR_DEF_ + hbmk[ _HBMK_cWorkDirDynSub ]
+         hb_default( @hbmk[ _HBMK_cWorkDir ], hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ) + _WORKDIR_DEF_ + hbmk[ _HBMK_cWorkDirDynSub ] )
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
             IF ! hb_DirBuild( hbmk[ _HBMK_cWorkDir ] )
                hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Working directory cannot be created: %1$s" ), hbmk[ _HBMK_cWorkDir ] ) )
@@ -3349,7 +3348,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          NEXT
       ENDIF
 
-      DEFAULT hbmk[ _HBMK_lSHAREDDIST ] TO lSysLoc
+      hb_default( @hbmk[ _HBMK_lSHAREDDIST ], lSysLoc )
 
       IF hbmk[ _HBMK_lSHAREDDIST ] .OR. ! HBMK_ISCOMP( "gcc|clang|open64" )
          l_cDynLibDir := ""
@@ -5043,7 +5042,7 @@ FUNCTION hbmk2( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       hbmk[ _HBMK_lStopAfterInit ] := .T.
    ENDIF
 
-   DEFAULT hbmk[ _HBMK_nScr_Esc ] TO hbmk[ _HBMK_nCmd_Esc ]
+   hb_default( @hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
 
    /* Delete all lib paths which contain late-evaluation macros. */
    FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ] DESCEND
@@ -7126,7 +7125,7 @@ STATIC FUNCTION DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, aIMPLIBS
 
             cMakeImpLibDLL := hb_FNameExtSetDef( cMakeImpLibDLL, ".dll" )
             tmp1 := cPROGNAME
-            DEFAULT tmp1 TO hb_FNameName( cMakeImpLibDLL )
+            hb_default( @tmp1, hb_FNameName( cMakeImpLibDLL ) )
             tmp := FN_CookLib( hb_FNameMerge( hbmk[ _HBMK_cPROGDIR ], tmp1 ), cLibLibPrefix, cLibLibExt )
 
             IF hbmk[ _HBMK_lCLEAN ]
@@ -8628,7 +8627,7 @@ FUNCTION hbmk2_AddInput_PRG( ctx, cFileName )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
       AAdd( hbmk[ _HBMK_aPRG ], PathSepToSelf( cFileName ) )
-      DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cFileName )
+      hb_default( @hbmk[ _HBMK_cFIRST ], PathSepToSelf( cFileName ) )
    ENDIF
    RETURN NIL
 
@@ -8636,7 +8635,7 @@ FUNCTION hbmk2_AddInput_C( ctx, cFileName )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
       AAdd( hbmk[ _HBMK_aC ], PathSepToSelf( cFileName ) )
-      DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cFileName )
+      hb_default( @hbmk[ _HBMK_cFIRST ], PathSepToSelf( cFileName ) )
    ENDIF
    RETURN NIL
 
@@ -8644,7 +8643,7 @@ FUNCTION hbmk2_AddInput_CPP( ctx, cFileName )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
       AAdd( hbmk[ _HBMK_aCPP ], PathSepToSelf( cFileName ) )
-      DEFAULT hbmk[ _HBMK_cFIRST ] TO PathSepToSelf( cFileName )
+      hb_default( @hbmk[ _HBMK_cFIRST ], PathSepToSelf( cFileName ) )
    ENDIF
    RETURN NIL
 
@@ -8989,7 +8988,7 @@ STATIC FUNCTION ListDirExt( arraySrc, cDirNew, cExtNew, lStripClpAt )
    LOCAL array := AClone( arraySrc )
    LOCAL cFileName
 
-   DEFAULT lStripClpAt TO .F.
+   hb_default( @lStripClpAt, .F. )
 
    IF lStripClpAt
       FOR EACH cFileName IN array
@@ -9088,9 +9087,9 @@ STATIC FUNCTION ArrayToList( array, cSeparator, nEscapeMode, nFNNotation, cPrefi
    LOCAL cString := ""
    LOCAL tmp
 
-   DEFAULT cSeparator TO " "
-   DEFAULT cPrefix TO ""
-   DEFAULT cPostfix TO ""
+   hb_default( @cSeparator, " " )
+   hb_default( @cPrefix, "" )
+   hb_default( @cPostfix, "" )
 
    IF nEscapeMode == NIL .AND. nFNNotation == NIL
       FOR tmp := 1 TO Len( array )
@@ -11089,7 +11088,7 @@ STATIC FUNCTION win_implib_command( hbmk, cCommand, cSourceDLL, cTargetLib, cFla
       RETURN _HBMK_IMPLIB_NOTFOUND
    ENDIF
 
-   DEFAULT cFlags TO ""
+   hb_default( @cFlags, "" )
 
    cCommand := StrTran( cCommand, "{FI}", cFlags )
    cCommand := StrTran( cCommand, "{ID}", FNameEscape( cSourceDLL, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
@@ -11336,7 +11335,7 @@ STATIC FUNCTION win_implib_command_msvc( hbmk, cCommand, cSourceDLL, cTargetLib,
 
 STATIC FUNCTION VCSDetect( cDir )
 
-   DEFAULT cDir TO ""
+   hb_default( @cDir, "" )
 
    IF ! Empty( cDir )
       cDir := hb_DirSepAdd( cDir )
@@ -13079,7 +13078,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       hb_StrFormat( I_( "Options can also be specified in environment variable %1$s" ), _HBMK_ENV_NAME ),;
       I_( ".hb, .hbs or .hrb file passed as first parameter will be run as Harbour script. (EXPERIMENTAL)" ) }
 
-   DEFAULT lLong TO .F.
+   hb_default( @lLong, .F. )
 
    AEval( aText_Basic, {| tmp | OutStd( tmp + _OUT_EOL ) } )
    AEval( aOpt_Basic, {| tmp | OutOpt( hbmk, tmp ) } )

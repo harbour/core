@@ -745,7 +745,7 @@ STATIC FUNCTION hbrun_FindInPath( cFileName )
          FOR EACH cDir IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator() )
          #endif
             IF ! Empty( cDir )
-               IF hb_FileExists( cFullName := hb_FNameMerge( cDir ), cName, cExt )
+               IF hb_FileExists( cFullName := hb_FNameMerge( cDir, cName, cExt ) )
                   RETURN cFullName
                ENDIF
             ENDIF
