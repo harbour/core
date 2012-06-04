@@ -2782,7 +2782,11 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cTypeHB := "L"
 
          CASE oArg:cCast == "QString"
-            oArg:cBody   := "hb_parstr_utf8( " + cHBIdx + ", &pText%%%, NULL )"
+            IF oArg:lFar
+               oArg:cBody   := "( QString * ) hb_parstr_utf8( " + cHBIdx + ", &pText%%%, NULL )" 
+            ELSE    
+               oArg:cBody   := "hb_parstr_utf8( " + cHBIdx + ", &pText%%%, NULL )"
+            ENDIF    
             oArg:cDoc    := "c" + oMtd:cDocNM  // oArg:cCast - W R O N G
             oArg:cTypeHB := "C"
 #if 0
