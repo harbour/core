@@ -2120,7 +2120,23 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE !( Left( cParam, 1 ) == "-" ) .AND. ;
            ( Lower( hb_FNameExt( cParam ) ) == ".hbm" .OR. ;
              Lower( hb_FNameExt( cParam ) ) == ".hbp" )
-         tmp := HBM_Load( hbmk, aParams, PathSepToSelf( cParam ), 1, .T. ) /* Load parameters from script file */
+
+         cParam := PathSepToSelf( cParam )
+
+         /* search for .hbp files in macro libpaths */
+         IF Lower( hb_FNameExt( cParam ) ) == ".hbp" .AND. ! hbmk_hb_FileExists( cParam )
+            FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
+               IF "%{hb_name}" $ tmp .AND. hbmk_hb_FileExists( hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cParam, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cParam ) )
+                  cParam := hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cParam, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cParam )
+                  IF hbmk[ _HBMK_lInfo ]
+                     _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Found project reference on library search path: %1$s" ), cParam ) )
+                  ENDIF
+                  EXIT
+               ENDIF
+            NEXT
+         ENDIF
+
+         tmp := HBM_Load( hbmk, aParams, cParam, 1, .T. ) /* Load parameters from script file */
          IF tmp != _ERRLEV_OK .AND. ;
             tmp != _ERRLEV_STOP
             RETURN tmp
@@ -6946,8 +6962,8 @@ STATIC PROCEDURE convert_incpaths_to_options( hbmk, cOptIncMask, lCHD_Comp )
 
    RETURN
 
+STATIC FUNCTION hbmk_hb_FileExists( cFileName )
 #if defined( __PLATFORM__DOS )
-STATIC FUNCTION hbmk_dos_FileExists( cFileName )
    LOCAL cName
    LOCAL cExt
 
@@ -6959,9 +6975,9 @@ STATIC FUNCTION hbmk_dos_FileExists( cFileName )
          do other unpredictable operation */
       RETURN .F.
    ENDIF
+#endif
 
    RETURN hb_FileExists( cFileName )
-#endif
 
 /* NOTE: We store -hbdyn objects in different dirs by default as - for Windows
          platforms - they're always built using different compilation options
@@ -8832,14 +8848,14 @@ STATIC FUNCTION FindInPathPlugIn( /* @ */ cFileName )
    ENDIF
 
    IF Empty( cExt )
-      cExt := ".prg"
+      cExt := ".hb"
    ENDIF
 
    cFileName := hb_FNameMerge( cDir, cName, cExt )
 
    RETURN FindInPath( cFileName )
 
-STATIC FUNCTION FindInPath( cFileName, cPath )
+STATIC FUNCTION FindInPath( cFileName, xPath )
    LOCAL cDir
    LOCAL cName
    LOCAL cExt
@@ -8865,18 +8881,23 @@ STATIC FUNCTION FindInPath( cFileName, cPath )
       ENDIF
    ENDIF
 
-   IF ! HB_ISSTRING( cPath )
-      cPath := GetEnv( "PATH" )
+   IF ! HB_ISSTRING( xPath ) .AND. ;
+      ! HB_ISARRAY( xPath )
+      xPath := GetEnv( "PATH" )
    ENDIF
 
    /* Check in the PATH. */
-   #if defined( __PLATFORM__WINDOWS ) .OR. ;
-       defined( __PLATFORM__DOS ) .OR. ;
-       defined( __PLATFORM__OS2 )
-   FOR EACH cDir IN hb_ATokens( cPath, hb_osPathListSeparator(), .T., .T. )
-   #else
-   FOR EACH cDir IN hb_ATokens( cPath, hb_osPathListSeparator() )
-   #endif
+   IF HB_ISSTRING( xPath )
+      #if defined( __PLATFORM__WINDOWS ) .OR. ;
+          defined( __PLATFORM__DOS ) .OR. ;
+          defined( __PLATFORM__OS2 )
+         xPath := hb_ATokens( xPath, hb_osPathListSeparator(), .T., .T. )
+      #else
+         xPath := hb_ATokens( xPath, hb_osPathListSeparator() )
+      #endif
+   ENDIF
+
+   FOR EACH cDir IN xPath
       IF ! Empty( cDir )
          IF hb_FileExists( cFileName := hb_FNameMerge( hb_DirSepAdd( StrStripQuote( cDir ) ), cName, cExt ) )
             RETURN cFileName
@@ -9372,11 +9393,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
    LOCAL lFound
    LOCAL tmp, tmp1
 
-#if defined( __PLATFORM__DOS )
-   IF ! hbmk_dos_FileExists( cFileName )
-#else
-   IF ! hb_FileExists( cFileName )
-#endif
+   IF ! hbmk_hb_FileExists( cFileName )
       _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Opening: %1$s" ), cFileName ) )
       RETURN .F.
    ENDIF
@@ -10006,12 +10023,10 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP )
    LOCAL aArgs
    LOCAL nResult
    LOCAL cHBP
+   LOCAL lFound
+   LOCAL tmp
 
-#if defined( __PLATFORM__DOS )
-   IF hbmk_dos_FileExists( cFileName )
-#else
-   IF hb_FileExists( cFileName )
-#endif
+   IF hbmk_hb_FileExists( cFileName )
 
       cFile := hbmk_MemoRead( cFileName ) /* NOTE: Intentionally using hbmk_MemoRead() which handles EOF char. */
 
@@ -10062,7 +10077,25 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP )
                      cHBP := PathMakeAbsolute( PathSepToSelf( cParam ), cFileName )
                      IF lProcHBP
                         IF hbmk[ _HBMK_nArgTarget ] > 0
-                           IF hb_FileExists( cHBP )
+
+                           /* search for .hbp files in macro libpaths */
+                           IF hbmk_hb_FileExists( cHBP )
+                              lFound := .T.
+                           ELSE
+                              lFound := .F.
+                              FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
+                                 IF "%{hb_name}" $ tmp .AND. hbmk_hb_FileExists( hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cHBP, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cHBP ) )
+                                    cHBP := hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cHBP, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cHBP )
+                                    IF hbmk[ _HBMK_lInfo ]
+                                       _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Found project reference on library search path: %1$s" ), cHBP ) )
+                                    ENDIF
+                                    lFound := .T.
+                                    EXIT
+                                 ENDIF
+                              NEXT
+                           ENDIF
+
+                           IF lFound
                               aArgs := AClone( hbmk[ _HBMK_aArgs ] )
                               aArgs[ hbmk[ _HBMK_nArgTarget ] ] := cHBP
                               nResult := hbmk( aArgs, hbmk[ _HBMK_nArgTarget ], @hbmk[ _HBMK_lPause ], hbmk[ _HBMK_nLevel ] + 1 )
@@ -13047,7 +13080,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-depimplibs=<d:dll>"     , I_( "<d> is the name of the dependency. Add <dll> to the import library source list." ) },;
       { "-depimplibd=<d:lib>"     , I_( "<d> is the name of the dependency. Set generated import library name to <lib>" ) },;
       NIL,;
-      { "-plugin=<filename>" , I_( "add plugin. <filename> can be: .prg, .hb, .hbs, .hrb" ) },;
+      { "-plugin=<filename>" , I_( "add plugin. <filename> can be: .hb, .hbs, .prg, .hrb" ) },;
       { "-pi=<filename>"     , I_( "pass input file to plugins" ) },;
       { "-pflag=<f>"         , I_( "pass flag to plugins" ) },;
       NIL,;
