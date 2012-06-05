@@ -171,21 +171,21 @@ STATIC FUNCTION ErrorMessage( oError )
    LOCAL cMessage := iif( oError:severity > ES_WARNING, "Error", "Warning" ) + " "
 
    // add subsystem name if available
-   IF ISCHARACTER( oError:subsystem )
+   IF HB_ISCHAR( oError:subsystem )
       cMessage += oError:subsystem()
    ELSE
       cMessage += "???"
    ENDIF
 
    // add subsystem's error code if available
-   IF ISNUMBER( oError:subCode )
+   IF HB_ISNUMERIC( oError:subCode )
       cMessage += "/" + hb_NToS( oError:subCode )
    ELSE
       cMessage += "/???"
    ENDIF
 
    // add error description if available
-   IF ISCHARACTER( oError:description )
+   IF HB_ISCHAR( oError:description )
       cMessage += "  " + oError:description
    ENDIF
 
