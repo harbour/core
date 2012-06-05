@@ -39,8 +39,8 @@ msgstr "Hiba: Ismeretlen platform: %1$s"
 
 #: hbmk2.prg:5021 hbmk2.prg:5029 hbmk2.prg:7074 hbmk2.prg:7082 hbmk2.prg:7891 hbmk2.prg:7899
 #, c-format
-msgid "Error: In %1$s at line %2$s %3$s:"
-msgstr "Hiba: %1$s %2$s. sorában %3$s:"
+msgid "Error: In %1$s at line %2$d %3$s:"
+msgstr "Hiba: %1$s %2$d. sorában %3$s:"
 
 #: hbmk2.prg:4350 hbmk2.prg:5884 hbmk2.prg:6465
 #, c-format
@@ -49,8 +49,8 @@ msgstr "Dinamikus függvénykönyvtár létrehozása... %1$s"
 
 #: hbmk2.prg:3968 hbmk2.prg:4010 hbmk2.prg:5445 hbmk2.prg:5487 hbmk2.prg:6018 hbmk2.prg:6060
 #, c-format
-msgid "Error: Running resource compiler. %1$s"
-msgstr "Hiba: Erőforrás fordító futtatásakor. %1$s"
+msgid "Error: Running resource compiler. %1$d"
+msgstr "Hiba: Erőforrás fordító futtatásakor. %1$d"
 
 #: hbmk2.prg:1449 hbmk2.prg:1960 hbmk2.prg:2094
 #, c-format
@@ -84,13 +84,13 @@ msgstr "Környezeti változókban megadott opciók feldolgozása: %1$s"
 
 #: hbmk2.prg:4458 hbmk2.prg:6002 hbmk2.prg:6599
 #, c-format
-msgid "Error: Running lib command. %1$s"
-msgstr "Hiba: Statikus függvénykönyvtár létrehozásakor. %1$s"
+msgid "Error: Running lib command. %1$d"
+msgstr "Hiba: Statikus függvénykönyvtár létrehozásakor. %1$d"
 
 #: hbmk2.prg:3577 hbmk2.prg:3611 hbmk2.prg:4886 hbmk2.prg:4923 hbmk2.prg:5386 hbmk2.prg:5431
 #, c-format
-msgid "Error: Running Harbour compiler. %1$s"
-msgstr "Hiba: Harbour fordító futtatásakor. %1$s"
+msgid "Error: Running Harbour compiler. %1$d"
+msgstr "Hiba: Harbour fordító futtatásakor. %1$d"
 
 #: hbmk2.prg:1701 hbmk2.prg:2300 hbmk2.prg:2480
 #, c-format
@@ -169,13 +169,13 @@ msgstr "Erőforrás fordító parancsa:"
 
 #: hbmk2.prg:4137 hbmk2.prg:4698 hbmk2.prg:5642 hbmk2.prg:6566 hbmk2.prg:6221 hbmk2.prg:7334
 #, c-format
-msgid "C/C++ compiler command job #%1$s:"
-msgstr "C/C++ fordító parancs. %1$s. szál:"
+msgid "C/C++ compiler command job #%1$d:"
+msgstr "C/C++ fordító parancs. %1$d. szál:"
 
 #: hbmk2.prg:4154 hbmk2.prg:4178 hbmk2.prg:4710 hbmk2.prg:5659 hbmk2.prg:5683 hbmk2.prg:6578 hbmk2.prg:6238 hbmk2.prg:6262 hbmk2.prg:7346
 #, c-format
-msgid "Error: Running C/C++ compiler. %1$s"
-msgstr "Hiba: C/C++ fordító futtatásakor. %1$s"
+msgid "Error: Running C/C++ compiler. %1$d"
+msgstr "Hiba: C/C++ fordító futtatásakor. %1$d"
 
 #: hbmk2.prg:7082 hbmk2.prg:10347 hbmk2.prg:11073
 #, c-format
@@ -304,8 +304,8 @@ msgstr "Kimenet nem igényel frissítést: %1$s"
 
 #: hbmk2.prg:4618 hbmk2.prg:6199 hbmk2.prg:6863
 #, c-format
-msgid "Running time: %1$ss"
-msgstr "Futási idő: %1$smp"
+msgid "Running time: %1$ds"
+msgstr "Futási idő: %1$dmp"
 
 #: hbmk2.prg:6871 hbmk2.prg:10136 hbmk2.prg:10862
 #, c-format
@@ -414,8 +414,8 @@ msgstr "Hiba: Munkakönyvtár nem hozható létre: %1$s"
 
 #: hbmk2.prg:3554 hbmk2.prg:4860 hbmk2.prg:5360
 #, c-format
-msgid "Error: Running Harbour compiler (embedded). %1$s"
-msgstr "Hiba: Harbour fordító futtatásakor (beágyazott). %1$s"
+msgid "Error: Running Harbour compiler (embedded). %1$d"
+msgstr "Hiba: Harbour fordító futtatásakor (beágyazott). %1$d"
 
 #: hbmk2.prg:3773 hbmk2.prg:5106 hbmk2.prg:5623
 #, c-format
@@ -514,18 +514,18 @@ msgstr "Több -l, -L, -i és <parancsállomány> kapcsoló/paraméter is megenge
 
 #: hbmk2.prg:3540 hbmk2.prg:4846 hbmk2.prg:5346
 #, c-format
-msgid "Harbour compiler command (embedded) job #%1$s:"
-msgstr "Harbour (beágyazott) fordító parancs %1$s. szál:"
+msgid "Harbour compiler command (embedded) job #%1$d:"
+msgstr "Harbour (beágyazott) fordító parancs %1$d. szál:"
 
 #: hbmk2.prg:3575 hbmk2.prg:4884 hbmk2.prg:5384
 #, c-format
-msgid "Error: Running Harbour compiler job #%1$s. %2$s"
-msgstr "Hiba: Harbour fordító futtatásakor. %1$s. szál. %2$s"
+msgid "Error: Running Harbour compiler job #%1$d. %2$d"
+msgstr "Hiba: Harbour fordító futtatásakor. %1$d. szál. %2$d"
 
 #: hbmk2.prg:4176 hbmk2.prg:4708 hbmk2.prg:5681 hbmk2.prg:6576 hbmk2.prg:6260 hbmk2.prg:7344
 #, c-format
-msgid "Error: Running C/C++ compiler job #%1$s. %2$s"
-msgstr "Hiba: C/C++ fordító futtatásakor. %1$s. szál. %2$s"
+msgid "Error: Running C/C++ compiler job #%1$d. %2$d"
+msgstr "Hiba: C/C++ fordító futtatásakor. %1$d. szál. %2$d"
 
 #: hbmk2.prg:4251 hbmk2.prg:5775 hbmk2.prg:6354
 #, c-format
@@ -534,18 +534,18 @@ msgstr ""
 
 #: hbmk2.prg:4397 hbmk2.prg:5934 hbmk2.prg:6531
 #, c-format
-msgid "Error: Running dynamic lib link command. %1$s"
-msgstr "Hiba: Dinamikus függvénykönyvtár szerkesztő futtatásakor. %1$s"
+msgid "Error: Running dynamic lib link command. %1$d"
+msgstr "Hiba: Dinamikus függvénykönyvtár szerkesztő futtatásakor. %1$d"
 
 #: hbmk2.prg:4519 hbmk2.prg:6109 hbmk2.prg:6732
 #, c-format
-msgid "Warning: Running post processor command. %1$s:"
-msgstr "Figyelem: Utófeldolgozó parancs hibával tért vissza. %1$s:"
+msgid "Warning: Running post processor command. %1$d:"
+msgstr "Figyelem: Utófeldolgozó parancs hibával tért vissza. %1$d:"
 
 #: hbmk2.prg:4589 hbmk2.prg:6179 hbmk2.prg:6802
 #, c-format
-msgid "Warning: Running compression command. %1$s:"
-msgstr "Figyelem: Tömörítő futtatása hibával tért vissza. %1$s:"
+msgid "Warning: Running compression command. %1$d:"
+msgstr "Figyelem: Tömörítő futtatása hibával tért vissza. %1$d:"
 
 #: hbmk2.prg:6974 hbmk2.prg:10239 hbmk2.prg:10965
 #, c-format
@@ -664,8 +664,8 @@ msgstr "Statikus függvénykönyvtár létrehozás parancsállománya:"
 
 #: hbmk2.prg:4309 hbmk2.prg:5837 hbmk2.prg:6418
 #, c-format
-msgid "Error: Running linker. %1$s"
-msgstr "Hiba: Szerkesztő futtatása közben. %1$s"
+msgid "Error: Running linker. %1$d"
+msgstr "Hiba: Szerkesztő futtatása közben. %1$d"
 
 #: hbmk2.prg:4387 hbmk2.prg:5924 hbmk2.prg:6521
 #, c-format
@@ -1024,7 +1024,7 @@ msgstr ""
 
 #: hbmk2.prg:1147 hbmk2.prg:1204
 #, c-format
-msgid "Building sub-project (level %1$s): %2$s"
+msgid "Building sub-project (level %1$d): %2$s"
 msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
@@ -1069,7 +1069,7 @@ msgstr ""
 
 #: hbmk2.prg:6507 hbmk2.prg:7233
 #, c-format
-msgid "Warning: Copying symbolic link %1$s to %2$s failed with %3$s."
+msgid "Warning: Copying symbolic link %1$s to %2$s failed with %3$d."
 msgstr ""
 
 #: hbmk2.prg:9415 hbmk2.prg:10084
@@ -1079,7 +1079,7 @@ msgstr ""
 
 #: hbmk2.prg:1141 hbmk2.prg:1198
 #, c-format
-msgid "Error: Cannot nest projects deeper than %1$s levels"
+msgid "Error: Cannot nest projects deeper than %1$d levels"
 msgstr ""
 
 #: hbmk2.prg:5210 hbmk2.prg:5731
@@ -1099,7 +1099,7 @@ msgstr ""
 
 #: hbmk2.prg:7934 hbmk2.prg:8776
 #, c-format
-msgid "Error: Executing plugin: %1$s at %3$s(%4$s)\\n'%2$s'"
+msgid "Error: Executing plugin: %1$s at %3$s(%4$d)\\n'%2$s'"
 msgstr ""
 
 #: hbmk2.prg:11512 hbmk2.prg:12970
@@ -1139,7 +1139,7 @@ msgstr ""
 
 #: hbmk2.prg:6513 hbmk2.prg:7239
 #, c-format
-msgid "Warning: Copying %1$s to %2$s failed with %3$s."
+msgid "Warning: Copying %1$s to %2$s failed with %3$d."
 msgstr ""
 
 #: hbmk2.prg:6439 hbmk2.prg:7165
@@ -1469,7 +1469,7 @@ msgstr ""
 
 #: hbmk2.prg:6843
 #, c-format
-msgid "Warning: Running code sign command. %1$s:"
+msgid "Warning: Running code sign command. %1$d:"
 msgstr ""
 
 #: hbmk2.prg:2597

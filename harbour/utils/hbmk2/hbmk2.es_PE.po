@@ -38,8 +38,8 @@ msgstr "Error: archivos fuente no se especificaron."
 
 #: hbmk2.prg:3967 hbmk2.prg:4009 hbmk2.prg:5445 hbmk2.prg:5487 hbmk2.prg:6018 hbmk2.prg:6060
 #, c-format
-msgid "Error: Running resource compiler. %1$s"
-msgstr "Error: Ejecución de compilador de recursos. %1$s"
+msgid "Error: Running resource compiler. %1$d"
+msgstr "Error: Ejecución de compilador de recursos. %1$d"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
@@ -63,8 +63,8 @@ msgstr "Error: Directorio de trabajo no puede ser creado: %1$s"
 
 #: hbmk2.prg:3576 hbmk2.prg:3610 hbmk2.prg:4886 hbmk2.prg:4923 hbmk2.prg:5386 hbmk2.prg:5431
 #, c-format
-msgid "Error: Running Harbour compiler. %1$s"
-msgstr "Error: Ejecutando compilador Harbour: %1$s"
+msgid "Error: Running Harbour compiler. %1$d"
+msgstr "Error: Ejecutando compilador Harbour: %1$d"
 
 #: hbmk2.prg:1075 hbmk2.prg:1421 hbmk2.prg:1503
 #, c-format
@@ -123,8 +123,8 @@ msgstr "Usando compilador C: %1$s"
 
 #: hbmk2.prg:5020 hbmk2.prg:5028 hbmk2.prg:7074 hbmk2.prg:7082 hbmk2.prg:7891 hbmk2.prg:7899
 #, c-format
-msgid "Error: In %1$s at line %2$s %3$s:"
-msgstr "Error: En %1$s línea %2$s %3$s:"
+msgid "Error: In %1$s at line %2$d %3$s:"
+msgstr "Error: En %1$s línea %2$d %3$s:"
 
 #: hbmk2.prg:1448 hbmk2.prg:1960 hbmk2.prg:2094
 #, c-format
@@ -138,8 +138,8 @@ msgstr "Advertencia: Script para compilador C/C++ no puede ser creado, continuan
 
 #: hbmk2.prg:4457 hbmk2.prg:6002 hbmk2.prg:6599
 #, c-format
-msgid "Error: Running lib command. %1$s"
-msgstr "Error: Ejecutando comando lib. %1$s"
+msgid "Error: Running lib command. %1$d"
+msgstr "Error: Ejecutando comando lib. %1$d"
 
 #: hbmk2.prg:1804 hbmk2.prg:6016 hbmk2.prg:2457 hbmk2.prg:2466 hbmk2.prg:8831 hbmk2.prg:9034 hbmk2.prg:9041 hbmk2.prg:2706 hbmk2.prg:2715 hbmk2.prg:9405 hbmk2.prg:9657 hbmk2.prg:9664
 #, c-format
@@ -178,8 +178,8 @@ msgstr "Meta actualizada: %1$s"
 
 #: hbmk2.prg:4308 hbmk2.prg:5837 hbmk2.prg:6418
 #, c-format
-msgid "Error: Running linker. %1$s"
-msgstr "Error: Ejecutando linkeditor. %1$s"
+msgid "Error: Running linker. %1$d"
+msgstr "Error: Ejecutando linkeditor. %1$d"
 
 #: hbmk2.prg:4390 hbmk2.prg:5928 hbmk2.prg:6525
 #, c-format
@@ -203,8 +203,8 @@ msgstr "Comando para enlace de Librería dinámica:"
 
 #: hbmk2.prg:4588 hbmk2.prg:6179 hbmk2.prg:6802
 #, c-format
-msgid "Warning: Running compression command. %1$s:"
-msgstr "Advertencia: Ejecutando comando de compresión. %1$s:"
+msgid "Warning: Running compression command. %1$d:"
+msgstr "Advertencia: Ejecutando comando de compresión. %1$d:"
 
 #: hbmk2.prg:3541 hbmk2.prg:4848 hbmk2.prg:5348
 #, c-format
@@ -223,8 +223,8 @@ msgstr "Creando cabecera con fecha y hora: %1$s"
 
 #: hbmk2.prg:4175 hbmk2.prg:4707 hbmk2.prg:5681 hbmk2.prg:6576 hbmk2.prg:6260 hbmk2.prg:7344
 #, c-format
-msgid "Error: Running C/C++ compiler job #%1$s. %2$s"
-msgstr "Error: Ejecutando trabajo del compilador C/C++ #%1$s. %2$s"
+msgid "Error: Running C/C++ compiler job #%1$d. %2$d"
+msgstr "Error: Ejecutando trabajo del compilador C/C++ #%1$d. %2$d"
 
 #: hbmk2.prg:3515 hbmk2.prg:4822 hbmk2.prg:5319
 #, c-format
@@ -238,18 +238,18 @@ msgstr "Línea de comando de Harbour:"
 
 #: hbmk2.prg:3539 hbmk2.prg:4846 hbmk2.prg:5346
 #, c-format
-msgid "Harbour compiler command (embedded) job #%1$s:"
-msgstr "Trabajo de compilador harbour (interno) #%1$s:"
+msgid "Harbour compiler command (embedded) job #%1$d:"
+msgstr "Trabajo de compilador harbour (interno) #%1$d:"
 
 #: hbmk2.prg:3553 hbmk2.prg:4860 hbmk2.prg:5360
 #, c-format
-msgid "Error: Running Harbour compiler (embedded). %1$s"
-msgstr "Error: Ejecutando compilador Harbour (interno): %1$s"
+msgid "Error: Running Harbour compiler (embedded). %1$d"
+msgstr "Error: Ejecutando compilador Harbour (interno): %1$d"
 
 #: hbmk2.prg:3574 hbmk2.prg:4884 hbmk2.prg:5384
 #, c-format
-msgid "Error: Running Harbour compiler job #%1$s. %2$s"
-msgstr "Error: Ejecutando trabajo de Compilador Harbour #%1$s. %2$s"
+msgid "Error: Running Harbour compiler job #%1$d. %2$d"
+msgstr "Error: Ejecutando trabajo de Compilador Harbour #%1$d. %2$d"
 
 #: hbmk2.prg:4349 hbmk2.prg:5884 hbmk2.prg:6465
 #, c-format
@@ -273,8 +273,8 @@ msgstr "Compilando..."
 
 #: hbmk2.prg:4136 hbmk2.prg:4697 hbmk2.prg:5642 hbmk2.prg:6566 hbmk2.prg:6221 hbmk2.prg:7334
 #, c-format
-msgid "C/C++ compiler command job #%1$s:"
-msgstr "Trabajo de Compilador C/C++ #%1$s:"
+msgid "C/C++ compiler command job #%1$d:"
+msgstr "Trabajo de Compilador C/C++ #%1$d:"
 
 #: hbmk2.prg:4412 hbmk2.prg:5956 hbmk2.prg:6553
 #, c-format
@@ -383,8 +383,8 @@ msgstr "Advertencia: Script para creación de librería no puede ser creado, con
 
 #: hbmk2.prg:4396 hbmk2.prg:5934 hbmk2.prg:6531
 #, c-format
-msgid "Error: Running dynamic lib link command. %1$s"
-msgstr "Error: Ejecutando comando de enlace de librería dinámica. %1$s"
+msgid "Error: Running dynamic lib link command. %1$d"
+msgstr "Error: Ejecutando comando de enlace de librería dinámica. %1$d"
 
 #: hbmk2.prg:4447 hbmk2.prg:5992 hbmk2.prg:6589
 #, c-format
@@ -783,8 +783,8 @@ msgstr "Script del compilador C/C++:"
 
 #: hbmk2.prg:4153 hbmk2.prg:4177 hbmk2.prg:4709 hbmk2.prg:5659 hbmk2.prg:5683 hbmk2.prg:6578 hbmk2.prg:6238 hbmk2.prg:6262 hbmk2.prg:7346
 #, c-format
-msgid "Error: Running C/C++ compiler. %1$s"
-msgstr "Error: Ejecutando compilador C/C++. %1$s"
+msgid "Error: Running C/C++ compiler. %1$d"
+msgstr "Error: Ejecutando compilador C/C++. %1$d"
 
 #: hbmk2.prg:4190
 #, c-format
@@ -803,8 +803,8 @@ msgstr "Creado archivo .po '%1$s' para idioma(s): %2$s"
 
 #: hbmk2.prg:4617 hbmk2.prg:6199 hbmk2.prg:6863
 #, c-format
-msgid "Running time: %1$ss"
-msgstr "Tiempo de ejecución: %1$ss"
+msgid "Running time: %1$ds"
+msgstr "Tiempo de ejecución: %1$ds"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
@@ -833,8 +833,8 @@ msgstr "Comando post procesador:"
 
 #: hbmk2.prg:4518 hbmk2.prg:6109 hbmk2.prg:6732
 #, c-format
-msgid "Warning: Running post processor command. %1$s:"
-msgstr "Advertencia: Ejecutando Comando post procesador. %1$s:"
+msgid "Warning: Running post processor command. %1$d:"
+msgstr "Advertencia: Ejecutando Comando post procesador. %1$d:"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
@@ -1028,7 +1028,7 @@ msgstr ""
 
 #: hbmk2.prg:1147 hbmk2.prg:1204
 #, c-format
-msgid "Building sub-project (level %1$s): %2$s"
+msgid "Building sub-project (level %1$d): %2$s"
 msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
@@ -1073,7 +1073,7 @@ msgstr ""
 
 #: hbmk2.prg:6507 hbmk2.prg:7233
 #, c-format
-msgid "Warning: Copying symbolic link %1$s to %2$s failed with %3$s."
+msgid "Warning: Copying symbolic link %1$s to %2$s failed with %3$d."
 msgstr ""
 
 #: hbmk2.prg:9415 hbmk2.prg:10084
@@ -1083,7 +1083,7 @@ msgstr ""
 
 #: hbmk2.prg:1141 hbmk2.prg:1198
 #, c-format
-msgid "Error: Cannot nest projects deeper than %1$s levels"
+msgid "Error: Cannot nest projects deeper than %1$d levels"
 msgstr ""
 
 #: hbmk2.prg:5210 hbmk2.prg:5731
@@ -1103,7 +1103,7 @@ msgstr ""
 
 #: hbmk2.prg:7934 hbmk2.prg:8776
 #, c-format
-msgid "Error: Executing plugin: %1$s at %3$s(%4$s)\\n'%2$s'"
+msgid "Error: Executing plugin: %1$s at %3$s(%4$d)\\n'%2$s'"
 msgstr ""
 
 #: hbmk2.prg:11512 hbmk2.prg:12970
@@ -1143,7 +1143,7 @@ msgstr ""
 
 #: hbmk2.prg:6513 hbmk2.prg:7239
 #, c-format
-msgid "Warning: Copying %1$s to %2$s failed with %3$s."
+msgid "Warning: Copying %1$s to %2$s failed with %3$d."
 msgstr ""
 
 #: hbmk2.prg:6439 hbmk2.prg:7165
@@ -1473,7 +1473,7 @@ msgstr ""
 
 #: hbmk2.prg:6843
 #, c-format
-msgid "Warning: Running code sign command. %1$s:"
+msgid "Warning: Running code sign command. %1$d:"
 msgstr ""
 
 #: hbmk2.prg:2597
