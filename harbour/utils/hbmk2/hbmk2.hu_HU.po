@@ -124,8 +124,8 @@ msgstr "egyszeri sípolás sikeres végrehajtás esetén, dupla sípolás hiba e
 
 #: hbmk2.prg:7941 hbmk2.prg:11633
 #, c-format
-msgid "stop after creating the object files\\ncreate link/copy hbmk2 to hbcmp/clipper for the same effect"
-msgstr "álljon meg az object állományok létrehozása után\\nA hbmk2 program hbcmp/clipper nevekre való másolásával/átnevezésével hasonló hatás érhet el"
+msgid "stop after creating the object files\\ncreate link/copy %1$s to hbcmp/clipper for the same effect"
+msgstr "álljon meg az object állományok létrehozása után\\nA %1$s program hbcmp/clipper nevekre való másolásával/átnevezésével hasonló hatás érhet el"
 
 #: hbmk2.prg:1296 hbmk2.prg:1667
 #, c-format
@@ -349,8 +349,8 @@ msgstr "Automatikusan detektált '%1$s' C fordító figyelmen kívül hagyva, me
 
 #: hbmk2.prg:7824 hbmk2.prg:11479
 #, c-format
-msgid "  hbmk2 [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d]>"
-msgstr "  hbmk2 [kapcsolók] [<parancsállomány[s]>] <forrás[.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d]>"
+msgid "  %1$s [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d]>"
+msgstr "  %1$s [kapcsolók] [<parancsállomány[s]>] <forrás[.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d]>"
 
 #: hbmk2.prg:7941
 #, c-format
@@ -389,8 +389,8 @@ msgstr "szerkessze be a GT<name> GT meghajtót. Több ilyen is megadható, az el
 
 #: hbmk2.prg:7941 hbmk2.prg:11633
 #, c-format
-msgid "stop after creating the object files and accept raw C flags\\ncreate link/copy hbmk2 to hbcc for the same effect"
-msgstr "álljon meg az object állományok létrehozása után és továbbítsa a kapcsolókat a C fordítónak\\nA hbmk2 program hbcc névre való másolásával/átnevezésével hasonló hatás érhet el"
+msgid "stop after creating the object files and accept raw C flags\\ncreate link/copy %1$s to hbcc for the same effect"
+msgstr "álljon meg az object állományok létrehozása után és továbbítsa a kapcsolókat a C fordítónak\\nA %1$s program hbcc névre való másolásával/átnevezésével hasonló hatás érhet el"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633
 #, c-format
@@ -699,8 +699,8 @@ msgstr ""
 
 #: hbmk2.prg:7959 hbmk2.prg:11650
 #, c-format
-msgid "%1$s option file in hbmk2 directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk2 directory."
-msgstr "%1$s opció fájl a hbmk2 könyvtárában mindig feldolgozásra kerül amennyiben létezik. *nix platformokon a fájl a ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc könyvtárak (ebben a sorrendben) szintén ellenőrzésre kerülnek."
+msgid "%1$s option file in %2$s directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the %2$s directory."
+msgstr "%1$s opció fájl a %2$s könyvtárában mindig feldolgozásra kerül amennyiben létezik. *nix platformokon a fájl a ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc könyvtárak (ebben a sorrendben) szintén ellenőrzésre kerülnek."
 
 #: hbmk2.prg:5806 hbmk2.prg:8785
 #, c-format
@@ -809,8 +809,8 @@ msgstr "szerkessze be <libname> függvénykönyvtárat. <libname>-ben nem szerep
 
 #: hbmk2.prg:7941 hbmk2.prg:11633
 #, c-format
-msgid "emulate Clipper compatible linker behavior\\ncreate link/copy hbmk2 to rtlink/blinker/exospace for the same effect"
-msgstr "emuláljon Clipper kompatibilis szerkesztő üzemmódot.\\nA hbmk2 program rtlink/blinker/exospace nevekre való másolásával/átnevezésével hasonló hatás érhet el"
+msgid "emulate Clipper compatible linker behavior\\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect"
+msgstr "emuláljon Clipper kompatibilis szerkesztő üzemmódot.\\nA %1$s program rtlink/blinker/exospace nevekre való másolásával/átnevezésével hasonló hatás érhet el"
 
 #: hbmk2.prg:7941
 #, c-format
@@ -1209,7 +1209,7 @@ msgstr ""
 
 #: hbmk2.prg:11633
 #, c-format
-msgid "options/flags reserved for 3rd party tools, always ignored by hbmk2 itself"
+msgid "options/flags reserved for 3rd party tools, always ignored by %1$s itself"
 msgstr ""
 
 #: hbmk2.prg:11633
@@ -1224,7 +1224,7 @@ msgstr ""
 
 #: hbmk2.prg:9418
 #, c-format
-msgid "Warning: Project reference (%1$s) ignored. Project references require hbmk2 to be invoced with a main project."
+msgid "Warning: Project reference (%1$s) ignored. Project references require %2$s to be invoked with a main project."
 msgstr ""
 
 #: hbmk2.prg:6786
@@ -1389,7 +1389,7 @@ msgstr ""
 
 #: hbmk2.prg:11633
 #, c-format
-msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of envvar HBMK2_WITH_<d>"
+msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of envvar HBMK_WITH_<d>"
 msgstr ""
 
 #: hbmk2.prg:11512

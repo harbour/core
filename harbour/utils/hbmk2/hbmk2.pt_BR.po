@@ -343,8 +343,8 @@ msgstr "linkar com suporte multi ou single-thread na HVM"
 
 #: hbmk2.prg:7825 hbmk2.prg:11479
 #, c-format
-msgid "  hbmk2 [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d]>"
-msgstr "  hbmk2 [opções] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d]>"
+msgid "  %1$s [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d]>"
+msgstr "  %1$s [opções] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d]>"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633
 #, c-format
@@ -478,8 +478,8 @@ msgstr "As opções em um arquivo .hbc devem estar em linhas separadas e são: l
 
 #: hbmk2.prg:7942 hbmk2.prg:11633
 #, c-format
-msgid "stop after creating the object files\\ncreate link/copy hbmk2 to hbcmp/clipper for the same effect"
-msgstr "interromper após criar os arquivos objetos\\ncriar um link ou copiar o hbmk2 para hbcmp/clipper resultará no mesmo efeito"
+msgid "stop after creating the object files\\ncreate link/copy %1$s to hbcmp/clipper for the same effect"
+msgstr "interromper após criar os arquivos objetos\\ncriar um link ou copiar o %1$s para hbcmp/clipper resultará no mesmo efeito"
 
 #: hbmk2.prg:7960
 #, c-format
@@ -808,13 +808,13 @@ msgstr "Tempo de execução: %1$ss"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633
 #, c-format
-msgid "emulate Clipper compatible linker behavior\\ncreate link/copy hbmk2 to rtlink/blinker/exospace for the same effect"
-msgstr "emula o comportamento de um linkeditor compatível com clipper\\ncriar um link ou copiar o hbmk2 para rtlink/blinker/exospace resultará no mesmo efeito"
+msgid "emulate Clipper compatible linker behavior\\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect"
+msgstr "emula o comportamento de um linkeditor compatível com clipper\\ncriar um link ou copiar o %1$s para rtlink/blinker/exospace resultará no mesmo efeito"
 
 #: hbmk2.prg:7960 hbmk2.prg:11650
 #, c-format
-msgid "%1$s option file in hbmk2 directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the hbmk2 directory."
-msgstr "O arquivo de configuração %1$s no diretório do hbmk2 sempre ser processado caso exista. Em plataformas *nix este arquivo é sempre procurado nas pastas ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc (exatamente nesta ordem) antes da pasta que contém o hbmk."
+msgid "%1$s option file in %2$s directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the %2$s directory."
+msgstr "O arquivo de configuração %1$s no diretório do %2$s sempre ser processado caso exista. Em plataformas *nix este arquivo é sempre procurado nas pastas ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc (exatamente nesta ordem) antes da pasta que contém o %2$s."
 
 #: hbmk2.prg:7942 hbmk2.prg:11633
 #, c-format
@@ -968,8 +968,8 @@ msgstr "compilação limpa (em modo de compilação incremental)"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633
 #, c-format
-msgid "stop after creating the object files and accept raw C flags\\ncreate link/copy hbmk2 to hbcc for the same effect"
-msgstr "interromper após criar os arquivos objetos e processa-los com o compilador C\\ncriar um link ou copiar o hbmk2 para hbcc resultará no mesmo efeito"
+msgid "stop after creating the object files and accept raw C flags\\ncreate link/copy %1$s to hbcc for the same effect"
+msgstr "interromper após criar os arquivos objetos e processa-los com o compilador C\\ncriar um link ou copiar o %1$s para hbcc resultará no mesmo efeito"
 
 #: hbmk2.prg:7808 hbmk2.prg:11462
 #, c-format
@@ -1213,7 +1213,7 @@ msgstr ""
 
 #: hbmk2.prg:11633
 #, c-format
-msgid "options/flags reserved for 3rd party tools, always ignored by hbmk2 itself"
+msgid "options/flags reserved for 3rd party tools, always ignored by %1$s itself"
 msgstr ""
 
 #: hbmk2.prg:11633
@@ -1228,7 +1228,7 @@ msgstr ""
 
 #: hbmk2.prg:9418
 #, c-format
-msgid "Warning: Project reference (%1$s) ignored. Project references require hbmk2 to be invoced with a main project."
+msgid "Warning: Project reference (%1$s) ignored. Project references require %2$s to be invoked with a main project."
 msgstr ""
 
 #: hbmk2.prg:6786
@@ -1393,7 +1393,7 @@ msgstr ""
 
 #: hbmk2.prg:11633
 #, c-format
-msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of envvar HBMK2_WITH_<d>"
+msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of envvar HBMK_WITH_<d>"
 msgstr ""
 
 #: hbmk2.prg:11512
