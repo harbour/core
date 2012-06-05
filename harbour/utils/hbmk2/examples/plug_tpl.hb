@@ -31,27 +31,27 @@
 
 #pragma warninglevel=3
 
-FUNCTION hbmk2_plugin_tpl( hbmk2 )
+FUNCTION hbmk_plugin_tpl( hbmk )
    LOCAL tmp
 
-   IF hbmk2[ "lTRACE" ]
-      hbmk2_OutStd( hbmk2, "@@ Entered plugin: " + hbmk2[ "cSTATE" ] )
+   IF hbmk[ "lTRACE" ]
+      hbmk_OutStd( hbmk, "@@ Entered plugin: " + hbmk[ "cSTATE" ] )
    ENDIF
 
-   SWITCH hbmk2[ "cSTATE" ]
+   SWITCH hbmk[ "cSTATE" ]
    CASE "pre_all"
 
-      FOR EACH tmp IN hbmk2[ "params" ]
-         hbmk2_OutStd( hbmk2, hb_StrFormat( "Parameter #%1$s: '%2$s'", hb_ntos( tmp:__enumIndex() ), tmp ) )
+      FOR EACH tmp IN hbmk[ "params" ]
+         hbmk_OutStd( hbmk, hb_StrFormat( "Parameter #%1$s: '%2$s'", hb_ntos( tmp:__enumIndex() ), tmp ) )
       NEXT
       EXIT
 
    CASE "pre_c"
-      hbmk2[ "vars" ][ "MyVar" ] := "Hello world!"
+      hbmk[ "vars" ][ "MyVar" ] := "Hello world!"
       EXIT
 
    CASE "post_all"
-      hbmk2_OutStd( hbmk2, "POST_ALL: " + hbmk2[ "vars" ][ "MyVar" ] )
+      hbmk_OutStd( hbmk, "POST_ALL: " + hbmk[ "vars" ][ "MyVar" ] )
       EXIT
 
    ENDSWITCH

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Harbour Make (alias hbmk, alias hbmk2)
+ * Harbour Make (alias hbmk/hbmk2)
  *
  * Copyright 1999-2012 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
@@ -8554,19 +8554,44 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
 
    RETURN
 
+/* Public functions accessible for plugins (compatibility) */
+
+FUNCTION hbmk2_FindInPath( ... )                    ; RETURN hbmk_FindInPath( ... )
+FUNCTION hbmk2_PathSepToForward( ... )              ; RETURN hbmk_PathSepToForward( ... )
+FUNCTION hbmk2_PathSepToSelf( ... )                 ; RETURN hbmk_PathSepToSelf( ... )
+FUNCTION hbmk2_FNameDirExtSet( ... )                ; RETURN hbmk_FNameDirExtSet( ... )
+FUNCTION hbmk2_FNameEscape( ... )                   ; RETURN hbmk_FNameEscape( ... )
+FUNCTION hbmk2_FNameToSymbol( ... )                 ; RETURN hbmk_FNameToSymbol( ... )
+FUNCTION hbmk2_StrStripQuote( ... )                 ; RETURN hbmk_StrStripQuote( ... )
+FUNCTION hbmk2_OutStdRaw( ... )                     ; RETURN hbmk_OutStdRaw( ... )
+FUNCTION hbmk2_OutErrRaw( ... )                     ; RETURN hbmk_OutErrRaw( ... )
+FUNCTION hbmk2_ArrayToList( ... )                   ; RETURN hbmk_ArrayToList( ... )
+FUNCTION hbmk2_PathFromWorkdirToCWD( ... )          ; RETURN hbmk_PathFromWorkdirToCWD( ... )
+FUNCTION hbmk2_Macro( ... )                         ; RETURN hbmk_Macro( ... )
+FUNCTION hbmk2_OutStd( ... )                        ; RETURN hbmk_OutStd( ... )
+FUNCTION hbmk2_OutErr( ... )                        ; RETURN hbmk_OutErr( ... )
+FUNCTION hbmk2_PathSepToTarget( ... )               ; RETURN hbmk_PathSepToTarget( ... )
+FUNCTION hbmk2_AddInput_PRG( ... )                  ; RETURN hbmk_AddInput_PRG( ... )
+FUNCTION hbmk2_AddInput_C( ... )                    ; RETURN hbmk_AddInput_C( ... )
+FUNCTION hbmk2_AddInput_CPP( ... )                  ; RETURN hbmk_AddInput_CPP( ... )
+FUNCTION hbmk2_AddInput_RC( ... )                   ; RETURN hbmk_AddInput_RC( ... )
+FUNCTION hbmk2_AddInput_OBJ( ... )                  ; RETURN hbmk_AddInput_OBJ( ... )
+FUNCTION hbmk2_AddInput_INSTFILE( ... )             ; RETURN hbmk_AddInput_INSTFILE( ... )
+FUNCTION hbmk2_Register_Input_File_Extension( ... ) ; RETURN hbmk_Register_Input_File_Extension( ... )
+
 /* Public functions accessible for plugins */
 
-FUNCTION hbmk2_FindInPath( ... )       ; RETURN FindInPath( ... )
-FUNCTION hbmk2_PathSepToForward( ... ) ; RETURN PathSepToForward( ... )
-FUNCTION hbmk2_PathSepToSelf( ... )    ; RETURN PathSepToSelf( ... )
-FUNCTION hbmk2_FNameDirExtSet( ... )   ; RETURN FNameDirExtSet( ... )
-FUNCTION hbmk2_FNameEscape( ... )      ; RETURN FNameEscape( ... )
-FUNCTION hbmk2_FNameToSymbol( ... )    ; RETURN FuncNameEncode( ... )
-FUNCTION hbmk2_StrStripQuote( ... )    ; RETURN StrStripQuote( ... )
-FUNCTION hbmk2_OutStdRaw( ... )        ; RETURN ( OutStd( ... ), OutStd( _OUT_EOL ) )
-FUNCTION hbmk2_OutErrRaw( ... )        ; RETURN ( OutErr( ... ), OutErr( _OUT_EOL ) )
+FUNCTION hbmk_FindInPath( ... )       ; RETURN FindInPath( ... )
+FUNCTION hbmk_PathSepToForward( ... ) ; RETURN PathSepToForward( ... )
+FUNCTION hbmk_PathSepToSelf( ... )    ; RETURN PathSepToSelf( ... )
+FUNCTION hbmk_FNameDirExtSet( ... )   ; RETURN FNameDirExtSet( ... )
+FUNCTION hbmk_FNameEscape( ... )      ; RETURN FNameEscape( ... )
+FUNCTION hbmk_FNameToSymbol( ... )    ; RETURN FuncNameEncode( ... )
+FUNCTION hbmk_StrStripQuote( ... )    ; RETURN StrStripQuote( ... )
+FUNCTION hbmk_OutStdRaw( ... )        ; RETURN ( OutStd( ... ), OutStd( _OUT_EOL ) )
+FUNCTION hbmk_OutErrRaw( ... )        ; RETURN ( OutErr( ... ), OutErr( _OUT_EOL ) )
 
-FUNCTION hbmk2_ArrayToList( array, cSeparator )
+FUNCTION hbmk_ArrayToList( array, cSeparator )
    LOCAL cString := ""
    LOCAL tmp
 
@@ -8593,42 +8618,42 @@ STATIC FUNCTION ctx_to_hbmk( ctx )
    ENDIF
    RETURN NIL
 
-FUNCTION hbmk2_PathFromWorkdirToCWD( ctx )
+FUNCTION hbmk_PathFromWorkdirToCWD( ctx )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL
       RETURN hb_DirSepAdd( hb_PathRelativize( hb_PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_cwd() ) ), hb_cwd(), .T. ) )
    ENDIF
    RETURN ""
 
-FUNCTION hbmk2_Macro( ctx, cString )
+FUNCTION hbmk_Macro( ctx, cString )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL
       RETURN MacroProc( hbmk, cString )
    ENDIF
    RETURN ""
 
-FUNCTION hbmk2_OutStd( ctx, cText )
+FUNCTION hbmk_OutStd( ctx, cText )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL
       RETURN hbmk_OutStd( hbmk, hb_StrFormat( I_( "plugin: %1$s" ), cText ) )
    ENDIF
    RETURN NIL
 
-FUNCTION hbmk2_OutErr( ctx, cText )
+FUNCTION hbmk_OutErr( ctx, cText )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL
       RETURN hbmk_OutErr( hbmk, hb_StrFormat( I_( "plugin: %1$s" ), cText ) )
    ENDIF
    RETURN NIL
 
-FUNCTION hbmk2_PathSepToTarget( ctx, ... )
+FUNCTION hbmk_PathSepToTarget( ctx, ... )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL
       RETURN PathSepToTarget( hbmk, ... )
    ENDIF
    RETURN ""
 
-FUNCTION hbmk2_AddInput_PRG( ctx, cFileName )
+FUNCTION hbmk_AddInput_PRG( ctx, cFileName )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
       AAdd( hbmk[ _HBMK_aPRG ], PathSepToSelf( cFileName ) )
@@ -8636,7 +8661,7 @@ FUNCTION hbmk2_AddInput_PRG( ctx, cFileName )
    ENDIF
    RETURN NIL
 
-FUNCTION hbmk2_AddInput_C( ctx, cFileName )
+FUNCTION hbmk_AddInput_C( ctx, cFileName )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
       AAdd( hbmk[ _HBMK_aC ], PathSepToSelf( cFileName ) )
@@ -8644,7 +8669,7 @@ FUNCTION hbmk2_AddInput_C( ctx, cFileName )
    ENDIF
    RETURN NIL
 
-FUNCTION hbmk2_AddInput_CPP( ctx, cFileName )
+FUNCTION hbmk_AddInput_CPP( ctx, cFileName )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
       AAdd( hbmk[ _HBMK_aCPP ], PathSepToSelf( cFileName ) )
@@ -8652,21 +8677,21 @@ FUNCTION hbmk2_AddInput_CPP( ctx, cFileName )
    ENDIF
    RETURN NIL
 
-FUNCTION hbmk2_AddInput_RC( ctx, cFileName )
+FUNCTION hbmk_AddInput_RC( ctx, cFileName )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
       AAdd( hbmk[ _HBMK_aRESSRC ], PathSepToSelf( cFileName ) )
    ENDIF
    RETURN NIL
 
-FUNCTION hbmk2_AddInput_OBJ( ctx, cFileName )
+FUNCTION hbmk_AddInput_OBJ( ctx, cFileName )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
       AAdd( hbmk[ _HBMK_aOBJUSER ], PathSepToSelf( cFileName ) )
    ENDIF
    RETURN NIL
 
-FUNCTION hbmk2_AddInput_INSTFILE( ctx, cFileName, cGroup )
+FUNCTION hbmk_AddInput_INSTFILE( ctx, cFileName, cGroup )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
       IF ! HB_ISSTRING( cGroup )
@@ -8676,7 +8701,7 @@ FUNCTION hbmk2_AddInput_INSTFILE( ctx, cFileName, cGroup )
    ENDIF
    RETURN NIL
 
-FUNCTION hbmk2_Register_Input_File_Extension( ctx, cExt )
+FUNCTION hbmk_Register_Input_File_Extension( ctx, cExt )
    LOCAL hbmk := ctx_to_hbmk( ctx )
    IF hbmk != NIL .AND. HB_ISSTRING( cExt )
       IF ! Empty( cExt )
