@@ -4,13 +4,14 @@
 
 /*
  * Harbour Project source code:
- * Document generator include file
+ * Document generator template class
  *
  * Copyright 2009 April White <april users.sourceforge.net>
  * www - http://harbour-project.org
  *
  * Portions of this project are based on hbdoc
  *    Copyright 1999-2003 Luiz Rafael Culik <culikr@uol.com.br>
+ *    <TODO: list gen... methods used>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,24 +54,62 @@
  *
  */
 
-#ifndef HBDOC2_CH_
-#define HBDOC2_CH_
+#include "simpleio.ch"
 
-MEMVAR p_aCategories
-MEMVAR p_hsSwitches
-MEMVAR p_aCompliance
-MEMVAR p_aPlatforms
-MEMVAR p_aStatus
-MEMVAR p_aConversionList
+#include "hbclass.ch"
 
-// Template definitions
-#define TPL_START            1
-#define TPL_END              2
-#define TPL_REQUIRED         4 // intentially has a 'required' and 'optional' flag
-#define TPL_OPTIONAL         8
-#define TPL_PREFORMATTED    16
-#define TPL_CONSTRAINTLIST  32
-#define TPL_TEMPLATE        64
-#define TPL_OUTPUT         128
+#include "hbdoc.ch"
 
-#endif
+#define DOCUMENT_ 1
+#define INDEX_ 2
+
+CLASS TPLGenerate
+
+EXPORTED:
+//~ PROTECTED:
+   DATA nHandle AS NUMERIC
+   DATA cFolder AS STRING
+   DATA cFilename AS STRING
+   DATA cTitle AS STRING
+   DATA cExtension AS STRING
+
+   METHOD NewIndex( cFolder, cFilename, cTitle, cExtension )
+   METHOD NewDocument( cFolder, cFilename, cTitle, cExtension )
+   METHOD AddEntry( oEntry ) INLINE HB_SYMBOL_UNUSED( oEntry ), NIL
+   METHOD AddReference( oEntry ) INLINE HB_SYMBOL_UNUSED( oEntry ), NIL
+   METHOD BeginSection( cSection, cFilename ) INLINE HB_SYMBOL_UNUSED( cSection ), HB_SYMBOL_UNUSED( cFilename ), ::Depth++
+   METHOD EndSection( cSection, cFilename ) INLINE  HB_SYMBOL_UNUSED( cSection ), HB_SYMBOL_UNUSED( cFilename ), ::Depth--
+   METHOD Generate() INLINE NIL
+   METHOD IsIndex() INLINE ( ::nType == INDEX_ )
+
+PROTECTED:
+   METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) HIDDEN
+   DATA nType AS INTEGER
+   DATA Depth AS INTEGER INIT 0
+ENDCLASS
+
+METHOD NewIndex( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate
+   self:New( cFolder, cFilename, cTitle, cExtension, INDEX_ )
+   RETURN self
+
+METHOD NewDocument( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate
+   self:New( cFolder, cFilename, cTitle, cExtension, DOCUMENT_ )
+   RETURN self
+
+METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate
+
+   ::nHandle := 0
+   ::cFolder := cFolder
+   ::cFilename := cFilename
+   ::cTitle := cTitle
+   ::cExtension := cExtension
+   ::nType := nType
+
+   IF ! hb_DirExists( ::cFolder )
+      ? "Creating folder " + ::cFolder
+      hb_DirCreate( ::cFolder )
+   ENDIF
+
+   ::nHandle := FCreate( ::cFolder + hb_ps() + ::cFilename + ::cExtension )
+
+   RETURN self

@@ -58,7 +58,7 @@
 #include "common.ch"
 #include "inkey.ch"
 #include "fileio.ch"
-#include "hbdoc2.ch"
+#include "hbdoc.ch"
 
 #ifdef __PLATFORM__DOS
    #define EXTENSION ".htm"
@@ -111,7 +111,7 @@ METHOD NewFile() CLASS GenerateHTML
    ::OpenTag( "head" )
 
    ::Append( ::cTitle /* + IIf( Empty( ::cDescription ), "", " - " + ::cDescription ) */, "title" )
-   ::OpenTag( "meta", "name", "generator", "content", "Harbour examples/hbdoc2" )
+   ::OpenTag( "meta", "name", "generator", "content", "Harbour examples/hbdoc" )
    ::OpenTag( "meta", "name", "keywords", "content", "Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin" )
 
    #define STYLEFILE "hrb_doc.css"

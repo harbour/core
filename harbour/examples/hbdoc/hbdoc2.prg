@@ -101,7 +101,7 @@ done - validate sources against these templates
 #include "fileio.ch"
 #include "simpleio.ch"
 
-#include "hbdoc2.ch"
+#include "hbdoc.ch"
 
 ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
@@ -944,12 +944,12 @@ PROCEDURE ShowHelp( cExtraMessage, aArgs )
    CASE Empty( aArgs ) .OR. Len( aArgs ) <= 1 .OR. Empty( aArgs[ 1 ] )
       aHelp := { ;
          cExtraMessage, ;
-         "Harbour Document Compiler (hbdoc2) " + HBRawVersion(), ;
+         "Harbour Document Compiler (hbdoc) " + HBRawVersion(), ;
          "Copyright (c) 1999-2010, http://harbour-project.org/", ;
          "", ;
          "Syntax:", ;
          "", ;
-         { "hbdoc2 [options]" }, ;
+         { "hbdoc [options]" }, ;
          "", ;
          "Options:", ;
          { ;

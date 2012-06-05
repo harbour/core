@@ -53,7 +53,7 @@
  *
  */
 
-#include "hbdoc2.ch"
+#include "hbdoc.ch"
 
 #include "hbclass.ch"
 

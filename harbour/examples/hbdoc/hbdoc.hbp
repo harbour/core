@@ -10,7 +10,7 @@
 
 -gtcgi
 
-hbdoc2.prg
+hbdoc.prg
 
 gentpl.prg
 gentxt.prg

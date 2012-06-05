@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Document generator - text output
+ * Document generator - XML output
  *
  * Copyright 2009 April White <april users.sourceforge.net>
  * www - http://harbour-project.org
@@ -57,28 +57,12 @@
 #include "hbclass.ch"
 #include "inkey.ch"
 #include "fileio.ch"
-#include "hbdoc2.ch"
+#include "hbdoc.ch"
 
-CLASS GenerateAscii FROM GenerateText
-   METHOD NewIndex( cFolder, cFilename, cTitle, cDescription )
-   METHOD NewDocument( cFolder, cFilename, cTitle, cDescription )
-ENDCLASS
-
-METHOD NewDocument( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateAscii
-   ::lContinuous := .T.
-   super:NewDocument( cFolder, cFilename, cTitle, cDescription )
-   RETURN self
-
-METHOD NewIndex( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateAscii
-   ::lContinuous := .T.
-   super:NewIndex( cFolder, cFilename, cTitle, cDescription )
-   RETURN self
-
-CLASS GenerateText FROM TPLGenerate
+CLASS GenerateXML FROM TPLGenerate
 HIDDEN:
 
 PROTECTED:
-   DATA lContinuous AS LOGICAL INIT .F.
 
 EXPORTED:
    METHOD NewIndex( cFolder, cFilename, cTitle )
@@ -86,72 +70,65 @@ EXPORTED:
    METHOD AddEntry( oEntry )
    METHOD AddIndex( oEntry ) HIDDEN
    METHOD BeginSection( cSection, cFilename )
-   //~ METHOD EndSection( cSection, cFilename ) // will use inherited method
+   METHOD EndSection( cSection, cFilename )
    METHOD Generate()
 
    METHOD WriteEntry( cCaption, cEntry, lPreformatted ) HIDDEN
 ENDCLASS
 
-METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateText
-   super:NewDocument( cFolder, cFilename, cTitle, ".txt" )
-   ::WriteEntry( "", cTitle + hb_eol(), .F. )
+METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateXML
+   super:NewDocument( cFolder, cFilename, cTitle, ".xml" )
+   FWrite( ::nHandle, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + hb_eol() )
+   FWrite( ::nHandle, '<HarbourReference>' + hb_eol() )
    RETURN self
 
-METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateText
-   super:NewIndex( cFolder, cFilename, cTitle, ".txt" )
-   ::WriteEntry( "", cTitle + hb_eol(), .F. )
+METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateXML
+   super:NewIndex( cFolder, cFilename, cTitle, ".xml" )
+   FWrite( ::nHandle, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + hb_eol() )
+   FWrite( ::nHandle, '<HarbourReference>' + hb_eol() )
    RETURN self
 
-METHOD BeginSection( cSection, cFilename ) CLASS GenerateText
+METHOD BeginSection( cSection, cFilename ) CLASS GenerateXML
    IF ::Depth == 0
-      ::WriteEntry( "", cSection + " (see " + cFilename + ::cExtension + "):", .F. )
+      FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [<Section name="] + cSection + [" file="] + cFilename + ::cExtension + [">] + hb_eol() )
    ELSE
-      ::WriteEntry( "", cSection + ":", .F. )
+      FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [<Section name="] + cSection + [">] + hb_eol() )
    ENDIF
    ::Depth++
    RETURN self
 
-METHOD AddIndex( oEntry ) CLASS GenerateText
-   ::WriteEntry( oEntry:FieldName( "NAME" ), oEntry:Name + " - " + oEntry:OneLiner, .F. )
+METHOD EndSection( cSection, cFilename ) CLASS GenerateXML
+HB_SYMBOL_UNUSED( cSection )
+HB_SYMBOL_UNUSED( cFilename )
+   ::Depth--
+   FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [</Section>] + hb_eol() )
    RETURN self
 
-METHOD AddEntry( oEntry ) CLASS GenerateText
+METHOD AddIndex( oEntry ) CLASS GenerateXML
+   ::WriteEntry( "ENTRY", oEntry:Name + " - " + oEntry:OneLiner, .F. )
+   RETURN self
+
+METHOD AddEntry( oEntry ) CLASS GenerateXML
    LOCAL idx
 
    IF self:IsIndex()
       self:AddIndex( oEntry )
    ELSE
+      FWrite( ::nHandle, '<Entry>' + hb_eol() )
+      ::Depth++
       FOR idx := 1 TO Len( oEntry:Fields )
-         IF oEntry:IsField( oEntry:Fields[ idx ][ 1 ] ) .AND. oEntry:IsOutput( oEntry:Fields[ idx ][ 1 ] ) .AND. Len( oEntry:&( oEntry:Fields[ idx ][ 1 ] ) ) > 0
-            ::WriteEntry( oEntry:FieldName( oEntry:Fields[ idx ][ 1 ] ), oEntry:&( oEntry:Fields[ idx ][ 1 ] ), oEntry:IsPreformatted( oEntry:Fields[ idx ][ 1 ] ) )
-         ENDIF
+         ::WriteEntry( oEntry:Fields[ idx ][ 1 ], oEntry:&( oEntry:Fields[ idx ][ 1 ] ), oEntry:IsPreformatted( oEntry:Fields[ idx ][ 1 ] ) )
       NEXT
-
-      IF ! ::lContinuous
-         FWrite( ::nHandle, Chr( K_CTRL_L ) + hb_eol() )
-      ENDIF
+      ::Depth--
+      FWrite( ::nHandle, '</Entry>' + hb_eol() )
    ENDIF
 
    RETURN self
 
-METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateText
-   LOCAL nIndent
-   IF ! Empty( cEntry )
-      nIndent := IIf( Len( cCaption ) > 0, 6, 0 )
-      IF Len( cCaption ) > 0 .AND. nIndent > 0
-            FWrite( ::nHandle, Space( ::Depth * 6 ) + cCaption + ": " + hb_eol() )
-      ENDIF
-      nIndent += ::Depth * 6
-      DO WHILE Len( cEntry ) > 0
-         FWrite( ::nHandle, Indent( Parse( @cEntry, hb_eol() ), nIndent, 70, lPreformatted ) )
-      ENDDO
-   ENDIF
+METHOD Generate() CLASS GenerateXML
+   FWrite( ::nHandle, '</HarbourReference>' + hb_eol() )
 
-METHOD Generate() CLASS GenerateText
    IF ::IsIndex()
-      IF ! ::lContinuous
-         FWrite( ::nHandle, Chr( K_CTRL_L ) + hb_eol() )
-      ENDIF
    ENDIF
 
    IF ! Empty( ::nHandle )
@@ -160,3 +137,21 @@ METHOD Generate() CLASS GenerateText
    ENDIF
 
    RETURN self
+
+METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateXML
+   LOCAL cResult
+   LOCAL idx
+
+   IF ! Empty( cEntry )
+      cResult := iif( hb_eol() $ cEntry, hb_eol() + cEntry, cEntry )
+      FOR idx := 1 TO Len( p_aConversionList ) STEP 2
+         cResult := StrTran( cResult, Chr( p_aConversionList[ idx ] ), "&" + p_aConversionList[ idx + 1 ] + ";" )
+      NEXT
+      cEntry := cResult
+
+      FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + "<" + cCaption + iif( lPreformatted, ' preformatted="yes"', "") + ">" )
+      FWrite( ::nHandle, cEntry )
+      FWrite( ::nHandle, /* Replicate( Chr(9), ::Depth ) + */ "</" + cCaption + ">" + hb_eol() )
+   ENDIF
+
+   RETURN
