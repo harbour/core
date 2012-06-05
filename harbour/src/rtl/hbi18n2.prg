@@ -484,7 +484,7 @@ FUNCTION __I18N_POTARRAYJOIN( aTrans, aTrans2, hIndex )
    LOCAL aItem, aDest, aSrc
    LOCAL ctx
 
-   IF !HB_ISHASH( hIndex )
+   IF ! HB_ISHASH( hIndex )
       hIndex := { => }
       FOR EACH aItem in aTrans
          ctx := aItem[ _I18N_CONTEXT ] + _I18N_DELIM + aItem[ _I18N_MSGID, 1 ]

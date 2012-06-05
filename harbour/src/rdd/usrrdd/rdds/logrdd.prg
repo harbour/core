@@ -404,7 +404,7 @@ STATIC PROCEDURE ToLog( cCmd, nWA, xPar1, xPar2, xPar3 )
       bUserLogBlock := aRDDData[ ARRAY_USERLOGBLOCK ]
 
       // If not defined a User codeblock
-      IF !HB_ISBLOCK( bUserLogBlock )
+      IF ! HB_ISBLOCK( bUserLogBlock )
 
          nHandle      := aRDDData[ ARRAY_FHANDLE ]
 

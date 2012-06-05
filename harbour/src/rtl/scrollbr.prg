@@ -54,7 +54,6 @@
 
 #include "button.ch"
 #include "color.ch"
-#include "common.ch"
 
 /* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
@@ -404,13 +403,13 @@ METHOD New( nStart, nEnd, nOffset, bSBlock, nOrient ) CLASS SCROLLBAR
 
    LOCAL cColor
 
-   DEFAULT nOrient TO SCROLL_VERTICAL
+   __defaultNIL( @nOrient, SCROLL_VERTICAL )
 
-   IF !HB_ISNUMERIC( nStart ) .OR. ;
-      !HB_ISNUMERIC( nEnd ) .OR. ;
-      !HB_ISNUMERIC( nOffset ) .OR. ;
-      !ValType( bSBlock ) $ "BU" .OR. ;
-      !HB_ISNUMERIC( nOrient ) .OR. ;
+   IF ! HB_ISNUMERIC( nStart ) .OR. ;
+      ! HB_ISNUMERIC( nEnd ) .OR. ;
+      ! HB_ISNUMERIC( nOffset ) .OR. ;
+      ! ValType( bSBlock ) $ "BU" .OR. ;
+      ! HB_ISNUMERIC( nOrient ) .OR. ;
       ( nOrient != SCROLL_VERTICAL .AND. nOrient != SCROLL_HORIZONTAL )
       RETURN NIL
    ENDIF

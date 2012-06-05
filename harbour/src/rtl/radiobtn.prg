@@ -324,12 +324,12 @@ METHOD New( nRow, nCol, cCaption, cData ) CLASS RADIOBUTTN
 
    LOCAL cColor
 
-   IF !HB_ISNUMERIC( nRow ) .OR. ;
-      !HB_ISNUMERIC( nCol )
+   IF ! HB_ISNUMERIC( nRow ) .OR. ;
+      ! HB_ISNUMERIC( nCol )
       RETURN NIL
    ENDIF
 
-   IF !HB_ISSTRING( cCaption )
+   IF ! HB_ISSTRING( cCaption )
       cCaption := ""
    ENDIF
 

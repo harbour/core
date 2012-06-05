@@ -165,7 +165,7 @@ PROCEDURE GetDoSetKey( bKeyBlock, oGet )
 
 #ifdef HB_COMPAT_C53
 PROCEDURE GetApplyKey( oGet, nKey, oGetList, oMenu, aMsg )
-   IF !HB_ISOBJECT( oGetList )
+   IF ! HB_ISOBJECT( oGetList )
       oGetList := __GetListActive()
    ENDIF
 #else

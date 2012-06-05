@@ -54,7 +54,6 @@
 
 #include "button.ch"
 #include "color.ch"
-#include "common.ch"
 #include "setcurs.ch"
 
 /* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
@@ -331,7 +330,7 @@ METHOD New( nRow, nCol, cCaption ) CLASS CHECKBOX
 
    LOCAL cColor
 
-   DEFAULT cCaption TO ""
+   __defaultNIL( @cCaption, "" )
 
    ::caption  := cCaption
    ::capRow   := nRow

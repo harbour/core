@@ -55,7 +55,6 @@
 #include "hblang.ch"
 
 #include "color.ch"
-#include "common.ch"
 #include "setcurs.ch"
 #include "getexit.ch"
 #include "inkey.ch"
@@ -1931,18 +1930,30 @@ METHOD Reader( xValue ) CLASS GET
 
 METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS GET
 
-   DEFAULT nRow       TO Row()
-   DEFAULT nCol       TO Col() + iif( Set( _SET_DELIMITERS ), 1, 0 )
-   DEFAULT cVarName   TO ""
-   DEFAULT bVarBlock  TO iif( HB_ISSTRING( cVarName ), MemvarBlock( cVarName ), NIL )
+   IF nRow == NIL
+      nRow := Row()
+   ENDIF
+   IF nCol == NIL
+      nCol := Col() + iif( Set( _SET_DELIMITERS ), 1, 0 )
+   ENDIF
+   IF cVarName == NIL
+      cVarName := ""
+   ENDIF
+   IF bVarBlock == NIL
+      bVarBlock := iif( HB_ISSTRING( cVarName ), MemvarBlock( cVarName ), NIL )
+   ENDIF
 #ifdef HB_COMPAT_C53
-   DEFAULT cColorSpec TO hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," +;
-                         hb_ColorIndex( SetColor(), CLR_ENHANCED ) + "," +;
-                         hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;
-                         iif( IsDefColor(), iif( Set( _SET_INTENSITY ), "W+/N", "W/N" ), hb_ColorIndex( SetColor(), CLR_BACKGROUND ) )
+   IF cColorSpec == NIL
+      cColorSpec := hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," +;
+                    hb_ColorIndex( SetColor(), CLR_ENHANCED ) + "," +;
+                    hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;
+                    iif( IsDefColor(), iif( Set( _SET_INTENSITY ), "W+/N", "W/N" ), hb_ColorIndex( SetColor(), CLR_BACKGROUND ) )
+   ENDIF
 #else
-   DEFAULT cColorSpec TO hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," +;
-                         hb_ColorIndex( SetColor(), CLR_ENHANCED )
+   IF cColorSpec == NIL
+      cColorSpec := hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," +;
+                    hb_ColorIndex( SetColor(), CLR_ENHANCED )
+   ENDIF
 #endif
 
    ::nRow      := nRow

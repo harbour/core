@@ -58,7 +58,6 @@
 
 #include "button.ch"
 #include "color.ch"
-#include "common.ch"
 #include "error.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -306,10 +305,15 @@ FUNCTION TBrowseNew( nTop, nLeft, nBottom, nRight )
 
 METHOD new( nTop, nLeft, nBottom, nRight ) CLASS TBROWSE
 
-   DEFAULT nTop    TO 0
-   DEFAULT nLeft   TO 0
-   DEFAULT nBottom TO MaxRow()
-   DEFAULT nRight  TO MaxCol()
+   __defaultNIL( @nTop, 0 )
+   __defaultNIL( @nLeft, 0 )
+
+   IF nBottom == NIL
+      nBottom := MaxRow()
+   ENDIF
+   IF nRight == NIL
+      nRight := MaxCol()
+   ENDIF
 
    ::nTop    := nTop
    ::nLeft   := nLeft
@@ -1249,7 +1253,7 @@ METHOD configure( nMode ) CLASS TBROWSE
     * accessing [druzus]
     */
 
-   IF !HB_ISNUMERIC( nMode ) .OR. nMode == 0 .OR. nMode > _TBR_CONF_ALL
+   IF ! HB_ISNUMERIC( nMode ) .OR. nMode == 0 .OR. nMode > _TBR_CONF_ALL
       nMode := _TBR_CONF_ALL
    ENDIF
    ::nConfigure := HB_BITOR( ::nConfigure, nMode )
@@ -1299,16 +1303,16 @@ METHOD doConfigure() CLASS TBROWSE
          cColSep := ::cColSep
       ENDIF
       cHeadSep := oCol:headSep
-      IF !HB_ISSTRING( cHeadSep ) .OR. cHeadSep == ""
+      IF ! HB_ISSTRING( cHeadSep ) .OR. cHeadSep == ""
          cHeadSep := ::cHeadSep
-         IF !HB_ISSTRING( cHeadSep )
+         IF ! HB_ISSTRING( cHeadSep )
             cHeadSep := ""
          ENDIF
       ENDIF
       cFootSep := oCol:footSep
-      IF !HB_ISSTRING( cFootSep ) .OR. cFootSep == ""
+      IF ! HB_ISSTRING( cFootSep ) .OR. cFootSep == ""
          cFootSep := ::cFootSep
-         IF !HB_ISSTRING( cFootSep )
+         IF ! HB_ISSTRING( cFootSep )
             cFootSep := ""
          ENDIF
       ENDIF
@@ -2021,7 +2025,7 @@ METHOD setTopFlag( lTop ) CLASS TBROWSE
       ::doConfigure()
    ENDIF
 
-   IF !HB_ISLOGICAL( lTop )
+   IF ! HB_ISLOGICAL( lTop )
       RETURN .T.
    ENDIF
 
@@ -2045,7 +2049,7 @@ METHOD setBottomFlag( lBottom ) CLASS TBROWSE
       ::doConfigure()
    ENDIF
 
-   IF !HB_ISLOGICAL( lBottom )
+   IF ! HB_ISLOGICAL( lBottom )
       RETURN .T.
    ENDIF
 
@@ -2069,7 +2073,7 @@ METHOD setAutoLite( lAutoLite ) CLASS TBROWSE
       ::doConfigure()
    ENDIF
 
-   IF !HB_ISLOGICAL( lAutoLite )
+   IF ! HB_ISLOGICAL( lAutoLite )
       RETURN .T.
    ENDIF
 
@@ -2093,7 +2097,7 @@ METHOD setStableFlag( lStable ) CLASS TBROWSE
       ::doConfigure()
    ENDIF
 
-   IF !HB_ISLOGICAL( lStable )
+   IF ! HB_ISLOGICAL( lStable )
       RETURN .T.
    ENDIF
 
@@ -2390,7 +2394,7 @@ METHOD hitTest( mRow, mCol ) CLASS TBROWSE
    ::mRowPos := ::mColPos := 0
 #endif
 
-   IF !HB_ISNUMERIC( mRow ) .OR. !HB_ISNUMERIC( mCol ) .OR. ;
+   IF ! HB_ISNUMERIC( mRow ) .OR. ! HB_ISNUMERIC( mCol ) .OR. ;
       mRow < ( nTop    := _TBR_COORD( ::n_Top    ) ) .OR. ;
       mRow > ( nBottom := _TBR_COORD( ::n_Bottom ) ) .OR. ;
       mCol < ( nLeft   := _TBR_COORD( ::n_Left   ) ) .OR. ;

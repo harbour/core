@@ -3303,7 +3303,7 @@ FUNCTION __dbgInput( nRow, nCol, nWidth, cValue, bValid, cColor, nSize )
    LOCAL nKey
    LOCAL oGet
 
-   IF !HB_ISNUMERIC( nWidth )
+   IF ! HB_ISNUMERIC( nWidth )
       nWidth := Len( cValue )
    ENDIF
    oGet := HbDbInput():new( nRow, nCol, nWidth, cValue, cColor, nSize )

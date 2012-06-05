@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "dbstruct.ch"
 
 FUNCTION __dbCopyStruct( cFileName, aFieldList )
@@ -108,7 +107,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
 
    LOCAL oError
 
-   DEFAULT lNew TO .F.
+   __defaultNIL( @lNew, .F. )
 
    IF cAlias == NIL
       hb_FNameSplit( cFileName, NIL, @cAlias )

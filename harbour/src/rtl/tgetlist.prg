@@ -64,7 +64,6 @@
 #include "hbclass.ch"
 
 #include "button.ch"
-#include "common.ch"
 #include "getexit.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -183,7 +182,7 @@ METHOD ReadModal() CLASS HBGetList
                     HB_ISNUMERIC( nMsgLeft ) .AND. ;
                     HB_ISNUMERIC( nMsgRight ) )
 
-      IF !HB_ISSTRING( cMsgColor )
+      IF ! HB_ISSTRING( cMsgColor )
          cMsgColor := GetClrPair( SetColor(), 1 )
       ENDIF
 
@@ -335,7 +334,7 @@ METHOD GetApplyKey( nKey, oGet, oMenu, aMsg ) CLASS HBGetList
    LOCAL nHotItem
 #endif
 
-   DEFAULT oGet TO ::oGet
+   hb_default( @oGet, ::oGet )
 
    IF ( bKeyBlock := SetKey( nKey ) ) != NIL
       IF ::GetDoSetKey( bKeyBlock, oGet )
@@ -349,7 +348,7 @@ METHOD GetApplyKey( nKey, oGet, oMenu, aMsg ) CLASS HBGetList
       oGet:exitState := GE_SHORTCUT
       ::nNextGet := nHotItem
       ::nLastExitState := GE_SHORTCUT
-   ELSEIF !HB_ISOBJECT( oMenu )
+   ELSEIF ! HB_ISOBJECT( oMenu )
    ELSEIF ( nHotItem := oMenu:getAccel( nKey ) ) != 0
       ::nMenuID := MenuModal( oMenu, nHotItem, aMsg[ MSGROW ], aMsg[ MSGLEFT ], aMsg[ MSGRIGHT ], aMsg[ MSGCOLOR ] )
       nKey := 0
@@ -418,7 +417,7 @@ METHOD GetApplyKey( nKey, oGet, oMenu, aMsg ) CLASS HBGetList
       nMRow := MRow()
       nMCol := MCol()
 
-      IF !HB_ISOBJECT( oMenu )
+      IF ! HB_ISOBJECT( oMenu )
          nButton := 0
       ELSEIF !( oMenu:ClassName() == "TOPBARMENU" )
          nButton := 0
@@ -548,7 +547,7 @@ METHOD GetPreValidate( oGet, aMsg ) CLASS HBGetList
    LOCAL lUpdated
    LOCAL lWhen := .T.
 
-   DEFAULT oGet TO ::oGet
+   hb_default( @oGet, ::oGet )
 
    IF oGet:preBlock != NIL
 
@@ -586,7 +585,7 @@ METHOD GetPostValidate( oGet, aMsg ) CLASS HBGetList
    LOCAL nOldCursor
 #endif
 
-   DEFAULT oGet TO ::oGet
+   hb_default( @oGet, ::oGet )
 
    IF oGet:exitState == GE_ESCAPE
       RETURN .T.
@@ -646,7 +645,7 @@ METHOD GetDoSetKey( bKeyBlock, oGet ) CLASS HBGetList
    LOCAL lUpdated
    LOCAL lSetKey
 
-   DEFAULT oGet TO ::oGet
+   hb_default( @oGet, ::oGet )
 
    IF oGet:changed
       oGet:assign()
@@ -657,7 +656,7 @@ METHOD GetDoSetKey( bKeyBlock, oGet ) CLASS HBGetList
 
    lSetKey := Eval( bKeyBlock, ::cReadProcName, ::nReadProcLine, ::ReadVar() )
 
-   IF !HB_ISLOGICAL( lSetKey )
+   IF ! HB_ISLOGICAL( lSetKey )
       lSetKey := .T.
    ENDIF
 
@@ -678,8 +677,8 @@ METHOD Settle( nPos, lInit ) CLASS HBGetList
 
    LOCAL nExitState
 
-   DEFAULT nPos  TO ::nPos
-   DEFAULT lInit TO .F.
+   hb_default( @nPos, ::nPos )
+   hb_default( @lInit, .F. )
 
    IF nPos == 0
       nExitState := GE_DOWN
@@ -951,7 +950,7 @@ METHOD GUIApplyKey( oGet, oGUI, nKey, oMenu, aMsg ) CLASS HBGetList
    IF ( nHotItem := ::Accelerator( nKey, aMsg ) ) != 0
       oGet:exitState := GE_SHORTCUT
       ::nNextGet := nHotItem
-   ELSEIF !HB_ISOBJECT( oMenu )
+   ELSEIF ! HB_ISOBJECT( oMenu )
    ELSEIF ( nHotItem := oMenu:getAccel( nKey ) ) != 0
       ::nMenuID := MenuModal( oMenu, nHotItem, aMsg[ MSGROW ], aMsg[ MSGLEFT ], aMsg[ MSGRIGHT ], aMsg[ MSGCOLOR ] )
       nKey := 0
@@ -1082,7 +1081,7 @@ METHOD GUIApplyKey( oGet, oGUI, nKey, oMenu, aMsg ) CLASS HBGetList
       nMRow := MRow()
       nMCol := MCol()
 
-      IF !HB_ISOBJECT( oMenu )
+      IF ! HB_ISOBJECT( oMenu )
          nButton := 0
       ELSEIF !( oMenu:ClassName() == "TOPBARMENU" )
          nButton := 0
@@ -1136,7 +1135,7 @@ METHOD GUIPreValidate( oGet, oGUI, aMsg ) CLASS HBGetList
    LOCAL lUpdated
    LOCAL lWhen := .T.
 
-   DEFAULT oGet TO ::oGet
+   hb_default( @oGet, ::oGet )
 
    IF oGet:preBlock != NIL
 
@@ -1172,7 +1171,7 @@ METHOD GUIPostValidate( oGet, oGUI, aMsg ) CLASS HBGetList
    LOCAL xOldValue
    LOCAL xNewValue
 
-   DEFAULT oGet TO ::oGet
+   hb_default( @oGet, ::oGet )
 
    IF oGet:exitState == GE_ESCAPE
       RETURN .T.                   // NOTE
@@ -1238,7 +1237,7 @@ METHOD TBApplyKey( oGet, oTB, nKey, oMenu, aMsg ) CLASS HBGetList
    IF ( nHotItem := ::Accelerator( nKey, aMsg ) ) != 0
       oGet:exitState := GE_SHORTCUT
       ::nNextGet := nHotItem
-   ELSEIF !HB_ISOBJECT( oMenu )
+   ELSEIF ! HB_ISOBJECT( oMenu )
    ELSEIF ( nHotItem := oMenu:getAccel( nKey ) ) != 0
       ::nMenuID := MenuModal( oMenu, nHotItem, aMsg[ MSGROW ], aMsg[ MSGLEFT ], aMsg[ MSGRIGHT ], aMsg[ MSGCOLOR ] )
       nKey := 0
@@ -1292,7 +1291,7 @@ METHOD TBApplyKey( oGet, oTB, nKey, oMenu, aMsg ) CLASS HBGetList
       nMRow := MRow()
       nMCol := MCol()
 
-      IF !HB_ISOBJECT( oMenu )
+      IF ! HB_ISOBJECT( oMenu )
          nButton := 0
       ELSEIF !( oMenu:ClassName() == "TOPBARMENU" )
          nButton := 0
@@ -1625,7 +1624,7 @@ METHOD ShowGetMsg( oGet, aMsg ) CLASS HBGetList
 
    IF !Empty( aMsg ) .AND. aMsg[ MSGFLAG ]
 
-      DEFAULT oGet TO ::oGet
+      hb_default( @oGet, ::oGet )
 
       cMsg := iif( HB_ISOBJECT( oGet:control ), oGet:control:message, oGet:message )
 

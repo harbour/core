@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "dbstruct.ch"
 #include "error.ch"
 
@@ -99,7 +98,7 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
       bForBlock := {|| .T. }
    ENDIF
 
-   DEFAULT lRest TO .F.
+   __defaultNIL( @lRest, .F. )
 
    IF nRec != NIL
       dbGoto( nRec )
@@ -214,7 +213,7 @@ STATIC FUNCTION __GetField( cField )
          oError:subCode    := 1101
 
          lError := Eval( ErrorBlock(), oError )
-         IF !HB_ISLOGICAL( lError ) .OR. lError
+         IF ! HB_ISLOGICAL( lError ) .OR. lError
             __ErrInHandler()
          ENDIF
 

@@ -623,10 +623,10 @@ METHOD New( nTop, nLeft, nBottom, nRight ) CLASS RADIOGROUP
 
    LOCAL cColor
 
-   IF !HB_ISNUMERIC( nTop ) .OR. ;
-      !HB_ISNUMERIC( nLeft ) .OR. ;
-      !HB_ISNUMERIC( nBottom ) .OR. ;
-      !HB_ISNUMERIC( nRight )
+   IF ! HB_ISNUMERIC( nTop ) .OR. ;
+      ! HB_ISNUMERIC( nLeft ) .OR. ;
+      ! HB_ISNUMERIC( nBottom ) .OR. ;
+      ! HB_ISNUMERIC( nRight )
       RETURN NIL
    ENDIF
 

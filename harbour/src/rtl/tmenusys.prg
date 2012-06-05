@@ -137,7 +137,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
                       HB_ISNUMERIC( ::nMsgLeft ) .AND. ;
                       HB_ISNUMERIC( ::nMsgRight ) )
 
-      IF !HB_ISSTRING( ::cMsgColor )
+      IF ! HB_ISSTRING( ::cMsgColor )
          ::cMsgColor := GetClrPair( SetColor(), 1 )
       ENDIF
 
@@ -620,7 +620,7 @@ METHOD ShowMsg( lMode ) CLASS HBMenuSys
    ENDIF
 
    IF lMode
-      IF !HB_ISSTRING( ::cMsgColor )
+      IF ! HB_ISSTRING( ::cMsgColor )
          ::cMsgColor := GetClrPair( SetColor(), 1 )
       ENDIF
 

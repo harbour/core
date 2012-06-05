@@ -83,16 +83,16 @@ FUNCTION DBEDIT( nTop, nLeft, nBottom, nRight, ;
       dbGoBottom()
    ENDIF
 
-   IF !HB_ISNUMERIC( nTop ) .OR. nTop < 0
+   IF ! HB_ISNUMERIC( nTop ) .OR. nTop < 0
       nTop := 0
    ENDIF
-   IF !HB_ISNUMERIC( nLeft ) .OR. nLeft < 0
+   IF ! HB_ISNUMERIC( nLeft ) .OR. nLeft < 0
       nLeft := 0
    ENDIF
-   IF !HB_ISNUMERIC( nBottom ) .OR. nBottom > MaxRow() .OR. nBottom < nTop
+   IF ! HB_ISNUMERIC( nBottom ) .OR. nBottom > MaxRow() .OR. nBottom < nTop
       nBottom := MaxRow()
    ENDIF
-   IF !HB_ISNUMERIC( nRight ) .OR. nRight > MaxCol() .OR. nRight < nLeft
+   IF ! HB_ISNUMERIC( nRight ) .OR. nRight > MaxCol() .OR. nRight < nLeft
       nRight := MaxCol()
    ENDIF
 

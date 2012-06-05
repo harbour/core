@@ -55,7 +55,6 @@
 #include "box.ch"
 #include "button.ch"
 #include "color.ch"
-#include "common.ch"
 
 /* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
          it has all related variables and methods. */
@@ -138,7 +137,7 @@ METHOD addItem( oItem ) CLASS POPUPMENU
 
 METHOD close( lCloseChild ) CLASS POPUPMENU
 
-   DEFAULT lCloseChild TO .T.
+   __defaultNIL( @lCloseChild, .T. )
 
    IF ::isOpen()
 

@@ -52,7 +52,6 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
 #include "error.ch"
 #include "fileio.ch"
 #include "inkey.ch"
@@ -148,8 +147,8 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       ENDIF
    ENDIF
 
-   DEFAULT lPrinter TO .F.
-   DEFAULT lSample TO .F.
+   __defaultNIL( @lPrinter, .F. )
+   __defaultNIL( @lSample, .F. )
 
    // Set output devices
    IF lPrinter             // To the printer

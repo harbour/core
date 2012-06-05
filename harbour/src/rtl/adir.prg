@@ -68,7 +68,7 @@ FUNCTION ADir( cFileMask, aName, aSize, aDate, aTime, aAttr )
 
    // ; CA-Cl*pper would fail on this case.
 
-   IF !HB_ISSTRING( cFileMask )
+   IF ! HB_ISSTRING( cFileMask )
       RETURN 0
    ENDIF
 

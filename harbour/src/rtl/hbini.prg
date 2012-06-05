@@ -298,7 +298,7 @@ FUNCTION hb_IniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
    cBuffer := hb_IniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
 
    // if cBuffer == NIL I have to stop here
-   IF !HB_ISSTRING( cBuffer )
+   IF ! HB_ISSTRING( cBuffer )
       RETURN .F.
    ENDIF
 
@@ -347,7 +347,7 @@ FUNCTION hb_IniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
    ENDIF
 
    // Fix if lAutoMain is .T. but I haven't a MAIN section
-   IF lAutoMain .AND. !hb_HHasKey( hIni, "MAIN" )
+   IF lAutoMain .AND. ! hb_HHasKey( hIni, "MAIN" )
       lAutoMain := .F.
    ENDIF
 

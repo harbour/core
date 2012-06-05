@@ -433,9 +433,9 @@ METHOD New( nRow, nLeft, nRight ) CLASS TOPBARMENU
 
    LOCAL cColor
 
-   IF !HB_ISNUMERIC( nRow ) .OR. ;
-      !HB_ISNUMERIC( nLeft ) .OR. ;
-      !HB_ISNUMERIC( nRight )
+   IF ! HB_ISNUMERIC( nRow ) .OR. ;
+      ! HB_ISNUMERIC( nLeft ) .OR. ;
+      ! HB_ISNUMERIC( nRight )
       RETURN NIL
    ENDIF
 

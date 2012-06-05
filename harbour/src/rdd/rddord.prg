@@ -81,7 +81,7 @@ FUNCTION IndexExt()
 
 FUNCTION IndexKey( nOrder )
 
-   IF !HB_ISNUMERIC( nOrder )
+   IF ! HB_ISNUMERIC( nOrder )
       RETURN ordKey( nOrder )
    ENDIF
 

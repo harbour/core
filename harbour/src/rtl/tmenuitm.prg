@@ -174,13 +174,13 @@ METHOD isPopUp() CLASS MENUITEM
 
 METHOD New( cCaption, boData, nShortcut, cMessage, nID ) CLASS MENUITEM
 
-   IF !HB_ISNUMERIC( nShortcut )
+   IF ! HB_ISNUMERIC( nShortcut )
       nShortcut := 0
    ENDIF
-   IF !HB_ISSTRING( cMessage )
+   IF ! HB_ISSTRING( cMessage )
       cMessage := ""
    ENDIF
-   IF !HB_ISNUMERIC( nID )
+   IF ! HB_ISNUMERIC( nID )
       nID := 0
    ENDIF
 

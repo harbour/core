@@ -321,16 +321,16 @@ METHOD findText( cText, nPos, lCaseSensitive, lExact ) CLASS LISTBOX
    LOCAL nLen
    LOCAL bSearch
 
-   IF !HB_ISSTRING( cText ) .OR. Len( cText ) == 0
+   IF ! HB_ISSTRING( cText ) .OR. Len( cText ) == 0
       RETURN 0
    ENDIF
-   IF !HB_ISNUMERIC( nPos )
+   IF ! HB_ISNUMERIC( nPos )
       nPos := 1
    ENDIF
-   IF !HB_ISLOGICAL( lCaseSensitive )
+   IF ! HB_ISLOGICAL( lCaseSensitive )
       lCaseSensitive := .T.
    ENDIF
-   IF !HB_ISLOGICAL( lExact )
+   IF ! HB_ISLOGICAL( lExact )
       lExact := Set( _SET_EXACT )
    ENDIF
 
@@ -365,16 +365,16 @@ METHOD findData( cData, nPos, lCaseSensitive, lExact ) CLASS LISTBOX
    LOCAL nLen
    LOCAL bSearch
 
-   IF !HB_ISSTRING( cData )
+   IF ! HB_ISSTRING( cData )
       RETURN 0
    ENDIF
-   IF !HB_ISNUMERIC( nPos )
+   IF ! HB_ISNUMERIC( nPos )
       nPos := 1
    ENDIF
-   IF !HB_ISLOGICAL( lCaseSensitive )
+   IF ! HB_ISLOGICAL( lCaseSensitive )
       lCaseSensitive := .T.
    ENDIF
-   IF !HB_ISLOGICAL( lExact )
+   IF ! HB_ISLOGICAL( lExact )
       lExact := Set( _SET_EXACT )
    ENDIF
 
@@ -1056,14 +1056,14 @@ METHOD New( nTop, nLeft, nBottom, nRight, lDropDown )
 
    LOCAL cColor
 
-   IF !HB_ISNUMERIC( nTop ) .OR. ;
-      !HB_ISNUMERIC( nLeft ) .OR. ;
-      !HB_ISNUMERIC( nBottom ) .OR. ;
-      !HB_ISNUMERIC( nRight )
+   IF ! HB_ISNUMERIC( nTop ) .OR. ;
+      ! HB_ISNUMERIC( nLeft ) .OR. ;
+      ! HB_ISNUMERIC( nBottom ) .OR. ;
+      ! HB_ISNUMERIC( nRight )
       RETURN NIL
    ENDIF
 
-   IF !HB_ISLOGICAL( lDropDown )
+   IF ! HB_ISLOGICAL( lDropDown )
       lDropDown := .F.
    ENDIF
 

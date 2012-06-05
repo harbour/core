@@ -54,7 +54,6 @@
 
 #include "button.ch"
 #include "color.ch"
-#include "common.ch"
 #include "setcurs.ch"
 
 /* NOTE: Harbour doesn't support CA-Cl*pper 5.3 GUI functionality, but
@@ -342,12 +341,12 @@ METHOD New( nRow, nCol, cCaption ) CLASS PUSHBUTTON
 
    LOCAL cColor
 
-   IF !HB_ISNUMERIC( nRow ) .OR. ;
-      !HB_ISNUMERIC( nCol )
+   IF ! HB_ISNUMERIC( nRow ) .OR. ;
+      ! HB_ISNUMERIC( nCol )
       RETURN NIL
    ENDIF
 
-   DEFAULT cCaption TO ""
+   __defaultNIL( @cCaption, "" )
 
    ::caption  := cCaption
    ::nCol     := nCol

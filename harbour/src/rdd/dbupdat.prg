@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 FUNCTION __dbUpdate( cAlias, bKey, lRandom, bAssign )
    LOCAL nOldArea := Select()
    LOCAL xKey
@@ -59,7 +57,7 @@ FUNCTION __dbUpdate( cAlias, bKey, lRandom, bAssign )
    LOCAL oError
    LOCAL lError := .F.
 
-   DEFAULT lRandom TO .F.
+   __defaultNIL( @lRandom, .F. )
 
    dbGoTop()
 

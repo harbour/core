@@ -94,7 +94,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
 
       // put choice in a valid range
 
-      IF !HB_ISNUMERIC( n ) .OR. n < 1
+      IF ! HB_ISNUMERIC( n ) .OR. n < 1
          n := 1
       ENDIF
 
@@ -129,7 +129,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
                xMsg := Eval( xMsg )
             ENDIF
 
-            IF !HB_ISSTRING( xMsg )
+            IF ! HB_ISSTRING( xMsg )
                xMsg := ""
             ENDIF
 

@@ -133,7 +133,7 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
       aOptions := {}
    ENDIF
 
-   IF !HB_ISSTRING( cColorNorm ) .OR. Empty( cColorNorm )
+   IF ! HB_ISSTRING( cColorNorm ) .OR. Empty( cColorNorm )
       cColorNorm := "W+/R" // first pair color (Box line and Text)
       cColorHigh := "W+/B" // second pair color (Options buttons)
    ELSE

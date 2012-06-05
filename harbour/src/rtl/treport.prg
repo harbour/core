@@ -52,7 +52,6 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
 #include "error.ch"
 #include "fileio.ch"
 #include "inkey.ch"
@@ -230,7 +229,7 @@ METHOD New( cFrmName AS STRING,;
       ENDIF
    ENDIF
 
-   DEFAULT cHeading TO ""
+   __defaultNIL( @cHeading, "" )
 
    // Set output devices
 
