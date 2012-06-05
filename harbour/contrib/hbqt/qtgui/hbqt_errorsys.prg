@@ -171,7 +171,7 @@ STATIC FUNCTION ErrorMessage( oError )
    LOCAL cMessage := iif( oError:severity > ES_WARNING, "Error", "Warning" ) + " "
 
    // add subsystem name if available
-   IF HB_ISCHAR( oError:subsystem )
+   IF HB_ISSTRING( oError:subsystem )
       cMessage += oError:subsystem()
    ELSE
       cMessage += "???"
@@ -185,7 +185,7 @@ STATIC FUNCTION ErrorMessage( oError )
    ENDIF
 
    // add error description if available
-   IF HB_ISCHAR( oError:description )
+   IF HB_ISSTRING( oError:description )
       cMessage += "  " + oError:description
    ENDIF
 
