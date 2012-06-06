@@ -75,7 +75,7 @@ typedef struct HB_BACKGROUNDTASK_
    double dSeconds;        /* internal - last time this task has gone */
    int millisec;           /* milliseconds after this task must run */
    HB_BOOL bActive;        /* task is active ? */
-} HB_BACKGROUNDTASK, * PHB_BACKGROUNDTASK, * HB_BACKGROUNDTASK_PTR;
+} HB_BACKGROUNDTASK, * PHB_BACKGROUNDTASK;
 
 extern void     hb_backgroundRunSingle( HB_ULONG ulID );                                  /* run a single background routine */
 extern void     hb_backgroundRunForced( void );                                           /* run all background routines also if them are not active*/
