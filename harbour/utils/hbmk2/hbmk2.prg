@@ -2126,7 +2126,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          /* search for .hbp files in macro libpaths */
          IF Lower( hb_FNameExt( cParam ) ) == ".hbp" .AND. ! hbmk_hb_FileExists( cParam )
             FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
-               IF "%{hb_name}" $ tmp .AND. hbmk_hb_FileExists( hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cParam, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cParam ) )
+               IF ( _MACRO_LATE_PREFIX + _MACRO_OPEN ) $ tmp .AND. hbmk_hb_FileExists( hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cParam, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cParam ) )
                   cParam := hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cParam, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cParam )
                   IF hbmk[ _HBMK_lInfo ]
                      _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Found project reference on library search path: %1$s" ), cParam ) )
@@ -5061,13 +5061,6 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    hb_default( @hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
 
-   /* Delete all lib paths which contain late-evaluation macros. */
-   FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ] DESCEND
-      IF ( _MACRO_LATE_PREFIX + _MACRO_OPEN ) $ tmp
-         hb_ADel( hbmk[ _HBMK_aLIBPATH ], tmp:__enumIndex(), .T. )
-      ENDIF
-   NEXT
-
    IF ! hbmk[ _HBMK_lStopAfterInit ]
       IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
          /* NOTE: Ending path sep is important. */
@@ -5262,11 +5255,35 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ENDIF
 
       IF ! Empty( hbmk[ _HBMK_hAUTOHBCFOUND ] )
-         FOR EACH tmp IN hbmk[ _HBMK_hAUTOHBCFOUND ]
-            IF hbmk[ _HBMK_lInfo ]
-               _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing (triggered by '%1$s' header): %2$s" ), tmp:__enumKey(), tmp ) )
+         FOR EACH cParam IN hbmk[ _HBMK_hAUTOHBCFOUND ]
+
+            IF ! Empty( cParam )
+               tmp1 := cParam
+               lFound := .F.
+               IF hb_FileExists( cParam )
+                  lFound := .T.
+               ELSE
+                  FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
+                     IF hb_FileExists( hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cParam, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cParam ) )
+                        cParam := hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cParam, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cParam )
+                        lFound := .T.
+                        EXIT
+                     ENDIF
+                  NEXT
+               ENDIF
+
+               IF lFound
+                  cParam := hb_PathNormalize( cParam )
+
+                  IF hbmk[ _HBMK_lInfo ]
+                     _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing (triggered by '%1$s' header): %2$s" ), cParam:__enumKey(), cParam ) )
+                  ENDIF
+
+                  HBC_ProcessOne( hbmk, cParam, 1 )
+               ELSE
+                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s" ), tmp1 ) )
+               ENDIF
             ENDIF
-            HBC_ProcessOne( hbmk, tmp, 1 )
          NEXT
 
          convert_incpaths_to_options( hbmk, cOptIncMask, lCHD_Comp )
@@ -5274,6 +5291,13 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    ELSE
       l_aPRG_TO_DO := hbmk[ _HBMK_aPRG ]
    ENDIF
+
+   /* Delete all lib paths which contain late-evaluation macros. */
+   FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ] DESCEND
+      IF ( _MACRO_LATE_PREFIX + _MACRO_OPEN ) $ tmp
+         hb_ADel( hbmk[ _HBMK_aLIBPATH ], tmp:__enumIndex(), .T. )
+      ENDIF
+   NEXT
 
    /* Dump build information */
 
@@ -7565,6 +7589,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
 
 STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
    STATIC s_pRegexInclude
+   STATIC s_pRegexRequire
    STATIC s_hExclStd
 
    LOCAL aDeps
@@ -7587,6 +7612,9 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
       s_pRegexInclude := hb_regexComp( '(^|;)[[:blank:]]*#[[:blank:]]*(incl|inclu|includ|include|import)[[:blank:]]*(\".+?\"|<.+?>'+"|['`].+?'"+')',;
          .F. /* lCaseSensitive */,;
          .T. /* lNewLine */ )
+      s_pRegexRequire := hb_regexComp( '(^|;)[[:blank:]]*#[[:blank:]]*(require)[[:blank:]]*(\".+?\"'+"|'.+?'"+')',;
+         .F. /* lCaseSensitive */,;
+         .T. /* lNewLine */ )
       hb_cdpSelect( tmp )
       IF Empty( s_pRegexInclude )
          _hbmk_OutErr( hbmk, I_( "Internal Error: Regular expression engine missing or unsupported. Check your Harbour build settings." ) )
@@ -7595,7 +7623,8 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
    ENDIF
 
    aDeps := {}
-   IF ! Empty( s_pRegexInclude )
+   IF ! Empty( s_pRegexInclude ) .AND. ;
+      ! Empty( s_pRegexRequire )
 
       cFileBody := MemoRead( cFile )
 
@@ -7727,6 +7756,18 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
                AAdd( aDeps, aDep )
             ENDIF
          NEXT
+
+         IF ! lCMode
+            FOR EACH tmp IN hb_regexAll( s_pRegexRequire, cFileBody, ;
+                                         NIL /* lCaseSensitive */, ;
+                                         NIL /* lNewLine */, NIL, ;
+                                         NIL /* nGetMatch */, ;
+                                         .T. /* lOnlyMatch */ )
+               cHeader := ATail( tmp ) /* Last group in match marker */
+               cHeader := SubStr( cHeader, 2, Len( cHeader ) - 2 )
+               hbmk[ _HBMK_hAUTOHBCFOUND ][ "." + cHeader ] := hb_FNameExtSet( cHeader, ".hbc" )
+            NEXT
+         ENDIF
       ENDIF
    ENDIF
 
@@ -10084,7 +10125,7 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP )
                            ELSE
                               lFound := .F.
                               FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
-                                 IF "%{hb_name}" $ tmp .AND. hbmk_hb_FileExists( hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cHBP, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cHBP ) )
+                                 IF ( _MACRO_LATE_PREFIX + _MACRO_OPEN ) $ tmp .AND. hbmk_hb_FileExists( hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cHBP, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cHBP ) )
                                     cHBP := hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cHBP, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cHBP )
                                     IF hbmk[ _HBMK_lInfo ]
                                        _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Found project reference on library search path: %1$s" ), cHBP ) )

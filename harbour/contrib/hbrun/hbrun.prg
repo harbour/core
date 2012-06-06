@@ -242,7 +242,7 @@ STATIC PROCEDURE LoadDynamicFromSource( aDynamic, cFileName )
    LOCAL tmp
 
    tmp := hb_cdpSelect( "EN" )
-   pRegex := hb_regexComp( '^(//)[[:blank:]]*#[[:blank:]]*(require)[[:blank:]]*(\".+?\"'+"|'.+?'"+')',;
+   pRegex := hb_regexComp( '(^|;)[[:blank:]]*#[[:blank:]]*(require)[[:blank:]]*(\".+?\"'+"|'.+?'"+')',;
       .F. /* lCaseSensitive */,;
       .T. /* lNewLine */ )
    hb_cdpSelect( tmp )

@@ -5263,6 +5263,11 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
             else
                hb_pp_error( pState, 'F', HB_PP_ERR_WRONG_FILE_NAME, NULL );
          }
+         else if( hb_pp_tokenValueCmp( pToken, "REQUIRE", HB_PP_CMP_STD ) )
+         {
+            /* do nothing. this directive is processed by hbrun and hbmk2 to
+               pull in external modules. */
+         }
          else if( hb_pp_tokenValueCmp( pToken, "STDOUT", HB_PP_CMP_DBASE ) )
          {
             hb_pp_disp( pState, hb_pp_tokenListStr( pToken->pNext, NULL, HB_FALSE,
