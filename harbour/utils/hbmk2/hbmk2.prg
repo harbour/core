@@ -8613,6 +8613,8 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
 
 /* Public functions accessible for plugins (compatibility) */
 
+#if defined( HB_LEGACY_LEVEL4 )
+
 FUNCTION hbmk2_FindInPath( ... )                    ; RETURN hbmk_FindInPath( ... )
 FUNCTION hbmk2_PathSepToForward( ... )              ; RETURN hbmk_PathSepToForward( ... )
 FUNCTION hbmk2_PathSepToSelf( ... )                 ; RETURN hbmk_PathSepToSelf( ... )
@@ -8635,6 +8637,8 @@ FUNCTION hbmk2_AddInput_RC( ... )                   ; RETURN hbmk_AddInput_RC( .
 FUNCTION hbmk2_AddInput_OBJ( ... )                  ; RETURN hbmk_AddInput_OBJ( ... )
 FUNCTION hbmk2_AddInput_INSTFILE( ... )             ; RETURN hbmk_AddInput_INSTFILE( ... )
 FUNCTION hbmk2_Register_Input_File_Extension( ... ) ; RETURN hbmk_Register_Input_File_Extension( ... )
+
+#endif
 
 /* Public functions accessible for plugins */
 
