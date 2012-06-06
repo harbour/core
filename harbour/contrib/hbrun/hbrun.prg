@@ -238,7 +238,7 @@ STATIC PROCEDURE LoadDynamicFromSource( aDynamic, cFileName )
    LOCAL tmp
 
    tmp := hb_cdpSelect( "EN" )
-   pRegex := hb_regexComp( '^\*[[:blank:]]*#[[:blank:]]*(pragma)[[:blank:]]*(module)[[:blank:]]*(\".+?\"|<.+?>'+"|'.+?'"+')',;
+   pRegex := hb_regexComp( '^(//)[[:blank:]]*#[[:blank:]]*(pragma)[[:blank:]]*(module)[[:blank:]]*(\".+?\"|<.+?>'+"|'.+?'"+')',;
       .F. /* lCaseSensitive */,;
       .T. /* lNewLine */ )
    hb_cdpSelect( tmp )
@@ -248,7 +248,7 @@ STATIC PROCEDURE LoadDynamicFromSource( aDynamic, cFileName )
                                 NIL /* lNewLine */, NIL, ;
                                 NIL /* nGetMatch */, ;
                                 .T. /* lOnlyMatch */ )
-      AAdd( aDynamic, ATail( tmp ) /* Last group in match marker */ )
+      AAdd( aDynamic, SubStr( ATail( tmp ), 2, Len( ATail( tmp ) ) - 2 ) /* Last group in match marker */ )
    NEXT
 
    RETURN
