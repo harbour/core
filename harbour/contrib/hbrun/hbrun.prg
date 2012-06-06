@@ -171,6 +171,8 @@ PROCEDURE _APPMAIN( cFile, ... )
                         hHeaders := __hbrun_CoreHeaderFiles() /* add core header files */
                      ENDIF
 
+                     LoadDynamicFromSource( aDynamic, cFile )
+
                      cFile := hb_compileBuf( hHeaders, hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
                                              "-I" + hb_FNameDir( cFile ), "-D" + "__HBSCRIPT__HBRUN", cFile )
                      IF cFile == NIL
@@ -226,6 +228,27 @@ STATIC PROCEDURE LoadDynamicFromString( aDynamic, cString )
 
    FOR EACH cItem IN hb_ATokens( cString,, .T. )
       AAdd( aDynamic, cItem )
+   NEXT
+
+   RETURN
+
+STATIC PROCEDURE LoadDynamicFromSource( aDynamic, cFileName )
+   LOCAL cFile := MemoRead( cFileName )
+   LOCAL pRegex
+   LOCAL tmp
+
+   tmp := hb_cdpSelect( "EN" )
+   pRegex := hb_regexComp( '^\*[[:blank:]]*#[[:blank:]]*(pragma)[[:blank:]]*(module)[[:blank:]]*(\".+?\"|<.+?>'+"|'.+?'"+')',;
+      .F. /* lCaseSensitive */,;
+      .T. /* lNewLine */ )
+   hb_cdpSelect( tmp )
+
+   FOR EACH tmp IN hb_regexAll( pRegex, cFile, ;
+                                NIL /* lCaseSensitive */, ;
+                                NIL /* lNewLine */, NIL, ;
+                                NIL /* nGetMatch */, ;
+                                .T. /* lOnlyMatch */ )
+      AAdd( aDynamic, ATail( tmp ) /* Last group in match marker */ )
    NEXT
 
    RETURN
