@@ -13071,6 +13071,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-tshead=<file>"     , I_( "generate .ch header file with timestamp information. Generated header will define macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) },;
       { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform" ) },;
       { "-manifest=<file>"   , I_( "embed manifest <file> in executable/dynamic lib (Windows only)" ) },;
+      { "-sign=<key>"        , I_( "sign executable with <key> (Windows and Darwin only)" ) },;
+      { "-signpw=<pw>"       , I_( "use <pw> as password when signing executable (Windows and Darwin only)" ) },;
       { "-instfile=<g:file>" , I_( "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group, it must be at least two characters long." ) },;
       { "-instpath=<g:path>" , I_( "copy target to <path>. if <path> is a directory, it should end with path separatorm, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group." ) },;
       { "-instforce[-]"      , I_( "copy target to install path even if it is up to date" ) },;
