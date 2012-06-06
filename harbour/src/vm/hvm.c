@@ -104,16 +104,16 @@ HB_FUNC_EXTERN( SYSINIT );
 
 /* Operators (mathematical / character / misc) */
 static void    hb_vmNegate( void );          /* negates (-) the latest value on the stack */
-static void    hb_vmInc( HB_ITEM_PTR pItem );   /* increment the latest numeric value on the stack */
-static void    hb_vmDec( HB_ITEM_PTR pItem );   /* decrements the latest numeric value on the stack */
+static void    hb_vmInc( PHB_ITEM pItem );   /* increment the latest numeric value on the stack */
+static void    hb_vmDec( PHB_ITEM pItem );   /* decrements the latest numeric value on the stack */
 static void    hb_vmFuncPtr( void );         /* pushes a function address pointer. Removes the symbol from the satck */
-static void    hb_vmAddInt( HB_ITEM_PTR pResult, HB_LONG lAdd );      /* add integer to given item */
-static void    hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2 );        /* sums given values */
-static void    hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2 );       /* substracts given values */
-static void    hb_vmMult( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2 );        /* multiplies given values */
-static void    hb_vmDivide( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2 );      /* divides the given values */
-static void    hb_vmModulus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2 );     /* calculates modulus given values */
-static void    hb_vmPower( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2 );       /* power given values */
+static void    hb_vmAddInt( PHB_ITEM pResult, HB_LONG lAdd );      /* add integer to given item */
+static void    hb_vmPlus( PHB_ITEM pResult, PHB_ITEM pItem1, PHB_ITEM pItem2 );        /* sums given values */
+static void    hb_vmMinus( PHB_ITEM pResult, PHB_ITEM pItem1, PHB_ITEM pItem2 );       /* substracts given values */
+static void    hb_vmMult( PHB_ITEM pResult, PHB_ITEM pItem1, PHB_ITEM pItem2 );        /* multiplies given values */
+static void    hb_vmDivide( PHB_ITEM pResult, PHB_ITEM pItem1, PHB_ITEM pItem2 );      /* divides the given values */
+static void    hb_vmModulus( PHB_ITEM pResult, PHB_ITEM pItem1, PHB_ITEM pItem2 );     /* calculates modulus given values */
+static void    hb_vmPower( PHB_ITEM pResult, PHB_ITEM pItem1, PHB_ITEM pItem2 );       /* power given values */
 
 /* Operators (relational) */
 static void    hb_vmEqual( void );           /* checks if the two latest values on the stack are equal, removes both and leaves result */
@@ -1300,7 +1300,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_PLUSEQ:
             {
-               HB_ITEM_PTR pResult, pValue;
+               PHB_ITEM pResult, pValue;
                pResult = hb_itemUnRef( hb_stackItemFromTop( -2 ) );
                pValue = hb_stackItemFromTop( -1 );
                hb_vmPlus( pResult, pResult, pValue );
@@ -1313,7 +1313,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_PLUSEQPOP:
             {
-               HB_ITEM_PTR pResult;
+               PHB_ITEM pResult;
                pResult = hb_itemUnRef( hb_stackItemFromTop( -2 ) );
                hb_vmPlus( pResult, pResult, hb_stackItemFromTop( -1 ) );
                hb_stackPop();
@@ -1330,7 +1330,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MINUSEQ:
             {
-               HB_ITEM_PTR pResult, pValue;
+               PHB_ITEM pResult, pValue;
                pResult = hb_itemUnRef( hb_stackItemFromTop( -2 ) );
                pValue = hb_stackItemFromTop( -1 );
                hb_vmMinus( pResult, pResult, pValue );
@@ -1343,7 +1343,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MINUSEQPOP:
             {
-               HB_ITEM_PTR pResult;
+               PHB_ITEM pResult;
                pResult = hb_itemUnRef( hb_stackItemFromTop( -2 ) );
                hb_vmMinus( pResult, pResult, hb_stackItemFromTop( -1 ) );
                hb_stackPop();
@@ -1360,7 +1360,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MULTEQ:
             {
-               HB_ITEM_PTR pResult, pValue;
+               PHB_ITEM pResult, pValue;
                pResult = hb_itemUnRef( hb_stackItemFromTop( -2 ) );
                pValue = hb_stackItemFromTop( -1 );
                hb_vmMult( pResult, pResult, pValue );
@@ -1373,7 +1373,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MULTEQPOP:
             {
-               HB_ITEM_PTR pResult;
+               PHB_ITEM pResult;
                pResult = hb_itemUnRef( hb_stackItemFromTop( -2 ) );
                hb_vmMult( pResult, pResult, hb_stackItemFromTop( -1 ) );
                hb_stackPop();
@@ -1390,7 +1390,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_DIVEQ:
             {
-               HB_ITEM_PTR pResult, pValue;
+               PHB_ITEM pResult, pValue;
                pResult = hb_itemUnRef( hb_stackItemFromTop( -2 ) );
                pValue = hb_stackItemFromTop( -1 );
                hb_vmDivide( pResult, pResult, pValue );
@@ -1403,7 +1403,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_DIVEQPOP:
             {
-               HB_ITEM_PTR pResult;
+               PHB_ITEM pResult;
                pResult = hb_itemUnRef( hb_stackItemFromTop( -2 ) );
                hb_vmDivide( pResult, pResult, hb_stackItemFromTop( -1 ) );
                hb_stackPop();
@@ -1420,7 +1420,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MODEQ:
             {
-               HB_ITEM_PTR pResult, pValue;
+               PHB_ITEM pResult, pValue;
                pResult = hb_itemUnRef( hb_stackItemFromTop( -2 ) );
                pValue = hb_stackItemFromTop( -1 );
                hb_vmModulus( pResult, pResult, pValue );
@@ -1433,7 +1433,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MODEQPOP:
             {
-               HB_ITEM_PTR pResult;
+               PHB_ITEM pResult;
                pResult = hb_itemUnRef( hb_stackItemFromTop( -2 ) );
                hb_vmModulus( pResult, pResult, hb_stackItemFromTop( -1 ) );
                hb_stackPop();
@@ -1450,7 +1450,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_EXPEQ:
             {
-               HB_ITEM_PTR pResult, pValue;
+               PHB_ITEM pResult, pValue;
                pResult = hb_itemUnRef( hb_stackItemFromTop( -2 ) );
                pValue = hb_stackItemFromTop( -1 );
                hb_vmPower( pResult, pResult, pValue );
@@ -1463,7 +1463,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_EXPEQPOP:
             {
-               HB_ITEM_PTR pResult;
+               PHB_ITEM pResult;
                pResult = hb_itemUnRef( hb_stackItemFromTop( -2 ) );
                hb_vmPower( pResult, pResult, hb_stackItemFromTop( -1 ) );
                hb_stackPop();
@@ -1479,7 +1479,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_INCEQ:
             {
-               HB_ITEM_PTR pResult, pValue, pTemp;
+               PHB_ITEM pResult, pValue, pTemp;
                pResult = hb_stackItemFromTop( -1 );
                pValue = hb_itemUnRef( pResult );
                hb_vmInc( pValue );
@@ -1504,7 +1504,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_DECEQ:
             {
-               HB_ITEM_PTR pResult, pValue, pTemp;
+               PHB_ITEM pResult, pValue, pTemp;
                pResult = hb_stackItemFromTop( -1 );
                pValue = hb_itemUnRef( pResult );
                hb_vmDec( pValue );
@@ -2983,7 +2983,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 /*             character / misc )  */
 /* ------------------------------- */
 
-static void hb_vmAddInt( HB_ITEM_PTR pResult, HB_LONG lAdd )
+static void hb_vmAddInt( PHB_ITEM pResult, HB_LONG lAdd )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmAddInt(%p,%ld)", pResult, lAdd));
 
@@ -3117,7 +3117,7 @@ static void hb_vmNegate( void )
    }
 }
 
-static void hb_vmTimeStampPut( HB_ITEM_PTR pItem, long lJulian, long lMilliSec )
+static void hb_vmTimeStampPut( PHB_ITEM pItem, long lJulian, long lMilliSec )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmTimeStampPut(%p,%ld,%ld)", pItem, lJulian, lMilliSec));
 
@@ -3162,7 +3162,7 @@ static void hb_vmTimeStampPut( HB_ITEM_PTR pItem, long lJulian, long lMilliSec )
    hb_itemPutTDT( pItem, lJulian, lMilliSec );
 }
 
-static void hb_vmTimeStampAdd( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem, double dValue )
+static void hb_vmTimeStampAdd( PHB_ITEM pResult, PHB_ITEM pItem, double dValue )
 {
    long lJulian, lMilliSec;
 
@@ -3176,7 +3176,7 @@ static void hb_vmTimeStampAdd( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem, double dV
    hb_vmTimeStampPut( pResult, lJulian, lMilliSec );
 }
 
-static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2 )
+static void hb_vmPlus( PHB_ITEM pResult, PHB_ITEM pItem1, PHB_ITEM pItem2 )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPlus(%p,%p,%p)", pResult, pItem1, pItem2));
 
@@ -3292,7 +3292,7 @@ static void hb_vmPlus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
    }
 }
 
-static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2 )
+static void hb_vmMinus( PHB_ITEM pResult, PHB_ITEM pItem1, PHB_ITEM pItem2 )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMinus(%p,%p,%p)", pResult, pItem1, pItem2));
 
@@ -3401,7 +3401,7 @@ static void hb_vmMinus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIt
    }
 }
 
-static void hb_vmMult( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2 )
+static void hb_vmMult( PHB_ITEM pResult, PHB_ITEM pItem1, PHB_ITEM pItem2 )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmMult(%p,%p,%p)", pResult, pItem1, pItem2));
 
@@ -3438,7 +3438,7 @@ static void hb_vmMult( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pIte
    }
 }
 
-static void hb_vmDivide( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2 )
+static void hb_vmDivide( PHB_ITEM pResult, PHB_ITEM pItem1, PHB_ITEM pItem2 )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDivide(%p,%p,%p)", pResult, pItem1, pItem2));
 
@@ -3500,7 +3500,7 @@ static void hb_vmDivide( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pI
    }
 }
 
-static void hb_vmModulus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2 )
+static void hb_vmModulus( PHB_ITEM pResult, PHB_ITEM pItem1, PHB_ITEM pItem2 )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmModulus(%p,%p,%p)", pResult, pItem1, pItem2));
 
@@ -3558,7 +3558,7 @@ static void hb_vmModulus( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR p
    }
 }
 
-static void hb_vmPower( HB_ITEM_PTR pResult, HB_ITEM_PTR pItem1, HB_ITEM_PTR pItem2 )
+static void hb_vmPower( PHB_ITEM pResult, PHB_ITEM pItem1, PHB_ITEM pItem2 )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPower(%p,%p,%p)", pResult, pItem1, pItem2));
 
@@ -4618,7 +4618,7 @@ static void hb_vmEnumStart( int nVars, int nDescend )
 
    for( i = ( int ) nVars << 1; i > 0 && fStart; i -= 2 )
    {
-      HB_ITEM_PTR pBase, pValue, pEnumRef, pEnum;
+      PHB_ITEM pBase, pValue, pEnumRef, pEnum;
 
       pValue = hb_stackItemFromTop( -i );
       /* create extended reference for enumerator destructor */
@@ -4715,7 +4715,7 @@ static void hb_vmEnumStart( int nVars, int nDescend )
 static void hb_vmEnumNext( void )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ITEM_PTR pEnumRef, pEnum, pBase;
+   PHB_ITEM pEnumRef, pEnum, pBase;
    int i;
 
    for( i = ( int ) hb_stackItemFromTop( -1 )->item.asInteger.value; i > 0; --i )
@@ -4795,7 +4795,7 @@ static void hb_vmEnumNext( void )
 static void hb_vmEnumPrev( void )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ITEM_PTR pEnumRef, pEnum, pBase;
+   PHB_ITEM pEnumRef, pEnum, pBase;
    int i;
 
    for( i = hb_stackItemFromTop( -1 )->item.asInteger.value; i > 0; --i )
@@ -4893,7 +4893,7 @@ static PHB_ITEM hb_vmSwitchGet( void )
 
    if( !( HB_IS_NUMINT( pSwitch ) || HB_IS_STRING( pSwitch ) ) )
    {
-      HB_ITEM_PTR pResult = hb_errRT_BASE_Subst( EG_ARG, 3104, NULL, "SWITCH", 1, pSwitch );
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 3104, NULL, "SWITCH", 1, pSwitch );
 
       if( !pResult )
          return NULL;
@@ -4908,7 +4908,7 @@ static PHB_ITEM hb_vmSwitchGet( void )
 static const HB_BYTE * hb_vmSwitch( const HB_BYTE * pCode, HB_USHORT casesCnt )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ITEM_PTR pSwitch = hb_vmSwitchGet();
+   PHB_ITEM pSwitch = hb_vmSwitchGet();
 
    if( pSwitch )
    {
@@ -5386,11 +5386,11 @@ static void hb_vmArrayGen( HB_SIZE nElements ) /* generates an nElements Array a
 /* This function creates an array item using 'uiDimension' as an index
  * to retrieve the number of elements from the stack
  */
-static void hb_vmArrayNew( HB_ITEM_PTR pArray, HB_USHORT uiDimension )
+static void hb_vmArrayNew( PHB_ITEM pArray, HB_USHORT uiDimension )
 {
    HB_STACK_TLS_PRELOAD
    HB_SIZE nElements;
-   HB_ITEM_PTR pDim;
+   PHB_ITEM pDim;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmArrayNew(%p, %hu)", pArray, uiDimension));
 
@@ -5775,8 +5775,8 @@ static HB_ERRCODE hb_vmSelectWorkarea( PHB_ITEM pAlias, PHB_SYMB pField )
 static void hb_vmSwapAlias( void )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ITEM_PTR pItem;
-   HB_ITEM_PTR pWorkArea;
+   PHB_ITEM pItem;
+   PHB_ITEM pWorkArea;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSwapAlias()"));
 
@@ -6085,7 +6085,7 @@ static HARBOUR hb_vmDoBlock( void )
 
 /* Evaluates a passed codeblock item with no arguments passed to a codeblock
 */
-HB_ITEM_PTR hb_vmEvalBlock( HB_ITEM_PTR pBlock )
+PHB_ITEM hb_vmEvalBlock( PHB_ITEM pBlock )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -6105,7 +6105,7 @@ HB_ITEM_PTR hb_vmEvalBlock( HB_ITEM_PTR pBlock )
  * for example:
  *  retVal = hb_vmEvalBlockV( pBlock, 2, pParam1, pParam2 );
 */
-HB_ITEM_PTR hb_vmEvalBlockV( HB_ITEM_PTR pBlock, HB_ULONG ulArgCount, ... )
+PHB_ITEM hb_vmEvalBlockV( PHB_ITEM pBlock, HB_ULONG ulArgCount, ... )
 {
    HB_STACK_TLS_PRELOAD
    va_list va;
@@ -7079,7 +7079,7 @@ static void hb_vmPushLocal( int iLocal )
 static void hb_vmPushLocalByRef( int iLocal )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ITEM_PTR pTop;
+   PHB_ITEM pTop;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPushLocalByRef(%d)", iLocal));
 
@@ -7160,9 +7160,9 @@ static void hb_vmPushVariable( PHB_SYMB pVarSymb )
    if( hb_rddFieldGet( pItem, pVarSymb ) != HB_SUCCESS &&
        hb_memvarGet( pItem, pVarSymb ) != HB_SUCCESS )
    {
-      HB_ITEM_PTR pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
-                                         NULL, pVarSymb->szName,
-                                         0, EF_CANRETRY );
+      PHB_ITEM pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
+                                      NULL, pVarSymb->szName,
+                                      0, EF_CANRETRY );
 
       while( hb_errLaunch( pError ) == E_RETRY )
       {
@@ -7291,7 +7291,7 @@ static void hb_vmPopAliasedField( PHB_SYMB pSym )
 static void hb_vmPopAliasedVar( PHB_SYMB pSym )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ITEM_PTR pAlias = hb_stackItemFromTop( -1 );
+   PHB_ITEM pAlias = hb_stackItemFromTop( -1 );
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmPopAliasedVar(%p)", pSym));
 

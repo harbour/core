@@ -1030,7 +1030,7 @@ void * hb_xrealloc( void * pMem, HB_SIZE nSize )
    return s_xrealloc ? s_xrealloc( pMem, nSize ) : NULL;
 }
 
-void hb_macroTextValue( HB_ITEM_PTR pItem )
+void hb_macroTextValue( PHB_ITEM pItem )
 {
    static HB_MACROTEXTVALUE s_macroTextValue = NULL;
 

@@ -59,7 +59,7 @@
 typedef struct
 {
    PHB_DYNS pDynSym;             /* Pointer to dynamic symbol */
-} DYNHB_ITEM, * PDYNHB_ITEM, * DYNHB_ITEM_PTR;
+} DYNHB_ITEM, * PDYNHB_ITEM;
 
 typedef struct _HB_SYM_HOLDER
 {

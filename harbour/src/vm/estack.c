@@ -614,7 +614,7 @@ void hb_stackPush( void )
 }
 
 #undef hb_stackAllocItem
-HB_ITEM_PTR hb_stackAllocItem( void )
+PHB_ITEM hb_stackAllocItem( void )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -674,7 +674,7 @@ void hb_stackIncrease( void )
 void hb_stackRemove( HB_ISIZ nUntilPos )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ITEM_PTR * pEnd = hb_stack.pItems + nUntilPos;
+   PHB_ITEM * pEnd = hb_stack.pItems + nUntilPos;
 
    while( hb_stack.pPos > pEnd )
    {
@@ -781,10 +781,10 @@ static void hb_stackDispLocal( void )
 
 #endif
 
-HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pFrame, HB_USHORT uiParams )
+PHB_ITEM hb_stackNewFrame( PHB_STACK_STATE pFrame, HB_USHORT uiParams )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ITEM_PTR * pBase, pItem;
+   PHB_ITEM * pBase, pItem;
 
    pBase = hb_stack.pPos - uiParams - 2;
    pItem = * pBase;  /* procedure symbol */
@@ -835,7 +835,7 @@ void hb_stackOldFrame( PHB_STACK_STATE pFrame )
 }
 
 #undef hb_stackItem
-HB_ITEM_PTR hb_stackItem( HB_ISIZ nItemPos )
+PHB_ITEM hb_stackItem( HB_ISIZ nItemPos )
 {
    HB_STACK_TLS_PRELOAD
    if( nItemPos < 0 )
@@ -845,7 +845,7 @@ HB_ITEM_PTR hb_stackItem( HB_ISIZ nItemPos )
 }
 
 #undef hb_stackItemFromTop
-HB_ITEM_PTR hb_stackItemFromTop( int iFromTop )
+PHB_ITEM hb_stackItemFromTop( int iFromTop )
 {
    HB_STACK_TLS_PRELOAD
    if( iFromTop >= 0 )
@@ -855,7 +855,7 @@ HB_ITEM_PTR hb_stackItemFromTop( int iFromTop )
 }
 
 #undef hb_stackItemFromBase
-HB_ITEM_PTR hb_stackItemFromBase( int iFromBase )
+PHB_ITEM hb_stackItemFromBase( int iFromBase )
 {
    HB_STACK_TLS_PRELOAD
    if( iFromBase < 0 )
@@ -865,10 +865,10 @@ HB_ITEM_PTR hb_stackItemFromBase( int iFromBase )
 }
 
 #undef hb_stackLocalVariable
-HB_ITEM_PTR hb_stackLocalVariable( int iLocal )
+PHB_ITEM hb_stackLocalVariable( int iLocal )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ITEM_PTR pBase = *hb_stack.pBase;
+   PHB_ITEM pBase = *hb_stack.pBase;
 
 /*
    if( iLocal <= 0 )
@@ -889,10 +889,10 @@ HB_ITEM_PTR hb_stackLocalVariable( int iLocal )
 }
 
 #undef hb_stackLocalVariableAt
-HB_ITEM_PTR hb_stackLocalVariableAt( int * piFromBase )
+PHB_ITEM hb_stackLocalVariableAt( int * piFromBase )
 {
    HB_STACK_TLS_PRELOAD
-   HB_ITEM_PTR pBase = *hb_stack.pBase;
+   PHB_ITEM pBase = *hb_stack.pBase;
 
 /*
    if( *piFromBase <= 0 )
@@ -913,7 +913,7 @@ HB_ITEM_PTR hb_stackLocalVariableAt( int * piFromBase )
 }
 
 #undef hb_stackBaseItem
-HB_ITEM_PTR hb_stackBaseItem( void )
+PHB_ITEM hb_stackBaseItem( void )
 {
    HB_STACK_TLS_PRELOAD
    return * hb_stack.pBase;
@@ -922,14 +922,14 @@ HB_ITEM_PTR hb_stackBaseItem( void )
 /* Returns SELF object, an evaluated codeblock or NIL for normal func/proc
 */
 #undef hb_stackSelfItem
-HB_ITEM_PTR hb_stackSelfItem( void )
+PHB_ITEM hb_stackSelfItem( void )
 {
    HB_STACK_TLS_PRELOAD
    return * ( hb_stack.pBase + 1 );
 }
 
 #undef hb_stackReturnItem
-HB_ITEM_PTR hb_stackReturnItem( void )
+PHB_ITEM hb_stackReturnItem( void )
 {
    HB_STACK_TLS_PRELOAD
 

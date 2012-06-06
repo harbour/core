@@ -417,7 +417,7 @@ typedef struct _HB_ITEM
       struct hb_struSymbol    asSymbol;
       struct hb_struRecover   asRecover;
    } item;
-} HB_ITEM, * PHB_ITEM, * HB_ITEM_PTR;
+} HB_ITEM, * PHB_ITEM;
 
 /* internal structure for arrays */
 typedef struct _HB_BASEARRAY
@@ -447,7 +447,13 @@ typedef struct _HB_CODEBLOCK
    void *      pStatics;     /* STATICs base frame */
    HB_USHORT   uiLocals;     /* number of referenced local variables */
    HB_SHORT    dynBuffer;    /* is pcode buffer allocated dynamically, SHORT used instead of HB_BOOL intentionally to force optimal alignment */
-} HB_CODEBLOCK, * PHB_CODEBLOCK, * HB_CODEBLOCK_PTR;
+} HB_CODEBLOCK, * HB_CODEBLOCK_PTR;
+
+#if defined( HB_LEGACY_LEVEL4 )
+#  define HB_ITEM_PTR      PHB_ITEM
+#  define HB_BASEARRAY_PTR PHB_BASEARRAY
+#  define PHB_CODEBLOCK    HB_CODEBLOCK_PTR
+#endif
 
 typedef void     ( * HB_EXTREF_FUNC0 )( void * );
 typedef PHB_ITEM ( * HB_EXTREF_FUNC1 )( PHB_ITEM );
@@ -588,15 +594,15 @@ extern HB_EXPORT  void     hb_gcRefFree( void * pAlloc ); /* decrement reference
 
 extern HB_EXPORT  void     hb_gcDummyMark( void * Cargo ); /* dummy GC mark function */
 
-extern PHB_ITEM   hb_gcGripGet( HB_ITEM_PTR pItem );
-extern void       hb_gcGripDrop( HB_ITEM_PTR pItem );
+extern PHB_ITEM   hb_gcGripGet( PHB_ITEM pItem );
+extern void       hb_gcGripDrop( PHB_ITEM pItem );
 
 #ifdef _HB_API_INTERNAL_
 extern const HB_GC_FUNCS * hb_gcFuncs( void *pBlock );  /* return cleanup function pointer */
 extern void       hb_gcAttach( void * pBlock );
 extern void *     hb_gcAllocRaw( HB_SIZE nSize, const HB_GC_FUNCS * pFuncs ); /* allocates a memory controlled by the garbage collector */
 extern void       hb_gcGripMark( void * Cargo ); /* mark complex variables inside given item as used */
-extern void       hb_gcItemRef( HB_ITEM_PTR pItem ); /* mark complex variables inside given item as used */
+extern void       hb_gcItemRef( PHB_ITEM pItem ); /* mark complex variables inside given item as used */
 extern void       hb_vmIsStackRef( void ); /* hvm.c - mark all local variables as used */
 extern void       hb_vmIsStaticRef( void ); /* hvm.c - mark all static variables as used */
 extern void       hb_gcReleaseAll( void ); /* release all memory blocks unconditionally */
@@ -1053,10 +1059,10 @@ extern PHB_ITEM         hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, int iItemP
 
 /* memvars subsystem */
 extern           void       hb_memvarsClear( HB_BOOL fAll ); /* clear all PUBLIC and PRIVATE variables optionally without GetList PUBLIC variable */
-extern HB_EXPORT void       hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem ); /* copy an item into a symbol */
-extern HB_EXPORT HB_ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item */
-extern           void       hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item, with error trapping */
-extern           void       hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ); /* copy a reference to a symbol value into an item, with error trapping */
+extern HB_EXPORT void       hb_memvarSetValue( PHB_SYMB pMemvarSymb, PHB_ITEM pItem ); /* copy an item into a symbol */
+extern HB_EXPORT HB_ERRCODE hb_memvarGet( PHB_ITEM pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item */
+extern           void       hb_memvarGetValue( PHB_ITEM pItem, PHB_SYMB pMemvarSymb ); /* copy an symbol value into an item, with error trapping */
+extern           void       hb_memvarGetRefer( PHB_ITEM pItem, PHB_SYMB pMemvarSymb ); /* copy a reference to a symbol value into an item, with error trapping */
 extern           HB_SIZE    hb_memvarGetPrivatesBase( void ); /* retrieve current PRIVATE variables stack base */
 extern           void       hb_memvarSetPrivatesBase( HB_SIZE nBase ); /* release PRIVATE variables created after specified base */
 extern           void       hb_memvarUpdatePrivatesBase( void ); /* Update PRIVATE base ofsset so they will not be removed when function return */
@@ -1064,7 +1070,7 @@ extern           void       hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pV
 extern           char *     hb_memvarGetStrValuePtr( char * szVarName, HB_SIZE * pnLen );
 extern           void       hb_memvarCreateFromItem( PHB_ITEM pMemvar, int iScope, PHB_ITEM pValue );
 extern           int        hb_memvarScope( const char * szVarName, HB_SIZE nLength ); /* retrieve scope of a dynamic variable symbol */
-extern           PHB_ITEM   hb_memvarDetachLocal( HB_ITEM_PTR pLocal ); /* Detach a local variable from the eval stack */
+extern           PHB_ITEM   hb_memvarDetachLocal( PHB_ITEM pLocal ); /* Detach a local variable from the eval stack */
 extern HB_EXPORT PHB_ITEM   hb_memvarGetValueBySym( PHB_DYNS pDynSym );
 extern HB_EXPORT PHB_ITEM   hb_memvarSaveInArray( int iScope, HB_BOOL fCopy ); /* create array with visible memvar references or copies respecting given memvars scope */
 extern           void       hb_memvarRestoreFromArray( PHB_ITEM pArray );
@@ -1103,19 +1109,19 @@ typedef struct HB_MACRO_ * HB_MACRO_PTR;
 #else
 typedef void * HB_MACRO_PTR;
 #endif
-extern HB_EXPORT void         hb_macroGetValue( HB_ITEM_PTR pItem, int iContext, int flags ); /* retrieve results of a macro expansion */
-extern           void         hb_macroSetValue( HB_ITEM_PTR pItem, int flags ); /* assign a value to a macro-expression item */
-extern           void         hb_macroPushReference( HB_ITEM_PTR pItem ); /* push reference to given expression */
-extern           void         hb_macroTextValue( HB_ITEM_PTR pItem ); /* macro text substitution */
-extern           void         hb_macroPushSymbol( HB_ITEM_PTR pItem ); /* handle a macro function calls, e.g. var := &macro() */
+extern HB_EXPORT void         hb_macroGetValue( PHB_ITEM pItem, int iContext, int flags ); /* retrieve results of a macro expansion */
+extern           void         hb_macroSetValue( PHB_ITEM pItem, int flags ); /* assign a value to a macro-expression item */
+extern           void         hb_macroPushReference( PHB_ITEM pItem ); /* push reference to given expression */
+extern           void         hb_macroTextValue( PHB_ITEM pItem ); /* macro text substitution */
+extern           void         hb_macroPushSymbol( PHB_ITEM pItem ); /* handle a macro function calls, e.g. var := &macro() */
 extern           void         hb_macroRun( HB_MACRO_PTR pMacro ); /* executes pcode compiled by macro compiler */
 extern           HB_MACRO_PTR hb_macroCompile( const char * szString ); /* compile a string and return a pcode buffer */
 extern           void         hb_macroDelete( HB_MACRO_PTR pMacro ); /* release all memory allocated for macro evaluation */
 extern           char *       hb_macroTextSymbol( const char * szString, HB_SIZE nLength, HB_BOOL * pfNewString ); /* substitute macro variables occurences within a given string and check if result is a valid function or variable name */
 extern           char *       hb_macroExpandString( const char * szString, HB_SIZE nLength, HB_BOOL * pfNewString ); /* expands valid '&' operator */
-extern           void         hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int flags ); /* compiles and evaluates an aliased macro expression */
-extern           void         hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int flags ); /* compiles and evaluates an aliased macro expression */
-extern HB_EXPORT const char * hb_macroGetType( HB_ITEM_PTR pItem ); /* determine the type of an expression */
+extern           void         hb_macroPopAliasedValue( PHB_ITEM pAlias, PHB_ITEM pVar, int flags ); /* compiles and evaluates an aliased macro expression */
+extern           void         hb_macroPushAliasedValue( PHB_ITEM pAlias, PHB_ITEM pVar, int flags ); /* compiles and evaluates an aliased macro expression */
+extern HB_EXPORT const char * hb_macroGetType( PHB_ITEM pItem ); /* determine the type of an expression */
 
 /* idle states */
 extern HB_EXPORT void hb_releaseCPU( void );

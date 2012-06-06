@@ -2292,7 +2292,7 @@ HB_BOOL hb_objHasOperator( PHB_ITEM pObject, HB_USHORT uiOperator )
  * Function return HB_TRUE when object class overloads given operator
  * and HB_FALSE otherwise. [druzus]
  */
-HB_BOOL hb_objOperatorCall( HB_USHORT uiOperator, HB_ITEM_PTR pResult, PHB_ITEM pObject,
+HB_BOOL hb_objOperatorCall( HB_USHORT uiOperator, PHB_ITEM pResult, PHB_ITEM pObject,
                             PHB_ITEM pMsgArg1, PHB_ITEM pMsgArg2 )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_objOperatorCall(%hu,%p,%p,%p,%p)", uiOperator, pResult, pObject, pMsgArg1, pMsgArg2));

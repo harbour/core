@@ -172,17 +172,17 @@ extern           void      hb_errInternalRaw    ( HB_ERRCODE errCode, const char
 
 /* Low-level error handling */
 struct HB_ERROR_INFO_;   /* forward declaration */
-#define HB_ERROR_HANDLE( hbfunc )   HB_ITEM_PTR hbfunc( struct HB_ERROR_INFO_ * ErrorInfo )
+#define HB_ERROR_HANDLE( hbfunc )   PHB_ITEM hbfunc( struct HB_ERROR_INFO_ * ErrorInfo )
 typedef HB_ERROR_HANDLE( HB_ERROR_HANDLER );
 typedef HB_ERROR_HANDLER * HB_ERROR_HANDLER_PTR;
 
 typedef struct HB_ERROR_INFO_
 {
    HB_ERROR_HANDLER_PTR Func;
-   HB_ITEM_PTR Error;
+   PHB_ITEM Error;
    void * Cargo;
    struct HB_ERROR_INFO_ * Previous;
-   HB_ITEM_PTR ErrorBlock;
+   PHB_ITEM ErrorBlock;
 } HB_ERROR_INFO, * HB_ERROR_INFO_PTR;
 
 /* set/get current error handler */

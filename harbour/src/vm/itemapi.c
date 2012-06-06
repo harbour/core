@@ -1937,7 +1937,7 @@ PHB_ITEM hb_itemUnRefOnce( PHB_ITEM pItem )
             else
             {
                /* a reference to a local variable */
-               HB_ITEM_PTR * pLocal;
+               PHB_ITEM * pLocal;
 
                pLocal = *( pItem->item.asRefer.BasePtr.itemsbasePtr ) +
                         pItem->item.asRefer.offset + pItem->item.asRefer.value;

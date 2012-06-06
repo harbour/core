@@ -436,15 +436,15 @@ typedef struct HB_EXPR_
    HB_SIZE     nLength;
    HB_EXPRTYPE ExprType;      /* internal expression type */
    HB_USHORT   ValType;       /* language level value type */
-   struct HB_EXPR_ *pNext;    /* next expression in the list of expressions */
-} HB_EXPR, *HB_EXPR_PTR;
+   struct HB_EXPR_ * pNext;   /* next expression in the list of expressions */
+} HB_EXPR, * HB_EXPR_PTR;
 
 typedef struct HB_ENUMERATOR_
 {
    const char * szName;
    HB_BOOL bForEach;
    struct HB_ENUMERATOR_ *pNext;
-} HB_ENUMERATOR, *HB_ENUMERATOR_PTR; /* support structure for FOR EACH statements */
+} HB_ENUMERATOR, * HB_ENUMERATOR_PTR; /* support structure for FOR EACH statements */
 
 /* support structure for else if pcode fixups */
 typedef struct HB_ELSEIF_
@@ -483,7 +483,7 @@ typedef struct HB_SWITCHCMD_
    HB_EXPR_PTR pExpr;
    HB_SIZE nDefault;
    struct HB_SWITCHCMD_ * pPrev;
-} HB_SWITCHCMD, *HB_SWITCHCMD_PTR;
+} HB_SWITCHCMD, * HB_SWITCHCMD_PTR;
 
 /* support structure for PUBLIC and PRIVATE statements */
 typedef struct HB_RTVAR_
@@ -492,7 +492,7 @@ typedef struct HB_RTVAR_
    HB_BOOL bPopValue;
    struct HB_RTVAR_ * pNext;
    struct HB_RTVAR_ * pPrev;
-} HB_RTVAR, *HB_RTVAR_PTR;
+} HB_RTVAR, * HB_RTVAR_PTR;
 
 /* structure to hold a Clipper defined function */
 typedef struct __FUNC
@@ -673,7 +673,7 @@ typedef struct HB_MACRO_      /* a macro compiled pcode container */
    HB_SIZE  length;           /* length of the string */
    int      Flags;            /* some flags we may need */
    int      status;           /* status of compilation */
-   HB_ITEM_PTR pError;        /* error object returned from the parser */
+   PHB_ITEM pError;           /* error object returned from the parser */
    HB_PCODE_INFO_PTR pCodeInfo;  /* pointer to pcode buffer and info */
    void *   pLex;             /* lexer buffer pointer */
    void *   pExprLst;         /* list with allocated expressions */

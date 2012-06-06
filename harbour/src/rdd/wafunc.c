@@ -349,7 +349,7 @@ HB_ERRCODE hb_rddGetAliasNumber( const char * szAlias, int * iArea )
  */
 HB_ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
 {
-   HB_ITEM_PTR pError;
+   PHB_ITEM pError;
    HB_ERRCODE errCode;
    const char * szName;
    int iArea;
@@ -428,7 +428,7 @@ HB_ERRCODE hb_rddSelectWorkAreaAlias( const char * szAlias )
        * generate an error with retry possibility
        * (user created error handler can open a missing database)
        */
-      HB_ITEM_PTR pError = hb_errRT_New( ES_ERROR, NULL, EG_NOALIAS, EDBCMD_NOALIAS, NULL, szAlias, 0, EF_CANRETRY );
+      PHB_ITEM pError = hb_errRT_New( ES_ERROR, NULL, EG_NOALIAS, EDBCMD_NOALIAS, NULL, szAlias, 0, EF_CANRETRY );
 
       do
       {
@@ -455,7 +455,7 @@ HB_ERRCODE hb_rddSelectWorkAreaAlias( const char * szAlias )
 /*
  * Obtain the current value of a field.
  */
-HB_ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+HB_ERRCODE hb_rddFieldGet( PHB_ITEM pItem, PHB_SYMB pFieldSymbol )
 {
    AREAP pArea;
 
@@ -484,7 +484,7 @@ HB_ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 /*
  * Assign a value to a field.
  */
-HB_ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+HB_ERRCODE hb_rddFieldPut( PHB_ITEM pItem, PHB_SYMB pFieldSymbol )
 {
    AREAP pArea;
 
@@ -513,7 +513,7 @@ HB_ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 /*
  * Obtain the current value of a field.
  */
-HB_ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+HB_ERRCODE hb_rddGetFieldValue( PHB_ITEM pItem, PHB_SYMB pFieldSymbol )
 {
    HB_ERRCODE errCode;
 
@@ -546,7 +546,7 @@ HB_ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
 /*
  * Assign a value to a field.
  */
-HB_ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+HB_ERRCODE hb_rddPutFieldValue( PHB_ITEM pItem, PHB_SYMB pFieldSymbol )
 {
    HB_ERRCODE errCode;
 

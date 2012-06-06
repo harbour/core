@@ -4313,7 +4313,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_codeblockDelete( HB_ITEM_PTR pItem )
+ *      hb_codeblockDelete( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
  *  $DESCRIPTION$
@@ -4426,7 +4426,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_codeblockEvaluate( HB_ITEM_PTR pItem )
+ *      hb_codeblockEvaluate( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
  *  $DESCRIPTION$
@@ -4498,7 +4498,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_memvarValueNew( HB_ITEM_PTR pSource, HB_BOOL bTrueMemvar ) --> ( HB_HANDLE )hResult
+ *      hb_memvarValueNew( PHB_ITEM pSource, HB_BOOL bTrueMemvar ) --> ( HB_HANDLE )hResult
  *  $ARGUMENTS$
  *      <pSource>
  *
@@ -4749,7 +4749,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
+ *      hb_memvarSetValue( PHB_SYMB pMemvarSymb, PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pMemvarSymb>
  *
@@ -4786,7 +4786,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb ) --> ( HB_ERRCODE )hResult
+ *      hb_memvarGet( PHB_ITEM pItem, PHB_SYMB pMemvarSymb ) --> ( HB_ERRCODE )hResult
  *  $ARGUMENTS$
  *      <pItem>
  *
@@ -4825,7 +4825,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
+ *      hb_memvarGetValue( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
  *  $ARGUMENTS$
  *      <pItem>
  *
@@ -4862,7 +4862,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
+ *      hb_memvarGetRefer( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
  *  $ARGUMENTS$
  *      <pItem>
  *
@@ -5493,7 +5493,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_macroGetValue( HB_ITEM_PTR pItem )
+ *      hb_macroGetValue( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
  *  $DESCRIPTION$
@@ -5528,7 +5528,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_macroSetValue( HB_ITEM_PTR pItem )
+ *      hb_macroSetValue( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
  *  $DESCRIPTION$
@@ -5563,7 +5563,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_macroTextValue( HB_ITEM_PTR pItem )
+ *      hb_macroTextValue( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
  *  $DESCRIPTION$
@@ -5598,7 +5598,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_macroPushSymbol( HB_ITEM_PTR pItem )
+ *      hb_macroPushSymbol( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
  *  $DESCRIPTION$
@@ -5816,7 +5816,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar )
+ *      hb_macroPopAliasedValue( PHB_ITEM pAlias, PHB_ITEM pVar )
  *  $ARGUMENTS$
  *      <pAlias>
  *
@@ -5853,7 +5853,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar )
+ *      hb_macroPushAliasedValue( PHB_ITEM pAlias, PHB_ITEM pVar )
  *  $ARGUMENTS$
  *      <pAlias>
  *
@@ -5890,7 +5890,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_macroGetType( HB_ITEM_PTR pItem ) --> ( char * )pszResult
+ *      hb_macroGetType( PHB_ITEM pItem ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pItem>
  *  $RETURNS$
@@ -6075,7 +6075,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_gcLockItem( HB_ITEM_PTR pItem )
+ *      hb_gcLockItem( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
  *  $DESCRIPTION$
@@ -6110,7 +6110,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_gcUnlockItem( HB_ITEM_PTR pItem )
+ *      hb_gcUnlockItem( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
  *  $DESCRIPTION$
@@ -6215,7 +6215,7 @@
  *      C Prototype
  *
  *      #include <hbapi.h>
- *      hb_gcItemRef( HB_ITEM_PTR pItem )
+ *      hb_gcItemRef( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
  *  $DESCRIPTION$

@@ -50,14 +50,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * See COPYING for licensing terms.
- *
- */
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbstack.h"
@@ -106,7 +98,7 @@ static HB_ULONG s_ulBackgroundID = 0;
 /* list of background tasks
  * A pointer into an array of pointers to items with a codeblock
  */
-static HB_BACKGROUNDTASK_PTR *   s_pBackgroundTasks     = NULL;
+static PHB_BACKGROUNDTASK *      s_pBackgroundTasks     = NULL;
 
 static HB_BOOL                   s_bEnabled             = HB_FALSE;
 
@@ -411,9 +403,9 @@ HB_FUNC( HB_BACKGROUNDRESET )
 /* add a new background task and return its handle */
 HB_FUNC( HB_BACKGROUNDADD )
 {
-   HB_ITEM_PTR pBlock     = hb_param( 1, HB_IT_ANY );
-   HB_ITEM_PTR pMillisec  = hb_param( 2, HB_IT_NUMERIC );
-   HB_ITEM_PTR pActive    = hb_param( 3, HB_IT_LOGICAL );
+   PHB_ITEM pBlock     = hb_param( 1, HB_IT_ANY );
+   PHB_ITEM pMillisec  = hb_param( 2, HB_IT_NUMERIC );
+   PHB_ITEM pActive    = hb_param( 3, HB_IT_LOGICAL );
 
    if( HB_IS_BLOCK( pBlock ) || HB_IS_ARRAY( pBlock ) )
    {

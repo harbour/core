@@ -81,7 +81,7 @@ static void hb_arrayReleaseItems( PHB_BASEARRAY pBaseArray )
 {
    if( pBaseArray->nLen )
    {
-      HB_ITEM_PTR pItems = pBaseArray->pItems;
+      PHB_ITEM pItems = pBaseArray->pItems;
       HB_SIZE nLen = pBaseArray->nLen;
 
       /*
@@ -162,7 +162,7 @@ static HB_GARBAGE_FUNC( hb_arrayGarbageMark )
    if( pBaseArray->nLen )
    {
       HB_SIZE nLen = pBaseArray->nLen;
-      HB_ITEM_PTR pItems = pBaseArray->pItems;
+      PHB_ITEM pItems = pBaseArray->pItems;
 
       while( nLen-- )
       {

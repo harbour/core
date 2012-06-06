@@ -159,7 +159,7 @@ static void hb_memvarDetachDynSym( PHB_DYNS pDynSym, PHB_ITEM pPrevMemvar )
 /*
  * Detach local variable (swap current value with a memvar handle)
  */
-HB_ITEM_PTR hb_memvarDetachLocal( PHB_ITEM pLocal )
+PHB_ITEM hb_memvarDetachLocal( PHB_ITEM pLocal )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarDetachLocal(%p)", pLocal));
 
@@ -362,7 +362,7 @@ static void hb_memvarResetPrivatesBase( void )
  * pItem   - value to store in memvar
  *
  */
-void hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
+void hb_memvarSetValue( PHB_SYMB pMemvarSymb, PHB_ITEM pItem )
 {
    PHB_DYNS pDyn;
 
@@ -395,7 +395,7 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, HB_ITEM_PTR pItem )
       hb_errInternal( HB_EI_MVBADSYMBOL, NULL, pMemvarSymb->szName, NULL );
 }
 
-HB_ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
+HB_ERRCODE hb_memvarGet( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
 {
    PHB_DYNS pDyn;
    HB_ERRCODE bSuccess = HB_FAILURE;
@@ -429,7 +429,7 @@ HB_ERRCODE hb_memvarGet( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
    return bSuccess;
 }
 
-void hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
+void hb_memvarGetValue( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarGetValue(%p, %p)", pItem, pMemvarSymb));
 
@@ -438,7 +438,7 @@ void hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
       /* Generate an error with retry possibility
        * (user created error handler can create this variable)
        */
-      HB_ITEM_PTR pError;
+      PHB_ITEM pError;
 
       pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
                              NULL, pMemvarSymb->szName, 0, EF_CANRETRY );
@@ -453,7 +453,7 @@ void hb_memvarGetValue( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
    }
 }
 
-void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
+void hb_memvarGetRefer( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
 {
    PHB_DYNS pDyn;
 
@@ -485,7 +485,7 @@ void hb_memvarGetRefer( HB_ITEM_PTR pItem, PHB_SYMB pMemvarSymb )
          /* Generate an error with retry possibility
           * (user created error handler can make this variable accessible)
           */
-         HB_ITEM_PTR pError;
+         PHB_ITEM pError;
 
          pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
                                 NULL, pMemvarSymb->szName, 0, EF_CANRETRY );
@@ -700,7 +700,7 @@ static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, int iScope, PHB_ITEM
  * It also restores the value that was hidden if there is another
  * PRIVATE variable with the same name.
  */
-static void hb_memvarRelease( HB_ITEM_PTR pMemvar )
+static void hb_memvarRelease( PHB_ITEM pMemvar )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_memvarRelease(%p)", pMemvar));
 
@@ -935,7 +935,7 @@ static HB_DYNS_FUNC( hb_memvarFindPublicByPos )
  * Both pointers points to existing and used data - they shouldn't be
  * deallocated.
  */
-static HB_ITEM_PTR hb_memvarDebugVariable( int iScope, int iPos, const char ** pszName )
+static PHB_ITEM hb_memvarDebugVariable( int iScope, int iPos, const char ** pszName )
 {
    PHB_ITEM pValue = NULL;
    *pszName = NULL;
@@ -1220,7 +1220,7 @@ HB_FUNC( __MVDBGINFO )
 
    else if( iCount > 2 )     /* request for a value of variable */
    {
-      HB_ITEM_PTR pValue;
+      PHB_ITEM pValue;
       const char * szName;
 
       pValue = hb_memvarDebugVariable( hb_parni( 1 ), hb_parni( 2 ), &szName );
@@ -1248,7 +1248,7 @@ HB_FUNC( __MVEXIST )
 
 HB_FUNC( __MVGET )
 {
-   HB_ITEM_PTR pName = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pName = hb_param( 1, HB_IT_STRING );
 
    if( pName )
    {
@@ -1269,7 +1269,7 @@ HB_FUNC( __MVGET )
          /* Generate an error with retry possibility
           * (user created error handler can create this variable)
           */
-         HB_ITEM_PTR pError;
+         PHB_ITEM pError;
 
          pError = hb_errRT_New( ES_ERROR, NULL, EG_NOVAR, 1003,
                                  NULL, pName->item.asString.value, 0, EF_CANRETRY );
@@ -1303,8 +1303,8 @@ HB_FUNC( __MVGET )
 
 HB_FUNC( __MVPUT )
 {
-   HB_ITEM_PTR pName = hb_param( 1, HB_IT_STRING );
-   HB_ITEM_PTR pValue = hb_paramError( 2 );
+   PHB_ITEM pName = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pValue = hb_paramError( 2 );
 
    if( pName )
    {
@@ -1334,7 +1334,7 @@ HB_FUNC( __MVPUT )
        * (it must be a string)
        * This is not a critical error - we can continue normal processing
        */
-      HB_ITEM_PTR pRetValue = hb_errRT_BASE_Subst( EG_ARG, 3010, NULL, NULL, HB_ERR_ARGS_BASEPARAMS );
+      PHB_ITEM pRetValue = hb_errRT_BASE_Subst( EG_ARG, 3010, NULL, NULL, HB_ERR_ARGS_BASEPARAMS );
 
       if( pRetValue )
          hb_itemRelease( pRetValue );

@@ -1158,10 +1158,10 @@ extern void hb_rddCloseDetachedAreas( void );
 
 /* RDD virtual machine integration functions */
 extern HB_EXPORT void         hb_rddShutDown( void );
-extern HB_EXPORT HB_ERRCODE   hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
-extern HB_EXPORT HB_ERRCODE   hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
-extern HB_EXPORT HB_ERRCODE   hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
-extern HB_EXPORT HB_ERRCODE   hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol );
+extern HB_EXPORT HB_ERRCODE   hb_rddGetFieldValue( PHB_ITEM pItem, PHB_SYMB pFieldSymbol );
+extern HB_EXPORT HB_ERRCODE   hb_rddPutFieldValue( PHB_ITEM pItem, PHB_SYMB pFieldSymbol );
+extern HB_EXPORT HB_ERRCODE   hb_rddFieldGet( PHB_ITEM pItem, PHB_SYMB pFieldSymbol );
+extern HB_EXPORT HB_ERRCODE   hb_rddFieldPut( PHB_ITEM pItem, PHB_SYMB pFieldSymbol );
 extern HB_EXPORT int          hb_rddGetCurrentWorkAreaNumber( void );
 extern HB_EXPORT HB_ERRCODE   hb_rddSelectWorkAreaNumber( int iArea );
 extern HB_EXPORT HB_ERRCODE   hb_rddSelectWorkAreaAlias( const char * szAlias );

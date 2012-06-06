@@ -151,7 +151,7 @@ void hb_macroDelete( HB_MACRO_PTR pMacro )
 
 /* checks if a correct ITEM was passed from the virtual machine eval stack
  */
-static HB_BOOL hb_macroCheckParam( HB_ITEM_PTR pItem )
+static HB_BOOL hb_macroCheckParam( PHB_ITEM pItem )
 {
    HB_BOOL bValid = HB_TRUE;
 
@@ -159,7 +159,7 @@ static HB_BOOL hb_macroCheckParam( HB_ITEM_PTR pItem )
 
    if( ! HB_IS_STRING( pItem ) )
    {
-      HB_ITEM_PTR pResult = hb_errRT_BASE_Subst( EG_ARG, 1065, NULL, "&", 1, pItem );
+      PHB_ITEM pResult = hb_errRT_BASE_Subst( EG_ARG, 1065, NULL, "&", 1, pItem );
 
       bValid = HB_FALSE;
       if( pResult )
@@ -414,7 +414,7 @@ static char * hb_macroTextSubst( const char * szString, HB_SIZE * pnStringLen )
  *
  */
 
-void hb_macroGetValue( HB_ITEM_PTR pItem, int iContext, int flags )
+void hb_macroGetValue( PHB_ITEM pItem, int iContext, int flags )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -501,7 +501,7 @@ void hb_macroGetValue( HB_ITEM_PTR pItem, int iContext, int flags )
  * placed on the left side of the assignment
  * POP operation
  */
-void hb_macroSetValue( HB_ITEM_PTR pItem, int flags )
+void hb_macroSetValue( PHB_ITEM pItem, int flags )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -545,7 +545,7 @@ void hb_macroSetValue( HB_ITEM_PTR pItem, int flags )
  *   passed by reference or used in optimized left side of the <op>=
  *   expression or as argument of ++ or -- operation
  */
-void hb_macroPushReference( HB_ITEM_PTR pItem )
+void hb_macroPushReference( PHB_ITEM pItem )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -592,7 +592,7 @@ void hb_macroPushReference( HB_ITEM_PTR pItem )
  *    instead of
  *    &( "M + M" ) -> &( "M + M" )
  */
-static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag, int iSupported )
+static void hb_macroUseAliased( PHB_ITEM pAlias, PHB_ITEM pVar, int iFlag, int iSupported )
 {
    HB_STACK_TLS_PRELOAD
 
@@ -674,7 +674,7 @@ static void hb_macroUseAliased( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int iFlag,
  *    &alias->var := any
  *    alias->&var := any
  */
-void hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int flags )
+void hb_macroPopAliasedValue( PHB_ITEM pAlias, PHB_ITEM pVar, int flags )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroPopAliasedValue(%p, %p)", pAlias, pVar));
 
@@ -686,7 +686,7 @@ void hb_macroPopAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int flags )
  *    any := &alias->var
  *    any := alias->&var
  */
-void hb_macroPushAliasedValue( HB_ITEM_PTR pAlias, HB_ITEM_PTR pVar, int flags )
+void hb_macroPushAliasedValue( PHB_ITEM pAlias, PHB_ITEM pVar, int flags )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroPushAliasedValue(%p, %p)", pAlias, pVar));
 
@@ -855,7 +855,7 @@ HB_FUNC( HB_MACROBLOCK )
  * 'pItem' points to a ITEM that contains a string value which after
  *    text substitution will return a function name
  */
-void hb_macroPushSymbol( HB_ITEM_PTR pItem )
+void hb_macroPushSymbol( PHB_ITEM pItem )
 {
    HB_STACK_TLS_PRELOAD
    HB_TRACE(HB_TR_DEBUG, ("hb_macroPushSymbol(%p)", pItem));
@@ -898,7 +898,7 @@ void hb_macroPushSymbol( HB_ITEM_PTR pItem )
  * 'pItem' points to a ITEM that contains a string value which after
  *    text substitution will be returned
  */
-void hb_macroTextValue( HB_ITEM_PTR pItem )
+void hb_macroTextValue( PHB_ITEM pItem )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_macroTextValue(%p)", pItem));
 
@@ -923,7 +923,7 @@ void hb_macroTextValue( HB_ITEM_PTR pItem )
    }
 }
 
-const char * hb_macroGetType( HB_ITEM_PTR pItem )
+const char * hb_macroGetType( PHB_ITEM pItem )
 {
    HB_STACK_TLS_PRELOAD
    const char * szType;

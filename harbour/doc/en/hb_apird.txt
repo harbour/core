@@ -250,7 +250,7 @@
  *      C Prototype
  *
  *      #include <hbapirdd.h>
- *      hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol ) --> ( HB_ERRCODE )hResult
+ *      hb_rddGetFieldValue( PHB_ITEM pItem, PHB_SYMB pFieldSymbol ) --> ( HB_ERRCODE )hResult
  *  $ARGUMENTS$
  *      <pItem>
  *
@@ -289,7 +289,7 @@
  *      C Prototype
  *
  *      #include <hbapirdd.h>
- *      hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol ) --> ( HB_ERRCODE )hResult
+ *      hb_rddPutFieldValue( PHB_ITEM pItem, PHB_SYMB pFieldSymbol ) --> ( HB_ERRCODE )hResult
  *  $ARGUMENTS$
  *      <pItem>
  *
@@ -328,7 +328,7 @@
  *      C Prototype
  *
  *      #include <hbapirdd.h>
- *      hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol ) --> ( HB_ERRCODE )hResult
+ *      hb_rddFieldGet( PHB_ITEM pItem, PHB_SYMB pFieldSymbol ) --> ( HB_ERRCODE )hResult
  *  $ARGUMENTS$
  *      <pItem>
  *
@@ -367,7 +367,7 @@
  *      C Prototype
  *
  *      #include <hbapirdd.h>
- *      hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol ) --> ( HB_ERRCODE )hResult
+ *      hb_rddFieldPut( PHB_ITEM pItem, PHB_SYMB pFieldSymbol ) --> ( HB_ERRCODE )hResult
  *  $ARGUMENTS$
  *      <pItem>
  *

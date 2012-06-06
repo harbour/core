@@ -183,7 +183,7 @@ HB_FUNC( HB_IDLESLEEP )
 /* add a new background task and return its handle */
 HB_FUNC( HB_IDLEADD )
 {
-   HB_ITEM_PTR pBlock = hb_param( 1, HB_IT_BLOCK );
+   PHB_ITEM pBlock = hb_param( 1, HB_IT_BLOCK );
 
    if( pBlock )
    {
@@ -192,9 +192,9 @@ HB_FUNC( HB_IDLEADD )
       ++pIdleData->iIdleMaxTask;
 
       if( ! pIdleData->pIdleTasks )
-         pIdleData->pIdleTasks = ( HB_ITEM_PTR * ) hb_xgrab( sizeof( HB_ITEM_PTR ) );
+         pIdleData->pIdleTasks = ( PHB_ITEM * ) hb_xgrab( sizeof( PHB_ITEM ) );
       else
-         pIdleData->pIdleTasks = ( HB_ITEM_PTR * ) hb_xrealloc( pIdleData->pIdleTasks, sizeof( HB_ITEM_PTR ) * pIdleData->iIdleMaxTask );
+         pIdleData->pIdleTasks = ( PHB_ITEM * ) hb_xrealloc( pIdleData->pIdleTasks, sizeof( PHB_ITEM ) * pIdleData->iIdleMaxTask );
 
       /* store a copy of passed codeblock
       */
@@ -218,7 +218,7 @@ HB_FUNC( HB_IDLEDEL )
 
       while( iTask < pIdleData->iIdleMaxTask )
       {
-         HB_ITEM_PTR pItem = pIdleData->pIdleTasks[ iTask ];
+         PHB_ITEM pItem = pIdleData->pIdleTasks[ iTask ];
 
          if( pID == hb_codeblockId( pItem ) )
          {
@@ -231,9 +231,9 @@ HB_FUNC( HB_IDLEDEL )
                 if( iTask != pIdleData->iIdleMaxTask )
                 {
                    memmove( &pIdleData->pIdleTasks[ iTask ], &pIdleData->pIdleTasks[ iTask + 1 ],
-                            sizeof( HB_ITEM_PTR ) * ( pIdleData->iIdleMaxTask - iTask ) );
+                            sizeof( PHB_ITEM ) * ( pIdleData->iIdleMaxTask - iTask ) );
                 }
-                pIdleData->pIdleTasks = ( HB_ITEM_PTR * ) hb_xrealloc( pIdleData->pIdleTasks, sizeof( HB_ITEM_PTR ) * pIdleData->iIdleMaxTask );
+                pIdleData->pIdleTasks = ( PHB_ITEM * ) hb_xrealloc( pIdleData->pIdleTasks, sizeof( PHB_ITEM ) * pIdleData->iIdleMaxTask );
                 if( pIdleData->iIdleTask >= pIdleData->iIdleMaxTask )
                    pIdleData->iIdleTask = 0;
              }

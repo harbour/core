@@ -277,13 +277,13 @@ typedef struct
 #endif /* _HB_API_INTERNAL_ */
 
 extern HB_EXPORT void *      hb_stackId( void );
-extern HB_EXPORT HB_ITEM_PTR hb_stackItemFromTop( int nFromTop );
-extern HB_EXPORT HB_ITEM_PTR hb_stackItemFromBase( int nFromBase );
-extern HB_EXPORT HB_ITEM_PTR hb_stackBaseItem( void );
-extern HB_EXPORT HB_ITEM_PTR hb_stackSelfItem( void );   /* returns Self object at C function level */
-extern HB_EXPORT HB_ITEM_PTR hb_stackReturnItem( void ); /* returns RETURN Item from stack */
+extern HB_EXPORT PHB_ITEM    hb_stackItemFromTop( int nFromTop );
+extern HB_EXPORT PHB_ITEM    hb_stackItemFromBase( int nFromBase );
+extern HB_EXPORT PHB_ITEM    hb_stackBaseItem( void );
+extern HB_EXPORT PHB_ITEM    hb_stackSelfItem( void );   /* returns Self object at C function level */
+extern HB_EXPORT PHB_ITEM    hb_stackReturnItem( void ); /* returns RETURN Item from stack */
 
-extern HB_EXPORT HB_ITEM_PTR hb_stackAllocItem( void );  /* allocates new item on the top of stack, returns pointer to it */
+extern HB_EXPORT PHB_ITEM    hb_stackAllocItem( void );  /* allocates new item on the top of stack, returns pointer to it */
 extern HB_EXPORT void        hb_stackPop( void );        /* pops an item from the stack */
 
 extern void        hb_stackPush( void );                 /* pushes an item on to the stack */
@@ -294,7 +294,7 @@ extern void        hb_stackRemove( HB_ISIZ nUntilPos );
 extern           HB_ISIZ     hb_stackTopOffset( void );
 extern HB_EXPORT HB_ISIZ     hb_stackBaseOffset( void );
 extern           HB_ISIZ     hb_stackTotalItems( void );
-extern HB_EXPORT HB_ITEM_PTR hb_stackItem( HB_ISIZ nItemPos );
+extern HB_EXPORT PHB_ITEM    hb_stackItem( HB_ISIZ nItemPos );
 extern           char *      hb_stackDateBuffer( void );
 
 /* stack management functions */
@@ -323,12 +323,12 @@ extern HB_EXPORT void ** hb_stackDebugInfo( void );
 #ifdef _HB_API_INTERNAL_
 extern void        hb_stackDec( void );
 extern void        hb_stackDecrease( HB_SIZE nItems );
-extern HB_ITEM_PTR hb_stackNewFrame( PHB_STACK_STATE pFrame, HB_USHORT uiParams );
+extern PHB_ITEM    hb_stackNewFrame( PHB_STACK_STATE pFrame, HB_USHORT uiParams );
 extern void        hb_stackOldFrame( PHB_STACK_STATE pFrame );
 extern void        hb_stackClearMemvarsBase( void );
 
-extern HB_ITEM_PTR hb_stackLocalVariable( int iLocal );
-extern HB_ITEM_PTR hb_stackLocalVariableAt( int * piFromBase );
+extern PHB_ITEM    hb_stackLocalVariable( int iLocal );
+extern PHB_ITEM    hb_stackLocalVariableAt( int * piFromBase );
 extern PHB_ITEM ** hb_stackItemBasePtr( void );
 
 extern HB_EXPORT HB_ISIZ     hb_stackGetRecoverBase( void );

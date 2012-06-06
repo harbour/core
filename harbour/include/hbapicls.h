@@ -100,7 +100,7 @@ extern PHB_SYMB   hb_clsMethodSym( PHB_ITEM pBaseSymbol ); /* returns the real m
 extern PHB_SYMB   hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg, PHB_STACK_STATE pStack ); /* returns the method pointer of an object class */
 extern HB_BOOL    hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage, PHB_STACK_STATE pStack ); /* create object variable reference */
 extern HB_BOOL    hb_objHasOperator( PHB_ITEM pObject, HB_USHORT uiOperator );
-extern HB_BOOL    hb_objOperatorCall( HB_USHORT uiOperator, HB_ITEM_PTR pResult, PHB_ITEM pObject, PHB_ITEM pMsgArg1, PHB_ITEM pMsgArg2 );
+extern HB_BOOL    hb_objOperatorCall( HB_USHORT uiOperator, PHB_ITEM pResult, PHB_ITEM pObject, PHB_ITEM pMsgArg1, PHB_ITEM pMsgArg2 );
 extern void       hb_objDestructorCall( PHB_ITEM pObject );
 
 #ifndef HB_NO_PROFILER

@@ -80,7 +80,7 @@ int hb_rddGetCurrentWorkAreaNumber( void )
    return 0;
 }
 
-HB_ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+HB_ERRCODE hb_rddFieldGet( PHB_ITEM pItem, PHB_SYMB pFieldSymbol )
 {
    HB_SYMBOL_UNUSED( pItem );
    HB_SYMBOL_UNUSED( pFieldSymbol );
@@ -88,7 +88,7 @@ HB_ERRCODE hb_rddFieldGet( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+HB_ERRCODE hb_rddFieldPut( PHB_ITEM pItem, PHB_SYMB pFieldSymbol )
 {
    HB_SYMBOL_UNUSED( pItem );
    HB_SYMBOL_UNUSED( pFieldSymbol );
@@ -96,7 +96,7 @@ HB_ERRCODE hb_rddFieldPut( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+HB_ERRCODE hb_rddGetFieldValue( PHB_ITEM pItem, PHB_SYMB pFieldSymbol )
 {
    HB_SYMBOL_UNUSED( pItem );
    HB_SYMBOL_UNUSED( pFieldSymbol );
@@ -104,7 +104,7 @@ HB_ERRCODE hb_rddGetFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
    return HB_FAILURE;
 }
 
-HB_ERRCODE hb_rddPutFieldValue( HB_ITEM_PTR pItem, PHB_SYMB pFieldSymbol )
+HB_ERRCODE hb_rddPutFieldValue( PHB_ITEM pItem, PHB_SYMB pFieldSymbol )
 {
    HB_SYMBOL_UNUSED( pItem );
    HB_SYMBOL_UNUSED( pFieldSymbol );

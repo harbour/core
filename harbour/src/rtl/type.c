@@ -55,7 +55,7 @@
 
 HB_FUNC( TYPE )
 {
-   HB_ITEM_PTR pItem = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
    if( pItem )
    {
