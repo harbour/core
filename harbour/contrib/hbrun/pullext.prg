@@ -50,6 +50,8 @@
  *
  */
 
+#include "hbver.ch"
+
 STATIC s_hLib := { => }
 
 PROCEDURE __hbrun_extensions_init_static()
@@ -88,12 +90,18 @@ PROCEDURE __hbrun_extensions_load_one( cName )
    LOCAL cFileName
    LOCAL hLib
 
-   IF !( cName $ s_hLib )
-      IF hb_FileExists( cFileName := hb_libName( cName + hb_libPostfix() ) )
-         hLib := hb_libLoad( cFileName )
-         IF ! Empty( hLib )
-            s_hLib[ cName ] := hLib
+   IF ! Empty( cName )
+      IF hb_Version( HB_VERSION_SHARED )
+         IF !( cName $ s_hLib )
+            IF hb_FileExists( cFileName := hb_libName( cName + hb_libPostfix() ) )
+               hLib := hb_libLoad( cFileName )
+               IF ! Empty( hLib )
+                  s_hLib[ cName ] := hLib
+               ENDIF
+            ENDIF
          ENDIF
+      ELSE
+         OutErr( hb_StrFormat( "Cannot load %1$s. Requires -shared hbrun build", cName ) + hb_eol() )
       ENDIF
    ENDIF
 

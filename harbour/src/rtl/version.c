@@ -130,6 +130,14 @@ HB_FUNC( HB_VERSION )
    case HB_VERSION_BITWIDTH:       hb_retni( ( int ) sizeof( void * ) * 8 ); break;
    case HB_VERSION_MT:             hb_retl( hb_vmIsMt() );
 
+   case HB_VERSION_SHARED:
+      #if defined( HB_DYNLIB )
+         hb_retl( HB_TRUE );
+      #else
+         hb_retl( HB_FALSE );
+      #endif
+      break;
+
    case HB_VERSION_UNIX_COMPAT:
       #if defined( HB_OS_UNIX )
          hb_retl( HB_TRUE );

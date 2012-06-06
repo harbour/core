@@ -218,7 +218,9 @@ STATIC PROCEDURE LoadDynamicFromFile( aDynamic, cFileName )
       IF "#" $ cItem
          cItem := Left( cItem, At( "#", cItem ) - 1 )
       ENDIF
-      AAdd( aDynamic, cItem )
+      IF ! Empty( cItem )
+         AAdd( aDynamic, cItem )
+      ENDIF
    NEXT
 
    RETURN
@@ -227,7 +229,9 @@ STATIC PROCEDURE LoadDynamicFromString( aDynamic, cString )
    LOCAL cItem
 
    FOR EACH cItem IN hb_ATokens( cString,, .T. )
-      AAdd( aDynamic, cItem )
+      IF ! Empty( cItem )
+         AAdd( aDynamic, cItem )
+      ENDIF
    NEXT
 
    RETURN
@@ -238,7 +242,7 @@ STATIC PROCEDURE LoadDynamicFromSource( aDynamic, cFileName )
    LOCAL tmp
 
    tmp := hb_cdpSelect( "EN" )
-   pRegex := hb_regexComp( '^(//)[[:blank:]]*#[[:blank:]]*(pragma)[[:blank:]]*(module)[[:blank:]]*(\".+?\"|<.+?>'+"|'.+?'"+')',;
+   pRegex := hb_regexComp( '^(//)[[:blank:]]*#[[:blank:]]*(require)[[:blank:]]*(\".+?\"'+"|'.+?'"+')',;
       .F. /* lCaseSensitive */,;
       .T. /* lNewLine */ )
    hb_cdpSelect( tmp )

@@ -78,10 +78,11 @@
 #define HB_VERSION_BITWIDTH         17
 #define HB_VERSION_ENDIANNESS       18
 #define HB_VERSION_MT               19
+#define HB_VERSION_SHARED           26 /* Last. Please continue from here. */
 #define HB_VERSION_UNIX_COMPAT      20
 #define HB_VERSION_PLATFORM         21
 #define HB_VERSION_CPU              24
-#define HB_VERSION_COMPILER_CPP     25 /* Last. Please continue from here. */
+#define HB_VERSION_COMPILER_CPP     25
 
 /* hb_version( HB_VERSION_ENDIANNESS ) return values. */
 #define HB_VERSION_ENDIAN_LITTLE    1
