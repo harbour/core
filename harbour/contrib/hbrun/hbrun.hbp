@@ -18,7 +18,7 @@
 
 hbrun.prg
 
--request=__hbrun_extensions
+-request=__hbrun_extensions_get_list
 headers.prg
 plugins.prg
 pullext.prg
@@ -33,6 +33,7 @@ hbrun.rc
 
 # Plugins
 
+-I.
 -I../hbnetio/utils/hbnetio
 
 # Here comes the list of contribs linked in:

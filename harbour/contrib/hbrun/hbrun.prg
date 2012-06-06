@@ -6,8 +6,8 @@
  * Harbour Project source code:
  *    "DOt Prompt" Console and .prg/.hrb runner for the Harbour Language
  *
- * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 2008-2012 Viktor Szakats (harbour syenar.net)
+ * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -92,94 +92,104 @@ PROCEDURE _APPMAIN( cFile, ... )
    LOCAL cExt
    LOCAL hHeaders
 
+   LOCAL aDynamic := {}
+
+   LoadDynamicFromFile( aDynamic, hb_DirBase() + "hbrun.dyn" )
+   LoadDynamicFromString( aDynamic, GetEnv( "HBRUN_DYN" ) )
+
    /* TODO: Rework parameter handling */
    IF PCount() > 0
       SWITCH Lower( cFile )
-         CASE "-?"
-         CASE "-h"
-         CASE "--help"
-         CASE "/?"
-         CASE "/h"
-            hbrun_Usage()
-            EXIT
-         CASE "-v"
-         CASE "/v"
-            hbrun_Prompt( hb_AParams(), "? hb_version()" )
-            EXIT
+      CASE "-?"
+      CASE "-h"
+      CASE "--help"
+      CASE "/?"
+      CASE "/h"
+         hbrun_Usage()
+         EXIT
+      CASE "-v"
+      CASE "/v"
+         hbrun_Prompt( hb_AParams(), "? hb_version()" )
+         EXIT
 #if defined( __PLATFORM__WINDOWS )
-         CASE "-r"
-         CASE "-ra"
-         CASE "/r"
-         CASE "/ra"
-            IF win_reg_self( .T., Right( Lower( cFile ), 1 ) == "a" )
-               OutStd( "hbrun: Harbour Script File registered" + hb_eol() )
-            ELSE
-               OutErr( "hbrun: Error: Registering Harbour Script File" + hb_eol() )
-            ENDIF
-            EXIT
-         CASE "-u"
-         CASE "-ua"
-         CASE "/u"
-         CASE "/ua"
-            IF win_reg_self( .F., Right( Lower( cFile ), 1 ) == "a" )
-               OutStd( "hbrun: Harbour Script File unregistered" + hb_eol() )
-            ELSE
-               OutErr( "hbrun: Error: Unregistering Harbour Script File" + hb_eol() )
-            ENDIF
-            EXIT
+      CASE "-r"
+      CASE "-ra"
+      CASE "/r"
+      CASE "/ra"
+         IF win_reg_self( .T., Right( Lower( cFile ), 1 ) == "a" )
+            OutStd( "hbrun: Harbour Script File registered" + hb_eol() )
+         ELSE
+            OutErr( "hbrun: Error: Registering Harbour Script File" + hb_eol() )
+         ENDIF
+         EXIT
+      CASE "-u"
+      CASE "-ua"
+      CASE "/u"
+      CASE "/ua"
+         IF win_reg_self( .F., Right( Lower( cFile ), 1 ) == "a" )
+            OutStd( "hbrun: Harbour Script File unregistered" + hb_eol() )
+         ELSE
+            OutErr( "hbrun: Error: Unregistering Harbour Script File" + hb_eol() )
+         ENDIF
+         EXIT
 #endif
-         CASE "-p"
-         CASE "/p"
-            s_lPreserveHistory := .F.
+      CASE "-p"
+      CASE "/p"
+         s_lPreserveHistory := .F.
+         hbrun_extensionlist_init( aDynamic )
+         hbrun_Prompt( hb_AParams() )
+         EXIT
+      OTHERWISE
+         IF Left( cFile, 2 ) == "--"
+            hbrun_extensionlist_init( aDynamic )
             hbrun_Prompt( hb_AParams() )
             EXIT
-         OTHERWISE
-            IF Left( cFile, 2 ) == "--"
-               hbrun_Prompt( hb_AParams() )
-               EXIT
-            ELSE
-               cFile := hbrun_FindInPath( cFile )
-               IF ! Empty( cFile )
-                  hb_FNameSplit( cFile, NIL, NIL, @cExt )
-                  cExt := Lower( cExt )
-                  SWITCH cExt
-                     CASE ".prg"
-                     CASE ".hb"
-                     CASE ".hbs"
-                     CASE ".hrb"
-                     CASE ".dbf"
-                        EXIT
-                     OTHERWISE
-                        cExt := hbrun_FileSig( cFile )
-                  ENDSWITCH
-                  SWITCH cExt
-                     CASE ".dbf"
-                        hbrun_Prompt( hb_AParams(), "USE " + cFile + " SHARED" )
-                        EXIT
-                     CASE ".prg"
-                     CASE ".hb"
-                     CASE ".hbs"
-                        IF Empty( GetEnv( "HBRUN_NOHEAD" ) )
-                           hHeaders := __hbrun_CoreHeaderFiles() /* add core header files */
-                        ENDIF
+         ELSE
+            cFile := hbrun_FindInPath( cFile )
+            IF ! Empty( cFile )
+               hb_FNameSplit( cFile, NIL, NIL, @cExt )
+               cExt := Lower( cExt )
+               SWITCH cExt
+                  CASE ".prg"
+                  CASE ".hb"
+                  CASE ".hbs"
+                  CASE ".hrb"
+                  CASE ".dbf"
+                     EXIT
+                  OTHERWISE
+                     cExt := hbrun_FileSig( cFile )
+               ENDSWITCH
+               SWITCH cExt
+                  CASE ".dbf"
+                     hbrun_extensionlist_init( aDynamic )
+                     hbrun_Prompt( hb_AParams(), "USE " + cFile + " SHARED" )
+                     EXIT
+                  CASE ".prg"
+                  CASE ".hb"
+                  CASE ".hbs"
+                     IF Empty( GetEnv( "HBRUN_NOHEAD" ) )
+                        hHeaders := __hbrun_CoreHeaderFiles() /* add core header files */
+                     ENDIF
 
-                        cFile := hb_compileBuf( hHeaders, hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
-                                                "-I" + hb_FNameDir( cFile ), "-D" + "__HBSCRIPT__HBRUN", cFile )
-                        IF cFile == NIL
-                           ErrorLevel( 1 )
-                           EXIT
-                        ENDIF
-                     OTHERWISE
-                        s_cDirBase := hb_DirBase()
-                        s_cProgName := hb_ProgName()
-                        hb_argShift( .T. )
-                        hb_hrbRun( cFile, ... )
+                     cFile := hb_compileBuf( hHeaders, hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
+                                             "-I" + hb_FNameDir( cFile ), "-D" + "__HBSCRIPT__HBRUN", cFile )
+                     IF cFile == NIL
+                        ErrorLevel( 1 )
                         EXIT
-                  ENDSWITCH
-               ENDIF
+                     ENDIF
+                  OTHERWISE
+                     hbrun_extensionlist_init( aDynamic )
+                     s_cDirBase := hb_DirBase()
+                     s_cProgName := hb_ProgName()
+                     hb_argShift( .T. )
+                     hb_hrbRun( cFile, ... )
+                     EXIT
+               ENDSWITCH
             ENDIF
+         ENDIF
       ENDSWITCH
    ELSE
+      hbrun_extensionlist_init( aDynamic )
       hbrun_Prompt( hb_AParams() )
    ENDIF
 
@@ -199,15 +209,47 @@ EXIT PROCEDURE hbrun_exit()
 
    RETURN
 
-STATIC FUNCTION hbrun_extensionlist()
-   STATIC s_aList
+STATIC PROCEDURE LoadDynamicFromFile( aDynamic, cFileName )
+   LOCAL cItem
 
-   IF s_aList == NIL
-      s_aList := iif( Type( "__HBRUN_EXTENSIONS()" ) == "UI", &( "__hbrun_extensions()" ), {} )
-      ASort( s_aList )
+   FOR EACH cItem IN hb_ATokens( StrTran( MemoRead( cFileName ), Chr( 13 ) ), Chr( 10 ) )
+      IF "#" $ cItem
+         cItem := Left( cItem, At( "#", cItem ) - 1 )
+      ENDIF
+      AAdd( aDynamic, cItem )
+   NEXT
+
+   RETURN
+
+STATIC PROCEDURE LoadDynamicFromString( aDynamic, cString )
+   LOCAL cItem
+
+   FOR EACH cItem IN hb_ATokens( cString,, .T. )
+      AAdd( aDynamic, cItem )
+   NEXT
+
+   RETURN
+
+STATIC PROCEDURE hbrun_extensionlist_init( aDynamic )
+   STATIC s_lInit := .F.
+
+   IF ! s_lInit
+      IF Type( "__HBRUN_EXTENSIONS_GET_LIST()" ) == "UI"
+         Do( "__hbrun_extensions_init_static" )
+         Do( "__hbrun_extensions_init_dynamic", aDynamic )
+      ENDIF
+      s_lInit := .T.
    ENDIF
 
-   RETURN s_aList
+   RETURN
+
+STATIC FUNCTION hbrun_extensionlist()
+   LOCAL aList := iif( Type( "__HBRUN_EXTENSIONS_GET_LIST()" ) == "UI", Do( "__hbrun_extensions_get_list" ), {} )
+   ASort( aList,,, {| x, y | __proc_name_for_sort( x ) < __proc_name_for_sort( y ) } )
+   RETURN aList
+
+STATIC FUNCTION __proc_name_for_sort( c )
+   RETURN iif( IsAlpha( Left( c, 1 ) ) .OR. IsDigit( Left( c, 1 ) ), c, SubStr( c, 2 ) )
 
 STATIC FUNCTION hbrun_FileSig( cFile )
    LOCAL hFile

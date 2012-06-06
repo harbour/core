@@ -4,9 +4,9 @@
 
 /*
  * Harbour Project source code:
- * extern puller
+ * dynamic module manager plugin
  *
- * Copyright 2011 Viktor Szakats (harbour syenar.net)
+ * Copyright 2012 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,69 +50,64 @@
  *
  */
 
-STATIC s_hLib := { => }
+FUNCTION __hbrun_plugin()
+   RETURN {;
+      "id"   => "dyn",;
+      "init" => {| hConIO | dyn_init( hConIO ) } ,;
+      "exit" => {| context | HB_SYMBOL_UNUSED( context ) } ,;
+      "cmd"  => {| context, cCommand | dyn_command( context, cCommand ) } }
 
-PROCEDURE __hbrun_extensions_init_static()
+STATIC FUNCTION dyn_init( hConIO )
+   RETURN { hConIO, { ;
+      "load"   => { "<name>" , "Load."   , {| context, cCommand | cmdLoad( context, cCommand ) } },;
+      "unload" => { "<name>" , "Unload." , {| context, cCommand | cmdUnload( context, cCommand ) } },;
+      "list"   => { ""       , "List."   , {| context, cCommand | cmdList( context ) } } } }
 
-   #xtranslate PULLEXT <cName> => REQUEST __HBEXTERN__<cName>__ ; s_hLib\[ Lower( <"cName"> ) \] := NIL
-
-   PULLEXT hbct
-   PULLEXT hbxpp
-   PULLEXT hbexpat
-   PULLEXT hbmemio
-   PULLEXT hbmzip
-   PULLEXT hbnetio
-   #if defined( __PLATFORM__UNIX )
-      PULLEXT hbunix
-   #endif
-   #if defined( __PLATFORM__WINDOWS )
-      PULLEXT hbwin
-   #endif
-
+STATIC PROCEDURE dyn_disp( context, cText )
+   Eval( context[ 1 ][ "displine" ], cText )
    RETURN
 
-/* Requires hbrun to be built in -shared mode */
+STATIC FUNCTION dyn_command( context, cCommand )
+   LOCAL aCommand
+   LOCAL nPos
 
-PROCEDURE __hbrun_extensions_init_dynamic( aDynamic )
-   LOCAL cName
-
-   IF ! Empty( aDynamic )
-      FOR EACH cName IN aDynamic
-         __hbrun_extensions_load_one( cName )
-      NEXT
-   ENDIF
-
-   RETURN
-
-PROCEDURE __hbrun_extensions_load_one( cName )
-   LOCAL cFileName
-   LOCAL hLib
-
-   IF !( cName $ s_hLib )
-      IF hb_FileExists( cFileName := hb_libName( cName + hb_libPostfix() ) )
-         hLib := hb_libLoad( cFileName )
-         IF ! Empty( hLib )
-            s_hLib[ cName ] := hLib
-         ENDIF
+   IF ! Empty( context )
+      aCommand := hb_ATokens( cCommand, " " )
+      IF ! Empty( aCommand ) .AND. ( nPos := hb_HPos( context[ 2 ], Lower( aCommand[ 1 ] ) ) ) > 0
+         Eval( hb_HValueAt( context[ 2 ], nPos )[ 3 ], context, cCommand )
+         RETURN .T.
       ENDIF
    ENDIF
 
-   RETURN
+   RETURN .F.
 
-PROCEDURE __hbrun_extensions_unload_one( cName )
+/* Commands */
 
-   IF cName $ s_hLib .AND. s_hLib[ cName ] != NIL
-      hb_HDel( s_hLib, cName )
-   ENDIF
+STATIC PROCEDURE cmdLoad( context, cCommand )
+   LOCAL aToken := hb_ATokens( cCommand, " " )
+   LOCAL tmp
 
-   RETURN
-
-FUNCTION __hbrun_extensions_get_list()
-   LOCAL aName := Array( Len( s_hLib ) )
-   LOCAL hLib
-
-   FOR EACH hLib IN s_hLib
-      aName[ hLib:__enumIndex() ] := iif( Empty( hLib ), "", "*" ) + hLib:__enumKey()
+   FOR tmp := 2 TO Len( aToken )
+      __hbrun_extensions_load_one( aToken[ tmp ] )
    NEXT
 
-   RETURN aName
+   RETURN
+
+STATIC PROCEDURE cmdUnload( context, cCommand )
+   LOCAL aToken := hb_ATokens( cCommand, " " )
+   LOCAL tmp
+
+   FOR tmp := 2 TO Len( aToken )
+      __hbrun_extensions_unload_one( aToken[ tmp ] )
+   NEXT
+
+   RETURN
+
+STATIC PROCEDURE cmdList( context )
+   LOCAL cName
+
+   FOR EACH cName IN __hbrun_extensions_get_list()
+      dyn_disp( context, cName )
+   NEXT
+
+   RETURN
