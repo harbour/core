@@ -427,7 +427,7 @@ typedef struct _HB_BASEARRAY
    HB_SIZE     nAllocated;   /* number of allocated items */
    HB_USHORT   uiClass;      /* offset to the classes base if it is an object */
    HB_USHORT   uiPrevCls;    /* for fixing after access super */
-} HB_BASEARRAY, * PHB_BASEARRAY, * HB_BASEARRAY_PTR;
+} HB_BASEARRAY, * PHB_BASEARRAY;
 
 #ifndef _HB_HASH_INTERNAL_
 /* internal structure for hashes */

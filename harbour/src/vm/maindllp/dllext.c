@@ -1030,4 +1030,18 @@ void * hb_xrealloc( void * pMem, HB_SIZE nSize )
    return s_xrealloc ? s_xrealloc( pMem, nSize ) : NULL;
 }
 
+void hb_macroTextValue( HB_ITEM_PTR pItem )
+{
+   static HB_MACROTEXTVALUE s_macroTextValue = NULL;
+
+   if( !s_macroTextValue )
+   {
+      s_macroTextValue = ( HB_MACROTEXTVALUE ) hb_dllGetProcAddress( "macroTextValue" );
+      if( !s_macroTextValue )
+         HB_DLL_MSG_NO_FUNC( "macroTextValue" );
+   }
+
+   return s_macroTextValue ? s_macroTextValue( pItem ) : NULL;
+}
+
 #endif /* HB_OS_WIN */

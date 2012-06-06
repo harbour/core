@@ -118,6 +118,8 @@ typedef void *   ( * HB_XGRAB )( HB_SIZE nSize );                   /* allocates
 typedef void     ( * HB_XFREE )( void * pMem );                     /* frees memory */
 typedef void *   ( * HB_XREALLOC )( void * pMem, HB_SIZE nSize );   /* reallocates memory */
 
+typedef void     ( * HB_MACROTEXTVALUE )( HB_ITEM_PTR pItem );
+
 HB_EXTERN_END
 
 #endif /* HB_TYPES_H_ */
