@@ -1388,7 +1388,7 @@ msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "output Harbour build information. The data output comes in the format: '<name>{{<value>}}'. The included paths always contain forward slashes."
+msgid "output Harbour build information. Output is in JSON format. The included paths always contain forward slashes."
 msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102

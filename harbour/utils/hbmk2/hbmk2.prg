@@ -527,6 +527,8 @@ REQUEST HB_MD5
 REQUEST HB_CRC32
 REQUEST HB_BLOWFISHKEY
 REQUEST HB_BLOWFISHENCRYPT
+REQUEST HB_JSONENCODE
+REQUEST HB_JSONDECODE
 REQUEST HB_LIBEXT
 REQUEST HB_HKEYAT
 REQUEST HB_HDELAT
@@ -5303,26 +5305,26 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    IF lDumpInfo
 
-      OutStd( "{{{" + hb_eol() )
-      OutStd( "platform{{" + hbmk[ _HBMK_cPLAT ] + "}}" + hb_eol() )
-      OutStd( "compiler{{" + hbmk[ _HBMK_cCOMP ] + "}}" + hb_eol() )
-      OutStd( "cpu{{" + hbmk[ _HBMK_cCPU ] + "}}" + hb_eol() )
-      OutStd( "buildname{{" + hbmk[ _HBMK_cBUILD ] + "}}" + hb_eol() )
-      IF ! Empty( hbmk[ _HBMK_cPROGNAME ] )
-         OutStd( "outputname{{" + PathSepToForward( hbmk[ _HBMK_cPROGNAME ] ) + "}}" + hb_eol() )
-      ENDIF
-      OutStd( "targetname{{" + hbmk_TARGETNAME( hbmk ) + "}}" + hb_eol() )
-      OutStd( "targettype{{" + hbmk_TARGETTYPE( hbmk ) + "}}" + hb_eol() )
-      OutStd( "dynprefix{{" + iif( Empty( l_cDynLibDir ), "", l_cDynLibDir + hbmk[ _HBMK_cDynLibPrefix ] ) + "}}" + hb_eol() )
-      OutStd( "dynsuffix{{" + hbmk_DYNSUFFIX( hbmk ) + "}}" + hb_eol() )
-      OutStd( "inc{{" + iif( hbmk[ _HBMK_lINC ], "yes", "no" ) + "}}" + hb_eol() )
+      tmp := { "platform"   => hbmk[ _HBMK_cPLAT ],;
+               "compiler"   => hbmk[ _HBMK_cCOMP ],;
+               "cpu"        => hbmk[ _HBMK_cCPU ],;
+               "buildname"  => hbmk[ _HBMK_cBUILD ],;
+               "targetname" => hbmk_TARGETNAME( hbmk ),;
+               "targettype" => hbmk_TARGETTYPE( hbmk ),;
+               "dynprefix"  => iif( Empty( l_cDynLibDir ), "", l_cDynLibDir + hbmk[ _HBMK_cDynLibPrefix ] ),;
+               "dynsuffix"  => hbmk_DYNSUFFIX( hbmk ),;
+               "inc"        => iif( hbmk[ _HBMK_lINC ], "yes", "no" ) }
 
-      OutStd( "hbctree{{" + hb_eol() )
-      FOR EACH tmp IN hbmk[ _HBMK_aDEPTHBC ]
-         OutStd( Replicate( Chr( 9 ), tmp[ 2 ] ) + PathSepToForward( hb_PathNormalize( tmp[ 1 ] ) ) + hb_eol() )
+      IF ! Empty( hbmk[ _HBMK_cPROGNAME ] )
+         tmp[ "outputname" ] := PathSepToForward( hbmk[ _HBMK_cPROGNAME ] )
+      ENDIF
+
+      tmp[ "hbctree" ] := ""
+      FOR EACH tmp1 IN hbmk[ _HBMK_aDEPTHBC ]
+         tmp[ "hbctree" ] += Replicate( Chr( 9 ), tmp1[ 2 ] ) + PathSepToForward( hb_PathNormalize( tmp1[ 1 ] ) ) + Chr( 10 )
       NEXT
-      OutStd( "}}" + hb_eol() )
-      OutStd( "}}}" + hb_eol() )
+
+      OutStd( hb_jsonEncode( tmp ) )
 
       RETURN _ERRLEV_OK
    ENDIF
@@ -13159,7 +13161,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "--hbdirdyn"         , I_( "output Harbour dynamic library directory" ) },;
       { "--hbdirlib"         , I_( "output Harbour static library directory" ) },;
       { "--hbdirinc"         , I_( "output Harbour header directory" ) },;
-      { "--hbinfo"           , I_( "output Harbour build information. The data output comes in the format: '<name>{{<value>}}'. The included paths always contain forward slashes." ) },;
+      { "--hbinfo"           , I_( "output Harbour build information. Output is in JSON format. The included paths always contain forward slashes." ) },;
       NIL,;
       { "-plat[form]=<plat>" , I_( "select target platform." ) },;
       { "-comp[iler]=<comp>" , I_( "select C compiler.\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;

@@ -492,6 +492,7 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
    LOCAL cDir
    LOCAL cName
    LOCAL tmp
+   LOCAL hInfo
 
    LOCAL nErrorLevel
 
@@ -501,12 +502,14 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
 
    IF ( nErrorLevel := call_hbmk2( cProjectPath, " --hbinfo", NIL,, @cStdOut ) ) == 0
 
-      hProject[ "cType" ] := hbmk2_hbinfo_getitem( cStdOut, "targettype" )
-      hProject[ "cOutputName" ] := hbmk2_hbinfo_getitem( cStdOut, "outputname" )
-      hProject[ "cDynSuffix" ] := hbmk2_hbinfo_getitem( cStdOut, "dynsuffix" )
-      hProject[ "cPlatform" ] := hbmk2_hbinfo_getitem( cStdOut, "platform" )
+      hb_jsonDecode( cStdOut, @hInfo )
 
-      FOR EACH tmp IN hb_ATokens( hbmk2_hbinfo_getitem( cStdOut, "hbctree", .T. ), Chr( 10 ) )
+      hProject[ "cType" ] := hbmk2_hbinfo_getitem( hInfo, "targettype" )
+      hProject[ "cOutputName" ] := hbmk2_hbinfo_getitem( hInfo, "outputname" )
+      hProject[ "cDynSuffix" ] := hbmk2_hbinfo_getitem( hInfo, "dynsuffix" )
+      hProject[ "cPlatform" ] := hbmk2_hbinfo_getitem( hInfo, "platform" )
+
+      FOR EACH tmp IN hb_ATokens( hbmk2_hbinfo_getitem( hInfo, "hbctree" ), Chr( 10 ) )
          IF ! Empty( tmp )
             hb_FNameSplit( LTrim( tmp ), @cDir, @cName )
             #ifdef __PLATFORM__DOS
@@ -523,25 +526,8 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
 
    RETURN nErrorLevel
 
-STATIC FUNCTION hbmk2_hbinfo_getitem( cString, cItem, lAll )
-   LOCAL cRetVal := ""
-   LOCAL nPos := 1
-   LOCAL tmp
-
-   DO WHILE ( tmp := hb_At( cItem + "{{", cString, nPos ) ) > 0
-      nPos := tmp + Len( cItem + "{{" )
-      IF ( tmp := hb_At( "}}", cString, nPos ) ) > 0
-         tmp := StrTran( SubStr( cString, nPos, tmp - nPos ), Chr( 13 ) )
-         IF lAll != NIL .AND. lAll
-            cRetVal += tmp
-         ELSE
-            /* Find the last occurrence, which is the root project */
-            cRetVal := tmp
-         ENDIF
-      ENDIF
-   ENDDO
-
-   RETURN cRetVal
+STATIC FUNCTION hbmk2_hbinfo_getitem( hInfo, cItem )
+   RETURN iif( HB_ISHASH( hInfo ), hb_HGetDef( hInfo, cItem, "" ), "" )
 
 STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStdOut )
    LOCAL nErrorLevel
