@@ -18,10 +18,11 @@
 
 hbrun.prg
 
--request=__hbrun_extensions_get_list
+-request=__hbrun_extensions_static_init
 headers.prg
 plugins.prg
-pullext.prg
+extdyn.prg
+extstat.prg
 
 -lhbpmcom{dos}
 
@@ -49,3 +50,7 @@ hbmzip.hbc
 hbnetio.hbc
 hbunix.hbc{unix}
 hbwin.hbc{allwin}
+
+# Always build in shared mode for these platforms because the
+# it's required for dynamic extension loading.
+#{_HB_BUILD_&(!(HB_BUILD_DYN='no')&(win|wce|os2))}-shared

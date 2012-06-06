@@ -8927,7 +8927,6 @@ STATIC FUNCTION FindInPath( cFileName, xPath )
       xPath := GetEnv( "PATH" )
    ENDIF
 
-   /* Check in the PATH. */
    IF HB_ISSTRING( xPath )
       #if defined( __PLATFORM__WINDOWS ) .OR. ;
           defined( __PLATFORM__DOS ) .OR. ;
@@ -8938,6 +8937,7 @@ STATIC FUNCTION FindInPath( cFileName, xPath )
       #endif
    ENDIF
 
+   /* Check in the PATH. */
    FOR EACH cDir IN xPath
       IF ! Empty( cDir )
          IF hb_FileExists( cFileName := hb_FNameMerge( hb_DirSepAdd( StrStripQuote( cDir ) ), cName, cExt ) )

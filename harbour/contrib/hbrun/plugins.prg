@@ -60,7 +60,7 @@ FUNCTION __hbrun_plugins()
    LOCAL file
 
    ADD PLUGIN TO hPlugins FILE "netiomgm.prg"
-   ADD PLUGIN TO hPlugins FILE "pullextp.hb"
+   ADD PLUGIN TO hPlugins FILE "extdynpl.hb"
 
    FOR EACH file IN Directory( hb_DirBase() + "*.hb" )
       hPlugins[ hb_DirBase() + file[ F_NAME ] ] := MemoRead( hb_DirBase() + file[ F_NAME ] )

@@ -94,8 +94,8 @@ PROCEDURE _APPMAIN( cFile, ... )
 
    LOCAL aDynamic := {}
 
-   LoadDynamicFromFile( aDynamic, hb_DirBase() + "hbrun.dyn" )
-   LoadDynamicFromString( aDynamic, GetEnv( "HBRUN_DYN" ) )
+   LoadExtDynamicFromFile( aDynamic, hb_DirBase() + "hbrun.ext" )
+   LoadExtDynamicFromString( aDynamic, GetEnv( "HBRUN_EXT" ) )
 
    /* TODO: Rework parameter handling */
    IF PCount() > 0
@@ -145,7 +145,7 @@ PROCEDURE _APPMAIN( cFile, ... )
             hbrun_Prompt( hb_AParams() )
             EXIT
          ELSE
-            cFile := hbrun_FindInPath( cFile )
+            cFile := __hbrun_FindInPath( cFile )
             IF ! Empty( cFile )
                hb_FNameSplit( cFile, NIL, NIL, @cExt )
                cExt := Lower( cExt )
@@ -171,7 +171,7 @@ PROCEDURE _APPMAIN( cFile, ... )
                         hHeaders := __hbrun_CoreHeaderFiles() /* add core header files */
                      ENDIF
 
-                     LoadDynamicFromSource( aDynamic, cFile )
+                     LoadExtDynamicFromSource( aDynamic, cFile )
 
                      cFile := hb_compileBuf( hHeaders, hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
                                              "-I" + hb_FNameDir( cFile ), "-D" + "__HBSCRIPT__HBRUN", cFile )
@@ -211,7 +211,7 @@ EXIT PROCEDURE hbrun_exit()
 
    RETURN
 
-STATIC PROCEDURE LoadDynamicFromFile( aDynamic, cFileName )
+STATIC PROCEDURE LoadExtDynamicFromFile( aDynamic, cFileName )
    LOCAL cItem
 
    FOR EACH cItem IN hb_ATokens( StrTran( MemoRead( cFileName ), Chr( 13 ) ), Chr( 10 ) )
@@ -225,7 +225,7 @@ STATIC PROCEDURE LoadDynamicFromFile( aDynamic, cFileName )
 
    RETURN
 
-STATIC PROCEDURE LoadDynamicFromString( aDynamic, cString )
+STATIC PROCEDURE LoadExtDynamicFromString( aDynamic, cString )
    LOCAL cItem
 
    FOR EACH cItem IN hb_ATokens( cString,, .T. )
@@ -236,7 +236,7 @@ STATIC PROCEDURE LoadDynamicFromString( aDynamic, cString )
 
    RETURN
 
-STATIC PROCEDURE LoadDynamicFromSource( aDynamic, cFileName )
+STATIC PROCEDURE LoadExtDynamicFromSource( aDynamic, cFileName )
    LOCAL cFile := MemoRead( cFileName )
    LOCAL pRegex
    LOCAL tmp
@@ -261,22 +261,14 @@ STATIC PROCEDURE hbrun_extensionlist_init( aDynamic )
    STATIC s_lInit := .F.
 
    IF ! s_lInit
-      IF Type( "__HBRUN_EXTENSIONS_GET_LIST()" ) == "UI"
-         Do( "__hbrun_extensions_init_static" )
-         Do( "__hbrun_extensions_init_dynamic", aDynamic )
+      IF Type( "__hbrun_extensions_static_init()" ) == "UI"
+         Do( "__hbrun_extensions_static_init" )
       ENDIF
+      __hbrun_extensions_dynamic_init( aDynamic )
       s_lInit := .T.
    ENDIF
 
    RETURN
-
-STATIC FUNCTION hbrun_extensionlist()
-   LOCAL aList := iif( Type( "__HBRUN_EXTENSIONS_GET_LIST()" ) == "UI", Do( "__hbrun_extensions_get_list" ), {} )
-   ASort( aList,,, {| x, y | __proc_name_for_sort( x ) < __proc_name_for_sort( y ) } )
-   RETURN aList
-
-STATIC FUNCTION __proc_name_for_sort( c )
-   RETURN iif( IsAlpha( Left( c, 1 ) ) .OR. IsDigit( Left( c, 1 ) ), c, SubStr( c, 2 ) )
 
 STATIC FUNCTION hbrun_FileSig( cFile )
    LOCAL hFile
@@ -442,7 +434,7 @@ STATIC PROCEDURE hbrun_Prompt( aParams, cCommand )
 
    Set( _SET_EVENTMASK, hb_bitOr( INKEY_KEYBOARD, HB_INKEY_GTEVENT ) )
 
-   s_nRow := 2 + iif( Empty( hbrun_extensionlist() ), 0, 1 )
+   s_nRow := 2 + iif( Empty( __hbrun_extensions_get_list() ), 0, 1 )
 
    plugins := plugins_load( __hbrun_plugins(), aParams )
 
@@ -528,7 +520,7 @@ STATIC PROCEDURE hbrun_Prompt( aParams, cCommand )
             ENDIF
 
             IF s_nRow >= MaxRow()
-               Scroll( 2 + iif( Empty( hbrun_extensionlist() ), 0, 1 ), 0, MaxRow(), MaxCol(), 1 )
+               Scroll( 2 + iif( Empty( __hbrun_extensions_get_list() ), 0, 1 ), 0, MaxRow(), MaxCol(), 1 )
                s_nRow := MaxRow() - 1
             ENDIF
          ENDIF
@@ -613,8 +605,8 @@ STATIC PROCEDURE hbrun_Info( cCommand )
    IF s_lPreserveHistory
       hb_DispOutAt( 1, MaxCol(), "o", "R/BG" )
    ENDIF
-   IF ! Empty( hbrun_extensionlist() )
-      hb_DispOutAt( 2, 0, PadR( "Ext: " + ArrayToList( hbrun_extensionlist() ), MaxCol() + 1 ), "W/B" )
+   IF ! Empty( __hbrun_extensions_get_list() )
+      hb_DispOutAt( 2, 0, PadR( "Ext: " + ArrayToList( __hbrun_extensions_get_list() ), MaxCol() + 1 ), "W/B" )
    ENDIF
 
    RETURN
@@ -684,7 +676,7 @@ STATIC PROCEDURE hbrun_Exec( cCommand )
             Eval( bBlock )
             s_nRow := Row()
             s_nCol := Col()
-            nRowMin := 2 + iif( Empty( hbrun_extensionlist() ), 0, 1 )
+            nRowMin := 2 + iif( Empty( __hbrun_extensions_get_list() ), 0, 1 )
             IF s_nRow < nRowMin
                s_nRow := nRowMin
             ENDIF
@@ -774,7 +766,7 @@ STATIC FUNCTION hbrun_HistoryFileName()
 
    RETURN cDir + hb_ps() + cFileName
 
-STATIC FUNCTION hbrun_FindInPath( cFileName )
+FUNCTION __hbrun_FindInPath( cFileName, xPath )
    LOCAL cDir
    LOCAL cName
    LOCAL cExt
@@ -801,18 +793,27 @@ STATIC FUNCTION hbrun_FindInPath( cFileName )
          NEXT
       ENDIF
 
-      FOR EACH cExt IN aExt
-         /* Check in the PATH. */
+      IF ! HB_ISSTRING( xPath ) .AND. ;
+         ! HB_ISARRAY( xPath )
+         xPath := GetEnv( "PATH" )
+      ENDIF
+
+      IF HB_ISSTRING( xPath )
          #if defined( __PLATFORM__WINDOWS ) .OR. ;
              defined( __PLATFORM__DOS ) .OR. ;
              defined( __PLATFORM__OS2 )
-         FOR EACH cDir IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator(), .T., .T. )
+            xPath := hb_ATokens( xPath, hb_osPathListSeparator(), .T., .T. )
+         #else
+            xPath := hb_ATokens( xPath, hb_osPathListSeparator() )
+         #endif
+      ENDIF
+
+      FOR EACH cExt IN aExt
+         /* Check in the PATH. */
+         FOR EACH cDir IN xPath
             IF Left( cDir, 1 ) == '"' .AND. Right( cDir, 1 ) == '"'
                cDir := SubStr( cDir, 2, Len( cDir ) - 2 )
             ENDIF
-         #else
-         FOR EACH cDir IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator() )
-         #endif
             IF ! Empty( cDir )
                IF hb_FileExists( cFullName := hb_FNameMerge( cDir, cName, cExt ) )
                   RETURN cFullName
@@ -822,7 +823,7 @@ STATIC FUNCTION hbrun_FindInPath( cFileName )
       NEXT
    ENDIF
 
-   RETURN cFileName
+   RETURN NIL
 
 #if defined( __PLATFORM__WINDOWS )
 
