@@ -124,14 +124,21 @@ static PHB_ITEM hb_arrayCreateClone( PHB_ITEM pItem, PHB_BASEARRAY pBaseArray )
 
 PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, PHB_SYMB pClassFunc, PHBQT_DEL_FUNC pDelFunc, int iFlags )
 {
-   HB_TRACE( HB_TR_DEBUG, ( ".................HARBOUR_REQUEST_BIND_OBJECT( %p, %i ).................", qtObject, iFlags ) );
-
-   PHBQT_BIND bind;
+   #if 0
+   char * pname = ( char* ) hb_xgrab( 200 );
+   char * pname1 = ( char* ) hb_xgrab( 200 );
+   HB_TRACE( HB_TR_DEBUG, ( ".................HARBOUR_REQUEST_BIND_OBJECT( %p, %i, %s : %s ).................", qtObject, iFlags, hb_procname( 0, pname, HB_TRUE ),  hb_procname( 1, pname1, HB_TRUE ) ) );
+   hb_xfree( pname );
+   hb_xfree( pname1 );
+   #endif
+   
    PHB_ITEM pObject = NULL;
    
    if( qtObject == NULL )
       return pObject;
-   
+
+   PHBQT_BIND bind;
+         
    HBQT_BIND_LOCK
    bind = s_hbqt_binds;
    while( bind )
@@ -179,11 +186,9 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, PHB_SYMB pClassF
          {
             if( s_destroyer == NULL )
                s_destroyer = new HBQDestroyer();
-            if( qtObject != NULL )
-            {
-               QObject::connect( ( QObject * ) qtObject, SIGNAL(destroyed(QObject*)), s_destroyer, SLOT(destroyer()) );
-               HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetHbObject( %p )...%s", qtObject, ( ( QObject * ) qtObject )->metaObject()->className() ) );
-            }   
+               
+            QObject::connect( ( QObject * ) qtObject, SIGNAL(destroyed(QObject*)), s_destroyer, SLOT(destroyer()) );
+            HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetHbObject( %p )...%s", qtObject, ( ( QObject * ) qtObject )->metaObject()->className() ) );
          }
          else
          {   
@@ -228,8 +233,6 @@ void * hbqt_bindGetQtObject( PHB_ITEM pObject )
 
 void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "..............HARBOUR_DESTROY_BEGINS.............." ) );
-   
    void * hbObject = hb_arrayId( pObject );
    bool found = HB_FALSE;
    
@@ -243,6 +246,8 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
       {
          if( bind->hbObject == hbObject )
          {
+            HB_TRACE( HB_TR_DEBUG, ( "..............HARBOUR_DESTROY_BEGINS( %p, %i )..............", bind->qtObject, bind->iFlags ) );
+            
             found = HB_TRUE;
             bool fObject = bind->iFlags & HBQT_BIT_QOBJECT;
             QObject * obj = NULL;
@@ -264,9 +269,10 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
                      {
                         if( obj->parent() == NULL )
                         {
+                           * bind_ptr = bind->next;
                            bind->fDeleting = true;
                            bind->pDelFunc( obj, bind->iFlags );
-                           * bind_ptr = bind->next;
+                           bind->fDeleting = false;
                            hb_xfree( bind );
                            HB_TRACE( HB_TR_DEBUG, ( "HARBOUR_DESTROYED_%s( %p )", classname, obj ) );
                         }
@@ -282,10 +288,16 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
                else
                {
                   void * oobj = bind->qtObject;
+                  HB_TRACE( HB_TR_DEBUG, ( "HARBOUR_DESTROY_ABOUT_TO..........( %p )", oobj ) );
                   * bind_ptr = bind->next;
-                  bind->pDelFunc( bind->qtObject, bind->iFlags );
+                  if( bind->pDelFunc != NULL )
+                  {
+                     bind->fDeleting = true;
+                     bind->pDelFunc( bind->qtObject, bind->iFlags );
+                     bind->fDeleting = false;
+                  }   
                   hb_xfree( bind );
-                  HB_TRACE( HB_TR_DEBUG, ( "HARBOUR_DESTROYED( %p )", oobj ) );
+                  HB_TRACE( HB_TR_DEBUG, ( "HARBOUR_DESTROYED.........( %p )", oobj ) );
                   Q_UNUSED( oobj );
                } 
             }
@@ -293,11 +305,11 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
             {   
                if( fObject )
                {
-                  HB_TRACE( HB_TR_DEBUG, ( "HARBOUR_DESTROYED_NOT_OWNED_BY_HHARBOUR( %p )...%s", bind->qtObject, obj->metaObject()->className() ) );
+                  HB_TRACE( HB_TR_DEBUG, ( "HARBOUR_DESTROYED_NOT_OWNED_BY_HARBOUR( %p )...%s", bind->qtObject, obj->metaObject()->className() ) );
                }   
                else   
                {   
-                  HB_TRACE( HB_TR_DEBUG, ( "HARBOUR_DESTROYED_NOT_OWNED_BY_HHARBOUR( %p )", bind->qtObject ) );
+                  HB_TRACE( HB_TR_DEBUG, ( "HARBOUR_DESTROYED_NOT_OWNED_BY_HARBOUR( %p )", bind->qtObject ) );
                }   
                * bind_ptr = bind->next;
                hb_xfree( bind ); 
@@ -339,7 +351,8 @@ void hbqt_bindDestroyQtObject( void * qtObject )
                HB_TRACE( HB_TR_DEBUG, ( "QT_DESTROYED( %p )", bind->qtObject ) );
             }   
             hb_xfree( bind );
-         }            
+         }    
+         bind->fDeleting = false;        
          break;
       }
       bind_ptr = &bind->next;

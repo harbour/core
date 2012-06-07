@@ -798,7 +798,7 @@ METHOD IdeFindInFiles:buildUI()
 
    ::oFindDock:oWidget:setWidget( ::oUI:oWidget )
 
-   ::oUI:q_buttonFolder:setIcon( ::resPath + "folder.png" )
+   ::oUI:q_buttonFolder:setIcon( QIcon( ::resPath + "folder.png" ) )
 
    aeval( ::oINI:aFind   , {|e| ::oUI:q_comboExpr:addItem( e ) } )
    aeval( ::oINI:aReplace, {|e| ::oUI:q_comboRepl:addItem( e ) } )
@@ -1016,13 +1016,37 @@ METHOD IdeFindInFiles:replaceAll()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeFindInFiles:execContextMenu( p )
-   LOCAL nLine, qCursor, qMenu, qAct, cAct, cFind, aAct := {}
+   LOCAL nLine, qCursor, qMenu, qAct, cAct, cFind
+#ifndef __HBQT_REVAMP__   
+   LOCAL aAct := {}
+#endif
 
    qCursor := ::oUI:q_editResults:textCursor()
    nLine := qCursor:blockNumber() + 1
 
    IF nLine <= len( ::aInfo )
-      qMenu := QMenu( ::oUI:q_editResults )
+      qMenu := QMenu() // ::oUI:q_editResults )
+      
+#ifdef __HBQT_REVAMP__
+      qMenu:addAction( "Copy"       )
+      qMenu:addAction( "Select All" )
+      qMenu:addAction( "Clear"      )
+      qMenu:addAction( "Print"      )
+      qMenu:addAction( "Save as..." )
+      qMenu:addSeparator()           
+      qMenu:addAction( "Find"       )
+      qMenu:addSeparator()           
+      IF ::aInfo[ nLine, 1 ] == -2     /* Found Line */
+         qMenu:addAction( "Replace Line" )
+      ELSEIF ::aInfo[ nLine, 1 ] == -1 /* Source File */
+         qMenu:addAction( "Open"        )
+         qMenu:addAction( "Replace All" )
+      ENDIF
+      qMenu:addSeparator() 
+      qMenu:addAction( "Zom In"  ) 
+      qMenu:addAction( "Zoom Out" )
+      
+#else
       aadd( aAct, qMenu:addAction( "Copy"       ) )
       aadd( aAct, qMenu:addAction( "Select All" ) )
       aadd( aAct, qMenu:addAction( "Clear"      ) )
@@ -1040,50 +1064,53 @@ METHOD IdeFindInFiles:execContextMenu( p )
       aadd( aAct, qMenu:addSeparator()          )
       aadd( aAct, qMenu:addAction( "Zoom In"  ) )
       aadd( aAct, qMenu:addAction( "Zoom Out" ) )
-
-      IF ( qAct := qMenu:exec( ::oUI:q_editResults:mapToGlobal( QPoint( p ) ) ) ):hasValidPointer()
-         cAct := qAct:text()
-
-         SWITCH cAct
-         CASE "Save as..."
-            EXIT
-         CASE "Find"
-            IF !empty( cFind := hbide_fetchAString( ::oUI:q_editResults, , "Find what?", "Find" ) )
-               ::lNotDblClick := .T.
-               IF !( ::oUI:q_editResults:find( cFind, 0 ) )
-                  MsgBox( "Not Found" )
+      
+#endif
+      
+      IF __objGetClsName( qAct := qMenu:exec( ::oUI:q_editResults:mapToGlobal( p ) ) ) == "QACTION"
+         IF valtype( cAct := qAct:text() ) == "C"
+      
+            SWITCH cAct
+            CASE "Save as..."
+               EXIT
+            CASE "Find"
+               IF !empty( cFind := hbide_fetchAString( ::oUI:q_editResults, , "Find what?", "Find" ) )
+                  ::lNotDblClick := .T.
+                  IF !( ::oUI:q_editResults:find( cFind, 0 ) )
+                     MsgBox( "Not Found" )
+                  ENDIF
                ENDIF
-            ENDIF
-            EXIT
-         CASE "Print"
-            ::print()
-            EXIT
-         CASE "Clear"
-            ::oUI:q_editResults:clear()
-            ::aInfo := {}
-            EXIT
-         CASE "Copy"
-            ::lNotDblClick := .T.
-            ::oUI:q_editResults:copy()
-            EXIT
-         CASE "Select All"
-            ::oUI:q_editResults:selectAll()
-            EXIT
-         CASE "Replace Line"
-            EXIT
-         CASE "Replace Source"
-            EXIT
-         CASE "Zoom In"
-            ::oUI:q_editResults:zoomIn()
-            EXIT
-         CASE "Zoom Out"
-            ::oUI:q_editResults:zoomOut()
-            EXIT
-         ENDSWITCH
+               EXIT
+            CASE "Print"
+               ::print()
+               EXIT
+            CASE "Clear"
+               ::oUI:q_editResults:clear()
+               ::aInfo := {}
+               EXIT
+            CASE "Copy"
+               ::lNotDblClick := .T.
+               ::oUI:q_editResults:copy()
+               EXIT
+            CASE "Select All"
+               ::oUI:q_editResults:selectAll()
+               EXIT
+            CASE "Replace Line"
+               EXIT
+            CASE "Replace Source"
+               EXIT
+            CASE "Zoom In"
+               ::oUI:q_editResults:zoomIn()
+               EXIT
+            CASE "Zoom Out"
+               ::oUI:q_editResults:zoomOut()
+               EXIT
+            ENDSWITCH
+         ENDIF    
       ENDIF
    ENDIF
 
-   RETURN Self
+   RETURN NIL 
 
 /*----------------------------------------------------------------------*/
 
@@ -1536,3 +1563,4 @@ STATIC FUNCTION hbide_isSourceOfType( cSource, aFilter )
    RETURN  ascan( aFilter, {|e| cExt $ e } ) > 0
 
 /*----------------------------------------------------------------------*/
+

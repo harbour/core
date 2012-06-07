@@ -149,7 +149,7 @@ METHOD HbqToolbar:create( cName, oParent )
 
 METHOD HbqToolbar:onError( ... )
    LOCAL cMsg := __GetMessage()
-HB_TRACE( HB_TR_ALWAYS, cMsg )   
+  
    IF SubStr( cMsg, 1, 1 ) == "_"
       cMsg := SubStr( cMsg, 2 )
    ENDIF
