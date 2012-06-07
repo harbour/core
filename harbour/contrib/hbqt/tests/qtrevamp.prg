@@ -3,6 +3,9 @@
  */
 
 
+#include "hbtrace.ch"
+
+
 FUNCTION Main() 
    LOCAL oWnd 
 
@@ -38,15 +41,15 @@ STATIC FUNCTION BuildMenuBar( oWnd )
    //
    oMenu1 := QMenu( oMenuBar ) 
    //
-   oMenu1:setTitle( "&Dialogs" ) 
+   oMenu1:setTitle( "&Options" ) 
 
    oItemIns := QAction( oMenu1 ) 
    oItemIns:setText( "&MessageBox()" ) 
    oItemIns:connect( "triggered()", {|| DlgMBox( "Yes" ) } )
 
    oItemMod := QAction( oMenu1 ) 
-   oItemMod:setText( "&FileDialog()" ) 
-   oItemMod:connect( "triggered()", {|| DlgFiles( "*.prg" ) } )
+   oItemMod:setText( "&ContextMenu()" ) 
+   oItemMod:connect( "triggered()", {|| ContextMenu( oWnd ) } )
 
    oMenu1:addAction( oItemIns ) 
    oMenu1:addAction( oItemMod ) 
@@ -62,8 +65,8 @@ FUNCTION AddLabel( oWnd )
    LOCAL oL
 
    oL := QLabel( oWnd )
-   oL:move( 180,95 )
-   oL:setText( "Harbour Qt" )
+   oL:move( 155,95 )
+   oL:setText( "Harbour Qt Revamped" )
 
    // oL is local, still it is visible to the appln throughout.
    // Also memory is released automatically once its parent 
@@ -99,4 +102,37 @@ FUNCTION DlgFiles( cMask )
    // repeatedly and see for yourself that memory remains constant.
 
    RETURN cMask
+
+
+FUNCTION ContextMenu( oWnd )
+   LOCAL qMenu, qAct
+
+   qMenu := QMenu()
+
+   qMenu:addAction( "Copy"       )
+   qMenu:addAction( "Select All" )
+   qMenu:addAction( "Clear"      )
+   qMenu:addAction( "Print"      )
+   qMenu:addAction( "Save as..." )
+   qMenu:addSeparator()           
+   qMenu:addAction( "Find"       )
+
+   qAct := qMenu:exec( oWnd:mapToGlobal( QPoint( 10,10 ) ) )
+
+   // The test below is neccessary because Qt returns NULL in case 
+   // user clicks anything except a menu item. Theoretically, Qt 
+   // should have returned a QAction.
+   //
+   IF __objGetClsName( qAct ) == "QAction"
+      IF hb_isString( qAct:text() )
+         //...
+      ENDIF
+   ENDIF 
+
+   // qMenu is a local variable and is carries no parent, 
+   // which should be like this for any context menu,
+   // The memory is released, along its actions, when 
+   // RETURN is hit.
+
+   RETURN NIL
 
