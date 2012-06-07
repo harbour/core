@@ -59,8 +59,8 @@ FUNCTION xpp_TBrowseDB( nTop, nLeft, nBottom, nRight )
 
    LOCAL oBrowse := TBrowseNew( nTop, nLeft, nBottom, nRight )
 
-   oBrowse:SkipBlock     := { | nRecs | DbSkipper( nRecs ) }
-   oBrowse:GoTopBlock    := { || dbGoTop() }
-   oBrowse:GoBottomBlock := { || dbGoBottom() }
+   oBrowse:SkipBlock     := {| nRecs | DbSkipper( nRecs ) }
+   oBrowse:GoTopBlock    := {|| dbGoTop() }
+   oBrowse:GoBottomBlock := {|| dbGoBottom() }
 
    RETURN oBrowse

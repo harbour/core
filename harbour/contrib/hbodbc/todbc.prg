@@ -452,7 +452,7 @@ METHOD FieldByName( cField ) CLASS TODBC
    LOCAL xRet := NIL
 
    IF HB_ISSTRING( cField )
-      nRet := AScan( ::Fields, { | x | Upper( x:FieldName ) == Upper( cField ) } )
+      nRet := AScan( ::Fields, {| x | Upper( x:FieldName ) == Upper( cField ) } )
 
       IF nRet != 0
          xRet := ::Fields[ nRet ]

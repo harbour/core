@@ -443,7 +443,7 @@ STATIC PROCEDURE AddFriendClass( ... )
 
    LOCAL Self := QSelf()
 
-   AEval( HB_AParams(), { | sClass | AAdd( ::asFriendClass, sClass ) } )
+   AEval( HB_AParams(), {| sClass | AAdd( ::asFriendClass, sClass ) } )
 
    RETURN
 
@@ -451,7 +451,7 @@ STATIC PROCEDURE AddFriendFunc( ... )
 
    LOCAL Self := QSelf()
 
-   AEval( HB_AParams(), { | sFunc | AAdd( ::asFriendFunc, sFunc ) } )
+   AEval( HB_AParams(), {| sFunc | AAdd( ::asFriendFunc, sFunc ) } )
 
    RETURN
 

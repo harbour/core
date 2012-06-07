@@ -450,7 +450,7 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
 
       If cModeCode == "C"
 
-         npos := AsCAn( ::KeysmodeC, { |x| x == SubStr( ::Text, i, 1 ) + SubStr( ::Text, i+1, 1 ) } )
+         npos := AsCAn( ::KeysmodeC, {| x | x == SubStr( ::Text, i, 1 ) + SubStr( ::Text, i+1, 1 ) } )
 
          If npos == 0
             ::DrawError("With Code C, you must provide always pair of two integers. Char "+SubStr( ::text, i, 1 )+SubStr( ::text, i+1, 1 )+" not allowed." )
@@ -477,7 +477,7 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
 
    If !lerror
 
-      If Empty(cModeCode)
+      If Empty( cModeCode )
 
          If Str( Val( ::text ), Len( ::text ) ) == ::text
 
@@ -487,16 +487,16 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
 
          Else
 
-            For n := 1 TO  Len( ::text )
-               nC += iif( substr( ::text ,n,1 ) > 31, 1, 0 )
+            For n := 1 TO Len( ::text )
+               nC += iif( substr( ::text, n, 1 ) > 31, 1, 0 )
             Next
 
             If nC < Len( ::text ) / 2
                lTypeCodeA:= .t.
-               cconc := ::aCode[STARTA]
+               cconc := ::aCode[ STARTA ]
                nSum  := FNC1
             Else
-               cconc := ::aCode[STARTB]
+               cconc := ::aCode[ STARTB ]
                nSum := STARTA
             EndIf
 
@@ -504,21 +504,21 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
 
       Else
 
-          If cModeCode =='C'
+          If cModeCode == 'C'
 
              lTypeCodeC  := .T.
-             cconc       := ::aCode[STARTC]
+             cconc       := ::aCode[ STARTC ]
              nSum        := STARTB
 
           Elseif cModeCode =='A'
 
              lTypeCodeA := .t.
-             cconc      := ::aCode[STARTB]
+             cconc      := ::aCode[ STARTB ]
              nSum       := FNC1
 
           Else
 
-             cconc := ::aCode[STARTB]
+             cconc := ::aCode[ STARTB ]
              nSum := STARTA
 
           EndIf
@@ -531,50 +531,50 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
 
          nC ++
 
-         cchar := Substr(::text,n,1)
+         cchar := Substr( ::text, n, 1 )
 
          if lTypeCodeC
 
             If Len( ::TEXT ) == n
-               cconc += ::aCode[101]
-               nvalchar := Asc(cchar)-31
+               cconc += ::aCode[ 101 ]
+               nvalchar := Asc( cchar )-31
             Else
-               nvalchar := Val(Substr( ::text,n,2 ) ) + 1
+               nvalchar := Val( Substr( ::text, n, 2 ) ) + 1
                n++
             EndIf
 
          Elseif lTypeCodeA
 
             If cchar > '_'
-               cconc += ::aCode[101]
-               nvalchar  := Asc(cchar)-31
+               cconc += ::aCode[ 101 ]
+               nvalchar  := Asc( cchar ) - 31
             Elseif cchar <= ' '
-               nvalchar  := Asc(cchar)+64
+               nvalchar  := Asc( cchar ) + 64
             Else
-               nvalchar  := Asc(cchar)-31
+               nvalchar  := Asc( cchar ) - 31
             Endif
 
          Else
 
             If cchar < ' '
-               cconc += ::aCode[CODEA]
-               nvalchar := Asc(cchar)+64
+               cconc += ::aCode[ CODEA ]
+               nvalchar := Asc( cchar ) + 64
             Else
-               nvalchar := Asc(cchar)-31
+               nvalchar := Asc( cchar ) - 31
             EndIf
 
          Endif
-         nSum += (nvalchar-1)*nC
-         cconc := cconc +::aCode[nvalchar]
+         nSum += ( nvalchar - 1 ) * nC
+         cconc := cconc +::aCode[ nvalchar ]
 
       next
 
-      nSum  := nSum%103 +1
-      cconc := cconc + ::aCode[ nSum ] +::aCode[107]
+      nSum  := nSum % 103 + 1
+      cconc := cconc + ::aCode[ nSum ] +::aCode[ 107 ]
 
-      For n:=1 To Len(cconc) STEP 2
-          cBarCode +=Replicate('1', Val( Substr( cconc, n,1 ) ) )
-          cBarCode +=Replicate('0', Val( substr( cconc, n+1,1 ) ) )
+      For n := 1 To Len( cconc ) STEP 2
+          cBarCode += Replicate( '1', Val( Substr( cconc, n, 1 ) ) )
+          cBarCode += Replicate( '0', Val( substr( cconc, n + 1, 1 ) ) )
       Next
 
       ::DrawSingleBar( cBarCode )
@@ -606,7 +606,7 @@ METHOD GenCodei25() CLASS TCode
    LOCAL bc_string // := ::text
    //LOCAL new_string := ""
 
-   If ( Len(::text) % 2 ) != 0
+   If ( Len( ::text ) % 2 ) != 0
       ::DrawError("Invalid barcode lenght")
       lError := .T.
    Endif
@@ -622,7 +622,7 @@ METHOD GenCodei25() CLASS TCode
       ///////////////////////////////////////////////////////////////////////////////////////////////
       //Adding Start and Stop Pattern
 
-      ::DrawSingleI25( ::acode[11] + bc_string + ::acode[12]  )
+      ::DrawSingleI25( ::acode[ 11 ] + bc_string + ::acode[ 12 ]  )
 
       ::lastY := ::maxHeight
 
@@ -638,7 +638,7 @@ METHOD GenCodei25() CLASS TCode
 /*
    It makes mixe of the value to be codified by the Bar code I25
 */
-METHOD MixCode(value) CLASS TCode
+METHOD MixCode( value ) CLASS TCode
 
    LOCAL l,i,k
    LOCAL s
@@ -657,14 +657,14 @@ METHOD MixCode(value) CLASS TCode
 
       DO While i < l
 
-         cFirst := ::Findcode( value[i] )
-         cnext  := ::Findcode( value[i+1] )
+         cFirst := ::Findcode( value[ i ] )
+         cnext  := ::Findcode( value[ i + 1 ] )
 
          // Mix of the codes
          // NNNNWNNWWW
          //  N N N W W
          For k := 1 TO 5
-             s += cFirst[k] + cnext[k]
+             s += cFirst[ k ] + cnext[ k ]
          Next
 
          i += 2
@@ -682,7 +682,7 @@ METHOD Findcode( uval ) CLASS TCode
    LOCAL npos
    LOCAL cretc
 
-   npos  :=  AScan( ::keys, { |x| x[1] == uval } )
-   cretc := ::acode[npos]
+   npos  :=  AScan( ::keys, {| x | x[ 1 ] == uval } )
+   cretc := ::acode[ npos ]
 
    Return cretc

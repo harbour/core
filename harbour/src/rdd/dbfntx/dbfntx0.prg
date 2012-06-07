@@ -57,7 +57,7 @@
 
 ANNOUNCE DBFNTX
 
-procedure DBFNTXInit
+PROCEDURE DBFNTXInit
 
    REQUEST _DBF
    REQUEST _DBFNTX
@@ -66,7 +66,7 @@ procedure DBFNTXInit
    rddRegister( "DBFNTX", RDT_FULL )
    rddInfo( RDDI_MEMOTYPE, DB_MEMO_DBT, "DBFNTX" )
 
-return
+   RETURN
 */
 
 /* NOTE: Commented out, because in Harbour the INIT order is not guaranteed,
@@ -75,18 +75,18 @@ return
 
 /*
 
-init procedure InitHandler
+INIT PROCEDURE InitHandler
 
-   local bOldError := ErrorBlock( { | oError | LockErrHandler( oError, bOldError ) } )
+   LOCAL bOldError := ErrorBlock( {| oError | LockErrHandler( oError, bOldError ) } )
 
-return
+   RETURN
 
-static function LockErrHandler( oError, bOldError )
+STATIC FUNCTION LockErrHandler( oError, bOldError )
 
-   if oError:GenCode == EG_LOCK
-      return .T.
-   endif
+   IF oError:GenCode == EG_LOCK
+      RETURN .T.
+   ENDIF
 
-return Eval( bOldError, oError )
+   RETURN Eval( bOldError, oError )
 
 */

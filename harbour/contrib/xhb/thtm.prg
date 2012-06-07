@@ -370,7 +370,7 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
    ENDIF
 
    IF aJsCode != NIL
-      Aeval( aJsCode, { | e | HtmlJsCmd( ::nH, e ) } )
+      Aeval( aJsCode, {| e | HtmlJsCmd( ::nH, e ) } )
    ENDIF
 
    IF aScriptSrc != NIL

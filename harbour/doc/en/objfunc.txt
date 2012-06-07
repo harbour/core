@@ -403,7 +403,7 @@
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile INLINE method
  *      oHappy  := HBClass():New( "THappy" )
- *      bInline := { | nType | { ":)", ";)", "*SMILE*" }[ nType ] }
+ *      bInline := {| nType | { ":)", ";)", "*SMILE*" }[ nType ] }
  *      __objAddInline( oHappy, "Smile", bInline )
  *      ? oHappy:Smile( 1 )       // :)
  *      ? oHappy:Smile( 2 )       // ;)
@@ -564,8 +564,8 @@
  *  $EXAMPLES$
  *      // create a new THappy class and add a Smile INLINE method
  *      oHappy  := HBClass():New( "THappy" )
- *      bMyInline   := { | nType | { ":)", ";)" }[ nType ] }
- *      bYourInline := { | nType | { "*SMILE*", "*WINK*" }[ nType ] }
+ *      bMyInline   := {| nType | { ":)", ";)" }[ nType ] }
+ *      bYourInline := {| nType | { "*SMILE*", "*WINK*" }[ nType ] }
  *      __objAddInline( oHappy, "Smile", bMyInline )
  *      ? oHappy:Smile( 1 )       // :)
  *      ? oHappy:Smile( 2 )       // ;)

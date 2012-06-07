@@ -181,7 +181,7 @@ FUNCTION Sx_Compress( xVal )
       xRetVal := _sx_strCompress( xVal )
    ELSEIF cType == "A"
       xRetVal := Array( Len( xVal ) )
-      aEval( xVal, { |x| xRetVal := Sx_Compress( x ) } )
+      aEval( xVal, {| x | xRetVal := Sx_Compress( x ) } )
    ELSE
       xRetVal := xVal
    ENDIF
@@ -193,7 +193,7 @@ FUNCTION Sx_Decompress( xVal )
       xRetVal := _sx_strDecompress( xVal )
    ELSEIF cType == "A"
       xRetVal := Array( Len( xVal ) )
-      aEval( xVal, { |x| xRetVal := Sx_Decompress( x ) } )
+      aEval( xVal, {| x | xRetVal := Sx_Decompress( x ) } )
    ELSE
       xRetVal := xVal
    ENDIF

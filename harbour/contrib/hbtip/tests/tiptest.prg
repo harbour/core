@@ -57,17 +57,17 @@ PROCEDURE MAIN( cUrl, cFile )
 
    SET COLOR TO w +/ b
    CLEAR SCREEN
-   @1, 6 SAY "X H A R B O U R - TIP (class based internet client protocol) test"
+   @ 1, 6 SAY "X H A R B O U R - TIP (class based internet client protocol) test"
 
 
    IF Empty( cUrl )
-      @4, 5 SAY "USAGE: tipTest <URI> [dumpToOrFromFileName]"
+      @ 4, 5 SAY "USAGE: tipTest <URI> [dumpToOrFromFileName]"
       Terminate()
    ENDIF
 
    oUrl := tURL():New( cUrl )
    IF Empty( oUrl )
-      @4, 5 SAY "Invalid url " + cUrl
+      @ 4, 5 SAY "Invalid url " + cUrl
       Terminate()
    ENDIF
 
@@ -87,7 +87,7 @@ PROCEDURE MAIN( cUrl, cFile )
    ENDCASE
 
    IF Empty( oClient )
-      @4, 5 SAY "Invalid url " + cUrl
+      @ 4, 5 SAY "Invalid url " + cUrl
       Terminate()
    ENDIF
    oClient:nConnTimeout := 2000 /* := 20000 */
@@ -95,12 +95,12 @@ PROCEDURE MAIN( cUrl, cFile )
 
    oUrl:cUserid := StrTran( oUrl:cUserid, "&at;", "@" )
 
-   @4, 5 SAY "Connecting to " + oUrl:cProto + "://" + oUrl:cServer
+   @ 4, 5 SAY "Connecting to " + oUrl:cProto + "://" + oUrl:cServer
    IF oClient:Open()
       IF Empty( oClient:cReply )
-         @5, 5 SAY "Connection status: <connected>"
+         @ 5, 5 SAY "Connection status: <connected>"
       ELSE
-         @5, 5 SAY "Connection status: " + oClient:cReply
+         @ 5, 5 SAY "Connection status: " + oClient:cReply
       ENDIF
 
       IF ! Empty( cFile ) .AND. Left( cFile, 1 ) == '+'
@@ -109,44 +109,44 @@ PROCEDURE MAIN( cUrl, cFile )
       ENDIF
 
       IF oClient:nAccessMode == TIP_WO .OR. ( oClient:nAccessMode == TIP_RW .AND. bWrite )
-         oClient:exGauge := { | done, size| ShowGauge( done, size ) }
+         oClient:exGauge := {| done, size | ShowGauge( done, size ) }
          /* Can be also:
-            oClient:exGauge := {| done, size, oConnection | dothing( done, size, oConnection) }
+            oClient:exGauge := {| done, size, oConnection | dothing( done, size, oConnection ) }
          */
          IF oClient:WriteFromFile( cFile )
-            @7, 5 SAY "Data sucessfully sent"
+            @ 7, 5 SAY "Data sucessfully sent"
          ELSE
-            @7, 5 SAY "ERROR: Data not sent " + oClient:lastErrorMessage()
+            @ 7, 5 SAY "ERROR: Data not sent " + oClient:lastErrorMessage()
          ENDIF
       ELSE
          IF Empty( cFile )
             cData := oClient:Read()
             IF ! Empty( cData )
-               @7, 5 SAY "First 80 characters:"
+               @ 7, 5 SAY "First 80 characters:"
                ? Trim( SubStr( cData, 1, 80 ) )
             ELSE
-               @7, 5 SAY "ERROR - file can't be retrieved " + oClient:lastErrorMessage()
+               @ 7, 5 SAY "ERROR - file can't be retrieved " + oClient:lastErrorMessage()
             ENDIF
          ELSE
             IF oClient:ReadToFile( cFile )
-               @7, 5 SAY "File " + cFile + " written."
-               @8, 5 SAY "Server replied " + oClient:cReply
+               @ 7, 5 SAY "File " + cFile + " written."
+               @ 8, 5 SAY "Server replied " + oClient:cReply
             ELSE
-               @7, 5 SAY "Generic error in writing."  + cFile
+               @ 7, 5 SAY "Generic error in writing."  + cFile
             ENDIF
          ENDIF
       ENDIF
 
       oClient:Close()
       IF Empty( oClient:cReply )
-         @22, 5 SAY "Done: (no goodbye message)"
+         @ 22, 5 SAY "Done: (no goodbye message)"
       ELSE
-         @22, 5 SAY "Done: " + oClient:cReply
+         @ 22, 5 SAY "Done: " + oClient:cReply
       ENDIF
    ELSE
-      @5, 5 SAY "Can't open URI " + cUrl
+      @ 5, 5 SAY "Can't open URI " + cUrl
       IF ! Empty( oClient:cReply )
-         @6, 5 SAY oClient:cReply
+         @ 6, 5 SAY oClient:cReply
       ENDIF
    ENDIF
 
@@ -156,9 +156,9 @@ PROCEDURE MAIN( cUrl, cFile )
 
 PROCEDURE Terminate()
 
-   @23, 18 SAY "Program done - Press a key to terminate"
+   @ 23, 18 SAY "Program done - Press a key to terminate"
    Inkey( 0 )
-   @24, 0
+   @ 24, 0
    QUIT
 
    RETURN
@@ -168,7 +168,7 @@ PROCEDURE ShowGauge( nSent, nSize )
    @6, 5 SAY "Sending: " + Replicate( Chr( 176 ), 60 )
    /* nSent may be zero */
    IF nSent > 0
-      @6, 14 SAY Replicate( Chr( 219 ), 60 * nSent/nSize )
+      @ 6, 14 SAY Replicate( Chr( 219 ), 60 * nSent / nSize )
    ENDIF
 
    RETURN

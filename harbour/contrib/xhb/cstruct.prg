@@ -87,7 +87,7 @@ FUNCTION __ActiveStructure( cStructure, nAlign )
    IF PCount() == 2
       cStructure := Upper( cStructure )
 
-      IF aScan( s_aClasses, { | aClassInfo | aClassInfo[1] == cStructure } ) > 0
+      IF aScan( s_aClasses, {| aClassInfo | aClassInfo[1] == cStructure } ) > 0
          /* In most cases we can simply ignore the reduefinition, by returning a FAKED Structure Array!
          oErr := ErrorNew()
          oErr:Args := { cStructure, nAlign }
@@ -182,7 +182,7 @@ FUNCTION HB_CStructureID( cStructure, lInplace )
 
    cStructure := Upper( cStructure )
 
-   nID := aScan( s_aClasses, { | aClassInfo | aClassInfo[1] == cStructure } )
+   nID := aScan( s_aClasses, {| aClassInfo | aClassInfo[1] == cStructure } )
 
    IF nID == 0
       nID := aScan( s_aSynonyms, {|aSynonym| aSynonym[1] == cStructure } )
@@ -313,7 +313,7 @@ FUNCTION HB_CStructure( cStructure, nAlign )
    LOCAL oErr
 
    cStructure := Upper( cStructure )
-   nID        := aScan( s_aClasses, { | aClassInfo | aClassInfo[1] == cStructure } )
+   nID        := aScan( s_aClasses, {| aClassInfo | aClassInfo[1] == cStructure } )
 
    IF nID == 0
       oErr := ErrorNew()
@@ -403,7 +403,7 @@ FUNCTION HB_CTypeArrayID( CType, nLen )
    LOCAL aCTypes, acMembers, cMember
    LOCAL cArrayClassName := "C Array of [" + LTrim( Str( nLen ) ) + "] CType: " + Str( CType )
 
-   nID := aScan( s_aArrayClasses, { | aArrayDefinitions | aArrayDefinitions[1] == CType .AND. aArrayDefinitions[2] == nLen } )
+   nID := aScan( s_aArrayClasses, {| aArrayDefinitions | aArrayDefinitions[1] == CType .AND. aArrayDefinitions[2] == nLen } )
 
    IF nID == 0
       hClass := __clsNew( "C Structure " + cArrayClassName, nLen + CLASS_PROPERTIES )

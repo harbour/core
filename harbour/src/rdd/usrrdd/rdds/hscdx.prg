@@ -84,7 +84,7 @@ STATIC FUNCTION _HSX_NEW( pWA )
    RETURN HB_SUCCESS
 
 STATIC FUNCTION _HSX_CLOSE( nWA )
-   LOCAL aWData:= USRRDD_AREADATA( nWA ), nHSX
+   LOCAL aWData := USRRDD_AREADATA( nWA ), nHSX
 
    /* close all HSX indexes */
    FOR EACH nHSX IN aWData[ 2 ]
@@ -103,7 +103,7 @@ STATIC FUNCTION _HSX_GOCOLD( nWA )
 
    nResult := UR_SUPER_GOCOLD( nWA )
    IF nResult == HB_SUCCESS
-      aWData:= USRRDD_AREADATA( nWA )
+      aWData := USRRDD_AREADATA( nWA )
       IF aWData[ 1 ]
          IF !EMPTY( aWData[ 2 ] )
             nRecNo := RECNO()
@@ -129,7 +129,7 @@ STATIC FUNCTION _HSX_GOHOT( nWA )
 
    nResult := UR_SUPER_GOHOT( nWA )
    IF nResult == HB_SUCCESS
-      aWData:= USRRDD_AREADATA( nWA )
+      aWData := USRRDD_AREADATA( nWA )
       aWData[ 1 ] := .T.
    ENDIF
 
@@ -140,7 +140,7 @@ STATIC FUNCTION _HSX_APPEND( nWA, lUnlockAll )
 
    nResult := UR_SUPER_APPEND( nWA, lUnlockAll )
    IF nResult == HB_SUCCESS
-      aWData:= USRRDD_AREADATA( nWA )
+      aWData := USRRDD_AREADATA( nWA )
       aWData[ 1 ] := .T.
    ENDIF
 
@@ -156,7 +156,7 @@ FUNCTION HSX_CREATE( cFile, cExpr, nKeySize, nBufSize, lCase, nFiltSet )
    IF !USED()
    ELSEIF !RDDNAME() == "HSCDX"
    ELSE
-      aWData:= USRRDD_AREADATA( SELECT() )
+      aWData := USRRDD_AREADATA( SELECT() )
       nOpenMode := IIF( DBINFO( DBI_SHARED ), 1, 0 ) + ;
                    IIF( DBINFO( DBI_ISREADONLY ), 2, 0 )
       nHsx := HS_INDEX( cFile, cExpr, nKeySize, nOpenMode, ;
@@ -175,7 +175,7 @@ FUNCTION HSX_OPEN( cFile, nBufSize )
    IF !USED()
    ELSEIF !RDDNAME() == "HSCDX"
    ELSE
-      aWData:= USRRDD_AREADATA( SELECT() )
+      aWData := USRRDD_AREADATA( SELECT() )
       nOpenMode := IIF( DBINFO( DBI_SHARED ), 1, 0 ) + ;
                    IIF( DBINFO( DBI_ISREADONLY ), 2, 0 )
       nHsx := HS_OPEN( cFile, nBufSize, nOpenMode )
@@ -191,11 +191,11 @@ FUNCTION HSX_CLOSE( xHSX )
    LOCAL aWData, nSlot
 
    IF USED() .AND. RDDNAME() == "HSCDX"
-      aWData:= USRRDD_AREADATA( SELECT() )
+      aWData := USRRDD_AREADATA( SELECT() )
       IF HB_ISNUMERIC( xHSX )
          nSlot := ASCAN( aWData[ 2 ], xHSX )
       ELSEIF HB_ISSTRING( xHSX )
-         nSlot := ASCAN( aWData[ 3 ], { |_1| _1 == xHSX } )
+         nSlot := ASCAN( aWData[ 3 ], {| _1 | _1 == xHSX } )
       ELSE
          nSlot := 0
       ENDIF
@@ -213,8 +213,8 @@ FUNCTION HSX_HANDLE( cFile )
    LOCAL aWData, nSlot
 
    IF USED() .AND. RDDNAME() == "HSCDX"
-      aWData:= USRRDD_AREADATA( SELECT() )
-      nSlot := ASCAN( aWData[ 3 ], { |_1| _1 == cFile } )
+      aWData := USRRDD_AREADATA( SELECT() )
+      nSlot := ASCAN( aWData[ 3 ], {| _1 | _1 == cFile } )
       IF nSlot != 0
          RETURN aWData[ 2, nSlot ]
       ENDIF
@@ -225,7 +225,7 @@ FUNCTION HSX_HANDLE( cFile )
 FUNCTION HSX_FILE( nHsx )
    LOCAL aWData, nSlot
    IF USED() .AND. RDDNAME() == "HSCDX"
-      aWData:= USRRDD_AREADATA( SELECT() )
+      aWData := USRRDD_AREADATA( SELECT() )
       nSlot := ASCAN( aWData[ 3 ], nHsx )
       IF nSlot != 0
          RETURN aWData[ 3, nSlot ]
@@ -236,7 +236,7 @@ FUNCTION HSX_FILE( nHsx )
 FUNCTION HSX_GET( nSlot )
    LOCAL aWData
    IF USED() .AND. RDDNAME() == "HSCDX"
-      aWData:= USRRDD_AREADATA( SELECT() )
+      aWData := USRRDD_AREADATA( SELECT() )
       IF nSlot > 0 .AND. nSlot <= LEN( aWData[ 2 ] )
          RETURN aWData[ 2, nSlot ]
       ENDIF

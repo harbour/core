@@ -100,7 +100,7 @@
                           [SCOPE <scope>] [<persist: PERSISTENT>] ;
                           [<case: NOUPPER>] => ;
             __clsAddMsg( <Class>():classH, #<Message>, ;
-                         { |Self| HB_SYMBOL_UNUSED(Self), <code> }, ;
+                         {| Self | HB_SYMBOL_UNUSED( Self ), <code> }, ;
                          HB_OO_MSG_INLINE, NIL, ;
                          __xhb_cls_scope( <scope>, <.persist.> ) )
 
@@ -110,7 +110,7 @@
                           [SCOPE <scope>] [<persist: PERSISTENT>] ;
                           [<case: NOUPPER>] => ;
             __clsAddMsg( <Class>():classH, #<Message>, ;
-                         { |Self, <params>| HB_SYMBOL_UNUSED(Self), <code> }, ;
+                         {| Self, <params> | HB_SYMBOL_UNUSED( Self ), <code> }, ;
                          HB_OO_MSG_INLINE, NIL, ;
                          __xhb_cls_scope( <scope>, <.persist.> ) )
 

@@ -378,7 +378,7 @@ STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
    aMessages := ASort( oObject:ClassSel( nRange, nScope, .T. ),,, {|x,y| x[HB_OO_DATA_SYMBOL] < y[HB_OO_DATA_SYMBOL] } )
    aReturn   := {}
 
-   nFirstProperty := aScan( aMessages, { | aElement | Left( aElement[HB_OO_DATA_SYMBOL], 1 ) == '_' } )
+   nFirstProperty := aScan( aMessages, {| aElement | Left( aElement[HB_OO_DATA_SYMBOL], 1 ) == '_' } )
 
    FOR EACH aMsg IN aMessages
 
@@ -386,7 +386,7 @@ STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
          LOOP
       ENDIF
 
-      IF ( AScan( aMessages, { | aElement | aElement[HB_OO_DATA_SYMBOL] == "_" + aMsg[HB_OO_DATA_SYMBOL] }, nFirstProperty ) != 0 ) == lData
+      IF ( AScan( aMessages, {| aElement | aElement[HB_OO_DATA_SYMBOL] == "_" + aMsg[HB_OO_DATA_SYMBOL] }, nFirstProperty ) != 0 ) == lData
          IF nNoScope == 0 .OR. HB_BITAND( aMsg[HB_OO_DATA_SCOPE], nNoScope ) == 0
             AAdd( aReturn, aMsg )
          ENDIF

@@ -87,7 +87,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
 
    oBrw := TBrowseDB( nTop + 2, nLeft + 1, nBottom - 1, nRight - 1 )
    oBrw:HeadSep   := " " + Chr( 205 )
-   oBrw:SkipBlock := { | nRecs | Skipped( nRecs, lAppend ) }
+   oBrw:SkipBlock := {| nRecs | Skipped( nRecs, lAppend ) }
 
    FOR n := 1 to FCount()
       oBrw:AddColumn( TBColumnNew( FieldName( n ), FieldBlock( FieldName( n ) ) ) )
@@ -336,7 +336,7 @@ STATIC FUNCTION DoGet( oBrw, lAppend )
    oCol := oBrw:GetColumn( oBrw:ColPos )
    xValue := Eval( oCol:Block )
    oGet := GetNew( Row(), Col(), ;
-               { |xNewVal| iif( PCount() == 0, xValue, xValue := xNewVal ) }, ;
+               {| xNewVal | iif( PCount() == 0, xValue, xValue := xNewVal ) }, ;
                "mGetVar", NIL, oBrw:ColorSpec )
    lSuccess := .F.
    IF ReadModal( { oGet } )

@@ -724,7 +724,7 @@ PVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piPos, int
                 * cannot detach this local variable
                 * For example:
                 * LOCAL locvar
-                * STATIC stavar:={ | x | locvar}
+                * STATIC stavar:= {| x | locvar }
                 *
                 * NOTE: Clipper creates such a codeblock however at the
                 * time of codeblock evaluation it generates a runtime error:

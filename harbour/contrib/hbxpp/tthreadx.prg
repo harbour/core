@@ -207,7 +207,7 @@ METHOD start( xAction, ... ) CLASS THREAD
 
    ELSE
       ::pThreadID := hb_threadStart( HB_THREAD_INHERIT_PUBLIC, ;
-            { |...|
+            {| ... |
                LOCAL nTime
 
                ThreadObject( Self )

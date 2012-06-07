@@ -456,7 +456,7 @@
 
 #command JOIN [WITH <(alias)>] [TO <f>] [FIELDS <fields,...>] [FOR <for>] => ;
          __dbJoin( <(alias)>, <(f)>, { <(fields)> }, ;
-                   if(EMPTY(#<for>), { || .T. }, <{for}> ) )
+                   if(EMPTY(#<for>), {|| .T. }, <{for}> ) )
 
 #command COUNT [TO <v>] ;
                [FOR <for>] [WHILE <while>] [NEXT <next>] ;
@@ -562,7 +562,7 @@
 
 #command @ <row>, <col> GET <v> [<exp,...>] RANGE <l>, <h> [<nextexp,...>] => ;
          @ <row>, <col> GET <v> [ <exp>] ;
-                        VALID { |_1| RangeCheck( _1, , <l>, <h> ) } [ <nextexp>]
+                        VALID {|_1| RangeCheck( _1, , <l>, <h> ) } [ <nextexp>]
 
 #command @ <row>, <col> GET <v> [<exp,...>] COLOR <clr> [<nextexp,...>] => ;
          @ <row>, <col> GET <v> [ <exp>] SEND colorDisp(<clr>) [ <nextexp>]
@@ -597,7 +597,7 @@
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
          ATail(GetList):Control := _CheckBox_( <v>, <cap>, ;
                      <msg>, <clr>, <{fb}>, <{sb}>, <stl>, <bmaps> ) ;;
-         ATail(GetList):reader := { | a, b, c, d | GuiReader( a, b, c, d ) } ;;
+         ATail(GetList):reader := {| a, b, c, d | GuiReader( a, b, c, d ) } ;;
        [ ATail(GetList):<snd> ;] [ ATail(GetList):Control:<gsnd> ;] ;
          ATail(GetList):Control:Display()
 
@@ -611,7 +611,7 @@
          ATail(GetList):Control := _ListBox_( ATail(Getlist):row, ;
                ATail(Getlist):col, <bottom>, <right>, <v>, <items>, <cap>, ;
                <msg>, <clr>, <{fb}>, <{sb}>, <.dd.>, <.sbar.>, <bmap> ) ;;
-         ATail(GetList):reader := { | a, b, c, d | GuiReader( a, b, c, d ) } ;;
+         ATail(GetList):reader := {| a, b, c, d | GuiReader( a, b, c, d ) } ;;
        [ ATail(GetList):<snd> ;] [ ATail(GetList):Control:<gsnd> ;] ;
          ATail(GetList):Control:Display()
 
@@ -626,7 +626,7 @@
          AAdd( GetList, _GET_( <v>, <(v)>, NIL, <{valid}>, <{when}> ) ) ;;
          ATail(GetList):Control := _PushButt_( <cap>, <msg>, <clr>, <{fb}>,;
                <{sb}>, <stl>, <sX>, <sY>, <cX>, <cY>, <bmap>, <bX>, <bY> ) ;;
-         ATail(GetList):reader := { | a, b, c, d | GuiReader( a, b, c, d ) } ;;
+         ATail(GetList):reader := {| a, b, c, d | GuiReader( a, b, c, d ) } ;;
        [ ATail(GetList):<snd> ;] [ ATail(GetList):Control:<gsnd> ;] ;
          ATail(GetList):Control:Display()
 
@@ -640,7 +640,7 @@
          ATail(GetList):Control := _RadioGrp_( ATail(Getlist):row, ;
                ATail(Getlist):col, <bottom>, <right>, <v>, <buttons>, <cap>,;
                <msg>, <clr>, <{fb}>, <stl> ) ;;
-         ATail(GetList):reader := { | a, b, c, d | GuiReader( a, b, c, d ) } ;;
+         ATail(GetList):reader := {| a, b, c, d | GuiReader( a, b, c, d ) } ;;
        [ ATail(GetList):<snd> ;] [ ATail(GetList):Control:<gsnd> ;] ;
          ATail(GetList):Control:Display()
 
@@ -653,7 +653,7 @@
          <oBrowse>:nleft := ATail(Getlist):col ;;
          <oBrowse>:nbottom := <bottom> ; <oBrowse>:nright := <right> ;;
          <oBrowse>:Configure() ; ATail(GetList):Control := <oBrowse> ;;
-         ATail(GetList):reader := { | a, b, c, d | TBReader( a, b, c, d ) } ;
+         ATail(GetList):reader := {| a, b, c, d | TBReader( a, b, c, d ) } ;
      [ ; ATail(GetList):Control:Message := <msg>] ;
      [ ; ATail(GetList):<snd>] [ ; ATail(GetList):Control:<gsnd>]
 
@@ -666,7 +666,7 @@
          <oBrowse>:nleft := ATail(Getlist):col ;;
          <oBrowse>:nbottom := <bottom> ; <oBrowse>:nright := <right> ;;
          <oBrowse>:Configure() ; ATail(GetList):Control := <oBrowse> ;;
-         ATail(GetList):reader := { | a, b, c, d | <a>->( TBReader( a, b, c, d ) ) } ;
+         ATail(GetList):reader := {| a, b, c, d | <a>->( TBReader( a, b, c, d ) ) } ;
      [ ; ATail(GetList):Control:Message := <msg>] ;
      [ ; ATail(GetList):<snd>] [ ; ATail(GetList):Control:<gsnd>]
 

@@ -1455,7 +1455,7 @@ void hb_compExprCBVarDel( HB_CBVAR_PTR pVars )
 
 /* Creates a set/get codeblock for passed expression used in __GET
  *
- * { | ~1 | IIF( ~1 == NIL, <pExpr>, <pExpr> := ~1 )}
+ * {| ~1 | IIF( ~1 == NIL, <pExpr>, <pExpr> := ~1 ) }
  *
  * NOTE: "~1" is not a valid variable name so there will be no collisions
  */

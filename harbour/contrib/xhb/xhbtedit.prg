@@ -2,7 +2,7 @@
  * $Id$
  */
 
-/* $Id$
+/*
  * Harbour Project source code:
  * Editor Class (base for Memoedit(), debugger, etc.)
  *
@@ -161,8 +161,8 @@
    // Class DATA can be faster, but since the user can change directly
    // READINSERT(), ::lInsert must check in it.
    // DATA  lInsert        INIT .F.              // Is editor in Insert mode or in Overstrike one? Default : Overstrike - Clipper
-   METHOD lInsert()              BLOCK { | | Set( _SET_INSERT ) }
-   METHOD _lInsert( lInsert )    BLOCK { | Self, lInsert | HB_SYMBOL_UNUSED( Self ), iif( HB_ISLOGICAL( lInsert ), Set( _SET_INSERT, lInsert ), Set( _SET_INSERT ) ) }
+   METHOD lInsert()              BLOCK {|| Set( _SET_INSERT ) }
+   METHOD _lInsert( lInsert )    BLOCK {| Self, lInsert | HB_SYMBOL_UNUSED( Self ), iif( HB_ISLOGICAL( lInsert ), Set( _SET_INSERT, lInsert ), Set( _SET_INSERT ) ) }
 
    METHOD  New( cString, nTop, nLeft, nBottom, ;             // Converts a string to an array of strings splitting input string at EOL boundaries
                 nRight, lEditMode, nLineLength, nTabSize, nTextRow, nTextCol, nWndRow, nWndCol )
@@ -2438,9 +2438,9 @@ METHOD GetText( lSoftCr ) CLASS XHBEditor
       ENDIF
 
       IF ::lWordWrap
-         AEval( ::aText, { | cItem | cString += cItem:cText + iif( cItem:lSoftCR, cSoft, cEOL ) }, , ::LastRow() - 1 )
+         AEval( ::aText, {| cItem | cString += cItem:cText + iif( cItem:lSoftCR, cSoft, cEOL ) }, , ::LastRow() - 1 )
       ELSE
-         AEval( ::aText, { | cItem | cString += cItem:cText + cEOL }, , ::LastRow() - 1 )
+         AEval( ::aText, {| cItem | cString += cItem:cText + cEOL }, , ::LastRow() - 1 )
       ENDIF
 
       // Last line does not need a cEOL delimiter

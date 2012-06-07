@@ -125,7 +125,7 @@ ENDCLASS
 METHOD Eval( cMethodName, ... ) CLASS OleNetioSrv
    LOCAL xRetVal, oErr
 
-   BEGIN SEQUENCE WITH { |oErr| BREAK( oErr ) }
+   BEGIN SEQUENCE WITH {| oErr | BREAK( oErr ) }
       SWITCH cMethodName
          CASE "CONNECT"
             xRetVal := !Empty( ::pConn := NETIO_GETCONNECTION( ... ) )

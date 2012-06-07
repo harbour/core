@@ -142,29 +142,29 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
 
    oBrwSets:autolite := .T.
    oBrwSets:ColorSpec := __Dbg():ClrModal()
-   oBrwSets:GoTopBlock := { || ::Arrayindex := 1 }
-   oBrwSets:GoBottomBlock := { || ::arrayindex := Len( ::ArrayReference ) }
-   oBrwSets:SkipBlock := { | nSkip, nPos | nPos := ::arrayindex,;
+   oBrwSets:GoTopBlock := {|| ::Arrayindex := 1 }
+   oBrwSets:GoBottomBlock := {|| ::arrayindex := Len( ::ArrayReference ) }
+   oBrwSets:SkipBlock := {| nSkip, nPos | nPos := ::arrayindex,;
                           ::arrayindex := iif( nSkip > 0, Min( ::arrayindex + nSkip, Len( ::arrayReference ) ),;
                           Max( 1, ::arrayindex + nSkip ) ), ::arrayindex - nPos }
 
    nMaxLen := ArrayMaxLen( ::AllNames )
    oBrwSets:AddColumn( oCol := HBDbColumnNew( "",;
-                    { || PadR( ::ArrayReference[ ::arrayindex, 1 ], nMaxLen ) } ) )
+                    {|| PadR( ::ArrayReference[ ::arrayindex, 1 ], nMaxLen ) } ) )
    oCol:width := nMaxLen
-   oCol:ColorBlock := { || { iif( ::Arrayindex == oBrwSets:Cargo, 2, 1 ), 2 } }
+   oCol:ColorBlock := {|| { iif( ::Arrayindex == oBrwSets:Cargo, 2, 1 ), 2 } }
    oBrwSets:Freeze := 1
 
-   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", { || iif( HB_ISSTRING( ::ArrayReference[ ::ArrayIndex, 2 ] ) .AND. !::ArrayReference[ ::ArrayIndex, 3 ],;
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| iif( HB_ISSTRING( ::ArrayReference[ ::ArrayIndex, 2 ] ) .AND. !::ArrayReference[ ::ArrayIndex, 3 ],;
       ::ArrayReference[ ::ArrayIndex, 2 ],;
       PadR( __dbgValToStr( __dbgObjGetValue( ::TheObj, ::ArrayReference[ ::arrayindex, 1 ] ) ), nWidth  - 12 ) ) } ) )
 
    oBrwSets:Cargo := 1 // Actual highlighted row
-   oCol:ColorBlock := { || { iif( ::Arrayindex == oBrwSets:Cargo, 3, 1 ), 3 } }
+   oCol:ColorBlock := {|| { iif( ::Arrayindex == oBrwSets:Cargo, 3, 1 ), 3 } }
    oCol:width := MaxCol() - 14 - nMaxLen
    oBrwSets:colPos := 2
-   ::aWindows[ ::nCurWindow ]:bPainted    := { || oBrwSets:ForceStable() }
-   ::aWindows[ ::nCurWindow ]:bKeyPressed := { | nKey | ::SetsKeyPressed( nKey, oBrwSets, Len( aArray ), ::ArrayReference ) }
+   ::aWindows[ ::nCurWindow ]:bPainted    := {|| oBrwSets:ForceStable() }
+   ::aWindows[ ::nCurWindow ]:bKeyPressed := {| nKey | ::SetsKeyPressed( nKey, oBrwSets, Len( aArray ), ::ArrayReference ) }
    ::aWindows[ ::nCurwindow ]:cCaption := ::objname + " is of class: " +::TheObj:ClassName()
 
    SetCursor( SC_NONE )
@@ -196,7 +196,7 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
    cValue := PadR( __dbgValToStr( cValue ), column:Width )
 
    IF __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1,, @cValue, ;
-                  { | cValue | iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
+                  {| cValue | iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
       BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
          __dbgObjSetValue( ::TheObj, pitem[ nSet, 1 ], &cValue )
       RECOVER USING oErr

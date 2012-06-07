@@ -50,6 +50,8 @@
  *
  */
 
+#include "directry.ch"
+
 STATIC FUNCTION hb_doScan( cPath, cMask, cAttr, cPathSep )
 
    LOCAL aFile
@@ -57,15 +59,15 @@ STATIC FUNCTION hb_doScan( cPath, cMask, cAttr, cPathSep )
    LOCAL aResult := {}
 
    FOR EACH aFile IN Directory( cPath + hb_osFileMask(), cAttr + "D" )
-      lMatch := hb_FileMatch( aFile[ 1 ], cMask )
-      IF "D" $ aFile[ 5 ]
+      lMatch := hb_FileMatch( aFile[ F_NAME ], cMask )
+      IF "D" $ aFile[ F_ATTR ]
          IF lMatch .AND. "D" $ cAttr
             AAdd( aResult, aFile )
          ENDIF
-         IF !( aFile[ 1 ] == "." .OR. aFile[ 1 ] == ".." .OR. aFile[ 1 ] == "" )
-            AEval( hb_DoScan( cPath + aFile[ 1 ] + cPathSep, cMask, cAttr, cPathSep ), ;
-                   { |x| x[ 1 ] := aFile[ 1 ] + cPathSep + x[ 1 ], ;
-                         AAdd( aResult, x ) } )
+         IF !( aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".." .OR. aFile[ F_NAME ] == "" )
+            AEval( hb_DoScan( cPath + aFile[ F_NAME ] + cPathSep, cMask, cAttr, cPathSep ), ;
+                   {| x | x[ F_NAME ] := aFile[ F_NAME ] + cPathSep + x[ F_NAME ], ;
+                          AAdd( aResult, x ) } )
          ENDIF
       ELSEIF lMatch
          AAdd( aResult, aFile )
@@ -82,7 +84,7 @@ FUNCTION hb_DirScan( cPath, cFileMask, cAttr )
       cFilePath := ""
    ELSE
       cFilePath := cPath
-      IF !Right( cPath, 1 ) $ hb_osPathDelimiters()
+      IF ! Right( cPath, 1 ) $ hb_osPathDelimiters()
          cFilePath += hb_ps()
       ENDIF
    ENDIF

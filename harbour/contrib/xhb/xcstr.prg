@@ -270,7 +270,7 @@ FUNCTION ValToBlock( xVal )
       RETURN xVal
    ENDIF
 
-   RETURN { || xVal }
+   RETURN {|| xVal }
 
 //--------------------------------------------------------------//
 FUNCTION ValToCharacter( xVal )

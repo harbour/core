@@ -189,7 +189,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       // Print the last band if there is one
       IF ::lOneMoreBand
          // Print the band
-         AEval( ::aBandToPrint, { | BandLine | PrintIt( BandLine ) } )
+         AEval( ::aBandToPrint, {| BandLine | PrintIt( BandLine ) } )
       ENDIF
 
    RECOVER USING xBreakVal
@@ -275,7 +275,7 @@ METHOD ExecuteLabel() CLASS HBLabelForm
       ::nCurrentCol  := 1
 
       // Print the band
-      AEval( ::aBandToPrint, { | BandLine | PrintIt( BandLine ) } )
+      AEval( ::aBandToPrint, {| BandLine | PrintIt( BandLine ) } )
 
       nMoreLines := ::aLabelData[ LBL_HEIGHT ] - Len( ::aBandToPrint )
       IF nMoreLines > 0
@@ -317,7 +317,7 @@ METHOD SampleLabels() CLASS HBLabelForm
    DO WHILE lMoreSamples
 
       // Print the samples
-      AEval( aBand, { | BandLine | PrintIt( BandLine ) } )
+      AEval( aBand, {| BandLine | PrintIt( BandLine ) } )
 
       IF ::aLabelData[ LBL_LINES ] > 0
          // Add the spaces between the label lines

@@ -430,7 +430,7 @@ METHOD Next() CLASS THtmlIterator
    LOCAL oFound, lExit := .F.
 
    DO WHILE ! lExit
-      BEGIN SEQUENCE WITH { |oErr| Break( oErr ) }
+      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          oFound := ::aNodes[ ++::nCurrent ]
          IF ::MatchCriteria( oFound )
             ::oNode := oFound
@@ -483,7 +483,7 @@ METHOD MatchCriteria( oFound ) CLASS THtmlIteratorScan
 
    IF ::cValue != NIL
       xData := oFound:getAttributes()
-      IF hb_HScan( xData, { | xKey, cValue | HB_SYMBOL_UNUSED( xKey ), Lower( ::cValue ) == Lower( cValue ) } ) == 0
+      IF hb_HScan( xData, {| xKey, cValue | HB_SYMBOL_UNUSED( xKey ), Lower( ::cValue ) == Lower( cValue ) } ) == 0
          RETURN .F.
       ENDIF
    ENDIF
@@ -525,12 +525,12 @@ METHOD MatchCriteria( oFound ) CLASS THtmlIteratorRegex
    ENDIF
 
    IF ::cAttribute != NIL .AND. ;
-         hb_HScan( oFound:getAttributes(), { | cKey | hb_regexLike( Lower( ::cAttribute ), cKey ) } ) == 0
+         hb_HScan( oFound:getAttributes(), {| cKey | hb_regexLike( Lower( ::cAttribute ), cKey ) } ) == 0
       RETURN .F.
    ENDIF
 
    IF ::cValue != NIL .AND. ;
-         hb_HScan( oFound:getAttributes(), { | xKey, cValue | HB_SYMBOL_UNUSED( xKey ), hb_regexLike( ::cValue, cValue ) } ) == 0
+         hb_HScan( oFound:getAttributes(), {| xKey, cValue | HB_SYMBOL_UNUSED( xKey ), hb_regexLike( ::cValue, cValue ) } ) == 0
       RETURN .F.
    ENDIF
 
@@ -678,7 +678,7 @@ METHOD isType( nType ) CLASS THtmlNode
 
    LOCAL lRet
 
-   BEGIN SEQUENCE WITH { |oErr| Break( oErr ) }
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       lRet := hb_bitAnd( ::htmlTagType[ 2 ], nType ) > 0
    RECOVER
       lRet := .F.
@@ -1065,14 +1065,14 @@ METHOD nextNode() CLASS THtmlNode
       RETURN ::htmlContent[ 1 ]
    ENDIF
 
-   nPos := AScan( ::parent:htmlContent, { | o | o == Self } )
+   nPos := AScan( ::parent:htmlContent, {| o | o == Self } )
 
    IF nPos < Len( ::parent:htmlContent )
       RETURN ::parent:htmlContent[ nPos + 1 ]
    ENDIF
 
    aNodes := ::parent:parent:collect()
-   nPos   := AScan( aNodes, { | o | o == Self } )
+   nPos   := AScan( aNodes, {| o | o == Self } )
 
    RETURN iif( nPos == Len( aNodes ), NIL, aNodes[ nPos + 1 ] )
 
@@ -1087,7 +1087,7 @@ METHOD prevNode() CLASS THtmlNode
    ENDIF
 
    aNodes := ::parent:collect( Self )
-   nPos   := AScan( aNodes, { | o | o == Self } )
+   nPos   := AScan( aNodes, {| o | o == Self } )
 
    RETURN iif( nPos == 1, ::parent, aNodes[ nPos - 1 ] )
 
@@ -1163,14 +1163,14 @@ METHOD attrToString() CLASS THtmlNode
 
    ELSE
       // attributes are parsed into a Hash
-      BEGIN SEQUENCE WITH { |oErr| Break( oErr ) }
+      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          aAttr := ::htmlTagType[ 1 ]:exec()
       RECOVER
          // Tag has no attributes
          aAttr := {}
       END SEQUENCE
       cAttr := ""
-      hb_HEval( ::htmlAttributes, { | cKey, cValue | cAttr += __AttrToStr( cKey, cValue, aAttr, Self ) } )
+      hb_HEval( ::htmlAttributes, {| cKey, cValue | cAttr += __AttrToStr( cKey, cValue, aAttr, Self ) } )
    ENDIF
 
    RETURN cAttr
@@ -1179,7 +1179,7 @@ STATIC FUNCTION __AttrToStr( cName, cValue, aAttr, oTHtmlNode )
 
    LOCAL nPos
 
-   IF ( nPos := AScan( aAttr, { | a | a[ 1 ] == Lower( cName ) } ) ) == 0
+   IF ( nPos := AScan( aAttr, {| a | a[ 1 ] == Lower( cName ) } ) ) == 0
       // Tag doesn't have this attribute
       RETURN oTHtmlNode:error( "Invalid HTML attribute for: <" + oTHtmlNode:htmlTagName + ">", oTHtmlNode:className(), cName, EG_ARG, { cName, cValue } )
    ENDIF
@@ -1241,7 +1241,7 @@ METHOD getText( cEOL ) CLASS THtmlNode
 
    FOR EACH oNode IN ::htmlContent
       cText += oNode:getText( cEOL )
-      IF Lower( ::htmlTagName ) $ "td,th" .AND. AScan( ::parent:htmlContent, { | o | o == Self } ) < Len( ::parent:htmlContent )
+      IF Lower( ::htmlTagName ) $ "td,th" .AND. AScan( ::parent:htmlContent, {| o | o == Self } ) < Len( ::parent:htmlContent )
          // leave table rows in one line, cells separated by Tab
          cText := SubStr( cText, 1, Len( cText ) - Len( cEol ) )
          cText += Chr( 9 )
@@ -1261,7 +1261,7 @@ METHOD getAttribute( cName ) CLASS THtmlNode
       RETURN hHash
    ENDIF
 
-   BEGIN SEQUENCE WITH { |oErr| Break( oErr ) }
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       cValue := hHash[ cName ]
    RECOVER
       cValue := NIL
@@ -1408,14 +1408,14 @@ METHOD setAttribute( cName, cValue ) CLASS THtmlNode
       RETURN ::error( "Invalid HTML attribute for: <" + ::htmlTagName + ">", ::className(), cName, EG_ARG, { cName, cValue } )
    ENDIF
 
-   BEGIN SEQUENCE WITH { |oErr| Break( oErr ) }
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       aAttr := ::htmlTagType[ 1 ]:exec()
    RECOVER
       // Tag has no attributes
       aAttr := {}
    END SEQUENCE
 
-   IF ( nPos := AScan( aAttr, { | a | a[ 1 ] == Lower( cName ) } ) ) == 0
+   IF ( nPos := AScan( aAttr, {| a | a[ 1 ] == Lower( cName ) } ) ) == 0
       // Tag doesn't have this attribute
       RETURN ::error( "Invalid HTML attribute for: <" + ::htmlTagName + ">", ::className(), cName, EG_ARG, { cName, cValue } )
    ENDIF
@@ -1445,7 +1445,7 @@ METHOD delAttribute( cName ) CLASS THtmlNode
    LOCAL lRet := .F.
 
    IF xVal != NIL
-      BEGIN SEQUENCE WITH { |oErr| Break( oErr ) }
+      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          hb_HDel( ::htmlAttributes, cName )
          lRet := .T.
       RECOVER
@@ -1469,7 +1469,7 @@ METHOD isAttribute( cName ) CLASS THtmlNode
 
    LOCAL lRet
 
-   BEGIN SEQUENCE WITH { |oErr| Break( oErr ) }
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       lRet := hb_HHasKey( ::getAttributes(), cName )
    RECOVER
       lRet := .F.
@@ -1700,7 +1700,7 @@ FUNCTION THtmlTagType( cTagName )
       THtmlInit()
    ENDIF
 
-   BEGIN SEQUENCE WITH { |oErr| Break( oErr ) }
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       aType := t_hTagTypes[ cTagName ]
    RECOVER
       aType := t_hTagTypes[ "_text_" ]
@@ -1716,11 +1716,11 @@ FUNCTION THtmlIsValid( cTagName, cAttrName )
       THtmlInit()
    ENDIF
 
-   BEGIN SEQUENCE WITH { |oErr| Break( oErr ) }
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       aValue := t_hTagTypes[ cTagName ]
       IF cAttrName != NIL
          aValue := aValue[ 1 ]:exec()
-         lRet   := ( AScan( aValue, { | a | Lower( a[ 1 ] ) == Lower( cAttrName ) } ) > 0 )
+         lRet   := ( AScan( aValue, {| a | Lower( a[ 1 ] ) == Lower( cAttrName ) } ) > 0 )
       ENDIF
    RECOVER
       lRet := .F.

@@ -115,7 +115,7 @@ METHOD addWindows( hHash, nRow ) CLASS HBDbHash
    oBrwSets:Cargo := { 1, {} } // Actual highligthed row
    AAdd( oBrwSets:Cargo[ 2 ], hHash )
 
-   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", { || ::hashName + "[" + HashKeyString( hHash, oBrwSets:cargo[ 1 ] ) + "]" } ) )
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| ::hashName + "[" + HashKeyString( hHash, oBrwSets:cargo[ 1 ] ) + "]" } ) )
 
    // calculate max key length
    nKeyLen := 0
@@ -124,7 +124,7 @@ METHOD addWindows( hHash, nRow ) CLASS HBDbHash
    oCol:DefColor := { 1, 2 }
    nColWidth := oCol:Width
 
-   oBrwSets:AddColumn( oCol := HBDbColumnNew( "" ,{ || PadR( __dbgValToStr( hb_HValueAt( hHash, oBrwSets:cargo[ 1 ] ) ), nWidth - nColWidth - 1 ) } ) )
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| PadR( __dbgValToStr( hb_HValueAt( hHash, oBrwSets:cargo[ 1 ] ) ), nWidth - nColWidth - 1 ) } ) )
 
    /* 09/08/2004 - <maurilio.longo@libero.it>
                    Setting a fixed width like it is done in the next line of code wich I've
@@ -143,13 +143,13 @@ METHOD addWindows( hHash, nRow ) CLASS HBDbHash
 
    oCol:DefColor:= { 1, 3 }
 
-   oBrwSets:goTopBlock := { || oBrwSets:cargo[ 1 ] := 1 }
-   oBrwSets:goBottomBlock := { || oBrwSets:cargo[ 1 ] := Len( oBrwSets:cargo[ 2 ][ 1 ] ) }
-   oBrwSets:skipBlock := { |nPos| ( nPos := HashBrowseSkip(nPos, oBrwSets), oBrwSets:cargo[ 1 ] := ;
+   oBrwSets:goTopBlock := {|| oBrwSets:cargo[ 1 ] := 1 }
+   oBrwSets:goBottomBlock := {|| oBrwSets:cargo[ 1 ] := Len( oBrwSets:cargo[ 2 ][ 1 ] ) }
+   oBrwSets:skipBlock := {| nPos | ( nPos := HashBrowseSkip(nPos, oBrwSets), oBrwSets:cargo[ 1 ] := ;
                                     oBrwSets:cargo[ 1 ] + nPos, nPos ) }
 
-   ::aWindows[ ::nCurWindow ]:bPainted    := { || ( oBrwSets:forcestable(), RefreshVarsS( oBrwSets ) ) }
-   ::aWindows[ ::nCurWindow ]:bKeyPressed := { | nKey | ::SetsKeyPressed( nKey, oBrwSets,;
+   ::aWindows[ ::nCurWindow ]:bPainted    := {|| ( oBrwSets:forcestable(), RefreshVarsS( oBrwSets ) ) }
+   ::aWindows[ ::nCurWindow ]:bKeyPressed := {| nKey | ::SetsKeyPressed( nKey, oBrwSets,;
                            ::aWindows[ ::nCurWindow ],::hashName, hHash ) }
 
    SetCursor( SC_NONE )
@@ -169,7 +169,7 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbHash
    // if confirming new record, append blank
 
    IF __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1,, @cValue, ;
-                  { | cValue | iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
+                  {| cValue | iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
       BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
          HB_HValueAt( pItem, nSet, &cValue )
       RECOVER USING oErr

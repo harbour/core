@@ -92,7 +92,7 @@ FUNCTION DO_MTTES1()
       hb_mutexSubscribe( mtxResults,, @nDigit )
       AAdd( aResults, nDigit )
    NEXT
-   aEval( aThreads, { |x| hb_threadJoin( x ) } )
+   aEval( aThreads, {| x | hb_threadJoin( x ) } )
    nSum := 0
    FOR EACH nDigit IN aResults
       nSum += nDigit

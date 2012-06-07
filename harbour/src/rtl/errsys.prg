@@ -54,7 +54,7 @@
 
 PROCEDURE ErrorSys()
 
-   ErrorBlock( { | oError | DefError( oError ) } )
+   ErrorBlock( {| oError | DefError( oError ) } )
 
    RETURN
 

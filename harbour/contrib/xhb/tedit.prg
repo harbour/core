@@ -491,7 +491,7 @@ CLASS THtmlForm
    METHOD AddControl( o ) INLINE IIF( HB_ISOBJECT( o ), ( o:nH := ::nH, o:Form := Self ), ),;
           Aadd( ::aControls, o )
 
-   METHOD PutControls() INLINE Aeval( ::aControls, { | e | e:Put() } )
+   METHOD PutControls() INLINE Aeval( ::aControls, {| e | e:Put() } )
 
    METHOD New( cName, cAction, cMethod, lFrame, cCaption, nWidth )
 
@@ -681,7 +681,7 @@ METHOD Put( lPutControls ) CLASS THtmlForm
 //   Fwrite( ::nH, ::cOutput )
 ::oHtm:cStr += ::cOutput
    IF lPutControls
-      Aeval( ::aControls, { | e | IIF( HB_ISOBJECT( e ), ;
+      Aeval( ::aControls, {| e | IIF( HB_ISOBJECT( e ), ;
                             e:Put(), ::oHtm:cStr += e  ) } )
    ENDIF
 
@@ -717,7 +717,7 @@ RETURN Self
 METHOD GetControl( cName ) CLASS THtmlForm
 
    LOCAL oRet
-   LOCAL nPos := Ascan( ::aControls, { | e | e:name == cName } )
+   LOCAL nPos := Ascan( ::aControls, {| e | e:name == cName } )
 
    IF nPos > 0
       oRet := ::aControls[ nPos ]

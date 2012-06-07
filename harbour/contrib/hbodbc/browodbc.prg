@@ -91,9 +91,9 @@ FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
 
    oBrw := TBrowseNew( nTop + 2, nLeft + 1, nBottom - 1, nRight - 1 )
 
-   oBrw:SkipBlock     := { | nRecs | Skipped( nRecs,oDataSource ) }
-   oBrw:GoTopBlock    := { || oDataSource:first() }
-   oBrw:GoBottomBlock := { || oDataSource:last() }
+   oBrw:SkipBlock     := {| nRecs | Skipped( nRecs, oDataSource ) }
+   oBrw:GoTopBlock    := {|| oDataSource:first() }
+   oBrw:GoBottomBlock := {|| oDataSource:last() }
 
    oBrw:HeadSep := "-"
 

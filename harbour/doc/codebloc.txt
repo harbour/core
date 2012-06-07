@@ -60,9 +60,9 @@ PRIVATE foo, bar
   EVAL( bar )
 
 PROCEDURE Test()
-LOCAL a:='FOO', b:='BAR'
+LOCAL a := "FOO", b := "BAR"
 
-  foo ={ || a + ( bar:=EVAL( {|| b} ) ) }
+  foo := {|| a + ( bar := EVAL( {|| b } ) ) }
 
 RETURN
 

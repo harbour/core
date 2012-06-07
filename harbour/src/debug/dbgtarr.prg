@@ -115,12 +115,12 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
    oBrwSets:Cargo := { 1, {} } // Actual highligthed row
    AAdd( oBrwSets:Cargo[ 2 ], aArray )
 
-   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", { || ::arrayName + "[" + LTrim( Str( oBrwSets:cargo[ 1 ], 6 ) ) + "]" } ) )
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| ::arrayName + "[" + LTrim( Str( oBrwSets:cargo[ 1 ], 6 ) ) + "]" } ) )
    oCol:width := Len( ::arrayName + "[" + LTrim( Str( Len( aArray ), 6 ) ) + "]" )
    oCol:DefColor := { 1, 2 }
    nColWidth := oCol:Width
 
-   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", { || PadR( __dbgValToStr( aArray[ oBrwSets:cargo[ 1 ] ] ), nWidth - nColWidth - 1 ) } ) )
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| PadR( __dbgValToStr( aArray[ oBrwSets:cargo[ 1 ] ] ), nWidth - nColWidth - 1 ) } ) )
 
    /* 09/08/2004 - <maurilio.longo@libero.it>
                    Setting a fixed width like it is done in the next line of code wich I've
@@ -139,13 +139,13 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
 
    oCol:defColor := { 1, 3 }
 
-   oBrwSets:goTopBlock := { || oBrwSets:cargo[ 1 ] := 1 }
-   oBrwSets:goBottomBlock := { || oBrwSets:cargo[ 1 ] := Len( oBrwSets:cargo[ 2 ][ 1 ] ) }
-   oBrwSets:skipBlock := { | nPos | ( nPos := ArrayBrowseSkip( nPos, oBrwSets ), oBrwSets:cargo[ 1 ] := ;
+   oBrwSets:goTopBlock := {|| oBrwSets:cargo[ 1 ] := 1 }
+   oBrwSets:goBottomBlock := {|| oBrwSets:cargo[ 1 ] := Len( oBrwSets:cargo[ 2 ][ 1 ] ) }
+   oBrwSets:skipBlock := {| nPos | ( nPos := ArrayBrowseSkip( nPos, oBrwSets ), oBrwSets:cargo[ 1 ] := ;
                                     oBrwSets:cargo[ 1 ] + nPos, nPos ) }
 
-   ::aWindows[ ::nCurWindow ]:bPainted    := { || ( oBrwSets:forcestable(), RefreshVarsS( oBrwSets ) ) }
-   ::aWindows[ ::nCurWindow ]:bKeyPressed := { | nKey | ::SetsKeyPressed( nKey, oBrwSets,;
+   ::aWindows[ ::nCurWindow ]:bPainted    := {|| ( oBrwSets:forcestable(), RefreshVarsS( oBrwSets ) ) }
+   ::aWindows[ ::nCurWindow ]:bKeyPressed := {| nKey | ::SetsKeyPressed( nKey, oBrwSets,;
                            ::aWindows[ ::nCurWindow ], ::arrayName, aArray ) }
 
    SetCursor( SC_NONE )
@@ -165,7 +165,7 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbArray
    // if confirming new record, append blank
 
    IF __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1,, @cValue, ;
-                  { | cValue | iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
+                  {| cValue | iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
       BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
          pItem[ nSet ] := &cValue
       RECOVER USING oErr

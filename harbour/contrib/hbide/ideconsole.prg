@@ -4574,10 +4574,10 @@ METHOD AChoiceNew:init( nTop, nLft, nBtm, nRgt, acItems, xSelect, ;
    ::nAtTop      := 1                    // The number of the item at the top
    ::nAtBtm      := 1                    // The number of the item at the bottom
    ::nItems      := 0                    // The number of items
-   ::bScan       := { | cX | IF( left( cX, 1 ) == upper( chr( ::nKey ) ), .T., .F. ) }
+   ::bScan       := {| cX | IF( left( cX, 1 ) == upper( chr( ::nKey ) ), .T., .F. ) }
    ::lUserFunc   := ( !empty( ::cUserFunc ) )
    ::nUserFunc   := 0                    // RETURN value FROM user FUNCTION
-   ::bUserFunc   := { || AC_ABORT }      // Block form of user FUNCTION
+   ::bUserFunc   := {|| AC_ABORT }       // Block form of user FUNCTION
    ::cLoClr      := Before( ",", setcolor() )
    ::cHiClr      := Before( ",", After( ",", setcolor() ) )
    ::cUnClr      := After( ",", After( ",", After( ",", After( ",", setcolor() ) ) ) )
@@ -4601,7 +4601,7 @@ METHOD AChoiceNew:init( nTop, nLft, nBtm, nRgt, acItems, xSelect, ;
    ::nNumCols := ::nRight - ::nLeft + 1
    ::nNumRows := ::nBottom - ::nTop + 1
 
-   aeval( ::acItems, { | x | IF( valtype( x ) == "C", aadd( ::acCopy, padr( x, ::nNumCols ) ), .F. ) } )
+   aeval( ::acItems, {| x | IF( valtype( x ) == "C", aadd( ::acCopy, padr( x, ::nNumCols ) ), .F. ) } )
    ::nItems := len( ::acCopy )
 
    ::alSelect := array( ::nItems )

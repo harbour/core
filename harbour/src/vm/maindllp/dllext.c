@@ -1041,7 +1041,8 @@ void hb_macroTextValue( PHB_ITEM pItem )
          HB_DLL_MSG_NO_FUNC( "macroTextValue" );
    }
 
-   return s_macroTextValue ? s_macroTextValue( pItem ) : NULL;
+   if( s_macroTextValue )
+      s_macroTextValue( pItem );
 }
 
 #endif /* HB_OS_WIN */

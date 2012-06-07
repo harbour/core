@@ -307,7 +307,7 @@
  *         DATA   hWnd, nOldProc
  *         METHOD New( ) CONSTRUCTOR
  *         METHOD Capture() INLINE  SetCapture( ::hWnd )
- *         METHOD End() BLOCK  { | Self, lEnd | If( lEnd := ::lValid(),;
+ *         METHOD End() BLOCK  {| Self, lEnd | If( lEnd := ::lValid(),;
  *                                 ::PostMsg( WM_CLOSE ),), lEnd }
  *         METHOD EraseBkGnd( hDC )
  *         METHOD cTitle( cNewTitle ) SETGET

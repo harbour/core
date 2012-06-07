@@ -12,7 +12,7 @@ PROCEDURE Main()
 
    ? hb_ValToExp( oMeta:getTables() )
 
-   IF AScan( oMeta:getTables(), { | a | "test" == a[ 3 ] } ) > 0
+   IF AScan( oMeta:getTables(), {| a | "test" == a[ 3 ] } ) > 0
       ? "test table already exist let's drop it"
       oStmt := oConn:createStatement()
       oStmt:executeUpdate( "DROP TABLE test" )

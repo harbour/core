@@ -2162,7 +2162,7 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods )
    HB_SYMBOL_UNUSED( cMtdName )
 
    /* check for methods already been worked on */
-   IF AScan( ::func_, { |e_ | e_[ 1 ] == oMtd:cFun } ) > 0
+   IF AScan( ::func_, {| e_ | e_[ 1 ] == oMtd:cFun } ) > 0
       RETURN {}
    ENDIF
    AAdd( ::func_, { oMtd:cFun, 0, "" } )

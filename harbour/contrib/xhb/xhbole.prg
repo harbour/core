@@ -78,7 +78,7 @@ FUNCTION CreateOLEObject()
 #define EG_OLEEXCEPTION 1001
 #define DISPID_VALUE    0
 
-STATIC s_bBreak := { | oError | Break( oError ) }
+STATIC s_bBreak := {| oError | Break( oError ) }
 
 STATIC FUNCTION s_oleOpError( cOperator, ... )
    STATIC s_hErrCode := { "==" => 1070, ;

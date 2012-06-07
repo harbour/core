@@ -91,7 +91,7 @@ FUNCTION xhb_ErrorLog( cErrorLog, lErrorLogAppend )
    RETURN aValueOld
 
 PROCEDURE xhb_ErrorSys()
-   ErrorBlock( { | oError | xhb_DefError( oError ) } )
+   ErrorBlock( {| oError | xhb_DefError( oError ) } )
    RETURN
 
 STATIC FUNCTION err_ModuleName( oError, n )
@@ -475,7 +475,7 @@ STATIC FUNCTION LogError( oerr )
         ENDIF
         FWriteLine( nHandle, "" )
 
-        HB_WAEval( { ||
+        HB_WAEval( {||
                      IF __dynsIsFun( "Select" )
                         FWriteLine( nHandle, "Work Area No ......: " + strvalue( &("Select()") ) )
                      ENDIF

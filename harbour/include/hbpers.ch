@@ -54,7 +54,7 @@
 #define HB_PERS_CH_
 
 #xcommand OBJECT <obj> AS <ClassName> => ;
-          Self := hb_SetObject( Self, { || <ClassName>():New() } )
+          Self := hb_SetObject( Self, {|| <ClassName>():New() } )
 
 #xcommand ENDOBJECT => Self := hb_EndObject()
 

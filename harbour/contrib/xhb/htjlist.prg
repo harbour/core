@@ -293,7 +293,7 @@ METHOD Put( cFile ) CLASS TJsList
       ::nH := Fcreate( cFile )
    ENDIF
 
-   Aeval( ::aScript, { | e | Fwrite( ::nH, e ) } )
+   Aeval( ::aScript, {| e | Fwrite( ::nH, e ) } )
 
    Fclose( ::nH )
 

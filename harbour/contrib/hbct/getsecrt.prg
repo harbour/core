@@ -81,9 +81,9 @@ FUNCTION GETSECRET( cVar, nRow, nCol, lSay, xPrompt )
 
    SETPOS( nRow, nCol )
    AADD( GetList, _GET_( _CGETSECRET, "_CGETSECRET",,, ) )
-   ATAIL( GetList ):reader := { |oGet, oGetList| _SECRET( @_cGetSecret, @lHide, ;
-                                                          oGet, oGetList ) }
-   ATAIL( GetList ):block  := { |xNew| _VALUE( @_cGetSecret, lHide, xNew ) }
+   ATAIL( GetList ):reader := {| oGet, oGetList | _SECRET( @_cGetSecret, @lHide, ;
+                                                           oGet, oGetList ) }
+   ATAIL( GetList ):block  := {| xNew | _VALUE( @_cGetSecret, lHide, xNew ) }
    READ
 
    IF lSay

@@ -337,18 +337,18 @@ METHOD findText( cText, nPos, lCaseSensitive, lExact ) CLASS LISTBOX
    IF lExact
       cText := RTrim( cText )
       IF lCaseSensitive
-         bSearch := { | aItem | RTrim( aItem[ _ITEM_cTEXT ] ) == cText }
+         bSearch := {| aItem | RTrim( aItem[ _ITEM_cTEXT ] ) == cText }
       ELSE
          cText := Lower( cText )
-         bSearch := { | aItem | Lower( RTrim( aItem[ _ITEM_cTEXT ] ) ) == cText }
+         bSearch := {| aItem | Lower( RTrim( aItem[ _ITEM_cTEXT ] ) ) == cText }
       ENDIF
    ELSE
       nLen := Len( cText )
       IF lCaseSensitive
-         bSearch := { | aItem | Left( aItem[ _ITEM_cTEXT ], nLen ) == cText }
+         bSearch := {| aItem | Left( aItem[ _ITEM_cTEXT ], nLen ) == cText }
       ELSE
          cText := Lower( cText )
-         bSearch := { | aItem | Lower( Left( aItem[ _ITEM_cTEXT ], nLen ) ) == cText }
+         bSearch := {| aItem | Lower( Left( aItem[ _ITEM_cTEXT ], nLen ) ) == cText }
       ENDIF
    ENDIF
 
@@ -381,18 +381,18 @@ METHOD findData( cData, nPos, lCaseSensitive, lExact ) CLASS LISTBOX
    IF lExact
       cData := RTrim( cData )
       IF lCaseSensitive
-         bSearch := { | aItem | RTrim( _LISTBOX_ITEMDATA( aItem ) ) == cData }
+         bSearch := {| aItem | RTrim( _LISTBOX_ITEMDATA( aItem ) ) == cData }
       ELSE
          cData := Lower( cData )
-         bSearch := { | aItem | Lower( RTrim( _LISTBOX_ITEMDATA( aItem ) ) ) == cData }
+         bSearch := {| aItem | Lower( RTrim( _LISTBOX_ITEMDATA( aItem ) ) ) == cData }
       ENDIF
    ELSE
       nLen := Len( cData )
       IF lCaseSensitive
-         bSearch := { | aItem | Left( _LISTBOX_ITEMDATA( aItem ), nLen ) == cData }
+         bSearch := {| aItem | Left( _LISTBOX_ITEMDATA( aItem ), nLen ) == cData }
       ELSE
          cData := Lower( cData )
-         bSearch := { | aItem | Lower( Left( _LISTBOX_ITEMDATA( aItem ), nLen ) ) == cData }
+         bSearch := {| aItem | Lower( Left( _LISTBOX_ITEMDATA( aItem ), nLen ) ) == cData }
       ENDIF
    ENDIF
 

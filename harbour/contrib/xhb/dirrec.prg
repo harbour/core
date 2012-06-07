@@ -70,6 +70,8 @@
  * [druzus]
  */
 
+#include "directry.ch"
+
 FUNCTION DirectoryRecurse( cPath, cAttr )
 
    LOCAL aResult
@@ -87,6 +89,6 @@ FUNCTION DirectoryRecurse( cPath, cAttr )
    aResult := HB_DirScan( cFilePath, cMask + cExt, ;
                           StrTran( Upper( cAttr ), "D" ) )
 
-   AEval( aResult, { |x| x[ 1 ] := cFilePath + x[ 1 ] } )
+   AEval( aResult, {| x | x[ F_NAME ] := cFilePath + x[ F_NAME ] } )
 
    RETURN aResult

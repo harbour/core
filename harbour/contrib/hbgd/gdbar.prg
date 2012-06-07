@@ -306,7 +306,7 @@ METHOD CheckValInArray( cchar ) CLASS TBarCode
    LOCAL npos
    LOCAL uret
 
-   npos := AScan( ::keys, { |x| SubStr( x, 1, 1 ) == cchar } )
+   npos := AScan( ::keys, {| x | SubStr( x, 1, 1 ) == cchar } )
 
    IF npos > 0
       uret := npos

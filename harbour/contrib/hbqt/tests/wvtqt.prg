@@ -255,9 +255,9 @@ PROCEDURE thFunc()
 
    oBrowse:ColSep        := " ³ "
    oBrowse:HeadSep       := "ÄÂÄ"
-   oBrowse:GoTopBlock    := { || dbGoTop() }
-   oBrowse:GoBottomBlock := { || dbGoBottom() }
-   oBrowse:SkipBlock     := { | nSkip | dbSkipBlock( nSkip, oBrowse ) }
+   oBrowse:GoTopBlock    := {|| dbGoTop() }
+   oBrowse:GoBottomBlock := {|| dbGoBottom() }
+   oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip, oBrowse ) }
 
    for i := 1 to len( aStruct )
       oBrowse:AddColumn( TBColumnNew( aStruct[ i,1 ], BlockField( i ) ) )
@@ -374,4 +374,3 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 
    RETURN lRet
 //-------------------------------------------------------------------//
-

@@ -180,7 +180,7 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
                ENDIF
             ENDIF
          NEXT
-      ENDIF    
+      ENDIF
    ENDIF
    qPop := NIL
    HB_SYMBOL_UNUSED( xRet )
@@ -201,7 +201,7 @@ FUNCTION hbide_createTarget( cFile, txt_ )
    LOCAL cNewLine := hb_eol()
 
    IF hHandle != F_ERROR
-      aeval( txt_, { |e| fWrite( hHandle, e + cNewLine ) } )
+      aeval( txt_, {| e | fWrite( hHandle, e + cNewLine ) } )
       fClose( hHandle )
    ENDIF
 
@@ -374,7 +374,7 @@ FUNCTION hbide_readSource( cTxtFile )
 FUNCTION hbide_evalAsString( cExp )
    LOCAL cValue
 
-   BEGIN SEQUENCE WITH { || break() }
+   BEGIN SEQUENCE WITH {|| break() }
       cValue := Eval( hb_macroBlock( cExp ) )
    RECOVER
       cValue := cExp
@@ -391,7 +391,7 @@ FUNCTION hbide_evalAsString( cExp )
 FUNCTION hbide_evalAsIs( cExp )
    LOCAL xValue
 
-   BEGIN SEQUENCE WITH { || break() }
+   BEGIN SEQUENCE WITH {|| break() }
       xValue := Eval( hb_macroBlock( cExp ) )
    RECOVER
       xValue := cExp

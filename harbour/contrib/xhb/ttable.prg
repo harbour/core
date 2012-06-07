@@ -166,15 +166,15 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
 
    SWITCH nType
    CASE NET_RECLOCK                        // 1 = Record Lock...
-      xIdentifier := IF( lReleaseLocks, NIL, RECNO() )
-      bOperation  := { | x | DBRLOCK( x ) }
+      xIdentifier := IIF( lReleaseLocks, NIL, RECNO() )
+      bOperation  := {| x | DBRLOCK( x ) }
       exit
    CASE NET_FILELOCK                       // 2 = File Lock...
-      bOperation := { || FLOCK() }
+      bOperation := {|| FLOCK() }
       exit
    CASE NET_APPEND                         // 3 = Append Blank...
       xIdentifier := lReleaseLocks
-      bOperation  := { | x | DBAPPEND( x ), !NETERR() }
+      bOperation  := {| x | DBAPPEND( x ), !NETERR() }
       exit
    ENDSWITCH
 
@@ -416,7 +416,7 @@ RETURN n
 FUNCTION IsLocked( nRecId )
 DEFAULT nRecID TO recno()
 
-RETURN ASCAN( DBRLOCKLIST(), { | n | n == nRecID } ) > 0
+RETURN ASCAN( DBRLOCKLIST(), {| n | n == nRecID } ) > 0
 
 
 FUNCTION NetError()
@@ -465,7 +465,7 @@ FUNCTION TableNew( cDBF, cALIAS, cOrderBag, cDRIVER, ;
 
    lAuto := SET( _SET_AUTOPEN, .F. )
 
-   IF ( nPos := ASCAN( saTables, { | e | e[ 1 ] == UPPER( cALIAS ) } ) ) > 0
+   IF ( nPos := ASCAN( saTables, {| e | e[ 1 ] == UPPER( cALIAS ) } ) ) > 0
 
       oDB := saTables[ nPos, 2 ]
 
@@ -489,7 +489,7 @@ FUNCTION GetTable( cAlias )
 
    LOCAL nPos
    LOCAL oDB
-   IF ( nPos := ASCAN( saTables, { | e | e[ 1 ] == UPPER( cALIAS ) } ) ) > 0
+   IF ( nPos := ASCAN( saTables, {| e | e[ 1 ] == UPPER( cALIAS ) } ) ) > 0
       oDB := saTables[ nPos, 2 ]
    ENDIF
 RETURN oDB
@@ -1034,7 +1034,7 @@ METHOD Write( lKeepBuffer ) CLASS HBTable
    ( ::Alias )->( ORDSETFOCUS( 0 ) )
 
    FOR i := 1 TO ( ::Alias )->( FCOUNT() )
-      n := ASCAN( adata, { | a | a[ 1 ] == ( ::Alias )->( FIELDNAME( i ) ) } )
+      n := ASCAN( adata, {| a | a[ 1 ] == ( ::Alias )->( FIELDNAME( i ) ) } )
       ( ::Alias )->( FIELDPUT( i, adata[ n, 2 ] ) )
    NEXT
 
@@ -1296,7 +1296,7 @@ METHOD Reindex() CLASS HBTable
          RETURN .F.
       ENDIF
 
-      AEVAL( ::aOrders, { | o | o:Create() } )
+      AEVAL( ::aOrders, {| o | o:Create() } )
 
       ::Kill()
       ::IsNet := .T.
@@ -1363,7 +1363,7 @@ METHOD GetOrder( xOrder ) CLASS HBTable
    LOCAL xType := VALTYPE( xOrder )
 
    IF xType == "C"
-      nPos := ASCAN( ::aOrders, { | e | e:Tag == xOrder } )
+      nPos := ASCAN( ::aOrders, {| e | e:Tag == xOrder } )
    ELSEIF xType == "N" .and. xOrder > 0
       nPos := xOrder
    ELSE
@@ -1405,7 +1405,7 @@ METHOD GetOrderLabels() CLASS HBTable
 
    LOCAL aRet := {}
    IF !EMPTY( ::aOrders )
-      AEVAL( ::aOrders, { | e | AADD( aRet, e:Label ) } )
+      AEVAL( ::aOrders, {| e | AADD( aRet, e:Label ) } )
    ENDIF
 RETURN aRet
 
@@ -1523,7 +1523,7 @@ METHOD New( cTag, cKey, cLabel, cFor, cWhile, lUnique, bEval, nInterval, cOrderB
    DEFAULT lUnique TO .F.
    DEFAULT cFor TO ".T."
    DEFAULT cWhile TO ".T."
-   DEFAULT bEval TO { || .T. }
+   DEFAULT bEval TO {|| .T. }
    DEFAULT nInterval TO 1
    DEFAULT cLabel TO cTag
    ::cOrderBag := cOrderBag

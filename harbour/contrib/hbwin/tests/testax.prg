@@ -33,13 +33,13 @@ METHOD Init( hWnd, cProgId, nTop, nLeft, nWidth, nHeight, cID ) CLASS HActiveX
    win_AxInit()
    ::hWnd := WAPI_CreateWindowEX( 0, "AtlAxWin", cProgId, nStyle, nLeft, nTop, nWidth, nHeight, hWnd, 0 )
    /* WAPI_SetWindowPos( ::hWnd, WIN_HWND_TOPMOST, 0, 0, 1, 1, hb_bitOr( WIN_SWP_NOSIZE, WIN_SWP_DRAWFRAME ) ) */
-   ::oOLE := WIN_AxGetControl( ::hWnd, { | event, ... | ::Event( event, ... ) }, cID )
+   ::oOLE := WIN_AxGetControl( ::hWnd, {| event, ... | ::Event( event, ... ) }, cID )
    RETURN self
 
 PROCEDURE Event( ... ) CLASS HActiveX
    LOCAL cEvents := ""
    LOCAL aEvents := { ... }
-   aEval( aEvents, { | xEvent | cEvents += HB_ValToStr( xEvent ) + ", " } )
+   aEval( aEvents, {| xEvent | cEvents += HB_ValToStr( xEvent ) + ", " } )
    wapi_OutputDebugString( cEvents )
    RETURN
 
