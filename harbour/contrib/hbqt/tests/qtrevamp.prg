@@ -118,15 +118,8 @@ FUNCTION ContextMenu( oWnd )
    qMenu:addAction( "Find"       )
 
    qAct := qMenu:exec( oWnd:mapToGlobal( QPoint( 10,10 ) ) )
-
-   // The test below is neccessary because Qt returns NULL in case 
-   // user clicks anything except a menu item. Theoretically, Qt 
-   // should have returned a QAction.
-   //
-   IF __objGetClsName( qAct ) == "QAction"
-      IF hb_isString( qAct:text() )
-         //...
-      ENDIF
+   IF ! empty( qAct )
+      //...
    ENDIF 
 
    // qMenu is a local variable and is carries no parent, 
