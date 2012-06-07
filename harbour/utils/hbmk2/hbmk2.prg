@@ -3333,7 +3333,8 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          /boot/common/include                        (beos)
          /boot/develop/headers/3rdparty              (beos)
 
-         /opt/local/include                          (darwin MacPorts)
+         /usr/local/include                          (darwin Homebrew)
+         /opt/local/include                          (darwin MacPorts/DarwinPorts)
          /sw/include                                 (darwin Fink)
          /Library/Frameworks/<pkg>.framework/Headers (darwin)
 
@@ -3792,8 +3793,15 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             /* Add paths, where this isn't a system component */
             DO CASE
             CASE hbmk[ _HBMK_cPLAT ] == "darwin"
-               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/sw/lib" ) /* For Fink */
-               AAddNew( hbmk[ _HBMK_aLIBPATH ], "/opt/local/lib" ) /* For MacPorts (formerly DarwinPorts) */
+               IF hb_DirExists( "/usr/local/lib" )
+                  AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" ) /* For Homebrew */
+               ENDIF
+               IF hb_DirExists( "/opt/local/lib" )
+                  AAddNew( hbmk[ _HBMK_aLIBPATH ], "/opt/local/lib" ) /* For MacPorts (formerly DarwinPorts) */
+               ENDIF
+               IF hb_DirExists( "/sw/lib" )
+                  AAddNew( hbmk[ _HBMK_aLIBPATH ], "/sw/lib" ) /* For Fink */
+               ENDIF
             CASE hbmk[ _HBMK_cPLAT ] == "bsd"
                AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/local/lib" ) /* For ports */
                AAddNew( hbmk[ _HBMK_aLIBPATH ], "/usr/pkg/lib" ) /* For pkgsrc */
@@ -8237,7 +8245,18 @@ STATIC FUNCTION dep_try_pkg_detection( hbmk, dep )
                hb_processRun( cName + "-config --version --libs --cflags",, @cStdOut, @cStdErr )
             ENDIF
 #if defined( __PLATFORM__DARWIN )
-            /* DarwinPorts */
+            /* Homebrew */
+            IF Empty( cStdOut )
+               IF hb_FileExists( "/usr/local/bin/pkg-config" )
+                  hb_processRun( "/usr/local/bin/pkg-config --modversion --libs --cflags " + cName,, @cStdOut, @cStdErr )
+               ENDIF
+            ENDIF
+            IF Empty( cStdOut )
+               IF hb_FileExists( "/usr/local/bin/" + cName + "-config" )
+                  hb_processRun( "/usr/local/bin/" + cName + "-config --version --libs --cflags",, @cStdOut, @cStdErr )
+               ENDIF
+            ENDIF
+            /* MacPorts/DarwinPorts */
             IF Empty( cStdOut )
                IF hb_FileExists( "/opt/local/bin/pkg-config" )
                   hb_processRun( "/opt/local/bin/pkg-config --modversion --libs --cflags " + cName,, @cStdOut, @cStdErr )
