@@ -87,6 +87,7 @@ FUNCTION __hbrun_CoreHeaderFiles()
       ADD HEADER TO s_hHeaders FILE "hbgfx.ch"
       ADD HEADER TO s_hHeaders FILE "hbgfxdef.ch"
       ADD HEADER TO s_hHeaders FILE "hbgtinfo.ch"
+      ADD HEADER TO s_hHeaders FILE "hbhash.ch"
       ADD HEADER TO s_hHeaders FILE "hbhrb.ch"
       ADD HEADER TO s_hHeaders FILE "hbinkey.ch"
       ADD HEADER TO s_hHeaders FILE "hblang.ch"

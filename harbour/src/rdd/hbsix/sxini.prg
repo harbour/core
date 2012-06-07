@@ -52,8 +52,9 @@
  *
  */
 
-#include "common.ch"
 #include "dbinfo.ch"
+
+#include "hbhash.ch"
 #include "hbsxdef.ch"
 
 #define HB_SIX_SECTION "SXKEYWORDS"

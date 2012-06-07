@@ -12058,6 +12058,7 @@ STATIC FUNCTION hbmk_CoreHeaderFilesMinimal()
       ADD HEADER TO s_hHeaders FILE "directry.ch"
       ADD HEADER TO s_hHeaders FILE "error.ch"
       ADD HEADER TO s_hHeaders FILE "fileio.ch"
+      ADD HEADER TO s_hHeaders FILE "hbhash.ch"
       ADD HEADER TO s_hHeaders FILE "hbmemory.ch"
       ADD HEADER TO s_hHeaders FILE "hbver.ch"
       ADD HEADER TO s_hHeaders FILE "inkey.ch"

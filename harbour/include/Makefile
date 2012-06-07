@@ -116,6 +116,7 @@ PRG_HEADERS := \
    hbgfx.ch \
    hbgfxdef.ch \
    hbgtinfo.ch \
+   hbhash.ch \
    hbhrb.ch \
    hbinkey.ch \
    hblang.ch \

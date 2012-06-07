@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header file for common macros
+ * Header file for hash constants
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://harbour-project.org
@@ -50,36 +50,20 @@
  *
  */
 
-#ifndef HB_COMMON_CH_
-#define HB_COMMON_CH_
+#ifndef HB_HASH_CH_
+#define HB_HASH_CH_
 
-#if defined( HB_LEGACY_LEVEL4 )
-#  include "hbhash.ch"
-#endif
+/* HASH autoadd options */
+#define HB_HAUTOADD_NEVER       0x00
+#define HB_HAUTOADD_ACCESS      0x01
+#define HB_HAUTOADD_ASSIGN      0x02
+#define HB_HAUTOADD_ALWAYS      ( HB_HAUTOADD_ACCESS + HB_HAUTOADD_ASSIGN )
+#define HB_HAUTOADD_REFERENCE   HB_HAUTOADD_ALWAYS
 
-/* Friendly logical aliases */
-#define TRUE                    .T.
-#define FALSE                   .F.
-#define YES                     .T.
-#define NO                      .F.
+/* HB_HMERGE() modes */
+#define HB_HMERGE_UNION         0  /* logical OR  on items in two hash tables (default) */
+#define HB_HMERGE_INTERSECT     1  /* logical AND on items in two hash tables */
+#define HB_HMERGE_DIFFERENCE    2  /* logical XOR on items in two hash tables */
+#define HB_HMERGE_REMOVE        3  /* h1 & ( h1 ^ h2 ) */
 
-/* Type checking macros */
-#translate ISNIL( <xValue> )       => ( <xValue> == NIL )
-#translate ISARRAY( <xValue> )     => hb_isArray( <xValue> )
-#translate ISBLOCK( <xValue> )     => hb_isBlock( <xValue> )
-#translate ISCHARACTER( <xValue> ) => hb_isString( <xValue> )
-#translate ISDATE( <xValue> )      => hb_isDate( <xValue> )
-#translate ISLOGICAL( <xValue> )   => hb_isLogical( <xValue> )
-#translate ISMEMO( <xValue> )      => hb_isMemo( <xValue> )
-#translate ISNUMBER( <xValue> )    => hb_isNumeric( <xValue> )
-#translate ISOBJECT( <xValue> )    => hb_isObject( <xValue> )
-
-/* DEFAULT and UPDATE commands */
-#xcommand DEFAULT <v1> TO <x1> [, <vn> TO <xn> ] => ;
-                                IF <v1> == NIL ; <v1> := <x1> ; END ;
-                                [; IF <vn> == NIL ; <vn> := <xn> ; END ]
-
-#command UPDATE <v1> IF <exp> TO <v2> => ;
-                                IF <exp> ; <v1> := <v2> ; END
-
-#endif /* HB_COMMON_CH_ */
+#endif /* HB_HASH_CH_ */
