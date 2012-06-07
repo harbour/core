@@ -20,7 +20,7 @@ Procedure Main()
 
    oWid := QWidget()
    oWid:setWindowTitle( 'Draggable window' )
-   //oWId:setAttribute( Qt_WA_TranslucentBackground )
+   oWId:setAttribute( Qt_WA_TranslucentBackground )
    oWid:setWindowFlags(Qt_FramelessWindowHint)
 
    oLabel1:= QLabel()
