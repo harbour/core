@@ -5,50 +5,39 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2010 Carlos Bacco <carlosbacco at gmail.com>
+ * Copyright 2012 Carlos Bacco <carlosbacco at gmail.com>
  * www - http://harbour-project.org
+ *
+ *
+ * This sample demonstrates the embedding of external Qt resources
+ * inside harbour executables. The two images used in this sample
+ * are listed in the file testres.qrc, and when compiled, the 
+ * program will display correctly the images even if you delete
+ * the original files used, as a copy of them will be inside the
+ * executable.
+ *
+ * Remember that the Qt resource compiler needs to be in the path,
+ * as it will be required to compile the sample correctly.
  *
  */
 
 #include "hbqtgui.ch"
 
-#include "hbtrace.ch"
-
-#include "common.ch"
-
-STATIC s_qApp
-STATIC s_re1
-
-INIT PROCEDURE Qt_Start()
-   s_qApp := QApplication()
-   s_re1 := QResource()
-   s_re1:registerResource_1( HBQTRES_TESTRES() )
-   RETURN
-
-EXIT PROCEDURE Qt_End()
-   s_re1:unregisterResource_1( HBQTRES_TESTRES() )
-   RETURN
-
 PROCEDURE Main()
-   LOCAL oWnd
-   LOCAL oDA
-   LOCAL lb1
-   LOCAL ly1
+   LOCAL oWid
+   LOCAL oRes
 
-   oWnd := QMainWindow()
-   oWnd:setWindowIcon( ":harbour-icon.png" )
+   oRes := QResource()
+   oRes:registerResource_1( HBQTRES_TESTRES() ) // HBQTRES_filename_without_qrc_extension()
 
-   oDA := QWidget()
-   oWnd:setCentralWidget( oDA )
+   oWid := QLabel()
+   oWid:setWindowIcon( QIcon( ":harbour-icon.png" ) )
+   oWid:setAlignment( hb_bitOr( Qt_AlignHCenter, Qt_AlignVCenter ) )
+   oWid:setPixMap( QPixMap( ":harbour-logo.png" ) )
 
-   lb1 := Qlabel()
-   lb1:setAlignment( hb_bitOr( Qt_AlignHCenter, Qt_AlignVCenter ) )
-   lb1:setPixMap( QPixMap( ":harbour-logo.png" ) )
+   oWid:Show()
 
-   ly1 := QVBoxLayout( oDA )
-   ly1:addWidget( lb1 )
-
-   oWnd:Show()
-   s_qApp:exec()
-
+   QApplication():exec()
+   oRes:unregisterResource_1( HBQTRES_TESTRES() )
    RETURN
+
