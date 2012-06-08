@@ -137,7 +137,7 @@ HBQSlots::~HBQSlots()
 
 int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
 {
-   //HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %s )", pszSignal ) );
+   HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %s )", pszSignal ) );
    
    int nResult = 1;
 
@@ -331,17 +331,19 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
          if( hb_vmRequestReenter() )
          {
             if( parameterCount == 0 )
+            {
                hb_evalBlock0( this->listBlock.at( i - 1 ) );
+            }   
             else
             {
                int paramId = s_argCombinations.indexOf( paramString );
                PHBQT_SLOT_FUNC pCallback;
 
-               HB_TRACE( HB_TR_DEBUG, ( "  params=%s,  paramId=%d", ( char * ) paramString.data(), paramId ) );
-
                pCallback = s_pCallback.at( paramId );
                if( pCallback )
+               {
                   pCallback( ( PHB_ITEM * ) this->listBlock.at( i - 1 ), arguments, pList );
+               }
             }
             hb_vmRequestRestore();
          }

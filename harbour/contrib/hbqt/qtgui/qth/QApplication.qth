@@ -46,7 +46,7 @@ HB_FUNC( QT_QAPPLICATION )
    //__HB_RETPTRGC__( ( QApplication * ) __hbqtgui_app() );
 
 #ifdef __HBQT_REVAMP__   
-   hb_itemReturn( hbqt_bindGetHbObject( NULL, ( void * ) __hbqtgui_app(), hb_dynsymGetSymbol( "HB_QAPPLICATION" ), hbqt_del_QApplication, 2 ) );
+   hb_itemReturn( hbqt_bindGetHbObject( NULL, ( void * ) __hbqtgui_app(), ( "HB_QAPPLICATION" ), hbqt_del_QApplication, 2 ) );
 #else
    hbqt_itemPushReturn( hbqt_gcAllocate_QApplication( (void *) __hbqtgui_app(), false) , hb_stackSelfItem() );
 #endif

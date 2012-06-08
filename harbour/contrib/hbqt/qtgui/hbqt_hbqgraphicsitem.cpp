@@ -491,7 +491,7 @@ void HBQGraphicsItem::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
    if( block ){
       PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::GraphicsSceneContextMenu );
 #ifdef __HBQT_REVAMP__
-      PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, hb_dynsymGetSymbol( "HB_QGRAPHICSSCENECONTEXTMENUEVENT" ), NULL, 0 );
+      PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, ( "HB_QGRAPHICSSCENECONTEXTMENUEVENT" ), NULL, 0 );
 #else
       PHB_ITEM p2 = hbqt_create_objectGC( hbqt_gcAllocate_QGraphicsSceneContextMenuEvent( event, false ), "hb_QGraphicsSceneContextMenuEvent" );
 #endif
@@ -641,7 +641,7 @@ int HBQGraphicsItem::determineResizeMode( const QPointF & pos )
 
 void HBQGraphicsItem::dragEnterEvent( QGraphicsSceneDragDropEvent * event )
 {
-HB_TRACE( HB_TR_DEBUG, ( "dragEnterEvent( QGraphicsSceneDragDropEvent * event )" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "dragEnterEvent( QGraphicsSceneDragDropEvent * event )" ) );
    if( block )
    {
       #if 0
@@ -784,8 +784,8 @@ void HBQGraphicsItem::paint( QPainter * painter, const QStyleOptionGraphicsItem 
 
       PHB_ITEM p1 = hb_itemPutNI( NULL, 21017 );
 #ifdef __HBQT_REVAMP__
-      PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) painter, hb_dynsymGetSymbol( "HB_QPAINTER" ), NULL, 0 );
-      PHB_ITEM p3 = hbqt_bindGetHbObject( NULL, ( void * ) &rect, hb_dynsymGetSymbol( "HB_QRECTF" ), NULL, 0 );
+      PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) painter, ( "HB_QPAINTER" ), NULL, 0 );
+      PHB_ITEM p3 = hbqt_bindGetHbObject( NULL, ( void * ) &rect, ( "HB_QRECTF" ), NULL, 0 );
 #else
       PHB_ITEM p2 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QPainter( painter, false ), "hb_QPainter" ) );
       PHB_ITEM p3 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QRectF( &rect, false ), "hb_QRectF" ) );

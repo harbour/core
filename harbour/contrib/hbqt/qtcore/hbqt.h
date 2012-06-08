@@ -122,7 +122,7 @@ extern HB_EXPORT PHB_ITEM hbqt_create_object( void * pObject, const char * pszOb
 extern HB_EXPORT PHB_ITEM hbqt_create_objectGC( void * pObject, const char * pszObjectName );
 extern HB_EXPORT void hbqt_addDeleteList( PHB_ITEM item ); /* populate a list of PHB_ITEM to delete at exit time */
 
-HB_EXPORT PHB_ITEM   hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, PHB_SYMB pClassFunc, PHBQT_DEL_FUNC pDelete, int iFlags );
+HB_EXPORT PHB_ITEM   hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szClassFunc, PHBQT_DEL_FUNC pDelete, int iFlags );
 HB_EXPORT void    *  hbqt_bindGetQtObject( PHB_ITEM pObject );
 HB_EXPORT void       hbqt_bindSetOwner( void * qtObject, HB_BOOL fOwner );
 HB_EXPORT void       hbqt_bindDestroyHbObject( PHB_ITEM pObject );

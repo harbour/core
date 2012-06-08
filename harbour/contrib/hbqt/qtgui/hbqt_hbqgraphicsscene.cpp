@@ -415,7 +415,7 @@ void HBQGraphicsScene::contextMenuEvent( QGraphicsSceneContextMenuEvent * event 
       if( block ){
          PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::GraphicsSceneContextMenu );
 #ifdef __HBQT_REVAMP__
-         PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, hb_dynsymGetSymbol( "HB_QGRAPHICSSCENECONTEXTMENUEVENT" ), NULL, 0 );
+         PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, ( "HB_QGRAPHICSSCENECONTEXTMENUEVENT" ), NULL, 0 );
 #else
          PHB_ITEM p2 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QGraphicsSceneContextMenuEvent( event, false ), "hb_QGraphicsSceneContextMenuEvent" ) );
 #endif         
@@ -433,7 +433,7 @@ void HBQGraphicsScene::dragEnterEvent( QGraphicsSceneDragDropEvent * event )
    {
       PHB_ITEM p1 = hb_itemPutNI( NULL, ( int ) QEvent::GraphicsSceneDragEnter );
 #ifdef __HBQT_REVAMP__
-      PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, hb_dynsymGetSymbol( "HB_QGRAPHICSSCENEDRAGDROPEVENT" ), NULL, 0 );
+      PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, ( "HB_QGRAPHICSSCENEDRAGDROPEVENT" ), NULL, 0 );
 #else
       PHB_ITEM p2 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QGraphicsSceneDragDropEvent( event, false ), "hb_QGraphicsSceneDragDropEvent" ) );
 #endif      
@@ -452,7 +452,7 @@ void HBQGraphicsScene::dragLeaveEvent( QGraphicsSceneDragDropEvent * event )
    {
       PHB_ITEM p1 = hb_itemPutNI( NULL, ( int ) QEvent::GraphicsSceneDragLeave );
 #ifdef __HBQT_REVAMP__
-      PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, hb_dynsymGetSymbol( "HB_QGRAPHICSSCENEDRAGDROPEVENT" ), NULL, 0 );
+      PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, ( "HB_QGRAPHICSSCENEDRAGDROPEVENT" ), NULL, 0 );
 #else
       PHB_ITEM p2 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QGraphicsSceneDragDropEvent( event, false ), "hb_QGraphicsSceneDragDropEvent" ) );
 #endif      
@@ -471,7 +471,7 @@ void HBQGraphicsScene::dragMoveEvent( QGraphicsSceneDragDropEvent * event )
    {
       PHB_ITEM p1 = hb_itemPutNI( NULL, ( int ) QEvent::GraphicsSceneDragMove );
 #ifdef __HBQT_REVAMP__
-      PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, hb_dynsymGetSymbol( "HB_QGRAPHICSSCENEDRAGDROPEVENT" ), NULL, 0 );
+      PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, ( "HB_QGRAPHICSSCENEDRAGDROPEVENT" ), NULL, 0 );
 #else
       PHB_ITEM p2 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QGraphicsSceneDragDropEvent( event, false ), "hb_QGraphicsSceneDragDropEvent" ) );
 #endif      
@@ -494,7 +494,7 @@ void HBQGraphicsScene::dropEvent( QGraphicsSceneDragDropEvent * event )
       {
          PHB_ITEM p1 = hb_itemPutNI( NULL, ( int ) QEvent::GraphicsSceneDrop );
 #ifdef __HBQT_REVAMP__
-         PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, hb_dynsymGetSymbol( "HB_QGRAPHICSSCENEDRAGDROPEVENT" ), NULL, 0 );
+         PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, ( "HB_QGRAPHICSSCENEDRAGDROPEVENT" ), NULL, 0 );
 #else
          PHB_ITEM p2 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QGraphicsSceneDragDropEvent( event, false ), "hb_QGraphicsSceneDragDropEvent" ) );
 #endif         
@@ -525,7 +525,7 @@ void HBQGraphicsScene::dropEvent( QGraphicsSceneDragDropEvent * event )
       {
          PHB_ITEM p1 = hb_itemPutNI( NULL, ( int ) QEvent::GraphicsSceneDrop );
 #ifdef __HBQT_REVAMP__
-         PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, hb_dynsymGetSymbol( "HB_QGRAPHICSSCENEDRAGDROPEVENT" ), NULL, 0 );
+         PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, ( "HB_QGRAPHICSSCENEDRAGDROPEVENT" ), NULL, 0 );
 #else
          PHB_ITEM p2 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QGraphicsSceneDragDropEvent( event, false ), "hb_QGraphicsSceneDragDropEvent" ) );
 #endif         

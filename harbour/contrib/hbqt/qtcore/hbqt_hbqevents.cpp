@@ -245,7 +245,7 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
                      if( hb_vmRequestReenter() )
                      {
 #ifdef __HBQT_REVAMP__
-                        PHB_ITEM pItem = hbqt_bindGetHbObject( NULL, ( void * ) event, hb_dynsymGetSymbol( s_lstCreateObj.at( eventId ) ), NULL, 0 );
+                        PHB_ITEM pItem = hbqt_bindGetHbObject( NULL, ( void * ) event, ( s_lstCreateObj.at( eventId ) ), NULL, 0 );
 #else
                         PHB_ITEM pItem = hb_itemNew( hbqt_create_objectGC( ( * pCallback )( event, false ), s_lstCreateObj.at( eventId ) ) );
 #endif

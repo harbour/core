@@ -48,7 +48,7 @@ const QMimeData * mimeData ( Mode mode = Clipboard ) const{
    if( p )
    {
 #ifdef __HBQT_REVAMP__
-      hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ( void* ) p->mimeData( ( QClipboard::Mode ) hb_parni( 1 ) ), hb_dynsymGetSymbol( "HB_QMIMEDATA" ), NULL, 0 ) );
+      hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ( void* ) p->mimeData( ( QClipboard::Mode ) hb_parni( 1 ) ), ( "HB_QMIMEDATA" ), NULL, 0 ) );
 #else
       hbqt_create_objectGC( hbqt_gcAllocate_QMimeData( ( void* ) p->mimeData( ( QClipboard::Mode ) hb_parni( 1 ) ), false ), "hb_QMimeData" );
 #endif      

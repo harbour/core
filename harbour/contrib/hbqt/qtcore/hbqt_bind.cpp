@@ -122,12 +122,12 @@ static PHB_ITEM hb_arrayCreateClone( PHB_ITEM pItem, PHB_BASEARRAY pBaseArray )
    return pItem;
 }
 
-PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, PHB_SYMB pClassFunc, PHBQT_DEL_FUNC pDelFunc, int iFlags )
+PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szClassName, PHBQT_DEL_FUNC pDelFunc, int iFlags )
 {
    #if 0
    char * pname = ( char* ) hb_xgrab( 200 );
    char * pname1 = ( char* ) hb_xgrab( 200 );
-   HB_TRACE( HB_TR_DEBUG, ( ".................HARBOUR_REQUEST_BIND_OBJECT( %p, %i, %s : %s ).................", qtObject, iFlags, hb_procname( 0, pname, HB_TRUE ),  hb_procname( 1, pname1, HB_TRUE ) ) );
+   HB_TRACE( HB_TR_DEBUG, ( ".................HARBOUR_REQUEST_BIND_OBJECT( %p, %i, %s, %s, %s ).................", qtObject, iFlags, szClassName, hb_procname( 0, pname, HB_TRUE ),  hb_procname( 1, pname1, HB_TRUE ) ) );
    hb_xfree( pname );
    hb_xfree( pname1 );
    #endif
@@ -137,6 +137,10 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, PHB_SYMB pClassF
    if( qtObject == NULL )
       return pObject;
 
+   PHB_SYMB pClassFunc = hb_dynsymGetSymbol( szClassName );
+   if( pClassFunc == NULL )
+      return pObject;
+   
    PHBQT_BIND bind;
          
    HBQT_BIND_LOCK

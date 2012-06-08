@@ -100,7 +100,7 @@ void HBQTableView::mousePressEvent( QMouseEvent * event )
    {
       PHB_ITEM p0 = hb_itemPutNI( NULL, QEvent::MouseButtonPress );
 #ifdef __HBQT_REVAMP__
-      PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, ( void * ) event, hb_dynsymGetSymbol( "HB_QMOUSEEVENT" ), NULL, 0 );
+      PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, ( void * ) event, ( "HB_QMOUSEEVENT" ), NULL, 0 );
 #else
       PHB_ITEM p1 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QMouseEvent( event, false ), "hb_QMouseEvent" ) );
 #endif
@@ -117,7 +117,7 @@ void HBQTableView::mouseDoubleClickEvent( QMouseEvent * event )
    {
       PHB_ITEM p0 = hb_itemPutNI( NULL, QEvent::MouseButtonDblClick );
 #ifdef __HBQT_REVAMP__
-      PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, ( void * ) event, hb_dynsymGetSymbol( "HB_QMOUSEEVENT" ), NULL, 0 );
+      PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, ( void * ) event, ( "HB_QMOUSEEVENT" ), NULL, 0 );
 #else
       PHB_ITEM p1 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QMouseEvent( event, false ), "hb_QMouseEvent" ) );
 #endif
@@ -134,7 +134,7 @@ void HBQTableView::wheelEvent( QWheelEvent * event )
    {
       PHB_ITEM p0 = hb_itemPutNI( NULL, QEvent::Wheel );
 #ifdef __HBQT_REVAMP__
-      PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, ( void * ) event, hb_dynsymGetSymbol( "HB_QWHEELEVENT" ), NULL, 0 );
+      PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, ( void * ) event, ( "HB_QWHEELEVENT" ), NULL, 0 );
 #else
       PHB_ITEM p1 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QWheelEvent( event, false ), "hb_QWheelEvent" ) );
 #endif

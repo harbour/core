@@ -48,7 +48,7 @@ enum LibraryLocation { PrefixPath, DocumentationPath, HeadersPath, LibrariesPath
 QDate buildDate (){
    #if QT_VERSION >= 0x040600
 #ifdef __HBQT_REVAMP__
-   hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, new QDate( QLibraryInfo::buildDate() ), hb_dynsymGetSymbol( "HB_QDATE" ), NULL, 1 ) );
+   hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, new QDate( QLibraryInfo::buildDate() ), ( "HB_QDATE" ), NULL, 1 ) );
 #else
    hbqt_create_objectGC( hbqt_gcAllocate_QDate( new QDate( QLibraryInfo::buildDate() ), true ) , "HB_QDATE" );   
 #endif
