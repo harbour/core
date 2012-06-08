@@ -267,11 +267,6 @@ diff -u minizip.orig\ioapi.h minizip\ioapi.h
  #define ZCLOSE64(filefunc,filestream)             ((*((filefunc).zfile_func64.zclose_file))  ((filefunc).zfile_func64.opaque,filestream))
  #define ZERROR64(filefunc,filestream)             ((*((filefunc).zfile_func64.zerror_file))  ((filefunc).zfile_func64.opaque,filestream))
  
-Only in minizip: minizip.dif
-Only in minizip: minizip.hbc
-Only in minizip: minizip.hbp
-Only in minizip: minizip.hbx
-Only in minizip.orig: mztools.c
 diff -u minizip.orig\unzip.c minizip\unzip.c
 --- minizip.orig\unzip.c	Sat Jan 21 12:49:30 2012
 +++ minizip\unzip.c	Fri Jun 08 16:24:24 2012
@@ -597,4 +592,3 @@ diff -u minizip.orig\zip.h minizip\zip.h
  
  #ifndef _ZLIB_H
  #include "zlib.h"
-Only in minizip: zlib126.zip
