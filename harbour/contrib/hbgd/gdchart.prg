@@ -54,8 +54,6 @@
 #include "hbclass.ch"
 #include "gd.ch"
 
-#define DEFAULT( x, y ) IIF( x == NIL, x := y, )
-
 CLASS GDChart FROM GDImage
 
    DATA cTitle
@@ -97,32 +95,33 @@ METHOD New( sx, sy ) CLASS GDChart
 
    ::cTitle := "Chart"
    ::aSeries        := {}
-   ::hDefs          := {=>}
+   ::hDefs          := { => }
    ::aDataOfHashes  := {}
 
    ::Create( sx, sy )
-RETURN Self
+
+   RETURN Self
 
 METHOD AddData( hData ) CLASS GDChart
-   IF ValType( hData ) == "H"
+   IF HB_ISHASH( hData )
       aAdd( ::aDataOfHashes, hData )
    ENDIF
-RETURN Self
+   RETURN Self
 
 METHOD SetData( aData ) CLASS GDChart
    IF HB_ISARRAY( aData )
       ::aDataOfHashes := aData
    ENDIF
-RETURN Self
+   RETURN Self
 
 METHOD AddDef( cDefKey, xDefVal ) CLASS GDChart
    IF HB_ISSTRING( cDefKey )
-      HB_hSet( ::hDefs, Upper( cDefKey ), xDefVal )
+      hb_HSet( ::hDefs, Upper( cDefKey ), xDefVal )
    ENDIF
-RETURN Self
+   RETURN Self
 
 METHOD SetDefs( hDefs ) CLASS GDChart
-   IF ValType( hDefs ) == "H"
+   IF HB_ISHASH( hDefs )
       ::hDefs := hDefs
    ENDIF
    RETURN Self
@@ -142,10 +141,10 @@ METHOD PieChart() CLASS GDChart
    aPieDataOfHash := ::aDataOfHashes
    hDefs          := ::hDefs
 
-   x          := HGetValue( hDefs, "POSX" )
-   y          := HGetValue( hDefs, "POSY" )
-   nWidth     := HGetValue( hDefs, "WIDTH" )
-   cFontPitch := HGetValue( hDefs, "FONTPITCH" )
+   x          := __HGetValue( hDefs, "POSX" )
+   y          := __HGetValue( hDefs, "POSY" )
+   nWidth     := __HGetValue( hDefs, "WIDTH" )
+   cFontPitch := __HGetValue( hDefs, "FONTPITCH" )
 
    DEFAULT x          TO ::CenterWidth()
    DEFAULT y          TO ::CenterHeight()
@@ -171,9 +170,9 @@ METHOD PieChart() CLASS GDChart
 
    // Before sum of values to determine perentual
    FOR EACH hElement IN aPieDataOfHash
-      nTot += hElement["VALUE"]
+      nTot += hElement[ "VALUE" ]
       // Check extrution
-      IF ( nExtrude  := HGetValue( hElement, "EXTRUDE" ) ) != NIL
+      IF ( nExtrude := __HGetValue( hElement, "EXTRUDE" ) ) != NIL
          nTotExtr := Max( nTotExtr, nExtrude )
       ENDIF
    NEXT
@@ -182,24 +181,24 @@ METHOD PieChart() CLASS GDChart
 
    // Second,
    FOR EACH hElement IN aPieDataOfHash
-      cLabel    := HGetValue( hElement, "LABEL" )
-      lFilled   := HGetValue( hElement, "FILLED" )
-      nExtrude  := HGetValue( hElement, "EXTRUDE" )
-      pTile     := HGetValue( hElement, "TILE" )
+      cLabel    := __HGetValue( hElement, "LABEL" )
+      lFilled   := __HGetValue( hElement, "FILLED" )
+      nExtrude  := __HGetValue( hElement, "EXTRUDE" )
+      pTile     := __HGetValue( hElement, "TILE" )
       IF nExtrude != NIL
          lExtruded := .T.
       ELSE
          lExtruded := .F.
       ENDIF
-      colorp    := HGetValue( hElement, "COLOR" )
-      nVal      := hElement["VALUE"]
+      colorp    := __HGetValue( hElement, "COLOR" )
+      nVal      := hElement[ "VALUE" ]
       nDim      := 360 * ( ( nVal / nTot ) * 100 ) / 100
       DEFAULT lFilled  TO .F.
       DEFAULT nExtrude TO 0
       DEFAULT colorp   TO ::SetColor( 0, 0, 0 )
       IF lExtruded
-         nPosX   := x + nExtrude * cos(::Radians( nDegree + nDim / 2 ))
-         nPosY   := y + nExtrude * sin(::Radians( nDegree + nDim / 2 ))
+         nPosX   := x + nExtrude * Cos( ::Radians( nDegree + nDim / 2 ) )
+         nPosY   := y + nExtrude * Sin( ::Radians( nDegree + nDim / 2 ) )
       ELSE
          nPosX   := x
          nPosY   := y
@@ -218,7 +217,7 @@ METHOD PieChart() CLASS GDChart
          ::Arc( nPosX, nPosY, nWidth, nWidth, nDegree, nDegree + nDim, .T., colorp, gdNoFill + gdEdged )
       ENDIF
       IF cLabel != NIL
-         hFont := HGetValue( hElement, "FONT" )
+         hFont := __HGetValue( hElement, "FONT" )
          IF hFont == NIL
             ::SetFontMediumBold()
             cFontName := NIL
@@ -226,21 +225,21 @@ METHOD PieChart() CLASS GDChart
             nAngle    := NIL
             textcolor := NIL
          ELSE
-            cFontName := HGetValue( hFont, "NAME" )
-            nPitch    := HGetValue( hFont, "PITCH" )
-            nAngle    := HGetValue( hFont, "ANGLE" )
-            textcolor := HGetValue( hFont, "COLOR" )
+            cFontName := __HGetValue( hFont, "NAME" )
+            nPitch    := __HGetValue( hFont, "PITCH" )
+            nAngle    := __HGetValue( hFont, "ANGLE" )
+            textcolor := __HGetValue( hFont, "COLOR" )
             DEFAULT cFontName TO "Arial"
             DEFAULT nPitch    TO 8
             DEFAULT nAngle    TO 0
          ENDIF
-         nPosX   := nPosX + ( (nExtrude + nWidth) / 4 ) * cos(::Radians( nDegree + nDim / 2 ))
-         nPosY   := nPosY + ( (nExtrude + nWidth) / 4 ) * sin(::Radians( nDegree + nDim / 2 ))
+         nPosX   := nPosX + ( ( nExtrude + nWidth ) / 4 ) * Cos( ::Radians( nDegree + nDim / 2 ) )
+         nPosY   := nPosY + ( ( nExtrude + nWidth ) / 4 ) * Sin( ::Radians( nDegree + nDim / 2 ) )
          IF textcolor == NIL
             colorp    := ::GetPixel( nPosX, nPosY )
             textcolor := ::SetColor( 255 - ::Red( colorp ), 255 - ::Green( colorp ), 255 - ::Blue( colorp ) )
          ENDIF
-         //cTitle := LTrim( Str( nVal ) )
+         //cTitle := hb_ntos( nVal )
          IF hFont == NIL
             ::Say( nPosX, nPosY, cLabel, textcolor, gdAlignCenter )
          ELSE
@@ -280,16 +279,16 @@ METHOD VerticalBarChart() CLASS GDChart
    aDataOfHash := ::aDataOfHashes
    hDefs       := ::hDefs
 
-   x          := HGetValue( hDefs, "POSX" )
-   y          := HGetValue( hDefs, "POSY" )
-   nWidth     := HGetValue( hDefs, "WIDTH" )
-   nHeight    := HGetValue( hDefs, "HEIGHT" )
-   nMaxValue  := HGetValue( hDefs, "MAXVALUE" )
-   color      := HGetValue( hDefs, "COLOR" )
-   lShowAxis  := HGetValue( hDefs, "SHOWAXIS" )
-   lShowGrid  := HGetValue( hDefs, "SHOWGRID" )
-   cAxisPict  := HGetValue( hDefs, "AXISPICT" )
-   cFontPitch := HGetValue( hDefs, "FONTPITCH" )
+   x          := __HGetValue( hDefs, "POSX" )
+   y          := __HGetValue( hDefs, "POSY" )
+   nWidth     := __HGetValue( hDefs, "WIDTH" )
+   nHeight    := __HGetValue( hDefs, "HEIGHT" )
+   nMaxValue  := __HGetValue( hDefs, "MAXVALUE" )
+   color      := __HGetValue( hDefs, "COLOR" )
+   lShowAxis  := __HGetValue( hDefs, "SHOWAXIS" )
+   lShowGrid  := __HGetValue( hDefs, "SHOWGRID" )
+   cAxisPict  := __HGetValue( hDefs, "AXISPICT" )
+   cFontPitch := __HGetValue( hDefs, "FONTPITCH" )
 
    DEFAULT x          TO 0
    DEFAULT y          TO 0
@@ -327,17 +326,17 @@ METHOD VerticalBarChart() CLASS GDChart
    nMax      := 0
    FOR EACH hElement IN aDataOfHash
        IF hElement:__enumIndex() == 1
-          nMax := hElement["VALUE"]
+          nMax := hElement[ "VALUE" ]
        ELSE
-          nMax := Max( nMax, hElement["VALUE"] )
+          nMax := Max( nMax, hElement[ "VALUE" ] )
        ENDIF
-       cLabel    := HGetValue( hElement, "LABEL" )
-       nMaxLabel := Max( nMaxLabel, Len( IIF( cLabel != NIL, cLabel, "" ) ) )
-       nTot      += hElement["VALUE"]
+       cLabel    := __HGetValue( hElement, "LABEL" )
+       nMaxLabel := Max( nMaxLabel, Len( iif( cLabel != NIL, cLabel, "" ) ) )
+       nTot      += hElement[ "VALUE" ]
    NEXT
 
    DEFAULT nLeftLabelSpace    TO nBorder + Len( LTrim( Transform( nMax, cAxisPict ) ) ) * ::GetFontWidth() + nBorder
-   DEFAULT nRightLabelSpace   TO nLeftLabelSpace //nBorder + Len( LTrim( Str( nMax ) ) ) * ::GetFontWidth() + nBorder
+   DEFAULT nRightLabelSpace   TO nLeftLabelSpace //nBorder + Len( hb_ntos( nMax ) ) * ::GetFontWidth() + nBorder
    DEFAULT nBottomLabelSpace  TO nBorder + nMaxLabel * ::GetFontWidth() + nBorder
    DEFAULT nMaxValue          TO nMax
 
@@ -399,17 +398,17 @@ METHOD VerticalBarChart() CLASS GDChart
 
    // Second,
    FOR EACH hElement IN aDataOfHash
-      cLabel    := HGetValue( hElement, "LABEL" )
-      lFilled   := HGetValue( hElement, "FILLED" )
-      //nExtrude  := HGetValue( hElement, "EXTRUDE" )
-      pTile     := HGetValue( hElement, "TILE" )
+      cLabel    := __HGetValue( hElement, "LABEL" )
+      lFilled   := __HGetValue( hElement, "FILLED" )
+      //nExtrude  := __HGetValue( hElement, "EXTRUDE" )
+      pTile     := __HGetValue( hElement, "TILE" )
       //IF nExtrude != NIL
       //   lExtruded := .T.
       //ELSE
       //   lExtruded := .F.
       //ENDIF
-      colorp    := HGetValue( hElement, "COLOR" )
-      nVal      := hElement["VALUE"]
+      colorp    := __HGetValue( hElement, "COLOR" )
+      nVal      := hElement[ "VALUE" ]
       nDim      := ( nVal / nMaxValue ) * nHeight
 
       DEFAULT lFilled  TO .F.
@@ -465,16 +464,16 @@ METHOD HorizontalBarChart() CLASS GDChart
    aDataOfHash := ::aDataOfHashes
    hDefs       := ::hDefs
 
-   x          := HGetValue( hDefs, "POSX" )
-   y          := HGetValue( hDefs, "POSY" )
-   nWidth     := HGetValue( hDefs, "WIDTH" )
-   nHeight    := HGetValue( hDefs, "HEIGHT" )
-   nMaxValue  := HGetValue( hDefs, "MAXVALUE" )
-   color      := HGetValue( hDefs, "COLOR" )
-   lShowAxis  := HGetValue( hDefs, "SHOWAXIS" )
-   lShowGrid  := HGetValue( hDefs, "SHOWGRID" )
-   cAxisPict  := HGetValue( hDefs, "AXISPICT" )
-   cFontPitch := HGetValue( hDefs, "FONTPITCH" )
+   x          := __HGetValue( hDefs, "POSX" )
+   y          := __HGetValue( hDefs, "POSY" )
+   nWidth     := __HGetValue( hDefs, "WIDTH" )
+   nHeight    := __HGetValue( hDefs, "HEIGHT" )
+   nMaxValue  := __HGetValue( hDefs, "MAXVALUE" )
+   color      := __HGetValue( hDefs, "COLOR" )
+   lShowAxis  := __HGetValue( hDefs, "SHOWAXIS" )
+   lShowGrid  := __HGetValue( hDefs, "SHOWGRID" )
+   cAxisPict  := __HGetValue( hDefs, "AXISPICT" )
+   cFontPitch := __HGetValue( hDefs, "FONTPITCH" )
 
    DEFAULT x          TO 0
    DEFAULT y          TO 0
@@ -510,13 +509,13 @@ METHOD HorizontalBarChart() CLASS GDChart
    nMax      := 0
    FOR EACH hElement IN aDataOfHash
       IF hElement:__enumIndex() == 1
-         nMax := hElement["VALUE"]
+         nMax := hElement[ "VALUE" ]
       ELSE
-         nMax := Max( nMax, hElement["VALUE"] )
+         nMax := Max( nMax, hElement[ "VALUE" ] )
       ENDIF
-      cLabel    := HGetValue( hElement, "LABEL" )
-      nMaxLabel := Max( nMaxLabel, Len( IIF( cLabel != NIL, cLabel, "" ) ) )
-      nTot      += hElement["VALUE"]
+      cLabel    := __HGetValue( hElement, "LABEL" )
+      nMaxLabel := Max( nMaxLabel, Len( iif( cLabel != NIL, cLabel, "" ) ) )
+      nTot      += hElement[ "VALUE" ]
    NEXT
    DEFAULT nLeftLabelSpace    TO nBorder + nMaxLabel * ::GetFontWidth() + nBorder
    DEFAULT nRightLabelSpace   TO nBorder + ( Len( LTrim( Transform( nMax, cAxisPict ) ) ) * ::GetFontWidth() / 2 )
@@ -582,17 +581,17 @@ METHOD HorizontalBarChart() CLASS GDChart
 
    // Second,
    FOR EACH hElement IN aDataOfHash
-      cLabel    := HGetValue( hElement, "LABEL" )
-      lFilled   := HGetValue( hElement, "FILLED" )
-      //nExtrude  := HGetValue( hElement, "EXTRUDE" )
-      pTile     := HGetValue( hElement, "TILE" )
+      cLabel    := __HGetValue( hElement, "LABEL" )
+      lFilled   := __HGetValue( hElement, "FILLED" )
+      //nExtrude  := __HGetValue( hElement, "EXTRUDE" )
+      pTile     := __HGetValue( hElement, "TILE" )
       //IF nExtrude != NIL
       //   lExtruded := .T.
       //ELSE
       //   lExtruded := .F.
       //ENDIF
-      colorp    := HGetValue( hElement, "COLOR" )
-      nVal      := hElement["VALUE"]
+      colorp    := __HGetValue( hElement, "COLOR" )
+      nVal      := hElement[ "VALUE" ]
       nDim      := ( nVal / nMaxValue ) * nWidth
       DEFAULT lFilled  TO .F.
       //DEFAULT nExtrude TO 0
@@ -649,17 +648,17 @@ METHOD LineChart() CLASS GDChart
    aDataOfHash := ::aDataOfHashes
    hDefs       := ::hDefs
 
-   x          := HGetValue( hDefs, "POSX" )
-   y          := HGetValue( hDefs, "POSY" )
-   nWidth     := HGetValue( hDefs, "WIDTH" )
-   nHeight    := HGetValue( hDefs, "HEIGHT" )
-   nMaxValue  := HGetValue( hDefs, "MAXVALUE" )
-   nMinValue  := HGetValue( hDefs, "MINVALUE" )
-   colorp     := HGetValue( hDefs, "COLOR" )
-   lShowAxis  := HGetValue( hDefs, "SHOWAXIS" )
-   lShowGrid  := HGetValue( hDefs, "SHOWGRID" )
-   cAxisPict  := HGetValue( hDefs, "AXISPICT" )
-   cFontPitch := HGetValue( hDefs, "FONTPITCH" )
+   x          := __HGetValue( hDefs, "POSX" )
+   y          := __HGetValue( hDefs, "POSY" )
+   nWidth     := __HGetValue( hDefs, "WIDTH" )
+   nHeight    := __HGetValue( hDefs, "HEIGHT" )
+   nMaxValue  := __HGetValue( hDefs, "MAXVALUE" )
+   nMinValue  := __HGetValue( hDefs, "MINVALUE" )
+   colorp     := __HGetValue( hDefs, "COLOR" )
+   lShowAxis  := __HGetValue( hDefs, "SHOWAXIS" )
+   lShowGrid  := __HGetValue( hDefs, "SHOWGRID" )
+   cAxisPict  := __HGetValue( hDefs, "AXISPICT" )
+   cFontPitch := __HGetValue( hDefs, "FONTPITCH" )
 
    DEFAULT x          TO 0
    DEFAULT y          TO 0
@@ -695,12 +694,12 @@ METHOD LineChart() CLASS GDChart
    nMax      := 0
    FOR EACH hElement IN aDataOfHash
       IF hElement:__enumIndex() == 1
-         nMax := hElement["VALUE"]
+         nMax := hElement[ "VALUE" ]
       ELSE
-         nMax := Max( nMax, hElement["VALUE"] )
+         nMax := Max( nMax, hElement[ "VALUE" ] )
       ENDIF
-      cLabel    := HGetValue( hElement, "LABEL" )
-      nMaxLabel := Max( nMaxLabel, Len( IIF( cLabel != NIL, cLabel, "" ) ) )
+      cLabel    := __HGetValue( hElement, "LABEL" )
+      nMaxLabel := Max( nMaxLabel, Len( iif( cLabel != NIL, cLabel, "" ) ) )
    NEXT
 
    // Before sum of values to determine percentual
@@ -708,12 +707,12 @@ METHOD LineChart() CLASS GDChart
    nMin      := 0
    FOR EACH hElement IN aDataOfHash
       IF hElement:__enumIndex() == 1
-         nMin := hElement["VALUE"]
+         nMin := hElement[ "VALUE" ]
       ELSE
-         nMin := Min( nMin, hElement["VALUE"] )
+         nMin := Min( nMin, hElement[ "VALUE" ] )
       ENDIF
-      cLabel    := HGetValue( hElement, "LABEL" )
-      nMinLabel := Max( nMinLabel, Len( IIF( cLabel != NIL, cLabel, "" ) ) )
+      cLabel    := __HGetValue( hElement, "LABEL" )
+      nMinLabel := Max( nMinLabel, Len( iif( cLabel != NIL, cLabel, "" ) ) )
    NEXT
 
    DEFAULT nLeftLabelSpace    TO nBorder + Max( Len( LTrim( Transform( nMax, cAxisPict ) ) ), Len( LTrim( Transform( nMin, cAxisPict ) ) ) ) * ::GetFontWidth() + nBorder
@@ -807,17 +806,17 @@ METHOD LineChart() CLASS GDChart
    // Second,
    aPoints := {}
    FOR EACH hElement IN aDataOfHash
-      cLabel    := HGetValue( hElement, "LABEL" )
-      //lFilled   := HGetValue( hElement, "FILLED" )
-      //nExtrude  := HGetValue( hElement, "EXTRUDE" )
-      pTile     := HGetValue( hElement, "TILE" )
+      cLabel    := __HGetValue( hElement, "LABEL" )
+      //lFilled   := __HGetValue( hElement, "FILLED" )
+      //nExtrude  := __HGetValue( hElement, "EXTRUDE" )
+      pTile     := __HGetValue( hElement, "TILE" )
       //IF nExtrude != NIL
       //   lExtruded := .T.
       //ELSE
       //   lExtruded := .F.
       //ENDIF
-      colorp    := HGetValue( hElement, "COLOR" )
-      nVal      := hElement["VALUE"]
+      colorp    := __HGetValue( hElement, "COLOR" )
+      nVal      := hElement[ "VALUE" ]
       nDim      := ( ( nVal + abs( nMinValue ) ) / nTotRange ) * nHeight
 
       //DEFAULT lFilled  TO .F.
@@ -831,7 +830,7 @@ METHOD LineChart() CLASS GDChart
          colorp := gdTiled
       ELSE
          if HB_ISARRAY( colorp )
-            colorp := ::SetColor( colorp[1], colorp[2], colorp[3] )
+            colorp := ::SetColor( colorp[ 1 ], colorp[ 2 ], colorp[ 3 ] )
          endif
       ENDIF
       //::Rectangle( nPosX + nBorder, ::Height() - ( nPosY + nDim ), nPosX + nSize - nBorder, ::Height() - nPosY, lFilled, colorp )
@@ -908,15 +907,10 @@ METHOD CloneDataFrom( oSrc )
 
    ::aSeries       := AClone( oSrc:aSeries )
    ::aDataOfHashes := AClone( oSrc:aDataOfHashes )
-   ::hDefs         := HB_HClone( oSrc:hDefs )
+   ::hDefs         := hb_HClone( oSrc:hDefs )
 
    RETURN Self
 
 
-STATIC FUNCTION HGetValue( hHash, cKey )
-   LOCAL nPos
-   LOCAL xVal
-   IF hHash != NIL
-      xVal := IIF( ( nPos := HB_HPos( hHash, cKey )) == 0, NIL, HB_HValueAt( hHash, nPos) )
-   ENDIF
-   RETURN xVal
+STATIC FUNCTION __HGetValue( hHash, cKey )
+   RETURN iif( HB_ISHASH( hHash ), hb_HGetDef( hHash, cKey ), NIL )

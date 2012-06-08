@@ -128,7 +128,7 @@ METHOD CreateBar( sx, sy, filename, ccolor ) CLASS TBarCode
    ::positionY := 0
    ::imWidth   := sx
 
-   IF !Empty( filename )
+   IF ! Empty( filename )
       ::filename  := filename
    ENDIF
 
@@ -138,11 +138,11 @@ METHOD CreateBar( sx, sy, filename, ccolor ) CLASS TBarCode
    ::Setfont( "Arial" )
 
    // configures Fontes
-   If        ::textfont == 1 ; ::SetFontSmall()
-   ElseIf ::textfont == 2 ; ::SetFontLarge()
-   ElseIf ::textfont == 3 ; ::SetFontMediumBold()
-   ElseIf ::textfont == 4 ; ::SetFontGiant()
-   ElseIf ::textfont == 5 ; ::SetFontTiny()
+   IF     ::textfont == 1 ; ::SetFontSmall()
+   ELSEIF ::textfont == 2 ; ::SetFontLarge()
+   ELSEIF ::textfont == 3 ; ::SetFontMediumBold()
+   ELSEIF ::textfont == 4 ; ::SetFontGiant()
+   ELSEIF ::textfont == 5 ; ::SetFontTiny()
    ENDIF
 
    ::SetFontPitch( ::textfont )
@@ -226,19 +226,19 @@ METHOD DrawSingleI25( pcode ) CLASS TBarCode
 
    ::positionX := 10
 
-   For j := 1 TO Len( pcode )
+   FOR j := 1 TO Len( pcode )
 
       imgBar := iif( j % 2 == 0, ::FillColor, ::BackColor )
       imgWid := iif( SubStr( pcode,j,1 ) == "0" , widthSlimBar, widthFatBar )
 
       end_y := ::maxHeight
 
-      For qw := 1 TO imgWid
+      FOR qw := 1 TO imgWid
          ::Line( ::positionX, 1, ::positionX, end_y, imgBar )
          ::nextX( .T. )
-      Next
+      NEXT
 
-   Next
+   NEXT
 
    RETURN NIL
 
@@ -292,12 +292,12 @@ METHOD CheckCode() CLASS TBarCode
    LOCAL lRet := .T.
    LOCAL i
 
-   For i := 1 TO Len( ::text )
+   FOR i := 1 TO Len( ::text )
       IF HB_ISSTRING( ::CheckValInArray( SubStr( ::text, i, 1 ) ) )
          ::DrawError( "Character  " + SubStr( ::text, i, 1 ) + " not allowed ." )
          lRet := .F.
       ENDIF
-   Next
+   NEXT
 
    RETURN lRet
 
