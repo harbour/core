@@ -77,6 +77,10 @@
 #include "zlib.h"
 #include "unzip.h"
 
+#if ZLIB_VERNUM < 0x1270
+#  define z_crc_t unsigned long
+#endif
+
 #include "hbapi.h"      /* for hb_xgrab()/hb_xfree() */
 
 #ifdef STDC
@@ -192,7 +196,7 @@ typedef struct
 
 #    ifndef NOUNCRYPT
     unsigned long keys[3];     /* keys defining the pseudo-random sequence */
-    const unsigned long* pcrc_32_tab;
+    const z_crc_t* pcrc_32_tab;
 #    endif
 } unz64_s;
 

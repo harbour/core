@@ -794,7 +794,7 @@ STATIC FUNCTION URL_GetFileName( cURL )
    nIdx := Len( aComponents )
 
    IF nIdx < 4 /* now what */
-      RETURN .F.
+      RETURN ""
    ENDIF
 
    cName := aComponents[ nIdx ]
@@ -803,7 +803,7 @@ STATIC FUNCTION URL_GetFileName( cURL )
    DO WHILE !( "." $ cName )
       cName := aComponents[ --nIdx ]
       IF nIdx < 4 /* don't drain all components */
-         RETURN .F.
+         RETURN ""
       ENDIF
    ENDDO
 
