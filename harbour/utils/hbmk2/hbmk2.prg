@@ -5297,7 +5297,11 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   cParam := hb_PathNormalize( cParam )
 
                   IF hbmk[ _HBMK_lInfo ]
-                     _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing (triggered by '%1$s' header): %2$s" ), cParam:__enumKey(), cParam ) )
+                     IF Left( cParam:__enumKey(), 1 ) == "."
+                        _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing (triggered by #require directive): %1$s" ), cParam ) )
+                     ELSE
+                        _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing (triggered by '%1$s' header): %2$s" ), cParam:__enumKey(), cParam ) )
+                     ENDIF
                   ENDIF
 
                   HBC_ProcessOne( hbmk, cParam, 1 )

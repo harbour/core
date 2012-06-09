@@ -4,5 +4,5 @@
 
 incpaths=.
 
-#libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 libs=3rd/minilzo/minilzo.hbc

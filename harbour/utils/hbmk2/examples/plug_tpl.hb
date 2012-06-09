@@ -42,7 +42,7 @@ FUNCTION hbmk_plugin_tpl( hbmk )
    CASE "pre_all"
 
       FOR EACH tmp IN hbmk[ "params" ]
-         hbmk_OutStd( hbmk, hb_StrFormat( "Parameter #%1$s: '%2$s'", hb_ntos( tmp:__enumIndex() ), tmp ) )
+         hbmk_OutStd( hbmk, hb_StrFormat( "Parameter #%1$d: '%2$s'", tmp:__enumIndex(), tmp ) )
       NEXT
       EXIT
 

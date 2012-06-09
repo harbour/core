@@ -169,7 +169,7 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
       SWITCH AllTrim( cLine )
       CASE "$DOC$"
          IF hEntry != NIL
-            _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: %2$s: $DOC$ without $END$", cFileName, hb_ntos( nLine ) ) )
+            _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: %2$d: $DOC$ without $END$", cFileName, nLine ) )
          ELSEIF ! Empty( hEntry )
             AAdd( aEntry, hEntry )
          ENDIF
@@ -183,7 +183,7 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
          EXIT
       CASE "$END$"
          IF hEntry == NIL
-            _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: %2$s: $END$ without $DOC$", cFileName, hb_ntos( nLine ) ) )
+            _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: %2$d: $END$ without $DOC$", cFileName, nLine ) )
          ELSEIF ! Empty( hEntry )
             AAdd( aEntry, hEntry )
          ENDIF
@@ -196,7 +196,7 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
             cLine := AllTrim( cLine )
             cSection := SubStr( cLine, 2, Len( cLine ) - 2 )
             IF cSection $ hEntry
-               _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: %2$s: Duplicate sections inside the same entry", cFileName, hb_ntos( nLine ) ) )
+               _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: %2$d: Duplicate sections inside the same entry", cFileName, nLine ) )
             ELSE
                hEntry[ cSection ] := ""
             ENDIF
@@ -211,13 +211,13 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
             ENDIF
             hEntry[ cSection ] += SubStr( cLine, nStartCol )
          ELSEIF ! Empty( cLine )
-            _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: %2$s: Content outside section", cFileName, hb_ntos( nLine ) ) )
+            _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: %2$d: Content outside section", cFileName, nLine ) )
          ENDIF
       ENDSWITCH
    NEXT
 
    IF hEntry != NIL
-      _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: %2$s: $DOC$ without $END$", cFileName, hb_ntos( nLine ) ) )
+      _HBDOC_ADD_MSG( aErrMsg, hb_StrFormat( "Warning: %1$s: %2$d: $DOC$ without $END$", cFileName, nLine ) )
    ENDIF
 
    RETURN

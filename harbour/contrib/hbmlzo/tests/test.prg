@@ -2,7 +2,9 @@
  * $Id$
  */
 
-/* hbmk test.prg -lbz2 -lhbbz2 -llzf -lhblzf -lminilzo -lhbmlzo -es2 -w3 */
+#require "hbmlzo"
+#require "hbbz2"
+#require "hblzf"
 
 #include "simpleio.ch"
 
@@ -20,7 +22,7 @@ PROCEDURE Main()
    LOCAL aRepl := { 10, 100, 1000, 10000, 100000, 1000000 }
 
    /* about miniLZO */
-   ?? "miniLZO -- mini subset of the LZO real-time data compression library" 
+   ?? "miniLZO -- mini subset of the LZO real-time data compression library"
    ? "Ver. " + ;
       lzo_version_string() + ;
       " (0x" + hb_numtohex( lzo_version() ) +"), " + ;
@@ -37,7 +39,7 @@ PROCEDURE Main()
       cCompressed := hb_lzo1x_1_compress( @cStr, @nLenC, @nResult )
       ShowResult( @cStr, @cCompressed, @nLenC, @nResult )
       IF nResult != LZO_E_OK
-         RETURN 
+         RETURN
       ENDIF
    NEXT
 
