@@ -1319,7 +1319,7 @@ HARBOUR
        header and/or lib dirs, built-in constants to make files or environment.
        No such thing is necessary and all of these is automatically handled
        by hbmk2. IOW start simple and don't be overbusy with "fine-tuning"
-       your configuration, if you need to, the problem is most probably
+       your configuration. If you need to, the problem is most probably
        elsewhere. It's also good idea to try with Harbour nightly binary or
        official release first.
    12. If you are to report a problem with Harbour itself, always provide
@@ -1398,7 +1398,7 @@ HARBOUR
             (this is not a requirement though)
           - You can access hbmk2 using absolute or relative paths, and
             it will work equally well:
-               'C:\hb20\bin\hbmk2 hello.prg'
+               'C:\hb\bin\hbmk2 hello.prg'
           - GNU Make, MSYS, or any other extra tool is *not* needed
             to build a Harbour application with above methods.
 
