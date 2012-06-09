@@ -96,8 +96,6 @@
          writing, most of them has one created.
          Thank you. [vszakats] */
 
-/* TODO: Switch to UTF8EX codepage internally. (non-priority) */
-
 /* TODO: Support debug/release modes. Some default setting can be set
          accordingly, and user can use it to further tweak settings. */
 /* TODO: Further clean hbmk context var usage (global scope, project scope,
@@ -2191,8 +2189,18 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          /* Simply ignore. They were already processed in the first pass. */
 
       CASE cParamL == "-quiet"           ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
-      CASE cParamL == "-quiet-"          ; hbmk[ _HBMK_lQuiet ] := .F.
-      CASE cParamL == "-info"            ; hbmk[ _HBMK_lInfo ] := .T.
+      CASE cParamL == "-quiet-"
+
+         IF ! lDumpInfo
+            hbmk[ _HBMK_lQuiet ] := .F.
+         ENDIF
+
+      CASE cParamL == "-info"
+
+         IF ! lDumpInfo
+            hbmk[ _HBMK_lInfo ] := .T.
+         ENDIF
+
       CASE cParamL == "-pause"           ; lPause := .T.
       CASE cParamL == "-hbexe"
 
@@ -2435,6 +2443,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE cParamL == "--hbinfo"
 
          lDumpInfo := .T.
+
+         hbmk[ _HBMK_lQuiet ] := .T.
+         hbmk[ _HBMK_lInfo ] := .F.
 
       CASE Left( cParamL, Len( "-jobs=" ) ) == "-jobs="
 

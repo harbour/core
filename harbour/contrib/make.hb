@@ -68,6 +68,8 @@ PROCEDURE Main( ... )
    LOCAL hProjectList
    LOCAL aParams
 
+   hb_cdpSelect( "UTF8EX" )
+
    s_cBase := ""
    s_cReBase := ""
    IF Empty( GetEnv( "HB_HOST_BIN_DIR" ) )
@@ -196,7 +198,7 @@ PROCEDURE Standalone( aParams, hProjectList )
       IF Empty( hProjectReqList )
          lCustom := .T.
       ELSE
-         OutStd( hb_StrFormat( "! Package %1$s... %2$s project(s)", hActions[ nAction ], hb_ntos( Len( hProjectReqList ) ) ) + hb_eol() )
+         OutStd( hb_StrFormat( "! Package %1$s... %2$d project(s)", hActions[ nAction ], Len( hProjectReqList ) ) + hb_eol() )
       ENDIF
    ENDIF
 
@@ -387,7 +389,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
    /* Preprocessing */
 
    IF Len( hProjectReqList ) > 1
-      OutStd( hb_StrFormat( "! Calculating build order for %1$s projects...", hb_ntos( Len( hProjectReqList ) ) ) + hb_eol() )
+      OutStd( hb_StrFormat( "! Calculating build order for %1$d projects...", Len( hProjectReqList ) ) + hb_eol() )
    ENDIF
 
    aPairList := {}
@@ -399,7 +401,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
 
    aSortedList := TopoSort( aPairList )
 
-   /* Add referenced project not present on our list and featuring an .hbp file */
+   /* Add referenced project not present in our list and featuring an .hbp file */
    FOR EACH cProject IN aSortedList
       IF !( cProject $ hProjectList )
          IF hb_FileExists( s_cBase + s_cHome + cProject )
@@ -570,7 +572,7 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
    ENDIF
 
    IF nErrorLevel != 0
-      OutStd( hb_StrFormat( "! '%1$s' returned status: %2$s", cProjectPath, hb_ntos( nErrorLevel ) ) + hb_eol() )
+      OutStd( hb_StrFormat( "! '%1$s' returned status: %2$d", cProjectPath, nErrorLevel ) + hb_eol() )
    ENDIF
 
    RETURN nErrorLevel
