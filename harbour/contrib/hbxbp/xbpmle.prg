@@ -312,7 +312,7 @@ METHOD XbpMLE:setMarked( aStartEnd )
 METHOD XbpMLE:insert( nPos, cString )
    LOCAL qCursor
 
-   IF hb_isChar( cString )
+   IF HB_ISSTRING( cString )
       qCursor := ::oWidget:textCursor()
       IF HB_ISNUMERIC( nPos ) .AND. nPos >= 0
          qCursor:setPosition( nPos )

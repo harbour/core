@@ -315,7 +315,7 @@ METHOD XbpRtf:find( cSearchString, nStart, nEnd, nOptions )
    HB_SYMBOL_UNUSED( nEnd )
    HB_SYMBOL_UNUSED( nOptions )
 
-   IF hb_isChar( cSearchString )
+   IF HB_ISSTRING( cSearchString )
       ::oTextDocument := ::oWidget:document()
       ::oTextCursor   := ::oTextDocument:find( cSearchString )
       ::oCurCursor         := ::oTextCursor
@@ -531,7 +531,7 @@ METHOD XbpRtf:selFontName( ... )                            // ""
    LOCAL xRet := 0
    LOCAL aP := hb_aParams()
 
-   IF len( aP ) >= 1 .and. hb_isChar( aP[ 1 ] )
+   IF len( aP ) >= 1 .and. HB_ISSTRING( aP[ 1 ] )
       ::oTextCharFormat := ::oCurCursor:charFormat()
       IF ::oTextCharFormat:isValid()
          xRet := ::oTextCharFormat:fontFamily()
@@ -676,7 +676,7 @@ METHOD XbpRtf:selText( ... )                                // ""
    IF ::oCurCursor:hasSelection()
       xRet := ::oCurCursor:selectedText()
    ENDIF
-   IF len( aP ) >= 1 .and. hb_isChar( aP[ 1 ] )
+   IF len( aP ) >= 1 .and. HB_ISSTRING( aP[ 1 ] )
       ::oCurCursor:removeSelectedText()
       ::oCurCursor:insertText( aP[ 1 ] )
    ENDIF
@@ -703,7 +703,7 @@ METHOD XbpRtf:text( ... )                                   // ""
    LOCAL xRet := ::oWidget:toPlainText()
    LOCAL aP := hb_aParams()
 
-   IF len( aP ) == 1 .and. hb_isChar( aP[ 1 ] )
+   IF len( aP ) == 1 .and. HB_ISSTRING( aP[ 1 ] )
       ::oWidget:setPlainText( aP[ 1 ] )
    ENDIF
 
@@ -717,7 +717,7 @@ METHOD XbpRtf:textRTF( ... )                                // ""
    LOCAL xRet := ::oWidget:toHtml()
    LOCAL aP := hb_aParams()
 
-   IF len( aP ) == 1 .and. hb_isChar( aP[ 1 ] )
+   IF len( aP ) == 1 .and. HB_ISSTRING( aP[ 1 ] )
       ::oWidget:setHTML( aP[ 1 ] )
    ENDIF
 

@@ -1331,7 +1331,7 @@ METHOD IdeProjManager:promptForPath( cObjPathName, cTitle, cObjFileName, cObjPat
       cTemp := ""
    ENDIF
 
-   IF !hb_isChar( cObjFileName )
+   IF !HB_ISSTRING( cObjFileName )
       cPath := hbide_fetchADir( ::oDlg, cTitle, cTemp )
 
    ELSE
@@ -1350,11 +1350,11 @@ METHOD IdeProjManager:promptForPath( cObjPathName, cTitle, cObjFileName, cObjPat
       ENDIF
       ::oUI:qObj[ cObjPathName ]:setText( cPath )
 
-      IF hb_isChar( cObjPath2 ) .AND. Empty( ::oUI:qObj[ cObjPath2 ]:Text() )
+      IF HB_ISSTRING( cObjPath2 ) .AND. Empty( ::oUI:qObj[ cObjPath2 ]:Text() )
          ::oUI:qObj[ cObjPath2 ]:setText( cPath )
       ENDIF
 
-      IF hb_isChar( cObjPath3 ) .AND. Empty( ::oUI:qObj[ cObjPath3 ]:Text() )
+      IF HB_ISSTRING( cObjPath3 ) .AND. Empty( ::oUI:qObj[ cObjPath3 ]:Text() )
          ::oUI:qObj[ cObjPath3 ]:setText( cPath )
       ENDIF
    ENDIF

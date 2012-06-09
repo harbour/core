@@ -68,12 +68,12 @@ CREATE CLASS HbQtObjectHandler
    VAR    __pEvents                               PROTECTED
 
    VAR    hEvents                                 INIT {=>}
-   
+
    METHOD hasValidPointer()
 
    METHOD connect( cnEvent, bBlock )
    METHOD disconnect( cnEvent )
-   
+
    DESTRUCTOR _destroy()
    ERROR HANDLER onError()
 
@@ -118,7 +118,7 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
 
    IF ! __objDerivedFrom( Self, "QOBJECT" )
       RETURN .f.
-   ENDIF  
+   ENDIF
 
    IF ! HB_ISBLOCK( bBlock )
       RETURN .f.
@@ -127,11 +127,11 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
    IF hb_hHasKey( ::hEvents, cnEvent )
       IF HB_ISNUMERIC( ::hEvents[ cnEvent ] )
          ::__pEvents:hbDisconnect( Self, cnEvent )
-      ELSE 
+      ELSE
          ::__pSlots:hbDisconnect( Self, cnEvent )
-      ENDIF  
+      ENDIF
       hb_hDel( ::hEvents, cnEvent )
-   ENDIF 
+   ENDIF
 
    SWITCH ValType( cnEvent )
    CASE "C"
@@ -175,7 +175,7 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
 
    OTHERWISE
       nResult := 99
-      
+
    ENDSWITCH
 
    __hbqt_error( 1200 + nResult )
@@ -185,15 +185,15 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
 
 METHOD HbQtObjectHandler:disconnect( cnEvent )
    LOCAL nResult := 0
-   
+
    IF ! __objDerivedFrom( Self, "QOBJECT" )
       RETURN .f.
-   ENDIF  
+   ENDIF
 
    IF ! hb_hHasKey( ::hEvents, cnEvent )
       RETURN .f.
-   ENDIF       
-   
+   ENDIF
+
    SWITCH ValType( cnEvent )
    CASE "C"
       IF ! empty( ::__pSlots )
@@ -231,7 +231,7 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 
    OTHERWISE
       nResult := 99
-      
+
    ENDSWITCH
 
    __hbqt_error( 1300 + nResult )
@@ -241,38 +241,38 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 
 METHOD HbQtObjectHandler:_destroy()
    LOCAL cnEvent
-   
-#ifdef __HBQT_REVAMP__   
-   HB_TRACE( HB_TR_DEBUG, "  _destroy()", __objDerivedFrom( Self, "QOBJECT" ), __objGetClsName( Self ) )      
+
+#ifdef __HBQT_REVAMP__
+   HB_TRACE( HB_TR_DEBUG, "  _destroy()", __objDerivedFrom( Self, "QOBJECT" ), __objGetClsName( Self ) )
    __hbqt_destroy( Self )
 #endif
-   
+
    IF ! __objDerivedFrom( Self, "QOBJECT" )
       RETURN NIL
-   ENDIF 
+   ENDIF
    IF empty( ::__pSlots ) .AND. empty( ::__pEvents )
       RETURN NIL
-   ENDIF 
-   
+   ENDIF
+
    HB_TRACE( HB_TR_DEBUG, "  _destroy()", __objDerivedFrom( Self, "QOBJECT" ), "pSlots", valtype( ::__pSlots ), "pEvents", valtype( ::__pEvents ) )
-      
+
    FOR EACH cnEvent IN ::hEvents
-      IF HB_ISNUMERIC( cnEvent ) .AND. ! empty( ::__pEvents ) 
+      IF HB_ISNUMERIC( cnEvent ) .AND. ! empty( ::__pEvents )
          HB_TRACE( HB_TR_DEBUG, "  _destroy()", ".....N.....", cnEvent )
          ::__pEvents:hbDisconnect( Self, cnEvent )
-      ELSEIF hb_isChar( cnEvent ) .AND. ! empty( ::__pSlots )
+      ELSEIF HB_ISSTRING( cnEvent ) .AND. ! empty( ::__pSlots )
          HB_TRACE( HB_TR_DEBUG, "  _destroy()", ".....C.....", cnEvent )
          ::__pSlots:hbDisconnect( Self, cnEvent )
-      ENDIF       
-   NEXT  
-   
+      ENDIF
+   NEXT
+
    ::hEvents := NIL
-   
+
    ::__pSlots := NIL
    ::__pEvents := NIL
-   
+
    HB_TRACE( HB_TR_DEBUG, "  _destroy()", "Exiting..." )
-   
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/

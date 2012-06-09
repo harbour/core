@@ -224,7 +224,7 @@ METHOD XbpStatusBar:delItem( nItemORcKey )
 METHOD XbpStatusBar:getItem( nItemORcKey )
    LOCAL nIndex := 0, oPanel
 
-   IF hb_isChar( nItemORcKey  )
+   IF HB_ISSTRING( nItemORcKey  )
       nIndex := ascan( ::aItems, {|o| o:key == nItemORcKey } )
 
    ELSEIF HB_ISNUMERIC(  nItemORcKey  )

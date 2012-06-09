@@ -471,7 +471,7 @@ METHOD XbpTreeViewItem:setExpandedImage( nResIdoBitmap )
 
 METHOD XbpTreeViewItem:setImage( xIcon )
 
-   ::oWidget:setIcon( 0, iif( hb_isChar( xIcon ), QIcon( xIcon ), xIcon ) )
+   ::oWidget:setIcon( 0, iif( HB_ISSTRING( xIcon ), QIcon( xIcon ), xIcon ) )
 
    RETURN self
 

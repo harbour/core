@@ -116,17 +116,17 @@ METHOD XbpFileDialog:create( oParent, oOwner, aPos )
 
    ::oWidget := QFileDialog( ::pParent )
 
-#if 0   
+#if 0
    ::oWidget:setStyle( AppDesktop():style() )
    ::setStyle()
    ::setColorBG( GraMakeRGBColor( { 255,255,255 } ) )
    ::setColorFG( GraMakeRGBColor( { 0,0,0 } ) )
-#endif   
+#endif
 
    ::oWidget:setOption( QFileDialog_DontResolveSymlinks, .t. )
-   
+
    ::postCreate()
-   
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -143,7 +143,7 @@ METHOD XbpFileDialog:destroy()
       HB_TRACE( HB_TR_DEBUG, "XbpFileDialog:destroy()" )
       ::xbpWindow:destroy()
    ENDIF
-   RETURN NIL 
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -152,7 +152,7 @@ METHOD XbpFileDialog:connect()
    ::oWidget:connect( "finished(int)"             , {|| ::disconnect() } )
    ::oWidget:connect( "rejected()"                , {|p| ::execSlot( "rejected()"                , p ) } )
 
-#if 0      
+#if 0
    ::oWidget:connect( "accepted()"                , {|p| ::execSlot( "accepted()"                , p ) } )
    ::oWidget:connect( "finished(int)"             , {|p| ::execSlot( "finished(int)"             , p ) } )
    ::oWidget:connect( "currentChanged(QString)"   , {|p| ::execSlot( "currentChanged(QString)"   , p ) } )
@@ -162,7 +162,7 @@ METHOD XbpFileDialog:connect()
    ::oWidget:connect( "filterSelected(QString)"   , {|p| ::execSlot( "filterSelected(QString)"   , p ) } )
 #endif
 
-   RETURN NIL 
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -170,8 +170,8 @@ METHOD XbpFileDialog:disconnect()
 
    ::oWidget:disconnect( "rejected()"    )
    ::oWidget:disconnect( "finished(int)" )
-   
-#if 0   
+
+#if 0
    ::oWidget:disconnect( "accepted()"                 )
    ::oWidget:disconnect( "finished(int)"              )
    ::oWidget:disconnect( "currentChanged(QString)"    )
@@ -181,7 +181,7 @@ METHOD XbpFileDialog:disconnect()
    ::oWidget:disconnect( "filterSelected(QString)"    )
 #endif
 
-   RETURN NIL 
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -233,11 +233,11 @@ METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFile
       ::oWidget:setDefaultSuffix( ::defExtension )
    ENDIF
 
-   IF hb_isChar( ::title )
+   IF HB_ISSTRING( ::title )
       ::oWidget:setWindowTitle( ::title )
    ENDIF
 
-   IF hb_isChar( cDefaultFile )
+   IF HB_ISSTRING( cDefaultFile )
       hb_fNameSplit( cDefaultFile, @cPath, @cFile, @cExt )
       //::oWidget:setDirectory( cFile )
       ::oWidget:setDirectory( cDefaultFile )
@@ -290,11 +290,11 @@ METHOD XbpFileDialog:saveAs( cDefaultFile, lFileList, lCenter )
       ::oWidget:setDefaultSuffix( ::defExtension )
    ENDIF
 
-   IF hb_isChar( ::title )
+   IF HB_ISSTRING( ::title )
       ::oWidget:setWindowTitle( ::title )
    ENDIF
 
-   IF hb_isChar( cDefaultFile )
+   IF HB_ISSTRING( cDefaultFile )
       ::oWidget:setDirectory( cDefaultFile )
    ENDIF
 

@@ -174,7 +174,7 @@ METHOD WvgDataRef:setData( xValue, mp2 )
       ENDIF
 
    CASE ::className == "EDIT"
-      IF hb_isChar( ::sl_editBuffer )
+      IF HB_ISSTRING( ::sl_editBuffer )
          WVG_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::sl_editBuffer )
       ENDIF
 

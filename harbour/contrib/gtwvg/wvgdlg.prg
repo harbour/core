@@ -150,7 +150,7 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       if HB_ISNUMERIC( ::icon )
          hb_gtInfo( HB_GTI_ICONRES, ::icon )
 
-      elseif hb_isChar( ::icon )
+      elseif HB_ISSTRING( ::icon )
          hb_gtInfo( HB_GTI_ICONFILE, ::icon )
 
       endif

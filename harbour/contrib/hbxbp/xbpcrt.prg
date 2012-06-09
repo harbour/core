@@ -306,7 +306,7 @@ METHOD XbpCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF ! empty( ::toolTipText )
       ::oWidget:setTooltip( ::toolTipText )
    ENDIF
-   IF hb_isChar( ::icon )
+   IF HB_ISSTRING( ::icon )
       ::oWidget:setWindowIcon( QIcon( ::icon ) )
    ENDIF
 

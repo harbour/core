@@ -209,7 +209,7 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF ! empty( ::title )
       ::oWidget:setWindowTitle( ::title )
    ENDIF
-   IF hb_isChar( ::icon )
+   IF HB_ISSTRING( ::icon )
       ::oWidget:setWindowIcon( QIcon( ::icon ) )
    ENDIF
 
@@ -288,7 +288,7 @@ METHOD XbpDialog:destroy()
       ::oMdi := NIL
    ENDIF
 
-   RETURN NIL 
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

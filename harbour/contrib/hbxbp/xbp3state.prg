@@ -183,7 +183,7 @@ METHOD Xbp3State:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
 METHOD Xbp3State:setCaption( xCaption )
 
-   IF hb_isChar( xCaption )
+   IF HB_ISSTRING( xCaption )
       ::caption := xCaption
       ::oWidget:setText( xCaption )
    ENDIF

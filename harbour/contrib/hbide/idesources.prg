@@ -504,11 +504,11 @@ METHOD IdeSourcesManager:selectSource( cMode, cFile, cTitle, cDftPath )
       ENDIF
 
    ELSEIF cMode == "save"
-      oDlg:title       := iif( !hb_isChar( cTitle ), "Save as...", cTitle )
+      oDlg:title       := iif( !HB_ISSTRING( cTitle ), "Save as...", cTitle )
       oDlg:center      := .t.
       oDlg:defExtension:= 'prg'
 
-      IF hb_isChar( cFile ) .AND. !Empty( cFile )
+      IF HB_ISSTRING( cFile ) .AND. !Empty( cFile )
          IF Right( cFile, 1 ) $ '/\'
             cPath := cFile
          ELSE

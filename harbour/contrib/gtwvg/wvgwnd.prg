@@ -230,7 +230,7 @@ CLASS WvgWindow  INHERIT  WvgPartHandler
    METHOD   HandleEvent()                         INLINE EVENT_UNHANDELLED
    METHOD   isEnabled()                           INLINE ::is_enabled
    METHOD   isVisible()                           INLINE ! ::is_hidden
-   METHOD   setColorFG( nRGB )                    INLINE ::clr_FG := iif( hb_isChar( nRGB ), Wvt_GetRGBColorByString( nRGB, 0 ), nRGB ), ::invalidateRect()
+   METHOD   setColorFG( nRGB )                    INLINE ::clr_FG := iif( HB_ISSTRING( nRGB ), Wvt_GetRGBColorByString( nRGB, 0 ), nRGB ), ::invalidateRect()
 
    METHOD   enter( xParam )                       SETGET
    METHOD   leave( xParam )                       SETGET
@@ -491,7 +491,7 @@ METHOD WvgWindow:lockUpdate()
 METHOD WvgWindow:setColorBG( nRGB )
    LOCAL hBrush
 
-   IF hb_isChar( nRGB )
+   IF HB_ISSTRING( nRGB )
       nRGB := Wvt_GetRGBColorByString( nRGB, 1 )
    ENDIF
    IF HB_ISNUMERIC( nRGB )
@@ -613,7 +613,7 @@ METHOD WvgWindow:isDerivedFrom( cClassORoObject )
 
    /* Compares without Xbp or Wvg prefixes  */
 
-   IF hb_isChar( cClassORoObject )
+   IF HB_ISSTRING( cClassORoObject )
       IF upper( substr( cClassORoObject,4 ) ) == upper( substr( cCls,4 ) )
          lTrue := .t.
       ENDIF
@@ -1349,7 +1349,7 @@ METHOD WvgWindow:getPosAndSize( aPs, aSz )
 
 METHOD WvgWindow:toolTipText( cText )
 
-   IF hb_isChar( cText )
+   IF HB_ISSTRING( cText )
       ::s_toolTipText := cText
       IF WVG_IsWindow( ::hWndTT )
          WVG_SetTooltipText( ::hWnd, ::hWndTT, ::s_toolTipText )

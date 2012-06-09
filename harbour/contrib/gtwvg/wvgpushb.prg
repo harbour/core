@@ -122,7 +122,7 @@ METHOD WvgPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    IF HB_ISNUMERIC( ::caption )
       ::style += BS_BITMAP
-   ELSEIF hb_isChar( ::caption )
+   ELSEIF HB_ISSTRING( ::caption )
       IF ".ICO" == upper( right( ::caption, 4 ) )
          ::style += BS_ICON
       ELSEIF ".BMP" == upper( right( ::caption, 4 ) )
@@ -223,9 +223,9 @@ METHOD WvgPushButton:setCaption( xCaption, cDll )
    DEFAULT xCaption TO ::caption
    HB_SYMBOL_UNUSED( cDll )
 
-   IF hb_isChar( xCaption )
+   IF HB_ISSTRING( xCaption )
       ::caption := xCaption
-      IF ".ICO" == upper( right( ::caption, 4 ) )
+      IF ".ico" == lower( right( ::caption, 4 ) )
          WVG_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, WVG_LoadImage( ::caption, 2, IMAGE_ICON ) )
       ELSEIF ".BMP" == upper( right( ::caption, 4 ) )
          WVG_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_BITMAP, WVG_LoadImage( ::caption, 2, IMAGE_BITMAP ) )

@@ -182,7 +182,7 @@ METHOD XbpCheckBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
 METHOD XbpCheckBox:setCaption( xCaption )
 
-   IF hb_isChar( xCaption )
+   IF HB_ISSTRING( xCaption )
       ::caption := xCaption
       ::oWidget:setText( xCaption )
    ENDIF

@@ -1100,7 +1100,7 @@ METHOD IdeDocks:setView( cView )
       EXIT
 
    OTHERWISE
-      IF ( n := ascan( ::aViews, {|o| iif( hb_isChar( o:oWidget:objectName() ), o:oWidget:objectName() == cView, .f. ) } ) ) > 0
+      IF ( n := ascan( ::aViews, {|o| iif( HB_ISSTRING( o:oWidget:objectName() ), o:oWidget:objectName() == cView, .f. ) } ) ) > 0
          ::oIde:cWrkView := cView
          ::oIde:qTabWidget := ::aViews[ n ]:oTabWidget:oWidget
          ::oIde:oTabParent := ::aViews[ n ]
@@ -1384,15 +1384,15 @@ METHOD IdeDocks:buildToolBarPanels()
    aadd( aBtns, { ::oUiSrcDock          , "fileprg"       } )
    aadd( aBtns, {} )
    aadd( aBtns, { ::oDockB2             , "builderror"    } )
-   
+
    ::oIde:qTBarDocks := HBQToolBar():new( "ToolBar_Docks" )
-   
+
    ::qTBarDocks:cName := "ToolBar_Docks"
    ::qTBarDocks:allowedAreas := Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea
    ::qTBarDocks:size := qSize
-   
+
    ::qTBarDocks:create()
-   
+
    ::qTBarDocks:setStyleSheet( GetStyleSheet( "QToolBarLR5", ::nAnimantionMode ) )
    ::qTBarDocks:setWindowTitle( "ToolBar: Dockable Widgets" )
    ::qTBarDocks:setToolButtonStyle( Qt_ToolButtonIconOnly )
@@ -2023,4 +2023,3 @@ METHOD IdeDocks:buildUISrcDock()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-

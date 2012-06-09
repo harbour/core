@@ -223,7 +223,7 @@ METHOD XbpPushButton:setCaption( xCaption, cDll )
 
    HB_SYMBOL_UNUSED( cDll )
 
-   IF hb_isChar( xCaption )
+   IF HB_ISSTRING( xCaption )
       ::caption := xCaption
 
       IF hb_FileExists( xCaption )

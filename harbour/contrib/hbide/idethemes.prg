@@ -317,7 +317,7 @@ METHOD IdeThemes:contains( cTheme )
 
 METHOD IdeThemes:load( cFile )
 
-   IF hb_isChar( cFile ) .AND. !empty( cFile ) .AND. hb_FileExists( cFile )
+   IF HB_ISSTRING( cFile ) .AND. !empty( cFile ) .AND. hb_FileExists( cFile )
       ::aIni:= hbide_readSource( cFile )
       ::parseINI()
       ::lDefault := .f.
@@ -352,7 +352,7 @@ METHOD IdeThemes:getThemeAttribute( cAttr, cTheme )
    LOCAL nTheme, aAttr := {}
 
    IF !empty( cAttr )
-      IF !empty( cTheme ) .and. hb_isChar( cTheme ) .and. ( nTheme := ascan( ::aThemes, {|e_| e_[ 1 ] == cTheme } ) ) > 0
+      IF !empty( cTheme ) .and. HB_ISSTRING( cTheme ) .and. ( nTheme := ascan( ::aThemes, {|e_| e_[ 1 ] == cTheme } ) ) > 0
          aAttr := GetKeyValue( ::aThemes[ nTheme, 2 ], cAttr )
       ENDIF
    ENDIF

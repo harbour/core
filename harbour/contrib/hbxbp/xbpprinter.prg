@@ -149,7 +149,7 @@ METHOD XbpPrinter:create( cDeviceName, nSpoolFormat, cDeviceParams )
 
    ::oWidget := QPrinter()
 
-   IF hb_isChar( cDeviceName )
+   IF HB_ISSTRING( cDeviceName )
       ::oWidget:setPrinterName( cDeviceName )
    ENDIF
    IF !::oWidget:isValid()
@@ -460,7 +460,7 @@ METHOD XbpPrinter:setPaperBin( nBin )
 METHOD XbpPrinter:setPrintFile( cFileName )
    LOCAL cOldFileName := ::oWidget:outputFileName()
 
-   IF hb_isChar( cFileName )
+   IF HB_ISSTRING( cFileName )
       ::oWidget:setOutputFileName( cFileName )
    ENDIF
 

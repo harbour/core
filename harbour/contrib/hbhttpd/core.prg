@@ -1559,7 +1559,7 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
          CASE "="
             IF HB_HHasKey( aData, aInstr[2] )
                xValue := aData[aInstr[2]]
-               IF HB_ISCHAR( xValue )
+               IF HB_ISSTRING( xValue )
                   cRet += UHtmlEncode( xValue )
                ELSEIF HB_ISNUMERIC( xValue )
                   cRet += UHtmlEncode( Str( xValue ) )
@@ -1580,7 +1580,7 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
          CASE ":"
             IF HB_HHasKey( aData, aInstr[2] )
                xValue := aData[aInstr[2]]
-               IF HB_ISCHAR( xValue )
+               IF HB_ISSTRING( xValue )
                   cRet += xValue
                ELSEIF HB_ISNUMERIC( xValue )
                   cRet += Str( xValue )

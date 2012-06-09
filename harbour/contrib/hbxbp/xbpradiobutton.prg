@@ -180,7 +180,7 @@ METHOD XbpRadioButton:configure( oParent, oOwner, aPos, aSize, aPresParams, lVis
 
 METHOD XbpRadioButton:setCaption( xCaption )
 
-   IF hb_isChar( xCaption )
+   IF HB_ISSTRING( xCaption )
       ::caption := xCaption
       ::oWidget:setText( xCaption )
    ENDIF

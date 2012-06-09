@@ -4207,7 +4207,7 @@ FUNCTION SetHelpStr( cStr )
    STATIC s_str := ""
 
    o_str := s_str
-   IF hb_isChar( cStr )
+   IF HB_ISSTRING( cStr )
       s_str := cStr
    ENDIF
 

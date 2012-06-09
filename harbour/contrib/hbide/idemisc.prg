@@ -99,7 +99,7 @@ FUNCTION hbide_setProjectOutputPath( cPath )
 
    oldProjPath := cProjPath
 
-   IF hb_isChar( cPath )
+   IF HB_ISSTRING( cPath )
       cProjPath := cPath
    ENDIF
 
@@ -117,7 +117,7 @@ FUNCTION hbide_setProjectTitle( cTitle )
    ENDIF
    oldProjTitle := cProjTitle
 
-   IF hb_isChar( cTitle )
+   IF HB_ISSTRING( cTitle )
       cProjTitle := cTitle
    ENDIF
 
@@ -286,7 +286,7 @@ FUNCTION hbide_fetchAFile( oWnd, cTitle, aFlt, cDftDir, cDftSuffix )
    oDlg:title       := cTitle
    oDlg:center      := .t.
    oDlg:fileFilters := aFlt
-   IF hb_isChar( cDftSuffix )
+   IF HB_ISSTRING( cDftSuffix )
       oDlg:oWidget:setDefaultSuffix( cDftSuffix )
    ENDIF
 
@@ -307,7 +307,7 @@ FUNCTION hbide_saveAFile( oWnd, cTitle, aFlt, cDftFile, cDftSuffix )
    oDlg:title       := cTitle
    oDlg:center      := .t.
    oDlg:fileFilters := aFlt
-   IF hb_isChar( cDftSuffix )
+   IF HB_ISSTRING( cDftSuffix )
       oDlg:oWidget:setDefaultSuffix( cDftSuffix )
    ENDIF
 
@@ -334,7 +334,7 @@ FUNCTION hbide_fetchADir( oWnd, cTitle, cDftDir )
 
    cFile := oDlg:open( cDftDir, , .f. )
    oDlg:destroy()
-   IF hb_isChar( cFile )
+   IF HB_ISSTRING( cFile )
       //cFile := strtran( cFile, "/", hb_ps() )
       RETURN cFile
    ENDIF
@@ -380,7 +380,7 @@ FUNCTION hbide_evalAsString( cExp )
       cValue := cExp
    END SEQUENCE
 
-   IF !hb_isChar( cValue )
+   IF !HB_ISSTRING( cValue )
       cValue := ""
    ENDIF
 
@@ -1915,7 +1915,7 @@ FUNCTION hbide_SetWrkFolderLast( cPathFile )
    ENDIF
    cOldPath := cPath
 
-   IF hb_isChar( cPathFile )
+   IF HB_ISSTRING( cPathFile )
       hb_fNameSplit( cPathFile, @cPth )
       cPath := cPth
    ENDIF

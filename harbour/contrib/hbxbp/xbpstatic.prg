@@ -296,7 +296,7 @@ METHOD XbpStatic:setCaption( xCaption, cDll )
             ENDIF
             ::oWidget:setPixmap( QPixmap():fromImage( ::caption:oWidget ) )
 
-         ELSEIF hb_isChar( ::caption )               /* $HARBOUR$ */
+         ELSEIF HB_ISSTRING( ::caption )             /* $HARBOUR$ */
             IF ::options == XBPSTATIC_BITMAP_SCALED
                ::setCSSAttribute( "XBPSTATIC_BITMAP_SCALED"   , 'border-image: url(' + ::caption + ');' )
             ELSE

@@ -169,16 +169,16 @@ METHOD DataRef:setData( xValue, mp2 )
       ENDIF
 
    CASE ::isDerivedFrom( "XBPSLE" )
-      IF hb_isChar( ::sl_editBuffer )
+      IF HB_ISSTRING( ::sl_editBuffer )
          ::oWidget:setText( ::sl_editBuffer )
       ENDIF
    CASE ::isDerivedFrom( "XBPMLE" )
-      IF hb_isChar( ::sl_editBuffer )
+      IF HB_ISSTRING( ::sl_editBuffer )
          ::oWidget:setPlainText( ::sl_editBuffer )
       ENDIF
    #if 0
    CASE cClass $ "XBPCOMBOBOX"
-      IF hb_isChar( ::sl_editBuffer )
+      IF HB_ISSTRING( ::sl_editBuffer )
          ::oWidget:setText( ::sl_editBuffer )
       ENDIF
    #endif

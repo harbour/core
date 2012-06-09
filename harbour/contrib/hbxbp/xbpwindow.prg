@@ -407,7 +407,7 @@ METHOD XbpWindow:postCreate()
 
    ::status := iif( ::oWidget:hasValidPointer(), XBP_STAT_CREATE, XBP_STAT_FAILURE )
 
-   IF ! empty( ::toolTipText ) .AND. hb_isChar( ::toolTipText )
+   IF ! empty( ::toolTipText ) .AND. HB_ISSTRING( ::toolTipText )
       ::oWidget:setTooltip( ::toolTipText )
    ENDIF
 
@@ -565,7 +565,7 @@ METHOD XbpWindow:clearSlots()
 METHOD XbpWindow:grabEvent( nEvent, oEvent )
    LOCAL nXbpKey, oP0, oP1, oObj_O, oObj_N
 
-   HB_TRACE( HB_TR_DEBUG, nEvent, valtype( oEvent ), __objGetClsName( oEvent ) )   
+   HB_TRACE( HB_TR_DEBUG, nEvent, valtype( oEvent ), __objGetClsName( oEvent ) )
 
    SWITCH ( nEvent )
 
@@ -1218,7 +1218,7 @@ METHOD XbpWindow:isDerivedFrom( cClassORoObject )
 
    /* Compares without Xbp or Wvg prefixes  */
 
-   IF hb_isChar( cClassORoObject )
+   IF HB_ISSTRING( cClassORoObject )
       RETURN __clsParent( Self:classH, cClassORoObject )
 
    ELSEIF HB_ISOBJECT( cClassORoObject )
@@ -1337,7 +1337,7 @@ METHOD XbpWindow:hasInputFocus()
 METHOD XbpWindow:title( cTitle )
    LOCAL xTitle := ::cTitle
 
-   IF hb_isChar( cTitle )
+   IF HB_ISSTRING( cTitle )
       ::cTitle := cTitle
       IF HB_ISOBJECT( ::oWidget )
          ::oWidget:setWindowTitle( ::cTitle )

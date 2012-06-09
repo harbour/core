@@ -1261,13 +1261,13 @@ METHOD HbqReportsManager:buildToolbar()
    qTBar:addToolButton( "Save"     , "Save Report"           , app_image( "save3"       ), {|| ::execEvent( "buttonSave_clicked"      ) } )
    qTBar:addToolButton( "Close"    , "Close Report"          , app_image( "close3"      ), {|| ::execEvent( "buttonClose_clicked"     ) } )
    qTBar:addToolButton( "Print"    , "Print Report"          , app_image( "print"       ), {|| ::execEvent( "buttonPrint_clicked"     ) } )
-   qTBar:addSeparator()                                                                                                               
+   qTBar:addSeparator()
    qTBar:addToolButton( "ToBack"   , "Push to back"          , app_image( "toback"      ), {|| ::execEvent( "buttonToBack_clicked"    ) }, .f., .f. )
    qTBar:addToolButton( "ToFront"  , "Bring to front"        , app_image( "tofront"     ), {|| ::execEvent( "buttonToFront_clicked"   ) }, .f., .f. )
-   qTBar:addSeparator()                                                                                                               
+   qTBar:addSeparator()
    qTBar:addToolButton( "RotateL"  , "Rotate anti-clock wise", app_image( "unload_1"    ), {|| ::execEvent( "buttonRotateL_clicked"   ) }, .f., .f. )
    qTBar:addToolButton( "RotateR"  , "Rotate clock wise"     , app_image( "load_1"      ), {|| ::execEvent( "buttonRotateR_clicked"   ) }, .f., .f. )
-   qTBar:addSeparator()                                                                                                               
+   qTBar:addSeparator()
    qTBar:addToolButton( "Portrait" , "Portrait orientation"  , app_image( "r-portrait"  ), {|| ::execEvent( "buttonPortrait_clicked"  ) }, .f., .f. )
    qTBar:addToolButton( "Landscape", "Landscape orientation" , app_image( "r-landscape" ), {|| ::execEvent( "buttonLandscape_clicked" ) }, .f., .f. )
    qTBar:addSeparator()
@@ -1875,7 +1875,7 @@ METHOD HqrGraphicsItem:contextMenu( p1, p2 )
          EXIT
       ENDSWITCH
    ENDIF
-   RETURN NIL 
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -1890,7 +1890,7 @@ METHOD HqrGraphicsItem:setText( ... )
    IF empty( a_ )
       RETURN ::cText
    ENDIF
-   IF hb_isChar( a_[ 1 ] )
+   IF HB_ISSTRING( a_[ 1 ] )
       ::cText := a_[ 1 ]
       ::update()
    ENDIF

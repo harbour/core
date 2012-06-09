@@ -311,8 +311,8 @@ METHOD IdeShortcuts:execEvent( nMode, p )
    LOCAL nRow, cMethod, cFile, cPath, cTemp, cExt, a_
 
    IF ::lQuitting
-      RETURN Self 
-   ENDIF 
+      RETURN Self
+   ENDIF
 
    SWITCH nMode
 
@@ -660,8 +660,8 @@ METHOD IdeShortcuts:populateDftSCuts()
       ::array2table( nRow, a_ )
       qApp:processEvents()
       IF ::lQuitting
-         EXIT 
-      ENDIF    
+         EXIT
+      ENDIF
    NEXT
    oTbl:setCurrentCell( 0,0 )
 
@@ -1199,31 +1199,31 @@ METHOD IdeShortcuts:findDlgEx()
    RETURN Self
 /*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:build( cProj )
-   IF ! hb_isChar( cProj )
+   IF ! HB_ISSTRING( cProj )
       cProj := ""
    ENDIF
    RETURN ::oPM:buildProject( cProj, .F., .F. )
 /*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:buildLaunch( cProj )
-   IF ! hb_isChar( cProj )
+   IF ! HB_ISSTRING( cProj )
       cProj := ""
    ENDIF
    RETURN ::oPM:buildProject( cProj, .T., .F. )
 /*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:reBuild( cProj )
-   IF ! hb_isChar( cProj )
+   IF ! HB_ISSTRING( cProj )
       cProj := ""
    ENDIF
    RETURN ::oPM:buildProject( cProj, .F., .T. )
 /*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:reBuildLaunch( cProj )
-   IF ! hb_isChar( cProj )
+   IF ! HB_ISSTRING( cProj )
       cProj := ""
    ENDIF
    RETURN ::oPM:buildProject( cProj, .T., .T. )
 /*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:launch( cProj )
-   IF ! hb_isChar( cProj )
+   IF ! HB_ISSTRING( cProj )
       cProj := ""
    ENDIF
    RETURN ::oPM:launchProject( cProj )

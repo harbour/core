@@ -672,8 +672,8 @@ FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
 
    nForeBack := iif( HB_ISNUMERIC( nForeBack ), nForeBack, 0 )
 
-   IF hb_isChar( cColor )
-      IF ( n := at( cColor, "/" ) ) > 0
+   IF HB_ISSTRING( cColor )
+      IF ( n := at( "/", cColor ) ) > 0
          IF nForeBack == 0
             s := substr( cColor, 1, n-1 )
          ELSE

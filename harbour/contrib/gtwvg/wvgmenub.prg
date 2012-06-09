@@ -329,7 +329,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
       WVG_AppendMenu( ::hMenu, ;
                       aItem[ 1 ], ;
                       aItem[ 2 ], ;
-                      iif( hb_isChar( aItem[ 3 ] ), strtran( aItem[ 3 ], "~", "&" ), aItem[ 3 ] ) )
+                      iif( HB_ISSTRING( aItem[ 3 ] ), strtran( aItem[ 3 ], "~", "&" ), aItem[ 3 ] ) )
    ELSE
       nItemIndex := nPos
       IF lInsert
@@ -338,7 +338,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
                          nItemIndex - 1, ;
                          aItem[ 1 ] + MF_BYPOSITION, ;
                          aItem[ 2 ], ;
-                         iif( hb_isChar( aItem[ 3 ] ), strtran( aItem[ 3 ], "~", "&" ), aItem[ 3 ] ) )
+                         iif( HB_ISSTRING( aItem[ 3 ] ), strtran( aItem[ 3 ], "~", "&" ), aItem[ 3 ] ) )
       ELSE
          IF valtype( xCaption ) == "C"
             aItem[ 2 ] := ::aMenuItems[ nItemIndex, 2 ]
@@ -347,7 +347,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
          WVG_SetMenuItem( ::hMenu, ;
                           nItemIndex - 1, ;
                           aItem[ 2 ], ;
-                          iif( hb_isChar( aItem[ 3 ] ), strtran( aItem[ 3 ], "~", "&" ), aItem[ 3 ] ),;
+                          iif( HB_ISSTRING( aItem[ 3 ] ), strtran( aItem[ 3 ], "~", "&" ), aItem[ 3 ] ),;
                           valtype( xCaption ) == "C" )
       ENDIF
    ENDIF

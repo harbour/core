@@ -350,7 +350,7 @@ METHOD xbpMenuBar:placeItem( xCaption, bAction, nStyle, nAttrb, nMode, nPos )
    CASE cType == "O"
       cCaption := IIF( bAction == NIL, xCaption:title, bAction )
       aItem    := { QMF_POPUP, xCaption:oWidget, cCaption, xCaption, NIL }
-      IF hb_isChar( cCaption )
+      IF HB_ISSTRING( cCaption )
          xCaption:oWidget:setTitle( strtran( cCaption, '~','&' ) )
       ENDIF
 

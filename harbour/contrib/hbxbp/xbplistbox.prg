@@ -347,7 +347,7 @@ METHOD XbpListBox:clear( lConnect )
    #if 0
    ::disConnect()
    #endif
-   
+
    FOR EACH qItm IN ::aItems
       qItm := NIL
    NEXT
@@ -361,7 +361,7 @@ METHOD XbpListBox:clear( lConnect )
    IF lConnect
       ::connect()
    ENDIF
-   #endif 
+   #endif
    RETURN .t.
 
 /*----------------------------------------------------------------------*/
@@ -447,7 +447,7 @@ METHOD XbpListBox:setItemColorFG( nIndex, aRGB )
       ::aItems[ nIndex ]:setForeGround( QBrush( QColor( aRGB[ 1 ], aRGB[ 2 ], aRGB[ 3 ] ) ) )
       ::nOldIndex := nIndex
 
-   ELSEIF hb_isChar( nIndex )
+   ELSEIF HB_ISSTRING( nIndex )
       IF ( nIndex := ascan( ::aItems, {|o| o:text() == nIndex } ) ) > 0
          IF ::nOldIndex > 0  .AND. ::nOldIndex <= len( ::aItems )
             ::aItems[ ::nOldIndex ]:setForeGround( QBrush( QColor( 0,0,0 ) ) )

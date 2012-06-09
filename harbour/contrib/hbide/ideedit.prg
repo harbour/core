@@ -330,8 +330,8 @@ METHOD IdeEdit:destroy()
       ::oSourceThumbnailDock:oWidget:hide()
    ENDIF
 
-   ::oEditor := NIL 
-   
+   ::oEditor := NIL
+
    ::qTimer:disconnect( "timeout()" )
    IF ::qTimer:isActive()
       ::qTimer:stop()
@@ -350,7 +350,7 @@ METHOD IdeEdit:destroy()
    ::qEdit  := NIL
    ::qFont  := NIL
 
-   RETURN NIL 
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -369,7 +369,7 @@ METHOD IdeEdit:disconnectEditSignals()
    ::qEdit:disConnect( "undoAvailable(bool)"                )
    #endif
 
-   RETURN NIL 
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -387,7 +387,7 @@ METHOD IdeEdit:connectEditSignals()
    ::qEdit:connect( "redoAvailable(bool)"               , {|p   | ::execEvent( 5, p ) } )
    ::qEdit:connect( "undoAvailable(bool)"               , {|p   | ::execEvent( 7, p ) } )
    #endif
-   
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
@@ -398,8 +398,8 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
    HB_SYMBOL_UNUSED( p1 )
 
    IF ::lQuitting
-      RETURN NIL 
-   ENDIF 
+      RETURN NIL
+   ENDIF
 
    qCursor := ::qEdit:textCursor()
    ::nCurLineNo := qCursor:blockNumber()
@@ -570,7 +570,7 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
    #endif
    ENDSWITCH
 
-   RETURN NIL 
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -2166,7 +2166,7 @@ METHOD IdeEdit:insertSeparator( cSep )
 METHOD IdeEdit:insertText( cText )
    LOCAL qCursor, nL, nB
 
-   IF hb_isChar( cText ) .AND. !Empty( cText )
+   IF HB_ISSTRING( cText ) .AND. !Empty( cText )
       qCursor := ::qEdit:textCursor()
 
       nL := len( cText )

@@ -183,7 +183,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
 METHOD setCaption( xCaption ) CLASS WvgRadioButton
 
-   IF hb_isChar( xCaption )
+   IF HB_ISSTRING( xCaption )
       ::caption := xCaption
       WVG_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
    ENDIF
