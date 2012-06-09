@@ -25,6 +25,7 @@ C_SOURCES := \
    box.c \
    cdpapi.c \
    cdpapihb.c \
+   cdpdetc.c \
    chrasc.c \
    chruni.c \
    colorind.c \
@@ -216,6 +217,7 @@ PRG_SOURCES := \
    altd.prg \
    browdb.prg \
    browse.prg \
+   cdpdet.prg \
    checkbox.prg \
    color53.prg \
    dbedit.prg \

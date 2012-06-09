@@ -339,7 +339,9 @@ DYNAMIC hb_cdpCharMax
 DYNAMIC hb_cdpInfo
 DYNAMIC hb_cdpIsUTF8
 DYNAMIC hb_cdpList
+DYNAMIC hb_cdpOS
 DYNAMIC hb_cdpSelect
+DYNAMIC hb_cdpTerm
 DYNAMIC hb_cdpUniID
 DYNAMIC hb_Clocks2Secs
 DYNAMIC hb_ClrArea
@@ -1470,6 +1472,8 @@ DYNAMIC __TextSave
 DYNAMIC __TracePrgCalls
 DYNAMIC __TypeFile
 DYNAMIC __Wait
+DYNAMIC __wapi_GetACP
+DYNAMIC __wapi_GetOEMCP
 DYNAMIC __XHelp
 DYNAMIC __XRestScreen
 DYNAMIC __XSaveScreen
