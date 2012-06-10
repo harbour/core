@@ -196,7 +196,7 @@ All those commands/functions behave the same way as in other GTs.
 Unlike other GTs, however, GTWVW supports multi-windows.
 
 GTWVW has been tested using BCC32 only. To use GTWVW, build GTWVW.LIB using
-make_b32.bat, then link it to your application as your GT. (Currently
+hbmk2, then link it to your application as your GT. (Currently
 GTWVW cannot coexist with GTWVT in a MULTIGT environment.)
 
 Some special characteristics of GTWVW:

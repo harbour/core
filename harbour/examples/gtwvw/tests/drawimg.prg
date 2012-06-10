@@ -4,7 +4,6 @@
 
 /*
    compile and link this file together with wutil.prg
-   (use drawimg.bat to build)
 
    This is a sample of how to display an image file (.bmp,.gif,.jpg)
    in four ways:

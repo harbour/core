@@ -2,7 +2,8 @@
  * $Id$
  */
 
-/* hbmk2 testz.prg -lhbbz2 -lbz2 -lhblzf -llzf -es2 -w3 */
+#require "hbbz2"
+#require "hblzf"
 
 #include "simpleio.ch"
 
@@ -39,7 +40,7 @@ STATIC PROCEDURE MakeTest( ... )
       nBegin := hb_secondsCPU()
       cRes := Eval( e:__enumValue(), iif( lCmp, hb_pValue( 3 ), e2 ), NIL, @nResult )
       nEnd := hb_secondsCPU()
-      IF lCmp 
+      IF lCmp
          e2 := cRes
       ENDIF
       cFmt := hb_strFormat( ;

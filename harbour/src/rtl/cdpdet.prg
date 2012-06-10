@@ -63,6 +63,7 @@ FUNCTION hb_cdpTerm()
       ELSE
          __UnixParseLangCP( GetEnv( "LC_CTYPE" ), @cCP, @cLang )
       ENDIF
+      cCP := __CPUnixToCPStd( cCP )
    #elif defined( __PLATFORM__DOS )
       /* TODO */
    #elif defined( __PLATFORM__OS2 )
@@ -88,6 +89,7 @@ FUNCTION hb_cdpOS()
       ELSE
          __UnixParseLangCP( GetEnv( "LC_CTYPE" ), @cCP, @cLang )
       ENDIF
+      cCP := __CPUnixToCPStd( cCP )
    #elif defined( __PLATFORM__DOS )
       /* TODO */
    #elif defined( __PLATFORM__OS2 )

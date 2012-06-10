@@ -17,7 +17,7 @@ Inside this .zip file you will find HarbourScript package. This
 should be unzipped to /tests/working/hscript directory in order
 to work w/o any changes.
 
-To make the HarbourScript Translator, hscript.exe, use makehs.bat.
+To make the HarbourScript Translator, hscript.exe, use hbmk2.
 If you are going to test offline, there's no need to make it,
 it will be done automatically for you (Batch Power<g>). To test it,
 you'll have the following options:

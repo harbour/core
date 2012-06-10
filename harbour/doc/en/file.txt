@@ -714,8 +714,7 @@
  *      The file must be considered closed by the operating system before it
  *      may be deleted.
  *  $EXAMPLES$
- *      ERASE C:\autoexec.bat
- *      ERASE C:/temp/read.txt
+ *      ERASE C:\temp\read.txt
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -749,8 +748,7 @@
  *      The file must be considered closed by the operating system before it
  *      may be deleted.
  *  $EXAMPLES$
- *      ERASE C:\autoexec.bat
- *      ERASE C:/temp/read.txt
+ *      ERASE C:\temp\read.txt
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

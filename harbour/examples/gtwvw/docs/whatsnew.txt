@@ -113,7 +113,6 @@
   + contrib/gtwvw/samples/drawimg.prg
   + contrib/gtwvw/samples/wutil.prg
   + contrib/gtwvw/samples/wutil.ch
-  + contrib/gtwvw/samples/drawimg.bat
     * A sample about this new feature.
 
     Notes on WVW_DRAWIMAGE()

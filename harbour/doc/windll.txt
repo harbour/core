@@ -29,10 +29,6 @@ Harbour supports Windows DLLs in 3 ways.
      For the Borland C platform, use that library and import32.lib
      and cw32.lib from Borland, and you are ready to go.
 
-     See contrib\delphi\hbdll for an example of a Delphi program that can
-     use all of Harbour's functionality by accessing a self-contained DLL.
-     bld_sdll.bat is used there to create the DLL.
-
 
   2) PCode EXEs using a Harbour.dll
 
@@ -90,4 +86,3 @@ Please notice that there are three different Windows DLL entry points:
 
    If you are looking to build a Harbour.dll, then you must use
    maindllh.c
-

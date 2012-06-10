@@ -142,13 +142,11 @@ For gcc on Win95/WinNT with the Cygwin library:
          wildcard command line arguments (this is checked at run-time!)
   HB_PLATFORM       win
   HB_COMPILER       gcc
-  HB_GT_LIB         gtwin
   CYGWIN            noglob
 
 For gcc on Win95/WinNT with the MinGW library:
   HB_PLATFORM       win
   HB_COMPILER       mingw
-  HB_GT_LIB         gtwin
 
 For MSVC on Win95/WinNT:
   Notes: gnu make is case sensitive!  If your editor converts
@@ -157,40 +155,23 @@ For MSVC on Win95/WinNT:
          If you have MAKE_MODE in your dos environment, make sure it is
          not set to unix
 
-         For best results, in your copy of make_gnu.bat, also set:
+         For best results, also set:
   HB_PLATFORM       win
   HB_COMPILER       msvc
-  HB_GT_LIB         gtwin
 
 For GCC on BSD:
   HB_PLATFORM       bsd
   HB_COMPILER       gcc
-  HB_GT_LIB         gtstd
   Notes:
     1)  You have to have bison and gmake installed in order to build
         Harbour for BSD. The file doc/howtobsd.txt gives an overview
         of what is required.
-    2)  If you have an ncurses library or a slang library, you may
-        want to try one of the following two values for HB_GT_LIB:
-              gtcrs
-              gtsln
-        In which case you'll also need to export HB_SCREEN_LIB with
-        the name of the appropriate screen library, if it doesn't
-        match the default value in config/bsd/gcc.mk
 
 For GCC on Linux:
   HB_PLATFORM       linux
   HB_COMPILER       gcc
-  HB_GT_LIB         gtstd
   Notes:
-    1)  If you have an ncurses library or a slang library, you may
-        want to try one of the following two values for HB_GT_LIB:
-              gtcrs
-              gtsln
-        In which case you'll also need to export HB_SCREEN_LIB with
-        the name of the appropriate screen library, if it doesn't
-        match the default value in config/linux/gcc.mk.
-    2)  If you want to take advantage of compiler cache programs
+    1)  If you want to take advantage of compiler cache programs
         (such as http://ccaache.samba.org), you may set environment
         variable HB_CCACHE with the value containing the name of program.
 
@@ -199,26 +180,21 @@ For GCC on OS/2 for VIO mode:
         you must also point LIBRARY_PATH to the EMX library directory.
   HB_PLATFORM       os2
   HB_COMPILER       gcc
-  HB_GT_LIB         gtos2
 
 For Borland C++ 5.5
   HB_PLATFORM       win
   HB_COMPILER       bcc
-  HB_GT_LIB         gtwin
 
 For Borland C++ 3.x
   HB_PLATFORM       dos
-  HB_GT_LIB         gtdos
 
 For DJGPP (GCC port for DOS)
   HB_PLATFORM       dos
   HB_COMPILER       djgpp
-  HB_GT_LIB         gtdos
 
 For Watcom C/C++ 10.x (default Makefile creates DOS4G extender executables)
   HB_PLATFORM       dos
   HB_COMPILER       watcom
-  HB_GT_LIB         gtdos
   Note: It is possible that you will have to increase the space reserved for
         DOS environment variables in order to successfuly run make utility
         (Add for example:
