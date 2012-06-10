@@ -9,6 +9,7 @@
  */
 
 #include "gd.ch"
+#include "simpleio.ch"
 
 #define IMAGES_IN  "imgs_in" + hb_ps()
 #define IMAGES_OUT "imgs_out" + hb_ps()
@@ -20,11 +21,8 @@ PROCEDURE Main()
    LOCAL oI, oI2, oI3, oI4, nThick, n, nSecs
    LOCAL oI5
    LOCAL oB
-// LOCAL aClip
 
-   // To set fonts run this command:
-   // for windows: SET GDFONTPATH=C:\windows\fonts
-   // per linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType
+   // LOCAL aClip
 
    // SET GDFONTPATH=C:\windows\fonts
    IF GetEnv( "GDFONTPATH" ) == ""
@@ -35,7 +33,7 @@ PROCEDURE Main()
    ENDIF
 /*
    // Check output directory
-   IF !ISDirectory( IMAGES_OUT )
+   IF !hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
 */
@@ -57,8 +55,8 @@ PROCEDURE Main()
    cyan  := oI:SetColor( 0, 255, 255 )
 
    /* Draw rectangle */
-   oI:Rectangle( 0, 0, 199, 199, .T., cyan )
-   oI:Rectangle( 0, 0, 199, 199,, black)
+   oI:Rectangle( 0, 0, 199, 199, .T. , cyan )
+   oI:Rectangle( 0, 0, 199, 199, , black )
 
    oI:SetColor( blue )
 
@@ -67,7 +65,7 @@ PROCEDURE Main()
 
    /* Draw lines */
    oI:Line( 0, 0, 199, 199, blue )
-   oI:DashedLine(0, 199, 199, 0, blue)
+   oI:DashedLine( 0, 199, 199, 0, blue )
    nThick := oI:SetThickness( 5 )
    oI:Line( 50, 150, 100, 150 )
    oI:SetThickness( nThick )
@@ -98,44 +96,44 @@ PROCEDURE Main()
    oI:AddPoint( 160, 180 )
    oI:AddPoint( 170, 110 )
    oI:AddPoint( 150, 160 )
-   oI:Polygon(,.T., green)
+   oI:Polygon( , .T. , green )
 
    /* Draw an arc */
-   oI:Arc(50, 50, 40, 40, 30, 190,, red )
-   oI:Circle(50, 150, 45, .t., green )
-   oI:Ellipse(120, 120, 50, 20, , green )
+   oI:Arc( 50, 50, 40, 40, 30, 190, , red )
+   oI:Circle( 50, 150, 45, .T. , green )
+   oI:Ellipse( 120, 120, 50, 20, , green )
 
    /* Draw a character. */
    oI:SetFontLarge()
    ? "Font Dims", oI:GetFontWidth(), oI:GetFontHeight()
    oI:SetColor( black )
    //__OutDebug( "Font", font )
-   oI:Say( 0, 0, 'Test')
-   oI:Say( 0, 15, 'P')
-   oI:Say( 0, 30, 'W')
+   oI:Say( 0, 0, "Test" )
+   oI:Say( 0, 15, "P" )
+   oI:Say( 0, 30, "W" )
 
-   oI:SayVertical( 70, 90, 'Test')
-   oI:SayVertical( 70, 15, 'P')
-   oI:SayVertical( 70, 30, 'W')
+   oI:SayVertical( 70, 90, "Test" )
+   oI:SayVertical( 70, 15, "P" )
+   oI:SayVertical( 70, 30, "W" )
 
    oI:SayFreeType( 20, 30, "Test", "arial", 24, 15 )
    oI:SayFreeType( 40, 70, "Test2" )
 
 
    /* Set Clip Rectangle */
-   oI:SetClippingArea(25, 25, 75, 75)
+   oI:SetClippingArea( 25, 25, 75, 75 )
 
    /* Retrieve Clipping rectangle */
-// aClip := oI:GetClippingArea()
+   // aClip := oI:GetClippingArea()
    ? "Clipping rectangle values"
-//   ? hb_DumpVar( aClip )
+   //   ? hb_DumpVar( aClip )
 
    /* Query functions */
 
-   color := oI:GetPixel( oI:Width() / 2, oI:Height() / 2)
+   color := oI:GetPixel( oI:Width() / 2, oI:Height() / 2 )
    ? "Pixel Color is: ", color
-   ? "RGB Values: ", oI:Red(color), oI:Green(color), oI:Blue(color)
-   ? "Alpha Value: ",  oI:Alpha(color)
+   ? "RGB Values: ", oI:Red( color ), oI:Green( color ), oI:Blue( color )
+   ? "Alpha Value: ",  oI:Alpha( color )
 
    /* Write Images on files */
    oI:SavePng( IMAGES_OUT + "rect.png" )
@@ -167,7 +165,7 @@ PROCEDURE Main()
 
    nSecs := Seconds()
    ? "start clone"
-   oI4:= oI5:Clone()
+   oI4 := oI5:Clone()
    ? "end", Seconds() - nSecs
 
    nSecs := Seconds()
@@ -177,8 +175,8 @@ PROCEDURE Main()
 
    //__OutDebug( oI2:pImage )
    //oI4:SetFontGiant()
-   gray := oI4:SetColor(30, 30, 30)
-   blue := oI4:SetColor(0, 0, 200)
+   gray := oI4:SetColor( 30, 30, 30 )
+   blue := oI4:SetColor( 0, 0, 200 )
 
    //oI4:SetColor( black )
    //oI4:Say( 100, 10, "Valentina" )
@@ -188,11 +186,11 @@ PROCEDURE Main()
       nSecs := Seconds()
       ? "start write"
       FOR n := 0 TO 350 STEP 10
-          oI4:SayFreeType( oI4:CenterWidth(), oI4:CenterHeight(), "             GD Font Power", "arial", 20, n )
+         oI4:SayFreeType( oI4:CenterWidth(), oI4:CenterHeight(), "             GD Font Power", "arial", 20, n )
       NEXT
       ? "end", Seconds() - nSecs
       oI4:SetTransparent( blue )
-      oI4:SayFreeType( oI4:CenterWidth()-4, oI4:CenterHeight()+4, "GD", "verdana", 70, n, gray )
+      oI4:SayFreeType( oI4:CenterWidth() - 4, oI4:CenterHeight() + 4, "GD", "verdana", 70, n, gray )
       oI4:SayFreeType( oI4:CenterWidth(), oI4:CenterHeight(), "GD", "verdana", 70, n, blue )
    ENDIF
    oI4:SaveJpeg( IMAGES_OUT + "writing.jpg" )
@@ -217,21 +215,21 @@ PROCEDURE Main()
 
    oI5:Zoom( 40 )
    //oI5:Rotate( 90 )
-   blue := oI5:SetColor(0, 0, 200)
+   blue := oI5:SetColor( 0, 0, 200 )
    oI5:SayFreeType( oI5:CenterWidth(), oI5:CenterHeight(), "GD", "verdana", 20, 0, blue )
    oI5:SaveJpeg( IMAGES_OUT + "gd_zoom.jpg" )
 
 
    oI5 := GDChart():New( 400, 400 )
    // Define piece colors
-   blue  := oI5:SetColor(0, 0, 200)
-   gray  := oI5:SetColor(30, 30, 30)
-   green := oI5:SetColor(0, 250, 0)
-   red   := oI5:SetColor(250, 0, 0)
+   blue  := oI5:SetColor( 0, 0, 200 )
+   gray  := oI5:SetColor( 30, 30, 30 )
+   green := oI5:SetColor( 0, 250, 0 )
+   red   := oI5:SetColor( 250, 0, 0 )
 
    // Load an image as brush
    oB := GDImage():LoadFromGif( IMAGES_IN + "harbour.gif" )
-   oB:Zoom(15)
+   oB:Zoom( 15 )
 
    //oI5:Circle( 200, 200, oI5:Width() )
    //oI5:Line( 0, 200, 200, 200 )
@@ -239,14 +237,14 @@ PROCEDURE Main()
    oI5:AddDef( "FONTPITCH", "GIANT" )
 
    oI5:SetData( { ;
-                   { "LABEL" => "One"  , "VALUE" => 10, "COLOR"  => blue , "FILLED" => .T., "EXTRUDE" => 40/*, "TILE" => oB*/ },;
-                   { "LABEL" => "Two"  , "VALUE" => 35, "COLOR"  => gray , "FILLED" => .T., "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  },;
-                   { "LABEL" => "Three", "VALUE" => 55, "COLOR"  => green, "FILLED" => .T. }, ;
-                   { "LABEL" => "Four" , "VALUE" => 55, "FILLED" => .T.  , "TILE"   => oB }, ;
-                   { "LABEL" => "Five" , "VALUE" => 55, "COLOR"  => red  , "FILLED" => .T., "EXTRUDE" => 20 }, ;
-                   { "LABEL" => "Six"  , "VALUE" => 55, "FILLED" => .T.  , "TILE"   => oB }, ;
-                   { "LABEL" => "Seven", "VALUE" => 55, "FILLED" => .T.  , "COLOR"  => green } ;
-                } )
+      { "LABEL" => "One"  , "VALUE" => 10, "COLOR"  => blue , "FILLED" => .T. , "EXTRUDE" => 40/*, "TILE" => oB*/ }, ;
+      { "LABEL" => "Two"  , "VALUE" => 35, "COLOR"  => gray , "FILLED" => .T. , "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  }, ;
+      { "LABEL" => "Three", "VALUE" => 55, "COLOR"  => green, "FILLED" => .T. }, ;
+      { "LABEL" => "Four" , "VALUE" => 55, "FILLED" => .T.  , "TILE"   => oB }, ;
+      { "LABEL" => "Five" , "VALUE" => 55, "COLOR"  => red  , "FILLED" => .T. , "EXTRUDE" => 20 }, ;
+      { "LABEL" => "Six"  , "VALUE" => 55, "FILLED" => .T.  , "TILE"   => oB }, ;
+      { "LABEL" => "Seven", "VALUE" => 55, "FILLED" => .T.  , "COLOR"  => green } ;
+      } )
 
    //oI5:VerticalBarChart()
    oI5:PieChart()
@@ -256,16 +254,16 @@ PROCEDURE Main()
 
    oI5 := GDChart():New( 640, 480 )
    // Define piece colors
-   blue  := oI5:SetColor(0, 0, 200)
-   gray  := oI5:SetColor(30, 30, 30)
-   green := oI5:SetColor(0, 250, 0)
-   red   := oI5:SetColor(250, 0, 0)
+   blue  := oI5:SetColor( 0, 0, 200 )
+   gray  := oI5:SetColor( 30, 30, 30 )
+   green := oI5:SetColor( 0, 250, 0 )
+   red   := oI5:SetColor( 250, 0, 0 )
 
    // Load an image as brush
    oB := GDImage():LoadFromJpeg( IMAGES_IN + "conv_tst.jpg" )
-   oB:Zoom(15)
+   oB:Zoom( 15 )
 
-//   oI5:AddDef( "MAXVALUE", 150 )
+   //   oI5:AddDef( "MAXVALUE", 150 )
    oI5:AddDef( "AXISPICT", "@E 999999" )
    oI5:AddDef( "FONTPITCH", "GIANT" )
    oI5:AddDef( "COLOR", blue )
@@ -290,16 +288,16 @@ PROCEDURE Main()
 
 
    oI5:SetData( { ;
-                  { "LABEL" => "One", "VALUE" => 10, "COLOR" => blue, "FILLED" => .T., "EXTRUDE" => 40/*, "TILE" => oB*/ },;
-                  { "LABEL" => "Two", "VALUE" => 35, "COLOR" => gray, "FILLED" => .T., "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  },;
-                  { "LABEL" => "Three", "VALUE" => 55, "COLOR" => green, "FILLED" => .T. }, ;
-                  { "LABEL" => "Four", "VALUE" => 65, "FILLED" => .T., "TILE" => oB }, ;
-                  { "LABEL" => "Five", "VALUE" => 34, "FILLED" => .T., "COLOR" => green }, ;
-                  { "LABEL" => "Six", "VALUE" => 100 }, ;
-                  { "LABEL" => "Seven", "VALUE" => 0, "FILLED" => .T., "COLOR" => red }, ;
-                  { "LABEL" => "Eight", "VALUE" => -0 }, ;
-                  { "LABEL" => "Nine", "VALUE" => -0, "COLOR" => blue, "FILLED" => .T. } ;
-                } )
+      { "LABEL" => "One", "VALUE" => 10, "COLOR" => blue, "FILLED" => .T. , "EXTRUDE" => 40/*, "TILE" => oB*/ }, ;
+      { "LABEL" => "Two", "VALUE" => 35, "COLOR" => gray, "FILLED" => .T. , "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  }, ;
+      { "LABEL" => "Three", "VALUE" => 55, "COLOR" => green, "FILLED" => .T. }, ;
+      { "LABEL" => "Four", "VALUE" => 65, "FILLED" => .T. , "TILE" => oB }, ;
+      { "LABEL" => "Five", "VALUE" => 34, "FILLED" => .T. , "COLOR" => green }, ;
+      { "LABEL" => "Six", "VALUE" => 100 }, ;
+      { "LABEL" => "Seven", "VALUE" => 0, "FILLED" => .T. , "COLOR" => red }, ;
+      { "LABEL" => "Eight", "VALUE" => - 0 }, ;
+      { "LABEL" => "Nine", "VALUE" => - 0, "COLOR" => blue, "FILLED" => .T. } ;
+      } )
 
 
    oI5:Clone():VerticalBarChart():SaveJpeg( IMAGES_OUT + "vertbars.jpg" )
@@ -321,4 +319,4 @@ PROCEDURE Main()
    ? "Look at " + IMAGES_OUT + " folder for output images"
    ?
 
-RETURN
+   RETURN

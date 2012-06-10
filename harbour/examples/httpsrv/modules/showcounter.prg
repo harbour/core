@@ -143,7 +143,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
 
    // Check output directory
    /*
-   IF !ISDirectory( IMAGES_OUT )
+   IF !hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
    */

@@ -83,7 +83,7 @@ THREAD STATIC NHPOS, NVPOS, NMAXROW, NMAXCOL
 
    cCmdLine := iif( cCmdLine == NIL, "", cCmdLine )
 
-   lColor := iif( "MONO" $ UPPER( cCmdLine ), .F., ISCOLOR() )
+   lColor := iif( "MONO" $ UPPER( cCmdLine ), .F., IsColor() )
 
    * Border, Box, Bar, Current, Unselected
    aColors := iif( lColor, {"W+/G", "N/G", "N/G", "N/W", "N+/G"}, ;

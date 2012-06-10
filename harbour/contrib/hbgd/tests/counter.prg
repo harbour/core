@@ -12,6 +12,7 @@
  */
 
 #include "gd.ch"
+#include "simpleio.ch"
 
 /* Some digits images from:
    http://www.digitmania.holowww.com/all.html */
@@ -62,7 +63,7 @@ PROCEDURE Main( cValue, cBaseImage )
 
    // Check output directory
    /*
-   IF !ISDirectory( IMAGES_OUT )
+   IF !hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
    */
@@ -136,4 +137,4 @@ PROCEDURE Main( cValue, cBaseImage )
    ? "Look at " + IMAGES_OUT + " folder for output images"
    ?
 
-RETURN
+   RETURN

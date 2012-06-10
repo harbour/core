@@ -60,7 +60,7 @@ FUNCTION SYS( nValue, xPar1 )
    CASE 2
       RETURN hb_ntos( Seconds() )
    CASE 2002
-      IF ! hb_isNumeric( xPar1 )
+      IF ! HB_ISNUMERIC( xPar1 )
          xPar1 := SC_NONE
       ENDIF
       RETURN SetCursor( xPar1 )
@@ -70,11 +70,11 @@ FUNCTION SYS( nValue, xPar1 )
 
    RETURN NIL
 
-STATIC FUNCTION AFILLNESTED( aValue, xVal )
+STATIC FUNCTION AFillNested( aValue, xVal )
    LOCAL item
 
-   FOR EACH item in aValue
-      IF hb_isArray( item )
+   FOR EACH item IN aValue
+      IF HB_ISARRAY( item )
          AFillNested( item, xVal )
       ELSE
          item := xVal

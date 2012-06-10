@@ -50,6 +50,8 @@
  *
  */
 
+#require "rddads"
+
 #include "ord.ch"
 #include "set.ch"
 #include "ads.ch"

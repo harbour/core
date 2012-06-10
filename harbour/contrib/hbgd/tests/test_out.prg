@@ -13,7 +13,7 @@
 #command WRITE <c> => FWrite( 1, <c> + CHR(13)+CHR(10) )
 #command OutHTML <c> => WRITE <c>
 
-PROCEDURE Main(...)
+PROCEDURE Main( ... )
 
    LOCAL cPar
    LOCAL aParams := hb_aParams()
@@ -21,48 +21,49 @@ PROCEDURE Main(...)
    LOCAL hParams := { => }
 
    LOCAL cImg, nPt, nWidth, nHeight, cPhoto
+
    // LOCAL cText
 
    IF Empty( aParams )
       IF !Empty( cQuery )
-          hParams := GetVars( cQuery )
+         hParams := GetVars( cQuery )
       ENDIF
    ELSE
       hParams := GetParams( aParams )
    ENDIF
 
-  //-----------------------------------------------------------------------------------------
+   //-----------------------------------------------------------------------------------------
 
-  // Gestione parametri
-  IF !Empty( hParams )
-     FOR EACH cPar IN hParams:Keys
+   // Gestione parametri
+   IF !Empty( hParams )
+      FOR EACH cPar IN hParams:Keys
 
-        do case
-        case cPar == "txt"
-             // cText := hb_hGet( hParams, cPar )
+         DO CASE
+         CASE cPar == "txt"
+            // cText := hb_hGet( hParams, cPar )
 
-        case cPar == "img"
-             cImg := hb_hGet( hParams, cPar )
+         CASE cPar == "img"
+            cImg := hb_hGet( hParams, cPar )
 
-        case cPar == "photo"
-             cPhoto := hb_hGet( hParams, cPar )
+         CASE cPar == "photo"
+            cPhoto := hb_hGet( hParams, cPar )
 
-        case cPar == "width"
-             nWidth := Val( hb_hGet( hParams, cPar ) )
+         CASE cPar == "width"
+            nWidth := Val( hb_hGet( hParams, cPar ) )
 
-        case cPar == "height"
-             nHeight := Val( hb_hGet( hParams, cPar ) )
+         CASE cPar == "height"
+            nHeight := Val( hb_hGet( hParams, cPar ) )
 
-        case cPar == "pt"
-             nPt := Val( hb_hGet( hParams, cPar ) )
+         CASE cPar == "pt"
+            nPt := Val( hb_hGet( hParams, cPar ) )
 
-        endcase
-     NEXT
-  ENDIF
+         ENDCASE
+      NEXT
+   ENDIF
 
-  //__OutDebug( cQuery, ValToPrg( hParams ) )
+   //__OutDebug( cQuery, ValToPrg( hParams ) )
 
-  //-----------------------------------------------------------------------------------------
+   //-----------------------------------------------------------------------------------------
    //hb_default( @cText, "Testo di Prova" )
    hb_default( @nPt, 30 )
 
@@ -82,9 +83,9 @@ PROCEDURE Main(...)
       OutHTML "</td></tr>"
       OutHTML "<tr><td align='center'>"
       OutHTML "<img src='test_out.exe?img=" + cPhoto + ;
-              IIF( nWidth != NIL , "&width="  + AllTrim( Str( nWidth ) ) , "" ) + ;
-              IIF( nHeight != NIL, "&height=" + AllTrim( Str( nHeight ) ), "" ) + ;
-              "'>" + "<br>"
+         iif( nWidth != NIL , "&width="  + AllTrim( Str( nWidth ) ) , "" ) + ;
+         iif( nHeight != NIL, "&height=" + AllTrim( Str( nHeight ) ), "" ) + ;
+         "'>" + "<br>"
       OutHTML "</td></tr>"
       OutHTML "<tr><td align='center'>"
       OutHTML cPhoto
@@ -93,14 +94,14 @@ PROCEDURE Main(...)
       OutHTML "<br>"
       //OutHTML "<img src='test_out.exe?img=" + cText + "_2&pt=" + AllTrim( Str( nPt ) ) + "'>" + "<br>"
       //OutHTML OS() + "<br>"
-      //OutHTML IIF( OS_ISWINNT(), "WIN NT", "NON WIN NT" ) + "<br>"
+      //OutHTML iif( OS_ISWINNT(), "WIN NT", "NON WIN NT" ) + "<br>"
       EndHTML()
    ELSE
       StartHTML()
       EndHTML()
    ENDIF
 
-RETURN
+   RETURN
 
 PROCEDURE StartHTML( cTitle )
 
@@ -108,23 +109,27 @@ PROCEDURE StartHTML( cTitle )
 
    WRITE 'content-type: text/html'
    WRITE 'Pragma: no-cache'
-   WRITE CHR(13)+CHR(10)
+   WRITE Chr( 13 ) + Chr( 10 )
    WRITE "<html>"
    WRITE "<head>"
    WRITE "<title>" + cTitle + "</title>"
    WRITE "</head>"
    WRITE "<body>"
-RETURN
+
+   RETURN
 
 PROCEDURE EndHTML()
+
    WRITE "</body>"
    WRITE "</html>"
-RETURN
 
-   // per windows: SET GDFONTPATH=C:\windows\fonts
-   // per linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType
+   RETURN
+
+// per windows: SET GDFONTPATH=C:\windows\fonts
+// per linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType
 
 PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
+
    LOCAL cType
 
    LOCAL oImage := GDImage():LoadFromFile( cPhoto )
@@ -141,25 +146,25 @@ PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
 
    //__OutDebug( hb_dumpvar( oImage ) )
 
-   WRITE 'content-type: ' + oImage:cMime + CHR(13)+CHR(10)
+   WRITE 'content-type: ' + oImage:cMime + Chr( 13 ) + Chr( 10 )
    cType := oImage:cType
 
    DO CASE
-      CASE cType == "jpeg"
-           oImage:OutputJpeg()
-      CASE cType == "gif"
-           oImage:OutputGif()
-      CASE cType == "png"
-           oImage:OutputPng()
+   CASE cType == "jpeg"
+      oImage:OutputJpeg()
+   CASE cType == "gif"
+      oImage:OutputGif()
+   CASE cType == "png"
+      oImage:OutputPng()
    ENDCASE
 
-   oImage := NIL
-RETURN
+   RETURN
 
 PROCEDURE OutJpg( cText, nPitch )
-   LOCAL cOS := OS()
-   LOCAL cPath := IIF( Left( cOS, 10 ) == "Windows NT", "C:\winnt\fonts\", "C:\windows\fonts\" )
+
+   LOCAL cPath := GetEnv( "WINDIR" ) + "\fonts\"
    LOCAL oI
+
    // LOCAL cyan
    LOCAL blue
    LOCAL aSize, nWidth, nHeight, nX, nY
@@ -172,25 +177,25 @@ PROCEDURE OutJpg( cText, nPitch )
    oI := GDImage( 400, 100 )
 
    /* Allocate background */
-   // cyan  := oI:SetColor(0, 255, 255)
+   // cyan  := oI:SetColor( 0, 255, 255 )
 
    /* Allocate drawing color */
-   // blue := oI:SetColor(0, 0, 200)
+   // blue := oI:SetColor( 0, 0, 200 )
 
    //oI:SetTransparent( blue )
    oI:SetFontName( cFont )
    oI:SetFontPitch( nPitch )
    //__OutDebug( oI:GetFTFontHeight() )
    aSize := oI:GetFTStringSize( cText )
-   nWidth  := aSize[1]
-   nHeight := aSize[2]
-   nX      := aSize[3]
-   nY      := aSize[4]
+   nWidth  := aSize[ 1 ]
+   nHeight := aSize[ 2 ]
+   nX      := aSize[ 3 ]
+   nY      := aSize[ 4 ]
    oI:Resize( nWidth, nHeight )
 
 
    /* Allocate drawing color */
-   blue := oI:SetColor(0, 0, 200)
+   blue := oI:SetColor( 0, 0, 200 )
    oI:SetFontName( cPath + "verdana.ttf" )
    oI:SetFontPitch( nPitch )
    oI:SayFreeType( 0 - nX, 0 + nHeight - nY, cText, , , 0, blue )
@@ -205,13 +210,14 @@ PROCEDURE OutJpg( cText, nPitch )
    //oI:SetColor( blue )
    //oI:Say( 0, 0, cText )
 
-   WRITE 'content-type: image/jpeg' + CHR(13)+CHR(10)
+   WRITE 'content-type: image/jpeg' + Chr( 13 ) + Chr( 10 )
 
    oI:OutputJpeg()
 
-RETURN
+   RETURN
 
 FUNCTION GetVars( cFields, cSeparator )
+
    LOCAL hHashVars := { => }
    LOCAL aField, cField, aFields
    LOCAL cName, xValue
@@ -226,14 +232,14 @@ FUNCTION GetVars( cFields, cSeparator )
          LOOP
       ENDIF
 
-      cName  := LTrim( aField[1] )
-      xValue := UrlDecode( aField[2] )
+      cName  := LTrim( aField[ 1 ] )
+      xValue := UrlDecode( aField[ 2 ] )
 
       // Tracelog( "cName, xValue", cName, xValue )
 
       // is it an array entry?
-      IF Substr( cName, Len( cName ) - 1 ) == "[]"
-         cName := Substr( cName, 1, Len( cName ) - 2 )
+      IF SubStr( cName, Len( cName ) - 1 ) == "[]"
+         cName := SubStr( cName, 1, Len( cName ) - 2 )
 
          hHashVars[ cName ] := { xValue }
 
@@ -246,9 +252,10 @@ FUNCTION GetVars( cFields, cSeparator )
    NEXT
    //__OutDebug( hHashVars )
 
-RETURN hHashVars
+   RETURN hHashVars
 
 FUNCTION GetParams( aParams )
+
    LOCAL hHashVars := { => }
    LOCAL aField, cField, aFields
    LOCAL cName, xValue
@@ -261,14 +268,14 @@ FUNCTION GetParams( aParams )
          LOOP
       ENDIF
 
-      cName  := LTrim( aField[1] )
-      xValue := UrlDecode( aField[2] )
+      cName  := LTrim( aField[ 1 ] )
+      xValue := UrlDecode( aField[ 2 ] )
 
       // Tracelog( "cName, xValue", cName, xValue )
 
       // is it an array entry?
-      IF Substr( cName, Len( cName ) - 1 ) == "[]"
-         cName := Substr( cName, 1, Len( cName ) - 2 )
+      IF SubStr( cName, Len( cName ) - 1 ) == "[]"
+         cName := SubStr( cName, 1, Len( cName ) - 2 )
 
          hHashVars[ cName ] := { xValue }
 
@@ -281,34 +288,37 @@ FUNCTION GetParams( aParams )
    NEXT
    //__OutDebug( hHashVars )
 
-RETURN hHashVars
+   RETURN hHashVars
 
-************************************************************
-* Decoding URL
-* Can return both a string or a number
-*
+   //***********************************************************
+   // Decoding URL
+   // Can return both a string or a number
+   //
+
 FUNCTION URLDecode( cStr )
+
    LOCAL cRet := "", i, cCar
+
    // LOCAL lNumeric := .T.
 
    FOR i := 1 TO Len( cStr )
-      cCar := cStr[i]
+      cCar := cStr[ i ]
+
       DO CASE
+      CASE cCar == "+"
+         cRet += " "
 
-         CASE cCar == "+"
-            cRet += " "
-
-         CASE cCar == "%"
-            i ++
-            cRet += Chr( hb_HexToNum( SubStr( cStr, i, 2 ) ) )
-            i ++
+      CASE cCar == "%"
+         i++
+         cRet += Chr( hb_HexToNum( SubStr( cStr, i, 2 ) ) )
+         i++
 
          OTHERWISE
-            cRet += cCar
+         cRet += cCar
 
       ENDCASE
 
-      // IF (cRet[i] > "9" .or. cRet[i] < "0") .and. cRet[i] != "."
+      // IF (cRet[ i ] > "9" .or. cRet[ i ] < "0") .and. cRet[ i ] != "."
       //    lNumeric := .F.
       // ENDIF
    NEXT
@@ -317,31 +327,31 @@ FUNCTION URLDecode( cStr )
    //    cRet := Val( cRet )
    // ENDIF
 
-RETURN cRet
+   RETURN cRet
 
 FUNCTION URLEncode( cStr )
+
    LOCAL cRet := "", i, nVal, cCar
 
    FOR i := 1 TO Len( cStr )
-      cCar := cStr[i]
+      cCar := cStr[ i ]
       DO CASE
+      CASE cCar == " "
+         cRet += "+"
 
-         CASE cCar == " "
-              cRet += "+"
+      CASE cCar >= "A" .AND. cCar <= "Z"
+         cRet += cCar
 
-         CASE cCar >= "A" .and. cCar <= "Z"
-            cRet += cCar
+      CASE cCar >= "a" .AND. cCar <= "z"
+         cRet += cCar
 
-         CASE cCar >= "a" .and. cCar <= "z"
-            cRet += cCar
+      CASE cCar >= "0" .AND. cCar <= "9"
+         cRet += cCar
 
-         CASE cCar >= "0" .and. cCar <= "9"
-            cRet += cCar
-
-         OTHERWISE
-            nVal := Asc( cCar )
-            cRet += "%" + hb_NumToHex( nVal )
+      OTHERWISE
+         nVal := Asc( cCar )
+         cRet += "%" + hb_NumToHex( nVal )
       ENDCASE
    NEXT
 
-RETURN cRet
+   RETURN cRet

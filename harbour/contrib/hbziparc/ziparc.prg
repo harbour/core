@@ -74,7 +74,7 @@ PROCEDURE SetZipReadOnly( lReadOnly )
 
 PROCEDURE hb_SetZipComment( cComment )
 
-   IF cComment == NIL .OR. ISCHARACTER( cComment )
+   IF cComment == NIL .OR. HB_ISSTRING( cComment )
       t_cComment := cComment
    ENDIF
 

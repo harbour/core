@@ -82,7 +82,7 @@ PROCEDURE Main()
    bar:Finish( 2 )
 
    // BRAZIL-FEBRABAN
-   bar:= TCode():New( 25 )
+   bar := TCode():New( 25 )
 
    bar:Configure( 25, black, white, 1, 1,, .T. )
 

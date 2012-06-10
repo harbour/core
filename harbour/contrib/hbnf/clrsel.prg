@@ -116,7 +116,7 @@
   IF "EGA" $ UPPER( cVidMode )
      SETMODE( 43, 80 )
   ENDIF
-  lColour := iif( "MONO" $ UPPER( cVidMode ), .F., ISCOLOR() )
+  lColour := iif( "MONO" $ UPPER( cVidMode ), .F., IsColor() )
 
   SET SCOREBOARD Off
   SETCURSOR( SC_NONE )
@@ -168,7 +168,7 @@ LOCAL nColSav := COL()
 LOCAL aEnvSav := FT_SaveSets()
 LOCAL cScrSav := SAVESCREEN( 00, 00, MAXROW(), MAXCOL() )
 
-DEFAULT lColour TO ISCOLOR()
+DEFAULT lColour TO IsColor()
 DEFAULT cChr TO chr(254)+chr(254)
 cChr := PadR( cChr, 2 )
 
@@ -261,7 +261,7 @@ DEFAULT aOpt[ C_TYPE ] TO "W"
 aOpt[ C_CLR ]  := UPPER( aOpt[ C_CLR ] )    // need upper case
 aOpt[ C_TYPE ] := UPPER( aOpt[ C_TYPE ] )
 
-DEFAULT lColour TO ISCOLOR()
+DEFAULT lColour TO IsColor()
 
 *.... display appropriate prompts based on type of colour setting
 nChoice := 1

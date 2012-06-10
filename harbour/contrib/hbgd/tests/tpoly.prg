@@ -34,7 +34,7 @@ PROCEDURE DrawFlake( lOpenPoly )
    nSideLen := 1500
    nOrder := 7
 
-   cImageName := IIF( lOpenPoly, "flakeo.png", "flake.png" )
+   cImageName := iif( lOpenPoly, "flakeo.png", "flake.png" )
 
    gdImage := gdImageCreate( 1900, 2100 )
    gdImageColorAllocate( gdImage, 0, 0, 0 )
@@ -54,7 +54,7 @@ PROCEDURE DrawFlake( lOpenPoly )
 
    /** In green */
    gdColor := gdImageColorAllocate( gdImage, 0, 255, 0 )
-   IIF( lOpenPoly,;
+   iif( lOpenPoly,;
         gdImageOpenPolygon( gdImage, s_aCoords, gdColor ),;
         gdImagePolygon( gdImage, s_aCoords, gdColor ) )
 
@@ -73,7 +73,7 @@ PROCEDURE DrawFlake( lOpenPoly )
 
    /** In yellow */
    gdColor := gdImageColorAllocate( gdImage, 255, 255, 0 )
-   IIF( lOpenPoly,;
+   iif( lOpenPoly,;
         gdImageOpenPolygon( gdImage, s_aCoords, gdColor ),;
         gdImagePolygon( gdImage, s_aCoords, gdColor ) )
 

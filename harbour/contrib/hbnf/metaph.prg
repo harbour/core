@@ -331,7 +331,7 @@ STATIC FUNCTION _ftMakeAlpha ( cStr )
 LOCAL x, cAlpha := ""
 
 FOR x := 1 to LEN( cStr )
-  IF SUBSTR( cStr, x, 1 ) == " " .OR. ISALPHA( SUBSTR( cStr, x, 1 ) )
+  IF SUBSTR( cStr, x, 1 ) == " " .OR. IsAlpha( SUBSTR( cStr, x, 1 ) )
     cAlpha := cAlpha + SUBSTR( cStr, x, 1 )
   ENDIF
 NEXT

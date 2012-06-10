@@ -2,6 +2,9 @@
  * $Id$
  */
 
+#require "hbzebra"
+#require "hbcairo"
+
 #include "hbzebra.ch"
 #include "hbcairo.ch"
 
@@ -74,7 +77,7 @@ PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
          ENDIF
          cairo_move_to( hCairo, 40, nY + 13 )
          cairo_show_text( hCairo, cType )
-         IF Len( cTxt := hb_zebra_getcode( hZebra ) ) < 20 
+         IF Len( cTxt := hb_zebra_getcode( hZebra ) ) < 20
             cairo_move_to( hCairo, 100, nY + 13 )
             cairo_show_text( hCairo, cTxt )
          ENDIF

@@ -187,13 +187,13 @@ FUNCTION __I18N_POTARRAYLOAD( cFile, cErrorMsg )
             nOldIndex := nIndex
             nIndex := 2
             n := 13
-            IF ISDIGIT( substr( cLine, n, 1 ) )
+            IF IsDigit( substr( cLine, n, 1 ) )
                nIndex := VAL( substr( cLine, n ) ) + 1
                IF nIndex < 1
                   cErrorMsg := "wrong plural form index"
                   EXIT
                ENDIF
-               WHILE ISDIGIT( substr( cLine, n, 1 ) )
+               WHILE IsDigit( substr( cLine, n, 1 ) )
                   ++n
                ENDDO
             ENDIF
@@ -224,9 +224,9 @@ FUNCTION __I18N_POTARRAYLOAD( cFile, cErrorMsg )
             nOldIndex := IIF( nMode == _I18N_MSGSTR, nIndex, -1 )
             nIndex := 0
             n := 8
-            IF ISDIGIT( substr( cLine, n, 1 ) )
+            IF IsDigit( substr( cLine, n, 1 ) )
                nIndex := VAL( substr( cLine, n ) )
-               WHILE ISDIGIT( substr( cLine, n, 1 ) )
+               WHILE IsDigit( substr( cLine, n, 1 ) )
                   ++n
                ENDDO
             ENDIF

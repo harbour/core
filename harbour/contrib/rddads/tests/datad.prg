@@ -6,6 +6,8 @@
     Demo of ADS Connection handling and Data Dictionaries
 */
 
+#require "rddads"
+
 #include "ads.ch"
 REQUEST ADS
 

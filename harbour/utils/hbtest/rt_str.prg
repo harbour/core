@@ -257,7 +257,7 @@ PROCEDURE Main_STR()
    TEST_LINE( Asc( @scString )                , 72                                   ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1107 Argument error (ASC) OS:0 #:0 A:1:U:HELLO F:S" */
 #endif
 
-   /* ISDIGIT() */
+   /* IsDigit() */
 
 #ifndef __XPP__
    TEST_LINE( IsDigit()                       , .F.              )
@@ -278,7 +278,7 @@ PROCEDURE Main_STR()
    TEST_LINE( IsDigit( "A1" )                 , .F.              )
    TEST_LINE( IsDigit( "1A" )                 , .T.              )
 
-   /* ISALPHA() */
+   /* IsAlpha() */
 
 #ifndef __XPP__
    TEST_LINE( IsAlpha()                       , .F.              )
@@ -307,7 +307,7 @@ PROCEDURE Main_STR()
    TEST_LINE( IsAlpha( "`"  )                 , .F.              )
    TEST_LINE( IsAlpha( "{"  )                 , .F.              )
 
-   /* ISUPPER() */
+   /* IsUpper() */
 
 #ifndef __XPP__
    TEST_LINE( IsUpper()                       , .F.              )
@@ -327,7 +327,7 @@ PROCEDURE Main_STR()
    TEST_LINE( IsUpper( "™" )                  , .F.              )
    TEST_LINE( IsUpper( "”" )                  , .F.              )
 
-   /* ISLOWER() */
+   /* IsLower() */
 
 #ifndef __XPP__
    TEST_LINE( IsLower()                       , .F.              )

@@ -8,8 +8,8 @@
  * GD Class test file: tostring() demo
  */
 
-
 #include "gd.ch"
+#include "simpleio.ch"
 
 #define IMAGES_IN  "imgs_in" + hb_ps()
 #define IMAGES_OUT "imgs_out" + hb_ps()
@@ -20,7 +20,7 @@ PROCEDURE Main()
 
    /*
    // Check output directory
-   IF !ISDirectory( IMAGES_OUT )
+   IF !hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
    */
@@ -40,4 +40,4 @@ PROCEDURE Main()
    ? "Look at " + IMAGES_OUT + " folder for output images"
    ?
 
-RETURN
+   RETURN

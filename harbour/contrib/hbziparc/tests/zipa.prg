@@ -2,6 +2,10 @@
  * $Id$
  */
 
+#require "hbziparc"
+
+#include "simpleio.ch"
+
 PROCEDURE Main( cZip, ... )
     LOCAL a, b, c
 
