@@ -252,6 +252,9 @@ REQUEST hbmk_KEYW
 
 #define _HBMK_TARGENAME_ADHOC   ".adhoc."
 
+#define _HBMK_REGEX_INCLUDE     '(^|;)[[:blank:]]*#[[:blank:]]*(incl|inclu|includ|include|import)[[:blank:]]*(\".+?\"|<.+?>'+"|['`].+?'"+')'
+#define _HBMK_REGEX_REQUIRE     '(^|;)[[:blank:]]*#[[:blank:]]*(require)[[:blank:]]*(\".+?\"'+"|'.+?'"+')'
+
 #define _HBMK_NEST_MAX          10
 #define _HBMK_HEAD_NEST_MAX     10
 
@@ -538,6 +541,7 @@ REQUEST HB_FSETATTR
 /* For hbrun emulation */
 STATIC s_cDirBase_hbrun
 STATIC s_cProgName_hbrun
+STATIC s_hLibExtDyn := { => }
 
 /* NOTE: Security token to protect against plugins accessing our
          internal structures referenced from context variable */
@@ -568,7 +572,7 @@ PROCEDURE _APPMAIN( ... )
       IF tmp == ".hb" .OR. ;
          tmp == ".hbs" .OR. ;
          tmp == ".hrb"
-         hbmk_hbrun_minimal( ... )
+         __hbrun_minimal( ... )
          QUIT
       ENDIF
    ENDIF
@@ -7634,12 +7638,8 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
        * not need UTF8 or any other fixed encoding.
        */
       tmp := hb_cdpSelect( "EN" )
-      s_pRegexInclude := hb_regexComp( '(^|;)[[:blank:]]*#[[:blank:]]*(incl|inclu|includ|include|import)[[:blank:]]*(\".+?\"|<.+?>'+"|['`].+?'"+')',;
-         .F. /* lCaseSensitive */,;
-         .T. /* lNewLine */ )
-      s_pRegexRequire := hb_regexComp( '(^|;)[[:blank:]]*#[[:blank:]]*(require)[[:blank:]]*(\".+?\"'+"|'.+?'"+')',;
-         .F. /* lCaseSensitive */,;
-         .T. /* lNewLine */ )
+      s_pRegexInclude := hb_regexComp( _HBMK_REGEX_INCLUDE, .F. /* lCaseSensitive */, .T. /* lNewLine */ )
+      s_pRegexRequire := hb_regexComp( _HBMK_REGEX_REQUIRE, .F. /* lCaseSensitive */, .T. /* lNewLine */ )
       hb_cdpSelect( tmp )
       IF Empty( s_pRegexInclude )
          _hbmk_OutErr( hbmk, I_( "Internal Error: Regular expression engine missing or unsupported. Check your Harbour build settings." ) )
@@ -12106,12 +12106,27 @@ STATIC FUNCTION hbmk_CoreHeaderFilesMinimal()
 
 /* Emulate a minimal hbrun */
 
-STATIC PROCEDURE hbmk_hbrun_minimal( cFile, ... )
+STATIC PROCEDURE __hbrun_minimal( cFile, ... )
+   LOCAL aDynamic := {}
 
    IF ! Empty( cFile := FindInPath( cFile ) )
       SWITCH Lower( hb_FNameExt( cFile ) )
       CASE ".hb"
       CASE ".hbs"
+         __hbrun_LoadExtDynamicFromSource( aDynamic, cFile )
+         /* NOTE: Assumptions:
+                  - one dynamic libs belongs to one .hbc file
+                  - dynamic libs will reference and automatically load all their dependencies
+                  - hbrun/hbmk2 is located in well known place inside the Harbour dir tree tree.
+                  - contribs/addons are also located in well-known place inside the Harbour dir tree
+                  - 3rd party addons can be loaded, too if they are installed into the Harbour dir tree
+                  - dynamic libs are installed into bin dir.
+                  - (this list is to be finalized) */
+         /* TODO: Find .hbc file. Load .hbc file. Process .hbc references.
+                  Pick include paths. Load libs. Add include paths to include
+                  path list. For this hbrun needs to know where Harbour tree
+                  is located. Once matured, copy the loading method to hbrun. */
+         __hbrun_extensions_dynamic_init( aDynamic )
          cFile := hb_compileBuf( hbmk_CoreHeaderFilesMinimal(), hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
                                  "-I" + hb_FNameDir( cFile ), "-D" + "__HBSCRIPT__HBRUN", cFile )
          IF cFile == NIL
@@ -12125,6 +12140,63 @@ STATIC PROCEDURE hbmk_hbrun_minimal( cFile, ... )
          hb_hrbRun( cFile, ... )
          EXIT
       ENDSWITCH
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE __hbrun_LoadExtDynamicFromSource( aDynamic, cFileName )
+   LOCAL cFile := MemoRead( cFileName )
+   LOCAL pRegex
+   LOCAL tmp
+
+   tmp := hb_cdpSelect( "EN" )
+   pRegex := hb_regexComp( _HBMK_REGEX_REQUIRE, .F. /* lCaseSensitive */, .T. /* lNewLine */ )
+   hb_cdpSelect( tmp )
+
+   IF ! Empty( pRegex )
+      FOR EACH tmp IN hb_regexAll( pRegex, cFile, ;
+                                   NIL /* lCaseSensitive */, ;
+                                   NIL /* lNewLine */, NIL, ;
+                                   NIL /* nGetMatch */, ;
+                                   .T. /* lOnlyMatch */ )
+         AAdd( aDynamic, SubStr( ATail( tmp ), 2, Len( ATail( tmp ) ) - 2 ) /* Last group in match marker */ )
+      NEXT
+   ENDIF
+
+   RETURN
+
+/* Requires -shared mode build */
+
+STATIC PROCEDURE __hbrun_extensions_dynamic_init( aDynamic )
+   LOCAL cName
+
+   IF ! Empty( aDynamic )
+      FOR EACH cName IN aDynamic
+         __hbrun_extensions_dynamic_load( cName )
+      NEXT
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE __hbrun_extensions_dynamic_load( cName )
+   LOCAL cFileName
+   LOCAL hLib
+
+   IF ! Empty( cName )
+      IF hb_Version( HB_VERSION_SHARED )
+         IF !( cName $ s_hLibExtDyn )
+            cFileName := FindInPath( hb_libName( cName + hb_libPostfix() ),;
+                            iif( hb_Version( HB_VERSION_UNIX_COMPAT ), GetEnv( "LD_LIBRARY_PATH" ), GetEnv( "PATH" ) ) )
+            IF ! Empty( cFileName )
+               hLib := hb_libLoad( cFileName )
+               IF ! Empty( hLib )
+                  s_hLibExtDyn[ cName ] := hLib
+               ENDIF
+            ENDIF
+         ENDIF
+      ELSE
+         OutErr( hb_StrFormat( "Cannot load %1$s. Requires -shared hbrun build.", cName ) + hb_eol() )
+      ENDIF
    ENDIF
 
    RETURN
