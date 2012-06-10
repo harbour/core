@@ -449,12 +449,6 @@ typedef struct _HB_CODEBLOCK
    HB_SHORT    dynBuffer;    /* is pcode buffer allocated dynamically, SHORT used instead of HB_BOOL intentionally to force optimal alignment */
 } HB_CODEBLOCK, * HB_CODEBLOCK_PTR;
 
-#if defined( HB_LEGACY_LEVEL4 )
-#  define HB_ITEM_PTR      PHB_ITEM
-#  define HB_BASEARRAY_PTR PHB_BASEARRAY
-#  define PHB_CODEBLOCK    HB_CODEBLOCK_PTR
-#endif
-
 typedef void     ( * HB_EXTREF_FUNC0 )( void * );
 typedef PHB_ITEM ( * HB_EXTREF_FUNC1 )( PHB_ITEM );
 typedef PHB_ITEM ( * HB_EXTREF_FUNC2 )( PHB_ITEM, PHB_ITEM );
@@ -533,6 +527,12 @@ extern void *     hb_xRefResize( void * pMem, HB_SIZE nSave, HB_SIZE nSize, HB_S
 #endif
 
 #endif /* _HB_API_INTERNAL_ */
+
+#if defined( HB_LEGACY_LEVEL4 )
+#  define HB_ITEM_PTR      PHB_ITEM
+#  define HB_BASEARRAY_PTR PHB_BASEARRAY
+#  define PHB_CODEBLOCK    HB_CODEBLOCK_PTR
+#endif
 
 #define hb_xgrabz( n )        memset( hb_xgrab( ( n ) ), 0, ( n ) )
 #define hb_xmemdup( p, n )    memcpy( hb_xgrab( ( n ) ), ( p ), ( n ) )
