@@ -1422,14 +1422,79 @@ without class object) though xHarbour wrongly use class messages as normal
 messages.
 
 In the future we plan to introduce real class objects like in Class(y) and
-some other languages (i.e. XBASE++) so it's important for portability to write
-code which is Class(y) friendly and never use class function directly as
-constructor, i.e. instead of writing code like:
+some other languages (i.e. XBASE++) so it's important for portability to
+rite code which is Class(y) friendly and never use class function directly
+as constructor, i.e. instead of writing code like:
       o := mycls( p1, p2, p3 )
 programmer should use:
       o := mycls():new( p1, p2, p3 )
 otherwise the code will not work with future Harbour versions supporting
-real class objects.
+real class objects. Even if programmer do not plan to pass any parameters
+to constructor then he shold call :NEW() method:
+      o := mycls():new()
+and please remember that :NEW() will be class method so it should not
+be redefined as constructor in user class. Instead :INIT() method should
+be used as constructor. It's executed automatically when object is
+created from the :NEW() method.
+
+In Class(y) and xBase++ class function never returns final object.
+It returns class object which is completely different and this object
+understands few messages which allow to manage class, check inheritance
+scheme, check object definition and access many different information
+about the class and object. It also understands message :NEW() which
+creates final object so programmer can make something like:
+
+    oClass := myclass()
+    oObj1 := oClass:new()
+    oObj2 := oClass:new()
+
+It's very powerful system which allows to easy create constructions
+which are still not available for Harbour and xHarbour users, i.e.
+it's possible to write fully functional object inspector in just
+few lines.
+It also resolves many internal problems, i.e. now in many places we
+have to create dummy objects just to extract some information about
+the class. Each call to class function creates new object in current
+implementation. In Class(y) class function returns exactly the same
+class object on each call so it's very fast and programmer can call
+this function as many times as he need without creating new objects.
+Current Harbour and xHarbour implementation blocks writing some more
+complicated code which needs to precisely follow each object instance
+overloading constructors and destructors or even implement dynamic
+initialization code because it will be activated in hidden way when
+dummy objects are created.
+
+In xHarbour when parameters are passed to class function then :NEW()
+method is executed inside class function.
+I plan to eliminate current limitations and open new possibilities
+adding class object functionality and it's the reason why I haven't
+tried to replicate xHarbour behavior in Harbour. It simply won't work
+in the future.
+
+Anyhow if someone wants to simulate xHarbour like behavior in Harbour
+then he can modify hbclass.ch from Harbour. It's enough to change
+ENDCLASS definition to:
+
+#xcommand ENDCLASS [<lck: LOCK, LOCKED>] => ;
+            oClass:Create() ; [<-lck-> __clsLock( oClass:hClass ) ] ;;
+         always ;;
+            __clsUnlockDef( @s_oClass, oClass ) ;;
+         end sequence ;;
+         oInstance := oClass:Instance() ;;
+         if __ObjHasMsg( oInstance, "InitClass" ) ;;
+            oInstance:InitClass( HB_CLS_PARAM_LIST ) ;;
+         end ;;
+      else ;;
+         oInstance := s_oClass:Instance() ;;
+      end ;;
+      if PCount() > 0 ;;
+         return oInstance:new( HB_CLS_PARAM_LIST ) ;;
+      endif ;;
+      return oInstance AS CLASS _CLASS_NAME_ ;;
+   #undef  _CLASS_MODE_ ; #define _CLASS_MODE_ _CLASS_IMPLEMENTATION_
+
+But please remember it's not supported by Harbour and it may stop to
+work in the future.
 
 
 
@@ -1718,7 +1783,7 @@ loading and executing external code like support for thread local public
 symbols. It should greatly help to improve some programs like HTTP
 servers. Probably this code should also help in implementing dynamic
 namespace support so maybe we introduce it but seems that it will be
-completely different thing then in current xHarbour.
+completely different thing then namespaces in current xHarbour.
 
 
 
@@ -1926,7 +1991,7 @@ far from current Harbour functionality and quality.
 
 ###    HARBOUR TASKS AND MT SUPPORT IN DOS    ###
 =================================================
-Harbour supports threads also in system without native thread support.
+Harbour supports threads also in systems without native thread support.
 It has special code which emulates task switching so Harbour MT programs
 can be compiled and executed in systems like DOS.
 Harbour tasks are used by default in DOS builds in MT HVM.

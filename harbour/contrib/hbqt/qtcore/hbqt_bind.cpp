@@ -52,7 +52,6 @@
  */
 /*----------------------------------------------------------------------*/
 
-#include "hbvmint.h"
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbstack.h"
@@ -108,17 +107,6 @@ static void hbqt_bind_init( void* cargo )
    s_dynsym_SETSLOTS = hb_dynsymGetCase( "SETSLOTS" );
 }
 
-static PHB_ITEM hb_arrayCreateClone( PHB_ITEM pItem, PHB_BASEARRAY pBaseArray )
-{
-   hb_arrayPushBase( pBaseArray );
-   if( pItem == NULL )
-      pItem = hb_itemNew( NULL );
-   hb_itemMove( pItem, hb_stackItemFromTop( -1 ) );
-   hb_stackPop();
-
-   return pItem;
-}
-
 PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szClassName, PHBQT_DEL_FUNC pDelFunc, int iFlags )
 {
    #if 0
@@ -147,7 +135,7 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
       if( bind->qtObject == qtObject )
       {
          HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetHbObject( %p ):if( bind->qtObject == qtObject )", qtObject ) );
-         pObject = hb_arrayCreateClone( pItem, ( PHB_BASEARRAY ) bind->hbObject );
+         pObject = hb_arrayFromId( pItem, bind->hbObject );
          break;
       }
       bind = bind->next;
@@ -272,27 +260,25 @@ PHB_ITEM hbqt_bindSetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
 PHB_ITEM hbqt_bindGetHbObjectBYqtObject( void * qtObject )
 {
    PHB_ITEM pObject = NULL;
-   PHB_ITEM pItem = NULL;
-   
+
    if( qtObject != NULL )
    {
       PHBQT_BIND bind;
-         
+
       HBQT_BIND_LOCK
       bind = s_hbqt_binds;
       while( bind )
       {
          if( bind->qtObject == qtObject )
          {
-            pObject = hb_arrayCreateClone( pItem, ( PHB_BASEARRAY ) bind->hbObject );
+            pObject = hb_arrayFromId( NULL, bind->hbObject );
             break;
          }
          bind = bind->next;
       }
       HBQT_BIND_UNLOCK
    }
-   hb_itemRelease( pItem );
-   return pObject;   
+   return pObject;
 }
 
 void * hbqt_bindGetQtObject( PHB_ITEM pObject )
@@ -672,21 +658,18 @@ void hbqt_bindDelSlots( PHB_ITEM pSenderObject )
          hb_vmSend( 0 );
          if( hb_vmRequestQuery() == 0 )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindDelSlots( PHB_ITEM pSenderObject    1 )" ) );
-            PHB_ITEM pArray = hb_stackReturnItem();
-            if( pArray )
-            {
-               HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindDelSlots( PHB_ITEM pSenderObject )" ) );
-               hb_itemRelease( pArray );
-            }   
+            HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindDelSlots( PHB_ITEM pSenderObject )" ) );
+            hb_hashClear( hb_stackReturnItem() );
          }
          hb_vmRequestRestore();
       }
-   }   
+   }
 }
 
 PHB_ITEM hbqt_bindGetSlots( PHB_ITEM pSenderObject, int iSignalid )
 {
+   PHB_ITEM pSlots = NULL;
+
    if( hb_vmRequestReenter() )
    {
       hb_vmPushDynSym( s_dynsym___SLOTS );
@@ -701,11 +684,11 @@ PHB_ITEM hbqt_bindGetSlots( PHB_ITEM pSenderObject, int iSignalid )
          hb_stackPop();
 
          if( pArray && HB_IS_ARRAY( pArray ) && hb_arrayLen( pArray ) > 0 )
-            return hb_itemNew( pArray );
+            pSlots = hb_itemNew( pArray );
       }
       hb_vmRequestRestore();
    }
-   return NULL;
+   return pSlots;
 }
 
 HB_CALL_ON_STARTUP_BEGIN( _hbqt_bind_init_ )

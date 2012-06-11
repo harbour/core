@@ -30,5 +30,6 @@ DOC_FILES := \
    transfrm.txt \
    vm.txt \
    windll.txt \
+   xhb-diff.txt \
 
 include $(TOP)$(ROOT)config/doc.mk

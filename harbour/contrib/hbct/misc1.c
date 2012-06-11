@@ -54,25 +54,31 @@
 
 HB_FUNC( XTOC )
 {
-   if( HB_ISCHAR( 1 ) )
-      hb_retc( hb_parc( 1 ) );
-   else if( HB_ISDATE( 1 ) )
-      hb_retc( hb_pards( 1 ) );
-   else if( HB_ISTIMESTAMP( 1 ) )
-   {
-      char szDateTime[ 18 ];
-      hb_retc( hb_itemGetTS( hb_param( 1, HB_IT_TIMESTAMP ), szDateTime ) );
-   }
-   else if( HB_ISNUM( 1 ) )
-   {
-      char buf[ sizeof( double ) ];
-      double d = hb_parnd( 1 );
+   PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
 
-      HB_PUT_LE_DOUBLE( buf, d );
-      hb_retclen( buf, sizeof( buf ) );
+   if( pItem )
+   {
+      if( HB_IS_DATE( pItem ) )
+      {
+         char szDate[ 9 ];
+         hb_retc( hb_itemGetDS( pItem, szDate ) );
+      }
+      else if( HB_IS_TIMESTAMP( pItem ) )
+      {
+         char szDateTime[ 18 ];
+         hb_retc( hb_itemGetTS( pItem, szDateTime ) );
+      }
+      else if( HB_IS_NUMERIC( pItem ) )
+      {
+         char buf[ sizeof( double ) ];
+         double d = hb_parnd( 1 );
+
+         HB_PUT_LE_DOUBLE( buf, d );
+         hb_retclen( buf, sizeof( buf ) );
+      }
+      else if( HB_IS_LOGICAL( pItem ) )
+         hb_retclen( hb_itemGetL( pItem ) ? "T" : "F", 1 );
+      else
+         hb_itemReturn( pItem );
    }
-   else if( HB_ISLOG( 1 ) )
-      hb_retclen( hb_parl( 1 ) ? "T" : "F", 1 );
-   else
-      hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
 }

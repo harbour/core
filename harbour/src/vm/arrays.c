@@ -321,6 +321,19 @@ void * hb_arrayId( PHB_ITEM pArray )
       return NULL;
 }
 
+PHB_ITEM hb_arrayFromId( PHB_ITEM pItem, void * pArrayId )
+{
+   HB_STACK_TLS_PRELOAD
+
+   hb_arrayPushBase( ( PHB_BASEARRAY ) pArrayId );
+   if( pItem == NULL )
+      pItem = hb_itemNew( NULL );
+   hb_itemMove( pItem, hb_stackItemFromTop( -1 ) );
+   hb_stackPop();
+
+   return pItem;
+}
+
 HB_BOOL hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pValue )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_arrayAdd(%p, %p)", pArray, pValue));
