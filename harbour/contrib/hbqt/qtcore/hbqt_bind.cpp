@@ -113,7 +113,7 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
    #if 1
    char * pname = ( char* ) hb_xgrab( 200 );
    char * pname1 = ( char* ) hb_xgrab( 200 );
-   HB_TRACE( HB_TR_ALWAYS, ( ".................HARBOUR_REQUEST_BIND_OBJECT( %p, %i, %s, %s, %s ).................", qtObject, iFlags, szClassName, hb_procname( 0, pname, HB_TRUE ),  hb_procname( 1, pname1, HB_TRUE ) ) );
+   HB_TRACE( HB_TR_DEBUG, ( ".................HARBOUR_REQUEST_BIND_OBJECT( %p, %i, %s, %s, %s ).................", qtObject, iFlags, szClassName, hb_procname( 0, pname, HB_TRUE ),  hb_procname( 1, pname1, HB_TRUE ) ) );
    hb_xfree( pname );
    hb_xfree( pname1 );
    #endif
@@ -329,7 +329,7 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
       {
          if( bind->hbObject == hbObject )
          {
-            HB_TRACE( HB_TR_ALWAYS, ( "..............HARBOUR_DESTROY_BEGINS( %p, %i ).............. %s", bind->qtObject, bind->iFlags, bind->szClassName ) );
+            HB_TRACE( HB_TR_DEBUG, ( "..............HARBOUR_DESTROY_BEGINS( %p, %i ).............. %s", bind->qtObject, bind->iFlags, bind->szClassName ) );
             
             found = HB_TRUE;
             bool fObject = bind->iFlags & HBQT_BIT_QOBJECT;
@@ -425,7 +425,7 @@ void hbqt_bindDestroyQtObject( void * qtObject )
    {
       if( bind->qtObject == qtObject )
       {
-         HB_TRACE( HB_TR_ALWAYS, ( "..............QT_DESTROY_BEGINS( %p ).............. %s fDeleting = %s", qtObject, bind->szClassName, bind->fDeleting ? "YES" : "NO" ) );
+         HB_TRACE( HB_TR_DEBUG, ( "..............QT_DESTROY_BEGINS( %p ).............. %s fDeleting = %s", qtObject, bind->szClassName, bind->fDeleting ? "YES" : "NO" ) );
          
          * bind_ptr = bind->next;
          if( ! bind->fDeleting )
