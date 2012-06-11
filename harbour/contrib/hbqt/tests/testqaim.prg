@@ -16,13 +16,11 @@
 
 #include "common.ch"
 
-STATIC oWnd
-
-STATIC oDA, oForeColor, oAlphaColor, oBackBrush, oSize, oPixmap, oIcon, oFont
-
-
+STATIC oForeColor, oAlphaColor, oBackBrush, oSize, oPixmap, oIcon, oFont
+   
 PROCEDURE Main()
    LOCAL tb1, mo1, lay1, lay2, bt1, bt2, bt3
+   LOCAL oWnd, oDA
 
    oWnd := QMainWindow()
    oWnd:resize(600,400 )
@@ -32,17 +30,17 @@ PROCEDURE Main()
    lay1 := QVBoxLayout( oDA )
 
    /* Here we define some HBQt objects to use in the callback */
-   oForeColor := QColor( 0, 50, 100 )                              // Solid blue
-   oAlphaColor := QColor( 255, 0, 0 )                              // Transparent Red
+   oForeColor := QColor( 0, 50, 100 )                               // Solid blue
+   oAlphaColor := QColor( 255, 0, 0 )                               // Transparent Red
    oAlphaColor:setAlpha( 128 )
    oBackBrush := QBrush( QColor( 255, 255, 100 ), Qt_BDiagPattern ) // Yellow Diagonal lines
-   oSize := QSize( 80, 30 )                                        // Default header sizes
-   oPixmap := QPixMap( hb_dirBase() + "harbour-icon.png" )         // Image
-   oIcon := QIcon( oPixMap )                                       // Icon (reusing the image)
-   oFont := QFont()                                                // Bold Italic font
+   oSize := QSize( 80, 30 )                                         // Default header sizes
+   oPixmap := QPixMap( hb_dirBase() + "harbour-icon.png" )          // Image
+   oIcon := QIcon( oPixMap )                                        // Icon (reusing the image)
+   
+   oFont := QFont()                                                 // Bold Italic font
    oFont:setBold( .T. )
    oFont:setItalic( .T. )
-   /* ------------------------------------------------------- */
 
    tb1 := QTableView()
 

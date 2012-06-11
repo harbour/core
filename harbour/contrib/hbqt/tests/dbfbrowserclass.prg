@@ -10,8 +10,8 @@
  *
  */
 
-#ifndef HB_QDBFBROWSER_CH_
-#define HB_QDBFBROWSER_CH_
+#ifndef HB_QDBFBROWSER_PRG_
+#define HB_QDBFBROWSER_PRG_
 
 #include "hbclass.ch"
 
@@ -23,41 +23,48 @@ CREATE CLASS B2QDBFBrowser INHERIT HB_QTableView FUNCTION B2_QDBFBrowser
    METHOD init()
    METHOD attach()
    METHOD detach()
+   METHOD destroy()
 
    VAR oModel
    VAR nArea  INIT 0
    VAR aStru
 
-   VAR oHack1
-ENDCLASS
+   VAR oItemDgt
+   ENDCLASS
 
 METHOD init()
    ::oModel := HBQAbstractItemModel( {| t, r, x, y| B2_QDBFBrowse( Self, t, r, x, y ) } )
-   Self:setModel( ::oModel )
-RETURN Self
+   ::setModel( ::oModel )
+   ::oItemDgt := ::itemDelegate()
+   ::oItemDgt:connect( "commitData(QWidget*)", {|oWidget| B2_QDBFCommit( Self, oWidget ) } )
+   RETURN Self
 
+METHOD B2QDBFBrowser:destroy()
+   ::oItemDgt:disconnect( "commitData(QWidget*)" )
+   ::oModel:reset()
+   ::nArea := 0
+   IF Select() > 0
+      DbCloseArea()
+   ENDIF    
+   RETURN NIL
+   
 METHOD B2QDBFBrowser:attach()
-   If ( ::nArea := Select() ) > 0
+   IF ( ::nArea := Select() ) > 0
       ::aStru := DBStruct()
       ::oModel:reset()
-      ::oHack1 := ::itemDelegate() // Intermediate variable needed to avoid destroying the :connect()
-      ::oHack1:connect( "commitData(QWidget*)", {|oWidget| B2_QDBFCommit( Self, oWidget ) } )
-   End
-RETURN NIL
+   ENDIF
+   RETURN NIL
 
 METHOD B2QDBFBrowser:detach()
-   ::oHack1 := ::itemDelegate() // Intermediate variable needed to avoid destroying the :connect()
-   ::oHack1:disconnect( "commitData(QWidget*)" )
    ::nArea := 0
    ::oModel:reset()
-RETURN NIL
-
+   RETURN NIL
 
 PROCEDURE B2_QDBFCommit( o, oWidget )
    LOCAL oIndex := o:currentIndex()
    LOCAL nCX := oIndex:column()
    LOCAL nCY := oIndex:row()
-   Local nOldArea := Select()
+   LOCAL nOldArea := Select()
    LOCAL cData := oWidget:property( "text" ):toString()
    
    DBSelectArea( o:nArea )
@@ -79,16 +86,16 @@ PROCEDURE B2_QDBFCommit( o, oWidget )
    ENDSWITCH
 
    DBSelectArea( nOldArea )
-RETURN
+   RETURN
 
 
 FUNCTION B2_QDBFBrowse( o, nT, nRole, nX, nY )
    LOCAL xRet
    LOCAL nOldArea := Select()
 
-   If o:nArea == 0
+   IF o:nArea == 0
       RETURN NIL
-   END
+   ENDIF
 
    SWITCH nT
    CASE HBQT_QAIM_flags
@@ -149,8 +156,10 @@ FUNCTION B2_QDBFBrowse( o, nT, nRole, nX, nY )
             RETURN Qt_AlignVCenter + Qt_AlignLeft
          CASE "N"
             RETURN Qt_AlignVCenter + Qt_AlignRight
+            
          ENDSWITCH
          RETURN Qt_AlignCenter
+         
       ENDSWITCH
       RETURN NIL
 
@@ -178,6 +187,7 @@ FUNCTION B2_QDBFBrowse( o, nT, nRole, nX, nY )
 
    CASE HBQT_QAIM_columnCount
       RETURN Len( o:aStru )
+      
    ENDSWITCH
 
    RETURN NIL

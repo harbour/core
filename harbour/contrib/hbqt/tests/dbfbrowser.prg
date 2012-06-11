@@ -11,8 +11,6 @@
  */
 
 #include "hbqtgui.ch"
-#include "dbfbrowserclass.prg"
-
 
 PROCEDURE Main()
    LOCAL oWid
@@ -54,13 +52,17 @@ PROCEDURE Main()
 
    oWid:Show()
    QApplication():exec()
-RETURN
-
+   
+   oTable1:destroy() // Mainly to disconnect signals 
+   
+   oButton1:disconnect( "clicked()" ) // The only way for GC to resolve
+   oButton2:disconnect( "clicked()" )
+   RETURN
 
 PROCEDURE OpenDBF( oWid, oTable )
    STATIC cDir := "."
    LOCAL cFile
-
+   
    cFile := QFileDialog():getOpenFileName( oWid, "Open file", cDir, "DBF files (*.dbf);;All files (*.*)" )
 
    IF cFile == ""
@@ -74,15 +76,15 @@ PROCEDURE OpenDBF( oWid, oTable )
       DBUseArea( .T., NIL, cFile, NIL, .F., .F. )
    END SEQUENCE
 
-   If Used()
+   IF Used()
       oTable:attach()
-   End
-RETURN
+   ENDIF 
+   RETURN
 
 PROCEDURE CloseDBF( oTable )
    oTable:detach()
    DBCloseArea()
-RETURN
+   RETURN
 
 
 #include "dbfbrowserclass.prg"

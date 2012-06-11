@@ -124,6 +124,9 @@ PROCEDURE Main()
 
    QApplication():exec()
 
+   oBtn:disconnect( "clicked()" )
+   oBtn := NIL
+   
    HB_TRACE( HB_TR_DEBUG, ".............. E X I T I N G ...................", valtype( oLabel ) )
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
 

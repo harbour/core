@@ -77,6 +77,7 @@ typedef struct _HBQT_BIND
    PHBQT_DEL_FUNC       pDelFunc;
    int                  iFlags;
    bool                 fDeleting;
+   char                 szClassName[ 100 ];
    struct _HBQT_BIND *  next;
 }
 HBQT_BIND, * PHBQT_BIND;
@@ -109,10 +110,10 @@ static void hbqt_bind_init( void* cargo )
 
 PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szClassName, PHBQT_DEL_FUNC pDelFunc, int iFlags )
 {
-   #if 0
+   #if 1
    char * pname = ( char* ) hb_xgrab( 200 );
    char * pname1 = ( char* ) hb_xgrab( 200 );
-   HB_TRACE( HB_TR_DEBUG, ( ".................HARBOUR_REQUEST_BIND_OBJECT( %p, %i, %s, %s, %s ).................", qtObject, iFlags, szClassName, hb_procname( 0, pname, HB_TRUE ),  hb_procname( 1, pname1, HB_TRUE ) ) );
+   HB_TRACE( HB_TR_ALWAYS, ( ".................HARBOUR_REQUEST_BIND_OBJECT( %p, %i, %s, %s, %s ).................", qtObject, iFlags, szClassName, hb_procname( 0, pname, HB_TRUE ),  hb_procname( 1, pname1, HB_TRUE ) ) );
    hb_xfree( pname );
    hb_xfree( pname1 );
    #endif
@@ -165,6 +166,7 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
             bind->pDelFunc = pDelFunc;
             bind->iFlags = iFlags;
             bind->fDeleting = false;
+            hb_strncpy( bind->szClassName, szClassName, 99 );
             bind->next = s_hbqt_binds;
             s_hbqt_binds = bind;
          }
@@ -232,6 +234,7 @@ PHB_ITEM hbqt_bindSetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
          bind->pDelFunc = pDelFunc;
          bind->iFlags = iFlags;
          bind->fDeleting = false;
+         hb_strncpy( bind->szClassName, szClassName, 99 );
          bind->next = s_hbqt_binds;
          s_hbqt_binds = bind;
 
@@ -326,7 +329,7 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
       {
          if( bind->hbObject == hbObject )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "..............HARBOUR_DESTROY_BEGINS( %p, %i )..............", bind->qtObject, bind->iFlags ) );
+            HB_TRACE( HB_TR_ALWAYS, ( "..............HARBOUR_DESTROY_BEGINS( %p, %i ).............. %s", bind->qtObject, bind->iFlags, bind->szClassName ) );
             
             found = HB_TRUE;
             bool fObject = bind->iFlags & HBQT_BIT_QOBJECT;
@@ -350,9 +353,12 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
                         if( obj->parent() == NULL )
                         {
                            * bind_ptr = bind->next;
-                           bind->fDeleting = true;
-                           bind->pDelFunc( obj, bind->iFlags );
-                           bind->fDeleting = false;
+                           if( bind->pDelFunc != NULL )
+                           {
+                              bind->fDeleting = true;
+                              bind->pDelFunc( bind->qtObject, bind->iFlags );
+                              bind->fDeleting = false;
+                           }   
                            hb_xfree( bind );
                            HB_TRACE( HB_TR_DEBUG, ( "HARBOUR_DESTROYED_%s( %p )", classname, obj ) );
                         }
@@ -419,21 +425,14 @@ void hbqt_bindDestroyQtObject( void * qtObject )
    {
       if( bind->qtObject == qtObject )
       {
+         HB_TRACE( HB_TR_ALWAYS, ( "..............QT_DESTROY_BEGINS( %p ).............. %s fDeleting = %s", qtObject, bind->szClassName, bind->fDeleting ? "YES" : "NO" ) );
+         
          * bind_ptr = bind->next;
          if( ! bind->fDeleting )
          {
-            if( bind->iFlags & HBQT_BIT_QOBJECT )
-            {
-               HB_TRACE( HB_TR_DEBUG, ( "QT_DESTROYED_%s( %p )", ( ( QObject * ) bind->qtObject )->metaObject()->className(), bind->qtObject ) );
-            }   
-            else 
-            {     
-               HB_TRACE( HB_TR_DEBUG, ( "QT_DESTROYED( %p )", bind->qtObject ) );
-            }   
             hbqt_bindDelSlots( hbqt_bindGetHbObjectBYqtObject( bind->qtObject ) );
             hb_xfree( bind );
          }    
-         bind->fDeleting = false;        
          break;
       }
       bind_ptr = &bind->next;
@@ -701,3 +700,4 @@ HB_CALL_ON_STARTUP_END( _hbqt_bind_init_ )
    #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hbqt_bind_init_ )
    #include "hbiniseg.h"
 #endif
+

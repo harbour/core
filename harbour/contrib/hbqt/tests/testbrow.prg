@@ -62,7 +62,6 @@ PROCEDURE Main()
 #ifdef _method_local_
    oID := tb1:itemDelegate()
    oID:connect( "commitData(QWidget*)", {| w | my_save( w, 1, aStru1, @nCX1, @nCY1 ) } )
-   oID := NIL
 
    oSM := tb1:selectionModel()
    oSM:connect( "currentChanged(QModelIndex,QModelIndex)", {| n | my_select( n, @nCX1, @nCY1 ) } )
@@ -92,18 +91,19 @@ PROCEDURE Main()
    lay2:addWidget( bt2 )
    lay2:addWidget( bt3 )
 
-   HB_TRACE( HB_TR_DEBUG, "AAAAA" )
    oWnd:Show()
-   HB_TRACE( HB_TR_DEBUG, "BBBBB" )
    QApplication():exec()
-   HB_TRACE( HB_TR_DEBUG, "CCCCC" )
 
+#ifdef _method_local_
+   oID:disconnect( "commitData(QWidget*)" )
+#endif
+   
    HB_TRACE( HB_TR_DEBUG, ( "my_select "+hb_ntos( nCX1 )+ "/"+hb_ntos( nCY1 ) ) )
 
    RETURN
 
 STATIC PROCEDURE my_save( qWidget, nArea, aStru, nCX, nCY )
-   LOCAL cData := qWidget:text()
+   LOCAL cData := qWidget:property( "text" ):toString()
 
    DBSelectArea( nArea )
    DBGoto( nCY + 1 )

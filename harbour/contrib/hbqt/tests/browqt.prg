@@ -77,7 +77,7 @@ STATIC PROCEDURE BuildADialog()
    RETURN
 
 STATIC PROCEDURE my_save( qWidget, nArea, aStru, nCX, nCY )
-   LOCAL cData := qWidget:text()
+   LOCAL cData := qWidget:property( "text" ):toString()
 
    DBSelectArea( nArea )
    DBGoto( nCY + 1 )

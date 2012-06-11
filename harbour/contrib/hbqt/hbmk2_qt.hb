@@ -33,7 +33,7 @@
 #include "directry.ch"
 #include "hbclass.ch"
 
-//#define __HBQT_REVAMP__
+#define __HBQT_REVAMP__
 
 #define I_( x )                 hb_i18n_gettext( x )
 
@@ -1996,7 +1996,7 @@ METHOD HbQtSource:getConstructor()
       NEXT
       AAdd( aLine, " " )
 #ifdef __HBQT_REVAMP__
-      AAdd( aLine, '   hb_itemReturnRelease( hbqt_bindSetHbObject( NULL, pObj, ( "' + 'HB_' + upper( ::cQtObject ) +'" ), hbqt_del_' + ::cQtObject + ', ' + qth_get_bits( ::cQtObject, ! ::isDetached ) + ' ) );' )
+      AAdd( aLine, '   hb_itemReturnRelease( hbqt_bindSetHbObject( NULL, pObj, "' + 'HB_' + upper( ::cQtObject ) +'", hbqt_del_' + ::cQtObject + ', ' + qth_get_bits( ::cQtObject, ! ::isDetached ) + ' ) );' )
 #else
       AAdd( aLine, "   hbqt_itemPushReturn( hbqt_gcAllocate_" + ::cQtObject + "( ( void * ) pObj, " + iif( ::isDetached, "false", "true" ) + " ), hb_stackSelfItem() );" )
 #endif

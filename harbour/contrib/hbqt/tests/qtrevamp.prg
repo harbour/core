@@ -5,6 +5,11 @@
 
 #include "hbtrace.ch"
 
+// Why do we need these two variables in scope ?
+// Because :connect needs that Harbour object must 
+// always be accessible.
+//
+STATIC oItemIns, oItemMod
 
 FUNCTION Main() 
    LOCAL oWnd 
@@ -21,18 +26,19 @@ FUNCTION Main()
 
    QApplication():exec() 
 
+   IF ! empty( oItemIns )
+      oItemIns:disconnect( "triggered()", {|| DlgMBox( "Yes" ) } )
+   ENDIF 
+   IF ! empty( oItemMod )
+      oItemMod:disconnect( "triggered()", {|| ContextMenu( oWnd ) } )
+   ENDIF 
+   
    RETURN NIL
 
 
 STATIC FUNCTION BuildMenuBar( oWnd ) 
    LOCAL oMenu1, oMenuBar
 
-   // Why do we need these two variables in scope ?
-   // Because :connect needs that Harbour object must 
-   //  always be accessible.
-   //
-   STATIC oItemIns, oItemMod
-   
    oMenuBar := QMenuBar( oWnd ) 
 
    // if we do not construct a widget without a parent
@@ -43,14 +49,18 @@ STATIC FUNCTION BuildMenuBar( oWnd )
    //
    oMenu1:setTitle( "&Options" ) 
 
-   oItemIns := QAction( oMenu1 ) 
-   oItemIns:setText( "&MessageBox()" ) 
-   oItemIns:connect( "triggered()", {|| DlgMBox( "Yes" ) } )
-
-   oItemMod := QAction( oMenu1 ) 
-   oItemMod:setText( "&ContextMenu()" ) 
-   oItemMod:connect( "triggered()", {|| ContextMenu( oWnd ) } )
-
+   IF empty( oItemIns )
+      oItemIns := QAction( oMenu1 ) 
+      oItemIns:setText( "&MessageBox()" ) 
+      oItemIns:connect( "triggered()", {|| DlgMBox( "Yes" ) } )
+   ENDIF 
+   
+   IF empty( oItemMod )
+      oItemMod := QAction( oMenu1 ) 
+      oItemMod:setText( "&ContextMenu()" ) 
+      oItemMod:connect( "triggered()", {|| ContextMenu( oWnd ) } )
+   ENDIF 
+   
    oMenu1:addAction( oItemIns ) 
    oMenu1:addAction( oItemMod ) 
 
