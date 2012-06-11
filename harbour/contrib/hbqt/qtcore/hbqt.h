@@ -123,10 +123,19 @@ extern HB_EXPORT PHB_ITEM hbqt_create_objectGC( void * pObject, const char * psz
 extern HB_EXPORT void hbqt_addDeleteList( PHB_ITEM item ); /* populate a list of PHB_ITEM to delete at exit time */
 
 HB_EXPORT PHB_ITEM   hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szClassFunc, PHBQT_DEL_FUNC pDelete, int iFlags );
+HB_EXPORT PHB_ITEM   hbqt_bindSetHbObject( PHB_ITEM pItem, void * qtObject, const char * szClassName, PHBQT_DEL_FUNC pDelFunc, int iFlags );
+HB_EXPORT PHB_ITEM   hbqt_bindGetHbObjectBYqtObject( void * qtObject );
 HB_EXPORT void    *  hbqt_bindGetQtObject( PHB_ITEM pObject );
 HB_EXPORT void       hbqt_bindSetOwner( void * qtObject, HB_BOOL fOwner );
 HB_EXPORT void       hbqt_bindDestroyHbObject( PHB_ITEM pObject );
 HB_EXPORT void       hbqt_bindDestroyQtObject( void * qtObject );
+
+HB_EXPORT void       hbqt_bindAddChild( PHB_ITEM pObject, PHB_ITEM pChild );
+HB_EXPORT void       hbqt_bindDelChild( PHB_ITEM pObject, PHB_ITEM pChild );
+
+HB_EXPORT void       hbqt_bindAddSlot( PHB_ITEM pSenderObject, int iSignalid, PHB_ITEM pCode );
+HB_EXPORT void       hbqt_bindDelSlot( PHB_ITEM pSenderObject, int iSignalid, PHB_ITEM pCode );
+HB_EXPORT PHB_ITEM   hbqt_bindGetSlots( PHB_ITEM pSenderObject, int iSignalid );
 
 HB_EXTERN_END
 

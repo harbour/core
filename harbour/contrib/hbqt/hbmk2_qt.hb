@@ -1996,8 +1996,7 @@ METHOD HbQtSource:getConstructor()
       NEXT
       AAdd( aLine, " " )
 #ifdef __HBQT_REVAMP__
-//      AAdd( aLine, '   hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, pObj, hb_dynsymGetSymbol( "' + 'HB_' + upper( ::cQtObject ) +'" ), hbqt_del_' + ::cQtObject + ', ' + qth_get_bits( ::cQtObject, .t. ) + ' ) );' )
-      AAdd( aLine, '   hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, pObj, ( "' + 'HB_' + upper( ::cQtObject ) +'" ), hbqt_del_' + ::cQtObject + ', ' + qth_get_bits( ::cQtObject, .t. ) + ' ) );' )
+      AAdd( aLine, '   hb_itemReturnRelease( hbqt_bindSetHbObject( NULL, pObj, ( "' + 'HB_' + upper( ::cQtObject ) +'" ), hbqt_del_' + ::cQtObject + ', ' + qth_get_bits( ::cQtObject, ! ::isDetached ) + ' ) );' )
 #else
       AAdd( aLine, "   hbqt_itemPushReturn( hbqt_gcAllocate_" + ::cQtObject + "( ( void * ) pObj, " + iif( ::isDetached, "false", "true" ) + " ), hb_stackSelfItem() );" )
 #endif
@@ -2019,8 +2018,9 @@ METHOD HbQtSource:getConstructor()
 METHOD HbQtSource:getConstructorW()
    LOCAL aLine := ::getConstructor()
 
-   AEval( aLine, {| e, i | aLine[ i ] := StrTran( e, "hbqt_itemPushReturn", "hbqt_create_objectGC" ) } )
-   AEval( aLine, {| e, i | aLine[ i ] := StrTran( e, "hb_stackSelfItem()" , '"HB_' + Upper( ::cQtObject ) + '"' ) } )
+   AEval( aLine, {| e, i | aLine[ i ] := StrTran( e, "hbqt_bindSetHbObject", "hbqt_bindGetHbObject" ) } )
+   AEval( aLine, {| e, i | aLine[ i ] := StrTran( e, "hbqt_itemPushReturn" , "hbqt_create_objectGC" ) } )
+   AEval( aLine, {| e, i | aLine[ i ] := StrTran( e, "hb_stackSelfItem()"  , '"HB_' + Upper( ::cQtObject ) + '"' ) } )
 
    RETURN aLine
 
@@ -2980,7 +2980,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
                              "Abstract" $ oRet:cCast
       cRef := oRet:cCast
 #ifdef __HBQT_REVAMP__
-      oMtd:cCmd := 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + "( void * ) " + oMtd:cCmn + ', ( "' + 'HB_' + Upper( ::cQtObject ) + '" ), hbqt_del_' +  ::cQtObject + ', ' + qth_get_bits( ::cQtObject, .f. ) + ' ) )'
+      oMtd:cCmd := 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + "( void * ) " + oMtd:cCmn + ', "' + 'HB_' + Upper( oRet:cCast ) + '", hbqt_del_' +  oRet:cCast + ', ' + qth_get_bits( oRet:cCast, .f. ) + ' ) )'
 #else
       oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) " + ', "HB_' + Upper( ::cQtObject ) + '" )'
 #endif
@@ -2992,7 +2992,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
                              oRet:lVirt
       cRef := oRet:cCast
 #ifdef __HBQT_REVAMP__
-      oMtd:cCmd := 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + "( void * ) " + oMtd:cCmn + ', ( "' + 'HB_' + Upper( ::cQtObject ) + '" ), hbqt_del_' +  ::cQtObject + ', ' + qth_get_bits( ::cQtObject, .f. ) + ' ) )'
+      oMtd:cCmd := 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + "( void * ) " + oMtd:cCmn + ', "' + 'HB_' + Upper( oRet:cCast ) + '", hbqt_del_' +  oRet:cCast + ', ' + qth_get_bits( oRet:cCast, .f. ) + ' ) )'
 #else
       oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) " + ', "HB_' + Upper( ::cQtObject ) + '" )'
 #endif
@@ -3218,8 +3218,7 @@ METHOD HbqtArgument:new( cTxt, cQtObject, enum_, lConstL, lIsRetArg )
 
 STATIC FUNCTION hbqtgen_Get_Command_1( cWgt, cCmn )
 #ifdef __HBQT_REVAMP__
-//   RETURN 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + 'new ' + cWgt + '( *( ' + cCmn + ' ) )' + ', hb_dynsymGetSymbol( "' + 'HB_' + Upper( cWgt ) + '" ), hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, .t. ) + ' ) )'
-   RETURN 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + 'new ' + cWgt + '( *( ' + cCmn + ' ) )' + ', ( "' + 'HB_' + Upper( cWgt ) + '" ), hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, .t. ) + ' ) )'
+   RETURN 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + 'new ' + cWgt + '( *( ' + cCmn + ' ) )' + ', "' + 'HB_' + Upper( cWgt ) + '", hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, .t. ) + ' ) )'
 #else
    RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( *( " + cCmn + " ) ), true ), " + '"HB_' + Upper( cWgt ) + '")'
 #endif
@@ -3236,9 +3235,9 @@ STATIC FUNCTION hbqtgen_Get_Command( cWgt, cCmn, lNew, isRetDetached )
 
 #ifdef __HBQT_REVAMP__
    IF lNew
-      RETURN 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + 'new ' + cWgt + '( ' + cCmn + ' )' + ', ( "' + 'HB_' + Upper( cWgt ) + '" ), hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, .t. ) + ' ) )'
+      RETURN 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + 'new ' + cWgt + '( ' + cCmn + ' )' + ', "' + 'HB_' + Upper( cWgt ) + '", hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, .t. ) + ' ) )'
    ELSE
-      RETURN 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + cCmn + ', ( "' + 'HB_' + Upper( cWgt ) + '" ), hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, isRetDetached ) + ' ) )'
+      RETURN 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + cCmn + ', "' + 'HB_' + Upper( cWgt ) + '", hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, isRetDetached ) + ' ) )'
    ENDIF
 #else
    IF lNew
@@ -3777,16 +3776,16 @@ STATIC FUNCTION qth_is_QObject( cWidget )
 #define HBQT_BIT_QPOINTER                         16
 
 STATIC FUNCTION qth_get_bits( cWidget, lNew )
-   LOCAL nBits := HBQT_BIT_NONE
+   LOCAL cBits := "HBQT_BIT_NONE"
 
    IF lNew
-      nBits := hb_bitOr( nBits, HBQT_BIT_OWNER )
+      cBits += " | HBQT_BIT_OWNER"
    ENDIF
    IF qth_is_QObject( cWidget )
-      nBits := hb_bitOr( nBits, HBQT_BIT_QOBJECT )
+      cBits += " | HBQT_BIT_QOBJECT"
    ENDIF
 
-   RETURN hb_ntos( nBits )
+   RETURN cBits
 
 #endif
 /*----------------------------------------------------------------------*/

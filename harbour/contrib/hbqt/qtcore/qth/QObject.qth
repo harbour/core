@@ -56,7 +56,7 @@ void installEventFilter ( QObject * filterObj )
 bool isWidgetType () const
 void killTimer ( int id )
 #
-//virtual const QMetaObject * metaObject () const
+virtual const QMetaObject * metaObject () const                   [*R=1*]
 #
 void moveToThread ( QThread * targetThread )
 QString objectName () const

@@ -68,19 +68,35 @@ CREATE CLASS HbQtObjectHandler
    VAR    __pEvents                               PROTECTED
 
    VAR    hEvents                                 INIT {=>}
+#ifdef __HBQT_REVAMP__
+   VAR    __Slots
+#endif   
 
    METHOD hasValidPointer()
 
    METHOD connect( cnEvent, bBlock )
    METHOD disconnect( cnEvent )
-
+#ifdef __HBQT_REVAMP__
+   METHOD setSlots()
+#endif   
    DESTRUCTOR _destroy()
    ERROR HANDLER onError()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
+#ifdef __HBQT_REVAMP__
+METHOD HbQtObjectHandler:setSlots()
 
+   IF empty( ::__Slots )
+      ::__Slots := {=>}
+      hb_hDefault( ::__Slots, {} )
+   ENDIF    
+   
+   RETURN Self 
+#endif   
+/*----------------------------------------------------------------------*/
+   
 METHOD HbQtObjectHandler:hasValidPointer()
    RETURN __hbqt_isPointer( ::pPtr )
 
@@ -245,6 +261,7 @@ METHOD HbQtObjectHandler:_destroy()
 #ifdef __HBQT_REVAMP__
    HB_TRACE( HB_TR_DEBUG, "  _destroy()", __objDerivedFrom( Self, "QOBJECT" ), __objGetClsName( Self ) )
    __hbqt_destroy( Self )
+   
 #endif
 
    IF ! __objDerivedFrom( Self, "QOBJECT" )
