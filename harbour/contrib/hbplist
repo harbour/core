@@ -25,7 +25,7 @@ hbgt/hbgt.hbp
 hbhpdf/hbhpdf.hbp                # uses: libhpdf (locally hosted)
 hbhttpd/hbhttpd.hbp
 hbhttpd/hbhttpds.hbp
-hbide/hbide.hbp
+#hbide/hbide.hbp
 hblzf/hblzf.hbp                  # uses: liblzf (locally hosted)
 hbmagic/hbmagic.hbp
 hbmemio/hbmemio.hbp
@@ -40,7 +40,7 @@ hbnf/hbnf.hbp
 hbodbc/hbodbc.hbp
 hboslib/hboslib.hbp
 hbpgsql/hbpgsql.hbp
-hbqt/hbqt_all.hbp
+#hbqt/hbqt_all.hbp
 hbrun/hbrun.hbp
 hbsms/hbsms.hbp
 hbsqlit3/hbsqlit3.hbp            # uses: sqlite3 (locally hosted)
@@ -50,7 +50,7 @@ hbtip/hbtipssl.hbp
 hbtpathy/hbtpathy.hbp
 hbunix/hbunix.hbp
 hbwin/hbwin.hbp
-hbxbp/hbxbp.hbp
+#hbxbp/hbxbp.hbp
 hbxdiff/hbxdiff.hbp              # uses: libxdiff (locally hosted)
 hbxpp/hbxpp.hbp
 hbzebra/hbzebra.hbp

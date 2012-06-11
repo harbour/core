@@ -158,9 +158,9 @@ PROCEDURE _APPMAIN( cFile, ... )
                hb_FNameSplit( cFile, NIL, NIL, @cExt )
                cExt := Lower( cExt )
                SWITCH cExt
-                  CASE ".prg"
                   CASE ".hb"
                   CASE ".hbs"
+                  CASE ".prg"
                   CASE ".hrb"
                   CASE ".dbf"
                      EXIT
@@ -172,9 +172,9 @@ PROCEDURE _APPMAIN( cFile, ... )
                      hbrun_extensionlist_init( aDynamic )
                      hbrun_Prompt( hb_AParams(), "USE " + cFile + " SHARED" )
                      EXIT
-                  CASE ".prg"
                   CASE ".hb"
                   CASE ".hbs"
+                  CASE ".prg"
                      IF Empty( GetEnv( "HBRUN_NOHEAD" ) )
                         hHeaders := __hbrun_CoreHeaderFiles() /* add core header files */
                      ENDIF
@@ -288,7 +288,7 @@ STATIC FUNCTION hbrun_FileSig( cFile )
    LOCAL hFile
    LOCAL cBuff, cSig, cExt
 
-   cExt := ".prg"
+   cExt := ".hb"
    hFile := FOpen( cFile, FO_READ )
    IF hFile != F_ERROR
       cSig := hb_hrbSignature()
@@ -587,7 +587,7 @@ STATIC PROCEDURE hbrun_Usage()
            "Copyright (c) 1999-2012, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
            "http://harbour-project.org/" + hb_eol() +;
            hb_eol() +;
-           "Syntax:  hbrun [<file[.prg|.hb|.hbs|.hrb]> [<parameters,...>]]" + hb_eol() )
+           "Syntax:  hbrun [<file[.hb|.hbs|.prg|.hrb]> [<parameters,...>]]" + hb_eol() )
 
    RETURN
 
