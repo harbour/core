@@ -528,7 +528,7 @@ METHOD IdeEditsManager:getEditorCurrent()
 METHOD IdeEditsManager:getEditorByIndex( nIndex ) /* Index is 0 based */
    LOCAL qTab, a_
 
-   IF hb_isNumeric( nIndex ) .AND. nIndex >= 0 .AND. nIndex < ::qTabWidget:count()
+   IF HB_ISNUMERIC( nIndex ) .AND. nIndex >= 0 .AND. nIndex < ::qTabWidget:count()
       qTab := ::qTabWidget:widget( nIndex )
       FOR EACH a_ IN ::aTabs
          IF !empty( a_[ TAB_OTAB ] ) .AND. hbqt_IsEqual( a_[ TAB_OTAB ]:oWidget, qTab )
@@ -544,7 +544,7 @@ METHOD IdeEditsManager:getEditorByIndex( nIndex ) /* Index is 0 based */
 METHOD IdeEditsManager:getEditorByTabObject( oTab )
    LOCAL nPos
 
-   IF hb_isObject( oTab )
+   IF HB_ISOBJECT( oTab )
       IF ( nPos := ascan( ::aTabs, {|e_| e_[ TAB_OTAB ] == oTab } ) ) > 0
          RETURN ::aTabs[ nPos, TAB_OEDITOR ]
       ENDIF
@@ -556,7 +556,7 @@ METHOD IdeEditsManager:getEditorByTabObject( oTab )
 
 METHOD IdeEditsManager:getEditorByTabPosition( nPos )
 
-   IF hb_isNumeric( nPos ) .AND. nPos > 0 .AND. nPos <= len( ::aTabs )
+   IF HB_ISNUMERIC( nPos ) .AND. nPos > 0 .AND. nPos <= len( ::aTabs )
       IF !empty( ::aTabs[ nPos, TAB_OEDITOR ] )
          RETURN ::aTabs[ nPos, TAB_OEDITOR ]
       ENDIF
@@ -1465,7 +1465,7 @@ METHOD IdeEditor:relay( oEdit )
       ENDIF
    ENDIF
 
-   IF hb_isObject( oEdit )
+   IF HB_ISOBJECT( oEdit )
       aadd( ::aEdits, oEdit )
    ENDIF
 
@@ -1503,7 +1503,7 @@ METHOD IdeEditor:split( nOrient, oEditP )
 
    ::relay( oEdit )
 
-   IF hb_isObject( ::qHiliter )
+   IF HB_ISOBJECT( ::qHiliter )
       oEdit:qEdit:hbSetHighLighter( ::qHiliter )
       oEdit:qEdit:hbHighlightPage()
    ENDIF
@@ -1646,7 +1646,7 @@ METHOD IdeEditor:setDocumentProperties()
                                 QIcon( hbide_image( iif( ::lReadOnly, "tabreadonly", "tabunmodified" ) ) ) )
       ::lLoaded := .T.
 
-      IF hb_isObject( ::qHiliter )
+      IF HB_ISOBJECT( ::qHiliter )
          ::qHiliter:hbSetInitialized( .t. )
          ::qEdit:hbHighlightPage()
       ENDIF

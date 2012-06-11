@@ -339,7 +339,7 @@ METHOD ExcelWriterXML:writeData( target )
                 
 METHOD ExcelWriterXML:docTitle( title )
 
-   IF hb_isChar( title )
+   IF HB_ISSTRING( title )
       ::cDocTitle := title
    ENDIF    
    
@@ -349,7 +349,7 @@ METHOD ExcelWriterXML:docTitle( title )
       
 METHOD ExcelWriterXML:docSubject( subject )
 
-   IF hb_isChar( subject )
+   IF HB_ISSTRING( subject )
       ::cDocSubject := subject
    ENDIF    
    
@@ -359,7 +359,7 @@ METHOD ExcelWriterXML:docSubject( subject )
       
 METHOD ExcelWriterXML:docAuthor( author )
    
-   IF hb_isChar( author )
+   IF HB_ISSTRING( author )
       ::cDocAuthor := author
    ENDIF 
       
@@ -369,7 +369,7 @@ METHOD ExcelWriterXML:docAuthor( author )
       
 METHOD ExcelWriterXML:docManager( manager )
 
-   IF hb_isChar( manager )
+   IF HB_ISSTRING( manager )
       ::cDocManager := manager
    ENDIF    
    
@@ -379,7 +379,7 @@ METHOD ExcelWriterXML:docManager( manager )
       
 METHOD ExcelWriterXML:docCompany( company )
 
-   IF hb_isChar( company )
+   IF HB_ISSTRING( company )
       ::cDocCompany := company
    ENDIF 
    

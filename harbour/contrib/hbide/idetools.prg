@@ -787,12 +787,12 @@ METHOD IdeToolsManager:execTool( ... )
       cParams  := iif( "http://" $ lower( cParams ), cParams, hbide_pathToOSPath( cParams ) )
       cParams  := hbide_parseMacros( cParams )
       cStayIn  := hbide_pathToOSPath( aParam[ 3 ] )
-      lCapture := iif( hb_isLogical( aParam[ 4 ] ), aParam[ 4 ], aParam[ 4 ] == "YES" )
-      lOpen    := iif( hb_isLogical( aParam[ 5 ] ), aParam[ 5 ], aParam[ 5 ] == "YES" )
+      lCapture := iif( HB_ISLOGICAL( aParam[ 4 ] ), aParam[ 4 ], aParam[ 4 ] == "YES" )
+      lOpen    := iif( HB_ISLOGICAL( aParam[ 5 ] ), aParam[ 5 ], aParam[ 5 ] == "YES" )
 
    ENDIF
 
-   IF hb_isLogical( lCapture )
+   IF HB_ISLOGICAL( lCapture )
       IF !empty( cPlugin )
          a_:= hb_aTokens( cParams, " " )
          FOR EACH cParams IN a_

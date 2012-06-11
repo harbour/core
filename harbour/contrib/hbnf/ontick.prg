@@ -66,9 +66,9 @@ STATIC PROCEDURE __FT_ONTICK()
 
 PROCEDURE FT_ONTICK( bOnTick, nTickInterval )
 
-   IF hb_isBlock( bOnTick )
+   IF HB_ISBLOCK( bOnTick )
       t_bOnTick := bOnTick
-      IF hb_isNumeric( nTickInterval )
+      IF HB_ISNUMERIC( nTickInterval )
          t_nTickInterval := ( 1 / 18.20648 ) * nTickInterval * 1000
       ENDIF
       t_nLastCheck := hb_milliSeconds()

@@ -159,7 +159,7 @@ METHOD IdeDictionary:load( cDict )
    LOCAL a_:= hb_aTokens( cDict, ";" )
    LOCAL s, b_, n, n1, cKeyword, cSyntax, cDesc, q_
 
-   IF !empty( a_ ) .AND. hb_isArray( a_ )
+   IF !empty( a_ ) .AND. HB_ISARRAY( a_ )
       asize( a_, DIC_NUM_VRBLS )
 
       DEFAULT a_[ DIC_FILENAME       ] TO ""
@@ -177,7 +177,7 @@ METHOD IdeDictionary:load( cDict )
 
       IF !( ::cBgColor == "NONE" )
          q_:= hbide_evalAsIs( ::cBgColor )
-         IF hb_isArray( q_ ) .AND. len( q_ ) == 3
+         IF HB_ISARRAY( q_ ) .AND. len( q_ ) == 3
             ::qBgColor := QColor( q_[ 1 ], q_[ 2 ], q_[ 3 ] )
          ENDIF
 HB_TRACE( HB_TR_DEBUG, ::cBgColor, valtype( q_ ) )

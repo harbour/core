@@ -512,7 +512,7 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
       ::oUpDn:show()
       ::unHighlight()
 
-      IF hb_isObject( ::oEditor:qHiliter )
+      IF HB_ISOBJECT( ::oEditor:qHiliter )
          ::oEditor:qHiliter:hbSetEditor( ::qEdit )
          ::qEdit:hbSetHighlighter( ::oEditor:qHiliter )
          ::qEdit:hbHighlightPage()
@@ -764,7 +764,7 @@ METHOD IdeEdit:setFont()
 
 METHOD IdeEdit:highlightPage()
 
-   IF hb_isObject( ::oEditor:qHiliter )
+   IF HB_ISOBJECT( ::oEditor:qHiliter )
       ::qEdit:hbHighlightPage()
    ENDIF
 
@@ -789,7 +789,7 @@ STATIC FUNCTION hbide_blockContents( aContents )
    STATIC contents := {}
 
    oldContents := contents
-   IF hb_isArray( aContents )
+   IF HB_ISARRAY( aContents )
       contents := aclone( aContents )
    ENDIF
 
@@ -800,7 +800,7 @@ STATIC FUNCTION hbide_blockContents( aContents )
 STATIC FUNCTION hbide_setQCursor( qEdit, q_ )
    LOCAL qCursor
 
-   IF hb_isArray( q_ )
+   IF HB_ISARRAY( q_ )
       qCursor := q_[ 1 ]
       qCursor:movePosition( QTextCursor_Start, QTextCursor_MoveAnchor )
       qCursor:movePosition( QTextCursor_Down , QTextCursor_MoveAnchor, q_[ 2 ] )
@@ -1593,7 +1593,7 @@ METHOD IdeEdit:setReadOnly( lReadOnly )
    IF ::oEditor:lReadOnly
       lReadOnly := .t.
    ELSE
-      IF ! hb_isLogical( lReadOnly )
+      IF ! HB_ISLOGICAL( lReadOnly )
          lReadOnly := ! ::qEdit:isReadOnly()
       ENDIF
    ENDIF
@@ -1666,12 +1666,12 @@ METHOD IdeEdit:find( cText, nPosFrom )
    LOCAL qCursor := ::getCursor()
 
    nPos := qCursor:position()
-   IF hb_isNumeric( nPosFrom )
+   IF HB_ISNUMERIC( nPosFrom )
       qCursor:setPosition( nPosFrom )
    ENDIF
    ::qEdit:setTextCursor( qCursor )
    IF ! ( lFound := ::qEdit:find( cText, QTextDocument_FindCaseSensitively ) )
-      IF ! hb_isNumeric( nPosFrom )
+      IF ! HB_ISNUMERIC( nPosFrom )
          lFound := ::qEdit:find( cText, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
       ENDIF
    ENDIF

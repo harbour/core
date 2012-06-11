@@ -123,7 +123,7 @@ PROCEDURE BuildADialog()
       IF ( nEvent == xbeP_Close ) .OR. ( nEvent == xbeP_Keyboard .and. mp1 == xbeK_ESC )
          EXIT
       ENDIF
-      HB_TRACE( HB_TR_DEBUG, nEvent, valtype( oXbp ), iif( hb_isObject( oXbp ), oXbp:title, "Nothing" ) )
+      HB_TRACE( HB_TR_DEBUG, nEvent, valtype( oXbp ), iif( HB_ISOBJECT( oXbp ), oXbp:title, "Nothing" ) )
       oXbp:handleEvent( nEvent, mp1, mp2 )
    ENDDO
 

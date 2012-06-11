@@ -199,7 +199,7 @@ METHOD IdeUpDown:execEvent( cEvent, p )
 
 METHOD IdeUpDown:destroy()
 
-   IF hb_isObject( ::oUI )
+   IF HB_ISOBJECT( ::oUI )
       ::oUI:destroy()
    ENDIF
 
@@ -287,7 +287,7 @@ METHOD IdeSearchReplace:create( oIde )
 
 METHOD IdeSearchReplace:destroy()
 
-   IF hb_isObject( ::oUI )
+   IF HB_ISOBJECT( ::oUI )
 
       ::qFindLineEdit:disconnect( "textChanged(QString)" )
       ::qFindLineEdit:disconnect( "returnPressed()"      )

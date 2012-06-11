@@ -176,7 +176,7 @@ METHOD hObj( xOle ) CLASS TOLEAUTO
 
 METHOD New( xOle, cClass, cLicense ) CLASS TOLEAUTO
    LOCAL hOle
-   IF HB_ISCHAR( xOle )
+   IF HB_ISSTRING( xOle )
       hOle := __OleCreateObject( xOle,, cLicense )
       IF ! Empty( hOle )
          ::__hObj := hOle
@@ -188,7 +188,7 @@ METHOD New( xOle, cClass, cLicense ) CLASS TOLEAUTO
       ::hObj := xOle
       IF ::__hObj == NIL
          RETURN Throw( s_oleError( 0, "Invalid argument to contructor!" ) )
-      ELSEIF HB_ISCHAR( cClass )
+      ELSEIF HB_ISSTRING( cClass )
          ::cClassName := cClass
       ELSE
          ::cClassName := hb_ntos( win_P2N( ::__hObj ) )
@@ -197,7 +197,7 @@ METHOD New( xOle, cClass, cLicense ) CLASS TOLEAUTO
    RETURN Self
 
 METHOD GetActiveObject( cClass ) CLASS TOLEAUTO
-   IF HB_ISCHAR( cClass )
+   IF HB_ISSTRING( cClass )
       IF ! Empty( ::__hObj := __OleGetActiveObject( cClass ) )
          ::cClassName := cClass
       ELSE

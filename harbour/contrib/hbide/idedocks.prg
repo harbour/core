@@ -254,7 +254,7 @@ METHOD IdeDocks:destroy()
 
    IF !empty( ::oSys )
       ::oIde:oSys                : disconnect( "activated(QSystemTrayIcon::ActivationReason)" )
-      IF hb_isObject( ::qAct1 )
+      IF HB_ISOBJECT( ::qAct1 )
          ::qAct1                 : disconnect( "triggered(bool)"         )
          ::qAct2                 : disconnect( "triggered(bool)"         )
       ENDIF
@@ -322,11 +322,11 @@ METHOD IdeDocks:destroy()
       qTmp := NIL
    NEXT
 
-   IF hb_isObject( ::qMdiToolBar )
+   IF HB_ISOBJECT( ::qMdiToolBar )
       ::qMdiToolBar:destroy()
       ::qMdiToolBar := NIL
    ENDIF
-   IF hb_isObject( ::qMdiToolBarL )
+   IF HB_ISOBJECT( ::qMdiToolBarL )
       ::qMdiToolBarL:destroy()
       ::qMdiToolBarL := NIL
    ENDIF
@@ -992,7 +992,7 @@ METHOD IdeDocks:restPanelsGeometry()
    LOCAL a_, n
    FOR EACH a_ IN ::aViewsInfo
       IF ( n := ascan( ::oIde:aMdies, {|o| o:objectName() == a_[ 1 ] } ) ) > 0
-         IF hb_isObject( a_[ 2 ] )
+         IF HB_ISOBJECT( a_[ 2 ] )
             ::oIde:aMdies[ n ]:setGeometry( a_[ 2 ] )
          ENDIF
       ENDIF
@@ -1719,7 +1719,7 @@ METHOD IdeDocks:buildStatusBar()
 METHOD IdeDocks:setStatusText( nPart, xValue )
    LOCAL oPanel
 
-   IF ! hb_isObject( ::oSBar )
+   IF ! HB_ISOBJECT( ::oSBar )
       RETURN Self
    ENDIF
 

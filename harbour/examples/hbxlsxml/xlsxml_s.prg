@@ -169,7 +169,7 @@ METHOD ExcelWriterXML_Sheet:writeData( type, row, column, xData, style, formula 
    LOCAL hcol, cell, styleID
    
    IF style != NIL
-      IF HB_IsObject( style )
+      IF HB_ISOBJECT( style )
          styleID := style:getID()
       ELSE
          styleID := style

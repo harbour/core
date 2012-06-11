@@ -63,7 +63,7 @@ METHOD ui_dbstruct:create( oParent )
 
 METHOD ui_dbstruct:destroy()
 
-   IF hb_isObject( ::oUI )
+   IF HB_ISOBJECT( ::oUI )
       ::disconnects()
       ::oUI:destroy()
    ENDIF

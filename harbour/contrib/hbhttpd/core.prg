@@ -985,7 +985,7 @@ STATIC FUNCTION GetErrorDesc( oErr )
    ENDIF
    IF !Empty( oErr:osCode );        cRet += "OS error: " + hb_ntos( oErr:osCode ) + hb_eol()
    ENDIF
-   IF hb_isArray( oErr:args )
+   IF HB_ISARRAY( oErr:args )
       cRet += "Arguments:" + hb_eol()
       AEval( oErr:args, {| X, Y | cRet += Str( Y, 5 ) + ": " + HB_CStr( X ) + hb_eol() } )
    ENDIF
@@ -1106,19 +1106,19 @@ STATIC FUNCTION cvt2str( xI, lLong )
       cI := ""
       IF __objHasMsg( xI, "ID" )
          xJ := xI:ID
-         IF ! hb_isObject( xJ )
+         IF ! HB_ISOBJECT( xJ )
             cI += ",ID=" + cvt2str( xJ )
          ENDIF
       ENDIF
       IF __objHasMsg( xI, "nID" )
          xJ := xI:nID
-         IF ! hb_isObject( xJ )
+         IF ! HB_ISOBJECT( xJ )
             cI += ",NID=" + cvt2str( xJ )
          ENDIF
       ENDIF
       IF __objHasMsg( xI, "xValue" )
          xJ := xI:xValue
-         IF ! hb_isObject( xJ )
+         IF ! HB_ISOBJECT( xJ )
             cI += ",XVALUE=" + cvt2str( xJ )
          ENDIF
       ENDIF
@@ -1368,7 +1368,7 @@ PROCEDURE UProcFiles( cFileName, lIndex )
 
    LOCAL aDir, aF, nI, cI, tDate, tHDate
 
-   IF ! hb_isLogical( lIndex )
+   IF ! HB_ISLOGICAL( lIndex )
       lIndex := .F.
    ENDIF
 
@@ -1608,7 +1608,7 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
             EXIT
 
          CASE "loop"
-            IF HB_HHasKey( aData, aInstr[2] ) .AND. hb_isArray( aValue := aData[aInstr[2]] )
+            IF HB_HHasKey( aData, aInstr[2] ) .AND. HB_ISARRAY( aValue := aData[aInstr[2]] )
                FOR EACH xValue IN aValue
                   aData2 := HB_HCLONE( aData )
                   HB_HEVAL( xValue, {| k, v | aData2[aInstr[2] + "." + k] := v } )

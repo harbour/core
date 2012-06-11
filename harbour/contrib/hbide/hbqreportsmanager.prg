@@ -1904,7 +1904,7 @@ METHOD HqrGraphicsItem:setTextFlags( ... )
    CASE 0
       EXIT
    OTHERWISE
-      IF hb_isNumeric( a_[ 1 ] )
+      IF HB_ISNUMERIC( a_[ 1 ] )
          ::nTextFlags := a_[ 1 ]
       ENDIF
       ::update()
@@ -1924,7 +1924,7 @@ METHOD HqrGraphicsItem:setPen( ... )
       ENDIF
       RETURN ::qPen
    OTHERWISE
-      IF hb_isObject( a_[ 1 ] )
+      IF HB_ISOBJECT( a_[ 1 ] )
          ::qPen := a_[ 1 ]
       ELSE
          ::qPen := QPen( ... )
@@ -1944,7 +1944,7 @@ METHOD HqrGraphicsItem:setBrush( ... )
       ENDIF
       EXIT
    OTHERWISE
-      IF hb_isObject( a_[ 1 ] )
+      IF HB_ISOBJECT( a_[ 1 ] )
          ::qBrush := a_[ 1 ]
       ELSE
          ::qBrush := QBrush( ... )
@@ -1965,7 +1965,7 @@ METHOD HqrGraphicsItem:setBackgroundBrush( ... )
       ENDIF
       EXIT
    OTHERWISE
-      IF hb_isObject( a_[ 1 ] )
+      IF HB_ISOBJECT( a_[ 1 ] )
          ::qBgBrush := a_[ 1 ]
       ELSE
          ::qBgBrush := QBrush( ... )
@@ -1989,7 +1989,7 @@ METHOD HqrGraphicsItem:setFont( ... )
       ENDIF
       EXIT
    OTHERWISE
-      IF hb_isObject( a_[ 1 ] )
+      IF HB_ISOBJECT( a_[ 1 ] )
          ::qFont := a_[ 1 ]
       ELSE
          ::qFont := QFont( ... )
@@ -2008,7 +2008,7 @@ METHOD HqrGraphicsItem:setBarcodeType( ... )
    CASE 0
       EXIT
    OTHERWISE
-      IF hb_isNumeric( a_[ 1 ] )
+      IF HB_ISNUMERIC( a_[ 1 ] )
          ::nBarcodeType := a_[ 1 ]
       ENDIF
       ::update()
@@ -2027,7 +2027,7 @@ METHOD HqrGraphicsItem:setGradient( ... )
       ENDIF
       EXIT
    OTHERWISE
-      IF hb_isObject( a_[ 1 ] )
+      IF HB_ISOBJECT( a_[ 1 ] )
          ::qGBrush := a_[ 1 ]
       ELSE
          ::qGBrush := QBrush( ... )
@@ -2048,7 +2048,7 @@ METHOD HqrGraphicsItem:setPixmap( ... )
       ENDIF
       EXIT
    OTHERWISE
-      IF hb_isObject( a_[ 1 ] )
+      IF HB_ISOBJECT( a_[ 1 ] )
          ::qPixmap := a_[ 1 ]
       ELSE
          ::qPixmap := QPixmap( ... )
@@ -2066,7 +2066,7 @@ METHOD HqrGraphicsItem:setBorderWidth( ... )
    CASE 0
       EXIT
    OTHERWISE
-      IF hb_isNumeric( a_[ 1 ] )
+      IF HB_ISNUMERIC( a_[ 1 ] )
          ::nBorderWidth := a_[ 1 ]
       ENDIF
       ::update()
@@ -2082,7 +2082,7 @@ METHOD HqrGraphicsItem:setWidth( ... )
    CASE 0
       RETURN ::oWidget:width()
    OTHERWISE
-      IF hb_isNumeric( a_[ 1 ] )
+      IF HB_ISNUMERIC( a_[ 1 ] )
          ::nWidth := a_[ 1 ]
          ::oWidget:setWidth( ::nWidth )
       ENDIF
@@ -2099,7 +2099,7 @@ METHOD HqrGraphicsItem:setHeight( ... )
    CASE 0
       RETURN ::oWidget:height()
    OTHERWISE
-      IF hb_isNumeric( a_[ 1 ] )
+      IF HB_ISNUMERIC( a_[ 1 ] )
          ::nHeight := a_[ 1 ]
          ::oWidget:setHeight( ::nHeight )
       ENDIF
@@ -2117,7 +2117,7 @@ METHOD HqrGraphicsItem:setGeometry( ... )
       qPos := ::oWidget:pos()
       RETURN QRectF( qPos:x(), qPos:y(), ::width(), ::height() )
    CASE 1
-      IF hb_isObject( a_[ 1 ] )
+      IF HB_ISOBJECT( a_[ 1 ] )
          qRectF := a_[ 1 ]
          ::oWidget:setPos( QPointF( qRectF:x(), qRectF:y() ) )
          ::oWidget:setWidth( qRectF:width() )
@@ -2142,7 +2142,7 @@ METHOD HqrGraphicsItem:setPos( ... )
    CASE 0
       RETURN ::oWidget:pos()
    CASE 1
-      IF hb_isObject( a_[ 1 ] )
+      IF HB_ISOBJECT( a_[ 1 ] )
          ::oWidget:setPos( a_[ 1 ] )
          ::update()
       ENDIF
@@ -2162,7 +2162,7 @@ METHOD HqrGraphicsItem:setLineStyle( ... )
    CASE 0
       EXIT
    OTHERWISE
-      IF hb_isNumeric( a_[ 1 ] )
+      IF HB_ISNUMERIC( a_[ 1 ] )
          ::nLineStyle := a_[ 1 ]
       ENDIF
       ::update()
@@ -2178,7 +2178,7 @@ METHOD HqrGraphicsItem:setBackgroundMode( ... )
    CASE 0
       EXIT
    OTHERWISE
-      IF hb_isNumeric( a_[ 1 ] )
+      IF HB_ISNUMERIC( a_[ 1 ] )
          ::nBackgroundMode := a_[ 1 ]
       ENDIF
       ::update()
@@ -2194,7 +2194,7 @@ METHOD HqrGraphicsItem:setOpacity( ... )
    CASE 0
       EXIT
    OTHERWISE
-      IF hb_isNumeric( a_[ 1 ] )
+      IF HB_ISNUMERIC( a_[ 1 ] )
          ::nOpacity := a_[ 1 ]
       ENDIF
       ::update()
@@ -2210,7 +2210,7 @@ METHOD HqrGraphicsItem:setLineType( ... )
    CASE 0
       EXIT
    OTHERWISE
-      IF hb_isNumeric( a_[ 1 ] )
+      IF HB_ISNUMERIC( a_[ 1 ] )
          ::nLineType := a_[ 1 ]
       ENDIF
       ::update()

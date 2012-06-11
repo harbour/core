@@ -1155,7 +1155,7 @@ METHOD IdeShortcuts:help( cTopic )
    RETURN ::oHelpDock:show()
 /*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:exit( lWarn )
-   IF hb_isLogical( lWarn ) .AND. lWarn
+   IF HB_ISLOGICAL( lWarn ) .AND. lWarn
       IF hbide_getYesNo( "Exit hbIDE ?", , "Macro Executed" )
          PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
       ENDIF

@@ -138,7 +138,7 @@ METHOD IdeSourcesManager:saveNamedSource( cSource )
 
    FOR EACH a_ IN ::aTabs
       oEditor := a_[ TAB_OEDITOR ]
-      IF hb_isObject( oEditor )
+      IF HB_ISOBJECT( oEditor )
          IF hb_FileMatch( hbide_pathNormalized( oEditor:sourceFile, .t. ), cSource )
             IF oEditor:lLoaded
                IF oEditor:qDocument:isModified()

@@ -80,9 +80,7 @@ THREAD STATIC t_nErrorCode := 0      // Error code from last operation, 0 if no 
 
 FUNCTION tp_baud( nPort, nNewBaud )
 
-   IF ! HB_ISNUMERIC( nNewBaud )
-      nNewBaud := 0
-   ENDIF
+   hb_default( @nNewBaud, 0 )
 
    IF ! isport( nPort ) .OR. Empty( t_aPorts[ nPort, TPFP_NAME ] )
       RETURN TE_NOPORT
@@ -114,9 +112,7 @@ FUNCTION tp_idle( lNewval )
 
 PROCEDURE tp_delay( nTime )
 
-   IF ! HB_ISNUMERIC( nTime )
-      nTime := 0
-   ENDIF
+   hb_default( @nTime, 0 )
 
    IF nTime < 0
       RETURN
@@ -130,9 +126,7 @@ PROCEDURE tp_delay( nTime )
 
 FUNCTION tp_close( nPort, nTimeout )
 
-   IF ! HB_ISNUMERIC( nTimeout )
-      nTimeout := 0
-   ENDIF
+   hb_default( @nTimeout, 0 )
 
    /* Clipper returns 0 even if a port is not open */
    IF ! isopenport( nPort )
@@ -179,24 +173,13 @@ FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
       RETURN TE_NOPORT
    ENDIF
 
-   IF ! HB_ISNUMERIC( nInSize )
-      nInSize := 1536
-   ENDIF
-   IF ! HB_ISNUMERIC( nOutSize )
-      nOutSize := 1536
-   ENDIF
-   IF ! HB_ISNUMERIC( nBaud )
-      nBaud := 1200
-   ENDIF
-   IF ! HB_ISNUMERIC( nData )
-      nData := 8
-   ENDIF
-   IF ! HB_ISSTRING( cParity )
-      cParity := "N"
-   ENDIF
-   IF ! HB_ISNUMERIC( nStop )
-      nStop := 1
-   ENDIF
+   hb_default( @nInSize, 1536 )
+   hb_default( @nOutSize, 1536 )
+   hb_default( @nBaud, 1200 )
+   hb_default( @nData, 8 )
+   hb_default( @cParity, "N" )
+   hb_default( @nStop, 1 )
+
    IF HB_ISSTRING( cPortname )
       hb_comSetDevice( nPort, cPortname )
    ENDIF
@@ -244,9 +227,7 @@ FUNCTION tp_recv( nPort, nLength, nTimeout )
    IF ! HB_ISNUMERIC( nLength )
       nLength := t_aPorts[ nPort, TPFP_INBUF_SIZE ]
    ENDIF
-   IF ! HB_ISNUMERIC( nTimeout )
-      nTimeout := 0
-   ENDIF
+   hb_default( @nTimeout, 0 )
 
    FetchChars( nPort )
 
@@ -274,12 +255,9 @@ FUNCTION tp_recv( nPort, nLength, nTimeout )
 
 FUNCTION tp_send( nPort, cString, nTimeout )
 
-   IF ! HB_ISSTRING( cString )
-      cString := ""
-   ENDIF
-   IF ! HB_ISNUMERIC( nTimeout )
-      nTimeout := 0
-   ENDIF
+   hb_default( @cString, "" )
+   hb_default( @nTimeout, 0 )
+
    IF ! isopenport( nPort )
       RETURN 0
    ENDIF
@@ -292,9 +270,7 @@ FUNCTION tp_send( nPort, cString, nTimeout )
 
 FUNCTION tp_sendsub( nPort, cString, nStart, nLength, nTimeout )
 
-   IF ! HB_ISNUMERIC( nStart )
-      nStart := 1
-   ENDIF
+   hb_default( @nStart, 1 )
    IF ! HB_ISNUMERIC( nLength )
       nLength := Len( cString )
    ENDIF
@@ -317,12 +293,8 @@ FUNCTION tp_recvto( nPort, cDelim, nMaxlen, nTimeout )
       RETURN ""
    ENDIF
 
-   IF ! HB_ISNUMERIC( nMaxlen )
-      nMaxlen := 64999    /* dos telepathy def. on xharbour could be higher */
-   ENDIF
-   IF ! HB_ISNUMERIC( nTimeout )
-      nTimeout := 0
-   ENDIF
+   hb_default( @nMaxLen, 64999 ) /* dos telepathy def. on xharbour could be higher */
+   hb_default( @nTimeout, 0 )
 
    FetchChars( nPort )
 
@@ -468,12 +440,8 @@ FUNCTION tp_waitfor( ... )
       RETURN 0
    ENDIF
 
-   // IF ! HB_ISNUMERIC( nTimeout )
-   //    nTimeout := -1
-   // ENDIF
-   // IF ! HB_ISLOGICAL( lIgnorecase )
-   //    lIgnorecase := .F.
-   // ENDIF
+   // hb_default( @nTimeout, -1 )
+   // hb_default( @lIgnorecase, .F. )
 
    /*
 
@@ -631,9 +599,7 @@ FUNCTION tp_flush( nPort, nTimeout )
 
    LOCAL nDone
 
-   IF ! HB_ISNUMERIC( nTimeout )
-      nTimeout := -1
-   ENDIF
+   hb_default( @nTimeout, -1 )
 
    IF ! isopenport( nPort )
       RETURN TE_CLOSED

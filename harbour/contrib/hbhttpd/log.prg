@@ -71,7 +71,7 @@ ENDCLASS
 METHOD New( cFileName ) CLASS UHttpdLog
    LOCAL cExt
 
-   IF hb_isString( cFileName )
+   IF HB_ISSTRING( cFileName )
 
       IF Set( _SET_DEFEXTENSIONS )
          hb_FNameSplit( cFileName, NIL, NIL, @cExt )
@@ -90,7 +90,7 @@ METHOD IsOpen() CLASS UHttpdLog
 
 METHOD Add( cMsg ) CLASS UHttpdLog
 
-   IF ! hb_isString( cMsg )
+   IF ! HB_ISSTRING( cMsg )
       RETURN .F.
    ENDIF
 

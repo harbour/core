@@ -360,7 +360,7 @@ METHOD ExcelWriterXML_Style:alignHorizontal( halign )
               
 METHOD ExcelWriterXML_Style:alignRotate( rotate )
 
-   IF !HB_IsNumeric( rotate )
+   IF !HB_ISNUMERIC( rotate )
       RETURN NIL
    ENDIF
    IF abs( rotate ) > 90 
@@ -402,7 +402,7 @@ METHOD ExcelWriterXML_Style:alignWraptext()
            
 METHOD ExcelWriterXML_Style:setFontSize( fontSize )
 
-   IF ! HB_IsNumeric( fontSize )
+   IF ! HB_ISNUMERIC( fontSize )
       fontSize := 10
    ENDIF
    IF fontSize <= 0 
@@ -553,7 +553,7 @@ METHOD ExcelWriterXML_Style:border( position,weight,color,linestyle )
       position := 'All'
    ENDIF
    
-   IF HB_IsNumeric( weight ) 
+   IF HB_ISNUMERIC( weight ) 
       IF abs( weight ) > 3
          weight := 3
       ENDIF

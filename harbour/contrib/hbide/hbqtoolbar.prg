@@ -309,7 +309,7 @@ METHOD HbqToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDra
       oButton:connect( QEvent_Enter             , {|p| ::execEvent( "QEvent_MouseEnter"  , p, cName ) } )
    ENDIF
 
-   IF hb_isBlock( bAction )
+   IF HB_ISBLOCK( bAction )
       oButton:connect( "clicked()", bAction )
    ENDIF
    oActBtn := ::oWidget:addWidget( oButton )
@@ -327,7 +327,7 @@ METHOD HbqToolbar:setItemChecked( cName, lState )
    IF hb_hHasKey( ::hItems, cName )
       IF ::hItems[ cName ]:isCheckable()
          lOldState := ::hItems[ cName ]:isChecked()
-         IF hb_isLogical( lState )
+         IF HB_ISLOGICAL( lState )
             ::hItems[ cName ]:setChecked( lState )
          ENDIF
       ENDIF
@@ -342,7 +342,7 @@ METHOD HbqToolbar:setItemEnabled( cName, lEnabled )
 
    IF hb_hHasKey( ::hItems, cName )
       lOldEnabled := ::hItems[ cName ]:isEnabled()
-      IF hb_isLogical( lEnabled )
+      IF HB_ISLOGICAL( lEnabled )
          ::hItems[ cName ]:setEnabled( lEnabled )
       ENDIF
    ENDIF

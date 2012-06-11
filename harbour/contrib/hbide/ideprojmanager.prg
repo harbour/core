@@ -154,7 +154,7 @@ CLASS IdeProject
 METHOD IdeProject:new( oIDE, aProps )
    LOCAL b_, a_, oSource, cSource
 
-   IF hb_isArray( aProps ) .AND. !empty( aProps )
+   IF HB_ISARRAY( aProps ) .AND. !empty( aProps )
       ::aProjProps := aProps
 
       b_:= aProps
@@ -1325,7 +1325,7 @@ METHOD IdeProjManager:closeProject( cProjectTitle )
 METHOD IdeProjManager:promptForPath( cObjPathName, cTitle, cObjFileName, cObjPath2, cObjPath3 )
    LOCAL cTemp, cPath, cFile
 
-   IF hb_isObject( ::oProject )
+   IF HB_ISOBJECT( ::oProject )
       cTemp := ::oUI:qObj[ cObjPathName ]:Text()
    ELSE
       cTemp := ""
@@ -1653,7 +1653,7 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
       ENDIF
    ENDIF
 
-   IF hb_isObject( ::cargo )
+   IF HB_ISOBJECT( ::cargo )
       cExe := hb_PathJoin( hbide_pathToOSPath( ::cargo:cPath ), cExe )
    ELSE
       cExe := hb_PathJoin( hbide_pathToOSPath( ::oProject:location ), cExe )

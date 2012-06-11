@@ -376,7 +376,7 @@ METHOD IdeBrowseManager:getPanelsInfo()
             aAttr[ TBL_INDEX    ] := hb_ntos( oBrw:indexOrd()  )
             aAttr[ TBL_RECORD   ] := hb_ntos( oBrw:recNo()     )
             aAttr[ TBL_CURSOR   ] := hb_ntos( oBrw:nCursorType )
-            IF !hb_isObject( aSub[ SUB_GEOMETRY ] )
+            IF !HB_ISOBJECT( aSub[ SUB_GEOMETRY ] )
                aSub[ SUB_GEOMETRY ] := aSub[ SUB_WINDOW ]:geometry()
             ENDIF
             aAttr[ TBL_GEOMETRY ] := hb_ntos( aSub[ SUB_GEOMETRY ]:x() )     + " " + hb_ntos( aSub[ SUB_GEOMETRY ]:y() ) + " " + ;
@@ -525,7 +525,7 @@ METHOD IdeBrowseManager:addPanel( cPanel )
 
 METHOD IdeBrowseManager:addPanelsMenu( cPanel )
    LOCAL qAct
-IF hb_isObject( ::qPanelsMenu )
+IF HB_ISOBJECT( ::qPanelsMenu )
    qAct := ::qPanelsMenu:addAction( cPanel )
    qAct:setIcon( QIcon( hbide_image( "panel_7" ) ) )
    qAct:connect( "triggered(bool)", {|| ::setPanel( cPanel ) } )
@@ -962,7 +962,7 @@ METHOD IdeBrowseManager:loadTables()
       ENDIF
    NEXT
 
-   IF hb_isObject( oCurPanel )
+   IF HB_ISOBJECT( oCurPanel )
       ::qStack:setCurrentWidget( oCurPanel )
    ENDIF
    RETURN Self
@@ -1298,7 +1298,7 @@ METHOD IdeBrowsePanel:setViewStyle( nStyle )
    LOCAL qObj, a_
    LOCAL nOldStyle := ::nViewStyle
 
-   IF hb_isNumeric( nStyle )
+   IF HB_ISNUMERIC( nStyle )
       IF nStyle != ::nViewStyle
          IF ::nViewStyle == HBPMDI_STYLE_ORGANIZED
             ::saveGeometry()
@@ -1424,7 +1424,7 @@ METHOD IdeBrowsePanel:saveGeometry()
 METHOD IdeBrowsePanel:restGeometry()
    LOCAL a_
    FOR EACH a_ IN ::aBrowsers
-      IF hb_isObject( a_[ SUB_GEOMETRY ] )
+      IF HB_ISOBJECT( a_[ SUB_GEOMETRY ] )
          a_[ SUB_WINDOW ]:setGeometry( a_[ SUB_GEOMETRY ] )
       ENDIF
    NEXT

@@ -3197,7 +3197,7 @@ FUNCTION setGetAch( v_ )
    LOCAL lCrt
    THREAD STATIC sCrt := {}
    lCrt := sCrt
-   IF hb_isArray( v_ )
+   IF HB_ISARRAY( v_ )
       sCrt := v_
    ENDIF
    RETURN lCrt
@@ -5204,7 +5204,7 @@ FUNCTION hbide_setExitCuiEd( lYes )
    LOCAL l_lYes
    STATIC s_lYes := .f.
    l_lYes := s_lYes
-   IF hb_isLogical( lYes )
+   IF HB_ISLOGICAL( lYes )
       s_lYes := lYes
    ENDIF
    RETURN l_lYes

@@ -160,7 +160,7 @@ local lChoice := .F.
 local nCursor := set( _SET_CURSOR,SC_NONE )
 local nKey,bKey,nScan,lWrap,cScreen,nPrev
 
-IF ! hb_isLogical( lCold )
+IF ! HB_ISLOGICAL( lCold )
    lCold := .F.
 ENDIF
 

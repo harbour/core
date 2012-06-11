@@ -162,7 +162,7 @@ STATIC PROCEDURE hbnetiocon_IPPortSplit( cAddr, /* @ */ cIP, /* @ */ nPort )
 /* TODO: To display event in separate screen area than cmd prompt. */
 STATIC FUNCTION hbnetiocon_acceptStreamData( netiocli, xItem )
 
-   IF hb_isString( xItem )
+   IF HB_ISSTRING( xItem )
       IF xItem == "__SHUTDOWN__"
          hbnetiocon_dispevent( netiocli, "> message from server: Shutting down..." )
          RETURN .F.
@@ -198,10 +198,10 @@ STATIC PROCEDURE hbnetiocon_waitStream( netiocli, bBlock ) /* in separate thread
 
       IF netiocli[ _NETIOCLI_nStreamID ] != NIL
          IF ( xList := netio_GetData( netiocli[ _NETIOCLI_nStreamID ] ) ) != NIL
-            IF hb_isArray( xList )
+            IF HB_ISARRAY( xList )
                FOR EACH xItem IN xList
                   xRetVal := Eval( bBlock, netiocli[ _NETIOCLI_nStreamID ], xItem )
-                  IF hb_isLogical( xRetVal ) .AND. ! xRetVal
+                  IF HB_ISLOGICAL( xRetVal ) .AND. ! xRetVal
                      lExit := .T.
                      EXIT
                   ENDIF

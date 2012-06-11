@@ -80,7 +80,7 @@ PROCEDURE Main( cName )
          /* Now (without automatic main), toplevel options may be in the root hash */
          aSect := hIni[ cSection ]
 
-         IF hb_isHash( aSect )
+         IF HB_ISHASH( aSect )
             /* It's a section */
             ?
             ? "Section [" + cSection + "]"
@@ -146,7 +146,7 @@ PROCEDURE Main( cName )
          /* Now (without automatic main), toplevel options may be in the root hash */
          aSect := hIni[ cSection ]
 
-         IF hb_isHash( aSect )
+         IF HB_ISHASH( aSect )
             /* It's a section */
             ?
             ? "Section [" + cSection + "]"

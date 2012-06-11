@@ -128,16 +128,16 @@ FUNCTION hbide_setProjectTitle( cTitle )
 FUNCTION hbide_execPopup( aPops, aqPos, qParent )
    LOCAL i, qPop, qPoint, qAct, cAct, xRet, a_, qSub, b_, qSub_:={}, qAct_:={}
 
-   qPop := QMenu( iif( hb_isObject( qParent ), qParent, NIL ) )
+   qPop := QMenu( iif( HB_ISOBJECT( qParent ), qParent, NIL ) )
    qPop:setStyleSheet( GetStyleSheet( "QMenuPop", hbide_setIde():nAnimantionMode ) )
 
    FOR i := 1 TO len( aPops )
       IF empty( aPops[ i,1 ] )
          aadd( qAct_, qPop:addSeparator() )
       ELSE
-         IF hb_isObject( aPops[ i, 1 ] )
+         IF HB_ISOBJECT( aPops[ i, 1 ] )
             aadd( qAct_, qPop:addAction( aPops[ i, 1 ] ) )
-         ELSEIF hb_isArray( aPops[ i, 1 ] )     /* Sub-menu */
+         ELSEIF HB_ISARRAY( aPops[ i, 1 ] )     /* Sub-menu */
             qSub := QMenu( qPop )
             qSub:setStyleSheet( GetStyleSheet( "QMenuPop", hbide_setIde():nAnimantionMode ) )
             FOR EACH a_ IN aPops[ i, 1 ]
@@ -152,21 +152,21 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
       ENDIF
    NEXT
 
-   IF hb_isArray( aqPos )
+   IF HB_ISARRAY( aqPos )
       qPoint := QPoint( aqPos[ 1 ], aqPos[ 2 ] )
-   ELSEIF hb_isObject( aqPos )
+   ELSEIF HB_ISOBJECT( aqPos )
       qPoint := aqPos
    ENDIF
 
    IF __objGetClsName( qAct := qPop:exec( qPoint ) ) == "QACTION"
       IF valtype( cAct := qAct:text() ) == "C"
          FOR EACH a_ IN aPops
-            IF hb_isObject( a_[ 1 ] )
+            IF HB_ISOBJECT( a_[ 1 ] )
                IF a_[ 1 ]:text() == cAct
                   xRet := eval( aPops[ a_:__enumIndex(), 2 ] )
                   EXIT
                ENDIF
-            ELSEIF hb_isArray( a_[ 1 ] )
+            ELSEIF HB_ISARRAY( a_[ 1 ] )
                FOR EACH b_ IN a_[ 1 ]
                   IF b_[ 1 ] == cAct
                      xRet := eval( b_[ 2 ], cAct )
@@ -2010,7 +2010,7 @@ FUNCTION hbide_setClose( lYes )
    LOCAL yes
    STATIC sYes := .f.
    yes := sYes
-   IF hb_isLogical( lYes )
+   IF HB_ISLOGICAL( lYes )
       sYes := lYes
    ENDIF
    RETURN yes
@@ -2021,7 +2021,7 @@ FUNCTION hbide_setAdsAvailable( lYes )
    LOCAL yes
    STATIC sYes := .f.
    yes := sYes
-   IF hb_isLogical( lYes )
+   IF HB_ISLOGICAL( lYes )
       sYes := lYes
    ENDIF
    RETURN yes

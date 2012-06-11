@@ -1017,13 +1017,13 @@ STATIC FUNCTION hbide_setSyntaxAttrbs( qHiliter, cPattern, cName, nR, nG, nB, lI
 
    qFormat  := QTextCharFormat()
 
-   IF hb_isLogical( lItalic )
+   IF HB_ISLOGICAL( lItalic )
       qFormat:setFontItalic( lItalic )
    ENDIF
-   IF hb_isLogical( lBold ) .and. lBold
+   IF HB_ISLOGICAL( lBold ) .and. lBold
       qFormat:setFontWeight( 1000 )
    ENDIF
-   IF hb_isLogical( lUnderline )
+   IF HB_ISLOGICAL( lUnderline )
       qFormat:setFontUnderline( lUnderline )
    ENDIF
    qFormat:setForeGround( QBrush( QColor( nR, nG, nB ) ) )

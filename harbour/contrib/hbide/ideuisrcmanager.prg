@@ -578,7 +578,7 @@ METHOD IdeUISrcManager:clear()
       ::pHrb := NIL
    ENDIF
 
-   IF hb_isObject( ::qMdiSub )
+   IF HB_ISOBJECT( ::qMdiSub )
       ::qMdiArea:removeSubWindow( ::qMdiSub )
       ::qMdiSub := NIL
    ENDIF
@@ -687,7 +687,7 @@ METHOD IdeUISrcManager:buildWidget( cBuffer, cPath, cName, cExt, aPrg )
          ::cSrcFile := ::cPath + "cls_" + ::cName + ".prg"
 
          ::qU := eval( &( "{|q| " +  "hbide_ui_" + cName + "( q ) }" ) )
-         IF hb_isObject( ::qU )
+         IF HB_ISOBJECT( ::qU )
             ::loadSource()
 
             ::qMdiSub := QMdiSubWindow()
@@ -1019,7 +1019,7 @@ METHOD IdeUISrcManager:buildClassSkeleton( cCls, cUiName )
    aadd( aSrc, '' )
    aadd( aSrc, 'METHOD ' + cClsC + 'destroy()' )
    aadd( aSrc, '' )
-   aadd( aSrc, '   IF hb_isObject( ::oUI )' )
+   aadd( aSrc, '   IF HB_ISOBJECT( ::oUI )' )
    aadd( aSrc, '      ::disconnects()' )
    aadd( aSrc, '      ::oUI:destroy()' )
    aadd( aSrc, '   ENDIF'  )

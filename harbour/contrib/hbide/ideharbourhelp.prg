@@ -352,7 +352,7 @@ METHOD IdeHarbourHelp:clear()
    NEXT
    FOR EACH a_ IN ::aNodes
       IF a_[ 2 ] == "Path"
-         IF hb_isObject( a_[ 3 ] )
+         IF HB_ISOBJECT( a_[ 3 ] )
 //            a_[ 3 ]:removeChild( a_[ 1 ] )
             a_[ 3 ] := NIL
          ENDIF
@@ -883,7 +883,7 @@ METHOD IdeHarbourHelp:populateIndex()
 
 METHOD IdeHarbourHelp:pullDefinitions( acBuffer )
 
-   IF hb_isArray( acBuffer )
+   IF HB_ISARRAY( acBuffer )
       RETURN doc2functions( __hbdoc_fromSource( hbide_arrayTOmemo( acBuffer ) ) )
    ELSE
       IF hb_fileExists( acBuffer )
@@ -1066,7 +1066,7 @@ METHOD IdeHarbourHelp:getFunctionPrototypes()
                      IF !( a_[ 5 ] == "D" )
                         aFn := ::pullDefinitions( cFolder + a_[ 1 ] )
                         FOR EACH oFunc IN aFn
-                           IF hb_isObject( oFunc )
+                           IF HB_ISOBJECT( oFunc )
                               IF !empty( oFunc:aSyntax )
                                  IF "C Prototype" $ oFunc:aSyntax[ 1 ]
                                     aadd( aProto, alltrim( oFunc:aSyntax[ len( oFunc:aSyntax ) ] ) )
@@ -1083,7 +1083,7 @@ METHOD IdeHarbourHelp:getFunctionPrototypes()
                FOR EACH a_ IN aHbd
                   aFn := ::pullDefinitionsHBD( cRoot + a_[ 1 ] )
                   FOR EACH oFunc IN aFn
-                     IF hb_isObject( oFunc )
+                     IF HB_ISOBJECT( oFunc )
                         IF !empty( oFunc:aSyntax )
                            IF "C Prototype" $ oFunc:aSyntax[ 1 ]
                               aadd( aProto, alltrim( oFunc:aSyntax[ len( oFunc:aSyntax ) ] ) )
@@ -1164,7 +1164,7 @@ METHOD IdeHarbourHelp:populateTextFile( cTextFile )
       aFn := ::aFuncByFile[ nParsed, 2 ]
       IF len( aFn ) > 0
          FOR EACH oFunc IN aFn
-            IF hb_isObject( oFunc )
+            IF HB_ISOBJECT( oFunc )
                aadd( aHtm, '   <br>' + hbide_arrayToMemoHtml( oFunc:aSyntax ) + '</br>' )
             ENDIF
          NEXT

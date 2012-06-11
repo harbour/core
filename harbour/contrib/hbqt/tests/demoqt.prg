@@ -135,9 +135,9 @@ FUNCTION xReleaseMemory( aObj )
    #if 0
    LOCAL i
    FOR i := 1 TO len( aObj )
-      IF hb_isObject( aObj[ i ] )
+      IF HB_ISOBJECT( aObj[ i ] )
          aObj[ i ] := NIL
-      ELSEIF hb_isArray( aObj[ i ] )
+      ELSEIF HB_ISARRAY( aObj[ i ] )
          xReleaseMemory( aObj[ i ] )
       ENDIF
    NEXT
@@ -322,7 +322,7 @@ STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize, cLabel, cMsg, lExit )
    oBtn:move( aPos[ 1 ],aPos[ 2 ] )
    oBtn:resize( aSize[ 1 ],aSize[ 2 ] )
    oBtn:show()
-   IF hb_isLogical( lExit )
+   IF HB_ISLOGICAL( lExit )
       oBtn:connect( "clicked()", {|| lExit := .t. } )
    ELSE
       oBtn:connect( "clicked()", {|| MsgInfo( cMsg ), lExit := .t. } )
@@ -674,7 +674,7 @@ STATIC FUNCTION SetButtonColor( qClr )
       s_clr := QColor( 220,100,12 )
    ENDIF
    l_clr := s_clr
-   IF hb_isObject( qClr )
+   IF HB_ISOBJECT( qClr )
       s_clr := qClr
    ENDIF
    RETURN l_clr

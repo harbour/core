@@ -330,7 +330,7 @@ STATIC FUNCTION netiosrv_ConfSave( netiosrv, netiomgm )
 STATIC FUNCTION netiosrv_ConfLoad( netiosrv, netiomgm )
    LOCAL hConf := hb_Deserialize( hb_MemoRead( netiosrv_ConfName() ) )
 
-   IF hb_isHash( hConf ) .AND. ;
+   IF HB_ISHASH( hConf ) .AND. ;
       "__signature" $ hConf .AND. ;
       hConf[ "__signature" ] == _NETIOSRV_SIGNATURE
 
@@ -520,7 +520,7 @@ STATIC FUNCTION netiomgm_rpc_regnotif( netiomgm, pConnSock, nStreamID, lRegister
       RETURN iif( index $ netiomgm[ _NETIOSRV_hNotifStream ], netiomgm[ _NETIOSRV_hNotifStream ][ index ][ _CLI_xCargo ], NIL )
 #endif
    CASE 4
-      IF ! hb_isLogical( lRegister ) .OR. ! lRegister
+      IF ! HB_ISLOGICAL( lRegister ) .OR. ! lRegister
          hb_mutexLock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
          IF index $ netiomgm[ _NETIOSRV_hNotifStream ]
             hb_HDel( netiomgm[ _NETIOSRV_hNotifStream ], index )
@@ -545,7 +545,7 @@ STATIC FUNCTION netiomgm_rpc_regnotif( netiomgm, pConnSock, nStreamID, lRegister
 STATIC FUNCTION netiomgm_rpc_setclientinfo( netiosrv, hInfo )
    LOCAL nconn
 
-   IF hb_isHash( hInfo )
+   IF HB_ISHASH( hInfo )
 
       hb_mutexLock( netiosrv[ _NETIOSRV_mtxConnection ] )
 
@@ -574,7 +574,7 @@ STATIC FUNCTION netiomgm_rpc_serverconfig( netiosrv, netiomgm )
 STATIC FUNCTION netiomgm_rpc_logconn( netiosrv, lValue )
    LOCAL lOldValue := netiosrv[ _NETIOSRV_lShowConn ]
 
-   IF hb_isLogical( lValue )
+   IF HB_ISLOGICAL( lValue )
       netiosrv[ _NETIOSRV_lShowConn ] := lValue
    ENDIF
 
@@ -583,7 +583,7 @@ STATIC FUNCTION netiomgm_rpc_logconn( netiosrv, lValue )
 STATIC FUNCTION netiomgm_rpc_conn( netiosrv, lValue )
    LOCAL lOldValue := netiosrv[ _NETIOSRV_lAcceptConn ]
 
-   IF hb_isLogical( lValue )
+   IF HB_ISLOGICAL( lValue )
       netiosrv[ _NETIOSRV_lAcceptConn ] := lValue
    ENDIF
 
@@ -593,7 +593,7 @@ STATIC FUNCTION netiomgm_rpc_stop( netiosrv, cIPPort )
    LOCAL nconn
    LOCAL aAddressPeer
 
-   IF hb_isString( cIPPort )
+   IF HB_ISSTRING( cIPPort )
 
       cIPPort := Lower( cIPPort )
 
@@ -623,7 +623,7 @@ STATIC FUNCTION netiomgm_rpc_clientinfo( netiosrv, netiomgm, cIPPort )
    LOCAL xCargo := NIL
    LOCAL lDone
 
-   IF hb_isString( cIPPort )
+   IF HB_ISSTRING( cIPPort )
 
       cIPPort := Lower( cIPPort )
 
@@ -777,7 +777,7 @@ STATIC FUNCTION ConnStatusStr( nStatus )
 STATIC FUNCTION AddrToIPPort( aAddr )
    LOCAL cIP
 
-   IF hb_isArray( aAddr ) .AND. ;
+   IF HB_ISARRAY( aAddr ) .AND. ;
       ( aAddr[ HB_SOCKET_ADINFO_FAMILY ] == HB_SOCKET_AF_INET .OR. ;
         aAddr[ HB_SOCKET_ADINFO_FAMILY ] == HB_SOCKET_AF_INET6 )
       cIP := aAddr[ HB_SOCKET_ADINFO_ADDRESS ] + ":" + hb_ntos( aAddr[ HB_SOCKET_ADINFO_PORT ] )

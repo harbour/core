@@ -12712,7 +12712,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       "  - linux   : gcc, clang, icc, watcom, sunpro, open64, pcc",;
       "  - darwin  : gcc, clang, icc, pcc",;
       "  - win     : mingw, msvc, bcc, watcom, icc, pocc, xcc,",;
-      "  -           mingw64, msvc64, msvcia64, iccia64, pocc64",;
+      "              mingw64, msvc64, msvcia64, iccia64, pocc64",;
       "  - wce     : mingwarm, mingw, msvcarm, poccarm",;
       "  - os2     : gcc, gccomf, watcom",;
       "  - dos     : djgpp, watcom",;

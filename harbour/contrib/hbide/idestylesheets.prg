@@ -73,7 +73,7 @@ FUNCTION hbide_setAppTheme( aTheme )
    LOCAL oTheme
    STATIC sTheme
    oTheme := sTheme
-   IF hb_isArray( aTheme )
+   IF HB_ISARRAY( aTheme )
       sTheme := aTheme
    ENDIF
    RETURN oTheme
@@ -490,7 +490,7 @@ FUNCTION hbide_cssColorString( cPart )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_rgbString( nR, nG, nB )
-   IF hb_isArray( nR )
+   IF HB_ISARRAY( nR )
       RETURN "rgb(" + hb_ntos( nR[ 1 ] ) + "," + hb_ntos( nR[ 2 ] ) + "," + hb_ntos( nR[ 3 ] ) + ")"
    ELSE
       RETURN "rgb(" + hb_ntos( nR ) + "," + hb_ntos( nG ) + "," + hb_ntos( nB ) + ")"
