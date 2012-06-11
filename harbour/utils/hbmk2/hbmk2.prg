@@ -570,7 +570,6 @@ PROCEDURE _APPMAIN( ... )
    IF PCount() >= 1
       tmp := Lower( hb_FNameExt( hb_PValue( 1 ) ) )
       IF tmp == ".hb" .OR. ;
-         tmp == ".hbs" .OR. ;
          tmp == ".hrb"
          __hbrun_minimal( ... )
          QUIT
@@ -3118,7 +3117,6 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
 
       CASE hb_FNameExt( cParamL ) == ".prg" .OR. ;
-           hb_FNameExt( cParamL ) == ".hbs" .OR. ;
            hb_FNameExt( cParamL ) == ".hb"
 
          FOR EACH cParam IN FN_Expand( PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
@@ -5521,7 +5519,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          /* Do entry function detection on platform required and supported */
          IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ! lStopAfterCComp .AND. l_cMAIN == NIL
-            tmp := iif( HBMK_IS_IN( Lower( hb_FNameExt( hbmk[ _HBMK_cFIRST ] ) ), ".prg|.hb|.hbs|.clp" ) .OR. Empty( hb_FNameExt( hbmk[ _HBMK_cFIRST ] ) ), FNameDirExtSet( hbmk[ _HBMK_cFIRST ], hbmk[ _HBMK_cWorkDir ], ".c" ), hbmk[ _HBMK_cFIRST ] )
+            tmp := iif( HBMK_IS_IN( Lower( hb_FNameExt( hbmk[ _HBMK_cFIRST ] ) ), ".prg|.hb|.clp" ) .OR. Empty( hb_FNameExt( hbmk[ _HBMK_cFIRST ] ) ), FNameDirExtSet( hbmk[ _HBMK_cFIRST ], hbmk[ _HBMK_cWorkDir ], ".c" ), hbmk[ _HBMK_cFIRST ] )
             IF ! Empty( tmp := getFirstFunc( hbmk, tmp ) )
                l_cMAIN := tmp
             ENDIF
@@ -8607,9 +8605,8 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
 
       IF ! Empty( cFile )
          lOK := .F.
-         /* Optimization: Don't try to load it as .hrb if the extension is .prg, .hb or .hbs (Harbour script) */
+         /* Optimization: Don't try to load it as .hrb if the extension is .prg, .hb (Harbour script) */
          IF !( Lower( cExt ) == ".prg" ) .AND. ;
-            !( Lower( cExt ) == ".hbs" ) .AND. ;
             !( Lower( cExt ) == ".hb" )
             BEGIN SEQUENCE WITH {| oError | Break( oError ) }
                hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
@@ -12112,7 +12109,6 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
    IF ! Empty( cFile := FindInPath( cFile ) )
       SWITCH Lower( hb_FNameExt( cFile ) )
       CASE ".hb"
-      CASE ".hbs"
          __hbrun_LoadExtDynamicFromSource( aDynamic, cFile )
          /* NOTE: Assumptions:
                   - one dynamic libs belongs to one .hbc file
@@ -12839,7 +12835,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-depimplibs=<d:dll>"     , I_( "<d> is the name of the dependency. Add <dll> to the import library source list." ) },;
       { "-depimplibd=<d:lib>"     , I_( "<d> is the name of the dependency. Set generated import library name to <lib>" ) },;
       NIL,;
-      { "-plugin=<filename>" , I_( "add plugin. <filename> can be: .hb, .hbs, .prg, .hrb" ) },;
+      { "-plugin=<filename>" , I_( "add plugin. <filename> can be: .hb, .prg, .hrb" ) },;
       { "-pi=<filename>"     , I_( "pass input file to plugins" ) },;
       { "-pflag=<f>"         , I_( "pass flag to plugins" ) },;
       NIL,;
@@ -12898,7 +12894,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ),;
       I_( "Defaults and feature support vary by platform/compiler." ) ,;
       hb_StrFormat( I_( "Options can also be specified in environment variable %1$s" ), _HBMK_ENV_NAME ),;
-      I_( ".hb, .hbs or .hrb file passed as first parameter will be run as Harbour script. (EXPERIMENTAL)" ) }
+      I_( ".hb or .hrb file passed as first parameter will be run as Harbour script. (EXPERIMENTAL)" ) }
 
    hb_default( @lLong, .F. )
 

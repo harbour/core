@@ -159,7 +159,6 @@ PROCEDURE _APPMAIN( cFile, ... )
                cExt := Lower( cExt )
                SWITCH cExt
                   CASE ".hb"
-                  CASE ".hbs"
                   CASE ".prg"
                   CASE ".hrb"
                   CASE ".dbf"
@@ -173,7 +172,6 @@ PROCEDURE _APPMAIN( cFile, ... )
                      hbrun_Prompt( hb_AParams(), "USE " + cFile + " SHARED" )
                      EXIT
                   CASE ".hb"
-                  CASE ".hbs"
                   CASE ".prg"
                      IF Empty( GetEnv( "HBRUN_NOHEAD" ) )
                         hHeaders := __hbrun_CoreHeaderFiles() /* add core header files */
@@ -325,7 +323,6 @@ STATIC FUNCTION plugins_load( hPlugins, aParams )
 
       SWITCH Lower( hb_FNameExt( cFile:__enumKey() ) )
       CASE ".hb"
-      CASE ".hbs"
       CASE ".prg"
          cFile := hb_compileFromBuf( cFile, __hbrun_CoreHeaderFiles(), hb_ProgName(), "-n2", "-w", "-es2", "-q0" )
          IF cFile == NIL
@@ -587,7 +584,7 @@ STATIC PROCEDURE hbrun_Usage()
            "Copyright (c) 1999-2012, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
            "http://harbour-project.org/" + hb_eol() +;
            hb_eol() +;
-           "Syntax:  hbrun [<file[.hb|.hbs|.prg|.hrb]> [<parameters,...>]]" + hb_eol() )
+           "Syntax:  hbrun [<file[.hb|.prg|.hrb]> [<parameters,...>]]" + hb_eol() )
 
    RETURN
 
@@ -788,7 +785,7 @@ FUNCTION __hbrun_FindInPath( cFileName, xPath )
    LOCAL aExt
 
    hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
-   aExt := iif( Empty( cExt ), { ".hb", ".hbs", ".hrb" }, { cExt } )
+   aExt := iif( Empty( cExt ), { ".hb", ".hrb" }, { cExt } )
 
    FOR EACH cExt IN aExt
       /* Check original filename (in supplied path or current dir) */
@@ -852,7 +849,6 @@ STATIC FUNCTION win_reg_app( lRegister, lAllUser, cAppPath )
    LOCAL aEntries := {;
       cHive + '\'                                , ""                     ,;
       cHive + '\.hb\'                            , "HarbourScript"        ,;
-      cHive + '\.hbs\'                           , "HarbourScript"        ,;
       cHive + '\HarbourScript\'                  , "Harbour Script File"  ,;
       cHive + '\HarbourScript\DefaultIcon\'      , cAppPath + ",-1"       ,;
       cHive + '\HarbourScript\Shell\'            , "Run"                  ,;

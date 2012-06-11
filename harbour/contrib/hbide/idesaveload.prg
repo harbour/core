@@ -121,7 +121,7 @@ CLASS IdeINI INHERIT IdeObject
    DATA   cCurrentReplace                         INIT  ""
    DATA   cCurrentView                            INIT  ""
    //
-   DATA   cTextFileExtensions                     INIT  ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env,.ppo,.qtp,.hb,.hbs," + ;
+   DATA   cTextFileExtensions                     INIT  ".c,.cpp,.prg,.h,.ch,.txt,.log,.ini,.env,.ppo,.qtp,.hb," + ;
                                                         ".cc,.hbc,.hbp,.hbm,.xml,.bat,.sh,.rc,.ui,.uic,.bak,.fmg,.qth,.qrc"
    DATA   aProjFiles                              INIT  {}
    DATA   aFiles                                  INIT  {}
@@ -1171,7 +1171,7 @@ METHOD IdeSetup:setIcons()
    ::oUI:q_buttonKeyUp         : setIcon( QIcon( hbide_image( "dc_up"     ) ) )
    ::oUI:q_buttonKeyDown       : setIcon( QIcon( hbide_image( "dc_down"   ) ) )
 
-   /* Paths */        
+   /* Paths */
    ::oUI:q_buttonPathHrbRoot   : setIcon( QIcon( hbide_image( "open"      ) ) )
    ::oUI:q_buttonPathHbmk2     : setIcon( QIcon( hbide_image( "open"      ) ) )
    ::oUI:q_buttonPathEnv       : setIcon( QIcon( hbide_image( "open"      ) ) )
@@ -1193,10 +1193,10 @@ METHOD IdeSetup:setIcons()
    ::oUI:q_buttonThmApp        : setIcon( QIcon( hbide_image( "copy"      ) ) )
    ::oUI:q_buttonThmSav        : setIcon( QIcon( hbide_image( "save"      ) ) )
 
-   /* Dictionaries */ 
+   /* Dictionaries */
    ::oUI:q_buttonDictPath      : setIcon( QIcon( hbide_image( "open"      ) ) )
 
-   /* VSS */ 
+   /* VSS */
    ::oUI:q_buttonVSSExe        : setIcon( QIcon( hbide_image( "open"      ) ) )
    ::oUI:q_buttonVSSDatabase   : setIcon( QIcon( hbide_image( "open"      ) ) )
 

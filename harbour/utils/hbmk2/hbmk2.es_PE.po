@@ -1438,7 +1438,7 @@ msgstr ""
 
 #: hbmk2.prg:13120
 #, c-format
-msgid ".hb, .hbs or .hrb file passed as first parameter will be run as Harbour script. (EXPERIMENTAL)"
+msgid ".hb or .hrb file passed as first parameter will be run as Harbour script. (EXPERIMENTAL)"
 msgstr ""
 
 #: hbmk2.prg:2590
@@ -1458,7 +1458,7 @@ msgstr ""
 
 #: hbmk2.prg:13102
 #, c-format
-msgid "add plugin. <filename> can be: .hb, .hbs, .prg, .hrb"
+msgid "add plugin. <filename> can be: .hb, .prg, .hrb"
 msgstr ""
 
 #: hbmk2.prg:5315
