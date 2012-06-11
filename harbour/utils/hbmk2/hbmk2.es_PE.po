@@ -1438,7 +1438,7 @@ msgstr ""
 
 #: hbmk2.prg:13120
 #, c-format
-msgid ".hb or .hrb file passed as first parameter will be run as Harbour script. (EXPERIMENTAL)"
+msgid ".hb or .hrb file passed as first parameter will be run as Harbour script."
 msgstr ""
 
 #: hbmk2.prg:2590

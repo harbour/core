@@ -2630,7 +2630,6 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDIF
          ENDIF
 
-      /* EXPERIMENTAL */
       CASE Left( cParamL, Len( "-sign=" ) ) == "-sign="
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-sign=" ) + 1 ), aParam[ _PAR_cFileName ] )
@@ -2638,7 +2637,6 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             cOpt_SignID := cParam
          ENDIF
 
-      /* EXPERIMENTAL */
       CASE Left( cParamL, Len( "-signpw=" ) ) == "-signpw="
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-signpw=" ) + 1 ), aParam[ _PAR_cFileName ] )
@@ -12894,7 +12892,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ),;
       I_( "Defaults and feature support vary by platform/compiler." ) ,;
       hb_StrFormat( I_( "Options can also be specified in environment variable %1$s" ), _HBMK_ENV_NAME ),;
-      I_( ".hb or .hrb file passed as first parameter will be run as Harbour script. (EXPERIMENTAL)" ) }
+      I_( ".hb or .hrb file passed as first parameter will be run as Harbour script." ) }
 
    hb_default( @lLong, .F. )
 
