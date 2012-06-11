@@ -55,17 +55,9 @@
 
 #include "hbapi.h"
 
+HB_FUNC_EXTERN( HB_ISFUNCTION );
+
 HB_FUNC( ISFUNCTION )
 {
-   const char * szProc = hb_parc( 1 );
-   HB_BOOL fResult = HB_FALSE;
-
-   if( szProc )
-   {
-      PHB_DYNS pDynSym = hb_dynsymFindName( szProc );
-      if( pDynSym )
-         fResult = hb_dynsymIsFunction( pDynSym );
-   }
-
-   hb_retl( fResult );
+   HB_FUNC_EXEC( HB_ISFUNCTION );
 }

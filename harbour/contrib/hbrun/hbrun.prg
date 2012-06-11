@@ -275,7 +275,7 @@ STATIC PROCEDURE hbrun_extensionlist_init( aDynamic )
    STATIC s_lInit := .F.
 
    IF ! s_lInit
-      IF Type( "__hbrun_extensions_static_init()" ) == "UI"
+      IF hb_IsFunction( "__hbrun_extensions_static_init" )
          Do( "__hbrun_extensions_static_init" )
       ENDIF
       __hbrun_extensions_dynamic_init( aDynamic )

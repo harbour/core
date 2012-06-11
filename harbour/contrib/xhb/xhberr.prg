@@ -358,7 +358,7 @@ STATIC FUNCTION LogError( oerr )
         FWriteLine( nHandle, "Multi Threading....: " + If( hb_mtvm(),"YES","NO" ) )
         FWriteLine( nHandle, "VM Optimization....: " + strvalue( Hb_VmMode() ) )
 
-        IF __dynsIsFun( "Select" )
+        IF hb_IsFunction( "Select" )
             FWriteLine( nHandle, "" )
             FWriteLine( nHandle, "Current Area ......:" + strvalue( &("Select()") ) )
         ENDIF
@@ -476,25 +476,25 @@ STATIC FUNCTION LogError( oerr )
         FWriteLine( nHandle, "" )
 
         HB_WAEval( {||
-                     IF __dynsIsFun( "Select" )
+                     IF hb_IsFunction( "Select" )
                         FWriteLine( nHandle, "Work Area No ......: " + strvalue( &("Select()") ) )
                      ENDIF
-                     IF __dynsIsFun( "Alias" )
+                     IF hb_IsFunction( "Alias" )
                         FWriteLine( nHandle, "Alias .............: " + &("Alias()") )
                      ENDIF
-                     IF __dynsIsFun( "RecNo" )
+                     IF hb_IsFunction( "RecNo" )
                         FWriteLine( nHandle, "Current Recno .....: " + strvalue( &("RecNo()") ) )
                      ENDIF
-                     IF __dynsIsFun( "DbFilter" )
+                     IF hb_IsFunction( "DbFilter" )
                         FWriteLine( nHandle, "Current Filter ....: " + &("DbFilter()") )
                      ENDIF
-                     IF __dynsIsFun( "DbRelation" )
+                     IF hb_IsFunction( "DbRelation" )
                         FWriteLine( nHandle, "Relation Exp. .....: " + &("DbRelation()") )
                      ENDIF
-                     IF __dynsIsFun( "IndexOrd" )
+                     IF hb_IsFunction( "IndexOrd" )
                         FWriteLine( nHandle, "Index Order .......: " + strvalue( &("IndexOrd(0)") ) )
                      ENDIF
-                     IF __dynsIsFun( "IndexKey" )
+                     IF hb_IsFunction( "IndexKey" )
                         FWriteLine( nHandle, "Active Key ........: " + strvalue( &("IndexKey(0)") ) )
                      ENDIF
                      FWriteLine( nHandle, "" )

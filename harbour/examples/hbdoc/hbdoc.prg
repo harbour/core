@@ -146,7 +146,7 @@ PROCEDURE Main( ... )
    FOR idx := Len( p_hsSwitches[ "format-list" ] ) TO 1 STEP -1
       IF p_hsSwitches[ "format-list" ][ idx ] == "all"
 
-      ELSEIF Type( "Generate" + p_hsSwitches[ "format-list" ][ idx ] + "()" ) != "UI"
+      ELSEIF hb_IsFunction( "Generate" + p_hsSwitches[ "format-list" ][ idx ] )
          ASize( ADel( p_hsSwitches[ "format-list" ], idx), Len( p_hsSwitches[ "format-list" ] ) - 1 )
       ENDIF
    NEXT

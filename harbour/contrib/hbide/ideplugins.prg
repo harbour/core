@@ -309,7 +309,7 @@ FUNCTION hbide_loadPersistentScripts()
 
 FUNCTION hbide_execScriptFunction( cFunc, ... )
 
-   IF type( "script_" + cFunc + "()" ) == "UI"
+   IF hb_IsFunction( "script_" + cFunc )
       RETURN eval( &( "{|...| " + "script_" + cFunc + "( ... )" + "}" ), ... )
    ENDIF
 

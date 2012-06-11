@@ -58,7 +58,7 @@ ANNOUNCE XPP_OP_OVERLOAD
  * It should not be used in user code. [druzus]
  */
 #xcommand OPTIONAL INHERIT <!className!> =>                 ;
-            IF Type( <"className">+"()" ) == "UI"          ;;
+            IF hb_IsFunction( <"className"> )              ;;
                AAdd( oClass:asSuper, @__<className>() )    ;;
             ENDIF
 

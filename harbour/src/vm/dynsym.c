@@ -695,8 +695,25 @@ HB_FUNC( __DYNSGETINDEX ) /* Gimme index number of symbol: dsIndex = __dynsymGet
    hb_retnint( uiPos );
 }
 
-HB_FUNC( __DYNSISFUN ) /* returns .t. if a symbol has a function/procedure pointer,
-                          given its symbol index */
+HB_FUNC( HB_ISFUNCTION ) /* returns .T. if a symbol has a function/procedure pointer,
+                            given its name */
+{
+   HB_STACK_TLS_PRELOAD
+   const char * szProc = hb_parc( 1 );
+   HB_BOOL fResult = HB_FALSE;
+
+   if( szProc )
+   {
+      PHB_DYNS pDynSym = hb_dynsymFindName( szProc );
+      if( pDynSym )
+         fResult = hb_dynsymIsFunction( pDynSym );
+   }
+
+   hb_retl( fResult );
+}
+
+HB_FUNC( __DYNSISFUN ) /* returns .T. if a symbol has a function/procedure pointer,
+                          given its symbol index or name */
 {
    HB_STACK_TLS_PRELOAD
    const char * szName = hb_parc( 1 );
