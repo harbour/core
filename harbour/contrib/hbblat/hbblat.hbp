@@ -15,11 +15,14 @@
 -depkeyhead=blat:blat.h
 -depcontrol=blat:${HB_WITH_BLAT}
 -depimplibs=blat:../blat.dll
+-depfinish=blat
 
 -iflag={bcc}-a
 
 -instfile=inc:hbblat.ch
 -instfile=inc:hbblat.hbx
+
+{hbdyn&win&HB_INSTALL_3RDDYN='yes'}-instfile=${HBMK_DIR_BLAT}/../blat.dll
 
 hbblat.hbx
 
