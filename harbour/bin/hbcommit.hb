@@ -27,7 +27,7 @@
  */
 
 #define _MY_NAME_ "Firstname Lastname (me domain.net)"
-#define _PCOMMIT_ ".pcommit"
+#define _PCOMMIT_ ".hbcommit"
 
 #pragma warninglevel=3
 #pragma -km+
