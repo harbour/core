@@ -415,15 +415,9 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
       ::oEM:aActions[ 19, 2 ]:setEnabled( len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 2 )
       ::oEM:aActions[ 21, 2 ]:setEnabled( n > 0 )
 
-#ifdef __HBQT_REVAMP__
       IF empty( qAct := ::oEM:qContextMenu:exec( ::qEdit:mapToGlobal( p ) ) )
          RETURN Self
       ENDIF
-#else
-      IF ! ( qAct := ::oEM:qContextMenu:exec( ::qEdit:mapToGlobal( p ) ) ):hasValidPointer()
-         RETURN Self
-      ENDIF
-#endif
       cAct := strtran( qAct:text(), "&", "" )
       SWITCH cAct
       CASE "Split Horizontally"

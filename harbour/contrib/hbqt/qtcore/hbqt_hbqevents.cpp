@@ -66,6 +66,13 @@
 #include <QtCore/QVariant>
 #include <QtGui/QMessageBox>
 
+HB_FUNC_EXTERN( HB_QCLOSEEVENT );
+
+void _hb_force_link_HBQevents( void )
+{
+    HB_FUNC_EXEC( HB_QCLOSEEVENT );
+}
+
 /*----------------------------------------------------------------------*/
 
 #include <QtCore/QStringList>
@@ -74,23 +81,16 @@
 
 static QList<QEvent::Type> s_lstEvent;
 static QList<QByteArray> s_lstCreateObj;
-static QList<PHBQT_EVENT_FUNC> s_pEventAllocateCallback;
 
 
-void hbqt_events_register_createobj( QEvent::Type eventtype, QByteArray szCreateObj, PHBQT_EVENT_FUNC pCallback )
-{
+void hbqt_events_register_createobj( QEvent::Type eventtype, QByteArray szCreateObj )
+{ 
    int iIndex = s_lstEvent.indexOf( eventtype );
 
    if( iIndex == -1 )
    {
       s_lstEvent << eventtype;
       s_lstCreateObj << szCreateObj.toUpper();
-      s_pEventAllocateCallback << pCallback;
-   }
-   else
-   {
-      s_lstCreateObj[ iIndex ] = szCreateObj.toUpper();
-      s_pEventAllocateCallback[ iIndex ] = pCallback;
    }
 }
 
@@ -102,7 +102,6 @@ void hbqt_events_unregister_createobj( QEvent::Type eventtype )
    {
       s_lstEvent.removeAt( iIndex );
       s_lstCreateObj.removeAt( iIndex );
-      s_pEventAllocateCallback.removeAt( iIndex );
    }
 }
 
@@ -122,67 +121,23 @@ HBQEvents::HBQEvents( PHB_ITEM pObj ) : QObject()
 
 HBQEvents::~HBQEvents()
 {
-   if( hb_vmRequestReenter() )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "HBQEvents::~HBQEvents() Size = %i", listBlock.size() ) );
-   
-      int i;
-      for( i = 0; i < listBlock.size(); i++ )
-      {
-         if( listBlock[ i ] != NULL )
-         {
-            HB_TRACE( HB_TR_DEBUG, ( "HBQEvents::~HBQEvents() item %d", i + 1 ) );
-            hb_itemRelease( listBlock.at( i ) );
-            listBlock[ i ] = NULL;
-         }
-      }
-      hb_vmRequestRestore();
-   }
-   listBlock.clear();
 }
 
 int HBQEvents::hbConnect( PHB_ITEM pObj, int event, PHB_ITEM bBlock )
 {
+   HB_TRACE( HB_TR_DEBUG, ( "HBQEvents::hbConnect( %i )", event ) );
+   
    int nResult = -1;
 
-   if( true )
+   if( hb_itemType( bBlock ) & HB_IT_BLOCK )
    {
       QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
       if( object )
       {
-         PHB_ITEM pBlock = hb_itemNew( bBlock );
-         if( pBlock )
-         {
-            hb_gcUnlock( pBlock );
-
-            char prop[ 20 ];
-            hb_snprintf( prop, sizeof( prop ), "P%iP", event ); /* Make it a unique identifier */
-
-            int i = object->property( prop ).toInt();
-            if( i == 0 )
-            {
-               listBlock << pBlock;
-               object->setProperty( prop, ( int ) listBlock.size() );
-            }
-            else
-            {
-               if( listBlock.at( i - 1 ) != NULL )
-               {
-                  hb_itemRelease( listBlock.at( i - 1 ) );
-               }
-               listBlock[ i - 1 ] = pBlock;
-            }
-            nResult = 0;
-         }
-         else
-            nResult = -3;
+         hbqt_bindAddEvent( pObj, event, bBlock );
+         nResult = 0;
       }
-      else
-         nResult = -2;
-   }
-   else
-      nResult = -1;
-
+   }   
    return nResult;
 }
 
@@ -195,27 +150,9 @@ int HBQEvents::hbDisconnect( PHB_ITEM pObj, int event )
    QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
    if( object )
    {
-      char prop[ 20 ];
-      hb_snprintf( prop, sizeof( prop ), "P%iP", event );    /* Make it a unique identifier */
-
-      int i = object->property( prop ).toInt();
-      if( i > 0 && i <= listBlock.size() )
-      {
-         object->setProperty( prop, 0 );
-
-         if( listBlock[ i - 1 ] != NULL )
-         {
-            hb_itemRelease( listBlock.at( i - 1 ) );
-            listBlock[ i - 1 ] = NULL;
-         }
-         nResult = 0;
-      }
-      else
-         nResult = -3;
-   }
-   else
-      nResult = -2;
-
+      hbqt_bindDelEvent( pObj, event, NULL );
+      nResult = 0;
+   }   
    return nResult;
 }
 
@@ -228,42 +165,26 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
       QEvent::Type eventtype = event->type();
       if( ( int ) eventtype > 0 )
       {
-         char prop[ 20 ];
-         hb_snprintf( prop, sizeof( prop ), "%s%i%s", "P", eventtype, "P" );
-
-         int found = object->property( prop ).toInt();
-         if( found > 0 )
+         int eventId = s_lstEvent.indexOf( eventtype );
+         
+         if( eventId > -1 && hb_vmRequestReenter() )
          {
-            if( found <= listBlock.size() &&  listBlock.at( found - 1 ) != NULL )
+            PHB_ITEM p = hbqt_bindGetEvents( hbqt_bindGetHbObjectBYqtObject( object ), eventtype ); 
+            if( p )
             {
-               int eventId = s_lstEvent.indexOf( eventtype );
-               if( eventId > -1 )
-               {
-                  PHBQT_EVENT_FUNC pCallback = s_pEventAllocateCallback.at( eventId );
-                  if( pCallback )
-                  {
-                     if( hb_vmRequestReenter() )
-                     {
-#ifdef __HBQT_REVAMP__
-                        PHB_ITEM pItem = hbqt_bindGetHbObject( NULL, ( void * ) event, ( s_lstCreateObj.at( eventId ) ), NULL, 0 );
-#else
-                        PHB_ITEM pItem = hb_itemNew( hbqt_create_objectGC( ( * pCallback )( event, false ), s_lstCreateObj.at( eventId ) ) );
-#endif
-                        stopTheEventChain = ( bool ) hb_itemGetL( hb_vmEvalBlockV( ( PHB_ITEM ) listBlock.at( found - 1 ), 1, pItem ) );
-
-                        hb_itemRelease( pItem );
-                        hb_vmRequestRestore();
-                     }
-                  }
-               }
-            }
-         }
-
+               PHB_ITEM pItem = hbqt_bindGetHbObject( NULL, ( void * ) event, ( s_lstCreateObj.at( eventId ) ), NULL, HBQT_BIT_NONE );
+               stopTheEventChain = ( bool ) hb_itemGetL( hb_vmEvalBlockV( hb_arrayGetItemPtr( p, 1 ), 1, pItem ) );
+               hb_itemRelease( pItem );
+            }   
+            hb_itemRelease( p );
+            hb_vmRequestRestore();
+         }   
          if( eventtype == QEvent::Close )
+         {
             return true;
+         }   
       }
    }
-
    return stopTheEventChain;
 }
 
@@ -283,7 +204,6 @@ static void hbqt_events_exit( void * cargo )
       HB_TRACE( HB_TR_DEBUG, ( "hbqt_events_exit, deleting item %d", i ));
       s_lstEvent.removeAt( 0 );
       s_lstCreateObj.removeAt( 0 );
-      s_pEventAllocateCallback.removeAt( 0 );
    }
 
    HB_TRACE( HB_TR_DEBUG, ( "EXITING hbqt_events_exit, len=%d", s_lstCreateObj.size() ) );

@@ -56,8 +56,6 @@
 
 #define QEvent_Paint                              12
 
-//#define __HBQT_REVAMP__
-
 /*----------------------------------------------------------------------*/
 
 CREATE CLASS HbQtObjectHandler
@@ -68,24 +66,24 @@ CREATE CLASS HbQtObjectHandler
    VAR    __pEvents                               PROTECTED
 
    VAR    hEvents                                 INIT {=>}
-#ifdef __HBQT_REVAMP__
+
    VAR    __Slots
-#endif   
+   VAR    __Events
 
    METHOD hasValidPointer()
 
    METHOD connect( cnEvent, bBlock )
    METHOD disconnect( cnEvent )
-#ifdef __HBQT_REVAMP__
    METHOD setSlots()
-#endif   
+   METHOD setEvents()
+   
    DESTRUCTOR _destroy()
    ERROR HANDLER onError()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
-#ifdef __HBQT_REVAMP__
+
 METHOD HbQtObjectHandler:setSlots()
 
    IF empty( ::__Slots )
@@ -94,9 +92,20 @@ METHOD HbQtObjectHandler:setSlots()
    ENDIF    
    
    RETURN Self 
-#endif   
+
 /*----------------------------------------------------------------------*/
+      
+METHOD HbQtObjectHandler:setEvents()
+
+   IF empty( ::__Events )
+      ::__Events := {=>}
+      hb_hDefault( ::__Events, {} )
+   ENDIF    
    
+   RETURN Self 
+
+/*----------------------------------------------------------------------*/
+/* TOBE: deleted */   
 METHOD HbQtObjectHandler:hasValidPointer()
    RETURN __hbqt_isPointer( ::pPtr )
 
@@ -256,14 +265,12 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 /*----------------------------------------------------------------------*/
 
 METHOD HbQtObjectHandler:_destroy()
-   LOCAL cnEvent
 
-#ifdef __HBQT_REVAMP__
    HB_TRACE( HB_TR_DEBUG, "  _destroy()", __objDerivedFrom( Self, "QOBJECT" ), __objGetClsName( Self ) )
-   __hbqt_destroy( Self )
    
-#endif
+   __hbqt_destroy( Self )
 
+#if 0      
    IF ! __objDerivedFrom( Self, "QOBJECT" )
       RETURN NIL
    ENDIF
@@ -271,14 +278,10 @@ METHOD HbQtObjectHandler:_destroy()
       RETURN NIL
    ENDIF
 
-   HB_TRACE( HB_TR_DEBUG, "  _destroy()", __objDerivedFrom( Self, "QOBJECT" ), "pSlots", valtype( ::__pSlots ), "pEvents", valtype( ::__pEvents ) )
-
    FOR EACH cnEvent IN ::hEvents
       IF HB_ISNUMERIC( cnEvent ) .AND. ! empty( ::__pEvents )
-         HB_TRACE( HB_TR_DEBUG, "  _destroy()", ".....N.....", cnEvent )
          ::__pEvents:hbDisconnect( Self, cnEvent )
       ELSEIF HB_ISSTRING( cnEvent ) .AND. ! empty( ::__pSlots )
-         HB_TRACE( HB_TR_DEBUG, "  _destroy()", ".....C.....", cnEvent )
          ::__pSlots:hbDisconnect( Self, cnEvent )
       ENDIF
    NEXT
@@ -287,18 +290,8 @@ METHOD HbQtObjectHandler:_destroy()
 
    ::__pSlots := NIL
    ::__pEvents := NIL
-
-   HB_TRACE( HB_TR_DEBUG, "  _destroy()", "Exiting..." )
-
+#endif
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbqt_promoteWidget( oWidget, cWidgetTo )
-   LOCAL oObj := Eval( hb_macroBlock( "HB_" + cWidgetTo + "()" ) )
-
-   oObj:pPtr := oWidget:pPtr
-
-   RETURN oObj
-
-/*----------------------------------------------------------------------*/

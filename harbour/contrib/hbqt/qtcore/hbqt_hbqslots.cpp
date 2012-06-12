@@ -116,23 +116,6 @@ HBQSlots::HBQSlots( PHB_ITEM pObj ) : QObject()
 
 HBQSlots::~HBQSlots()
 {
-   if( hb_vmRequestReenter() )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::~HBQSlots() Size = %i", listBlock.size() ) );
-   
-      int i;
-      for( i = 0; i < listBlock.size(); i++ )
-      {
-         if( listBlock[ i ] != NULL )
-         {
-            HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::~HBQSlots() Item %d", i + 1 ) );
-            hb_itemRelease( listBlock.at( i ) );
-            listBlock[ i ] = NULL;
-         }
-      }
-      hb_vmRequestRestore();
-   }
-   listBlock.clear();
 }
 
 int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
@@ -146,11 +129,8 @@ int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
       QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
       if( object )
       {
-         PHB_ITEM pBlock = hb_itemNew( bBlock );
-         if( pBlock )
+         if( hb_itemType( bBlock ) & HB_IT_BLOCK )
          {
-            hb_gcUnlock( pBlock );
-
             int i = object->property( pszSignal ).toInt();
             if( i == 0 )
             {
@@ -168,23 +148,17 @@ int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
                         if( QMetaObject::connect( object, signalId, this, slotId + QObject::staticMetaObject.methodCount(), Qt::AutoConnection ) )
                         {
                            nResult = 0;
-#ifdef __HBQT_REVAMP__
-                           hb_itemRelease( pBlock );
+
                            listBlock << NULL;
-#else
-                           listBlock << pBlock;
-#endif
+                           
                            char szSlotName[ 20 ];
                            hb_snprintf( szSlotName, sizeof( szSlotName ), "SLOT_%d", slotId );
 
                            object->setProperty( szSlotName, ( int ) listBlock.size() );
                            object->setProperty( pszSignal, ( int ) listBlock.size() );
 
-                           HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %s ) %i", pszSignal, listBlock.size() ) ); 
-#ifdef __HBQT_REVAMP__
                            HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %s ) signalId=%i, %p", pszSignal, signalId, object ) ); 
                            hbqt_bindAddSlot( pObj, signalId, bBlock );
-#endif
                         }
                         else
                            nResult = 8;
@@ -197,23 +171,6 @@ int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
                }
                else
                   nResult = 5;
-            }
-            else
-            {
-#ifndef __HBQT_REVAMP__            
-               if( listBlock.at( i - 1 ) != NULL )
-               {
-                  HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %s ) Already Exists : %i", pszSignal, i ) ); 
-                  hb_itemRelease( listBlock.at( i - 1 ) );
-               }
-               listBlock[ i - 1 ] = pBlock;
-               nResult = 0;
-#endif                
-            }
-
-            if( nResult > 0 )
-            {
-               hb_itemRelease( pBlock );
             }
          }
          else
@@ -261,17 +218,8 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
 
          if( nResult == 0 )
          {   
-#ifdef __HBQT_REVAMP__
             HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisConnect( %s ) signalId=%i, %p", pszSignal, signalId, object ) ); 
             hbqt_bindDelSlot( pObj, signalId, NULL );
-#else
-            if( listBlock.at( i - 1 ) != NULL )
-            {
-               hb_itemRelease( listBlock.at( i - 1 ) );
-               listBlock[ i - 1 ] = NULL;
-               HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s ) hb_itemReleased( %i )", pszSignal, i ) ); 
-            }
-#endif
          }   
       }
       else
@@ -346,13 +294,9 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
          {
             if( parameterCount == 0 )
             {
-#ifdef __HBQT_REVAMP__
                PHB_ITEM p = hbqt_bindGetSlots( hbqt_bindGetHbObjectBYqtObject( object ), id ); 
                hb_evalBlock0( hb_arrayGetItemPtr( p, 1 ) );
                hb_itemRelease( p );
-#else               
-               hb_evalBlock0( this->listBlock.at( i - 1 ) );
-#endif
             }   
             else
             {
@@ -362,13 +306,9 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
                pCallback = s_pCallback.at( paramId );
                if( pCallback )
                {
-#ifdef __HBQT_REVAMP__
                   PHB_ITEM p = hbqt_bindGetSlots( hbqt_bindGetHbObjectBYqtObject( object ), id ); 
                   pCallback( ( PHB_ITEM * ) hb_arrayGetItemPtr( p, 1 ), arguments, pList );
                   hb_itemRelease( p );
-#else               
-                  pCallback( ( PHB_ITEM * ) this->listBlock.at( i - 1 ), arguments, pList );
-#endif                  
                }
             }
             hb_vmRequestRestore();

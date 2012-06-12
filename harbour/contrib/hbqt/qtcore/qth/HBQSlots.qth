@@ -28,30 +28,6 @@ New         =
 #include <QtCore/QObject>
 #include "hbqt_hbqslots.h"
 
-HB_GARBAGE_FUNC( hbqt_gcMark_HBQSlots )
-{
-   HBQT_GC_T_HBQSlots * p = ( HBQT_GC_T_HBQSlots * ) Cargo;
-   //HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcMark_HBQSlots   cargo=%p", Cargo ) );
-   if( p )
-   {
-      if( p->ph )
-      {
-         HBQSlots * t_slots = p->ph;
-         int i;
-
-         for( i = t_slots->listBlock.size() - 1; i >= 0 ; i-- )
-         {
-            //HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcMark_HBQSlots marking %d", i ) );
-            if( t_slots->listBlock[ i ] != NULL )
-            {
-               hb_gcMark( t_slots->listBlock[ i ] );
-               //HB_TRACE( HB_TR_DEBUG, ( "      MARKED %d  ptr=%p", i, (void *)t_slots->listBlock.at( i ) ) );
-            }
-         }
-      }
-   }
-}
-
 /*
  * HBQSlots ()
  * ~HBQSlots ()

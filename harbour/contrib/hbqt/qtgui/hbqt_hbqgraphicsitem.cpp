@@ -65,12 +65,6 @@
 
 #include <math.h>
 
-HB_EXTERN_BEGIN
-extern void * hbqt_gcAllocate_QPainter( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QRectF( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QGraphicsSceneContextMenuEvent( void * pObj, bool bNew );
-HB_EXTERN_END
-
 HBQGraphicsItem::HBQGraphicsItem( int type, QGraphicsItem * parent ) : QGraphicsItem( parent )
 {
    iType = type;
@@ -125,7 +119,8 @@ HBQGraphicsItem::HBQGraphicsItem( int type, QGraphicsItem * parent ) : QGraphics
 
 HBQGraphicsItem::~HBQGraphicsItem()
 {
-   if( block ){
+   if( block )
+   {
       hb_itemRelease( block );
       block = NULL;
    }
@@ -133,9 +128,10 @@ HBQGraphicsItem::~HBQGraphicsItem()
 
 void HBQGraphicsItem::hbSetBlock( PHB_ITEM b )
 {
-   if( b ){
+   if( b )
+   {
       block = hb_itemNew( b );
-      hb_gcUnlock( block );
+      // hb_gcUnlock( block );
    }
 }
 
@@ -490,11 +486,7 @@ void HBQGraphicsItem::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 {
    if( block ){
       PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::GraphicsSceneContextMenu );
-#ifdef __HBQT_REVAMP__
-      PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, ( "HB_QGRAPHICSSCENECONTEXTMENUEVENT" ), NULL, 0 );
-#else
-      PHB_ITEM p2 = hbqt_create_objectGC( hbqt_gcAllocate_QGraphicsSceneContextMenuEvent( event, false ), "hb_QGraphicsSceneContextMenuEvent" );
-#endif
+      PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, "HB_QGRAPHICSSCENECONTEXTMENUEVENT", NULL, 0 );
       PHB_ITEM p3 = hb_itemPutC( NULL, objectName().toLatin1().data() );
       hb_vmEvalBlockV( block, 3, p1, p2, p3 );
       hb_itemRelease( p1 );
@@ -783,13 +775,8 @@ void HBQGraphicsItem::paint( QPainter * painter, const QStyleOptionGraphicsItem 
       QRectF rect = ( option->type == QStyleOption::SO_GraphicsItem ) ? boundingRect() : option->exposedRect;
 
       PHB_ITEM p1 = hb_itemPutNI( NULL, 21017 );
-#ifdef __HBQT_REVAMP__
-      PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) painter, ( "HB_QPAINTER" ), NULL, 0 );
-      PHB_ITEM p3 = hbqt_bindGetHbObject( NULL, ( void * ) &rect, ( "HB_QRECTF" ), NULL, 0 );
-#else
-      PHB_ITEM p2 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QPainter( painter, false ), "hb_QPainter" ) );
-      PHB_ITEM p3 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QRectF( &rect, false ), "hb_QRectF" ) );
-#endif
+      PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) painter, "HB_QPAINTER", NULL, 0 );
+      PHB_ITEM p3 = hbqt_bindGetHbObject( NULL, ( void * ) &rect, "HB_QRECTF", NULL, 0 );
       hb_vmEvalBlockV( block, 3, p1, p2, p3 );
       hb_itemRelease( p1 );
       hb_itemRelease( p2 );

@@ -39,30 +39,6 @@ HB_FUNC( QT_HBQEVENTS )
    __HB_RETPTRGC__( new HBQEvents( hb_param( 1, HB_IT_OBJECT ) ) );
 }
 
-static HB_GARBAGE_FUNC( hbqt_gcMark_HBQEvents )
-{
-   HBQT_GC_T_HBQEvents * p = ( HBQT_GC_T_HBQEvents * ) Cargo;
-   //HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcMark_HBQEvents   cargo=%p", (void*)Cargo ) );
-   if( p )
-   {
-      if( p->ph )
-      {
-         HBQEvents * t_slots = p->ph;
-         int i;
-
-         for( i = t_slots->listBlock.size() - 1; i >= 0 ; i-- )
-         {
-            //HB_TRACE( HB_TR_DEBUG, ( "hbqt_gcMark_HBQEvents marking %d", i ) );
-            if( t_slots->listBlock[ i ] != NULL )
-            {
-               hb_gcMark( t_slots->listBlock[ i ] );
-               //HB_TRACE( HB_TR_DEBUG, ( "      MARKED %d  ptr=%p", i, (void *)t_slots->listBlock.at( i ) ) );
-            }
-         }
-      }
-   }
-}
-
 </CODE>
 
 <ENUMS>

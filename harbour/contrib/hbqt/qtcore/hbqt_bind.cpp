@@ -89,28 +89,33 @@ HBQT_BIND, * PHBQT_BIND;
 #define HBQT_BIND_UNLOCK      } while( 0 );
 
 void hbqt_bindDelSlots( PHB_ITEM pSenderObject );
+void hbqt_bindDelEvents( PHB_ITEM pSenderObject );
 
 static PHBQT_BIND s_hbqt_binds = NULL;
 static HBQDestroyer * s_destroyer = NULL;
 
-static PHB_DYNS s_dynsym_NEW      = NULL;
-static PHB_DYNS s_dynsym___CHILDS = NULL;
-static PHB_DYNS s_dynsym___SLOTS  = NULL;
-static PHB_DYNS s_dynsym_SETSLOTS = NULL;
+static PHB_DYNS s_dynsym_NEW       = NULL;
+static PHB_DYNS s_dynsym___CHILDS  = NULL;
+static PHB_DYNS s_dynsym___SLOTS   = NULL;
+static PHB_DYNS s_dynsym_SETSLOTS  = NULL;
+static PHB_DYNS s_dynsym___EVENTS  = NULL;
+static PHB_DYNS s_dynsym_SETEVENTS = NULL;
 
 static void hbqt_bind_init( void* cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   s_dynsym_NEW      = hb_dynsymGetCase( "NEW" );
-   s_dynsym___CHILDS = hb_dynsymGetCase( "__CHILDS" );
-   s_dynsym___SLOTS  = hb_dynsymGetCase( "__SLOTS" );
-   s_dynsym_SETSLOTS = hb_dynsymGetCase( "SETSLOTS" );
+   s_dynsym_NEW       = hb_dynsymGetCase( "NEW" );
+   s_dynsym___CHILDS  = hb_dynsymGetCase( "__CHILDS" );
+   s_dynsym___SLOTS   = hb_dynsymGetCase( "__SLOTS" );
+   s_dynsym_SETSLOTS  = hb_dynsymGetCase( "SETSLOTS" );
+   s_dynsym___EVENTS  = hb_dynsymGetCase( "__EVENTS" );
+   s_dynsym_SETEVENTS = hb_dynsymGetCase( "SETEVENTS" );
 }
 
 PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szClassName, PHBQT_DEL_FUNC pDelFunc, int iFlags )
 {
-   #if 0
+   #if 1
    char * pname = ( char* ) hb_xgrab( 200 );
    char * pname1 = ( char* ) hb_xgrab( 200 );
    HB_TRACE( HB_TR_DEBUG, ( ".................HARBOUR_REQUEST_BIND_OBJECT( %p, %i, %s, %s, %s ).................", qtObject, iFlags, szClassName, hb_procname( 0, pname, HB_TRUE ),  hb_procname( 1, pname1, HB_TRUE ) ) );
@@ -179,9 +184,13 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
                s_destroyer = new HBQDestroyer();
             if( pDelFunc != NULL )
                QObject::connect( ( QObject * ) qtObject, SIGNAL(destroyed(QObject*)), s_destroyer, SLOT(destroyer()) );
-            HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetHbObject( %p )...%s", qtObject, ( ( QObject * ) qtObject )->metaObject()->className() ) );
+            HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetHbObject( %p )...%s", qtObject, szClassName ) );
             
             hb_vmPushDynSym( s_dynsym_SETSLOTS );  /* initializes __Slots hash */
+            hb_vmPush( pObject );
+            hb_vmSend( 0 );
+            
+            hb_vmPushDynSym( s_dynsym_SETEVENTS );  /* initializes __Events hash */
             hb_vmPush( pObject );
             hb_vmSend( 0 );
          }
@@ -316,7 +325,6 @@ void * hbqt_bindGetQtObject( PHB_ITEM pObject )
 void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
 {
    void * hbObject = hb_arrayId( pObject );
-   bool found = HB_FALSE;
    
    if( hbObject )
    {
@@ -330,7 +338,6 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
          {
             HB_TRACE( HB_TR_DEBUG, ( "..............HARBOUR_DESTROY_BEGINS( %p, %i ).............. %s", bind->qtObject, bind->iFlags, bind->szClassName ) );
             
-            found = HB_TRUE;
             bool fObject = bind->iFlags & HBQT_BIT_QOBJECT;
             QObject * obj = NULL;
             const char * classname = NULL;
@@ -344,7 +351,7 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
             {
                if( fObject )
                {
-                  HB_TRACE( HB_TR_DEBUG, ( "..............HARBOUR_ABOUT_TO_DESTROY_%s( %p )", classname, obj ) );
+                  HB_TRACE( HB_TR_DEBUG, ( "..............HARBOUR_ABOUT_TO_DESTROY_%s( %p )..... %s", classname, obj, bind->szClassName ) );
                   if( obj )
                   {
                      if( classname != ( const char * ) "QAction" )
@@ -359,7 +366,7 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
                               bind->fDeleting = false;
                            }   
                            hb_xfree( bind );
-                           HB_TRACE( HB_TR_DEBUG, ( "HARBOUR_DESTROYED_%s( %p )", classname, obj ) );
+                           HB_TRACE( HB_TR_DEBUG, ( "                                    HARBOUR_DESTROYED_NO_PARENTED_%s( %p )", classname, obj ) );
                         }
                      }      
                   }
@@ -397,11 +404,6 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
          bind_ptr = &bind->next;
       }
       HBQT_BIND_UNLOCK
-      
-      if( ! found )
-      {
-         HB_TRACE( HB_TR_DEBUG, ( "..............HARBOUR_DESTROYING_NOT_FOUND_ARRAYID( %p )", hbObject ) );
-      }
    }
 }
 
@@ -422,7 +424,10 @@ void hbqt_bindDestroyQtObject( void * qtObject )
          * bind_ptr = bind->next;
          if( ! bind->fDeleting )
          {
-            hbqt_bindDelSlots( hbqt_bindGetHbObjectBYqtObject( bind->qtObject ) );
+            PHB_ITEM pObj = hbqt_bindGetHbObjectBYqtObject( bind->qtObject );
+            hbqt_bindDelSlots( pObj );
+            hbqt_bindDelEvents( pObj );
+            hb_itemRelease( pObj );
             hb_xfree( bind );
          }    
          break;
@@ -674,6 +679,117 @@ PHB_ITEM hbqt_bindGetSlots( PHB_ITEM pSenderObject, int iSignalid )
          PHB_ITEM pArray, pIndex;
 
          pIndex = hb_itemPutNI( hb_stackAllocItem(), iSignalid );
+         pArray = hb_hashGetItemPtr( hb_stackReturnItem(), pIndex, 0 );
+         hb_stackPop();
+
+         if( pArray && HB_IS_ARRAY( pArray ) && hb_arrayLen( pArray ) > 0 )
+            pSlots = hb_itemNew( pArray );
+      }
+      hb_vmRequestRestore();
+   }
+   return pSlots;
+}
+
+void hbqt_bindAddEvent( PHB_ITEM pSenderObject, int iEventId, PHB_ITEM pCode )
+{
+   if( HB_IS_BLOCK( pCode ) && hb_vmRequestReenter() )
+   {
+      hb_vmPushDynSym( s_dynsym___EVENTS );
+      hb_vmPush( pSenderObject );
+      hb_vmSend( 0 );
+      if( hb_vmRequestQuery() == 0 )
+      {
+         PHB_ITEM pArray, pIndex;
+
+         pIndex = hb_itemPutNI( hb_stackAllocItem(), iEventId );
+         pArray = hb_hashGetItemPtr( hb_stackReturnItem(), pIndex, HB_HASH_AUTOADD_ASSIGN );
+         hb_stackPop();
+
+         if( pArray && HB_IS_ARRAY( pArray ) )
+            hb_arrayAdd( pArray, pCode );
+         else
+            hb_errRT_BASE( EG_BOUND, 4005, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      }
+      hb_vmRequestRestore();
+   }
+}
+
+void hbqt_bindDelEvent( PHB_ITEM pSenderObject, int iEventId, PHB_ITEM pCode )
+{
+   if( hb_vmRequestReenter() )
+   {
+      hb_vmPushDynSym( s_dynsym___EVENTS );
+      hb_vmPush( pSenderObject );
+      hb_vmSend( 0 );
+      if( hb_vmRequestQuery() == 0 )
+      {
+         PHB_ITEM pArray, pIndex;
+
+         pIndex = hb_itemPutNI( hb_stackAllocItem(), iEventId );
+         pArray = hb_hashGetItemPtr( hb_stackReturnItem(), pIndex, 0 );
+         hb_stackPop();
+
+         if( pArray && HB_IS_ARRAY( pArray ) )
+         {
+            if( pCode == NULL )
+            {
+               HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindDelEvent( %i )", iEventId ) );
+               hb_arraySize( pArray, 0 );
+            }   
+            else
+            {
+               void * id = hb_codeblockId( pCode );
+               HB_SIZE nPos;
+               for( nPos = hb_arrayLen( pArray ); nPos; --nPos )
+               {
+                  if( id == hb_codeblockId( hb_arrayGetItemPtr( pArray, nPos ) ) )
+                  {
+                     hb_arrayDel( pArray, nPos );
+                     hb_arraySize( pArray, hb_arrayLen( pArray ) - 1 );
+                     break;
+                  }
+               }
+            }
+         }
+      }
+      hb_vmRequestRestore();
+   }
+}
+
+void hbqt_bindDelEvents( PHB_ITEM pSenderObject )
+{
+   if( pSenderObject )
+   {
+      if( hb_vmRequestReenter() )
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindDelEvents( PHB_ITEM pSenderObject    0 %p )", pSenderObject ) );
+         hb_vmPushDynSym( s_dynsym___EVENTS );
+         hb_vmPush( pSenderObject );
+         hb_vmSend( 0 );
+         if( hb_vmRequestQuery() == 0 )
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindDelEvents( PHB_ITEM pSenderObject )" ) );
+            hb_hashClear( hb_stackReturnItem() );
+         }
+         hb_vmRequestRestore();
+      }
+   }
+}
+
+PHB_ITEM hbqt_bindGetEvents( PHB_ITEM pSenderObject, int iEventId )
+{
+   PHB_ITEM pSlots = NULL;
+
+   if( hb_vmRequestReenter() )
+   {
+      hb_vmPushDynSym( s_dynsym___EVENTS );
+      hb_vmPush( pSenderObject );
+      hb_vmSend( 0 );
+      if( hb_vmRequestQuery() == 0 )
+      {
+         PHB_ITEM pArray, pIndex;
+
+         pIndex = hb_itemPutNI( hb_stackAllocItem(), iEventId );
          pArray = hb_hashGetItemPtr( hb_stackReturnItem(), pIndex, 0 );
          hb_stackPop();
 

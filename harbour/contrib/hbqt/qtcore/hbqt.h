@@ -59,8 +59,6 @@
 #include "hbapistr.h"
 #include "hbthread.h"
 
-//#define __HBQT_REVAMP__
-
 #if defined( HB_OS_OS2 )
 #  define OS2EMX_PLAIN_CHAR
 #  define INCL_BASE
@@ -101,7 +99,7 @@ typedef void ( * PHBQT_DEL_FUNC )( void * pObj, int iFlags );
 
 HB_EXTERN_BEGIN
 
-extern HB_EXPORT void hbqt_events_register_createobj( QEvent::Type eventtype, QByteArray szCreateObj, PHBQT_EVENT_FUNC pCallback );
+extern HB_EXPORT void hbqt_events_register_createobj( QEvent::Type eventtype, QByteArray szCreateObj );
 extern HB_EXPORT void hbqt_events_unregister_createobj( QEvent::Type eventtype );
 extern HB_EXPORT void hbqt_slots_register_callback( QByteArray sig, PHBQT_SLOT_FUNC pCallback );
 extern HB_EXPORT void hbqt_slots_unregister_callback( QByteArray sig );
@@ -109,17 +107,13 @@ extern HB_EXPORT void hbqt_slots_unregister_callback( QByteArray sig );
 extern HB_EXPORT void * hbqt_par_ptr( int iParam );
 extern HB_EXPORT HBQT_GC_T * hbqt_par_ptrGC( int iParam ); /* returns a pointer to the HBQT_GC_T area */
 extern HB_EXPORT void hbqt_par_detach_ptrGC( int iParam );
-extern HB_EXPORT void hbqt_itemPushReturn( void * ptr, PHB_ITEM pSelf );
 extern HB_EXPORT HB_BOOL hbqt_par_isDerivedFrom( int iParam, const char * pszClsName ); /* check if parameter iParam is class or subclass of szClsName */
 extern HB_EXPORT HB_BOOL hbqt_obj_isDerivedFrom( PHB_ITEM pItem, const char * pszClsName ); /* check if parameter iParam is class or subclass of szClsName */
 extern HB_EXPORT void * hbqt_get_ptr( PHB_ITEM pObj );
 
-extern HB_EXPORT const HB_GC_FUNCS * hbqt_gcFuncs( void );
 extern HB_EXPORT void hbqt_errRT_ARG( void );
 extern HB_EXPORT PHB_ITEM hbqt_defineClassBegin( const char * pszClsName, PHB_ITEM s_oClass, const char * pszParentClsStr );
 extern HB_EXPORT void hbqt_defineClassEnd( PHB_ITEM s_oClass, PHB_ITEM oClass );
-extern HB_EXPORT PHB_ITEM hbqt_create_object( void * pObject, const char * pszObjectName );
-extern HB_EXPORT PHB_ITEM hbqt_create_objectGC( void * pObject, const char * pszObjectName );
 extern HB_EXPORT void hbqt_addDeleteList( PHB_ITEM item ); /* populate a list of PHB_ITEM to delete at exit time */
 
 HB_EXPORT PHB_ITEM   hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szClassFunc, PHBQT_DEL_FUNC pDelete, int iFlags );
@@ -136,6 +130,10 @@ HB_EXPORT void       hbqt_bindDelChild( PHB_ITEM pObject, PHB_ITEM pChild );
 HB_EXPORT void       hbqt_bindAddSlot( PHB_ITEM pSenderObject, int iSignalid, PHB_ITEM pCode );
 HB_EXPORT void       hbqt_bindDelSlot( PHB_ITEM pSenderObject, int iSignalid, PHB_ITEM pCode );
 HB_EXPORT PHB_ITEM   hbqt_bindGetSlots( PHB_ITEM pSenderObject, int iSignalid );
+
+HB_EXPORT void       hbqt_bindAddEvent( PHB_ITEM pSenderObject, int iEventId, PHB_ITEM pCode );
+HB_EXPORT void       hbqt_bindDelEvent( PHB_ITEM pSenderObject, int iEventId, PHB_ITEM pCode );
+HB_EXPORT PHB_ITEM   hbqt_bindGetEvents( PHB_ITEM pSenderObject, int iEventId );
 
 HB_EXTERN_END
 

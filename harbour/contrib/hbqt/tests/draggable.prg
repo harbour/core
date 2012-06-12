@@ -42,6 +42,12 @@ PROCEDURE Main()
    oWid:show()
    QApplication():exec()
 
+   oWid:disconnect( QEvent_MouseButtonPress  , {| oMouseEvent | WinDrag( oMouseEvent, oWid ) } )
+   oWid:disconnect( QEvent_MouseButtonRelease, {| oMouseEvent | WinDrag( oMouseEvent, oWid ) } )
+   oWid:disconnect( QEvent_MouseMove, {| oMouseEvent | WinDrag( oMouseEvent, oWid ) } )
+
+   oWid:disconnect( QEvent_MouseButtonDblClick, {|| oWid:close() } )
+   
    RETURN
 
 PROCEDURE WinDrag( oMouseEvent, oWid )

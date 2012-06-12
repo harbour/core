@@ -33,8 +33,6 @@
 #include "directry.ch"
 #include "hbclass.ch"
 
-//#define __HBQT_REVAMP__
-
 #define I_( x )                 hb_i18n_gettext( x )
 
 #if defined( __HBSCRIPT__HBMK )
@@ -1089,8 +1087,6 @@ CREATE CLASS HbQtSource
    METHOD parseVariables( cProto )
    METHOD build()
    METHOD exploreExtensions()
-   METHOD buildExtendedSource( t_ )
-   METHOD buildExtendedHeader()
    METHOD getConstructor()
    METHOD getConstructorW()
    METHOD buildCppCode( oMtd )
@@ -1237,11 +1233,7 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
    ::isDetached        := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "detached"    .AND. Lower( e_[ 2 ] ) == "yes" } ) > 0
    ::isConstructor     := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "constructor" .AND. Lower( e_[ 2 ] ) == "no"  } ) == 0
    ::isDestructor      := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "destructor"  .AND. Lower( e_[ 2 ] ) == "no"  } ) == 0
-#ifdef __HBQT_REVAMP__
    ::isObject          := qth_is_QObject( ::cQtObject )
-#else
-   ::isObject          := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "qobject"     .AND. Lower( e_[ 2 ] ) == "no"  } ) == 0
-#endif
    ::areMethodsClubbed := AScan( ::cls_, {| e_ | Lower( e_[ 1 ] ) == "clubmethods" .AND. Lower( e_[ 2 ] ) == "no"  } ) == 0
    /* Determine Constructor - but this is hacky a bit. What could be easiest ? */
    IF ! ::isConstructor
@@ -1324,7 +1316,6 @@ METHOD HbQtSource:new( cQtModule, cQtVer, cQTHFileName, cCPPFileName, cDOCFileNa
 
 METHOD HbQtSource:build()
    LOCAL i, s, oMtd, tmp, tmp1, n, k, aLine, uQtObject
-   LOCAL cObjPfx := iif( ::lBuildExtended, "Q", "" )
 
    uQtObject := Upper( ::cQtObject )
 
@@ -1346,26 +1337,6 @@ METHOD HbQtSource:build()
       AAdd( aLine, "" )
    ENDIF
 
-   /* Insert information about prototypes not converted to functions */
-#if 0
-   AAdd( aLine, "/*" )
-   AAdd( aLine, " *  Constructed[ " + hb_ntos( ::nCnvrtd ) + "/" + hb_ntos( ::nFuncs ) + " [ " + hb_ntos( ::nCnvrtd / ::nFuncs * 100 ) + "% ] ]" )
-   AAdd( aLine, " *  " )
-   IF ! Empty( ::dummy_ )
-      AAdd( aLine, " *  *** Unconvered Prototypes ***" )
-      AAdd( aLine, " *  " )
-      AEval( ::dummy_, {| e | AAdd( aLine, " *  " + e ) } )
-   ENDIF
-   IF ! Empty( ::cmntd_ )
-      AAdd( aLine, " *  " )
-      AAdd( aLine, " *  " + "*** Commented out prototypes ***" )
-      AAdd( aLine, " *  " )
-      AEval( ::cmntd_, {| e | AAdd( aLine, " *  " + e ) } )
-   ENDIF
-   AAdd( aLine, " */ " )
-   AAdd( aLine, "" )
-#endif
-
    IF ::isConstructor
       FOR i := 3 TO Len( ::new_ ) - 1
          IF !( Left( LTrim( ::new_[ i ] ), 2 ) == "//" )
@@ -1380,9 +1351,6 @@ METHOD HbQtSource:build()
          ENDIF
       NEXT
    ENDIF
-
-   /*----------------------------------------------------------------------*/
-   /* Generate necessary declarations */
 
    AAdd( aLine, "HB_EXTERN_BEGIN" )
    AAdd( aLine, "" )
@@ -1406,23 +1374,12 @@ METHOD HbQtSource:build()
    IF ::cQtVer > "0x040500"
       AAdd( aLine, "#if QT_VERSION >= " + ::cQtVer )
    ENDIF
-   FOR EACH s IN ::hRef
-      AAdd( aLine, "extern HB_EXPORT HBQT_GC_FUNC( hbqt_gcRelease_" + s:__enumKey() + " );" )
-   NEXT
-   AAdd( aLine, "" )
-   FOR EACH s IN ::hRef
-      AAdd( aLine, "extern HB_EXPORT void * hbqt_gcAllocate_" + s:__enumKey() + "( void * pObj, bool bNew );" )
-   NEXT
 
-#ifdef __HBQT_REVAMP__
    AAdd( aLine, '' )
    FOR EACH s IN ::hRef
       AAdd( aLine, "extern HB_EXPORT void hbqt_del_" + s:__enumKey() + "( void * pObj, int iFlags );" )
    NEXT
    AAdd( aLine, '' )
-   AAdd( aLine, "/*..........................................................*/" )
-   AAdd( aLine, '' )
-#endif
 
    n := AScan( ::cls_, {| e_ | Left( Lower( e_[ 1 ] ), 7 ) == "inherit" .and. ! Empty( e_[ 2 ] ) } )
    IF n > 0
@@ -1479,10 +1436,7 @@ METHOD HbQtSource:build()
       AAdd( aLine, "#endif" )
    ENDIF
    AAdd( aLine, "" )
-   /*----------------------------------------------------------------------*/
 
-   /* Insert user defined code - INCLUDEs */
-   AAdd( aLine, "#include <QtCore/QPointer>" )
    IF ! Empty( ::code_ )
       IF ::cQtVer > "0x040500"
          AAdd( aLine, "#if QT_VERSION >= " + ::cQtVer )
@@ -1499,171 +1453,10 @@ METHOD HbQtSource:build()
       AAdd( aLine, "" )
    ENDIF
 
-#define __GCMARK__
-
-   ::buildExtendedSource( aLine )   /* Insert protected functions */
-
    IF ::cQtVer > "0x040500"
       AAdd( aLine, "#if QT_VERSION >= " + ::cQtVer )
    ENDIF
-   AAdd( aLine, "typedef struct"                  )
-   AAdd( aLine, "{"                               )
-   IF ::isObject .AND. ::isConstructor
-      AAdd( aLine, "   QPointer< " + cObjPfx + ::cQtObject + " > ph;" )
-   ELSE
-      IF ::isList
-          AAdd( aLine, "   " + cObjPfx + ::cQtObject + "< void * > * ph;" )
-      ELSE
-          AAdd( aLine, "   " + cObjPfx + ::cQtObject + " * ph;" )
-      ENDIF
-   ENDIF
-   AAdd( aLine, "   bool bNew;"                     )
-   AAdd( aLine, "   PHBQT_GC_FUNC func;"            )
-   AAdd( aLine, "   PHBQT_GC_FUNC mark;"            )
-   AAdd( aLine, "} HBQT_GC_T_" + ::cQtObject + ";"  )
-   AAdd( aLine, " "                                 )
-   AAdd( aLine, " "                                 )
-   IF n > 0
-      AEval( ::code_, {| e | AAdd( aLine, StrTran( e, chr( 13 ) ) ) }, n )
-   ENDIF
-   AAdd( aLine, " "                                 )
-   AAdd( aLine, " "                                 )
-
-   AAdd( aLine, "HBQT_GC_FUNC( hbqt_gcRelease_" + ::cQtObject + " )"  )
-   AAdd( aLine, "{"                                     )
-   IF ::isDestructor .AND. ::isConstructor
-      IF ::isObject
-         AAdd( aLine, "   HBQT_GC_T_" + ::cQtObject + " * p = ( HBQT_GC_T_" + ::cQtObject + " * ) Cargo; " )
-         AAdd( aLine, "   " )
-         AAdd( aLine, "   if( p )" )
-         AAdd( aLine, "   {" )
-         AAdd( aLine, "      if( p->bNew )" )
-         AAdd( aLine, "      {" )
-         AAdd( aLine, "         if( p->ph )" )
-         AAdd( aLine, "         {" )
-#ifdef _GEN_TRACE_
-         AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p %p YES_rel_' + ::cQtObject + '   /.\\   ", ( void * ) p, ( void * ) p->ph ) );' )
-#endif
-         AAdd( aLine, "            delete ( " + cObjPfx + ::cQtObject + " * )( p->ph ); " )
-#ifdef _GEN_TRACE_
-         AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p %p YES_rel_' + ::cQtObject + '   \\./   ", ( void * ) p, ( void * ) p->ph ) );' )
-#endif
-         AAdd( aLine, "         }" )
-#ifdef _GEN_TRACE_
-         AAdd( aLine, "         else" )
-         AAdd( aLine, "         {" )
-         AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     already deleted!", ( void * ) p->ph ) );' )
-         AAdd( aLine, "         }" )
-#endif
-         AAdd( aLine, "      }" )
-#ifdef _GEN_TRACE_
-         AAdd( aLine, "      else" )
-         AAdd( aLine, "      {" )
-         AAdd( aLine, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cQtObject + '    :    not a _new_ object", ( void * ) p->ph ) );' )
-         AAdd( aLine, "      }" )
-#endif
-         AAdd( aLine, "      p->ph = NULL;" )
-         AAdd( aLine, "   }" )
-#ifdef _GEN_TRACE_
-         AAdd( aLine, "   else" )
-         AAdd( aLine, "   {" )
-         AAdd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "DEL_rel_' + ::cQtObject + '    :     not valid GC object" ) );' )
-         AAdd( aLine, "   }" )
-#endif
-      ELSE
-         AAdd( aLine, "   HBQT_GC_T_" + ::cQtObject + " * p = ( HBQT_GC_T_" + ::cQtObject + " * ) Cargo; " )
-         AAdd( aLine, "   " )
-         AAdd( aLine, "   if( p )" )
-         AAdd( aLine, "   {" )
-         AAdd( aLine, "      if( p->bNew )" )
-         AAdd( aLine, "      {" )
-         AAdd( aLine, "         if( p->ph )" )
-         AAdd( aLine, "         {" )
-#ifdef _GEN_TRACE_
-         AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p    _rel_' + ::cQtObject + '   /.\\", ( void * ) p->ph ) );' )
-#endif
-         IF ::isList
-         AAdd( aLine, "            int i; " )
-         AAdd( aLine, "            for( i = 0; i < p->ph->size(); i++ )" )
-         AAdd( aLine, "            {" )
-         AAdd( aLine, "               if( p->ph->at( i ) != NULL )" )
-         AAdd( aLine, "               {" )
-         AAdd( aLine, "                  hb_itemRelease( p->ph->at( i ) );" )
-         AAdd( aLine, "               }" )
-         AAdd( aLine, "            }" )
-         ENDIF
-         AAdd( aLine, "            delete ( ( " + cObjPfx + ::cQtObject + iif( ::isList, "< void * >", "" ) + " * ) p->ph ); " )
-#ifdef _GEN_TRACE_
-         AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p YES_rel_' + ::cQtObject + '   \\./", ( void * ) p->ph ) );' )
-#endif
-         AAdd( aLine, "         }" )
-#ifdef _GEN_TRACE_
-         AAdd( aLine, "         else" )
-         AAdd( aLine, "         {" )
-         AAdd( aLine, '            HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     object already deleted!", ( void * ) p->ph ) );' )
-         AAdd( aLine, "         }" )
-#endif
-         AAdd( aLine, "      }" )
-#ifdef _GEN_TRACE_
-         AAdd( aLine, "      else" )
-         AAdd( aLine, "      {" )
-         AAdd( aLine, '         HB_TRACE( ' + ::cTrMode + ', ( "ph=%p DEL_rel_' + ::cQtObject + '    :     not a _new_ object!", ( void * ) p->ph ) );' )
-         AAdd( aLine, "      }" )
-#endif
-         AAdd( aLine, "      p->ph = NULL;" )
-         AAdd( aLine, "   }" )
-#ifdef _GEN_TRACE_
-         AAdd( aLine, "   else" )
-         AAdd( aLine, "   {" )
-         AAdd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p PTR_rel_' + ::cQtObject + '    :    not a valid GC object!", ( void * ) p ) );' )
-         AAdd( aLine, "   }" )
-#endif
-      ENDIF
-   ELSE
-      AAdd( aLine, "   /* CASE else */" )
-      AAdd( aLine, "   HBQT_GC_T * p = ( HBQT_GC_T * ) Cargo;" )
-      AAdd( aLine, "   " )
-      AAdd( aLine, "   if( p )" ) //&& p->bNew )" )
-      AAdd( aLine, "      p->ph = NULL;" )
-   ENDIF
-   AAdd( aLine, "}" )
-   AAdd( aLine, "" )
-
-   AAdd( aLine, "void * hbqt_gcAllocate_" + ::cQtObject + "( void * pObj, bool bNew )" )
-   AAdd( aLine, "{                                      " )
-   IF ::isObject
-      AAdd( aLine, "   HBQT_GC_T_" + ::cQtObject + " * p = ( HBQT_GC_T_" + ::cQtObject + " * ) hb_gcAllocate( sizeof( HBQT_GC_T_" + ::cQtObject + " ), hbqt_gcFuncs() );" )
-   ELSE
-      AAdd( aLine, "   HBQT_GC_T_" + ::cQtObject + " * p = ( HBQT_GC_T_" + ::cQtObject + " * ) hb_gcAllocate( sizeof( HBQT_GC_T_" + ::cQtObject + " ), hbqt_gcFuncs() );" )
-   ENDIF
-   AAdd( aLine, "" )
-
-   IF ::isObject .AND. ::isConstructor
-      AAdd( aLine, "   new( & p->ph ) QPointer< "+ cObjPfx + ::cQtObject +" >( ( " + cObjPfx + ::cQtObject + " * ) pObj );" )
-   ELSE
-      AAdd( aLine, "   p->ph = ( " + cObjPfx + ::cQtObject + iif( ::isList, "< void * >", "" ) + " * ) pObj;" )
-   ENDIF
-   AAdd( aLine, "   p->bNew = bNew;" )
-   AAdd( aLine, "   p->func = hbqt_gcRelease_" + ::cQtObject + ";" )
-   if n > 0
-      AAdd( aLine, "   p->mark = hbqt_gcMark_" + ::cQtObject + ";" )
-   else
-      AAdd( aLine, "   p->mark = NULL;" )
-   ENDIF
-
-   AAdd( aLine, "" )
-#ifdef _GEN_TRACE_
-   AAdd( aLine, "   if( bNew )" )
-   AAdd( aLine, "   {" )
-   AAdd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p    _new_' + ::cQtObject + iif( ::isObject, '  under p->pq', '' ) + '", ( void * ) pObj ) );' )
-   AAdd( aLine, "   }" )
-   AAdd( aLine, "   else" )
-   AAdd( aLine, "   {" )
-   AAdd( aLine, '      HB_TRACE( ' + ::cTrMode + ', ( "ph=%p NOT_new_' + ::cQtObject + '", ( void * ) pObj ) );' )
-   AAdd( aLine, "   }" )
-#endif
-   AAdd( aLine, "   return p;" )
-   AAdd( aLine, "}" )
+   
    IF ::cQtVer > "0x040500"
       AAdd( aLine, "#endif" )
    ENDIF
@@ -1672,7 +1465,6 @@ METHOD HbQtSource:build()
    AAdd( aLine, 'static PHB_ITEM s_oClass = NULL;' )
    AAdd( aLine, "" )
 
-#ifdef __HBQT_REVAMP__
    AAdd( aLine, '' )
    AAdd( aLine, 'void hbqt_del_' + ::cQtObject + '( void * pObj, int iFlags )' )
    AAdd( aLine, '{' )
@@ -1698,9 +1490,7 @@ METHOD HbQtSource:build()
    AAdd( aLine, '      pObj = NULL;' )
    AAdd( aLine, '   }' )
    AAdd( aLine, '}' )
-   AAdd( aLine, "/*..........................................................*/" )
    AAdd( aLine, '' )
-#endif
 
    AAdd( aLine, 'void hbqt_register_' + lower( uQtObject ) + '()' )
    AAdd( aLine, "{" )
@@ -1776,9 +1566,6 @@ METHOD HbQtSource:build()
    /* Build Document File */
    ::buildDOC()
 
-   /* Build Protected Events Implimentation */
-   ::buildExtendedHeader()
-
    /* Distribute in specific lib subfolder */
    hbqtgen_CreateTarget( ::cCPPFileName, aLine )
 
@@ -1793,171 +1580,6 @@ METHOD HbQtSource:exploreExtensions()
       IF ! Empty( ::cls_[ n,2 ] )
          ::lPaintEvent := .t.
       ENDIF
-   ENDIF
-
-   // check other events
-
-   // Test IF extended code is TO be built
-   IF ::lPaintEvent // .OR. ::lOtherEvent
-      ::lBuildExtended := .t.
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbQtSource:buildExtendedHeader()
-   LOCAL cPath, txt_, cObj
-
-   IF ! ::lBuildExtended
-      RETURN Self
-   ENDIF
-
-   cObj := ::cQtObject
-   txt_:= {}
-
-   aadd( txt_, '' )
-   aadd( txt_, '#include "hbapiitm.h" ' )
-   aadd( txt_, '' )
-   aadd( txt_, 'HB_EXTERN_BEGIN' )
-   IF ::lPaintEvent
-   AAdd( txt_, 'extern HB_EXPORT void * hbqt_gcAllocate_QPaintEvent( void * pObj, bool bNew );' )
-   AAdd( txt_, 'extern HB_EXPORT void * hbqt_gcAllocate_QPainter( void * pObj, bool bNew );' )
-   ENDIF
-   aadd( txt_, 'HB_EXTERN_END' )
-   aadd( txt_, '' )
-   aadd( txt_, '#include <QtGui/' + cObj + '>' )
-   IF ::lPaintEvent
-   aadd( txt_, '#include <QtGui/QStyleOption>' )
-   aadd( txt_, '#include <QtGui/QPainter>' )
-   aadd( txt_, '#include <QtGui/QPaintEvent>' )
-   ENDIF
-   aadd( txt_, '' )
-   aadd( txt_, 'class Q' + cObj + ' : public ' + cObj )
-   aadd( txt_, '{' )
-   aadd( txt_, '   Q_OBJECT' )
-   aadd( txt_, '' )
-   aadd( txt_, 'public:' )
-
-   SWITCH cObj
-   CASE "QWidget"
-   aadd( txt_, '   Q' + cObj + '( QWidget * parent = 0, Qt::WindowFlags f = 0 );' )
-   EXIT
-   OTHERWISE
-   aadd( txt_, '   Q' + cObj + '( QWidget * parent = 0 );' )
-   EXIT
-   ENDSWITCH
-
-   aadd( txt_, '   virtual ~Q' + cObj + '();' )
-   aadd( txt_, '' )
-   aadd( txt_, '   void hbSetEventBlock( int event, PHB_ITEM pBlock );' )
-   aadd( txt_, '' )
-   IF ::lPaintEvent
-   aadd( txt_, '   PHB_ITEM pPaintBlock;' )
-   aadd( txt_, '   void paintEvent ( QPaintEvent * event );' )
-   ENDIF
-   aadd( txt_, '};' )
-   aadd( txt_, '' )
-
-   aeval( txt_, {|e,i| txt_[ i ] := trim( e ) } )
-
-   hb_fNameSplit( ::cCPPFileName, @cPath )
-
-   hbqtgen_CreateTarget( cPath + "q" + lower( ::cQtObject ) + ".h", txt_ )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbQtSource:buildExtendedSource( t_ )
-   LOCAL txt_, cObj
-
-   IF ! ::lBuildExtended
-      RETURN Self
-   ENDIF
-
-   cObj := ::cQtObject
-   txt_ := {}
-
-   IF ::cQtVer > "0x040500"
-      AAdd( txt_, "#if QT_VERSION >= " + ::cQtVer )
-   ENDIF
-
-   AAdd( txt_, '' )
-   AAdd( txt_, '#include "q' + Lower( cObj ) + '.h"' )
-   AAdd( txt_, '' )
-
-   SWITCH cObj
-   CASE "QWidget"
-   AAdd( txt_, 'Q' + cObj + '::Q' + cObj + '( QWidget * parent, Qt::WindowFlags f ) : ' + cObj + '( parent, f )' )
-   EXIT
-   OTHERWISE
-   AAdd( txt_, 'Q' + cObj + '::Q' + cObj + '( QWidget * parent ) : ' + cObj + '( parent )' )
-   EXIT
-   ENDSWITCH
-
-   AAdd( txt_, '{' )
-   IF ::lPaintEvent
-   AAdd( txt_, '   pPaintBlock = NULL;' )
-   ENDIF
-   AAdd( txt_, '}' )
-   AAdd( txt_, 'Q' + cObj + '::~Q' + cObj + '()' )
-   AAdd( txt_, '{' )
-   IF ::lPaintEvent
-   AAdd( txt_, '   if( pPaintBlock )' )
-   AAdd( txt_, '   {' )
-   AAdd( txt_, '      hb_itemRelease( pPaintBlock );' )
-   AAdd( txt_, '      pPaintBlock = NULL;' )
-   AAdd( txt_, '   }' )
-   ENDIF
-   AAdd( txt_, '}' )
-   AAdd( txt_, 'void Q' + cObj + '::hbSetEventBlock( int event, PHB_ITEM pBlock )' )
-   AAdd( txt_, '{' )
-   AAdd( txt_, '   switch( event )' )
-   AAdd( txt_, '   {' )
-   IF ::lPaintEvent
-   AAdd( txt_, '      case QEvent::Paint:' )
-   AAdd( txt_, '      {' )
-   AAdd( txt_, '         if( pPaintBlock )' )
-   AAdd( txt_, '         {' )
-   AAdd( txt_, '            hb_itemRelease( pPaintBlock );' )
-   AAdd( txt_, '         }' )
-   AAdd( txt_, '         pPaintBlock = hb_itemNew( pBlock );' )
-   AAdd( txt_, '         hb_gcUnlock( pPaintBlock );' )
-   AAdd( txt_, '         break;' )
-   AAdd( txt_, '      }' )
-   ENDIF
-   AAdd( txt_, '   }' )
-   AAdd( txt_, '}' )
-   IF ::lPaintEvent
-   AAdd( txt_, 'void Q' + cObj + '::paintEvent( QPaintEvent * event )' )
-   AAdd( txt_, '{' )
-   AAdd( txt_, '   bool bEventHandelled = false;' )
-   AAdd( txt_, '   if( pPaintBlock )' )
-   AAdd( txt_, '   {' )
-   AAdd( txt_, '      QPainter painter( this );' )
-   AAdd( txt_, '      PHB_ITEM p0 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QPaintEvent( event, false ), "hb_QPaintEvent" ) );' )
-   AAdd( txt_, '      PHB_ITEM p1 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QPainter( &painter, false ), "hb_QPainter" ) );' )
-   AAdd( txt_, '      bEventHandelled = hb_itemGetL( hb_vmEvalBlockV( pPaintBlock, 2, p0, p1 ) );' )
-   AAdd( txt_, '      hb_itemRelease( p0 );' )
-   AAdd( txt_, '      hb_itemRelease( p1 );' )
-   AAdd( txt_, '   }' )
-   AAdd( txt_, '   if( ! bEventHandelled )' )
-   AAdd( txt_, '   {' )
-   AAdd( txt_, '      QStyleOption opt;' )
-   AAdd( txt_, '      opt.init( this );' )
-   AAdd( txt_, '      QPainter p( this );' )
-   AAdd( txt_, '      style()->drawPrimitive( QStyle::PE_Widget, &opt, &p, this );' )
-   AAdd( txt_, '      ' + cObj + '::paintEvent( event );' )
-   AAdd( txt_, '   }' )
-   AAdd( txt_, '}' )
-   ENDIF
-   AAdd( txt_, '' )
-
-   AEval( txt_, {|e| aadd( t_, trim( e ) ) } )
-
-   IF ::cQtVer > "0x040500"
-      AAdd( txt_, "#endif" )
    ENDIF
 
    RETURN Self
@@ -1995,11 +1617,8 @@ METHOD HbQtSource:getConstructor()
          ENDIF
       NEXT
       AAdd( aLine, " " )
-#ifdef __HBQT_REVAMP__
+
       AAdd( aLine, '   hb_itemReturnRelease( hbqt_bindSetHbObject( NULL, pObj, "' + 'HB_' + upper( ::cQtObject ) +'", hbqt_del_' + ::cQtObject + ', ' + qth_get_bits( ::cQtObject, ! ::isDetached ) + ' ) );' )
-#else
-      AAdd( aLine, "   hbqt_itemPushReturn( hbqt_gcAllocate_" + ::cQtObject + "( ( void * ) pObj, " + iif( ::isDetached, "false", "true" ) + " ), hb_stackSelfItem() );" )
-#endif
    ELSE
       FOR i := 3 TO Len( ::new_ ) - 1
          AAdd( aLine, ::new_[ i ] )
@@ -2019,8 +1638,6 @@ METHOD HbQtSource:getConstructorW()
    LOCAL aLine := ::getConstructor()
 
    AEval( aLine, {| e, i | aLine[ i ] := StrTran( e, "hbqt_bindSetHbObject", "hbqt_bindGetHbObject" ) } )
-   AEval( aLine, {| e, i | aLine[ i ] := StrTran( e, "hbqt_itemPushReturn" , "hbqt_create_objectGC" ) } )
-   AEval( aLine, {| e, i | aLine[ i ] := StrTran( e, "hb_stackSelfItem()"  , '"HB_' + Upper( ::cQtObject ) + '"' ) } )
 
    RETURN aLine
 
@@ -2090,13 +1707,13 @@ METHOD HbQtSource:getReturnAsList( oMtd, FP, cPrefix )
             AAdd( aLines, cPrefix + '   qList->append( pItem );' )
          ELSE
             IF lFar
-               AAdd( aLines, cPrefix + '   qList->append( hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_' + cCast + '( ( void * ) qL.at( i ), false ) , "HB_' + Upper( cCast ) + '" ) ) );' )
+               AAdd( aLines, cPrefix + '   qList->append( hbqt_bindGetHbObject( NULL, ( void * ) qL.at( i ), "HB_' + Upper( cCast ) + '", NULL, ' + qth_get_bits( cCast, .f. ) + ' ) );' )
             ELSE
-               AAdd( aLines, cPrefix + '   qList->append( hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_' + cCast + '( new ' + cCast + '( qL.at( i ) ), true ) , "HB_' + Upper( cCast ) + '" ) ) );' )
+               AAdd( aLines, cPrefix + '   qList->append( hbqt_bindGetHbObject( NULL, new ' + cCast + '( qL.at( i ) ), "HB_' + Upper( cCast ) + '", hbqt_del_' + cCast + ', ' + qth_get_bits( cCast, .t. ) + ' ) );' )
             ENDIF
          ENDIF
          AAdd( aLines, cPrefix + '}' )
-         AAdd( aLines, cPrefix + 'hbqt_create_objectGC( hbqt_gcAllocate_QList( qList, true ), "HB_QLIST" );' )
+         AAdd( aLines, cPrefix + 'hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, new QList<PHB_ITEM>*( qList ), "HB_QLIST", hbqt_del_QList, HBQT_BIT_OWNER ) );' )
       ENDIF
    ELSE
       AAdd( aLines, cPrefix + FP + ";" )
@@ -2191,9 +1808,6 @@ METHOD HbQtSource:getMethodBody( oMtd, cMtdName, aMethods )
    ELSEIF ::cQtVer > "0x040500"
       AAdd( txt_, "   #if QT_VERSION >= " + ::cQtVer )
    ENDIF
-#ifdef _GEN_TRACE_
-   AAdd( txt_, '   HB_TRACE( ' + ::cTrMode + ', ( "' + ::cQtObject + ":" + oMtd:cHBFunc + '" ) );' )
-#endif
 
    /* If method is manually written in .qth - no more processing */
    IF ! Empty( oMtd:fBody_ )
@@ -2786,12 +2400,7 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             ENDIF
             oArg:cDoc    := "c" + oMtd:cDocNM  // oArg:cCast - W R O N G
             oArg:cTypeHB := "C"
-#if 0
-         CASE oArg:cCast == "FT_Face"
-            oArg:cBody   := "hbqt_par_FT_Face( " + cHBIdx + " )"
-            oArg:cDoc    := "c" + oMtd:cDocNM
-            oArg:cTypeHB := "C"
-#endif
+            
          CASE oArg:lFar
             cRef := oArg:cCast
             oArg:cBody := "hbqt_par_" + oArg:cCast + "( " + cHBIdx + " )"
@@ -2888,7 +2497,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
 
    DO CASE
    CASE oMtd:isConstructor
-      oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + ::cQtObject + "( new " + oRet:cCast + "( " + cPara + " ), true )" + ', "HB_' + Upper(::cQtObject) +'")'
+      oMtd:cCmd := 'hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ' + 'new ' + ::cQtObject + '( ' + cPara + ' )' + ', "' + 'HB_' + Upper( ::cQtObject ) + '", hbqt_del_' + ::cQtObject + ', ' + qth_get_bits( ::cQtObject, .t. ) + ' ) )'
       oMtd:cPrgRet := "o" + ::cQtObject
 
    CASE "<" $ oRet:cCast
@@ -2912,7 +2521,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
          cRefInList := StrTran( cRefInList, "*" )
          cRefInList := StrTran( cRefInList, " " )
          oMtd:isRetList := .T.
-         oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_QList( new " + oRet:cCast + "( " + oMtd:cCmn + " ), true ) " + ', "HB_' + Upper( ::cQtObject ) + '" )'
+         oMtd:cCmd := 'hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ' + 'new ' + oRet:cCast + '( ' + oMtd:cCmn + ' )' + ', "' + 'HB_' + 'QList' + '", hbqt_del_' + 'QList' + ', ' + qth_get_bits( 'QList', .t. ) + ' ) )'
          oMtd:cPrgRet := "o" + oMtd:cDocNMRet
       ENDCASE
 
@@ -2979,11 +2588,8 @@ METHOD HbQtSource:buildCppCode( oMtd )
                              oRet:lConst   .AND. ;
                              "Abstract" $ oRet:cCast
       cRef := oRet:cCast
-#ifdef __HBQT_REVAMP__
-      oMtd:cCmd := 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + "( void * ) " + oMtd:cCmn + ', "' + 'HB_' + Upper( oRet:cCast ) + '", hbqt_del_' +  oRet:cCast + ', ' + qth_get_bits( oRet:cCast, .f. ) + ' ) )'
-#else
-      oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) " + ', "HB_' + Upper( ::cQtObject ) + '" )'
-#endif
+
+      oMtd:cCmd := 'hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ' + "( void * ) " + oMtd:cCmn + ', "' + 'HB_' + Upper( oRet:cCast ) + '", hbqt_del_' +  oRet:cCast + ', ' + qth_get_bits( oRet:cCast, .f. ) + ' ) )'
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE hbqtgen_isAqtObject( oRet:cCast )  .AND. ;
@@ -2991,11 +2597,8 @@ METHOD HbQtSource:buildCppCode( oMtd )
                              oRet:lConst   .AND. ;
                              oRet:lVirt
       cRef := oRet:cCast
-#ifdef __HBQT_REVAMP__
-      oMtd:cCmd := 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + "( void * ) " + oMtd:cCmn + ', "' + 'HB_' + Upper( oRet:cCast ) + '", hbqt_del_' +  oRet:cCast + ', ' + qth_get_bits( oRet:cCast, .f. ) + ' ) )'
-#else
-      oMtd:cCmd := "hbqt_create_objectGC( hbqt_gcAllocate_" + oRet:cCast + "( ( void * ) " + oMtd:cCmn + ", false ) " + ', "HB_' + Upper( ::cQtObject ) + '" )'
-#endif
+
+      oMtd:cCmd := 'hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ' + "( void * ) " + oMtd:cCmn + ', "' + 'HB_' + Upper( oRet:cCast ) + '", hbqt_del_' +  oRet:cCast + ', ' + qth_get_bits( oRet:cCast, .f. ) + ' ) )'
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE hbqtgen_isAqtObject( oRet:cCast )  .AND. ;
@@ -3217,11 +2820,9 @@ METHOD HbqtArgument:new( cTxt, cQtObject, enum_, lConstL, lIsRetArg )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION hbqtgen_Get_Command_1( cWgt, cCmn )
-#ifdef __HBQT_REVAMP__
-   RETURN 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + 'new ' + cWgt + '( *( ' + cCmn + ' ) )' + ', "' + 'HB_' + Upper( cWgt ) + '", hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, .t. ) + ' ) )'
-#else
-   RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( *( " + cCmn + " ) ), true ), " + '"HB_' + Upper( cWgt ) + '")'
-#endif
+
+   RETURN 'hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ' + 'new ' + cWgt + '( *( ' + cCmn + ' ) )' + ', "' + 'HB_' + Upper( cWgt ) + '", hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, .t. ) + ' ) )'
+   
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION hbqtgen_Get_Command( cWgt, cCmn, lNew, isRetDetached )
@@ -3233,19 +2834,12 @@ STATIC FUNCTION hbqtgen_Get_Command( cWgt, cCmn, lNew, isRetDetached )
       isRetDetached := .f.
    ENDIF
 
-#ifdef __HBQT_REVAMP__
    IF lNew
-      RETURN 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + 'new ' + cWgt + '( ' + cCmn + ' )' + ', "' + 'HB_' + Upper( cWgt ) + '", hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, .t. ) + ' ) )'
+      RETURN 'hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ' + 'new ' + cWgt + '( ' + cCmn + ' )' + ', "' + 'HB_' + Upper( cWgt ) + '", hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, .t. ) + ' ) )'
    ELSE
-      RETURN 'hb_itemReturn( hbqt_bindGetHbObject( NULL, ' + cCmn + ', "' + 'HB_' + Upper( cWgt ) + '", hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, isRetDetached ) + ' ) )'
+      RETURN 'hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ' + cCmn + ', "' + 'HB_' + Upper( cWgt ) + '", hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, isRetDetached ) + ' ) )'
    ENDIF
-#else
-   IF lNew
-      RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( new " + cWgt + "( " + cCmn + " ), true ), " + '"HB_' + Upper( cWgt ) +'" )'
-   ELSE
-      RETURN "hbqt_create_objectGC( hbqt_gcAllocate_" + cWgt + "( " + cCmn + ", " + iif( isRetDetached, "true", "false" ) + " ), " + '"HB_' + Upper( cWgt ) +'" )'
-   ENDIF
-#endif
+   
    RETURN ""
 
 /*----------------------------------------------------------------------*/
@@ -3333,9 +2927,7 @@ STATIC FUNCTION hbqtgen_BuildCopyrightText()
 /*----------------------------------------------------------------------*/
 
 STATIC PROCEDURE hbqtgen_BuildFooter( txt_ )
-
    AAdd( txt_, "#endif" )
-
    RETURN
 
 /*----------------------------------------------------------------------*/
@@ -3415,7 +3007,6 @@ STATIC FUNCTION qth_is_extended( cQTHFileName )
    RETURN lYes
 
 /*----------------------------------------------------------------------*/
-#ifdef __HBQT_REVAMP__
 
 STATIC FUNCTION qth_is_QObject( cWidget )
    STATIC aQObjects := {}
@@ -3787,5 +3378,4 @@ STATIC FUNCTION qth_get_bits( cWidget, lNew )
 
    RETURN cBits
 
-#endif
 /*----------------------------------------------------------------------*/

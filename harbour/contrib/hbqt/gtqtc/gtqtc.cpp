@@ -1127,13 +1127,14 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
 
       case HB_GTI_WIDGET:
-         //pInfo->pResult = hb_itemPutPtrGC( pInfo->pResult, hbqt_gcAllocate_QWidget( pWVT->qWnd, false ) );
-         pInfo->pResult = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QMainWindow( pWVT->qWnd, false ), "HB_QMAINWINDOW" ) );
+         //pInfo->pResult = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QMainWindow( pWVT->qWnd, false ), "HB_QMAINWINDOW" ) );
+         pInfo->pResult =   hbqt_bindSetHbObject( NULL, pWVT->qWnd, "HB_QMAINWINDOW", NULL, HBQT_BIT_QOBJECT );
+
          break;
 
       case HB_GTI_DRAWINGAREA:
-         //pInfo->pResult = hb_itemPutPtrGC( pInfo->pResult, hbqt_gcAllocate_QMainWindow( pWVT->qWnd->_drawingArea, false ) );
-         pInfo->pResult = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QWidget( pWVT->qWnd->_drawingArea, false ), "HB_QWIDGET" ) );
+         //pInfo->pResult = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QWidget( pWVT->qWnd->_drawingArea, false ), "HB_QWIDGET" ) );
+         pInfo->pResult =   hbqt_bindSetHbObject( NULL, pWVT->qWnd->_drawingArea, "HB_QWIDGET", NULL, HBQT_BIT_QOBJECT );
          break;
 
       case HB_GTI_EVENTLOOP:

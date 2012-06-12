@@ -61,11 +61,6 @@
 
 #include <QtCore/QPointer>
 
-HB_EXTERN_BEGIN
-extern void * hbqt_gcAllocate_QMouseEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QWheelEvent( void * pObj, bool bNew );
-HB_EXTERN_END
-
 
 HBQTableView::HBQTableView( QWidget * parent ) : QTableView( parent )
 {
@@ -90,7 +85,7 @@ void HBQTableView::hbSetBlock( PHB_ITEM b )
          hb_itemRelease( block );
       }
       block = hb_itemNew( b );
-      hb_gcUnlock( block );
+      // hb_gcUnlock( block );
    }
 }
 
@@ -99,11 +94,7 @@ void HBQTableView::mousePressEvent( QMouseEvent * event )
    if( block )
    {
       PHB_ITEM p0 = hb_itemPutNI( NULL, QEvent::MouseButtonPress );
-#ifdef __HBQT_REVAMP__
-      PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, ( void * ) event, ( "HB_QMOUSEEVENT" ), NULL, 0 );
-#else
-      PHB_ITEM p1 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QMouseEvent( event, false ), "hb_QMouseEvent" ) );
-#endif
+      PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, ( void * ) event, "HB_QMOUSEEVENT", NULL, 0 );
       hb_vmEvalBlockV( block, 2, p0, p1 );
       hb_itemRelease( p0 );
       hb_itemRelease( p1 );
@@ -116,11 +107,7 @@ void HBQTableView::mouseDoubleClickEvent( QMouseEvent * event )
    if( block )
    {
       PHB_ITEM p0 = hb_itemPutNI( NULL, QEvent::MouseButtonDblClick );
-#ifdef __HBQT_REVAMP__
-      PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, ( void * ) event, ( "HB_QMOUSEEVENT" ), NULL, 0 );
-#else
-      PHB_ITEM p1 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QMouseEvent( event, false ), "hb_QMouseEvent" ) );
-#endif
+      PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, ( void * ) event, "HB_QMOUSEEVENT", NULL, 0 );
       hb_vmEvalBlockV( block, 2, p0, p1 );
       hb_itemRelease( p0 );
       hb_itemRelease( p1 );
@@ -133,11 +120,7 @@ void HBQTableView::wheelEvent( QWheelEvent * event )
    if( block )
    {
       PHB_ITEM p0 = hb_itemPutNI( NULL, QEvent::Wheel );
-#ifdef __HBQT_REVAMP__
-      PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, ( void * ) event, ( "HB_QWHEELEVENT" ), NULL, 0 );
-#else
-      PHB_ITEM p1 = hb_itemNew( hbqt_create_objectGC( hbqt_gcAllocate_QWheelEvent( event, false ), "hb_QWheelEvent" ) );
-#endif
+      PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, ( void * ) event, "HB_QWHEELEVENT", NULL, 0 );
       hb_vmEvalBlockV( block, 2, p0, p1 );
       hb_itemRelease( p0 );
       hb_itemRelease( p1 );

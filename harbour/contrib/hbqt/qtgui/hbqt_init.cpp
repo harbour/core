@@ -81,60 +81,12 @@
 #include <QtGui/QTreeWidgetItem>
 #include <QtGui/QWidget>
 #include <QtGui/QKeyEvent>
+#include <QtGui/QCloseEvent>
 
 #include <QtCore/QStringList>
 #include <QtCore/QTextCodec>
 
-HB_EXTERN_BEGIN
-extern void * hbqt_gcAllocate_QColor( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QItemSelection( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QTextCharFormat( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QFont( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QTextCursor( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QTextBlock( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QAbstractButton( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QAction( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QMdiSubWindow( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QPrinter( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QStandardItem( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QListWidgetItem( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QTreeWidgetItem( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QTableWidgetItem( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QWidget( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QRect( void * pObj, bool bNew );
 
-extern void * hbqt_gcAllocate_QActionEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QContextMenuEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QDragEnterEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QDragLeaveEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QDropEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QFocusEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QGraphicsSceneContextMenuEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QGraphicsSceneMouseEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QGraphicsSceneDragDropEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QGraphicsSceneHoverEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QGraphicsSceneMoveEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QGraphicsSceneResizeEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QGraphicsSceneWheelEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QHelpEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QHideEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QHoverEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QInputMethodEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QKeyEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QMouseEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QMoveEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QPaintEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QResizeEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QShortcutEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QShowEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QWheelEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QWindowStateChangeEvent( void * pObj, bool bNew );
-extern void * hbqt_gcAllocate_QCloseEvent( void * pObj, bool bNew );
-
-HB_EXTERN_END
-
-#ifdef __HBQT_REVAMP__
 HB_EXTERN_BEGIN
 
 extern void hbqt_del_QObject( void * pObj, int iFlags );
@@ -185,7 +137,6 @@ extern void hbqt_del_QWindowStateChangeEvent( void * pObj, int iFlags );
 extern void hbqt_del_QCloseEvent( void * pObj, int iFlags );
 
 HB_EXTERN_END
-#endif
 
 /*----------------------------------------------------------------------*/
 
@@ -195,16 +146,10 @@ static void hbqt_SlotsExecQColor( PHB_ITEM * codeBlock, void ** arguments, QStri
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QColor( ( *reinterpret_cast< QColor( * ) >( arguments[ 1 ] ) ) ), "HB_QCOLOR", hbqt_del_QColor, HBQT_BIT_OWNER ); 
    hb_vmPush( p0 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QColor( new QColor( ( *reinterpret_cast< QColor( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QColor" ) );
-#endif
    hb_vmSend( 1 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
-#endif
 }
 
 static void hbqt_SlotsExecItemSelItemSel( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -213,20 +158,13 @@ static void hbqt_SlotsExecItemSelItemSel( PHB_ITEM * codeBlock, void ** argument
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QItemSelection( ( *reinterpret_cast< QItemSelection( * ) >( arguments[ 1 ] ) ) ), "HB_QITEMSELECTION", hbqt_del_QObject, HBQT_BIT_OWNER ); 
    PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, new QItemSelection( ( *reinterpret_cast< QItemSelection( * ) >( arguments[ 2 ] ) ) ), "HB_QITEMSELECTION", hbqt_del_QObject, HBQT_BIT_OWNER ) ;
    hb_vmPush( p0 );
    hb_vmPush( p1 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( *reinterpret_cast< QItemSelection( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QItemSelection" ) );
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QItemSelection( new QItemSelection( ( *reinterpret_cast< QItemSelection( * ) >( arguments[ 2 ] ) ) ), true ), "hb_QItemSelection" ) );
-#endif   
    hb_vmSend( 2 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
    hb_itemRelease( p1 );
-#endif
 }
 
 static void hbqt_SlotsExecQTextCharFormat( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -235,16 +173,10 @@ static void hbqt_SlotsExecQTextCharFormat( PHB_ITEM * codeBlock, void ** argumen
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QTextCharFormat( ( *reinterpret_cast< QTextCharFormat( * ) >( arguments[ 1 ] ) ) ), "HB_QTEXTCHARFORMAT", hbqt_del_QTextCharFormat, HBQT_BIT_OWNER );
    hb_vmPush( p0 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTextCharFormat( new QTextCharFormat( ( *reinterpret_cast< QTextCharFormat( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QTextCharFormat" ) );
-#endif   
    hb_vmSend( 1 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
-#endif
 }
 
 static void hbqt_SlotsExecQFont( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -253,16 +185,10 @@ static void hbqt_SlotsExecQFont( PHB_ITEM * codeBlock, void ** arguments, QStrin
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QFont( ( *reinterpret_cast< QFont( * ) >( arguments[ 1 ] ) ) ), "HB_QFONT", hbqt_del_QFont, HBQT_BIT_OWNER ); 
    hb_vmPush( p0 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QFont( new QFont( ( *reinterpret_cast< QFont( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QFont" ) );
-#endif   
    hb_vmSend( 1 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
-#endif
 }
 
 static void hbqt_SlotsExecQTextCursor( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -271,16 +197,10 @@ static void hbqt_SlotsExecQTextCursor( PHB_ITEM * codeBlock, void ** arguments, 
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QTextCursor( ( *reinterpret_cast< QTextCursor( * ) >( arguments[ 1 ] ) ) ), "HB_QTEXTCURSOR", hbqt_del_QTextCursor, HBQT_BIT_OWNER );
    hb_vmPush( p0 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTextCursor( new QTextCursor( ( *reinterpret_cast< QTextCursor( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QTextCursor" ) );
-#endif   
    hb_vmSend( 1 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
-#endif
 }
 
 static void hbqt_SlotsExecQTextBlock( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -289,16 +209,10 @@ static void hbqt_SlotsExecQTextBlock( PHB_ITEM * codeBlock, void ** arguments, Q
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QTextBlock( ( *reinterpret_cast< QTextBlock( * ) >( arguments[ 1 ] ) ) ), "HB_QTEXTBLOCK", hbqt_del_QTextBlock, HBQT_BIT_OWNER ); 
    hb_vmPush( p0 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTextBlock( new QTextBlock( ( *reinterpret_cast< QTextBlock( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QTextBlock" ) );
-#endif   
    hb_vmSend( 1 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
-#endif
 }
 
 static void hbqt_SlotsExecQAbstractButton( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -307,16 +221,10 @@ static void hbqt_SlotsExecQAbstractButton( PHB_ITEM * codeBlock, void ** argumen
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QWidget( (  QAbstractButton * ) ( arguments[ 1 ] ) ), "HB_QABSTRACTBUTTON", hbqt_del_QWidget, HBQT_BIT_OWNER | HBQT_BIT_QOBJECT ); 
    hb_vmPush( p0 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QAbstractButton( new QWidget( (  QAbstractButton * ) ( arguments[ 1 ] ) ) , true ), "hb_QAbstractButton" ) );
-#endif   
    hb_vmSend( 1 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
-#endif
 }
 
 static void hbqt_SlotsExecQAction( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -325,16 +233,10 @@ static void hbqt_SlotsExecQAction( PHB_ITEM * codeBlock, void ** arguments, QStr
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QAction( ( QAction * ) ( arguments[ 1 ] ) ), "HB_QACTION", hbqt_del_QAction, HBQT_BIT_OWNER | HBQT_BIT_QOBJECT ); 
    hb_vmPush( p0 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QAction( new QAction( ( QAction * ) ( arguments[ 1 ] ) ), true ), "hb_QAction" ) );
-#endif   
    hb_vmSend( 1 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
-#endif
 }
 
 static void hbqt_SlotsExecQMdiSubWindow( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -343,16 +245,10 @@ static void hbqt_SlotsExecQMdiSubWindow( PHB_ITEM * codeBlock, void ** arguments
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , "HB_QMDISUBWINDOW", NULL, HBQT_BIT_QOBJECT );
    hb_vmPush( p0 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QMdiSubWindow( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), "hb_QMdiSubWindow" ) );
-#endif   
    hb_vmSend( 1 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
-#endif
 }
 
 static void hbqt_SlotsExecQTreeWidgetItem( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -361,16 +257,10 @@ static void hbqt_SlotsExecQTreeWidgetItem( PHB_ITEM * codeBlock, void ** argumen
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , "HB_QTREEWIDGETITEM", NULL, HBQT_BIT_NONE ); 
    hb_vmPush( p0 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTreeWidgetItem( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), "hb_QTreeWidgetItem" ) );
-#endif   
    hb_vmSend( 1 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
-#endif
 }
 
 static void hbqt_SlotsExecQTreeWidgetItemInt( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -379,17 +269,11 @@ static void hbqt_SlotsExecQTreeWidgetItemInt( PHB_ITEM * codeBlock, void ** argu
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , "HB_QTREEWIDGETITEM", NULL, HBQT_BIT_NONE ); 
    hb_vmPush( p0 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTreeWidgetItem( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), "hb_QTreeWidgetItem" ) );
-#endif   
    hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
    hb_vmSend( 2 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
-#endif
 }
 
 static void hbqt_SlotsExecQPrinter( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -398,16 +282,10 @@ static void hbqt_SlotsExecQPrinter( PHB_ITEM * codeBlock, void ** arguments, QSt
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , "HB_QPRINTER", NULL, HBQT_BIT_NONE ); 
    hb_vmPush( p0 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QPrinter( ( *reinterpret_cast< void*(*)> ( arguments[ 1 ] ) ), false ), "hb_QPrinter" ) );
-#endif   
    hb_vmSend( 1 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
-#endif
 }
 
 static void hbqt_SlotsExecQStandardItem( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -416,16 +294,10 @@ static void hbqt_SlotsExecQStandardItem( PHB_ITEM * codeBlock, void ** arguments
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , "HB_QSTANDARDITEM", NULL, HBQT_BIT_NONE ); 
    hb_vmPush( p0 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QStandardItem( ( *reinterpret_cast< void*( * )>( arguments[ 1 ] ) ), false ), "hb_QStandardItem" ) );
-#endif   
    hb_vmSend( 1 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
-#endif
 }
 
 static void hbqt_SlotsExecQListWidgetItem( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -434,16 +306,10 @@ static void hbqt_SlotsExecQListWidgetItem( PHB_ITEM * codeBlock, void ** argumen
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , "HB_QLISTWIDGETITEM", NULL, HBQT_BIT_NONE ); 
    hb_vmPush( p0 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QListWidgetItem( ( *reinterpret_cast<void*( * )>( arguments[ 1 ] ) ), false ), "hb_QListWidgetItem" ) );
-#endif   
    hb_vmSend( 1 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
-#endif
 }
 
 static void hbqt_SlotsExecQListWidgetItemQListWidgetItem( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -452,20 +318,13 @@ static void hbqt_SlotsExecQListWidgetItemQListWidgetItem( PHB_ITEM * codeBlock, 
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , "HB_QLISTWIDGETITEM", NULL, HBQT_BIT_NONE ); 
    PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 2 ] ) , "HB_QLISTWIDGETITEM", NULL, HBQT_BIT_NONE ); 
    hb_vmPush( p0 );
    hb_vmPush( p1 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QListWidgetItem( ( *reinterpret_cast<void*( * )>( arguments[ 1 ] ) ), false ), "hb_QListWidgetItem" ) );
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QListWidgetItem( ( *reinterpret_cast<void*( * )>( arguments[ 2 ] ) ), false ), "hb_QListWidgetItem" ) );
-#endif   
    hb_vmSend( 2 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
    hb_itemRelease( p1 );
-#endif
 }
 
 static void hbqt_SlotsExecQTableWidgetItem( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -474,16 +333,10 @@ static void hbqt_SlotsExecQTableWidgetItem( PHB_ITEM * codeBlock, void ** argume
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , "HB_QTABLEWIDGETITEM", NULL, HBQT_BIT_NONE ); 
    hb_vmPush( p0 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTableWidgetItem( ( *reinterpret_cast<void*( * )>( arguments[ 1 ] ) ), false ), "hb_QTableWidgetItem" ) );
-#endif   
    hb_vmSend( 1 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
-#endif
 }
 
 static void hbqt_SlotsExecQTableWidgetItemQTableWidgetItem( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -492,20 +345,13 @@ static void hbqt_SlotsExecQTableWidgetItemQTableWidgetItem( PHB_ITEM * codeBlock
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , "HB_QTABLEWIDGETITEM", NULL, HBQT_BIT_NONE ); 
    PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 2 ] ) , "HB_QTABLEWIDGETITEM", NULL, HBQT_BIT_NONE ); 
    hb_vmPush( p0 );
    hb_vmPush( p1 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTableWidgetItem( ( *reinterpret_cast<void*( * )>( arguments[ 1 ] ) ), false ), "hb_QTableWidgetItem" ) );
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTableWidgetItem( ( *reinterpret_cast<void*( * )>( arguments[ 2 ] ) ), false ), "hb_QTableWidgetItem" ) );
-#endif   
    hb_vmSend( 2 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
    hb_itemRelease( p1 );
-#endif
 }
 
 static void hbqt_SlotsExecQTreeWidgetItemQTreeWidgetItem( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -514,20 +360,13 @@ static void hbqt_SlotsExecQTreeWidgetItemQTreeWidgetItem( PHB_ITEM * codeBlock, 
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , "HB_QTREEWIDGETITEM", NULL, HBQT_BIT_NONE ); 
    PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 2 ] ) , "HB_QTREEWIDGETITEM", NULL, HBQT_BIT_NONE );
    hb_vmPush( p0 );
    hb_vmPush( p1 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTreeWidgetItem( ( *reinterpret_cast<void*( * )>( arguments[ 1 ] ) ), false ), "hb_QTreeWidgetItem" ) );
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QTreeWidgetItem( ( *reinterpret_cast<void*( * )>( arguments[ 2 ] ) ), false ), "hb_QTreeWidgetItem" ) );
-#endif   
    hb_vmSend( 2 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
    hb_itemRelease( p1 );
-#endif
 }
 
 static void hbqt_SlotsExecQWidget( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -536,16 +375,10 @@ static void hbqt_SlotsExecQWidget( PHB_ITEM * codeBlock, void ** arguments, QStr
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , "HB_QWIDGET", NULL, HBQT_BIT_QOBJECT ); 
    hb_vmPush( p0 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QWidget( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), "hb_QWidget" ) );
-#endif   
    hb_vmSend( 1 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
-#endif
 }
 
 static void hbqt_SlotsExecQWidgetQWidget( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -554,20 +387,13 @@ static void hbqt_SlotsExecQWidgetQWidget( PHB_ITEM * codeBlock, void ** argument
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , "HB_QWIDGET", NULL, HBQT_BIT_QOBJECT ); 
    PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 2 ] ) , "HB_QWIDGET", NULL, HBQT_BIT_QOBJECT );
    hb_vmPush( p0 );
    hb_vmPush( p1 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QWidget( ( *reinterpret_cast<void*( * )>( arguments[ 1 ] ) ), false ), "hb_QWidget" ) );
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QWidget( ( *reinterpret_cast<void*( * )>( arguments[ 2 ] ) ), false ), "hb_QWidget" ) );
-#endif   
    hb_vmSend( 2 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
    hb_itemRelease( p1 );
-#endif
 }
 
 static void hbqt_SlotsExecQWidgetInt( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -576,17 +402,11 @@ static void hbqt_SlotsExecQWidgetInt( PHB_ITEM * codeBlock, void ** arguments, Q
 
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , "HB_QWIDGET", NULL, HBQT_BIT_QOBJECT ); 
    hb_vmPush( p0 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QWidget( ( *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) ), false ), "hb_QWidget" ) );
-#endif   
    hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
    hb_vmSend( 2 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
-#endif
 }
 
 static void hbqt_SlotsExecQRectInt( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
@@ -594,17 +414,11 @@ static void hbqt_SlotsExecQRectInt( PHB_ITEM * codeBlock, void ** arguments, QSt
    Q_UNUSED( pList );
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
-#ifdef __HBQT_REVAMP__
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QRect( ( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) ), "HB_QRECT", hbqt_del_QRect, HBQT_BIT_OWNER ); 
    hb_vmPush( p0 );
-#else
-   hb_vmPush( hbqt_create_objectGC( hbqt_gcAllocate_QRect( new QRect( ( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) ), true ), "hb_QRect" ) );
-#endif   
    hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
    hb_vmSend( 2 );
-#ifdef __HBQT_REVAMP__
    hb_itemRelease( p0 );
-#endif
 }
 
 
@@ -717,134 +531,134 @@ static void hbqt_registerCallbacks( void )
    hbqt_slots_register_callback( "QWidget*"                            , hbqt_SlotsExecQWidget          );
    hbqt_slots_register_callback( "QRect$int"                           , hbqt_SlotsExecQRectInt         );
 
-   hbqt_events_register_createobj( QEvent::MouseButtonPress                  , "hb_QMouseEvent"                    , hbqt_gcAllocate_QMouseEvent );
-   hbqt_events_register_createobj( QEvent::MouseButtonRelease                , "hb_QMouseEvent"                    , hbqt_gcAllocate_QMouseEvent );
-   hbqt_events_register_createobj( QEvent::MouseButtonDblClick               , "hb_QMouseEvent"                    , hbqt_gcAllocate_QMouseEvent );
-   hbqt_events_register_createobj( QEvent::MouseMove                         , "hb_QMouseEvent"                    , hbqt_gcAllocate_QMouseEvent );
-   hbqt_events_register_createobj( QEvent::KeyPress                          , "hb_QKeyEvent"                      , hbqt_gcAllocate_QKeyEvent );
-   hbqt_events_register_createobj( QEvent::KeyRelease                        , "hb_QKeyEvent"                      , hbqt_gcAllocate_QKeyEvent );
-   hbqt_events_register_createobj( QEvent::FocusIn                           , "hb_QFocusEvent"                    , hbqt_gcAllocate_QFocusEvent );
-   hbqt_events_register_createobj( QEvent::FocusOut                          , "hb_QFocusEvent"                    , hbqt_gcAllocate_QFocusEvent );
-   hbqt_events_register_createobj( QEvent::Enter                             , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::Leave                             , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::Paint                             , "hb_QPaintEvent"                    , hbqt_gcAllocate_QPaintEvent );
-   hbqt_events_register_createobj( QEvent::Move                              , "hb_QMoveEvent"                     , hbqt_gcAllocate_QMoveEvent );
-   hbqt_events_register_createobj( QEvent::Resize                            , "hb_QResizeEvent"                   , hbqt_gcAllocate_QResizeEvent );
-   hbqt_events_register_createobj( QEvent::Show                              , "hb_QShowEvent"                     , hbqt_gcAllocate_QShowEvent );
-   hbqt_events_register_createobj( QEvent::Hide                              , "hb_QHideEvent"                     , hbqt_gcAllocate_QHideEvent );
-   hbqt_events_register_createobj( QEvent::Close                             , "hb_QCloseEvent"                    , hbqt_gcAllocate_QCloseEvent );
-   hbqt_events_register_createobj( QEvent::ParentChange                      , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::WindowActivate                    , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::WindowDeactivate                  , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ShowToParent                      , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::HideToParent                      , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::Wheel                             , "hb_QWheelEvent"                    , hbqt_gcAllocate_QWheelEvent );
-   hbqt_events_register_createobj( QEvent::WindowTitleChange                 , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::WindowIconChange                  , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ApplicationWindowIconChange       , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ApplicationFontChange             , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ApplicationLayoutDirectionChange  , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ApplicationPaletteChange          , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::PaletteChange                     , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::Clipboard                         , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::MetaCall                          , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::SockAct                           , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ShortcutOverride                  , "hb_QKeyEvent"                      , hbqt_gcAllocate_QKeyEvent );
-   hbqt_events_register_createobj( QEvent::DeferredDelete                    , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::DragEnter                         , "hb_QDragEnterEvent"                , hbqt_gcAllocate_QDragEnterEvent );
-   hbqt_events_register_createobj( QEvent::DragLeave                         , "hb_QDragLeaveEvent"                , hbqt_gcAllocate_QDragLeaveEvent );
-   hbqt_events_register_createobj( QEvent::DragMove                          , "hb_QDragMoveEvent"                 , hbqt_gcAllocate_QMoveEvent );
-   hbqt_events_register_createobj( QEvent::Drop                              , "hb_QDropEvent"                     , hbqt_gcAllocate_QDropEvent );
-   hbqt_events_register_createobj( QEvent::ChildAdded                        , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ChildPolished                     , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ChildRemoved                      , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::PolishRequest                     , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::Polish                            , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::LayoutRequest                     , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::UpdateRequest                     , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::UpdateLater                       , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ContextMenu                       , "hb_QContextMenuEvent"              , hbqt_gcAllocate_QContextMenuEvent );
-   hbqt_events_register_createobj( QEvent::InputMethod                       , "hb_QInputMethodEvent"              , hbqt_gcAllocate_QInputMethodEvent );
-   hbqt_events_register_createobj( QEvent::AccessibilityPrepare              , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::TabletMove                        , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::LocaleChange                      , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::LanguageChange                    , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::LayoutDirectionChange             , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::TabletPress                       , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::TabletRelease                     , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::OkRequest                         , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::IconDrag                          , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::FontChange                        , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::EnabledChange                     , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ActivationChange                  , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::StyleChange                       , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::IconTextChange                    , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ModifiedChange                    , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::WindowBlocked                     , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::WindowUnblocked                   , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::WindowStateChange                 , "hb_QWindowStateChangeEvent"        , hbqt_gcAllocate_QWindowStateChangeEvent );
-   hbqt_events_register_createobj( QEvent::MouseTrackingChange               , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ToolTip                           , "hb_QHelpEvent"                     , hbqt_gcAllocate_QHelpEvent );
-   hbqt_events_register_createobj( QEvent::WhatsThis                         , "hb_QHelpEvent"                     , hbqt_gcAllocate_QHelpEvent );
-   hbqt_events_register_createobj( QEvent::StatusTip                         , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ActionChanged                     , "hb_QActionEvent"                   , hbqt_gcAllocate_QActionEvent );
-   hbqt_events_register_createobj( QEvent::ActionAdded                       , "hb_QActionEvent"                   , hbqt_gcAllocate_QActionEvent );
-   hbqt_events_register_createobj( QEvent::ActionRemoved                     , "hb_QActionEvent"                   , hbqt_gcAllocate_QActionEvent );
-   hbqt_events_register_createobj( QEvent::FileOpen                          , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::Shortcut                          , "hb_QShortcutEvent"                 , hbqt_gcAllocate_QShortcutEvent );
-   hbqt_events_register_createobj( QEvent::WhatsThisClicked                  , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::AccessibilityHelp                 , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ToolBarChange                     , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ApplicationActivate               , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ApplicationActivated              , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ApplicationDeactivate             , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::QueryWhatsThis                    , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::EnterWhatsThisMode                , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::LeaveWhatsThisMode                , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ZOrderChange                      , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::HoverEnter                        , "hb_QHoverEvent"                    , hbqt_gcAllocate_QHoverEvent );
-   hbqt_events_register_createobj( QEvent::HoverLeave                        , "hb_QHoverEvent"                    , hbqt_gcAllocate_QHoverEvent );
-   hbqt_events_register_createobj( QEvent::HoverMove                         , "hb_QHoverEvent"                    , hbqt_gcAllocate_QHoverEvent );
-   hbqt_events_register_createobj( QEvent::AccessibilityDescription          , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ParentAboutToChange               , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::WinEventAct                       , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
+   hbqt_events_register_createobj( QEvent::MouseButtonPress                  , "hb_QMouseEvent"                    );
+   hbqt_events_register_createobj( QEvent::MouseButtonRelease                , "hb_QMouseEvent"                    );
+   hbqt_events_register_createobj( QEvent::MouseButtonDblClick               , "hb_QMouseEvent"                    );
+   hbqt_events_register_createobj( QEvent::MouseMove                         , "hb_QMouseEvent"                    );
+   hbqt_events_register_createobj( QEvent::KeyPress                          , "hb_QKeyEvent"                      );
+   hbqt_events_register_createobj( QEvent::KeyRelease                        , "hb_QKeyEvent"                      );
+   hbqt_events_register_createobj( QEvent::FocusIn                           , "hb_QFocusEvent"                    );
+   hbqt_events_register_createobj( QEvent::FocusOut                          , "hb_QFocusEvent"                    );
+   hbqt_events_register_createobj( QEvent::Enter                             , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::Leave                             , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::Paint                             , "hb_QPaintEvent"                    );
+   hbqt_events_register_createobj( QEvent::Move                              , "hb_QMoveEvent"                     );
+   hbqt_events_register_createobj( QEvent::Resize                            , "hb_QResizeEvent"                   );
+   hbqt_events_register_createobj( QEvent::Show                              , "hb_QShowEvent"                     );
+   hbqt_events_register_createobj( QEvent::Hide                              , "hb_QHideEvent"                     );
+   hbqt_events_register_createobj( QEvent::Close                             , "hb_QCloseEvent"                    );
+   hbqt_events_register_createobj( QEvent::ParentChange                      , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::WindowActivate                    , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::WindowDeactivate                  , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ShowToParent                      , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::HideToParent                      , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::Wheel                             , "hb_QWheelEvent"                    );
+   hbqt_events_register_createobj( QEvent::WindowTitleChange                 , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::WindowIconChange                  , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ApplicationWindowIconChange       , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ApplicationFontChange             , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ApplicationLayoutDirectionChange  , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ApplicationPaletteChange          , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::PaletteChange                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::Clipboard                         , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::MetaCall                          , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::SockAct                           , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ShortcutOverride                  , "hb_QKeyEvent"                      );
+   hbqt_events_register_createobj( QEvent::DeferredDelete                    , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::DragEnter                         , "hb_QDragEnterEvent"                );
+   hbqt_events_register_createobj( QEvent::DragLeave                         , "hb_QDragLeaveEvent"                );
+   hbqt_events_register_createobj( QEvent::DragMove                          , "hb_QDragMoveEvent"                 );
+   hbqt_events_register_createobj( QEvent::Drop                              , "hb_QDropEvent"                     );
+   hbqt_events_register_createobj( QEvent::ChildAdded                        , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ChildPolished                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ChildRemoved                      , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::PolishRequest                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::Polish                            , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::LayoutRequest                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::UpdateRequest                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::UpdateLater                       , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ContextMenu                       , "hb_QContextMenuEvent"              );
+   hbqt_events_register_createobj( QEvent::InputMethod                       , "hb_QInputMethodEvent"              );
+   hbqt_events_register_createobj( QEvent::AccessibilityPrepare              , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::TabletMove                        , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::LocaleChange                      , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::LanguageChange                    , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::LayoutDirectionChange             , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::TabletPress                       , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::TabletRelease                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::OkRequest                         , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::IconDrag                          , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::FontChange                        , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::EnabledChange                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ActivationChange                  , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::StyleChange                       , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::IconTextChange                    , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ModifiedChange                    , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::WindowBlocked                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::WindowUnblocked                   , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::WindowStateChange                 , "hb_QWindowStateChangeEvent"        );
+   hbqt_events_register_createobj( QEvent::MouseTrackingChange               , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ToolTip                           , "hb_QHelpEvent"                     );
+   hbqt_events_register_createobj( QEvent::WhatsThis                         , "hb_QHelpEvent"                     );
+   hbqt_events_register_createobj( QEvent::StatusTip                         , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ActionChanged                     , "hb_QActionEvent"                   );
+   hbqt_events_register_createobj( QEvent::ActionAdded                       , "hb_QActionEvent"                   );
+   hbqt_events_register_createobj( QEvent::ActionRemoved                     , "hb_QActionEvent"                   );
+   hbqt_events_register_createobj( QEvent::FileOpen                          , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::Shortcut                          , "hb_QShortcutEvent"                 );
+   hbqt_events_register_createobj( QEvent::WhatsThisClicked                  , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::AccessibilityHelp                 , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ToolBarChange                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ApplicationActivate               , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ApplicationActivated              , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ApplicationDeactivate             , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::QueryWhatsThis                    , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::EnterWhatsThisMode                , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::LeaveWhatsThisMode                , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ZOrderChange                      , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::HoverEnter                        , "hb_QHoverEvent"                    );
+   hbqt_events_register_createobj( QEvent::HoverLeave                        , "hb_QHoverEvent"                    );
+   hbqt_events_register_createobj( QEvent::HoverMove                         , "hb_QHoverEvent"                    );
+   hbqt_events_register_createobj( QEvent::AccessibilityDescription          , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ParentAboutToChange               , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::WinEventAct                       , "hb_QEvent"                         );
 #if defined( QT_KEYPAD_NAVIGATION )
-   hbqt_events_register_createobj( QEvent::EnterEditFocus                    , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::LeaveEditFocus                    , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
+   hbqt_events_register_createobj( QEvent::EnterEditFocus                    , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::LeaveEditFocus                    , "hb_QEvent"                         );
 #endif
-   hbqt_events_register_createobj( QEvent::MenubarUpdated                    , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::GraphicsSceneMouseMove            , "hb_QGraphicsSceneMouseEvent"       , hbqt_gcAllocate_QGraphicsSceneMouseEvent );
-   hbqt_events_register_createobj( QEvent::GraphicsSceneMousePress           , "hb_QGraphicsSceneMouseEvent"       , hbqt_gcAllocate_QGraphicsSceneMouseEvent );
-   hbqt_events_register_createobj( QEvent::GraphicsSceneMouseRelease         , "hb_QGraphicsSceneMouseEvent"       , hbqt_gcAllocate_QGraphicsSceneMouseEvent );
-   hbqt_events_register_createobj( QEvent::GraphicsSceneMouseDoubleClick     , "hb_QGraphicsSceneMouseEvent"       , hbqt_gcAllocate_QGraphicsSceneMouseEvent );
-   hbqt_events_register_createobj( QEvent::GraphicsSceneContextMenu          , "hb_QGraphicsSceneContextMenuEvent" , hbqt_gcAllocate_QGraphicsSceneContextMenuEvent );
-   hbqt_events_register_createobj( QEvent::GraphicsSceneHoverEnter           , "hb_QGraphicsSceneHoverEvent"       , hbqt_gcAllocate_QGraphicsSceneHoverEvent );
-   hbqt_events_register_createobj( QEvent::GraphicsSceneHoverMove            , "hb_QGraphicsSceneHoverEvent"       , hbqt_gcAllocate_QGraphicsSceneHoverEvent );
-   hbqt_events_register_createobj( QEvent::GraphicsSceneHoverLeave           , "hb_QGraphicsSceneHoverEvent"       , hbqt_gcAllocate_QGraphicsSceneHoverEvent );
-   hbqt_events_register_createobj( QEvent::GraphicsSceneHelp                 , "hb_QHelpEvent"                     , hbqt_gcAllocate_QHelpEvent );
-   hbqt_events_register_createobj( QEvent::GraphicsSceneDragEnter            , "hb_QGraphicsSceneDragDropEvent"    , hbqt_gcAllocate_QGraphicsSceneDragDropEvent );
-   hbqt_events_register_createobj( QEvent::GraphicsSceneDragMove             , "hb_QGraphicsSceneDragDropEvent"    , hbqt_gcAllocate_QGraphicsSceneDragDropEvent );
-   hbqt_events_register_createobj( QEvent::GraphicsSceneDragLeave            , "hb_QGraphicsSceneDragDropEvent"    , hbqt_gcAllocate_QGraphicsSceneDragDropEvent );
-   hbqt_events_register_createobj( QEvent::GraphicsSceneDrop                 , "hb_QGraphicsSceneDragDropEvent"    , hbqt_gcAllocate_QGraphicsSceneDragDropEvent );
-   hbqt_events_register_createobj( QEvent::GraphicsSceneWheel                , "hb_QGraphicsSceneWheelEvent"       , hbqt_gcAllocate_QGraphicsSceneWheelEvent );
-   hbqt_events_register_createobj( QEvent::KeyboardLayoutChange              , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::DynamicPropertyChange             , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::TabletEnterProximity              , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::TabletLeaveProximity              , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::NonClientAreaMouseMove            , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::NonClientAreaMouseButtonPress     , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::NonClientAreaMouseButtonRelease   , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::NonClientAreaMouseButtonDblClick  , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::MacSizeChange                     , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ContentsRectChange                , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::GraphicsSceneResize               , "hb_QGraphicsSceneResizeEvent"      , hbqt_gcAllocate_QGraphicsSceneResizeEvent );
-   hbqt_events_register_createobj( QEvent::GraphicsSceneMove                 , "hb_QGraphicsSceneMoveEvent"        , hbqt_gcAllocate_QGraphicsSceneMoveEvent );
-   hbqt_events_register_createobj( QEvent::CursorChange                      , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::ToolTipChange                     , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::GrabMouse                         , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::UngrabMouse                       , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::GrabKeyboard                      , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
-   hbqt_events_register_createobj( QEvent::UngrabKeyboard                    , "hb_QEvent"                         , hbqt_gcAllocate_QEvent );
+   hbqt_events_register_createobj( QEvent::MenubarUpdated                    , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::GraphicsSceneMouseMove            , "hb_QGraphicsSceneMouseEvent"       );
+   hbqt_events_register_createobj( QEvent::GraphicsSceneMousePress           , "hb_QGraphicsSceneMouseEvent"       );
+   hbqt_events_register_createobj( QEvent::GraphicsSceneMouseRelease         , "hb_QGraphicsSceneMouseEvent"       );
+   hbqt_events_register_createobj( QEvent::GraphicsSceneMouseDoubleClick     , "hb_QGraphicsSceneMouseEvent"       );
+   hbqt_events_register_createobj( QEvent::GraphicsSceneContextMenu          , "hb_QGraphicsSceneContextMenuEvent" );
+   hbqt_events_register_createobj( QEvent::GraphicsSceneHoverEnter           , "hb_QGraphicsSceneHoverEvent"       );
+   hbqt_events_register_createobj( QEvent::GraphicsSceneHoverMove            , "hb_QGraphicsSceneHoverEvent"       );
+   hbqt_events_register_createobj( QEvent::GraphicsSceneHoverLeave           , "hb_QGraphicsSceneHoverEvent"       );
+   hbqt_events_register_createobj( QEvent::GraphicsSceneHelp                 , "hb_QHelpEvent"                     );
+   hbqt_events_register_createobj( QEvent::GraphicsSceneDragEnter            , "hb_QGraphicsSceneDragDropEvent"    );
+   hbqt_events_register_createobj( QEvent::GraphicsSceneDragMove             , "hb_QGraphicsSceneDragDropEvent"    );
+   hbqt_events_register_createobj( QEvent::GraphicsSceneDragLeave            , "hb_QGraphicsSceneDragDropEvent"    );
+   hbqt_events_register_createobj( QEvent::GraphicsSceneDrop                 , "hb_QGraphicsSceneDragDropEvent"    );
+   hbqt_events_register_createobj( QEvent::GraphicsSceneWheel                , "hb_QGraphicsSceneWheelEvent"       );
+   hbqt_events_register_createobj( QEvent::KeyboardLayoutChange              , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::DynamicPropertyChange             , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::TabletEnterProximity              , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::TabletLeaveProximity              , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::NonClientAreaMouseMove            , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::NonClientAreaMouseButtonPress     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::NonClientAreaMouseButtonRelease   , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::NonClientAreaMouseButtonDblClick  , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::MacSizeChange                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ContentsRectChange                , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::GraphicsSceneResize               , "hb_QGraphicsSceneResizeEvent"      );
+   hbqt_events_register_createobj( QEvent::GraphicsSceneMove                 , "hb_QGraphicsSceneMoveEvent"        );
+   hbqt_events_register_createobj( QEvent::CursorChange                      , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::ToolTipChange                     , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::GrabMouse                         , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::UngrabMouse                       , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::GrabKeyboard                      , "hb_QEvent"                         );
+   hbqt_events_register_createobj( QEvent::UngrabKeyboard                    , "hb_QEvent"                         );
 }
 
 /*----------------------------------------------------------------------*/
