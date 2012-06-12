@@ -1,3 +1,4 @@
+   #pragma linenumber=on
 /*
  * $Id$
  */
@@ -765,9 +766,160 @@ STATIC PROCEDURE hbmk_COMP_Setup( cARCH, cCOMP, cBasePath )
 
    RETURN
 
+STATIC FUNCTION hbmk_new()
+   LOCAL hbmk[ _HBMK_MAX_ ]
+
+   hbmk[ _HBMK_cBUILD ] := ""
+
+   hbmk[ _HBMK_lStopAfterInit ] := .F.
+   hbmk[ _HBMK_lStopAfterHarbour ] := .F.
+
+   hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_OK
+
+   hbmk[ _HBMK_cWorkDir ] := NIL
+
+   hbmk[ _HBMK_lCreateLib ] := .F.
+   Set_lCreateDyn( hbmk, .F. )
+   hbmk[ _HBMK_lCreateImpLib ] := .F.
+   hbmk[ _HBMK_lCreatePPO ] := .F.
+   hbmk[ _HBMK_lCreateHRB ] := .F.
+
+   hbmk[ _HBMK_lDynVM ] := .F.
+
+   hbmk[ _HBMK_lQuiet ] := .F.
+   hbmk[ _HBMK_lInfo ] := .F.
+   hbmk[ _HBMK_nMaxCol ] := MaxCol()
+
+   hbmk[ _HBMK_cPLAT ] := ""
+   hbmk[ _HBMK_cCOMP ] := ""
+
+   hbmk[ _HBMK_lCPP ] := NIL
+   hbmk[ _HBMK_lGUI ] := .F.
+   hbmk[ _HBMK_lMT ] := .F.
+   hbmk[ _HBMK_lPIC ] := .F.
+   hbmk[ _HBMK_lDEBUG ] := .F.
+   hbmk[ _HBMK_nHEAD ] := _HEAD_FULL
+   hbmk[ _HBMK_lREBUILD ] := .F.
+   hbmk[ _HBMK_lCLEAN ] := .F.
+   hbmk[ _HBMK_lTRACE ] := .F.
+   hbmk[ _HBMK_lDONTEXEC ] := .F.
+   hbmk[ _HBMK_nHBMODE ] := _HBMODE_NATIVE
+   hbmk[ _HBMK_lSHAREDDIST ] := NIL
+   hbmk[ _HBMK_lNULRDD ] := .F.
+   hbmk[ _HBMK_lMAP ] := .F.
+   hbmk[ _HBMK_lBEEP ] := .F.
+   hbmk[ _HBMK_lSTRIP ] := .F.
+   hbmk[ _HBMK_lOPTIM ] := .T.
+   hbmk[ _HBMK_nWARN ] := _WARN_YES
+   hbmk[ _HBMK_nCOMPR ] := _COMPR_OFF
+   hbmk[ _HBMK_lRUN ] := .F.
+   hbmk[ _HBMK_lINC ] := .F.
+   hbmk[ _HBMK_lREBUILDPO ] := .F.
+   hbmk[ _HBMK_lMINIPO ] := .F.
+   hbmk[ _HBMK_nCONF ] := _CONF_RELEASE
+   hbmk[ _HBMK_lIGNOREERROR ] := .F.
+   hbmk[ _HBMK_lIMPLIB ] := .F.
+   hbmk[ _HBMK_lHBCPPMM ] := .F.
+   hbmk[ _HBMK_aVAR ] := {}
+   hbmk[ _HBMK_hDEP ] := { => }
+   hbmk[ _HBMK_hAUTOHBC ] := { => }
+   hbmk[ _HBMK_hAUTOHBCFOUND ] := { => }
+   hbmk[ _HBMK_aDEPTHBC ] := {}
+   hbmk[ _HBMK_lDEPIMPLIB ] := .T.
+
+   hb_HSetCaseMatch( hbmk[ _HBMK_hDEP ], .F. )
+
+   hbmk[ _HBMK_lBLDFLGP ] := .F.
+   hbmk[ _HBMK_lBLDFLGC ] := .F.
+   hbmk[ _HBMK_lBLDFLGL ] := .F.
+
+   hbmk[ _HBMK_hPLUGINHRB ] := { => }
+   hbmk[ _HBMK_hPLUGINVars ] := { => }
+   hbmk[ _HBMK_aPLUGINPars ] := {}
+   hbmk[ _HBMK_hPLUGINExt ] := { => }
+
+   hb_HSetCaseMatch( hbmk[ _HBMK_hPLUGINExt ], .F. )
+
+   hbmk[ _HBMK_lDEBUGTIME ] := .F.
+   hbmk[ _HBMK_lDEBUGINC ] := .F.
+   hbmk[ _HBMK_lDEBUGSTUB ] := .F.
+   hbmk[ _HBMK_lDEBUGI18N ] := .F.
+   hbmk[ _HBMK_lDEBUGDEPD ] := .F.
+   hbmk[ _HBMK_lDEBUGPARS ] := .F.
+
+   hbmk[ _HBMK_nCmd_Esc ] := NIL
+   hbmk[ _HBMK_nScr_Esc ] := NIL
+   hbmk[ _HBMK_nCmd_FNF ] := NIL
+
+   hbmk[ _HBMK_hDEPTSDIR ] := { => }
+   hbmk[ _HBMK_hDEPTMACRO ] := { => }
+
+   hbmk[ _HBMK_lInstForce ] := .F.
+   hbmk[ _HBMK_lAutoHBM ] := .T.
+   hbmk[ _HBMK_lContainer ] := .F.
+   hbmk[ _HBMK_lShowLevel ] := .F.
+
+   hbmk[ _HBMK_aLINK ] := {}
+
+   hbmk[ _HBMK_cC ] := ""
+   hbmk[ _HBMK_cCPP ] := ""
+
+   hbmk[ _HBMK_aINCPATH ] := {}
+   hbmk[ _HBMK_aLIBPATH ] := {}
+
+   RETURN hbmk
+
+STATIC PROCEDURE hbmk_init_stage2( hbmk )
+
+   hbmk[ _HBMK_aPRG ] := {}
+   hbmk[ _HBMK_aC ] := {}
+   hbmk[ _HBMK_aCPP ] := {}
+   hbmk[ _HBMK_hDEPTS ] := { => }
+   hbmk[ _HBMK_aOPTPRG ] := {}
+   hbmk[ _HBMK_aOPTC ] := {}
+   hbmk[ _HBMK_aOPTCUSER ] := {}
+   hbmk[ _HBMK_aOPTCX ] := {}
+   hbmk[ _HBMK_aOPTCPPX ] := {}
+   hbmk[ _HBMK_aOPTRES ] := {}
+   hbmk[ _HBMK_aOPTL ] := {}
+   hbmk[ _HBMK_aOPTLPOST ] := {}
+   hbmk[ _HBMK_aOPTA ] := {}
+   hbmk[ _HBMK_aOPTD ] := {}
+   hbmk[ _HBMK_aOPTDPOST ] := {}
+   hbmk[ _HBMK_aOPTI ] := {}
+   hbmk[ _HBMK_aRESSRC ] := {}
+   hbmk[ _HBMK_aRESCMP ] := {}
+   hbmk[ _HBMK_aLIBUSER ] := {}
+   hbmk[ _HBMK_aLIBUSERFWK ] := {}
+   hbmk[ _HBMK_aLIBUSERGT ] := {}
+   hbmk[ _HBMK_aLIBUSERSYS ] := {}
+   hbmk[ _HBMK_aLIBUSERSYSPRE ] := {}
+   hbmk[ _HBMK_aLIBFILTEROUT ] := {}
+   hbmk[ _HBMK_aOBJUSER ] := {}
+   hbmk[ _HBMK_aGT ] := {}
+   hbmk[ _HBMK_aICON ] := {}
+   hbmk[ _HBMK_cMANIFEST ] := NIL
+   hbmk[ _HBMK_aIMPLIBSRC ] := {}
+   hbmk[ _HBMK_aDEF ] := {}
+   hbmk[ _HBMK_aINSTFILE ] := {}
+   hbmk[ _HBMK_aREQUEST ] := {}
+   hbmk[ _HBMK_cPROGDIR ] := NIL
+   hbmk[ _HBMK_cPROGNAME ] := NIL
+   hbmk[ _HBMK_cFIRST ] := NIL
+   hbmk[ _HBMK_aPO ] := {}
+   hbmk[ _HBMK_cHBL ] := NIL
+   hbmk[ _HBMK_cHBLDir ] := ""
+   hbmk[ _HBMK_cPO ] := NIL
+   hbmk[ _HBMK_aLNG ] := {}
+   hbmk[ _HBMK_aINSTPATH ] := {}
+   hbmk[ _HBMK_lWINUNI ] := .F.
+   hbmk[ _HBMK_cHBX ] := NIL
+
+   RETURN
+
 FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
-   LOCAL hbmk[ _HBMK_MAX_ ]
+   LOCAL hbmk
 
    LOCAL aLIB_BASE_EXTERN
    LOCAL aLIB_BASE_DEBUG
@@ -913,8 +1065,6 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL aOBJLIST
    LOCAL cHarbourDyn
 
-   LOCAL lFound
-
    LOCAL lSkipBuild := .F.
    LOCAL lStopAfterCComp := .F.
    LOCAL lAcceptCFlag := .F.
@@ -958,100 +1108,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       s_cSecToken := StrZero( hb_rand32(), 10, 0 )
    ENDIF
 
-   hbmk[ _HBMK_cBUILD ] := ""
-
-   hbmk[ _HBMK_lStopAfterInit ] := .F.
-   hbmk[ _HBMK_lStopAfterHarbour ] := .F.
-
-   hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_OK
-
-   hbmk[ _HBMK_cWorkDir ] := NIL
-
-   hbmk[ _HBMK_lCreateLib ] := .F.
-   Set_lCreateDyn( hbmk, .F. )
-   hbmk[ _HBMK_lCreateImpLib ] := .F.
-   hbmk[ _HBMK_lCreatePPO ] := .F.
-   hbmk[ _HBMK_lCreateHRB ] := .F.
-
-   hbmk[ _HBMK_lDynVM ] := .F.
-
-   hbmk[ _HBMK_lQuiet ] := .F.
-   hbmk[ _HBMK_lInfo ] := .F.
-   hbmk[ _HBMK_nMaxCol ] := MaxCol()
-
-   hbmk[ _HBMK_cPLAT ] := ""
-   hbmk[ _HBMK_cCOMP ] := ""
-
-   hbmk[ _HBMK_lCPP ] := NIL
-   hbmk[ _HBMK_lGUI ] := .F.
-   hbmk[ _HBMK_lMT ] := .F.
-   hbmk[ _HBMK_lPIC ] := .F.
-   hbmk[ _HBMK_lDEBUG ] := .F.
-   hbmk[ _HBMK_nHEAD ] := _HEAD_FULL
-   hbmk[ _HBMK_lREBUILD ] := .F.
-   hbmk[ _HBMK_lCLEAN ] := .F.
-   hbmk[ _HBMK_lTRACE ] := .F.
-   hbmk[ _HBMK_lDONTEXEC ] := .F.
-   hbmk[ _HBMK_nHBMODE ] := _HBMODE_NATIVE
-   hbmk[ _HBMK_lSHAREDDIST ] := NIL
-   hbmk[ _HBMK_lNULRDD ] := .F.
-   hbmk[ _HBMK_lMAP ] := .F.
-   hbmk[ _HBMK_lBEEP ] := .F.
-   hbmk[ _HBMK_lSTRIP ] := .F.
-   hbmk[ _HBMK_lOPTIM ] := .T.
-   hbmk[ _HBMK_nWARN ] := _WARN_YES
-   hbmk[ _HBMK_nCOMPR ] := _COMPR_OFF
-   hbmk[ _HBMK_lRUN ] := .F.
-   hbmk[ _HBMK_lINC ] := .F.
-   hbmk[ _HBMK_lREBUILDPO ] := .F.
-   hbmk[ _HBMK_lMINIPO ] := .F.
-   hbmk[ _HBMK_nCONF ] := _CONF_RELEASE
-   hbmk[ _HBMK_lIGNOREERROR ] := .F.
-   hbmk[ _HBMK_lIMPLIB ] := .F.
-   hbmk[ _HBMK_lHBCPPMM ] := .F.
-   hbmk[ _HBMK_aVAR ] := {}
-   hbmk[ _HBMK_hDEP ] := { => }
-   hbmk[ _HBMK_hAUTOHBC ] := { => }
-   hbmk[ _HBMK_hAUTOHBCFOUND ] := { => }
-   hbmk[ _HBMK_aDEPTHBC ] := {}
-   hbmk[ _HBMK_lDEPIMPLIB ] := .T.
-
-   hb_HSetCaseMatch( hbmk[ _HBMK_hDEP ], .F. )
-
-   hbmk[ _HBMK_lBLDFLGP ] := .F.
-   hbmk[ _HBMK_lBLDFLGC ] := .F.
-   hbmk[ _HBMK_lBLDFLGL ] := .F.
-
-   hbmk[ _HBMK_hPLUGINHRB ] := { => }
-   hbmk[ _HBMK_hPLUGINVars ] := { => }
-   hbmk[ _HBMK_aPLUGINPars ] := {}
-   hbmk[ _HBMK_hPLUGINExt ] := { => }
-
-   hb_HSetCaseMatch( hbmk[ _HBMK_hPLUGINExt ], .F. )
-
-   hbmk[ _HBMK_lDEBUGTIME ] := .F.
-   hbmk[ _HBMK_lDEBUGINC ] := .F.
-   hbmk[ _HBMK_lDEBUGSTUB ] := .F.
-   hbmk[ _HBMK_lDEBUGI18N ] := .F.
-   hbmk[ _HBMK_lDEBUGDEPD ] := .F.
-   hbmk[ _HBMK_lDEBUGPARS ] := .F.
-
-   hbmk[ _HBMK_nCmd_Esc ] := NIL
-   hbmk[ _HBMK_nScr_Esc ] := NIL
-   hbmk[ _HBMK_nCmd_FNF ] := NIL
-
-   hbmk[ _HBMK_hDEPTSDIR ] := { => }
-   hbmk[ _HBMK_hDEPTMACRO ] := { => }
-
-   hbmk[ _HBMK_lInstForce ] := .F.
-   hbmk[ _HBMK_lAutoHBM ] := .T.
-   hbmk[ _HBMK_lContainer ] := .F.
-   hbmk[ _HBMK_lShowLevel ] := .F.
-
-   hbmk[ _HBMK_aLINK ] := {}
-
-   hbmk[ _HBMK_cC ] := ""
-   hbmk[ _HBMK_cCPP ] := ""
+   hbmk := hbmk_new()
 
    hbmk[ _HBMK_aArgs ] := aArgs
    hbmk[ _HBMK_nArgTarget ] := nArgTarget
@@ -1781,9 +1838,6 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ENDIF
    ENDIF
 
-   hbmk[ _HBMK_aINCPATH ] := {}
-   hbmk[ _HBMK_aLIBPATH ] := {}
-
    IF Empty( hbmk[ _HBMK_cCPU ] )
       hbmk[ _HBMK_cCPU ] := hbmk_CPU( hbmk )
    ENDIF
@@ -2026,54 +2080,13 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Process command line */
 
-   hbmk[ _HBMK_aPRG ] := {}
-   hbmk[ _HBMK_aC ] := {}
-   hbmk[ _HBMK_aCPP ] := {}
-   hbmk[ _HBMK_hDEPTS ] := { => }
-   hbmk[ _HBMK_aOPTPRG ] := {}
-   hbmk[ _HBMK_aOPTC ] := {}
-   hbmk[ _HBMK_aOPTCUSER ] := {}
-   hbmk[ _HBMK_aOPTCX ] := {}
-   hbmk[ _HBMK_aOPTCPPX ] := {}
-   hbmk[ _HBMK_aOPTRES ] := {}
-   hbmk[ _HBMK_aOPTL ] := {}
-   hbmk[ _HBMK_aOPTLPOST ] := {}
-   hbmk[ _HBMK_aOPTA ] := {}
-   hbmk[ _HBMK_aOPTD ] := {}
-   hbmk[ _HBMK_aOPTDPOST ] := {}
-   hbmk[ _HBMK_aOPTI ] := {}
+   hbmk_init_stage2( hbmk )
+
    l_aOPTRUN := {}
-   hbmk[ _HBMK_aRESSRC ] := {}
-   hbmk[ _HBMK_aRESCMP ] := {}
-   hbmk[ _HBMK_aLIBUSER ] := {}
-   hbmk[ _HBMK_aLIBUSERFWK ] := {}
-   hbmk[ _HBMK_aLIBUSERGT ] := {}
-   hbmk[ _HBMK_aLIBUSERSYS ] := {}
-   hbmk[ _HBMK_aLIBUSERSYSPRE ] := {}
-   hbmk[ _HBMK_aLIBFILTEROUT ] := {}
-   hbmk[ _HBMK_aOBJUSER ] := {}
-   hbmk[ _HBMK_aGT ] := {}
-   hbmk[ _HBMK_aICON ] := {}
-   hbmk[ _HBMK_cMANIFEST ] := NIL
-   hbmk[ _HBMK_aIMPLIBSRC ] := {}
-   hbmk[ _HBMK_aDEF ] := {}
-   hbmk[ _HBMK_aINSTFILE ] := {}
-   hbmk[ _HBMK_aREQUEST ] := {}
    l_aOBJA := {}
-   hbmk[ _HBMK_cPROGDIR ] := NIL
-   hbmk[ _HBMK_cPROGNAME ] := NIL
    l_cLIBSELF := NIL
    l_cIMPLIBDIR := NIL
    l_cIMPLIBNAME := NIL
-   hbmk[ _HBMK_cFIRST ] := NIL
-   hbmk[ _HBMK_aPO ] := {}
-   hbmk[ _HBMK_cHBL ] := NIL
-   hbmk[ _HBMK_cHBLDir ] := ""
-   hbmk[ _HBMK_cPO ] := NIL
-   hbmk[ _HBMK_aLNG ] := {}
-   hbmk[ _HBMK_aINSTPATH ] := {}
-   hbmk[ _HBMK_lWINUNI ] := .F.
-   hbmk[ _HBMK_cHBX ] := NIL
 
    aParams := {}
 
@@ -2150,7 +2163,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    NEXT
 
    /* Process automatic control files. */
-   HBC_ProcessAll( hbmk )
+   HBC_ProcessAuto( hbmk )
 
    /* Process command line (2nd pass) */
    FOR EACH aParam IN aParams
@@ -3073,28 +3086,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cParam := tmp1 := MacroProc( hbmk, cParam, aParam[ _PAR_cFileName ] )
          cParam := PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
-            lFound := .F.
-            IF hb_FileExists( cParam )
-               lFound := .T.
-            ELSE
-               FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
-                  IF hb_FileExists( hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cParam, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cParam ) )
-                     cParam := hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cParam, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cParam )
-                     lFound := .T.
-                     EXIT
-                  ENDIF
-               NEXT
-            ENDIF
-
-            IF lFound
-               cParam := hb_PathNormalize( cParam )
-
-               IF hbmk[ _HBMK_lInfo ]
-                  _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cParam ) )
-               ENDIF
-
-               HBC_ProcessOne( hbmk, cParam, 1 )
-            ELSE
+            IF ! HBC_Find( hbmk, cParam )
                IF Empty( aParam[ _PAR_cFileName ] )
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s" ), tmp1 ) )
                ELSE
@@ -5279,34 +5271,13 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          FOR EACH cParam IN hbmk[ _HBMK_hAUTOHBCFOUND ]
 
             IF ! Empty( cParam )
-               tmp1 := cParam
-               lFound := .F.
-               IF hb_FileExists( cParam )
-                  lFound := .T.
+               IF Left( cParam:__enumKey(), 1 ) == "."
+                  _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Triggered by #require directive: %1$s" ), cParam ) )
                ELSE
-                  FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
-                     IF hb_FileExists( hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cParam, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cParam ) )
-                        cParam := hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cParam, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cParam )
-                        lFound := .T.
-                        EXIT
-                     ENDIF
-                  NEXT
+                  _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Triggered by '%1$s' header: %2$s" ), cParam:__enumKey(), cParam ) )
                ENDIF
-
-               IF lFound
-                  cParam := hb_PathNormalize( cParam )
-
-                  IF hbmk[ _HBMK_lInfo ]
-                     IF Left( cParam:__enumKey(), 1 ) == "."
-                        _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing (triggered by #require directive): %1$s" ), cParam ) )
-                     ELSE
-                        _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing (triggered by '%1$s' header): %2$s" ), cParam:__enumKey(), cParam ) )
-                     ENDIF
-                  ENDIF
-
-                  HBC_ProcessOne( hbmk, cParam, 1 )
-               ELSE
-                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s" ), tmp1 ) )
+               IF ! HBC_Find( hbmk, cParam )
+                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s" ), cParam ) )
                ENDIF
             ENDIF
          NEXT
@@ -9432,7 +9403,32 @@ STATIC FUNCTION FNameHasWildcard( cFileName )
    RETURN "?" $ cFileName .OR. ;
           "*" $ cFileName
 
-STATIC PROCEDURE HBC_ProcessAll( hbmk )
+STATIC FUNCTION HBC_Find( hbmk, cFile, nNesting )
+   LOCAL cLibPath
+   LOCAL lFound
+
+   hb_default( @nNesting, 1 )
+
+   lFound := .F.
+   IF hb_FileExists( cFile )
+      lFound := .T.
+   ELSE
+      FOR EACH cLibPath IN hbmk[ _HBMK_aLIBPATH ]
+         IF hb_FileExists( hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, cLibPath, cFile, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cFile ) )
+            cFile := hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, cLibPath, cFile, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cFile )
+            lFound := .T.
+            EXIT
+         ENDIF
+      NEXT
+   ENDIF
+
+   IF lFound
+      HBC_ProcessOne( hbmk, hb_PathNormalize( cFile ), nNesting )
+   ENDIF
+
+   RETURN lFound
+
+STATIC PROCEDURE HBC_ProcessAuto( hbmk )
    LOCAL cDir
    LOCAL cFileName
 
@@ -9468,6 +9464,10 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
    LOCAL cName
    LOCAL lFound
    LOCAL tmp, tmp1
+
+   IF hbmk[ _HBMK_lInfo ]
+      _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cFileName ) )
+   ENDIF
 
    IF ! hbmk_hb_FileExists( cFileName )
       _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Opening: %1$s" ), cFileName ) )
@@ -9566,28 +9566,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             IF hb_FNameExt( cItem ) == ".hbc"
                cItem := PathMakeAbsolute( PathSepToSelf( cItem ), hb_FNameDir( cFileName ) )
                IF nNestingLevel < _HBMK_NEST_MAX
-                  lFound := .F.
-                  IF hb_FileExists( cItem )
-                     lFound := .T.
-                  ELSE
-                     FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
-                        IF hb_FileExists( hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cItem, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cItem ) )
-                           cItem := hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cItem, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cItem )
-                           lFound := .T.
-                           EXIT
-                        ENDIF
-                     NEXT
-                  ENDIF
-
-                  IF lFound
-                     cItem := hb_PathNormalize( cItem )
-
-                     IF hbmk[ _HBMK_lInfo ]
-                        _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cItem ) )
-                     ENDIF
-
-                     HBC_ProcessOne( hbmk, cItem, nNestingLevel + 1 )
-                  ELSE
+                  IF ! HBC_Find( hbmk, cItem, nNestingLevel + 1 )
                      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s (referenced from %2$s)" ), tmp1, cFileName ) )
                   ENDIF
                ELSE
@@ -9640,28 +9619,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                   cItem := hb_FNameExtSet( cItem, ".hbc" )
                ENDIF
 
-               lFound := .F.
-               IF hb_FileExists( cItem )
-                  lFound := .T.
-               ELSE
-                  FOR EACH tmp IN hbmk[ _HBMK_aLIBPATH ]
-                     IF hb_FileExists( hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cItem, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cItem ) )
-                        cItem := hb_DirSepAdd( PathSepToSelf( MacroProc( hbmk, tmp, cItem, _MACRO_LATE_PREFIX ) ) ) + hb_FNameNameExt( cItem )
-                        lFound := .T.
-                        EXIT
-                     ENDIF
-                  NEXT
-               ENDIF
-
-               IF lFound
-                  cItem := hb_PathNormalize( cItem )
-
-                  IF hbmk[ _HBMK_lInfo ]
-                     _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cItem ) )
-                  ENDIF
-
-                  HBC_ProcessOne( hbmk, cItem, nNestingLevel + 1 )
-               ELSE
+               IF ! HBC_Find( hbmk, cItem, nNestingLevel + 1 )
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s (referenced from %2$s)" ), tmp1, cFileName ) )
                ENDIF
             ELSE
@@ -12103,11 +12061,16 @@ STATIC FUNCTION hbmk_CoreHeaderFilesMinimal()
 
 STATIC PROCEDURE __hbrun_minimal( cFile, ... )
    LOCAL aDynamic := {}
+   LOCAL hbmk
+   LOCAL cHBC
+   LOCAL tmp
+   LOCAL aINCPATH
 
    IF ! Empty( cFile := FindInPath( cFile ) )
+
       SWITCH Lower( hb_FNameExt( cFile ) )
       CASE ".hb"
-         __hbrun_LoadExtDynamicFromSource( aDynamic, cFile )
+
          /* NOTE: Assumptions:
                   - one dynamic libs belongs to one .hbc file
                   - dynamic libs will reference and automatically load all their dependencies
@@ -12116,13 +12079,42 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
                   - 3rd party addons can be loaded, too if they are installed into the Harbour dir tree
                   - dynamic libs are installed into bin dir.
                   - (this list is to be finalized) */
-         /* TODO: Find .hbc file. Load .hbc file. Process .hbc references.
+
+         __hbrun_LoadExtDynamicFromSource( aDynamic, cFile )
+
+         aINCPATH := { "-I" + hb_FNameDir( cFile ) }
+
+         /* NOTE: Find .hbc file. Load .hbc file. Process .hbc references.
                   Pick include paths. Load libs. Add include paths to include
                   path list. For this hbrun needs to know where Harbour tree
-                  is located. Once matured, copy the loading method to hbrun. */
-         __hbrun_extensions_dynamic_init( aDynamic )
+                  is located. Once matured, copy this loading method to hbrun,
+                  OR migrate hbrun functionality into hbmk2, with contribs
+                  loaded solely dynamically. */
+
+         /* NOTE: - most filters and macros in .hbc files won't work in
+                    this mode */
+
+         IF ! Empty( aDynamic )
+
+            hbmk := hbmk_new()
+            hbmk_init_stage2( hbmk )
+            __hbrun_detect_setup( hbmk )
+
+            FOR EACH tmp IN aDynamic
+               IF ! HBC_Find( hbmk, cHBC := hb_FNameExtSet( tmp, ".hbc" ) )
+                  OutErr( hb_StrFormat( I_( "Warning: Cannot find %1$s" ), cHBC ) + hb_eol() )
+               ENDIF
+            NEXT
+
+            FOR EACH tmp IN hbmk[ _HBMK_aINCPATH ]
+               AAdd( aINCPATH, "-I" + tmp )
+            NEXT
+
+            __hbrun_extensions_dynamic_init( aDynamic )
+         ENDIF
+
          cFile := hb_compileBuf( hbmk_CoreHeaderFilesMinimal(), hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
-                                 "-I" + hb_FNameDir( cFile ), "-D" + "__HBSCRIPT__HBRUN", cFile )
+                                 hb_ArrayToParams( aINCPATH ), "-D" + "__HBSCRIPT__HBRUN", cFile )
          IF cFile == NIL
             ErrorLevel( 1 )
             EXIT
@@ -12192,6 +12184,155 @@ STATIC PROCEDURE __hbrun_extensions_dynamic_load( cName )
          OutErr( hb_StrFormat( "Cannot load %1$s. Requires -shared hbrun build.", cName ) + hb_eol() )
       ENDIF
    ENDIF
+
+   RETURN
+
+/* It's a reduced copy of similar logic in hbmk() function
+   TODO: merge these into one */
+STATIC PROCEDURE __hbrun_detect_setup( hbmk )
+
+   LOCAL l_cHB_INSTALL_PREFIX
+
+   LOCAL l_cHB_INSTALL_BIN := ""
+   LOCAL l_cHB_INSTALL_LIB := ""
+   LOCAL l_cHB_INSTALL_LI3 := ""
+   LOCAL l_cHB_INSTALL_DYN := ""
+   LOCAL l_cHB_INSTALL_INC := ""
+   LOCAL l_cHB_INSTALL_ADD
+
+   LOCAL tmp
+
+   /* Autodetect Harbour environment */
+
+   l_cHB_INSTALL_PREFIX := hb_DirSepAdd( hb_DirBase() ) + ".."
+
+   IF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" +;
+                                   hb_ps() + "hbvm.h" )
+      /* do nothing */
+   /* Detect special non-installed dir layout (after simple 'make') */
+   ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + ".." + hb_ps() + "include" +;
+                                       hb_ps() + "hbvm.h" )
+      l_cHB_INSTALL_PREFIX := hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + ".." + hb_ps()
+   /* Detect special multi-host dir layout */
+   ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + "include" +;
+                                       hb_ps() + "hbvm.h" )
+      l_cHB_INSTALL_PREFIX := hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps()
+   /* Detect non-installed dir layout with build name containing sub-dirs */
+   ELSEIF PathSepCount( hbmk[ _HBMK_cBUILD ] ) > 0 .AND. ;
+          hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + Replicate( ".." + hb_ps(), PathSepCount( hbmk[ _HBMK_cBUILD ] ) ) + ".." + hb_ps() + ".." + hb_ps() + "include" +;
+                                       hb_ps() + "hbvm.h" )
+      l_cHB_INSTALL_PREFIX := hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + Replicate( ".." + hb_ps(), PathSepCount( hbmk[ _HBMK_cBUILD ] ) ) + ".." + hb_ps() + ".." + hb_ps()
+   /* Detect special *nix dir layout (/bin, /lib/harbour, /lib64/harbour, /include/harbour) */
+   ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" +;
+                                   hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) +;
+                                   hb_ps() + "hbvm.h" )
+      IF Empty( l_cHB_INSTALL_BIN )
+         l_cHB_INSTALL_BIN := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "bin" )
+      ENDIF
+      IF Empty( l_cHB_INSTALL_LIB )
+         IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "lib64" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) ) )
+            l_cHB_INSTALL_LIB := tmp
+         ELSE
+            l_cHB_INSTALL_LIB := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "lib" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
+         ENDIF
+      ENDIF
+      IF Empty( l_cHB_INSTALL_INC )
+         l_cHB_INSTALL_INC := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
+      ENDIF
+   ELSEIF ! hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + hb_ps() + "include" +;
+                                         hb_ps() + "hbvm.h" )
+      _hbmk_OutErr( hbmk, I_( "Error: Failed to autodetect Harbour installation.\nRun this tool from its original location inside the Harbour installation." ) )
+      RETURN
+   ENDIF
+
+   /* Finish detecting bin/lib/include dirs */
+
+   IF Empty( l_cHB_INSTALL_BIN )
+      /* Autodetect multi-compiler/platform bin structure (also .dlls are in bin dir on non-*nix platforms) */
+      IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "bin" +;
+                                                hb_ps() + hbmk[ _HBMK_cPLAT ] +;
+                                                hb_ps() + hbmk[ _HBMK_cCOMP ] +;
+                                                PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) )
+         l_cHB_INSTALL_BIN := tmp
+      ELSE
+         l_cHB_INSTALL_BIN := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "bin" )
+      ENDIF
+   ENDIF
+   IF Empty( l_cHB_INSTALL_LIB )
+      /* Autodetect multi-compiler/platform lib structure */
+      IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "lib" +;
+                                                hb_ps() + hbmk[ _HBMK_cPLAT ] +;
+                                                hb_ps() + hbmk[ _HBMK_cCOMP ] +;
+                                                PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) )
+         l_cHB_INSTALL_LIB := tmp
+      ELSE
+         l_cHB_INSTALL_LIB := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "lib" )
+      ENDIF
+   ENDIF
+   IF Empty( l_cHB_INSTALL_INC )
+      l_cHB_INSTALL_INC := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" )
+   ENDIF
+
+   IF l_cHB_INSTALL_DYN == NIL
+      IF HBMK_ISPLAT( "win|wce|os2|dos|cygwin" )
+         l_cHB_INSTALL_DYN := l_cHB_INSTALL_BIN
+      ELSE
+         l_cHB_INSTALL_DYN := l_cHB_INSTALL_LIB
+      ENDIF
+   ENDIF
+
+   /* Make a copy to hbmk structure so that we can use it in deeper
+      functions. The only reason I kept the local version is to
+      keep above code parts easier to read. [vszakats] */
+   hbmk[ _HBMK_cHB_INSTALL_BIN ] :=                      hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_BIN ) )
+   hbmk[ _HBMK_cHB_INSTALL_LIB ] := l_cHB_INSTALL_LIB := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_LIB ) )
+   hbmk[ _HBMK_cHB_INSTALL_LI3 ] := l_cHB_INSTALL_LI3 := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_LI3 ) )
+   hbmk[ _HBMK_cHB_INSTALL_DYN ] := l_cHB_INSTALL_DYN := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_DYN ) )
+   hbmk[ _HBMK_cHB_INSTALL_INC ] := l_cHB_INSTALL_INC := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_INC ) )
+
+   /* Add main Harbour library dir to lib path list */
+   AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], l_cHB_INSTALL_LIB )
+   /* Locally hosted 3rd party binary libraries */
+   AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], l_cHB_INSTALL_LI3 )
+   IF ! Empty( l_cHB_INSTALL_DYN ) .AND. !( l_cHB_INSTALL_DYN == l_cHB_INSTALL_LIB )
+      AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], l_cHB_INSTALL_DYN )
+   ENDIF
+
+   /* Add main Harbour header dir to header path list */
+   AAddNotEmpty( hbmk[ _HBMK_aINCPATH ], l_cHB_INSTALL_INC )
+
+   /* Add custom search paths for .hbc files */
+   IF ! Empty( l_cHB_INSTALL_ADD := GetEnv( "HB_INSTALL_ADDONS" ) )
+      #if defined( __PLATFORM__WINDOWS ) .OR. ;
+          defined( __PLATFORM__DOS ) .OR. ;
+          defined( __PLATFORM__OS2 )
+      FOR EACH tmp IN hb_ATokens( l_cHB_INSTALL_ADD, hb_osPathListSeparator(), .T., .T. )
+      #else
+      FOR EACH tmp IN hb_ATokens( l_cHB_INSTALL_ADD, hb_osPathListSeparator() )
+      #endif
+         IF ! Empty( tmp )
+            AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( PathSepToSelf( tmp ) ) ) + "%{hb_name}" )
+         ENDIF
+      NEXT
+   ENDIF
+   /* Add default search paths for .hbc files */
+   l_cHB_INSTALL_ADD := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) )
+   AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_INSTALL_ADD + "contrib" + hb_ps() + "%{hb_name}" )
+   AAdd( hbmk[ _HBMK_aLIBPATH ], l_cHB_INSTALL_ADD + "addons" + hb_ps() + "%{hb_name}" )
+#if defined( __PLATFORM__UNIX )
+   IF hb_DirExists( "/opt/harbour" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/contrib/%{hb_name}" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/addons/%{hb_name}" )
+   ENDIF
+   IF hb_DirExists( "/usr/local/share/harbour" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/share/harbour/contrib/%{hb_name}" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/share/harbour/addons/%{hb_name}" )
+   ENDIF
+   IF hb_DirExists( "/usr/share/harbour" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/share/harbour/contrib/%{hb_name}" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/share/harbour/addons/%{hb_name}" )
+   ENDIF
+#endif
 
    RETURN
 

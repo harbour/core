@@ -124,7 +124,6 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    LOCAL xBreakVal, lBroke := .F.
    LOCAL err
    LOCAL OldMargin
-   LOCAL cExt
 
    ::aBandToPrint := {} // Array(5)
    ::nCurrentCol := 1
@@ -140,10 +139,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       /* NOTE: CA-Cl*pper does an RTrim() on the filename here,
                but in Harbour we're using _SET_TRIMFILENAME. [vszakats] */
       IF Set( _SET_DEFEXTENSIONS )
-         hb_FNameSplit( cLBLName, NIL, NIL, @cExt )
-         IF Empty( cExt )
-            cLBLName += ".lbl"
-         ENDIF
+         cLBLName := hb_FNameExtSetDef( cLBLName, ".lbl" )
       ENDIF
    ENDIF
 

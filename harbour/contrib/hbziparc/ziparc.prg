@@ -83,16 +83,12 @@ PROCEDURE hb_SetZipComment( cComment )
 FUNCTION hb_GetZipComment( cFileName )
    LOCAL hUnzip
    LOCAL cComment
-   LOCAL cExt
 
    IF Set( _SET_DEFEXTENSIONS )
-      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-      IF Empty( cExt )
-         cFileName += ".zip"
-      ENDIF
+      cFileName := hb_FNameExtSetDef( cFileName, ".zip" )
    ENDIF
 
-   IF !Empty( hUnzip := hb_UnzipOpen( cFileName ) )
+   IF ! Empty( hUnzip := hb_UnzipOpen( cFileName ) )
       hb_UnzipGlobalInfo( hUnzip, NIL, @cComment )
       hb_UnzipClose( hUnzip )
    ELSE
@@ -104,16 +100,12 @@ FUNCTION hb_GetZipComment( cFileName )
 FUNCTION hb_GetFileCount( cFileName )
    LOCAL hUnzip
    LOCAL nEntries
-   LOCAL cExt
 
    IF Set( _SET_DEFEXTENSIONS )
-      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-      IF Empty( cExt )
-         cFileName += ".zip"
-      ENDIF
+      cFileName := hb_FNameExtSetDef( cFileName, ".zip" )
    ENDIF
 
-   IF !Empty( hUnzip := hb_UnzipOpen( cFileName ) )
+   IF ! Empty( hUnzip := hb_UnzipOpen( cFileName ) )
       hb_UnzipGlobalInfo( hUnzip, @nEntries, NIL )
       hb_UnzipClose( hUnzip )
    ELSE
@@ -125,16 +117,12 @@ FUNCTION hb_GetFileCount( cFileName )
 FUNCTION hb_ZipWithPassword( cFileName )
    LOCAL lCrypted := .F.
    LOCAL hUnzip
-   LOCAL cExt
 
    IF Set( _SET_DEFEXTENSIONS )
-      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-      IF Empty( cExt )
-         cFileName += ".zip"
-      ENDIF
+      cFileName := hb_FNameExtSetDef( cFileName, ".zip" )
    ENDIF
 
-   IF !Empty( hUnzip := hb_UnzipOpen( cFileName ) )
+   IF ! Empty( hUnzip := hb_UnzipOpen( cFileName ) )
 
       IF hb_UnzipFileFirst( hUnzip ) == 0
          hb_UnzipFileInfo( hUnzip, NIL, NIL, NIL, NIL, NIL, NIL, NIL, NIL, @lCrypted )
@@ -149,7 +137,6 @@ FUNCTION hb_GetFilesInZip( cFileName, lVerbose )
 
    LOCAL hUnzip
    LOCAL nErr
-   LOCAL cExt
 
    LOCAL dDate
    LOCAL cTime
@@ -165,13 +152,10 @@ FUNCTION hb_GetFilesInZip( cFileName, lVerbose )
    LOCAL aFiles := {}
 
    IF Set( _SET_DEFEXTENSIONS )
-      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-      IF Empty( cExt )
-         cFileName += ".zip"
-      ENDIF
+      cFileName := hb_FNameExtSetDef( cFileName, ".zip" )
    ENDIF
 
-   IF !Empty( hUnzip := hb_UnzipOpen( cFileName ) )
+   IF ! Empty( hUnzip := hb_UnzipOpen( cFileName ) )
 
       hb_default( @lVerbose, .F. )
 
@@ -296,17 +280,14 @@ FUNCTION hb_ZipFile( cFileName,;
    HB_SYMBOL_UNUSED( acExclude )
 
    IF Set( _SET_DEFEXTENSIONS )
-      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-      IF Empty( cExt )
-         cFileName += ".zip"
-      ENDIF
+      cFileName := hb_FNameExtSetDef( cFileName, ".zip" )
    ENDIF
 
    IF lOverwrite .AND. hb_FileExists( cFileName )
       FErase( cFileName )
    ENDIF
 
-   IF !Empty( hZip := hb_ZipOpen( cFileName, iif( ! lOverwrite .AND. hb_FileExists( cFileName ), HB_ZIP_OPEN_ADDINZIP, NIL ) ) )
+   IF ! Empty( hZip := hb_ZipOpen( cFileName, iif( ! lOverwrite .AND. hb_FileExists( cFileName ), HB_ZIP_OPEN_ADDINZIP, NIL ) ) )
 
       IF HB_ISSTRING( acFiles )
          acFiles := { acFiles }
@@ -408,7 +389,6 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
    LOCAL nErr
    LOCAL nPos
    LOCAL cZipName
-   LOCAL cExt
    LOCAL lExtract
 
    LOCAL hHandle
@@ -430,13 +410,10 @@ FUNCTION hb_UnzipFile( cFileName, bUpdate, lWithPath, cPassword, cPath, acFiles,
    ENDIF
 
    IF Set( _SET_DEFEXTENSIONS )
-      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-      IF Empty( cExt )
-         cFileName += ".zip"
-      ENDIF
+      cFileName := hb_FNameExtSetDef( cFileName, ".zip" )
    ENDIF
 
-   IF !Empty( hUnzip := hb_UnzipOpen( cFileName ) )
+   IF ! Empty( hUnzip := hb_UnzipOpen( cFileName ) )
 
       IF HB_ISNUMERIC( acFiles ) .OR. ;
          HB_ISSTRING( acFiles )
@@ -511,13 +488,9 @@ FUNCTION hb_ZipDeleteFiles( cFileName, acFiles )
 
    LOCAL lRetVal := .T.
    LOCAL cFileToProc
-   LOCAL cExt
 
    IF Set( _SET_DEFEXTENSIONS )
-      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-      IF Empty( cExt )
-         cFileName += ".zip"
-      ENDIF
+      cFileName := hb_FNameExtSetDef( cFileName, ".zip" )
    ENDIF
 
    IF HB_ISSTRING( acFiles )

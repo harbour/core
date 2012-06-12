@@ -14,3 +14,5 @@ hbmk2.prg
 hbmk2.%{hb_lng}.po
 -hbl=hbmk2.%{hb_lng}.hbl
 -lng=es_PE,hu_HU,pt_BR
+
+{!(HB_BUILD_DYN='no')&(win|wce|os2)}-shared

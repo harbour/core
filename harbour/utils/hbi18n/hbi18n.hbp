@@ -6,3 +6,5 @@
 
 -nulrdd
 hbi18n.prg
+
+{!(HB_BUILD_DYN='no')&(win|wce|os2)}-shared

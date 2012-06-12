@@ -61,21 +61,18 @@
 
 #define _I18N_ITEM         { "", {}, {}, .F., NIL }
 
-#define _I18N_EOL          chr( 10 )
-#define _I18N_DELIM        ( chr( 0 ) + chr( 3 ) + chr( 0 ) )
+#define _I18N_EOL          Chr( 10 )
+#define _I18N_DELIM        ( Chr( 0 ) + Chr( 3 ) + Chr( 0 ) )
 
 #define LEFTEQUAL( l, r )  ( Left( l, Len( r ) ) == r )
 
-STATIC FUNCTION __I18N_fileName( cFile )
-   LOCAL cExt
+STATIC FUNCTION __I18N_fileName( cFileName )
 
    IF Set( _SET_DEFEXTENSIONS )
-      hb_FNameSplit( cFile, NIL, NIL, @cExt )
-      IF Empty( cExt )
-         cFile += ".pot"
-      ENDIF
+      cFileName := hb_FNameExtSetDef( cFileName, ".pot" )
    ENDIF
-   RETURN cFile
+
+   RETURN cFileName
 
 
 STATIC FUNCTION __I18N_strEncode( cStr )

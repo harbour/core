@@ -69,15 +69,11 @@ CREATE CLASS UHttpdLog
 ENDCLASS
 
 METHOD New( cFileName ) CLASS UHttpdLog
-   LOCAL cExt
 
    IF HB_ISSTRING( cFileName )
 
       IF Set( _SET_DEFEXTENSIONS )
-         hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-         IF Empty( cExt )
-            cFileName += ".log"
-         ENDIF
+         cFileName := hb_FNameExtSetDef( cFileName, ".log" )
       ENDIF
 
       ::cFileName := cFileName

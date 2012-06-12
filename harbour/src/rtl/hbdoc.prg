@@ -313,16 +313,12 @@ FUNCTION __hbdoc_FilterOut( cFile )
 
 FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
    LOCAL fhnd
-   LOCAL cExt
 
    IF HB_ISSTRING( cFileName ) .AND. ;
       HB_ISARRAY( aEntry )
 
       IF Set( _SET_DEFEXTENSIONS )
-         hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-         IF Empty( cExt )
-            cFileName += _HBDOC_EXT
-         ENDIF
+         cFileName := hb_FNameExtSetDef( cFileName, _HBDOC_EXT )
       ENDIF
 
       fhnd := hb_FCreate( cFileName, FC_NORMAL, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE )
@@ -338,7 +334,6 @@ FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
 
 FUNCTION __hbdoc_LoadHBD( cFileName )
    LOCAL fhnd
-   LOCAL cExt
    LOCAL aEntry := NIL
 
    LOCAL cBuffer
@@ -346,10 +341,7 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
    IF HB_ISSTRING( cFileName )
 
       IF Set( _SET_DEFEXTENSIONS )
-         hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-         IF Empty( cExt )
-            cFileName += _HBDOC_EXT
-         ENDIF
+         cFileName := hb_FNameExtSetDef( cFileName, _HBDOC_EXT )
       ENDIF
 
       fhnd := FOpen( cFileName, FO_READ )

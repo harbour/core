@@ -69,17 +69,13 @@ CREATE CLASS TIPLOG
 ENDCLASS
 
 METHOD New( cFileName ) CLASS TIPLOG
-   LOCAL cExt
 
    IF ! HB_ISSTRING( cFileName )
       cFileName := "hbtip"
    ENDIF
 
    IF Set( _SET_DEFEXTENSIONS )
-      hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-      IF Empty( cExt )
-         cFileName += ".log"
-      ENDIF
+      cFileName := hb_FNameExtSetDef( cFileName, ".log" )
    ENDIF
 
    ::cFileName := cFileName

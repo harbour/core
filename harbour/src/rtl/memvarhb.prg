@@ -81,11 +81,8 @@ FUNCTION HB_MVSAVE( cFileName, cMask, lIncludeMask )
    LOCAL nScope
    LOCAL lMatch
 
-   LOCAL cExt
    LOCAL aVars
-
    LOCAL fhnd
-
    LOCAL tmp
 
    LOCAL oError
@@ -95,10 +92,7 @@ FUNCTION HB_MVSAVE( cFileName, cMask, lIncludeMask )
    IF HB_ISSTRING( cFileName )
 
       IF Set( _SET_DEFEXTENSIONS )
-         hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-         IF Empty( cExt )
-            cFileName += _HBMEM_EXT
-         ENDIF
+         cFileName := hb_FNameExtSetDef( cFileName, _HBMEM_EXT )
       ENDIF
 
       IF ! HB_ISSTRING( cMask ) .OR. ;
@@ -176,7 +170,6 @@ FUNCTION HB_MVRESTORE( cFileName, lAdditive, cMask, lIncludeMask )
    LOCAL cName
    LOCAL lMatch
 
-   LOCAL cExt
    LOCAL aVars
    LOCAL cBuffer
    LOCAL xValue
@@ -198,10 +191,7 @@ FUNCTION HB_MVRESTORE( cFileName, lAdditive, cMask, lIncludeMask )
       ENDIF
 
       IF Set( _SET_DEFEXTENSIONS )
-         hb_FNameSplit( cFileName, NIL, NIL, @cExt )
-         IF Empty( cExt )
-            cFileName += _HBMEM_EXT
-         ENDIF
+         cFileName := hb_FNameExtSetDef( cFileName, _HBMEM_EXT )
       ENDIF
 
       IF ! HB_ISSTRING( cFileName ) .OR. ;

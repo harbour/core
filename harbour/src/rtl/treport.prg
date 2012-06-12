@@ -206,7 +206,6 @@ METHOD New( cFrmName AS STRING,;
    LOCAL nCol, nGroup
    LOCAL xBreakVal, lBroke := .F.
    LOCAL err
-   LOCAL cExt
 
    LOCAL lAnyTotals
    LOCAL lAnySubTotals
@@ -222,10 +221,7 @@ METHOD New( cFrmName AS STRING,;
       /* NOTE: CA-Cl*pper does an RTrim() on the filename here,
                but in Harbour we're using _SET_TRIMFILENAME. */
       IF Set( _SET_DEFEXTENSIONS )
-         hb_FNameSplit( cFRMName, NIL, NIL, @cExt )
-         IF Empty( cExt )
-            cFRMName += ".frm"
-         ENDIF
+         cFRMName := hb_FNameExtSetDef( cFRMName, ".frm" )
       ENDIF
    ENDIF
 
