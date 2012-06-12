@@ -33,7 +33,7 @@
 #include "directry.ch"
 #include "hbclass.ch"
 
-#define __HBQT_REVAMP__
+//#define __HBQT_REVAMP__
 
 #define I_( x )                 hb_i18n_gettext( x )
 
