@@ -108,6 +108,9 @@
          autodetection of watcom cross-build setups, poccarm/pocc64 setups,
          clang, etc. */
 
+/* TODO: When full runner functionality, command console and make is
+         implemented. Consider renaming the tool to simply 'hb'. */
+
 /* TODO: Turn off lib grouping by default */
 
 /* TODO: Use hashes instead of arrays for input files, options */
@@ -916,6 +919,161 @@ STATIC PROCEDURE hbmk_init_stage2( hbmk )
 
    RETURN
 
+STATIC FUNCTION hbmk_harbour_dirlayout_detect( hbmk, /* @ */ l_cHB_INSTALL_PREFIX )
+   LOCAL tmp
+
+   hbmk[ _HBMK_cHB_INSTALL_LI3 ] := ""
+
+   hbmk[ _HBMK_cHB_INSTALL_BIN ] := PathSepToSelf( GetEnv( "HB_INSTALL_BIN" ) )
+   hbmk[ _HBMK_cHB_INSTALL_LIB ] := PathSepToSelf( GetEnv( "HB_INSTALL_LIB" ) )
+   hbmk[ _HBMK_cHB_INSTALL_INC ] := PathSepToSelf( GetEnv( "HB_INSTALL_INC" ) )
+
+   l_cHB_INSTALL_PREFIX := MacroProc( hbmk, PathSepToSelf( GetEnv( "HB_INSTALL_PREFIX" ) ), NIL, _MACRO_NO_PREFIX )
+   IF Empty( l_cHB_INSTALL_PREFIX )
+      l_cHB_INSTALL_PREFIX := hb_DirSepAdd( hb_DirBase() ) + ".."
+   ENDIF
+
+   IF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" +;
+                                   hb_ps() + "hbvm.h" )
+      /* do nothing */
+   /* Detect special non-installed dir layout (after simple 'make') */
+   ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + ".." + hb_ps() + "include" +;
+                                       hb_ps() + "hbvm.h" )
+      l_cHB_INSTALL_PREFIX := hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + ".." + hb_ps()
+   /* Detect special multi-host dir layout */
+   ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + "include" +;
+                                       hb_ps() + "hbvm.h" )
+      l_cHB_INSTALL_PREFIX := hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps()
+   /* Detect non-installed dir layout with build name containing sub-dirs */
+   ELSEIF PathSepCount( hbmk[ _HBMK_cBUILD ] ) > 0 .AND. ;
+          hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + Replicate( ".." + hb_ps(), PathSepCount( hbmk[ _HBMK_cBUILD ] ) ) + ".." + hb_ps() + ".." + hb_ps() + "include" +;
+                                       hb_ps() + "hbvm.h" )
+      l_cHB_INSTALL_PREFIX := hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + Replicate( ".." + hb_ps(), PathSepCount( hbmk[ _HBMK_cBUILD ] ) ) + ".." + hb_ps() + ".." + hb_ps()
+   /* Detect special *nix dir layout (/bin, /lib/harbour, /lib64/harbour, /include/harbour) */
+   ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" +;
+                                   hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) +;
+                                   hb_ps() + "hbvm.h" )
+      IF Empty( hbmk[ _HBMK_cHB_INSTALL_BIN ] )
+         hbmk[ _HBMK_cHB_INSTALL_BIN ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "bin" )
+      ENDIF
+      IF Empty( hbmk[ _HBMK_cHB_INSTALL_LIB ] )
+         IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "lib64" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) ) )
+            hbmk[ _HBMK_cHB_INSTALL_LIB ] := tmp
+         ELSE
+            hbmk[ _HBMK_cHB_INSTALL_LIB ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "lib" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
+         ENDIF
+      ENDIF
+      IF Empty( hbmk[ _HBMK_cHB_INSTALL_INC ] )
+         hbmk[ _HBMK_cHB_INSTALL_INC ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
+      ENDIF
+   ELSEIF ! hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + hb_ps() + "include" +;
+                                         hb_ps() + "hbvm.h" )
+      RETURN .F.
+   ENDIF
+
+   RETURN .T.
+
+/* This stage needs COMP and PLAT to be filled */
+STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk, l_cHB_INSTALL_PREFIX )
+   LOCAL tmp
+
+   IF Empty( hbmk[ _HBMK_cHB_INSTALL_BIN ] )
+      /* Autodetect multi-compiler/platform bin structure (also .dlls are in bin dir on non-*nix platforms) */
+      IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "bin" +;
+                                                hb_ps() + hbmk[ _HBMK_cPLAT ] +;
+                                                hb_ps() + hbmk[ _HBMK_cCOMP ] +;
+                                                PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) )
+         hbmk[ _HBMK_cHB_INSTALL_BIN ] := tmp
+      ELSE
+         hbmk[ _HBMK_cHB_INSTALL_BIN ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "bin" )
+      ENDIF
+   ENDIF
+   IF Empty( hbmk[ _HBMK_cHB_INSTALL_LIB ] )
+      /* Autodetect multi-compiler/platform lib structure */
+      IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "lib" +;
+                                                hb_ps() + hbmk[ _HBMK_cPLAT ] +;
+                                                hb_ps() + hbmk[ _HBMK_cCOMP ] +;
+                                                PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) )
+         hbmk[ _HBMK_cHB_INSTALL_LIB ] := tmp
+      ELSE
+         hbmk[ _HBMK_cHB_INSTALL_LIB ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "lib" )
+      ENDIF
+   ENDIF
+   IF Empty( hbmk[ _HBMK_cHB_INSTALL_LI3 ] )
+      IF hbmk[ _HBMK_cPLAT ] == "win" .AND. ;
+         hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "lib" +;
+                                                hb_ps() + "3rd" +;
+                                                hb_ps() + hbmk[ _HBMK_cPLAT ] +;
+                                                hb_ps() + hbmk[ _HBMK_cCOMP ] )
+         hbmk[ _HBMK_cHB_INSTALL_LI3 ] := tmp
+      ENDIF
+   ENDIF
+   IF Empty( hbmk[ _HBMK_cHB_INSTALL_INC ] )
+      hbmk[ _HBMK_cHB_INSTALL_INC ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" )
+   ENDIF
+
+   IF hbmk[ _HBMK_cHB_INSTALL_DYN ] == NIL
+      IF HBMK_ISPLAT( "win|wce|os2|dos|cygwin" )
+         hbmk[ _HBMK_cHB_INSTALL_DYN ] := hbmk[ _HBMK_cHB_INSTALL_BIN ]
+      ELSE
+         hbmk[ _HBMK_cHB_INSTALL_DYN ] := hbmk[ _HBMK_cHB_INSTALL_LIB ]
+      ENDIF
+   ENDIF
+
+   /* Make a copy to hbmk structure so that we can use it in deeper
+      functions. The only reason I kept the local version is to
+      keep above code parts easier to read. [vszakats] */
+   hbmk[ _HBMK_cHB_INSTALL_BIN ] := hb_DirSepDel( PathSepToSelf( hbmk[ _HBMK_cHB_INSTALL_BIN ] ) )
+   hbmk[ _HBMK_cHB_INSTALL_LIB ] := hb_DirSepDel( PathSepToSelf( hbmk[ _HBMK_cHB_INSTALL_LIB ] ) )
+   hbmk[ _HBMK_cHB_INSTALL_LI3 ] := hb_DirSepDel( PathSepToSelf( hbmk[ _HBMK_cHB_INSTALL_LI3 ] ) )
+   hbmk[ _HBMK_cHB_INSTALL_DYN ] := hb_DirSepDel( PathSepToSelf( hbmk[ _HBMK_cHB_INSTALL_DYN ] ) )
+   hbmk[ _HBMK_cHB_INSTALL_INC ] := hb_DirSepDel( PathSepToSelf( hbmk[ _HBMK_cHB_INSTALL_INC ] ) )
+
+   /* Add main Harbour library dir to lib path list */
+   AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], hbmk[ _HBMK_cHB_INSTALL_LIB ] )
+   /* Locally hosted 3rd party binary libraries */
+   AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], hbmk[ _HBMK_cHB_INSTALL_LI3 ] )
+   IF ! Empty( hbmk[ _HBMK_cHB_INSTALL_DYN ] ) .AND. !( hbmk[ _HBMK_cHB_INSTALL_DYN ] == hbmk[ _HBMK_cHB_INSTALL_LIB ] )
+      AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], hbmk[ _HBMK_cHB_INSTALL_DYN ] )
+   ENDIF
+
+   /* Add main Harbour header dir to header path list */
+   AAddNotEmpty( hbmk[ _HBMK_aINCPATH ], hbmk[ _HBMK_cHB_INSTALL_INC ] )
+
+   /* Add custom search paths for .hbc files */
+   IF ! Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] := GetEnv( "HB_INSTALL_ADDONS" ) )
+      #if defined( __PLATFORM__WINDOWS ) .OR. ;
+          defined( __PLATFORM__DOS ) .OR. ;
+          defined( __PLATFORM__OS2 )
+      FOR EACH tmp IN hb_ATokens( hbmk[ _HBMK_cHB_INSTALL_ADD ], hb_osPathListSeparator(), .T., .T. )
+      #else
+      FOR EACH tmp IN hb_ATokens( hbmk[ _HBMK_cHB_INSTALL_ADD ], hb_osPathListSeparator() )
+      #endif
+         IF ! Empty( tmp )
+            AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( PathSepToSelf( tmp ) ) ) + "%{hb_name}" )
+         ENDIF
+      NEXT
+   ENDIF
+   /* Add default search paths for .hbc files */
+   AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "contrib" + hb_ps() + "%{hb_name}" )
+   AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "addons" + hb_ps() + "%{hb_name}" )
+#if defined( __PLATFORM__UNIX )
+   IF hb_DirExists( "/opt/harbour" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/contrib/%{hb_name}" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/addons/%{hb_name}" )
+   ENDIF
+   IF hb_DirExists( "/usr/local/share/harbour" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/share/harbour/contrib/%{hb_name}" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/share/harbour/addons/%{hb_name}" )
+   ENDIF
+   IF hb_DirExists( "/usr/share/harbour" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/share/harbour/contrib/%{hb_name}" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/share/harbour/addons/%{hb_name}" )
+   ENDIF
+#endif
+
+   RETURN
+
 FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    LOCAL hbmk
@@ -941,11 +1099,6 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL l_cRESSTUB
 
    LOCAL l_cHB_INSTALL_PREFIX
-   LOCAL l_cHB_INSTALL_BIN
-   LOCAL l_cHB_INSTALL_LIB
-   LOCAL l_cHB_INSTALL_LI3 := ""
-   LOCAL l_cHB_INSTALL_DYN
-   LOCAL l_cHB_INSTALL_INC
 
    LOCAL l_aPRG_TO_DO
    LOCAL l_aC_TO_DO
@@ -1571,65 +1724,22 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
 
-      l_cHB_INSTALL_BIN := PathSepToSelf( GetEnv( "HB_INSTALL_BIN" ) )
-      l_cHB_INSTALL_LIB := PathSepToSelf( GetEnv( "HB_INSTALL_LIB" ) )
-      l_cHB_INSTALL_INC := PathSepToSelf( GetEnv( "HB_INSTALL_INC" ) )
-
-      l_cHB_INSTALL_PREFIX := MacroProc( hbmk, PathSepToSelf( GetEnv( "HB_INSTALL_PREFIX" ) ), NIL, _MACRO_NO_PREFIX )
-      IF Empty( l_cHB_INSTALL_PREFIX )
-         l_cHB_INSTALL_PREFIX := hb_DirSepAdd( hb_DirBase() ) + ".."
-      ENDIF
-
-      IF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" +;
-                                      hb_ps() + "hbvm.h" )
-         /* do nothing */
-      /* Detect special non-installed dir layout (after simple 'make') */
-      ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + ".." + hb_ps() + "include" +;
-                                          hb_ps() + "hbvm.h" )
-         l_cHB_INSTALL_PREFIX := hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + ".." + hb_ps()
-      /* Detect special multi-host dir layout */
-      ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + "include" +;
-                                          hb_ps() + "hbvm.h" )
-         l_cHB_INSTALL_PREFIX := hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps()
-      /* Detect non-installed dir layout with build name containing sub-dirs */
-      ELSEIF PathSepCount( hbmk[ _HBMK_cBUILD ] ) > 0 .AND. ;
-             hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + Replicate( ".." + hb_ps(), PathSepCount( hbmk[ _HBMK_cBUILD ] ) ) + ".." + hb_ps() + ".." + hb_ps() + "include" +;
-                                          hb_ps() + "hbvm.h" )
-         l_cHB_INSTALL_PREFIX := hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + Replicate( ".." + hb_ps(), PathSepCount( hbmk[ _HBMK_cBUILD ] ) ) + ".." + hb_ps() + ".." + hb_ps()
-      /* Detect special *nix dir layout (/bin, /lib/harbour, /lib64/harbour, /include/harbour) */
-      ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" +;
-                                      hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) +;
-                                      hb_ps() + "hbvm.h" )
-         IF Empty( l_cHB_INSTALL_BIN )
-            l_cHB_INSTALL_BIN := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "bin" )
-         ENDIF
-         IF Empty( l_cHB_INSTALL_LIB )
-            IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "lib64" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) ) )
-               l_cHB_INSTALL_LIB := tmp
-            ELSE
-               l_cHB_INSTALL_LIB := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "lib" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
-            ENDIF
-         ENDIF
-         IF Empty( l_cHB_INSTALL_INC )
-            l_cHB_INSTALL_INC := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
-         ENDIF
-      ELSEIF ! hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + hb_ps() + "include" +;
-                                            hb_ps() + "hbvm.h" )
-         _hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) )
+      IF ! hbmk_harbour_dirlayout_detect( hbmk, @l_cHB_INSTALL_PREFIX )
+         hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) )
          RETURN _ERRLEV_FAILHBDETECT
       ENDIF
 
       #if defined( __PLATFORM__UNIX )
          /* Detect system locations to enable shared library option by default */
          IF hbmk[ _HBMK_cPLAT ] == "beos"
-            lSysLoc := LEFTEQUAL( l_cHB_INSTALL_BIN, "/boot/common"      ) .OR. ;
-                       LEFTEQUAL( l_cHB_INSTALL_BIN, "/boot/system"      ) .OR. ;
-                       LEFTEQUAL( l_cHB_INSTALL_BIN, "/boot/home/config" ) .OR. ;
-                       AScan( ListToArray( GetEnv( "LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( l_cHB_INSTALL_LIB, tmp ) } ) > 0
+            lSysLoc := LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/common"      ) .OR. ;
+                       LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/system"      ) .OR. ;
+                       LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/home/config" ) .OR. ;
+                       AScan( ListToArray( GetEnv( "LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_LIB ], tmp ) } ) > 0
          ELSE
-            lSysLoc := LEFTEQUAL( l_cHB_INSTALL_BIN, "/usr/local/bin" ) .OR. ;
-                       LEFTEQUAL( l_cHB_INSTALL_BIN, "/usr/bin"       ) .OR. ;
-                       AScan( ListToArray( GetEnv( "LD_LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( l_cHB_INSTALL_LIB, tmp ) } ) > 0
+            lSysLoc := LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/usr/local/bin" ) .OR. ;
+                       LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/usr/bin"       ) .OR. ;
+                       AScan( ListToArray( GetEnv( "LD_LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_LIB ], tmp ) } ) > 0
          ENDIF
       #else
          lSysLoc := .F.
@@ -1637,9 +1747,10 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    ELSE
       lSysLoc := .F.
 
-      l_cHB_INSTALL_BIN := ""
-      l_cHB_INSTALL_LIB := ""
-      l_cHB_INSTALL_INC := ""
+      hbmk[ _HBMK_cHB_INSTALL_LI3 ] := ""
+      hbmk[ _HBMK_cHB_INSTALL_BIN ] := ""
+      hbmk[ _HBMK_cHB_INSTALL_LIB ] := ""
+      hbmk[ _HBMK_cHB_INSTALL_INC ] := ""
       l_cHB_INSTALL_PREFIX := ""
    ENDIF
 
@@ -1740,7 +1851,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDIF
          ELSE
             IF Empty( hbmk[ _HBMK_cCOMP ] ) .AND. ! Empty( aCOMPDET )
-               lDoSupportDetection := Empty( l_cHB_INSTALL_LIB ) .AND. ;
+               lDoSupportDetection := Empty( hbmk[ _HBMK_cHB_INSTALL_LIB ] ) .AND. ;
                                       hb_DirExists( hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "lib" + hb_ps() + hbmk[ _HBMK_cPLAT ] )
                /* Check compilers */
                FOR tmp := 1 TO Len( aCOMPDET )
@@ -1957,100 +2068,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Finish detecting bin/lib/include dirs */
 
-   IF Empty( l_cHB_INSTALL_BIN )
-      /* Autodetect multi-compiler/platform bin structure (also .dlls are in bin dir on non-*nix platforms) */
-      IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "bin" +;
-                                                hb_ps() + hbmk[ _HBMK_cPLAT ] +;
-                                                hb_ps() + hbmk[ _HBMK_cCOMP ] +;
-                                                PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) )
-         l_cHB_INSTALL_BIN := tmp
-      ELSE
-         l_cHB_INSTALL_BIN := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "bin" )
-      ENDIF
-   ENDIF
-   IF Empty( l_cHB_INSTALL_LIB )
-      /* Autodetect multi-compiler/platform lib structure */
-      IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "lib" +;
-                                                hb_ps() + hbmk[ _HBMK_cPLAT ] +;
-                                                hb_ps() + hbmk[ _HBMK_cCOMP ] +;
-                                                PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) )
-         l_cHB_INSTALL_LIB := tmp
-      ELSE
-         l_cHB_INSTALL_LIB := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "lib" )
-      ENDIF
-   ENDIF
-   IF Empty( l_cHB_INSTALL_LI3 )
-      IF hbmk[ _HBMK_cPLAT ] == "win" .AND. ;
-         hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "lib" +;
-                                                hb_ps() + "3rd" +;
-                                                hb_ps() + hbmk[ _HBMK_cPLAT ] +;
-                                                hb_ps() + hbmk[ _HBMK_cCOMP ] )
-         l_cHB_INSTALL_LI3 := tmp
-      ENDIF
-   ENDIF
-   IF Empty( l_cHB_INSTALL_INC )
-      l_cHB_INSTALL_INC := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" )
-   ENDIF
+   hbmk_harbour_dirlayout_init( hbmk, l_cHB_INSTALL_PREFIX )
 
-   IF l_cHB_INSTALL_DYN == NIL
-      IF HBMK_ISPLAT( "win|wce|os2|dos|cygwin" )
-         l_cHB_INSTALL_DYN := l_cHB_INSTALL_BIN
-      ELSE
-         l_cHB_INSTALL_DYN := l_cHB_INSTALL_LIB
-      ENDIF
-   ENDIF
-
-   /* Make a copy to hbmk structure so that we can use it in deeper
-      functions. The only reason I kept the local version is to
-      keep above code parts easier to read. [vszakats] */
-   hbmk[ _HBMK_cHB_INSTALL_BIN ] := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_BIN ) )
-   hbmk[ _HBMK_cHB_INSTALL_LIB ] := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_LIB ) )
-   hbmk[ _HBMK_cHB_INSTALL_LI3 ] := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_LI3 ) )
-   hbmk[ _HBMK_cHB_INSTALL_DYN ] := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_DYN ) )
-   hbmk[ _HBMK_cHB_INSTALL_INC ] := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_INC ) )
-
-   /* Add main Harbour library dir to lib path list */
-   AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], hbmk[ _HBMK_cHB_INSTALL_LIB ] )
-   /* Locally hosted 3rd party binary libraries */
-   AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], hbmk[ _HBMK_cHB_INSTALL_LI3 ] )
-   IF ! Empty( hbmk[ _HBMK_cHB_INSTALL_DYN ] ) .AND. !( hbmk[ _HBMK_cHB_INSTALL_DYN ] == hbmk[ _HBMK_cHB_INSTALL_LIB ] )
-      AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], hbmk[ _HBMK_cHB_INSTALL_DYN ] )
-   ENDIF
-
-   /* Add main Harbour header dir to header path list */
-   AAddNotEmpty( hbmk[ _HBMK_aINCPATH ], hbmk[ _HBMK_cHB_INSTALL_INC ] )
-
-   /* Add custom search paths for .hbc files */
-   IF ! Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] := GetEnv( "HB_INSTALL_ADDONS" ) )
-      #if defined( __PLATFORM__WINDOWS ) .OR. ;
-          defined( __PLATFORM__DOS ) .OR. ;
-          defined( __PLATFORM__OS2 )
-      FOR EACH tmp IN hb_ATokens( hbmk[ _HBMK_cHB_INSTALL_ADD ], hb_osPathListSeparator(), .T., .T. )
-      #else
-      FOR EACH tmp IN hb_ATokens( hbmk[ _HBMK_cHB_INSTALL_ADD ], hb_osPathListSeparator() )
-      #endif
-         IF ! Empty( tmp )
-            AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( PathSepToSelf( tmp ) ) ) + "%{hb_name}" )
-         ENDIF
-      NEXT
-   ENDIF
-   /* Add default search paths for .hbc files */
-   AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "contrib" + hb_ps() + "%{hb_name}" )
-   AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "addons" + hb_ps() + "%{hb_name}" )
-#if defined( __PLATFORM__UNIX )
-   IF hb_DirExists( "/opt/harbour" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/contrib/%{hb_name}" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/addons/%{hb_name}" )
-   ENDIF
-   IF hb_DirExists( "/usr/local/share/harbour" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/share/harbour/contrib/%{hb_name}" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/share/harbour/addons/%{hb_name}" )
-   ENDIF
-   IF hb_DirExists( "/usr/share/harbour" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/share/harbour/contrib/%{hb_name}" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/share/harbour/addons/%{hb_name}" )
-   ENDIF
-#endif
+   /* Display detection results */
 
    IF hbmk[ _HBMK_lInfo ]
       _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Using Harbour: %1$s %2$s %3$s %4$s" ), hbmk[ _HBMK_cHB_INSTALL_BIN ], hbmk[ _HBMK_cHB_INSTALL_INC ], hbmk[ _HBMK_cHB_INSTALL_LIB ], hbmk[ _HBMK_cHB_INSTALL_DYN ] ) )
@@ -12060,6 +12080,7 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
    LOCAL hbmk
    LOCAL cHBC
    LOCAL tmp
+   LOCAL l_cHB_INSTALL_PREFIX
    LOCAL aINCPATH
 
    SetUILang( GetUILang() )
@@ -12071,10 +12092,14 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
 
          hbmk := hbmk_new()
          hbmk_init_stage2( hbmk )
+         IF ! hbmk_harbour_dirlayout_detect( hbmk, @l_cHB_INSTALL_PREFIX )
+            OutErr( I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) + _OUT_EOL )
+            RETURN
+         ENDIF
          hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
          hbmk[ _HBMK_cPLAT ] := hb_Version( HB_VERSION_BUILD_PLAT )
          hbmk[ _HBMK_cCPU ] := hb_Version( HB_VERSION_CPU )
-         __hbrun_detect_setup( hbmk )
+         hbmk_harbour_dirlayout_init( hbmk, l_cHB_INSTALL_PREFIX )
 
          /* NOTE: Assumptions:
                   - one dynamic libs belongs to one .hbc file (true for dynamic builds in contrib)
@@ -12214,153 +12239,6 @@ STATIC FUNCTION __hbrun_extensions_get_list()
    ASort( aName )
 
    RETURN aName
-
-/* It's a reduced copy of similar logic in hbmk() function
-   TODO: merge these into one */
-STATIC PROCEDURE __hbrun_detect_setup( hbmk )
-
-   LOCAL l_cHB_INSTALL_PREFIX
-
-   LOCAL l_cHB_INSTALL_BIN := ""
-   LOCAL l_cHB_INSTALL_LIB := ""
-   LOCAL l_cHB_INSTALL_LI3 := ""
-   LOCAL l_cHB_INSTALL_DYN := ""
-   LOCAL l_cHB_INSTALL_INC := ""
-
-   LOCAL tmp
-
-   /* Autodetect Harbour environment */
-
-   l_cHB_INSTALL_PREFIX := hb_DirSepAdd( hb_DirBase() ) + ".."
-
-   IF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" +;
-                                   hb_ps() + "hbvm.h" )
-      /* do nothing */
-   /* Detect special non-installed dir layout (after simple 'make') */
-   ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + ".." + hb_ps() + "include" +;
-                                       hb_ps() + "hbvm.h" )
-      l_cHB_INSTALL_PREFIX := hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + ".." + hb_ps()
-   /* Detect special multi-host dir layout */
-   ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + "include" +;
-                                       hb_ps() + "hbvm.h" )
-      l_cHB_INSTALL_PREFIX := hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps()
-   /* Detect non-installed dir layout with build name containing sub-dirs */
-   ELSEIF PathSepCount( hbmk[ _HBMK_cBUILD ] ) > 0 .AND. ;
-          hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + Replicate( ".." + hb_ps(), PathSepCount( hbmk[ _HBMK_cBUILD ] ) ) + ".." + hb_ps() + ".." + hb_ps() + "include" +;
-                                       hb_ps() + "hbvm.h" )
-      l_cHB_INSTALL_PREFIX := hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + Replicate( ".." + hb_ps(), PathSepCount( hbmk[ _HBMK_cBUILD ] ) ) + ".." + hb_ps() + ".." + hb_ps()
-   /* Detect special *nix dir layout (/bin, /lib/harbour, /lib64/harbour, /include/harbour) */
-   ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" +;
-                                   hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) +;
-                                   hb_ps() + "hbvm.h" )
-      IF Empty( l_cHB_INSTALL_BIN )
-         l_cHB_INSTALL_BIN := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "bin" )
-      ENDIF
-      IF Empty( l_cHB_INSTALL_LIB )
-         IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "lib64" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) ) )
-            l_cHB_INSTALL_LIB := tmp
-         ELSE
-            l_cHB_INSTALL_LIB := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "lib" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
-         ENDIF
-      ENDIF
-      IF Empty( l_cHB_INSTALL_INC )
-         l_cHB_INSTALL_INC := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
-      ENDIF
-   ELSEIF ! hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + hb_ps() + "include" +;
-                                         hb_ps() + "hbvm.h" )
-      _hbmk_OutErr( hbmk, I_( "Error: Failed to autodetect Harbour installation.\nRun this tool from its original location inside the Harbour installation." ) )
-      RETURN
-   ENDIF
-
-   /* Finish detecting bin/lib/include dirs */
-
-   IF Empty( l_cHB_INSTALL_BIN )
-      /* Autodetect multi-compiler/platform bin structure (also .dlls are in bin dir on non-*nix platforms) */
-      IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "bin" +;
-                                                hb_ps() + hbmk[ _HBMK_cPLAT ] +;
-                                                hb_ps() + hbmk[ _HBMK_cCOMP ] +;
-                                                PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) )
-         l_cHB_INSTALL_BIN := tmp
-      ELSE
-         l_cHB_INSTALL_BIN := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "bin" )
-      ENDIF
-   ENDIF
-   IF Empty( l_cHB_INSTALL_LIB )
-      /* Autodetect multi-compiler/platform lib structure */
-      IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "lib" +;
-                                                hb_ps() + hbmk[ _HBMK_cPLAT ] +;
-                                                hb_ps() + hbmk[ _HBMK_cCOMP ] +;
-                                                PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) )
-         l_cHB_INSTALL_LIB := tmp
-      ELSE
-         l_cHB_INSTALL_LIB := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "lib" )
-      ENDIF
-   ENDIF
-   IF Empty( l_cHB_INSTALL_INC )
-      l_cHB_INSTALL_INC := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" )
-   ENDIF
-
-   IF l_cHB_INSTALL_DYN == NIL
-      IF HBMK_ISPLAT( "win|wce|os2|dos|cygwin" )
-         l_cHB_INSTALL_DYN := l_cHB_INSTALL_BIN
-      ELSE
-         l_cHB_INSTALL_DYN := l_cHB_INSTALL_LIB
-      ENDIF
-   ENDIF
-
-   /* Make a copy to hbmk structure so that we can use it in deeper
-      functions. The only reason I kept the local version is to
-      keep above code parts easier to read. [vszakats] */
-   hbmk[ _HBMK_cHB_INSTALL_BIN ] := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_BIN ) )
-   hbmk[ _HBMK_cHB_INSTALL_LIB ] := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_LIB ) )
-   hbmk[ _HBMK_cHB_INSTALL_LI3 ] := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_LI3 ) )
-   hbmk[ _HBMK_cHB_INSTALL_DYN ] := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_DYN ) )
-   hbmk[ _HBMK_cHB_INSTALL_INC ] := hb_DirSepDel( PathSepToSelf( l_cHB_INSTALL_INC ) )
-
-   /* Add main Harbour library dir to lib path list */
-   AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], hbmk[ _HBMK_cHB_INSTALL_LIB ] )
-   /* Locally hosted 3rd party binary libraries */
-   AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], hbmk[ _HBMK_cHB_INSTALL_LI3 ] )
-   IF ! Empty( hbmk[ _HBMK_cHB_INSTALL_DYN ] ) .AND. !( hbmk[ _HBMK_cHB_INSTALL_DYN ] == hbmk[ _HBMK_cHB_INSTALL_LIB ] )
-      AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], hbmk[ _HBMK_cHB_INSTALL_DYN ] )
-   ENDIF
-
-   /* Add main Harbour header dir to header path list */
-   AAddNotEmpty( hbmk[ _HBMK_aINCPATH ], hbmk[ _HBMK_cHB_INSTALL_INC ] )
-
-   /* Add custom search paths for .hbc files */
-   IF ! Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] := GetEnv( "HB_INSTALL_ADDONS" ) )
-      #if defined( __PLATFORM__WINDOWS ) .OR. ;
-          defined( __PLATFORM__DOS ) .OR. ;
-          defined( __PLATFORM__OS2 )
-      FOR EACH tmp IN hb_ATokens( hbmk[ _HBMK_cHB_INSTALL_ADD ], hb_osPathListSeparator(), .T., .T. )
-      #else
-      FOR EACH tmp IN hb_ATokens( hbmk[ _HBMK_cHB_INSTALL_ADD ], hb_osPathListSeparator() )
-      #endif
-         IF ! Empty( tmp )
-            AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( PathSepToSelf( tmp ) ) ) + "%{hb_name}" )
-         ENDIF
-      NEXT
-   ENDIF
-   /* Add default search paths for .hbc files */
-   AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "contrib" + hb_ps() + "%{hb_name}" )
-   AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "addons" + hb_ps() + "%{hb_name}" )
-#if defined( __PLATFORM__UNIX )
-   IF hb_DirExists( "/opt/harbour" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/contrib/%{hb_name}" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/addons/%{hb_name}" )
-   ENDIF
-   IF hb_DirExists( "/usr/local/share/harbour" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/share/harbour/contrib/%{hb_name}" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/share/harbour/addons/%{hb_name}" )
-   ENDIF
-   IF hb_DirExists( "/usr/share/harbour" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/share/harbour/contrib/%{hb_name}" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/share/harbour/addons/%{hb_name}" )
-   ENDIF
-#endif
-
-   RETURN
 
 /* ------------------------------------------------------------- */
 
