@@ -1,7 +1,0 @@
-#
-# $Id$
-#
-
-{win}libs=hbwin
-libs=hbct
-mt=yes
