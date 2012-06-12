@@ -110,7 +110,7 @@ static void hbqt_bind_init( void* cargo )
 
 PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szClassName, PHBQT_DEL_FUNC pDelFunc, int iFlags )
 {
-   #if 1
+   #if 0
    char * pname = ( char* ) hb_xgrab( 200 );
    char * pname1 = ( char* ) hb_xgrab( 200 );
    HB_TRACE( HB_TR_DEBUG, ( ".................HARBOUR_REQUEST_BIND_OBJECT( %p, %i, %s, %s, %s ).................", qtObject, iFlags, szClassName, hb_procname( 0, pname, HB_TRUE ),  hb_procname( 1, pname1, HB_TRUE ) ) );
@@ -310,7 +310,6 @@ void * hbqt_bindGetQtObject( PHB_ITEM pObject )
       }
       HBQT_BIND_UNLOCK
    }
-
    return qtObject;
 }
 
@@ -374,7 +373,7 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
                else
                {
                   void * oobj = bind->qtObject;
-                  HB_TRACE( HB_TR_DEBUG, ( "HARBOUR_DESTROY_ABOUT_TO..........( %p )", oobj ) );
+                  HB_TRACE( HB_TR_DEBUG, ( "HARBOUR_DESTROY_ABOUT_TO..........( %p )........ %s", oobj, bind->szClassName ) );
                   * bind_ptr = bind->next;
                   if( bind->pDelFunc != NULL )
                   {
@@ -389,14 +388,7 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
             }
             else
             {   
-               if( fObject )
-               {
-                  HB_TRACE( HB_TR_DEBUG, ( "HARBOUR_DESTROYED_NOT_OWNED_BY_HARBOUR( %p )...%s", bind->qtObject, obj->metaObject()->className() ) );
-               }   
-               else   
-               {   
-                  HB_TRACE( HB_TR_DEBUG, ( "HARBOUR_DESTROYED_NOT_OWNED_BY_HARBOUR( %p )", bind->qtObject ) );
-               }   
+               HB_TRACE( HB_TR_DEBUG, ( "HARBOUR_DESTROYED_NOT_OWNED_BY_HARBOUR( %p )...%s", bind->qtObject, bind->szClassName ) );
                * bind_ptr = bind->next;
                hb_xfree( bind ); 
             }   
@@ -505,7 +497,10 @@ void hbqt_bindSetOwner( void * qtObject, HB_BOOL fOwner )
    {
       if( bind->qtObject == qtObject )
       {
-         bind->iFlags = ( fOwner ? bind->iFlags | HBQT_BIT_OWNER : bind->iFlags & ~( HBQT_BIT_OWNER ) );
+         if( fOwner == HB_TRUE )
+            bind->iFlags = bind->iFlags | HBQT_BIT_OWNER;
+         else
+            bind->iFlags = bind->iFlags & ~( HBQT_BIT_OWNER );   
          break;
       }
       bind = bind->next;

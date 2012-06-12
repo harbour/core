@@ -248,7 +248,12 @@ void hbqt_errRT_ARG( void )
 void hbqt_par_detach_ptrGC( int iParam )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hbqt_par_detach_ptrGC( %d )", iParam ) );
-
+#ifdef __HBQT_REVAMP__
+   if( HB_ISOBJECT( iParam ) )
+   {
+      hbqt_bindSetOwner( hbqt_bindGetQtObject( hb_param( iParam, HB_IT_OBJECT ) ), HB_FALSE ); 
+   }   
+#else
    if( HB_ISOBJECT( iParam ) )
    {
       PHB_ITEM pObj = hb_param( iParam, HB_IT_ANY );
@@ -263,6 +268,7 @@ void hbqt_par_detach_ptrGC( int iParam )
       if( p && p->ph )
          p->bNew = false;
    }
+#endif   
 }
 
 HB_FUNC( __HBQT_ISPOINTER )
