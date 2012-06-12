@@ -55,7 +55,7 @@ QDateTimeEdit.qth
 # QDeclarativeImageProvider.qth
 # QDeclarativeItem.qth
 # QDeclarativeListReference.qth
-QDeclarativeParserStatus.qth
+# QDeclarativeParserStatus.qth
 # QDeclarativeProperty.qth
 # QDeclarativePropertyMap.qth
 # QDeclarativePropertyValueSource.qth
