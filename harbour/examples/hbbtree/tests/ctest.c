@@ -38,7 +38,7 @@
 
 #include "hb_btree.h"
 
-static void display( const char *cKey, LONG lData, HB_BOOL NewLine )
+static void display( const char *cKey, HB_LONG lData, HB_BOOL NewLine )
 {
    int n;
    char buffer[ 80 ];

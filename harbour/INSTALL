@@ -1328,7 +1328,7 @@ HARBOUR
        the problem using official stable or nightly Harbour build.
        Do not post executables and other binary files. If your source contains
        non-ASCII (national, accented, special) chars, clearly mark the
-       codepage/encoding used and attach the files compressed with zip.
+       codepage/encoding used or attach the files compressed with zip.
        (use the extension .zip)
        See more on self-contained examples: http://sscce.org/
    13. If your example involves compatibility components, make sure to test
