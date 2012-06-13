@@ -4,9 +4,9 @@
 
 /*******
  *
- *  amfdecode.c by Aleksander Czajczynski <hb/at/fki.pl> 2011-2012
+ *  by Aleksander Czajczynski <hb/at/fki.pl> 2011-2012
  *
- *  amfdecode.c - Decoding AMF3 to Harbour items
+ *  Decoding AMF3 to Harbour items
  *
  *  Contains portions from
  *  Dave Thompson's MIT licensed
@@ -38,8 +38,43 @@ typedef struct
 } amfContext;
 
 static HB_BOOL amf3_getItem( amfContext * context, PHB_ITEM pItem );
-extern HB_BOOL is_cls_externalizable( HB_USHORT uiClass );
-extern PHB_ITEM cls_externalizable_instance( PHB_ITEM pClassFuncStr );
+extern HB_BOOL hbamf_is_cls_externalizable( HB_USHORT uiClass );
+
+static PHB_ITEM hbamf_cls_externalizable_instance( PHB_ITEM pClassFuncStr )
+{
+   PHB_DYNS pSymbol = hb_dynsymGet( hb_itemGetCPtr( pClassFuncStr ) );
+
+   if( pSymbol )
+   {
+      PHB_ITEM pRetCopy = hb_itemNew( NULL );
+      PHB_ITEM pNewItem = hb_itemNew( NULL );
+      hb_itemMove( pRetCopy, hb_stackReturnItem() );
+
+      hb_vmPushDynSym( pSymbol );
+      hb_vmPushNil();
+      hb_vmDo( 0 );
+
+      hb_objSendMsg( hb_stackReturnItem(), "NEW", 0 );
+
+      hb_itemMove( pNewItem, hb_stackReturnItem() );
+      hb_itemMove( hb_stackReturnItem(), pRetCopy );
+
+      hb_itemRelease( pRetCopy );
+
+      if( pNewItem )
+      {
+         if( ! HB_IS_OBJECT( pNewItem ) )
+         {
+            hb_itemRelease( pNewItem );
+            pNewItem = NULL;
+         }
+      }
+
+      return pNewItem;
+   }
+
+   return NULL;
+}
 
 static char * readByte( amfContext * context )
 {
@@ -595,7 +630,7 @@ static PHB_ITEM class_def_from_classname( /* amfContext * context, */ PHB_ITEM p
    hb_itemRelease( pKey );
    hb_itemRelease( pValue );
 
-   if( is_cls_externalizable( uiClass ) )
+   if( hbamf_is_cls_externalizable( uiClass ) )
    {
       pKey     = hb_itemPutC( NULL, "EXTERNALIZABLE_CLASS_DEF" );
       pValue   = hb_itemNew( NULL );
@@ -1017,7 +1052,7 @@ static HB_BOOL amf3_deserialize_obj( amfContext * context, PHB_ITEM pItem, HB_BO
          return HB_FALSE;
       }
 
-      pValue = cls_externalizable_instance( pValue );
+      pValue = hbamf_cls_externalizable_instance( pValue );
       if( ! pValue )
       {
          hb_itemRelease( pClass );

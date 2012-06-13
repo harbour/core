@@ -12786,7 +12786,7 @@ STATIC PROCEDURE __hbrun_Exec( cCommand )
    LOCAL pHRB, cHRB, cFunc, bBlock, cEol, nRowMin
 
    cEol := hb_eol()
-   cFunc := "STATIC FUNC __HBDOT()" + cEol + ;
+   cFunc := "STATIC FUNCTION __HBDOT()" + cEol + ;
             "RETURN {||" + cEol + ;
             "   " + cCommand + cEol + ;
             "   RETURN __MVSETBASE()" + cEol + ;

@@ -4,11 +4,10 @@
 
 /*******
  *
- *  amfencode.c by
  *  Ilina Stoilkovska <anili100/at/gmail.com> 2011
  *  Aleksander Czajczynski <hb/at/fki.pl> 2011-2012
  *
- *  amfencode.c - Encoding Harbour items to AMF3
+ *  Encoding Harbour items to AMF3
  *
  *  Contains portions from
  *  Dave Thompson's MIT licensed
@@ -50,8 +49,27 @@ typedef struct
 } amfContext;
 
 static HB_BOOL amf3_encode( amfContext * context, PHB_ITEM pItem );
-extern void _ref_realItemPtr( PHB_ITEM pKey, PHB_ITEM pItem );
-extern HB_BOOL is_cls_externalizable( HB_USHORT uiClass );
+extern HB_BOOL hbamf_is_cls_externalizable( HB_USHORT uiClass );
+
+static void _ref_realItemPtr( PHB_ITEM pKey, PHB_ITEM pItem )
+{
+   if( HB_IS_STRING( pItem ) )
+   {
+      hb_itemPutPtr( pKey, ( void * ) hb_itemGetCPtr( pItem ) );
+   }
+   else if( HB_IS_ARRAY( pItem ) )
+   {
+      hb_itemPutPtr( pKey, hb_arrayId( pItem ) );
+   }
+   else if( HB_IS_HASH( pItem ) )
+   {
+      hb_itemPutPtr( pKey, hb_hashId( pItem ) );
+   }
+   else if( HB_IS_DATETIME( pItem ) )
+   {
+      hb_itemCopy( pKey, pItem );
+   }
+}
 
 static int bufferGrow( amfContext * context, int len )
 {
@@ -210,11 +228,11 @@ static HB_BOOL amf3_write_int( amfContext * context, PHB_ITEM pItem )
 }
 
 /*
-   static HB_BOOL amf3_encode_float(amfContext * context, PHB_ITEM pItem)
-   {
+static HB_BOOL amf3_encode_float(amfContext * context, PHB_ITEM pItem)
+{
    float n = (float)hb_itemGetND(pItem);
    return amfX_encode_double(context, (double)n);
-   }
+}
  */
 
 static HB_BOOL amf3_encode_nil( amfContext * context )
@@ -392,8 +410,8 @@ static HB_BOOL amf3_serialize_string( amfContext * context, PHB_ITEM pItem )
 }
 
 /*
-   static HB_BOOL amf3_serialize_object_as_string(amfContext * context, PHB_ITEM pItem)
-   {
+static HB_BOOL amf3_serialize_object_as_string(amfContext * context, PHB_ITEM pItem)
+{
    PHB_ITEM pStr;
    HB_BOOL result;
 
@@ -407,7 +425,8 @@ static HB_BOOL amf3_serialize_string( amfContext * context, PHB_ITEM pItem )
 
    hb_itemRelease(pStr);
    return result;
-   }
+}
+
  */
 
 static HB_BOOL amf3_encode_hash( amfContext * context, PHB_ITEM pItem )
@@ -450,6 +469,7 @@ static HB_BOOL amf3_encode_hash( amfContext * context, PHB_ITEM pItem )
       return HB_FALSE;
 
    if( nIntKeys > 0 )
+   {
       for( i = 1; i <= len; i++ )
       {
          pKey  = hb_hashGetKeyAt( pItem, i );
@@ -460,6 +480,7 @@ static HB_BOOL amf3_encode_hash( amfContext * context, PHB_ITEM pItem )
                return HB_FALSE;
          }
       }
+   }
 
    return HB_TRUE;
 }
@@ -758,7 +779,7 @@ static PHB_ITEM class_def_from_class( /* amfContext * context, */ PHB_ITEM pItem
    hb_itemRelease( pKey );
    hb_itemRelease( pValue );
 
-   if( is_cls_externalizable( uiClass ) )
+   if( hbamf_is_cls_externalizable( uiClass ) )
    {
       pKey     = hb_itemPutC( NULL, "EXTERNALIZABLE_CLASS_DEF" );
       pValue   = hb_itemNew( NULL );
@@ -1131,7 +1152,6 @@ static void context_release( amfContext * context, amfContext * outer_context )
       else
          hb_itemRelease( context->strstr_ref );
    }
-
 }
 
 HB_FUNC( AMF3_FROMWA )
@@ -1395,7 +1415,6 @@ HB_FUNC( AMF3_FROMWA )
    }
    else
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
-
 }
 
 HB_FUNC( AMF3_ENCODE )

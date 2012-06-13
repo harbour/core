@@ -4,10 +4,10 @@
 
 /*******
  *
- *  amfstdio.c by Ilina Stoilkovska <anili100/at/gmail.com> 2011
- *                Aleksander Czajczynski <hb/at/fki.pl> 2012
+ *  by Ilina Stoilkovska <anili100/at/gmail.com> 2011
+ *     Aleksander Czajczynski <hb/at/fki.pl> 2012
  *
- *  amfstdio.c - Reading AMFIO data from standard input pipe
+ *  Reading AMFIO data from standard input pipe
  *
  *
  ********/
@@ -96,5 +96,4 @@ HB_FUNC( AMFSTDIO_READ )
    hb_xfree( pszStrIn );
    hb_xfree( pszLenPrefix );
    hb_retclen_buffer( pszBuf, nLen );
-
 }

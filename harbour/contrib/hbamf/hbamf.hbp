@@ -16,5 +16,4 @@ hbamf.hbx
 amfenc.c
 amfdec.c
 amfstdio.c
-hbref.c
 hbcls.c
