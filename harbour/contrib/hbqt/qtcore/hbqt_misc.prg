@@ -54,20 +54,19 @@
 #include "error.ch"
 #include "hbtrace.ch"
 
-#define QEvent_Paint                              12
-
 /*----------------------------------------------------------------------*/
 
 CREATE CLASS HbQtObjectHandler
 
    /* QUESTION: _three_ different lists for events? two for slots? Is this needed? */
+   /* ANSWER  : these variables hold the objects which capture and fire the relative signal/event */
 
    VAR    __pSlots   PROTECTED
    VAR    __pEvents  PROTECTED
 
    VAR    __hEvents  PROTECTED INIT { => }
 
-   VAR    __Slots    /* TOFIX: add PROTECTED or clean this mess */
+   VAR    __Slots    /* TOFIX: add PROTECTED or clean this mess     ANS: It is like this by design, cannot be made PROTECTED */
    VAR    __Events   /* TOFIX: add PROTECTED or clean this mess */
 
    METHOD connect( cnEvent, bBlock )
@@ -154,7 +153,7 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
    SWITCH ValType( cnEvent )
    CASE "C"
       IF Empty( ::__pSlots )
-         ::__pSlots := HBQSlots( Self )
+         ::__pSlots := HBQSlots()
       ENDIF
       nResult := ::__pSlots:hbconnect( Self, cnEvent, bBlock )
 
@@ -168,27 +167,19 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
       EXIT
 
    CASE "N"
-      IF cnEvent == QEvent_Paint
-         IF __objHasMethod( Self, "HBSETEVENTBLOCK" )
-            ::hbSetEventBlock( QEvent_Paint, bBlock )
-            RETURN .T.
-         ELSE
-            RETURN .F.
-         ENDIF
-      ELSE
-         IF Empty( ::__pEvents )
-            ::__pEvents := HBQEvents( Self )
-         ENDIF
-         nResult := ::__pEvents:hbConnect( Self, cnEvent, bBlock )
-
-         SWITCH nResult
-         CASE 0
-            ::__hEvents[ cnEvent ] := cnEvent
-            RETURN .T.
-         CASE -3 /* bBlock not supplied */
-            RETURN .F.
-         ENDSWITCH
+      IF Empty( ::__pEvents )
+         ::__pEvents := HBQEvents()
+         ::__pEvents:hbInstallEventFilter( Self )
       ENDIF
+      nResult := ::__pEvents:hbConnect( Self, cnEvent, bBlock )
+
+      SWITCH nResult
+      CASE 0
+         ::__hEvents[ cnEvent ] := cnEvent
+         RETURN .T.
+      CASE -3 /* bBlock not supplied */
+         RETURN .F.
+      ENDSWITCH
       EXIT
 
    OTHERWISE

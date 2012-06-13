@@ -106,14 +106,13 @@ void hbqt_slots_unregister_callback( QByteArray sig )
 
 /*----------------------------------------------------------------------*/
 
-// HBQSlots::HBQSlots( PHB_ITEM pObj ) : QObject()
 HBQSlots::HBQSlots() : QObject()
 {
 }
 
 HBQSlots::~HBQSlots()
 {
-         HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::~HBQSlots()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::~HBQSlots()" ) );
 }
 
 int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
@@ -184,29 +183,28 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
    QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
    if( object )
    {
+      QString signal = pszSignal;
+      QByteArray theSignal = signal.toAscii();
 
-         QString signal = pszSignal;
-         QByteArray theSignal = signal.toAscii();
-
-         int signalId = object->metaObject()->indexOfSignal( QMetaObject::normalizedSignature( theSignal ) );
-         if( signalId != -1 )
+      int signalId = object->metaObject()->indexOfSignal( QMetaObject::normalizedSignature( theSignal ) );
+      if( signalId != -1 )
+      {
+         if( QMetaObject::disconnect( object, signalId, 0, 0 ) )
          {
-            if( QMetaObject::disconnect( object, signalId, 0, 0 ) )
-            {
-               HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s ) %i", pszSignal, i ) );
-               nResult = 0;
-            }
-            else
-               nResult = 5;
+            HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s ) %i", pszSignal, i ) );
+            nResult = 0;
          }
          else
-            nResult = 4;
+            nResult = 5;
+      }
+      else
+         nResult = 4;
 
-         if( nResult == 0 )
-         {
-            HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisConnect( %s ) signalId=%i, %p", pszSignal, signalId, object ) );
-            hbqt_bindDelSlot( pObj, signalId, NULL );
-         }
+      if( nResult == 0 )
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisConnect( %s ) signalId=%i, %p", pszSignal, signalId, object ) );
+         hbqt_bindDelSlot( pObj, signalId, NULL );
+      }
    }
    else
       nResult = 2;
@@ -223,73 +221,73 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
    QObject * object = sender();
    if( object )
    {
-         QByteArray paramString;
-         const QMetaMethod meta = object->metaObject()->method( id );
-         QList<QByteArray> arrayOfTypes = meta.parameterTypes();
-         int parameterCount = arrayOfTypes.size();
-         QStringList pList;
+      QByteArray paramString;
+      const QMetaMethod meta = object->metaObject()->method( id );
+      QList<QByteArray> arrayOfTypes = meta.parameterTypes();
+      int parameterCount = arrayOfTypes.size();
+      QStringList pList;
 
-         if( parameterCount > 0 )
+      if( parameterCount > 0 )
+      {
+         char szParams[ 20 ];
+         hb_snprintf( szParams, sizeof( szParams ), "PARAM_%d", id );
+         paramString = object->property( szParams ).toByteArray();
+
+         char szPList[ 20 ];
+         hb_snprintf( szPList, sizeof( szPList ), "PLIST_%d", id );
+         pList = object->property( szPList ).toStringList();
+
+         if( paramString.isNull() )
          {
-            char szParams[ 20 ];
-            hb_snprintf( szParams, sizeof( szParams ), "PARAM_%d", id );
-            paramString = object->property( szParams ).toByteArray();
+            QStringList parList;
+            HB_TRACE( HB_TR_DEBUG, ( "SlotsProxy signature %s", meta.signature() ) );
 
-            char szPList[ 20 ];
-            hb_snprintf( szPList, sizeof( szPList ), "PLIST_%d", id );
-            pList = object->property( szPList ).toStringList();
-
-            if( paramString.isNull() )
+            for( int i = 0; i < parameterCount; i++ )
             {
-               QStringList parList;
-               HB_TRACE( HB_TR_DEBUG, ( "SlotsProxy signature %s", meta.signature() ) );
-
-               for( int i = 0; i < parameterCount; i++ )
+               if( arrayOfTypes.at( i ).contains( "::" ) )
                {
-                  if( arrayOfTypes.at( i ).contains( "::" ) )
-                  {
-                     parList += "int";
-                     pList += "int";
-                  }
-                  else
-                  {
-                     parList += arrayOfTypes.at( i ).trimmed() ;
-                     pList += arrayOfTypes.at( i ).trimmed().toUpper();
-                  }
-               }
-               paramString = parList.join( "$" ).toAscii();
-               object->setProperty( szParams, paramString );
-
-               object->setProperty( szPList, pList );
-
-               HB_TRACE( HB_TR_DEBUG, ( "       SlotsProxy parList %s ", ( char * ) paramString.data() ) );
-            }
-         }
-
-         if( hb_vmRequestReenter() )
-         {
-            PHB_ITEM hbObject = hbqt_bindGetHbObjectByQtObject( object );
-            PHB_ITEM p = hbqt_bindGetSlots( hbObject, id ); 
-            hb_itemRelease( hbObject );
-            if( p )
-            {
-               if( parameterCount == 0 )
-               {
-                  hb_evalBlock0( hb_arrayGetItemPtr( p, 1 ) );
+                  parList += "int";
+                  pList += "int";
                }
                else
                {
-                  int paramId = s_argCombinations.indexOf( paramString );
-                  PHBQT_SLOT_FUNC pCallback = s_pCallback.at( paramId );
-                  if( pCallback )
-                  {
-                     pCallback( ( PHB_ITEM * ) hb_arrayGetItemPtr( p, 1 ), arguments, pList );
-                  }
+                  parList += arrayOfTypes.at( i ).trimmed() ;
+                  pList += arrayOfTypes.at( i ).trimmed().toUpper();
                }
-               hb_itemRelease( p );
             }
-            hb_vmRequestRestore();
+            paramString = parList.join( "$" ).toAscii();
+            object->setProperty( szParams, paramString );
+
+            object->setProperty( szPList, pList );
+
+            HB_TRACE( HB_TR_DEBUG, ( "       SlotsProxy parList %s ", ( char * ) paramString.data() ) );
          }
+      }
+
+      if( hb_vmRequestReenter() )
+      {
+         PHB_ITEM hbObject = hbqt_bindGetHbObjectByQtObject( object );
+         PHB_ITEM p = hbqt_bindGetSlots( hbObject, id );
+         hb_itemRelease( hbObject );
+         if( p )
+         {
+            if( parameterCount == 0 )
+            {
+               hb_evalBlock0( hb_arrayGetItemPtr( p, 1 ) );
+            }
+            else
+            {
+               int paramId = s_argCombinations.indexOf( paramString );
+               PHBQT_SLOT_FUNC pCallback = s_pCallback.at( paramId );
+               if( pCallback )
+               {
+                  pCallback( ( PHB_ITEM * ) hb_arrayGetItemPtr( p, 1 ), arguments, pList );
+               }
+            }
+            hb_itemRelease( p );
+         }
+         hb_vmRequestRestore();
+      }
    }
    return -1;
 }

@@ -73,7 +73,6 @@ public:
    
    HBQSlots( );
    ~HBQSlots();
-   QList<PHB_ITEM>  listBlock;
 
    int hbConnect( PHB_ITEM obj, char * pszSignal, PHB_ITEM block );
    int hbDisconnect( PHB_ITEM obj, char * pszSignal );

@@ -107,16 +107,24 @@ void hbqt_events_unregister_createobj( QEvent::Type eventtype )
 
 /*----------------------------------------------------------------------*/
 
-HBQEvents::HBQEvents( QObject * object ) : QObject()
+HBQEvents::HBQEvents() : QObject()
 {
-   if( object )
-   {
-      object->installEventFilter( this );
-   }
 }
 
 HBQEvents::~HBQEvents()
 {
+}
+
+void HBQEvents::hbInstallEventFilter( PHB_ITEM pObj )
+{
+   if( hb_itemType( pObj ) & HB_IT_OBJECT )
+   {
+      QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
+      if( object )
+      {
+         object->installEventFilter( this );
+      }
+   }
 }
 
 int HBQEvents::hbConnect( PHB_ITEM pObj, int event, PHB_ITEM bBlock )

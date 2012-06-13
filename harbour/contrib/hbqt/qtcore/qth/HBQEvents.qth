@@ -36,14 +36,7 @@ New         =
  */
 HB_FUNC( QT_HBQEVENTS )
 {
-   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
-   {
-      __HB_RETPTRGC__( new HBQEvents( hbqt_par_QObject( 1 ) ) );
-   }
-   else
-   {
-      __HB_RETPTRGC__( new HBQEvents() );
-   }
+   __HB_RETPTRGC__( new HBQEvents() );
 }
 
 </CODE>
@@ -54,6 +47,7 @@ HB_FUNC( QT_HBQEVENTS )
 <PROTOS>
 int hbConnect( PHB_ITEM obj, int event, PHB_ITEM block )
 int hbDisconnect( PHB_ITEM obj, int event )
+void hbInstallEventFilter( PHB_ITEM obj )
 </PROTOS>
 
 <SLOTS>
