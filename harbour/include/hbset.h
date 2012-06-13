@@ -153,6 +153,7 @@ typedef struct
    HB_FHANDLE     hb_set_printhan;
    HB_PATHNAMES * hb_set_path;
    void *         hb_set_oscp;
+   void *         hb_set_dbcp;
    void *         hb_set_listener;
 
    /* Upper case members are directly related to a SET */
@@ -215,9 +216,7 @@ typedef struct
    HB_BOOL    HB_SET_TRIMFILENAME;
    char *     HB_SET_HBOUTLOG;
    char *     HB_SET_HBOUTLOGINFO;
-   char *     HB_SET_OSCODEPAGE;
    char *     HB_SET_TIMEFORMAT;
-   char *     HB_SET_DBCODEPAGE;
 
 } HB_SET_STRUCT, * PHB_SET_STRUCT;
 

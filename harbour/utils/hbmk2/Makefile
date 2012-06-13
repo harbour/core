@@ -14,7 +14,7 @@ RC_SOURCES := \
 
 PRG_MAIN := hbmk2.prg
 
-LIBS = $(HB_LIBS_MT_NORDD)
+LIBS = $(HB_LIBS_MT_RDD)
 
 ifneq ($(HB_HAS_GPM),)
    HB_PRGFLAGS += -DHB_HAS_GPM

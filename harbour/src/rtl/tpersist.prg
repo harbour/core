@@ -66,7 +66,6 @@ ENDCLASS
 
 METHOD LoadFromText( cObjectText ) CLASS HBPersistent
 
-   LOCAL nFrom := 1
    LOCAL nPos
    LOCAL cLine
    LOCAL lStart := .t.
@@ -78,8 +77,9 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
       RETURN .F.
    ENDIF
 
-   DO WHILE nFrom <= Len( cObjectText )
-      cLine := AllTrim( ExtractLine( cObjectText, @nFrom ) )
+   FOR EACH cLine IN hb_ATokens( StrTran( cObjectText, Chr( 13 ) ), Chr( 10 ) )
+
+      cLine := AllTrim( cLine )
 
       DO CASE
       CASE Empty( cLine ) .OR. Left( cLine, 2 ) == "//"
@@ -123,7 +123,7 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
 
       ENDCASE
 
-   ENDDO
+   NEXT
 
    RETURN .T.
 
@@ -244,25 +244,3 @@ STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
    cArray += hb_eol() + Space( nIndent ) + "ENDARRAY" + hb_eol()
 
    RETURN cArray
-
-/* Notice: nFrom must be supplied by reference */
-
-STATIC FUNCTION ExtractLine( cText, nFrom )
-
-   LOCAL nAt := hb_At( Chr( 10 ), cText, nFrom )
-
-   IF nAt > 0
-      cText := SubStr( cText, nFrom, nAt - nFrom )
-      IF Right( cText, 1 ) == Chr( 13 )
-         cText := hb_StrShrink( cText, 1 )
-      ENDIF
-      nFrom := nAt + 1
-   ELSE
-      cText := SubStr( cText, nFrom )
-      IF Right( cText, 1 ) == Chr( 13 )
-         cText := hb_StrShrink( cText, 1 )
-      ENDIF
-      nFrom += Len( cText ) + 1
-   ENDIF
-
-   RETURN cText

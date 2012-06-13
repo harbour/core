@@ -53,6 +53,7 @@
 #include "hbapi.h"
 #include "hbapilng.h"
 #include "hbapicdp.h"
+#include "hbapierr.h"
 
 /* Language name: English */
 /* ISO language code (2 chars): EN */
@@ -382,10 +383,15 @@ PHB_LANG hb_langSelect( PHB_LANG lang )
 const char * hb_langSelectID( const char * pszID )
 {
    const char * pszIDOld = hb_langID();
+   PHB_LANG lang;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_langSelectID(%s)", pszID));
 
-   hb_langSelect( hb_langFind( pszID ) );
+   lang = hb_langFind( pszID );
+   if( lang )
+      hb_langSelect( lang );
+   else
+      hb_errRT_BASE( EG_ARG, 1303, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 
    return pszIDOld;
 }

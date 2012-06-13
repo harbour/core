@@ -3146,7 +3146,16 @@ PHB_CODEPAGE hb_cdpFindExt( const char * id )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_cdpFindExt(%s)", id ) );
 
-   return id ? * hb_cdpFindPos( id ) : NULL;
+   if( id )
+   {
+      PHB_CODEPAGE cdp = * hb_cdpFindPos( id );
+
+      if( cdp )
+         return cdp;
+
+      hb_errRT_BASE( EG_ARG, 1302, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+   return NULL;
 }
 
 HB_BOOL hb_cdpIsUTF8( PHB_CODEPAGE cdp )
@@ -3189,7 +3198,7 @@ const char * hb_cdpSelectID( const char * id )
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_cdpSelectID(%s)", id ) );
 
-   cdp = hb_cdpSelect( hb_cdpFind( id ) );
+   cdp = hb_cdpSelect( hb_cdpFindExt( id ) );
 
    return cdp ? cdp->id : NULL;
 }

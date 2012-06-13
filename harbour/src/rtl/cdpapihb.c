@@ -93,7 +93,7 @@ HB_FUNC( HB_CDPSELECT )
 HB_FUNC( HB_CDPUNIID )
 {
    const char * id = hb_parc( 1 );
-   PHB_CODEPAGE cdp = id ? hb_cdpFind( id ) : hb_vmCDP();
+   PHB_CODEPAGE cdp = id ? hb_cdpFindExt( id ) : hb_vmCDP();
 
    hb_retc( cdp ? cdp->uniTable->uniID : NULL );
 }
@@ -108,12 +108,12 @@ HB_FUNC( HB_CDPINFO )
 
 HB_FUNC( HB_CDPCHARMAX )
 {
-   hb_retnl( ( 1 << ( ( int ) ( hb_cdpIsUTF8( hb_cdpFindExt( hb_parcx( 1 ) ) ) ? sizeof( HB_WCHAR ) : sizeof( HB_UCHAR ) ) * 8 ) ) - 1 );
+   hb_retnl( ( 1 << ( ( int ) ( hb_cdpIsUTF8( hb_cdpFindExt( hb_parc( 1 ) ) ) ? sizeof( HB_WCHAR ) : sizeof( HB_UCHAR ) ) * 8 ) ) - 1 );
 }
 
 HB_FUNC( HB_CDPISUTF8 )
 {
-   hb_retl( hb_cdpIsUTF8( hb_cdpFindExt( hb_parcx( 1 ) ) ) );
+   hb_retl( hb_cdpIsUTF8( hb_cdpFindExt( hb_parc( 1 ) ) ) );
 }
 
 HB_FUNC( HB_CDPLIST )
