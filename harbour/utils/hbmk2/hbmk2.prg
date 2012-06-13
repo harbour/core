@@ -12155,8 +12155,12 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
 
 /* Emulate a minimal hbrun */
 
-#define _EXT_FILE_ "hbmk.ext"
-#define _EXT_ENV_  "HBMK_EXT"
+#if defined( __PLATFORM__DOS )
+#  define _EXT_FILE_ "hb_ext.ini"
+#else
+#  define _EXT_FILE_ "hb_extension"
+#endif
+#define _EXT_ENV_  "HB_EXTENSION"
 
 STATIC PROCEDURE __hbrun_minimal( cFile, ... )
    LOCAL aDynamic := {}
@@ -12244,7 +12248,7 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
             EXIT
          ENDIF
       CASE ".hrb"
-         __hbrun_LoadExtDynamicFromFile( aDynamic, hb_DirBase() + _EXT_FILE_ )
+         __hbrun_LoadExtDynamicFromFile( aDynamic, __hbrun_ConfigDir() + _EXT_FILE_ )
          __hbrun_LoadExtDynamicFromString( aDynamic, GetEnv( _EXT_ENV_ ) )
          __hbrun_extensions_dynamic_init( aDynamic )
          s_cDirBase_hbrun := hb_DirBase()
@@ -12253,14 +12257,14 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
          hb_hrbRun( cFile, ... )
          EXIT
       CASE ".dbf"
-         __hbrun_LoadExtDynamicFromFile( aDynamic, hb_DirBase() + _EXT_FILE_ )
+         __hbrun_LoadExtDynamicFromFile( aDynamic, __hbrun_ConfigDir() + _EXT_FILE_ )
          __hbrun_LoadExtDynamicFromString( aDynamic, GetEnv( _EXT_ENV_ ) )
          __hbrun_extensions_dynamic_init( aDynamic )
          __hbrun_shell( hb_AParams(), "USE " + cFile + " SHARED" )
          EXIT
       ENDSWITCH
    ELSE
-      __hbrun_LoadExtDynamicFromFile( aDynamic, hb_DirBase() + _EXT_FILE_ )
+      __hbrun_LoadExtDynamicFromFile( aDynamic, __hbrun_ConfigDir() + _EXT_FILE_ )
       __hbrun_LoadExtDynamicFromString( aDynamic, GetEnv( _EXT_ENV_ ) )
       __hbrun_extensions_dynamic_init( aDynamic )
       __hbrun_shell( hb_AParams() )
@@ -12285,6 +12289,32 @@ STATIC FUNCTION __hbrun_FileSig( cFile )
    ENDIF
 
    RETURN cExt
+
+STATIC FUNCTION __hbrun_ConfigDir()
+   LOCAL cEnvVar
+   LOCAL cDir
+
+#if defined( __PLATFORM__WINDOWS )
+   cEnvVar := "APPDATA"
+#else
+   cEnvVar := "HOME"
+#endif
+
+   IF ! Empty( GetEnv( cEnvVar ) )
+#if defined( __PLATFORM__DOS )
+      cDir := GetEnv( cEnvVar ) + hb_ps() + "~harbour"
+#else
+      cDir := GetEnv( cEnvVar ) + hb_ps() + ".harbour"
+#endif
+   ELSE
+      cDir := hb_DirBase()
+   ENDIF
+
+   IF ! hb_DirExists( cDir )
+      hb_DirCreate( cDir )
+   ENDIF
+
+   RETURN cDir + hb_ps()
 
 STATIC PROCEDURE __hbrun_LoadExtDynamicFromFile( aDynamic, cFileName )
    LOCAL cItem
@@ -12397,14 +12427,17 @@ STATIC FUNCTION __hbrun_extensions_get_list()
 
 FUNCTION __hbrun_plugins()
    LOCAL hPlugins := { => }
+   LOCAL cDir
    LOCAL cExt
    LOCAL file
 
    ADD PLUGIN TO hPlugins FILE "p_extdyn.hb"
 
+   cDir := __hbrun_ConfigDir()
+
    FOR EACH cExt IN { "*.hb", "*.hrb" }
-      FOR EACH file IN Directory( hb_DirBase() + cExt )
-         hPlugins[ hb_DirBase() + file[ F_NAME ] ] := MemoRead( hb_DirBase() + file[ F_NAME ] ) /* TODO: decide where to load plugins from */
+      FOR EACH file IN Directory( cDir + cExt )
+         hPlugins[ cDir + file[ F_NAME ] ] := MemoRead( cDir + file[ F_NAME ] )
       NEXT
    NEXT
 
@@ -12836,15 +12869,7 @@ STATIC PROCEDURE __hbrun_HistorySave()
    RETURN
 
 STATIC FUNCTION __hbrun_HistoryFileName()
-   LOCAL cEnvVar
-   LOCAL cDir
    LOCAL cFileName
-
-#if defined( __PLATFORM__WINDOWS )
-   cEnvVar := "APPDATA"
-#else
-   cEnvVar := "HOME"
-#endif
 
 #if defined( __PLATFORM__DOS )
    cFileName := "hbhist.ini"
@@ -12852,21 +12877,7 @@ STATIC FUNCTION __hbrun_HistoryFileName()
    cFileName := ".hb_history"
 #endif
 
-   IF ! Empty( GetEnv( cEnvVar ) )
-#if defined( __PLATFORM__DOS )
-      cDir := GetEnv( cEnvVar ) + hb_ps() + "~harbour"
-#else
-      cDir := GetEnv( cEnvVar ) + hb_ps() + ".harbour"
-#endif
-   ELSE
-      cDir := hb_DirBase()
-   ENDIF
-
-   IF ! hb_DirExists( cDir )
-      hb_DirCreate( cDir )
-   ENDIF
-
-   RETURN cDir + hb_ps() + cFileName
+   RETURN __hbrun_ConfigDir() + cFileName
 
 #if defined( __PLATFORM__WINDOWS )
 

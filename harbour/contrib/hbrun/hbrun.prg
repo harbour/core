@@ -88,6 +88,13 @@ STATIC s_cProgName
 
 /* ********************************************************************** */
 
+#if defined( __PLATFORM__DOS )
+#  define _EXT_FILE_ "hb_ext.ini"
+#else
+#  define _EXT_FILE_ "hb_extension"
+#endif
+#define _EXT_ENV_  "HB_EXTENSION"
+
 PROCEDURE _APPMAIN( cFile, ... )
    LOCAL cExt
    LOCAL hHeaders
@@ -102,8 +109,8 @@ PROCEDURE _APPMAIN( cFile, ... )
 
    aDynamic := {}
 
-   LoadExtDynamicFromFile( aDynamic, hb_DirBase() + "hbrun.ext" )
-   LoadExtDynamicFromString( aDynamic, GetEnv( "HBRUN_EXT" ) )
+   LoadExtDynamicFromFile( aDynamic, __hbrun_ConfigDir() + _EXT_FILE_ )
+   LoadExtDynamicFromString( aDynamic, GetEnv( _EXT_ENV_ ) )
 
    /* TODO: Rework parameter handling */
    IF PCount() > 0
@@ -222,6 +229,32 @@ EXIT PROCEDURE hbrun_exit()
    hbrun_HistorySave()
 
    RETURN
+
+FUNCTION __hbrun_ConfigDir()
+   LOCAL cEnvVar
+   LOCAL cDir
+
+#if defined( __PLATFORM__WINDOWS )
+   cEnvVar := "APPDATA"
+#else
+   cEnvVar := "HOME"
+#endif
+
+   IF ! Empty( GetEnv( cEnvVar ) )
+#if defined( __PLATFORM__DOS )
+      cDir := GetEnv( cEnvVar ) + hb_ps() + "~harbour"
+#else
+      cDir := GetEnv( cEnvVar ) + hb_ps() + ".harbour"
+#endif
+   ELSE
+      cDir := hb_DirBase()
+   ENDIF
+
+   IF ! hb_DirExists( cDir )
+      hb_DirCreate( cDir )
+   ENDIF
+
+   RETURN cDir + hb_ps()
 
 STATIC PROCEDURE LoadExtDynamicFromFile( aDynamic, cFileName )
    LOCAL cItem
@@ -745,15 +778,7 @@ STATIC PROCEDURE hbrun_HistorySave()
    RETURN
 
 STATIC FUNCTION hbrun_HistoryFileName()
-   LOCAL cEnvVar
-   LOCAL cDir
    LOCAL cFileName
-
-#if defined( __PLATFORM__WINDOWS )
-   cEnvVar := "APPDATA"
-#else
-   cEnvVar := "HOME"
-#endif
 
 #if defined( __PLATFORM__DOS )
    cFileName := "hbhist.ini"
@@ -761,21 +786,7 @@ STATIC FUNCTION hbrun_HistoryFileName()
    cFileName := ".hb_history"
 #endif
 
-   IF ! Empty( GetEnv( cEnvVar ) )
-#if defined( __PLATFORM__DOS )
-      cDir := GetEnv( cEnvVar ) + hb_ps() + "~harbour"
-#else
-      cDir := GetEnv( cEnvVar ) + hb_ps() + ".harbour"
-#endif
-   ELSE
-      cDir := hb_DirBase()
-   ENDIF
-
-   IF ! hb_DirExists( cDir )
-      hb_DirCreate( cDir )
-   ENDIF
-
-   RETURN cDir + hb_ps() + cFileName
+   RETURN __hbrun_ConfigDir() + cFileName
 
 FUNCTION __hbrun_FindInPath( cFileName, xPath )
    LOCAL cDir

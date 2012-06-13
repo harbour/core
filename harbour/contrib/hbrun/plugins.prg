@@ -57,16 +57,19 @@
 
 FUNCTION __hbrun_plugins()
    LOCAL hPlugins := { => }
+   LOCAL cDir
+   LOCAL cExt
    LOCAL file
 
    ADD PLUGIN TO hPlugins FILE "netiomgm.prg"
    ADD PLUGIN TO hPlugins FILE "extdynpl.hb"
 
-   FOR EACH file IN Directory( hb_DirBase() + "*.hb" )
-      hPlugins[ hb_DirBase() + file[ F_NAME ] ] := MemoRead( hb_DirBase() + file[ F_NAME ] )
-   NEXT
-   FOR EACH file IN Directory( hb_DirBase() + "*.hrb" )
-      hPlugins[ hb_DirBase() + file[ F_NAME ] ] := MemoRead( hb_DirBase() + file[ F_NAME ] )
+   cDir := __hbrun_ConfigDir()
+
+   FOR EACH cExt IN { "*.hb", "*.hrb" }
+      FOR EACH file IN Directory( cDir + cExt )
+         hPlugins[ cDir + file[ F_NAME ] ] := MemoRead( cDir + file[ F_NAME ] )
+      NEXT
    NEXT
 
    RETURN hPlugins
