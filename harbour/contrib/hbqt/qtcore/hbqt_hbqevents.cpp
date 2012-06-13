@@ -84,7 +84,7 @@ static QList<QByteArray> s_lstCreateObj;
 
 
 void hbqt_events_register_createobj( QEvent::Type eventtype, QByteArray szCreateObj )
-{ 
+{
    int iIndex = s_lstEvent.indexOf( eventtype );
 
    if( iIndex == -1 )
@@ -122,7 +122,7 @@ HBQEvents::~HBQEvents()
 int HBQEvents::hbConnect( PHB_ITEM pObj, int event, PHB_ITEM bBlock )
 {
    HB_TRACE( HB_TR_DEBUG, ( "HBQEvents::hbConnect( %i )", event ) );
-   
+
    int nResult = -1;
 
    if( hb_itemType( bBlock ) & HB_IT_BLOCK )
@@ -133,14 +133,14 @@ int HBQEvents::hbConnect( PHB_ITEM pObj, int event, PHB_ITEM bBlock )
          hbqt_bindAddEvent( pObj, event, bBlock );
          nResult = 0;
       }
-   }   
+   }
    return nResult;
 }
 
 int HBQEvents::hbDisconnect( PHB_ITEM pObj, int event )
 {
    HB_TRACE( HB_TR_DEBUG, ( "HBQEvents::hbDisconnect( %i )", event ) );
-   
+
    int nResult = -1;
 
    QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
@@ -148,7 +148,7 @@ int HBQEvents::hbDisconnect( PHB_ITEM pObj, int event )
    {
       hbqt_bindDelEvent( pObj, event, NULL );
       nResult = 0;
-   }   
+   }
    return nResult;
 }
 
@@ -162,23 +162,23 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
       if( ( int ) eventtype > 0 )
       {
          int eventId = s_lstEvent.indexOf( eventtype );
-         
+
          if( eventId > -1 && hb_vmRequestReenter() )
          {
-            PHB_ITEM pArray = hbqt_bindGetEvents( hbqt_bindGetHbObjectBYqtObject( object ), eventtype ); 
+            PHB_ITEM pArray = hbqt_bindGetEvents( hbqt_bindGetHbObjectByQtObject( object ), eventtype );
             if( pArray )
             {
                PHB_ITEM pItem = hbqt_bindGetHbObject( NULL, ( void * ) event, ( s_lstCreateObj.at( eventId ) ), NULL, HBQT_BIT_NONE );
                stopTheEventChain = ( bool ) hb_itemGetL( hb_vmEvalBlockV( hb_arrayGetItemPtr( pArray, 1 ), 1, pItem ) );
                hb_itemRelease( pItem );
                hb_itemRelease( pArray );
-            }   
+            }
             hb_vmRequestRestore();
-         }   
+         }
          if( eventtype == QEvent::Close )
          {
             return true;
-         }   
+         }
       }
    }
    return stopTheEventChain;

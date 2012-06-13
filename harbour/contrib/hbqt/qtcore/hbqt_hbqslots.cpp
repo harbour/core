@@ -121,7 +121,7 @@ HBQSlots::~HBQSlots()
 int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
 {
    HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %s )", pszSignal ) );
-   
+
    int nResult = 1;
 
    if( true )
@@ -150,14 +150,14 @@ int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
                            nResult = 0;
 
                            listBlock << NULL;
-                           
+
                            char szSlotName[ 20 ];
                            hb_snprintf( szSlotName, sizeof( szSlotName ), "SLOT_%d", slotId );
 
                            object->setProperty( szSlotName, ( int ) listBlock.size() );
                            object->setProperty( pszSignal, ( int ) listBlock.size() );
 
-                           HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %s ) signalId=%i, %p", pszSignal, signalId, object ) ); 
+                           HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %s ) signalId=%i, %p", pszSignal, signalId, object ) );
                            hbqt_bindAddSlot( pObj, signalId, bBlock );
                         }
                         else
@@ -188,9 +188,9 @@ int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
 int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
 {
    HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s )", pszSignal ) );
-   
+
    int nResult = 1;
-   
+
    QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
    if( object )
    {
@@ -207,9 +207,9 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
          {
             if( QMetaObject::disconnect( object, signalId, 0, 0 ) )
             {
-               HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s ) %i", pszSignal, i ) ); 
+               HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s ) %i", pszSignal, i ) );
                nResult = 0;
-            }   
+            }
             else
                nResult = 5;
          }
@@ -217,10 +217,10 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
             nResult = 4;
 
          if( nResult == 0 )
-         {   
-            HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisConnect( %s ) signalId=%i, %p", pszSignal, signalId, object ) ); 
+         {
+            HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisConnect( %s ) signalId=%i, %p", pszSignal, signalId, object ) );
             hbqt_bindDelSlot( pObj, signalId, NULL );
-         }   
+         }
       }
       else
          nResult = 3;
@@ -291,13 +291,13 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
 
          if( hb_vmRequestReenter() )
          {
-            PHB_ITEM p = hbqt_bindGetSlots( hbqt_bindGetHbObjectBYqtObject( object ), id ); 
+            PHB_ITEM p = hbqt_bindGetSlots( hbqt_bindGetHbObjectByQtObject( object ), id );
             if( p )
             {
                if( parameterCount == 0 )
                {
                   hb_evalBlock0( hb_arrayGetItemPtr( p, 1 ) );
-               }   
+               }
                else
                {
                   int paramId = s_argCombinations.indexOf( paramString );
@@ -306,7 +306,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
                   {
                      pCallback( ( PHB_ITEM * ) hb_arrayGetItemPtr( p, 1 ), arguments, pList );
                   }
-               }   
+               }
                hb_itemRelease( p );
             }
             hb_vmRequestRestore();

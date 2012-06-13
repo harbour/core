@@ -60,20 +60,22 @@
 
 CREATE CLASS HbQtObjectHandler
 
-   VAR    __pSlots                                PROTECTED
-   VAR    __pEvents                               PROTECTED
+   /* QUESTION: _three_ different lists for events? two for slots? Is this needed? */
 
-   VAR    hEvents                                 INIT {=>}
+   VAR    __pSlots   PROTECTED
+   VAR    __pEvents  PROTECTED
 
-   VAR    __Slots
-   VAR    __Events
+   VAR    __hEvents  PROTECTED INIT { => }
+
+   VAR    __Slots    PROTECTED
+   VAR    __Events   PROTECTED
 
    METHOD connect( cnEvent, bBlock )
    METHOD disconnect( cnEvent )
    METHOD setSlots()
    METHOD setEvents()
-   
-   DESTRUCTOR _destroy()
+
+   DESTRUCTOR __destroy()
    ERROR HANDLER onError()
 
    ENDCLASS
@@ -85,20 +87,20 @@ METHOD HbQtObjectHandler:setSlots()
    IF empty( ::__Slots )
       ::__Slots := {=>}
       hb_hDefault( ::__Slots, {} )
-   ENDIF    
-   
-   RETURN Self 
+   ENDIF
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
-      
+
 METHOD HbQtObjectHandler:setEvents()
 
    IF empty( ::__Events )
-      ::__Events := {=>}
+      ::__Events := { => }
       hb_hDefault( ::__Events, {} )
-   ENDIF    
-   
-   RETURN Self 
+   ENDIF
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
@@ -140,13 +142,13 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
       RETURN .f.
    ENDIF
 
-   IF hb_hHasKey( ::hEvents, cnEvent )
-      IF HB_ISNUMERIC( ::hEvents[ cnEvent ] )
+   IF hb_hHasKey( ::__hEvents, cnEvent )
+      IF HB_ISNUMERIC( ::__hEvents[ cnEvent ] )
          ::__pEvents:hbDisconnect( Self, cnEvent )
       ELSE
          ::__pSlots:hbDisconnect( Self, cnEvent )
       ENDIF
-      hb_hDel( ::hEvents, cnEvent )
+      hb_hDel( ::__hEvents, cnEvent )
    ENDIF
 
    SWITCH ValType( cnEvent )
@@ -158,7 +160,7 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
 
       SWITCH nResult
       CASE 0
-         ::hEvents[ cnEvent ] := cnEvent
+         ::__hEvents[ cnEvent ] := cnEvent
          RETURN .T.
       CASE 8 /* QT connect call failure */
          RETURN .F.
@@ -181,7 +183,7 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
 
          SWITCH nResult
          CASE 0
-            ::hEvents[ cnEvent ] := cnEvent
+            ::__hEvents[ cnEvent ] := cnEvent
             RETURN .T.
          CASE -3 /* bBlock not supplied */
             RETURN .F.
@@ -206,7 +208,7 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
       RETURN .f.
    ENDIF
 
-   IF ! hb_hHasKey( ::hEvents, cnEvent )
+   IF ! hb_hHasKey( ::__hEvents, cnEvent )
       RETURN .f.
    ENDIF
 
@@ -220,7 +222,7 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
       CASE 0
       CASE 4 /* signal not found in object */
       CASE 5 /* disconnect failure */
-         hb_hDel( ::hEvents, cnEvent )
+         hb_hDel( ::__hEvents, cnEvent )
          RETURN .T.
       CASE 1 /* wrong slot container, no connect was called yet */
       CASE 2 /* object has been already freed */
@@ -236,7 +238,7 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 
       SWITCH nResult
       CASE 0
-         hb_hDel( ::hEvents, cnEvent )
+         hb_hDel( ::__hEvents, cnEvent )
          RETURN .T.
       CASE -3 /* event not found */
       CASE -2 /* event not found */
@@ -255,34 +257,12 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtObjectHandler:_destroy()
+METHOD HbQtObjectHandler:__destroy()
 
-   HB_TRACE( HB_TR_DEBUG, "  _destroy()", __objDerivedFrom( Self, "QOBJECT" ), __objGetClsName( Self ) )
-   
+   HB_TRACE( HB_TR_DEBUG, "  __destroy()", __objDerivedFrom( Self, "QOBJECT" ), __objGetClsName( Self ) )
+
    __hbqt_destroy( Self )
 
-#if 0      
-   IF ! __objDerivedFrom( Self, "QOBJECT" )
-      RETURN NIL
-   ENDIF
-   IF empty( ::__pSlots ) .AND. empty( ::__pEvents )
-      RETURN NIL
-   ENDIF
-
-   FOR EACH cnEvent IN ::hEvents
-      IF HB_ISNUMERIC( cnEvent ) .AND. ! empty( ::__pEvents )
-         ::__pEvents:hbDisconnect( Self, cnEvent )
-      ELSEIF HB_ISSTRING( cnEvent ) .AND. ! empty( ::__pSlots )
-         ::__pSlots:hbDisconnect( Self, cnEvent )
-      ENDIF
-   NEXT
-
-   ::hEvents := NIL
-
-   ::__pSlots := NIL
-   ::__pEvents := NIL
-#endif
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-

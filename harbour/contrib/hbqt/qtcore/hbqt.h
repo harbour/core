@@ -118,7 +118,7 @@ extern HB_EXPORT void hbqt_addDeleteList( PHB_ITEM item ); /* populate a list of
 
 HB_EXPORT PHB_ITEM   hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szClassFunc, PHBQT_DEL_FUNC pDelete, int iFlags );
 HB_EXPORT PHB_ITEM   hbqt_bindSetHbObject( PHB_ITEM pItem, void * qtObject, const char * szClassName, PHBQT_DEL_FUNC pDelFunc, int iFlags );
-HB_EXPORT PHB_ITEM   hbqt_bindGetHbObjectBYqtObject( void * qtObject );
+HB_EXPORT PHB_ITEM   hbqt_bindGetHbObjectByQtObject( void * qtObject );
 HB_EXPORT void    *  hbqt_bindGetQtObject( PHB_ITEM pObject );
 HB_EXPORT void       hbqt_bindSetOwner( void * qtObject, HB_BOOL fOwner );
 HB_EXPORT void       hbqt_bindDestroyHbObject( PHB_ITEM pObject );

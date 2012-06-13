@@ -91,21 +91,11 @@ void hbqt_par_detach_ptrGC( int iParam )
    HB_TRACE( HB_TR_DEBUG, ( "hbqt_par_detach_ptrGC( %d )", iParam ) );
    if( HB_ISOBJECT( iParam ) )
    {
-      hbqt_bindSetOwner( hbqt_bindGetQtObject( hb_param( iParam, HB_IT_OBJECT ) ), HB_FALSE ); 
-   }   
+      hbqt_bindSetOwner( hbqt_bindGetQtObject( hb_param( iParam, HB_IT_OBJECT ) ), HB_FALSE );
+   }
 }
 
-HB_FUNC( __HBQT_ISPOINTER )
-{
-   PHB_ITEM pObject = hb_stackSelfItem();
-   if( pObject == NULL )
-      pObject = hb_param( 1, HB_IT_OBJECT );
-   if( pObject )
-      hb_retl( ! ( hbqt_bindGetQtObject( pObject ) == NULL ) );
-   else
-      hb_retl( HB_FALSE );
-}
-
+/* TODO: Delete this. */
 HB_FUNC( HBQT_ISEQUAL )
 {
    hb_retl( hbqt_par_ptr( 1 ) == hbqt_par_ptr( 2 ) );
@@ -123,7 +113,7 @@ HB_FUNC( __HBQT_SETUTF8 )
    if( cdp )
    {
       hb_vmSetCDP( cdp );
-   }   
+   }
 }
 
 PHB_ITEM hbqt_defineClassBegin( const char * pszClsName, PHB_ITEM s_oClass, const char * pszParentClsStr )
