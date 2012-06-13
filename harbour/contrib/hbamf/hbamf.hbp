@@ -1,0 +1,20 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+-instfile=inc:hbamf.hbx
+
+hbamf.hbx
+
+amfenc.c
+amfdec.c
+amfstdio.c
+hbref.c
+hbcls.c

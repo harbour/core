@@ -518,13 +518,8 @@ REQUEST hbmk_KEYW
 
 #define PathMakeAbsolute( cPathR, cPathA ) hb_PathJoin( cPathA, cPathR )
 
-/* NOTE: use hbextern library instead of #include "hbextern.ch"
- *       in dynamic builds it will greatly reduce the size because
- *       all function symbols will be registered by harbour shared
- *       library (.dll, .so, .sl, .dyn, ...) not by this code
- */
-
-REQUEST __HB_EXTERN__ /* for runner and interactive shell */
+/* Request for runner and interactive shell */
+REQUEST __HB_EXTERN__
 
 /* Request some functions for plugins */
 REQUEST HBCLASS
