@@ -579,7 +579,7 @@ HB_TRACE( HB_TR_DEBUG, "QEvent_GraphicsSceneDrop", 1000, p1:dropAction() )
       EXIT
 
    CASE "QEvent_MouseMoveMenu"
-      IF empty( ::qPos ) .OR. empty( ::qAct ) .OR. ! ::qAct:hasValidPointer()
+      IF empty( ::qPos ) .OR. empty( ::qAct )
          EXIT
       ENDIF
 
@@ -1118,7 +1118,7 @@ METHOD HbqReportsManager:contextMenuScene( p1 )
    aadd( aAct, qMenu:addAction( "Refresh"  ) )
    aadd( aAct, qMenu:addAction( "Zoom+" ) )
 
-   IF ( qAct := qMenu:exec( p1:screenPos() ) ):hasValidPointer()
+   IF ! empty( qAct := qMenu:exec( p1:screenPos() ) )
       SWITCH qAct:text()
       CASE "Refresh"
          EXIT
@@ -1140,7 +1140,7 @@ METHOD HbqReportsManager:contextMenuItem( p1, p2 )
    aadd( aAct, qMenu:addAction( "Cut"  ) )
    aadd( aAct, qMenu:addAction( "Copy" ) )
 
-   IF ( qAct := qMenu:exec( p1:screenPos() ) ):hasValidPointer()
+   IF ! empty( qAct := qMenu:exec( p1:screenPos() ) )
       SWITCH qAct:text()
       CASE "Cut"
          EXIT
@@ -1858,16 +1858,15 @@ METHOD HqrGraphicsItem:execEvent( cEvent, p, p1, p2 )
 /*----------------------------------------------------------------------*/
 
 METHOD HqrGraphicsItem:contextMenu( p1, p2 )
-   LOCAL qMenu, qAct, aAct := {}
+   LOCAL qMenu, qAct
 
    HB_SYMBOL_UNUSED( p2 )
 
    qMenu := QMenu()
-   aadd( aAct, qMenu:addAction( "Cut"  ) )
-   aadd( aAct, qMenu:addAction( "Copy" ) )
+   qMenu:addAction( "Cut"  )
+   qMenu:addAction( "Copy" )
 
-   qAct := qMenu:exec( p1:screenPos() )
-   IF qAct:hasValidPointer()
+   IF ! empty( qAct := qMenu:exec( p1:screenPos() ) )
       SWITCH qAct:text()
       CASE "Cut"
          EXIT

@@ -36,7 +36,14 @@ New         =
  */
 HB_FUNC( QT_HBQEVENTS )
 {
-   __HB_RETPTRGC__( new HBQEvents( hb_param( 1, HB_IT_OBJECT ) ) );
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
+   {
+      __HB_RETPTRGC__( new HBQEvents( hbqt_par_QObject( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new HBQEvents() );
+   }
 }
 
 </CODE>

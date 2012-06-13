@@ -234,7 +234,6 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
 int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
 {
    id = QObject::qt_metacall( c, id, arguments );
-
    if( id < 0 || c != QMetaObject::InvokeMetaMethod )
       return id;
 
@@ -292,24 +291,23 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
 
          if( hb_vmRequestReenter() )
          {
-            if( parameterCount == 0 )
+            PHB_ITEM p = hbqt_bindGetSlots( hbqt_bindGetHbObjectBYqtObject( object ), id ); 
+            if( p )
             {
-               PHB_ITEM p = hbqt_bindGetSlots( hbqt_bindGetHbObjectBYqtObject( object ), id ); 
-               hb_evalBlock0( hb_arrayGetItemPtr( p, 1 ) );
-               hb_itemRelease( p );
-            }   
-            else
-            {
-               int paramId = s_argCombinations.indexOf( paramString );
-               PHBQT_SLOT_FUNC pCallback;
-
-               pCallback = s_pCallback.at( paramId );
-               if( pCallback )
+               if( parameterCount == 0 )
                {
-                  PHB_ITEM p = hbqt_bindGetSlots( hbqt_bindGetHbObjectBYqtObject( object ), id ); 
-                  pCallback( ( PHB_ITEM * ) hb_arrayGetItemPtr( p, 1 ), arguments, pList );
-                  hb_itemRelease( p );
-               }
+                  hb_evalBlock0( hb_arrayGetItemPtr( p, 1 ) );
+               }   
+               else
+               {
+                  int paramId = s_argCombinations.indexOf( paramString );
+                  PHBQT_SLOT_FUNC pCallback = s_pCallback.at( paramId );
+                  if( pCallback )
+                  {
+                     pCallback( ( PHB_ITEM * ) hb_arrayGetItemPtr( p, 1 ), arguments, pList );
+                  }
+               }   
+               hb_itemRelease( p );
             }
             hb_vmRequestRestore();
          }

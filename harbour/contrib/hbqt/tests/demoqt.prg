@@ -81,9 +81,8 @@ FUNCTION My_Events( e )
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main()
-   Local oLabel, oBtn, oDA, oWnd, oProg, oSBar
-   LOCAL aMenu, aTool, aGrid, aTabs, aList
-
+   Local oBtn, oDA, oWnd, oSBar, oAct, aMenu, aTool, aTabs
+   
    hbqt_errorsys()
 
    oWnd := QMainWindow()
@@ -104,32 +103,41 @@ PROCEDURE Main()
    oWnd:setStatusBar( oSBar )
    oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
 
-   oLabel := Build_Label( oDA, { 30,190 }, { 300, 30 } )
-   oBtn   := Build_PushButton( oDA, { 30,240 }, { 100,50 } )
-   aGrid  := Build_Grid( oDA, { 30, 30 }, { 450,150 } )
+   Build_Grid( oDA, { 30, 30 }, { 450,150 } )
+   Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
+   Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
+   Build_Label( oDA, { 30,190 }, { 300, 30 } )
+   
    aTabs  := Build_Tabs( oDA, { 510, 5 }, { 360, 400 } )
 
-   oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
-   aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
-
+   oBtn   := Build_PushButton( oDA, { 30,240 }, { 100,50 } )
    oBtn:setStyleSheet( "background: #a00fff;" )
 
-   oBtn:connect( QEvent_Enter, {|oEvent| RePaintHover( oEvent, oBtn, QEvent_Enter ) } )
-   oBtn:connect( QEvent_Leave, {|oEvent| RePaintHover( oEvent, oBtn, QEvent_Leave ) } )
-//   oBtn:connect( QEvent_Paint, {|oEvent,oPainter| RePaint( oEvent, oPainter, oBtn ) } )
-
    oWnd:connect( QEvent_KeyPress, {|e| My_Events( e ) } )
-   oWnd:connect( QEvent_Close, {|| QApplication():quit() } )
+   oWnd:connect( QEvent_Close   , {|| QApplication():quit() } )
+   
    oWnd:Show()
-
    QApplication():exec()
 
-   oBtn:disconnect( "clicked()" )
-   oBtn := NIL
-   
-   HB_TRACE( HB_TR_DEBUG, ".............. E X I T I N G ...................", valtype( oLabel ) )
-   xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd } )
+   oWnd:disconnect( QEvent_KeyPress )
+   oWnd:disconnect( QEvent_Close )
 
+   oBtn:disconnect( "clicked()" )
+
+   FOR EACH oAct IN aMenu
+      oAct:disconnect( "triggered(bool)" )
+   NEXT        
+   FOR EACH oAct IN aTool
+      oAct:disconnect( "triggered(bool)" )
+   NEXT        
+       
+   aTabs[ 1,1 ]:disconnect( "returnPressed()" )
+   aTabs[ 1,2 ]:disconnect( "currentIndexChanged(int)" )
+   aTabs[ 1,3 ]:disconnect( "stateChanged(int)" )
+   aTabs[ 1,4 ]:disconnect( "clicked()" )
+
+   HB_TRACE( HB_TR_DEBUG, ".............. E X I T I N G ..................." )
+   xReleaseMemory( { oBtn, aMenu, aTool, aTabs, oDA, oWnd } )
    RETURN
 
 /*----------------------------------------------------------------------*/
@@ -193,23 +201,23 @@ PROCEDURE ExecOneMore()
    oEventLoop := 0
 
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd, oEventLoop } )
-
+   HB_TRACE( HB_TR_DEBUG, "  " )
+   HB_TRACE( HB_TR_DEBUG, ".............. E X I T I N G one more dialog ..................." )
+   HB_TRACE( HB_TR_DEBUG, "  " )
+   
    RETURN
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_MenuBar( oWnd )
-   LOCAL oMenuBar, oMenu1, oMenu2, oAM1, oAM2
+   LOCAL oMenuBar, oMenu1, oMenu2
    LOCAL oActNew, oActOpen, oActSave, oActExit
    LOCAL oActColors, oActFonts, oActPgSetup, oActPreview, oActWiz, oActWeb, oActOther
-   LOCAL oS1, oS2, oS3, oS4, oS5
 
-   oMenuBar := QMenuBar()
-   oMenuBar:resize( oWnd:width(), 25 )
+   oMenuBar := QMenuBar( oWnd )
 
-   oMenu1 := QMenu()
+   oMenu1 := QMenu( oMenuBar )
    oMenu1:setTitle( "&File" )
-   oMenu1:connect( QEvent_Paint, {|oEvent,oPainter| MenuRePaint( oEvent, oPainter, oMenu1 ) } )
 
    oActNew := QAction( oMenu1 )
    oActNew:setText( "&New" )
@@ -220,19 +228,19 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oActOpen := oMenu1:addAction( QIcon( hb_dirBase() + "open.png" ), "&Open" )
    oActOpen:connect( "triggered(bool)", {|w,l| FileDialog( "Open" , w, l ) } )
 
-   oS1 := oMenu1:addSeparator()
+   oMenu1:addSeparator()
 
    oActSave := oMenu1:addAction( QIcon( hb_dirBase() + "save.png" ), "&Save" )
    oActSave:connect( "triggered(bool)", {|w,l| FileDialog( "Save" , w, l ) } )
 
-   oS2 := oMenu1:addSeparator()
+   oMenu1:addSeparator()
 
    oActExit := oMenu1:addAction( "E&xit" )
    oActExit:connect( "triggered(bool)", {|| QApplication():quit() } )
 
-   oAM1 := oMenuBar:addMenu( oMenu1 )
+   oMenuBar:addMenu( oMenu1 )
 
-   oMenu2 := QMenu()
+   oMenu2 := QMenu( oMenuBar )
    oMenu2:setTitle( "&Dialogs" )
 
    oActColors := oMenu2:addAction( "&Colors" )
@@ -241,7 +249,7 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oActFonts := oMenu2:addAction( "&Fonts" )
    oActFonts:connect( "triggered(bool)", {|w,l| Dialogs( "Fonts", w, l ) } )
 
-   oS3 := oMenu2:addSeparator()
+   oMenu2:addSeparator()
 
    oActPgSetup := oMenu2:addAction( "&PageSetup" )
    oActPgSetup:connect( "triggered(bool)", {|w,l| Dialogs( "PageSetup", w, l ) } )
@@ -249,7 +257,7 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oActPreview := oMenu2:addAction( "P&review" )
    oActPreview:connect( "triggered(bool)", {|w,l| Dialogs( "Preview", w, l ) } )
 
-   oS4 := oMenu2:addSeparator()
+   oMenu2:addSeparator()
 
    oActWiz := oMenu2:addAction( "&Wizard" )
    oActWiz:connect( "triggered(bool)", {|w,l| Dialogs( "Wizard", w, l ) } )
@@ -257,26 +265,25 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oActWeb := oMenu2:addAction( "W&ebPage" )
    oActWeb:connect( "triggered(bool)", {|w,l| Dialogs( "WebPage", w, l ) } )
 
-   oS5 := oMenu2:addSeparator()
+   oMenu2:addSeparator()
 
    oActOther := oMenu2:addAction( "&Another Dialog" )
    oActOther:connect( "triggered(bool)", {|| ExecOneMore() } )
 
-   oAM2 := oMenuBar:addMenu( oMenu2 )
+   oMenuBar:addMenu( oMenu2 )
 
    oWnd:setMenuBar( oMenuBar )
 
-   RETURN { oMenu1, oMenu2, oMenuBar, oActNew, oActOpen, oActSave, oActExit, ;
-            oActColors, oActFonts, oActPgSetup, oActPreview, oActWiz, oActWeb, ;
-            oActOther, oS1, oS2, oS3, oS4, oS5, oAM1, oAM2 }
+   RETURN { oActNew, oActOpen, oActSave, oActExit, oActColors, oActFonts, ;
+            oActPgSetup, oActPreview, oActWiz, oActWeb, oActOther }
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_ToolBar( oWnd )
-   LOCAL oTB, oActNew, oActOpen, oActSave, oS1
+   LOCAL oTB, oActNew, oActOpen, oActSave
 
    /* Create a Toolbar Object */
-   oTB := QToolBar()
+   oTB := QToolBar( oWnd )
 
    /* Create an action */
    oActNew := QAction( oWnd )
@@ -296,7 +303,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    /* Attach Action with Toolbar */
    oTB:addAction( oActOpen )
 
-   oS1 := oTB:addSeparator()
+   oTB:addSeparator()
 
    /* Create another action */
    oActSave := QAction( oWnd )
@@ -310,7 +317,7 @@ STATIC FUNCTION Build_ToolBar( oWnd )
    /* Add this toolbar with main window */
    oWnd:addToolBar( oTB )
 
-   RETURN { oActNew, oActOpen, oActSave, oTB, oS1 }
+   RETURN { oActNew, oActOpen, oActSave }
 
 /*----------------------------------------------------------------------*/
 
@@ -361,12 +368,12 @@ STATIC FUNCTION Build_Grid( oWnd, aPos, aSize )
    //
    oGrid:Show()
 
-   RETURN {  oBrushBackItem0x0, oBrushForeItem0x0, oGridItem0x0, oGrid }
+   RETURN {}  
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )
-   LOCAL oTabWidget, oTab1, oTab2, oTab3, aTree, aCntl, aText
+   LOCAL oTabWidget, oTab1, oTab2, oTab3, aCtrls
 
    oTabWidget := QTabWidget( oWnd )
 
@@ -382,14 +389,11 @@ STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )
    oTabWidget:ReSize( aSize[ 1 ], aSize[ 2 ] )
    oTabWidget:show()
 
-   aTree := Build_Treeview( oTab1 )
-   aadd( aTree, oTab1 )
-   aCntl := Build_Controls( oTab2 )
-   aadd( aCntl, oTab2 )
-   aText := Build_TextBox( oTab3 )
-   aadd( aText, oTab3 )
+   Build_Treeview( oTab1 )
+   aCtrls := Build_Controls( oTab2 )
+   Build_TextBox( oTab3 )
 
-   RETURN { aCntl, aTree, aText, oTabWidget }
+   RETURN { aCtrls }
 
 /*----------------------------------------------------------------------*/
 
@@ -399,13 +403,13 @@ STATIC FUNCTION Build_TreeView( oWnd )
    oTV := QTreeView( oWnd )
    oTV:setMouseTracking( .t. )
 *  oTV:connect( "hovered()", {|i| HB_TRACE( HB_TR_DEBUG, ( "oTV:hovered" ) } )
-   oDirModel := QDirModel()
+   oDirModel := QDirModel( oTV )
    oTV:setModel( oDirModel )
    oTV:move( 5, 7 )
    oTV:resize( 345, 365 )
    OTV:show()
 
-   RETURN { oDirModel, oTV }
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -413,11 +417,8 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
    LOCAL oListBox, oStrList, oStrModel
 
    oListBox := QListView( oWnd )
-   oListBox:setMouseTracking( .t. )
-*  oListBox:connect( "hovered()", {|i| HB_TRACE( HB_TR_DEBUG, ( "oListBox:hovered" ) } )
 
    oStrList := QStringList()
-
    oStrList:append( "India"          )
    oStrList:append( "United States"  )
    oStrList:append( "England"        )
@@ -427,15 +428,14 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
    oStrList:append( "China"          )
    oStrList:sort()
 
-   oStrModel := QStringListModel()
-   oStrModel:setStringList( oStrList )
-
+   oStrModel := QStringListModel( oStrList, oListBox )
+   
    oListBox:setModel( oStrModel )
    oListBox:Move( aPos[ 1 ], aPos[ 2 ] )
    oListBox:ReSize( aSize[ 1 ], aSize[ 2 ] )
    oListBox:Show()
 
-   RETURN { oStrList, oStrModel, oListBox }
+   RETURN NIL 
 
 /*----------------------------------------------------------------------*/
 
@@ -449,7 +449,7 @@ STATIC FUNCTION Build_TextBox( oWnd )
    oTextBox:setPlainText( "This is Harbour QT implementation" )
    oTextBox:Show()
 
-   RETURN oTextBox
+   RETURN NIL 
 
 /*----------------------------------------------------------------------*/
 
@@ -493,7 +493,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    oRadioButton:ReSize( 345, 30 )
    oRadioButton:Show()
 
-   RETURN { oEdit, oComboBox, oCheckBox, oSpinBox, oRadioButton }
+   RETURN { oEdit, oComboBox, oCheckBox, oRadioButton }
 
 /*----------------------------------------------------------------------*/
 
@@ -507,7 +507,7 @@ STATIC FUNCTION Build_ProgressBar( oWnd, aPos, aSize )
    oProgressBar:ReSize( aSize[ 1 ], aSize[ 2 ] )
    oProgressBar:Show()
 
-   RETURN oProgressBar
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -521,7 +521,7 @@ STATIC FUNCTION Build_Label( oWnd, aPos, aSize )
    oLabel:ReSize( aSize[ 1 ], aSize[ 2 ] )
    oLabel:Show()
 
-   RETURN oLabel
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

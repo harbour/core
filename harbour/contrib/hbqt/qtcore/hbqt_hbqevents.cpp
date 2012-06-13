@@ -107,15 +107,11 @@ void hbqt_events_unregister_createobj( QEvent::Type eventtype )
 
 /*----------------------------------------------------------------------*/
 
-HBQEvents::HBQEvents( PHB_ITEM pObj ) : QObject()
+HBQEvents::HBQEvents( QObject * object ) : QObject()
 {
-   if( pObj )
+   if( object )
    {
-      QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
-      if( object )
-      {
-         object->installEventFilter( this );
-      }
+      object->installEventFilter( this );
    }
 }
 
@@ -169,14 +165,14 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
          
          if( eventId > -1 && hb_vmRequestReenter() )
          {
-            PHB_ITEM p = hbqt_bindGetEvents( hbqt_bindGetHbObjectBYqtObject( object ), eventtype ); 
-            if( p )
+            PHB_ITEM pArray = hbqt_bindGetEvents( hbqt_bindGetHbObjectBYqtObject( object ), eventtype ); 
+            if( pArray )
             {
                PHB_ITEM pItem = hbqt_bindGetHbObject( NULL, ( void * ) event, ( s_lstCreateObj.at( eventId ) ), NULL, HBQT_BIT_NONE );
-               stopTheEventChain = ( bool ) hb_itemGetL( hb_vmEvalBlockV( hb_arrayGetItemPtr( p, 1 ), 1, pItem ) );
+               stopTheEventChain = ( bool ) hb_itemGetL( hb_vmEvalBlockV( hb_arrayGetItemPtr( pArray, 1 ), 1, pItem ) );
                hb_itemRelease( pItem );
+               hb_itemRelease( pArray );
             }   
-            hb_itemRelease( p );
             hb_vmRequestRestore();
          }   
          if( eventtype == QEvent::Close )

@@ -91,9 +91,6 @@ METHOD HbQtUI:new( oRootWidget, hWidget )
    ::oWidget := oRootWidget
    ::qObj := hWidget
 
-   /* QUESTION: Is this needed? */
-   ::pPtr := oRootWidget:pPtr
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -147,7 +144,7 @@ METHOD HbQtUI:__OnError( ... )
 
          Eval( ErrorBlock(), oError )
       ENDIF
-   ELSEIF ::oWidget:hasValidPointer() /* QUESTION: Why do we need this? */
+   ELSEIF ! empty( ::oWidget )
       RETURN ::oWidget:&cMsg( ... )
    ENDIF
 

@@ -60,8 +60,6 @@
 
 CREATE CLASS HbQtObjectHandler
 
-   VAR    pPtr     /* TODO: Rename to __pPtr */
-
    VAR    __pSlots                                PROTECTED
    VAR    __pEvents                               PROTECTED
 
@@ -69,8 +67,6 @@ CREATE CLASS HbQtObjectHandler
 
    VAR    __Slots
    VAR    __Events
-
-   METHOD hasValidPointer()
 
    METHOD connect( cnEvent, bBlock )
    METHOD disconnect( cnEvent )
@@ -103,11 +99,6 @@ METHOD HbQtObjectHandler:setEvents()
    ENDIF    
    
    RETURN Self 
-
-/*----------------------------------------------------------------------*/
-/* TOBE: deleted */   
-METHOD HbQtObjectHandler:hasValidPointer()
-   RETURN __hbqt_isPointer( ::pPtr )
 
 /*----------------------------------------------------------------------*/
 

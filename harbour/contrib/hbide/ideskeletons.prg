@@ -353,7 +353,7 @@ METHOD IdeSkeletons:selectByMenuAndPostText( qEdit )
             aadd( aAct, qMenu:addAction( a_[ 1 ] ) )
          NEXT
 
-         IF ( qAct := qMenu:exec( qEdit:mapToGlobal( QPoint( qRect:x(), qRect:y() ) ) ) ):hasValidPointer()
+         IF ! empty( qAct := qMenu:exec( qEdit:mapToGlobal( QPoint( qRect:x(), qRect:y() ) ) ) )
             IF !empty( cText := ::getText( qAct:text() ) )
                ::postText( qEdit, cText )
             ENDIF

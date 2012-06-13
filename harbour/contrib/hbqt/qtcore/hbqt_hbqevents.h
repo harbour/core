@@ -68,7 +68,7 @@ class HBQEvents: public QObject
    Q_OBJECT
 
 public:
-   HBQEvents( PHB_ITEM pObj );
+   HBQEvents( QObject * parent = 0 );
    ~HBQEvents();
    QList<PHB_ITEM> listBlock;
 
