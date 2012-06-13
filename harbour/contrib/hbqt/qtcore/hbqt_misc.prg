@@ -85,7 +85,7 @@ CREATE CLASS HbQtObjectHandler
 METHOD HbQtObjectHandler:setSlots()
 
    IF empty( ::__Slots )
-      ::__Slots := {=>}
+      ::__Slots := { => }
       hb_hDefault( ::__Slots, {} )
    ENDIF
 

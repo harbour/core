@@ -79,7 +79,7 @@ typedef struct _HBQT_BIND
    PHBQT_DEL_FUNC       pDelFunc;
    int                  iFlags;
    bool                 fDeleting;
-   char                 szClassName[ 100 ];
+   char                 szClassName[ HB_SYMBOL_NAME_LEN + 1 ];
    struct _HBQT_BIND *  next;
 }
 HBQT_BIND, * PHBQT_BIND;
@@ -171,7 +171,7 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
             bind->pDelFunc = pDelFunc;
             bind->iFlags = iFlags;
             bind->fDeleting = false;
-            hb_strncpy( bind->szClassName, szClassName, 99 );
+            hb_strncpy( bind->szClassName, szClassName, HB_SIZEOFARRAY( bind->szClassName ) - 1 );
             bind->next = s_hbqt_binds;
             s_hbqt_binds = bind;
          }
@@ -243,7 +243,7 @@ PHB_ITEM hbqt_bindSetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
          bind->pDelFunc = pDelFunc;
          bind->iFlags = iFlags;
          bind->fDeleting = false;
-         hb_strncpy( bind->szClassName, szClassName, 99 );
+         hb_strncpy( bind->szClassName, szClassName, HB_SIZEOFARRAY( bind->szClassName ) - 1 );
          bind->next = s_hbqt_binds;
          s_hbqt_binds = bind;
 
