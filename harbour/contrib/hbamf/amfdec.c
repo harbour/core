@@ -257,7 +257,7 @@ static HB_BOOL amf3_deserialize_string( amfContext * context, PHB_ITEM pItem )
 {
    int      header;
    int *    header_p = &header;
-   PHB_ITEM pRefItem = NULL;
+   PHB_ITEM pRefItem;
    PHB_ITEM pHash    = context->str_ref;
 
    if( ! amf3_decode_int( context, header_p ) )
@@ -393,10 +393,10 @@ static HB_BOOL amf3_deserialize_array( amfContext * context, PHB_ITEM pItem, HB_
 {
    int      header;
    int *    header_p = &header;
-   PHB_ITEM pRefItem = NULL;
+   PHB_ITEM pRefItem;
    PHB_ITEM pHash    = context->obj_ref;
    int      array_len;
-   HB_BOOL  mixed    = HB_FALSE; /* if the result will be a Hash with both numbers and strings as keys */
+   HB_BOOL  mixed; /* if the result will be a Hash with both numbers and strings as keys */
    char *   byte_ref;
 
    if( ! amf3_decode_int( context, header_p ) )
@@ -506,7 +506,7 @@ static HB_BOOL amf3_deserialize_date( amfContext * context, PHB_ITEM pItem )
 {
    int      header;
    int *    header_p = &header;
-   PHB_ITEM pRefItem = NULL;
+   PHB_ITEM pRefItem;
    PHB_ITEM pHash    = context->obj_ref;
 
    if( ! amf3_decode_int( context, header_p ) )
@@ -553,7 +553,7 @@ static HB_BOOL amf3_deserialize_byte_array( amfContext * context, PHB_ITEM pItem
 {
    int      header;
    int *    header_p = &header;
-   PHB_ITEM pRefItem = NULL;
+   PHB_ITEM pRefItem;
    PHB_ITEM pHash    = context->obj_ref;
 
    if( ! amf3_decode_int( context, header_p ) )
@@ -657,9 +657,9 @@ static HB_BOOL amf3_decode_class_def( amfContext * context, PHB_ITEM pClass, int
 {
    PHB_ITEM pStrAlias         = hb_itemNew( NULL );
    PHB_ITEM pMappedClassDef   = NULL;
-   PHB_ITEM pKey              = NULL;
-   PHB_ITEM pValue            = NULL;
-   PHB_ITEM pAttrs            = NULL;
+   PHB_ITEM pKey;
+   PHB_ITEM pValue;
+   PHB_ITEM pAttrs;
    int      static_attr_len;
    int      i;
 
@@ -788,7 +788,7 @@ static HB_BOOL amf3_decode_class_def( amfContext * context, PHB_ITEM pClass, int
 static HB_BOOL amf3_deserialize_class_def( amfContext * context, PHB_ITEM pClass, int header )
 {
    PHB_ITEM pHash    = context->class_ref;
-   PHB_ITEM pRefItem = NULL;
+   PHB_ITEM pRefItem;
 
    /* Check for reference */
    pRefItem = amf3_decode_reference( pHash, header );
@@ -941,11 +941,11 @@ static HB_BOOL amf3_deserialize_obj( amfContext * context, PHB_ITEM pItem, HB_BO
 {
    int      header;
    int *    header_p          = &header;
-   PHB_ITEM pRefItem          = NULL;
+   PHB_ITEM pRefItem;
    PHB_ITEM pHash             = context->obj_ref;
-   PHB_ITEM pClass            = NULL;
-   PHB_ITEM pMappedClassDef   = NULL;
-   PHB_ITEM pValue            = NULL;
+   PHB_ITEM pClass;
+   PHB_ITEM pMappedClassDef;
+   PHB_ITEM pValue;
    int      obj_type; /* 0 = anonymous, 1 == externalizable, 2 == typed */
    HB_BOOL  result;
 

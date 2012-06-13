@@ -41,9 +41,9 @@ HB_FUNC( AMFSTDIO_READ )
    char *     pszLenPrefix  = ( char * ) hb_xgrab( 5 );
    char *     pszBuf;    /* = ( char * ) hb_xgrab( SINGLEBUF ); */
    char *     pszTmp      = pszLenPrefix;
-   HB_USHORT  nBytes      = 0;
+   HB_USHORT  nBytes;
    int        nTotal      = 0;
-   int        nLen        = 0;
+   int        nLen;
    int        nToRead;
    HB_FHANDLE hStdIn      = hb_fsGetOsHandle( HB_STDIN_HANDLE );
 

@@ -176,22 +176,22 @@ static HB_BOOL amf3_encode_int( amfContext * context, int value )
    else if( value < 0x4000 )
    {
       tmp_size = 2;
-      tmp[ 0 ] = ( char ) ( value >> 7 & 0x7f ) | 0x80;  /* Shift bits by 7 to fill 1st byte and set next byte flag */
-      tmp[ 1 ] = ( char ) value & 0x7f;                  /* Shift bits by 7 to fill 2nd byte, leave next byte flag unset */
+      tmp[ 0 ] = ( char ) ( ( value >> 7 ) & 0x7f ) | 0x80;  /* Shift bits by 7 to fill 1st byte and set next byte flag */
+      tmp[ 1 ] = ( char ) value & 0x7f;                      /* Shift bits by 7 to fill 2nd byte, leave next byte flag unset */
    }
    else if( value < 0x200000 )
    {
       tmp_size = 3;
-      tmp[ 0 ] = ( char ) ( value >> 14 & 0x7f ) | 0x80;
-      tmp[ 1 ] = ( char ) ( value >> 7 & 0x7f ) | 0x80;
+      tmp[ 0 ] = ( char ) ( ( value >> 14 ) & 0x7f ) | 0x80;
+      tmp[ 1 ] = ( char ) ( ( value >> 7 ) & 0x7f ) | 0x80;
       tmp[ 2 ] = ( char ) value & 0x7f;
    }
    else if( value < 0x40000000 )
    {
       tmp_size = 4;
-      tmp[ 0 ] = ( char ) ( value >> 22 & 0x7f ) | 0x80;
-      tmp[ 1 ] = ( char ) ( value >> 15 & 0x7f ) | 0x80;
-      tmp[ 2 ] = ( char ) ( value >> 8 & 0x7f ) | 0x80; /* Shift bits by 8, since we can use all bits in the 4th byte */
+      tmp[ 0 ] = ( char ) ( ( value >> 22 ) & 0x7f ) | 0x80;
+      tmp[ 1 ] = ( char ) ( ( value >> 15 ) & 0x7f ) | 0x80;
+      tmp[ 2 ] = ( char ) ( ( value >> 8 ) & 0x7f ) | 0x80; /* Shift bits by 8, since we can use all bits in the 4th byte */
       tmp[ 3 ] = ( char ) ( value & 0xff );
    }
    else
@@ -261,7 +261,7 @@ static HB_BOOL amf3_encode_string( amfContext * context, PHB_ITEM pItem )
    if( context->str_rtrim )
       len = hb_strRTrimLen( utf8str, len, HB_FALSE );
 
-   if( ! amf3_encode_int( context, ( ( int ) len ) << 1 | REFERENCE_BIT ) )
+   if( ! amf3_encode_int( context, ( ( int ) len << 1 ) | REFERENCE_BIT ) )
       return HB_FALSE;
 
    result = ( writeBuffer( context, utf8str, len ) != 0 );
@@ -369,7 +369,7 @@ static int amf3_get_index( amfContext * context, PHB_ITEM pHash, PHB_ITEM pItem 
 
 static int amf3_encode_reference( amfContext * context, PHB_ITEM pHash, PHB_ITEM pItem, int bit )
 {
-   int idx = -1;
+   int idx;
 
    if( pItem == NULL )
       return -1;
@@ -433,7 +433,7 @@ static HB_BOOL amf3_encode_hash( amfContext * context, PHB_ITEM pItem )
 {
    PHB_ITEM pKey;
    PHB_ITEM pVal;
-   int      i        = 0;
+   int      i;
    int      len      = hb_hashLen( pItem );
    int      nIntKeys = 0;
 
@@ -449,7 +449,7 @@ static HB_BOOL amf3_encode_hash( amfContext * context, PHB_ITEM pItem )
       }
    }
 
-   if( ! amf3_encode_int( context, nIntKeys << 1 | REFERENCE_BIT ) )
+   if( ! amf3_encode_int( context, ( nIntKeys << 1 ) | REFERENCE_BIT ) )
       return HB_FALSE;
 
    for( i = 1; i <= len; i++ )
@@ -489,7 +489,7 @@ static HB_BOOL amf3_encode_dynamic_dict( amfContext * context, PHB_ITEM pItem )
 {
    PHB_ITEM pKey;
    PHB_ITEM pVal;
-   int      i     = 0;
+   int      i;
    int      len   = hb_hashLen( pItem );
 
    for( i = 1; i <= len; i++ )
@@ -561,7 +561,7 @@ static int amf3_serialize_byte_array( amfContext * context, PHB_ITEM pItem )
    if( result > -1 )
       return result;
 
-   if( ! amf3_encode_int( context, ( ( int ) hb_itemGetCLen( pItem ) ) << 1 | REFERENCE_BIT ) )
+   if( ! amf3_encode_int( context, ( ( int ) hb_itemGetCLen( pItem ) << 1 ) | REFERENCE_BIT ) )
       return HB_FALSE;
 
    return amf3_encode_byte_array( context, pItem );
@@ -596,7 +596,7 @@ static HB_BOOL amf3_encode_array( amfContext * context, PHB_ITEM pItem )
    int      i;
    int      result;
 
-   if( ! amf3_encode_int( context, ( ( int ) item_len ) << 1 | REFERENCE_BIT ) )
+   if( ! amf3_encode_int( context, ( ( int ) item_len << 1 ) | REFERENCE_BIT ) )
       return HB_FALSE;
 
    if( ! writeByte( context, NULL_TYPE ) )
@@ -633,10 +633,10 @@ static int amf3_encode_class_def( amfContext * context, PHB_ITEM pClass )
    int      result;
    int      static_attr_len;
    int      i;
-   PHB_ITEM class_alias    = NULL;
-   PHB_ITEM static_attrs   = NULL;
-   /* PHB_ITEM attr_len = NULL; */
-   PHB_ITEM attr_name      = NULL;
+   PHB_ITEM class_alias;
+   PHB_ITEM static_attrs;
+/* PHB_ITEM attr_len = NULL; */
+   PHB_ITEM attr_name;
 
    if( ! pClass )
    {
@@ -680,7 +680,6 @@ static int amf3_encode_class_def( amfContext * context, PHB_ITEM pClass )
       return result;
    }
 
-
    static_attrs = hb_hashGetCItemPtr( pClass, "static_attrs" );
    if( ! static_attrs )
    {
@@ -720,7 +719,7 @@ static int amf3_encode_class_def( amfContext * context, PHB_ITEM pClass )
          return 0;
    }
 
-   /* not needed  hb_itemRelease(static_attrs); */
+   /* not needed  hb_itemRelease( static_attrs ); */
    return 1;
 }
 
@@ -1039,7 +1038,8 @@ static HB_BOOL amf3_encode( amfContext * context, PHB_ITEM pItem )
    {
       if( ! writeByte( context, DATE_TYPE ) )
          result = HB_FALSE;
-      result = amf3_serialize_date( context, pItem );
+      else
+         result = amf3_serialize_date( context, pItem );
    }
    else if( HB_IS_OBJECT( pItem ) )
    {
@@ -1253,7 +1253,7 @@ HB_FUNC( AMF3_FROMWA )
       /* TODO: should be if( writeByte() ), before we make a variant that operates on streams directly */
 
       writeByte( context, ARRAY_TYPE );
-      amf3_encode_int( context, ( ( int ) nCount ) << 1 | REFERENCE_BIT );
+      amf3_encode_int( context, ( ( int ) nCount << 1 ) | REFERENCE_BIT );
       writeByte( context, NULL_TYPE );
 
       SELF_FIELDCOUNT( pArea, &uiFields );
@@ -1341,7 +1341,7 @@ HB_FUNC( AMF3_FROMWA )
                writeByte( context, ARRAY_TYPE );
                if( bNoFieldPassed )
                {
-                  amf3_encode_int( context, ( ( int ) uiFields ) << 1 | REFERENCE_BIT );
+                  amf3_encode_int( context, ( ( int ) uiFields << 1 ) | REFERENCE_BIT );
                   writeByte( context, NULL_TYPE );
                   for( uiIter = 1; uiIter <= uiFields; uiIter++ )
                   {
@@ -1351,7 +1351,7 @@ HB_FUNC( AMF3_FROMWA )
                }
                else
                {
-                  amf3_encode_int( context, ( ( int ) uiFieldCopy ) << 1 | REFERENCE_BIT );
+                  amf3_encode_int( context, ( ( int ) uiFieldCopy << 1 ) | REFERENCE_BIT );
                   writeByte( context, NULL_TYPE );
                   for( uiIter = 1; uiIter <= uiFieldCopy; uiIter++ )
                   {
