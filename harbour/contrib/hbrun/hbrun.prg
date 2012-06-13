@@ -756,9 +756,9 @@ STATIC FUNCTION hbrun_HistoryFileName()
 #endif
 
 #if defined( __PLATFORM__DOS )
-   cFileName := "hbrunhst.ini"
+   cFileName := "hbhist.ini"
 #else
-   cFileName := ".hbrun_history"
+   cFileName := ".hb_history"
 #endif
 
    IF ! Empty( GetEnv( cEnvVar ) )
