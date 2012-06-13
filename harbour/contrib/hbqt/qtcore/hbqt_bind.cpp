@@ -90,8 +90,12 @@ HBQT_BIND, * PHBQT_BIND;
 #define HBQT_BIND_LOCK        do {
 #define HBQT_BIND_UNLOCK      } while( 0 );
 
+// #define HBQT_FORCE_RELEASE_GLL
+
 void hbqt_bindDelSlots( PHB_ITEM pSenderObject );
 void hbqt_bindDelEvents( PHB_ITEM pSenderObject );
+int __hbqt_bindItemsInGlobalList();
+int hbqt_bindIsHbObject( PHB_ITEM pObject );
 
 static PHBQT_BIND s_hbqt_binds = NULL;
 static HBQDestroyer * s_destroyer = NULL;
@@ -114,6 +118,51 @@ static void hbqt_bind_init( void* cargo )
    s_dynsym___EVENTS  = hb_dynsymGetCase( "__EVENTS" );
    s_dynsym_SETEVENTS = hb_dynsymGetCase( "SETEVENTS" );
 }
+
+
+// we need to release all the PHB_ITEM that are still in the GLL
+// we are now using a linked list and releasing an item may change the GLL
+// so I first store the PHB_ITEM addresses in a QList
+// and then I ask to remove them from the GLL... if already removed no problem
+static void hbqt_bind_exit( void* cargo )
+{
+   HB_SYMBOL_UNUSED( cargo );
+
+   PHBQT_BIND bind;
+
+   QList<PHB_ITEM> deleteIt;
+
+   HBQT_BIND_LOCK
+  
+   bind = s_hbqt_binds;
+   while ( bind )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "Item on GLL %p %s", bind->qtObject, bind->szClassName ) );
+      deleteIt << bind->hbObject;
+
+      bind = bind->next;
+   }
+   HBQT_BIND_UNLOCK
+#ifdef HBQT_FORCE_RELEASE_GLL
+
+   HB_TRACE( HB_TR_ALWAYS, ( "onExit before" ) );
+   while( ! deleteIt.isEmpty() )
+   {
+         HB_TRACE( HB_TR_ALWAYS, ( "onExit check" ) );
+      int i = deleteIt.size() - 1;
+      // check to see if PHB_ITEM is still in GLL
+      if( hbqt_bindIsHbObject( (PHB_ITEM) deleteIt.at( i ) ) )
+      {
+         HB_TRACE( HB_TR_ALWAYS, ( "onExit itemRelease" ) );
+         hb_itemRelease( (PHB_ITEM) deleteIt.at( i ));
+      }
+      deleteIt.removeAt( i );
+   }
+   HB_TRACE( HB_TR_ALWAYS, ( "onExit after" ) );
+#endif
+   HB_TRACE( HB_TR_ALWAYS, ( "Exiting with %d items on GLL", __hbqt_bindItemsInGlobalList() ) );
+}
+
 
 PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szClassName, PHBQT_DEL_FUNC pDelFunc, int iFlags )
 {
@@ -292,6 +341,30 @@ PHB_ITEM hbqt_bindGetHbObjectByQtObject( void * qtObject )
    }
    return pObject;
 }
+
+// returns 1 if HB object is in the Global Linked List
+
+int hbqt_bindIsHbObject( PHB_ITEM pObject )
+{
+      PHBQT_BIND bind;
+
+      HBQT_BIND_LOCK
+      bind = s_hbqt_binds;
+      while( bind )
+      {
+         HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindIsHbObject( %p )", bind->qtObject ) );
+
+         if( bind->hbObject == pObject )
+         {
+            return 1;
+         }
+         bind = bind->next;
+      }
+      HBQT_BIND_UNLOCK
+
+   return 0;
+}
+
 
 void * hbqt_bindGetQtObject( PHB_ITEM pObject )
 {
@@ -757,24 +830,6 @@ HB_FUNC( __HBQT_DESTROY )
       hbqt_bindDestroyHbObject( pObject );
 }
 
-HB_FUNC( HBQT_PROMOTEWIDGET )
-{
-   if( hbqt_par_isDerivedFrom( 1, "QWIDGET" ) && HB_ISCHAR( 2 ) )
-   {
-      void * qtObject = hbqt_bindGetQtObject( hb_param( 1, HB_IT_OBJECT ) );
-      if ( qtObject )
-      {
-         hbqt_bindDestroyQtObject( qtObject );
-
-         const char * pText01 = hb_parc( 2 );
-         char test[ HB_SYMBOL_NAME_LEN + 1 ];
-         hb_snprintf( test, sizeof( test ), "HB_%s", pText01 );
-
-         hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, qtObject, test, NULL, HBQT_BIT_QOBJECT ) );
-      }
-   }
-}
-
 int __hbqt_bindItemsInGlobalList( void )
 {
    int i = 0;
@@ -795,12 +850,6 @@ int __hbqt_bindItemsInGlobalList( void )
 HB_FUNC( __HBQT_ITEMSINGLOBALLIST )
 {
    hb_retni( __hbqt_bindItemsInGlobalList() );
-}
-
-static void hbqt_bind_exit( void* cargo )
-{
-   HB_SYMBOL_UNUSED( cargo );
-   HB_TRACE( HB_TR_DEBUG, ( "Exiting with %d Items in Global List", __hbqt_bindItemsInGlobalList() ) );
 }
 
 HB_CALL_ON_STARTUP_BEGIN( _hbqt_bind_init_ )

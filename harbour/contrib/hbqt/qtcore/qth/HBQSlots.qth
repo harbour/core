@@ -34,7 +34,7 @@ New         =
  */
 HB_FUNC( QT_HBQSLOTS )
 {
-   __HB_RETPTRGC__( new HBQSlots( hb_param( 1, HB_IT_OBJECT ) ) );
+   __HB_RETPTRGC__( new HBQSlots() );
 }
 </CODE>
 

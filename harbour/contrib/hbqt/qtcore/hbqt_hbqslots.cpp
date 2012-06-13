@@ -106,16 +106,14 @@ void hbqt_slots_unregister_callback( QByteArray sig )
 
 /*----------------------------------------------------------------------*/
 
-HBQSlots::HBQSlots( PHB_ITEM pObj ) : QObject()
+// HBQSlots::HBQSlots( PHB_ITEM pObj ) : QObject()
+HBQSlots::HBQSlots() : QObject()
 {
-   if( pObj )
-   {
-      // Nothing to do
-   }
 }
 
 HBQSlots::~HBQSlots()
 {
+         HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::~HBQSlots()" ) );
 }
 
 int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
@@ -149,14 +147,6 @@ int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
                         {
                            nResult = 0;
 
-                           listBlock << NULL;
-
-                           char szSlotName[ 20 ];
-                           hb_snprintf( szSlotName, sizeof( szSlotName ), "SLOT_%d", slotId );
-
-                           object->setProperty( szSlotName, ( int ) listBlock.size() );
-                           object->setProperty( pszSignal, ( int ) listBlock.size() );
-
                            HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %s ) signalId=%i, %p", pszSignal, signalId, object ) );
                            hbqt_bindAddSlot( pObj, signalId, bBlock );
                         }
@@ -181,7 +171,7 @@ int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
       else
          nResult = 2;
    }
-
+   HB_TRACE( HB_TR_DEBUG, ( "HBQT_SLOTS_CONNECT returns: %d", nResult ) );
    return nResult;
 }
 
@@ -194,10 +184,6 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
    QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
    if( object )
    {
-      int i = object->property( pszSignal ).toInt();
-      if( i > 0 && i <= listBlock.size() )
-      {
-         object->setProperty( pszSignal, QVariant() );
 
          QString signal = pszSignal;
          QByteArray theSignal = signal.toAscii();
@@ -221,9 +207,6 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
             HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisConnect( %s ) signalId=%i, %p", pszSignal, signalId, object ) );
             hbqt_bindDelSlot( pObj, signalId, NULL );
          }
-      }
-      else
-         nResult = 3;
    }
    else
       nResult = 2;
@@ -240,12 +223,6 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
    QObject * object = sender();
    if( object )
    {
-      char szSlotName[ 20 ];
-      hb_snprintf( szSlotName, sizeof( szSlotName ), "SLOT_%d", id );
-      int i = object->property( szSlotName ).toInt();
-
-      if( i > 0 && i <= this->listBlock.size() )
-      {
          QByteArray paramString;
          const QMetaMethod meta = object->metaObject()->method( id );
          QList<QByteArray> arrayOfTypes = meta.parameterTypes();
@@ -291,7 +268,9 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
 
          if( hb_vmRequestReenter() )
          {
-            PHB_ITEM p = hbqt_bindGetSlots( hbqt_bindGetHbObjectByQtObject( object ), id );
+            PHB_ITEM hbObject = hbqt_bindGetHbObjectBYqtObject( object );
+            PHB_ITEM p = hbqt_bindGetSlots( hbObject, id ); 
+            hb_itemRelease( hbObject );
             if( p )
             {
                if( parameterCount == 0 )
@@ -311,7 +290,6 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
             }
             hb_vmRequestRestore();
          }
-      }
    }
    return -1;
 }

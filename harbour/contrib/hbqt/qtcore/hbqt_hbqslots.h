@@ -70,7 +70,8 @@ class HBQSlots: public QObject
 {
 
 public:
-   HBQSlots( PHB_ITEM pObj );
+   
+   HBQSlots( );
    ~HBQSlots();
    QList<PHB_ITEM>  listBlock;
 

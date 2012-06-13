@@ -67,8 +67,8 @@ CREATE CLASS HbQtObjectHandler
 
    VAR    __hEvents  PROTECTED INIT { => }
 
-   VAR    __Slots    PROTECTED
-   VAR    __Events   PROTECTED
+   VAR    __Slots    
+   VAR    __Events   
 
    METHOD connect( cnEvent, bBlock )
    METHOD disconnect( cnEvent )
