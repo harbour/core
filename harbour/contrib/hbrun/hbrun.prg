@@ -701,7 +701,7 @@ STATIC PROCEDURE hbrun_Exec( cCommand )
    LOCAL pHRB, cHRB, cFunc, bBlock, cEol, nRowMin
 
    cEol := hb_eol()
-   cFunc := "STATIC FUNC __HBDOT()" + cEol + ;
+   cFunc := "STATIC FUNCTION __HBDOT()" + cEol + ;
             "RETURN {||" + cEol + ;
             "   " + cCommand + cEol + ;
             "   RETURN __MVSETBASE()" + cEol + ;
@@ -740,6 +740,12 @@ STATIC FUNCTION HBRawVersion()
 
 #define _HISTORY_DISABLE_LINE "no"
 
+#if defined( __PLATFORM__DOS )
+#  define _FNAME_HISTORY_ "hbhist.ini"
+#else
+#  define _FNAME_HISTORY_ ".hb_history"
+#endif
+
 STATIC PROCEDURE hbrun_HistoryLoad()
    LOCAL cHistory
    LOCAL cLine
@@ -747,7 +753,7 @@ STATIC PROCEDURE hbrun_HistoryLoad()
    s_lWasLoad := .T.
 
    IF s_lPreserveHistory
-      cHistory := StrTran( MemoRead( hbrun_HistoryFileName() ), Chr( 13 ) )
+      cHistory := StrTran( MemoRead( __hbrun_ConfigDir() + _FNAME_HISTORY_ ), Chr( 13 ) )
       IF Left( cHistory, Len( _HISTORY_DISABLE_LINE + Chr( 10 ) ) ) == _HISTORY_DISABLE_LINE + Chr( 10 )
          s_lPreserveHistory := .F.
       ELSE
@@ -764,6 +770,7 @@ STATIC PROCEDURE hbrun_HistoryLoad()
 STATIC PROCEDURE hbrun_HistorySave()
    LOCAL cHistory
    LOCAL cLine
+   LOCAL cDir
 
    IF s_lWasLoad .AND. s_lPreserveHistory
       cHistory := ""
@@ -772,21 +779,13 @@ STATIC PROCEDURE hbrun_HistorySave()
             cHistory += AllTrim( cLine ) + hb_eol()
          ENDIF
       NEXT
-      hb_MemoWrit( hbrun_HistoryFileName(), cHistory )
+      IF ! hb_DirExists( cDir := __hbrun_ConfigDir() )
+         hb_DirCreate( cDir )
+      ENDIF
+      hb_MemoWrit( cDir + _FNAME_HISTORY_, cHistory )
    ENDIF
 
    RETURN
-
-STATIC FUNCTION hbrun_HistoryFileName()
-   LOCAL cFileName
-
-#if defined( __PLATFORM__DOS )
-   cFileName := "hbhist.ini"
-#else
-   cFileName := ".hb_history"
-#endif
-
-   RETURN __hbrun_ConfigDir() + cFileName
 
 FUNCTION __hbrun_FindInPath( cFileName, xPath )
    LOCAL cDir

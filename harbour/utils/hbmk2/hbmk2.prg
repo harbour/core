@@ -12305,10 +12305,6 @@ STATIC FUNCTION __hbrun_ConfigDir()
       cDir := hb_DirBase()
    ENDIF
 
-   IF ! hb_DirExists( cDir )
-      hb_DirCreate( cDir )
-   ENDIF
-
    RETURN cDir + hb_ps()
 
 STATIC PROCEDURE __hbrun_LoadExtDynamicFromFile( aDynamic, cFileName )
@@ -12820,6 +12816,12 @@ STATIC PROCEDURE __hbrun_Exec( cCommand )
 
 #define _HISTORY_DISABLE_LINE "no"
 
+#if defined( __PLATFORM__DOS )
+#  define _FNAME_HISTORY_ "hbhist.ini"
+#else
+#  define _FNAME_HISTORY_ ".hb_history"
+#endif
+
 EXIT PROCEDURE __hbrun_exit()
 
    __hbrun_HistorySave()
@@ -12833,7 +12835,7 @@ STATIC PROCEDURE __hbrun_HistoryLoad()
    s_lWasLoad := .T.
 
    IF s_lPreserveHistory
-      cHistory := StrTran( MemoRead( __hbrun_HistoryFileName() ), Chr( 13 ) )
+      cHistory := StrTran( MemoRead( __hbrun_ConfigDir() + _FNAME_HISTORY_ ), Chr( 13 ) )
       IF Left( cHistory, Len( _HISTORY_DISABLE_LINE + Chr( 10 ) ) ) == _HISTORY_DISABLE_LINE + Chr( 10 )
          s_lPreserveHistory := .F.
       ELSE
@@ -12850,6 +12852,7 @@ STATIC PROCEDURE __hbrun_HistoryLoad()
 STATIC PROCEDURE __hbrun_HistorySave()
    LOCAL cHistory
    LOCAL cLine
+   LOCAL cDir
 
    IF s_lWasLoad .AND. s_lPreserveHistory
       cHistory := ""
@@ -12858,21 +12861,13 @@ STATIC PROCEDURE __hbrun_HistorySave()
             cHistory += AllTrim( cLine ) + hb_eol()
          ENDIF
       NEXT
-      hb_MemoWrit( __hbrun_HistoryFileName(), cHistory )
+      IF ! hb_DirExists( cDir := __hbrun_ConfigDir() )
+         hb_DirCreate( cDir )
+      ENDIF
+      hb_MemoWrit( cDir + _FNAME_HISTORY_, cHistory )
    ENDIF
 
    RETURN
-
-STATIC FUNCTION __hbrun_HistoryFileName()
-   LOCAL cFileName
-
-#if defined( __PLATFORM__DOS )
-   cFileName := "hbhist.ini"
-#else
-   cFileName := ".hb_history"
-#endif
-
-   RETURN __hbrun_ConfigDir() + cFileName
 
 #if defined( __PLATFORM__WINDOWS )
 
