@@ -268,7 +268,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
 
          if( hb_vmRequestReenter() )
          {
-            PHB_ITEM hbObject = hbqt_bindGetHbObjectBYqtObject( object );
+            PHB_ITEM hbObject = hbqt_bindGetHbObjectByQtObject( object );
             PHB_ITEM p = hbqt_bindGetSlots( hbObject, id ); 
             hb_itemRelease( hbObject );
             if( p )
