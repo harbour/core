@@ -41,7 +41,7 @@ endif
 
 RC := $(HB_CCPATH)$(HB_CCPREFIX)windres
 RC_OUT := -o$(subst x,x, )
-RCFLAGS += -O coff
+RCFLAGS += -I. -I$(HB_HOST_INC) -O coff
 
 ifneq ($(filter $(HB_BUILD_STRIP),all lib),)
    ARSTRIP = && ${HB_CCPATH}${HB_CCPREFIX}strip -S $(LIB_DIR)/$@

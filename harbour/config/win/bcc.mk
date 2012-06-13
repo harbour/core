@@ -60,6 +60,7 @@ endif
 
 RC := brcc32.exe
 RC_OUT := -fo
+RCFLAGS += -I. -I$(HB_HOST_INC)
 
 LD := ilink32.exe
 LIBPATHS := $(foreach dir,$(LIB_DIR) $(3RDLIB_DIR),$(subst /,$(BACKSLASH),-L"$(dir)"))

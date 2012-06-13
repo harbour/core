@@ -82,6 +82,7 @@ endif
 
 RC := rc.exe
 RC_OUT := -fo$(subst x,x, )
+RCFLAGS += -I. -I$(HB_HOST_INC)
 ifeq ($(filter $(HB_COMPILER_VER),1200 1300 1310 1400 1500),)
    RCFLAGS += -nologo
 endif

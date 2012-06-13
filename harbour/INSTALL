@@ -1292,8 +1292,8 @@ HARBOUR
    7.  Remove any Harbour build settings documented in OPTIONS AVAILABLE WHEN
        BUILDING HARBOUR section.
    8.  Try to do no or only small modifications at once to command examples
-       included in this document. If it doesn't work, fall back to documented
-       examples as is.
+       included in EXAMPLES section of this document. If it doesn't work,
+       fall back to documented examples _as is_.
    9.  If everything fails and you are to report a problem to Harbour developers,
        make sure to include your OS version/language/CPU architecture,
        Harbour revision, C compiler name/release and version, environment
@@ -1310,14 +1310,14 @@ HARBOUR
    10. Do not alter the directory layout and files in Harbour and 3rd party
        packages.
    11. If you are to report a build problem with a Harbour application,
-       most of the above points apply, plus make sure to use '-trace'
+       all of the above points apply, plus make sure to use '-trace'
        command line option when running hbmk2 and redirect the result to
        a file (see above how).
-       It's a good idea to first remove all manual references to Harbour
-       core components from make files and custom environment. F.e. it's
+       It's good idea to first remove all manual references to Harbour
+       core components from makefiles and custom environment. F.e. it's
        commom mistake to add C compiler header and/or lib dirs, Harbour core
-       header and/or lib dirs, built-in constants to make files or environment.
-       No such thing is necessary and all of these is automatically handled
+       header and/or lib dirs, built-in constants to makefiles or environment.
+       No such thing is necessary and all of these are automatically handled
        by hbmk2. IOW start simple and don't be overbusy with "fine-tuning"
        your configuration. If you need to, the problem is most probably
        elsewhere. It's also good idea to try with Harbour nightly binary or

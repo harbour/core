@@ -38,6 +38,7 @@ endif
 
 RC := porc.exe
 RC_OUT := -fo$(subst x,x, )
+RCFLAGS += -I. -I$(HB_HOST_INC)
 
 LD := polink.exe
 LD_OUT := -out:

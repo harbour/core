@@ -67,8 +67,8 @@ CREATE CLASS HbQtObjectHandler
 
    VAR    __hEvents  PROTECTED INIT { => }
 
-   VAR    __Slots    
-   VAR    __Events   
+   VAR    __Slots    /* TOFIX: add PROTECTED or clean this mess */
+   VAR    __Events   /* TOFIX: add PROTECTED or clean this mess */
 
    METHOD connect( cnEvent, bBlock )
    METHOD disconnect( cnEvent )

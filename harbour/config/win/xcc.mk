@@ -41,6 +41,7 @@ endif
 
 RC := xRC.exe
 RC_OUT := -fo$(subst x,x, )
+RCFLAGS += -I. -I$(HB_HOST_INC)
 
 LD := xLink.exe
 LD_OUT := -out:
