@@ -43,18 +43,7 @@ HB_EXTERN_END
 
 HB_FUNC( QT_QAPPLICATION )
 {
-   //__HB_RETPTRGC__( ( QApplication * ) __hbqtgui_app() );
    hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ( void * ) __hbqtgui_app(), "HB_QAPPLICATION", NULL, HBQT_BIT_QOBJECT ) );
-}
-
-HB_FUNC( QT_QAPPLICATION_EXECUTE )
-{
-   hb_retni( __hbqtgui_app()->exec() );
-}
-
-HB_FUNC( QT_QAPPLICATION_QUIT )
-{
-   __hbqtgui_app()->quit();
 }
 </CODE>
 

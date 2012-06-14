@@ -192,41 +192,39 @@ METHOD XbpListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 METHOD XbpListBox:connect()
 
-//   ::oWidget:connect( QEvent_ContextMenu, {|e| ::grabEvent( QEvent_ContextMenu, e ) } )
-
-   ::oWidget:connect( "currentItemChanged(QListWidgetItem*,QListWidgetItem*)", {|p,p1| ::execSlot( "currentItemChanged(QListWidgetItem*,QListWidgetItem*)", p, p1 ) } )
    ::oWidget:connect( "currentRowChanged(int)"                               , {|p,p1| ::execSlot( "currentRowChanged(int)"                               , p, p1 ) } )
-   ::oWidget:connect( "currentTextChanged(QString)"                          , {|p,p1| ::execSlot( "currentTextChanged(QString)"                          , p, p1 ) } )
-   ::oWidget:connect( "itemActivated(QListWidgetItem*)"                      , {|p,p1| ::execSlot( "itemActivated(QListWidgetItem*)"                      , p, p1 ) } )
-   ::oWidget:connect( "itemChanged(QListWidgetItem*)"                        , {|p,p1| ::execSlot( "itemChanged(QListWidgetItem*)"                        , p, p1 ) } )
    ::oWidget:connect( "itemClicked(QListWidgetItem*)"                        , {|p,p1| ::execSlot( "itemClicked(QListWidgetItem*)"                        , p, p1 ) } )
    ::oWidget:connect( "itemDoubleClicked(QListWidgetItem*)"                  , {|p,p1| ::execSlot( "itemDoubleClicked(QListWidgetItem*)"                  , p, p1 ) } )
    ::oWidget:connect( "itemEntered(QListWidgetItem*)"                        , {|p,p1| ::execSlot( "itemEntered(QListWidgetItem*)"                        , p, p1 ) } )
+   ::oWidget:connect( "customContextMenuRequested(QPoint)"                   , {|p1  | ::execSlot( "customContextMenuRequested(QPoint)"                   , p1    ) } )
+/*
+   ::oWidget:connect( "currentItemChanged(QListWidgetItem*,QListWidgetItem*)", {|p,p1| ::execSlot( "currentItemChanged(QListWidgetItem*,QListWidgetItem*)", p, p1 ) } )
+   ::oWidget:connect( "currentTextChanged(QString)"                          , {|p,p1| ::execSlot( "currentTextChanged(QString)"                          , p, p1 ) } )
+   ::oWidget:connect( "itemActivated(QListWidgetItem*)"                      , {|p,p1| ::execSlot( "itemActivated(QListWidgetItem*)"                      , p, p1 ) } )
+   ::oWidget:connect( "itemChanged(QListWidgetItem*)"                        , {|p,p1| ::execSlot( "itemChanged(QListWidgetItem*)"                        , p, p1 ) } )
    ::oWidget:connect( "itemPressed(QListWidgetItem*)"                        , {|p,p1| ::execSlot( "itemPressed(QListWidgetItem*)"                        , p, p1 ) } )
    ::oWidget:connect( "itemSelectionChanged()"                               , {|p,p1| ::execSlot( "itemSelectionChanged()"                               , p, p1 ) } )
-
-   ::oWidget:connect( "customContextMenuRequested(QPoint)"                   , {|p1  | ::execSlot( "customContextMenuRequested(QPoint)"                   , p1    ) } )
-
+*/
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpListBox:disConnect()
 
-//   ::oWidget:disconnect( QEvent_ContextMenu )
-
-   ::oWidget:disConnect( "currentItemChanged(QListWidgetItem*,QListWidgetItem*)" )
    ::oWidget:disConnect( "currentRowChanged(int)"                                )
-   ::oWidget:disConnect( "currentTextChanged(QString)"                           )
-   ::oWidget:disConnect( "itemActivated(QListWidgetItem*)"                       )
-   ::oWidget:disConnect( "itemChanged(QListWidgetItem*)"                         )
    ::oWidget:disConnect( "itemClicked(QListWidgetItem*)"                         )
    ::oWidget:disConnect( "itemDoubleClicked(QListWidgetItem*)"                   )
    ::oWidget:disConnect( "itemEntered(QListWidgetItem*)"                         )
+   ::oWidget:disconnect( "customContextMenuRequested(QPoint)"                    )
+
+/*
+   ::oWidget:disConnect( "currentItemChanged(QListWidgetItem*,QListWidgetItem*)" )
+   ::oWidget:disConnect( "currentTextChanged(QString)"                           )
+   ::oWidget:disConnect( "itemActivated(QListWidgetItem*)"                       )
+   ::oWidget:disConnect( "itemChanged(QListWidgetItem*)"                         )
    ::oWidget:disConnect( "itemPressed(QListWidgetItem*)"                         )
    ::oWidget:disConnect( "itemSelectionChanged()"                                )
-
-   ::oWidget:disconnect( "customContextMenuRequested(QPoint)"                    )
+*/
 
    RETURN Self
 
@@ -257,6 +255,7 @@ METHOD XbpListBox:getItemIndex( pItm )
 
 METHOD XbpListBox:execSlot( cSlot, p )
    LOCAL qPos, qItm, nIndex, n, qPt
+      HB_TRACE( HB_TR_ALWAYS, "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" )
 
    IF cSlot == "customContextMenuRequested(QPoint)"
       IF HB_ISBLOCK( ::hb_contextMenu )
@@ -285,8 +284,11 @@ METHOD XbpListBox:execSlot( cSlot, p )
       ::nCurSelected := p + 1
       EXIT
    CASE "itemClicked(QListWidgetItem*)"
+      HB_TRACE( HB_TR_ALWAYS, "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" )
       ::toggleSelected( nIndex )
+      HB_TRACE( HB_TR_ALWAYS, "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" )
       ::itemMarked()
+      HB_TRACE( HB_TR_ALWAYS, "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" )
       EXIT
    CASE "itemDoubleClicked(QListWidgetItem*)"
       ::itemSelected()

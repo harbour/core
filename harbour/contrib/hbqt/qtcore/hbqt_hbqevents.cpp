@@ -164,30 +164,36 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
 {
    bool stopTheEventChain = false;
 
-   if( object )
+   if( hb_vmRequestReenter() )
    {
-      QEvent::Type eventtype = event->type();
-      if( ( int ) eventtype > 0 )
+      if( object )
       {
-         int eventId = s_lstEvent.indexOf( eventtype );
+         QEvent::Type eventtype = event->type();
+         if( ( int ) eventtype > 0 )
+         {
+            int eventId = s_lstEvent.indexOf( eventtype );
 
-         if( eventId > -1 && hb_vmRequestReenter() )
-         {
-            PHB_ITEM pArray = hbqt_bindGetEvents( hbqt_bindGetHbObjectByQtObject( object ), eventtype );
-            if( pArray )
+            if( eventId > -1 )
             {
-               PHB_ITEM pItem = hbqt_bindGetHbObject( NULL, ( void * ) event, ( s_lstCreateObj.at( eventId ) ), NULL, HBQT_BIT_NONE );
-               stopTheEventChain = ( bool ) hb_itemGetL( hb_vmEvalBlockV( hb_arrayGetItemPtr( pArray, 1 ), 1, pItem ) );
-               hb_itemRelease( pItem );
-               hb_itemRelease( pArray );
+               PHB_ITEM pArray = hbqt_bindGetEvents( hbqt_bindGetHbObjectByQtObject( object ), eventtype );
+               if( pArray )
+               {
+                  if( hb_vmRequestQuery() == 0 )
+                  {
+                     PHB_ITEM pItem = hbqt_bindGetHbObject( NULL, ( void * ) event, ( s_lstCreateObj.at( eventId ) ), NULL, HBQT_BIT_NONE );
+                     stopTheEventChain = ( bool ) hb_itemGetL( hb_vmEvalBlockV( hb_arrayGetItemPtr( pArray, 1 ), 1, pItem ) );
+                     hb_itemRelease( pItem );
+                     hb_itemRelease( pArray );
+                  }
+               }
             }
-            hb_vmRequestRestore();
-         }
-         if( eventtype == QEvent::Close )
-         {
-            return true;
+            if( eventtype == QEvent::Close )
+            {
+               stopTheEventChain = true;
+            }
          }
       }
+      hb_vmRequestRestore();
    }
    return stopTheEventChain;
 }
