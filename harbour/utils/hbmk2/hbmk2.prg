@@ -12427,7 +12427,6 @@ FUNCTION __hbrun_extensions_dynamic_load( cName )
 FUNCTION __hbrun_extensions_dynamic_unload( cName )
 
    IF cName $ s_hLibExtDyn .AND. s_hLibExtDyn[ cName ] != NIL
-      s_hLibExtDyn[ cName ] := NIL
       hb_HDel( s_hLibExtDyn, cName )
       RETURN .T.
    ENDIF
