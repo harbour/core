@@ -151,7 +151,7 @@ PHB_ITEM hbqt_defineClassBegin( const char * pszClsName, PHB_ITEM s_oClass, cons
       /* array with parent classes (at least ONE) */
       hb_arrayNew( pSuper, 0 );
 
-      HB_TRACE( HB_TR_DEBUG, ("%s: dCB 3", pszClsName ) );
+      HB_TRACE( HB_TR_ALWAYS, ("%s: dCB 3", pszClsName ) );
 
       while( pszParentClsStr[ nPos++ ] )
       {
@@ -241,67 +241,13 @@ HB_BOOL hbqt_par_isDerivedFrom( int iParam, const char * pszClsName )
    return HB_FALSE;
 }
 
-int hbqt_QtConnect( QObject *sender, const char * pszSignal, QObject *receiver, const char * pszSlot )
+HB_FUNC( HBQT_REALCLASS )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "_Connect %s with slot %s", pszSignal, pszSlot ) );
+   void * oObject;
 
-   int nResult = 1;
+   oObject = hbqt_par_ptr( 1 );
 
-   if( sender && receiver )
-   {
-      QString signal = pszSignal;
-      QByteArray theSignal = QMetaObject::normalizedSignature( signal.toAscii() );
-      QString slot = pszSlot;
-      QByteArray theSlot = QMetaObject::normalizedSignature( slot.toAscii() );
-
-      if( QMetaObject::checkConnectArgs( theSignal, theSlot ) )
-      {
-         int signalId = sender->metaObject()->indexOfSignal( theSignal );
-         if( signalId != -1 )
-         {
-            int slotId = receiver->metaObject()->indexOfMethod( theSlot );
-            if( slotId != -1 )
-            {
-               if( QMetaObject::connect( sender, signalId, receiver, slotId, Qt::AutoConnection ) )
-               {
-                  nResult = 0;
-                  HB_TRACE( HB_TR_DEBUG, ( "SIGNAL2SLOT ok" ) );
-               }
-               else
-                  nResult = 8;
-            }
-            else
-               nResult = 7;
-         }
-         else
-            nResult = 6;
-      }
-      else
-         nResult = 5;
-   }
-   else
-      nResult = 9;  // Qt objects not active
-
-   HB_TRACE( HB_TR_DEBUG, ( "_Connect returns: %d", nResult ) );
-   return nResult;
-}
-
-HB_FUNC( HBQT_CONNECT )
-{
-   HB_BOOL ret = HB_FALSE;
-
-   if( hb_pcount() == 4 && HB_ISCHAR( 2 ) && HB_ISCHAR( 4 ) && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) && hbqt_par_isDerivedFrom( 3, "QOBJECT" ) )
-   {
-      void * pText01 = NULL;
-      void * pText02 = NULL;
-      if( hbqt_QtConnect( ( QObject* ) hbqt_par_ptr( 1 ), hb_parstr_utf8( 2, &pText01, NULL ), ( QObject* ) hbqt_par_ptr( 3 ), hb_parstr_utf8( 4, &pText02, NULL ) ) == 0 )
-      {
-         ret = HB_TRUE;
-      }
-      hb_strfree( pText01 );
-      hb_strfree( pText02 );
-   }
-   hb_retl( ret );
+   hb_retc( ( ( QObject * ) oObject )->metaObject()->className() ) ;
 }
 
 /*----------------------------------------------------------------------*/

@@ -7,7 +7,6 @@
 -pflag=-qthdocdir=../doc/
 
 HBQEvents.qth
-HBQSlots.qth
 HBQString.qth
 
 # QAbstractEventDispatcher.qth

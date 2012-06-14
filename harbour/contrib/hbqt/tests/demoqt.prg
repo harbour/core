@@ -180,9 +180,7 @@ PROCEDURE ExecOneMore()
    oWnd:setStatusBar( oSBar )
    oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
 
-   oWnd:connect( QEvent_Close   , {|| lExit := .t. } )
    oEventLoop := QEventLoop( oWnd )
-
    DO WHILE .t.
       oEventLoop:processEvents()
       IF lExit
@@ -195,7 +193,7 @@ PROCEDURE ExecOneMore()
    HB_TRACE( HB_TR_DEBUG, "  " )
    HB_TRACE( HB_TR_DEBUG, ".............. E X I T I N G one more dialog ..................." )
    HB_TRACE( HB_TR_DEBUG, "  " )
-   
+
    RETURN
 
 /*----------------------------------------------------------------------*/

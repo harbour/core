@@ -76,6 +76,7 @@ public:
 
    int hbConnect( PHB_ITEM obj, char * pszSignal, PHB_ITEM block );
    int hbDisconnect( PHB_ITEM obj, char * pszSignal );
+   int hbDisconnectAll( PHB_ITEM obj );
 
    int qt_metacall( QMetaObject::Call call, int id, void **arguments );
 };
