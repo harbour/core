@@ -12427,6 +12427,7 @@ FUNCTION __hbrun_extensions_dynamic_load( cName )
 FUNCTION __hbrun_extensions_dynamic_unload( cName )
 
    IF cName $ s_hLibExtDyn .AND. s_hLibExtDyn[ cName ] != NIL
+      s_hLibExtDyn[ cName ] := NIL
       hb_HDel( s_hLibExtDyn, cName )
       RETURN .T.
    ENDIF
@@ -12779,9 +12780,8 @@ STATIC PROCEDURE __hbrun_Info( cCommand )
    IF s_lPreserveHistory
       hb_DispOutAt( 1, MaxCol(), "o", "R/BG" )
    ENDIF
-   IF ! Empty( __hbrun_extensions_get_list() )
-      hb_DispOutAt( 2, 0, PadR( "Ext: " + ArrayToList( __hbrun_extensions_get_list(), ", " ), MaxCol() + 1 ), "W/B" )
-   ENDIF
+
+   hb_DispOutAt( 2, 0, PadR( "Ext: " + ArrayToList( __hbrun_extensions_get_list(), ", " ), MaxCol() + 1 ), "W/B" )
 
    RETURN
 
