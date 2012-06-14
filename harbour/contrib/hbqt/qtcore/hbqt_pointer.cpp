@@ -151,7 +151,7 @@ PHB_ITEM hbqt_defineClassBegin( const char * pszClsName, PHB_ITEM s_oClass, cons
       /* array with parent classes (at least ONE) */
       hb_arrayNew( pSuper, 0 );
 
-      HB_TRACE( HB_TR_ALWAYS, ("%s: dCB 3", pszClsName ) );
+      HB_TRACE( HB_TR_DEBUG, ("%s: dCB 3", pszClsName ) );
 
       while( pszParentClsStr[ nPos++ ] )
       {

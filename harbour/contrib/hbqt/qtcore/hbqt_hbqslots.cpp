@@ -112,7 +112,7 @@ HBQSlots::HBQSlots() : QObject()
 
 HBQSlots::~HBQSlots()
 {
-   HB_TRACE( HB_TR_ALWAYS, ( "HBQSlots::~HBQSlots()" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::~HBQSlots()" ) );
 }
 
 int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
@@ -188,7 +188,7 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
       {
          if( QMetaObject::disconnect( object, signalId, 0, 0 ) )
          {
-            HB_TRACE( HB_TR_ALWAYS, ( "HBQSlots::hbDisconnect( %s ) signalId=%d", pszSignal, signalId ) );
+            HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s ) signalId=%d", pszSignal, signalId ) );
             nResult = 0;
          }
          else
@@ -211,7 +211,7 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
 
 int HBQSlots::hbDisconnectAll( PHB_ITEM pObj )
 {
-   HB_TRACE( HB_TR_ALWAYS, ( "DISCONNECTALL" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "DISCONNECTALL" ) );
 
    QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
    if( object )
@@ -228,7 +228,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
    if( id < 0 || c != QMetaObject::InvokeMetaMethod )
       return id;
 
-   HB_TRACE( HB_TR_ALWAYS, ( "qt_metacall" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "qt_metacall" ) );
    QObject * object = sender();
    if( object )
    {
@@ -271,7 +271,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
 
             object->setProperty( szPList, pList );
 
-            HB_TRACE( HB_TR_ALWAYS, ( "       SlotsProxy parList %s ", ( char * ) paramString.data() ) );
+            HB_TRACE( HB_TR_DEBUG, ( "       SlotsProxy parList %s ", ( char * ) paramString.data() ) );
          }
       }
 
@@ -445,16 +445,16 @@ static void hbqt_lib_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 
-   HB_TRACE( HB_TR_ALWAYS, ( "Slots: hbqt_lib_init" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "Slots: hbqt_lib_init" ) );
    if( receiverSlot == NULL )
      receiverSlot = new HBQSlots;
-   HB_TRACE( HB_TR_ALWAYS, ( "Slots: hbqt_lib_init" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "Slots: hbqt_lib_init" ) );
 }
 
 static void hbqt_lib_exit( void* cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
-   HB_TRACE( HB_TR_ALWAYS, ( "Exiting slots lib" ) );
+   HB_TRACE( HB_TR_DEBUG, ( "Exiting slots lib" ) );
 
    if( receiverSlot )
      delete receiverSlot;

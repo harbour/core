@@ -139,7 +139,7 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
    LOCAL nResult
 
    IF ! __objDerivedFrom( Self, "QOBJECT" )
-      HB_TRACE( HB_TR_ALWAYS, "REFUSED CONNECT ", Self:className() )
+      HB_TRACE( HB_TR_DEBUG, "REFUSED CONNECT ", Self:className() )
       RETURN .f.
    ENDIF
 
@@ -173,7 +173,7 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
          ::__pEvents := HBQEvents()
          ::__pEvents:hbInstallEventFilter( Self )
       ENDIF
-         HB_TRACE( HB_TR_ALWAYS, "  _HbQtObjectHandler:connect valtype __pEvents object=", Self:className() )
+         HB_TRACE( HB_TR_DEBUG, "  _HbQtObjectHandler:connect valtype __pEvents object=", Self:className() )
       nResult := ::__pEvents:hbConnect( Self, cnEvent, bBlock )
 
       SWITCH nResult
@@ -190,7 +190,7 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
 
    ENDSWITCH
 
-   HB_TRACE( HB_TR_ALWAYS, "Errore in connect " + hb_ntos( nResult ) )
+   HB_TRACE( HB_TR_DEBUG, "Errore in connect " + hb_ntos( nResult ) )
 
    __hbqt_error( 1200 + nResult )
    RETURN .F.
@@ -255,7 +255,7 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 
       ENDSWITCH
    ENDIF
-   HB_TRACE( HB_TR_ALWAYS, "Errore in disconnect nResult="+str(nResult) )
+   HB_TRACE( HB_TR_DEBUG, "Errore in disconnect nResult="+str(nResult) )
    __hbqt_error( 1300 + nResult )
    RETURN .F.
 
@@ -263,7 +263,7 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 
 METHOD HbQtObjectHandler:__destroy()
 
-   HB_TRACE( HB_TR_ALWAYS, "  _destroy()", __objDerivedFrom( Self, "QOBJECT" ), __objGetClsName( Self ) )
+   HB_TRACE( HB_TR_DEBUG, "  _destroy()", __objDerivedFrom( Self, "QOBJECT" ), __objGetClsName( Self ) )
 
    __hbqt_destroy( Self )
 
