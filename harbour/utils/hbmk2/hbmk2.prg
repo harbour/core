@@ -371,105 +371,104 @@ REQUEST hbmk_KEYW
 #define _HBMK_lIGNOREERROR      67
 #define _HBMK_lIMPLIB           68
 #define _HBMK_lHBCPPMM          69
-#define _HBMK_aVAR              70
-#define _HBMK_hDEP              71
+#define _HBMK_hDEP              70
 
-#define _HBMK_lCreateLib        72
-#define _HBMK_lCreateDyn        73
-#define _HBMK_lCreateImpLib     74
-#define _HBMK_lCreatePPO        75
-#define _HBMK_lCreateHRB        76
+#define _HBMK_lCreateLib        71
+#define _HBMK_lCreateDyn        72
+#define _HBMK_lCreateImpLib     73
+#define _HBMK_lCreatePPO        74
+#define _HBMK_lCreateHRB        75
 
-#define _HBMK_lDynVM            77
+#define _HBMK_lDynVM            76
 
-#define _HBMK_lBLDFLGP          78
-#define _HBMK_lBLDFLGC          79
-#define _HBMK_lBLDFLGL          80
+#define _HBMK_lBLDFLGP          77
+#define _HBMK_lBLDFLGC          78
+#define _HBMK_lBLDFLGL          79
 
-#define _HBMK_cFIRST            81
-#define _HBMK_aPRG              82
-#define _HBMK_aC                83
-#define _HBMK_aCPP              84
-#define _HBMK_aRESSRC           85
-#define _HBMK_aRESCMP           86
-#define _HBMK_aOBJUSER          87
-#define _HBMK_aICON             88
-#define _HBMK_cMANIFEST         89
-#define _HBMK_aIMPLIBSRC        90
-#define _HBMK_aDEF              91
-#define _HBMK_aINSTFILE         92
-#define _HBMK_hDEPTS            93
-#define _HBMK_aREQUEST          94
+#define _HBMK_cFIRST            80
+#define _HBMK_aPRG              81
+#define _HBMK_aC                82
+#define _HBMK_aCPP              83
+#define _HBMK_aRESSRC           84
+#define _HBMK_aRESCMP           85
+#define _HBMK_aOBJUSER          86
+#define _HBMK_aICON             87
+#define _HBMK_cMANIFEST         88
+#define _HBMK_aIMPLIBSRC        89
+#define _HBMK_aDEF              90
+#define _HBMK_aINSTFILE         91
+#define _HBMK_hDEPTS            92
+#define _HBMK_aREQUEST          93
 
-#define _HBMK_aPO               95
-#define _HBMK_cHBL              96
-#define _HBMK_cHBLDir           97
-#define _HBMK_aLNG              98
-#define _HBMK_cPO               99
+#define _HBMK_aPO               94
+#define _HBMK_cHBL              95
+#define _HBMK_cHBLDir           96
+#define _HBMK_aLNG              97
+#define _HBMK_cPO               98
 
-#define _HBMK_hPLUGINHRB        100
-#define _HBMK_hPLUGINVars       101
-#define _HBMK_aPLUGINPars       102
-#define _HBMK_hPLUGINExt        103
+#define _HBMK_hPLUGINHRB        99
+#define _HBMK_hPLUGINVars       100
+#define _HBMK_aPLUGINPars       101
+#define _HBMK_hPLUGINExt        102
 
-#define _HBMK_lDEBUGTIME        104
-#define _HBMK_lDEBUGINC         105
-#define _HBMK_lDEBUGSTUB        106
-#define _HBMK_lDEBUGI18N        107
-#define _HBMK_lDEBUGDEPD        108
-#define _HBMK_lDEBUGPARS        109
+#define _HBMK_lDEBUGTIME        103
+#define _HBMK_lDEBUGINC         104
+#define _HBMK_lDEBUGSTUB        105
+#define _HBMK_lDEBUGI18N        106
+#define _HBMK_lDEBUGDEPD        107
+#define _HBMK_lDEBUGPARS        108
 
-#define _HBMK_cCCPATH           110
-#define _HBMK_cCCPREFIX         111
-#define _HBMK_cCCPOSTFIX        112
-#define _HBMK_cCCEXT            113
+#define _HBMK_cCCPATH           109
+#define _HBMK_cCCPREFIX         110
+#define _HBMK_cCCPOSTFIX        111
+#define _HBMK_cCCEXT            112
 
-#define _HBMK_cWorkDir          114
-#define _HBMK_cWorkDirDynSub    115
-#define _HBMK_nCmd_Esc          116
-#define _HBMK_nScr_Esc          117
-#define _HBMK_nCmd_FNF          118
-#define _HBMK_nScr_FNF          119
-#define _HBMK_nErrorLevel       120
+#define _HBMK_cWorkDir          113
+#define _HBMK_cWorkDirDynSub    114
+#define _HBMK_nCmd_Esc          115
+#define _HBMK_nScr_Esc          116
+#define _HBMK_nCmd_FNF          117
+#define _HBMK_nScr_FNF          118
+#define _HBMK_nErrorLevel       119
 
-#define _HBMK_cPROGDIR          121
-#define _HBMK_cPROGNAME         122
+#define _HBMK_cPROGDIR          120
+#define _HBMK_cPROGNAME         121
 
-#define _HBMK_hAUTOHBC          123 /* trigger header => .hbc associations */
-#define _HBMK_hAUTOHBCFOUND     124 /* trigger headers found */
+#define _HBMK_hAUTOHBC          122 /* trigger header => .hbc associations */
+#define _HBMK_hAUTOHBCFOUND     123 /* trigger headers found */
 
-#define _HBMK_aDEPTHBC          125 /* .hbc references found */
-#define _HBMK_hDEPTSDIR         126 /* Header dirs found for dependencies */
+#define _HBMK_aDEPTHBC          124 /* .hbc references found */
+#define _HBMK_hDEPTSDIR         125 /* Header dirs found for dependencies */
 
-#define _HBMK_lStopAfterInit    127
-#define _HBMK_lStopAfterHarbour 128
+#define _HBMK_lStopAfterInit    126
+#define _HBMK_lStopAfterHarbour 127
 
-#define _HBMK_nCOMPVer          129
-#define _HBMK_lDEPIMPLIB        130 /* Generate import libs configured in dependecy specification */
-#define _HBMK_lInstForce        131 /* Force to install target even if was up to date */
-#define _HBMK_lAutoHBM          132 /* Toggles processing of hbmk.hbm file in current directory */
-#define _HBMK_lContainer        133 /* Target type: container */
-#define _HBMK_lShowLevel        134 /* Show project nesting level in all output lines */
-#define _HBMK_hFiles            135 /* Cache for the header parser (common for C and Harbour) */
-#define _HBMK_cDynLibPrefix     136 /* Dynamic lib filename prefix */
-#define _HBMK_cDynLibExt        137 /* Dynamic lib filename extension */
-#define _HBMK_aLINK             138 /* Links to be created and pointing to the target */
-#define _HBMK_hDEPTMACRO        139 /* Links to be created and pointing to the target */
-#define _HBMK_cC                140 /* C dialect */
-#define _HBMK_cCPP              141 /* C++ dialect */
-#define _HBMK_aLIB_BASE_WARN    142
+#define _HBMK_nCOMPVer          128
+#define _HBMK_lDEPIMPLIB        129 /* Generate import libs configured in dependecy specification */
+#define _HBMK_lInstForce        130 /* Force to install target even if was up to date */
+#define _HBMK_lAutoHBM          131 /* Toggles processing of hbmk.hbm file in current directory */
+#define _HBMK_lContainer        132 /* Target type: container */
+#define _HBMK_lShowLevel        133 /* Show project nesting level in all output lines */
+#define _HBMK_hFiles            134 /* Cache for the header parser (common for C and Harbour) */
+#define _HBMK_cDynLibPrefix     135 /* Dynamic lib filename prefix */
+#define _HBMK_cDynLibExt        136 /* Dynamic lib filename extension */
+#define _HBMK_aLINK             137 /* Links to be created and pointing to the target */
+#define _HBMK_hDEPTMACRO        138 /* Links to be created and pointing to the target */
+#define _HBMK_cC                139 /* C dialect */
+#define _HBMK_cCPP              140 /* C++ dialect */
+#define _HBMK_aLIB_BASE_WARN    141
 
-#define _HBMK_aArgs             143
-#define _HBMK_nArgTarget        144
-#define _HBMK_lPause            145
-#define _HBMK_nLevel            146
+#define _HBMK_aArgs             142
+#define _HBMK_nArgTarget        143
+#define _HBMK_lPause            144
+#define _HBMK_nLevel            145
 
-#define _HBMK_cHBX              147
+#define _HBMK_cHBX              146
 
-#define _HBMK_aGT               148
-#define _HBMK_cCPPRG            149
+#define _HBMK_aGT               147
+#define _HBMK_cCPPRG            148
 
-#define _HBMK_MAX_              149
+#define _HBMK_MAX_              148
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -833,7 +832,6 @@ STATIC FUNCTION hbmk_new()
    hbmk[ _HBMK_lIGNOREERROR ] := .F.
    hbmk[ _HBMK_lIMPLIB ] := .F.
    hbmk[ _HBMK_lHBCPPMM ] := .F.
-   hbmk[ _HBMK_aVAR ] := {}
    hbmk[ _HBMK_hDEP ] := { => }
    hbmk[ _HBMK_hAUTOHBC ] := { => }
    hbmk[ _HBMK_hAUTOHBCFOUND ] := { => }
@@ -1366,24 +1364,11 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE cParamL             == "-hb10"      ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_HB10
       CASE cParamL             == "-hb20"      ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_HB20
       CASE cParamL             == "-hbc"       ; hbmk[ _HBMK_nHBMODE ] := _HBMODE_RAW_C ; lAcceptCFlag := .T.
-      CASE Left( cParamL, 5 )  == "-env:"
 
-         tmp := SubStr( cParam, 6 )
-         IF ! Empty( tmp )
-            IF     ( tmp1 := At( "=", tmp ) ) > 1
-               tmp2 := _VAR_MODE_SET
-            ELSEIF ( tmp1 := At( "+", tmp ) ) > 1
-               tmp2 := _VAR_MODE_APPEND
-            ELSEIF ( tmp1 := At( "#", tmp ) ) > 1
-               tmp2 := _VAR_MODE_INSERT
-            ELSEIF ( tmp1 := At( "-", tmp ) ) > 1
-               tmp2 := _VAR_MODE_DELETE
-            ELSE
-               tmp2 := _VAR_MODE_SET
-               tmp1 := Len( tmp ) + 1
-            ENDIF
-            AAdd( hbmk[ _HBMK_aVAR ], { tmp2, Left( tmp, tmp1 - 1 ), SubStr( tmp, tmp1 + 1 ) } )
-         ENDIF
+      /* -env options used on command line, process only once (=do not process again for subprojects) */
+      CASE Left( cParamL, 5 )  == "-env:" .AND. hbmk[ _HBMK_nLevel ] == 1
+
+         ProcEnvOption( SubStr( cParam, 6 ) )
 
       CASE cParamL == "-help" .OR. ;
            cParamL == "--help"
@@ -1454,15 +1439,6 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing environment options: %1$s" ), cEnv ) )
       ENDIF
    ENDIF
-
-   FOR EACH tmp IN hbmk[ _HBMK_aVAR ]
-      SWITCH tmp[ 1 ]
-      CASE _VAR_MODE_SET    ; hb_SetEnv( tmp[ 2 ], tmp[ 3 ] ) ; EXIT
-      CASE _VAR_MODE_INSERT ; hb_SetEnv( tmp[ 2 ], tmp[ 3 ] + hb_GetEnv( tmp[ 2 ] ) ) ; EXIT
-      CASE _VAR_MODE_APPEND ; hb_SetEnv( tmp[ 2 ], hb_GetEnv( tmp[ 2 ] ) + tmp[ 3 ] ) ; EXIT
-      CASE _VAR_MODE_DELETE ; hb_SetEnv( tmp[ 2 ] ) ; EXIT
-      ENDSWITCH
-   NEXT
 
    /* Initialize Harbour libs */
 
@@ -2234,7 +2210,6 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            Left( cParamL, 6 )  == "-lang=" .OR. ;
            Left( cParamL, 4 )  == "-shl" .OR. ;
            Left( cParamL, 7 )  == "-width=" .OR. ;
-           Left( cParamL, 5 )  == "-env:" .OR. ;
            cParamL             == "-autohbm" .OR. ;
            cParamL             == "-autohbm-" .OR. ;
            cParamL             == "-hbrun" .OR. ;
@@ -2253,6 +2228,11 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            cParamL             == "-exospace"
 
          /* Simply ignore. They were already processed in the first pass. */
+
+      /* -env options used inside makefiles */
+      CASE Left( cParamL, 5 )  == "-env:" .AND. ! Empty( aParam[ _PAR_cFileName ] )
+
+         ProcEnvOption( SubStr( cParam, 6 ) )
 
       CASE cParamL == "-quiet"           ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
       CASE cParamL == "-quiet-"
@@ -6994,6 +6974,25 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    ENDIF
 
    RETURN hbmk[ _HBMK_nErrorLevel ]
+
+STATIC PROCEDURE ProcEnvOption( cValue )
+   LOCAL tmp
+
+   IF ! Empty( cValue )
+      IF     ( tmp := At( "=", cValue ) ) > 1
+         hb_SetEnv( Left( cValue, tmp - 1 ), SubStr( cValue, tmp + 1 ) )
+      ELSEIF ( tmp := At( "+", cValue ) ) > 1
+         hb_SetEnv( Left( cValue, tmp - 1 ), hb_GetEnv( Left( cValue, tmp - 1 ) ) + SubStr( cValue, tmp + 1 ) )
+      ELSEIF ( tmp := At( "#", cValue ) ) > 1
+         hb_SetEnv( Left( cValue, tmp - 1 ), SubStr( cValue, tmp + 1 ) + hb_GetEnv( Left( cValue, tmp - 1 ) ) )
+      ELSEIF ( tmp := At( "-", cValue ) ) > 1
+         hb_SetEnv( Left( cValue, tmp - 1 ) )
+      ELSE
+         hb_SetEnv( cValue, "" )
+      ENDIF
+   ENDIF
+
+   RETURN
 
 STATIC FUNCTION CheckLibParam( hbmk, cLibName )
 
@@ -13612,7 +13611,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       NIL,;
       { "-target=<script>"   , I_( "specify a new build target. <script> can be .prg (or no extension) or .hbp file. Note that .hbp files are automatically considered as separate targets." ) },;
       NIL,;
-      { "-env:<e>[<o>[<v>]]" , I_( "alter local environment. <e> is the name of the environment variable to alter. <o> can be '=' to set/override, '-' to delete, '+' to append to the end of existing value, '#' to insert to the beginning of existing value. <v> is the value to set/append/insert. If multiple options are passed, they are processed from left to right." ) },;
+      { "-env:<e>[<o>[<v>]]" , I_( "alter local environment. <e> is the name of the environment variable to alter. <o> can be '=' to set/override, '-' to delete, '+' to append to the end of existing value, '#' to insert to the beginning of existing value. <v> is the value to set/append/insert." ) },;
       NIL,;
       { "-hbrun"             , I_( "run target" ) },;
       { "-hbraw"             , I_( "stop after running Harbour compiler" ) },;

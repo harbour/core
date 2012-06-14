@@ -79,9 +79,7 @@
 #include "hbclass.ch"
 #include "hbver.ch"
 
-#ifdef __HBDYNLOAD__RDDADS__
 #include "rddads.hbx"
-#endif
 
 /* Link all Harbour Functions : needed to run external scripts */
 /* NOTE: Please only add what's actually requested by plugin developers */
@@ -97,18 +95,15 @@
 REQUEST DBFCDX
 REQUEST DBFNTX
 REQUEST DBFNSX
-#ifdef __HBDYNLOAD__RDDADS__
 REQUEST ADS
-#endif
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION Main( ... )
    LOCAL oTmp
-   
-#ifdef __HBDYNLOAD__RDDADS__
+
    LOCAL hRDDADS, tmp
-#endif
+
    #ifdef HB_IDE_DISTRO
       LOCAL cBse := hb_dirBase() + ".."
 
@@ -121,7 +116,6 @@ FUNCTION Main( ... )
    #endif
 
 
-#ifdef __HBDYNLOAD__RDDADS__
    IF hb_FileExists( tmp := hb_dirBase() + hb_libName( "rddads" + hb_libPostfix() ) )
       hRDDADS := hb_libLoad( tmp )
       IF ! Empty( hRDDADS )
@@ -129,7 +123,7 @@ FUNCTION Main( ... )
          hb_rddadsRegister()
       ENDIF
    ENDIF
-#endif
+
    SET DATE TO ANSI
    SET CENTURY ON
    SET EPOCH TO 1970

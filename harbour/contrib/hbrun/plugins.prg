@@ -61,7 +61,7 @@ FUNCTION __hbrun_plugins()
    LOCAL cExt
    LOCAL file
 
-   ADD PLUGIN TO hPlugins FILE "netiomgm.prg"
+   ADD PLUGIN TO hPlugins FILE "netiomgm.hb"
    ADD PLUGIN TO hPlugins FILE "extdynpl.hb"
 
    cDir := __hbrun_ConfigDir()

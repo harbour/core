@@ -22,8 +22,9 @@
 hbxbp.hbc
 hbqt.hbc
 hbformat.hbc
-# TODO: Need to set 'HB_DYNLOAD_RDDADS=yes' for this to be enabled
-rddads.hbc{HB_DYNLOAD_RDDADS}
+
+-env:HB_DYNLOAD_RDDADS=yes
+rddads.hbc
 
 idemain.prg
 ideobject.prg
