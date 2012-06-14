@@ -12696,6 +12696,8 @@ STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
 
    plugins := __hbshell_plugins_load( __hbshell_plugins(), aParams )
 
+   __hbshell_Exec( "? hb_Version()" )
+
    DO WHILE .T.
 
       IF cLine == NIL

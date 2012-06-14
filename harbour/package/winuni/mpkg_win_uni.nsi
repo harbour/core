@@ -347,7 +347,7 @@ Section "Start Menu and Desktop icons" hb_shortcuts
   CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Harbour (Command line).lnk" "cmd.exe" "/k cd $INSTDIR\bin" "cmd.exe" 0
   CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Harbour.lnk" "$INSTDIR" "" "$INSTDIR" 0
-  CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Harbout (Interactive shell).lnk" "$INSTDIR\bin\hbrun.exe" "-v" "$INSTDIR\bin\hbrun.exe" 0
+  CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Harbour (Interactive shell).lnk" "$INSTDIR\bin\hbmk2.exe" "." "$INSTDIR\bin\hbmk2.exe" 0
   ; TOFIX: Only create this shortcut, if 'hb_ide' component was enabled at install time (or when the target filename exists)
 ;!ifndef PKG_NO_IDE
 ;  CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\hbide.lnk" "$INSTDIR\bin\hbide.exe" "" "$INSTDIR\bin\hbide.exe" 0
