@@ -375,14 +375,14 @@ STATIC FUNCTION plugins_load( hPlugins, aParams )
       IF ! Empty( plugin[ _PLUGIN_hHRB ] )
          plugin[ _PLUGIN_hMethods ] := Do( hHRBEntry )
          IF ! Empty( plugin[ _PLUGIN_hMethods ] )
-           plugin[ _PLUGIN_ctx ] := Eval( plugin[ _PLUGIN_hMethods ][ "init" ], hConIO, aParams )
-           IF ! Empty( plugin[ _PLUGIN_ctx ] )
-              plugin[ _PLUGIN_cID ] := plugin[ _PLUGIN_hMethods ][ "id" ]
-              IF ! Empty( plugin[ _PLUGIN_cID ] )
-                 AAdd( plugins, plugin )
-              ENDIF
-           ENDIF
-        ENDIF
+            plugin[ _PLUGIN_ctx ] := Eval( plugin[ _PLUGIN_hMethods ][ "init" ], hConIO, aParams )
+            IF ! Empty( plugin[ _PLUGIN_ctx ] )
+               plugin[ _PLUGIN_cID ] := plugin[ _PLUGIN_hMethods ][ "id" ]
+               IF ! Empty( plugin[ _PLUGIN_cID ] )
+                  AAdd( plugins, plugin )
+               ENDIF
+            ENDIF
+         ENDIF
       ENDIF
    NEXT
 
