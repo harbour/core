@@ -91,7 +91,7 @@ Section "Main components" hb_main
   File /nonfatal "$%HB_ABSROOT%ChangeLog*"
 
   SetOutPath $INSTDIR\bin
-  File "$%HB_ABSROOT%bin\harbour-$%HB_VS%.dll"
+  File "$%HB_ABSROOT%bin\*-$%HB_VS%.dll"
   File "$%HB_ABSROOT%bin\harbour.exe"
   File "$%HB_ABSROOT%bin\hbformat.exe"
   File "$%HB_ABSROOT%bin\hbi18n.exe"
@@ -297,7 +297,7 @@ SectionEnd
 !ifndef PKG_NO_COMP_MINGW64
 Section /o "Dlls for x64" hb_dlls_x64
   SetOutPath $INSTDIR\bin
-  File "$%HB_ABSROOT%bin\harbour-$%HB_VS%-x64.dll"
+  File "$%HB_ABSROOT%bin\*-$%HB_VS%-x64.dll"
 SectionEnd
 !endif
 
