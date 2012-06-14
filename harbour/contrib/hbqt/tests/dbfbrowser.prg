@@ -54,9 +54,6 @@ PROCEDURE Main()
    oWid:Show()
    QApplication():exec()
 
-   oTable1:detach()
-   oButton1:disconnect( "clicked()" )
-   oButton2:disconnect( "clicked()" )
    RETURN
 
 PROCEDURE OpenDBF( oWid, oTable, oLabel )

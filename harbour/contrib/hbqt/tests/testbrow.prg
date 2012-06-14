@@ -94,10 +94,6 @@ PROCEDURE Main()
    oWnd:Show()
    QApplication():exec()
 
-#ifdef _method_local_
-   oID:disconnect( "commitData(QWidget*)" )
-#endif
-   
    HB_TRACE( HB_TR_DEBUG, ( "my_select "+hb_ntos( nCX1 )+ "/"+hb_ntos( nCY1 ) ) )
 
    RETURN

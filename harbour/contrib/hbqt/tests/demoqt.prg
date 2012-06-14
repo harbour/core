@@ -81,11 +81,12 @@ FUNCTION My_Events( e )
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main()
-   Local oBtn, oDA, oWnd, oSBar, oAct, aMenu, aTool, aTabs
-   
+   Local oBtn, oDA, oWnd, oSBar, aMenu, aTool, aTabs, oELoop, lExit := .f.
+
    hbqt_errorsys()
 
    oWnd := QMainWindow()
+   oWnd:setAttribute( Qt_WA_DeleteOnClose, .f. )
    oWnd:show()
 
    oWnd:setMouseTracking( .t. )
@@ -107,34 +108,24 @@ PROCEDURE Main()
    Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
    Build_Label( oDA, { 30,190 }, { 300, 30 } )
-   
+
    aTabs  := Build_Tabs( oDA, { 510, 5 }, { 360, 400 } )
 
    oBtn   := Build_PushButton( oDA, { 30,240 }, { 100,50 } )
    oBtn:setStyleSheet( "background: #a00fff;" )
 
    oWnd:connect( QEvent_KeyPress, {|e| My_Events( e ) } )
-   oWnd:connect( QEvent_Close   , {|| QApplication():quit() } )
-   
+   oWnd:connect( QEvent_Close   , {|| lExit := .t. } )
+
    oWnd:Show()
-   QApplication():exec()
-
-   oWnd:disconnect( QEvent_KeyPress )
-   oWnd:disconnect( QEvent_Close )
-
-   oBtn:disconnect( "clicked()" )
-
-   FOR EACH oAct IN aMenu
-      oAct:disconnect( "triggered(bool)" )
-   NEXT        
-   FOR EACH oAct IN aTool
-      oAct:disconnect( "triggered(bool)" )
-   NEXT        
-       
-   aTabs[ 1,1 ]:disconnect( "returnPressed()" )
-   aTabs[ 1,2 ]:disconnect( "currentIndexChanged(int)" )
-   aTabs[ 1,3 ]:disconnect( "stateChanged(int)" )
-   aTabs[ 1,4 ]:disconnect( "clicked()" )
+   oELoop := QEventLoop( oWnd )
+   DO WHILE .t.
+      oELoop:processEvents()
+      IF lExit
+         EXIT
+      ENDIF
+   ENDDO
+   oELoop:exit( 0 )
 
    HB_TRACE( HB_TR_DEBUG, ".............. E X I T I N G ..................." )
    xReleaseMemory( { oBtn, aMenu, aTool, aTabs, oDA, oWnd } )
@@ -189,6 +180,7 @@ PROCEDURE ExecOneMore()
    oWnd:setStatusBar( oSBar )
    oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
 
+   oWnd:connect( QEvent_Close   , {|| lExit := .t. } )
    oEventLoop := QEventLoop( oWnd )
 
    DO WHILE .t.
@@ -198,7 +190,6 @@ PROCEDURE ExecOneMore()
       ENDIF
    ENDDO
    oEventLoop:exit( 0 )
-   oEventLoop := 0
 
    xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd, oEventLoop } )
    HB_TRACE( HB_TR_DEBUG, "  " )
@@ -368,7 +359,7 @@ STATIC FUNCTION Build_Grid( oWnd, aPos, aSize )
    //
    oGrid:Show()
 
-   RETURN {}  
+   RETURN {}
 
 /*----------------------------------------------------------------------*/
 
@@ -429,13 +420,13 @@ STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
    oStrList:sort()
 
    oStrModel := QStringListModel( oStrList, oListBox )
-   
+
    oListBox:setModel( oStrModel )
    oListBox:Move( aPos[ 1 ], aPos[ 2 ] )
    oListBox:ReSize( aSize[ 1 ], aSize[ 2 ] )
    oListBox:Show()
 
-   RETURN NIL 
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -449,7 +440,7 @@ STATIC FUNCTION Build_TextBox( oWnd )
    oTextBox:setPlainText( "This is Harbour QT implementation" )
    oTextBox:Show()
 
-   RETURN NIL 
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

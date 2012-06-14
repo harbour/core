@@ -24,7 +24,6 @@ PROCEDURE MAIN
    LOCAL oWnd
    LOCAL oTB
    LOCAL oLbl
-   LOCAL oRet
 
    oWnd := QMainWindow()
 

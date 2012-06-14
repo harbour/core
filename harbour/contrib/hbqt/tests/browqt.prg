@@ -34,7 +34,8 @@ STATIC PROCEDURE BuildADialog()
    oDA:resize(640,460 )
    lay1 := QVBoxLayout( oDA )
 
-   DBUseArea( .T., NIL, "../../../tests/test.dbf", "T1", .F., .F. )
+   USE "../../../tests/test.dbf" SHARED NEW
+
    aStru1 := DBStruct()
    nCX1 := 0
    nCY1 := 0
@@ -112,7 +113,7 @@ STATIC FUNCTION my_browse( nArea, aStru, t, role, x, y )
    THREAD STATIC oColorLN
    THREAD STATIC oSize
 
-   IF ! lInit 
+   IF ! lInit
       lInit := .t.
       oColorN  := QColor( 100,   0,100 )
       oColorD  := QColor( 150, 100,  0 )
@@ -120,7 +121,7 @@ STATIC FUNCTION my_browse( nArea, aStru, t, role, x, y )
       oColorLN := QColor( 200,   0,  0 )
 
       oSize := QSize(50,24)
-   ENDIF 
+   ENDIF
 
    DBSelectArea( nArea )
 
@@ -215,4 +216,3 @@ STATIC FUNCTION my_browse( nArea, aStru, t, role, x, y )
 
    RETURN NIL
 
-   

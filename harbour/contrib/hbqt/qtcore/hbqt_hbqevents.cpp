@@ -183,8 +183,8 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
                      PHB_ITEM pItem = hbqt_bindGetHbObject( NULL, ( void * ) event, ( s_lstCreateObj.at( eventId ) ), NULL, HBQT_BIT_NONE );
                      stopTheEventChain = ( bool ) hb_itemGetL( hb_vmEvalBlockV( hb_arrayGetItemPtr( pArray, 1 ), 1, pItem ) );
                      hb_itemRelease( pItem );
-                     hb_itemRelease( pArray );
                   }
+                  hb_itemRelease( pArray );
                }
             }
             if( eventtype == QEvent::Close )
