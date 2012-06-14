@@ -7,9 +7,13 @@
 {HB_HAS_GPM}-prgflag=-DHB_HAS_GPM
 {HB_HAS_WATT}-prgflag=-DHB_HAS_WATT
 
--nulrdd
+-head=dep
+-cflag=-Zm200{wce&allmsvc}
+
 -mt
 hbmk2.prg
+
+-lhbpmcom{dos}
 
 hbmk2.%{hb_lng}.po
 -hbl=hbmk2.%{hb_lng}.hbl

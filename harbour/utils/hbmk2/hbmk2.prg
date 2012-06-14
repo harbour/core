@@ -1407,6 +1407,29 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          convert_xhp_to_hbp( hbmk, SubStr( cParam, 6 ) )
          RETURN _ERRLEV_OK
 
+#if defined( __PLATFORM__WINDOWS )
+
+      CASE Left( cParamL, 6 ) == "-hbreg"
+
+         IF __hbrun_win_reg_self( .T., SubStr( cParamL, 6 + 1 ) == "=global" )
+            _hbmk_OutStd( hbmk, "Harbour Script (.hb) registered" )
+         ELSE
+            _hbmk_OutErr( hbmk, "Error: Registering Harbour Script (.hb)" )
+         ENDIF
+
+         RETURN _ERRLEV_OK
+
+      CASE Left( cParamL, 8 ) == "-hbunreg"
+
+         IF __hbrun_win_reg_self( .F., SubStr( cParamL, 8 + 1 ) == "=global" )
+            _hbmk_OutStd( hbmk, "Harbour Script (.hb) unregistered" )
+         ELSE
+            _hbmk_OutErr( hbmk, "Error: Unregistering Harbour Script (.hb)" )
+         ENDIF
+
+         RETURN _ERRLEV_OK
+#endif
+
       CASE cParamL == "--version"
 
          ShowHeader( hbmk )
@@ -12057,8 +12080,14 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
 
    RETURN .F.
 
+/* TODO: Consider dropping all embedded headers, now that the runner
+         "knows" where Harbour headers reside on disk. */
+
 STATIC FUNCTION hbmk_CoreHeaderFiles()
    STATIC s_hHeaders := NIL
+
+#define HBMK_WITHOUT_HEADERS
+#ifndef HBMK_WITHOUT_HEADERS
 
    IF s_hHeaders == NIL
       s_hHeaders := { => }
@@ -12146,6 +12175,8 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
       hb_HCaseMatch( s_hHeaders, .T. )
    ENDIF
 
+#endif /* HBMK_WITHOUT_HEADERS */
+
    RETURN s_hHeaders
 
 /* Emulate a minimal hbrun */
@@ -12166,7 +12197,32 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
    LOCAL l_cHB_INSTALL_PREFIX
    LOCAL aINCPATH
 
+   /* Set CP and language */
+
    SetUILang( GetUILang() )
+
+   /* Detect Harbour dir layout */
+
+   hbmk := hbmk_new()
+   hbmk_init_stage2( hbmk )
+   IF ! hbmk_harbour_dirlayout_detect( hbmk, @l_cHB_INSTALL_PREFIX )
+      OutErr( I_( "Warning: HB_INSTALL_PREFIX not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) + _OUT_EOL )
+   ENDIF
+   hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
+   hbmk[ _HBMK_cPLAT ] := hb_Version( HB_VERSION_BUILD_PLAT )
+   hbmk[ _HBMK_cCPU ] := hb_Version( HB_VERSION_CPU )
+   hbmk_harbour_dirlayout_init( hbmk, l_cHB_INSTALL_PREFIX )
+
+   /* Load permanent extensions */
+
+   /* NOTE: The drawback of this feature is that users might omit using
+            '#require' keyword in script source, rendering these scripts
+             non-portable. */
+
+   __hbrun_LoadExtDynamicFromFile( aDynamic, __hbrun_ConfigDir() + _EXT_FILE_ )
+   __hbrun_LoadExtDynamicFromString( aDynamic, GetEnv( _EXT_ENV_ ) )
+
+   /* Do the thing */
 
    IF ! Empty( hb_FNameName( cFile ) ) .AND. ;
       ! Empty( cFile := FindInPath( cFile ) )
@@ -12181,17 +12237,6 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
 
       SWITCH cExt
       CASE ".hb"
-
-         hbmk := hbmk_new()
-         hbmk_init_stage2( hbmk )
-         IF ! hbmk_harbour_dirlayout_detect( hbmk, @l_cHB_INSTALL_PREFIX )
-            OutErr( I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) + _OUT_EOL )
-            RETURN
-         ENDIF
-         hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
-         hbmk[ _HBMK_cPLAT ] := hb_Version( HB_VERSION_BUILD_PLAT )
-         hbmk[ _HBMK_cCPU ] := hb_Version( HB_VERSION_CPU )
-         hbmk_harbour_dirlayout_init( hbmk, l_cHB_INSTALL_PREFIX )
 
          /* NOTE: Assumptions:
                   - one dynamic libs belongs to one .hbc file (true for dynamic builds in contrib)
@@ -12209,8 +12254,6 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
 
          __hbrun_LoadExtDynamicFromSource( aDynamic, cFile )
 
-         aINCPATH := {}
-
          /* NOTE: Find .hbc file. Load .hbc file. Process .hbc references.
                   Pick include paths. Load libs. Add include paths to include
                   path list. For this hbrun needs to know where Harbour tree
@@ -12218,23 +12261,18 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
                   OR migrate hbrun functionality into hbmk2, with contribs
                   loaded solely dynamically. */
 
-         /* NOTE: - most filters and macros in .hbc files won't work in
-                    this mode */
+         /* NOTE: - most filters and macros in .hbc files won't work in this mode */
 
-         IF ! Empty( aDynamic )
+         FOR EACH tmp IN aDynamic
+            IF ! HBC_Find( hbmk, cHBC := hb_FNameExtSet( tmp, ".hbc" ) )
+               OutErr( hb_StrFormat( I_( "Warning: Cannot find %1$s" ), cHBC ) + _OUT_EOL )
+            ENDIF
+         NEXT
 
-            FOR EACH tmp IN aDynamic
-               IF ! HBC_Find( hbmk, cHBC := hb_FNameExtSet( tmp, ".hbc" ) )
-                  OutErr( hb_StrFormat( I_( "Warning: Cannot find %1$s" ), cHBC ) + _OUT_EOL )
-               ENDIF
-            NEXT
-
-            FOR EACH tmp IN hbmk[ _HBMK_aINCPATH ]
-               AAdd( aINCPATH, "-I" + tmp )
-            NEXT
-
-            __hbrun_extensions_dynamic_init( aDynamic )
-         ENDIF
+         aINCPATH := {}
+         FOR EACH tmp IN hbmk[ _HBMK_aINCPATH ]
+            AAdd( aINCPATH, "-I" + tmp )
+         NEXT
 
          cFile := hb_compileBuf( hbmk_CoreHeaderFiles(), hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
                                  hb_ArrayToParams( aINCPATH ), "-D" + "__HBSCRIPT__HBRUN", cFile )
@@ -12242,9 +12280,8 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
             ErrorLevel( 1 )
             EXIT
          ENDIF
+
       CASE ".hrb"
-         __hbrun_LoadExtDynamicFromFile( aDynamic, __hbrun_ConfigDir() + _EXT_FILE_ )
-         __hbrun_LoadExtDynamicFromString( aDynamic, GetEnv( _EXT_ENV_ ) )
          __hbrun_extensions_dynamic_init( aDynamic )
          s_cDirBase_hbrun := hb_DirBase()
          s_cProgName_hbrun := hb_ProgName()
@@ -12252,15 +12289,11 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
          hb_hrbRun( cFile, ... )
          EXIT
       CASE ".dbf"
-         __hbrun_LoadExtDynamicFromFile( aDynamic, __hbrun_ConfigDir() + _EXT_FILE_ )
-         __hbrun_LoadExtDynamicFromString( aDynamic, GetEnv( _EXT_ENV_ ) )
          __hbrun_extensions_dynamic_init( aDynamic )
          __hbrun_shell( hb_AParams(), "USE " + cFile + " SHARED" )
          EXIT
       ENDSWITCH
    ELSE
-      __hbrun_LoadExtDynamicFromFile( aDynamic, __hbrun_ConfigDir() + _EXT_FILE_ )
-      __hbrun_LoadExtDynamicFromString( aDynamic, GetEnv( _EXT_ENV_ ) )
       __hbrun_extensions_dynamic_init( aDynamic )
       __hbrun_shell( hb_AParams() )
    ENDIF
@@ -12353,8 +12386,6 @@ STATIC PROCEDURE __hbrun_LoadExtDynamicFromSource( aDynamic, cFileName )
 
    RETURN
 
-/* Requires -shared mode build */
-
 STATIC PROCEDURE __hbrun_extensions_dynamic_init( aDynamic )
    LOCAL cName
 
@@ -12366,7 +12397,9 @@ STATIC PROCEDURE __hbrun_extensions_dynamic_init( aDynamic )
 
    RETURN
 
-STATIC FUNCTION __hbrun_extensions_dynamic_load( cName )
+/* NOTE: Requires -shared mode build */
+/* TOFIX: Load components from detected Harbour dir layout */
+FUNCTION __hbrun_extensions_dynamic_load( cName )
    LOCAL cFileName
    LOCAL hLib
 
@@ -12390,7 +12423,7 @@ STATIC FUNCTION __hbrun_extensions_dynamic_load( cName )
 
    RETURN .F.
 
-STATIC FUNCTION __hbrun_extensions_dynamic_unload( cName )
+FUNCTION __hbrun_extensions_dynamic_unload( cName )
 
    IF cName $ s_hLibExtDyn .AND. s_hLibExtDyn[ cName ] != NIL
       hb_HDel( s_hLibExtDyn, cName )
@@ -12399,7 +12432,7 @@ STATIC FUNCTION __hbrun_extensions_dynamic_unload( cName )
 
    RETURN .F.
 
-STATIC FUNCTION __hbrun_extensions_get_list()
+FUNCTION __hbrun_extensions_get_list()
    LOCAL aName := Array( Len( s_hLibExtDyn ) )
    LOCAL hLib
 
@@ -12449,6 +12482,7 @@ STATIC FUNCTION __hbrun_plugins_load( hPlugins, aParams )
    LOCAL plugins := {}
    LOCAL hHRBEntry
    LOCAL cFile
+   LOCAL oError
 
    FOR EACH cFile IN hPlugins
 
@@ -12463,13 +12497,14 @@ STATIC FUNCTION __hbrun_plugins_load( hPlugins, aParams )
             EXIT
          ENDIF
       CASE ".hrb"
-         BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+         BEGIN SEQUENCE WITH {| oError | Break( oError ) }
             plugin[ _PLUGIN_hHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
             IF Empty( hHRBEntry := hb_hrbGetFunSym( plugin[ _PLUGIN_hHRB ], "__hbrun_plugin" ) )
                plugin[ _PLUGIN_hHRB ] := NIL
             ENDIF
-         RECOVER
+         RECOVER USING oError
             plugin[ _PLUGIN_hHRB ] := NIL
+            OutErr( hb_StrFormat( I_( "Error: Loading shell plugin: %1$s\n'%2$s'" ), cFile:__enumKey(), hbmk_ErrorMessage( oError ) ) + _OUT_EOL )
          END SEQUENCE
          EXIT
       ENDSWITCH
@@ -12557,7 +12592,7 @@ STATIC PROCEDURE __hbrun_shell( aParams, cCommand )
    hbrun_gtInteractive()
 
    IF ! hb_gtInfo( HB_GTI_ISSCREENPOS )
-      OutErr( "hbrun: Error: Interactive session not possible with " + hb_gtVersion( 0 ) + " terminal driver" + hb_eol() )
+      OutErr( hb_StrFormat( I_( "hbrun: Error: Interactive session not possible with %1$s terminal driver" ), hb_gtVersion( 0 ) ) + _OUT_EOL )
       RETURN
    ENDIF
 
@@ -12693,7 +12728,7 @@ STATIC FUNCTION __hbrun_GetHidden()
    LOCAL nSavedRow
    LOCAL bKeyPaste
 
-   QQOut( "Enter password: " )
+   QQOut( I_( "Enter password: " ) )
 
    nSavedRow := Row()
 
@@ -12755,14 +12790,14 @@ STATIC PROCEDURE __hbrun_Err( oErr, cCommand )
 
    LOCAL xArg, cMessage
 
-   cMessage := "Sorry, could not execute:;;" + cCommand + ";;"
+   cMessage := I_( "Could not execute:" ) + ";;" + cCommand + ";;"
    IF oErr:ClassName == "ERROR"
       cMessage += oErr:Description
       IF !Empty( oErr:Operation )
          cMessage += " " + oErr:Operation
       ENDIF
       IF HB_ISARRAY( oErr:Args ) .AND. Len( oErr:Args ) > 0
-         cMessage += ";Arguments:"
+         cMessage += ";" + I_( "Arguments:" )
          FOR EACH xArg IN oErr:Args
             cMessage += ";" + hb_CStr( xArg )
          NEXT
@@ -12779,20 +12814,19 @@ STATIC PROCEDURE __hbrun_Err( oErr, cCommand )
 /* ********************************************************************** */
 
 STATIC PROCEDURE __hbrun_Exec( cCommand )
-   LOCAL pHRB, cHRB, cFunc, bBlock, cEol, nRowMin
+   LOCAL pHRB, cHRB, cFunc, bBlock, nRowMin
 
-   cEol := hb_eol()
-   cFunc := "STATIC FUNCTION __HBDOT()" + cEol + ;
-            "RETURN {||" + cEol + ;
-            "   " + cCommand + cEol + ;
-            "   RETURN __MVSETBASE()" + cEol + ;
-            "}" + cEol
+   cFunc := "STATIC FUNCTION __HBDOT()" + hb_eol() + ;
+            "RETURN {||" + hb_eol() + ;
+            "   " + cCommand + hb_eol() + ;
+            "   RETURN __MVSETBASE()" + hb_eol() + ;
+            "}" + hb_eol()
 
    BEGIN SEQUENCE WITH {| oErr | __hbrun_Err( oErr, cCommand ) }
 
       cHRB := hb_compileFromBuf( cFunc, hb_ProgName(), "-n2", "-q2" )
       IF cHRB == NIL
-         Eval( ErrorBlock(), "Syntax error." )
+         Eval( ErrorBlock(), I_( "Syntax error." ) )
       ELSE
          pHRB := hb_hrbLoad( cHRB )
          IF pHrb != NIL
@@ -12871,8 +12905,12 @@ STATIC PROCEDURE __hbrun_HistorySave()
 
 #if defined( __PLATFORM__WINDOWS )
 
-/* NOTE: Using an optional contrib component. Relying on it dynamically. */
-/* TODO: Use this, with some options. */
+/* NOTE: Using an optional contrib component dynamically.
+         It's a little trick to work around the limitation
+         that core components cannot depend on contribs.
+         This way we depend on it, but only dynamically.
+         Probably in the future, this functionality should
+         be moved to core. [vszakats] */
 
 DYNAMIC win_regWrite
 DYNAMIC win_regDelete
@@ -12895,7 +12933,7 @@ STATIC FUNCTION __hbrun_win_reg_app( lRegister, lAllUser, cAppPath )
    LOCAL aEntries := {;
       cHive + '\'                                , ""                     ,;
       cHive + '\.hb\'                            , "HarbourScript"        ,;
-      cHive + '\HarbourScript\'                  , "Harbour Script File"  ,;
+      cHive + '\HarbourScript\'                  , "Harbour Script file"  ,;
       cHive + '\HarbourScript\DefaultIcon\'      , cAppPath + ",-1"       ,;
       cHive + '\HarbourScript\Shell\'            , "Run"                  ,;
       cHive + '\HarbourScript\Shell\Run\'        , ""                     ,;
@@ -13587,6 +13625,9 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-rtlink"            , "" },;
       { "-blinker"           , "" },;
       { "-exospace"          , hb_StrFormat( I_( "emulate Clipper compatible linker behavior\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect" ), _SELF_NAME_ ) },;
+      NIL,;
+      { "-hbreg[=global]"    , hb_StrFormat( I_( "register Harbour Script (.hb) with %1$s (Windows only)" ), _SELF_NAME_ ) },;
+      { "-hbunreg[=global]"  , hb_StrFormat( I_( "unregister Harbour Script (.hb) from %1$s (Windows only)" ), _SELF_NAME_ ) },;
       NIL,;
       { "-hbmake=<file>"     , I_( "convert hbmake project <file> to .hbp file" ) },;
       { "-xbp=<file>"        , I_( "convert .xbp (xbuild) project <file> to .hbp file" ) },;
