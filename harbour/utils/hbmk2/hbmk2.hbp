@@ -7,7 +7,6 @@
 {HB_HAS_GPM}-prgflag=-DHB_HAS_GPM
 {HB_HAS_WATT}-prgflag=-DHB_HAS_WATT
 
--head=dep
 -cflag=-Zm200{wce&allmsvc}
 
 -mt
