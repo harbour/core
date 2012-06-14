@@ -14,6 +14,7 @@
 
 PROCEDURE Main()
    LOCAL oWid
+   LOCAL oLabel1
    LOCAL oButton1
    LOCAL oButton2
    LOCAL oTable1
@@ -23,28 +24,28 @@ PROCEDURE Main()
    Set( _SET_EXACT, .T. )
 
    oWid := QWidget()
-   oWid:setWindowTitle( "DBF Browser" )
+   oWid:setWindowTitle( "Simple DBF Browser/Editor" )
 
-   oTable1 := QDBFBrowser()
+   oLabel1 := QLabel()
+   oLabel1:setText( 'Click in "Open DBF" to start' )
 
-   // NOTE: QDBFBrowser inherits QTableView, so we can use the methods below.
+   oTable1 := QDBFBrowser() // QDBFBrowser inherits QTableView, so we can use the methods below.
    oTable1:setAlternatingRowColors( .T. )
    oTable1:setShowGrid( .F. )
    oTable1:setTabKeyNavigation( .F. )
    oTable1:verticalHeader():setSelectionBehavior( QAbstractItemView_SelectRows )
    oTable1:verticalHeader():setSelectionMode( QAbstractItemView_SingleSelection )
-   // ENDNOTE
 
    oButton1 := QPushButton()
    oButton1:setText( "Open DBF" )
-   oButton1:connect( "clicked()", {|| OpenDBF( oWid, oTable1 ) } )
+   oButton1:connect( "clicked()", {|| OpenDBF( oWid, oTable1, oLabel1 ) } )
 
    oButton2 := QPushButton()
    oButton2:setText( "Close DBF" )
-   oButton2:connect( "clicked()", {|| CloseDBF( oTable1 ) } )
+   oButton2:connect( "clicked()", {|| CloseDBF( oTable1, oLabel1 ) } )
 
-   
    oLay1 := QVBoxLayout( oWid )
+   oLay1:addWidget( oLabel1 )
    oLay1:addWidget( oTable1 )
    olay1:addLayout( oLay2 := QHBoxLayout() )
    oLay2:addWidget( oButton1 )
@@ -52,37 +53,41 @@ PROCEDURE Main()
 
    oWid:Show()
    QApplication():exec()
-   
-   oTable1:destroy() // Mainly to disconnect signals 
-   
-   oButton1:disconnect( "clicked()" ) // The only way for GC to resolve
+
+   oTable1:detach()
+   oButton1:disconnect( "clicked()" )
    oButton2:disconnect( "clicked()" )
    RETURN
 
-PROCEDURE OpenDBF( oWid, oTable )
+PROCEDURE OpenDBF( oWid, oTable, oLabel )
    STATIC cDir := "."
    LOCAL cFile
-   
-   cFile := QFileDialog():getOpenFileName( oWid, "Open file", cDir, "DBF files (*.dbf);;All files (*.*)" )
+   Local cName
 
+   cFile := QFileDialog():getOpenFileName( oWid, "Select database", cDir, "DBF files (*.dbf);;All files (*.*)" )
    IF cFile == ""
       RETURN
-   END
+   ENDIF
 
    cDir := hb_FNameDir( cFile ) // To remember last used dir
+   cName := hb_FNameNameExt( cFile )
 
-   CloseDBF( oTable )
+   CloseDBF( oTable, oLabel )
    BEGIN SEQUENCE WITH {||.F.}
       DBUseArea( .T., NIL, cFile, NIL, .F., .F. )
    END SEQUENCE
 
    IF Used()
       oTable:attach()
-   ENDIF 
+      oLabel:setText( "Database: " + cName )
+   ELSE
+      oLabel:setText( "Could not open " + cName )
+   ENDIF
    RETURN
 
-PROCEDURE CloseDBF( oTable )
+PROCEDURE CloseDBF( oTable , oLabel )
    oTable:detach()
+   oLabel:setText( "" )
    DBCloseArea()
    RETURN
 

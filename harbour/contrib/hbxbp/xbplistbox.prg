@@ -261,7 +261,7 @@ METHOD XbpListBox:execSlot( cSlot, p )
    IF cSlot == "customContextMenuRequested(QPoint)"
       IF HB_ISBLOCK( ::hb_contextMenu )
          qPos := p
-         IF ( qItm := ::oWidget:itemAt( qPos ) ):hasValidPointer()
+         IF ! empty( qItm := ::oWidget:itemAt( qPos ) )
             IF ( n := ascan( ::aItems, {|o| hbqt_IsEqual( o, qItm ) } ) ) > 0
                qPt := ::oWidget:mapToGlobal( QPoint( p ) )
                eval( ::hb_contextMenu, { qPt:x(), qPt:y() }, NIL, ::aItems[ n ] )
@@ -352,7 +352,7 @@ METHOD XbpListBox:clear( lConnect )
       qItm := NIL
    NEXT
    ::aItems := {}
-   IF ::oWidget:hasValidPointer()
+   IF ! empty( ::oWidget )
       IF lConnect
          ::oWidget:clear()
       ENDIF
