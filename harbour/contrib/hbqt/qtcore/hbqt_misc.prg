@@ -58,25 +58,24 @@
 
 CREATE CLASS HbQtObjectHandler
 
-   /* __pSlots removed */
+   /* QUESTION: _three_ different lists for events? two for slots? Is this needed? */
+   /* ANSWER  : these variables hold the objects which capture and fire the relative signal/event */
 
-   /* __pEvents is used for event handling */
+   VAR    __pSlots   PROTECTED
    VAR    __pEvents  PROTECTED
 
    VAR    __hEvents  PROTECTED INIT { => }
 
-   /* The following two variables are PUBLIC */
-   VAR    __Slots
-   VAR    __Events
+   VAR    __Slots    /* TOFIX: add PROTECTED or clean this mess     ANS: It is like this by design, cannot be made PROTECTED */
+   VAR    __Events   /* TOFIX: add PROTECTED or clean this mess */
 
    METHOD connect( cnEvent, bBlock )
    METHOD disconnect( cnEvent )
-   METHOD disconnectAll()
    METHOD setSlots()
    METHOD setEvents()
 
    DESTRUCTOR __destroy()
-   ERROR HANDLER onError( cMsg )
+   ERROR HANDLER onError()
 
    ENDCLASS
 
@@ -104,14 +103,10 @@ METHOD HbQtObjectHandler:setEvents()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbQtObjectHandler:onError( cMsg )
+METHOD HbQtObjectHandler:onError()
+   LOCAL cMsg := __GetMessage()
    LOCAL oError
-   LOCAL nCallStack := 1
 
-   IF ! hb_isChar( cMsg )
-      cMsg := __GetMessage()
-      nCallStack := 0
-   ENDIF
    IF SubStr( cMsg, 1, 1 ) == "_"
       cMsg := SubStr( cMsg, 2 )
    ENDIF
@@ -126,7 +121,7 @@ METHOD HbQtObjectHandler:onError( cMsg )
    oError:canRetry    := .F.
    oError:canDefault  := .F.
    oError:Args        := hb_AParams()
-   oError:operation   := ProcName( nCallStack )
+   oError:operation   := ProcName()
    oError:Description := cMsg
 
    Eval( ErrorBlock(), oError )
@@ -139,7 +134,6 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
    LOCAL nResult
 
    IF ! __objDerivedFrom( Self, "QOBJECT" )
-      HB_TRACE( HB_TR_DEBUG, "REFUSED CONNECT ", Self:className() )
       RETURN .f.
    ENDIF
 
@@ -151,14 +145,18 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
       IF HB_ISNUMERIC( ::__hEvents[ cnEvent ] )
          ::__pEvents:hbDisconnect( Self, cnEvent )
       ELSE
-         hbqt_disconnect( Self, cnEvent )
+         ::__pSlots:hbDisconnect( Self, cnEvent )
       ENDIF
       hb_hDel( ::__hEvents, cnEvent )
    ENDIF
 
    SWITCH ValType( cnEvent )
    CASE "C"
-      nResult := hbqt_connect( Self, cnEvent, bBlock )
+      IF Empty( ::__pSlots )
+         ::__pSlots := HBQSlots()
+      ENDIF
+      nResult := ::__pSlots:hbconnect( Self, cnEvent, bBlock )
+
       SWITCH nResult
       CASE 0
          ::__hEvents[ cnEvent ] := cnEvent
@@ -173,7 +171,6 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
          ::__pEvents := HBQEvents()
          ::__pEvents:hbInstallEventFilter( Self )
       ENDIF
-         HB_TRACE( HB_TR_DEBUG, "  _HbQtObjectHandler:connect valtype __pEvents object=", Self:className() )
       nResult := ::__pEvents:hbConnect( Self, cnEvent, bBlock )
 
       SWITCH nResult
@@ -190,15 +187,8 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
 
    ENDSWITCH
 
-   HB_TRACE( HB_TR_DEBUG, "Errore in connect " + hb_ntos( nResult ) )
-
    __hbqt_error( 1200 + nResult )
    RETURN .F.
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbQtObjectHandler:disconnectAll()
-   RETURN .T.
 
 /*----------------------------------------------------------------------*/
 
@@ -206,56 +196,53 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
    LOCAL nResult := 0
 
    IF ! __objDerivedFrom( Self, "QOBJECT" )
-      RETURN .F.
+      RETURN .f.
    ENDIF
 
    IF ! hb_hHasKey( ::__hEvents, cnEvent )
       RETURN .f.
    ENDIF
 
-   IF PCOUNT() == 0
-      // ::disconnectAll()
-      RETURN .T.
-   ELSE
-      SWITCH ValType( cnEvent )
-      CASE "C"
-         nResult := hbqt_disconnect( Self, cnEvent )
+   SWITCH ValType( cnEvent )
+   CASE "C"
+      IF ! empty( ::__pSlots )
+         nResult := ::__pSlots:hbDisconnect( Self, cnEvent )
+      ENDIF
 
-         SWITCH nResult
-         CASE 0
-         CASE 4 /* signal not found in object */
-         CASE 5 /* disconnect failure */
+      SWITCH nResult
+      CASE 0
+      CASE 4 /* signal not found in object */
+      CASE 5 /* disconnect failure */
          hb_hDel( ::__hEvents, cnEvent )
-            RETURN .T.
-         CASE 1 /* wrong slot container, no connect was called yet */
-         CASE 2 /* object has been already freed */
-         CASE 3 /* event not found */
-            RETURN .F.
-         ENDSWITCH
-         EXIT
-
-      CASE "N"
-         IF ! empty( ::__pEvents )
-            nResult := ::__pEvents:hbdisconnect( Self, cnEvent )
-         ENDIF
-
-         SWITCH nResult
-         CASE 0
-         hb_hDel( ::__hEvents, cnEvent )
-            RETURN .T.
-         CASE -3 /* event not found */
-         CASE -2 /* event not found */
-         CASE -1 /* event not found */
-            RETURN .F.
-         ENDSWITCH
-         EXIT
-
-      OTHERWISE
-         nResult := 99
-
+         RETURN .T.
+      CASE 1 /* wrong slot container, no connect was called yet */
+      CASE 2 /* object has been already freed */
+      CASE 3 /* event not found */
+         RETURN .F.
       ENDSWITCH
-   ENDIF
-   HB_TRACE( HB_TR_DEBUG, "Errore in disconnect nResult="+str(nResult) )
+      EXIT
+
+   CASE "N"
+      IF ! empty( ::__pEvents )
+         nResult := ::__pEvents:hbdisconnect( Self, cnEvent )
+      ENDIF
+
+      SWITCH nResult
+      CASE 0
+         hb_hDel( ::__hEvents, cnEvent )
+         RETURN .T.
+      CASE -3 /* event not found */
+      CASE -2 /* event not found */
+      CASE -1 /* event not found */
+         RETURN .F.
+      ENDSWITCH
+      EXIT
+
+   OTHERWISE
+      nResult := 99
+
+   ENDSWITCH
+
    __hbqt_error( 1300 + nResult )
    RETURN .F.
 
@@ -263,7 +250,7 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 
 METHOD HbQtObjectHandler:__destroy()
 
-   HB_TRACE( HB_TR_DEBUG, "  _destroy()", __objDerivedFrom( Self, "QOBJECT" ), __objGetClsName( Self ) )
+   HB_TRACE( HB_TR_DEBUG, "  __destroy()", __objDerivedFrom( Self, "QOBJECT" ), __objGetClsName( Self ) )
 
    __hbqt_destroy( Self )
 

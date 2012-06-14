@@ -57,20 +57,20 @@
 #include "hbqt.h"
 
 #include "hbapiitm.h"
-#include "hbapierr.h"
 #include "hbvm.h"
 
 #if QT_VERSION >= 0x040500
 
 #include "hbqt_hbqslots.h"
 
+/*----------------------------------------------------------------------*/
+
 #include <QtCore/QStringList>
 
+/*----------------------------------------------------------------------*/
 
 static QList<QByteArray> s_argCombinations;
 static QList<PHBQT_SLOT_FUNC> s_pCallback;
-
-static HBQSlots * receiverSlot = NULL;
 
 void hbqt_slots_register_callback( QByteArray sig, PHBQT_SLOT_FUNC pCallback )
 {
@@ -121,53 +121,56 @@ int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
 
    int nResult = 1;
 
-   QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
-   if( object )
+   if( true )
    {
-      if( hb_itemType( bBlock ) & HB_IT_BLOCK )
+      QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
+      if( object )
       {
-         int i = object->property( pszSignal ).toInt();
-         if( i == 0 )
+         if( hb_itemType( bBlock ) & HB_IT_BLOCK )
          {
-            QString signal = pszSignal;
-            QByteArray theSignal = QMetaObject::normalizedSignature( signal.toAscii() );
-
-            if( QMetaObject::checkConnectArgs( theSignal, theSignal ) )
+            int i = object->property( pszSignal ).toInt();
+            if( i == 0 )
             {
-               int signalId = object->metaObject()->indexOfSignal( theSignal );
-               if( signalId != -1 )
-               {
-                  int slotId = object->metaObject()->indexOfMethod( theSignal );
-                  if( slotId != -1 )
-                  {
-                     if( QMetaObject::connect( object, signalId, this, slotId + QObject::staticMetaObject.methodCount(), Qt::AutoConnection ) )
-                     {
-                        nResult = 0;
+               QString signal = pszSignal;
+               QByteArray theSignal = QMetaObject::normalizedSignature( signal.toAscii() );
 
-                        HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %s ) signalId=%i, %p", pszSignal, signalId, object ) );
-                        hbqt_bindAddSlot( pObj, signalId, bBlock );
+               if( QMetaObject::checkConnectArgs( theSignal, theSignal ) )
+               {
+                  int signalId = object->metaObject()->indexOfSignal( theSignal );
+                  if( signalId != -1 )
+                  {
+                     int slotId = object->metaObject()->indexOfMethod( theSignal );
+                     if( slotId != -1 )
+                     {
+                        if( QMetaObject::connect( object, signalId, this, slotId + QObject::staticMetaObject.methodCount(), Qt::AutoConnection ) )
+                        {
+                           nResult = 0;
+
+                           HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %s ) signalId=%i, %p", pszSignal, signalId, object ) );
+                           hbqt_bindAddSlot( pObj, signalId, bBlock );
+                        }
+                        else
+                           nResult = 8;
                      }
                      else
-                        nResult = 8;
+                        nResult = 7;
                   }
                   else
-                     nResult = 7;
+                     nResult = 6;
                }
                else
-                  nResult = 6;
+                  nResult = 5;
             }
-            else
-               nResult = 5;
+         }
+         else
+         {
+            nResult = 3;
          }
       }
       else
-      {
-         nResult = 3;
-      }
+         nResult = 2;
    }
-   else
-      nResult = 2;
-
+   HB_TRACE( HB_TR_DEBUG, ( "HBQT_SLOTS_CONNECT returns: %d", nResult ) );
    return nResult;
 }
 
@@ -188,7 +191,7 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
       {
          if( QMetaObject::disconnect( object, signalId, 0, 0 ) )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s ) signalId=%d", pszSignal, signalId ) );
+            HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s ) %i", pszSignal, i ) );
             nResult = 0;
          }
          else
@@ -209,26 +212,12 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
    return nResult;
 }
 
-int HBQSlots::hbDisconnectAll( PHB_ITEM pObj )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "DISCONNECTALL" ) );
-
-   QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
-   if( object )
-   {
-      QObject::disconnect();
-      return HB_TRUE;
-   }
-   return HB_FALSE;
-}
-
 int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
 {
    id = QObject::qt_metacall( c, id, arguments );
    if( id < 0 || c != QMetaObject::InvokeMetaMethod )
       return id;
 
-   HB_TRACE( HB_TR_DEBUG, ( "qt_metacall" ) );
    QObject * object = sender();
    if( object )
    {
@@ -303,173 +292,6 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
    return -1;
 }
 
-int hbqt_QtConnect( QObject *sender, const char * pszSignal, QObject *receiver, const char * pszSlot )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "_Connect %s with slot %s", pszSignal, pszSlot ) );
-
-   int nResult = 1;
-
-   if( sender && receiver )
-   {
-      QString signal = pszSignal;
-      QByteArray theSignal = QMetaObject::normalizedSignature( signal.toAscii() );
-      QString slot = pszSlot;
-      QByteArray theSlot = QMetaObject::normalizedSignature( slot.toAscii() );
-
-      if( QMetaObject::checkConnectArgs( theSignal, theSlot ) )
-      {
-         int signalId = sender->metaObject()->indexOfSignal( theSignal );
-         if( signalId != -1 )
-         {
-            int slotId = receiver->metaObject()->indexOfMethod( theSlot );
-            if( slotId != -1 )
-            {
-               if( QMetaObject::connect( sender, signalId, receiver, slotId, Qt::AutoConnection ) )
-               {
-                  nResult = 0;
-                  HB_TRACE( HB_TR_DEBUG, ( "SIGNAL2SLOT ok" ) );
-               }
-               else
-                  nResult = 8;
-            }
-            else
-               nResult = 7;
-         }
-         else
-            nResult = 6;
-      }
-      else
-         nResult = 5;
-   }
-   else
-      nResult = 9;  // Qt objects not active
-
-   HB_TRACE( HB_TR_DEBUG, ( "_Connect returns: %d", nResult ) );
-   return nResult;
-}
-
-int hbqt_QtDisconnect( QObject *sender, const char * pszSignal, QObject *receiver, const char * pszSlot )
-{
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_QtDisconnect %s with slot %s", pszSignal, pszSlot ) );
-
-   int nResult = 1;
-
-   if( sender && receiver )
-   {
-      QString signal = pszSignal;
-      QByteArray theSignal = QMetaObject::normalizedSignature( signal.toAscii() );
-      QString slot = pszSlot;
-      QByteArray theSlot = QMetaObject::normalizedSignature( slot.toAscii() );
-
-      if( QMetaObject::checkConnectArgs( theSignal, theSlot ) )
-      {
-         int signalId = sender->metaObject()->indexOfSignal( theSignal );
-         if( signalId != -1 )
-         {
-            int slotId = receiver->metaObject()->indexOfMethod( theSlot );
-            if( slotId != -1 )
-            {
-               if( QMetaObject::disconnect( sender, signalId, receiver, slotId ) )
-               {
-                  nResult = 0;
-                  HB_TRACE( HB_TR_DEBUG, ( "SIGNAL2SLOT ok" ) );
-               }
-               else
-                  nResult = 8;
-            }
-            else
-               nResult = 7;
-         }
-         else
-            nResult = 6;
-      }
-      else
-         nResult = 5;
-   }
-   else
-      nResult = 9;  // Qt objects not active
-
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_QtDisconnect returns: %d", nResult ) );
-   return nResult;
-}
-
-/*  HBQT_CONNECT handles now two types of connection, one Qt based, one HB based:
-
-    Qt:  HBQT_CONNECT( object, signal, object, string )
-    HB:  HBQT_CONNECT( object, signal, codeblock )
-*/
-HB_FUNC( HBQT_CONNECT )
-{
-   int ret = -1;
-
-   if( hb_pcount() == 4 && HB_ISCHAR( 2 ) && HB_ISCHAR( 4 ) && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) && hbqt_par_isDerivedFrom( 3, "QOBJECT" ) )
-   {
-      void * pText01 = NULL;
-      void * pText02 = NULL;
-      ret =  hbqt_QtConnect( ( QObject* ) hbqt_par_ptr( 1 ), hb_parstr_utf8( 2, &pText01, NULL ), ( QObject* ) hbqt_par_ptr( 3 ), hb_parstr_utf8( 4, &pText02, NULL ) );
-      hb_strfree( pText01 );
-      hb_strfree( pText02 );
-   }
-   else if( hb_pcount() == 3 && HB_ISCHAR( 2 ) && HB_ISBLOCK( 3 ) && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
-   {
-      void * pText01 = NULL;
-      ret = receiverSlot->hbConnect( hb_param( 1, HB_IT_OBJECT ), ( char * ) hb_parstr_utf8( 2, &pText01, NULL ), hb_param( 3, HB_IT_BLOCK ) );
-      hb_strfree( pText01 );
-   }
-   else
-   {
-      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-   }
-
-   hb_retni( ret );
-}
-
-HB_FUNC( HBQT_DISCONNECT )
-{
-   int ret = -1;
-
-   if( hb_pcount() == 2 && HB_ISCHAR( 2 ) && hbqt_par_isDerivedFrom( 1, "QOBJECT" )  )
-   {
-      void * pText01 = NULL;
-      ret = receiverSlot->hbDisconnect( hb_param( 1, HB_IT_OBJECT ), (char *) hb_parstr_utf8( 2, &pText01, NULL ) ) == 0;
-      hb_strfree( pText01 );
-   }
-   else
-   {
-      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-   }
-   hb_retni( ret );
-}
-
-static void hbqt_lib_init( void * cargo )
-{
-   HB_SYMBOL_UNUSED( cargo );
-
-   HB_TRACE( HB_TR_DEBUG, ( "Slots: hbqt_lib_init" ) );
-   if( receiverSlot == NULL )
-     receiverSlot = new HBQSlots;
-   HB_TRACE( HB_TR_DEBUG, ( "Slots: hbqt_lib_init" ) );
-}
-
-static void hbqt_lib_exit( void* cargo )
-{
-   HB_SYMBOL_UNUSED( cargo );
-   HB_TRACE( HB_TR_DEBUG, ( "Exiting slots lib" ) );
-
-   if( receiverSlot )
-     delete receiverSlot;
-}
-
-HB_CALL_ON_STARTUP_BEGIN( _hbqtslots_init_ )
-   hb_vmAtInit( hbqt_lib_init, NULL );
-   hb_vmAtExit( hbqt_lib_exit, NULL );
-HB_CALL_ON_STARTUP_END( _hbqtslots_init_ )
-
-#if defined( HB_PRAGMA_STARTUP )
-   #pragma startup _hbqtslots_init_
-#elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hbqtslots_init_ )
-   #include "hbiniseg.h"
-#endif
+/*----------------------------------------------------------------------*/
 
 #endif
