@@ -62,7 +62,7 @@ FUNCTION __hbrun_plugins()
    LOCAL file
 
    ADD PLUGIN TO hPlugins FILE "netiomgm.hb"
-   ADD PLUGIN TO hPlugins FILE "extdynpl.hb"
+   ADD PLUGIN TO hPlugins FILE "p_ext.hb"
 
    cDir := __hbrun_ConfigDir()
 

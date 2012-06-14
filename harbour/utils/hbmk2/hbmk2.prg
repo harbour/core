@@ -249,7 +249,8 @@ REQUEST hbmk_KEYW
 #define _HBMK_HAS_TPL           "HBMK_HAS_%1$s"
 #define _HBMK_HAS_TPL_LOCAL     "HBMK_HAS_%1$s_LOCAL"
 #define _HBMK_DIR_TPL           "HBMK_DIR_%1$s"
-#define _HBMK_SCRIPT            "__HBSCRIPT__HBMK"
+#define _HBMK_PLUGIN            "__HBSCRIPT__HBMK_PLUGIN"
+#define _HBMK_SHELL             "__HBSCRIPT__HBSHELL"
 
 #define _HBMK_IMPLIB_EXE_POST   "_exe"
 #define _HBMK_IMPLIB_DLL_POST   "_dll"
@@ -517,7 +518,7 @@ REQUEST hbmk_KEYW
 
 #define PathMakeAbsolute( cPathR, cPathA ) hb_PathJoin( cPathA, cPathR )
 
-/* Request for runner and interactive shell */
+/* Request for runner and shell */
 REQUEST __HB_EXTERN__
 
 /* Request some functions for plugins */
@@ -8634,7 +8635,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
          ENDIF
          IF ! lOK .AND. !( Lower( cExt ) == ".hrb" ) /* Optimization: Don't try to load it as .prg if the extension is .hrb */
             cType := I_( "(source)" )
-            cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0", "-i" + hbmk[ _HBMK_cHB_INSTALL_INC ], "-D" + _HBMK_SCRIPT )
+            cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0", "-i" + hbmk[ _HBMK_cHB_INSTALL_INC ], "-D" + _HBMK_PLUGIN )
             IF ! Empty( cFile )
                hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
             ENDIF
@@ -12274,26 +12275,26 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
          NEXT
 
          cFile := hb_compileBuf( hbmk_CoreHeaderFiles(), hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
-                                 hb_ArrayToParams( aINCPATH ), "-D" + "__HBSCRIPT__HBRUN", cFile )
+                                 hb_ArrayToParams( aINCPATH ), "-D" + _HBMK_SHELL, cFile )
          IF cFile == NIL
             ErrorLevel( 1 )
             EXIT
          ENDIF
 
       CASE ".hrb"
-         __hbrun_extensions_dynamic_init( aDynamic )
+         __hbrun_extensions_init( aDynamic )
          s_cDirBase_hbrun := hb_DirBase()
          s_cProgName_hbrun := hb_ProgName()
          hb_argShift( .T. )
          hb_hrbRun( cFile, ... )
          EXIT
       CASE ".dbf"
-         __hbrun_extensions_dynamic_init( aDynamic )
+         __hbrun_extensions_init( aDynamic )
          __hbrun_shell( hb_AParams(), "USE " + cFile + " SHARED" )
          EXIT
       ENDSWITCH
    ELSE
-      __hbrun_extensions_dynamic_init( aDynamic )
+      __hbrun_extensions_init( aDynamic )
       __hbrun_shell( hb_AParams() )
    ENDIF
 
@@ -12385,12 +12386,12 @@ STATIC PROCEDURE __hbrun_LoadExtDynamicFromSource( aDynamic, cFileName )
 
    RETURN
 
-STATIC PROCEDURE __hbrun_extensions_dynamic_init( aDynamic )
+STATIC PROCEDURE __hbrun_extensions_init( aDynamic )
    LOCAL cName
 
    IF ! Empty( aDynamic )
       FOR EACH cName IN aDynamic
-         __hbrun_extensions_dynamic_load( cName )
+         __hbrun_extensions_load( cName )
       NEXT
    ENDIF
 
@@ -12400,7 +12401,7 @@ STATIC PROCEDURE __hbrun_extensions_dynamic_init( aDynamic )
 /* TOFIX: Load components from detected Harbour dir layout */
 /* TODO: Load .hbc file (handle -stop command in it) and
          extend header search path accordingly */
-FUNCTION __hbrun_extensions_dynamic_load( cName )
+FUNCTION __hbrun_extensions_load( cName )
    LOCAL cFileName
    LOCAL hLib
 
@@ -12424,7 +12425,7 @@ FUNCTION __hbrun_extensions_dynamic_load( cName )
 
    RETURN .F.
 
-FUNCTION __hbrun_extensions_dynamic_unload( cName )
+FUNCTION __hbrun_extensions_unload( cName )
 
    IF cName $ s_hLibExtDyn .AND. s_hLibExtDyn[ cName ] != NIL
       hb_HDel( s_hLibExtDyn, cName )
@@ -12456,7 +12457,7 @@ FUNCTION __hbrun_plugins()
    LOCAL cExt
    LOCAL file
 
-   ADD PLUGIN TO hPlugins FILE "p_extdyn.hb"
+   ADD PLUGIN TO hPlugins FILE "p_ext.hb"
 
    cDir := __hbrun_ConfigDir()
 
@@ -12577,7 +12578,7 @@ STATIC PROCEDURE __hbrun_plugins_unload( plugins )
 #include "inkey.ch"
 #include "setcurs.ch"
 
-/* TODO: rewrite the full-screen prompt to be a simple stdout/stdin shell */
+/* TODO: rewrite the full-screen shell to be a simple stdout/stdin shell */
 STATIC PROCEDURE __hbrun_shell( aParams, cCommand )
    LOCAL GetList
    LOCAL cLine
@@ -12590,7 +12591,7 @@ STATIC PROCEDURE __hbrun_shell( aParams, cCommand )
    LOCAL cDomain := ""
    LOCAL tmp
 
-   hbrun_gtInteractive()
+   hbshell_gtInteractive()
 
    IF ! hb_gtInfo( HB_GTI_ISSCREENPOS )
       OutErr( hb_StrFormat( I_( "hbrun: Error: Interactive session not possible with %1$s terminal driver" ), hb_gtVersion( 0 ) ) + _OUT_EOL )
@@ -12916,7 +12917,7 @@ DYNAMIC win_regWrite
 DYNAMIC win_regDelete
 
 STATIC FUNCTION __hbrun_win_reg_self( lRegister, lAllUser )
-   IF ! __hbrun_extensions_dynamic_load( "hbwin" )
+   IF ! __hbrun_extensions_load( "hbwin" )
       RETURN .F.
    ENDIF
    IF ! hb_IsFunction( "win_regWrite" ) .OR. ;
@@ -12960,28 +12961,18 @@ STATIC FUNCTION __hbrun_win_reg_app( lRegister, lAllUser, cAppPath )
    modules, which could be queried and loaded. shell could
    support #require as well. */
 
-/* Public hbrun API */
-FUNCTION hbrun_load( cName )
-   RETURN __hbrun_extensions_dynamic_load( cName )
-
-/* Public hbrun API */
-FUNCTION hbrun_unload( cName )
-   RETURN __hbrun_extensions_dynamic_unload( cName )
-
-/* Public hbrun API */
-FUNCTION hbrun_DirBase()
+/* Public hbshell API */
+FUNCTION hbshell_DirBase()
    RETURN s_cDirBase_hbrun
 
-/* Public hbrun API */
-FUNCTION hbrun_ProgName()
+FUNCTION hbshell_ProgName()
    RETURN s_cProgName_hbrun
 
-/* Public hbrun API */
-PROCEDURE hbrun_gtInteractive()
-   hb_gtSelect( hb_gtCreate( hbrun_gtDefault() ) )
-   RETURN
+FUNCTION hbshell_gtInteractive()
+   hb_gtSelect( hb_gtCreate( __hbrun_gtDefault() ) )
+   RETURN NIL
 
-STATIC FUNCTION hbrun_gtDefault()
+STATIC FUNCTION __hbrun_gtDefault()
 #if defined( __PLATFORM__WINCE )
    RETURN "GTWVT"
 #elif defined( __PLATFORM__WINDOWS )

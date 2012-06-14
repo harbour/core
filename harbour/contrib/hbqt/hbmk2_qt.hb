@@ -35,7 +35,7 @@
 
 #define I_( x )                 hb_i18n_gettext( x )
 
-#if defined( __HBSCRIPT__HBMK )
+#if defined( __HBSCRIPT__HBMK_PLUGIN )
 
 FUNCTION hbmk_plugin_qt( hbmk )
    LOCAL cRetVal := ""
@@ -1456,7 +1456,7 @@ METHOD HbQtSource:build()
    IF ::cQtVer > "0x040500"
       AAdd( aLine, "#if QT_VERSION >= " + ::cQtVer )
    ENDIF
-   
+
    IF ::cQtVer > "0x040500"
       AAdd( aLine, "#endif" )
    ENDIF
@@ -2400,7 +2400,7 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             ENDIF
             oArg:cDoc    := "c" + oMtd:cDocNM  // oArg:cCast - W R O N G
             oArg:cTypeHB := "C"
-            
+
          CASE oArg:lFar
             cRef := oArg:cCast
             oArg:cBody := "hbqt_par_" + oArg:cCast + "( " + cHBIdx + " )"
@@ -2822,7 +2822,7 @@ METHOD HbqtArgument:new( cTxt, cQtObject, enum_, lConstL, lIsRetArg )
 STATIC FUNCTION hbqtgen_Get_Command_1( cWgt, cCmn )
 
    RETURN 'hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ' + 'new ' + cWgt + '( *( ' + cCmn + ' ) )' + ', "' + 'HB_' + Upper( cWgt ) + '", hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, .t. ) + ' ) )'
-   
+
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION hbqtgen_Get_Command( cWgt, cCmn, lNew, isRetDetached )
@@ -2839,7 +2839,7 @@ STATIC FUNCTION hbqtgen_Get_Command( cWgt, cCmn, lNew, isRetDetached )
    ELSE
       RETURN 'hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ' + cCmn + ', "' + 'HB_' + Upper( cWgt ) + '", hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, isRetDetached ) + ' ) )'
    ENDIF
-   
+
    RETURN ""
 
 /*----------------------------------------------------------------------*/

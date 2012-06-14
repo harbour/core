@@ -80,8 +80,8 @@ PROCEDURE Main( ... )
       s_cRoot := "../"
    ENDIF
 
-   #if defined( __HBSCRIPT__HBRUN )
-      s_cBinDir := hbrun_DirBase()
+   #if defined( __HBSCRIPT__HBSHELL )
+      s_cBinDir := hbshell_DirBase()
    #else
       s_cBinDir := hb_DirBase()
    #endif

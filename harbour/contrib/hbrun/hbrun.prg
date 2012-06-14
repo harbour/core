@@ -187,7 +187,7 @@ PROCEDURE _APPMAIN( cFile, ... )
                      LoadExtDynamicFromSource( aDynamic, cFile )
 
                      cFile := hb_compileBuf( hHeaders, hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
-                                             "-I" + hb_FNameDir( cFile ), "-D" + "__HBSCRIPT__HBRUN", cFile )
+                                             "-I" + hb_FNameDir( cFile ), "-D" + "__HBSCRIPT__HBSHELL", cFile )
                      IF cFile == NIL
                         ErrorLevel( 1 )
                         EXIT
@@ -210,12 +210,11 @@ PROCEDURE _APPMAIN( cFile, ... )
 
    RETURN
 
-/* Public hbrun API */
-FUNCTION hbrun_DirBase()
+/* Public hbshell API */
+FUNCTION hbshell_DirBase()
    RETURN s_cDirBase
 
-/* Public hbrun API */
-FUNCTION hbrun_ProgName()
+FUNCTION hbshell_ProgName()
    RETURN s_cProgName
 
 INIT PROCEDURE ClipInit()
