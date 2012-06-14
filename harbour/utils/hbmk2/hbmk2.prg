@@ -545,9 +545,9 @@ REQUEST HB_HKEEPORDER
 REQUEST HB_FGETATTR
 REQUEST HB_FSETATTR
 
-/* For hbrun emulation */
-STATIC s_cDirBase_hbrun
-STATIC s_cProgName_hbrun
+/* For hbshell */
+STATIC s_cDirBase_hbshell
+STATIC s_cProgName_hbshell
 STATIC s_hLibExtDyn := { => }
 
 #define HB_HISTORY_LEN 500
@@ -586,7 +586,7 @@ PROCEDURE _APPMAIN( ... )
    IF Lower( hb_FNameName( hb_argv( 0 ) ) ) == "hbrun" .OR. ;
       hb_PValue( 1 ) == "." .OR. ;
       "|" + Lower( hb_FNameExt( hb_PValue( 1 ) ) ) + "|" $ "|.hb|.hrb|"
-      __hbrun_minimal( ... )
+      __hbshell( ... )
       QUIT
    ENDIF
 
@@ -1397,7 +1397,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       CASE Left( cParamL, 6 ) == "-hbreg"
 
-         IF __hbrun_win_reg_self( .T., SubStr( cParamL, 6 + 1 ) == "=global" )
+         IF __hbshell_win_reg_self( .T., SubStr( cParamL, 6 + 1 ) == "=global" )
             _hbmk_OutStd( hbmk, "Harbour Script (.hb) registered" )
          ELSE
             _hbmk_OutErr( hbmk, "Error: Registering Harbour Script (.hb)" )
@@ -1407,7 +1407,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       CASE Left( cParamL, 8 ) == "-hbunreg"
 
-         IF __hbrun_win_reg_self( .F., SubStr( cParamL, 8 + 1 ) == "=global" )
+         IF __hbshell_win_reg_self( .F., SubStr( cParamL, 8 + 1 ) == "=global" )
             _hbmk_OutStd( hbmk, "Harbour Script (.hb) unregistered" )
          ELSE
             _hbmk_OutErr( hbmk, "Error: Unregistering Harbour Script (.hb)" )
@@ -12179,7 +12179,7 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
 
    RETURN s_hHeaders
 
-/* Emulate a minimal hbrun */
+/* Implement hbshell (formerly known as hbrun) */
 
 #if defined( __PLATFORM__DOS )
 #  define _EXT_FILE_ "hb_ext.ini"
@@ -12188,7 +12188,7 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
 #endif
 #define _EXT_ENV_  "HB_EXTENSION"
 
-STATIC PROCEDURE __hbrun_minimal( cFile, ... )
+STATIC PROCEDURE __hbshell( cFile, ... )
    LOCAL aDynamic := {}
    LOCAL hbmk
    LOCAL cHBC
@@ -12219,8 +12219,8 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
             '#require' keyword in script source, rendering these scripts
              non-portable. */
 
-   __hbrun_LoadExtDynamicFromFile( aDynamic, __hbrun_ConfigDir() + _EXT_FILE_ )
-   __hbrun_LoadExtDynamicFromString( aDynamic, GetEnv( _EXT_ENV_ ) )
+   __hbshell_LoadExtDynamicFromFile( aDynamic, __hbshell_ConfigDir() + _EXT_FILE_ )
+   __hbshell_LoadExtDynamicFromString( aDynamic, GetEnv( _EXT_ENV_ ) )
 
    /* Do the thing */
 
@@ -12232,7 +12232,7 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
       IF !( cExt == ".hb" .OR. ;
             cExt == ".hrb" .OR. ;
             cExt == ".dbf" )
-         cExt := __hbrun_FileSig( cFile )
+         cExt := __hbshell_FileSig( cFile )
       ENDIF
 
       SWITCH cExt
@@ -12242,7 +12242,7 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
                   - one dynamic libs belongs to one .hbc file (true for dynamic builds in contrib)
                   - dynamic libs will reference and automatically load all their dependencies
                     (true on all systems so far)
-                  - hbrun/hbmk2 is located in well known place inside the Harbour dir tree tree.
+                  - hbrun/hbmk2 is located in well known place inside the Harbour dir tree.
                   - contribs/addons are also located in well-known place inside the Harbour dir tree
                   - 3rd party addons can be loaded, too if they are installed into the Harbour dir tree
                     and built the same way as contribs.
@@ -12252,14 +12252,12 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
                     hbmk2 uses the same <comp> values as was used to build itself.) */
           */
 
-         __hbrun_LoadExtDynamicFromSource( aDynamic, cFile )
+         __hbshell_LoadExtDynamicFromSource( aDynamic, cFile )
 
          /* NOTE: Find .hbc file. Load .hbc file. Process .hbc references.
                   Pick include paths. Load libs. Add include paths to include
-                  path list. For this hbrun needs to know where Harbour tree
-                  is located. Once matured, copy this loading method to hbrun,
-                  OR migrate hbrun functionality into hbmk2, with contribs
-                  loaded solely dynamically. */
+                  path list. For this we need to know where Harbour tree
+                  is located. */
 
          /* NOTE: - most filters and macros in .hbc files won't work in this mode */
 
@@ -12282,25 +12280,25 @@ STATIC PROCEDURE __hbrun_minimal( cFile, ... )
          ENDIF
 
       CASE ".hrb"
-         __hbrun_extensions_init( aDynamic )
-         s_cDirBase_hbrun := hb_DirBase()
-         s_cProgName_hbrun := hb_ProgName()
+         __hbshell_ext_init( aDynamic )
+         s_cDirBase_hbshell := hb_DirBase()
+         s_cProgName_hbshell := hb_ProgName()
          hb_argShift( .T. )
          hb_hrbRun( cFile, ... )
          EXIT
       CASE ".dbf"
-         __hbrun_extensions_init( aDynamic )
-         __hbrun_shell( hb_AParams(), "USE " + cFile + " SHARED" )
+         __hbshell_ext_init( aDynamic )
+         __hbshell_prompt( hb_AParams(), "USE " + cFile + " SHARED" )
          EXIT
       ENDSWITCH
    ELSE
-      __hbrun_extensions_init( aDynamic )
-      __hbrun_shell( hb_AParams() )
+      __hbshell_ext_init( aDynamic )
+      __hbshell_prompt( hb_AParams() )
    ENDIF
 
    RETURN
 
-STATIC FUNCTION __hbrun_FileSig( cFile )
+STATIC FUNCTION __hbshell_FileSig( cFile )
    LOCAL hFile
    LOCAL cBuff, cSig, cExt
 
@@ -12318,7 +12316,7 @@ STATIC FUNCTION __hbrun_FileSig( cFile )
 
    RETURN cExt
 
-STATIC FUNCTION __hbrun_ConfigDir()
+STATIC FUNCTION __hbshell_ConfigDir()
    LOCAL cEnvVar
    LOCAL cDir
 
@@ -12340,7 +12338,7 @@ STATIC FUNCTION __hbrun_ConfigDir()
 
    RETURN cDir + hb_ps()
 
-STATIC PROCEDURE __hbrun_LoadExtDynamicFromFile( aDynamic, cFileName )
+STATIC PROCEDURE __hbshell_LoadExtDynamicFromFile( aDynamic, cFileName )
    LOCAL cItem
 
    FOR EACH cItem IN hb_ATokens( StrTran( MemoRead( cFileName ), Chr( 13 ) ), Chr( 10 ) )
@@ -12354,7 +12352,7 @@ STATIC PROCEDURE __hbrun_LoadExtDynamicFromFile( aDynamic, cFileName )
 
    RETURN
 
-STATIC PROCEDURE __hbrun_LoadExtDynamicFromString( aDynamic, cString )
+STATIC PROCEDURE __hbshell_LoadExtDynamicFromString( aDynamic, cString )
    LOCAL cItem
 
    FOR EACH cItem IN hb_ATokens( cString,, .T. )
@@ -12365,7 +12363,7 @@ STATIC PROCEDURE __hbrun_LoadExtDynamicFromString( aDynamic, cString )
 
    RETURN
 
-STATIC PROCEDURE __hbrun_LoadExtDynamicFromSource( aDynamic, cFileName )
+STATIC PROCEDURE __hbshell_LoadExtDynamicFromSource( aDynamic, cFileName )
    LOCAL cFile := MemoRead( cFileName )
    LOCAL pRegex
    LOCAL tmp
@@ -12386,12 +12384,12 @@ STATIC PROCEDURE __hbrun_LoadExtDynamicFromSource( aDynamic, cFileName )
 
    RETURN
 
-STATIC PROCEDURE __hbrun_extensions_init( aDynamic )
+STATIC PROCEDURE __hbshell_ext_init( aDynamic )
    LOCAL cName
 
    IF ! Empty( aDynamic )
       FOR EACH cName IN aDynamic
-         __hbrun_extensions_load( cName )
+         hbshell_ext_load( cName )
       NEXT
    ENDIF
 
@@ -12401,7 +12399,7 @@ STATIC PROCEDURE __hbrun_extensions_init( aDynamic )
 /* TOFIX: Load components from detected Harbour dir layout */
 /* TODO: Load .hbc file (handle -stop command in it) and
          extend header search path accordingly */
-FUNCTION __hbrun_extensions_load( cName )
+FUNCTION hbshell_ext_load( cName )
    LOCAL cFileName
    LOCAL hLib
 
@@ -12425,7 +12423,7 @@ FUNCTION __hbrun_extensions_load( cName )
 
    RETURN .F.
 
-FUNCTION __hbrun_extensions_unload( cName )
+FUNCTION hbshell_ext_unload( cName )
 
    IF cName $ s_hLibExtDyn .AND. s_hLibExtDyn[ cName ] != NIL
       hb_HDel( s_hLibExtDyn, cName )
@@ -12434,7 +12432,7 @@ FUNCTION __hbrun_extensions_unload( cName )
 
    RETURN .F.
 
-FUNCTION __hbrun_extensions_get_list()
+FUNCTION hbshell_ext_get_list()
    LOCAL aName := Array( Len( s_hLibExtDyn ) )
    LOCAL hLib
 
@@ -12446,20 +12444,95 @@ FUNCTION __hbrun_extensions_get_list()
 
    RETURN aName
 
+STATIC FUNCTION __plugin_ext()
+#pragma __cstream|RETURN %s
+/*
+ * Harbour Project source code:
+ * extensions (dynamic manager plugin)
+ *
+ * Copyright 2012 Viktor Szakats (harbour syenar.net)
+ * www - http://harbour-project.org
+ */
+
+FUNCTION __hbshell_plugin()
+   RETURN {;
+      "id"   => "ext",;
+      "init" => {| hConIO | __init( hConIO ) } ,;
+      "exit" => {| context | HB_SYMBOL_UNUSED( context ) } ,;
+      "cmd"  => {| context, cCommand | __command( context, cCommand ) } }
+
+STATIC FUNCTION __init( hConIO )
+   RETURN { hConIO, { ;
+      "load"   => { "<name>" , "Load."   , {| context, cCommand | load( context, cCommand ) } },;
+      "unload" => { "<name>" , "Unload." , {| context, cCommand | unload( context, cCommand ) } },;
+      "list"   => { ""       , "List."   , {| context, cCommand | list( context ) } } } }
+
+STATIC PROCEDURE __disp( context, cText )
+   Eval( context[ 1 ][ "displine" ], cText )
+   RETURN
+
+STATIC FUNCTION __command( context, cCommand )
+   LOCAL aCommand
+   LOCAL nPos
+
+   IF ! Empty( context )
+      aCommand := hb_ATokens( cCommand, " " )
+      IF ! Empty( aCommand ) .AND. ( nPos := hb_HPos( context[ 2 ], Lower( aCommand[ 1 ] ) ) ) > 0
+         Eval( hb_HValueAt( context[ 2 ], nPos )[ 3 ], context, cCommand )
+         RETURN .T.
+      ENDIF
+   ENDIF
+
+   RETURN .F.
+
+/* Commands */
+
+STATIC PROCEDURE load( context, cCommand )
+   LOCAL aToken := hb_ATokens( cCommand, " " )
+   LOCAL tmp
+
+   FOR tmp := 2 TO Len( aToken )
+      hbshell_ext_load( aToken[ tmp ] )
+   NEXT
+
+   RETURN
+
+STATIC PROCEDURE unload( context, cCommand )
+   LOCAL aToken := hb_ATokens( cCommand, " " )
+   LOCAL tmp
+
+   FOR tmp := 2 TO Len( aToken )
+      hbshell_ext_unload( aToken[ tmp ] )
+   NEXT
+
+   RETURN
+
+STATIC PROCEDURE list( context )
+   LOCAL cName
+
+   FOR EACH cName IN hbshell_ext_get_list()
+      __disp( context, cName )
+   NEXT
+
+   RETURN
+#pragma __endtext
+
 #include "directry.ch"
 
 #command ADD PLUGIN TO <hash> FILE <(cFile)> => ;
          #pragma __streaminclude <(cFile)> | <hash>\[ <(cFile)> \] := %s
+#command ADD PLUGIN TO <hash> STRING <cExpr> => ;
+         <hash>\[ <"cExpr"> \] := <cExpr>
 
-FUNCTION __hbrun_plugins()
+STATIC FUNCTION __hbshell_plugins()
    LOCAL hPlugins := { => }
    LOCAL cDir
    LOCAL cExt
    LOCAL file
 
-   ADD PLUGIN TO hPlugins FILE "p_ext.hb"
+   ADD PLUGIN TO hPlugins STRING __plugin_ext()
 
-   cDir := __hbrun_ConfigDir()
+   cDir := __hbshell_ConfigDir()
 
    FOR EACH cExt IN { "*.hb", "*.hrb" }
       FOR EACH file IN Directory( cDir + cExt )
@@ -12475,10 +12548,10 @@ FUNCTION __hbrun_plugins()
 #define _PLUGIN_cID                 4
 #define _PLUGIN_MAX_                4
 
-STATIC FUNCTION __hbrun_plugins_load( hPlugins, aParams )
+STATIC FUNCTION __hbshell_plugins_load( hPlugins, aParams )
    LOCAL hConIO := {;
-      "displine"  => {| c | __hbrun_ToConsole( c ) } ,;
-      "gethidden" => {|| __hbrun_GetHidden() } }
+      "displine"  => {| c | __hbshell_ToConsole( c ) } ,;
+      "gethidden" => {|| __hbshell_GetHidden() } }
 
    LOCAL plugin
    LOCAL plugins := {}
@@ -12491,25 +12564,21 @@ STATIC FUNCTION __hbrun_plugins_load( hPlugins, aParams )
       plugin := Array( _PLUGIN_MAX_ )
       plugin[ _PLUGIN_hHRB ] := NIL
 
-      SWITCH Lower( hb_FNameExt( cFile:__enumKey() ) )
-      CASE ".hb"
-      CASE ".prg"
+      IF !( Lower( hb_FNameExt( cFile:__enumKey() ) ) == ".hrb" )
          cFile := hb_compileFromBuf( cFile, hbmk_CoreHeaderFiles(), hb_ProgName(), "-n2", "-w", "-es2", "-q0" )
-         IF cFile == NIL
-            EXIT
-         ENDIF
-      CASE ".hrb"
+      ENDIF
+
+      IF ! Empty( cFile )
          BEGIN SEQUENCE WITH {| oError | Break( oError ) }
             plugin[ _PLUGIN_hHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
-            IF Empty( hHRBEntry := hb_hrbGetFunSym( plugin[ _PLUGIN_hHRB ], "__hbrun_plugin" ) )
+            IF Empty( hHRBEntry := hb_hrbGetFunSym( plugin[ _PLUGIN_hHRB ], "__hbshell_plugin" ) )
                plugin[ _PLUGIN_hHRB ] := NIL
             ENDIF
          RECOVER USING oError
             plugin[ _PLUGIN_hHRB ] := NIL
             OutErr( hb_StrFormat( I_( "Error: Loading shell plugin: %1$s\n'%2$s'" ), cFile:__enumKey(), hbmk_ErrorMessage( oError ) ) + _OUT_EOL )
          END SEQUENCE
-         EXIT
-      ENDSWITCH
+      ENDIF
 
       IF ! Empty( plugin[ _PLUGIN_hHRB ] )
          plugin[ _PLUGIN_hMethods ] := Do( hHRBEntry )
@@ -12527,7 +12596,7 @@ STATIC FUNCTION __hbrun_plugins_load( hPlugins, aParams )
 
    RETURN plugins
 
-STATIC FUNCTION __hbrun_plugins_command( plugins, cCommand, cDomain )
+STATIC FUNCTION __hbshell_plugins_command( plugins, cCommand, cDomain )
    LOCAL plugin
 
    FOR EACH plugin IN plugins
@@ -12544,7 +12613,7 @@ STATIC FUNCTION __hbrun_plugins_command( plugins, cCommand, cDomain )
 
    RETURN .F.
 
-STATIC FUNCTION __hbrun_plugins_valid_id( plugins, cID )
+STATIC FUNCTION __hbshell_plugins_valid_id( plugins, cID )
    LOCAL plugin
 
    FOR EACH plugin IN plugins
@@ -12555,7 +12624,7 @@ STATIC FUNCTION __hbrun_plugins_valid_id( plugins, cID )
 
    RETURN .F.
 
-STATIC FUNCTION __hbrun_plugins_valid_id_list( plugins )
+STATIC FUNCTION __hbshell_plugins_valid_id_list( plugins )
    LOCAL plugin
    LOCAL aList := {}
 
@@ -12565,7 +12634,7 @@ STATIC FUNCTION __hbrun_plugins_valid_id_list( plugins )
 
    RETURN aList
 
-STATIC PROCEDURE __hbrun_plugins_unload( plugins )
+STATIC PROCEDURE __hbshell_plugins_unload( plugins )
    LOCAL plugin
 
    FOR EACH plugin IN plugins
@@ -12579,7 +12648,7 @@ STATIC PROCEDURE __hbrun_plugins_unload( plugins )
 #include "setcurs.ch"
 
 /* TODO: rewrite the full-screen shell to be a simple stdout/stdin shell */
-STATIC PROCEDURE __hbrun_shell( aParams, cCommand )
+STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
    LOCAL GetList
    LOCAL cLine
    LOCAL nMaxRow, nMaxCol
@@ -12594,7 +12663,7 @@ STATIC PROCEDURE __hbrun_shell( aParams, cCommand )
    hbshell_gtInteractive()
 
    IF ! hb_gtInfo( HB_GTI_ISSCREENPOS )
-      OutErr( hb_StrFormat( I_( "hbrun: Error: Interactive session not possible with %1$s terminal driver" ), hb_gtVersion( 0 ) ) + _OUT_EOL )
+      OutErr( hb_StrFormat( I_( "hbshell: Error: Interactive session not possible with %1$s terminal driver" ), hb_gtVersion( 0 ) ) + _OUT_EOL )
       RETURN
    ENDIF
 
@@ -12604,15 +12673,15 @@ STATIC PROCEDURE __hbrun_shell( aParams, cCommand )
    SET SCOREBOARD OFF
    GetList := {}
 
-   __hbrun_HistoryLoad()
+   __hbshell_HistoryLoad()
 
    AAdd( s_aHistory, PadR( "quit", HB_LINE_LEN ) )
    nHistIndex := Len( s_aHistory ) + 1
 
    IF HB_ISSTRING( cCommand )
       AAdd( s_aHistory, PadR( cCommand, HB_LINE_LEN ) )
-      __hbrun_Info( cCommand )
-      __hbrun_Exec( cCommand )
+      __hbshell_Info( cCommand )
+      __hbshell_Exec( cCommand )
    ELSE
       cCommand := ""
    ENDIF
@@ -12623,9 +12692,9 @@ STATIC PROCEDURE __hbrun_shell( aParams, cCommand )
 
    Set( _SET_EVENTMASK, hb_bitOr( INKEY_KEYBOARD, HB_INKEY_GTEVENT ) )
 
-   s_nRow := 2 + iif( Empty( __hbrun_extensions_get_list() ), 0, 1 )
+   s_nRow := 2 + iif( Empty( hbshell_ext_get_list() ), 0, 1 )
 
-   plugins := __hbrun_plugins_load( __hbrun_plugins(), aParams )
+   plugins := __hbshell_plugins_load( __hbshell_plugins(), aParams )
 
    DO WHILE .T.
 
@@ -12633,7 +12702,7 @@ STATIC PROCEDURE __hbrun_shell( aParams, cCommand )
          cLine := Space( HB_LINE_LEN )
       ENDIF
 
-      __hbrun_Info( cCommand )
+      __hbshell_Info( cCommand )
 
       nMaxRow := MaxRow()
       nMaxCol := MaxCol()
@@ -12689,42 +12758,42 @@ STATIC PROCEDURE __hbrun_shell( aParams, cCommand )
       cCommand := AllTrim( cLine, " " )
       cLine := NIL
       @ nMaxRow, 0 CLEAR
-      __hbrun_Info( cCommand )
+      __hbshell_Info( cCommand )
 
       IF ! Empty( cCommand )
 
          IF Left( cCommand, 1 ) == "."
             IF cCommand == "."
                cDomain := ""
-            ELSEIF __hbrun_plugins_valid_id( plugins, SubStr( cCommand, 2 ) )
+            ELSEIF __hbshell_plugins_valid_id( plugins, SubStr( cCommand, 2 ) )
                cDomain := SubStr( cCommand, 2 )
             ELSE
-               FOR EACH tmp IN __hbrun_plugins_valid_id_list( plugins )
-                  __hbrun_ToConsole( "." + tmp )
+               FOR EACH tmp IN __hbshell_plugins_valid_id_list( plugins )
+                  __hbshell_ToConsole( "." + tmp )
                NEXT
             ENDIF
          ELSE
-            IF ! __hbrun_plugins_command( plugins, cCommand, cDomain )
-               __hbrun_Exec( cCommand )
+            IF ! __hbshell_plugins_command( plugins, cCommand, cDomain )
+               __hbshell_Exec( cCommand )
             ENDIF
 
             IF s_nRow >= MaxRow()
-               Scroll( 2 + iif( Empty( __hbrun_extensions_get_list() ), 0, 1 ), 0, MaxRow(), MaxCol(), 1 )
+               Scroll( 2 + iif( Empty( hbshell_ext_get_list() ), 0, 1 ), 0, MaxRow(), MaxCol(), 1 )
                s_nRow := MaxRow() - 1
             ENDIF
          ENDIF
       ENDIF
    ENDDO
 
-   __hbrun_plugins_unload( plugins )
+   __hbshell_plugins_unload( plugins )
 
    RETURN
 
-STATIC PROCEDURE __hbrun_ToConsole( cText )
+STATIC PROCEDURE __hbshell_ToConsole( cText )
    QQOut( cText + hb_eol() )
    RETURN
 
-STATIC FUNCTION __hbrun_GetHidden()
+STATIC FUNCTION __hbshell_GetHidden()
    LOCAL GetList := {}
    LOCAL cPassword := Space( 128 )
    LOCAL nSavedRow
@@ -12754,7 +12823,7 @@ STATIC FUNCTION __hbrun_GetHidden()
 
 /* ********************************************************************** */
 
-STATIC PROCEDURE __hbrun_Info( cCommand )
+STATIC PROCEDURE __hbshell_Info( cCommand )
 
    IF cCommand != NIL
       hb_DispOutAt( 0, 0, "PP: " )
@@ -12781,13 +12850,13 @@ STATIC PROCEDURE __hbrun_Info( cCommand )
       hb_DispOutAt( 1, MaxCol(), "o", "R/BG" )
    ENDIF
 
-   hb_DispOutAt( 2, 0, PadR( "Ext: " + ArrayToList( __hbrun_extensions_get_list(), ", " ), MaxCol() + 1 ), "W/B" )
+   hb_DispOutAt( 2, 0, PadR( "Ext: " + ArrayToList( hbshell_ext_get_list(), ", " ), MaxCol() + 1 ), "W/B" )
 
    RETURN
 
 /* ********************************************************************** */
 
-STATIC PROCEDURE __hbrun_Err( oErr, cCommand )
+STATIC PROCEDURE __hbshell_Err( oErr, cCommand )
 
    LOCAL xArg, cMessage
 
@@ -12814,7 +12883,7 @@ STATIC PROCEDURE __hbrun_Err( oErr, cCommand )
 
 /* ********************************************************************** */
 
-STATIC PROCEDURE __hbrun_Exec( cCommand )
+STATIC PROCEDURE __hbshell_Exec( cCommand )
    LOCAL pHRB, cHRB, cFunc, bBlock, nRowMin
 
    cFunc := "STATIC FUNCTION __HBDOT()" + hb_eol() + ;
@@ -12823,7 +12892,7 @@ STATIC PROCEDURE __hbrun_Exec( cCommand )
             "   RETURN __MVSETBASE()" + hb_eol() + ;
             "}" + hb_eol()
 
-   BEGIN SEQUENCE WITH {| oErr | __hbrun_Err( oErr, cCommand ) }
+   BEGIN SEQUENCE WITH {| oErr | __hbshell_Err( oErr, cCommand ) }
 
       cHRB := hb_compileFromBuf( cFunc, hb_ProgName(), "-n2", "-q2" )
       IF cHRB == NIL
@@ -12836,7 +12905,7 @@ STATIC PROCEDURE __hbrun_Exec( cCommand )
             Eval( bBlock )
             s_nRow := Row()
             s_nCol := Col()
-            nRowMin := 2 + iif( Empty( __hbrun_extensions_get_list() ), 0, 1 )
+            nRowMin := 2 + iif( Empty( hbshell_ext_get_list() ), 0, 1 )
             IF s_nRow < nRowMin
                s_nRow := nRowMin
             ENDIF
@@ -12857,20 +12926,20 @@ STATIC PROCEDURE __hbrun_Exec( cCommand )
 #  define _FNAME_HISTORY_ ".hb_history"
 #endif
 
-EXIT PROCEDURE __hbrun_exit()
+EXIT PROCEDURE __hbshell_exit()
 
-   __hbrun_HistorySave()
+   __hbshell_HistorySave()
 
    RETURN
 
-STATIC PROCEDURE __hbrun_HistoryLoad()
+STATIC PROCEDURE __hbshell_HistoryLoad()
    LOCAL cHistory
    LOCAL cLine
 
    s_lWasLoad := .T.
 
    IF s_lPreserveHistory
-      cHistory := StrTran( MemoRead( __hbrun_ConfigDir() + _FNAME_HISTORY_ ), Chr( 13 ) )
+      cHistory := StrTran( MemoRead( __hbshell_ConfigDir() + _FNAME_HISTORY_ ), Chr( 13 ) )
       IF Left( cHistory, Len( _HISTORY_DISABLE_LINE + Chr( 10 ) ) ) == _HISTORY_DISABLE_LINE + Chr( 10 )
          s_lPreserveHistory := .F.
       ELSE
@@ -12884,7 +12953,7 @@ STATIC PROCEDURE __hbrun_HistoryLoad()
 
    RETURN
 
-STATIC PROCEDURE __hbrun_HistorySave()
+STATIC PROCEDURE __hbshell_HistorySave()
    LOCAL cHistory
    LOCAL cLine
    LOCAL cDir
@@ -12896,7 +12965,7 @@ STATIC PROCEDURE __hbrun_HistorySave()
             cHistory += AllTrim( cLine ) + hb_eol()
          ENDIF
       NEXT
-      IF ! hb_DirExists( cDir := __hbrun_ConfigDir() )
+      IF ! hb_DirExists( cDir := __hbshell_ConfigDir() )
          hb_DirCreate( cDir )
       ENDIF
       hb_MemoWrit( cDir + _FNAME_HISTORY_, cHistory )
@@ -12916,17 +12985,17 @@ STATIC PROCEDURE __hbrun_HistorySave()
 DYNAMIC win_regWrite
 DYNAMIC win_regDelete
 
-STATIC FUNCTION __hbrun_win_reg_self( lRegister, lAllUser )
-   IF ! __hbrun_extensions_load( "hbwin" )
+STATIC FUNCTION __hbshell_win_reg_self( lRegister, lAllUser )
+   IF ! hbshell_ext_load( "hbwin" )
       RETURN .F.
    ENDIF
    IF ! hb_IsFunction( "win_regWrite" ) .OR. ;
       ! hb_IsFunction( "win_regDelete" )
       RETURN .F.
    ENDIF
-   RETURN __hbrun_win_reg_app( lRegister, lAllUser, hb_ProgName() )
+   RETURN __hbshell_win_reg_app( lRegister, lAllUser, hb_ProgName() )
 
-STATIC FUNCTION __hbrun_win_reg_app( lRegister, lAllUser, cAppPath )
+STATIC FUNCTION __hbshell_win_reg_app( lRegister, lAllUser, cAppPath )
    LOCAL cHive := iif( HB_ISLOGICAL( lAllUser ) .AND. lAllUser, "HKEY_CLASSES_ROOT", "HKEY_CURRENT_USER\Software\Classes" )
    LOCAL lSuccess := .T.
    LOCAL tmp
@@ -12963,16 +13032,16 @@ STATIC FUNCTION __hbrun_win_reg_app( lRegister, lAllUser, cAppPath )
 
 /* Public hbshell API */
 FUNCTION hbshell_DirBase()
-   RETURN s_cDirBase_hbrun
+   RETURN s_cDirBase_hbshell
 
 FUNCTION hbshell_ProgName()
-   RETURN s_cProgName_hbrun
+   RETURN s_cProgName_hbshell
 
 FUNCTION hbshell_gtInteractive()
-   hb_gtSelect( hb_gtCreate( __hbrun_gtDefault() ) )
+   hb_gtSelect( hb_gtCreate( __hbshell_gtDefault() ) )
    RETURN NIL
 
-STATIC FUNCTION __hbrun_gtDefault()
+STATIC FUNCTION __hbshell_gtDefault()
 #if defined( __PLATFORM__WINCE )
    RETURN "GTWVT"
 #elif defined( __PLATFORM__WINDOWS )
