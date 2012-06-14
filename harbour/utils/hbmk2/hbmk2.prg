@@ -12399,6 +12399,8 @@ STATIC PROCEDURE __hbrun_extensions_dynamic_init( aDynamic )
 
 /* NOTE: Requires -shared mode build */
 /* TOFIX: Load components from detected Harbour dir layout */
+/* TODO: Load .hbc file (handle -stop command in it) and
+         extend header search path accordingly */
 FUNCTION __hbrun_extensions_dynamic_load( cName )
    LOCAL cFileName
    LOCAL hLib
@@ -13664,7 +13666,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ),;
       I_( "Defaults and feature support vary by platform/compiler." ) ,;
       hb_StrFormat( I_( "Options can also be specified in environment variable %1$s" ), _HBMK_ENV_NAME ),;
-      I_( ".hb or .hrb file passed as first parameter will be run as Harbour script." ) }
+      I_( ".hb or .hrb file passed as first parameter will be run as Harbour script." ) ,;
+      I_( ". (dot) passed as first parameter will enter an interactive Harbour shell." ) }
 
    hb_default( @lLong, .F. )
 

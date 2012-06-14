@@ -11,7 +11,7 @@ hbnetio.hbc
 
 netiosrv.prg
 netiocon.prg
-netiomgm.prg
+netiomgm.hb
 netiosvc.prg{win}
 -main=WinMain{win}
 hbwin.hbc{win}
