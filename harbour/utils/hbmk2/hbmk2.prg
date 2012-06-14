@@ -12189,7 +12189,7 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
 #define _EXT_ENV_  "HB_EXTENSION"
 
 STATIC PROCEDURE __hbshell( cFile, ... )
-   LOCAL aDynamic := {}
+   LOCAL aExtension := {}
    LOCAL hbmk
    LOCAL cHBC
    LOCAL cExt
@@ -12219,8 +12219,8 @@ STATIC PROCEDURE __hbshell( cFile, ... )
             '#require' keyword in script source, rendering these scripts
              non-portable. */
 
-   __hbshell_LoadExtDynamicFromFile( aDynamic, __hbshell_ConfigDir() + _EXT_FILE_ )
-   __hbshell_LoadExtDynamicFromString( aDynamic, GetEnv( _EXT_ENV_ ) )
+   __hbshell_LoadExtFromFile( aExtension, __hbshell_ConfigDir() + _EXT_FILE_ )
+   __hbshell_LoadExtFromString( aExtension, GetEnv( _EXT_ENV_ ) )
 
    /* Do the thing */
 
@@ -12252,7 +12252,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
                     hbmk2 uses the same <comp> values as was used to build itself.) */
           */
 
-         __hbshell_LoadExtDynamicFromSource( aDynamic, cFile )
+         __hbshell_LoadExtFromSource( aExtension, cFile )
 
          /* NOTE: Find .hbc file. Load .hbc file. Process .hbc references.
                   Pick include paths. Load libs. Add include paths to include
@@ -12261,7 +12261,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
          /* NOTE: - most filters and macros in .hbc files won't work in this mode */
 
-         FOR EACH tmp IN aDynamic
+         FOR EACH tmp IN aExtension
             IF ! HBC_Find( hbmk, cHBC := hb_FNameExtSet( tmp, ".hbc" ) )
                OutErr( hb_StrFormat( I_( "Warning: Cannot find %1$s" ), cHBC ) + _OUT_EOL )
             ENDIF
@@ -12280,19 +12280,19 @@ STATIC PROCEDURE __hbshell( cFile, ... )
          ENDIF
 
       CASE ".hrb"
-         __hbshell_ext_init( aDynamic )
+         __hbshell_ext_init( aExtension )
          s_cDirBase_hbshell := hb_DirBase()
          s_cProgName_hbshell := hb_ProgName()
          hb_argShift( .T. )
          hb_hrbRun( cFile, ... )
          EXIT
       CASE ".dbf"
-         __hbshell_ext_init( aDynamic )
+         __hbshell_ext_init( aExtension )
          __hbshell_prompt( hb_AParams(), "USE " + cFile + " SHARED" )
          EXIT
       ENDSWITCH
    ELSE
-      __hbshell_ext_init( aDynamic )
+      __hbshell_ext_init( aExtension )
       __hbshell_prompt( hb_AParams() )
    ENDIF
 
@@ -12338,7 +12338,7 @@ STATIC FUNCTION __hbshell_ConfigDir()
 
    RETURN cDir + hb_ps()
 
-STATIC PROCEDURE __hbshell_LoadExtDynamicFromFile( aDynamic, cFileName )
+STATIC PROCEDURE __hbshell_LoadExtFromFile( aExtension, cFileName )
    LOCAL cItem
 
    FOR EACH cItem IN hb_ATokens( StrTran( MemoRead( cFileName ), Chr( 13 ) ), Chr( 10 ) )
@@ -12346,24 +12346,24 @@ STATIC PROCEDURE __hbshell_LoadExtDynamicFromFile( aDynamic, cFileName )
          cItem := Left( cItem, At( "#", cItem ) - 1 )
       ENDIF
       IF ! Empty( cItem )
-         AAdd( aDynamic, cItem )
+         AAdd( aExtension, cItem )
       ENDIF
    NEXT
 
    RETURN
 
-STATIC PROCEDURE __hbshell_LoadExtDynamicFromString( aDynamic, cString )
+STATIC PROCEDURE __hbshell_LoadExtFromString( aExtension, cString )
    LOCAL cItem
 
    FOR EACH cItem IN hb_ATokens( cString,, .T. )
       IF ! Empty( cItem )
-         AAdd( aDynamic, cItem )
+         AAdd( aExtension, cItem )
       ENDIF
    NEXT
 
    RETURN
 
-STATIC PROCEDURE __hbshell_LoadExtDynamicFromSource( aDynamic, cFileName )
+STATIC PROCEDURE __hbshell_LoadExtFromSource( aExtension, cFileName )
    LOCAL cFile := MemoRead( cFileName )
    LOCAL pRegex
    LOCAL tmp
@@ -12378,17 +12378,17 @@ STATIC PROCEDURE __hbshell_LoadExtDynamicFromSource( aDynamic, cFileName )
                                    NIL /* lNewLine */, NIL, ;
                                    NIL /* nGetMatch */, ;
                                    .T. /* lOnlyMatch */ )
-         AAdd( aDynamic, SubStr( ATail( tmp ), 2, Len( ATail( tmp ) ) - 2 ) /* Last group in match marker */ )
+         AAdd( aExtension, SubStr( ATail( tmp ), 2, Len( ATail( tmp ) ) - 2 ) /* Last group in match marker */ )
       NEXT
    ENDIF
 
    RETURN
 
-STATIC PROCEDURE __hbshell_ext_init( aDynamic )
+STATIC PROCEDURE __hbshell_ext_init( aExtension )
    LOCAL cName
 
-   IF ! Empty( aDynamic )
-      FOR EACH cName IN aDynamic
+   IF ! Empty( aExtension )
+      FOR EACH cName IN aExtension
          hbshell_ext_load( cName )
       NEXT
    ENDIF
@@ -12448,7 +12448,7 @@ STATIC FUNCTION __plugin_ext()
 #pragma __cstream|RETURN %s
 /*
  * Harbour Project source code:
- * extensions (dynamic manager plugin)
+ * extension manager plugin
  *
  * Copyright 2012 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
