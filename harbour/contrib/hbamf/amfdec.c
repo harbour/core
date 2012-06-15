@@ -1027,7 +1027,7 @@ static HB_BOOL amf3_deserialize_obj( amfContext * context, PHB_ITEM pItem, HB_BO
       hb_arrayNew( pItem, OBJAMF_VAR_COUNT );
       /* performance TOFIX, cache class id (in context maybe)
          to not scan all classes by name everytime */
-      hb_objSetClass( pItem, "OBJAMF", "OBJAMF" );
+      hb_objSetClass( pItem, "AMF_OBJ", "AMF_OBJ" );
       pValue   = hb_itemPutNI( NULL, OBJAMF_VER );
       hb_arraySet( pItem, OBJAMF_VAR_VER, pValue );
       hb_itemRelease( pValue );

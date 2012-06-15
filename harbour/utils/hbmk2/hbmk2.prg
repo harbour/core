@@ -13010,7 +13010,8 @@ DYNAMIC win_regWrite
 DYNAMIC win_regDelete
 
 STATIC FUNCTION __hbshell_win_reg_self( lRegister, lAllUser )
-   IF ! hb_IsFunction( "__HBEXTERN__HBWIN__" ) .AND. ! hbshell_ext_load( "hbwin" )
+   IF ! hb_IsFunction( "__HBEXTERN__HBWIN__" ) .AND. ;
+      ! hbshell_ext_load( "hbwin" )
       RETURN .F.
    ENDIF
    IF ! hb_IsFunction( "win_regWrite" ) .OR. ;

@@ -814,7 +814,7 @@ static HB_BOOL amf3_encode_object( amfContext * context, PHB_ITEM pItem )
    PHB_ITEM pClass;
 
    /* serialize emulated ActionScript dynamic object */
-   if( strcmp( hb_clsName( hb_objGetClass( pItem ) ), "OBJAMF" ) == 0 )
+   if( strcmp( hb_clsName( hb_objGetClass( pItem ) ), "AMF_OBJ" ) == 0 )
    {
       PHB_ITEM pAnonHash = hb_itemNew( NULL );
 
