@@ -39,7 +39,7 @@
 #define _NETIOCLI_hConIO                 8
 #define _NETIOCLI_MAX_                   8
 
-FUNCTION __hbrun_plugin()
+FUNCTION __hbshell_plugin()
    RETURN {;
       "id"   => "netio",;
       "init" => {| hConIO, ... | hbnetiocon_init( hConIO, ... ) } ,;

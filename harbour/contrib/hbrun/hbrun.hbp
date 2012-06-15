@@ -2,43 +2,13 @@
 # $Id$
 #
 
--w3 -es2 -l
--kmo
+@../../utils/hbmk2/hbmk2.hbp
 
 -o${hb_name}
 
--DHBRUN_WITH_HEADERS
+-static
 
--head=dep
-
--cflag=-Zm200{wce&allmsvc}
-
-# required by some plugins (f.e. netio management console)
--mt
-
-hbrun.prg
-
-headers.prg
-plugins.prg
-extdyn.prg
-
--lhbpmcom{dos}
-
-# not using these together with .rc input, because some compilers (mingw)
-# do not support multiple .rc inputs
-#-icon={allwin}../../package/harb_win.ico
-#-icon={os2}../../package/harb_os2.ico
-hbrun.rc
-
-# Plugins
-
--I.
--I../hbnetio/utils/hbnetio
-
-# Here comes the list of contribs linked in:
-# - Make sure to keep it in sync with pullext.prg.
-# - Do not add contribs which have external dependencies.
-#   (not in the public SVN that is)
+-DHBMK_WITH_ALL_EMBEDDED_HEADERS
 
 hbct.hbc           -request=__HBEXTERN__HBCT__
 hbexpat.hbc        -request=__HBEXTERN__HBEXPAT__
@@ -47,9 +17,3 @@ hbmzip.hbc         -request=__HBEXTERN__HBMZIP__
 hbnetio.hbc        -request=__HBEXTERN__HBNETIO__
 hbunix.hbc{unix}   -request=__HBEXTERN__HBUNIX__{unix}
 hbwin.hbc{allwin}  -request=__HBEXTERN__HBWIN__{allwin}
-
-# Build in shared mode for these platforms because the
-# it's required for dynamic extension loading. (only
-# do that if HB_BUILD_CONTRIB_DYN is enabled, so there
-# are actually some dynamic extensions to load.)
-{_HB_BUILD_&(!(HB_BUILD_DYN='no')&!(HB_BUILD_CONTRIB_DYN='no')&(win|wce|os2))}-shared

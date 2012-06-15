@@ -1362,14 +1362,14 @@ HARBOUR
    - To run the interactive shell ('dot' prompt):
        'hbmk2 .'
    - To run a Harbour script:
-       'hbmk2 script.hb [<options>]'
+       'hbmk2 script.hb [<parameters>]'
 
    Examples to build and run Harbour portable binary (aka precompiled script):
 
    - To build:
        'hbmk2 -gh script.hb'
    - To run result of above:
-       'hbmk2 script.hrb [<options>]'
+       'hbmk2 script.hrb [<parameters>]'
 
    Examples to build a Harbour application:
 

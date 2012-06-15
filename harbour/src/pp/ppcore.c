@@ -5265,7 +5265,7 @@ static void hb_pp_preprocessToken( PHB_PP_STATE pState )
          }
          else if( hb_pp_tokenValueCmp( pToken, "REQUIRE", HB_PP_CMP_STD ) )
          {
-            /* do nothing. this directive is processed by hbrun and hbmk2 to
+            /* do nothing. this directive is processed by hbmk2 to
                pull in external modules. */
          }
          else if( hb_pp_tokenValueCmp( pToken, "STDOUT", HB_PP_CMP_DBASE ) )
