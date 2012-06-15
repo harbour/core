@@ -583,10 +583,12 @@ PROCEDURE _APPMAIN( ... )
 
    /* Expand wildcard project specs */
 
-   IF Right( Lower( hb_FNameName( hb_argv( 0 ) ) ), 5 ) == "hbrun" .OR. ;
-      Left( Lower( hb_FNameName( hb_argv( 0 ) ) ), 5 ) == "hbrun" .OR. ;
-      hb_PValue( 1 ) == "." .OR. ;
-      "|" + Lower( hb_FNameExt( hb_PValue( 1 ) ) ) + "|" $ "|.hb|.hrb|"
+   IF ( Right( Lower( hb_FNameName( hb_argv( 0 ) ) ), 5 ) == "hbrun" .OR. ;
+        Left( Lower( hb_FNameName( hb_argv( 0 ) ) ), 5 ) == "hbrun" .OR. ;
+        hb_PValue( 1 ) == "." .OR. ;
+        "|" + Lower( hb_FNameExt( hb_PValue( 1 ) ) ) + "|" $ "|.hb|.hrb|" ) .AND. ;
+      !( Left( hb_PValue( 1 ), 6 ) == "-hbreg" .OR. ;
+         Left( hb_PValue( 1 ), 8 ) == "-hbunreg" )
       __hbshell( ... )
       QUIT
    ENDIF
@@ -13007,7 +13009,7 @@ DYNAMIC win_regWrite
 DYNAMIC win_regDelete
 
 STATIC FUNCTION __hbshell_win_reg_self( lRegister, lAllUser )
-   IF ! hbshell_ext_load( "hbwin" )
+   IF ! hb_IsFunction( "__HBEXTERN__HBWIN__" ) .AND. ! hbshell_ext_load( "hbwin" )
       RETURN .F.
    ENDIF
    IF ! hb_IsFunction( "win_regWrite" ) .OR. ;
