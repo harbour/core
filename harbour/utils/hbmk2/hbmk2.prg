@@ -583,7 +583,8 @@ PROCEDURE _APPMAIN( ... )
 
    /* Expand wildcard project specs */
 
-   IF Lower( hb_FNameName( hb_argv( 0 ) ) ) == "hbrun" .OR. ;
+   IF Right( Lower( hb_FNameName( hb_argv( 0 ) ) ), 5 ) == "hbrun" .OR. ;
+      Left( Lower( hb_FNameName( hb_argv( 0 ) ) ), 5 ) == "hbrun" .OR. ;
       hb_PValue( 1 ) == "." .OR. ;
       "|" + Lower( hb_FNameExt( hb_PValue( 1 ) ) ) + "|" $ "|.hb|.hrb|"
       __hbshell( ... )
@@ -12086,8 +12087,8 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
 STATIC FUNCTION hbmk_CoreHeaderFiles()
    STATIC s_hHeaders := NIL
 
-#define HBMK_WITHOUT_HEADERS
-#ifndef HBMK_WITHOUT_HEADERS
+#if defined( HBMK_WITH_EMBEDDED_HEADERS ) .OR. ;
+    defined( HBMK_WITH_ALL_EMBEDDED_HEADERS )
 
    IF s_hHeaders == NIL
       s_hHeaders := { => }
@@ -12096,7 +12097,7 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
       #command ADD HEADER TO <hash> FILE <(cFile)> => ;
                #pragma __streaminclude <(cFile)> | <hash>\[ <(cFile)> \] := %s
 
-#ifdef _HBMK_INCLUDE_ALL_CORE_HEADERS_
+#if defined( HBMK_WITH_ALL_EMBEDDED_HEADERS )
       ADD HEADER TO s_hHeaders FILE "achoice.ch"
       ADD HEADER TO s_hHeaders FILE "assert.ch"
       ADD HEADER TO s_hHeaders FILE "blob.ch"
@@ -12175,7 +12176,7 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
       hb_HCaseMatch( s_hHeaders, .T. )
    ENDIF
 
-#endif /* HBMK_WITHOUT_HEADERS */
+#endif
 
    RETURN s_hHeaders
 
@@ -12212,6 +12213,8 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    hbmk[ _HBMK_cPLAT ] := hb_Version( HB_VERSION_BUILD_PLAT )
    hbmk[ _HBMK_cCPU ] := hb_Version( HB_VERSION_CPU )
    hbmk_harbour_dirlayout_init( hbmk, l_cHB_INSTALL_PREFIX )
+
+   __hbshell_ext_static_init()
 
    /* Load permanent extensions */
 
@@ -12381,6 +12384,22 @@ STATIC PROCEDURE __hbshell_LoadExtFromSource( aExtension, cFileName )
          AAdd( aExtension, SubStr( ATail( tmp ), 2, Len( ATail( tmp ) ) - 2 ) /* Last group in match marker */ )
       NEXT
    ENDIF
+
+   RETURN
+
+STATIC PROCEDURE __hbshell_ext_static_init()
+   LOCAL tmp
+   LOCAL nCount
+   LOCAL cName
+
+   nCount := __dynsCount()
+   FOR tmp := 1 TO nCount
+      cName := __dynsGetName( tmp )
+      IF LEFTEQUAL( cName, "__HBEXTERN__" ) .AND. ;
+         !( "|" + cName + "|" $ "|__HBEXTERN__HBCPAGE__|" )
+         s_hLibExtDyn[ Lower( SubStr( cName, Len( "__HBEXTERN__" ) + 1, Len( cName ) - Len( "__HBEXTERN__" ) - Len( "__" ) ) ) ] := NIL
+      ENDIF
+   NEXT
 
    RETURN
 

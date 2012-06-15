@@ -18,11 +18,9 @@
 
 hbrun.prg
 
--request=__hbrun_extensions_static_init
 headers.prg
 plugins.prg
 extdyn.prg
-extstat.prg
 
 -lhbpmcom{dos}
 
@@ -42,17 +40,16 @@ hbrun.rc
 # - Do not add contribs which have external dependencies.
 #   (not in the public SVN that is)
 
-hbct.hbc
-hbxpp.hbc
-hbexpat.hbc
-hbmemio.hbc
-hbmzip.hbc
-hbnetio.hbc
-hbunix.hbc{unix}
-hbwin.hbc{allwin}
+hbct.hbc           -request=__HBEXTERN__HBCT__
+hbexpat.hbc        -request=__HBEXTERN__HBEXPAT__
+hbmemio.hbc        -request=__HBEXTERN__HBMEMIO__
+hbmzip.hbc         -request=__HBEXTERN__HBMZIP__
+hbnetio.hbc        -request=__HBEXTERN__HBNETIO__
+hbunix.hbc{unix}   -request=__HBEXTERN__HBUNIX__{unix}
+hbwin.hbc{allwin}  -request=__HBEXTERN__HBWIN__{allwin}
 
 # Build in shared mode for these platforms because the
 # it's required for dynamic extension loading. (only
 # do that if HB_BUILD_CONTRIB_DYN is enabled, so there
 # are actually some dynamic extensions to load.)
-{_HB_BUILD_&(!(HB_BUILD_DYN='no')&(HB_BUILD_CONTRIB_DYN='yes')&(win|wce|os2))}-shared
+{_HB_BUILD_&(!(HB_BUILD_DYN='no')&!(HB_BUILD_CONTRIB_DYN='no')&(win|wce|os2))}-shared

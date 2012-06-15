@@ -648,9 +648,8 @@ STATIC PROCEDURE hbrun_Info( cCommand )
    IF s_lPreserveHistory
       hb_DispOutAt( 1, MaxCol(), "o", "R/BG" )
    ENDIF
-   IF ! Empty( __hbrun_extensions_get_list() )
-      hb_DispOutAt( 2, 0, PadR( "Ext: " + ArrayToList( __hbrun_extensions_get_list() ), MaxCol() + 1 ), "W/B" )
-   ENDIF
+
+   hb_DispOutAt( 2, 0, PadR( "Ext: " + ArrayToList( __hbrun_extensions_get_list() ), MaxCol() + 1 ), "W/B" )
 
    RETURN
 

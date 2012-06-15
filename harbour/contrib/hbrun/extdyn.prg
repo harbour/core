@@ -54,14 +54,19 @@
 
 STATIC s_hLib := { => }
 
-PROCEDURE __hbrun_extensions_static_load( cName )
-   s_hLib[ Lower( cName ) ] := NIL
-   RETURN
-
-/* Requires hbrun to be built in -shared mode */
-
 PROCEDURE __hbrun_extensions_dynamic_init( aDynamic )
+   LOCAL tmp
+   LOCAL nCount
    LOCAL cName
+
+   nCount := __dynsCount()
+   FOR tmp := 1 TO nCount
+      cName := __dynsGetName( tmp )
+      IF Left( cName, Len( "__HBEXTERN__" ) ) == "__HBEXTERN__" .AND. ;
+         !( "|" + cName + "|" $ "|__HBEXTERN__HBCPAGE__|" )
+         s_hLib[ Lower( SubStr( cName, Len( "__HBEXTERN__" ) + 1, Len( cName ) - Len( "__HBEXTERN__" ) - Len( "__" ) ) ) ] := NIL
+      ENDIF
+   NEXT
 
    IF ! Empty( aDynamic )
       FOR EACH cName IN aDynamic
@@ -70,6 +75,8 @@ PROCEDURE __hbrun_extensions_dynamic_init( aDynamic )
    ENDIF
 
    RETURN
+
+/* Requires hbrun to be built in -shared mode */
 
 PROCEDURE __hbrun_extensions_dynamic_load( cName )
    LOCAL cFileName

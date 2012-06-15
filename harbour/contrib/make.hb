@@ -414,7 +414,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
 
    /* Load project information for dependencies too
       (we need "cType" to decide about dynamic build) */
-   IF GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes"
+   IF !( GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "no" )
       FOR EACH cProject IN aSortedList
          IF !( cProject $ hProjectReqList ) .AND. ;
             cProject $ hProjectList .AND. ;
@@ -454,7 +454,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
                                                             GetEnv( "HB_REBUILD_EXTERN" ) == "yes", " -hbx=" + hb_FNameExtSet( cProjectPath, ".hbx" ), "" ), NIL ) ) == 0
 
             /* Build dynamic lib */
-            IF GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. hProjectList[ cProject ][ "cType" ] == "hblib"
+            IF !( GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "no" ) .AND. hProjectList[ cProject ][ "cType" ] == "hblib"
                /* Is this a platform where import libs are used? */
                IF "|" + hProjectList[ cProject ][ "cPlatform" ] + "|" $ "|win|dos|os2|"
                   IF Empty( hProjectList[ cProject ][ "cDynSuffix" ] )

@@ -10,6 +10,7 @@
 -cflag=-Zm200{wce&allmsvc}
 
 -mt
+
 hbmk2.prg
 
 -lhbpmcom{dos}
