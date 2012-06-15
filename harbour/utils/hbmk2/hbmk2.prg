@@ -587,8 +587,9 @@ PROCEDURE _APPMAIN( ... )
         Left( Lower( hb_FNameName( hb_argv( 0 ) ) ), 5 ) == "hbrun" .OR. ;
         hb_PValue( 1 ) == "." .OR. ;
         "|" + Lower( hb_FNameExt( hb_PValue( 1 ) ) ) + "|" $ "|.hb|.hrb|" ) .AND. ;
-      !( Left( hb_PValue( 1 ), 6 ) == "-hbreg" .OR. ;
-         Left( hb_PValue( 1 ), 8 ) == "-hbunreg" )
+      !( ! Empty( hb_PValue( 1 ) ) .AND. ;
+         ( Left( hb_PValue( 1 ), 6 ) == "-hbreg" .OR. ;
+           Left( hb_PValue( 1 ), 8 ) == "-hbunreg" ) )
       __hbshell( ... )
       QUIT
    ENDIF
