@@ -134,7 +134,7 @@ STATIC FUNCTION s_valToExp( xVal, cInd, hRefs, cRefs )
       ENDIF
 
       IF !Empty( cRefs ) .AND. cInd == ""
-         cVal := "hb_setItemRef( " + cVal + ", {" + cRefs + "} )"
+         cVal := "__itemSetRef( " + cVal + ", {" + cRefs + "} )"
       ENDIF
       IF v == "O"
          cVal := "__objSetClass( " + cVal + ", '" + xVal:className() + "' )"
@@ -152,7 +152,7 @@ STATIC FUNCTION s_valToExp( xVal, cInd, hRefs, cRefs )
 
    RETURN cVal
 
-FUNCTION hb_setItemRef( xVal, aRefs )
+FUNCTION __itemSetRef( xVal, aRefs )
    LOCAL aRef
 
    FOR EACH aRef in aRefs

@@ -12086,6 +12086,8 @@ HB_FUNC( __QUITCANCEL )
 
 HB_FUNC( __VMITEMID )
 {
+   HB_STACK_TLS_PRELOAD
+
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
 
    if( pItem )

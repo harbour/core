@@ -12,9 +12,6 @@
 *
 ********/
 
-/* internal Harbour functions used in this file */
-#xtranslate MethodName() => __GetMessage()
-
 #include "hbclass.ch"
 
 CREATE CLASS AMF_Obj
@@ -47,7 +44,7 @@ METHOD New( hCachedData ) CLASS AMF_Obj
 
 METHOD noMessage( ... ) CLASS AMF_Obj
 
-   RETURN ::msgNotFound( MethodName(), ... )
+   RETURN ::msgNotFound( __GetMessage(), ... )
 
 METHOD msgNotFound( cMessage, ... ) CLASS AMF_Obj
 

@@ -933,7 +933,7 @@ STATIC PROCEDURE hbmk_init_stage2( hbmk )
 
    RETURN
 
-STATIC FUNCTION hbmk_harbour_dirlayout_detect( hbmk, /* @ */ l_cHB_INSTALL_PREFIX )
+STATIC FUNCTION hbmk_harbour_dirlayout_detect( hbmk, /* @ */ l_cHB_INSTALL_PREFIX, lIgnoreEnvVar )
    LOCAL tmp
 
    hbmk[ _HBMK_cHB_INSTALL_LI3 ] := ""
@@ -942,7 +942,11 @@ STATIC FUNCTION hbmk_harbour_dirlayout_detect( hbmk, /* @ */ l_cHB_INSTALL_PREFI
    hbmk[ _HBMK_cHB_INSTALL_LIB ] := PathSepToSelf( GetEnv( "HB_INSTALL_LIB" ) )
    hbmk[ _HBMK_cHB_INSTALL_INC ] := PathSepToSelf( GetEnv( "HB_INSTALL_INC" ) )
 
-   l_cHB_INSTALL_PREFIX := MacroProc( hbmk, PathSepToSelf( GetEnv( "HB_INSTALL_PREFIX" ) ), NIL, _MACRO_NO_PREFIX )
+   IF lIgnoreEnvVar
+      l_cHB_INSTALL_PREFIX := ""
+   ELSE
+      l_cHB_INSTALL_PREFIX := MacroProc( hbmk, PathSepToSelf( GetEnv( "HB_INSTALL_PREFIX" ) ), NIL, _MACRO_NO_PREFIX )
+   ENDIF
    IF Empty( l_cHB_INSTALL_PREFIX )
       l_cHB_INSTALL_PREFIX := hb_DirSepAdd( hb_DirBase() ) + ".."
    ENDIF
@@ -1739,7 +1743,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
 
-      IF ! hbmk_harbour_dirlayout_detect( hbmk, @l_cHB_INSTALL_PREFIX )
+      IF ! hbmk_harbour_dirlayout_detect( hbmk, @l_cHB_INSTALL_PREFIX, .F. )
          hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) )
          RETURN _ERRLEV_FAILHBDETECT
       ENDIF
@@ -12209,7 +12213,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
    hbmk := hbmk_new()
    hbmk_init_stage2( hbmk )
-   IF ! hbmk_harbour_dirlayout_detect( hbmk, @l_cHB_INSTALL_PREFIX )
+   IF ! hbmk_harbour_dirlayout_detect( hbmk, @l_cHB_INSTALL_PREFIX, .T. )
       OutErr( StrTran( I_( "Warning: HB_INSTALL_PREFIX not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ), "\n", hb_eol() ) + _OUT_EOL )
    ENDIF
    hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )

@@ -1396,6 +1396,7 @@ DYNAMIC __i18n_potArraySave
 DYNAMIC __i18n_potArrayToHash
 DYNAMIC __i18n_potArrayTrans
 DYNAMIC __Input
+DYNAMIC __itemSetRef
 DYNAMIC __Keyboard
 DYNAMIC __KillRead
 DYNAMIC __LabelForm
@@ -1472,6 +1473,7 @@ DYNAMIC __TextRestore
 DYNAMIC __TextSave
 DYNAMIC __TracePrgCalls
 DYNAMIC __TypeFile
+DYNAMIC __vmItemID
 DYNAMIC __Wait
 DYNAMIC __wapi_GetACP
 DYNAMIC __wapi_GetOEMCP
