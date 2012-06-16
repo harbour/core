@@ -11,8 +11,6 @@
 
 -mt
 
--prgflag=-DHBMK_WITH_ALL_EMBEDDED_HEADERS
-
 hbmk2.prg
 
 -lhbpmcom{dos}
