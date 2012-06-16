@@ -1406,6 +1406,8 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                   pSelf->value.asList.pIndex->value.asFunCall.pFunName->
                   value.asSymbol.funcid == HB_F_ARRAYTOPARAMS )
          {
+            pSelf->value.asList.pIndex->value.asFunCall.pFunName->
+                                        value.asSymbol.flags |= HB_FN_MULTIARG;
             fMacroIndex = HB_TRUE;
          }
          if( pSelf->value.asList.reference && HB_SUPPORT_ARRSTR )
@@ -1483,6 +1485,8 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
                   pSelf->value.asList.pIndex->value.asFunCall.pFunName->
                   value.asSymbol.funcid == HB_F_ARRAYTOPARAMS )
          {
+            pSelf->value.asList.pIndex->value.asFunCall.pFunName->
+                                        value.asSymbol.flags |= HB_FN_MULTIARG;
             fMacroIndex = HB_TRUE;
          }
          /* to manage strings as bytes arrays, they must be pushed by reference */

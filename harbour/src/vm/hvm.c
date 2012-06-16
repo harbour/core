@@ -12084,6 +12084,19 @@ HB_FUNC( __QUITCANCEL )
    }
 }
 
+HB_FUNC( __VMITEMID )
+{
+   PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
+
+   if( pItem )
+   {
+      if( HB_IS_ARRAY( pItem ) )
+         hb_retptr( hb_arrayId( pItem ) );
+      else if( HB_IS_HASH( pItem ) )
+         hb_retptr( hb_hashId( pItem ) );
+   }
+}
+
 HB_FUNC( HB_ARRAYTOPARAMS )
 {
    HB_STACK_TLS_PRELOAD

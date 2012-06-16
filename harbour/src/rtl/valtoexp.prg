@@ -50,58 +50,6 @@
  *
  */
 
-REQUEST __objSetClass
-
-FUNCTION hb_VALTOEXP( xVal )
-   LOCAL cVal
-   LOCAL v := ValType( xVal )
-
-   SWITCH v
-   CASE "C"
-   CASE "M" ; RETURN hb_StrToExp( xVal )
-   CASE "N" ; RETURN hb_ntos( xVal )
-   CASE "D" ; RETURN iif( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
-   CASE "T" ; RETURN 't"' + hb_TSToStr( xVal, .T. ) + '"'
-   CASE "L" ; RETURN iif( xVal, ".T.", ".F." )
-   CASE "S" ; RETURN "@" + xVal:name + "()"
-   CASE "A"
-      cVal := "{"
-      FOR EACH v IN xVal
-         cVal += iif( v:__enumIndex() == 1, "", ", " ) + hb_ValToExp( v )
-      NEXT
-      cVal += "}"
-      EXIT
-   CASE "O"
-      cVal := "__objSetClass( {"
-      FOR EACH v IN xVal
-         cVal += iif( v:__enumIndex() == 1, "", ", " ) + hb_ValToExp( v )
-      NEXT
-      cVal += "}, '" + xVal:className() + "')"
-      EXIT
-   CASE "H"
-      IF Empty( xVal )
-         cVal := "{=>}"
-      ELSE
-         cVal := "{"
-         FOR EACH v IN xVal
-            cVal += iif( v:__enumIndex() == 1, "", ", " ) + ;
-                    hb_ValToExp( v:__enumKey() ) + "=>" + hb_ValToExp( v )
-         NEXT
-         cVal += "}"
-      ENDIF
-      EXIT
-   CASE "P" ; RETURN "<pointer>"
-   CASE "B" ; RETURN "{|| ... }"
-   OTHERWISE
-      IF xVal == NIL
-         cVal := "NIL"
-      ELSE
-         cVal := "???:" + v
-      ENDIF
-   ENDSWITCH
-
-   RETURN cVal
-
 FUNCTION hb_CStr( xVal )
    LOCAL v := ValType( xVal )
 
@@ -125,3 +73,91 @@ FUNCTION hb_CStr( xVal )
    ENDSWITCH
 
    RETURN "???:" + v
+
+REQUEST __objSetClass
+
+FUNCTION hb_valToExp( xVal )
+
+   RETURN s_valToExp( xVal )
+
+STATIC FUNCTION s_valToExp( xVal, cInd, hRefs, cRefs )
+   LOCAL cVal, cKey
+   LOCAL tmp
+   LOCAL v := ValType( xVal )
+
+   SWITCH v
+   CASE "C"
+   CASE "M" ; RETURN hb_StrToExp( xVal )
+   CASE "N" ; RETURN hb_ntos( xVal )
+   CASE "D" ; RETURN IIF( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
+   CASE "T" ; RETURN 't"' + hb_TSToStr( xVal, .T. ) + '"'
+   CASE "L" ; RETURN IIF( xVal, ".T.", ".F." )
+   CASE "S" ; RETURN "@" + xVal:name + "()"
+   CASE "A"
+   CASE "O"
+   CASE "H"
+      tmp := __vmItemID( xVal )
+      IF cInd == NIL
+         cInd := cRefs := ""
+         hRefs := { tmp => cInd }
+      ELSEIF tmp $ hRefs
+         IF !cRefs == ""
+            cRefs += ","
+         ENDIF
+         cRefs += "{{" + cInd + "}," + hRefs[ tmp ] + "}"
+         RETURN "NIL"
+      ELSE
+         hRefs[ tmp ] := "{" + cInd + "}"
+         cInd += ","
+      ENDIF
+
+      IF v == "H"
+         IF Empty( xVal )
+            cVal := "{=>}"
+         ELSE
+            cVal := "{"
+            FOR EACH tmp IN xVal
+               cKey := s_valToExp( tmp:__enumKey() )
+               cVal += IIF( tmp:__enumIndex() == 1, "", ", " ) + ;
+                       cKey + "=>" + ;
+                       s_valToExp( tmp, cInd + cKey, hRefs, @cRefs )
+            NEXT
+            cVal += "}"
+         ENDIF
+      ELSE
+         cVal := "{"
+         FOR EACH tmp IN xVal
+            cVal += IIF( tmp:__enumIndex() == 1, "", ", " ) + ;
+                    s_valToExp( tmp, cInd + hb_ntos( tmp:__enumIndex() ), hRefs, @cRefs )
+         NEXT
+         cVal += "}"
+      ENDIF
+
+      IF !Empty( cRefs ) .AND. cInd == ""
+         cVal := "hb_setItemRef( " + cVal + ", {" + cRefs + "} )"
+      ENDIF
+      IF v == "O"
+         cVal := "__objSetClass( " + cVal + ", '" + xVal:className() + "' )"
+      ENDIF
+      EXIT
+   CASE "P" ; RETURN "<pointer>"
+   CASE "B" ; RETURN "{|| ... }"
+   OTHERWISE
+      IF xVal == NIL
+         cVal := "NIL"
+      ELSE
+         cVal := "???:" + v
+      ENDIF
+   ENDSWITCH
+
+   RETURN cVal
+
+FUNCTION hb_setItemRef( xVal, aRefs )
+   LOCAL aRef
+
+   FOR EACH aRef in aRefs
+      xVal[ hb_arrayToParams( aRef[ 1 ] ) ] := ;
+         IIF( aRef[ 2 ] == NIL, xVal, xVal[ hb_arrayToParams( aRef[ 2 ] ) ] )
+   NEXT
+
+   RETURN xVal
