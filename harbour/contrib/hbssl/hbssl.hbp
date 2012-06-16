@@ -9,7 +9,6 @@
 -depimplibs=openssl:../dll/ssleay32.dll
 -depimplibs=openssl:../libeay32.dll
 -depimplibs=openssl:../ssleay32.dll
--depfinish=openssl
 
 hbssl.hbm
 

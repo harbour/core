@@ -17,8 +17,8 @@
 -depincpath=firebird:/usr/include
 -depincpath=firebird:/opt/firebird/include
 -depincpath=firebird:/Library/Frameworks/Firebird.framework/Headers
--depimplibs=firebird:../bin/fbclient.dll{!(allgcc|allmsvc|allpocc)}
--depimplibs=firebird:../lib/fbclient_ms.lib{allgcc|allmsvc|allpocc}
+-depimplibs=firebird:../bin/fbclient.dll{!(allgcc|allmsvc|allpocc)|hbdyn}
+-depimplibs=firebird:../lib/fbclient_ms.lib{(allgcc|allmsvc|allpocc)&!hbdyn}
 -depimplibd=firebird:fbclient
 
 -instfile=inc:hbfbird.hbx

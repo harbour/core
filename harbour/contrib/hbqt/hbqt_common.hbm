@@ -41,5 +41,5 @@
 -instfile=contrib_qt:*.txt
 -instfile=contrib_qt_tests:tests/*.*
 
-{_HB_BUILD_INSTALL&_HB_INSTALL_CONTRIB&hblib}-instpath=contrib_qt:${_HB_INSTALL_CONTRIB}/${_HB_CONTRIB_SUBDIR}/../
-{_HB_BUILD_INSTALL&_HB_INSTALL_CONTRIB&hblib}-instpath=contrib_qt_tests:${_HB_INSTALL_CONTRIB}/${_HB_CONTRIB_SUBDIR}/../tests/
+{_HB_BUILD_INSTALL&_HB_INSTALL_CONTRIB&hblib}-instpath=contrib_qt:${_HB_INSTALL_CONTRIB}/${_HB_CONTRIB_SUBDIR}../
+{_HB_BUILD_INSTALL&_HB_INSTALL_CONTRIB&hblib}-instpath=contrib_qt_tests:${_HB_INSTALL_CONTRIB}/${_HB_CONTRIB_SUBDIR}../tests/

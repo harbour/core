@@ -15,7 +15,6 @@
 -depkeyhead=blat:blat.h
 -depcontrol=blat:${HB_WITH_BLAT}
 -depimplibs=blat:../blat.dll
--depfinish=blat
 
 -iflag={bcc}-a
 

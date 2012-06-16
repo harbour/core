@@ -584,15 +584,15 @@ STATIC FUNCTION hbmk2_errorstr( nErrorLevel )
    CASE 2  ; RETURN "unknown compiler"
    CASE 3  ; RETURN "failed Harbour detection"
    CASE 5  ; RETURN "failed stub creation"
-   CASE 6  ; RETURN "failed in compilation phase"
-   CASE 7  ; RETURN "failed in final assembly phase"
+   CASE 6  ; RETURN "failed in compilation"
+   CASE 7  ; RETURN "failed in final assembly"
    CASE 8  ; RETURN "unsupported"
    CASE 9  ; RETURN "failed to create working directory"
    CASE 19 ; RETURN "help"
    CASE 10 ; RETURN "dependency missing or disabled"
    CASE 20 ; RETURN "plugin initialization"
    CASE 30 ; RETURN "too deep nesting"
-   CASE 50 ; RETURN "stop requested by makefile"
+   CASE 50 ; RETURN "stop requested"
    ENDSWITCH
    RETURN "unknown"
 

@@ -12248,8 +12248,9 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
    /* Do the thing */
 
-   IF ! Empty( hb_FNameName( cFile ) ) .AND. ;
-      ! Empty( cFile := FindInPath( cFile ) )
+   IF !( cFile == "." ) .AND. ;
+      ! Empty( hb_FNameName( cFile ) ) .AND. ;
+      ! Empty( cFile := __hbshell_FindInPath( cFile ) )
 
       cExt := Lower( hb_FNameExt( cFile ) )
 
@@ -12321,6 +12322,65 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    ENDIF
 
    RETURN
+
+STATIC FUNCTION __hbshell_FindInPath( cFileName, xPath )
+   LOCAL cDir
+   LOCAL cName
+   LOCAL cExt
+   LOCAL cFullName
+   LOCAL aExt
+
+   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
+   aExt := iif( Empty( cExt ), { ".hb", ".hrb" }, { cExt } )
+
+   FOR EACH cExt IN aExt
+      /* Check original filename (in supplied path or current dir) */
+      IF hb_FileExists( cFullName := hb_FNameMerge( cDir, cName, cExt ) )
+         RETURN cFullName
+      ENDIF
+   NEXT
+
+   IF Empty( cDir )
+      IF ! Empty( cDir := hb_DirBase() )
+         /* Check in the dir of this executable. */
+         FOR EACH cExt IN aExt
+            IF hb_FileExists( cFullName := hb_FNameMerge( cDir, cName, cExt ) )
+               RETURN cFullName
+            ENDIF
+         NEXT
+      ENDIF
+
+      IF ! HB_ISSTRING( xPath ) .AND. ;
+         ! HB_ISARRAY( xPath )
+         xPath := GetEnv( "PATH" )
+      ENDIF
+
+      IF HB_ISSTRING( xPath )
+         #if defined( __PLATFORM__WINDOWS ) .OR. ;
+             defined( __PLATFORM__DOS ) .OR. ;
+             defined( __PLATFORM__OS2 )
+            xPath := hb_ATokens( xPath, hb_osPathListSeparator(), .T., .T. )
+         #else
+            xPath := hb_ATokens( xPath, hb_osPathListSeparator() )
+         #endif
+      ENDIF
+
+      FOR EACH cExt IN aExt
+         /* Check in the PATH. */
+         FOR EACH cDir IN xPath
+            IF Left( cDir, 1 ) == '"' .AND. Right( cDir, 1 ) == '"'
+               cDir := SubStr( cDir, 2, Len( cDir ) - 2 )
+            ENDIF
+            IF ! Empty( cDir )
+               IF hb_FileExists( cFullName := hb_FNameMerge( cDir, cName, cExt ) )
+                  RETURN cFullName
+               ENDIF
+            ENDIF
+         NEXT
+      NEXT
+   ENDIF
+
+   RETURN NIL
 
 STATIC FUNCTION __hbshell_FileSig( cFile )
    LOCAL hFile
