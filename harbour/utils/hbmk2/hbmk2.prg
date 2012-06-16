@@ -938,7 +938,6 @@ STATIC FUNCTION hbmk_harbour_dirlayout_detect( hbmk, /* @ */ l_cHB_INSTALL_PREFI
 
    hbmk[ _HBMK_cHB_INSTALL_LI3 ] := ""
 
-
    IF lIgnoreEnvVar
       l_cHB_INSTALL_PREFIX := ""
       hbmk[ _HBMK_cHB_INSTALL_BIN ] := ""
