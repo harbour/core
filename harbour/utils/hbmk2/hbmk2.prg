@@ -938,14 +938,17 @@ STATIC FUNCTION hbmk_harbour_dirlayout_detect( hbmk, /* @ */ l_cHB_INSTALL_PREFI
 
    hbmk[ _HBMK_cHB_INSTALL_LI3 ] := ""
 
-   hbmk[ _HBMK_cHB_INSTALL_BIN ] := PathSepToSelf( GetEnv( "HB_INSTALL_BIN" ) )
-   hbmk[ _HBMK_cHB_INSTALL_LIB ] := PathSepToSelf( GetEnv( "HB_INSTALL_LIB" ) )
-   hbmk[ _HBMK_cHB_INSTALL_INC ] := PathSepToSelf( GetEnv( "HB_INSTALL_INC" ) )
 
    IF lIgnoreEnvVar
       l_cHB_INSTALL_PREFIX := ""
+      hbmk[ _HBMK_cHB_INSTALL_BIN ] := ""
+      hbmk[ _HBMK_cHB_INSTALL_LIB ] := ""
+      hbmk[ _HBMK_cHB_INSTALL_INC ] := ""
    ELSE
       l_cHB_INSTALL_PREFIX := MacroProc( hbmk, PathSepToSelf( GetEnv( "HB_INSTALL_PREFIX" ) ), NIL, _MACRO_NO_PREFIX )
+      hbmk[ _HBMK_cHB_INSTALL_BIN ] := PathSepToSelf( GetEnv( "HB_INSTALL_BIN" ) )
+      hbmk[ _HBMK_cHB_INSTALL_LIB ] := PathSepToSelf( GetEnv( "HB_INSTALL_LIB" ) )
+      hbmk[ _HBMK_cHB_INSTALL_INC ] := PathSepToSelf( GetEnv( "HB_INSTALL_INC" ) )
    ENDIF
    IF Empty( l_cHB_INSTALL_PREFIX )
       l_cHB_INSTALL_PREFIX := hb_DirSepAdd( hb_DirBase() ) + ".."
