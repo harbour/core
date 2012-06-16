@@ -22,8 +22,6 @@
 -instfile=inc:hbblat.ch
 -instfile=inc:hbblat.hbx
 
-{hbdyn&win&HB_INSTALL_3RDDYN='yes'}-instfile=${HBMK_DIR_BLAT}/../blat.dll
-
 hbblat.hbx
 
 blatwrp.c

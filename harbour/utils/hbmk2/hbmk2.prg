@@ -5377,10 +5377,10 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Creating implibs requested in dependency specification */
 
-   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. hbmk[ _HBMK_lDEPIMPLIB ] .AND. HB_ISBLOCK( bBlk_ImpLib )
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. HB_ISBLOCK( bBlk_ImpLib )
       FOR EACH tmp IN hbmk[ _HBMK_hDEP ]
          IF tmp[ _HBMKDEP_lFound ] .AND. ! Empty( tmp[ _HBMKDEP_aIMPLIBSRC ] )
-            DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, tmp[ _HBMKDEP_aIMPLIBSRC ], tmp[ _HBMKDEP_cIMPLIBDST ], "depimplib" )
+            DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, tmp[ _HBMKDEP_aIMPLIBSRC ], tmp[ _HBMKDEP_cIMPLIBDST ], "depimplib", ! hbmk[ _HBMK_lDEPIMPLIB ] )
          ENDIF
       NEXT
    ENDIF
@@ -7210,7 +7210,7 @@ STATIC FUNCTION DoLink( hbmk )
 
    RETURN .T.
 
-STATIC FUNCTION DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, aIMPLIBSRC, cPROGNAME, cInstCat )
+STATIC FUNCTION DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, aIMPLIBSRC, cPROGNAME, cInstCat, lDoSrc )
    LOCAL cMakeImpLibDLL
    LOCAL tmp, tmp1
    LOCAL nNotFound
@@ -7220,40 +7220,52 @@ STATIC FUNCTION DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, aIMPLIBS
 
    IF HB_ISBLOCK( bBlk_ImpLib )
       IF ! Empty( aIMPLIBSRC )
+         hb_default( @lDoSrc, .F. )
          aToDelete := {}
          nNotFound := 0
          FOR EACH cMakeImpLibDLL IN aIMPLIBSRC
 
             cMakeImpLibDLL := hb_FNameExtSetDef( cMakeImpLibDLL, ".dll" )
-            tmp1 := cPROGNAME
-            hb_default( @tmp1, hb_FNameName( cMakeImpLibDLL ) )
-            tmp := FN_CookLib( hb_FNameMerge( hbmk[ _HBMK_cPROGDIR ], tmp1 ), cLibLibPrefix, cLibLibExt )
 
-            IF hbmk[ _HBMK_lCLEAN ]
-               AAddNew( aToDelete, tmp )
+            IF lDoSrc
+               IF hb_FileExists( cMakeImpLibDLL )
+                  /* Keep a list of found dynamic library sources, allowing this
+                     list to be used to install those dynamic libs */
+                  AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { "depimplibsrc", cMakeImpLibDLL }, .T. )
+               ENDIF
             ELSE
-               SWITCH Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp, ArrayToList( hbmk[ _HBMK_aOPTI ] ) )
-               CASE _HBMK_IMPLIB_OK
-                  _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
-                  AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { cInstCat, tmp }, .T. )
-                  EXIT
-               CASE _HBMK_IMPLIB_FAILED
-                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Failed creating import library %1$s from %2$s." ), tmp, cMakeImpLibDLL ) )
-                  EXIT
-               CASE _HBMK_IMPLIB_NOTFOUND
-                  ++nNotFound
-                  EXIT
-               ENDSWITCH
+               tmp1 := cPROGNAME
+               hb_default( @tmp1, hb_FNameName( cMakeImpLibDLL ) )
+               tmp := FN_CookLib( hb_FNameMerge( hbmk[ _HBMK_cPROGDIR ], tmp1 ), cLibLibPrefix, cLibLibExt )
+
+               IF hbmk[ _HBMK_lCLEAN ]
+                  AAddNew( aToDelete, tmp )
+               ELSE
+                  SWITCH Eval( bBlk_ImpLib, cMakeImpLibDLL, tmp, ArrayToList( hbmk[ _HBMK_aOPTI ] ) )
+                  CASE _HBMK_IMPLIB_OK
+                     _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Created import library: %1$s <= %2$s" ), tmp, cMakeImpLibDLL ) )
+                     AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { cInstCat, tmp }, .T. )
+                     EXIT
+                  CASE _HBMK_IMPLIB_FAILED
+                     _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Failed creating import library %1$s from %2$s." ), tmp, cMakeImpLibDLL ) )
+                     EXIT
+                  CASE _HBMK_IMPLIB_NOTFOUND
+                     ++nNotFound
+                     EXIT
+                  ENDSWITCH
+               ENDIF
             ENDIF
          NEXT
 
-         IF nNotFound == Len( aIMPLIBSRC )
-            _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: No import library sources were found." ) ) )
-         ELSE
-            IF hbmk[ _HBMK_lCLEAN ]
-               AEval( aToDelete, {| tmp | FErase( tmp ) } )
+         IF ! lDoSrc
+            IF nNotFound == Len( aIMPLIBSRC )
+               _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: No import library sources were found." ) ) )
             ELSE
-               lRetVal := .T.
+               IF hbmk[ _HBMK_lCLEAN ]
+                  AEval( aToDelete, {| tmp | FErase( tmp ) } )
+               ELSE
+                  lRetVal := .T.
+               ENDIF
             ENDIF
          ENDIF
       ELSE

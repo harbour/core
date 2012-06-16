@@ -10,7 +10,4 @@ hbcurl.hbm
 
 -iflag={bcc}-a
 
-{hbdyn&win&HB_INSTALL_3RDDYN='yes'}-instfile=${HBMK_DIR_CURL}/../libcurl.dll
-{hbdyn&win&HB_INSTALL_3RDDYN='yes'}-instfile=${HBMK_DIR_CURL}/../bin/libcurl.dll
-
 hbcurls.hbp
