@@ -572,10 +572,29 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
    ENDIF
 
    IF nErrorLevel != 0
-      OutStd( hb_StrFormat( "! '%1$s' returned status: %2$d", cProjectPath, nErrorLevel ) + hb_eol() )
+      OutStd( hb_StrFormat( "! '%1$s' returned status: %2$d '%3$s'", cProjectPath, nErrorLevel, hbmk2_errorstr( nErrorLevel ) ) + hb_eol() )
    ENDIF
 
    RETURN nErrorLevel
+
+STATIC FUNCTION hbmk2_errorstr( nErrorLevel )
+   SWITCH nErrorLevel
+   CASE 0  ; RETURN "no error"
+   CASE 1  ; RETURN "unknown platform"
+   CASE 2  ; RETURN "unknown compiler"
+   CASE 3  ; RETURN "failed Harbour detection"
+   CASE 5  ; RETURN "failed stub creation"
+   CASE 6  ; RETURN "failed in compilation phase"
+   CASE 7  ; RETURN "failed in final assembly phase"
+   CASE 8  ; RETURN "unsupported"
+   CASE 9  ; RETURN "failed to create working directory"
+   CASE 19 ; RETURN "help"
+   CASE 10 ; RETURN "dependency missing or disabled"
+   CASE 20 ; RETURN "plugin initialization"
+   CASE 30 ; RETURN "too deep nesting"
+   CASE 50 ; RETURN "stop requested by makefile"
+   ENDSWITCH
+   RETURN "unknown"
 
 STATIC FUNCTION mk_hb_processRun( cCommand, ... )
 
