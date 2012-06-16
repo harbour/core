@@ -8,8 +8,6 @@
 
 -static
 
--DHBMK_WITH_ALL_EMBEDDED_HEADERS
-
 hbct.hbc           -request=__HBEXTERN__HBCT__
 hbexpat.hbc        -request=__HBEXTERN__HBEXPAT__
 hbmemio.hbc        -request=__HBEXTERN__HBMEMIO__

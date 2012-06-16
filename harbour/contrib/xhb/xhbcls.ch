@@ -62,6 +62,8 @@
 
 #ifndef __XHARBOUR__
 
+   #include "hboo.ch"
+
    #xtranslate __xhb_cls_scope( <scope>, .t. ) => <scope> + HB_OO_CLSTP_PERSIST
    #xtranslate __xhb_cls_scope( <scope>, .f. ) => <scope>
    #xtranslate __xhb_cls_scope( , .t. ) => HB_OO_CLSTP_PERSIST

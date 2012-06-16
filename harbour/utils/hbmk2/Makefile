@@ -23,6 +23,8 @@ ifneq ($(HB_HAS_WATT),)
    HB_PRGFLAGS += -DHB_HAS_WATT
 endif
 
+HB_PRGFLAGS += -DHBMK_WITH_ALL_EMBEDDED_HEADERS
+
 ifneq ($(filter $(HB_PLATFORM),win wce os2),)
    ifneq ($(HB_BUILD_DYN),no)
       HB_BUILD_SHARED := yes
