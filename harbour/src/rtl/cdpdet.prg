@@ -50,6 +50,8 @@
  *
  */
 
+#include "hbextcdp.ch"
+
 FUNCTION hb_cdpTerm()
    LOCAL cCP
    LOCAL cLang

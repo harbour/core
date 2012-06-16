@@ -9,10 +9,18 @@
 -depimplibs=openssl:../dll/ssleay32.dll
 -depimplibs=openssl:../libeay32.dll
 -depimplibs=openssl:../ssleay32.dll
+-depfinish=openssl
 
 hbssl.hbm
 
 {allwin&HBMK_HAS_OPENSSL}-cflag=-I${HB_WITH_OPENSSL}/../inc32
+
+{hbdyn&win&HB_INSTALL_3RDDYN='yes'}-instfile=${HBMK_DIR_OPENSSL}/../out32dll/libeay32.dll
+{hbdyn&win&HB_INSTALL_3RDDYN='yes'}-instfile=${HBMK_DIR_OPENSSL}/../out32dll/ssleay32.dll
+{hbdyn&win&HB_INSTALL_3RDDYN='yes'}-instfile=${HBMK_DIR_OPENSSL}/../dll/libeay32.dll
+{hbdyn&win&HB_INSTALL_3RDDYN='yes'}-instfile=${HBMK_DIR_OPENSSL}/../dll/ssleay32.dll
+{hbdyn&win&HB_INSTALL_3RDDYN='yes'}-instfile=${HBMK_DIR_OPENSSL}/../libeay32.dll
+{hbdyn&win&HB_INSTALL_3RDDYN='yes'}-instfile=${HBMK_DIR_OPENSSL}/../ssleay32.dll
 
 -iflag={bcc}-a
 

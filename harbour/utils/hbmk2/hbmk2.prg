@@ -12192,9 +12192,9 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
 /* Implement hbshell (formerly known as hbrun) */
 
 #if defined( __PLATFORM__DOS )
-#  define _EXT_FILE_ "hb_ext.ini"
+   #define _EXT_FILE_ "hb_ext.ini"
 #else
-#  define _EXT_FILE_ "hb_extension"
+   #define _EXT_FILE_ "hb_extension"
 #endif
 #define _EXT_ENV_  "HB_EXTENSION"
 
@@ -12951,9 +12951,9 @@ STATIC PROCEDURE __hbshell_Exec( cCommand )
 #define _HISTORY_DISABLE_LINE "no"
 
 #if defined( __PLATFORM__DOS )
-#  define _FNAME_HISTORY_ "hbhist.ini"
+   #define _FNAME_HISTORY_ "hbhist.ini"
 #else
-#  define _FNAME_HISTORY_ ".hb_history"
+   #define _FNAME_HISTORY_ ".hb_history"
 #endif
 
 EXIT PROCEDURE __hbshell_exit()
