@@ -61,7 +61,6 @@ CREATE CLASS HbQtObjectHandler
    /* QUESTION: _three_ different lists for events? two for slots? Is this needed? */
    /* ANSWER  : these variables hold the objects which capture and fire the relative signal/event */
 
-   VAR    __pSlots   PROTECTED
    VAR    __pEvents  PROTECTED
 
    VAR    __hEvents  PROTECTED INIT { => }
@@ -145,17 +144,14 @@ METHOD HbQtObjectHandler:connect( cnEvent, bBlock )
       IF HB_ISNUMERIC( ::__hEvents[ cnEvent ] )
          ::__pEvents:hbDisconnect( Self, cnEvent )
       ELSE
-         ::__pSlots:hbDisconnect( Self, cnEvent )
+         hbqt_disconnect( Self, cnEvent )
       ENDIF
       hb_hDel( ::__hEvents, cnEvent )
    ENDIF
 
    SWITCH ValType( cnEvent )
    CASE "C"
-      IF Empty( ::__pSlots )
-         ::__pSlots := HBQSlots()
-      ENDIF
-      nResult := ::__pSlots:hbconnect( Self, cnEvent, bBlock )
+      nResult := hbqt_connect( Self, cnEvent, bBlock )
 
       SWITCH nResult
       CASE 0
@@ -205,9 +201,7 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 
    SWITCH ValType( cnEvent )
    CASE "C"
-      IF ! empty( ::__pSlots )
-         nResult := ::__pSlots:hbDisconnect( Self, cnEvent )
-      ENDIF
+      nResult := hbqt_disconnect( Self, cnEvent )
 
       SWITCH nResult
       CASE 0
@@ -257,3 +251,4 @@ METHOD HbQtObjectHandler:__destroy()
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
+

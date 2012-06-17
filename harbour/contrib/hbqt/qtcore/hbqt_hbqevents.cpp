@@ -62,26 +62,17 @@
 
 #include "hbqt_hbqevents.h"
 
-#include <QtCore/QPointer>
-#include <QtCore/QVariant>
-#include <QtGui/QMessageBox>
-
 HB_FUNC_EXTERN( HB_QCLOSEEVENT );
 
 void _hb_force_link_HBQevents( void )
 {
-    HB_FUNC_EXEC( HB_QCLOSEEVENT );
+   HB_FUNC_EXEC( HB_QCLOSEEVENT );
 }
-
-/*----------------------------------------------------------------------*/
-
-#include <QtCore/QStringList>
-
-/*----------------------------------------------------------------------*/
 
 static QList<QEvent::Type> s_lstEvent;
 static QList<QByteArray> s_lstCreateObj;
 
+/*----------------------------------------------------------------------*/
 
 void hbqt_events_register_createobj( QEvent::Type eventtype, QByteArray szCreateObj )
 {

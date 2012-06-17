@@ -7,19 +7,6 @@
 
 #include "hbqt.h"
 
-HB_EXTERN_BEGIN
-
-extern HB_EXPORT void * hbqt_gcAllocate_QAction( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_QIcon( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_QPixmap( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_QMenu( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_QPalette( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_QWidget( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_QActionGroup( void * pObj, bool bNew );
-extern HB_EXPORT void * hbqt_gcAllocate_QLayout( void * pObj, bool bNew );
-
-HB_EXTERN_END
-
 #define hbqt_par_QAction( n )                                   ( ( QAction                                     * ) hbqt_par_ptr( n ) )
 #define hbqt_par_QContextMenuEvent( n )                         ( ( QContextMenuEvent                           * ) hbqt_par_ptr( n ) )
 #define hbqt_par_QPalette( n )                                  ( ( QPalette                                    * ) hbqt_par_ptr( n ) )
