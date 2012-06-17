@@ -62,6 +62,7 @@
 
 #include "hbqt.h"
 #include "hbqt_destroyer.h"
+#include <QtCore/QPointer>
 
 #ifndef QT_VERSION
    /* workaround for missing QT headers - for test only */
@@ -84,6 +85,35 @@ typedef struct _HBQT_BIND
 }
 HBQT_BIND, * PHBQT_BIND;
 
+typedef struct
+{
+   PHBQT_BIND s_hbqt_binds;
+} HB_SK_DATA, * PHB_SK_DATA;
+
+static void hbqt_bindInit( void * cargo )
+{
+  ( ( PHB_SK_DATA ) cargo )->s_hbqt_binds = NULL;
+}
+
+static void hbqt_bindRelease( void * cargo )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "....................................hbqt_bindRelease......................................" ) );
+   PHBQT_BIND hbqt_bind;
+
+   while( ( ( PHB_SK_DATA ) cargo )->s_hbqt_binds )
+   {
+      hbqt_bind = ( ( PHB_SK_DATA ) cargo )->s_hbqt_binds;
+      hbqt_bindDestroyHbObject( hb_arrayFromId( NULL, hbqt_bind->hbObject ) );
+   }
+
+   ( ( PHB_SK_DATA ) cargo )->s_hbqt_binds = NULL;
+}
+
+static HB_TSD_NEW( s_skData, sizeof( HB_SK_DATA ), hbqt_bindInit, hbqt_bindRelease );
+
+#define hbqt_bindGetData()       ( ( PHB_SK_DATA ) hb_stackGetTSD( &s_skData ) )
+
+
 /* locks for MT mode, now just dummy definitions which checks
  * if all locks are correctly released.
  */
@@ -97,7 +127,6 @@ void hbqt_bindDelEvents( PHB_ITEM pSenderObject );
 int __hbqt_bindItemsInGlobalList();
 int hbqt_bindIsHbObject( PHB_ITEM pObject );
 
-static PHBQT_BIND s_hbqt_binds = NULL;
 static HBQDestroyer * s_destroyer = NULL;
 
 static PHB_DYNS s_dynsym_NEW       = NULL;
@@ -117,49 +146,6 @@ static void hbqt_bind_init( void* cargo )
    s_dynsym_SETSLOTS  = hb_dynsymGetCase( "SETSLOTS" );
    s_dynsym___EVENTS  = hb_dynsymGetCase( "__EVENTS" );
    s_dynsym_SETEVENTS = hb_dynsymGetCase( "SETEVENTS" );
-}
-
-
-/* we need to release all the PHB_ITEM that are still in the GLL
- * we are now using a linked list and releasing an item may change the GLL
- * so I first store the PHB_ITEM addresses in a QList
- * and then I ask to remove them from the GLL... if already removed no problem
- */
-static void hbqt_bind_exit( void* cargo )
-{
-   HB_SYMBOL_UNUSED( cargo );
-
-   PHBQT_BIND bind;
-   QList<PHB_ITEM> deleteIt;
-
-   HBQT_BIND_LOCK
-   bind = s_hbqt_binds;
-   while ( bind )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "Item on GList %p %s", bind->qtObject, bind->szClassName ) );
-      deleteIt << bind->hbObject;
-      bind = bind->next;
-   }
-   HBQT_BIND_UNLOCK
-
-#ifdef HBQT_FORCE_RELEASE_GLL
-   HB_TRACE( HB_TR_DEBUG, ( "onExit before" ) );
-   while( ! deleteIt.isEmpty() )
-   {
-      HB_TRACE( HB_TR_DEBUG, ( "onExit check" ) );
-
-      if( hbqt_bindIsHbObject( ( PHB_ITEM ) deleteIt.at( 0 ) ) )
-      {
-         hbqt_bindDestroyHbObject( hb_arrayFromId( NULL, deleteIt.at( 0 ) ) );
-         HB_TRACE( HB_TR_DEBUG, ( "onExit itemRelease" ) );
-         hb_itemRelease( ( PHB_ITEM ) deleteIt.at( 0 ) );
-      }
-      deleteIt.removeAt( 0 );
-   }
-   HB_TRACE( HB_TR_DEBUG, ( "onExit after" ) );
-#endif
-
-   HB_TRACE( HB_TR_DEBUG, ( "Exiting with %d items on GList", __hbqt_bindItemsInGlobalList() ) );
 }
 
 PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szClassName, PHBQT_DEL_FUNC pDelFunc, int iFlags )
@@ -182,12 +168,12 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
    PHBQT_BIND bind;
 
    HBQT_BIND_LOCK
-   bind = s_hbqt_binds;
+   bind = hbqt_bindGetData()->s_hbqt_binds;
    while( bind )
    {
       if( bind->qtObject == qtObject )
       {
-         HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetHbObject( %p ):if( bind->qtObject == qtObject )", qtObject ) );
+         HB_TRACE( HB_TR_DEBUG, ( "...hbqt_bindGetHbObject( %p ):if( bind->qtObject == qtObject )", qtObject ) );
          pObject = hb_arrayFromId( pItem, bind->hbObject );
          break;
       }
@@ -219,27 +205,35 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
             bind->iFlags = iFlags;
             bind->fDeleting = false;
             hb_strncpy( bind->szClassName, szClassName, HB_SIZEOFARRAY( bind->szClassName ) - 1 );
-            bind->next = s_hbqt_binds;
-            s_hbqt_binds = bind;
+            bind->next = hbqt_bindGetData()->s_hbqt_binds;
+            hbqt_bindGetData()->s_hbqt_binds = bind;
          }
 
          bind->hbObject = hb_arrayId( pObject );
 
          if( iFlags & HBQT_BIT_QOBJECT )
          {
+            QObject * obj = ( QObject * ) qtObject;
+            QString className = ( QString ) obj->metaObject()->className();
+
             if( s_destroyer == NULL )
                s_destroyer = new HBQDestroyer();
-            if( pDelFunc != NULL )
-               QObject::connect( ( QObject * ) qtObject, SIGNAL( destroyed(QObject*) ), s_destroyer, SLOT( destroyer() ) );
-            HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetHbObject( %p )...%s", qtObject, szClassName ) );
 
-            hb_vmPushDynSym( s_dynsym_SETSLOTS );  /* initializes __Slots hash */
-            hb_vmPush( pObject );
-            hb_vmSend( 0 );
+            if( ( className != "HBQSlots" ) && ( className != "HBQEvents" ) )
+            {
+               if( pDelFunc != NULL )
+                  QObject::connect( obj, SIGNAL( destroyed(QObject*) ), s_destroyer, SLOT( destroyer() ) );
 
-            hb_vmPushDynSym( s_dynsym_SETEVENTS );  /* initializes __Events hash */
-            hb_vmPush( pObject );
-            hb_vmSend( 0 );
+               HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetHbObject_connected_to_destroy()( %p )...%s", qtObject, szClassName ) );
+
+               hb_vmPushDynSym( s_dynsym_SETSLOTS );  /* initializes __Slots hash */
+               hb_vmPush( pObject );
+               hb_vmSend( 0 );
+
+               hb_vmPushDynSym( s_dynsym_SETEVENTS );  /* initializes __Events hash */
+               hb_vmPush( pObject );
+               hb_vmSend( 0 );
+            }
          }
          else
          {
@@ -268,7 +262,7 @@ PHB_ITEM hbqt_bindSetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
    PHBQT_BIND bind;
 
    HBQT_BIND_LOCK
-   bind = s_hbqt_binds;
+   bind = hbqt_bindGetData()->s_hbqt_binds;;
 
    pObject = hb_param( 0, HB_IT_OBJECT );
    if( 1 == 1 ) /* QUESTION: What is this? */
@@ -291,8 +285,8 @@ PHB_ITEM hbqt_bindSetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
          bind->iFlags = iFlags;
          bind->fDeleting = false;
          hb_strncpy( bind->szClassName, szClassName, HB_SIZEOFARRAY( bind->szClassName ) - 1 );
-         bind->next = s_hbqt_binds;
-         s_hbqt_binds = bind;
+         bind->next = hbqt_bindGetData()->s_hbqt_binds;
+         hbqt_bindGetData()->s_hbqt_binds = bind;
 
          bind->hbObject = hb_arrayId( pObject );
 
@@ -325,7 +319,7 @@ PHB_ITEM hbqt_bindGetHbObjectByQtObject( void * qtObject )
       PHBQT_BIND bind;
 
       HBQT_BIND_LOCK
-      bind = s_hbqt_binds;
+      bind = hbqt_bindGetData()->s_hbqt_binds;
       while( bind )
       {
          if( bind->qtObject == qtObject )
@@ -345,7 +339,7 @@ int hbqt_bindIsHbObject( PHB_ITEM pObject )
    PHBQT_BIND bind;
 
    HBQT_BIND_LOCK
-   bind = s_hbqt_binds;
+   bind = hbqt_bindGetData()->s_hbqt_binds;
    while( bind )
    {
       HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindIsHbObject( %p )", bind->qtObject ) );
@@ -373,7 +367,7 @@ void * hbqt_bindGetQtObject( PHB_ITEM pObject )
       PHBQT_BIND bind;
 
       HBQT_BIND_LOCK
-      bind = s_hbqt_binds;
+      bind = hbqt_bindGetData()->s_hbqt_binds;
       while( bind )
       {
          HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetQtObject( %p )", bind->qtObject ) );
@@ -399,7 +393,7 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
       PHBQT_BIND * bind_ptr, bind;
 
       HBQT_BIND_LOCK
-      bind_ptr = &s_hbqt_binds;
+      bind_ptr = &( hbqt_bindGetData()->s_hbqt_binds );
       while( ( bind = * bind_ptr ) != NULL )
       {
          if( bind->hbObject == hbObject )
@@ -411,12 +405,8 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
                if( bind->iFlags & HBQT_BIT_QOBJECT )
                {
                   if( ( ( QObject * ) bind->qtObject )->metaObject()->className() != ( const char * ) "QAction" )
-                  {
                      if( ( ( QObject * ) bind->qtObject )->parent() == NULL )
-                     {
                         fDelQtObject = true;
-                     }
-                  }
                }
                else
                   fDelQtObject = true;
@@ -429,18 +419,26 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
                if( bind->pDelFunc != NULL )
                {
                   HB_TRACE( HB_TR_DEBUG, ( ".......HARBOUR_DESTROYING_ACTUAL_QT_OBJECT( %p, %i ).............. %s", bind->qtObject, bind->iFlags, bind->szClassName ) );
-                  if( hb_vmRequestReenter() )
+                  if( bind->iFlags & HBQT_BIT_QOBJECT )
+                  {
+                     HB_TRACE( HB_TR_DEBUG, ( ".......HARBOUR_DESTROYING_ACTUAL_QT_OBJECT_NAMED( %p, %s )..............", bind->qtObject, ( ( QObject * ) bind->qtObject )->objectName().toAscii().data() ) );
+                     if( ( QString ) ( ( QObject * ) bind->qtObject )->metaObject()->className() == "QMainWindow" )
+                     {
+                        if( ( ( QObject * ) bind->qtObject )->objectName() == "PleaseDoNotDelete" )  /* This is a hack: will be removed a bit later */
+                           fDelQtObject = false;
+                     }
+                     else if( ( QString ) ( ( QObject * ) bind->qtObject )->metaObject()->className() == "QDesktopWidget" )
+                        fDelQtObject = false;
+                  }
+                  if( fDelQtObject )
                   {
                      bind->fDeleting = true;
                      bind->pDelFunc( bind->qtObject, bind->iFlags );
                      bind->fDeleting = false;
-
-                     hb_vmRequestRestore();
                   }
                }
             }
             hb_xfree( bind );
-
             break;
          }
          bind_ptr = &bind->next;
@@ -457,17 +455,17 @@ void hbqt_bindDestroyQtObject( void * qtObject )
       PHBQT_BIND * bind_ptr, bind;
 
       HBQT_BIND_LOCK
-      bind_ptr = &s_hbqt_binds;
+      bind_ptr = &( hbqt_bindGetData()->s_hbqt_binds );
       while( ( bind = * bind_ptr ) != NULL )
       {
          if( bind->qtObject == qtObject )
          {
             HB_TRACE( HB_TR_DEBUG, ( "........................QT_DESTROYING( %p ).....%s ... fDeleting=%s", qtObject, bind->szClassName, bind->fDeleting ? "YES" : "NO" ) );
-
             * bind_ptr = bind->next;
             if( ! bind->fDeleting )
             {
                hb_xfree( bind );
+               HB_TRACE( HB_TR_DEBUG, ( "........................QT_DESTROYED()" ) );
             }
             break;
          }
@@ -485,7 +483,7 @@ void hbqt_bindSetOwner( void * qtObject, HB_BOOL fOwner )
    PHBQT_BIND bind;
 
    HBQT_BIND_LOCK
-   bind = s_hbqt_binds;
+   bind = hbqt_bindGetData()->s_hbqt_binds;
    while( bind )
    {
       if( bind->qtObject == qtObject )
@@ -809,7 +807,7 @@ int __hbqt_bindItemsInGlobalList( void )
    PHBQT_BIND bind;
 
    HBQT_BIND_LOCK
-   bind = s_hbqt_binds;
+   bind = hbqt_bindGetData()->s_hbqt_binds;
    while( bind )
    {
       i++;
@@ -827,7 +825,6 @@ HB_FUNC( __HBQT_ITEMSINGLOBALLIST )
 
 HB_CALL_ON_STARTUP_BEGIN( _hbqt_bind_init_ )
    hb_vmAtInit( hbqt_bind_init, NULL );
-   hb_vmAtExit( hbqt_bind_exit, NULL );
 HB_CALL_ON_STARTUP_END( _hbqt_bind_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )

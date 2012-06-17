@@ -255,7 +255,6 @@ METHOD XbpListBox:getItemIndex( pItm )
 
 METHOD XbpListBox:execSlot( cSlot, p )
    LOCAL qPos, qItm, nIndex, n, qPt
-      HB_TRACE( HB_TR_ALWAYS, "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" )
 
    IF cSlot == "customContextMenuRequested(QPoint)"
       IF HB_ISBLOCK( ::hb_contextMenu )
@@ -284,11 +283,8 @@ METHOD XbpListBox:execSlot( cSlot, p )
       ::nCurSelected := p + 1
       EXIT
    CASE "itemClicked(QListWidgetItem*)"
-      HB_TRACE( HB_TR_ALWAYS, "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" )
       ::toggleSelected( nIndex )
-      HB_TRACE( HB_TR_ALWAYS, "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" )
       ::itemMarked()
-      HB_TRACE( HB_TR_ALWAYS, "MMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMMM" )
       EXIT
    CASE "itemDoubleClicked(QListWidgetItem*)"
       ::itemSelected()

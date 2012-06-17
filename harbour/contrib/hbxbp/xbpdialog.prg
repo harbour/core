@@ -159,11 +159,11 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ELSE
       IF ::taskList
          ::oWidget := QMainWindow()
+         ::oWidget:setObjectName( "PleaseDoNotDelete" )
       ELSE
-         ::oWidget := QMainWindow( SetAppWindow():oWidget )
+         ::oWidget := QMainWindow( SetAppWindow():oWidget ) /* Why it was wanted */
       ENDIF
       ::oWidget:setMouseTracking( .t. )
-      ::oWidget:setObjectName( "mainWindow" )
    ENDIF
 
    IF !empty( ::qtObject )
@@ -443,8 +443,6 @@ CLASS XbpDrawingArea  INHERIT  XbpWindow
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   DATA     oBrush
-
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -467,13 +465,8 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
    IF ! empty( ::qtObject )
       ::oWidget := ::qtObject:oWidget
    ELSE
-      #if 0
-      ::oWidget := QWidget()
-      #else
       ::oWidget := QMdiArea()
-      ::oBrush  := QApplication():palette():button()
-      ::oWidget:setBackground( ::oBrush )
-      #endif
+      ::oWidget:setBackground( QApplication():palette():button() )
    ENDIF
 
    ::oWidget:setMouseTracking( .T. )
@@ -482,7 +475,7 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    ::setQtProperty()  /* Using it for one-to-one style sheet management */
 
-   ::oParent:addChild( SELF )
+   ::oParent:addChild( Self )
 
    RETURN Self
 
