@@ -12879,8 +12879,6 @@ STATIC FUNCTION __hbshell_GetHidden()
 
    RETURN AllTrim( cPassword )
 
-/* ********************************************************************** */
-
 STATIC PROCEDURE __hbshell_Info( cCommand )
 
    IF cCommand != NIL
@@ -12912,8 +12910,6 @@ STATIC PROCEDURE __hbshell_Info( cCommand )
 
    RETURN
 
-/* ********************************************************************** */
-
 STATIC PROCEDURE __hbshell_Err( oErr, cCommand )
 
    LOCAL xArg, cMessage
@@ -12939,38 +12935,38 @@ STATIC PROCEDURE __hbshell_Err( oErr, cCommand )
 
    Break( oErr )
 
-/* ********************************************************************** */
-
 STATIC PROCEDURE __hbshell_Exec( cCommand )
    LOCAL pHRB, cHRB, cFunc, bBlock, nRowMin
 
    cFunc := "STATIC FUNCTION __HBDOT()" + hb_eol() + ;
             "RETURN {||" + hb_eol() + ;
             "   " + cCommand + hb_eol() + ;
-            "   RETURN __MVSETBASE()" + hb_eol() + ;
+            "   RETURN __mvSetBase()" + hb_eol() + ;
             "}" + hb_eol()
+
+   DevPos( s_nRow, s_nCol )
 
    BEGIN SEQUENCE WITH {| oErr | __hbshell_Err( oErr, cCommand ) }
 
       cHRB := hb_compileFromBuf( cFunc, hb_ProgName(), "-n2", "-q2" )
-      IF cHRB == NIL
+      IF Empty( cHRB )
          Eval( ErrorBlock(), I_( "Syntax error." ) )
       ELSE
          pHRB := hb_hrbLoad( cHRB )
-         IF pHrb != NIL
+         IF ! Empty( pHrb )
             bBlock := hb_hrbDo( pHRB )
-            DevPos( s_nRow, s_nCol )
             Eval( bBlock )
-            s_nRow := Row()
-            s_nCol := Col()
-            nRowMin := 3
-            IF s_nRow < nRowMin
-               s_nRow := nRowMin
-            ENDIF
          ENDIF
       ENDIF
 
-   ENDSEQUENCE
+   END SEQUENCE
+
+   s_nRow := Row()
+   s_nCol := Col()
+   nRowMin := 3
+   IF s_nRow < nRowMin
+      s_nRow := nRowMin
+   ENDIF
 
    __mvSetBase()
 

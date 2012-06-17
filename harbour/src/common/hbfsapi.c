@@ -136,7 +136,7 @@ PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameSplit(%s)", pszFileName));
 
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit: Filename: |%s|\n", pszFileName));
+   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit: Filename: |%s|", pszFileName));
 
    /* Grab memory, set defaults */
    pFileName = ( PHB_FNAME ) hb_xgrab( sizeof( HB_FNAME ) );
@@ -212,10 +212,10 @@ PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
       }
    }
 
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:   szPath: |%s|\n", pFileName->szPath));
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:   szName: |%s|\n", pFileName->szName));
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:    szExt: |%s|\n", pFileName->szExtension));
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:  szDrive: |%s|\n", pFileName->szDrive));
+   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:   szPath: |%s|", pFileName->szPath));
+   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:   szName: |%s|", pFileName->szName));
+   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:    szExt: |%s|", pFileName->szExtension));
+   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:  szDrive: |%s|", pFileName->szDrive));
 
    return pFileName;
 }
@@ -281,11 +281,11 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
          hb_strncat( pszFileName, pFileName->szExtension, HB_PATH_MAX - 1 - 1 );
       }
 
-      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:   szPath: |%s|\n", pFileName->szPath));
-      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:   szName: |%s|\n", pFileName->szName));
-      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:    szExt: |%s|\n", pFileName->szExtension));
-      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:  szDrive: |%s|\n", pFileName->szDrive));
-      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge: Filename: |%s|\n", pszFileName));
+      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:   szPath: |%s|", pFileName->szPath));
+      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:   szName: |%s|", pFileName->szName));
+      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:    szExt: |%s|", pFileName->szExtension));
+      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:  szDrive: |%s|", pFileName->szDrive));
+      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge: Filename: |%s|", pszFileName));
    }
 
    return pszFileName;

@@ -1451,7 +1451,7 @@ UNSIGNED32 WINAPI hb_adsShowPercentageCB( UNSIGNED16 usPercentDone )
 #if HB_TR_LEVEL >= HB_TR_DEBUG
    else
    {
-      HB_TRACE(HB_TR_DEBUG, ("hb_adsShowPercentageCB(%d) called with no codeblock set.\n", usPercentDone ));
+      HB_TRACE(HB_TR_DEBUG, ("hb_adsShowPercentageCB(%d) called with no codeblock set.", usPercentDone ));
    }
 #endif
 

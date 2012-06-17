@@ -3691,7 +3691,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
 
       if( u32RetVal == AE_SUCCESS )
          u32RetVal = SELF_ADDFIELD( ( AREAP ) pArea, &dbFieldInfo ) == HB_FAILURE ? EDBF_CORRUPT : AE_SUCCESS;
-     
+
       if( u32RetVal != AE_SUCCESS )
          break;
    }
@@ -3759,7 +3759,7 @@ static HB_ERRCODE adsSysName( ADSAREAP pArea, HB_BYTE * pBuffer )
       u32RetVal = AdsGetTableType( pArea->hTable, &u16TableType );
       if( u32RetVal != AE_SUCCESS )
       {
-         HB_TRACE(HB_TR_DEBUG, ("Error in adsSysName: %lu  pArea->hTable %p\n", ( HB_ULONG ) u32RetVal, ( void * ) ( HB_PTRDIFF ) pArea->hTable));
+         HB_TRACE(HB_TR_DEBUG, ("Error in adsSysName: %lu  pArea->hTable %p", ( HB_ULONG ) u32RetVal, ( void * ) ( HB_PTRDIFF ) pArea->hTable));
          u16TableType = ( UNSIGNED16 ) pArea->iFileType;
       }
    }

@@ -15,6 +15,19 @@ HARBOUR
                                        http://harbour-project.org/
 
 
+0. GUARANTEES AND LIABILITY
+===========================
+
+   This document and all other parts of Harbour are distributed in the
+   hope the they will be useful, but there is NO GUARANTEE that they
+   are complete, accurate or usable for any purpose whatsoever. Authors
+   and contributors are NOT LIABLE for any damages that result from
+   using Harbour in any ways. For more legal details, see COPYING.
+
+   If you think you can make Harbour better, start to contribute.
+   See this section: HOW TO PARTICIPATE
+
+
 1. HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
 ===============================================
 
@@ -224,7 +237,6 @@ HARBOUR
 
       cd contrib/<name>
       ..\..\bin\<plat>\<comp>\hbmk2 ..\make.hb [clean] [install] [custom hbmk2 options]
-
 
 
 3. HOW TO CREATE DISTRIBUTABLE PACKAGES
@@ -807,7 +819,7 @@ HARBOUR
    Tracing
    -------
       Build Harbour with:
-         HB_USER_CFLAGS=-DHB_TR_LEVEL_DEBUG
+         HB_BUILD_DEBUG=yes
       Run app with:
          HB_TR_LEVEL=debug
          HB_TR_OUTPUT=<filename> (to override default stderr output)
