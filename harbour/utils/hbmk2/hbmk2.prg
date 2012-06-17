@@ -586,7 +586,7 @@ PROCEDURE _APPMAIN( ... )
    IF ( Right( Lower( hb_FNameName( hb_argv( 0 ) ) ), 5 ) == "hbrun" .OR. ;
         Left( Lower( hb_FNameName( hb_argv( 0 ) ) ), 5 ) == "hbrun" .OR. ;
         hb_PValue( 1 ) == "." .OR. ;
-        "|" + Lower( hb_FNameExt( hb_PValue( 1 ) ) ) + "|" $ "|.hb|.hrb|" ) .AND. ;
+        "|" + Lower( hb_FNameExt( hb_PValue( 1 ) ) ) + "|" $ "|.hb|.hrb|.dbf|" ) .AND. ;
       !( ! Empty( hb_PValue( 1 ) ) .AND. ;
          ( Left( hb_PValue( 1 ), 6 ) == "-hbreg" .OR. ;
            Left( hb_PValue( 1 ), 8 ) == "-hbunreg" ) )
@@ -12502,22 +12502,27 @@ STATIC PROCEDURE __hbshell_ext_init( aExtension )
 FUNCTION hbshell_ext_load( cName )
    LOCAL cFileName
    LOCAL hLib
+   LOCAL tmp
 
    IF ! Empty( cName )
       IF hb_Version( HB_VERSION_SHARED )
          IF !( cName $ s_hLibExtDyn )
-            cFileName := FindInPath( hb_libName( cName + hb_libPostfix() ),;
+            cFileName := FindInPath( tmp := hb_libName( cName + hb_libPostfix() ),;
                             iif( hb_Version( HB_VERSION_UNIX_COMPAT ), GetEnv( "LD_LIBRARY_PATH" ), GetEnv( "PATH" ) ) )
-            IF ! Empty( cFileName )
+            IF Empty( cFileName )
+               OutErr( hb_StrFormat( I_( "'%1$s' (%2$s) not found." ), cName, tmp ) + _OUT_EOL )
+            ELSE
                hLib := hb_libLoad( cFileName )
-               IF ! Empty( hLib )
+               IF Empty( hLib )
+                  OutErr( hb_StrFormat( I_( "Error loading '%1$s' (%2$s)." ), cName, cFileName ) + _OUT_EOL )
+               ELSE
                   s_hLibExtDyn[ cName ] := hLib
                   RETURN .T.
                ENDIF
             ENDIF
          ENDIF
       ELSE
-         OutErr( hb_StrFormat( I_( "Cannot load %1$s. Requires -shared %2$s build." ), cName, _SELF_NAME_ ) + _OUT_EOL )
+         OutErr( hb_StrFormat( I_( "Cannot load '%1$s'. Requires -shared %2$s build." ), cName, _SELF_NAME_ ) + _OUT_EOL )
       ENDIF
    ENDIF
 
@@ -12778,6 +12783,16 @@ STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
    AAdd( s_aHistory, PadR( "quit", HB_LINE_LEN ) )
    nHistIndex := Len( s_aHistory ) + 1
 
+   hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
+
+   SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
+
+   Set( _SET_EVENTMASK, hb_bitOr( INKEY_KEYBOARD, HB_INKEY_GTEVENT ) )
+
+   s_nRow := 3
+
+   __hbshell_Exec( "?? hb_Version()" )
+
    IF HB_ISSTRING( cCommand )
       AAdd( s_aHistory, PadR( cCommand, HB_LINE_LEN ) )
       __hbshell_Info( cCommand )
@@ -12786,17 +12801,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
       cCommand := ""
    ENDIF
 
-   hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
-
-   SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
-
-   Set( _SET_EVENTMASK, hb_bitOr( INKEY_KEYBOARD, HB_INKEY_GTEVENT ) )
-
-   s_nRow := 2 + iif( Empty( hbshell_ext_get_list() ), 0, 1 )
-
    plugins := __hbshell_plugins_load( __hbshell_plugins(), aParams )
-
-   __hbshell_Exec( "? hb_Version()" )
 
    DO WHILE .T.
 
@@ -12880,7 +12885,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
             ENDIF
 
             IF s_nRow >= MaxRow()
-               Scroll( 2 + iif( Empty( hbshell_ext_get_list() ), 0, 1 ), 0, MaxRow(), MaxCol(), 1 )
+               Scroll( 3, 0, MaxRow(), MaxCol(), 1 )
                s_nRow := MaxRow() - 1
             ENDIF
          ENDIF
@@ -13007,7 +13012,7 @@ STATIC PROCEDURE __hbshell_Exec( cCommand )
             Eval( bBlock )
             s_nRow := Row()
             s_nCol := Col()
-            nRowMin := 2 + iif( Empty( hbshell_ext_get_list() ), 0, 1 )
+            nRowMin := 3
             IF s_nRow < nRowMin
                s_nRow := nRowMin
             ENDIF
