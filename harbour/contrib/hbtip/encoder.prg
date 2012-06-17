@@ -65,9 +65,7 @@
 FUNCTION TIp_GetEncoder( cModel )
    LOCAL oEncoder
 
-   IF ! HB_ISSTRING( cModel )
-      cModel := "as-is"
-   ENDIF
+   hb_default( @cModel, "as-is" )
 
    cModel := Lower( cModel )
 
@@ -101,9 +99,7 @@ CREATE CLASS TIPEncoder
 ENDCLASS
 
 METHOD New( cModel ) CLASS TIPEncoder
-   IF ! HB_ISSTRING( cModel )
-      cModel := "as-is"
-   ENDIF
+   hb_default( @cModel, "as-is" )
    ::cName := cModel
    RETURN Self
 

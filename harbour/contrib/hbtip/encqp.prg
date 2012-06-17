@@ -52,7 +52,14 @@
 
 #include "hbclass.ch"
 
-CREATE CLASS TIPEncoderQP FROM TIPEncoder
+/* TOFIX: Removed TIPEncode as parent class to make it
+          work from a dynamically loaded hbtip library.
+          'VAR cName' was the only inherited item/logic.
+          This should be reverted once derived classes
+          work fine from dynamically loaded libs. */
+CREATE CLASS TIPEncoderQP
+   VAR cName
+
    METHOD New() CONSTRUCTOR
    METHOD Encode( cData )
    METHOD Decode( cData )
