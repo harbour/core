@@ -6,7 +6,10 @@ hbcurl.hbm
 
 -depimplibs=curl:../libcurl.dll
 -depimplibs=curl:../bin/libcurl.dll
+-depfinish=curl
 
 -iflag={bcc}-a
+
+{hbdyn&win}-instfile=depimplibsrc:${HBMK_DIR_BLAT}/../bin/*.dll
 
 hbcurls.hbp
