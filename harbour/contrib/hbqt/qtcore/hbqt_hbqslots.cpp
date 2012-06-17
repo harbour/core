@@ -58,13 +58,10 @@
 #include "hbapierr.h"
 #include "hbapiitm.h"
 #include "hbvm.h"
-#include "hbqt_bind.h"
-#include "hbqt_hbqslots.h"
 
 #if QT_VERSION >= 0x040500
 
 #include "hbqt_hbqslots.h"
-#include "hbqt_bind.h"
 
 HB_EXPORT HBQSlots * hbqt_bindGetReceiverSlotByHbObject( PHB_ITEM pObject );
 
