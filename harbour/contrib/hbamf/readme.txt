@@ -58,7 +58,7 @@ Short description of Harbour functions
                        lClose := xVal:lCloseWA
                        SELECT ( xVal:nWorkArea )
 
-                       xVal := RawAMF():New( AMF3_FROMWA( xVal:bWhile, xVal:bFor, xVal:aFields, xVal:nCount, xVal:lStrTrim, 1, pOuterContext ) )
+                       xVal := AMF_Raw():New( AMF3_FROMWA( xVal:bWhile, xVal:bFor, xVal:aFields, xVal:nCount, xVal:lStrTrim, 1, pOuterContext ) )
                        IF lClose
                           CLOSE
                        ENDIF

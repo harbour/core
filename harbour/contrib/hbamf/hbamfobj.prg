@@ -60,3 +60,19 @@ METHOD msgNotFound( cMessage, ... ) CLASS AMF_Obj
    ENDIF
 
    RETURN NIL
+
+CREATE CLASS AMF_Raw
+
+   METHOD New( cData ) CONSTRUCTOR
+   METHOD GetData INLINE ::cData
+
+   PROTECTED:
+   VAR cData
+
+END CLASS
+
+METHOD New( cData ) CLASS AMF_Raw
+
+   ::cData := cData
+
+   RETURN self

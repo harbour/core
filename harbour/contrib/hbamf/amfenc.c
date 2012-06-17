@@ -948,7 +948,7 @@ static HB_BOOL amf3_serialize_object( amfContext * context, PHB_ITEM pItem )
 {
    int result;
 
-   if( strcmp( hb_clsName( hb_objGetClass( pItem ) ), "RAWAMF" ) == 0 )
+   if( strcmp( hb_clsName( hb_objGetClass( pItem ) ), "AMF_RAW" ) == 0 )
    {
       PHB_ITEM pStr = hb_itemNew( NULL );
       hb_arrayGet( pItem, 1, pStr );
