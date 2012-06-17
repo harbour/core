@@ -13,6 +13,8 @@
 
 hbmk2.prg
 
+-DHBMK_WITH_ALL_EMBEDDED_HEADERS
+
 -lhbpmcom{dos}
 
 hbmk2.%{hb_lng}.po
@@ -24,5 +26,3 @@ hbmk2.%{hb_lng}.po
 #-icon={allwin}../../package/harb_win.ico
 #-icon={os2}../../package/harb_os2.ico
 hbmk2.rc
-
-{!(HB_BUILD_DYN='no')&(win|wce|os2)}-shared

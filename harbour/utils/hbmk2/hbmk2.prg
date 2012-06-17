@@ -12229,6 +12229,9 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    LOCAL l_cHB_INSTALL_PREFIX
    LOCAL aINCPATH
 
+   s_cDirBase_hbshell := hb_DirBase()
+   s_cProgName_hbshell := hb_ProgName()
+
    /* Set CP and language */
 
    SetUILang( GetUILang() )
@@ -12238,7 +12241,9 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    hbmk := hbmk_new()
    hbmk_init_stage2( hbmk )
    IF ! hbmk_harbour_dirlayout_detect( hbmk, @l_cHB_INSTALL_PREFIX, .T. )
-      OutErr( StrTran( I_( "Warning: HB_INSTALL_PREFIX not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ), "\n", hb_eol() ) + _OUT_EOL )
+      IF hb_Version( HB_VERSION_SHARED )
+         OutErr( StrTran( I_( "Warning: Failed to detect Harbour.\nRun this tool from its original location inside the Harbour installation." ), "\n", hb_eol() ) + _OUT_EOL )
+      ENDIF
    ENDIF
    hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
    hbmk[ _HBMK_cPLAT ] := hb_Version( HB_VERSION_BUILD_PLAT )
@@ -12316,8 +12321,6 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
       CASE ".hrb"
          __hbshell_ext_init( aExtension )
-         s_cDirBase_hbshell := hb_DirBase()
-         s_cProgName_hbshell := hb_ProgName()
          hb_argShift( .T. )
          hb_hrbRun( cFile, ... )
          EXIT
@@ -12473,7 +12476,7 @@ FUNCTION hbshell_ext_load( cName )
             ENDIF
          ENDIF
       ELSE
-         OutErr( hb_StrFormat( I_( "Cannot load '%1$s'. Requires -shared %2$s build." ), cName, _SELF_NAME_ ) + _OUT_EOL )
+         OutErr( hb_StrFormat( I_( "Cannot load '%1$s'. Requires -shared %2$s build." ), cName, hb_FNameName( hbshell_ProgName() ) ) + _OUT_EOL )
       ENDIF
    ENDIF
 
@@ -12882,7 +12885,7 @@ STATIC FUNCTION __hbshell_GetHidden()
 STATIC PROCEDURE __hbshell_Info( cCommand )
 
    IF cCommand != NIL
-      hb_DispOutAt( 0, 0, "PP: " )
+      hb_DispOutAt( 0, 0, "PP: ", "W/N" )
       hb_DispOutAt( 0, 4, PadR( cCommand, MaxCol() - 3 ), "N/R" )
    ENDIF
    IF Used()
@@ -12906,7 +12909,7 @@ STATIC PROCEDURE __hbshell_Info( cCommand )
       hb_DispOutAt( 1, MaxCol(), "o", "R/BG" )
    ENDIF
 
-   hb_DispOutAt( 2, 0, PadR( "Ext: " + ArrayToList( hbshell_ext_get_list(), ", " ), MaxCol() + 1 ), "W/B" )
+   hb_DispOutAt( 2, 0, PadR( "Ext: " + ArrayToList( hbshell_ext_get_list(), ", " ), MaxCol() + 1 ), iif( hb_Version( HB_VERSION_SHARED ), "W/B", "N/N*" ) )
 
    RETURN
 

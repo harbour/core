@@ -130,7 +130,7 @@ Section "Start Menu and Desktop icons" hb_shortcuts
   CreateShortCut  "$SMPROGRAMS\Harbour\Uninstall.lnk" "$INSTDIR\uninstall.exe" "" "$INSTDIR\uninstall.exe" 0
   CreateShortCut  "$SMPROGRAMS\Harbour\Harbour (Command line).lnk" "cmd.exe" "/k cd $INSTDIR\bin" "cmd.exe" 0
   CreateShortCut  "$SMPROGRAMS\Harbour\Harbour.lnk" "$INSTDIR" "" "$INSTDIR" 0
-  CreateShortCut  "$SMPROGRAMS\Harbour\Harbour (Interactive shell).lnk" "$INSTDIR\bin\hbmk2.exe" "." "$INSTDIR\bin\hbmk2.exe" 0
+  CreateShortCut  "$SMPROGRAMS\Harbour\Harbour (Interactive shell).lnk" "$INSTDIR\bin\hbrun.exe" "" "$INSTDIR\bin\hbrun.exe" 0
   CreateDirectory "$SMPROGRAMS\Harbour\Links"
   WriteINIStr     "$SMPROGRAMS\Harbour\Links\Homepage.url"                   "InternetShortcut" "URL" "http://harbour-project.org/"
   WriteINIStr     "$SMPROGRAMS\Harbour\Links\Sourceforge Page.url"           "InternetShortcut" "URL" "http://sourceforge.net/projects/harbour-project/"
