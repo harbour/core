@@ -8974,55 +8974,65 @@ STATIC FUNCTION FindInPathPlugIn( /* @ */ cFileName )
 
    RETURN FindInPath( cFileName )
 
-STATIC FUNCTION FindInPath( cFileName, xPath )
+STATIC FUNCTION FindInPath( cFileName, xPath, aExtDef )
    LOCAL cDir
    LOCAL cName
    LOCAL cExt
+   LOCAL aExt
 
    hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
    #if defined( __PLATFORM__WINDOWS ) .OR. ;
        defined( __PLATFORM__DOS ) .OR. ;
        defined( __PLATFORM__OS2 )
-      IF Empty( cExt )
-         cExt := ".exe"
-      ENDIF
+      hb_default( @aExtDef, { ".exe" } )
+   #else
+      hb_default( @aExtDef, { cExt } )
    #endif
+   aExt := iif( Empty( cExt ), aExtDef, { cExt } )
 
-   /* Check original filename (in supplied path or current dir) */
-   IF hb_FileExists( cFileName := hb_FNameMerge( cDir, cName, cExt ) )
-      RETURN cFileName
-   ENDIF
-
-   /* Check in the dir of this executable. */
-   IF ! Empty( hb_DirBase() )
-      IF hb_FileExists( cFileName := hb_FNameMerge( hb_DirBase(), cName, cExt ) )
+   FOR EACH cExt IN aExt
+      /* Check original filename (in supplied path or current dir) */
+      IF hb_FileExists( cFileName := hb_FNameMerge( cDir, cName, cExt ) )
          RETURN cFileName
       ENDIF
-   ENDIF
-
-   IF ! HB_ISSTRING( xPath ) .AND. ;
-      ! HB_ISARRAY( xPath )
-      xPath := GetEnv( "PATH" )
-   ENDIF
-
-   IF HB_ISSTRING( xPath )
-      #if defined( __PLATFORM__WINDOWS ) .OR. ;
-          defined( __PLATFORM__DOS ) .OR. ;
-          defined( __PLATFORM__OS2 )
-         xPath := hb_ATokens( xPath, hb_osPathListSeparator(), .T., .T. )
-      #else
-         xPath := hb_ATokens( xPath, hb_osPathListSeparator() )
-      #endif
-   ENDIF
-
-   /* Check in the PATH. */
-   FOR EACH cDir IN xPath
-      IF ! Empty( cDir )
-         IF hb_FileExists( cFileName := hb_FNameMerge( hb_DirSepAdd( StrStripQuote( cDir ) ), cName, cExt ) )
-            RETURN cFileName
-         ENDIF
-      ENDIF
    NEXT
+
+   IF Empty( cDir )
+      /* Check in the dir of this executable. */
+      IF ! Empty( cDir := hb_DirBase() )
+         FOR EACH cExt IN aExt
+            IF hb_FileExists( cFileName := hb_FNameMerge( cDir, cName, cExt ) )
+               RETURN cFileName
+            ENDIF
+         NEXT
+      ENDIF
+
+      IF ! HB_ISSTRING( xPath ) .AND. ;
+         ! HB_ISARRAY( xPath )
+         xPath := GetEnv( "PATH" )
+      ENDIF
+
+      IF HB_ISSTRING( xPath )
+         #if defined( __PLATFORM__WINDOWS ) .OR. ;
+             defined( __PLATFORM__DOS ) .OR. ;
+             defined( __PLATFORM__OS2 )
+            xPath := hb_ATokens( xPath, hb_osPathListSeparator(), .T., .T. )
+         #else
+            xPath := hb_ATokens( xPath, hb_osPathListSeparator() )
+         #endif
+      ENDIF
+
+      FOR EACH cExt IN aExt
+         /* Check in the PATH. */
+         FOR EACH cDir IN xPath
+            IF ! Empty( cDir := StrStripQuote( cDir ) )
+               IF hb_FileExists( cFileName := hb_FNameMerge( hb_DirSepAdd( cDir ), cName, cExt ) )
+                  RETURN cFileName
+               ENDIF
+            ENDIF
+         NEXT
+      NEXT
+   ENDIF
 
    RETURN NIL
 
@@ -12250,7 +12260,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
    IF !( cFile == "." ) .AND. ;
       ! Empty( hb_FNameName( cFile ) ) .AND. ;
-      ! Empty( cFile := __hbshell_FindInPath( cFile ) )
+      ! Empty( cFile := FindInPath( cFile,, { ".hb", ".hrb" } ) )
 
       cExt := Lower( hb_FNameExt( cFile ) )
 
@@ -12264,11 +12274,11 @@ STATIC PROCEDURE __hbshell( cFile, ... )
       CASE ".hb"
 
          /* NOTE: Assumptions:
-                  - one dynamic libs belongs to one .hbc file (true for dynamic builds in contrib)
+                  - one dynamic lib belongs to one .hbc file (true for dynamic builds in contrib)
                   - dynamic libs will reference and automatically load all their dependencies
                     (true on all systems so far)
                   - hbrun/hbmk2 is located in well known place inside the Harbour dir tree.
-                  - contribs/addons are also located in well-known place inside the Harbour dir tree
+                  - contribs/addons are located in well-known place inside the Harbour dir tree
                   - 3rd party addons can be loaded, too if they are installed into the Harbour dir tree
                     and built the same way as contribs.
                   - dynamic libs are installed into bin dir.
@@ -12322,65 +12332,6 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    ENDIF
 
    RETURN
-
-STATIC FUNCTION __hbshell_FindInPath( cFileName, xPath )
-   LOCAL cDir
-   LOCAL cName
-   LOCAL cExt
-   LOCAL cFullName
-   LOCAL aExt
-
-   hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
-   aExt := iif( Empty( cExt ), { ".hb", ".hrb" }, { cExt } )
-
-   FOR EACH cExt IN aExt
-      /* Check original filename (in supplied path or current dir) */
-      IF hb_FileExists( cFullName := hb_FNameMerge( cDir, cName, cExt ) )
-         RETURN cFullName
-      ENDIF
-   NEXT
-
-   IF Empty( cDir )
-      IF ! Empty( cDir := hb_DirBase() )
-         /* Check in the dir of this executable. */
-         FOR EACH cExt IN aExt
-            IF hb_FileExists( cFullName := hb_FNameMerge( cDir, cName, cExt ) )
-               RETURN cFullName
-            ENDIF
-         NEXT
-      ENDIF
-
-      IF ! HB_ISSTRING( xPath ) .AND. ;
-         ! HB_ISARRAY( xPath )
-         xPath := GetEnv( "PATH" )
-      ENDIF
-
-      IF HB_ISSTRING( xPath )
-         #if defined( __PLATFORM__WINDOWS ) .OR. ;
-             defined( __PLATFORM__DOS ) .OR. ;
-             defined( __PLATFORM__OS2 )
-            xPath := hb_ATokens( xPath, hb_osPathListSeparator(), .T., .T. )
-         #else
-            xPath := hb_ATokens( xPath, hb_osPathListSeparator() )
-         #endif
-      ENDIF
-
-      FOR EACH cExt IN aExt
-         /* Check in the PATH. */
-         FOR EACH cDir IN xPath
-            IF Left( cDir, 1 ) == '"' .AND. Right( cDir, 1 ) == '"'
-               cDir := SubStr( cDir, 2, Len( cDir ) - 2 )
-            ENDIF
-            IF ! Empty( cDir )
-               IF hb_FileExists( cFullName := hb_FNameMerge( cDir, cName, cExt ) )
-                  RETURN cFullName
-               ENDIF
-            ENDIF
-         NEXT
-      NEXT
-   ENDIF
-
-   RETURN NIL
 
 STATIC FUNCTION __hbshell_FileSig( cFile )
    LOCAL hFile

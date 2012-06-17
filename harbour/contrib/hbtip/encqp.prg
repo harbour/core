@@ -63,6 +63,12 @@ METHOD New() CLASS TIPEncoderQP
    RETURN Self
 
 METHOD Encode( cData ) CLASS TIPEncoderQP
+   RETURN TIP_QPEncode( cData )
+
+METHOD Decode( cData ) CLASS TIPEncoderQP
+   RETURN TIP_QPDecode( cData )
+
+FUNCTION TIP_QPEncode( cData )
    LOCAL nPos
    LOCAL c
    LOCAL nLen
@@ -93,7 +99,7 @@ METHOD Encode( cData ) CLASS TIPEncoderQP
 
    RETURN cString
 
-METHOD Decode( cData ) CLASS TIPEncoderQP
+FUNCTION TIP_QPDecode( cData )
    LOCAL nPos
    LOCAL c
    LOCAL nLen
