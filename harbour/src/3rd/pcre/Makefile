@@ -48,13 +48,9 @@ ifneq ($(HB_HAS_PCRE_LOCAL),)
    endif
    endif
 
-   ifneq ($(filter $(HB_COMPILER),mingw mingw64 msvc mvc64),)
-      HB_CFLAGS += -DSUPPORT_JIT
-   else
-   ifneq ($(filter $(HB_PLATFORM),darwin linux),)
-      HB_CFLAGS += -DSUPPORT_JIT
-   endif
-   endif
+#   ifneq ($(filter $(HB_COMPILER),mingw mingw64 msvc mvc64)$(filter $(HB_PLATFORM),darwin linux),)
+#      HB_CFLAGS += -DSUPPORT_JIT
+#   endif
 
    HB_CFLAGS += -DHAVE_CONFIG_H
 
