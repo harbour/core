@@ -63,7 +63,7 @@
 
 #include "hbqt_hbqslots.h"
 
-HB_EXPORT HBQSlots * hbqt_bindGetReceiverSlotByHbObject( PHB_ITEM pObject );
+HB_EXPORT HBQSlots * hbqt_bindGetReceiverSlotsByHbObject( PHB_ITEM pObject );
 
 static QList<QByteArray> s_argCombinations;
 static QList<PHBQT_SLOT_FUNC> s_pCallback;
@@ -142,7 +142,7 @@ int HBQSlots::hbConnect( PHB_ITEM pObj, char * pszSignal, PHB_ITEM bBlock )
                         {
                            nResult = 0;
 
-                           HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %s ) signalId=%i, %p", pszSignal, signalId, object ) );
+                           HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbConnect( %p, %s, %i )", object, pszSignal, signalId ) );
                            hbqt_bindAddSlot( pObj, signalId, bBlock );
                         }
                         else
@@ -249,7 +249,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
                else
                {
                   parList += arrayOfTypes.at( i ).trimmed() ;
-                  pList += arrayOfTypes.at( i ).trimmed().toUpper();
+                  pList += "HB_" + arrayOfTypes.at( i ).trimmed().toUpper();
                }
             }
             paramString = parList.join( "$" ).toAscii();
@@ -264,24 +264,35 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
       if( hb_vmRequestReenter() )
       {
          PHB_ITEM hbObject = hbqt_bindGetHbObjectByQtObject( object );
-         PHB_ITEM p = hbqt_bindGetSlots( hbObject, id );
-         hb_itemRelease( hbObject );
-         if( p )
+         if( hbObject )
          {
-            if( parameterCount == 0 )
+            PHB_ITEM p = hbqt_bindGetSlots( hbObject, id );
+            hb_itemRelease( hbObject );
+            if( p )
             {
-               hb_evalBlock0( hb_arrayGetItemPtr( p, 1 ) );
-            }
-            else
-            {
-               int paramId = s_argCombinations.indexOf( paramString );
-               PHBQT_SLOT_FUNC pCallback = s_pCallback.at( paramId );
-               if( pCallback )
+               PHB_ITEM codeBlock = hb_arrayGetItemPtr( p, 1 );
+               if( HB_IS_BLOCK( codeBlock ) )
                {
-                  pCallback( ( PHB_ITEM * ) hb_arrayGetItemPtr( p, 1 ), arguments, pList );
+                  if( parameterCount == 0 )
+                  {
+                     HB_TRACE( HB_TR_DEBUG, ( "Firing Signal( %p )", object ) );
+                     hb_evalBlock0( codeBlock );
+                     HB_TRACE( HB_TR_DEBUG, ( "Fired ( %p )", object ) );
+                  }
+                  else
+                  {
+                     int paramId = s_argCombinations.indexOf( paramString );
+                     PHBQT_SLOT_FUNC pCallback = s_pCallback.at( paramId );
+                     if( pCallback )
+                     {
+                        HB_TRACE( HB_TR_DEBUG, ( "Firing Signal( %p, %s )", object, paramString.data() ) );
+                        pCallback( ( PHB_ITEM * ) codeBlock, arguments, pList );
+                        HB_TRACE( HB_TR_DEBUG, ( "Fired ( %p )", object ) );
+                     }
+                  }
                }
+               hb_itemRelease( p );
             }
-            hb_itemRelease( p );
          }
          hb_vmRequestRestore();
       }
@@ -336,7 +347,7 @@ int hbqt_QtConnect( QObject *sender, const char * pszSignal, QObject *receiver, 
    return nResult;
 }
 
-int hbqt_QtDisconnect( QObject *sender, const char * pszSignal, QObject *receiver, const char * pszSlot )
+int hbqt_QtDisconnect( QObject * sender, const char * pszSignal, QObject * receiver, const char * pszSlot )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hbqt_QtDisconnect %s with slot %s", pszSignal, pszSlot ) );
 
@@ -360,7 +371,7 @@ int hbqt_QtDisconnect( QObject *sender, const char * pszSignal, QObject *receive
                if( QMetaObject::disconnect( sender, signalId, receiver, slotId ) )
                {
                   nResult = 0;
-                  HB_TRACE( HB_TR_DEBUG, ( "SIGNAL2SLOT ok" ) );
+                  HB_TRACE( HB_TR_DEBUG, ( "hbqt_QtDisconnect_OK( %p, %s, %s )", sender, pszSignal, pszSlot ) );
                }
                else
                   nResult = 8;
@@ -377,7 +388,6 @@ int hbqt_QtDisconnect( QObject *sender, const char * pszSignal, QObject *receive
    else
       nResult = 9;  // Qt objects not active
 
-   HB_TRACE( HB_TR_DEBUG, ( "hbqt_QtDisconnect returns: %d", nResult ) );
    return nResult;
 }
 
@@ -399,11 +409,11 @@ HB_FUNC( HBQT_CONNECT )
    }
    else if( hb_pcount() == 3 && HB_ISCHAR( 2 ) && HB_ISBLOCK( 3 ) && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
    {
-      HBQSlots * receiverSlot = hbqt_bindGetReceiverSlotByHbObject( hb_param( 1, HB_IT_OBJECT ) );
-      if( receiverSlot )
+      HBQSlots * receiverSlots = hbqt_bindGetReceiverSlotsByHbObject( hb_param( 1, HB_IT_OBJECT ) );
+      if( receiverSlots )
       {
          void * pText01 = NULL;
-         ret = receiverSlot->hbConnect( hb_param( 1, HB_IT_OBJECT ), ( char * ) hb_parstr_utf8( 2, &pText01, NULL ), hb_param( 3, HB_IT_ANY ) );
+         ret = receiverSlots->hbConnect( hb_param( 1, HB_IT_OBJECT ), ( char * ) hb_parstr_utf8( 2, &pText01, NULL ), hb_param( 3, HB_IT_BLOCK ) );
          hb_strfree( pText01 );
       }
    }
@@ -420,11 +430,11 @@ HB_FUNC( HBQT_DISCONNECT )
    HB_TRACE( HB_TR_DEBUG, ( "enters HBQT_DISCONNECT" ) );
    if( hb_pcount() == 2 && HB_ISCHAR( 2 ) && hbqt_par_isDerivedFrom( 1, "QOBJECT" )  )
    {
-      void * pText01 = NULL;
-      HBQSlots * receiverSlot = hbqt_bindGetReceiverSlotByHbObject( hb_param( 1, HB_IT_OBJECT ) );
-      if( receiverSlot )
+      HBQSlots * receiverSlots = hbqt_bindGetReceiverSlotsByHbObject( hb_param( 1, HB_IT_OBJECT ) );
+      if( receiverSlots )
       {
-         ret = receiverSlot->hbDisconnect( hb_param( 1, HB_IT_OBJECT ), ( char * ) hb_parstr_utf8( 2, &pText01, NULL ) );
+         void * pText01 = NULL;
+         ret = receiverSlots->hbDisconnect( hb_param( 1, HB_IT_OBJECT ), ( char * ) hb_parstr_utf8( 2, &pText01, NULL ) );
          hb_strfree( pText01 );
       }
    }

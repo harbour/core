@@ -56,14 +56,16 @@
 #include "hbqt.h"
 
 #include "hbapiitm.h"
+#include "hbapierr.h"
 #include "hbvm.h"
 
 #if QT_VERSION >= 0x040500
 
 #include "hbqt_hbqevents.h"
 
-HB_FUNC_EXTERN( HB_QCLOSEEVENT );
+HBQEvents * hbqt_bindGetReceiverEventsByHbObject( PHB_ITEM pObject );
 
+HB_FUNC_EXTERN( HB_QCLOSEEVENT );
 void _hb_force_link_HBQevents( void )
 {
    HB_FUNC_EXEC( HB_QCLOSEEVENT );
@@ -190,6 +192,45 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
       hb_vmRequestRestore();
    }
    return stopTheEventChain;
+}
+
+HB_FUNC( HBQT_CONNECTEVENT )
+{
+   int ret = -1;
+
+   if( hb_pcount() == 3 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) && HB_ISNUM( 2 ) && HB_ISBLOCK( 3 ) )
+   {
+      HBQEvents * receiverEvents = hbqt_bindGetReceiverEventsByHbObject( hb_param( 1, HB_IT_OBJECT ) );
+      if( receiverEvents )
+      {
+         ret = receiverEvents->hbConnect( hb_param( 1, HB_IT_OBJECT ), hb_parni( 2 ), hb_param( 3, HB_IT_BLOCK ) );
+      }
+   }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+   hb_retni( ret );
+}
+
+HB_FUNC( HBQT_DISCONNECTEVENT )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "enters HBQT_DISCONNECT" ) );
+   int ret = -1;
+   if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) && HB_ISNUM( 2 )  )
+   {
+      HBQEvents * receiverEvents = hbqt_bindGetReceiverEventsByHbObject( hb_param( 1, HB_IT_OBJECT ) );
+      if( receiverEvents )
+      {
+         ret = receiverEvents->hbDisconnect( hb_param( 1, HB_IT_OBJECT ), hb_parni( 2 ) );
+      }
+   }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+   HB_TRACE( HB_TR_DEBUG, ( "exits HBQT_DISCONNECT" ) );
+   hb_retni( ret );
 }
 
 static void hbqt_events_init( void * cargo )

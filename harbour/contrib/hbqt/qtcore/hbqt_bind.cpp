@@ -61,6 +61,7 @@
 #include "hbqt.h"
 #include "hbqt_destroyer.h"
 #include "hbqt_hbqslots.h"
+#include "hbqt_hbqevents.h"
 
 
 typedef struct _HBQT_BIND
@@ -72,7 +73,9 @@ typedef struct _HBQT_BIND
    bool                 fDeleting;
    char                 szClassName[ HB_SYMBOL_NAME_LEN + 1 ];
    HBQDestroyer *       pDestroyer;
-   HBQSlots *           pReceiverSlot;
+   HBQSlots *           pReceiverSlots;
+   HBQEvents *          pReceiverEvents;
+   bool                 fEventFilterInstalled;
    struct _HBQT_BIND *  next;
 }
 HBQT_BIND, * PHBQT_BIND;
@@ -196,12 +199,14 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
          {
             bind = ( PHBQT_BIND ) hb_xgrab( sizeof( HBQT_BIND ) );
             memset( bind, 0, sizeof( HBQT_BIND ) );
-            bind->qtObject      = qtObject;
-            bind->pDelFunc      = pDelFunc;
-            bind->iFlags        = iFlags;
-            bind->fDeleting     = false;
-            bind->pDestroyer    = new HBQDestroyer();
-            bind->pReceiverSlot = new HBQSlots();
+            bind->qtObject              = qtObject;
+            bind->pDelFunc              = pDelFunc;
+            bind->iFlags                = iFlags;
+            bind->fDeleting             = false;
+            bind->pDestroyer            = new HBQDestroyer();
+            bind->pReceiverSlots        = new HBQSlots();
+            bind->pReceiverEvents       = new HBQEvents();
+            bind->fEventFilterInstalled = false;
             hb_strncpy( bind->szClassName, szClassName, HB_SIZEOFARRAY( bind->szClassName ) - 1 );
             bind->next = hbqt_bindGetData()->s_hbqt_binds;
             hbqt_bindGetData()->s_hbqt_binds = bind;
@@ -275,12 +280,14 @@ PHB_ITEM hbqt_bindSetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
 
          bind = ( PHBQT_BIND ) hb_xgrab( sizeof( HBQT_BIND ) );
          memset( bind, 0, sizeof( HBQT_BIND ) );
-         bind->qtObject      = qtObject;
-         bind->pDelFunc      = pDelFunc;
-         bind->iFlags        = iFlags;
-         bind->fDeleting     = false;
-         bind->pDestroyer    = new HBQDestroyer();
-         bind->pReceiverSlot = new HBQSlots();
+         bind->qtObject              = qtObject;
+         bind->pDelFunc              = pDelFunc;
+         bind->iFlags                = iFlags;
+         bind->fDeleting             = false;
+         bind->pDestroyer            = new HBQDestroyer();
+         bind->pReceiverSlots        = new HBQSlots();
+         bind->pReceiverEvents       = new HBQEvents();
+         bind->fEventFilterInstalled = false;
          hb_strncpy( bind->szClassName, szClassName, HB_SIZEOFARRAY( bind->szClassName ) - 1 );
          bind->next = hbqt_bindGetData()->s_hbqt_binds;
          hbqt_bindGetData()->s_hbqt_binds = bind;
@@ -291,11 +298,8 @@ PHB_ITEM hbqt_bindSetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
          {
             if( pDelFunc != NULL )
                QObject::connect( ( QObject * ) qtObject, SIGNAL( destroyed(QObject*) ), bind->pDestroyer, SLOT( destroyer() ) );
+
             HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindSetHbObject( QObject %p )...%s", qtObject, ( ( QObject * ) qtObject )->metaObject()->className() ) );
-         }
-         else
-         {
-            HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindSetHbObject( %p )", qtObject ) );
          }
       }
    }
@@ -305,7 +309,7 @@ PHB_ITEM hbqt_bindSetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
    return pObject;
 }
 
-HBQSlots * hbqt_bindGetReceiverSlotByHbObject( PHB_ITEM pObject )
+HBQSlots * hbqt_bindGetReceiverSlotsByHbObject( PHB_ITEM pObject )
 {
    HBQSlots * pReceiverSlot = NULL;
    if( pObject != NULL )
@@ -319,7 +323,7 @@ HBQSlots * hbqt_bindGetReceiverSlotByHbObject( PHB_ITEM pObject )
       {
          if( bind->hbObject == hbObject )
          {
-            pReceiverSlot = bind->pReceiverSlot;
+            pReceiverSlot = bind->pReceiverSlots;
             HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetReceiverSlotByHbObject( %p )", bind->qtObject ) );
             break;
          }
@@ -328,6 +332,36 @@ HBQSlots * hbqt_bindGetReceiverSlotByHbObject( PHB_ITEM pObject )
       HBQT_BIND_UNLOCK
    }
    return pReceiverSlot;
+}
+
+HBQEvents * hbqt_bindGetReceiverEventsByHbObject( PHB_ITEM pObject )
+{
+   HBQEvents * pReceiverEvents = NULL;
+   if( pObject != NULL )
+   {
+      void * hbObject = hb_arrayId( pObject );
+      PHBQT_BIND bind;
+
+      HBQT_BIND_LOCK
+      bind = hbqt_bindGetData()->s_hbqt_binds;
+      while( bind )
+      {
+         if( bind->hbObject == hbObject )
+         {
+            pReceiverEvents = bind->pReceiverEvents;
+            if( ! bind->fEventFilterInstalled )
+            {
+               bind->fEventFilterInstalled = true;
+               bind->pReceiverEvents->hbInstallEventFilter( pObject );
+            }
+            HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetReceiverEventsByHbObject( %p )", bind->qtObject ) );
+            break;
+         }
+         bind = bind->next;
+      }
+      HBQT_BIND_UNLOCK
+   }
+   return pReceiverEvents;
 }
 
 PHB_ITEM hbqt_bindGetHbObjectByQtObject( void * qtObject )
@@ -435,9 +469,8 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
             HB_TRACE( HB_TR_DEBUG, ( "..............HARBOUR_DESTROY_BEGINS( %p, %i ).............. %s", bind->qtObject, bind->iFlags, bind->szClassName ) );
             * bind_ptr = bind->next;
 
-            delete bind->pDestroyer;
-            delete bind->pReceiverSlot;
-
+            delete bind->pReceiverSlots;
+            delete bind->pReceiverEvents;
             if( fDelQtObject )
             {
                if( bind->pDelFunc != NULL )
@@ -463,6 +496,8 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
                   }
                }
             }
+            delete bind->pDestroyer;
+
             hb_xfree( bind );
             break;
          }

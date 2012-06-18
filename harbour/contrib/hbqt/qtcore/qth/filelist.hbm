@@ -6,7 +6,6 @@
 -pflag=-qtmodule=qtcore
 -pflag=-qthdocdir=../doc/
 
-HBQEvents.qth
 HBQString.qth
 
 # QAbstractEventDispatcher.qth
