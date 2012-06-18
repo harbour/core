@@ -51,20 +51,22 @@ HARBOUR
 
       1.) Windows XP or upper system is recommended to build Harbour.
       2.) Make sure to have your C compiler of choice properly installed
-          (in PATH). Refer to your C compiler installation and setup
+          in PATH. Refer to your C compiler installation and setup
           instructions for details. It's recommended to make sure no tools
           in your PATH belonging to other C compilers are interfering with
           your setup. It's also highly discouraged to keep multiple copies
           of the same compiler, or different versions of the same compiler
           in PATH at the same time. For the list of supported compilers,
           look up the relevant section in this document.
-      3.) GNU Make 3.81 or upper is required. We recommend this link:
+      3.) GNU Make 3.81 or upper is required. A copy of this tool
+          is included in all Harbour packages, so you don't have to do
+          anything.
+          If you want to get it separately, you can find it here:
              http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma/download
-          Unpack it to your PATH or Harbour source root directory.
-          If you use MinGW compiler, you already have GNU Make.
-          You can also use included copy named win-make.exe instead.
+          Unpack it to your PATH or Harbour source root directory,
+          and run it as 'mingw32-make'.
 
-      > mingw32-make [install]
+      > win-make [install]
 
       To test it, type:
       > cd tests
@@ -1761,11 +1763,10 @@ HARBOUR
      Patches are accepted in 'svn diff' (or 'diff -u') format,
      created from root directory of the repository sandbox.
      Zip your patch file before attaching it. Use the extension '.zip'.
-     The size limit for e-mails sent to the development list is
-     40KB. If you need more, upload it to a site where we can
-     access it, or use the sf.net page to submit it.
      Always use the same coding/formatting style as you find in
      the files you're patching.
+   - In the rare case you need to send something large (> 100KB),
+     use this free service: http://dropcanvas.com
    - Given a good history of valuable contributions, you can get
      write access to the source repository.
    - Of course there is more into Harbour contribution than writing
