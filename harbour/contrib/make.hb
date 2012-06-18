@@ -27,11 +27,8 @@
  *
  */
 
-/* TODO (long term, low priority):
-     1. normalize path to hbpre/hbpost to save on cmdline
-        (after normalizer function has been moved to core)
-     2. Move lib output dir and workdirs inside contrib dirs.
-     3. Make home project detection more robust in stdalone mode.
+/* TODO:
+     - Make home project detection more robust in stdalone mode.
 
    NOTE:
      - 'install' is ignored in stdalone mode. It would be needed to

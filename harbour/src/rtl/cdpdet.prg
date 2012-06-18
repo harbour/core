@@ -68,8 +68,12 @@ FUNCTION hb_cdpTerm()
       cCP := __CPUnixToCPStd( cCP )
    #elif defined( __PLATFORM__DOS )
       /* TODO */
+      cCP := NIL
+      cLang := NIL
    #elif defined( __PLATFORM__OS2 )
       /* TODO */
+      cCP := NIL
+      cLang := NIL
    #endif
 
    IF ! Empty( cCP := __CPStdToHarbour( cCP, cLang ) )
@@ -94,8 +98,12 @@ FUNCTION hb_cdpOS()
       cCP := __CPUnixToCPStd( cCP )
    #elif defined( __PLATFORM__DOS )
       /* TODO */
+      cCP := NIL
+      cLang := NIL
    #elif defined( __PLATFORM__OS2 )
       /* TODO */
+      cCP := NIL
+      cLang := NIL
    #endif
 
    IF ! Empty( cCP := __CPStdToHarbour( cCP, cLang ) )
