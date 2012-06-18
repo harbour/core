@@ -1244,6 +1244,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL lAcceptIFlag := .F.
    LOCAL lHarbourInfo := .F.
    LOCAL lDumpInfo := .F.
+   LOCAL lDumpInfoNested := .F.
 
    LOCAL nHarbourPPO := 0
    LOCAL cHarbourOutputExt
@@ -1338,7 +1339,10 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            cParamL == "--hbdirdyn" .OR. ;
            cParamL == "--hbdirlib" .OR. ;
            cParamL == "--hbdirinc" .OR. ;
-           cParamL == "--hbinfo"               ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
+           Left( cParamL, Len( "--hbinfo" ) ) == "--hbinfo"
+
+         hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
+
       CASE cParamL             == "-quiet-"    ; hbmk[ _HBMK_lQuiet ] := .F.
       CASE Left( cParamL, 6 )  == "-comp="     ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 7 ), _TARG_COMP )
       CASE Left( cParamL, 10 ) == "-compiler=" ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 11 ), _TARG_COMP )
@@ -2497,9 +2501,10 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          OutStd( hbmk[ _HBMK_cHB_INSTALL_INC ] )
 
-      CASE cParamL == "--hbinfo"
+      CASE Left( cParamL, Len( "--hbinfo" ) ) == "--hbinfo"
 
          lDumpInfo := .T.
+         lDumpInfoNested := ( SubStr( cParamL, Len( "--hbinfo" ) + 1 ) == "=nested" )
 
          hbmk[ _HBMK_lQuiet ] := .T.
          hbmk[ _HBMK_lInfo ] := .F.
@@ -5340,6 +5345,10 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    IF lDumpInfo
 
+      IF ! lDumpInfoNested .AND. nLevel > 1
+         RETURN _ERRLEV_OK
+      ENDIF
+
       tmp := { "platform"   => hbmk[ _HBMK_cPLAT ],;
                "compiler"   => hbmk[ _HBMK_cCOMP ],;
                "cpu"        => hbmk[ _HBMK_cCPU ],;
@@ -5359,7 +5368,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          tmp[ "hbctree" ] += Replicate( Chr( 9 ), tmp1[ 2 ] ) + PathSepToForward( hb_PathNormalize( tmp1[ 1 ] ) ) + Chr( 10 )
       NEXT
 
-      OutStd( hb_jsonEncode( tmp ) )
+      OutStd( hb_jsonEncode( tmp ) + Chr( 10 ) )
 
       RETURN _ERRLEV_OK
    ENDIF
@@ -13755,7 +13764,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "--hbdirdyn"         , I_( "output Harbour dynamic library directory" ) },;
       { "--hbdirlib"         , I_( "output Harbour static library directory" ) },;
       { "--hbdirinc"         , I_( "output Harbour header directory" ) },;
-      { "--hbinfo"           , I_( "output Harbour build information. Output is in JSON format. The included paths always contain forward slashes." ) },;
+      { "--hbinfo[=nested]"  , I_( "output Harbour build information. Output is in JSON format. The included paths always contain forward slashes. Each JSON block is followed by an 0x0A byte." ) },;
       NIL,;
       { "-plat[form]=<plat>" , I_( "select target platform." ) },;
       { "-comp[iler]=<comp>" , I_( "select C compiler.\nSpecial value:\n - bld: use original build settings (default on *nix)" ) },;

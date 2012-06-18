@@ -9,8 +9,9 @@
 
 # Common settings for all hbqt subcomponents (static mode)
 
--stop{!HB_QT_BUILD_STATIC|!allwin}
-
 hbqt_common.hbm
 
 -cflag=-DQT_NODLL
+
+# moved to the end to make --hbinfo=nested' return complete information
+-stop{!HB_QT_BUILD_STATIC|!allwin}
