@@ -326,6 +326,8 @@
 
 /* extended dbFieldInfo() actions */
 #define DBS_ISNULL              101
+#define DBS_COUNTER             102
+#define DBS_STEP                103
 #define DBS_BLOB_GET            201  /* This is internal definition */
 #define DBS_BLOB_LEN            202
 #define DBS_BLOB_OFFSET         203
