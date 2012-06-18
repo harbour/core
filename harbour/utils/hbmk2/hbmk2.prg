@@ -1053,7 +1053,9 @@ STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk, l_cHB_INSTALL_PREFIX )
    AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], hbmk[ _HBMK_cHB_INSTALL_LIB ] )
    /* Locally hosted 3rd party binary libraries */
    AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], hbmk[ _HBMK_cHB_INSTALL_LI3 ] )
-   IF ! Empty( hbmk[ _HBMK_cHB_INSTALL_DYN ] ) .AND. !( hbmk[ _HBMK_cHB_INSTALL_DYN ] == hbmk[ _HBMK_cHB_INSTALL_LIB ] )
+   IF ! Empty( hbmk[ _HBMK_cHB_INSTALL_DYN ] ) .AND. ;
+      !( hbmk[ _HBMK_cHB_INSTALL_DYN ] == hbmk[ _HBMK_cHB_INSTALL_LIB ] ) .AND. ;
+      ! HBMK_ISPLAT( "win|wce|os2|dos|cygwin" )
       AAddNotEmpty( hbmk[ _HBMK_aLIBPATH ], hbmk[ _HBMK_cHB_INSTALL_DYN ] )
    ENDIF
 
@@ -2245,9 +2247,11 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          /* Simply ignore. They were already processed in the first pass. */
 
       /* -env options used inside makefiles */
-      CASE Left( cParamL, 5 )  == "-env:" .AND. ! Empty( aParam[ _PAR_cFileName ] )
+      CASE Left( cParamL, 5 )  == "-env:"
 
-         ProcEnvOption( SubStr( cParam, 6 ) )
+         IF ! Empty( aParam[ _PAR_cFileName ] )
+            ProcEnvOption( SubStr( cParam, 6 ) )
+         ENDIF
 
       CASE cParamL == "-quiet"           ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
       CASE cParamL == "-quiet-"
