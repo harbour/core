@@ -203,7 +203,7 @@ METHOD Auth( cUser, cPass ) CLASS tIPClientSMTP
 
 METHOD AuthPlain( cUser, cPass ) CLASS tIPClientSMTP
 
-   ::InetSendall( ::SocketCon, "AUTH PLAIN" + hb_base64Encode( Chr( 0 ) + cUser + Chr( 0 ) + cPass ) + ::cCRLF )
+   ::InetSendall( ::SocketCon, "AUTH PLAIN" + hb_base64Encode( hb_BChar( 0 ) + cUser + hb_BChar( 0 ) + cPass ) + ::cCRLF )
 
    RETURN ::isAuth := ::GetOk()
 

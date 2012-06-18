@@ -696,10 +696,10 @@ STATIC FUNCTION WordEncodeQ( cData, cCharset )
 
    FOR nPos := 1 TO hb_BLen( cData )
       c := hb_BSubStr( cData, nPos, 1 )
-      IF Asc( c ) > 126 .OR. ;
+      IF hb_BCode( c ) > 126 .OR. ;
          c $ '=?!"#$@[\]^`{|}~_' .OR. ;
-         Asc( c ) <= 32
-         cString += "=" + hb_NumToHex( Asc( c ), 2 )
+         hb_BCode( c ) <= 32
+         cString += "=" + hb_NumToHex( hb_BCode( c ), 2 )
          nLineLen += 3
          lToEncode := .T.
       ELSE
