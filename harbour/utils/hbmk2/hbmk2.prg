@@ -2902,7 +2902,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          /* Silently ignore these. These options can be used to store options
             processed by other tools allowing them to keep additional information
-            in hbmk2 script files. */
+            in .hb? script files. */
 
       CASE Left( cParamL, Len( "-workdir=" ) ) == "-workdir="
 
@@ -5852,7 +5852,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             IF !( hbmk[ _HBMK_lCreateDyn ] .AND. ! hbmk[ _HBMK_lDynVM ] )
                l_aLIBHB := AClone( l_aLIBSHAREDPOST )
                /* NOTE: Make sure to add these static libs only if they can be found.
-                        This will ensure that hbmk2 can be used to build shared mode binaries
+                        This will ensure that we can build shared mode binaries
                         even when static libs are not installed (typically on *nix systems).
                         [vszakats] */
                FOR EACH tmp IN ArrayAJoin( { aLIB_BASE_CPLR,;
@@ -5917,7 +5917,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                 building 64-bit target on a 32-bit Ubuntu 10.10
                 system. Moral of the story: we should decide about
                 gpm using dynamic information instead of using
-                hbmk2 build-time default HB_HAS_GPM value.
+                build-time default HB_HAS_GPM value.
                 [vszakats] */
       #if defined( HB_HAS_GPM )
          IF hbmk[ _HBMK_cPLAT ] == "linux"
@@ -7148,7 +7148,7 @@ STATIC PROCEDURE vxworks_env_init( hbmk )
 
    #define _VX_DIAB_ENV         "rtp"
 
-   /* Conversion table between hbmk2 CPU and vxworks values required to target that CPU */
+   /* Conversion table between ours and vxworks CPU values required to target that CPU */
    LOCAL aTable := {;
       "x86"  => { "pentium", "X86LH"  , "_VX_SIMPENTIUM", "simpentium/SIMPENTIUM" },;
       "arm"  => { "arm"    , "ARMV7LS", "_VX_ARMARCH7"  , "arm/ARMARCH7"          },;
@@ -8586,7 +8586,7 @@ STATIC FUNCTION LibExists( hbmk, cDir, cLib, cLibPrefix, cLibExt )
    DO CASE
    CASE HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm" ) .AND. HBMK_ISPLAT( "win|wce|cygwin" )
       /* NOTE: ld/gcc option -dll-search-prefix isn't taken into account here,
-               So, '<prefix>xxx.dll' format libs won't be found by hbmk2. */
+               So, '<prefix>xxx.dll' format libs won't be found here in any case. */
       DO CASE
       CASE                                       hb_FileExists( tmp := cDir + "lib" + hb_FNameExtSet( cLib, ".dll.a" ) ) ; RETURN tmp
       CASE                                       hb_FileExists( tmp := cDir +         hb_FNameExtSet( cLib, ".dll.a" ) ) ; RETURN tmp
@@ -12295,14 +12295,14 @@ STATIC PROCEDURE __hbshell( cFile, ... )
                   - one dynamic lib belongs to one .hbc file (true for dynamic builds in contrib)
                   - dynamic libs will reference and automatically load all their dependencies
                     (true on all systems so far)
-                  - hbrun/hbmk2 is located in well known place inside the Harbour dir tree.
+                  - this tool is located in well known place inside the Harbour dir tree.
                   - contribs/addons are located in well-known place inside the Harbour dir tree
                   - 3rd party addons can be loaded, too if they are installed into the Harbour dir tree
                     and built the same way as contribs.
                   - dynamic libs are installed into bin dir.
                     (this is not true on *nix, there they are in lib dir, and it is a problem
                     in configurations where lib dir contains <comp> component, so to solve it
-                    hbmk2 uses the same <comp> values as was used to build itself.) */
+                    we use the same <comp> values as was used to build itself.) */
           */
 
          __hbshell_LoadExtFromSource( aExtension, cFile )
