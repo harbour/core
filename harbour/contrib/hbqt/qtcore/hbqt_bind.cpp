@@ -85,6 +85,10 @@ typedef struct
    PHBQT_BIND s_hbqt_binds;
 } HB_BIND_DATA, * PHB_BIND_DATA;
 
+#define __HBQT_WITH_MT_SUPPORT__NO
+
+#ifdef __HBQT_WITH_MT_SUPPORT__
+
 static void hbqt_bindInit( void * cargo )
 {
    HB_TRACE( HB_TR_DEBUG, ( "....................................hbqt_bindInit............0............................." ) );
@@ -109,14 +113,24 @@ static void hbqt_bindRelease( void * cargo )
 
 static HB_TSD_NEW( s_bindData, sizeof( HB_BIND_DATA ), hbqt_bindInit, hbqt_bindRelease );
 
-#define hbqt_bindGetData()       ( ( PHB_BIND_DATA ) hb_stackGetTSD( &s_bindData ) )
+#define hbqt_bindGetData()       ( ( ( PHB_BIND_DATA ) hb_stackGetTSD( &s_bindData ) )->s_hbqt_binds )
 
+#else
+
+static PHB_BIND_DATA s_bindData = NULL;
+#define hbqt_bindGetData()       ( ( ( PHB_BIND_DATA ) &s_bindData )->s_hbqt_binds )
+
+#endif
 
 /* locks for MT mode, now just dummy definitions which checks
  * if all locks are correctly released.
+ *
+ * #define HBQT_BIND_LOCK        do {
+ * #define HBQT_BIND_UNLOCK      } while( 0 );
  */
-#define HBQT_BIND_LOCK        do {
-#define HBQT_BIND_UNLOCK      } while( 0 );
+static HB_CRITICAL_NEW( s_qtMtx );
+#define HBQT_BIND_LOCK     do { hb_threadEnterCriticalSection( &s_qtMtx );
+#define HBQT_BIND_UNLOCK   hb_threadLeaveCriticalSection( &s_qtMtx ); } while( 0 );
 
 void hbqt_bindDelSlots( PHB_ITEM pSenderObject );
 void hbqt_bindDelEvents( PHB_ITEM pSenderObject );
@@ -130,9 +144,11 @@ static PHB_DYNS s_dynsym_SETSLOTS  = NULL;
 static PHB_DYNS s_dynsym___EVENTS  = NULL;
 static PHB_DYNS s_dynsym_SETEVENTS = NULL;
 
-static void hbqt_bind_init( void* cargo )
+static void hbqt_bind_init( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
+
+   hbqt_bindGetData() = NULL;
 
    s_dynsym_NEW       = hb_dynsymGetCase( "NEW" );
    s_dynsym___CHILDS  = hb_dynsymGetCase( "__CHILDS" );
@@ -142,7 +158,7 @@ static void hbqt_bind_init( void* cargo )
    s_dynsym_SETEVENTS = hb_dynsymGetCase( "SETEVENTS" );
 }
 
-static void hbqt_bind_exit( void* cargo )
+static void hbqt_bind_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
 }
@@ -167,7 +183,7 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
    PHBQT_BIND bind;
 
    HBQT_BIND_LOCK
-   bind = hbqt_bindGetData()->s_hbqt_binds;
+   bind = hbqt_bindGetData();
    while( bind )
    {
       if( bind->qtObject == qtObject )
@@ -208,8 +224,8 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
             bind->pReceiverEvents       = new HBQEvents();
             bind->fEventFilterInstalled = false;
             hb_strncpy( bind->szClassName, szClassName, HB_SIZEOFARRAY( bind->szClassName ) - 1 );
-            bind->next = hbqt_bindGetData()->s_hbqt_binds;
-            hbqt_bindGetData()->s_hbqt_binds = bind;
+            bind->next = hbqt_bindGetData();
+            hbqt_bindGetData() = bind;
          }
 
          bind->hbObject = hb_arrayId( pObject );
@@ -262,7 +278,7 @@ PHB_ITEM hbqt_bindSetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
    PHBQT_BIND bind;
 
    HBQT_BIND_LOCK
-   bind = hbqt_bindGetData()->s_hbqt_binds;;
+   bind = hbqt_bindGetData();
 
    pObject = hb_param( 0, HB_IT_OBJECT );
    if( 1 == 1 ) /* QUESTION: What is this? */
@@ -289,8 +305,8 @@ PHB_ITEM hbqt_bindSetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
          bind->pReceiverEvents       = new HBQEvents();
          bind->fEventFilterInstalled = false;
          hb_strncpy( bind->szClassName, szClassName, HB_SIZEOFARRAY( bind->szClassName ) - 1 );
-         bind->next = hbqt_bindGetData()->s_hbqt_binds;
-         hbqt_bindGetData()->s_hbqt_binds = bind;
+         bind->next = hbqt_bindGetData();
+         hbqt_bindGetData() = bind;
 
          bind->hbObject = hb_arrayId( pObject );
 
@@ -318,7 +334,7 @@ HBQSlots * hbqt_bindGetReceiverSlotsByHbObject( PHB_ITEM pObject )
       PHBQT_BIND bind;
 
       HBQT_BIND_LOCK
-      bind = hbqt_bindGetData()->s_hbqt_binds;
+      bind = hbqt_bindGetData();
       while( bind )
       {
          if( bind->hbObject == hbObject )
@@ -343,7 +359,7 @@ HBQEvents * hbqt_bindGetReceiverEventsByHbObject( PHB_ITEM pObject )
       PHBQT_BIND bind;
 
       HBQT_BIND_LOCK
-      bind = hbqt_bindGetData()->s_hbqt_binds;
+      bind = hbqt_bindGetData();
       while( bind )
       {
          if( bind->hbObject == hbObject )
@@ -373,7 +389,7 @@ PHB_ITEM hbqt_bindGetHbObjectByQtObject( void * qtObject )
       PHBQT_BIND bind;
 
       HBQT_BIND_LOCK
-      bind = hbqt_bindGetData()->s_hbqt_binds;
+      bind = hbqt_bindGetData();
       while( bind )
       {
          if( bind->qtObject == qtObject )
@@ -393,7 +409,7 @@ int hbqt_bindIsHbObject( PHB_ITEM pObject )
    PHBQT_BIND bind;
 
    HBQT_BIND_LOCK
-   bind = hbqt_bindGetData()->s_hbqt_binds;
+   bind = hbqt_bindGetData();
    while( bind )
    {
       HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindIsHbObject( %p )", bind->qtObject ) );
@@ -421,7 +437,7 @@ void * hbqt_bindGetQtObject( PHB_ITEM pObject )
       PHBQT_BIND bind;
 
       HBQT_BIND_LOCK
-      bind = hbqt_bindGetData()->s_hbqt_binds;
+      bind = hbqt_bindGetData();
       while( bind )
       {
          HB_TRACE( HB_TR_DEBUG, ( "hbqt_bindGetQtObject( %p )", bind->qtObject ) );
@@ -447,7 +463,7 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
       PHBQT_BIND * bind_ptr, bind;
 
       HBQT_BIND_LOCK
-      bind_ptr = &( hbqt_bindGetData()->s_hbqt_binds );
+      bind_ptr = &( hbqt_bindGetData() );
       while( ( bind = * bind_ptr ) != NULL )
       {
          if( bind->hbObject == hbObject )
@@ -515,7 +531,7 @@ void hbqt_bindDestroyQtObject( void * qtObject )
       PHBQT_BIND * bind_ptr, bind;
 
       HBQT_BIND_LOCK
-      bind_ptr = &( hbqt_bindGetData()->s_hbqt_binds );
+      bind_ptr = &( hbqt_bindGetData() );
       while( ( bind = * bind_ptr ) != NULL )
       {
          if( bind->qtObject == qtObject )
@@ -542,7 +558,7 @@ void hbqt_bindSetOwner( void * qtObject, HB_BOOL fOwner )
    PHBQT_BIND bind;
 
    HBQT_BIND_LOCK
-   bind = hbqt_bindGetData()->s_hbqt_binds;
+   bind = hbqt_bindGetData();
    while( bind )
    {
       if( bind->qtObject == qtObject )
@@ -866,7 +882,7 @@ int __hbqt_bindItemsInGlobalList( void )
    PHBQT_BIND bind;
 
    HBQT_BIND_LOCK
-   bind = hbqt_bindGetData()->s_hbqt_binds;
+   bind = hbqt_bindGetData();
    while( bind )
    {
       i++;
