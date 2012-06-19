@@ -83,7 +83,7 @@ PROCEDURE main()
    LOCAL cSQLTEXT
    LOCAL pDb, cb
 
-   IF Empty( pDb := PrepareDB(cFile) )
+   IF Empty( pDb := PrepareDB( cFile ) )
       ErrorLevel( 1 )
       RETURN
    ENDIF
@@ -92,25 +92,25 @@ PROCEDURE main()
 
    QOut( cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40" )
    cb := @CallBack() // "CallBack"
-   Qout( cErrorMsg(sqlite3_exec(pDb, cSQLTEXT, cb)) )
+   QOut( cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) ) )
 
    sqlite3_sleep( 3000 )
    // Authorizer2
-   Qout( cErrorMsg(sqlite3_set_authorizer(pDb, @Authorizer2() /*"Authorizer2"*/)) )
+   QOut( cErrorMsg( sqlite3_set_authorizer( pDb, @Authorizer2() /*"Authorizer2"*/ ) ) )
 
    QOut( cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40" )
-   Qout( cErrorMsg(sqlite3_exec(pDb, cSQLTEXT, cb)) )
+   QOut( cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) ) )
 
    sqlite3_sleep( 3000 )
    // Authorizer3
-   Qout( cErrorMsg(sqlite3_set_authorizer(pDb, @Authorizer3() /*"Authorizer3"*/)) )
+   QOut( cErrorMsg( sqlite3_set_authorizer( pDb, @Authorizer3() /*"Authorizer3"*/ ) ) )
 
    QOut( cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40" )
-   Qout( cErrorMsg(sqlite3_exec(pDb, cSQLTEXT, cb), .F. ) )
+   QOut( cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ), .F. ) )
 
    sqlite3_sleep( 3000 )
    //
-   pDb := Nil   // close database
+   pDb := NIL   // close database
 
    RETURN
 
@@ -201,8 +201,8 @@ STATIC FUNCTION cErrorMsg( nError, lShortMsg )
       IF nError == 0
          cErrorMsg := "SQLITE_OK"
       ELSE
-         nIndex    := AScan( aErrorCodes, {|x| x[1] == nError } )
-         cErrorMsg := iif( nIndex > 0, aErrorCodes[ nIndex ][ iif(lShortMsg,2,3) ], cErrorMsg )
+         nIndex    := AScan( aErrorCodes, {| x | x[ 1 ] == nError } )
+         cErrorMsg := iif( nIndex > 0, aErrorCodes[ nIndex ][ iif( lShortMsg, 2, 3 ) ], cErrorMsg )
       ENDIF
    ENDIF
 
@@ -250,7 +250,7 @@ STATIC FUNCTION PrepareDB( cFile )
    FOR EACH enum IN hPerson
       sqlite3_reset( pStmt )
       sqlite3_bind_text( pStmt, 1, enum:__enumKey() )
-      sqlite3_bind_int( pStmt,  2, enum:__enumValue() )
+      sqlite3_bind_int( pStmt, 2, enum:__enumValue() )
       sqlite3_bind_text( pStmt, 3, hb_md5( enum:__enumKey() ) )
       sqlite3_step( pStmt )
    NEXT

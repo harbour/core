@@ -54,8 +54,8 @@
 
 #define TABLE_SQL "CREATE TABLE image( id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT(50), image BLOB )"
 
-PROCEDURE main()
-   LOCAL lCreateIfNotExist := .t.
+PROCEDURE Main()
+   LOCAL lCreateIfNotExist := .T.
    LOCAL db := sqlite3_open( "test.s3db", lCreateIfNotExist )
    LOCAL stmt
    LOCAL buff, blob
@@ -76,7 +76,7 @@ PROCEDURE main()
          IF sqlite3_bind_text( stmt, 1, "pngtest.png" ) == SQLITE_OK .AND. ;
             sqlite3_bind_blob( stmt, 2, @buff ) == SQLITE_OK
             IF sqlite3_step( stmt ) == SQLITE_DONE
-               ?"Save pngtest.png into BLOB"
+               ? "Save pngtest.png into BLOB"
                ? "INSERT INTO image( title, image ) VALUES( 'pngtest.png', 'pngtest.png' ) - Done"
             ENDIF
          ENDIF
@@ -92,7 +92,7 @@ PROCEDURE main()
       sqlite3_sleep( 3000 )
 
       blob := sqlite3_blob_open( db, NIL, "image", "image", sqlite3_last_insert_rowid( db ), 0 /* 0 - RO; 1- RW */ )
-      IF !Empty( blob )
+      IF ! Empty( blob )
          ? "Open BLOB image - Ok"
 
          buff := sqlite3_blob_read( blob )
@@ -101,7 +101,7 @@ PROCEDURE main()
 
          ? "The size in bytes of the blob - ", sqlite3_blob_bytes( blob )
 
-         IF ( sqlite3_buff_to_file( "pngtest1.png", @buff ) == SQLITE_OK )
+         IF sqlite3_buff_to_file( "pngtest1.png", @buff ) == SQLITE_OK
             ? "Save BLOB into pngtest1.png - Done"
          ENDIF
 
@@ -112,14 +112,14 @@ PROCEDURE main()
       ENDIF
       sqlite3_sleep( 3000 )
 
-      ?""
-      ?"Save BLOB using sqlite3_column_blob()"
+      ? ""
+      ? "Save BLOB using sqlite3_column_blob()"
       stmt := sqlite3_prepare( db, "SELECT image FROM image WHERE id == ?5 ")
-      IF !Empty( stmt )
+      IF ! Empty( stmt )
          IF sqlite3_bind_int64( stmt, 5, sqlite3_last_insert_rowid( db ) ) == SQLITE_OK
             IF sqlite3_step( stmt ) == SQLITE_ROW
                buff := sqlite3_column_blob( stmt, 1 )
-               IF ( sqlite3_buff_to_file( "pngtest2.png", @buff ) == SQLITE_OK )
+               IF sqlite3_buff_to_file( "pngtest2.png", @buff ) == SQLITE_OK
                   ? "Save BLOB into pngtest2.png - Done"
                ENDIF
                buff := NIL
