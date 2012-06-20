@@ -13577,7 +13577,7 @@ STATIC PROCEDURE ShowHeader( hbmk )
    LOCAL cTrsTextI
 
    OutStd( "Harbour Make (" + _SELF_NAME_ + ") " + HBRawVersion() + _OUT_EOL +;
-           "Copyright (c) 1999-2012, Viktor Szakats" + _OUT_EOL +;
+           "Copyright (c) 1999-2012, Viktor Szakáts" + _OUT_EOL +;
            "http://harbour-project.org/" + _OUT_EOL )
 
    IF !( hbmk[ _HBMK_cUILNG ] == "en" ) .AND. ;
