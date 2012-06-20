@@ -151,6 +151,11 @@ HB_FUNC( HB_ISHASHKEY )
    hb_retl( ( hb_parinfo( 1 ) & HB_IT_HASHKEY ) != 0 );
 }
 
+HB_FUNC( HB_ISEVALITEM )
+{
+   hb_retl( ( hb_parinfo( 1 ) & HB_IT_EVALITEM ) != 0 );
+}
+
 HB_FUNC( HB_ISNULL )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
