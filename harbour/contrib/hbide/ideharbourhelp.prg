@@ -410,10 +410,10 @@ METHOD IdeHarbourHelp:setImages()
 
    oUI:q_buttonInstall :setIcon( QIcon( hbide_image( "dc_folder"  ) ) )
 
-   //oUI:q_buttonArgPlus:setIcon( hbide_image( "dc_plus" ) )
-   //oUI:q_buttonArgMinus:setIcon( hbide_image( "dc_delete" ) )
-   //oUI:q_buttonArgUp:setIcon( hbide_image( "dc_up" ) )
-   //oUI:q_buttonArgDown:setIcon( hbide_image( "dc_down" ) )
+   //oUI:q_buttonArgPlus:setIcon( QIcon( hbide_image( "dc_plus" ) ) )
+   //oUI:q_buttonArgMinus:setIcon( QIcon( QIcon( hbide_image( "dc_delete" ) ) )
+   //oUI:q_buttonArgUp:setIcon( QIcon( hbide_image( "dc_up" ) ) )
+   //oUI:q_buttonArgDown:setIcon( QIcon( hbide_image( "dc_down" ) ) )
 
    RETURN Self
 
@@ -1423,7 +1423,7 @@ METHOD IdeHarbourHelp:exportAsPdf()
 METHOD IdeHarbourHelp:exportAsPdfAll()
    LOCAL cPdf, qPrinter, cExt, cPath, cFile, aItems
    LOCAL qApp := QApplication()
-   
+
    IF empty( ::aNodes )
       RETURN Self
    ENDIF

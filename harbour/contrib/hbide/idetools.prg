@@ -323,8 +323,8 @@ METHOD IdeToolsManager:execEvent( cMode, p )
    HB_SYMBOL_UNUSED( p )
 
    IF ::lQuitting
-      RETURN Self 
-   ENDIF 
+      RETURN Self
+   ENDIF
 
    SWITCH cMode
    CASE "checkToolActive_stateChanged"
@@ -342,7 +342,7 @@ METHOD IdeToolsManager:execEvent( cMode, p )
       cFileName := hbide_fetchAFile( ::oDlg, "Select an PNG image", { { "Image Files", "*.png" } },/* cFolder */ , /*cDftSuffix*/ )
       IF !empty( cFileName )
          ::oUI:q_editImage:setText( hbide_pathNormalized( cFileName, .f. ) )
-         ::oUI:q_buttonSetImage:setIcon( hbide_pathToOsPath( cFileName ) )
+         ::oUI:q_buttonSetImage:setIcon( QIcon( hbide_pathToOsPath( cFileName ) ) )
       ENDIF
       EXIT
    CASE "buttonUserToolbarUpd_clicked"
@@ -464,7 +464,7 @@ METHOD IdeToolsManager:buildUserToolbars()
             qTBtn := QToolButton()
             qTBtn:setText( b_[ 1 ] )
             qTBtn:setTooltip( b_[ 10 ] )
-            qTBtn:setIcon( hbide_pathToOSPath( b_[ 9 ] ) )
+            qTBtn:setIcon( QIcon( hbide_pathToOSPath( b_[ 9 ] ) ) )
             qTBtn:setMaximumWidth( 20 )
             qTBtn:setMaximumHeight( 20 )
             qTBtn:connect( "clicked()", hbide_toolBlock( Self, b_ ) )
@@ -508,7 +508,7 @@ METHOD IdeToolsManager:populateButtonsTable( nIndex )
             nRow := b_:__enumIndex()-1
 
             q0 := QTableWidgetItem()
-            q0:setIcon( hbide_pathToOSPath( b_[ 9 ] ) )
+            q0:setIcon( QIcon( hbide_pathToOSPath( b_[ 9 ] ) ) )
             q0:setTooltip( b_[ 10 ] )
             oTbl:setItem( nRow, 0, q0 )
 
@@ -567,8 +567,8 @@ METHOD IdeToolsManager:ini2controls( nIndex )
       ::oUI:q_comboToolbarAsgnd:setCurrentIndex( iif( empty( ::aTools[ nIndex, 7 ] ), -1, val( ::aTools[ nIndex, 7 ] ) ) )
       ::oUI:q_checkToolActive  :setChecked( ::aTools[ nIndex, 8 ] == "YES" )
       ::oUI:q_editImage        :setText( hbide_pathNormalized( ::aTools[ nIndex, 9 ], .f. ) )
-      ::oUI:q_buttonSetImage   :setIcon( iif( empty( ::aTools[ nIndex, 9 ] ), hbide_image( "open" ), ;
-                                                               hbide_pathToOsPath( ::aTools[ nIndex, 9 ] ) ) )
+      ::oUI:q_buttonSetImage   :setIcon( QIcon( iif( empty( ::aTools[ nIndex, 9 ] ), hbide_image( "open" ), ;
+                                                               hbide_pathToOsPath( ::aTools[ nIndex, 9 ] ) ) ) )
       ::oUI:q_editTooltip      :setText( ::aTools[ nIndex, 10 ] )
       ::oUI:q_comboPlugin      :setCurrentIndex( ascan( ::aPlugins, {|e| ::aTools[ nIndex, 11 ] == e } ) - 1 )
       ::oUI:q_checkPlugInit    :setChecked( ::aTools[ nIndex, 12 ] == "YES" )
@@ -584,7 +584,7 @@ METHOD IdeToolsManager:ini2controls( nIndex )
       ::oUI:q_comboToolbarAsgnd:setCurrentIndex( -1 )
       ::oUI:q_checkToolActive  :setChecked( .t. )
       ::oUI:q_editImage        :setText( "" )
-      ::oUI:q_buttonSetImage   :setIcon( hbide_image( "open" ) )
+      ::oUI:q_buttonSetImage   :setIcon( QIcon( hbide_image( "open" ) ) )
       ::oUI:q_editTooltip      :setText( "" )
       ::oUI:q_comboPlugin      :setCurrentIndex( -1 )
       ::oUI:q_checkPlugInit    :setChecked( .f. )

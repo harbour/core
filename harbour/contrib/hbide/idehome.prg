@@ -221,8 +221,8 @@ METHOD IdeHome:execEvent( nMode, p )
    LOCAL cAct, cText, cExt
 
    IF ::lQuitting
-      RETURN Self 
-   ENDIF 
+      RETURN Self
+   ENDIF
 
    DO CASE
    CASE nMode == "tabWidget_currentChanged"
@@ -289,7 +289,7 @@ METHOD IdeHome:print()
    IF empty( ::qPrnDlg )
       ::qPrnDlg := QPrintPreviewDialog()
       ::qPrnDlg:setWindowTitle( "Welcome::Projects" )
-      ::qPrnDlg:setWindowIcon( hbide_image( "hbide" ) )
+      ::qPrnDlg:setWindowIcon( QIcon( hbide_image( "hbide" ) ) )
       ::qPrnDlg:connect( "paintRequested(QPrinter*)", {|p| ::paintRequested( p ) } )
    ENDIF
 

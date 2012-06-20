@@ -142,7 +142,7 @@ CLASS IdeBrowseManager INHERIT IdeObject
    DATA   lDeletedOn                              INIT  .t.
    DATA   qComboAction
    DATA   sp0,sp1,sp2,sp3
-   
+
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD show()
@@ -404,7 +404,7 @@ METHOD IdeBrowseManager:setStyleSheet( nMode )
    ::qToolbar:setStyleSheet( GetStyleSheet( "QToolBar", nMode ) )
    ::qToolbarL:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
    ::qStatus:setStyleSheet( GetStyleSheet( "QStatusBar", nMode ) )
-#if 0   
+#if 0
    ::qPanelsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
    ::qIndexMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
    ::qTablesMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
@@ -530,7 +530,7 @@ IF HB_ISOBJECT( ::qPanelsMenu )
    qAct:setIcon( QIcon( hbide_image( "panel_7" ) ) )
    qAct:connect( "triggered(bool)", {|| ::setPanel( cPanel ) } )
    aadd( ::aPanelsAct, qAct )
-ENDIF 
+ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -561,8 +561,8 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
    HB_SYMBOL_UNUSED( p1 )
 
    IF ::lQuitting
-      RETURN Self 
-   ENDIF 
+      RETURN Self
+   ENDIF
 
    SWITCH cEvent
    CASE "dockDbu_dragEnterEvent"
@@ -981,7 +981,7 @@ METHOD IdeBrowseManager:addArray( aData, aAttr )
 METHOD IdeBrowseManager:buildToolbar()
    LOCAL nW := 25
    LOCAL qTBar
-   
+
    ::sp0 := QLabel(); ::sp0:setMinimumWidth( nW )
    ::sp1 := QLabel(); ::sp1:setMinimumWidth( nW )
    ::sp2 := QLabel(); ::sp2:setMinimumWidth( nW )
@@ -993,7 +993,7 @@ METHOD IdeBrowseManager:buildToolbar()
    qTBar:create()
 
    ::qToolbar := qTBar
-      
+
    ::buildPanelsButton()
    qTBar:addWidget( , ::sp0 )
    ::buildRddsCombo()
@@ -1011,7 +1011,7 @@ METHOD IdeBrowseManager:buildToolbar()
    qTBar:addToolButton( "Close"    , "Close current table", app_image( "dc_delete" ), {|| ::execEvent( "buttonClose_clicked"         ) }, .f.  )
    qTBar:addWidget( , ::sp2 )
    ::buildTablesButton()
-   
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1023,40 +1023,40 @@ METHOD IdeBrowseManager:buildLeftToolbar()
    qTBar:size := QSize( 16,16 )
    qTBar:orientation := Qt_Vertical
    qTBar:create()
-   
+
    ::qToolbarL := qTBar
-   
+
    qTBar:setMaximumWidth( 24 )
    qTBar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
 
-   qTBar:addToolButton( "view_tabbed"     , "Toggle tabbed view"         , app_image( "view_tabbed"       ), {|| ::execEvent( "buttonViewTabbed_clicked"      ) }, .f. )  
-   qTBar:addSeparator()                                                                                   
-   qTBar:addToolButton( "view_organized"  , "View as arranged"           , app_image( "view_organized"    ), {|| ::execEvent( "buttonViewOrganized_clicked"   ) }, .f. )  
-   qTBar:addToolButton( "save3"           , "Save layout"                , app_image( "save3"             ), {|| ::execEvent( "buttonSaveLayout_clicked"      ) }, .f. )  
-   qTBar:addSeparator()                                                                                   
-   qTBar:addToolButton( "view_cascaded"   , "View as cascaded"           , app_image( "view_cascaded"     ), {|| ::execEvent( "buttonViewCascaded_clicked"    ) }, .f. )  
-   qTBar:addToolButton( "view_tiled"      , "View as tiled"              , app_image( "view_tiled"        ), {|| ::execEvent( "buttonViewTiled_clicked"       ) }, .f. )  
-   qTBar:addToolButton( "fullscreen"      , "View Maximized"             , app_image( "fullscreen"        ), {|| ::execEvent( "buttonViewMaximized_clicked"   ) }, .f. )  
-   qTBar:addToolButton( "view_vertstacked", "View Vertically Tiled"      , app_image( "view_vertstacked"  ), {|| ::execEvent( "buttonViewStackedVert_clicked" ) }, .f. )  
-   qTBar:addToolButton( "view_horzstacked", "View Horizontally Tiled"    , app_image( "view_horzstacked"  ), {|| ::execEvent( "buttonViewStackedHorz_clicked" ) }, .f. )  
-   qTBar:addToolButton( "view_zoomin"     , "View Zoom In"               , app_image( "view_zoomin"       ), {|| ::execEvent( "buttonViewZoomedIn_clicked"    ) }, .f. )  
-   qTBar:addToolButton( "view_zoomout"    , "View Zoom Out"              , app_image( "view_zoomout"      ), {|| ::execEvent( "buttonViewZoomedOut_clicked"   ) }, .f. )  
+   qTBar:addToolButton( "view_tabbed"     , "Toggle tabbed view"         , app_image( "view_tabbed"       ), {|| ::execEvent( "buttonViewTabbed_clicked"      ) }, .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "view_organized"  , "View as arranged"           , app_image( "view_organized"    ), {|| ::execEvent( "buttonViewOrganized_clicked"   ) }, .f. )
+   qTBar:addToolButton( "save3"           , "Save layout"                , app_image( "save3"             ), {|| ::execEvent( "buttonSaveLayout_clicked"      ) }, .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "view_cascaded"   , "View as cascaded"           , app_image( "view_cascaded"     ), {|| ::execEvent( "buttonViewCascaded_clicked"    ) }, .f. )
+   qTBar:addToolButton( "view_tiled"      , "View as tiled"              , app_image( "view_tiled"        ), {|| ::execEvent( "buttonViewTiled_clicked"       ) }, .f. )
+   qTBar:addToolButton( "fullscreen"      , "View Maximized"             , app_image( "fullscreen"        ), {|| ::execEvent( "buttonViewMaximized_clicked"   ) }, .f. )
+   qTBar:addToolButton( "view_vertstacked", "View Vertically Tiled"      , app_image( "view_vertstacked"  ), {|| ::execEvent( "buttonViewStackedVert_clicked" ) }, .f. )
+   qTBar:addToolButton( "view_horzstacked", "View Horizontally Tiled"    , app_image( "view_horzstacked"  ), {|| ::execEvent( "buttonViewStackedHorz_clicked" ) }, .f. )
+   qTBar:addToolButton( "view_zoomin"     , "View Zoom In"               , app_image( "view_zoomin"       ), {|| ::execEvent( "buttonViewZoomedIn_clicked"    ) }, .f. )
+   qTBar:addToolButton( "view_zoomout"    , "View Zoom Out"              , app_image( "view_zoomout"      ), {|| ::execEvent( "buttonViewZoomedOut_clicked"   ) }, .f. )
    qTBar:addSeparator()
 
-   qTBar:addToolButton( "database_add"     , "Append a record"           , app_image( "database_add"      ), {|| ::execEvent( "buttonAppendRecord_clicked"  ) }, .f. )  
-   qTBar:addToolButton( "database_remove"  , "Delete a record"           , app_image( "database_remove"   ), {|| ::execEvent( "buttonDelRecord_clicked"     ) }, .f. )  
-   qTBar:addToolButton( "database_lock"    , "Lock/Unlock Record"        , app_image( "database_lock"     ), {|| ::execEvent( "buttonLockRecord_clicked"    ) }, .f. )  
-   qTBar:addSeparator()                                                  
-   qTBar:addToolButton( "database_up"      , "Goto Top"                  , app_image( "database_up"       ), {|| ::execEvent( "buttonGoTop_clicked"         ) }, .f. )  
-   qTBar:addToolButton( "database_down"    , "Goto Bottom"               , app_image( "database_down"     ), {|| ::execEvent( "buttonGoBottom_clicked"      ) }, .f. )  
-   qTBar:addToolButton( "database_previous", "Scroll to First Column"    , app_image( "database_previous" ), {|| ::execEvent( "buttonScrollToFirst_clicked" ) }, .f. )  
-   qTBar:addToolButton( "database_next"    , "Scroll to Last Column"     , app_image( "database_next"     ), {|| ::execEvent( "buttonScrollToLast_clicked"  ) }, .f. )  
-   qTBar:addSeparator()                                                  
-   qTBar:addToolButton( "database_search"  , "Search in Table"           , app_image( "database_search"   ), {|| ::execEvent( "buttonSearchInTable_clicked" ) }, .f. )  
-   qTBar:addSeparator()                                                  
-   qTBar:addToolButton( "database_process" , "Zap Table"                 , app_image( "database_process"  ), {|| ::execEvent( "buttonZaptable_clicked"      ) }, .f. )  
-      
-   RETURN NIL 
+   qTBar:addToolButton( "database_add"     , "Append a record"           , app_image( "database_add"      ), {|| ::execEvent( "buttonAppendRecord_clicked"  ) }, .f. )
+   qTBar:addToolButton( "database_remove"  , "Delete a record"           , app_image( "database_remove"   ), {|| ::execEvent( "buttonDelRecord_clicked"     ) }, .f. )
+   qTBar:addToolButton( "database_lock"    , "Lock/Unlock Record"        , app_image( "database_lock"     ), {|| ::execEvent( "buttonLockRecord_clicked"    ) }, .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "database_up"      , "Goto Top"                  , app_image( "database_up"       ), {|| ::execEvent( "buttonGoTop_clicked"         ) }, .f. )
+   qTBar:addToolButton( "database_down"    , "Goto Bottom"               , app_image( "database_down"     ), {|| ::execEvent( "buttonGoBottom_clicked"      ) }, .f. )
+   qTBar:addToolButton( "database_previous", "Scroll to First Column"    , app_image( "database_previous" ), {|| ::execEvent( "buttonScrollToFirst_clicked" ) }, .f. )
+   qTBar:addToolButton( "database_next"    , "Scroll to Last Column"     , app_image( "database_next"     ), {|| ::execEvent( "buttonScrollToLast_clicked"  ) }, .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "database_search"  , "Search in Table"           , app_image( "database_search"   ), {|| ::execEvent( "buttonSearchInTable_clicked" ) }, .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "database_process" , "Zap Table"                 , app_image( "database_process"  ), {|| ::execEvent( "buttonZaptable_clicked"      ) }, .f. )
+
+   RETURN NIL
 
 /*------------------------------------------------------------------------*/
 
@@ -1852,7 +1852,7 @@ METHOD IdeBrowse:buildBrowser()
    ::qVerSpl:addWidget( ::qForm )
 
    ::qClose := QToolButton()
-   ::qClose:setIcon( hbide_image( "closetab" ) )
+   ::qClose:setIcon( QIcon( hbide_image( "closetab" ) ) )
    ::qClose:hide()
 
    ::qVerSpl:addWidget( ::qClose )

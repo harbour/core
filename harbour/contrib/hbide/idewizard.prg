@@ -115,7 +115,7 @@ METHOD IdeWizard:create( oIde )
 
    ::oUI := QWizard()
    ::oUI:setWindowTitle( "Open" )
-   ::oUI:setWindowIcon( hbide_image( "hbide" ) )
+   ::oUI:setWindowIcon( QIcon( hbide_image( "hbide" ) ) )
 
    ::addIntroPage()
    ::addDescPage()

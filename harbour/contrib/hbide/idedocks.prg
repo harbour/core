@@ -541,7 +541,7 @@ METHOD IdeDocks:buildSystemTray()
    IF empty( ::oSys )
       ::oIde:oSys := QSystemTrayIcon( ::oDlg:oWidget )
       IF ( ::lSystemTrayAvailable := ::oSys:isSystemTrayAvailable() ) .AND. ::lMinimizeInSystemTray
-         ::oSys:setIcon( hbide_image( "hbide" ) )
+         ::oSys:setIcon( QIcon( hbide_image( "hbide" ) ) )
          ::oSys:connect( "activated(QSystemTrayIcon::ActivationReason)", {|p| ::execEvent( "qSystemTrayIcon_activated", p ) } )
 
          ::oIde:oSysMenu := QMenu()
@@ -558,7 +558,7 @@ METHOD IdeDocks:buildSystemTray()
       ENDIF
    ENDIF
 
-   RETURN nil
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -1433,32 +1433,6 @@ METHOD IdeDocks:getPanelIcon( cView )
 
    RETURN ""
 
-/*----------------------------------------------------------------------*/
-/*
-METHOD IdeDocks:addPanelButton( cPanel )
-   LOCAL qTBtn
-
-   STATIC nIndex := 0
-   nIndex++
-
-   qTBtn := QToolButton()
-   qTBtn:setMaximumHeight( 20 )
-   qTBtn:setMaximumWidth( 20 )
-   qTBtn:setText( cPanel )
-   qTBtn:setTooltip( "Panel: " + cPanel )
-   qTBtn:setIcon( hbide_image( "panel_" + hb_ntos( nIndex ) ) )
-   aadd( ::aPanels, qTBtn )
-   ::qTBarPanels:addWidget( qTBtn )
-   qTBtn:connect( "clicked()", {|| ::setView( cPanel ) } )
-
-   nIndex := iif( nIndex >= 7, 0, nIndex )
-
-   IF !empty( ::qViewsCombo )
-      ::qViewsCombo:setCurrentIndex( len( ::aPanels ) + 1 )
-   endif
-
-   RETURN Self
-*/
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildProjectTree()

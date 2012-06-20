@@ -466,12 +466,12 @@ METHOD IdeShortcuts:vrbls2array( nRow )
 
 METHOD IdeShortcuts:vrbls2controls( nRow )
 
-   ::aDftSCutsItms[ nRow, 1 ]:setIcon( hbide_image( ::cIcon ) )
+   ::aDftSCutsItms[ nRow, 1 ]:setIcon( QIcon( hbide_image( ::cIcon ) ) )
    ::aDftSCutsItms[ nRow, 2 ]:setText( ::cName )
    ::aDftSCutsItms[ nRow, 3 ]:setText( ::cKey )
-   ::aDftSCutsItms[ nRow, 4 ]:setIcon( hbide_image( iif( ::cAlt   == "YES", "check", "" ) ) )
-   ::aDftSCutsItms[ nRow, 5 ]:setIcon( hbide_image( iif( ::cCtrl  == "YES", "check", "" ) ) )
-   ::aDftSCutsItms[ nRow, 6 ]:setIcon( hbide_image( iif( ::cShift == "YES", "check", "" ) ) )
+   ::aDftSCutsItms[ nRow, 4 ]:setIcon( QIcon( hbide_image( iif( ::cAlt   == "YES", "check", "" ) ) ) )
+   ::aDftSCutsItms[ nRow, 5 ]:setIcon( QIcon( hbide_image( iif( ::cCtrl  == "YES", "check", "" ) ) ) )
+   ::aDftSCutsItms[ nRow, 6 ]:setIcon( QIcon( hbide_image( iif( ::cShift == "YES", "check", "" ) ) ) )
 
    RETURN Self
 

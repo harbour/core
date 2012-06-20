@@ -281,7 +281,7 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
          ::oIde:aSources := { oEdit:sourceFile }
          ::createTags()
          ::updateFuncList()
-         ::qTabWidget:setTabIcon( nIndex, ::resPath + "tabunmodified.png" )
+         ::qTabWidget:setTabIcon( nIndex, QIcon( ::resPath + "tabunmodified.png" ) )
          ::oDK:setStatusText( SB_PNL_MODIFIED, " " )
 
          cFileTemp := hbide_pathToOSPath( oEdit:cPath + oEdit:cFile + oEdit:cExt + ".tmp" )

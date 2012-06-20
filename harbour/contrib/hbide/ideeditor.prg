@@ -422,9 +422,9 @@ METHOD IdeEditsManager:execEvent( cEvent, p )
    LOCAL oEdit
 
    IF ::lQuitting
-      RETURN Self 
-   ENDIF 
-   
+      RETURN Self
+   ENDIF
+
    DO CASE
    CASE cEvent == "qFldsCompleter_activated"
       IF !empty( oEdit := ::getEditObjectCurrent() )
@@ -1359,7 +1359,7 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
    ::qLayout:setContentsMargins( 0,0,0,0 )
    //
    ::oTab:oWidget:setLayout( ::qLayout )
-   
+
    ::oEdit   := IdeEdit():new( ::oIde, Self, 0 )
    ::oEdit:aBookMarks := aBookMarks
    ::oEdit:create()
@@ -1430,7 +1430,7 @@ METHOD IdeEditor:destroy()
       ::qHiliter := NIL
    ENDIF
 
-   ::qSplitter := NIL 
+   ::qSplitter := NIL
    ::oEdit := NIL
    ::qLayout := NIL
 
@@ -1608,7 +1608,7 @@ METHOD IdeEditor:reload()
    ::oEdit:setReadOnly( ::lReadOnly )
 
    ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oTab:oWidget ), ;
-                             hbide_image( iif( ::lReadOnly, "tabreadonly", "tabunmodified" ) ) )
+                             QIcon( hbide_image( iif( ::lReadOnly, "tabreadonly", "tabunmodified" ) ) ) )
 
    ::qEdit:clear()
    ::qEdit:setPlainText( ::prepareBufferToLoad( hb_memoread( ::sourceFile ) ) )
@@ -1683,9 +1683,9 @@ METHOD IdeEditor:execEvent( cEvent, p )
    p := p
 
    IF ::lQuitting
-      RETURN Self 
-   ENDIF 
-   
+      RETURN Self
+   ENDIF
+
    SWITCH cEvent
 
    CASE "qTimeSave_timeout"
