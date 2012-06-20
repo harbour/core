@@ -331,6 +331,8 @@ DECLARE HBClass ;
    _HB_MEMBER __HB_CLS_ASFUNC(<MethodName>);;
    __HB_CLS_DECLARE_METHOD __HB_CLS_PARAMS(<MethodName>) _CLASS_NAME_ ;;
    oClass:SetDestructor( @__HB_CLS_ASID( __HB_CLS_MTHNAME _CLASS_NAME_ <MethodName> )() )
+#xcommand DESTRUCTOR FUNCTION <FuncName> => ;
+   oClass:SetDestructor( @__HB_CLS_ASID( <FuncName> )() )
 
 #xcommand ON ERROR <MethodName>     => ERROR HANDLER <MethodName>
 #xcommand ERROR HANDLER <MethodName> => ;
