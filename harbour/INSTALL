@@ -62,7 +62,7 @@ HARBOUR
           is included in all Harbour packages, so you don't have to do
           anything.
           If you want to get it separately, you can find it here:
-             http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma/download
+             http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/
           Unpack it to your PATH or Harbour source root directory,
           and run it as 'mingw32-make'.
 
@@ -440,7 +440,6 @@ HARBOUR
 
    Linux (.deb based distros: Debian, Ubuntu)
    ------------------------------------------
-   (tested with Ubuntu 7.04, 8.04, 9.04, 9.10, 10.4)
 
       You'll need these base packages to build/package/test/use Harbour:
 
@@ -1657,10 +1656,9 @@ HARBOUR
          http://qt.nokia.com/products/
          http://get.qt.nokia.com/qt/source/
          OS X binary package (or use Homebrew):
-            http://get.qt.nokia.com/qt/source/qt-mac-opensource-4.8.0.dmg
-         Currently supported Windows binary package:
-            http://get.qt.nokia.com/qt/source/qt-win-opensource-4.5.3-mingw.exe
-            http://get.qt.nokia.com/qt/source/qt-win-opensource-4.8.0-mingw.exe
+            qt-mac-opensource-*.dmg in http://get.qt.nokia.com/qt/source/
+         Supported Windows binary package:
+            qt-win-opensource-*-mingw.exe in http://get.qt.nokia.com/qt/source/
          How to create Windows static and MSVC builds:
             http://developer.qt.nokia.com/doc/qt-4.8/deployment-windows.html
          NOTES:
