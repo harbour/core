@@ -364,7 +364,6 @@ METHOD IdeDocks:buildDialog()
    ::oIde:oDlg     := XbpDialog():new()
    ::oDlg:icon     := hbide_image( "hbide" )
    ::oDlg:title    := "Harbour IDE"
-   ::oDlg:qtObject := hbide_getUI( "mainwindow" )
    ::oDlg:create( , , , , , .f. )
 
    ::oDlg:oWidget:setStyleSheet( GetStyleSheet( "QMainWindow", ::nAnimantionMode ) )

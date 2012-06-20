@@ -217,60 +217,69 @@ FUNCTION hbide_posAndSize( qWidget )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_showWarning( cMsg, cInfo, cTitle, qParent )
-   LOCAL oMB
+   LOCAL oMB, nRet
 
    DEFAULT cTitle  TO "Information"
    DEFAULT qParent TO SetAppWindow():oWidget
 
-   oMB := QMessageBox()
+   oMB := QMessageBox( qParent )
    oMB:setText( cMsg )
    IF !empty( cInfo )
       oMB:setInformativeText( cInfo )
    ENDIF
    oMB:setIcon( QMessageBox_Critical )
-   oMB:setParent( qParent )
    oMB:setWindowFlags( Qt_Dialog )
    oMB:setWindowTitle( cTitle )
 
-   RETURN oMB:exec()
+   nRet := oMB:exec()
+   oMB:setParent( QWidget() )
+
+   RETURN nRet
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_getYesNo( cMsg, cInfo, cTitle )
-   LOCAL oMB
+   LOCAL oMB, nRet
 
    DEFAULT cTitle TO "Option Please!"
 
-   oMB := QMessageBox()
+   oMB := QMessageBox( hbide_setIde():oDlg:oWidget )
    oMB:setText( "<b>"+ cMsg +"</b>" )
    IF !empty( cInfo )
       oMB:setInformativeText( cInfo )
    ENDIF
    oMB:setIcon( QMessageBox_Information )
    oMB:setWindowTitle( cTitle )
+   oMB:setWindowFlags( Qt_Dialog )
    oMB:setStandardButtons( QMessageBox_Yes + QMessageBox_No )
 
-   RETURN ( oMB:exec() == QMessageBox_Yes )
+   nRet := oMB:exec()
+
+   oMB:setParent( QWidget() )
+
+   RETURN ( nRet == QMessageBox_Yes )
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_getYesNoCancel( cMsg, cInfo, cTitle )
-   LOCAL oMB
+   LOCAL oMB, nRet
 
    DEFAULT cTitle TO "Option Please!"
 
-   oMB := QMessageBox()
+   oMB := QMessageBox( SetAppWindow():oWidget )
    oMB:setText( "<b>"+ cMsg +"</b>" )
    IF !empty( cInfo )
       oMB:setInformativeText( cInfo )
    ENDIF
    oMB:setIcon( QMessageBox_Information )
-   oMB:setParent( SetAppWindow():oWidget )
    oMB:setWindowFlags( Qt_Dialog )
    oMB:setWindowTitle( cTitle )
    oMB:setStandardButtons( QMessageBox_Yes + QMessageBox_No + QMessageBox_Cancel )
 
-   RETURN oMB:exec()
+   nRet := oMB:exec()
+   oMB:setParent( QWidget() )
+
+   RETURN nRet
 
 /*----------------------------------------------------------------------*/
 

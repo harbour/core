@@ -284,7 +284,7 @@ CLASS HbIde
    DATA   cWrkFolderLast                          INIT   ""
    DATA   cWrkProject                             INIT   ""
    DATA   cWrkTheme                               INIT   ""
-   DATA   cWrkCodec                               INIT   ""
+   DATA   cWrkCodec                               INIT   "EN"
    DATA   cWrkPathMk2                             INIT   hb_getenv( "HBIDE_DIR_HBMK2" )
    DATA   cWrkPathEnv                             INIT   hb_DirBase()
    DATA   cWrkEnvironment                         INIT   ""

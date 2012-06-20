@@ -74,8 +74,8 @@ STATIC oSys, oMenuSys, oActShow, oActHide
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION My_Events( e )
-   MsgInfo( "Pressed: " + hb_ntos( e:key() ) )
+FUNCTION My_Events( oWnd, e )
+   MsgInfo( oWnd, "Pressed: " + hb_ntos( e:key() ) )
    RETURN nil
 
 /*----------------------------------------------------------------------*/
@@ -114,7 +114,7 @@ PROCEDURE Main()
    oBtn   := Build_PushButton( oDA, { 30,240 }, { 100,50 } )
    oBtn:setStyleSheet( "background: #a00fff;" )
 
-   oWnd:connect( QEvent_KeyPress, {|e| My_Events( e ) } )
+   oWnd:connect( QEvent_KeyPress, {|e| My_Events( oWnd, e ) } )
    oWnd:connect( QEvent_Close   , {|| lExit := .t. } )
 
    oWnd:Show()
@@ -170,11 +170,11 @@ PROCEDURE ExecOneMore()
    aMenu  := Build_MenuBar( oWnd )
    aTool  := Build_ToolBar( oWnd )
    oLabel := Build_Label( oDA, { 30,190 }, { 300, 30 } )
-   oBtn   := Build_PushButton( oDA, { 30,240 }, { 100,50 }, "CLOSE", "This dialog will be closed now!", @lExit )
    aGrid  := Build_Grid( oDA, { 30, 30 }, { 450,150 } )
    aTabs  := Build_Tabs( oDA, { 510, 5 }, { 360, 400 } )
    oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
+   oBtn   := Build_PushButton( oDA, { 30,240 }, { 100,50 }, "CLOSE", "This dialog will be closed now!", @lExit )
 
    oSBar  := QStatusBar( oWnd )
    oWnd:setStatusBar( oSBar )
@@ -257,7 +257,7 @@ STATIC FUNCTION Build_MenuBar( oWnd )
    oMenu2:addSeparator()
 
    oActOther := oMenu2:addAction( "&Another Dialog" )
-   oActOther:connect( "triggered(bool)", {|| ExecOneMore() } )
+   oActOther:connect( "triggered(bool)", {|| hb_threadStart( {|| ExecOneMore( oWnd ) } ) } )
 
    oMenuBar:addMenu( oMenu2 )
 
@@ -324,7 +324,7 @@ STATIC FUNCTION Build_PushButton( oWnd, aPos, aSize, cLabel, cMsg, lExit )
    IF HB_ISLOGICAL( lExit )
       oBtn:connect( "clicked()", {|| lExit := .t. } )
    ELSE
-      oBtn:connect( "clicked()", {|| MsgInfo( cMsg ), lExit := .t. } )
+      oBtn:connect( "clicked()", {|| MsgInfo( oWnd, cMsg ), lExit := .t. } )
    ENDIF
 
    RETURN oBtn
@@ -446,7 +446,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    LOCAL oEdit, oCheckBox, oComboBox, oSpinBox, oRadioButton
 
    oEdit := QLineEdit( oWnd )
-   oEdit:connect( "returnPressed()", {|i| i := i, MsgInfo( oEdit:text() ) } )
+   oEdit:connect( "returnPressed()", {|i| i := i, MsgInfo( oWnd, oEdit:text() ) } )
    oEdit:move( 5, 10 )
    oEdit:resize( 345, 30 )
    oEdit:setMaxLength( 40 )
@@ -459,13 +459,13 @@ STATIC FUNCTION Build_Controls( oWnd )
    oComboBox:addItem( "Third"  )
    oComboBox:addItem( "First"  )
    oComboBox:addItem( "Second" )
-   oComboBox:connect( "currentIndexChanged(int)", {|i| i := i, MsgInfo( oComboBox:itemText( i ) ) } )
+   oComboBox:connect( "currentIndexChanged(int)", {|i| i := i, MsgInfo( oWnd, oComboBox:itemText( i ) ) } )
    oComboBox:move( 5, 60 )
    oComboBox:resize( 345, 30 )
    oComboBox:show()
 
    oCheckBox := QCheckBox( oWnd )
-   oCheckBox:connect( "stateChanged(int)", {|i| i := i, MsgInfo( IF( i == 0,"Uncheckd","Checked" ) ) } )
+   oCheckBox:connect( "stateChanged(int)", {|i| i := i, MsgInfo( oWnd, iif( i == 0,"Uncheckd","Checked" ) ) } )
    oCheckBox:setText( "Testing CheckBox HbQt" )
    oCheckBox:move( 5, 110 )
    oCheckBox:resize( 345, 30 )
@@ -477,7 +477,7 @@ STATIC FUNCTION Build_Controls( oWnd )
    oSpinBox:Show()
 
    oRadioButton := QRadioButton( oWnd )
-   oRadioButton:connect( "clicked()", {|i| i := i, MsgInfo( "Checked" ) } )
+   oRadioButton:connect( "clicked()", {|i| i := i, MsgInfo( oWnd, "Checked" ) } )
    oRadioButton:Move( 5, 210 )
    oRadioButton:ReSize( 345, 30 )
    oRadioButton:Show()
@@ -514,17 +514,17 @@ STATIC FUNCTION Build_Label( oWnd, aPos, aSize )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION MsgInfo( cMsg )
+STATIC FUNCTION MsgInfo( oWnd, cMsg )
    LOCAL oMB
 
-   oMB := QMessageBox()
+   oMB := QMessageBox( oWnd )
    oMB:setInformativeText( cMsg )
    oMB:setWindowTitle( "Harbour-QT" )
    oMB:exec()
 
-   oMB := NIL
+   oMB:setParent( QWidget() )
 
-   RETURN nil
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -540,8 +540,8 @@ STATIC FUNCTION FileDialog()
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION Dialogs( cType )
-   LOCAL oDlg //, oUrl
+STATIC FUNCTION Dialogs( cType, oParent )
+   LOCAL oDlg
 
    DO CASE
    CASE cType == "PageSetup"
@@ -557,9 +557,10 @@ STATIC FUNCTION Dialogs( cType )
       oDlg:setWindowTitle( "Harbour-QT Wizard to Show Slides etc." )
       oDlg:exec()
    CASE cType == "Colors"
-      oDlg := QColorDialog()
+      oDlg := QColorDialog( oParent )
       oDlg:setWindowTitle( "Harbour-QT Color Selection Dialog" )
       oDlg:exec()
+      oDlg:setParent( QWidget() )
    CASE cType == "WebPage"
       #if 0    // Till we resolve for oDlg:show()
       oDlg := QWebView()
