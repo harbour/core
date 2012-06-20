@@ -30,11 +30,11 @@ HB_FUNC( QT_QDATEEDIT )
    {
       __HB_RETPTRGC__( new QDateEdit( hbqt_par_QWidget( 1 ) ) );
    }
-   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QDATE" ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QDATE" ) )
    {
       __HB_RETPTRGC__( new QDateEdit( *hbqt_par_QDate( 1 ) ) );
    }
-   if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QDATE" ) && hbqt_par_isDerivedFrom( 2, "QWIDGET" ) )
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QDATE" ) && hbqt_par_isDerivedFrom( 2, "QWIDGET" ) )
    {
       __HB_RETPTRGC__( new QDateEdit( *hbqt_par_QDate( 1 ), hbqt_par_QWidget( 2 ) ) );
    }

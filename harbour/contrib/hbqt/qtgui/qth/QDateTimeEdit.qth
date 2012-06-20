@@ -32,27 +32,27 @@ HB_FUNC( QT_QDATETIMEEDIT )
    {
       __HB_RETPTRGC__( new QDateTimeEdit( hbqt_par_QWidget( 1 ) ) );
    }
-   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QDATE" ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QDATE" ) )
    {
       __HB_RETPTRGC__( new QDateTimeEdit( *hbqt_par_QDate( 1 ) ) );
    }
-   if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QDATE" ) && hbqt_par_isDerivedFrom( 2, "QWIDGET" ) )
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QDATE" ) && hbqt_par_isDerivedFrom( 2, "QWIDGET" ) )
    {
       __HB_RETPTRGC__( new QDateTimeEdit( *hbqt_par_QDate( 1 ), hbqt_par_QWidget( 2 ) ) );
    }
-   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QTIME" ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QTIME" ) )
    {
       __HB_RETPTRGC__( new QDateTimeEdit( *hbqt_par_QTime( 1 ) ) );
    }
-   if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QTIME" ) && hbqt_par_isDerivedFrom( 2, "QWIDGET" ) )
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QTIME" ) && hbqt_par_isDerivedFrom( 2, "QWIDGET" ) )
    {
       __HB_RETPTRGC__( new QDateTimeEdit( *hbqt_par_QTime( 1 ), hbqt_par_QWidget( 2 ) ) );
    }
-   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QDATETIME" ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QDATETIME" ) )
    {
       __HB_RETPTRGC__( new QDateTimeEdit( *hbqt_par_QDateTime( 1 ) ) );
    }
-   if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QDATETIME" ) && hbqt_par_isDerivedFrom( 2, "QWIDGET" ) )
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QDATETIME" ) && hbqt_par_isDerivedFrom( 2, "QWIDGET" ) )
    {
       __HB_RETPTRGC__( new QDateTimeEdit( *hbqt_par_QDateTime( 1 ), hbqt_par_QWidget( 2 ) ) );
    }
