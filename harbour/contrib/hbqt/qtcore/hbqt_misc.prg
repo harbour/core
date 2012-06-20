@@ -68,7 +68,7 @@ CREATE CLASS HbQtObjectHandler
    METHOD setSlots()
    METHOD setEvents()
 
-   DESTRUCTOR __destroy()
+   DESTRUCTOR FUNCTION __hbqt_destroy()
    ERROR HANDLER onError()
 
    ENDCLASS
@@ -228,16 +228,6 @@ METHOD HbQtObjectHandler:disconnect( cnEvent )
 
    __hbqt_error( 1300 + nResult )
    RETURN .F.
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbQtObjectHandler:__destroy()
-
-   HB_TRACE( HB_TR_DEBUG, "  __destroy()", __objDerivedFrom( Self, "QOBJECT" ), __objGetClsName( Self ) )
-
-   __hbqt_destroy( Self )
-
-   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

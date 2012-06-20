@@ -105,47 +105,55 @@ HB_EXTERN_END
 static void hbqt_SlotsExecPointer( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , ( const char * ) pList.at( 0 ).data(), NULL, HBQT_BIT_QOBJECT );
-   hb_vmPush( p0 );
-   hb_vmSend( 1 );
-   hb_itemRelease( p0 );
+   if( p0 )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( codeBlock );
+      hb_vmPush( p0 );
+      hb_vmSend( 1 );
+      hb_itemRelease( p0 );
+   }
 }
 
 static void hbqt_SlotsExecPointerPointer( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , ( const char * ) pList.at( 0 ).data(), NULL, HBQT_BIT_QOBJECT );
-   PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 2 ] ) , ( const char * ) pList.at( 0 ).data(), NULL, HBQT_BIT_QOBJECT );
-   hb_vmPush( p0 );
-   hb_vmPush( p1 );
-   hb_vmSend( 2 );
-   hb_itemRelease( p0 );
-   hb_itemRelease( p1 );
+   if( p0 )
+   {
+      PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 2 ] ) , ( const char * ) pList.at( 0 ).data(), NULL, HBQT_BIT_QOBJECT );
+      if( p1 )
+      {
+         hb_vmPushEvalSym();
+         hb_vmPush( codeBlock );
+         hb_vmPush( p0 );
+         hb_vmPush( p1 );
+         hb_vmSend( 2 );
+         hb_itemRelease( p1 );
+      }
+      hb_itemRelease( p0 );
+   }
 }
 
 static void hbqt_SlotsExecPointerInt( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , ( const char * ) pList.at( 0 ).data(), NULL, HBQT_BIT_QOBJECT );
-   hb_vmPush( p0 );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
-   hb_vmSend( 2 );
-   hb_itemRelease( p0 );
+   if( p0 )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( codeBlock );
+      hb_vmPush( p0 );
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
+      hb_vmSend( 2 );
+      hb_itemRelease( p0 );
+   }
 }
 
 static void hbqt_SlotsExecBool( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
    hb_vmPushLogical( *reinterpret_cast< bool( * ) >( arguments[ 1 ] ) );
@@ -155,7 +163,6 @@ static void hbqt_SlotsExecBool( PHB_ITEM * codeBlock, void ** arguments, QString
 static void hbqt_SlotsExecDouble( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
    hb_vmPushDouble( *reinterpret_cast< double( * ) >( arguments[ 1 ] ), 4 );
@@ -165,7 +172,6 @@ static void hbqt_SlotsExecDouble( PHB_ITEM * codeBlock, void ** arguments, QStri
 static void hbqt_SlotsExecInt( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
    hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
@@ -175,7 +181,6 @@ static void hbqt_SlotsExecInt( PHB_ITEM * codeBlock, void ** arguments, QStringL
 static void hbqt_SlotsExecIntInt( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
    hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
@@ -186,7 +191,6 @@ static void hbqt_SlotsExecIntInt( PHB_ITEM * codeBlock, void ** arguments, QStri
 static void hbqt_SlotsExecIntIntInt( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
    hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
@@ -198,7 +202,6 @@ static void hbqt_SlotsExecIntIntInt( PHB_ITEM * codeBlock, void ** arguments, QS
 static void hbqt_SlotsExecIntIntIntInt( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
    hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 1 ] ) );
@@ -211,7 +214,6 @@ static void hbqt_SlotsExecIntIntIntInt( PHB_ITEM * codeBlock, void ** arguments,
 static void hbqt_SlotsExecString( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
    QString text = *reinterpret_cast< QString( * ) >( arguments[ 1 ] );
    hb_vmPushEvalSym();
    hb_vmPush( codeBlock );
@@ -222,187 +224,220 @@ static void hbqt_SlotsExecString( PHB_ITEM * codeBlock, void ** arguments, QStri
 static void hbqt_SlotsExecModel( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ), "HB_QMODELINDEX", hbqt_del_QModelIndex, HBQT_BIT_OWNER );
-   hb_vmPush( p0 );
-   hb_vmSend( 1 );
-   hb_itemRelease( p0 );
+   if( p0 )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( codeBlock );
+      hb_vmPush( p0 );
+      hb_vmSend( 1 );
+      hb_itemRelease( p0 );
+   }
 }
 
 static void hbqt_SlotsExecModelModel( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ), "HB_QMODELINDEX", hbqt_del_QModelIndex, HBQT_BIT_OWNER );
-   PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ), "HB_QMODELINDEX", hbqt_del_QModelIndex, HBQT_BIT_OWNER );
-   hb_vmPush( p0 );
-   hb_vmPush( p1 );
-   hb_vmSend( 2 );
-   hb_itemRelease( p0 );
-   hb_itemRelease( p1 );
+   if( p0 )
+   {
+      PHB_ITEM p1 = hbqt_bindGetHbObject( NULL, new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ), "HB_QMODELINDEX", hbqt_del_QModelIndex, HBQT_BIT_OWNER );
+      if( p1 )
+      {
+         hb_vmPushEvalSym();
+         hb_vmPush( codeBlock );
+         hb_vmPush( p0 );
+         hb_vmPush( p1 );
+         hb_vmSend( 2 );
+         hb_itemRelease( p1 );
+      }
+      hb_itemRelease( p0 );
+   }
 }
 
 static void hbqt_SlotsExecStringList( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QStringList( ( *reinterpret_cast< QStringList( * ) >( arguments[ 1 ] ) ) ), "HB_QSTRINGLIST", hbqt_del_QStringList, HBQT_BIT_OWNER );
-   hb_vmPush( p0 );
-   hb_vmSend( 1 );
-   hb_itemRelease( p0 );
+   if( p0 )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( codeBlock );
+      hb_vmPush( p0 );
+      hb_vmSend( 1 );
+      hb_itemRelease( p0 );
+   }
 }
 
 static void hbqt_SlotsExecQPoint( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QPoint( ( *reinterpret_cast< QPoint( * ) >( arguments[ 1 ] ) ) ), "HB_QPOINT", hbqt_del_QPoint, HBQT_BIT_OWNER );
-   hb_vmPush( p0 );
-   hb_vmSend( 1 );
-   hb_itemRelease( p0 );
+   if( p0 )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( codeBlock );
+      hb_vmPush( p0 );
+      hb_vmSend( 1 );
+      hb_itemRelease( p0 );
+   }
 }
 
 static void hbqt_SlotsExecQUrl( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QUrl( ( *reinterpret_cast< QUrl( * ) >( arguments[ 1 ] ) ) ), "HB_QURL", hbqt_del_QUrl, HBQT_BIT_OWNER );
-   hb_vmPush( p0 );
-   hb_vmSend( 1 );
-   hb_itemRelease( p0 );
+   if( p0 )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( codeBlock );
+      hb_vmPush( p0 );
+      hb_vmSend( 1 );
+      hb_itemRelease( p0 );
+   }
 }
 
 static void hbqt_SlotsExecQDate( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QDate( ( *reinterpret_cast< QDate( * ) >( arguments[ 1 ] ) ) ), "HB_QDATE", hbqt_del_QDate, HBQT_BIT_OWNER );
-   hb_vmPush( p0 );
-   hb_vmSend( 1 );
-   hb_itemRelease( p0 );
+   if( p0 )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( codeBlock );
+      hb_vmPush( p0 );
+      hb_vmSend( 1 );
+      hb_itemRelease( p0 );
+   }
 }
 
 static void hbqt_SlotsExecQDateTime( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QDateTime( ( *reinterpret_cast< QDateTime( * ) >( arguments[ 1 ] ) ) ), "HB_QDATETIME", hbqt_del_QDateTime, HBQT_BIT_OWNER );
-   hb_vmPush( p0 );
-   hb_vmSend( 1 );
-   hb_itemRelease( p0 );
+   if( p0 )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( codeBlock );
+      hb_vmPush( p0 );
+      hb_vmSend( 1 );
+      hb_itemRelease( p0 );
+   }
 }
 
 static void hbqt_SlotsExecQTime( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QTime( ( *reinterpret_cast< QTime( * ) >( arguments[ 1 ] ) ) ), "HB_QTIME", hbqt_del_QTime, HBQT_BIT_OWNER );
-   hb_vmPush( p0 );
-   hb_vmSend( 1 );
-   hb_itemRelease( p0 );
+   if( p0 )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( codeBlock );
+      hb_vmPush( p0 );
+      hb_vmSend( 1 );
+      hb_itemRelease( p0 );
+   }
 }
 
 static void hbqt_SlotsExecQRectF( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QRectF( ( *reinterpret_cast< QRectF( * ) >( arguments[ 1 ] ) ) ), "HB_QRECTF", hbqt_del_QRectF, HBQT_BIT_OWNER );
-   hb_vmPush( p0 );
-   hb_vmSend( 1 );
-   hb_itemRelease( p0 );
+   if( p0 )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( codeBlock );
+      hb_vmPush( p0 );
+      hb_vmSend( 1 );
+      hb_itemRelease( p0 );
+   }
 }
 
 static void hbqt_SlotsExecQRectInt( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QRect( ( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) ), "HB_QRECT", hbqt_del_QRect, HBQT_BIT_OWNER );
-   hb_vmPush( p0 );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
-   hb_vmSend( 2 );
-   hb_itemRelease( p0 );
+   if( p0 )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( codeBlock );
+      hb_vmPush( p0 );
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
+      hb_vmSend( 2 );
+      hb_itemRelease( p0 );
+   }
 }
 
 static void hbqt_SlotsExecQRect( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QRect( ( *reinterpret_cast< QRect( * ) >( arguments[ 1 ] ) ) ), "HB_QRECT", hbqt_del_QRect, HBQT_BIT_OWNER );
-   hb_vmPush( p0 );
-   hb_vmSend( 1 );
-   hb_itemRelease( p0 );
+   if( p0 )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( codeBlock );
+      hb_vmPush( p0 );
+      hb_vmSend( 1 );
+      hb_itemRelease( p0 );
+   }
 }
 
 static void hbqt_SlotsExecQSizeF( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QSizeF( ( *reinterpret_cast< QSizeF( * ) >( arguments[ 1 ] ) ) ), "HB_QSIZEF", hbqt_del_QSizeF, HBQT_BIT_OWNER );
-   hb_vmPush( p0 );
-   hb_vmSend( 1 );
-   hb_itemRelease( p0 );
+   if( p0 )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( codeBlock );
+      hb_vmPush( p0 );
+      hb_vmSend( 1 );
+      hb_itemRelease( p0 );
+   }
 }
 
 static void hbqt_SlotsExecModelIndexIntInt( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QModelIndex( ( *reinterpret_cast< QModelIndex( * ) >( arguments[ 1 ] ) ) ), "HB_QMODELINDEX", hbqt_del_QModelIndex, HBQT_BIT_OWNER );
-   hb_vmPush( p0 );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
-   hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 3 ] ) );
-   hb_vmSend( 3 );
-   hb_itemRelease( p0 );
+   if( p0 )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( codeBlock );
+      hb_vmPush( p0 );
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 2 ] ) );
+      hb_vmPushInteger( *reinterpret_cast< int( * ) >( arguments[ 3 ] ) );
+      hb_vmSend( 3 );
+      hb_itemRelease( p0 );
+   }
 }
 
 static void hbqt_SlotsExecModelIndexList( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, new QList< QModelIndex *>( ( *reinterpret_cast< QList< QModelIndex *> *>( arguments[ 1 ] ) ) ), "HB_QMODELINDEXLIST", hbqt_del_QList, HBQT_BIT_OWNER );
-   hb_vmPush( p0 );
-   hb_vmSend( 1 );
-   hb_itemRelease( p0 );
+   if( p0 )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( codeBlock );
+      hb_vmPush( p0 );
+      hb_vmSend( 1 );
+      hb_itemRelease( p0 );
+   }
 }
 
 static void hbqt_SlotsExecQObject( PHB_ITEM * codeBlock, void ** arguments, QStringList pList )
 {
    Q_UNUSED( pList );
-
-   hb_vmPushEvalSym();
-   hb_vmPush( codeBlock );
    PHB_ITEM p0 = hbqt_bindGetHbObject( NULL, *reinterpret_cast< void*( * ) >( arguments[ 1 ] ) , "HB_QOBJECT", NULL, HBQT_BIT_QOBJECT );
-   hb_vmPush( p0 );
-   hb_vmSend( 1 );
-   hb_itemRelease( p0 );
+   if( p0 )
+   {
+      hb_vmPushEvalSym();
+      hb_vmPush( codeBlock );
+      hb_vmPush( p0 );
+      hb_vmSend( 1 );
+      hb_itemRelease( p0 );
+   }
 }
 
 /*----------------------------------------------------------------------*/

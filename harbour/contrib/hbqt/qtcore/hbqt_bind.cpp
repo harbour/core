@@ -928,9 +928,7 @@ void hbqt_bindDelChild( PHB_ITEM pObject, PHB_ITEM pChild )
  */
 HB_FUNC( __HBQT_DESTROY )
 {
-   PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
-   if( pObject == NULL )
-      pObject = hb_stackSelfItem();
+   PHB_ITEM pObject = hb_stackSelfItem();
    if( pObject )
       hbqt_bindDestroyHbObject( pObject );
 }
