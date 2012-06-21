@@ -425,20 +425,17 @@ void hbqt_bindDestroyHbObject( PHB_ITEM pObject )
             {
                if( bind->pDelFunc != NULL )
                {
-                  HB_TRACE( HB_TR_DEBUG, ( ".........HARBOUR_DESTROYING_ACTUAL_QT_OBJECT( %p, %s, %i )", bind->qtObject, bind->szClassName, bind->iFlags ) );
                   if( bind->iFlags & HBQT_BIT_QOBJECT )
                   {
-                     HB_TRACE( HB_TR_DEBUG, ( ".........HARBOUR_DESTROYING_ACTUAL_QT_OBJECT_NAMED( %p, %s )", bind->qtObject, ( ( QObject * ) bind->qtObject )->objectName().toAscii().data() ) );
                      if( bind->iThreadId == 1 && ( ( QObject * ) bind->qtObject )->objectName() == "PleaseDoNotDelete" )  /* This is a hack: will be removed a bit later */
                      {
+                        HB_TRACE( HB_TR_DEBUG, ( ".........HARBOUR_NOT_DESTROYING_ACTUAL_QT_OBJECT( %p, %s, PleaseDoNotDelete )", bind->qtObject, bind->szClassName ) );
                         fDelQtObject = false;
                      }
-//                     else if( ( QString ) ( ( QObject * ) bind->qtObject )->metaObject()->className() == "QDesktopWidget" )
-//                        fDelQtObject = false;
                   }
                   if( fDelQtObject )
                   {
-                     HB_TRACE( HB_TR_DEBUG, ( ".........HARBOUR_DESTROYING_ACTUAL_QT_OBJECT_NAMED( %p, %s )", bind->qtObject, bind->szClassName ) );
+                     HB_TRACE( HB_TR_DEBUG, ( ".........HARBOUR_DESTROYING_ACTUAL_QT_OBJECT( %p, %s )", bind->qtObject, bind->szClassName ) );
                      bind->fDeleting = true;
                      bind->pDelFunc( bind->qtObject, bind->iFlags );
                      bind->fDeleting = false;
@@ -482,6 +479,7 @@ void hbqt_bindDestroyQtObject( void * qtObject )
 
       hb_vmRequestRestore();
    }
+   HB_TRACE( HB_TR_DEBUG, ( "............QT_DESTROY_ENDS( %p )..............", qtObject ) );
 }
 
 HBQSlots * hbqt_bindGetReceiverSlotsByHbObject( PHB_ITEM pObject )

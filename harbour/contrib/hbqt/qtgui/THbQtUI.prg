@@ -69,16 +69,17 @@
 #include "error.ch"
 #include "hbtrace.ch"
 
+#define Qt_WA_DeleteOnClose                       55
+
 /*----------------------------------------------------------------------*/
 
-CREATE CLASS HbQtUI INHERIT HbQtObjectHandler
+CREATE CLASS HbQtUI
 
    VAR oWidget          /* TOFIX: User code uses this directly. Then rename this to __oRootWidget and make it PROTECTED. */
    VAR qObj INIT { => } /* TOFIX: User code uses this directly. Then rename this to __hWidget and make it PROTECTED. */
 
    METHOD new( oRootWidget, hWidget )
    METHOD destroy()
-   DESTRUCTOR _destroy()
 
    ERROR HANDLER __OnError( ... )
 
@@ -91,13 +92,9 @@ METHOD HbQtUI:new( oRootWidget, hWidget )
    ::oWidget := oRootWidget
    ::qObj := hWidget
 
+   ::oWidget:setAttribute( Qt_WA_DeleteOnClose, .f. )
+
    RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-/* QUESTION: Is this needed? */
-METHOD HbQtUI:_destroy()
-   RETURN ::destroy()
 
 /*----------------------------------------------------------------------*/
 
