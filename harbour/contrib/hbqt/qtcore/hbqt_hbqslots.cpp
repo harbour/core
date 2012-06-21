@@ -241,15 +241,22 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
 
             for( int i = 0; i < parameterCount; i++ )
             {
-               if( arrayOfTypes.at( i ).contains( "::" ) )
+               QByteArray s = arrayOfTypes.at( i ).trimmed();
+               if( s.contains( "::" ) )
                {
                   parList += "int";
                   pList += "int";
                }
+               else if( s.endsWith( "*" ) )
+               {
+                  parList += s;
+                  s.chop( 1 );
+                  pList += "HB_" + s.toUpper();
+               }
                else
                {
-                  parList += arrayOfTypes.at( i ).trimmed() ;
-                  pList += "HB_" + arrayOfTypes.at( i ).trimmed().toUpper();
+                  parList += s;
+                  pList += "HB_" + s.toUpper();
                }
             }
             paramString = parList.join( "$" ).toAscii();
@@ -257,7 +264,7 @@ int HBQSlots::qt_metacall( QMetaObject::Call c, int id, void ** arguments )
 
             object->setProperty( szPList, pList );
 
-            HB_TRACE( HB_TR_DEBUG, ( "       SlotsProxy parList %s ", ( char * ) paramString.data() ) );
+            HB_TRACE( HB_TR_DEBUG, ( "    %p   SlotsProxy pList %s ", object, ( char * ) pList.join( "$" ).toAscii().data() ) );
          }
       }
 

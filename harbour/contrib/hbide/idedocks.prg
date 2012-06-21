@@ -545,9 +545,9 @@ METHOD IdeDocks:buildSystemTray()
          ::oSys:connect( "activated(QSystemTrayIcon::ActivationReason)", {|p| ::execEvent( "qSystemTrayIcon_activated", p ) } )
 
          ::oIde:oSysMenu := QMenu()
-         ::qAct1 := ::oSysMenu:addAction( hbide_image( "fullscreen" ), "&Show" )
+         ::qAct1 := ::oSysMenu:addAction( QIcon( hbide_image( "fullscreen" ) ), "&Show" )
          ::oSysMenu:addSeparator()
-         ::qAct2 := ::oSysMenu:addAction( hbide_image( "exit" ), "&Exit" )
+         ::qAct2 := ::oSysMenu:addAction( QIcon( hbide_image( "exit" ) ), "&Exit" )
 
          ::qAct1:connect( "triggered(bool)", {|| ::execEvent( "qSystemTrayIcon_show"  ) } )
          ::qAct2:connect( "triggered(bool)", {|| ::execEvent( "qSystemTrayIcon_close" ) } )
