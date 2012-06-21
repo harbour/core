@@ -33,7 +33,7 @@ HB_FUNC( QT_QGRAPHICSVIEW )
    {
       __HB_RETPTRGC__( new QGraphicsView( hbqt_par_QGraphicsScene( 1 ), hbqt_par_QWidget( 2 ) ) );
    }   
-   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QGRAPHICSSCENE" ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QGRAPHICSSCENE" ) )
    {
       __HB_RETPTRGC__( new QGraphicsView( hbqt_par_QGraphicsScene( 1 ), 0 ) );
    }

@@ -39,7 +39,7 @@ HB_FUNC( QT_QSETTINGS )
       hb_strfree( pText01 );
       hb_strfree( pText02 );
    }
-   if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
+   else if( hb_pcount() == 2 && HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       void * pText01 = NULL;
       void * pText02 = NULL;

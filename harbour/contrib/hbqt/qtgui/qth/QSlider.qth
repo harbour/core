@@ -31,11 +31,11 @@ HB_FUNC( QT_QSLIDER )
    {
       __HB_RETPTRGC__( new QSlider( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
    }   
-   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) )
    {
       __HB_RETPTRGC__( new QSlider( hbqt_par_QWidget( 1 ) ) );
    }   
-   if( hb_pcount() == 2 && HB_ISNUM( 1 ) && hbqt_par_isDerivedFrom( 2, "QWIDGET" ) )
+   else if( hb_pcount() == 2 && HB_ISNUM( 1 ) && hbqt_par_isDerivedFrom( 2, "QWIDGET" ) )
    {
       __HB_RETPTRGC__( new QSlider( ( Qt::Orientation ) hb_parni( 1 ), hbqt_par_QWidget( 2 ) ) );
    }   

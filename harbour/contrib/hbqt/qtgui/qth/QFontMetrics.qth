@@ -35,7 +35,7 @@ HB_FUNC( QT_QFONTMETRICS )
    {
       __HB_RETPTRGC__( new QFontMetrics( *hbqt_par_QFontMetrics( 1 ) ) );
    }
-   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QFONT" ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QFONT" ) )
    {
       __HB_RETPTRGC__( new QFontMetrics( *hbqt_par_QFont( 1 ) ) );
    }

@@ -32,11 +32,11 @@ HB_FUNC( QT_QSYSTEMTRAYICON )
    {
       __HB_RETPTRGC__( new QSystemTrayIcon( hbqt_par_QObject( 1 ) ) );
    }
-   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QICON" ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QICON" ) )
    {
       __HB_RETPTRGC__( new QSystemTrayIcon( *hbqt_par_QIcon( 1 ) ) );
    }
-   if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QICON" ) && hbqt_par_isDerivedFrom( 2, "QOBJECT" ) )
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QICON" ) && hbqt_par_isDerivedFrom( 2, "QOBJECT" ) )
    {
       __HB_RETPTRGC__( new QSystemTrayIcon( *hbqt_par_QIcon( 1 ), hbqt_par_QObject( 2 ) ) );
    }

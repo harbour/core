@@ -32,7 +32,7 @@ HB_FUNC( QT_QWINDOWSTATECHANGEEVENT )
    {
       __HB_RETPTRGC__( new QWindowStateChangeEvent( ( Qt::WindowStates ) hb_parni( 1 ), hb_parl( 2 ) ) );
    }
-   if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
+   else if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
    {
       __HB_RETPTRGC__( new QWindowStateChangeEvent( ( Qt::WindowStates ) hb_parni( 1 ) ) );
    }

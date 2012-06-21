@@ -30,7 +30,7 @@ HB_FUNC( QT_QFONTDIALOG )
    {
       __HB_RETPTRGC__( new QFontDialog( hbqt_par_QWidget( 1 ) ) );
    }
-   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QFONT" ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QFONT" ) )
    {
       __HB_RETPTRGC__( new QFontDialog( *hbqt_par_QFont( 1 ) ) );
    }

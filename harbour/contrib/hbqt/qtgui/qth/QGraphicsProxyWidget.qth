@@ -32,7 +32,7 @@ HB_FUNC( QT_QGRAPHICSPROXYWIDGET )
    {
       __HB_RETPTRGC__( new QGraphicsProxyWidget( hbqt_par_QGraphicsItem( 1 ) ) );
    }
-   if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) && HB_ISNUM( 2 ) )
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) && HB_ISNUM( 2 ) )
    {
       __HB_RETPTRGC__( new QGraphicsProxyWidget( hbqt_par_QGraphicsItem( 1 ), ( Qt::WindowFlags ) hb_parni( 2 ) ) );
    }

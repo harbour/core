@@ -39,7 +39,7 @@ HB_FUNC( QT_QDATASTREAM )
    {
       __HB_RETPTRGC__( new QDataStream( *hbqt_par_QByteArray( 1 ) ) );
    }
-   if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QBYTEARRAY" ) && HB_ISNUM( 2 ) )
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QBYTEARRAY" ) && HB_ISNUM( 2 ) )
    {
       __HB_RETPTRGC__( new QDataStream( hbqt_par_QByteArray( 1 ), ( QIODevice::OpenMode ) hb_parni( 2 ) ) );
    }

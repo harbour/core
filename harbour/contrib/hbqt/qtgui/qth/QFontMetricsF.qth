@@ -36,11 +36,11 @@ HB_FUNC( QT_QFONTMETRICSF )
    {
       __HB_RETPTRGC__( new QFontMetricsF( *hbqt_par_QFontMetrics( 1 ) ) );
    }
-   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QFONTMETRICSF" ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QFONTMETRICSF" ) )
    {
       __HB_RETPTRGC__( new QFontMetricsF( *hbqt_par_QFontMetricsF( 1 ) ) );
    }
-   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QFONT" ) )
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QFONT" ) )
    {
       __HB_RETPTRGC__( new QFontMetricsF( *hbqt_par_QFont( 1 ) ) );
    }
