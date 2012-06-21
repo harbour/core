@@ -240,8 +240,9 @@ PHB_ITEM hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szC
 
    PHB_ITEM pObject = NULL;
 
-   if( qtObject == NULL )
-      return pObject;
+   if( ! HB_IS_NUMERIC( ( PHB_ITEM ) qtObject ) )
+      if( qtObject == NULL )
+         return pObject;
 
    PHB_SYMB pClassFunc = hb_dynsymGetSymbol( szClassName );
    if( pClassFunc == NULL )
