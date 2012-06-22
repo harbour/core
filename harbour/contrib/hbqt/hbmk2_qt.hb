@@ -1044,6 +1044,7 @@ CREATE CLASS HbQtSource
    VAR    isList                                  INIT .F.
    VAR    isDestructor                            INIT .T.
    VAR    isConstructor                           INIT .F.
+   VAR    isQtObjectAvailable                     INIT .F.
    VAR    isObject                                INIT .T.
    VAR    isDetached                              INIT .F.
    VAR    areMethodsClubbed                       INIT .T.
@@ -1337,7 +1338,15 @@ METHOD HbQtSource:build()
       AAdd( aLine, "" )
    ENDIF
 
-   IF ::isConstructor
+   FOR i := 3 TO Len( ::new_ ) - 1
+      IF !( Left( LTrim( ::new_[ i ] ), 2 ) == "//" )
+         IF "__HB_RETPTRGC__(" $ ::new_[ i ]
+            ::isQtObjectAvailable := .T.
+         ENDIF
+      ENDIF
+   NEXT
+
+   IF ::isConstructor .AND. ::isQtObjectAvailable
       FOR i := 3 TO Len( ::new_ ) - 1
          IF !( Left( LTrim( ::new_[ i ] ), 2 ) == "//" )
             IF "__HB_RETPTRGC__(" $ ::new_[ i ]
@@ -1593,12 +1602,14 @@ METHOD HbQtSource:getConstructor()
       AAdd( aLine, "#if QT_VERSION >= " + ::cQtVer )
    ENDIF
    IF ::isConstructor
-      IF ::isList
-         AAdd( aLine, "   " + cObjPfx + ::cQtObject + "< void * > * pObj = NULL;" )
-      ELSE
-         AAdd( aLine, "   " + cObjPfx + ::cQtObject + " * pObj = NULL;" )
+      IF ::isQtObjectAvailable
+         IF ::isList
+            AAdd( aLine, "   " + cObjPfx + ::cQtObject + "< void * > * pObj = NULL;" )
+         ELSE
+            AAdd( aLine, "   " + cObjPfx + ::cQtObject + " * pObj = NULL;" )
+         ENDIF
+         AAdd( aLine, " " )
       ENDIF
-      AAdd( aLine, " " )
       FOR i := 3 TO Len( ::new_ ) - 1
          IF !( Left( LTrim( ::new_[ i ] ), 2 ) == "//" )
             IF "__HB_RETPTRGC__(" $ ::new_[ i ]
@@ -1615,9 +1626,10 @@ METHOD HbQtSource:getConstructor()
             ENDIF
          ENDIF
       NEXT
-      AAdd( aLine, " " )
-
-      AAdd( aLine, '   hb_itemReturnRelease( hbqt_bindSetHbObject( NULL, pObj, "' + 'HB_' + upper( ::cQtObject ) +'", hbqt_del_' + ::cQtObject + ', ' + qth_get_bits( ::cQtObject, ! ::isDetached ) + ' ) );' )
+      IF ::isQtObjectAvailable
+         AAdd( aLine, " " )
+         AAdd( aLine, '   hb_itemReturnRelease( hbqt_bindSetHbObject( NULL, pObj, "' + 'HB_' + upper( ::cQtObject ) +'", hbqt_del_' + ::cQtObject + ', ' + qth_get_bits( ::cQtObject, ! ::isDetached ) + ' ) );' )
+      ENDIF
    ELSE
       FOR i := 3 TO Len( ::new_ ) - 1
          AAdd( aLine, ::new_[ i ] )
