@@ -16,6 +16,8 @@ PRG_MAIN := hbmk2.prg
 
 LIBS = $(HB_LIBS_MT_RDD)
 
+HB_PRGFLAGS += -u
+
 ifneq ($(HB_HAS_GPM),)
    HB_PRGFLAGS += -DHB_HAS_GPM
 endif

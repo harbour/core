@@ -78,7 +78,7 @@
 #include "directry.ch"
 #include "error.ch"
 #include "fileio.ch"
-#include "set.ch"
+#include "set.ch" /* needed for -u */
 #include "simpleio.ch" /* Don't delete this, it's useful for development. */
 
 #include "hbgtinfo.ch"
@@ -143,25 +143,33 @@
 
 #include "hbextcdp.ch"
 
+/* For -u support we use 'WHILE' instead of 'DO WHILE',
+   'EXTERNAL' instead of 'REQUEST'
+   'END' instead of 'END SEQUENCE' */
+
 ANNOUNCE HB_GTSYS
-REQUEST HB_GT_CGI_DEFAULT
+EXTERNAL HB_GT_CGI_DEFAULT
 
 /* Include these for -pause support. */
 #if   defined( __PLATFORM__WINCE )
-   REQUEST HB_GT_WVT
+   EXTERNAL HB_GT_WVT
 #elif defined( __PLATFORM__WINDOWS )
-   REQUEST HB_GT_WIN
+   EXTERNAL HB_GT_WIN
 #elif defined( __PLATFORM__DOS )
-   REQUEST HB_GT_DOS
+   EXTERNAL HB_GT_DOS
 #elif defined( __PLATFORM__OS2 )
-   REQUEST HB_GT_OS2
+   EXTERNAL HB_GT_OS2
 #elif defined( __PLATFORM__UNIX ) .AND. ! defined( __PLATFORM__VXWORKS ) .AND. ! defined( __PLATFORM__SYMBIAN )
-   REQUEST HB_GT_TRM
+   EXTERNAL HB_GT_TRM
 #endif
 
 #endif
 
-REQUEST hbmk_KEYW
+EXTERNAL hbmk_KEYW
+
+/* needed for -u */
+#undef HB_SYMBOL_UNUSED
+#define HB_SYMBOL_UNUSED( symbol )  ( ( symbol ) )
 
 #define _SELF_NAME_             "hbmk2"
 
@@ -520,31 +528,31 @@ REQUEST hbmk_KEYW
 #define PathMakeAbsolute( cPathR, cPathA ) hb_PathJoin( cPathA, cPathR )
 
 /* Request for runner and shell */
-REQUEST __HB_EXTERN__
+EXTERNAL __HB_EXTERN__
 
 /* Request some functions for plugins */
-REQUEST HBCLASS
-REQUEST __CLSLOCKDEF
-REQUEST __HBDOC_LOADDIR
-REQUEST __HBDOC_TOSOURCE
-REQUEST __HBDOC_SAVEHBD
-REQUEST HB_REGEX
-REQUEST HB_SHA1
-REQUEST HB_SHA256
-REQUEST HB_SHA512
-REQUEST HB_MD5
-REQUEST HB_CRC32
-REQUEST HB_BLOWFISHKEY
-REQUEST HB_BLOWFISHENCRYPT
-REQUEST HB_JSONENCODE
-REQUEST HB_JSONDECODE
-REQUEST HB_LIBEXT
-REQUEST HB_HKEYAT
-REQUEST HB_HDELAT
-REQUEST HB_HKEYS
-REQUEST HB_HKEEPORDER
-REQUEST HB_FGETATTR
-REQUEST HB_FSETATTR
+EXTERNAL HBCLASS
+EXTERNAL __CLSLOCKDEF
+EXTERNAL __HBDOC_LOADDIR
+EXTERNAL __HBDOC_TOSOURCE
+EXTERNAL __HBDOC_SAVEHBD
+EXTERNAL HB_REGEX
+EXTERNAL HB_SHA1
+EXTERNAL HB_SHA256
+EXTERNAL HB_SHA512
+EXTERNAL HB_MD5
+EXTERNAL HB_CRC32
+EXTERNAL HB_BLOWFISHKEY
+EXTERNAL HB_BLOWFISHENCRYPT
+EXTERNAL HB_JSONENCODE
+EXTERNAL HB_JSONDECODE
+EXTERNAL HB_LIBEXT
+EXTERNAL HB_HKEYAT
+EXTERNAL HB_HDELAT
+EXTERNAL HB_HKEYS
+EXTERNAL HB_HKEEPORDER
+EXTERNAL HB_FGETATTR
+EXTERNAL HB_FSETATTR
 
 /* For hbshell */
 STATIC s_cDirBase_hbshell
@@ -658,7 +666,7 @@ PROCEDURE _APPMAIN( ... )
    hb_FSetDevMode( hb_gtInfo( HB_GTI_ERRORFD ), FD_TEXT )
 
    nTargetTO_DO := 1
-   DO WHILE .T.
+   WHILE .T.
 
       aArgsTarget := {}
       nTarget := 0
@@ -8666,7 +8674,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
                hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
                cType := I_( "(compiled)" )
                lOK := .T.
-            END SEQUENCE
+            END
          ENDIF
          IF ! lOK .AND. !( Lower( cExt ) == ".hrb" ) /* Optimization: Don't try to load it as .prg if the extension is .hrb */
             cType := I_( "(source)" )
@@ -8923,7 +8931,7 @@ STATIC FUNCTION PlugIn_call_low( hbmk, cName, hrb, ctx )
       IF ! hbmk[ _HBMK_lQuiet ]
          _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Executing plugin: %1$s at %3$s(%4$d)\n'%2$s'" ), cName, hbmk_ErrorMessage( oError ), oError:cargo[ 1 ], oError:cargo[ 2 ] ) )
       ENDIF
-   END SEQUENCE
+   END
 
    RETURN lSuccess
 
@@ -9438,7 +9446,7 @@ STATIC FUNCTION FNameNameGetNoExt( cFileName )
 
    hb_FNameSplit( cFileName,, @cName )
 
-   DO WHILE ! Empty( cName ) .AND. ! Empty( hb_FNameExt( cName ) )
+   WHILE ! Empty( cName ) .AND. ! Empty( hb_FNameExt( cName ) )
       hb_FNameSplit( cName,, @cName )
    ENDDO
 
@@ -10278,7 +10286,7 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
    LOCAL tmp
 
    nEnd := 1
-   DO WHILE .T.
+   WHILE .T.
       IF ( nStart := hb_At( _MACRO_OPEN, cItem, nEnd ) ) == 0
          EXIT
       ENDIF
@@ -10383,7 +10391,7 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
             IF ! hbmk[ _HBMK_lQuiet ]
                _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Error in filter expression: '%1$s'" ), cFilterSrc ) )
             ENDIF
-         END SEQUENCE
+         END
 
          RETURN cRetVal
       ENDIF
@@ -10400,7 +10408,7 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
 
    LOCAL cStdOut
 
-   DO WHILE ( nStart := At( cStart, cString ) ) > 0 .AND. ;
+   WHILE ( nStart := At( cStart, cString ) ) > 0 .AND. ;
             ( nEnd := hb_At( _MACRO_CLOSE, cString, nStart + Len( cStart ) ) ) > 0
 
       cMacro := MacroGet( hbmk, SubStr( cString, nStart + Len( cStart ), nEnd - nStart - Len( cStart ) ), cFileName )
@@ -10408,7 +10416,7 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
       cString := Left( cString, nStart - 1 ) + cMacro + SubStr( cString, nEnd + Len( _MACRO_CLOSE ) )
    ENDDO
 
-   DO WHILE ( nStart := At( _CMDSUBST_OPEN, cString ) ) > 0 .AND. ;
+   WHILE ( nStart := At( _CMDSUBST_OPEN, cString ) ) > 0 .AND. ;
             ( nEnd := hb_At( _CMDSUBST_CLOSE, cString, nStart + Len( _CMDSUBST_OPEN ) ) ) > 0
       cMacro := SubStr( cString, nStart + Len( _CMDSUBST_OPEN ), nEnd - nStart - Len( _CMDSUBST_OPEN ) )
       cStdOut := ""
@@ -10582,7 +10590,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
             cLine := AllTrim( cLine )
             IF LEFTEQUAL( cLine, '{ "' ) .AND. "HB_FS_FIRST" $ cLine .AND. !( "HB_FS_STATIC" $ cLine )
                n := 4
-               DO WHILE ( c := SubStr( cLine, n++, 1 ) ) != '"'
+               WHILE ( c := SubStr( cLine, n++, 1 ) ) != '"'
                   cFuncName += c
                ENDDO
                EXIT
@@ -10603,7 +10611,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
             n += 11
          ENDIF
          IF n != 0
-            DO WHILE ( c := SubStr( cFuncList, n++, 1 ) ) == "_" .OR. ;
+            WHILE ( c := SubStr( cFuncList, n++, 1 ) ) == "_" .OR. ;
                      hb_asciiIsDigit( c ) .OR. hb_asciiIsAlpha( c )
                IF c == "x" .AND. IsHexDigit( SubStr( cFuncList, n, 1 ) ) .AND. ;
                                  IsHexDigit( SubStr( cFuncList, n + 1, 1 ) )
@@ -12649,7 +12657,7 @@ STATIC FUNCTION __hbshell_plugins_load( hPlugins, aParams )
          RECOVER USING oError
             plugin[ _PLUGIN_hHRB ] := NIL
             OutErr( hb_StrFormat( I_( "Error: Loading shell plugin: %1$s\n'%2$s'" ), cFile:__enumKey(), hbmk_ErrorMessage( oError ) ) + _OUT_EOL )
-         END SEQUENCE
+         END
       ENDIF
 
       IF ! Empty( plugin[ _PLUGIN_hHRB ] )
@@ -12771,7 +12779,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
 
    plugins := __hbshell_plugins_load( __hbshell_plugins(), aParams )
 
-   DO WHILE .T.
+   WHILE .T.
 
       IF cLine == NIL
          cLine := Space( HB_LINE_LEN )
@@ -12979,7 +12987,7 @@ STATIC PROCEDURE __hbshell_Exec( cCommand )
          ENDIF
       ENDIF
 
-   END SEQUENCE
+   END
 
    s_nRow := Row()
    s_nCol := Col()

@@ -2,7 +2,7 @@
 # $Id$
 #
 
--q0 -w3 -es2 -kmo -l
+-q0 -w3 -es2 -kmo -l -u
 
 {HB_HAS_GPM}-prgflag=-DHB_HAS_GPM
 {HB_HAS_WATT}-prgflag=-DHB_HAS_WATT
