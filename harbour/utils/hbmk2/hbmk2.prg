@@ -556,7 +556,7 @@ EXTERNAL HB_FSETATTR
 /* For hbshell */
 STATIC s_cDirBase_hbshell
 STATIC s_cProgName_hbshell
-STATIC s_hLibExtDyn := { => }
+STATIC s_hLibExt := { => }
 
 #define HB_HISTORY_LEN 500
 #define HB_LINE_LEN    256
@@ -12450,7 +12450,7 @@ STATIC PROCEDURE __hbshell_ext_static_init()
       cName := __dynsGetName( tmp )
       IF LEFTEQUAL( cName, "__HBEXTERN__" ) .AND. ;
          !( "|" + cName + "|" $ "|__HBEXTERN__HBCPAGE__|" )
-         s_hLibExtDyn[ Lower( SubStr( cName, Len( "__HBEXTERN__" ) + 1, Len( cName ) - Len( "__HBEXTERN__" ) - Len( "__" ) ) ) ] := NIL
+         s_hLibExt[ Lower( SubStr( cName, Len( "__HBEXTERN__" ) + 1, Len( cName ) - Len( "__HBEXTERN__" ) - Len( "__" ) ) ) ] := NIL
       ENDIF
    NEXT
 
@@ -12478,7 +12478,7 @@ FUNCTION hbshell_ext_load( cName )
 
    IF ! Empty( cName )
       IF hb_Version( HB_VERSION_SHARED )
-         IF !( cName $ s_hLibExtDyn )
+         IF !( cName $ s_hLibExt )
             cFileName := FindInPath( tmp := hb_libName( cName + hb_libPostfix() ),;
                             iif( hb_Version( HB_VERSION_UNIX_COMPAT ), GetEnv( "LD_LIBRARY_PATH" ), GetEnv( "PATH" ) ) )
             IF Empty( cFileName )
@@ -12488,7 +12488,7 @@ FUNCTION hbshell_ext_load( cName )
                IF Empty( hLib )
                   OutErr( hb_StrFormat( I_( "Error loading '%1$s' (%2$s)." ), cName, cFileName ) + _OUT_EOL )
                ELSE
-                  s_hLibExtDyn[ cName ] := hLib
+                  s_hLibExt[ cName ] := hLib
                   RETURN .T.
                ENDIF
             ENDIF
@@ -12502,18 +12502,18 @@ FUNCTION hbshell_ext_load( cName )
 
 FUNCTION hbshell_ext_unload( cName )
 
-   IF cName $ s_hLibExtDyn .AND. s_hLibExtDyn[ cName ] != NIL
-      hb_HDel( s_hLibExtDyn, cName )
+   IF cName $ s_hLibExt .AND. s_hLibExt[ cName ] != NIL
+      hb_HDel( s_hLibExt, cName )
       RETURN .T.
    ENDIF
 
    RETURN .F.
 
 FUNCTION hbshell_ext_get_list()
-   LOCAL aName := Array( Len( s_hLibExtDyn ) )
+   LOCAL aName := Array( Len( s_hLibExt ) )
    LOCAL hLib
 
-   FOR EACH hLib IN s_hLibExtDyn
+   FOR EACH hLib IN s_hLibExt
       aName[ hLib:__enumIndex() ] := hLib:__enumKey() + iif( Empty( hLib ), "", "*" )
    NEXT
 
