@@ -78,6 +78,7 @@
 #include "directry.ch"
 #include "error.ch"
 #include "fileio.ch"
+#include "set.ch"
 #include "simpleio.ch" /* Don't delete this, it's useful for development. */
 
 #include "hbgtinfo.ch"
@@ -578,8 +579,7 @@ PROCEDURE _APPMAIN( ... )
 
    /* for temp debug messages */
 
-   SET DATE ANSI
-   SET CENTURY ON
+   Set( _SET_DATEFORMAT, "yyyy.mm.dd" )
 
    /* Expand wildcard project specs */
 
@@ -591,7 +591,7 @@ PROCEDURE _APPMAIN( ... )
          ( Left( hb_PValue( 1 ), 6 ) == "-hbreg" .OR. ;
            Left( hb_PValue( 1 ), 8 ) == "-hbunreg" ) )
       __hbshell( ... )
-      QUIT
+      RETURN
    ENDIF
 
    aArgsProc := {}
@@ -12730,6 +12730,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
    LOCAL plugins
 
    LOCAL cDomain := ""
+   LOCAL cPrompt
    LOCAL tmp
 
    hbshell_gtInteractive()
@@ -12741,8 +12742,8 @@ STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
 
    hb_gtInfo( HB_GTI_ICONRES, 1 )
 
-   CLEAR SCREEN
-   SET SCOREBOARD OFF
+   hb_Scroll()
+   Set( _SET_SCOREBOARD, .F. )
    GetList := {}
 
    __hbshell_HistoryLoad()
@@ -12780,9 +12781,11 @@ STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
 
       nMaxRow := MaxRow()
       nMaxCol := MaxCol()
-      @ nMaxRow, 0 SAY cDomain + "."
-      @ nMaxRow, Col() GET cLine ;
-                       PICTURE "@KS" + hb_ntos( nMaxCol - Col() + 1 )
+
+      hb_DispOutAt( nMaxRow, 0, cPrompt := cDomain + "." )
+
+      AAdd( GetList, Get():New( nMaxRow, Len( cPrompt ), {| v | iif( PCount() == 0, cLine, cLine := v ) }, "cLine", "@KS" + hb_ntos( nMaxCol - Len( cPrompt ) + 1 ) ) )
+      ATail( GetList ):display()
 
       SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
 
@@ -12799,7 +12802,8 @@ STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
       bKeyResize := SetKey( HB_K_RESIZE,;
          {|| lResize := .T., hb_KeyPut( K_ENTER ) } )
 
-      READ
+      ReadModal( GetList )
+      GetList := {}
 
       SetKey( K_DOWN, bKeyDown )
       SetKey( K_UP, bKeyUp )
@@ -12814,7 +12818,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
             cLine := NIL
          ENDIF
          IF nMaxRow != MaxRow() .OR. nMaxCol != MaxCol()
-            @ nMaxRow, 0 CLEAR
+            hb_Scroll( nMaxRow, 0 )
          ENDIF
          LOOP
       ENDIF
@@ -12831,7 +12835,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
 
       cCommand := AllTrim( cLine, " " )
       cLine := NIL
-      @ nMaxRow, 0 CLEAR
+      hb_Scroll( nMaxRow, 0 )
       __hbshell_Info( cCommand )
 
       IF ! Empty( cCommand )
@@ -12852,7 +12856,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
             ENDIF
 
             IF s_nRow >= MaxRow()
-               Scroll( 3, 0, MaxRow(), MaxCol(), 1 )
+               hb_Scroll( 3, 0, MaxRow(), MaxCol(), 1 )
                s_nRow := MaxRow() - 1
             ENDIF
          ENDIF
@@ -12885,7 +12889,7 @@ STATIC FUNCTION __hbshell_GetHidden()
    SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
    bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
 
-   READ
+   ReadModal( GetList )
 
    /* Positions the cursor on the line previously saved */
    SetPos( nSavedRow, MaxCol() - 1 )
