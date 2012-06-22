@@ -98,46 +98,41 @@
          writing, most of them has one created.
          Thank you. [vszakats] */
 
-/* TODO: Support debug/release modes. Some default setting can be set
-         accordingly, and user can use it to further tweak settings. */
-/* TODO: Further clean hbmk context var usage (global scope, project scope,
-         adding rest of variables). */
-/* TODO: Add a way to fallback to stop if required headers couldn't be found.
-         This needs a way to spec what key headers to look for. */
-
-/* TODO: Clean up compiler autodetection and add those few feature only
-         found in GNU Make / global.mk, like *nix native autodetection,
-         autodetection of watcom cross-build setups, poccarm/pocc64 setups,
-         clang, etc. */
-
-/* TODO: When full runner functionality, command console and make is
-         implemented. Consider renaming the tool to simply 'hb'. */
-
-/* TODO: Turn off lib grouping by default */
-
-/* TODO: Use hashes instead of arrays for input files, options */
-/* TODO: Avoid adding certain options and input files twice */
-
-/* TODO: Next gen compiler autodetection:
-         1. Gather supported compilers by Harbour installation
-            (look for lib/<plat>/*[/<name>] subdirs)
-            Show error if nothing is found
-         2. Look if any supported compilers are found embedded, in PATH
-            or on HB_CCPATH for target <plat>.
-            Show error if nothing is found
-         3. If HB_COMPILER is set to one of them, select it.
-            (TODO: handle multiple installations of the same compiler.
-            F.e. embedded mingw and one in PATH, or two versions of MSVC)
-         4. If HB_COMPILER is set, but not to one of them, show warning and
-            use the highest one on the priority list.
-         5. If HB_COMPILER is not set,
-            use the highest one on the priority list.
-         NOTES: - Priority list: HB_CCPATH, PATH, embedded.
-                - Priority list: mingw, msvc, bcc, watcom, pocc, xcc
-                - Compilers of native CPU target have higher priority. (extra)
-                  On x64 Windows: msvc64, msvc, msvcia64, mingw64, mingw, ...
-                  On x86 Windows: msvc, msvc64, msvcia64, mingw, mingw64, ...
-                  On IA64 Windows: msvcia64, msvc, msvc64, mingw, mingw64, ... */
+/* TODOs:
+   - Support debug/release modes. Some default setting can be set
+     accordingly, and user can use it to further tweak settings.
+   - Further clean hbmk context var usage (global scope, project scope,
+     adding rest of variables).
+   - Add a way to fallback to stop if required headers couldn't be found.
+     This needs a way to spec what key headers to look for.
+   - Clean up compiler autodetection and add those few feature only
+     found in GNU Make / global.mk, like *nix native autodetection,
+     autodetection of watcom cross-build setups, poccarm/pocc64 setups,
+     clang, etc.
+   - Consider renaming the tool to simply 'hb'.
+   - Turn off lib grouping by default
+   - Avoid adding certain options and input files twice
+   - Next gen compiler autodetection:
+     1. Gather supported compilers by Harbour installation
+        (look for lib/<plat>/*[/<name>] subdirs)
+        Show error if nothing is found
+     2. Look if any supported compilers are found embedded, in PATH
+        or on HB_CCPATH for target <plat>.
+        Show error if nothing is found
+     3. If HB_COMPILER is set to one of them, select it.
+        (TODO: handle multiple installations of the same compiler.
+        F.e. embedded mingw and one in PATH, or two versions of MSVC)
+     4. If HB_COMPILER is set, but not to one of them, show warning and
+        use the highest one on the priority list.
+     5. If HB_COMPILER is not set,
+        use the highest one on the priority list.
+     NOTES: - Priority list: HB_CCPATH, PATH, embedded.
+            - Priority list: mingw, msvc, bcc, watcom, pocc, xcc
+            - Compilers of native CPU target have higher priority. (extra)
+              On x64 Windows: msvc64, msvc, msvcia64, mingw64, mingw, ...
+              On x86 Windows: msvc, msvc64, msvcia64, mingw, mingw64, ...
+              On IA64 Windows: msvcia64, msvc, msvc64, mingw, mingw64, ...
+ */
 
 #ifndef _HBMK_EMBEDDED_
 
@@ -163,7 +158,7 @@ EXTERNAL HB_GT_CGI_DEFAULT
    EXTERNAL HB_GT_TRM
 #endif
 
-#endif
+#endif /* _HBMK_EMBEDDED_ */
 
 EXTERNAL hbmk_KEYW
 
@@ -500,8 +495,6 @@ EXTERNAL hbmk_KEYW
 #define _HBMKDEP_lDetected      16
 #define _HBMKDEP_MAX_           16
 
-#ifndef _HBMK_EMBEDDED_
-
 #define _ERRLEV_OK              0
 #define _ERRLEV_UNKNPLAT        1
 #define _ERRLEV_UNKNCOMP        2
@@ -526,6 +519,12 @@ EXTERNAL hbmk_KEYW
 #define HBMK_ISCOMP( list )     HBMK_IS_IN( hbmk[ _HBMK_cCOMP ], list )
 
 #define PathMakeAbsolute( cPathR, cPathA ) hb_PathJoin( cPathA, cPathR )
+
+/* NOTE: Security token to protect against plugins accessing our
+         internal structures referenced from context variable */
+STATIC s_cSecToken := NIL
+
+#ifndef _HBMK_EMBEDDED_
 
 /* Request for runner and shell */
 EXTERNAL __HB_EXTERN__
@@ -567,10 +566,6 @@ STATIC s_nCol := 0
 STATIC s_aHistory := {}
 STATIC s_lPreserveHistory := .T.
 STATIC s_lWasLoad := .F.
-
-/* NOTE: Security token to protect against plugins accessing our
-         internal structures referenced from context variable */
-STATIC s_cSecToken := NIL
 
 PROCEDURE _APPMAIN( ... )
    LOCAL aArgsProc
@@ -721,7 +716,7 @@ PROCEDURE _APPMAIN( ... )
 
    RETURN
 
-#endif
+#endif /* _HBMK_EMBEDDED_ */
 
 STATIC PROCEDURE hbmk_COMP_Setup( cARCH, cCOMP, cBasePath )
 
@@ -12234,6 +12229,8 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
 
 /* Implement hbshell (formerly known as hbrun) */
 
+#ifndef _HBMK_EMBEDDED_
+
 #if defined( __PLATFORM__DOS )
    #define _EXT_FILE_ "hb_ext.ini"
 #else
@@ -13138,6 +13135,8 @@ STATIC FUNCTION __hbshell_gtDefault()
 #else
    RETURN "GTCGI"
 #endif
+
+#endif /* _HBMK_EMBEDDED_ */
 
 /* ------------------------------------------------------------- */
 
