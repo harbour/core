@@ -35,9 +35,7 @@ Constructor = no
  */
 HB_FUNC( QT_QDESKTOPSERVICES )
 {
-   PHB_ITEM pItem = hb_itemPutNI( NULL, 0 );
-   hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, pItem, "HB_QDESKTOPSERVICES", NULL, HBQT_BIT_NONE ) );
-   hb_itemRelease( pItem );
+   HB_FUNC_EXEC( HB_QDESKTOPSERVICES );
 }
 </CODE>
 

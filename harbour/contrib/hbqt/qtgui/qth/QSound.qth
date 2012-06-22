@@ -61,6 +61,8 @@ void play ( const QString & filename )
 </PROTOS>
 
 <SLOTS>
+void play ()
+void stop ()
 </SLOTS>
 
 <SIGNALS>

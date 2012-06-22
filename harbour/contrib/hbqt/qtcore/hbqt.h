@@ -101,7 +101,6 @@ HB_EXPORT void *    hbqt_get_ptr( PHB_ITEM pObj );
 HB_EXPORT void      hbqt_errRT_ARG( void );
 HB_EXPORT PHB_ITEM  hbqt_defineClassBegin( const char * pszClsName, PHB_ITEM s_oClass, const char * pszParentClsStr );
 HB_EXPORT void      hbqt_defineClassEnd( PHB_ITEM s_oClass, PHB_ITEM oClass );
-HB_EXPORT void      hbqt_addDeleteList( PHB_ITEM item ); /* populate a list of PHB_ITEM to delete at exit time */
 
 HB_EXPORT PHB_ITEM  hbqt_bindGetHbObject( PHB_ITEM pItem, void * qtObject, const char * szClassFunc, PHBQT_DEL_FUNC pDelete, int iFlags );
 HB_EXPORT PHB_ITEM  hbqt_bindSetHbObject( PHB_ITEM pItem, void * qtObject, const char * szClassName, PHBQT_DEL_FUNC pDelFunc, int iFlags );

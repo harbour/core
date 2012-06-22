@@ -183,12 +183,10 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
                   hb_itemRelease( pArray );
                }
             }
-            #if 0
             if( eventtype == QEvent::Close )
             {
                stopTheEventChain = true;
             }
-            #endif
          }
       }
       hb_vmRequestRestore();

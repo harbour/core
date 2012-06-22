@@ -831,8 +831,6 @@ static void hbqt_lib_exit( void * cargo )
 {
    HB_SYMBOL_UNUSED( cargo );
    fIsQuitting = HB_TRUE;
-   s_app->exit( 0 );
-   delete s_app;
 }
 
 HB_FUNC( HBQT_ISACTIVEAPPLICATION )

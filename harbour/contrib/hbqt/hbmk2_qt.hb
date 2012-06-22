@@ -1499,7 +1499,6 @@ METHOD HbQtSource:build()
    AAdd( aLine, "   if( s_oClass == NULL )" )
    AAdd( aLine, "   {" )
    AAdd( aLine, "      s_oClass = hb_itemNew( NULL );" )
-   AAdd( aLine, "      hbqt_addDeleteList( s_oClass );" )
    FOR EACH k IN hb_aTokens( s, "," )
       k := lower( AllTrim( k ) )
       IF k == "hbqtobjecthandler"
