@@ -58,21 +58,6 @@ void setText ( const QString & text )
 void setUrls ( const QList<QUrl> & urls )
 QString text () const
 QList<QUrl> urls () const
-
-#          Harbour Callable Function Till QList<QUrl> is not resolved
-#
-QStringList * hbUrlList() const{
-   QMimeData * _mimedata = ( QMimeData * ) hbqt_par_ptr( 0 );
-   if( _mimedata )
-   {
-      QStringList strList;
-      foreach ( QUrl url, ( _mimedata )->urls() )
-      {
-         strList << ( QString ) url.toString().toAscii().data();
-      }
-      hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, new QStringList( strList ), "HB_QSTRINGLIST", hbqt_del_QStringList, HBQT_BIT_OWNER ) );
-   }
-}
 </PROTOS>
 
 <SLOTS>

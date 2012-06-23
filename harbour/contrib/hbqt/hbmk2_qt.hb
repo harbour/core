@@ -1724,7 +1724,7 @@ METHOD HbQtSource:getReturnAsList( oMtd, FP, cPrefix )
             ENDIF
          ENDIF
          AAdd( aLines, cPrefix + '}' )
-         AAdd( aLines, cPrefix + 'hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, new QList<PHB_ITEM>*( qList ), "HB_QLIST", hbqt_del_QList, HBQT_BIT_OWNER ) );' )
+         AAdd( aLines, cPrefix + 'hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, qList, "HB_QLIST", hbqt_del_QList, HBQT_BIT_OWNER ) );' )
       ENDIF
    ELSE
       AAdd( aLines, cPrefix + FP + ";" )
