@@ -31,8 +31,7 @@ Detached = yes
  */
 HB_FUNC( QT_QCLIPBOARD )
 {
-   //__HB_RETPTRGC__( QApplication::clipboard() );
-   pObj = QApplication::clipboard() ;
+   hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ( void* ) QApplication::clipboard(), "HB_QCLIPBOARD", NULL, HBQT_BIT_NONE ) );
 }
 </CODE>
 
