@@ -62,6 +62,7 @@
 #if QT_VERSION >= 0x040500
 
 #include "hbqt_hbqevents.h"
+#include <QtCore/QVariant>
 
 HBQEvents * hbqt_bindGetReceiverEventsByHbObject( PHB_ITEM pObject );
 
@@ -131,6 +132,10 @@ int HBQEvents::hbConnect( PHB_ITEM pObj, int event, PHB_ITEM bBlock )
       QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
       if( object )
       {
+         char szParams[ 20 ];
+         hb_snprintf( szParams, sizeof( szParams ), "EVENT_%d", event );
+         object->setProperty( szParams, QVariant( event ) );
+
          hbqt_bindAddEvent( pObj, event, bBlock );
          nResult = 0;
       }
@@ -147,6 +152,10 @@ int HBQEvents::hbDisconnect( PHB_ITEM pObj, int event )
    QObject * object = ( QObject * ) hbqt_get_ptr( pObj );
    if( object )
    {
+      char szParams[ 20 ];
+      hb_snprintf( szParams, sizeof( szParams ), "EVENT_%d", event );
+      object->setProperty( szParams, QVariant() );
+
       hbqt_bindDelEvent( pObj, event, NULL );
       nResult = 0;
    }
@@ -157,39 +166,48 @@ bool HBQEvents::eventFilter( QObject * object, QEvent * event )
 {
    bool stopTheEventChain = false;
 
-   if( hb_vmRequestReenter() )
+   if( object )
    {
-      if( object )
+      QEvent::Type eventtype = event->type();
+      if( ( int ) eventtype > 0 )
       {
-         QEvent::Type eventtype = event->type();
-         if( ( int ) eventtype > 0 )
+         char szParams[ 20 ];
+         hb_snprintf( szParams, sizeof( szParams ), "EVENT_%d", ( int ) eventtype );
+         if( object->property( szParams ).toInt() > 0 )
          {
-            int eventId = s_lstEvent.indexOf( eventtype );
-
-            if( eventId > -1 )
+            if( hb_vmRequestReenter() )
             {
-               PHB_ITEM pArray = hbqt_bindGetEvents( hbqt_bindGetHbObjectByQtObject( object ), eventtype );
-               if( pArray )
+               int eventId = s_lstEvent.indexOf( eventtype );
+               if( eventId > -1 )
                {
-                  if( hb_vmRequestQuery() == 0 )
+                  PHB_ITEM hbObject = hbqt_bindGetHbObjectByQtObject( object );
+                  if( hbObject )
                   {
-                     PHB_ITEM pItem = hbqt_bindGetHbObject( NULL, ( void * ) event, ( s_lstCreateObj.at( eventId ) ), NULL, HBQT_BIT_NONE );
-                     if( pItem )
+                     PHB_ITEM pArray = hbqt_bindGetEvents( hbObject, eventtype );
+                     hb_itemRelease( hbObject );
+                     if( pArray )
                      {
-                        stopTheEventChain = ( bool ) hb_itemGetL( hb_vmEvalBlockV( hb_arrayGetItemPtr( pArray, 1 ), 1, pItem ) );
-                        hb_itemRelease( pItem );
+                        if( hb_vmRequestQuery() == 0 )
+                        {
+                           PHB_ITEM pItem = hbqt_bindGetHbObject( NULL, ( void * ) event, ( s_lstCreateObj.at( eventId ) ), NULL, HBQT_BIT_NONE );
+                           if( pItem )
+                           {
+                              stopTheEventChain = ( bool ) hb_itemGetL( hb_vmEvalBlockV( hb_arrayGetItemPtr( pArray, 1 ), 1, pItem ) );
+                              hb_itemRelease( pItem );
+                           }
+                        }
+                        hb_itemRelease( pArray );
                      }
                   }
-                  hb_itemRelease( pArray );
                }
-            }
-            if( eventtype == QEvent::Close )
-            {
-               stopTheEventChain = true;
+               if( eventtype == QEvent::Close )
+               {
+                  stopTheEventChain = true;
+               }
+               hb_vmRequestRestore();
             }
          }
       }
-      hb_vmRequestRestore();
    }
    return stopTheEventChain;
 }
