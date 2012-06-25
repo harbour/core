@@ -49,8 +49,6 @@
  *
  */
 
-//--------------------------------------------------------------//
-
 #define MATCH_STRING 1
 #define MATCH_START  2
 #define MATCH_END    3
@@ -61,16 +59,15 @@ FUNCTION hb_RegexReplace( cRegex, cString, cReplace, lCaseSensitive, lNewLine, n
    LOCAL cReturn
    LOCAL nOffSet := 0
    LOCAL cSearch, nStart, nLenSearch, nLenReplace
-   //LOCAL nEnd
 
    aMatches := HB_RegExAll( cRegEx, cString, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch, .F. )
    cReturn := cString
 
    IF ! Empty( aMatches )
       FOR EACH aMatch IN aMatches
-         IF ValType( aMatch ) == "A" .AND. Len( aMatch ) == 1 .AND. ;
-            ValType( aMatch[1] ) == "A"
-            aMatch := aMatch[1]
+         IF HB_ISARRAY( aMatch ) .AND. Len( aMatch ) == 1 .AND. ;
+            HB_ISARRAY( aMatch[ 1 ] )
+            aMatch := aMatch[ 1 ]
          ENDIF
          IF Len( aMatch ) == 3 // if regex matches I must have an array of 3 elements
             cSearch := aMatch[ MATCH_STRING ]
@@ -84,6 +81,4 @@ FUNCTION hb_RegexReplace( cRegex, cString, cReplace, lCaseSensitive, lNewLine, n
 
    ENDIF
 
-RETURN cReturn
-
-//--------------------------------------------------------------//
+   RETURN cReturn

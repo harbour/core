@@ -242,7 +242,7 @@ STATIC FUNCTION DShowHash( hVar, lRecursive, nIndent, nRecursionLevel, nMaxRecur
 
    //TraceLog( "DShowHash: hVar, ValType( hVar ), lRecursive", hVar, ValType( hVar ), ValToPrg( hVar ), lRecursive )
 
-   IF ValType( hVar ) == "H"
+   IF HB_ISHASH( hVar )
       nEolLen := Len( hb_eol() )
       cString += Space( nIndent ) + "{" + hb_eol()
       FOR EACH xVal IN hVar

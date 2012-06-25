@@ -153,20 +153,20 @@
    #xtranslate hb_mutexNotify(<x,...>)     => Notify(<x>)
    #xtranslate hb_mutexNotifyAll(<x,...>)  => NotifyAll(<x>)
 
-   #xtranslate hb_mutexSubscribe(<x,...>)  => {|mtx, nTimeOut, xSubscribed| ;;
+   #xtranslate hb_mutexSubscribe(<x,...>)  => {| mtx, nTimeOut, xSubscribed | ;;
                                                 local lSubscribed ;;
                                                 xSubscribed := Subscribe( mtx, ;
-                                                                          iif( hb_isNumeric( nTimeOut ), nTimeOut * 1000, ), ;
+                                                                          iif( HB_ISNUMERIC( nTimeOut ), nTimeOut * 1000, ), ;
                                                                           @lSubscribed ) ;
                                                 return lSubscribed ; }:eval( <x> )
-   #xtranslate hb_mutexSubscribeNow(<x,...>) => {|mtx, nTimeOut, xSubscribed| ;;
+   #xtranslate hb_mutexSubscribeNow(<x,...>) => {| mtx, nTimeOut, xSubscribed | ;;
                                                 local lSubscribed ;;
                                                 xSubscribed := SubscribeNow( mtx, ;
-                                                                             iif( hb_isNumeric( nTimeOut ), nTimeOut * 1000, ), ;
+                                                                             iif( HB_ISNUMERIC( nTimeOut ), nTimeOut * 1000, ), ;
                                                                              @lSubscribed ) ;
                                                 return lSubscribed ; }:eval( <x> )
 
-   #xtranslate hb_MutexLock( <x>, <n> )    => iif( !hb_isNumeric( <n> ), hb_MutexLock( <x> ) ;
+   #xtranslate hb_MutexLock( <x>, <n> )    => iif( ! HB_ISNUMERIC( <n> ), hb_MutexLock( <x> ) ;
                                                  iif( <n> <= 0, hb_MutexTryLock( <x> ), ;
                                                     hb_MutexTimeOutLock( <x>, <n> ) ) )
 
@@ -281,8 +281,8 @@
    #xuntranslate NetName(                      =>
    #xuntranslate MemoWrit(                     =>
 
-   #xtranslate NetName(<n>)                    => iif( hb_isNumeric( <n> ) .AND. <n> == 1, hb_UserName(), NetName() )
-   #xtranslate MemoWrit(<x>,<y>,<z>)           => iif( hb_isLogical(<z>) .AND. ! <z>, hb_MemoWrit(<x>,<y>), MemoWrit(<x>,<y>) )
+   #xtranslate NetName(<n>)                    => iif( HB_ISNUMERIC( <n> ) .AND. <n> == 1, hb_UserName(), NetName() )
+   #xtranslate MemoWrit(<x>,<y>,<z>)           => iif( HB_ISLOGICAL( <z> ) .AND. ! <z>, hb_MemoWrit(<x>,<y>), MemoWrit(<x>,<y>) )
 
    #xuntranslate AIns(                         =>
    #xuntranslate ADel(                         =>
@@ -311,7 +311,7 @@
    #xcommand FINALLY => ALWAYS
 
    /* EXTENDED CODEBLOCKs */
-   #xtranslate \<|[<x,...>]| => {|<x>|
+   #xtranslate \<|[<x,...>]| => {| <x> |
    #xcommand > [<*x*>]       => } <x>
 
    /* xHarbour operators: IN, HAS, LIKE, >>, <<, |, &, ^^ */
@@ -421,26 +421,26 @@
    #xtranslate DestroyMutex( <x> )             =>
    #xtranslate hb_MutexTryLock( <x> )          => hb_mutexLock( <x>, 0 )
    #xtranslate hb_MutexTimeOutLock( <x> )      => hb_mutexLock( <x>, 0 )
-   #xtranslate hb_MutexTimeOutLock( <x>, <n> ) => hb_mutexLock( <x>, IIF( hb_isNumeric( <n> ), <n> / 1000, 0 ) )
+   #xtranslate hb_MutexTimeOutLock( <x>, <n> ) => hb_mutexLock( <x>, iif( HB_ISNUMERIC( <n> ), <n> / 1000, 0 ) )
 
    #xtranslate Notify( <x,...> )               => hb_mutexNotify( <x> )
    #xtranslate NotifyAll( <x,...> )            => hb_mutexNotifyAll( <x> )
-   #xtranslate Subscribe( <x,...> )            => {|mtx, nTimeOut, lSubscribed| ;;
+   #xtranslate Subscribe( <x,...> )            => {| mtx, nTimeOut, lSubscribed | ;;
                                                    local xSubscribed ;;
                                                    lSubscribed := hb_mutexSubscribe( mtx, ;
-                                                                                     iif( hb_isNumeric( nTimeOut ), nTimeOut / 1000, ), ;
+                                                                                     iif( HB_ISNUMERIC( nTimeOut ), nTimeOut / 1000, ), ;
                                                                                      @xSubscribed ) ;
                                                    return xSubscribed ; }:eval( <x> )
-   #xtranslate SubscribeNow( <x,...> )         => {|mtx, nTimeOut, lSubscribed| ;;
+   #xtranslate SubscribeNow( <x,...> )         => {| mtx, nTimeOut, lSubscribed | ;;
                                                    local xSubscribed ;;
                                                    lSubscribed := hb_mutexSubscribeNow( mtx, ;
-                                                                                        iif( hb_isNumeric( nTimeOut ), nTimeOut / 1000, ), ;
+                                                                                        iif( HB_ISNUMERIC( nTimeOut ), nTimeOut / 1000, ), ;
                                                                                         @xSubscribed ) ;
                                                    return xSubscribed ; }:eval( <x> )
 
    #xtranslate StartThread( [<x>] )            => hb_threadStart( <x> )
-   #xtranslate StartThread( <x>, <y> [, <z,...>] ) => iif( valtype( <x> ) == "O" .and. hb_isString( <y> ), ;
-                                                           hb_threadStart( {|...| (<x>):&(<y>)( ... ) } [, <z>] ), ;
+   #xtranslate StartThread( <x>, <y> [, <z,...>] ) => iif( HB_ISOBJECT( <x> ) .AND. HB_ISSTRING( <y> ), ;
+                                                           hb_threadStart( {| ... | (<x>):&(<y>)( ... ) } [, <z>] ), ;
                                                            hb_threadStart( <x>, <y> [, <z>] ) )
 
    /* not possible to well replicate xHarbour behavior because it's buggy
@@ -501,16 +501,16 @@
    #xtranslate HAAGETVALUEAT([<x,...>])    => hb_HVALUEAT(<x>)
    #xtranslate HAADELAT([<x,...>])         => hb_HDELAT(<x>)
    #xtranslate HAAGETPOS([<x,...>])        => hb_HPOS(<x>)
-   #xtranslate HAAGETREALPOS(<x>,<y>)      => iif( hb_isNumeric( <y> ) .AND. <y> >= 1 .AND. ;
+   #xtranslate HAAGETREALPOS(<x>,<y>)      => iif( HB_ISNUMERIC( <y> ) .AND. <y> >= 1 .AND. ;
                                                    int( <y> ) <= len( <x> ), int( <y> ), 0 )
-   #xtranslate HGETVAAPOS(<x>)             => {|h| ;;
+   #xtranslate HGETVAAPOS(<x>)             => {| h | ;;
                                                 local a := array( len( h ), v ;;
                                                 for each v in a ;;
                                                    v := v:__enumIndex() ;;
                                                 next ;;
                                                 return a ; }:eval( <x> )
    #xtranslate HGETAACOMPATIBILITY(<x>)    => hb_HKEEPORDER(<x>)
-   #xtranslate HSETAACOMPATIBILITY([<x,...>]) => {|h| ;;
+   #xtranslate HSETAACOMPATIBILITY([<x,...>]) => {| h | ;;
                                                    hb_HKEEPORDER( h ) ;;
                                                    return .T. ; }:eval( <x> )
 
