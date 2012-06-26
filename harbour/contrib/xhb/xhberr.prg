@@ -611,7 +611,7 @@ STATIC FUNCTION LogError( oerr )
            FSeek( nHandle2, 0, FS_SET )
 
            while nBytes > 0
-              nRead := FRead( nHandle2, @cBuff, hb_BLen( cBuffer ) )
+              nRead := FRead( nHandle2, @cBuff, hb_BLen( cBuff ) )
               FWrite( nHandle, cBuff, nRead )
               nBytes -= nRead
               cBuff := Space( 10 )
