@@ -145,9 +145,8 @@ PROCEDURE Main( ... )
    // remove formats that have not been implemented yet
    FOR idx := Len( p_hsSwitches[ "format-list" ] ) TO 1 STEP -1
       IF p_hsSwitches[ "format-list" ][ idx ] == "all"
-
-      ELSEIF hb_IsFunction( "Generate" + p_hsSwitches[ "format-list" ][ idx ] )
-         ASize( ADel( p_hsSwitches[ "format-list" ], idx), Len( p_hsSwitches[ "format-list" ] ) - 1 )
+      ELSEIF ! hb_IsFunction( "Generate" + p_hsSwitches[ "format-list" ][ idx ] )
+         hb_ADel( p_hsSwitches[ "format-list" ], idx, .T. )
       ENDIF
    NEXT
 

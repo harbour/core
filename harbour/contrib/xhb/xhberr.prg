@@ -607,14 +607,14 @@ STATIC FUNCTION LogError( oerr )
 
            nBytes := FSeek( nHandle2, 0, FS_END )
 
-           cBuff := space(10)
+           cBuff := Space( 10 )
            FSeek( nHandle2, 0, FS_SET )
 
            while nBytes > 0
-             nRead := FRead( nHandle2, @cBuff, 10 )
-             FWrite( nHandle, cBuff, nRead )
-             nBytes -= nRead
-             cBuff := space( 10 )
+              nRead := FRead( nHandle2, @cBuff, hb_BLen( cBuffer ) )
+              FWrite( nHandle, cBuff, nRead )
+              nBytes -= nRead
+              cBuff := Space( 10 )
            enddo
 
            FClose( nHandle2 )
@@ -626,7 +626,7 @@ STATIC FUNCTION LogError( oerr )
            FClose( nHandle )
         endif
 
-     Endif
+     endif
 
 Return .f.
 
@@ -641,17 +641,17 @@ STATIC FUNCTION strvalue( c, l )
        cr := c
        EXIT
    CASE "N"
-       cr := Alltrim( Str( c ) )
+       cr := hb_ntos( c )
        EXIT
    CASE "M"
        cr := c
        EXIT
    CASE "D"
-       cr := Dtoc( c )
+       cr := DToC( c )
        EXIT
    CASE "L"
-//     cr := Iif( l, Iif( c, "On", "Off" ), Iif( c, "True", "False" ) )
-       cr := Iif( l, Iif( c, "On", "Off" ), Iif( c, ".t.", ".f." ) )
+//     cr := iif( l, iif( c, "On", "Off" ), iif( c, "True", "False" ) )
+       cr := iif( l, iif( c, "On", "Off" ), iif( c, ".t.", ".f." ) )
        EXIT
    ENDSWITCH
 

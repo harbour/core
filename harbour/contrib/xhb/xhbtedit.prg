@@ -1006,7 +1006,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
 
          OTHERWISE
 
-         IF nKey >= K_SPACE .AND. nKey < 256
+         IF Len( hb_KeyChar( nKey ) ) > 0
             IF ::lEditAllow
                ::ClrTextSelection()
                ::K_Ascii( nKey )
@@ -1435,8 +1435,6 @@ METHOD K_Mouse( nKey ) CLASS XHBEditor
 
 METHOD K_Ascii( nKey ) CLASS XHBEditor
 
-   // nKey := ASC( HB_ANSITOOEM( CHR( nKey ) ) )    // convert from windows
-
    IF !::lEditAllow .OR. ::nCol > ::nWordWrapCol + 1
       RETURN Self
    ENDIF
@@ -1460,10 +1458,10 @@ METHOD K_Ascii( nKey ) CLASS XHBEditor
    // insert char if in insert mode or at end of current line
    //
    IF ::lInsert .OR. ( ::nCol > ::LineLen( ::nRow ) )
-      ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 0, Chr( nKey ) )
+      ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 0, hb_KeyChar( nKey ) )
       ::lChanged := .T.
    ELSE
-      ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 1, Chr( nKey ) )
+      ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 1, hb_KeyChar( nKey ) )
       ::lChanged := .T.
    ENDIF
 
@@ -1778,7 +1776,7 @@ METHOD K_Esc() CLASS XHBEditor
 
       // 2006/JUL/21 - E.F - Exit only if "Y" is pressed.
       //
-      ::lExitEdit := ( Upper( Chr(nKey ) ) == "Y" )
+      ::lExitEdit := ( Upper( hb_KeyChar( nKey ) ) == "Y" )
    ENDIF
 
    IF ::lExitEdit

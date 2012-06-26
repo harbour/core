@@ -94,7 +94,7 @@ FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, ;
    nSeconds *= 1.00
    lforever := ( nSeconds == 0 )
 
-   KEYBOARD CHR( 255 )
+   hb_keyIns( 255 )
    INKEY()
 
    DO WHILE ( lforever .or. nSeconds > 0 ) .and. LASTKEY() != K_ESC

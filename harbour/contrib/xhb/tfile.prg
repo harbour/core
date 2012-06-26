@@ -278,7 +278,7 @@ METHOD ReadByte() CLASS TCgiFile
    LOCAL nBytes
    LOCAL cBuff  := Space( 1 )
 
-   nBytes := Fread( ::Handle, @cBuff, 1 )
+   nBytes := Fread( ::Handle, @cBuff, hb_BLen( cBuff ) )
 
 RETURN IIF( nBytes > 0, Asc( cBuff ), - 1 )
 
@@ -292,7 +292,7 @@ METHOD ReadInt() CLASS TCgiFile
    LOCAL nBytes
    LOCAL cBuff  := Space( 2 )
 
-   nBytes := Fread( ::Handle, @cBuff, 2 )
+   nBytes := Fread( ::Handle, @cBuff, hb_BLen( cBuff ) )
 
 RETURN IIF( nBytes > 0, Bin2i( cBuff ), - 1 )
 
@@ -306,7 +306,7 @@ METHOD ReadLong() CLASS TCgiFile
    LOCAL nBytes
    LOCAL cBuff  := Space( 4 )
 
-   nBytes := Fread( ::Handle, @cBuff, 4 )
+   nBytes := Fread( ::Handle, @cBuff, hb_BLen( cBuff ) )
 
 RETURN IIF( nBytes > 0, Bin2l( cBuff ), - 1 )
 
@@ -318,7 +318,7 @@ RETURN IIF( nBytes > 0, Bin2l( cBuff ), - 1 )
 METHOD WriteByte( nByte ) CLASS TCgiFile
 
 
-   LOCAL lSuccess := ( Fwrite( ::nHandle, Chr( nByte ), 1 ) == 1 )
+   LOCAL lSuccess := ( Fwrite( ::nHandle, hb_BCode( nByte ), 1 ) == 1 )
 RETURN lSuccess
 
 /*
@@ -501,7 +501,7 @@ METHOD PrevLine( nBytes ) CLASS TCgiFile
       //  Check preceeding 2 chars for CR+LF
       Fseek( fHandle, - 2, FS_RELATIVE )
       cTemp := Space( 2 )
-      Fread( fHandle, @cTemp, 2 )
+      Fread( fHandle, @cTemp, hb_BLen( cTemp ) )
 
       IF cTemp == CRLF()
          Fseek( fHandle, - 2, FS_RELATIVE )

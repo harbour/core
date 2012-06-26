@@ -105,12 +105,14 @@ EXPORTED:
 ENDCLASS
 
 METHOD NewFile() CLASS GenerateHTML
-   FWrite( ::nHandle, '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">' + hb_eol() )
 
-   ::OpenTag( "html" )
+   FWrite( ::nHandle, "<!DOCTYPE html>" + hb_eol() )
+
+   ::OpenTag( "html", "xmlns", "http://www.w3.org/1999/xhtml", "lang", "en" )
    ::OpenTag( "head" )
 
    ::Append( ::cTitle /* + IIf( Empty( ::cDescription ), "", " - " + ::cDescription ) */, "title" )
+   ::OpenTag( "meta", "http-equiv", "content-type", "content", "text/html; charset=UTF-8" )
    ::OpenTag( "meta", "name", "generator", "content", "Harbour examples/hbdoc" )
    ::OpenTag( "meta", "name", "keywords", "content", "Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin" )
 
@@ -141,20 +143,20 @@ METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateHTML
 METHOD BeginSection( cSection, cFilename ) CLASS  GenerateHTML
    IF ::IsIndex()
       If cFilename == ::cFilename
-         ::OpenTag( "a", "name", cSection ):Append( cSection, "h" + HB_NTOS( ::Depth + 2 ) ):CloseTag( "a" )//:Newline()
+         ::OpenTag( "div", "id", cSection ):Append( cSection, "h" + HB_NTOS( ::Depth + 2 ) ):CloseTag( "div" )//:Newline()
       ELSE
          ::OpenTag( "a", "href", cFilename + ::cExtension + "#" + cSection ):Append( cSection, "h" + HB_NTOS( ::Depth + 2 ) ):CloseTag( "a" )//:Newline()
       ENDIF
    ELSE
-      ::OpenTag( "a", "name", cSection ):Append( cSection, "h" + HB_NTOS( ::Depth + 2 ) ):CloseTag( "a" )//:Newline()
+      ::OpenTag( "div", "id", cSection ):Append( cSection, "h" + HB_NTOS( ::Depth + 2 ) ):CloseTag( "div" )//:Newline()
    ENDIF
    ::TargetFilename := cFilename
    ::Depth++
    RETURN self
 
 METHOD EndSection( cSection, cFilename ) CLASS  GenerateHTML
-HB_SYMBOL_UNUSED( cSection )
-HB_SYMBOL_UNUSED( cFilename )
+   HB_SYMBOL_UNUSED( cSection )
+   HB_SYMBOL_UNUSED( cFilename )
    ::Depth--
    RETURN self
 
@@ -175,7 +177,7 @@ METHOD AddEntry( oEntry ) CLASS GenerateHTML
 
    FOR idx := 1 TO Len( oEntry:Fields )
       IF oEntry:Fields[ idx ][ 1 ] == "NAME"
-         ::OpenTag( "a", "name", oEntry:filename ):OpenTag( "h4" ):Append( oEntry:Name ):CloseTag( "h4" ):CloseTag( "a" )
+         ::OpenTag( "div", "id", oEntry:filename ):OpenTag( "h4" ):Append( oEntry:Name ):CloseTag( "h4" ):CloseTag( "div" )
       ELSEIF oEntry:IsField( oEntry:Fields[ idx ][ 1 ] ) .AND. oEntry:IsOutput( oEntry:Fields[ idx ][ 1 ] ) .AND. Len( oEntry:&( oEntry:Fields[ idx ][ 1 ] ) ) > 0
          ::WriteEntry( oEntry:Fields[ idx ][ 1 ], oEntry, oEntry:IsPreformatted( oEntry:Fields[ idx ][ 1 ] ) )
       ENDIF
@@ -294,7 +296,7 @@ METHOD Append( cText, cFormat ) CLASS GenerateHTML
 METHOD RecreateStyleDocument( cStyleFile ) CLASS GenerateHTML
 
    IF ! hb_MemoWrit( ::cFolder + hb_ps() + cStyleFile,;
-         "/* Harbour Documents Stylesheet (" + cStyleFile + ") */" + hb_eol() + ;
+         "/* Harbour Documents Stylesheet */" + hb_eol() + ;
          "body {font-family:arial;font-size:14px;line-height:18px;}" + hb_eol() + ;
          /* ".classtitle {font-weight:bold;font-size:22px;padding-bottom:4px;}" + hb_eol() + */ ;
          ".name {font-weight:bold;font-size:18px;margin-left:0px;padding-top:0px;padding-bottom:4px;}" + hb_eol() + ;
