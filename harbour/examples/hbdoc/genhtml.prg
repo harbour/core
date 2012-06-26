@@ -276,9 +276,11 @@ METHOD Append( cText, cFormat ) CLASS GenerateHTML
          cResult := StrTran( cResult, Chr( aFormat[ idx ] ), "&" + aFormat[ idx + 1 ] + ";" )
       NEXT
 
-      aFormat := Split( cFormat, "," )
+      aFormat := hb_ATokens( cFormat, "," )
       FOR idx := Len( aFormat ) TO 1 STEP -1
-         cResult := "<" + aFormat[ idx ] + ">" + cResult + "</" + aFormat[ idx ] + ">"
+         IF ! Empty( aFormat[ idx ] )
+            cResult := "<" + aFormat[ idx ] + ">" + cResult + "</" + aFormat[ idx ] + ">"
+         ENDIF
       NEXT
 
       DO WHILE Right( cResult, Len( hb_eol() ) ) == hb_eol()

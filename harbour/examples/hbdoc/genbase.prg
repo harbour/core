@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Document generator template class
+ * Document generator base class
  *
  * Copyright 2009 April White <april users.sourceforge.net>
  * www - http://harbour-project.org
@@ -103,7 +103,7 @@ METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate
    ::nType := nType
 
    IF ! hb_DirExists( ::cFolder )
-      OutStd( hb_eol(), "Creating folder " + ::cFolder )
+      OutStd( hb_eol() + "Creating folder '" + ::cFolder + "'" )
       hb_DirCreate( ::cFolder )
    ENDIF
 

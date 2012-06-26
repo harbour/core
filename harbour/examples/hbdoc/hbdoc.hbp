@@ -11,10 +11,10 @@
 -gtcgi
 
 hbdoc.prg
+tmplates.prg
 
-gentpl.prg
+genbase.prg
+
 gentxt.prg
 genhtml.prg
 genxml.prg
-
-tmplates.prg

@@ -1008,26 +1008,16 @@ FUNCTION Parse(cVar, xDelimiter)
 
    RETURN cResult
 
-FUNCTION Split(cVar, xDelimiter)
-   LOCAL aResult := {}
-   LOCAL clVar := cVar
-
-   DO WHILE Len(clVar) > 0
-      AAdd(aResult, Parse( @clVar, xDelimiter ) )
-   ENDDO
-
-   RETURN aResult
-
 FUNCTION Join(aVar, cDelimiter)
    LOCAL cResult := ""
 
-   AEval( aVar, {|c,n| cResult += iif( n > 1, cDelimiter, "" ) + c } )
+   AEval( aVar, {| c, n | cResult += iif( n > 1, cDelimiter, "" ) + c } )
 
    RETURN cResult
 
 STATIC PROCEDURE AddErrorCondition( cFile, cMessage, nLine )
    IF p_hsSwitches[ "immediate-errors" ]
-      qout( cFile + ":" + HB_NTOS( nLine ) + ": " + cMessage )
+      OutStd( cFile + ":" + HB_NTOS( nLine ) + ": " + cMessage + hb_eol() )
    ENDIF
    RETURN
 
@@ -1040,10 +1030,10 @@ FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
    hb_default( @lRaw, .F. )
 
    IF nWidth == 0 .or. lRaw
-      aText := Split( cText, hb_eol() )
+      aText := hb_ATokens( cText, hb_eol() )
       idx := 99999
-      AEval( aText, {|c| iif( Empty(c), , idx := Min( idx, Len( c ) - Len( LTrim( c ) ) ) ) } )
-      AEval( aText, {|c,n| aText[ n ] := Space( nLeftMargin ) + SubStr( c, idx + 1 ) } )
+      AEval( aText, {| c | iif( Empty( c ), , idx := Min( idx, Len( c ) - Len( LTrim( c ) ) ) ) } )
+      AEval( aText, {| c, n | aText[ n ] := Space( nLeftMargin ) + SubStr( c, idx + 1 ) } )
       cResult := Join( aText, hb_eol() ) + hb_eol() + hb_eol()
    ELSE
       DO WHILE Len( cText ) > 0
