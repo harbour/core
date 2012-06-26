@@ -55,11 +55,9 @@
  */
 
 #include "hbclass.ch"
-#include "inkey.ch"
-#include "fileio.ch"
 #include "hbdoc.ch"
 
-CLASS GenerateAscii FROM GenerateText
+CREATE CLASS GenerateAscii FROM GenerateText
    METHOD NewIndex( cFolder, cFilename, cTitle, cDescription )
    METHOD NewDocument( cFolder, cFilename, cTitle, cDescription )
 ENDCLASS
@@ -128,7 +126,7 @@ METHOD AddEntry( oEntry ) CLASS GenerateText
       NEXT
 
       IF ! ::lContinuous
-         FWrite( ::nHandle, Chr( K_CTRL_L ) + hb_eol() )
+         FWrite( ::nHandle, hb_BChar( 12 ) + hb_eol() )
       ENDIF
    ENDIF
 
@@ -137,7 +135,7 @@ METHOD AddEntry( oEntry ) CLASS GenerateText
 METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateText
    LOCAL nIndent
    IF ! Empty( cEntry )
-      nIndent := IIf( Len( cCaption ) > 0, 6, 0 )
+      nIndent := iif( Len( cCaption ) > 0, 6, 0 )
       IF Len( cCaption ) > 0 .AND. nIndent > 0
             FWrite( ::nHandle, Space( ::Depth * 6 ) + cCaption + ": " + hb_eol() )
       ENDIF
@@ -150,7 +148,7 @@ METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateTex
 METHOD Generate() CLASS GenerateText
    IF ::IsIndex()
       IF ! ::lContinuous
-         FWrite( ::nHandle, Chr( K_CTRL_L ) + hb_eol() )
+         FWrite( ::nHandle, hb_BChar( 12 ) + hb_eol() )
       ENDIF
    ENDIF
 

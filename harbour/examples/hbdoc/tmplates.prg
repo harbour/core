@@ -58,8 +58,10 @@
 #include "hbclass.ch"
 
 /* a class that will hold one entry */
-CLASS Entry
-EXPORTED:
+CREATE CLASS Entry
+
+   EXPORTED:
+
    CLASSDATA Fields AS ARRAY INIT { ;
       { "DOC",          "Doc" }, ;
       { "TEMPLATE",     "Template" }, ;
@@ -482,7 +484,7 @@ PROCEDURE init_Templates()
       255, "yuml;" ;
    }
 
-RETURN
+   RETURN
 
 
 PROCEDURE ShowTemplatesHelp( cTemplate )
@@ -537,6 +539,8 @@ PROCEDURE ShowComplianceHelp()
       ShowSubHelp( "", 1, 0 )
    NEXT
 
+   RETURN
+
 PROCEDURE ShowPlatformsHelp
    LOCAL idx
 
@@ -545,3 +549,5 @@ PROCEDURE ShowPlatformsHelp
       ShowSubHelp( Decode( "PLATFORMS", NIL, p_aPlatforms[ idx ][ 1 ] ), 1, 6, idx )
       ShowSubHelp( "", 1, 0 )
    NEXT
+
+   RETURN

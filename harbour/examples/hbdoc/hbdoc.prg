@@ -96,7 +96,6 @@ done - build a list of 'categories' and validate against; see what 'classdoc' us
 done - validate sources against these templates
 */
 
-#include "common.ch"
 #include "directry.ch"
 #include "fileio.ch"
 #include "simpleio.ch"
@@ -118,6 +117,13 @@ PROCEDURE Main( ... )
    LOCAL cFormat
    LOCAL oDocument, oIndex
    LOCAL aContent
+
+   /* Setup input CP of the translation */
+   hb_cdpSelect( "UTF8EX" )
+
+   /* Configure terminal and OS codepage */
+   hb_SetTermCP( hb_cdpTerm() )
+   Set( _SET_OSCODEPAGE, hb_cdpOS() )
 
    init_Templates()
 
@@ -219,9 +225,9 @@ PROCEDURE Main( ... )
    ?
 
    ASort( aContent, , , {|oL,oR| ;
-      HB_NTOS( oL:CategoryIndex( oL:Category ) ) + Chr(1) + HB_NTOS( oL:SubcategoryIndex( oL:Category, oL:Subcategory ) ) + Chr(1) + oL:Name + Chr(1) ;
+      HB_NTOS( oL:CategoryIndex( oL:Category ) ) + " " + HB_NTOS( oL:SubcategoryIndex( oL:Category, oL:Subcategory ) ) + Chr(1) + oL:Name + " " ;
       <= ;
-      HB_NTOS( oR:CategoryIndex( oR:Category ) ) + Chr(1) + HB_NTOS( oR:SubcategoryIndex( oR:Category, oR:Subcategory ) ) + Chr(1) + oR:Name + Chr(1) ;
+      HB_NTOS( oR:CategoryIndex( oR:Category ) ) + " " + HB_NTOS( oR:SubcategoryIndex( oR:Category, oR:Subcategory ) ) + Chr(1) + oR:Name + " " ;
       } )
 
    // TODO: what is this for?  it is sorting the category sub-arrays and removing empty (?) sub-arrays, but why?
@@ -232,9 +238,9 @@ PROCEDURE Main( ... )
                IF ValType( p_aCategories[ idx ][ 3 ][ idx2 ] ) == "A"
                   ASort( p_aCategories[ idx ][ 3 ][ idx2 ], , , ;
                      {|oL,oR| ;
-                        HB_NTOS( oL:CategoryIndex( oL:Category ) ) + Chr(1) + HB_NTOS( oL:SubcategoryIndex( oL:Category, oL:Subcategory ) ) + Chr(1) + oL:Name ;
+                        HB_NTOS( oL:CategoryIndex( oL:Category ) ) + " " + HB_NTOS( oL:SubcategoryIndex( oL:Category, oL:Subcategory ) ) + " " + oL:Name ;
                         <= ;
-                        HB_NTOS( oR:CategoryIndex( oR:Category ) ) + Chr(1) + HB_NTOS( oR:SubcategoryIndex( oR:Category, oR:Subcategory ) ) + Chr(1) + oR:Name ;
+                        HB_NTOS( oR:CategoryIndex( oR:Category ) ) + " " + HB_NTOS( oR:SubcategoryIndex( oR:Category, oR:Subcategory ) ) + " " + oR:Name ;
                         } )
                ELSE
                   ASize( ADel( p_aCategories[ idx ][ 2 ], idx2 ), Len( p_aCategories[ idx ][ 2 ] ) - 1 )
@@ -459,11 +465,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
    LOCAL idxSubCategory := -1
    LOCAL cSourceFile
 
-#ifdef __PLATFORM__UNIX
-      cSourceFile := "../" + cFile /* SubStr( cFile, Len( p_hsSwitches[ "basedir" ] + hb_ps() ) ) */
-#else
-      cSourceFile := StrTran( "../" + cFile /* SubStr( cFile, Len( p_hsSwitches[ "basedir" ] + hb_ps() ) ) */, "\", "/" )
-#endif
+   cSourceFile := StrTran( ".." + hb_ps() + cFile /* SubStr( cFile, Len( p_hsSwitches[ "basedir" ] + hb_ps() ) ) */, iif( hb_ps() == "\", "/", "\" ), hb_ps() )
 
    o:type_ := cType
    o:sourcefile_ := cSourceFile
@@ -708,7 +710,7 @@ STATIC PROCEDURE FileEval( acFile, bBlock, nMaxLine )
    LOCAL lCloseFile := .F.
    LOCAL xResult
 
-   DEFAULT nMaxLine TO 256
+   hb_default( @nMaxLine, 256 )
 
    IF HB_ISSTRING( acFile )
       lCloseFile := .T.
@@ -734,48 +736,23 @@ STATIC PROCEDURE FileEval( acFile, bBlock, nMaxLine )
 
    RETURN
 
-STATIC FUNCTION FReadUntil( aHandle, cMatch, cResult )
-   LOCAL cBuffer, nSavePos, nIdxMatch, nNumRead
-
-   DEFAULT cResult TO ""
-
-   DO WHILE nNumRead != 0
-      nSavePos := FSeek( aHandle[ 1 ], 0, FS_RELATIVE )
-      cBuffer := Space( 255 )
-      IF ( nNumRead := FRead( aHandle[ 1 ], @cBuffer, Len( cBuffer ) ) ) == 0
-         RETURN .F.
-      ENDIF
-      cBuffer := SubStr( cBuffer, 1, nNumRead )
-
-      IF ( nIdxMatch := At( cMatch, cBuffer ) ) > 0
-         cResult += SubStr( cBuffer, 1, nIdxMatch + Len( cMatch ) - 1 )
-         FSeek( aHandle[ 1 ], nSavePos + nIdxMatch + Len( cMatch ) - 1, FS_SET )
-         RETURN nNumRead != 0
-      ELSE
-         cResult += SubStr( cBuffer, 1, nNumRead - Len( cMatch ) )
-         FSeek( aHandle[ 1 ], -Len( cMatch ), FS_RELATIVE )
-      ENDIF
-   ENDDO
-
-   RETURN nNumRead != 0
-
 STATIC FUNCTION FReadLn( aHandle, cBuffer, nMaxLine )
-   STATIC s_aEOL := { chr(13) + chr(10), chr(10), chr(13) }
+   STATIC s_aEOL := { Chr( 13 ) + Chr( 10 ), Chr( 10 ), Chr( 13 ) }
    LOCAL cLine, nSavePos, nEol, nNumRead, nLenEol, idx
 
-   DEFAULT nMaxLine TO 256
+   hb_default( @nMaxLine, 256 )
 
    cBuffer := ""
 
    nSavePos := FSeek( aHandle[ 1 ], 0, FS_RELATIVE )
    cLine := Space( nMaxLine )
-   nNumRead := FRead( aHandle[ 1 ], @cLine, Len( cLine ) )
-   cLine := SubStr( cLine, 1, nNumRead )
+   nNumRead := FRead( aHandle[ 1 ], @cLine, hb_BLen( cLine ) )
+   cLine := hb_BLeft( cLine, nNumRead )
 
    nEol := 0
-   FOR idx := 1 To Len(s_aEOL)
+   FOR idx := 1 To Len( s_aEOL )
       IF ( nEol := At( s_aEOL[ idx ], cLine ) ) > 0
-         nLenEol := Len( s_aEOL[ idx ] ) - 1
+         nLenEol := hb_BLen( s_aEOL[ idx ] ) - 1
          Exit
       ENDIF
    NEXT
@@ -783,8 +760,8 @@ STATIC FUNCTION FReadLn( aHandle, cBuffer, nMaxLine )
    IF nEol == 0
       cBuffer := cLine
    ELSE
-      cBuffer := SubStr( cLine, 1, nEol - 1 )
-      FSeek( aHandle[ 1 ], nSavePos + nEol + nLenEol, FS_SET )
+      cBuffer := Left( cLine, nEol - 1 )
+      FSeek( aHandle[ 1 ], nSavePos + hb_BLen( cBuffer ) + 1 + nLenEol, FS_SET )
    ENDIF
 
    aHandle[ 2 ]++
@@ -1060,7 +1037,7 @@ FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
    LOCAL cLine
    LOCAL aText
 
-   DEFAULT lRaw TO .F.
+   hb_default( @lRaw, .F. )
 
    IF nWidth == 0 .or. lRaw
       aText := Split( cText, hb_eol() )
@@ -1133,17 +1110,19 @@ FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
    RETURN cResult
 
 FUNCTION Filename( cFile, cFormat, nLength )
-STATIC s_Files := {}
+
+   STATIC s_Files := {}
+
    LOCAL cResult := ""
    LOCAL idx
    LOCAL char
 
-   DEFAULT cFormat TO "alnum"
+   hb_default( @cFormat, "alnum" )
 
 #ifdef __PLATFORM__DOS
-   DEFAULT nLength TO 8
+   hb_default( @nLength, 8 )
 #else
-   DEFAULT nLength TO 0
+   hb_default( @nLength, 0 )
 #endif
 
    DO CASE

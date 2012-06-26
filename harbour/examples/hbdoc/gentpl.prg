@@ -54,18 +54,15 @@
  *
  */
 
-#include "simpleio.ch"
-
 #include "hbclass.ch"
-
 #include "hbdoc.ch"
 
 #define DOCUMENT_ 1
 #define INDEX_ 2
 
-CLASS TPLGenerate
+CREATE CLASS TPLGenerate
 
-EXPORTED:
+   EXPORTED:
 //~ PROTECTED:
    DATA nHandle AS NUMERIC
    DATA cFolder AS STRING
@@ -82,7 +79,7 @@ EXPORTED:
    METHOD Generate() INLINE NIL
    METHOD IsIndex() INLINE ( ::nType == INDEX_ )
 
-PROTECTED:
+   PROTECTED:
    METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) HIDDEN
    DATA nType AS INTEGER
    DATA Depth AS INTEGER INIT 0
@@ -106,7 +103,7 @@ METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate
    ::nType := nType
 
    IF ! hb_DirExists( ::cFolder )
-      ? "Creating folder " + ::cFolder
+      OutStd( hb_eol(), "Creating folder " + ::cFolder )
       hb_DirCreate( ::cFolder )
    ENDIF
 

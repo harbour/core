@@ -55,16 +55,14 @@
  */
 
 #include "hbclass.ch"
-#include "inkey.ch"
-#include "fileio.ch"
 #include "hbdoc.ch"
 
-CLASS GenerateXML FROM TPLGenerate
-HIDDEN:
+CREATE CLASS GenerateXML FROM TPLGenerate
+   HIDDEN:
 
-PROTECTED:
+   PROTECTED:
 
-EXPORTED:
+   EXPORTED:
    METHOD NewIndex( cFolder, cFilename, cTitle )
    METHOD NewDocument( cFolder, cFilename, cTitle )
    METHOD AddEntry( oEntry )
@@ -98,8 +96,8 @@ METHOD BeginSection( cSection, cFilename ) CLASS GenerateXML
    RETURN self
 
 METHOD EndSection( cSection, cFilename ) CLASS GenerateXML
-HB_SYMBOL_UNUSED( cSection )
-HB_SYMBOL_UNUSED( cFilename )
+   HB_SYMBOL_UNUSED( cSection )
+   HB_SYMBOL_UNUSED( cFilename )
    ::Depth--
    FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [</Section>] + hb_eol() )
    RETURN self

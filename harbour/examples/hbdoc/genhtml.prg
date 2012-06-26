@@ -55,9 +55,6 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
-#include "inkey.ch"
-#include "fileio.ch"
 #include "hbdoc.ch"
 
 #ifdef __PLATFORM__DOS
@@ -79,8 +76,8 @@ METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateHTML2
    super:NewIndex( cFolder, cFilename, cTitle, EXTENSION )
    RETURN self
 
-CLASS GenerateHTML FROM TPLGenerate
-HIDDEN:
+CREATE CLASS GenerateHTML FROM TPLGenerate
+   HIDDEN:
    METHOD RecreateStyleDocument( cStyleFile )
    METHOD OpenTag( cText, ... )
    METHOD Tagged( cText, cTag, ... )
@@ -91,7 +88,7 @@ HIDDEN:
    CLASSDATA lCreateStyleDocument AS LOGICAL INIT .T.
    DATA TargetFilename AS STRING INIT ""
 
-EXPORTED:
+   EXPORTED:
    METHOD NewFile() HIDDEN
    METHOD NewIndex( cFolder, cFilename, cTitle )
    METHOD NewDocument( cFolder, cFilename, cTitle )
@@ -201,10 +198,11 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
    LOCAL cTagClass := IIf( LOWER( cField ) + "|" $ "name|oneliner|examples|tests|", LOWER( cField ), "itemtext" )
 
    IF ! Empty( cEntry )
-      DEFAULT cCaption TO ""
-      DEFAULT nIndent TO 0
-      //~ DEFAULT lPreformatted TO .F.
-      //~ DEFAULT cTagClass TO "itemtext"
+
+      hb_default( @cCaption, "" )
+      hb_default( @nIndent, 0 )
+      //~ hb_default( @lPreformatted, .F. )
+      //~ hb_default( @cTagClass, "itemtext" )
 
       IF Len( cCaption ) > 0 /* .AND. nIndent > 0 */
          ::Tagged( cCaption, "div", "class", "itemtitle" )
@@ -271,7 +269,7 @@ METHOD Append( cText, cFormat ) CLASS GenerateHTML
 
    IF Len( cResult ) > 0
 
-      DEFAULT cFormat TO ""
+      hb_default( @cFormat, "" )
 
       aFormat := p_aConversionList
       FOR idx := 1 TO Len( aFormat ) STEP 2
