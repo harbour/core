@@ -238,7 +238,7 @@ HARBOUR
    If you want to rebuild one specific contrib package, use this:
 
       cd contrib/<name>
-      ..\..\bin\<plat>\<comp>\hbmk2 ..\make.hb [clean] [install] [custom hbmk2 options]
+      ../../bin/<plat>/<comp>/hbmk2 ../make.hb [clean] [install] [custom hbmk2 options]
 
 
 3. HOW TO CREATE DISTRIBUTABLE PACKAGES

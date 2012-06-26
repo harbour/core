@@ -589,7 +589,7 @@ PROCEDURE _APPMAIN( ... )
    IF ( Right( Lower( hb_FNameName( hb_argv( 0 ) ) ), 5 ) == "hbrun" .OR. ;
         Left( Lower( hb_FNameName( hb_argv( 0 ) ) ), 5 ) == "hbrun" .OR. ;
         hb_PValue( 1 ) == "." .OR. ;
-        "|" + Lower( hb_FNameExt( hb_PValue( 1 ) ) ) + "|" $ "|.hb|.hrb|.dbf|" ) .AND. ;
+        "|" + Lower( hb_FNameExt( PathSepToSelf( hb_PValue( 1 ) ) ) ) + "|" $ "|.hb|.hrb|.dbf|" ) .AND. ;
       !( ! Empty( hb_PValue( 1 ) ) .AND. ;
          ( Left( hb_PValue( 1 ), 6 ) == "-hbreg" .OR. ;
            Left( hb_PValue( 1 ), 8 ) == "-hbunreg" ) )
@@ -12280,6 +12280,8 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    __hbshell_LoadExtFromString( aExtension, GetEnv( _EXT_ENV_ ) )
 
    /* Do the thing */
+
+   cFile := PathSepToSelf( cFile )
 
    IF !( cFile == "." ) .AND. ;
       ! Empty( hb_FNameName( cFile ) ) .AND. ;
