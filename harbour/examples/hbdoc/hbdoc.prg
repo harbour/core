@@ -379,7 +379,7 @@ PROCEDURE Main( ... )
       ENDIF
    NEXT
 
-   ?
+   OutStd( hb_eol() )
 
    RETURN
 
