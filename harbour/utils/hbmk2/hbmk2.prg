@@ -12281,7 +12281,9 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
    /* Do the thing */
 
-   cFile := PathSepToSelf( cFile )
+   IF ! Empty( cFile )
+      cFile := PathSepToSelf( cFile )
+   ENDIF
 
    IF !( cFile == "." ) .AND. ;
       ! Empty( hb_FNameName( cFile ) ) .AND. ;
