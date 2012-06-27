@@ -109,6 +109,8 @@ REQUEST HB_GT_CGI_DEFAULT
 
 STATIC s_aExclusions := { "class_tp.txt", "hdr_tpl.txt" }
 
+MEMVAR p_hsSwitches
+
 PROCEDURE Main( ... )
    LOCAL aArgs := HB_AParams()
    LOCAL idx, idx2, idx3, idx4
@@ -957,7 +959,7 @@ PROCEDURE ShowHelp( cExtraMessage, aArgs )
       aHelp := { ;
          iif( Len( aArgs ) >= 3, aArgs[ 3 ] + " template is:", "Defined templates are:" ), ;
          "", ;
-         {|| ShowTemplatesHelp( iif( Len( aArgs ) >= 3, aArgs[ 3 ], NIL ) ) } ;
+         {|| ShowTemplatesHelp( iif( Len( aArgs ) >= 3, aArgs[ 3 ], NIL ), p_hsSwitches[ "DELIMITER" ] ) } ;
       }
 
    CASE aArgs[ 2 ] == "Compliance"

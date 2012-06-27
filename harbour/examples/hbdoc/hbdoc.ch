@@ -57,7 +57,6 @@
 #define HBDOC_CH_
 
 MEMVAR p_aCategories
-MEMVAR p_hsSwitches
 MEMVAR p_aCompliance
 MEMVAR p_aPlatforms
 MEMVAR p_aStatus

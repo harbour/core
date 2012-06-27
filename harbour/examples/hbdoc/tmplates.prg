@@ -487,10 +487,9 @@ PROCEDURE init_Templates()
    RETURN
 
 
-PROCEDURE ShowTemplatesHelp( cTemplate )
+PROCEDURE ShowTemplatesHelp( cTemplate, cDelimiter )
    LOCAL o := Entry():New()
    LOCAL idxTemplates, nFrom := 1, nTo := Len( o:Templates )
-   LOCAL cDelimiter := p_hsSwitches[ "DELIMITER" ]
    LOCAL idx
 
    IF ! Empty( cTemplate ) .AND. cTemplate != "Template"
