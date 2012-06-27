@@ -98,7 +98,6 @@ done - validate sources against these templates
 
 #include "directry.ch"
 #include "fileio.ch"
-#include "simpleio.ch"
 
 #include "hbdoc.ch"
 
@@ -223,8 +222,8 @@ PROCEDURE Main( ... )
       }, ;
       {|c| iif( ! Empty( c ), ProcessFolder( c, @aContent ), ) } )
 
-   ? HB_NTOS( Len( aContent ) ) + " items found"
-   ?
+   OutStd( HB_NTOS( Len( aContent ) ) + " items found" + hb_eol() )
+   OutStd( hb_eol() )
 
    ASort( aContent, , , {|oL,oR| ;
       HB_NTOS( oL:CategoryIndex( oL:Category ) ) + " " + HB_NTOS( oL:SubcategoryIndex( oL:Category, oL:Subcategory ) ) + Chr(1) + oL:Name + " " ;
@@ -250,7 +249,7 @@ PROCEDURE Main( ... )
                ENDIF
             NEXT
          ELSE
-            ? "Index", idx, " is not length 4 but rather", Len( p_aCategories[ idx ] )
+            OutStd( "Index", idx, " is not length 4 but rather", Len( p_aCategories[ idx ] ), hb_eol() )
          ENDIF
       ENDIF
    NEXT
@@ -262,7 +261,7 @@ PROCEDURE Main( ... )
    FOR idx2 := 1 TO Len( p_hsSwitches[ "format" ] )
       cFormat := p_hsSwitches[ "format" ][ idx2 ]
       IF cFormat != "all"
-         ? "Output as " + cFormat
+         OutStd( "Output as " + cFormat + hb_eol() )
 
          DO CASE
          CASE p_hsSwitches[ "output" ] == "single"
@@ -390,7 +389,7 @@ STATIC PROCEDURE ProcessFolder( cFolder, aContent ) // this is a recursive proce
    LOCAL idx
    LOCAL cExt
 
-   //~ ? ">>> " + cFolder
+   //~ OutStd( ">>> " + cFolder + hb_eol() )
 
    cFolder += hb_ps()
 
@@ -427,7 +426,7 @@ STATIC FUNCTION ProcessFile( cFile, aContent )
    LOCAL nOldContentLen := Len( aContent )
 
    IF ( aHandle[ 1 ] := FOpen( cFile ) ) < 0
-      ? "error: could not open " + cFile + ", " + HB_NTOS( Abs( aHandle[ 1 ] ) )
+      OutErr( "error: could not open " + cFile + ", " + HB_NTOS( Abs( aHandle[ 1 ] ) ) + hb_eol() )
       RETURN .F.
    ENDIF
 
@@ -452,8 +451,7 @@ STATIC FUNCTION ProcessFile( cFile, aContent )
    FClose( aHandle[ 1 ] )
 
    IF ( Len( aContent ) - nOldContentLen ) > 0
-      ? "> " + cFile
-      ?? " (" + HB_NTOS( Len( aContent ) - nOldContentLen ) + " items)"
+      OutStd( "> " + cFile + " (" + HB_NTOS( Len( aContent ) - nOldContentLen ) + " items)" + hb_eol() )
    ENDIF
 
    RETURN .T.
@@ -597,7 +595,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
             AAdd( p_hsSwitches[ "not in hbextern" ], cSectionName + "; " + cFile )
          ENDIF
 
-         //~ ? "    > " + cSectionName
+         //~ OutStd( "    > " + cSectionName + hb_eol() )
 
       ENDIF
 

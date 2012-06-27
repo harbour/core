@@ -1,0 +1,44 @@
+/* Harbour Documents Stylesheet */
+
+@charset "utf-8";
+
+body {
+	font-family: arial;
+	font-size: 14px;
+	line-height: 18px;
+}
+
+.name {
+	font-weight: bold;
+	font-size: 18px;
+	margin-left: 0px;
+	padding-top: 0px;
+	padding-bottom: 4px;
+}
+
+.oneliner {
+	font-style: italic;
+	margin-bottom: 12px;
+}
+
+.itemtitle {
+	font-weight: bold;
+	margin-left: 0px;
+	padding-top: 0px;
+	padding-bottom: 4px;
+}
+
+.itemtext {
+	margin-left: 10px;
+	padding-bottom: 4px;
+}
+
+.examples {
+	margin-left: 10px;
+	padding-bottom: 4px;
+}
+
+.tests {
+	margin-left: 10px;
+	padding-bottom: 4px;
+}

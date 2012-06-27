@@ -113,7 +113,7 @@ METHOD NewFile() CLASS GenerateHTML
    ::OpenTag( "meta", "name", "generator", "content", "Harbour examples/hbdoc" )
    ::OpenTag( "meta", "name", "keywords", "content", "Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin" )
 
-   #define STYLEFILE "hrb_doc.css"
+   #define STYLEFILE "hbdoc.css"
    IF ::lCreateStyleDocument
       ::lCreateStyleDocument := .F.
       ::RecreateStyleDocument( STYLEFILE )
@@ -296,50 +296,7 @@ METHOD Append( cText, cFormat ) CLASS GenerateHTML
 METHOD RecreateStyleDocument( cStyleFile ) CLASS GenerateHTML
    LOCAL cString
 
-   #pragma __cstream|cString := %s
-/* Harbour Documents Stylesheet */
-
-body {
-	font-family: arial;
-	font-size: 14px;
-	line-height: 18px;
-}
-
-.name {
-	font-weight: bold;
-	font-size: 18px;
-	margin-left: 0px;
-	padding-top: 0px;
-	padding-bottom: 4px;
-}
-
-.oneliner {
-	font-style: italic;
-	margin-bottom: 12px;
-}
-
-.itemtitle {
-	font-weight: bold;
-	margin-left: 0px;
-	padding-top: 0px;
-	padding-bottom: 4px;
-}
-
-.itemtext {
-	margin-left: 10px;
-	padding-bottom: 4px;
-}
-
-.examples {
-	margin-left: 10px;
-	padding-bottom: 4px;
-}
-
-.tests {
-	margin-left: 10px;
-	padding-bottom: 4px;
-}
-   #pragma __endtext
+   #pragma __streaminclude "hbdoc.css" | cString := %s
 
    IF ! hb_MemoWrit( ::cFolder + hb_ps() + cStyleFile, cString )
       // TODO: raise an error, could not create style file

@@ -589,7 +589,7 @@ PROCEDURE _APPMAIN( ... )
    IF ( Right( Lower( hb_FNameName( hb_argv( 0 ) ) ), 5 ) == "hbrun" .OR. ;
         Left( Lower( hb_FNameName( hb_argv( 0 ) ) ), 5 ) == "hbrun" .OR. ;
         hb_PValue( 1 ) == "." .OR. ;
-        HBMK_IS_IN( Lower( hb_FNameExt( PathSepToSelf( hb_PValue( 1 ) ) ) ), ".hb|.hrb|.dbf" ) ) .AND. ;
+        HBMK_IS_IN( Lower( hb_FNameExt( hb_PValue( 1 ) ) ), ".hb|.hrb|.dbf" ) ) .AND. ;
       !( ! Empty( hb_PValue( 1 ) ) .AND. ;
          ( Left( hb_PValue( 1 ), 6 ) == "-hbreg" .OR. ;
            Left( hb_PValue( 1 ), 8 ) == "-hbunreg" ) )
