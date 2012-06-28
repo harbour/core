@@ -15,198 +15,81 @@ track of all files (read the FAQ if you don't know what SVN is).
 |                         make file and Changelog (=changes history) files.
 |
 +---bin                 - Executable and build scripts.
-|                         Should contain harbour.exe and other executable. (*)
+|                         Should contain harbour and other executables. (*)
 |
 +---config              - Configuration Files (.mk) for the GNU Make system.
 |   |
-|   +---bsd             - Configuration files specific to FreeBSD.
-|   |
-|   +---darwin          - Configuration files specific to BSD/Darwin.
-|   |
-|   +---dos             - Configuration files specific to DOS.
-|   |
-|   +---hpux            - Configuration files specific to HP-UX.
-|   |
-|   +---linux           - Configutation files specific to GNU/Linux.
-|   |
-|   +---os2             - Configutation files specific to OS/2.
-|   |
-|   +---sunos           - Configutation files specific to SunOS.
-|   |
-|   +---win             - Configutation files specific to MS Windows.
+|   +---<platform>      - Configuration files specific to <platform>.
 |
-+---contrib             - Miscellaneous contribution files. Those are not
-|   |                     part of the official Harbour project.
++---contrib             - Miscellaneous contribution projects.
 |   |
-|   |---gtalleg         - GT subsystem based on Allegro with graphic
-|   |                     extensions.
+|   |---gtalleg         - GT subsystem based on Allegro with graphic extensions.
 |   |
 |   +---gtwvg           - GT subsystem for Windows GUI using GDI functions.
-|   |   |
-|   |   +---tests       - Demo program and sample images.
 |   |
-|   +---hbapollo        - Wrapper functions for VistaSoftware's Apollo
-|   |   |                 database driver.
-|   |   |
-|   |   +---tests       - Test programs.
-|   |
-|   +---hbbmcdx         - DBFCDX RDD with bitmap filters compatible with
-|   |                     CA-Cl*pper 5.3
+|   +---rddbm           - DBFCDX RDD with bitmap filters.
 |   |
 |   +---hbct            - CA-T**ls Compatible Library for Harbour.
-|   |   |
-|   |   +---tests       - Test programs.
 |   |
 |   +---hbcurl          - libcurl 'easy' API - Harbour interface.
-|   |   |
-|   |   +---tests       - Test programs.
 |   |
 |   +---hbfbird         - Harbour Low Level api for Firebird and Interbase
-|   |   |                 RDBMS.
-|   |   |
-|   |   +---tests       - Test programs.
 |   |
 |   +---hbfimage        - Wrapper for FreeImage.
-|   |   |
-|   |   +---tests       - Test program and sample images.
-|   |       |
-|   |       +-imgs_out  - Output directory used by the test program.
 |   |
 |   +---hbformat        - Harbour Source Formatter utility.
 |   |
 |   +---hbgd            - HBGD wrapper for gdLibrary.
-|   |   |
-|   |   +---doc         - Help and license files.
-|   |   |
-|   |   +---tests       - Test programs and samples.
-|   |       |
-|   |       +-digits    - Digits images for counter test program.
-|   |       |
-|   |       +-imgs_in   - Sample images.
-|   |       |
-|   |       +-imgs_out  - Output directory.
-|   |
-|   +---hbgf            - Harbour GUI framework.
-|   |   |
-|   |   +---hbgfgtk     - Implementation for GTK+ environment.
-|   |   |
-|   |   +---hbgfos2     - Implementation for OS/2 Presentation Manager
-|   |   |                 environment.
-|   |   |
-|   |   +---hbgfwin     - Implementation for Windowns environment.
-|   |   |
-|   |   +---tests       - Test programs.
 |   |
 |   +---hbgt            - GT library port to Harbour.
-|   |   |
-|   |   +---doc         - Documents for the GT library.
-|   |       |
-|   |       +---en      - English documentation.
 |   |
 |   +---hbhpdf          - libHaru PDF library wrappers.
-|   |   |
-|   |   +---tests       - Test programs.
-|   |       |
-|   |       +---files   - Sample files for testing.
 |   |
 |   +---hbmisc          - Miscellaneous contribution.
-|   |   |
-|   |   +---doc         - Documents for above contribution.
-|   |   |   |
-|   |   |   +---en      - English documentation.
-|   |   |
-|   |   +---tests       - Test programs.
-|   |
-|   +---hbmsql          - Harbour mSQL access classes.
-|   |   |
-|   |   +---tests       - Test programs.
 |   |
 |   +---hbmysql         - Harbour MySQL access classes.
-|   |   |
-|   |   +---tests       - Test program.
 |   |   |
 |   |   +---utils       - Converts a .dbf file into a MySQL table.
 |   |
 |   +---hbmzip          - Wrapper functions for minizip library.
-|   |   |
-|   |   +---tests       - Test programs.
 |   |
 |   +---hbnf            - Nanforum library port for Harbour.
-|   |   |
-|   |   +---tests       - Test program.
 |   |
 |   +---hbodbc          - ODBS Access Class Demonstration.
-|   |   |
-|   |   +---tests       - Test programs.
 |   |
 |   +---hbpgsql         - Harbour Low Level API for Postgres RDBMS.
-|   |   |
-|   |   +---tests       - Test programs.
 |   |
 |   +---hbrun           - Standalone Harbour Portable Object file runner,
 |   |                     and a "dot prompt" console for the Harbour language.
 |   |
 |   +---hbsqlit3        - Interface for SQLite 3.x library.
-|   |   |
-|   |   +---sqlite3     - An amalgamation of SQLite core library.
-|   |   |
-|   |   +---tests       - Test programs.
+|   |
+|   +---3rd/sqlite3     - An amalgamation of SQLite core library.
 |   |
 |   +---hbssl           - Harbour inteface for OpenSSL API.
-|   |   |
-|   |   +---tests       - Test programs.
 |   |
 |   +---hbtip           - TIP Class oriented Internet Protocol library.
-|   |   |
-|   |   +---tests       - Test programs.
 |   |
 |   +---hbtpathy        - Telepathy serial communication port for Harbour.
-|   |   |
-|   |   +---tests       - Test program.
-|   |
-|   +---hbvpdf          - PDF library written in PRG.
-|   |   |
-|   |   +---tests       - Test programs.
-|   |       |
-|   |       +---files   - Sample files for testing.
-|   |
-|   +---hbwhat          - What is a library for ccessing all of Windows API
-|   |   |                 from PRG level.
-|   |   |
-|   |   +---tests       - Test program.
 |   |
 |   +---hbwin           - Collection of Windows specific utility functions.
-|   |   |
-|   |   +---tests       - Test programs.
 |   |
 |   +---hbziparc        - Compatibility interface with ZipArchive general
-|   |   |                 purpose compression library to work with ZIP files.
-|   |   |
-|   |   +---tests       - Test programs.
+|   |                     purpose compression library to work with ZIP files.
 |   |
 |   +---rddads          - RDD for Advantage Database Server.
-|   |   |
-|   |   +---doc         - Documents for Advantage Database Server RDD.
-|   |   |   |
-|   |   |   +---en      - English documentation.
-|   |   |
-|   |   +---tests       - Test programs.
 |   |
 |   +---rddsql          - RDD for general SQL database with plugins.
-|   |   |
-|   |   +---sddfb       - Firebird SQL database driver.
-|   |   |
-|   |   +---sddmy       - MySQL database driver.
-|   |   |
-|   |   +---sddpg       - Postgre SQL database driver.
-|   |   |
-|   |   +---tests       - Test programs.
 |   |
-|   +---xhb             - xHarbour compatibility libarary. To allow programs
-|       |                 which where written using some xHarcour extensions,
-|       |                 to be complied by Harbour.
-|       |
-|       +---tests       - Test programs.
+|   +---sddfb           - RDDSQL Firebird SQL database driver.
+|   |
+|   +---sddmy           - RDDSQL MySQL database driver.
+|   |
+|   +---sddpg           - RDDSQL Postgre SQL database driver.
+|   |
+|   +---xhb             - xHarbour compatibility library. To allow programs
+|                         which where written using some xHarcour extensions,
+|                         to be complied by Harbour.
 |
 +---examples        - Sample files and small applications.
 |   |
@@ -214,73 +97,27 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |
 |   +---guestbk     - Harbour Guests Book.
 |   |
-|   +---hbbtree         - BTree library.
-|   |   |
-|   |   +---doc         - HB_BTree C and Harbour API documentation.
-|   |   |
-|   |   +---tests       - HB_BTree api test programs.
-|   |
-|   +---hbdoc           - Documentation generation tool.
-|   |
-|   +---hbdoc2          - Documentation generation tool.
-|   |
-|   +---hbextern        - hbextern.ch generator.
-|   |
-|   +---hbsqlit2    - Interface for SQLite 2.x library.
-|   |   |
-|   |   +---tests   - Test programs.
-|   |
-|   +---hscript     - Harbour Script.
+|   +---hbdoc       - Documentation generation tool.
 |   |
 |   +---misc        - A few humble demonstration.
 |   |
-|   +---pe          - Editor.
-|   |
-|   +---pp          - Harbour Preprocessor as a standalone module.
-|   |
-|   +---rddado          - ADORDD - RDD to automatically manage Microsoft ADO.
-|   |   |
-|   |   +---tests       - Test programs.
+|   +---rddado      - ADORDD - RDD to automatically manage Microsoft ADO.
 |   |
 |   +---rl          - Make files (without source) for CA-Cl*pper RL.
 |   |
-|   +---terminal    - Harbour terminal server/client.
-|   |
-|   +---uhttpd      - uHTTPD micro web server.
-|       |
-|       +-home      - Root directory for the web server.
-|       | |
-|       | +-cgi-bin - (*)
-|       | |
-|       | +-css     -
-|       | |
-|       | +-images  -
-|       | |
-|       | +-js      -
-|       | |
-|       | +-xsl     -
-|       |
-|       +-logs      - Log files. (*)
-|       |
-|       +-modules   -
-|       |
-|       +-sessions  - (*)
+|   +---httpsrv     - uHTTPD micro web server.
 |
 +---debian              - Packaging information for Debian GNU/Linux.
 |
 +---doc                 - Documentation and white-paper.
 |   |
 |   +---en              - English documentation.
-|   |
-|   +---es              - Spanish documentation.
-|   |
-|   +---man             - Man pages.
 |
 +---include             - Include files for both Harbour and C.
 |
 +---lib                 - Run-Time libraries binaries for each platform. (*)
 |
-+---source              - All source files reside underneath.
++---src                 - All source files reside underneath.
 |   |
 |   +---codepage        - National codepage collection.
 |   |
@@ -293,10 +130,10 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   +---hbextern        - Library with all function binding available for
 |   |                     .prg code
 |   |
-|   +---hbpcre          - Harbour implementation of the Perl Compatible
+|   +---3rd/pcre        - Harbour implementation of the Perl Compatible
 |   |                     Regular Expressions (PCRE) library.
 |   |
-|   +---hbzlib          - Harbour implementation of the ZLIB data
+|   +---3rd/zlib        - Harbour implementation of the ZLIB data
 |   |                     compression library.
 |   |
 |   +---lang            - National language message support files.
