@@ -45,7 +45,8 @@ void setInterval ( int msec )
 void setSingleShot ( bool singleShot )
 int timerId () const
 
-void singleShot ( int msec, QObject * receiver, const char * member )
+//   This will never work as per Harbour's implementation of Signal/slots, so commenting out - 27Jun2012
+//void singleShot ( int msec, QObject * receiver, const char * member )
 </PROTOS>
 
 <SLOTS>
