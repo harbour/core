@@ -213,7 +213,7 @@ STATIC FUNCTION Xbp_ArrayToFileFilter( aFilter )
 
 METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFiles )
    LOCAL cFiles := NIL
-   LOCAL i, oList, nResult, cPath, cFile, cExt, qFocus
+   LOCAL i, oList, nResult, cPath, cFile, cExt, qFocus, xRes
 
    HB_SYMBOL_UNUSED( lCreateNewFiles )
 
@@ -269,18 +269,22 @@ METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFile
    ::connect()
    nResult := ::oWidget:exec()
    ::disconnect()
-   ::oWidget:setParent( QWidget() )
 
    IF hb_isObject( qFocus )
       qFocus:setFocus( 0 )
    ENDIF
 
-   RETURN IIF( nResult == QDialog_Accepted, ::extractFileNames( lAllowMultiple ), NIL )
+   xRes := iif( nResult == QDialog_Accepted, ::extractFileNames( lAllowMultiple ), NIL )
+
+   // Just TO destroy it
+   ::oWidget:setParent( QWidget() )
+
+   RETURN xRes
 
 /*----------------------------------------------------------------------*/
 
 METHOD XbpFileDialog:saveAs( cDefaultFile, lFileList, lCenter )
-   LOCAL nResult, i, oList, qFocus
+   LOCAL nResult, i, oList, qFocus, xRes
 
    DEFAULT lFileList TO .T.
 
@@ -324,13 +328,17 @@ METHOD XbpFileDialog:saveAs( cDefaultFile, lFileList, lCenter )
    ::connect()
    nResult := ::oWidget:exec()
    ::disconnect()
-   ::oWidget:setParent( QWidget() )
 
    IF hb_isObject( qFocus )
       qFocus:setFocus( 0 )
    ENDIF
 
-   RETURN IIF( nResult == QDialog_Accepted, ::extractFileNames(), NIL )
+   xRes := iif( nResult == QDialog_Accepted, ::extractFileNames(), NIL )
+
+   // Just TO destroy it AND release memory
+   ::oWidget:setParent( QWidget() )
+
+   RETURN xRes
 
 /*----------------------------------------------------------------------*/
 
