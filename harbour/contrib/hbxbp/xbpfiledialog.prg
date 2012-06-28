@@ -124,7 +124,6 @@ METHOD XbpFileDialog:create( oParent, oOwner, aPos )
 #endif
 
    ::oWidget:setOption( QFileDialog_DontResolveSymlinks, .t. )
-   ::oWidget:setAttribute( Qt_WA_DeleteOnClose, .f. )
 
    ::postCreate()
 
@@ -270,7 +269,8 @@ METHOD XbpFileDialog:open( cDefaultFile, lCenter, lAllowMultiple, lCreateNewFile
    ::connect()
    nResult := ::oWidget:exec()
    ::disconnect()
-   ::oWidget:close()
+   ::oWidget:setParent( QWidget() )
+
    IF hb_isObject( qFocus )
       qFocus:setFocus( 0 )
    ENDIF
@@ -324,6 +324,8 @@ METHOD XbpFileDialog:saveAs( cDefaultFile, lFileList, lCenter )
    ::connect()
    nResult := ::oWidget:exec()
    ::disconnect()
+   ::oWidget:setParent( QWidget() )
+
    IF hb_isObject( qFocus )
       qFocus:setFocus( 0 )
    ENDIF
