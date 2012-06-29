@@ -63,7 +63,7 @@ HB_FUNC( __RUN )
 {
    const char * pszCommand = hb_parc( 1 );
 
-   if( pszCommand && hb_gtSuspend() == 0 )
+   if( pszCommand && hb_gtSuspend() == HB_SUCCESS )
    {
 #if defined( HB_OS_WIN )
       hb_fsProcessRun( pszCommand, NULL, 0, NULL, NULL, NULL, NULL, HB_FALSE );
@@ -76,7 +76,7 @@ HB_FUNC( __RUN )
          hb_xfree( pszFree );
 #endif
 
-      if( hb_gtResume() != 0 )
+      if( hb_gtResume() != HB_SUCCESS )
       {
          /* an error should be generated here !! Something like */
          /* hb_errRT_BASE_Ext1( EG_GTRESUME, 6002, NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT ); */

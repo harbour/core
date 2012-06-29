@@ -2415,7 +2415,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             HB_ITEMCOPYSTR( pInfo->pNewVal, pWVT->fontFace, HB_SIZEOFARRAY( pWVT->fontFace ) );
-            pWVT->fontFace[ HB_SIZEOFARRAY( pWVT->fontFace ) - 1 ] = 0;
+            pWVT->fontFace[ HB_SIZEOFARRAY( pWVT->fontFace ) - 1 ] = TEXT( '\0' );
          }
          break;
 
