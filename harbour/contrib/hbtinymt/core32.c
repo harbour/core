@@ -65,7 +65,7 @@ static HB_TSD_NEW( s_tinymtData, sizeof( HB_TINYMTDATA ), NULL, NULL );
 /* Syntax: HB_TINYMT32_INIT( <nVector1>, <nVector2>, <nVector3>, [<nSeed>] ) -> <lSuccess> */
 HB_FUNC( HB_TINYMT32_INIT )
 {
-   if( hb_pcount() >= 3 && HB_ISNUM( 1 ) && HB_ISNUM( 3 ) && HB_ISNUM( 3 ) )
+   if( hb_pcount() >= 3 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
       PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
