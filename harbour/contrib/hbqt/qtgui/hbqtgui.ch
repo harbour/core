@@ -195,6 +195,10 @@
 #define QPalette_ToolTipBase                      18       // Used as the background color for QToolTip and QWhatsThis. Tool tips use the Inactive color group of QPalette, because tool tips are not active windows.
 #define QPalette_ToolTipText                      19       // Used as the foreground color for QToolTip and QWhatsThis. Tool tips use the Inactive color group of QPalette, because tool tips are not active windows.
 
+#define QPalette_Disabled                         1	
+#define QPalette_Active                           0	
+#define QPalette_Inactive                         2	
+#define QPalette_Normal                           QPalette_Active
 /*
  * There are some color roles used mostly for 3D bevel and shadow effects.
  * All of these are normally derived from Window, and used in ways that depend on that
