@@ -384,6 +384,7 @@ HARBOUR
    HB_WITH_QT=C:\Qt\include (version 4.5.0 or upper is required)
    HB_WITH_SLANG= (on *nix systems)
    HB_WITH_SQLITE3=C:\sqlite3 (defaults to locally hosted version if not found)
+   HB_WITH_TINYMT=C:\tinymt\tinymt (defaults to locally hosted version)
    HB_WITH_WATT= (on MS-DOS systems)
    HB_WITH_X11= (on *nix systems)
    HB_WITH_XDIFF=C:\libxdiff-0.23\xdiff (defaults to locally hosted version if not found)
@@ -1668,6 +1669,8 @@ HARBOUR
               (mingw official 4.4.0 or upper, or mingw tdm with dwarf2)
       HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
          http://www.sqlite.org/
+      HB_WITH_TINYMT - TinyMT (Mersenne Twister) [multiplatform, free, open-source]
+         http://www.math.sci.hiroshima-u.ac.jp/~m-mat/MT/TINYMT/
       HB_WITH_WATT - Watt-32 (TCP/IP sockets) [dos, free, open-source]
          http://home.broadpark.no/~gvanem/
       HB_WITH_ZLIB - zlib [multiplatform, free, open-source]
