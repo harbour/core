@@ -7,6 +7,8 @@
  * Andi Jahja
  */
 
+#require "hbtinymt"
+
 PROCEDURE Main()
 
    LOCAL i, j
