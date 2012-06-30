@@ -150,6 +150,12 @@ QImage transformed ( const QTransform & matrix, Qt::TransformationMode mode = Qt
 bool valid ( const QPoint & pos ) const
 bool valid ( int x, int y ) const
 int width () const
+
+// Static members
+QImage fromData ( const uchar * data, int size, const char * format = 0 )
+QImage fromData ( const QByteArray & data, const char * format = 0 )
+QMatrix trueMatrix ( const QMatrix & matrix, int width, int height )
+QTransform trueMatrix ( const QTransform & matrix, int width, int height )
 </PROTOS>
 
 <SLOTS>
