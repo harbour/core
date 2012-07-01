@@ -648,7 +648,10 @@ STATIC FUNCTION hbqtui_gen_prg( cFile, cFuncName )
                AAdd( aWidgets, { cCls, cNam, cCls + "()", cCls + "()" } )
             ENDIF
 
-         ELSEIF hbqtui_isObjectNameSet( s )
+         ELSEIF hbqtui_isNonImplementedMethod( s )
+            // DO nothing
+
+         ELSEIF hbqtui_isObjectNameSet( s )  /* This is needed as it is not being set in class construction */
             // Skip - we already know the object name and will set after construction
 
          ELSEIF ! Empty( cText := hbqtui_pullSetToolTip( aLines, s:__enumIndex() ) )
@@ -838,12 +841,23 @@ STATIC FUNCTION hbqtui_formatCommand( cCmd, lText, widgets )
          cCmd1 := StrTran( cCmd1, "->", ":" )
          AAdd( widgets, { "QSizePolicy", cNam, "QSizePolicy()", "QSizePolicy(" + cCmd1 + ")" } )
          cCmd := 'setHeightForWidth(o[ "' + cNam + '" ]:' + SubStr( cCmd, n1 + 1 )
-      ELSE
-         cCmd := "pPtr"
       ENDIF
    ENDIF
 
    RETURN cCmd
+
+STATIC FUNCTION hbqtui_isNonImplementedMethod( cString )
+   LOCAL cMethod, aMethods := {}
+
+   AAdd( aMethods, "setAccessibleName" )
+
+   FOR EACH cMethod IN aMethods
+      IF cMethod $ cString
+         RETURN .t.
+      ENDIF
+   NEXT
+
+   RETURN .f.
 
 STATIC FUNCTION hbqtui_isObjectNameSet( cString )
    RETURN "objectName" $ cString .OR. ;
@@ -902,9 +916,14 @@ STATIC PROCEDURE hbqtui_replaceConstants( /* @ */ cString )
    LOCAL cCmdB
    LOCAL cCmdE
    LOCAL cOR
-   LOCAL n
+   LOCAL n, n1
 
    LOCAL regDefine := hb_regexComp( "\b[A-Za-z_]+\:\:[A-Za-z_]+\b" )
+
+   IF ( n := At( "QString::fromUtf8(", cString ) ) > 0
+      n1 := hb_At( ")", cString, n )
+      cString := SubStr( cString, 1, n - 1 ) + substr( cString, n + len( "QString::fromUtf8(" ), n1 - ( n + len( "QString::fromUtf8(" ) ) ) + SubStr( cString, n1 + 1 )
+   ENDIF
 
    IF hbqtui_occurs( cString, "|" ) > 0
 
