@@ -12,8 +12,7 @@
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentation for: FOPEN(), FCLOSE(), FWRITE(), FSEEK(), FREAD(), FILE(),
  *                       FREADSTR(), FRENAME(), FERROR(), RENAME, ERASE, CURDIR(),
- *                       DIRMAKE(), DIRCHANGE(), ISDISK(), DIRREMOVE(), DISKCHANGE(),
- *                       DIRCHANGE()
+ *                       DIRMAKE(), DIRCHANGE(), ISDISK(), DIRREMOVE(), DISKCHANGE()
  *
  * Copyright 2000 David G. Holm <Harbour@SpaceMoose.com>
  *    Documentation for: HB_FEOF()
@@ -428,11 +427,11 @@
  *  $SYNTAX$
  *      FRENAME( <cOldFile>, <cNewFile> ) --> nSuccess
  *  $ARGUMENTS$
- *     <cOldFile> Old filenarne to he changed
+ *     <cOldFile> Old filenarne to be changed
 
  *     <cNewFile> New filename
  *  $RETURNS$
- *     <nSuccess> If sucessful, a 0 will he returned otherwise,
+ *     <nSuccess> If sucessful, a 0 will be returned otherwise,
  *     a -1 will be returned.
  *  $DESCRIPTION$
  *      This function renames the specified file <cOldFile> to <cNewFile>.
