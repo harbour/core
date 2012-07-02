@@ -73,8 +73,8 @@ bool isFloating () const
 void setAllowedAreas ( Qt::DockWidgetAreas areas )
 void setFeatures ( DockWidgetFeatures features )
 void setFloating ( bool floating )
-void setTitleBarWidget ( QWidget * widget )            [*D=1*]
-void setWidget ( QWidget * widget )                    [*D=1*]
+void setTitleBarWidget ( QWidget * widget )            [*X=1*]
+void setWidget ( QWidget * widget )                    [*X=1*]
 QWidget * titleBarWidget () const
 QAction * toggleViewAction () const
 QWidget * widget () const

@@ -51,31 +51,31 @@ HB_FUNC( QT_QSTANDARDITEMMODEL )
 </ENUMS>
 
 <PROTOS>
-void appendColumn ( const QList<QStandardItem *> & items )                    [*D=1*]
-void appendRow ( const QList<QStandardItem *> & items )                       [*D=1*]
-void appendRow ( QStandardItem * item )                                       [*D=1*]
+void appendColumn ( const QList<QStandardItem *> & items )                    [*X=1*]
+void appendRow ( const QList<QStandardItem *> & items )                       [*X=1*]
+void appendRow ( QStandardItem * item )                                       [*X=1*]
 void clear ()
 QList<QStandardItem *> findItems ( const QString & text, Qt::MatchFlags flags = Qt::MatchExactly, int column = 0 ) const
 QStandardItem * horizontalHeaderItem ( int column ) const
 QModelIndex indexFromItem ( const QStandardItem * item ) const
-void insertColumn ( int column, const QList<QStandardItem *> & items )        [*D=2*]
-bool insertColumn ( int column, const QModelIndex & parent = QModelIndex() )  [*D=2*]
-void insertRow ( int row, const QList<QStandardItem *> & items )              [*D=2*]
-bool insertRow ( int row, const QModelIndex & parent = QModelIndex() )        [*D=2*]
-void insertRow ( int row, QStandardItem * item )                              [*D=2*]
+void insertColumn ( int column, const QList<QStandardItem *> & items )        [*X=2*]
+bool insertColumn ( int column, const QModelIndex & parent = QModelIndex() )  [*X=2*]
+void insertRow ( int row, const QList<QStandardItem *> & items )              [*X=2*]
+bool insertRow ( int row, const QModelIndex & parent = QModelIndex() )        [*X=2*]
+void insertRow ( int row, QStandardItem * item )                              [*X=2*]
 QStandardItem * invisibleRootItem () const
 QStandardItem * item ( int row, int column = 0 ) const
 QStandardItem * itemFromIndex ( const QModelIndex & index ) const
 // const QStandardItem * itemPrototype () const
 void setColumnCount ( int columns )
-void setHorizontalHeaderItem ( int column, QStandardItem * item )             [*D=2*]
+void setHorizontalHeaderItem ( int column, QStandardItem * item )             [*X=2*]
 void setHorizontalHeaderLabels ( const QStringList & labels )                 
-void setItem ( int row, int column, QStandardItem * item )                    [*D=3*]
-void setItem ( int row, QStandardItem * item )                                [*D=2*]
-void setItemPrototype ( const QStandardItem * item )                          [*D=1*]
+void setItem ( int row, int column, QStandardItem * item )                    [*X=3*]
+void setItem ( int row, QStandardItem * item )                                [*X=2*]
+void setItemPrototype ( const QStandardItem * item )                          [*X=1*]
 void setRowCount ( int rows )
 void setSortRole ( int role )
-void setVerticalHeaderItem ( int row, QStandardItem * item )                  [*D=2*]
+void setVerticalHeaderItem ( int row, QStandardItem * item )                  [*X=2*]
 void setVerticalHeaderLabels ( const QStringList & labels )   
 int sortRole () const
 QList<QStandardItem *> takeColumn ( int column )                              [*A=1*]

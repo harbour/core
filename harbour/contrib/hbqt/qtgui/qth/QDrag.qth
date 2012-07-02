@@ -52,7 +52,7 @@ QMimeData * mimeData () const
 QPixmap pixmap () const
 void setDragCursor ( const QPixmap & cursor, Qt::DropAction action )
 void setHotSpot ( const QPoint & hotspot )
-void setMimeData ( QMimeData * data )   [*D=1*]
+void setMimeData ( QMimeData * data )   [*X=1*]
 void setPixmap ( const QPixmap & pixmap )
 QWidget * source () const
 QWidget * target () const

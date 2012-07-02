@@ -67,7 +67,7 @@ flags SceneLayers
 QGraphicsWidget * activeWindow () const
 QGraphicsEllipseItem * addEllipse ( const QRectF & rect, const QPen & pen = QPen(), const QBrush & brush = QBrush() )
 QGraphicsEllipseItem * addEllipse ( qreal x, qreal y, qreal w, qreal h, const QPen & pen = QPen(), const QBrush & brush = QBrush() )
-void addItem ( QGraphicsItem * item )   [*D=1*]
+void addItem ( QGraphicsItem * item )   [*X=1*]
 QGraphicsLineItem * addLine ( const QLineF & line, const QPen & pen = QPen() )
 QGraphicsLineItem * addLine ( qreal x1, qreal y1, qreal x2, qreal y2, const QPen & pen = QPen() )
 QGraphicsPathItem * addPath ( const QPainterPath & path, const QPen & pen = QPen(), const QBrush & brush = QBrush() )

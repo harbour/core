@@ -70,27 +70,31 @@
  */
 /*----------------------------------------------------------------------*/
 
-STATIC oSys, oMenuSys, oActShow, oActHide
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION My_Events( oWnd, e )
-   MsgInfo( oWnd, "Pressed: " + hb_ntos( e:key() ) )
-   RETURN nil
+STATIC oSys, oMenuSys, oActShow, oActHide  /* To keep variables in scope for entire duration of appn */
 
 /*----------------------------------------------------------------------*/
 
 PROCEDURE Main()
-   Local oBtn, oDA, oWnd, oSBar, aMenu, aTool, aTabs, oELoop, lExit := .f.
+
+   hbqt_errorsys()
+
+   ExecTheDialog()
+
+   RETURN
+
+/*----------------------------------------------------------------------*/
+
+PROCEDURE ExecTheDialog()
+   LOCAL oBtn, oDA, oWnd, aMenu, aTool, aTabs, oELoop, lExit := .f.
 
    hbqt_errorsys()
 
    oWnd := QMainWindow()
-   oWnd:setAttribute( Qt_WA_DeleteOnClose, .f. )
+   oWnd:setAttribute( Qt_WA_DeleteOnClose, .F. )
    oWnd:show()
 
    oWnd:setMouseTracking( .t. )
-   oWnd:setWindowTitle( "Harbour-Qt Implementation Test Dialog" )
+   oWnd:setWindowTitle( "[" + hb_ntos( hb_threadID() ) + "] Harbour-Qt" )
    oWnd:setWindowIcon( QIcon( "test" ) )
    oWnd:resize( 900, 500 )
 
@@ -100,18 +104,16 @@ PROCEDURE Main()
    aMenu  := Build_MenuBar( oWnd )
    aTool  := Build_ToolBar( oWnd )
 
-   oSBar  := QStatusBar( oWnd )
-   oWnd:setStatusBar( oSBar )
-   oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
+   oWnd:statusBar():showMessage( "Harbour-QT Statusbar Ready!" )
 
    Build_Grid( oDA, { 30, 30 }, { 450,150 } )
    Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
    Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
    Build_Label( oDA, { 30,190 }, { 300, 30 } )
 
-   aTabs  := Build_Tabs( oDA, { 510, 5 }, { 360, 400 } )
+   aTabs := Build_Tabs( oDA, { 510, 5 }, { 360, 400 } )
 
-   oBtn   := Build_PushButton( oDA, { 30,240 }, { 100,50 } )
+   oBtn := Build_PushButton( oDA, { 30,240 }, { 100,50 } )
    oBtn:setStyleSheet( "background: #a00fff;" )
 
    oWnd:connect( QEvent_KeyPress, {|e| My_Events( oWnd, e ) } )
@@ -127,9 +129,19 @@ PROCEDURE Main()
    ENDDO
    oELoop:exit( 0 )
 
-   HB_TRACE( HB_TR_DEBUG, ".............. E X I T I N G ..................." )
    xReleaseMemory( { oBtn, aMenu, aTool, aTabs, oDA, oWnd } )
+
+   HB_TRACE( HB_TR_DEBUG, "  " )
+   HB_TRACE( HB_TR_DEBUG, ".............. E X I T I N G ...................", hb_threadID() )
+   HB_TRACE( HB_TR_DEBUG, "  " )
+
    RETURN
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION My_Events( oWnd, e )
+   MsgInfo( oWnd, "Pressed: " + hb_ntos( e:key() ) )
+   RETURN nil
 
 /*----------------------------------------------------------------------*/
 
@@ -150,61 +162,14 @@ FUNCTION xReleaseMemory( aObj )
 
 /*----------------------------------------------------------------------*/
 
-PROCEDURE ExecOneMore()
-   Local oLabel, oBtn, oDA, oWnd, oProg, oSBar
-   LOCAL aMenu, aTool, aGrid, aTabs, aList, oEventLoop
-   LOCAL lExit := .f.
-
-   oWnd := QMainWindow()
-
-   oWnd:setMouseTracking( .t. )
-   oWnd:setWindowTitle( "Harbour-Qt Implementation Test Dialog" )
-   oWnd:setWindowIcon( QIcon( "test" ) )
-   oWnd:resize( 900, 500 )
-
-   oDA    := QWidget( oWnd )
-   oWnd:setCentralWidget( oDA )
-
-   oWnd:show()
-
-   aMenu  := Build_MenuBar( oWnd )
-   aTool  := Build_ToolBar( oWnd )
-   oLabel := Build_Label( oDA, { 30,190 }, { 300, 30 } )
-   aGrid  := Build_Grid( oDA, { 30, 30 }, { 450,150 } )
-   aTabs  := Build_Tabs( oDA, { 510, 5 }, { 360, 400 } )
-   oProg  := Build_ProgressBar( oDA, { 30,300 }, { 200,30 } )
-   aList  := Build_ListBox( oDA, { 310,240 }, { 150, 100 } )
-   oBtn   := Build_PushButton( oDA, { 30,240 }, { 100,50 }, "CLOSE", "This dialog will be closed now!", @lExit )
-
-   oSBar  := QStatusBar( oWnd )
-   oWnd:setStatusBar( oSBar )
-   oSBar:showMessage( "Harbour-QT Statusbar Ready!" )
-
-   oEventLoop := QEventLoop( oWnd )
-   DO WHILE .t.
-      oEventLoop:processEvents()
-      IF lExit
-         EXIT
-      ENDIF
-   ENDDO
-   oEventLoop:exit( 0 )
-
-   xReleaseMemory( { oBtn, oLabel, oProg, oSBar, aGrid, aList, aMenu, aTool, aTabs, oDA, oWnd, oEventLoop } )
-   HB_TRACE( HB_TR_DEBUG, "  " )
-   HB_TRACE( HB_TR_DEBUG, ".............. E X I T I N G one more dialog ..................." )
-   HB_TRACE( HB_TR_DEBUG, "  " )
-
-   RETURN
-
-/*----------------------------------------------------------------------*/
-
 STATIC FUNCTION Build_MenuBar( oWnd )
    LOCAL oMenuBar, oMenu1, oMenu2
    LOCAL oActNew, oActOpen, oActSave, oActExit
    LOCAL oActColors, oActFonts, oActPgSetup, oActPreview, oActWiz, oActWeb, oActOther
 
-   oMenuBar := QMenuBar( oWnd )
+   oMenuBar := oWnd:menuBar()
 
+   //    F I L E
    oMenu1 := QMenu( oMenuBar )
    oMenu1:setTitle( "&File" )
 
@@ -229,39 +194,38 @@ STATIC FUNCTION Build_MenuBar( oWnd )
 
    oMenuBar:addMenu( oMenu1 )
 
+   //     D I A L O G S
    oMenu2 := QMenu( oMenuBar )
    oMenu2:setTitle( "&Dialogs" )
 
    oActColors := oMenu2:addAction( "&Colors" )
-   oActColors:connect( "triggered(bool)", {|w,l| Dialogs( "Colors", w, l ) } )
+   oActColors:connect( "triggered(bool)", {|| Dialogs( "Colors", oWnd ) } )
 
    oActFonts := oMenu2:addAction( "&Fonts" )
-   oActFonts:connect( "triggered(bool)", {|w,l| Dialogs( "Fonts", w, l ) } )
+   oActFonts:connect( "triggered(bool)", {|| Dialogs( "Fonts", oWnd ) } )
 
    oMenu2:addSeparator()
 
    oActPgSetup := oMenu2:addAction( "&PageSetup" )
-   oActPgSetup:connect( "triggered(bool)", {|w,l| Dialogs( "PageSetup", w, l ) } )
+   oActPgSetup:connect( "triggered(bool)", {|| Dialogs( "PageSetup", oWnd ) } )
 
    oActPreview := oMenu2:addAction( "P&review" )
-   oActPreview:connect( "triggered(bool)", {|w,l| Dialogs( "Preview", w, l ) } )
+   oActPreview:connect( "triggered(bool)", {|| Dialogs( "Preview", oWnd ) } )
 
    oMenu2:addSeparator()
 
    oActWiz := oMenu2:addAction( "&Wizard" )
-   oActWiz:connect( "triggered(bool)", {|w,l| Dialogs( "Wizard", w, l ) } )
+   oActWiz:connect( "triggered(bool)", {|| Dialogs( "Wizard", oWnd ) } )
 
    oActWeb := oMenu2:addAction( "W&ebPage" )
-   oActWeb:connect( "triggered(bool)", {|w,l| Dialogs( "WebPage", w, l ) } )
+   oActWeb:connect( "triggered(bool)", {|| Dialogs( "WebPage", oWnd ) } )
 
    oMenu2:addSeparator()
 
    oActOther := oMenu2:addAction( "&Another Dialog" )
-   oActOther:connect( "triggered(bool)", {|| hb_threadStart( {|| ExecOneMore( oWnd ) } ) } )
+   oActOther:connect( "triggered(bool)", {|| hb_threadStart( {|| ExecTheDialog( oWnd ) } ) } )
 
    oMenuBar:addMenu( oMenu2 )
-
-   oWnd:setMenuBar( oMenuBar )
 
    RETURN { oActNew, oActOpen, oActSave, oActExit, oActColors, oActFonts, ;
             oActPgSetup, oActPreview, oActWiz, oActWeb, oActOther }
@@ -366,9 +330,9 @@ STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )
 
    oTabWidget := QTabWidget( oWnd )
 
-   oTab1 := QWidget()
-   oTab2 := QWidget()
-   oTab3 := QWidget()
+   oTab1 := QWidget( oTabWidget )
+   oTab2 := QWidget( oTabWidget )
+   oTab3 := QWidget( oTabWidget )
 
    oTabWidget:addTab( oTab1, "Folders"  )
    oTabWidget:addTab( oTab2, "Controls" )
@@ -385,21 +349,27 @@ STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )
    RETURN { aCtrls }
 
 /*----------------------------------------------------------------------*/
-
+#if 1
 STATIC FUNCTION Build_TreeView( oWnd )
-   LOCAL oTV, oDirModel
+   HB_SYMBOL_UNUSED( oWnd )
+   RETURN NIL
+#else
+STATIC FUNCTION Build_TreeView( oWnd )
+   LOCAL oDirModel
+   LOCAL oTV
+
+   oDirModel := QDirModel( oWnd )
 
    oTV := QTreeView( oWnd )
    oTV:setMouseTracking( .t. )
-*  oTV:connect( "hovered()", {|i| HB_TRACE( HB_TR_DEBUG, ( "oTV:hovered" ) } )
-   oDirModel := QDirModel( oTV )
+// oTV:connect( "hovered()", {|i| HB_TRACE( HB_TR_DEBUG, ( "oTV:hovered" ) } )
    oTV:setModel( oDirModel )
    oTV:move( 5, 7 )
    oTV:resize( 345, 365 )
    OTV:show()
 
    RETURN NIL
-
+#endif
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )
@@ -553,6 +523,7 @@ STATIC FUNCTION Dialogs( cType, oParent )
       oDlg:setWindowTitle( "Harbour-QT Preview Dialog" )
       oDlg:exec()
    CASE cType == "Wizard"
+      QMessageBox():critical( oParent, "XXX", "yyy" )
       oDlg := QWizard()
       oDlg:setWindowTitle( "Harbour-QT Wizard to Show Slides etc." )
       oDlg:exec()

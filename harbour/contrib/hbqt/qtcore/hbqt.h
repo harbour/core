@@ -108,7 +108,7 @@ HB_EXPORT PHB_ITEM  hbqt_bindGetHbObjectByQtObject( void * qtObject );
 HB_EXPORT void *    hbqt_bindGetQtObject( PHB_ITEM pObject );
 HB_EXPORT void      hbqt_bindSetOwner( void * qtObject, HB_BOOL fOwner );
 HB_EXPORT void      hbqt_bindDestroyHbObject( PHB_ITEM pObject );
-HB_EXPORT void      hbqt_bindDestroyQtObject( void * qtObject );
+HB_EXPORT void      hbqt_bindDestroyQtObject( void * qtObject, QObject * obj );
 
 HB_EXPORT void      hbqt_bindAddChild( PHB_ITEM pObject, PHB_ITEM pChild );
 HB_EXPORT void      hbqt_bindDelChild( PHB_ITEM pObject, PHB_ITEM pChild );

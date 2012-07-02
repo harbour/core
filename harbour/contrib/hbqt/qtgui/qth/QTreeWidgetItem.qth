@@ -67,8 +67,8 @@ enum ItemType { Type, UserType }
 </ENUMS>
 
 <PROTOS>
-void addChild ( QTreeWidgetItem * child )                                     [*D=1*]
-void addChildren ( const QList<QTreeWidgetItem *> & children )                [*D=1*]
+void addChild ( QTreeWidgetItem * child )                                     [*X=1*]
+void addChildren ( const QList<QTreeWidgetItem *> & children )                [*X=1*]
 QBrush background ( int column ) const
 Qt::CheckState checkState ( int column ) const
 QTreeWidgetItem * child ( int index ) const

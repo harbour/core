@@ -42,8 +42,8 @@ HB_FUNC( QT_QSTATUSBAR )
 </ENUMS>
 
 <PROTOS>
-void addPermanentWidget ( QWidget * widget, int stretch = 0 )   [*D=1*]
-void addWidget ( QWidget * widget, int stretch = 0 )   [*D=1*]
+void addPermanentWidget ( QWidget * widget, int stretch = 0 )   [*X=1*]
+void addWidget ( QWidget * widget, int stretch = 0 )   [*X=1*]
 QString currentMessage () const
 int insertPermanentWidget ( int index, QWidget * widget, int stretch = 0 )
 int insertWidget ( int index, QWidget * widget, int stretch = 0 )

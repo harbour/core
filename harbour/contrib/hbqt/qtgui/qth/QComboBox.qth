@@ -97,7 +97,7 @@ void setModelColumn ( int visibleColumn )
 void setRootModelIndex ( const QModelIndex & index )
 void setSizeAdjustPolicy ( SizeAdjustPolicy policy )
 void setValidator ( const QValidator * validator )
-void setView ( QAbstractItemView * itemView )   [*D=1*]
+void setView ( QAbstractItemView * itemView )   [*X=1*]
 virtual void showPopup ()
 SizeAdjustPolicy sizeAdjustPolicy () const
 virtual const QValidator * validator () const

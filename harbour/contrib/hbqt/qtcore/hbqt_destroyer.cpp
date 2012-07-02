@@ -70,11 +70,12 @@ HBQDestroyer::~HBQDestroyer()
 {
 }
 
-void HBQDestroyer::destroyer()
+void HBQDestroyer::destroyer( QObject * obj )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "HBQDestroyer::destroyer( %p )", this->sender() ) );
-   
-   hbqt_bindDestroyQtObject( this->sender() );
+   Q_UNUSED( obj );
+   HB_TRACE( HB_TR_DEBUG, ( "............HBQDestroyer::destroyer( %p )", this->sender() ) );
+
+   hbqt_bindDestroyQtObject( this->sender(), obj );
 }
 
 

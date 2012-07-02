@@ -70,7 +70,7 @@ public:
    ~HBQDestroyer();
 
 public slots:
-   void destroyer();
+   void destroyer( QObject * obj = 0 );
 };
 
 /*----------------------------------------------------------------------*/

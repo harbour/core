@@ -62,7 +62,7 @@ QAction * addAction ( const QString & text, const QObject * receiver, const char
 QAction * addAction ( const QIcon & icon, const QString & text, const QObject * receiver, const char * member, const QKeySequence & shortcut = 0 )   [*R=1*]
 void addAction ( QAction * action )
 
-QAction * addMenu ( QMenu * menu )                                    [*D=1;R=1*]
+QAction * addMenu ( QMenu * menu )                                    [*X=1;R=1*]
 QMenu * addMenu ( const QString & title )                             [*R=1*]
 QMenu * addMenu ( const QIcon & icon, const QString & title )         [*R=1*]
 
@@ -75,7 +75,7 @@ QAction * exec ( const QPoint & p, QAction * action = 0 )
 
 void hideTearOffMenu ()
 QIcon icon () const
-QAction * insertMenu ( QAction * before, QMenu * menu )               [*D=2;R=1*]
+QAction * insertMenu ( QAction * before, QMenu * menu )               [*X=2;R=1*]
 QAction * insertSeparator ( QAction * before )                        [*R=1*]
 bool isEmpty () const
 bool isTearOffEnabled () const

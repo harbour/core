@@ -70,10 +70,10 @@ flags DockOptions
 
 <PROTOS>
 
-void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget )   [*D=2*]
-void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget, Qt::Orientation orientation )   [*D=2*]
-void addToolBar ( Qt::ToolBarArea area, QToolBar * toolbar )               [*D=2*]
-void addToolBar ( QToolBar * toolbar )                                     [*D=1*]
+void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget )   [*X=2*]
+void addDockWidget ( Qt::DockWidgetArea area, QDockWidget * dockwidget, Qt::Orientation orientation )   [*X=2*]
+void addToolBar ( Qt::ToolBarArea area, QToolBar * toolbar )               [*X=2*]
+void addToolBar ( QToolBar * toolbar )                                     [*X=1*]
 QToolBar * addToolBar ( const QString & title )               // NOT implemented
 void addToolBarBreak ( Qt::ToolBarArea area = Qt::TopToolBarArea )
 QWidget * centralWidget () const
@@ -83,7 +83,7 @@ DockOptions dockOptions () const
 Qt::DockWidgetArea dockWidgetArea ( QDockWidget * dockwidget ) const
 bool documentMode () const
 QSize iconSize () const
-void insertToolBar ( QToolBar * before, QToolBar * toolbar )      [*D=2*]
+void insertToolBar ( QToolBar * before, QToolBar * toolbar )      [*X=2*]
 void insertToolBarBreak ( QToolBar * before )
 bool isAnimated () const
 bool isDockNestingEnabled () const
@@ -95,14 +95,14 @@ void removeToolBarBreak ( QToolBar * before )
 bool restoreDockWidget ( QDockWidget * dockwidget )
 bool restoreState ( const QByteArray & state, int Version = 0 )
 QByteArray saveState ( int Version = 0 ) const
-void setCentralWidget ( QWidget * widget )                        [*D=1*]
+void setCentralWidget ( QWidget * widget )                        [*X=1*]
 void setCorner ( Qt::Corner corner, Qt::DockWidgetArea area )
 void setDockOptions ( DockOptions options )
 void setDocumentMode ( bool enabled )
 void setIconSize ( const QSize & iconSize )
-void setMenuBar ( QMenuBar * menuBar )                            [*D=1*]
-void setMenuWidget ( QWidget * menuBar )                          [*D=1*]
-void setStatusBar ( QStatusBar * statusbar )                      [*D=1*]
+void setMenuBar ( QMenuBar * menuBar )                            [*X=1*]
+void setMenuWidget ( QWidget * menuBar )                          [*X=1*]
+void setStatusBar ( QStatusBar * statusbar )                      [*X=1*]
 void setTabPosition ( Qt::DockWidgetAreas areas, QTabWidget::TabPosition tabPosition )
 void setTabShape ( QTabWidget::TabShape tabShape )
 void setToolButtonStyle ( Qt::ToolButtonStyle toolButtonStyle )

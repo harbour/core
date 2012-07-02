@@ -57,9 +57,9 @@ void addAction ( QAction * action )
 QAction * addAction ( const QString & text )                          [*R=1*]
 QAction * addAction ( const QIcon & icon, const QString & text )      [*R=1*]
 QAction * addAction ( const QString & text, const QObject * receiver, const char * member )                       [*R=1*]
-QAction * addAction ( const QIcon & icon, const QString & text, const QObject * receiver, const char * member )   [*D=3;R=1*]
+QAction * addAction ( const QIcon & icon, const QString & text, const QObject * receiver, const char * member )   [*X=3;R=1*]
 QAction * addSeparator ()                                             [*R=1*]
-QAction * addWidget ( QWidget * widget )                              [*D=1;R=1*]
+QAction * addWidget ( QWidget * widget )                              [*X=1;R=1*]
 Qt::ToolBarAreas allowedAreas () const
 void clear ()
 QSize iconSize () const
