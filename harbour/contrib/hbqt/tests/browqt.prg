@@ -20,6 +20,24 @@ PROCEDURE ExecOneMore()
    RETURN
 
 STATIC PROCEDURE BuildADialog()
+   LOCAL oEventLoop, oDA, lExit := .f.
+
+   oDA := QWidget()
+   oDA:setAttribute( Qt_WA_DeleteOnClose, .f. )
+   oDA:resize(640,460 )
+
+   oEventLoop := QEventLoop( oDA )
+   oDA:connect( QEvent_Close, {|| lExit := .t. } )
+   oDA:Show()
+   DO WHILE ! lExit
+      oEventLoop:processEvents()
+   ENDDO
+   oDA:disconnect( QEvent_Close )
+   oEventLoop:exit()
+   HB_TRACE( HB_TR_ALWAYS, "EXITING" )
+   RETURN
+
+STATIC PROCEDURE xBuildADialog()
    LOCAL tb1, mo1, lay1, lay2, bt1, bt2, bt3, hd1, i, oDgt, oSmdl
    LOCAL oDA
    LOCAL aStru1
@@ -69,6 +87,7 @@ STATIC PROCEDURE BuildADialog()
    lay2:addWidget( bt3 )
 
    oEventLoop := QEventLoop( oDA )
+   //oDA:connect( QEvent_Close, {|oEventClose| oEventClose:ignore(), oEventLoop:exit( 0 ) } )
    oDA:connect( QEvent_Close, {|| oEventLoop:exit( 0 ) } )
    oDA:Show()
    oEventLoop:exec()
