@@ -68,9 +68,9 @@
  *      If an error has occured, see the returns values from FERROR() for
  *      possible reasons for the error.
  *  $EXAMPLES$
- *
- *      IF (nH:=FOPEN('x.txt',66) < 0
- *         ? 'File can't be opened'
+ *      #include "fileio.ch"
+ *      IF ( nH := FOpen( "x.txt", 66 ) ) == F_ERROR
+ *         ? "File can't be opened"
  *      ENDIF
  *  $STATUS$
  *      R
@@ -128,7 +128,8 @@
  *       4              FC_SYSTEM     Create,Excluded from normal DIR search
  *      </table>
  *  $EXAMPLES$
- *      IF (nh:=FCREATE("test.txt") <0
+ *      #include "fileio.ch"
+ *      IF ( nh := FCreate( "test.txt" ) ) == F_ERROR
  *          ? "Cannot create file"
  *      ENDIF
  *  $STATUS$
@@ -188,12 +189,13 @@
  *      bytes read matches neither the length of <cBuffer> nor the specified
  *      value in <nBytes> an end-of-file condition has been reached.
  *  $EXAMPLES$
- *      cBuffer:=SPACE(500)
- *      IF (nH:=FOPEN('x.txt'))>0
- *         FREAD(nH,@cBuffer,500)
+ *      #include "fileio.ch"
+ *      cBuffer := Space( 500 )
+ *      IF ( nH := FOpen( "x.txt" ) ) == F_ERROR
+ *         FRead( nH, @cBuffer, 500 )
  *         ? cbuffer
  *      ENDIF
- *      FCLOSE(nH)
+ *      FClose( nH )
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
@@ -247,11 +249,11 @@
  *      to the file.
  *      To truncate a file, a call of FWRITE( nHandle, "", 0 ) is needed.
  *  $EXAMPLES$
- *      nHandle := FCREATE( "x.txt" )
+ *      nHandle := FCreate( "x.txt" )
  *      FOR X := 1 TO 10
- *        FWRITE( nHandle, STR( x ) )
+ *         FWrite( nHandle, Str( x ) )
  *      NEXT
- *      FCLOSE( nHandle )
+ *      FClose( nHandle )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -311,10 +313,9 @@
  *      of possibles values returned by the FERROR() function.
  *  $EXAMPLES$
  *      #include "fileio.ch"
- *      //
- *      nHandle := FCREATE( "temp.txt", FC_NORMAL )
- *      IF FERROR() != 0
- *         ? "Cannot create file, DOS error ", FERROR()
+ *      nHandle := FCreate( "temp.txt", FC_NORMAL )
+ *      IF FError() != 0
+ *         ? "Cannot create file, DOS error ", FError()
  *      ENDIF
  *  $STATUS$
  *     R
@@ -350,9 +351,10 @@
  *     disk. The <nHandle> value is derived from the FCREATE()
  *     or FOPEN() function.
  *  $EXAMPLES$
- *     nHandle:=FOPEN('x.txt')
- *     ? FSEEK(nHandle, 0, 2)
- *     FCLOSE(nHandle)
+ *     #include "fileio.ch"
+ *     nHandle := FOpen( "x.txt" )
+ *     ? FSeek( nHandle, 0, FS_END )
+ *     FClose( nHandle )
  *  $STATUS$
  *     R
  *  $COMPLIANCE$
@@ -397,10 +399,11 @@
  *      Note: Any file to be removed by FERASE() must still be closed.
  *
  *  $EXAMPLES$
- *      IF FERASE("test.txt")==0
- *          ? "File successfully erased"
+ *      #include "fileio.ch"
+ *      IF FErase( "test.txt" ) != F_ERROR
+ *         ? "File successfully erased"
  *      ELSE
- *          ? "File can not be deleted"
+ *         ? "File can not be deleted"
  *      ENDIF
  *  $STATUS$
  *     R
@@ -427,7 +430,7 @@
  *  $SYNTAX$
  *      FRENAME( <cOldFile>, <cNewFile> ) --> nSuccess
  *  $ARGUMENTS$
- *     <cOldFile> Old filenarne to be changed
+ *     <cOldFile> Old filename to be changed
 
  *     <cNewFile> New filename
  *  $RETURNS$
@@ -455,8 +458,9 @@
  *      will be 0. A call to FERROR() function will give additional infor-
  *      mation about any error found.
  *  $EXAMPLES$
- *      nResult := FRENAME( "x.txt", "x1.txt" )
- *      IF nResult < 0
+ *      #include "fileio.ch"
+ *      nResult := FRename( "x.txt", "x1.txt" )
+ *      IF nResult == F_ERROR
  *         ? "File could not be renamed."
  *      ENDIF
  *  $STATUS$
@@ -521,23 +525,23 @@
  *  $EXAMPLES$
  *      // here is a function that read one text line from an open file
  *
- *      // nH = file handle obtained from FOPEN()
+ *      // nH = file handle obtained from FOpen()
  *      // cB = a string buffer passed-by-reference to hold the result
  *      // nMaxLine = maximum number of bytes to read
  *
  *      FUNCTION FREADln( nH, cB, nMaxLine )
- *      LOCAL cLine, nSavePos, nEol, nNumRead
- *      cLine := space( nMaxLine )
- *      cB := ''
- *      nSavePos := FSEEK( nH, 0, FS_RELATIVE )
- *      nNumRead := FREAD( nH, @cLine, nMaxLine )
- *      IF ( nEol := AT( hb_eol(), substr( cLine, 1, nNumRead ) ) ) == 0
- *        cB := cLine
- *      ELSE
- *        cB := SUBSTR( cLine, 1, nEol - 1 )
- *        FSEEK( nH, nSavePos + nEol + 1, FS_SET )
- *      ENDIF
- *      RETURN nNumRead != 0
+ *         LOCAL cLine, nSavePos, nEol, nNumRead
+ *         cLine := Space( nMaxLine )
+ *         cB := ""
+ *         nSavePos := FSeek( nH, 0, FS_RELATIVE )
+ *         nNumRead := FRead( nH, @cLine, nMaxLine )
+ *         IF ( nEol := At( hb_eol(), SubStr( cLine, 1, nNumRead ) ) ) == 0
+ *            cB := cLine
+ *         ELSE
+ *            cB := SubStr( cLine, 1, nEol - 1 )
+ *            FSEEK( nH, nSavePos + nEol + 1, FS_SET )
+ *         ENDIF
+ *         RETURN nNumRead != 0
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -579,8 +583,8 @@
  *      no more paths to search. The DOS PATH is never searched and the
  *      current drive/directory is only searched if SET DEFAULT is blank.
  *  $EXAMPLES$
- *      ? file('C:\harbour\doc\compiler.txt")
- *      ? file('C:/harbour/doc/subcodes.txt")
+ *      ? File( "C:\harbour\doc\compiler.txt" )
+ *      ? File( "C:/harbour/doc/subcodes.txt" )
  *  $STATUS$
  *      S (wild card support is missing)
  *  $COMPLIANCE$
@@ -630,11 +634,12 @@
  *      event, the FREAD() function should he used in place of the FREADSTR()
  *      function.
  *  $EXAMPLES$
- *      IF ( nH := FOPEN("x.txt") ) > 0
- *         cStr := Freadstr(nH,100)
+ *      #include "fileio.ch"
+ *      IF ( nH := FOpen( "x.txt" ) ) != F_ERROR
+ *         cStr := FReadStr( nH, 100 )
  *         ? cStr
+ *         FClose( nH )
  *      ENDIF
- *      FCLOSE(nH)
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -677,7 +682,7 @@
  *      If <cNewFile> id currently open or if it previously exists, this
  *      command will not perform the desired operation.
  *  $EXAMPLES$
- *      RENAME C:\autoexec.bat TO C:\autoexec.old
+ *      RENAME hello.txt TO hello.old
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -747,7 +752,7 @@
  *      The file must be considered closed by the operating system before it
  *      may be deleted.
  *  $EXAMPLES$
- *      ERASE C:\temp\read.txt
+ *      DELETE FILE C:\temp\read.txt
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -987,12 +992,12 @@
  *      function returns .T. and sets the value returned by FERROR() to -1
  *      (FS_ERROR) or a C-compiler dependent errno value (EBADF or EINVAL).
  *  $EXAMPLES$
- *      nH := FOPEN( "file.txt" )
- *      ? FREADSTR( nH, 80 )
- *      IF HB_FEOF( nH )
+ *      nH := FOpen( "file.txt" )
+ *      ? FReadStr( nH, 80 )
+ *      IF hb_FEof( nH )
  *         ? "End-of-file reached."
  *      ELSE
- *         ? FREADSTR( nH, 80 )
+ *         ? FReadStr( nH, 80 )
  *      ENDIF
  *  $STATUS$
  *      R
@@ -1028,10 +1033,10 @@
  *      If this function fail, the it will return the last OS error code number.
  *      See FERROR() function for the description of the error.
  *  $EXAMPLES$
- *      cDir:= ".\backup"
- *      if DIRREMOVE( cDir ) == 0
- *          ? "Remove of directory", cDir, "was successfull"
- *      endif
+ *      cDir := ".\backup"
+ *      IF DirRemove( cDir ) == 0
+ *         ? "Remove of directory", cDir, "was successfull"
+ *      ENDIF
  *  $TESTS$
  *      See examples
  *  $STATUS$
@@ -1071,9 +1076,9 @@
  *      the last OS error code number. See FERROR() function for the
  *      description of the error.
  *  $EXAMPLES$
- *      if DIRCHANGE( "\temp" ) == 0
- *          ? "Change to diretory was successfull"
- *      endif
+ *      IF DirChange( "\temp" ) == 0
+ *         ? "Change to diretory was successfull"
+ *      ENDIF
  *  $TESTS$
  *      See examples
  *  $STATUS$
@@ -1114,9 +1119,9 @@
  *      error
  *  $EXAMPLES$
  *      cDir := "temp"
- *      If MAKEDIR( cDir ) == 0
- *          ? "Directory ", cDir, " successfully created
- *      Endif
+ *      IF MakeDir( cDir ) == 0
+ *         ? "Directory", cDir, "successfully created
+ *      ENDIF
  *  $TESTS$
  *      See examples
  *  $STATUS$
@@ -1155,9 +1160,9 @@
  *      function is usefull for backup function, so you can determine if the
  *      drive that will recieve the backup data is ready or not.
  *  $EXAMPLES$
- *      IF ISDISK( "A" )
- *          ? "Drive is ready "
- *      Endif
+ *      IF IsDisk( "A" )
+ *         ? "Drive is ready "
+ *      ENDIF
  *  $TESTS$
  *      See Examples
  *  $STATUS$
