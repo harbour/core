@@ -284,7 +284,7 @@ METHOD Append( cText, cFormat ) CLASS GenerateHTML
       NEXT
 
       DO WHILE Right( cResult, Len( hb_eol() ) ) == hb_eol()
-         cResult := SubStr( cResult, 1, Len( cResult ) - Len( hb_eol() ) )
+         cResult := Left( cResult, Len( cResult ) - Len( hb_eol() ) )
       ENDDO
 
       FWrite( ::nHandle, cResult + hb_eol() )
