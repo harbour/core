@@ -37,10 +37,10 @@
  *      If a NULL date is passed to the function, the value of the function
  *      will be a NULL byte.
  *  $EXAMPLES$
- *      ? CDOW(DATE())
- *      if CDOW(DATE()+10) =="SUNDAY"
+ *      ? CDOW( Date() )
+ *      IF CDOW( Date() + 10 ) == "Sunday"
  *         ? "This is a sunny day."
- *      Endif
+ *      ENDIF
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -77,10 +77,10 @@
  *      If a NULL date is passed to the function, the value of the function
  *      will be a NULL byte.
  *  $EXAMPLES$
- *      ? CMONTH(DATE())
- *      if CMONTH(DATE()+10) =="March"
+ *      ? CMonth( Date() )
+ *      IF CMonth( Date() + 10 ) =="March"
  *         ? "Have you done your system BACKUP?"
- *      Endif
+ *      ENDIF
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -116,7 +116,7 @@
  *  $EXAMPLES$
  *      ? Date()
  *  $TESTS$
- *      ? "Today is ",Day(date())," of ",cMonth(date())," of ",Year(date())
+ *      ? "Today is ",Day(Date())," of ",cMonth(Date())," of ",Year(Date())
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -155,7 +155,7 @@
  *      improper character string is passed to the function, an empty date
  *      value will be returned.
  *  $EXAMPLES$
- *      ? CTOD('12/21/00')
+ *      ? CToD( "12/21/00" )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -190,8 +190,8 @@
  *      This function returns the numeric value of the day of month from a
  *      date.
  *  $EXAMPLES$
- *      ? Day(DATE())
- *      ? Day(DATE()+6325)
+ *      ? Day( Date() )
+ *      ? Day( Date() + 6325 )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -226,8 +226,8 @@
  *      This function converts <nSecs> seconds to the equivalent number
  *      of days; 86399 seconds represents one day, 0 seconds being midnight.
  *  $EXAMPLES$
- *      ? DAYS(2434234)
- *      ? "Has been passed ",DAYS(63251),' since midnight'
+ *      ? Days( 2434234 )
+ *      ? "Has been passed", Days( 63251 ), "since midnight"
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -262,8 +262,8 @@
  *      This function returns the number representing the day of the week
  *      for the date expressed as <dDate>.
  *  $EXAMPLES$
- *      ? DOW(DATE())
- *      ? DOW(DATE()-6584)
+ *      ? DOW( Date() )
+ *      ? DOW( Date() - 6584 )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -301,7 +301,7 @@
  *      controled in part by the date format specified in the SET DATE
  *      command
  *  $EXAMPLES$
- *      ? DTOC(Date())
+ *      ? DToC( Date() )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -337,7 +337,7 @@
  *      string in the format of YYYYMMDD. If the value of <dDateString> is
  *      an empty date, this function will return eight blank spaces.
  *  $EXAMPLES$
- *      ? DTOS(Date())
+ *      ? DToS( Date() )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -375,12 +375,13 @@
  *      as <cEndTime>. If the stating time is greater then the ending
  *      time, the function will assume that the date changed once.
  *  $EXAMPLES$
- *      Static cStartTime
- *      Init Proc Startup
- *      cStartTime:=Time()
- *
- *      Exit Proc StartExit
- *      ? "You used this program by",ELAPTIME(cStartTime,Time())
+ *      STATIC s_cStartTime
+ *      INIT PROCEDURE Startup()
+ *         s_cStartTime := Time()
+ *         RETURN
+ *      EXIT PROCEDURE StartExit()
+ *         ? "You used this program by", ElapTime( s_cStartTime, Time() )
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -417,7 +418,7 @@
  *      date expression <dDate>. If a NULL date (CTOD('')) is passed to the
  *      function, the value of the function will be 0.
  *  $EXAMPLES$
- *      ? Month(DATE())
+ *      ? Month( Date() )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -490,8 +491,8 @@
  *      This function returns a numeric value that is a number of elapsed
  *      seconds from midnight based on a time string given as <cTime>.
  *  $EXAMPLES$
- *      ? Secs(Time())
- *      ? Secs(time()-10)
+ *      ? Secs( Time() )
+ *      ? Secs( Time() - 10 )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -564,8 +565,8 @@
  *      ally, an empty date expression passed to this function will yield
  *      a zero value.
  *  $EXAMPLES$
- *      ? Year(date())
- *      ? year(CTOD("01/25/3251"))
+ *      ? Year( Date() )
+ *      ? Year( CToD( "01/25/3251" ) )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

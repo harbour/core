@@ -29,7 +29,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmInit( HB_BOOL bStartMainProc )
  *  $ARGUMENTS$
  *      <bStartMainProc>
@@ -64,7 +64,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmQuit( void ) --> int
  *  $ARGUMENTS$
  *
@@ -101,7 +101,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmExecute( const BYTE * pCode, PHB_SYMB pSymbols )
  *  $ARGUMENTS$
  *      <pCode>
@@ -138,7 +138,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmProcessSymbols( PHB_SYMB pSymbols, USHORT uiSymbols )
  *  $ARGUMENTS$
  *      <pSymbols>
@@ -175,7 +175,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmSymbolInit_RT( void )
  *  $ARGUMENTS$
  *
@@ -210,7 +210,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmRequestQuit( void )
  *  $ARGUMENTS$
  *
@@ -245,7 +245,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmRequestEndProc( void )
  *  $ARGUMENTS$
  *
@@ -280,7 +280,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmRequestCancel( void )
  *  $ARGUMENTS$
  *
@@ -315,7 +315,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmRequestBreak( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
@@ -350,7 +350,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmRequestQuery( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -387,7 +387,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmMessage( PHB_SYMB pSymMsg )
  *  $ARGUMENTS$
  *      <pSymMsg>
@@ -422,7 +422,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmDo( USHORT uiParams )
  *  $ARGUMENTS$
  *      <uiParams>
@@ -457,7 +457,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmFunction( USHORT uiParams )
  *  $ARGUMENTS$
  *      <uiParams>
@@ -492,7 +492,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmSend( USHORT uiParams )
  *  $ARGUMENTS$
  *      <uiParams>
@@ -527,7 +527,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmEvalBlock( PHB_ITEM pBlockItem ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pBlockItem>
@@ -564,7 +564,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmEvalBlockV( PHB_ITEM pBlockItem, USHORT uiArgCount, ... ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pBlockItem>
@@ -605,7 +605,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmPush( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
@@ -640,7 +640,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmPushNil( void )
  *  $ARGUMENTS$
  *
@@ -675,7 +675,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmPushNumber( double dNumber, int iDec )
  *  $ARGUMENTS$
  *      <dNumber>
@@ -712,7 +712,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmPushInteger( int iNumber )
  *  $ARGUMENTS$
  *      <iNumber>
@@ -747,7 +747,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmPushLong( long lNumber )
  *  $ARGUMENTS$
  *      <lNumber>
@@ -782,7 +782,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmPushDouble( double lNumber, int iDec )
  *  $ARGUMENTS$
  *      <lNumber>
@@ -819,7 +819,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmPushLogical( HB_BOOL bValue )
  *  $ARGUMENTS$
  *      <bValue>
@@ -854,7 +854,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmPushString( char * szText, ULONG length )
  *  $ARGUMENTS$
  *      <szText>
@@ -891,7 +891,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmPushDate( long lDate )
  *  $ARGUMENTS$
  *      <lDate>
@@ -926,7 +926,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmPushSymbol( PHB_SYMB pSym )
  *  $ARGUMENTS$
  *      <pSym>
@@ -961,7 +961,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_vmPushPointer( void * )
  *  $ARGUMENTS$
  *      <void *>
@@ -996,7 +996,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_stackDispCall( void )
  *  $ARGUMENTS$
  *
@@ -1031,7 +1031,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbvm.h>
+ *      #include "hbvm.h"
  *      hb_stackPop( void )
  *  $ARGUMENTS$
  *

@@ -2,10 +2,10 @@
  * $Id$
  */
 
-                        Gt Slang driver
+                        GT Slang driver
 
 
-A gt Slang driver for Harbour (gtsln) is based on a S-Lang library written
+A GT Slang driver for Harbour (gtsln) is based on a S-Lang library written
 by John E. Davis. It was developed using Slang version 1.41, although prior
 versions of Slang up to 1.22 should also work, but they are not recomended
 because of some bugs they have.

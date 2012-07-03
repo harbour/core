@@ -27,7 +27,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbdate.h>
+ *      #include "hbdate.h"
  *      hb_dateSeconds( void ) --> ( double )dResult
  *  $ARGUMENTS$
  *
@@ -64,7 +64,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbdate.h>
+ *      #include "hbdate.h"
  *      hb_dateToday( long * plYear, long * plMonth, long * plDay )
  *  $ARGUMENTS$
  *      <plYear>
@@ -103,7 +103,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbdate.h>
+ *      #include "hbdate.h"
  *      hb_dateTimeStr( char * pszTime )
  *  $ARGUMENTS$
  *      <pszTime>
@@ -139,7 +139,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbdate.h>
+ *      #include "hbdate.h"
  *      hb_dateCMonth( int iMonth ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <iMonth>
@@ -176,7 +176,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbdate.h>
+ *      #include "hbdate.h"
  *      hb_dateCDOW( int iDay ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <iDay>
@@ -213,7 +213,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbdate.h>
+ *      #include "hbdate.h"
  *      hb_dateDOW( long lYear, long lMonth, long lDay ) --> ( long )lResult
  *  $ARGUMENTS$
  *      <lYear>
@@ -254,7 +254,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbdate.h>
+ *      #include "hbdate.h"
  *      hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <szDate>
@@ -295,7 +295,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbdate.h>
+ *      #include "hbdate.h"
  *      hb_dateEncode( long lYear, long lMonth, long lDay ) --> ( long )lResult
  *  $ARGUMENTS$
  *      <lYear>
@@ -336,7 +336,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbdate.h>
+ *      #include "hbdate.h"
  *      hb_dateDecode( long julian, long * plYear, long * plMonth, long * plDay )
  *  $ARGUMENTS$
  *      <julian>
@@ -377,7 +377,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbdate.h>
+ *      #include "hbdate.h"
  *      hb_dateStrPut( char * szDate, long lYear, long lMonth, long lDay )
  *  $ARGUMENTS$
  *      <szDate>
@@ -418,7 +418,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbdate.h>
+ *      #include "hbdate.h"
  *      hb_dateStrGet( const char * szDate, long * plYear, long * plMonth, long * plDay )
  *  $ARGUMENTS$
  *      <szDate>
@@ -459,7 +459,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbdate.h>
+ *      #include "hbdate.h"
  *      hb_dateDecStr( char * szDate, long lJulian ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <szDate>
@@ -498,8 +498,8 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbdate.h>
- *      hb_dateEncStr( char * szDate ) --> ( long )lResult
+ *      #include "hbdate.h"
+ *      hb_dateEncStr( char * szDate ) --> ( long ) lResult
  *  $ARGUMENTS$
  *      <szDate>
  *  $RETURNS$

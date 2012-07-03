@@ -29,7 +29,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errGetDescription( PHB_ITEM pError ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pError>
@@ -66,7 +66,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errGetFileName( PHB_ITEM pError ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pError>
@@ -103,7 +103,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errGetFlags( PHB_ITEM pError ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <pError>
@@ -140,7 +140,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errGetGenCode( PHB_ITEM pError ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <pError>
@@ -177,7 +177,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errGetOperation( PHB_ITEM pError ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pError>
@@ -214,7 +214,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errGetOsCode( PHB_ITEM pError ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <pError>
@@ -251,7 +251,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errGetSeverity( PHB_ITEM pError ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <pError>
@@ -288,7 +288,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errGetSubCode( PHB_ITEM pError ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <pError>
@@ -325,7 +325,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errGetSubSystem( PHB_ITEM pError ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pError>
@@ -362,7 +362,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errGetTries( PHB_ITEM pError ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <pError>
@@ -399,7 +399,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errLaunch( PHB_ITEM pError ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <pError>
@@ -436,7 +436,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errNew( void ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *
@@ -473,7 +473,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errPutArgs( PHB_ITEM pError, USHORT uiArgCount, ... ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pError>
@@ -514,7 +514,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errPutDescription( PHB_ITEM pError, char * szDescription ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pError>
@@ -553,7 +553,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errPutFileName( PHB_ITEM pError, char * szFileName ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pError>
@@ -592,7 +592,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pError>
@@ -631,7 +631,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pError>
@@ -670,7 +670,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errPutOperation( PHB_ITEM pError, char * szOperation ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pError>
@@ -709,7 +709,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pError>
@@ -748,7 +748,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pError>
@@ -787,7 +787,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pError>
@@ -826,7 +826,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errPutSubSystem( PHB_ITEM pError, char * szSubSystem ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pError>
@@ -865,7 +865,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errPutTries( PHB_ITEM pError, USHORT uiTries ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pError>
@@ -904,7 +904,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errRelease( PHB_ITEM pError )
  *  $ARGUMENTS$
  *      <pError>
@@ -939,7 +939,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errInit( void )
  *  $ARGUMENTS$
  *
@@ -974,7 +974,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errExit( void )
  *  $ARGUMENTS$
  *
@@ -1009,7 +1009,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errLaunchSubst( PHB_ITEM pError ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pError>
@@ -1046,7 +1046,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errRT_New( USHORT uiSeverity, char * szSubSystem, ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <uiSeverity>
@@ -1097,7 +1097,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errRT_New_Subst( USHORT uiSeverity, char * szSubSystem, ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <uiSeverity>
@@ -1148,7 +1148,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <ulGenCode>
@@ -1191,7 +1191,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <ulGenCode>
@@ -1238,7 +1238,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <ulGenCode>
@@ -1281,7 +1281,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
  *  $ARGUMENTS$
  *      <ulGenCode>
@@ -1322,7 +1322,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errRT_TERM( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOSCode, USHORT uiFlags ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <ulGenCode>
@@ -1369,7 +1369,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <ulGenCode>
@@ -1412,7 +1412,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <ulGenCode>
@@ -1455,7 +1455,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errInternal( ULONG ulIntCode, char * szText, char * szPar1, char * szPar2 )
  *  $ARGUMENTS$
  *      <ulIntCode>
@@ -1496,7 +1496,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapierr.h>
+ *      #include "hbapierr.h"
  *      hb_errorHandler( HB_ERROR_INFO_PTR pNewHandler ) --> ( HB_ERROR_INFO_PTR )hParam
  *  $ARGUMENTS$
  *      <pNewHandler>

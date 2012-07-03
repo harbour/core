@@ -27,7 +27,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbset.h>
+ *      #include "hbset.h"
  *      hb_setInitialize( void )
  *  $ARGUMENTS$
  *
@@ -62,7 +62,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbset.h>
+ *      #include "hbset.h"
  *      hb_setRelease( void )
  *  $ARGUMENTS$
  *
@@ -97,7 +97,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbset.h>
+ *      #include "hbset.h"
  *      hb_setListenerAdd( PHB_SET_LISTENER_CALLBACK callback ) --> int
  *  $ARGUMENTS$
  *      <callback>
@@ -150,7 +150,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbset.h>
+ *      #include "hbset.h"
  *      hb_setListenerNotify( HB_set_enum set, HB_set_listener_enum
  *      when ) --> int
  *  $ARGUMENTS$
@@ -200,7 +200,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbset.h>
+ *      #include "hbset.h"
  *      hb_setListenerRemove( int handle ) --> int
  *  $ARGUMENTS$
  *      <handle>
@@ -226,4 +226,3 @@
  *      hb_setListenerAdd()
  *  $END$
  */
-

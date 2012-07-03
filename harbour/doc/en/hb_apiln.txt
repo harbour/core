@@ -29,7 +29,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapilng.h>
+ *      #include "hbapilng.h"
  *      hb_langRegister( PHB_LANG lang ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <lang>
@@ -66,7 +66,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapilng.h>
+ *      #include "hbapilng.h"
  *      hb_langDeRegister( char * pszID ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pszID>
@@ -103,7 +103,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapilng.h>
+ *      #include "hbapilng.h"
  *      hb_langFind( char * pszID ) --> ( PHB_LANG )pResult
  *  $ARGUMENTS$
  *      <pszID>
@@ -140,7 +140,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapilng.h>
+ *      #include "hbapilng.h"
  *      hb_langSelect( PHB_LANG lang ) --> ( PHB_LANG )pResult
  *  $ARGUMENTS$
  *      <lang>
@@ -177,7 +177,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapilng.h>
+ *      #include "hbapilng.h"
  *      hb_langSelectID( char * pszID ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pszID>
@@ -214,7 +214,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapilng.h>
+ *      #include "hbapilng.h"
  *      hb_langDGetItem( int iIndex ) --> ( void * )pResult
  *  $ARGUMENTS$
  *      <iIndex>
@@ -251,7 +251,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapilng.h>
+ *      #include "hbapilng.h"
  *      hb_langID( void ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *
@@ -288,7 +288,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapilng.h>
+ *      #include "hbapilng.h"
  *      hb_langName( void ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *
@@ -325,7 +325,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapilng.h>
+ *      #include "hbapilng.h"
  *      hb_langDGetErrorDesc( ULONG ulIndex ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <ulIndex>
@@ -362,7 +362,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapilng.h>
+ *      #include "hbapilng.h"
  *      HB_LANG_REQUEST( id ) --> <see HB_LANG_REQUEST_( id )>
  *  $ARGUMENTS$
  *      <id>

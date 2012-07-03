@@ -108,9 +108,9 @@
  *      If no environment variable
  *      is found, an empty string is returned.
  *  $EXAMPLES$
- *      ? QOUT(GETENV('PATH'))
- *      ? QOUT(GETENV('CONFIG'))
- *      ? QOUT(GETENV('HARBOURCMD', '-n -l -es2'))
+ *      ? QOUT(GETENV("PATH"))
+ *      ? QOUT(GETENV("CONFIG"))
+ *      ? QOUT(GETENV("HARBOURCMD", "-n -l -es2"))
  *  $TESTS$
  *
  *  $STATUS$
@@ -152,9 +152,9 @@
  *      If no environment variable
  *      is found, an empty string is returned.
  *  $EXAMPLES$
- *      ? QOUT(GETE('PATH'))
- *      ? QOUT(GETE('CONFIG'))
- *      ? QOUT(GETE('HARBOURCMD', '-n -l -es2'))
+ *      ? QOUT(GETE("PATH"))
+ *      ? QOUT(GETE("CONFIG"))
+ *      ? QOUT(GETE("HARBOURCMD", "-n -l -es2"))
  *  $TESTS$
  *
  *  $STATUS$
@@ -208,9 +208,9 @@
  *      can be found, the value of the function will be <cDefaultValue>
  *      if it is passed, else an empty string.
  *  $EXAMPLES$
- *      ? QOUT(HB_GETENV('PATH'))
- *      ? QOUT(HB_GETENV('CONFIG'))
- *      ? QOUT(HB_GETENV('HARBOURCMD', '-n -l -es2'))
+ *      ? QOUT(HB_GETENV("PATH"))
+ *      ? QOUT(HB_GETENV("CONFIG"))
+ *      ? QOUT(HB_GETENV("HARBOURCMD", "-n -l -es2"))
  *  $TESTS$
  *
  *  $STATUS$

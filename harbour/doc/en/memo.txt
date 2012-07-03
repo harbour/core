@@ -148,7 +148,7 @@
  *         cFile   := "account.prg"
  *         cString := MEMOREAD( cFile )
  *
- *         IF AT( "Melina", cString) == 0             // check for copyright
+ *         IF At( "Melina", cString ) == 0            // check for copyright
  *            MEMOWRIT( cFile, cCopyright + cString ) // if not, add it!
  *         ENDIF
  *  $STATUS$
@@ -219,7 +219,7 @@
  *         cFile   := "account.prg"
  *         cString := MEMOREAD( cFile )
  *
- *         IF AT( "Melina", cString) == 0             // check for copyright
+ *         IF At( "Melina", cString ) == 0            // check for copyright
  *            MEMOWRIT( cFile, cCopyright + cString ) // if not, add it!
  *         ENDIF
  *  $STATUS$

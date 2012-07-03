@@ -27,7 +27,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_macroError( int iError, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <iError>
@@ -64,7 +64,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_macroYYParse( HB_MACRO_PTR pMacro ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <pMacro>
@@ -101,7 +101,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenPCode1( BYTE byte, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <byte>
@@ -138,7 +138,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenPCode2( BYTE byte1, BYTE byte2, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <byte1>
@@ -177,7 +177,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenPCode3( BYTE byte1, BYTE byte2, BYTE byte3, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <byte1>
@@ -218,7 +218,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenPCode4( BYTE byte1, BYTE byte2, BYTE byte3, BYTE byte4, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <byte1>
@@ -261,7 +261,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenPCodeN( BYTE * pBuffer, ULONG ulSize, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <pBuffer>
@@ -300,7 +300,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compLocalVarGetPos( char * szVarName, HB_BISON_PTR pMacro ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <szVarName>
@@ -339,7 +339,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenJump( LONG lOffset, HB_BISON_PTR pMacro ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <lOffset>
@@ -378,7 +378,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenJumpFalse( LONG lOffset, HB_BISON_PTR pMacro ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <lOffset>
@@ -417,7 +417,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenJumpThere( ULONG ulFrom, ULONG ulTo, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <ulFrom>
@@ -456,7 +456,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenJumpHere( ULONG ulOffset, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <ulOffset>
@@ -493,7 +493,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenJumpTrue( LONG lOffset, HB_BISON_PTR pMacro ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <lOffset>
@@ -532,7 +532,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compMemvarGenPCode( BYTE bPCode, char * szVarName, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <bPCode>
@@ -571,7 +571,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenPushSymbol( char * szSymbolName, int isFunction, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <szSymbolName>
@@ -610,7 +610,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenPushLong( long lNumber, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <lNumber>
@@ -647,7 +647,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenMessage( char * szMsgName, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <szMsgName>
@@ -684,7 +684,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenMessageData( char * szMsg, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <szMsg>
@@ -721,7 +721,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenPopVar( char * szVarName, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <szVarName>
@@ -758,7 +758,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenPopAliasedVar( char * szVarName, HB_BOOL bPushAliasValue, char * szAlias, long lWorkarea, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <szVarName>
@@ -801,7 +801,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenPushVar( char * szVarName, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <szVarName>
@@ -838,7 +838,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenPushVarRef( char * szVarName, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <szVarName>
@@ -875,7 +875,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenPushAliasedVar( char * szVarName, HB_BOOL bPushAliasValue, char * szAlias, long lWorkarea, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <szVarName>
@@ -918,7 +918,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenPushLogical( int iTrueFalse, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <iTrueFalse>
@@ -955,7 +955,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenPushDouble( double dNumber, BYTE bWidth, BYTE bDec, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <dNumber>
@@ -996,7 +996,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenPushFunCall( char * szFunName, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <szFunName>
@@ -1033,7 +1033,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compGenPushString( char * szText, ULONG ulStrLen, HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <szText>
@@ -1072,7 +1072,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compCodeBlockStart( HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <pMacro>
@@ -1107,7 +1107,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmacro.h>
+ *      #include "hbmacro.h"
  *      hb_compCodeBlockEnd( HB_BISON_PTR pMacro )
  *  $ARGUMENTS$
  *      <pMacro>

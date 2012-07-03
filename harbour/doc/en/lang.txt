@@ -43,13 +43,13 @@
  *  $EXAMPLES$
  *      #include "error.ch"
  *      REQUEST HB_LANG_ES
- *      FUNCTION Main()
- *      // English: Argument error
- *      ? "English:", HB_LANGERRMSG( EG_ARG )
- *      HB_LANGSELECT( "ES" )
- *      // Spanish: Error de argumento
- *      ? "Spanish:", HB_LANGERRMSG( EG_ARG )
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         // English: Argument error
+ *         ? "English:", HB_LANGERRMSG( EG_ARG )
+ *         HB_LANGSELECT( "ES" )
+ *         // Spanish: Error de argumento
+ *         ? "Spanish:", HB_LANGERRMSG( EG_ARG )
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -90,13 +90,13 @@
  *  $EXAMPLES$
  *      #include "hblang.ch"
  *      REQUEST HB_LANG_ES
- *      FUNCTION Main()
- *      // English: Monday
- *      ? "English:", HB_LANGMESSAGE( HB_LANG_ITEM_BASE_DAY + 1 )
- *      HB_LANGSELECT( "ES" )
- *      // Spanish: Lunes
- *      ? "Spanish:", HB_LANGMESSAGE( HB_LANG_ITEM_BASE_DAY + 1 )
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         // English: Monday
+ *         ? "English:", HB_LANGMESSAGE( HB_LANG_ITEM_BASE_DAY + 1 )
+ *         HB_LANGSELECT( "ES" )
+ *         // Spanish: Lunes
+ *         ? "Spanish:", HB_LANGMESSAGE( HB_LANG_ITEM_BASE_DAY + 1 )
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -134,19 +134,19 @@
  *      REQUEST HB_LANG_PT
  *      REQUEST HB_LANG_RO
  *      REQUEST HB_LANG_ES
- *      FUNCTION Main()
- *      HB_LANGSELECT( 'PT' )       // Default language is now Portuguese
- *      ? CDOW( DATE() )            //Segunda-feira
- *      ? 'Current language is ", HB_LANGNAME()             // Portuguese
- *      ? 'Old language id selected is ", HB_LANGSELECT()   // PT
- *      HB_LANGSELECT( 'RO' )       // Default language is now Romanian
- *      ? CMONTH( DATE() )          // Mai
- *      ? 'Old language id selected is ",HB_LANGSELECT()    // RO
- *      HB_LANGSELECT( 'ES' )       // Default language is now Spanish
- *      ? 'Current language is ",HB_LANGNAME()              // Spanish
- *      ? CMONTH( DATE() )          // Mayo
- *      ? CDOW( DATE() )            // Lunes
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         HB_LANGSELECT( "PT" )       // Default language is now Portuguese
+ *         ? CDOW( DATE() )            //Segunda-feira
+ *         ? "Current language is ", HB_LANGNAME()             // Portuguese
+ *         ? "Old language id selected is ", HB_LANGSELECT()   // PT
+ *         HB_LANGSELECT( "RO" )       // Default language is now Romanian
+ *         ? CMONTH( DATE() )          // Mai
+ *         ? "Old language id selected is ", HB_LANGSELECT()   // RO
+ *         HB_LANGSELECT( "ES" )       // Default language is now Spanish
+ *         ? "Current language is ",HB_LANGNAME()              // Spanish
+ *         ? CMONTH( DATE() )          // Mayo
+ *         ? CDOW( DATE() )            // Lunes
+ *         RETURN
  *  $TESTS$
  *      See tests/langapi.prg, tests/langmsg.prg
  *  $STATUS$
@@ -253,17 +253,17 @@
  *      REQUEST HB_LANG_PT
  *      REQUEST HB_LANG_RO
  *      REQUEST HB_LANG_ES
- *      FUNCTION Main()
- *      HB_LANGSELECT( 'PT' )       // Default language is now Portuguese
- *      ? CDOW( DATE() )            // Segunda-feira
- *      ? 'Old language id selected is ", HB_LANGSELECT()   // PT
- *      HB_LANGSELECT( 'RO' )       // Default language is now Romanian
- *      ? CMONTH( DATE() )          // Mai
- *      ? 'Old language id selected is ",HB_LANGSELECT()   // RO
- *      HB_LANGSELECT( 'ES' )       // Default language is now Spanish
- *      ? CMONTH( DATE() )          // Mayo
- *      ? CDOW( DATE() )            // Lunes
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         HB_LANGSELECT( "PT" )       // Default language is now Portuguese
+ *         ? CDOW( DATE() )            // Segunda-feira
+ *         ? "Old language id selected is ", HB_LANGSELECT()   // PT
+ *         HB_LANGSELECT( "RO" )       // Default language is now Romanian
+ *         ? CMONTH( DATE() )          // Mai
+ *         ? "Old language id selected is ", HB_LANGSELECT()   // RO
+ *         HB_LANGSELECT( "ES" )       // Default language is now Spanish
+ *         ? CMONTH( DATE() )          // Mayo
+ *         ? CDOW( DATE() )            // Lunes
+ *         RETURN
  *  $TESTS$
  *      See tests/langapi.prg, tests/langmsg.prg
  *  $STATUS$
@@ -370,15 +370,15 @@
  *      following to your program: REQUEST HB_CODEPAGE_RU866
  *  $EXAMPLES$
  *      REQUEST HB_CODEPAGE_HU852
- *      FUNCTION Main()
- *      LOCAL cTxt := CHR( 71 ) + " > " + CHR( 144 ) + " is"
- *      ? HB_SETCODEPAGE()               // EN
- *      ? cTxt, CHR( 71 ) > CHR( 144 )   // G >  is .F.
- *      ? HB_SETCODEPAGE( "HU852" )      // EN
- *      ? cTxt, CHR( 71 ) > CHR( 144 )   // G >  is .T.
- *      ? HB_SETCODEPAGE( "EN" )         // HU852
- *      ? cTxt, CHR( 71 ) > CHR( 144 )   // G >  is .F.
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         LOCAL cTxt := CHR( 71 ) + " > " + CHR( 144 ) + " is"
+ *         ? HB_SETCODEPAGE()               // EN
+ *         ? cTxt, CHR( 71 ) > CHR( 144 )   // G > Ã‰ is .F.
+ *         ? HB_SETCODEPAGE( "HU852" )      // EN
+ *         ? cTxt, CHR( 71 ) > CHR( 144 )   // G > Ã‰ is .T.
+ *         ? HB_SETCODEPAGE( "EN" )         // HU852
+ *         ? cTxt, CHR( 71 ) > CHR( 144 )   // G > Ã‰ is .F.
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -433,11 +433,11 @@
  *  $EXAMPLES$
  *      REQUEST HB_CODEPAGE_DE
  *      REQUEST HB_CODEPAGE_DEWIN
- *      FUNCTION Main()
- *      LOCAL cTxt := "A" + CHR( 142 ) + "BC"
- *      ? "German 850  text:", cTxt
- *      ? "German ANSI text:", HB_TRANSLATE( cTxt, "DE", "DEWIN" )
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         LOCAL cTxt := "A" + CHR( 142 ) + "BC"
+ *         ? "German 850  text:", cTxt
+ *         ? "German ANSI text:", HB_TRANSLATE( cTxt, "DE", "DEWIN" )
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

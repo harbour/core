@@ -29,7 +29,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_evalLaunch( PHB_EVALINFO pEvalInfo ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pEvalInfo>
@@ -66,7 +66,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_evalNew( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem ) --> ( HB_BOOL ) bResult
  *  $ARGUMENTS$
  *      <pEvalInfo>
@@ -105,7 +105,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_evalPutParam( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem ) --> ( HB_BOOL ) bResult
  *  $ARGUMENTS$
  *      <pEvalInfo>
@@ -144,7 +144,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_evalRelease( PHB_EVALINFO pEvalInfo ) --> ( HB_BOOL ) bResult
  *  $ARGUMENTS$
  *      <pEvalInfo>
@@ -181,7 +181,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemDo( PHB_ITEM pItem, USHORT uiPCount, PHB_ITEM pItemArg1, ... ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -224,7 +224,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemDoC( char * szFunc, USHORT uiPCount, PHB_ITEM pItemArg1, ... ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <szFunc>
@@ -267,7 +267,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemArrayGet( PHB_ITEM pArray, ULONG ulIndex ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -306,7 +306,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemArrayNew( ULONG ulLen ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <ulLen>
@@ -343,7 +343,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemArrayPut( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -384,7 +384,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemCopyC( PHB_ITEM pItem, char * szBuffer, ULONG ulLen ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -425,7 +425,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemFreeC( char * szText ) --> ( HB_BOOL ) bResult
  *  $ARGUMENTS$
  *      <szText>
@@ -462,7 +462,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemGetC( PHB_ITEM pItem ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -499,7 +499,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemGetCPtr( PHB_ITEM pItem ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -536,7 +536,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemGetCLen( PHB_ITEM pItem ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -573,7 +573,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemGetDS( PHB_ITEM pItem, char * szDate ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -612,7 +612,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemGetDL( PHB_ITEM pItem ) --> ( long )lResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -649,7 +649,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemGetL( PHB_ITEM pItem ) --> ( HB_BOOL ) bResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -686,7 +686,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemGetND( PHB_ITEM pItem ) --> ( double )dResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -723,7 +723,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemGetNI( PHB_ITEM pItem ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -760,7 +760,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemGetNL( PHB_ITEM pItem ) --> ( long )lResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -797,7 +797,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemGetNLen( PHB_ITEM pItem, int * piWidth, int * piDec )
  *  $ARGUMENTS$
  *      <pItem>
@@ -836,7 +836,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemGetPtr( PHB_ITEM pItem ) --> ( void * )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -873,7 +873,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemNew( PHB_ITEM pNull ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pNull>
@@ -910,7 +910,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemInit( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
@@ -945,7 +945,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPCount( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -982,7 +982,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemParam( USHORT uiParam ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <uiParam>  The 1-based parameter to copy and retrieve.
@@ -1026,7 +1026,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPutC( PHB_ITEM pItem, char * szText ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1065,7 +1065,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPutCPtr( PHB_ITEM pItem, char * szText ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1106,7 +1106,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPutCLPtr( PHB_ITEM pItem, char * szText, ULONG ulLen ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1147,7 +1147,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPutCL( PHB_ITEM pItem, char * szText, ULONG ulLen ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1188,7 +1188,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemSetCMemo( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
@@ -1223,7 +1223,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPutD( PHB_ITEM pItem, long lYear, long lMonth, long lDay ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1266,7 +1266,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPutDS( PHB_ITEM pItem, char * szDate ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1305,7 +1305,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPutDL( PHB_ITEM pItem, long lJulian ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1344,7 +1344,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPutL( PHB_ITEM pItem, HB_BOOL bValue ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1383,7 +1383,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPutND( PHB_ITEM pItem, double dNumber ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1422,7 +1422,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPutNI( PHB_ITEM pItem, int iNumber ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1461,7 +1461,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPutNL( PHB_ITEM pItem, long lNumber ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1500,7 +1500,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPutNLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1543,7 +1543,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPutNDLen( PHB_ITEM pItem, double dNumber, int iWidth, int iDec ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1586,7 +1586,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPutNILen( PHB_ITEM pItem, int iNumber, int iWidth ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1627,7 +1627,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPutNLLen( PHB_ITEM pItem, long lNumber, int iWidth ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1668,7 +1668,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPutPtr( PHB_ITEM pItem, void * pValue ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1707,7 +1707,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemRelease( PHB_ITEM pItem ) --> ( HB_BOOL ) bResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1744,7 +1744,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemReturn( PHB_ITEM pItem ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1781,7 +1781,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemSize( PHB_ITEM pItem ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1818,7 +1818,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemType( PHB_ITEM pItem ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1855,7 +1855,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemTypeStr( PHB_ITEM pItem ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1892,7 +1892,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemParamPtr( USHORT uiParam, int iMask ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <uiParam>
@@ -1931,7 +1931,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemReturnPtr( void ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *
@@ -1968,7 +1968,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemStrCmp( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <pFirst>
@@ -2009,7 +2009,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemCopy( PHB_ITEM pDest, PHB_ITEM pSource )
  *  $ARGUMENTS$
  *      <pDest>
@@ -2046,7 +2046,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemClear( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
@@ -2081,7 +2081,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemUnRef( PHB_ITEM pItem ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -2118,7 +2118,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemStr( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pNumber>
@@ -2159,7 +2159,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemString( PHB_ITEM pItem, ULONG * ulLen, HB_BOOL * bFreeReq ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -2200,7 +2200,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemValToStr( PHB_ITEM pItem ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -2237,7 +2237,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemPadConv( PHB_ITEM pItem, char * buffer, ULONG * pulSize ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -2278,7 +2278,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapiitm.h>
+ *      #include "hbapiitm.h"
  *      hb_itemSwap( PHB_ITEM pItem1, PHB_ITEM pItem2 )
  *  $ARGUMENTS$
  *      <pItem1>

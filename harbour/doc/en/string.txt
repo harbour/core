@@ -80,8 +80,8 @@
  *      function will return a logical true (.T.); otherwise, it will
  *      return a logical false (.F.).
  *  $EXAMPLES$
- *      ? ISDIGIT( '12345' )      // .T.
- *      ? ISDIGIT( 'abcde' )      // .F.
+ *      ? ISDIGIT( "12345" )      // .T.
+ *      ? ISDIGIT( "abcde" )      // .F.
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -118,8 +118,8 @@
  *      function will return a logical true (.T.); otherwise, it will
  *      return a logical false (.F.).
  *  $EXAMPLES$
- *      ? ISUPPER( 'Abcde' )    // .T.
- *      ? ISUPPER( 'abcde' )    // .F.
+ *      ? ISUPPER( "Abcde" )    // .T.
+ *      ? ISUPPER( "abcde" )    // .F.
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -156,8 +156,8 @@
  *      function will return a logical true (.T.); otherwise, it will
  *      return a logical false (.F.).
  *  $EXAMPLES$
- *      ? islower( 'ABCde' )      // .F.
- *      ? islower( 'aBCde' )      // .T.
+ *      ? islower( "ABCde" )      // .F.
+ *      ? islower( "aBCde" )      // .T.
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -320,7 +320,7 @@
  *
  *      SUBSTR( <cString>, 1, <nLen> )
  *  $EXAMPLES$
- *      ? LEFT( 'HELLO HARBOUR', 5 )    // HELLO
+ *      ? LEFT( "HELLO HARBOUR", 5 )    // HELLO
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -361,7 +361,7 @@
  *
  *      SUBSTR( <cString>, LEN( <cString> ) - <nLen> + 1, <nLen> )
  *  $EXAMPLES$
- *      ? RIGHT( 'HELLO HARBOUR', 5 )     // RBOUR
+ *      ? RIGHT( "HELLO HARBOUR", 5 )     // RBOUR
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -408,9 +408,9 @@
  *      characters from <nStart> to the end of the string is less than <nLen>
  *      the rest are ignored.
  *  $EXAMPLES$
- *      ? SUBSTR( 'HELLO HARBOUR' , 7, 4 )      // HARB
- *      ? SUBSTR( 'HELLO HARBOUR' ,-3, 3 )      // OUR
- *      ? SUBSTR( 'HELLO HARBOUR' , 7    )      // HARBOUR
+ *      ? SUBSTR( "HELLO HARBOUR" , 7, 4 )      // HARB
+ *      ? SUBSTR( "HELLO HARBOUR" ,-3, 3 )      // OUR
+ *      ? SUBSTR( "HELLO HARBOUR" , 7    )      // HARBOUR
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -1006,7 +1006,7 @@
  *      truncate the string <xVal> from the leftmost side to the length of
  *      <nWidth>.
  *  $EXAMPLES$
- *      ? PADC( 'Harbour',20 )
+ *      ? PADC( "Harbour",20 )
  *      ? PADC( 34.5142, 20 )
  *      ? PADC( Date(), 35 )
  *  $TESTS$
@@ -1056,7 +1056,7 @@
  *      truncate the string <xVal> from the leftmost side to the length of
  *      <nWidth>.
  *  $EXAMPLES$
- *      ? PADL( 'Harbour', 20 )
+ *      ? PADL( "Harbour", 20 )
  *      ? PADL( 34.5142, 20 )
  *      ? PADL( Date(), 35 )
  *  $TESTS$
@@ -1106,7 +1106,7 @@
  *      truncate the string <xVal> from the leftmost side to the length of
  *      <nWidth>.
  *  $EXAMPLES$
- *      ? PADR( 'Harbour', 20 )
+ *      ? PADR( "Harbour", 20 )
  *      ? PADR( 34.5142, 20 )
  *      ? PADR( Date(), 35 )
  *  $TESTS$
@@ -1279,8 +1279,8 @@
  *
  *      A value of 0 for <nSize> will return a NULL string.
  *  $EXAMPLES$
- *      ? REPLICATE( 'a', 10 )      // aaaaaaaaaa
- *      ? REPLICATE( 'b', 100000 )
+ *      ? REPLICATE( "a", 10 )      // aaaaaaaaaa
+ *      ? REPLICATE( "b", 100000 )
  *  $TESTS$
  *      See Examples
  *  $STATUS$
@@ -1393,7 +1393,7 @@
  *
  *      This functions is the oppose of the STR() function.
  *  $EXAMPLES$
- *      ? VAL( '31421' ) // 31421
+ *      ? VAL( "31421" ) // 31421
  *  $TESTS$
  *      See regression test
  *  $STATUS$
@@ -1536,12 +1536,12 @@
  *      .           Decimal point position
  *      </table>
  *  $EXAMPLES$
- *      LOCAL cString := 'This is harbour'
+ *      LOCAL cString := "This is harbour"
  *      LOCAL nNumber := 9923.34
  *      LOCAL nNumber1 := -95842.00
  *      LOCAL lValue := .T.
  *      LOCAL dDate := DATE()
- *      ? 'working with String'
+ *      ? "working with String"
  *      ? "Current String is", cString
  *      ? "All uppercased", TRANSFORM( cString, "@!" )
  *      ? "Date is", ddate

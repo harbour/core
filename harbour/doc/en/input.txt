@@ -94,10 +94,10 @@
  *  $EXAMPLES$
  *      // Wait for the user to press the Esc key
  *      ? "Please press the ESC key."
- *      WHILE INKEY( 0.1 ) != K_ESC
- *      END
+ *      DO WHILE Inkey( 0.1 ) != K_ESC
+ *      ENDDO
  *  $TESTS$
- *      KEYBOARD "AB"; ? INKEY(), INKEY() ==>   65   66
+ *      KEYBOARD "AB"; ? Inkey(), Inkey() ==>   65   66
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
@@ -139,11 +139,11 @@
  *      optional string into it.
  *  $EXAMPLES$
  *      // Stuff an Enter key into the keyboard buffer
- *      KEYBOARD CHR(13)
+ *      KEYBOARD Chr(13)
  *      // Clear the keyboard buffer
  *      CLEAR TYPEAHEAD
  *  $TESTS$
- *      KEYBOARD CHR(13); ? INKEY() ==> 13
+ *      KEYBOARD Chr(13); ? INKEY() ==> 13
  *      KEYBOARD ";" ? INKEY() ==> 13
  *      KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? INKEY() ==> 0
  *  $STATUS$
@@ -183,10 +183,10 @@
  *      be inserted.
  *  $EXAMPLES$
  *      // Stuff an Alt+PgDn key into the keyboard buffer
- *      HB_KEYPUT( K_ALT_PGDN )
+ *      hb_keyPut( K_ALT_PGDN )
  *  $TESTS$
- *      HB_KEYPUT( K_ALT_PGDN ) ; ? INKEY() ==> 417
- *      HB_KEYPUT( K_F11 ) ; ? INKEY() ==> -40
+ *      hb_keyPut( K_ALT_PGDN ) ; ? INKEY() ==> 417
+ *      hb_keyPut( K_F11 ) ; ? INKEY() ==> -40
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -225,17 +225,17 @@
  *      // Use NEXTKEY() with INKEY() to change display characters, or by
  *      // itself to exit the loop, so that the caller can detect the Esc.
  *      LOCAL nKey, cChar := "+"
- *      WHILE TRUE
+ *      DO WHILE .T.
  *         ?? cChar
- *         nKey := NEXTKEY()
+ *         nKey := NextKey()
  *         IF nKey == K_ESC
  *            EXIT
  *         ELSE
  *            IF nKey != 0
- *               cChar := CHR( nKey )
- *            END IF
- *         END IF
- *      END WHILE
+ *               cChar := Chr( nKey )
+ *            ENDIF
+ *         ENDIF
+ *      ENDDO
  *  $TESTS$
  *      KEYBOARD "AB"; ? NEXTKEY(), NEXTKEY() ==>   65   65
  *  $STATUS$
@@ -275,12 +275,12 @@
  *      keyboard buffer
  *  $EXAMPLES$
  *      // Continue looping unless the ESC key was pressed in MainFunc()
- *      WHILE TRUE
+ *      DO WHILE .T.
  *         MainFunc()
- *         IF LASTKEY() == K_ESC
+ *         IF LastKey() == K_ESC
  *            EXIT
  *         ENDIF
- *      END WHILE
+ *      ENDDO
  *  $TESTS$
  *      KEYBOARD "AB"; ? INKEY(), LASTKEY() ==>   65   65
  *  $STATUS$

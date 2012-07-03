@@ -111,8 +111,8 @@
  *  $ONELINER$
  *      Allocates memory that will be collected by the garbage collector.
  *  $SYNTAX$
- *      #include <hbapi.h>
- *      void *hb_gcAlloc( ULONG ulSize,
+ *      #include "hbapi.h"
+ *      void * hb_gcAlloc( HB_SIZE nSize,
  *      HB_GARBAGE_FUNC_PTR pCleanupFunc );
  *  $ARGUMENTS$
  *      <ulSize> Requested size of memory block

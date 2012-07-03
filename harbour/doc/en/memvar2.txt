@@ -100,9 +100,9 @@
  *      Function Main2()
  *      Local n, lVar
  *
- *      n := IIF( lVar, 'A', 3 )
+ *      n := IIF( lVar, "A", 3 )
  *      n := 2
- *      n := 'a'
+ *      n := "a"
  *      n := seconds() + 2
  *      n := int( seconds() + 2 )
  *      Return NIL
@@ -152,9 +152,9 @@
  *      Function Main2()
  *      Local n , lVar
  *
- *      n := IIF( lVar, 'A', 3 )
+ *      n := IIF( lVar, "A", 3 )
  *      n := 2
- *      n := 'a'
+ *      n := "a"
  *      n := seconds() + 2
  *      n := int( seconds() + 2 )
  *      y := n

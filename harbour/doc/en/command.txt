@@ -63,19 +63,19 @@
  *      and Delegating, and is largely compatible with Class(y)(tm), TopClass(tm)
  *      and Visual Objects(tm).
  *  $EXAMPLES$
- *      CLASS TBColumn
+ *      CREATE CLASS TBColumn
  *
- *         DATA Block      // Code block to retrieve data for the column
- *         DATA Cargo      // User-definable variable
- *         DATA ColorBlock // Code block that determines color of data items
- *         DATA ColSep     // Column separator character
- *         DATA DefColor   // Array of numeric indexes into the color table
- *         DATA Footing    // Column footing
- *         DATA FootSep    // Footing separator character
- *         DATA Heading    // Column heading
- *         DATA HeadSep    // Heading separator character
- *         DATA Width      // Column display width
- *         DATA ColPos     // Temporary column position on screen
+ *         VAR Block      // Code block to retrieve data for the column
+ *         VAR Cargo      // User-definable variable
+ *         VAR ColorBlock // Code block that determines color of data items
+ *         VAR ColSep     // Column separator character
+ *         VAR DefColor   // Array of numeric indexes into the color table
+ *         VAR Footing    // Column footing
+ *         VAR FootSep    // Footing separator character
+ *         VAR Heading    // Column heading
+ *         VAR HeadSep    // Heading separator character
+ *         VAR Width      // Column display width
+ *         VAR ColPos     // Temporary column position on screen
  *
  *         METHOD New()    // Constructor
  *
@@ -144,7 +144,7 @@
  *      VAR can be a synonym for DATA, or it can use a slightly different
  *      syntax for compatibility with other dialects.
  *  $EXAMPLES$
- *      CLASS TBColumn
+ *      CREATE CLASS TBColumn
  *
  *         DATA Block      // Code block to retrieve data for the column
  *         DATA Cargo      // User-definable variable
@@ -206,7 +206,7 @@
  *      Use the "INIT <uValue>" clause to initialize that DATA to <uValue>
  *      whenever the class is first used.
  *  $EXAMPLES$
- *      CLASS TWindow
+ *      CREATE CLASS TWindow
  *         DATA   hWnd, nOldProc
  *         CLASSDATA lRegistered AS LOGICAL
  *      ENDCLASS
@@ -303,8 +303,8 @@
  *                   Use this syntax only for defining a full method after
  *                   the ENDCLASS command.
  *  $EXAMPLES$
- *      CLASS TWindow
- *         DATA   hWnd, nOldProc
+ *      CREATE CLASS TWindow
+ *         VAR    hWnd, nOldProc
  *         METHOD New( ) CONSTRUCTOR
  *         METHOD Capture() INLINE  SetCapture( ::hWnd )
  *         METHOD End() BLOCK  {| Self, lEnd | If( lEnd := ::lValid(),;
@@ -372,8 +372,8 @@
  *      to call ::xBeginPaint().  This is then free to call the public
  *      function BeginPaint().
  *  $EXAMPLES$
- *      CLASS TWindow
- *         DATA   hWnd, nOldProc
+ *      CREATE CLASS TWindow
+ *         VAR    hWnd, nOldProc
  *         METHOD New( ) CONSTRUCTOR
  *         MESSAGE BeginPaint METHOD xBeginPaint()
  *      ENDCLASS
@@ -409,7 +409,7 @@
  *      ERROR HANDLER names the method that should handle errors for the
  *      class being defined.
  *  $EXAMPLES$
- *      CLASS TWindow
+ *      CREATE CLASS TWindow
  *         ERROR HANDLER  MyErrHandler()
  *      ENDCLASS
  *  $STATUS$
@@ -445,7 +445,7 @@
  *      It names the method that should handle errors for the
  *      class being defined.
  *  $EXAMPLES$
- *      CLASS TWindow
+ *      CREATE CLASS TWindow
  *         ON ERROR  MyErrHandler()
  *      ENDCLASS
  *  $STATUS$
@@ -478,8 +478,8 @@
  *      ENDCLASS marks the end of a class declaration.
  *      It is usually followed by the class methods that are not INLINE.
  *  $EXAMPLES$
- *      CLASS TWindow
- *         DATA   hWnd, nOldProc
+ *      CREATE CLASS TWindow
+ *         VAR hWnd, nOldProc
  *      ENDCLASS
  *  $STATUS$
  *      R

@@ -59,7 +59,7 @@
  *      tasks that will be evaluated during the idle states. There is no
  *      limit for the number of tasks.
  *  $EXAMPLES$
- *      nTask := HB_IDLEADD( {|| SayTime() } )
+ *      nTask := hb_idleAdd( {|| SayTime() } )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -101,9 +101,9 @@
  *      If specified task is defined then the codeblock is returned
  *      otherwise the NIL value is returned.
  *  $EXAMPLES$
- *      nTask := HB_IDLEADD( {|| SayTime() } )
- *      INKEY(10)
- *      bAction := HB_IDLEDEL( nTask )
+ *      nTask := hb_idleAdd( {|| SayTime() } )
+ *      Inkey( 10 )
+ *      bAction := hb_idleDel( nTask )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -142,14 +142,14 @@
  *      This function can be safely called even if there are no background
  *      tasks defined.
  *  $EXAMPLES$
- *      nTask1 := HB_IDLEADD( {|| SayTime() } )
- *      nTask2 := HB_IDLEADD( {|| SaveScreen() } )
- *      DO WHILE( !bFinished )
+ *      nTask1 := hb_idleAdd( {|| SayTime() } )
+ *      nTask2 := hb_idleAdd( {|| SaveScreen() } )
+ *      DO WHILE ! bFinished
  *        bFinished := DOSomethingVeryImportant()
- *        HB_IdleState()
+ *        hb_idleState()
  *      ENDDO
- *      cbAction := HB_IDLEDEL( nTask1 )
- *      HB_IDLEDEL( nTask2 )
+ *      cbAction := hb_idleDel( nTask1 )
+ *      hb_idleDel( nTask2 )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

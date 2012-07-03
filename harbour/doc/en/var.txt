@@ -348,7 +348,7 @@
  *      successive calls to retrieve the value of <Nth> PUBLIC variable will
  *      return the value of the same variable.
  *  $EXAMPLES$
- *      #include <hbmemvar.ch>
+ *      #include "hbmemvar.ch"
  *
  *      LOCAL nCount, i, xValue, cName
  *
@@ -358,54 +358,54 @@
  *          ? i, cName, xValue
  *      NEXT
  *  $TESTS$
- *      #include <hbmemvar.ch>
+ *      #include "hbmemvar.ch"
  *      PROCEDURE MAIN()
  *
- *      ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *      ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *      ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
+ *      ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
  *
- *      PUBLIC cPublic:='cPublic in MAIN'
+ *      PUBLIC cPublic := "cPublic in MAIN"
  *
- *      ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *      ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *      ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
+ *      ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
  *
- *      PRIVATE cPrivate:='cPrivate in MAIN'
+ *      PRIVATE cPrivate := "cPrivate in MAIN"
  *
- *      ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *      ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *      ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
+ *      ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
  *
  *      CountMemvars()
  *
- *      ? 'Back in Main'
- *      ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *      ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *      ? "Back in Main"
+ *      ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
+ *      ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
  *
  *      RETURN
  *
  *      PROCEDURE CountMemvars()
  *      LOCAL i, nCnt, xVal, cName
- *      PUBLIC ccPublic:='ccPublic'
- *      PRIVATE ccPrivate:='ccPrivate'
+ *      PUBLIC ccPublic := "ccPublic"
+ *      PRIVATE ccPrivate := "ccPrivate"
  *
- *      ? 'In CountMemvars'
- *      ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *      ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *      ? "In CountMemvars"
+ *      ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
+ *      ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
  *
- *      PRIVATE cPublic:='cPublic'
+ *      PRIVATE cPublic := "cPublic"
  *
- *      ? 'PUBLIC=', __mvDBGINFO( HB_MV_PUBLIC )
- *      ? 'PRIVATE=', __mvDBGINFO( HB_MV_PRIVATE )
+ *      ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
+ *      ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
  *
  *      nCnt =__mvDBGINFO( HB_MV_PRIVATE ) +1
  *      FOR i:=1 TO nCnt
  *        xVal =__mvDBGINFO( HB_MV_PRIVATE, i, @cName )
- *        ? i, '=', cName, xVal
+ *        ? i, "=", cName, xVal
  *      NEXT
  *
  *      nCnt =__mvDBGINFO( HB_MV_PUBLIC ) +1
  *      FOR i:=1 TO nCnt
  *        xVal =__mvDBGINFO( HB_MV_PUBLIC, i, @cName )
- *        ? i, '=', cName, xVal
+ *        ? i, "=", cName, xVal
  *      NEXT
  *
  *      RETURN
@@ -621,9 +621,9 @@
  *      LOCAL bField
  *      bFiled := FIELDBLOCK( "name" )
  *      USE Test
- *      ? 'Original value of field "name" :', EVAL( bField )
+ *      ? "Original value of field 'name' :", EVAL( bField )
  *      EVAL( bField, "Mr X new name" )
- *      ? 'New value for the field "name" :', EVAL( bField )
+ *      ? "New value for the field 'name' :", EVAL( bField )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -758,8 +758,8 @@
  *      expression is returned.
  *  $EXAMPLES$
  *       ? TYPE( "{ 1, 2 }" )                            //prints "A"
- *       ? TYPE( "IIF(.T., SUBSTR('TYPE',2,1), .F.)" )   //prints "C"
- *       ? TYPE( "AT( 'OK', MyUDF())>0" )                //prints "UI"
+ *       ? TYPE( "IIF(.T., SUBSTR("TYPE",2,1), .F.)" )   //prints "C"
+ *       ? TYPE( "AT( "OK", MyUDF())>0" )                //prints "UI"
  *       ? TYPE( "{ 1, 2 }[ 5 ]" )                       //prints "UE"
  *
  *       //--------------------------------------------------------

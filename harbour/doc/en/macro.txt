@@ -67,9 +67,9 @@
  *
  *  $EXAMPLES$
  *      INIT PROCEDURE IWANTCLIPPER()
- *        HB_SETMACRO( HB_SM_HARBOUR, .F. )
- *        HB_SETMACRO( HB_SM_XBASE, .F. )
- *      RETURN
+ *         HB_SETMACRO( HB_SM_HARBOUR, .F. )
+ *         HB_SETMACRO( HB_SM_XBASE, .F. )
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

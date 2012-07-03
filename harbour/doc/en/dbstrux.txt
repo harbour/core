@@ -357,22 +357,22 @@
  *      // then CREATE FROM this file a new database file
  *
  *      __dbCreate( "template" )
- *      DBAPPEND()
+ *      dbAppend()
  *      FIELD->FIELD_NAME := "CHANNEL"
  *      FIELD->FIELD_TYPE := "N"
  *      FIELD->FIELD_LEN  := 2
  *      FIELD->FIELD_DEC  := 0
- *      DBAPPEND()
+ *      dbAppend()
  *      FIELD->FIELD_NAME := "PROGRAM"
  *      FIELD->FIELD_TYPE := "C"
  *      FIELD->FIELD_LEN  := 20
  *      FIELD->FIELD_DEC  := 0
- *      DBAPPEND()
+ *      dbAppend()
  *      FIELD->FIELD_NAME := "REVIEW"
  *      FIELD->FIELD_TYPE := "C"      // this field is 1000 char long
  *      FIELD->FIELD_LEN  := 232      // 1000 % 256 = 232
  *      FIELD->FIELD_DEC  := 3        // 1000 / 256 = 3
- *      DBCLOSEAREA()
+ *      dbCloseArea()
  *      __dbCreate( "TV_Guide", "template" )
  *  $STATUS$
  *      R
@@ -600,9 +600,9 @@
  *      // Create a new file that contain part of the original structure
  *      LOCAL aStruct, aList, aRet
  *      USE TEST
- *      aStruct := DBSTRUCT()
+ *      aStruct := dbStruct()
  *      aList := { "NAME" }
- *      DBCREATE( "onlyname.dbf", __FLEDIT( aStruct, aList ) )
+ *      dbCreate( "onlyname.dbf", __FLEDIT( aStruct, aList ) )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -691,9 +691,9 @@
  *      // Create a new file that contain part of the original structure
  *      LOCAL aStruct, aList, aRet
  *      USE TEST
- *      aStruct := DBSTRUCT()
+ *      aStruct := dbStruct()
  *      aList := { "NAME" }
- *      DBCREATE( "onlyname.dbf", __dbStructFilter( aStruct, aList ) )
+ *      dbCreate( "onlyname.dbf", __dbStructFilter( aStruct, aList ) )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

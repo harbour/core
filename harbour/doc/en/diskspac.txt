@@ -41,7 +41,7 @@
  *      If information is requested on a disk that is not available, a runtime
  *      error 2018 will be raised.
  *  $EXAMPLES$
- *      ? "You can use : " +Str( DiskSpace() ) + " bytes "
+ *      ? "You can use : " + hb_ntos( DiskSpace() ) + " bytes "
  *
  *      Note: See tests\tstdspac.prg for another example
  *  $STATUS$
@@ -89,11 +89,11 @@
  *                      disk quotas are supported by the O/S in use at runtime,
  *                      and disk quotas are in effect. Otherwise, the value
  *                      will be equal to that returned for HB_FS_FREE.
-
+ *
  *       HB_FS_FREE     The actual amount of free diskspace on the drive.
-
+ *
  *       HB_FS_USED     The number of bytes in use on the disk.
-
+ *
  *       HB_FS_TOTAL    The total amount of space allocated for the user if
  *                      disk quotas are in effect, otherwise, the actual size
  *                      of the drive.
@@ -101,8 +101,9 @@
  *      If information is requested on a disk that is not available, a runtime
  *      error 2018 will be raised.
  *  $EXAMPLES$
- *      ? "You can use : " + Str( HB_DiskSpace() ) + " bytes " +;
- *        "Out of a total of " + Str( HB_DiskSpace( "C:", HB_FS_TOTAL ) )
+ *      #include "fileio.ch"
+ *      ? "You can use : " + hb_ntos( hb_DiskSpace() ) + " bytes " +;
+ *        "Out of a total of " + hb_ntos( hb_DiskSpace( "C:", HB_FS_TOTAL ) )
  *
  *      Note: See tests\tstdspac.prg for another example
  *  $STATUS$

@@ -179,16 +179,16 @@
  *      which returns all the information in a multidimensional array.
  *  $EXAMPLES$
  *      LOCAL aName, aSize, aDate, aTime, aAttr, nLen, i
- *      nLen := ADIR( "*.jpg" )     // Number of JPG files in this directory
+ *      nLen := ADir( "*.jpg" )     // Number of JPG files in this directory
  *      IF nLen > 0
  *         aName := Array( nLen )   // make room to store the information
  *         aSize := Array( nLen )
  *         aDate := Array( nLen )
  *         aTime := Array( nLen )
  *         aAttr := Array( nLen )
- *         ADIR( "*.prg", aName, aSize, aDate, aTime, aAttr )
- *         FOR i = 1 TO nLen
- *             ? aName[i], aSize[i], aDate[i], aTime[i], aAttr[i]
+ *         ADir( "*.prg", aName, aSize, aDate, aTime, aAttr )
+ *         FOR i := 1 TO nLen
+ *             ? aName[ i ], aSize[ i ], aDate[ i ], aTime[ i ], aAttr[ i ]
  *         NEXT
  *      ELSE
  *         ? "This directory is clean from smut"

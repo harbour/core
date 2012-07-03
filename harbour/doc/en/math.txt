@@ -39,17 +39,16 @@
  *      This function yields the absolute value of the numeric value or
  *      expression <nNumber>.
  *  $EXAMPLES$
- *      Proc Main()
+ *      PROCEDURE Main()
+ *         LOCAL nNumber := 50
+ *         LOCAL nNumber1 := 27
+ *         CLS
  *
- *      Local nNumber:=50
- *      Local nNumber1:=27
- *      cls
- *
- *      qout(nNumber-nNumber1)
- *      qout(nNumber1-nNumber)
- *      qout(ABS(nNumber-nNumber1))
- *      qout(ABSnNumber1-nNumber))
- *      qout(ABS( -1 * 345))
+ *         ? nNumber - nNumber1
+ *         ? nNumber1 - nNumber
+ *         ? ABS( nNumber - nNumber1 )
+ *         ? ABS( nNumber1 - nNumber )
+ *         ? ABS( -1 * 345 )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -121,9 +120,9 @@
  *      upward or downward; it merely truncates a number at the decimal
  *      point.
  *  $EXAMPLES$
- *      SET Decimal to 5
- *      ? INT(632512.62541)
- *      ? INT(845414111.91440)
+ *      SET DECIMAL TO 5
+ *      ? INT( 632512.62541 )
+ *      ? INT( 845414111.91440 )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -160,7 +159,7 @@
  *      which is depicted on the display device as a series of asterisks.
  *      This function is the inverse of EXP().
  *  $EXAMPLES$
- *      ? LOG(632512)
+ *      ? LOG( 632512 )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -187,7 +186,7 @@
  *  $ONELINER$
  *      Returns the maximum of two numbers or dates.
  *  $SYNTAX$
- *      MAX(<xValue>,<xValue1>)  --> <xMax>
+ *      MAX( <xValue>, <xValue1> )  --> <xMax>
  *  $ARGUMENTS$
  *      <xValue>  Any date or numeric value.
  *
@@ -202,8 +201,8 @@
  *      are date data types, the return value will be a date data type as
  *      well. It will be the later of the two dates passed to it.
  *  $EXAMPLES$
- *      ? MAX(214514214,6251242142)
- *      ? MAX(CTOD('11/11/2000'),CTOD('21/06/2014')
+ *      ? MAX( 214514214, 6251242142 )
+ *      ? MAX( STOD( "20001111" ), STOD( "20140621" ) )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -229,7 +228,7 @@
  *  $ONELINER$
  *      Determines the minumum of two numbers or dates.
  *  $SYNTAX$
- *      MIN(<xValue>,<xValue1>)  --> <xMin>
+ *      MIN( <xValue>, <xValue1> )  --> <xMin>
  *  $ARGUMENTS$
  *      <xValue>  Any date or numeric value.
  *
@@ -241,8 +240,8 @@
  *      <xValue> and <xValue1> must be the same data type. If numeric, the
  *      smaller number is returned. If dates, the earlier date is returned.
  *  $EXAMPLES$
- *      ? MIN(214514214,6251242142)
- *      ? MIN(CTOD('11/11/2000'),CTOD('21/06/2014')
+ *      ? MIN( 214514214, 6251242142 )
+ *      ? MIN( STOD( "20001111" ), STOD( "20140621" ) )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -268,7 +267,7 @@
  *  $ONELINER$
  *      Return the modulus of two numbers.
  *  $SYNTAX$
- *      MOD( <nNumber>,<nNumber1>) -->  <nRemainder>
+ *      MOD( <nNumber>, <nNumber1> ) -->  <nRemainder>
  *  $ARGUMENTS$
  *      <nNumber>  Numerator in a divisional expression.
  *
@@ -279,9 +278,9 @@
  *      This functuion returns the remainder of one number divided by
  *      another.
  *  $EXAMPLES$
- *      ? MOD(12,8.521)
- *      ? Mod(12,0)
- *      ? Mod(62412.5142,4522114.12014)
+ *      ? Mod( 12, 8.521 )
+ *      ? Mod( 12, 0 )
+ *      ? Mod( 62412.5142, 4522114.12014 )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -318,9 +317,9 @@
  *      SET DECIMAL TO command. Any negative number passed as <nNumber>
  *      will always return a 0.
  *  $EXAMPLES$
- *      SET Decimal to 5
- *      ? SQRT(632512.62541)
- *      ? SQRT(845414111.91440)
+ *      SET DECIMAL TO 5
+ *      ? SQRT( 632512.62541 )
+ *      ? SQRT( 845414111.91440 )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -360,8 +359,8 @@
  *      whole numbers. Numbers from 5 through 9 will be rounded up, all
  *      others will be rounded down.
  *  $EXAMPLES$
- *      ? ROUND(632512.62541,5)
- *      ? ROUND(845414111.91440,3)
+ *      ? ROUND( 632512.62541, 5 )
+ *      ? ROUND( 845414111.91440, 3 )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -389,8 +388,8 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmath.h>
- *      hb_mathGetLastError (HB_MATH_EXCEPTION * phb_exc)
+ *      #include "hbmath.h"
+ *      hb_mathGetLastError( HB_MATH_EXCEPTION * phb_exc )
  *                          --> int iMathErrorType
  *  $ARGUMENTS$
  *      phb_exc     pointer to HB_MATH_EXCEPTION structure, if not NULL,
@@ -446,8 +445,8 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmath.h>
- *      hb_mathResetError (void)
+ *      #include "hbmath.h"
+ *      hb_mathResetError( void )
  *  $ARGUMENTS$
  *
  *  $DESCRIPTION$
@@ -482,8 +481,8 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmath.h>
- *      hb_mathIsMathErr (void) --> int iIsMathHandler
+ *      #include "hbmath.h"
+ *      hb_mathIsMathErr( void ) --> int iIsMathHandler
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -520,8 +519,8 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmath.h>
- *      hb_mathSetHandler (HB_MATH_HANDLERPROC handlerproc)
+ *      #include "hbmath.h"
+ *      hb_mathSetHandler( HB_MATH_HANDLERPROC handlerproc )
  *                        --> HB_MATH_HANDLERPROC previous_handerproc
  *  $ARGUMENTS$
  *      handlerproc             custom math handler
@@ -561,8 +560,8 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmath.h>
- *      hb_mathGetHandler (void) --> HB_MATH_HANDLERPROC handlerproc
+ *      #include "hbmath.h"
+ *      hb_mathGetHandler( void ) --> HB_MATH_HANDLERPROC handlerproc
  *  $ARGUMENTS$
  *      handlerproc             custom math handler
  *              typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err)
@@ -600,8 +599,8 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmath.h>
- *      hb_mathSetErrMode (int imode) --> int ioldmode
+ *      #include "hbmath.h"
+ *      hb_mathSetErrMode( int imode ) --> int ioldmode
  *  $ARGUMENTS$
  *      imode        math error handling mode, one of the following
  *                   constants, defined in hbmath.ch:
@@ -644,8 +643,8 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbmath.h>
- *      hb_mathGetErrMode (void) --> imode
+ *      #include "hbmath.h"
+ *      hb_mathGetErrMode( void ) --> imode
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -680,7 +679,7 @@
  *  $ONELINER$
  *      Set/Get math error handling mode
  *  $SYNTAX$
- *      HB_MATHERMODE ([<nNewMode>]) --> <nOldMode>
+ *      HB_MATHERMODE( [<nNewMode>] ) --> <nOldMode>
  *  $ARGUMENTS$
  *      [<nNumber>]   new math error handling mode, one of the following
  *                    constants, defined in hbmath.ch:
@@ -721,7 +720,7 @@
  *  $ONELINER$
  *      Set/Get math error handling codeblock
  *  $SYNTAX$
- *      HB_MATHERBLOCK ([<bNewBlock>]) --> <bOldBlock>
+ *      HB_MATHERBLOCK( [<bNewBlock>] ) --> <bOldBlock>
  *  $ARGUMENTS$
  *      <bNewBlock>
  *  $RETURNS$

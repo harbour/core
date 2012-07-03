@@ -29,7 +29,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtInit( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
  *  $ARGUMENTS$
  *      <iFilenoStdin>
@@ -68,7 +68,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtExit( void )
  *  $ARGUMENTS$
  *
@@ -103,7 +103,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtAdjustPos( int iHandle, char * pStr, ULONG ulLen )
  *  $ARGUMENTS$
  *      <iHandle>
@@ -142,7 +142,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiTop>
@@ -187,7 +187,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiTop>
@@ -230,7 +230,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiTop>
@@ -273,7 +273,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtColorSelect( USHORT uiColorIndex ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiColorIndex>
@@ -310,7 +310,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtColorToN( char * szColorString ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <szColorString>
@@ -347,7 +347,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtDispBegin( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -384,7 +384,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtDispCount( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -421,7 +421,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtDispEnd( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -458,7 +458,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtDrawShadow( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiTop>
@@ -503,7 +503,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtGetBlink( HB_BOOL * pbBlink ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <pbBlink>
@@ -540,7 +540,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtGetColorStr( char * pszColorString ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <pszColorString>
@@ -577,7 +577,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtGetCursor( USHORT * puiCursorShape ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <puiCursorShape>
@@ -614,7 +614,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtGetPos( SHORT * piRow, SHORT * piCol ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <piRow>
@@ -653,7 +653,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtIsColor( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
@@ -690,7 +690,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtMaxCol( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -727,7 +727,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtMaxRow( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -764,7 +764,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtPostExt( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -801,7 +801,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtPreExt( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -838,7 +838,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtSuspend( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -875,7 +875,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtResume( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -912,7 +912,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtReadKey( HB_inkey_enum eventmask ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <eventmask>
@@ -949,7 +949,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtRectSize( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * puiBuffSize ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiTop>
@@ -994,7 +994,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiRow>
@@ -1037,7 +1037,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtRest( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * pScrBuff ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiTop>
@@ -1082,7 +1082,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtSave( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * pScrBuff ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiTop>
@@ -1127,7 +1127,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtScrDim( USHORT * puiHeight, USHORT * puiWidth ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <puiHeight>
@@ -1166,7 +1166,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiTop>
@@ -1213,7 +1213,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtSetBlink( HB_BOOL bBlink ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <bBlink>
@@ -1250,7 +1250,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtSetColorStr( char * pszColorString ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <pszColorString>
@@ -1287,7 +1287,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtSetCursor( USHORT uiCursorShape ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiCursorShape>
@@ -1324,7 +1324,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtSetMode( USHORT uiRows, USHORT uiCols ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiRows>
@@ -1363,7 +1363,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtSetPos( SHORT iRow, SHORT iCol ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <iRow>
@@ -1402,7 +1402,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtSetPosContext( SHORT iRow, SHORT iCol, SHORT iMode ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <iRow>
@@ -1443,7 +1443,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtSetSnowFlag( HB_BOOL bNoSnow ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <bNoSnow>
@@ -1480,7 +1480,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtTone( double dFrequency, double dDuration )
  *  $ARGUMENTS$
  *      <dFrequency>
@@ -1517,7 +1517,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtWrite( BYTE * pbyStr, ULONG ulLen ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <pbyStr>
@@ -1556,7 +1556,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * pbyStr, ULONG ulLen ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiRow>
@@ -1599,7 +1599,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtWriteCon( BYTE * pbyStr, ULONG ulLen ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <pbyStr>
@@ -1638,7 +1638,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtVersion( void ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *
@@ -1675,7 +1675,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtWCreate( HB_GT_RECT * rect, HB_GT_WND ** wnd )
  *  $ARGUMENTS$
  *      <rect>
@@ -1712,7 +1712,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtWDestroy( HB_GT_WND * wnd )
  *  $ARGUMENTS$
  *      <wnd>
@@ -1747,7 +1747,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtWFlash( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
@@ -1784,7 +1784,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtWApp( HB_GT_WND ** wnd )
  *  $ARGUMENTS$
  *      <wnd>
@@ -1819,7 +1819,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtWCurrent( HB_GT_WND * wnd )
  *  $ARGUMENTS$
  *      <wnd>
@@ -1854,7 +1854,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtWPos( HB_GT_WND * wnd, HB_GT_RECT * rect )
  *  $ARGUMENTS$
  *      <wnd>
@@ -1891,7 +1891,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtWVis( HB_GT_WND * wnd, USHORT uiStatus ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <wnd>
@@ -1930,7 +1930,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtSLR( HB_GT_SLR * pSLR ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <pSLR>
@@ -1967,7 +1967,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtModalRead( void * ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <void *>
@@ -2004,7 +2004,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtBeginWrite( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -2041,7 +2041,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtEndWrite( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -2078,7 +2078,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtFlushCursor( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -2115,7 +2115,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtSetColor( HB_GT_RGB * color ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <color>
@@ -2152,7 +2152,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtGetColor( HB_GT_RGB * color ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <color>
@@ -2189,7 +2189,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gtSetBorder( HB_GT_RGB * color ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <color>
@@ -2226,7 +2226,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
  *  $ARGUMENTS$
  *      <iFilenoStdin>
@@ -2265,7 +2265,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_Exit( void )
  *  $ARGUMENTS$
  *
@@ -2300,7 +2300,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pStr>
@@ -2339,7 +2339,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiTop>
@@ -2386,7 +2386,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_BoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiTop>
@@ -2433,7 +2433,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_BoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiTop>
@@ -2480,7 +2480,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_Col( void ) --> ( SHORT )sResult
  *  $ARGUMENTS$
  *
@@ -2517,7 +2517,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_DispBegin( void )
  *  $ARGUMENTS$
  *
@@ -2552,7 +2552,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_DispCount( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -2589,7 +2589,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_DispEnd( void )
  *  $ARGUMENTS$
  *
@@ -2624,7 +2624,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_GetBlink( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
@@ -2661,7 +2661,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_GetCursorStyle( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -2698,7 +2698,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_GetScreenHeight( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -2735,7 +2735,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_GetScreenWidth( void ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *
@@ -2772,7 +2772,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyDst )
  *  $ARGUMENTS$
  *      <uiTop>
@@ -2815,7 +2815,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar, BYTE byAttr ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiRow>
@@ -2860,7 +2860,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_IsColor( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
@@ -2897,7 +2897,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_PreExt( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
@@ -2934,7 +2934,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_PostExt( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
@@ -2971,7 +2971,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_Suspend( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
@@ -3008,7 +3008,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_Resume( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
@@ -3045,7 +3045,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG ulLen )
  *  $ARGUMENTS$
  *      <uiRow>
@@ -3088,7 +3088,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbySrc )
  *  $ARGUMENTS$
  *      <uiTop>
@@ -3131,7 +3131,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_ReadKey( HB_inkey_enum eventmask ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <eventmask>
@@ -3168,7 +3168,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_RectSize( USHORT rows, USHORT cols ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <rows>
@@ -3207,7 +3207,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_Replicate( USHORT uiTop, USHORT uiLeft, BYTE byAttr, BYTE byChar, ULONG ulLen )
  *  $ARGUMENTS$
  *      <uiTop>
@@ -3250,7 +3250,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_Row( void ) --> ( SHORT )sResult
  *  $ARGUMENTS$
  *
@@ -3287,7 +3287,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr, SHORT iRows, SHORT iCols )
  *  $ARGUMENTS$
  *      <uiTop>
@@ -3334,7 +3334,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr )
  *  $ARGUMENTS$
  *      <uiTop>
@@ -3377,7 +3377,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_SetBlink( HB_BOOL bBlink )
  *  $ARGUMENTS$
  *      <bBlink>
@@ -3412,7 +3412,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_SetCursorStyle( USHORT uiCursorShape )
  *  $ARGUMENTS$
  *      <uiCursorShape>
@@ -3447,7 +3447,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_SetMode( USHORT uiRows, USHORT uiCols ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <uiRows>
@@ -3486,7 +3486,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
  *  $ARGUMENTS$
  *      <iRow>
@@ -3525,7 +3525,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_Tone( double dFrequency, double dDuration )
  *  $ARGUMENTS$
  *      <dFrequency>
@@ -3562,7 +3562,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_Version( void ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *
@@ -3599,7 +3599,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar, BYTE byAttr ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <uiCol>
@@ -3644,7 +3644,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_inkey( HB_BOOL bWait, double dSeconds, HB_inkey_enum event_mask ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <bWait>
@@ -3685,7 +3685,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_inkeyGet( void ) --> ( int )iResult
  *  $ARGUMENTS$
  *
@@ -3722,7 +3722,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_inkeyPut( int ch )
  *  $ARGUMENTS$
  *      <ch>
@@ -3757,7 +3757,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_inkeyLast( void ) --> ( int )iResult
  *  $ARGUMENTS$
  *
@@ -3794,7 +3794,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_inkeyNext( void ) --> ( int )iResult
  *  $ARGUMENTS$
  *
@@ -3831,7 +3831,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_inkeyPoll( void )
  *  $ARGUMENTS$
  *
@@ -3866,7 +3866,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_inkeyReset( HB_BOOL allocate )
  *  $ARGUMENTS$
  *      <allocate>
@@ -3901,7 +3901,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouseIsPresent( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
@@ -3938,7 +3938,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouseGetCursor( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
@@ -3975,7 +3975,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouseSetCursor( HB_BOOL bVisible )
  *  $ARGUMENTS$
  *      <bVisible>
@@ -4010,7 +4010,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouseCol( void ) --> ( int )iResult
  *  $ARGUMENTS$
  *
@@ -4047,7 +4047,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouseRow( void ) --> ( int )iResult
  *  $ARGUMENTS$
  *
@@ -4084,7 +4084,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouseSetPos( int iRow, int iCol )
  *  $ARGUMENTS$
  *      <iRow>
@@ -4121,7 +4121,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouseIsButtonPressed( int iButton ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <iButton>
@@ -4158,7 +4158,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouseCountButton( void ) --> ( int )iResult
  *  $ARGUMENTS$
  *
@@ -4195,7 +4195,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouseSetBounds( int iTop, int iLeft, int iBottom, int iRight )
  *  $ARGUMENTS$
  *      <iTop>
@@ -4236,7 +4236,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouseGetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight )
  *  $ARGUMENTS$
  *      <piTop>
@@ -4277,7 +4277,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouse_Init( void )
  *  $ARGUMENTS$
  *
@@ -4312,7 +4312,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouse_Exit( void )
  *  $ARGUMENTS$
  *
@@ -4347,7 +4347,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouse_IsPresent( void ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *
@@ -4384,7 +4384,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouse_Show( void )
  *  $ARGUMENTS$
  *
@@ -4419,7 +4419,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouse_Hide( void )
  *  $ARGUMENTS$
  *
@@ -4454,7 +4454,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouse_Col( void ) --> ( int )iResult
  *  $ARGUMENTS$
  *
@@ -4491,7 +4491,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouse_Row( void ) --> ( int )iResult
  *  $ARGUMENTS$
  *
@@ -4528,7 +4528,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouse_SetPos( int iRow, int iCol )
  *  $ARGUMENTS$
  *      <iRow>
@@ -4565,7 +4565,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouse_IsButtonPressed( int iButton ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <iButton>
@@ -4602,7 +4602,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouse_CountButton( void ) --> ( int )iResult
  *  $ARGUMENTS$
  *
@@ -4639,7 +4639,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight )
  *  $ARGUMENTS$
  *      <iTop>
@@ -4680,7 +4680,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight )
  *  $ARGUMENTS$
  *      <piTop>
@@ -4721,7 +4721,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_setkeyInit( void )
  *  $ARGUMENTS$
  *
@@ -4756,7 +4756,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapigt.h>
+ *      #include "hbapigt.h"
  *      hb_setkeyExit( void )
  *  $ARGUMENTS$
  *

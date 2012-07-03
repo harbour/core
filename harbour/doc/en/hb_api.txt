@@ -29,7 +29,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_parc( int iParam, ... ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <iParam>
@@ -68,7 +68,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_parclen( int iParam, ... ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <iParam>
@@ -107,7 +107,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_parcsiz( int iParam, ... ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <iParam>
@@ -146,7 +146,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_pards( int iParam, ... ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <iParam>
@@ -185,7 +185,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_pardsbuff( char * szDate, int iParam, ... ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <szDate>
@@ -226,7 +226,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_parinfa( int iParamNum, ULONG uiArrayIndex ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <iParamNum>
@@ -265,7 +265,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_parinfo( int iParam ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <iParam>
@@ -302,7 +302,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_parl( int iParam, ... ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <iParam>
@@ -341,7 +341,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_parnd( int iParam, ... ) --> ( double )dResult
  *  $ARGUMENTS$
  *      <iParam>
@@ -380,7 +380,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_parni( int iParam, ... ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <iParam>
@@ -419,7 +419,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_parnl( int iParam, ... ) --> ( long )lResult
  *  $ARGUMENTS$
  *      <iParam>
@@ -458,7 +458,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_param( int iParam, int iMask ) --> ( PHB_ITEM ) pResult
  *  $ARGUMENTS$
  *      <iParam>  The 1-based parameter to retrieve.
@@ -501,7 +501,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_pcount( void ) --> ( int )iResult
  *  $ARGUMENTS$
  *
@@ -539,7 +539,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_ret( void ) --> void
  *  $ARGUMENTS$
  *
@@ -575,7 +575,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_retc( char * szText )
  *  $ARGUMENTS$
  *      <szText>
@@ -611,7 +611,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_retclen( char * szText, ULONG ulLen )
  *  $ARGUMENTS$
  *      <szText>
@@ -649,7 +649,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_retds( char * szDate )
  *  $ARGUMENTS$
  *      <szDate>
@@ -685,7 +685,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_retd( long lYear, long lMonth, long lDay )
  *  $ARGUMENTS$
  *      <lYear>
@@ -725,7 +725,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_retdl( long lJulian )
  *  $ARGUMENTS$
  *      <lJulian>
@@ -761,7 +761,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_retl( int iTrueFalse )
  *  $ARGUMENTS$
  *      <iTrueFalse>
@@ -797,7 +797,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_retnd( double dNumber )
  *  $ARGUMENTS$
  *      <dNumber>
@@ -833,7 +833,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_retni( int iNumber )
  *  $ARGUMENTS$
  *      <iNumber>
@@ -869,7 +869,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_retnl( long lNumber )
  *  $ARGUMENTS$
  *      <lNumber>
@@ -905,7 +905,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_retnlen( double dNumber, int iWidth, int iDec )
  *  $ARGUMENTS$
  *      <dNumber>
@@ -945,7 +945,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_retndlen( double dNumber, int iWidth, int iDec )
  *  $ARGUMENTS$
  *      <dNumber>
@@ -985,7 +985,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_retnilen( int iNumber, int iWidth )
  *  $ARGUMENTS$
  *      <iNumber>
@@ -1023,7 +1023,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_retnllen( long lNumber, int iWidth )
  *  $ARGUMENTS$
  *      <lNumber>
@@ -1061,7 +1061,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_reta( ULONG ulLen )
  *  $ARGUMENTS$
  *      <ulLen>
@@ -1097,7 +1097,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_storc( char * szText, int iParam, ... )
  *  $ARGUMENTS$
  *      <szText>
@@ -1136,7 +1136,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_storclen( char * szText, ULONG ulLength, int iParam, ... )
  *  $ARGUMENTS$
  *      <szText>
@@ -1177,7 +1177,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_stords( char * szDate, int iParam, ... )
  *  $ARGUMENTS$
  *      <szDate>
@@ -1216,7 +1216,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_storl( int iLogical, int iParam, ... )
  *  $ARGUMENTS$
  *      <iLogical>
@@ -1255,7 +1255,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_storni( int iValue, int iParam, ... )
  *  $ARGUMENTS$
  *      <iValue>
@@ -1294,7 +1294,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_stornl( long lValue, int iParam, ... )
  *  $ARGUMENTS$
  *      <lValue>
@@ -1333,7 +1333,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_stornd( double dValue, int iParam, ... )
  *  $ARGUMENTS$
  *      <dValue>
@@ -1372,7 +1372,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_xinit( void )
  *  $ARGUMENTS$
  *
@@ -1407,7 +1407,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_xexit( void )
  *  $ARGUMENTS$
  *
@@ -1442,7 +1442,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_xalloc( ULONG ulSize ) --> ( void * )pResult
  *  $ARGUMENTS$
  *      <ulSize>
@@ -1479,7 +1479,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_xgrab( ULONG ulSize ) --> ( void * )pResult
  *  $ARGUMENTS$
  *      <ulSize>
@@ -1516,7 +1516,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_xfree( void * pMem )
  *  $ARGUMENTS$
  *      <pMem>
@@ -1551,7 +1551,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_xrealloc( void * pMem, ULONG ulSize ) --> ( void * )pResult
  *  $ARGUMENTS$
  *      <pMem>
@@ -1590,7 +1590,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_xsize( void * pMem ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <pMem>
@@ -1627,7 +1627,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_xquery( USHORT uiMode ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <uiMode>
@@ -1664,7 +1664,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_xmemcpy( void * pDestArg, void * pSourceArg, ULONG ulLen ) --> ( void * )pResult
  *  $ARGUMENTS$
  *      <pDestArg>
@@ -1706,7 +1706,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_xmemset( void * pDestArg, int iFill, ULONG ulLen ) --> ( void * )pResult
  *  $ARGUMENTS$
  *      <pDestArg>
@@ -1748,7 +1748,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayNew( PHB_ITEM pItem, ULONG ulLen ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -1787,7 +1787,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayLen( PHB_ITEM pArray ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -1824,7 +1824,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayIsObject( PHB_ITEM pArray ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -1861,7 +1861,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayAdd( PHB_ITEM pArray, PHB_ITEM pItemValue ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -1900,7 +1900,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayIns( PHB_ITEM pArray, ULONG ulIndex ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -1939,7 +1939,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayDel( PHB_ITEM pArray, ULONG ulIndex ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -1978,7 +1978,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arraySize( PHB_ITEM pArray, ULONG ulLen ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2017,7 +2017,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayLast( PHB_ITEM pArray, PHB_ITEM pResult ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2056,7 +2056,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayRelease( PHB_ITEM pArray ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2093,7 +2093,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arraySet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2134,7 +2134,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayGet( PHB_ITEM pArray, ULONG ulIndex, PHB_ITEM pItem ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2175,7 +2175,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayGetItemPtr( PHB_ITEM pArray, ULONG ulIndex ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2214,7 +2214,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayCopyC( PHB_ITEM pArray, ULONG ulIndex, char * szBuffer, ULONG ulLen ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2257,7 +2257,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayGetC( PHB_ITEM pArray, ULONG ulIndex ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2296,7 +2296,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayGetCPtr( PHB_ITEM pArray, ULONG ulIndex ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2335,7 +2335,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayGetCLen( PHB_ITEM pArray, ULONG ulIndex ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2374,7 +2374,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayGetL( PHB_ITEM pArray, ULONG ulIndex ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2413,7 +2413,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayGetNI( PHB_ITEM pArray, ULONG ulIndex ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2452,7 +2452,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayGetNL( PHB_ITEM pArray, ULONG ulIndex ) --> ( long )lResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2491,7 +2491,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayGetND( PHB_ITEM pArray, ULONG ulIndex ) --> ( double )dResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2530,7 +2530,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayGetDS( PHB_ITEM pArray, ULONG ulIndex, char * szDate ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2571,7 +2571,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayGetDL( PHB_ITEM pArray, ULONG ulIndex ) --> ( long )lResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2610,7 +2610,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayGetType( PHB_ITEM pArray, ULONG ulIndex ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2649,7 +2649,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayFill( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2692,7 +2692,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayScan( PHB_ITEM pArray, PHB_ITEM pValue, ULONG * pulStart, ULONG * pulCount ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2735,7 +2735,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayEval( PHB_ITEM pArray, PHB_ITEM bBlock, ULONG * pulStart, ULONG * pulCount ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2778,7 +2778,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayCopy( PHB_ITEM pSrcArray, PHB_ITEM pDstArray, ULONG * pulStart, ULONG * pulCount, ULONG * pulTarget ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pSrcArray>
@@ -2823,7 +2823,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayClone( PHB_ITEM pArray ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2860,7 +2860,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arraySort( PHB_ITEM pArray, ULONG * pulStart, ULONG * pulCount, PHB_ITEM pBlock ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pArray>
@@ -2903,7 +2903,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_stricmp( const char * s1, const char * s2 ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <s1>
@@ -2942,7 +2942,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_strnicmp( const char * s1, const char * s2, ULONG ulLen ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <s1>
@@ -2983,7 +2983,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_strupr( char * pszText ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pszText>
@@ -3020,7 +3020,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_strdup( const char * pszText ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pszText>
@@ -3057,7 +3057,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_strMatchRegExp( const char * szString, const char * szMask ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <szString>
@@ -3096,7 +3096,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_strEmpty( const char * szText, ULONG ulLen ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <szText>
@@ -3135,7 +3135,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_strDescend( char * szStringTo, const char * szStringFrom, ULONG ulLen )
  *  $ARGUMENTS$
  *      <szStringTo>
@@ -3174,7 +3174,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_strAt( const char * szSub, ULONG ulSubLen, const char * szText, ULONG ulLen ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <szSub>
@@ -3217,7 +3217,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_strUpper( char * szText, ULONG ulLen ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <szText>
@@ -3256,7 +3256,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_strLower( char * szText, ULONG ulLen ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <szText>
@@ -3295,7 +3295,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_strncpyUpper( char * pDest, const char * pSource, ULONG ulLen ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pDest>
@@ -3336,7 +3336,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_strVal( const char * szText, ULONG ulLen ) --> ( double )dResult
  *  $ARGUMENTS$
  *      <szText>
@@ -3375,7 +3375,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_strLTrim( const char * szText, ULONG * ulLen ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <szText>
@@ -3414,7 +3414,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_strRTrimLen( const char * szText, ULONG ulLen, HB_BOOL bAnySpace ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <szText>
@@ -3455,7 +3455,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_numRound( double dResult, int iDec ) --> ( double )dResult
  *  $ARGUMENTS$
  *      <dResult>
@@ -3494,7 +3494,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_clsReleaseAll( void )
  *  $ARGUMENTS$
  *
@@ -3529,7 +3529,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_objGetClsName( PHB_ITEM pObject ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pObject>
@@ -3566,7 +3566,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pSymMsg ) --> ( PHB_FUNC )hResult
  *  $ARGUMENTS$
  *      <pObject>
@@ -3605,7 +3605,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_objHasMsg( PHB_ITEM pObject, char * szString ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *      <pObject>
@@ -3644,7 +3644,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_dynsymGet( char * szName ) --> ( PHB_DYNS )hResult
  *  $ARGUMENTS$
  *      <szName>
@@ -3681,7 +3681,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_dynsymNew( PHB_SYMB pSymbol ) --> ( PHB_DYNS )hResult
  *  $ARGUMENTS$
  *      <pSymbol>
@@ -3718,7 +3718,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_dynsymFind( char * szName ) --> ( PHB_DYNS )hResult
  *  $ARGUMENTS$
  *      <szName>
@@ -3755,7 +3755,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_dynsymFindName( char * szName ) --> ( PHB_DYNS )hResult
  *  $ARGUMENTS$
  *      <szName>
@@ -3792,7 +3792,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_dynsymLog( void )
  *  $ARGUMENTS$
  *
@@ -3827,7 +3827,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_dynsymRelease( void )
  *  $ARGUMENTS$
  *
@@ -3862,7 +3862,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_dynsymEval( PHB_DYNS_FUNC pFunction, void * Cargo )
  *  $ARGUMENTS$
  *      <pFunction>
@@ -3899,7 +3899,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_cmdargInit( int argc, char * argv[] )
  *  $ARGUMENTS$
  *      <argc>
@@ -3936,7 +3936,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_cmdargARGC( void ) --> ( int )iResult
  *  $ARGUMENTS$
  *
@@ -3973,7 +3973,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_cmdargARGV( void ) --> ( char ** )ppszResult
  *  $ARGUMENTS$
  *
@@ -4010,7 +4010,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_cmdargIsInternal( const char * szArg ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <szArg>
@@ -4047,7 +4047,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_cmdargCheck( const char * pszName ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <pszName>
@@ -4084,7 +4084,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_cmdargString( const char * pszName ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pszName>
@@ -4121,7 +4121,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_cmdargNum( const char * pszName ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <pszName>
@@ -4158,7 +4158,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_cmdargProcessVM( void )
  *  $ARGUMENTS$
  *
@@ -4193,7 +4193,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_symbolNew( char * szName ) --> ( PHB_SYMB )hResult
  *  $ARGUMENTS$
  *      <szName>
@@ -4230,7 +4230,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_codeblockNew( BYTE * pBuffer, USHORT uiLocals, USHORT * pLocalPosTable, PHB_SYMB pSymbols ) --> ( HB_CODEBLOCK_PTR )hResult
  *  $ARGUMENTS$
  *      <pBuffer>
@@ -4273,7 +4273,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_codeblockMacroNew( BYTE * pBuffer, USHORT usLen ) --> ( HB_CODEBLOCK_PTR )hResult
  *  $ARGUMENTS$
  *      <pBuffer>
@@ -4312,7 +4312,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_codeblockDelete( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
@@ -4347,7 +4347,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_codeblockGetVar( PHB_ITEM pItem, LONG iItemPos ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -4386,7 +4386,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_codeblockGetRef( PHB_ITEM pItem, PHB_ITEM pRefer ) --> ( PHB_ITEM )pResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -4425,7 +4425,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_codeblockEvaluate( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
@@ -4460,7 +4460,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_codeblockCopy( PHB_ITEM pDest, PHB_ITEM pSource )
  *  $ARGUMENTS$
  *      <pDest>
@@ -4497,7 +4497,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarValueNew( PHB_ITEM pSource, HB_BOOL bTrueMemvar ) --> ( HB_HANDLE )hResult
  *  $ARGUMENTS$
  *      <pSource>
@@ -4536,7 +4536,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarValueBaseAddress( void ) --> ( HB_VALUE_PTR * )phResult
  *  $ARGUMENTS$
  *
@@ -4573,7 +4573,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarsInit( void )
  *  $ARGUMENTS$
  *
@@ -4608,7 +4608,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarsRelease( void )
  *  $ARGUMENTS$
  *
@@ -4643,7 +4643,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarsFree( void )
  *  $ARGUMENTS$
  *
@@ -4678,7 +4678,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarValueIncRef( HB_HANDLE hValue )
  *  $ARGUMENTS$
  *      <hValue>
@@ -4713,7 +4713,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarValueDecRef( HB_HANDLE hValue )
  *  $ARGUMENTS$
  *      <hValue>
@@ -4748,7 +4748,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarSetValue( PHB_SYMB pMemvarSymb, PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pMemvarSymb>
@@ -4785,7 +4785,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarGet( PHB_ITEM pItem, PHB_SYMB pMemvarSymb ) --> ( HB_ERRCODE )hResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -4824,7 +4824,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarGetValue( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
  *  $ARGUMENTS$
  *      <pItem>
@@ -4861,7 +4861,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarGetRefer( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
  *  $ARGUMENTS$
  *      <pItem>
@@ -4898,7 +4898,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarGetPrivatesBase( void ) --> ( ULONG )ulResult
  *  $ARGUMENTS$
  *
@@ -4935,7 +4935,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarSetPrivatesBase( ULONG ulBase )
  *  $ARGUMENTS$
  *      <ulBase>
@@ -4970,7 +4970,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue )
  *  $ARGUMENTS$
  *      <pSymbol>
@@ -5007,7 +5007,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarGetStrValuePtr( char * szVarName, ULONG *pulLen ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <szVarName>
@@ -5046,7 +5046,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarCreateFromItem( PHB_ITEM pMemvar, BYTE bScope, PHB_ITEM pValue )
  *  $ARGUMENTS$
  *      <pMemvar>
@@ -5085,7 +5085,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarScope( char * szVarName, ULONG ulLength ) --> ( int )iResult
  *  $ARGUMENTS$
  *      <szVarName>
@@ -5124,7 +5124,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_conInit( void )
  *  $ARGUMENTS$
  *
@@ -5159,7 +5159,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_conRelease( void )
  *  $ARGUMENTS$
  *
@@ -5194,7 +5194,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_conNewLine( void ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *
@@ -5231,7 +5231,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_conOutStd( char * pStr, ULONG ulLen )
  *  $ARGUMENTS$
  *      <pStr>
@@ -5268,7 +5268,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_conOutErr( char * pStr, ULONG ulLen )
  *  $ARGUMENTS$
  *      <pStr>
@@ -5305,7 +5305,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_conSetCursor( HB_BOOL bSetCursor, USHORT usNewCursor ) --> ( USHORT )usResult
  *  $ARGUMENTS$
  *      <bSetCursor>
@@ -5344,7 +5344,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_conSetColor( char * szColor ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <szColor>
@@ -5381,7 +5381,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_conXSaveRestRelease( void )
  *  $ARGUMENTS$
  *
@@ -5416,7 +5416,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_compReservedName( char * szName ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <szName>
@@ -5453,7 +5453,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_procname( int iLevel, char * szName ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <iLevel>
@@ -5492,7 +5492,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_macroGetValue( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
@@ -5527,7 +5527,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_macroSetValue( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
@@ -5562,7 +5562,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_macroTextValue( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
@@ -5597,7 +5597,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_macroPushSymbol( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
@@ -5632,7 +5632,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_macroRun( HB_MACRO_PTR pMacro )
  *  $ARGUMENTS$
  *      <pMacro>
@@ -5667,7 +5667,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_macroCompile( char * szString ) --> ( HB_MACRO_PTR )hResult
  *  $ARGUMENTS$
  *      <szString>
@@ -5704,7 +5704,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_macroDelete( HB_MACRO_PTR pMacro )
  *  $ARGUMENTS$
  *      <pMacro>
@@ -5739,7 +5739,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_macroTextSubst( char * szString, ULONG *pulStringLen ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <szString>
@@ -5778,7 +5778,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_macroIsIdent( char * szString ) --> ( HB_BOOL )bResult
  *  $ARGUMENTS$
  *      <szString>
@@ -5815,7 +5815,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_macroPopAliasedValue( PHB_ITEM pAlias, PHB_ITEM pVar )
  *  $ARGUMENTS$
  *      <pAlias>
@@ -5852,7 +5852,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_macroPushAliasedValue( PHB_ITEM pAlias, PHB_ITEM pVar )
  *  $ARGUMENTS$
  *      <pAlias>
@@ -5889,7 +5889,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_macroGetType( PHB_ITEM pItem ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *      <pItem>
@@ -5926,7 +5926,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_gcAlloc( ULONG ulSize, HB_GARBAGE_FUNC_PTR pFunc ) --> ( void * )pResult
  *  $ARGUMENTS$
  *      <ulSize>
@@ -5965,7 +5965,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_gcFree( void *pAlloc )
  *  $ARGUMENTS$
  *      <*pAlloc>
@@ -6000,7 +6000,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_gcLock( void *pAlloc ) --> ( void * )pResult
  *  $ARGUMENTS$
  *      <*pAlloc>
@@ -6037,7 +6037,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_gcUnlock( void *pAlloc ) --> ( void * )pResult
  *  $ARGUMENTS$
  *      <*pAlloc>
@@ -6074,7 +6074,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_gcLockItem( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
@@ -6109,7 +6109,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_gcUnlockItem( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
@@ -6144,7 +6144,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_gcCollect( void )
  *  $ARGUMENTS$
  *
@@ -6179,7 +6179,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_gcCollectAll( void )
  *  $ARGUMENTS$
  *
@@ -6214,7 +6214,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_gcItemRef( PHB_ITEM pItem )
  *  $ARGUMENTS$
  *      <pItem>
@@ -6249,7 +6249,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_vmIsLocalRef( void )
  *  $ARGUMENTS$
  *
@@ -6284,7 +6284,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_vmIsStaticRef( void )
  *  $ARGUMENTS$
  *
@@ -6319,7 +6319,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_memvarsIsMemvarRef( void )
  *  $ARGUMENTS$
  *
@@ -6354,7 +6354,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_clsIsClassRef( void )
  *  $ARGUMENTS$
  *
@@ -6389,7 +6389,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_codeblockDeleteGarbage( void * Cargo )
  *  $ARGUMENTS$
  *      <Cargo>
@@ -6424,7 +6424,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_arrayReleaseGarbage( void * Cargo )
  *  $ARGUMENTS$
  *      <Cargo>
@@ -6459,7 +6459,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_idleState( void )
  *  $ARGUMENTS$
  *
@@ -6494,7 +6494,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_idleReset( void )
  *  $ARGUMENTS$
  *
@@ -6529,7 +6529,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_idleShutDown( void )
  *  $ARGUMENTS$
  *
@@ -6564,7 +6564,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_verPlatform( void ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *
@@ -6601,7 +6601,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_verCompiler( void ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *
@@ -6638,7 +6638,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_verHarbour( void ) --> ( char * )pszResult
  *  $ARGUMENTS$
  *
@@ -6675,7 +6675,7 @@
  *  $SYNTAX$
  *      C Prototype
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      hb_verBuildInfo( void )
  *  $ARGUMENTS$
  *
@@ -6710,7 +6710,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_IS_OF_TYPE( p, t ) --> <see ( ( ( p )->type & ~HB_IT_BYREF ) == t )>
  *  $ARGUMENTS$
  *      <p>
@@ -6749,7 +6749,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_IS_BYREF( p ) --> <see ( ( p )->type & HB_IT_BYREF )>
  *  $ARGUMENTS$
  *      <p>
@@ -6786,7 +6786,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_IS_ARRAY( p ) --> <see HB_IS_OF_TYPE( p, HB_IT_ARRAY )>
  *  $ARGUMENTS$
  *      <p>
@@ -6823,7 +6823,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_IS_NIL( p ) --> <see HB_IS_OF_TYPE( p, HB_IT_NIL )>
  *  $ARGUMENTS$
  *      <p>
@@ -6860,7 +6860,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_IS_BLOCK( p ) --> <see HB_IS_OF_TYPE( p, HB_IT_BLOCK )>
  *  $ARGUMENTS$
  *      <p>
@@ -6897,7 +6897,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_IS_DATE( p ) --> <see HB_IS_OF_TYPE( p, HB_IT_DATE )>
  *  $ARGUMENTS$
  *      <p>
@@ -6934,7 +6934,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_IS_DOUBLE( p ) --> <see HB_IS_OF_TYPE( p, HB_IT_DOUBLE )>
  *  $ARGUMENTS$
  *      <p>
@@ -6971,7 +6971,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_IS_INTEGER( p ) --> <see HB_IS_OF_TYPE( p, HB_IT_INTEGER )>
  *  $ARGUMENTS$
  *      <p>
@@ -7008,7 +7008,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_IS_LOGICAL( p ) --> <see HB_IS_OF_TYPE( p, HB_IT_LOGICAL )>
  *  $ARGUMENTS$
  *      <p>
@@ -7045,7 +7045,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_IS_LONG( p ) --> <see HB_IS_OF_TYPE( p, HB_IT_LONG )>
  *  $ARGUMENTS$
  *      <p>
@@ -7082,7 +7082,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_IS_NUMERIC( p ) --> <see ( ( p )->type & HB_IT_NUMERIC )>
  *  $ARGUMENTS$
  *      <p>
@@ -7119,7 +7119,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_IS_OBJECT( p ) --> <see HB_IS_OF_TYPE( p, HB_IT_OBJECT )>
  *  $ARGUMENTS$
  *      <p>
@@ -7156,7 +7156,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_IS_STRING( p ) --> <see ( ( ( p )->type & ~( HB_IT_BYREF | HB_IT_MEMOFLAG ) ) == HB_IT_STRING )>
  *  $ARGUMENTS$
  *      <p>
@@ -7193,7 +7193,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_IS_MEMO( p ) --> <see HB_IS_OF_TYPE( p, HB_IT_MEMO )>
  *  $ARGUMENTS$
  *      <p>
@@ -7230,7 +7230,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_IS_SYMBOL( p ) --> <see HB_IS_OF_TYPE( p, HB_IT_SYMBOL )>
  *  $ARGUMENTS$
  *      <p>
@@ -7267,7 +7267,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_IS_MEMVAR( p ) --> <see HB_IS_OF_TYPE( p, HB_IT_MEMVAR )>
  *  $ARGUMENTS$
  *      <p>
@@ -7304,7 +7304,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_IS_POINTER( p ) --> <see HB_IS_OF_TYPE( p, HB_IT_POINTER )>
  *  $ARGUMENTS$
  *      <p>
@@ -7341,7 +7341,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      ISNIL( n ) --> <see ( hb_param( n, HB_IT_ANY ) == NULL || HB_IS_NIL( hb_param( n, HB_IT_ANY ) ) )>
  *  $ARGUMENTS$
  *      <n>
@@ -7378,7 +7378,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      ISCHAR( n ) --> <see ( hb_param( n, HB_IT_STRING ) != NULL )>
  *  $ARGUMENTS$
  *      <n>
@@ -7415,7 +7415,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      ISNUM( n ) --> <see ( hb_param( n, HB_IT_NUMERIC ) != NULL )>
  *  $ARGUMENTS$
  *      <n>
@@ -7452,7 +7452,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      ISLOG( n ) --> <see ( hb_param( n, HB_IT_LOGICAL ) != NULL )>
  *  $ARGUMENTS$
  *      <n>
@@ -7489,7 +7489,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      ISDATE( n ) --> <see ( hb_param( n, HB_IT_DATE ) != NULL )>
  *  $ARGUMENTS$
  *      <n>
@@ -7526,7 +7526,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      ISMEMO( n ) --> <see ( hb_param( n, HB_IT_MEMO ) != NULL )>
  *  $ARGUMENTS$
  *      <n>
@@ -7563,7 +7563,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      ISBYREF( n ) --> <see ( hb_parinfo( n ) & HB_IT_BYREF )>
  *  $ARGUMENTS$
  *      <n>
@@ -7600,7 +7600,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      ISARRAY( n ) --> <see ( hb_param( n, HB_IT_ARRAY ) != NULL )>
  *  $ARGUMENTS$
  *      <n>
@@ -7637,7 +7637,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      ISOBJECT( n ) --> <see ( ISARRAY( n ) && hb_param( n, HB_IT_ARRAY )->asArray.value->uiClass != 0 )>
  *  $ARGUMENTS$
  *      <n>
@@ -7674,7 +7674,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      ISBLOCK( n ) --> <see ( hb_param( n, HB_IT_BLOCK ) != NULL )>
  *  $ARGUMENTS$
  *      <n>
@@ -7711,7 +7711,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      ISPOINTER( n ) --> <see ( hb_param( n, HB_IT_POINTER ) != NULL )>
  *  $ARGUMENTS$
  *      <n>
@@ -7748,7 +7748,7 @@
  *  $SYNTAX$
  *      C Prototype (macro definition)
  *
- *      #include <hbapi.h>
+ *      #include "hbapi.h"
  *      HB_ISSPACE( c ) --> <see ( ( c ) == ' ' || ( c ) == HB_CHAR_HT || ( c ) == HB_CHAR_LF || ( c ) == HB_CHAR_CR )>
  *  $ARGUMENTS$
  *      <c>

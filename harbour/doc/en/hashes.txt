@@ -885,9 +885,9 @@
  *       the old flag value rather than the hash table
  *  $EXAMPLES$
  *       LOCAL hsTable, lFlag
- *       hsTable := HB_HASH( "one", 1, "two", 2 )
+ *       hsTable := { "one" => 1, "two" => 2 }
  *       // turn 'case match' on for a new hash table, storing ol flag
- *       lFlag := HB_HCASEMATCH( hsTable, .T. )
+ *       lFlag := hb_HCaseMatch( hsTable, .T. )
  *  $TESTS$
  *
  *  $STATUS$
@@ -928,9 +928,9 @@
  *       the old flag value rather than the hash table
  *  $EXAMPLES$
  *       LOCAL hsTable, lFlag
- *       hsTable := HB_HASH( "one", 1, "two", 2 )
+ *       hsTable := { "one" => 1, "two" => 2 }
  *       // turn 'binary' on for a new hash table, storing ol flag
- *       lFlag := HB_HBINARY( hsTable, .T. )
+ *       lFlag := hb_HBinary( hsTable, .T. )
  *  $TESTS$
  *
  *  $STATUS$
@@ -971,9 +971,9 @@
  *       the old flag value rather than the hash table
  *  $EXAMPLES$
  *       LOCAL hsTable, lFlag
- *       hsTable := HB_HASH( "one", 1, "two", 2 )
+ *       hsTable := { "one" => 1, "two" => 2 }
  *       // turn 'auto add' on for a new hash table, storing ol flag
- *       lFlag := HB_HAUTOADD( hsTable, .T. )
+ *       lFlag := hb_HAutoAdd( hsTable, .T. )
  *  $TESTS$
  *
  *  $STATUS$
@@ -1089,7 +1089,7 @@
  *  $EXAMPLES$
  *       LOCAL hsTable
  *       // turn 'auto add' on for a new hash table
- *       hsTable := HB_HSETAUTOADD( HB_HASH( "one", 1, "two", 2 ), .T. )
+ *       hsTable := hb_HSetAutoAdd( { "one" => 1, "two" => 2 }, .T. )
  *  $TESTS$
  *
  *  $STATUS$
@@ -1131,7 +1131,7 @@
  *  $EXAMPLES$
  *       LOCAL hsTable
  *       // turn 'case match' on for a new hash table
- *       hsTable := HB_HSETCASEMATCH( HB_HASH( "one", 1, "two", 2 ), .T. )
+ *       hsTable := hb_HSetCaseMatch( { "one" => 1, "two" => 2 }, .T. )
  *  $TESTS$
  *
  *  $STATUS$
@@ -1173,7 +1173,7 @@
  *  $EXAMPLES$
  *       LOCAL hsTable
  *       // turn 'binary' on for a new hash table
- *       hsTable := HB_HSETBINARY( HB_HASH( "one", 1, "two", 2 ), .T. )
+ *       hsTable := hb_HSetBinary( { "one" => 1, "two" => 2 }, .T. )
  *  $TESTS$
  *
  *  $STATUS$
