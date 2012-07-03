@@ -349,11 +349,7 @@ STATIC FUNCTION Build_Tabs( oWnd, aPos, aSize )
    RETURN { aCtrls }
 
 /*----------------------------------------------------------------------*/
-#if 1
-STATIC FUNCTION Build_TreeView( oWnd )
-   HB_SYMBOL_UNUSED( oWnd )
-   RETURN NIL
-#else
+
 STATIC FUNCTION Build_TreeView( oWnd )
    LOCAL oDirModel
    LOCAL oTV
@@ -369,7 +365,7 @@ STATIC FUNCTION Build_TreeView( oWnd )
    OTV:show()
 
    RETURN NIL
-#endif
+
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION Build_ListBox( oWnd, aPos, aSize )

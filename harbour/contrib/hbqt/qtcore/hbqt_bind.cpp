@@ -607,34 +607,18 @@ void hbqt_bindDestroyQtObject( void * qtObject, QObject * qObject )
 {
    if( qtObject )
    {
+      qObject->disconnect();
+
       PHBQT_BIND bind = hbqt_bindGetBindByQtObject( qtObject );
       if( bind != NULL )
       {
-         if( bind->pDelFunc != NULL )
-         {
-            HB_TRACE( HB_TR_DEBUG, ( "............QT_DESTROYS( %i, %i, %p, %s )..............", bind->iThreadId, bind->iFlags, bind->qtObject, bind->szClassName ) );
+         HB_TRACE( HB_TR_DEBUG, ( "............QT_DESTROYS( %i, %i, %p, %s )..............", bind->iThreadId, bind->iFlags, bind->qtObject, bind->szClassName ) );
 
-            int iFlags              = bind->iFlags;
-            PHBQT_DEL_FUNC pDelFunc = bind->pDelFunc;
-            qObject->disconnect();
-            if( bind->fEventFilterInstalled )
-            {
-               qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
-            }
-            hbqt_bindRemoveBind( bind );
-            pDelFunc( qtObject, iFlags ); /* Though this is not needed as Qt will delete the object,
-                                           * but may be because Harbour uses is own memory manager,
-                                           * it seems necessary to reclaim the memory.
-                                           */
-         }
-         else
+         if( bind->fEventFilterInstalled )
          {
-            hbqt_bindRemoveBind( bind );  /* Conceptually it must not reach here, but... It is Qt */
+            qObject->removeEventFilter( hbqt_bindGetThreadData()->pReceiverEvents );
          }
-      }
-      else
-      {
-         qObject->disconnect();
+         hbqt_bindRemoveBind( bind );
       }
    }
 }
