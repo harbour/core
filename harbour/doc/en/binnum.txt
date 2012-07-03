@@ -49,18 +49,19 @@
  *      BIN2W() is the opposite of W2BIN()
  *  $EXAMPLES$
  *      // Show header length of a DBF
- *      FUNCTION main()
- *      LOCAL nHandle, cBuffer := space( 2 )
- *      nHandle := fopen( "test.dbf" )
- *      IF nHandle > 0
- *         fseek( nHandle, 8 )
- *         fread( nHandle, @cBuffer, 2 )
- *         ? "Length of DBF header in bytes:", BIN2W( cBuffer )
- *         fclose( nHandle )
- *      ELSE
- *         ? "Can not open file"
- *      ENDIF
- *      RETURN NIL
+ *      #include "fileio.ch"
+ *      PROCEDURE Main()
+ *         LOCAL nHandle, cBuffer := Space( 2 )
+ *         nHandle := FOpen( "test.dbf" )
+ *         IF nHandle != F_ERROR
+ *            FSeek( nHandle, 8 )
+ *            FRead( nHandle, @cBuffer, hb_BLen( cBuffer ) )
+ *            ? "Length of DBF header in bytes:", Bin2W( cBuffer )
+ *            FClose( nHandle )
+ *         ELSE
+ *            ? "Can not open file"
+ *         ENDIF
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -107,21 +108,22 @@
  *      BIN2I() is the opposite of I2BIN()
  *  $EXAMPLES$
  *      // Show DBF last update date
- *      FUNCTION main()
- *      LOCAL nHandle, cYear, cMonth, cDay
- *      nHandle := fopen( "test.dbf" )
- *      IF nHandle > 0
- *         fseek( nHandle, 1 )
- *         cYear := cMonth := cDay := " "
- *         fread( nHandle, @cYear , 1 )
- *         fread( nHandle, @cMonth, 1 )
- *         fread( nHandle, @cDay  , 1 )
- *         ? "Last update:", BIN2I( cYear ), BIN2I( cMonth ), BIN2I( cDay )
- *         fclose( nHandle )
- *      ELSE
- *         ? "Can not open file"
- *      ENDIF
- *      RETURN NIL
+ *      #include "fileio.ch"
+ *      PROCEDURE Main()
+ *         LOCAL nHandle, cYear, cMonth, cDay
+ *         nHandle := FOpen( "test.dbf" )
+ *         IF nHandle != F_ERROR
+ *            FSeek( nHandle, 1 )
+ *            cYear := cMonth := cDay := " "
+ *            FRead( nHandle, @cYear , hb_BLen( cYear ) )
+ *            FRead( nHandle, @cMonth, hb_BLen( cMonth ) )
+ *            FRead( nHandle, @cDay  , hb_BLen( cDay ) )
+ *            ? "Last update:", Bin2I( cYear ), Bin2I( cMonth ), Bin2I( cDay )
+ *            FClose( nHandle )
+ *         ELSE
+ *            ? "Can not open file"
+ *         ENDIF
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -168,18 +170,19 @@
  *      BIN2L() is the opposite of L2BIN()
  *  $EXAMPLES$
  *      // Show number of records in DBF
- *      FUNCTION main()
- *      LOCAL nHandle, cBuffer := space( 4 )
- *      nHandle := fopen( "test.dbf" )
- *      IF nHandle > 0
- *         fseek( nHandle, 4 )
- *         fread( nHandle, @cBuffer, 4 )
- *         ? "Number of records in file:", BIN2L( cBuffer )
- *         fclose( nHandle )
- *      ELSE
- *         ? "Can not open file"
- *      ENDIF
- *      RETURN NIL
+ *      #include "fileio.ch"
+ *      PROCEDURE Main()
+ *         LOCAL nHandle, cBuffer := Space( 4 )
+ *         nHandle := FOpen( "test.dbf" )
+ *         IF nHandle != F_ERROR
+ *            FSeek( nHandle, 4 )
+ *            FRead( nHandle, @cBuffer, hb_BLen( cBuffer ) )
+ *            ? "Number of records in file:", Bin2L( cBuffer )
+ *            FClose( nHandle )
+ *         ELSE
+ *            ? "Can not open file"
+ *         ENDIF
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -226,18 +229,19 @@
  *      BIN2U() is the opposite of U2BIN()
  *  $EXAMPLES$
  *      // Show number of records in DBF
- *      FUNCTION main()
- *      LOCAL nHandle, cBuffer := space( 4 )
- *      nHandle := fopen( "test.dbf" )
- *      IF nHandle > 0
- *         fseek( nHandle, 4 )
- *         fread( nHandle, @cBuffer, 4 )
- *         ? "Number of records in file:", BIN2U( cBuffer )
- *         fclose( nHandle )
- *      ELSE
- *         ? "Can not open file"
- *      ENDIF
- *      RETURN NIL
+ *      #include "fileio.ch"
+ *      PROCEDURE Main()
+ *         LOCAL nHandle, cBuffer := Space( 4 )
+ *         nHandle := FOpen( "test.dbf" )
+ *         IF nHandle != F_ERROR
+ *            FSeek( nHandle, 4 )
+ *            FRead( nHandle, @cBuffer, hb_BLen( cBuffer ) )
+ *            ? "Number of records in file:", Bin2U( cBuffer )
+ *            FClose( nHandle )
+ *         ELSE
+ *            ? "Can not open file"
+ *         ENDIF
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -284,28 +288,28 @@
  *  $EXAMPLES$
  *      // Update DBF "last update" date
  *      #include "fileio.ch"
- *      FUNCTION main()
- *      LOCAL nHandle, cYear, cMonth, cDay
- *      use test
- *      ? "Original update date is:", lupdate()
- *      close
- *      nHandle := fopen( "test.dbf", FO_READWRITE )
- *      IF nHandle > 0
- *         fseek( nHandle, 1, )
- *         cYear  := I2BIN( 68 )
- *         cMonth := I2BIN(  8 )
- *         cDay   := I2BIN(  1 )
- *         fwrite( nHandle, cYear , 1 )   // write only the first byte
- *         fwrite( nHandle, cMonth, 1 )
- *         fwrite( nHandle, cDay  , 1 )
- *         fclose( nHandle )
- *         use test
- *         ? "New update date is:", lupdate()
- *         close
- *      ELSE
- *         ? "Can not open file"
- *      ENDIF
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         LOCAL nHandle, cYear, cMonth, cDay
+ *         USE test
+ *         ? "Original update date is:", LUpdate()
+ *         CLOSE
+ *         nHandle := FOpen( "test.dbf", FO_READWRITE )
+ *         IF nHandle != F_ERROR
+ *            FSeek( nHandle, 1 )
+ *            cYear  := I2Bin( 68 )
+ *            cMonth := I2Bin(  8 )
+ *            cDay   := I2Bin(  1 )
+ *            FWrite( nHandle, cYear , 1 )   // write only the first byte
+ *            FWrite( nHandle, cMonth, 1 )
+ *            FWrite( nHandle, cDay  , 1 )
+ *            FClose( nHandle )
+ *            USE test
+ *            ? "New update date is:", lupdate()
+ *            CLOSE
+ *         ELSE
+ *            ? "Can not open file"
+ *         ENDIF
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

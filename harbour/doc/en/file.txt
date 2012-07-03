@@ -65,7 +65,7 @@
  *      on this function. Directory names and paths must be specified along
  *      with the file that is to be opened.
  *
- *      If an error has occured, see the returns values from FERROR() for
+ *      If an error has occurred, see the returns values from FERROR() for
  *      possible reasons for the error.
  *  $EXAMPLES$
  *      #include "fileio.ch"
@@ -307,7 +307,7 @@
  *      </table>
  *  $DESCRIPTION$
  *      After every low-level file function,this function will return
- *      a value that provides additional informationon the status of
+ *      a value that provides additional information on the status of
  *      the last low-level file functions's performance. If the FERROR()
  *      function returns a 0, no error was detected. Below is a table
  *      of possibles values returned by the FERROR() function.
@@ -389,11 +389,11 @@
  *      <cFile>; neither the SET DEFAULT not the SET PATH command controls
  *      the performance of this function. If the drive or path is not used,
  *      the function will look for the file only on the currently selected
- *      direcytory on the logged drive.
+ *      directory on the logged drive.
  *
  *      If the function is able to successfully delete the file from the
  *      disk, the value of the function will be 0; otherwise a -1 will
- *      be returned. If not successfu, aditional information may be
+ *      be returned. If not successfull, additional information may be
  *      obtained by calling the FERROR() function.
  *
  *      Note: Any file to be removed by FERASE() must still be closed.
@@ -434,7 +434,7 @@
 
  *     <cNewFile> New filename
  *  $RETURNS$
- *     <nSuccess> If sucessful, a 0 will be returned otherwise,
+ *     <nSuccess> If successful, a 0 will be returned otherwise,
  *     a -1 will be returned.
  *  $DESCRIPTION$
  *      This function renames the specified file <cOldFile> to <cNewFile>.
@@ -577,7 +577,7 @@
  *      <cFileSpec> exist.
 
  *      Dos skeletons symbols may be used in the filename in <cFileSpec>,
- *      as may the drive and/or path name. If a path is not explicity
+ *      as may the drive and/or path name. If a path is not explicitly
  *      specified, FILE() will look for the file in the SET DEFAULT path,
  *      then in each SET PATH path, until the file is found or there are
  *      no more paths to search. The DOS PATH is never searched and the
@@ -614,7 +614,7 @@
  *
  *      <nBytes>  Number of bytes to read.
  *  $RETURNS$
- *      <cString> an characted expression
+ *      <cString> an character expression
  *  $DESCRIPTION$
  *      This function returns a character string of <nBytes> bytes from a
  *      file whose DOS file handle is <nHandle>.
@@ -676,7 +676,7 @@
  *      This command changes the name of <cOldFile> to <cNewFile>. Both
  *      <cOldFile> and <cNewFile> must include a file extension. This command
  *      if not affected by the SET PATH TO or SET DEFAULT TO commands;drive
- *      and directoy designaters must be specified if either file is in a
+ *      and directory designates must be specified if either file is in a
  *      directory other then the default drive and directory.
  *
  *      If <cNewFile> id currently open or if it previously exists, this
@@ -787,7 +787,7 @@
  *  $DESCRIPTION$
  *      __TYPEFILE() function type the content of a text file on the screen
  *      with an option to send this information also to the printer. The
- *      file is displayed as is without any headings or formating.
+ *      file is displayed as is without any headings or formatting.
  *
  *      If <cFile> contain no path, __TYPEFILE() try to find the file first
  *      in the SET DEFAULT directory and then in search all of the SET PATH
@@ -853,7 +853,7 @@
  *      TYPE command type the content of a text file on the screen
  *      with an option to send this information also to the printer or to
  *      an alternate file. The file is displayed as is without any headings
- *      or formating.
+ *      or formatting.
  *
  *      If <xcFile> contain no path, TYPE try to find the file first in the
  *      SET DEFAULT directory and then in search all of the SET PATH
@@ -909,7 +909,7 @@
  *      <cPath> Name of directory
  *  $DESCRIPTION$
  *      This function yields the name of the current OS directory on a
- *      specified drive. If <cDrive> is not speficied, the currently logged
+ *      specified drive. If <cDrive> is not specified, the currently logged
  *      drive will be used.
 
  *      This function should not return the leading and trailing
@@ -954,7 +954,7 @@
  *      Both files must have the file extension included; the drive and the
  *      directory names must also be specified if they are different from
  *      the default drive and/or director. <cFile1> also can refer to a OS
- *      device (e.g. LPT1). This command does not obsert the SET PATH TO or
+ *      device (e.g. LPT1). This command does not observe the SET PATH TO or
  *      SET DEFAULT TO settings.
  *  $EXAMPLES$
  *      COPY FILE C:\harbour\tests\adirtest.prg TO C:\temp\adirtest.prg
@@ -1030,7 +1030,7 @@
  *      the number of the last error.
  *  $DESCRIPTION$
  *      This function attempt to remove the specified directory in <cDirectory>
- *      If this function fail, the it will return the last OS error code number.
+ *      If this function fails, it will return the last OS error code number.
  *      See FERROR() function for the description of the error.
  *  $EXAMPLES$
  *      cDir := ".\backup"
@@ -1072,7 +1072,7 @@
  *      the number of the last error.
  *  $DESCRIPTION$
  *      This function attempt to change the current directory to the one
- *      specidied in <cDirectory>. If this function fail, the it will return
+ *      specified in <cDirectory>. If this function fails, it will return
  *      the last OS error code number. See FERROR() function for the
  *      description of the error.
  *  $EXAMPLES$
@@ -1114,13 +1114,13 @@
  *      the number of the last error.
  *  $DESCRIPTION$
  *      This function attempt to create a new directory with the name contained
- *      in <cDirectory>. If this function fail, the it will return the last OS
+ *      in <cDirectory>. If this function fails, it will return the last OS
  *      error code number. See FERROR() function for the description of the
  *      error
  *  $EXAMPLES$
  *      cDir := "temp"
  *      IF MakeDir( cDir ) == 0
- *         ? "Directory", cDir, "successfully created
+ *         ? "Directory", cDir, "successfully created"
  *      ENDIF
  *  $TESTS$
  *      See examples
@@ -1158,7 +1158,7 @@
  *      This function attempts to access a drive. If the access to the drive
  *      was successfull, it will return true (.T.), otherwise false(.F.). This
  *      function is usefull for backup function, so you can determine if the
- *      drive that will recieve the backup data is ready or not.
+ *      drive that will receive the backup data is ready or not.
  *  $EXAMPLES$
  *      IF IsDisk( "A" )
  *         ? "Drive is ready "

@@ -181,7 +181,7 @@
  *  $EXAMPLES$
  *      // Browse a file using default values
  *      USE Test
- *      DBEDIT()
+ *      dbEdit()
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
@@ -274,7 +274,7 @@
  *  $EXAMPLES$
  *      // this one shows you how to browse around
  *      USE Around
- *      BROWSE()
+ *      Browse()
  *  $STATUS$
  *      S
  *  $COMPLIANCE$

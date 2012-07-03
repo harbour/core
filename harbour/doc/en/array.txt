@@ -47,13 +47,13 @@
  *      the array or the variable with the same name as the array.
  *  $EXAMPLES$
  *      PROCEDURE Main()
- *        LOCAL aArray:=Array(10)
- *        LOCAL x
- *        FOR x:=1 to LEN(aArray)
- *          aArray[x]:=Array(x)
- *        NEXT
- *        // Result is: { { NIL }, { NIL, NIL }, ... }
- *      RETURN
+ *         LOCAL aArray := Array( 10 )
+ *         LOCAL x
+ *         FOR x := 1 TO Len( aArray )
+ *            aArray[ x ] := Array( x )
+ *         NEXT
+ *         // Result is: { { NIL }, { NIL, NIL }, ... }
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -93,11 +93,11 @@
  *      <xValue> may be an array reference pointer, which in turn may be
  *      stored to an array's subscript position.
  *  $EXAMPLES$
- *      LOCAL aArray:={}
+ *      LOCAL aArray := {}
  *      LOCAL x
- *      AADD(aArray,10)
- *      FOR x:=1 to 10
- *          AADD(aArray,x)
+ *      AAdd( aArray, 10 )
+ *      FOR x := 1 TO 10
+ *         AAdd( aArray, x )
  *      NEXT
  *      // Result is: { 10, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
  *  $STATUS$
@@ -139,9 +139,9 @@
  *      subscript positions are lost. If the length of the array is
  *      lengthened a NIL value is assigned to the new subscript position.
  *  $EXAMPLES$
- *      aArray := { 1 }          // Result: aArray is { 1 }
- *      ASIZE(aArray, 3)         // Result: aArray is { 1, NIL, NIL }
- *      ASIZE(aArray, 1)         // Result: aArray is { 1 }
+ *      LOCAL aArray := { 1 }      // Result: aArray is { 1 }
+ *      ASize( aArray, 3 )         // Result: aArray is { 1, NIL, NIL }
+ *      ASize( aArray, 1 )         // Result: aArray is { 1 }
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -176,8 +176,8 @@
  *      named <aArray>. This function does not alter the size of the
  *      array or any of the subscript values.
  *  $EXAMPLES$
- *      LOCAL array:= {"Harbour", "is", "Supreme", "Power"}
- *      ? ATAIL(aArray) // Result is "Power"
+ *      LOCAL aArray := { "Harbour", "is", "Supreme", "Power" }
+ *      ? ATail( aArray ) // Result is "Power"
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -220,8 +220,8 @@
  *      be located at the sixth position. The length of the array <aArray>
  *      will remain unchanged.
  *  $EXAMPLES$
- *      LOCAL aArray:={"Harbour","is","Power!","!!!"}
- *      AINS(aArray,4)
+ *      LOCAL aArray := { "Harbour", "is", "Power!", "!!!" }
+ *      AIns( aArray, 4 )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -261,10 +261,8 @@
  *      <aArray> will remain unchanged,as the last element in the array will
  *      become a NIL data type.
  *  $EXAMPLES$
- *     LOCAL aArray
- *      aArray := {"Harbour", "is", "Power"}
- *
- *      ADEL(aArray, 2) // Result: aArray is {"Harbour", "Power"}
+ *      LOCAL aArray := { "Harbour", "is", "Power" }
+ *      ADel( aArray, 2 ) // Result: aArray is { "Harbour", "Power" }
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -313,8 +311,8 @@
  *      those values will be lost, since this function will overwrite those
  *      values with new values.
  *  $EXAMPLES$
- *      LOCAL aTest:={Nil,0,1,2}
- *      Afill(aTest,5)
+ *      LOCAL aTest := { NIL, 0, 1, 2 }
+ *      AFill( aTest, 5 )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -370,8 +368,8 @@
  *      will continue until the value obtained from the code block is a
  *      logical true (.T.) or until the end of the array has been reached.
  *  $EXAMPLES$
- *      aDir:=Directory("*.prg")
- *      AScan(aDir,,,{|x,y| x[1]="Test.prg"})
+ *      LOCAL aDir := Directory( "*.prg" )
+ *      AScan( aDir,,, {| x, y | x[ 1 ] := "test.prg" } )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -485,9 +483,9 @@
  *      array <aTarget> remains constant.
  *  $EXAMPLES$
  *      LOCAL nCount := 2, nStart := 1, aOne, aTwo
- *      aOne := {"HARBOUR"," is ","POWER"}
- *      aTwo := {"CLIPPER"," was ","POWER"}
- *      ACOPY(aOne, aTwo, nStart, nCount)
+ *      aOne := { "HARBOUR", " is ", "POWER"}
+ *      aTwo := { "CLIPPER", " was ", "POWER"}
+ *      ACopy( aOne, aTwo, nStart, nCount )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -524,12 +522,12 @@
  *      original array <aSource>
  *  $EXAMPLES$
  *      LOCAL aOne, aTwo
- *      aOne := {"Harbour"," is ","POWER"}
- *      aTwo := ACLONE(aOne)       // Result: aTwo is {"Harbour"," is ","POWER"}
- *      aOne[1] := "The Harbour Compiler"
+ *      aOne := { "Harbour"," is ","POWER" }
+ *      aTwo := AClone( aOne )       // Result: aTwo is {"Harbour"," is ","POWER"}
+ *      aOne[ 1 ] := "The Harbour Compiler"
  *      // Result:
- *      // aOne is {"The Harbour Compiler"," is ","POWER"}
- *      // aTwo is {"Harbour"," is ","POWER"}
+ *      // aOne is { "The Harbour Compiler", " is ", "POWER" }
+ *      // aTwo is { "Harbour"," is ","POWER" }
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -585,17 +583,17 @@
  *      type.
  *  $EXAMPLES$
  *      // sort numeric values in ascending order
- *      ASORT( { 3, 1, 4, 42, 5, 9 } )     // result: { 1, 3, 4, 5, 9, 42 }
+ *      ASort( { 3, 1, 4, 42, 5, 9 } )     // result: { 1, 3, 4, 5, 9, 42 }
  *
  *      // sort character strings in descending lexical order
  *      aKeys := { "Ctrl", "Alt", "Delete" }
- *      bSort := {| x, y | UPPER( x ) > UPPER( y ) }
- *      ASORT( aKeys,,, bSort )      // result: { "Delete", "Ctrl", "Alt" }
+ *      bSort := {| x, y | Upper( x ) > Upper( y ) }
+ *      ASort( aKeys,,, bSort )      // result: { "Delete", "Ctrl", "Alt" }
  *
  *      // sort two-dimensional array according to 2nd element of each pair
- *      aPair :=   { {"Sun",8}, {"Mon",1}, {"Tue",57}, {"Wed",-6} }
- *      ASORT( aPair,,, {| x, y | x[2] < y[2] } )
- *      // result: { {"Wed",-6}, {"Mon",1}, {"Sun",8}, {"Tue",57} }
+ *      aPair := { { "Sun", 8 }, { "Mon", 1 }, { "Tue", 57 }, { "Wed", -6 } }
+ *      ASort( aPair,,, {| x, y | x[ 2 ] < y[ 2 ] } )
+ *      // result: { { "Wed", -6 }, { "Mon", 1 }, { "Sun", 8 }, { "Tue", 57 } }
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
