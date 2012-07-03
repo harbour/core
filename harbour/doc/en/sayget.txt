@@ -129,16 +129,16 @@
  *      be included in the PICTURE string if there are both functions and
  *      templates.
  *  $EXAMPLES$
- *      Function Main()
- *      Local cVar:=Space(50)
- *      Local nId:=0
- *      cls
- *      @ 3,1 SAY "Name" GET cVar PICTURE "@!S 30"
- *      @ 4,1 SAY "Id"   GET nId  PICTURE "999.999"
- *      READ
- *      ? "The name you entered is",cVar
- *      ? "The id you entered is",nId
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         LOCAL cVar := Space( 50 )
+ *         LOCAL nId := 0
+ *         CLS
+ *         @ 3,1 SAY "Name" GET cVar PICTURE "@!S 30"
+ *         @ 4,1 SAY "Id"   GET nId  PICTURE "999.999"
+ *         READ
+ *         ? "The name you entered is",cVar
+ *         ? "The id you entered is",nId
+ *         RETURN
  *  $TESTS$
  *      See Examples
  *  $STATUS$
@@ -185,12 +185,12 @@
  *      For a complete list of PICTURES templates and functions, see the
  *      @...GET command.
  *  $EXAMPLES$
- *      Function Main
- *      Cls
- *      @ 2,1 SAY "Harbour"
- *      @ 3,1 SAY "is" COLOR "b/r+"
- *      @ 4,1 SAY "Power" PICTURE "@!"
- *      Return NIL
+ *      PROCEDURE Main()
+ *         CLS
+ *         @ 2, 1 SAY "Harbour"
+ *         @ 3, 1 SAY "is" COLOR "b/r+"
+ *         @ 4, 1 SAY "Power" PICTURE "@!"
+ *         RETURN
  *  $TESTS$
  *      See Examples
  *  $STATUS$

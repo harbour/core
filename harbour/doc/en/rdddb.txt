@@ -47,12 +47,12 @@
  *  $RETURNS$
  *      DBEVAL() always returns NIL
  *  $DESCRIPTION$
- *        Performs a code block operation on the current Database
+ *      Performs a code block operation on the current Database
  *  $EXAMPLES$
- *      FUNCTION Main()
+ *      PROCEDURE Main()
  *         LOCAL nCount
  *
- *         USE Test
+ *         USE test
  *
  *         dbGoto( 4 )
  *         ? RecNo()
@@ -61,7 +61,7 @@
  *         COUNT TO nCount NEXT 10
  *         ? RecNo(), nCount
  *
- *         RETURN NIL
+ *         RETURN
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
@@ -92,16 +92,16 @@
  *      This function returns the same alias name ofthe currently selected
  *      work area.
  *  $EXAMPLES$
- *      FUNCTION Main()
+ *      PROCEDURE Main()
  *
- *         USE Test
+ *         USE test
  *
- *         select 0
- *         qOut( IF(DBF()=="","No Name",DBF()))
- *         Test->(qOut(DBF())
- *         qOut(Alias(1))
+ *         SELECT 0
+ *         QOut( iif( DBF() == "", "No Name", DBF() ) )
+ *         test->( QOut( DBF() ) )
+ *         QOut( Alias( 1 ) )
  *
- *         RETURN NIL
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -152,14 +152,13 @@
  *     tain multiple record locks during an appending operation. The
  *     default for this parameter is a logical false (.F.).
  *  $EXAMPLES$
- *      FUNCTION Main()
- *
- *         USE Test
- *         local cName="HARBOUR",nId=10
- *         Test->(DbAppend())
- *         Replace Test->Name wit cName,Id with nId
- *         Use
- *         RETURN NIL
+ *      PROCEDURE Main()
+ *         LOCAL cName := "HARBOUR", nId := 10
+ *         USE test
+ *         test->( dbAppend() )
+ *         REPLACE test->Name WITH cName, test->Id WITH nId
+ *         USE
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -190,19 +189,13 @@
  *      This function clears any active filter condiction
  *      for the current or selected work area.
  *  $EXAMPLES$
- *      Function Main()
- *
- *       Use Test
- *
- *       Set Filter to Left(Test->Name,2) == "An"
- *
- *       Dbedit()
- *
- *       Test->(DbClearFilter())
- *
- *       USE
- *
- *       Return Nil
+ *      PROCEDURE Main()
+ *         USE test
+ *         SET FILTER TO Left( test->Name, 2 ) == "An"
+ *         dbEdit()
+ *         Test->( dbClearFilter() )
+ *         USE
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -234,21 +227,14 @@
  *      indexes. In addition, it closes all format files and moves
  *      the work area pointer to the first position
  *  $EXAMPLES$
- *      Function Main()
- *
- *       Use Test New
- *
- *       DbEdit()
- *
- *       Use Test1 New
- *
- *       DbEdit()
- *
- *       DbCloseAll()
- *
- *       USE
- *
- *       Return Nil
+ *      PROCEDURE Main()
+ *         USE test NEW
+ *         dbEdit()
+ *         USE test1 NEW
+ *         dbEdit()
+ *         dbCloseAll()
+ *         USE
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -277,12 +263,12 @@
  *      This function  will close any database open in the selected
  *      or aliased work area.
  *  $EXAMPLES$
- *      Function Main()
- *       Use Test
- *       Dbedit()
- *       Test->(DbCloseArea())
- *       USE
- *       Return Nil
+ *      PROCEDURE Main()
+ *         USE test
+ *         dbEdit()
+ *         Test->( dbCloseArea() )
+ *         USE
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -313,22 +299,22 @@
  *      buffers for that work area only. This function does not update all
  *      open work areas.
  *  $EXAMPLES$
- *      FUNCTION Main()
- *      LOCAL cName:=SPACE(40)
- *      LOCAL nId:=0
- *      USE Test EXCLUSIVE NEW
- *      //
- *      @ 10, 10 GET cName
- *      @ 11, 10 GET nId
- *      READ
- *      //
- *      IF UPDATED()
- *         APPEND BLANK
- *         REPLACE Tests->Name WITH cName
- *         REPLACE Tests->Id WITH nId
- *         Tests->( DBCOMMIT() )
- *      ENDIF
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         LOCAL cName := SPACE( 40 )
+ *         LOCAL nId := 0
+ *         USE test EXCLUSIVE NEW
+ *         //
+ *         @ 10, 10 GET cName
+ *         @ 11, 10 GET nId
+ *         READ
+ *         //
+ *         IF UPDATED()
+ *            APPEND BLANK
+ *            REPLACE tests->Name WITH cName
+ *            REPLACE tests->Id WITH nId
+ *            tests->( DBCOMMIT() )
+ *         ENDIF
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -358,27 +344,27 @@
  *      Before the disk write is performed,all buffers are flushed.
  *      open work areas.
  *  $EXAMPLES$
- *      FUNCTION Main()
- *      LOCAL cName:=SPACE(40)
- *      LOCAL nId:=0
- *      USE Test EXCLUSIVE NEW
- *      USE TestId New INDEX Testid
- *      //
- *      @ 10, 10 GET cName
- *      @ 11, 10 GET nId
- *      READ
- *      //
- *      IF UPDATED()
- *         APPEND BLANK
- *         REPLACE Tests->Name WITH cName
- *         REPLACE Tests->Id WITH nId
- *         IF !TestId->(DBSEEK(nId))
+ *      PROCEDURE Main()
+ *         LOCAL cName := SPACE( 40 )
+ *         LOCAL nId := 0
+ *         USE test EXCLUSIVE NEW
+ *         USE testid NEW INDEX testid
+ *         //
+ *         @ 10, 10 GET cName
+ *         @ 11, 10 GET nId
+ *         READ
+ *         //
+ *         IF UPDATED()
  *            APPEND BLANK
- *            REPLACE Tests->Id WITH nId
+ *            REPLACE tests->Name WITH cName
+ *            REPLACE tests->Id WITH nId
+ *            IF ! testid->( DBSEEK( nId ) )
+ *               APPEND BLANK
+ *               REPLACE tests->Id WITH nId
+ *            ENDIF
  *         ENDIF
- *      ENDIF
- *      DBCOMMITALL()
- *      RETURN NIL
+ *         DBCOMMITALL()
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -458,21 +444,20 @@
  *      The <cAlias> parameter specifies the alias name for the new opened
  *      database.
  *  $EXAMPLES$
- *      function main()
+ *      PROCEDURE Main()
+ *         LOCAL nI, aStruct := { { "CHARACTER", "C", 25, 0 }, ;
+ *                                { "NUMERIC",   "N",  8, 0 }, ;
+ *                                { "DOUBLE",    "N",  8, 2 }, ;
+ *                                { "DATE",      "D",  8, 0 }, ;
+ *                                { "LOGICAL",   "L",  1, 0 }, ;
+ *                                { "MEMO1",     "M", 10, 0 }, ;
+ *                                { "MEMO2",     "M", 10, 0 } }
  *
- *      local nI, aStruct := { { "CHARACTER", "C", 25, 0 }, ;
- *                          { "NUMERIC",   "N",  8, 0 }, ;
- *                          { "DOUBLE",    "N",  8, 2 }, ;
- *                          { "DATE",      "D",  8, 0 }, ;
- *                          { "LOGICAL",   "L",  1, 0 }, ;
- *                          { "MEMO1",     "M", 10, 0 }, ;
- *                          { "MEMO2",     "M", 10, 0 } }
+ *         REQUEST DBFCDX
  *
- *      REQUEST DBFCDX
+ *         dbCreate( "testdbf", aStruct, "DBFCDX", .T., "MYALIAS" )
  *
- *      dbCreate( "testdbf", aStruct, "DBFCDX", .t., "MYALIAS" )
- *
- *      RETURN NIL
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -507,10 +492,10 @@
  *      In a networking situation, this function requires that the record
  *      be locked prior to issuing the DBDELETE() function.
  *  $EXAMPLES$
- *      nId:=10
- *      USE TestId INDEX TestId NEW
- *      IF TestId->(DBSEEK(nId))
- *         IF TestId->(RLOCK())
+ *      nId := 10
+ *      USE testid INDEX testid NEW
+ *      IF testid->( DBSEEK( nId ) )
+ *         IF testid->( RLOCK() )
  *            DBDELETE()
  *         ENDIF
  *      ENDIF
@@ -546,14 +531,14 @@
  *      for the current or designated work area. If no filter condition
  *      is present, a NULL string will be returned.
  *  $EXAMPLES$
- *      USE Test INDEX Test NEW
- *      SET FILTER TO Name= "Harbour"
- *      USE TestId INDEX TestId NEW
- *      SET FILTER TO Id = 1
+ *      USE test INDEX test NEW
+ *      SET FILTER TO Name == "Harbour"
+ *      USE testid INDEX testid NEW
+ *      SET FILTER TO Id == 1
  *      SELECT Test
  *      //
  *      ? DBFILTER()
- *      ? TestId->(DBFILTER())
+ *      ? testid->( DBFILTER() )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -585,7 +570,7 @@
  *      condition. Otherwise, if no index is active or if no filter condition
  *      is present, the value of the record pointer will be LASTREC().
  *  $EXAMPLES$
- *      USE Tests
+ *      USE tests
  *      DBGOTOP()
  *      ? RECNO()
  *      DBGOBOTTOM()
@@ -634,12 +619,12 @@
  *      The following example uses DBGOTO() to iteratively process
  *      every fourth record:
  *
- *      DBUSEAREA( .T., "DBFNTX", "Sales", "Sales", .T. )
+ *      DBUSEAREA( .T., "DBFNTX", "sales", "sales", .T. )
  *      //
  *      // toggle every fourth record
- *      DO WHILE !EOF()
+ *      DO WHILE ! EOF()
  *         DBGOTO( RECNO() + 4 )
- *         Sales->Group := "Bear"
+ *         sales->Group := "Bear"
  *      ENDDO
  *  $STATUS$
  *      R
@@ -672,7 +657,7 @@
  *      condition. Otherwise, if no index is active or if no filter condition
  *      is present, the value of RECNO() will be 1.
  *  $EXAMPLES$
- *      USE Tests
+ *      USE tests
  *      DBGOTOP()
  *      ? RECNO()
  *      DBGOBOTTOM()
@@ -711,8 +696,8 @@
  *      DELETE setting ON has been skipped, it no longer can be brought back
  *      with DBRECALL().
  *  $EXAMPLES$
- *      USE Test NEW
- *      DBGOTO(10)
+ *      USE test NEW
+ *      DBGOTO( 10 )
  *      DBDELETE()
  *      ? DELETED()
  *      DBRECALL()
@@ -754,15 +739,15 @@
  *      passed it will be assumed to lock the current active record/data
  *      item.
  *  $EXAMPLES$
- *      FUNCTION Main()
- *      LOCAL x:=0
- *      USE Tests New
- *      FOR x:=1 to reccount()
- *        IF !DBRLOCK()
- *          DBUNLOCK()
- *        ENDIF
- *      NEXT
- *      USE
+ *      PROCEDURE Main()
+ *         LOCAL x := 0
+ *         USE tests NEW
+ *         FOR x := 1 TO reccount()
+ *            IF ! DBRLOCK()
+ *               DBUNLOCK()
+ *            ENDIF
+ *         NEXT
+ *         USE
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -795,20 +780,20 @@
  *      (meaning no elements in it), then there are no locked records in that
  *      work area.
  *  $EXAMPLES$
- *      FUNCTION Main()
- *      LOCAL aList:={}
- *      LOCAL x:=0
- *      USE Tests NEW
- *      DBGOTO(10)
- *      RLOCK()
- *      DBGOTO(100)
- *      RLOCK()
- *      aList:=DBRLOCKLIST()
- *      FOR x:=1 TO LEN(aList)
- *         ? aList[x]
- *      NEXT
- *      USE
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         LOCAL aList := {}
+ *         LOCAL x := 0
+ *         USE tests NEW
+ *         DBGOTO( 10 )
+ *         RLOCK()
+ *         DBGOTO( 100 )
+ *         RLOCK()
+ *         aList := DBRLOCKLIST()
+ *         FOR x := 1 TO Len( aList )
+ *            ? aList[ x ]
+ *         NEXT
+ *         USE
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -841,15 +826,15 @@
  *      specified, them the current active record/data item will be
  *      unlocked
  *  $EXAMPLES$
- *      FUNCTION Main()
- *      USE Tests New
- *      DBGOTO(10)
- *      IF RLOCK()
- *         ? Tests->ID
- *         DBRUNLOCK()
- *      ENDIF
- *      USE
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         USE tests NEW
+ *         DBGOTO( 10 )
+ *         IF RLOCK()
+ *            ? tests->ID
+ *            DBRUNLOCK()
+ *         ENDIF
+ *         USE
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -905,25 +890,25 @@
  *      status of SOFTSEEK before performing the operation. The default of
  *      <lSoftSeek> is a logical false (.F.)
  *  $EXAMPLES$
- *      FUNCTION Main()
- *      USE Tests New INDEX Tests
- *      DBGOTO(10)
- *      nId:=Tests->nId
- *      IF Tests->(DBSEEK(nId))
- *        IF RLOCK()
- *           ? Tests->Name
- *           DBRUNLOCK()
- *        ENDIF
- *      ENDIF
- *      USE
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         USE tests NEW INDEX tests
+ *         DBGOTO( 10 )
+ *         nId := tests->nId
+ *         IF tests->( DBSEEK( nId ) )
+ *            IF RLOCK()
+ *               ? tests->Name
+ *               DBRUNLOCK()
+ *            ENDIF
+ *         ENDIF
+ *         USE
+ *         RETURN
  *
  *      ACCEPT "Employee name: " TO cName
- *      IF ( Employee->(DBSEEK(cName)) )
- *         Employee->(ViewRecord())
+ *      IF Employee->( DBSEEK( cName ) )
+ *         Employee->( ViewRecord() )
  *      ELSE
  *         ? "Not found"
- *      END
+ *      ENDIF
  *  $STATUS$
  *      S
  *  $COMPLIANCE$
@@ -961,18 +946,18 @@
  *      and record pointer, as well as its own FOUND(), DBFILTER(),
  *      DBRSELECT() and DBRELATION() function values.
  *  $EXAMPLES$
- *      FUNCTION Main()
- *      LOCAL nId
- *      USE Tests NEW INDEX Tests
- *      USE Tests1 NEW INDEX Tests1
- *      DBSELECTAREA(1)
- *      nId:=Tests->Id
- *      DBSELECTAREA(2)
- *      IF DBSEEK(nId)
- *         ? Tests1->cName
- *      ENDIF
- *      DBCLOSEALL()
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         LOCAL nId
+ *         USE tests NEW INDEX tests
+ *         USE tests1 NEW INDEX tests1
+ *         DBSELECTAREA( 1 )
+ *         nId := tests->Id
+ *         DBSELECTAREA( 2 )
+ *         IF DBSEEK( nId )
+ *            ? tests1->cName
+ *         ENDIF
+ *         DBCLOSEALL()
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -1042,15 +1027,15 @@
  *      make any changes made to the record visible without moving the record
  *      pointer in either direction.
  *  $EXAMPLES$
- *      FUNCTION Main()
- *      USE Tests NEW
- *      DBGOTOP()
- *      WHILE !EOF()
- *        ? Tests->Id, Tests->Name
- *        DBSKIP()
- *      ENDDO
- *      USE
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         USE tests NEW
+ *         DBGOTOP()
+ *         DO WHILE ! EOF()
+ *            ? tests->Id, tests->Name
+ *            DBSKIP()
+ *         ENDDO
+ *         USE
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -1087,10 +1072,10 @@
  *      function will return an empty string showing no filter in that work
  *      area which in fact,would be not correct.
  *  $EXAMPLES$
- *      FUNCTION Main()
- *      USE Tests NEW
- *      DBSETFILTER( {|| Tests->Id <100 }, "Tests->Id <100" )
- *      DBGOTOP()
+ *      PROCEDURE Main()
+ *         USE tests NEW
+ *         DBSETFILTER( {|| tests->Id <100 }, "tests->Id <100" )
+ *         DBGOTOP()
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -1125,15 +1110,16 @@
  *      LEN(DBSTRUCT()) is equal to the value obtained from FCOUNT().
  *      Each subscript position
  *  $EXAMPLES$
- *      FUNCTION Main()
- *      LOCAL aStru,x
- *      USE Tests NEW
- *      aStru:=DBSTRUCT()
- *      FOR x:=1 TO LEN(aStru)
- *        ? aStru[x,1]
- *      NEXT
- *      USE
- *      RETURN NIL
+ *      #include "dbstruct.ch"
+ *      PROCEDURE Main()
+ *         LOCAL aStru, x
+ *         USE tests NEW
+ *         aStru := dbStruct()
+ *         FOR x := 1 TO LEN( aStru )
+ *            ? aStru[ x ][ DBS_NAME ]
+ *         NEXT
+ *         USE
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -1165,9 +1151,9 @@
  *      in a related databases.
  *  $EXAMPLES$
  *      nId := 10
- *      USE TestId INDEX TestId NEW
- *      IF TestId->(DBSEEK(nId))
- *         IF TestId->(RLOCK())
+ *      USE testid INDEX testid NEW
+ *      IF testid->( DBSEEK( nId ) )
+ *         IF testid->( RLOCK() )
  *            DBDELETE()
  *         ELSE
  *            DBUNLOCK()
@@ -1201,11 +1187,11 @@
  *  $DESCRIPTION$
  *      This function will remove all file and record locks in all work area.
  *  $EXAMPLES$
- *      nId:=10
- *      USE Tests INDEX TestId NEW
- *      USE Tests1 INDEX Tests NEW
- *      IF TestId->(DBSEEK(nId))
- *         IF TestId->(RLOCK())
+ *      nId := 10
+ *      USE tests INDEX testid NEW
+ *      USE tests1 INDEX tests NEW
+ *      IF testid->( DBSEEK( nId ) )
+ *         IF testid->( RLOCK() )
  *            DBDELETE()
  *         ELSE
  *            DBUNLOCK()
@@ -1275,7 +1261,7 @@
  *      If it is not specified, the file will he opened in normal read-write
  *      mode.
  *  $EXAMPLES$
- *      DBUSEAREA(.T.,,"Tests")
+ *      DBUSEAREA( .T.,, "tests" )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

@@ -248,7 +248,7 @@
  *      To remove an keypress/code block definition, specify NIL for <bBlock>
  *      oTb:SetKey(K_ESC,nil)
  *  $EXAMPLES$
- *      oTb:SeyKey(K_F10,{|otb,nkey| ShowListByname(otb)}
+ *      oTb:SeyKey( K_F10, {| otb, nkey | ShowListByname( otb ) }
  *  $END$
  */
 
@@ -279,12 +279,12 @@
  *      This method evaluate an code block associated with <nkey> that is
  *      contained in the TBrowse:setkey() dictionary.
  *  $EXAMPLES$
- *      while .t.
- *          oTb:forceStable()
- *          if (oTb:applykey(inkey(0))==-1)
- *             exit
- *          endif
- *      enddo
+ *      DO WHILE .T.
+ *         oTb:forceStable()
+ *         IF oTb:applykey( Inkey( 0 ) ) == -1
+ *            EXIT
+ *         ENDIF
+ *      ENDDO
  *  $END$
  */
 

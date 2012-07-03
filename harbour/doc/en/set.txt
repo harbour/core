@@ -584,12 +584,12 @@
  *      A group of keys may be assigned the same code block/condition block
  *      by using an array of key values in place on the first parameter.
  *  $EXAMPLES$
- *      local bOldF10 := setKey( K_F10, {|| Yahoo() } )
+ *      LOCAL bOldF10 := SetKey( K_F10, {|| Yahoo() } )
  *      ... // some other processing
  *      SetKey( K_F10, bOldF10 )
  *      ... // some other processing
  *      bBlock := SetKey( K_SPACE )
- *      if bBlock != NIL ...
+ *      IF bBlock != NIL ...
  *
  *      // make F10 exit current get, but only if in a get - ignores other
  *      // wait-states such as menus, achoices, etc...
@@ -635,7 +635,7 @@
  *      a key, and optionally assignes the condition-block to the
  *      return-parameter
  *  $EXAMPLES$
- *      local bOldF10, bOldF10Cond
+ *      LOCAL bOldF10, bOldF10Cond
  *      bOldF10 := HB_SetKeyGet( K_F10, @bOldF10Cond )
  *      ... // some other processing
  *      SetKey( K_F10, bOldF10, bOldF10Cond )
@@ -678,7 +678,7 @@
  *     returned from a previous call to SetKeySave() - to restore that list,
  *     or the value of NIL to clear the current list.
  *  $EXAMPLES$
- *     local aKeys := HB_SetKeySave( NIL )  // removes all current set=keys
+ *     LOCAL aKeys := HB_SetKeySave( NIL )  // removes all current set=keys
  *     ... // some other processing
  *     HB_SetKeySave( aKeys )
  *  $TESTS$
@@ -726,14 +726,14 @@
  *      ACCEPT, INPUT, READ, and WAIT
  *  $EXAMPLES$
  *      // within ReadModal()
- *      if HB_SetKeyCheck( K_ALT_X, GetActive() )
- *      ... // some other processing
- *      endif
+ *      IF HB_SetKeyCheck( K_ALT_X, GetActive() )
+ *         ... // some other processing
+ *      ENDIF
  *      // within TBrowse handler
- *      case HB_SetKeyCheck( nInkey, oTBrowse )
- *        return
- *      case nInKey == K_ESC
- *      ... // some other processing
+ *      CASE HB_SetKeyCheck( nInkey, oTBrowse )
+ *         RETURN
+ *      CASE nInKey == K_ESC
+ *         ... // some other processing
  *  $TESTS$
  *      None definable
  *  $STATUS$
@@ -775,12 +775,12 @@
  *      A group of keys may be assigned the same code block/condition block
  *      by using an array of key values in place on the first parameter.
  *  $EXAMPLES$
- *      local bOldF10 := setKey( K_F10, {|| Yahoo() } )
+ *      LOCAL bOldF10 := setKey( K_F10, {|| Yahoo() } )
  *      ... // some other processing
- *      Set Key  K_F10 to  bOldF10)
+ *      SET KEY K_F10 TO bOldF10
  *      ... // some other processing
  *      bBlock := SetKey( K_SPACE )
- *      if bBlock != NIL ...
+ *      IF bBlock != NIL ...
  *
  *      // make F10 exit current get, but only if in a get - ignores other
  *      // wait-states such as menus, achoices, etc...
@@ -886,7 +886,7 @@
  *      parameters with this command will default the operation to the
  *      current logged drive and directory.
  *  $EXAMPLES$
- *      SET DEFAULT to C:\temp
+ *      SET DEFAULT TO C:\temp
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -917,7 +917,7 @@
  *      value of the logical expression <lWrap> is a logical false (.F.),
  *      the wrapping mode is set OFF; otherwise,it is set ON.
  *  $EXAMPLES$
- *      See Tests/menutest.prg
+ *      See tests/menutest.prg
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -960,7 +960,7 @@
  *      witch suppresses all messages output.
  *      The British spelling of CENTRE is also supported.
  *  $EXAMPLES$
- *      See Tests/menutest.prg
+ *      See tests/menutest.prg
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -1106,7 +1106,7 @@
  *      be set off
  *  $EXAMPLES$
  *      SET CENTURY ON
- *      ? DATE()
+ *      ? Date()
  *      SET CENTURY OFF
  *  $STATUS$
  *      R
@@ -1155,7 +1155,7 @@
  *      </table>
  *  $EXAMPLES$
  *      SET DATE JAPAN
- *      ? DATE()
+ *      ? Date()
  *      SET DATE GERMAN
  *      ? Date()
  *  $TESTS$
@@ -1235,7 +1235,7 @@
  *      </table>
  *  $EXAMPLES$
  *      SET FIXED ON
- *      ? 25141251/362
+ *      ? 25141251 / 362
  *      SET FIXED OFF
  *  $STATUS$
  *      R
@@ -1292,7 +1292,7 @@
  *  $EXAMPLES$
  *      SET PRINTER ON
  *      SET PRINTER TO LPT1
- *      ? 25141251/362
+ *      ? 25141251 / 362
  *      SET PRINTER .F.
  *  $STATUS$
  *      R
@@ -1326,10 +1326,10 @@
  *      If <lConsole> is a logical true (.T.),the console will be turned
  *      ON; otherwise, the console will be turned off.
  *  $EXAMPLES$
- *      SET console on
- *      ? DATE()
- *      SET console off
- *      ? date()
+ *      SET CONSOLE ON
+ *      ? Date()
+ *      SET CONSOLE OFF
+ *      ? Date()
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -1362,9 +1362,9 @@
  *      command must be activated.
  *  $EXAMPLES$
  *      SET FIXED ON
- *      ? 25141251/362
+ *      ? 25141251 / 362
  *      SET DECIMALS TO 10
- *      ? 214514.214/6325
+ *      ? 214514.214 / 6325
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -1401,10 +1401,10 @@
  *      the @...GET commands, the values for the GETs will all be ignored.
  *  $EXAMPLES$
  *      SET DEVICE TO SCREEN
- *      ? 25141251/362
+ *      ? 25141251 / 362
  *      SET DEVICE TO PRINTER
  *      SET PRINTER TO LPT1
- *      ? 214514.214/6325
+ *      ? 214514.214 / 6325
  *      SET PRINTER OFF
  *      SET DEVICE TO SCREEN
  *  $STATUS$
@@ -1440,10 +1440,10 @@
  *      ON; otherwise, the bell will be turned off.
  *  $EXAMPLES$
  *      SET BELL ON
- *      cDummy:=space(20)
- *      @ 3,2 get cDummy
- *      Read
- *      SET bell off
+ *      cDummy := Space( 20 )
+ *      @ 3,2 GET cDummy
+ *      READ
+ *      SET BELL OFF
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

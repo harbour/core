@@ -65,8 +65,7 @@
  *  $DESCRIPTION$
  *      This function returns the current Harbour Version.
  *  $EXAMPLES$
- *      ? QOUT(VERSION())
- *      "Harbour Terminal: Standard stream console"
+ *      ? VERSION() // "Harbour Terminal: Standard stream console"
  *  $TESTS$
  *
  *  $STATUS$
@@ -108,9 +107,9 @@
  *      If no environment variable
  *      is found, an empty string is returned.
  *  $EXAMPLES$
- *      ? QOUT(GETENV("PATH"))
- *      ? QOUT(GETENV("CONFIG"))
- *      ? QOUT(GETENV("HARBOURCMD", "-n -l -es2"))
+ *      ? GETENV( "PATH" )
+ *      ? GETENV( "CONFIG" )
+ *      ? GETENV( "HARBOURCMD", "-n -l -es2" )
  *  $TESTS$
  *
  *  $STATUS$
@@ -152,9 +151,9 @@
  *      If no environment variable
  *      is found, an empty string is returned.
  *  $EXAMPLES$
- *      ? QOUT(GETE("PATH"))
- *      ? QOUT(GETE("CONFIG"))
- *      ? QOUT(GETE("HARBOURCMD", "-n -l -es2"))
+ *      ? GETE( "PATH" )
+ *      ? GETE( "CONFIG" )
+ *      ? GETE( "HARBOURCMD", "-n -l -es2" )
  *  $TESTS$
  *
  *  $STATUS$
@@ -208,9 +207,9 @@
  *      can be found, the value of the function will be <cDefaultValue>
  *      if it is passed, else an empty string.
  *  $EXAMPLES$
- *      ? QOUT(HB_GETENV("PATH"))
- *      ? QOUT(HB_GETENV("CONFIG"))
- *      ? QOUT(HB_GETENV("HARBOURCMD", "-n -l -es2"))
+ *      ? HB_GETENV( "PATH" )
+ *      ? HB_GETENV( "CONFIG" )
+ *      ? HB_GETENV( "HARBOURCMD", "-n -l -es2" )
  *  $TESTS$
  *
  *  $STATUS$
@@ -252,8 +251,8 @@
  *            It is considered bad form to use this function directly.
  *            Use the RUN command instead.
  *  $EXAMPLES$
- *      __Run( "edit " + cMyTextFile )    // Runs an external editor
- *      __Run( "command" )                // Gives a DOS shell (DOS only)
+ *      __run( "edit " + cMyTextFile )    // Runs an external editor
+ *      __run( "command" )                // Gives a DOS shell (DOS only)
  *  $TESTS$
  *
  *  $STATUS$
@@ -296,15 +295,15 @@
  *      user, his or her dog, and the surrounding neighborhood. The frequency
  *      is limited to the range 0 to 32767 Hz.
  *  $EXAMPLES$
- *      If lOk   // Good Sound
+ *      IF lOk   // Good Sound
  *         TONE(  500, 1 )
  *         TONE( 4000, 1 )
  *         TONE( 2500, 1 )
- *      Else     // Bad Sound
+ *      ELSE     // Bad Sound
  *         TONE(  300, 1 )
  *         TONE(  499, 5 )
  *         TONE(  700, 5 )
- *      EndIf
+ *      ENDIF
  *  $TESTS$
  *      TONE( 800, 1 )                         // same as ? CHR(7)
  *      TONE( 32000, 200 )                     // any dogs around yet?
@@ -348,8 +347,8 @@
  *      Do not use it to run Terminate and Stay Resident programs
  *      (in case of DOS) since that causes several problems.
  *  $EXAMPLES$
- *      Run "edit " + cMyTextFile      // Runs an external editor
- *      Run "command"                  // Gives a DOS shell (DOS only)
+ *      RUN ( "edit " + cMyTextFile )  // Runs an external editor
+ *      RUN command                    // Gives a DOS shell (DOS only)
  *  $TESTS$
  *
  *  $STATUS$

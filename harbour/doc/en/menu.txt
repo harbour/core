@@ -82,10 +82,10 @@
  *      aItems := { "One", "Two", "Three" }
  *      nChoice := ACHOICE( 10, 10, 20, 20, aItems )
  *      IF nChoice == 0
- *          ? "You did not choose an item"
+ *         ? "You did not choose an item"
  *      ELSE
- *          ? "You chose element " + LTRIM( STR( nChoice ) )
- *          ?? " which has a value of " + aItems[ nChoice ]
+ *         ? "You chose element " + hb_ntos( nChoice )
+ *         ?? " which has a value of " + aItems[ nChoice ]
  *      ENDIF
  *  $FILES$
  *      Library is rtl
@@ -143,12 +143,12 @@
  *      @ 11, 2 PROMPT "Monday" MESSAGE "Now we're on the 2nd item"
  *      MENU TO nChoice
  *      DO CASE
- *         CASE nChoice == 0           // user press Esc key
- *              QUIT
- *         CASE nChoice == 1           // user select 1st menu item
- *              ? "Guess you don't like Mondays"
- *         CASE nChoice == 2           // user select 2nd menu item
- *              ? "Just another day for some"
+ *      CASE nChoice == 0           // user press Esc key
+ *         QUIT
+ *      CASE nChoice == 1           // user select 1st menu item
+ *         ? "Guess you don't like Mondays"
+ *      CASE nChoice == 2           // user select 2nd menu item
+ *         ? "Just another day for some"
  *      ENDCASE
  *  $STATUS$
  *      R
@@ -206,12 +206,12 @@
  *      @ 11, 2 PROMPT "Monday" MESSAGE "Now we're on the 2nd item"
  *      MENU TO nChoice
  *      DO CASE
- *         CASE nChoice == 0           // user press Esc key
- *              QUIT
- *         CASE nChoice == 1           // user select 1st menu item
- *              ? "Guess you don't like Mondays"
- *         CASE nChoice == 2           // user select 2nd menu item
- *              ? "Just another day for some"
+ *      CASE nChoice == 0           // user press Esc key
+ *         QUIT
+ *      CASE nChoice == 1           // user select 1st menu item
+ *         ? "Guess you don't like Mondays"
+ *      CASE nChoice == 2           // user select 2nd menu item
+ *         ? "Just another day for some"
  *      ENDCASE
  *  $STATUS$
  *      R
@@ -290,19 +290,19 @@
  *  $EXAMPLES$
  *      // display menu item on each screen corner and let user select one
  *      CLS
- *      SET MESSAGE TO MAXROW()/2 CENTER
+ *      SET MESSAGE TO MAXROW() / 2 CENTER
  *      SET WRAP ON
- *      @ 0,         0           PROMPT "1. Upper left"   MESSAGE " One "
- *      @ 0,         MAXCOL()-16 PROMPT "2. Upper right"  MESSAGE " Two "
- *      @ MAXROW()-1,MAXCOL()-16 PROMPT "3. Bottom right" MESSAGE "Three"
- *      @ MAXROW()-1,0           PROMPT "4. Bottom left"  MESSAGE "Four "
+ *      @ 0           , 0           PROMPT "1. Upper left"   MESSAGE " One "
+ *      @ 0           , MAXCOL()-16 PROMPT "2. Upper right"  MESSAGE " Two "
+ *      @ MAXROW() - 1, MAXCOL()-16 PROMPT "3. Bottom right" MESSAGE "Three"
+ *      @ MAXROW() - 1, 0           PROMPT "4. Bottom left"  MESSAGE "Four "
  *      MENU TO nChoice
- *      SETPOS ( MAXROW()/2, MAXCOL()/2 - 10 )
- *      if nChoice == 0
+ *      SETPOS( MAXROW() / 2, MAXCOL() / 2 - 10 )
+ *      IF nChoice == 0
  *         ?? "Esc was pressed"
- *      else
+ *      ELSE
  *         ?? "Selected option is", nChoice
- *      endif
+ *      ENDIF
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -376,19 +376,19 @@
  *  $EXAMPLES$
  *      // display menu item on each screen corner and let user select one
  *      CLS
- *      SET MESSAGE TO MAXROW()/2 CENTER
+ *      SET MESSAGE TO MAXROW() / 2 CENTER
  *      SET WRAP ON
- *      @ 0,         0           PROMPT "1. Upper left"   MESSAGE " One "
- *      @ 0,         MAXCOL()-16 PROMPT "2. Upper right"  MESSAGE " Two "
- *      @ MAXROW()-1,MAXCOL()-16 PROMPT "3. Bottom right" MESSAGE "Three"
- *      @ MAXROW()-1,0           PROMPT "4. Bottom left"  MESSAGE "Four "
+ *      @ 0           , 0             PROMPT "1. Upper left"   MESSAGE " One "
+ *      @ 0           , MAXCOL() - 16 PROMPT "2. Upper right"  MESSAGE " Two "
+ *      @ MAXROW() - 1, MAXCOL() - 16 PROMPT "3. Bottom right" MESSAGE "Three"
+ *      @ MAXROW() - 1, 0             PROMPT "4. Bottom left"  MESSAGE "Four "
  *      MENU TO nChoice
- *      SETPOS ( MAXROW()/2, MAXCOL()/2 - 10 )
- *      if nChoice == 0
+ *      SETPOS( MAXROW() / 2, MAXCOL() / 2 - 10 )
+ *      IF nChoice == 0
  *         ?? "Esc was pressed"
- *      else
+ *      ELSE
  *         ?? "Selected option is", nChoice
- *      endif
+ *      ENDIF
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

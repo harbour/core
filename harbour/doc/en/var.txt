@@ -134,26 +134,26 @@
  *      It releases variable even if this variable was created in different
  *      procedure
  *  $EXAMPLES$
- *      PROCEDURE MAIN()
- *      PRIVATE mPrivate
+ *      PROCEDURE Main()
+ *         PRIVATE mPrivate
  *
- *        mPrivate :="PRIVATE from MAIN()"
- *        ? mPrivate     //PRIVATE from MAIN()
- *        Test()
- *        ? mPrivate     //PRIVATE from MAIN()
+ *         mPrivate :="PRIVATE from MAIN()"
+ *         ? mPrivate     //PRIVATE from MAIN()
+ *         Test()
+ *         ? mPrivate     //PRIVATE from MAIN()
  *
- *      RETURN
+ *         RETURN
  *
  *      PROCEDURE Test()
- *      PRIVATE mPrivate
+ *         PRIVATE mPrivate
  *
- *        mPrivate :="PRIVATE from Test()"
- *        ? mPrivate           //PRIVATE from TEST()
- *        RELEASE mPrivate
- *        ? mPrivate           //NIL
- *        mPrivate :="Again in Test()"
+ *         mPrivate :="PRIVATE from Test()"
+ *         ? mPrivate           //PRIVATE from TEST()
+ *         RELEASE mPrivate
+ *         ? mPrivate           //NIL
+ *         mPrivate :="Again in Test()"
  *
- *      RETURN
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -232,30 +232,30 @@
  *      HB_MV_PRIVATE_LOCAL  =for private variables declared in current
  *      function/procedure
  *  $EXAMPLES$
- *      PROCEDURE MAIN()
- *      PUBLIC mPublic
- *      PRIVATE mPrivateGlobal
+ *      PROCEDURE Main()
+ *         PUBLIC mPublic
+ *         PRIVATE mPrivateGlobal
  *
- *      CallProc()
- *      ? __mvScope( "mPrivateLocal" )      //HB_MV_UNKNOWN
+ *         CallProc()
+ *         ? __mvScope( "mPrivateLocal" )      //HB_MV_UNKNOWN
  *
- *      RETURN
+ *         RETURN
  *
  *      PROCEDURE CallProc()
- *      PRIVATE mPrivateLocal
+ *         PRIVATE mPrivateLocal
  *
- *      ? __mvScope( "mPublic" )            //HB_MV_PUBLIC
- *      ? __mvScope( "mPrivateGlobal" )     //HB_MV_PRIVATE_GLOBAL
- *      ? __mvScope( "mPrivateLocal" )      //HB_MV_PRIVATE_LOCAL
- *      ? __mvScope( "mFindMe" )            //HB_MV_NOT_FOUND
+ *         ? __mvScope( "mPublic" )            //HB_MV_PUBLIC
+ *         ? __mvScope( "mPrivateGlobal" )     //HB_MV_PRIVATE_GLOBAL
+ *         ? __mvScope( "mPrivateLocal" )      //HB_MV_PRIVATE_LOCAL
+ *         ? __mvScope( "mFindMe" )            //HB_MV_NOT_FOUND
  *
- *      IF( __mvScope( "mPublic" ) > HB_MV_ERROR )
- *         ? "Variable exists"
- *      ELSE
- *         ? "Variable not created yet"
- *      ENDIF
+ *         IF __mvScope( "mPublic" ) > HB_MV_ERROR
+ *            ? "Variable exists"
+ *         ELSE
+ *            ? "Variable not created yet"
+ *         ENDIF
  *
- *      RETURN
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -352,63 +352,63 @@
  *
  *      LOCAL nCount, i, xValue, cName
  *
- *      nCount =_mvDBGINFO( HB_MV_PUBLIC )
- *      FOR i:=1 TO nCount
- *          xValue =__mvDBGINFO( HB_MV_PUBLIC, i, @cName )
- *          ? i, cName, xValue
+ *      nCount := _mvDBGINFO( HB_MV_PUBLIC )
+ *      FOR i := 1 TO nCount
+ *         xValue := __mvDBGINFO( HB_MV_PUBLIC, i, @cName )
+ *         ? i, cName, xValue
  *      NEXT
  *  $TESTS$
  *      #include "hbmemvar.ch"
  *      PROCEDURE MAIN()
  *
- *      ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
- *      ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
+ *         ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
+ *         ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
  *
- *      PUBLIC cPublic := "cPublic in MAIN"
+ *         PUBLIC cPublic := "cPublic in MAIN"
  *
- *      ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
- *      ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
+ *         ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
+ *         ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
  *
- *      PRIVATE cPrivate := "cPrivate in MAIN"
+ *         PRIVATE cPrivate := "cPrivate in MAIN"
  *
- *      ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
- *      ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
+ *         ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
+ *         ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
  *
- *      CountMemvars()
+ *         CountMemvars()
  *
- *      ? "Back in Main"
- *      ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
- *      ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
+ *         ? "Back in Main"
+ *         ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
+ *         ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
  *
- *      RETURN
+ *         RETURN
  *
  *      PROCEDURE CountMemvars()
- *      LOCAL i, nCnt, xVal, cName
- *      PUBLIC ccPublic := "ccPublic"
- *      PRIVATE ccPrivate := "ccPrivate"
+ *         LOCAL i, nCnt, xVal, cName
+ *         PUBLIC ccPublic := "ccPublic"
+ *         PRIVATE ccPrivate := "ccPrivate"
  *
- *      ? "In CountMemvars"
- *      ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
- *      ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
+ *         ? "In CountMemvars"
+ *         ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
+ *         ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
  *
- *      PRIVATE cPublic := "cPublic"
+ *         PRIVATE cPublic := "cPublic"
  *
- *      ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
- *      ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
+ *         ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
+ *         ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
  *
- *      nCnt =__mvDBGINFO( HB_MV_PRIVATE ) +1
- *      FOR i:=1 TO nCnt
- *        xVal =__mvDBGINFO( HB_MV_PRIVATE, i, @cName )
- *        ? i, "=", cName, xVal
- *      NEXT
+ *         nCnt := __mvDBGINFO( HB_MV_PRIVATE ) + 1
+ *         FOR i := 1 TO nCnt
+ *           xVal := __mvDBGINFO( HB_MV_PRIVATE, i, @cName )
+ *           ? i, "=", cName, xVal
+ *         NEXT
  *
- *      nCnt =__mvDBGINFO( HB_MV_PUBLIC ) +1
- *      FOR i:=1 TO nCnt
- *        xVal =__mvDBGINFO( HB_MV_PUBLIC, i, @cName )
- *        ? i, "=", cName, xVal
- *      NEXT
+ *         nCnt := __mvDBGINFO( HB_MV_PUBLIC ) + 1
+ *         FOR i := 1 TO nCnt
+ *           xVal := __mvDBGINFO( HB_MV_PUBLIC, i, @cName )
+ *           ? i, "=", cName, xVal
+ *         NEXT
  *
- *      RETURN
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -482,10 +482,10 @@
  *      The variable is specified by its name passed as the function parameter.
  *  $EXAMPLES$
  *      FUNCTION MEMVARBLOCK( cMemvar )
- *      RETURN {|x| ;
- *          IIF( PCOUNT()==0, ;
- *          __MVGET( cMemvar ),;
- *          __MVPUT( cMemvar, x ) ) }
+ *         RETURN {| x | ;
+ *            iif( PCOUNT() == 0, ;
+ *               __MVGET( cMemvar ),;
+ *               __MVPUT( cMemvar, x ) ) }
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -524,10 +524,10 @@
  *      If a value is not specified then the NIL is assumed
  *  $EXAMPLES$
  *      FUNCTION MEMVARBLOCK( cMemvar )
- *      RETURN {|x| ;
- *          IIF( PCOUNT()==0, ;
- *          __MVGET( cMemvar ),;
- *          __MVPUT( cMemvar, x ) ) }
+ *         RETURN {| x | ;
+ *            iif( PCOUNT() == 0, ;
+ *               __MVGET( cMemvar ),;
+ *               __MVPUT( cMemvar, x ) ) }
 *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -565,15 +565,15 @@
  *      value of given variable - the passed value is also returned
  *      as a value of the codeblock evaluation.
  *  $EXAMPLES$
- *      PROCEDURE MAIN()
- *      LOCAL cbSetGet
- *      PUBLIC xPublic
+ *      PROCEDURE Main()
+ *         LOCAL cbSetGet
+ *         PUBLIC xPublic
  *
- *      cbSetGet = MEMVARBLOCK( "xPublic" )
- *      EVAL( cbSetGet, "new value" )
- *      ? "Value of xPublic variable", EVAL( cbSetGet )
+ *         cbSetGet := MEMVARBLOCK( "xPublic" )
+ *         EVAL( cbSetGet, "new value" )
+ *         ? "Value of xPublic variable", EVAL( cbSetGet )
  *
- *      RETURN
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -677,11 +677,11 @@
  *      // open a file named One in work area 1
  *      // that have a field named "name"
  *      SELECT 1
- *      USE One
+ *      USE one
  *      // open a file named Two in work area 2
  *      // it also have a field named "name"
  *      SELECT 2
- *      USE Two
+ *      USE two
  *      SELECT 1
  *      ? "Original names: ", One->name, Two->name
  *      ? "Name value for file Two :", EVAL( bField )
@@ -757,22 +757,22 @@
  *      argument with a valid Harbour expression - the data type of this
  *      expression is returned.
  *  $EXAMPLES$
- *       ? TYPE( "{ 1, 2 }" )                            //prints "A"
- *       ? TYPE( "IIF(.T., SUBSTR("TYPE",2,1), .F.)" )   //prints "C"
- *       ? TYPE( "AT( "OK", MyUDF())>0" )                //prints "UI"
- *       ? TYPE( "{ 1, 2 }[ 5 ]" )                       //prints "UE"
+ *       ? TYPE( "{ 1, 2 }" )                                // prints "A"
+ *       ? TYPE( "iif( .T., SubStr( "TYPE", 2, 1 ), .F. )" ) // prints "C"
+ *       ? TYPE( "At( "OK", MyUDF() ) > 0" )                 // prints "UI"
+ *       ? TYPE( "{ 1, 2 }[ 5 ]" )                           // prints "UE"
  *
  *       //--------------------------------------------------------
  *
  *       LOCAL c
- *       PRIVATE a:="A", b:="B"
- *       ? TYPE( "a + b + c" )     //prints: "U" ('C' variable is a local one)
+ *       PRIVATE a := "A", b := "B"
+ *       ? TYPE( "a + b + c" )     // prints: "U" ('C' variable is a local one)
  *
  *       //--------------------------------------------------------
  *
- *       LOCAL cFilter := SPACE( 60 )
+ *       LOCAL cFilter := Space( 60 )
  *       ACCEPT "Enter filter expression:" TO cFilter
- *       IF( TYPE( cFilter ) $ "CDLMN" ) )
+ *       IF TYPE( cFilter ) $ "CDLMN"
  *          // this is a valid expression
  *          SET FILTER TO &cFilter
  *       ENDIF
@@ -783,7 +783,7 @@
  *        In the following code:
  *
  *          PRIVATE lCond := 0
- *          ? TYPE( "IIF( lCond, 'true', MyUDF() )" )
+ *          ? TYPE( "iof( lCond, 'true', MyUDF() )" )
  *
  *        CA-Cl*pper will print "UE" - in Harbour the output will be "UI"
  *
@@ -840,7 +840,7 @@
  *  $EXAMPLES$
  *      See Test(s)
  *  $TESTS$
- *      function Test()
+ *      PROCEDURE Test()
  *         ? ValType( Array( 1 ) )   // "A"
  *         ? ValType( {|| 1 + 1 } )  // "B"
  *         ? ValType( "HARBOUR" )    // "C"
@@ -851,7 +851,7 @@
  *         ? ValType( hb_idleadd() ) // "P" Harbour extension
  *         ? ValType( @QOut() )      // "S" Harbour extension
  *         ? ValType( NIL )          // "U"
- *      return nil
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -898,19 +898,19 @@
  *  $EXAMPLES$
  *      See Tests
  *  $TESTS$
- *      function Main()
- *         local cVar := "Test local"
- *         private nVar := 0
+ *      PROCEDURE Main()
+ *         LOCAL cVar := "Test local"
+ *         PRIVATE nVar := 0
  *
  *         Test( @cVar, @nVar, cVar, nVar )
- *      return nil
+ *         RETURN
  *
- *      procedure Test( Arg1, Arg2, Arg3, Arg4 )
+ *      PROCEDURE Test( Arg1, Arg2, Arg3, Arg4 )
  *         ? hb_isbyref( @Arg1 )        // .T.
  *         ? hb_isbyref( @Arg2 )        // .T.
  *         ? hb_isbyref( @Arg3 )        // .F.
  *         ? hb_isbyref( @Arg4 )        // .F.
- *      return
+ *         RETURN
  *  $STATUS$
  *      S
  *  $COMPLIANCE$

@@ -47,12 +47,12 @@
  *        New()                 Create a new instance of the class
  *  $EXAMPLES$
  *      FUNCTION TestObject()
- *      local oObject
+ *         LOCAL oObject
  *
- *      oObject := HBClass():New("TMyClass")
- *      oObject:End()
+ *         oObject := HBClass():New("TMyClass")
+ *         oObject:End()
  *
- *      RETURN Nil
+ *         RETURN NIL
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

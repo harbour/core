@@ -58,7 +58,7 @@
  *            usually FCOUNT(), before calling this function.
  *
  *  $EXAMPLES$
- *      FUNCTION Main()
+ *      PROCEDURE Main()
  *         LOCAL aNames, aTypes, aLens, aDecs, nCount, nFields, i
  *         USE Test
  *
@@ -66,9 +66,9 @@
  *         ? "Number of fields:", nCount
  *         PrintFields( nCount )   // Information for all fields
  *         PrintFields( 4      )   // Information for first 4 fields
- *      RETURN NIL
+ *         RETURN
  *
- *      FUNCTION PrintFields( nCount )
+ *      PROCEDURE PrintFields( nCount )
  *         LOCAL aNames, aTypes, aLens, aDecs, nFields, i
  *
  *         aNames  := Array( nCount )
@@ -79,11 +79,11 @@
  *
  *         ? "Number of items :", nFields
  *         FOR i := 1 TO nFields
- *             ?  i, PadR( aNames[ i ], 12 ), aTypes[ i ]
- *             ?? aLens[ i ], aDecs[ i ]
+ *            ?  i, PadR( aNames[ i ], 12 ), aTypes[ i ]
+ *            ?? aLens[ i ], aDecs[ i ]
  *         NEXT
  *         ?
- *      RETURN NIL
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -117,15 +117,15 @@
  *      If <nWorkArea> is not provided, the alias of the current work area is
  *      returned.
  *  $EXAMPLES$
- *      FUNCTION Main()
+ *      PROCEDURE Main()
  *
- *      USE Test
- *      select 0
- *      qOut( IF(Alias()=="","No Name",Alias()))
- *      Test->(qOut(Alias())
- *      qOut(Alias(1))
+ *         USE Test
+ *         SELECT 0
+ *         QOut( iif( Alias() == "", "No Name", Alias() ) )
+ *         Test->( QOut( Alias() ) )
+ *         QOut( Alias( 1 ) )
  *
- *      RETURN NIL
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -159,14 +159,14 @@
  *      By default, BOF() will apply to the currently selected database unless
  *      the function is preceded by an alias
  *  $EXAMPLES$
- *      FUNCTION Main()
- *        USE Tests NEW
- *        DBGOTOP()
- *        ? "Is Eof()",EOF()
- *        DBGOBOTTOM()
- *        ? "Is Eof()",EOF()
- *        USE
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         USE tests NEW
+ *         DBGOTOP()
+ *         ? "Is Eof()", EOF()
+ *         DBGOBOTTOM()
+ *         ? "Is Eof()", EOF()
+ *         USE
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -201,7 +201,7 @@
  *      In a network enviroment, any file that is about to be ZAPped must
  *      be used exclusively.
  *  $EXAMPLES$
- *      USE Tests NEW index Tests
+ *      USE tests NEW INDEX tests
  *      ZAP
  *      USE
  *  $STATUS$
@@ -235,14 +235,14 @@
  *      selected or designated work area ha ben marked for deletion. If not, the
  *      function will return a logical false (.F.).
  *  $EXAMPLES$
- *      FUNCTION Main()
- *      USE Test New
- *      DBGOTO()
- *      DBDELETE()
- *      ? "Is Record Deleted",Test->(DELETED())
- *      DBRECALL()
- *      USE
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         USE test NEW
+ *         DBGOTO()
+ *         DBDELETE()
+ *         ? "Is Record Deleted", Test->( DELETED() )
+ *         DBRECALL()
+ *         USE
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -276,14 +276,14 @@
  *      If it has, the function will return a logical true (.T.); otherwise
  *      a logical false (.F.) will be returnd
  *  $EXAMPLES$
- *      FUNCTION Main()
- *        USE Tests NEW
- *        DBGOTOP()
- *        ? "Is Eof()",EOF()
- *        DBGOBOTTOM()
- *        ? "Is Eof()",EOF()
- *        USE
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         USE tests NEW
+ *         DBGOTOP()
+ *         ? "Is Eof()", EOF()
+ *         DBGOBOTTOM()
+ *         ? "Is Eof()", EOF()
+ *         USE
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -315,11 +315,11 @@
  *      work area. If no database is open in this work area, the function will
  *      return 0.
  *  $EXAMPLES$
- *      FUNCTION Main()
- *        USE Tests NEW
- *        ? "This database have ",Tests->(FCOUNT()),"Fields"
- *        USE
- *      RETURN Nil
+ *      PROCEDURE Main()
+ *         USE tests NEW
+ *         ? "This database have", tests->( FCOUNT() ), "Fields"
+ *         USE
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -354,11 +354,11 @@
  *      correspond to n avaliable field position in this work area, the function
  *      will return a NIL data type.
  *  $EXAMPLES$
- *      FUNCTION Main()
- *      USE Test NEW
- *      ? Test->(FieldGet(1))
- *      USE
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         USE test NEW
+ *         ? test->( FieldGet( 1 ) )
+ *         USE
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -393,14 +393,14 @@
  *      existing field in the designated or selected work area, this function
  *      will return a NULL byte.
  *  $EXAMPLES$
- *      FUNCTION Main()
- *        LOCAL x
- *        USE Tests NEW
- *        FOR x := 1 to Tests->(FCOUNT())
- *          ? "Field Name",FieldName(x)
- *        NEXT
- *        USE
- *      RETURN Nil
+ *      PROCEDURE Main()
+ *         LOCAL x
+ *         USE tests NEW
+ *         FOR x := 1 TO tests->( FCOUNT() )
+ *            ? "Field Name", FieldName( x )
+ *         NEXT
+ *         USE
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -435,11 +435,11 @@
  *      of <cField> or of no database is open in the selected work area, the func-
  *      tion will return a 0.
  *  $EXAMPLES$
- *      FUNCTION Main()
- *      USE Test NEW
- *      ? Test->(FIELDPOS("ID"))
- *      USE
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         USE test NEW
+ *         ? test->( FIELDPOS( "ID" ) )
+ *         USE
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -477,8 +477,8 @@
  *      assigned to the specified field. If the operation is not successful,
  *      the function will return a NIL data type
  *  $EXAMPLES$
- *      USE Tests New
- *      FIELDPUT(1,"Mr. Jones")
+ *      USE tests NEW
+ *      FIELDPUT( 1, "Mr. Jones" )
  *      USE
  *  $STATUS$
  *      R
@@ -513,9 +513,9 @@
  *      database. This function will also unlock all records locks placed
  *      by the same network station.
  *  $EXAMPLES$
- *      USE Tests New
+ *      USE tests New
  *      IF FLOCK()
- *         SUM Tests->Ammount
+ *         SUM tests->Ammount
  *      ENDIF
  *      USE
  *  $STATUS$
@@ -552,11 +552,11 @@
  *      flag, so that a FOUND() condition may be tested in unselected work
  *      areas by using an alias.
  *  $EXAMPLES$
- *      nId:=100
- *      USE Tests NEW INDEX Tests
+ *      nId := 100
+ *      USE tests NEW INDEX tests
  *      SEEK nId
  *      IF FOUND()
- *        ? Tests->Name
+ *         ? tests->Name
  *      ENDIF
  *      USE
  *  $STATUS$
@@ -593,7 +593,7 @@
  *      functions, this functions is capable of implementing a backup and
  *      restore routine.
  *  $EXAMPLES$
- *      USE Tests New
+ *      USE tests NEW
  *      ? Header()
  *  $STATUS$
  *      R
@@ -628,7 +628,7 @@
  *      in use in the selected or designated work area, this function will
  *      return a 0 value as well.
  *  $EXAMPLES$
- *      USE Tests NEW
+ *      USE tests NEW
  *      ? LASTREC(), RECCOUNT()
  *  $TESTS$
  *
@@ -667,12 +667,11 @@
  *      or designated database was last written to disk. This function will
  *      only work for those database files in USE.
  *  $EXAMPLES$
- *      Function Main
- *
- *      Use Tests New
- *      ? Lupdate() // 04/25/2000
- *      Use
- *      Return Nil
+ *      PROCEDURE Main()
+ *         USE tests NEW
+ *         ? LUpdate()
+ *         USE
+ *         RETURN
  *  $TESTS$
  *
  *  $STATUS$
@@ -718,13 +717,13 @@
  *      This allow the run-time error-handling system to control the way
  *      certains errors are handled.
  *  $EXAMPLES$
- *      USE TEST NEW Index Test
- *      If !NetErr()
- *          Seek Test->Name="HARBOUR"
- *          If Found()
- *             ? Test->Name
- *          Endif
- *      Endif
+ *      USE test NEW INDEX test
+ *      IF ! NetErr()
+ *          SEEK test->Name := "HARBOUR"
+ *          IF Found()
+ *             ? test->Name
+ *          ENDIF
+ *      ENDIF
  *      USE
  *  $STATUS$
  *      R
@@ -761,10 +760,10 @@
  *      in use in the selected or designated work area, this function will
  *      return a 0 value as well.
  *  $EXAMPLES$
- *      Use Test NEW
- *      USE Harbour NEW
- *      ? Reccount()
- *      ? Test->(RECCOUNT())
+ *      USE test NEW
+ *      USE harbour NEW
+ *      ? RecCount()
+ *      ? Test->( RecCount() )
  *      CLOSE ALL
  *  $TESTS$
  *
@@ -803,10 +802,10 @@
  *      If the database file is empty and if the RDD is the traditional .dbf
  *      file, the value of this function will be 1.
  *  $EXAMPLES$
- *      USE Tests NEW
+ *      USE tests NEW
  *      DBGOTOP()
  *      RECNO()            // Returns 1
- *      DBGOTO(50)
+ *      DBGOTO( 50 )
  *      RECNO()            // Returns 50
  *  $TESTS$
  *
@@ -844,10 +843,10 @@
  *      is in use in this work area, the return value from this function
  *      will be 0.
  *  $EXAMPLES$
- *      USE Tests NEW
+ *      USE tests NEW
  *      DBGOTOP()
  *      RECSIZE()            // Returns 1
- *      DBGOTO(50)
+ *      DBGOTO( 50 )
  *      RECSIZE()
  *  $TESTS$
  *
@@ -898,10 +897,10 @@
  *
  *      REPLACE (single record)
  *  $EXAMPLES$
- *      nId:=10
- *      USE TestId INDEX TestId NEW
- *      IF TestId->(DBSEEK(nId))
- *         IF TestId->(RLOCK())
+ *      nId := 10
+ *      USE testid INDEX testid NEW
+ *      IF testid->( DBSEEK( nId ) )
+ *         IF testid->( RLOCK() )
  *            DBDELETE()
  *         ENDIF
  *      ENDIF
@@ -941,10 +940,10 @@
  *      name <cAlias>. If no parameter is specified, the current work area will
  *      be the return value of the function.
  *  $EXAMPLES$
- *      USE TESTS NEW
- *      USE NAMES NEW
- *      cOldArea:=SELECT("NAMES")
- *      select TEST
+ *      USE tests NEW
+ *      USE names NEW
+ *      cOldArea := Select( "names" )
+ *      SELECT test
  *      LIST
  *      SELECT cOldArea
  *  $TESTS$
@@ -983,13 +982,13 @@
  *      along with this function , it will default to the currently selected
  *      work area.
  *  $EXAMPLES$
- *      Use TESTS NEW
- *      USE Names New
+ *      USE tests NEW
+ *      USE names NEW
  *      ? USED()    // .T.
- *      ? TESTS->(USED()) //.T.
+ *      ? TESTS->( USED() ) //.T.
  *      CLOSE
  *      ? USED()  // .F.
- *      Select TESTS
+ *      SELECT tests
  *      ? USED() //.T.
  *  $TESTS$
  *
@@ -1028,8 +1027,8 @@
  *      has completed its operation. On completion, the record pointer is placed
  *      on the first record in the database.
  *  $EXAMPLES$
- *      USE Tests NEW index Tests
- *      DBGOTO(10)
+ *      USE tests NEW INDEX tests
+ *      DBGOTO( 10 )
  *      DELETE NEXT 10
  *      PACK
  *      USE

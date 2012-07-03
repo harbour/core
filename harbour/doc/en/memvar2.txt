@@ -32,14 +32,14 @@
  *      has no effect on memory variables or on field reference buried within
  *      a macro expression.
  *  $EXAMPLES$
- *      Func main
- *      FIELD iD
- *      FIELD Name
- *      USE TESTS NEW
- *      name:="Sales"
- *      Id:=5
- *      USE
- *      Return Nil
+ *      PROCEDURE Main()
+ *         FIELD Id
+ *         FIELD Name
+ *         USE tests NEW
+ *         Name := "Sales"
+ *         Id := 5
+ *         USE
+ *         RETURN
  *  $TESTS$
  *      See tests/testwarn.prg
  *  $STATUS$
@@ -97,15 +97,15 @@
  *
  *      LOCAL variables and arrays are not affected by the RELEASE command.
  *  $EXAMPLES$
- *      Function Main2()
- *      Local n, lVar
+ *      PROCEDURE Main()
+ *         LOCAL n, lVar
  *
- *      n := IIF( lVar, "A", 3 )
- *      n := 2
- *      n := "a"
- *      n := seconds() + 2
- *      n := int( seconds() + 2 )
- *      Return NIL
+ *         n := iif( lVar, "A", 3 )
+ *         n := 2
+ *         n := "a"
+ *         n := seconds() + 2
+ *         n := int( seconds() + 2 )
+ *         RETURN
  *  $TESTS$
  *      See tests/testwarn.prg for more examples
  *  $STATUS$
@@ -148,18 +148,18 @@
  *      is similat to the LOCAL,STATIC,FIELD,PARAMETERS,FUNCTION, and
  *      PROCEDURE commands statements.
  *  $EXAMPLES$
- *      MEMVAR y As Numeric
- *      Function Main2()
- *      Local n , lVar
+ *      MEMVAR y AS NUMERIC
+ *      PROCEDURE Main()
+ *         LOCAL n, lVar
  *
- *      n := IIF( lVar, "A", 3 )
- *      n := 2
- *      n := "a"
- *      n := seconds() + 2
- *      n := int( seconds() + 2 )
- *      y := n
- *      ? y
- *      Return NIL
+ *         n := iif( lVar, "A", 3 )
+ *         n := 2
+ *         n := "a"
+ *         n := seconds() + 2
+ *         n := int( seconds() + 2 )
+ *         y := n
+ *         ? y
+ *         RETURN
  *  $TESTS$
  *      See tests/testwarn.prg for more examples
  *  $STATUS$

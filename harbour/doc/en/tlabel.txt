@@ -64,11 +64,11 @@
  *      command. The path may be specified, along, with (the drive letter,
  *      in <cLabelName>
  *  $EXAMPLES$
- *      FUNCTION MAIN()
- *      USE Test New
- *      LABEL FORM EE
- *      USE
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         USE test NEW
+ *         LABEL FORM EE
+ *         USE
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

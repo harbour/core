@@ -236,8 +236,8 @@
  *      the second expression, the function will return 0. The third and fourth
  *      parameters lets you indicate a starting and end offset to search in.
  *  $EXAMPLES$
- *      QOUT( "at( 'cde', 'abcdefgfedcba' ) = '" +;
- *      at( 'cde', 'abcsefgfedcba' ) + "'" )
+ *      QOUT( "At( 'cde', 'abcdefgfedcba' ) = '" +;
+ *             At( 'cde', 'abcsefgfedcba' ) + "'" )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -280,8 +280,8 @@
  *      of <cString> to the left. If the function is unable to find any
  *      occurence of <cSearch> in <cString>, the return value is 0.
  *  $EXAMPLES$
- *      QOUT( "rat( 'cde', 'abcdefgfedcba' ) = '" +;
- *      rat( 'cde', 'abcsefgfedcba' ) + "'" )
+ *      QOUT( "RAt( 'cde', 'abcdefgfedcba' ) = '" +;
+ *             RAt( 'cde', 'abcsefgfedcba' ) + "'" )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -408,9 +408,9 @@
  *      characters from <nStart> to the end of the string is less than <nLen>
  *      the rest are ignored.
  *  $EXAMPLES$
- *      ? SUBSTR( "HELLO HARBOUR" , 7, 4 )      // HARB
- *      ? SUBSTR( "HELLO HARBOUR" ,-3, 3 )      // OUR
- *      ? SUBSTR( "HELLO HARBOUR" , 7    )      // HARBOUR
+ *      ? SUBSTR( "HELLO HARBOUR" ,  7, 4 )      // HARB
+ *      ? SUBSTR( "HELLO HARBOUR" , -3, 3 )      // OUR
+ *      ? SUBSTR( "HELLO HARBOUR" ,  7    )      // HARBOUR
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -607,7 +607,7 @@
  *      ? HB_VALTOSTR( 4 ) == "         4"
  *      ? HB_VALTOSTR( 4.0 / 2 ) == "         2.00"
  *      ? HB_VALTOSTR( "String" ) == "String"
- *      ? HB_VALTOSTR( CTOD( "01/01/2001" ) ) == "01/01/01"
+ *      ? HB_VALTOSTR( STOD( "20010101" ) ) == "01/01/01"
  *      ? HB_VALTOSTR( NIL ) == "NIL"
  *      ? HB_VALTOSTR( .F. ) == ".F."
  *      ? HB_VALTOSTR( .T. ) == ".T."
@@ -688,7 +688,7 @@
  *  $EXAMPLES$
  *      ? EMPTY( "I'm not empty" )    // .F.
  *  $TESTS$
- *      FUNCTION Test()
+ *      PROCEDURE Test()
  *         ? EMPTY( NIL )             // .T.
  *         ? EMPTY( 0 )               // .T.
  *         ? EMPTY( .F. )             // .T.
@@ -697,7 +697,7 @@
  *         ? EMPTY( .T. )             // .F.
  *         ? EMPTY( "smile" )         // .F.
  *         ? EMPTY( Date() )          // .F.
- *      RETURN NIL
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -960,7 +960,7 @@
  *      any character expression passed as <cCharacter>.
  *  $EXAMPLES$
  *      ? ASC( "A" )
- *      ? ASC( "น" )
+ *      ? ASC( "ยน" )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -1006,7 +1006,7 @@
  *      truncate the string <xVal> from the leftmost side to the length of
  *      <nWidth>.
  *  $EXAMPLES$
- *      ? PADC( "Harbour",20 )
+ *      ? PADC( "Harbour", 20 )
  *      ? PADC( 34.5142, 20 )
  *      ? PADC( Date(), 35 )
  *  $TESTS$
@@ -1320,41 +1320,41 @@
  *      This function is useful to declare the length of a character memory
  *      variable.
  *  $EXAMPLES$
- *      FUNC MAIN
- *      LOCAL cBigString
- *      LOCAL cFirst
- *      LOCAL cString := Space(20)   // Create an character memory variable
- *                                   // with length 20
- *      ? len(cString)      // 20
- *      cBigString:=space(100000)    // create a memory variable with 100000
- *                                   // blank spaces
- *      ?  len(cBigString)
- *      Use Tests New
- *      cFirst:= makeempty(1)
- *      ? len(cFirst)
- *      Return Nil
+ *      PROCEDURE Main()
+ *         LOCAL cBigString
+ *         LOCAL cFirst
+ *         LOCAL cString := Space( 20 )  // Create an character memory variable
+ *                                       // with length 20
+ *         ? Len( cString )      // 20
+ *         cBigString := space( 100000 ) // create a memory variable with 100000
+ *                                       // blank spaces
+ *         ? Len( cBigString )
+ *         USE tests NEW
+ *         cFirst := MakeEmpty( 1 )
+ *         ? Len( cFirst )
+ *         RETURN
  *
- *      Function MakeEmpty(xField)
- *      LOCAL nRecord
- *      LOCAL xRetValue
+ *      FUNCTION MakeEmpty( xField )
+ *         LOCAL nRecord
+ *         LOCAL xRetValue
  *
- *      If !empty(alias())
- *          nRecord:=recno()
- *          dbgoto(0)
- *          if valtype(xField)=="C"
- *              xField:= ascan(dbstruct(),{|aFields| aFields[1]==upper(xfield)})
- *          else
- *              default xField to 0
- *              if xField < 1 .or. xField>fcount()
- *                  xfield:=0
- *              endif
- *          endif
- *          if !(xfield ==0)
- *              xRetvalue:=fieldget(xfield)
- *          endif
- *          dbgoto(nrecord)
- *      endif
- *      return xRetvalue
+ *         IF ! Empty( Alias() )
+ *            nRecord := RecNo()
+ *            dbgoto( 0 )
+ *            IF ValType( xField ) == "C"
+ *               xField := AScan( dbstruct(), {| aFields | aFields[ 1 ] == Upper( xfield ) } )
+ *            ELSE
+ *               DEFAULT xField TO 0
+ *               IF xField < 1 .OR. xField > FCount()
+ *                  xfield := 0
+ *               ENDIF
+ *            ENDIF
+ *            IF !( xfield == 0 )
+ *               xRetvalue := FieldGet( xfield )
+ *            ENDIF
+ *            dbgoto( nrecord )
+ *         ENDIF
+ *         RETURN xRetvalue
  *  $TESTS$
  *      See examples
  *  $STATUS$

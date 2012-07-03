@@ -50,7 +50,7 @@
  *      MENU TO What_Is_Bug
  *
  *      PROCEDURE ShowVar
- *      ALERT( READVAR() )        // WHAT_IS_BUG in red ALERT() box
+ *         Alert( ReadVar() )     // WHAT_IS_BUG in red ALERT() box
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

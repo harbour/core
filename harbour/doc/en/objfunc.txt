@@ -152,13 +152,13 @@
  *      aData      := __objGetMsgList( oB, .T. )
  *      aClassData := __objGetMsgList( oB, .T., HB_MSGLISTCLASS )
  *      aMethod    := __objGetMsgList( oB, .F. )
- *      FOR i = 1 to len ( aData )
+ *      FOR i := 1 TO Len( aData )
  *          ? "DATA name:", aData[ i ]
  *      NEXT
- *      FOR i = 1 to len ( aClassData )
+ *      FOR i := 1 TO Len( aClassData )
  *          ? "CLASSDATA name:", aClassData[ i ]
  *      NEXT
- *      FOR i = 1 to len ( aMethod )
+ *      FOR i := 1 TO Len( aMethod )
  *          ? "METHOD name:", aMethod[ i ]
  *      NEXT
  *  $STATUS$
@@ -200,7 +200,7 @@
  *      // show information about TBrowse class
  *      oB := TBrowseNew( 0, 0, 24, 79 )
  *      aMethod := __objGetMethodList( oB )
- *      FOR i = 1 to len ( aMethod )
+ *      FOR i := 1 TO Len( aMethod )
  *          ? "METHOD name:", aMethod[ i ]
  *      NEXT
  *  $STATUS$
@@ -246,7 +246,7 @@
  *      // show information about TBrowse class
  *      oB := TBrowseNew( 0, 0, 24, 79 )
  *      aData := __objGetValueList( oB )
- *      FOR i = 1 to len ( aData )
+ *      FOR i := 1 TO len( aData )
  *          ? "DATA name:", aData[ i, HB_OO_DATA_SYMBOL ], ;
  *            "    value=", aData[ i, HB_OO_DATA_VALUE  ]
  *      NEXT
@@ -291,7 +291,7 @@
  *  $EXAMPLES$
  *      // set some TBrowse instance variable
  *      oB := TBrowse():New()
- *      aData := array( 4, 2 )
+ *      aData := Array( 4, 2 )
  *      aData[ 1, HB_OO_DATA_SYMBOL ] = "nTop"
  *      aData[ 1, HB_OO_DATA_VALUE  ] = 1
  *      aData[ 2, HB_OO_DATA_SYMBOL ] = "nLeft"
@@ -354,16 +354,16 @@
  *      ? oHappy:Smile( 3 )       // *SMILE*
  *
  *      STATIC FUNCTION MySmile( nType )
- *      LOCAL cSmile
- *      DO CASE
+ *         LOCAL cSmile
+ *         DO CASE
  *         CASE nType == 1
- *              cSmile := ":)"
+ *            cSmile := ":)"
  *         CASE nType == 2
- *              cSmile := ";)"
+ *            cSmile := ";)"
  *         CASE nType == 3
- *              cSmile := "*SMILE*"
- *      ENDCASE
- *      RETURN cSmile
+ *            cSmile := "*SMILE*"
+ *         ENDCASE
+ *         RETURN cSmile
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -505,24 +505,24 @@
  *      ? oHappy:Smile( 2 )       // *WINK*
  *
  *      STATIC FUNCTION MySmile( nType )
- *      LOCAL cSmile
- *      DO CASE
+ *         LOCAL cSmile
+ *         DO CASE
  *         CASE nType == 1
- *              cSmile := ":)"
+ *            cSmile := ":)"
  *         CASE nType == 2
- *              cSmile := ";)"
- *      ENDCASE
- *      RETURN cSmile
+ *            cSmile := ";)"
+ *         ENDCASE
+ *         RETURN cSmile
  *
  *      STATIC FUNCTION YourSmile( nType )
- *      LOCAL cSmile
- *      DO CASE
+ *         LOCAL cSmile
+ *         DO CASE
  *         CASE nType == 1
- *              cSmile := "*SMILE*"
+ *            cSmile := "*SMILE*"
  *         CASE nType == 2
- *              cSmile := "*WINK*"
- *      ENDCASE
- *      RETURN cSmile
+ *            cSmile := "*WINK*"
+ *         ENDCASE
+ *         RETURN cSmile
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -621,14 +621,14 @@
  *      ? __objHasMethod( oHappy, "Smile" )    // .F.
  *
  *      STATIC FUNCTION MySmile( nType )
- *      LOCAL cSmile
- *      DO CASE
+ *         LOCAL cSmile
+ *         DO CASE
  *         CASE nType == 1
- *              cSmile := ":)"
+ *            cSmile := ":)"
  *         CASE nType == 2
- *              cSmile := ";)"
- *      ENDCASE
- *      RETURN cSmile
+ *            cSmile := ";)"
+ *         ENDCASE
+ *         RETURN cSmile
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -675,14 +675,14 @@
  *      ? __objHasMethod( oHappy, "Smile" )    // .F.
  *
  *      STATIC FUNCTION MySmile( nType )
- *      LOCAL cSmile
- *      DO CASE
+ *         LOCAL cSmile
+ *         DO CASE
  *         CASE nType == 1
- *              cSmile := ":)"
+ *            cSmile := ":)"
  *         CASE nType == 2
- *              cSmile := ";)"
- *      ENDCASE
- *      RETURN cSmile
+ *            cSmile := ";)"
+ *         ENDCASE
+ *         RETURN cSmile
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -766,27 +766,27 @@
  *      // Create three classes and check their relations
  *
  *      #include "hbclass.ch"
- *      FUNCTION main()
- *         local oSuper, oObject, oDress
+ *      PROCEDURE Main()
+ *         LOCAL oSuper, oObject, oDress
  *         oSuper  := TMood():New()
  *         oObject := THappy():New()
  *         oDress  := TShirt():New()
  *         ? __objDerivedFrom( oObject, oSuper )    // .T.
  *         ? __objDerivedFrom( oSuper, oObject )    // .F.
  *         ? __objDerivedFrom( oObject, oDress )    // .F.
- *      RETURN NIL
+ *         RETURN
  *
- *      CLASS TMood
+ *      CREATE CLASS TMood
  *         METHOD New() INLINE Self
  *      ENDCLASS
  *
- *      CLASS THappy FROM TMood
+ *      CREATE CLASS THappy FROM TMood
  *         METHOD Smile() INLINE qout( "*smile*" )
  *      ENDCLASS
  *
- *      CLASS TShirt
- *         DATA Color
- *         DATA Size
+ *      CREATE CLASS TShirt
+ *         VAR Color
+ *         VAR Size
  *         METHOD New() INLINE Self
  *      ENDCLASS
  *  $STATUS$

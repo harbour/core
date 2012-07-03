@@ -39,10 +39,10 @@
  *
  *      This function replaces the Indexord() function.
  *  $EXAMPLES$
- *      USE Tests NEW VIA "DBFNTX"
+ *      USE tests NEW VIA "DBFNTX"
  *      ? ORDBAGEXT()      //  Returns .ntx
  *      DBCLOSEAREA()
- *      USE Tests NEW VIA "DBFCDX"
+ *      USE tests NEW VIA "DBFCDX"
  *      ? ORDBAGEXT()      //  Returns .cdx
  *      DBCLOSEAREA()
  *  $STATUS$
@@ -86,13 +86,13 @@
  *      index name or index order number. If <cOrderName> is not specified
  *      or <nOrder> is 0, the Current active order will be used.
  *  $EXAMPLES$
- *      USE Tests VIA "DBFCDX" NEW
- *      Set index to TESTs
+ *      USE tests VIA "DBFCDX" NEW
+ *      SET INDEX TO tests
  *      ORDBAGNAME( "TeName" )        // Returns: Customer
  *      ORDBAGNAME( "TeLast" )        // Returns: Customer
  *      ORDBAGNAME( "teZip" )         // Returns: Customer
- *      Set Order to Tag TeName
- *      ? OrderBagName() //Return Custumer
+ *      SET ORDER TO TAG TeName
+ *      ? OrderBagName()              // Returns: Custumer
  *  $TESTS$
  *      See Examples
  *  $STATUS$
@@ -214,10 +214,10 @@
  *      added. It is does exist, then the <cOrderBagName> replaces the former
  *      name in the order list in the current or specified work area.
  *  $EXAMPLES$
- *      USE TESTS VIA "DBFNDX" NEW
+ *      USE tests VIA "DBFNDX" NEW
  *      ORDCREATE( "FNAME",, "Tests->fName" )
  *
- *      USE TEsts VIA "DBFCDX" NEW
+ *      USE tests VIA "DBFCDX" NEW
  *      ORDCREATE( , "lName", "tests->lName" )
  *  $TESTS$
  *      See examples
@@ -265,8 +265,8 @@
  *      for those drivers with support multiple orders bags (e.q. DBFCDX
  *      and RDDADS drivers).
  *  $EXAMPLES$
- *      USE Tests VIA "DBFCDX" NEW
- *      ORDdestroy( "lName", "tests" )
+ *      USE tests VIA "DBFCDX" NEW
+ *      OrdDestroy( "lName", "tests" )
  *  $TESTS$
  *      See examples
  *  $STATUS$
@@ -311,12 +311,12 @@
  *      numeric which represent the position in the order list of the desired
  *      Order.
  *  $EXAMPLES$
- *      USE Tests NEW via _DBFCDX
- *      INDEX ON  Tests->Id ;
- *         TO  TESTS          ;
- *         FOR Tests->Id > 100
+ *      USE tests NEW VIA "DBFCDX"
+ *      INDEX ON tests->ID ;
+ *         TO tests          ;
+ *         FOR tests->ID > 100
  *
- *      ORDFOR( "Tests" )      // Returns: Tests->Id > 100
+ *      ORDFOR( "tests" )      // Returns: tests->ID > 100
  *  $TESTS$
  *      See examples
  *  $STATUS$
@@ -357,15 +357,15 @@
  *  $DESCRIPTION$
  *
  *  $EXAMPLES$
- *      USE Tests NEW via _DBFCDX
- *      INDEX ON  Tests->fName ;
- *         TO  Tests           ;
- *         FOR Tests->fName > "CK"
- *      Index on Tests->Id to TestId
+ *      USE tests NEW VIA "DBFCDX"
+ *      INDEX ON tests->fName ;
+ *         TO tests           ;
+ *         FOR tests->fName > "CK"
+ *      INDEX ON tests->Id TO TestId
  *
- *      ORDKEY( "Tests" )      // Returns: Tests->fName
- *      Set order to 2
- *      ORDKEY()               // Returns: Tests->Id
+ *      ORDKEY( "tests" )      // Returns: tests->fName
+ *      SET ORDER TO 2
+ *      ORDKEY()               // Returns: tests->Id
  *
  *  $STATUS$
  *      S
@@ -405,9 +405,9 @@
  *      ".ntx". This is controled by the particular database driver that is
  *      linked with the application.
  *  $EXAMPLES$
- *      IF INDEXEXT()==".ntx"
- *          ? "Current driver being used is DBFNTX"
- *      Endif
+ *      IF INDEXEXT() == ".ntx"
+ *         ? "Current driver being used is DBFNTX"
+ *      ENDIF
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -448,8 +448,8 @@
  *      corresnponding index key at the specified order position, a NULL
  *      byte will be returned.
  *  $EXAMPLES$
- *      USE TESTS NEW INDEX TEST1
- *      ? INDEXKEY(1)
+ *      USE tests NEW INDEX test1
+ *      ? INDEXKEY( 1 )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -486,10 +486,10 @@
  *      A returned value of 0 indicated that no active index is controlling
  *      the database,which therefore is in the natural order.
  *  $EXAMPLES$
- *      USE TESTS NEW INDEX TEST1
- *      IF INDEXORD()>0
- *          ? "Current order is ",INDEXORD()
- *      Endif
+ *      USE tests NEW INDEX test1
+ *      IF INDEXORD() > 0
+ *         ? "Current order is", INDEXORD()
+ *      ENDIF
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
