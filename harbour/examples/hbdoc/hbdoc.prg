@@ -889,7 +889,7 @@ PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
          IF nMode == 2
             OutStd( cIndent + Space( 2 ) )
          ENDIF
-         AEval( xLine, {|x,n| ShowSubHelp( x, @nMode, nIndent + 2, n ) } )
+         AEval( xLine, {| x, n | ShowSubHelp( x, @nMode, nIndent + 2, n ) } )
          IF nMode == 2
             OutStd( hb_eol() )
          ENDIF
