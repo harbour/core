@@ -108,7 +108,7 @@ METHOD NewFile() CLASS GenerateHTML
    ::OpenTag( "html", "xmlns", "http://www.w3.org/1999/xhtml", "lang", "en" )
    ::OpenTag( "head" )
 
-   ::Append( ::cTitle /* + IIf( Empty( ::cDescription ), "", " - " + ::cDescription ) */, "title" )
+   ::Append( ::cTitle /* + iif( Empty( ::cDescription ), "", " - " + ::cDescription ) */, "title" )
    ::OpenTag( "meta", "http-equiv", "content-type", "content", "text/html; charset=UTF-8" )
    ::OpenTag( "meta", "name", "generator", "content", "Harbour examples/hbdoc" )
    ::OpenTag( "meta", "name", "keywords", "content", "Harbour project, Clipper, xBase, database, Free Software, GNU, compiler, cross platform, 32-bit, FiveWin" )
@@ -140,12 +140,12 @@ METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateHTML
 METHOD BeginSection( cSection, cFilename ) CLASS  GenerateHTML
    IF ::IsIndex()
       If cFilename == ::cFilename
-         ::OpenTag( "div", "id", cSection ):Append( cSection, "h" + HB_NTOS( ::Depth + 2 ) ):CloseTag( "div" )//:Newline()
+         ::OpenTag( "div", "id", cSection ):Append( cSection, "h" + hb_ntos( ::Depth + 2 ) ):CloseTag( "div" )//:Newline()
       ELSE
-         ::OpenTag( "a", "href", cFilename + ::cExtension + "#" + cSection ):Append( cSection, "h" + HB_NTOS( ::Depth + 2 ) ):CloseTag( "a" )//:Newline()
+         ::OpenTag( "a", "href", cFilename + ::cExtension + "#" + cSection ):Append( cSection, "h" + hb_ntos( ::Depth + 2 ) ):CloseTag( "a" )//:Newline()
       ENDIF
    ELSE
-      ::OpenTag( "div", "id", cSection ):Append( cSection, "h" + HB_NTOS( ::Depth + 2 ) ):CloseTag( "div" )//:Newline()
+      ::OpenTag( "div", "id", cSection ):Append( cSection, "h" + hb_ntos( ::Depth + 2 ) ):CloseTag( "div" )//:Newline()
    ENDIF
    ::TargetFilename := cFilename
    ::Depth++
@@ -195,7 +195,7 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
    LOCAL cCaption := oEntry:FieldName( cField )
    LOCAL cEntry := oEntry:&( cField )
 // TODO: change this to search the CSS document itself
-   LOCAL cTagClass := IIf( LOWER( cField ) + "|" $ "name|oneliner|examples|tests|", LOWER( cField ), "itemtext" )
+   LOCAL cTagClass := iif( LOWER( cField ) + "|" $ "name|oneliner|examples|tests|", LOWER( cField ), "itemtext" )
 
    IF ! Empty( cEntry )
 
@@ -209,7 +209,7 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
       ENDIF
 
       IF lPreformatted
-         ::OpenTag( "pre", IIf( cTagClass != NIL, "class", ), cTagClass )
+         ::OpenTag( "pre", iif( cTagClass != NIL, "class", ), cTagClass )
          DO WHILE Len( cEntry ) > 0
             ::Append( Indent( Parse( @cEntry, hb_eol() ), 0, , .T. ), "" )
             //~ IF Len( cEntry ) > 0 .AND. ! lPreformatted

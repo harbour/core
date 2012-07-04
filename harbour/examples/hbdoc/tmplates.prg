@@ -144,12 +144,12 @@ CREATE CLASS Entry
 ENDCLASS
 
 METHOD New( cType ) CLASS Entry
-   ::uid_ := HB_NTOS( ++::uid__ )
-   IF ! __ObjHasData( self, self:Fields[ 1 ][ 1 ] )
-      AEval( self:Fields, {|a| __objAddData( self, a[ 1 ] ) } )
+   ::uid_ := hb_ntos( ++::uid__ )
+   IF ! __objHasData( self, self:Fields[ 1 ][ 1 ] )
+      AEval( self:Fields, {| a | __objAddData( self, a[ 1 ] ) } )
    ENDIF
    IF cType != NIL
-      self:Group := self:Templates[ HB_AScan( self:Templates, {|a| UPPER( a[ 1 ] ) == UPPER( cType ) } ) ][ 2 ]
+      self:Group := self:Templates[ hb_AScan( self:Templates, {| a | Upper( a[ 1 ] ) == Upper( cType ) } ) ][ 2 ]
    ENDIF
    RETURN self
 
@@ -157,10 +157,10 @@ METHOD IsField( c, nType ) CLASS Entry
    LOCAL idx
    LOCAL lResult
 
-   IF ( lResult := ( idx := HB_AScan( self:Fields, {|a| UPPER( a[ 1 ] ) == UPPER( c ) } ) ) > 0 )
+   IF ( lResult := ( idx := hb_AScan( self:Fields, {| a | Upper( a[ 1 ] ) == Upper( c ) } ) ) > 0 )
       IF self:Group[ idx ] == 0
          lResult := .F.
-      ELSEIF nType != NIL .AND. HB_BitAnd( self:Group[ idx ], nType ) != nType
+      ELSEIF nType != NIL .AND. hb_bitAnd( self:Group[ idx ], nType ) != nType
          lResult := .F.
       ELSE
       ENDIF
@@ -169,13 +169,13 @@ METHOD IsField( c, nType ) CLASS Entry
    RETURN lResult
 
 METHOD IsTemplate( cType ) CLASS Entry
-   RETURN HB_AScan( self:Templates, {|a| UPPER( a[ 1 ] ) == UPPER( cType ) } ) > 0
+   RETURN hb_AScan( self:Templates, {| a | Upper( a[ 1 ] ) == Upper( cType ) } ) > 0
 
 METHOD SetTemplate( cTemplate ) CLASS Entry
    LOCAL aData := Array( Len( self:Fields ) )
    LOCAL idx
 
-   self:Group := self:Templates[ HB_AScan( self:Templates, {|a| UPPER( a[ 1 ] ) == UPPER( cTemplate ) } ) ][ 2 ]
+   self:Group := self:Templates[ hb_AScan( self:Templates, {| a | Upper( a[ 1 ] ) == Upper( cTemplate ) } ) ][ 2 ]
    FOR idx := 1 TO Len( aData )
       IF self:Fields[ idx ][ 1 ] == "TEMPLATE"
          aData[ idx ] := { self:Fields[ idx ][ 1 ], cTemplate }
@@ -183,18 +183,18 @@ METHOD SetTemplate( cTemplate ) CLASS Entry
          aData[ idx ] := { self:Fields[ idx ][ 1 ], iif( self:Group[ idx ] == TPL_REQUIRED, NIL, "" ) }
       ENDIF
    NEXT
-   __ObjSetValueList( self, aData )
+   __objSetValueList( self, aData )
    RETURN self
 
 METHOD IsConstraint( cSectionName, cSection ) CLASS Entry
    LOCAL lResult
-   LOCAL idx := HB_AScan( self:Fields, {|a| a[ 1 ] == cSectionName } )
+   LOCAL idx := hb_AScan( self:Fields, {| a | a[ 1 ] == cSectionName } )
 
-   IF HB_BitAnd( self:Group[ idx ], HB_BitAnd( TPL_REQUIRED, TPL_OPTIONAL ) ) == 0
+   IF hb_bitAnd( self:Group[ idx ], hb_bitAnd( TPL_REQUIRED, TPL_OPTIONAL ) ) == 0
       lResult := .T.
    ELSEIF Type( "p_a" + cSectionName ) == "A"
-      lResult := HB_AScan( &( "p_a" + cSectionName ), cSection ) .OR. ;
-                 HB_AScan( &( "p_a" + cSectionName ), Parse( ( cSection ), "," ) )
+      lResult := hb_AScan( &( "p_a" + cSectionName ), cSection ) .OR. ;
+                 hb_AScan( &( "p_a" + cSectionName ), Parse( ( cSection ), "," ) )
    ELSE
       lResult := .T.
    ENDIF
@@ -208,7 +208,7 @@ METHOD IsComplete( cIncompleteFielsList ) CLASS Entry
    cIncompleteFielsList := ""
 
    FOR idx := 1 TO Len( self:Fields )
-      IF HB_BitAnd( self:Group[ idx ], TPL_REQUIRED ) != 0 .AND. Empty( self:&( self:Fields[ idx ][ 1 ] ) )
+      IF hb_bitAnd( self:Group[ idx ], TPL_REQUIRED ) != 0 .AND. Empty( self:&( self:Fields[ idx ][ 1 ] ) )
          cIncompleteFielsList += "," + self:Fields[ idx ][ 1 ]
          lResult := .F.
       ENDIF
@@ -219,26 +219,26 @@ METHOD IsComplete( cIncompleteFielsList ) CLASS Entry
    RETURN lResult
 
 METHOD IsPreformatted( cField ) CLASS Entry
-   RETURN HB_BitAnd( self:Group[ HB_AScan( self:Fields, {|a| a[ 1 ] == cField } ) ], TPL_PREFORMATTED ) != 0
+   RETURN hb_bitAnd( self:Group[ hb_AScan( self:Fields, {| a | a[ 1 ] == cField } ) ], TPL_PREFORMATTED ) != 0
 
 METHOD IsRequired( cField ) CLASS Entry
-   RETURN HB_BitAnd( self:Group[ HB_AScan( self:Fields, {|a| a[ 1 ] == cField } ) ], TPL_REQUIRED ) != 0
+   RETURN hb_bitAnd( self:Group[ hb_AScan( self:Fields, {| a | a[ 1 ] == cField } ) ], TPL_REQUIRED ) != 0
 
 METHOD IsOptional( cField ) CLASS Entry
-   RETURN HB_BitAnd( self:Group[ HB_AScan( self:Fields, {|a| a[ 1 ] == cField } ) ], TPL_OPTIONAL ) != 0
+   RETURN hb_bitAnd( self:Group[ hb_AScan( self:Fields, {| a | a[ 1 ] == cField } ) ], TPL_OPTIONAL ) != 0
 
 METHOD IsOutput( cField ) CLASS Entry
-   RETURN HB_BitAnd( self:Group[ HB_AScan( self:Fields, {|a| a[ 1 ] == cField } ) ], TPL_OUTPUT ) != 0
+   RETURN hb_bitAnd( self:Group[ hb_AScan( self:Fields, {| a | a[ 1 ] == cField } ) ], TPL_OUTPUT ) != 0
 
 METHOD FieldName( cField ) CLASS Entry
-   RETURN self:Fields[ HB_AScan( self:Fields, {|a| a[ 1 ] == cField } ) ][ 2 ]
+   RETURN self:Fields[ hb_AScan( self:Fields, {| a | a[ 1 ] == cField } ) ][ 2 ]
 
 METHOD CategoryIndex( cCategory ) CLASS Entry
-   RETURN HB_AScan( p_aCategories, {|a| a[ 1 ] == cCategory } )
+   RETURN hb_AScan( p_aCategories, {| a | a[ 1 ] == cCategory } )
 
 METHOD SubcategoryIndex( cCategory, cSubcategory ) CLASS Entry
-   RETURN HB_AScan( p_aCategories[ ::CategoryIndex( cCategory ) ][ 2 ], cSubcategory, , , .T. )
-   //~ RETURN HB_AScan( p_aCategories[ ::CategoryIndex( cCategory ) ][ 2 ], {|c| c == cSubcategory } )
+   RETURN hb_AScan( p_aCategories[ ::CategoryIndex( cCategory ) ][ 2 ], cSubcategory, , , .T. )
+   //~ RETURN hb_AScan( p_aCategories[ ::CategoryIndex( cCategory ) ][ 2 ], {| c | c == cSubcategory } )
 
 PROCEDURE init_Templates()
    LOCAL idx
@@ -365,9 +365,9 @@ PROCEDURE ShowTemplatesHelp( cTemplate, cDelimiter )
    LOCAL idxTemplates, nFrom := 1, nTo := Len( o:Templates )
    LOCAL idx
 
-   IF ! Empty( cTemplate ) .AND. cTemplate != "Template"
+   IF ! Empty( cTemplate ) .AND. !( cTemplate == "Template" )
       IF o:IsTemplate( cTemplate )
-         nFrom := nTo := HB_AScan( o:Templates, {|a| UPPER( a[ 1 ] ) == UPPER( cTemplate ) } )
+         nFrom := nTo := hb_AScan( o:Templates, {| a | Upper( a[ 1 ] ) == Upper( cTemplate ) } )
       ELSE
          ShowHelp( "Unknown template '" + cTemplate + "'" )
          RETURN
@@ -377,7 +377,7 @@ PROCEDURE ShowTemplatesHelp( cTemplate, cDelimiter )
    FOR idxTemplates := nFrom TO nTo
       IF ! Empty( o:Templates[ idxTemplates ] ) .AND. ;
          ! Empty( o:Templates[ idxTemplates ][ 1 ] ) .AND. ;
-         o:Templates[ idxTemplates ][ 1 ] != "Template"
+         !( o:Templates[ idxTemplates ][ 1 ] == "Template" )
 
          //~ IF nFrom != nTo
             //~ ShowSubHelp( o:Templates[ idxTemplates ][ 1 ], 1, 0 )
