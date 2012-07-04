@@ -128,26 +128,24 @@ PROCEDURE Main( ... )
 
    init_Templates()
 
-   PUBLIC p_hsSwitches := hb_Hash( ;
+   PUBLIC p_hsSwitches := {;
       /* configuration settings, values, etc */ ;
-      "basedir", BASE_DIR, ;
-      "doc", .T., ;
-      "source", .F., ;
-      "contribs", .T., ;
-      "format", {}, ;
-      "output", "category", ;
-      "include-doc-source", .F., ;
-      "include-doc-version", .F., ;
-      "immediate-errors", .F., ;
-      ;
+      "basedir"             => BASE_DIR, ;
+      "doc"                 => .T., ;
+      "source"              => .F., ;
+      "contribs"            => .T., ;
+      "format"              => {}, ;
+      "output"              => "category", ;
+      "include-doc-source"  => .F., ;
+      "include-doc-version" => .F., ;
+      "immediate-errors"    => .F., ;
       /* internal settings, values, etc */ ;
-      "DELIMITER", "$", ;
-      "format-list", { "text", "ascii", "html", "html2", "xml", "rtf", "hpc", "ngi", "os2", "chm", "ch2", "pdf", "trf", "doc", "dbf", "all" }, ;
-      "hbextern.ch", {}, ;
-      "in hbextern", {}, ;
-      "not in hbextern", {}, ;
-      "<eol>", nil ;
-   )
+      "DELIMITER"           => "$", ;
+      "format-list"         => { "text", "ascii", "html", "html2", "xml", "rtf", "hpc", "ngi", "os2", "chm", "ch2", "pdf", "trf", "doc", "dbf", "all" }, ;
+      "hbextern.ch"         => {}, ;
+      "in hbextern"         => {}, ;
+      "not in hbextern"     => {}, ;
+      "<eol>"               => NIL }
 
    // remove formats that have not been implemented yet
    FOR idx := Len( p_hsSwitches[ "format-list" ] ) TO 1 STEP -1
