@@ -392,7 +392,7 @@ STATIC PROCEDURE ProcessFolder( cFolder, aContent ) // this is a recursive proce
    cFolder += hb_ps()
 
    aFiles := Directory( cFolder + hb_osFileMask(), "D" )
-   IF ( nLen := LEN( aFiles ) ) > 0
+   IF ( nLen := Len( aFiles ) ) > 0
       FOR idx := 1 TO nLen
          IF aFiles[ idx ][F_ATTR ] == "D"
             IF !( aFiles[ idx ][ F_NAME ] == "." ) .AND. ;
@@ -423,7 +423,7 @@ STATIC FUNCTION ProcessFile( cFile, aContent )
    LOCAL o
    LOCAL nOldContentLen := Len( aContent )
 
-   IF ( aHandle[ 1 ] := FOpen( cFile ) ) < 0
+   IF ( aHandle[ 1 ] := FOpen( cFile ) ) == F_ERROR
       OutErr( "error: could not open " + cFile + ", " + hb_ntos( Abs( aHandle[ 1 ] ) ) + hb_eol() )
       RETURN .F.
    ENDIF
@@ -712,7 +712,7 @@ STATIC PROCEDURE FileEval( acFile, bBlock, nMaxLine )
 
    IF HB_ISSTRING( acFile )
       lCloseFile := .T.
-      IF ( aHandle[ 1 ] := FOpen( acFile ) ) < 0
+      IF ( aHandle[ 1 ] := FOpen( acFile ) ) == F_ERROR
          RETURN
       ENDIF
    ELSEIF HB_ISNUMERIC( acFile )
@@ -779,17 +779,17 @@ FUNCTION Decode( cType, hsBlock, cKey )
 
    DO CASE
    CASE cType == "STATUS"
-      IF "," $ cCode .AND. hb_AScan( p_aStatus, Parse( ( cCode ), "," ) ) > 0
+      IF "," $ cCode .AND. hb_AScan( p_aStatus, Parse( cCode, "," ) ) > 0
          cResult := ""
-         DO WHILE LEN( cCode ) > 0
+         DO WHILE Len( cCode ) > 0
             cResult += hb_eol() + Decode( cType, hsBlock, Parse( @cCode, "," ) )
          ENDDO
-         RETURN SubStr( cResult, LEN( hb_eol() ) + 1 )
+         RETURN SubStr( cResult, Len( hb_eol() ) + 1 )
       ENDIF
 
       IF ( idx := hb_AScan( p_aStatus, {| a | a[ 1 ] == cCode } ) ) > 0
          RETURN p_aStatus[ idx ][ 2 ]
-      ELSEIF LEN( cCode ) > 1
+      ELSEIF Len( cCode ) > 1
          RETURN cCode
       ELSEIF Len( cCode ) > 0
          RETURN "Unknown 'STATUS' code: '" + cCode + "'"
@@ -798,12 +798,12 @@ FUNCTION Decode( cType, hsBlock, cKey )
       ENDIF
 
    CASE cType == "PLATFORMS"
-      IF "," $ cCode .AND. hb_AScan( p_aPlatforms, Parse( ( cCode ), "," ) ) > 0
+      IF "," $ cCode .AND. hb_AScan( p_aPlatforms, Parse( cCode, "," ) ) > 0
          cResult := ""
-         DO WHILE LEN( cCode ) > 0
+         DO WHILE Len( cCode ) > 0
             cResult += hb_eol() + Decode( cType, hsBlock, Parse( @cCode, "," ) )
          ENDDO
-         RETURN SubStr( cResult, LEN( hb_eol() ) + 1 )
+         RETURN SubStr( cResult, Len( hb_eol() ) + 1 )
       ENDIF
 
       IF ( idx := hb_AScan( p_aPlatforms, {| a | a[ 1 ] == cCode } ) ) > 0
@@ -813,12 +813,12 @@ FUNCTION Decode( cType, hsBlock, cKey )
       ENDIF
 
    CASE cType == "COMPLIANCE"
-      IF "," $ cCode .AND. hb_AScan( p_aCompliance, Parse( ( cCode ), "," ) ) > 0
+      IF "," $ cCode .AND. hb_AScan( p_aCompliance, Parse( cCode, "," ) ) > 0
          cResult := ""
-         DO WHILE LEN( cCode ) > 0
+         DO WHILE Len( cCode ) > 0
             cResult += hb_eol() + Decode( cType, hsBlock, Parse( @cCode, "," ) )
          ENDDO
-         RETURN SubStr( cResult, LEN( hb_eol() ) + 1 )
+         RETURN SubStr( cResult, Len( hb_eol() ) + 1 )
       ENDIF
 
       IF ( idx := hb_AScan( p_aCompliance, {| a | a[ 1 ] == cCode } ) ) > 0
@@ -1076,7 +1076,7 @@ FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
                      idx -= 2
                   OTHERWISE
                      EXIT
-                  END SELECT
+                  ENDCASE
                ENDDO
                IF idx <= 0
                   idx := nWidth

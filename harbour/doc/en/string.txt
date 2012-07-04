@@ -648,11 +648,11 @@
  *      ? LEN( "Harbour" )           // 7
  *      ? LEN( { "One", "Two" } )    // 2
  *  $TESTS$
- *      function Test()
+ *      PROCEDURE Test()
  *         LOCAL cName := ""
  *         ACCEPT "Enter your name: " TO cName
  *         ? LEN( cName )
- *      return nil
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

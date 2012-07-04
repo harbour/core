@@ -195,7 +195,7 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
    LOCAL cCaption := oEntry:FieldName( cField )
    LOCAL cEntry := oEntry:&( cField )
 // TODO: change this to search the CSS document itself
-   LOCAL cTagClass := iif( LOWER( cField ) + "|" $ "name|oneliner|examples|tests|", LOWER( cField ), "itemtext" )
+   LOCAL cTagClass := iif( Lower( cField ) + "|" $ "name|oneliner|examples|tests|", Lower( cField ), "itemtext" )
 
    IF ! Empty( cEntry )
 
@@ -211,7 +211,11 @@ METHOD PROCEDURE WriteEntry( cField, oEntry, lPreformatted, nIndent ) CLASS Gene
       IF lPreformatted
          ::OpenTag( "pre", iif( cTagClass != NIL, "class", ), cTagClass )
          DO WHILE Len( cEntry ) > 0
-            ::Append( Indent( Parse( @cEntry, hb_eol() ), 0, , .T. ), "" )
+            IF Lower( cField ) + "|" $ "examples|tests|"
+               ::Append( SubStr( Parse( @cEntry, hb_eol() ), 7 ), "" )
+            ELSE
+               ::Append( Indent( Parse( @cEntry, hb_eol() ), 0, , .T. ), "" )
+            ENDIF
             //~ IF Len( cEntry ) > 0 .AND. ! lPreformatted
                //~ FWrite( ::nHandle, hb_eol() )
             //~ ENDIF
