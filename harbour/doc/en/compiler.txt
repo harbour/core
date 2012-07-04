@@ -248,30 +248,30 @@
  *
  *      The difference can be checked by the following code:
  *
- *          <fixed>
- *      PROCEDURE MAIN()
- *      PRIVATE myname
+ *      <fixed>
+ *      PROCEDURE Main()
+ *         PRIVATE myname
  *
- *        DBCREATE( "TEST", { { "MYNAME", "C", 10, 0} } )
- *        USE test NEW
- *        SELECT test
- *        APPEND BLANK
+ *         DBCREATE( "TEST", { { "MYNAME", "C", 10, 0} } )
+ *         USE test NEW
+ *         SELECT test
+ *         APPEND BLANK
  *
- *        FIELD->myname  := "FIELD"
- *        MEMVAR->myname := "MEMVAR"
+ *         FIELD->myname  := "FIELD"
+ *         MEMVAR->myname := "MEMVAR"
  *
- *        myname := myname + " assigned"
+ *         myname := myname + " assigned"
  *
- *        // In CA-Cl*pper: "FIELD",  In Harbour: "FIELD assigned"
- *        ? FIELD->myname
+ *         // In CA-Cl*pper: "FIELD",  In Harbour: "FIELD assigned"
+ *         ? FIELD->myname
  *
- *        // In CA-Cl*pper: "MEMVAR assigned", In Harbour: "MEMVAR"
- *        ? MEMVAR->myname
+ *         // In CA-Cl*pper: "MEMVAR assigned", In Harbour: "MEMVAR"
+ *         ? MEMVAR->myname
  *
- *        USE
+ *         USE
  *
- *      RETURN
- *     </fixed>
+ *         RETURN
+ *      </fixed>
  *
  *      <b>Passing an undeclared variable by the reference </b>  </par>
  *      ===============================================   </par>

@@ -359,7 +359,7 @@
  *      NEXT
  *  $TESTS$
  *      #include "hbmemvar.ch"
- *      PROCEDURE MAIN()
+ *      PROCEDURE Main()
  *
  *         ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
  *         ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
