@@ -94,7 +94,7 @@ HB_FUNC( FILESTATS )
          // determine if we can read/write/execute the file
          HB_FATTR usAttr, ushbAttr = 0;
          time_t ftime;
-#if _POSIX_C_SOURCE >= 199506L
+#if defined( HB_HAS_LOCALTIME_R )
          struct tm tms;
 #endif
          struct tm *ptms;
