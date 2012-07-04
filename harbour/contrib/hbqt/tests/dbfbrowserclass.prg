@@ -40,11 +40,11 @@ METHOD init()
 
 
 METHOD B2QDBFBrowser:attach()
-	::detach()
+   ::detach()
    IF ( ::nArea := Select() ) > 0
       ::aStru := DBStruct()
       ::oModel:reset()
-	   ::oItemDgt := ::itemDelegate()
+      ::oItemDgt := ::itemDelegate()
       ::oItemDgt:connect( "commitData(QWidget*)", {|oWidget| B2_QDBFCommit( Self, oWidget ) } )
    ENDIF
    RETURN NIL
@@ -53,7 +53,7 @@ METHOD B2QDBFBrowser:attach()
 METHOD B2QDBFBrowser:detach()
    If ::nArea > 0
       ::oItemDgt:disconnect( "commitData(QWidget*)" )
-	   ::oItemDgt := NIL
+      ::oItemDgt := NIL
    ENDIF
    ::nArea := 0
    ::oModel:reset()
@@ -193,4 +193,3 @@ FUNCTION B2_QDBFBrowse( o, nT, nRole, nX, nY )
    RETURN NIL
 
 #endif /* HB_QDBFBROWSER_PRG_ */
-

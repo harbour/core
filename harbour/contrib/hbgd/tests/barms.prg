@@ -8,7 +8,7 @@ PROCEDURE Main()
 
    LOCAL bar
 
-	 // // Creating some Color (arguments are R, G, B)
+   // Creating some Color (arguments are R, G, B)
    LOCAL black  := { 0, 0, 0 }
    LOCAL white  := { 255, 255, 255 }
 

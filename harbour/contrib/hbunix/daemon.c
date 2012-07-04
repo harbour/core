@@ -4,7 +4,7 @@
 
 /*-
  * Copyright (c) 1990, 1993
- *	The Regents of the University of California.  All rights reserved.
+ * The Regents of the University of California.  All rights reserved.
  * Copyright (c) 2011 Tamas TEVESZ <ice@extreme.hu>
  *
  * Redistribution and use in source and binary forms, with or without
