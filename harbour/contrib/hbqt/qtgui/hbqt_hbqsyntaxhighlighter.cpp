@@ -94,7 +94,7 @@ HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument * parent )
    commentStartExpression = QRegExp( "/\\*" );
    commentEndExpression   = QRegExp( "\\*/" );
    commentSingleLine      = QRegExp( "//[^\n]*|^[ ]*\\*[^\n]*" );
-   patternQuotation       = QRegExp( "\"[^\"]+\"|\'[^\']+\'" );
+   patternQuotation       = QRegExp( "\"[^\"]*\"|\'[^\']*\'" );
 
    initialized = false;
    type = 0;
