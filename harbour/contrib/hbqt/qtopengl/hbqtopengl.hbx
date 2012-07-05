@@ -1,0 +1,56 @@
+/*
+ * $Id$
+ */
+
+/* -------------------------------------------------------------------- */
+/* NOTE: You can add manual override which functions to include or      */
+/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
+/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
+/*                  // HB_FUNC_EXCLUDE <func>                           */
+/* -------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated code below. DO NOT EDIT!            */
+/*          Regenerate using hbmk2 '-hbx=' option.                      */
+/* -------------------------------------------------------------------- */
+
+#ifndef __HBEXTERN_CH__HBQTOPENGL__
+#define __HBEXTERN_CH__HBQTOPENGL__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBQTOPENGL__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBQTOPENGL__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBQTOPENGL__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC HB_QGLBUFFER
+DYNAMIC HB_QGLCOLORMAP
+DYNAMIC HB_QGLCONTEXT
+DYNAMIC HB_QGLFORMAT
+DYNAMIC HB_QGLFRAMEBUFFEROBJECT
+DYNAMIC HB_QGLFRAMEBUFFEROBJECTFORMAT
+DYNAMIC HB_QGLFUNCTIONS
+DYNAMIC HB_QGLPIXELBUFFER
+DYNAMIC HB_QGLSHADER
+DYNAMIC HB_QGLSHADERPROGRAM
+DYNAMIC HB_QGLWIDGET
+DYNAMIC QGLBUFFER
+DYNAMIC QGLCOLORMAP
+DYNAMIC QGLCONTEXT
+DYNAMIC QGLFORMAT
+DYNAMIC QGLFRAMEBUFFEROBJECT
+DYNAMIC QGLFRAMEBUFFEROBJECTFORMAT
+DYNAMIC QGLFUNCTIONS
+DYNAMIC QGLPIXELBUFFER
+DYNAMIC QGLSHADER
+DYNAMIC QGLSHADERPROGRAM
+DYNAMIC QGLWIDGET
+DYNAMIC __HBQTOPENGL
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBQTOPENGL__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

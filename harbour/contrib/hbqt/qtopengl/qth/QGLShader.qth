@@ -1,0 +1,73 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     = QObject
+QObject     = yes
+Version     = 0x040600
+
+</CLASS>
+
+
+<CODE>
+#include <QtOpenGL/QGLShader>
+
+
+/*
+ * QGLShader ( QGLShader::ShaderType type, QObject * parent = 0 )
+ * QGLShader ( QGLShader::ShaderType type, const QGLContext * context, QObject * parent = 0 )
+ * virtual ~QGLShader ()
+ */
+HB_FUNC( QT_QGLSHADER )
+{
+   if( hb_pcount() == 2 && HB_ISNUM( 1 ) && hbqt_par_isDerivedFrom( 2, "QOBJECT" ) )
+   {
+      __HB_RETPTRGC__( new QGLShader( ( QGLShader::ShaderType ) hb_parni( 1 ), hbqt_par_QObject( 2 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
+   {
+      __HB_RETPTRGC__( new QGLShader( ( QGLShader::ShaderType ) hb_parni( 1 ) ) );
+   }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+}
+</CODE>
+
+<ENUMS>
+flags ShaderType
+enum ShaderTypeBit { Vertex, Fragment, Geometry }
+</ENUMS>
+
+<PROTOS>
+//bool compileSourceCode ( const char * source )
+bool compileSourceCode ( const QByteArray & source )
+bool compileSourceCode ( const QString & source )
+bool compileSourceFile ( const QString & fileName )
+bool isCompiled () const
+QString log () const
+GLuint shaderId () const
+QGLShader::ShaderType shaderType () const
+QByteArray sourceCode () const
+
+bool hasOpenGLShaders ( ShaderType type, const QGLContext * context = 0 )
+
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

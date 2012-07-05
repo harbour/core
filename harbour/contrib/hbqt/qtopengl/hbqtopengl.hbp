@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+
+../hbqt_common.hbm
+
+hbqtopengl.hbm
+
+-instfile=inc:hbqtopengl.ch
+-instfile=inc:hbqtopengl.hbx
+
+hbqtopengls.hbp

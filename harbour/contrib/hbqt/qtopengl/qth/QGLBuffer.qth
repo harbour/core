@@ -1,0 +1,79 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     =
+QObject     = no
+Version     = 0x040700
+
+</CLASS>
+
+
+<CODE>
+#include <QtOpenGL/QGLBuffer>
+
+
+/*
+ * QGLBuffer ()
+ * QGLBuffer ( QGLBuffer::Type type )
+ * QGLBuffer ( const QGLBuffer & other )
+ * ~QGLBuffer ()
+ */
+HB_FUNC( QT_QGLBUFFER )
+{
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QGLBUFFER" ) )
+   {
+      __HB_RETPTRGC__( new QGLBuffer( *hbqt_par_QGLBuffer( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
+   {
+      __HB_RETPTRGC__( new QGLBuffer( ( QGLBuffer::Type ) hb_parni( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QGLBuffer() );
+   }
+}
+</CODE>
+
+<ENUMS>
+enum Access { ReadOnly, WriteOnly, ReadWrite }
+enum Type { VertexBuffer, IndexBuffer, PixelPackBuffer, PixelUnpackBuffer }
+enum UsagePattern { StreamDraw, StreamRead, StreamCopy, StaticDraw, ..., DynamicCopy }
+</ENUMS>
+
+<PROTOS>
+void allocate ( const void * data, int count )
+void allocate ( int count )
+bool bind ()
+GLuint bufferId () const
+bool create ()
+void destroy ()
+bool isCreated () const
+void * map ( QGLBuffer::Access access )
+bool read ( int offset, void * data, int count )
+void release ()
+void setUsagePattern ( QGLBuffer::UsagePattern value )
+int size () const
+QGLBuffer::Type type () const
+bool unmap ()
+QGLBuffer::UsagePattern usagePattern () const
+void write ( int offset, const void * data, int count )
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

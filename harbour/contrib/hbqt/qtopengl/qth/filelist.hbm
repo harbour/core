@@ -1,0 +1,21 @@
+#
+# $Id$
+#
+
+-pflag=-qtver=0x040500
+-pflag=-qtmodule=qtopengl
+-pflag=-qthdocdir=../doc/
+
+QGLBuffer.qth
+QGLColormap.qth
+QGLContext.qth
+QGLFormat.qth
+QGLFramebufferObject.qth
+QGLFramebufferObjectFormat.qth
+QGLFunctions.qth
+QGLPixelBuffer.qth
+QGLShader.qth
+QGLShaderProgram.qth
+QGLWidget.qth
+
+

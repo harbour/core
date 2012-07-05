@@ -1,0 +1,65 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     =
+QObject     = no
+Version     = 0x40600
+
+</CLASS>
+
+
+<CODE>
+#include <QtOpenGL/QGLFramebufferObjectFormat>
+
+
+/*
+ *	QGLFramebufferObjectFormat ()
+ * QGLFramebufferObjectFormat ( const QGLFramebufferObjectFormat & other )
+ * ~QGLFramebufferObjectFormat ()
+ */
+HB_FUNC( QT_QGLFRAMEBUFFEROBJECTFORMAT )
+{
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QGLFRAMEBUFFEROBJECTFORMAT" ) )
+   {
+      __HB_RETPTRGC__( new QGLFramebufferObjectFormat( *hbqt_par_QGLFramebufferObjectFormat( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QGLFramebufferObjectFormat() );
+   }
+}
+</CODE>
+
+<ENUMS>
+</ENUMS>
+
+<PROTOS>
+QGLFramebufferObject::Attachment attachment () const
+GLenum internalTextureFormat () const
+bool mipmap () const
+int samples () const
+void setAttachment ( QGLFramebufferObject::Attachment attachment )
+void setInternalTextureFormat ( GLenum internalTextureFormat )
+void setMipmap ( bool enabled )
+void setSamples ( int samples )
+void setTextureTarget ( GLenum target )
+GLenum textureTarget () const
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

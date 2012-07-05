@@ -1095,8 +1095,8 @@ CREATE CLASS HbQtSource
    VAR    cFunc
    VAR    cTrMode
 
-   VAR    cInt                                    INIT "int,qint16,quint16,short,ushort,unsigned"
-   VAR    cIntLong                                INIT "qint32,quint32,QRgb"
+   VAR    cInt                                    INIT "int,qint16,quint16,short,ushort,unsigned,GLuint,GLenum,GLint,GLsizei,GLclampf"
+   VAR    cIntLong                                INIT "qint32,quint32,QRgb,qgl_GLsizeiptr,qgl_GLintptr"
    VAR    cIntLongLong                            INIT "qint64,quint64,qlonglong,qulonglong,ulong"
 
    VAR    lPaintEvent                             INIT .f.
@@ -1573,10 +1573,10 @@ METHOD HbQtSource:build()
    AAdd( aLine, "" )
    AAdd( aLine, "static void s_registerMethods( HB_USHORT uiClass )" )
    AAdd( aLine, "{" )
-   AAdd( aLine, '   hb_clsAdd( uiClass, ' + PadR( '"new"', 35) +', HB_FUNCNAME( ' + PadR( Upper( "NEW" ), 35) + ' ) );' )
+   AAdd( aLine, '   hb_clsAdd( uiClass, ' + PadR( '"new"', 40 ) +', HB_FUNCNAME( ' + PadR( Upper( "NEW" ), 40 ) + ' ) );' )
    FOR EACH oMtd IN ::aMethods
       IF ! Empty( oMtd:cHBFunc )
-         AAdd( aLine, '   hb_clsAdd( uiClass, ' + PadR( '"' + oMtd:cHBFunc +'"', 35 ) +', HB_FUNCNAME( ' + PadR( Upper( oMtd:cHBFunc ), 35) + ' ) );' )
+         AAdd( aLine, '   hb_clsAdd( uiClass, ' + PadR( '"' + oMtd:cHBFunc +'"', 40 ) +', HB_FUNCNAME( ' + PadR( Upper( oMtd:cHBFunc ), 40 ) + ' ) );' )
       ENDIF
    NEXT
    AAdd( aLine, "}" )
@@ -2335,13 +2335,13 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cDoc    := "n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
 
-         CASE oArg:cCast $ "double,qreal" .AND. oArg:lFar
-            AAdd( oMtd:aPre, { "qreal qr" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "qr" + oMtd:cDocNM, "hb_stornd"  } )
+         CASE oArg:cCast $ "double,qreal,float,GLfloat" .AND. oArg:lFar
+            AAdd( oMtd:aPre, { oArg:cCast + " qr" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "qr" + oMtd:cDocNM, "hb_stornd"  } )
             oArg:cBody   := "&qr" + oMtd:cDocNM
             oArg:cDoc    := "@n" + oMtd:cDocNM
             oArg:cTypeHB := "N*"
 
-         CASE oArg:cCast $ "double,qreal,float"
+         CASE oArg:cCast $ "double,qreal,float,GLfloat"
             s := "hb_parnd( " + cHBIdx + " )"
             IF ! Empty( oArg:cDefault )
                oArg:cBody := "( HB_ISNUM( " + cHBIdx + " ) ? " + s + " : " + oArg:cDefault + " )"
@@ -2406,13 +2406,13 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cDoc    := "n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
 
-         CASE oArg:cCast == "bool" .AND. oArg:lFar
+         CASE oArg:cCast $ "bool,GLboolean" .AND. oArg:lFar
             AAdd( oMtd:aPre, { "bool i" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "i" + oMtd:cDocNM, "hb_stornl" } )
             oArg:cBody   := "&i" + oMtd:cDocNM
             oArg:cDoc    := "@l" + oMtd:cDocNM
             oArg:cTypeHB := "L"
 
-         CASE oArg:cCast == "bool"
+         CASE oArg:cCast $ "bool,GLboolean"
             s := "hb_parl( " + cHBIdx + " )"
             IF ! Empty( oArg:cDefault )
                oArg:cBody := iif( oArg:cDefault == "false", s, "hb_parldef( " + cHBIdx + ", true )" )
@@ -2421,6 +2421,11 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             ENDIF
             oArg:cDoc    := "l" + oMtd:cDocNM
             oArg:cTypeHB := "L"
+
+         CASE oArg:cCast == "void" .AND. oArg:lFar /* and it must be void * */
+            oArg:cBody   := "hb_parptr( " + cHBIdx + " )"
+            oArg:cDoc    := "n" + oMtd:cDocNM
+            oArg:cTypeHB := "N"
 
          CASE oArg:cCast == "QString"
             IF oArg:lFar
@@ -2636,7 +2641,7 @@ METHOD HbQtSource:buildCppCode( oMtd )
                              oRet:lConst   .AND. ;
                              oRet:lConstL
       cRef := oRet:cCast
-      oMtd:cCmd := hbqtgen_Get_Command_1( oRet:cCast, oMtd:cCmn )
+      oMtd:cCmd := hbqtgen_Get_Command_1( oRet:cCast, oMtd:cCmn, oMtd:nDetachRet != 9 )
       oMtd:cPrgRet := "o" + oMtd:cDocNMRet
 
    CASE oRet:lAnd .AND. oRet:lConst
@@ -2849,9 +2854,16 @@ METHOD HbqtArgument:new( cTxt, cQtObject, enum_, lConstL, lIsRetArg )
 //                        Helper Functions
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbqtgen_Get_Command_1( cWgt, cCmn )
-
-   RETURN 'hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ' + 'new ' + cWgt + '( *( ' + cCmn + ' ) )' + ', "' + 'HB_' + Upper( cWgt ) + '", hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, .t. ) + ' ) )'
+STATIC FUNCTION hbqtgen_Get_Command_1( cWgt, cCmn, lNew )
+   IF lNew == NIL
+      lNew := .T.
+   ENDIF
+   IF lNew
+      RETURN 'hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ' + 'new ' + cWgt + '( *( ' + cCmn + ' ) )' + ', "' + 'HB_' + Upper( cWgt ) + '", hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, .t. ) + ' ) )'
+   ELSE
+      RETURN 'hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ' + '( void * ) ' + cCmn + ', "' + 'HB_' + Upper( cWgt ) + '", hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, .f. ) + ' ) )'
+   ENDIF
+   RETURN ""
 
 /*----------------------------------------------------------------------*/
 
@@ -2869,7 +2881,6 @@ STATIC FUNCTION hbqtgen_Get_Command( cWgt, cCmn, lNew, isRetDetached )
    ELSE
       RETURN 'hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ' + cCmn + ', "' + 'HB_' + Upper( cWgt ) + '", hbqt_del_' + cWgt + ', ' + qth_get_bits( cWgt, isRetDetached ) + ' ) )'
    ENDIF
-
    RETURN ""
 
 /*----------------------------------------------------------------------*/
@@ -3383,6 +3394,10 @@ STATIC FUNCTION qth_is_QObject( cWidget )
       aadd( aQObjects, "QTreeWidget" )
       aadd( aQObjects, "QDeclarativeView" )
       aadd( aQObjects, "QTextBrowser" )
+
+      aadd( aQObjects, "QGLShader" )
+      aadd( aQObjects, "QGLShaderProgram" )
+      aadd( aQObjects, "QGLWidget" )
    ENDIF
 
    RETURN ascan( aQObjects, {|e| e == cWidget } ) > 0
