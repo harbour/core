@@ -75,7 +75,7 @@
  *  $RETURNS$
  *      lDigit Logical true (.T.) or false (.F.).
  *  $DESCRIPTION$
- *      This function takes the caracter string <cString> and checks to
+ *      This function takes the character string <cString> and checks to
  *      see if the leftmost character is a digit, from 1 to 9. If so, the
  *      function will return a logical true (.T.); otherwise, it will
  *      return a logical false (.F.).
@@ -151,7 +151,7 @@
  *  $RETURNS$
  *      lLower Logical true (.T.) or false (.F.).
  *  $DESCRIPTION$
- *      This function takes the caracter string <cString> and checks to
+ *      This function takes the character string <cString> and checks to
  *      see if the leftmost character is a lowercased letter. If so, the
  *      function will return a logical true (.T.); otherwise, it will
  *      return a logical false (.F.).
@@ -226,7 +226,7 @@
  *
  *      <nStart> First position to search in cString, by default 1
  *
- *      <nEnd> End posistion to search, by default cString length
+ *      <nEnd> End position to search, by default cString length
  *  $RETURNS$
  *      AT() return the starting position of the first occurrence of the
  *      substring in the main string
@@ -273,12 +273,12 @@
  *
  *      <cString> Main string
  *  $RETURNS$
- *      RAT() return the location of beginnig position.
+ *      RAT() return the location of beginning position.
  *  $DESCRIPTION$
- *      This function searches througt <cString> for the first existence
+ *      This function searches through <cString> for the first existence
  *      of <cSearch>. The search operation is performed from the right side
  *      of <cString> to the left. If the function is unable to find any
- *      occurence of <cSearch> in <cString>, the return value is 0.
+ *      occurrence of <cSearch> in <cString>, the return value is 0.
  *  $EXAMPLES$
  *      QOUT( "RAt( 'cde', 'abcdefgfedcba' ) = '" +;
  *             RAt( 'cde', 'abcsefgfedcba' ) + "'" )
@@ -311,7 +311,7 @@
  *  $ARGUMENTS$
  *      <cString> Main character to be parsed
  *
- *      <nLen> Number of bytes to return beggining at the leftmost position
+ *      <nLen> Number of bytes to return beginning at the leftmost position
  *  $RETURNS$
  *      <cReturn>  Substring of evaluation
  *  $DESCRIPTION$
@@ -350,7 +350,7 @@
  *  $ARGUMENTS$
  *      <cString> Character expression to be parsed
  *
- *      <nLen> Number of bytes to return beggining at the rightmost position
+ *      <nLen> Number of bytes to return beginning at the rightmost position
  *  $RETURNS$
  *      <cReturn>  Substring of evaluation
  *  $DESCRIPTION$
@@ -807,7 +807,7 @@
  *      corresponding character in the Windows (ANSI) character set. The
  *      character expression <cString> should contain characters from the
  *      OEM character set. If a character in <cString> doesn't have a ANSI
- *      equivalent, the character is remais the same.
+ *      equivalent, the character is remains the same.
  *  $EXAMPLES$
  *      ? HB_OEMTOANSI( "Harbour" )
  *  $STATUS$
@@ -843,7 +843,7 @@
  *      <cLowerString> Lowercased value of <cString>
  *  $DESCRIPTION$
  *      This function converts any character expression passes as <cString>
- *      to its lowercased representation.Any nonalphabetic character withing
+ *      to its lowercased representation. Any non alphabetic character withing
  *      <cString> will remain unchanged.
  *  $EXAMPLES$
  *      ? LOWER( "HARBOUR" )      // harbour
@@ -916,7 +916,7 @@
  *      <cReturn> Character expression of that ASCII value
  *  $DESCRIPTION$
  *      This function returns the ASCII character code for <nAsciiNum>. The
- *      number expressed must be an interger value within the range of 0 to
+ *      number expressed must be an integer value within the range of 0 to
  *      255 inclusive. The CHR() function will send the character returned
  *      to whatever device is presently set.
  *
@@ -1180,12 +1180,12 @@
  *  $ARGUMENTS$
  *      <cExpression> Any character expression
  *  $RETURNS$
- *      <cString> A formated string with out any blank spaced.
+ *      <cString> A formatted string with out any blank spaced.
  *  $DESCRIPTION$
  *      This function returns the value of <cString> with any trailing blank
  *      removed.
  *
- *      This function is indentical to RTRIM() and the opposite of LTRIM().
+ *      This function is identical to RTRIM() and the opposite of LTRIM().
  *      Together with LTRIM(), this function equated to the ALLTRIM()
  *      function.
  *  $EXAMPLES$
@@ -1224,12 +1224,12 @@
  *  $ARGUMENTS$
  *      <cExpression> Any character expression
  *  $RETURNS$
- *      <cString> A formated string with out any blank spaced.
+ *      <cString> A formatted string with out any blank spaced.
  *  $DESCRIPTION$
  *      This function returns the value of <cString> with any trailing blank
  *      removed.
  *
- *      This function is indentical to RTRIM() and the opposite of LTRIM().
+ *      This function is identical to RTRIM() and the opposite of LTRIM().
  *      Together with LTRIM(), this function equated to the ALLTRIM()
  *      function.
  *  $EXAMPLES$
@@ -1270,12 +1270,12 @@
  *
  *      <nSize> Number of times to replicate <cString>
  *  $RETURNS$
- *      <cReplicateString> A character expression containg the <cString>
+ *      <cReplicateString> A character expression contain the <cString>
  *      fill character.
  *  $DESCRIPTION$
  *      This function returns a string composed of <nSize> repetitions of
  *      <cString>. The length of the character string returned by this
- *      function is limited to the memory avaliable.
+ *      function is limited to the memory available.
  *
  *      A value of 0 for <nSize> will return a NULL string.
  *  $EXAMPLES$
@@ -1388,7 +1388,7 @@
  *  $RETURNS$
  *      <nNumber> The numeric value of <cNumber>
  *  $DESCRIPTION$
- *      This function converts any number previosly defined as an character
+ *      This function converts any number previously defined as an character
  *      expression <cNumber> into a numeric expression.
  *
  *      This functions is the oppose of the STR() function.
@@ -1422,7 +1422,7 @@
  *      Translate substring value with a main string
  *  $SYNTAX$
  *      STRTRAN( <cString>, <cLocString>, [<cRepString>], [<nPos>],
- *               [<nOccurences>] ) --> cReturn
+ *               [<nOccurrences>] ) --> cReturn
  *  $ARGUMENTS$
  *      <cString>     The main string to search
  *
@@ -1430,20 +1430,20 @@
  *
  *      <cRepString>  The string to replace the <cLocString>
  *
- *      <nPos>        The first occurence to be replaced
+ *      <nPos>        The first occurrence to be replaced
  *
- *      <nOccurences> Number of occurence to replace
+ *      <nOccurrences> Number of occurrence to replace
  *  $RETURNS$
  *      <cReturn>  Formated string
  *  $DESCRIPTION$
- *      This function searches for any occurence of <cLocString> in <cString>
- *      and replacesit with <cRepString>. If <cRepString> is not specified, a
+ *      This function searches for any occurrence of <cLocString> in <cString>
+ *      and replaces it with <cRepString>. If <cRepString> is not specified, a
  *      NULL byte will replace <cLocString>.
  *
- *      If <nPos> is used, its value defines the first occurence to be
+ *      If <nPos> is used, its value defines the first occurrence to be
  *      replaced. The default value is 1. Additionally, if used, the value of
- *      <nOccurences> tell the function how many occurrences of <cLocString>
- *      in <cString> are to the replaced. The default of <nOccurences> is
+ *      <nOccurrences> tell the function how many occurrences of <cLocString>
+ *      in <cString> are to the replaced. The default of <nOccurrences> is
  *      all occurrences.
  *  $EXAMPLES$
  *      ? STRTRAN( "Harbour  Power", "  ", " " )   // Harbour Power
@@ -1476,19 +1476,19 @@
  *  $ONELINER$
  *      Formats a value based on a specific picture template.
  *  $SYNTAX$
- *      TRANSFORM( <xExpression>, <cTemplate> )  --> cFormated
+ *      TRANSFORM( <xExpression>, <cTemplate> )  --> cFormatted
  *  $ARGUMENTS$
  *      <xExpression> Any expression to be formated.
  *
  *      <cTemplate> Character string with picture template
  *  $RETURNS$
- *      <cFormated> Formatted expression in character format
+ *      <cFormatted> Formatted expression in character format
  *  $DESCRIPTION$
  *      This function returns <xExpression> in the format of the picture
  *      expression passed to the function as <cTemplate>.
  *
  *      Their are two components that can make up <cTemplate> : a function
- *      string and a template string.Function strings are those functions
+ *      string and a template string. Function strings are those functions
  *      that globally tell what the format of <xExpression> should be. These
  *      functions are represented by a single character precede by the
  *      @ symbol.
@@ -1505,7 +1505,7 @@
  *         function string may appear with out the template string and
  *         vice versa.
  *
- *      The table below shows the possible function strings avaliable with
+ *      The table below shows the possible function strings available with
  *      the TRANSFORM() function.
  *
  *      <table>
@@ -1514,15 +1514,15 @@
  *      @D   Put dates in SET DATE format.
  *      @E   Put dates in BRITISH format.
  *      @L   Make a zero padded string out of the number.
- *      @R   Insert nontemplate characters.
+ *      @R   Insert non template characters.
  *      @X   Issue a DB after format is numbers are negative.
  *      @Z   Display any zero as blank spaces.
  *      @(   Quotes around negative numbers
  *      @!   Convert alpha characters to uppercased format.
  *      </table>
  *
- *      The second part of <cTemplate> consists of the format string.Each
- *      character in the string may be formated based on using the follow
+ *      The second part of <cTemplate> consists of the format string. Each
+ *      character in the string may be formatted based on using the follow
  *      characters as template markers for the string.
  *
  *      <table>
@@ -1530,7 +1530,7 @@
  *      L           Shows logical as "T" or "F"
  *      Y           Shows logical as "Y" or "N"
  *      !           Convert to uppercase
- *      $           Dolar sing in place of leading spaces in numeric expression
+ *      $           Dollar sing in place of leading spaces in numeric expression
  *      *           Asterisks in place of leading spaces in numeric expression
  *      ,           Commas position
  *      .           Decimal point position

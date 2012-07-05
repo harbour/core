@@ -806,7 +806,7 @@ start from 3000
  *  $CATEGORY$
  *      Run time errors
  *  $ONELINER$
- *      Bound error in array assigment
+ *      Bound error in array assignment
  *  $DESCRIPTION$
  *      The specified index into an array was greater then the number of
  *      elements in the array.
@@ -825,7 +825,7 @@ start from 3000
  *  $CATEGORY$
  *      Run time errors
  *  $ONELINER$
- *      Bound error in array element assigment
+ *      Bound error in array element assignment
  *  $DESCRIPTION$
  *      The specified index into an array was greater then the number of
  *      elements in the array.
@@ -1098,7 +1098,7 @@ start from 3000
  *  $ONELINER$
  *      File error
  *  $DESCRIPTION$
- *      An error has occured during the attempt to open, create or write
+ *      An error has occurred during the attempt to open, create or write
  *      during copy operation
  *  $EXAMPLES$
  *      __COPYFILE
@@ -1271,7 +1271,7 @@ start from 3000
  *  $ONELINER$
  *      Invalid type of argument
  *  $DESCRIPTION$
- *      The passed arguments are causing conflict in hanndling of the request.
+ *      The passed arguments are causing conflict in handling of the request.
  *      There is no point in waiting forever for no input events!
  *  $EXAMPLES$
  *      INKEY
@@ -1355,7 +1355,7 @@ start from 3000
  *      Invalid argument passed to a function
  *  $DESCRIPTION$
  *      The attempt to retrieve the function argument that was not passed.
- *      The number of requested argument is greated then the number of
+ *      The number of requested argument is greater then the number of
  *      passed arguments.
  *  $EXAMPLES$
  *      PVALUE

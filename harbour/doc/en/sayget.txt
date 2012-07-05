@@ -51,7 +51,7 @@
  *      <nRow>,<nCol>, with the field variable <xVar> displayed at ROW(),
  *      COL()+ 1. If <cSayPicr>, the picture template for the SAY expression
  *      <cSay>, is used, all formatting rules contained will apply See the
- *      TRANSFORM I function for futher information.
+ *      TRANSFORM I function for further information.
  *
  *      If <cGetPict> is specified, the PICTURE clause of <xVar> will be
  *      used for the GET object and all formatting rules will apply. See
@@ -89,13 +89,13 @@
  *      <table>
  *      @A          Allows only alphabetic characters.
  *      @B          Numbers will be left justified
- *      @C          All positive numbers will be followes by CR.
+ *      @C          All positive numbers will be followed by CR.
  *      @D          All dates will be in the SET DATE format.
  *      @E          Dates will be in British formal: numbers in European format.
  *      @K          Allows a suggested value to be seen within the GET
- *                  area but clears It if any noncu sor key is pressed when
+ *                  area but clears It if any non cursor key is pressed when
  *                  the cursor is in the first Position in the GET area.
- *      @R          Nontemplate characters will be inserted.
+ *      @R          Non template characters will be inserted.
  *      @S<nSize>   Allows horizontal scrolling of a field or variable that
  *                  is <nSize> characters wide.
  *      @X          All negative numbers will be followed by DB
@@ -177,7 +177,7 @@
  *      <cColor>   Color string
  *  $DESCRIPTION$
  *      This command displays the contents of <xValue> at row column
- *      coordinates <nRow>, <nCol>. A PICTURE clause may be speclfied
+ *      coordinates <nRow>, <nCol>. A PICTURE clause may be specified
  *      in <cPict>. If the current device is set to the printer, the output
  *      will go to the printer; the default is for all output to go to
  *      the screen.

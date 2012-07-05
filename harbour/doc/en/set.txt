@@ -66,7 +66,7 @@
  *  $SUBCATEGORY$
  *      Environment
  *  $ONELINER$
- *      Changes or evaluated enviromental settings
+ *      Changes or evaluated environmental settings
  *  $SYNTAX$
  *      Set(<nSet> [, <xNewSetting> [, <xOption> ] ] ) --> xPreviousSetting
  *  $ARGUMENTS$
@@ -632,7 +632,7 @@
  *      Current assigned action-block
  *  $DESCRIPTION$
  *      The HB_SetKeyGet() function returns the current code-block assigned to
- *      a key, and optionally assignes the condition-block to the
+ *      a key, and optionally assigns the condition-block to the
  *      return-parameter
  *  $EXAMPLES$
  *      LOCAL bOldF10, bOldF10Cond
@@ -704,7 +704,7 @@
  *  $SUBCATEGORY$
  *      Events
  *  $ONELINER$
- *      Impliments common hot-key activation code
+ *      Implements common hot-key activation code
  *  $SYNTAX$
  *      HB_SetKeyCheck( <nKey> [, <p1> ][, <p2> ][, <p3> ] )
  *  $ARGUMENTS$
@@ -882,7 +882,7 @@
  *      <cPath> Drive and/or path.
  *  $DESCRIPTION$
  *      This command changes the drive and directory used for reading and
- *      writting database,index,memory, and alternate files. Specifying no
+ *      writing database,index,memory, and alternate files. Specifying no
  *      parameters with this command will default the operation to the
  *      current logged drive and directory.
  *  $EXAMPLES$
@@ -937,18 +937,18 @@
  *  $SUBCATEGORY$
  *     Environment
  *  $ONELINER$
- *      Extablishes a message row for @...PROMPT command
+ *      Establishes a message row for @...PROMPT command
  *  $SYNTAX$
  *      SET MESSAGE TO [<nRow> [CENTER]]
  *  $ARGUMENTS$
  *      <nRow> Row number to display the message
  *  $DESCRIPTION$
- *      This command is designed to work in conjuntion with the MENU TO and
+ *      This command is designed to work in conjunction with the MENU TO and
  *      @...PROMPT commands. With this command, a row number between 0 and
  *      MAXROW() may be specified in <nRow>. This establishes the row on
- *      witch any message associated with an @...PROMPT command will apear.
+ *      witch any message associated with an @...PROMPT command will appear.
 
- *      If the value of <nRow> is 0, all messages will be supressed.
+ *      If the value of <nRow> is 0, all messages will be suppressed.
  *      All messaged will be left-justifies unless the CENTER clause is
  *      used. In this case, the individual messages in each @...PROMPT command
  *      will be centered at the designated row (unless <nRow> is 0). All
@@ -990,7 +990,7 @@
  *      commands and functions not found in the current drive and directory.
  *      This pertains primarily, but not exclusively, to databases, indexes,
  *      and memo files, as well as to memory, labels and reports files. The
- *      search hirarchy is: 1 Current drive and directory, 2 The SET DEFAULT
+ *      search hierarchy is: 1 Current drive and directory, 2 The SET DEFAULT
  *      path; 3 The SET PATH path.
  *  $EXAMPLES$
  *      SET PATH TO C:\harbour\test
@@ -1013,7 +1013,7 @@
  *  $SUBCATEGORY$
  *     Environment
  *  $ONELINER$
- *      Toggles the enhaced display of PROMPT's and GETs.
+ *      Toggles the enhanced display of PROMPT's and GETs.
  *  $SYNTAX$
  *      SET INTENSITY  ON | off | (<lInte>)
  *  $ARGUMENTS$
@@ -1056,7 +1056,7 @@
  *      file <cFile>, provided that the command is toggled on or the condition
  *      <lAlter> is set to a logical true (.T.). If <cFile> does not has a
  *      file extension, .txt will be assumed. The file name may optionally
- *      have a drive letter and/or directory path. If none is speficied, the
+ *      have a drive letter and/or directory path. If none is specified, the
  *      current drive and directory will be used.
  *      If the ALTERNATE file is created but no ALTERNATE ON command is
  *      issued, nothing will be echoed to the file.
@@ -1137,9 +1137,9 @@
  *  $DESCRIPTION$
  *      This command sets the date format for function display purposes.
  *      If specified, <cFormat> may be a customized date format in which the
- *      letters d, m and y may be used to desing a date format. The default
+ *      letters d, m and y may be used to design a date format. The default
  *      is an AMERICAN date format; specifying no parameters will set the
- *      date format to AMERICAN. Below is a table of the varius predefined
+ *      date format to AMERICAN. Below is a table of the various predefined
  *      dates formats.
  *
  *      <table>
@@ -1224,7 +1224,7 @@
  *
  *      <table>
  *       Addition         Same as operand with the greatest number of decimal digits
- *       Subraction       Same as operand with the greatest number of decimal digits
+ *       Subtraction      Same as operand with the greatest number of decimal digits
  *       Multiplication   Sum of operand decimal digits
  *       Division         Determined by SET DECIMAL TO
  *       Exponential      Determined by SET DECIMAL TO
@@ -1266,7 +1266,7 @@
  *
  *      <cPrinter> A device name or an alternate name
  *  $DESCRIPTION$
- *      This command can direct all output that is not controled by the
+ *      This command can direct all output that is not controlled by the
  *      @...SAY command and the DEVPOS() and DEVOUT() functions to the
  *      printer. If specified,the condition <lPrinter> toggles the printer
  *      ON if a logical true (.T.) and OFF if a logical false (.F.). If no
@@ -1274,7 +1274,7 @@
  *      is open) is closed, or the device is reselected and the PRINTER
  *      option is turned OFF.
  *
- *      If a device is specified in <cPrinter>, the outpur will be directed
+ *      If a device is specified in <cPrinter>, the output will be directed
  *      to that device instead of to the PRINTER. A specified device may be
  *      a literal string or a variable, as long as the variable is enclosed
  *      in parentheses. For a network, do not use a trailing colon when
@@ -1433,7 +1433,7 @@
  *      <lBell> Logical expression for toggle command
  *  $DESCRIPTION$
  *      This command toggles the bell to sound whenever a character is
- *      entered into the last character positionof a GET, or if an invalid
+ *      entered into the last character position of a GET, or if an invalid
  *      data type is entered into a GET.
  *
  *      If <lBell> is a logical true (.T.), the bell will be turned

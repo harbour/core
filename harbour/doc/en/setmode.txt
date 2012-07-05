@@ -44,7 +44,7 @@
  *                                50 rows x 80 columns
  *      </table>
  *
- *      The follow modes are avaliable to Windows
+ *      The follow modes are available to Windows
  *
  *      <table>
  *         25 rows x 40 columns   25 rows x 80 columns
