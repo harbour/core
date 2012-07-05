@@ -1437,12 +1437,15 @@ METHOD IdeBrowsePanel:destroyBrw( oBrw )
 
    IF ( n := ascan( ::aBrowsers, {|e_| e_[ SUB_BROWSER ] == oBrw } ) )  > 0
       oSub := ::aBrowsers[ n, SUB_WINDOW ]
+      hb_adel( ::aBrowsers, n, .t. )
 
       ::qWidget:removeSubWindow( oSub )
-      oBrw:destroy()
-      oSub := NIL
-
-      hb_adel( ::aBrowsers, n, .t. )
+#if 1
+      oSub:setParent( QWidget() ) /* This alone releases all Windows down its hirarchy, right at this line */
+                                  /* Without it GPFing when a single browser was being closed via X button */
+#endif
+      oBrw:destroy()  /* this is almost non-effective */
+      oBrw := NIL
    ENDIF
 
    RETURN Self
@@ -1651,27 +1654,15 @@ METHOD IdeBrowse:new( oIde, oManager, oPanel, aInfo )
 
 METHOD IdeBrowse:destroy()
 
+   IF ::lOpened
+      ( ::cAlias )->( dbCloseArea() )
+   ENDIF
+
    IF !empty( ::qTimer )
       ::qTimer:disconnect( "timeout()" )
-      ::qTimer := NIL
    ENDIF
 
-   IF ! empty( ::qMdi )
-   *  ::qMdi:disconnect( "aboutToActivate()" )
-      ::qMdi:disconnect( "windowStateChanged(Qt::WindowStates,Qt::WindowStates)" )
-      ::qMdi:disconnect( QEvent_Close )
-   ENDIF
-
-   IF ! empty( ::oWnd )
-      ::qLayout:removeWidget( ::qSplitter )
-      ::oWnd:destroy()
-      ::qForm := NIL
-      IF ::lOpened
-         ( ::cAlias )->( dbCloseArea() )
-      ENDIF
-      ::qSplitter := NIL
-      ::oManager:oCurBrw := NIL
-   ENDIF
+   ::QTimer := NIL
 
    RETURN Self
 
@@ -1942,7 +1933,7 @@ METHOD IdeBrowse:buildMdiWindow()
  * ::qMdi:connect( "aboutToActivate()", {|| ::execEvent( "mdiSubWindow_aboutToActivate" ) } )
    ::qMdi:connect( "windowStateChanged(Qt::WindowStates,Qt::WindowStates)", ;
                                  {|p,p1| ::execEvent( "mdiSubWindow_windowStateChanged", p, p1 ) } )
-   ::qMdi:connect( QEvent_Close, {|| ::execEvent( "mdiSubWindow_buttonXclicked" ) } )
+   ::qMdi:connect( QEvent_Close, {|oEvent| oEvent:accept(), ::execEvent( "mdiSubWindow_buttonXclicked" ) } )
 
    RETURN Self
 

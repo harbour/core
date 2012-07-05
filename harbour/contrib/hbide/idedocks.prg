@@ -766,7 +766,6 @@ HB_TRACE( HB_TR_DEBUG, "editWidget_dragEnterEvent", 0 )
       EXIT
 
    CASE "editWidget_dropEvent"
-HB_TRACE( HB_TR_DEBUG, "editWidget_dropEvent", 0 )
       qMime := p:mimeData()
       IF qMime:hasUrls()
          qList := qMime:urls()

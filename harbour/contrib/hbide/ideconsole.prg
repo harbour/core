@@ -217,7 +217,6 @@ METHOD IdeConsole:new( oIde )
 
    ::oIde    := oIde
 
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -236,8 +235,13 @@ METHOD IdeConsole:show()
    LOCAL qRect, qRect1
 
    IF empty( ::oUI )
-      ::oMdiArea := QMdiArea():new()
-      ::oCuiEdDock:oWidget:setWidget( ::oMdiArea )
+      IF empty( ::oMdiArea )
+         ::oMdiArea := QMdiArea()
+         ::oMdiArea:setHorizontalScrollBarPolicy( Qt_ScrollBarAlwaysOn )
+         ::oMdiArea:setVerticalScrollBarPolicy( Qt_ScrollBarAlwaysOn )
+
+         ::oCuiEdDock:oWidget:setWidget( ::oMdiArea )
+      ENDIF
 
       ::oUI := XbpCrt():new( , , { 10,10 }, { 600,480 }, , .t. )
       ::oUI:title       := "My First CRT"
@@ -267,10 +271,10 @@ METHOD IdeConsole:show()
 
       BuildScreen()
 
-      ::oMdiArea:removeSubWindow( ::oUI:oWidget /*::oMDI*/ )
+      ::oMdiArea:removeSubWindow( ::oMDI )
       ::oMDI := NIL
-      ::oUI:destroy()
 
+      ::oUI:destroy()
       ::oUI := NIL
 
       ::oCuiEdDock:oWidget:hide()
