@@ -1,0 +1,55 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     = QDomNode
+QObject     = no
+Version     =
+
+</CLASS>
+
+
+<CODE>
+#include <QtXml/QDomEntityReference>
+
+
+/*
+ * QDomEntityReference ()
+ * QDomEntityReference ( const QDomEntityReference & x )
+ */
+HB_FUNC( QT_QDOMENTITYREFERENCE )
+{
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QDOMENTITYREFERENCE" ) )
+   {
+      __HB_RETPTRGC__( new QDomEntityReference( *hbqt_par_QDomEntityReference( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QDomEntityReference() );
+   }
+}
+</CODE>
+
+<ENUMS>
+</ENUMS>
+
+<PROTOS>
+QDomNode::NodeType nodeType () const
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

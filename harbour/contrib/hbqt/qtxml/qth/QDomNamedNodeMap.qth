@@ -1,0 +1,67 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     =
+QObject     = no
+Version     =
+
+</CLASS>
+
+
+<CODE>
+#include <QtXml/QDomNamedNodeMap>
+
+
+/*
+ * QDomNamedNodeMap ()
+ * QDomNamedNodeMap ( const QDomNamedNodeMap & n )
+ * ~QDomNamedNodeMap ()
+ */
+HB_FUNC( QT_QDOMNAMEDNODEMAP )
+{
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QDOMNAMEDNODEMAP" ) )
+   {
+      __HB_RETPTRGC__( new QDomNamedNodeMap( *hbqt_par_QDomNamedNodeMap( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QDomNamedNodeMap() );
+   }
+}
+</CODE>
+
+<ENUMS>
+</ENUMS>
+
+<PROTOS>
+bool contains ( const QString & name ) const
+int count () const
+bool isEmpty () const
+QDomNode item ( int index ) const
+uint length () const
+QDomNode namedItem ( const QString & name ) const
+QDomNode namedItemNS ( const QString & nsURI, const QString & localName ) const
+QDomNode removeNamedItem ( const QString & name )
+QDomNode removeNamedItemNS ( const QString & nsURI, const QString & localName )
+QDomNode setNamedItem ( const QDomNode & newNode )
+QDomNode setNamedItemNS ( const QDomNode & newNode )
+int size () const
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

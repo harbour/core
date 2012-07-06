@@ -1,0 +1,70 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     =
+QObject     = no
+
+</CLASS>
+
+
+<CODE>
+#include <QtXml/QXmlAttributes>
+
+
+/*
+ *	QXmlAttributes ()
+ * virtual ~QXmlAttributes ()
+ */
+HB_FUNC( QT_QXMLATTRIBUTES )
+{
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QXMLATTRIBUTES" ) )
+   {
+      __HB_RETPTRGC__( new QXmlAttributes( *hbqt_par_QXmlAttributes( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QXmlAttributes() );
+   }
+}
+</CODE>
+
+<ENUMS>
+</ENUMS>
+
+<PROTOS>
+void append ( const QString & qName, const QString & uri, const QString & localPart, const QString & value )
+void clear ()
+int count () const
+int index ( const QString & qName ) const
+int index ( const QLatin1String & qName ) const
+int index ( const QString & uri, const QString & localPart ) const
+int length () const
+QString localName ( int index ) const
+QString qName ( int index ) const
+QString type ( int index ) const
+QString type ( const QString & qName ) const
+QString type ( const QString & uri, const QString & localName ) const
+QString uri ( int index ) const
+QString value ( int index ) const
+QString value ( const QString & qName ) const
+QString value ( const QLatin1String & qName ) const
+QString value ( const QString & uri, const QString & localName ) const
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

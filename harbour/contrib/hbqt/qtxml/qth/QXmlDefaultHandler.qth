@@ -1,0 +1,74 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     = QXmlContentHandler, QXmlErrorHandler, QXmlDTDHandler, QXmlEntityResolver, QXmlLexicalHandler, QXmlDeclHandler
+QObject     = no
+
+</CLASS>
+
+
+<CODE>
+#include <QtXml/QXmlDefaultHandler>
+
+
+/*
+ *	QXmlDefaultHandler ()
+ * virtual ~QXmlDefaultHandler ()
+ */
+HB_FUNC( QT_QXMLDEFAULTHANDLER )
+{
+   __HB_RETPTRGC__( new QXmlDefaultHandler() );
+}
+</CODE>
+
+<ENUMS>
+</ENUMS>
+
+<PROTOS>
+virtual bool attributeDecl ( const QString & eName, const QString & aName, const QString & type, const QString & valueDefault, const QString & value )
+virtual bool characters ( const QString & ch )
+virtual bool comment ( const QString & ch )
+virtual bool endCDATA ()
+virtual bool endDTD ()
+virtual bool endDocument ()
+virtual bool endElement ( const QString & namespaceURI, const QString & localName, const QString & qName )
+virtual bool endEntity ( const QString & name )
+virtual bool endPrefixMapping ( const QString & prefix )
+virtual bool error ( const QXmlParseException & exception )
+virtual QString errorString () const
+virtual bool externalEntityDecl ( const QString & name, const QString & publicId, const QString & systemId )
+virtual bool fatalError ( const QXmlParseException & exception )
+virtual bool ignorableWhitespace ( const QString & ch )
+virtual bool internalEntityDecl ( const QString & name, const QString & value )
+virtual bool notationDecl ( const QString & name, const QString & publicId, const QString & systemId )
+virtual bool processingInstruction ( const QString & target, const QString & data )
+//virtual bool resolveEntity ( const QString & publicId, const QString & systemId, QXmlInputSource *& ret )
+virtual void setDocumentLocator ( QXmlLocator * locator )
+virtual bool skippedEntity ( const QString & name )
+virtual bool startCDATA ()
+virtual bool startDTD ( const QString & name, const QString & publicId, const QString & systemId )
+virtual bool startDocument ()
+virtual bool startElement ( const QString & namespaceURI, const QString & localName, const QString & qName, const QXmlAttributes & atts )
+virtual bool startEntity ( const QString & name )
+virtual bool startPrefixMapping ( const QString & prefix, const QString & uri )
+virtual bool unparsedEntityDecl ( const QString & name, const QString & publicId, const QString & systemId, const QString & notationName )
+virtual bool warning ( const QXmlParseException & exception )
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

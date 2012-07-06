@@ -1,0 +1,59 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     =
+QObject     = no
+
+</CLASS>
+
+
+<CODE>
+#include <QtXml/QXmlParseException>
+
+
+/*
+ * QXmlParseException ( const QString & name = QString(), int c = -1, int l = -1, const QString & p = QString(), const QString & s = QString() )
+ * QXmlParseException ( const QXmlParseException & other )
+ * ~QXmlParseException ()
+ */
+HB_FUNC( QT_QXMLPARSEEXCEPTION )
+{
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QXMLPARSEEXCEPTION" ) )
+   {
+      __HB_RETPTRGC__( new QXmlParseException( *hbqt_par_QXmlParseException( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QXmlParseException() );
+   }
+}
+</CODE>
+
+<ENUMS>
+</ENUMS>
+
+<PROTOS>
+int columnNumber () const
+int lineNumber () const
+QString message () const
+QString publicId () const
+QString systemId () const
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

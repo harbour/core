@@ -1,0 +1,26 @@
+#
+# $Id$
+#
+
+-i.
+
+qth/filelist.hbm
+
+hbqtxml.hbx
+
+hbqt_init.cpp
+
+../qtcore/hbqtcore.hbc
+../qtgui/hbqtgui.hbc
+../qtnetwork/hbqtnetwork.hbc
+
+-deppkgname=qtxml:QtXml
+-depkeyhead=qtxml:QtXml/QtXml
+-depcontrol=qtxml:${HB_WITH_QT}
+{!darwin}-depincpath=qtxml:/usr/include/qt4
+{!darwin}-depincpath=qtxml:/usr/lib/qt4/include
+{!darwin}-depincpath=qtxml:/usr/include
+{bsd}-depincpath=qt:/usr/local/include/qt4
+{darwin}-depincpath=qtxml:/Developer/qt/include
+{darwin}-depincpath=qtxml:/Library/Frameworks
+{darwin}-depincpath=qtxml:/usr/local/include

@@ -1,0 +1,48 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     =
+QObject     = no
+
+</CLASS>
+
+
+<CODE>
+#include <QtXml/QXmlDeclHandler>
+
+
+/*
+ * virtual	~QXmlDeclHandler ()
+ */
+HB_FUNC( QT_QXMLDECLHANDLER )
+{
+}
+</CODE>
+
+<ENUMS>
+</ENUMS>
+
+<PROTOS>
+virtual bool attributeDecl ( const QString & eName, const QString & aName, const QString & type, const QString & valueDefault, const QString & value ) = 0
+virtual QString errorString () const = 0
+virtual bool externalEntityDecl ( const QString & name, const QString & publicId, const QString & systemId ) = 0
+virtual bool internalEntityDecl ( const QString & name, const QString & value ) = 0
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

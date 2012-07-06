@@ -1,0 +1,61 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     = QDomNode
+QObject     = no
+Version     =
+
+</CLASS>
+
+
+<CODE>
+#include <QtXml/QDomDocumentType>
+
+
+/*
+ *	QDomDocumentType ()
+ * QDomDocumentType ( const QDomDocumentType & n )
+ */
+HB_FUNC( QT_QDOMDOCUMENTTYPE )
+{
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QDOMDOCUMENTTYPE" ) )
+   {
+      __HB_RETPTRGC__( new QDomDocumentType( *hbqt_par_QDomDocumentType( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QDomDocumentType() );
+   }
+}
+</CODE>
+
+<ENUMS>
+</ENUMS>
+
+<PROTOS>
+QDomNamedNodeMap entities () const
+QString internalSubset () const
+QString name () const
+QDomNode::NodeType nodeType () const
+QDomNamedNodeMap notations () const
+QString publicId () const
+QString systemId () const
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

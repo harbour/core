@@ -1,0 +1,46 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     =
+QObject     = no
+
+</CLASS>
+
+
+<CODE>
+#include <QtXml/QXmlEntityResolver>
+
+
+/*
+ * virtual ~QXmlEntityResolver ()
+ */
+HB_FUNC( QT_QXMLENTITYRESOLVER )
+{
+}
+</CODE>
+
+<ENUMS>
+</ENUMS>
+
+<PROTOS>
+virtual QString errorString () const = 0
+//virtual bool resolveEntity ( const QString & publicId, const QString & systemId, QXmlInputSource *& ret ) = 0
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

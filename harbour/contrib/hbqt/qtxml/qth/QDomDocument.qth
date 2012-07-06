@@ -1,0 +1,87 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     = QDomNode
+QObject     = no
+Version     =
+
+</CLASS>
+
+
+<CODE>
+#include <QtXml/QDomDocument>
+
+
+/*
+ *	QDomDocument ()
+ * QDomDocument ( const QString & name )
+ * QDomDocument ( const QDomDocumentType & doctype )
+ * QDomDocument ( const QDomDocument & x )
+ * ~QDomDocument ()
+ */
+HB_FUNC( QT_QDOMDOCUMENT )
+{
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QDOMDOCUMENT" ) )
+   {
+      __HB_RETPTRGC__( new QDomDocument( *hbqt_par_QDomDocument( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QDomDocument() );
+   }
+}
+</CODE>
+
+<ENUMS>
+</ENUMS>
+
+<PROTOS>
+QDomAttr createAttribute ( const QString & name )
+QDomAttr createAttributeNS ( const QString & nsURI, const QString & qName )
+QDomCDATASection createCDATASection ( const QString & value )
+QDomComment createComment ( const QString & value )
+QDomDocumentFragment createDocumentFragment ()
+QDomElement createElement ( const QString & tagName )
+QDomElement createElementNS ( const QString & nsURI, const QString & qName )
+QDomEntityReference createEntityReference ( const QString & name )
+QDomProcessingInstruction createProcessingInstruction ( const QString & target, const QString & data )
+QDomText createTextNode ( const QString & value )
+QDomDocumentType doctype () const
+QDomElement documentElement () const
+QDomElement elementById ( const QString & elementId )
+QDomNodeList elementsByTagName ( const QString & tagname ) const
+QDomNodeList elementsByTagNameNS ( const QString & nsURI, const QString & localName )
+QDomImplementation implementation () const
+QDomNode importNode ( const QDomNode & importedNode, bool deep )
+QDomNode::NodeType nodeType () const
+
+bool setContent ( const QByteArray & data, bool namespaceProcessing, QString * errorMsg = 0, int * errorLine = 0, int * errorColumn = 0 )
+bool setContent ( const QString & text, bool namespaceProcessing, QString * errorMsg = 0, int * errorLine = 0, int * errorColumn = 0 )
+bool setContent ( QIODevice * dev, bool namespaceProcessing, QString * errorMsg = 0, int * errorLine = 0, int * errorColumn = 0 )
+bool setContent ( QXmlInputSource * source, bool namespaceProcessing, QString * errorMsg = 0, int * errorLine = 0, int * errorColumn = 0 )
+bool setContent ( const QString & text, QString * errorMsg = 0, int * errorLine = 0, int * errorColumn = 0 )
+bool setContent ( const QByteArray & buffer, QString * errorMsg = 0, int * errorLine = 0, int * errorColumn = 0 )
+bool setContent ( QIODevice * dev, QString * errorMsg = 0, int * errorLine = 0, int * errorColumn = 0 )
+bool setContent ( QXmlInputSource * source, QXmlReader * reader, QString * errorMsg = 0, int * errorLine = 0, int * errorColumn = 0 )
+
+QByteArray toByteArray ( int indent = 1 ) const
+QString toString ( int indent = 1 ) const
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>
