@@ -1,0 +1,88 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+QObject     = Yes
+Inherit     = QObject
+Type        = 
+New         = 
+Version     = 0x040700
+</CLASS>
+
+<CODE>
+#include <QtDeclarative/QDeclarativeEngine>
+
+
+/*
+ * QDeclarativeEngine ( QObject * parent = 0 )
+ * virtual ~QDeclarativeEngine ()
+ */
+HB_FUNC( QT_QDECLARATIVEENGINE )
+{
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QOBJECT" ) )
+   {
+      __HB_RETPTRGC__( new QDeclarativeEngine( hbqt_par_QObject( 1 ) ) );
+   }
+   else
+   {      
+      __HB_RETPTRGC__( new QDeclarativeEngine() );
+   }   
+}
+</CODE>
+
+<ENUMS>
+enum ObjectOwnership { CppOwnership, JavaScriptOwnership }
+</ENUMS>
+
+<PROTOS>
+void addImageProvider ( const QString & providerId, QDeclarativeImageProvider * provider )
+void addImportPath ( const QString & path )
+void addPluginPath ( const QString & path )
+QUrl baseUrl () const
+void clearComponentCache ()
+QDeclarativeImageProvider * imageProvider ( const QString & providerId ) const
+QStringList importPathList () const
+// bool importPlugin ( const QString & filePath, const QString & uri, QString * errorString )
+QNetworkAccessManager * networkAccessManager () const
+QDeclarativeNetworkAccessManagerFactory * networkAccessManagerFactory () const
+QString offlineStoragePath () const
+bool outputWarningsToStandardError () const
+QStringList pluginPathList () const
+void removeImageProvider ( const QString & providerId )
+QDeclarativeContext * rootContext () const
+void setBaseUrl ( const QUrl & url )
+void setImportPathList ( const QStringList & paths )
+void setNetworkAccessManagerFactory ( QDeclarativeNetworkAccessManagerFactory * factory )
+void setOfflineStoragePath ( const QString & dir )
+void setOutputWarningsToStandardError ( bool enabled )
+void setPluginPathList ( const QStringList & paths )
+
+QDeclarativeContext * contextForObject ( const QObject * object )
+ObjectOwnership objectOwnership ( QObject * object )
+void setContextForObject ( QObject * object, QDeclarativeContext * context )
+void setObjectOwnership ( QObject * object, ObjectOwnership ownership )
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+void quit ()
+void warnings ( const QList<QDeclarativeError> & warnings )
+</SIGNALS>
+
+<VARIABLES>
+</VARIABLES>
+
+
+

@@ -1,0 +1,68 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+QObject     = Yes
+Inherit     = QObject
+Type        = 
+New         = 
+Version     = 0x040700
+</CLASS>
+
+<CODE>
+#include <QtDeclarative/QDeclarativeExpression>
+
+
+/*
+ * QDeclarativeExpression ()
+ * QDeclarativeExpression ( QDeclarativeContext * ctxt, QObject * scope, const QString & expression, QObject * parent = 0 )
+ * virtual ~QDeclarativeExpression ()
+ */
+HB_FUNC( QT_QDECLARATIVEEXPRESSION )
+{
+   __HB_RETPTRGC__( new QDeclarativeExpression() );
+}
+</CODE>
+
+<ENUMS>
+</ENUMS>
+
+<PROTOS>
+void clearError ()
+QDeclarativeContext * context () const
+QDeclarativeEngine * engine () const
+QDeclarativeError error () const
+QVariant evaluate ( bool * valueIsUndefined = 0 )
+QString expression () const
+bool hasError () const
+int lineNumber () const
+bool notifyOnValueChanged () const
+QObject * scopeObject () const
+void setExpression ( const QString & expression )
+void setNotifyOnValueChanged ( bool notifyOnChange )
+void setSourceLocation ( const QString & url, int line )
+QString sourceFile () const
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+void valueChanged ()
+</SIGNALS>
+
+<VARIABLES>
+</VARIABLES>
+
+
+

@@ -1,0 +1,79 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+QObject     = Yes
+Inherit     =  QGraphicsObject, QDeclarativeParserStatus
+Type        = 
+New         = 
+Version     = 0x040700
+</CLASS>
+
+<CODE>
+#include <QtDeclarative/QDeclarativeItem>
+
+
+/*
+ * QDeclarativeItem ( QDeclarativeItem * parent = 0 )
+ * virtual ~QDeclarativeItem ()
+ */
+HB_FUNC( QT_QDECLARATIVEITEM )
+{
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QDECLARATIVEITEM" ) )
+   {
+      __HB_RETPTRGC__( new QDeclarativeItem( hbqt_par_QDeclarativeItem( 1 ) ) );
+   }
+   else
+   {   
+      __HB_RETPTRGC__( new QDeclarativeItem() );
+   }   
+}
+</CODE>
+
+<ENUMS>
+enum TransformOrigin { TopLeft, Top, TopRight, Left, ..., BottomRight }
+</ENUMS>
+
+<PROTOS>
+qreal baselineOffset () const
+QDeclarativeItem * childAt ( qreal x, qreal y ) const
+QRectF childrenRect ()
+bool clip () const
+void forceActiveFocus ()
+qreal implicitHeight () const
+qreal implicitWidth () const
+bool keepMouseGrab () const
+QScriptValue mapFromItem ( const QScriptValue & item, qreal x, qreal y ) const
+QScriptValue mapToItem ( const QScriptValue & item, qreal x, qreal y ) const
+QDeclarativeItem * parentItem () const
+void setBaselineOffset ( qreal )
+void setClip ( bool )
+void setKeepMouseGrab ( bool keep )
+void setParentItem ( QDeclarativeItem * parent )
+void setSmooth ( bool smooth )
+void setTransformOrigin ( TransformOrigin origin )
+bool smooth () const
+TransformOrigin transformOrigin () const
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>
+
+<VARIABLES>
+</VARIABLES>
+
+
+

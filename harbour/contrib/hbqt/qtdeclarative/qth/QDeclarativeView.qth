@@ -1,0 +1,83 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+QObject     = Yes
+Inherit     = QGraphicsView
+Type        = 
+New         = 
+Version     = 0x040700
+</CLASS>
+
+<CODE>
+#include <QtDeclarative/QDeclarativeView>
+#include <QtDeclarative/QDeclarativeError>
+
+
+/*   
+ * QDeclarativeView ( QWidget * parent = 0 )
+ * QDeclarativeView ( const QUrl & source, QWidget * parent = 0 )
+ * ~QDeclarativeView ()
+ */
+HB_FUNC( QT_QDECLARATIVEVIEW )
+{
+   if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QURL" ) && hbqt_par_isDerivedFrom( 2, "QWIDGET" ) )
+   {
+      __HB_RETPTRGC__( new QDeclarativeView( *hbqt_par_QUrl( 1 ), hbqt_par_QWidget( 2 ) ) );
+   }
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QURL" ) )
+   {
+      __HB_RETPTRGC__( new QDeclarativeView( *hbqt_par_QUrl( 1 ), 0 ) );
+   }
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QWIDGET" ) )
+   {
+      __HB_RETPTRGC__( new QDeclarativeView( hbqt_par_QWidget( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QDeclarativeView() );
+   }
+}
+</CODE>
+
+<ENUMS>
+enum ResizeMode { SizeViewToRootObject, SizeRootObjectToView }
+enum Status { Null, Ready, Loading, Error }
+</ENUMS>
+
+<PROTOS>
+QDeclarativeEngine * engine () const
+QList<QDeclarativeError> errors () const
+QSize initialSize () const
+ResizeMode resizeMode () const
+QDeclarativeContext * rootContext () const
+QGraphicsObject * rootObject () const
+void setResizeMode ( ResizeMode )
+void setSource ( const QUrl & url )
+QUrl source () const
+QDeclarativeView::Status status () const
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+void sceneResized ( QSize size )
+void statusChanged ( QDeclarativeView::Status status )
+</SIGNALS>
+
+<VARIABLES>
+</VARIABLES>
+
+
+

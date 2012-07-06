@@ -1,0 +1,68 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+QObject     = No
+Inherit     = 
+Type        = 
+New         = 
+Version     = 0x040700
+</CLASS>
+
+<CODE>
+#include <QtDeclarative/QDeclarativeError>
+
+
+/*
+ * 
+ */
+HB_FUNC( QT_QDECLARATIVEERROR )
+{
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QDECLARATIVEERROR" ) )
+   {
+      __HB_RETPTRGC__( new QDeclarativeError( *hbqt_par_QDeclarativeError( 1 ) ) );
+   }
+   else
+   {   
+      __HB_RETPTRGC__( new QDeclarativeError() );
+   }   
+}
+</CODE>
+
+<ENUMS>
+</ENUMS>
+
+<PROTOS>
+int column () const
+QString description () const
+bool isValid () const
+int line () const
+void setColumn ( int column )
+void setDescription ( const QString & description )
+void setLine ( int line )
+void setUrl ( const QUrl & url )
+QString toString () const
+QUrl url () const
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>
+
+<VARIABLES>
+</VARIABLES>
+
+
+
