@@ -2430,6 +2430,8 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
          CASE oArg:cCast == "QString"
             IF oArg:lFar
                oArg:cBody   := "( QString * ) hb_parstr_utf8( " + cHBIdx + ", &pText%%%, NULL )"
+            ELSEIF oArg:lConst
+               oArg:cBody   := "( QString ) hb_parstr_utf8( " + cHBIdx + ", &pText%%%, NULL )"
             ELSE
                oArg:cBody   := "hb_parstr_utf8( " + cHBIdx + ", &pText%%%, NULL )"
             ENDIF
@@ -3398,6 +3400,8 @@ STATIC FUNCTION qth_is_QObject( cWidget )
       aadd( aQObjects, "QGLShader" )
       aadd( aQObjects, "QGLShaderProgram" )
       aadd( aQObjects, "QGLWidget" )
+
+      aadd( aQObjects, "QGraphicsSvgItem" )
    ENDIF
 
    RETURN ascan( aQObjects, {|e| e == cWidget } ) > 0
