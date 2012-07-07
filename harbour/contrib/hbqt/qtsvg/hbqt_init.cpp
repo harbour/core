@@ -88,7 +88,7 @@ HB_CALL_ON_STARTUP_BEGIN( _hbqtsvg_init_ )
 HB_CALL_ON_STARTUP_END( _hbqtsvg_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )
-   #pragma startup _hbqtopengl_init__hbqtsvg_init_
+   #pragma startup __hbqtsvg_init_
 #elif defined( HB_DATASEG_STARTUP )
    #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hbqtsvg_init_ )
    #include "hbiniseg.h"

@@ -6,7 +6,7 @@
 
 qth/filelist.hbm
 
-hbqtopengl.hbx
+hbqtsvg.hbx
 
 hbqt_init.cpp
 
@@ -14,7 +14,7 @@ hbqt_init.cpp
 ../qtgui/hbqtgui.hbc
 ../qtnetwork/hbqtnetwork.hbc
 
--deppkgname=qtsvg:QtOpenGL
+-deppkgname=qtsvg:QtSvg
 -depkeyhead=qtsvg:QtSvg/QtSvg
 -depcontrol=qtsvg:${HB_WITH_QT}
 {!darwin}-depincpath=qtsvg:/usr/include/qt4
