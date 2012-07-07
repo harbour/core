@@ -1,0 +1,16 @@
+#
+# $Id$
+#
+
+-pflag=-qtver=0x040500
+-pflag=-qtmodule=qtsvg
+-pflag=-qthdocdir=../doc/
+
+QAbstractVideoBuffer.qth
+QAbstractVideoSurface.qth
+QAudioDeviceInfo.qth
+QAudioFormat.qth
+QAudioInput.qth
+QAudioOutput.qth
+QVideoFrame.qth
+QVideoSurfaceFormat.qth

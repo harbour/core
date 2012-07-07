@@ -1,0 +1,54 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     =
+QObject     = no
+Version     = 0x040600
+
+</CLASS>
+
+
+<CODE>
+#include <QtCore/QVariant>
+#include <QtMultimedia/QAbstractVideoBuffer>
+
+
+/*
+ * QAbstractVideoBuffer ( HandleType type )
+ * virtual	~QAbstractVideoBuffer ()
+ */
+HB_FUNC( QT_QABSTRACTVIDEOBUFFER )
+{
+}
+</CODE>
+
+<ENUMS>
+enum HandleType { NoHandle, GLTextureHandle, XvShmImageHandle, CoreImageHandle, QPixmapHandle, UserHandle }
+enum MapMode { NotMapped, ReadOnly, WriteOnly, ReadWrite }
+</ENUMS>
+
+<PROTOS>
+virtual QVariant handle () const
+HandleType handleType () const
+virtual uchar * map ( MapMode mode, int * numBytes, int * bytesPerLine ) = 0
+virtual MapMode mapMode () const = 0
+virtual void unmap () = 0
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

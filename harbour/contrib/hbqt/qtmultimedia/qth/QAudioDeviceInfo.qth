@@ -1,0 +1,70 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     =
+QObject     =
+Version     = 0x040600
+
+</CLASS>
+
+
+<CODE>
+#include <QtMultimedia/QAudioDeviceInfo>
+
+
+/*
+ *	QAudioDeviceInfo ()
+ * QAudioDeviceInfo ( const QAudioDeviceInfo & other )
+ * ~QAudioDeviceInfo ()
+ */
+HB_FUNC( QT_QAUDIODEVICEINFO )
+{
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QAUDIODEVICEINFO" ) )
+   {
+      __HB_RETPTRGC__( new QAudioDeviceInfo( *hbqt_par_QAudioDeviceInfo( 1 ) ) );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QAudioDeviceInfo() );
+   }
+}
+</CODE>
+
+<ENUMS>
+</ENUMS>
+
+<PROTOS>
+QString deviceName () const
+bool isFormatSupported ( const QAudioFormat & settings ) const
+bool isNull () const
+QAudioFormat nearestFormat ( const QAudioFormat & settings ) const
+QAudioFormat preferredFormat () const
+QList<QAudioFormat::Endian> supportedByteOrders () const
+QList<int> supportedChannelCounts () const
+QStringList supportedCodecs () const
+QList<int> supportedSampleRates () const
+QList<int> supportedSampleSizes () const
+QList<QAudioFormat::SampleType> supportedSampleTypes () const
+
+QList<QAudioDeviceInfo> availableDevices ( QAudio::Mode mode )
+QAudioDeviceInfo defaultInputDevice ()
+QAudioDeviceInfo defaultOutputDevice ()
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

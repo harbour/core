@@ -1,0 +1,50 @@
+/*
+ * $Id$
+ */
+
+/* -------------------------------------------------------------------- */
+/* NOTE: You can add manual override which functions to include or      */
+/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
+/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
+/*                  // HB_FUNC_EXCLUDE <func>                           */
+/* -------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated code below. DO NOT EDIT!            */
+/*          Regenerate using hbmk2 '-hbx=' option.                      */
+/* -------------------------------------------------------------------- */
+
+#ifndef __HBEXTERN_CH__HBQTMULTIMEDIA__
+#define __HBEXTERN_CH__HBQTMULTIMEDIA__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBQTMULTIMEDIA__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBQTMULTIMEDIA__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBQTMULTIMEDIA__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC HB_QABSTRACTVIDEOBUFFER
+DYNAMIC HB_QABSTRACTVIDEOSURFACE
+DYNAMIC HB_QAUDIODEVICEINFO
+DYNAMIC HB_QAUDIOFORMAT
+DYNAMIC HB_QAUDIOINPUT
+DYNAMIC HB_QAUDIOOUTPUT
+DYNAMIC HB_QVIDEOFRAME
+DYNAMIC HB_QVIDEOSURFACEFORMAT
+DYNAMIC QABSTRACTVIDEOBUFFER
+DYNAMIC QABSTRACTVIDEOSURFACE
+DYNAMIC QAUDIODEVICEINFO
+DYNAMIC QAUDIOFORMAT
+DYNAMIC QAUDIOINPUT
+DYNAMIC QAUDIOOUTPUT
+DYNAMIC QVIDEOFRAME
+DYNAMIC QVIDEOSURFACEFORMAT
+DYNAMIC __HBQTMULTIMEDIA
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBQTMULTIMEDIA__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

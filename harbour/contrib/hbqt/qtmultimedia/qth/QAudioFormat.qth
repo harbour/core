@@ -1,0 +1,69 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     =
+QObject     =
+Version     = 0x040600
+
+</CLASS>
+
+
+<CODE>
+#include <QtMultimedia/QAudioFormat>
+
+
+/*
+ * QAudioFormat ()
+ * QAudioFormat ( const QAudioFormat & other )
+ * ~QAudioFormat ()
+ */
+HB_FUNC( QT_QAUDIOFORMAT )
+{
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QAUDIOFORMAT" ) )
+   {
+      __HB_RETPTRGC__( new QAudioFormat( *hbqt_par_QAudioFormat( 1 ) ) );
+   }
+   {
+      __HB_RETPTRGC__( new QAudioFormat() );
+   }
+}
+</CODE>
+
+<ENUMS>
+enum Endian { BigEndian, LittleEndian }
+enum SampleType { Unknown, SignedInt, UnSignedInt, Float }
+</ENUMS>
+
+<PROTOS>
+QAudioFormat::Endian byteOrder () const
+int channelCount () const
+QString codec () const
+bool isValid () const
+int sampleRate () const
+int sampleSize () const
+QAudioFormat::SampleType sampleType () const
+void setByteOrder ( QAudioFormat::Endian byteOrder )
+void setChannelCount ( int channels )
+void setCodec ( const QString & codec )
+void setSampleRate ( int samplerate )
+void setSampleSize ( int sampleSize )
+void setSampleType ( QAudioFormat::SampleType sampleType )
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

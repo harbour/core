@@ -1,0 +1,26 @@
+#
+# $Id$
+#
+
+-i.
+
+qth/filelist.hbm
+
+hbqtmultimedia.hbx
+
+hbqt_init.cpp
+
+../qtcore/hbqtcore.hbc
+../qtgui/hbqtgui.hbc
+../qtnetwork/hbqtnetwork.hbc
+
+-deppkgname=qtmultimedia:QtMultimedia
+-depkeyhead=qtmultimedia:QtMultimedia/QtMultimedia
+-depcontrol=qtmultimedia:${HB_WITH_QT}
+{!darwin}-depincpath=qtmultimedia:/usr/include/qt4
+{!darwin}-depincpath=qtmultimedia:/usr/lib/qt4/include
+{!darwin}-depincpath=qtmultimedia:/usr/include
+{bsd}-depincpath=qt:/usr/local/include/qt4
+{darwin}-depincpath=qtmultimedia:/Developer/qt/include
+{darwin}-depincpath=qtmultimedia:/Library/Frameworks
+{darwin}-depincpath=qtmultimedia:/usr/local/include
