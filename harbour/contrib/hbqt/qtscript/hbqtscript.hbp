@@ -1,0 +1,12 @@
+#
+# $Id$
+#
+
+../hbqt_common.hbm
+
+hbqtscript.hbm
+
+-instfile=inc:hbqtscript.ch
+-instfile=inc:hbqtscript.hbx
+
+hbqtscripts.hbp

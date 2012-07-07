@@ -1,0 +1,71 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     =
+QObject     =
+Version     =
+
+</CLASS>
+
+
+<CODE>
+#include <QtScript/QScriptString>
+#include <QtScript/QScriptValueIterator>
+
+
+/*
+ * QScriptValueIterator ( const QScriptValue & object )
+ * ~QScriptValueIterator ()
+ */
+HB_FUNC( QT_QSCRIPTVALUEITERATOR )
+{
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QSCRIPTVALUE" ) )
+   {
+      __HB_RETPTRGC__( new QScriptValueIterator( *hbqt_par_QScriptValue( 1 ) ) );
+   }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+}
+</CODE>
+
+<ENUMS>
+
+</ENUMS>
+
+
+<PROTOS>
+QScriptValue::PropertyFlags flags () const
+bool hasNext () const
+bool hasPrevious () const
+QString name () const
+void next ()
+void previous ()
+void remove ()
+QScriptString scriptName () const
+void setValue ( const QScriptValue & value )
+void toBack ()
+void toFront ()
+QScriptValue value () const
+</PROTOS>
+
+
+<SLOTS>
+
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

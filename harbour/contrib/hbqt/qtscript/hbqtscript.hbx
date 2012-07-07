@@ -1,0 +1,60 @@
+/*
+ * $Id$
+ */
+
+/* -------------------------------------------------------------------- */
+/* NOTE: You can add manual override which functions to include or      */
+/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
+/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
+/*                  // HB_FUNC_EXCLUDE <func>                           */
+/* -------------------------------------------------------------------- */
+
+/* -------------------------------------------------------------------- */
+/* WARNING: Automatically generated code below. DO NOT EDIT!            */
+/*          Regenerate using hbmk2 '-hbx=' option.                      */
+/* -------------------------------------------------------------------- */
+
+#ifndef __HBEXTERN_CH__HBQTSCRIPT__
+#define __HBEXTERN_CH__HBQTSCRIPT__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBQTSCRIPT__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__HBQTSCRIPT__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBQTSCRIPT__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC HB_QSCRIPTABLE
+DYNAMIC HB_QSCRIPTCLASS
+DYNAMIC HB_QSCRIPTCLASSPROPERTYITERATOR
+DYNAMIC HB_QSCRIPTCONTEXT
+DYNAMIC HB_QSCRIPTCONTEXTINFO
+DYNAMIC HB_QSCRIPTENGINE
+DYNAMIC HB_QSCRIPTENGINEAGENT
+DYNAMIC HB_QSCRIPTEXTENSIONPLUGIN
+DYNAMIC HB_QSCRIPTPROGRAM
+DYNAMIC HB_QSCRIPTSTRING
+DYNAMIC HB_QSCRIPTSYNTAXCHECKRESULT
+DYNAMIC HB_QSCRIPTVALUE
+DYNAMIC HB_QSCRIPTVALUEITERATOR
+DYNAMIC QSCRIPTABLE
+DYNAMIC QSCRIPTCLASS
+DYNAMIC QSCRIPTCLASSPROPERTYITERATOR
+DYNAMIC QSCRIPTCONTEXT
+DYNAMIC QSCRIPTCONTEXTINFO
+DYNAMIC QSCRIPTENGINE
+DYNAMIC QSCRIPTENGINEAGENT
+DYNAMIC QSCRIPTEXTENSIONPLUGIN
+DYNAMIC QSCRIPTPROGRAM
+DYNAMIC QSCRIPTSTRING
+DYNAMIC QSCRIPTSYNTAXCHECKRESULT
+DYNAMIC QSCRIPTVALUE
+DYNAMIC QSCRIPTVALUEITERATOR
+DYNAMIC __HBQTSCRIPT
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBQTSCRIPT__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

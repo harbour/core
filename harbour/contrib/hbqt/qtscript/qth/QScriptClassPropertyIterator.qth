@@ -1,0 +1,60 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     =
+QObject     =
+Version     =
+
+</CLASS>
+
+
+<CODE>
+#include <QtScript/QScriptString>
+#include <QtScript/QScriptClassPropertyIterator>
+
+
+/*
+ * virtual	~QScriptClassPropertyIterator ()
+ */
+HB_FUNC( QT_QSCRIPTCLASSPROPERTYITERATOR )
+{
+}
+</CODE>
+
+<ENUMS>
+
+</ENUMS>
+
+
+<PROTOS>
+virtual QScriptValue::PropertyFlags flags () const
+virtual bool hasNext () const = 0
+virtual bool hasPrevious () const = 0
+virtual uint id () const
+virtual QScriptString name () const = 0
+virtual void next () = 0
+QScriptValue object () const
+virtual void previous () = 0
+virtual void toBack () = 0
+virtual void toFront () = 0
+</PROTOS>
+
+
+<SLOTS>
+
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

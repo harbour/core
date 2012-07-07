@@ -1,0 +1,141 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     =
+QObject     =
+Version     =
+
+</CLASS>
+
+
+<CODE>
+#include <QtCore/QDateTime>
+#include <QtCore/QVariant>
+#include <QtScript/QScriptValue>
+
+
+/*
+ * QScriptValue ()
+ * QScriptValue ( const QScriptValue & other )
+ * QScriptValue ( SpecialValue value )
+ * QScriptValue ( bool value )
+ * QScriptValue ( int value )
+ * QScriptValue ( uint value )
+ * QScriptValue ( qsreal value )
+ * QScriptValue ( const QString & value )
+ * QScriptValue ( const QLatin1String & value )
+ * QScriptValue ( const char * value )
+ * ~QScriptValue ()
+ */
+HB_FUNC( QT_QSCRIPTVALUE )
+{
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QSCRIPTVALUE" ) )
+   {
+      __HB_RETPTRGC__( new QScriptValue( *hbqt_par_QScriptValue( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "QLATIN1STRING" ) )
+   {
+      __HB_RETPTRGC__( new QScriptValue( *hbqt_par_QLatin1String( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISNUM( 1 ) )
+   {
+      __HB_RETPTRGC__( new QScriptValue( hb_parni( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISLOG( 1 ) )
+   {
+      __HB_RETPTRGC__( new QScriptValue( hb_parl( 1 ) ) );
+   }
+   else if( hb_pcount() == 1 && HB_ISCHAR( 1 ) )
+   {
+      void * pText01 = NULL;
+      __HB_RETPTRGC__( new QScriptValue( ( QString ) hb_parstr_utf8( 1, &pText01, NULL ) ) );
+      hb_strfree( pText01 );
+   }
+   else
+   {
+      __HB_RETPTRGC__( new QScriptValue() );
+   }
+}
+</CODE>
+
+<ENUMS>
+enum PropertyFlag { ReadOnly, Undeletable, SkipInEnumeration, PropertyGetter, PropertySetter, KeepExistingFlags }
+flags PropertyFlags
+enum ResolveFlag { ResolveLocal, ResolvePrototype }
+flags ResolveFlags
+enum SpecialValue { UndefinedValue, NullValue }
+</ENUMS>
+
+
+<PROTOS>
+QScriptValue call ( const QScriptValue & thisObject = QScriptValue(), const QScriptValueList & args = QScriptValueList() )
+QScriptValue call ( const QScriptValue & thisObject, const QScriptValue & arguments )
+QScriptValue construct ( const QScriptValueList & args = QScriptValueList() )
+QScriptValue construct ( const QScriptValue & arguments )
+QScriptValue data () const
+QScriptEngine * engine () const
+bool equals ( const QScriptValue & other ) const
+bool instanceOf ( const QScriptValue & other ) const
+bool isArray () const
+bool isBool () const
+bool isDate () const
+bool isError () const
+bool isFunction () const
+bool isNull () const
+bool isNumber () const
+bool isObject () const
+bool isQMetaObject () const
+bool isQObject () const
+bool isRegExp () const
+bool isString () const
+bool isUndefined () const
+bool isValid () const
+bool isVariant () const
+bool lessThan ( const QScriptValue & other ) const
+QScriptValue property ( const QString & name, const ResolveFlags & mode = ResolvePrototype ) const
+QScriptValue property ( const QScriptString & name, const ResolveFlags & mode = ResolvePrototype ) const
+QScriptValue property ( quint32 arrayIndex, const ResolveFlags & mode = ResolvePrototype ) const
+QScriptValue::PropertyFlags propertyFlags ( const QString & name, const ResolveFlags & mode = ResolvePrototype ) const
+QScriptValue::PropertyFlags propertyFlags ( const QScriptString & name, const ResolveFlags & mode = ResolvePrototype ) const
+QScriptValue prototype () const
+QScriptClass * scriptClass () const
+void setData ( const QScriptValue & data )
+void setProperty ( const QString & name, const QScriptValue & value, const PropertyFlags & flags = KeepExistingFlags )
+void setProperty ( const QScriptString & name, const QScriptValue & value, const PropertyFlags & flags = KeepExistingFlags )
+void setProperty ( quint32 arrayIndex, const QScriptValue & value, const PropertyFlags & flags = KeepExistingFlags )
+void setPrototype ( const QScriptValue & prototype )
+void setScriptClass ( QScriptClass * scriptClass )
+bool strictlyEquals ( const QScriptValue & other ) const
+bool toBool () const
+QDateTime toDateTime () const
+qint32 toInt32 () const
+qsreal toInteger () const
+qsreal toNumber () const
+const QMetaObject * toQMetaObject () const
+QObject * toQObject () const
+QRegExp toRegExp () const
+QString toString () const
+quint16 toUInt16 () const
+quint32 toUInt32 () const
+QVariant toVariant () const
+</PROTOS>
+
+
+<SLOTS>
+
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>

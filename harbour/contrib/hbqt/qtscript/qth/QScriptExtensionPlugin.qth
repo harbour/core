@@ -1,0 +1,55 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+
+Inherit     = QObject
+QObject     = Yes
+Version     =
+
+</CLASS>
+
+
+<CODE>
+#include <QtScript/QScriptValue>
+#include <QtScript/QScriptExtensionPlugin>
+
+
+/*
+ * QScriptExtensionPlugin ( QObject * parent = 0 )
+ * ~QScriptExtensionPlugin ()
+ */
+HB_FUNC( QT_QSCRIPTEXTENSIONPLUGIN )
+{
+}
+</CODE>
+
+<ENUMS>
+
+</ENUMS>
+
+
+<PROTOS>
+QScriptValue setupPackage ( const QString & key, QScriptEngine * engine ) const
+
+virtual void initialize ( const QString & key, QScriptEngine * engine ) = 0
+virtual QStringList keys () const = 0
+</PROTOS>
+
+
+<SLOTS>
+
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>
