@@ -1231,36 +1231,51 @@ HARBOUR
 9. HOW TO GET HARBOUR
 =====================
 
-   1.) It's possible you're reading this document as part of the Harbour
-       distribution package. If not, read along.
+   Stable versions
+   ---------------
 
-   2.) Harbour source repository
+      1.) Harbour stable binary download
 
-       You'll need Subversion (SVN) version control software installed
-       on your system, and issue this command:
-          svn co https://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+          Download binary archive from this page and unpack or install:
+             http://sourceforge.net/projects/harbour-project/files/
+             (choose latest version number)
 
-       You can get subsequent updates using this command:
-          svn update
+      2.) Harbour stable source download
 
-   3.) Harbour nightly sources (updated once a day from source repository)
+          Download source archive from this page and unpack:
+             http://sourceforge.net/projects/harbour-project/files/source/
+             (choose latest version number)
 
-       Download source archive from any of these links and unpack:
-          http://sourceforge.net/projects/harbour-project/files/source/nightly/harbour-nightly-src.zip/download
-          http://sourceforge.net/projects/harbour-project/files/source/nightly/harbour-nightly.tar.gz/download
-          http://sourceforge.net/projects/harbour-project/files/source/nightly/harbour-nightly.tar.bz2/download
-          http://sourceforge.net/projects/harbour-project/files/source/nightly/harbour-nightly.tar.xz/download
 
-   4.) Harbour nightly binaries (updated once a day from source repository)
+   Unstable versions
+   -----------------
 
-       Windows (unified):
-          http://sourceforge.net/projects/harbour-project/files/binaries-windows/nightly/harbour-nightly-win.exe/download
-          http://sourceforge.net/projects/harbour-project/files/binaries-windows/nightly/harbour-nightly-win.7z/download
+      WARNING: Recommended for users contributing to Harbour development,
+               following the development mailing list, commits and reading
+               ChangeLog.
 
-   5.) Harbour source download (stable)
+      1.) Harbour live source repository
 
-       Download source archive from this page and unpack:
-          http://sourceforge.net/project/showfiles.php?group_id=681&package_id=192305
+          You'll need Subversion (SVN) version control software installed
+          on your system, and issue this command:
+             svn co https://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+
+          You can get subsequent updates using this command:
+             svn update
+
+      2.) Harbour unstable sources (updated once a day from live source repository)
+
+          Download source archive from any of these links and unpack:
+             http://sourceforge.net/projects/harbour-project/files/source/nightly/harbour-nightly-src.zip/download
+             http://sourceforge.net/projects/harbour-project/files/source/nightly/harbour-nightly.tar.gz/download
+             http://sourceforge.net/projects/harbour-project/files/source/nightly/harbour-nightly.tar.bz2/download
+             http://sourceforge.net/projects/harbour-project/files/source/nightly/harbour-nightly.tar.xz/download
+
+      3.) Harbour unstable binaries (updated once a day from live source repository)
+
+          Windows (unified):
+             http://sourceforge.net/projects/harbour-project/files/binaries-windows/nightly/harbour-nightly-win.exe/download
+             http://sourceforge.net/projects/harbour-project/files/binaries-windows/nightly/harbour-nightly-win.7z/download
 
 
 10. TROUBLESHOOTING
@@ -1335,7 +1350,7 @@ HARBOUR
        by hbmk2. IOW start simple and don't be overbusy with "fine-tuning"
        your configuration. If you need to, the problem is most probably
        elsewhere. It's also good idea to try with Harbour nightly binary or
-       official release first.
+       official stable release first.
    12. If you are to report a problem with Harbour itself, always provide
        self-contained, minimal source code example. Do not use xhb contrib
        library, or any 3rd party Harbour libraries. The example shall reproduce
