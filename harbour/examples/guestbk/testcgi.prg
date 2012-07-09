@@ -17,10 +17,7 @@
 *  1999/06/02  Dynamic TAG matching routines (inspired on Delphi).
 *              First attempt to convert Delphi's ISAPI dll of WebSites'
 *              Function List
-*              (See http://www.flexsys-ci.com/harbour-project/functions.htm)
-*  1999/06/11  List can be viewed online at
-*              http://www.flexsys-ci.com/cgi-bin/testcgi.exe
-*  1999/07/29  Changed qOut() calls to OutStd() calls.
+*  1999/07/29  Changed QOut() calls to OutStd() calls.
 *
 **/
 
@@ -32,57 +29,58 @@ FUNCTION ParseString( cString, cDelim, nRet )
 
    LOCAL cBuf, aElem, nPosFim, nSize, i
 
-   nSize := len( cString ) - len( StrTran( cString, cDelim, "" ) ) + 1
-   aElem := array( nSize )
+   nSize := Len( cString ) - Len( StrTran( cString, cDelim, "" ) ) + 1
+   aElem := Array( nSize )
 
    cBuf := cString
-   i := 1
+
    FOR i := 1 TO nSize
-      nPosFim := at( cDelim, cBuf )
+      nPosFim := At( cDelim, cBuf )
 
       IF nPosFim > 0
-         aElem[i] := substr( cBuf, 1, nPosFim - 1 )
+         aElem[ i ] := SubStr( cBuf, 1, nPosFim - 1 )
       ELSE
-         aElem[i] := cBuf
+         aElem[ i ] := cBuf
       ENDIF
 
-      cBuf := substr( cBuf, nPosFim + 1, len( cBuf ) )
+      cBuf := SubStr( cBuf, nPosFim + 1, Len( cBuf ) )
 
-   NEXT i
+   NEXT
 
    RETURN aElem[ nRet ]
 
 FUNCTION Hex2Dec( cHex )
 
-   LOCAL aHex := { { "0", 00 }, ;
-                   { "1", 01 }, ;
-                   { "2", 02 }, ;
-                   { "3", 03 }, ;
-                   { "4", 04 }, ;
-                   { "5", 05 }, ;
-                   { "6", 06 }, ;
-                   { "7", 07 }, ;
-                   { "8", 08 }, ;
-                   { "9", 09 }, ;
-                   { "A", 10 }, ;
-                   { "B", 11 }, ;
-                   { "C", 12 }, ;
-                   { "D", 13 }, ;
-                   { "E", 14 }, ;
-                   { "F", 15 } }
+   LOCAL aHex := {;
+      { "0", 00 }, ;
+      { "1", 01 }, ;
+      { "2", 02 }, ;
+      { "3", 03 }, ;
+      { "4", 04 }, ;
+      { "5", 05 }, ;
+      { "6", 06 }, ;
+      { "7", 07 }, ;
+      { "8", 08 }, ;
+      { "9", 09 }, ;
+      { "A", 10 }, ;
+      { "B", 11 }, ;
+      { "C", 12 }, ;
+      { "D", 13 }, ;
+      { "E", 14 }, ;
+      { "F", 15 } }
    LOCAL nRet
    LOCAL nRes
 
-   nRet := ascan( aHex, { |x| upper( x[1] ) == upper( left( cHex, 1 ) ) } )
-   nRes := aHex[nRet, 2] * 16
-   nRet := ascan( aHex, { |x| upper( x[1] ) == upper( right( cHex, 1 ) ) } )
-   nRes += aHex[nRet, 2]
+   nRet := AScan( aHex, {| x | Upper( x[ 1 ] ) == Upper( Left( cHex, 1 ) ) } )
+   nRes := aHex[ nRet, 2 ] * 16
+   nRet := AScan( aHex, {| x | Upper( x[ 1 ] ) == Upper( Right( cHex, 1 ) ) } )
+   nRes += aHex[ nRet, 2 ]
 
    RETURN nRes
 
-/*-------------------------------------------------------------------------*/
+   /*-------------------------------------------------------------------------*/
 
-FUNCTION THTML
+FUNCTION THTML()
 
    STATIC oClass
 
@@ -109,7 +107,7 @@ FUNCTION THTML
       oClass:AddMethod( "SaveToFile", @SaveToFile() )  // Saves Content to File
       oClass:AddMethod( "ShowResult", @ShowResult() )  // Show Result - SEE Fcn
       oClass:AddMethod( "Generate",   @Generate() )    // Generate HTML
-      oClass:AddMethod( "SetHTMLFile",@SetHTMLFile() ) // Sets source HTML file
+      oClass:AddMethod( "SetHTMLFile", @SetHTMLFile() ) // Sets source HTML file
 
       oClass:AddMethod( "ProcessCGI",    @ProcessCGI() )
       oClass:AddMethod( "GetCGIParam",   @GetCGIParam() )
@@ -152,7 +150,7 @@ STATIC FUNCTION AddLink( cLinkTo, cLinkName )
    LOCAL Self := QSelf()
 
    ::cBody := ::cBody + ;
-      "<A HREF='" + cLinkTo + "'>" + cLinkName + "</A>"
+      "<a href='" + cLinkTo + "'>" + cLinkName + "</a>"
 
    RETURN Self
 
@@ -160,12 +158,7 @@ STATIC FUNCTION AddHead( cDescr )
 
    LOCAL Self := QSelf()
 
-   // Why this doesn't work?
-   // ::cBody += ...
-   // ???
-
-   ::cBody := ::cBody + ;
-      "<H1>" + cDescr + "</H1>"
+   ::cBody += "<h1>" + cDescr + "</h1>"
 
    RETURN NIL
 
@@ -174,9 +167,9 @@ STATIC FUNCTION AddPara( cPara, cAlign )
    LOCAL Self := QSelf()
 
    ::cBody := ::cBody + ;
-      "<P ALIGN='" + cAlign + "'>" + hb_eol() + ;
+      "<p align='" + cAlign + "'>" + hb_eol() + ;
       cPara + hb_eol() + ;
-      "</P>"
+      "</p>"
 
    RETURN Self
 
@@ -184,45 +177,45 @@ STATIC FUNCTION Generate()
 
    LOCAL Self := QSelf()
    LOCAL cFile, i, hFile, nPos, cRes := ""
-   LOCAL lFlag := .f.
+   LOCAL lFlag := .F.
 
    // Is this a meta file or hand generated script?
-   IF empty( ::cHTMLFile )
+   IF Empty( ::cHTMLFile )
       ::cContent :=                                                        ;
-         "<HTML><HEAD>"                                        + hb_eol() + ;
-         "<TITLE>" + ::cTitle + "</TITLE>"                     + hb_eol() + ;
-         "<BODY link='" + ::cLinkColor + "' " +                            ;
+         "<html><head>"                                        + hb_eol() + ;
+         "<title>" + ::cTitle + "</title>"                     + hb_eol() + ;
+         "<body link='" + ::cLinkColor + "' " +                            ;
          "vlink='" + ::cvLinkColor + "'>" +                    + hb_eol() + ;
          ::cBody                                               + hb_eol() + ;
-         "</BODY></HTML>"
+         "</body></html>"
    ELSE
       ::cContent := ""
 
       // Does cHTMLFile exists?
-      IF !File( ::cHTMLFile )
-         ::cContent := "<H1>Server Error</H1><P><I>No such file: " + ;
-           ::cHTMLFile
+      IF ! hb_FileExists( ::cHTMLFile )
+         ::cContent := "<h1>Server Error</h1><p><i>No such file: " + ;
+            ::cHTMLFile
       ELSE
          // Read from file
-         hFile := fOpen( ::cHTMLFile, 0 )
-         cFile := space( IF_BUFFER )
-         DO WHILE (nPos := fRead( hFile, @cFile, IF_BUFFER )) > 0
+         hFile := FOpen( ::cHTMLFile, 0 )
+         cFile := Space( IF_BUFFER )
+         DO WHILE ( nPos := FRead( hFile, @cFile, IF_BUFFER ) ) > 0
 
-            cFile := left( cFile, nPos )
+            cFile := Left( cFile, nPos )
             cRes += cFile
-            cFile := space( IF_BUFFER )
+            cFile := Space( IF_BUFFER )
 
          ENDDO
 
-         fClose( hFile )
+         FClose( hFile )
 
          // Replace matched tags
          i := 1
          ::cContent := cRes
          /* TODO: Replace this DO WHILE with FOR..NEXT */
-         DO WHILE i <= len( ::aReplaceTags )
-            ::cContent := strtran( ::cContent, ;
-               "<#" + ::aReplaceTags[i, 1] + ">", ::aReplaceTags[i, 2] )
+         DO WHILE i <= Len( ::aReplaceTags )
+            ::cContent := StrTran( ::cContent, ;
+               "<#" + ::aReplaceTags[ i, 1 ] + ">", ::aReplaceTags[ i, 2 ] )
             i++
          ENDDO
 
@@ -230,15 +223,15 @@ STATIC FUNCTION Generate()
          /*
          cRes := ""
          FOR i := 1 TO len( ::cContent )
-            IF substr( ::cContent, i, 1 ) == "<" .AND. ;
-               substr( ::cContent, i + 1, 1 ) == "#"
+            IF SubStr( ::cContent, i, 1 ) == "<" .AND. ;
+               SubStr( ::cContent, i + 1, 1 ) == "#"
                lFlag := .t.
-            ELSEIF substr( ::cContent, i, 1 ) == ">" .AND. lFlag
+            ELSEIF SubStr( ::cContent, i, 1 ) == ">" .AND. lFlag
                lFlag := .f.
-            ELSEIF !lFlag
-               cRes += substr( ::cContent, i, 1 )
+            ELSEIF ! lFlag
+               cRes += SubStr( ::cContent, i, 1 )
             ENDIF
-         NEXT i
+         NEXT
 
          ::cContent := cRes
          */
@@ -262,10 +255,10 @@ STATIC FUNCTION ShowResult()
 STATIC FUNCTION SaveToFile( cFile )
 
    LOCAL Self  := QSelf()
-   LOCAL hFile := fCreate( cFile )
+   LOCAL hFile := FCreate( cFile )
 
-   fWrite( hFile, ::cContent )
-   fClose( hFile )
+   FWrite( hFile, ::cContent )
+   FClose( hFile )
 
    RETURN Self
 
@@ -277,7 +270,7 @@ STATIC FUNCTION ProcessCGI()
    LOCAL nBuff  := 0
    LOCAL i
 
-   IF empty( ::aCGIContents )
+   IF Empty( ::aCGIContents )
       ::aCGIContents := {               ;
          GetEnv( "SERVER_SOFTWARE"   ), ;
          GetEnv( "SERVER_NAME"       ), ;
@@ -299,37 +292,37 @@ STATIC FUNCTION ProcessCGI()
          GetEnv( "CONTENT_TYPE"      ), ;
          GetEnv( "CONTENT_LENGTH"    ), ;
          GetEnv( "ANNOTATION_SERVER" )  ;
-          }
+         }
 
       cQuery := ::GetCGIParam( CGI_QUERY_STRING )
 
-      IF !empty( cQuery )
+      IF !Empty( cQuery )
 
-        ::aQueryFields := {}
+         ::aQueryFields := {}
 
-        FOR i := 1 TO len( cQuery ) + 1
+         FOR i := 1 TO Len( cQuery ) + 1
 
-          IF i > len( cQuery ) .OR. substr( cQuery, i, 1 ) == "&"
+            IF i > Len( cQuery ) .OR. SubStr( cQuery, i, 1 ) == "&"
 
-             aadd( ::aQueryFields,                          ;
-                { substr( cBuff, 1, at( "=", cBuff ) - 1 ), ;
-                  strtran( substr( cBuff, at( "=", cBuff ) + 1,      ;
-                     len( cBuff ) - at( "=", cBuff ) + 1 ), "+", " " ) } )
-             cBuff := ""
-          ELSE
-             IF substr( cQuery, i, 1 ) == "%"
-                cBuff += chr( Hex2Dec( substr( cQuery, i + 1, 2 ) ) )
-                nBuff := 3
-             ENDIF
+               AAdd( ::aQueryFields,                          ;
+                  { SubStr( cBuff, 1, At( "=", cBuff ) - 1 ), ;
+                  StrTran( SubStr( cBuff, At( "=", cBuff ) + 1,      ;
+                  Len( cBuff ) - At( "=", cBuff ) + 1 ), "+", " " ) } )
+               cBuff := ""
+            ELSE
+               IF SubStr( cQuery, i, 1 ) == "%"
+                  cBuff += Chr( Hex2Dec( SubStr( cQuery, i + 1, 2 ) ) )
+                  nBuff := 3
+               ENDIF
 
-             IF nBuff == 0
-                cBuff += substr( cQuery, i, 1 )
-             ELSE
-                nBuff--
-             ENDIF
-          ENDIF
+               IF nBuff == 0
+                  cBuff += SubStr( cQuery, i, 1 )
+               ELSE
+                  nBuff--
+               ENDIF
+            ENDIF
 
-        NEXT
+         NEXT
 
       ENDIF
 
@@ -344,7 +337,7 @@ STATIC FUNCTION GetCGIParam( nParam )
    ::ProcessCGI()
 
    IF nParam > 20 .OR. nParam < 1
-      outerr( "Invalid CGI parameter" )
+      OutErr( "Invalid CGI parameter" )
       RETURN NIL
    ENDIF
 
@@ -358,11 +351,11 @@ STATIC FUNCTION QueryFields( cQueryName )
 
    ::ProcessCGI()
 
-   nRet := aScan( ::aQueryFields, ;
-      { |x| upper( x[1] ) == upper( cQueryName ) } )
+   nRet := AScan( ::aQueryFields, ;
+      {| x | Upper( x[ 1 ] ) == Upper( cQueryName ) } )
 
    IF nRet > 0
-      cRet := ::aQueryFields[nRet, 2]
+      cRet := ::aQueryFields[ nRet, 2 ]
    ENDIF
 
    RETURN cRet
@@ -379,6 +372,6 @@ STATIC FUNCTION AddReplaceTag( cTag, cReplaceText )
 
    LOCAL Self := QSelf()
 
-   aAdd( ::aReplaceTags, { cTag, cReplaceText } )
+   AAdd( ::aReplaceTags, { cTag, cReplaceText } )
 
    RETURN Self

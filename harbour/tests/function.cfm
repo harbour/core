@@ -8,11 +8,11 @@ content="text/html; charset=iso-8859-1">
 
 <body bgcolor="#FFFFFF">
 
-<p align="center"><img src="/harbour-project/images/clouds.jpg" alt="clouds.jpg (2615 bytes)" WIDTH="550" HEIGHT="36"></p>
+<p align="center"><img src="clouds.jpg" alt="clouds.jpg" width="550" height="36"></p>
 
 <font SIZE="2">
 
-<p align="center"></font><font face="Tahoma" size="4"><strong>Function Task List</strong></font><font SIZE="2">
+<p align="center"></font><font face="Tahoma" size="4"><strong>Function Task List</strong></font><font size="2">
 <br><small><a href="funcs.dll?Lang=BR">In Portuguese</A></p>
 
 <p><font size="2" face="Tahoma">Below is a list of all Harbour
