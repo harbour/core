@@ -631,7 +631,7 @@ TIFFPrintDirectory(TIFF* tif, FILE* fd, long flags)
 		    (long) td->td_nstrips,
 		    isTiled(tif) ? "Tiles" : "Strips");
 		for (s = 0; s < td->td_nstrips; s++)
-			fprintf(fd, "    %3lu: [%8I" PFLL "u, %8I" PFLL "u]\n",
+			fprintf(fd, "    %3lu: [%8" PFLL "u, %8" PFLL "u]\n",
 			    (unsigned long) s,
 			    (TIFF_UINT64_T) td->td_stripoffset[s],
 			    (TIFF_UINT64_T) td->td_stripbytecount[s]);
