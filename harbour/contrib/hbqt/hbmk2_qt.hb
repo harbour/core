@@ -634,6 +634,9 @@ STATIC FUNCTION hbqtui_gen_prg( cFile, cFuncName )
          IF "setupUi" $ s
             lCreateFinished := .T.
 
+         ELSEIF Left( s, 4 ) == "if ("
+            // It is the test for main widget's objectName, leave it.
+
          ELSEIF Left( s, 1 ) == "Q" .AND. ! lCreateFinished .AND. ( n := At( "*", s ) ) > 0
             // We will deal later - just skip
 
@@ -650,9 +653,6 @@ STATIC FUNCTION hbqtui_gen_prg( cFile, cFuncName )
 
          ELSEIF hbqtui_isNonImplementedMethod( s )
             // DO nothing
-
-         ELSEIF hbqtui_isObjectNameSet( s )  /* This is needed as it is not being set in class construction */
-            // Skip - we already know the object name and will set after construction
 
          ELSEIF ! Empty( cText := hbqtui_pullSetToolTip( aLines, s:__enumIndex() ) )
             n := At( "->", cText )
@@ -3402,9 +3402,14 @@ STATIC FUNCTION qth_is_QObject( cWidget )
       aadd( aQObjects, "QGLWidget" )
 
       aadd( aQObjects, "QGraphicsSvgItem" )
+      aadd( aQObjects, "QSvgRenderer" )
 
       aadd( aQObjects, "QScriptEngine" )
       aadd( aQObjects, "QScriptExtensionPlugin" )
+
+      aadd( aQObjects, "QAudioInput" )
+      aadd( aQObjects, "QAudioOutput" )
+
    ENDIF
 
    RETURN ascan( aQObjects, {|e| e == cWidget } ) > 0
