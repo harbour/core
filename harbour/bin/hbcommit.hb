@@ -111,6 +111,9 @@ STATIC FUNCTION DoctorChanges( aChanges )
          CASE "X"
             cStart := ""
             EXIT
+         CASE " " /* modified props */
+            cStart := "*"
+            EXIT
          OTHERWISE
             cStart := "?"
          ENDSWITCH
