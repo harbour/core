@@ -126,7 +126,7 @@ TIFFFillStripPartial( TIFF *tif, int strip, tmsize_t read_ahead, int restart )
 
         if (cc != to_read) {
                 TIFFErrorExt(tif->tif_clientdata, module,
-                             "Read error at scanline %lu; got " TIFF_UINT64_FORMAT " bytes, expected %I64u",
+                             "Read error at scanline %lu; got " TIFF_UINT64_FORMAT " bytes, expected " TIFF_UINT64_FORMAT,
                              (unsigned long) tif->tif_row,
                              (TIFF_UINT64_T) cc,
                              (TIFF_UINT64_T) to_read);
