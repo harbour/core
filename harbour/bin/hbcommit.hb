@@ -100,6 +100,7 @@ STATIC FUNCTION DoctorChanges( aChanges )
          cStart := Left( cLine, 1 )
          SWITCH cStart
          CASE "M"
+         CASE " " /* modified props */
             cStart := "*"
             EXIT
          CASE "A"
@@ -110,9 +111,6 @@ STATIC FUNCTION DoctorChanges( aChanges )
             EXIT
          CASE "X"
             cStart := ""
-            EXIT
-         CASE " " /* modified props */
-            cStart := "*"
             EXIT
          OTHERWISE
             cStart := "?"
