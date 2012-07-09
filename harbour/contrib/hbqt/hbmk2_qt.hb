@@ -2335,13 +2335,13 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cDoc    := "n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
 
-         CASE oArg:cCast $ "double,qreal,float,GLfloat" .AND. oArg:lFar
+         CASE oArg:cCast $ "double,qreal,float,GLfloat,qsreal" .AND. oArg:lFar
             AAdd( oMtd:aPre, { oArg:cCast + " qr" + oMtd:cDocNM + " = 0;", oMtd:nHBIdx, "qr" + oMtd:cDocNM, "hb_stornd"  } )
             oArg:cBody   := "&qr" + oMtd:cDocNM
             oArg:cDoc    := "@n" + oMtd:cDocNM
             oArg:cTypeHB := "N*"
 
-         CASE oArg:cCast $ "double,qreal,float,GLfloat"
+         CASE oArg:cCast $ "double,qreal,float,GLfloat,qsreal"
             s := "hb_parnd( " + cHBIdx + " )"
             IF ! Empty( oArg:cDefault )
                oArg:cBody := "( HB_ISNUM( " + cHBIdx + " ) ? " + s + " : " + oArg:cDefault + " )"
@@ -3402,6 +3402,9 @@ STATIC FUNCTION qth_is_QObject( cWidget )
       aadd( aQObjects, "QGLWidget" )
 
       aadd( aQObjects, "QGraphicsSvgItem" )
+
+      aadd( aQObjects, "QScriptEngine" )
+      aadd( aQObjects, "QScriptExtensionPlugin" )
    ENDIF
 
    RETURN ascan( aQObjects, {|e| e == cWidget } ) > 0
