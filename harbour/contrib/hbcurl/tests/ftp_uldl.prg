@@ -144,7 +144,7 @@ PROCEDURE Main( cDL, cUL )
       /* Now let's download to memory */
 
       ? curl_easy_setopt( curl, HB_CURLOPT_DOWNLOAD )
-      ? curl_easy_setopt( curl, HB_CURLOPT_URL, "http://kent.dl.sourceforge.net/sourceforge/harbour-project/harbour-static-0.99.2-0mdk20070.i586.rpm" )
+      ? curl_easy_setopt( curl, HB_CURLOPT_URL, cDL )
       ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYPEER, .F. )
       ? curl_easy_setopt( curl, HB_CURLOPT_SSL_VERIFYHOST, .F. )
       ? curl_easy_setopt( curl, HB_CURLOPT_DL_BUFF_SETUP )
