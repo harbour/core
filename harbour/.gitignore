@@ -1,0 +1,8 @@
+.svn
+.hbmk
+obj
+lib
+*.exe
+*.dll
+!*-make.exe
+!lib/3rd

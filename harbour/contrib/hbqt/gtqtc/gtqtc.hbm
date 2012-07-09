@@ -8,6 +8,8 @@
 
 ../qtcore/hbqtcore.hbc
 
+-hbx=
+
 gtqtc.cpp
 
 gtqtc.h

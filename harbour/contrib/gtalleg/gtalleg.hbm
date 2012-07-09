@@ -10,6 +10,8 @@
 
 -w3 -es2
 
+-hbx=
+
 -stop{hbdyn|pocc|pocc64|poccarm|xcc|dmc|watcom|mingwarm|msvcarm}
 
 -depkeyhead=allegro:allegro.h

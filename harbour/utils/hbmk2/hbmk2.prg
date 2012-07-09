@@ -2549,7 +2549,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE Left( cParamL, 5 ) == "-hbx="
 
          cParam := MacroProc( hbmk, SubStr( cParam, 6 ), aParam[ _PAR_cFileName ] )
-         IF ! Empty( cParam )
+         IF Empty( cParam )
+            hbmk[ _HBMK_cHBX ] := NIL
+         ELSE
             hbmk[ _HBMK_cHBX ] := PathMakeAbsolute( PathSepToSelf( cParam ), hb_FNameDir( aParam[ _PAR_cFileName ] ) )
          ENDIF
 
@@ -13085,13 +13087,13 @@ STATIC FUNCTION __hbshell_win_reg_app( lRegister, lAllUser, cAppPath )
    LOCAL tmp
 
    LOCAL aEntries := {;
-      cHive + '\'                                , ""                     ,;
-      cHive + '\.hb\'                            , "HarbourScript"        ,;
-      cHive + '\HarbourScript\'                  , "Harbour Script file"  ,;
-      cHive + '\HarbourScript\DefaultIcon\'      , cAppPath + ",-1"       ,;
-      cHive + '\HarbourScript\Shell\'            , "Run"                  ,;
-      cHive + '\HarbourScript\Shell\Run\'        , ""                     ,;
-      cHive + '\HarbourScript\Shell\Run\Command\', cAppPath + ' "%1"'     }
+      cHive + '\'                                , ""                    ,;
+      cHive + '\.hb\'                            , "HarbourScript"       ,;
+      cHive + '\HarbourScript\'                  , "Harbour Script file" ,;
+      cHive + '\HarbourScript\DefaultIcon\'      , cAppPath + ",-1"      ,;
+      cHive + '\HarbourScript\Shell\'            , "Run"                 ,;
+      cHive + '\HarbourScript\Shell\Run\'        , ""                    ,;
+      cHive + '\HarbourScript\Shell\Run\Command\', cAppPath + ' "%1"'    }
 
    IF lRegister
       FOR tmp := 1 TO Len( aEntries ) STEP 2
@@ -13735,7 +13737,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-[no]minipo"        , I_( "do (not) add Harbour version number and source file reference to .po (default: add them)" ) },;
       { "-rebuildpo"         , I_( "recreate .po file, thus removing all obsolete entries in it" ) },;
       NIL,;
-      { "-hbx=<.ch>"         , I_( "Create Harbour header (in .hbx format) with all external symbols." ) },;
+      { "-hbx=[<.ch>]"       , I_( "Create Harbour header (in .hbx format) with all external symbols. Empty parameter will disable it." ) },;
       { "-autohbc=<.ch:.hbc>", I_( "<.ch> is a header file name. <.hbc> is a .hbc filename to be automatically included in case the header is found in any of the compiled sources. (EXPERIMENTAL)" ) },;
       NIL,;
       { "-deppkgname=<d:n>"       , I_( "<d> is the name of the dependency. <n> name of the package depedency. Can be specified multiple times." ) },;

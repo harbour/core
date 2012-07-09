@@ -11,6 +11,8 @@
 
 rddsql.hbc
 
+-hbx=
+
 -stop{pocc64|poccarm}
 
 -depkeyhead=firebird:ibase.h

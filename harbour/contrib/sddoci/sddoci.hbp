@@ -11,6 +11,8 @@
 
 rddsql.hbc
 
+-hbx=
+
 -stop{dos|os2|wce}
 
 -depkeyhead=ocilib:ocilib.h

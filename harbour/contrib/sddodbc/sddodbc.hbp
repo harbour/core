@@ -12,6 +12,8 @@
 
 rddsql.hbc
 
+-hbx=
+
 -stop{dos|os2|rsxnt}
 
 -depkeyhead=odbc:sql.h
