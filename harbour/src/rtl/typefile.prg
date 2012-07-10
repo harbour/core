@@ -69,7 +69,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
    LOCAL aSaveSet[ 2 ]
    LOCAL cDir, cName, cExt
    LOCAL cTmp
-   LOCAL aPath
+   LOCAL cPath
    LOCAL i
 
    IF ! HB_ISLOGICAL( lPrint )
@@ -89,16 +89,18 @@ PROCEDURE __TypeFile( cFile, lPrint )
    /* If no drive/dir specified, search the SET DEFAULT and PATH directories */
 
    hb_FNameSplit( cFile, @cDir, @cName, @cExt )
+
    IF Empty( cDir )
-      cTmp := Set( _SET_DEFAULT ) + ";" + Set( _SET_PATH )
-      cTmp := StrTran( cTmp, ",", ";" )
+
+      cTmp := StrTran( Set( _SET_DEFAULT ) + ";" + Set( _SET_PATH ), ",", ";" )
+
       i := Len( cTmp )
       DO WHILE SubStr( cTmp, i, 1 ) == ";"            /* remove last ";" */
          cTmp := Left( cTmp, --i )
       ENDDO
-      aPath := hb_ATokens( cTmp, ";" )
-      FOR i := 1 TO Len( aPath )
-         IF File( cTmp := hb_FNameMerge( aPath[ i ], cName, cExt ) )
+
+      FOR EACH cPath IN hb_ATokens( cTmp, ";" )
+         IF File( cTmp := hb_FNameMerge( cPath, cName, cExt ) )
             cFile := cTmp
             EXIT
          ENDIF
@@ -134,7 +136,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
    nSize   := FSeek( nHandle, 0, FS_END )
    nBuffer := Min( nSize, BUFFER_LENGTH )
 
-   FSeek( nHandle, 0 )  // go top
+   FSeek( nHandle, 0 ) /* go top */
 
    /* Here we try to read a line at a time but I think we could just
       display the whole buffer since it said:

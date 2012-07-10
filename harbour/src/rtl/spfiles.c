@@ -55,7 +55,7 @@
 
 HB_BOOL hb_spFile( const char * pFilename, char * pRetPath )
 {
-   char *Path;
+   char * Path;
    HB_BOOL bIsFile = HB_FALSE;
    PHB_FNAME pFilepath;
 
@@ -83,7 +83,7 @@ HB_BOOL hb_spFile( const char * pFilename, char * pRetPath )
          bIsFile = hb_fsFile( Path );
       }
 
-      if( !bIsFile && hb_setGetPath() )
+      if( ! bIsFile && hb_setGetPath() )
       {
          HB_PATHNAMES * NextPath = hb_setGetFirstSetPath();
 
@@ -119,7 +119,7 @@ HB_BOOL hb_spFile( const char * pFilename, char * pRetPath )
 
 HB_BOOL hb_spFileExists( const char * pFilename, char * pRetPath )
 {
-   char *Path;
+   char * Path;
    HB_BOOL bIsFile = HB_FALSE;
    PHB_FNAME pFilepath;
 
@@ -147,7 +147,7 @@ HB_BOOL hb_spFileExists( const char * pFilename, char * pRetPath )
          bIsFile = hb_fsFileExists( Path );
       }
 
-      if( !bIsFile && hb_setGetPath() )
+      if( ! bIsFile && hb_setGetPath() )
       {
          HB_PATHNAMES * NextPath = hb_setGetFirstSetPath();
 

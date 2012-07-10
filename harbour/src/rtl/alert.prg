@@ -43,7 +43,7 @@ STATIC s_lNoAlert
 FUNCTION Alert( cMessage, aOptions, cColorNorm )
    LOCAL cColorHigh
    LOCAL aOptionsOK
-   LOCAL nEval
+   LOCAL cOption
 
 #ifdef HB_CLP_UNDOC
 
@@ -76,9 +76,9 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
    ENDIF
 
    aOptionsOK := {}
-   FOR nEval := 1 TO Len( aOptions )
-      IF HB_ISSTRING( aOptions[ nEval ] ) .AND. ! Empty( aOptions[ nEval ] )
-         AAdd( aOptionsOK, aOptions[ nEval ] )
+   FOR EACH cOption IN aOptions
+      IF HB_ISSTRING( cOption ) .AND. ! Empty( cOption )
+         AAdd( aOptionsOK, cOption )
       ENDIF
    NEXT
 
@@ -100,6 +100,7 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
    LOCAL cMessage
    LOCAL cColorHigh
    LOCAL aOptionsOK
+   LOCAL cOption
    LOCAL nEval
 
 #ifdef HB_CLP_UNDOC
@@ -142,9 +143,9 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
    ENDIF
 
    aOptionsOK := {}
-   FOR nEval := 1 TO Len( aOptions )
-      IF HB_ISSTRING( aOptions[ nEval ] ) .AND. ! Empty( aOptions[ nEval ] )
-         AAdd( aOptionsOK, aOptions[ nEval ] )
+   FOR EACH cOption IN aOptions
+      IF HB_ISSTRING( cOption ) .AND. ! Empty( cOption )
+         AAdd( aOptionsOK, cOption )
       ENDIF
    NEXT
 
