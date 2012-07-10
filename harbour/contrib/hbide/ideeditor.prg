@@ -371,7 +371,7 @@ METHOD IdeEditsManager:getProto( cWord )
    LOCAL n, nLen
 
    cWord := upper( cWord )
-   nLen := len( cWord )
+   nLen := Len( cWord )
 
    /* This can be rationalized */
    IF ( n := ascan( ::aProtos, {|e| upper( left( e, nLen ) ) == cWord } ) ) > 0
@@ -556,7 +556,7 @@ METHOD IdeEditsManager:getEditorByTabObject( oTab )
 
 METHOD IdeEditsManager:getEditorByTabPosition( nPos )
 
-   IF HB_ISNUMERIC( nPos ) .AND. nPos > 0 .AND. nPos <= len( ::aTabs )
+   IF HB_ISNUMERIC( nPos ) .AND. nPos > 0 .AND. nPos <= Len( ::aTabs )
       IF !empty( ::aTabs[ nPos, TAB_OEDITOR ] )
          RETURN ::aTabs[ nPos, TAB_OEDITOR ]
       ENDIF
@@ -1415,7 +1415,7 @@ METHOD IdeEditor:destroy()
    ::qCoEdit  := NIL
    ::qEdit    := NIL
 
-   DO WHILE len( ::aEdits ) > 0
+   DO WHILE Len( ::aEdits ) > 0
       oEdit := ::aEdits[ 1 ]
       hb_adel( ::aEdits, 1, .t. )
       oEdit:destroy()
@@ -1457,7 +1457,7 @@ METHOD IdeEditor:destroy()
 METHOD IdeEditor:relay( oEdit )
    LOCAL oEdt
 
-   IF len( ::aEdits ) == 0
+   IF Len( ::aEdits ) == 0
       IF ::nSplOrient > -1
          ::nSplOrient := -1
          ::qLayout:removeWidget( ::qSplitter )
@@ -1535,7 +1535,7 @@ METHOD IdeEditor:prepareBufferToSave( cBuffer )
       NEXT
       cBuffer := ""
       aeval( a_, {|e| cBuffer += e + cEOL } )
-      cBuffer := substr( cBuffer, 1, len( cBuffer ) - len( cEOL ) )
+      cBuffer := substr( cBuffer, 1, Len( cBuffer ) - len( cEOL ) )
    ENDIF
 
    RETURN cBuffer

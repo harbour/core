@@ -523,7 +523,7 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
 
    CASE "browserView_anchorClicked"
       cText := lower( p:toString() )
-      nLen := len( cText )
+      nLen := Len( cText )
       IF ( n := ascan( ::aFunctions, {|e_| left( e_[ 6 ], nLen ) == cText } ) ) > 0
          ::oUI:q_listIndex:setCurrentItem( ::aFunctions[ n, 5 ] )
          ::populateIndexedSelection()
@@ -543,7 +543,7 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       EXIT
 
    CASE "editIndex_textChanged"
-      IF ( nLen := len( p ) ) > 0
+      IF ( nLen := Len( p ) ) > 0
          cLower := lower( p )
          IF ( n := ascan( ::aFunctions, {|e_| left( e_[ 6 ], nLen ) == cLower } ) ) > 0
             ::oUI:q_listIndex:setCurrentItem( ::aFunctions[ n, 5 ] )
@@ -574,13 +574,13 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       EXIT
 
    CASE "buttonForward_clicked"
-      IF ::nCurInHist < len( ::aHistory )
+      IF ::nCurInHist < Len( ::aHistory )
          ::oUI:q_treeDoc:setCurrentItem( ::aNodes[ ::aHistory[ ::nCurInHist + 1 ], 1 ], 0 )
       ENDIF
       EXIT
 
    CASE "buttonUp_clicked"
-      IF ::nCurInHist > 1 .AND. ::nCurInHist <= len( ::aHistory )
+      IF ::nCurInHist > 1 .AND. ::nCurInHist <= Len( ::aHistory )
          IF ! empty( qTWItem := ::oUI:q_treeDoc:itemAbove( ::oUI:q_treeDoc:currentItem( 0 ) ) )
             ::oUI:q_treeDoc:setCurrentItem( qTWItem, 0 )
          ENDIF
@@ -623,7 +623,7 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       IF ( n := ascan( ::aNodes, {|e_| e_[ 5 ] == cText } ) ) > 0
          IF ( nn := ascan( ::aHistory, n ) ) == 0
             aadd( ::aHistory, n )
-            ::nCurInHist := len( ::aHistory )
+            ::nCurInHist := Len( ::aHistory )
          ELSE
             ::nCurInHist := nn
          ENDIF
@@ -650,7 +650,7 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
 METHOD IdeHarbourHelp:jumpToFunction( cFunction )
    LOCAL n, nLen
 
-   nLen := len( cFunction )
+   nLen := Len( cFunction )
    cFunction := lower( cFunction )
    IF !empty( ::aNodes )
       IF ( n := ascan( ::aFunctions, {|e_| lower( left( e_[ 2 ], nLen ) ) == cFunction } ) ) > 0
@@ -784,7 +784,7 @@ STATIC FUNCTION hbide_buildFoldersTree( aNodes, aPaths )
 
       aSubs := hb_aTokens( cPath, "/" )
 
-      FOR i := 1 TO len( aSubs )
+      FOR i := 1 TO Len( aSubs )
          IF !empty( aSubs[ i ] )
             cCPath := hbide_buildPathFromSubs( aSubs, i )
             n := ascan( aNodes, {|e_| hb_FileMatch( hbide_pathNormalized( e_[ 4 ], .f. ), hbide_pathNormalized( cRoot + cCPath, .f. ) ) } )
@@ -1069,7 +1069,7 @@ METHOD IdeHarbourHelp:getFunctionPrototypes()
                            IF HB_ISOBJECT( oFunc )
                               IF !empty( oFunc:aSyntax )
                                  IF "C Prototype" $ oFunc:aSyntax[ 1 ]
-                                    aadd( aProto, alltrim( oFunc:aSyntax[ len( oFunc:aSyntax ) ] ) )
+                                    aadd( aProto, alltrim( oFunc:aSyntax[ Len( oFunc:aSyntax ) ] ) )
                                  ELSE
                                     aadd( aProto, alltrim( oFunc:aSyntax[ 1 ] ) )
                                  ENDIF
@@ -1086,7 +1086,7 @@ METHOD IdeHarbourHelp:getFunctionPrototypes()
                      IF HB_ISOBJECT( oFunc )
                         IF !empty( oFunc:aSyntax )
                            IF "C Prototype" $ oFunc:aSyntax[ 1 ]
-                              aadd( aProto, alltrim( oFunc:aSyntax[ len( oFunc:aSyntax ) ] ) )
+                              aadd( aProto, alltrim( oFunc:aSyntax[ Len( oFunc:aSyntax ) ] ) )
                            ELSE
                               aadd( aProto, alltrim( oFunc:aSyntax[ 1 ] ) )
                            ENDIF
@@ -1162,7 +1162,7 @@ METHOD IdeHarbourHelp:populateTextFile( cTextFile )
    aadd( aHtm, '   <br>' + '&nbsp;  <hr></hr></br>' )
    IF nParsed > 0
       aFn := ::aFuncByFile[ nParsed, 2 ]
-      IF len( aFn ) > 0
+      IF Len( aFn ) > 0
          FOR EACH oFunc IN aFn
             IF HB_ISOBJECT( oFunc )
                aadd( aHtm, '   <br>' + hbide_arrayToMemoHtml( oFunc:aSyntax ) + '</br>' )
@@ -1285,7 +1285,7 @@ METHOD IdeHarbourHelp:buildView( oFunc )
                s1 := s
             ENDIF
             aadd( aHtm, '<a href="' + s1 + '">' + s + "</a>" + ;
-                                        iif( s:__enumIndex() == len( a_ ), "", ",&nbsp;" ) )
+                                        iif( s:__enumIndex() == Len( a_ ), "", ",&nbsp;" ) )
          NEXT
          aadd( aHtm, "</td></tr>" )
       ENDIF
@@ -1355,7 +1355,7 @@ METHOD IdeHarbourHelp:buildView( oFunc )
                s1 := s
             ENDIF
             aadd( aHtm, '<a href="' + s1 + '">' + s + "</a>" + ;
-                                        iif( s:__enumIndex() == len( a_ ), "", ",&nbsp;" ) )
+                                        iif( s:__enumIndex() == Len( a_ ), "", ",&nbsp;" ) )
          NEXT
          aadd( aHtm, "</td></tr>" )
          aadd( aHtm, z )

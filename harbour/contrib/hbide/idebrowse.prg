@@ -458,8 +458,8 @@ METHOD IdeBrowseManager:getBrowserByAlias( cAlias )
 
 METHOD IdeBrowseManager:dispStatusInfo()
 
-   ::aStatusPnls[ PNL_PANELS ]:setText( "Panels: " + hb_ntos( len( ::aPanels ) ) + ":" + ::oCurPanel:cPanel )
-   ::aStatusPnls[ PNL_TABLES ]:setText( "Tables: " + hb_ntos( len( ::oCurPanel:aBrowsers ) ) )
+   ::aStatusPnls[ PNL_PANELS ]:setText( "Panels: " + hb_ntos( Len( ::aPanels ) ) + ":" + ::oCurPanel:cPanel )
+   ::aStatusPnls[ PNL_TABLES ]:setText( "Tables: " + hb_ntos( Len( ::oCurPanel:aBrowsers ) ) )
 
    ::aStatusPnls[ PNL_MISC   ]:setText( "M:"    )
    ::aStatusPnls[ PNL_READY  ]:setText( "Ready" )
@@ -728,7 +728,7 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
       EXIT
    CASE "buttonScrollToLast_clicked"
       IF !empty( ::oCurBrw )
-         ::oCurBrw:toColumn( len( ::oCurBrw:aStruct ) )
+         ::oCurBrw:toColumn( Len( ::oCurBrw:aStruct ) )
       ENDIF
       EXIT
    CASE "buttonSearchInTable_clicked"
@@ -741,7 +741,7 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
    CASE "buttonCopyStruct_clicked"
       IF !empty( aStruct := ::oCurBrw:dbStruct() )
          i := 0
-         aeval( aStruct, {|e_| iif( len( e_[ 1 ] ) > i, i := len( e_[ 1 ] ), NIL ) } )
+         aeval( aStruct, {|e_| iif( Len( e_[ 1 ] ) > i, i := len( e_[ 1 ] ), NIL ) } )
          i += 2
 
          cTmp := "   LOCAL aStruct := {"
@@ -749,7 +749,7 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
                                     pad( '"' + e_[ 1 ] + '"', i ) + ', "' + e_[ 2 ] + '", ' + ;
                                         str( e_[ 3 ], 4, 0 ) + ', ' + ;
                                             str( e_[ 4 ], 2, 0 ) + ' }' + ;
-                                                iif( len( aStruct ) == n, " }", ",;" ) + hb_eol() } )
+                                                iif( Len( aStruct ) == n, " }", ",;" ) + hb_eol() } )
 
          QClipboard():setText( cTmp )
       ENDIF
@@ -868,7 +868,7 @@ METHOD IdeBrowseManager:populateUiStruct()
 
    ::qStruct:q_tableFields:clearContents()
 
-   oTbl:setRowCount( len( aStruct ) )
+   oTbl:setRowCount( Len( aStruct ) )
 
    n := 0
    FOR EACH fld_ IN aStruct
@@ -925,11 +925,11 @@ METHOD IdeBrowseManager:buildUiStruct()
    oTbl:verticalHeader():hide()
    oTbl:horizontalHeader():setStretchLastSection( .t. )
    oTbl:setAlternatingRowColors( .t. )
-   oTbl:setColumnCount( len( hdr_ ) )
+   oTbl:setColumnCount( Len( hdr_ ) )
    oTbl:setShowGrid( .t. )
    oTbl:setSelectionMode( QAbstractItemView_SingleSelection )
    oTbl:setSelectionBehavior( QAbstractItemView_SelectRows )
-   FOR n := 1 TO len( hdr_ )
+   FOR n := 1 TO Len( hdr_ )
       qItm := QTableWidgetItem()
       qItm:setText( hdr_[ n,1 ] )
       oTbl:setHorizontalHeaderItem( n-1, qItm )
@@ -1350,7 +1350,7 @@ METHOD IdeBrowsePanel:tileVertically()
 
    qObj   := ::activeSubWindow()
    qVPort := ::viewport()
-   nH     := qVPort:height() / len( ::aBrowsers )
+   nH     := qVPort:height() / Len( ::aBrowsers )
    nW     := qVPort:width()
    nT     := 0
    FOR EACH a_ IN ::aBrowsers
@@ -1368,7 +1368,7 @@ METHOD IdeBrowsePanel:tileHorizontally()
    qObj   := ::activeSubWindow()
    qVPort := ::viewport()
    nH     := qVPort:height()
-   nW     := qVPort:width() / len( ::aBrowsers )
+   nW     := qVPort:width() / Len( ::aBrowsers )
    nT     := 0
    nL     := 0
    FOR EACH a_ IN ::aBrowsers
@@ -1521,7 +1521,7 @@ METHOD IdeBrowsePanel:addBrowser( aInfo )
 /*------------------------------------------------------------------------*/
 
 METHOD IdeBrowsePanel:activateBrowser()
-   IF len( ::aBrowsers ) > 0
+   IF Len( ::aBrowsers ) > 0
       ::qWidget:setActiveSubWindow( ::aBrowsers[ 1, SUB_WINDOW ] )
    ENDIF
    RETURN Self
@@ -1621,7 +1621,7 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD getIndexInfo()
    METHOD setIndex( cIndex )
    METHOD setOrder( nOrder )
-   ACCESS numIndexes()                            INLINE len( ::aIndex )
+   ACCESS numIndexes()                            INLINE Len( ::aIndex )
 
    METHOD dispInfo()
    METHOD search( cSearch, lSoft, lLast, nMode )
@@ -1742,7 +1742,7 @@ METHOD IdeBrowse:create( oIde, oManager, oPanel, aInfo )
             aadd( ::aStruct,  1 )
             aadd( ::aStruct,  0 )
          ELSE
-            aadd( ::aStruct, len( xVrb ) )
+            aadd( ::aStruct, Len( xVrb ) )
             aadd( ::aStruct,  0 )
          ENDIF
       NEXT
@@ -1820,7 +1820,7 @@ METHOD IdeBrowse:buildBrowser()
 
    /* Form View */
    ::qForm := QWidget()
-   ::qForm:setMinimumSize( QSize( 300  , len( ::aStruct ) * 34 ) )
+   ::qForm:setMinimumSize( QSize( 300  , Len( ::aStruct ) * 34 ) )
    ::qForm:setMaximumSize( QSize( 12000, 48000 ) )
 
    ::qFLayout := QFormLayout()
@@ -2048,7 +2048,7 @@ METHOD IdeBrowse:buildContextMenu()
 
    ::qMdi:setFocus( 0 )
 
-   IF len( ::aIndex ) > 0
+   IF Len( ::aIndex ) > 0
       aadd( ::aMenu, { "Set to Natural Order", {|| ::setOrder( 0 ) } } )
       aadd( ::aMenu, { "" } )
    ENDIF
@@ -2064,7 +2064,7 @@ METHOD IdeBrowse:buildContextMenu()
    ENDIF
 
    /* Column Scrolling */
-   nZeros := iif( len( ::aStruct ) < 10, 1, iif( len( ::aStruct ) < 100, 2, 3 ) )
+   nZeros := iif( Len( ::aStruct ) < 10, 1, iif( len( ::aStruct ) < 100, 2, 3 ) )
    FOR EACH a_ IN ::aStruct
       cPmt := strzero( a_:__enumIndex(), nZeros ) + " " + a_[ 2 ] + " . " + a_[ 1 ]
       aadd( ::aFlds, hbide_fieldsArray( Self, cPmt, a_:__enumIndex() ) )
@@ -2230,7 +2230,7 @@ METHOD IdeBrowse:skipBlock( nHowMany )
       ENDIF
 
    ELSE
-      nRecs    := len( ::aData )
+      nRecs    := Len( ::aData )
       nCurPos  := ::nIndex
 
       IF nHowMany >= 0
@@ -2458,7 +2458,7 @@ METHOD IdeBrowse:ordKeyGoto( nRec )
       ( ::cAlias )->( OrdKeyGoto( nRec ) )
       ::refreshAll()
    ELSE
-      IF nRec > 0 .AND. nRec <= len( ::aData )
+      IF nRec > 0 .AND. nRec <= Len( ::aData )
          ::nIndex := nRec
       ENDIF
    ENDIF
@@ -2473,7 +2473,7 @@ METHOD IdeBrowse:goto( nRec )
       ( ::cAlias )->( DbGoto( nRec ) )
       ::refreshAll()
    ELSE
-      IF nRec > 0 .AND. nRec <= len( ::aData )
+      IF nRec > 0 .AND. nRec <= Len( ::aData )
          ::nIndex := nRec
       ENDIF
    ENDIF
@@ -2500,7 +2500,7 @@ METHOD IdeBrowse:goBottom()
       ( ::cAlias )->( DbGoBottom() )
       ::refreshAll()
    ELSE
-      ::nIndex := len( ::aData )
+      ::nIndex := Len( ::aData )
    ENDIF
 
    RETURN NIL
@@ -2557,7 +2557,7 @@ METHOD IdeBrowse:ordKeyCount()
    IF ::nType == BRW_TYPE_DBF
       RETURN ( ::cAlias )->( ordKeyCount() )
    ELSE
-      RETURN len( ::aData )
+      RETURN Len( ::aData )
    ENDIF
 
    RETURN 0
@@ -2569,7 +2569,7 @@ METHOD IdeBrowse:lastRec()
    IF ::nType == BRW_TYPE_DBF
       RETURN ( ::cAlias )->( LastRec() )
    ELSE
-      RETURN len( ::aData )
+      RETURN Len( ::aData )
    ENDIF
 
    RETURN 0

@@ -522,7 +522,7 @@ METHOD hbCUIEditor:scrBuildFromBuffer( cBuffer, cScreen )
 
    IF ( nStart := at( cTokenB, cBuffer ) ) > 0
       IF ( nEnd := at( cTokenE, cBuffer ) ) > 0
-         cCode := substr( cBuffer, nStart + len( cTokenB ), nEnd - nStart - 1 - len( cTokenB ) )
+         cCode := substr( cBuffer, nStart + Len( cTokenB ), nEnd - nStart - 1 - len( cTokenB ) )
          aCode := hb_aTokens( strtran( cCode, chr( 13 ), chr( 10 ) ), chr( 10 ) )
          IF ! empty( aCode )
             aAttr := {}
@@ -545,7 +545,7 @@ METHOD hbCUIEditor:scrBuildFromBuffer( cBuffer, cScreen )
 
                      CASE OBJ_O_BOX
                         aMatches := hb_regExAll( "^@|\bBOX\b|\bCOLOR\b", cLine, .f., .f., 0, 1, .f. )
-                        IF ! empty( nLen := len( aMatches ) )
+                        IF ! empty( nLen := Len( aMatches ) )
                            o_:= ::scrObjBlank()
                            //
                            o_[ OBJ_TYPE       ] := OBJ_O_BOX
@@ -577,7 +577,7 @@ METHOD hbCUIEditor:scrBuildFromBuffer( cBuffer, cScreen )
                                  s := alltrim( s )
                                  s := strtran( s, '"', "" )
                                  o_[ OBJ_BOX_SHAPE ] := substr( s, 1, 8 )
-                                 o_[ OBJ_PATTERN   ] := iif( len( s ) == 9, "FILLED", "CLEAR" )
+                                 o_[ OBJ_PATTERN   ] := iif( Len( s ) == 9, "FILLED", "CLEAR" )
 
                                  EXIT
                               CASE "COLOR"
@@ -592,7 +592,7 @@ METHOD hbCUIEditor:scrBuildFromBuffer( cBuffer, cScreen )
 
                      CASE OBJ_O_TEXT
                         aMatches := hb_regExAll( "^@|\bSAY\b|\bCOLOR\b", cLine, .f., .f., 0, 1, .f. )
-                        IF ! empty( nLen := len( aMatches ) )
+                        IF ! empty( nLen := Len( aMatches ) )
                            o_:= ::scrObjBlank()
                            //
                            o_[ OBJ_TYPE ] := OBJ_O_TEXT
@@ -623,12 +623,12 @@ METHOD hbCUIEditor:scrBuildFromBuffer( cBuffer, cScreen )
                                     s := aAttr[ 6 ]
                                  ELSE
                                     s := alltrim( s )
-                                    s := substr( s, 2, len( s ) - 2 )
+                                    s := substr( s, 2, Len( s ) - 2 )
                                     o_[ OBJ_TEXT   ] := s
                                  ENDIF
                                  o_[ OBJ_TO_ROW ] := o_[ OBJ_ROW ]
-                                 o_[ OBJ_TO_COL ] := o_[ OBJ_COL ] + len( s ) - 1
-                                 o_[ OBJ_F_LEN  ] := len( s )
+                                 o_[ OBJ_TO_COL ] := o_[ OBJ_COL ] + Len( s ) - 1
+                                 o_[ OBJ_F_LEN  ] := Len( s )
 
                                  EXIT
                               CASE "COLOR"
@@ -643,7 +643,7 @@ METHOD hbCUIEditor:scrBuildFromBuffer( cBuffer, cScreen )
 
                      CASE OBJ_O_FIELD
                         aMatches := hb_regExAll( "^@|\bGET\b|\bPICTURE\b|\bCOLOR\b|\bWHEN\b|\bVALID\b", cLine, .f., .f., 0, 1, .f. )
-                        IF ! empty( nLen := len( aMatches ) )
+                        IF ! empty( nLen := Len( aMatches ) )
                            o_:= ::scrObjBlank()
                            //
                            o_[ OBJ_TYPE ] := OBJ_O_FIELD
@@ -680,7 +680,7 @@ METHOD hbCUIEditor:scrBuildFromBuffer( cBuffer, cScreen )
                                  EXIT
 
                               CASE "PICTURE"
-                                 IF aMatch:__enumIndex() < len( aMatches )
+                                 IF aMatch:__enumIndex() < Len( aMatches )
                                     n := aMatches[ aMatch:__enumIndex() + 1, 2 ]
                                     o_[ OBJ_F_PIC ] := alltrim( substr( cLine, aMatch[ 3 ] + 1, n - 1 - aMatch[ 3 ] ) )
                                  ELSE
@@ -689,7 +689,7 @@ METHOD hbCUIEditor:scrBuildFromBuffer( cBuffer, cScreen )
                                  EXIT
 
                               CASE "COLOR"
-                                 IF aMatch:__enumIndex() < len( aMatches )
+                                 IF aMatch:__enumIndex() < Len( aMatches )
                                     n := aMatches[ aMatch:__enumIndex() + 1, 2 ]
                                     o_[ OBJ_COLOR ] := alltrim( substr( cLine, aMatch[ 3 ] + 1, n - 1 - aMatch[ 3 ] ) )
                                  ELSE
@@ -698,7 +698,7 @@ METHOD hbCUIEditor:scrBuildFromBuffer( cBuffer, cScreen )
                                  EXIT
 
                               CASE "WHEN"
-                                 IF aMatch:__enumIndex() < len( aMatches )
+                                 IF aMatch:__enumIndex() < Len( aMatches )
                                     n := aMatches[ aMatch:__enumIndex() + 1, 2 ]
                                     o_[ OBJ_WHEN ] := alltrim( substr( cLine, aMatch[ 3 ] + 1, n - 1 - aMatch[ 3 ] ) )
                                  ELSE
@@ -707,7 +707,7 @@ METHOD hbCUIEditor:scrBuildFromBuffer( cBuffer, cScreen )
                                  EXIT
 
                               CASE "VALID"
-                                 IF aMatch:__enumIndex() < len( aMatches )
+                                 IF aMatch:__enumIndex() < Len( aMatches )
                                     n := aMatches[ aMatch:__enumIndex() + 1, 2 ]
                                     o_[ OBJ_VALID ] := alltrim( substr( cLine, aMatch[ 3 ] + 1, n - 1 - aMatch[ 3 ] ) )
                                  ELSE
@@ -762,14 +762,14 @@ METHOD hbCUIEditor:scrSave( lAsk )
 
    nLenSay := nLenPic := nLenClr := nLenWhn := nLenVld := nLenGet := 0
 
-   aeval( ::obj_, {|e_| iif( e_[ OBJ_TYPE ] == OBJ_O_FIELD, nLenGet := max( len( e_[ OBJ_ID   ] ), nLenGet ), ;
-                        iif( e_[ OBJ_TYPE ] == OBJ_O_TEXT , nLenSay := max( len( e_[ OBJ_TEXT ] ), nLenSay ), NIL ) ) } )
+   aeval( ::obj_, {|e_| iif( e_[ OBJ_TYPE ] == OBJ_O_FIELD, nLenGet := max( Len( e_[ OBJ_ID   ] ), nLenGet ), ;
+                        iif( e_[ OBJ_TYPE ] == OBJ_O_TEXT , nLenSay := max( Len( e_[ OBJ_TEXT ] ), nLenSay ), NIL ) ) } )
    nLenSay := iif( empty( nLenSay ), 0, nLenSay + 2 )
 
-   aeval( ::obj_, {|e_| nLenClr := max( len( e_[ OBJ_COLOR ] ), nLenClr ) } )
-   aeval( ::obj_, {|e_| nLenPic := max( len( e_[ OBJ_F_PIC ] ), nLenPic ) } )
-   aeval( ::obj_, {|e_| nLenWhn := max( len( e_[ OBJ_WHEN  ] ), nLenWhn ) } )
-   aeval( ::obj_, {|e_| nLenVld := max( len( e_[ OBJ_VALID ] ), nLenVld ) } )
+   aeval( ::obj_, {|e_| nLenClr := max( Len( e_[ OBJ_COLOR ] ), nLenClr ) } )
+   aeval( ::obj_, {|e_| nLenPic := max( Len( e_[ OBJ_F_PIC ] ), nLenPic ) } )
+   aeval( ::obj_, {|e_| nLenWhn := max( Len( e_[ OBJ_WHEN  ] ), nLenWhn ) } )
+   aeval( ::obj_, {|e_| nLenVld := max( Len( e_[ OBJ_VALID ] ), nLenVld ) } )
 
    aadd( prg_, "/* HB_SCREEN_BEGINS <" + ::cScreen + "> */" )
    aadd( prg_, " " )
@@ -869,7 +869,7 @@ METHOD hbCUIEditor:scrBuildSource( prg_, nIndent )
 
    cP := space( nIndent )
    aeval( prg_, {|e| s += cP + e + hb_eol() } )
-   s := substr( s, 1, len( s ) - len( hb_eol() ) )
+   s := substr( s, 1, Len( s ) - len( hb_eol() ) )
 
    RETURN s
 
@@ -886,12 +886,12 @@ METHOD hbCUIEditor:scrUpdateSource( prg_ )
       IF ( nStart := at( cTokenB, cBuffer ) ) > 0
          nEnd := at( cTokenE, cBuffer )
          IF nEnd == 0
-            nEnd := nStart + len( cTokenB )
+            nEnd := nStart + Len( cTokenB )
          ELSE
-            nEnd += len( cTokenE )
+            nEnd += Len( cTokenE )
          ENDIF
          cTmp := substr( cBuffer, 1, nStart - 1 )
-         nIndent := nStart - hb_rat( hb_eol(), cTmp ) - len( hb_eol() )
+         nIndent := nStart - hb_rat( hb_eol(), cTmp ) - Len( hb_eol() )
 
          s := ::scrBuildSource( prg_, nIndent )
          s := substr( cBuffer, 1, nStart - nIndent - 1 ) + s + substr( cBuffer, nEnd )
@@ -1016,7 +1016,7 @@ METHOD hbCUIEditor:scrUpdateUndo()
 METHOD hbCUIEditor:scrUndo()
    LOCAL nLast
 
-   IF ! empty( nLast := len( ::aUndo ) )
+   IF ! empty( nLast := Len( ::aUndo ) )
       ::obj_:= aclone( ::aUndo[ nLast ] )
       hb_adel( ::aUndo, nLast, .t. )
       ::xRefresh := OBJ_REFRESH_ALL
@@ -1328,7 +1328,7 @@ METHOD hbCUIEditor:scrMove()
             ::cDrawFill ,;
             ::cClrPrev   )
 
-   FOR i := 1 TO len( ::obj_ )
+   FOR i := 1 TO Len( ::obj_ )
       IF ::obj_[ i,OBJ_ROW ] + ::nRowDis <= ::nBottom .AND. ;
          ::obj_[ i,OBJ_COL ] + ::nColDis <= ::nRight
 
@@ -1413,7 +1413,7 @@ METHOD hbCUIEditor:scrMoveLine()
                ::cDrawFill ,;
                ::cClrPrev   )
 
-      FOR i := 1 TO len( ::obj_ )
+      FOR i := 1 TO Len( ::obj_ )
          nOff := ::obj_[ i, OBJ_COL ] + ::nColDis
          nRow := ::obj_[ i, OBJ_ROW ] + ::nRowDis
          nCol := nOff
@@ -1506,7 +1506,7 @@ METHOD hbCUIEditor:scrDispGhost( gst_ )
 METHOD hbCUIEditor:scrStatus()
    LOCAL s, typ_, objId, cS
 
-   cS := iif( len( ::cSource ) <= 20, ::cSource, substr( ::cSource, 1, 3 ) + ".." + right( ::cSource, 15 ) )
+   cS := iif( Len( ::cSource ) <= 20, ::cSource, substr( ::cSource, 1, 3 ) + ".." + right( ::cSource, 15 ) )
 
    dispbegin()
    s := pad( cS, 20 ) + CHR_PIPE
@@ -1538,7 +1538,7 @@ METHOD hbCUIEditor:scrStatus()
    ENDIF
 
    s += pad( trim( objId ), 10 ) + CHR_PIPE
-   s += "U:" + hb_ntos( len( ::aUndo ) )
+   s += "U:" + hb_ntos( Len( ::aUndo ) )
 
    @ ::nRowStatus, ::nColStatus SAY pad( s, maxcol() + 1 ) COLOR ::cClrStatus
 
@@ -1658,8 +1658,8 @@ METHOD hbCUIEditor:scrOrdGets()
       ENDIF
    NEXT
    IF ! empty( t_ )
-      n_:= array( len( t_ ) )
-      h_:= array( len( t_ ) )
+      n_:= array( Len( t_ ) )
+      h_:= array( Len( t_ ) )
       aeval( t_, {|e_,i| e_:= e_, n_[ i ] := i } )
       aeval( t_, {|e_,i| h_[ i ] := e_[ OBJ_ID ] } )
 
@@ -1667,7 +1667,7 @@ METHOD hbCUIEditor:scrOrdGets()
       B_MSG "Order GETS" CHOOSE h_ RESTORE SHADOW CENTER INTO n_ SELECTIONS NUMERIC // NUMBERED n_
       ::scrMsg()
 
-      IF len( n_ ) != len( t_ )
+      IF Len( n_ ) != len( t_ )
          alert( "Must ORDER every field !" )
          RETURN Self
       ENDIF
@@ -1860,7 +1860,7 @@ METHOD hbCUIEditor:scrChkObj()
    NEXT
 
    IF !empty( a_ )
-      IF len( a_ ) >= 2
+      IF Len( a_ ) >= 2
          RETURN a_[ 2 ]
       ELSE
          RETURN a_[ 1 ]
@@ -1887,7 +1887,7 @@ METHOD hbCUIEditor:scrUpdObjRC()
          ::obj_[ nObj, OBJ_TO_COL ] := ::obj_[ nObj, OBJ_COL ] + nW
       ELSE
          ::obj_[ nObj, OBJ_TO_ROW ] := ::nRowRep
-         ::obj_[ nObj, OBJ_TO_COL ] := ::nColRep + len( ::obj_[ nObj, iif( ::objIsTxt( nObj ), OBJ_EQN, OBJ_TEXT ) ] ) - 1
+         ::obj_[ nObj, OBJ_TO_COL ] := ::nColRep + Len( ::obj_[ nObj, iif( ::objIsTxt( nObj ), OBJ_EQN, OBJ_TEXT ) ] ) - 1
       ENDIF
    ENDIF
    RETURN NIL
@@ -1989,7 +1989,7 @@ METHOD hbCUIEditor:scrObjPas()       //  Paste Copied OBJECT
       o_[ OBJ_COL ]         := ::nColRep
       IF o_[ OBJ_TYPE   ]   == OBJ_O_FIELD
          o_[ OBJ_TO_ROW ]   := ::nRowRep
-         o_[ OBJ_TO_COL ]   := ::nColRep + len( o_[ OBJ_TEXT ] ) - 1
+         o_[ OBJ_TO_COL ]   := ::nColRep + Len( o_[ OBJ_TEXT ] ) - 1
       ELSEIF o_[ OBJ_TYPE ] == OBJ_O_BOX
          o_[ OBJ_TO_ROW ]   := ::nRowRep + ( oldRow2 - oldRow )
          o_[ OBJ_TO_COL ]   := ::nColRep + ( oldCol2 - oldCol )
@@ -2301,27 +2301,27 @@ METHOD hbCUIEditor:scrTextPost( gst_, nMode )
                   s3 := substr( s, gst_[ 4 ] - nCol + 2 )
                ENDIF
 
-               IF len( s1 ) > 0
-                  aadd( ins_, ::scrObjBlank() ) ; n1 := len( ins_ )
+               IF Len( s1 ) > 0
+                  aadd( ins_, ::scrObjBlank() ) ; n1 := Len( ins_ )
 
                   ins_[ n1, OBJ_TYPE    ] := OBJ_O_TEXT
                   ins_[ n1, OBJ_ROW     ] := ::obj_[ n, OBJ_ROW ]
                   ins_[ n1, OBJ_COL     ] := ::obj_[ n, OBJ_COL ]
                   ins_[ n1, OBJ_EQN     ] := s1
                   ins_[ n1, OBJ_TO_ROW  ] := ::obj_[ n, OBJ_ROW     ]
-                  ins_[ n1, OBJ_TO_COL  ] := ins_[ n1, OBJ_COL ] + len( s1 ) - 1
+                  ins_[ n1, OBJ_TO_COL  ] := ins_[ n1, OBJ_COL ] + Len( s1 ) - 1
                ENDIF
 
-               IF len( s3 ) > 0
+               IF Len( s3 ) > 0
                   aadd( ins_, ::scrObjBlank() )
-                  n1 := len( ins_ )
+                  n1 := Len( ins_ )
 
                   ins_[ n1, OBJ_TYPE    ] := OBJ_O_TEXT
                   ins_[ n1, OBJ_ROW     ] := ::obj_[n, OBJ_ROW]
                   ins_[ n1, OBJ_COL     ] := gst_[ 4 ] + 1
                   ins_[ n1, OBJ_EQN     ] := s3
                   ins_[ n1, OBJ_TO_ROW  ] := ::obj_[ n, OBJ_ROW     ]
-                  ins_[ n1, OBJ_TO_COL  ] := ins_[ n1, OBJ_COL ] + len( s3 ) - 1
+                  ins_[ n1, OBJ_TO_COL  ] := ins_[ n1, OBJ_COL ] + Len( s3 ) - 1
                ENDIF
 
             ELSEIF ::objIsFld( n )
@@ -2371,35 +2371,35 @@ METHOD hbCUIEditor:scrTextPost( gst_, nMode )
                ENDIF
 
                IF nMode == 0
-                  IF len( s1 ) > 0
-                     aadd( ins_, ::scrObjBlank() ) ; n1 := len( ins_ )
+                  IF Len( s1 ) > 0
+                     aadd( ins_, ::scrObjBlank() ) ; n1 := Len( ins_ )
 
                      ins_[ n1, OBJ_TYPE    ] := OBJ_O_TEXT
                      ins_[ n1, OBJ_ROW     ] := ::obj_[ n, OBJ_ROW ]
                      ins_[ n1, OBJ_COL     ] := ::obj_[ n, OBJ_COL ]
                      ins_[ n1, OBJ_EQN     ] := s1
                      ins_[ n1, OBJ_TO_ROW  ] := ::obj_[ n, OBJ_ROW ]
-                     ins_[ n1, OBJ_TO_COL  ] := ins_[ n1,OBJ_COL   ] + len( s1 ) - 1
+                     ins_[ n1, OBJ_TO_COL  ] := ins_[ n1,OBJ_COL   ] + Len( s1 ) - 1
                   ENDIF
-                  IF len(s3) > 0
-                     aadd( ins_, ::scrObjBlank() ) ; n1 := len( ins_ )
+                  IF Len(s3) > 0
+                     aadd( ins_, ::scrObjBlank() ) ; n1 := Len( ins_ )
 
                      ins_[ n1, OBJ_TYPE    ] := OBJ_O_TEXT
                      ins_[ n1, OBJ_ROW     ] := ::obj_[ n, OBJ_ROW ]
                      ins_[ n1, OBJ_COL     ] := old_[ 4 ] + 1
                      ins_[ n1, OBJ_EQN     ] := s3
                      ins_[ n1, OBJ_TO_ROW  ] := ::obj_[ n, OBJ_ROW ]
-                     ins_[ n1, OBJ_TO_COL  ] := ins_[ n1,OBJ_COL   ] + len( s3 ) - 1
+                     ins_[ n1, OBJ_TO_COL  ] := ins_[ n1,OBJ_COL   ] + Len( s3 ) - 1
                   ENDIF
                ENDIF
 
-               IF len(s2) > 0
-                  aadd( ins_, aclone( ::obj_[ n ] ) ) ;  n1 := len( ins_ )
+               IF Len(s2) > 0
+                  aadd( ins_, aclone( ::obj_[ n ] ) ) ;  n1 := Len( ins_ )
 
                   ins_[ n1, OBJ_ROW    ] := gst_[ 1 ] + nn
                   ins_[ n1, OBJ_COL    ] := gst_[ 2 ]+ iif( old_[ 2 ] - ::obj_[ n, OBJ_COL ] >= 0, 0, abs( old_[ 2 ] - ::obj_[ n, OBJ_COL ] ) )
                   ins_[ n1, OBJ_TO_ROW ] := ins_[ n1, OBJ_ROW ]
-                  ins_[ n1, OBJ_TO_COL ] := ins_[ n1, OBJ_COL ] + len( s2 ) - 1
+                  ins_[ n1, OBJ_TO_COL ] := ins_[ n1, OBJ_COL ] + Len( s2 ) - 1
                   ins_[ n1, OBJ_EQN    ] := s2
                ENDIF
 
@@ -2409,7 +2409,7 @@ METHOD hbCUIEditor:scrTextPost( gst_, nMode )
                ENDIF
 
                //  Same OBJECT is TO be inserted IN moved block
-               aadd( ins_, aclone( ::obj_[ n ] ) ) ; n1 := len( ins_ )
+               aadd( ins_, aclone( ::obj_[ n ] ) ) ; n1 := Len( ins_ )
                nWid := ::obj_[ n, OBJ_TO_COL ] - ::obj_[ n, OBJ_COL ]
 
                ins_[ n1, OBJ_ROW    ] := gst_[ 1 ] + nn
@@ -2430,7 +2430,7 @@ METHOD hbCUIEditor:scrTextPost( gst_, nMode )
    aeval( ddd_,{|e| aadd( del_, e ) } )
 
    IF !empty( del_ )
-      FOR i := 1 TO len( ::obj_)
+      FOR i := 1 TO Len( ::obj_)
          IF ascan( del_, i ) == 0
             aadd( d_, ::obj_[ i ] )
          ENDIF
@@ -2485,25 +2485,25 @@ METHOD hbCUIEditor:scrTextDel()
                   s3 := substr( s, old_[ 4 ] - nCol + 2 )
                ENDIF
 
-               IF len( s1 ) > 0
-                  aadd( ins_, ::scrObjBlank() ) ; n1 := len( ins_ )
+               IF Len( s1 ) > 0
+                  aadd( ins_, ::scrObjBlank() ) ; n1 := Len( ins_ )
 
                   ins_[ n1, OBJ_TYPE    ] := OBJ_O_TEXT
                   ins_[ n1, OBJ_ROW     ] := ::obj_[ n,OBJ_ROW ]
                   ins_[ n1, OBJ_COL     ] := ::obj_[ n,OBJ_COL ]
                   ins_[ n1, OBJ_EQN     ] := s1
                   ins_[ n1, OBJ_TO_ROW  ] := ::obj_[ n, OBJ_ROW     ]
-                  ins_[ n1, OBJ_TO_COL  ] := ins_[ n1, OBJ_COL ] + len( s1 ) - 1
+                  ins_[ n1, OBJ_TO_COL  ] := ins_[ n1, OBJ_COL ] + Len( s1 ) - 1
                ENDIF
-               IF len( s3 ) > 0
-                  aadd( ins_, ::scrObjBlank() ) ; n1 := len( ins_ )
+               IF Len( s3 ) > 0
+                  aadd( ins_, ::scrObjBlank() ) ; n1 := Len( ins_ )
 
                   ins_[ n1, OBJ_TYPE    ] := OBJ_O_TEXT
                   ins_[ n1, OBJ_ROW     ] := ::obj_[ n, OBJ_ROW ]
                   ins_[ n1, OBJ_COL     ] := old_[ 4 ] + 1
                   ins_[ n1, OBJ_EQN     ] := s3
                   ins_[ n1, OBJ_TO_ROW  ] := ::obj_[ n, OBJ_ROW     ]
-                  ins_[ n1, OBJ_TO_COL  ] := ins_[ n1, OBJ_COL ] + len( s3 ) - 1
+                  ins_[ n1, OBJ_TO_COL  ] := ins_[ n1, OBJ_COL ] + Len( s3 ) - 1
                ENDIF
 
             ELSEIF ::objIsFld( n )
@@ -2517,7 +2517,7 @@ METHOD hbCUIEditor:scrTextDel()
    NEXT
 
    IF !empty(del_)
-      FOR i := 1 TO len( ::obj_ )
+      FOR i := 1 TO Len( ::obj_ )
          IF ascan(del_,i) == 0
             aadd(d_,::obj_[i])
          ENDIF
@@ -2550,7 +2550,7 @@ METHOD hbCUIEditor:scrAddTxt( nMode )
    IF nMode == 1      //  New Character
       IF empty( txt_ ) .OR. ascan( txt_, {|e_| VouchInRange( nRepCol, e_[ OBJ_COL ], e_[ OBJ_TO_COL ] ) } ) == 0
          aadd( txt_, ::scrObjBlank() )
-         nTxt := len( txt_ )
+         nTxt := Len( txt_ )
          txt_[ nTxt, OBJ_TYPE    ]  := OBJ_O_TEXT
          txt_[ nTxt, OBJ_F_TYPE  ]  := 'C'
          txt_[ nTxt, OBJ_F_LEN   ]  := 1
@@ -2569,42 +2569,42 @@ METHOD hbCUIEditor:scrAddTxt( nMode )
                                  chr( nKey ) + ;
            substr( txt_[ nTxt, OBJ_EQN ], ::nColRep - txt_[ nTxt, OBJ_COL ] + iif( ReadInsert(), 1, 2 ) )
 
-      txt_[ nTxt, OBJ_TO_COL ] := txt_[ nTxt, OBJ_COL ] + len( txt_[ nTxt, OBJ_EQN ] ) - 1
+      txt_[ nTxt, OBJ_TO_COL ] := txt_[ nTxt, OBJ_COL ] + Len( txt_[ nTxt, OBJ_EQN ] ) - 1
 
    ELSEIF nMode == 2  .OR. nMode == 3 //  Delete
       IF readInsert()
          txt_[nTxt,OBJ_EQN] := substr( txt_[ nTxt, OBJ_EQN ], 1,;
                         ::nColRep - txt_[ nTxt, OBJ_COL ] ) + ;
            substr( txt_[ nTxt, OBJ_EQN ], ::nColRep - txt_[ nTxt, OBJ_COL ] + 2 )
-         txt_[ nTxt, OBJ_TO_COL ] := txt_[ nTxt, OBJ_COL ] + len( txt_[ nTxt, OBJ_EQN ] ) - 1
+         txt_[ nTxt, OBJ_TO_COL ] := txt_[ nTxt, OBJ_COL ] + Len( txt_[ nTxt, OBJ_EQN ] ) - 1
       ELSE             //  Divide it IN two objects
          s1   := substr( txt_[ nTxt, OBJ_EQN ], 1, ::nColRep - txt_[ nTxt, OBJ_COL ] )
          s2   := substr( txt_[ nTxt, OBJ_EQN ], ::nColRep - txt_[ nTxt, OBJ_COL ] + 2 )
          nDel := 0
-         IF len( s1 ) > 0
+         IF Len( s1 ) > 0
             txt_[ nTxt, OBJ_EQN     ] := s1
-            txt_[ nTxt, OBJ_TO_COL  ] := txt_[ nTxt, OBJ_COL ] + len( s1 ) - 1
+            txt_[ nTxt, OBJ_TO_COL  ] := txt_[ nTxt, OBJ_COL ] + Len( s1 ) - 1
          ELSE
             nDel := nTxt
          ENDIF
 
-         IF len( s2 ) > 0
+         IF Len( s2 ) > 0
             IF nDel == 0
                aadd( txt_, aclone( txt_[ nTxt ] ) )
-               n1 := len( txt_ )
+               n1 := Len( txt_ )
             ELSE
                n1 := nDel
             ENDIF
             txt_[ n1, OBJ_TYPE    ] := OBJ_O_TEXT
             txt_[ n1, OBJ_F_TYPE  ] := 'C'
-            txt_[ n1, OBJ_F_LEN   ] := len( s2 )
+            txt_[ n1, OBJ_F_LEN   ] := Len( s2 )
             txt_[ n1, OBJ_ROW     ] := ::nRowRep
             txt_[ n1, OBJ_COL     ] := ::nColRep+1
             txt_[ n1, OBJ_EQN     ] := s2
             txt_[ n1, OBJ_TO_ROW  ] := ::nRowRep
-            txt_[ n1, OBJ_TO_COL  ] := txt_[ n1, OBJ_COL ] + len( s2 ) - 1
+            txt_[ n1, OBJ_TO_COL  ] := txt_[ n1, OBJ_COL ] + Len( s2 ) - 1
          ENDIF
-         IF len( s1 ) == 0 .AND. len( s2 ) == 0
+         IF Len( s1 ) == 0 .AND. len( s2 ) == 0
             VouchAShrink( txt_, nTxt )
          ENDIF
       ENDIF
@@ -2628,11 +2628,11 @@ METHOD hbCUIEditor:scrAddTxt( nMode )
 
       DO WHILE .t.
          lClub := .f.
-         FOR i := 2 TO len( txt_ )
+         FOR i := 2 TO Len( txt_ )
             IF txt_[ i    , OBJ_COL    ] == txt_[ i - 1, OBJ_TO_COL ] + 1
                txt_[ i - 1, OBJ_EQN    ] += txt_[ i, OBJ_EQN ]    //  Club both
-               txt_[ i - 1, OBJ_TO_COL ] := txt_[ i - 1, OBJ_COL ] + len( txt_[ i - 1, OBJ_EQN ] ) - 1
-               txt_[ i - 1, OBJ_F_LEN  ] := len( txt_[ i - 1, OBJ_EQN ] )
+               txt_[ i - 1, OBJ_TO_COL ] := txt_[ i - 1, OBJ_COL ] + Len( txt_[ i - 1, OBJ_EQN ] ) - 1
+               txt_[ i - 1, OBJ_F_LEN  ] := Len( txt_[ i - 1, OBJ_EQN ] )
                VouchAShrink( txt_,i )
                lClub   := .t.
             ENDIF
@@ -2682,7 +2682,7 @@ METHOD hbCUIEditor:scrMsg( msg )
       msg := "F1:Help F4:Prop F5:Edit F6:Select F7:Copy F8:Paste F9:Box F10:Field"
    ENDIF
    msg := " " + msg + " "
-   @ maxrow(), ( maxcol()+1-len( msg ) )/2 SAY msg COLOR "W+/RB"
+   @ maxrow(), ( maxcol()+1-Len( msg ) )/2 SAY msg COLOR "W+/RB"
 
    setPos( row,col )
    RETURN NIL
@@ -2868,7 +2868,7 @@ METHOD hbCUIEditor:scrAddBox( nObj )
       o_[ OBJ_PATTERN    ] := "CLEAR"
 
       aadd( ::obj_, o_ )
-      nObj := len( ::obj_ )
+      nObj := Len( ::obj_ )
    ENDIF
 
    IF ! empty( nnObj )
@@ -2919,7 +2919,7 @@ METHOD hbCUIEditor:scrAddFld( nObj )
    v_:= iif( nObj > 0, ::scrObj2Vv( ::obj_[ nObj ] ), ::scrVrbBlank( OBJ_O_FIELD ) )
    h_:= ::scrVrbHeaders( OBJ_O_FIELD )
 
-   w_:= afill( array( len( h_ ) ), {|| .T. } )
+   w_:= afill( array( Len( h_ ) ), {|| .T. } )
 
    w_[ 2 ] := {| | VouchMenuM( 'MN_TYFLD' ) }
    w_[ 3 ] := {|v| v := oAchGet( 2 ), iif( v == 'D', !oCPut( 8 ), iif( v == 'L', !oCPut( 1 ), .t. ) ) }
@@ -2955,7 +2955,7 @@ METHOD hbCUIEditor:scrAddFld( nObj )
 
       IF nObj == 0
          aadd( ::obj_, o_ )
-         nObj := len( ::obj_ )
+         nObj := Len( ::obj_ )
       ELSE
          ::obj_[ nObj ] := o_
       ENDIF
@@ -2986,7 +2986,7 @@ METHOD hbCUIEditor:scrGetProperty( nObj )
 
       v_:= iif( nObj > 0, ::scrObj2Vv( ::obj_[ nObj ] ), ::scrVrbBlank( OBJ_O_BOX ) )
       h_:= ::scrVrbHeaders( OBJ_O_BOX )
-      w_:= afill( array( len( h_ ) ), {|| .T. } )
+      w_:= afill( array( Len( h_ ) ), {|| .T. } )
 
       w_[ 2 ] := {| | VouchMenuM( 'MN_BOX'  ) }
       w_[ 3 ] := {| | VouchMenuM( 'MN_FILL' ) }
@@ -3003,7 +3003,7 @@ METHOD hbCUIEditor:scrGetProperty( nObj )
 
       v_:= iif( nObj > 0, ::scrObj2Vv( ::obj_[ nObj ] ), ::scrVrbBlank( OBJ_O_TEXT ) )
       h_:= ::scrVrbHeaders( OBJ_O_TEXT )
-      w_:= afill( array( len( h_ ) ), {|| .T. } )
+      w_:= afill( array( Len( h_ ) ), {|| .T. } )
 
       ::scrMsg( "ENTER: Starts Editing Current Selection.  CTRL_ENTER: When Done." )
       B_GETS HEADERS h_ VALUES v_ TITLE 'Configure Field' WHEN w_ INTO v_
@@ -3078,7 +3078,7 @@ METHOD hbCUIEditor:scrPreview()
       ENDSWITCH
    NEXT
 
-   IF len( getlist ) > 0
+   IF Len( getlist ) > 0
       READ
    ELSE
       DO WHILE inkey() != K_ESC; ENDDO
@@ -3099,9 +3099,9 @@ STATIC FUNCTION VouchGetPic( cType, cPic, nLen, nDec )
       cP := iif( nDec > 0, replicate( "9", nLen - nDec - 1 ) + "." + replicate( "9", nDec ), replicate( "9", nLen ) )
    ELSE
       IF left( cPic,1 ) == '"' .and. right( cPic,1 ) == '"'
-         cP := substr( cPic, 2, len( cPic ) - 2 )
+         cP := substr( cPic, 2, Len( cPic ) - 2 )
       ELSEIF left( cPic,1 ) == "'" .and. right( cPic,1 ) == "'"
-         cP := substr( cPic, 2, len( cPic ) - 2 )
+         cP := substr( cPic, 2, Len( cPic ) - 2 )
       ENDIF
    ENDIF
 
@@ -3176,7 +3176,7 @@ FUNCTION pad_max( a_,lNum,max )
    DEFAULT lNum TO .f.
    IF max == NIL
       max := 0
-      aeval( a_, {|x| max := max( max,len( x ) )} )
+      aeval( a_, {|x| max := max( max,Len( x ) )} )
    ENDIF
    aeval( a_, {|x| a_[ i ] := iif( lNum, str( i,3 ) + '  ', '' ) + pad( x,max ), i++ } )
    RETURN a_
@@ -3191,7 +3191,7 @@ FUNCTION VouchInArray( v,a_ )
 FUNCTION VouchAShrink( a_,n )
    IF n > 0
       adel( a_,n )
-      asize( a_,len( a_ )-1 )
+      asize( a_,Len( a_ )-1 )
    ENDIF
    RETURN a_
 
@@ -3259,12 +3259,12 @@ FUNCTION VouchGetArray( h_,vv_, sel_, nTop, nLft, nBtm, nRgt, title, bWhen_, bVa
 
    nLenVrb := 0
    aeval( vv_, {|e| cTyp := valtype( e ), nLenVrb := max( ;
-                     iif( cTyp == 'C', len( e ), ;
+                     iif( cTyp == 'C', Len( e ), ;
                          iif( cTyp == 'N', 15, iif( cTyp == 'D', 8, 3 ) ) ), nLenVrb ) } )
 
    IF bWhen_ == NIL
-      bWhen_:= afill( array( len( vv_) ), {|| .t. } )
-      FOR i := 1 TO len( vv_ )
+      bWhen_:= afill( array( Len( vv_) ), {|| .t. } )
+      FOR i := 1 TO Len( vv_ )
          s := h_[ i ]
          IF valtype( vv_[ i ] ) == 'L'
             bWhen_[ i ] := {|| VouchYN( s, oGet() ), .f. }
@@ -3273,7 +3273,7 @@ FUNCTION VouchGetArray( h_,vv_, sel_, nTop, nLft, nBtm, nRgt, title, bWhen_, bVa
    ENDIF
 
    IF bValid_ == NIL
-      bValid_:= afill( array( len( vv_ ) ), {|| .t. } )
+      bValid_:= afill( array( Len( vv_ ) ), {|| .t. } )
    ENDIF
 
    pmt_:={}
@@ -3281,14 +3281,14 @@ FUNCTION VouchGetArray( h_,vv_, sel_, nTop, nLft, nBtm, nRgt, title, bWhen_, bVa
 
    //  decide maximum length of the largest prompt
    mLen := 0
-   aeval( pmt_, {|x| mLen := max( mLen, len( x ) ) } )
-   mLen := max( len( h_[ 1 ] ) + 2 + nLenVrb, mLen ) + 2
+   aeval( pmt_, {|x| mLen := max( mLen, Len( x ) ) } )
+   mLen := max( Len( h_[ 1 ] ) + 2 + nLenVrb, mLen ) + 2
 
    IF nTop == NIL
-      nTop := int( ( maxrow() - min( 3 + len( h_ ), maxrow() - 3 ) ) / 2 )
+      nTop := int( ( maxrow() - min( 3 + Len( h_ ), maxrow() - 3 ) ) / 2 )
    ENDIF
    IF nBtm == NIL
-      nBtm := min( nTop + len( h_ ) + 3, maxrow() - 3 )
+      nBtm := min( nTop + Len( h_ ) + 3, maxrow() - 3 )
    ENDIF
 
    IF nLft == NIL
@@ -3314,8 +3314,8 @@ FUNCTION VouchGetArray( h_,vv_, sel_, nTop, nLft, nBtm, nRgt, title, bWhen_, bVa
       title := alltrim( title )
    ENDIF
    title := padc( title, nRgt - nLft )
-   title := { title, replicate( chr( 196 ), len( title ) + 2 ) }
-   maxL  := len( h_[ 1 ] )
+   title := { title, replicate( chr( 196 ), Len( title ) + 2 ) }
+   maxL  := Len( h_[ 1 ] )
    sel_  := iif( sel_ == NIL, .t., sel_ )
 
    vstk_push()
@@ -3328,7 +3328,7 @@ FUNCTION VouchGetArray( h_,vv_, sel_, nTop, nLft, nBtm, nRgt, title, bWhen_, bVa
    setcolor( clr + "," + "+GR/B" + ",,," + "N" + substr( clr, at( "/", clr ) ) )
    aScrol_ := ScrolBarNew( nTop + 2, nRgt, nBtm, "gr+/b" )
 
-   nLenMnu := len( pmt_ )
+   nLenMnu := Len( pmt_ )
    clr1    := setColor()
 
    ScrolBarDisplay( aScrol_ )
@@ -3339,8 +3339,8 @@ FUNCTION VouchGetArray( h_,vv_, sel_, nTop, nLft, nBtm, nRgt, title, bWhen_, bVa
    SetGetAch( vv_ )
 
    IF pic_ == NIL
-      pic_:= array( len( vv_ ) )
-      FOR i := 1 TO len( vv_ )
+      pic_:= array( Len( vv_ ) )
+      FOR i := 1 TO Len( vv_ )
          cTyp := valtype( vv_[ i ] )
          pic_[ i ] := iif( cTyp == "C", "@S" + hb_ntos( nLenVrb ) + "K ", iif( cTyp == "N", "@Z 99999999.999", iif( cTyp == "L", "Y", "@ " ) ) )
       NEXT
@@ -3425,8 +3425,8 @@ STATIC FUNCTION scan_ff( elem, a_, c /*, nFrom */ )
    LOCAL na, nlen
 
    c := lower( substr( c,1,1 ) )
-   nLen := len( c )
-   IF( na := ascan( a_,{|e| lower( substr( ltrim( e ),1,nLen ) ) == c }, min( elem+1, len( a_ ) ) ) ) == 0
+   nLen := Len( c )
+   IF( na := ascan( a_,{|e| lower( substr( ltrim( e ),1,nLen ) ) == c }, min( elem+1, Len( a_ ) ) ) ) == 0
       na := ascan( a_,{|e| lower( substr( ltrim( e ),1,nlen ) ) == c },1,elem-1 )
    ENDIF
 
@@ -3454,7 +3454,7 @@ STATIC FUNCTION VouchGetChoice( vrb, row, col, e_col, whn, vld, pic )
    ELSEIF type == "L"
       pic := "Y"
    ELSEIF type == "C"
-      maxL := len( vrb )
+      maxL := Len( vrb )
       pic  := "@K"
       IF ( maxL + col ) > e_col
          pic += "S" + ltrim( str( e_col - col ) )
@@ -3582,8 +3582,8 @@ FUNCTION VouchMenuMM( mnu_,nInit,msg,lExact,aSel )
    DEFAULT lExact TO .f.
    DEFAULT aSel   TO {}
 
-   aSel := asize( aSel, len( mnu_ ) )
-   FOR i := 1 TO len( mnu_ )
+   aSel := asize( aSel, Len( mnu_ ) )
+   FOR i := 1 TO Len( mnu_ )
       DEFAULT aSel[ i ] TO .t.
    NEXT
 
@@ -3599,7 +3599,7 @@ FUNCTION VouchMenuMM( mnu_,nInit,msg,lExact,aSel )
    B_MSG msg CHOOSE m_ INITIAL n SELECTABLES aSel RESTORE SHADOW AT row()-3,col() WVT .T. INTO n
    n := max( 1,n )
 
-   getActive():varPut( iif( t,pad( mnu_[n,2],len( nInit ) ),mnu_[n,2] ) )
+   getActive():varPut( iif( t,pad( mnu_[n,2],Len( nInit ) ),mnu_[n,2] ) )
 
    RETURN .f.
 
@@ -3654,7 +3654,7 @@ FUNCTION vstk_push()
 //----------------------------------------------------------------------//
 
 FUNCTION vstk_pop()
-   IF len( s_vid_stk ) > 0
+   IF Len( s_vid_stk ) > 0
       setcursor( asc( substr( s_vid_stk, 1, 1 ) ) )
       //@ asc( substr( s_vid_stk, 2, 1 ) ), asc( substr( s_vid_stk, 3, 1 ) ) SAY ""
       devpos( asc( substr( s_vid_stk, 2, 1 ) ), asc( substr( s_vid_stk, 3, 1 ) ) )
@@ -3707,27 +3707,27 @@ FUNCTION VouchMsgBox(r1, c1, r2, c2, width, depth, msg_, msgClr, ;
 
    oGet := iif( paste, getactive(), oGet )
 
-   IF ( len( msg_) > 0) .AND. (valtype (msg_[1]) == "A" )
+   IF ( Len( msg_) > 0) .AND. (valtype (msg_[1]) == "A" )
       msg_ := aclone( msg_[ 1 ] )
    ENDIF
-   IF ( len( msg_ ) > 0 ) .AND. ( msg_[1] == NIL )
+   IF ( Len( msg_ ) > 0 ) .AND. ( msg_[1] == NIL )
       msg_:= {}
    ENDIF
-   IF ( len( ch_ ) > 0 ) .AND. ( valtype( ch_[ 1 ] ) = "A" )
+   IF ( Len( ch_ ) > 0 ) .AND. ( valtype( ch_[ 1 ] ) = "A" )
       ch_:= aclone( ch_[ 1 ] )
    ENDIF
-   IF len( msg_ ) == 0 .AND. len( ch_ ) == 0
+   IF Len( msg_ ) == 0 .AND. len( ch_ ) == 0
       RETURN .f.
    ENDIF
 
    IF lSlctns
       IF lNumeric
          IF empty(num_)
-            FOR i := 1 TO len (ch_)
+            FOR i := 1 TO Len (ch_)
                ch_[i] := '    '+ch_[i]
             NEXT
          ELSE
-            FOR i := 1 TO len (ch_)
+            FOR i := 1 TO Len (ch_)
                IF (n := ascan(num_,i))==0
                   ch_[ i ] := '    '+ch_[i]
                ELSE
@@ -3736,14 +3736,14 @@ FUNCTION VouchMsgBox(r1, c1, r2, c2, width, depth, msg_, msgClr, ;
             NEXT
          ENDIF
       ELSE
-         FOR i := 1 TO len( ch_ )
+         FOR i := 1 TO Len( ch_ )
             ch_[ i ] := iif( empty( tagged_ ),'  ', iif( tagged_[ i ], CHECKMARK + ' ', '  ' ) ) + ch_[ i ]
          NEXT
       ENDIF
    ENDIF
 
-   aeval( msg_, {|s| msgLen := max( msgLen, len( s ) ) } )
-   aeval( ch_,  {|s| chLen  := max( chLen,  len( s ) ) } )
+   aeval( msg_, {|s| msgLen := max( msgLen, Len( s ) ) } )
+   aeval( ch_,  {|s| chLen  := max( chLen,  Len( s ) ) } )
    maxlen := max( msgLen, chLen )
    aeval( ch_, {|s,i| s := s, ch_[ i ] := pad( ch_[ i ], maxLen ) } )
 
@@ -3754,7 +3754,7 @@ FUNCTION VouchMsgBox(r1, c1, r2, c2, width, depth, msg_, msgClr, ;
       aeval( ch_, {|s,i| lSelect_[ i ] := iif( empty( s ), .f., lSelect_[ i ] ) } )
    ENDIF
    IF ascan( lSelect_, {|e| e } ) == 0
-      IF len(ch_) > 0
+      IF Len(ch_) > 0
          RETURN 0
       ENDIF
    ENDIF
@@ -3762,7 +3762,7 @@ FUNCTION VouchMsgBox(r1, c1, r2, c2, width, depth, msg_, msgClr, ;
    nMsg := Len( msg_ )
 //   nOff := iif( nMsg == 1, 0,  1 )
 
-   boxDeep  := iif( len( msg_ )=0,0,len( msg_ )+1 ) + iif( len( ch_  )=0,0,len( ch_  )+1 )
+   boxDeep  := iif( Len( msg_ )=0,0,len( msg_ )+1 ) + iif( len( ch_  )=0,0,len( ch_  )+1 )
    tBoxDeep := boxDeep
    boxDeep  := min( boxDeep, maxrow() - r1 )
    boxWide  := max( msgLen, chLen ) + 3
@@ -3821,7 +3821,7 @@ FUNCTION VouchMsgBox(r1, c1, r2, c2, width, depth, msg_, msgClr, ;
       ENDIF
    ENDIF
 
-   IF sel == NIL .OR. sel < 1 .OR. sel > len( ch_ )
+   IF sel == NIL .OR. sel < 1 .OR. sel > Len( ch_ )
       sel := 1
    ENDIF
 
@@ -3838,14 +3838,14 @@ FUNCTION VouchMsgBox(r1, c1, r2, c2, width, depth, msg_, msgClr, ;
       VouchShadow( r1, c1, r2, c2 )
    ENDIF
 
-   FOR i = 1 TO min( len( msg_ ), r2 - ( r1 + 1 ) )
+   FOR i = 1 TO min( Len( msg_ ), r2 - ( r1 + 1 ) )
       devpos( r1 + i, c1 + 2 )
       devout( pad( msg_[ i ], c2 - ( c1 + 3 ) ) )
    NEXT i
    mSetCursor( mCrs )
 
    clr := "W+/BG"
-   IF len( ch_ ) > 0
+   IF Len( ch_ ) > 0
       IF nMsg > 0
          mCrs := mSetCursor(.f.)
          devpos( r1 + 1 + nMsg, c1 + 1 )
@@ -3859,7 +3859,7 @@ FUNCTION VouchMsgBox(r1, c1, r2, c2, width, depth, msg_, msgClr, ;
       setcolor( clr + "," + "+W/B" + ",,," + "N" + substr( clr, at( "/", clr ) ) )
       aScrolBar := ScrolBarNew( cr1 - 1, c2, r2 /*, colorGet( C_SCROLL ) )*/ )
 
-      nLenScrol := len( ch_ )
+      nLenScrol := Len( ch_ )
       pmtWidth  := c2 - c1 - 3
       aeval( ch_, {|e,i| ch_[ i ] := pad( e, pmtWidth ) } )
 
@@ -3891,7 +3891,7 @@ FUNCTION VouchMsgBox(r1, c1, r2, c2, width, depth, msg_, msgClr, ;
    IF paste
       IF valtype( oGet:varGet() ) == "C"
          oVal := oGet:varGet()
-         oGet:varPut( pad( ch_[ iif( sel = 0,1,sel ) ], len( oVal ) ) )
+         oGet:varPut( pad( ch_[ iif( sel = 0,1,sel ) ], Len( oVal ) ) )
          oGet:display()
       ENDIF
    ENDIF
@@ -3903,13 +3903,13 @@ FUNCTION VouchMsgBox(r1, c1, r2, c2, width, depth, msg_, msgClr, ;
 
    IF lSlctns
       IF !lNumeric
-         FOR i = 1 TO len( cgo_[CGO_CH_] )
+         FOR i = 1 TO Len( cgo_[CGO_CH_] )
             IF substr( cgo_[CGO_CH_,i], 1, 1) == CHECKMARK
                aadd( nSlctns_,i )
             ENDIF
          NEXT
       ELSE
-         FOR i := 1 TO len(cgo_[CGO_CH_])
+         FOR i := 1 TO Len(cgo_[CGO_CH_])
             IF val( left( cgo_[CGO_CH_,i],4 ) )>0
                aadd( dd_,{val( left( cgo_[CGO_CH_,i],4 ) ),i} )
             ENDIF
@@ -3966,7 +3966,7 @@ FUNCTION VouchFunc2( nMode, nElem, nRel, nKey, cgo_ )
       CASE nKey == K_F9      // TAG ALL
          IF cgo_[CGO_LSEL]
             IF cgo_[CGO_LNUM]
-               FOR i := 1 TO len( cgo_[CGO_CH_] )
+               FOR i := 1 TO Len( cgo_[CGO_CH_] )
                   IF cgo_[CGO_SEL_]
                      cgo_[CGO_CH_,i] := chr( 251 ) + substr( cgo_[ CGO_CH_,i ], 2 )
                   ENDIF
@@ -3980,7 +3980,7 @@ FUNCTION VouchFunc2( nMode, nElem, nRel, nKey, cgo_ )
          ENDIF
       CASE nKey == K_F10      // UnTAG ALL
          IF cgo_[CGO_LSEL]
-            FOR i := 1 TO len( cgo_[CGO_CH_] )
+            FOR i := 1 TO Len( cgo_[CGO_CH_] )
                cgo_[CGO_CH_,i] := " "+substr( cgo_[CGO_CH_,i],2 )
             NEXT
             RETURN AC_ABORT
@@ -3993,13 +3993,13 @@ FUNCTION VouchFunc2( nMode, nElem, nRel, nKey, cgo_ )
             IF !cgo_[CGO_LNUM]
                cgo_[CGO_CH_,cgo_[CGO_POS]] := iif( substr( cgo_[CGO_CH_,cgo_[CGO_POS]],1,1 )==CHECKMARK, ;
                              " ",CHECKMARK )+substr( cgo_[CGO_CH_,cgo_[CGO_POS]],2 )
-               cgo_[CGO_POS] := min( cgo_[CGO_POS]+1,len( cgo_[CGO_CH_] ) )
+               cgo_[CGO_POS] := min( cgo_[CGO_POS]+1,Len( cgo_[CGO_CH_] ) )
                RETURN AC_ABORT
             ELSE
                IF( n:=val( substr( cgo_[CGO_CH_,cgo_[CGO_POS]],1,4 ) ) )>0
                   cgo_[CGO_CH_,cgo_[CGO_POS]] := "    "+substr( cgo_[CGO_CH_,cgo_[CGO_POS]],5 )
-                  cgo_[CGO_POS] := min( cgo_[CGO_POS]+1,len( cgo_[CGO_CH_] ) )
-                  FOR i := 1 TO len( cgo_[CGO_CH_] )
+                  cgo_[CGO_POS] := min( cgo_[CGO_POS]+1,Len( cgo_[CGO_CH_] ) )
+                  FOR i := 1 TO Len( cgo_[CGO_CH_] )
                      IF( nn := val( left( cgo_[CGO_CH_,i],4 ) ) )>0
                         IF nn > n
                            nn := nn - 1
@@ -4013,7 +4013,7 @@ FUNCTION VouchFunc2( nMode, nElem, nRel, nKey, cgo_ )
                   n  := 0
                   aeval( cgo_[CGO_CH_], {|e| n := val( left( e,4 ) ), nn := iif( n>nn,n,nn ) } )
                   cgo_[CGO_CH_,cgo_[CGO_POS]] := pad( hb_ntos( nn+1 ),4 ) + substr( cgo_[CGO_CH_,cgo_[CGO_POS]],5 )
-                  cgo_[CGO_POS] := min( cgo_[CGO_POS]+1, len( cgo_[CGO_CH_] ) )
+                  cgo_[CGO_POS] := min( cgo_[CGO_POS]+1, Len( cgo_[CGO_CH_] ) )
                ENDIF
                RETURN AC_ABORT
             ENDIF
@@ -4047,7 +4047,7 @@ STATIC FUNCTION scan_f( elem, a_, key, nFrom )
    LOCAL n := elem, na, c
 
    c := lower( chr( key ) )
-   na := ascan( a_, {|e| lower( substr( e, nFrom, 1 ) ) == c }, min( elem + 1, len( a_ ) ) )
+   na := ascan( a_, {|e| lower( substr( e, nFrom, 1 ) ) == c }, min( elem + 1, Len( a_ ) ) )
    IF na == 0
       na := ascan( a_,{|e| lower( substr( e, nFrom, 1 ) ) == c },1,elem-1 )
    ENDIF
@@ -4082,7 +4082,7 @@ STATIC FUNCTION sha_attr( t, l, b, r, new_attr )
    old_scr_area := savescreen( t, l, b, r )
    new_scr_area = ""
 
-   FOR i = 1 TO len( old_scr_area ) STEP 2
+   FOR i = 1 TO Len( old_scr_area ) STEP 2
       new_scr_area := new_scr_area + substr( old_scr_area, i, 1 ) + chr( new_attr )
    NEXT
 
@@ -4110,12 +4110,12 @@ FUNCTION VouchGetSome( msg, vrb, pass, pic, set_, wh, vl, nLastKey )
    clr := SetColor()
 
    nMaxLen := maxcol() - 7
-   nLenMsg := len( msg )
+   nLenMsg := Len( msg )
 
    DO CASE
    CASE dType == 'D' ; nLenVrb := 8
    CASE dType == 'N' ; nLenVrb := 17
-   CASE dType == 'C' ; nLenVrb := len( vrb )
+   CASE dType == 'C' ; nLenVrb := Len( vrb )
    CASE dType == 'L' ; nLenVrb := 1
    ENDCASE
 
@@ -4606,13 +4606,13 @@ METHOD AChoiceNew:init( nTop, nLft, nBtm, nRgt, acItems, xSelect, ;
    ::nNumRows := ::nBottom - ::nTop + 1
 
    aeval( ::acItems, {| x | IF( valtype( x ) == "C", aadd( ::acCopy, padr( x, ::nNumCols ) ), .F. ) } )
-   ::nItems := len( ::acCopy )
+   ::nItems := Len( ::acCopy )
 
    ::alSelect := array( ::nItems )
 
    IF valtype( ::xSelect ) == "A"
       afill( ::alSelect, .T. )
-      FOR nCntr := 1 TO len( ::xSelect )
+      FOR nCntr := 1 TO Len( ::xSelect )
          IF nCntr <= ::nItems
             IF valtype( ::xSelect[ nCntr ] ) == "C"
                IF empty( ::xSelect[ nCntr ] )
@@ -4625,7 +4625,7 @@ METHOD AChoiceNew:init( nTop, nLft, nBtm, nRgt, acItems, xSelect, ;
                ::alSelect[ nCntr ] := ::xSelect[ nCntr ]
             ENDIF
          ELSE
-            nCntr := len( ::xSelect ) + 1
+            nCntr := Len( ::xSelect ) + 1
          ENDIF
       NEXT
    ELSE
@@ -4818,7 +4818,7 @@ METHOD AChoiceNew:DispPageNew()
       IF INRANGE( 1, nPos, ::nItems )
          ::DispLineNew( nPos, nRowPos, nPos == ::nPos )
       ELSE
-         DispOutAt( nRowPos, ::nLeft, space( len( ::acCopy[ 1 ] ) ), ::cLoClr, ::oWin )
+         DispOutAt( nRowPos, ::nLeft, space( Len( ::acCopy[ 1 ] ) ), ::cLoClr, ::oWin )
       ENDIF
    NEXT
 

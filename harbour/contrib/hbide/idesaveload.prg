@@ -438,7 +438,7 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "" )
    aadd( txt_, "[PROJECTS]" )
    aadd( txt_, " " )
-   FOR n := 1 TO len( ::oIde:aProjects )
+   FOR n := 1 TO Len( ::oIde:aProjects )
       aadd( txt_, "project_" + hb_ntos( n ) + "=" + hbide_pathNormalized( ::oIde:aProjects[ n, 2 ], .f. ) )
    NEXT
    aadd( txt_, " " )
@@ -447,7 +447,7 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "[FILES]" )
    aadd( txt_, " " )
    nn := 0
-   FOR j := 1 TO len( ::oIde:aViews )
+   FOR j := 1 TO Len( ::oIde:aViews )
       ::oIde:lClosing := .t.
       ::oDK:setView( ::oIde:aViews[ j ]:oWidget:objectName() )
 
@@ -477,35 +477,35 @@ METHOD IdeINI:save( cHbideIni )
 
    aadd( txt_, "[FIND]" )
    aadd( txt_, " " )
-   FOR n := 1 TO len( ::aFind )
+   FOR n := 1 TO Len( ::aFind )
       aadd( txt_, "find_" + hb_ntos( n ) + "=" + ::aFind[ n ] )
    NEXT
    aadd( txt_, " " )
 
    aadd( txt_, "[REPLACE]" )
    aadd( txt_, " " )
-   FOR n := 1 TO len( ::aReplace )
+   FOR n := 1 TO Len( ::aReplace )
       aadd( txt_, "replace_" + hb_ntos( n ) + "=" + ::aReplace[ n ] )
    NEXT
    aadd( txt_, " " )
 
    aadd( txt_, "[RECENTFILES]" )
    aadd( txt_, " " )
-   FOR n := 1 TO len( ::aRecentFiles )
+   FOR n := 1 TO Len( ::aRecentFiles )
       aadd( txt_, "recentfile_" + hb_ntos( n ) + "=" + hbide_pathNormalized( ::aRecentFiles[ n ], .f. ) )
    NEXT
    aadd( txt_, " " )
 
    aadd( txt_, "[RECENTPROJECTS]" )
    aadd( txt_, " " )
-   FOR n := 1 TO len( ::aRecentProjects )
+   FOR n := 1 TO Len( ::aRecentProjects )
       aadd( txt_, "recentproject_" + hb_ntos( n ) + "=" + hbide_pathNormalized( ::aRecentProjects[ n ], .f. ) )
    NEXT
    aadd( txt_, " " )
 
    aadd( txt_, "[FOLDERS]" )
    aadd( txt_, " " )
-   FOR n := 1 TO len( ::aFolders )
+   FOR n := 1 TO Len( ::aFolders )
       aadd( txt_, "folder_" + hb_ntos( n ) + "=" + hbide_pathNormalized( ::aFolders[ n ], .f. ) )
    NEXT
    aadd( txt_, " " )
@@ -519,7 +519,7 @@ METHOD IdeINI:save( cHbideIni )
 
    aadd( txt_, "[TAGGEDPROJECTS]" )
    aadd( txt_, " " )
-   FOR n := 1 TO len( ::aTaggedProjects )
+   FOR n := 1 TO Len( ::aTaggedProjects )
       aadd( txt_, "taggedproject_" + hb_ntos( n ) + "=" + ::aTaggedProjects[ n ] )
    NEXT
    aadd( txt_, " " )
@@ -533,14 +533,14 @@ METHOD IdeINI:save( cHbideIni )
 
    aadd( txt_, "[USERTOOLBARS]" )
    aadd( txt_, " " )
-   FOR n := 1 TO len( ::aUserToolbars )
+   FOR n := 1 TO Len( ::aUserToolbars )
       aadd( txt_, "usertoolbars_" + hb_ntos( n ) + "=" + hbide_array2string( ::aUserToolbars[ n ], "," ) )
    NEXT
    aadd( txt_, " " )
 
    aadd( txt_, "[KEYWORDS]" )
    aadd( txt_, " " )
-   FOR n := 1 TO len( ::aKeywords )
+   FOR n := 1 TO Len( ::aKeywords )
       aadd( txt_, "keyword_" + hb_ntos( n ) + "=" + hbide_array2string( ::aKeywords[ n ], "~" ) )
    NEXT
    aadd( txt_, " " )
@@ -575,14 +575,14 @@ METHOD IdeINI:save( cHbideIni )
 
    aadd( txt_, "[LOGTITLE]" )
    aadd( txt_, " " )
-   FOR n := 1 TO len( ::aLogTitle )
+   FOR n := 1 TO Len( ::aLogTitle )
       aadd( txt_, "logtitle_" + hb_ntos( n ) + "=" + ::aLogTitle[ n ] )
    NEXT
    aadd( txt_, " " )
 
    aadd( txt_, "[LOGSOURCES]" )
    aadd( txt_, " " )
-   FOR n := 1 TO len( ::aLogSources )
+   FOR n := 1 TO Len( ::aLogSources )
       aadd( txt_, "logsources_" + hb_ntos( n ) + "=" + ::aLogSources[ n ] )
    NEXT
    aadd( txt_, " " )
@@ -973,14 +973,14 @@ FUNCTION hbide_loadSkltns( oIde, cPathSkltns )
                cCode := substr( cCode, 2 )
             ENDIF
             IF right( cCode, 1 ) $ chr( 13 ) + chr( 10 )
-               cCode := substr( cCode, 1, len( cCode ) - 1 )
+               cCode := substr( cCode, 1, Len( cCode ) - 1 )
             ENDIF
             IF right( cCode, 1 ) $ chr( 13 ) + chr( 10 )
-               cCode := substr( cCode, 1, len( cCode ) - 1 )
+               cCode := substr( cCode, 1, Len( cCode ) - 1 )
             ENDIF
 
             aadd( oIde:aSkltns, { cSkltn, cCode } )
-            s := substr( s, n + len( "</" + cSkltn + ">" ) )
+            s := substr( s, n + Len( "</" + cSkltn + ">" ) )
          ELSE
             EXIT
          ENDIF
@@ -1384,7 +1384,7 @@ METHOD IdeSetup:retrieve()
       qItm := ::oUI:q_listTextExt:item( i - 1 )
       s += "." + qItm:text() + ","
    NEXT
-   s := substr( s, 1, len( s ) - 1 )
+   s := substr( s, 1, Len( s ) - 1 )
    ::oINI:cTextFileExtensions := s
 
    ::oINI:nTmpBkpPrd               := val( ::oUI:q_editTmpBkpPrd : text() )
@@ -1679,8 +1679,8 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "buttonKeyAdd_clicked"
-      ::populateKeyTableRow( len( ::aKeyItems ) + 1, "", "" )
-      ::oUI:q_tableVar:setCurrentItem( ::aKeyItems[ len( ::aKeyItems ), 1 ] )
+      ::populateKeyTableRow( Len( ::aKeyItems ) + 1, "", "" )
+      ::oUI:q_tableVar:setCurrentItem( ::aKeyItems[ Len( ::aKeyItems ), 1 ] )
       EXIT
 
    CASE "buttonKeyDel_clicked"
@@ -1718,7 +1718,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
 
    CASE "buttonKeyDown_clicked"
       nRow := ::oUI:q_tableVar:currentRow()
-      IF nRow >= 0 .AND. nRow + 1 < len( ::aKeyItems )
+      IF nRow >= 0 .AND. nRow + 1 < Len( ::aKeyItems )
 
          nCol := ::oUI:q_tableVar:currentColumn()
 
@@ -1801,7 +1801,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
          qItem:setText( cTheme )
          //::oUI:q_listThemes:addItem_1( qItem )
          ::oUI:q_listThemes:addItem( qItem )
-         ::oUI:q_listThemes:setCurrentRow( len( ::oINI:aAppThemes ) - 1 )
+         ::oUI:q_listThemes:setCurrentRow( Len( ::oINI:aAppThemes ) - 1 )
       ENDIF
       EXIT
    CASE "buttonThmApp_clicked"
@@ -1998,7 +1998,7 @@ METHOD IdeSetup:pushThemesData()
    ENDIF
    IF !empty( ::oINI:aAppThemes )
       ::oUI:q_listThemes:setCurrentRow( -1 )
-      ::oUI:q_listThemes:setCurrentRow( len( ::oINI:aAppThemes ) - 1 )
+      ::oUI:q_listThemes:setCurrentRow( Len( ::oINI:aAppThemes ) - 1 )
       ::oUI:q_listThemes:setCurrentRow( 0 )
    ENDIF
    ::oUI:q_radioSec1:click()
@@ -2010,7 +2010,7 @@ METHOD IdeSetup:pushThemesData()
 METHOD IdeSetup:getThemeData( nTheme )
    LOCAL a_, i, aTheme := {}
 
-   IF nTheme >= 1 .AND. nTheme <= len( ::oINI:aAppThemes )
+   IF nTheme >= 1 .AND. nTheme <= Len( ::oINI:aAppThemes )
       a_:= hbide_parseThemeComponent( ::oINI:aAppThemes[ nTheme ] )
 
       FOR i := 2 TO 6
@@ -2027,7 +2027,7 @@ METHOD IdeSetup:getThemeData( nTheme )
 METHOD IdeSetup:pushThemeColors( nTheme )
    LOCAL n, a_, i, aRGB, nSlot
 
-   IF nTheme >= 1 .AND. nTheme <= len( ::oINI:aAppThemes )
+   IF nTheme >= 1 .AND. nTheme <= Len( ::oINI:aAppThemes )
       a_:= hb_aTokens( ::oINI:aAppThemes[ nTheme ], "," )
       aSize( a_, 6 )
       DEFAULT a_[ 1 ] TO ""
@@ -2105,7 +2105,7 @@ METHOD IdeSetup:pullThemeColors( nSlot )
 /*------------------------------------------------------------------------*/
 
 METHOD IdeSetup:populateKeyTableRow( nRow, cTxtCol1, cTxtCol2 )
-   LOCAL lAppend := len( ::aKeyItems ) < nRow
+   LOCAL lAppend := Len( ::aKeyItems ) < nRow
    LOCAL q0, q1
 
    IF lAppend
@@ -2143,9 +2143,9 @@ METHOD IdeSetup:buildKeywords()
    oTbl:horizontalHeader():setStretchLastSection( .t. )
 
    oTbl:setAlternatingRowColors( .t. )
-   oTbl:setColumnCount( len( hdr_ ) )
+   oTbl:setColumnCount( Len( hdr_ ) )
    oTbl:setShowGrid( .t. )
-   FOR n := 1 TO len( hdr_ )
+   FOR n := 1 TO Len( hdr_ )
       qItm := QTableWidgetItem()
       qItm:setText( hdr_[ n,1 ] )
       oTbl:setHorizontalHeaderItem( n-1, qItm )

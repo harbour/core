@@ -411,8 +411,8 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
 
       n := ascan( ::oEditor:aEdits, {|o| o == Self } )
 
-      ::oEM:aActions[ 18, 2 ]:setEnabled( len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 1 )
-      ::oEM:aActions[ 19, 2 ]:setEnabled( len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 2 )
+      ::oEM:aActions[ 18, 2 ]:setEnabled( Len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 1 )
+      ::oEM:aActions[ 19, 2 ]:setEnabled( Len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 2 )
       ::oEM:aActions[ 21, 2 ]:setEnabled( n > 0 )
 
       IF empty( qAct := ::oEM:qContextMenu:exec( ::qEdit:mapToGlobal( p ) ) )
@@ -499,7 +499,7 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
 
       ::qEdit:hbGetSelectionInfo()
       IF ::aSelectionInfo[ 1 ] > -1 .AND. ::aSelectionInfo[ 1 ] == ::aSelectionInfo[ 3 ]
-         ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, len( ::getSelectedText() ) )
+         ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, Len( ::getSelectedText() ) )
       ELSE
          ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, 0 )
       ENDIF
@@ -837,7 +837,7 @@ STATIC FUNCTION hbide_invert( cBuffer )
    LOCAL s, i, c, nLen
 
    s    := ""
-   nLen := len( cBuffer )
+   nLen := Len( cBuffer )
    FOR i := 1 TO nLen
       c := substr( cBuffer, i, 1 )
       IF isAlpha( c )
@@ -962,7 +962,7 @@ METHOD IdeEdit:pasteBlockContents( nMode )
 
    a_:= hbide_blockContents()
    IF !empty( a_ )
-      IF ( len( a_[ 2 ] ) == len( aCopy ) ) .OR. ( len( a_[ 2 ] ) == len( aCopy ) + 1 )
+      IF ( Len( a_[ 2 ] ) == len( aCopy ) ) .OR. ( len( a_[ 2 ] ) == len( aCopy ) + 1 )
          IF a_[ 2,1 ] == aCopy[ 1 ]
             nPasteMode := a_[ 1 ]
          ENDIF
@@ -977,9 +977,9 @@ METHOD IdeEdit:pasteBlockContents( nMode )
    //
    SWITCH nPasteMode
    CASE selectionMode_column
-      FOR i := 1 TO len( aCopy )
+      FOR i := 1 TO Len( aCopy )
          qCursor:insertText( aCopy[ i ] )
-         IF i < len( aCopy )
+         IF i < Len( aCopy )
             hbide_qCursorDownInsert( qCursor )
 
             qCursor:movePosition( QTextCursor_EndOfLine, QTextCursor_MoveAnchor )
@@ -993,16 +993,16 @@ METHOD IdeEdit:pasteBlockContents( nMode )
       NEXT
       EXIT
    CASE selectionMode_stream
-      FOR i := 1 TO len( aCopy )
+      FOR i := 1 TO Len( aCopy )
          qCursor:insertText( aCopy[ i ] )
-         IF i < len( aCopy )
+         IF i < Len( aCopy )
             qCursor:insertText( hb_eol() )
          ENDIF
       NEXT
       EXIT
    CASE selectionMode_line
       qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_MoveAnchor       )
-      FOR i := 1 TO len( aCopy )
+      FOR i := 1 TO Len( aCopy )
          qCursor:insertText( aCopy[ i ] )
          qCursor:insertBlock()
       NEXT
@@ -1128,7 +1128,7 @@ METHOD IdeEdit:deleteBlockContents( aCord )
 METHOD IdeEdit:blockComment()
    LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, nMode, q_
    LOCAL cComment := "// "
-   LOCAL nLen := len( cComment )
+   LOCAL nLen := Len( cComment )
 
    IF ::lReadOnly
       RETURN Self
@@ -1386,10 +1386,10 @@ METHOD IdeEdit:currentFunctionIndex()
 
    IF !empty( ::aTags )
       nCurLine := ::getLineNo()
-      IF len( ::aTags ) == 1
+      IF Len( ::aTags ) == 1
          n := 1
       ELSEIF ( n := ascan( ::aTags, {|e_| e_[ 3 ] >= nCurLine } ) ) == 0
-         n := len( ::aTags )
+         n := Len( ::aTags )
       ELSEIF n > 0
          n--
       ENDIF
@@ -1403,7 +1403,7 @@ METHOD IdeEdit:toNextFunction()
    LOCAL n
 
    IF ( n := ::currentFunctionIndex() ) >= 0
-      IF n < len( ::aTags )
+      IF n < Len( ::aTags )
          IF ::find( ::aTags[ n+1, 8 ], QTextDocument_FindCaseSensitively )
             ::qEdit:centerCursor()
             ::down()
@@ -1599,7 +1599,7 @@ METHOD IdeEdit:setReadOnly( lReadOnly )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:gotoMark( nIndex )
-   IF len( ::aBookMarks ) >= nIndex
+   IF Len( ::aBookMarks ) >= nIndex
       ::qEdit:hbGotoBookmark( ::aBookMarks[ nIndex ] )
       ::qEdit:centerCursor()
    ENDIF
@@ -1627,13 +1627,13 @@ METHOD IdeEdit:setNewMark()
 
       IF ( n := ascan( ::aBookMarks, nBlock ) ) > 0
          hb_adel( ::aBookMarks, n, .t. )
-         ::aMarkTBtns[ len( ::aBookMarks ) + 1 ]:hide()
+         ::aMarkTBtns[ Len( ::aBookMarks ) + 1 ]:hide()
       ELSE
-         IF len( ::aBookMarks ) == 6
+         IF Len( ::aBookMarks ) == 6
             RETURN Self
          ENDIF
          aadd( ::aBookMarks, nBlock )
-         n := len( ::aBookMarks )
+         n := Len( ::aBookMarks )
          ::aMarkTBtns[ n ]:show()
       ENDIF
 
@@ -1702,7 +1702,7 @@ METHOD IdeEdit:findEx( cText, nFlags, nStart )
       ::qEdit:centerCursor()
       qCursor := ::qEdit:textCursor()
 
-      ::qEdit:hbSetSelectionInfo( { qCursor:blockNumber(), qCursor:columnNumber() - len( cText ), ;
+      ::qEdit:hbSetSelectionInfo( { qCursor:blockNumber(), qCursor:columnNumber() - Len( cText ), ;
                                     qCursor:blockNumber(), qCursor:columnNumber(), 1, .t., .f. } )
       qCursor:clearSelection()
    ELSE
@@ -1834,8 +1834,8 @@ METHOD IdeEdit:panEnd()
    LOCAL qCursor := ::getCursor()
    LOCAL cLine := ::getLine()
    ::qEdit:hbGetViewportInfo()
-   IF len( cLine ) - ::aViewportInfo[ 2 ] > ::aViewportInfo[ 4 ]
-      qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, len( cLine ) - ::aViewportInfo[ 2 ] )
+   IF Len( cLine ) - ::aViewportInfo[ 2 ] > ::aViewportInfo[ 4 ]
+      qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, Len( cLine ) - ::aViewportInfo[ 2 ] )
    ELSE
       qCursor:movePosition( QTextCursor_EndOfLine )
    ENDIF
@@ -2163,7 +2163,7 @@ METHOD IdeEdit:insertText( cText )
    IF HB_ISSTRING( cText ) .AND. !Empty( cText )
       qCursor := ::qEdit:textCursor()
 
-      nL := len( cText )
+      nL := Len( cText )
       nB := qCursor:position() + nL
 
       qCursor:beginEditBlock()
@@ -2197,9 +2197,9 @@ METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
    cWord  := hbide_getPreviousWord( cText, nCol + 1 )
 
    IF !empty( cWord ) .AND. hbide_isHarbourKeyword( cWord, ::oIde )
-      lPrevOnly := left( lower( ltrim( cText ) ), len( cWord ) ) == lower( cWord )
+      lPrevOnly := left( lower( ltrim( cText ) ), Len( cWord ) ) == lower( cWord )
 
-      nL := len( cWord ) + nSpace
+      nL := Len( cWord ) + nSpace
       nB := qCursor:position() - nL
 
       IF lower( ::oEditor:cExt ) $ ".prg,.hb" .AND. ! ::oINI:lSupressHbKWordsToUpper
@@ -2672,7 +2672,7 @@ FUNCTION hbide_formatProto_1( cProto, cText, nProtoCol, nCurCol, nRows, nCols )
 
          s := substr( cText, nProtoCol, nCurCol - nProtoCol )
          nArgs := 1
-         FOR i := 1 TO len( s )
+         FOR i := 1 TO Len( s )
             IF substr( s, i, 1 ) == ","
                nArgs++
             ENDIF
@@ -2687,12 +2687,12 @@ FUNCTION hbide_formatProto_1( cProto, cText, nProtoCol, nCurCol, nRows, nCols )
             cArgs := substr( cProto, n + 1, n1 - n - 1 )
             aArgs := hb_aTokens( cArgs, "," )
             cArgs := ""
-            nCols := len( cFunc ) + 1
+            nCols := Len( cFunc ) + 1
             FOR EACH cArg IN aArgs
                cArg := alltrim( cArg )
 
                nRows++
-               nCols := max( nCols, len( cArg ) + 3 )
+               nCols := max( nCols, Len( cArg ) + 3 )
 
                cArg := StrTran( cArg, "<", "&lt;" )
                cArg := StrTran( cArg, ">", "&gt;" )
@@ -2701,13 +2701,13 @@ FUNCTION hbide_formatProto_1( cProto, cText, nProtoCol, nCurCol, nRows, nCols )
                IF nnn == nArgs
                   cArg := "<font color=red><b>" + cArg + "</b></font>"
                ENDIF
-               IF nnn == len( aArgs )
+               IF nnn == Len( aArgs )
                   cArgs += "<br>" + "   " + cArg
                ELSE
                   cArgs += "<br>" + "   " + cArg + "<font color=red><b>" + "," + "</b></font>"
                ENDIF
             NEXT
-            nCols += iif( nCols <= len( cFunc ), 0, 1 )
+            nCols += iif( nCols <= Len( cFunc ), 0, 1 )
 
             //cPro  := "<p style='white-space:pre'>" + "<font color=darkgreen><b>" + cFunc + "</b></font>" + ;
             cPro  := "<p style='white-space:pre'>" + "<b>" + cFunc + "</b>" + ;

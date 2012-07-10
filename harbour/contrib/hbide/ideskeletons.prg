@@ -183,7 +183,7 @@ METHOD IdeSkeletons:execEvent( cEvent, p )
       IF !empty( cName := hbide_fetchAString( ::oUI:q_listNames, "", "Name", "New Skeleton" ) )
          ::oUI:q_listNames:addItem( cName )
          aadd( ::oIde:aSkltns, { cName, "" } )
-         ::oUI:q_listNames:setCurrentRow( len( ::aSkltns ) - 1 )
+         ::oUI:q_listNames:setCurrentRow( Len( ::aSkltns ) - 1 )
       ENDIF
       EXIT
 
@@ -373,7 +373,7 @@ METHOD IdeSkeletons:parseMeta( cMeta )
       cKey := upper( cKey )
       IF ( nMeta := ascan( ::aMetas, {|e_| e_[ 1 ] == cKey } ) ) == 0
          aadd( ::aMetas, { cKey, "" } )
-         nMeta := len( ::aMetas )
+         nMeta := Len( ::aMetas )
       ENDIF
    ENDIF
 

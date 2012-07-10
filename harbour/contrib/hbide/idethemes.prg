@@ -153,9 +153,9 @@ METHOD IdeThemes:new( oIde, cThemesFile )
 METHOD IdeThemes:destroy()
 
    IF !empty( ::oSL )
-      ::oSL:qObj[ "listOptions"  ]:disConnect( "doubleClicked(QModelIndex)" )
-      ::oSL:qObj[ "buttonOk"     ]:disConnect( "clicked()" )
-      ::oSL:qObj[ "buttonCancel" ]:disConnect( "clicked()" )
+      ::oSL:q_listOptions  :disConnect( "doubleClicked(QModelIndex)" )
+      ::oSL:q_buttonOk     :disConnect( "clicked()" )
+      ::oSL:q_buttonCancel :disConnect( "clicked()" )
       ::oSL:destroy()
    ENDIF
 
@@ -513,7 +513,7 @@ METHOD IdeThemes:mergeUserDictionaries( qHiliter, cTheme )
          FOR EACH a_ IN oDict:aItems
             s += "\b" + a_[ 1 ] + "\b|"
          NEXT
-         s := substr( s, 1, len( s ) - 1 )
+         s := substr( s, 1, Len( s ) - 1 )
 
          qRegExp := QRegExp()
          qRegExp:setCaseSensitivity( oDict:lCaseSensitive )
@@ -566,15 +566,15 @@ METHOD IdeThemes:show()
       /* Fill Themes Dialog Values */
       ::oUI:setWindowTitle( GetKeyValue( ::aControls, "dialogTitle" ) )
 
-      ::oUI:qObj[ "checkItalic"    ]:setText( GetKeyValue( ::aControls, "checkItalic"   , "Italic"    ) )
-      ::oUI:qObj[ "checkBold"      ]:setText( GetKeyValue( ::aControls, "checkBold"     , "Bold"      ) )
-      ::oUI:qObj[ "checkUnderline" ]:setText( GetKeyValue( ::aControls, "checkUnderline", "Underline" ) )
+      ::oUI:q_checkItalic    :setText( GetKeyValue( ::aControls, "checkItalic"   , "Italic"    ) )
+      ::oUI:q_checkBold      :setText( GetKeyValue( ::aControls, "checkBold"     , "Bold"      ) )
+      ::oUI:q_checkUnderline :setText( GetKeyValue( ::aControls, "checkUnderline", "Underline" ) )
       //
-      ::oUI:qObj[ "buttonColor"    ]:setText( GetKeyValue( ::aControls, "buttonColor"   , "Color"     ) )
-      ::oUI:qObj[ "buttonSave"     ]:setText( GetKeyValue( ::aControls, "buttonSave"    , "Save"      ) )
-      ::oUI:qObj[ "buttonSaveAs"   ]:setText( GetKeyValue( ::aControls, "buttonSaveAs"  , "SaveAs"    ) )
-      ::oUI:qObj[ "buttonClose"    ]:setText( GetKeyValue( ::aControls, "buttonClose"   , "Close"     ) )
-      ::oUI:qObj[ "buttonCopy"     ]:setText( GetKeyValue( ::aControls, "buttonCopy"    , "Copy"      ) )
+      ::oUI:q_buttonColor    :setText( GetKeyValue( ::aControls, "buttonColor"   , "Color"     ) )
+      ::oUI:q_buttonSave     :setText( GetKeyValue( ::aControls, "buttonSave"    , "Save"      ) )
+      ::oUI:q_buttonSaveAs   :setText( GetKeyValue( ::aControls, "buttonSaveAs"  , "SaveAs"    ) )
+      ::oUI:q_buttonClose    :setText( GetKeyValue( ::aControls, "buttonClose"   , "Close"     ) )
+      ::oUI:q_buttonCopy     :setText( GetKeyValue( ::aControls, "buttonCopy"    , "Copy"      ) )
 
       aeval( ::aThemes, {|e_| ::oUI:q_listThemes:addItem( e_[ 1 ] ) } )
       aeval( ::aItems , {|e_| ::oUI:q_listItems:addItem( e_[ 2 ] )  } )
@@ -623,10 +623,10 @@ METHOD IdeThemes:setAttributes()
    IF ! ::lCreating
       aAttr := ::aThemes[ ::nCurTheme, 2, ::nCurItem, 2 ]
       //
-      ::oUI:qObj[ "checkItalic"    ]:setChecked( aAttr[ THM_ATR_ITALIC ] )
-      ::oUI:qObj[ "checkBold"      ]:setChecked( aAttr[ THM_ATR_BOLD   ] )
-      ::oUI:qObj[ "checkUnderline" ]:setChecked( aAttr[ THM_ATR_ULINE  ] )
-      ::oUI:qObj[ "buttonColor"    ]:setStyleSheet( "color: " + Attr2RGBfnRev( aAttr ) + ";" + ;
+      ::oUI:q_checkItalic    :setChecked( aAttr[ THM_ATR_ITALIC ] )
+      ::oUI:q_checkBold      :setChecked( aAttr[ THM_ATR_BOLD   ] )
+      ::oUI:q_checkUnderline :setChecked( aAttr[ THM_ATR_ULINE  ] )
+      ::oUI:q_buttonColor    :setStyleSheet( "color: " + Attr2RGBfnRev( aAttr ) + ";" + ;
                                                     "background-color: " + Attr2RGBfn( aAttr ) + ";" )
    ENDIF
 
@@ -731,9 +731,9 @@ METHOD IdeThemes:selectTheme()
 
       ::oSL:setWindowTitle( "Available Themes" )
 
-      ::oSL:qObj[ "listOptions"  ]:connect( "doubleClicked(QModelIndex)", {|p| ::selectThemeProc( 1, p ) } )
-      ::oSL:qObj[ "buttonOk"     ]:connect( "clicked()"                 , {|p| ::selectThemeProc( 2, p ) } )
-      ::oSL:qObj[ "buttonCancel" ]:connect( "clicked()"                 , {|p| ::selectThemeProc( 3, p ) } )
+      ::oSL:q_listOptions :connect( "doubleClicked(QModelIndex)", {|p| ::selectThemeProc( 1, p ) } )
+      ::oSL:q_buttonOk    :connect( "clicked()"                 , {|p| ::selectThemeProc( 2, p ) } )
+      ::oSL:q_buttonCancel:connect( "clicked()"                 , {|p| ::selectThemeProc( 3, p ) } )
    ENDIF
 
    oStrList := QStringList()
@@ -744,7 +744,7 @@ METHOD IdeThemes:selectTheme()
    oStrModel := QStringListModel()
    oStrModel:setStringList( oStrList )
 
-   ::oSL:qObj[ "listOptions" ]:setModel( oStrModel )
+   ::oSL:q_listOptions:setModel( oStrModel )
 
    nDone := ::oSL:exec()
 
@@ -761,7 +761,7 @@ METHOD IdeThemes:selectThemeProc( nMode, p )
       ::oSL:done( 1 )
 
    CASE nMode == 2
-      qModalIndex := ::oSL:qObj[ "listOptions" ]:currentIndex()
+      qModalIndex := ::oSL:q_listOptions:currentIndex()
       ::cSelTheme := ::aThemes[ qModalIndex:row() + 1, 1 ]
       ::oSL:done( 1 )
 
@@ -790,8 +790,8 @@ METHOD IdeThemes:copy()
       aItems := aclone( ::aThemes[ ::nCurTheme ] )
       aItems[ 1 ] := cTheme
       aadd( ::aThemes, aItems )
-      ::oUI:qObj[ "listThemes" ]:addItem( cTheme )
-      ::oUI:qObj[ "listThemes" ]:setCurrentRow( len( ::aThemes ) - 1 )
+      ::oUI:q_listThemes:addItem( cTheme )
+      ::oUI:q_listThemes:setCurrentRow( Len( ::aThemes ) - 1 )
    ENDIF
 
    RETURN Self
@@ -868,7 +868,7 @@ METHOD IdeThemes:parseINI( lAppend )
                nPart := 3
                IF ( nTheme := ascan( ::aThemes, {|e_| e_[ 1 ] == cKey } ) ) == 0
                   aadd( ::aThemes, { cKey, {} } )
-                  nTheme := len( ::aThemes )
+                  nTheme := Len( ::aThemes )
                ENDIF
             ELSE
                nPart := 0

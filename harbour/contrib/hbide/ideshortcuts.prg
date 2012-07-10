@@ -321,14 +321,14 @@ METHOD IdeShortcuts:execEvent( nMode, p )
       EXIT
    CASE buttonDelete_clicked
       nRow := ::oUI:q_tableMacros:currentRow()
-      IF nRow >= 0 .AND. nRow < len( ::aDftSCuts )
+      IF nRow >= 0 .AND. nRow < Len( ::aDftSCuts )
          nRow++
          IF hbide_getYesNo( "Delete", ::aDftSCuts[ nRow, 1 ], "A Delete Operation Requested" )
             hb_adel( ::aDftSCuts, nRow, .t. )
             ::clearDftSCuts()
             ::populateDftSCuts()
          ENDIF
-         IF nRow <= len( ::aDftSCuts )
+         IF nRow <= Len( ::aDftSCuts )
             ::oUI:q_tableMacros:setCurrentCell( nRow - 1, 0 )
          ENDIF
       ENDIF
@@ -374,7 +374,7 @@ METHOD IdeShortcuts:execEvent( nMode, p )
                aadd( ::aDftSCuts, { ::cName, ::cKey, ::cAlt, ::cCtrl, ::cShift, ::cMenu, ::cBlock, ::cIcon } )
                aadd( ::aDftSCutsItms, array( 6 ) )
                ::oUI:q_tableMacros:setRowCount( ::oUI:q_tableMacros:rowCount() + 1 )
-               ::array2table( len( ::aDftSCuts ), { ::cName, ::cKey, ::cAlt, ::cCtrl, ::cShift, ::cMenu, ::cBlock, ::cIcon } )
+               ::array2table( Len( ::aDftSCuts ), { ::cName, ::cKey, ::cAlt, ::cCtrl, ::cShift, ::cMenu, ::cBlock, ::cIcon } )
             ELSE
                MsgBox( "Current shortcut is already defined!" )
             ENDIF
@@ -384,7 +384,7 @@ METHOD IdeShortcuts:execEvent( nMode, p )
 
    CASE buttonSet_clicked
       nRow := ::oUI:q_tableMacros:currentRow()
-      IF nRow >= 0 .AND. nRow < len( ::aDftSCuts )
+      IF nRow >= 0 .AND. nRow < Len( ::aDftSCuts )
          nRow++
          ::controls2vrbls()
          IF !empty( ::cName ) .AND. !( ::checkDuplicate( ::cKey, ::cAlt, ::cCtrl, ::cShift, nRow ) ) .AND. ::test( ::cBlock, .f. )
@@ -397,7 +397,7 @@ METHOD IdeShortcuts:execEvent( nMode, p )
       EXIT
    CASE tableMacros_itemSelectionChanged
       nRow := ::oUI:q_tableMacros:currentRow()
-      IF nRow >= 0 .AND. nRow < len( ::aDftSCuts )
+      IF nRow >= 0 .AND. nRow < Len( ::aDftSCuts )
          nRow++
          ::array2controls( nRow )
       ENDIF
@@ -412,7 +412,7 @@ METHOD IdeShortcuts:execEvent( nMode, p )
       ENDIF
       EXIT
    CASE listMethods_currentRowChanged
-      IF p >= 0 .AND. p < len( ::aMethods )
+      IF p >= 0 .AND. p < Len( ::aMethods )
          ::oUI:q_texteditSyntax:setPlainText( ::aMethods[ p+1, 3 ] )
       ENDIF
       EXIT
@@ -448,7 +448,7 @@ METHOD IdeShortcuts:vrbls2array( nRow )
 
    IF nRow == NIL
       aadd( ::aDftSCuts, array( 7 ) )
-      nRow := len( ::aDftSCuts )
+      nRow := Len( ::aDftSCuts )
    ENDIF
 
    ::aDftSCuts[ nRow, 1 ] := ::cName
@@ -573,11 +573,11 @@ METHOD IdeShortcuts:buildUI()
    oTbl:verticalHeader():hide()
    oTbl:horizontalHeader():setStretchLastSection( .t. )
    oTbl:setAlternatingRowColors( .t. )
-   oTbl:setColumnCount( len( hdr_ ) )
+   oTbl:setColumnCount( Len( hdr_ ) )
    oTbl:setShowGrid( .t. )
    oTbl:setSelectionMode( QAbstractItemView_SingleSelection )
    oTbl:setSelectionBehavior( QAbstractItemView_SelectRows )
-   FOR n := 1 TO len( hdr_ )
+   FOR n := 1 TO Len( hdr_ )
       qItm := QTableWidgetItem()
       qItm:setText( hdr_[ n,1 ] )
       oTbl:setHorizontalHeaderItem( n-1, qItm )
@@ -651,7 +651,7 @@ METHOD IdeShortcuts:populateDftSCuts()
    LOCAL oTbl := ::oUI:q_tableMacros
    LOCAL qApp := QApplication()
 
-   oTbl:setRowCount( len( ::aDftSCuts ) )
+   oTbl:setRowCount( Len( ::aDftSCuts ) )
 
    nRow := 0
    FOR EACH a_ IN ::aDftSCuts

@@ -131,7 +131,7 @@ FUNCTION hbide_ar2paramList( aArg )
    LOCAL s, cList := ""
    FOR EACH s IN aArg
       s := alltrim( s )
-      cList += s + iif( s:__enumIndex() < len( aArg ), ", ", "" )
+      cList += s + iif( s:__enumIndex() < Len( aArg ), ", ", "" )
    NEXT
    RETURN cList
 
@@ -141,7 +141,7 @@ FUNCTION hbide_arg2memo( aArg )
    LOCAL s, cMemo := ""
 
    FOR EACH s IN aArg
-      cMemo += "<" + s + ">" + iif( s:__enumIndex() < len( aArg ), hb_eol(), "" )
+      cMemo += "<" + s + ">" + iif( s:__enumIndex() < Len( aArg ), hb_eol(), "" )
    NEXT
 
    RETURN cMemo
@@ -502,7 +502,7 @@ METHOD IdeDocWriter:pullDocFromSource( nLineFrom, oEdit )
 
    a_:={}
    IF lDone
-      FOR i := len( aDoc ) TO 1 STEP -1
+      FOR i := Len( aDoc ) TO 1 STEP -1
          aadd( a_, aDoc[ i ] )
       NEXT
    ENDIF
@@ -522,10 +522,10 @@ METHOD IdeDocWriter:loadCurrentFuncDoc()
 
       IF !empty( ::aTags )
          nCurLine := oEdit:getLineNo()
-         IF len( ::aTags ) == 1
+         IF Len( ::aTags ) == 1
             n := 1
          ELSEIF ( n := ascan( ::aTags, {|e_| e_[ 3 ] >= nCurLine } ) ) == 0
-            n := len( ::aTags )
+            n := Len( ::aTags )
          ELSEIF n > 0
             n--
          ENDIF

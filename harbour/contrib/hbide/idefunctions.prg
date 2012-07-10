@@ -158,7 +158,7 @@ METHOD IdeFunctions:execEvent( nMode, p )
    DO CASE
    CASE nMode == "editFunc_textChanged"
       p    := upper( p )
-      nLen := len( p )
+      nLen := Len( p )
       IF ( n := ascan( ::aList, {|e_| left( e_[ 1 ], nLen ) == p } ) ) > 0
          ::oUI:q_tableFuncList:setCurrentItem( ::aItems[ n ] )
       ENDIF
@@ -306,7 +306,7 @@ METHOD IdeFunctions:positionToFunction( cWord, lShowTip )
 
    IF !empty( ::aList )
       p    := upper( cWord )
-      nLen := len( p )
+      nLen := Len( p )
       IF ( n := ascan( ::aList, {|e_| left( e_[ 1 ], nLen ) == p } ) ) > 0
          ::oUI:q_editFunction:setText( cWord )
          ::oUI:q_tableFuncList:setCurrentItem( ::aItems[ n ] )
@@ -329,7 +329,7 @@ METHOD IdeFunctions:jumpToFunction( cWord )
 
    IF !empty( ::aList )
       p    := upper( cWord )
-      nLen := len( p )
+      nLen := Len( p )
       IF ( n := ascan( ::aList, {|e_| left( e_[ 1 ], nLen ) == p } ) ) > 0
          ::oUI:q_editFunction:setText( cWord )
          ::oUI:q_tableFuncList:setCurrentItem( ::aItems[ n ] )
@@ -348,7 +348,7 @@ METHOD IdeFunctions:openFunction( lCheckDuplicates )
    IF ( n := ::oUI:q_tableFuncList:currentRow() ) >= 0
       n++
       cFunc := ::aList[ n, 1 ]
-      IF lCheckDuplicates .AND. n < len( ::aList ) .AND. ::aList[ n + 1, 1 ] == cFunc
+      IF lCheckDuplicates .AND. n < Len( ::aList ) .AND. ::aList[ n + 1, 1 ] == cFunc
          ::oFunctionsDock:show()
          ::oUI:q_tableFuncList:setFocus()
          RETURN lOpened
@@ -611,7 +611,7 @@ METHOD IdeFunctions:populateTable()
    ::buildHeader()
 
    oTbl := ::oUI:q_tableFuncList
-   oTbl:setRowCount( len( ::aList ) )
+   oTbl:setRowCount( Len( ::aList ) )
 
    n := 0
    FOR EACH a_ IN ::aList

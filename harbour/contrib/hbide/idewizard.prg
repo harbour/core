@@ -169,7 +169,7 @@ METHOD IdeWizard:addIntroPage()
 
    aadd( ::aPages, { PAGE_INTRO, page, layout, label } )
 
-   ::oUI:setPage( len( ::aPages ), page )
+   ::oUI:setPage( Len( ::aPages ), page )
 
    RETURN Self
 

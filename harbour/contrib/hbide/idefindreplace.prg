@@ -308,7 +308,7 @@ METHOD IdeSearchReplace:find( cText, lBackward )
 
    ::nCurDirection := iif( lBackward, QTextDocument_FindBackward, 0 )
 
-   IF len( cText ) > 0
+   IF Len( cText ) > 0
       qCursor := ::qCurEdit:textCursor()
 
       IF ::oUI:q_checkRegEx:isChecked()
@@ -605,13 +605,13 @@ METHOD IdeFindReplace:replaceSelection( cReplWith )
 
    qCursor := ::qCurEdit:textCursor()
    IF qCursor:hasSelection() .and. ! empty( cBuffer := qCursor:selectedText() )
-      nL := len( cBuffer )
+      nL := Len( cBuffer )
       nB := qCursor:position() - nL
 
       qCursor:beginEditBlock()
       qCursor:removeSelectedText()
       qCursor:insertText( cReplWith )
-      qCursor:setPosition( nB + len( cReplWith ) )
+      qCursor:setPosition( nB + Len( cReplWith ) )
       ::qCurEdit:setTextCursor( qCursor )
       ::oEM:getEditObjectCurrent():clearSelection()
       qCursor:endEditBlock()
@@ -950,7 +950,7 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
          qCursor := ::oUI:q_editResults:textCursor()
          nInfo := qCursor:blockNumber() + 1
 
-         IF nInfo <= len( ::aInfo ) .AND. ::aInfo[ nInfo, 1 ] == -2
+         IF nInfo <= Len( ::aInfo ) .AND. ::aInfo[ nInfo, 1 ] == -2
             cSource := ::aInfo[ nInfo, 2 ]
 
             ::oSM:editSource( cSource, 0, 0, 0, NIL, NIL, .f., .t. )
@@ -958,7 +958,7 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
             qCursor:setPosition( 0 )
             qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, ::aInfo[ nInfo, 3 ] - 1 )
             qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, ::aInfo[ nInfo, 4 ] - 1 )
-            qCursor:movePosition( QTextCursor_Right, QTextCursor_KeepAnchor, len( ::aInfo[ nInfo, 5 ] ) )
+            qCursor:movePosition( QTextCursor_Right, QTextCursor_KeepAnchor, Len( ::aInfo[ nInfo, 5 ] ) )
             ::oIde:qCurEdit:setTextCursor( qCursor )
             ::oIde:manageFocusInEditor()
          ENDIF
@@ -979,7 +979,7 @@ METHOD IdeFindInFiles:replaceAll()
    IF empty( ::cReplWith  := ::oUI:q_comboRepl:currentText() )
       RETURN Self
    ENDIF
-   nL := len( ::cReplWith )
+   nL := Len( ::cReplWith )
 
    IF ! hbide_getYesNo( "Starting REPLACE operation", "No way to interrupt", "Critical" )
       RETURN Self
@@ -996,7 +996,7 @@ METHOD IdeFindInFiles:replaceAll()
          qCursor:setPosition( 0 )
          qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, aFind[ 3 ] - 1 )
          qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, aFind[ 4 ] - 1 )
-         qCursor:movePosition( QTextCursor_Right, QTextCursor_KeepAnchor, len( aFind[ 5 ] ) )
+         qCursor:movePosition( QTextCursor_Right, QTextCursor_KeepAnchor, Len( aFind[ 5 ] ) )
          ::qCurEdit:setTextCursor( qCursor )
 
          nB := qCursor:position()
@@ -1016,76 +1016,74 @@ METHOD IdeFindInFiles:replaceAll()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeFindInFiles:execContextMenu( p )
-   LOCAL nLine, qCursor, qMenu, qAct, cAct, cFind
+   LOCAL nLine, qCursor, qMenu, qAct, cFind
 
    qCursor := ::oUI:q_editResults:textCursor()
    nLine := qCursor:blockNumber() + 1
 
-   IF nLine <= len( ::aInfo )
-      qMenu := QMenu() // ::oUI:q_editResults )
-      
+   IF nLine <= Len( ::aInfo )
+      qMenu := QMenu()
+
       qMenu:addAction( "Copy"       )
       qMenu:addAction( "Select All" )
       qMenu:addAction( "Clear"      )
       qMenu:addAction( "Print"      )
       qMenu:addAction( "Save as..." )
-      qMenu:addSeparator()           
+      qMenu:addSeparator()
       qMenu:addAction( "Find"       )
-      qMenu:addSeparator()           
+      qMenu:addSeparator()
       IF ::aInfo[ nLine, 1 ] == -2     /* Found Line */
          qMenu:addAction( "Replace Line" )
       ELSEIF ::aInfo[ nLine, 1 ] == -1 /* Source File */
          qMenu:addAction( "Open"        )
          qMenu:addAction( "Replace All" )
       ENDIF
-      qMenu:addSeparator() 
-      qMenu:addAction( "Zom In"  ) 
+      qMenu:addSeparator()
+      qMenu:addAction( "Zom In"  )
       qMenu:addAction( "Zoom Out" )
-      
+
       IF ! empty( qAct := qMenu:exec( ::oUI:q_editResults:mapToGlobal( p ) ) )
-         IF valtype( cAct := qAct:text() ) == "C"
-      
-            SWITCH cAct
-            CASE "Save as..."
-               EXIT
-            CASE "Find"
-               IF !empty( cFind := hbide_fetchAString( ::oUI:q_editResults, , "Find what?", "Find" ) )
-                  ::lNotDblClick := .T.
-                  IF !( ::oUI:q_editResults:find( cFind, 0 ) )
-                     MsgBox( "Not Found" )
-                  ENDIF
-               ENDIF
-               EXIT
-            CASE "Print"
-               ::print()
-               EXIT
-            CASE "Clear"
-               ::oUI:q_editResults:clear()
-               ::aInfo := {}
-               EXIT
-            CASE "Copy"
+         SWITCH qAct:text()
+
+         CASE "Save as..."
+            EXIT
+         CASE "Find"
+            IF !empty( cFind := hbide_fetchAString( ::oUI:q_editResults, , "Find what?", "Find" ) )
                ::lNotDblClick := .T.
-               ::oUI:q_editResults:copy()
-               EXIT
-            CASE "Select All"
-               ::oUI:q_editResults:selectAll()
-               EXIT
-            CASE "Replace Line"
-               EXIT
-            CASE "Replace Source"
-               EXIT
-            CASE "Zoom In"
-               ::oUI:q_editResults:zoomIn()
-               EXIT
-            CASE "Zoom Out"
-               ::oUI:q_editResults:zoomOut()
-               EXIT
-            ENDSWITCH
-         ENDIF    
+               IF !( ::oUI:q_editResults:find( cFind, 0 ) )
+                  MsgBox( "Not Found" )
+               ENDIF
+            ENDIF
+            EXIT
+         CASE "Print"
+            ::print()
+            EXIT
+         CASE "Clear"
+            ::oUI:q_editResults:clear()
+            ::aInfo := {}
+            EXIT
+         CASE "Copy"
+            ::lNotDblClick := .T.
+            ::oUI:q_editResults:copy()
+            EXIT
+         CASE "Select All"
+            ::oUI:q_editResults:selectAll()
+            EXIT
+         CASE "Replace Line"
+            EXIT
+         CASE "Replace Source"
+            EXIT
+         CASE "Zoom In"
+            ::oUI:q_editResults:zoomIn()
+            EXIT
+         CASE "Zoom Out"
+            ::oUI:q_editResults:zoomOut()
+            EXIT
+         ENDSWITCH
       ENDIF
    ENDIF
 
-   RETURN NIL 
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -1315,7 +1313,7 @@ METHOD IdeFindInFiles:findInABunch( aFiles )
             ENDIF
          ENDIF
 
-         IF len( aLines ) > 0
+         IF Len( aLines ) > 0
             ::showLog( LOG_FINDS, s, aLines )
             ::nFounds++
          ELSE
@@ -1326,8 +1324,8 @@ METHOD IdeFindInFiles:findInABunch( aFiles )
          ::nMisses++
       ENDIF
    NEXT
-   IF nNoMatch == len( aFiles )
-      ::showLog( LOG_INFO, "Searched (" + hb_ntos( len( aFiles ) ) + ") files, no matches found" )
+   IF nNoMatch == Len( aFiles )
+      ::showLog( LOG_INFO, "Searched (" + hb_ntos( Len( aFiles ) ) + ") files, no matches found" )
    ENDIF
 
    RETURN Self
@@ -1373,7 +1371,7 @@ METHOD IdeFindInFiles:showLog( nType, cMsg, aLines )
       EXIT
 
    CASE LOG_FINDS
-      cText := F_FILE + "<b>" + cMsg + "   ( "+ hb_ntos( len( aLines ) ) + " )" + "</b>" + F_END
+      cText := F_FILE + "<b>" + cMsg + "   ( "+ hb_ntos( Len( aLines ) ) + " )" + "</b>" + F_END
       ::oUI:q_editResults:append( cText )
       ::oUI:q_labelStatus:setText( cText )
       aadd( ::aInfo, { -1, cMsg, NIL } )
@@ -1403,8 +1401,8 @@ METHOD IdeFindInFiles:showLog( nType, cMsg, aLines )
             //nB    := at( cExp, cL )
             nB    := at( cExp, iif( ::lMatchCase, cL, lower( cL ) ) )
             cPre  := substr( cL, 1, nB - 1 )
-            cPost := substr( cL, nB + len( cExp ) )
-            cT    := substr( cL, nB, len( cExp ) )
+            cPost := substr( cL, nB + Len( cExp ) )
+            cT    := substr( cL, nB, Len( cExp ) )
             cL    := hbide_convertHtmlDelimiters( cPre ) + F_SEARCH + "<b>" + hbide_convertHtmlDelimiters( cT ) + ;
                                                              "</b>" + F_END + hbide_convertHtmlDelimiters( cPost )
 
@@ -1445,13 +1443,13 @@ METHOD IdeFindInFiles:showLog( nType, cMsg, aLines )
 STATIC FUNCTION hbide_buildResultLine( cLine, aM )
    LOCAL cT, cR, i
 
-   FOR i := 1 TO len( aM )
+   FOR i := 1 TO Len( aM )
       cR    := aM[ i, 1 ]
-      cT    := replicate( chr( 255 ), len( aM[ i, 1 ] ) )
+      cT    := replicate( chr( 255 ), Len( aM[ i, 1 ] ) )
       cLine := strtran( cLine, cR, cT, 1, 1 )
    NEXT
-   FOR i := 1 TO len( aM )
-      cR    := replicate( chr( 255 ), len( aM[ i, 1 ] ) )
+   FOR i := 1 TO Len( aM )
+      cR    := replicate( chr( 255 ), Len( aM[ i, 1 ] ) )
       cT    := F_SEARCH + "<b>" + hbide_convertHtmlDelimiters( aM[ i, 1 ] ) + "</b>" + F_END
       cLine := strtran( cLine, cR, cT, 1, 1 )
    NEXT

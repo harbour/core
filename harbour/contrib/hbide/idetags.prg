@@ -69,7 +69,7 @@
 #include "common.ch"
 #include "xbp.ch"
 
-#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
+#define LEFTEQUAL( l, r )       ( hb_BLeft( l, hb_BLen( r ) ) == r )
 
 /*----------------------------------------------------------------------*/
 
@@ -85,7 +85,7 @@ FUNCTION UpdateTags( cModule, aSummary, aSumData, aFuncList, aLines, aText )
    aFuncList := {}
    aLines    := {}
 
-   FOR i := 1 TO LEN( aSummary )
+   FOR i := 1 TO Len( aSummary )
       cSyntax := lTrim( Substr( aSummary[ i ], 8 ) )
 
       IF LEFT( cSyntax,14 ) == "HB_FUNC_STATIC"
@@ -125,11 +125,11 @@ FUNCTION UpdateTags( cModule, aSummary, aSumData, aFuncList, aLines, aText )
          ELSEIF cType == "CLASS"
             cSyntax := LTrim( SubStr( cSyntax, 7 ) )
          ELSE
-            cSyntax := lTrim( SubStr( cSyntax, Len( cType ) + 1 ) )
+            cSyntax := lTrim( SubStr( cSyntax, hb_BLen( cType ) + 1 ) )
          ENDIF
 
          IF ( n := RAt( "(", cSyntax ) ) > 0
-            cName := Trim( Left( cSyntax, n-1 ) )
+            cName := Trim( hb_BLeft( cSyntax, n-1 ) )
             FOR m := Len( cName ) TO 1 STEP -1
                IF ( ! substr( cName, m, 1 ) $ cGoodFuncNameChars )
                   EXIT

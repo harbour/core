@@ -950,7 +950,7 @@ METHOD IdeDocks:stackHorizontally()
    qObj   := qArea:activeSubWindow()
    qVPort := qArea:viewport()
    nH     := qVPort:height()
-   nW     := qVPort:width() / len( ::oIde:aMdies )
+   nW     := qVPort:width() / Len( ::oIde:aMdies )
    nT     := 0
    nL     := 0
 
@@ -972,7 +972,7 @@ METHOD IdeDocks:stackVertically()
    qArea  := ::oStackedWidget
    qObj   := qArea:activeSubWindow()
    qVPort := qArea:viewport()
-   nH     := qVPort:height() / len( ::oIde:aMdies )
+   nH     := qVPort:height() / Len( ::oIde:aMdies )
    nW     := qVPort:width()
    nT     := 0
 
@@ -1471,7 +1471,7 @@ METHOD IdeDocks:buildProjectTree()
 
    ::oProjRoot:expand( .t. )
    //
-   FOR i := 1 TO len( ::aProjects )
+   FOR i := 1 TO Len( ::aProjects )
       ::oIde:updateProjectTree( ::aProjects[ i, 3 ] )
    NEXT
 

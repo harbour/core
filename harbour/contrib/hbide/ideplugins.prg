@@ -244,11 +244,11 @@ FUNCTION hbide_loadPrototypes( cPath )
       NEXT
    ENDIF
 
-   nLen := len( b_ )
+   nLen := Len( b_ )
    FOR EACH s IN b_
       i := s:__enumIndex()
       IF right( s, 1 ) == ";"
-         s := substr( s, 1, len( s ) - 1 )
+         s := substr( s, 1, Len( s ) - 1 )
          IF i < nLen
             b_[ i + 1 ] := s + " " + b_[ i + 1 ]
             s := ""

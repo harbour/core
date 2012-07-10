@@ -483,7 +483,7 @@ METHOD IdeChangeLog:buildLogEntry()
 STATIC FUNCTION hbide_howManyPreSpaces( cStr )
    LOCAL i, n := 0
 
-   FOR i := 1 TO len( cStr )
+   FOR i := 1 TO Len( cStr )
       IF ! ( substr( cStr, i, 1 ) == " " )
          EXIT
       ENDIF

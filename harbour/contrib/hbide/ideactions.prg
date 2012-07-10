@@ -704,7 +704,7 @@ FUNCTION hbide_mnuAddFileToMRU( oIde, cFileName, cType )
       hb_aDel( a_, nPos, .T. )
    ENDIF
 
-   ASize( a_, len( a_ ) + 1 )
+   ASize( a_, Len( a_ ) + 1 )
    AIns( a_, 1 )
    a_[ 1 ] := cFileName
 

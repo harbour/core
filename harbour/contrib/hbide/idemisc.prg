@@ -131,7 +131,7 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
    qPop := QMenu( iif( HB_ISOBJECT( qParent ), qParent, NIL ) )
    qPop:setStyleSheet( GetStyleSheet( "QMenuPop", hbide_setIde():nAnimantionMode ) )
 
-   FOR i := 1 TO len( aPops )
+   FOR i := 1 TO Len( aPops )
       IF empty( aPops[ i,1 ] )
          aadd( qAct_, qPop:addSeparator() )
       ELSE
@@ -459,7 +459,7 @@ FUNCTION hbide_ar2delString( a_, cDlm )
 
    aeval( a_, {|e| s += e + cDlm  } )
 
-   RETURN substr( s, 1, len( s ) - len( cDlm ) )
+   RETURN substr( s, 1, Len( s ) - len( cDlm ) )
 
 /*----------------------------------------------------------------------*/
 
@@ -479,7 +479,7 @@ FUNCTION hbide_arrayToMemoEx( a_ )
 
    aeval( a_, {|e| s += e + hb_eol() } )
 
-   s := substr( s, 1, len( s ) - 2 )
+   s := substr( s, 1, Len( s ) - 2 )
 
    RETURN s
 
@@ -504,7 +504,7 @@ FUNCTION hbide_arrayToMemoEx2( a_ )
 
    DO WHILE .t.
       IF right( s, 2 ) == hb_eol()
-         s := substr( s, 1, len( s ) - 2 )
+         s := substr( s, 1, Len( s ) - 2 )
       ELSE
          EXIT
       ENDIF
@@ -618,13 +618,13 @@ FUNCTION hbide_pathNormalized( cPath )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_pathFile( cPath, cFile )
-   cPath := iif( right( cPath, 1 ) $ "\/", substr( cPath, 1, len( cPath ) - 1 ), cPath )
+   cPath := iif( right( cPath, 1 ) $ "\/", substr( cPath, 1, Len( cPath ) - 1 ), cPath )
    RETURN hbide_pathToOSPath( iif( empty( cPath ), cFile, cPath + "\" + cFile ) )
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_pathStripLastSlash( cPath )
-   RETURN iif( right( cPath, 1 ) $ "\/", substr( cPath, 1, len( cPath ) - 1 ), cPath )
+   RETURN iif( right( cPath, 1 ) $ "\/", substr( cPath, 1, Len( cPath ) - 1 ), cPath )
 
 /*----------------------------------------------------------------------*/
 
@@ -942,11 +942,11 @@ function hbide_toString( x, lLineFeed, lInherited, lType, cFile, lForceLineFeed 
       s := iif( lType, "[U]=", "" ) + 'NIL'
    CASE ( t == "A" )
       s := iif( lType, "[A]=", "" ) + "{"
-      IF len( x ) == 0
+      IF Len( x ) == 0
          s += " "
       ELSE
          s += iif( valtype( x[1] ) == "A" .or. lForceLineFeed, hb_eol(), "" )
-         j := len( x )
+         j := Len( x )
 
          FOR i := 1 TO j
              s += iif( valtype( x[i] ) == "A", "  ", " " ) + iif( lForceLineFeed, " ", "" ) + hbide_toString( x[i], .F. )
@@ -1045,7 +1045,7 @@ FUNCTION hbide_getUniqueFuncName()
    LOCAL t, b, c, n
 
    t := 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
-   n := len( t )
+   n := Len( t )
    b := ''
    DO WHILE Len( b ) != 10
       c := Substr( t, HB_RANDOMINT( 1, n ), 1 )
@@ -1551,7 +1551,7 @@ FUNCTION hbide_isPrevParent( cRoot, cPath )
    cLRoot := hbide_pathNormalized( cRoot, .t. )
    cLPath := hbide_pathNormalized( cPath, .t. )
 
-   IF hb_FileMatch( left( cLPath, len( cLRoot ) ), cLRoot )
+   IF hb_FileMatch( left( cLPath, Len( cLRoot ) ), cLRoot )
       RETURN .t.
    ENDIF
 
@@ -1595,8 +1595,8 @@ FUNCTION hbide_stripRoot( cRoot, cPath )
 
    cLRoot := hbide_pathNormalized( cRoot, .t. )
    cLPath := hbide_pathNormalized( cPath, .f. )
-   IF hb_FileMatch( left( lower( cLPath ), len( cLRoot ) ), cLRoot )
-      cP := substr( cLPath, len( cRoot ) + 1 )
+   IF hb_FileMatch( left( lower( cLPath ), Len( cLRoot ) ), cLRoot )
+      cP := substr( cLPath, Len( cRoot ) + 1 )
       RETURN cP
    ENDIF
 
@@ -1769,7 +1769,7 @@ FUNCTION hbide_string2nArray( s )
    b_:= hb_atokens( s, " " )
    FOR EACH s IN b_
       s := alltrim( s )
-      IF len( s ) > 0
+      IF Len( s ) > 0
          aadd( a_, val( s ) )
       ENDIF
    NEXT

@@ -91,7 +91,7 @@ FUNCTION hbide_loadUserDictionaries( oIde )
    #endif
    LOCAL oDict, i
 
-   FOR i := 1 TO len( aDict )
+   FOR i := 1 TO Len( aDict )
       oDict := IdeDictionary():new( oIde ):create()
       oDict:load( aDict[ i ] )
 
@@ -177,7 +177,7 @@ METHOD IdeDictionary:load( cDict )
 
       IF !( ::cBgColor == "NONE" )
          q_:= hbide_evalAsIs( ::cBgColor )
-         IF HB_ISARRAY( q_ ) .AND. len( q_ ) == 3
+         IF HB_ISARRAY( q_ ) .AND. Len( q_ ) == 3
             ::qBgColor := QColor( q_[ 1 ], q_[ 2 ], q_[ 3 ] )
          ENDIF
 HB_TRACE( HB_TR_DEBUG, ::cBgColor, valtype( q_ ) )

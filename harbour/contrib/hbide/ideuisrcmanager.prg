@@ -410,13 +410,13 @@ METHOD IdeUISrcManager:saveMethod()
          FOR i := n3-1 TO n2 + 1 STEP - 1
             hb_adel( ::aSource, i, .t. )
          NEXT
-         FOR i := 1 TO len( aSrc )
+         FOR i := 1 TO Len( aSrc )
             ::aSource := hb_ains( ::aSource, n2 + i, "   " + aSrc[ i ], .t. )
          NEXT
       ELSE
          n := ascan( ::aSource, {|e| "<EVENTSMETHODAREA>" $ e } )
          ::aSource := hb_ains( ::aSource, ++n, cMtd, .t. )
-         FOR i := 1 TO len( aSrc )
+         FOR i := 1 TO Len( aSrc )
             ::aSource := hb_ains( ::aSource, ++n, "   " + aSrc[ i ], .t. )
          NEXT
          ::aSource := hb_ains( ::aSource, ++n, "  ", .t. )
@@ -487,7 +487,7 @@ METHOD IdeUISrcManager:loadMethod()
          FOR i := n2 + 1 TO n3 - 1
             cSrc += substr( ::aSource[ i ], 4 ) + chr( 10 )
          NEXT
-         cSrc := substr( cSrc, 1, len( cSrc ) - 1 )
+         cSrc := substr( cSrc, 1, Len( cSrc ) - 1 )
       ENDIF
    ENDIF
 
@@ -698,7 +698,7 @@ METHOD IdeUISrcManager:buildWidget( cBuffer, cPath, cName, cExt, aPrg )
             ::qMdiSub:move( 10,10 )
             ::aStatusPnls[ PNL_UI ]:setText( "<font color = red  >UI: " + cName + "</font>" )
 
-            FOR i := 1 to len( aPrg )
+            FOR i := 1 to Len( aPrg )
                cCode := aPrg[ i ]
                IF " := " $ cCode
                   IF ! ( "oRootWidget" $ cCode ) .AND. ! ( "LOCAL" $ cCode )

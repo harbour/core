@@ -257,7 +257,7 @@ CLASS IdeProjManager INHERIT IdeObject
 
    METHOD removeProject( cProjectTitle )
    METHOD closeProject( cProjectTitle )
-   METHOD promptForPath( cObjPathName, cTitle, cObjFileName, cObjPath2, cObjPath3 )
+   METHOD promptForPath( oEditPath, cTitle, cObjFileName )
    METHOD buildSource( lExecutable )
    METHOD buildProject( cProject, lLaunch, lRebuild, lPPO, lViaQt )
    METHOD launchProject( cProject, cExe )
@@ -479,7 +479,7 @@ METHOD IdeProjManager:pullHbpData( cHbp )
    cHome  := hbide_pathStripLastSlash( cHome )
 
    c3rd   := "-3rd="
-   nL     := len( c3rd )
+   nL     := Len( c3rd )
    aData  := hbide_fetchHbpData( cHbp )
    aOptns := aData[ 1 ]
    aFiles := aData[ 2 ]
@@ -851,10 +851,10 @@ METHOD IdeProjManager:buildInterface()
 // ::oUI:q_buttonSortZA      :connect( "clicked()", {|| ::sortSources( "za"  ) } )
 // ::oUI:q_buttonSortOrg     :connect( "clicked()", {|| ::sortSources( "org" ) } )
    ::oUI:q_tabWidget         :connect( "currentChanged(int)", {|p| ::updateHbp( p ) } )
-   ::oUI:q_buttonChoosePrjLoc:connect( "clicked()", {|| ::PromptForPath( 'editPrjLoctn' , 'Choose Project Location...'   ) } )
-   ::oUI:q_buttonChooseWd    :connect( "clicked()", {|| ::PromptForPath( 'editWrkFolder', 'Choose Working Folder...'     ) } )
-   ::oUI:q_buttonChooseDest  :connect( "clicked()", {|| ::PromptForPath( 'editDstFolder', 'Choose Destination Folder...' ) } )
-   ::oUI:q_buttonBackup      :connect( "clicked()", {|| ::PromptForPath( 'editBackup'   , 'Choose Backup Folder...'      ) } )
+   ::oUI:q_buttonChoosePrjLoc:connect( "clicked()", {|| ::PromptForPath( ::oUI:q_editPrjLoctn , 'Choose Project Location...'   ) } )
+   ::oUI:q_buttonChooseWd    :connect( "clicked()", {|| ::PromptForPath( ::oUI:q_editWrkFolder, 'Choose Working Folder...'     ) } )
+   ::oUI:q_buttonChooseDest  :connect( "clicked()", {|| ::PromptForPath( ::oUI:q_editDstFolder, 'Choose Destination Folder...' ) } )
+   ::oUI:q_buttonBackup      :connect( "clicked()", {|| ::PromptForPath( ::oUI:q_editBackup   , 'Choose Backup Folder...'      ) } )
    ::oUI:q_editPrjLoctn      :connect( "textChanged(QString)", {|cPath| ::setProjectLocation( cPath ) } )
 
    /* Set monospaced fonts */
@@ -1175,12 +1175,12 @@ METHOD IdeProjManager:selectCurrentProject()
 
    FOR EACH p IN ::aProjects
       IF !empty( t := p[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] )
-         oDlg:qObj[ "cbProjects" ]:addItem( t )
+         oDlg:q_cbProjects:addItem( t )
       ENDIF
    NEXT
 
    oDlg:q_btnCancel:connect( "clicked()", {|| oDlg:oWidget:done( 1 ) } )
-   oDlg:q_btnOk    :connect( "clicked()", {|| ::setCurrentProject( oDlg:qObj[ "cbProjects" ]:currentText() ), ;
+   oDlg:q_btnOk    :connect( "clicked()", {|| ::setCurrentProject( oDlg:q_cbProjects:currentText() ), ;
                                                                                              oDlg:done( 1 ) } )
    oDlg:exec()
 
@@ -1322,11 +1322,11 @@ METHOD IdeProjManager:closeProject( cProjectTitle )
 /* Prompt for user to select a existing folder
  * 25/12/2009 - 19:03:09 - vailtom
  */
-METHOD IdeProjManager:promptForPath( cObjPathName, cTitle, cObjFileName, cObjPath2, cObjPath3 )
+METHOD IdeProjManager:promptForPath( oEditPath, cTitle, cObjFileName )
    LOCAL cTemp, cPath, cFile
 
    IF HB_ISOBJECT( ::oProject )
-      cTemp := ::oUI:qObj[ cObjPathName ]:Text()
+      cTemp := oEditPath:Text()
    ELSE
       cTemp := ""
    ENDIF
@@ -1336,11 +1336,9 @@ METHOD IdeProjManager:promptForPath( cObjPathName, cTitle, cObjFileName, cObjPat
 
    ELSE
       cTemp := hbide_fetchAFile( ::oDlg, cTitle, { { "Harbour IDE Projects", "*.hbp" } }, cTemp )
-
       IF !Empty( cTemp )
          hb_fNameSplit( hbide_pathNormalized( cTemp, .f. ), @cPath, @cFile )
-
-         ::oUI:qObj[ cObjFileName ]:setText( cFile )
+         oEditPath:setText( cFile )
       ENDIF
    ENDIF
 
@@ -1348,18 +1346,10 @@ METHOD IdeProjManager:promptForPath( cObjPathName, cTitle, cObjFileName, cObjPat
       IF Right( cPath, 1 ) $ '/\'
          cPath := Left( cPath, Len( cPath ) - 1 )
       ENDIF
-      ::oUI:qObj[ cObjPathName ]:setText( cPath )
-
-      IF HB_ISSTRING( cObjPath2 ) .AND. Empty( ::oUI:qObj[ cObjPath2 ]:Text() )
-         ::oUI:qObj[ cObjPath2 ]:setText( cPath )
-      ENDIF
-
-      IF HB_ISSTRING( cObjPath3 ) .AND. Empty( ::oUI:qObj[ cObjPath3 ]:Text() )
-         ::oUI:qObj[ cObjPath3 ]:setText( cPath )
-      ENDIF
+      oEditPath:setText( cPath )
    ENDIF
 
-   ::oUI:qObj[ cObjPathName ]:setFocus()
+   oEditPath:setFocus()
 
    RETURN Self
 
@@ -1641,15 +1631,15 @@ METHOD IdeProjManager:finished( nExitCode, nExitStatus, oProcess )
    IF empty( cExe )
       cTkn := "hbmk2: Linking... "
       IF ( n := at( cTkn, cTmp ) ) > 0
-         n1   := hb_at( Chr( 10 ), cTmp, n + len( cTkn ) )
-         cExe := StrTran( substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) ), Chr( 13 ) )
+         n1   := hb_at( Chr( 10 ), cTmp, n + Len( cTkn ) )
+         cExe := StrTran( substr( cTmp, n + Len( cTkn ), n1 - n - len( cTkn ) ), Chr( 13 ) )
       ENDIF
    ENDIF
    IF empty( cExe )
       cTkn := "hbmk2: Target up to date: "
       IF ( n := at( cTkn, cTmp ) ) > 0
-         n1   := hb_at( Chr( 10 ), cTmp, n + len( cTkn ) )
-         cExe := StrTran( substr( cTmp, n + len( cTkn ), n1 - n - len( cTkn ) ), Chr( 13 ) )
+         n1   := hb_at( Chr( 10 ), cTmp, n + Len( cTkn ) )
+         cExe := StrTran( substr( cTmp, n + Len( cTkn ), n1 - n - len( cTkn ) ), Chr( 13 ) )
       ENDIF
    ENDIF
 

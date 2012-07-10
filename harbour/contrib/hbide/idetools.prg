@@ -290,11 +290,11 @@ METHOD IdeToolsManager:show()
       oTbl:verticalHeader():hide()
       oTbl:horizontalHeader():setStretchLastSection( .t. )
       oTbl:setAlternatingRowColors( .t. )
-      oTbl:setColumnCount( len( hdr_ ) )
+      oTbl:setColumnCount( Len( hdr_ ) )
       oTbl:setShowGrid( .t. )
       oTbl:setSelectionMode( QAbstractItemView_SingleSelection )
       oTbl:setSelectionBehavior( QAbstractItemView_SelectRows )
-      FOR n := 1 TO len( hdr_ )
+      FOR n := 1 TO Len( hdr_ )
          qItm := QTableWidgetItem()
          qItm:setText( hdr_[ n,1 ] )
          oTbl:setHorizontalHeaderItem( n-1, qItm )
@@ -501,7 +501,7 @@ METHOD IdeToolsManager:populateButtonsTable( nIndex )
          ENDIF
       NEXT
 
-      oTbl:setRowCount( len( a_ ) )
+      oTbl:setRowCount( Len( a_ ) )
 
       IF !empty( a_ )
          FOR EACH b_ IN a_
@@ -599,7 +599,7 @@ METHOD IdeToolsManager:controls2ini( nIndex )
 
    IF empty( nIndex )
       aadd( ::oINI:aTools, {} )
-      nIndex := len( ::oINI:aTools )
+      nIndex := Len( ::oINI:aTools )
    ENDIF
 
    ::oINI:aTools[ nIndex ] := { ::oUI:q_editName:text()   , ;
@@ -759,7 +759,7 @@ METHOD IdeToolsManager:execTool( ... )
    LOCAL nIndex, cCmd, cParams, cStayIn, lCapture, lOpen, aParam, cPlugin, a_
 
    aParam := hb_aParams()
-   IF len( aParam ) == 1
+   IF Len( aParam ) == 1
       IF ( nIndex := ascan( ::aTools, {|e_| e_[ 1 ] == aParam[ 1 ] } ) ) > 0
          hb_fNameSplit( ::aTools[ nIndex, 11 ], , @cPlugin )
 
@@ -773,7 +773,7 @@ METHOD IdeToolsManager:execTool( ... )
 
       ENDIF
 
-   ELSEIF len( aParam ) > 1
+   ELSEIF Len( aParam ) > 1
       asize( aParam, 5 )
 
       DEFAULT aParam[ 1 ] TO ""

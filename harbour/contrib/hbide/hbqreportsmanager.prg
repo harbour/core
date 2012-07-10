@@ -885,7 +885,7 @@ METHOD HbqReportsManager:loadReport( xData )
    ELSE
       ::lNew := .f.
 
-      IF len( xData ) <= 300 .AND. hb_fileExists( xData )
+      IF Len( xData ) <= 300 .AND. hb_fileExists( xData )
          ::cSaved := xData
          cBuffer  := hb_utf8tostr( hb_memoread( xData ) )
 
@@ -1424,7 +1424,7 @@ STATIC FUNCTION rmgr_a2arrayStr( aArray )
       ENDSWITCH
       s += ","
    NEXT
-   s := iif( len( s ) == 1, s, substr( s, 1, len( s ) - 1 ) ) + "}"
+   s := iif( Len( s ) == 1, s, substr( s, 1, len( s ) - 1 ) ) + "}"
 
    RETURN s
 
@@ -1523,12 +1523,12 @@ STATIC FUNCTION fetchBarString( cCode, lCheck, nType )
    DO CASE
    CASE nType == HQR_BARCODE_3OF9
       cCode := upper( cCode )
-      IF len( cCode ) > 32
+      IF Len( cCode ) > 32
          cCode := left( cCode,32 )
       ENDIF
 
       cCode := '*' + cCode + '*'
-      FOR n := 1 TO len( cCode )
+      FOR n := 1 TO Len( cCode )
          cCar := substr( cCode,n,1 )
          m    := at( cCar, cCars )
          IF m > 0
@@ -1899,7 +1899,7 @@ METHOD HqrGraphicsItem:setText( ... )
 
 METHOD HqrGraphicsItem:setTextFlags( ... )
    LOCAL a_:= hb_aParams()
-   SWITCH len( a_ )
+   SWITCH Len( a_ )
    CASE 0
       EXIT
    OTHERWISE
@@ -1915,7 +1915,7 @@ METHOD HqrGraphicsItem:setTextFlags( ... )
 
 METHOD HqrGraphicsItem:setPen( ... )
    LOCAL a_:= hb_aParams()
-   SWITCH len( a_ )
+   SWITCH Len( a_ )
    CASE 0
       IF empty( ::qPen )
          ::qPen := QPen( Qt_black )
@@ -1936,7 +1936,7 @@ METHOD HqrGraphicsItem:setPen( ... )
 
 METHOD HqrGraphicsItem:setBrush( ... )
    LOCAL a_:= hb_aParams()
-   SWITCH len( a_ )
+   SWITCH Len( a_ )
    CASE 0
       IF empty( ::qBrush )
          ::qBrush := QBrush()
@@ -1957,7 +1957,7 @@ METHOD HqrGraphicsItem:setBrush( ... )
 
 METHOD HqrGraphicsItem:setBackgroundBrush( ... )
    LOCAL a_:= hb_aParams()
-   SWITCH len( a_ )
+   SWITCH Len( a_ )
    CASE 0
       IF empty( ::qBgBrush )
          ::qBgBrush := QBrush()
@@ -1978,7 +1978,7 @@ METHOD HqrGraphicsItem:setBackgroundBrush( ... )
 
 METHOD HqrGraphicsItem:setFont( ... )
    LOCAL a_:= hb_aParams()
-   SWITCH len( a_ )
+   SWITCH Len( a_ )
    CASE 0
       IF empty( ::qFont )
          ::qFont := QFont( "Serif" )
@@ -2003,7 +2003,7 @@ METHOD HqrGraphicsItem:setFont( ... )
 
 METHOD HqrGraphicsItem:setBarcodeType( ... )
    LOCAL a_:= hb_aParams()
-   SWITCH len( a_ )
+   SWITCH Len( a_ )
    CASE 0
       EXIT
    OTHERWISE
@@ -2019,7 +2019,7 @@ METHOD HqrGraphicsItem:setBarcodeType( ... )
 
 METHOD HqrGraphicsItem:setGradient( ... )
    LOCAL a_:= hb_aParams()
-   SWITCH len( a_ )
+   SWITCH Len( a_ )
    CASE 0
       IF empty( ::qGBrush )
          ::qGBrush := QBrush()
@@ -2040,7 +2040,7 @@ METHOD HqrGraphicsItem:setGradient( ... )
 
 METHOD HqrGraphicsItem:setPixmap( ... )
    LOCAL a_:= hb_aParams()
-   SWITCH len( a_ )
+   SWITCH Len( a_ )
    CASE 0
       IF empty( ::qPixmap )
          ::qPixmap := QPixmap()
@@ -2061,7 +2061,7 @@ METHOD HqrGraphicsItem:setPixmap( ... )
 
 METHOD HqrGraphicsItem:setBorderWidth( ... )
    LOCAL a_:= hb_aParams()
-   SWITCH len( a_ )
+   SWITCH Len( a_ )
    CASE 0
       EXIT
    OTHERWISE
@@ -2077,7 +2077,7 @@ METHOD HqrGraphicsItem:setBorderWidth( ... )
 
 METHOD HqrGraphicsItem:setWidth( ... )
    LOCAL a_:= hb_aParams()
-   SWITCH len( a_ )
+   SWITCH Len( a_ )
    CASE 0
       RETURN ::oWidget:width()
    OTHERWISE
@@ -2094,7 +2094,7 @@ METHOD HqrGraphicsItem:setWidth( ... )
 
 METHOD HqrGraphicsItem:setHeight( ... )
    LOCAL a_:= hb_aParams()
-   SWITCH len( a_ )
+   SWITCH Len( a_ )
    CASE 0
       RETURN ::oWidget:height()
    OTHERWISE
@@ -2111,7 +2111,7 @@ METHOD HqrGraphicsItem:setHeight( ... )
 
 METHOD HqrGraphicsItem:setGeometry( ... )
    LOCAL qRectF, qPos, a_:= hb_aParams()
-   SWITCH len( a_ )
+   SWITCH Len( a_ )
    CASE 0
       qPos := ::oWidget:pos()
       RETURN QRectF( qPos:x(), qPos:y(), ::width(), ::height() )
@@ -2137,7 +2137,7 @@ METHOD HqrGraphicsItem:setGeometry( ... )
 
 METHOD HqrGraphicsItem:setPos( ... )
    LOCAL a_:= hb_aParams()
-   SWITCH len( a_ )
+   SWITCH Len( a_ )
    CASE 0
       RETURN ::oWidget:pos()
    CASE 1
@@ -2157,7 +2157,7 @@ METHOD HqrGraphicsItem:setPos( ... )
 
 METHOD HqrGraphicsItem:setLineStyle( ... )
    LOCAL a_:= hb_aParams()
-   SWITCH len( a_ )
+   SWITCH Len( a_ )
    CASE 0
       EXIT
    OTHERWISE
@@ -2173,7 +2173,7 @@ METHOD HqrGraphicsItem:setLineStyle( ... )
 
 METHOD HqrGraphicsItem:setBackgroundMode( ... )
    LOCAL a_:= hb_aParams()
-   SWITCH len( a_ )
+   SWITCH Len( a_ )
    CASE 0
       EXIT
    OTHERWISE
@@ -2189,7 +2189,7 @@ METHOD HqrGraphicsItem:setBackgroundMode( ... )
 
 METHOD HqrGraphicsItem:setOpacity( ... )
    LOCAL a_:= hb_aParams()
-   SWITCH len( a_ )
+   SWITCH Len( a_ )
    CASE 0
       EXIT
    OTHERWISE
@@ -2205,7 +2205,7 @@ METHOD HqrGraphicsItem:setOpacity( ... )
 
 METHOD HqrGraphicsItem:setLineType( ... )
    LOCAL a_:= hb_aParams()
-   SWITCH len( a_ )
+   SWITCH Len( a_ )
    CASE 0
       EXIT
    OTHERWISE
@@ -2455,10 +2455,10 @@ METHOD HqrGraphicsItem:drawBarcode( qPainter, qRectF )
 
    rc    := qRectF:adjusted( 5, 5, -10, -10 )
    cCode := fetchBarString( ::text() )
-   w     := rc:width() / len( cCode )
+   w     := rc:width() / Len( cCode )
    x     := 0.0
 
-   FOR i := 1 TO len( cCode )
+   FOR i := 1 TO Len( cCode )
       IF substr( cCode, i, 1 ) == "1"
          qPainter:fillRect( QRectF( rc:x() + x, rc:y(), w, rc:height() ), QColor( Qt_black ) )
       ELSE
@@ -2600,7 +2600,7 @@ METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
    cMaxVal   := hb_ntos( absMaxVal )
    nDec      := at( ".", cMaxVal )
 
-   powVal    := iif( absMaxVal < 1,  10.0 ^ ( len( substr( cMaxVal, nDec+1 ) ) + 1 ), 1 )
+   powVal    := iif( absMaxVal < 1,  10.0 ^ ( Len( substr( cMaxVal, nDec+1 ) ) + 1 ), 1 )
    maxpv     *= powVal
    minnv     *= powVal
 
@@ -2618,7 +2618,7 @@ METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
    rc := qRect:adjusted( pw / 2, pw / 2, -pw, -pw )
 
    f  := 2
-   chartStep := ( 10.0 ^ ( len( substr( cMaxVal, 1, nDec - 1 ) ) - 1 ) ) / f
+   chartStep := ( 10.0 ^ ( Len( substr( cMaxVal, 1, nDec - 1 ) ) - 1 ) ) / f
    powStep   := iif( chartStep < 1, 10, 1 )
    chartStep *= powStep
    maxpv     *= powStep
@@ -2667,7 +2667,7 @@ METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
 
    rc := rc:adjusted( 0,  nFHeight / 2, 0, 0 )
    x  := m_barsIdentation
-   barWidth := ( rc:width() - m_barsIdentation * ( len( ::xData ) + 1 ) ) / len( ::xData )
+   barWidth := ( rc:width() - m_barsIdentation * ( Len( ::xData ) + 1 ) ) / len( ::xData )
    py := maxHeight / maxVal
 
    FOR EACH cv IN ::xData
@@ -2693,7 +2693,7 @@ METHOD HqrGraphicsItem:drawChart( qPainter, qRect )
    qPainter:drawRect( qRect )
    qPainter:translate( qRect:topLeft() )
    qreal y := 1 / UNIT
-   qreal vstep := ( qRect:height() - y - 1 / UNIT * val:size() ) / len( ::aData )
+   qreal vstep := ( qRect:height() - y - 1 / UNIT * val:size() ) / Len( ::aData )
    FOR EACH cv IN ::aData
    {
       qPainter:fillRect( QRectF( 1 / UNIT / 2, y, m_legendColorqRectWidth, vstep ), QBrush( cv[ 3 ] ) )
