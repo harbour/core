@@ -2353,6 +2353,15 @@
 #define QDeclarativeEngine_CppOwnership                      0     // The object is owned by C++ code, and will never be deleted by QML. The JavaScript destroy() method cannot be used on objects with CppOwnership. This option is similar to QScriptEngine::QtOwnership.
 #define QDeclarativeEngine_JavaScriptOwnership               1     // The object is owned by JavaScript. When the object is returned to QML as the return value of a method call or property access, QML will delete the object if there are no remaining JavaScript references to it and it has no QObject::parent(). This option is similar to QScriptEngine::ScriptOwnership.
 
+#define QLCDNumber_Hex                                       0     // Hexadecimal
+#define QLCDNumber_Dec                                       1     // Decimal
+#define QLCDNumber_Oct                                       2     // Octal
+#define QLCDNumber_Bin                                       3     // Binary
+
+#define QLCDNumber_Outline                                   0     // gives raised segments filled with the background color.
+#define QLCDNumber_Filled                                    1     // gives raised segments filled with the windowText color.
+#define QLCDNumber_Flat                                      2     // gives flat segments filled with the windowText color.
+
 /*----------------------------------------------------------------------*/
 //                        HBQT Defined Constants
 /*----------------------------------------------------------------------*/

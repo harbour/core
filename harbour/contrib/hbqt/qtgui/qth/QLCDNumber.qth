@@ -54,10 +54,12 @@ enum SegmentStyle { Outline, Filled, Flat }
 <PROTOS>
 bool checkOverflow ( double num ) const
 //bool checkOverflow ( int num ) const
+int digitCount () const                                     [*V=0x040600*]
 int intValue () const
 Mode mode () const
 int numDigits () const
 SegmentStyle segmentStyle () const
+void setDigitCount ( int numDigits )                        [*V=0x040600*]
 void setMode ( Mode )
 void setNumDigits ( int nDigits )
 void setSegmentStyle ( SegmentStyle )
