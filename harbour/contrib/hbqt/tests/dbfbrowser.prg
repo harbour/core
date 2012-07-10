@@ -71,7 +71,7 @@ PROCEDURE OpenDBF( oWid, oTable, oLabel )
 
    CloseDBF( oTable, oLabel )
    BEGIN SEQUENCE WITH {||.F.}
-      DBUseArea( .T., NIL, cFile, NIL, .F., .F. )
+      DBUseArea( .T., NIL, cFile, NIL, .T., .F. )
    END SEQUENCE
 
    IF Used()
