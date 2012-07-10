@@ -25,6 +25,4 @@ hbqt_hbqtableview.h
 
 hbqt_errorsys.prg
 
-THbQtUI.prg
-
 ../qtcore/hbqtcore.hbc
