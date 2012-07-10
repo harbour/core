@@ -2362,6 +2362,10 @@
 #define QLCDNumber_Filled                                    1     // gives raised segments filled with the windowText color.
 #define QLCDNumber_Flat                                      2     // gives flat segments filled with the windowText color.
 
+#define QValidator_Invalid                                   0     // The string is clearly invalid.
+#define QValidator_Intermediate                              1     // The string is a plausible intermediate value.
+#define QValidator_Acceptable                                2     // The string is acceptable as a final result; i.e. it is valid.
+
 /*----------------------------------------------------------------------*/
 //                        HBQT Defined Constants
 /*----------------------------------------------------------------------*/
