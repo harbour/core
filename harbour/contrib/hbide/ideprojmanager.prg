@@ -299,21 +299,21 @@ METHOD IdeProjManager:create( oIDE )
 METHOD IdeProjManager:destroy()
 
    IF !empty( ::oUI )
-      ::oUI:q_buttonCn          :disconnect( "clicked()" )
-      ::oUI:q_buttonSave        :disconnect( "clicked()" )
-      ::oUI:q_buttonSaveExit    :disconnect( "clicked()" )
-      ::oUI:q_buttonSelect      :disconnect( "clicked()" )
-      ::oUI:q_buttonUp          :disconnect( "clicked()" )
-      ::oUI:q_buttonDown        :disconnect( "clicked()" )
-   // ::oUI:q_buttonSort        :disconnect( "clicked()" )
-   // ::oUI:q_buttonSortZA      :disconnect( "clicked()" )
-   // ::oUI:q_buttonSortOrg     :disconnect( "clicked()" )
-      ::oUI:q_tabWidget         :disconnect( "currentChanged(int)" )
-      ::oUI:q_buttonChoosePrjLoc:disconnect( "clicked()" )
-      ::oUI:q_buttonChooseWd    :disconnect( "clicked()" )
-      ::oUI:q_buttonChooseDest  :disconnect( "clicked()" )
-      ::oUI:q_buttonBackup      :disconnect( "clicked()" )
-      ::oUI:q_editPrjLoctn      :disconnect( "textChanged(QString)" )
+      ::oUI:buttonCn          :disconnect( "clicked()" )
+      ::oUI:buttonSave        :disconnect( "clicked()" )
+      ::oUI:buttonSaveExit    :disconnect( "clicked()" )
+      ::oUI:buttonSelect      :disconnect( "clicked()" )
+      ::oUI:buttonUp          :disconnect( "clicked()" )
+      ::oUI:buttonDown        :disconnect( "clicked()" )
+   // ::oUI:buttonSort        :disconnect( "clicked()" )
+   // ::oUI:buttonSortZA      :disconnect( "clicked()" )
+   // ::oUI:buttonSortOrg     :disconnect( "clicked()" )
+      ::oUI:tabWidget         :disconnect( "currentChanged(int)" )
+      ::oUI:buttonChoosePrjLoc:disconnect( "clicked()" )
+      ::oUI:buttonChooseWd    :disconnect( "clicked()" )
+      ::oUI:buttonChooseDest  :disconnect( "clicked()" )
+      ::oUI:buttonBackup      :disconnect( "clicked()" )
+      ::oUI:editPrjLoctn      :disconnect( "textChanged(QString)" )
 
       ::oUI:destroy()
    ENDIF
@@ -576,19 +576,19 @@ METHOD IdeProjManager:save( lCanClose )
 
    * Validate certain parameters before continuing ... (vailtom)
 
-   IF Empty( ::oUI:q_editPrjTitle:text() )
-      ::oUI:q_editPrjTitle:setText( ::oUI:q_editOutName:text() )
+   IF Empty( ::oUI:editPrjTitle:text() )
+      ::oUI:editPrjTitle:setText( ::oUI:editOutName:text() )
    ENDIF
 
-   IF Empty( ::oUI:q_editOutName:text() )
+   IF Empty( ::oUI:editOutName:text() )
       MsgBox( 'Invalid Output FileName' )
-      ::oUI:q_editOutName:setFocus()
+      ::oUI:editOutName:setFocus()
       RETURN .F.
    ENDIF
 
    /* This must be valid, we cannot skip */
-   IF !hbide_isValidPath( ::oUI:q_editPrjLoctn:text(), 'Project Location' )
-      ::oUI:q_editPrjLoctn:setFocus()
+   IF !hbide_isValidPath( ::oUI:editPrjLoctn:text(), 'Project Location' )
+      ::oUI:editPrjLoctn:setFocus()
       RETURN .F.
    ENDIF
 
@@ -596,46 +596,46 @@ METHOD IdeProjManager:save( lCanClose )
    //
    aadd( hdr_, c3rd + "hbide_version="              + "1.0" )
    //
-   IF ::oUI:q_comboPrjType:currentIndex() != 0
-      aadd( hdr_, c3rd + "hbide_type="              + { "Executable", "Lib", "Dll" }[ ::oUI:q_comboPrjType:currentIndex() + 1 ] )
+   IF ::oUI:comboPrjType:currentIndex() != 0
+      aadd( hdr_, c3rd + "hbide_type="              + { "Executable", "Lib", "Dll" }[ ::oUI:comboPrjType:currentIndex() + 1 ] )
    ENDIF
-   IF ! Empty( ::oUI:q_editPrjTitle    :text() )
-      aadd( hdr_, c3rd + "hbide_title="             + hbide_space2amp( ::oUI:q_editPrjTitle    :text() ) )
+   IF ! Empty( ::oUI:editPrjTitle    :text() )
+      aadd( hdr_, c3rd + "hbide_title="             + hbide_space2amp( ::oUI:editPrjTitle    :text() ) )
    ENDIF
-   IF ! Empty( ::oUI:q_editWrkFolder   :text() )
-      aadd( hdr_, c3rd + "hbide_workingfolder="     + hbide_space2amp( ::oUI:q_editWrkFolder   :text() ) )
+   IF ! Empty( ::oUI:editWrkFolder   :text() )
+      aadd( hdr_, c3rd + "hbide_workingfolder="     + hbide_space2amp( ::oUI:editWrkFolder   :text() ) )
    ENDIF
-   IF ! Empty( ::oUI:q_editDstFolder   :text() )
-      aadd( hdr_, c3rd + "hbide_destinationfolder=" + hbide_space2amp( ::oUI:q_editDstFolder   :text() ) )
+   IF ! Empty( ::oUI:editDstFolder   :text() )
+      aadd( hdr_, c3rd + "hbide_destinationfolder=" + hbide_space2amp( ::oUI:editDstFolder   :text() ) )
    ENDIF
-   IF ! Empty( ::oUI:q_editOutName     :text() )
-      aadd( hdr_, c3rd + "hbide_output="            + hbide_space2amp( ::oUI:q_editOutName     :text() ) )
+   IF ! Empty( ::oUI:editOutName     :text() )
+      aadd( hdr_, c3rd + "hbide_output="            + hbide_space2amp( ::oUI:editOutName     :text() ) )
    ENDIF
-   IF ! Empty( ::oUI:q_editLaunchParams:text() )
-      aadd( hdr_, c3rd + "hbide_launchparams="      + hbide_space2amp( ::oUI:q_editLaunchParams:text() ) )
+   IF ! Empty( ::oUI:editLaunchParams:text() )
+      aadd( hdr_, c3rd + "hbide_launchparams="      + hbide_space2amp( ::oUI:editLaunchParams:text() ) )
    ENDIF
-   IF ! Empty( ::oUI:q_editLaunchExe   :text() )
-      aadd( hdr_, c3rd + "hbide_launchprogram="     + hbide_space2amp( ::oUI:q_editLaunchExe   :text() ) )
+   IF ! Empty( ::oUI:editLaunchExe   :text() )
+      aadd( hdr_, c3rd + "hbide_launchprogram="     + hbide_space2amp( ::oUI:editLaunchExe   :text() ) )
    ENDIF
-   IF ! Empty( ::oUI:q_editBackup      :text() )
-      aadd( hdr_, c3rd + "hbide_backupfolder="      + hbide_space2amp( ::oUI:q_editBackup      :text() ) )
+   IF ! Empty( ::oUI:editBackup      :text() )
+      aadd( hdr_, c3rd + "hbide_backupfolder="      + hbide_space2amp( ::oUI:editBackup      :text() ) )
    ENDIF
-   IF ::oUI:q_checkXhb:isChecked()
-      aadd( hdr_, c3rd + "hbide_xhb="               + iif( ::oUI:q_checkXhb:isChecked(), "YES", "NO" )   )
+   IF ::oUI:checkXhb:isChecked()
+      aadd( hdr_, c3rd + "hbide_xhb="               + iif( ::oUI:checkXhb:isChecked(), "YES", "NO" )   )
    ENDIF
-   IF ::oUI:q_checkXpp:isChecked()
-      aadd( hdr_, c3rd + "hbide_xpp="               + iif( ::oUI:q_checkXpp:isChecked(), "YES", "NO" )   )
+   IF ::oUI:checkXpp:isChecked()
+      aadd( hdr_, c3rd + "hbide_xpp="               + iif( ::oUI:checkXpp:isChecked(), "YES", "NO" )   )
    ENDIF
-   IF ::oUI:q_checkClp:isChecked()
-      aadd( hdr_, c3rd + "hbide_clp="               + iif( ::oUI:q_checkClp:isChecked(), "YES", "NO" )   )
+   IF ::oUI:checkClp:isChecked()
+      aadd( hdr_, c3rd + "hbide_clp="               + iif( ::oUI:checkClp:isChecked(), "YES", "NO" )   )
    ENDIF
 
-   a_:= hbide_synchronizeForHbp( hbide_memoToArray( ::oUI:q_editSources:toPlainText() ) )
+   a_:= hbide_synchronizeForHbp( hbide_memoToArray( ::oUI:editSources:toPlainText() ) )
    a_:= ::insertHeader( hdr_, a_ )
    aeval( a_, {|e| aadd( txt_, e ) } )
    aadd( txt_, " " )
 
-   ::cSaveTo := ::oUI:q_editPrjLoctn:text() + ::pathSep + ::oUI:q_editOutName:text() + ".hbp"
+   ::cSaveTo := ::oUI:editPrjLoctn:text() + ::pathSep + ::oUI:editOutName:text() + ".hbp"
 
    ::cSaveTo := hbide_pathToOSPath( ::cSaveTo )
 
@@ -735,10 +735,10 @@ METHOD IdeProjManager:updateHbp( iIndex )
    ENDIF
 
    /* Sources */
-   txt_:= hbide_synchronizeForHbp( hb_atokens( ::oUI:q_editSources:toPlainText(), _EOL ) )
+   txt_:= hbide_synchronizeForHbp( hb_atokens( ::oUI:editSources:toPlainText(), _EOL ) )
 
    /* Final assault */
-   ::oUI:q_editHbp:setPlainText( hbide_arrayToMemo( txt_ ) )
+   ::oUI:editHbp:setPlainText( hbide_arrayToMemo( txt_ ) )
 
    RETURN txt_
 
@@ -755,56 +755,56 @@ METHOD IdeProjManager:fetchProperties()
    ENDIF
 
    IF empty( ::aPrjProps )
-      ::oUI:q_comboPrjType:setCurrentIndex( 0 )
+      ::oUI:comboPrjType:setCurrentIndex( 0 )
 
-      ::oUI:q_editPrjTitle :setText( "" )
-      ::oUI:q_editPrjLoctn :setText( hbide_pathNormalized( ::oProject:location, .F. ) )
-      ::oUI:q_editDstFolder:setText( "" )
-      ::oUI:q_editBackup   :setText( "" )
-      ::oUI:q_editOutName  :setText( "" )
+      ::oUI:editPrjTitle :setText( "" )
+      ::oUI:editPrjLoctn :setText( hbide_pathNormalized( ::oProject:location, .F. ) )
+      ::oUI:editDstFolder:setText( "" )
+      ::oUI:editBackup   :setText( "" )
+      ::oUI:editOutName  :setText( "" )
 
-      ::oUI:q_editFlags    :setPlainText( "" )
-      ::oUI:q_editSources  :setPlainText( "" )
+      ::oUI:editFlags    :setPlainText( "" )
+      ::oUI:editSources  :setPlainText( "" )
 
-      ::oUI:q_editLaunchParams:setText( "" )
-      ::oUI:q_editLaunchExe:setText( "" )
-      ::oUI:q_editWrkFolder:setText( "" )
-      ::oUI:q_editHbp:setPlainText( "" )
+      ::oUI:editLaunchParams:setText( "" )
+      ::oUI:editLaunchExe:setText( "" )
+      ::oUI:editWrkFolder:setText( "" )
+      ::oUI:editHbp:setPlainText( "" )
 
       ::oUI:oWidget:setWindowTitle( 'New Project...' )
 
    ELSE
       DO CASE
       CASE empty( ::aPrjProps )
-         ::oUI:q_comboPrjType:setCurrentIndex( 0 )
+         ::oUI:comboPrjType:setCurrentIndex( 0 )
       CASE ::aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Lib"
-         ::oUI:q_comboPrjType:setCurrentIndex( 1 )
+         ::oUI:comboPrjType:setCurrentIndex( 1 )
       CASE ::aPrjProps[ PRJ_PRP_PROPERTIES, 2, E_qPrjType ] == "Dll"
-         ::oUI:q_comboPrjType:setCurrentIndex( 2 )
+         ::oUI:comboPrjType:setCurrentIndex( 2 )
       OTHERWISE
-         ::oUI:q_comboPrjType:setCurrentIndex( 0 )
+         ::oUI:comboPrjType:setCurrentIndex( 0 )
       ENDCASE
 
-      ::oUI:q_editPrjTitle :setText( ::oProject:title        )
-      ::oUI:q_editPrjLoctn :setText( ::oProject:location     )
-      ::oUI:q_editDstFolder:setText( ::oProject:destination  )
-      ::oUI:q_editOutName  :setText( ::oProject:outputName   )
-      ::oUI:q_editBackup   :setText( ::oProject:backup       )
+      ::oUI:editPrjTitle :setText( ::oProject:title        )
+      ::oUI:editPrjLoctn :setText( ::oProject:location     )
+      ::oUI:editDstFolder:setText( ::oProject:destination  )
+      ::oUI:editOutName  :setText( ::oProject:outputName   )
+      ::oUI:editBackup   :setText( ::oProject:backup       )
 
-      ::oUI:q_checkXhb     :setChecked( ::oProject:isXhb )
-      ::oUI:q_checkXpp     :setChecked( ::oProject:isXpp )
-      ::oUI:q_checkClp     :setChecked( ::oProject:isClp )
+      ::oUI:checkXhb     :setChecked( ::oProject:isXhb )
+      ::oUI:checkXpp     :setChecked( ::oProject:isXpp )
+      ::oUI:checkClp     :setChecked( ::oProject:isClp )
 
-      ::oUI:q_editFlags    :setPlainText( hbide_arrayToMemo( ::aPrjProps[ PRJ_PRP_FLAGS   , 1 ] ) )
-      ::oUI:q_editSources  :setPlainText( hbide_arrayToMemo( ::stripHeader( ::aPrjProps[ 5 ] ) ) )
+      ::oUI:editFlags    :setPlainText( hbide_arrayToMemo( ::aPrjProps[ PRJ_PRP_FLAGS   , 1 ] ) )
+      ::oUI:editSources  :setPlainText( hbide_arrayToMemo( ::stripHeader( ::aPrjProps[ 5 ] ) ) )
 
-      ::oUI:q_editLaunchParams:setText( ::oProject:launchParams )
-      ::oUI:q_editLaunchExe:setText( ::oProject:launchProgram )
-      ::oUI:q_editWrkFolder:setText( ::oProject:wrkDirectory )
+      ::oUI:editLaunchParams:setText( ::oProject:launchParams )
+      ::oUI:editLaunchExe:setText( ::oProject:launchProgram )
+      ::oUI:editWrkFolder:setText( ::oProject:wrkDirectory )
 
-      ::oUI:q_editHbp:setPlainText( "" )
+      ::oUI:editHbp:setPlainText( "" )
 
-      ::oUI:oWidget:setWindowTitle( 'Properties for "' + ::oUI:q_editPrjTitle:Text() + '"' )
+      ::oUI:oWidget:setWindowTitle( 'Properties for "' + ::oUI:editPrjTitle:Text() + '"' )
    ENDIF
 
    RETURN Self
@@ -818,88 +818,88 @@ METHOD IdeProjManager:buildInterface()
 
    ::oPropertiesDock:oWidget:setWidget( ::oUI:oWidget )
 
-   ::oUI:q_comboPrjType:addItem( "Executable" )
-   ::oUI:q_comboPrjType:addItem( "Library"    )
-   ::oUI:q_comboPrjType:addItem( "Dll"        )
+   ::oUI:comboPrjType:addItem( "Executable" )
+   ::oUI:comboPrjType:addItem( "Library"    )
+   ::oUI:comboPrjType:addItem( "Dll"        )
 
    cLukupPng := hbide_image( "folder" )
    //
-   ::oUI:q_buttonChoosePrjLoc:setIcon( QIcon( cLukupPng ) )
-   ::oUI:q_buttonChooseWd    :setIcon( QIcon( cLukupPng ) )
-   ::oUI:q_buttonChooseDest  :setIcon( QIcon( cLukupPng ) )
-   ::oUI:q_buttonBackup      :setIcon( QIcon( cLukupPng ) )
+   ::oUI:buttonChoosePrjLoc:setIcon( QIcon( cLukupPng ) )
+   ::oUI:buttonChooseWd    :setIcon( QIcon( cLukupPng ) )
+   ::oUI:buttonChooseDest  :setIcon( QIcon( cLukupPng ) )
+   ::oUI:buttonBackup      :setIcon( QIcon( cLukupPng ) )
 
-   ::oUI:q_buttonSelect :setIcon( QIcon( hbide_image( "open"        ) ) )
-   ::oUI:q_buttonUp     :setIcon( QIcon( hbide_image( "dc_up"       ) ) )
-   ::oUI:q_buttonDown   :setIcon( QIcon( hbide_image( "dc_down"     ) ) )
+   ::oUI:buttonSelect :setIcon( QIcon( hbide_image( "open"        ) ) )
+   ::oUI:buttonUp     :setIcon( QIcon( hbide_image( "dc_up"       ) ) )
+   ::oUI:buttonDown   :setIcon( QIcon( hbide_image( "dc_down"     ) ) )
 
-   ::oUI:q_buttonSort   :setIcon( QIcon( hbide_image( "sort"        ) ) )
-   ::oUI:q_buttonSortZA :setIcon( QIcon( hbide_image( "sortdescend" ) ) )
-   ::oUI:q_buttonSortOrg:setIcon( QIcon( hbide_image( "invertcase"  ) ) )
+   ::oUI:buttonSort   :setIcon( QIcon( hbide_image( "sort"        ) ) )
+   ::oUI:buttonSortZA :setIcon( QIcon( hbide_image( "sortdescend" ) ) )
+   ::oUI:buttonSortOrg:setIcon( QIcon( hbide_image( "invertcase"  ) ) )
 
-   ::oUI:q_buttonSort   :hide()
-   ::oUI:q_buttonSortZA :hide()
-   ::oUI:q_buttonSortOrg:hide()
+   ::oUI:buttonSort   :hide()
+   ::oUI:buttonSortZA :hide()
+   ::oUI:buttonSortOrg:hide()
 
-   ::oUI:q_buttonCn          :connect( "clicked()", {|| ::lSaveOK := .f., ::oPropertiesDock:hide() } )
-   ::oUI:q_buttonSave        :connect( "clicked()", {|| ::lSaveOK := .t., ::save( .F. )          } )
-   ::oUI:q_buttonSaveExit    :connect( "clicked()", {|| ::lSaveOK := .t., ::save( .T. )          } )
-   ::oUI:q_buttonSelect      :connect( "clicked()", {|| ::addSources()         } )
-   ::oUI:q_buttonUp          :connect( "clicked()", {|| ::moveLine( -1 )       } )
-   ::oUI:q_buttonDown        :connect( "clicked()", {|| ::moveLine( +1 )       } )
-// ::oUI:q_buttonSort        :connect( "clicked()", {|| ::sortSources( "az"  ) } )
-// ::oUI:q_buttonSortZA      :connect( "clicked()", {|| ::sortSources( "za"  ) } )
-// ::oUI:q_buttonSortOrg     :connect( "clicked()", {|| ::sortSources( "org" ) } )
-   ::oUI:q_tabWidget         :connect( "currentChanged(int)", {|p| ::updateHbp( p ) } )
-   ::oUI:q_buttonChoosePrjLoc:connect( "clicked()", {|| ::PromptForPath( ::oUI:q_editPrjLoctn , 'Choose Project Location...'   ) } )
-   ::oUI:q_buttonChooseWd    :connect( "clicked()", {|| ::PromptForPath( ::oUI:q_editWrkFolder, 'Choose Working Folder...'     ) } )
-   ::oUI:q_buttonChooseDest  :connect( "clicked()", {|| ::PromptForPath( ::oUI:q_editDstFolder, 'Choose Destination Folder...' ) } )
-   ::oUI:q_buttonBackup      :connect( "clicked()", {|| ::PromptForPath( ::oUI:q_editBackup   , 'Choose Backup Folder...'      ) } )
-   ::oUI:q_editPrjLoctn      :connect( "textChanged(QString)", {|cPath| ::setProjectLocation( cPath ) } )
+   ::oUI:buttonCn          :connect( "clicked()", {|| ::lSaveOK := .f., ::oPropertiesDock:hide() } )
+   ::oUI:buttonSave        :connect( "clicked()", {|| ::lSaveOK := .t., ::save( .F. )          } )
+   ::oUI:buttonSaveExit    :connect( "clicked()", {|| ::lSaveOK := .t., ::save( .T. )          } )
+   ::oUI:buttonSelect      :connect( "clicked()", {|| ::addSources()         } )
+   ::oUI:buttonUp          :connect( "clicked()", {|| ::moveLine( -1 )       } )
+   ::oUI:buttonDown        :connect( "clicked()", {|| ::moveLine( +1 )       } )
+// ::oUI:buttonSort        :connect( "clicked()", {|| ::sortSources( "az"  ) } )
+// ::oUI:buttonSortZA      :connect( "clicked()", {|| ::sortSources( "za"  ) } )
+// ::oUI:buttonSortOrg     :connect( "clicked()", {|| ::sortSources( "org" ) } )
+   ::oUI:tabWidget         :connect( "currentChanged(int)", {|p| ::updateHbp( p ) } )
+   ::oUI:buttonChoosePrjLoc:connect( "clicked()", {|| ::PromptForPath( ::oUI:editPrjLoctn , 'Choose Project Location...'   ) } )
+   ::oUI:buttonChooseWd    :connect( "clicked()", {|| ::PromptForPath( ::oUI:editWrkFolder, 'Choose Working Folder...'     ) } )
+   ::oUI:buttonChooseDest  :connect( "clicked()", {|| ::PromptForPath( ::oUI:editDstFolder, 'Choose Destination Folder...' ) } )
+   ::oUI:buttonBackup      :connect( "clicked()", {|| ::PromptForPath( ::oUI:editBackup   , 'Choose Backup Folder...'      ) } )
+   ::oUI:editPrjLoctn      :connect( "textChanged(QString)", {|cPath| ::setProjectLocation( cPath ) } )
 
    /* Set monospaced fonts */
-   ::oUI:q_editFlags       :setFont( ::oFont:oWidget )
-   ::oUI:q_editSources     :setFont( ::oFont:oWidget )
-   ::oUI:q_editHbp         :setFont( ::oFont:oWidget )
+   ::oUI:editFlags       :setFont( ::oFont:oWidget )
+   ::oUI:editSources     :setFont( ::oFont:oWidget )
+   ::oUI:editHbp         :setFont( ::oFont:oWidget )
 
    #if 0
-   ::oUI:q_editPrjTitle    :setFont( ::oFont:oWidget )
-   ::oUI:q_editPrjLoctn    :setFont( ::oFont:oWidget )
-   ::oUI:q_editWrkFolder   :setFont( ::oFont:oWidget )
-   ::oUI:q_editDstFolder   :setFont( ::oFont:oWidget )
-   ::oUI:q_editOutName     :setFont( ::oFont:oWidget )
-   ::oUI:q_editBackup      :setFont( ::oFont:oWidget )
-   ::oUI:q_editLaunchParams:setFont( ::oFont:oWidget )
-   ::oUI:q_editLaunchExe   :setFont( ::oFont:oWidget )
+   ::oUI:editPrjTitle    :setFont( ::oFont:oWidget )
+   ::oUI:editPrjLoctn    :setFont( ::oFont:oWidget )
+   ::oUI:editWrkFolder   :setFont( ::oFont:oWidget )
+   ::oUI:editDstFolder   :setFont( ::oFont:oWidget )
+   ::oUI:editOutName     :setFont( ::oFont:oWidget )
+   ::oUI:editBackup      :setFont( ::oFont:oWidget )
+   ::oUI:editLaunchParams:setFont( ::oFont:oWidget )
+   ::oUI:editLaunchExe   :setFont( ::oFont:oWidget )
    #endif
 
-   ::oUI:setTabOrder( ::oUI:q_comboPrjType    , ::oUI:q_editPrjTitle     )
-   ::oUI:setTabOrder( ::oUI:q_editPrjTitle    , ::oUI:q_editPrjLoctn     )
-   ::oUI:setTabOrder( ::oUI:q_editPrjLoctn    , ::oUI:q_editOutName      )
-   ::oUI:setTabOrder( ::oUI:q_editOutName     , ::oUI:q_checkXhb         )
-   ::oUI:setTabOrder( ::oUI:q_checkXhb        , ::oUI:q_checkXpp         )
-   ::oUI:setTabOrder( ::oUI:q_checkXpp        , ::oUI:q_checkClp         )
-   ::oUI:setTabOrder( ::oUI:q_checkClp        , ::oUI:q_editDstFolder    )
-   ::oUI:setTabOrder( ::oUI:q_editDstFolder   , ::oUI:q_editBackup       )
-   ::oUI:setTabOrder( ::oUI:q_editBackup      , ::oUI:q_editLaunchParams )
-   ::oUI:setTabOrder( ::oUI:q_editLaunchParams, ::oUI:q_editLaunchExe    )
-   ::oUI:setTabOrder( ::oUI:q_editLaunchExe   , ::oUI:q_editWrkFolder    )
-   ::oUI:setTabOrder( ::oUI:q_editWrkFolder   , ::oUI:q_tabFiles         )
+   ::oUI:setTabOrder( ::oUI:comboPrjType    , ::oUI:editPrjTitle     )
+   ::oUI:setTabOrder( ::oUI:editPrjTitle    , ::oUI:editPrjLoctn     )
+   ::oUI:setTabOrder( ::oUI:editPrjLoctn    , ::oUI:editOutName      )
+   ::oUI:setTabOrder( ::oUI:editOutName     , ::oUI:checkXhb         )
+   ::oUI:setTabOrder( ::oUI:checkXhb        , ::oUI:checkXpp         )
+   ::oUI:setTabOrder( ::oUI:checkXpp        , ::oUI:checkClp         )
+   ::oUI:setTabOrder( ::oUI:checkClp        , ::oUI:editDstFolder    )
+   ::oUI:setTabOrder( ::oUI:editDstFolder   , ::oUI:editBackup       )
+   ::oUI:setTabOrder( ::oUI:editBackup      , ::oUI:editLaunchParams )
+   ::oUI:setTabOrder( ::oUI:editLaunchParams, ::oUI:editLaunchExe    )
+   ::oUI:setTabOrder( ::oUI:editLaunchExe   , ::oUI:editWrkFolder    )
+   ::oUI:setTabOrder( ::oUI:editWrkFolder   , ::oUI:tabFiles         )
    //
-   ::oUI:setTabOrder( ::oUI:q_tabFiles        , ::oUI:q_editSources      )
-   ::oUI:setTabOrder( ::oUI:q_editSources     , ::oUI:q_tabFlags         )
+   ::oUI:setTabOrder( ::oUI:tabFiles        , ::oUI:editSources      )
+   ::oUI:setTabOrder( ::oUI:editSources     , ::oUI:tabFlags         )
    //
-   ::oUI:setTabOrder( ::oUI:q_tabFlags        , ::oUI:q_editFlags        )
-   ::oUI:setTabOrder( ::oUI:q_editFlags       , ::oUI:q_tabHbp           )
+   ::oUI:setTabOrder( ::oUI:tabFlags        , ::oUI:editFlags        )
+   ::oUI:setTabOrder( ::oUI:editFlags       , ::oUI:tabHbp           )
    //
-   ::oUI:setTabOrder( ::oUI:q_tabHbp          , ::oUI:q_editHbp          )
+   ::oUI:setTabOrder( ::oUI:tabHbp          , ::oUI:editHbp          )
    //
-   ::oUI:setTabOrder( ::oUI:q_editHbp         , ::oUI:q_buttonSaveExit   )
-   ::oUI:setTabOrder( ::oUI:q_buttonSaveExit  , ::oUI:q_buttonSave       )
-   ::oUI:setTabOrder( ::oUI:q_buttonSave      , ::oUI:q_buttonCn         )
+   ::oUI:setTabOrder( ::oUI:editHbp         , ::oUI:buttonSaveExit   )
+   ::oUI:setTabOrder( ::oUI:buttonSaveExit  , ::oUI:buttonSave       )
+   ::oUI:setTabOrder( ::oUI:buttonSave      , ::oUI:buttonCn         )
 
-   ::oUI:q_tabHbp:hide()
-   ::oUI:q_tabFlags:hide()
+   ::oUI:tabHbp:hide()
+   ::oUI:tabFlags:hide()
 
    RETURN Self
 
@@ -953,7 +953,7 @@ METHOD IdeProjManager:sortSources( cMode )
    LOCAL aTxt := { {}    , {}   , {}  , {}    , {}  , {}    , {}  , {}    , {}  , {}   , {}     }
    LOCAL aRst := {}
 
-   a_:= hbide_memoToArray( ::oUI:q_editSources:toPlainText() )
+   a_:= hbide_memoToArray( ::oUI:editSources:toPlainText() )
 
    IF     cMode == "az"
       asort( a_, , , {|e,f| lower( hbide_stripFilter( e ) ) < lower( hbide_stripFilter( f ) ) } )
@@ -996,8 +996,8 @@ METHOD IdeProjManager:sortSources( cMode )
       ENDIF
    ENDIF
 
-   ::oUI:q_editSources:clear()
-   ::oUI:q_editSources:setPlainText( hbide_arrayToMemo( a_ ) )
+   ::oUI:editSources:clear()
+   ::oUI:editSources:setPlainText( hbide_arrayToMemo( a_ ) )
 
    RETURN Self
 
@@ -1006,14 +1006,14 @@ METHOD IdeProjManager:sortSources( cMode )
 METHOD IdeProjManager:setProjectLocation( cPath )
 
    IF ! hb_dirExists( cPath )
-      ::oUI:q_editPrjLoctn:setStyleSheet( "background-color: rgba( 240,120,120,255 );" )
-      ::oUI:q_editSources:setEnabled( .f. )
-      ::oUI:q_buttonSelect:setEnabled( .f. )
+      ::oUI:editPrjLoctn:setStyleSheet( "background-color: rgba( 240,120,120,255 );" )
+      ::oUI:editSources:setEnabled( .f. )
+      ::oUI:buttonSelect:setEnabled( .f. )
    ELSE
       ::oProject:location := cPath
-      ::oUI:q_editPrjLoctn:setStyleSheet( "" )
-      ::oUI:q_editSources:setEnabled( .T. )
-      ::oUI:q_buttonSelect:setEnabled( .T. )
+      ::oUI:editPrjLoctn:setStyleSheet( "" )
+      ::oUI:editSources:setEnabled( .T. )
+      ::oUI:buttonSelect:setEnabled( .T. )
    ENDIF
 
    RETURN Self
@@ -1023,11 +1023,11 @@ METHOD IdeProjManager:setProjectLocation( cPath )
 METHOD IdeProjManager:isValidProjectLocation( lTell )
    LOCAL lOk := .f.
 
-   IF empty( ::oUI:q_editPrjLoctn:text() )
+   IF empty( ::oUI:editPrjLoctn:text() )
       IF lTell
          MsgBox( "Please supply 'Project Location' first" )
       ENDIF
-   ELSEIF ! hb_dirExists( ::oUI:q_editPrjLoctn:text() )
+   ELSEIF ! hb_dirExists( ::oUI:editPrjLoctn:text() )
       IF lTell
          MsgBox( "Please ensure 'Project Location' is correct" )
       ENDIF
@@ -1055,13 +1055,13 @@ METHOD IdeProjManager:addSources()
    LOCAL aFiles, a_, b_, s, cHome
 
    IF ::isValidProjectLocation( .t. )
-      IF !empty( aFiles := ::oSM:selectSource( "openmany", , , ::oUI:q_editPrjLoctn:text() ) )
-         a_:= hbide_memoToArray( ::oUI:q_editSources:toPlainText() )
+      IF !empty( aFiles := ::oSM:selectSource( "openmany", , , ::oUI:editPrjLoctn:text() ) )
+         a_:= hbide_memoToArray( ::oUI:editSources:toPlainText() )
 
          b_:={}
          aeval( aFiles, {|e| aadd( b_, e ) } )
 
-         cHome := ::oUI:q_editPrjLoctn:text()
+         cHome := ::oUI:editPrjLoctn:text()
          FOR EACH s IN b_
             s := hbide_prepareSourceForHbp( hbide_stripRoot( cHome, s ) )
             IF ascan( a_, s ) == 0
@@ -1069,7 +1069,7 @@ METHOD IdeProjManager:addSources()
             ENDIF
          NEXT
 
-         ::oUI:q_editSources:setPlainText( hbide_arrayToMemo( a_ ) )
+         ::oUI:editSources:setPlainText( hbide_arrayToMemo( a_ ) )
       ENDIF
    ENDIF
    RETURN Self
@@ -1175,17 +1175,17 @@ METHOD IdeProjManager:selectCurrentProject()
 
    FOR EACH p IN ::aProjects
       IF !empty( t := p[ 3, PRJ_PRP_PROPERTIES, 2, E_oPrjTtl ] )
-         oDlg:q_cbProjects:addItem( t )
+         oDlg:cbProjects:addItem( t )
       ENDIF
    NEXT
 
-   oDlg:q_btnCancel:connect( "clicked()", {|| oDlg:oWidget:done( 1 ) } )
-   oDlg:q_btnOk    :connect( "clicked()", {|| ::setCurrentProject( oDlg:q_cbProjects:currentText() ), ;
+   oDlg:btnCancel:connect( "clicked()", {|| oDlg:oWidget:done( 1 ) } )
+   oDlg:btnOk    :connect( "clicked()", {|| ::setCurrentProject( oDlg:cbProjects:currentText() ), ;
                                                                                              oDlg:done( 1 ) } )
    oDlg:exec()
 
-   oDlg:q_btnCancel:disconnect( "clicked()" )
-   oDlg:q_btnOk    :disconnect( "clicked()" )
+   oDlg:btnCancel:disconnect( "clicked()" )
+   oDlg:btnOk    :disconnect( "clicked()" )
    oDlg:destroy()
    oDlg := NIL
 

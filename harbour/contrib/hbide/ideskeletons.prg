@@ -123,13 +123,13 @@ METHOD IdeSkeletons:create( oIde )
 METHOD IdeSkeletons:destroy()
 
    IF !empty( ::oUI )
-      ::oUI:q_buttonNew   :disconnect( "clicked()" )
-      ::oUI:q_buttonRename:disconnect( "clicked()" )
-      ::oUI:q_buttonDelete:disconnect( "clicked()" )
-      ::oUI:q_buttonClear :disconnect( "clicked()" )
-      ::oUI:q_buttonGetSel:disconnect( "clicked()" )
-      ::oUI:q_buttonUpdate:disconnect( "clicked()" )
-      ::oUI:q_listNames   :disconnect( "itemSelectionChanged()" )
+      ::oUI:buttonNew   :disconnect( "clicked()" )
+      ::oUI:buttonRename:disconnect( "clicked()" )
+      ::oUI:buttonDelete:disconnect( "clicked()" )
+      ::oUI:buttonClear :disconnect( "clicked()" )
+      ::oUI:buttonGetSel:disconnect( "clicked()" )
+      ::oUI:buttonUpdate:disconnect( "clicked()" )
+      ::oUI:listNames   :disconnect( "itemSelectionChanged()" )
 
       ::oUI:destroy()
    ENDIF
@@ -148,18 +148,18 @@ METHOD IdeSkeletons:show()
 
       ::oSkeltnDock:oWidget:setWidget( ::oUI:oWidget )
 
-      ::oUI:q_buttonNew   :connect( "clicked()"             , {|| ::execEvent( "buttonNew_clicked"              ) } )
-      ::oUI:q_buttonRename:connect( "clicked()"             , {|| ::execEvent( "buttonRename_clicked"           ) } )
-      ::oUI:q_buttonDelete:connect( "clicked()"             , {|| ::execEvent( "buttonDelete_clicked"           ) } )
-      ::oUI:q_buttonClear :connect( "clicked()"             , {|| ::execEvent( "buttonClear_clicked"            ) } )
-      ::oUI:q_buttonGetSel:connect( "clicked()"             , {|| ::execEvent( "buttonGetSel_clicked"           ) } )
-      ::oUI:q_buttonUpdate:connect( "clicked()"             , {|| ::execEvent( "buttonUpdate_clicked"           ) } )
-      ::oUI:q_listNames   :connect( "itemSelectionChanged()", {|| ::execEvent( "listNames_itemSelectionChanged" ) } )
+      ::oUI:buttonNew   :connect( "clicked()"             , {|| ::execEvent( "buttonNew_clicked"              ) } )
+      ::oUI:buttonRename:connect( "clicked()"             , {|| ::execEvent( "buttonRename_clicked"           ) } )
+      ::oUI:buttonDelete:connect( "clicked()"             , {|| ::execEvent( "buttonDelete_clicked"           ) } )
+      ::oUI:buttonClear :connect( "clicked()"             , {|| ::execEvent( "buttonClear_clicked"            ) } )
+      ::oUI:buttonGetSel:connect( "clicked()"             , {|| ::execEvent( "buttonGetSel_clicked"           ) } )
+      ::oUI:buttonUpdate:connect( "clicked()"             , {|| ::execEvent( "buttonUpdate_clicked"           ) } )
+      ::oUI:listNames   :connect( "itemSelectionChanged()", {|| ::execEvent( "listNames_itemSelectionChanged" ) } )
 
-      //::oUI:q_editCode:setFontFamily( "Courier New" )
-      //::oUI:q_editCode:setFontPointSize( 10 )
+      //::oUI:editCode:setFontFamily( "Courier New" )
+      //::oUI:editCode:setFontPointSize( 10 )
 
-      ::oUI:q_editCode:setFont( ::oFont:oWidget )
+      ::oUI:editCode:setFont( ::oFont:oWidget )
    ENDIF
    ::refreshList()
 
@@ -180,44 +180,44 @@ METHOD IdeSkeletons:execEvent( cEvent, p )
    SWITCH cEvent
 
    CASE "buttonNew_clicked"
-      IF !empty( cName := hbide_fetchAString( ::oUI:q_listNames, "", "Name", "New Skeleton" ) )
-         ::oUI:q_listNames:addItem( cName )
+      IF !empty( cName := hbide_fetchAString( ::oUI:listNames, "", "Name", "New Skeleton" ) )
+         ::oUI:listNames:addItem( cName )
          aadd( ::oIde:aSkltns, { cName, "" } )
-         ::oUI:q_listNames:setCurrentRow( Len( ::aSkltns ) - 1 )
+         ::oUI:listNames:setCurrentRow( Len( ::aSkltns ) - 1 )
       ENDIF
       EXIT
 
    CASE "buttonRename_clicked"
-      qItem := ::oUI:q_listNames:currentItem()
+      qItem := ::oUI:listNames:currentItem()
       qItem:setText( ::rename( qItem:text() ) )
       EXIT
 
    CASE "buttonDelete_clicked"
-      qItem := ::oUI:q_listNames:currentItem()
+      qItem := ::oUI:listNames:currentItem()
       ::delete( qItem:text() )
       EXIT
 
    CASE "buttonClear_clicked"
-      ::oUI:q_editCode:clear()
+      ::oUI:editCode:clear()
       EXIT
 
    CASE "buttonGetSel_clicked"
       IF !empty( cCode := ::oEM:getSelectedText() )
          // TODO: Format cCode
-         ::oUI:q_editCode:setPlainText( cCode )
+         ::oUI:editCode:setPlainText( cCode )
       ENDIF
       EXIT
 
    CASE "buttonUpdate_clicked"
-      qItem := ::oUI:q_listNames:currentItem()
-      ::save( qItem:text(), ::oUI:q_editCode:toPlainText() )
+      qItem := ::oUI:listNames:currentItem()
+      ::save( qItem:text(), ::oUI:editCode:toPlainText() )
       EXIT
 
    CASE "listNames_itemSelectionChanged"
-      qItem := ::oUI:q_listNames:currentItem()
+      qItem := ::oUI:listNames:currentItem()
       cName := qItem:text()
       IF ( n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } ) ) > 0
-         ::oUI:q_editCode:setPlainText( ::aSkltns[ n, 2 ] )
+         ::oUI:editCode:setPlainText( ::aSkltns[ n, 2 ] )
       ENDIF
       EXIT
 
@@ -252,8 +252,8 @@ METHOD IdeSkeletons:execEvent( cEvent, p )
 
 METHOD IdeSkeletons:refreshList()
 
-   ::oUI:q_listNames:clear()
-   aeval( ::aSkltns, {|e_| ::oUI:q_listNames:addItem( e_[ 1 ] ) } )
+   ::oUI:listNames:clear()
+   aeval( ::aSkltns, {|e_| ::oUI:listNames:addItem( e_[ 1 ] ) } )
 
    RETURN Self
 

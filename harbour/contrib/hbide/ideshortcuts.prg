@@ -320,7 +320,7 @@ METHOD IdeShortcuts:execEvent( nMode, p )
       MsgBox( "KeyPress on LabelMacros" )
       EXIT
    CASE buttonDelete_clicked
-      nRow := ::oUI:q_tableMacros:currentRow()
+      nRow := ::oUI:tableMacros:currentRow()
       IF nRow >= 0 .AND. nRow < Len( ::aDftSCuts )
          nRow++
          IF hbide_getYesNo( "Delete", ::aDftSCuts[ nRow, 1 ], "A Delete Operation Requested" )
@@ -329,7 +329,7 @@ METHOD IdeShortcuts:execEvent( nMode, p )
             ::populateDftSCuts()
          ENDIF
          IF nRow <= Len( ::aDftSCuts )
-            ::oUI:q_tableMacros:setCurrentCell( nRow - 1, 0 )
+            ::oUI:tableMacros:setCurrentCell( nRow - 1, 0 )
          ENDIF
       ENDIF
       EXIT
@@ -373,7 +373,7 @@ METHOD IdeShortcuts:execEvent( nMode, p )
             IF !( ::checkDuplicate( ::cKey, ::cAlt, ::cCtrl, ::cShift ) )
                aadd( ::aDftSCuts, { ::cName, ::cKey, ::cAlt, ::cCtrl, ::cShift, ::cMenu, ::cBlock, ::cIcon } )
                aadd( ::aDftSCutsItms, array( 6 ) )
-               ::oUI:q_tableMacros:setRowCount( ::oUI:q_tableMacros:rowCount() + 1 )
+               ::oUI:tableMacros:setRowCount( ::oUI:tableMacros:rowCount() + 1 )
                ::array2table( Len( ::aDftSCuts ), { ::cName, ::cKey, ::cAlt, ::cCtrl, ::cShift, ::cMenu, ::cBlock, ::cIcon } )
             ELSE
                MsgBox( "Current shortcut is already defined!" )
@@ -383,7 +383,7 @@ METHOD IdeShortcuts:execEvent( nMode, p )
       EXIT
 
    CASE buttonSet_clicked
-      nRow := ::oUI:q_tableMacros:currentRow()
+      nRow := ::oUI:tableMacros:currentRow()
       IF nRow >= 0 .AND. nRow < Len( ::aDftSCuts )
          nRow++
          ::controls2vrbls()
@@ -396,24 +396,24 @@ METHOD IdeShortcuts:execEvent( nMode, p )
    CASE tableMacros_itemDoubleClicked
       EXIT
    CASE tableMacros_itemSelectionChanged
-      nRow := ::oUI:q_tableMacros:currentRow()
+      nRow := ::oUI:tableMacros:currentRow()
       IF nRow >= 0 .AND. nRow < Len( ::aDftSCuts )
          nRow++
          ::array2controls( nRow )
       ENDIF
       EXIT
    CASE listMethods_itemDoubleClicked
-      IF ( nRow := ::oUI:q_listMethods:currentRow() ) >= 0
+      IF ( nRow := ::oUI:listMethods:currentRow() ) >= 0
          nRow++
          IF !empty( ::aMethods[ nRow, 2 ] )
             cMethod := "::" + ::aMethods[ nRow, 2 ]
-            ::oUI:q_plainBlock:insertPlainText( cMethod )
+            ::oUI:plainBlock:insertPlainText( cMethod )
          ENDIF
       ENDIF
       EXIT
    CASE listMethods_currentRowChanged
       IF p >= 0 .AND. p < Len( ::aMethods )
-         ::oUI:q_texteditSyntax:setPlainText( ::aMethods[ p+1, 3 ] )
+         ::oUI:texteditSyntax:setPlainText( ::aMethods[ p+1, 3 ] )
       ENDIF
       EXIT
    ENDSWITCH
@@ -425,20 +425,20 @@ METHOD IdeShortcuts:execEvent( nMode, p )
 METHOD IdeShortcuts:array2controls( nRow )
    LOCAL cKey, nKey
 
-   ::oUI:q_editName:setText( ::aDftSCuts[ nRow, 1 ] )
+   ::oUI:editName:setText( ::aDftSCuts[ nRow, 1 ] )
 
    cKey := ::aDftSCuts[ nRow, 2 ]
    IF ( nKey := ascan( ::aKeys, {|e_| e_[ 2 ] == cKey } ) ) > 0
-      ::oUI:q_comboKey:setCurrentIndex( nKey - 1 )
+      ::oUI:comboKey:setCurrentIndex( nKey - 1 )
    ENDIF
 
-   ::oUI:q_checkAlt  :setChecked( ::aDftSCuts[ nRow, 3 ] == "YES" )
-   ::oUI:q_checkCtrl :setChecked( ::aDftSCuts[ nRow, 4 ] == "YES" )
-   ::oUI:q_checkShift:setChecked( ::aDftSCuts[ nRow, 5 ] == "YES" )
+   ::oUI:checkAlt  :setChecked( ::aDftSCuts[ nRow, 3 ] == "YES" )
+   ::oUI:checkCtrl :setChecked( ::aDftSCuts[ nRow, 4 ] == "YES" )
+   ::oUI:checkShift:setChecked( ::aDftSCuts[ nRow, 5 ] == "YES" )
 
-   ::oUI:q_editMenu:setText( ::aDftSCuts[ nRow, 6 ] )
+   ::oUI:editMenu:setText( ::aDftSCuts[ nRow, 6 ] )
 
-   ::oUI:q_plainBlock:setPlainText( ::aDftSCuts[ nRow, 7 ] )
+   ::oUI:plainBlock:setPlainText( ::aDftSCuts[ nRow, 7 ] )
 
    RETURN Self
 
@@ -479,7 +479,7 @@ METHOD IdeShortcuts:vrbls2controls( nRow )
 
 METHOD IdeShortcuts:array2table( nRow, a_ )
    LOCAL q0, q1, q2, q3, q4, q5
-   LOCAL oTbl := ::oUI:q_tableMacros
+   LOCAL oTbl := ::oUI:tableMacros
    LOCAL n := nRow - 1
 
    q0 := QTableWidgetItem()
@@ -520,17 +520,17 @@ METHOD IdeShortcuts:array2table( nRow, a_ )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeShortcuts:controls2vrbls()
-   LOCAL nRow := ::oUI:q_comboKey:currentIndex()
+   LOCAL nRow := ::oUI:comboKey:currentIndex()
 
    IF nRow >= 0
       nRow++
-      ::cName  := ::oUI:q_editName:text()
+      ::cName  := ::oUI:editName:text()
       ::cKey   := ::aKeys[ nRow, 2 ]
-      ::cAlt   := iif( ::oUI:q_checkAlt  :isChecked(), "YES", "NO" )
-      ::cCtrl  := iif( ::oUI:q_checkCtrl :isChecked(), "YES", "NO" )
-      ::cShift := iif( ::oUI:q_checkShift:isChecked(), "YES", "NO" )
-      ::cMenu  := ::oUI:q_editMenu:text()
-      ::cBlock := ::oUI:q_plainBlock:toPlainText()
+      ::cAlt   := iif( ::oUI:checkAlt  :isChecked(), "YES", "NO" )
+      ::cCtrl  := iif( ::oUI:checkCtrl :isChecked(), "YES", "NO" )
+      ::cShift := iif( ::oUI:checkShift:isChecked(), "YES", "NO" )
+      ::cMenu  := ::oUI:editMenu:text()
+      ::cBlock := ::oUI:plainBlock:toPlainText()
    ENDIF
    RETURN Self
 
@@ -569,7 +569,7 @@ METHOD IdeShortcuts:buildUI()
 
    ::oUI:oWidget:connect( QEvent_Close, {|| ::oIde:oINI:cShortcutsDialogGeometry := hbide_posAndSize( ::oUI:oWidget ) } )
 
-   oTbl := ::oUI:q_tableMacros                              /* Build Table Header */
+   oTbl := ::oUI:tableMacros                              /* Build Table Header */
    oTbl:verticalHeader():hide()
    oTbl:horizontalHeader():setStretchLastSection( .t. )
    oTbl:setAlternatingRowColors( .t. )
@@ -585,15 +585,15 @@ METHOD IdeShortcuts:buildUI()
       aadd( ::aHdr, qItm )
    NEXT
 
-   ::oUI:q_listMethods:setAlternatingRowColors( .t. )       /* Public Methods List */
+   ::oUI:listMethods:setAlternatingRowColors( .t. )       /* Public Methods List */
 
-   ::qHiliter := ::oTH:SetSyntaxHilighting( ::oUI:q_plainBlock, "Pritpal's Favourite" )
+   ::qHiliter := ::oTH:SetSyntaxHilighting( ::oUI:plainBlock, "Pritpal's Favourite" )
 
    ::buildSignals()
 
    /* Demonstration only */
-   ::oUI:q_labelMacros:setFocusPolicy( Qt_StrongFocus )
-   ::oUI:q_labelMacros:connect( QEvent_KeyPress, {|p| ::execEvent( 21000, p ) } )
+   ::oUI:labelMacros:setFocusPolicy( Qt_StrongFocus )
+   ::oUI:labelMacros:connect( QEvent_KeyPress, {|p| ::execEvent( 21000, p ) } )
 
    RETURN Self
 
@@ -601,17 +601,17 @@ METHOD IdeShortcuts:buildUI()
 
 METHOD IdeShortcuts:buildSignals()
 
-   ::oUI:q_buttonNew   :connect( "clicked()"                   , {| | ::execEvent( buttonNew_clicked    ) } )
-   ::oUI:q_buttonSet   :connect( "clicked()"                   , {| | ::execEvent( buttonSet_clicked    ) } )
-   ::oUI:q_buttonTest  :connect( "clicked()"                   , {| | ::execEvent( buttonTest_clicked   ) } )
-   ::oUI:q_buttonLoad  :connect( "clicked()"                   , {| | ::execEvent( buttonLoad_clicked   ) } )
-   ::oUI:q_buttonSave  :connect( "clicked()"                   , {| | ::execEvent( buttonSave_clicked   ) } )
-   ::oUI:q_buttonSaveAs:connect( "clicked()"                   , {| | ::execEvent( buttonSaveAs_clicked ) } )
-   ::oUI:q_buttonDelete:connect( "clicked()"                   , {| | ::execEvent( buttonDelete_clicked ) } )
-   ::oUI:q_listMethods :connect( "itemDoubleClicked(QListWidgetItem*)"  , {|p| ::execEvent( listMethods_itemDoubleClicked, p ) } )
-   ::oUI:q_listMethods :connect( "currentRowChanged(int)"      , {|p| ::execEvent( listMethods_currentRowChanged, p ) } )
-   ::oUI:q_tableMacros :connect( "itemSelectionChanged()"      , {| | ::execEvent( tableMacros_itemSelectionChanged ) } )
-   ::oUI:q_tableMacros :connect( "itemDoubleClicked(QTableWidgetItem*)", {|p| ::execEvent( tableMacros_itemDoubleClicked, p ) } )
+   ::oUI:buttonNew   :connect( "clicked()"                   , {| | ::execEvent( buttonNew_clicked    ) } )
+   ::oUI:buttonSet   :connect( "clicked()"                   , {| | ::execEvent( buttonSet_clicked    ) } )
+   ::oUI:buttonTest  :connect( "clicked()"                   , {| | ::execEvent( buttonTest_clicked   ) } )
+   ::oUI:buttonLoad  :connect( "clicked()"                   , {| | ::execEvent( buttonLoad_clicked   ) } )
+   ::oUI:buttonSave  :connect( "clicked()"                   , {| | ::execEvent( buttonSave_clicked   ) } )
+   ::oUI:buttonSaveAs:connect( "clicked()"                   , {| | ::execEvent( buttonSaveAs_clicked ) } )
+   ::oUI:buttonDelete:connect( "clicked()"                   , {| | ::execEvent( buttonDelete_clicked ) } )
+   ::oUI:listMethods :connect( "itemDoubleClicked(QListWidgetItem*)"  , {|p| ::execEvent( listMethods_itemDoubleClicked, p ) } )
+   ::oUI:listMethods :connect( "currentRowChanged(int)"      , {|p| ::execEvent( listMethods_currentRowChanged, p ) } )
+   ::oUI:tableMacros :connect( "itemSelectionChanged()"      , {| | ::execEvent( tableMacros_itemSelectionChanged ) } )
+   ::oUI:tableMacros :connect( "itemDoubleClicked(QTableWidgetItem*)", {|p| ::execEvent( tableMacros_itemDoubleClicked, p ) } )
 
    RETURN Self
 
@@ -631,7 +631,7 @@ METHOD IdeShortcuts:populateData( nMode )
 
 METHOD IdeShortcuts:clearDftSCuts()
    LOCAL a_, qItm
-   LOCAL oTbl := ::oUI:q_tableMacros
+   LOCAL oTbl := ::oUI:tableMacros
 
    FOR EACH a_ IN ::aDftSCutsItms
       FOR EACH qItm IN a_
@@ -648,7 +648,7 @@ METHOD IdeShortcuts:clearDftSCuts()
 
 METHOD IdeShortcuts:populateDftSCuts()
    LOCAL a_, nRow
-   LOCAL oTbl := ::oUI:q_tableMacros
+   LOCAL oTbl := ::oUI:tableMacros
    LOCAL qApp := QApplication()
 
    oTbl:setRowCount( Len( ::aDftSCuts ) )
@@ -671,7 +671,7 @@ METHOD IdeShortcuts:populateDftSCuts()
 
 METHOD IdeShortcuts:populateMethods()
    LOCAL qItem, a_
-   LOCAL qLW := ::oUI:q_listMethods
+   LOCAL qLW := ::oUI:listMethods
 
    //qLW:setSortingEnabled( .t. )
 
@@ -699,7 +699,7 @@ METHOD IdeShortcuts:populateMethods()
 
 METHOD IdeShortcuts:populateKeys()
    LOCAL a_
-   LOCAL oCB := ::oUI:q_comboKey
+   LOCAL oCB := ::oUI:comboKey
 
    FOR EACH a_ IN ::aKeys
       oCB:addItem( a_[ 2 ] )

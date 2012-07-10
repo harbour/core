@@ -263,7 +263,7 @@ METHOD IdeHarbourHelp:show()
 
       ::refreshDocTree()
 
-      ::oUI:q_editInstall:setText( ::cPathInstall )
+      ::oUI:editInstall:setText( ::cPathInstall )
    ENDIF
 
    RETURN Self
@@ -274,23 +274,23 @@ METHOD IdeHarbourHelp:destroy()
    LOCAL aTmp, oFun
 
    IF ! empty( ::oUI )
-      ::oUI:q_buttonInstall    :disconnect( "clicked()"                           )
-      ::oUI:q_buttonHome       :disconnect( "clicked()"                           )
-      ::oUI:q_buttonBackward   :disconnect( "clicked()"                           )
-      ::oUI:q_buttonForward    :disconnect( "clicked()"                           )
-      ::oUI:q_buttonUp         :disconnect( "clicked()"                           )
-      ::oUI:q_buttonRefresh    :disconnect( "clicked()"                           )
-      ::oUI:q_buttonPrint      :disconnect( "clicked()"                           )
-      ::oUI:q_buttonPdf        :disconnect( "clicked()"                           )
-      ::oUI:q_buttonPdfAll     :disconnect( "clicked()"                           )
-      ::oUI:q_browserView      :disconnect( "anchorClicked(QUrl)"                 )
-      ::oUI:q_tabWidgetContents:disconnect( "currentChanged(int)"                 )
-      ::oUI:q_editInstall      :disconnect( "textChanged(QString)"                )
-      ::oUI:q_editIndex        :disconnect( "textChanged(QString)"                )
-      ::oUI:q_editIndex        :disconnect( "returnPressed()"                     )
-      ::oUI:q_listIndex        :disconnect( "itemDoubleClicked(QListWidgetItem*)" )
-      ::oUI:q_treeDoc          :disconnect( "itemSelectionChanged()"              )
-      ::oUI:q_treeCategory     :disconnect( "itemSelectionChanged()"              )
+      ::oUI:buttonInstall    :disconnect( "clicked()"                           )
+      ::oUI:buttonHome       :disconnect( "clicked()"                           )
+      ::oUI:buttonBackward   :disconnect( "clicked()"                           )
+      ::oUI:buttonForward    :disconnect( "clicked()"                           )
+      ::oUI:buttonUp         :disconnect( "clicked()"                           )
+      ::oUI:buttonRefresh    :disconnect( "clicked()"                           )
+      ::oUI:buttonPrint      :disconnect( "clicked()"                           )
+      ::oUI:buttonPdf        :disconnect( "clicked()"                           )
+      ::oUI:buttonPdfAll     :disconnect( "clicked()"                           )
+      ::oUI:browserView      :disconnect( "anchorClicked(QUrl)"                 )
+      ::oUI:tabWidgetContents:disconnect( "currentChanged(int)"                 )
+      ::oUI:editInstall      :disconnect( "textChanged(QString)"                )
+      ::oUI:editIndex        :disconnect( "textChanged(QString)"                )
+      ::oUI:editIndex        :disconnect( "returnPressed()"                     )
+      ::oUI:listIndex        :disconnect( "itemDoubleClicked(QListWidgetItem*)" )
+      ::oUI:treeDoc          :disconnect( "itemSelectionChanged()"              )
+      ::oUI:treeCategory     :disconnect( "itemSelectionChanged()"              )
 
       ::clear()
 
@@ -385,9 +385,9 @@ METHOD IdeHarbourHelp:clear()
    NEXT
    ::aCategory := {}
 
-   ::oUI:q_treeDoc:clear()
-   ::oUI:q_treeCategory:clear()
-   ::oUI:q_listIndex:clear()
+   ::oUI:treeDoc:clear()
+   ::oUI:treeCategory:clear()
+   ::oUI:listIndex:clear()
 
    RETURN Self
 
@@ -396,24 +396,24 @@ METHOD IdeHarbourHelp:clear()
 METHOD IdeHarbourHelp:setImages()
    LOCAL oUI := ::oUI
 
-   oUI:q_buttonHome    :setIcon( QIcon( hbide_image( "dc_home"    ) ) )
-   oUI:q_buttonBackward:setIcon( QIcon( hbide_image( "dc_left"    ) ) )
-   oUI:q_buttonForward :setIcon( QIcon( hbide_image( "dc_right"   ) ) )
-   oUI:q_buttonUp      :setIcon( QIcon( hbide_image( "dc_up"      ) ) )
-   oUI:q_buttonRefresh :setIcon( QIcon( hbide_image( "dc_refresh" ) ) )
-   oUI:q_buttonPrint   :setIcon( QIcon( hbide_image( "dc_print"   ) ) )
-   oUI:q_buttonPdf     :setIcon( QIcon( hbide_image( "dc_pdffile" ) ) )
-   oUI:q_buttonPdfAll  :setIcon( QIcon( hbide_image( "dc_pdffile" ) ) )
+   oUI:buttonHome    :setIcon( QIcon( hbide_image( "dc_home"    ) ) )
+   oUI:buttonBackward:setIcon( QIcon( hbide_image( "dc_left"    ) ) )
+   oUI:buttonForward :setIcon( QIcon( hbide_image( "dc_right"   ) ) )
+   oUI:buttonUp      :setIcon( QIcon( hbide_image( "dc_up"      ) ) )
+   oUI:buttonRefresh :setIcon( QIcon( hbide_image( "dc_refresh" ) ) )
+   oUI:buttonPrint   :setIcon( QIcon( hbide_image( "dc_print"   ) ) )
+   oUI:buttonPdf     :setIcon( QIcon( hbide_image( "dc_pdffile" ) ) )
+   oUI:buttonPdfAll  :setIcon( QIcon( hbide_image( "dc_pdffile" ) ) )
 
-   oUI:q_buttonSave    :setIcon( QIcon( hbide_image( "save"       ) ) )
-   oUI:q_buttonExit    :setIcon( QIcon( hbide_image( "dc_quit"    ) ) )
+   oUI:buttonSave    :setIcon( QIcon( hbide_image( "save"       ) ) )
+   oUI:buttonExit    :setIcon( QIcon( hbide_image( "dc_quit"    ) ) )
 
-   oUI:q_buttonInstall :setIcon( QIcon( hbide_image( "dc_folder"  ) ) )
+   oUI:buttonInstall :setIcon( QIcon( hbide_image( "dc_folder"  ) ) )
 
-   //oUI:q_buttonArgPlus:setIcon( QIcon( hbide_image( "dc_plus" ) ) )
-   //oUI:q_buttonArgMinus:setIcon( QIcon( QIcon( hbide_image( "dc_delete" ) ) )
-   //oUI:q_buttonArgUp:setIcon( QIcon( hbide_image( "dc_up" ) ) )
-   //oUI:q_buttonArgDown:setIcon( QIcon( hbide_image( "dc_down" ) ) )
+   //oUI:buttonArgPlus:setIcon( QIcon( hbide_image( "dc_plus" ) ) )
+   //oUI:buttonArgMinus:setIcon( QIcon( QIcon( hbide_image( "dc_delete" ) ) )
+   //oUI:buttonArgUp:setIcon( QIcon( hbide_image( "dc_up" ) ) )
+   //oUI:buttonArgDown:setIcon( QIcon( hbide_image( "dc_down" ) ) )
 
    RETURN Self
 
@@ -422,19 +422,19 @@ METHOD IdeHarbourHelp:setImages()
 METHOD IdeHarbourHelp:setTooltips()
    LOCAL oUI := ::oUI
 
-   oUI:q_buttonHome    :setToolTip( "Home"     )
-   oUI:q_buttonBackward:setToolTip( "Backward" )
-   oUI:q_buttonForward :setToolTip( "Forward"  )
-   oUI:q_buttonRefresh :setToolTip( "Refresh"  )
-   oUI:q_buttonUp      :setToolTip( "Up"       )
-   oUI:q_buttonPrint   :setToolTip( "Print"    )
-   oUI:q_buttonPdf     :setToolTip( "Export as PDF Document" )
-   oUI:q_buttonPdfAll  :setToolTip( "Export ALL as PDF Documents" )
+   oUI:buttonHome    :setToolTip( "Home"     )
+   oUI:buttonBackward:setToolTip( "Backward" )
+   oUI:buttonForward :setToolTip( "Forward"  )
+   oUI:buttonRefresh :setToolTip( "Refresh"  )
+   oUI:buttonUp      :setToolTip( "Up"       )
+   oUI:buttonPrint   :setToolTip( "Print"    )
+   oUI:buttonPdf     :setToolTip( "Export as PDF Document" )
+   oUI:buttonPdfAll  :setToolTip( "Export ALL as PDF Documents" )
 
-   oUI:q_buttonSave    :setToolTip( "Save"     )
-   oUI:q_buttonExit    :setToolTip( "Exit"     )
+   oUI:buttonSave    :setToolTip( "Save"     )
+   oUI:buttonExit    :setToolTip( "Exit"     )
 
-   oUI:q_buttonInstall :setToolTip( "Select Harbour Installation Path" )
+   oUI:buttonInstall :setToolTip( "Select Harbour Installation Path" )
 
    RETURN Self
 
@@ -443,28 +443,28 @@ METHOD IdeHarbourHelp:setTooltips()
 METHOD IdeHarbourHelp:setParameters()
    LOCAL oUI := ::oUI
 
-   oUI:q_treeDoc:setHeaderHidden( .t. )
-   oUI:q_treeCategory:setHeaderHidden( .t. )
-   oUI:q_editInstall:setText( ::cWrkHarbour )
+   oUI:treeDoc:setHeaderHidden( .t. )
+   oUI:treeCategory:setHeaderHidden( .t. )
+   oUI:editInstall:setText( ::cWrkHarbour )
 
    #if 0
-   ::qHiliter := ::oTH:SetSyntaxHilighting( oUI:q_plainExamples, "Bare Minimum" )
+   ::qHiliter := ::oTH:SetSyntaxHilighting( oUI:plainExamples, "Bare Minimum" )
 
-   oUI:q_plainExamples:setFont( ::oFont:oWidget )
-   oUI:q_plainDescription:setFont( ::oFont:oWidget )
-   oUI:q_plainArguments:setFont( ::oFont:oWidget )
-   oUI:q_plainArgDesc:setFont( ::oFont:oWidget )
-   oUI:q_plainTests:setFont( ::oFont:oWidget )
+   oUI:plainExamples:setFont( ::oFont:oWidget )
+   oUI:plainDescription:setFont( ::oFont:oWidget )
+   oUI:plainArguments:setFont( ::oFont:oWidget )
+   oUI:plainArgDesc:setFont( ::oFont:oWidget )
+   oUI:plainTests:setFont( ::oFont:oWidget )
 
-   oUI:q_plainExamples:setLineWrapMode( QTextEdit_NoWrap )
-   oUI:q_plainTests:setLineWrapMode( QTextEdit_NoWrap )
+   oUI:plainExamples:setLineWrapMode( QTextEdit_NoWrap )
+   oUI:plainTests:setLineWrapMode( QTextEdit_NoWrap )
    #endif
 
-   oUI:q_treeDoc:setExpandsOnDoubleClick( .f. )
+   oUI:treeDoc:setExpandsOnDoubleClick( .f. )
 
-   oUI:q_browserView:setOpenLinks( .t. )
-   oUI:q_browserView:setOpenExternalLinks( .t. )
-   oUI:q_tabWidgetContents:setFocusPolicy( Qt_NoFocus )
+   oUI:browserView:setOpenLinks( .t. )
+   oUI:browserView:setOpenExternalLinks( .t. )
+   oUI:tabWidgetContents:setFocusPolicy( Qt_NoFocus )
 
    RETURN Self
 
@@ -472,26 +472,26 @@ METHOD IdeHarbourHelp:setParameters()
 
 METHOD IdeHarbourHelp:installSignals()
 
-   ::oUI:q_buttonInstall    :connect( "clicked()"                 , {| | ::execEvent( "buttonInstall_clicked"               ) } )
-   ::oUI:q_buttonHome       :connect( "clicked()"                 , {| | ::execEvent( "buttonHome_clicked"                  ) } )
-   ::oUI:q_buttonBackward   :connect( "clicked()"                 , {| | ::execEvent( "buttonBackward_clicked"              ) } )
-   ::oUI:q_buttonForward    :connect( "clicked()"                 , {| | ::execEvent( "buttonForward_clicked"               ) } )
-   ::oUI:q_buttonUp         :connect( "clicked()"                 , {| | ::execEvent( "buttonUp_clicked"                    ) } )
-   ::oUI:q_buttonRefresh    :connect( "clicked()"                 , {| | ::execEvent( "buttonRefresh_clicked"               ) } )
-   ::oUI:q_buttonPrint      :connect( "clicked()"                 , {| | ::execEvent( "buttonPrint_clicked"                 ) } )
-   ::oUI:q_buttonPdf        :connect( "clicked()"                 , {| | ::execEvent( "buttonPdf_clicked"                   ) } )
-   ::oUI:q_buttonPdfAll     :connect( "clicked()"                 , {| | ::execEvent( "buttonPdfAll_clicked"                ) } )
+   ::oUI:buttonInstall    :connect( "clicked()"                 , {| | ::execEvent( "buttonInstall_clicked"               ) } )
+   ::oUI:buttonHome       :connect( "clicked()"                 , {| | ::execEvent( "buttonHome_clicked"                  ) } )
+   ::oUI:buttonBackward   :connect( "clicked()"                 , {| | ::execEvent( "buttonBackward_clicked"              ) } )
+   ::oUI:buttonForward    :connect( "clicked()"                 , {| | ::execEvent( "buttonForward_clicked"               ) } )
+   ::oUI:buttonUp         :connect( "clicked()"                 , {| | ::execEvent( "buttonUp_clicked"                    ) } )
+   ::oUI:buttonRefresh    :connect( "clicked()"                 , {| | ::execEvent( "buttonRefresh_clicked"               ) } )
+   ::oUI:buttonPrint      :connect( "clicked()"                 , {| | ::execEvent( "buttonPrint_clicked"                 ) } )
+   ::oUI:buttonPdf        :connect( "clicked()"                 , {| | ::execEvent( "buttonPdf_clicked"                   ) } )
+   ::oUI:buttonPdfAll     :connect( "clicked()"                 , {| | ::execEvent( "buttonPdfAll_clicked"                ) } )
 
-   ::oUI:q_browserView      :connect( "anchorClicked(QUrl)"       , {|p| ::execEvent( "browserView_anchorClicked"       , p ) } )
-   ::oUI:q_tabWidgetContents:connect( "currentChanged(int)"       , {|p| ::execEvent( "tabWidgetContents_currentChanged", p ) } )
+   ::oUI:browserView      :connect( "anchorClicked(QUrl)"       , {|p| ::execEvent( "browserView_anchorClicked"       , p ) } )
+   ::oUI:tabWidgetContents:connect( "currentChanged(int)"       , {|p| ::execEvent( "tabWidgetContents_currentChanged", p ) } )
 
-   ::oUI:q_editInstall      :connect( "textChanged(QString)"      , {|p| ::execEvent( "editInstall_textChanged"         , p ) } )
-   ::oUI:q_editIndex        :connect( "textChanged(QString)"      , {|p| ::execEvent( "editIndex_textChanged"           , p ) } )
-   ::oUI:q_editIndex        :connect( "returnPressed()"           , {| | ::execEvent( "editIndex_returnPressed"             ) } )
-   ::oUI:q_listIndex        :connect( "itemDoubleClicked(QListWidgetItem*)", {|p| ::execEvent( "listIndex_ItemDoubleClicked"     , p ) } )
+   ::oUI:editInstall      :connect( "textChanged(QString)"      , {|p| ::execEvent( "editInstall_textChanged"         , p ) } )
+   ::oUI:editIndex        :connect( "textChanged(QString)"      , {|p| ::execEvent( "editIndex_textChanged"           , p ) } )
+   ::oUI:editIndex        :connect( "returnPressed()"           , {| | ::execEvent( "editIndex_returnPressed"             ) } )
+   ::oUI:listIndex        :connect( "itemDoubleClicked(QListWidgetItem*)", {|p| ::execEvent( "listIndex_ItemDoubleClicked"     , p ) } )
 
-   ::oUI:q_treeDoc          :connect( "itemSelectionChanged()"    , {| | ::execEvent( "treeDoc_itemSelectionChanged"        ) } )
-   ::oUI:q_treeCategory     :connect( "itemSelectionChanged()"    , {| | ::execEvent( "treeCategory_itemSelectionChanged"   ) } )
+   ::oUI:treeDoc          :connect( "itemSelectionChanged()"    , {| | ::execEvent( "treeDoc_itemSelectionChanged"        ) } )
+   ::oUI:treeCategory     :connect( "itemSelectionChanged()"    , {| | ::execEvent( "treeCategory_itemSelectionChanged"   ) } )
 
    RETURN Self
 
@@ -511,13 +511,13 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
    CASE "buttonInstall_clicked"
       cPath := hbide_fetchADir( ::oDocViewDock, "Harbour Install Root" )
       IF !empty( cPath )
-         ::oUI:q_editInstall:setText( cPath )
+         ::oUI:editInstall:setText( cPath )
       ENDIF
       EXIT
 
    CASE "tabWidgetContents_currentChanged"
       IF p == 1
-         ::oUI:q_editIndex:setFocus()
+         ::oUI:editIndex:setFocus()
       ENDIF
       EXIT
 
@@ -525,20 +525,20 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       cText := lower( p:toString() )
       nLen := Len( cText )
       IF ( n := ascan( ::aFunctions, {|e_| left( e_[ 6 ], nLen ) == cText } ) ) > 0
-         ::oUI:q_listIndex:setCurrentItem( ::aFunctions[ n, 5 ] )
+         ::oUI:listIndex:setCurrentItem( ::aFunctions[ n, 5 ] )
          ::populateIndexedSelection()
       ENDIF
       EXIT
 
    CASE "listIndex_ItemDoubleClicked"
       ::populateIndexedSelection()
-      ::oUI:q_editIndex:setFocus()
+      ::oUI:editIndex:setFocus()
       EXIT
 
    CASE "editIndex_returnPressed"
-      IF !empty( ::oUI:q_editIndex:text() )
+      IF !empty( ::oUI:editIndex:text() )
          ::populateIndexedSelection()
-         ::oUI:q_editIndex:setFocus()
+         ::oUI:editIndex:setFocus()
       ENDIF
       EXIT
 
@@ -546,43 +546,43 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       IF ( nLen := Len( p ) ) > 0
          cLower := lower( p )
          IF ( n := ascan( ::aFunctions, {|e_| left( e_[ 6 ], nLen ) == cLower } ) ) > 0
-            ::oUI:q_listIndex:setCurrentItem( ::aFunctions[ n, 5 ] )
+            ::oUI:listIndex:setCurrentItem( ::aFunctions[ n, 5 ] )
          ENDIF
       ENDIF
       EXIT
 
    CASE "editInstall_textChanged"
       IF hb_dirExists( p )
-         ::oUI:q_editInstall:setStyleSheet( "" )
+         ::oUI:editInstall:setStyleSheet( "" )
          ::cPathInstall := hbide_pathStripLastSlash( hbide_pathNormalized( p, .f. ) )
 //         ::oIde:cWrkHarbour := ::cPathInstall
       ELSE
-         ::oUI:q_editInstall:setStyleSheet( getStyleSheet( "PathIsWrong", ::nAnimantionMode ) )
+         ::oUI:editInstall:setStyleSheet( getStyleSheet( "PathIsWrong", ::nAnimantionMode ) )
       ENDIF
       EXIT
 
    CASE "buttonHome_clicked"
       IF !empty( ::aNodes )
-         ::oUI:q_treeDoc:setCurrentItem( ::aNodes[ 1, 1 ], 0 )
+         ::oUI:treeDoc:setCurrentItem( ::aNodes[ 1, 1 ], 0 )
       ENDIF
       EXIT
 
    CASE "buttonBackward_clicked"
       IF ::nCurInHist > 1
-         ::oUI:q_treeDoc:setCurrentItem( ::aNodes[ ::aHistory[ ::nCurInHist - 1 ], 1 ], 0 )
+         ::oUI:treeDoc:setCurrentItem( ::aNodes[ ::aHistory[ ::nCurInHist - 1 ], 1 ], 0 )
       ENDIF
       EXIT
 
    CASE "buttonForward_clicked"
       IF ::nCurInHist < Len( ::aHistory )
-         ::oUI:q_treeDoc:setCurrentItem( ::aNodes[ ::aHistory[ ::nCurInHist + 1 ], 1 ], 0 )
+         ::oUI:treeDoc:setCurrentItem( ::aNodes[ ::aHistory[ ::nCurInHist + 1 ], 1 ], 0 )
       ENDIF
       EXIT
 
    CASE "buttonUp_clicked"
       IF ::nCurInHist > 1 .AND. ::nCurInHist <= Len( ::aHistory )
-         IF ! empty( qTWItem := ::oUI:q_treeDoc:itemAbove( ::oUI:q_treeDoc:currentItem( 0 ) ) )
-            ::oUI:q_treeDoc:setCurrentItem( qTWItem, 0 )
+         IF ! empty( qTWItem := ::oUI:treeDoc:itemAbove( ::oUI:treeDoc:currentItem( 0 ) ) )
+            ::oUI:treeDoc:setCurrentItem( qTWItem, 0 )
          ENDIF
       ENDIF
       EXIT
@@ -607,17 +607,17 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       EXIT
 
    CASE "treeCategory_itemSelectionChanged"
-      qTWItem := ::oUI:q_treeCategory:currentItem()
+      qTWItem := ::oUI:treeCategory:currentItem()
       n := ascan( ::aCategory, {|e_| hbqt_IsEqual( e_[ 5 ], qTWItem ) } )
       IF n > 0
          IF ::aCategory[ n, 5 ]:childCount() == 0
-            ::oUI:q_treeDoc:setCurrentItem( ::aCategory[ n, 4 ], 0 )
+            ::oUI:treeDoc:setCurrentItem( ::aCategory[ n, 4 ], 0 )
          ENDIF
       ENDIF
       EXIT
 
    CASE "treeDoc_itemSelectionChanged"
-      qTWItem := ::oUI:q_treeDoc:currentItem()
+      qTWItem := ::oUI:treeDoc:currentItem()
       cText   := qTWItem:text( 0 )
 
       IF ( n := ascan( ::aNodes, {|e_| e_[ 5 ] == cText } ) ) > 0
@@ -654,7 +654,7 @@ METHOD IdeHarbourHelp:jumpToFunction( cFunction )
    cFunction := lower( cFunction )
    IF !empty( ::aNodes )
       IF ( n := ascan( ::aFunctions, {|e_| lower( left( e_[ 2 ], nLen ) ) == cFunction } ) ) > 0
-         ::oUI:q_treeDoc:setCurrentItem( ::aFunctions[ n, 4 ] )
+         ::oUI:treeDoc:setCurrentItem( ::aFunctions[ n, 4 ] )
       ENDIF
    ENDIF
 
@@ -666,10 +666,10 @@ METHOD IdeHarbourHelp:populateIndexedSelection()
    LOCAL qItem, cText, n
 
    IF !empty( ::aNodes )
-      IF !empty( qItem := ::oUI:q_listIndex:currentItem() )
+      IF !empty( qItem := ::oUI:listIndex:currentItem() )
          cText := qItem:text()
          IF ( n := ascan( ::aFunctions, {|e_| e_[ 2 ] == cText } ) ) > 0
-            ::oUI:q_treeDoc:setCurrentItem( ::aFunctions[ n, 4 ] )
+            ::oUI:treeDoc:setCurrentItem( ::aFunctions[ n, 4 ] )
          ENDIF
       ENDIF
    ENDIF
@@ -685,8 +685,8 @@ METHOD IdeHarbourHelp:refreshDocTree()
       RETURN Self
    ENDIF
 
-   //::oUI:q_treeDoc:disconnect( "itemSelectionChanged()" )
-   //::oUI:q_treeCategory:disconnect( "itemSelectionChanged()" )
+   //::oUI:treeDoc:disconnect( "itemSelectionChanged()" )
+   //::oUI:treeCategory:disconnect( "itemSelectionChanged()" )
    ::showApplicationCursor( Qt_BusyCursor )
 
    /* Clean Environment */
@@ -729,7 +729,7 @@ METHOD IdeHarbourHelp:refreshDocTree()
    oRoot:setToolTip( 0, aPaths[ 1 ] )
    oRoot:setExpanded( .t. )
 
-   ::oUI:q_treeDoc:addTopLevelItem( oRoot )
+   ::oUI:treeDoc:addTopLevelItem( oRoot )
 
    aadd( ::aNodes, { oRoot, "Path", NIL, cRoot, cRoot } )
    hbide_buildFoldersTree( ::aNodes, aDocs )
@@ -761,11 +761,11 @@ METHOD IdeHarbourHelp:refreshDocTree()
 
    ::populateIndex()
 
-   ::oUI:q_treeDoc:expandItem( oRoot )
+   ::oUI:treeDoc:expandItem( oRoot )
 
    ::showApplicationCursor()
-   //::oUI:q_treeDoc:connect( "itemSelectionChanged()"   , {|| ::execEvent( "treeDoc_itemSelectionChanged"      ) } )
-   //::oUI:q_treeCategory:connect( "itemSelectionChanged()"   , {|| ::execEvent( "treeCategory_itemSelectionChanged" ) } )
+   //::oUI:treeDoc:connect( "itemSelectionChanged()"   , {|| ::execEvent( "treeDoc_itemSelectionChanged"      ) } )
+   //::oUI:treeCategory:connect( "itemSelectionChanged()"   , {|| ::execEvent( "treeCategory_itemSelectionChanged" ) } )
 
    RETURN Self
 
@@ -833,14 +833,14 @@ METHOD IdeHarbourHelp:populateIndex()
 
    asort( ::aFunctions, , , {|e_, f_| e_[ 2 ] < f_[ 2 ] } )
 
-   ::oUI:q_listIndex:setSortingEnabled( .t. )
+   ::oUI:listIndex:setSortingEnabled( .t. )
 
    FOR EACH a_ IN ::aFunctions
       IF !empty( a_[ 2 ] )
          qItem := QListWidgetItem()
          qItem:setText( a_[ 2 ] )
          a_[ 5 ] := qItem
-         ::oUI:q_listIndex:addItem( qItem )
+         ::oUI:listIndex:addItem( qItem )
       ENDIF
    NEXT
 
@@ -861,7 +861,7 @@ METHOD IdeHarbourHelp:populateIndex()
    FOR EACH a_ IN aUnq
       qItem := QTreeWidgetItem()
       qItem:setText( 0, a_[ 1 ] )
-      ::oUI:q_treeCategory:addTopLevelItem( qItem )
+      ::oUI:treeCategory:addTopLevelItem( qItem )
       a_[ 2 ] := qItem
    NEXT
    FOR EACH a_ IN ::aCategory
@@ -1108,8 +1108,8 @@ METHOD IdeHarbourHelp:getFunctionPrototypes()
 
 METHOD IdeHarbourHelp:updateViewer( aHtm, cDocName )
 
-   ::oUI:q_browserView:setHTML( hbide_arrayToMemo( aHtm ) )
-   ::oUI:q_browserView:setDocumentTitle( cDocName )
+   ::oUI:browserView:setHTML( hbide_arrayToMemo( aHtm ) )
+   ::oUI:browserView:setDocumentTitle( cDocName )
 
    RETURN Self
 
@@ -1399,7 +1399,7 @@ METHOD IdeHarbourHelp:print()
 
 METHOD IdeHarbourHelp:paintRequested( qPrinter )
 
-   ::oUI:q_browserView:print( qPrinter )
+   ::oUI:browserView:print( qPrinter )
 
    RETURN Self
 
@@ -1411,9 +1411,9 @@ METHOD IdeHarbourHelp:exportAsPdf()
    IF !empty( cPdf := hbide_fetchAFile( ::oDlg, "Provide a file name", { { "Pdf Document", "*.pdf" } } ) )
       hb_fNameSplit( cPdf, @cPath, @cFile, @cExt )
       qPrinter := QPrinter()
-      qPrinter:setOutputFileName( cPath + cFile + "_" + trim( ::oUI:q_browserView:documentTitle() ) + ".pdf" )
+      qPrinter:setOutputFileName( cPath + cFile + "_" + trim( ::oUI:browserView:documentTitle() ) + ".pdf" )
       qPrinter:setFullPage( .t. )
-      ::oUI:q_browserView:print( qPrinter )
+      ::oUI:browserView:print( qPrinter )
    ENDIF
 
    RETURN Self
@@ -1433,14 +1433,14 @@ METHOD IdeHarbourHelp:exportAsPdfAll()
       qPrinter := QPrinter()
 
       FOR EACH aItems IN ::aNodes
-         ::oUI:q_treeDoc:setCurrentItem( aItems[ 1 ], 0 )
+         ::oUI:treeDoc:setCurrentItem( aItems[ 1 ], 0 )
          qApp:processEvents()
          IF ::lQuitting
             EXIT
          ENDIF
-         qPrinter:setOutputFileName( cPath + cFile + "_" + trim( ::oUI:q_browserView:documentTitle() ) + ".pdf" )
+         qPrinter:setOutputFileName( cPath + cFile + "_" + trim( ::oUI:browserView:documentTitle() ) + ".pdf" )
          qPrinter:setFullPage( .t. )
-         ::oUI:q_browserView:print( qPrinter )
+         ::oUI:browserView:print( qPrinter )
          qPrinter:newPage()
       NEXT
    ENDIF

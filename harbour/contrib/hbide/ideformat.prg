@@ -110,11 +110,11 @@ METHOD IdeFormat:create( oIde )
 METHOD IdeFormat:destroy()
 
    IF !empty( ::oUI )
-      ::oUI:q_btnEditCmnds:disconnect( "clicked()"         )
-      ::oUI:q_btnStart    :disconnect( "clicked()"         )
-      ::oUI:q_btnCancel   :disconnect( "clicked()"         )
-      ::oUI:q_btnUpdSrc   :disconnect( "clicked()"         )
-      ::oUI:q_checkSelOnly:disconnect( "stateChanged(int)" )
+      ::oUI:btnEditCmnds:disconnect( "clicked()"         )
+      ::oUI:btnStart    :disconnect( "clicked()"         )
+      ::oUI:btnCancel   :disconnect( "clicked()"         )
+      ::oUI:btnUpdSrc   :disconnect( "clicked()"         )
+      ::oUI:checkSelOnly:disconnect( "stateChanged(int)" )
 
       ::qEdit    := NIL
       ::qHiliter := NIL
@@ -133,13 +133,13 @@ METHOD IdeFormat:show()
       ::oUI := hbide_getUI( "format" )
       ::oFormatDock:oWidget:setWidget( ::oUI:oWidget )
 
-      ::oUI:q_btnEditCmnds:connect( "clicked()"             , {| | ::execEvent( "buttonEditCmds_clicked"  ) } )
-      ::oUI:q_btnStart    :connect( "clicked()"             , {| | ::execEvent( "buttonStart_clicked"     ) } )
-      ::oUI:q_btnCancel   :connect( "clicked()"             , {| | ::execEvent( "buttonCancel_clicked"    ) } )
-      ::oUI:q_btnUpdSrc   :connect( "clicked()"             , {| | ::execEvent( "buttonUpdSrc_clicked"    ) } )
-      ::oUI:q_checkSelOnly:connect( "stateChanged(int)"     , {|i| ::execEvent( "checkSelOnly_changed", i ) } )
+      ::oUI:btnEditCmnds:connect( "clicked()"             , {| | ::execEvent( "buttonEditCmds_clicked"  ) } )
+      ::oUI:btnStart    :connect( "clicked()"             , {| | ::execEvent( "buttonStart_clicked"     ) } )
+      ::oUI:btnCancel   :connect( "clicked()"             , {| | ::execEvent( "buttonCancel_clicked"    ) } )
+      ::oUI:btnUpdSrc   :connect( "clicked()"             , {| | ::execEvent( "buttonUpdSrc_clicked"    ) } )
+      ::oUI:checkSelOnly:connect( "stateChanged(int)"     , {|i| ::execEvent( "checkSelOnly_changed", i ) } )
 
-      ::qEdit   := ::oUI:q_plainFormatter
+      ::qEdit   := ::oUI:plainFormatter
 
       ::qEdit:setLineWrapMode( QTextEdit_NoWrap )
       ::qEdit:setFont( ::oIde:oFont:oWidget )
@@ -152,7 +152,7 @@ METHOD IdeFormat:show()
    ENDIF
 
    ::lSelOnly := .f.
-   ::oUI:q_checkSelOnly:setChecked( .f. )
+   ::oUI:checkSelOnly:setChecked( .f. )
    ::qEdit:clear()
 
    RETURN Self

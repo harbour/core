@@ -708,7 +708,7 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
 
    ENDSWITCH
 
-   RETURN .F.  /* Important */
+   RETURN .F.  /* Important - NEVER CHANGE IT TO .T. */
 
 /*----------------------------------------------------------------------*/
 
@@ -791,14 +791,14 @@ STATIC FUNCTION hbide_blockContents( aContents )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbide_setQCursor( qEdit, q_ )
+STATIC FUNCTION hbide_setQCursor( qEdit, a_ )
    LOCAL qCursor
 
-   IF HB_ISARRAY( q_ )
-      qCursor := q_[ 1 ]
+   IF HB_ISARRAY( a_ )
+      qCursor := a_[ 1 ]
       qCursor:movePosition( QTextCursor_Start, QTextCursor_MoveAnchor )
-      qCursor:movePosition( QTextCursor_Down , QTextCursor_MoveAnchor, q_[ 2 ] )
-      qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, q_[ 3 ] )
+      qCursor:movePosition( QTextCursor_Down , QTextCursor_MoveAnchor, a_[ 2 ] )
+      qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, a_[ 3 ] )
       qEdit:setTextCursor( qCursor )
       qCursor:endEditBlock()
    ELSE
@@ -1126,7 +1126,7 @@ METHOD IdeEdit:deleteBlockContents( aCord )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:blockComment()
-   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, nMode, q_
+   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, nMode, a_
    LOCAL cComment := "// "
    LOCAL nLen := Len( cComment )
 
@@ -1140,7 +1140,7 @@ METHOD IdeEdit:blockComment()
 
    IF nW >= 0
       nMode   := aCord[ 5 ]
-      q_:= hbide_setQCursor( ::qEdit ) ; qCursor := q_[ 1 ]
+      a_:= hbide_setQCursor( ::qEdit ) ; qCursor := a_[ 1 ]
 
       FOR i := nT TO nB
          cLine := ::getLine( i + 1 )
@@ -1165,7 +1165,7 @@ METHOD IdeEdit:blockComment()
          hbide_qReplaceLine( qCursor, i, cLine )
       NEXT
 
-      hbide_setQCursor( ::qEdit, q_ )
+      hbide_setQCursor( ::qEdit, a_ )
    ENDIF
 
    RETURN Self
@@ -1173,7 +1173,7 @@ METHOD IdeEdit:blockComment()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:streamComment()
-   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, nMode, q_
+   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, nMode, a_
 
    IF ::lReadOnly
       RETURN Self
@@ -1186,7 +1186,7 @@ METHOD IdeEdit:streamComment()
 
    IF nW >= 0
       nMode   := aCord[ 5 ]
-      q_:= hbide_setQCursor( ::qEdit ) ; qCursor := q_[ 1 ]
+      a_:= hbide_setQCursor( ::qEdit ) ; qCursor := a_[ 1 ]
 
       FOR i := nT TO nB
          cLine := ::getLine( i + 1 )
@@ -1211,7 +1211,7 @@ METHOD IdeEdit:streamComment()
          hbide_qReplaceLine( qCursor, i, cLine )
       NEXT
 
-      hbide_setQCursor( ::qEdit, q_ )
+      hbide_setQCursor( ::qEdit, a_ )
    ENDIF
 
    RETURN Self
@@ -1219,7 +1219,7 @@ METHOD IdeEdit:streamComment()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:blockIndent( nDirctn )
-   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, q_, nMode, cLineSel
+   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, a_, nMode, cLineSel
 
    IF ::lReadOnly
       RETURN Self
@@ -1231,7 +1231,7 @@ METHOD IdeEdit:blockIndent( nDirctn )
 
    IF nW >= 0
       nMode := aCord[ 5 ]
-      q_:= hbide_setQCursor( ::qEdit ) ; qCursor := q_[ 1 ]
+      a_:= hbide_setQCursor( ::qEdit ) ; qCursor := a_[ 1 ]
 
       FOR i := nT TO nB
          cLine := ::getLine( i + 1 )
@@ -1262,7 +1262,7 @@ METHOD IdeEdit:blockIndent( nDirctn )
          hbide_qReplaceLine( qCursor, i, cLine )
       NEXT
 
-      hbide_setQCursor( ::qEdit, q_ )
+      hbide_setQCursor( ::qEdit, a_ )
    ENDIF
 
    RETURN Self
@@ -1270,7 +1270,7 @@ METHOD IdeEdit:blockIndent( nDirctn )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:blockConvert( cMode )
-   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, q_, nMode
+   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, a_, nMode
 
    IF ::lReadOnly
       RETURN Self
@@ -1282,7 +1282,7 @@ METHOD IdeEdit:blockConvert( cMode )
 
    IF nW >= 0
       nMode := aCord[ 5 ]
-      q_:= hbide_setQCursor( ::qEdit ) ; qCursor := q_[ 1 ]
+      a_:= hbide_setQCursor( ::qEdit ) ; qCursor := a_[ 1 ]
 
       FOR i := nT TO nB
          cLine := ::getLine( i + 1 )
@@ -1312,7 +1312,7 @@ METHOD IdeEdit:blockConvert( cMode )
          hbide_qReplaceLine( qCursor, i, cLine )
       NEXT
 
-      hbide_setQCursor( ::qEdit, q_ )
+      hbide_setQCursor( ::qEdit, a_ )
    ENDIF
 
    RETURN Self

@@ -114,7 +114,7 @@ METHOD IdeChangeLog:create( oIde )
 METHOD IdeChangeLog:destroy()
 
    IF !empty( ::oUI )
-      ::oUI:q_buttonNew   :disconnect( "clicked()" )
+      ::oUI:buttonNew   :disconnect( "clicked()" )
 
       ::oUI:destroy()
    ENDIF
@@ -130,65 +130,65 @@ METHOD IdeChangeLog:show()
       ::oUI:setWindowFlags( Qt_Sheet )
       ::oUI:setWindowIcon( QIcon( hbide_image( "hbide" ) ) )
 
-      ::oUI:q_buttonOpen      :setIcon( QIcon( hbide_image( "dc_folder" ) ) )
-      ::oUI:q_buttonNew       :setIcon( QIcon( hbide_image( "new"       ) ) )
-      ::oUI:q_buttonTitle     :setIcon( QIcon( hbide_image( "dc_plus"   ) ) )
-      ::oUI:q_buttonSource    :setIcon( QIcon( hbide_image( "dc_plus"   ) ) )
-      ::oUI:q_buttonDesc      :setIcon( QIcon( hbide_image( "dc_plus"   ) ) )
-      ::oUI:q_buttonSrcDesc   :setIcon( QIcon( hbide_image( "dc_plus"   ) ) )
+      ::oUI:buttonOpen      :setIcon( QIcon( hbide_image( "dc_folder" ) ) )
+      ::oUI:buttonNew       :setIcon( QIcon( hbide_image( "new"       ) ) )
+      ::oUI:buttonTitle     :setIcon( QIcon( hbide_image( "dc_plus"   ) ) )
+      ::oUI:buttonSource    :setIcon( QIcon( hbide_image( "dc_plus"   ) ) )
+      ::oUI:buttonDesc      :setIcon( QIcon( hbide_image( "dc_plus"   ) ) )
+      ::oUI:buttonSrcDesc   :setIcon( QIcon( hbide_image( "dc_plus"   ) ) )
 
-      ::oUI:q_buttonOpen      :setToolTip( "Open a ChangeLog"       )
-      ::oUI:q_buttonNew       :setToolTip( "Create Empty ChangeLog" )
-      ::oUI:q_buttonTitle     :setToolTip( "Add Title in current entry" )
-      ::oUI:q_buttonSource    :setToolTip( "Add Source in current entry" )
-      ::oUI:q_buttonDesc      :setToolTip( "Add Action_Description in current entry" )
-      ::oUI:q_buttonSrcDesc   :setToolTip( "Add Source_Action_Description in current entry" )
+      ::oUI:buttonOpen      :setToolTip( "Open a ChangeLog"       )
+      ::oUI:buttonNew       :setToolTip( "Create Empty ChangeLog" )
+      ::oUI:buttonTitle     :setToolTip( "Add Title in current entry" )
+      ::oUI:buttonSource    :setToolTip( "Add Source in current entry" )
+      ::oUI:buttonDesc      :setToolTip( "Add Action_Description in current entry" )
+      ::oUI:buttonSrcDesc   :setToolTip( "Add Source_Action_Description in current entry" )
 
-      ::oUI:q_buttonOpen      :connect( "clicked()", {|| ::execEvent( "buttonOpen_clicked"      ) } )
-      ::oUI:q_buttonNew       :connect( "clicked()", {|| ::execEvent( "buttonNew_clicked"       ) } )
+      ::oUI:buttonOpen      :connect( "clicked()", {|| ::execEvent( "buttonOpen_clicked"      ) } )
+      ::oUI:buttonNew       :connect( "clicked()", {|| ::execEvent( "buttonNew_clicked"       ) } )
 
-      ::oUI:q_buttonTitle     :connect( "clicked()", {|| ::execEvent( "buttonTitle_clicked"     ) } )
-      ::oUI:q_buttonSource    :connect( "clicked()", {|| ::execEvent( "buttonSource_clicked"    ) } )
-      ::oUI:q_buttonDesc      :connect( "clicked()", {|| ::execEvent( "buttonDesc_clicked"      ) } )
-      ::oUI:q_buttonSrcDesc   :connect( "clicked()", {|| ::execEvent( "buttonSrcDesc_clicked"   ) } )
-      ::oUI:q_buttonClearDesc :connect( "clicked()", {|| ::execEvent( "buttonClearDesc_clicked" ) } )
+      ::oUI:buttonTitle     :connect( "clicked()", {|| ::execEvent( "buttonTitle_clicked"     ) } )
+      ::oUI:buttonSource    :connect( "clicked()", {|| ::execEvent( "buttonSource_clicked"    ) } )
+      ::oUI:buttonDesc      :connect( "clicked()", {|| ::execEvent( "buttonDesc_clicked"      ) } )
+      ::oUI:buttonSrcDesc   :connect( "clicked()", {|| ::execEvent( "buttonSrcDesc_clicked"   ) } )
+      ::oUI:buttonClearDesc :connect( "clicked()", {|| ::execEvent( "buttonClearDesc_clicked" ) } )
 
-      ::oUI:q_buttonCancel    :connect( "clicked()", {|| ::execEvent( "buttonCancel_clicked"    ) } )
-      ::oUI:q_buttonSave      :connect( "clicked()", {|| ::execEvent( "buttonSave_clicked"      ) } )
+      ::oUI:buttonCancel    :connect( "clicked()", {|| ::execEvent( "buttonCancel_clicked"    ) } )
+      ::oUI:buttonSave      :connect( "clicked()", {|| ::execEvent( "buttonSave_clicked"      ) } )
 
-      ::oUI:q_editChangelog   :connect( "textChanged(QString)", {|p| ::execEvent( "editChangelog_textChanged", p ) } )
-      ::oUI:q_editUser        :connect( "textChanged(QString)", {|p| ::execEvent( "editUser_textChanged"     , p ) } )
+      ::oUI:editChangelog   :connect( "textChanged(QString)", {|p| ::execEvent( "editChangelog_textChanged", p ) } )
+      ::oUI:editUser        :connect( "textChanged(QString)", {|p| ::execEvent( "editUser_textChanged"     , p ) } )
 
-      ::oUI:q_comboAction     :addItem( "! Fixed  : " )
-      ::oUI:q_comboAction     :addItem( "* Changed: " )
-      ::oUI:q_comboAction     :addItem( "% Optimzd: " )
-      ::oUI:q_comboAction     :addItem( "+ Added  : " )
-      ::oUI:q_comboAction     :addItem( "- Removed: " )
-      ::oUI:q_comboAction     :addItem( "; Comment: " )
-      ::oUI:q_comboAction     :addItem( "@ TODO   : " )
-      ::oUI:q_comboAction     :addItem( "| Moved  : " )
+      ::oUI:comboAction     :addItem( "! Fixed  : " )
+      ::oUI:comboAction     :addItem( "* Changed: " )
+      ::oUI:comboAction     :addItem( "% Optimzd: " )
+      ::oUI:comboAction     :addItem( "+ Added  : " )
+      ::oUI:comboAction     :addItem( "- Removed: " )
+      ::oUI:comboAction     :addItem( "; Comment: " )
+      ::oUI:comboAction     :addItem( "@ TODO   : " )
+      ::oUI:comboAction     :addItem( "| Moved  : " )
 
       IF empty( ::oINI:cUserChangeLog )
          ::oINI:cUserChangeLog := hbide_fetchAString( ::oDlg:oWidget, ::oINI:cUserChangeLog, , "Developer Name" )
       ENDIF
 
-      aeval( ::oINI:aLogTitle  , {|e| ::oUI:q_comboTitle:insertItem( 0,e ) } )
-      aeval( ::oINI:aLogSources, {|e| ::oUI:q_comboSources:insertItem( 0,e ) } )
+      aeval( ::oINI:aLogTitle  , {|e| ::oUI:comboTitle:insertItem( 0,e ) } )
+      aeval( ::oINI:aLogSources, {|e| ::oUI:comboSources:insertItem( 0,e ) } )
 
-      ::oUI:q_comboTitle:setCurrentIndex( -1 )
-      ::oUI:q_comboSources:setCurrentIndex( -1 )
+      ::oUI:comboTitle:setCurrentIndex( -1 )
+      ::oUI:comboSources:setCurrentIndex( -1 )
 
-      ::oUI:q_plainChangelog  :setFont( ::oFont:oWidget )
-      ::oUI:q_plainLogEntry   :setFont( ::oFont:oWidget )
-      ::oUI:q_plainCurrentLog :setFont( ::oFont:oWidget )
+      ::oUI:plainChangelog  :setFont( ::oFont:oWidget )
+      ::oUI:plainLogEntry   :setFont( ::oFont:oWidget )
+      ::oUI:plainCurrentLog :setFont( ::oFont:oWidget )
 
-      ::oUI:q_plainLogEntry   :ensureCursorVisible()
+      ::oUI:plainLogEntry   :ensureCursorVisible()
 
-      ::oUI:q_editUser:setText( ::oINI:cUserChangeLog )
+      ::oUI:editUser:setText( ::oINI:cUserChangeLog )
       ::oUI:setWindowTitle( "Manage ChangeLog(s)" )
 
       ::oEdit := IdeEdit():new( ::oIde )
-      ::qEdit := ::oUI:q_plainChangelog
+      ::qEdit := ::oUI:plainChangelog
       ::oEdit:qEdit := ::qEdit
       ::qEdit:setFocusPolicy( Qt_NoFocus )
       ::qEdit:hbHorzRulerVisible( .f. )
@@ -197,7 +197,7 @@ METHOD IdeChangeLog:show()
       ::qHiliter := ::oTheme:setSyntaxHilighting( ::qEdit, , .t., .t. )
       ::qHiliter:hbSetType( 1 )
 
-      ::oUI:q_editChangelog   :setText( ::oINI:cChangeLog )
+      ::oUI:editChangelog   :setText( ::oINI:cChangeLog )
 
       ::oUI:oWidget:connect( QEvent_Close, {|| ::oIde:oINI:cChangelogDialogGeometry := hbide_posAndSize( ::oUI:oWidget ) } )
    ENDIF
@@ -238,44 +238,44 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
    SWITCH cEvent
 
    CASE "buttonTitle_clicked"
-      IF ! empty( cTmp := ::oUI:q_comboTitle:currentText() )
+      IF ! empty( cTmp := ::oUI:comboTitle:currentText() )
          ::addToLog( { "Title", cTmp, "" } )
          ::refresh()
          IF ascan( ::oINI:aLogTitle, {|e| upper( e ) == upper( cTmp ) } ) == 0
             aadd( ::oINI:aLogTitle, cTmp )
-            ::oUI:q_comboTitle:insertItem( 0,cTmp )
+            ::oUI:comboTitle:insertItem( 0,cTmp )
          ENDIF
       ENDIF
       EXIT
    CASE "buttonSource_clicked"
-      IF ! empty( cTmp := ::oUI:q_comboSources:currentText() )
+      IF ! empty( cTmp := ::oUI:comboSources:currentText() )
          ::addToLog( { "Source", cTmp, "" } )
          ::refresh()
          IF ascan( ::oINI:aLogSources, {|e| upper( e ) == upper( cTmp ) } ) == 0
             aadd( ::oINI:aLogSources, cTmp )
-            ::oUI:q_comboSources:insertItem( 0,cTmp )
+            ::oUI:comboSources:insertItem( 0,cTmp )
          ENDIF
       ENDIF
       EXIT
    CASE "buttonDesc_clicked"
-      IF ! empty( cTmp := ::oUI:q_plainCurrentLog:toPlainText() )
-         ::addToLog( { "Desc", ::oUI:q_comboAction:currentText(), cTmp } )
-         ::oUI:q_plainCurrentLog:clear()
+      IF ! empty( cTmp := ::oUI:plainCurrentLog:toPlainText() )
+         ::addToLog( { "Desc", ::oUI:comboAction:currentText(), cTmp } )
+         ::oUI:plainCurrentLog:clear()
          ::refresh()
       ENDIF
       EXIT
    CASE "buttonSrcDesc_clicked"
-      IF ! empty( cTmp := ::oUI:q_comboSources:currentText() )
+      IF ! empty( cTmp := ::oUI:comboSources:currentText() )
          ::addToLog( { "Source", cTmp, "" } )
       ENDIF
-      IF ! empty( cTmp := ::oUI:q_plainCurrentLog:toPlainText() )
-         ::addToLog( { "Desc", ::oUI:q_comboAction:currentText(), cTmp } )
-         ::oUI:q_plainCurrentLog:clear()
+      IF ! empty( cTmp := ::oUI:plainCurrentLog:toPlainText() )
+         ::addToLog( { "Desc", ::oUI:comboAction:currentText(), cTmp } )
+         ::oUI:plainCurrentLog:clear()
       ENDIF
       ::refresh()
       EXIT
    CASE "buttonClearDesc_clicked"
-      ::oUI:q_plainCurrentLog:clear()
+      ::oUI:plainCurrentLog:clear()
       EXIT
    CASE "buttonSave_clicked"
       IF ! empty( cTmp := ::buildLogEntry() )
@@ -294,13 +294,13 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
       ENDIF
       EXIT
    CASE "buttonCancel_clicked"
-      ::oUI:q_plainLogEntry:clear()
+      ::oUI:plainLogEntry:clear()
       EXIT
    CASE "buttonOpen_clicked"
       cTmp := hbide_fetchAFile( ::oDlg, "Select a ChangeLog File" )
       IF ! empty( cTmp ) .AND. hb_fileExists( cTmp )
          ::oINI:cChangeLog := cTmp
-         ::oUI:q_editChangelog:setText( ::oINI:cChangeLog )
+         ::oUI:editChangelog:setText( ::oINI:cChangeLog )
       ENDIF
       EXIT
    CASE "buttonNew_clicked"
@@ -314,7 +314,7 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
 
          hb_memowrit( ::oINI:cChangeLog, s )
 
-         ::oUI:q_editChangelog:setText( ::oINI:cChangeLog )
+         ::oUI:editChangelog:setText( ::oINI:cChangeLog )
       ENDIF
       EXIT
    CASE "editUser_textChanged"
@@ -325,11 +325,11 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
    CASE "editChangelog_textChanged"
       IF ! empty( p ) .AND. hb_fileExists( p )
          ::oINI:cChangeLog := p
-         ::oUI:q_editChangelog:setStyleSheet( "" )
+         ::oUI:editChangelog:setStyleSheet( "" )
          ::updateLog()
       ELSE
-         ::oUI:q_editChangelog:setStyleSheet( "background-color: rgba( 240,120,120,255 );" )
-         ::oUI:q_plainChangelog:clear()
+         ::oUI:editChangelog:setStyleSheet( "background-color: rgba( 240,120,120,255 );" )
+         ::oUI:plainChangelog:clear()
       ENDIF
       EXIT
 
@@ -341,11 +341,11 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
 
 METHOD IdeChangeLog:updateLog()
 
-   ::oUI:q_plainLogEntry:clear()
-   ::oUI:q_plainCurrentLog:clear()
-   ::oUI:q_plainChangelog:clear()
+   ::oUI:plainLogEntry:clear()
+   ::oUI:plainCurrentLog:clear()
+   ::oUI:plainChangelog:clear()
 
-   ::oUI:q_plainChangelog:setPlainText( hb_memoread( ::oINI:cChangeLog ) )
+   ::oUI:plainChangelog:setPlainText( hb_memoread( ::oINI:cChangeLog ) )
 
    ::refresh()
 
@@ -389,8 +389,8 @@ METHOD IdeChangeLog:addToLog( aLog )
       NEXT
    ENDCASE
 
-   ::oUI:q_plainLogEntry:setPlainText( hbide_arrayToMemo( a_ ) )
-   QApplication():sendEvent( ::oUI:q_plainLogEntry, QKeyEvent( QEvent_KeyPress, Qt_Key_End, Qt_ControlModifier ) )
+   ::oUI:plainLogEntry:setPlainText( hbide_arrayToMemo( a_ ) )
+   QApplication():sendEvent( ::oUI:plainLogEntry, QKeyEvent( QEvent_KeyPress, Qt_Key_End, Qt_ControlModifier ) )
 
    RETURN Self
 
@@ -398,7 +398,7 @@ METHOD IdeChangeLog:addToLog( aLog )
 
 METHOD IdeChangeLog:getLogEntry()
    LOCAL e, n, f, s_:={}, lHandelled
-   LOCAL a_:= hbide_memoToArray( ::oUI:q_plainLogEntry:toPlainText() )
+   LOCAL a_:= hbide_memoToArray( ::oUI:plainLogEntry:toPlainText() )
 
    FOR EACH e IN a_
       lHandelled := .f.

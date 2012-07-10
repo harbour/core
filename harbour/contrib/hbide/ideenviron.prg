@@ -229,13 +229,13 @@ METHOD IdeEnvironments:show()
 
       ::oEnvironDock:oWidget:setWidget( ::oUI:oWidget )
 
-      ::oUI:q_buttonCn      :connect( "clicked()", {|| ::oEnvironDock:hide() } )
-      ::oUI:q_buttonSave    :connect( "clicked()", {|| ::saveEnv()    } )
-      ::oUI:q_buttonSaveExit:connect( "clicked()", {|| ::saveEnv(), ::oEnvironDock:hide() } )
+      ::oUI:buttonCn      :connect( "clicked()", {|| ::oEnvironDock:hide() } )
+      ::oUI:buttonSave    :connect( "clicked()", {|| ::saveEnv()    } )
+      ::oUI:buttonSaveExit:connect( "clicked()", {|| ::saveEnv(), ::oEnvironDock:hide() } )
 
-      ::oUI:q_editCompilers:setFont( ::oFont:oWidget )
+      ::oUI:editCompilers:setFont( ::oFont:oWidget )
    ENDIF
-   ::oUI:q_editCompilers:setPlainText( hb_memoread( ::oINI:getEnvFile() ) )
+   ::oUI:editCompilers:setPlainText( hb_memoread( ::oINI:getEnvFile() ) )
 
    RETURN Self
 
@@ -244,7 +244,7 @@ METHOD IdeEnvironments:show()
 METHOD IdeEnvironments:saveEnv()
    LOCAL cText
 
-   IF !empty( cText := ::oUI:q_editCompilers:toPlainText() )
+   IF !empty( cText := ::oUI:editCompilers:toPlainText() )
       hb_MemoWrit( ::oINI:getEnvFile(), cText )
       ::parse( ::oINI:getEnvFile() )
    ENDIF

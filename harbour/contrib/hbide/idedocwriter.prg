@@ -229,23 +229,23 @@ METHOD IdeDocWriter:show()
 
 METHOD IdeDocWriter:setImages()
 
-   ::oUI:q_buttonLoadFromDocFile :setIcon( QIcon( hbide_image( "load_3"      ) ) )
-   ::oUI:q_buttonLoadFromSource  :setIcon( QIcon( hbide_image( "load_2"      ) ) )
-   ::oUI:q_buttonLoadFromCurFunc :setIcon( QIcon( hbide_image( "load_1"      ) ) )
+   ::oUI:buttonLoadFromDocFile :setIcon( QIcon( hbide_image( "load_3"      ) ) )
+   ::oUI:buttonLoadFromSource  :setIcon( QIcon( hbide_image( "load_2"      ) ) )
+   ::oUI:buttonLoadFromCurFunc :setIcon( QIcon( hbide_image( "load_1"      ) ) )
 
-   ::oUI:q_buttonArgs            :setIcon( QIcon( hbide_image( "arguments"   ) ) )
-   ::oUI:q_buttonDesc            :setIcon( QIcon( hbide_image( "description" ) ) )
-   ::oUI:q_buttonExamples        :setIcon( QIcon( hbide_image( "example"     ) ) )
-   ::oUI:q_buttonTests           :setIcon( QIcon( hbide_image( "tests"       ) ) )
+   ::oUI:buttonArgs            :setIcon( QIcon( hbide_image( "arguments"   ) ) )
+   ::oUI:buttonDesc            :setIcon( QIcon( hbide_image( "description" ) ) )
+   ::oUI:buttonExamples        :setIcon( QIcon( hbide_image( "example"     ) ) )
+   ::oUI:buttonTests           :setIcon( QIcon( hbide_image( "tests"       ) ) )
 
-   ::oUI:q_buttonClear           :setIcon( QIcon( hbide_image( "clean"       ) ) )
-   ::oUI:q_buttonSaveInFunc      :setIcon( QIcon( hbide_image( "unload_1"    ) ) )
-   ::oUI:q_buttonSave            :setIcon( QIcon( hbide_image( "helpdoc"     ) ) )
+   ::oUI:buttonClear           :setIcon( QIcon( hbide_image( "clean"       ) ) )
+   ::oUI:buttonSaveInFunc      :setIcon( QIcon( hbide_image( "unload_1"    ) ) )
+   ::oUI:buttonSave            :setIcon( QIcon( hbide_image( "helpdoc"     ) ) )
 
-   ::oUI:q_buttonCloseArgs       :setIcon( QIcon( hbide_image( "closetab"    ) ) )
-   ::oUI:q_buttonCloseDesc       :setIcon( QIcon( hbide_image( "closetab"    ) ) )
-   ::oUI:q_buttonCloseExamples   :setIcon( QIcon( hbide_image( "closetab"    ) ) )
-   ::oUI:q_buttonCloseTests      :setIcon( QIcon( hbide_image( "closetab"    ) ) )
+   ::oUI:buttonCloseArgs       :setIcon( QIcon( hbide_image( "closetab"    ) ) )
+   ::oUI:buttonCloseDesc       :setIcon( QIcon( hbide_image( "closetab"    ) ) )
+   ::oUI:buttonCloseExamples   :setIcon( QIcon( hbide_image( "closetab"    ) ) )
+   ::oUI:buttonCloseTests      :setIcon( QIcon( hbide_image( "closetab"    ) ) )
 
    RETURN Self
 
@@ -253,18 +253,18 @@ METHOD IdeDocWriter:setImages()
 
 METHOD IdeDocWriter:installSignals()
 
-   ::oUI:q_buttonArgs           :connect( "toggled(bool)", {|p| ::execEvent( buttonArgs_clicked        , p ) } )
-   ::oUI:q_buttonDesc           :connect( "toggled(bool)", {|p| ::execEvent( buttonDesc_clicked        , p ) } )
-   ::oUI:q_buttonExamples       :connect( "toggled(bool)", {|p| ::execEvent( buttonExample_clicked     , p ) } )
-   ::oUI:q_buttonTests          :connect( "toggled(bool)", {|p| ::execEvent( buttonTests_clicked       , p ) } )
-   ::oUI:q_buttonCloseArgs      :connect( "clicked()"    , {| | ::execEvent( buttonCloseArgs_clicked       ) } )
-   ::oUI:q_buttonCloseDesc      :connect( "clicked()"    , {| | ::execEvent( buttonCloseDesc_clicked       ) } )
-   ::oUI:q_buttonCloseExamples  :connect( "clicked()"    , {| | ::execEvent( buttonCloseExample_clicked    ) } )
-   ::oUI:q_buttonCloseTests     :connect( "clicked()"    , {| | ::execEvent( buttonCloseTests_clicked      ) } )
-   ::oUI:q_buttonClear          :connect( "clicked()"    , {| | ::execEvent( buttonClear_clicked           ) } )
-   ::oUI:q_buttonSaveInFunc     :connect( "clicked()"    , {| | ::execEvent( buttonSaveInFunc_clicked      ) } )
-   ::oUI:q_buttonSave           :connect( "clicked()"    , {| | ::execEvent( buttonSave_clicked            ) } )
-   ::oUI:q_buttonLoadFromCurFunc:connect( "clicked()"    , {|| ::execEvent( buttonLoadFromCurFunc_clicked  ) } )
+   ::oUI:buttonArgs           :connect( "toggled(bool)", {|p| ::execEvent( buttonArgs_clicked        , p ) } )
+   ::oUI:buttonDesc           :connect( "toggled(bool)", {|p| ::execEvent( buttonDesc_clicked        , p ) } )
+   ::oUI:buttonExamples       :connect( "toggled(bool)", {|p| ::execEvent( buttonExample_clicked     , p ) } )
+   ::oUI:buttonTests          :connect( "toggled(bool)", {|p| ::execEvent( buttonTests_clicked       , p ) } )
+   ::oUI:buttonCloseArgs      :connect( "clicked()"    , {| | ::execEvent( buttonCloseArgs_clicked       ) } )
+   ::oUI:buttonCloseDesc      :connect( "clicked()"    , {| | ::execEvent( buttonCloseDesc_clicked       ) } )
+   ::oUI:buttonCloseExamples  :connect( "clicked()"    , {| | ::execEvent( buttonCloseExample_clicked    ) } )
+   ::oUI:buttonCloseTests     :connect( "clicked()"    , {| | ::execEvent( buttonCloseTests_clicked      ) } )
+   ::oUI:buttonClear          :connect( "clicked()"    , {| | ::execEvent( buttonClear_clicked           ) } )
+   ::oUI:buttonSaveInFunc     :connect( "clicked()"    , {| | ::execEvent( buttonSaveInFunc_clicked      ) } )
+   ::oUI:buttonSave           :connect( "clicked()"    , {| | ::execEvent( buttonSave_clicked            ) } )
+   ::oUI:buttonLoadFromCurFunc:connect( "clicked()"    , {|| ::execEvent( buttonLoadFromCurFunc_clicked  ) } )
 
    RETURN Self
 
@@ -272,30 +272,30 @@ METHOD IdeDocWriter:installSignals()
 
 METHOD IdeDocWriter:setParameters()
 
-   ::oUI:q_buttonArgs    :setCheckable( .t. )
-   ::oUI:q_buttonDesc    :setCheckable( .t. )
-   ::oUI:q_buttonExamples:setCheckable( .t. )
-   ::oUI:q_buttonTests   :setCheckable( .t. )
+   ::oUI:buttonArgs    :setCheckable( .t. )
+   ::oUI:buttonDesc    :setCheckable( .t. )
+   ::oUI:buttonExamples:setCheckable( .t. )
+   ::oUI:buttonTests   :setCheckable( .t. )
 
-   ::oUI:q_buttonArgs    :setChecked( .t. )
-   ::oUI:q_buttonDesc    :setChecked( .t. )
-   ::oUI:q_buttonExamples:setChecked( .f. )
-   ::oUI:q_buttonTests   :setChecked( .f. )
+   ::oUI:buttonArgs    :setChecked( .t. )
+   ::oUI:buttonDesc    :setChecked( .t. )
+   ::oUI:buttonExamples:setChecked( .f. )
+   ::oUI:buttonTests   :setChecked( .f. )
 
-   ::oUI:q_frameTests:hide()
-   ::oUI:q_frameExamples:hide()
+   ::oUI:frameTests:hide()
+   ::oUI:frameExamples:hide()
 
-   ::oUI:q_comboTemplate:addItem( "Function"  )
-   ::oUI:q_comboTemplate:addItem( "Procedure" )
-   ::oUI:q_comboTemplate:addItem( "Class"     )
+   ::oUI:comboTemplate:addItem( "Function"  )
+   ::oUI:comboTemplate:addItem( "Procedure" )
+   ::oUI:comboTemplate:addItem( "Class"     )
 
-   ::qHiliter  := ::oTH:SetSyntaxHilighting( ::oUI:q_plainExamples, "Pritpal's Favourite" )
-   ::qHiliter1 := ::oTH:SetSyntaxHilighting( ::oUI:q_plainTests   , "Evening Glamour"     )
+   ::qHiliter  := ::oTH:SetSyntaxHilighting( ::oUI:plainExamples, "Pritpal's Favourite" )
+   ::qHiliter1 := ::oTH:SetSyntaxHilighting( ::oUI:plainTests   , "Evening Glamour"     )
 
-   ::oUI:q_plainExamples:setFont( ::oFont:oWidget )
-   ::oUI:q_plainTests:setFont( ::oFont:oWidget )
+   ::oUI:plainExamples:setFont( ::oFont:oWidget )
+   ::oUI:plainTests:setFont( ::oFont:oWidget )
 
-   ::oUI:q_frameGeneral:setSizePolicy( QSizePolicy_Preferred, QSizePolicy_Fixed )
+   ::oUI:frameGeneral:setSizePolicy( QSizePolicy_Preferred, QSizePolicy_Fixed )
 
    RETURN Self
 
@@ -310,44 +310,44 @@ METHOD IdeDocWriter:execEvent( nMode, p )
    SWITCH nMode
    CASE buttonArgs_clicked
       IF p
-         ::oUI:q_frameArgs:show()
+         ::oUI:frameArgs:show()
       ELSE
-         ::oUI:q_frameArgs:hide()
+         ::oUI:frameArgs:hide()
       ENDIF
       EXIT
    CASE buttonDesc_clicked
       IF p
-         ::oUI:q_frameDesc:show()
+         ::oUI:frameDesc:show()
       ELSE
-         ::oUI:q_frameDesc:hide()
+         ::oUI:frameDesc:hide()
       ENDIF
       EXIT
    CASE buttonExample_clicked
       IF p
-         ::oUI:q_frameExamples:show()
+         ::oUI:frameExamples:show()
       ELSE
-         ::oUI:q_frameExamples:hide()
+         ::oUI:frameExamples:hide()
       ENDIF
       EXIT
    CASE buttonTests_clicked
       IF p
-         ::oUI:q_frameTests:show()
+         ::oUI:frameTests:show()
       ELSE
-         ::oUI:q_frameTests:hide()
+         ::oUI:frameTests:hide()
       ENDIF
       EXIT
 
    CASE buttonCloseArgs_clicked
-      ::oUI:q_buttonArgs:setChecked( .f. )
+      ::oUI:buttonArgs:setChecked( .f. )
       EXIT
    CASE buttonCloseDesc_clicked
-      ::oUI:q_buttonDesc:setChecked( .f. )
+      ::oUI:buttonDesc:setChecked( .f. )
       EXIT
    CASE buttonCloseExample_clicked
-      ::oUI:q_buttonExamples:setChecked( .f. )
+      ::oUI:buttonExamples:setChecked( .f. )
       EXIT
    CASE buttonCloseTests_clicked
-      ::oUI:q_buttonTests:setChecked( .f. )
+      ::oUI:buttonTests:setChecked( .f. )
       EXIT
 
    CASE buttonLoadFromCurFunc_clicked
@@ -385,24 +385,24 @@ METHOD IdeDocWriter:clear()
 
 METHOD IdeDocWriter:fillForm( aFacts )
 
-   ::oUI:q_editVersion     :setText      ( aFacts[ qqVersion     ] )
-   ::oUI:q_editStatus      :setText      ( aFacts[ qqStatus      ] )
-   ::oUI:q_editCompliance  :setText      ( aFacts[ qqCompliance  ] )
-   ::oUI:q_editCategory    :setText      ( aFacts[ qqCategory    ] )
-   ::oUI:q_editSubCategory :setText      ( aFacts[ qqSubCategory ] )
-   ::oUI:q_editName        :setText      ( aFacts[ qqName        ] )
-   ::oUI:q_editExtLink     :setText      ( aFacts[ qqExtLink     ] )
-   ::oUI:q_editOneLiner    :setText      ( aFacts[ qqOneLiner    ] )
-   ::oUI:q_editSyntax      :setText      ( aFacts[ qqSyntax      ] )
-   ::oUI:q_editReturns     :setText      ( aFacts[ qqReturns     ] )
-   ::oUI:q_editSeeAlso     :setText      ( aFacts[ qqSeeAlso     ] )
-   ::oUI:q_editFiles       :setText      ( aFacts[ qqFiles       ] )
-   ::oUI:q_plainArgs       :setPlainText ( aFacts[ qqArgs        ] )
-   ::oUI:q_plainDesc       :setPlainText ( aFacts[ qqDesc        ] )
-   ::oUI:q_plainExamples   :setPlainText ( aFacts[ qqExamples    ] )
-   ::oUI:q_plainTests      :setPlainText ( aFacts[ qqTests       ] )
+   ::oUI:editVersion     :setText      ( aFacts[ qqVersion     ] )
+   ::oUI:editStatus      :setText      ( aFacts[ qqStatus      ] )
+   ::oUI:editCompliance  :setText      ( aFacts[ qqCompliance  ] )
+   ::oUI:editCategory    :setText      ( aFacts[ qqCategory    ] )
+   ::oUI:editSubCategory :setText      ( aFacts[ qqSubCategory ] )
+   ::oUI:editName        :setText      ( aFacts[ qqName        ] )
+   ::oUI:editExtLink     :setText      ( aFacts[ qqExtLink     ] )
+   ::oUI:editOneLiner    :setText      ( aFacts[ qqOneLiner    ] )
+   ::oUI:editSyntax      :setText      ( aFacts[ qqSyntax      ] )
+   ::oUI:editReturns     :setText      ( aFacts[ qqReturns     ] )
+   ::oUI:editSeeAlso     :setText      ( aFacts[ qqSeeAlso     ] )
+   ::oUI:editFiles       :setText      ( aFacts[ qqFiles       ] )
+   ::oUI:plainArgs       :setPlainText ( aFacts[ qqArgs        ] )
+   ::oUI:plainDesc       :setPlainText ( aFacts[ qqDesc        ] )
+   ::oUI:plainExamples   :setPlainText ( aFacts[ qqExamples    ] )
+   ::oUI:plainTests      :setPlainText ( aFacts[ qqTests       ] )
 
-   ::oUI:q_comboTemplate:setCurrentIndex( iif( aFacts[ qqVersion ] == "Procedure", 1, ;
+   ::oUI:comboTemplate:setCurrentIndex( iif( aFacts[ qqVersion ] == "Procedure", 1, ;
                                           iif( aFacts[ qqVersion ] == "Class", 2, 0 ) ) )
    RETURN Self
 
@@ -410,24 +410,24 @@ METHOD IdeDocWriter:fillForm( aFacts )
 
 METHOD IdeDocWriter:fillFormByObject( oFunc )
 
-   ::oUI:q_editVersion     :setText      ( oFunc:cVersion      )
-   ::oUI:q_editStatus      :setText      ( oFunc:cStatus       )
-   ::oUI:q_editCompliance  :setText      ( oFunc:cPlatForms    )
-   ::oUI:q_editCategory    :setText      ( oFunc:cCategory     )
-   ::oUI:q_editSubCategory :setText      ( oFunc:cSubCategory  )
-   ::oUI:q_editName        :setText      ( oFunc:cName         )
-   ::oUI:q_editExtLink     :setText      ( oFunc:cExternalLink )
-   ::oUI:q_editOneLiner    :setText      ( oFunc:cOneLiner     )
-   ::oUI:q_editSyntax      :setText      ( hbide_ar2delString( oFunc:aSyntax , "; " ) )
-   ::oUI:q_editReturns     :setText      ( hbide_ar2delString( oFunc:aReturns, "; " ) )
-   ::oUI:q_editSeeAlso     :setText      ( oFunc:cSeeAlso      )
-   ::oUI:q_editFiles       :setText      ( hbide_ar2delString( oFunc:aFiles  , "; " ) )
-   ::oUI:q_plainArgs       :setPlainText ( hbide_arrayTOmemo( oFunc:aArguments    ) )
-   ::oUI:q_plainDesc       :setPlainText ( hbide_arrayTOmemo( oFunc:aDescription  ) )
-   ::oUI:q_plainExamples   :setPlainText ( hbide_arrayTOmemo( oFunc:aExamples     ) )
-   ::oUI:q_plainTests      :setPlainText ( hbide_arrayTOmemo( oFunc:aTests        ) )
+   ::oUI:editVersion     :setText      ( oFunc:cVersion      )
+   ::oUI:editStatus      :setText      ( oFunc:cStatus       )
+   ::oUI:editCompliance  :setText      ( oFunc:cPlatForms    )
+   ::oUI:editCategory    :setText      ( oFunc:cCategory     )
+   ::oUI:editSubCategory :setText      ( oFunc:cSubCategory  )
+   ::oUI:editName        :setText      ( oFunc:cName         )
+   ::oUI:editExtLink     :setText      ( oFunc:cExternalLink )
+   ::oUI:editOneLiner    :setText      ( oFunc:cOneLiner     )
+   ::oUI:editSyntax      :setText      ( hbide_ar2delString( oFunc:aSyntax , "; " ) )
+   ::oUI:editReturns     :setText      ( hbide_ar2delString( oFunc:aReturns, "; " ) )
+   ::oUI:editSeeAlso     :setText      ( oFunc:cSeeAlso      )
+   ::oUI:editFiles       :setText      ( hbide_ar2delString( oFunc:aFiles  , "; " ) )
+   ::oUI:plainArgs       :setPlainText ( hbide_arrayTOmemo( oFunc:aArguments    ) )
+   ::oUI:plainDesc       :setPlainText ( hbide_arrayTOmemo( oFunc:aDescription  ) )
+   ::oUI:plainExamples   :setPlainText ( hbide_arrayTOmemo( oFunc:aExamples     ) )
+   ::oUI:plainTests      :setPlainText ( hbide_arrayTOmemo( oFunc:aTests        ) )
 
-   ::oUI:q_comboTemplate:setCurrentIndex( iif( oFunc:cTemplate == "Procedure", 1, ;
+   ::oUI:comboTemplate:setCurrentIndex( iif( oFunc:cTemplate == "Procedure", 1, ;
                                           iif( oFunc:cTemplate == "Class", 2, 0 ) ) )
    RETURN Self
 
@@ -609,9 +609,9 @@ METHOD IdeDocWriter:parsePrototype( cProto )
 METHOD IdeDocWriter:saveInFile()
    LOCAL cFile, cBuffer
    LOCAL txt_    := ::buildDocument()
-   LOCAL n       := ::oUI:q_comboTemplate:currentIndex()
+   LOCAL n       := ::oUI:comboTemplate:currentIndex()
    LOCAL cPrefix := iif( n == 0, "fun_", iif( n == 1, "proc_", "class_" ) )
-   LOCAL cName   := lower( ::oUI:q_editName:text() )
+   LOCAL cName   := lower( ::oUI:editName:text() )
 
    cName := strtran( cName, "(", "" )
    cName := strtran( cName, ")", "" )
@@ -677,51 +677,51 @@ METHOD IdeDocWriter:saveInFunction()
 
 METHOD IdeDocWriter:buildDocument()
    LOCAL s
-   LOCAL nIndex := ::oUI:q_comboTemplate:currentIndex()
+   LOCAL nIndex := ::oUI:comboTemplate:currentIndex()
 
    LOCAL hEntry := { => }
 
    hb_HKeepOrder( hEntry, .T. )
 
    hEntry[ "TEMPLATE"     ] := iif( nIndex == 2, "Class", iif( nIndex == 1, "Procedure", "Function" ) )
-   IF !empty( s := ::oUI:q_editName:text() )
+   IF !empty( s := ::oUI:editName:text() )
       hEntry[ "NAME"         ] := s
    ENDIF
-   IF !empty( s := ::oUI:q_editCategory:text() )
+   IF !empty( s := ::oUI:editCategory:text() )
       hEntry[ "CATEGORY"     ] := s
    ENDIF
-   IF !empty( s := ::oUI:q_editSubCategory:text() )
+   IF !empty( s := ::oUI:editSubCategory:text() )
       hEntry[ "SUBCATEGORY"  ] := s
    ENDIF
-   IF !empty( s := ::oUI:q_editExtLink:text() )
+   IF !empty( s := ::oUI:editExtLink:text() )
       hEntry[ "EXTERNALLINK" ] := s
    ENDIF
-   IF !empty( s := ::oUI:q_editOneLiner:text() )
+   IF !empty( s := ::oUI:editOneLiner:text() )
       hEntry[ "ONELINER"     ] := s
    ENDIF
-   IF !empty( s := ::oUI:q_editSyntax:text() )
+   IF !empty( s := ::oUI:editSyntax:text() )
       hEntry[ "SYNTAX"       ] := s
    ENDIF
-   hEntry[ "ARGUMENTS"    ] := ::oUI:q_plainArgs:toPlainText()
-   IF !empty( s := ::oUI:q_editReturns:text() )
+   hEntry[ "ARGUMENTS"    ] := ::oUI:plainArgs:toPlainText()
+   IF !empty( s := ::oUI:editReturns:text() )
       hEntry[ "RETURNS"      ] := s
    ENDIF
-   hEntry[ "DESCRIPTION"  ] := ::oUI:q_plainDesc:toPlainText()
-   hEntry[ "EXAMPLES"     ] := ::oUI:q_plainExamples:toPlainText()
-   hEntry[ "TESTS"        ] := ::oUI:q_plainTests:toPlainText()
-   IF !empty( s := ::oUI:q_editStatus:text() )
+   hEntry[ "DESCRIPTION"  ] := ::oUI:plainDesc:toPlainText()
+   hEntry[ "EXAMPLES"     ] := ::oUI:plainExamples:toPlainText()
+   hEntry[ "TESTS"        ] := ::oUI:plainTests:toPlainText()
+   IF !empty( s := ::oUI:editStatus:text() )
       hEntry[ "STATUS"       ] := s
    ENDIF
-   IF !empty( s := ::oUI:q_editCompliance:text() )
+   IF !empty( s := ::oUI:editCompliance:text() )
       hEntry[ "PLATFORMS"    ] := s
    ENDIF
-   IF !empty( s := ::oUI:q_editVersion:text() )
+   IF !empty( s := ::oUI:editVersion:text() )
       hEntry[ "VERSION"      ] := s
    ENDIF
-   IF !empty( s := ::oUI:q_editFiles:text() )
+   IF !empty( s := ::oUI:editFiles:text() )
       hEntry[ "FILES"        ] := s
    ENDIF
-   IF !empty( s := ::oUI:q_editSeeAlso:text() )
+   IF !empty( s := ::oUI:editSeeAlso:text() )
       hEntry[ "SEEALSO"      ] := s
    ENDIF
 

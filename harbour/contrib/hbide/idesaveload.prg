@@ -1163,42 +1163,42 @@ METHOD IdeSetup:eol()
 
 METHOD IdeSetup:setIcons()
 
-   ::oUI:q_buttonAddTextExt    : setIcon( QIcon( hbide_image( "dc_plus"   ) ) )
-   ::oUI:q_buttonDelTextExt    : setIcon( QIcon( hbide_image( "dc_delete" ) ) )
+   ::oUI:buttonAddTextExt    : setIcon( QIcon( hbide_image( "dc_plus"   ) ) )
+   ::oUI:buttonDelTextExt    : setIcon( QIcon( hbide_image( "dc_delete" ) ) )
 
-   ::oUI:q_buttonKeyAdd        : setIcon( QIcon( hbide_image( "dc_plus"   ) ) )
-   ::oUI:q_buttonKeyDel        : setIcon( QIcon( hbide_image( "dc_delete" ) ) )
-   ::oUI:q_buttonKeyUp         : setIcon( QIcon( hbide_image( "dc_up"     ) ) )
-   ::oUI:q_buttonKeyDown       : setIcon( QIcon( hbide_image( "dc_down"   ) ) )
+   ::oUI:buttonKeyAdd        : setIcon( QIcon( hbide_image( "dc_plus"   ) ) )
+   ::oUI:buttonKeyDel        : setIcon( QIcon( hbide_image( "dc_delete" ) ) )
+   ::oUI:buttonKeyUp         : setIcon( QIcon( hbide_image( "dc_up"     ) ) )
+   ::oUI:buttonKeyDown       : setIcon( QIcon( hbide_image( "dc_down"   ) ) )
 
    /* Paths */
-   ::oUI:q_buttonPathHrbRoot   : setIcon( QIcon( hbide_image( "open"      ) ) )
-   ::oUI:q_buttonPathHbmk2     : setIcon( QIcon( hbide_image( "open"      ) ) )
-   ::oUI:q_buttonPathEnv       : setIcon( QIcon( hbide_image( "open"      ) ) )
-   ::oUI:q_buttonPathResources : setIcon( QIcon( hbide_image( "open"      ) ) )
-   ::oUI:q_buttonPathTemp      : setIcon( QIcon( hbide_image( "open"      ) ) )
-   ::oUI:q_buttonPathShortcuts : setIcon( QIcon( hbide_image( "open"      ) ) )
-   ::oUI:q_buttonPathSnippets  : setIcon( QIcon( hbide_image( "open"      ) ) )
-   ::oUI:q_buttonPathThemes    : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:buttonPathHrbRoot   : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:buttonPathHbmk2     : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:buttonPathEnv       : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:buttonPathResources : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:buttonPathTemp      : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:buttonPathShortcuts : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:buttonPathSnippets  : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:buttonPathThemes    : setIcon( QIcon( hbide_image( "open"      ) ) )
 
-   ::oUI:q_buttonViewIni       : setIcon( QIcon( hbide_image( "file-open" ) ) )
-   ::oUI:q_buttonViewEnv       : setIcon( QIcon( hbide_image( "file-open" ) ) )
-   ::oUI:q_buttonViewSnippets  : setIcon( QIcon( hbide_image( "file-open" ) ) )
-   ::oUI:q_buttonViewThemes    : setIcon( QIcon( hbide_image( "file-open" ) ) )
+   ::oUI:buttonViewIni       : setIcon( QIcon( hbide_image( "file-open" ) ) )
+   ::oUI:buttonViewEnv       : setIcon( QIcon( hbide_image( "file-open" ) ) )
+   ::oUI:buttonViewSnippets  : setIcon( QIcon( hbide_image( "file-open" ) ) )
+   ::oUI:buttonViewThemes    : setIcon( QIcon( hbide_image( "file-open" ) ) )
 
-   ::oUI:q_buttonSelFont       : setIcon( QIcon( hbide_image( "font"      ) ) )
+   ::oUI:buttonSelFont       : setIcon( QIcon( hbide_image( "font"      ) ) )
 
-   ::oUI:q_buttonThmAdd        : setIcon( QIcon( hbide_image( "dc_plus"   ) ) )
-   ::oUI:q_buttonThmDel        : setIcon( QIcon( hbide_image( "dc_delete" ) ) )
-   ::oUI:q_buttonThmApp        : setIcon( QIcon( hbide_image( "copy"      ) ) )
-   ::oUI:q_buttonThmSav        : setIcon( QIcon( hbide_image( "save"      ) ) )
+   ::oUI:buttonThmAdd        : setIcon( QIcon( hbide_image( "dc_plus"   ) ) )
+   ::oUI:buttonThmDel        : setIcon( QIcon( hbide_image( "dc_delete" ) ) )
+   ::oUI:buttonThmApp        : setIcon( QIcon( hbide_image( "copy"      ) ) )
+   ::oUI:buttonThmSav        : setIcon( QIcon( hbide_image( "save"      ) ) )
 
    /* Dictionaries */
-   ::oUI:q_buttonDictPath      : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:buttonDictPath      : setIcon( QIcon( hbide_image( "open"      ) ) )
 
    /* VSS */
-   ::oUI:q_buttonVSSExe        : setIcon( QIcon( hbide_image( "open"      ) ) )
-   ::oUI:q_buttonVSSDatabase   : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:buttonVSSExe        : setIcon( QIcon( hbide_image( "open"      ) ) )
+   ::oUI:buttonVSSDatabase   : setIcon( QIcon( hbide_image( "open"      ) ) )
 
    RETURN Self
 
@@ -1206,74 +1206,74 @@ METHOD IdeSetup:setIcons()
 
 METHOD IdeSetup:disConnectSlots()
 
-   ::oUI:q_buttonAddTextExt    :disconnect( "clicked()"                )
-   ::oUI:q_buttonDelTextExt    :disconnect( "clicked()"                )
+   ::oUI:buttonAddTextExt    :disconnect( "clicked()"                )
+   ::oUI:buttonDelTextExt    :disconnect( "clicked()"                )
 
-   ::oUI:q_buttonKeyAdd        :disconnect( "clicked()"                )
-   ::oUI:q_buttonKeyDel        :disconnect( "clicked()"                )
-   ::oUI:q_buttonKeyUp         :disconnect( "clicked()"                )
-   ::oUI:q_buttonKeyDown       :disconnect( "clicked()"                )
+   ::oUI:buttonKeyAdd        :disconnect( "clicked()"                )
+   ::oUI:buttonKeyDel        :disconnect( "clicked()"                )
+   ::oUI:buttonKeyUp         :disconnect( "clicked()"                )
+   ::oUI:buttonKeyDown       :disconnect( "clicked()"                )
 
-   ::oUI:q_tableVar            :disconnect( "itemActivated(QTableWidgetItem*)" )
+   ::oUI:tableVar            :disconnect( "itemActivated(QTableWidgetItem*)" )
 
-   ::oUI:q_buttonSelFont       :disconnect( "clicked()"                )
-   ::oUI:q_buttonClose         :disConnect( "clicked()"                )
-   ::oUI:q_buttonOK            :disConnect( "clicked()"                )
-   ::oUI:q_buttonCancel        :disConnect( "clicked()"                )
-   ::oUI:q_treeWidget          :disConnect( "itemSelectionChanged()"   )
-   ::oUI:q_comboStyle          :disconnect( "currentIndexChanged(int)" )
+   ::oUI:buttonSelFont       :disconnect( "clicked()"                )
+   ::oUI:buttonClose         :disConnect( "clicked()"                )
+   ::oUI:buttonOK            :disConnect( "clicked()"                )
+   ::oUI:buttonCancel        :disConnect( "clicked()"                )
+   ::oUI:treeWidget          :disConnect( "itemSelectionChanged()"   )
+   ::oUI:comboStyle          :disconnect( "currentIndexChanged(int)" )
 
-   ::oUI:q_checkAnimated       :disconnect( "stateChanged(int)"        )
+   ::oUI:checkAnimated       :disconnect( "stateChanged(int)"        )
 
-   ::oUI:q_checkHilightLine    :disconnect( "stateChanged(int)"        )
-   ::oUI:q_checkHorzRuler      :disconnect( "stateChanged(int)"        )
-   ::oUI:q_checkLineNumbers    :disconnect( "stateChanged(int)"        )
-   ::oUI:q_checkShowLeftToolbar:disconnect( "stateChanged(int)"        )
-   ::oUI:q_checkShowTopToolbar :disconnect( "stateChanged(int)"        )
+   ::oUI:checkHilightLine    :disconnect( "stateChanged(int)"        )
+   ::oUI:checkHorzRuler      :disconnect( "stateChanged(int)"        )
+   ::oUI:checkLineNumbers    :disconnect( "stateChanged(int)"        )
+   ::oUI:checkShowLeftToolbar:disconnect( "stateChanged(int)"        )
+   ::oUI:checkShowTopToolbar :disconnect( "stateChanged(int)"        )
 
-   ::oUI:q_sliderRed           :disconnect( "valueChanged(int)"        )
-   ::oUI:q_sliderGreen         :disconnect( "valueChanged(int)"        )
-   ::oUI:q_sliderBlue          :disconnect( "valueChanged(int)"        )
+   ::oUI:sliderRed           :disconnect( "valueChanged(int)"        )
+   ::oUI:sliderGreen         :disconnect( "valueChanged(int)"        )
+   ::oUI:sliderBlue          :disconnect( "valueChanged(int)"        )
 
-   ::oUI:q_radioSec1           :disconnect( "clicked()"                )
-   ::oUI:q_radioSec2           :disconnect( "clicked()"                )
-   ::oUI:q_radioSec3           :disconnect( "clicked()"                )
-   ::oUI:q_radioSec4           :disconnect( "clicked()"                )
-   ::oUI:q_radioSec5           :disconnect( "clicked()"                )
+   ::oUI:radioSec1           :disconnect( "clicked()"                )
+   ::oUI:radioSec2           :disconnect( "clicked()"                )
+   ::oUI:radioSec3           :disconnect( "clicked()"                )
+   ::oUI:radioSec4           :disconnect( "clicked()"                )
+   ::oUI:radioSec5           :disconnect( "clicked()"                )
 
-   ::oUI:q_buttonThmAdd        :disconnect( "clicked()"                )
-   ::oUI:q_buttonThmDel        :disconnect( "clicked()"                )
-   ::oUI:q_buttonThmApp        :disconnect( "clicked()"                )
-   ::oUI:q_buttonThmSav        :disconnect( "clicked()"                )
+   ::oUI:buttonThmAdd        :disconnect( "clicked()"                )
+   ::oUI:buttonThmDel        :disconnect( "clicked()"                )
+   ::oUI:buttonThmApp        :disconnect( "clicked()"                )
+   ::oUI:buttonThmSav        :disconnect( "clicked()"                )
 
-   ::oUI:q_listThemes          :disconnect( "currentRowChanged(int)"   )
+   ::oUI:listThemes          :disconnect( "currentRowChanged(int)"   )
 
-   ::oUI:q_buttonPathHrbRoot   :disconnect( "clicked()"                )
-   ::oUI:q_buttonPathHbmk2     :disconnect( "clicked()"                )
-   ::oUI:q_buttonPathEnv       :disconnect( "clicked()"                )
-   ::oUI:q_buttonPathResources :disconnect( "clicked()"                )
-   ::oUI:q_buttonPathTemp      :disconnect( "clicked()"                )
-   ::oUI:q_buttonPathShortcuts :disconnect( "clicked()"                )
-   ::oUI:q_buttonPathSnippets  :disconnect( "clicked()"                )
-   ::oUI:q_buttonPathThemes    :disconnect( "clicked()"                )
+   ::oUI:buttonPathHrbRoot   :disconnect( "clicked()"                )
+   ::oUI:buttonPathHbmk2     :disconnect( "clicked()"                )
+   ::oUI:buttonPathEnv       :disconnect( "clicked()"                )
+   ::oUI:buttonPathResources :disconnect( "clicked()"                )
+   ::oUI:buttonPathTemp      :disconnect( "clicked()"                )
+   ::oUI:buttonPathShortcuts :disconnect( "clicked()"                )
+   ::oUI:buttonPathSnippets  :disconnect( "clicked()"                )
+   ::oUI:buttonPathThemes    :disconnect( "clicked()"                )
 
-   ::oUI:q_buttonViewIni       :disconnect( "clicked()"                )
-   ::oUI:q_buttonViewEnv       :disconnect( "clicked()"                )
-   ::oUI:q_buttonViewSnippets  :disconnect( "clicked()"                )
-   ::oUI:q_buttonViewThemes    :disconnect( "clicked()"                )
+   ::oUI:buttonViewIni       :disconnect( "clicked()"                )
+   ::oUI:buttonViewEnv       :disconnect( "clicked()"                )
+   ::oUI:buttonViewSnippets  :disconnect( "clicked()"                )
+   ::oUI:buttonViewThemes    :disconnect( "clicked()"                )
 
    /* Dictionaries */
-   ::oUI:q_buttonDictPath      :disconnect( "clicked()"                )
+   ::oUI:buttonDictPath      :disconnect( "clicked()"                )
 
-   ::oUI:q_comboTabsShape      :disconnect( "currentIndexChanged(int)" )
-   ::oUI:q_comboLeftTabPos     :disconnect( "currentIndexChanged(int)" )
-   ::oUI:q_comboTopTabPos      :disconnect( "currentIndexChanged(int)" )
-   ::oUI:q_comboRightTabPos    :disconnect( "currentIndexChanged(int)" )
-   ::oUI:q_comboBottomTabPos   :disconnect( "currentIndexChanged(int)" )
-   ::oUI:q_comboTBSize         :disconnect( "currentIndexChanged(int)" )
+   ::oUI:comboTabsShape      :disconnect( "currentIndexChanged(int)" )
+   ::oUI:comboLeftTabPos     :disconnect( "currentIndexChanged(int)" )
+   ::oUI:comboTopTabPos      :disconnect( "currentIndexChanged(int)" )
+   ::oUI:comboRightTabPos    :disconnect( "currentIndexChanged(int)" )
+   ::oUI:comboBottomTabPos   :disconnect( "currentIndexChanged(int)" )
+   ::oUI:comboTBSize         :disconnect( "currentIndexChanged(int)" )
 
-   ::oUI:q_buttonVSSExe        :disconnect( "clicked()"                )
-   ::oUI:q_buttonVSSDatabase   :disconnect( "clicked()"                )
+   ::oUI:buttonVSSExe        :disconnect( "clicked()"                )
+   ::oUI:buttonVSSDatabase   :disconnect( "clicked()"                )
 
    RETURN Self
 
@@ -1281,73 +1281,73 @@ METHOD IdeSetup:disConnectSlots()
 
 METHOD IdeSetup:connectSlots()
 
-   ::oUI:q_buttonAddTextExt    :connect( "clicked()"               , {| | ::execEvent( "buttonAddTextext_clicked"          ) } )
-   ::oUI:q_buttonDelTextExt    :connect( "clicked()"               , {| | ::execEvent( "buttonDelTextext_clicked"          ) } )
+   ::oUI:buttonAddTextExt    :connect( "clicked()"               , {| | ::execEvent( "buttonAddTextext_clicked"          ) } )
+   ::oUI:buttonDelTextExt    :connect( "clicked()"               , {| | ::execEvent( "buttonDelTextext_clicked"          ) } )
 
-   ::oUI:q_buttonKeyAdd        :connect( "clicked()"               , {| | ::execEvent( "buttonKeyAdd_clicked"              ) } )
-   ::oUI:q_buttonKeyDel        :connect( "clicked()"               , {| | ::execEvent( "buttonKeyDel_clicked"              ) } )
-   ::oUI:q_buttonKeyUp         :connect( "clicked()"               , {| | ::execEvent( "buttonKeyUp_clicked"               ) } )
-   ::oUI:q_buttonKeyDown       :connect( "clicked()"               , {| | ::execEvent( "buttonKeyDown_clicked"             ) } )
+   ::oUI:buttonKeyAdd        :connect( "clicked()"               , {| | ::execEvent( "buttonKeyAdd_clicked"              ) } )
+   ::oUI:buttonKeyDel        :connect( "clicked()"               , {| | ::execEvent( "buttonKeyDel_clicked"              ) } )
+   ::oUI:buttonKeyUp         :connect( "clicked()"               , {| | ::execEvent( "buttonKeyUp_clicked"               ) } )
+   ::oUI:buttonKeyDown       :connect( "clicked()"               , {| | ::execEvent( "buttonKeyDown_clicked"             ) } )
 
-   ::oUI:q_tableVar            :connect( "itemActivated(QTableWidgetItem*)", {|p| ::execEvent( "tableVar_keyPress", p              ) } )
+   ::oUI:tableVar            :connect( "itemActivated(QTableWidgetItem*)", {|p| ::execEvent( "tableVar_keyPress", p              ) } )
 
-   ::oUI:q_buttonSelFont       :connect( "clicked()"               , {| | ::execEvent( "buttonSelFont_clicked"             ) } )
-   ::oUI:q_buttonClose         :connect( "clicked()"               , {| | ::execEvent( "buttonClose_clicked"               ) } )
-   ::oUI:q_buttonOk            :connect( "clicked()"               , {| | ::execEvent( "buttonOk_clicked"                  ) } )
-   ::oUI:q_buttonCancel        :connect( "clicked()"               , {| | ::execEvent( "buttonCancel_clicked"              ) } )
-   ::oUI:q_treeWidget          :connect( "itemSelectionChanged()"  , {| | ::execEvent( "treeWidget_itemSelectionChanged"   ) } )
-   ::oUI:q_comboStyle          :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboStyle_currentIndexChanged", i ) } )
+   ::oUI:buttonSelFont       :connect( "clicked()"               , {| | ::execEvent( "buttonSelFont_clicked"             ) } )
+   ::oUI:buttonClose         :connect( "clicked()"               , {| | ::execEvent( "buttonClose_clicked"               ) } )
+   ::oUI:buttonOk            :connect( "clicked()"               , {| | ::execEvent( "buttonOk_clicked"                  ) } )
+   ::oUI:buttonCancel        :connect( "clicked()"               , {| | ::execEvent( "buttonCancel_clicked"              ) } )
+   ::oUI:treeWidget          :connect( "itemSelectionChanged()"  , {| | ::execEvent( "treeWidget_itemSelectionChanged"   ) } )
+   ::oUI:comboStyle          :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboStyle_currentIndexChanged", i ) } )
 
-   ::oUI:q_checkAnimated       :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkAnimated_stateChanged", i     ) } )
+   ::oUI:checkAnimated       :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkAnimated_stateChanged", i     ) } )
 
-   ::oUI:q_checkHilightLine    :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkHilightLine_stateChanged", i  ) } )
-   ::oUI:q_checkHorzRuler      :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkHorzRuler_stateChanged"  , i  ) } )
-   ::oUI:q_checkLineNumbers    :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkLineNumbers_stateChanged", i  ) } )
-   ::oUI:q_checkShowLeftToolbar:connect( "stateChanged(int)"       , {|i| ::execEvent( "checkShowLeftToolbar_stateChanged", i  ) } )
-   ::oUI:q_checkShowTopToolbar :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkShowTopToolbar_stateChanged", i  ) } )
+   ::oUI:checkHilightLine    :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkHilightLine_stateChanged", i  ) } )
+   ::oUI:checkHorzRuler      :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkHorzRuler_stateChanged"  , i  ) } )
+   ::oUI:checkLineNumbers    :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkLineNumbers_stateChanged", i  ) } )
+   ::oUI:checkShowLeftToolbar:connect( "stateChanged(int)"       , {|i| ::execEvent( "checkShowLeftToolbar_stateChanged", i  ) } )
+   ::oUI:checkShowTopToolbar :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkShowTopToolbar_stateChanged", i  ) } )
 
-   ::oUI:q_sliderRed           :connect( "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "R"       ) } )
-   ::oUI:q_sliderGreen         :connect( "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "G"       ) } )
-   ::oUI:q_sliderBlue          :connect( "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "B"       ) } )
+   ::oUI:sliderRed           :connect( "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "R"       ) } )
+   ::oUI:sliderGreen         :connect( "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "G"       ) } )
+   ::oUI:sliderBlue          :connect( "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "B"       ) } )
 
-   ::oUI:q_radioSec1           :connect( "clicked()"               , {| | ::execEvent( "radioSection_clicked", 1           ) } )
-   ::oUI:q_radioSec2           :connect( "clicked()"               , {| | ::execEvent( "radioSection_clicked", 2           ) } )
-   ::oUI:q_radioSec3           :connect( "clicked()"               , {| | ::execEvent( "radioSection_clicked", 3           ) } )
-   ::oUI:q_radioSec4           :connect( "clicked()"               , {| | ::execEvent( "radioSection_clicked", 4           ) } )
-   ::oUI:q_radioSec5           :connect( "clicked()"               , {| | ::execEvent( "radioSection_clicked", 5           ) } )
+   ::oUI:radioSec1           :connect( "clicked()"               , {| | ::execEvent( "radioSection_clicked", 1           ) } )
+   ::oUI:radioSec2           :connect( "clicked()"               , {| | ::execEvent( "radioSection_clicked", 2           ) } )
+   ::oUI:radioSec3           :connect( "clicked()"               , {| | ::execEvent( "radioSection_clicked", 3           ) } )
+   ::oUI:radioSec4           :connect( "clicked()"               , {| | ::execEvent( "radioSection_clicked", 4           ) } )
+   ::oUI:radioSec5           :connect( "clicked()"               , {| | ::execEvent( "radioSection_clicked", 5           ) } )
 
-   ::oUI:q_buttonThmAdd        :connect( "clicked()"               , {| | ::execEvent( "buttonThmAdd_clicked"              ) } )
-   ::oUI:q_buttonThmDel        :connect( "clicked()"               , {| | ::execEvent( "buttonThmDel_clicked"              ) } )
-   ::oUI:q_buttonThmApp        :connect( "clicked()"               , {| | ::execEvent( "buttonThmApp_clicked"              ) } )
-   ::oUI:q_buttonThmSav        :connect( "clicked()"               , {| | ::execEvent( "buttonThmSav_clicked"              ) } )
+   ::oUI:buttonThmAdd        :connect( "clicked()"               , {| | ::execEvent( "buttonThmAdd_clicked"              ) } )
+   ::oUI:buttonThmDel        :connect( "clicked()"               , {| | ::execEvent( "buttonThmDel_clicked"              ) } )
+   ::oUI:buttonThmApp        :connect( "clicked()"               , {| | ::execEvent( "buttonThmApp_clicked"              ) } )
+   ::oUI:buttonThmSav        :connect( "clicked()"               , {| | ::execEvent( "buttonThmSav_clicked"              ) } )
 
-   ::oUI:q_listThemes          :connect( "currentRowChanged(int)"  , {|i| ::execEvent( "listThemes_currentRowChanged", i   ) } )
+   ::oUI:listThemes          :connect( "currentRowChanged(int)"  , {|i| ::execEvent( "listThemes_currentRowChanged", i   ) } )
 
-   ::oUI:q_buttonPathHrbRoot   :connect( "clicked()"               , {| | ::execEvent( "buttonHrbRoot_clicked"             ) } )
-   ::oUI:q_buttonPathHbmk2     :connect( "clicked()"               , {| | ::execEvent( "buttonHbmk2_clicked"               ) } )
-   ::oUI:q_buttonPathEnv       :connect( "clicked()"               , {| | ::execEvent( "buttonEnv_clicked"                 ) } )
-   ::oUI:q_buttonPathResources :connect( "clicked()"               , {| | ::execEvent( "buttonResources_clicked"           ) } )
-   ::oUI:q_buttonPathTemp      :connect( "clicked()"               , {| | ::execEvent( "buttonTemp_clicked"                ) } )
-   ::oUI:q_buttonPathShortcuts :connect( "clicked()"               , {| | ::execEvent( "buttonShortcuts_clicked"           ) } )
-   ::oUI:q_buttonPathSnippets  :connect( "clicked()"               , {| | ::execEvent( "buttonSnippets_clicked"            ) } )
-   ::oUI:q_buttonPathThemes    :connect( "clicked()"               , {| | ::execEvent( "buttonThemes_clicked"              ) } )
+   ::oUI:buttonPathHrbRoot   :connect( "clicked()"               , {| | ::execEvent( "buttonHrbRoot_clicked"             ) } )
+   ::oUI:buttonPathHbmk2     :connect( "clicked()"               , {| | ::execEvent( "buttonHbmk2_clicked"               ) } )
+   ::oUI:buttonPathEnv       :connect( "clicked()"               , {| | ::execEvent( "buttonEnv_clicked"                 ) } )
+   ::oUI:buttonPathResources :connect( "clicked()"               , {| | ::execEvent( "buttonResources_clicked"           ) } )
+   ::oUI:buttonPathTemp      :connect( "clicked()"               , {| | ::execEvent( "buttonTemp_clicked"                ) } )
+   ::oUI:buttonPathShortcuts :connect( "clicked()"               , {| | ::execEvent( "buttonShortcuts_clicked"           ) } )
+   ::oUI:buttonPathSnippets  :connect( "clicked()"               , {| | ::execEvent( "buttonSnippets_clicked"            ) } )
+   ::oUI:buttonPathThemes    :connect( "clicked()"               , {| | ::execEvent( "buttonThemes_clicked"              ) } )
 
-   ::oUI:q_buttonViewIni       :connect( "clicked()"               , {| | ::execEvent( "buttonViewIni_clicked"             ) } )
-   ::oUI:q_buttonViewEnv       :connect( "clicked()"               , {| | ::execEvent( "buttonViewEnv_clicked"             ) } )
-   ::oUI:q_buttonViewSnippets  :connect( "clicked()"               , {| | ::execEvent( "buttonViewSnippets_clicked"        ) } )
-   ::oUI:q_buttonViewThemes    :connect( "clicked()"               , {| | ::execEvent( "buttonViewThemes_clicked"          ) } )
+   ::oUI:buttonViewIni       :connect( "clicked()"               , {| | ::execEvent( "buttonViewIni_clicked"             ) } )
+   ::oUI:buttonViewEnv       :connect( "clicked()"               , {| | ::execEvent( "buttonViewEnv_clicked"             ) } )
+   ::oUI:buttonViewSnippets  :connect( "clicked()"               , {| | ::execEvent( "buttonViewSnippets_clicked"        ) } )
+   ::oUI:buttonViewThemes    :connect( "clicked()"               , {| | ::execEvent( "buttonViewThemes_clicked"          ) } )
 
-   ::oUI:q_buttonDictPath      :connect( "clicked()"               , {| | ::execEvent( "buttonDictPath_clicked"            ) } )
+   ::oUI:buttonDictPath      :connect( "clicked()"               , {| | ::execEvent( "buttonDictPath_clicked"            ) } )
 
-   ::oUI:q_comboTabsShape      :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboTabsShape_currentIndexChanged"   , i ) } )
-   ::oUI:q_comboLeftTabPos     :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboLeftTabPos_currentIndexChanged"  , i ) } )
-   ::oUI:q_comboTopTabPos      :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboTopTabPos_currentIndexChanged"   , i ) } )
-   ::oUI:q_comboRightTabPos    :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboRightTabPos_currentIndexChanged" , i ) } )
-   ::oUI:q_comboBottomTabPos   :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboBottomTabPos_currentIndexChanged", i ) } )
-   ::oUI:q_comboTBSize         :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboTBSize_currentIndexChanged"      , i ) } )
+   ::oUI:comboTabsShape      :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboTabsShape_currentIndexChanged"   , i ) } )
+   ::oUI:comboLeftTabPos     :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboLeftTabPos_currentIndexChanged"  , i ) } )
+   ::oUI:comboTopTabPos      :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboTopTabPos_currentIndexChanged"   , i ) } )
+   ::oUI:comboRightTabPos    :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboRightTabPos_currentIndexChanged" , i ) } )
+   ::oUI:comboBottomTabPos   :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboBottomTabPos_currentIndexChanged", i ) } )
+   ::oUI:comboTBSize         :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboTBSize_currentIndexChanged"      , i ) } )
 
-   ::oUI:q_buttonVSSExe        :connect( "clicked()"               , {| | ::execEvent( "buttonVSSExe_clicked"              ) } )
-   ::oUI:q_buttonVSSDatabase   :connect( "clicked()"               , {| | ::execEvent( "buttonVSSDatabase_clicked"         ) } )
+   ::oUI:buttonVSSExe        :connect( "clicked()"               , {| | ::execEvent( "buttonVSSExe_clicked"              ) } )
+   ::oUI:buttonVSSDatabase   :connect( "clicked()"               , {| | ::execEvent( "buttonVSSDatabase_clicked"         ) } )
 
    RETURN Self
 
@@ -1356,23 +1356,23 @@ METHOD IdeSetup:connectSlots()
 METHOD IdeSetup:retrieve()
    LOCAL a_, i, s, qItm
 
-   ::oINI:cLineEndingMode          := iif( ::oUI:q_radioLineEndCRLF : isChecked(), "CRLF", ;
-                                      iif( ::oUI:q_radioLineEndCR   : isChecked(), "CR"  , ;
-                                      iif( ::oUI:q_radioLineEndLF   : isChecked(), "LF"  , ;
-                                      iif( ::oUI:q_radioLineEndOS   : isChecked(), "OS"  , ;
-                                      iif( ::oUI:q_radioLineEndAuto : isChecked(), "AUTO", "CRLF" ) ) ) ) )
+   ::oINI:cLineEndingMode          := iif( ::oUI:radioLineEndCRLF : isChecked(), "CRLF", ;
+                                      iif( ::oUI:radioLineEndCR   : isChecked(), "CR"  , ;
+                                      iif( ::oUI:radioLineEndLF   : isChecked(), "LF"  , ;
+                                      iif( ::oUI:radioLineEndOS   : isChecked(), "OS"  , ;
+                                      iif( ::oUI:radioLineEndAuto : isChecked(), "AUTO", "CRLF" ) ) ) ) )
 
-   ::oINI:lTrimTrailingBlanks      := ::oUI:q_checkTrimTrailingBlanks      : isChecked()
-   ::oINI:lSaveSourceWhenComp      := ::oUI:q_checkSaveSourceWhenComp      : isChecked()
-   ::oINI:lSupressHbKWordsToUpper  := ::oUI:q_checkSupressHbKWordsToUpper  : isChecked()
-   ::oINI:lReturnAsBeginKeyword    := ::oUI:q_checkReturnAsBeginKeyword    : isChecked()
-   ::oINI:lConvTabToSpcWhenLoading := ::oUI:q_checkConvTabToSpcWhenLoading : isChecked()
-   ::oINI:lTabToSpcInEdits         := ::oUI:q_checkTabToSpcInEdits         : isChecked()
-   ::oINI:lAutoIndent              := ::oUI:q_checkAutoIndent              : isChecked()
-   ::oINI:lSmartIndent             := ::oUI:q_checkSmartIndent             : isChecked()
-   ::oIde:nTabSpaces               := val( ::oUI:q_editTabSpaces           : text() )
-   ::oINI:nIndentSpaces            := val( ::oUI:q_editIndentSpaces        : text() )
-   ::oINI:lEditsMdi                := ::oUI:q_checkEditsMdi                : isChecked()
+   ::oINI:lTrimTrailingBlanks      := ::oUI:checkTrimTrailingBlanks      : isChecked()
+   ::oINI:lSaveSourceWhenComp      := ::oUI:checkSaveSourceWhenComp      : isChecked()
+   ::oINI:lSupressHbKWordsToUpper  := ::oUI:checkSupressHbKWordsToUpper  : isChecked()
+   ::oINI:lReturnAsBeginKeyword    := ::oUI:checkReturnAsBeginKeyword    : isChecked()
+   ::oINI:lConvTabToSpcWhenLoading := ::oUI:checkConvTabToSpcWhenLoading : isChecked()
+   ::oINI:lTabToSpcInEdits         := ::oUI:checkTabToSpcInEdits         : isChecked()
+   ::oINI:lAutoIndent              := ::oUI:checkAutoIndent              : isChecked()
+   ::oINI:lSmartIndent             := ::oUI:checkSmartIndent             : isChecked()
+   ::oIde:nTabSpaces               := val( ::oUI:editTabSpaces           : text() )
+   ::oINI:nIndentSpaces            := val( ::oUI:editIndentSpaces        : text() )
+   ::oINI:lEditsMdi                := ::oUI:checkEditsMdi                : isChecked()
 
    ::oINI:aKeywords := {}
    FOR EACH a_ IN ::aKeyItems
@@ -1380,28 +1380,28 @@ METHOD IdeSetup:retrieve()
    NEXT
 
    s := ""
-   FOR i := 1 TO ::oUI:q_listTextExt:count()
-      qItm := ::oUI:q_listTextExt:item( i - 1 )
+   FOR i := 1 TO ::oUI:listTextExt:count()
+      qItm := ::oUI:listTextExt:item( i - 1 )
       s += "." + qItm:text() + ","
    NEXT
    s := substr( s, 1, Len( s ) - 1 )
    ::oINI:cTextFileExtensions := s
 
-   ::oINI:nTmpBkpPrd               := val( ::oUI:q_editTmpBkpPrd : text() )
-   ::oINI:cBkpPath                 := ::oUI:q_editBkpPath        : text()
-   ::oINI:cBkpSuffix               := ::oUI:q_editBkpSuffix      : text()
-   ::oINI:lCompletionWithArgs      := ::oUI:q_checkListlWithArgs : isChecked()
-   ::oINI:lCompleteArgumented      := ::oUI:q_checkCmplInclArgs  : isChecked()
+   ::oINI:nTmpBkpPrd               := val( ::oUI:editTmpBkpPrd : text() )
+   ::oINI:cBkpPath                 := ::oUI:editBkpPath        : text()
+   ::oINI:cBkpSuffix               := ::oUI:editBkpSuffix      : text()
+   ::oINI:lCompletionWithArgs      := ::oUI:checkListlWithArgs : isChecked()
+   ::oINI:lCompleteArgumented      := ::oUI:checkCmplInclArgs  : isChecked()
 
    /* Paths */
-   ::oINI:cPathHrbRoot             := ::oUI:q_editPathHrbRoot    : text()
-   ::oINI:cPathHbMk2               := ::oUI:q_editPathHbMk2      : text()
-   ::oINI:cPathResources           := ::oUI:q_editPathResources  : text()
-   ::oINI:cPathTemp                := ::oUI:q_editPathTemp       : text()
-   ::oINI:cPathEnv                 := ::oUI:q_editPathEnv        : text()
-   ::oINI:cPathShortcuts           := ::oUI:q_editPathShortcuts  : text()
-   ::oINI:cPathSnippets            := ::oUI:q_editPathSnippets   : text()
-   ::oINI:cPathThemes              := ::oUI:q_editPathThemes     : text()
+   ::oINI:cPathHrbRoot             := ::oUI:editPathHrbRoot    : text()
+   ::oINI:cPathHbMk2               := ::oUI:editPathHbMk2      : text()
+   ::oINI:cPathResources           := ::oUI:editPathResources  : text()
+   ::oINI:cPathTemp                := ::oUI:editPathTemp       : text()
+   ::oINI:cPathEnv                 := ::oUI:editPathEnv        : text()
+   ::oINI:cPathShortcuts           := ::oUI:editPathShortcuts  : text()
+   ::oINI:cPathSnippets            := ::oUI:editPathSnippets   : text()
+   ::oINI:cPathThemes              := ::oUI:editPathThemes     : text()
 
    RETURN Self
 
@@ -1412,95 +1412,95 @@ METHOD IdeSetup:populate()
 
    ::disconnectSlots()
 
-   ::oUI:q_checkAnimated                : setChecked( val( ::oINI:cIdeAnimated ) > 0      )
+   ::oUI:checkAnimated                : setChecked( val( ::oINI:cIdeAnimated ) > 0      )
 
-   ::oUI:q_checkHilightLine             : setChecked( ::oIde:lCurrentLineHighlightEnabled )
-   ::oUI:q_checkHorzRuler               : setChecked( ::oIde:lHorzRulerVisible            )
-   ::oUI:q_checkLineNumbers             : setChecked( ::oIde:lLineNumbersVisible          )
-   ::oUI:q_checkShowLeftToolbar         : setChecked( ::oINI:lShowEditsLeftToolbar        )
-   ::oUI:q_checkShowTopToolbar          : setChecked( ::oINI:lShowEditsTopToolbar         )
+   ::oUI:checkHilightLine             : setChecked( ::oIde:lCurrentLineHighlightEnabled )
+   ::oUI:checkHorzRuler               : setChecked( ::oIde:lHorzRulerVisible            )
+   ::oUI:checkLineNumbers             : setChecked( ::oIde:lLineNumbersVisible          )
+   ::oUI:checkShowLeftToolbar         : setChecked( ::oINI:lShowEditsLeftToolbar        )
+   ::oUI:checkShowTopToolbar          : setChecked( ::oINI:lShowEditsTopToolbar         )
 
    /* Line Ending Mode */
    s := ::oINI:cLineEndingMode
    //
-   ::oUI:q_radioLineEndCRLF             : setChecked( s == "CRLF" .OR. empty( s )         )
-   ::oUI:q_radioLineEndCR               : setChecked( s == "CR"                           )
-   ::oUI:q_radioLineEndLF               : setChecked( s == "LF"                           )
-   ::oUI:q_radioLineEndOS               : setChecked( s == "OS"                           )
-   ::oUI:q_radioLineEndAuto             : setChecked( s == "AUTO"                         )
+   ::oUI:radioLineEndCRLF             : setChecked( s == "CRLF" .OR. empty( s )         )
+   ::oUI:radioLineEndCR               : setChecked( s == "CR"                           )
+   ::oUI:radioLineEndLF               : setChecked( s == "LF"                           )
+   ::oUI:radioLineEndOS               : setChecked( s == "OS"                           )
+   ::oUI:radioLineEndAuto             : setChecked( s == "AUTO"                         )
 
-   ::oUI:q_checkTrimTrailingBlanks      : setChecked( ::oINI:lTrimTrailingBlanks          )
-   ::oUI:q_checkSaveSourceWhenComp      : setChecked( ::oINI:lSaveSourceWhenComp          )
-   ::oUI:q_checkSupressHbKWordsToUpper  : setChecked( ::oINI:lSupressHbKWordsToUpper      )
-   ::oUI:q_checkReturnAsBeginKeyword    : setChecked( ::oINI:lReturnAsBeginKeyword        )
-   ::oUI:q_checkConvTabToSpcWhenLoading : setChecked( ::oINI:lConvTabToSpcWhenLoading     )
-   ::oUI:q_checkTabToSpcInEdits         : setChecked( ::oINI:lTabToSpcInEdits             )
-   ::oUI:q_checkAutoIndent              : setChecked( ::oINI:lAutoIndent                  )
-   ::oUI:q_checkSmartIndent             : setChecked( ::oINI:lSmartIndent                 )
-   ::oUI:q_editTabSpaces                : setText( hb_ntos( ::oIde:nTabSpaces    )        )
-   ::oUI:q_editIndentSpaces             : setText( hb_ntos( ::oINI:nIndentSpaces )        )
-   ::oUI:q_checkEditsMdi                : setChecked( ::oINI:lEditsMdi                    )
+   ::oUI:checkTrimTrailingBlanks      : setChecked( ::oINI:lTrimTrailingBlanks          )
+   ::oUI:checkSaveSourceWhenComp      : setChecked( ::oINI:lSaveSourceWhenComp          )
+   ::oUI:checkSupressHbKWordsToUpper  : setChecked( ::oINI:lSupressHbKWordsToUpper      )
+   ::oUI:checkReturnAsBeginKeyword    : setChecked( ::oINI:lReturnAsBeginKeyword        )
+   ::oUI:checkConvTabToSpcWhenLoading : setChecked( ::oINI:lConvTabToSpcWhenLoading     )
+   ::oUI:checkTabToSpcInEdits         : setChecked( ::oINI:lTabToSpcInEdits             )
+   ::oUI:checkAutoIndent              : setChecked( ::oINI:lAutoIndent                  )
+   ::oUI:checkSmartIndent             : setChecked( ::oINI:lSmartIndent                 )
+   ::oUI:editTabSpaces                : setText( hb_ntos( ::oIde:nTabSpaces    )        )
+   ::oUI:editIndentSpaces             : setText( hb_ntos( ::oINI:nIndentSpaces )        )
+   ::oUI:checkEditsMdi                : setChecked( ::oINI:lEditsMdi                    )
 
    /* Paths */
-   ::oUI:q_editPathIni                  : setText( ::oIde:cProjIni                        )
+   ::oUI:editPathIni                  : setText( ::oIde:cProjIni                        )
    //
-   ::oUI:q_editPathHrbRoot              : setText( ::oINI:cPathHrbRoot                    )
-   ::oUI:q_editPathHbMk2                : setText( ::oINI:cPathHbMk2                      )
-   ::oUI:q_editPathResources            : setText( ::oINI:cPathResources                  )
-   ::oUI:q_editPathTemp                 : setText( ::oINI:cPathTemp                       )
-   ::oUI:q_editPathEnv                  : setText( ::oINI:cPathEnv                        )
-   ::oUI:q_editPathShortcuts            : setText( ::oINI:cPathShortcuts                  )
-   ::oUI:q_editPathSnippets             : setText( ::oINI:cPathSnippets                   )
-   ::oUI:q_editPathThemes               : setText( ::oINI:cPathThemes                     )
+   ::oUI:editPathHrbRoot              : setText( ::oINI:cPathHrbRoot                    )
+   ::oUI:editPathHbMk2                : setText( ::oINI:cPathHbMk2                      )
+   ::oUI:editPathResources            : setText( ::oINI:cPathResources                  )
+   ::oUI:editPathTemp                 : setText( ::oINI:cPathTemp                       )
+   ::oUI:editPathEnv                  : setText( ::oINI:cPathEnv                        )
+   ::oUI:editPathShortcuts            : setText( ::oINI:cPathShortcuts                  )
+   ::oUI:editPathSnippets             : setText( ::oINI:cPathSnippets                   )
+   ::oUI:editPathThemes               : setText( ::oINI:cPathThemes                     )
 
    /* Variables */
-   ::oUI:q_tableVar:clearContents()
+   ::oUI:tableVar:clearContents()
    ::aKeyItems := {}
    FOR EACH a_ IN ::oINI:aKeywords
       ::populateKeyTableRow( a_:__enumIndex(), a_[ 1 ], a_[ 2 ] )
    NEXT
 
-   ::oUI:q_listTextExt:clear()
+   ::oUI:listTextExt:clear()
    a_:= hb_atokens( ::oINI:cTextFileExtensions, ",." )
    FOR EACH s IN a_
-      ::oUI:q_listTextExt:addItem( strtran( s, "." ) )
+      ::oUI:listTextExt:addItem( strtran( s, "." ) )
    NEXT
-   ::oUI:q_listTextExt:setSortingEnabled( .t. )
-   ::oUI:q_listTextExt:sortItems()
+   ::oUI:listTextExt:setSortingEnabled( .t. )
+   ::oUI:listTextExt:sortItems()
 
-   ::oUI:q_editTmpBkpPrd      : setText( hb_ntos( ::oINI:nTmpBkpPrd ) )
-   ::oUI:q_editBkpPath        : setText( ::oINI:cBkpPath   )
-   ::oUI:q_editBkpSuffix      : setText( ::oINI:cBkpSuffix )
+   ::oUI:editTmpBkpPrd      : setText( hb_ntos( ::oINI:nTmpBkpPrd ) )
+   ::oUI:editBkpPath        : setText( ::oINI:cBkpPath   )
+   ::oUI:editBkpSuffix      : setText( ::oINI:cBkpSuffix )
 
    /* Selections - Code Completion */
-   ::oUI:q_checkListlWithArgs : setChecked( ::oINI:lCompletionWithArgs )
-   ::oUI:q_checkCmplInclArgs  : setChecked( ::oINI:lCompleteArgumented )
+   ::oUI:checkListlWithArgs : setChecked( ::oINI:lCompletionWithArgs )
+   ::oUI:checkCmplInclArgs  : setChecked( ::oINI:lCompleteArgumented )
 
    /* Themes */
-   ::oUI:q_sliderRed:setMinimum( 0 )
-   ::oUI:q_sliderRed:setMaximum( 255 )
+   ::oUI:sliderRed:setMinimum( 0 )
+   ::oUI:sliderRed:setMaximum( 255 )
 
-   ::oUI:q_sliderGreen:setMinimum( 0 )
-   ::oUI:q_sliderGreen:setMaximum( 255 )
+   ::oUI:sliderGreen:setMinimum( 0 )
+   ::oUI:sliderGreen:setMaximum( 255 )
 
-   ::oUI:q_sliderBlue:setMinimum( 0 )
-   ::oUI:q_sliderBlue:setMaximum( 255 )
+   ::oUI:sliderBlue:setMinimum( 0 )
+   ::oUI:sliderBlue:setMaximum( 255 )
 
-   ::oUI:q_editSec1:setText( "0" )
-   ::oUI:q_editSec5:setText( "1" )
+   ::oUI:editSec1:setText( "0" )
+   ::oUI:editSec5:setText( "1" )
 
-   ::oUI:q_editSec1:setReadOnly( .t. )
-   ::oUI:q_editSec5:setReadOnly( .t. )
+   ::oUI:editSec1:setReadOnly( .t. )
+   ::oUI:editSec5:setReadOnly( .t. )
 
    /* Dock Widgets */
-   ::oUI:q_comboTabsShape:setCurrentIndex( ::oINI:nDocksTabShape )
-   ::oUI:q_comboLeftTabPos:setCurrentIndex( ::oINI:nDocksLeftTabPos )
-   ::oUI:q_comboTopTabPos:setCurrentIndex( ::oINI:nDocksTopTabPos )
-   ::oUI:q_comboRightTabPos:setCurrentIndex( ::oINI:nDocksRightTabPos )
-   ::oUI:q_comboBottomTabPos:setCurrentIndex( ::oINI:nDocksBottomTabPos )
+   ::oUI:comboTabsShape:setCurrentIndex( ::oINI:nDocksTabShape )
+   ::oUI:comboLeftTabPos:setCurrentIndex( ::oINI:nDocksLeftTabPos )
+   ::oUI:comboTopTabPos:setCurrentIndex( ::oINI:nDocksTopTabPos )
+   ::oUI:comboRightTabPos:setCurrentIndex( ::oINI:nDocksRightTabPos )
+   ::oUI:comboBottomTabPos:setCurrentIndex( ::oINI:nDocksBottomTabPos )
 
-   ::oUI:q_editVSSExe:setText( ::oINI:cVSSExe )
-   ::oUI:q_editVSSDatabase:setText( ::oINI:cVSSDatabase )
+   ::oUI:editVSSExe:setText( ::oINI:cVSSExe )
+   ::oUI:editVSSDatabase:setText( ::oINI:cVSSDatabase )
 
    ::connectSlots()
 
@@ -1528,44 +1528,44 @@ METHOD IdeSetup:show()
       ::buildKeywords()
 
       /* Dock Widgets */
-      ::oUI:q_comboTabsShape:addItem( "Rounded" )
-      ::oUI:q_comboTabsShape:addItem( "Triangular" )
+      ::oUI:comboTabsShape:addItem( "Rounded" )
+      ::oUI:comboTabsShape:addItem( "Triangular" )
 
-      ::oUI:q_comboLeftTabPos:addItem( "Top"    )
-      ::oUI:q_comboLeftTabPos:addItem( "Bottom" )
-      ::oUI:q_comboLeftTabPos:addItem( "Left"   )
-      ::oUI:q_comboLeftTabPos:addItem( "Right"  )
+      ::oUI:comboLeftTabPos:addItem( "Top"    )
+      ::oUI:comboLeftTabPos:addItem( "Bottom" )
+      ::oUI:comboLeftTabPos:addItem( "Left"   )
+      ::oUI:comboLeftTabPos:addItem( "Right"  )
 
-      ::oUI:q_comboTopTabPos:addItem( "Top"    )
-      ::oUI:q_comboTopTabPos:addItem( "Bottom" )
-      ::oUI:q_comboTopTabPos:addItem( "Left"   )
-      ::oUI:q_comboTopTabPos:addItem( "Right"  )
+      ::oUI:comboTopTabPos:addItem( "Top"    )
+      ::oUI:comboTopTabPos:addItem( "Bottom" )
+      ::oUI:comboTopTabPos:addItem( "Left"   )
+      ::oUI:comboTopTabPos:addItem( "Right"  )
 
-      ::oUI:q_comboBottomTabPos:addItem( "Top"    )
-      ::oUI:q_comboBottomTabPos:addItem( "Bottom" )
-      ::oUI:q_comboBottomTabPos:addItem( "Left"   )
-      ::oUI:q_comboBottomTabPos:addItem( "Right"  )
+      ::oUI:comboBottomTabPos:addItem( "Top"    )
+      ::oUI:comboBottomTabPos:addItem( "Bottom" )
+      ::oUI:comboBottomTabPos:addItem( "Left"   )
+      ::oUI:comboBottomTabPos:addItem( "Right"  )
 
-      ::oUI:q_comboRightTabPos:addItem( "Top"    )
-      ::oUI:q_comboRightTabPos:addItem( "Bottom" )
-      ::oUI:q_comboRightTabPos:addItem( "Left"   )
-      ::oUI:q_comboRightTabPos:addItem( "Right"  )
+      ::oUI:comboRightTabPos:addItem( "Top"    )
+      ::oUI:comboRightTabPos:addItem( "Bottom" )
+      ::oUI:comboRightTabPos:addItem( "Left"   )
+      ::oUI:comboRightTabPos:addItem( "Right"  )
 
-      ::oUI:q_editFontName:setText( ::oINI:cFontName )
-      ::oUI:q_editPointSize:setText( hb_ntos( ::oINI:nPointSize ) )
+      ::oUI:editFontName:setText( ::oINI:cFontName )
+      ::oUI:editPointSize:setText( hb_ntos( ::oINI:nPointSize ) )
 
       FOR EACH cStyle IN ::aStyles
-         ::oUI:q_comboStyle:addItem( cStyle )
+         ::oUI:comboStyle:addItem( cStyle )
       NEXT
-      ::oUI:q_comboStyle:setCurrentIndex( ascan( ::aStyles, {|e| e == ::oINI:cIdeTheme } ) - 1 )
+      ::oUI:comboStyle:setCurrentIndex( ascan( ::aStyles, {|e| e == ::oINI:cIdeTheme } ) - 1 )
 
-      aeval( ::aTBSize, {|e| ::oUI:q_comboTBSize:addItem( e ) } )
-      ::oUI:q_comboTBSize:setCurrentIndex( ascan( ::aTBSize, {|e| e == ::oINI:cToolbarSize } ) - 1 )
+      aeval( ::aTBSize, {|e| ::oUI:comboTBSize:addItem( e ) } )
+      ::oUI:comboTBSize:setCurrentIndex( ascan( ::aTBSize, {|e| e == ::oINI:cToolbarSize } ) - 1 )
 
       ::setIcons()
       ::connectSlots()
 
-      ::oUI:q_stackedWidget:setCurrentIndex( 0 )
+      ::oUI:stackedWidget:setCurrentIndex( 0 )
       ::oUI:hide()
    ENDIF
 
@@ -1598,11 +1598,11 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       IF nOK == 1
          qFont := qFontDlg:currentFont()
 
-         ::oUI:q_editFontName:setText( qFont:family() )
-         ::oUI:q_editPointSize:setText( hb_ntos( qFont:pointSize() ) )
+         ::oUI:editFontName:setText( qFont:family() )
+         ::oUI:editPointSize:setText( hb_ntos( qFont:pointSize() ) )
 
-         ::oINI:cFontName  := ::oUI:q_editFontName:text()
-         ::oINI:nPointSize := val( ::oUI:q_editPointSize:text() )
+         ::oINI:cFontName  := ::oUI:editFontName:text()
+         ::oINI:nPointSize := val( ::oUI:editPointSize:text() )
       ENDIF
       EXIT
 
@@ -1640,9 +1640,9 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "treeWidget_itemSelectionChanged"
-      qItem  := ::oUI:q_treeWidget:currentItem()
+      qItem  := ::oUI:treeWidget:currentItem()
       IF ( nIndex := ascan( ::aTree, qItem:text( 0 ) ) ) > 0
-         ::oUI:q_stackedWidget:setCurrentIndex( nIndex - 1 )
+         ::oUI:stackedWidget:setCurrentIndex( nIndex - 1 )
       ENDIF
       EXIT
 
@@ -1659,7 +1659,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "comboStyle_currentIndexChanged"
-      IF ( nIndex := ::oUI:q_comboStyle:currentIndex() ) > -1
+      IF ( nIndex := ::oUI:comboStyle:currentIndex() ) > -1
          ::oINI:cIdeTheme := ::aStyles[ nIndex + 1 ]
          ::setSystemStyle( ::aStyles[ nIndex + 1 ] )
       ENDIF
@@ -1668,32 +1668,32 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
    CASE "buttonAddTextext_clicked"
       q0 := hbide_fetchAString( ::oUI, "", "Text File Extension" )
       IF !empty( q0 )
-         ::oUI:q_listTextExt:addItem( lower( strtran( q0, "." ) ) )
+         ::oUI:listTextExt:addItem( lower( strtran( q0, "." ) ) )
       ENDIF
       EXIT
 
    CASE "buttonDelTextext_clicked"
-      IF ::oUI:q_listTextExt:currentRow() >= 0
-         ::oUI:q_listTextExt:takeItem( ::oUI:q_listTextExt:currentRow() )
+      IF ::oUI:listTextExt:currentRow() >= 0
+         ::oUI:listTextExt:takeItem( ::oUI:listTextExt:currentRow() )
       ENDIF
       EXIT
 
    CASE "buttonKeyAdd_clicked"
       ::populateKeyTableRow( Len( ::aKeyItems ) + 1, "", "" )
-      ::oUI:q_tableVar:setCurrentItem( ::aKeyItems[ Len( ::aKeyItems ), 1 ] )
+      ::oUI:tableVar:setCurrentItem( ::aKeyItems[ Len( ::aKeyItems ), 1 ] )
       EXIT
 
    CASE "buttonKeyDel_clicked"
-      IF ( nRow := ::oUI:q_tableVar:currentRow() ) >= 0
-         ::oUI:q_tableVar:removeRow( nRow )
+      IF ( nRow := ::oUI:tableVar:currentRow() ) >= 0
+         ::oUI:tableVar:removeRow( nRow )
          hb_adel( ::aKeyItems     , nRow + 1, .t. )
          hb_adel( ::oINI:aKeywords, nRow + 1, .t. )
       ENDIF
       EXIT
 
    CASE "buttonKeyUp_clicked"
-      IF ( nRow := ::oUI:q_tableVar:currentRow() ) >= 1
-         nCol := ::oUI:q_tableVar:currentColumn()
+      IF ( nRow := ::oUI:tableVar:currentRow() ) >= 1
+         nCol := ::oUI:tableVar:currentColumn()
 
          b_ := ::aKeyItems[ nRow+1 ]
          q0 := QTableWidgetItem(); q0:setText( b_[ 1 ]:text() )
@@ -1703,24 +1703,24 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
          w0 := QTableWidgetItem(); w0:setText( b_[ 1 ]:text() )
          w1 := QTableWidgetItem(); w1:setText( b_[ 2 ]:text() )
 
-         ::oUI:q_tableVar:setItem( nRow-0, 0, w0 )
-         ::oUI:q_tableVar:setItem( nRow-0, 1, w1 )
+         ::oUI:tableVar:setItem( nRow-0, 0, w0 )
+         ::oUI:tableVar:setItem( nRow-0, 1, w1 )
 
-         ::oUI:q_tableVar:setItem( nRow-1, 0, q0 )
-         ::oUI:q_tableVar:setItem( nRow-1, 1, q1 )
+         ::oUI:tableVar:setItem( nRow-1, 0, q0 )
+         ::oUI:tableVar:setItem( nRow-1, 1, q1 )
 
          ::aKeyItems[ nRow+1 ] := { w0,w1 }
          ::aKeyItems[ nRow+0 ] := { q0,q1 }
 
-         ::oUI:q_tableVar:setCurrentItem( iif( nCol == 0, q0, q1 ) )
+         ::oUI:tableVar:setCurrentItem( iif( nCol == 0, q0, q1 ) )
       ENDIF
       EXIT
 
    CASE "buttonKeyDown_clicked"
-      nRow := ::oUI:q_tableVar:currentRow()
+      nRow := ::oUI:tableVar:currentRow()
       IF nRow >= 0 .AND. nRow + 1 < Len( ::aKeyItems )
 
-         nCol := ::oUI:q_tableVar:currentColumn()
+         nCol := ::oUI:tableVar:currentColumn()
 
          b_ := ::aKeyItems[ nRow + 1 ]
          q0 := QTableWidgetItem(); q0:setText( b_[ 1 ]:text() )
@@ -1730,27 +1730,27 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
          w0 := QTableWidgetItem(); w0:setText( b_[ 1 ]:text() )
          w1 := QTableWidgetItem(); w1:setText( b_[ 2 ]:text() )
 
-         ::oUI:q_tableVar:setItem( nRow, 0, w0 )
-         ::oUI:q_tableVar:setItem( nRow, 1, w1 )
+         ::oUI:tableVar:setItem( nRow, 0, w0 )
+         ::oUI:tableVar:setItem( nRow, 1, w1 )
 
-         ::oUI:q_tableVar:setItem( nRow+1, 0, q0 )
-         ::oUI:q_tableVar:setItem( nRow+1, 1, q1 )
+         ::oUI:tableVar:setItem( nRow+1, 0, q0 )
+         ::oUI:tableVar:setItem( nRow+1, 1, q1 )
 
          ::aKeyItems[ nRow + 1 ] := { w0,w1 }
          ::aKeyItems[ nRow + 2 ] := { q0,q1 }
 
-         ::oUI:q_tableVar:setCurrentItem( iif( nCol == 0, q0, q1 ) )
+         ::oUI:tableVar:setCurrentItem( iif( nCol == 0, q0, q1 ) )
       ENDIF
       EXIT
 
    CASE "tableVar_keyPress"
-      IF ( nRow := ::oUI:q_tableVar:currentRow() ) >= 0
+      IF ( nRow := ::oUI:tableVar:currentRow() ) >= 0
          HB_TRACE( HB_TR_DEBUG, "RECEIVING ENTER KEY" )
-         ::oUI:q_tableVar:editItem( p )
+         ::oUI:tableVar:editItem( p )
          HB_SYMBOL_UNUSED( nRow )
          #if 0
-         IF ::oUI:q_tableVar:currentColumn() == 0
-            ::oUI:q_tableVar:setCurrentCell( ::oUI:q_tableVar:currentRow(), 1 )
+         IF ::oUI:tableVar:currentColumn() == 0
+            ::oUI:tableVar:setCurrentCell( ::oUI:tableVar:currentRow(), 1 )
          ENDIF
          #endif
       ENDIF
@@ -1760,24 +1760,24 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       IF empty( aRGB := ::pullThemeColors( p ) )
          aRGB := { 0,0,0 }
       ENDIF
-      ::oUI:q_sliderRed   : setValue( aRGB[ 1 ] )
-      ::oUI:q_sliderGreen : setValue( aRGB[ 2 ] )
-      ::oUI:q_sliderBlue  : setValue( aRGB[ 3 ] )
+      ::oUI:sliderRed   : setValue( aRGB[ 1 ] )
+      ::oUI:sliderGreen : setValue( aRGB[ 2 ] )
+      ::oUI:sliderBlue  : setValue( aRGB[ 3 ] )
       EXIT
 
    CASE "sliderValue_changed"
       nSlot := ::nCurThemeSlot
 
       IF nSlot > 0
-         qFrame := { ::oUI:q_frameSec1, ::oUI:q_frameSec2, ::oUI:q_frameSec3, ::oUI:q_frameSec4, ::oUI:q_frameSec5 }[ nSlot ]
-         aRGB   := { ::oUI:q_sliderRed:value(), ::oUI:q_sliderGreen:value(), ::oUI:q_sliderBlue:value() }
+         qFrame := { ::oUI:frameSec1, ::oUI:frameSec2, ::oUI:frameSec3, ::oUI:frameSec4, ::oUI:frameSec5 }[ nSlot ]
+         aRGB   := { ::oUI:sliderRed:value(), ::oUI:sliderGreen:value(), ::oUI:sliderBlue:value() }
          ::populateThemeColors( nSlot, aRGB )
          qFrame:setStyleSheet( "background-color: " + hbide_rgbString( aRGB ) + ";" )
       ENDIF
 
       aGrad := {}
       FOR nSlot := 1 TO 5
-         n  := val( { ::oUI:q_editSec1, ::oUI:q_editSec2, ::oUI:q_editSec3, ::oUI:q_editSec4, ::oUI:q_editSec5 }[ nSlot ]:text() )
+         n  := val( { ::oUI:editSec1, ::oUI:editSec2, ::oUI:editSec3, ::oUI:editSec4, ::oUI:editSec5 }[ nSlot ]:text() )
 
          IF !empty( aRGB := ::pullThemeColors( nSlot ) )
             aadd( aGrad, { n, aRGB[ 1 ], aRGB[ 2 ], aRGB[ 3 ] } )
@@ -1785,9 +1785,9 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       NEXT
       IF !empty( aGrad )
          cCSS := 'background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0, ' + hbide_buildGradientString( aGrad ) + ");"
-         ::oUI:q_frameHorz:setStyleSheet( cCSS )
+         ::oUI:frameHorz:setStyleSheet( cCSS )
          cCSS := 'background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1, ' + hbide_buildGradientString( aGrad ) + ");"
-         ::oUI:q_frameVert:setStyleSheet( cCSS )
+         ::oUI:frameVert:setStyleSheet( cCSS )
       ENDIF
       EXIT
 
@@ -1799,13 +1799,13 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
          aadd( ::oINI:aAppThemes, cTheme + "," + ::fetchThemeColorsString() )
          qItem := QListWidgetItem()
          qItem:setText( cTheme )
-         //::oUI:q_listThemes:addItem_1( qItem )
-         ::oUI:q_listThemes:addItem( qItem )
-         ::oUI:q_listThemes:setCurrentRow( Len( ::oINI:aAppThemes ) - 1 )
+         //::oUI:listThemes:addItem_1( qItem )
+         ::oUI:listThemes:addItem( qItem )
+         ::oUI:listThemes:setCurrentRow( Len( ::oINI:aAppThemes ) - 1 )
       ENDIF
       EXIT
    CASE "buttonThmApp_clicked"
-      IF ( n := ::oUI:q_listThemes:currentRow() ) > -1
+      IF ( n := ::oUI:listThemes:currentRow() ) > -1
          hbide_setAppTheme( ::getThemeData( n + 1 ) )
          ::oDK:animateComponents( HBIDE_ANIMATION_GRADIENT )
       ENDIF
@@ -1813,8 +1813,8 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
    CASE "buttonThmDel_clicked"
       EXIT
    CASE "buttonThmSav_clicked"
-      IF ( n := ::oUI:q_listThemes:currentRow() ) > -1
-         ::oINI:aAppThemes[ n + 1 ] := ::oUI:q_listThemes:currentItem():text() + "," + ;
+      IF ( n := ::oUI:listThemes:currentRow() ) > -1
+         ::oINI:aAppThemes[ n + 1 ] := ::oUI:listThemes:currentItem():text() + "," + ;
                                        ::fetchThemeColorsString()
       ENDIF
       EXIT
@@ -1824,66 +1824,66 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
    CASE "buttonVSSExe_clicked"
       IF ! empty( cPath := hbide_fetchADir( ::oDlg, "Visual SourceSafe Installation Path", ::oINI:cVSSExe ) )
          ::oINI:cVSSExe := cPath
-         ::oUI:q_editVSSExe:setText( hbide_pathStripLastSlash( cPath ) )
+         ::oUI:editVSSExe:setText( hbide_pathStripLastSlash( cPath ) )
       ENDIF
       EXIT
    CASE "buttonVSSDatabase_clicked"
       IF ! empty( cPath := hbide_fetchADir( ::oDlg, "Visual SourceSafe Database Path", ::oINI:cVSSDatabase ) )
          ::oINI:cVSSDatabase := cPath
-         ::oUI:q_editVSSDatabase:setText( hbide_pathStripLastSlash( cPath ) )
+         ::oUI:editVSSDatabase:setText( hbide_pathStripLastSlash( cPath ) )
       ENDIF
       EXIT
    CASE "buttonHrbRoot_clicked"
       IF ! empty( cPath := hbide_fetchADir( ::oDlg, "Harbour's Root Path", ::oINI:cPathHrbRoot ) )
          ::oINI:cPathHrbRoot := cPath
-         ::oUI:q_editPathHrbRoot:setText( hbide_pathStripLastSlash( cPath ) )
+         ::oUI:editPathHrbRoot:setText( hbide_pathStripLastSlash( cPath ) )
       ENDIF
       EXIT
    CASE "buttonHbmk2_clicked"
       IF !empty( cPath := hbide_fetchAFile( ::oDlg, "Location of hbmk2", ;
                                                        { { "Harbour Make - hbmk2", "*" } }, ::oINI:cPathHbMk2 ) )
          ::oINI:cPathhbMk2 := cPath
-         ::oUI:q_editPathHbMk2:setText( cPath )
+         ::oUI:editPathHbMk2:setText( cPath )
       ENDIF
       EXIT
    CASE "buttonEnv_clicked"
       IF !empty( cPath := hbide_fetchAFile( ::oDlg, "Environment Definitions File ( .env )", ;
                                                        { { "Environment Files", "*.env" } }, ::oINI:getEnvFile() ) )
          ::oINI:cPathEnv := cPath
-         ::oUI:q_editPathEnv:setText( cPath )
+         ::oUI:editPathEnv:setText( cPath )
       ENDIF
       EXIT
    CASE "buttonResources_clicked"
       IF ! empty( cPath := hbide_fetchADir( ::oDlg, "Location of Resources ( Plugins, Dialogs, Images, Scripts )", ::oINI:getResourcesPath() ) )
          ::oINI:cPathResources := cPath
-         ::oUI:q_editPathResources:setText( cPath )
+         ::oUI:editPathResources:setText( cPath )
       ENDIF
       EXIT
    CASE "buttonTemp_clicked"
       IF ! empty( cPath := hbide_fetchADir( ::oDlg, "Location for Temporary and Transitory Files", ::oINI:getTempPath() ) )
          ::oINI:cPathTemp := cPath
-         ::oUI:q_editPathTemp:setText( cPath )
+         ::oUI:editPathTemp:setText( cPath )
       ENDIF
       EXIT
    CASE "buttonShortcuts_clicked"
       IF !empty( cPath := hbide_fetchAFile( ::oDlg, "Keyboard Mapping Definitions File ( .scu )", ;
                                                        { { "Keyboard Mappings", "*.scu" } }, ::oINI:getShortcutsFile() ) )
          ::oINI:cPathShortcuts := cPath
-         ::oUI:q_editPathShortcuts:setText( cPath )
+         ::oUI:editPathShortcuts:setText( cPath )
       ENDIF
       EXIT
    CASE "buttonSnippets_clicked"
       IF !empty( cPath := hbide_fetchAFile( ::oDlg, "Code Snippets File ( .skl )", ;
                                                        { { "Code Snippets", "*.skl" } }, ::oINI:getSnippetsFile() ) )
          ::oINI:cPathSnippets := cPath
-         ::oUI:q_editPathSnippets:setText( cPath )
+         ::oUI:editPathSnippets:setText( cPath )
       ENDIF
       EXIT
    CASE "buttonThemes_clicked"
       IF !empty( cPath := hbide_fetchAFile( ::oDlg, "Syntax Highlighting Theme File ( .hbt )", ;
                                                        { { "Syntax Theme", "*.hbt" } }, ::oINI:getThemesFile() ) )
          ::oINI:cPathThemes := cPath
-         ::oUI:q_editPathThemes:setText( cPath )
+         ::oUI:editPathThemes:setText( cPath )
       ENDIF
       EXIT
    CASE "buttonViewIni_clicked"
@@ -1900,23 +1900,23 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "buttonEditorSaveAs_clicked"
-      IF ! empty( cBuffer := p:q_plainText:toPlainText() )
+      IF ! empty( cBuffer := p:plainText:toPlainText() )
          IF ! empty( cPath := hbide_saveAFile( ::oDlg, "Save: " + p1, NIL, p1 ) )
             hb_memowrit( cPath, cBuffer )
          ENDIF
       ENDIF
       EXIT
    CASE "buttonEditorSave_clicked"
-      IF ! empty( cBuffer := p:q_plainText:toPlainText() )
+      IF ! empty( cBuffer := p:plainText:toPlainText() )
          hb_memowrit( p1, cBuffer )
       ENDIF
       EXIT
    CASE "buttonEditorClose_clicked"
    CASE "buttonEditorX_clicked"
       p:oWidget:disconnect( QEvent_Close )
-      p:q_buttonSaveAs:disconnect( "clicked()"  )
-      p:q_buttonSave:disconnect( "clicked()"  )
-      p:q_buttonClose:disconnect( "clicked()"  )
+      p:buttonSaveAs:disconnect( "clicked()"  )
+      p:buttonSave:disconnect( "clicked()"  )
+      p:buttonClose:disconnect( "clicked()"  )
 
       p:close()
       p := NIL   /* Must Destroy It */
@@ -1945,7 +1945,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       EXIT
 
    CASE "comboTBSize_currentIndexChanged"
-      ::oINI:cToolbarSize := ::oUI:q_comboTBSize:currentText()
+      ::oINI:cToolbarSize := ::oUI:comboTBSize:currentText()
       ::oDK:setToolbarSize( val( ::oINI:cToolbarSize ) )
       EXIT
    ENDSWITCH
@@ -1960,22 +1960,22 @@ METHOD IdeSetup:viewIt( cFileName, lSaveAs, lSave, lReadOnly, lApplyHiliter )
    oUI := hbide_getUI( "editor", ::oUI:oWidget )
    oUI:setWindowFlags( Qt_Sheet + Qt_CustomizeWindowHint + Qt_WindowTitleHint + Qt_WindowContextHelpButtonHint )
 
-   oUI:q_plainText:setReadOnly( lReadOnly )
-   oUI:q_buttonSaveAs:setEnabled( lSaveAs )
-   oUI:q_buttonSave:setEnabled( lSave )
+   oUI:plainText:setReadOnly( lReadOnly )
+   oUI:buttonSaveAs:setEnabled( lSaveAs )
+   oUI:buttonSave:setEnabled( lSave )
 
-   oUI:q_plainText:setLineWrapMode( QPlainTextEdit_NoWrap )
+   oUI:plainText:setLineWrapMode( QPlainTextEdit_NoWrap )
 
-   oUI:q_plainText:setPlainText( hb_memoRead( cFileName ) )
-   oUI:q_plainText:setFont( ::oIde:oFont:oWidget )
+   oUI:plainText:setPlainText( hb_memoRead( cFileName ) )
+   oUI:plainText:setFont( ::oIde:oFont:oWidget )
    IF lApplyHiliter
-      aadd( ::aHilighters, ::oTH:setSyntaxHilighting( oUI:q_plainText, "Bare Minimum" ) )
+      aadd( ::aHilighters, ::oTH:setSyntaxHilighting( oUI:plainText, "Bare Minimum" ) )
    ENDIF
 
    oUI:oWidget       :connect( QEvent_Close, {|| ::execEvent( "buttonEditorX_clicked"     , oUI            ) } )
-   oUI:q_buttonSaveAs:connect( "clicked()" , {|| ::execEvent( "buttonEditorSaveAs_clicked", oUI, cFileName ) } )
-   oUI:q_buttonSave  :connect( "clicked()" , {|| ::execEvent( "buttonEditorSave_clicked"  , oUI, cFileName ) } )
-   oUI:q_buttonClose :connect( "clicked()" , {|| ::execEvent( "buttonEditorClose_clicked" , oUI            ) } )
+   oUI:buttonSaveAs:connect( "clicked()" , {|| ::execEvent( "buttonEditorSaveAs_clicked", oUI, cFileName ) } )
+   oUI:buttonSave  :connect( "clicked()" , {|| ::execEvent( "buttonEditorSave_clicked"  , oUI, cFileName ) } )
+   oUI:buttonClose :connect( "clicked()" , {|| ::execEvent( "buttonEditorClose_clicked" , oUI            ) } )
 
    oUI:show()
 
@@ -1991,17 +1991,17 @@ METHOD IdeSetup:pushThemesData()
          a_:= hb_aTokens( s, "," )
          qItem := QListWidgetItem()
          qItem:setText( a_[ 1 ] )
-         //::oUI:q_listThemes:addItem_1( qItem )
-         ::oUI:q_listThemes:addItem( qItem )
+         //::oUI:listThemes:addItem_1( qItem )
+         ::oUI:listThemes:addItem( qItem )
          ::pushThemeColors( s:__enumIndex() )
       NEXT
    ENDIF
    IF !empty( ::oINI:aAppThemes )
-      ::oUI:q_listThemes:setCurrentRow( -1 )
-      ::oUI:q_listThemes:setCurrentRow( Len( ::oINI:aAppThemes ) - 1 )
-      ::oUI:q_listThemes:setCurrentRow( 0 )
+      ::oUI:listThemes:setCurrentRow( -1 )
+      ::oUI:listThemes:setCurrentRow( Len( ::oINI:aAppThemes ) - 1 )
+      ::oUI:listThemes:setCurrentRow( 0 )
    ENDIF
-   ::oUI:q_radioSec1:click()
+   ::oUI:radioSec1:click()
 
    RETURN Self
 
@@ -2044,12 +2044,12 @@ METHOD IdeSetup:pushThemeColors( nTheme )
             FOR EACH n IN aRGB
                n := val( n )
             NEXT
-            { ::oUI:q_editSec1, ::oUI:q_editSec2, ::oUI:q_editSec3, ::oUI:q_editSec4, ::oUI:q_editSec5 }[ nSlot ]:setText( hb_ntos( aRGB[ 1 ] ) )
+            { ::oUI:editSec1, ::oUI:editSec2, ::oUI:editSec3, ::oUI:editSec4, ::oUI:editSec5 }[ nSlot ]:setText( hb_ntos( aRGB[ 1 ] ) )
 
             ::populateThemeColors( nSlot, { aRGB[ 2 ], aRGB[ 3 ], aRGB[ 4 ] } )
          ENDIF
       NEXT
-      { ::oUI:q_radioSec1, ::oUI:q_radioSec2, ::oUI:q_radioSec3, ::oUI:q_radioSec4, ::oUI:q_radioSec5 }[ nSlot ]:click()
+      { ::oUI:radioSec1, ::oUI:radioSec2, ::oUI:radioSec3, ::oUI:radioSec4, ::oUI:radioSec5 }[ nSlot ]:click()
    ENDIF
 
    RETURN Self
@@ -2059,11 +2059,11 @@ METHOD IdeSetup:pushThemeColors( nTheme )
 METHOD IdeSetup:populateThemeColors( nSlot, aRGB )
    LOCAL qFrame
 
-   { ::oUI:q_editR1, ::oUI:q_editR2, ::oUI:q_editR3, ::oUI:q_editR4, ::oUI:q_editR5 }[ nSlot ]:setText( hb_ntos( aRGB[ 1 ] ) )
-   { ::oUI:q_editG1, ::oUI:q_editG2, ::oUI:q_editG3, ::oUI:q_editG4, ::oUI:q_editG5 }[ nSlot ]:setText( hb_ntos( aRGB[ 2 ] ) )
-   { ::oUI:q_editB1, ::oUI:q_editB2, ::oUI:q_editB3, ::oUI:q_editB4, ::oUI:q_editB5 }[ nSlot ]:setText( hb_ntos( aRGB[ 3 ] ) )
+   { ::oUI:editR1, ::oUI:editR2, ::oUI:editR3, ::oUI:editR4, ::oUI:editR5 }[ nSlot ]:setText( hb_ntos( aRGB[ 1 ] ) )
+   { ::oUI:editG1, ::oUI:editG2, ::oUI:editG3, ::oUI:editG4, ::oUI:editG5 }[ nSlot ]:setText( hb_ntos( aRGB[ 2 ] ) )
+   { ::oUI:editB1, ::oUI:editB2, ::oUI:editB3, ::oUI:editB4, ::oUI:editB5 }[ nSlot ]:setText( hb_ntos( aRGB[ 3 ] ) )
 
-   qFrame := { ::oUI:q_frameSec1, ::oUI:q_frameSec2, ::oUI:q_frameSec3, ::oUI:q_frameSec4, ::oUI:q_frameSec5 }[ nSlot ]
+   qFrame := { ::oUI:frameSec1, ::oUI:frameSec2, ::oUI:frameSec3, ::oUI:frameSec4, ::oUI:frameSec5 }[ nSlot ]
    qFrame:setStyleSheet( "background-color: " + hbide_rgbString( aRGB ) + ";" )
 
    RETURN Self
@@ -2075,11 +2075,11 @@ METHOD IdeSetup:fetchThemeColorsString( nSlot )
 
    IF empty( nSlot )
       FOR nSlot := 1 TO 5
-         s += { ::oUI:q_editSec1, ::oUI:q_editSec2, ::oUI:q_editSec3, ::oUI:q_editSec4, ::oUI:q_editSec5 }[ nSlot ]:text() + " "
+         s += { ::oUI:editSec1, ::oUI:editSec2, ::oUI:editSec3, ::oUI:editSec4, ::oUI:editSec5 }[ nSlot ]:text() + " "
 
-         s += { ::oUI:q_editR1, ::oUI:q_editR2, ::oUI:q_editR3, ::oUI:q_editR4, ::oUI:q_editR5 }[ nSlot ]:text() + " "
-         s += { ::oUI:q_editG1, ::oUI:q_editG2, ::oUI:q_editG3, ::oUI:q_editG4, ::oUI:q_editG5 }[ nSlot ]:text() + " "
-         s += { ::oUI:q_editB1, ::oUI:q_editB2, ::oUI:q_editB3, ::oUI:q_editB4, ::oUI:q_editB5 }[ nSlot ]:text()
+         s += { ::oUI:editR1, ::oUI:editR2, ::oUI:editR3, ::oUI:editR4, ::oUI:editR5 }[ nSlot ]:text() + " "
+         s += { ::oUI:editG1, ::oUI:editG2, ::oUI:editG3, ::oUI:editG4, ::oUI:editG5 }[ nSlot ]:text() + " "
+         s += { ::oUI:editB1, ::oUI:editB2, ::oUI:editB3, ::oUI:editB4, ::oUI:editB5 }[ nSlot ]:text()
 
          s += ","
       NEXT
@@ -2094,10 +2094,10 @@ METHOD IdeSetup:fetchThemeColorsString( nSlot )
 METHOD IdeSetup:pullThemeColors( nSlot )
    LOCAL aRGB := {}
 
-   IF !empty( { ::oUI:q_editSec1, ::oUI:q_editSec2, ::oUI:q_editSec3, ::oUI:q_editSec4, ::oUI:q_editSec5 }[ nSlot ]:text() )
-      aadd( aRGB, val( { ::oUI:q_editR1, ::oUI:q_editR2, ::oUI:q_editR3, ::oUI:q_editR4, ::oUI:q_editR5 }[ nSlot ]:text() ) )
-      aadd( aRGB, val( { ::oUI:q_editG1, ::oUI:q_editG2, ::oUI:q_editG3, ::oUI:q_editG4, ::oUI:q_editG5 }[ nSlot ]:text() ) )
-      aadd( aRGB, val( { ::oUI:q_editB1, ::oUI:q_editB2, ::oUI:q_editB3, ::oUI:q_editB4, ::oUI:q_editB5 }[ nSlot ]:text() ) )
+   IF !empty( { ::oUI:editSec1, ::oUI:editSec2, ::oUI:editSec3, ::oUI:editSec4, ::oUI:editSec5 }[ nSlot ]:text() )
+      aadd( aRGB, val( { ::oUI:editR1, ::oUI:editR2, ::oUI:editR3, ::oUI:editR4, ::oUI:editR5 }[ nSlot ]:text() ) )
+      aadd( aRGB, val( { ::oUI:editG1, ::oUI:editG2, ::oUI:editG3, ::oUI:editG4, ::oUI:editG5 }[ nSlot ]:text() ) )
+      aadd( aRGB, val( { ::oUI:editB1, ::oUI:editB2, ::oUI:editB3, ::oUI:editB4, ::oUI:editB5 }[ nSlot ]:text() ) )
    ENDIF
 
    RETURN aRGB
@@ -2109,19 +2109,19 @@ METHOD IdeSetup:populateKeyTableRow( nRow, cTxtCol1, cTxtCol2 )
    LOCAL q0, q1
 
    IF lAppend
-      ::oUI:q_tableVar:setRowCount( nRow )
+      ::oUI:tableVar:setRowCount( nRow )
 
       q0 := QTableWidgetItem()
       q0:setText( cTxtCol1 )
-      ::oUI:q_tableVar:setItem( nRow-1, 0, q0 )
+      ::oUI:tableVar:setItem( nRow-1, 0, q0 )
 
       q1 := QTableWidgetItem()
       q1:setText( cTxtCol2 )
-      ::oUI:q_tableVar:setItem( nRow-1, 1, q1 )
+      ::oUI:tableVar:setItem( nRow-1, 1, q1 )
 
       aadd( ::aKeyItems, { q0, q1 } )
 
-      ::oUI:q_tableVar:setRowHeight( nRow-1, 16 )
+      ::oUI:tableVar:setRowHeight( nRow-1, 16 )
 
    ELSE
       ::aKeyItems[ nRow, 1 ]:setText( cTxtCol1 )
@@ -2137,7 +2137,7 @@ METHOD IdeSetup:buildKeywords()
    LOCAL hdr_:= { { "Keyword", 100 }, { "Value", 230 } }
    LOCAL oTbl, n, qItm
 
-   oTbl := ::oUI:q_tableVar
+   oTbl := ::oUI:tableVar
 
    oTbl:verticalHeader():hide()
    oTbl:horizontalHeader():setStretchLastSection( .t. )
@@ -2159,15 +2159,15 @@ METHOD IdeSetup:buildKeywords()
 METHOD IdeSetup:buildTree()
    LOCAL oRoot, oChild, s
 
-   ::oUI:q_treeWidget:setHeaderHidden( .t. )
-   ::oUI:q_treeWidget:setIconSize( QSize( 12,12 ) )
-   ::oUI:q_treeWidget:setIndentation( 12 )
+   ::oUI:treeWidget:setHeaderHidden( .t. )
+   ::oUI:treeWidget:setIconSize( QSize( 12,12 ) )
+   ::oUI:treeWidget:setIndentation( 12 )
 
    oRoot := QTreeWidgetItem()
    oRoot:setText( 0, "Parts" )
    oRoot:setToolTip( 0, "Parts" )
 
-   ::oUI:q_treeWidget:addTopLevelItem( oRoot )
+   ::oUI:treeWidget:addTopLevelItem( oRoot )
 
    aadd( ::aItems, oRoot )
 
@@ -2180,7 +2180,7 @@ METHOD IdeSetup:buildTree()
    NEXT
 
    oRoot:setExpanded( .t. )
-   ::oUI:q_treeWidget:setCurrentItem( ::aItems[ 2 ] ) /* General */
+   ::oUI:treeWidget:setCurrentItem( ::aItems[ 2 ] ) /* General */
 
    RETURN Self
 

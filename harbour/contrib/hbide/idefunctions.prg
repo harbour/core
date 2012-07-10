@@ -135,14 +135,14 @@ METHOD IdeFunctions:create( oIde )
 
    ::buildHeader()
 
-   ::oUI:q_editFunction :connect( "textChanged(QString)"        , {|p| ::execEvent( "editFunc_textChanged", p   ) } )
-   ::oUI:q_editFunction :connect( "returnPressed()"             , {| | ::execEvent( "editFunc_returnPressed"    ) } )
-   ::oUI:q_buttonMark   :connect( "clicked()"                   , {| | ::execEvent( "buttonMark_clicked"        ) } )
-   ::oUI:q_buttonLoad   :connect( "clicked()"                   , {| | ::execEvent( "buttonLoad_clicked"        ) } )
-   ::oUI:q_buttonTag    :connect( "clicked()"                   , {| | ::execEvent( "buttonTag_clicked"         ) } )
-   ::oUI:q_buttonClose  :connect( "clicked()"                   , {| | ::execEvent( "buttonClose_clicked"       ) } )
-   ::oUI:q_tableFuncList:connect( "itemSelectionChanged()"      , {| | ::execEvent( "tableFuncList_itemSelectionChanged" ) } )
-   ::oUI:q_tableFuncList:connect( "itemDoubleClicked(QTableWidgetItem*)", {|p| ::execEvent( "tableFuncList_itemDoubleClicked", p ) } )
+   ::oUI:editFunction :connect( "textChanged(QString)"        , {|p| ::execEvent( "editFunc_textChanged", p   ) } )
+   ::oUI:editFunction :connect( "returnPressed()"             , {| | ::execEvent( "editFunc_returnPressed"    ) } )
+   ::oUI:buttonMark   :connect( "clicked()"                   , {| | ::execEvent( "buttonMark_clicked"        ) } )
+   ::oUI:buttonLoad   :connect( "clicked()"                   , {| | ::execEvent( "buttonLoad_clicked"        ) } )
+   ::oUI:buttonTag    :connect( "clicked()"                   , {| | ::execEvent( "buttonTag_clicked"         ) } )
+   ::oUI:buttonClose  :connect( "clicked()"                   , {| | ::execEvent( "buttonClose_clicked"       ) } )
+   ::oUI:tableFuncList:connect( "itemSelectionChanged()"      , {| | ::execEvent( "tableFuncList_itemSelectionChanged" ) } )
+   ::oUI:tableFuncList:connect( "itemDoubleClicked(QTableWidgetItem*)", {|p| ::execEvent( "tableFuncList_itemDoubleClicked", p ) } )
 
    RETURN Self
 
@@ -160,7 +160,7 @@ METHOD IdeFunctions:execEvent( nMode, p )
       p    := upper( p )
       nLen := Len( p )
       IF ( n := ascan( ::aList, {|e_| left( e_[ 1 ], nLen ) == p } ) ) > 0
-         ::oUI:q_tableFuncList:setCurrentItem( ::aItems[ n ] )
+         ::oUI:tableFuncList:setCurrentItem( ::aItems[ n ] )
       ENDIF
 
    CASE nMode == "editFunc_returnPressed"
@@ -170,15 +170,15 @@ METHOD IdeFunctions:execEvent( nMode, p )
       ::openFunction( .f. )
 
    CASE nMode == "buttonMark_clicked"
-      ::oUI:q_listProjects:show()
+      ::oUI:listProjects:show()
       ::listProjects()
 
    CASE nMode == "buttonLoad_clicked"
-      ::oUI:q_listProjects:hide()
+      ::oUI:listProjects:hide()
       ::loadTags()
 
    CASE nMode == "buttonTag_clicked"
-      ::oUI:q_listProjects:hide()
+      ::oUI:listProjects:hide()
       ::buildTags()
       ::oEM:updateCompleter()
 
@@ -186,9 +186,9 @@ METHOD IdeFunctions:execEvent( nMode, p )
       ::oFunctionsDock:hide()
 
    CASE nMode == "tableFuncList_itemSelectionChanged"
-      n := ::oUI:q_tableFuncList:currentRow()
+      n := ::oUI:tableFuncList:currentRow()
       IF n >= 0
-         ::oUI:q_editSyntax:setText( ::aList[ n + 1, 2 ] )
+         ::oUI:editSyntax:setText( ::aList[ n + 1, 2 ] )
       ENDIF
    ENDCASE
 
@@ -200,7 +200,7 @@ METHOD IdeFunctions:buildHeader()
    LOCAL oTbl, qItm, cHdr, qFnt, qHdr
    LOCAL cDH := " "
 
-   oTbl := ::oUI:q_tableFuncList
+   oTbl := ::oUI:tableFuncList
 
    qFnt := QFont( "Courier New" )
    oTbl:setFont( qFnt )
@@ -227,7 +227,7 @@ METHOD IdeFunctions:buildHeader()
 
    oTbl:setAlternatingRowColors( .t. )
 
-   ::oUI:q_listProjects:hide()
+   ::oUI:listProjects:hide()
 
    RETURN Self
 
@@ -280,9 +280,9 @@ METHOD IdeFunctions:clear( lHdrAlso )
    ::aItems := {}
 
    IF lHdrAlso
-      ::oUI:q_tableFuncList:clear()
+      ::oUI:tableFuncList:clear()
    ELSE
-      ::oUI:q_tableFuncList:clearContents()
+      ::oUI:tableFuncList:clearContents()
    ENDIF
 
    RETURN Self
@@ -308,8 +308,8 @@ METHOD IdeFunctions:positionToFunction( cWord, lShowTip )
       p    := upper( cWord )
       nLen := Len( p )
       IF ( n := ascan( ::aList, {|e_| left( e_[ 1 ], nLen ) == p } ) ) > 0
-         ::oUI:q_editFunction:setText( cWord )
-         ::oUI:q_tableFuncList:setCurrentItem( ::aItems[ n ] )
+         ::oUI:editFunction:setText( cWord )
+         ::oUI:tableFuncList:setCurrentItem( ::aItems[ n ] )
 
          cProto := ::aList[ n, 2 ]
 
@@ -331,8 +331,8 @@ METHOD IdeFunctions:jumpToFunction( cWord )
       p    := upper( cWord )
       nLen := Len( p )
       IF ( n := ascan( ::aList, {|e_| left( e_[ 1 ], nLen ) == p } ) ) > 0
-         ::oUI:q_editFunction:setText( cWord )
-         ::oUI:q_tableFuncList:setCurrentItem( ::aItems[ n ] )
+         ::oUI:editFunction:setText( cWord )
+         ::oUI:tableFuncList:setCurrentItem( ::aItems[ n ] )
          lOpened := ::openFunction( .t. )
       ENDIF
    ENDIF
@@ -345,12 +345,12 @@ METHOD IdeFunctions:openFunction( lCheckDuplicates )
    LOCAL n, cFunc, cSource, oEdit, lFound, cProto
    LOCAL lOpened := .f.
 
-   IF ( n := ::oUI:q_tableFuncList:currentRow() ) >= 0
+   IF ( n := ::oUI:tableFuncList:currentRow() ) >= 0
       n++
       cFunc := ::aList[ n, 1 ]
       IF lCheckDuplicates .AND. n < Len( ::aList ) .AND. ::aList[ n + 1, 1 ] == cFunc
          ::oFunctionsDock:show()
-         ::oUI:q_tableFuncList:setFocus()
+         ::oUI:tableFuncList:setFocus()
          RETURN lOpened
       ENDIF
 
@@ -384,14 +384,14 @@ METHOD IdeFunctions:clearProjects()
       NEXT
    ENDIF
    ::aProjList := {}
-   ::oUI:q_listProjects:clear()
+   ::oUI:listProjects:clear()
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeFunctions:listProjects()
-   LOCAL s, qItm, oLst := ::oUI:q_listProjects
+   LOCAL s, qItm, oLst := ::oUI:listProjects
 
    ::clearProjects()
 
@@ -425,11 +425,11 @@ METHOD IdeFunctions:enableControls( lEnable )
 
    ::inAction := ! lEnable
 
-   ::oUI:q_buttonMark:setEnabled( lEnable )
-   ::oUI:q_buttonLoad:setEnabled( lEnable )
-   ::oUI:q_buttonTag:setEnabled( lEnable )
+   ::oUI:buttonMark:setEnabled( lEnable )
+   ::oUI:buttonLoad:setEnabled( lEnable )
+   ::oUI:buttonTag:setEnabled( lEnable )
 
-   ::oUI:q_editFunction:setEnabled( lEnable )
+   ::oUI:editFunction:setEnabled( lEnable )
 
    ::showApplicationCursor( iif( lEnable, NIL, Qt_BusyCursor ) )
 
@@ -610,7 +610,7 @@ METHOD IdeFunctions:populateTable()
    ::clear( .t. )
    ::buildHeader()
 
-   oTbl := ::oUI:q_tableFuncList
+   oTbl := ::oUI:tableFuncList
    oTbl:setRowCount( Len( ::aList ) )
 
    n := 0
@@ -629,7 +629,7 @@ METHOD IdeFunctions:populateTable()
 
       aadd( ::aItems, qItm )
       n++
-      ::oUI:q_labelEntries:setText( "Entries: " + hb_ntos( n ) )
+      ::oUI:labelEntries:setText( "Entries: " + hb_ntos( n ) )
    NEXT
 
    RETURN Self

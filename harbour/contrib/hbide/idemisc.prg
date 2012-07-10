@@ -1279,25 +1279,25 @@ FUNCTION hbide_fetchADate( qParent, cTitle, cPrompt, dDefault )
    oUI := hbide_getUI( "fetchdate", qParent )
 
    oUI:setWindowTitle( cTitle )
-   oUI:q_labelPrompt:setText( cPrompt )
+   oUI:labelPrompt:setText( cPrompt )
    IF dDefault != NIL
       qDate := QDate()
       qDate:setYear( year( dDefault ) )
       qDate:setMonth( month( dDefault ) )
       qDate:setDay( day( dDefault ) )
-      oUI:q_editDate:setDate( qDate )
+      oUI:editDate:setDate( qDate )
    ENDIF
 
-   oUI:q_buttonOk:connect( "clicked()", {|| oUI:done( 1 ) } )
-   oUI:q_buttonCancel:connect( "clicked()", {|| oUI:done( 0 ) } )
+   oUI:buttonOk:connect( "clicked()", {|| oUI:done( 1 ) } )
+   oUI:buttonCancel:connect( "clicked()", {|| oUI:done( 0 ) } )
 
    nRet := oUI:exec()
 
-   oUI:q_buttonOk:disconnect( "clicked()" )
-   oUI:q_buttonCancel:disconnect( "clicked()" )
+   oUI:buttonOk:disconnect( "clicked()" )
+   oUI:buttonCancel:disconnect( "clicked()" )
 
    IF nRet == 1
-      qDate := oUI:q_editDate:date()
+      qDate := oUI:editDate:date()
       RETURN stod( strzero( qDate:year(), 4 ) + strzero( qDate:month(),2 ) + strzero( qDate:day(), 2 ) )
    ENDIF
 

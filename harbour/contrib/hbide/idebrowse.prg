@@ -280,10 +280,10 @@ METHOD IdeBrowseManager:destroy()
    IF !empty( ::qStruct )
       ::qStruct:disconnect( QEvent_Close )
 
-      ::qStruct:q_tableFields:disconnect( "itemSelectionChanged()" )
-      ::qStruct:q_buttonCopyStruct:disconnect( "clicked()" )
+      ::qStruct:tableFields:disconnect( "itemSelectionChanged()" )
+      ::qStruct:buttonCopyStruct:disconnect( "clicked()" )
 
-      ::qStruct:q_tableFields:clearContents()
+      ::qStruct:tableFields:clearContents()
 
       ::qStruct:destroy()
       ::qStruct := NIL
@@ -769,7 +769,7 @@ METHOD IdeBrowseManager:showTablesTree()
    oUI := hbide_getUI( "tables", ::oCurPanel:qWidget )
 
    qFont := QFont( "Courier New", 8 )
-   qTree := oUI:q_treeTables
+   qTree := oUI:treeTables
    qTree:setFont( qFont )
 
    FOR EACH oPanel IN ::aPanels
@@ -803,9 +803,9 @@ METHOD IdeBrowseManager:showTablesTree()
       qParent:setExpanded( .t. )
    NEXT
    ::oIde:setPosAndSizeByIniEx( oUI:oWidget, ::oINI:cTablesDialogGeometry )
-   oUI:q_buttonOk:connect( "clicked()", {|| oUI:done( 1 ) } )
+   oUI:buttonOk:connect( "clicked()", {|| oUI:done( 1 ) } )
    oUI:exec()
-   oUI:q_buttonOk:disconnect( "clicked()" )
+   oUI:buttonOk:disconnect( "clicked()" )
    ::oIde:oINI:cTablesDialogGeometry := hbide_posAndSize( oUI:oWidget )
    oUI:destroy()
 
@@ -846,15 +846,15 @@ FUNCTION hbide_fldType2Desc( cType )
 METHOD IdeBrowseManager:populateFieldData()
    LOCAL nRow, qItm
 
-   IF ( nRow := ::qStruct:q_tableFields:currentRow() ) >= 0
-      qItm := ::qStruct:q_tableFields:item( nRow, 1 )
-      ::qStruct:q_editName:setText( qItm:text() )
-      qItm := ::qStruct:q_tableFields:item( nRow, 2 )
-      ::qStruct:q_comboType:setCurrentIndex( ascan( { "Character", "Numeric", "Date", "Logical" }, qItm:text() ) - 1 )
-      qItm := ::qStruct:q_tableFields:item( nRow, 3 )
-      ::qStruct:q_editSize:setText( qItm:text() )
-      qItm := ::qStruct:q_tableFields:item( nRow, 4 )
-      ::qStruct:q_editDec:setText( qItm:text() )
+   IF ( nRow := ::qStruct:tableFields:currentRow() ) >= 0
+      qItm := ::qStruct:tableFields:item( nRow, 1 )
+      ::qStruct:editName:setText( qItm:text() )
+      qItm := ::qStruct:tableFields:item( nRow, 2 )
+      ::qStruct:comboType:setCurrentIndex( ascan( { "Character", "Numeric", "Date", "Logical" }, qItm:text() ) - 1 )
+      qItm := ::qStruct:tableFields:item( nRow, 3 )
+      ::qStruct:editSize:setText( qItm:text() )
+      qItm := ::qStruct:tableFields:item( nRow, 4 )
+      ::qStruct:editDec:setText( qItm:text() )
    ENDIF
 
    RETURN Self
@@ -863,10 +863,10 @@ METHOD IdeBrowseManager:populateFieldData()
 
 METHOD IdeBrowseManager:populateUiStruct()
    LOCAL qItm, fld_, n
-   LOCAL oTbl := ::qStruct:q_tableFields
+   LOCAL oTbl := ::qStruct:tableFields
    LOCAL aStruct := ::oCurBrw:dbStruct()
 
-   ::qStruct:q_tableFields:clearContents()
+   ::qStruct:tableFields:clearContents()
 
    oTbl:setRowCount( Len( aStruct ) )
 
@@ -899,7 +899,7 @@ METHOD IdeBrowseManager:populateUiStruct()
    n := 0
    aeval( aStruct, {|e_| n += e_[ 3 ] } )
 
-   ::qStruct:q_labelRecSize:setText( hb_ntos( n + 1 ) )
+   ::qStruct:labelRecSize:setText( hb_ntos( n + 1 ) )
 
    oTbl:setCurrentCell( 0,0 )
 
@@ -921,7 +921,7 @@ METHOD IdeBrowseManager:buildUiStruct()
 
    ::qStruct:connect( QEvent_Close, {|| ::execEvent( "dbStruct_closeEvent" ) } )
 
-   oTbl := ::qStruct:q_tableFields
+   oTbl := ::qStruct:tableFields
    oTbl:verticalHeader():hide()
    oTbl:horizontalHeader():setStretchLastSection( .t. )
    oTbl:setAlternatingRowColors( .t. )
@@ -936,14 +936,14 @@ METHOD IdeBrowseManager:buildUiStruct()
       oTbl:setColumnWidth( n-1, hdr_[ n,2 ] )
    NEXT
 
-   ::qStruct:q_comboType:addItem( "Character" )
-   ::qStruct:q_comboType:addItem( "Numeric"   )
-   ::qStruct:q_comboType:addItem( "Date"      )
-   ::qStruct:q_comboType:addItem( "Logical"   )
+   ::qStruct:comboType:addItem( "Character" )
+   ::qStruct:comboType:addItem( "Numeric"   )
+   ::qStruct:comboType:addItem( "Date"      )
+   ::qStruct:comboType:addItem( "Logical"   )
 
    oTbl:connect( "itemSelectionChanged()", {|| ::execEvent( "fieldsTable_itemSelectionChanged" ) } )
 
-   ::qStruct:q_buttonCopyStruct:connect( "clicked()", {|| ::execEvent( "buttonCopyStruct_clicked" ) } )
+   ::qStruct:buttonCopyStruct:connect( "clicked()", {|| ::execEvent( "buttonCopyStruct_clicked" ) } )
 
    RETURN Self
 
