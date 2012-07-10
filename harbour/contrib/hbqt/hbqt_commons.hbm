@@ -11,6 +11,8 @@
 
 hbqt_common.hbm
 
+-hbx=
+
 -cflag=-DQT_NODLL
 
 # moved to the end to make --hbinfo=nested' return complete information
