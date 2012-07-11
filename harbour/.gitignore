@@ -1,8 +1,12 @@
+# legacy
 .svn
-.hbmk
 
-include/hbverbld.h
+# build generated files
+/include/hbverbld.h
+*.hbl
+*.hbd
 
+# build targets
 aix/
 android/
 beos/
@@ -21,5 +25,22 @@ vxworks/
 wce/
 win/
 
+# misc build files
+.hbmk/
+
+# misc junk
+.DS_Store
+*.bak
+
+# 'install'-ed binaries
 *.exe
 *.dll
+*.dxe
+*.dylib
+*.so
+*.sl
+*.lib
+*.a
+
+# packages
+/pkg/
