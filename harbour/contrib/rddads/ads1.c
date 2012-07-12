@@ -2334,6 +2334,7 @@ static HB_ERRCODE adsGetValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
          }
          hb_itemPutNLen( pItem, dVal,
                          pField->uiTypeExtended == HB_FT_AUTOINC ? 10 : 20, 0 );
+         break;
       }
 #endif
       case HB_FT_LONG:
@@ -4203,7 +4204,7 @@ static HB_ERRCODE adsOrderCreate( ADSAREAP pArea, LPDBORDERCREATEINFO pOrderInfo
    if( fClose )
    {
       ADSHANDLE ahIndex[ 256  ];
-      UNSIGNED16 usArrayLen = 256 ;
+      UNSIGNED16 usArrayLen = 256;
 
       u32RetVal = AdsOpenIndex( pArea->hTable,
                      ( UNSIGNED8 * ) pOrderInfo->abBagName, ahIndex, &usArrayLen );

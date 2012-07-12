@@ -80,7 +80,7 @@ typedef struct _MIXKEY
 {
    HB_ULONG  rec;
    HB_BYTE   val[ 1 ];
-} MIXKEY, *LPMIXKEY;
+} MIXKEY, *PMIXKEY;
 
 
 typedef struct _MIXTAG
@@ -95,14 +95,17 @@ typedef struct _MIXTAG
    HB_BYTE          bType;
    HB_USHORT        uiLen;
 
-   LPMIXKEY*        pKeys;
+   PMIXKEY*         pKeys;
    HB_ULONG         ulRecMax;
    HB_ULONG         ulRecCount;
 
    PHB_CODEPAGE     pCodepage;  /* National sorttable for character key tags, NULL otherwise */
 
    HB_ULONG         ulKeyNo;
-} MIXTAG, *LPMIXTAG;
+} MIXTAG, *PMIXTAG;
+
+
+typedef HB_ULONG MIXUPDATE, *PMIXUPDATE;
 
 
 typedef struct _ADSXAREA_
@@ -111,8 +114,8 @@ typedef struct _ADSXAREA_
 
    /* ================ Additional fields for ADSX RDD =================== */
 
-   LPMIXTAG     pTagList;
-   LPMIXTAG     pTagCurrent;
+   PMIXTAG     pTagList;
+   PMIXTAG     pTagCurrent;
 } ADSXAREA, *ADSXAREAP;
 
 
@@ -179,13 +182,13 @@ static HB_ERRCODE hb_adsUpdateAreaFlags( ADSXAREAP pArea )
 *  Memory Index
 *************************************************************************/
 
-static LPMIXKEY mixKeyNew( PHB_ITEM pItem, HB_ULONG ulRecNo, HB_BYTE bType, HB_USHORT uiLen )
+static PMIXKEY mixKeyNew( PHB_ITEM pItem, HB_ULONG ulRecNo, HB_BYTE bType, HB_USHORT uiLen )
 {
-   LPMIXKEY    pKey;
+   PMIXKEY     pKey;
    double      dbl;
    HB_BYTE     buf[ 8 ];
 
-   pKey = (LPMIXKEY) hb_xgrab( sizeof( HB_ULONG ) + uiLen );
+   pKey = ( PMIXKEY ) hb_xgrab( sizeof( HB_ULONG ) + uiLen );
    pKey->rec = ulRecNo;
 
    switch ( bType )
@@ -223,12 +226,12 @@ static LPMIXKEY mixKeyNew( PHB_ITEM pItem, HB_ULONG ulRecNo, HB_BYTE bType, HB_U
 }
 
 
-static LPMIXKEY mixKeyEval( LPMIXTAG pTag, ADSXAREAP pArea )
+static PMIXKEY mixKeyEval( PMIXTAG pTag, ADSXAREAP pArea )
 {
-   PHB_ITEM      pItem;
-   LPMIXKEY      pKey;
-   int           iCurrArea = hb_rddGetCurrentWorkAreaNumber();
-   PHB_CODEPAGE  pCodepage = hb_cdpSelect( pArea->adsarea.area.cdPage );
+   PHB_ITEM     pItem;
+   PMIXKEY      pKey;
+   int          iCurrArea = hb_rddGetCurrentWorkAreaNumber();
+   PHB_CODEPAGE pCodepage = hb_cdpSelect( pArea->adsarea.area.cdPage );
 
    if( iCurrArea != pArea->adsarea.area.uiArea )
       hb_rddSelectWorkAreaNumber( pArea->adsarea.area.uiArea );
@@ -272,13 +275,13 @@ static HB_BOOL mixEvalCond( PHB_ITEM pCondItem, ADSXAREAP pArea )
 }
 
 
-static void mixKeyFree( LPMIXKEY pKey )
+static void mixKeyFree( PMIXKEY pKey )
 {
    hb_xfree( pKey );
 }
 
 
-static int mixQSortCompare( LPMIXKEY p1, LPMIXKEY p2, HB_USHORT uiLen, PHB_CODEPAGE pCodepage )
+static int mixQSortCompare( PMIXKEY p1, PMIXKEY p2, HB_USHORT uiLen, PHB_CODEPAGE pCodepage )
 {
    int   i;
 
@@ -307,10 +310,10 @@ static int mixQSortCompare( LPMIXKEY p1, LPMIXKEY p2, HB_USHORT uiLen, PHB_CODEP
 }
 
 
-static void mixQSort( LPMIXKEY* pKeys, HB_ULONG left, HB_ULONG right, HB_USHORT uiLen, PHB_CODEPAGE pCodepage )
+static void mixQSort( PMIXKEY* pKeys, HB_ULONG left, HB_ULONG right, HB_USHORT uiLen, PHB_CODEPAGE pCodepage )
 {
    HB_ULONG  l, r;
-   LPMIXKEY  x, h;
+   PMIXKEY   x, h;
 
    l = left;
    r = right;
@@ -339,7 +342,7 @@ static void mixQSort( LPMIXKEY* pKeys, HB_ULONG left, HB_ULONG right, HB_USHORT 
 }
 
 
-static LPMIXKEY mixFindKey( LPMIXTAG pTag, LPMIXKEY pKey, HB_ULONG* ulKeyPos )
+static PMIXKEY mixFindKey( PMIXTAG pTag, PMIXKEY pKey, HB_ULONG* ulKeyPos )
 {
    HB_ULONG   l, r;
    int        i = 1;
@@ -380,26 +383,26 @@ static LPMIXKEY mixFindKey( LPMIXTAG pTag, LPMIXKEY pKey, HB_ULONG* ulKeyPos )
 }
 
 
-static int mixCompareKey( LPMIXTAG pTag, HB_ULONG ulKeyPos, LPMIXKEY pKey )
+static int mixCompareKey( PMIXTAG pTag, HB_ULONG ulKeyPos, PMIXKEY pKey )
 {
    return mixQSortCompare( pTag->pKeys[ ulKeyPos ], pKey, pTag->uiLen, pTag->pCodepage );
 }
 
 
-static LPMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITEM pKeyItem,
-                              PHB_ITEM pForItem, PHB_ITEM pWhileItem, HB_BYTE bType,
-                              HB_USHORT uiLen, ADSXAREAP pArea )
+static PMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITEM pKeyItem,
+                             PHB_ITEM pForItem, PHB_ITEM pWhileItem, HB_BYTE bType,
+                             HB_USHORT uiLen, ADSXAREAP pArea )
 {
-   LPMIXTAG             pTag;
-   LPMIXKEY             pKey;
-   LPDBORDERCONDINFO    pOrdCondInfo = pArea->adsarea.area.lpdbOrdCondInfo;
-   ADSHANDLE            hOrder;
-   HB_ULONG             ulRec, ulStartRec, ulNextCount = 0;
-   HB_LONG              lStep = 0;
-   PHB_ITEM             pItem, pEvalItem = NULL;
+   PMIXTAG             pTag;
+   PMIXKEY             pKey;
+   LPDBORDERCONDINFO   pOrdCondInfo = pArea->adsarea.area.lpdbOrdCondInfo;
+   ADSHANDLE           hOrder;
+   HB_ULONG            ulRec, ulStartRec, ulNextCount = 0;
+   HB_LONG             lStep = 0;
+   PHB_ITEM            pItem, pEvalItem = NULL;
 
 
-   pTag = (LPMIXTAG) hb_xgrab( sizeof( MIXTAG ) );
+   pTag = ( PMIXTAG ) hb_xgrab( sizeof( MIXTAG ) );
    memset( pTag, 0, sizeof( MIXTAG ) );
 
    pTag->szName   = ( char * ) hb_xgrab( MIX_MAXTAGNAMELEN + 1 );
@@ -421,7 +424,7 @@ static LPMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITE
        !HB_CDP_ISBINSORT( pArea->adsarea.area.cdPage ) )
       pTag->pCodepage = pArea->adsarea.area.cdPage;
 
-   pTag->pKeys = (LPMIXKEY*) hb_xgrab( sizeof( LPMIXKEY ) * MIX_KEYPOOLFIRST );
+   pTag->pKeys = ( PMIXKEY* ) hb_xgrab( sizeof( PMIXKEY ) * MIX_KEYPOOLFIRST );
    pTag->ulRecMax = MIX_KEYPOOLFIRST;
 
    ulStartRec = 0;
@@ -501,7 +504,7 @@ static LPMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITE
 
          if( pTag->ulRecCount == pTag->ulRecMax )
          {
-            pTag->pKeys = (LPMIXKEY*) hb_xrealloc( pTag->pKeys, sizeof( LPMIXKEY ) * ( pTag->ulRecMax + MIX_KEYPOOLRESIZE ) );
+            pTag->pKeys = ( PMIXKEY* ) hb_xrealloc( pTag->pKeys, sizeof( PMIXKEY ) * ( pTag->ulRecMax + MIX_KEYPOOLRESIZE ) );
             pTag->ulRecMax += MIX_KEYPOOLRESIZE;
          }
 
@@ -527,7 +530,7 @@ static LPMIXTAG mixTagCreate( const char * szTagName, PHB_ITEM pKeyExpr, PHB_ITE
 }
 
 
-static void mixTagDestroy( LPMIXTAG pTag )
+static void mixTagDestroy( PMIXTAG pTag )
 {
    HB_ULONG ul;
 
@@ -551,10 +554,10 @@ static void mixTagDestroy( LPMIXTAG pTag )
 }
 
 
-static LPMIXTAG mixFindTag( ADSXAREAP pArea, PHB_ITEM pOrder )
+static PMIXTAG mixFindTag( ADSXAREAP pArea, PHB_ITEM pOrder )
 {
-   char        szTag[ MIX_MAXTAGNAMELEN + 1 ];
-   LPMIXTAG    pTag;
+   char       szTag[ MIX_MAXTAGNAMELEN + 1 ];
+   PMIXTAG    pTag;
 
    if( HB_IS_NUMBER( pOrder ) )
    {
@@ -580,14 +583,135 @@ static LPMIXTAG mixFindTag( ADSXAREAP pArea, PHB_ITEM pOrder )
 }
 
 
+static PMIXUPDATE mixUpdateCreate( ADSXAREAP pArea )
+{
+   PMIXUPDATE  pUpdate;
+   PMIXTAG     pTag;
+   int         iTag;
+
+   pTag = pArea->pTagList;
+   if( ! pArea->adsarea.fPositioned || ! pTag )
+      return NULL;
+
+   iTag = 0;
+   while ( pTag )
+   {
+      pTag = pTag->pNext;
+      iTag++;
+   }
+
+   pUpdate = ( PMIXUPDATE ) hb_xgrab( sizeof( MIXUPDATE ) * iTag );
+   pTag = pArea->pTagList;
+   iTag = 0;
+   while ( pTag )
+   {
+      PMIXKEY  pKey = mixKeyEval( pTag, pArea );
+      HB_ULONG ulKeyPos;
+
+      pUpdate[ iTag ] = mixFindKey( pTag, pKey, &ulKeyPos ) ? ulKeyPos : ( HB_LONG ) -1;
+      mixKeyFree( pKey );
+
+      pTag = pTag->pNext;
+      iTag++;
+   }
+
+   return pUpdate;
+}
+
+static void mixUpdateDestroy( ADSXAREAP pArea, PMIXUPDATE pUpdate, int fUpdate )
+{
+   PMIXTAG  pTag = pArea->pTagList;
+   int      iTag;  
+
+   if( ! pUpdate )
+      return;
+
+   if( ! fUpdate )
+   {
+      hb_xfree( pUpdate );
+      return;
+   }
+
+   iTag = 0;
+   while ( pTag )
+   {
+      HB_BOOL  bFor = pTag->pForItem == NULL || mixEvalCond( pTag->pForItem, pArea );
+      if( pUpdate[ iTag ] == ( HB_ULONG ) -1 )
+      {
+         if( bFor )
+         {
+            HB_ULONG  ulKeyPos;
+            PMIXKEY   pKey = mixKeyEval( pTag, pArea );
+            mixFindKey( pTag, pKey, &ulKeyPos );
+
+            // insert key into index
+            if( pTag->ulRecCount == pTag->ulRecMax )
+            {
+               pTag->pKeys = ( PMIXKEY* ) hb_xrealloc( pTag->pKeys, sizeof( PMIXKEY ) * ( pTag->ulRecMax + MIX_KEYPOOLRESIZE ) );
+               pTag->ulRecMax += MIX_KEYPOOLRESIZE;
+            }
+            if( ulKeyPos < pTag->ulRecCount )
+               memmove( pTag->pKeys + ulKeyPos + 1, pTag->pKeys + ulKeyPos, ( pTag->ulRecCount - ulKeyPos ) * sizeof( PMIXKEY ) );
+            pTag->pKeys[ ulKeyPos ] = pKey;
+            pTag->ulRecCount++;
+         }
+      }
+      else
+      {
+         PMIXKEY  pKey = mixKeyEval( pTag, pArea );
+         if( bFor ) 
+         {
+            if( mixCompareKey( pTag, pUpdate[ iTag ], pKey ) != 0 )
+            {
+               HB_ULONG  ulKeyPos;
+               mixKeyFree( pTag->pKeys[ pUpdate[ iTag ] ] );
+               mixFindKey( pTag, pKey, &ulKeyPos );
+               if( ulKeyPos == pUpdate[ iTag ] || ulKeyPos == pUpdate[ iTag ] + 1 )
+               {
+                  // assign new key in same position
+                  pTag->pKeys[ pUpdate[ iTag ] ] = pKey;
+               }
+               else
+               {
+                  // move keys and assign new key to new position
+                  if( ulKeyPos < pUpdate[ iTag ] )
+                  {
+                     memmove( pTag->pKeys + ulKeyPos + 1, pTag->pKeys + ulKeyPos, ( pUpdate[ iTag ] - ulKeyPos ) * sizeof( PMIXKEY ) );
+                     pTag->pKeys[ ulKeyPos ] = pKey;
+                  }
+                  else
+                  {
+                     memmove( pTag->pKeys + pUpdate[ iTag ], pTag->pKeys + pUpdate[ iTag ] + 1, ( ulKeyPos - pUpdate[ iTag ] - 1 ) * sizeof( PMIXKEY ) );
+                     pTag->pKeys[ ulKeyPos - 1 ] = pKey;
+                  }
+               }
+            }
+            else
+               mixKeyFree( pKey );
+         }
+         else
+         {
+            // delete key
+            mixKeyFree( pKey );
+            memmove( pTag->pKeys + pUpdate[ iTag ], pTag->pKeys + pUpdate[ iTag ] + 1, ( pTag->ulRecCount - pUpdate[ iTag ] ) * sizeof( PMIXKEY ) );
+            pTag->ulRecCount--;
+         }
+      }
+      pTag = pTag->pNext;
+      iTag++;
+   }
+   hb_xfree( pUpdate );
+}
+
+
 /************************************************************************
 *  ADSX RDD METHODS
 *************************************************************************/
 
 static HB_ERRCODE adsxGoBottom( ADSXAREAP pArea )
 {
-   LPMIXTAG  pTag;
-   HB_ULONG  ulRecNo;
+   PMIXTAG  pTag;
+   HB_ULONG ulRecNo;
 
    pTag = pArea->pTagCurrent;
 
@@ -614,8 +738,8 @@ static HB_ERRCODE adsxGoBottom( ADSXAREAP pArea )
 
 static HB_ERRCODE adsxGoTop( ADSXAREAP pArea )
 {
-   LPMIXTAG  pTag;
-   HB_ULONG  ulRecNo;
+   PMIXTAG  pTag;
+   HB_ULONG ulRecNo;
 
    pTag = pArea->pTagCurrent;
 
@@ -642,7 +766,7 @@ static HB_ERRCODE adsxGoTop( ADSXAREAP pArea )
 
 static HB_ERRCODE adsxSeek( ADSXAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, HB_BOOL bFindLast )
 {
-   LPMIXKEY     pMixKey;
+   PMIXKEY      pMixKey;
    HB_ULONG     ulKeyPos, ulRecNo;
    HB_ERRCODE   errCode;
    HB_BOOL      fFound = HB_FALSE;
@@ -699,7 +823,7 @@ static HB_ERRCODE adsxSeek( ADSXAREAP pArea, HB_BOOL bSoftSeek, PHB_ITEM pKey, H
 
 static HB_ERRCODE adsxSkip( ADSXAREAP pArea, HB_LONG lToSkip )
 {
-   LPMIXKEY    pKey;
+   PMIXKEY     pKey;
    HB_ULONG    ulKeyPos;
    HB_ERRCODE  errCode = HB_SUCCESS;
 
@@ -786,9 +910,21 @@ static HB_ERRCODE adsxSkip( ADSXAREAP pArea, HB_LONG lToSkip )
 }
 
 
+static HB_ERRCODE adsxPutValue( ADSXAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
+{
+   PMIXUPDATE pUpdate;
+   HB_ERRCODE errCode;
+
+   pUpdate = mixUpdateCreate( pArea );
+   errCode = SUPER_PUTVALUE( ( AREAP ) pArea, uiIndex, pItem );
+   mixUpdateDestroy( pArea, pUpdate, errCode == HB_SUCCESS );
+   return errCode;
+}
+
+
 static HB_ERRCODE adsxClose( ADSXAREAP pArea )
 {
-   LPMIXTAG     pTag;
+   PMIXTAG     pTag;
 
    pArea->pTagCurrent = NULL;
    while( pArea->pTagList )
@@ -937,7 +1073,7 @@ static HB_ERRCODE adsxOrderListFocus( ADSXAREAP pArea, LPDBORDERINFO pOrderInfo 
 
 static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderInfo )
 {
-   LPMIXTAG     pTagNew, pTag;
+   PMIXTAG      pTagNew, pTag;
    PHB_ITEM     pKeyItem, pForItem = NULL, pWhileItem = NULL, pResult;
    HB_ULONG     ulRecNo;
    HB_USHORT    uiLen;
@@ -1148,7 +1284,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
 
 static HB_ERRCODE adsxOrderDestroy( ADSXAREAP pArea, LPDBORDERINFO pOrderInfo )
 {
-   LPMIXTAG     pTag, pTag2;
+   PMIXTAG     pTag, pTag2;
 
    /* TODO: ADS RDD missing implementation of ordDestroy( nOrder ) */
    if( SUPER_ORDDESTROY( ( AREAP ) pArea, pOrderInfo ) == HB_SUCCESS )
@@ -1184,7 +1320,7 @@ static HB_ERRCODE adsxOrderDestroy( ADSXAREAP pArea, LPDBORDERINFO pOrderInfo )
 
 static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERINFO pOrderInfo )
 {
-   LPMIXTAG pTag = pArea->pTagCurrent;
+   PMIXTAG pTag = pArea->pTagCurrent;
 
    /* resolve any pending relations */
    if( pArea->adsarea.lpdbPendingRel )
@@ -1288,7 +1424,7 @@ static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERIN
          }
          else
          {
-            LPMIXKEY pKey;
+            PMIXKEY  pKey;
             HB_ULONG ulKeyPos;
 
             if( !pArea->adsarea.fPositioned )
@@ -1318,7 +1454,7 @@ static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERIN
          }
          else
          {
-            LPMIXKEY pKey;
+            PMIXKEY  pKey;
             HB_ULONG ulKeyPos;
 
             if( !pArea->adsarea.fPositioned )
@@ -1371,7 +1507,7 @@ static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERIN
 
       case DBOI_NUMBER :
       {
-         LPMIXTAG        pTag2;
+         PMIXTAG         pTag2;
          UNSIGNED16      usOrder = 0;
 
          AdsGetNumIndexes( pArea->adsarea.hTable, &usOrder );
@@ -1441,7 +1577,7 @@ static RDDFUNCS adsxTable = { NULL,
                               NULL,
                               NULL,
                               NULL,
-                              NULL,
+                              ( DBENTRYP_SI ) adsxPutValue,
                               NULL,
                               NULL,
                               NULL,

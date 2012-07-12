@@ -248,19 +248,20 @@ void hb_dateDecode( long lJulian, int *piYear, int *piMonth, int *piDay )
 
    if( lJulian >= HB_STR_DATE_BASE )
    {
-      long U, V, W, X;
+      HB_LONGLONG U, V, W, X, J;
 
-      lJulian += 68569;
-      W = ( lJulian * 4 ) / 146097;
-      lJulian -= ( ( 146097 * W ) + 3 ) / 4;
-      X = 4000 * ( lJulian + 1 ) / 1461001;
-      lJulian -= ( ( 1461 * X ) / 4 ) - 31;
-      V = 80 * lJulian / 2447;
+      J = lJulian;
+      J += 68569;
+      W = ( J * 4 ) / 146097;
+      J -= ( ( 146097 * W ) + 3 ) / 4;
+      X = 4000 * ( J + 1 ) / 1461001;
+      J -= ( ( 1461 * X ) / 4 ) - 31;
+      V = 80 * J / 2447;
       U = V / 11;
 
       *piYear  = ( int ) ( X + U + ( W - 49 ) * 100 );
       *piMonth = ( int ) ( V + 2 - ( U * 12 ) );
-      *piDay   = ( int ) ( lJulian - ( 2447 * V / 80 ) );
+      *piDay   = ( int ) ( J - ( 2447 * V / 80 ) );
    }
    else
    {
