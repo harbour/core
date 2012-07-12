@@ -1267,7 +1267,7 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD split( nOrient, oEditP )
    METHOD relay( oEdit )
    METHOD destroy()
-   METHOD execEvent( cEvent, p )
+   METHOD execEvent( cEvent, p, p1, p2 )
    METHOD setDocumentProperties()
    METHOD activateTab( mp1, mp2, oXbp )
    METHOD buildTabPage( cSource )
@@ -1386,9 +1386,10 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
       ::qEdit:setTextInteractionFlags( Qt_TextSelectableByMouse + Qt_TextSelectableByKeyboard )
    ENDIF
 
+   ::qDocument:connect( "modificationChanged(bool)"  , {|p| ::execEvent( "qDocModificationChanged", p ) } )
+   ::qDocument:connect( "contentsChange(int,int,int)", {|p,p1,p2| ::execEvent( "qDocContentsChange", p, p1, p2 ) } )
+
    ::qDocument:setModified( .f. )
-   ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oTab:oWidget ), ;
-                                QIcon( hbide_image( iif( ::lReadOnly, "tabreadonly", "tabunmodified" ) ) ) )
 
    RETURN Self
 
@@ -1408,8 +1409,6 @@ METHOD IdeEditor:destroy()
    ENDIF
    /* This code is reached under normal circumstances, so delete auto saved file */
    ferase( hbide_pathToOSPath( ::cPath + ::cFile + ::cExt + ".tmp" ) )
-
-//   ::qHiliter := NIL
 
    ::qCqEdit  := NIL
    ::qCoEdit  := NIL
@@ -1606,9 +1605,7 @@ METHOD IdeEditor:reload()
    ENDIF
 
    ::oEdit:setReadOnly( ::lReadOnly )
-
-   ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oTab:oWidget ), ;
-                             QIcon( hbide_image( iif( ::lReadOnly, "tabreadonly", "tabunmodified" ) ) ) )
+   ::setTabImage()
 
    ::qEdit:clear()
    ::qEdit:setPlainText( ::prepareBufferToLoad( hb_memoread( ::sourceFile ) ) )
@@ -1642,8 +1639,6 @@ METHOD IdeEditor:setDocumentProperties()
 
       ::qEdit:document():setModified( .f. )
 
-      ::qTabWidget:setTabIcon( ::qTabWidget:indexOf( ::oTab:oWidget ), ;
-                                QIcon( hbide_image( iif( ::lReadOnly, "tabreadonly", "tabunmodified" ) ) ) )
       ::lLoaded := .T.
 
       IF HB_ISOBJECT( ::qHiliter )
@@ -1677,16 +1672,24 @@ METHOD IdeEditor:setDocumentProperties()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditor:execEvent( cEvent, p )
+METHOD IdeEditor:execEvent( cEvent, p, p1, p2 )
    LOCAL cFileTemp, aPops := {}
-
-   p := p
 
    IF ::lQuitting
       RETURN Self
    ENDIF
 
    SWITCH cEvent
+
+   CASE "qDocModificationChanged"
+      ::setTabImage()
+      EXIT
+
+   CASE "qDocContentsChange"
+      IF p1 + p2 > 0
+         ::oEdit:reformatLine( p, p1, p2 )
+      ENDIF
+      EXIT
 
    CASE "qTimeSave_timeout"
       IF ::qDocument:isModified()

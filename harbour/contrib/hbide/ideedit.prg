@@ -136,6 +136,7 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   isColumnSelectionON                     INIT .F.
    DATA   lReadOnly                               INIT .F.
    DATA   isHighLighted                           INIT .f.
+   DATA   cLastWord, cCurWord
 
    METHOD new( oIde, oEditor, nMode )
    METHOD create( oIde, oEditor, nMode )
@@ -248,6 +249,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD parseCodeCompletion( cSyntax )
 
    METHOD highlightPage()
+   METHOD reformatLine( nPos, nAdded, nDeleted )
 
    ENDCLASS
 
@@ -376,14 +378,14 @@ METHOD IdeEdit:disconnectEditSignals()
 METHOD IdeEdit:connectEditSignals()
 
    ::qEdit:connect( "customContextMenuRequested(QPoint)", {|p   | ::execEvent( 1, p ) } )
-   ::qEdit:connect( "textChanged()"                     , {|    | ::execEvent( 2,   ) } )
    ::qEdit:connect( "selectionChanged()"                , {|p   | ::execEvent( 6, p ) } )
    ::qEdit:connect( "cursorPositionChanged()"           , {|    | ::execEvent( 9,   ) } )
    ::qEdit:connect( "copyAvailable(bool)"               , {|p   | ::execEvent( 3, p ) } )
 
    #if 0
-   ::qEdit:connect( "updateRequest(QRect,int)"          , {|p,p1| ::execEvent( updateRequest, p, p1 ) } )
    ::qEdit:connect( "modificationChanged(bool)"         , {|p   | ::execEvent( 4, p ) } )
+   ::qEdit:connect( "textChanged()"                     , {|    | ::execEvent( 2,   ) } )
+   ::qEdit:connect( "updateRequest(QRect,int)"          , {|p,p1| ::execEvent( updateRequest, p, p1 ) } )
    ::qEdit:connect( "redoAvailable(bool)"               , {|p   | ::execEvent( 5, p ) } )
    ::qEdit:connect( "undoAvailable(bool)"               , {|p   | ::execEvent( 7, p ) } )
    #endif
@@ -393,7 +395,7 @@ METHOD IdeEdit:connectEditSignals()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:execEvent( nMode, p, p1 )
-   LOCAL qAct, n, qCursor, cProto, nRows, nCols, cAct
+   LOCAL qAct, n, qCursor, cAct
 
    HB_SYMBOL_UNUSED( p1 )
 
@@ -405,6 +407,55 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
    ::nCurLineNo := qCursor:blockNumber()
 
    SWITCH nMode
+
+   CASE timerTimeout
+      IF empty( ::cProto )
+         ::hidePrototype()
+      ELSE
+         ::showPrototype()
+      ENDIF
+      EXIT
+
+   CASE cursorPositionChanged
+      ::oEditor:dispEditInfo( ::qEdit )   /* Is a MUST */
+      ::markCurrentFunction()             /* Optimized */
+      EXIT
+
+   CASE selectionChanged
+      ::oEditor:qCqEdit := ::qEdit
+      ::oEditor:qCoEdit := Self
+
+      /* Book Marks reach-out buttons */
+      ::relayMarkButtons()
+      ::updateTitleBar()
+
+      ::toggleCurrentLineHighlightMode()
+      ::toggleLineNumbers()
+      ::toggleHorzRuler()
+      ::dispStatusInfo()
+
+      ::qEdit:hbGetSelectionInfo()
+      IF ::aSelectionInfo[ 1 ] > -1 .AND. ::aSelectionInfo[ 1 ] == ::aSelectionInfo[ 3 ]
+         ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, Len( ::getSelectedText() ) )
+      ELSE
+         ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, 0 )
+      ENDIF
+      ::oUpDn:show()
+      ::unHighlight()
+
+      IF HB_ISOBJECT( ::oEditor:qHiliter )
+         ::oEditor:qHiliter:hbSetEditor( ::qEdit )
+         ::qEdit:hbSetHighlighter( ::oEditor:qHiliter )
+         ::qEdit:hbHighlightPage()
+      ENDIF
+      EXIT
+
+   CASE copyAvailable
+      IF p .AND. ::lCopyWhenDblClicked
+         ::qEdit:copy()
+      ENDIF
+      ::lCopyWhenDblClicked := .f.
+      EXIT
 
    CASE customContextMenuRequested
       ::oEM:aActions[ 17, 2 ]:setEnabled( !empty( qCursor:selectedText() ) )
@@ -477,81 +528,14 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
       ENDSWITCH
       EXIT
 
-   CASE textChanged
-      //HB_TRACE( HB_TR_DEBUG, "textChanged()" )
-      ::oEditor:setTabImage( ::qEdit )
-      EXIT
-
-   CASE selectionChanged
-      //HB_TRACE( HB_TR_DEBUG, "selectionChanged()" )
-
-      ::oEditor:qCqEdit := ::qEdit
-      ::oEditor:qCoEdit := Self
-
-      /* Book Marks reach-out buttons */
-      ::relayMarkButtons()
-      ::updateTitleBar()
-
-      ::toggleCurrentLineHighlightMode()
-      ::toggleLineNumbers()
-      ::toggleHorzRuler()
-      ::dispStatusInfo()
-
-      ::qEdit:hbGetSelectionInfo()
-      IF ::aSelectionInfo[ 1 ] > -1 .AND. ::aSelectionInfo[ 1 ] == ::aSelectionInfo[ 3 ]
-         ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, Len( ::getSelectedText() ) )
-      ELSE
-         ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, 0 )
-      ENDIF
-      ::oUpDn:show()
-      ::unHighlight()
-
-      IF HB_ISOBJECT( ::oEditor:qHiliter )
-         ::oEditor:qHiliter:hbSetEditor( ::qEdit )
-         ::qEdit:hbSetHighlighter( ::oEditor:qHiliter )
-         ::qEdit:hbHighlightPage()
-      ENDIF
-
-      EXIT
-
-   CASE cursorPositionChanged
-      //HB_TRACE( HB_TR_DEBUG, "cursorPositionChanged()", ::nProtoLine, ::nProtoCol, ::isSuspended, ::getLineNo(), ::getColumnNo(), ::cProto )
-      ::oEditor:dispEditInfo( ::qEdit )
-      ::handlePreviousWord( ::lUpdatePrevWord )
-      ::handleCurrentIndent()
-
-      ::markCurrentFunction()
-
-      IF ::nProtoLine != -1
-         IF ::getLineNo() == ::nProtoLine .AND. ::getColumnNo() >= ::nProtoCol + 1
-            IF !empty( cProto := hbide_formatProto_1( ::cProtoOrg, ::getLine(), ::nProtoCol, ::getColumnNo(), @nRows, @nCols ) )
-               ::cProto     := cProto
-               ::nProtoRows := nRows
-               ::nProtoCols := nCols
-               ::showProtoType()
-            ENDIF
-         ENDIF
-      ENDIF
-      EXIT
-
-   CASE copyAvailable
-      IF p .AND. ::lCopyWhenDblClicked
-         ::qEdit:copy()
-      ENDIF
-      ::lCopyWhenDblClicked := .f.
-      EXIT
-
-   CASE timerTimeout
-      IF empty( ::cProto )
-         ::hidePrototype()
-      ELSE
-         ::showPrototype()
-      ENDIF
-      EXIT
-
    #if 0
+   CASE textChanged
+//      HB_TRACE( HB_TR_ALWAYS, "textChanged()" )
+//      ::oEditor:setTabImage( ::qEdit )
+//      ::handlePreviousWord( ::lUpdatePrevWord )
+      EXIT
    CASE modificationChanged
-      //HB_TRACE( HB_TR_DEBUG, "modificationChanged(bool)", p )
+      ::oEditor:setTabImage( ::qEdit )
       EXIT
    CASE redoAvailable
       //HB_TRACE( HB_TR_DEBUG, "redoAvailable(bool)", p )
@@ -1432,14 +1416,16 @@ METHOD IdeEdit:toPreviousFunction()
 METHOD IdeEdit:markCurrentFunction()
    LOCAL n
 
-   IF ::nPrevLineNo1 != ::getLineNo()
-      ::nPrevLineNo1 := ::getLineNo()
-
-      IF ( n := ::currentFunctionIndex() ) > 0
-         ::oIde:oFuncList:setItemColorFG( ::aTags[ n,7 ], { 255,0,0 } )
-         ::oIde:oFuncList:setVisible( ::aTags[ n,7 ] )
+   IF ::oFuncDock:oWidget:isVisible()
+      IF ::nPrevLineNo1 != ::getLineNo()
+         ::nPrevLineNo1 := ::getLineNo()
+         IF ( n := ::currentFunctionIndex() ) > 0
+            ::oIde:oFuncList:setItemColorFG( ::aTags[ n,7 ], { 255,0,0 } )
+            ::oIde:oFuncList:setVisible( ::aTags[ n,7 ] )
+         ENDIF
       ENDIF
    ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -2172,6 +2158,40 @@ METHOD IdeEdit:insertText( cText )
       qCursor:setPosition( nB )
       qCursor:endEditBlock()
    ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+/* called via qDocument:contentsChange(*/
+
+METHOD IdeEdit:reformatLine( nPos, nAdded, nDeleted )
+   LOCAL cProto, nRows, nCols
+   //LOCAL cWord, nColumn
+   //LOCAL qCursor := ::qEdit:textCursor()
+   //LOCAL cLine := ::getLine()
+
+   HB_SYMBOL_UNUSED( nPos )
+   HB_SYMBOL_UNUSED( nAdded )
+   HB_SYMBOL_UNUSED( nDeleted )
+
+   //nColumn := qCursor:columnNumber() + 1
+   //cWord := ::getWord()
+
+   //HB_TRACE( HB_TR_ALWAYS, nPos, nAdded, nDeleted, nColumn, len( cWord ), cWord )
+
+   ::handlePreviousWord( ::lUpdatePrevWord )
+   ::handleCurrentIndent()
+
+   IF ::nProtoLine != -1
+      IF ::getLineNo() == ::nProtoLine .AND. ::getColumnNo() >= ::nProtoCol + 1
+         IF !empty( cProto := hbide_formatProto_1( ::cProtoOrg, ::getLine(), ::nProtoCol, ::getColumnNo(), @nRows, @nCols ) )
+            ::cProto     := cProto
+            ::nProtoRows := nRows
+            ::nProtoCols := nCols
+            ::showProtoType()
+         ENDIF
+      ENDIF
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
