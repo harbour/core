@@ -1407,6 +1407,15 @@
 #define Qt_WMacNoSheet                            0                   // No longer needed.
 
 
+//Input Methods Hints
+#define Qt_ImhHiddenText                          0x1      // Characters should be hidden, as is typically used when entering passwords. This is automatically set when setting QLineEdit::echoMode to Password.
+#define Qt_ImhNoAutoUppercase                     0x2      // The input method should not try to automatically switch to upper case when a sentence ends.
+#define Qt_ImhPreferNumbers                       0x4      // Numbers are preferred (but not required).
+#define Qt_ImhPreferUppercase                     0x8      // Upper case letters are preferred (but not required).
+#define Qt_ImhPreferLowercase                     0x10     // Lower case letters are preferred (but not required).
+#define Qt_ImhNoPredictiveText                    0x20     // Do not use predictive text (i.e. dictionary lookup) while typing.
+
+
 // Frame Shadow
 #define QFrame_Plain                              0x0010   // the frame and contents appear level with the surroundings; draws using the palette QPalette::WindowText color (without any 3D effect)
 #define QFrame_Raised                             0x0020   // the frame and contents appear raised; draws a 3D raised line using the light and dark colors of the current color group
@@ -2353,6 +2362,20 @@
 #define QDeclarativeEngine_CppOwnership                      0     // The object is owned by C++ code, and will never be deleted by QML. The JavaScript destroy() method cannot be used on objects with CppOwnership. This option is similar to QScriptEngine::QtOwnership.
 #define QDeclarativeEngine_JavaScriptOwnership               1     // The object is owned by JavaScript. When the object is returned to QML as the return value of a method call or property access, QML will delete the object if there are no remaining JavaScript references to it and it has no QObject::parent(). This option is similar to QScriptEngine::ScriptOwnership.
 
+
+//MenuRole of Qaction
+#define QAction_NoRole                                       0     // This action should not be put into the application menu
+#define QAction_TextHeuristicRole                            1     // This action should be put in the application menu based on the action's text as described in the QMenuBar documentation.
+#define QAction_ApplicationSpecificRole                      2     // This action should be put in the application menu with an application specific role
+#define QAction_AboutQtRole                                  3     // This action matches handles the "About Qt" menu item.
+#define QAction_AboutRole                                    4     // This action should be placed where the "About" menu item is in the application menu. The text of the menu item will be set to "About <application name>". The application name is fetched from the Info.plist file in the application's bundle (See Deploying an Application on Mac OS X).
+#define QAction_PreferencesRole                              5     // This action should be placed where the "Preferences..." menu item is in the application menu.
+#define QAction_QuitRole                                     6     // This action should be placed where the Quit menu item is in the application menu.
+
+//QApplication:Translate
+#define QApplication_CodecForTr                              0     // The encoding specified by QTextCodec::codecForTr() (Latin-1 if none has been set).
+#define QApplication_UnicodeUTF8                             1     // UTF-8
+
 #define QLCDNumber_Hex                                       0     // Hexadecimal
 #define QLCDNumber_Dec                                       1     // Decimal
 #define QLCDNumber_Oct                                       2     // Octal
@@ -2365,6 +2388,7 @@
 #define QValidator_Invalid                                   0     // The string is clearly invalid.
 #define QValidator_Intermediate                              1     // The string is a plausible intermediate value.
 #define QValidator_Acceptable                                2     // The string is acceptable as a final result; i.e. it is valid.
+
 
 /*----------------------------------------------------------------------*/
 //                        HBQT Defined Constants

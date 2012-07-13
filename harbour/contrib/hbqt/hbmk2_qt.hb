@@ -32,6 +32,7 @@
 
 #include "directry.ch"
 #include "hbclass.ch"
+#include "error.ch"
 
 #define I_( x )                 hb_i18n_gettext( x )
 
@@ -573,7 +574,7 @@ STATIC FUNCTION uic_to_prg( hbmk, cFileNameSrc, cFileNameDst, cName )
 
 #define HBQTUI_STRINGIFY( cStr )    '"' + cStr + '"'
 #define HBQTUI_PAD_30( cStr )       PadR( cStr, Max( Len( cStr ), 35 ) )
-#define HBQTUI_STRIP_SQ( cStr )     StrTran( StrTran( StrTran( StrTran( s, "[", " " ), "]", " " ), "\n", " " ), Chr( 10 ), " " )
+#define HBQTUI_STRIP_SQ( cStr )     StrTran( StrTran( StrTran( StrTran( cStr, "[", " " ), "]", " " ), "\n", " " ), Chr( 10 ), " " )
 
 STATIC FUNCTION hbqtui_gen_prg( cFile, cFuncName )
    LOCAL s
@@ -588,6 +589,7 @@ STATIC FUNCTION hbqtui_gen_prg( cFile, cFuncName )
    LOCAL cCmd
    LOCAL aReg
    LOCAL aLinesPRG
+   LOCAL aMethodCalls := { { "QObject_connect( ", {| s | hbqtui_qobject_connect( s ) } } }
 
    LOCAL regEx := hb_regexComp( "\bQ[A-Za-z_]+ \b" )
 
@@ -595,6 +597,7 @@ STATIC FUNCTION hbqtui_gen_prg( cFile, cFuncName )
 
    LOCAL aWidgets := {}
    LOCAL aCommands := {}
+   LOCAL aCalls := {}
 
    lCreateFinished := .F.
 
@@ -624,12 +627,17 @@ STATIC FUNCTION hbqtui_gen_prg( cFile, cFuncName )
    NEXT
 
    FOR EACH s IN aLines
+      IF ! Empty( s )
+         hbqtui_replaceConstants( @s )  /* Replace Qt::* with Harbour constants */
+      ENDIF
+   NEXT
+
+   FOR EACH s IN aLines
 
       IF ! Empty( s )
 
          /* Replace Qt::* with actual values */
-         hbqtui_replaceConstants( @s )
-         hbqtui_QAppTranslate( @s )
+//         hbqtui_replaceConstants( @s )
 
          IF "setupUi" $ s
             lCreateFinished := .T.
@@ -638,6 +646,7 @@ STATIC FUNCTION hbqtui_gen_prg( cFile, cFuncName )
             /* It is the test for main widget's objectName, leave it. */
 
          ELSEIF Left( s, 1 ) == "Q" .AND. ! lCreateFinished .AND. ( n := At( "*", s ) ) > 0
+            HB_SYMBOL_UNUSED( n )
             /* We will deal later - just skip */
 
          ELSEIF hbqtui_notAString( s ) .AND. ! Empty( aReg := hb_regex( regEx, s ) )
@@ -654,13 +663,16 @@ STATIC FUNCTION hbqtui_gen_prg( cFile, cFuncName )
          ELSEIF hbqtui_isNonImplementedMethod( s )
             /* Do nothing */
 
+         ELSEIF ( n := hbqtui_isSupportedMethodCall( s, aMethodCalls ) ) > 0
+            AAdd( aCalls, Eval( aMethodCalls[ n ][ 2 ], s ) )
+
          ELSEIF ! Empty( cText := hbqtui_pullSetToolTip( aLines, s:__enumIndex() ) )
             n := At( "->", cText )
             cNam := AllTrim( SubStr( cText, 1, n - 1 ) )
             cCmd := hbqtui_formatCommand( SubStr( cText, n + 2 ), .T., aWidgets )
-            AAdd( aCommands, { cNam, cCmd } )
+            AAdd( aCommands, { cNam, hbqtui_pullTranslate( cCmd ) } )
 
-         ELSEIF ! Empty( cText := hbqui_pullText( aLines, s:__enumIndex() ) )
+         ELSEIF ! Empty( cText := hbqtui_pullText( aLines, s:__enumIndex() ) )
             n := At( "->", cText )
             cNam := AllTrim( SubStr( cText, 1, n - 1 ) )
             cCmd := hbqtui_formatCommand( SubStr( cText, n + 2 ), .T., aWidgets )
@@ -688,7 +700,7 @@ STATIC FUNCTION hbqtui_gen_prg( cFile, cFuncName )
             cNam := SubStr( s, 1, n - 1 )
             cCmd := hbqtui_formatCommand( SubStr( s, n + 2 ), .F., aWidgets )
             cCmd := hbqtui_setObjects( cCmd, aWidgets )
-            AAdd( aCommands, { cNam, cCmd } )
+            AAdd( aCommands, { cNam, hbqtui_pullTranslate( cCmd ) } )
 
          ELSEIF ( n := At( "= new", s ) ) > 0
             IF ( n1 := At( "*", s ) ) > 0 .AND. n1 < n
@@ -719,12 +731,12 @@ STATIC FUNCTION hbqtui_gen_prg( cFile, cFuncName )
    AAdd( aLinesPRG, "   RETURN " + StrTran( cFuncName, "hbqtui_", "ui_" ) + "():new( oParent )" )
    AAdd( aLinesPRG, "" )
 
-   hbqtui_buildClassCode( cFuncName, cMCls, aWidgets, aCommands, aLinesPRG )
+   hbqtui_buildClassCode( cFuncName, cMCls, aWidgets, aCommands, aCalls, aLinesPRG )
 
    RETURN aLinesPRG
 
-STATIC FUNCTION hbqtui_buildClassCode( cFuncName, cMCls, aWidgets, aCommands, aLinesPRG )
-   LOCAL item, cClass, cNam, cCmd, s
+STATIC FUNCTION hbqtui_buildClassCode( cFuncName, cMCls, aWidgets, aCommands, aCalls, aLinesPRG )
+   LOCAL item, cClass, cNam, cCmd
 
    cClass := strtran( cFuncName, "hbqtui_", "ui_" )
 
@@ -738,9 +750,15 @@ STATIC FUNCTION hbqtui_buildClassCode( cFuncName, cMCls, aWidgets, aCommands, aL
    NEXT
    AAdd( aLinesPRG, "" )
    AAdd( aLinesPRG, "   METHOD init( oParent )" )
-   AAdd( aLinesPRG, "   METHOD destroy()                     INLINE ::oWidget:setParent( QWidget() )" )
+   AAdd( aLinesPRG, "   METHOD destroy()                               INLINE ::oWidget:setParent( QWidget() )" )
    AAdd( aLinesPRG, "" )
    AAdd( aLinesPRG, "   ERROR HANDLER __OnError( ... )" )
+   AAdd( aLinesPRG, "" )
+   FOR EACH item IN aWidgets
+      IF At( "QAction", item[ 1 ] ) > 0
+         AAdd( aLinesPRG, "   MESSAGE " + PadR(  item[ 2 ] + "_triggered()", max( 38, Len( item[ 2 ] + "_triggered()" ) ) ) + " VIRTUAL" )
+      ENDIF
+   NEXT
    AAdd( aLinesPRG, "" )
    AAdd( aLinesPRG, "ENDCLASS" )
    AAdd( aLinesPRG, "" )
@@ -765,6 +783,7 @@ STATIC FUNCTION hbqtui_buildClassCode( cFuncName, cMCls, aWidgets, aCommands, aL
          AAdd( aLinesPRG, "   ::" + PadR( item[ 2 ], 34 ) + " := " + hbqtui_hashToObj( item[ 4 ] ) )
       ELSE
          AAdd( aLinesPRG, "   ::" + PadR( item[ 2 ], 34 ) + " := " + "::oWidget" )
+         AAdd( aLinesPRG, "" )
       ENDIF
    NEXT
    AAdd( aLinesPRG, "" )
@@ -776,32 +795,45 @@ STATIC FUNCTION hbqtui_buildClassCode( cFuncName, cMCls, aWidgets, aCommands, aL
       cCmd := StrTran( cCmd, "false", ".F." )
 
       IF "setToolTip(" $ cCmd
-         s := hbqtui_pullToolTip( cCmd )
-         AAdd( aLinesPRG, "   ::" + HBQTUI_PAD_30( cNam ) + ":  setToolTip( [" + HBQTUI_STRIP_SQ( s ) + "] )" )
+         AAdd( aLinesPRG, "   ::" + HBQTUI_PAD_30( cNam ) + ":  " + hbqtui_pullTranslate( cCmd ) )
 
       ELSEIF "setPlainText(" $ cCmd
-         s := hbqtui_pullToolTip( cCmd )
-         AAdd( aLinesPRG, "   ::" + HBQTUI_PAD_30( cNam ) + ":  setPlainText( [" + HBQTUI_STRIP_SQ( s ) + "] )" )
+         AAdd( aLinesPRG, "   ::" + HBQTUI_PAD_30( cNam ) + ":  " + cCmd )
 
       ELSEIF "setStyleSheet(" $ cCmd
-         s := hbqtui_pullToolTip( cCmd )
-         AAdd( aLinesPRG, "   ::" + HBQTUI_PAD_30( cNam ) + ":  setStyleSheet( [" + HBQTUI_STRIP_SQ( s ) + "] )" )
+         hbqtui_stripFront( @cCmd, "(" )
+         hbqtui_stripRear( @cCmd, ")" )
+         AAdd( aLinesPRG, "   ::" + HBQTUI_PAD_30( cNam ) + ":  setStyleSheet( " + HBQTUI_STRIP_SQ( cCmd ) + " )" )
+
+      ELSEIF "setText(" $ cCmd
+         AAdd( aLinesPRG, "   ::" + HBQTUI_PAD_30( cNam ) + ":  " + hbqtui_pullTranslate( cCmd ) )
 
       ELSEIF "setWhatsThis(" $ cCmd
-         s := hbqtui_pullToolTip( cCmd )
-         AAdd( aLinesPRG, "   ::" + HBQTUI_PAD_30( cNam ) + ":  setWhatsThis( [" + HBQTUI_STRIP_SQ( s ) + "] )" )
+         AAdd( aLinesPRG, "   ::" + HBQTUI_PAD_30( cNam ) + ":  " + hbqtui_pullTranslate( cCmd ) )
 
       ELSEIF "header()->" $ cCmd
          /* TODO: how to handle : __qtreeviewitem->header()->setVisible( .F. ) */
-
       ELSEIF cCmd == "pPtr"
          /* Nothing TO DO */
-
       ELSE
          AAdd( aLinesPRG, "   ::" + HBQTUI_PAD_30( cNam ) + ":  " + hbqtui_hashToObj( cCmd ) )
 
       ENDIF
    NEXT
+   AAdd( aLinesPRG, "" )
+
+   FOR EACH item IN aWidgets
+      IF item[ 1 ] == "QAction"
+         AAdd( aLinesPRG, "   ::" + HBQTUI_PAD_30( item[ 2 ] ) + ":  connect( " + '"triggered()", {|| ::' + item[ 2 ] + "_triggered() } )" )
+      ENDIF
+   NEXT
+
+   /* supported method calls */
+   AAdd( aLinesPRG, "" )
+   FOR EACH item IN aCalls
+      AAdd( aLinesPRG, "   " + item )
+   NEXT
+
    AAdd( aLinesPRG, "" )
    AAdd( aLinesPRG, "   RETURN Self" )
    AAdd( aLinesPRG, "" )
@@ -854,12 +886,6 @@ STATIC FUNCTION hbqtui_hashToObj( cCmd )
 
    RETURN cCmd
 
-STATIC FUNCTION hbqtui_QAppTranslate( cCmd )
-   IF "QApplication_translate" $ cCmd
-      cCmd := hbqtui_pullTranslate( cCmd )
-   ENDIF
-   RETURN cCmd
-
 STATIC FUNCTION hbqtui_formatCommand( cCmd, lText, widgets )
    LOCAL regDefine
    LOCAL aDefine
@@ -874,14 +900,10 @@ STATIC FUNCTION hbqtui_formatCommand( cCmd, lText, widgets )
       lText := .T.
    ENDIF
 
-// cCmd := StrTran( cCmd, "QApplication_translate"   , "q__tr"  )
-   cCmd := StrTran( cCmd, "QApplication::UnicodeUTF8", '"UTF8"' )
-   cCmd := StrTran( cCmd, "QString()"                , '""'     )
-   cCmd := StrTran( cCmd, "QSize("                   , "QSize(" )
-   cCmd := StrTran( cCmd, "QRect("                   , "QRect(" )
+   cCmd := StrTran( cCmd, "QString()", ' "" ' )
 
    IF "::" $ cCmd
-      regDefine := hb_regexComp( "\b[A-Za-z_]+\:\:[A-Za-z_]+\b" )
+      regDefine := hb_regexComp( "\b[A-Za-z_]+\:\:[A-Za-z0-9_]+\b" )
       aDefine := hb_regex( regDefine, cCmd )
       IF ! Empty( aDefine )
          cCmd := StrTran( cCmd, "::", "_" )    /* Qt Defines  - how to handle */
@@ -905,24 +927,90 @@ STATIC FUNCTION hbqtui_formatCommand( cCmd, lText, widgets )
 
 STATIC FUNCTION hbqtui_pullTranslate( cCmd )
    LOCAL n, n1, n2, n3, n4, cArgs, cText
+   LOCAL cName
+   LOCAL cEnd
+   LOCAL cDisamb
+   LOCAL oError
 
-   IF ( n := at( "QApplication_translate", cCmd ) ) > 0
+   /* Examples:
+      object->setWindowTitle(QApplication_translate("DialogName", "[Dialog Title]\"\303\263Title\"", 0, QApplication_UnicodeUTF8))
+      object->setWindowTitle(QApplication::translate("FormEnvironments", "Form", 0, QApplication::UnicodeUTF8));
+      object->setToolTip(QString());
+      object->setWhatsThis(QApplication::translate("FormEnvironments", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
+               "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
+               "p, li { white-space: pre-wrap; }\n"
+               "</style></head><body style=\" font-family:'MS Shell Dlg 2'; font-size:8.25pt; font-weight:400; font-style:normal;\">\n"
+               "<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">HBIDE employes the concept of keeping everything tied together. It means all complier specific environments are kept together in a convinient way and applied as per need.</span></p>\n"
+               "<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"></p>\n"
+               "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" fo"
+                        "nt-size:8pt;\">So here you view/edit all the environments you employ in your applications. At the time you will build the project, a list of stated environments will be presented to choose from.</span></p>\n"
+               "<p align=\"center\" style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:8pt;\"></p>\n"
+               "<p align=\"center\" style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><span style=\" font-size:8pt;\">This opens up the possibility to experiment with different compilers without re-opening the IDE or setting up the envvars manually.</span></p></body></html>", 0, QApplication::UnicodeUTF8));
+   */
+
+   IF ( n := At( "QApplication_translate", cCmd ) ) > 0
       n1 := hb_at( "(", cCmd, n )
       n2 := hb_rat( ")", cCmd )
       cArgs := SubStr( cCmd, n1 + 1, n2 - n1 - 2 )
+      /* "DialogName", "[Dialog Title]\"\303\263Title\"", 0, QApplication_UnicodeUTF8 */
 
       n3 := at( ",", cArgs )
-      n4 := hb_at( ",", cArgs, n3 + 1 )
-      cText := StrTran( AllTrim( SubStr( cArgs, n3 + 1, n4 - n3 - 2 ) ), '"' )
+      cName := SubStr( cArgs, 2, n3 - 3 )
+      cArgs := SubStr( cArgs, n3 + 1 )
+      /*  "[Dialog Title]\"\303\263Title\"", 0, QApplication_UnicodeUTF8 */
+      IF ( n4 := At( "QApplication_UnicodeUTF8", cArgs ) ) > 0
+         cEnd := SubStr( cArgs, n4 )    /* "QApplication_UnicodeUTF8" */
+      ELSEIF ( n4 := At( "QApplication_CodecForTr", cArgs ) ) > 0
+         cEnd := SubStr( cArgs, n4 )    /* "QApplication_CodecForTr" */
+      ELSE
+         oError := ErrorNew()
+         oError:severity    := ES_ERROR
+         oError:genCode     := EG_ARG
+         oError:subSystem   := "HBMK2"
+         oError:subCode     := 1001
+         oError:canRetry    := .F.
+         oError:canDefault  := .F.
+         oError:Args        := cCmd
+         oError:operation   := ProcName()
+         oError:Description := "Unsupported QT-encoding in QApplication:translate() call"
+         Eval( ErrorBlock(), oError )
+      ENDIF
 
-      cCmd := SubStr( cCmd, 1, n - 1 ) + ' "' + cText + '" ' + ")"
+      IF ! Empty( cEnd )
+         /* Known translation */
+         cArgs := Left( cArgs, n4 - 1 )
+         /*  "[Dialog Title]\"\303\263Title\"", 0, */
+         n4 := hb_RAt( ",", cArgs )
+         cArgs := Left( cArgs, n4 - 1 )
+         /*  "[Dialog Title]\"\303\263Title\"", 0 */
+         n4 := hb_RAt( ",", cArgs )
+         cDisamb := AllTrim( SubStr( cArgs, n4 + 1 ) )
+         IF cDisamb == "0"
+            cDisamb := '""'
+         ENDIF
+         cArgs := AllTrim( Left( cArgs, n4 - 1 ) )
+         // cArgs := HB_STRDECODESCAPE( SubStr( cArgs, 2, Len( cArgs ) - 2 ) )
+
+         IF "DOCTYPE HTML PUBLIC" $ cArgs
+            cArgs := StrTran( cArgs, '\"', '"' )
+            cArgs := StrTran( cArgs, '\n', " " )
+            cArgs := StrTran( cArgs, '""' )
+            cArgs := "[" + Substr( cArgs, 2, Len( cArgs ) - 2 ) + "]"
+            cText := ' QApplication():translate( "' + cName + '", ' + cArgs + ', ' + cDisamb + ', ' + cEnd + " )"
+         ELSE
+            cText := ' QApplication():translate( "' + cName + '", e' + cArgs + ', ' + cDisamb + ', ' + cEnd + " )"
+         ENDIF
+         /* Finally translate to CP used by application */
+         cCmd := SubStr( cCmd, 1, n - 1 ) + cText + " )"
+      ENDIF
    ENDIF
+
    RETURN cCmd
 
 STATIC FUNCTION hbqtui_isNonImplementedMethod( cString )
    LOCAL cMethod, aMethods := {}
 
-   AAdd( aMethods, "setAccessibleName" )
+   AAdd( aMethods, "setAccessibleName" ) /* Add other methods which could not been implemented in HbQt */
 
    FOR EACH cMethod IN aMethods
       IF cMethod $ cString
@@ -954,6 +1042,36 @@ STATIC FUNCTION hbqtui_occurs( cString, cCharToFind )
    NEXT
 
    RETURN nCount
+
+STATIC FUNCTION hbqtui_isSupportedMethodCall( cString, aMethodCalls )
+   LOCAL aMethod
+
+   FOR EACH aMethod IN aMethodCalls
+      IF aMethod[ 1 ] $ cString
+         RETURN aMethod:__enumIndex()
+      ENDIF
+   NEXT
+
+   RETURN 0
+
+STATIC FUNCTION hbqtui_qobject_connect( cString )
+   LOCAL cCall
+   LOCAL n, n2, n4
+   LOCAL aPar
+
+   /* QObject::connect( buttonOK, SIGNAL( clicked() ), actionName, SLOT( trigger() ) ); */
+   cString := StrTran( cString, "QObject_connect", "hbqt_connect" )
+   n := At( "(", cString )
+   aPar := hb_aTokens( SubStr( cString, n + 1, Len( cString ) - n - 1 ), "," )
+   n2 := At( "(", aPar[ 2 ] )
+   n4 := At( "(", aPar[ 4 ] )
+   cCall := Left( cString, n ) +;
+            "::" + AllTrim( aPar[ 1 ] ) + ', ' +;
+            '"'  + SubStr( aPar[ 2 ], n2 + 1, Len( aPar[ 2 ] ) - n2 - 1 ) + '", ' +;
+            "::" + AllTrim( aPar[ 3 ] ) + ', ' +;
+            '"'  + SubStr( aPar[ 4 ], n4 + 1, Len( aPar[ 4 ] ) - n4 - 1 ) + '" ) '
+
+   RETURN cCall
 
 STATIC FUNCTION hbqtui_pullColumn( cCmd, nCol )
 
@@ -989,13 +1107,22 @@ STATIC PROCEDURE hbqtui_replaceConstants( /* @ */ cString )
    LOCAL cCmdB
    LOCAL cCmdE
    LOCAL cOR
-   LOCAL n, n1
+   LOCAL n, n1, n2, n3
 
-   LOCAL regDefine := hb_regexComp( "\b[A-Za-z_]+\:\:[A-Za-z_]+\b" )
+   LOCAL regDefine := hb_regexComp( "\b[A-Za-z_]+\:\:[A-Za-z0-9_]+\b" )
 
-   IF ( n := At( "QString::fromUtf8(", cString ) ) > 0
+   IF At( 'QString::fromUtf8("")', cString ) > 0
+      cString := StrTran( cString, 'QString::fromUtf8("")', '""' )
+
+   ELSEIF ( n := At( "QString::fromUtf8(", cString ) ) > 0
+      n2 := hb_At( '"', cString, n )
+      n3 := hb_At( '"', cString, n2 + 1 )
       n1 := hb_At( ")", cString, n )
-      cString := SubStr( cString, 1, n - 1 ) + SubStr( cString, n + Len( "QString::fromUtf8(" ), n1 - ( n + Len( "QString::fromUtf8(" ) ) ) + SubStr( cString, n1 + 1 )
+      IF n2 < n1 .AND. n1 < n3
+         n1 := hb_At( ")", cString, n3 + 1 )
+      ENDIF
+      cString := SubStr( cString, 1, n - 1 ) + substr( cString, n + len( "QString::fromUtf8(" ), n1 - ( n + len( "QString::fromUtf8(" ) ) ) + SubStr( cString, n1 + 1 )
+
    ENDIF
 
    IF hbqtui_occurs( cString, "|" ) > 0
@@ -1051,7 +1178,7 @@ STATIC FUNCTION hbqtui_setObjects( cCmd, aWidgets )
 
    RETURN cCmd
 
-STATIC FUNCTION hbqui_pullText( aLines, nFrom )
+STATIC FUNCTION hbqtui_pullText( aLines, nFrom )
    LOCAL cString := ""
    LOCAL nLen := Len( aLines )
    LOCAL aKeyword := { "setText(", "setPlainText(", "setStyleSheet(", "setWhatsThis(" }
