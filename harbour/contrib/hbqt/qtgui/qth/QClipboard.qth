@@ -25,13 +25,17 @@ Detached = yes
 #include <QtGui/QApplication>
 #include <QtCore/QMimeData>
 
+HB_EXTERN_BEGIN
+extern HB_EXPORT QApplication * __hbqtgui_app( void );
+HB_EXTERN_END
+
 /*
  * QApplication::clipboard()
  *
  */
 HB_FUNC( QT_QCLIPBOARD )
 {
-   hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ( void* ) QApplication::clipboard(), "HB_QCLIPBOARD", NULL, HBQT_BIT_NONE ) );
+   hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, ( void* ) __hbqtgui_app()->clipboard(), "HB_QCLIPBOARD", NULL, HBQT_BIT_QOBJECT ) );
 }
 </CODE>
 
@@ -61,7 +65,7 @@ bool supportsFindBuffer () const
 bool supportsSelection () const
 QString text ( Mode mode = Clipboard ) const
 #
-// QString text ( QString & subtype, Mode mode = Clipboard ) const
+//QString text ( const QString & subtype, Mode mode = Clipboard ) const
 #
 </PROTOS>
 
