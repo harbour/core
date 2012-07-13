@@ -189,6 +189,7 @@ CLASS HbIde
    DATA   aEditorPath                             INIT   {}
    DATA   aSrcOnCmdLine                           INIT   {}
    DATA   aHbpOnCmdLine                           INIT   {}
+   DATA   aDbfOnCmdLine                           INIT   {}
 
    /* HBQT Objects */
    DATA   qLayout
@@ -724,6 +725,8 @@ METHOD HbIde:create( aParams )
    IF ::nRunMode == HBIDE_RUN_MODE_PRG
       ::oDockPT:hide()
       ::oDockED:hide()
+      ::qTBarDocks:hide()
+      ::oMainToolbar:hide()
       ::oDK:setView( "Main" )
    ELSEIF ::nRunMode == HBIDE_RUN_MODE_HBP
       ::oDockED:hide()
@@ -731,6 +734,10 @@ METHOD HbIde:create( aParams )
    ELSE
       ::oDK:setView( "Main" )
       ::oDK:setView( cView )
+   ENDIF
+
+   IF ! empty( ::aDbfOnCmdLine )      /* Will take priority and allot more width to browser than editor : logical */
+      ::oBM:open( ::aDbfOnCmdLine )
    ENDIF
 
    ::qTabWidget:setCurrentIndex( -1 )
@@ -814,6 +821,8 @@ METHOD HbIde:parseParams()
          DO CASE
          CASE cExt == ".ini"
             aadd( aIni, s )
+         CASE cExt == ".dbf"
+            aadd( ::aDbfOnCmdLine, s )
          CASE cExt == ".hbp"
             aadd( ::aHbpOnCmdLine, s )
          CASE cExt $ ".prg.cpp"
@@ -833,6 +842,9 @@ METHOD HbIde:parseParams()
    ELSEIF !empty( ::aSrcOnCmdLine )
       ::cProjIni := ""
       ::nRunMode := HBIDE_RUN_MODE_PRG
+   ELSEIF !empty( ::aDbfOnCmdLine )
+      ::cProjIni := ""
+      ::nRunMode := HBIDE_RUN_MODE_PRG    /* Because then bare-bone HbIDE will be presented like sources */
    ELSE
       ::cProjIni := ""
       ::nRunMode := HBIDE_RUN_MODE_INI

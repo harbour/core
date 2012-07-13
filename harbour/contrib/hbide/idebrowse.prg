@@ -146,6 +146,7 @@ CLASS IdeBrowseManager INHERIT IdeObject
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD show()
+   METHOD open( aDbfs )
    METHOD destroy()
    METHOD buildToolbar()
    METHOD execEvent( cEvent, p, p1 )
@@ -944,6 +945,30 @@ METHOD IdeBrowseManager:buildUiStruct()
    oTbl:connect( "itemSelectionChanged()", {|| ::execEvent( "fieldsTable_itemSelectionChanged" ) } )
 
    ::qStruct:buttonCopyStruct:connect( "clicked()", {|| ::execEvent( "buttonCopyStruct_clicked" ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeBrowseManager:open( aDbfs )
+   LOCAL aInfo, cTable, oRect, oRec := ::oDlg:geometry()
+   LOCAL nX := 0, nY := 0
+
+   FOR EACH cTable IN aDbfs
+      nX += 20; nY += 20
+      // Main,C:\harbour\tests\test.dbf,TEST,DBFCDX,0,500,2,0 0 300 504,21,1,,,,
+      aInfo := array( TBL_VRBLS )
+      aInfo[ TBL_PANEL ] := "Main"
+      aInfo[ TBL_NAME  ] := cTable
+      aInfo[ TBL_GEOMETRY ] := hb_ntos( nX ) + " " + hb_ntos( nY ) + " 500 300"
+
+      ::oCurPanel:addBrowser( aInfo )
+   NEXT
+   oRect := ::oQScintillaDock:oWidget:geometry()
+   oRect:setWidth( oRec:width() - iif( empty( ::oIde:aSrcOnCmdLine() ), 50, 300 ) )
+   ::oQScintillaDock:oWidget:setMinimumWidth( oRect:width() )
+   ::oQScintillaDock:oWidget:show()
+   ::oQScintillaDock:oWidget:setMinimumWidth( 300 )
 
    RETURN Self
 

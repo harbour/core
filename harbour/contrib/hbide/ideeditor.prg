@@ -1687,7 +1687,7 @@ METHOD IdeEditor:execEvent( cEvent, p, p1, p2 )
 
    CASE "qDocContentsChange"
       IF p1 + p2 > 0
-         ::oEdit:reformatLine( p, p1, p2 )
+         ::qCoEdit:reformatLine( p, p1, p2 )
       ENDIF
       EXIT
 
