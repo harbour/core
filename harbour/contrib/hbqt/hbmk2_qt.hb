@@ -627,17 +627,11 @@ STATIC FUNCTION hbqtui_gen_prg( cFile, cFuncName )
    NEXT
 
    FOR EACH s IN aLines
-      IF ! Empty( s )
-         hbqtui_replaceConstants( @s )  /* Replace Qt::* with Harbour constants */
-      ENDIF
-   NEXT
-
-   FOR EACH s IN aLines
 
       IF ! Empty( s )
 
          /* Replace Qt::* with actual values */
-//         hbqtui_replaceConstants( @s )
+         hbqtui_replaceConstants( @s )
 
          IF "setupUi" $ s
             lCreateFinished := .T.

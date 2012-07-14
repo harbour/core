@@ -349,7 +349,8 @@ METHOD IdeEdit:destroy()
 
    ::disconnectEditSignals()
 
-   ::qEdit  := NIL
+   //::qEdit  := NIL
+   ::qEdit:setParent( QWidget() )  /* Works, but GPF on exit */
    ::qFont  := NIL
 
    RETURN NIL
@@ -395,7 +396,7 @@ METHOD IdeEdit:connectEditSignals()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:execEvent( nMode, p, p1 )
-   LOCAL qAct, n, qCursor, cAct
+   LOCAL qAct, n, qCursor, cAct, lOtherEdit
 
    HB_SYMBOL_UNUSED( p1 )
 
@@ -422,32 +423,26 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
       EXIT
 
    CASE selectionChanged
-      ::oEditor:qCqEdit := ::qEdit
-      ::oEditor:qCoEdit := Self
+      lOtherEdit := ! ( ::oEditor:qCqEdit == ::qEdit )
+      IF lOtherEdit
+         ::oEditor:qCqEdit := ::qEdit
+         ::oEditor:qCoEdit := Self
 
-      /* Book Marks reach-out buttons */
-      ::relayMarkButtons()
-      ::updateTitleBar()
+         ::unHighlight()
 
-      ::toggleCurrentLineHighlightMode()
-      ::toggleLineNumbers()
-      ::toggleHorzRuler()
-      ::dispStatusInfo()
-
+         IF HB_ISOBJECT( ::oEditor:qHiliter )
+            ::oEditor:qHiliter:hbSetEditor( ::qEdit )
+            ::qEdit:hbSetHighlighter( ::oEditor:qHiliter )
+         ENDIF
+      ENDIF
+#if 0    /* Disabled for now, has a big speed disadvantage */
       ::qEdit:hbGetSelectionInfo()
       IF ::aSelectionInfo[ 1 ] > -1 .AND. ::aSelectionInfo[ 1 ] == ::aSelectionInfo[ 3 ]
          ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, Len( ::getSelectedText() ) )
       ELSE
          ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, 0 )
       ENDIF
-      ::oUpDn:show()
-      ::unHighlight()
-
-      IF HB_ISOBJECT( ::oEditor:qHiliter )
-         ::oEditor:qHiliter:hbSetEditor( ::qEdit )
-         ::qEdit:hbSetHighlighter( ::oEditor:qHiliter )
-         ::qEdit:hbHighlightPage()
-      ENDIF
+#endif
       EXIT
 
    CASE copyAvailable
@@ -659,6 +654,7 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
 
       ELSEIF p == 21000                     /* Sends Block Info { t,l,b,r,mode,state } hbGetBlockInfo() */
          ::aSelectionInfo := p1
+         ::oDK:setButtonState( "SelectionMode", ::aSelectionInfo[ 5 ] > 1 )
 
       ELSEIF p == 21001
          ::handlePreviousWord( .t. )
@@ -755,7 +751,7 @@ METHOD IdeEdit:dispStatusInfo()
 
    ::qEdit:hbGetSelectionInfo()
    nMode := ::aSelectionInfo[ 5 ]
-   ::oDK:setButtonState( "stream", nMode > 1 )
+   ::oDK:setButtonState( "SelectionMode", nMode > 1 )
    ::oDK:setStatusText( SB_PNL_STREAM, iif( nMode == 2, "Column", iif( nMode == 3, "Line", "Stream" ) ) )
 
    RETURN Self
@@ -1044,7 +1040,7 @@ METHOD IdeEdit:insertBlockContents( aCord )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:deleteBlockContents( aCord )
-   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, k, nSelMode
+   LOCAL nT, nL, nB, nR, i, cLine, qCursor, k, nSelMode
 
    IF ::lReadOnly
       RETURN Self
@@ -1062,8 +1058,7 @@ METHOD IdeEdit:deleteBlockContents( aCord )
    qCursor := ::qEdit:textCursor()
    qCursor:beginEditBlock()
 
-   nW := nR - nL
-   IF nW == 0 .AND. k == Qt_Key_Backspace
+   IF k == Qt_Key_Backspace
       IF nSelMode == selectionMode_column
          FOR i := nT TO nB
             cLine := ::getLine( i + 1 )
@@ -1584,15 +1579,6 @@ METHOD IdeEdit:setReadOnly( lReadOnly )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:gotoMark( nIndex )
-   IF Len( ::aBookMarks ) >= nIndex
-      ::qEdit:hbGotoBookmark( ::aBookMarks[ nIndex ] )
-      ::qEdit:centerCursor()
-   ENDIF
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeEdit:relayMarkButtons()
    LOCAL oBtn
    FOR EACH oBtn IN ::aMarkTBtns
@@ -1601,6 +1587,17 @@ METHOD IdeEdit:relayMarkButtons()
    FOR EACH oBtn IN ::aBookMarks
       ::aMarkTBtns[ oBtn:__enumIndex() ]:show()
    NEXT
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:gotoMark( nIndex )
+
+   IF Len( ::aBookMarks ) >= nIndex
+      ::qEdit:hbGotoBookmark( ::aBookMarks[ nIndex ] )
+      ::qEdit:centerCursor()
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1624,6 +1621,7 @@ METHOD IdeEdit:setNewMark()
       ENDIF
 
       ::qEdit:hbBookMarks( nBlock )
+      ::qEdit:repaint()
    ENDIF
    RETURN Self
 

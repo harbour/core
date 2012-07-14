@@ -1718,13 +1718,13 @@ METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
    IF !empty( oEdit := ::oEM:getEditorByTabObject( oXbp ) )
       oEdit:setDocumentProperties()
       oEdit:qCoEdit:relayMarkButtons()
+      oEdit:qCoEdit:updateTitleBar()
       oEdit:qCoEdit:toggleLineNumbers()
       oEdit:qCoEdit:toggleHorzRuler()
       oEdit:qCoEdit:toggleCurrentLineHighlightMode()
       oEdit:qCoEdit:dispStatusInfo()
       ::oUpDn:show()
       oEdit:changeThumbnail()
-      oEdit:qCoEdit:highlightPage()
    ENDIF
 
    RETURN Self

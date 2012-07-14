@@ -268,6 +268,7 @@ METHOD IdeSourcesManager:saveSource( nTab, lCancel, lAs )
             oEdit:sourceFile := cFileToSave
 
             oEdit:oTab:Caption := cFile + cExt
+            oEdit:updateTitleBar()
 
             ::qTabWidget:setTabText( nIndex, cFile + cExt )
             ::qTabWidget:setTabTooltip( nIndex, cFileToSave )

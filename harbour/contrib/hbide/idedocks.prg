@@ -1658,6 +1658,8 @@ METHOD IdeDocks:outputDoubleClicked( lSelected )
 METHOD IdeDocks:buildStatusBar()
    LOCAL i
 
+   STATIC qTBtn
+
    ::oIde:oSBar := XbpStatusBar():new()
    ::oSBar:create( ::oDlg, , { 0,0 }, { ::oDlg:currentSize()[ 1 ], 30 } )
    ::oSBar:oWidget:showMessage( "" )
@@ -1681,6 +1683,14 @@ METHOD IdeDocks:buildStatusBar()
    ::oSBar:addItem( "", , , , "Theme"    ):oWidget:setMinimumWidth(  20 )
 
 
+   qTBtn := QToolButton( ::oSBar:oWidget )
+   qTBtn:setTooltip( "Toggle Mark" )
+   qTBtn:setIcon(  QIcon( hbide_image( "bookmark" ) ) )
+   qTBtn:connect( "clicked()", {|| ::oEM:setMark() } )
+   qTBtn:setMaximumHeight( 16 )
+   qTBtn:setMaximumWidth( 16 )
+   qTBtn:setAutoRaise( .t. )
+   ::oSBar:oWidget:addWidget( qTBtn )
    FOR i := 1 TO 6
       ::oSBar:oWidget:addWidget( ::getMarkWidget( i ) )
    NEXT
