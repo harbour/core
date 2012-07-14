@@ -69,6 +69,12 @@
 #include "hbclass.ch"
 #include "hbqtgui.ch"
 
+#define __buttonPrev_clicked                      1
+#define __buttonNext_clicked                      2
+#define __buttonFirst_clicked                     3
+#define __buttonLast_clicked                      4
+#define __buttonAll_clicked                       5
+
 /*----------------------------------------------------------------------*/
 
 CLASS IdeUpDown INHERIT IdeObject
@@ -76,9 +82,9 @@ CLASS IdeUpDown INHERIT IdeObject
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
-   METHOD show()
+   METHOD show( oEdit )
    METHOD position()
-   METHOD execEvent( cEvent, p )
+   METHOD execEvent( nEvent, p )
 
    ENDCLASS
 
@@ -111,11 +117,11 @@ METHOD IdeUpDown:position()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeUpDown:show()
-   LOCAL oEdit
+METHOD IdeUpDown:show( oEdit )
 
-   IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
-      oEdit:qEdit:hbGetSelectionInfo()
+   DEFAULT oEdit TO ::oEM:getEditObjectCurrent()
+
+   IF ! empty( oEdit )
       IF oEdit:aSelectionInfo[ 1 ] > -1
          ::oUI:setEnabled( .t. )
       ELSE
@@ -140,29 +146,31 @@ METHOD IdeUpDown:create( oIde )
 
    ::oUI:buttonPrev:setIcon( QIcon( hbide_image( "go-prev" ) ) )
    ::oUI:buttonPrev:setToolTip( "Find Previous" )
-   ::oUI:buttonPrev:connect( "clicked()", {|| ::execEvent( "buttonPrev_clicked" ) } )
+   ::oUI:buttonPrev:connect( "clicked()", {|| ::execEvent( __buttonPrev_clicked ) } )
    //
    ::oUI:buttonNext:setIcon( QIcon( hbide_image( "go-next" ) ) )
    ::oUI:buttonNext:setToolTip( "Find Next" )
-   ::oUI:buttonNext:connect( "clicked()", {|| ::execEvent( "buttonNext_clicked" ) } )
+   ::oUI:buttonNext:connect( "clicked()", {|| ::execEvent( __buttonNext_clicked ) } )
    //
    ::oUI:buttonFirst:setIcon( QIcon( hbide_image( "go-first" ) ) )
    ::oUI:buttonFirst:setToolTip( "Find First" )
-   ::oUI:buttonFirst:connect( "clicked()", {|| ::execEvent( "buttonFirst_clicked" ) } )
+   ::oUI:buttonFirst:connect( "clicked()", {|| ::execEvent( __buttonFirst_clicked ) } )
    //
    ::oUI:buttonLast:setIcon( QIcon( hbide_image( "go-last" ) ) )
    ::oUI:buttonLast:setToolTip( "Find Last" )
-   ::oUI:buttonLast:connect( "clicked()", {|| ::execEvent( "buttonLast_clicked" ) } )
+   ::oUI:buttonLast:connect( "clicked()", {|| ::execEvent( __buttonLast_clicked ) } )
    //
    ::oUI:buttonAll:setIcon( QIcon( hbide_image( "hilight-all" ) ) )
    ::oUI:buttonAll:setToolTip( "Highlight All" )
-   ::oUI:buttonAll:connect( "clicked()", {|| ::execEvent( "buttonAll_clicked" ) } )
+   ::oUI:buttonAll:connect( "clicked()", {|| ::execEvent( __buttonAll_clicked ) } )
+
+   ::oUI:setEnabled( .f. )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeUpDown:execEvent( cEvent, p )
+METHOD IdeUpDown:execEvent( nEvent, p )
    LOCAL cText, oEdit
 
    HB_SYMBOL_UNUSED( p )
@@ -173,26 +181,27 @@ METHOD IdeUpDown:execEvent( cEvent, p )
    IF !empty( oEdit := ::oEM:getEditObjectCurrent() )
       cText := oEdit:getSelectedText()
    ENDIF
-
    IF !empty( cText )
-      SWITCH cEvent
-      CASE "buttonPrev_clicked"
+      SWITCH nEvent
+
+      CASE __buttonPrev_clicked
          oEdit:findEx( cText, QTextDocument_FindBackward, 0 )
          EXIT
-      CASE "buttonNext_clicked"
+      CASE __buttonNext_clicked
          oEdit:findEx( cText, 0, 0 )
          EXIT
-      CASE "buttonFirst_clicked"
+      CASE __buttonFirst_clicked
          oEdit:findEx( cText, 0, 1 )
          EXIT
-      CASE "buttonLast_clicked"
+      CASE __buttonLast_clicked
          oEdit:findEx( cText, QTextDocument_FindBackward, 2 )
          EXIT
-      CASE "buttonAll_clicked"
+      CASE __buttonAll_clicked
          oEdit:highlightAll( cText )
          EXIT
       ENDSWITCH
    ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

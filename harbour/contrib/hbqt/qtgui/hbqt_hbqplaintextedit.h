@@ -125,6 +125,7 @@ public:
    void           hbUpdateHorzRulerHeight( int height );
    void           hbSetHighLighter( HBQSyntaxHighlighter * hilighter ){ highlighter = hilighter; };
    void           hbHighlightPage();
+   void           hbPostSelectionInfo();
 
    int            firstVisibleBlockNumber()        { return QPlainTextEdit::firstVisibleBlock().blockNumber(); };
    int            lastVisibleBlockNumber();
@@ -176,7 +177,7 @@ private:
    bool           isCompletionTipsActive;
    bool           isInDrag;
    QPoint         dragStartPosition;
-   
+
 protected:
    bool           event( QEvent * event );
    void           resizeEvent( QResizeEvent * event );
@@ -224,7 +225,6 @@ public slots:
    void           hbCopy();
    void           hbPaste();
    void           hbToStream();
-   void           hbGetSelectionInfo();
    void           hbSetSelectionMode( int mode, bool on );
    void           hbSetSelectionInfo( PHB_ITEM selectionInfo );
    void           hbSetSelectionColor( const QColor & color );

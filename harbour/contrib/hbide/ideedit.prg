@@ -72,21 +72,21 @@
 
 /*----------------------------------------------------------------------*/
 
-#define customContextMenuRequested                1
-#define textChanged                               2
-#define copyAvailable                             3
-#define modificationChanged                       4
-#define redoAvailable                             5
-#define selectionChanged                          6
-#define undoAvailable                             7
-#define updateRequest                             8
-#define cursorPositionChanged                     9
+#define __customContextMenuRequested                1
+#define __textChanged                               2
+#define __copyAvailable                             3
+#define __modificationChanged                       4
+#define __redoAvailable                             5
+#define __selectionChanged                          6
+#define __undoAvailable                             7
+#define __updateRequest                             8
+#define __cursorPositionChanged                     9
 
-#define timerTimeout                              23
+#define __timerTimeout                              23
 
-#define selectionMode_stream                      1
-#define selectionMode_column                      2
-#define selectionMode_line                        3
+#define __selectionMode_stream                      1
+#define __selectionMode_column                      2
+#define __selectionMode_line                        3
 
 /*----------------------------------------------------------------------*/
 
@@ -212,10 +212,10 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD isModified()                            INLINE ::oEditor:qDocument:isModified()
    METHOD setFont()
    METHOD markCurrentFunction()
-   METHOD copyBlockContents( aCord )
-   METHOD pasteBlockContents( nMode )
+   METHOD copyBlockContents()
+   METHOD pasteBlockContents()
    METHOD insertBlockContents( aCord )
-   METHOD deleteBlockContents( aCord )
+   METHOD deleteBlockContents( k )
    METHOD zoom( nKey )
    METHOD blockConvert( cMode )
    METHOD dispStatusInfo()
@@ -320,7 +320,7 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
 
    ::qTimer := QTimer()
    ::qTimer:setInterval( 2000 )
-   ::qTimer:connect( "timeout()",  {|| ::execEvent( timerTimeout ) } )
+   ::qTimer:connect( "timeout()",  {|| ::execEvent( __timerTimeout ) } )
 
    RETURN Self
 
@@ -378,17 +378,17 @@ METHOD IdeEdit:disconnectEditSignals()
 
 METHOD IdeEdit:connectEditSignals()
 
-   ::qEdit:connect( "customContextMenuRequested(QPoint)", {|p   | ::execEvent( 1, p ) } )
-   ::qEdit:connect( "selectionChanged()"                , {|p   | ::execEvent( 6, p ) } )
-   ::qEdit:connect( "cursorPositionChanged()"           , {|    | ::execEvent( 9,   ) } )
-   ::qEdit:connect( "copyAvailable(bool)"               , {|p   | ::execEvent( 3, p ) } )
+   ::qEdit:connect( "customContextMenuRequested(QPoint)", {|p   | ::execEvent( __customContextMenuRequested, p ) } )
+   ::qEdit:connect( "selectionChanged()"                , {|p   | ::execEvent( __selectionChanged, p ) } )
+   ::qEdit:connect( "cursorPositionChanged()"           , {|    | ::execEvent( __cursorPositionChanged,   ) } )
+   ::qEdit:connect( "copyAvailable(bool)"               , {|p   | ::execEvent( __copyAvailable, p ) } )
 
    #if 0
-   ::qEdit:connect( "modificationChanged(bool)"         , {|p   | ::execEvent( 4, p ) } )
-   ::qEdit:connect( "textChanged()"                     , {|    | ::execEvent( 2,   ) } )
-   ::qEdit:connect( "updateRequest(QRect,int)"          , {|p,p1| ::execEvent( updateRequest, p, p1 ) } )
-   ::qEdit:connect( "redoAvailable(bool)"               , {|p   | ::execEvent( 5, p ) } )
-   ::qEdit:connect( "undoAvailable(bool)"               , {|p   | ::execEvent( 7, p ) } )
+   ::qEdit:connect( "modificationChanged(bool)"         , {|p   | ::execEvent( __modificationChanged, p ) } )
+   ::qEdit:connect( "textChanged()"                     , {|    | ::execEvent( __textChanged ) } )
+   ::qEdit:connect( "updateRequest(QRect,int)"          , {|p,p1| ::execEvent( __updateRequest, p, p1 ) } )
+   ::qEdit:connect( "redoAvailable(bool)"               , {|p   | ::execEvent( __redoAvailable, p ) } )
+   ::qEdit:connect( "undoAvailable(bool)"               , {|p   | ::execEvent( __undoAvailable, p ) } )
    #endif
 
    RETURN NIL
@@ -409,7 +409,7 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
 
    SWITCH nMode
 
-   CASE timerTimeout
+   CASE __timerTimeout
       IF empty( ::cProto )
          ::hidePrototype()
       ELSE
@@ -417,42 +417,39 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
       ENDIF
       EXIT
 
-   CASE cursorPositionChanged
+   CASE __cursorPositionChanged
       ::oEditor:dispEditInfo( ::qEdit )   /* Is a MUST */
       ::markCurrentFunction()             /* Optimized */
       EXIT
 
-   CASE selectionChanged
+   CASE __selectionChanged
       lOtherEdit := ! ( ::oEditor:qCqEdit == ::qEdit )
       IF lOtherEdit
          ::oEditor:qCqEdit := ::qEdit
          ::oEditor:qCoEdit := Self
-
-         ::unHighlight()
-
          IF HB_ISOBJECT( ::oEditor:qHiliter )
             ::oEditor:qHiliter:hbSetEditor( ::qEdit )
             ::qEdit:hbSetHighlighter( ::oEditor:qHiliter )
          ENDIF
       ENDIF
-#if 0    /* Disabled for now, has a big speed disadvantage */
-      ::qEdit:hbGetSelectionInfo()
       IF ::aSelectionInfo[ 1 ] > -1 .AND. ::aSelectionInfo[ 1 ] == ::aSelectionInfo[ 3 ]
          ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, Len( ::getSelectedText() ) )
       ELSE
          ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, 0 )
       ENDIF
-#endif
+
+      ::unHighlight()
+      ::oUpDn:show( Self )
       EXIT
 
-   CASE copyAvailable
+   CASE __copyAvailable
       IF p .AND. ::lCopyWhenDblClicked
          ::qEdit:copy()
       ENDIF
       ::lCopyWhenDblClicked := .f.
       EXIT
 
-   CASE customContextMenuRequested
+   CASE __customContextMenuRequested
       ::oEM:aActions[ 17, 2 ]:setEnabled( !empty( qCursor:selectedText() ) )
 
       n := ascan( ::oEditor:aEdits, {|o| o == Self } )
@@ -524,21 +521,21 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
       EXIT
 
    #if 0
-   CASE textChanged
+   CASE __textChanged
 //      HB_TRACE( HB_TR_ALWAYS, "textChanged()" )
 //      ::oEditor:setTabImage( ::qEdit )
 //      ::handlePreviousWord( ::lUpdatePrevWord )
       EXIT
-   CASE modificationChanged
+   CASE __modificationChanged
       ::oEditor:setTabImage( ::qEdit )
       EXIT
-   CASE redoAvailable
+   CASE __redoAvailable
       //HB_TRACE( HB_TR_DEBUG, "redoAvailable(bool)", p )
       EXIT
-   CASE undoAvailable
+   CASE __undoAvailable
       //HB_TRACE( HB_TR_DEBUG, "undoAvailable(bool)", p )
       EXIT
-   CASE updateRequest
+   CASE __updateRequest
       EXIT
    #endif
    ENDSWITCH
@@ -567,7 +564,6 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
       ENDIF
 
       SWITCH ( key )
-
 
       CASE Qt_Key_F3
          IF ! lCtrl .AND. ! lAlt
@@ -663,15 +659,15 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
          ::loadFuncHelp()
 
       ELSEIF p == 21011
-         ::copyBlockContents( p1 )
+         ::copyBlockContents()
 
       ELSEIF p == 21012
-         ::pasteBlockContents( p1 )
+         ::pasteBlockContents()// p1 )
 
       ELSEIF p == 21013
          ::insertBlockContents( p1 )
 
-      ELSEIF p == 21014
+      ELSEIF p == 21014  /* ->hbCut() */
          ::deleteBlockContents( p1 )
 
       ELSEIF p == 21017                     /* Sends Block Info { t,l,b,r,mode,state } hbGetBlockInfo() */
@@ -749,7 +745,6 @@ METHOD IdeEdit:highlightPage()
 METHOD IdeEdit:dispStatusInfo()
    LOCAL nMode
 
-   ::qEdit:hbGetSelectionInfo()
    nMode := ::aSelectionInfo[ 5 ]
    ::oDK:setButtonState( "SelectionMode", nMode > 1 )
    ::oDK:setStatusText( SB_PNL_STREAM, iif( nMode == 2, "Column", iif( nMode == 3, "Line", "Stream" ) ) )
@@ -869,11 +864,13 @@ STATIC FUNCTION hbide_qCursorDownInsert( qCursor )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:copyBlockContents( aCord )
-   LOCAL nT, nL, nB, nR, nW, i, cLine, nMode, qClip
+METHOD IdeEdit:copyBlockContents()
+   LOCAL nT, nL, nB, nR, nW, i, cLine, nMode, qClip, aCord
    LOCAL cClip := ""
 
    HB_TRACE( HB_TR_DEBUG, "IdeEdit:copyBlockContents( aCord )" )
+
+   aCord := ::aSelectionInfo
 
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
    nMode := aCord[ 5 ]
@@ -886,7 +883,7 @@ METHOD IdeEdit:copyBlockContents( aCord )
       cLine := strtran( cLine, chr( 13 ) )
       cLine := strtran( cLine, chr( 10 ) )
 
-      IF nMode == selectionMode_stream
+      IF nMode == __selectionMode_stream
          IF aCord[ 1 ] > aCord[ 3 ]  // Selection - bottom to top
             IF i == nT .AND. i == nB
                cLine := substr( cLine, min( aCord[ 2 ], aCord[ 4 ] ) + 1, nW )
@@ -905,10 +902,10 @@ METHOD IdeEdit:copyBlockContents( aCord )
             ENDIF
          ENDIF
 
-      ELSEIF nMode == selectionMode_column
+      ELSEIF nMode == __selectionMode_column
          cLine := pad( substr( cLine, nL + 1, nW ), nW )
 
-      ELSEIF nMode == selectionMode_line
+      ELSEIF nMode == __selectionMode_line
          // Nothing to do, complete line is already pulled
 
       ENDIF
@@ -927,12 +924,15 @@ METHOD IdeEdit:copyBlockContents( aCord )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:pasteBlockContents( nMode )
-   LOCAL i, nCol, qCursor, nMaxCol, aCopy, a_, nPasteMode
+METHOD IdeEdit:pasteBlockContents()
+   LOCAL i, nCol, qCursor, nMaxCol, aCopy, a_, nPasteMode, nMode
 
    IF ::lReadOnly
       RETURN Self
    ENDIF
+
+   nMode := ::aSelectionInfo[ 5 ]
+
    aCopy := hb_ATokens( StrTran( QClipboard():text(), Chr( 13 ) + Chr( 10 ), _EOL ), _EOL )
    IF empty( aCopy )
       RETURN Self
@@ -949,14 +949,14 @@ METHOD IdeEdit:pasteBlockContents( nMode )
       ENDIF
    ENDIF
 
-   nPasteMode := iif( empty( nPasteMode ), selectionMode_stream, nPasteMode )
+   nPasteMode := iif( empty( nPasteMode ), __selectionMode_stream, nPasteMode )
    qCursor    := ::qEdit:textCursor()
    nCol       := qCursor:columnNumber()
 
    qCursor:beginEditBlock()
    //
    SWITCH nPasteMode
-   CASE selectionMode_column
+   CASE __selectionMode_column
       FOR i := 1 TO Len( aCopy )
          qCursor:insertText( aCopy[ i ] )
          IF i < Len( aCopy )
@@ -972,7 +972,7 @@ METHOD IdeEdit:pasteBlockContents( nMode )
          ENDIF
       NEXT
       EXIT
-   CASE selectionMode_stream
+   CASE __selectionMode_stream
       FOR i := 1 TO Len( aCopy )
          qCursor:insertText( aCopy[ i ] )
          IF i < Len( aCopy )
@@ -980,7 +980,7 @@ METHOD IdeEdit:pasteBlockContents( nMode )
          ENDIF
       NEXT
       EXIT
-   CASE selectionMode_line
+   CASE __selectionMode_line
       qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_MoveAnchor       )
       FOR i := 1 TO Len( aCopy )
          qCursor:insertText( aCopy[ i ] )
@@ -1039,19 +1039,19 @@ METHOD IdeEdit:insertBlockContents( aCord )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:deleteBlockContents( aCord )
-   LOCAL nT, nL, nB, nR, i, cLine, qCursor, k, nSelMode
+METHOD IdeEdit:deleteBlockContents( k )
+   LOCAL nT, nL, nB, nR, i, cLine, qCursor, nSelMode, aCord
 
    IF ::lReadOnly
       RETURN Self
    ENDIF
 
-   hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
-   k := aCord[ 7 ]
    k := iif( empty( k ), Qt_Key_X, k )
    IF k == Qt_Key_X
-      ::copyBlockContents( aCord )
+      ::copyBlockContents()
    ENDIF
+   aCord := ::aSelectionInfo
+   hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
 
    nSelMode := aCord[ 5 ]
 
@@ -1059,7 +1059,7 @@ METHOD IdeEdit:deleteBlockContents( aCord )
    qCursor:beginEditBlock()
 
    IF k == Qt_Key_Backspace
-      IF nSelMode == selectionMode_column
+      IF nSelMode == __selectionMode_column
          FOR i := nT TO nB
             cLine := ::getLine( i + 1 )
             cLine := pad( substr( cLine, 1, nL - 1 ), nL - 1 ) + substr( cLine, nL + 1 )
@@ -1069,7 +1069,7 @@ METHOD IdeEdit:deleteBlockContents( aCord )
       ENDIF
    ELSE
       IF k == Qt_Key_Delete .OR. k == Qt_Key_X
-         IF nSelMode == selectionMode_column
+         IF nSelMode == __selectionMode_column
             FOR i := nT TO nB
                cLine := ::getLine( i + 1 )
                cLine := pad( substr( cLine, 1, nL ), nL ) + substr( cLine, nR + 1 )
@@ -1077,20 +1077,20 @@ METHOD IdeEdit:deleteBlockContents( aCord )
             NEXT
             hbide_qPositionCursor( qCursor, nT, nL )
 
-         ELSEIF nSelMode == selectionMode_stream
+         ELSEIF nSelMode == __selectionMode_stream
             hbide_qPositionCursor( qCursor, nT, nL )
             qCursor:movePosition( QTextCursor_Down       , QTextCursor_KeepAnchor, nB - nT )
             qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_KeepAnchor          )
             qCursor:movePosition( QTextCursor_Right      , QTextCursor_KeepAnchor, nR      )
             qCursor:removeSelectedText()
-            ::qEdit:hbSetSelectionInfo( { -1,-1,-1,-1,1 } )
+            ::qEdit:hbSetSelectionInfo( { -1, -1, -1, -1, 1 } )
 
-         ELSEIF nSelMode == selectionMode_line
+         ELSEIF nSelMode == __selectionMode_line
             hbide_qPositionCursor( qCursor, nT, nL )
             qCursor:movePosition( QTextCursor_Down       , QTextCursor_KeepAnchor, nB - nT + 1 )
             qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_KeepAnchor          )
             qCursor:removeSelectedText()
-            ::qEdit:hbSetSelectionInfo( { -1,-1,-1,-1,1 } )
+            ::qEdit:hbSetSelectionInfo( { -1, -1, -1, -1, 1 } )
             ::isLineSelectionON := .f.
 
          ENDIF
@@ -1113,7 +1113,7 @@ METHOD IdeEdit:blockComment()
       RETURN Self
    ENDIF
 
-   ::qEdit:hbGetSelectionInfo(); aCord := ::aSelectionInfo
+   aCord := ::aSelectionInfo
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
    nW := nR - nL
 
@@ -1125,14 +1125,14 @@ METHOD IdeEdit:blockComment()
          cLine := ::getLine( i + 1 )
 
          DO CASE
-         CASE nMode == selectionMode_stream .OR. nMode == selectionMode_line
+         CASE nMode == __selectionMode_stream .OR. nMode == __selectionMode_line
             IF substr( cLine, 1, nLen ) == cComment
                cLine := substr( cLine, nLen + 1 )
             ELSE
                cLine := cComment + cLine
             ENDIF
 
-         CASE nMode == selectionMode_column
+         CASE nMode == __selectionMode_column
             IF substr( cLine, nL + 1, nLen ) == cComment
                cLine := pad( substr( cLine, 1, nL ), nL ) + substr( cLine, nL + nLen + 1 )
             ELSE
@@ -1158,8 +1158,7 @@ METHOD IdeEdit:streamComment()
       RETURN Self
    ENDIF
 
-   ::qEdit:hbGetSelectionInfo(); aCord := ::aSelectionInfo
-
+   aCord := ::aSelectionInfo
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
    nW := nR - nL
 
@@ -1171,14 +1170,14 @@ METHOD IdeEdit:streamComment()
          cLine := ::getLine( i + 1 )
 
          DO CASE
-         CASE nMode == selectionMode_stream
+         CASE nMode == __selectionMode_stream
             IF i == nT
                cLine := substr( cLine, 1, nL ) + "/* " + substr( cLine, nL + 1 )
             ELSEIF i == nB
                cLine := substr( cLine, 1, nR ) + " */" + substr( cLine, nR + 1 )
             ENDIF
 
-         CASE nMode == selectionMode_line
+         CASE nMode == __selectionMode_line
             IF i == nT
                cLine := "/* " + cLine
             ELSEIF i == nB
@@ -1204,7 +1203,7 @@ METHOD IdeEdit:blockIndent( nDirctn )
       RETURN Self
    ENDIF
 
-   ::qEdit:hbGetSelectionInfo(); aCord := ::aSelectionInfo
+   aCord := ::aSelectionInfo
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
    nW := nR - nL
 
@@ -1216,7 +1215,7 @@ METHOD IdeEdit:blockIndent( nDirctn )
          cLine := ::getLine( i + 1 )
 
          DO CASE
-         CASE nMode == selectionMode_stream .OR. nMode == selectionMode_line
+         CASE nMode == __selectionMode_stream .OR. nMode == __selectionMode_line
             IF nDirctn == -1
                IF left( cLine, 1 ) == " "
                   cLine := substr( cLine, 2 )
@@ -1225,7 +1224,7 @@ METHOD IdeEdit:blockIndent( nDirctn )
                cLine := " " + cLine
             ENDIF
 
-         CASE nMode == selectionMode_column
+         CASE nMode == __selectionMode_column
             cLineSel := pad( substr( cLine, nL + 1, nW ), nW )
             IF nDirctn == -1
                IF left( cLineSel, 1 ) == " "
@@ -1255,7 +1254,7 @@ METHOD IdeEdit:blockConvert( cMode )
       RETURN Self
    ENDIF
 
-   ::qEdit:hbGetSelectionInfo(); aCord := ::aSelectionInfo
+   aCord := ::aSelectionInfo
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
    nW := nR - nL
 
@@ -1267,7 +1266,7 @@ METHOD IdeEdit:blockConvert( cMode )
          cLine := ::getLine( i + 1 )
 
          DO CASE
-         CASE nMode == selectionMode_stream
+         CASE nMode == __selectionMode_stream
             IF nT == nB
                cLine := substr( cLine, 1, nL ) + hbide_convertALine( substr( cLine, nL + 1, nW ), cMode ) + substr( cLine, nL + 1 + nW )
             ELSE
@@ -1280,10 +1279,10 @@ METHOD IdeEdit:blockConvert( cMode )
                ENDIF
             ENDIF
 
-         CASE nMode == selectionMode_column
+         CASE nMode == __selectionMode_column
             cLine := pad( substr( cLine, 1, nL ), nL ) + hbide_convertALine( pad( substr( cLine, nL + 1, nW ), nW ), cMode ) + substr( cLine, nR + 1 )
 
-         CASE nMode == selectionMode_line
+         CASE nMode == __selectionMode_line
             cLine := hbide_convertALine( cLine, cMode )
 
          ENDCASE
@@ -1303,7 +1302,7 @@ METHOD IdeEdit:getSelectedText()
 
    HB_TRACE( HB_TR_DEBUG, "IdeEdit:getSelectedText()", ProcName( 1 ), procName( 2 ) )
 
-   ::qEdit:hbGetSelectionInfo(); aCord := ::aSelectionInfo
+   aCord := ::aSelectionInfo
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
    nMode := aCord[ 5 ]
 
@@ -1311,7 +1310,7 @@ METHOD IdeEdit:getSelectedText()
    FOR i := nT TO nB
       cLine := ::getLine( i + 1 )
 
-      IF nMode == selectionMode_stream
+      IF nMode == __selectionMode_stream
          IF i == nT .AND. i == nB
             cLine := substr( cLine, nL + 1, nR - nL )
          ELSEIF i == nT
@@ -1320,10 +1319,10 @@ METHOD IdeEdit:getSelectedText()
             cLine := substr( cLine, 1, nR + 1 )
          ENDIF
 
-      ELSEIF nMode == selectionMode_column
+      ELSEIF nMode == __selectionMode_column
          cLine := pad( substr( cLine, nL + 1, nW ), nW )
 
-      ELSEIF nMode == selectionMode_line
+      ELSEIF nMode == __selectionMode_line
          // Nothing to do, complete line is already pulled
 
       ENDIF
@@ -1532,27 +1531,26 @@ METHOD IdeEdit:cut()
    IF ::lReadOnly
       RETURN Self
    ENDIF
-   ::qEdit:hbCut( Qt_Key_X )
+   ::deleteBlockContents( Qt_Key_X )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:copy()
-   ::qEdit:hbCopy()
+   ::copyBlockContents()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:paste()
+
    IF ::lReadOnly
       RETURN Self
    ENDIF
-
-   ::qEdit:hbGetSelectionInfo()
    IF ::aSelectionInfo[ 1 ] > -1
-      ::qEdit:hbCut( Qt_Key_Delete )
+      ::deleteBlockContents( Qt_Key_Delete )
    ENDIF
-   ::qEdit:hbPaste()
+   ::pasteBlockContents()
 
    RETURN Self
 
@@ -2750,7 +2748,6 @@ FUNCTION hbide_formatProto( cProto )
    n1 := at( ")", cProto )
 
    IF n > 0 .AND. n1 > 0
-
       cArgs  := substr( cProto, n + 1, n1 - n - 1 )
       cArgs  := strtran( cArgs, ",", "<font color=red><b>" + "," + "</b></font>" )
       cProto := "<p style='white-space:pre'>" + "<b>" + substr( cProto, 1, n - 1 ) + "</b>" + ;

@@ -1282,6 +1282,7 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD prepareBufferToSave( cBuffer )
    METHOD reload()
    METHOD vssExecute( cAction )
+   METHOD updateComponents()
 
    ENDCLASS
 
@@ -1709,6 +1710,23 @@ HB_TRACE( HB_TR_DEBUG, "IdeEditor:execEvent( cMode, p )" )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEditor:updateComponents()
+   LOCAL qCoEdit := ::qCoEdit
+
+   ::setDocumentProperties()
+   qCoEdit:relayMarkButtons()
+   qCoEdit:updateTitleBar()
+   qCoEdit:toggleLineNumbers()
+   qCoEdit:toggleHorzRuler()
+   qCoEdit:toggleCurrentLineHighlightMode()
+   qCoEdit:dispStatusInfo()
+   ::oUpDn:show()
+   ::changeThumbnail()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
    LOCAL oEdit
 
@@ -1716,15 +1734,7 @@ METHOD IdeEditor:activateTab( mp1, mp2, oXbp )
    HB_SYMBOL_UNUSED( mp2 )
 
    IF !empty( oEdit := ::oEM:getEditorByTabObject( oXbp ) )
-      oEdit:setDocumentProperties()
-      oEdit:qCoEdit:relayMarkButtons()
-      oEdit:qCoEdit:updateTitleBar()
-      oEdit:qCoEdit:toggleLineNumbers()
-      oEdit:qCoEdit:toggleHorzRuler()
-      oEdit:qCoEdit:toggleCurrentLineHighlightMode()
-      oEdit:qCoEdit:dispStatusInfo()
-      ::oUpDn:show()
-      oEdit:changeThumbnail()
+      oEdit:updateComponents()
    ENDIF
 
    RETURN Self
