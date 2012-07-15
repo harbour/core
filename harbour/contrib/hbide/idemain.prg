@@ -171,6 +171,7 @@ CLASS HbIde
    DATA   oCL                                            /* ChangeLog Manager              */
    DATA   oCUI                                           /* CUI Screen Designer Console    */
    DATA   oUiS                                           /* UI Source Writer               */
+   DATA   oPWZ                                           /* Project Wizard                 */
 
    DATA   nRunMode                                INIT   HBIDE_RUN_MODE_INI
    DATA   nAnimantionMode                         INIT   HBIDE_ANIMATION_NONE
@@ -571,6 +572,9 @@ METHOD HbIde:create( aParams )
 
    /* Initiate UI Source Manager */
    ::oUiS := IdeUISrcManager():new( Self ):create()
+
+   /* Initiate Project Wizard */
+   ::oPWZ := IdeProjectWizard():new( Self ):create()
 
    /* Initialte Project Manager */
    ::oPM := IdeProjManager():new( Self ):create()

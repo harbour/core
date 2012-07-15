@@ -172,7 +172,7 @@ METHOD IdeToolsManager:destroy()
       ::qToolsButton := NIL
       ::clearList()
 
-      ::qPanelsButton             :disconnect( "clicked()" )
+      ::qPanelsButton           :disconnect( "clicked()" )
       ::oUI:buttonAdd           :disconnect( "clicked()" )
       ::oUI:buttonDelete        :disconnect( "clicked()" )
       ::oUI:buttonUp            :disconnect( "clicked()" )

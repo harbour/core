@@ -80,7 +80,7 @@ CLASS IdeActions INHERIT IdeObject
 
    DATA   hActions                                INIT { => }
    DATA   oActToolsBtn
-   
+
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
@@ -577,7 +577,8 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:addItem( { ::getAction( "SelectProject"       ), {|| oIde:execAction( "SelectProject"  ) } } )
    oSubMenu:addItem( { ::getAction( "CloseProject"        ), {|| oIde:execAction( "CloseProject"   ) } } )
    hbide_menuAddSep( oSubMenu )
-   oSubMenu:addItem( { ::getAction( "Environments"        ), {|| oIde:execAction( "Environments"   ) } } )
+// oSubMenu:addItem( { ::getAction( "Environments"        ), {|| oIde:execAction( "Environments"   ) } } )
+   oSubMenu:addItem( { "New Project Wizard"                , {|| oIde:oPWZ:show() } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    /*----------------------------------------------------------------------------*/

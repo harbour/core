@@ -59,6 +59,7 @@ idechangelog.prg
 ideconsole.prg
 ideparseexpr.c
 ideuisrcmanager.prg
+ideprojectwizard.prg
 
 docviewgenerator.ui
 docwriter.ui
@@ -89,6 +90,7 @@ tables.ui
 updown_v.ui
 format.ui
 changelog.ui
+projectwizard.ui
 
 hbide.qrc
 

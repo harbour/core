@@ -1,0 +1,1109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>470</width>
+    <height>630</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>470</width>
+    <height>630</height>
+   </size>
+  </property>
+  <property name="maximumSize">
+   <size>
+    <width>470</width>
+    <height>630</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>New Project Wizard</string>
+  </property>
+  <widget class="QStackedWidget" name="stackedWidget">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>469</width>
+     <height>581</height>
+    </rect>
+   </property>
+   <property name="currentIndex">
+    <number>0</number>
+   </property>
+   <widget class="QWidget" name="page">
+    <widget class="QFrame" name="frameParams">
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>244</y>
+       <width>453</width>
+       <height>113</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QFrame" name="frame_4">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>81</width>
+        <height>113</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QCheckBox" name="chkFWH">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>88</y>
+         <width>70</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>FWH</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkXhb">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>8</y>
+         <width>70</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>XHarbour</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkXbase">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>28</y>
+         <width>70</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>XBase++</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkXbp">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>68</y>
+         <width>70</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>HbXbp</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkHbQt">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>48</y>
+         <width>70</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>HbQt</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_5">
+      <property name="geometry">
+       <rect>
+        <x>88</x>
+        <y>0</y>
+        <width>161</width>
+        <height>113</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QCheckBox" name="chkA">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>8</y>
+         <width>41</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>/ a</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkB">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>28</y>
+         <width>41</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>/ b</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkES">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>48</y>
+         <width>41</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>/ es</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkG">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>68</y>
+         <width>41</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>/ g</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkL">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>88</y>
+         <width>41</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>/ l</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editES">
+       <property name="geometry">
+        <rect>
+         <x>48</x>
+         <y>48</y>
+         <width>29</width>
+         <height>17</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkM">
+       <property name="geometry">
+        <rect>
+         <x>84</x>
+         <y>8</y>
+         <width>41</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>/ m</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editM">
+       <property name="geometry">
+        <rect>
+         <x>124</x>
+         <y>8</y>
+         <width>29</width>
+         <height>17</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editG">
+       <property name="geometry">
+        <rect>
+         <x>48</x>
+         <y>68</y>
+         <width>29</width>
+         <height>17</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkN">
+       <property name="geometry">
+        <rect>
+         <x>84</x>
+         <y>28</y>
+         <width>41</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>/ n</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkV">
+       <property name="geometry">
+        <rect>
+         <x>84</x>
+         <y>48</y>
+         <width>41</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>/ v</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkW">
+       <property name="geometry">
+        <rect>
+         <x>84</x>
+         <y>68</y>
+         <width>41</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>/ w</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkZ">
+       <property name="geometry">
+        <rect>
+         <x>84</x>
+         <y>88</y>
+         <width>41</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>/ z</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editW">
+       <property name="geometry">
+        <rect>
+         <x>124</x>
+         <y>68</y>
+         <width>29</width>
+         <height>17</height>
+        </rect>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_6">
+      <property name="geometry">
+       <rect>
+        <x>252</x>
+        <y>0</y>
+        <width>65</width>
+        <height>113</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QCheckBox" name="chkInc">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>8</y>
+         <width>41</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>inc</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkGui">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>28</y>
+         <width>41</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>gui</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkInfo">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>48</y>
+         <width>49</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>info</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkShared">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>68</y>
+         <width>53</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>shared</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkMt">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>88</y>
+         <width>41</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>mt</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QFrame" name="frame_7">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>0</y>
+        <width>129</width>
+        <height>113</height>
+       </rect>
+      </property>
+      <property name="frameShape">
+       <enum>QFrame::StyledPanel</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Raised</enum>
+      </property>
+      <widget class="QCheckBox" name="chkXwc">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>88</y>
+         <width>53</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>gtxwc</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkGtgui">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>8</y>
+         <width>53</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>gtgui</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkGtwvt">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>48</y>
+         <width>53</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>gtwvt</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkGtwin">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>28</y>
+         <width>53</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>gtwin</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkGtwvg">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>68</y>
+         <width>53</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>gtwvg</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkGtpca">
+       <property name="geometry">
+        <rect>
+         <x>76</x>
+         <y>68</y>
+         <width>53</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>gtpca</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkGtstd">
+       <property name="geometry">
+        <rect>
+         <x>76</x>
+         <y>28</y>
+         <width>53</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>gtstd</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkGttrm">
+       <property name="geometry">
+        <rect>
+         <x>76</x>
+         <y>8</y>
+         <width>53</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>gttrm</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkGtsln">
+       <property name="geometry">
+        <rect>
+         <x>76</x>
+         <y>48</y>
+         <width>53</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>gtsln</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkGtos2">
+       <property name="geometry">
+        <rect>
+         <x>76</x>
+         <y>88</y>
+         <width>53</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>gtos2</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frameFreeFlow">
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>360</y>
+       <width>453</width>
+       <height>221</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QPlainTextEdit" name="plainSwitches">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>8</y>
+        <width>437</width>
+        <height>205</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Courier New</family>
+       </font>
+      </property>
+      <property name="whatsThis">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A free-slowing area where you can enter any other compiler switches, HbMk2 switches, or command-line swiches to be passed to hbMk2. Though it will be valid, but please do not add source files here which will be asked for on next page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="lineWrapMode">
+       <enum>QPlainTextEdit::NoWrap</enum>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="framePaths">
+     <property name="geometry">
+      <rect>
+       <x>8</x>
+       <y>8</y>
+       <width>453</width>
+       <height>233</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>12</x>
+        <y>12</y>
+        <width>46</width>
+        <height>13</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Path</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editProjPath">
+      <property name="geometry">
+       <rect>
+        <x>84</x>
+        <y>8</y>
+        <width>305</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="toolProjPath">
+      <property name="geometry">
+       <rect>
+        <x>414</x>
+        <y>8</y>
+        <width>25</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="hbide.qrc">
+        <normaloff>:/resources/open.png</normaloff>:/resources/open.png</iconset>
+      </property>
+      <property name="autoRaise">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>12</x>
+        <y>40</y>
+        <width>41</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Name</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editProjName">
+      <property name="geometry">
+       <rect>
+        <x>84</x>
+        <y>36</y>
+        <width>221</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QComboBox" name="comboProjType">
+      <property name="geometry">
+       <rect>
+        <x>332</x>
+        <y>36</y>
+        <width>105</width>
+        <height>22</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>12</x>
+        <y>68</y>
+        <width>73</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Output Name</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editOutName">
+      <property name="geometry">
+       <rect>
+        <x>84</x>
+        <y>64</y>
+        <width>221</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>12</x>
+        <y>96</y>
+        <width>65</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Output Path</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editOutPath">
+      <property name="geometry">
+       <rect>
+        <x>84</x>
+        <y>92</y>
+        <width>305</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>12</x>
+        <y>124</y>
+        <width>65</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Working Path</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editWorkPath">
+      <property name="geometry">
+       <rect>
+        <x>84</x>
+        <y>120</y>
+        <width>305</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="toolOutPath">
+      <property name="geometry">
+       <rect>
+        <x>412</x>
+        <y>92</y>
+        <width>25</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="hbide.qrc">
+        <normaloff>:/resources/open.png</normaloff>:/resources/open.png</iconset>
+      </property>
+      <property name="autoRaise">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="toolWorkPath">
+      <property name="geometry">
+       <rect>
+        <x>412</x>
+        <y>120</y>
+        <width>25</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="hbide.qrc">
+        <normaloff>:/resources/open.png</normaloff>:/resources/open.png</iconset>
+      </property>
+      <property name="autoRaise">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>12</x>
+        <y>152</y>
+        <width>65</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Launch Exec</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>12</x>
+        <y>180</y>
+        <width>69</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Launch Params</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editLaunchExe">
+      <property name="geometry">
+       <rect>
+        <x>84</x>
+        <y>148</y>
+        <width>305</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editLaunchParams">
+      <property name="geometry">
+       <rect>
+        <x>84</x>
+        <y>176</y>
+        <width>305</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_8">
+      <property name="geometry">
+       <rect>
+        <x>12</x>
+        <y>208</y>
+        <width>65</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Stay In</string>
+      </property>
+     </widget>
+     <widget class="QLineEdit" name="editStayIn">
+      <property name="geometry">
+       <rect>
+        <x>84</x>
+        <y>204</y>
+        <width>305</width>
+        <height>20</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="toolStayInPath">
+      <property name="geometry">
+       <rect>
+        <x>412</x>
+        <y>204</y>
+        <width>25</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="hbide.qrc">
+        <normaloff>:/resources/open.png</normaloff>:/resources/open.png</iconset>
+      </property>
+      <property name="autoRaise">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="page_2">
+    <widget class="QFrame" name="frame">
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>11</y>
+       <width>449</width>
+       <height>33</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QToolButton" name="toolGetSrc">
+      <property name="geometry">
+       <rect>
+        <x>12</x>
+        <y>8</y>
+        <width>25</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="hbide.qrc">
+        <normaloff>:/resources/open.png</normaloff>:/resources/open.png</iconset>
+      </property>
+      <property name="autoRaise">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="toolUp">
+      <property name="geometry">
+       <rect>
+        <x>92</x>
+        <y>8</y>
+        <width>25</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="hbide.qrc">
+        <normaloff>:/resources/go-up.png</normaloff>:/resources/go-up.png</iconset>
+      </property>
+      <property name="autoRaise">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="toolDown">
+      <property name="geometry">
+       <rect>
+        <x>128</x>
+        <y>8</y>
+        <width>25</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="hbide.qrc">
+        <normaloff>:/resources/go-down.png</normaloff>:/resources/go-down.png</iconset>
+      </property>
+      <property name="autoRaise">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="toolDelete">
+      <property name="geometry">
+       <rect>
+        <x>204</x>
+        <y>8</y>
+        <width>25</width>
+        <height>19</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="hbide.qrc">
+        <normaloff>:/resources/dc_delete.png</normaloff>:/resources/dc_delete.png</iconset>
+      </property>
+      <property name="autoRaise">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frame_2">
+     <property name="geometry">
+      <rect>
+       <x>12</x>
+       <y>48</y>
+       <width>449</width>
+       <height>533</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QPlainTextEdit" name="plainSources">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>8</y>
+        <width>321</width>
+        <height>517</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Courier New</family>
+       </font>
+      </property>
+      <property name="lineWrapMode">
+       <enum>QPlainTextEdit::NoWrap</enum>
+      </property>
+     </widget>
+     <widget class="QPlainTextEdit" name="plainTextEdit">
+      <property name="enabled">
+       <bool>false</bool>
+      </property>
+      <property name="geometry">
+       <rect>
+        <x>336</x>
+        <y>8</y>
+        <width>104</width>
+        <height>517</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Courier New</family>
+       </font>
+      </property>
+      <property name="verticalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+      <property name="horizontalScrollBarPolicy">
+       <enum>Qt::ScrollBarAlwaysOff</enum>
+      </property>
+     </widget>
+    </widget>
+   </widget>
+  </widget>
+  <widget class="QFrame" name="frameButtons">
+   <property name="geometry">
+    <rect>
+     <x>8</x>
+     <y>588</y>
+     <width>453</width>
+     <height>37</height>
+    </rect>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QPushButton" name="btnSave">
+    <property name="geometry">
+     <rect>
+      <x>284</x>
+      <y>8</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Save</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnCancel">
+    <property name="geometry">
+     <rect>
+      <x>372</x>
+      <y>8</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Cancel</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnNext">
+    <property name="geometry">
+     <rect>
+      <x>96</x>
+      <y>8</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Next</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="btnBack">
+    <property name="geometry">
+     <rect>
+      <x>8</x>
+      <y>8</y>
+      <width>75</width>
+      <height>23</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Back</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources>
+  <include location="hbide.qrc"/>
+ </resources>
+ <connections/>
+</ui>
