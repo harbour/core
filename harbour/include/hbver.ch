@@ -83,6 +83,7 @@
 #define HB_VERSION_PLATFORM         21
 #define HB_VERSION_CPU              24
 #define HB_VERSION_COMPILER_CPP     25
+#define HB_VERSION_MAX_             26
 
 /* hb_version( HB_VERSION_ENDIANNESS ) return values. */
 #define HB_VERSION_ENDIAN_LITTLE    1

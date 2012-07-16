@@ -960,7 +960,7 @@ STATIC FUNCTION hbqtui_pullTranslate( cCmd )
          oError := ErrorNew()
          oError:severity    := ES_ERROR
          oError:genCode     := EG_ARG
-         oError:subSystem   := "HBMK2"
+         oError:subSystem   := "HBMK2_PLUGIN_HBQT"
          oError:subCode     := 1001
          oError:canRetry    := .F.
          oError:canDefault  := .F.
