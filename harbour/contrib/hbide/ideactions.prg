@@ -317,6 +317,9 @@ METHOD IdeActions:loadActions()
  * aadd( aAct, { "Tools"                , "Tools and Utilities"          , "tools"          , ""     , "No", "Yes" } )
    aadd( aAct, { "ChangeLog"            , "Manage ChangeLog(s)"          , "memo"           , ""     , "No", "Yes" } )
    aadd( aAct, { "TB_Hide"              , "Hide Show Docks"              , "hideshow"       , ""     , "No", "Yes" } )
+   aadd( aAct, { "Delete"               , "Delete"                       , "dc_delete"      , ""     , "No", "Yes" } )
+   aadd( aAct, { "SortAZ"               , "Sort Ascending"               , "sort"           , ""     , "No", "Yes" } )
+   aadd( aAct, { "SortZA"               , "Sort Descending"              , "sortdescend"    , ""     , "No", "Yes" } )
 
    RETURN aAct
 

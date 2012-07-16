@@ -44,7 +44,7 @@
        <x>8</x>
        <y>244</y>
        <width>453</width>
-       <height>113</height>
+       <height>149</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -59,8 +59,11 @@
         <x>0</x>
         <y>0</y>
         <width>81</width>
-        <height>113</height>
+        <height>149</height>
        </rect>
+      </property>
+      <property name="whatsThis">
+       <string>Tick the project's underlying type, or say, necessary info which will be used by HbIDE to offer color syntax etc. for the library(s) used.</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -133,6 +136,32 @@
         <string>HbQt</string>
        </property>
       </widget>
+      <widget class="QCheckBox" name="chkHMG">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>108</y>
+         <width>70</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>HMG</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkOther">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>128</y>
+         <width>70</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Other</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QFrame" name="frame_5">
       <property name="geometry">
@@ -140,8 +169,11 @@
         <x>88</x>
         <y>0</y>
         <width>161</width>
-        <height>113</height>
+        <height>149</height>
        </rect>
+      </property>
+      <property name="whatsThis">
+       <string>Harbour specif comman-line switches.</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -205,7 +237,7 @@
        <property name="geometry">
         <rect>
          <x>8</x>
-         <y>88</y>
+         <y>108</y>
          <width>41</width>
          <height>17</height>
         </rect>
@@ -319,6 +351,68 @@
         </rect>
        </property>
       </widget>
+      <widget class="QCheckBox" name="chkBuild">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>128</y>
+         <width>65</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>build</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkCredits">
+       <property name="geometry">
+        <rect>
+         <x>84</x>
+         <y>128</y>
+         <width>70</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>credits</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkQ">
+       <property name="geometry">
+        <rect>
+         <x>84</x>
+         <y>108</y>
+         <width>41</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>/ q</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="editQ">
+       <property name="geometry">
+        <rect>
+         <x>124</x>
+         <y>108</y>
+         <width>29</width>
+         <height>17</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkJ">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>88</y>
+         <width>41</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>/ j</string>
+       </property>
+      </widget>
      </widget>
      <widget class="QFrame" name="frame_6">
       <property name="geometry">
@@ -326,8 +420,11 @@
         <x>252</x>
         <y>0</y>
         <width>65</width>
-        <height>113</height>
+        <height>149</height>
        </rect>
+      </property>
+      <property name="whatsThis">
+       <string>HbMk2 specific switches.</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -340,7 +437,7 @@
         <rect>
          <x>8</x>
          <y>8</y>
-         <width>41</width>
+         <width>53</width>
          <height>17</height>
         </rect>
        </property>
@@ -353,7 +450,7 @@
         <rect>
          <x>8</x>
          <y>28</y>
-         <width>41</width>
+         <width>53</width>
          <height>17</height>
         </rect>
        </property>
@@ -365,8 +462,8 @@
        <property name="geometry">
         <rect>
          <x>8</x>
-         <y>48</y>
-         <width>49</width>
+         <y>128</y>
+         <width>53</width>
          <height>17</height>
         </rect>
        </property>
@@ -391,13 +488,39 @@
        <property name="geometry">
         <rect>
          <x>8</x>
-         <y>88</y>
-         <width>41</width>
+         <y>48</y>
+         <width>53</width>
          <height>17</height>
         </rect>
        </property>
        <property name="text">
         <string>mt</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkTrace">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>108</y>
+         <width>53</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>trace</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkFullstatic">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>88</y>
+         <width>53</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>fullstatic</string>
        </property>
       </widget>
      </widget>
@@ -407,8 +530,11 @@
         <x>320</x>
         <y>0</y>
         <width>129</width>
-        <height>113</height>
+        <height>149</height>
        </rect>
+      </property>
+      <property name="whatsThis">
+       <string>Default GT to be linked plus other GT's to be linked.</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -416,11 +542,11 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <widget class="QCheckBox" name="chkXwc">
+      <widget class="QCheckBox" name="chkGtxwc">
        <property name="geometry">
         <rect>
          <x>12</x>
-         <y>88</y>
+         <y>108</y>
          <width>53</width>
          <height>17</height>
         </rect>
@@ -433,7 +559,7 @@
        <property name="geometry">
         <rect>
          <x>12</x>
-         <y>8</y>
+         <y>28</y>
          <width>53</width>
          <height>17</height>
         </rect>
@@ -446,7 +572,7 @@
        <property name="geometry">
         <rect>
          <x>12</x>
-         <y>48</y>
+         <y>68</y>
          <width>53</width>
          <height>17</height>
         </rect>
@@ -459,7 +585,7 @@
        <property name="geometry">
         <rect>
          <x>12</x>
-         <y>28</y>
+         <y>48</y>
          <width>53</width>
          <height>17</height>
         </rect>
@@ -472,7 +598,7 @@
        <property name="geometry">
         <rect>
          <x>12</x>
-         <y>68</y>
+         <y>88</y>
          <width>53</width>
          <height>17</height>
         </rect>
@@ -485,7 +611,7 @@
        <property name="geometry">
         <rect>
          <x>76</x>
-         <y>68</y>
+         <y>88</y>
          <width>53</width>
          <height>17</height>
         </rect>
@@ -498,7 +624,7 @@
        <property name="geometry">
         <rect>
          <x>76</x>
-         <y>28</y>
+         <y>48</y>
          <width>53</width>
          <height>17</height>
         </rect>
@@ -511,7 +637,7 @@
        <property name="geometry">
         <rect>
          <x>76</x>
-         <y>8</y>
+         <y>28</y>
          <width>53</width>
          <height>17</height>
         </rect>
@@ -524,7 +650,7 @@
        <property name="geometry">
         <rect>
          <x>76</x>
-         <y>48</y>
+         <y>68</y>
          <width>53</width>
          <height>17</height>
         </rect>
@@ -537,7 +663,7 @@
        <property name="geometry">
         <rect>
          <x>76</x>
-         <y>88</y>
+         <y>108</y>
          <width>53</width>
          <height>17</height>
         </rect>
@@ -546,15 +672,64 @@
         <string>gtos2</string>
        </property>
       </widget>
+      <widget class="QComboBox" name="comboGT">
+       <property name="geometry">
+        <rect>
+         <x>36</x>
+         <y>8</y>
+         <width>85</width>
+         <height>17</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_9">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>8</y>
+         <width>25</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>GT</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkGtcgi">
+       <property name="geometry">
+        <rect>
+         <x>12</x>
+         <y>128</y>
+         <width>53</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>gtcgi</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkGtcrs">
+       <property name="geometry">
+        <rect>
+         <x>76</x>
+         <y>128</y>
+         <width>53</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>gtcrs</string>
+       </property>
+      </widget>
      </widget>
     </widget>
     <widget class="QFrame" name="frameFreeFlow">
      <property name="geometry">
       <rect>
        <x>8</x>
-       <y>360</y>
+       <y>396</y>
        <width>453</width>
-       <height>221</height>
+       <height>185</height>
       </rect>
      </property>
      <property name="frameShape">
@@ -566,10 +741,10 @@
      <widget class="QPlainTextEdit" name="plainSwitches">
       <property name="geometry">
        <rect>
-        <x>8</x>
-        <y>8</y>
-        <width>437</width>
-        <height>205</height>
+        <x>276</x>
+        <y>28</y>
+        <width>169</width>
+        <height>149</height>
        </rect>
       </property>
       <property name="font">
@@ -582,6 +757,52 @@
       </property>
       <property name="lineWrapMode">
        <enum>QPlainTextEdit::NoWrap</enum>
+      </property>
+     </widget>
+     <widget class="QTreeWidget" name="treeProps">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>8</y>
+        <width>261</width>
+        <height>169</height>
+       </rect>
+      </property>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
+      </property>
+      <property name="indentation">
+       <number>10</number>
+      </property>
+      <property name="uniformRowHeights">
+       <bool>true</bool>
+      </property>
+      <property name="headerHidden">
+       <bool>true</bool>
+      </property>
+      <property name="expandsOnDoubleClick">
+       <bool>false</bool>
+      </property>
+      <column>
+       <property name="text">
+        <string notr="true">1</string>
+       </property>
+      </column>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>8</y>
+        <width>161</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Anything not Covered</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </widget>
@@ -616,17 +837,20 @@
      <widget class="QLineEdit" name="editProjPath">
       <property name="geometry">
        <rect>
-        <x>84</x>
+        <x>92</x>
         <y>8</y>
-        <width>305</width>
+        <width>321</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="whatsThis">
+       <string>The path to the project file to be saved.</string>
       </property>
      </widget>
      <widget class="QToolButton" name="toolProjPath">
       <property name="geometry">
        <rect>
-        <x>414</x>
+        <x>422</x>
         <y>8</y>
         <width>25</width>
         <height>19</height>
@@ -648,28 +872,31 @@
        <rect>
         <x>12</x>
         <y>40</y>
-        <width>41</width>
+        <width>65</width>
         <height>16</height>
        </rect>
       </property>
       <property name="text">
-       <string>Name</string>
+       <string>HbIDE Name</string>
       </property>
      </widget>
      <widget class="QLineEdit" name="editProjName">
       <property name="geometry">
        <rect>
-        <x>84</x>
+        <x>92</x>
         <y>36</y>
         <width>221</width>
         <height>20</height>
        </rect>
       </property>
+      <property name="whatsThis">
+       <string>The name of the project which will be displayed in the Projects tree on left docking area.</string>
+      </property>
      </widget>
      <widget class="QComboBox" name="comboProjType">
       <property name="geometry">
        <rect>
-        <x>332</x>
+        <x>336</x>
         <y>36</y>
         <width>105</width>
         <height>22</height>
@@ -692,11 +919,14 @@
      <widget class="QLineEdit" name="editOutName">
       <property name="geometry">
        <rect>
-        <x>84</x>
+        <x>92</x>
         <y>64</y>
         <width>221</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="whatsThis">
+       <string>The name of the linked file the project will produce after project is built. Please avoid any extention as HbMk2 will automatically do so depending upon the operating system.</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_4">
@@ -715,11 +945,14 @@
      <widget class="QLineEdit" name="editOutPath">
       <property name="geometry">
        <rect>
-        <x>84</x>
+        <x>92</x>
         <y>92</y>
-        <width>305</width>
+        <width>321</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="whatsThis">
+       <string>The folder where the build results will be stored. </string>
       </property>
      </widget>
      <widget class="QLabel" name="label_5">
@@ -738,17 +971,20 @@
      <widget class="QLineEdit" name="editWorkPath">
       <property name="geometry">
        <rect>
-        <x>84</x>
+        <x>92</x>
         <y>120</y>
-        <width>305</width>
+        <width>321</width>
         <height>20</height>
        </rect>
+      </property>
+      <property name="whatsThis">
+       <string>The working folder which will be used by HbMk2 to create in and assemble for the build process. By default it is .hbmk in the same folder where project file resides. You should keep it blank unless required most.</string>
       </property>
      </widget>
      <widget class="QToolButton" name="toolOutPath">
       <property name="geometry">
        <rect>
-        <x>412</x>
+        <x>420</x>
         <y>92</y>
         <width>25</width>
         <height>19</height>
@@ -768,7 +1004,7 @@
      <widget class="QToolButton" name="toolWorkPath">
       <property name="geometry">
        <rect>
-        <x>412</x>
+        <x>420</x>
         <y>120</y>
         <width>25</width>
         <height>19</height>
@@ -803,7 +1039,7 @@
        <rect>
         <x>12</x>
         <y>180</y>
-        <width>69</width>
+        <width>77</width>
         <height>16</height>
        </rect>
       </property>
@@ -814,9 +1050,9 @@
      <widget class="QLineEdit" name="editLaunchExe">
       <property name="geometry">
        <rect>
-        <x>84</x>
+        <x>92</x>
         <y>148</y>
-        <width>305</width>
+        <width>321</width>
         <height>20</height>
        </rect>
       </property>
@@ -824,9 +1060,9 @@
      <widget class="QLineEdit" name="editLaunchParams">
       <property name="geometry">
        <rect>
-        <x>84</x>
+        <x>92</x>
         <y>176</y>
-        <width>305</width>
+        <width>321</width>
         <height>20</height>
        </rect>
       </property>
@@ -847,9 +1083,9 @@
      <widget class="QLineEdit" name="editStayIn">
       <property name="geometry">
        <rect>
-        <x>84</x>
+        <x>92</x>
         <y>204</y>
-        <width>305</width>
+        <width>321</width>
         <height>20</height>
        </rect>
       </property>
@@ -857,7 +1093,7 @@
      <widget class="QToolButton" name="toolStayInPath">
       <property name="geometry">
        <rect>
-        <x>412</x>
+        <x>420</x>
         <y>204</y>
         <width>25</width>
         <height>19</height>
@@ -887,7 +1123,7 @@
       </rect>
      </property>
      <property name="frameShape">
-      <enum>QFrame::Panel</enum>
+      <enum>QFrame::StyledPanel</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
@@ -900,6 +1136,9 @@
         <width>25</width>
         <height>19</height>
        </rect>
+      </property>
+      <property name="toolTip">
+       <string>Select Sources</string>
       </property>
       <property name="text">
        <string>...</string>
@@ -988,47 +1227,35 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QPlainTextEdit" name="plainSources">
+     <widget class="QTreeWidget" name="treeSrc">
       <property name="geometry">
        <rect>
         <x>8</x>
         <y>8</y>
-        <width>321</width>
+        <width>433</width>
         <height>517</height>
        </rect>
       </property>
-      <property name="font">
-       <font>
-        <family>Courier New</family>
-       </font>
+      <property name="selectionBehavior">
+       <enum>QAbstractItemView::SelectRows</enum>
       </property>
-      <property name="lineWrapMode">
-       <enum>QPlainTextEdit::NoWrap</enum>
+      <property name="indentation">
+       <number>10</number>
       </property>
-     </widget>
-     <widget class="QPlainTextEdit" name="plainTextEdit">
-      <property name="enabled">
+      <property name="uniformRowHeights">
+       <bool>true</bool>
+      </property>
+      <property name="headerHidden">
+       <bool>true</bool>
+      </property>
+      <property name="expandsOnDoubleClick">
        <bool>false</bool>
       </property>
-      <property name="geometry">
-       <rect>
-        <x>336</x>
-        <y>8</y>
-        <width>104</width>
-        <height>517</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Courier New</family>
-       </font>
-      </property>
-      <property name="verticalScrollBarPolicy">
-       <enum>Qt::ScrollBarAlwaysOff</enum>
-      </property>
-      <property name="horizontalScrollBarPolicy">
-       <enum>Qt::ScrollBarAlwaysOff</enum>
-      </property>
+      <column>
+       <property name="text">
+        <string notr="true">1</string>
+       </property>
+      </column>
      </widget>
     </widget>
    </widget>
@@ -1051,11 +1278,14 @@
    <widget class="QPushButton" name="btnSave">
     <property name="geometry">
      <rect>
-      <x>284</x>
+      <x>292</x>
       <y>8</y>
       <width>75</width>
       <height>23</height>
      </rect>
+    </property>
+    <property name="toolTip">
+     <string>Save this project</string>
     </property>
     <property name="text">
      <string>Save</string>
@@ -1071,33 +1301,69 @@
      </rect>
     </property>
     <property name="text">
-     <string>Cancel</string>
+     <string>Close</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnNext">
+   <widget class="QPushButton" name="btnNew">
     <property name="geometry">
      <rect>
-      <x>96</x>
+      <x>212</x>
       <y>8</y>
       <width>75</width>
       <height>23</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Clear current project to create new one !</string>
+    </property>
     <property name="text">
-     <string>Next</string>
+     <string>New</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="btnBack">
+   <widget class="QToolButton" name="btnBack">
     <property name="geometry">
      <rect>
       <x>8</x>
       <y>8</y>
-      <width>75</width>
-      <height>23</height>
+      <width>25</width>
+      <height>19</height>
      </rect>
     </property>
+    <property name="toolTip">
+     <string>Go to previous page</string>
+    </property>
     <property name="text">
-     <string>Back</string>
+     <string>...</string>
+    </property>
+    <property name="icon">
+     <iconset resource="hbide.qrc">
+      <normaloff>:/resources/dc_left.png</normaloff>:/resources/dc_left.png</iconset>
+    </property>
+    <property name="autoRaise">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QToolButton" name="btnNext">
+    <property name="geometry">
+     <rect>
+      <x>40</x>
+      <y>8</y>
+      <width>25</width>
+      <height>19</height>
+     </rect>
+    </property>
+    <property name="toolTip">
+     <string>Go to next page</string>
+    </property>
+    <property name="text">
+     <string>...</string>
+    </property>
+    <property name="icon">
+     <iconset resource="hbide.qrc">
+      <normaloff>:/resources/dc_right.png</normaloff>:/resources/dc_right.png</iconset>
+    </property>
+    <property name="autoRaise">
+     <bool>true</bool>
     </property>
    </widget>
   </widget>

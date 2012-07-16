@@ -128,7 +128,7 @@ FUNCTION Main( ... )
    SET CENTURY ON
    SET EPOCH TO 1970
 
-   QResource():registerResource_1( hbqtres_HbIde(), ":/resource" )
+   QResource():registerResource_1( hbqtres_HbIde() )
 
    oTmp := HbIde():new( hb_aParams() )
 #if 0

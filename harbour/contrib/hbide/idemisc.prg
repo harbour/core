@@ -158,11 +158,12 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
       qPoint := aqPos
    ENDIF
 
+   cAct := ""
    IF __objGetClsName( qAct := qPop:exec( qPoint ) ) == "QACTION"
       IF valtype( cAct := qAct:text() ) == "C"
          FOR EACH a_ IN aPops
             IF HB_ISOBJECT( a_[ 1 ] )
-               IF a_[ 1 ]:text() == cAct
+               IF a_[ 1 ]:text() == cAct .AND. len( a_ ) >= 2
                   xRet := eval( aPops[ a_:__enumIndex(), 2 ] )
                   EXIT
                ENDIF
@@ -174,7 +175,7 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
                   ENDIF
                NEXT
             ELSE
-               IF a_[ 1 ] == cAct
+               IF a_[ 1 ] == cAct .AND. len( a_ ) >= 2
                   xRet := eval( aPops[ a_:__enumIndex(), 2 ], cAct )
                   EXIT
                ENDIF
@@ -182,7 +183,7 @@ FUNCTION hbide_execPopup( aPops, aqPos, qParent )
          NEXT
       ENDIF
    ENDIF
-   qPop := NIL
+   qPop:setParent( QWidget() )
    HB_SYMBOL_UNUSED( xRet )
    RETURN cAct
 
@@ -238,12 +239,13 @@ FUNCTION hbide_showWarning( cMsg, cInfo, cTitle, qParent )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_getYesNo( cMsg, cInfo, cTitle )
+FUNCTION hbide_getYesNo( cMsg, cInfo, cTitle, qParent )
    LOCAL oMB, nRet
 
-   DEFAULT cTitle TO "Option Please!"
+   DEFAULT cTitle  TO "Option Please!"
+   DEFAULT qParent TO hbide_setIde():oDlg:oWidget
 
-   oMB := QMessageBox( hbide_setIde():oDlg:oWidget )
+   oMB := QMessageBox( qParent )
    oMB:setText( "<b>"+ cMsg +"</b>" )
    IF !empty( cInfo )
       oMB:setInformativeText( cInfo )
@@ -283,12 +285,13 @@ FUNCTION hbide_getYesNoCancel( cMsg, cInfo, cTitle )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_fetchAFile( oWnd, cTitle, aFlt, cDftDir, cDftSuffix )
+FUNCTION hbide_fetchAFile( oWnd, cTitle, aFlt, cDftDir, cDftSuffix, lAllowMulti )
    LOCAL oDlg, cFile
 
    DEFAULT cTitle  TO "Please Select a File"
    DEFAULT aFlt    TO { { "All Files", "*" } }
    DEFAULT cDftDir TO hb_dirBase()
+   DEFAULT lAllowMulti TO .f.
 
    oDlg := XbpFileDialog():new():create( oWnd, , { 10,10 } )
 
@@ -299,7 +302,7 @@ FUNCTION hbide_fetchAFile( oWnd, cTitle, aFlt, cDftDir, cDftSuffix )
       oDlg:oWidget:setDefaultSuffix( cDftSuffix )
    ENDIF
 
-   cFile := oDlg:open( cDftDir, , .f. )
+   cFile := oDlg:open( cDftDir, , lAllowMulti )
    oDlg:destroy()
 
    RETURN cFile
