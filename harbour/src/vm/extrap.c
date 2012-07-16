@@ -166,7 +166,7 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
          pCtx->IntT8 , pCtx->IntT9 , pCtx->IntT10, pCtx->IntT11,
          pCtx->IntT12, pCtx->IntT13, pCtx->IntT14, pCtx->IntT15,
          pCtx->IntT16, pCtx->IntT17, pCtx->IntT18, pCtx->IntT19,
-         pCtx->IntT20, pCtx->IntT21, pCtx->IntT22
+         pCtx->IntT20, pCtx->IntT21, pCtx->IntT22,
          pCtx->IntGp , pCtx->IntV0 , pCtx->IntSp , pCtx->IntTeb,
          pCtx->IntNats );
    }
