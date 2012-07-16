@@ -424,7 +424,7 @@
        </rect>
       </property>
       <property name="whatsThis">
-       <string>HbMk2 specific switches.</string>
+       <string>hbmk2 specific switches.</string>
       </property>
       <property name="frameShape">
        <enum>QFrame::StyledPanel</enum>
@@ -753,7 +753,7 @@
        </font>
       </property>
       <property name="whatsThis">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A free-slowing area where you can enter any other compiler switches, HbMk2 switches, or command-line swiches to be passed to hbMk2. Though it will be valid, but please do not add source files here which will be asked for on next page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A free-slowing area where you can enter any other compiler switches, hbmk2 switches, or command-line swiches to be passed to hbmk2. Though it will be valid, but please do not add source files here which will be asked for on next page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="lineWrapMode">
        <enum>QPlainTextEdit::NoWrap</enum>
@@ -926,7 +926,7 @@
        </rect>
       </property>
       <property name="whatsThis">
-       <string>The name of the linked file the project will produce after project is built. Please avoid any extention as HbMk2 will automatically do so depending upon the operating system.</string>
+       <string>The name of the linked file the project will produce after project is built. Please avoid any extention as hbmk2 will automatically do so depending upon the operating system.</string>
       </property>
      </widget>
      <widget class="QLabel" name="label_4">
@@ -978,7 +978,7 @@
        </rect>
       </property>
       <property name="whatsThis">
-       <string>The working folder which will be used by HbMk2 to create in and assemble for the build process. By default it is .hbmk in the same folder where project file resides. You should keep it blank unless required most.</string>
+       <string>The working folder which will be used by hbmk2 to create in and assemble for the build process. By default it is .hbmk in the same folder where project file resides. You should keep it blank unless required most.</string>
       </property>
      </widget>
      <widget class="QToolButton" name="toolOutPath">

@@ -297,7 +297,7 @@ METHOD IdeProjectWizard:show()
       aadd( ::aItmRoots, { NIL, "Include Paths"            , QBrush( QColor( 160, 160, 160 ) ),  oBrush } )
       aadd( ::aItmRoots, { NIL, "PRG Defines"              , QBrush( QColor( 168, 168, 168 ) ),  oBrush } )
       aadd( ::aItmRoots, { NIL, "PRG Undefines"            , QBrush( QColor( 176, 176, 176 ) ),  oBrush } )
-      aadd( ::aItmRoots, { NIL, "HbMk2 Command-line Params", QBrush( QColor( 184, 184, 184 ) ),  oBrush } )
+      aadd( ::aItmRoots, { NIL, "hbmk2 Command-line Params", QBrush( QColor( 184, 184, 184 ) ),  oBrush } )
 
 
       ::oUI:treeSrc:setContextMenuPolicy( Qt_CustomContextMenu )
