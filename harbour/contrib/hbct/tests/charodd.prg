@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARODD() 
+ *   Test CT3 function CHARODD()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,29 +52,23 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of CHARODD()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  charodd("1A2B3C4D5E") == "12345" ? --> "] + charodd( "1A2B3C4D5E" ) + ["] )
+   QOut( [  charodd("1A2B3C4D5")  == "12345" ? --> "] + charodd( "1A2B3C4D5" ) + ["] )
 
- qout ("Begin test of CHARODD()")
- qout ("")
+   QOut( "End test of CHARODD()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  charodd ("1A2B3C4D5E") == "12345" ? --> "] + charodd ("1A2B3C4D5E") + ["])
- qout ([  charodd ("1A2B3C4D5")  == "12345" ? --> "] + charodd ("1A2B3C4D5") + ["])
+   ctexit()
 
- qout ("End test of CHARODD()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
+   RETURN

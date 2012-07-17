@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARADD() 
+ *   Test CT3 function CHARADD()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,31 +52,25 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of CHARADD()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  charadd("012345678", chr(1)) == "123456789" ? -> "] + charadd( "012345678", Chr(1 ) ) + ["] )
+   QOut( [  charadd("012345678", chr(1)+chr(2)) == "133557799" ? -> "] + charadd( "012345678", Chr(1 ) + Chr(2 ) ) + ["] )
+   QOut( [  charadd("123456789", chr(255)) == "012345678" ? -> "] + charadd( "123456789", Chr(255 ) ) + ["] )
+   QOut( [  charadd("123456789", chr(255)+chr(254)) == "002244668" ? -> "] + charadd( "123456789", Chr(255 ) + Chr(254 ) ) + ["] )
 
- qout ("Begin test of CHARADD()")
- qout ("")
+   QOut( "End test of CHARADD()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  charadd ("012345678", chr(1)) == "123456789" ? -> "] + charadd ("012345678", chr(1)) + ["])
- qout ([  charadd ("012345678", chr(1)+chr(2)) == "133557799" ? -> "] + charadd ("012345678", chr(1)+chr(2)) + ["])
- qout ([  charadd ("123456789", chr(255)) == "012345678" ? -> "] + charadd ("123456789", chr(255)) + ["])
- qout ([  charadd ("123456789", chr(255)+chr(254)) == "002244668" ? -> "] + charadd ("123456789", chr(255)+chr(254)) + ["])
+   ctexit()
 
- qout ("End test of CHARADD()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
+   RETURN

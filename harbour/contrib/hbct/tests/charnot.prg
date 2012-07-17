@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARNOT 
+ *   Test CT3 function CHARNOT
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,45 +52,40 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   LOCAL ni, cStr
 
-procedure main
+   ctinit()
 
-local ni, cStr
+   QOut( "Begin test of CHARNOT()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
 
- qout ("Begin test of CHARNOT()")
- qout ("")
+   QOut( [  charnot(chr(85)+chr(128)+chr(170)+chr(1)) == ] )
+   QOut( [  chr(170)+chr(127)+chr(85)+chr(254) ? -->] )
 
- // simple tests
- qout ("Simple tests:")   
+   QOut( [  ] )
+   cStr :=  charnot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) )
+   for ni := 1 TO Len( cStr )
+      QQOut( "chr(" + AllTrim( Str(Asc(SubStr(cStr, ni, 1 ) ) ) ) + ")" )
+      IF ni < Len( cStr )
+         QQOut( "+" )
+      ENDIF
+   next ni
+   QOut( "" )
 
- qout ([  charnot (chr(85)+chr(128)+chr(170)+chr(1)) == ])
- qout ([  chr(170)+chr(127)+chr(85)+chr(254) ? -->])
+   QOut( [  charnot(charnot("This is a test!")) == "This is a test!" ?] )
+   QOut( [  --> "] + charnot( charnot("This is a test!" ) ) + ["] )
+   QOut( "" )
 
- qout ([  ])
- cStr :=  charnot (chr(85)+chr(128)+chr(170)+chr(1))
- for ni := 1 to len (cStr)
-   qqout ("chr("+alltrim(str(asc(substr(cStr, ni, 1))))+")")
-   if ni < len(cStr)
-     qqout ("+")
-   endif
- next ni
- qout ("")
+   QOut( "End test of CHARNOT()" )
+   QOut( "" )
 
- qout ([  charnot (charnot ("This is a test!")) == "This is a test!" ?])
- qout ([  --> "]+ charnot (charnot ("This is a test!"))+["])
- qout ("")
+   ctexit()
 
- qout ("End test of CHARNOT()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
+   RETURN

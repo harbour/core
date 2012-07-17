@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARHIST() 
+ *   Test CT3 function CHARHIST()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,33 +52,27 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   LOCAL nTotal := 0
 
-procedure main
+   ctinit()
 
-local nTotal := 0
+   QOut( "Begin test of CHARHIST()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  charhist("Hello World !")] + "[109] == 3 ? --> ", charhist( "Hello World !" )[109] )
+   QOut( [  aeval(charhist("Hello World !"),{|x|nTotal+=x})] )
+   AEval( charhist( "Hello World !" ), { |x|nTotal += x } )
+   QOut( [    ==> nTotal == len("Hello World !") ? --> ], nTotal == Len( "Hello World !" ) )
 
- qout ("Begin test of CHARHIST()")
- qout ("")
+   QOut( "End test of CHARHIST()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  charhist ("Hello World !")]+"[109] == 3 ? --> ", charhist ("Hello World !")[109])
- qout ([  aeval (charhist ("Hello World !"),{|x|nTotal+=x})])
- aeval (charhist ("Hello World !"),{|x|nTotal+=x})
- qout ([    ==> nTotal == len("Hello World !") ? --> ], nTotal == len("Hello World !"))
+   ctexit()
 
- qout ("End test of CHARHIST()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
+   RETURN

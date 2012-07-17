@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function ATTOKEN() 
+ *   Test CT3 function ATTOKEN()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,44 +52,39 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   LOCAL cStr := "...This...is...a...test!"
+   LOCAL ni, npos
 
-procedure main
+   ctinit()
 
-local cStr := "...This...is...a...test!"
-local ni, npos
+   QOut( "Begin test of ATTOKEN()" )
+   QOut( "" )
 
- ctinit()
+   // Some simple tests
+   QOut( "  Simple tests:" )
+   QOut( [    attoken("Hello, World!") == 8 ? ---------> ] + Str( attoken("Hello, World!" ) ) )
+   QOut( [    attoken("Hello, World!",,2) == 8 ? ------> ] + Str( attoken("Hello, World!",,2 ) ) )
+   QOut( [    attoken("Hello, World!",,2,1) == 7 ? ----> ] + Str( attoken("Hello, World!",,2,1 ) ) )
+   QOut( [    attoken("Hello, World!"," ",2,1) == 8 ? -> ] + Str( attoken("Hello, World!"," ",2,1 ) ) )
+   QOut( "" )
 
- qout ("Begin test of ATTOKEN()")
- qout ("")
+   QOut( [  Tokenizing a string with skip width == 1 and ".!" as tokenizer list:] )
+   QOut( "    Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 ) )
+   QOut( "" )
+   for ni := 1 TO numtoken( cStr, ".!", 1 )
+      QOut( [    Token #] + AllTrim( Str(ni ) ) + [("] + token( cStr, ".!", ni, 1 ) + [")] )
+      QOut( "          starts at pos " + Str( npos := attoken(cStr, ".!", ni, 1 ),3 ) + ;
+         " and is " + iif( SubStr( cStr,npos,1 ) $ ".!", "", "not " ) + "an empty token." )
+   next ni
 
- // Some simple tests
- qout ("  Simple tests:")
- qout ([    attoken ("Hello, World!") == 8 ? ---------> ] + str(attoken ("Hello, World!")))
- qout ([    attoken ("Hello, World!",,2) == 8 ? ------> ] + str(attoken ("Hello, World!",,2)))
- qout ([    attoken ("Hello, World!",,2,1) == 7 ? ----> ] + str(attoken ("Hello, World!",,2,1)))
- qout ([    attoken ("Hello, World!"," ",2,1) == 8 ? -> ] + str(attoken ("Hello, World!"," ",2,1)))
- qout ("")
+   QOut( "" )
+   QOut( "End test of ATTOKEN()" )
+   QOut()
 
- qout ([  Tokenizing a string with skip width == 1 and ".!" as tokenizer list:])
- qout ("    Value of cStr is:"+chr(34)+cStr+chr(34))
- qout ("")
- for ni := 1 to numtoken (cStr, ".!", 1)
-   qout ([    Token #]+alltrim(str(ni))+[ ("]+token(cStr, ".!", ni, 1)+[")])
-   qout ("          starts at pos "+str(npos:=attoken (cStr, ".!", ni, 1),3)+;
-         " and is "+iif(substr(cStr,npos,1)$".!","","not ")+"an empty token.")
- next ni
+   ctexit()
 
- qout ("")
- qout ("End test of ATTOKEN()")
- qout ()
-
- ctexit()
-
-return 
-
-
-
+   RETURN

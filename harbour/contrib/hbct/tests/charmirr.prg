@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARMIRR() 
+ *   Test CT3 function CHARMIRR()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,30 +52,24 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of CHARMIRR()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  charmirr("racecar") == "racecar" ? ----------> "] + charmirr( "racecar" ) + ["] )
+   QOut( [  charmirr("racecar  ", .T.) == "racecar  " ? -> "] + charmirr( "racecar  ", .T. ) + ["] )
+   QOut( [  charmirr("racecar  ", .F.) == "  racecar" ? -> "] + charmirr( "racecar  ", .F. ) + ["] )
 
- qout ("Begin test of CHARMIRR()")
- qout ("")
+   QOut( "End test of CHARMIRR()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  charmirr ("racecar") == "racecar" ? ----------> "] + charmirr("racecar") + ["])
- qout ([  charmirr ("racecar  ", .T.) == "racecar  " ? -> "] + charmirr("racecar  ", .T.) + ["])
- qout ([  charmirr ("racecar  ", .F.) == "  racecar" ? -> "] + charmirr("racecar  ", .F.) + ["])
+   ctexit()
 
- qout ("End test of CHARMIRR()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
+   RETURN

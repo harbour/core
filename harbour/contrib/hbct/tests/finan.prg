@@ -10,11 +10,7 @@
  *     - PAYMENT
  *     - PERIODS
  *     - RATE
- *
- * NOTE: All these functions were builded using Borland C++ 5.5 (free version)
- *
  * Copyright 2001  Alejandro de Garate  <alex_degarate@hotmail.com>
- *
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -58,54 +54,53 @@
  *
  */
 
+PROCEDURE Main()
 
-PROCEDURE MAIN
+   CTINIT()
 
- CTINIT()
+   SET DECIMAL TO 3
+   CLS
+   ?? "Testing Financial functions...."
+   ?
+   ? "Calculate how loan summs if you make deposits for $175.00 for 24 months,"
+   ? "if the annual rate of the Bank for this mortage is 9.5% fixed"
+   ? "PV( 175, 0.095/12, 24 ) = 3811.433   // CT3"
+   ? Space( 19 ), PV( 175, 0.095/12, 24 ), "  <-- CT for Harbour"
+   ?
+   ?
 
- SET DECIMAL TO 3
- CLS
- ?? "Testing Financial functions...."
- ?
- ? "Calculate how loan summs if you make deposits for $175.00 for 24 months,"
- ? "if the annual rate of the Bank for this mortage is 9.5% fixed"
- ? "PV( 175, 0.095/12, 24 ) = 3811.433   // CT3"
- ? SPACE(19), PV( 175, 0.095/12, 24 ), "  <-- CT for Harbour"
- ?
- ?
+   ? "Calculate the amount in your account after 3 years, if you make deposits"
+   ? "for $150.00 per month, and the annual rate of the Bank for this is 6%"
+   ? "Capital = FV( 150, 0.06/12, 36 ) = 5900.416    // CT3"
+   ? Space( 28 ), FV( 150, 0.06/12, 36 ), "  <-- CT for Harbour"
+   ?
+   ?
 
- ? "Calculate the amount in your account after 3 years, if you make deposits"
- ? "for $150.00 per month, and the annual rate of the Bank for this is 6%"
- ? "Capital = FV( 150, 0.06/12, 36 ) = 5900.416    // CT3"
- ? SPACE(28), FV( 150, 0.06/12, 36 ), "  <-- CT for Harbour"
- ?
- ?
+   ? "Calculate the monthly payment for a loan of $2000.00 at an annual rate"
+   ? "of 10%, within 24 month "
+   ? "PAYMENT( 2000.00, 0.10/12, 24 ) =  92.290    // CT3"
+   ? Space( 26 ), PAYMENT( 2000.00, 0.10/12, 24 ), "  <-- CT for Harbour"
+   ?
+   ? "  PRESS ANY KEY"
 
- ? "Calculate the monthly payment for a loan of $2000.00 at an annual rate"
- ? "of 10%, within 24 month "
- ? "PAYMENT( 2000.00, 0.10/12, 24 ) =  92.290    // CT3"
- ? SPACE(26),PAYMENT( 2000.00, 0.10/12, 24 ), "  <-- CT for Harbour"
- ?
- ? "  PRESS ANY KEY"
+   Inkey( 0 )
+   ? "Continue Testing Financial functions...."
+   ?
+   ? "Calculate how many month do you need to cancel a loan of $4000.00 at"
+   ? "an annual rate of 9.5% with payments of $200.00 max"
+   ? "PERIODS( 4000.00, 200.00, 0.095/12 ) =  21.859    // CT3"
+   ? Space( 31 ), PERIODS( 4000.00, 200.00, 0.095/12 ), "  <-- CT for Harbour"
+   ?
+   ?
 
- INKEY (0)
- ? "Continue Testing Financial functions...."
- ?
- ? "Calculate how many month do you need to cancel a loan of $4000.00 at"
- ? "an annual rate of 9.5% with payments of $200.00 max"
- ? "PERIODS( 4000.00, 200.00, 0.095/12 ) =  21.859    // CT3"
- ? SPACE(31), PERIODS( 4000.00, 200.00, 0.095/12 ), "  <-- CT for Harbour"
- ?
- ?
+   ? "Calculate which is the effective anual rate of your Bank, for a loan"
+   ? "of $2500.00 if you pay $86.67 per month for 3 years"
+   ? "RATE( 2500.00, 86.67, 36 ) * 12 = 0.1501  // CT3"
+   ? Space( 24 ), RATE( 2500.00, 86.67, 36 ) * 12.0, "  <-- CT for Harbour"
+   ?
+   ? "  PRESS ANY KEY"
+   Inkey( 0 )
 
- ? "Calculate which is the effective anual rate of your Bank, for a loan"
- ? "of $2500.00 if you pay $86.67 per month for 3 years"
- ? "RATE( 2500.00, 86.67, 36 ) * 12 = 0.1501  // CT3"
- ? SPACE(24), RATE( 2500.00, 86.67, 36 ) * 12.0, "  <-- CT for Harbour"
- ?
- ? "  PRESS ANY KEY"
- INKEY(0)
+   CTEXIT()
 
- CTEXIT()
-
-RETURN
+   RETURN

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function ADDASCII() 
+ *   Test CT3 function ADDASCII()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,63 +52,57 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   LOCAL cStr := "This is a test!"
 
-procedure main
+   ctinit()
 
-local cStr := "This is a test!"
+   QOut( "Begin test of ADDASCII()" )
+   QOut( "" )
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  This should be "1000": ] + addascii( "0000", 1, 1 ) )
+   QOut( [  This should be "0001": ] + addascii( "0000", 1 ) )
+   QOut( [  This should be "BAAA": ] + addascii( "AAAA", - 255, 1 ) )
+   QOut( [  This should be "AAAB": ] + addascii( "AAAA", - 255 ) )
 
- ctinit()
+   // csetref() tests
+   QOut()
+   QOut( "CSETREF tests:" )
+   QOut( "  current csetref setting(should be .f.)................: ", csetref() )
+   QOut( "  return value of addascii([A],1,1) call(should be 'B'): ", addascii( "A",1,1 ) )
+   QOut( "  value of cStr..........................................: ", cStr )
+   QOut( "  return value of addascii(cStr,1,1) call...............: ", addascii( cStr,1,1 ) )
+   QOut( "  value of cStr is now...................................: ", cStr )
+   QOut( "  return value of addascii(@cStr,1,1) call..............: ", addascii( @cStr,1,1 ) )
+   QOut( "  value of cStr is now...................................: ", cStr )
+   QOut( "  return value of addascii(@cStr,-1,1) call.............: ", addascii( @cStr, - 1,1 ) )
+   QOut( "  value of cStr is now...................................: ", cStr )
+   QOut( "  return value of csetref(.t.)..........................: ", csetref( .T. ) )
+   QOut( "  return value of addascii([A],1,1) call................: ", addascii( "A",1,1 ) )
+   QOut( "  return value of addascii(cStr,1,1) call...............: ", addascii( cStr,1,1 ) )
+   QOut( "  value of cStr is now...................................: ", cStr )
+   QOut( "  return value of addascii(@cStr,1,1) call..............: ", addascii( @cStr,1,1 ) )
+   QOut( "  value of cStr is now...................................: ", cStr )
+   QOut( "  return value of addascii(@cStr,-1,1) call.............: ", addascii( @cStr, - 1,1 ) )
+   QOut( "  value of cStr is now...................................: ", cStr )
+   QOut( "  return value of csetref(.f.)..........................: ", csetref( .F. ) )
 
- qout ("Begin test of ADDASCII()")
- qout ("")
- // simple tests
- qout ("Simple tests:")
- qout ([  This should be "1000": ]+addascii ("0000", 1, 1))
- qout ([  This should be "0001": ]+addascii ("0000", 1))
- qout ([  This should be "BAAA": ]+addascii ("AAAA", -255, 1))
- qout ([  This should be "AAAB": ]+addascii ("AAAA", -255))
+   // tests for the new 4th parameter
+   QOut()
+   QOut( "Carryover tests(new 4th parameter):" )
+   QOut( "  return value of addascii([AAAA],1,2,.T.) call('ABAA')....:", addascii( "AAAA",1,2, .T. ) )
+   QOut( "  return value of addascii([AAAA],257,2,.T.) call('BBAA')..:", addascii( "AAAA",257,2, .T. ) )
+   QOut( "  return value of addascii([AAAA],257,2,.F.) call('ABAA')..:", addascii( "AAAA",257,2, .F. ) )
+   QOut( "  return value of addascii([AAAA],258,,.T.) call('AABC')...:", addascii( "AAAA",258,, .T. ) )
+   QOut( "  return value of addascii([ABBA],-257,3,.T.) call('AAAA').:", addascii( "ABBA", - 257,3, .T. ) )
 
- // csetref() tests 
- qout ()
- qout ("CSETREF tests:")
- qout ("  current csetref setting (should be .f.)................: ", csetref())
- qout ("  return value of addascii ([A],1,1) call (should be 'B'): ", addascii("A",1,1))
- qout ("  value of cStr..........................................: ", cStr)
- qout ("  return value of addascii (cStr,1,1) call...............: ", addascii(cStr,1,1))
- qout ("  value of cStr is now...................................: ", cStr)
- qout ("  return value of addascii (@cStr,1,1) call..............: ", addascii(@cStr,1,1))
- qout ("  value of cStr is now...................................: ", cStr)
- qout ("  return value of addascii (@cStr,-1,1) call.............: ", addascii(@cStr,-1,1))
- qout ("  value of cStr is now...................................: ", cStr)
- qout ("  return value of csetref (.t.)..........................: ", csetref (.t.))
- qout ("  return value of addascii ([A],1,1) call................: ", addascii("A",1,1))
- qout ("  return value of addascii (cStr,1,1) call...............: ", addascii(cStr,1,1))
- qout ("  value of cStr is now...................................: ", cStr)
- qout ("  return value of addascii (@cStr,1,1) call..............: ", addascii(@cStr,1,1))
- qout ("  value of cStr is now...................................: ", cStr)
- qout ("  return value of addascii (@cStr,-1,1) call.............: ", addascii(@cStr,-1,1))
- qout ("  value of cStr is now...................................: ", cStr)
- qout ("  return value of csetref (.f.)..........................: ", csetref (.f.))
+   QOut( "End test of ADDASCII()" )
+   QOut( "" )
 
- // tests for the new 4th parameter 
- qout ()
- qout ("Carryover tests (new 4th parameter):")
- qout ("  return value of addascii([AAAA],1,2,.T.) call ('ABAA')....:", addascii("AAAA",1,2,.T.))
- qout ("  return value of addascii([AAAA],257,2,.T.) call ('BBAA')..:", addascii("AAAA",257,2,.T.))
- qout ("  return value of addascii([AAAA],257,2,.F.) call ('ABAA')..:", addascii("AAAA",257,2,.F.))
- qout ("  return value of addascii([AAAA],258,,.T.) call ('AABC')...:", addascii("AAAA",258,,.T.))
- qout ("  return value of addascii([ABBA],-257,3,.T.) call ('AAAA').:", addascii("ABBA",-257,3,.T.))
+   ctexit()
 
- qout ("End test of ADDASCII()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
+   RETURN

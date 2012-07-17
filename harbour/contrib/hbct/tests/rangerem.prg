@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function RANGEREM() 
+ *   Test CT3 function RANGEREM()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,32 +52,26 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of RANGEREM()" )
+   QOut( "" )
 
- ctinit()
+   QOut( [  rangerem("0","9","year2002.dbf") == "year.dbf"     ? --> "] + ;
+      rangerem( "0", "9", "year2002.dbf" ) + ["] )
+   QOut( [  rangerem("9","0","year2002.dbf") == "22"           ? --> "] + ;
+      rangerem( "9", "0", "year2002.dbf" ) + ["] )
+   QOut( [  rangerem("0","9","yearcurr.dbf") == "yearcurr.dbf" ? --> "] + ;
+      rangerem( "0", "9", "yearcurr.dbf" ) + ["] )
 
- qout ("Begin test of RANGEREM()")
- qout ("")
+   QOut( "" )
+   QOut( "End test of RANGEREM()" )
+   QOut( "" )
 
- qout ([  rangerem ("0","9","year2002.dbf") == "year.dbf"     ? --> "] + ;
-          rangerem ("0","9","year2002.dbf") + ["])
- qout ([  rangerem ("9","0","year2002.dbf") == "22"           ? --> "] + ;
-          rangerem ("9","0","year2002.dbf") + ["])
- qout ([  rangerem ("0","9","yearcurr.dbf") == "yearcurr.dbf" ? --> "] + ;
-          rangerem ("0","9","yearcurr.dbf") + ["])
+   ctexit()
 
- qout ("")
- qout ("End test of RANGEREM()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
+   RETURN

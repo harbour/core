@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function ASCIISUM() 
+ *   Test CT3 function ASCIISUM()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,29 +52,23 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of ASCIISUM()" )
+   QOut( "" )
 
- ctinit()
+   QOut( [  asciisum(replicate("A", 10000)) == 650000 ? --> ] + Str( asciisum(Replicate("A",10000 ) ) ) )
+   QOut( [  asciisum("0123456789") == 525              ? --> ] + Str( asciisum("0123456789" ) ) )
+   QOut( [  asciisum(nil) == 0                         ? --> ] + Str( asciisum(nil ) ) )
 
- qout ("Begin test of ASCIISUM()")
- qout ("")
+   QOut( "" )
+   QOut( "End test of ASCIISUM()" )
+   QOut( "" )
 
- qout ([  asciisum (replicate ("A", 10000)) == 650000 ? --> ] + str (asciisum (replicate("A",10000))))
- qout ([  asciisum ("0123456789") == 525              ? --> ] + str (asciisum ("0123456789")))
- qout ([  asciisum (nil) == 0                         ? --> ] + str (asciisum (nil)))
+   ctexit()
 
- qout ("")
- qout ("End test of ASCIISUM()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
+   RETURN

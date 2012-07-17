@@ -53,246 +53,244 @@
  */
 
 
-#include "../ct.ch"
+#include "ct.ch"
 
+PROCEDURE main
 
-procedure main
+   LOCAL cRet, olderr
 
-local cRet, olderr
+   ctinit()
 
- ctinit()
+   QOut( "Begin test of CSETARGERR()" )
+   QOut( "" )
 
- qout ("Begin test of CSETARGERR()")
- qout ("")
+   QOut( "" )
+   QOut( "Local error handler: " )
 
- qout ("")
- qout ("Local error handler: ")
+   olderr := ErrorBlock( { | oerr | myerrhandler( oerr ) } )
 
- olderr := errorblock ({|oerr|myerrhandler(oerr)})
+   // standard behaviour on argument error
+   QOut( "" )
+   QOut( "Standard behaviour" )
+   QOut( "  Call to addascii(5789676,1,2,.T.):" )
+   cRet := addascii( 5789676, 1, 2, .T. )
+   QOut( "  return value was", cRet )
+   QOut( "" )
+   QOut( "  Call to charadd('AA',.F.):" )
+   cRet := charadd( "AA", .F. )
+   QOut( "  return value was", cRet, "<Press any key>" )
+   QOut( "" )
+   Inkey( 0 )
 
- // standard behaviour on argument error
- qout ("")
- qout ("Standard behaviour")
- qout ("  Call to addascii (5789676,1,2,.T.):")
- cRet := addascii (5789676,1,2,.T.)
- qout ("  return value was", cRet)
- qout ("")
- qout ("  Call to charadd ('AA',.F.):")
- cRet := charadd ("AA",.F.)
- qout ("  return value was", cRet, "<Press any key>")
- qout ("")
- inkey (0)
+   // CT_ARGERR_WHOCARES on argument error
+   QOut( "" )
+   QOut( "CT_ARGERR_WHOCARES behaviour" )
+   CSETARGERR( CT_ARGERR_WHOCARES )
+   QOut( "  Call to addascii(5789676,1,2,.T.):" )
+   cRet := addascii( 5789676, 1, 2, .T. )
+   QOut( "  return value was", cRet )
+   QOut( "" )
+   QOut( "  Call to charadd('AA',.F.):" )
+   cRet := charadd( "AA", .F. )
+   QOut( "  return value was", cRet, "<Press any key>" )
+   QOut( "" )
+   Inkey( 0 )
 
- // CT_ARGERR_WHOCARES on argument error
- qout ("")
- qout ("CT_ARGERR_WHOCARES behaviour")
- CSETARGERR (CT_ARGERR_WHOCARES)
- qout ("  Call to addascii (5789676,1,2,.T.):")
- cRet := addascii (5789676,1,2,.T.)
- qout ("  return value was", cRet)
- qout ("")
- qout ("  Call to charadd ('AA',.F.):")
- cRet := charadd ("AA",.F.)
- qout ("  return value was", cRet, "<Press any key>")
- qout ("")
- inkey (0)
+   // CT_ARGERR_WARNING on argument error
+   QOut( "" )
+   QOut( "CT_ARGERR_WARNING behaviour" )
+   CSETARGERR( CT_ARGERR_WARNING )
+   QOut( "  Call to addascii(5789676,1,2,.T.):" )
+   cRet := addascii( 5789676, 1, 2, .T. )
+   QOut( "  return value was", cRet )
+   QOut( "" )
+   QOut( "  Call to charadd('AA',.F.):" )
+   cRet := charadd( "AA", .F. )
+   QOut( "  return value was", cRet, "<Press any key>" )
+   QOut( "" )
+   Inkey( 0 )
 
- // CT_ARGERR_WARNING on argument error
- qout ("")
- qout ("CT_ARGERR_WARNING behaviour")
- CSETARGERR (CT_ARGERR_WARNING)
- qout ("  Call to addascii (5789676,1,2,.T.):")
- cRet := addascii (5789676,1,2,.T.)
- qout ("  return value was", cRet)
- qout ("")
- qout ("  Call to charadd ('AA',.F.):")
- cRet := charadd ("AA",.F.)
- qout ("  return value was", cRet, "<Press any key>")
- qout ("")
- inkey (0)
+   // CT_ARGERR_ERROR on argument error
+   QOut( "" )
+   QOut( "CT_ARGERR_ERROR behaviour" )
+   CSETARGERR( CT_ARGERR_ERROR )
+   QOut( "  Call to addascii(5789676,1,2,.T.):" )
+   cRet := addascii( 5789676, 1, 2, .T. )
+   QOut( "  return value was", cRet )
+   QOut( "" )
+   QOut( "  Call to charadd('AA',.F.):" )
+   cRet := charadd( "AA", .F. )
+   QOut( "  return value was", cRet, "<Press any key>" )
+   QOut( "" )
+   Inkey( 0 )
 
- // CT_ARGERR_ERROR on argument error
- qout ("")
- qout ("CT_ARGERR_ERROR behaviour")
- CSETARGERR (CT_ARGERR_ERROR)
- qout ("  Call to addascii (5789676,1,2,.T.):")
- cRet := addascii (5789676,1,2,.T.)
- qout ("  return value was", cRet)
- qout ("")
- qout ("  Call to charadd ('AA',.F.):")
- cRet := charadd ("AA",.F.)
- qout ("  return value was", cRet, "<Press any key>")
- qout ("")
- inkey (0)
+   // CT_ARGERR_CATASTROPHIC on argument error
+   QOut( "" )
+   QOut( "CT_ARGERR_CATASTROPHIC behaviour" )
+   CSETARGERR( CT_ARGERR_CATASTROPHIC )
+   QOut( "  Call to addascii(5789676,1,2,.T.):" )
+   cRet := addascii( 5789676, 1, 2, .T. )
+   QOut( "  return value was", cRet )
+   QOut( "" )
+   QOut( "  Call to charadd('AA',.F.):" )
+   cRet := charadd( "AA", .F. )
+   QOut( "  return value was", cRet, "<Press any key>" )
+   QOut( "" )
+   Inkey( 0 )
 
- // CT_ARGERR_CATASTROPHIC on argument error
- qout ("")
- qout ("CT_ARGERR_CATASTROPHIC behaviour")
- CSETARGERR (CT_ARGERR_CATASTROPHIC)
- qout ("  Call to addascii (5789676,1,2,.T.):")
- cRet := addascii (5789676,1,2,.T.)
- qout ("  return value was", cRet)
- qout ("")
- qout ("  Call to charadd ('AA',.F.):")
- cRet := charadd ("AA",.F.)
- qout ("  return value was", cRet, "<Press any key>")
- qout ("")
- inkey (0)
+   QOut( "" )
+   QOut( "Standard error handler: " )
+   ErrorBlock( olderr )
 
- qout ("")
- qout ("Standard error handler: ")
- errorblock (olderr)
+   // standard behaviour on argument error
+   QOut( "" )
+   QOut( "Standard behaviour" )
+   QOut( "  Call to charadd('AA',.F.):" )
+   cRet := charadd( "AA", .F. )
+   QOut( "  return value was", cRet, "<Press any key>" )
+   QOut( "" )
+   Inkey( 0 )
 
- // standard behaviour on argument error
- qout ("")
- qout ("Standard behaviour")
- qout ("  Call to charadd ('AA',.F.):")
- cRet := charadd ("AA",.F.)
- qout ("  return value was", cRet, "<Press any key>")
- qout ("")
- inkey (0)
+   // CT_ARGERR_WHOCARES on argument error
+   QOut( "" )
+   QOut( "CT_ARGERR_WHOCARES behaviour" )
+   CSETARGERR( CT_ARGERR_WHOCARES )
+   QOut( "  Call to charadd('AA',.F.):" )
+   cRet := charadd( "AA", .F. )
+   QOut( "  return value was", cRet, "<Press any key>" )
+   QOut( "" )
+   Inkey( 0 )
 
- // CT_ARGERR_WHOCARES on argument error
- qout ("")
- qout ("CT_ARGERR_WHOCARES behaviour")
- CSETARGERR (CT_ARGERR_WHOCARES)
- qout ("  Call to charadd ('AA',.F.):")
- cRet := charadd ("AA",.F.)
- qout ("  return value was", cRet, "<Press any key>")
- qout ("")
- inkey (0)
+   // CT_ARGERR_WARNING on argument error
+   QOut( "" )
+   QOut( "CT_ARGERR_WARNING behaviour" )
+   CSETARGERR( CT_ARGERR_WARNING )
+   QOut( "  Call to charadd('AA',.F.):" )
+   cRet := charadd( "AA", .F. )
+   QOut( "  return value was", cRet, "<Press any key>" )
+   QOut( "" )
+   Inkey( 0 )
 
- // CT_ARGERR_WARNING on argument error
- qout ("")
- qout ("CT_ARGERR_WARNING behaviour")
- CSETARGERR (CT_ARGERR_WARNING)
- qout ("  Call to charadd ('AA',.F.):")
- cRet := charadd ("AA",.F.)
- qout ("  return value was", cRet, "<Press any key>")
- qout ("")
- inkey (0)
+   // CT_ARGERR_ERROR on argument error
+   QOut( "" )
+   QOut( "CT_ARGERR_ERROR behaviour" )
+   CSETARGERR( CT_ARGERR_ERROR )
+   QOut( "  Call to charadd('AA',.F.):" )
+   cRet := charadd( "AA", .F. )
+   QOut( "  return value was", cRet, "<Press any key>" )
+   QOut( "" )
+   Inkey( 0 )
 
- // CT_ARGERR_ERROR on argument error
- qout ("")
- qout ("CT_ARGERR_ERROR behaviour")
- CSETARGERR (CT_ARGERR_ERROR)
- qout ("  Call to charadd ('AA',.F.):")
- cRet := charadd ("AA",.F.)
- qout ("  return value was", cRet, "<Press any key>")
- qout ("")
- inkey (0)
+   // CT_ARGERR_CATASTROPHIC on argument error
+   QOut( "" )
+   QOut( "CT_ARGERR_CATASTROPHIC behaviour" )
+   CSETARGERR( CT_ARGERR_CATASTROPHIC )
+   QOut( "  Call to charadd('AA',.F.):" )
+   cRet := charadd( "AA", .F. )
+   QOut( "  return value was", cRet, "<Press any key>" )
+   QOut( "" )
+   Inkey( 0 )
 
- // CT_ARGERR_CATASTROPHIC on argument error
- qout ("")
- qout ("CT_ARGERR_CATASTROPHIC behaviour")
- CSETARGERR (CT_ARGERR_CATASTROPHIC)
- qout ("  Call to charadd ('AA',.F.):")
- cRet := charadd ("AA",.F.)
- qout ("  return value was", cRet, "<Press any key>")
- qout ("")
- inkey (0)
+   QOut( "End test of CSETARGERR()" )
 
- qout ("End test of CSETARGERR()")
+   ctexit()
 
- ctexit()
+   RETURN
 
-return
+FUNCTION myerrhandler( oerr )
 
+   LOCAL ni, nDigit
 
-function myerrhandler (oerr)
+   MEMVAR INPUT
 
-local ni, nDigit
+   QOut( "    Error handler called:" )
+   QOut( "      err:severity.....:", oerr:severity )
+   QOut( "      err:subSystem....:", oerr:subSystem )
+   QOut( "      err:operation....:", oerr:operation )
+   QOut( "      len(err:args)....:", Len( oerr:args ) )
+   FOR ni := 1 TO Len( oerr:args )
+      QOut( "          err:args[" + hb_ntos( ni ) + "]..:", oerr:args[ni] )
+   NEXT
+   QOut( "      err:genCode......:", oerr:genCode )
+   QOut( "      err:subCode......:", oerr:subCode )
+   QOut( "      err:osCode.......:", oerr:osCode )
+   QOut( "      err:filename.....:", oerr:filename )
+   QOut( "      err:tries........:", oerr:tries )
+   QOut( "      err:cargo........:", oerr:cargo )
+   QOut( "      err:canDefault...:", oerr:canDefault )
+   QOut( "      err:canRetry.....:", oerr:canRetry )
+   QOut( "      err:canSubstitute:", oerr:canSubstitute )
+   QOut()
 
-  memvar Input
+   IF oerr:canSubstitute
 
-  qout ("    Error handler called:")
-  qout ("      err:severity.....:",oerr:severity)
-  qout ("      err:subSystem....:",oerr:subSystem)
-  qout ("      err:operation....:",oerr:operation)
-  qout ("      len(err:args)....:",len(oerr:args))
-  for ni := 1 to len (oerr:args)
-    qout ("          err:args["+alltrim(str(ni))+"]..:",oerr:args[ni])
-  next ni
-  qout ("      err:genCode......:",oerr:genCode)
-  qout ("      err:subCode......:",oerr:subCode)
-  qout ("      err:osCode.......:",oerr:osCode)
-  qout ("      err:filename.....:",oerr:filename)
-  qout ("      err:tries........:",oerr:tries)
-  qout ("      err:cargo........:",oerr:cargo)
-  qout ("      err:canDefault...:",oerr:canDefault)
-  qout ("      err:canRetry.....:",oerr:canRetry)
-  qout ("      err:canSubstitute:",oerr:canSubstitute)
-  qout()
+      PRIVATE Input := ""
 
-  if oerr:canSubstitute
+      QOut( "    Error handler can substitute return value, so please" )
+      ACCEPT "    type in return value <Return for default>: " TO Input
 
-    private Input := ""
+      IF Empty( Input )
+         QOut( "    You have chosen the default return value. Ok, this should " )
+         QOut( "    be now problem, since the last digit of err:subCode indicates" )
+         QOut( "    the type of the return value:" )
+         QOut( "      0 is NIL,    1 is String,    2 is Integer," )
+         QOut( "      3 is Float,  4 is Boolean,   5 is Date" )
+         QOut( "      6 is Block,  7 is Array,    8 is Object" )
+         QOut( "      9 is unknown" )
+         nDigit := Int( oerr:subCode % 10 )
+         QOut( "    Here it's a " + AllTrim( Str(nDigit ) ) + ", so I return a " )
+         DO CASE
+         CASE nDigit == 0
+            QQOut( "NIL." )
+            Input := NIL
 
-    qout ("    Error handler can substitute return value, so please")
-    ACCEPT "    type in return value <Return for default>: " TO Input
+         CASE nDigit == 1
+            QQOut( "String." )
+            Input := ""
 
-    if empty (Input)
-      qout ("    You have chosen the default return value. Ok, this should ")
-      qout ("    be now problem, since the last digit of err:subCode indicates")
-      qout ("    the type of the return value:")
-      qout ("      0 is NIL,    1 is String,    2 is Integer,")
-      qout ("      3 is Float,  4 is Boolean,   5 is Date")
-      qout ("      6 is Block,  7 is Array,    8 is Object")
-      qout ("      9 is unknown")
-      nDigit := int (oerr:subCode%10)
-      qout ("    Here it's a "+alltrim(str(nDigit))+", so I return a ")
-      do case
-        case nDigit == 0
-          qqout ("NIL.")
-          Input := NIL
+         CASE nDigit == 2
+            QQOut( "Integer." )
+            Input := 0
 
-        case nDigit == 1
-          qqout ("String.")
-          Input := ""
+         CASE nDigit == 3
+            QQOut( "Float." )
+            Input := 0.0
 
-        case nDigit == 2
-          qqout ("Integer.")
-          Input := 0
+         CASE nDigit == 4
+            QQOut( "Boolean." )
+            Input := .F.
 
-        case nDigit == 3
-          qqout ("Float.")
-          Input := 0.0
+         CASE nDigit == 5
+            QQOut( "Date." )
+            Input := CToD( "" )
 
-        case nDigit == 4
-          qqout ("Boolean.")
-          Input := .F.
+         CASE nDigit == 6
+            QQOut( "Block." )
+            Input := { ||NIL }
 
-        case nDigit == 5
-          qqout ("Date.")
-          Input := ctod ("")
+         CASE nDigit == 7
+            QQOut( "Array." )
+            Input := {}
 
-        case nDigit == 6
-          qqout ("Block.")
-          Input := {||NIL}
+         CASE nDigit == 8
+            QQOut( "Object." )
+            Input := GetNew()
 
-        case nDigit == 7
-          qqout ("Array.")
-          Input := {}
+         CASE nDigit == 9
+            QQOut( "<don't know, NIL would be best." )
+            Input := NIL
 
-        case nDigit == 8
-          qqout ("Object.")
-          Input := GetNew()
+         ENDCASE
 
-        case nDigit == 9
-          qqout ("<don't know, NIL would be best.")
-          Input := NIL
+      ENDIF
 
-      endcase
+      RETURN INPUT
 
-    endif
+   ENDIF
 
-    return Input
+   IF oerr:canDefault
+      QOut( "    Subsystem can set the default value itself, so this error" )
+      QOut( "    is only informative." )
+   ENDIF
 
-  endif
-
-  if oerr:canDefault
-    qout ("    Subsystem can set the default value itself, so this error")
-    qout ("    is only informative.")
-  endif
-
-return .F.
+   RETURN .F.

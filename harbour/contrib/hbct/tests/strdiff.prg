@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function STRDIFF() 
+ *   Test CT3 function STRDIFF()
  *
  * Copyright 2002 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,32 +52,28 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of STRDIFF()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
 
- qout ("Begin test of STRDIFF()")
- qout ("")
+   QOut( [  strdiff("ABC", "ADC") == 3 ?  -> ], strdiff( "ABC", "ADC" ) )
+   QOut( [  strdiff("ABC", "AEC") == 3 ?  -> ], strdiff( "ABC", "AEC" ) )
+   QOut( [  strdiff("CBA", "ABC") == 6 ?  -> ], strdiff( "CBA", "ABC" ) )
+   QOut( [  strdiff("ABC", "AXBC") == 1 ? -> ], strdiff( "ABC", "AXBC" ) )
+   QOut( [  strdiff("AXBC", "ABC") == 6 ? -> ], strdiff( "AXBC", "ABC" ) )
+   QOut( [  strdiff("AXBC", "ADC") == 9 ? -> ], strdiff( "AXBC", "ADC" ) )
 
- // simple tests
- qout ("Simple tests:")
+   QOut( "End test of STRDIFF()" )
+   QOut( "" )
 
- qout ([  strdiff("ABC", "ADC") == 3 ?  -> ], strdiff ("ABC", "ADC"))
- qout ([  strdiff("ABC", "AEC") == 3 ?  -> ], strdiff ("ABC", "AEC"))
- qout ([  strdiff("CBA", "ABC") == 6 ?  -> ], strdiff ("CBA", "ABC"))
- qout ([  strdiff("ABC", "AXBC") == 1 ? -> ], strdiff ("ABC", "AXBC"))
- qout ([  strdiff("AXBC", "ABC") == 6 ? -> ], strdiff ("AXBC", "ABC"))
- qout ([  strdiff("AXBC", "ADC") == 9 ? -> ], strdiff ("AXBC", "ADC"))
+   ctexit()
 
- qout ("End test of STRDIFF()")
- qout ("")
-
- ctexit()
-
-return
-
-
+   RETURN

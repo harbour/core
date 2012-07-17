@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARONE() 
+ *   Test CT3 function CHARONE()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,33 +52,27 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of CHARONE()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  charone("112333a123")      == "123a123"? --> "] + charone( "112333a123" )      + ["] )
+   QOut( [  charone("122333a123")      == "123a123"? --> "] + charone( "122333a123" )      + ["] )
+   QOut( [  charone("A  B  CCCD")      == "A B CD"? ---> "] + charone( "A  B  CCCD" )      + ["] )
+   QOut( [  charone(" ", "A  B  A  B") == "A B A B"? --> "] + charone( " ", "A  B  A  B" ) + ["] )
+   QOut( [  charone("o", "122oooB12o") == "122oB12o"? -> "] + charone( "o", "122oooB12o" ) + ["] )
+   QOut( "" )
 
- qout ("Begin test of CHARONE()")
- qout ("")
+   QOut( "End test of CHARONE()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  charone("112333a123")      == "123a123"? --> "] + charone("112333a123")      + ["])
- qout ([  charone("122333a123")      == "123a123"? --> "] + charone("122333a123")      + ["])
- qout ([  charone("A  B  CCCD")      == "A B CD"? ---> "] + charone("A  B  CCCD")      + ["])
- qout ([  charone(" ", "A  B  A  B") == "A B A B"? --> "] + charone(" ", "A  B  A  B") + ["])
- qout ([  charone("o", "122oooB12o") == "122oB12o"? -> "] + charone("o", "122oooB12o") + ["])
- qout ("")
+   ctexit()
 
- qout ("End test of CHARONE()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
+   RETURN

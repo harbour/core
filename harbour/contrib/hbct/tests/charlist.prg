@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARLIST() 
+ *   Test CT3 function CHARLIST()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,29 +52,23 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of CHARLIST()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  charlist("Hello World !") == "Helo Wrd!" ? -> "] + charlist( "Hello World !" ) + ["] )
+   QOut( [  charlist(nil) == "" ? -> "] + charlist( nil ) + ["] )
 
- qout ("Begin test of CHARLIST()")
- qout ("")
+   QOut( "End test of CHARLIST()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  charlist ("Hello World !") == "Helo Wrd!" ? -> "] + charlist ("Hello World !") + ["])
- qout ([  charlist (nil) == "" ? -> "] + charlist (nil) + ["])
+   ctexit()
 
- qout ("End test of CHARLIST()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
+   RETURN

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function WORDSWAP() 
+ *   Test CT3 function WORDSWAP()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,31 +52,24 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of WORDSWAP()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  wordswap("1234567890")      == "3412785690" ? --> "] + wordswap( "1234567890" )     + ["] )
+   QOut( [  wordswap("1234567890", .t.) == "4321876590" ? --> "] + wordswap( "1234567890", .T. ) + ["] )
+   QOut( "" )
 
- qout ("Begin test of WORDSWAP()")
- qout ("")
+   QOut( "End test of WORDSWAP()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  wordswap("1234567890")      == "3412785690" ? --> "] + wordswap("1234567890")     + ["])
- qout ([  wordswap("1234567890", .t.) == "4321876590" ? --> "] + wordswap("1234567890", .t.)+ ["])
- qout ("")
+   ctexit()
 
- qout ("End test of WORDSWAP()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
-
+   RETURN

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 functions BEFORATNUM() 
+ *   Test CT3 functions BEFORATNUM()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,63 +52,58 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   LOCAL cStr := "...This...is...a...test!"
 
-procedure main
+   ctinit()
 
-local cStr := "...This...is...a...test!"
+   QOut( "Begin test of BEFORATNUM()" )
+   QOut( "" )
+   QOut( "  Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 ) )
+   QOut( "" )
 
- ctinit()
+   // Some simple tests
+   QOut( "  Simple tests:" )
+   QOut( [  beforatnum("..",cStr)     should be "...This...is...a.",] )
+   QOut( [                                and is "] + beforatnum( "..", cStr ) + ["] )
+   QOut( [  beforatnum("..",cStr,2)   should be "...This",] )
+   QOut( [                                and is "] + beforatnum( "..", cStr, 2 ) + ["] )
+   QOut( [  beforatnum("..",cStr,2,2) should be "...This...is",] )
+   QOut( [                                and is "] + beforatnum( "..", cStr, 2, 2 ) + ["] )
+   QOut()
 
- qout ("Begin test of BEFORATNUM()")
- qout ("")
- qout ("  Value of cStr is:"+chr(34)+cStr+chr(34))
- qout ("")
+   // Tests with CSetAtMuPa(.T.)
+   QOut( "  Multi-Pass tests" )
+   QOut( "  Setting csetatmupa() to .T." )
+   csetatmupa( .T. )
+   QOut( [  beforatnum("..",cStr)     should be "...This...is...a.",] )
+   QOut( [                                and is "] + beforatnum( "..", cStr ) + ["] )
+   QOut( [  beforatnum("..",cStr,2)   should be ".",] )
+   QOut( [                                and is "] + beforatnum( "..", cStr, 2 ) + ["] )
+   QOut( [  beforatnum("..",cStr,2,2) should be "...This.",] )
+   QOut( [                                and is "] + beforatnum( "..", cStr, 2, 2 ) + ["] )
+   QOut( "  Setting csetatmupa() to .F." )
+   csetatmupa( .F. )
+   QOut()
 
- // Some simple tests
- qout ("  Simple tests:")
- qout ([  beforatnum ("..",cStr)     should be "...This...is...a.",])
- qout ([                                and is "]+beforatnum ("..", cStr)+["])
- qout ([  beforatnum ("..",cStr,2)   should be "...This",])
- qout ([                                and is "]+beforatnum ("..", cStr, 2)+["])
- qout ([  beforatnum ("..",cStr,2,2) should be "...This...is",])
- qout ([                                and is "]+beforatnum ("..", cStr, 2, 2)+["])
- qout ()
+   // Tests mit SetAtlike(1)
+   QOut( "  SetAtLike tests" )
+   QOut( [  Setting setatlike(CT_SETATLIKE_WILDCARD, ".")] )
+   setatlike( CT_SETATLIKE_WILDCARD, "." )
+   QOut( [  beforatnum("..",cStr) should be "...This...is...a...tes",] )
+   QOut( [                            and is "] + beforatnum( "..", cStr ) + ["] )
+   QOut( [  beforatnum("..",cStr,2,2) should be "...T",] )
+   QOut( [                                and is "] + beforatnum( "..", cStr, 2, 2 ) + ["] )
+   QOut( [  beforatnum("..",cStr,2,10) should be "...This...is",] )
+   QOut( [                                 and is "] + beforatnum( "..", cStr, 2, 10 ) + ["] )
+   QOut()
 
- // Tests with CSetAtMuPa(.T.)
- qout ("  Multi-Pass tests")
- qout ("  Setting csetatmupa() to .T.")
- csetatmupa (.T.)
- qout ([  beforatnum ("..",cStr)     should be "...This...is...a.",])
- qout ([                                and is "]+beforatnum ("..", cStr)+["])
- qout ([  beforatnum ("..",cStr,2)   should be ".",])
- qout ([                                and is "]+beforatnum ("..", cStr, 2)+["])
- qout ([  beforatnum ("..",cStr,2,2) should be "...This.",])
- qout ([                                and is "]+beforatnum ("..", cStr, 2, 2)+["])
- qout ("  Setting csetatmupa() to .F.")
- csetatmupa (.F.)
- qout ()
+   QOut( "End test of BEFORATNUM()" )
+   QOut()
 
- // Tests mit SetAtlike (1)
- qout ("  SetAtLike tests")
- qout ([  Setting setatlike (CT_SETATLIKE_WILDCARD, ".")])
- setatlike (CT_SETATLIKE_WILDCARD, ".")
- qout ([  beforatnum ("..",cStr) should be "...This...is...a...tes",])
- qout ([                            and is "]+beforatnum ("..", cStr)+["])
- qout ([  beforatnum ("..",cStr,2,2) should be "...T",])
- qout ([                                and is "]+beforatnum ("..", cStr, 2, 2)+["])
- qout ([  beforatnum ("..",cStr,2,10) should be "...This...is",])
- qout ([                                 and is "]+beforatnum ("..", cStr, 2, 10)+["])
- qout ()
+   ctexit()
 
- qout ("End test of BEFORATNUM()")
- qout ()
-
- ctexit()
-
-return 
-
-
-
+   RETURN

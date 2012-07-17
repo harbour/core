@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function ATREPL() 
+ *   Test CT3 function ATREPL()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,33 +52,28 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
-procedure main()
+   ctinit()
 
- ctinit()
+   QOut( "Begin test of ATREPL()" )
+   QOut( "" )
 
- qout ("Begin test of ATREPL()")
- qout ("")
+   // simple tests
+   QOut( "Simple tests:" )
 
- // simple tests
- qout ("Simple tests:")   
+   QOut( [  atrepl("ABC", "ABCDABCDABC", "xx") == "xxDxxDxx" ? --> "] + atrepl( "ABC", "ABCDABCDABC", "xx" ) + ["] )
+   QOut( [  atrepl("ABC", "ABCDABC", "ZYXW") == "ZYXWDZYXW" ? --> "] + atrepl( "ABC", "ABCDABC", "ZYXW" ) + ["] )
+   QOut( [  atrepl("ABC", "ABCDABCDABC", "xx", 2) == "xxDxxDABC" ? --> "] + atrepl( "ABC", "ABCDABCDABC", "xx", 2 ) + ["] )
+   QOut( [  atrepl("ABC", "ABCDABCDABC", "xx", 2, .T.) == "ABCDxxDABC" ? --> "] + atrepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) + ["] )
+   QOut( [  atrepl("ABC", "ABCDABCDABC", "xx", 2, .T., 1) == "ABCDABCDxx" ? ] )
+   QOut( [          --> "] + atrepl( "ABC", "ABCDABCDABC", "xx", 2, .T. , 1 ) + ["] )
 
- qout ([  atrepl ("ABC", "ABCDABCDABC", "xx") == "xxDxxDxx" ? --> "] + atrepl ("ABC", "ABCDABCDABC", "xx") + ["])
- qout ([  atrepl ("ABC", "ABCDABC", "ZYXW") == "ZYXWDZYXW" ? --> "] + atrepl ("ABC", "ABCDABC", "ZYXW") + ["])
- qout ([  atrepl ("ABC", "ABCDABCDABC", "xx", 2) == "xxDxxDABC" ? --> "] + atrepl ("ABC", "ABCDABCDABC", "xx", 2) + ["])
- qout ([  atrepl ("ABC", "ABCDABCDABC", "xx", 2, .T.) == "ABCDxxDABC" ? --> "] + atrepl ("ABC", "ABCDABCDABC", "xx", 2, .T.) + ["])
- qout ([  atrepl ("ABC", "ABCDABCDABC", "xx", 2, .T., 1) == "ABCDABCDxx" ? ])
- qout ([          --> "] + atrepl ("ABC", "ABCDABCDABC", "xx", 2, .T., 1) + ["])
+   QOut( "End test of ATREPL()" )
+   QOut( "" )
 
- qout ("End test of ATREPL()")
- qout ("")
+   ctexit()
 
- ctexit()
-
-return 
-
-
-
-
+   RETURN

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function WORDREM() 
+ *   Test CT3 function WORDREM()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,32 +52,24 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of WORDREM()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  wordrem("abcd", "0ab1cd") == "0ab1" ? ----> "] + wordrem( "abcd", "0ab1cd" ) + ["] )
+   QOut( [  wordrem("abcd", "ab0cd1") == "0cd1" ? ----> "] + wordrem( "abcd", "ab0cd1" ) + ["] )
+   QOut( "" )
 
- qout ("Begin test of WORDREM()")
- qout ("")
+   QOut( "End test of WORDREM()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  wordrem("abcd", "0ab1cd") == "0ab1" ? ----> "] + wordrem("abcd", "0ab1cd") + ["])
- qout ([  wordrem("abcd", "ab0cd1") == "0cd1" ? ----> "] + wordrem("abcd", "ab0cd1") + ["])
- qout ("")
+   ctexit()
 
- qout ("End test of WORDREM()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
-
-
+   RETURN

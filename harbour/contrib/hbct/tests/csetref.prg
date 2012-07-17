@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CSETREF() 
+ *   Test CT3 function CSETREF()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,22 +52,20 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of CSETREF()" )
+   QOut( "  Default switch should be .F., is..................................", csetref() )
+   QOut( "  Setting switch to .T., return value should be .F., is.............", csetref( .T. ) )
+   QOut( "  Switch setting should now be .T., is..............................", csetref() )
+   QOut( "  Setting switch to .F. again, return value should still be .T., is ", csetref( .F. ) )
+   QOut( "End test of CSETREF()" )
+   QOut( "" )
 
-  ctinit()
+   ctexit()
 
-  qout ("Begin test of CSETREF()")
-  qout ("  Default switch should be .F., is..................................", csetref())
-  qout ("  Setting switch to .T., return value should be .F., is.............", csetref (.T.))
-  qout ("  Switch setting should now be .T., is..............................", csetref())
-  qout ("  Setting switch to .F. again, return value should still be .T., is ", csetref (.F.))
-  qout ("End test of CSETREF()")
-  qout ("")
-
-  ctexit()
-
-return
+   RETURN

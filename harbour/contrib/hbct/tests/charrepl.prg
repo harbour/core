@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARREPL() 
+ *   Test CT3 function CHARREPL()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,34 +52,27 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of CHARREPL()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  charrepl("1234", "1x2y3z", "abcd") ==            "axbycz" ? --> "] + charrepl( "1234", "1x2y3z", "abcd" )           + ["] )
+   QOut( [  charrepl("abcdefghij", "jhfdb", "1234567890") == "08642"  ? --> "] + charrepl( "abcdefghij", "jhfdb", "1234567890" ) + ["] )
+   QOut( [  charrepl("abcdefghij", "jhfdb", "12345") ==      "55542"  ? --> "] + charrepl( "abcdefghij", "jhfdb", "12345" )     + ["] )
+   QOut( [  charrepl("1234", "1234", "234A") ==              "AAAA"   ? --> "] + charrepl( "1234", "1234", "234A" )             + ["] )
+   QOut( [  charrepl("1234", "1234", "234A", .T.) ==         "234A"   ? --> "] + charrepl( "1234", "1234", "234A", .T. )        + ["] )
+   QOut( "" )
 
- qout ("Begin test of CHARREPL()")
- qout ("")
+   QOut( "End test of CHARREPL()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  charrepl ("1234", "1x2y3z", "abcd") ==            "axbycz" ? --> "] + charrepl ("1234", "1x2y3z", "abcd")           + ["])
- qout ([  charrepl ("abcdefghij", "jhfdb", "1234567890") == "08642"  ? --> "] + charrepl ("abcdefghij", "jhfdb", "1234567890")+ ["])
- qout ([  charrepl ("abcdefghij", "jhfdb", "12345") ==      "55542"  ? --> "] + charrepl ("abcdefghij", "jhfdb", "12345")     + ["])
- qout ([  charrepl ("1234", "1234", "234A") ==              "AAAA"   ? --> "] + charrepl ("1234", "1234", "234A")             + ["])
- qout ([  charrepl ("1234", "1234", "234A", .T.) ==         "234A"   ? --> "] + charrepl ("1234", "1234", "234A", .T.)        + ["])
- qout ("")
+   ctexit()
 
- qout ("End test of CHARREPL()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
-
+   RETURN

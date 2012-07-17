@@ -52,27 +52,26 @@
  *
  */
 
+PROCEDURE Main()
 
-PROCEDURE MAIN
-
-   local n
+   LOCAL n
 
    CTINIT()
 
    SET DECIMALS TO 15
 
-   for n := 1 to 1000
-      outstd (str(n,20,15)+": "+str(mantissa(n),20,15)+" "+str(exponent(n),4) + hb_eol())
-      outstd (str(sqrt(n),20,15)+": "+str(mantissa(sqrt(n)),20,15)+" "+str(exponent(sqrt(n)),4) + hb_eol())
+   for n := 1 TO 1000
+      OutStd( Str( n,20,15 ) + ": " + Str( mantissa(n ),20,15 ) + " " + Str( exponent(n ),4 ) + hb_eol() )
+      OutStd( Str( Sqrt(n ),20,15 ) + ": " + Str( mantissa(Sqrt(n ) ),20,15 ) + " " + Str( exponent(Sqrt(n ) ),4 ) + hb_eol() )
    next n
 
-// The call to str( infinity(.t.) ), generate a GPF.
-// outstd (str(infinity(.t.))+str(mantissa( infinity(.t.) ))+str(exponent( infinity(.t.) )))
-// outstd (str(infinity(.t.)) )
+   // The call to str( infinity(.t.) ), generate a GPF.
+   // outstd(str(infinity(.t.))+str(mantissa( infinity(.t.) ))+str(exponent( infinity(.t.) )))
+   // outstd(str(infinity(.t.)) )
 
-   outstd ("       infinity(.t.): "+str(mantissa(infinity(.t.)),20,15)+" ")
-   outstd (str(exponent(infinity(.t.)),4)+hb_eol())
+   OutStd( "       infinity(.t.): " + Str( mantissa(infinity( .T. ) ),20,15 ) + " " )
+   OutStd( Str( exponent(infinity( .T. ) ),4 ) + hb_eol() )
 
    CTEXIT()
 
-RETURN
+   RETURN

@@ -56,1189 +56,1220 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-
 // TODO: add language module request(s) and an achoice to select different lang modules
 
 
-*:--------------------------------------------------------------------
-PROCEDURE main ()
-*:--------------------------------------------------------------------
-local cScr
-local nchoice
-local c    := .T.
-local farr := { "addmonth ( ddate )  Add a month to ddate     ", ;
-                "bom ()              Beginning of month       ", ;
-                "boq ()              Returns first date of qtr", ;
-                "boy ()              Beginning of year        ", ;
-                "ctodow ()           Day name to day number   ", ;
-                "ctomonth ()         Month name to number     ", ;
-                "daysInMonth ()      number of days in xMonth ", ;
-                "daystomonth (ddate) Returns num days TO month", ;
-                "dmy ( ddate, lmode) date as DD month YY      ", ;
-                "doy ( ddate )       Returns day of the year  ", ;
-                "eom ( ddate )       Returns last day of month", ;
-                "eoq ( ddate )       Returns last date of qtr ", ;
-                "eoy ( ddate )       Returns last day of year ", ;
-                "isleap ( ddate )    Returns .T. if leap year ", ;
-                "lastdayom ( ddate ) Returns num days in month", ;
-                "mdy ( dDate )       Returns stg Month DD, YY ", ;
-                "ntocdow ( nDay )    Returns name of day      ", ;
-                "ntocmonth ( nMth )  Returns name of month    ", ;
-                "quarter (date)      Returns qtr number of date", ;
-                "stod( ansi date)    Returns Clipper date     ", ;
-                "week( ddate, lSWN ) Returns numbef of week   ", }
+//:--------------------------------------------------------------------
 
-   set date british
-   set century on
+PROCEDURE Main()
+
+   //:--------------------------------------------------------------------
+   LOCAL cScr
+   LOCAL nchoice
+   LOCAL c    := .T.
+   LOCAL farr := { "addmonth( ddate )  Add a month to ddate     ", ;
+      "bom()              Beginning of month       ", ;
+      "boq()              Returns first date of qtr", ;
+      "boy()              Beginning of year        ", ;
+      "ctodow()           Day name to day number   ", ;
+      "ctomonth()         Month name to number     ", ;
+      "daysInMonth()      number of days in xMonth ", ;
+      "daystomonth(ddate) Returns num days TO month", ;
+      "dmy( ddate, lmode) date as DD month YY      ", ;
+      "doy( ddate )       Returns day of the year  ", ;
+      "eom( ddate )       Returns last day of month", ;
+      "eoq( ddate )       Returns last date of qtr ", ;
+      "eoy( ddate )       Returns last day of year ", ;
+      "isleap( ddate )    Returns .T. if leap year ", ;
+      "lastdayom( ddate ) Returns num days in month", ;
+      "mdy( dDate )       Returns stg Month DD, YY ", ;
+      "ntocdow( nDay )    Returns name of day      ", ;
+      "ntocmonth( nMth )  Returns name of month    ", ;
+      "quarter(date)      Returns qtr number of date", ;
+      "stod( ansi date)    Returns Clipper date     ", ;
+      "week( ddate, lSWN ) Returns numbef of week   ", }
+
+   SET DATE british
+   SET CENTURY ON
 
    cls
 
-   do while c
-      cScr := savescreen ( 4, 5, 21,66 )
+   DO WHILE c
+      cScr := SaveScreen( 4, 5, 21, 66 )
 
-      @  4, 5 to 21, 66
-      nchoice := achoice ( 5, 7,  20,  65, farr )   //, ,1)
+      @  4, 5 TO 21, 66
+      nchoice := AChoice( 5, 7,  20,  65, farr )   //, ,1)
 
-      if empty ( nchoice )
-         return
-      endif
+      IF Empty( nchoice )
+         RETURN
+      ENDIF
 
-      @ 0, 0 clear to maxrow(), maxcol()
+      @ 0, 0 CLEAR TO MaxRow(), MaxCol()
 
-      do case
-         case nchoice == 1
-              addmtest()
-         case nchoice == 2
-              bomtest ()
-         case nchoice == 3
-              boqtest ()
-         case nchoice == 4
-              boytest ()
-         case nchoice == 5
-              ctodowtest ()
-         case nchoice == 6
-              ctomonthtest ()
-         case nchoice == 7
-              dInMonthtest ()
-         case nchoice == 8
-              d2month ()
-         case nchoice == 9
-              dmytest ()
-         case nchoice == 10
-              doytest ()
-         case nchoice == 11
-              eomtest ()
-         case nchoice == 12
-              eoqtest ()
-         case nchoice == 13
-              eoytest ()
-         case nchoice == 14
-              isleaptest ()
-         case nchoice == 15
-              lastdayomtest ()
-         case nchoice == 16
-              mdytest ()
-         case nchoice == 17
-              ntocdowtest ()
-         case nchoice == 18
-              ntocmthtest ()
-         case nchoice == 19
-              qtrtest ()
-         case nchoice == 20
-              stodtest()
-         case nchoice == 21
-              weektest ()
-      endcase
+      DO CASE
+      CASE nchoice == 1
+         addmtest()
+      CASE nchoice == 2
+         bomtest()
+      CASE nchoice == 3
+         boqtest()
+      CASE nchoice == 4
+         boytest()
+      CASE nchoice == 5
+         ctodowtest()
+      CASE nchoice == 6
+         ctomonthtest()
+      CASE nchoice == 7
+         dInMonthtest()
+      CASE nchoice == 8
+         d2month()
+      CASE nchoice == 9
+         dmytest()
+      CASE nchoice == 10
+         doytest()
+      CASE nchoice == 11
+         eomtest()
+      CASE nchoice == 12
+         eoqtest()
+      CASE nchoice == 13
+         eoytest()
+      CASE nchoice == 14
+         isleaptest()
+      CASE nchoice == 15
+         lastdayomtest()
+      CASE nchoice == 16
+         mdytest()
+      CASE nchoice == 17
+         ntocdowtest()
+      CASE nchoice == 18
+         ntocmthtest()
+      CASE nchoice == 19
+         qtrtest()
+      CASE nchoice == 20
+         stodtest()
+      CASE nchoice == 21
+         weektest()
+      ENDCASE
 
-      restscreen ( 4, 5, 21, 66, cScr)
-   enddo
+      RestScreen( 4, 5, 21, 66, cScr )
+   ENDDO
 
-   return
+   RETURN
 
-*:--------------------------------------------------------------------
+   //:--------------------------------------------------------------------
+
 FUNCTION addmtest()
-*:--------------------------------------------------------------------
-*: addmonth (ddate, nMonths)
-*: =========================
-*: This version will only accept an nMonths value of from 0 to 70
 
-local getlist := {}
-local ddate   := ctod ("  /  /    ")
-local c       := .T.
-local mnth    := 0
-local nKey
+   //:--------------------------------------------------------------------
+   //: addmonth(ddate, nMonths)
+   //: =========================
+   //: This version will only accept an nMonths value of from 0 to 70
 
-do while c
-   @ 5, 10 say "addmonth (ddate) returns the date incremented by"
-   @ 6, 10 say "the number of days in months."
-   @ 7, 10 say "Insert a date"
-   @ 8, 10 say "How many months"
-   @ 7, 60 get ddate
-   @ 8, 60 get mnth picture "99"
+   LOCAL getlist := {}
+   LOCAL ddate   := CToD( "  /  /    " )
+   LOCAL c       := .T.
+   LOCAL mnth    := 0
+   LOCAL nKey
 
-   set confirm on
-   set escape on
-   read
-   set escape off
-   set confirm on
+   DO WHILE c
+      @ 5, 10 SAY "addmonth(ddate) returns the date incremented by"
+      @ 6, 10 SAY "the number of days in months."
+      @ 7, 10 SAY "Insert a date"
+      @ 8, 10 SAY "How many months"
+      @ 7, 60 GET ddate
+      @ 8, 60 GET mnth PICTURE "99"
 
-   nKey := lastkey()
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
 
-   if nKey == K_ESC
-      c := .F.
-   else
+      nKey := LastKey()
 
-      @ 11, 39 say "The returned date is " + dtoc ( addmonth (ddate, mnth) )
-
-      set cursor off
-      inkey(0)
-      set cursor on
-
-   endif
-
- enddo
-
- @ 0, 0 clear
-
- return NIL
-
-*:--------------------------------------------------------------------
-FUNCTION bomtest()
-*:--------------------------------------------------------------------
-*: bom ( ddate )
-*: =============
-
-local getlist := {}
-local ddate   := ctod ("  /  /    ")
-local c       := .T.
-local nKey
-
-do while c
-   @ 5, 10 say "bom (ddate) returns the date of the first day of ddate"
-   @ 6, 10 say "If ddate is 15/10/2002 (that's in dd/mm/yyy), bom ()"
-   @ 7, 10 say "should return 01/10/2002. Test it, Insert a date"
-   @ 9, 10 get ddate
-
-   set confirm on
-   set escape on
-   read
-   set escape off
-   set confirm on
-
-   nKey := lastkey()
-
-   if nKey == K_ESC
-      c := .F.
-   else
-      @ 11, 10 say "The returned date is " + dtoc ( bom (ddate) )
-
-      set cursor off
-      inkey(0)
-      set cursor on
-
-   endif
-
- enddo
-
- @ 0, 0 clear
-
- return NIL
-
-
-*:--------------------------------------------------------------------
-FUNCTION boqtest ()
-*:--------------------------------------------------------------------
-*: bom ( ddate )
-*: =============
-
-local getlist := {}
-local ddate   := ctod ("  /  /    ")
-local c       := .T.
-local nKey
-
-   do while c
-      @ 5, 10 say "boq (ddate) returns the date of the first day of the"
-      @ 6, 10 say "quarter in which ddate is situated. If ddate is"
-      @ 7, 10 say "15/10/2002  (that's in dd/mm/yyy), BOQ () should return"
-      @ 8, 10 say "01/09/2002. Test it, Insert a date"
-
-      @ 9, 10 get ddate
-
-      set confirm on
-      set escape on
-      read
-      set escape off
-      set confirm on
-
-      nKey := lastkey()
-
-      if nKey == K_ESC
+      IF nKey == K_ESC
          c := .F.
-      else
-         @ 11, 10 say "The returned date is " + dtoc ( boq (ddate) )
+      ELSE
 
-         set cursor off
-         inkey(0)
-         set cursor on
+         @ 11, 39 SAY "The returned date is " + DToC( addmonth( ddate, mnth ) )
 
-      endif
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
 
-    enddo
+      ENDIF
 
-    @ 0, 0 clear
-
-    return NIL
-
-
-*:--------------------------------------------------------------------
-FUNCTION boytest ()
-*:--------------------------------------------------------------------
-*: boy ( ddate )
-*: =============
-
-local getlist := {}
-local ddate   := ctod ("  /  /    ")
-local c       := .T.
-local nkey
-
-do while c
-   @ 5, 10 say "boy (ddate) returns the date of the first day of ddate"
-   @ 6, 10 say "If ddate is 15/10/2002 (that's in dd/mm/yyy), boy ()"
-   @ 7, 10 say "should return 01/01/2002. Test it, Insert a date"
-   @ 9, 10 get ddate
-
-   set confirm on
-   set escape on
-   read
-   set escape off
-   set confirm on
-
-   nKey := lastkey()
-
-   if nKey == K_ESC
-      c := .F.
-   else
-      @ 11, 10 say "The returned date is " + dtoc ( boy (ddate) )
-
-      set cursor off
-      inkey(0)
-      set cursor on
-
-      ddate   := ctod ("  /  /    ")
-
-   endif
-
- enddo
-
- @ 0, 0 clear
-
- return NIL
-
-
-*:----------------------------------------------------------------
-FUNCTION ctodowtest ()
-*:----------------------------------------------------------------
-*: ctodow ( cDow)
-*: ==============
-*: Convert name of day of the week to its ordinal number
-*: if cDow is invalid, returns 0
-*: English day names only.
-
-local getlist := {}
-local cDow    := space (9)
-local nkey
-local c       := .T.
-
-do while c
-   @ 5, 10 say "ctodow (ddate) receives the name of a day of the week and "
-   @ 6, 10 say "returns a number representing its position in the week"
-   @ 7, 10 say "Sunday returns 1. Test it, Insert a day"
-   @ 9, 10 get cDow
-
-   set confirm on
-   set escape on
-   read
-   set escape off
-   set confirm on
-
-   nKey := lastkey()
-
-   if nKey == K_ESC
-      c := .F.
-   else
-      @ 11, 10 say "The day number is " + str ( ctodow ( upper (alltrim (cDow))) )
-
-      set cursor off
-      inkey(0)
-      set cursor on
-
-      cDow := space (9)
-
-   endif
-
- enddo
-
- @ 0, 0 clear
-
- return NIL
-
-
-*:----------------------------------------------------------------
-FUNCTION ctomonthtest ()
-*:----------------------------------------------------------------
-*: ctomonth (cDom )
-*: ===============
-*: Convert the name of a month to its ordinal number. If cMonth is
-*: invalid, ctomonth() Returns 0. English month names only
-
-local getlist := {}
-local cDom    := space (9)
-local c       := .T.
-local nKey
-
-do while c
-   @ 5, 10 say "ctomonth (ddate) receives the name of a month and returns"
-   @ 6, 10 say "a number representing its position in the month. April"
-   @ 7, 10 say "returns 4. Test it, Insert a month"
-   @ 9, 10 get cDom picture "!!!!!!!!!"
-
-   set confirm on
-   set escape on
-   read
-   set escape off
-   set confirm on
-
-   cDom := alltrim ( cDom )
-
-   nKey := lastkey()
-
-   if nKey == K_ESC
-      c := .F.
-   else
-      @ 11, 10 say "The day number is " + str ( ctomonth ( cDom) )
-      set cursor off
-      inkey(0)
-      set cursor on
-
-      cDom := space (9)
-   endif
-
- enddo
-
- @ 0, 0 clear
-
- return NIL
-
-
-*:----------------------------------------------------------------
-FUNCTION dInMonthtest ()
-*:----------------------------------------------------------------
-*: daysInMonth ( xDate, lleap )
-*: ============================
-*: Returns the number of days in nMonth, either whose name as a
-*: string or month number is passed. English Month names only.
-
-local getlist := {}
-local cMonth  := space (9)
-local c       := .T.
-local nMonth
-local nKey
-local cLeap   := "N"
-local lleap   := .F.
-
-   do while c
-      @ 5, 10 say "daysInmonth () receives either the number of a month or"
-      @ 6, 10 say "its name and returns the number of days in the month. "
-      @ 7, 10 say "April returns 30. Test it. Insert a month number"
-      @ 8, 10 say "Is it a leap year?"
-      @ 7, 60 get cMonth picture "XXXXXXXXX"
-      @ 8, 60 get cleap picture "Y"
-
-      set confirm on
-      set escape on
-      read
-      set escape off
-      set confirm on
-
-      cMonth := upper (rtrim (cMonth))
-      nMonth := val (cMonth)
-
-      do case
-         case valtype ( cMonth ) == "C" .and. nmonth == 0
-              nMonth := ctomonth ( cMonth)
-
-         case nMonth == 0  .or. ;
-              nMonth  > 12
-
-              loop
-      endcase
-
-     if cLeap == "Y"
-         lleap := .T.
-      endif
-
-      nKey := lastkey()
-
-      if nKey == K_ESC
-         c := .F.
-      else
-
-         @ 10, 40 say "The day number is " + ;
-                                   ltrim (str ( daysInMonth ( nMonth, lLeap )))
-
-         set cursor off
-         inkey(0)
-         set cursor on
-
-         cMonth := space (9)
-         cLeap  := "N"
-
-      endif
-
-    enddo
-
-    @ 0, 0 clear
-
-    return NIL
-
-
-*:----------------------------------------------------------------
-FUNCTION d2month ()
-*:----------------------------------------------------------------
-*: daystomonth()
-*: =============
-*: Total number days from first of Jan to beginning of nMonth.
-*: lLeap is .F. for a non-leap year but .T. if it is. If so and
-*: nMonth is greater than 2, ndays is incremented.
-
-local getlist := {}
-local cMonth  := space (2)
-local cLeap   := "N"
-local c       := .T.
-local nMonth
-local lLeap
-local nKey
-
-do while c
-   @ 5, 10 say "daystomonth () receives the number a month and returns"
-   @ 6, 10 say "the number of days in the year up to that month. March"
-   @ 7, 10 say "returns 59 or 60 in a leap year. Test it."
-   @ 8, 10 say "Insert a month number"
-   @ 9, 10 say "Leap year Y/N?"
-   @ 8, 33 get cMonth picture "99"
-   @ 9, 33 get cLeap picture "Y"
-
-   set confirm on
-   set escape on
-   read
-   set escape off
-   set confirm on
-
-   nMonth := val ( cMonth )
-
-   nKey := lastkey()
-
-   if nKey == K_ESC
-      c := .F.
-   else
-      if cLeap == "Y"
-         lLeap := .T.
-      endif
-
-      @ 11, 10 say "The day number is " +  ;
-                             ltrim (str ( daystomonth ( nMonth, lLeap )))
-
-      set cursor off
-      inkey(0)
-      set cursor on
-
-      cMonth := space (2)
-      cLeap  := "N"
-
-   endif
-
- enddo
-
- @ 0, 0 clear
-
- return NIL
-
-*:----------------------------------------------------------------
-FUNCTION dmytest ()
-*:----------------------------------------------------------------
-*: dmy ( ddate, lmode)
-*: ===================
-*: Returns the date as a string in DD Month YY format. If lmode
-*: is .T., a "." is inserted after the DD
-*: This version does not observe the Nations module. English
-*: only.
-
-local getlist := {}
-local ddate   := ctod ("  /  /    ")
-local cMode   := space (1)
-local lmode
-local c       := .T.
-local nKey
-
-   do while c
-      @  5, 10 say "dmy() receives a date and logical lmode. If lmode is"
-      @  6, 10 say "is either missing or FALSE, dmy returns the date as"
-      @  7, 10 say "a string in DD Month YY format. If lmode is TRUE, a"
-      @  8, 10 say "full stop or perod '.' is inserted after DD. Test it"
-      @  9, 10 say "Insert a date"
-      @ 10, 10 say "inssert a full stop Y/N?"
-      @  9, 36 get ddate picture "@D   /  /    "
-      @ 10, 45 get cMode picture "Y"
-
-      set confirm on
-      set escape on
-      read
-      set escape off
-      set confirm on
-
-      nKey := lastkey()
-
-      if nKey == K_ESC
-         c := .F.
-      else
-         if (cMode == "Y", lMode := .T., lMode := .F.)
-
-         @ 12, 10 say "The date string returned is " + ;
-                           ltrim (dmy ( ddate, lmode ))
-
-         set cursor off
-         inkey(0)
-         set cursor on
-
-         ddate := ctod ("  /  /    ")
-         cMode := space (1)
-
-      endif
-
-    enddo
-
-    @ 0, 0 clear
-
-    return NIL
-
-*:----------------------------------------------------------------
-FUNCTION doytest ()
-*:----------------------------------------------------------------
-*: doy ( ddate )
-*: =============
-*: Determines the day of the year for a specific date
-*: if dDate is invalid, returns 0
-
-local getlist := {}
-local ddate   := ctod ("  /  /    ")
-local c       := .T.
-local nKey
-
-do while c
-   @ 5, 10 say "doy (ddate) returns the day of the year for the"
-   @ 6, 10 say "date passed. Test it, Insert a date"
-   @ 9, 10 get ddate
-
-   set confirm on
-   set escape on
-   read
-   set escape off
-   set confirm on
-
-   nKey := lastkey()
-
-   if nKey == K_ESC
-      c := .F.
-   else
-      @ 11, 10 say "The day of the date entered is " + ;
-                         ltrim ( str (doy ( ddate )))
-
-      set cursor off
-      inkey(0)
-      set cursor on
-
-      ddate := ctod ("  /  /    ")
-
-   endif
-
- enddo
-
- @ 0, 0 clear
-
- return NIL
-
-
-*:----------------------------------------------------------------
-FUNCTION eomtest ()
-*:----------------------------------------------------------------
-*: dBom := eom ( ddate )
-*: =====================
-*: Returns the last date in the month of the month appearing in
-*: date.
-
-local getlist := {}
-local ddate := ctod ("  /  /    ")
-local c     := .T.
-local nKey
-
-do while c
-   @ 5, 10 say "eom (ddate) returns the last date in the month of the"
-   @ 6, 10 say "month appearing in ddate. Test it, Insert a date"
-   @ 9, 10 get ddate
-
-   set confirm on
-   set escape on
-   read
-   set escape off
-   set confirm on
-
-   nKey := lastkey()
-
-   if nKey == K_ESC
-      c := .F.
-   else
-
-      @ 11, 10 say "The last date in the month is " + ;
-                             ltrim ( dtoc (eom ( ddate )))
-
-      set cursor off
-      inkey(0)
-      set cursor on
-
-      ddate := ctod ("  /  /    ")
-
-   endif
-
- enddo
-
- @ 0, 0 clear
-
- return NIL
-
-
-*:----------------------------------------------------------------
-FUNCTION eoqtest ()
-*:----------------------------------------------------------------
-*: dret := eoq ( ddate )
-*: =====================
-*: Returns the last date in the quarter in which ddate falls.
-
-local getlist := {}
-local ddate := ctod ("  /  /    ")
-local c     := .T.
-local nKey
-
-   do while c
-      @ 5, 10 say "EOQ (ddate) returns the last date in the quarter in"
-      @ 6, 10 say "which ddate falls. Test it, Insert a date"
-      @ 9, 10 get ddate
-
-      set confirm on
-      set escape on
-      read
-      set escape off
-      set confirm on
-
-      nKey := lastkey()
-
-      if nKey == K_ESC
-         c := .F.
-      else
-
-         @ 11, 10 say "The last date in the month is " + ;
-                                ltrim ( dtoc (eoq ( ddate )))
-
-         set cursor off
-         inkey(0)
-         set cursor on
-
-         ddate := ctod ("  /  /    ")
-
-      endif
-
-    enddo
-
-    @ 0, 0 clear
-
-    return NIL
-
-
-*:----------------------------------------------------------------
-FUNCTION eoytest ()
-*:----------------------------------------------------------------
-*: dEoy := eoy ( ddate )
-*: =====================
-*: Returns the last date in the year of the year appearing in
-*: date.
-
-local getlist := {}
-local ddate := ctod ("  /  /    ")
-local c     := .T.
-local nKey
-
-   do while c
-      @ 5, 10 say "eoy (ddate) returns the last date in the year of the"
-      @ 6, 10 say "year appearing in ddate. Test it, Insert a date"
-      @ 9, 10 get ddate
-
-      set confirm on
-      set escape on
-      read
-      set escape off
-      set confirm on
-
-      nKey := lastkey()
-
-      if nKey == K_ESC
-         c := .F.
-      else
-
-         @ 11, 10 say "The last date in the year is " + ;
-                                ltrim ( dtoc (eoy ( ddate )))
-
-         set cursor off
-         inkey(0)
-         set cursor on
-
-         ddate := ctod ("  /  /    ")
-
-      endif
-
-   enddo
+   ENDDO
 
    @ 0, 0 clear
 
-   return NIL
+   RETURN NIL
 
+   //:--------------------------------------------------------------------
 
-*:----------------------------------------------------------------
-FUNCTION isleaptest ()
-*:----------------------------------------------------------------
-*:  lRet :=  isleap ( ddate )
-*:  ========================
-*:  if ddate is a leap year, lRet is .T., otherwise .F..
-*:  Leap years are exactly divisible by 4 and 1,000 but not 100.
+FUNCTION bomtest()
 
-local getlist := {}
-local ddate := ctod ("  /  /    ")
-local c     := .T.
-local cResult
-local nKey
+   //:--------------------------------------------------------------------
+   //: bom( ddate )
+   //: =============
 
-   do while c
-      @ 5, 10 say "isleap (ddate) returns TRUE if ddate is a leap year"
-      @ 6, 10 say "Test it, Insert a date"
-      @ 9, 10 get ddate
+   LOCAL getlist := {}
+   LOCAL ddate   := CToD( "  /  /    " )
+   LOCAL c       := .T.
+   LOCAL nKey
 
-      set confirm on
-      set escape on
-      read
-      set escape off
-      set confirm on
+   DO WHILE c
+      @ 5, 10 SAY "bom(ddate) returns the date of the first day of ddate"
+      @ 6, 10 SAY "If ddate is 15/10/2002(that's in dd/mm/yyy), bom()"
+      @ 7, 10 SAY "should return 01/10/2002. Test it, Insert a date"
+      @ 9, 10 GET ddate
 
-      nKey := lastkey()
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
 
-      if nKey == K_ESC
+      nKey := LastKey()
+
+      IF nKey == K_ESC
          c := .F.
-      else
+      ELSE
+         @ 11, 10 SAY "The returned date is " + DToC( bom( ddate ) )
 
-         if isleap ( ddate )
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
+
+      ENDIF
+
+   ENDDO
+
+   @ 0, 0 clear
+
+   RETURN NIL
+
+   //:--------------------------------------------------------------------
+
+FUNCTION boqtest()
+
+   //:--------------------------------------------------------------------
+   //: bom( ddate )
+   //: =============
+
+   LOCAL getlist := {}
+   LOCAL ddate   := CToD( "  /  /    " )
+   LOCAL c       := .T.
+   LOCAL nKey
+
+   DO WHILE c
+      @ 5, 10 SAY "boq(ddate) returns the date of the first day of the"
+      @ 6, 10 SAY "quarter in which ddate is situated. If ddate is"
+      @ 7, 10 SAY "15/10/2002 (that's in dd/mm/yyy), BOQ() should return"
+      @ 8, 10 SAY "01/09/2002. Test it, Insert a date"
+
+      @ 9, 10 GET ddate
+
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
+
+      nKey := LastKey()
+
+      IF nKey == K_ESC
+         c := .F.
+      ELSE
+         @ 11, 10 SAY "The returned date is " + DToC( boq( ddate ) )
+
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
+
+      ENDIF
+
+   ENDDO
+
+   @ 0, 0 clear
+
+   RETURN NIL
+
+   //:--------------------------------------------------------------------
+
+FUNCTION boytest()
+
+   //:--------------------------------------------------------------------
+   //: boy( ddate )
+   //: =============
+
+   LOCAL getlist := {}
+   LOCAL ddate   := CToD( "  /  /    " )
+   LOCAL c       := .T.
+   LOCAL nkey
+
+   DO WHILE c
+      @ 5, 10 SAY "boy(ddate) returns the date of the first day of ddate"
+      @ 6, 10 SAY "If ddate is 15/10/2002(that's in dd/mm/yyy), boy()"
+      @ 7, 10 SAY "should return 01/01/2002. Test it, Insert a date"
+      @ 9, 10 GET ddate
+
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
+
+      nKey := LastKey()
+
+      IF nKey == K_ESC
+         c := .F.
+      ELSE
+         @ 11, 10 SAY "The returned date is " + DToC( boy( ddate ) )
+
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
+
+         ddate   := CToD( "  /  /    " )
+
+      ENDIF
+
+   ENDDO
+
+   @ 0, 0 clear
+
+   RETURN NIL
+
+   //:----------------------------------------------------------------
+
+FUNCTION ctodowtest()
+
+   //:----------------------------------------------------------------
+   //: ctodow( cDow)
+   //: ==============
+   //: Convert name of day of the week to its ordinal number
+   //: if cDow is invalid, returns 0
+   //: English day names only.
+
+   LOCAL getlist := {}
+   LOCAL cDow    := Space( 9 )
+   LOCAL nkey
+   LOCAL c       := .T.
+
+   DO WHILE c
+      @ 5, 10 SAY "ctodow(ddate) receives the name of a day of the week and "
+      @ 6, 10 SAY "returns a number representing its position in the week"
+      @ 7, 10 SAY "Sunday returns 1. Test it, Insert a day"
+      @ 9, 10 GET cDow
+
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
+
+      nKey := LastKey()
+
+      IF nKey == K_ESC
+         c := .F.
+      ELSE
+         @ 11, 10 SAY "The day number is " + Str( ctodow( Upper(AllTrim(cDow ) ) ) )
+
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
+
+         cDow := Space( 9 )
+
+      ENDIF
+
+   ENDDO
+
+   @ 0, 0 clear
+
+   RETURN NIL
+
+   //:----------------------------------------------------------------
+
+FUNCTION ctomonthtest()
+
+   //:----------------------------------------------------------------
+   //: ctomonth(cDom )
+   //: ===============
+   //: Convert the name of a month to its ordinal number. If cMonth is
+   //: invalid, ctomonth() Returns 0. English month names only
+
+   LOCAL getlist := {}
+   LOCAL cDom    := Space( 9 )
+   LOCAL c       := .T.
+   LOCAL nKey
+
+   DO WHILE c
+      @ 5, 10 SAY "ctomonth(ddate) receives the name of a month and returns"
+      @ 6, 10 SAY "a number representing its position in the month. April"
+      @ 7, 10 SAY "returns 4. Test it, Insert a month"
+      @ 9, 10 GET cDom PICTURE "!!!!!!!!!"
+
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
+
+      cDom := AllTrim( cDom )
+
+      nKey := LastKey()
+
+      IF nKey == K_ESC
+         c := .F.
+      ELSE
+         @ 11, 10 SAY "The day number is " + Str( ctomonth( cDom ) )
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
+
+         cDom := Space( 9 )
+      ENDIF
+
+   ENDDO
+
+   @ 0, 0 clear
+
+   RETURN NIL
+
+   //:----------------------------------------------------------------
+
+FUNCTION dInMonthtest()
+
+   //:----------------------------------------------------------------
+   //: daysInMonth( xDate, lleap )
+   //: ============================
+   //: Returns the number of days in nMonth, either whose name as a
+   //: string or month number is passed. English Month names only.
+
+   LOCAL getlist := {}
+   LOCAL cMonth  := Space( 9 )
+   LOCAL c       := .T.
+   LOCAL nMonth
+   LOCAL nKey
+   LOCAL cLeap   := "N"
+   LOCAL lleap   := .F.
+
+   DO WHILE c
+      @ 5, 10 SAY "daysInmonth() receives either the number of a month or"
+      @ 6, 10 SAY "its name and returns the number of days in the month. "
+      @ 7, 10 SAY "April returns 30. Test it. Insert a month number"
+      @ 8, 10 SAY "Is it a leap year?"
+      @ 7, 60 GET cMonth PICTURE "XXXXXXXXX"
+      @ 8, 60 GET cleap PICTURE "Y"
+
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
+
+      cMonth := Upper( RTrim( cMonth ) )
+      nMonth := Val( cMonth )
+
+      DO CASE
+      CASE ValType( cMonth ) == "C" .AND. nmonth == 0
+         nMonth := ctomonth( cMonth )
+
+      CASE nMonth == 0  .OR. ;
+            nMonth  > 12
+
+         LOOP
+      ENDCASE
+
+      IF cLeap == "Y"
+         lleap := .T.
+      ENDIF
+
+      nKey := LastKey()
+
+      IF nKey == K_ESC
+         c := .F.
+      ELSE
+
+         @ 10, 40 SAY "The day number is " + ;
+            LTrim( Str( daysInMonth( nMonth, lLeap ) ) )
+
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
+
+         cMonth := Space( 9 )
+         cLeap  := "N"
+
+      ENDIF
+
+   ENDDO
+
+   @ 0, 0 clear
+
+   RETURN NIL
+
+   //:----------------------------------------------------------------
+
+FUNCTION d2month()
+
+   //:----------------------------------------------------------------
+   //: daystomonth()
+   //: =============
+   //: Total number days from first of Jan to beginning of nMonth.
+   //: lLeap is .F. for a non-leap year but .T. if it is. If so and
+   //: nMonth is greater than 2, ndays is incremented.
+
+   LOCAL getlist := {}
+   LOCAL cMonth  := Space( 2 )
+   LOCAL cLeap   := "N"
+   LOCAL c       := .T.
+   LOCAL nMonth
+   LOCAL lLeap
+   LOCAL nKey
+
+   DO WHILE c
+      @ 5, 10 SAY "daystomonth() receives the number a month and returns"
+      @ 6, 10 SAY "the number of days in the year up to that month. March"
+      @ 7, 10 SAY "returns 59 or 60 in a leap year. Test it."
+      @ 8, 10 SAY "Insert a month number"
+      @ 9, 10 SAY "Leap year Y/N?"
+      @ 8, 33 GET cMonth PICTURE "99"
+      @ 9, 33 GET cLeap PICTURE "Y"
+
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
+
+      nMonth := Val( cMonth )
+
+      nKey := LastKey()
+
+      IF nKey == K_ESC
+         c := .F.
+      ELSE
+         IF cLeap == "Y"
+            lLeap := .T.
+         ENDIF
+
+         @ 11, 10 SAY "The day number is " +  ;
+            LTrim( Str( daystomonth( nMonth, lLeap ) ) )
+
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
+
+         cMonth := Space( 2 )
+         cLeap  := "N"
+
+      ENDIF
+
+   ENDDO
+
+   @ 0, 0 clear
+
+   RETURN NIL
+
+   //:----------------------------------------------------------------
+
+FUNCTION dmytest()
+
+   //:----------------------------------------------------------------
+   //: dmy( ddate, lmode)
+   //: ===================
+   //: Returns the date as a string in DD Month YY format. If lmode
+   //: is .T., a "." is inserted after the DD
+   //: This version does not observe the Nations module. English
+   //: only.
+
+   LOCAL getlist := {}
+   LOCAL ddate   := CToD( "  /  /    " )
+   LOCAL cMode   := Space( 1 )
+   LOCAL lmode
+   LOCAL c       := .T.
+   LOCAL nKey
+
+   DO WHILE c
+      @  5, 10 SAY "dmy() receives a date and logical lmode. If lmode is"
+      @  6, 10 SAY "is either missing or FALSE, dmy returns the date as"
+      @  7, 10 SAY "a string in DD Month YY format. If lmode is TRUE, a"
+      @  8, 10 SAY "full stop or perod '.' is inserted after DD. Test it"
+      @  9, 10 SAY "Insert a date"
+      @ 10, 10 SAY "inssert a full stop Y/N?"
+      @  9, 36 GET ddate PICTURE "@D   /  /    "
+      @ 10, 45 GET cMode PICTURE "Y"
+
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
+
+      nKey := LastKey()
+
+      IF nKey == K_ESC
+         c := .F.
+      ELSE
+         iif( cMode == "Y", lMode := .T. , lMode := .F. )
+
+         @ 12, 10 SAY "The date string returned is " + ;
+            LTrim( dmy( ddate, lmode ) )
+
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
+
+         ddate := CToD( "  /  /    " )
+         cMode := Space( 1 )
+
+      ENDIF
+
+   ENDDO
+
+   @ 0, 0 clear
+
+   RETURN NIL
+
+   //:----------------------------------------------------------------
+
+FUNCTION doytest()
+
+   //:----------------------------------------------------------------
+   //: doy( ddate )
+   //: =============
+   //: Determines the day of the year for a specific date
+   //: if dDate is invalid, returns 0
+
+   LOCAL getlist := {}
+   LOCAL ddate   := CToD( "  /  /    " )
+   LOCAL c       := .T.
+   LOCAL nKey
+
+   DO WHILE c
+      @ 5, 10 SAY "doy(ddate) returns the day of the year for the"
+      @ 6, 10 SAY "date passed. Test it, Insert a date"
+      @ 9, 10 GET ddate
+
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
+
+      nKey := LastKey()
+
+      IF nKey == K_ESC
+         c := .F.
+      ELSE
+         @ 11, 10 SAY "The day of the date entered is " + ;
+            LTrim( Str( doy( ddate ) ) )
+
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
+
+         ddate := CToD( "  /  /    " )
+
+      ENDIF
+
+   ENDDO
+
+   @ 0, 0 clear
+
+   RETURN NIL
+
+   //:----------------------------------------------------------------
+
+FUNCTION eomtest()
+
+   //:----------------------------------------------------------------
+   //: dBom := eom( ddate )
+   //: =====================
+   //: Returns the last date in the month of the month appearing in
+   //: date.
+
+   LOCAL getlist := {}
+   LOCAL ddate := CToD( "  /  /    " )
+   LOCAL c     := .T.
+   LOCAL nKey
+
+   DO WHILE c
+      @ 5, 10 SAY "eom(ddate) returns the last date in the month of the"
+      @ 6, 10 SAY "month appearing in ddate. Test it, Insert a date"
+      @ 9, 10 GET ddate
+
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
+
+      nKey := LastKey()
+
+      IF nKey == K_ESC
+         c := .F.
+      ELSE
+
+         @ 11, 10 SAY "The last date in the month is " + ;
+            LTrim( DToC( eom( ddate ) ) )
+
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
+
+         ddate := CToD( "  /  /    " )
+
+      ENDIF
+
+   ENDDO
+
+   @ 0, 0 clear
+
+   RETURN NIL
+
+   //:----------------------------------------------------------------
+
+FUNCTION eoqtest()
+
+   //:----------------------------------------------------------------
+   //: dret := eoq( ddate )
+   //: =====================
+   //: Returns the last date in the quarter in which ddate falls.
+
+   LOCAL getlist := {}
+   LOCAL ddate := CToD( "  /  /    " )
+   LOCAL c     := .T.
+   LOCAL nKey
+
+   DO WHILE c
+      @ 5, 10 SAY "EOQ(ddate) returns the last date in the quarter in"
+      @ 6, 10 SAY "which ddate falls. Test it, Insert a date"
+      @ 9, 10 GET ddate
+
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
+
+      nKey := LastKey()
+
+      IF nKey == K_ESC
+         c := .F.
+      ELSE
+
+         @ 11, 10 SAY "The last date in the month is " + ;
+            LTrim( DToC( eoq( ddate ) ) )
+
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
+
+         ddate := CToD( "  /  /    " )
+
+      ENDIF
+
+   ENDDO
+
+   @ 0, 0 clear
+
+   RETURN NIL
+
+   //:----------------------------------------------------------------
+
+FUNCTION eoytest()
+
+   //:----------------------------------------------------------------
+   //: dEoy := eoy( ddate )
+   //: =====================
+   //: Returns the last date in the year of the year appearing in
+   //: date.
+
+   LOCAL getlist := {}
+   LOCAL ddate := CToD( "  /  /    " )
+   LOCAL c     := .T.
+   LOCAL nKey
+
+   DO WHILE c
+      @ 5, 10 SAY "eoy(ddate) returns the last date in the year of the"
+      @ 6, 10 SAY "year appearing in ddate. Test it, Insert a date"
+      @ 9, 10 GET ddate
+
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
+
+      nKey := LastKey()
+
+      IF nKey == K_ESC
+         c := .F.
+      ELSE
+
+         @ 11, 10 SAY "The last date in the year is " + ;
+            LTrim( DToC( eoy( ddate ) ) )
+
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
+
+         ddate := CToD( "  /  /    " )
+
+      ENDIF
+
+   ENDDO
+
+   @ 0, 0 clear
+
+   RETURN NIL
+
+   //:----------------------------------------------------------------
+
+FUNCTION isleaptest()
+
+   //:----------------------------------------------------------------
+   //:  lRet :=  isleap( ddate )
+   //:  ========================
+   //:  if ddate is a leap year, lRet is .T., otherwise .F..
+   //:  Leap years are exactly divisible by 4 and 1,000 but not 100.
+
+   LOCAL getlist := {}
+   LOCAL ddate := CToD( "  /  /    " )
+   LOCAL c     := .T.
+   LOCAL cResult
+   LOCAL nKey
+
+   DO WHILE c
+      @ 5, 10 SAY "isleap(ddate) returns TRUE if ddate is a leap year"
+      @ 6, 10 SAY "Test it, Insert a date"
+      @ 9, 10 GET ddate
+
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
+
+      nKey := LastKey()
+
+      IF nKey == K_ESC
+         c := .F.
+      ELSE
+
+         IF isleap( ddate )
             cResult := "TRUE "
-         else
+         ELSE
             cResult := "FALSE"
-         endif
+         ENDIF
 
-         @ 11, 10 say "The result is " + cResult
+         @ 11, 10 SAY "The result is " + cResult
 
-         set cursor off
-         inkey(0)
-         set cursor on
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
 
-         ddate := ctod ("  /  /    ")
+         ddate := CToD( "  /  /    " )
 
-      endif
+      ENDIF
 
-    enddo
+   ENDDO
 
-    @ 0, 0 clear
+   @ 0, 0 clear
 
-    return NIL
+   RETURN NIL
 
-*:----------------------------------------------------------------
-FUNCTION lastdayomtest ()
-*:----------------------------------------------------------------
-*:   ndays := lastdayom ( xDate )
-*:--------------------------------------------------------------
-*: Returns the the number of days in the month.
-*: xDate can be a date or a month number. If empty uses the
-*: system date.
-*: If xDate is invalid, returns 0
+   //:----------------------------------------------------------------
 
-local getlist := {}
-local ddate := ctod ("  /  /    ")
-local c     := .T.
-local nKey
-local cMth  := "  "
+FUNCTION lastdayomtest()
 
- do while c
-    @  5, 10 say "lastdayom (xDate) returns the number of days in the"
-    @  6, 10 say "month appearing in date. Or, if only a month number"
-    @  7, 10 say "is passed, in that month. Test it. "
-    @  9, 10 say "Insert a date (or)"
-    @ 10, 10 say "a month"
+   //:----------------------------------------------------------------
+   //:   ndays := lastdayom( xDate )
+   //:--------------------------------------------------------------
+   //: Returns the the number of days in the month.
+   //: xDate can be a date or a month number. If empty uses the
+   //: system date.
+   //: If xDate is invalid, returns 0
 
-    @  9, 30 get ddate
-    @ 10, 38 get cMth picture "99"       //valid val (cmth) < 12
+   LOCAL getlist := {}
+   LOCAL ddate := CToD( "  /  /    " )
+   LOCAL c     := .T.
+   LOCAL nKey
+   LOCAL cMth  := "  "
 
-    set confirm on
-    set escape on
-    read
-    set escape off
-    set confirm on
+   DO WHILE c
+      @  5, 10 SAY "lastdayom(xDate) returns the number of days in the"
+      @  6, 10 SAY "month appearing in date. Or, if only a month number"
+      @  7, 10 SAY "is passed, in that month. Test it. "
+      @  9, 10 SAY "Insert a date(or)"
+      @ 10, 10 SAY "a month"
 
-    nKey := lastkey()
+      @  9, 30 GET ddate
+      @ 10, 38 GET cMth PICTURE "99"       //valid val(cmth) < 12
 
-    if nKey == K_ESC
-       c := .F.
-    else
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
 
-       if (empty (ddate), ddate := val (cMth), ddate)
+      nKey := LastKey()
 
-       @ 12, 10 say "The number of days in the month is " + ;
-                     ltrim (str (lastdayom ( ddate )))
-       set cursor off
-       inkey(0)
-       set cursor on
-
-       ddate := ctod ("  /  /    ")
-       cMth  := "  "
-
-    endif
-
- enddo
-
- @ 0, 0 clear
-
- return NIL
-
-*:----------------------------------------------------------------
-FUNCTION mdytest ()
-*:----------------------------------------------------------------
-*:  cDate := mdy ( dDate )
-*:  ======================
-*: Returns the date as a string in "Month DD, YY" or "Month DD, YYYY"
-*: If dDate is NULL, the system date is used
-*: This version does not observe the Nations module. English only.
-
-local getlist := {}
-local ddate := ctod ("  /  /    ")
-local c     := .T.
-local nKey
-
-  do while c
-     @  5, 10 say "mdy() receives a date. mdy returns the date as"
-     @  6, 10 say "a string in month DD YY format.  Test it"
-     @  8, 10 say "Insert a date"
-     @  8, 30 get ddate picture "@D   /  /  "
-
-     set confirm on
-     set escape on
-     read
-     set escape off
-     set confirm on
-
-     nKey := lastkey()
-
-     if nKey == K_ESC
-        c := .F.
-     else
-
-        @ 11, 10 say "The date string returned is " + ;
-                                ltrim (mdy ( ddate ))
-
-        set cursor off
-        inkey(0)
-        set cursor on
-
-        ddate := ctod ("  /  /    ")
-
-     endif
-
-  enddo
-
-  @ 0, 0 clear
-
-  return NIL
-
-
-*:----------------------------------------------------------------
-FUNCTION ntocdowtest ()
-*:----------------------------------------------------------------
-*:  cDay :=  ntocdow ( nDayNum )
-*:  ==================================
-*:  ntocdow() receives the number of a day and returns its
-*:  name as a string. This version does not observe the Nations
-*:  module. English only.
-
-local getlist := {}
-local cDay := "  "
-local c      := .T.
-local nKey
-
-do while c
-   @ 5, 10 say "ntocdow(n) returns the name of the day number n"
-   @ 6, 10 say "Test it, Insert a day number"
-   @ 6, 60 get cDay
-
-   set confirm on
-   set escape on
-   read
-   set escape off
-   set confirm on
-
-   nKey := lastkey()
-
-   if nKey == K_ESC
-      c := .F.
-   else
-
-      @ 11, 10 say "The day selected is " + ;
-                        padr (ntocdow ( val (cDay) ), 10)
-
-      set cursor off
-      inkey(0)
-      set cursor on
-
-      cDay := "  "
-
-   endif
-
- enddo
-
- @ 0, 0 clear
-
- return NIL
-
-
-*:----------------------------------------------------------------
-FUNCTION ntocmthtest ()
-*:----------------------------------------------------------------
-*:  cMonth :=  ntocmonth ( nMonthNum )
-*:  ==================================
-*:  ntocmonth() receives the number of a month and returns its
-*:  name as a string. This version does not observe the Nations
-*:  module. English only.
-
-local getlist := {}
-local cMonth := "  "
-local c      := .T.
-local nKey
-
-do while c
-   @ 5, 10 say "ntocmonth(n) returns the name of the month number n"
-   @ 6, 10 say "Test it, Insert a month number"
-   @ 6, 60 get cMonth
-
-   set confirm on
-   set escape on
-   read
-   set escape off
-   set confirm on
-
-   nKey := lastkey()
-
-   if nKey == K_ESC
-      c := .F.
-   else
-
-      @ 11, 10 say "The month selected is " + ;
-                        padr (ntocmonth ( val (cMonth) ), 10)
-
-      set cursor off
-      inkey(0)
-      set cursor on
-
-      cMonth := "  "
-
-   endif
-
- enddo
-
- @ 0, 0 clear
-
- return NIL
-
-*:----------------------------------------------------------------
-FUNCTION qtrtest ()
-*:----------------------------------------------------------------
-*:  nqtr := quarter ( ddate )
-*:  ===========================
-*:  Returns the quarter as a number. If no date is specified,
-*:  the system date is used.
-
-local getlist := {}
-local ddate  := ctod ("  /  /    ")
-local c      := .T.
-local nKey
-
-   do while c
-      @ 5, 10 say "quarter (ddate) returns the number of the quarter"
-      @ 6, 10 say "Test it, Insert a date"
-      @ 6, 52 get ddate
-
-      set confirm on
-      set escape on
-      read
-      set escape off
-      set confirm on
-
-      nKey := lastkey()
-
-      if nKey == K_ESC
+      IF nKey == K_ESC
          c := .F.
-      else
+      ELSE
 
-         @  8, 10 say "The quarter number is " + ;
-                           padr (ltrim ( str ( quarter ( ddate ))), 10)
+         iif( Empty( ddate ), ddate := Val( cMth ), ddate )
 
-         set cursor off
-         inkey(0)
-         set cursor on
+         @ 12, 10 SAY "The number of days in the month is " + ;
+            LTrim( Str( lastdayom( ddate ) ) )
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
 
-         ddate  := ctod ("  /  /    ")
+         ddate := CToD( "  /  /    " )
+         cMth  := "  "
 
-      endif
+      ENDIF
 
-    enddo
+   ENDDO
 
-    @ 0, 0 clear
+   @ 0, 0 clear
 
-    return NIL
+   RETURN NIL
 
+   //:----------------------------------------------------------------
 
-*:----------------------------------------------------------------
+FUNCTION mdytest()
+
+   //:----------------------------------------------------------------
+   //:  cDate := mdy( dDate )
+   //:  ======================
+   //: Returns the date as a string in "Month DD, YY" or "Month DD, YYYY"
+   //: If dDate is NULL, the system date is used
+   //: This version does not observe the Nations module. English only.
+
+   LOCAL getlist := {}
+   LOCAL ddate := CToD( "  /  /    " )
+   LOCAL c     := .T.
+   LOCAL nKey
+
+   DO WHILE c
+      @  5, 10 SAY "mdy() receives a date. mdy returns the date as"
+      @  6, 10 SAY "a string in month DD YY format.  Test it"
+      @  8, 10 SAY "Insert a date"
+      @  8, 30 GET ddate PICTURE "@D   /  /  "
+
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
+
+      nKey := LastKey()
+
+      IF nKey == K_ESC
+         c := .F.
+      ELSE
+
+         @ 11, 10 SAY "The date string returned is " + ;
+            LTrim( mdy( ddate ) )
+
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
+
+         ddate := CToD( "  /  /    " )
+
+      ENDIF
+
+   ENDDO
+
+   @ 0, 0 clear
+
+   RETURN NIL
+
+   //:----------------------------------------------------------------
+
+FUNCTION ntocdowtest()
+
+   //:----------------------------------------------------------------
+   //:  cDay :=  ntocdow( nDayNum )
+   //:  ==================================
+   //:  ntocdow() receives the number of a day and returns its
+   //:  name as a string. This version does not observe the Nations
+   //:  module. English only.
+
+   LOCAL getlist := {}
+   LOCAL cDay := "  "
+   LOCAL c      := .T.
+   LOCAL nKey
+
+   DO WHILE c
+      @ 5, 10 SAY "ntocdow(n) returns the name of the day number n"
+      @ 6, 10 SAY "Test it, Insert a day number"
+      @ 6, 60 GET cDay
+
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
+
+      nKey := LastKey()
+
+      IF nKey == K_ESC
+         c := .F.
+      ELSE
+
+         @ 11, 10 SAY "The day selected is " + ;
+            PadR( ntocdow( Val(cDay ) ), 10 )
+
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
+
+         cDay := "  "
+
+      ENDIF
+
+   ENDDO
+
+   @ 0, 0 clear
+
+   RETURN NIL
+
+   //:----------------------------------------------------------------
+
+FUNCTION ntocmthtest()
+
+   //:----------------------------------------------------------------
+   //:  cMonth :=  ntocmonth( nMonthNum )
+   //:  ==================================
+   //:  ntocmonth() receives the number of a month and returns its
+   //:  name as a string. This version does not observe the Nations
+   //:  module. English only.
+
+   LOCAL getlist := {}
+   LOCAL cMonth := "  "
+   LOCAL c      := .T.
+   LOCAL nKey
+
+   DO WHILE c
+      @ 5, 10 SAY "ntocmonth(n) returns the name of the month number n"
+      @ 6, 10 SAY "Test it, Insert a month number"
+      @ 6, 60 GET cMonth
+
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
+
+      nKey := LastKey()
+
+      IF nKey == K_ESC
+         c := .F.
+      ELSE
+
+         @ 11, 10 SAY "The month selected is " + ;
+            PadR( ntocmonth( Val(cMonth ) ), 10 )
+
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
+
+         cMonth := "  "
+
+      ENDIF
+
+   ENDDO
+
+   @ 0, 0 clear
+
+   RETURN NIL
+
+   //:----------------------------------------------------------------
+
+FUNCTION qtrtest()
+
+   //:----------------------------------------------------------------
+   //:  nqtr := quarter( ddate )
+   //:  ===========================
+   //:  Returns the quarter as a number. If no date is specified,
+   //:  the system date is used.
+
+   LOCAL getlist := {}
+   LOCAL ddate  := CToD( "  /  /    " )
+   LOCAL c      := .T.
+   LOCAL nKey
+
+   DO WHILE c
+      @ 5, 10 SAY "quarter(ddate) returns the number of the quarter"
+      @ 6, 10 SAY "Test it, Insert a date"
+      @ 6, 52 GET ddate
+
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
+
+      nKey := LastKey()
+
+      IF nKey == K_ESC
+         c := .F.
+      ELSE
+
+         @  8, 10 SAY "The quarter number is " + ;
+            PadR( LTrim( Str( quarter( ddate ) ) ), 10 )
+
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
+
+         ddate  := CToD( "  /  /    " )
+
+      ENDIF
+
+   ENDDO
+
+   @ 0, 0 clear
+
+   RETURN NIL
+
+   //:----------------------------------------------------------------
+
 FUNCTION stodtest()
-*:----------------------------------------------------------------
-*:  stod ( ansi-date)
-*:  ================
-*:  Returns a Clipper format date. If Ansi date is invalid, a
-*:  null date is returned.
 
-local getlist   := {}
-local ddate
-local cAnsidate := space(8)
-local c         := .T.
-local nKey
+   //:----------------------------------------------------------------
+   //:  stod( ansi-date)
+   //:  ================
+   //:  Returns a Clipper format date. If Ansi date is invalid, a
+   //:  null date is returned.
 
-   do while c
-      @  5, 10 say "stod ( ansi-date ) receives an ANSI date string and"
-      @  6, 10 say "returns a Clipper format date"
-      @  8, 10 say "Enter an ANSI date string in the form YYYYMMDD"
-      @  8, 57 get cAnsidate picture "999999999" valid chkansi (cAnsidate)
+   LOCAL getlist   := {}
+   LOCAL ddate
+   LOCAL cAnsidate := Space( 8 )
+   LOCAL c         := .T.
+   LOCAL nKey
 
-      set confirm on
-      set escape on
-      read
-      set escape off
-      set confirm on
+   DO WHILE c
+      @  5, 10 SAY "stod( ansi-date ) receives an ANSI date string and"
+      @  6, 10 SAY "returns a Clipper format date"
+      @  8, 10 SAY "Enter an ANSI date string in the form YYYYMMDD"
+      @  8, 57 GET cAnsidate PICTURE "999999999" VALID chkansi( cAnsidate )
 
-      nKey := lastkey()
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
 
-      if nKey == K_ESC
+      nKey := LastKey()
+
+      IF nKey == K_ESC
          c := .F.
-      else
+      ELSE
 
-         ddate := stod ( cAnsidate )
+         ddate := SToD( cAnsidate )
 
-         @ 10, 10 say "The Clipper format date is " + ;
-                           padr (ltrim ( dtoc ( ddate )), 10)
+         @ 10, 10 SAY "The Clipper format date is " + ;
+            PadR( LTrim( DToC( ddate ) ), 10 )
 
-         set cursor off
-         inkey(0)
-         set cursor on
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
 
-         cAnsidate := space(8)
+         cAnsidate := Space( 8 )
 
-      endif
+      ENDIF
 
-   enddo
-   return NIL
+   ENDDO
 
+   RETURN NIL
 
-*:----------------------------------------------------------------
-FUNCTION chkansi (cAnsidate)
-*:----------------------------------------------------------------
-local nYear
-local nMonth
-local nDay
-local lretval := .T.
+   //:----------------------------------------------------------------
 
-   nYear  := val (  left ( cAnsidate, 4))
-   nMonth := val (substr ( cAnsidate, 5, 2))
-   nDay   := val ( right ( cAnsidate, 2))
+FUNCTION chkansi( cAnsidate )
 
-   do case
+   //:----------------------------------------------------------------
+   LOCAL nYear
+   LOCAL nMonth
+   LOCAL nDay
+   LOCAL lretval := .T.
 
-      case nYear < 1
-           lretval := .F.
-      case nMonth < 1 .or. nMonth > 12
-           lretval := .F.
-      case nday < 0 .or. nday > 31
-           lretval := .F.
-   endcase
+   nYear  := Val(  Left( cAnsidate, 4 ) )
+   nMonth := Val( SubStr( cAnsidate, 5, 2 ) )
+   nDay   := Val( Right( cAnsidate, 2 ) )
 
-   return lretval
+   DO CASE
 
+   CASE nYear < 1
+      lretval := .F.
+   CASE nMonth < 1 .OR. nMonth > 12
+      lretval := .F.
+   CASE nday < 0 .OR. nday > 31
+      lretval := .F.
+   ENDCASE
 
-*:----------------------------------------------------------------
-FUNCTION weektest ()
-*:----------------------------------------------------------------
-*:  nWeek := week ( ddate, lSWN )
-*:  =============================
-*:  Returns the calendar week as a number. If no date is specified,
-*:  the system date is used. An empty date viz ctod("  /  /  ")
-*:  returns 0.
+   RETURN lretval
 
-local getlist := {}
-local ddate  := ctod ("  /  /    ")
-local c      := .T.
-local nKey
-local cMode := space(1)
+   //:----------------------------------------------------------------
 
-   do while c
-      @ 5, 10 say "week (ddate, lSWN) returns the calendar number of the week"
-      @ 6, 10 say "if lSWN == .T., the simple week number is returned"
-      @ 7, 10 say "if lSWN == .F.(default), the ISO8601 week number is returned"
+FUNCTION weektest()
 
-      @ 8, 10 say "Test it, Insert a date and <lSWN>"
-      @ 9, 52 get ddate
-      @ 10, 61 get cMode picture "Y"
+   //:----------------------------------------------------------------
+   //:  nWeek := week( ddate, lSWN )
+   //:  =============================
+   //:  Returns the calendar week as a number. If no date is specified,
+   //:  the system date is used. An empty date viz ctod("  /  /  ")
+   //:  returns 0.
 
-      set confirm on
-      set escape on
-      read
-      set escape off
-      set confirm on
+   LOCAL getlist := {}
+   LOCAL ddate  := CToD( "  /  /    " )
+   LOCAL c      := .T.
+   LOCAL nKey
+   LOCAL cMode := Space( 1 )
 
-      nKey := lastkey()
+   DO WHILE c
+      @ 5, 10 SAY "week(ddate, lSWN) returns the calendar number of the week"
+      @ 6, 10 SAY "if lSWN == .T., the simple week number is returned"
+      @ 7, 10 SAY "if lSWN == .F.(default), the ISO8601 week number is returned"
 
-      if nKey == K_ESC
+      @ 8, 10 SAY "Test it, Insert a date and <lSWN>"
+      @ 9, 52 GET ddate
+      @ 10, 61 GET cMode PICTURE "Y"
+
+      SET CONFIRM ON
+      SET ESCAPE ON
+      READ
+      SET ESCAPE OFF
+      SET CONFIRM ON
+
+      nKey := LastKey()
+
+      IF nKey == K_ESC
          c := .F.
-      else
+      ELSE
 
-         @  8, 10 say "The week number is " + ;
-                           padr (ltrim ( str (week ( ddate, cMode=="Y"))), 10)
+         @  8, 10 SAY "The week number is " + ;
+            PadR( LTrim( Str(week( ddate, cMode == "Y" ) ) ), 10 )
 
-         set cursor off
-         inkey(0)
-         set cursor on
+         SET CURSOR OFF
+         Inkey( 0 )
+         SET CURSOR ON
 
-         ddate  := ctod ("  /  /    ")
+         ddate  := CToD( "  /  /    " )
 
-      endif
+      ENDIF
 
-    enddo
+   ENDDO
 
-    @ 0, 0 clear
+   @ 0, 0 clear
 
-    return NIL
+   RETURN NIL

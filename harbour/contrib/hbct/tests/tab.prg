@@ -52,112 +52,110 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   LOCAL cStr, nLen
 
-procedure main
+   ctinit()
 
-local cStr, nLen
+   QOut( "Begin test of TABEXPAND()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  tabexpand("-"+chr(9)+"!")             == "-       !" ? -> "] + tabexpand( "-" + Chr(9 ) + "!" )             + ["] )
+   QOut( [  tabexpand("----"+chr(9) +"!")         == "----    !" ? -> "] + tabexpand( "----" + Chr(9 ) + "!" )         + ["] )
+   QOut( [  tabexpand("-"+chr(9)+"!",, "+")       == "-+++++++!" ? -> "] + tabexpand( "-" + Chr(9 ) + "!",, "+" )       + ["] )
+   QOut( [  tabexpand("-"+chr(9)+ "!", 4)         == "-   !"     ? -> "] + tabexpand( "-" + Chr(9 ) + "!", 4 )         + ["] )
+   QOut( [  tabexpand("----"+chr(9)+ "!", 8)      == "----    !" ? -> "] + tabexpand( "----" + Chr(9 ) + "!", 8 )      + ["] )
+   QOut( [  tabexpand("----"+chr(9)+ "!", 8, "+") == "----++++!" ? -> "] + tabexpand( "----" + Chr(9 ) + "!", 8, "+" ) + ["] )
+   QOut( "" )
 
- qout ("Begin test of TABEXPAND()")
- qout ("")
+   QOut( "Tests with newline characters: ^J == LF, ^M == CR" )
+   cStr := hb_eol()
+   cStr := StrTran( cStr, Chr( 10 ), "^J" )
+   cStr := StrTran( cStr, Chr( 13 ), "^M" )
+   QOut( [  hb_eol() = "] + cStr + ["] )
+   cStr := tabexpand( "-" + Chr( 9 ) + "!" + hb_eol() + "----" + Chr( 9 ) + "!", , "+" )
+   cStr := StrTran( cStr, Chr( 10 ), "^J" )
+   cStr := StrTran( cStr, Chr( 13 ), "^M" )
+   QOut( [  tabexpand("-"+chr(9)+"!"+hb_eol()+"----"+chr(9)+ "!",, "+")] )
+   QOut( [     == "-+++++++!"+hb_eol()+"----++++!"  ? -> "] + cStr + ["] )
+   cStr := tabexpand( "-" + Chr( 9 ) + "!$$--" + hb_eol() + "--" + Chr( 9 ) + "!", , "+", "$" )
+   cStr := StrTran( cStr, Chr( 10 ), "^J" )
+   cStr := StrTran( cStr, Chr( 13 ), "^M" )
+   QOut( [  tabexpand("-"+chr(9)+"!$$--"+hb_eol()+--"+chr(9)+ "!",, "+", "$")] )
+   nLen := Len( hb_eol() )
+   QOut( [     == "-+++++++!$$--"+hb_eol()+"] + Replicate( "-",4 - nLen ) + [++!"  ? -> "] + cStr + ["] )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  tabexpand("-"+chr(9)+"!")             == "-       !" ? -> "] + tabexpand ("-"+chr(9)+"!")             + ["])
- qout ([  tabexpand("----"+chr(9) +"!")         == "----    !" ? -> "] + tabexpand ("----"+chr(9) +"!")         + ["])
- qout ([  tabexpand("-"+chr(9)+"!",, "+")       == "-+++++++!" ? -> "] + tabexpand ("-"+chr(9)+"!",, "+")       + ["])
- qout ([  tabexpand("-"+chr(9)+ "!", 4)         == "-   !"     ? -> "] + tabexpand ("-"+chr(9)+ "!", 4)         + ["])
- qout ([  tabexpand("----"+chr(9)+ "!", 8)      == "----    !" ? -> "] + tabexpand ("----"+chr(9)+ "!", 8)      + ["])
- qout ([  tabexpand("----"+chr(9)+ "!", 8, "+") == "----++++!" ? -> "] + tabexpand ("----"+chr(9)+ "!", 8, "+") + ["])
- qout ("")
+   QOut( "Tests with tab characters:" )
+   QOut( [  tabexpand("-"+chr(9)+"-",,"+")      == "-+++++++-" ? -> "] + tabexpand( "-" + Chr(9 ) + "-",,"+" )     + ["] )
+   QOut( [  tabexpand("-"+chr(9)+"-",,"+",,"-")] )
+   QOut( [                              == "++++++++^I+++++++" ? -> "] + StrTran( tabexpand("-" + Chr(9 ) + "-",,"+",,"-" ),Chr(9 ),"^I" ) + ["] )
+   QOut( "" )
 
- qout ("Tests with newline characters: ^J == LF, ^M == CR")
- cStr := hb_eol()
- cStr := strtran (cStr, chr(10),"^J")
- cStr := strtran (cStr, chr(13),"^M")
- qout ([  hb_eol() = "] + cStr +["])
- cStr := tabexpand("-"+chr(9)+"!"+hb_eol()+"----"+chr(9)+ "!",, "+")
- cStr := strtran (cStr, chr(10),"^J")
- cStr := strtran (cStr, chr(13),"^M")
- qout ([  tabexpand("-"+chr(9)+"!"+hb_eol()+"----"+chr(9)+ "!",, "+")])
- qout ([     == "-+++++++!"+hb_eol()+"----++++!"  ? -> "] + cStr +["])
- cStr := tabexpand("-"+chr(9)+"!$$--"+hb_eol()+"--"+chr(9)+ "!",, "+", "$")
- cStr := strtran (cStr, chr(10),"^J")
- cStr := strtran (cStr, chr(13),"^M")
- qout ([  tabexpand("-"+chr(9)+"!$$--"+hb_eol()+--"+chr(9)+ "!",, "+", "$")])
- nLen := len (hb_eol())
- qout ([     == "-+++++++!$$--"+hb_eol()+"]+replicate("-",4-nLen)+[++!"  ? -> "] + cStr +["])
- qout ("")
+   QOut( "End test of TABEXPAND()" )
+   QOut( "Press any key to continue with tests of TABPACK()..." )
+   QOut( "" )
+   Inkey( 0 )
 
- qout ("Tests with tab characters:")
- qout ([  tabexpand("-"+chr(9)+"-",,"+")      == "-+++++++-" ? -> "] + tabexpand("-"+chr(9)+"-",,"+")     + ["])
- qout ([  tabexpand("-"+chr(9)+"-",,"+",,"-")])
- qout ([                              == "++++++++^I+++++++" ? -> "] + strtran(tabexpand("-"+chr(9)+"-",,"+",,"-"),chr(9),"^I")+ ["])
- qout ("")
+   QOut( "Begin test of TABPACK()" )
+   QOut( "" )
 
- qout ("End test of TABEXPAND()")
- qout ("Press any key to continue with tests of TABPACK()...")
- qout ("")
- inkey (0)
+   // simple tests
+   QOut( "Simple tests: ^I == tab character" )
 
- qout ("Begin test of TABPACK()")
- qout ("")
+   QOut( [  tabpack("AAAAAAA*",, "*")   == "AAAAAAA*"  ? -> "] + StrTran( tabpack("AAAAAAA*",, "*" ),Chr(9 ),"^I" )  + ["] )
+   QOut( [  tabpack("AAAAA***",, "*")   == "AAAAA^I"   ? -> "] + StrTran( tabpack("AAAAA***",, "*" ),Chr(9 ),"^I" )  + ["] )
+   QOut( [  tabpack("AAAAA*****",, "*") == "AAAAA^I**" ? -> "] + StrTran( tabpack("AAAAA*****",, "*" ),Chr(9 ),"^I" ) + ["] )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests: ^I == tab character")
+   QOut( "Tests with newline characters:" )
+   cStr := hb_eol()
+   cStr := StrTran( cStr, Chr( 10 ), "^J" )
+   cStr := StrTran( cStr, Chr( 13 ), "^M" )
+   QOut( [  hb_eol() = "] + cStr + ["] )
 
- qout ([  tabpack("AAAAAAA*",, "*")   == "AAAAAAA*"  ? -> "] + strtran(tabpack("AAAAAAA*",, "*"),chr(9),"^I")  + ["])
- qout ([  tabpack("AAAAA***",, "*")   == "AAAAA^I"   ? -> "] + strtran(tabpack("AAAAA***",, "*"),chr(9),"^I")  + ["])
- qout ([  tabpack("AAAAA*****",, "*") == "AAAAA^I**" ? -> "] + strtran(tabpack("AAAAA*****",, "*"),chr(9),"^I")+ ["])
- qout ("")
+   cStr := "ABCD+" + hb_eol() + "++---+++++"
+   cStr := tabpack( cStr, 4, "+" )
+   cStr := StrTran( cStr, Chr( 10 ), "^J" )
+   cStr := StrTran( cStr, Chr( 13 ), "^M" )
+   cStr := StrTran( cStr, Chr( 9 ), "^I" )
+   QOut( [  tabpack("ABCD+" + hb_eol() + "++---+++++", 4, "+")] )
+   QOut( [     == "ABCD+"+hb_eol()+"++---"+chr(9)+"++" ? -> "] + cStr + ["] )
 
- qout ("Tests with newline characters:")
- cStr := hb_eol()
- cStr := strtran (cStr, chr(10),"^J")
- cStr := strtran (cStr, chr(13),"^M")
- qout ([  hb_eol() = "] + cStr +["])
+   QOut( "End test of TABPACK()" )
+   QOut( "" )
 
- cStr := "ABCD+" + hb_eol() + "++---+++++"
- cStr := tabpack (cStr, 4, "+")
- cStr := strtran (cStr, chr(10),"^J")
- cStr := strtran (cStr, chr(13),"^M")
- cStr := strtran (cStr, chr(9),"^I")
- qout ([  tabpack("ABCD+" + hb_eol() + "++---+++++", 4, "+")])
- qout ([     == "ABCD+"+hb_eol()+"++---"+chr(9)+"++" ? -> "] + cStr +["])
+   //  qout("Test with a MEMOEDITed string:")
+   //  qout("  Now, a memoedit() will start. Please type a text, use tab characters")
+   //  qout("  and make sure, you make use of soft and hard returns !")
+   //  qout("  ...press any key to start the memoedit now...")
+   //  qout("")
+   //  inkey(0)
+   //  cls
+   //  dispbox(0,0,20,60)
+   //  cStr := memoedit(, 1, 1, 9, 59,,,59)
+   //  cls
+   //  qout("  Now printing the expanded text using a tab length of 4 and soft CRs")
+   //  cStr1 := tabexpand(cStr,4,"+",,,.F.)
+   //  cStr1 := strtran(cStr, chr(141), hb_eol())
+   //
+   //  for ni := 1 to mlcount(cStr1, 59, 4, .T.)
+   //    qout("  "+str(ni)+": "+memoline(cStr1, 59,ni,4,.T.))
+   //  next ni
+   //
+   //  qout("  Now printing the expanded text using a tab length of 4 but without soft CRs")
+   //  cStr1 := tabexpand(cStr,4,"+",,,.T.)
+   //
+   //  for ni := 1 to mlcount(cStr1, 59, 4, .T.)
+   //    qout("  "+str(ni)+": "+memoline(cStr1, 59,ni,4,.T.))
+   //  next ni
+   //  inkey(0)
 
- qout ("End test of TABPACK()")
- qout ("")
+   ctexit()
 
-//  qout ("Test with a MEMOEDITed string:")
-//  qout ("  Now, a memoedit() will start. Please type a text, use tab characters")
-//  qout ("  and make sure, you make use of soft and hard returns !")
-//  qout ("  ...press any key to start the memoedit now...")
-//  qout ("")
-//  inkey (0)
-//  cls
-//  dispbox (0,0,20,60)
-//  cStr := memoedit (, 1, 1, 9, 59,,,59)
-//  cls
-//  qout ("  Now printing the expanded text using a tab length of 4 and soft CRs")
-//  cStr1 := tabexpand (cStr,4,"+",,,.F.)
-//  cStr1 := strtran (cStr, chr(141), hb_eol())
-//
-//  for ni := 1 to mlcount (cStr1, 59, 4, .T.)
-//    qout ("  "+str(ni)+": "+memoline (cStr1, 59,ni,4,.T.))
-//  next ni
-//
-//  qout ("  Now printing the expanded text using a tab length of 4 but without soft CRs")
-//  cStr1 := tabexpand (cStr,4,"+",,,.T.)
-//
-//  for ni := 1 to mlcount (cStr1, 59, 4, .T.)
-//    qout ("  "+str(ni)+": "+memoline (cStr1, 59,ni,4,.T.))
-//  next ni
-//  inkey (0)
-
- ctexit()
-
-return
+   RETURN

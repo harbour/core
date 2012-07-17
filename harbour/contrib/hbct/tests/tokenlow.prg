@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function TOKENLOWER() 
+ *   Test CT3 function TOKENLOWER()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,45 +52,40 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   LOCAL cStr := ".,.This.,.is.,.a.,.test!"
 
-procedure main
+   ctinit()
 
-local cStr := ".,.This.,.is.,.a.,.test!"
+   QOut( "Begin test of TOKENLOWER()" )
+   QOut( "" )
 
- ctinit()
+   // Some simple tests
+   QOut( "  Simple tests:" )
+   QOut( [   tokenlower("Hello, World, here I am!")       == "hello, world, here i am!" ?] )
+   QOut( [                                                -> "] + tokenlower( "Hello, World, here I am!" ) + ["] )
+   QOut( [   tokenlower("Hello, World, here I am!",,3)    == "hello, world, here I am!" ?] )
+   QOut( [                                                -> "] + tokenlower( "Hello, World, here I am!",,3 ) + ["] )
+   QOut( [   tokenlower("Hello, World, here I am!",",",3) == "hello, World, here I am!" ?] )
+   QOut( [                                                -> "] + tokenlower( "Hello, World, here I am!",",",3 ) + ["] )
+   QOut( [   tokenlower("Hello, World, here I am!"," W")  == "hello, World, here i am!" ?] )
+   QOut( [                                                -> "] + tokenlower( "Hello, World, here I am!"," W" ) + ["] )
+   QOut( "" )
 
- qout ("Begin test of TOKENLOWER()")
- qout ("")
+   QOut( [  Lowercase the tokens in the string "] + cStr + ["] )
+   QOut( [            with csetref(.T.) and "@"] )
+   csetref( .T. )
+   QOut( "" )
+   QOut( [    --> return value of tokenlower(@cStr): ], tokenlower( @cStr ) )
+   QOut( [    --> cStr is now: "] + cStr + ["] )
 
- // Some simple tests
- qout ("  Simple tests:")
- qout ([   tokenlower("Hello, World, here I am!")       == "hello, world, here i am!" ?])
- qout ([                                                -> "] + tokenlower ("Hello, World, here I am!") + ["])
- qout ([   tokenlower("Hello, World, here I am!",,3)    == "hello, world, here I am!" ?])                                                    
- qout ([                                                -> "] + tokenlower ("Hello, World, here I am!",,3) + ["])
- qout ([   tokenlower("Hello, World, here I am!",",",3) == "hello, World, here I am!" ?])                                                    
- qout ([                                                -> "] + tokenlower ("Hello, World, here I am!",",",3) + ["])
- qout ([   tokenlower("Hello, World, here I am!"," W")  == "hello, World, here i am!" ?])                                                    
- qout ([                                                -> "] + tokenlower ("Hello, World, here I am!"," W") + ["])
- qout ("")
+   QOut( "" )
+   QOut( "End test of TOKENLOWER()" )
+   QOut()
 
- qout ([  Lowercase the tokens in the string "]+cStr+["])
- qout ([            with csetref (.T.) and "@"])
- csetref (.T.)
- qout ("")
- qout ([    --> return value of tokenlower (@cStr): ],tokenlower(@cStr))
- qout ([    --> cStr is now: "]+cStr+["])
+   ctexit()
 
- qout ("")
- qout ("End test of TOKENLOWER()")
- qout ()
-
- ctexit()
-
-return 
-
-
-
+   RETURN

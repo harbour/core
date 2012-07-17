@@ -4,15 +4,11 @@
 
 /*
  * Harbour Project source code:
- *
  *   Test CT3 Numeric functions - PART 1
- *
- * - CELSIUS
- * - FAHRENHEIT
- * - INFINITY
- *
+ *   - CELSIUS
+ *   - FAHRENHEIT
+ *   - INFINITY
  * Copyright 2001   Alejandro de Garate  <alex_degarate@hotmail.com>
- *
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,55 +52,53 @@
  *
  */
 
+PROCEDURE Main()
+
+   CTINIT()
+
+   SET DECIMAL TO 14
+   CLS
+   ?? "Test of Numeric functions - part 1"
+
+   ? "CELSIUS( 33.8 ) =   1             // CT3"
+   ?  Space( 10 ),  CELSIUS( 33.8 ), " <-- CT for Harbour "
+   ?
+
+   ? "CELSIUS( 338.0 ) = 170             // CT3"
+   ?  Space( 11 ),  CELSIUS( 338.0 ), " <-- CT for Harbour "
+   ?
+
+   ? "CELSIUS( 3380.0) = 1860             // CT3"
+   ?  Space( 12 ),  CELSIUS( 3380.0 ), " <-- CT for Harbour "
+   ?
+
+   ? "CELSIUS( -33.8) = -36.5555..      // CT3"
+   ?  Space( 10 ), CELSIUS( - 33.8 ), " <-- CT for Harbour "
+   ?
+
+   ? "FAHRENHEIT( 12.5 ) = 54.5           // CT3"
+   ?  Space( 12 ), FAHRENHEIT( 12.5 ), " <-- CT for Harbour "
+   ?
+
+   ? "FAHRENHEIT( 125 ) = 257             // CT3"
+   ?  Space( 12 ), FAHRENHEIT( 125 ), " <-- CT for Harbour "
+   ?
+
+   ? "FAHRENHEIT( 1250 ) = 2282             // CT3"
+   ?  Space( 14 ), FAHRENHEIT( 1250 ), " <-- CT for Harbour "
+   ?
+   ? "FAHRENHEIT( -155 ) = -247             // CT3"
+   ?  Space( 14 ), FAHRENHEIT( - 155 ), " <-- CT for Harbour "
+   ?
+   ? "   PRESS ANY KEY"
+
+   Inkey( 0 )
 
 
- PROCEDURE MAIN
+   ?  "INFINITY()       // CT3"
+   ?  Space( 8 ), Str( INFINITY(), 30, 15 ), "  <-- CT for Harbour"
+   ?
 
- CTINIT()
+   CTEXIT()
 
- SET DECIMAL TO 14
- CLS
- ?? "Test of Numeric functions - part 1"
-
- ? "CELSIUS( 33.8 ) =   1             // CT3"
- ?  SPACE(10),  CELSIUS( 33.8 ), " <-- CT for Harbour "
- ?
-
- ? "CELSIUS( 338.0 ) = 170             // CT3"
- ?  SPACE(11),  CELSIUS( 338.0 ), " <-- CT for Harbour "
- ?
-
- ? "CELSIUS( 3380.0) = 1860             // CT3"
- ?  SPACE(12),  CELSIUS( 3380.0), " <-- CT for Harbour "
- ?
-
- ? "CELSIUS( -33.8) = -36.5555..      // CT3"
- ?  SPACE(10), CELSIUS( -33.8), " <-- CT for Harbour "
- ?
-
- ? "FAHRENHEIT( 12.5 ) = 54.5           // CT3"
- ?  SPACE(12), FAHRENHEIT( 12.5 ), " <-- CT for Harbour "
- ?
-
- ? "FAHRENHEIT( 125 ) = 257             // CT3"
- ?  SPACE(12), FAHRENHEIT( 125 ), " <-- CT for Harbour "
- ?
-
- ? "FAHRENHEIT( 1250 ) = 2282             // CT3"
- ?  SPACE(14), FAHRENHEIT( 1250 ), " <-- CT for Harbour "
- ?
- ? "FAHRENHEIT( -155 ) = -247             // CT3"
- ?  SPACE(14), FAHRENHEIT( -155 ), " <-- CT for Harbour "
- ?
- ? "   PRESS ANY KEY"
-
- INKEY(0)
- 
-
- ?  "INFINITY()       // CT3"
- ?  SPACE(8), STR( INFINITY(), 30, 15), "  <-- CT for Harbour"
- ?
-
- CTEXIT()
-
-RETURN
+   RETURN

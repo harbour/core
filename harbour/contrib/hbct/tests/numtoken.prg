@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function NUMTOKEN() 
+ *   Test CT3 function NUMTOKEN()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,41 +52,36 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   LOCAL cStr := ".,.This.,.is.,.a.,.test!"
 
-procedure main
+   ctinit()
 
-local cStr := ".,.This.,.is.,.a.,.test!"
+   QOut( "Begin test of NUMTOKEN()" )
+   QOut( "" )
 
- ctinit()
+   // Some simple tests
+   QOut( "  Simple tests:" )
+   QOut( [    numtoken("Hello, World!") ==  2 ? ------------------------------> ] + Str( numtoken("Hello, World!" ),2 ) )
+   QOut( [    numtoken("This is good. See you! How do you do?",".!?") == 3 ? -> ] + Str( numtoken("This is good. See you! How do you do?",".!?" ),2 ) )
+   QOut( [    numtoken("one,,three,four,,six",",",1) ==  6 ? -----------------> ] + Str( numtoken("one,,three,four,,six",",",1 ),2 ) )
+   QOut( "" )
 
- qout ("Begin test of NUMTOKEN()")
- qout ("")
+   QOut( [  # of tokens in the string "] + cStr + ["] )
+   QOut( [      separator list = ".,!" and skip width = 1: ] + Str( numtoken(cStr, ".,!", 1 ) ) )
+   QOut( [                                 skip width = 3: ] + Str( numtoken(cStr, ".,!", 3 ) ) )
+   QOut( [      separator list = ",!"  and skip width = 1: ] + Str( numtoken(cStr, ",!", 1 ) ) )
+   QOut( [                                 skip width = 3: ] + Str( numtoken(cStr, ",!", 3 ) ) )
+   QOut( [      separator list = "!"   and skip width = 1: ] + Str( numtoken(cStr, "!", 1 ) ) )
+   QOut( [                                 skip width = 3: ] + Str( numtoken(cStr, "!", 3 ) ) )
 
- // Some simple tests
- qout ("  Simple tests:")
- qout ([    numtoken ("Hello, World!") ==  2 ? ------------------------------> ] + str (numtoken ("Hello, World!"),2))
- qout ([    numtoken ("This is good. See you! How do you do?",".!?") == 3 ? -> ] + str (numtoken ("This is good. See you! How do you do?",".!?"),2))
- qout ([    numtoken ("one,,three,four,,six",",",1) ==  6 ? -----------------> ] + str (numtoken ("one,,three,four,,six",",",1),2))
- qout ("")
+   QOut( "" )
+   QOut( "End test of NUMTOKEN()" )
+   QOut()
 
- qout ([  # of tokens in the string "]+cStr+["])
- qout ([      separator list = ".,!" and skip width = 1: ]+str (numtoken (cStr, ".,!", 1)))
- qout ([                                 skip width = 3: ]+str (numtoken (cStr, ".,!", 3)))
- qout ([      separator list = ",!"  and skip width = 1: ]+str (numtoken (cStr, ",!", 1)))
- qout ([                                 skip width = 3: ]+str (numtoken (cStr, ",!", 3)))
- qout ([      separator list = "!"   and skip width = 1: ]+str (numtoken (cStr, "!", 1)))
- qout ([                                 skip width = 3: ]+str (numtoken (cStr, "!", 3)))
+   ctexit()
 
- qout ("")
- qout ("End test of NUMTOKEN()")
- qout ()
-
- ctexit()
-
-return 
-
-
-
+   RETURN

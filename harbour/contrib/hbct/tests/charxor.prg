@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARXOR() 
+ *   Test CT3 function CHARXOR()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,29 +52,24 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of CHARXOR()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  charxor(charxor("This is top secret !", "My Password"),] )
+   QOut( [           "My Password") == "This is top secret !" ? ->] )
+   QOut( [  ] + charxor( charxor("This is top secret !", "My Password" ),"My Password" ) )
 
- qout ("Begin test of CHARXOR()")
- qout ("")
+   QOut( "End test of CHARXOR()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  charxor (charxor ("This is top secret !", "My Password"),])
- qout ([           "My Password") == "This is top secret !" ? ->])
- qout ([  ]+charxor (charxor ("This is top secret !", "My Password"),"My Password"))
+   ctexit()
 
- qout ("End test of CHARXOR()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
+   RETURN

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function WORDONE() 
+ *   Test CT3 function WORDONE()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,31 +52,25 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of WORDONE()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  wordone("12ABAB12")       == "12AB12" ? --> "] + wordone( "12ABAB12" )       + ["] )
+   QOut( [  wordone("1AAAA2")         == "1AAAA2" ? --> "] + wordone( "1AAAA2" )         + ["] )
+   QOut( [  wordone("12", "1212ABAB") == "12ABAB" ? --> "] + wordone( "12", "1212ABAB" ) + ["] )
+   QOut( "" )
 
- qout ("Begin test of WORDONE()")
- qout ("")
+   QOut( "End test of WORDONE()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  wordone("12ABAB12")       == "12AB12" ? --> "] + wordone("12ABAB12")       + ["])
- qout ([  wordone("1AAAA2")         == "1AAAA2" ? --> "] + wordone("1AAAA2")         + ["])
- qout ([  wordone("12", "1212ABAB") == "12ABAB" ? --> "] + wordone("12", "1212ABAB") + ["])
- qout ("")
+   ctexit()
 
- qout ("End test of WORDONE()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
+   RETURN

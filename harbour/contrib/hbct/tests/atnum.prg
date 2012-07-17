@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 functions ATNUM() 
+ *   Test CT3 functions ATNUM()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,63 +52,58 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   LOCAL cStr := "...This...is...a...test!"
 
-procedure main
+   ctinit()
 
-local cStr := "...This...is...a...test!"
+   QOut( "Begin test of ATNUM()" )
+   QOut( "" )
+   QOut( "  Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 ) )
+   QOut( "" )
 
- ctinit()
+   // Some simple tests
+   QOut( "  Simple tests:" )
+   QOut( [  atnum("..",cStr)     should be 18,] )
+   QOut( [                           and is ], atnum( "..", cStr ) )
+   QOut( [  atnum("..",cStr,2)   should be 8,] )
+   QOut( [                           and is ], atnum( "..", cStr, 2 ) )
+   QOut( [  atnum("..",cStr,2,2) should be 13,] )
+   QOut( [                           and is ], atnum( "..", cStr, 2, 2 ) )
+   QOut()
 
- qout ("Begin test of ATNUM()")
- qout ("")
- qout ("  Value of cStr is:"+chr(34)+cStr+chr(34))
- qout ("")
+   // Tests with CSetAtMuPa(.T.)
+   QOut( "  Multi-Pass tests" )
+   QOut( "  Setting csetatmupa() to .T." )
+   csetatmupa( .T. )
+   QOut( [  atnum("..",cStr)     should be 18,] )
+   QOut( [                           and is ], atnum( "..", cStr ) )
+   QOut( [  atnum("..",cStr,2)   should be 2,] )
+   QOut( [                           and is ], atnum( "..", cStr, 2 ) )
+   QOut( [  atnum("..",cStr,2,2) should be 9,] )
+   QOut( [                           and is ], atnum( "..", cStr, 2, 2 ) )
+   QOut( "  Setting csetatmupa() to .F." )
+   csetatmupa( .F. )
+   QOut()
 
- // Some simple tests
- qout ("  Simple tests:")
- qout ([  atnum ("..",cStr)     should be 18,])
- qout ([                           and is ],atnum ("..", cStr))
- qout ([  atnum ("..",cStr,2)   should be 8,])
- qout ([                           and is ],atnum ("..", cStr, 2))
- qout ([  atnum ("..",cStr,2,2) should be 13,])
- qout ([                           and is ],atnum ("..", cStr, 2, 2))
- qout ()
+   // Tests mit SetAtlike(1)
+   QOut( "  SetAtLike tests" )
+   QOut( [  Setting setatlike(CT_SETATLIKE_WILDCARD, ".")] )
+   setatlike( CT_SETATLIKE_WILDCARD, "." )
+   QOut( [  atnum("..",cStr) should be 23,] )
+   QOut( [                       and is ], atnum( "..", cStr ) )
+   QOut( [  atnum("..",cStr,2,2) should be 5,] )
+   QOut( [                           and is ], atnum( "..", cStr, 2, 2 ) )
+   QOut( [  atnum("..",cStr,2,10) should be 13,] )
+   QOut( [                            and is ], atnum( "..", cStr, 2, 10 ) )
+   QOut()
 
- // Tests with CSetAtMuPa(.T.)
- qout ("  Multi-Pass tests")
- qout ("  Setting csetatmupa() to .T.")
- csetatmupa (.T.)
- qout ([  atnum ("..",cStr)     should be 18,])
- qout ([                           and is ],atnum ("..", cStr))
- qout ([  atnum ("..",cStr,2)   should be 2,])
- qout ([                           and is ],atnum ("..", cStr, 2))
- qout ([  atnum ("..",cStr,2,2) should be 9,])
- qout ([                           and is ],atnum ("..", cStr, 2, 2))
- qout ("  Setting csetatmupa() to .F.")
- csetatmupa (.F.)
- qout ()
+   QOut( "End test of ATNUM()" )
+   QOut()
 
- // Tests mit SetAtlike (1)
- qout ("  SetAtLike tests")
- qout ([  Setting setatlike (CT_SETATLIKE_WILDCARD, ".")])
- setatlike (CT_SETATLIKE_WILDCARD, ".")
- qout ([  atnum ("..",cStr) should be 23,])
- qout ([                       and is ],atnum ("..", cStr))
- qout ([  atnum ("..",cStr,2,2) should be 5,])
- qout ([                           and is ],atnum ("..", cStr, 2, 2))
- qout ([  atnum ("..",cStr,2,10) should be 13,])
- qout ([                            and is ],atnum ("..", cStr, 2, 10))
- qout ()
+   ctexit()
 
- qout ("End test of ATNUM()")
- qout ()
-
- ctexit()
-
-return 
-
-
-
+   RETURN

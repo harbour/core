@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function WORDREPL() 
+ *   Test CT3 function WORDREPL()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,39 +52,31 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of WORDREPL()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "  Simple tests:" )
+   QOut( [    wordrepl("CC", "AABBCCDDEE", "XX") == "AABBXXDDEE"? --> "] + wordrepl( "CC", "AABBCCDDEE", "XX" ) + ["] )
+   QOut( [    wordrepl("aa", "1aaaa", "ba")      == "1abaa" ? ------> "] + wordrepl( "aa", "1aaaa", "ba" )     + ["] )
+   QOut( [    wordrepl("aa", "1aaaa", "ba", .T.) == "1baba" ? ------> "] + wordrepl( "aa", "1aaaa", "ba", .T. ) + ["] )
+   QOut( "" )
 
- qout ("Begin test of WORDREPL()")
- qout ("")
+   QOut( "  Testing CSETATMUPA(.T.) with lMode==.T.:" )
+   csetatmupa( .T. )
+   QOut( [    wordrepl("aa", "1aaaa", "ba")      == "1abaa" ? --> "] + wordrepl( "aa", "1aaaa", "ba" )     + ["] )
+   QOut( [    wordrepl("aa", "1aaaa", "ba", .T.) == "1bbba" ? --> "] + wordrepl( "aa", "1aaaa", "ba", .T. ) + ["] )
+   QOut( "" )
 
- // simple tests
- qout ("  Simple tests:")
- qout ([    wordrepl("CC", "AABBCCDDEE", "XX") == "AABBXXDDEE"? --> "] + wordrepl("CC", "AABBCCDDEE", "XX")+ ["])
- qout ([    wordrepl("aa", "1aaaa", "ba")      == "1abaa" ? ------> "] + wordrepl("aa", "1aaaa", "ba")     + ["])
- qout ([    wordrepl("aa", "1aaaa", "ba", .T.) == "1baba" ? ------> "] + wordrepl("aa", "1aaaa", "ba", .T.)+ ["])
- qout ("")
+   QOut( "End test of WORDREPL()" )
+   QOut( "" )
 
- qout ("  Testing CSETATMUPA(.T.) with lMode==.T.:")
- csetatmupa(.T.)
- qout ([    wordrepl("aa", "1aaaa", "ba")      == "1abaa" ? --> "] + wordrepl("aa", "1aaaa", "ba")     + ["])
- qout ([    wordrepl("aa", "1aaaa", "ba", .T.) == "1bbba" ? --> "] + wordrepl("aa", "1aaaa", "ba", .T.)+ ["])
- qout ("")
+   ctexit()
 
- qout ("End test of WORDREPL()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
-
-
+   RETURN

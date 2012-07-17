@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARSUB() 
+ *   Test CT3 function CHARSUB()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,29 +52,25 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of CHARSUB()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  charadd("123456789", chr(1)) == "012345678" ? -> "] + charsub( "123456789", Chr(1 ) ) + ["] )
+   QOut( [  charadd("123456789", chr(1)+chr(2)) == "002244668" ? -> "] + charsub( "123456789", Chr(1 ) + Chr(2 ) ) + ["] )
+   QOut( [  charadd("012345678", chr(255)) == "123456789" ? -> "] + charsub( "012345678", Chr(255 ) ) + ["] )
+   QOut( [  charadd("012345678", chr(255)+chr(254)) == "133557799" ? -> "] + charsub( "012345678", Chr(255 ) + Chr(254 ) ) + ["] )
 
- qout ("Begin test of CHARSUB()")
- qout ("")
+   QOut( "End test of CHARSUB()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  charadd ("123456789", chr(1)) == "012345678" ? -> "] + charsub ("123456789", chr(1)) + ["])
- qout ([  charadd ("123456789", chr(1)+chr(2)) == "002244668" ? -> "] + charsub ("123456789", chr(1)+chr(2)) + ["])
- qout ([  charadd ("012345678", chr(255)) == "123456789" ? -> "] + charsub ("012345678", chr(255)) + ["])
- qout ([  charadd ("012345678", chr(255)+chr(254)) == "133557799" ? -> "] + charsub ("012345678", chr(255)+chr(254)) + ["])
+   ctexit()
 
- qout ("End test of CHARSUB()")
- qout ("")
-
- ctexit()
-
-return
-
-
+   RETURN

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CSETATMUPA() 
+ *   Test CT3 function CSETATMUPA()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,22 +52,20 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of CSETATMUPA()" )
+   QOut( "  Default switch should be .F., is..................................", csetatmupa() )
+   QOut( "  Setting switch to .T., return value should be .F., is.............", csetatmupa( .T. ) )
+   QOut( "  Switch setting should now be .T., is..............................", csetatmupa() )
+   QOut( "  Setting switch to .F. again, return value should still be .T., is ", csetatmupa( .F. ) )
+   QOut( "End test of CSETATMUPA()" )
+   QOut( "" )
 
-  ctinit()
+   ctexit()
 
-  qout ("Begin test of CSETATMUPA()")
-  qout ("  Default switch should be .F., is..................................", csetatmupa())
-  qout ("  Setting switch to .T., return value should be .F., is.............", csetatmupa (.T.))
-  qout ("  Switch setting should now be .T., is..............................", csetatmupa())
-  qout ("  Setting switch to .F. again, return value should still be .T., is ", csetatmupa (.F.))
-  qout ("End test of CSETATMUPA()")
-  qout ("")
-
-  ctexit()
-
-return
+   RETURN

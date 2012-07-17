@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 functions 
+ *   Test CT3 functions
  *     - TOKENINIT()
  *     - TOKENEXIT()
  *     - TOKENNEXT()
@@ -60,125 +60,122 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
-procedure main
+   LOCAL cStr1 := "A,BB,CCC,DDDD,EEEEE,FFFFFF"
 
-local cStr1 := "A,BB,CCC,DDDD,EEEEE,FFFFFF"
-//local cStr2 := "ZZZZZZ,YYYYY,XXXX,WWW,VV,U"
-local cStr3 := "0123456789ABCDEFGHIJKLM"
-local cStr4 := "08:09:10:11:12"
-local cStr5 := "05:00+20:00+35:00+50:00"
+   //local cStr2 := "ZZZZZZ,YYYYY,XXXX,WWW,VV,U"
+   LOCAL cStr3 := "0123456789ABCDEFGHIJKLM"
+   LOCAL cStr4 := "08:09:10:11:12"
+   LOCAL cStr5 := "05:00+20:00+35:00+50:00"
 
-local cTE1, cTE2
+   LOCAL cTE1, cTE2
 
- ctinit()
+   ctinit()
 
- qout ("Begin test of incremental tokenizer function family")
- qout ("")
+   QOut( "Begin test of incremental tokenizer function family" )
+   QOut( "" )
 
- // Some simple tests with global token environment
- qout ([  Incremental tokenizing the string "]+cStr1+["])
- qout ([    tokeninit (@cStr1, ",", 1) == .T. ? ----> ] + ltoc(tokeninit (@cStr1, ",", 1)))
- qout ([    tokennum () == 6 ? ---------------------> ] + str(tokennum ()))
- qout ([      tokenend() ? -------------------------> ] + ltoc (tokenend()))
- while (!tokenend())
-   qout ([      tokennext (@cStr1)  ------------------> "] + tokennext(@cStr1)+["])
-   qout ([      tokenend() ? -------------------------> ] + ltoc (tokenend()))
- enddo                                           
- qout ()
- qout ([    rewind with tokeninit () == .T. ? ------> ] + ltoc(tokeninit ()))
- qout ([      tokenend() ? -------------------------> ] + ltoc (tokenend()))
- while (!tokenend())
-   qout ([      tokennext (@cStr1)  ------------------> "] + tokennext(@cStr1)+["])
-   qout ([      tokenend() ? -------------------------> ] + ltoc (tokenend()))
- enddo                                           
- qout ()
- qout ([    access tokens directly with tokennext])
- qout ([      tokennext (@cStr1,2) == "BB" ? -------> "] + tokennext(@cStr1,2)+["])
- qout ([      tokennext (@cStr1,4) == "DDDD" ? -----> "] + tokennext(@cStr1,4)+["])
- qout ()
+   // Some simple tests with global token environment
+   QOut( [  Incremental tokenizing the string "] + cStr1 + ["] )
+   QOut( [    tokeninit(@cStr1, ",", 1) == .T. ? ----> ] + ltoc( tokeninit(@cStr1, ",", 1 ) ) )
+   QOut( [    tokennum() == 6 ? ---------------------> ] + Str( tokennum() ) )
+   QOut( [      tokenend() ? -------------------------> ] + ltoc( tokenend() ) )
+   WHILE( !tokenend() )
+      QOut( [      tokennext(@cStr1)  ------------------> "] + tokennext( @cStr1 ) + ["] )
+      QOut( [      tokenend() ? -------------------------> ] + ltoc( tokenend() ) )
+   ENDDO
+   QOut()
+   QOut( [    rewind with tokeninit() == .T. ? ------> ] + ltoc( tokeninit() ) )
+   QOut( [      tokenend() ? -------------------------> ] + ltoc( tokenend() ) )
+   WHILE( !tokenend() )
+      QOut( [      tokennext(@cStr1)  ------------------> "] + tokennext( @cStr1 ) + ["] )
+      QOut( [      tokenend() ? -------------------------> ] + ltoc( tokenend() ) )
+   ENDDO
+   QOut()
+   QOut( [    access tokens directly with tokennext] )
+   QOut( [      tokennext(@cStr1,2) == "BB" ? -------> "] + tokennext( @cStr1,2 ) + ["] )
+   QOut( [      tokennext(@cStr1,4) == "DDDD" ? -----> "] + tokennext( @cStr1,4 ) + ["] )
+   QOut()
 
- qout ("...Press any key...")
- qout ()
- inkey (0)
+   QOut( "...Press any key..." )
+   QOut()
+   Inkey( 0 )
 
- qout ([  Incremental tokenizing the string "]+cStr3+[" with the])
- qout ([  token environment of cStr1 !])
- qout ([    rewind with tokeninit () == .T. ? ------> ] + ltoc(tokeninit ()))
- qout ([      tokenend() ? -------------------------> ] + ltoc (tokenend()))
- while (!tokenend())
-   qout ([      tokennext (@cStr3)  ------------------> "] + tokennext(@cStr3)+["])
-   qout ([      tokenend() ? -------------------------> ] + ltoc (tokenend()))
- enddo                                           
- qout ()
- qout ([    rewind with tokeninit () == .T. ? ------> ] + ltoc(tokeninit ()))
- qout ([      tokenend() ? -------------------------> ] + ltoc (tokenend()))
- while (!tokenend())
-   qout ([      start & end with tokenat(.F./.T.)-----> ] + str(tokenat())+[ ]+str(tokenat(.T.)))
-   tokennext(@cStr1) 
-   qout ([      tokenend() ? -------------------------> ] + ltoc (tokenend()))
- enddo                                           
- qout ()
- qout ([    access tokens directly with tokenat])
- qout ([      tokenat (.F.,2) == 3 ? ---------------> ] + str(tokenat(.F.,2)))
- qout ([      tokenat (.T.,4) == 14 ? --------------> ] + str(tokenat(.T.,4)))
- qout()
+   QOut( [  Incremental tokenizing the string "] + cStr3 + [" with the] )
+   QOut( [  token environment of cStr1 !] )
+   QOut( [    rewind with tokeninit() == .T. ? ------> ] + ltoc( tokeninit() ) )
+   QOut( [      tokenend() ? -------------------------> ] + ltoc( tokenend() ) )
+   WHILE( !tokenend() )
+      QOut( [      tokennext(@cStr3)  ------------------> "] + tokennext( @cStr3 ) + ["] )
+      QOut( [      tokenend() ? -------------------------> ] + ltoc( tokenend() ) )
+   ENDDO
+   QOut()
+   QOut( [    rewind with tokeninit() == .T. ? ------> ] + ltoc( tokeninit() ) )
+   QOut( [      tokenend() ? -------------------------> ] + ltoc( tokenend() ) )
+   WHILE( !tokenend() )
+      QOut( [      start & end with tokenat(.F./.T.)-----> ] + Str( tokenat() ) + [ ] + Str( tokenat( .T. ) ) )
+      tokennext( @cStr1 )
+      QOut( [      tokenend() ? -------------------------> ] + ltoc( tokenend() ) )
+   ENDDO
+   QOut()
+   QOut( [    access tokens directly with tokenat] )
+   QOut( [      tokenat(.F.,2) == 3 ? ---------------> ] + Str( tokenat( .F. ,2 ) ) )
+   QOut( [      tokenat(.T.,4) == 14 ? --------------> ] + Str( tokenat( .T. ,4 ) ) )
+   QOut()
 
- qout ("...Press any key...")
- qout ()
- inkey (0)
+   QOut( "...Press any key..." )
+   QOut()
+   Inkey( 0 )
 
- qout ([  Save global token environment with savetoken])
- cTE1 := savetoken()
- qout ([    tokeninit a different string, cStr4 := "]+cStr4+[", with tokeninit()])
- qout ([    tokeninit (@cStr4, ":", 1) == .T. ? ----> ] + ltoc(tokeninit (@cStr4, ":", 1)))
- qout ([    tokennum () == 5 ? ---------------------> ] + str(tokennum ()))
- qout ([    tokennext() == "08" ? ------------------> "]+ tokennext (@cStr4)+["])
- qout ([    Now restore global token environment with resttoken and rewind it])
- resttoken (cTE1)
- tokeninit()
- qout ([    tokennum () == 6 ? ---------------------> ] + str(tokennum ()))
- qout ([      tokenend() ? -------------------------> ] + ltoc (tokenend()))
- while (!tokenend())
-   qout ([      tokennext (@cStr1)  ------------------> "] + tokennext(@cStr1)+["])
-   qout ([      tokenend() ? -------------------------> ] + ltoc (tokenend()))
- enddo                                           
- qout ([  Release global TE with tokenexit () ----> ] + ltoc(tokenexit()))
- qout ()
+   QOut( [  Save global token environment with savetoken] )
+   cTE1 := savetoken()
+   QOut( [    tokeninit a different string, cStr4 := "] + cStr4 + [", with tokeninit()] )
+   QOut( [    tokeninit(@cStr4, ":", 1) == .T. ? ----> ] + ltoc( tokeninit(@cStr4, ":", 1 ) ) )
+   QOut( [    tokennum() == 5 ? ---------------------> ] + Str( tokennum() ) )
+   QOut( [    tokennext() == "08" ? ------------------> "] + tokennext( @cStr4 ) + ["] )
+   QOut( [    Now restore global token environment with resttoken and rewind it] )
+   resttoken( cTE1 )
+   tokeninit()
+   QOut( [    tokennum() == 6 ? ---------------------> ] + Str( tokennum() ) )
+   QOut( [      tokenend() ? -------------------------> ] + ltoc( tokenend() ) )
+   WHILE( !tokenend() )
+      QOut( [      tokennext(@cStr1)  ------------------> "] + tokennext( @cStr1 ) + ["] )
+      QOut( [      tokenend() ? -------------------------> ] + ltoc( tokenend() ) )
+   ENDDO
+   QOut( [  Release global TE with tokenexit() ----> ] + ltoc( tokenexit() ) )
+   QOut()
 
- qout ("...Press any key...")
- qout ()
- inkey (0)
+   QOut( "...Press any key..." )
+   QOut()
+   Inkey( 0 )
 
- qout ([  Now tokenize cStr4 := "]+cStr4+[" and])
- qout ([  cStr5 := "]+cStr5+["])
- qout ([  and store the token environment locally to cTE1 and cTE2:])
- qout ([    tokeninit (@cStr4, ":", 1, @cTE1) == .T. ? -> ] + ltoc(tokeninit (@cStr4, ":", 1, @cTE1)))
- qout ([    tokeninit (@cStr5, "+", 1, @cTE2) == .T. ? -> ] + ltoc(tokeninit (@cStr5, "+", 1, @cTE2)))
- qout ([    tokennum (@cTE1) == 5 ? --------------------> ] + str(tokennum (@cTE1)))
- qout ([    tokennum (@cTE2) == 4 ? --------------------> ] + str(tokennum (@cTE2)))
- qout ([        tokenend (@cTE1) ? ---------------------> ] + ltoc (tokenend (@cTE1)))
- qout ([        tokenend (@cTE2) ? ---------------------> ] + ltoc (tokenend (@cTE2)))
- while (!tokenend (@cTE1) .AND. !tokenend (@cTE2))
-   qout ([      next train at ]+tokennext (cStr4,,@cTE1)+":"+tokennext (cStr5,,@cTE2))
-   qout ([          compiled with tokennext (cStr4,,@cTE1)+":"+tokennext (cStr5,,@cTE2)])
-   qout ([        tokenend (@cTE1) ? ---------------------> ] + ltoc (tokenend (@cTE1)))
-   qout ([        tokenend (@cTE2) ? ---------------------> ] + ltoc (tokenend (@cTE2)))
- enddo
+   QOut( [  Now tokenize cStr4 := "] + cStr4 + [" and] )
+   QOut( [  cStr5 := "] + cStr5 + ["] )
+   QOut( [  and store the token environment locally to cTE1 and cTE2:] )
+   QOut( [    tokeninit(@cStr4, ":", 1, @cTE1) == .T. ? -> ] + ltoc( tokeninit(@cStr4, ":", 1, @cTE1 ) ) )
+   QOut( [    tokeninit(@cStr5, "+", 1, @cTE2) == .T. ? -> ] + ltoc( tokeninit(@cStr5, "+", 1, @cTE2 ) ) )
+   QOut( [    tokennum(@cTE1) == 5 ? --------------------> ] + Str( tokennum(@cTE1 ) ) )
+   QOut( [    tokennum(@cTE2) == 4 ? --------------------> ] + Str( tokennum(@cTE2 ) ) )
+   QOut( [        tokenend(@cTE1) ? ---------------------> ] + ltoc( tokenend(@cTE1 ) ) )
+   QOut( [        tokenend(@cTE2) ? ---------------------> ] + ltoc( tokenend(@cTE2 ) ) )
+   WHILE( !tokenend( @cTE1 ) .AND. !tokenend( @cTE2 ) )
+      QOut( [      next train at ] + tokennext( cStr4,,@cTE1 ) + ":" + tokennext( cStr5,,@cTE2 ) )
+      QOut( [          compiled with tokennext(cStr4,,@cTE1)+":"+tokennext(cStr5,,@cTE2)] )
+      QOut( [        tokenend(@cTE1) ? ---------------------> ] + ltoc( tokenend(@cTE1 ) ) )
+      QOut( [        tokenend(@cTE2) ? ---------------------> ] + ltoc( tokenend(@cTE2 ) ) )
+   ENDDO
 
- qout ("")
- qout ("End test of incremental tokenizer function family")
- qout ()
+   QOut( "" )
+   QOut( "End test of incremental tokenizer function family" )
+   QOut()
 
- qout ("...Press any key...")
- qout ()
- inkey (0)
+   QOut( "...Press any key..." )
+   QOut()
+   Inkey( 0 )
 
- ctexit()
+   ctexit()
 
-return 
-
-
-
+   RETURN

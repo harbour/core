@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function SETATLIKE() 
+ *   Test CT3 function SETATLIKE()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,31 +52,29 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   LOCAL cWildcard := " "
 
-procedure main
+   ctinit()
 
-  local cWildcard := " "
+   QOut( "Begin test of SETATLIKE()" )
+   QOut( "  Default mode should be 0, is................................", setatlike() )
+   QOut( "  Setting mode to 1, return value should be 0, is.............", setatlike( 1 ) )
+   QOut( "  Mode setting should now be 1, is............................", setatlike() )
+   QOut( "  Setting mode to 0 again, return value should still be 1, is ", setatlike( 0 ) )
+   QOut( "" )
+   setatlike( , @cWildcard )
+   QOut( "  Default wildcard character should be '?', is................", cWildcard )
+   setatlike( , "#" )
+   setatlike( , @cWildcard )
+   QOut( "  Setting wildcard to '#' and calling SETATLIKE(,@cWildcard)" )
+   QOut( "    should yield '#' for cWildcard, does......................", cWildcard )
+   QOut( "End test of SETATLIKE()" )
+   QOut( "" )
 
-  ctinit()
+   ctexit()
 
-  qout ("Begin test of SETATLIKE()")
-  qout ("  Default mode should be 0, is................................", setatlike())
-  qout ("  Setting mode to 1, return value should be 0, is.............", setatlike (1))
-  qout ("  Mode setting should now be 1, is............................", setatlike())
-  qout ("  Setting mode to 0 again, return value should still be 1, is ", setatlike (0))
-  qout ("")
-  setatlike (, @cWildcard)
-  qout ("  Default wildcard character should be '?', is................", cWildcard)
-  setatlike (, "#")
-  setatlike (, @cWildcard)
-  qout ("  Setting wildcard to '#' and calling SETATLIKE (,@cWildcard)")
-  qout ("    should yield '#' for cWildcard, does......................", cWildcard)
-  qout ("End test of SETATLIKE()")
-  qout ("")
-
-  ctexit()
-
-return
+   RETURN

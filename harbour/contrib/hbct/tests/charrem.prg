@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARREM() 
+ *   Test CT3 function CHARREM()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,31 +52,24 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of CHARREM()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  charrem(" ", " 1  2  ") == "12"   ? ---> "] + charrem( " ", " 1  2  " ) + ["] )
+   QOut( [  charrem("3y", "xyz123") == "xz12" ? ---> "] + charrem( "3y", "xyz123" ) + ["] )
+   QOut( "" )
 
- qout ("Begin test of CHARREM()")
- qout ("")
+   QOut( "End test of CHARREM()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  charrem(" ", " 1  2  ") == "12"   ? ---> "] + charrem(" ", " 1  2  ")+ ["])
- qout ([  charrem("3y", "xyz123") == "xz12" ? ---> "] + charrem("3y", "xyz123")+ ["])
- qout ("")
+   ctexit()
 
- qout ("End test of CHARREM()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
-
+   RETURN

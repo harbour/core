@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function VALPOS() 
+ *   Test CT3 function VALPOS()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,30 +52,24 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of VALPOS()" )
+   QOut( "" )
 
- ctinit()
+   QOut( [  valpos("1234x56789") == 9    ? --> ] + Str( valpos("1234x56789" ) ) )
+   QOut( [  valpos("1234x56789",1) == 1  ? --> ] + Str( valpos("1234x56789",1 ) ) )
+   QOut( [  valpos("1234x56789",11) == 0 ? --> ] + Str( valpos("1234x56789",11 ) ) )
+   QOut( [  valpos("1234x56789",5) == 0  ? --> ] + Str( valpos("1234x56789",5 ) ) )
 
- qout ("Begin test of VALPOS()")
- qout ("")
+   QOut( "" )
+   QOut( "End test of VALPOS()" )
+   QOut( "" )
 
- qout ([  valpos ("1234x56789") == 9    ? --> ] + str (valpos ("1234x56789")))
- qout ([  valpos ("1234x56789",1) == 1  ? --> ] + str (valpos ("1234x56789",1))) 
- qout ([  valpos ("1234x56789",11) == 0 ? --> ] + str (valpos ("1234x56789",11)))
- qout ([  valpos ("1234x56789",5) == 0  ? --> ] + str (valpos ("1234x56789",5))) 
+   ctexit()
 
- qout ("")
- qout ("End test of VALPOS()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
+   RETURN

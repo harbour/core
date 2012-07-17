@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function RANGEREPL() 
+ *   Test CT3 function RANGEREPL()
  *
  * Copyright 2002 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,32 +52,26 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of RANGEREPL()" )
+   QOut( "" )
 
- ctinit()
+   QOut( [  rangerepl("0","9","year2002.dbf","?") == "year????.dbf" ? --> "] + ;
+      rangerepl( "0", "9", "year2002.dbf", "?" ) + ["] )
+   QOut( [  rangerepl("9","0","year2002.dbf","?") == "????2??2????" ? --> "] + ;
+      rangerepl( "9", "0", "year2002.dbf", "?" ) + ["] )
+   QOut( [  rangerepl("0","9","yearcurr.dbf","?") == "yearcurr.dbf" ? --> "] + ;
+      rangerepl( "0", "9", "yearcurr.dbf", "?" ) + ["] )
 
- qout ("Begin test of RANGEREPL()")
- qout ("")
+   QOut( "" )
+   QOut( "End test of RANGEREPL()" )
+   QOut( "" )
 
- qout ([  rangerepl ("0","9","year2002.dbf","?") == "year????.dbf" ? --> "] + ;
-          rangerepl ("0","9","year2002.dbf","?") + ["])
- qout ([  rangerepl ("9","0","year2002.dbf","?") == "????2??2????" ? --> "] + ;
-          rangerepl ("9","0","year2002.dbf","?") + ["])
- qout ([  rangerepl ("0","9","yearcurr.dbf","?") == "yearcurr.dbf" ? --> "] + ;
-          rangerepl ("0","9","yearcurr.dbf","?") + ["])
+   ctexit()
 
- qout ("")
- qout ("End test of RANGEREPL()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
+   RETURN

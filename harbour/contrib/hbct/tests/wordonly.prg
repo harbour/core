@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function WORDONLY() 
+ *   Test CT3 function WORDONLY()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,31 +52,24 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of WORDONLY()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  wordonly("AABBCCDD", "XXAAYYBBZZ") == "AABB" ? --> "] + wordonly( "AABBCCDD", "XXAAYYBBZZ" ) + ["] )
+   QOut( [  wordonly("AABBCCDD", "XAAYYYBBZZ") == "BB" ? ----> "] + wordonly( "AABBCCDD", "XAAYYYBBZZ" ) + ["] )
+   QOut( "" )
 
- qout ("Begin test of WORDONLY()")
- qout ("")
+   QOut( "End test of WORDONLY()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  wordonly("AABBCCDD", "XXAAYYBBZZ") == "AABB" ? --> "] + wordonly("AABBCCDD", "XXAAYYBBZZ")+ ["])
- qout ([  wordonly("AABBCCDD", "XAAYYYBBZZ") == "BB" ? ----> "] + wordonly("AABBCCDD", "XAAYYYBBZZ")+ ["])
- qout ("")
+   ctexit()
 
- qout ("End test of WORDONLY()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
-
+   RETURN

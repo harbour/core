@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARONLY() 
+ *   Test CT3 function CHARONLY()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,31 +52,24 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of CHARONLY()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  charonly("0123456789", "0211 - 38 99 77") == "0211389977" ? --> "] + charonly( "0123456789", "0211 - 38 99 77" ) + ["] )
+   QOut( [  charonly("0123456789", "0211/ 389 977")   == "0211389977" ? --> "] + charonly( "0123456789", "0211/ 389 977" )  + ["] )
+   QOut( "" )
 
- qout ("Begin test of CHARONLY()")
- qout ("")
+   QOut( "End test of CHARONLY()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  charonly("0123456789", "0211 - 38 99 77") == "0211389977" ? --> "] + charonly("0123456789", "0211 - 38 99 77")+ ["])
- qout ([  charonly("0123456789", "0211/ 389 977")   == "0211389977" ? --> "] + charonly("0123456789", "0211/ 389 977")  + ["])
- qout ("")
+   ctexit()
 
- qout ("End test of CHARONLY()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
-
+   RETURN

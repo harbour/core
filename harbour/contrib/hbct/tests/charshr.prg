@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARSHR() 
+ *   Test CT3 function CHARSHR()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,45 +52,36 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   LOCAL ni, cStr
 
-procedure main
+   ctinit()
 
-local ni, cStr
+   QOut( "Begin test of CHARSHR()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  charshr(chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+] )
+   QOut( [           chr(64)+chr(128), 3) == ] )
+   QOut( [  chr(0)+chr(0)+chr(0)+chr(1)+chr(2)+chr(4)+chr(8)+chr(16) ? -->] )
 
- qout ("Begin test of CHARSHR()")
- qout ("")
+   QOut( [  ] )
+   cStr :=  charshr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
+   for ni := 1 TO Len( cStr )
+      QQOut( "chr(" + AllTrim( Str(Asc(SubStr(cStr, ni, 1 ) ) ) ) + ")" )
+      IF ni < Len( cStr )
+         QQOut( "+" )
+      ENDIF
+   next ni
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  charshr (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+])
- qout ([           chr(64)+chr(128), 3) == ])
- qout ([  chr(0)+chr(0)+chr(0)+chr(1)+chr(2)+chr(4)+chr(8)+chr(16) ? -->])
+   QOut( "End test of CHARSHR()" )
+   QOut( "" )
 
- qout ([  ])
- cStr :=  charshr (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+chr(64)+chr(128), 3)
- for ni := 1 to len (cStr)
-   qqout ("chr("+alltrim(str(asc(substr(cStr, ni, 1))))+")")
-   if ni < len(cStr)
-     qqout ("+")
-   endif
- next ni
- qout ("")
+   ctexit()
 
- qout ("End test of CHARSHR()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
-   
-
-
+   RETURN

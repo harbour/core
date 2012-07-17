@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function TOKENSEP() 
+ *   Test CT3 function TOKENSEP()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,45 +52,40 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   LOCAL cStr := ".,.This.,.is.,.a.,.test!"
+   LOCAL ni
 
-procedure main
+   ctinit()
 
-local cStr := ".,.This.,.is.,.a.,.test!"
-local ni
+   QOut( "Begin test of TOKENSEP()" )
+   QOut( "" )
 
- ctinit()
+   // Some simple tests
+   QOut( [  Tokenizing the string "] + cStr + ["] )
+   QOut( [    with skip width == 1 and ".,!" as tokenizer list:] )
+   QOut( "" )
+   for ni := 1 TO numtoken( cStr, ".,!", 1 )
+      QOut( [    Token #] + AllTrim( Str(ni ) ) + [("] + token( cStr, ".,!", ni, 1 ) + ;
+         [") is tokenized by "] + tokensep( .F. ) + [" and "] + tokensep( .T. ) + ["] )
+   next ni
 
- qout ("Begin test of TOKENSEP()")
- qout ("")
+   QOut( "" )
+   QOut( [  Tokenizing the string "] + cStr + ["] )
+   QOut( [    with skip width == 3 and ".,!" as tokenizer list:] )
+   QOut( "" )
+   for ni := 1 TO numtoken( cStr, ".,!", 3 )
+      QOut( [    Token #] + AllTrim( Str(ni ) ) + [("] + token( cStr, ".,!", ni, 3 ) + ;
+         [") is tokenized by "] + tokensep( .F. ) + [" and "] + tokensep( .T. ) + ["] )
+   next ni
 
- // Some simple tests
- qout ([  Tokenizing the string "]+cStr+["])
- qout ([    with skip width == 1 and ".,!" as tokenizer list:])
- qout ("")
- for ni := 1 to numtoken (cStr, ".,!", 1)
-   qout ([    Token #]+alltrim(str(ni))+[ ("]+token(cStr, ".,!", ni, 1)+;
-         [") is tokenized by "]+tokensep(.F.)+[" and "]+tokensep(.T.)+["])
- next ni
+   QOut( "" )
+   QOut( "End test of TOKENSEP()" )
+   QOut()
 
- qout ("")
- qout ([  Tokenizing the string "]+cStr+["])
- qout ([    with skip width == 3 and ".,!" as tokenizer list:])
- qout ("")
- for ni := 1 to numtoken (cStr, ".,!", 3)
-   qout ([    Token #]+alltrim(str(ni))+[ ("]+token(cStr, ".,!", ni, 3)+;
-         [") is tokenized by "]+tokensep(.F.)+[" and "]+tokensep(.T.)+["])
- next ni
+   ctexit()
 
- qout ("")
- qout ("End test of TOKENSEP()")
- qout ()
-
- ctexit()
-
-return 
-
-
-
+   RETURN

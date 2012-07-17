@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function TOKENUPPER() 
+ *   Test CT3 function TOKENUPPER()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,45 +52,40 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   LOCAL cStr := ".,.This.,.is.,.a.,.test!"
 
-procedure main
+   ctinit()
 
-local cStr := ".,.This.,.is.,.a.,.test!"
+   QOut( "Begin test of TOKENUPPER()" )
+   QOut( "" )
 
- ctinit()
+   // Some simple tests
+   QOut( "  Simple tests:" )
+   QOut( [   tokenupper("Hello, world, here I am!")       == "Hello, World, Here I Am!" ?] )
+   QOut( [                                                -> "] + tokenupper( "Hello, world, here I am!" ) + ["] )
+   QOut( [   tokenupper("Hello, world, here I am!",,3)    == "Hello, World, Here I am!" ?] )
+   QOut( [                                                -> "] + tokenupper( "Hello, world, here I am!",,3 ) + ["] )
+   QOut( [   tokenupper("Hello, world, here I am!",",",3) == "Hello, world, here I am!" ?] )
+   QOut( [                                                -> "] + tokenupper( "Hello, world, here I am!",",",3 ) + ["] )
+   QOut( [   tokenupper("Hello, world, here I am!"," w")  == "Hello, wOrld, Here I Am!" ?] )
+   QOut( [                                                -> "] + tokenupper( "Hello, world, here I am!"," w" ) + ["] )
+   QOut( "" )
 
- qout ("Begin test of TOKENUPPER()")
- qout ("")
+   QOut( [  Uppercase the tokens in the string "] + cStr + ["] )
+   QOut( [            with csetref(.T.) and "@"] )
+   csetref( .T. )
+   QOut( "" )
+   QOut( [    --> return value of tokenupper(@cStr): ], tokenupper( @cStr ) )
+   QOut( [    --> cStr is now: "] + cStr + ["] )
 
- // Some simple tests
- qout ("  Simple tests:")
- qout ([   tokenupper("Hello, world, here I am!")       == "Hello, World, Here I Am!" ?])
- qout ([                                                -> "] + tokenupper ("Hello, world, here I am!") + ["])
- qout ([   tokenupper("Hello, world, here I am!",,3)    == "Hello, World, Here I am!" ?])                                                    
- qout ([                                                -> "] + tokenupper ("Hello, world, here I am!",,3) + ["])
- qout ([   tokenupper("Hello, world, here I am!",",",3) == "Hello, world, here I am!" ?])                                                    
- qout ([                                                -> "] + tokenupper ("Hello, world, here I am!",",",3) + ["])
- qout ([   tokenupper("Hello, world, here I am!"," w")  == "Hello, wOrld, Here I Am!" ?])                                                    
- qout ([                                                -> "] + tokenupper ("Hello, world, here I am!"," w") + ["])
- qout ("")
+   QOut( "" )
+   QOut( "End test of TOKENUPPER()" )
+   QOut()
 
- qout ([  Uppercase the tokens in the string "]+cStr+["])
- qout ([            with csetref (.T.) and "@"])
- csetref (.T.)
- qout ("")
- qout ([    --> return value of tokenupper (@cStr): ],tokenupper(@cStr))
- qout ([    --> cStr is now: "]+cStr+["])
+   ctexit()
 
- qout ("")
- qout ("End test of TOKENUPPER()")
- qout ()
-
- ctexit()
-
-return 
-
-
-
+   RETURN

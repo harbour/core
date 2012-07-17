@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARSWAP() 
+ *   Test CT3 function CHARSWAP()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,31 +52,24 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of CHARSWAP()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  charswap("0123456789")  == "1032547698"  ? --> "] + charswap( "0123456789" ) + ["] )
+   QOut( [  charswap("ABCDEFGHIJK") == "BADCFEHGJIK" ? --> "] + charswap( "ABCDEFGHIJK" ) + ["] )
+   QOut( "" )
 
- qout ("Begin test of CHARSWAP()")
- qout ("")
+   QOut( "End test of CHARSWAP()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  charswap("0123456789")  == "1032547698"  ? --> "] + charswap("0123456789") + ["])
- qout ([  charswap("ABCDEFGHIJK") == "BADCFEHGJIK" ? --> "] + charswap("ABCDEFGHIJK")+ ["])
- qout ("")
+   ctexit()
 
- qout ("End test of CHARSWAP()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
-
+   RETURN

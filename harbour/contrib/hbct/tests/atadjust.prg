@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function ATADJUST() 
+ *   Test CT3 function ATADJUST()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,58 +52,52 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   LOCAL aStr := { "Introduction: 1", ;
+      "Theory: 5", ;
+      "Material and Methods: 13", ;
+      "Results: 19", ;
+      "Discussion: 21" }
+   LOCAL ni
 
-procedure main
+   ctinit()
 
-local aStr := {"Introduction: 1",;
-               "Theory: 5",;
-               "Material and Methods: 13",;
-               "Results: 19",;
-               "Discussion: 21"}
-local ni
+   // Some simple tests
+   QOut( "Begin test of ATADJUST()" )
+   QOut( "" )
 
- ctinit()
+   QOut( "  Original strings:" )
+   for ni := 1 TO Len( aStr )
+      QOut( Space( 4 ) + aStr[ni] )
+   next
+   QOut( "" )
 
- // Some simple tests
- qout ("Begin test of ATADJUST()")
- qout ("")
+   QOut( '  ATADJUST(":", aStr[ni], 21,,, ".") yields' )
+   for ni := 1 TO Len( aStr )
+      QOut( Space( 4 ) + atadjust( ":", aStr[ni], 21, 1,,"." ) )
+   next
+   QOut( "" )
 
- qout ("  Original strings:")
- for ni := 1 to len (aStr)
-   qout (space(4)+aStr[ni])
- next ni
- qout ("")
+   QOut( '  ATADJUST(":", aStr[ni], 10, 1,, ".") yields' )
+   for ni := 1 TO Len( aStr )
+      QOut( Space( 4 ) + atadjust( ":", aStr[ni], 10, 1,,"." ) )
+   next
+   QOut( "" )
 
- qout ('  ATADJUST (":", aStr[ni], 21,,, ".") yields')
- for ni := 1 to len (aStr)
-   qout (space(4)+atadjust (":", aStr[ni], 21, 1,,"."))
- next ni
- qout ("")
+   QOut( '  SETATLIKE(CT_SETATLIKE_WILDCARD, ":")' )
+   QOut( '  ATADJUST(":", aStr[ni], 10, 1,, ".") yields now' )
+   setatlike( CT_SETATLIKE_WILDCARD, ":" )
+   for ni := 1 TO Len( aStr )
+      QOut( Space( 4 ) + atadjust( ":", aStr[ni], 10, 1,,"." ) )
+   next
+   QOut( "" )
 
- qout ('  ATADJUST (":", aStr[ni], 10, 1,, ".") yields')
- for ni := 1 to len (aStr)
-   qout (space(4)+atadjust (":", aStr[ni], 10, 1,,"."))
- next ni
- qout ("")
+   QOut( "End test of ATADJUST()" )
+   QOut( "" )
 
- qout ('  SETATLIKE (CT_SETATLIKE_WILDCARD, ":")')
- qout ('  ATADJUST (":", aStr[ni], 10, 1,, ".") yields now')
- setatlike (CT_SETATLIKE_WILDCARD, ":")
- for ni := 1 to len (aStr)
-   qout (space(4)+atadjust (":", aStr[ni], 10, 1,,"."))
- next ni
- qout ("")
+   ctexit()
 
- qout ("End test of ATADJUST()")
- qout ("")
-
- ctexit()
-
-return 
-
-
-
-
+   RETURN

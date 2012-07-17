@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHAREVEN() 
+ *   Test CT3 function CHAREVEN()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,30 +52,24 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of CHAREVEN()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  chareven(" 1 2 3 4 5") == "12345" ? --> "] + chareven( " 1 2 3 4 5" ) + ["] )
+   QOut( [  chareven(" 1 2 3 4 ")  == "1234"  ? --> "] + chareven( " 1 2 3 4 " )  + ["] )
+   QOut( [  chareven(" ")          == ""      ? --> "] + chareven( " " )          + ["] )
 
- qout ("Begin test of CHAREVEN()")
- qout ("")
+   QOut( "End test of CHAREVEN()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  chareven (" 1 2 3 4 5") == "12345" ? --> "] + chareven (" 1 2 3 4 5") + ["])
- qout ([  chareven (" 1 2 3 4 ")  == "1234"  ? --> "] + chareven (" 1 2 3 4 ")  + ["])
- qout ([  chareven (" ")          == ""      ? --> "] + chareven (" ")          + ["])
+   ctexit()
 
- qout ("End test of CHAREVEN()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
+   RETURN

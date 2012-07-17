@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARMIX() 
+ *   Test CT3 function CHARMIX()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,33 +52,27 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of CHARMIX()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  charmix("ABC", "123")  == "A1B2C3"     ? --> "] + charmix( "ABC", "123" )  + ["] )
+   QOut( [  charmix("ABCDE", "12") == "A1B2C1D2E1" ? --> "] + charmix( "ABCDE", "12" ) + ["] )
+   QOut( [  charmix("AB", "12345") == "A1B2"       ? --> "] + charmix( "AB", "12345" ) + ["] )
+   QOut( [  charmix("HELLO", " ")  == "H E L L O " ? --> "] + charmix( "HELLO", " " )  + ["] )
+   QOut( [  charmix("HELLO", "")   == "HELLO"      ? --> "] + charmix( "HELLO", "" )   + ["] )
+   QOut( "" )
 
- qout ("Begin test of CHARMIX()")
- qout ("")
+   QOut( "End test of CHARMIX()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  charmix("ABC", "123")  == "A1B2C3"     ? --> "] + charmix("ABC", "123")  + ["])
- qout ([  charmix("ABCDE", "12") == "A1B2C1D2E1" ? --> "] + charmix("ABCDE", "12") + ["])
- qout ([  charmix("AB", "12345") == "A1B2"       ? --> "] + charmix("AB", "12345") + ["])
- qout ([  charmix("HELLO", " ")  == "H E L L O " ? --> "] + charmix("HELLO", " ")  + ["])
- qout ([  charmix("HELLO", "")   == "HELLO"      ? --> "] + charmix("HELLO", "")   + ["])
- qout ("")
+   ctexit()
 
- qout ("End test of CHARMIX()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
+   RETURN

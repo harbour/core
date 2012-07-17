@@ -1,8 +1,9 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 #include "set.ch"
+
 #xtranslate Default( <Var>, <xVal> ) => IIF( <Var> == NIL, <xVal>, <Var> )
 
 //
@@ -26,43 +27,44 @@
  * Placed in the public domain
  */
 
-function Main( cFrom, cTo )
+FUNCTION Main( cFrom, cTo )
 
-   local oFrom
-   local oTo
-   local cOut
+   LOCAL oFrom
+   LOCAL oTo
+   LOCAL cOut
 
-   set( _SET_EXACT, .T.)
+   SET( _SET_EXACT, .T. )
    cFrom := Default( cFrom, "strip.prg" )
    cTo   := Default( cTo,   "strip.out" )
 
    oFrom := TTextFile()
-//   Debug( __objGetMethodList( oFrom ) )
+   //   Debug( __objGetMethodList( oFrom ) )
    oFrom:New( cFrom, "R" )
    oTo   := TTextFile()
-//   Debug( __objGetMethodList( oTo ) )
+   //   Debug( __objGetMethodList( oTo ) )
    oTo:New( cTo  , "W" )
 
-   do while !oFrom:EoF()
+   DO WHILE !oFrom:EOF()
       cOut := oFrom:Run()
-      if alltrim(cOut) != ""
+      IF AllTrim( cOut ) != ""
          oTo:Run( cOut )
-      endif
-   enddo
+      ENDIF
+   ENDDO
    QOut( "Number of lines", oTo:nLine )
    oFrom:Dispose()
    oTo:Dispose()
-return nil
 
+   RETURN nil
 
-//
-// Generic DOS file handler
-//
-function TTextFile()                            // Parameter = dirty
+   //
+   // Generic DOS file handler
+   //
 
-   static oFile := NIL
+FUNCTION TTextFile()                            // Parameter = dirty
 
-   if oFile == NIL
+   STATIC oFile := NIL
+
+   IF oFile == NIL
       oFile := HBClass():New( "TTEXTFILE" )      // Create a new class def
 
       oFile:AddData( "cFileName"  )             // Filename spec. by user
@@ -73,7 +75,7 @@ function TTextFile()                            // Parameter = dirty
       oFile:AddData( "cBlock"     )             // Storage block
       oFile:AddData( "nBlockSize" )             // Size of read-ahead buffer
       oFile:AddData( "cMode"      )             // Mode of file use
-                                                // R = read, W = write
+      // R = read, W = write
 
       oFile:AddMethod( "New"    , @New()     )  // Constructor
       oFile:AddMethod( "Dispose", @Dispose() )  // Clean up code
@@ -82,26 +84,27 @@ function TTextFile()                            // Parameter = dirty
       oFile:AddMethod( "Goto"   , @Goto()    )  // Go to line
 
       oFile:AddInline( "Run"    , ;             // Get/set data
-      {|self,xTxt,lCRLF|iif( ::cMode == "R",::Read(),::WriteLn(xTxt, lCRLF)) } )
-      oFile:AddInline( "Write"  , {|self, xTxt|::WriteLn( xTxt, .F. ) } )
-                                                // Write without CR
-      oFile:AddInline( "EoF"    , {|self|::lEoF} )
-                                                // End of file as function
+         { |self, xTxt, lCRLF|iif( ::cMode == "R", ::Read(), ::WriteLn( xTxt, lCRLF ) ) } )
+      oFile:AddInline( "Write"  , { |self, xTxt|::WriteLn( xTxt, .F. ) } )
+      // Write without CR
+      oFile:AddInline( "EoF"    , { |self|::lEoF } )
+      // End of file as function
       oFile:Create()
-   endif
-return  oFile:Instance()
+   ENDIF
 
+   RETURN  oFile:Instance()
 
-//
-// Method TextFile:New -> Create a new text file
-//
-// <cFile>      file name. No wild characters
-// <cMode>      mode for opening. Default "R"
-// <nBlockSize> Optional maximum blocksize
-//
-function New( cFileName, cMode, nBlock )
+   //
+   // Method TextFile:New -> Create a new text file
+   //
+   // <cFile>      file name. No wild characters
+   // <cMode>      mode for opening. Default "R"
+   // <nBlockSize> Optional maximum blocksize
+   //
 
-   local self := QSelf()                        // Get self
+FUNCTION New( cFileName, cMode, nBlock )
+
+   LOCAL self := QSelf()                        // Get self
 
    ::nLine     := 0
    ::lEoF      := .F.
@@ -110,183 +113,186 @@ function New( cFileName, cMode, nBlock )
    ::cMode     := Default( cMode, "R" )
 
    if ::cMode == "R"
-      ::hFile := fOpen( cFileName )
+      ::hFile := FOpen( cFileName )
    elseif ::cMode == "W"
-      ::hFile := fCreate( cFileName )
-   else
+      ::hFile := FCreate( cFileName )
+   ELSE
       QOut( "DosFile Init: Unknown file mode:", ::cMode )
-   endif
+   ENDIF
 
-   ::nError := fError()
+   ::nError := FError()
    if ::nError != 0
       ::lEoF := .T.
-      QOut( "Error ", ::nError)
-   endif
+      QOut( "Error ", ::nError )
+   ENDIF
    ::nBlockSize := Default( nBlock, 4096 )
 
-return self
+   RETURN self
 
+   //
+   // Dispose -> Close the file handle
+   //
 
-//
-// Dispose -> Close the file handle
-//
-function Dispose()
+FUNCTION Dispose()
 
-   local self := QSelf()
+   LOCAL self := QSelf()
 
    ::cBlock := NIL
-   if ::hFile != -1
-      if ::cMode == "W" .and. ::nError != 0
-         ::Write( Chr(26) )                     // Do not forget EOF marker
-      endif
-      if !fClose(::hFile)
-         ::nError := fError()
-         QOut( "Dos Error closing ", ::cFileName, " Code ", ::nError)
-      endif
-   endif
-return self
+   if ::hFile != - 1
+      if ::cMode == "W" .AND. ::nError != 0
+         ::Write( Chr( 26 ) )                     // Do not forget EOF marker
+      ENDIF
+      IF !FClose( ::hFile )
+         ::nError := FError()
+         QOut( "Dos Error closing ", ::cFileName, " Code ", ::nError )
+      ENDIF
+   ENDIF
 
+   RETURN self
 
-//
-// Read a single line
-//
-function Read()
+   //
+   // Read a single line
+   //
 
-   local self := QSelf()
-   local cRet  := ""
-   local cBlock
-   local nCrPos
-   local nEoFPos
-   local nRead
+FUNCTION READ()
 
-   if ::hFile == -1
+   LOCAL self := QSelf()
+   LOCAL cRet  := ""
+   LOCAL cBlock
+   LOCAL nCrPos
+   LOCAL nEoFPos
+   LOCAL nRead
+
+   if ::hFile == - 1
       QOut( "DosFile:Read : No file open" )
    elseif ::cMode != "R"
       QOut( "File ", ::cFileName, " not open for reading" )
-   elseif !::lEoF
+   ELSEIF !::lEoF
 
-      if Len(::cBlock) == 0                     // Read new block
-         cBlock := fReadStr( ::hFile, ::nBlockSize )
-         if len(cBlock) == 0
-            ::nError := fError()                // Error or EOF
+      IF Len( ::cBlock ) == 0                     // Read new block
+         cBlock := FReadStr( ::hFile, ::nBlockSize )
+         IF Len( cBlock ) == 0
+            ::nError := FError()                // Error or EOF
             ::lEoF   := .T.
-         else
+         ELSE
             ::cBlock := cBlock
-         endif
-      endif
+         ENDIF
+      ENDIF
 
-      if !::lEoF
+      IF !::lEoF
          ::nLine := ::nLine + 1                 // ++ not available
-         nCRPos := At(Chr(10), ::cBlock)
-         if nCRPos != 0                         // More than one line read
-            cRet     := Substr( ::cBlock, 1, nCRPos - 1)
-            ::cBlock := Substr( ::cBlock, nCRPos + 1)
-         else                                   // No complete line
+         nCRPos := At( Chr( 10 ), ::cBlock )
+         IF nCRPos != 0                         // More than one line read
+            cRet     := SubStr( ::cBlock, 1, nCRPos - 1 )
+            ::cBlock := SubStr( ::cBlock, nCRPos + 1 )
+         ELSE                                   // No complete line
             cRet     := ::cBlock
             ::cBlock := ""
             cRet     += ::Read()                // Read the rest
-            if !::lEoF
+            IF !::lEoF
                ::nLine := ::nLine - 1           // Adjust erroneous line count
-            endif
-         endif
-         nEoFPos := At( Chr(26), cRet )
-         if nEoFPos != 0                        // End of file read
-            cRet   := Substr( cRet, 1, nEoFPos-1 )
+            ENDIF
+         ENDIF
+         nEoFPos := At( Chr( 26 ), cRet )
+         IF nEoFPos != 0                        // End of file read
+            cRet   := SubStr( cRet, 1, nEoFPos - 1 )
             ::lEoF := .T.
-         endif
-         cRet := Strtran( cRet, Chr(13), "" )   // Remove CR
-      endif
-   endif
-return cRet
+         ENDIF
+         cRet := StrTran( cRet, Chr( 13 ), "" )   // Remove CR
+      ENDIF
+   ENDIF
 
+   RETURN cRet
 
-//
-// WriteLn -> Write a line to a file
-//
-// <xTxt>  Text to write. May be any type. May also be an array containing
-//         one or more strings
-// <lCRLF> End with Carriage Return/Line Feed (Default == TRUE)
-//
-function WriteLn( xTxt, lCRLF )
+   //
+   // WriteLn -> Write a line to a file
+   //
+   // <xTxt>  Text to write. May be any type. May also be an array containing
+   //         one or more strings
+   // <lCRLF> End with Carriage Return/Line Feed (Default == TRUE)
+   //
 
-   local self := QSelf()
-   local cBlock
+FUNCTION WriteLn( xTxt, lCRLF )
 
-   if ::hFile == -1
+   LOCAL self := QSelf()
+   LOCAL cBlock
+
+   if ::hFile == - 1
       QOut( "DosFile:Write : No file open" )
    elseif ::cMode != 'W'
-      QOut( "File ", ::cFileName," not opened for writing" )
-   else
+      QOut( "File ", ::cFileName, " not opened for writing" )
+   ELSE
       cBlock := ToChar( xTxt )                  // Convert to string
-      if Default( lCRLF, .T. )
-         cBlock += Chr(10)                      // +chr(13) ??
-      endif
-      fWrite( ::hFile, cBlock, len(cBlock) )
-      if fError() != 0
-         ::nError := fError()                   // Not completely written !
-      endif
+      IF DEFAULT( lCRLF, .T. )
+         cBlock += Chr( 10 )                      // +chr(13) ??
+      ENDIF
+      FWrite( ::hFile, cBlock, Len( cBlock ) )
+      IF FError() != 0
+         ::nError := FError()                   // Not completely written !
+      ENDIF
       ::nLine := ::nLine + 1
-   endif
-return self
+   ENDIF
 
+   RETURN self
 
-//
-// Go to a specified line number
-//
-function Goto( nLine )
+   //
+   // Go to a specified line number
+   //
 
-   local self   := QSelf()
-   local nWhere := 1
+FUNCTION GOTO( nLine )
 
-   if Empty(::hFile)
+   LOCAL self   := QSelf()
+   LOCAL nWhere := 1
+
+   IF Empty( ::hFile )
       QOut( "DosFile:Goto : No file open" )
    elseif  ::cMode != "R"
       QOut( "File ", ::cFileName, " not open for reading" )
-   else
+   ELSE
       ::lEoF   := .F.                           // Clear (old) End of file
       ::nLine  := 0                             // Start at beginning
       ::cBlock := ""
-      fSeek(::hFile, 0)                         // Go top
-      do while !::lEoF .and. nWhere < nLine
-         nWhere++
+      FSeek( ::hFile, 0 )                         // Go top
+      DO WHILE !::lEoF .AND. nWhere < nLine
+         nWhere ++
          ::Run()
-      enddo
-   endif
-return !::lEoF
+      ENDDO
+   ENDIF
 
-function ToChar( xVal )
+   RETURN !::lEoF
 
-  local cType := ValType( xVal )
+FUNCTION ToChar( xVal )
 
-  do case
-     case cType == 'U'
-        return "NIL"
+   LOCAL cType := ValType( xVal )
 
-     case cType == 'A'
-        return "{}"
+   DO CASE
+   CASE cType == 'U'
+      RETURN "NIL"
 
-     case cType == 'B'
-        return "{|| }"
+   CASE cType == 'A'
+      RETURN "{}"
 
-     case cType == 'C'
-        return xVal
+   CASE cType == 'B'
+      RETURN "{|| }"
 
-     case cType == 'D'
-        return dtoc( xVal )
+   CASE cType == 'C'
+      RETURN xVal
 
-     case cType == 'L'
-        return IIF( xVal, ".T.", ".F." )
+   CASE cType == 'D'
+      RETURN DToC( xVal )
 
-     case cType == 'M'
-        return xVal
+   CASE cType == 'L'
+      RETURN IIF( xVal, ".T.", ".F." )
 
-     case cType == 'N'
-        return Str( xVal )
+   CASE cType == 'M'
+      RETURN xVal
 
-     case cType == 'O'
-        return "{::}"
+   CASE cType == 'N'
+      RETURN Str( xVal )
 
-  endcase
+   CASE cType == 'O'
+      RETURN "{::}"
 
-return "?"
+   ENDCASE
 
+   RETURN "?"

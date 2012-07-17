@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHAROR() 
+ *   Test CT3 function CHAROR()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,28 +52,24 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of CHAROR()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
 
- qout ("Begin test of CHAROR()")
- qout ("")
+   QOut( [  charor("012345678", chr(1)) == "113355779" ? --> "] + charor( "012345678", Chr(1 ) ) + ["] )
+   QOut( [  charor("012345678", chr(1)+chr(3)) == "133357779" ? --> "] + charor( "012345678", Chr(1 ) + Chr(3 ) ) + ["] )
 
- // simple tests
- qout ("Simple tests:")   
+   QOut( "End test of CHAROR()" )
+   QOut( "" )
 
- qout ([  charor ("012345678", chr(1)) == "113355779" ? --> "] + charor ("012345678", chr(1)) + ["])
- qout ([  charor ("012345678", chr(1)+chr(3)) == "133357779" ? --> "] + charor ("012345678", chr(1)+chr(3)) + ["])
+   ctexit()
 
- qout ("End test of CHAROR()")
- qout ("")
-
- ctexit()
-
-return
-
-
+   RETURN

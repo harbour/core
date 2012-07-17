@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARSORT() 
+ *   Test CT3 function CHARSORT()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -52,38 +52,31 @@
  *
  */
 
+#include "ct.ch"
 
-#include "../ct.ch"
+PROCEDURE Main()
 
+   ctinit()
 
-procedure main
+   QOut( "Begin test of CHARSORT()" )
+   QOut( "" )
 
- ctinit()
+   // simple tests
+   QOut( "Simple tests:" )
+   QOut( [  charsort("qwert")                     == "eqrtw"      ? --> "] + charsort( "qwert" )                   + ["] )
+   QOut( [  charsort("qwert", 2)                  == "erqwt"      ? --> "] + charsort( "qwert", 2 )                + ["] )
+   QOut( [  charsort("b1a4a3a2a1", 2, 1)          == "a2a1a3a4b1" ? --> "] + charsort( "b1a4a3a2a1", 2, 1 )        + ["] )
+   QOut( [  NOTE : The order of equal elements(here the one beginning with the same char) is NOT determined !] )
+   QOut( [  charsort("XXXqwert", 1, 1, 3)         == "XXXeqrtw"   ? --> "] + charsort( "XXXqwert", 1, 1, 3 )       + ["] )
+   QOut( [  charsort("b1a4a3a2a1", 2, 1, 0, 1)    == "a1b1a2a3a4" ? --> "] + charsort( "b1a4a3a2a1", 2, 1, 0, 1 )  + ["] )
+   QOut( [  NOTE : The order of equal elements(here the one ending with the same number) is NOT determined !] )
+   QOut( [  charsort("384172852", 1, 1, 0, 0, 4)  == "134872852"  ? --> "] + charsort( "384172852", 1, 1, 0, 0, 4 ) + ["] )
+   QOut( [  charsort("qwert",,,,,,.T.)            == "wtrqe"      ? --> "] + charsort( "qwert",,,,,, .T. )          + ["] )
+   QOut( "" )
 
- qout ("Begin test of CHARSORT()")
- qout ("")
+   QOut( "End test of CHARSORT()" )
+   QOut( "" )
 
- // simple tests
- qout ("Simple tests:")
- qout ([  charsort("qwert")                     == "eqrtw"      ? --> "] + charsort("qwert")                   + ["])
- qout ([  charsort("qwert", 2)                  == "erqwt"      ? --> "] + charsort("qwert", 2)                + ["])
- qout ([  charsort("b1a4a3a2a1", 2, 1)          == "a2a1a3a4b1" ? --> "] + charsort("b1a4a3a2a1", 2, 1)        + ["])
- qout ([  NOTE : The order of equal elements (here the one beginning with the same char) is NOT determined !])
- qout ([  charsort("XXXqwert", 1, 1, 3)         == "XXXeqrtw"   ? --> "] + charsort("XXXqwert", 1, 1, 3)       + ["])
- qout ([  charsort("b1a4a3a2a1", 2, 1, 0, 1)    == "a1b1a2a3a4" ? --> "] + charsort("b1a4a3a2a1", 2, 1, 0, 1)  + ["])
- qout ([  NOTE : The order of equal elements (here the one ending with the same number) is NOT determined !])
- qout ([  charsort("384172852", 1, 1, 0, 0, 4)  == "134872852"  ? --> "] + charsort("384172852", 1, 1, 0, 0, 4)+ ["])
- qout ([  charsort("qwert",,,,,,.T.)            == "wtrqe"      ? --> "] + charsort("qwert",,,,,,.T.)          + ["])
- qout ("")
+   ctexit()
 
- qout ("End test of CHARSORT()")
- qout ("")
-
- ctexit()
-
-return
-
-
-
-
-
+   RETURN
