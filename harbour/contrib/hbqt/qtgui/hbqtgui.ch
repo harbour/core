@@ -2389,6 +2389,12 @@
 #define QValidator_Intermediate                              1     // The string is a plausible intermediate value.
 #define QValidator_Acceptable                                2     // The string is acceptable as a final result; i.e. it is valid.
 
+#define QTreeWidgetItem_ShowIndicator                        0     // The controls for expanding and collapsing will be shown for this item even if there are no children.
+#define QTreeWidgetItem_DontShowIndicator                    1     // The controls for expanding and collapsing will never be shown even if there are children. If the node is forced open the user will not be able to expand or collapse the item.
+#define QTreeWidgetItem_DontShowIndicatorWhenChildless       2     // The controls for expanding and collapsing will be shown if the item contains children.
+
+#define QTreeWidgetItem_Type                                 0     // The default type for tree widget items.
+#define QTreeWidgetItem_UserType                             1000  // The minimum value for custom types. Values below UserType are reserved by Qt.
 
 /*----------------------------------------------------------------------*/
 //                        HBQT Defined Constants
