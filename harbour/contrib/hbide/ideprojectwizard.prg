@@ -200,54 +200,6 @@ METHOD IdeProjectWizard:clear()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeProjectWizard:loadSwichesSections()
-   LOCAL oTree := ::oUI:treeProps
-   LOCAL qItm, aAct, oFont
-
-   oFont := QTreeWidgetItem():font( 0 )
-   oFont:setBold( .t. )
-   FOR EACH aAct IN ::aItmRoots
-      qItm := QTreeWidgetItem()
-      aAct[ 1 ] := qItm
-      qItm:setFlags( 0 )
-      qItm:setFlags( hb_bitOr( Qt_ItemIsSelectable, Qt_ItemIsDropEnabled, Qt_ItemIsEnabled ) )
-      qItm:setText( 0, aAct[ 2 ] )
-      qItm:setBackground( 0, aAct[ 3 ] )
-      qItm:setForeground( 0, QBrush( QColor( 255,255,255 ) ) )
-      qItm:setFont( 0, oFont )
-      qItm:setTooltip( 0, "Double-click to add a value !" )
-      oTree:addTopLevelItem( qItm )
-      qItm:setExpanded( .t. )
-   NEXT
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeProjectWizard:loadSourcesSections()
-   LOCAL oTree := ::oUI:treeSrc
-   LOCAL qItm, aAct, oFont
-
-   oFont := QTreeWidgetItem():font( 0 )
-   oFont:setBold( .t. )
-   FOR EACH aAct IN ::aItmSrc
-      qItm := QTreeWidgetItem()
-      aAct[ 1 ] := qItm
-      qItm:setFlags( 0 )
-      qItm:setFlags( hb_bitOr( Qt_ItemIsSelectable, Qt_ItemIsDropEnabled, Qt_ItemIsEnabled ) )
-      qItm:setText( 0, aAct[ 2 ] )
-      qItm:setBackground( 0, aAct[ 3 ] )
-      qItm:setForeground( 0, QBrush( QColor( 255,255,255 ) ) )
-      qItm:setFont( 0, oFont )
-      qItm:setTooltip( 0, "Drag and drop a source OR select with open icon at the top !" )
-      oTree:addTopLevelItem( qItm )
-      qItm:setExpanded( .t. )
-   NEXT
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeProjectWizard:show()
    LOCAL oBrush
 
@@ -287,17 +239,20 @@ METHOD IdeProjectWizard:show()
       ::oUI:treeProps:setDropIndicatorShown( .t. )
       ::oUI:treeProps:setAcceptDrops( .t. )
       ::oUI:treeProps:setDragDropMode( QAbstractItemView_InternalMove )
+      ::oUI:treeProps:setRootIsDecorated( .F. ) /* Important to present as a list */
+      ::oUI:treeProps:header():resizeSection( 0, 223 )
+      ::oUI:treeProps:header():setStretchLastSection( .T. )
       ::oUI:treeProps:connect( "customContextMenuRequested(QPoint)"     , {|p   | ::execEvent( "treeProps_contextMenuRequested", p  ) } )
       ::oUI:treeProps:connect( "itemDoubleClicked(QTreeWidgetItem*,int)", {|p,p1| ::execEvent( "treeProps_doubleClicked"      , p, p1 ) } )
 
       oBrush := QBrush( QColor( 248, 248, 248 ) )
 
-      aadd( ::aItmRoots, { NIL, "Libraries"                , QBrush( QColor( 144, 144, 144 ) ),  oBrush } )
-      aadd( ::aItmRoots, { NIL, "Library Paths"            , QBrush( QColor( 152, 152, 152 ) ),  oBrush } )
-      aadd( ::aItmRoots, { NIL, "Include Paths"            , QBrush( QColor( 160, 160, 160 ) ),  oBrush } )
-      aadd( ::aItmRoots, { NIL, "PRG Defines"              , QBrush( QColor( 168, 168, 168 ) ),  oBrush } )
-      aadd( ::aItmRoots, { NIL, "PRG Undefines"            , QBrush( QColor( 176, 176, 176 ) ),  oBrush } )
-      aadd( ::aItmRoots, { NIL, "hbmk2 Command-line Params", QBrush( QColor( 184, 184, 184 ) ),  oBrush } )
+      aadd( ::aItmRoots, { NIL, "Libraries"                , QBrush( QColor( 144, 144, 144 ) ),  oBrush, NIL, NIL } )
+      aadd( ::aItmRoots, { NIL, "Library Paths"            , QBrush( QColor( 152, 152, 152 ) ),  oBrush, NIL, NIL } )
+      aadd( ::aItmRoots, { NIL, "Include Paths"            , QBrush( QColor( 160, 160, 160 ) ),  oBrush, NIL, NIL } )
+      aadd( ::aItmRoots, { NIL, "PRG Defines"              , QBrush( QColor( 168, 168, 168 ) ),  oBrush, NIL, NIL } )
+      aadd( ::aItmRoots, { NIL, "PRG Undefines"            , QBrush( QColor( 176, 176, 176 ) ),  oBrush, NIL, NIL } )
+      aadd( ::aItmRoots, { NIL, "hbmk2 Command-line Params", QBrush( QColor( 184, 184, 184 ) ),  oBrush, NIL, NIL } )
 
 
       ::oUI:treeSrc:setContextMenuPolicy( Qt_CustomContextMenu )
@@ -308,13 +263,13 @@ METHOD IdeProjectWizard:show()
       ::oUI:treeSrc:connect( "customContextMenuRequested(QPoint)"     , {|p   | ::execEvent( "treeSrc_contextMenuRequested", p     ) } )
       ::oUI:treeSrc:connect( "itemDoubleClicked(QTreeWidgetItem*,int)", {|p,p1| ::execEvent( "treeSrc_doubleClicked"       , p, p1 ) } )
 
-      aadd( ::aItmSrc, { NIL, "PRG Files"      , QBrush( QColor( 184, 184, 184 ) ), oBrush, ".prg" } )
-      aadd( ::aItmSrc, { NIL, "C Files"        , QBrush( QColor( 176, 176, 176 ) ), oBrush, ".c"   } )
-      aadd( ::aItmSrc, { NIL, "CPP Files"      , QBrush( QColor( 168, 168, 168 ) ), oBrush, ".cpp" } )
-      aadd( ::aItmSrc, { NIL, "CH Files"       , QBrush( QColor( 160, 160, 160 ) ), oBrush, ".ch"  } )
-      aadd( ::aItmSrc, { NIL, "H Files"        , QBrush( QColor( 152, 152, 152 ) ), oBrush, ".h"   } )
-      aadd( ::aItmSrc, { NIL, "UI Files"       , QBrush( QColor( 144, 144, 144 ) ), oBrush, ".ui"  } )
-      aadd( ::aItmSrc, { NIL, "All Other Files", QBrush( QColor( 136, 136, 136 ) ), oBrush, "*"    } )
+      aadd( ::aItmSrc, { NIL, "PRG Files"      , QBrush( QColor( 184, 184, 184 ) ), oBrush, ".prg", NIL } )
+      aadd( ::aItmSrc, { NIL, "C Files"        , QBrush( QColor( 176, 176, 176 ) ), oBrush, ".c"  , NIL } )
+      aadd( ::aItmSrc, { NIL, "CPP Files"      , QBrush( QColor( 168, 168, 168 ) ), oBrush, ".cpp", NIL } )
+      aadd( ::aItmSrc, { NIL, "CH Files"       , QBrush( QColor( 160, 160, 160 ) ), oBrush, ".ch" , NIL } )
+      aadd( ::aItmSrc, { NIL, "H Files"        , QBrush( QColor( 152, 152, 152 ) ), oBrush, ".h"  , NIL } )
+      aadd( ::aItmSrc, { NIL, "UI Files"       , QBrush( QColor( 144, 144, 144 ) ), oBrush, ".ui" , NIL } )
+      aadd( ::aItmSrc, { NIL, "All Other Files", QBrush( QColor( 136, 136, 136 ) ), oBrush, "*"   , NIL } )
 
 
       ::clear()
@@ -324,6 +279,68 @@ METHOD IdeProjectWizard:show()
       ::oUI:exec()
       ::oUI:oWidget:hide()
    ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjectWizard:loadSwichesSections()
+   LOCAL oTree := ::oUI:treeProps
+   LOCAL qItm, aAct, oFont, qTBtn, qPalette
+
+   oFont := QTreeWidgetItem():font( 0 )
+   oFont:setBold( .t. )
+   FOR EACH aAct IN ::aItmRoots
+      qItm := QTreeWidgetItem()
+      aAct[ 1 ] := qItm
+      qItm:setFlags( 0 )
+      qItm:setFlags( hb_bitOr( Qt_ItemIsSelectable, Qt_ItemIsDropEnabled, Qt_ItemIsEnabled ) )
+      qItm:setText( 0, aAct[ 2 ] )
+      qItm:setBackground( 0, aAct[ 3 ] )
+      qItm:setForeground( 0, QBrush( QColor( 255,255,255 ) ) )
+      qItm:setFont( 0, oFont )
+      qItm:setTooltip( 0, "Double-click to add a value !" )
+      oTree:addTopLevelItem( qItm )
+      qItm:setExpanded( .t. )
+   NEXT
+   FOR EACH aAct IN ::aItmRoots
+      qTBtn := QToolButton()
+      aAct[ 6 ] := qTBtn
+      qTBtn:setIcon( QIcon( hbide_image( "dc_delete" ) ) )
+      qTBtn:setAutoFillBackground( .t. )
+      qTBtn:setAutoRaise( .t. )
+      qTBtn:setMaximumWidth( 20 )
+      qTBtn:setMaximumHeight( 20 )
+      oTree:setItemWidget( aAct[ 1 ], 1, qTBtn )
+      qPalette := QToolButton():palette()
+      qPalette:setBrush( QPalette_Background, aAct[ 3 ] )
+      qTBtn:setPalette( qPalette )
+   NEXT
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjectWizard:loadSourcesSections()
+   LOCAL oTree := ::oUI:treeSrc
+   LOCAL qItm, aAct, oFont
+
+   oFont := QTreeWidgetItem():font( 0 )
+   oFont:setBold( .t. )
+   FOR EACH aAct IN ::aItmSrc
+      qItm := QTreeWidgetItem()
+      aAct[ 1 ] := qItm
+      qItm:setFlags( 0 )
+      qItm:setFlags( hb_bitOr( Qt_ItemIsSelectable, Qt_ItemIsDropEnabled, Qt_ItemIsEnabled ) )
+      qItm:setText( 0, aAct[ 2 ] )
+      qItm:setBackground( 0, aAct[ 3 ] )
+      qItm:setForeground( 0, QBrush( QColor( 255,255,255 ) ) )
+      qItm:setFont( 0, oFont )
+      qItm:setTooltip( 0, "Drag and drop a source OR select with open icon at the top !" )
+      oTree:addTopLevelItem( qItm )
+      oTree:setFirstItemColumnSpanned( qItm, .t. )
+      qItm:setChildIndicatorPolicy( QTreeWidgetItem_ShowIndicator )
+      qItm:setExpanded( .t. )
+   NEXT
 
    RETURN Self
 
@@ -424,6 +441,7 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
          qItm:setText( 0, "" )
          qItm:setFont( 0, oFont )
          qItm:setBackground( 0, ::aItmRoots[ n, 4 ] )
+         ::oUI:treeProps:setFirstItemColumnSpanned( qItm, .t. )
          ::oUI:treeProps:editItem( qItm, 0 )
       ENDIF
       EXIT
