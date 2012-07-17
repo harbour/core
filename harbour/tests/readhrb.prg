@@ -61,8 +61,8 @@ FUNCTION Main( cFrom )
    LOCAL nIdx
    LOCAL cSymbol
 
-   SET( _SET_ALTERNATE, "readhrb.out" )
-   SET( _SET_ALTERNATE, .T. )
+   Set( _SET_ALTERNATE, "readhrb.out" )
+   Set( _SET_ALTERNATE, .T. )
 
    IF cFrom == NIL
       cFrom := "default.hrb"
