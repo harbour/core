@@ -2,7 +2,7 @@
  * $Id$
  */
 
-FUNCTION main()
+PROCEDURE Main()
 
    LOCAL oError := ErrorNew()
 
@@ -25,7 +25,7 @@ FUNCTION main()
    ? "Asort.c......:", aDump( ASort( t := AClone( c ) ) )
    ? "Asort.c.block:", aDump( ASort( t := AClone( c ), , , {| x, y | xToStr( x ) < xToStr( y ) } ) )
 
-   RETURN nil
+   RETURN
 
 FUNCTION aDump( a )
 

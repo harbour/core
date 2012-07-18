@@ -1,59 +1,63 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 /* gtstd test */
 
-func Main()
-  local n
+PROCEDURE Main()
 
-  PosNow()
-  ?? "Output test. First line, no newlines."
+   LOCAL n
 
-  ? "Press a key to continue: "
-  ?? inkey(0)
+   PosNow()
+   ?? "Output test. First line, no newlines."
 
-  ? "This is row " + alltrim(str(row()))
-  
-  @ 7, 30 say "@ 7,30"
-  @ 7, 10 say "@ 7,10"
-  @ 7, 60 say "@ 7,60"
-  @ 7, 75 say "9876543210"
-  @ 6, 10 say "@ 6,10.."
-  PosNow()
+   ? "Press a key to continue: "
+   ?? Inkey( 0 )
 
-  ?
-  ? "Scroll test: pre = "
-  PosNow()
-   // scroll(0,0,maxrow(),maxcol(),-3,0)
-  ?? " post = "
-  PosNow()
+   ? "This is row " + AllTrim( Str( Row() ) )
 
-  ?
-  ? "Press key to test CLS"
-  inkey(0)
-  CLS
+   @ 7, 30 SAY "@ 7,30"
+   @ 7, 10 SAY "@ 7,10"
+   @ 7, 60 SAY "@ 7,60"
+   @ 7, 75 SAY "9876543210"
+   @ 6, 10 SAY "@ 6,10.."
+   PosNow()
 
-  PosNow()
+   ?
+   ? "Scroll test: pre = "
+   PosNow()
+// Scroll( 0, 0, MaxRow(), MaxCol(), -3, 0 )
+   ?? " post = "
+   PosNow()
 
-  ?
-  ? "Press key to test for n := 100 to 120 ; tone(n, 1) ; next"
-  inkey(0)
-  for n := 100 to 120 ; tone(n, 1) ; next  
+   ?
+   ? "Press key to test CLS"
+   Inkey( 0 )
+   CLS
 
-  ? "Done.."
-  ? "Testing long string via QOUT. 50 characters follow here: 98765432109876543210987654321098765432109876543210"
-  ? "Done.. testing end of screen scroll"
+   PosNow()
 
-  for n := 1 to 25
-    ? "This line is on row "
-    ?? alltrim(str(row()))
-    inkey(0)
-  next
+   ?
+   ? "Press key to test for n := 100 to 120 ; tone(n, 1) ; next"
+   Inkey( 0 )
+   FOR n := 100 TO 120
+      Tone( n, 1 )
+   NEXT
 
-  return NIL
+   ? "Done.."
+   ? "Testing long string via QOUT. 50 characters follow here: 98765432109876543210987654321098765432109876543210"
+   ? "Done.. testing end of screen scroll"
 
-func PosNow()
-  ?? "[" + alltrim(str(row())) + "," + alltrim(str(col())) + "]"
-  return NIL
+   FOR n := 1 TO 25
+      ? "This line is on row "
+      ?? AllTrim( Str( Row() ) )
+      Inkey( 0 )
+   NEXT
 
+   RETURN
+
+FUNCTION PosNow()
+
+   ?? "[" + AllTrim( Str( Row() ) ) + "," + AllTrim( Str( Col() ) ) + "]"
+
+   RETURN NIL

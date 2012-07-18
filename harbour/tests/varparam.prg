@@ -1,12 +1,15 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
+
 /* TEST FOR USING VARIABLE NUMBER OF PARAMETERS */
 
 MEMVAR iLoop
-PROCEDURE MAIN(p1, p2)
-LOCAL l1:=11,l2:=22,l3:=33,l4:=44,l5:=55,l6:=66
-PRIVATE iLoop
+
+PROCEDURE Main( p1, p2 )
+
+   LOCAL l1 := 11, l2 := 22, l3 := 33, l4 := 44, l5 := 55, l6 := 66
+   PRIVATE iLoop
 
    ? 'passed 0:  '; TEST_0_0( )
    ? 'passed 1:  '; TEST_0_0( 1 )
@@ -125,201 +128,210 @@ PRIVATE iLoop
 
 PROCEDURE TEST_0_0v( ... )
 
-   ?? PROCNAME(0), ' received: ', PCOUNT()
-   FOR m->iLoop:=1 TO PCOUNT()
-      ? m->iLoop, "=", HB_PVALUE( m->iLoop )
+   ?? ProcName( 0 ), ' received: ', PCount()
+   FOR m->iLoop := 1 TO PCount()
+      ? m->iLoop, "=", hb_PValue( m->iLoop )
    NEXT
-   
-   inkey(0)
 
-RETURN
+   Inkey( 0 )
+
+   RETURN
 
 PROCEDURE TEST_0_0( )
 
-   ?? PROCNAME(0), ' received: ', PCOUNT()
-   FOR m->iLoop:=1 TO PCOUNT()
-      ? m->iLoop, "=", HB_PVALUE( m->iLoop )
+   ?? ProcName( 0 ), ' received: ', PCount()
+   FOR m->iLoop := 1 TO PCount()
+      ? m->iLoop, "=", hb_PValue( m->iLoop )
    NEXT
-   
-   inkey(0)
 
-RETURN
+   Inkey( 0 )
+
+   RETURN
 
 PROCEDURE TEST_1_0v( ... )
-LOCAL i:='i'
 
-   ?? PROCNAME(0), ' received: ', PCOUNT()
-   ? 'i=',i
-   FOR i:=1 TO PCOUNT()
-      ? i, "=", HB_PVALUE( i )
+   LOCAL i := 'i'
+
+   ?? ProcName( 0 ), ' received: ', PCount()
+   ? 'i=', i
+   FOR i := 1 TO PCount()
+      ? i, "=", hb_PValue( i )
    NEXT
-   
-   inkey(0)
 
-RETURN
+   Inkey( 0 )
+
+   RETURN
 
 PROCEDURE TEST_1_0( )
-LOCAL i:='i'
 
-   ?? PROCNAME(0), ' received: ', PCOUNT()
-   ? 'i=',i
-   FOR i:=1 TO PCOUNT()
-      ? i, "=", HB_PVALUE( i )
-   NEXT
-   
-   inkey(0)
+   LOCAL i := 'i'
 
-RETURN
-
-PROCEDURE TEST_1_3v( a,b,c, ... )
-LOCAL i:='i'
-
-   ?? PROCNAME(0), ' received: ', PCOUNT()
-   ? 'i=',i
-   ? 'a=',a
-   ? 'b=',b
-   ? 'c=',c
-   FOR i:=1 TO PCOUNT()
-      ? i, "=", HB_PVALUE( i )
+   ?? ProcName( 0 ), ' received: ', PCount()
+   ? 'i=', i
+   FOR i := 1 TO PCount()
+      ? i, "=", hb_PValue( i )
    NEXT
 
-   FOR EACH i IN HB_APARAMS()
+   Inkey( 0 )
+
+   RETURN
+
+PROCEDURE TEST_1_3v( a, b, c, ... )
+
+   LOCAL i := 'i'
+
+   ?? ProcName( 0 ), ' received: ', PCount()
+   ? 'i=', i
+   ? 'a=', a
+   ? 'b=', b
+   ? 'c=', c
+   FOR i := 1 TO PCount()
+      ? i, "=", hb_PValue( i )
+   NEXT
+
+   FOR EACH i IN hb_AParams()
       ? i:__enumindex, "-", i
-   NEXT   
-   
-   inkey(0)
-
-RETURN
-
-
-PROCEDURE TEST_1_3( a,b,c )
-LOCAL i:='i'
-
-   ?? PROCNAME(0), ' received: ', PCOUNT()
-   ? 'i=',i
-   ? 'a=',a
-   ? 'b=',b
-   ? 'c=',c
-   FOR i:=1 TO PCOUNT()
-      ? i, "=", HB_PVALUE( i )
    NEXT
 
-   FOR EACH i IN HB_APARAMS()
+   Inkey( 0 )
+
+   RETURN
+
+PROCEDURE TEST_1_3( a, b, c )
+
+   LOCAL i := 'i'
+
+   ?? ProcName( 0 ), ' received: ', PCount()
+   ? 'i=', i
+   ? 'a=', a
+   ? 'b=', b
+   ? 'c=', c
+   FOR i := 1 TO PCount()
+      ? i, "=", hb_PValue( i )
+   NEXT
+
+   FOR EACH i IN hb_AParams()
       ? i:__enumindex, "-", i
-   NEXT   
-   
-   inkey(0)
+   NEXT
 
-RETURN
+   Inkey( 0 )
 
+   RETURN
 
 PROCEDURE TEST_1_1( a )
-LOCAL i:='i'
 
-   ?? PROCNAME(0), ' received: ', PCOUNT()
-   ? 'i=',i
-   ? 'a=',a
-   FOR i:=1 TO PCOUNT()
-      ? i, "=", HB_PVALUE( i )
+   LOCAL i := 'i'
+
+   ?? ProcName( 0 ), ' received: ', PCount()
+   ? 'i=', i
+   ? 'a=', a
+   FOR i := 1 TO PCount()
+      ? i, "=", hb_PValue( i )
    NEXT
-   
-   inkey(0)
 
-RETURN
+   Inkey( 0 )
+
+   RETURN
 
 PROCEDURE TEST_1_1v( a, ... )
-LOCAL i:='i'
 
-   ?? PROCNAME(0), ' received: ', PCOUNT()
-   ? 'i=',i
-   ? 'a=',a
-   FOR i:=1 TO PCOUNT()
-      ? i, "=", HB_PVALUE( i )
+   LOCAL i := 'i'
+
+   ?? ProcName( 0 ), ' received: ', PCount()
+   ? 'i=', i
+   ? 'a=', a
+   FOR i := 1 TO PCount()
+      ? i, "=", hb_PValue( i )
    NEXT
-   
-   inkey(0)
 
-RETURN
+   Inkey( 0 )
 
-PROCEDURE TEST_3_3v( a,b,c, ... )
-LOCAL x:='x', y:='y', z:='z'
+   RETURN
 
-   ?? PROCNAME(0), ' received: ', PCOUNT()
-   ? 'x=',x
-   ? 'y=',y
-   ? 'z=',z
-   ? 'a=',a
-   ? 'b=',b
-   ? 'c=',c
-   FOR m->iLoop:=1 TO PCOUNT()
-      ? m->iLoop, "=", HB_PVALUE( m->iLoop )
-   NEXT
-   
-   test_ref( @a, @b, @c, @x, @y, @z )
-      
-   inkey(0)
+PROCEDURE TEST_3_3v( a, b, c, ... )
 
-RETURN
+   LOCAL x := 'x', y := 'y', z := 'z'
 
-PROCEDURE TEST_3_3( a,b,c )
-LOCAL x:='x', y:='y', z:='z'
-
-   ?? PROCNAME(0), ' received: ', PCOUNT()
-   ? 'x=',x
-   ? 'y=',y
-   ? 'z=',z
-   ? 'a=',a
-   ? 'b=',b
-   ? 'c=',c
-   FOR m->iLoop:=1 TO PCOUNT()
-      ? m->iLoop, "=", HB_PVALUE( m->iLoop )
+   ?? ProcName( 0 ), ' received: ', PCount()
+   ? 'x=', x
+   ? 'y=', y
+   ? 'z=', z
+   ? 'a=', a
+   ? 'b=', b
+   ? 'c=', c
+   FOR m->iLoop := 1 TO PCount()
+      ? m->iLoop, "=", hb_PValue( m->iLoop )
    NEXT
 
    test_ref( @a, @b, @c, @x, @y, @z )
-      
-   inkey(0)
 
-RETURN
+   Inkey( 0 )
+
+   RETURN
+
+PROCEDURE TEST_3_3( a, b, c )
+
+   LOCAL x := 'x', y := 'y', z := 'z'
+
+   ?? ProcName( 0 ), ' received: ', PCount()
+   ? 'x=', x
+   ? 'y=', y
+   ? 'z=', z
+   ? 'a=', a
+   ? 'b=', b
+   ? 'c=', c
+   FOR m->iLoop := 1 TO PCount()
+      ? m->iLoop, "=", hb_PValue( m->iLoop )
+   NEXT
+
+   test_ref( @a, @b, @c, @x, @y, @z )
+
+   Inkey( 0 )
+
+   RETURN
 
 PROCEDURE TEST_3_0( )
-LOCAL x:='x', y:='y', z:='z'
 
-   ?? PROCNAME(0), ' received: ', PCOUNT()
-   ? 'x=',x
-   ? 'y=',y
-   ? 'z=',z
-   FOR m->iLoop:=1 TO PCOUNT()
-      ? m->iLoop, "=", HB_PVALUE( m->iLoop )
+   LOCAL x := 'x', y := 'y', z := 'z'
+
+   ?? ProcName( 0 ), ' received: ', PCount()
+   ? 'x=', x
+   ? 'y=', y
+   ? 'z=', z
+   FOR m->iLoop := 1 TO PCount()
+      ? m->iLoop, "=", hb_PValue( m->iLoop )
    NEXT
-   
-   inkey(0)
 
-RETURN
+   Inkey( 0 )
+
+   RETURN
 
 PROCEDURE TEST_3_0v( ... )
-LOCAL x:='x', y:='y', z:='z'
 
-   ?? PROCNAME(0), ' received: ', PCOUNT()
-   ? 'x=',x
-   ? 'y=',y
-   ? 'z=',z
-   FOR m->iLoop:=1 TO PCOUNT()
-      ? m->iLoop, "=", HB_PVALUE( m->iLoop )
+   LOCAL x := 'x', y := 'y', z := 'z'
+
+   ?? ProcName( 0 ), ' received: ', PCount()
+   ? 'x=', x
+   ? 'y=', y
+   ? 'z=', z
+   FOR m->iLoop := 1 TO PCount()
+      ? m->iLoop, "=", hb_PValue( m->iLoop )
    NEXT
-   
-   inkey(0)
 
-RETURN
+   Inkey( 0 )
+
+   RETURN
 
 PROCEDURE TEST_REF( a, ... )
-LOCAL b
+
+   LOCAL b
 
    ? '@@@'
-   ? PROCNAME(0), ' received: ', PCOUNT()
+   ? ProcName( 0 ), ' received: ', PCount()
    ? 'a= ', a
    ? 'b= ', b
-   FOR EACH b IN HB_APARAMS(0)
+   FOR EACH b IN hb_AParams( 0 )
       ? b:__enumindex, "-", b
-   NEXT   
+   NEXT
 
-RETURN
+   RETURN

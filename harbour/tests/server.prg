@@ -118,13 +118,13 @@ PROCEDURE Progress( nProgress, nDrow, nDcol )
 
    DO CASE
    CASE nProgress == 0
-       @ nDrow, nDcol + 1 SAY "-"
+      @ nDrow, nDcol + 1 SAY "-"
    CASE nProgress == 1
-       @ nDrow, nDcol + 1 SAY "\"
+      @ nDrow, nDcol + 1 SAY "\"
    CASE nProgress == 2
-       @ nDrow, nDcol + 1 SAY "|"
+      @ nDrow, nDcol + 1 SAY "|"
    CASE nProgress == 3
-       @ nDrow, nDcol + 1 SAY "/"
+      @ nDrow, nDcol + 1 SAY "/"
    ENDCASE
 
    nProgress++

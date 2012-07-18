@@ -1,6 +1,6 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // This file is OK to have warnings.
 #ifdef __HARBOUR__
@@ -55,7 +55,7 @@ MEMVAR Var1 AS STRING
 
 STATIC lGlobal AS LOGICAL
 
-PROCEDURE MAIN( optional )
+PROCEDURE Main( optional )
 
   STATIC lStatic := 0, oMyObj As Class WrongClass
 

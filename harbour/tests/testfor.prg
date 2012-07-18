@@ -1,8 +1,8 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
-PRCOEDURE MAIN
+PRCOEDURE Main()
 
    LOCAL i
 

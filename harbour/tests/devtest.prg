@@ -11,35 +11,37 @@
    Public domain program written by David G. Holm <dholm@jsd-llc.com>
 */
 
-procedure main()
+PROCEDURE Main()
+
 #ifdef __HARBOUR__
+
    SET PRINTER TO devtesth
 #else
    SET PRINTER TO devtestc
 #endif
    SET DEVICE TO PRINTER
-   DevPos( -2, 76 )
-   ? Prow(), Pcol()
+   DevPos( - 2, 76 )
+   ? PRow(), PCol()
    DevOut( "First text written!" )
-   ? Prow(), Pcol()
+   ? PRow(), PCol()
    DevOut( "Hello" )
-   ? Prow(), Pcol()
+   ? PRow(), PCol()
    DevPos( 6, 74 )
-   ? Prow(), Pcol()
+   ? PRow(), PCol()
    DevOut( "Off to the side!!" )
-   ? Prow(), Pcol()
-   DevPos( 8, -12 )
-   ? Prow(), Pcol()
-   DevPos( 13, -12 )
-   ? Prow(), Pcol()
+   ? PRow(), PCol()
+   DevPos( 8, - 12 )
+   ? PRow(), PCol()
+   DevPos( 13, - 12 )
+   ? PRow(), PCol()
    DevOut( "More test text!" )
-   ? Prow(), Pcol()
+   ? PRow(), PCol()
    DevOut( "Yet more text!" )
-   ? Prow(), Pcol()
+   ? PRow(), PCol()
    DevPos( 19, 85 )
-   ? Prow(), Pcol()
+   ? PRow(), PCol()
    DevPos( 500, 20 )
-   ? Prow(), Pcol()
+   ? PRow(), PCol()
    DevOut( "!" )
-   ? Prow(), Pcol()
-quit
+   ? PRow(), PCol()
+   QUIT

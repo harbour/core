@@ -2,7 +2,7 @@
  * $Id$
  */
 
-PROCEDURE main()
+PROCEDURE Main()
 
    OutStd( cMonth( date() ) + hb_eol() )
    OutStd( cMonth( date() + 31 ) + hb_eol() )

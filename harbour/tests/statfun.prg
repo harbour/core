@@ -1,10 +1,10 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Testing a static function call
 
-function Main()
+PROCEDURE Main()
 
    QOut( "From Main()" )
 
@@ -12,10 +12,10 @@ function Main()
 
    QOut( "From Main() again" )
 
-return nil
+   RETURN
 
-static function SecondOne()
+STATIC FUNCTION SecondOne()
 
    QOut( "From Second()" )
 
-return nil
+   RETURN nil

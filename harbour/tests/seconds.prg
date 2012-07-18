@@ -8,22 +8,23 @@
    Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>
 */
 
-function Main( cParam )
-local n, limit := 10
+FUNCTION Main( cParam )
 
-   IF ! EMPTY( cParam )
-      limit := VAL( cParam )
+   LOCAL n, limit := 10
+
+   IF ! Empty( cParam )
+      limit := Val( cParam )
    ENDIF
-   OUTSTD( hb_eol() )
-   OUTSTD( SECONDS() )
+   OutStd( hb_eol() )
+   OutStd( Seconds() )
    FOR n := 1 TO limit
-      IF EMPTY( cParam )
-         OUTSTD( hb_eol() )
-         OUTSTD( "Pause: " )
-         INKEY(0)
+      IF Empty( cParam )
+         OutStd( hb_eol() )
+         OutStd( "Pause: " )
+         Inkey( 0 )
       ENDIF
-      OUTSTD( hb_eol() )
-      OUTSTD( SECONDS() )
+      OutStd( hb_eol() )
+      OutStd( Seconds() )
    NEXT
 
-RETURN NIL
+   RETURN NIL

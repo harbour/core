@@ -1,75 +1,77 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 #include "hbmemory.ch"
 
-FUNCTION MAIN
-LOCAL nH1, nH2, nH3, nH4
-LOCAL n:=0
-LOCAL aSign:={"|", "/", "-", "\" }
-LOCAL nPrev:=SECONDS()
+PROCEDURE Main()
 
-  CLS
-  ? "   Time:        Memory used:                          Miliseconds elapsed"
-  ?
-  ? "Can you see it ??? :) Press any key or wait 30 seconds"
-  ?
-  ?
-  @ 10,2 SAY "Memory before TEST() call" + STR( MEMORY(HB_MEM_USED) )
-  TEST()
-  @ 11,2 SAY "Memory after TEST() and before collecting" + STR( MEMORY(HB_MEM_USED) )
-  HB_GCALL()
-  @ 12,2 SAY "Memory after collecting" + STR( MEMORY(HB_MEM_USED) )
-  nH1 := HB_IDLEADD( {|| DEVPOS(0,01), DEVOUT( TIME() ) } )
-  nH2 := HB_IDLEADD( {|| DEVPOS(0,21), TEST(), DEVOUT( MEMORY(HB_MEM_USED) ) } )
-  nH3 := HB_IDLEADD( {|| DEVPOS(0,41), IIF(n==4,n:=1,n++),DEVOUT(aSign[n]) } )
-  nH4 := HB_IDLEADD( {|| DEVPOS(0,61), DEVOUT( 1000*(SECONDS()-nPrev) ), nPrev:=SECONDS() } )
+   LOCAL nH1, nH2, nH3, nH4
+   LOCAL n := 0
+   LOCAL aSign := { "|", "/", "-", "\" }
+   LOCAL nPrev := Seconds()
 
-  ? VALTYPE(nH1), nH1, VALTYPE(nH2), nH2, VALTYPE(nH3), nH3, VALTYPE(nH4), nH4
-  
-  INKEY( 30 )
-  IF !EMPTY(nH3)
-     @ 14,2 SAY "Delete task 3: " + HB_VALTOSTR(nH3)
-     HB_IDLEDEL( nH3 )
-  ENDIF
-  IF !EMPTY(nH2)
-     @ 15,2 SAY "Delete task 2: " + HB_VALTOSTR(nH2)
-     HB_IDLEDEL( nH2 )
-  ENDIF
-  IF !EMPTY(nH1)
-     @ 16,2 SAY "Delete task 1: " + HB_VALTOSTR(nH1)
-     HB_IDLEDEL( nH1 )
-  ENDIF
-  IF !EMPTY(nH4)
-     @ 17,2 SAY "Delete task 4: " + HB_VALTOSTR(nH4)
-     HB_IDLEDEL( nH4 )
-  ENDIF
+   CLS
+   ? "   Time:        Memory used:                          Miliseconds elapsed"
+   ?
+   ? "Can you see it ??? :) Press any key or wait 30 seconds"
+   ?
+   ?
+   @ 10, 2 SAY "Memory before TEST() call" + Str( Memory( HB_MEM_USED ) )
+   TEST()
+   @ 11, 2 SAY "Memory after TEST() and before collecting" + Str( Memory( HB_MEM_USED ) )
+   hb_gcAll()
+   @ 12, 2 SAY "Memory after collecting" + Str( Memory( HB_MEM_USED ) )
+   nH1 := hb_idleAdd( { || DevPos( 0,01 ), DevOut( Time() ) } )
+   nH2 := hb_idleAdd( { || DevPos( 0,21 ), TEST(), DevOut( Memory(HB_MEM_USED ) ) } )
+   nH3 := hb_idleAdd( { || DevPos( 0,41 ), IIF( n == 4,n := 1,n ++ ), DevOut( aSign[n] ) } )
+   nH4 := hb_idleAdd( { || DevPos( 0,61 ), DevOut( 1000 * (Seconds() - nPrev ) ), nPrev := Seconds() } )
 
-  @ 18,2 SAY "Memory after idle states" + STR( MEMORY(HB_MEM_USED) )
-  HB_GCALL()
-  @ 19,2 SAY "Memory after collecting" + STR( MEMORY(HB_MEM_USED) )
+   ? ValType( nH1 ), nH1, ValType( nH2 ), nH2, ValType( nH3 ), nH3, ValType( nH4 ), nH4
 
-RETURN 1
+   Inkey( 30 )
+   IF !Empty( nH3 )
+      @ 14, 2 SAY "Delete task 3: " + hb_ValToStr( nH3 )
+      hb_idleDel( nH3 )
+   ENDIF
+   IF !Empty( nH2 )
+      @ 15, 2 SAY "Delete task 2: " + hb_ValToStr( nH2 )
+      hb_idleDel( nH2 )
+   ENDIF
+   IF !Empty( nH1 )
+      @ 16, 2 SAY "Delete task 1: " + hb_ValToStr( nH1 )
+      hb_idleDel( nH1 )
+   ENDIF
+   IF !Empty( nH4 )
+      @ 17, 2 SAY "Delete task 4: " + hb_ValToStr( nH4 )
+      hb_idleDel( nH4 )
+   ENDIF
 
-PROC TEST()
-LOCAL a, b, c
-LOCAL cb
+   @ 18, 2 SAY "Memory after idle states" + Str( Memory( HB_MEM_USED ) )
+   hb_gcAll()
+   @ 19, 2 SAY "Memory after collecting" + Str( Memory( HB_MEM_USED ) )
 
-  a := ARRAY( 3 )
-  b := ARRAY( 3 )
-  c := ARRAY( 3 )
-  a[1] :=a
-  a[2] :=b
-  a[3] :=c
-  b[1] :=a
-  b[2] :=b
-  b[3] :=c
-  c[1] :=a
-  c[2] :=b
-  c[3] :=c
+   RETURN
 
-  cb := {|x| x:=cb}
-  EVAL( cb )
+PROCEDURE TEST()
 
-RETURN
+   LOCAL a, b, c
+   LOCAL cb
+
+   a := Array( 3 )
+   b := Array( 3 )
+   c := Array( 3 )
+   a[ 1 ] := a
+   a[ 2 ] := b
+   a[ 3 ] := c
+   b[ 1 ] := a
+   b[ 2 ] := b
+   b[ 3 ] := c
+   c[ 1 ] := a
+   c[ 2 ] := b
+   c[ 3 ] := c
+
+   cb := {| x | x := cb }
+   Eval( cb )
+
+   RETURN

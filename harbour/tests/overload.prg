@@ -1,6 +1,6 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 //
 // DynObj
@@ -17,12 +17,11 @@
 // Placed in the public domain
 //
 
-
 #include "hbclass.ch"
 
-function Main()
+PROCEDURE Main()
 
-   local oString := TString():New( "Hello" )
+   LOCAL oString := TString():New( "Hello" )
 
    QOut( "Testing TString with Operator Overloading" )
    QOut( oString:cValue )
@@ -43,34 +42,32 @@ function Main()
    QOut( "Concatenation + :", oString + "Hello" )
    QOut( "Concatenation - :", oString - "Hello" )
    QOut( "Array index[2] :", oString[2] )
-   QOut( "Array index[3] := 'X' :", oString[3]:='X' )
+   QOut( "Array index[3] := 'X' :", oString[3] := 'X' )
    QOut( oString:cValue )
 
-return nil
+   RETURN nil
 
+CREATE CLASS tString
 
-create class tString
+   VAR cValue
 
-      VAR cValue
+   METHOD New( cText ) INLINE ::cValue := cText, self
 
-      METHOD New(cText) INLINE ::cValue := cText, self
+   OPERATOR "="  ARG cArg INLINE ::cValue =  cArg
+   OPERATOR "==" ARG cArg INLINE ::cValue == cArg
+   OPERATOR "!=" ARG cArg INLINE ::cValue != cArg
+   OPERATOR "<"  ARG cArg INLINE ::cValue <  cArg
+   OPERATOR "<=" ARG cArg INLINE ::cValue <= cArg
+   OPERATOR ">"  ARG cArg INLINE ::cValue >  cArg
+   OPERATOR ">=" ARG cArg INLINE ::cValue >= cArg
+   OPERATOR "+"  ARG cArg INLINE ::cValue +  cArg
+   OPERATOR "-"  ARG cArg INLINE ::cValue -  cArg
+   OPERATOR "$"  ARG cArg INLINE ::cValue $  cArg
+   OPERATOR "[]" ARG nIndex INLINE iif( PCount() > 2, ;
+      ::cValue := Stuff( ::cValue, nIndex, 1, hb_PValue( 3 ) ), ;
+      SubStr( ::cValue, nIndex, 1 ) )
 
-      OPERATOR "="  ARG cArg INLINE ::cValue =  cArg
-      OPERATOR "==" ARG cArg INLINE ::cValue == cArg
-      OPERATOR "!=" ARG cArg INLINE ::cValue != cArg
-      OPERATOR "<"  ARG cArg INLINE ::cValue <  cArg
-      OPERATOR "<=" ARG cArg INLINE ::cValue <= cArg
-      OPERATOR ">"  ARG cArg INLINE ::cValue >  cArg
-      OPERATOR ">=" ARG cArg INLINE ::cValue >= cArg
-      OPERATOR "+"  ARG cArg INLINE ::cValue +  cArg
-      OPERATOR "-"  ARG cArg INLINE ::cValue -  cArg
-      OPERATOR "$"  ARG cArg INLINE ::cValue $  cArg
-      OPERATOR "[]" ARG nIndex INLINE iif( pcount()>2, ;
-                     ::cValue := stuff( ::cValue, nIndex, 1, hb_pvalue(3) ), ;
-                     substr( ::cValue, nIndex, 1 ) )
-
-endclass
-
+ENDCLASS
 
 
 /*

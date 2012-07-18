@@ -11,54 +11,57 @@
    http://harbour-project.org/
    Public domain program written by David G. Holm <dholm@jsd-llc.com>
 */
-procedure main()
-local a,b,c,d,e,f,g,h,i,j,k,l
-   SetPos( -2, 76 )
+
+PROCEDURE Main()
+
+   LOCAL a, b, c, d, e, f, g, h, i, j, k, l
+
+   SetPos( - 2, 76 )
    DispOut( "You won't see this!" )
-   tone(440,1)
-   inkey(0)
+   Tone( 440, 1 )
+   Inkey( 0 )
    a := Row()
    b := Col()
    ?? a, b
-   tone(440,1)
-   inkey(0)
+   Tone( 440, 1 )
+   Inkey( 0 )
    c := Row()
    d := Col()
    ?? c, d
-   tone(440,1)
-   inkey(0)
+   Tone( 440, 1 )
+   Inkey( 0 )
    e := Row()
    f := Row()
    ?? e, f
-   tone(440,1)
-   inkey(0)
+   Tone( 440, 1 )
+   Inkey( 0 )
    g := Row()
    h := Col()
    ?? g, h
-   tone(440,1)
-   inkey(0)
+   Tone( 440, 1 )
+   Inkey( 0 )
    i := Row()
    j := Col()
    ?? i, j
-   tone(440,1)
-   inkey(0)
+   Tone( 440, 1 )
+   Inkey( 0 )
    k := Row()
    l := Col()
    ?? k, l
-   tone(440,1)
-   inkey(0)
+   Tone( 440, 1 )
+   Inkey( 0 )
    CLS
-   ?? a,b
-   ?? c,d
-   ?? e,f
-   ?? g,h
-   ?? i,j
-   ?? k,l
+   ?? a, b
+   ?? c, d
+   ?? e, f
+   ?? g, h
+   ?? i, j
+   ?? k, l
    DispOut( "Hello" )
    SetPos( 6, 74 )
    DispOut( "Partly off screen!" )
    ? Row(), Col()
-   SetPos( 8, -12 )
+   SetPos( 8, - 12 )
    a := Row()
    b := Col()
    ?? "PA"
@@ -67,10 +70,10 @@ local a,b,c,d,e,f,g,h,i,j,k,l
    ?? "ll on screen!"
    e := Row()
    f := Row()
-   ? a,b
-   ? c,d
-   ? e,f
-   SetPos( 13, -12 )
+   ? a, b
+   ? c, d
+   ? e, f
+   SetPos( 13, - 12 )
    a := Row()
    b := Col()
    DispOut( "All off screen!" )
@@ -79,13 +82,13 @@ local a,b,c,d,e,f,g,h,i,j,k,l
    DispOut( "All on screen!" )
    e := Row()
    f := Row()
-   ? a,b
-   ? c,d
-   ? e,f
+   ? a, b
+   ? c, d
+   ? e, f
    SetPos( 19, 85 )
    ?? "All on screen??"
-   tone(880,1)
-   inkey(0)
+   Tone( 880, 1 )
+   Inkey( 0 )
    SetPos( 50, 20 )
    ?? "On screen??"
-quit
+   QUIT

@@ -1,18 +1,19 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
-function Main()
+PROCEDURE Main()
 
-   local nI, aArray
+   LOCAL nI, aArray
 
    REQUEST _DBF
+
    rddSetDefault( "DBF" )
 
    SET EXCLUSIVE OFF
    CLS
 
-   dbUseArea( .T., "DBF", "test", "TESTDBF", .T., .F. )
+   dbUseArea( .T. , "DBF", "test", "TESTDBF", .T. , .F. )
    ? "RecCount:", TESTDBF->( RecCount() )
    ? "Used:", TESTDBF->( Used() )
    ? "Select:", TESTDBF->( Select() )
@@ -21,16 +22,16 @@ function Main()
    ? "NetErr:", TESTDBF->( NetErr() )
 
    ? "Press any key to continue..."
-   InKey( 0 )
+   Inkey( 0 )
    CLS
 
-   aArray := RddList( 0 )
+   aArray := rddList( 0 )
    ? "Rdd's: "
-   for nI := 1 to Len( aArray )
+   FOR nI := 1 TO Len( aArray )
       ?? aArray[ nI ], ""
-   next
-   ? "RddName:", TESTDBF->( RddName() )
-   ? "lUpdate:", TESTDBF->( lUpdate() )
+   NEXT
+   ? "RddName:", TESTDBF->( rddName() )
+   ? "lUpdate:", TESTDBF->( LUpdate() )
    ? "Header:", TESTDBF->( Header() )
    ? "FieldPos( 'LAST' ):", TESTDBF->( FieldPos( "LAST" ) )
    ? "FieldName( 2 ):", TESTDBF->( FieldName( 2 ) )
@@ -39,109 +40,109 @@ function Main()
    ? "dbTableExt():", TESTDBF->( dbTableExt() )
    aArray := TESTDBF->( dbStruct() )
    ? "dbStruct:"
-   for nI := 1 to Len( aArray )
+   FOR nI := 1 TO Len( aArray )
       ? PadR( aArray[ nI ][ 1 ], 10 ) , aArray[ nI ][ 2 ], aArray[ nI ][ 3 ], aArray[ nI ][ 4 ]
-   next
+   NEXT
 
    ? "Press any key to continue..."
-   InKey( 0 )
+   Inkey( 0 )
    CLS
 
    ? "dbGoTop():"
    dbGoTop()
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
-     TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
-     TESTDBF->( RecNo() )
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+      TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
+      TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
-   dbSkip( -1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
-     TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
-     TESTDBF->( RecNo() )
+   dbSkip( - 1 )
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+      TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
+      TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
-   dbSkip( -1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
-     TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
-     TESTDBF->( RecNo() )
+   dbSkip( - 1 )
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+      TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
+      TESTDBF->( RecNo() )
    ? "dbSkip( 1 ):"
    dbSkip( 1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
-     TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
-     TESTDBF->( RecNo() )
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+      TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
+      TESTDBF->( RecNo() )
    ? "dbSkip( 1 ):"
    dbSkip( 1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
-     TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
-     TESTDBF->( RecNo() )
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+      TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
+      TESTDBF->( RecNo() )
    ? "dbGoTop():"
    dbGoTop()
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
-     TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
-     TESTDBF->( RecNo() )
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+      TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
+      TESTDBF->( RecNo() )
    ? "dbSkip( 1 ):"
    dbSkip( 1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
-     TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
-     TESTDBF->( RecNo() )
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+      TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
+      TESTDBF->( RecNo() )
    ? "dbSkip( 1 ):"
    dbSkip( 1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
-     TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
-     TESTDBF->( RecNo() )
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+      TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
+      TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
-   dbSkip( -1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
-     TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
-     TESTDBF->( RecNo() )
+   dbSkip( - 1 )
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+      TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
+      TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
-   dbSkip( -1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
-     TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
-     TESTDBF->( RecNo() )
-   InKey( 0 )
+   dbSkip( - 1 )
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+      TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
+      TESTDBF->( RecNo() )
+   Inkey( 0 )
    CLS
 
    ? "dbGoBottom():"
    dbGoBottom()
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
-     TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
-     TESTDBF->( RecNo() )
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+      TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
+      TESTDBF->( RecNo() )
    ? "dbSkip( 1 ):"
    dbSkip( 1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
-     TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
-     TESTDBF->( RecNo() )
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+      TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
+      TESTDBF->( RecNo() )
    ? "dbSkip( 1 ):"
    dbSkip( 1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
-     TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
-     TESTDBF->( RecNo() )
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+      TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
+      TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
-   dbSkip( -1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
-     TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
-     TESTDBF->( RecNo() )
+   dbSkip( - 1 )
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+      TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
+      TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
-   dbSkip( -1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
-     TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
-     TESTDBF->( RecNo() )
+   dbSkip( - 1 )
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+      TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
+      TESTDBF->( RecNo() )
 
    ? "Press any key to continue..."
-   InKey( 0 )
+   Inkey( 0 )
    CLS
 
    ? "dbGoto( 490 ):"
    dbGoto( 490 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
-     TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
-     TESTDBF->( RecNo() )
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+      TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
+      TESTDBF->( RecNo() )
    ? "FCount:", TESTDBF->( FCount() )
-   for nI := 1 to TESTDBF->( FCount() )
+   FOR nI := 1 TO TESTDBF->( FCount() )
       ? "FieldGet( " + LTrim( Str( nI ) ) + " ):", TESTDBF->( FieldGet( nI ) )
-   next
+   NEXT
 
    ? "Press any key to continue..."
-   InKey( 0 )
+   Inkey( 0 )
    CLS
 
    ? "while !TESTDBF->( Eof() )"
@@ -149,13 +150,13 @@ function Main()
    ? "   TESTDBF->( dbSkip() )"
    ? "end"
    ? ""
-   while !TESTDBF->( Eof() )
+   WHILE !TESTDBF->( EOF() )
       ? TESTDBF->FIRST, TESTDBF->( RecNo() )
       TESTDBF->( dbSkip() )
-   end
+   ENDDO
 
    ? "Press any key to continue..."
-   InKey( 0 )
+   Inkey( 0 )
    CLS
 
    ? "SET FILTER TO TESTDBF->AGE == 21"
@@ -164,20 +165,20 @@ function Main()
    ? "while !TESTDBF->( Eof() )"
    ? "   ? TESTDBF->FIRST, TESTDBF->AGE, TESTDBF->( RecNo() )"
    ? "   TESTDBF->( dbSkip() )"
-   ? "end"
+   ? "enddo"
    ? "SET FILTER TO"
    ? ""
    SET FILTER TO TESTDBF->AGE == 21
    ? TESTDBF->( dbFilter() )
    TESTDBF->( dbGoTop() )
-   while !TESTDBF->( Eof() )
+   WHILE !TESTDBF->( EOF() )
       ? TESTDBF->FIRST, TESTDBF->AGE, TESTDBF->( RecNo() )
       TESTDBF->( dbSkip() )
-   end
+   ENDDO
    SET FILTER TO
 
    ? "Press any key to continue..."
-   InKey( 0 )
+   Inkey( 0 )
    CLS
 
    ? "TESTDBF->( Found() )"
@@ -188,13 +189,13 @@ function Main()
    ? "end"
    TESTDBF->( Found() )
    LOCATE FOR TESTDBF->AGE == 23
-   while TESTDBF->( Found() )
+   WHILE TESTDBF->( Found() )
       ? TESTDBF->FIRST, TESTDBF->AGE, TESTDBF->( RecNo() )
       CONTINUE
-   end
+   ENDDO
 
    ? "Press any key to continue..."
-   InKey( 0 )
+   Inkey( 0 )
    CLS
 
    ? "TESTDBF->( dbEval( { || QOut( TESTDBF->FIRST, TESTDBF->AGE ) }, ;"
@@ -202,11 +203,11 @@ function Main()
    ? ""
    ? "dbCommit()"
    TESTDBF->( dbEval( { || QOut( TESTDBF->FIRST, TESTDBF->AGE ) }, ;
-                      { || TESTDBF->AGE == 23 } ) )
+      { || TESTDBF->AGE == 23 } ) )
    TESTDBF->( dbCommit() )
 
    ? "Press any key to continue..."
-   InKey( 0 )
+   Inkey( 0 )
    CLS
 
    ? 'dbCreate( "newrdd", { { "First_Name", "C", 20, 0 }, ;'
@@ -217,16 +218,16 @@ function Main()
    ? '                      { "Student",    "L",  1, 0 } },, .T., "newrdd" )'
    ? 'SET CENTURY ON'
    dbCreate( "newrdd", { { "First_Name", "C", 20, 0 }, ;
-                         { "Age",        "N",  3, 0 }, ;
-                         { "Date",       "D",  8, 0 }, ;
-                         { "Rate",       "N",  6, 2 }, ;
-                         { "Memo",       "M", 10, 0 }, ;
-                         { "Student",    "L",  1, 0 } },, .T., "newrdd" )
+      { "Age",        "N",  3, 0 }, ;
+      { "Date",       "D",  8, 0 }, ;
+      { "Rate",       "N",  6, 2 }, ;
+      { "Memo",       "M", 10, 0 }, ;
+      { "Student",    "L",  1, 0 } }, , .T. , "newrdd" )
    SET CENTURY ON
-   ? "lUpdate:", NEWRDD->( lUpdate() )
+   ? "lUpdate:", NEWRDD->( LUpdate() )
 
    ? "Press any key to continue..."
-   InKey( 0 )
+   Inkey( 0 )
    CLS
 
    ? 'Select( "TESTDBF" )'
@@ -255,21 +256,21 @@ function Main()
    ? "NEWRDD->( dbDelete() )"
    ? "? NEWRDD->( Deleted() )"
    ? "NEWRDD->( dbRLock( 3 ) )"
-   Select( "TESTDBF" )
+   SELECT( "TESTDBF" )
    SET FILTER TO TESTDBF->SALARY > 120000
    TESTDBF->( dbGoTop() )
-   while !TESTDBF->( Eof() )
+   WHILE !TESTDBF->( EOF() )
       NEWRDD->( dbAppend() )
       NEWRDD->FIRST_NAME := TESTDBF->FIRST
       NEWRDD->AGE := TESTDBF->AGE
       NEWRDD->DATE := TESTDBF->HIREDATE
       NEWRDD->RATE := Val( Right( LTrim( Str( Seconds() ) ), 5 ) )
       NEWRDD->MEMO := TESTDBF->FIRST + Chr( 13 ) + Chr( 10 ) + ;
-                      TESTDBF->LAST + Chr( 13 ) + Chr( 10 ) + ;
-                      TESTDBF->STREET
+         TESTDBF->LAST + Chr( 13 ) + Chr( 10 ) + ;
+         TESTDBF->STREET
       NEWRDD->STUDENT := TESTDBF->MARRIED
       TESTDBF->( dbSkip() )
-   end
+   ENDDO
    SET FILTER TO
    ? NEWRDD->( RecCount() )
    NEWRDD->( dbGoTop() )
@@ -283,7 +284,7 @@ function Main()
    NEWRDD->( dbRLock( 3 ) )
 
    ? "Press any key to continue..."
-   InKey( 0 )
+   Inkey( 0 )
    CLS
 
    aArray := NEWRDD->( dbRLockList() )
@@ -292,12 +293,12 @@ function Main()
    ? "   ? aArray[ nI ]"
    ? "next"
    ? "dbRLockList(): "
-   for nI := 1 to Len( aArray )
+   FOR nI := 1 TO Len( aArray )
       ? aArray[ nI ]
-   next
+   NEXT
 
    ? "Press any key to continue..."
-   InKey( 0 )
+   Inkey( 0 )
    CLS
 
    ? 'NEWRDD->( dbCloseArea() )'
@@ -307,18 +308,18 @@ function Main()
    ? '? "RecCount:", NEWRDD->( RecCount() )'
    ? ""
    NEWRDD->( dbCloseArea() )
-   dbUseArea( .T., "DBF", "newrdd", "NEWRDD", .F., .F. )
+   dbUseArea( .T. , "DBF", "newrdd", "NEWRDD", .F. , .F. )
 
    ? "Press any key to continue..."
-   InKey( 0 )
+   Inkey( 0 )
    CLS
 
    nI := 1
-   NEWRDD->( __dbPack( { || QOut( nI ), nI++ } ) )
+   NEWRDD->( __dbPack( { || QOut( nI ), nI ++ } ) )
    ? "RecCount:", NEWRDD->( RecCount() )
 
    ? "Press any key to continue..."
-   InKey( 0 )
+   Inkey( 0 )
    CLS
 
    ? '? "RecCount:", NEWRDD->( RecCount() )'
@@ -330,7 +331,7 @@ function Main()
    ? "RecCount:", NEWRDD->( RecCount() )
 
    ? "Press any key to continue..."
-   InKey( 0 )
+   Inkey( 0 )
    CLS
 
    ? 'NEWRDD->( dbCloseArea() )'
@@ -350,25 +351,25 @@ function Main()
    ? 'next'
 
    ? "Press any key to continue..."
-   InKey( 0 )
+   Inkey( 0 )
    CLS
 
    NEWRDD->( dbCloseArea() )
-   Select( "TESTDBF" )
+   SELECT( "TESTDBF" )
    SORT ON FIRST /DC, AGE /D TO NEWRDD
 
-   dbUseArea( .T., "DBF", "newrdd", "NEWRDD", .F., .F. )
+   dbUseArea( .T. , "DBF", "newrdd", "NEWRDD", .F. , .F. )
    ? "RecCount:", NEWRDD->( RecCount() )
-   for nI := 1 to 8
+   FOR nI := 1 TO 8
       ? NEWRDD->FIRST, NEWRDD->AGE
       NEWRDD->( dbSkip() )
-   next
+   NEXT
    ? "..."
    NEWRDD->( dbGoBottom() )
-   NEWRDD->( dbSkip( -8 ) )
-   for nI := 1 to 8
+   NEWRDD->( dbSkip( - 8 ) )
+   FOR nI := 1 TO 8
       ? NEWRDD->FIRST, NEWRDD->AGE
       NEWRDD->( dbSkip() )
-   next
+   NEXT
 
-return nil
+   RETURN

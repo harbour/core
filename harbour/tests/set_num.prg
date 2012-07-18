@@ -6,12 +6,13 @@
 
 #include "set.ch"
 
-function Main()
-local n
+PROCEDURE Main()
 
-   for n := 1 to _SET_COUNT
-      outstd (hb_eol())
-      outstd (set (n))
-   next
+   LOCAL n
 
-return nil
+   FOR n := 1 TO _SET_COUNT
+      OutStd( hb_eol() )
+      OutStd( Set( n ) )
+   NEXT
+
+   RETURN

@@ -2,12 +2,12 @@
  * $Id$
  */
 
-FUNCTION Main()
+PROCEDURE Main()
 
    USE test
 
    REPLACE Age WITH 1
-   ? FIELD -> Age
+   ? FIELD->Age
 
    //REPLACE 1->Age WITH 2 // Todo: complete support in harbour.y - AliasAddInt()
    //? FIELD->Age
@@ -15,14 +15,14 @@ FUNCTION Main()
    //REPLACE 1.5->Age WITH 3 // Will produce "Invalid alias expression"
    //? FIELD->Age
 
-   REPLACE TEST -> Age WITH 4
-   ? FIELD -> Age
+   REPLACE TEST->Age WITH 4
+   ? FIELD->Age
 
-   TEST -> Age := 5
-   ? FIELD -> Age
+   TEST->Age := 5
+   ? FIELD->Age
 
-   TEST -> ( FieldPut( FieldPos( 'AGE' ), 6 ) )
-   ? FIELD -> Age
+   TEST->( FieldPut( FieldPos( 'AGE' ), 6 ) )
+   ? FIELD->Age
 
    dbCloseArea()
 
@@ -31,10 +31,10 @@ FUNCTION Main()
    USE test
 
    // ? ("0")->FIRST
-   ? ( "B" ) -> FIRST
-   ? ( "2" ) -> FIRST
-   ? 2 -> FIRST
-   ? B -> FIRST
+   ? ( "B" )->FIRST
+   ? ( "2" )->FIRST
+   ? 2->FIRST
+   ? B->FIRST
 
    Inkey( 0 )
 
@@ -98,4 +98,4 @@ FUNCTION Main()
    ? "Z" , dbSelectArea( "Z" ), Select()
    ? "AA", dbSelectArea( "AA" ), Select()
 
-   RETURN NIL
+   RETURN

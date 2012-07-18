@@ -1,10 +1,10 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Testing multiple returns into a function
 
-function Main()
+PROCEDURE Main()
 
    QOut( "From Main()" )
 
@@ -16,20 +16,20 @@ function Main()
 
    QOut( "back to Main()" )
 
-return nil
+   RETURN
 
-function Two( n )
+FUNCTION Two( n )
 
-   do case
-      case n == 1
-           QOut( "n == 1" )
-           return nil
+   DO CASE
+   CASE n == 1
+      QOut( "n == 1" )
+      RETURN nil
 
-      case n == 2
-           QOut( "n == 2" )
-           return nil
-  endcase
+   CASE n == 2
+      QOut( "n == 2" )
+      RETURN nil
+   ENDCASE
 
-  QOut( "This message should not been seen" )
+   QOut( "This message should not been seen" )
 
-return nil
+   RETURN nil

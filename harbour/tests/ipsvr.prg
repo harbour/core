@@ -13,7 +13,7 @@
 
 REQUEST HB_MT
 
-PROCEDURE main()
+PROCEDURE Main()
 
    LOCAL hListen
    LOCAL hSocket

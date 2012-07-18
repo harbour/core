@@ -4,25 +4,35 @@
 
 #include "hbclass.ch"
 
-function main()
-   local oObject, oBase
+PROCEDURE Main()
+
+   LOCAL oObject, oBase
+
    oObject := TAnyClass():New()
    oBase := TClassBase():New()
-return nil
 
-class TClassBase
-   method New()
-   method Test() INLINE Alert( "Test" )
-endclass
+   RETURN
 
-method New() class TClassBase
-return Self
+CREATE CLASS TClassBase
 
-class TAnyClass from TClassBase
-   method New()
-endclass
+   METHOD New()
+   METHOD Test() INLINE Alert( "Test" )
 
-method New() class TAnyClass
+ENDCLASS
+
+METHOD New() CLASS TClassBase
+
+   RETURN Self
+
+CREATE CLASS TAnyClass FROM TClassBase
+
+   METHOD New()
+
+ENDCLASS
+
+METHOD New() CLASS TAnyClass
+
    super:New()
    super:Test()
-return Self
+
+   RETURN Self

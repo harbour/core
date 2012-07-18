@@ -1,6 +1,6 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // The following code tests harbour's ability to cope with parenthesized
 // expressions.
@@ -13,9 +13,9 @@
    #pragma -es0
 #endif
 
-Function Main()
-Local x
-Local y
+PROCEDURE Main()
+   Local x
+   Local y
 
    // Simple one to start with.
    x := ( 1 )
@@ -24,26 +24,26 @@ Local y
    // Now with a little more complex:
    x := ( 1, 2 )
    ? x
-   
+
    // And a little more, this is really the same as the previous one.
    x := ( 1, 2, 3 )
    ? x
-   
+
    // Expression within expression
    x := ( ( 1, 2, 3 ) )
    ? x
-   
+
    // And a little more:
    x := ( ( 1, 2, 3 ), ( 1, 2, 3 ) )
    ? x
-   
+
    // Some inline assignments
    x := ( y := 10, y )
    ? x
-   
+
    x := ( ( y := ( 1, 2, 3) ), y * ( 10, 20, 30 ) )
    ? x
-   
+
    // Now mix with statements and functions
    ? ( 1, 2, 3 )
 
@@ -52,19 +52,19 @@ Local y
    Else
       ? "Borken"
    EndIf
-   
+
    If ( x := 10, y := ( x == 10 ) )
       ? "Working"
    Else
       ? "Broken"
    EndIf
-   
+
    If ( Something( 1, 2, 3 ), .T. )
       ? "Working"
    Else
       ? "Broken"
    EndIf
-   
+
    ?
 
    // Now even some more testing of related code
@@ -75,7 +75,7 @@ Local y
 
    ? IF( (.T. .OR. .F.), IF( .T., "Working", "Broken" ), IF( .F., "Broken", "Working" ) )
 
-   /* The following code should generate syntax error if uncommented 
+   /* The following code should generate syntax error if uncommented
     * because IF token followed by any three expressions is interpreted
     * as IIF inline
     */
@@ -85,10 +85,10 @@ Local y
 //       ? "Broken"
 //   ENDIF
 
-Return( NIL )
+   Return
 
 Static Function Something( x, y, z )
 
-  // This does something and it does it well/
-  
-Return( NIL )
+   // This does something and it does it well/
+
+   Return( NIL )

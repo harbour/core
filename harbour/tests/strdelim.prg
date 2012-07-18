@@ -1,14 +1,14 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
-procedure main()
+PROCEDURE Main()
 
-   local aArray := {{NIL}}
+   LOCAL aArray := { { NIL } }
 
-   aArray  [ 1 /*first*/ ][ 1 /* second */ ] := [Hello]
+   aArray[ 1 /*first*/ ][ 1 /* second */ ] := [Hello]
 
-   QOut( aArray[1][1] )
+   QOut( aArray[ 1 ][ 1 ] )
 
    QOut( 'World "Peace[!]"' )
 
@@ -16,6 +16,4 @@ procedure main()
 
    QOut( [King 'Clipper "!"'] )
 
-return
-
-
+   RETURN

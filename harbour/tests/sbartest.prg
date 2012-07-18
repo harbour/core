@@ -19,7 +19,7 @@
 #define B_THIN  ( Chr( 219 ) + Chr( 223 ) + Chr( 219 ) + Chr( 219 ) + ;
                   Chr( 219 ) + Chr( 220 ) + Chr( 219 ) + Chr( 219 ) )
 
-PROCEDURE main()
+PROCEDURE Main()
 
    InitScrlBar()
 

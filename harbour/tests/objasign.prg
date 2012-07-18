@@ -1,6 +1,6 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 //
 // Object Array syntax test
@@ -11,9 +11,9 @@
 // Placed in the public domain
 //
 
-Function Main
+PROCEDURE Main()
 
-   local o := TNumber():New()
+   LOCAL o := TNumber():New()
 
    QOut( "Direct reference : ", o:x )
 
@@ -23,9 +23,9 @@ Function Main
    o:x := 4
    QOut( "Assign 4         : ", o:x )
 
-   QOut( "Post increment   : ", o:x++ )
+   QOut( "Post increment   : ", o:x ++ )
    QOut( "After            : ", o:x   )
-   QOut( "Pre decrement    : ", --o:x )
+   QOut( "Pre decrement    : ", -- o:x )
    QOut( "After            : ", o:x   )
 
    o:x += 2
@@ -47,30 +47,30 @@ Function Main
    QOut( "To the power 3   : ", o:x )
 
    QOut( "Global stack" )
-   Debug( __dbgvmStkGList() )
-   QOut( "Statics")
-   Debug( __dbgvmVarSList() )
-return NIL
+   Debug( __dbgVMStkGList() )
+   QOut( "Statics" )
+   Debug( __dbgVMVarSList() )
 
-Function TNumber()                              // Very simple class
+   RETURN
 
-   static oNumber
+FUNCTION TNumber()                              // Very simple class
 
-   if oNumber == NIL
+   STATIC oNumber
+
+   IF oNumber == NIL
       oNumber := HBClass():New( "TNumber" )
 
-      oNumber:AddData  ( "x"   )
+      oNumber:AddData( "x" )
       oNumber:AddMethod( "New", @New() )
       oNumber:Create()
-   endif
-return oNumber:Instance()
+   ENDIF
 
+   RETURN oNumber:Instance()
 
-static function New()
+STATIC FUNCTION New()
 
-   local self := QSelf()
+   LOCAL self := QSelf()
 
    ::x := 1
-return self
 
-
+   RETURN self

@@ -4,16 +4,17 @@
 
 // Testing Browse()
 
-function Main()
+PROCEDURE Main()
+
    LOCAL cColor
 
-   cColor := SETCOLOR("W+/B")
+   cColor := SetColor( "W+/B" )
    CLS
 
    USE test
    Browse()
 
-   SETCOLOR(cColor)
+   SetColor( cColor )
    CLS
 
-return nil
+   RETURN

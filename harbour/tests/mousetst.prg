@@ -10,7 +10,7 @@
 
 #include "inkey.ch"
 
-PROCEDURE main()
+PROCEDURE Main()
 
    LOCAL nR := 5, nC := 38
 

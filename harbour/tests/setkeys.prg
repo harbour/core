@@ -55,77 +55,80 @@
 
 #include "inkey.ch"
 
-Procedure Main()
-  local GetList := {}
-  local alpha, bravo, charlie, k, l
-  local F8Active := .t.
+PROCEDURE Main()
 
-  cls
+   LOCAL GetList := {}
+   LOCAL alpha, bravo, charlie, k, l
+   LOCAL F8Active := .T.
 
-  @ 2, 2 say "Press F10 to popup alert box of current get, not active if empty"
-  @ 3, 2 say "Press F9 to disable all setkeys, except F9 to restore (uses SetKeySave())"
-  @ 4, 2 say "Press F8 to test setkey w/ array, SetKeyCheck(), and SetKeyGet()"
-  @ 5, 2 say "Press F7 to active/deactive F8"
+   CLS
 
-  alpha   := "alpha    "
-  bravo   := 123
-  charlie := date()
+   @ 2, 2 SAY "Press F10 to popup alert box of current get, not active if empty"
+   @ 3, 2 SAY "Press F9 to disable all setkeys, except F9 to restore (uses SetKeySave())"
+   @ 4, 2 SAY "Press F8 to test setkey w/ array, SetKeyCheck(), and SetKeyGet()"
+   @ 5, 2 SAY "Press F7 to active/deactive F8"
 
-  @ 10, 10 get alpha
-  @ 11, 10 get bravo
-  @ 12, 10 get charlie
+   alpha   := "alpha    "
+   bravo   := 123
+   charlie := Date()
 
-  #ifndef K_F10
+   @ 10, 10 GET alpha
+   @ 11, 10 GET bravo
+   @ 12, 10 GET charlie
 
-    #define K_F10 -9
-    #define K_F9  -8
-    #define K_F8  -7
-    #define K_ESC 27
+#ifndef K_F10
 
-  #endif
+#define K_F10 -9
+#define K_F9  -8
+#define K_F8  -7
+#define K_ESC 27
 
-  setKey( K_F10, {|| Alert( transform( getactive():varGet(), NIL ) ) }, ;
-                 {|| !empty( getactive():VarGet() ) } )  /* :buffer */
-  setKey( K_F9 , {|| k := hb_SetKeySave( NIL ), ;
-                     SetKey( K_F9, {|| hb_SetKeySave( k ) } ) } )
-  SetKey( K_F8 , {|| SubMain() }, {|| F8Active } )
-  SetKey( K_F7 , {|| F8Active := ! F8Active } )
+#endif
 
-  read
-  ? alpha, bravo, charlie
+   SetKey( K_F10, { || Alert( Transform( GetActive():varGet(), NIL ) ) }, ;
+      { || !Empty( GetActive():VarGet() ) } )  /* :buffer */
+   SetKey( K_F9 , { || k := hb_SetKeySave( NIL ), ;
+      SetKey( K_F9, { || hb_SetKeySave( k ) } ) } )
+   SetKey( K_F8 , { || SubMain() }, { || F8Active } )
+   SetKey( K_F7 , { || F8Active := ! F8Active } )
 
-  return
+   READ
+   ? alpha, bravo, charlie
 
-static Procedure SubMain()
-  local n
-  local bF8Action, bF8Active
+   RETURN
 
-  bF8Action := hb_SetKeyGet( K_F8, @bF8Active )
-  SetKey( K_F8, NIL )
+STATIC PROCEDURE SubMain()
 
-  hb_SetKeyArray( { 49, 50, 52, 53 }, {|x| qout( chr( x ) ) } )
-  do while ( n := inkey( 0 ) ) != K_ESC
-    if hb_SetKeyCheck( n, procname(),procline(), readvar() )
-      qqout( " hit hot" )
-    else
-      qout( chr( n ) )
-      qqout( " hit cold" )
-    endif
-  end
+   LOCAL n
+   LOCAL bF8Action, bF8Active
 
-  hb_SetKeyArray( { 49, 50, 52, 53 }, NIL )
-  SetKey( K_F8, bF8Action, bF8Active )
+   bF8Action := hb_SetKeyGet( K_F8, @bF8Active )
+   SetKey( K_F8, NIL )
 
-  return
+   hb_SetKeyArray( { 49, 50, 52, 53 }, { |x| QOut( Chr( x ) ) } )
+   DO WHILE ( n := Inkey( 0 ) ) != K_ESC
+      IF hb_SetKeyCheck( n, ProcName(), ProcLine(), ReadVar() )
+         QQOut( " hit hot" )
+      ELSE
+         QOut( Chr( n ) )
+         QQOut( " hit cold" )
+      ENDIF
+   end
 
-Procedure Help( cProc, nLine, cVar )
-  local nX := col(), nY := row()
+   hb_SetKeyArray( { 49, 50, 52, 53 }, NIL )
+   SetKey( K_F8, bF8Action, bF8Active )
 
-  @ 19, 19 say "Pcount: " ; ?? pcount()
-  @ 20, 10 say "Proc  : " ; ?? cProc
-  @ 21, 10 say "Line  : " ; ?? nLine
-  @ 22, 10 say "Var   : " ; ?? cVar
+   RETURN
 
-  SetPos( nX, nY )
+PROCEDURE Help( cProc, nLine, cVar )
 
-  return
+   LOCAL nX := Col(), nY := Row()
+
+   @ 19, 19 SAY "Pcount: " ; ?? PCount()
+   @ 20, 10 SAY "Proc  : " ; ?? cProc
+   @ 21, 10 SAY "Line  : " ; ?? nLine
+   @ 22, 10 SAY "Var   : " ; ?? cVar
+
+   SetPos( nX, nY )
+
+   RETURN

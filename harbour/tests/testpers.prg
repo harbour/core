@@ -1,14 +1,15 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
+
 // Class HBPersistent test
 
 #include "hbclass.ch"
 
-function Main()
+PROCEDURE Main()
 
-   local oTest := Test():New()
-   local oTest2 := Test2():New()
+   LOCAL oTest := Test():New()
+   LOCAL oTest2 := Test2():New()
 
    oTest:One   := "hello"
    oTest:Two   := 123
@@ -21,22 +22,22 @@ function Main()
 
    oTest:SaveToFile( "test.txt" )  // We save it to a file
 
-return nil
+   RETURN
 
-CLASS Test FROM HBPersistent
+CREATE CLASS Test FROM HBPersistent
 
-   DATA   One       PROPERTY
-   DATA   Two       PROPERTY
-   DATA   Three
-   DATA   Four      PROPERTY
+   VAR    One       PROPERTY
+   VAR    Two       PROPERTY
+   VAR    Three
+   VAR    Four      PROPERTY
 
    METHOD Another() INLINE { 1, { "One", "Two" }, Date() } PROPERTY
    METHOD More()    VIRTUAL
 
 ENDCLASS
 
-CLASS Test2 FROM HBPersistent
+CREATE CLASS Test2 FROM HBPersistent
 
-   DATA Five  PROPERTY
+   VAR Five  PROPERTY
 
 ENDCLASS

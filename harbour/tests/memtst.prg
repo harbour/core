@@ -15,7 +15,7 @@
    #include "hbmemory.ch"
 #endif
 
-proc main()
+PROCEDURE Main()
 local nCPUSec, nRealSec, i, a
 
 #ifdef __HARBOUR__

@@ -10,7 +10,7 @@
 #define PORT                        10000
 #define EOT                         ( Chr( 4 ) )
 
-PROCEDURE main()
+PROCEDURE Main()
 
    LOCAL hSocket
 

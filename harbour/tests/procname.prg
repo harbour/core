@@ -1,42 +1,41 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Testing Harbour ProcName() and ProcLine()
 
 #define CRLF Chr( 13 ) + Chr( 10 )
 
-function Main()
+PROCEDURE Main()
 
    Two()
 
-return nil
+   RETURN
 
-function Two()
+FUNCTION Two()
 
    Three()
 
-return nil
+   RETURN nil
 
-function Three()
+FUNCTION Three()
 
    Four()
 
-return nil
+   RETURN nil
 
-function Four()
+FUNCTION Four()
 
    Five()
 
-return nil
+   RETURN nil
 
-function Five()
+FUNCTION Five()
 
-   local n := 0
+   LOCAL n := 0
 
-   while ! Empty( ProcName( n ) )
-     QQOut( "Called from: ", ProcName( n ), ProcLine( n++ ), CRLF )
-   end
+   WHILE ! Empty( ProcName( n ) )
+      QQOut( "Called from: ", ProcName( n ), ProcLine( n ++ ), CRLF )
+   ENDDO
 
-return nil
-
+   RETURN nil

@@ -4,7 +4,7 @@
 
 // Testing memory release
 
-PROCEDURE main()
+PROCEDURE Main()
 
    LOCAL a, b
 

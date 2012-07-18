@@ -1,70 +1,70 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 #include "inkey.ch"
 
-procedure main()
+PROCEDURE Main()
 
-   memvar ptestvar
+   MEMVAR ptestvar
 
-   local testvar
+   LOCAL testvar
 
-   set key K_F8 to RECURSE()
+   SET KEY K_F8 TO RECURSE()
 
-   clear screen
+   CLEAR SCREEN
 
-   @  1, 10 prompt 'Menu Item 1' message 'Menu Message 1'
-   @  2, 10 prompt 'Menu Item 2' message 'Menu Message 2'
-   @  3, 10 prompt 'Menu Item 3' message 'Menu Message 3'
-   @  4, 10 prompt 'Menu Item 4' message 'Menu Message 4'
+   @  1, 10 PROMPT 'Menu Item 1' MESSAGE 'Menu Message 1'
+   @  2, 10 PROMPT 'Menu Item 2' MESSAGE 'Menu Message 2'
+   @  3, 10 PROMPT 'Menu Item 3' MESSAGE 'Menu Message 3'
+   @  4, 10 PROMPT 'Menu Item 4' MESSAGE 'Menu Message 4'
 
-   @  6, 10 say 'Testing with LOCAL parameter'
-   @  7, 10 say 'Press F8 to recurse into MENU TO'
+   @  6, 10 SAY 'Testing with LOCAL parameter'
+   @  7, 10 SAY 'Press F8 to recurse into MENU TO'
 
-   menu to testvar
+   MENU TO testvar
 
-   @  9, 10 say 'Your Choice = ' + str( testvar, 1 )
+   @  9, 10 SAY 'Your Choice = ' + Str( testvar, 1 )
 
-   Inkey(0)
+   Inkey( 0 )
 
-   set key K_F8 to RECURSE()
+   SET KEY K_F8 TO RECURSE()
 
-   clear screen
+   CLEAR SCREEN
 
-   @  1, 10 prompt 'Menu Item 1' message 'Menu Message 1'
-   @  2, 10 prompt 'Menu Item 2' message 'Menu Message 2'
-   @  3, 10 prompt 'Menu Item 3' message 'Menu Message 3'
-   @  4, 10 prompt 'Menu Item 4' message 'Menu Message 4'
+   @  1, 10 PROMPT 'Menu Item 1' MESSAGE 'Menu Message 1'
+   @  2, 10 PROMPT 'Menu Item 2' MESSAGE 'Menu Message 2'
+   @  3, 10 PROMPT 'Menu Item 3' MESSAGE 'Menu Message 3'
+   @  4, 10 PROMPT 'Menu Item 4' MESSAGE 'Menu Message 4'
 
-   @  6, 10 say 'Testing with MEMVAR parameter'
-   @  7, 10 say 'Press F8 to recurse into MENU TO'
+   @  6, 10 SAY 'Testing with MEMVAR parameter'
+   @  7, 10 SAY 'Press F8 to recurse into MENU TO'
 
-   menu to ptestvar
+   MENU TO ptestvar
 
-   @  9, 10 say 'Your Choice = ' + str( ptestvar, 1 )
+   @  9, 10 SAY 'Your Choice = ' + Str( ptestvar, 1 )
 
-   return
+   RETURN
 
-procedure RECURSE()
+PROCEDURE RECURSE()
 
-   local testvar
+   LOCAL testvar
 
-   set key K_F8 to
+   SET KEY K_F8 TO
 
-   @  6, 10 say '                                '
+   @  6, 10 SAY '                                '
 
-   @  1, 50 prompt 'Menu Item 1' message 'Menu Message 1'
-   @  2, 50 prompt 'Menu Item 2' message 'Menu Message 2'
-   @  3, 50 prompt 'Menu Item 3' message 'Menu Message 3'
-   @  4, 50 prompt 'Menu Item 4' message 'Menu Message 4'
+   @  1, 50 PROMPT 'Menu Item 1' MESSAGE 'Menu Message 1'
+   @  2, 50 PROMPT 'Menu Item 2' MESSAGE 'Menu Message 2'
+   @  3, 50 PROMPT 'Menu Item 3' MESSAGE 'Menu Message 3'
+   @  4, 50 PROMPT 'Menu Item 4' MESSAGE 'Menu Message 4'
 
-   menu to testvar
+   MENU TO testvar
 
-   @  7, 10 say 'Press F8 to recurse into MENU TO'
+   @  7, 10 SAY 'Press F8 to recurse into MENU TO'
 
-   @  9, 50 say 'Your Choice = ' + str( testvar, 1 )
+   @  9, 50 SAY 'Your Choice = ' + Str( testvar, 1 )
 
-   set key K_F8 to RECURSE()
+   SET KEY K_F8 TO RECURSE()
 
-   return
+   RETURN

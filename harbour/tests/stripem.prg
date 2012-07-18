@@ -4,7 +4,7 @@
 
 #include "set.ch"
 
-#xtranslate Default( <Var>, <xVal> ) => IIF( <Var> == NIL, <xVal>, <Var> )
+#xtranslate Default( <Var>, <xVal> ) => iif( <Var> == NIL, <xVal>, <Var> )
 
 //
 // Strip
@@ -56,9 +56,9 @@ FUNCTION Main( cFrom, cTo )
 
    RETURN nil
 
-   //
-   // Generic DOS file handler
-   //
+//
+// Generic DOS file handler
+//
 
 FUNCTION TTextFile()                            // Parameter = dirty
 
@@ -94,13 +94,13 @@ FUNCTION TTextFile()                            // Parameter = dirty
 
    RETURN  oFile:Instance()
 
-   //
-   // Method TextFile:New -> Create a new text file
-   //
-   // <cFile>      file name. No wild characters
-   // <cMode>      mode for opening. Default "R"
-   // <nBlockSize> Optional maximum blocksize
-   //
+//
+// Method TextFile:New -> Create a new text file
+//
+// <cFile>      file name. No wild characters
+// <cMode>      mode for opening. Default "R"
+// <nBlockSize> Optional maximum blocksize
+//
 
 FUNCTION New( cFileName, cMode, nBlock )
 
@@ -129,9 +129,9 @@ FUNCTION New( cFileName, cMode, nBlock )
 
    RETURN self
 
-   //
-   // Dispose -> Close the file handle
-   //
+//
+// Dispose -> Close the file handle
+//
 
 FUNCTION Dispose()
 
@@ -150,9 +150,9 @@ FUNCTION Dispose()
 
    RETURN self
 
-   //
-   // Read a single line
-   //
+//
+// Read a single line
+//
 
 FUNCTION READ()
 
@@ -204,13 +204,13 @@ FUNCTION READ()
 
    RETURN cRet
 
-   //
-   // WriteLn -> Write a line to a file
-   //
-   // <xTxt>  Text to write. May be any type. May also be an array containing
-   //         one or more strings
-   // <lCRLF> End with Carriage Return/Line Feed (Default == TRUE)
-   //
+//
+// WriteLn -> Write a line to a file
+//
+// <xTxt>  Text to write. May be any type. May also be an array containing
+//         one or more strings
+// <lCRLF> End with Carriage Return/Line Feed (Default == TRUE)
+//
 
 FUNCTION WriteLn( xTxt, lCRLF )
 
@@ -235,9 +235,9 @@ FUNCTION WriteLn( xTxt, lCRLF )
 
    RETURN self
 
-   //
-   // Go to a specified line number
-   //
+//
+// Go to a specified line number
+//
 
 FUNCTION GOTO( nLine )
 

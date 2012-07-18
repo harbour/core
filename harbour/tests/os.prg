@@ -1,11 +1,11 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Testing the OS function
 
-function Main()
+PROCEDURE Main()
 
-   QOUT( OS() )
+   QOut( OS() )
 
-return nil
+   RETURN

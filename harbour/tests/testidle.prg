@@ -2,9 +2,7 @@
  * $Id$
  */
 
-// #include "set.ch" - Preset in pptable.c
-
-PROCEDURE MAIN()
+PROCEDURE Main()
 
    CLS
 

@@ -5,9 +5,9 @@
 // Class(y) Class Symbol documentation is located at:
 // http://www.clipx.net/ng/classy/ngdebc.php
 
-function Main()
+PROCEDURE Main()
 
-   local oSym := Symbol():New( "QOUT" )
+   LOCAL oSym := SYMBOL():New( "QOUT" )
 
    ? "Now test the :Exec() method"
 
@@ -19,9 +19,9 @@ function Main()
    ? "symbol name: ", oSym:name
 
    ? "Comparing QOut symbol with xOut symbol"
-   ? oSym:IsEqual( Symbol():New( "xOut" ) )
+   ? oSym:IsEqual( SYMBOL():New( "xOut" ) )
 
    ? "done!"
    ?
 
-return nil
+   RETURN

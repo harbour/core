@@ -21,8 +21,8 @@ FUNCTION Main()
 
    oHTML:SetTitle( "Harbour Power Demonstration" )
    oHTML:AddHead( "Harbour" )
-   oHTML:AddPara( "<B>Harbour</B> is xBase at its best. Have a taste today!", "LEFT" )
-   oHTML:AddPara( "<B>L i n k s</B>", "CENTER" )
+   oHTML:AddPara( "<b>Harbour</b> is xBase at its best. Have a taste today!", "LEFT" )
+   oHTML:AddPara( "<b>L i n k s</b>", "CENTER" )
    oHTML:AddLink( "http://harbour-project.org", "Meet the Harbour power!" )
    oHTML:Generate()
 
@@ -39,7 +39,7 @@ FUNCTION Main()
 
 /*---------------------------------------------------------------------------*/
 
-FUNCTION THTML
+FUNCTION THTML()
 
    STATIC oClass
 
@@ -93,7 +93,7 @@ STATIC FUNCTION AddLink( cLinkTo, cLinkName )
    LOCAL Self := QSelf()
 
    ::cBody := ::cBody + ;
-      "<A HREF='" + cLinkTo + "'>" + cLinkName + "</A>"
+      "<a href='" + cLinkTo + "'>" + cLinkName + "</a>"
 
    RETURN Self
 
@@ -106,7 +106,7 @@ STATIC FUNCTION AddHead( cDescr )
    // ???
 
    ::cBody := ::cBody + ;
-      "<H1>" + cDescr + "</H1>"
+      "<h1>" + cDescr + "</h1>"
 
    RETURN NIL
 
@@ -114,13 +114,12 @@ STATIC FUNCTION AddPara( cPara, cAlign )
 
    LOCAL Self := QSelf()
 
-   //Default( cAlign, "Left" ) // removed Patrick Mast 2000-06-07
-   cAlign:=iif(cAlign==NIL,"Left",cAlign) //Added Patrick Mast 2000-06-17
+   cAlign := iif( cAlign == NIL, "Left", cAlign ) // Added Patrick Mast 2000-06-17
 
    ::cBody := ::cBody + ;
-      "<P ALIGN='" + cAlign + "'>" + hb_eol() + ;
+      "<p align='" + cAlign + "'>" + hb_eol() + ;
       cPara + hb_eol() + ;
-      "</P>"
+      "</p>"
 
    RETURN Self
 
@@ -129,12 +128,12 @@ STATIC FUNCTION Generate()
    LOCAL Self := QSelf()
 
    ::cContent :=                                                           ;
-      "<HTML><HEAD>"                                          + hb_eol() + ;
-      "<TITLE>" + ::cTitle + "</TITLE>"                       + hb_eol() + ;
-      "<BODY link='" + ::cLinkColor + "' " +                               ;
+      "<html><head>"                                          + hb_eol() + ;
+      "<title>" + ::cTitle + "</title>"                       + hb_eol() + ;
+      "<body link='" + ::cLinkColor + "' " +                               ;
       "vlink='" + ::cvLinkColor + "'>" +                      + hb_eol() + ;
       ::cBody                                                 + hb_eol() + ;
-      "</BODY></HTML>"
+      "</body></html>"
 
    RETURN Self
 

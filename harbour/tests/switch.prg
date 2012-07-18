@@ -2,15 +2,15 @@
  * $Id$
  */
 
-#ifdef __XHARBOUR__  
+#ifdef __XHARBOUR__
    #define OTHERWISE DEFAULT
-#endif   
+#endif
 
-PROCEDURE MAIN
-LOCAL a:=1
-PRIVATE b:="b"
+PROCEDURE Main()
+   LOCAL a := 1
+   PRIVATE b := "b"
 
-#ifndef __XHARBOUR__  
+#ifndef __XHARBOUR__
    SWITCH a
    END
 #endif
@@ -43,11 +43,11 @@ PRIVATE b:="b"
       ? "other"
    END
 
-#ifndef __XHARBOUR__  
+#ifndef __XHARBOUR__
    ?
    ? "44444444444444444444444444444444444"
    SWITCH a
-   OTHERWISE 
+   OTHERWISE
       ? "OTHERWISE"
    END
 #endif
@@ -55,12 +55,12 @@ PRIVATE b:="b"
    ?
    ? "55555555555555555555555555555555555"
    a := 'EE'
-#ifndef __XHARBOUR__  
+#ifndef __XHARBOUR__
    SWITCH a
    CASE 11
       ? "11"
       exit
-      
+
    CASE 'CCCC'+'DDDD'
       ? a+a
       EXIT
@@ -71,7 +71,7 @@ PRIVATE b:="b"
    CASE 1+1+1
       ? "3"
       EXIT
-      
+
    CASE 1+1*3
    CASE 123+12*4-1*4+2
    CASE 1-4
@@ -117,4 +117,4 @@ PRIVATE b:="b"
 
    ? "========================================="
 
-RETURN
+   RETURN

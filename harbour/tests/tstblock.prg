@@ -9,14 +9,14 @@ PROCEDURE Main()
    MEMVAR  Var1, Var2, Var3, Macro
    PRIVATE Var1, Var2, Var3, Macro
 
-   M -> Var1 := "Var1"
-   M -> Var2 := "Var2"
-   M -> Var3 := "Var3"
+   M->Var1 := "Var1"
+   M->Var2 := "Var2"
+   M->Var3 := "Var3"
 
    CLS
 
    FOR i := 1 TO 3
-      M -> Macro := "Var" + Str( i, 1 )
+      M->Macro := "Var" + Str( i, 1 )
       bBlock[ i ] := { || &Macro }
    NEXT
 
@@ -27,7 +27,7 @@ PROCEDURE Main()
    NEXT
 
    FOR i := 1 TO 3
-      M -> Macro := "Var" + Str( i, 1 )
+      M->Macro := "Var" + Str( i, 1 )
       bBlock[ i ] := { || &Macro + "!" }
    NEXT
 
@@ -39,7 +39,7 @@ PROCEDURE Main()
    NEXT
 
    FOR i := 1 TO 3
-      M -> Macro := "Var" + Str( i, 1 )
+      M->Macro := "Var" + Str( i, 1 )
       bBlock[ i ] := { || &( Macro ) }
    NEXT
 

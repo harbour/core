@@ -5,7 +5,7 @@
 #include "hbgtinfo.ch"
 #include "inkey.ch"
 
-PROCEDURE MAIN()
+PROCEDURE Main()
    LOCAL cGt
 
    cGt := HB_GtVersion( 0 )

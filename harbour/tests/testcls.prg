@@ -6,18 +6,19 @@
 
 #include "hbclass.ch"
 
-function Main()
+PROCEDURE Main()
 
-   local o := Test()
+   LOCAL o := Test()
 
    o:Another( "Hello" ) // "Another" message is not defined for Class Test, but
-                        // it will invoke ON ERROR MyErrorManager() method
+   // it will invoke ON ERROR MyErrorManager() method
 
    o:Another := 5  // Notice how __GetMessage() shows a underscored message
-                  // as we are setting a DATA value.
-return nil
+   // as we are setting a DATA value.
 
-CLASS Test
+   RETURN
+
+CREATE CLASS Test
 
    ON ERROR MyErrorManager( uParam1 )
 
@@ -25,10 +26,10 @@ ENDCLASS
 
 METHOD MyErrorManager( uParam1 ) CLASS Test
 
-   if PCount() > 0
+   IF PCount() > 0
       Alert( uParam1 )
-   endif
+   ENDIF
 
    Alert( __GetMessage() )  // Shows the message that was sent to the object
 
-return nil
+   RETURN nil

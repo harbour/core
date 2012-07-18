@@ -27,7 +27,7 @@
 //+--------------------------------------------------------------------
 //+
 
-PROCEDURE main()
+PROCEDURE Main()
 
    LOCAL aPrompts := { ;
       "AGRI-PLANTS"                   , ;

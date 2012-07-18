@@ -4,7 +4,7 @@
 
 #include "set.ch"
 
-PROCEDURE main()
+PROCEDURE Main()
 
    LOCAL a
    LOCAL i

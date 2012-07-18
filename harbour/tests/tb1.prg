@@ -16,7 +16,7 @@
 #include "setcurs.ch"
 #include "box.ch"
 
-proc main()
+procedure Main()
 
    static s_nCount := 0
    static s_nPos   := 1

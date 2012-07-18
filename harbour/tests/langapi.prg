@@ -8,35 +8,34 @@
 REQUEST HB_LANG_HU852
 REQUEST HB_LANG_KO
 
-func main()
+PROCEDURE Main()
 
-? "Prev:", hb_langselect()
-? hb_langName()
-? NationMsg( 1 )
-? CMonth( Date() )
-? CDOW( Date() )
-? "---------"
+   ? "Prev:", hb_langSelect()
+   ? hb_langName()
+   ? NationMsg( 1 )
+   ? CMonth( Date() )
+   ? CDOW( Date() )
+   ? "---------"
 
-? "Prev:", hb_langSelect( "HU852" )
-? hb_langName()
-? NationMsg( 1 )
-? CMonth( Date() )
-? CDOW( Date() )
-? "---------"
+   ? "Prev:", hb_langSelect( "HU852" )
+   ? hb_langName()
+   ? NationMsg( 1 )
+   ? CMonth( Date() )
+   ? CDOW( Date() )
+   ? "---------"
 
-? "Prev:", hb_langSelect( "NOTHERE" )
-? hb_langName()
-? NationMsg( 1 )
-? CMonth( Date() )
-? CDOW( Date() )
-? "---------"
+   ? "Prev:", hb_langSelect( "NOTHERE" )
+   ? hb_langName()
+   ? NationMsg( 1 )
+   ? CMonth( Date() )
+   ? CDOW( Date() )
+   ? "---------"
 
-? "Prev:", hb_langSelect( "KO" )
-? hb_langName()
-? NationMsg( 1 )
-? CMonth( Date() )
-? CDOW( Date() )
-? "---------"
+   ? "Prev:", hb_langSelect( "KO" )
+   ? hb_langName()
+   ? NationMsg( 1 )
+   ? CMonth( Date() )
+   ? CDOW( Date() )
+   ? "---------"
 
-return nil
-
+   RETURN

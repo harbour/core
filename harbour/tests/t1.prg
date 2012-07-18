@@ -1,18 +1,18 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // while loop test
 
-function Main()
+FUNCTION Main()
 
-   local i := 0
-   local cb := {|| QOut("test")}
+   LOCAL i := 0
+   LOCAL cb := {|| QOut( "test" ) }
 
-   while i < 1000
-      QOut(i)
-      eval(cb)
-      i++
-   end
+   WHILE i < 1000
+      QOut( i )
+      Eval( cb )
+      i ++
+   END
 
-return nil
+   RETURN nil

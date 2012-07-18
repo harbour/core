@@ -1,19 +1,19 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // testing recursive calls
 
-function main()
+PROCEDURE Main()
 
-  QOut( "Testing recursive calls" + Chr( 13 ) + Chr( 10 ) )
+   QOut( "Testing recursive calls" + Chr( 13 ) + Chr( 10 ) )
 
-  QOut(f(10))
+   QOut( f( 10 ) )
 
-  QOut( 10 * 9 * 8 * 7 * 6 * 5 * 4 * 3 * 2 * 1 )
+   QOut( 10 * 9 * 8 * 7 * 6 * 5 * 4 * 3 * 2 * 1 )
 
-return nil
+   RETURN
 
-function f(a)
-return iif(a<2,1,a*f(a-1))
+FUNCTION f( a )
 
+   RETURN iif( a < 2, 1, a * f( a - 1 ) )

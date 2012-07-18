@@ -6,7 +6,7 @@
    #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
 #endif
 
-PROCEDURE main()
+PROCEDURE Main()
 
    LOCAL i
    LOCAL cStr := ""

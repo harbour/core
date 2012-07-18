@@ -1,15 +1,15 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Testing Harbour classes and objects management
-// be aware Harbour provides a much simpler way using Class HBClass (source\rtl\class.prg)
+// be aware Harbour provides a much simpler way using Class HBClass
 
 #include "hboo.ch"
 
-function Main()
+PROCEDURE Main()
 
-   local oObject := TAny():New()
+   LOCAL oObject := TAny():New()
 
    QOut( ValType( oObject ) )
    QOut( Len( oObject ) )      // 3 datas !
@@ -18,49 +18,48 @@ function Main()
    QOut( oObject:ClassName() ) // retrieves its class name
 
    oObject:Test()         // This invokes the below defined Test function
-                          // See QSelf() and :: use
+   // See QSelf() and :: use
    QOut( oObject:cName )
 
    oObject:DoNothing()    // a virtual method does nothing,
-                          // but it is very usefull for Classes building logic
+   // but it is very usefull for Classes building logic
 
-return nil
+   RETURN
 
-function TAny()         /* builds a class */
+FUNCTION TAny()         /* builds a class */
 
-   static hClass
+   STATIC hClass
 
-   if hClass == nil
+   IF hClass == nil
       hClass := __clsNew( "TANY", 3 )                 // cClassName, nDatas
       __clsAddMsg( hClass, "cName",      1, HB_OO_MSG_DATA )  // retrieve data
       __clsAddMsg( hClass, "_cName",     1, HB_OO_MSG_DATA )  // assign data. Note the '_'
       __clsAddMsg( hClass, "New",   @New(), HB_OO_MSG_METHOD )
       __clsAddMsg( hClass, "Test", @Test(), HB_OO_MSG_METHOD )
       __clsAddMsg( hClass, "DoNothing",  0, HB_OO_MSG_VIRTUAL )
-   endif
+   ENDIF
 
    /* warning: we are not defining datas names and methods yet */
 
-return __clsInst( hClass )  // creates an object of this class
+   RETURN __clsInst( hClass )  // creates an object of this class
 
-static function New()
+STATIC FUNCTION New()
 
-   local Self := QSelf()
+   LOCAL Self := QSelf()
 
    QOut( ValType( Self ) )
    QOut( "Inside New()" )
 
    ::cName := "Harbour OOP"
 
-return Self
+   RETURN Self
 
-static function Test()
+STATIC FUNCTION Test()
 
-   local Self := QSelf()        // We access Self for this method
+   LOCAL Self := QSelf()        // We access Self for this method
 
    QOut( "Test method invoked!" )
 
    QOut( ::ClassName() )    // :: means Self:  It is a Harbour built-in operator
 
-return nil
-
+   RETURN nil

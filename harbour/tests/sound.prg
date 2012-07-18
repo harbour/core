@@ -2,13 +2,16 @@
  * $Id$
  */
 
-function main()
-local start := seconds(), stop
-   qout( "start   ", start )
-   tone( 440, 9.1 )
-   tone( 880, 9.1 )
-   tone( 440, 9.1 )
-   stop := seconds()
-   qout( "stop    ", stop )
-   qout( "duration", ( stop - start ), "(should be close to 1.5)" )
-return nil
+PROCEDURE Main()
+
+   LOCAL start := Seconds(), stop
+
+   QOut( "start   ", start )
+   Tone( 440, 9.1 )
+   Tone( 880, 9.1 )
+   Tone( 440, 9.1 )
+   stop := Seconds()
+   QOut( "stop    ", stop )
+   QOut( "duration", ( stop - start ), "(should be close to 1.5)" )
+
+   RETURN

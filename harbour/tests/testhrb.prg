@@ -1,54 +1,55 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // see also exthrb.prg
 
-
 #include "hbhrb.ch"
 
-Procedure Main(x)
-Local pHrb, cExe := "Msg2()", n
+PROCEDURE Main( x )
 
-  n:=iif(x==NIL,0,val(x))
+   LOCAL pHrb, cExe := "Msg2()", n
 
-  ? "calling Msg ... From exe here !"
-  Msg()
-  ? "========================="
+   n := iif( x == NIL, 0, Val( x ) )
 
-//  ? "Loading('exthrb.hrb' )"
-//  pHrb := hb_HrbLoad("exthrb.hrb" )
+   ? "calling Msg ... From exe here !"
+   Msg()
+   ? "========================="
 
-//  ? "Loading(HB_HRB_BIND_DEFAULT,'exthrb.hrb' )"
-//  pHrb := hb_HrbLoad(HB_HRB_BIND_DEFAULT,"exthrb.hrb" )
+   //  ? "Loading('exthrb.hrb' )"
+   //  pHrb := hb_HrbLoad("exthrb.hrb" )
 
-//  ? "Loading(HB_HRB_BIND_LOCAL,'exthrb.hrb' )"
-//  pHrb := hb_HrbLoad(HB_HRB_BIND_LOCAL,"exthrb.hrb" )
+   //  ? "Loading(HB_HRB_BIND_DEFAULT,'exthrb.hrb' )"
+   //  pHrb := hb_HrbLoad(HB_HRB_BIND_DEFAULT,"exthrb.hrb" )
 
-  ? "Loading("+iif(n=0,"HB_HRB_BIND_DEFAULT",iif(n=1,"HB_HRB_BIND_LOCAL","HB_HRB_BIND_OVERLOAD"))+",'exthrb.hrb' )"
-  pHrb := hb_HrbLoad(n,"exthrb.hrb" )
+   //  ? "Loading(HB_HRB_BIND_LOCAL,'exthrb.hrb' )"
+   //  pHrb := hb_HrbLoad(HB_HRB_BIND_LOCAL,"exthrb.hrb" )
 
-  ? "========================="
+   ? "Loading(" + iif( n = 0, "HB_HRB_BIND_DEFAULT", iif( n = 1,"HB_HRB_BIND_LOCAL","HB_HRB_BIND_OVERLOAD" ) ) + ",'exthrb.hrb' )"
+   pHrb := hb_hrbLoad( n, "exthrb.hrb" )
 
-  ? "calling Msg ... DEFAULT=From exe, LOCAL=From exe, OVERLOAD=From HRB"
-  Msg()
-  ? "========================="
+   ? "========================="
 
-  ? "calling Msg ... DEFAULT=From exe, LOCAL=From HRB, OVERLOAD=From HRB"
-  &cExe  //
-  ? "========================="
+   ? "calling Msg ... DEFAULT=From exe, LOCAL=From exe, OVERLOAD=From HRB"
+   Msg()
+   ? "========================="
 
-  hb_HrbUnload( pHrb ) // should do nothing in case of OVERLOAD
+   ? "calling Msg ... DEFAULT=From exe, LOCAL=From HRB, OVERLOAD=From HRB"
+   &cExe  //
+   ? "========================="
 
-  ? "calling Msg ... DEFAULT=From exe, LOCAL=From exe, OVERLOAD=From HRB"
-  Msg() // test unload protection when using OVERLOAD ... then .hrb not anymore unloadable
-  ? "========================="
+   hb_hrbUnload( pHrb ) // should do nothing in case of OVERLOAD
 
-  ?  "END"
+   ? "calling Msg ... DEFAULT=From exe, LOCAL=From exe, OVERLOAD=From HRB"
+   Msg() // test unload protection when using OVERLOAD ... then .hrb not anymore unloadable
+   ? "========================="
 
-Return
+   ?  "END"
 
+   RETURN
 
-Function Msg()
-? "Function called from Exe"
-Return .T.
+FUNCTION Msg()
+
+   ? "Function called from Exe"
+
+   RETURN .T.

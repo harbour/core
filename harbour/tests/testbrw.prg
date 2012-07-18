@@ -2,7 +2,7 @@
  * $Id$
  */
 
-   // Harbour Class TBrowse and TBColumn sample
+// Harbour Class TBrowse and TBColumn sample
 
 #include "inkey.ch"
 
@@ -58,7 +58,7 @@ FUNCTION Main()
    nCol := Col()
    @ 4, 4, 17, 31 BOX "ÚÄ¿³ÙÄÀ³ "
 #ifdef HB_COMPAT_C53
-   oBrowse:SetKey( 0, { |ob, nkey| Defproc( ob,nKey ) } )
+   oBrowse:SetKey( 0, {| ob, nkey | Defproc( ob,nKey ) } )
    WHILE .T.
       oBrowse:ForceStable()
       IF ( oBrowse:applykey( Inkey(0 ) ) == - 1 )
@@ -125,7 +125,7 @@ FUNCTION Main()
          DevPos( nTmpRow, nTmpCol )
 
       ENDCASE
-      
+
    end
 #endif
    DevPos( nRow, nCol )
@@ -136,7 +136,7 @@ FUNCTION Main()
 
 #ifdef HB_COMPAT_C53
 
-FUNCTION  defproc( ob, nkey )
+FUNCTION defproc( ob, nkey )
 
    LOCAL nTmpRow, nTmpCol
 

@@ -1,14 +1,14 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Statics overlapped!
 //
 // Compile statics1.prg, statics2.prg and link both files
 
-static uA, uB
+STATIC uA, uB
 
-function Test()
+PROCEDURE Test()
 
    QOut( "INSIDE statics2.prg" )
    QOut( "   static uA, uB" )
@@ -22,4 +22,4 @@ function Test()
    QOut( "   uA, uB =>", uA, ",", uB )
    QOut( "" )
 
-return nil
+   RETURN

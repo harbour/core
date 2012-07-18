@@ -2,9 +2,10 @@
  * $Id$
  */
 
-PROCEDURE MAIN()
-LOCAL dDate
-LOCAL A
+PROCEDURE Main()
+
+   LOCAL dDate
+   LOCAL A
 
    SET DATE FORMAT TO "YYYY.MM.DD"
    SET CENTURY ON
@@ -23,7 +24,7 @@ LOCAL A
 
    ? "Should be '4' :", 0d20040229 - 0d20040225
    ? "Should be '0' :", 0d20040229 - 0d20040229
-   
+
    dDate := 0d20000229
    ? "Should be '2000.02.29' :", dDate
 
