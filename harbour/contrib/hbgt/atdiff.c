@@ -21,29 +21,32 @@
 
 HB_FUNC( GT_ATDIFF )
 {
-  const char *s1, *s2;
-  HB_ISIZ pos, len;
+   const char * s1, * s2;
+   HB_ISIZ pos, len;
 
-  if (HB_ISCHAR(1) && HB_ISCHAR(2)) {
-    s1  = hb_parc(1);
-    s2  = hb_parc(2);
-    len = hb_parclen(2);
+   if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
+   {
+      s1    = hb_parc( 1 );
+      s2    = hb_parc( 2 );
+      len   = hb_parclen( 2 );
 
-    /*
-       loop through comparing both strings
+      /*
+         loop through comparing both strings
 
-       NOTE: pos starts at 1, so as to return a string index
-             for CLIPPER
-    */
+         NOTE: pos starts at 1, so as to return a string index
+               for CLIPPER
+       */
 
-    for (pos = 1; (pos <= len) && (*s1 == *s2); s2++, s1++)
-      pos++;
+      for( pos = 1; ( pos <= len ) && ( *s1 == *s2 ); s2++, s1++ )
+         pos++;
 
-    if (pos > len)                  /* strings match exactly!!! */
-      hb_retns(0);
-    else
-      hb_retns(pos);
-  } else {
-    hb_retns(-1);                     /* parameter mismatch - error -1 */
-  }
+      if( pos > len )               /* strings match exactly!!! */
+         hb_retns( 0 );
+      else
+         hb_retns( pos );
+   }
+   else
+   {
+      hb_retns( -1 );                 /* parameter mismatch - error -1 */
+   }
 }

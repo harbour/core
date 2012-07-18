@@ -58,7 +58,7 @@
 
 HB_BOOL ct_numParam( int iParam, HB_MAXINT * plNum )
 {
-   const char *szHex = hb_parc( iParam );
+   const char * szHex = hb_parc( iParam );
 
    if( szHex )
    {

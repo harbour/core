@@ -77,7 +77,7 @@ static void do_charonly( int iSwitch )
       char * pcRet;
       HB_SIZE sRetStrLen = 0;
       int iShift, iBool;
-      const char * pcSub, *pc;
+      const char * pcSub, * pc;
 
       /* check for zero-length strings  */
       switch ( iSwitch )

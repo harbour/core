@@ -64,7 +64,7 @@ HB_FUNC( EXPAND )
          hb_retclen( szText, 1 );
       else
       {
-         char * szDest, *szPtr, cRepl;
+         char * szDest, * szPtr, cRepl;
          int iRepl, i;
 
          iRepl = hb_parni( 2 );

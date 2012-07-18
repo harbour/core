@@ -199,7 +199,7 @@ HB_FUNC( SETFATTR )
 
 HB_FUNC( SETFDATI )
 {
-   const char *szFile = hb_parc( 1 );
+   const char * szFile = hb_parc( 1 );
    HB_BOOL fResult = HB_FALSE;
 
    if( szFile && *szFile )

@@ -67,7 +67,7 @@ HB_FUNC( NUMAT )
       char cAtLike = ct_getatlikechar();
       HB_SIZE sIgnore, sMatchStrLen = 0, sSubStrLen;
       HB_SIZE nCounter;
-      const char * pc, *pcSubStr;
+      const char * pc, * pcSubStr;
 
       /* eventually ignore some characters */
       if( HB_ISNUM( 3 ) )

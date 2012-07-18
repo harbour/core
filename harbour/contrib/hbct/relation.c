@@ -67,7 +67,7 @@ HB_FUNC( CHARRELA )
       const char * pcString2 = hb_parc( 4 );
       HB_SIZE sStrLen2 = hb_parclen( 4 );
 
-      const char * pc1, *pc2;
+      const char * pc1, * pc2;
       HB_SIZE sOffset1, sOffset2;
       HB_SIZE sMatchStrLen;
 
@@ -153,7 +153,7 @@ HB_FUNC( CHARRELREP )
       const char * pcReplace = hb_parc( 5 );
       HB_SIZE sReplaceLen = hb_parclen( 5 );
       char * pcRet;
-      const char * pc1, *pc2;
+      const char * pc1, * pc2;
       HB_SIZE sOffset1, sOffset2;
       HB_SIZE sMatchStrLen;
 

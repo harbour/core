@@ -77,7 +77,7 @@ static void do_replace( int iSwitch )
    {
       const char * pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
-      char * pcRet, *pc;
+      char * pcRet, * pc;
       char cSearch, cReplace;
 
       if( sStrLen == 0 )

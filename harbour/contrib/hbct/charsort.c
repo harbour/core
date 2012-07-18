@@ -64,7 +64,7 @@ int extern _LNK_CONV
 #else
 static int
 #endif
-_hb_do_sortascend( const void *p1, const void *p2 )
+_hb_do_sortascend( const void * p1, const void * p2 )
 {
    const char * pc1 = ( const char * ) p1;
    const char * pc2 = ( const char * ) p2;
@@ -80,7 +80,7 @@ int extern _LNK_CONV
 #else
 static int
 #endif
-_hb_do_sortdescend( const void *p1, const void *p2 )
+_hb_do_sortdescend( const void * p1, const void * p2 )
 {
    const char * pc1 = ( const char * ) p1;
    const char * pc2 = ( const char * ) p2;

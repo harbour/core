@@ -59,18 +59,18 @@
 #     include <crt_externs.h>
 #     define environ (*_NSGetEnviron())
 #  elif !defined( __WATCOMC__ )
-      extern char **environ;
+      extern char ** environ;
 #  endif
 #elif defined( HB_OS_DOS )
 #  if defined( __DJGPP__ )
-      extern char **environ;
+      extern char ** environ;
 #  elif !defined( __WATCOMC__ )
 #     define environ _environ
-      extern char **_environ;
+      extern char ** _environ;
 #  endif
 #elif defined( HB_OS_OS2 )
 #  if !defined( __WATCOMC__ )
-      extern char **environ;
+      extern char ** environ;
 #  endif
 #elif defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
 #  include "hbwinuni.h"

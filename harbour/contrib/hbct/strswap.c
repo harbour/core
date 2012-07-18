@@ -65,7 +65,7 @@ HB_FUNC( STRSWAP )
       /* get parameters */
       const char * pcString1 = hb_parc( 1 );
       const char * pcString2 = hb_parc( 2 );
-      char * pcRet1 = NULL, *pcRet2 = NULL;
+      char * pcRet1 = NULL, * pcRet2 = NULL;
       int iChange1, iChange2;
       HB_SIZE sIndex, sCmpLen;
 

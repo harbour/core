@@ -61,7 +61,7 @@
 #include "ct.h"
 
 /* static const data */
-static const char *s_pcSeparatorStr =
+static const char * s_pcSeparatorStr =
    "\x00" "\x09" "\x0A" "\x0C" "\x1A" "\x20" "\x8A" "\x8C" ",.;:!\?/\\<>()#&%+-*";
 static const HB_SIZE s_sSeparatorStrLen = 26;
 

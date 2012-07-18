@@ -75,7 +75,7 @@ typedef struct _TOKEN_POSITION
    HB_SIZE sEndPos;              /* relative 0-based index of first char BEHIND token,
                                    so that length = sEndPos-sStartPos */
 } TOKEN_POSITION;
-typedef TOKEN_POSITION *TOKEN_ENVIRONMENT;
+typedef TOKEN_POSITION * TOKEN_ENVIRONMENT;
 
 /* -------------------------------------------------------------------- */
 /* alloc new token environment                                          */
@@ -147,7 +147,7 @@ static HB_SIZE sTokEnvGetSize( TOKEN_ENVIRONMENT env )
 /* get position element pointed to by tokenizing pointer                */
 /* -------------------------------------------------------------------- */
 
-static TOKEN_POSITION *sTokEnvGetPos( TOKEN_ENVIRONMENT env )
+static TOKEN_POSITION * sTokEnvGetPos( TOKEN_ENVIRONMENT env )
 {
    if( env[ 1 ].sStartPos >= env[ 0 ].sStartPos )
       return NULL;
@@ -159,7 +159,7 @@ static TOKEN_POSITION *sTokEnvGetPos( TOKEN_ENVIRONMENT env )
 /* get position element pointed to by given 0-based index               */
 /* -------------------------------------------------------------------- */
 
-static TOKEN_POSITION *sTokEnvGetPosIndex( TOKEN_ENVIRONMENT env, HB_SIZE index )
+static TOKEN_POSITION * sTokEnvGetPosIndex( TOKEN_ENVIRONMENT env, HB_SIZE index )
 {
    if( index >= env[ 0 ].sStartPos )
       return NULL;
@@ -245,7 +245,7 @@ static void sTokEnvDel( TOKEN_ENVIRONMENT env )
 /* ==================================================================== */
 
 /* static data */
-static const char *spcSeparatorStr =
+static const char * spcSeparatorStr =
    "\x00" "\x09" "\x0A" "\x0C" "\x1A" "\x20" "\x8A" "\x8C" ",.;:!\?/\\<>()#&%+-*";
 static const HB_SIZE ssSeparatorStrLen = 26;
 
@@ -287,7 +287,7 @@ HB_FUNC( TOKENINIT )
       const char * pcSeparatorStr;
       HB_SIZE sSeparatorStrLen;
       HB_SIZE nSkipCnt, nSkip;
-      const char * pcSubStr, *pc;
+      const char * pcSubStr, * pc;
       HB_SIZE sSubStrLen;
       TOKEN_ENVIRONMENT sTokenEnvironment;
       TOKEN_POSITION sTokenPosition;
@@ -433,7 +433,7 @@ HB_FUNC( TOKENNEXT )
       HB_SIZE sStrLen = hb_parclen( 1 );
 
       TOKEN_ENVIRONMENT sTokenEnvironment;
-      TOKEN_POSITION *psTokenPosition;
+      TOKEN_POSITION * psTokenPosition;
 
       /* token environment by parameter ... */
       if( HB_ISCHAR( 3 ) && HB_ISBYREF( 3 ) )
