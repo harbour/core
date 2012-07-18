@@ -145,7 +145,7 @@ CLASS IdeUISrcManager INHERIT IdeObject
    DATA   aSource                                 INIT {}
    DATA   oProcess
    DATA   cCurAction                              INIT ""
-   DATA   cClsPrefix                              INIT "ui_"
+   DATA   cClsPrefix                              INIT "uie_"
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -429,7 +429,7 @@ METHOD IdeUISrcManager:saveMethod()
       // Connections
       n0 := ascan( ::aSource, {|e| "<CONNECTS>" $ e } )
       n1 := ascan( ::aSource, {|e| "</CONNECTS>" $ e }, n0 )
-      cSearch := '::oUI:qObj[ "' + cObjName + '" ]'
+      cSearch := '::oUI:' + cObjName
       n2 := ascan( ::aSource, {|e| cSearch $ e }, n0+1, n1-n0-1 )
       IF empty( cSrc )
          IF n2 > 0
@@ -437,13 +437,13 @@ METHOD IdeUISrcManager:saveMethod()
          ENDIF
       ELSE
          IF n2 == 0
-            hb_ains( ::aSource, n0+1, '   ::oUI:qObj[ "' + cObjName + '" ]:connect( "' + cSlot + '", {|...| ::' + cMethod + '( ... ) } )' )
+            hb_ains( ::aSource, n0+1, '   ::oUI:' + cObjName + ':connect( "' + cSlot + '", {|...| ::' + cMethod + '( ... ) } )' )
          ENDIF
       ENDIF
       // Disconnections
       n0 := ascan( ::aSource, {|e| "<DISCONNECTS>" $ e } )
       n1 := ascan( ::aSource, {|e| "</DISCONNECTS>" $ e }, n0 )
-      cSearch := '::oUI:qObj[ "' + cObjName + '" ]'
+      cSearch := '::oUI:' + cObjName
       n2 := ascan( ::aSource, {|e| cSearch $ e }, n0+1, n1-n0-1 )
       IF empty( cSrc )
          IF n2 > 0
@@ -451,7 +451,7 @@ METHOD IdeUISrcManager:saveMethod()
          ENDIF
       ELSE
          IF n2 == 0
-            hb_ains( ::aSource, n0+1, '   ::oUI:qObj[ "' + cObjName + '" ]:disconnect( "' + cSlot + '" )' )
+            hb_ains( ::aSource, n0+1, '   ::oUI:' + cObjName + ':disconnect( "' + cSlot + '" )' )
          ENDIF
       ENDIF
 
@@ -614,8 +614,8 @@ METHOD IdeUISrcManager:reloadIfOpen( cUI )
       ::openUi( cUI )
 
       IF ! empty( cObjName )
-         IF hb_hHasKey( ::qU:qObj, cObjName )
-            ::execEvent( "child_object", ::qU:qObj[ cObjName ], cObjName )
+         IF __objHasMsg( ::qU, cObjName )
+            ::execEvent( "child_object", ::qU:&cObjName., cObjName )
          ENDIF
          IF ! empty( cAction )
             qList := ::qTree:findItems( cAction, Qt_MatchExactly, 0 )
@@ -670,7 +670,10 @@ METHOD IdeUISrcManager:buildUiWidget( cUI )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeUISrcManager:buildWidget( cBuffer, cPath, cName, cExt, aPrg )
-   LOCAL cCode, s, n, cObj, cCls, i, pHrb, oObj
+   LOCAL cCode, s, n, oObj, cCls, i, pHrb, cObj
+
+//   MEMVAR cObj
+//   PRIVATE cObj
 
    cBuffer := hb_compileFromBuf( cBuffer, "-n2", "-w3", "-es2", "-q0", "-i" + ::oINI:getHarbourPath() + "include" )
    IF ! empty( cBuffer )
@@ -700,14 +703,12 @@ METHOD IdeUISrcManager:buildWidget( cBuffer, cPath, cName, cExt, aPrg )
 
             FOR i := 1 to Len( aPrg )
                cCode := aPrg[ i ]
-               IF " := " $ cCode
-                  IF ! ( "oRootWidget" $ cCode ) .AND. ! ( "LOCAL" $ cCode )
-                     s := substr( cCode, 1, at( " := ", cCode ) )
-                     n := at( '"', s )
-                     s := substr( s, n+1 )
-                     n := at( '"', s )
-                     cObj := substr( s, 1, n-1 )
-                     oObj := ::qU:qObj[ cObj ]
+               IF ! ( "oRootWidget" $ cCode ) .AND. ! ( "LOCAL" $ cCode ) .AND. ! ( "oParent" $ cCode )
+                  IF " := " $ cCode
+                     s := alltrim( substr( cCode, 1, at( " := ", cCode ) ) )
+                     n := at( '::', s )
+                     cObj := substr( s, n+2 )
+                     oObj := ::qU:&cObj
                      cCls := __objGetClsName( oObj )
                      IF ! ( cCls $ "QSIZEPOLICY,QFONT,QGRIDLAYOUT,QHBOXLAYOUT,QVBOXLAYOUT,QSPACERITEM,QLAYOUT,QSPLITTER,QSCROLLAREA,QTREEWIDGETITEM,QLISTWIDGETITEM" )
                         aadd( ::aObjByName, cObj )
@@ -726,9 +727,9 @@ METHOD IdeUISrcManager:buildWidget( cBuffer, cPath, cName, cExt, aPrg )
                         OTHERWISE
                            oObj:connect( QEvent_MouseButtonRelease, getObject( Self, ::qU, cObj ) )
                         ENDSWITCH
-
-                        ::hObjects[ cObj ] := UISrcData():new( oObj, cObj )
                      ENDIF
+                  ELSEIF "RETURN " $ cCode
+                     EXIT
                   ENDIF
                ENDIF
             NEXT
@@ -899,7 +900,7 @@ METHOD IdeUISrcManager:buildStatusPanels()
 /*------------------------------------------------------------------------*/
 
 STATIC FUNCTION getObject( oSelf, oHbQtUi, cObj )
-   RETURN {|...| oSelf:execEvent( "child_object", oHbQtUi:qObj[ cObj ], cObj, ... ) }
+   RETURN {|...| oSelf:execEvent( "child_object", oHbQtUi:&cObj., cObj, ... ) }
 
 /*----------------------------------------------------------------------*/
 
@@ -918,7 +919,7 @@ METHOD IdeUISrcManager:buildSource()
    LOCAL qHScr, qVScr, qCursor, qCurPos, qHVal, qVVal, qEdit
 
    IF empty( ::aSource )
-      ::aSource := ::buildClassSkeleton( 'ui_' + ::cName, ::cName )
+      ::aSource := ::buildClassSkeleton( 'uie_' + ::cName, ::cName )
    ENDIF
 
    ::cSource := ""
@@ -1030,15 +1031,16 @@ METHOD IdeUISrcManager:buildClassSkeleton( cCls, cUiName )
    aadd( aSrc, '' )
    aadd( aSrc, 'METHOD ' + cClsC + '__OnError( ... )' )
    aadd( aSrc, '   LOCAL cMsg := __GetMessage()' )
-   aadd( aSrc, '   LOCAL oError' )
+   aadd( aSrc, '   LOCAL oError, cMtd' )
    aadd( aSrc, '' )
    aadd( aSrc, '   IF SubStr( cMsg, 1, 1 ) == "_"' )
    aadd( aSrc, '      cMsg := SubStr( cMsg, 2 )' )
    aadd( aSrc, '   ENDIF' )
    aadd( aSrc, '' )
    aadd( aSrc, '   IF Left( cMsg, 2 ) == "Q_"' )
-   aadd( aSrc, '      IF SubStr( cMsg, 3 ) $ ::oUI:qObj' )
-   aadd( aSrc, '         RETURN ::oUI:qObj[ SubStr( cMsg, 3 ) ]' )
+   aadd( aSrc, '      cMtd := SubStr( cMsg, 3 )' )
+   aadd( aSrc, '      IF __objHasMsg( ::oUI, cMtd' )
+   aadd( aSrc, '         RETURN ::oUI:&cMtd' )
    aadd( aSrc, '      ELSE' )
    aadd( aSrc, '         oError := ErrorNew()' )
    aadd( aSrc, '' )
