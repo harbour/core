@@ -78,7 +78,7 @@
 CREATE CLASS IdeProjectWizard INHERIT IdeObject
 
    DATA    lEdited                                INIT .f.
-   DATA    aItmRoots                              INIT {}
+   DATA    aItmProps                              INIT {}
    DATA    aItmSrc                                INIT {}
    DATA    cProjPath
 
@@ -92,6 +92,8 @@ CREATE CLASS IdeProjectWizard INHERIT IdeObject
    METHOD  clear()
    METHOD  loadSourcesSections()
    METHOD  loadSwichesSections()
+   METHOD  deleteTreeItem( oChild )
+   METHOD  addTreeItem( oParent )
 
    ENDCLASS
 
@@ -207,13 +209,20 @@ METHOD IdeProjectWizard:show()
       ::oUI := ui_projectWizard():new(  ::oIde:oDlg:oWidget )
       ::oUI:oWidget:connect( QEvent_Close, {|| ::oUI:oWidget:done( 0 ) } )
 
-      ::oUI:btnNext   : connect( "clicked()", {|| ::execEvent( "btnNext_clicked" ) } )
-      ::oUI:btnBack   : connect( "clicked()", {|| ::execEvent( "btnBack_clicked" ) } )
-      ::oUI:btnNew    : connect( "clicked()", {|| ::execEvent( "btnNew_clicked"  ) } )
-      ::oUI:btnSave   : connect( "clicked()", {|| ::execEvent( "btnSave_clicked" ) } )
-      ::oUI:btnCancel : connect( "clicked()", {|| ::oUI:oWidget:done( 0 ) } )
+      ::oUI:btnSwPlus   : connect( "clicked()", {|| ::execEvent( "btnSw_clicked", "plus"  ) } )
+      ::oUI:btnSwAZ     : connect( "clicked()", {|| ::execEvent( "btnSw_clicked", "az"    ) } )
+      ::oUI:btnSwZA     : connect( "clicked()", {|| ::execEvent( "btnSw_clicked", "za"    ) } )
+      ::oUI:btnSwUpper  : connect( "clicked()", {|| ::execEvent( "btnSw_clicked", "upper" ) } )
+      ::oUI:btnSwLower  : connect( "clicked()", {|| ::execEvent( "btnSw_clicked", "lower" ) } )
+      ::oUI:btnSwDelete : connect( "clicked()", {|| ::execEvent( "btnSw_clicked", "delete") } )
 
-      ::oUI:toolGetSrc: connect( "clicked()", {|| ::execEvent( "toolGetSrc_clicked" ) } )
+      ::oUI:btnNext     : connect( "clicked()", {|| ::execEvent( "btnNext_clicked" ) } )
+      ::oUI:btnBack     : connect( "clicked()", {|| ::execEvent( "btnBack_clicked" ) } )
+      ::oUI:btnNew      : connect( "clicked()", {|| ::execEvent( "btnNew_clicked"  ) } )
+      ::oUI:btnSave     : connect( "clicked()", {|| ::execEvent( "btnSave_clicked" ) } )
+      ::oUI:btnCancel   : connect( "clicked()", {|| ::oUI:oWidget:done( 0 ) } )
+
+      ::oUI:toolGetSrc  : connect( "clicked()", {|| ::execEvent( "toolGetSrc_clicked" ) } )
 
       ::oUI:comboProjType : addItem( "Executable" )
       ::oUI:comboProjType : addItem( "Library" )
@@ -240,19 +249,21 @@ METHOD IdeProjectWizard:show()
       ::oUI:treeProps:setAcceptDrops( .t. )
       ::oUI:treeProps:setDragDropMode( QAbstractItemView_InternalMove )
       ::oUI:treeProps:setRootIsDecorated( .F. ) /* Important to present as a list */
-      ::oUI:treeProps:header():resizeSection( 0, 223 )
-      ::oUI:treeProps:header():setStretchLastSection( .T. )
-      ::oUI:treeProps:connect( "customContextMenuRequested(QPoint)"     , {|p   | ::execEvent( "treeProps_contextMenuRequested", p  ) } )
-      ::oUI:treeProps:connect( "itemDoubleClicked(QTreeWidgetItem*,int)", {|p,p1| ::execEvent( "treeProps_doubleClicked"      , p, p1 ) } )
+      ::oUI:treeProps:header():resizeSection( 0, 237 )
+      ::oUI:treeProps:connect( "itemCollapsed(QTreeWidgetItem*)"        , {|p   | ::execEvent( "treeProps_itemCollapsed"       , p     ) } )
+      ::oUI:treeProps:connect( "itemExpanded(QTreeWidgetItem*)"         , {|p   | ::execEvent( "treeProps_itemExpanded"        , p     ) } )
+      ::oUI:treeProps:connect( "customContextMenuRequested(QPoint)"     , {|p   | ::execEvent( "treeProps_contextMenuRequested", p     ) } )
+      ::oUI:treeProps:connect( "itemDoubleClicked(QTreeWidgetItem*,int)", {|p,p1| ::execEvent( "treeProps_doubleClicked"       , p, p1 ) } )
+      ::oUI:treeProps:connect( "itemSelectionChanged()"                 , {|    | ::execEvent( "treeProps_itemSelectionChanged"        ) } )
 
       oBrush := QBrush( QColor( 248, 248, 248 ) )
 
-      aadd( ::aItmRoots, { NIL, "Libraries"                , QBrush( QColor( 144, 144, 144 ) ),  oBrush, NIL, NIL } )
-      aadd( ::aItmRoots, { NIL, "Library Paths"            , QBrush( QColor( 152, 152, 152 ) ),  oBrush, NIL, NIL } )
-      aadd( ::aItmRoots, { NIL, "Include Paths"            , QBrush( QColor( 160, 160, 160 ) ),  oBrush, NIL, NIL } )
-      aadd( ::aItmRoots, { NIL, "PRG Defines"              , QBrush( QColor( 168, 168, 168 ) ),  oBrush, NIL, NIL } )
-      aadd( ::aItmRoots, { NIL, "PRG Undefines"            , QBrush( QColor( 176, 176, 176 ) ),  oBrush, NIL, NIL } )
-      aadd( ::aItmRoots, { NIL, "hbmk2 Command-line Params", QBrush( QColor( 184, 184, 184 ) ),  oBrush, NIL, NIL } )
+      aadd( ::aItmProps, { NIL, "Libraries"                , QBrush( QColor( 144, 144, 144 ) ),  oBrush, NIL, NIL, "background-color: rgb(144,144,144);" } )
+      aadd( ::aItmProps, { NIL, "Library Paths"            , QBrush( QColor( 152, 152, 152 ) ),  oBrush, NIL, NIL, "background-color: rgb(152,152,152);" } )
+      aadd( ::aItmProps, { NIL, "Include Paths"            , QBrush( QColor( 160, 160, 160 ) ),  oBrush, NIL, NIL, "background-color: rgb(160,160,160);" } )
+      aadd( ::aItmProps, { NIL, "PRG Defines"              , QBrush( QColor( 168, 168, 168 ) ),  oBrush, NIL, NIL, "background-color: rgb(168,168,168);" } )
+      aadd( ::aItmProps, { NIL, "PRG Undefines"            , QBrush( QColor( 176, 176, 176 ) ),  oBrush, NIL, NIL, "background-color: rgb(176,176,176);" } )
+      aadd( ::aItmProps, { NIL, "hbmk2 Command-line params", QBrush( QColor( 184, 184, 184 ) ),  oBrush, NIL, NIL, "background-color: rgb(184,184,184);" } )
 
 
       ::oUI:treeSrc:setContextMenuPolicy( Qt_CustomContextMenu )
@@ -260,16 +271,20 @@ METHOD IdeProjectWizard:show()
       ::oUI:treeSrc:setDropIndicatorShown( .t. )
       ::oUI:treeSrc:setAcceptDrops( .t. )
       ::oUI:treeSrc:setDragDropMode( QAbstractItemView_InternalMove )
+      ::oUI:treeSrc:setRootIsDecorated( .F. ) /* Important to present as a list */
+      ::oUI:treeSrc:header():resizeSection( 0, 393 )
+      ::oUI:treeSrc:connect( "itemCollapsed(QTreeWidgetItem*)"        , {|p   | ::execEvent( "treeSrc_itemCollapsed"       , p     ) } )
+      ::oUI:treeSrc:connect( "itemExpanded(QTreeWidgetItem*)"         , {|p   | ::execEvent( "treeSrc_itemExpanded"        , p     ) } )
       ::oUI:treeSrc:connect( "customContextMenuRequested(QPoint)"     , {|p   | ::execEvent( "treeSrc_contextMenuRequested", p     ) } )
       ::oUI:treeSrc:connect( "itemDoubleClicked(QTreeWidgetItem*,int)", {|p,p1| ::execEvent( "treeSrc_doubleClicked"       , p, p1 ) } )
 
-      aadd( ::aItmSrc, { NIL, "PRG Files"      , QBrush( QColor( 184, 184, 184 ) ), oBrush, ".prg", NIL } )
-      aadd( ::aItmSrc, { NIL, "C Files"        , QBrush( QColor( 176, 176, 176 ) ), oBrush, ".c"  , NIL } )
-      aadd( ::aItmSrc, { NIL, "CPP Files"      , QBrush( QColor( 168, 168, 168 ) ), oBrush, ".cpp", NIL } )
-      aadd( ::aItmSrc, { NIL, "CH Files"       , QBrush( QColor( 160, 160, 160 ) ), oBrush, ".ch" , NIL } )
-      aadd( ::aItmSrc, { NIL, "H Files"        , QBrush( QColor( 152, 152, 152 ) ), oBrush, ".h"  , NIL } )
-      aadd( ::aItmSrc, { NIL, "UI Files"       , QBrush( QColor( 144, 144, 144 ) ), oBrush, ".ui" , NIL } )
-      aadd( ::aItmSrc, { NIL, "All Other Files", QBrush( QColor( 136, 136, 136 ) ), oBrush, "*"   , NIL } )
+      aadd( ::aItmSrc, { NIL, "PRG Files"      , QBrush( QColor( 184, 184, 184 ) ), oBrush, ".prg", NIL, "background-color: rgb(184,184,184);" } )
+      aadd( ::aItmSrc, { NIL, "C Files"        , QBrush( QColor( 176, 176, 176 ) ), oBrush, ".c"  , NIL, "background-color: rgb(176,176,176);" } )
+      aadd( ::aItmSrc, { NIL, "CPP Files"      , QBrush( QColor( 168, 168, 168 ) ), oBrush, ".cpp", NIL, "background-color: rgb(168,168,168);" } )
+      aadd( ::aItmSrc, { NIL, "CH Files"       , QBrush( QColor( 160, 160, 160 ) ), oBrush, ".ch" , NIL, "background-color: rgb(160,160,160);" } )
+      aadd( ::aItmSrc, { NIL, "H Files"        , QBrush( QColor( 152, 152, 152 ) ), oBrush, ".h"  , NIL, "background-color: rgb(152,152,152);" } )
+      aadd( ::aItmSrc, { NIL, "UI Files"       , QBrush( QColor( 144, 144, 144 ) ), oBrush, ".ui" , NIL, "background-color: rgb(144,144,144);" } )
+      aadd( ::aItmSrc, { NIL, "All Other Files", QBrush( QColor( 136, 136, 136 ) ), oBrush, "*"   , NIL, "background-color: rgb(136,136,136);" } )
 
 
       ::clear()
@@ -284,37 +299,43 @@ METHOD IdeProjectWizard:show()
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION blockBtnClicked( o, cEvent, nAct )
+   RETURN {|| o:execEvent( cEvent, nAct ) }
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeProjectWizard:loadSwichesSections()
    LOCAL oTree := ::oUI:treeProps
-   LOCAL qItm, aAct, oFont, qTBtn, qPalette
+   LOCAL qItm, aAct, oFont, qTBtn
 
    oFont := QTreeWidgetItem():font( 0 )
    oFont:setBold( .t. )
-   FOR EACH aAct IN ::aItmRoots
+   FOR EACH aAct IN ::aItmProps
       qItm := QTreeWidgetItem()
       aAct[ 1 ] := qItm
       qItm:setFlags( 0 )
       qItm:setFlags( hb_bitOr( Qt_ItemIsSelectable, Qt_ItemIsDropEnabled, Qt_ItemIsEnabled ) )
-      qItm:setText( 0, aAct[ 2 ] )
+      qItm:setText( 0, space( 7 ) + aAct[ 2 ] )
       qItm:setBackground( 0, aAct[ 3 ] )
       qItm:setForeground( 0, QBrush( QColor( 255,255,255 ) ) )
       qItm:setFont( 0, oFont )
       qItm:setTooltip( 0, "Double-click to add a value !" )
       oTree:addTopLevelItem( qItm )
-      qItm:setExpanded( .t. )
+      oTree:setFirstItemColumnSpanned( qItm, .t. )
+      qItm:setChildIndicatorPolicy( QTreeWidgetItem_ShowIndicator )
    NEXT
-   FOR EACH aAct IN ::aItmRoots
+   FOR EACH aAct IN ::aItmProps
       qTBtn := QToolButton()
       aAct[ 6 ] := qTBtn
-      qTBtn:setIcon( QIcon( hbide_image( "dc_delete" ) ) )
+      qTBtn:setIcon( QIcon( hbide_image( "expand_m" ) ) )
       qTBtn:setAutoFillBackground( .t. )
       qTBtn:setAutoRaise( .t. )
       qTBtn:setMaximumWidth( 20 )
       qTBtn:setMaximumHeight( 20 )
+      qTBtn:setStyleSheet( "" )
+      qTBtn:setStyleSheet( aAct[ 7 ] )
+      qTBtn:connect( "clicked()", blockBtnClicked( Self, "qTBtn_clicked", aAct:__enumIndex() ) )
       oTree:setItemWidget( aAct[ 1 ], 1, qTBtn )
-      qPalette := QToolButton():palette()
-      qPalette:setBrush( QPalette_Background, aAct[ 3 ] )
-      qTBtn:setPalette( qPalette )
    NEXT
    RETURN Self
 
@@ -322,7 +343,7 @@ METHOD IdeProjectWizard:loadSwichesSections()
 
 METHOD IdeProjectWizard:loadSourcesSections()
    LOCAL oTree := ::oUI:treeSrc
-   LOCAL qItm, aAct, oFont
+   LOCAL qItm, aAct, oFont, qTBtn
 
    oFont := QTreeWidgetItem():font( 0 )
    oFont:setBold( .t. )
@@ -331,7 +352,7 @@ METHOD IdeProjectWizard:loadSourcesSections()
       aAct[ 1 ] := qItm
       qItm:setFlags( 0 )
       qItm:setFlags( hb_bitOr( Qt_ItemIsSelectable, Qt_ItemIsDropEnabled, Qt_ItemIsEnabled ) )
-      qItm:setText( 0, aAct[ 2 ] )
+      qItm:setText( 0, "        " + aAct[ 2 ] )
       qItm:setBackground( 0, aAct[ 3 ] )
       qItm:setForeground( 0, QBrush( QColor( 255,255,255 ) ) )
       qItm:setFont( 0, oFont )
@@ -339,7 +360,19 @@ METHOD IdeProjectWizard:loadSourcesSections()
       oTree:addTopLevelItem( qItm )
       oTree:setFirstItemColumnSpanned( qItm, .t. )
       qItm:setChildIndicatorPolicy( QTreeWidgetItem_ShowIndicator )
-      qItm:setExpanded( .t. )
+   NEXT
+   FOR EACH aAct IN ::aItmSrc
+      qTBtn := QToolButton()
+      aAct[ 6 ] := qTBtn
+      qTBtn:setIcon( QIcon( hbide_image( "expand_m" ) ) )
+      qTBtn:setAutoFillBackground( .t. )
+      qTBtn:setAutoRaise( .t. )
+      qTBtn:setMaximumWidth( 20 )
+      qTBtn:setMaximumHeight( 20 )
+      qTBtn:setStyleSheet( "" )
+      qTBtn:setStyleSheet( aAct[ 7 ] )
+      qTBtn:connect( "clicked()", blockBtnClicked( Self, "qSBtn_clicked", aAct:__enumIndex() ) )
+      oTree:setItemWidget( aAct[ 1 ], 1, qTBtn )
    NEXT
 
    RETURN Self
@@ -347,13 +380,66 @@ METHOD IdeProjectWizard:loadSourcesSections()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
-   LOCAL cText, qItm, n, oFont, aMenu, oParent, aFiles, aFilt, cFile, cExt
+   LOCAL cText, qItm, n, i, oFont, aMenu, oParent, aFiles, aFilt, cFile, cExt, lTop, nChildren, qChild
 
    HB_SYMBOL_UNUSED( p )
    HB_SYMBOL_UNUSED( p1 )
 
    SWITCH xEvent
 
+   CASE "treeProps_itemSelectionChanged"
+      IF ! empty( qItm := ::oUI:treeProps:currentItem() )
+         lTop := ::oUI:treeProps:indexOfTopLevelItem( qItm ) >= 0
+         ::oUI:btnSwPlus:setEnabled( lTop )
+         ::oUI:btnSwAZ:setEnabled( lTop )
+         ::oUI:btnSwZA:setEnabled( lTop )
+      ENDIF
+      EXIT
+   CASE "treeProps_itemCollapsed"
+   CASE "treeProps_itemExpanded"
+      IF ( n := ::oUI:treeProps:indexOfTopLevelItem( p ) ) >= 0
+         n++
+         IF hb_isObject( ::aItmProps[ n, 6 ] )
+            ::aItmProps[ n, 6 ]:setIcon( QIcon( hbide_image( iif( xEvent == "treeProps_itemExpanded", "collapse_m", "expand_m" ) ) ) )
+         ENDIF
+         p:setSelected( .t. )
+      ENDIF
+      EXIT
+   CASE "treeSrc_itemExpanded"
+   CASE "treeSrc_itemCollapsed"
+      IF ( n := ::oUI:treeSrc:indexOfTopLevelItem( p ) ) >= 0
+         IF hb_isObject( ::aItmSrc[ n+1,6 ] )
+            ::aItmSrc[ n+1,6 ]:setIcon( QIcon( hbide_image( iif( xEvent == "treeSrc_itemCollapsed", "expand_m", "collapse_m" ) ) ) )
+         ENDIF
+         p:setSelected( .t. )
+      ENDIF
+      EXIT
+   CASE "qTBtn_clicked"
+      IF ::aItmProps[ p,1 ]:isExpanded()
+         ::aItmProps[ p,1 ]:setExpanded( .f. )
+      ELSE
+         IF ::aItmProps[ p,1 ]:childCount() > 0
+            ::aItmProps[ p,1 ]:setExpanded( .t. )
+         ENDIF
+      ENDIF
+      IF ! empty( qItm := ::oUI:treeProps:currentItem() )
+         qItm:setSelected( .f. )
+      ENDIF
+      ::aItmProps[ p,1 ]:setSelected( .t. )
+      EXIT
+   CASE "qSBtn_clicked"
+      IF ::aItmSrc[ p,1 ]:isExpanded()
+         ::aItmSrc[ p,1 ]:setExpanded( .f. )
+      ELSE
+         IF ::aItmSrc[ p,1 ]:childCount() > 0
+            ::aItmSrc[ p,1 ]:setExpanded( .t. )
+         ENDIF
+      ENDIF
+      IF ! empty( qItm := ::oUI:treeSrc:currentItem() )
+         qItm:setSelected( .f. )
+      ENDIF
+      ::aItmSrc[ p,1 ]:setSelected( .t. )
+      EXIT
    CASE "toolGetSrc_clicked"
       aFilt := {}
       aadd( aFilt, { "Program Files", "*.prg" } )
@@ -386,7 +472,7 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
       EXIT
    CASE "treeSrc_contextMenuRequested"
       IF ! empty( qItm := ::oUI:treeSrc:itemAt( p ) )
-         cText := qItm:text( 0 )
+         cText := substr( qItm:text( 0 ), 8 )
          aMenu := {}
          IF ( n := ascan( ::aItmSrc, {|e_| e_[ 2 ] == cText } ) ) == 0
             aadd( aMenu, { ::oAC:getAction( "Delete" ) } )
@@ -396,8 +482,7 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
          ENDIF
          cText := hbide_execPopup( aMenu, ::oUI:treeSrc:mapToGlobal( p ), ::oUI:treeSrc )
          IF cText == "Delete"
-            oParent := qItm:parent()
-            oParent:removeChild( qItm )
+            ::deleteTreeItem( qItm )
          ELSEIF cText == "Sort Ascending"
             ::aItmSrc[ n,1 ]:sortChildren( 0, Qt_AscendingOrder )
          ELSEIF cText == "Sort Descending"
@@ -407,9 +492,9 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
       EXIT
    CASE "treeProps_contextMenuRequested"
       IF ! empty( qItm := ::oUI:treeProps:itemAt( p ) )
-         cText := qItm:text( 0 )
+         cText := substr( qItm:text( 0 ), 8 )
          aMenu := {}
-         IF ( n := ascan( ::aItmRoots, {|e_| e_[ 2 ] == cText } ) ) == 0
+         IF ( n := ascan( ::aItmProps, {|e_| e_[ 2 ] == cText } ) ) == 0
             aadd( aMenu, { ::oAC:getAction( "Delete" ) } )
          ELSE
             aadd( aMenu, { ::oAC:getAction( "SortAZ" ) } )
@@ -417,32 +502,53 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
          ENDIF
          cText := hbide_execPopup( aMenu, ::oUI:treeProps:mapToGlobal( p ), ::oUI:treeProps )
          IF cText == "Delete"
-            oParent := qItm:parent()
-            oParent:removeChild( qItm )
+            ::deleteTreeItem( qItm )
          ELSEIF cText == "Sort Ascending"
-            ::aItmRoots[ n,1 ]:sortChildren( 0, Qt_AscendingOrder )
+            ::aItmProps[ n,1 ]:sortChildren( 0, Qt_AscendingOrder )
          ELSEIF cText == "Sort Descending"
-            ::aItmRoots[ n,1 ]:sortChildren( 0, Qt_DescendingOrder )
+            ::aItmProps[ n,1 ]:sortChildren( 0, Qt_DescendingOrder )
          ENDIF
       ENDIF
       EXIT
    CASE "treeSrc_doubleClicked"
       EXIT
+   CASE "btnSw_clicked"
+      IF empty( qItm := ::oUI:treeProps:currentItem() )
+         EXIT
+      ENDIF
+      IF ::oUI:treeProps:indexOfTopLevelItem( qItm ) >= 0
+         IF p == "plus"
+           ::addTreeItem( qItm )
+
+         ELSEIF ( nChildren := qItm:childCount() ) > 0
+            IF     p == "az"
+               qItm:sortChildren( 0, Qt_AscendingOrder )
+            ELSEIF p == "za"
+               qItm:sortChildren( 0, Qt_DescendingOrder )
+            ELSEIF p == "delete"
+               FOR i := 1 TO nChildren
+                  ::deleteTreeItem( qItm:child( 0 ) )
+               NEXT
+            ELSE
+               FOR i := 1 TO nChildren
+                  qChild := qItm:child( i-1 )
+                  IF     p == "upper" ; qChild:setText( 0, upper( qChild:text( 0 ) ) )
+                  ELSEIF p == "lower" ; qChild:setText( 0, lower( qChild:text( 0 ) ) )
+                  ENDIF
+               NEXT
+            ENDIF
+         ENDIF
+      ELSE      // Indivisual node
+         SWITCH p
+         CASE "delete" ; ::deleteTreeItem( qItm )                  ; EXIT
+         CASE "upper"  ; qItm:setText( 0, upper( qItm:text( 0 ) ) ); EXIT
+         CASE "lower"  ; qItm:setText( 0, lower( qItm:text( 0 ) ) ); EXIT
+         ENDSWITCH
+      ENDIF
+      EXIT
    CASE "treeProps_doubleClicked"
-      cText := p:text( 0 )
-      IF ( n := ascan( ::aItmRoots, {|e_| e_[ 2 ] == cText } ) ) > 0
-         oFont := QFont( "Courier New" )
-         oFont:setPointSize( 8 )
-         ::oUI:treeProps:expandItem( ::aItmRoots[ n, 1 ] )
-         qItm := QTreeWidgetItem()
-         ::aItmRoots[ n,1 ]:addChild( qItm )
-         qItm:setFlags( 0 )
-         qItm:setFlags( hb_bitOr( Qt_ItemIsSelectable, Qt_ItemIsDragEnabled, Qt_ItemIsEnabled, Qt_ItemIsEditable ) )
-         qItm:setText( 0, "" )
-         qItm:setFont( 0, oFont )
-         qItm:setBackground( 0, ::aItmRoots[ n, 4 ] )
-         ::oUI:treeProps:setFirstItemColumnSpanned( qItm, .t. )
-         ::oUI:treeProps:editItem( qItm, 0 )
+      IF ::oUI:treeProps:indexOfTopLevelItem( p ) >= 0
+         ::addTreeItem( p )
       ENDIF
       EXIT
    CASE "btnNew_clicked"
@@ -469,6 +575,43 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
    ENDSWITCH
 
    RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjectWizard:addTreeItem( oParent )
+   LOCAL oFont, qItm
+
+   oFont := QFont( "Courier New" )
+   oFont:setPointSize( 8 )
+
+   oParent:setExpanded( .t. )
+
+   qItm := QTreeWidgetItem()
+   oParent:addChild( qItm )
+   qItm:setFlags( 0 )
+   qItm:setFlags( hb_bitOr( Qt_ItemIsSelectable, Qt_ItemIsDragEnabled, Qt_ItemIsEnabled, Qt_ItemIsEditable ) )
+   qItm:setText( 0, "" )
+   qItm:setFont( 0, oFont )
+   qItm:setBackground( 0, QBrush( QColor( 245,245,245 ) ) )
+   qItm:setFirstColumnSpanned( .t. )
+
+   oParent:treeWidget():editItem( qItm, 0 )
+
+   RETURN .t.
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjectWizard:deleteTreeItem( oChild )
+   LOCAL oParent
+
+   oParent := oChild:parent()
+   oParent:removeChild( oChild )
+   IF oParent:childCount() == 0
+      oParent:setExpanded( .f. )
+      oParent:setSelected( .t. )
+   ENDIF
+
+   RETURN .t.
 
 /*----------------------------------------------------------------------*/
 

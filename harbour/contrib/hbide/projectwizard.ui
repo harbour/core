@@ -728,7 +728,7 @@
       <rect>
        <x>8</x>
        <y>396</y>
-       <width>453</width>
+       <width>325</width>
        <height>185</height>
       </rect>
      </property>
@@ -738,41 +738,20 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QPlainTextEdit" name="plainSwitches">
-      <property name="geometry">
-       <rect>
-        <x>276</x>
-        <y>28</y>
-        <width>169</width>
-        <height>149</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Courier New</family>
-       </font>
-      </property>
-      <property name="whatsThis">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A free-slowing area where you can enter any other compiler switches, hbmk2 switches, or command-line swiches to be passed to hbmk2. Though it will be valid, but please do not add source files here which will be asked for on next page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-      </property>
-      <property name="lineWrapMode">
-       <enum>QPlainTextEdit::NoWrap</enum>
-      </property>
-     </widget>
      <widget class="QTreeWidget" name="treeProps">
       <property name="geometry">
        <rect>
         <x>8</x>
         <y>8</y>
-        <width>261</width>
+        <width>277</width>
         <height>169</height>
        </rect>
       </property>
       <property name="verticalScrollBarPolicy">
-       <enum>Qt::ScrollBarAlwaysOn</enum>
+       <enum>Qt::ScrollBarAsNeeded</enum>
       </property>
       <property name="horizontalScrollBarPolicy">
-       <enum>Qt::ScrollBarAsNeeded</enum>
+       <enum>Qt::ScrollBarAlwaysOff</enum>
       </property>
       <property name="selectionBehavior">
        <enum>QAbstractItemView::SelectRows</enum>
@@ -790,7 +769,7 @@
        <bool>false</bool>
       </property>
       <property name="columnCount">
-       <number>2</number>
+       <number>1</number>
       </property>
       <attribute name="headerDefaultSectionSize">
        <number>20</number>
@@ -800,26 +779,143 @@
         <string notr="true">1</string>
        </property>
       </column>
-      <column>
-       <property name="text">
-        <string notr="true">2</string>
-       </property>
-      </column>
      </widget>
-     <widget class="QLabel" name="label_10">
+     <widget class="QToolButton" name="btnSwPlus">
       <property name="geometry">
        <rect>
-        <x>280</x>
+        <x>292</x>
         <y>8</y>
-        <width>161</width>
-        <height>16</height>
+        <width>25</width>
+        <height>20</height>
        </rect>
       </property>
-      <property name="text">
-       <string>Anything not Covered</string>
+      <property name="toolTip">
+       <string>Add a new element</string>
       </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="hbide.qrc">
+        <normaloff>:/resources/dc_plus.png</normaloff>:/resources/dc_plus.png</iconset>
+      </property>
+      <property name="autoRaise">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="btnSwAZ">
+      <property name="geometry">
+       <rect>
+        <x>292</x>
+        <y>32</y>
+        <width>25</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Sort Ascending</string>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="hbide.qrc">
+        <normaloff>:/resources/sort.png</normaloff>:/resources/sort.png</iconset>
+      </property>
+      <property name="autoRaise">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="btnSwZA">
+      <property name="geometry">
+       <rect>
+        <x>292</x>
+        <y>56</y>
+        <width>25</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Sort Descending</string>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="hbide.qrc">
+        <normaloff>:/resources/sortdescend.png</normaloff>:/resources/sortdescend.png</iconset>
+      </property>
+      <property name="autoRaise">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="btnSwUpper">
+      <property name="geometry">
+       <rect>
+        <x>292</x>
+        <y>80</y>
+        <width>25</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Convert to upper-case</string>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="hbide.qrc">
+        <normaloff>:/resources/toupper.png</normaloff>:/resources/toupper.png</iconset>
+      </property>
+      <property name="autoRaise">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="btnSwLower">
+      <property name="geometry">
+       <rect>
+        <x>292</x>
+        <y>100</y>
+        <width>25</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Convert to lower-case</string>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="hbide.qrc">
+        <normaloff>:/resources/tolower.png</normaloff>:/resources/tolower.png</iconset>
+      </property>
+      <property name="autoRaise">
+       <bool>true</bool>
+      </property>
+     </widget>
+     <widget class="QToolButton" name="btnSwDelete">
+      <property name="geometry">
+       <rect>
+        <x>292</x>
+        <y>156</y>
+        <width>25</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="toolTip">
+       <string>Delete element( s )</string>
+      </property>
+      <property name="text">
+       <string>...</string>
+      </property>
+      <property name="icon">
+       <iconset resource="hbide.qrc">
+        <normaloff>:/resources/dc_delete.png</normaloff>:/resources/dc_delete.png</iconset>
+      </property>
+      <property name="autoRaise">
+       <bool>true</bool>
       </property>
      </widget>
     </widget>
@@ -1125,6 +1221,59 @@
       </property>
       <property name="autoRaise">
        <bool>true</bool>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QFrame" name="frame_3">
+     <property name="geometry">
+      <rect>
+       <x>336</x>
+       <y>396</y>
+       <width>125</width>
+       <height>185</height>
+      </rect>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Panel</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Raised</enum>
+     </property>
+     <widget class="QPlainTextEdit" name="plainSwitches">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>24</y>
+        <width>109</width>
+        <height>153</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <family>Courier New</family>
+       </font>
+      </property>
+      <property name="whatsThis">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;A free-slowing area where you can enter any other compiler switches, hbmk2 switches, or command-line swiches to be passed to hbmk2. Though it will be valid, but please do not add source files here which will be asked for on next page.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="lineWrapMode">
+       <enum>QPlainTextEdit::NoWrap</enum>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>4</x>
+        <y>4</y>
+        <width>117</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Anything Else</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </widget>
