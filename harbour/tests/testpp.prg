@@ -4,7 +4,7 @@
 
 // Tests for stringify match markers
 // Preproces  and compile only
-PROC MAIN
+PROC MAIN()
 LOCAL b
 MEMVAR a
 PRIVATE a
@@ -90,4 +90,3 @@ _DUMB_L(a,"a",'a',["'a'"],"['a']",'["a"]',&a.1,&a,&a.,&a.  ,&(a),&a[1],&a.[1],&a
 //? [[,,]]
 
 RETURN
-

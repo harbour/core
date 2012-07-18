@@ -18,7 +18,7 @@ proc main()
 local e, o
 
    ? "FOR EACH e IN myclass1()"
-   o:=myclass1()
+   o := myclass1()
    for each e in o
       ? e:__enumIndex(), "=>", e
    next

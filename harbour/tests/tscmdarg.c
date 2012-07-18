@@ -18,4 +18,3 @@ void hb_cmdargTEST( void )
    printf("  Fn: %i\n", hb_cmdargNum( "F" ) );
    printf("TEMP: %s\n", pszArg = hb_cmdargString( "TEMP" ) ); if( pszArg ) hb_xfree( pszArg );
 }
-
