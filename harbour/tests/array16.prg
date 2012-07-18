@@ -1,13 +1,13 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Harbour multidimensional arrays support
 
-function Main()
+PROCEDURE Main()
 
-   local a := { 100, 200, "Third" }
-   local b := Array( 8832 )  // 8832 elements !!! Maximum for 16 Bit !!!
+   LOCAL a := { 100, 200, "Third" }
+   LOCAL b := Array( 8832 )  // 8832 elements !!! Maximum for 16 Bit !!!
 
    QOut( ValType( a ) )
    QOut( ValType( { "A" } ) )
@@ -35,39 +35,39 @@ function Main()
 
    QOut( b[ 8832 ] )
 
-   QOut( atail( b ) )
+   QOut( ATail( b ) )
 
    ASize( b, 200 )
    QOut( Len( b ) )
 
    b[ 100 ] := 10
-   Test( b[ 100 ]++ )
+   Test( b[ 100 ] ++ )
    QOut( b[ 100 ] )
 
    b[ 100 ] := 10
-   Test( ++b[ 100 ] )
+   Test( ++ b[ 100 ] )
    QOut( b[ 100 ] )
 
    b := { 1, { 2, { 4, 5 } } }
-   Test( b[ 2 ][ 2 ][ 1 ]++ )
+   Test( b[ 2 ][ 2 ][ 1 ] ++ )
    QOut( b[ 2 ][ 2 ][ 1 ] )
 
    b[ 2 ][ 2 ][ 1 ] := 2
-   Test( ++b[ 2 ][ 2 ][ 1 ] )
+   Test( ++ b[ 2 ][ 2 ][ 1 ] )
    QOut( b[ 2 ][ 2 ][ 1 ] )
 
    ReleaseTest()
 
-return nil
+   RETURN
 
-function Test( n )
+FUNCTION Test( n )
 
    QOut( n )
 
-return nil
+   RETURN nil
 
-function ReleaseTest()
+FUNCTION ReleaseTest()
 
-   local a := { 1, 2, 3 }
+   LOCAL a := { 1, 2, 3 }
 
-return nil
+   RETURN nil

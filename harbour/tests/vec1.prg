@@ -6,7 +6,7 @@
 /* Donated to the public domain by
    Viktor Szakats (harbour syenar.net) */
 
-FUNCTION Main()
+PROCEDURE Main()
 
    QOut( ["'/* bumbulda */45]="k" )
 
@@ -16,4 +16,4 @@ FUNCTION Main()
 
    * Comments beginning with "*"
 
-   RETURN NIL
+   RETURN

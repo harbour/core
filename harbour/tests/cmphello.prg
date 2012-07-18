@@ -1,6 +1,6 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 //
 // Compile Hello
@@ -12,17 +12,19 @@
 //
 // Placed in the public domain
 //
-function Main()
 
-   local cOs := Upper( OS() )
+PROCEDURE Main()
+
+   LOCAL cOs := Upper( OS() )
 
    QOut( "About to compile Hello.prg" )
    QOut()
-   if at( "WINDOWS", cOs ) != 0 .or. at( "DOS", cOs ) != 0 .or. ;
-      at( "OS/2", cOs ) != 0                    // OS/2, DOS, Windows version
+   IF At( "WINDOWS", cOs ) != 0 .OR. At( "DOS", cOs ) != 0 .OR. ;
+         At( "OS/2", cOs ) != 0                    // OS/2, DOS, Windows version
       __Run( "..\bin\harbour.exe hello.prg /gHRB" )
-   else                                         // Unix / Linux version
-      __Run( "../bin/harbour.exe hello.prg /gHRB" )
-   endif
+   ELSE                                            // Unix / Linux version
+      __Run( "../bin/harbour hello.prg /gHRB" )
+   ENDIF
    QOut( "Finished compiling" )
-return nil
+
+   RETURN

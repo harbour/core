@@ -2,14 +2,14 @@
  * $Id$
  */
 
-FUNCTION Main()
+PROCEDURE Main()
 
    TestIt( "*.*" )
    TestIt( "\" )
    TestIt( "..\" )
    TestIt( "..\*.*" )
 
-   RETURN NIL
+   RETURN
 
 STATIC FUNCTION TestIt( cSpec )
 

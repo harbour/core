@@ -1,12 +1,12 @@
 //NOTEST
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 //DO NOT RUN THIS PROGRAM - ITS PURPOSE IS THE SYNTAX CHECK ONLY!
 
-/* NOTE: 
- * Harbour compiled with the Flex version of lexical scanner is 
+/* NOTE:
+ * Harbour compiled with the Flex version of lexical scanner is
  * designed to stay Clipper compatible in keywords usage.
  * Simplex version is extending their usage in some places.
  * Use HB_CLIPPER_COMPATIBLE to check compilation in full compatibility mode
@@ -19,7 +19,7 @@ EXTERNAL __case, __begin
 STATIC nExt, bEgin, bReak, cAse, do, wHile, wIth, eXit, eXternal, fIeld
 STATIC for, in, include, init, loop, local, using, static, return, recover
 
-Function Main()
+FUNCTION Main()
 
 //just to prevent any disaster if someone will want to run it
   IF .T.
@@ -118,7 +118,7 @@ Local nExt, nExt7, nExtNEXT
 
 #ifndef HB_CLIPPER_COMPATIBLE
    next->next :=next->next + next->next //NEXT does not match FOR in Clipper and Harbour(Flex)
-#endif   
+#endif
    next :=next->next
    ( next )->( next() )
 
@@ -249,10 +249,10 @@ case )
   CASE 2+case
     case =case +1
   CASE case++
-#ifndef HB_CLIPPER_COMPATIBLE  
+#ifndef HB_CLIPPER_COMPATIBLE
     case--   //sorry -Clipper & Harbour(flex) doesn't compile this line - but SimpLex does
     case++   //sorry -Clipper & harbour(flex) doesn't compile this line - but SimpLex does
-#endif    
+#endif
     ( case++ )
     ( case-- )
   CASE ++case
@@ -341,10 +341,10 @@ LOCAL with
   ENDDO
 
   while while
-#ifndef HB_CLIPPER_COMPATIBLE  
+#ifndef HB_CLIPPER_COMPATIBLE
     while++   //Clipper & harbour(flex) incomplete statement or unbalanced delimiter
     while--   //Clipper & harbour(flex) incomplete statement or unbalanced delimiter
-#endif    
+#endif
     ( while++ )
     ( while-- )
     --while
@@ -439,7 +439,7 @@ LOCAL end, while
   ( end-- )
   end :=end++
 
-#ifndef HB_CLIPPER_COMPATIBLE  
+#ifndef HB_CLIPPER_COMPATIBLE
   end->end +=1     //in Clipper & Harbour(flex): ENDIF does not match IF
 #endif
   end :=end->end
@@ -447,7 +447,7 @@ LOCAL end, while
   DO end WITH end
   DO end WITH end++
 
-#ifndef HB_CLIPPER_COMPATIBLE  
+#ifndef HB_CLIPPER_COMPATIBLE
   end->( end() )   //in Clipper & harbour(flex): ENDIF does not match IF
 #endif
   ( end )->( end() )
@@ -602,7 +602,7 @@ FUNCTION FOR( for )
   for[ for ] :=for
   for[ for ][ for ] :=for [ for ]
 
-#ifndef HB_CLIPPER_COMPATIBLE  
+#ifndef HB_CLIPPER_COMPATIBLE
   for( for( for ) )   //in Clipper: incomplete statement or unbalanced delimiters
   for( 0 )      //in Clipper: incomplete statement or unbalanced delimiters
   for()      //syntax error ')'
@@ -901,7 +901,7 @@ PRIVATE &return
   return -1
   return+2
   return +2
-#ifndef HB_CLIPPER_COMPATIBLE  
+#ifndef HB_CLIPPER_COMPATIBLE
   return++    //Clipper fails on this
   return--    //Clipper fails on this
 #endif

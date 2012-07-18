@@ -1,42 +1,42 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Testing Harbour AND OR operators
 
-function Main()
+PROCEDURE Main()
 
    QOut( "Testing logical shortcuts" )
 
-   if .f. .and. QOut( "this should not show!" ) // and it should not break!
-   endif
+   IF .F. .AND. QOut( "this should not show!" ) // and it should not break!
+   ENDIF
 
    QOut( "Testing .t. .t." )
-   AndOr( .t., .t. )
+   AndOr( .T. , .T. )
 
    QOut( "Testing .t. .f." )
-   AndOr( .t., .f. )
+   AndOr( .T. , .F. )
 
    QOut( "Testing .f. .f." )
-   AndOr( .f., .f. )
+   AndOr( .F. , .F. )
 
    QOut( "Testing errors..." )
-   AndOr( 1, .t. )
+   AndOr( 1, .T. )
 
-return nil
+   RETURN
 
-function AndOr( lValue1, lValue2 )
+FUNCTION AndOr( lValue1, lValue2 )
 
-   if lValue1 .and. lValue2
+   IF lValue1 .AND. lValue2
       QOut( "They are both true" )
-   else
+   ELSE
       QOut( "They are not both true" )
-   endif
+   ENDIF
 
-   if lValue1 .or. lValue2
+   IF lValue1 .OR. lValue2
       QOut( "At least one of them is true" )
-   else
+   ELSE
       QOut( "None of them are true" )
-   endif
+   ENDIF
 
-return nil
+   RETURN nil

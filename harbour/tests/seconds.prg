@@ -8,7 +8,7 @@
    Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>
 */
 
-FUNCTION Main( cParam )
+PROCEDURE Main( cParam )
 
    LOCAL n, limit := 10
 
@@ -27,4 +27,4 @@ FUNCTION Main( cParam )
       OutStd( Seconds() )
    NEXT
 
-   RETURN NIL
+   RETURN

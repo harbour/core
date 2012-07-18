@@ -7,18 +7,18 @@ PROCEDURE Main()
    LOCAL nTime0, nTime, nTimeLast, nMin := 9999, nMax := - 9999, nTick := 0, nLoop := 0
 
    ? "Wait for 10 seconds..."
-   nTimeLast := nTime0 := HB_MILLISECONDS()
-   DO WHILE ( nTime := HB_MILLISECONDS() ) - nTime0 < 10000
+   nTimeLast := nTime0 := hb_milliSeconds()
+   DO WHILE ( nTime := hb_milliSeconds() ) - nTime0 < 10000
       IF nTimeLast != nTime
-         nTick++
+         nTick ++
          nMin := Min( nMin, nTime - nTimeLast )
          nMax := Max( nMax, nTime - nTimeLast )
          nTimeLast := nTime
       ENDIF
-      nLoop++
+      nLoop ++
    ENDDO
    nTime := nTimeLast - nTime0
-   ? "Ticks per second:", LTrim( Str( nTick * 1000/ nTime, 12, 3 ) )
+   ? "Ticks per second:", LTrim( Str( nTick * 1000 / nTime, 12, 3 ) )
    ? "Min/avg/max interval (ms):", LTrim( Str( nMin, 9, 3 ) ), "/", ;
       LTrim( Str( nTime / nTick, 9, 3 ) ), "/", ;
       LTrim( Str( nMax, 9, 3 ) )

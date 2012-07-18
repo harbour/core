@@ -1,7 +1,7 @@
 //NOTEST             // It is very frustrating if this one is auto-tested
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 //
 // DosShell
@@ -16,17 +16,18 @@
 // Placed in the public domain
 //
 
-function Main()
+PROCEDURE Main()
 
-   local cOs    := Upper( OS() )
-   local cShell := GetEnv("COMSPEC")
+   LOCAL cOs    := Upper( OS() )
+   LOCAL cShell := GetEnv( "COMSPEC" )
 
-   if at( "WINDOWS", cOs ) != 0 .or. at( "DOS", cOs ) != 0 ;
-   .or. at( "OS/2", cOs ) != 0
+   IF At( "WINDOWS", cOs ) != 0 .OR. At( "DOS", cOs ) != 0 ;
+         .OR. At( "OS/2", cOs ) != 0
       ? "About to shell to DOS.."
-      ! (cShell)
+      ! ( cShell )
       ? "Hey, I am back !"
-   else
+   ELSE
       ? "Sorry this program is for Windows, DOS, and OS/2 only"
-   endif
-return nil
+   ENDIF
+
+   RETURN

@@ -106,58 +106,58 @@ RETURN
 
 PROCEDURE SOMEPROC()
 
-  PRIVATE TEST AS NUMERIC
+   PRIVATE TEST AS NUMERIC
 
-  M->TEST := 1
+   M->TEST := 1
 
-  FOR M->TEST := 1 TO M->TEST + 10
-    ? "Correct warnings for FOR/NEXT"
-  NEXT
+   FOR M->TEST := 1 TO M->TEST + 10
+      ? "Correct warnings for FOR/NEXT"
+   NEXT
 
-  REPLACE a WITH 1
+   REPLACE a WITH 1
 
-  M->public_var := 0
+   M->public_var := 0
 
-  b := 0
+   b := 0
 
-  Var1 := 1
+   Var1 := 1
 
-  if lGlobal = 0
-     ? 'lGlobal is NOT Numeric'
-  endif
+   IF lGlobal = 0
+      ? 'lGlobal is NOT Numeric'
+   ENDIF
 
-RETURN
+   RETURN
 
-PROC MAIN1()
+PROCEDURE MAIN1()
 
-  PRIVATE OTHER, TEST AS STRING
+   PRIVATE OTHER, TEST AS STRING
 
-  Var1 := M->TEST
+   Var1 := M->TEST
 
-  Var2 := Test()
+   Var2 := Test()
 
-  ? Var1 + 2
+   ? Var1 + 2
 
-  M->TEST := 1
-  M->TEST := "No Warning"
+   M->TEST := 1
+   M->TEST := "No Warning"
 
-  Test[ 1 ][ 2 ] := "Correct warning"
+   Test[ 1 ][ 2 ] := "Correct warning"
 
-RETURN
+   RETURN
 
-Function Test()
-RETURN .T.
+FUNCTION Test()
+   RETURN .T.
 
-Function Main2()
-  Local n As Numeric, lVar AS LOGICAL
+FUNCTION Main2()
+   Local n As Numeric, lVar AS LOGICAL
 
-  n := IIF( lVar, 'A', 3 ) //IIF() needs to be completed.
-  n := 2
-  n := 'a'
-  n := Seconds() + 2
-  n := Int( seconds() + 2 )
+   n := IIF( lVar, 'A', 3 ) //IIF() needs to be completed.
+   n := 2
+   n := 'a'
+   n := Seconds() + 2
+   n := Int( seconds() + 2 )
 
-Return( NIL )
+   RETURN( NIL )
 
 FUNCTION Main3()
 
@@ -232,16 +232,16 @@ FUNCTION SomeTest( lVar AS LOGICAL )
 
    ENDIF
 
-RETURN NIL
+   RETURN NIL
 
-Function nMyFunc( cVar AS STRING, nVar AS NUMERIC )
+FUNCTION nMyFunc( cVar AS STRING, nVar AS NUMERIC )
 
-nVar := Val(cVar)
+   nVar := Val(cVar)
 
-RETURN nVar + 1
+   RETURN nVar + 1
 
-Function cOtherFunc( )
-RETURN 'Hello'
+FUNCTION cOtherFunc( )
+   RETURN 'Hello'
 
-Function ExtFun()
-RETURN 1
+FUNCTION ExtFun()
+   RETURN 1

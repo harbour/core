@@ -1,44 +1,46 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
-Function Main()
-Local n
+PROCEDURE Main()
 
-  For n := 1 To 20
-     QOut( FibR( n ) )
-     QOut( FibI( n ) )
-  Next
+   LOCAL n
 
-Return( NIL )
+   FOR n := 1 TO 20
+      QOut( FibR( n ) )
+      QOut( FibI( n ) )
+   NEXT
 
-Function FibR( n )
-Local nFib
+   RETURN
 
-   If n < 2
+FUNCTION FibR( n )
+
+   LOCAL nFib
+
+   IF n < 2
       nFib := n
-   Else
+   ELSE
       nFib := FibR( n - 2 ) + FibR( n - 1 )
-   EndIf
+   ENDIF
 
-Return( nFib )
+   RETURN nFib
 
-Function FibI( n )
-Local nFibMin1  := 1
-Local nFibMinN1 := 0
-Local i         := 1
-Local nFib
+FUNCTION FibI( n )
 
-   If n < 2
+   LOCAL nFibMin1  := 1
+   LOCAL nFibMinN1 := 0
+   LOCAL i         := 1
+   LOCAL nFib
+
+   IF n < 2
       nFib := n
-   Else
-      Do While i < n
+   ELSE
+      DO WHILE i < n
          nFib      := nFibMin1 + nFibMinN1
          nFibMinN1 := nFibMin1
          nFibMin1  := nFib
-         ++i
-      EndDo
-   EndIf
+         ++ i
+      ENDDO
+   ENDIF
 
-Return( nFib )
-
+   RETURN nFib

@@ -7,7 +7,7 @@
 
 #include "hbmemory.ch"
 
-FUNCTION Main()
+PROCEDURE Main()
 
    ? "HB_MEM_CHAR      " , MEMORY( HB_MEM_CHAR       )
    ? "HB_MEM_BLOCK     " , MEMORY( HB_MEM_BLOCK      )
@@ -24,4 +24,4 @@ FUNCTION Main()
    ? "HB_MEM_STACKITEMS" , MEMORY( HB_MEM_STACKITEMS )
    ? "HB_MEM_STACK     " , MEMORY( HB_MEM_STACK      )
 
-   RETURN NIL
+   RETURN

@@ -15,7 +15,7 @@
 #include "directry.ch"
 #include "fileio.ch"
 
-FUNCTION Main( cOption, cCmd )
+PROCEDURE Main( cOption, cCmd )
 
    LOCAL aDir, f, n, o, p, cRead
 
@@ -50,7 +50,7 @@ FUNCTION Main( cOption, cCmd )
    FWrite( o, ":END" + Chr( 13 ) + Chr( 10 ) )
    FClose( o )
 
-   RETURN NIL
+   RETURN
 
 FUNCTION TestIt( cFile )
 

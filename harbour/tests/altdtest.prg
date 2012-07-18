@@ -1,11 +1,11 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Testing AltD()
 // Notice you have to compile it using /b
 
-function Main()
+PROCEDURE Main()
 
    AltD( 1 )   // Enables the debugger. Press F5 to go
 
@@ -15,4 +15,4 @@ function Main()
 
    Alert( "debugger invoked" )
 
-return nil
+   RETURN

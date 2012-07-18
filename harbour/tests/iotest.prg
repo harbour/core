@@ -1,34 +1,34 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Testing Harbour file io features
 
-function Main()
+PROCEDURE Main()
 
-   local h    := 0
-   local cstr := " "
-   local ntmp := 1
+   LOCAL h    := 0
+   LOCAL cstr := " "
+   LOCAL ntmp := 1
 
-   h := FCreate( "test.txt")
-   qout('create handle',h)
+   h := FCreate( "test.txt" )
+   QOut( "create handle", h )
 
    FWrite( h, "This test worked if you can see this" )
 
    FClose( h )
 
-   h := FOpen("test.txt")
-   qout('open handle',h)
-   qout()
+   h := FOpen( "test.txt" )
+   QOut( "open handle", h )
+   QOut()
    /* try to read what is there */
-   do while ntmp # 0
-      ntmp := FRead( h, @cstr, 1)
-      if ntmp > 0
-         qqout(cstr)
-      endif
-   enddo
-   qout()
+   DO WHILE ntmp != 0
+      ntmp := FRead( h, @cstr, 1 )
+      IF ntmp > 0
+         QQOut( cstr )
+      ENDIF
+   ENDDO
+   QOut()
 
    FClose( h )
 
-return nil
+   RETURN

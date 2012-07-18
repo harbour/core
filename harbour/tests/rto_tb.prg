@@ -91,7 +91,7 @@ STATIC s_lObjectDump
 STATIC s_lCatchErr
 STATIC s_lCheckResult
 
-FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
+PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
 
    LOCAL o
 
@@ -127,7 +127,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    #endif
 
    IF s_fhnd == F_ERROR
-      RETURN 1
+      RETURN
    ENDIF
 
    // ;
@@ -279,7 +279,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
 
    FClose( s_fhnd )
 
-   RETURN 0
+   RETURN
 
 PROCEDURE TBRAssign( xVar )
    LOCAL o

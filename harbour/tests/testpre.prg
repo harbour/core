@@ -4,7 +4,7 @@
 
 REQUEST __PP_STDRULES
 
-FUNCTION Main()
+PROCEDURE Main()
 
    LOCAL cString, l_pp
    LOCAL i, j, aScript
@@ -80,4 +80,4 @@ FUNCTION Main()
       CLS
    NEXT
 
-   RETURN NIL
+   RETURN

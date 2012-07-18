@@ -7,7 +7,7 @@
 
 #define WELCOME "Welcome to the World of Harbour multiplatform Graphics!"
 
-FUNCTION Main()
+PROCEDURE Main()
 
    LOCAL nFontHeight, nFontWidth
    LOCAL nTop, nLeft, nHeight, nWidth, nColor, nSec := Seconds()
@@ -88,7 +88,7 @@ FUNCTION Main()
       ENDIF
    ENDDO
 
-   RETURN NIL
+   RETURN
 
 FUNCTION PutFrame( nTop, nLeft, nBottom, nRight, nColor1, nColor2 )
 

@@ -1,13 +1,13 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Harbour multidimensional arrays support
 
-function Main()
+PROCEDURE Main()
 
-   local a := { 100, 200, "Third" }
-   local b := Array( 10000 )  // 10.000 elements !!!
+   LOCAL a := { 100, 200, "Third" }
+   LOCAL b := Array( 10000 )  // 10.000 elements !!!
 
    QOut( ValType( a ) )
    QOut( ValType( { "A" } ) )
@@ -56,16 +56,16 @@ function Main()
 
    ReleaseTest()
 
-return nil
+   RETURN
 
-function Test( n )
+FUNCTION Test( n )
 
    QOut( n )
 
-return nil
+   RETURN nil
 
-function ReleaseTest()
+FUNCTION ReleaseTest()
 
-   local a := { 1, 2, 3 }
+   LOCAL a := { 1, 2, 3 }
 
-return nil
+   RETURN nil

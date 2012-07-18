@@ -1,19 +1,19 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
-Function Main
+PROCEDURE Main()
 
-   local a, b , c
+   LOCAL a, b, c
 
-   a := { {,} }
+   a := { { , } }
 
-   a [ 1, 2 ] := [Hello]
+   a[ 1, 2 ] := [Hello]
 
    c := { 1 }
 
-   b := a [ c [1] ] [ val( [2] ) ]
+   b := a[ c[ 1 ] ][ val( [ 2 ] ) ]
 
    QOut( b )
 
-return NIL
+   RETURN

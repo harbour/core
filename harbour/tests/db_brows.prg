@@ -13,7 +13,7 @@
 //+
 //+    Source Module => db_brows.prg
 //+
-//+    Functions: Function Main()
+//+    Functions: PROCEDURE Main()
 //+               Function DBFLIST()
 //+               Function DBFLIST()
 //+               Function FLDCOUNT()
@@ -82,7 +82,7 @@ MEMVAR str_bar
 
 //+--------------------------------------------------------------------
 //+
-//+    Function Main()
+//+    PROCEDURE Main()
 //+
 //+--------------------------------------------------------------------
 //+
@@ -116,7 +116,7 @@ PROCEDURE Main( filename )
 //+
 //+    Function DBFLIST()
 //+
-//+    Called from ( db_brows.prg )   1 - function main()
+//+    Called from ( db_brows.prg )   1 - PROCEDURE Main()
 //+
 //+--------------------------------------------------------------------
 //+
@@ -767,7 +767,7 @@ FUNCTION GetBuf
 //+
 //+    Function InitList()
 //+
-//+    Called from ( db_brows.prg )   1 - function main()
+//+    Called from ( db_brows.prg )   1 - PROCEDURE Main()
 //+                                   1 - function dbflist()
 //+
 //+--------------------------------------------------------------------

@@ -42,7 +42,7 @@ STATIC nDispCount := 0
 
 #endif
 
-FUNCTION Main()
+PROCEDURE Main()
 
    LOCAL aResult := {}
 
@@ -56,7 +56,7 @@ FUNCTION Main()
    // Display Results
    Summary( aResult )
 
-   RETURN NIL
+   RETURN
 
 // initialise the screen
 

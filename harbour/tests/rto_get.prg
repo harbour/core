@@ -70,7 +70,7 @@ STATIC s_lCallBackStack
 STATIC s_lRTEDetails
 STATIC s_lObjectDump
 
-FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
+PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    LOCAL uNIL := NIL
    LOCAL nInt01 := 98
    LOCAL nInt02 := 0
@@ -117,7 +117,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
    #endif
 
    IF s_fhnd == F_ERROR
-      RETURN 1
+      RETURN
    ENDIF
 
    FWrite( s_fhnd, Set( _SET_DATEFORMAT ) + hb_eol() )
@@ -721,7 +721,7 @@ FUNCTION Main( cArg01, cArg02, cArg03, cArg04 )
 
    FClose( s_fhnd )
 
-   RETURN 0
+   RETURN
 
 PROCEDURE TGetTOVS( o, aKeys, lInsert )
    LOCAL tmp, tmp1

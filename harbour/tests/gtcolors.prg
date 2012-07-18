@@ -11,36 +11,43 @@
  *
  */
 
-function main( xBlink )
-local bg, fg, n
+PROCEDURE Main( xBlink )
 
-CLS
-?
-? OS(), VERSION(), DATE(), TIME()
-? HB_GTVERSION(), HB_GTVERSION(1)
-?
-inkey( 0 )
-setblink( empty( xBlink ) )
-for bg := 0 to 15
-    for fg := 0 to 15
-        n := bg * 16 + fg
-        @ 5 + bg, 5 + fg * 4 say "["+NUM2HEX(n)+"]" color NTOCOLOR( n )
-    next
-next
-?
-?
-while inkey(0)!=13; enddo
-return nil
+   LOCAL bg, fg, n
 
-static function NTOCOLOR(nClr)
-return ltrim( str( int( nClr % 16 ), 2 ) ) + "/" + ;
-       ltrim( str( int( nClr / 16 ), 2 ) )
+   CLS
+   ?
+   ? OS(), Version(), Date(), Time()
+   ? hb_gtVersion(), hb_gtVersion( 1 )
+   ?
+   Inkey( 0 )
+   SetBlink( Empty( xBlink ) )
+   FOR bg := 0 TO 15
+      FOR fg := 0 TO 15
+         n := bg * 16 + fg
+         @ 5 + bg, 5 + fg * 4 SAY "[" + NUM2HEX( n ) + "]" COLOR NTOCOLOR( n )
+      NEXT
+   NEXT
+   ?
+   ?
+   WHILE Inkey( 0 ) != 13
+   ENDDO
 
-static function NUM2HEX(nVal)
-local cHex := "", i, n
-for i := 1 to 2
-    n := nVal % 16
-    cHex := chr( n + iif( n > 9, 55, 48 ) ) + cHex
-    nVal := int( nVal / 16 )
-next
-return cHex
+   RETURN
+
+STATIC FUNCTION NTOCOLOR( nClr )
+
+   RETURN LTrim( Str( Int( nClr % 16 ), 2 ) ) + "/" + ;
+      LTrim( Str( Int( nClr / 16 ), 2 ) )
+
+STATIC FUNCTION NUM2HEX( nVal )
+
+   LOCAL cHex := "", i, n
+
+   FOR i := 1 TO 2
+      n := nVal % 16
+      cHex := Chr( n + iif( n > 9, 55, 48 ) ) + cHex
+      nVal := Int( nVal / 16 )
+   NEXT
+
+   RETURN cHex

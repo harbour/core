@@ -1,95 +1,95 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 #include "hbmath.ch"
 
-function main()
+PROCEDURE Main()
 
-local nOldMathErrMode
-local bOldMathErr
+   LOCAL nOldMathErrMode
+   LOCAL bOldMathErr
 
-  qout ("Testing math function: EXP(), LOG() and SQRT():")
-  qout ("")
-  qout ("  I) Test with correct arguments:")
-  qout ("     exp(0.0) == 1.00         ? ", exp (0.0))
-  qout ("     exp(1.0) == 2.71(8)...  ? ", exp (1.0))
-  qout ("     exp(-1.0) == 0.36(7)... ? ", exp (-1.0))
-  qout ("")
-  qout ("     log(1.0) == 0.00        ? ", log (1.0))
-  qout ("     log(2.7) == 0.99(3)...  ? ", log (2.7))
-  qout ("     log(0.36) == -1.02(1)... ? ", log (0.36))
-  qout ("")
-  qout ("     sqrt(1.0) == 1.00      ? ", sqrt (1.0))
-  qout ("     sqrt(4.0) == 2.00      ? ", sqrt (4.0))
-  qout ("     sqrt(2.0) == 1.41(4).. ? ", sqrt (2.0))
-  qout ("")
-  qout ("  II) Test with numeric but incorrect arguments:")
-  qout ("")
-  qout ("  IIa) default error handling (by the functions themselves)")
-  qout ("       exp (-1000) == 0.00   ?", exp (-1000))
-  qout ("       exp (1000) == ****... ?", exp (1000))
-  qout ("")
-  qout ("       log (0) == ****...  ?", log (0))
-  qout ("       log (-10) == *****... ?", log (-10))
-  qout ("")
-  qout ("       sqrt (-4) == 0.00 ?", sqrt (-4))
-  qout ("")
+   QOut( "Testing math function: EXP(), LOG() and SQRT():" )
+   QOut( "" )
+   QOut( "  I) Test with correct arguments:" )
+   QOut( "     exp(0.0) == 1.00         ? ", Exp( 0.0 ) )
+   QOut( "     exp(1.0) == 2.71(8)...  ? ", Exp( 1.0 ) )
+   QOut( "     exp(-1.0) == 0.36(7)... ? ", Exp( - 1.0 ) )
+   QOut( "" )
+   QOut( "     log(1.0) == 0.00        ? ", Log( 1.0 ) )
+   QOut( "     log(2.7) == 0.99(3)...  ? ", Log( 2.7 ) )
+   QOut( "     log(0.36) == -1.02(1)... ? ", Log( 0.36 ) )
+   QOut( "" )
+   QOut( "     sqrt(1.0) == 1.00      ? ", Sqrt( 1.0 ) )
+   QOut( "     sqrt(4.0) == 2.00      ? ", Sqrt( 4.0 ) )
+   QOut( "     sqrt(2.0) == 1.41(4).. ? ", Sqrt( 2.0 ) )
+   QOut( "" )
+   QOut( "  II) Test with numeric but incorrect arguments:" )
+   QOut( "" )
+   QOut( "  IIa) default error handling(by the functions themselves)" )
+   QOut( "       exp(-1000) == 0.00   ?", Exp( - 1000 ) )
+   QOut( "       exp(1000) == ****... ?", Exp( 1000 ) )
+   QOut( "" )
+   QOut( "       log(0) == ****...  ?", Log( 0 ) )
+   QOut( "       log(-10) == *****... ?", Log( - 10 ) )
+   QOut( "" )
+   QOut( "       sqrt(-4) == 0.00 ?", Sqrt( - 4 ) )
+   QOut( "" )
 
-  nOldMathErrMode := hb_MathErMode (HB_MATH_ERRMODE_USERDEFAULT)
+   nOldMathErrMode := hb_matherMode( HB_MATH_ERRMODE_USERDEFAULT )
 
-  qout ("  IIb) error handling by error (hb_MathErMode() == HB_MATH_ERRMODE_USERDEFAULT)")
-  qout ("       exp (-1000) == 0.00   ?", exp (-1000))
-  qout ("       exp (1000) == ****... ?", exp (1000))
-  qout ("")
-  qout ("       log (0) == ****...  ?", log (0))
-  qout ("       log (-10) == *****... ?", log (-10))
-  qout ("")
-  qout ("       sqrt (-4) == 0.00 ?", sqrt (-4))
-  qout ("")
+   QOut( "  IIb) error handling by error(hb_MathErMode() == HB_MATH_ERRMODE_USERDEFAULT)" )
+   QOut( "       exp(-1000) == 0.00   ?", Exp( - 1000 ) )
+   QOut( "       exp(1000) == ****... ?", Exp( 1000 ) )
+   QOut( "" )
+   QOut( "       log(0) == ****...  ?", Log( 0 ) )
+   QOut( "       log(-10) == *****... ?", Log( - 10 ) )
+   QOut( "" )
+   QOut( "       sqrt(-4) == 0.00 ?", Sqrt( - 4 ) )
+   QOut( "" )
 
-  hb_MathErMode (nOldMathErrMode)
+   hb_matherMode( nOldMathErrMode )
 
-  bOldMathErr := hb_MathErBlock ({|nType, cFuncname, cError, nArg1, nArg2, aInfo|;
-                                  localmatherr (nType, cFuncname, cError, nArg1, nArg2, aInfo)})
+   bOldMathErr := hb_matherBlock( {| nType, cFuncname, cError, nArg1, nArg2, aInfo |;
+      localmatherr( nType, cFuncname, cError, nArg1, nArg2, aInfo ) } )
 
-  qout ("  IIc) error handling by callback block (hb_MathErBlock())")
-  qout ("       exp (-1000) == ?", exp (-1000))
-  qout ("       exp (1000) ==  ?", exp (1000))
-  qout ("")
-  qout ("       log (0) ==     ?", log (0))
-  qout ("       log (-10) ==   ?", log (-10))
-  qout ("")
-  qout ("       sqrt (-4) ==   ?", sqrt (-4))
+   QOut( "  IIc) error handling by callback block(hb_MathErBlock())" )
+   QOut( "       exp(-1000) == ?", Exp( - 1000 ) )
+   QOut( "       exp(1000) ==  ?", Exp( 1000 ) )
+   QOut( "" )
+   QOut( "       log(0) ==     ?", Log( 0 ) )
+   QOut( "       log(-10) ==   ?", Log( - 10 ) )
+   QOut( "" )
+   QOut( "       sqrt(-4) ==   ?", Sqrt( - 4 ) )
 
-  hb_MathErBlock (bOldMathErr)
+   hb_matherBlock( bOldMathErr )
 
-return nil
+   RETURN
 
-function localmatherr (nType, cFuncname, cError, nArg1, nArg2, aInfo)
+FUNCTION localmatherr( nType, cFuncname, cError, nArg1, nArg2, aInfo )
 
-local cStr := "!! Local handling of math error MATH/"
+   LOCAL cStr := "!! Local handling of math error MATH/"
 
-  cStr += alltrim(str(nType))+" in "+cFuncname+"("
+   cStr += AllTrim( Str( nType ) ) + " in " + cFuncname + "("
 
-  if valtype(nArg1) == "N"
-    cStr += alltrim(str(nArg1))
-  endif
-  if valtype(nArg2) == "N"
-    cStr += ","+alltrim(str(nArg2))
-  endif
-  cStr += "):"
-  qout (cStr)
-  qout ("!!                              "+cError)
-  if aInfo[HB_MATHERRORBLOCK_HANDLED]
-    qout ("!!                               --> already handled with return value: "+;
-          alltrim(str(aInfo[HB_MATHERRORBLOCK_RETVAL])))
-    return 1
-  endif
+   IF ValType( nArg1 ) == "N"
+      cStr += AllTrim( Str( nArg1 ) )
+   ENDIF
+   IF ValType( nArg2 ) == "N"
+      cStr += "," + AllTrim( Str( nArg2 ) )
+   ENDIF
+   cStr += "):"
+   QOut( cStr )
+   QOut( "!!                              " + cError )
+   IF aInfo[HB_MATHERRORBLOCK_HANDLED]
+      QOut( "!!                               --> already handled with return value: " + ;
+         AllTrim( Str( aInfo[HB_MATHERRORBLOCK_RETVAL] ) ) )
+      RETURN 1
+   ENDIF
 
-  qout ("!!       setting return value to --> 5.0")
+   QOut( "!!       setting return value to --> 5.0" )
 
-  aInfo[HB_MATHERRORBLOCK_RETVAL] := 5.0
-  aInfo[HB_MATHERRORBLOCK_HANDLED] := .T.
+   aInfo[ HB_MATHERRORBLOCK_RETVAL ] := 5.0
+   aInfo[ HB_MATHERRORBLOCK_HANDLED ] := .T.
 
-return 1
+   RETURN 1

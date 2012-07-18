@@ -1,6 +1,6 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 //
 // Function Array syntax test
@@ -11,9 +11,9 @@
 // Placed in the public domain
 //
 
-Function Main
+PROCEDURE Main()
 
-   local a
+   LOCAL a
 
    QOut( "Direct reference : ", aFunc()[1] )
 
@@ -26,9 +26,9 @@ Function Main
    aFunc()[1] := 4
    QOut( "Assign 4         : ", aFunc()[1] )
 
-   QOut( "Post increment   : ", aFunc()[1]++ )
+   QOut( "Post increment   : ", aFunc()[1] ++ )
    QOut( "After            : ", aFunc()[1] )
-   QOut( "Pre decrement    : ", --aFunc()[1] )
+   QOut( "Pre decrement    : ", -- aFunc()[1] )
    QOut( "After            : ", aFunc()[1] )
 
    aFunc()[1] += 2
@@ -50,13 +50,14 @@ Function Main
    QOut( "To the power 3   : ", aFunc()[1] )
 
    QOut( "Global stack" )
-   Debug( __dbgvmStkGList() )        // Please note a is a reference to aArray !
-   QOut( "Statics")
-   Debug( __dbgvmVarSList() )
-return NIL
+   Debug( __dbgVMStkGList() )        // Please note a is a reference to aArray !
+   QOut( "Statics" )
+   Debug( __dbgVMVarSList() )
 
-Function aFunc()
+   RETURN
 
-   static aArray := { [Test] }
+FUNCTION aFunc()
 
-return aArray
+   STATIC aArray := { [Test] }
+
+   RETURN aArray

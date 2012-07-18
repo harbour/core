@@ -1,13 +1,15 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // see also testhrb.prg
 
+FUNCTION Msg()
 
-Function Msg()
-? "Function called from HRB file"
-Return .T.
+   ? "Function called from HRB file"
 
-Function msg2()
-Return Msg()
+   RETURN .T.
+
+FUNCTION msg2()
+
+   RETURN Msg()

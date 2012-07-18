@@ -1,9 +1,9 @@
 //NOTEST
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
-FUNCTION MAIN()
+PROCEDURE Main()
 LOCAL a, b
 
   TEST1() ; TEST2()
@@ -68,7 +68,7 @@ b ;
 1;
 ,;
 2;
-];  
+];
 [ ;
  3 ]
 
@@ -82,11 +82,11 @@ b ;
 ;
  55
 
-RETURN nil
+RETURN
 
 FUNCTION TEST1() ; LOCAL n; IF n==5; n =4; END; RETURN n
 
 FUNCTION TEST2(); LOCAL n
 
-  WHILE n<5; n++; END
-RETURN n
+   WHILE n<5; n++; END
+   RETURN n

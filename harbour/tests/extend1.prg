@@ -1,14 +1,14 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Testing Harbour Extended system.
 //
 // NOTE: compile extend1.prg and extend2.c and link both files
 
-function Main()
+PROCEDURE Main()
 
-   local uVar
+   LOCAL uVar
 
    SET CENTURY ON
 
@@ -230,9 +230,9 @@ function Main()
    QOut( "Parameters info:" )
    QOut( "================" )
    QOut( "" )
-   QOut( '  _pcount() with Params1( 1, "a", .T., 10 ) =>', Params1( 1, "a", .T., 10 ) )
-   QOut( '  _parinfo() with Params2( 1, "a", .T., 0 ) =>', Params2( 1, "a", .T., 0 ) )
-   QOut( '  _parinfo() with Params2( 1, "a", .T., 3 ) =>', Params2( 1, "a", .T., 3 ), "( IT_LOGICAL )" )
+   QOut( '  _pcount() with Params1( 1, "a", .T., 10 ) =>', Params1( 1, "a", .T. , 10 ) )
+   QOut( '  _parinfo() with Params2( 1, "a", .T., 0 ) =>', Params2( 1, "a", .T. , 0 ) )
+   QOut( '  _parinfo() with Params2( 1, "a", .T., 3 ) =>', Params2( 1, "a", .T. , 3 ), "( IT_LOGICAL )" )
    QOut( "" )
    QOut( "" )
    QOut( "" )
@@ -279,4 +279,4 @@ function Main()
    QOut( "" )
    QOut( "" )
 
-return nil
+   RETURN

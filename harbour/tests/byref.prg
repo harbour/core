@@ -1,59 +1,61 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Managing variables by reference
 
-function Main()
-STATIC s:=10
+PROCEDURE Main()
 
-   local x := 0
+   STATIC s := 10
+
+   LOCAL x := 0
 
    QOut( "Managing LOCAL variables by reference" )
-   Qout( 'In main before ref1 x=', x )
+   QOut( 'In main before ref1 x=', x )
    ref1( @x )
-   Qout( ' In main after ref1 x=', x )
+   QOut( ' In main after ref1 x=', x )
 
 
    QOut( "Managing STATIC variables by reference" )
-   Qout( 'In main before ref1 s=', s )
+   QOut( 'In main before ref1 s=', s )
    ref1( @s )
-   Qout( ' In main after ref1 s=', s )
+   QOut( ' In main after ref1 s=', s )
 
-return nil
+   RETURN
 
-function ref1( x )
+FUNCTION ref1( x )
 
-  x++
-  Qout( ' In ref1 before ref2 =', x )
-  Ref2( @x )
-  Qout( ' In ref1 after ref2 =', x )
+   x ++
+   QOut( ' In ref1 before ref2 =', x )
+   Ref2( @x )
+   QOut( ' In ref1 after ref2 =', x )
 
-return nil
+   RETURN nil
 
-function ref2( x )
+FUNCTION ref2( x )
 
-  x++
-  Qout( '  In ref2 before ref3 =', x )
-  Ref3( @x )
-  Qout( '  In ref2 after ref3 =', x )
+   x ++
+   QOut( '  In ref2 before ref3 =', x )
+   Ref3( @x )
+   QOut( '  In ref2 after ref3 =', x )
 
-return nil
+   RETURN nil
 
-function ref3( x )
-STATIC a
+FUNCTION ref3( x )
 
-  x++
-  Qout( '   In ref3 before ref4 =', x )
-  a ={ x, x }
-  Ref4( @a )
-  Qout( '   In ref3 after ref4 =', x )
+   STATIC a
 
-return nil
+   x ++
+   QOut( '   In ref3 before ref4 =', x )
+   a = { x, x }
+   Ref4( @a )
+   QOut( '   In ref3 after ref4 =', x )
 
-function ref4( a )
+   RETURN nil
 
-  a[ 1 ]++
-  Qout( '    In ref4 =', a[ 1 ] )
+FUNCTION ref4( a )
 
-return nil
+   a[ 1 ] ++
+   QOut( '    In ref4 =', a[ 1 ] )
+
+   RETURN nil

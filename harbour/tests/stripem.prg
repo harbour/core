@@ -27,7 +27,7 @@
  * Placed in the public domain
  */
 
-FUNCTION Main( cFrom, cTo )
+PROCEDURE Main( cFrom, cTo )
 
    LOCAL oFrom
    LOCAL oTo
@@ -54,7 +54,7 @@ FUNCTION Main( cFrom, cTo )
    oFrom:Dispose()
    oTo:Dispose()
 
-   RETURN nil
+   RETURN
 
 //
 // Generic DOS file handler

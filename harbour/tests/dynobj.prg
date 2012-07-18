@@ -1,6 +1,6 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 //
 // DynObj
@@ -15,10 +15,10 @@
 // Placed in the public domain
 //
 
-function Main()
+PROCEDURE Main()
 
-   local oForm := TForm():New()
-   local nSeq
+   LOCAL oForm := TForm():New()
+   LOCAL nSeq
 
    QOut( "What methods are in the class :" )
    Debug( __objGetMethodList( oForm ) )
@@ -28,7 +28,7 @@ function Main()
    QOut( "Let's add inline 'CalcArea' at run-time to an already instanced class" )
 
    __objAddInline( oForm, "CalcArea", ;
-      {|self| ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) } )
+      {| self | ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) } )
 
    QOut( "What methods are in the class :" )
    Debug( __objGetMethodList( oForm ) )
@@ -72,7 +72,7 @@ function Main()
    QOut( "And CalcArea() will now give a result in square inches" )
 
    __objModInline( oForm, "CalcArea", ;
-      {|self| ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) / (2.54*2.54) } )
+      {| self | ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) / ( 2.54 * 2.54 ) } )
 
    QOut( "What is the Form area ?" )
    QOut( oForm:CalcArea() )
@@ -106,14 +106,13 @@ function Main()
 
 /*   oForm:cHelp := "Please crash" */
 
-return nil
+   RETURN
 
+FUNCTION TForm()
 
-function TForm()
+   STATIC oClass
 
-   static oClass
-
-   if oClass == nil
+   IF oClass == nil
       oClass := HBClass():New( "TFORM" )    // starts a new class definition
 
       oClass:AddData( "cText" )           // define this class objects datas
@@ -123,50 +122,46 @@ function TForm()
       oClass:AddData( "nRight" )
 
       oClass:AddMethod( "New",  @New() )  // define this class objects methods
-      oClass:AddInline( "Show", {|self| ::cText } )
+      oClass:AddInline( "Show", {| self | ::cText } )
 
       oClass:Create()                     // builds this class
-   endif
+   ENDIF
 
-return oClass:Instance()                  // builds an object of this class
+   RETURN oClass:Instance()                  // builds an object of this class
 
+STATIC FUNCTION New()
 
-static function New()
-
-   local Self := QSelf()
+   LOCAL Self := QSelf()
 
    ::nTop    := 10
    ::nLeft   := 10
    ::nBottom := 20
    ::nRight  := 40
 
-return Self
+   RETURN Self
 
+STATIC FUNCTION Smile()
 
-static function Smile()
-
-   local self := QSelf()
+   LOCAL self := QSelf()
 
    if ::CalcArea() == 300
       QOut( ":-)" )
-   else
+   ELSE
       QOut( ":-(" )
-   endif
-return self
+   ENDIF
 
+   RETURN self
 
-static function BigSmile()
+STATIC FUNCTION BigSmile()
 
-   local self := QSelf()
+   LOCAL self := QSelf()
 
    QOut( ":-)))" )
-return self
 
+   RETURN self
 
-function Pause()
+FUNCTION Pause()
 
    __Accept( "Pause :" )
-return nil
 
-
-
+   RETURN nil

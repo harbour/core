@@ -1,94 +1,94 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 //
-// Array test aIns / aDel / aSize / aFill
+// Array test AIns / ADel / ASize / AFill
 //
-// Date : 26/4/99
-// Time : 09:30
-//
-function Main()
 
-    local aFirst
-    local aSecond
-    local aMore
+PROCEDURE Main()
 
-    aFirst := aClone( { 1,2,4 } )
-    aIns( aFirst, 3 )
-    aFirst[3] := "3"
-    QQOut( "Testing aIns .. " )
-    aDump( aFirst )
+   LOCAL aFirst
+   LOCAL aSecond
+   LOCAL aMore
 
-    aSecond := { 1,2,4 }
-    aSize( aSecond, 4 )
-    QQOut( "Testing aSize .. " )
-    aDump( aSecond )
+   aFirst := AClone( { 1, 2, 4 } )
+   AIns( aFirst, 3 )
+   aFirst[ 3 ] := "3"
+   QQOut( "Testing aIns .. " )
+   aDump( aFirst )
 
-    aSecond := { 1,2,4 }
-    aSize( aSecond, 4 )
-    aIns( aSecond, 3 )
-    aSecond[3] := "3"
-    QQOut( "Testing aSize + aIns .. " )
-    aDump( aSecond )
+   aSecond := { 1, 2, 4 }
+   ASize( aSecond, 4 )
+   QQOut( "Testing aSize .. " )
+   aDump( aSecond )
 
-    aSecond := { 1,2,3,3,4,5 }
-    aDel( aSecond, 3 )
-    QQOut( "Testing aDel .. " )
-    aDump( aSecond )
+   aSecond := { 1, 2, 4 }
+   ASize( aSecond, 4 )
+   AIns( aSecond, 3 )
+   aSecond[ 3 ] := "3"
+   QQOut( "Testing aSize + aIns .. " )
+   aDump( aSecond )
 
-    aSecond := { 1,2,3,3,4,5 }
-    aDel( aSecond, 3 )
-    aSize( aSecond, len(aSecond) - 1 )
-    QQOut( "Testing aSize + aDel .. " )
-    aDump( aSecond )
+   aSecond := { 1, 2, 3, 3, 4, 5 }
+   ADel( aSecond, 3 )
+   QQOut( "Testing aDel .. " )
+   aDump( aSecond )
 
-    aFill( aSecond, "!" )
-    QQOut( "Testing aFill .. " )
-    aDump( aSecond )
+   aSecond := { 1, 2, 3, 3, 4, 5 }
+   ADel( aSecond, 3 )
+   ASize( aSecond, Len( aSecond ) - 1 )
+   QQOut( "Testing aSize + aDel .. " )
+   aDump( aSecond )
 
-    aMore := { 1,2,3,4,5,6 }
-    aFill( aMore, "X", 3 )
-    QQOut( "Testing aFill with start .. " )
-    aDump( aMore )
+   AFill( aSecond, "!" )
+   QQOut( "Testing aFill .. " )
+   aDump( aSecond )
 
-    aMore := { 1,2,3,4,5,6 }
-    aFill( aMore, "X", 3, 2 )
-    QQOut( "Testing aFill with start and count .. " )
-    aDump( aMore )
+   aMore := { 1, 2, 3, 4, 5, 6 }
+   AFill( aMore, "X", 3 )
+   QQOut( "Testing aFill with start .. " )
+   aDump( aMore )
 
-    aMore := { {1,2}, {3,4} }
-    aDel( aMore, 1 )
-    aDump( aMore )
-return nil
+   aMore := { 1, 2, 3, 4, 5, 6 }
+   AFill( aMore, "X", 3, 2 )
+   QQOut( "Testing aFill with start and count .. " )
+   aDump( aMore )
 
-function aDump( aShow )
+   aMore := { { 1, 2 }, { 3, 4 } }
+   ADel( aMore, 1 )
+   aDump( aMore )
 
-   local n
-   local CRLF := chr(13)+chr(10)
+   RETURN
 
-   QQOut( "Len=", ALLTRIM( STR( len( aShow ) ) ) )
+FUNCTION aDump( aShow )
+
+   LOCAL n
+   LOCAL CRLF := Chr( 13 ) + Chr( 10 )
+
+   QQOut( "Len=", hb_ntos( Len( aShow ) ) )
    QQOut( ": " )
-   for n := 1 to len(aShow)
+   FOR n := 1 TO Len( aShow )
 
       QQOut( "[" )
-      QQOut( ALLTRIM (STR (n)) )
+      QQOut( hb_ntos( n ) )
       QQOut( "]= " )
-      QQOut( ValType( aShow[n] ) )
+      QQOut( ValType( aShow[ n ] ) )
       QQOut( ":" )
-      if ValType( aShow[n] ) == "A"             /* Iterate array         */
+      IF ValType( aShow[ n ] ) == "A"             /* Iterate array         */
          QQOut( CRLF )
-         QQOut("[")
-         aDump( aShow[n] )
-         QQOut("]")
-      else
-         QQOut( aShow[n] )
-      endif
+         QQOut( "[" )
+         aDump( aShow[ n ] )
+         QQOut( "]" )
+      ELSE
+         QQOut( aShow[ n ] )
+      ENDIF
 
-      if n != len(aShow)
+      IF n != Len( aShow )
          QQOut( ", " )
-      endif
+      ENDIF
 
-   next n
+   NEXT
    QQOut( CRLF )
-return nil
+
+   RETURN nil

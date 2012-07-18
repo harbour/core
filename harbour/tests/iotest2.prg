@@ -1,32 +1,32 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Testing Harbour file io features
 // using freadstr instead of fread
 
-function Main()
+PROCEDURE Main()
 
-   local h    := 0
-   local cstr := " "
-   local ntmp := 0
+   LOCAL h    := 0
+   LOCAL cstr := " "
+   LOCAL ntmp := 0
 
-   h := FCreate( "test.txt")
-   qout('create handle',h)
+   h := FCreate( "test.txt" )
+   QOut( "create handle", h )
 
    FWrite( h, "This test worked if you can see this" )
 
    FClose( h )
 
-   h := FOpen("test.txt")
-   qout('open handle',h)
-   qout()
+   h := FOpen( "test.txt" )
+   QOut( "open handle", h )
+   QOut()
    /* try to read what is there */
-   do while asc(cstr) # 0
-      cstr := FReadstr( h, 1)
-      qqout(cstr)
-   enddo
+   DO WHILE Asc( cstr ) != 0
+      cstr := FReadStr( h, 1 )
+      QQOut( cstr )
+   ENDDO
 
    FClose( h )
 
-return nil
+   RETURN

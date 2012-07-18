@@ -10,7 +10,7 @@
 #define SECOND
 #define THIRD
 
-FUNCTION Main()
+PROCEDURE Main()
 
    QOut( "testing Harbour /d compiler flag" )
 
@@ -41,4 +41,4 @@ FUNCTION Main()
       QOut( "FIRST is not defined" )
    #endif
 
-   RETURN NIL
+   RETURN

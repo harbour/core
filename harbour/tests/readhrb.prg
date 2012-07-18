@@ -47,7 +47,7 @@ STATIC s_aScopes := { ;
    { HB_FS_FRAME     , "HB_FS_FRAME" } ;
 }
 
-FUNCTION Main( cFrom )
+PROCEDURE Main( cFrom )
 
    LOCAL hFile
    LOCAL cBlock := " "
@@ -151,7 +151,7 @@ FUNCTION Main( cFrom )
    ENDIF
    SET( _SET_ALTERNATE, .F. )
 
-   RETURN NIL
+   RETURN
 
 PROCEDURE PrintItem( cSymbol, nType, nScope )
 

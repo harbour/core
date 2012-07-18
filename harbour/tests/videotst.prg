@@ -11,7 +11,7 @@
 #define HB_VCOL   2
 #define HB_PROMPT 3
 
-FUNCTION MAIN()
+PROCEDURE Main()
 
    LOCAL nMode := 1, nRow, lSuccess
    LOCAL aVModes := { ;
@@ -55,7 +55,7 @@ FUNCTION MAIN()
 
    QUIT
 
-   RETURN 0
+   RETURN
 
 //*************************
 

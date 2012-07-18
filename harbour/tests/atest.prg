@@ -1,16 +1,16 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // releasing arrays test
 
-function Main()
+PROCEDURE Main()
 
-   local a := { 1 }
+   LOCAL a := { 1 }
 
    a[ 1 ] := a
-   a[ 1 ] := nil
+   a[ 1 ] := NIL
 
    QOut( "The array will try to be released now..." )
 
-return nil
+   RETURN

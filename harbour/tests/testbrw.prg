@@ -6,7 +6,7 @@
 
 #include "inkey.ch"
 
-FUNCTION Main()
+PROCEDURE Main()
 
    LOCAL oBrowse := TBRowseNew( 5, 5, 16, 30 )
    LOCAL aTest0  := { "This", "is", "a", "browse", "on", "an", "array", "test", "with", "a", "long", "data" }
@@ -132,7 +132,7 @@ FUNCTION Main()
    SetColor( cColor )
    SetCursor( nCursor )
 
-   RETURN nil
+   RETURN
 
 #ifdef HB_COMPAT_C53
 

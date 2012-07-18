@@ -1,6 +1,6 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Testing Harbour hbclass.ch commands
 
@@ -8,9 +8,9 @@
 
 //--------------------------------------------------------------------//
 
-function Main()
+PROCEDURE Main()
 
-   local o := TTest():New( "one", "two" )
+   LOCAL o := TTest():New( "one", "two" )
 
    ? o:ClassName()
    ? o:One
@@ -18,13 +18,13 @@ function Main()
 
    o:Test()
 
-return nil
+   RETURN
 
 //--------------------------------------------------------------------//
 
-CLASS TTest INHERIT TParent
+CREATE CLASS TTest INHERIT TParent
 
-   DATA One, Two, Three
+   VAR One, Two, Three
 
    METHOD New( One, Two )
 
@@ -41,13 +41,13 @@ METHOD New( One, Two ) CLASS TTest
    ::One := One
    ::Two := Two
 
-return Self
+   RETURN Self
 
 //--------------------------------------------------------------------//
 
-CLASS TParent
+CREATE CLASS TParent
 
-   DATA One
+   VAR One
 
    METHOD New()
 
@@ -59,6 +59,6 @@ METHOD New() CLASS TParent
 
    ? "TParent:New()"
 
-return Self
+   RETURN Self
 
 //--------------------------------------------------------------------//

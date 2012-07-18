@@ -8,7 +8,7 @@
 
 REQUEST dbfntx
 
-FUNCTION Main()
+PROCEDURE Main()
 
    // for Clipper, this drags in the terminal driver
    @ Row(), Col() SAY ""
@@ -82,7 +82,7 @@ FUNCTION Main()
    TestLine( "_SET_DIRSEPARATOR", 104 )
 #endif
 
-   RETURN NIL
+   RETURN
 
 PROCEDURE testline( c, n )
 

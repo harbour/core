@@ -1,33 +1,33 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
-// Testing Harbour Do case
+// Testing Harbour DO CASE
 
-function Main()
+PROCEDURE Main()
 
-   local n := 2
+   LOCAL n := 2
 
    QOut( "testing Harbour Do case" )
 
-   do case
-      case n == 1
-           QOut( "n is 1" )
-           QOut( "first case" )
+   DO CASE
+   CASE n == 1
+      QOut( "n is 1" )
+      QOut( "first case" )
 
-      case n == 2
-           QOut( "n is 2" )
-           QOut( "second case" )
+   CASE n == 2
+      QOut( "n is 2" )
+      QOut( "second case" )
 
-      case n == 3
-           QOut( "n is 3" )
-           QOut( "third case" )
+   CASE n == 3
+      QOut( "n is 3" )
+      QOut( "third case" )
 
-      otherwise
-           QOut( "Sorry, I don't know what n is :-)" )
-           QOut( "otherwise" )
-   endcase
+      OTHERWISE
+      QOut( "Sorry, I don't know what n is :-)" )
+      QOut( "otherwise" )
+   ENDCASE
 
    QOut( "Ok!" )
 
-return nil
+   RETURN

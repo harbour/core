@@ -10,7 +10,7 @@
 #pragma BadPragma=off
 #pragma /Y+
 
-FUNCTION Main()
+PROCEDURE Main()
 
 #pragma Shortcut=On
 
@@ -54,4 +54,4 @@ FUNCTION Main()
 /* Pragmas with bad values will cause an error  */
 #pragma WarningLevel=8
 
-   RETURN NIL
+   RETURN

@@ -1,24 +1,24 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Using Harbour Class HBClass
 
-function Main()
+PROCEDURE Main()
 
-   local oForm := TForm():New()
+   LOCAL oForm := TForm():New()
 
    QOut( oForm:ClassName() )
 
    oForm:Show()
 
-return nil
+   RETURN
 
-function TForm()
+FUNCTION TForm()
 
-   static oClass
+   STATIC oClass
 
-   if oClass == nil
+   IF oClass == nil
       oClass := HBClass():New( "TFORM" )    // starts a new class definition
 
       oClass:AddData( "cName" )           // define this class objects datas
@@ -31,25 +31,25 @@ function TForm()
       oClass:AddMethod( "Show", @Show() )
 
       oClass:Create()                     // builds this class
-   endif
+   ENDIF
 
-return oClass:Instance()                  // builds an object of this class
+   RETURN oClass:Instance()                  // builds an object of this class
 
-static function New()
+STATIC FUNCTION New()
 
-   local Self := QSelf()
+   LOCAL Self := QSelf()
 
    ::nTop    := 10
    ::nLeft   := 10
    ::nBottom := 20
    ::nRight  := 40
 
-return Self
+   RETURN Self
 
-static function Show()
+STATIC FUNCTION Show()
 
-   local Self := QSelf()
+   LOCAL Self := QSelf()
 
    QOut( "lets show a form from here :-)" )
 
-return nil
+   RETURN nil

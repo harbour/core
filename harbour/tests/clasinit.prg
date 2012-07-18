@@ -1,13 +1,13 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Using Harbour Class HBClass
 
-function Main()
+PROCEDURE Main()
 
-   local oForm := TForm():New()
-   local oSecond
+   LOCAL oForm := TForm():New()
+   LOCAL oSecond
 
    QOut( "What's the default oForm and calculate area" )
    Debug( oForm )
@@ -22,13 +22,13 @@ function Main()
    Debug( oSecond )
    QOut( oSecond:CalcArea()  )
 
-return nil
+   RETURN
 
-function TForm()
+FUNCTION TForm()
 
-   static oClass
+   STATIC oClass
 
-   if oClass == nil
+   IF oClass == nil
       oClass := HBClass():New( "TFORM" )    // starts a new class definition
 
       oClass:AddData( "cName" )           // define this class objects datas
@@ -40,23 +40,23 @@ function TForm()
       oClass:AddMethod( "New",  @New() )  // define this class objects methods
       oClass:AddMethod( "Show", @Show() )
       oClass:AddInline( "CalcArea", ;
-             {|self| ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) } )
+         { |self| ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) } )
 
       oClass:Create()                     // builds this class
-   endif
+   ENDIF
 
-return oClass:Instance()                  // builds an object of this class
+   RETURN oClass:Instance()                  // builds an object of this class
 
-static function New()
+STATIC FUNCTION New()
 
-   local Self := QSelf()
+   LOCAL Self := QSelf()
 
-return Self
+   RETURN Self
 
-static function Show()
+STATIC FUNCTION Show()
 
-   local Self := QSelf()
+   LOCAL Self := QSelf()
 
    QOut( "lets show a form from here :-)" )
 
-return nil
+   RETURN nil

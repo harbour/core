@@ -9,7 +9,7 @@
 */
 #include "box.ch"
 
-FUNCTION main()
+PROCEDURE Main()
 
    LOCAL ct
 
@@ -61,7 +61,7 @@ FUNCTION main()
    Scroll ( 1, 1, 11, 30, 0, 0 )
    pause()
 
-   RETURN NIL
+   RETURN
 
 FUNCTION pause()
 

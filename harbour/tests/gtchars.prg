@@ -24,63 +24,68 @@ REQUEST HB_CODEPAGE_PLISO
 REQUEST HB_CODEPAGE_PL852
 REQUEST HB_CODEPAGE_PLWIN
 
-function main( cTermCP, cHostCP, lBoxChar )
-local i, j, x
+PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 
-if empty( cTermCP )
-    cTermCP := "PLISO"
-else
-    cTermCP := upper( cTermCP )
-endif
-if empty( cHostCP )
-    cHostCP := "PLMAZ"
-else
-    cHostCP := upper( cHostCP )
-endif
-lBoxChar := !empty( lBoxChar )
+   LOCAL i, j, x
 
-HB_GTINFO( HB_GTI_FONTNAME, "fixed" )
-HB_GTINFO( HB_GTI_FONTWIDTH, 9 )
-HB_GTINFO( HB_GTI_FONTSIZE, 20 )
+   IF Empty( cTermCP )
+      cTermCP := "PLISO"
+   ELSE
+      cTermCP := Upper( cTermCP )
+   ENDIF
+   IF Empty( cHostCP )
+      cHostCP := "PLMAZ"
+   ELSE
+      cHostCP := Upper( cHostCP )
+   ENDIF
+   lBoxChar := !Empty( lBoxChar )
 
-HB_SETTERMCP( cTermCP, cHostCP, lBoxChar )
+   hb_gtInfo( HB_GTI_FONTNAME, "fixed" )
+   hb_gtInfo( HB_GTI_FONTWIDTH, 9 )
+   hb_gtInfo( HB_GTI_FONTSIZE, 20 )
 
-? OS(), VERSION(), DATE(), TIME()
-? HB_GTVERSION(), HB_GTVERSION(1)
-? "Host codpage: " + cHostCP + ", terminal codepage: " + cTermCP
-?
+   hb_SetTermCP( cTermCP, cHostCP, lBoxChar )
 
-//HB_GTINFO(HB_GTI_COMPATBUFFER,.f.)
-?
-for i := 0 to 15
-    for j := 0 to 15
-        x := i * 16 + j
-        dispout( "  " + chr( x ) )
-    next
-    ?
-next
-inkey(0)
-?; dspboxch( "ÚÄÂÄ¿  ÉÍËÍ»  ÕÍÑÍ¸  ÖÄÒÄ·  ÜÜÜ °±²Û  ° ± ² Û" )
-?; dspboxch( "³ ³ ³  º º º  ÃÄÅÄ´  ÇÄ×Ä¶  ÝþÞ" )
-?; dspboxch( "ÃÄÅÄ´  ÌÍÎÍ¹  ³ ³ ³  º º º  ÝÛÞ ÛþÛ" )
-?; dspboxch( "³ ³ ³  º º º  ÆÍØÍµ  ÌÍÎÍ¹  ÝþÞ" )
-?; dspboxch( "ÀÄÁÄÙ  ÈÍÊÍ¼  ÔÍÏÍ¾  ÓÄÐÄ½  ßßß û ® ¯" )
-?
-? "ISO-8859-2: say[ " + POL_ISO + " ]"; dspboxch( ", box[ " + POL_ISO + " ]" )
-? "   Mazovia: say[ " + POL_MAZ + " ]"; dspboxch( ", box[ " + POL_MAZ + " ]" )
-? "   CP-1250: say[ " + POL_WIN + " ]"; dspboxch( ", box[ " + POL_WIN + " ]" )
-? "    CP-852: say[ " + POL_852 + " ]"; dspboxch( ", box[ " + POL_852 + " ]" )
-? chr(4)+chr(16)+chr(17)+chr(24)+chr(25)+chr(26)+chr(27)+chr(30)+chr(31)
-HB_GTINFO(HB_GTI_ESCDELAY,5)
-inkey(0)
-alert("ALERT BOX")
-return nil
+   ? OS(), Version(), Date(), Time()
+   ? hb_gtVersion(), hb_gtVersion( 1 )
+   ? "Host codpage: " + cHostCP + ", terminal codepage: " + cTermCP
+   ?
 
-function dspboxch( cStr )
-local i, r, c
-for i := 1 to len( cStr )
-    r:=row(); c:=col()
-    dispbox( r, c, r, c, substr( cStr, i, 1 ) )
-    setpos(r,c+1)
-next
-return nil
+   //HB_GTINFO(HB_GTI_COMPATBUFFER,.f.)
+   ?
+   FOR i := 0 TO 15
+      FOR j := 0 TO 15
+         x := i * 16 + j
+         DispOut( "  " + Chr( x ) )
+      NEXT
+      ?
+   NEXT
+   Inkey( 0 )
+   ?; dspboxch( "ÚÄÂÄ¿  ÉÍËÍ»  ÕÍÑÍ¸  ÖÄÒÄ·  ÜÜÜ °±²Û  ° ± ² Û" )
+   ?; dspboxch( "³ ³ ³  º º º  ÃÄÅÄ´  ÇÄ×Ä¶  ÝþÞ" )
+   ?; dspboxch( "ÃÄÅÄ´  ÌÍÎÍ¹  ³ ³ ³  º º º  ÝÛÞ ÛþÛ" )
+   ?; dspboxch( "³ ³ ³  º º º  ÆÍØÍµ  ÌÍÎÍ¹  ÝþÞ" )
+   ?; dspboxch( "ÀÄÁÄÙ  ÈÍÊÍ¼  ÔÍÏÍ¾  ÓÄÐÄ½  ßßß û ® ¯" )
+   ?
+   ? "ISO-8859-2: say[ " + POL_ISO + " ]"; dspboxch( ", box[ " + POL_ISO + " ]" )
+   ? "   Mazovia: say[ " + POL_MAZ + " ]"; dspboxch( ", box[ " + POL_MAZ + " ]" )
+   ? "   CP-1250: say[ " + POL_WIN + " ]"; dspboxch( ", box[ " + POL_WIN + " ]" )
+   ? "    CP-852: say[ " + POL_852 + " ]"; dspboxch( ", box[ " + POL_852 + " ]" )
+   ? Chr( 4 ) + Chr( 16 ) + Chr( 17 ) + Chr( 24 ) + Chr( 25 ) + Chr( 26 ) + Chr( 27 ) + Chr( 30 ) + Chr( 31 )
+   hb_gtInfo( HB_GTI_ESCDELAY, 5 )
+   Inkey( 0 )
+   Alert( "ALERT BOX" )
+
+   RETURN
+
+FUNCTION dspboxch( cStr )
+
+   LOCAL i, r, c
+
+   FOR i := 1 TO Len( cStr )
+      r := Row(); c := Col()
+      DispBox( r, c, r, c, SubStr( cStr, i, 1 ) )
+      SetPos( r, c + 1 )
+   NEXT
+
+   RETURN nil

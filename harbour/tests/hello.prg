@@ -1,11 +1,11 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Typical welcome message
 
-function Main()
+PROCEDURE Main()
 
    ? "Hello world!"
 
-return nil
+   RETURN

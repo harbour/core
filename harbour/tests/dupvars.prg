@@ -1,14 +1,14 @@
 //NOTEST
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Testing Harbour duplicate variable definition detection
 
-function Main()
+PROCEDURE Main()
 
-   local a, a
+   LOCAL a, a
 
    QOut( "ok" )
 
-return nil
+   RETURN

@@ -1,38 +1,38 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Testing Harbour If elseif else endif
 
-function Main()
+PROCEDURE Main()
 
-   local i
+   LOCAL i
 
    QOut( "Testing Harbour If elseif else endif" )
-   for i := 1 to 5
+   FOR i := 1 TO 5
       TestValue( i )
-   next
+   NEXT
 
-return nil
+   RETURN
 
-function TestValue( x )
+FUNCTION TestValue( x )
 
-   if x = 1
+   IF x = 1
       QOut( "x is 1" )
 
-   elseif x = 2
+   ELSEIF x = 2
       QOut( "x is 2" )
 
-   elseif x = 3
+   ELSEIF x = 3
       QOut( "x is 3" )
 
-   elseif x = 4
+   ELSEIF x = 4
       QOut( "x is 4" )
 
-   else
+   ELSE
       QOut( "x is not 1 or 2 or 3 or 4" )
-   endif
+   ENDIF
 
    QOut( "Ok!" )
 
-return nil
+   RETURN nil

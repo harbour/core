@@ -2,9 +2,7 @@
  * $Id$
  */
 
-#define CRLF (Chr(13) + Chr(10))
-
-FUNCTION Main( cFilename, cSection )
+PROCEDURE Main( cFilename, cSection )
 
    LOCAL oIni := TIniFile():New( Default( cFilename, "harbour.ini" ) )
    LOCAL s, n := Val( Default( cSection, "1" ) )
@@ -15,8 +13,8 @@ FUNCTION Main( cFilename, cSection )
    AEval( s, {| x | QOut( "[" + x + "]" ) } )
 
    QOut( "" )
-   QOut( "[" + s[n] + "]" )
-   s := oIni:ReadSection( s[n] )
+   QOut( "[" + s[ n ] + "]" )
+   s := oIni:ReadSection( s[ n ] )
    AEval( s, {| x | QOut( x ) } )
 
    oIni:WriteDate( "Date Test", "Today", Date() )
@@ -25,7 +23,7 @@ FUNCTION Main( cFilename, cSection )
 
    oIni:UpdateFile()
 
-   RETURN NIL
+   RETURN
 
 FUNCTION TIniFile()
 
@@ -105,7 +103,7 @@ STATIC FUNCTION New( cFileName )
 
                      AAdd( ::Contents, { cLine, { /* this will be CurrArray */
                      } } )
-                     CurrArray := ::Contents[Len(::Contents)][2]
+                     CurrArray := ::Contents[Len(::Contents)][ 2 ]
 
                   ELSEIF Left( cLine, 1 ) == ";" // preserve comments
                      AAdd( CurrArray, { NIL, cLine } )
@@ -144,22 +142,22 @@ STATIC FUNCTION ReadString( cSection, cIdent, cDefault )
 
    IF Empty( cSection )
       cFind := Lower( cIdent )
-      j := AScan( ::Contents, {| x | ValType( x[1] ) == "C" .AND. Lower( x[1] ) == cFind .AND. ValType( x[2] ) == "C" } )
+      j := AScan( ::Contents, {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cFind .AND. ValType( x[ 2 ] ) == "C" } )
 
       IF j > 0
-         cResult := ::Contents[j][2]
+         cResult := ::Contents[j][ 2 ]
       ENDIF
 
    ELSE
       cFind := Lower( cSection )
-      i := AScan( ::Contents, {| x | ValType( x[1] ) == "C" .AND. Lower( x[1] ) == cFind } )
+      i := AScan( ::Contents, {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cFind } )
 
       IF i > 0
          cFind := Lower( cIdent )
-         j := AScan( ::Contents[i][2], {| x | ValType( x[1] ) == "C" .AND. Lower( x[1] ) == cFind } )
+         j := AScan( ::Contents[ i ][ 2 ], {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cFind } )
 
          IF j > 0
-            cResult := ::Contents[i][2][j][2]
+            cResult := ::Contents[ i ][ 2 ][j][ 2 ]
          ENDIF
       ENDIF
    ENDIF
@@ -176,28 +174,28 @@ STATIC PROCEDURE WriteString( cSection, cIdent, cString )
 
    ELSEIF Empty( cSection )
       cFind := Lower( cIdent )
-      j := AScan( ::Contents, {| x | ValType( x[1] ) == "C" .AND. Lower( x[1] ) == cFind .AND. ValType( x[2] ) == "C" } )
+      j := AScan( ::Contents, {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cFind .AND. ValType( x[ 2 ] ) == "C" } )
 
       IF j > 0
-         ::Contents[j][2] := cString
+         ::Contents[j][ 2 ] := cString
 
       ELSE
          AAdd( ::Contents, NIL )
          AIns( ::Contents, 1 )
-         ::Contents[1] := { cIdent, cString }
+         ::Contents[ 1 ] := { cIdent, cString }
       ENDIF
 
    ELSE
       cFind := Lower( cSection )
-      IF ( i := AScan( ::Contents, {| x | ValType(x[1] ) == "C" .AND. Lower(x[1] ) == cFind .AND. ValType(x[2] ) == "A" } ) ) > 0
+      IF ( i := AScan( ::Contents, {| x | ValType(x[ 1 ] ) == "C" .AND. Lower(x[ 1 ] ) == cFind .AND. ValType(x[ 2 ] ) == "A" } ) ) > 0
          cFind := Lower( cIdent )
-         j := AScan( ::Contents[i][2], {| x | ValType( x[1] ) == "C" .AND. Lower( x[1] ) == cFind } )
+         j := AScan( ::Contents[ i ][ 2 ], {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cFind } )
 
          IF j > 0
-            ::Contents[i][2][j][2] := cString
+            ::Contents[ i ][ 2 ][j][ 2 ] := cString
 
          ELSE
-            AAdd( ::Contents[i][2], { cIdent, cString } )
+            AAdd( ::Contents[ i ][ 2 ], { cIdent, cString } )
          ENDIF
 
       ELSE
@@ -256,14 +254,14 @@ STATIC PROCEDURE DeleteKey( cSection, cIdent )
    LOCAL i, j
 
    cSection := Lower( cSection )
-   i := AScan( ::Contents, {| x | ValType( x[1] ) == "C" .AND. Lower( x[1] ) == cSection } )
+   i := AScan( ::Contents, {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cSection } )
 
    IF i > 0
       cIdent := Lower( cIdent )
-      j := AScan( ::Contents[i][2], {| x | ValType( x[1] ) == "C" .AND. Lower( x[1] ) == cIdent } )
+      j := AScan( ::Contents[ i ][ 2 ], {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cIdent } )
 
-      ADel( ::Contents[i][2], j )
-      ASize( ::Contents[i][2], Len( ::Contents[i][2] ) - 1 )
+      ADel( ::Contents[ i ][ 2 ], j )
+      ASize( ::Contents[ i ][ 2 ], Len( ::Contents[ i ][ 2 ] ) - 1 )
    ENDIF
 
    RETURN
@@ -274,14 +272,14 @@ STATIC PROCEDURE EraseSection( cSection )
    LOCAL i
 
    IF Empty( cSection )
-      DO WHILE ( i := AScan( ::Contents, {| x | ValType(x[1] ) == "C" .AND. ValType(x[2] ) == "C" } ) ) > 0
+      DO WHILE ( i := AScan( ::Contents, {| x | ValType(x[ 1 ] ) == "C" .AND. ValType(x[ 2 ] ) == "C" } ) ) > 0
          ADel( ::Contents, i )
          ASize( ::Contents, Len( ::Contents ) - 1 )
       ENDDO
 
    ELSE
       cSection := Lower( cSection )
-      IF ( i := AScan( ::Contents, {| x | ValType(x[1] ) == "C" .AND. Lower(x[1] ) == cSection .AND. ValType(x[2] ) == "A" } ) ) > 0
+      IF ( i := AScan( ::Contents, {| x | ValType(x[ 1 ] ) == "C" .AND. Lower(x[ 1 ] ) == cSection .AND. ValType(x[ 2 ] ) == "A" } ) ) > 0
          ADel( ::Contents, i )
          ASize( ::Contents, Len( ::Contents ) - 1 )
       ENDIF
@@ -296,19 +294,19 @@ STATIC FUNCTION ReadSection( cSection )
 
    IF Empty( cSection )
       FOR i := 1 TO Len( ::Contents )
-         IF ValType( ::Contents[i][1] ) == "C" .AND. ValType( ::Contents[i][2] ) == "C"
-            AAdd( aSection, ::Contents[i][1] )
+         IF ValType( ::Contents[ i ][ 1 ] ) == "C" .AND. ValType( ::Contents[ i ][ 2 ] ) == "C"
+            AAdd( aSection, ::Contents[ i ][ 1 ] )
          ENDIF
       NEXT
 
    ELSE
       cSection := Lower( cSection )
-      IF ( i := AScan( ::Contents, {| x | ValType(x[1] ) == "C" .AND. x[1] == cSection .AND. ValType(x[2] ) == "A" } ) ) > 0
+      IF ( i := AScan( ::Contents, {| x | ValType(x[ 1 ] ) == "C" .AND. x[ 1 ] == cSection .AND. ValType(x[ 2 ] ) == "A" } ) ) > 0
 
-         FOR j := 1 TO Len( ::Contents[i][2] )
+         FOR j := 1 TO Len( ::Contents[ i ][ 2 ] )
 
-            IF ::Contents[i][2][j][1] != NIL
-               AAdd( aSection, ::Contents[i][2][j][1] )
+            IF ::Contents[ i ][ 2 ][j][ 1 ] != NIL
+               AAdd( aSection, ::Contents[ i ][ 2 ][j][ 1 ] )
             ENDIF
          NEXT
       ENDIF
@@ -323,8 +321,8 @@ STATIC FUNCTION ReadSections()
 
    FOR i := 1 TO Len( ::Contents )
 
-      IF ValType( ::Contents[i][2] ) == "A"
-         AAdd( aSections, ::Contents[i][1] )
+      IF ValType( ::Contents[ i ][ 2 ] ) == "A"
+         AAdd( aSections, ::Contents[ i ][ 1 ] )
       ENDIF
    NEXT
 
@@ -338,23 +336,23 @@ STATIC PROCEDURE UpdateFile()
    hFile := FCreate( ::Filename )
 
    FOR i := 1 TO Len( ::Contents )
-      IF ::Contents[i][1] == NIL
-         FWrite( hFile, ::Contents[i][2] + Chr( 13 ) + Chr( 10 ) )
+      IF ::Contents[ i ][ 1 ] == NIL
+         FWrite( hFile, ::Contents[ i ][ 2 ] + Chr( 13 ) + Chr( 10 ) )
 
-      ELSEIF ValType( ::Contents[i][2] ) == "A"
-         FWrite( hFile, "[" + ::Contents[i][1] + "]" + Chr( 13 ) + Chr( 10 ) )
-         FOR j := 1 TO Len( ::Contents[i][2] )
+      ELSEIF ValType( ::Contents[ i ][ 2 ] ) == "A"
+         FWrite( hFile, "[" + ::Contents[ i ][ 1 ] + "]" + Chr( 13 ) + Chr( 10 ) )
+         FOR j := 1 TO Len( ::Contents[ i ][ 2 ] )
 
-            if ::Contents[i][2][j][1] == NIL
-               FWrite( hFile, ::Contents[i][2][j][2] + Chr( 13 ) + Chr( 10 ) )
+            if ::Contents[ i ][ 2 ][j][ 1 ] == NIL
+               FWrite( hFile, ::Contents[ i ][ 2 ][j][ 2 ] + Chr( 13 ) + Chr( 10 ) )
             ELSE
-               FWrite( hFile, ::Contents[i][2][j][1] + "=" + ::Contents[i][2][j][2] + Chr( 13 ) + Chr( 10 ) )
+               FWrite( hFile, ::Contents[ i ][ 2 ][j][ 1 ] + "=" + ::Contents[ i ][ 2 ][j][ 2 ] + Chr( 13 ) + Chr( 10 ) )
             ENDIF
          next
          FWrite( hFile, Chr( 13 ) + Chr( 10 ) )
 
-      ELSEIF ValType( ::Contents[i][2] ) == "C"
-         FWrite( hFile, ::Contents[i][1] + "=" + ::Contents[i][2] + Chr( 13 ) + Chr( 10 ) )
+      ELSEIF ValType( ::Contents[ i ][ 2 ] ) == "C"
+         FWrite( hFile, ::Contents[ i ][ 1 ] + "=" + ::Contents[ i ][ 2 ] + Chr( 13 ) + Chr( 10 ) )
 
       ENDIF
    NEXT

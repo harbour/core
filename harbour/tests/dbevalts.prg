@@ -2,7 +2,7 @@
  * $Id$
  */
 
-FUNCTION Main()
+PROCEDURE Main()
    LOCAL nCount
 
    USE test
@@ -14,5 +14,4 @@ FUNCTION Main()
    COUNT TO nCount NEXT 10
    ? RecNo(), nCount
 
-   RETURN NIL
-
+   RETURN

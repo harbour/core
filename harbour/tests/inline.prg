@@ -1,26 +1,27 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 //
 // Test of inline function
 //
-function Main()
 
-   local oForm := TForm():New()
+PROCEDURE Main()
+
+   LOCAL oForm := TForm():New()
 
    QOut( oForm:ClassName() )
    oForm:cText := "Let's show a form here :-)"
 
    oForm:Show()
 
-return nil
+   RETURN
 
-function TForm()
+FUNCTION TForm()
 
-   static oClass
+   STATIC oClass
 
-   if oClass == nil
+   IF oClass == nil
       oClass := HBClass():New( "TFORM" )    // starts a new class definition
 
       oClass:AddData( "cText" )           // define this class objects datas
@@ -30,20 +31,20 @@ function TForm()
       oClass:AddData( "nRight" )
 
       oClass:AddMethod( "New",  @New() )  // define this class objects methods
-      oClass:AddInline( "Show", {|self| QOut( self:cText ) } )
+      oClass:AddInline( "Show", {| self | QOut( self:cText ) } )
 
       oClass:Create()                     // builds this class
-   endif
+   ENDIF
 
-return oClass:Instance()                  // builds an object of this class
+   RETURN oClass:Instance()                  // builds an object of this class
 
-static function New()
+STATIC FUNCTION New()
 
-   local Self := QSelf()
+   LOCAL Self := QSelf()
 
    ::nTop    := 10
    ::nLeft   := 10
    ::nBottom := 20
    ::nRight  := 40
 
-return Self
+   RETURN Self

@@ -4,7 +4,7 @@
 
 // while loop test
 
-FUNCTION Main()
+PROCEDURE Main()
 
    LOCAL i := 0
    LOCAL cb := {|| QOut( "test" ) }
@@ -12,7 +12,7 @@ FUNCTION Main()
    WHILE i < 1000
       QOut( i )
       Eval( cb )
-      i ++
+      i++
    END
 
-   RETURN nil
+   RETURN

@@ -15,7 +15,7 @@
 *
 **/
 
-FUNCTION Main()
+PROCEDURE Main()
 
    LOCAL oHTML := THTML():New()
 
@@ -35,7 +35,7 @@ FUNCTION Main()
 
    oHTML:ShowResult()
 
-   RETURN NIL
+   RETURN
 
 /*---------------------------------------------------------------------------*/
 

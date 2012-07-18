@@ -1,12 +1,11 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
-function Main()
+PROCEDURE Main()
 
-   local a := { 100, 200, 300 }
+   LOCAL a := { 100, 200, 300 }
 
-   aEval(a, {|nValue, nIndex| QOut(nValue, nIndex) })
+   AEval( a, {| nValue, nIndex | QOut( nValue, nIndex ) } )
 
-return nil
-
+   RETURN

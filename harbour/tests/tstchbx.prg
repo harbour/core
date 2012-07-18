@@ -2,7 +2,7 @@
  * $Id$
  */
 
-FUNCTION Main()
+PROCEDURE Main()
 
    LOCAL GetList := {}
 
@@ -33,4 +33,4 @@ FUNCTION Main()
    ? "Is the person a singer:", iif( ly, "Yes", "No" )
    ? "Your OS is", cItem
 
-   RETURN NIL
+   RETURN

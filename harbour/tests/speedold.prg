@@ -47,7 +47,7 @@
    #undef ASSOC_ARRAY
 #endif
 
-function main()
+PROCEDURE Main()
 #ifndef NO_DBF_TEST
 field F_C, F_N, F_D
 #endif
@@ -495,7 +495,7 @@ endif
 
 #endif
 
-return nil
+return
 
 function dsp_time(s,t,tn)
 ? padr(s,50)+str(max(hb_secondsCPU()-t-tn,0),8,2)

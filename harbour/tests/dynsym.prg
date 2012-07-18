@@ -2,7 +2,7 @@
  * $Id$
  */
 
-FUNCTION Main()
+PROCEDURE Main()
    LOCAL nCount := __dynsCount()
    LOCAL nPos
 
@@ -18,5 +18,5 @@ FUNCTION Main()
    ? __dynsGetName( 0 )
    ? __dynsGetName( 100000 )
    ? __dynsGetName( __dynsGetIndex( "HB_THISDOESNTEXIST_" ) )
-   
-   RETURN NIL
+
+   RETURN

@@ -21,7 +21,7 @@
 #include "inkey.ch"
 #include "achoice.ch"
 
-FUNCTION main()
+PROCEDURE Main()
 
    //NIL, empty, numeric, and "not handled" - items
    //must be inaccesible and invisible
@@ -73,7 +73,7 @@ FUNCTION main()
 
    ENDDO
 
-   RETURN NIL
+   RETURN
 
 //Test for current and previous items
 //highliting-dehighliting algoritm

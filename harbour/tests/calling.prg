@@ -1,10 +1,10 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Calling different PRG functions
 
-function Main()
+PROCEDURE Main()
 
    SecondOne()
 
@@ -12,24 +12,24 @@ function Main()
 
    QOut( "Ok, back to Main()" )
 
-return nil
+   RETURN
 
-function SecondOne()
+FUNCTION SecondOne()
 
    QOut( "Ok, this is from Second() function call" )
 
    Third()
 
-return nil
+   RETURN nil
 
-function Third()
+FUNCTION Third()
 
    QOut( "Ok, this is from Third() function call" )
 
-return nil
+   RETURN nil
 
-function Fourth( cText )
+FUNCTION Fourth( cText )
 
    QOut( cText )
 
-return nil
+   RETURN nil

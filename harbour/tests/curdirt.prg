@@ -2,12 +2,12 @@
  * $Id$
  */
 
-FUNCTION Main()
+PROCEDURE Main()
 
-   OutStd( CurDir()     + Chr(13) + Chr(10) )
-   OutStd( CurDir("C")  + Chr(13) + Chr(10) )
-   OutStd( CurDir("C:") + Chr(13) + Chr(10) )
-   OutStd( CurDir("D:") + Chr(13) + Chr(10) )
-   OutStd( CurDir("A")  + Chr(13) + Chr(10) )
+   OutStd( CurDir()       + hb_eol() )
+   OutStd( CurDir( "C" )  + hb_eol() )
+   OutStd( CurDir( "C:" ) + hb_eol() )
+   OutStd( CurDir( "D:" ) + hb_eol() )
+   OutStd( CurDir( "A" )  + hb_eol() )
 
-   RETURN NIL
+   RETURN

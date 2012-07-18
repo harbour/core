@@ -1,27 +1,28 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // quick exit test
 
-function main
-local x := 0
+PROCEDURE Main()
 
-do while x < 10
-   ++x
-   if x == 5
-      exit
-   endif
-enddo
+   LOCAL x := 0
 
-qout("do exit test",iif(x == 5,"passed","fail"))
+   DO WHILE x < 10
+      ++ x
+      IF x == 5
+         EXIT
+      ENDIF
+   ENDDO
 
-for x := 1 to 10
-   if x == 5
-      exit
-   endif
-next
+   QOut( "do exit test", iif( x == 5, "passed", "fail" ) )
 
-qout("for exit test",iif(x == 5,"passed","fail"))
+   FOR x := 1 TO 10
+      IF x == 5
+         EXIT
+      ENDIF
+   NEXT
 
-return nil
+   QOut( "for exit test", iif( x == 5, "passed", "fail" ) )
+
+   RETURN

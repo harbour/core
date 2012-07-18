@@ -1,6 +1,6 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // Testing Harbour comments
 
@@ -11,7 +11,7 @@
 
 NOTE Old fashion comment
 
-function Main()
+PROCEDURE Main()
 
    /* multiple
       lines
@@ -19,6 +19,4 @@ function Main()
 
    QOut( "Ok!" )  && old fashion comment
 
-return nil
-
-
+   RETURN
