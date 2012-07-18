@@ -60,9 +60,9 @@ HB_FUNC( CHARMIX )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      const char *pcString1 = hb_parc( 1 );
-      const char *pcString2;
-      char *pcResult;
+      const char * pcString1 = hb_parc( 1 );
+      const char * pcString2;
+      char * pcResult;
       HB_SIZE sLen1 = hb_parclen( 1 );
       HB_SIZE sLen2, sPos1, sPos2, sResultPos;
 
@@ -108,8 +108,8 @@ HB_FUNC( CHARMIX )
       sPos2 = sResultPos = 0;
       for( sPos1 = 0; sPos1 < sLen1; )
       {
-         pcResult[sResultPos++] = pcString1[sPos1++];
-         pcResult[sResultPos++] = pcString2[sPos2++];
+         pcResult[ sResultPos++ ] = pcString1[ sPos1++ ];
+         pcResult[ sResultPos++ ] = pcString2[ sPos2++ ];
          sPos2 %= sLen2;
       }
 

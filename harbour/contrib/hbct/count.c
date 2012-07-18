@@ -64,10 +64,10 @@ static void do_count( int iSwitch )
    /* param check */
    if( HB_ISCHAR( 1 ) )
    {
-      const char *pcString = hb_parc( 1 );
+      const char * pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
       HB_SIZE sRetVal;
-      const char *pc;
+      const char * pc;
       char cSearch;
 
       if( hb_parclen( 2 ) > 0 )

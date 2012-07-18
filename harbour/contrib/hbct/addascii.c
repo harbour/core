@@ -63,9 +63,9 @@ HB_FUNC( ADDASCII )
 
    if( HB_ISCHAR( 1 ) )
    {
-      const char *pcSource = hb_parc( 1 );
+      const char * pcSource = hb_parc( 1 );
       HB_SIZE sLen = hb_parclen( 1 );
-      char *pcResult;
+      char * pcResult;
       HB_SIZE sPos;
       HB_LONG lValue;
       int iCarryOver;

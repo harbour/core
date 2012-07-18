@@ -81,7 +81,7 @@ const char *ct_at_exact_forward( const char * pcString, HB_SIZE sStrLen,
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_exact_forward (\"%s\", %" HB_PFS "u, \"%s\", %" HB_PFS "u, %p)",
                             pcString, sStrLen, pcMatch, sMatchLen, psMatchStrLen ) );
 
-   if( ( sMatchLen == 0 ) || ( sStrLen < sMatchLen ) )
+   if( sMatchLen == 0 || sStrLen < sMatchLen )
       return NULL;
 
    sPos = hb_strAt( pcMatch, sMatchLen, pcString, sStrLen );
@@ -111,7 +111,7 @@ const char *ct_at_exact_backward( const char * pcString, HB_SIZE sStrLen,
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_exact_backward (\"%s\", %" HB_PFS "u, \"%s\", %" HB_PFS "u, %p)",
                             pcString, sStrLen, pcMatch, sMatchLen, psMatchStrLen ) );
 
-   if( ( sMatchLen == 0 ) || ( sStrLen < sMatchLen ) )
+   if( sMatchLen == 0 || sStrLen < sMatchLen )
       return NULL;
 
    for( pcRet = pcString + sStrLen - sMatchLen; pcRet >= pcString; pcRet-- )
@@ -145,7 +145,7 @@ const char *ct_at_wildcard_forward( const char * pcString, HB_SIZE sStrLen,
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_wildcard_forward (\"%s\", %" HB_PFS "u, \"%s\", %" HB_PFS "u, \'%c\', %p)",
                             pcString, sStrLen, pcMatch, sMatchLen, cWildCard, psMatchStrLen ) );
 
-   if( ( sMatchLen == 0 ) || ( sStrLen < sMatchLen ) )
+   if( sMatchLen == 0 || sStrLen < sMatchLen )
       return NULL;
 
    pcStop = pcString + sStrLen - sMatchLen;
@@ -155,7 +155,7 @@ const char *ct_at_wildcard_forward( const char * pcString, HB_SIZE sStrLen,
       {
          char c = *( pcMatch + sIndex );
 
-         if( ( c != cWildCard ) && ( c != *( pcRet + sIndex ) ) )
+         if( c != cWildCard && c != *( pcRet + sIndex ) )
             break;
       }
       if( sIndex == sMatchLen )
@@ -183,7 +183,7 @@ const char *ct_at_wildcard_backward( const char * pcString, HB_SIZE sStrLen,
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_wildcard_backward (\"%s\", %" HB_PFS "u, \"%s\", %" HB_PFS "u, \'%c\', %p)",
                             pcString, sStrLen, pcMatch, sMatchLen, cWildCard, psMatchStrLen ) );
 
-   if( ( sMatchLen == 0 ) || ( sStrLen < sMatchLen ) )
+   if( sMatchLen == 0 || sStrLen < sMatchLen )
       return NULL;
 
    for( pcRet = pcString + sStrLen - sMatchLen; pcRet >= pcString; pcRet-- )
@@ -192,7 +192,7 @@ const char *ct_at_wildcard_backward( const char * pcString, HB_SIZE sStrLen,
       {
          char c = *( pcMatch + sIndex );
 
-         if( ( c != cWildCard ) && ( c != *( pcRet + sIndex ) ) )
+         if( c != cWildCard && c != *( pcRet + sIndex ) )
             break;
       }
       if( sIndex == sMatchLen )
@@ -221,7 +221,7 @@ const char *ct_at_charset_forward( const char * pcString, HB_SIZE sStrLen,
 
    *( psMatchedCharPos ) = sCharSetLen;
 
-   if( ( sCharSetLen == 0 ) || ( sStrLen == 0 ) )
+   if( sCharSetLen == 0 || sStrLen == 0 )
       return NULL;
 
    pcStop1 = pcString + sStrLen;
@@ -254,7 +254,7 @@ const char *ct_at_charset_backward( const char * pcString, HB_SIZE sStrLen,
 
    *( psMatchedCharPos ) = sCharSetLen;
 
-   if( ( sCharSetLen == 0 ) || ( sStrLen == 0 ) )
+   if( sCharSetLen == 0 || sStrLen == 0 )
       return NULL;
 
    pcStop = pcCharSet + sCharSetLen;
@@ -390,7 +390,7 @@ HB_FUNC( SETATLIKE )
    {
       int iNewMode = hb_parni( 1 );
 
-      if( ( iNewMode == CT_SETATLIKE_EXACT ) || ( iNewMode == CT_SETATLIKE_WILDCARD ) )
+      if( iNewMode == CT_SETATLIKE_EXACT || iNewMode == CT_SETATLIKE_WILDCARD )
       {
          ct_setatlike( iNewMode );
       }

@@ -66,8 +66,8 @@ static int
 #endif
 _hb_do_sortascend( const void *p1, const void *p2 )
 {
-   const char *pc1 = ( const char * ) p1;
-   const char *pc2 = ( const char * ) p2;
+   const char * pc1 = ( const char * ) p1;
+   const char * pc2 = ( const char * ) p2;
 
    pc1 += s_sElementPos;
    pc2 += s_sElementPos;
@@ -82,8 +82,8 @@ static int
 #endif
 _hb_do_sortdescend( const void *p1, const void *p2 )
 {
-   const char *pc1 = ( const char * ) p1;
-   const char *pc2 = ( const char * ) p2;
+   const char * pc1 = ( const char * ) p1;
+   const char * pc2 = ( const char * ) p2;
 
    pc1 += s_sElementPos;
    pc2 += s_sElementPos;
@@ -102,8 +102,8 @@ HB_FUNC( CHARSORT )
    if( HB_ISCHAR( 1 ) )
    {
       /* get parameters */
-      const char *pcString = hb_parc( 1 );
-      char *pcRet;
+      const char * pcString = hb_parc( 1 );
+      char * pcRet;
       HB_SIZE sStrLen = hb_parclen( 1 );
       HB_SIZE sElementLen, sIgnore, sSortLen;
       int iDescend;

@@ -90,7 +90,7 @@ static int ct_daystomonth( int iMonth, HB_BOOL bLeap )
    static const int iMonthes[] =
                { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
 
-   return ( ( iMonth < 1 && iMonth > 12 ) ? 0 : iMonthes[iMonth - 1] +
+   return ( ( iMonth < 1 && iMonth > 12 ) ? 0 : iMonthes[ iMonth - 1 ] +
             ( ( bLeap && iMonth > 2 ) ? 1 : 0 ) );
 }
 
@@ -111,7 +111,7 @@ HB_FUNC( CTODOW )
 
    if( nLen )
    {
-      const char *szParam = hb_parc( 1 );
+      const char * szParam = hb_parc( 1 );
 
       for( iDow = 7; iDow > 0; iDow-- )
       {
@@ -131,7 +131,7 @@ HB_FUNC( CTOMONTH )
 
    if( nLen )
    {
-      const char *szParam = hb_parc( 1 );
+      const char * szParam = hb_parc( 1 );
       for( iMonth = 12; iMonth > 0; iMonth-- )
       {
          const char * szMonth = hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
@@ -158,14 +158,14 @@ HB_FUNC( DMY )
 
    if( iMonth >= 1 && iMonth <= 12 )
    {
-      const char *szMonth = hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
+      const char * szMonth = hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
       int iMonLen = ( int ) strlen( szMonth );
       int iLen = 0, iBufLen = iMonLen + 10;
-      char *szMDY = ( char * ) hb_xgrab( iBufLen );
+      char * szMDY = ( char * ) hb_xgrab( iBufLen );
 
       if( iDay < 10 )
       {
-         szMDY[iLen] = ( char ) iDay + 0x30;
+         szMDY[ iLen ] = ( char ) iDay + 0x30;
          iLen++;
       }
       else
@@ -176,15 +176,15 @@ HB_FUNC( DMY )
 
       if( bMode )
       {
-         szMDY[iLen] = '.';
+         szMDY[ iLen ] = '.';
          iLen++;
       }
-      szMDY[iLen] = ' ';
+      szMDY[ iLen ] = ' ';
       iLen++;
 
       hb_strncpy( szMDY + iLen, szMonth, iBufLen - iLen - 1 );
       iLen += iMonLen;
-      szMDY[iLen] = ' ';
+      szMDY[ iLen ] = ' ';
       iLen++;
 
       if( hb_setGetCentury() )
@@ -216,16 +216,16 @@ HB_FUNC( MDY )
 
    if( iMonth >= 1 && iMonth <= 12 )
    {
-      const char *szMonth = hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
+      const char * szMonth = hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + iMonth - 1 );
       int iLen = ( int ) strlen( szMonth );
       int iBufLen = iLen + 9;
-      char *szMDY = ( char * ) hb_xgrab( iBufLen );
+      char * szMDY = ( char * ) hb_xgrab( iBufLen );
 
       hb_strncpy( szMDY, szMonth, iBufLen - 1 );
-      szMDY[iLen++] = ' ';
+      szMDY[ iLen++ ] = ' ';
       if( iDay < 10 )
       {
-         szMDY[iLen] = ( char ) iDay + 0x30;
+         szMDY[ iLen ] = ( char ) iDay + 0x30;
          iLen++;
       }
       else
@@ -233,7 +233,7 @@ HB_FUNC( MDY )
          hb_snprintf( szMDY + iLen, 3, "%02d", iDay );
          iLen += 2;
       }
-      szMDY[iLen++] = ' ';
+      szMDY[ iLen++ ] = ' ';
 
       if( hb_setGetCentury() )
       {
@@ -427,8 +427,8 @@ HB_FUNC( WEEK )
    {
       long lDate2;
 
-      if( hb_setGetCPtr( HB_SET_DATEFORMAT ) && ( hb_setGetCPtr( HB_SET_DATEFORMAT )[0] == 'd' ||
-                                                  hb_setGetCPtr( HB_SET_DATEFORMAT )[0] == 'D' ) )
+      if( hb_setGetCPtr( HB_SET_DATEFORMAT ) && ( hb_setGetCPtr( HB_SET_DATEFORMAT )[ 0 ] == 'd' ||
+                                                  hb_setGetCPtr( HB_SET_DATEFORMAT )[ 0 ] == 'D' ) )
          lDate2 = lDate + 3 - ( hb_dateDOW( iYear, iMonth, iDay ) + 5 ) % 7;
       else
          lDate2 = lDate + 4 - hb_dateDOW( iYear, iMonth, iDay );

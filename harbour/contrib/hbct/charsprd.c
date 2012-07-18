@@ -101,7 +101,7 @@ HB_FUNC( CHARSPREAD )
             szDest = ( char * ) hb_xgrab( nSize + 1 );
             for( nDst = ul = 0; ul < nLen; ++ul )
             {
-               szDest[ nDst++ ] = szText[ul];
+               szDest[ nDst++ ] = szText[ ul ];
                if( szText[ ul ] == cDelim )
                {
                   while( ul + 1 < nLen && szText[ ul + 1 ] == cDelim )

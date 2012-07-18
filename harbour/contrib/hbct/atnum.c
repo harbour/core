@@ -67,16 +67,16 @@ static void do_atnum( int iSwitch )
 {
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      const char *pcStringToMatch = hb_parc( 1 );
+      const char * pcStringToMatch = hb_parc( 1 );
       HB_SIZE sStrToMatchLen = hb_parclen( 1 );
-      const char *pcString = hb_parc( 2 );
+      const char * pcString = hb_parc( 2 );
       HB_SIZE sStrLen = hb_parclen( 2 );
       int iMultiPass = ct_getatmupa();
       int iAtLike = ct_getatlike();
       char cAtLike = ct_getatlikechar();
       HB_SIZE sIgnore, sMatchStrLen = 0;
       HB_SIZE nCounter;
-      const char *pc = NULL;
+      const char * pc = NULL;
 
       /* eventually ignore some characters */
       if( HB_ISNUM( 4 ) )
@@ -140,7 +140,7 @@ static void do_atnum( int iSwitch )
       if( HB_ISNUM( 3 ) && ( nCounter = hb_parns( 3 ) ) != 0 )
       {
          /* find the <nCounter>th match */
-         const char *pcSubStr;
+         const char * pcSubStr;
          HB_SIZE sSubStrLen;
          HB_SIZE nMatchCounter = 0;
 

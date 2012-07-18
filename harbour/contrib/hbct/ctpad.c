@@ -63,9 +63,9 @@ static void do_pad( int iSwitch )
 {
    if( HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
-      const char *pcString = hb_parc( 1 );
+      const char * pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
-      char *pcRet, *pc;
+      char * pcRet, *pc;
       HB_ISIZ nRetLen;
       HB_SIZE sRetLen;
       char cFill;

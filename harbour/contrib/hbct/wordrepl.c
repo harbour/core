@@ -70,12 +70,12 @@ HB_FUNC( WORDREPL )
        ( sReplaceLen = hb_parclen( 3 ) ) / 2 > 0 )
    {
       /* get parameters */
-      const char *pcSearch = hb_parc( 1 );
-      const char *pcString = hb_parc( 2 );
+      const char * pcSearch = hb_parc( 1 );
+      const char * pcString = hb_parc( 2 );
       HB_SIZE sStrLen = hb_parclen( 2 );
-      const char *pcReplace = hb_parc( 3 );
+      const char * pcReplace = hb_parc( 3 );
       int iMode;
-      char *pcRet;
+      char * pcRet;
       HB_SIZE sIndex;
 
       if( HB_ISLOG( 4 ) )
@@ -90,7 +90,7 @@ HB_FUNC( WORDREPL )
       {
 
          HB_SIZE sMatchStrLen;
-         const char *pc;
+         const char * pc;
          HB_SIZE sReplIndex = sIndex;
 
          if( sReplIndex > ( sReplaceLen & 0xFFFFFFFE ) )

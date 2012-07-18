@@ -74,7 +74,7 @@ static void do_ascpos( int iSwitch )
       else
          sPos = sStrSize;
 
-      if( ( sPos == 0 ) || ( sPos > sStrSize ) )
+      if( sPos == 0 || sPos > sStrSize )
       {
          hb_retni( 0 );
       }

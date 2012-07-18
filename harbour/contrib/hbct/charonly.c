@@ -70,21 +70,21 @@ static void do_charonly( int iSwitch )
    /* param check */
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      const char *pcString = hb_parc( 2 );
+      const char * pcString = hb_parc( 2 );
       HB_SIZE sStrLen = hb_parclen( 2 );
-      const char *pcOnlySet = hb_parc( 1 );
+      const char * pcOnlySet = hb_parc( 1 );
       HB_SIZE sOnlySetLen = hb_parclen( 1 );
-      char *pcRet;
+      char * pcRet;
       HB_SIZE sRetStrLen = 0;
       int iShift, iBool;
-      const char *pcSub, *pc;
+      const char * pcSub, *pc;
 
       /* check for zero-length strings  */
       switch ( iSwitch )
       {
          case DO_CHARONLY_CHARONLY:
          case DO_CHARONLY_WORDONLY:
-            if( ( sStrLen == 0 ) || ( sOnlySetLen == 0 ) )
+            if( sStrLen == 0 || sOnlySetLen == 0 )
             {
                hb_retc_null();
                return;
@@ -124,19 +124,19 @@ static void do_charonly( int iSwitch )
                        iSwitch == DO_CHARONLY_WORDREM ) )
          {
             for( pc = pcSub; pc < pcSub + iShift; pc++ )
-               pcRet[sRetStrLen++] = *pc;
+               pcRet[ sRetStrLen++ ] = *pc;
          }
       }
 
       /* copy last character if string len is odd */
       if( iShift == 2 && sStrLen % 2 == 1 )
       {
-         pcRet[sRetStrLen++] = pcString[sStrLen - 1];
+         pcRet[ sRetStrLen++ ] = pcString[ sStrLen - 1 ];
       }
       hb_retclen( pcRet, sRetStrLen );
       hb_xfree( pcRet );
    }
-   else                         /* if (ISCHAR (1) && ISCHAR (2)) */
+   else                         /* if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode(), iError = 0;

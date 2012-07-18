@@ -58,9 +58,9 @@ HB_FUNC( ATADJUST )
 {
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISNUM( 3 ) )
    {
-      const char *pcStringToMatch = hb_parc( 1 );
+      const char * pcStringToMatch = hb_parc( 1 );
       HB_SIZE sStrToMatchLen = hb_parclen( 1 );
-      const char *pcString = hb_parc( 2 );
+      const char * pcString = hb_parc( 2 );
       HB_SIZE sStrLen = hb_parclen( 2 );
       HB_SIZE sAdjustPosition = hb_parns( 3 );
 
@@ -69,11 +69,11 @@ HB_FUNC( ATADJUST )
       char cAtLike = ct_getatlikechar();
       HB_SIZE sIgnore, sMatchStrLen = 0;
       HB_SIZE nCounter;
-      const char *pc = NULL;
+      const char * pc = NULL;
 
       char cFillChar;
-      const char *pcCheckFill;
-      char *pcRetStr;
+      const char * pcCheckFill;
+      char * pcRetStr;
       HB_SIZE sRetStrLen;
 
       /* eventually ignore some characters */
@@ -120,7 +120,7 @@ HB_FUNC( ATADJUST )
       if( HB_ISNUM( 4 ) && ( nCounter = hb_parns( 4 ) ) != 0 )
       {
          /* find the <nCounter>th match */
-         const char *pcSubStr;
+         const char * pcSubStr;
          HB_SIZE sSubStrLen;
          HB_SIZE nMatchCounter = 0;
 

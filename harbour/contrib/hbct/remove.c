@@ -71,10 +71,10 @@ static void do_remove( int iSwitch )
    /* param check */
    if( HB_ISCHAR( 1 ) )
    {
-      const char *pcString = hb_parc( 1 );
+      const char * pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
-      const char *pcRet;
-      const char *pc;
+      const char * pcRet;
+      const char * pc;
       HB_SIZE sRetLen;
       char cSearch;
 
@@ -112,7 +112,7 @@ static void do_remove( int iSwitch )
       else
          hb_retclen( pcRet, sRetLen );
    }
-   else                         /* if (ISCHAR (1)) */
+   else                         /* if( HB_ISCHAR( 1 ) ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

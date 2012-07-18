@@ -68,10 +68,10 @@ HB_FUNC( WORDTOCHAR )
    {
 
       /* get parameters */
-      const char *pcSearch = hb_parc( 1 );
-      const char *pcString = hb_parc( 2 );
-      const char *pcReplace = hb_parc( 3 );
-      char *pcRet;
+      const char * pcSearch = hb_parc( 1 );
+      const char * pcString = hb_parc( 2 );
+      const char * pcReplace = hb_parc( 3 );
+      char * pcRet;
       HB_SIZE sRetIndex, sIndex;
       int iNoReplace;
 
@@ -85,7 +85,7 @@ HB_FUNC( WORDTOCHAR )
       do
       {
          HB_SIZE sMatchStrLen;
-         const char *pc;
+         const char * pc;
          HB_SIZE sReplIndex;
 
          *( pcRet + sRetIndex + 1 ) = *( pcString + sIndex + 1 );

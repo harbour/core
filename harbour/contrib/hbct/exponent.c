@@ -65,16 +65,16 @@ HB_FUNC( MANTISSA )
    union
    {
       double value;
-      char string[sizeof( double )];
+      char string[ sizeof( double ) ];
    } xConvert;
 
    xConvert.value = hb_parnd( 1 );
 
    if( xConvert.value != 0 )
    {
-      xConvert.string[6] |= 0xF0;
-      xConvert.string[7] |= 0x3F;
-      xConvert.string[7] &= 0xBF;
+      xConvert.string[ 6 ] |= 0xF0;
+      xConvert.string[ 7 ] |= 0x3F;
+      xConvert.string[ 7 ] &= 0xBF;
    }
 
    hb_retnd( xConvert.value );
@@ -117,16 +117,16 @@ HB_FUNC( EXPONENT )
    union
    {
       double value;
-      char string[sizeof( double )];
+      char string[ sizeof( double ) ];
    } xConvert;
 
    xConvert.value = hb_parnd( 1 );
 
    if( xConvert.value != 0 )
    {
-      iExponent = ( int ) ( xConvert.string[7] & 0x07F );
+      iExponent = ( int ) ( xConvert.string[ 7 ] & 0x07F );
       iExponent = iExponent << 4;
-      iExponent += ( int ) ( ( xConvert.string[6] & 0xF0 ) >> 4 );
+      iExponent += ( int ) ( ( xConvert.string[ 6 ] & 0xF0 ) >> 4 );
       iExponent -= 1023;
    }
 

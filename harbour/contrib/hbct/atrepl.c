@@ -58,21 +58,21 @@ HB_FUNC( ATREPL )
 {
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      const char *pcStringToMatch = hb_parc( 1 );
+      const char * pcStringToMatch = hb_parc( 1 );
       HB_SIZE nStrToMatchLen = hb_parclen( 1 );
-      const char *pcString = hb_parc( 2 );
+      const char * pcString = hb_parc( 2 );
       HB_SIZE nStrLen = hb_parclen( 2 );
       int iMultiPass = ct_getatmupa();
       int iAtLike = ct_getatlike();
       char cAtLike = ct_getatlikechar();
       HB_SIZE nIgnore, nMatchStrLen = 0;
       HB_SIZE nCounter;
-      char *pc;
+      char * pc;
 
-      const char *pcReplacement;
+      const char * pcReplacement;
       HB_SIZE nReplaceLen;
       int iReplaceMode;
-      char *pcRetStr;
+      char * pcRetStr;
       HB_SIZE nRetStrLen;
 
       /* eventually ignore some characters */
@@ -111,7 +111,7 @@ HB_FUNC( ATREPL )
             or only the nth occurence
             NOTE: if iReplaceMode = false and the nth occurence does not exist,
             all occurences are replaced */
-         char *pcRetSubStr;
+         char * pcRetSubStr;
          HB_SIZE sRetSubStrLen;
          HB_SIZE nMatchCounter = 0;
 

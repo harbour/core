@@ -63,9 +63,9 @@
 /* helper function for the *one functions */
 static void do_charone( int iSwitch )
 {
-   const char *pcString;
+   const char * pcString;
    HB_SIZE sStrLen;
-   const char *pcDeleteSet;
+   const char * pcDeleteSet;
    HB_SIZE sDeleteSetLen;
 
    /* param check */
@@ -91,26 +91,26 @@ static void do_charone( int iSwitch )
          case DO_CHARONE_CHARONE:
             if( sStrLen > 1 )
             {
-               const char *pcSub;
-               char *pcRet;
+               const char * pcSub;
+               char * pcRet;
                HB_SIZE sRetStrLen = 0;
                char cCurrent = *pcString;
 
                pcRet = ( char * ) hb_xgrab( sStrLen );
                /* copy first char */
-               pcRet[sRetStrLen++] = cCurrent;
+               pcRet[ sRetStrLen++ ] = cCurrent;
                for( pcSub = pcString + 1; pcSub < pcString + sStrLen; pcSub++ )
                {
                   if( *pcSub != cCurrent )
                   {
                      cCurrent = *pcSub;
-                     pcRet[sRetStrLen++] = cCurrent;
+                     pcRet[ sRetStrLen++ ] = cCurrent;
                   }
                   else if( pcDeleteSet != NULL &&
                            !ct_at_exact_forward( pcDeleteSet, sDeleteSetLen,
                                                  pcSub, 1, NULL ) )
                   {
-                     pcRet[sRetStrLen++] = cCurrent;
+                     pcRet[ sRetStrLen++ ] = cCurrent;
                   }
                }
                hb_retclen( pcRet, sRetStrLen );
@@ -126,30 +126,30 @@ static void do_charone( int iSwitch )
          case DO_CHARONE_WORDONE:
             if( sStrLen > 3 && sDeleteSetLen >= 2 )
             {
-               const char *pcSub;
-               char *pcRet;
+               const char * pcSub;
+               char * pcRet;
                HB_SIZE sRetStrLen = 0;
-               char cCurrent1 = pcString[0];
-               char cCurrent2 = pcString[1];
+               char cCurrent1 = pcString[ 0 ];
+               char cCurrent2 = pcString[ 1 ];
 
                pcRet = ( char * ) hb_xgrab( sStrLen );
                /* copy first double char */
-               pcRet[sRetStrLen++] = cCurrent1;
-               pcRet[sRetStrLen++] = cCurrent2;
+               pcRet[ sRetStrLen++ ] = cCurrent1;
+               pcRet[ sRetStrLen++ ] = cCurrent2;
 
                for( pcSub = pcString + 2; pcSub < pcString + sStrLen - 1; pcSub += 2 )
                {
-                  if( !( pcSub[0] == cCurrent1 && pcSub[1] == cCurrent2 ) )
+                  if( !( pcSub[ 0 ] == cCurrent1 && pcSub[ 1 ] == cCurrent2 ) )
                   {
-                     cCurrent1 = pcSub[0];
-                     cCurrent2 = pcSub[1];
-                     pcRet[sRetStrLen++] = cCurrent1;
-                     pcRet[sRetStrLen++] = cCurrent2;
+                     cCurrent1 = pcSub[ 0 ];
+                     cCurrent2 = pcSub[ 1 ];
+                     pcRet[ sRetStrLen++ ] = cCurrent1;
+                     pcRet[ sRetStrLen++ ] = cCurrent2;
                   }
                   else if( pcDeleteSet != NULL )
                   {
-                     const char *pc = NULL;
-                     const char *pStart = pcDeleteSet;
+                     const char * pc = NULL;
+                     const char * pStart = pcDeleteSet;
                      HB_SIZE sLen = sDeleteSetLen;
 
                      while( sLen >= 2 &&
@@ -162,8 +162,8 @@ static void do_charone( int iSwitch )
                      }
                      if( pc == NULL )
                      {
-                        pcRet[sRetStrLen++] = cCurrent1;
-                        pcRet[sRetStrLen++] = cCurrent2;
+                        pcRet[ sRetStrLen++ ] = cCurrent1;
+                        pcRet[ sRetStrLen++ ] = cCurrent2;
                      }
                   }
                }
@@ -171,7 +171,7 @@ static void do_charone( int iSwitch )
                /* copy last character if string len is odd */
                if( sStrLen & 1 )
                {
-                  pcRet[sRetStrLen++] = pcString[sStrLen - 1];
+                  pcRet[ sRetStrLen++ ] = pcString[ sStrLen - 1 ];
                }
                hb_retclen( pcRet, sRetStrLen );
                hb_xfree( pcRet );

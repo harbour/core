@@ -72,12 +72,12 @@ static void do_charswap( int iSwitch )
    /* param check */
    if( HB_ISCHAR( 1 ) )
    {
-      const char *pcString = hb_parc( 1 );
+      const char * pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
-      char *pcRet;
+      char * pcRet;
       HB_SIZE sRetIndex = 0;
       int iShift, iMod;
-      const char *pcSub;
+      const char * pcSub;
 
       if( sStrLen == 0 )
       {
@@ -108,24 +108,24 @@ static void do_charswap( int iSwitch )
          switch ( iSwitch )
          {
             case DO_CHARSWAP_WORDSWAP:
-               pcRet[sRetIndex++] = pcSub[2];
-               pcRet[sRetIndex++] = pcSub[3];
-               pcRet[sRetIndex++] = pcSub[0];
-               pcRet[sRetIndex++] = pcSub[1];
+               pcRet[ sRetIndex++ ] = pcSub[ 2 ];
+               pcRet[ sRetIndex++ ] = pcSub[ 3 ];
+               pcRet[ sRetIndex++ ] = pcSub[ 0 ];
+               pcRet[ sRetIndex++ ] = pcSub[ 1 ];
                break;
 
             case DO_CHARSWAP_WORDSWAP_CHARSWAP:
-               pcRet[sRetIndex++] = pcSub[3];
-               pcRet[sRetIndex++] = pcSub[2];
+               pcRet[ sRetIndex++ ] = pcSub[ 3 ];
+               pcRet[ sRetIndex++ ] = pcSub[ 2 ];
                /* no 'break' here !! */
             case DO_CHARSWAP_CHARSWAP:
-               pcRet[sRetIndex++] = pcSub[1];
-               pcRet[sRetIndex++] = pcSub[0];
+               pcRet[ sRetIndex++ ] = pcSub[ 1 ];
+               pcRet[ sRetIndex++ ] = pcSub[ 0 ];
          }
       }
 
       /* copy rest of string */
-      if( ( iSwitch == DO_CHARSWAP_WORDSWAP ) || ( iSwitch == DO_CHARSWAP_WORDSWAP_CHARSWAP ) )
+      if( iSwitch == DO_CHARSWAP_WORDSWAP || iSwitch == DO_CHARSWAP_WORDSWAP_CHARSWAP )
       {
          iMod = sStrLen % 4;
       }
@@ -136,7 +136,7 @@ static void do_charswap( int iSwitch )
 
       for( pcSub = pcString + sStrLen - iMod; pcSub < pcString + sStrLen; pcSub++ )
       {
-         pcRet[sRetIndex++] = *pcSub;
+         pcRet[ sRetIndex++ ] = *pcSub;
       }
 
       /* return string */
@@ -151,7 +151,7 @@ static void do_charswap( int iSwitch )
          hb_retclen( pcRet, sRetIndex );
       hb_xfree( pcRet );
    }
-   else                         /* if (ISCHAR (1)) */
+   else                         /* if( HB_ISCHAR( 1 ) ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

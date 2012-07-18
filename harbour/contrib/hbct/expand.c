@@ -72,7 +72,7 @@ HB_FUNC( EXPAND )
          if( i == 2 && HB_ISCHAR( 2 ) )
          {
             iRepl = 1;
-            cRepl = hb_parc( 2 )[0];
+            cRepl = hb_parc( 2 )[ 0 ];
          }
          else if( i == 2 && iRepl == 0 && HB_ISNUM( 2 ) )
          {
@@ -86,18 +86,18 @@ HB_FUNC( EXPAND )
             if( HB_ISNUM( 3 ) )
                cRepl = ( char ) hb_parni( 3 );
             else if( HB_ISCHAR( 3 ) )
-               cRepl = hb_parc( 3 )[0];
+               cRepl = hb_parc( 3 )[ 0 ];
             else
                cRepl = ' ';
          }
          ulSize = ( nLen - 1 ) * ( iRepl + 1 ) + 1;
          szPtr = szDest = ( char * ) hb_xgrab( ulSize + 1 );
-         *szPtr++ = szText[0];
+         *szPtr++ = szText[ 0 ];
          for( ul = 1; ul < nLen; ++ul )
          {
             for( i = 0; i < iRepl; ++i )
                *szPtr++ = cRepl;
-            *szPtr++ = szText[ul];
+            *szPtr++ = szText[ ul ];
          }
          hb_retclen_buffer( szDest, ulSize );
       }

@@ -58,13 +58,13 @@ HB_FUNC( TABEXPAND )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      const char *pcString = hb_parc( 1 );
+      const char * pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
-      char *pcRet;
+      char * pcRet;
       HB_SIZE sRetLen;
       HB_SIZE sTabWidth = 0;
       char cFill, cTab, cCR;
-      const char *pcNewLine;
+      const char * pcNewLine;
       HB_SIZE sNewLineLen;
       int iIgnore141;
       HB_SIZE sIndex, sLineIndex;
@@ -215,13 +215,13 @@ HB_FUNC( TABPACK )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      const char *pcString = hb_parc( 1 );
+      const char * pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
-      char *pcRet;
+      char * pcRet;
       HB_SIZE sRetLen;
       HB_SIZE sTabWidth = 0;
       char cFill, cTab, cCR;
-      const char *pcNewLine;
+      const char * pcNewLine;
       HB_SIZE sNewLineLen;
       int iIgnore141;
       HB_SIZE sIndex, sTabIndex, sFillCount;

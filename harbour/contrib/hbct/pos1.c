@@ -72,7 +72,7 @@ static void do_pos1( int iSwitch )
            HB_ISCHAR( 2 ) &&                 /* .. string as 2nd .. */
            HB_ISCHAR( 3 ) ) ) )              /* .. and 3rd param */
    {
-      const unsigned char *pcString, *puc;
+      const unsigned char * pcString, *puc;
       HB_SIZE sStrLen;
       unsigned char ucChar1 = ' ', ucChar2 = ' ';
       int iMode;

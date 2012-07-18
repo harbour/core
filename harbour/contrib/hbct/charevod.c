@@ -67,9 +67,9 @@ static void do_charevod( int iSwitch )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      const char *pcString = hb_parc( 1 );
+      const char * pcString = hb_parc( 1 );
       HB_SIZE sLen = hb_parclen( 1 );
-      char *pcResult;
+      char * pcResult;
       HB_SIZE sPos, sResultPos;
 
       if( sLen == 0 )
@@ -97,7 +97,7 @@ static void do_charevod( int iSwitch )
 
       sResultPos = 0;
       for( ; sPos < sLen; sPos += 2 )
-         pcResult[sResultPos++] = pcString[sPos];
+         pcResult[ sResultPos++ ] = pcString[ sPos ];
 
       if( sResultPos == 0 )
          hb_retc_null();

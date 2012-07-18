@@ -282,12 +282,12 @@ HB_FUNC( TOKENINIT )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      const char *pcString = hb_parc( 1 );
+      const char * pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
-      const char *pcSeparatorStr;
+      const char * pcSeparatorStr;
       HB_SIZE sSeparatorStrLen;
       HB_SIZE nSkipCnt, nSkip;
-      const char *pcSubStr, *pc;
+      const char * pcSubStr, *pc;
       HB_SIZE sSubStrLen;
       TOKEN_ENVIRONMENT sTokenEnvironment;
       TOKEN_POSITION sTokenPosition;
@@ -429,7 +429,7 @@ HB_FUNC( TOKENNEXT )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      const char *pcString = hb_parc( 1 );
+      const char * pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
 
       TOKEN_ENVIRONMENT sTokenEnvironment;

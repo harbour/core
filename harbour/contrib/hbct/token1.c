@@ -98,19 +98,19 @@ static void do_token1( int iSwitch )
 
    if( iParamCheck )
    {
-      const char *pcString = hb_parc( 1 );
+      const char * pcString = hb_parc( 1 );
       HB_SIZE sStrLen = hb_parclen( 1 );
-      const char *pcSeparatorStr;
+      const char * pcSeparatorStr;
       HB_SIZE sSeparatorStrLen;
       HB_SIZE nTokenCounter = 0;
       HB_SIZE nSkip;
-      const char *pcSubStr;
-      char *pcRet = NULL;
+      const char * pcSubStr;
+      char * pcRet = NULL;
       HB_SIZE sSubStrLen;
       HB_SIZE sRetStrLen = 0;
       HB_SIZE nToken = 0;
       HB_SIZE nSkipCnt;
-      const char *pc;
+      const char * pc;
 
       /* separator string */
       sSeparatorStrLen = hb_parclen( 2 );
@@ -305,8 +305,8 @@ static void do_token1( int iSwitch )
          {
             char cRet;
 
-            if( ( nTokenCounter == HB_SIZE_MAX ) ||
-                ( nToken == nTokenCounter ) )
+            if( nTokenCounter == HB_SIZE_MAX ||
+                nToken == nTokenCounter )
                hb_retclen( pcSubStr, pc - pcSubStr );
             else
                hb_retc_null();
@@ -328,8 +328,8 @@ static void do_token1( int iSwitch )
             break;
 
          case DO_TOKEN1_ATTOKEN:
-            if( ( nTokenCounter == HB_SIZE_MAX ) ||
-                ( nToken == nTokenCounter ) )
+            if( nTokenCounter == HB_SIZE_MAX ||
+                nToken == nTokenCounter )
                hb_retns( pcSubStr - pcString + 1 );
             else
                hb_retns( 0 );

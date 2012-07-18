@@ -139,7 +139,7 @@ HB_FUNC( SAYSPREAD )
          do
          {
             for( ul = 0; ul < nLen && iCol + ( int ) ul <= iMaxCol; ++ul )
-               hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( HB_UCHAR ) szText[nPos + ul] );
+               hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( HB_UCHAR ) szText[ nPos + ul ] );
             nLen += 2;
             if( lDelay )
             {
@@ -198,14 +198,14 @@ HB_FUNC( SAYMOVEIN )
                if( iCol <= iMaxCol )
                {
                   for( ul = 0; ul < nChars; ++ul )
-                     hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( HB_UCHAR ) szText[ul] );
+                     hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( HB_UCHAR ) szText[ ul ] );
                }
                --iCol;
             }
             else
             {
                for( ul = 0; ul < nChars; ++ul )
-                  hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( HB_UCHAR ) szText[ul] );
+                  hb_gtPutChar( iRow, iCol + ( int ) ul, iColor, 0, ( HB_UCHAR ) szText[ ul ] );
                --szText;
             }
             if( ( int ) nChars + iCol <= iMaxCol )
@@ -245,7 +245,7 @@ HB_FUNC( CLEARSLOW )
    if( HB_ISNUM( 6 ) )
       ucChar = ( HB_UCHAR ) hb_parni( 6 );
    else if( HB_ISCHAR( 6 ) )
-      ucChar = ( HB_UCHAR ) hb_parc( 6 )[0];
+      ucChar = ( HB_UCHAR ) hb_parc( 6 )[ 0 ];
    else
       ucChar = ( HB_UCHAR ) hb_gtGetClearChar();
 
@@ -255,8 +255,8 @@ HB_FUNC( CLEARSLOW )
       int iColor = hb_gtGetCurrColor();
       double dX, dY, dXX, dYY;
 
-      pszFrame[0] = ( char ) ucChar;
-      pszFrame[1] = '\0';
+      pszFrame[ 0 ] = ( char ) ucChar;
+      pszFrame[ 1 ] = '\0';
 
       dX = iRight - iLeft + 1;
       dY = iBottom - iTop + 1;
@@ -431,20 +431,20 @@ HB_FUNC( __HBCT_DSPTIME )
 
    if( hb_parl( 5 ) )
    {
-      int iHour = ( szTime[0] - '0' ) * 10 + ( szTime[1] - '0' );
+      int iHour = ( szTime[ 0 ] - '0' ) * 10 + ( szTime[ 1 ] - '0' );
 
       if( hb_parl( 6 ) )
-         szTime[iLen++] = iHour >= 12 ? 'p' : 'a';
+         szTime[ iLen++ ] = iHour >= 12 ? 'p' : 'a';
       if( iHour > 12 )
          iHour -= 12;
       else if( iHour == 0 )
          iHour = 12;
-      szTime[0] = ( char ) ( iHour / 10 ) + '0';
-      szTime[1] = ( char ) ( iHour % 10 ) + '0';
+      szTime[ 0 ] = ( char ) ( iHour / 10 ) + '0';
+      szTime[ 1 ] = ( char ) ( iHour % 10 ) + '0';
    }
 
-   if( szTime[0] == '0' )
-      szTime[0] = ' ';
+   if( szTime[ 0 ] == '0' )
+      szTime[ 0 ] = ' ';
 
    hb_gtPutText( iRow, iCol, szTime, iLen, iColor );
 }
