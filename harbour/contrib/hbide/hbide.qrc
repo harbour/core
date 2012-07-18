@@ -1,295 +1,299 @@
-<!DOCTYPE RCC><RCC version="1.0">
-<qresource>
-<file>resources/arguments.png</file>
-<file>resources/blockcomment.png</file>
-<file>resources/blockindentl.png</file>
-<file>resources/blockindentr.png</file>
-<file>resources/bookmark.png</file>
-<file>resources/browser.png</file>
-<file>resources/build.png</file>
-<file>resources/builderror.png</file>
-<file>resources/buildlaunch.png</file>
-<file>resources/buildrun.png</file>
-<file>resources/buildsource.png</file>
-<file>resources/check.png</file>
-<file>resources/clean.png</file>
-<file>resources/cleanrun.png</file>
-<file>resources/close.png</file>
-<file>resources/close3.png</file>
-<file>resources/closeall.png</file>
-<file>resources/closeexcept.png</file>
-<file>resources/closetab.png</file>
-<file>resources/codeskeletons.png</file>
-<file>resources/column.png</file>
-<file>resources/compile.png</file>
-<file>resources/copy-filname.png</file>
-<file>resources/copy.png</file>
-<file>resources/curlinehilight.png</file>
-<file>resources/cut.png</file>
-<file>resources/cutb16.png</file>
-<file>resources/database.png</file>
-<file>resources/database_accept.png</file>
-<file>resources/database_add.png</file>
-<file>resources/database_remove.png</file>
-<file>resources/database_lock.png</file>
-<file>resources/database_process.png</file>
-<file>resources/database_up.png</file>
-<file>resources/database_down.png</file>
-<file>resources/database_previous.png</file>
-<file>resources/database_next.png</file>
-<file>resources/database_search.png</file>
-<file>resources/dbl2sglquote.png</file>
-<file>resources/dbstruct.png</file>
-<file>resources/dbf_p1.png</file>
-<file>resources/dbf_p2.png</file>
-<file>resources/dbf_p3.png</file>
-<file>resources/dbf_p4.png</file>
-<file>resources/dbf_p5.png</file>
-<file>resources/dbf_p6.png</file>
-<file>resources/dbf_p7.png</file>
-<file>resources/dbf_p8.png</file>
-<file>resources/dbf_p9.png</file>
-<file>resources/dbf_p10.png</file>
-<file>resources/dc_delete.png</file>
-<file>resources/dc_down.png</file>
-<file>resources/dc_folder.png</file>
-<file>resources/dc_function.png</file>
-<file>resources/dc_home.png</file>
-<file>resources/dc_left.png</file>
-<file>resources/dc_pdffile.png</file>
-<file>resources/dc_plus.png</file>
-<file>resources/dc_print.png</file>
-<file>resources/dc_quit.png</file>
-<file>resources/dc_refresh.png</file>
-<file>resources/dc_right.png</file>
-<file>resources/dc_textdoc.png</file>
-<file>resources/dc_textdocument.png</file>
-<file>resources/dc_up.png</file>
-<file>resources/debug.png</file>
-<file>resources/decreaseindent.png</file>
-<file>resources/deleteline.png</file>
-<file>resources/description.png</file>
-<file>resources/designer.png</file>
-<file>resources/docwriter.png</file>
-<file>resources/down.png</file>
-<file>resources/down16.png</file>
-<file>resources/duplicateline.png</file>
-<file>resources/editstree.png</file>
-<file>resources/envconfig.png</file>
-<file>resources/example.png</file>
-<file>resources/exit.png</file>
-<file>resources/exit3.png</file>
-<file>resources/exporthtml.png</file>
-<file>resources/ffn.png</file>
-<file>resources/filec.png</file>
-<file>resources/fileprg.png</file>
-<file>resources/find.png</file>
-<file>resources/fl_c.png</file>
-<file>resources/fl_dll.png</file>
-<file>resources/fl_exe.png</file>
-<file>resources/fl_ini.png</file>
-<file>resources/fl_lib.png</file>
-<file>resources/fl_prg.png</file>
-<file>resources/fl_res.png</file>
-<file>resources/fl_txt.png</file>
-<file>resources/file-open.png</file>
-<file>resources/folder.png</file>
-<file>resources/font.png</file>
-<file>resources/formview.png</file>
-<file>resources/fullscreen.png</file>
-<file>resources/go-bottom.png</file>
-<file>resources/go-down.png</file>
-<file>resources/go-first.png</file>
-<file>resources/go-jump.png</file>
-<file>resources/go-last.png</file>
-<file>resources/go-next.png</file>
-<file>resources/go-prev.png</file>
-<file>resources/go-top.png</file>
-<file>resources/go-up.png</file>
-<file>resources/gotoline.png</file>
-<file>resources/gotoline3.png</file>
-<file>resources/gotomark.png</file>
-<file>resources/grid.png</file>
-<file>resources/harbour.png</file>
-<file>resources/harbourhelp.png</file>
-<file>resources/hb-16x16.png</file>
-<file>resources/hb-32x32.png</file>
-<file>resources/hbide.png</file>
-<file>resources/hbidesplash.png</file>
-<file>resources/hbidesplashwatermark.png</file>
-<file>resources/help.png</file>
-<file>resources/help1.png</file>
-<file>resources/helpdoc.png</file>
-<file>resources/hilight-all.png</file>
-<file>resources/home3.png</file>
-<file>resources/horzruler.png</file>
-<file>resources/idepreferences.png</file>
-<file>resources/increaseindent.png</file>
-<file>resources/indent-more.png</file>
-<file>resources/indent-less.png</file>
-<file>resources/info.png</file>
-<file>resources/infotips.png</file>
-<file>resources/insert-datetime.png</file>
-<file>resources/insert-external-file.png</file>
-<file>resources/insert-procname.png</file>
-<file>resources/insert-separator.png</file>
-<file>resources/invertcase.png</file>
-<file>resources/keyboardmappings.png</file>
-<file>resources/launch.png</file>
-<file>resources/lense.png</file>
-<file>resources/list-developers.png</file>
-<file>resources/list-users.png</file>
-<file>resources/load_1.png</file>
-<file>resources/load_2.png</file>
-<file>resources/load_3.png</file>
-<file>resources/Lookup.png</file>
-<file>resources/matchobj.png</file>
-<file>resources/minus.png</file>
-<file>resources/modulelist.png</file>
-<file>resources/movelinedown.png</file>
-<file>resources/movelineup.png</file>
-<file>resources/new.png</file>
-<file>resources/new2.png</file>
-<file>resources/next.png</file>
-<file>resources/notepad.png</file>
-<file>resources/open.png</file>
-<file>resources/open2.png</file>
-<file>resources/open3.png</file>
-<file>resources/panel_1.png</file>
-<file>resources/panel_2.png</file>
-<file>resources/panel_3.png</file>
-<file>resources/panel_4.png</file>
-<file>resources/panel_5.png</file>
-<file>resources/panel_6.png</file>
-<file>resources/panel_7.png</file>
-<file>resources/panel_8.png</file>
-<file>resources/panel_9.png</file>
-<file>resources/panel_10.png</file>
-<file>resources/panel_11.png</file>
-<file>resources/panel_12.png</file>
-<file>resources/panel_13.png</file>
-<file>resources/paste.png</file>
-<file>resources/placeremovemark.png</file>
-<file>resources/ppo.png</file>
-<file>resources/previous.png</file>
-<file>resources/print.png</file>
-<file>resources/project.png</file>
-<file>resources/projectadd.png</file>
-<file>resources/projectdel.png</file>
-<file>resources/projectstree.png</file>
-<file>resources/projtree.png</file>
-<file>resources/properties.png</file>
-<file>resources/readonly.png</file>
-<file>resources/rebuild.png</file>
-<file>resources/rebuildlaunch.png</file>
-<file>resources/redo.png</file>
-<file>resources/richtext.png</file>
-<file>resources/run.png</file>
-<file>resources/runscript.png</file>
-<file>resources/runnodebug.png</file>
-<file>resources/save.png</file>
-<file>resources/save3.png</file>
-<file>resources/saveall.png</file>
-<file>resources/saveas.png</file>
-<file>resources/search.png</file>
-<file>resources/selectall.png</file>
-<file>resources/selectionline.png</file>
-<file>resources/setmain.png</file>
-<file>resources/sgl2dblquote.png</file>
-<file>resources/sort.png</file>
-<file>resources/sortdescend.png</file>
-<file>resources/source_c.png</file>
-<file>resources/source_cpp.png</file>
-<file>resources/source_h.png</file>
-<file>resources/source_o.png</file>
-<file>resources/source_prg.png</file>
-<file>resources/source_res.png</file>
-<file>resources/source_txt.png</file>
-<file>resources/source_unknown.png</file>
-<file>resources/statistics.png</file>
-<file>resources/spacestotabs.png</file>
-<file>resources/stream.png</file>
-<file>resources/streamcomment.png</file>
-<file>resources/syntaxhiliter.png</file>
-<file>resources/tabcmodified.png</file>
-<file>resources/tabmodified.png</file>
-<file>resources/tabreadonly.png</file>
-<file>resources/tabs.png</file>
-<file>resources/tabstospaces.png</file>
-<file>resources/tabunmodified.png</file>
-<file>resources/tests.png</file>
-<file>resources/text.png</file>
-<file>resources/thumbnail.png</file>
-<file>resources/togglelinenumber.png</file>
-<file>resources/tolower.png</file>
-<file>resources/tools.png</file>
-<file>resources/toupper.png</file>
-<file>resources/trashpage.png</file>
-<file>resources/undo.png</file>
-<file>resources/unload_1.png</file>
-<file>resources/up.png</file>
-<file>resources/up16.png</file>
-<file>resources/view_cascaded.png</file>
-<file>resources/view_organized.png</file>
-<file>resources/view_tabbed.png</file>
-<file>resources/view_tiled.png</file>
-<file>resources/view_vertstacked.png</file>
-<file>resources/view_horzstacked.png</file>
-<file>resources/view_zoomin.png</file>
-<file>resources/view_zoomout.png</file>
-<file>resources/view_refresh.png</file>
-<file>resources/vr-16x16.png</file>
-<file>resources/vr.png</file>
-<file>resources/xmate.png</file>
-<file>resources/zoomin.png</file>
-<file>resources/zoomout.png</file>
-<file>resources/zoomin3.png</file>
-<file>resources/zoomout3.png</file>
-<file>resources/f_align_left.png</file>
-<file>resources/f_align_right.png</file>
-<file>resources/f_align_center.png</file>
-<file>resources/f_align_justify.png</file>
-<file>resources/f_align_top.png</file>
-<file>resources/f_align_middle.png</file>
-<file>resources/f_align_bottom.png</file>
-<file>resources/f_box_top.png</file>
-<file>resources/f_box_left.png</file>
-<file>resources/f_box_bottom.png</file>
-<file>resources/f_box_right.png</file>
-<file>resources/f_box_all.png</file>
-<file>resources/f_box_plain.png</file>
-<file>resources/f_box_shadow.png</file>
-<file>resources/f-generic.png</file>
-<file>resources/f-image.png</file>
-<file>resources/f_chart.png</file>
-<file>resources/f_gradient.png</file>
-<file>resources/f_barcode.png</file>
-<file>resources/f-bold-1.png</file>
-<file>resources/f-italic-1.png</file>
-<file>resources/f-underline-1.png</file>
-<file>resources/f-strike-1.png</file>
-<file>resources/toback.png</file>
-<file>resources/tofront.png</file>
-<file>resources/r-page.png</file>
-<file>resources/r-report.png</file>
-<file>resources/r-landscape.png</file>
-<file>resources/r-portrait.png</file>
-<file>resources/rp_arc.png</file>
-<file>resources/rp_chord.png</file>
-<file>resources/rp_diamond.png</file>
-<file>resources/rp_triangle.png</file>
-<file>resources/rp_rectangle.png</file>
-<file>resources/rp_roundrectangle.png</file>
-<file>resources/rp_linevert.png</file>
-<file>resources/rp_linehorz.png</file>
-<file>resources/rp_linediagright.png</file>
-<file>resources/rp_linediagleft.png</file>
-<file>resources/rp_ellipse.png</file>
-<file>resources/rp_shapes.png</file>
-<file>resources/memo.png</file>
-<file>resources/hideshow.png</file>
-<file>resources/cuied.png</file>
-<file>resources/expand_m.png</file>
-<file>resources/collapse_m.png</file>
-</qresource>
+<RCC>
+  <qresource>
+    <file>resources/minimize_all.png</file>
+    <file>resources/maximize_all.png</file>
+    <file>resources/maximize.png</file>
+    <file>resources/minimize.png</file>
+    <file>resources/arguments.png</file>
+    <file>resources/blockcomment.png</file>
+    <file>resources/blockindentl.png</file>
+    <file>resources/blockindentr.png</file>
+    <file>resources/bookmark.png</file>
+    <file>resources/browser.png</file>
+    <file>resources/build.png</file>
+    <file>resources/builderror.png</file>
+    <file>resources/buildlaunch.png</file>
+    <file>resources/buildrun.png</file>
+    <file>resources/buildsource.png</file>
+    <file>resources/check.png</file>
+    <file>resources/clean.png</file>
+    <file>resources/cleanrun.png</file>
+    <file>resources/close.png</file>
+    <file>resources/close3.png</file>
+    <file>resources/closeall.png</file>
+    <file>resources/closeexcept.png</file>
+    <file>resources/closetab.png</file>
+    <file>resources/codeskeletons.png</file>
+    <file>resources/column.png</file>
+    <file>resources/compile.png</file>
+    <file>resources/copy-filname.png</file>
+    <file>resources/copy.png</file>
+    <file>resources/curlinehilight.png</file>
+    <file>resources/cut.png</file>
+    <file>resources/cutb16.png</file>
+    <file>resources/database.png</file>
+    <file>resources/database_accept.png</file>
+    <file>resources/database_add.png</file>
+    <file>resources/database_remove.png</file>
+    <file>resources/database_lock.png</file>
+    <file>resources/database_process.png</file>
+    <file>resources/database_up.png</file>
+    <file>resources/database_down.png</file>
+    <file>resources/database_previous.png</file>
+    <file>resources/database_next.png</file>
+    <file>resources/database_search.png</file>
+    <file>resources/dbl2sglquote.png</file>
+    <file>resources/dbstruct.png</file>
+    <file>resources/dbf_p1.png</file>
+    <file>resources/dbf_p2.png</file>
+    <file>resources/dbf_p3.png</file>
+    <file>resources/dbf_p4.png</file>
+    <file>resources/dbf_p5.png</file>
+    <file>resources/dbf_p6.png</file>
+    <file>resources/dbf_p7.png</file>
+    <file>resources/dbf_p8.png</file>
+    <file>resources/dbf_p9.png</file>
+    <file>resources/dbf_p10.png</file>
+    <file>resources/dc_delete.png</file>
+    <file>resources/dc_down.png</file>
+    <file>resources/dc_folder.png</file>
+    <file>resources/dc_function.png</file>
+    <file>resources/dc_home.png</file>
+    <file>resources/dc_left.png</file>
+    <file>resources/dc_pdffile.png</file>
+    <file>resources/dc_plus.png</file>
+    <file>resources/dc_print.png</file>
+    <file>resources/dc_quit.png</file>
+    <file>resources/dc_refresh.png</file>
+    <file>resources/dc_right.png</file>
+    <file>resources/dc_textdoc.png</file>
+    <file>resources/dc_textdocument.png</file>
+    <file>resources/dc_up.png</file>
+    <file>resources/debug.png</file>
+    <file>resources/decreaseindent.png</file>
+    <file>resources/deleteline.png</file>
+    <file>resources/description.png</file>
+    <file>resources/designer.png</file>
+    <file>resources/docwriter.png</file>
+    <file>resources/down.png</file>
+    <file>resources/down16.png</file>
+    <file>resources/duplicateline.png</file>
+    <file>resources/editstree.png</file>
+    <file>resources/envconfig.png</file>
+    <file>resources/example.png</file>
+    <file>resources/exit.png</file>
+    <file>resources/exit3.png</file>
+    <file>resources/exporthtml.png</file>
+    <file>resources/ffn.png</file>
+    <file>resources/filec.png</file>
+    <file>resources/fileprg.png</file>
+    <file>resources/find.png</file>
+    <file>resources/fl_c.png</file>
+    <file>resources/fl_dll.png</file>
+    <file>resources/fl_exe.png</file>
+    <file>resources/fl_ini.png</file>
+    <file>resources/fl_lib.png</file>
+    <file>resources/fl_prg.png</file>
+    <file>resources/fl_res.png</file>
+    <file>resources/fl_txt.png</file>
+    <file>resources/file-open.png</file>
+    <file>resources/folder.png</file>
+    <file>resources/font.png</file>
+    <file>resources/formview.png</file>
+    <file>resources/fullscreen.png</file>
+    <file>resources/go-bottom.png</file>
+    <file>resources/go-down.png</file>
+    <file>resources/go-first.png</file>
+    <file>resources/go-jump.png</file>
+    <file>resources/go-last.png</file>
+    <file>resources/go-next.png</file>
+    <file>resources/go-prev.png</file>
+    <file>resources/go-top.png</file>
+    <file>resources/go-up.png</file>
+    <file>resources/gotoline.png</file>
+    <file>resources/gotoline3.png</file>
+    <file>resources/gotomark.png</file>
+    <file>resources/grid.png</file>
+    <file>resources/harbour.png</file>
+    <file>resources/harbourhelp.png</file>
+    <file>resources/hb-16x16.png</file>
+    <file>resources/hb-32x32.png</file>
+    <file>resources/hbide.png</file>
+    <file>resources/hbidesplash.png</file>
+    <file>resources/hbidesplashwatermark.png</file>
+    <file>resources/help.png</file>
+    <file>resources/help1.png</file>
+    <file>resources/helpdoc.png</file>
+    <file>resources/hilight-all.png</file>
+    <file>resources/home3.png</file>
+    <file>resources/horzruler.png</file>
+    <file>resources/idepreferences.png</file>
+    <file>resources/increaseindent.png</file>
+    <file>resources/indent-more.png</file>
+    <file>resources/indent-less.png</file>
+    <file>resources/info.png</file>
+    <file>resources/infotips.png</file>
+    <file>resources/insert-datetime.png</file>
+    <file>resources/insert-external-file.png</file>
+    <file>resources/insert-procname.png</file>
+    <file>resources/insert-separator.png</file>
+    <file>resources/invertcase.png</file>
+    <file>resources/keyboardmappings.png</file>
+    <file>resources/launch.png</file>
+    <file>resources/lense.png</file>
+    <file>resources/list-developers.png</file>
+    <file>resources/list-users.png</file>
+    <file>resources/load_1.png</file>
+    <file>resources/load_2.png</file>
+    <file>resources/load_3.png</file>
+    <file>resources/Lookup.png</file>
+    <file>resources/matchobj.png</file>
+    <file>resources/minus.png</file>
+    <file>resources/modulelist.png</file>
+    <file>resources/movelinedown.png</file>
+    <file>resources/movelineup.png</file>
+    <file>resources/new.png</file>
+    <file>resources/new2.png</file>
+    <file>resources/next.png</file>
+    <file>resources/notepad.png</file>
+    <file>resources/open.png</file>
+    <file>resources/open2.png</file>
+    <file>resources/open3.png</file>
+    <file>resources/panel_1.png</file>
+    <file>resources/panel_2.png</file>
+    <file>resources/panel_3.png</file>
+    <file>resources/panel_4.png</file>
+    <file>resources/panel_5.png</file>
+    <file>resources/panel_6.png</file>
+    <file>resources/panel_7.png</file>
+    <file>resources/panel_8.png</file>
+    <file>resources/panel_9.png</file>
+    <file>resources/panel_10.png</file>
+    <file>resources/panel_11.png</file>
+    <file>resources/panel_12.png</file>
+    <file>resources/panel_13.png</file>
+    <file>resources/paste.png</file>
+    <file>resources/placeremovemark.png</file>
+    <file>resources/ppo.png</file>
+    <file>resources/previous.png</file>
+    <file>resources/print.png</file>
+    <file>resources/project.png</file>
+    <file>resources/projectadd.png</file>
+    <file>resources/projectdel.png</file>
+    <file>resources/projectstree.png</file>
+    <file>resources/projtree.png</file>
+    <file>resources/properties.png</file>
+    <file>resources/readonly.png</file>
+    <file>resources/rebuild.png</file>
+    <file>resources/rebuildlaunch.png</file>
+    <file>resources/redo.png</file>
+    <file>resources/richtext.png</file>
+    <file>resources/run.png</file>
+    <file>resources/runscript.png</file>
+    <file>resources/runnodebug.png</file>
+    <file>resources/save.png</file>
+    <file>resources/save3.png</file>
+    <file>resources/saveall.png</file>
+    <file>resources/saveas.png</file>
+    <file>resources/search.png</file>
+    <file>resources/selectall.png</file>
+    <file>resources/selectionline.png</file>
+    <file>resources/setmain.png</file>
+    <file>resources/sgl2dblquote.png</file>
+    <file>resources/sort.png</file>
+    <file>resources/sortdescend.png</file>
+    <file>resources/source_c.png</file>
+    <file>resources/source_cpp.png</file>
+    <file>resources/source_h.png</file>
+    <file>resources/source_o.png</file>
+    <file>resources/source_prg.png</file>
+    <file>resources/source_res.png</file>
+    <file>resources/source_txt.png</file>
+    <file>resources/source_unknown.png</file>
+    <file>resources/statistics.png</file>
+    <file>resources/spacestotabs.png</file>
+    <file>resources/stream.png</file>
+    <file>resources/streamcomment.png</file>
+    <file>resources/syntaxhiliter.png</file>
+    <file>resources/tabcmodified.png</file>
+    <file>resources/tabmodified.png</file>
+    <file>resources/tabreadonly.png</file>
+    <file>resources/tabs.png</file>
+    <file>resources/tabstospaces.png</file>
+    <file>resources/tabunmodified.png</file>
+    <file>resources/tests.png</file>
+    <file>resources/text.png</file>
+    <file>resources/thumbnail.png</file>
+    <file>resources/togglelinenumber.png</file>
+    <file>resources/tolower.png</file>
+    <file>resources/tools.png</file>
+    <file>resources/toupper.png</file>
+    <file>resources/trashpage.png</file>
+    <file>resources/undo.png</file>
+    <file>resources/unload_1.png</file>
+    <file>resources/up.png</file>
+    <file>resources/up16.png</file>
+    <file>resources/view_cascaded.png</file>
+    <file>resources/view_organized.png</file>
+    <file>resources/view_tabbed.png</file>
+    <file>resources/view_tiled.png</file>
+    <file>resources/view_vertstacked.png</file>
+    <file>resources/view_horzstacked.png</file>
+    <file>resources/view_zoomin.png</file>
+    <file>resources/view_zoomout.png</file>
+    <file>resources/view_refresh.png</file>
+    <file>resources/vr-16x16.png</file>
+    <file>resources/vr.png</file>
+    <file>resources/xmate.png</file>
+    <file>resources/zoomin.png</file>
+    <file>resources/zoomout.png</file>
+    <file>resources/zoomin3.png</file>
+    <file>resources/zoomout3.png</file>
+    <file>resources/f_align_left.png</file>
+    <file>resources/f_align_right.png</file>
+    <file>resources/f_align_center.png</file>
+    <file>resources/f_align_justify.png</file>
+    <file>resources/f_align_top.png</file>
+    <file>resources/f_align_middle.png</file>
+    <file>resources/f_align_bottom.png</file>
+    <file>resources/f_box_top.png</file>
+    <file>resources/f_box_left.png</file>
+    <file>resources/f_box_bottom.png</file>
+    <file>resources/f_box_right.png</file>
+    <file>resources/f_box_all.png</file>
+    <file>resources/f_box_plain.png</file>
+    <file>resources/f_box_shadow.png</file>
+    <file>resources/f-generic.png</file>
+    <file>resources/f-image.png</file>
+    <file>resources/f_chart.png</file>
+    <file>resources/f_gradient.png</file>
+    <file>resources/f_barcode.png</file>
+    <file>resources/f-bold-1.png</file>
+    <file>resources/f-italic-1.png</file>
+    <file>resources/f-underline-1.png</file>
+    <file>resources/f-strike-1.png</file>
+    <file>resources/toback.png</file>
+    <file>resources/tofront.png</file>
+    <file>resources/r-page.png</file>
+    <file>resources/r-report.png</file>
+    <file>resources/r-landscape.png</file>
+    <file>resources/r-portrait.png</file>
+    <file>resources/rp_arc.png</file>
+    <file>resources/rp_chord.png</file>
+    <file>resources/rp_diamond.png</file>
+    <file>resources/rp_triangle.png</file>
+    <file>resources/rp_rectangle.png</file>
+    <file>resources/rp_roundrectangle.png</file>
+    <file>resources/rp_linevert.png</file>
+    <file>resources/rp_linehorz.png</file>
+    <file>resources/rp_linediagright.png</file>
+    <file>resources/rp_linediagleft.png</file>
+    <file>resources/rp_ellipse.png</file>
+    <file>resources/rp_shapes.png</file>
+    <file>resources/memo.png</file>
+    <file>resources/hideshow.png</file>
+    <file>resources/cuied.png</file>
+    <file>resources/expand_m.png</file>
+    <file>resources/collapse_m.png</file>
+  </qresource>
 </RCC>

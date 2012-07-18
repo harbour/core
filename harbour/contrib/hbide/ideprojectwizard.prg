@@ -94,6 +94,8 @@ CREATE CLASS IdeProjectWizard INHERIT IdeObject
    METHOD  loadSwichesSections()
    METHOD  deleteTreeItem( oChild )
    METHOD  addTreeItem( oParent )
+   METHOD  addDropIndicator( oTree, oNode, cMsg, cCSS, nIndex )
+   METHOD  addSourceFile( cFile )
 
    ENDCLASS
 
@@ -209,7 +211,6 @@ METHOD IdeProjectWizard:show()
       ::oUI := ui_projectWizard():new(  ::oIde:oDlg:oWidget )
       ::oUI:oWidget:connect( QEvent_Close, {|| ::oUI:oWidget:done( 0 ) } )
 
-      ::oUI:btnSwPlus   : connect( "clicked()", {|| ::execEvent( "btnSw_clicked", "plus"  ) } )
       ::oUI:btnSwAZ     : connect( "clicked()", {|| ::execEvent( "btnSw_clicked", "az"    ) } )
       ::oUI:btnSwZA     : connect( "clicked()", {|| ::execEvent( "btnSw_clicked", "za"    ) } )
       ::oUI:btnSwUpper  : connect( "clicked()", {|| ::execEvent( "btnSw_clicked", "upper" ) } )
@@ -222,12 +223,18 @@ METHOD IdeProjectWizard:show()
       ::oUI:btnSave     : connect( "clicked()", {|| ::execEvent( "btnSave_clicked" ) } )
       ::oUI:btnCancel   : connect( "clicked()", {|| ::oUI:oWidget:done( 0 ) } )
 
-      ::oUI:toolGetSrc  : connect( "clicked()", {|| ::execEvent( "toolGetSrc_clicked" ) } )
+      ::oUI:btnSwMax    : connect( "clicked()", {|| ::execEvent( "btnSwMax_clicked"   ) } )
+      ::oUI:btnSwMin    : connect( "clicked()", {|| ::execEvent( "btnSwMin_clicked"   ) } )
 
-      ::oUI:comboProjType : addItem( "Executable" )
-      ::oUI:comboProjType : addItem( "Library" )
+      ::oUI:toolSrcGet  : connect( "clicked()", {|| ::execEvent( "toolSrcGet_clicked" ) } )
+      ::oUI:toolSrcMax  : connect( "clicked()", {|| ::execEvent( "toolSrcMax_clicked" ) } )
+      ::oUI:toolSrcMin  : connect( "clicked()", {|| ::execEvent( "toolSrcMin_clicked" ) } )
+      ::oUI:toolSrcDel  : connect( "clicked()", {|| ::execEvent( "toolSrcDel_clicked" ) } )
+
+      ::oUI:comboProjType : addItem( "Executable"        )
+      ::oUI:comboProjType : addItem( "Library"           )
       ::oUI:comboProjType : addItem( "DLL - Without HVM" )
-      ::oUI:comboProjType : addItem( "DLL - With HVM" )
+      ::oUI:comboProjType : addItem( "DLL - With HVM"    )
 
       ::oUI:comboGT : addItem( "gtCGI" )
       ::oUI:comboGT : addItem( "gtCRS" )
@@ -288,6 +295,12 @@ METHOD IdeProjectWizard:show()
 
 
       ::clear()
+
+      ::oUI:frameSrc:setAcceptDrops( .t. )
+      ::oUI:frameSrc:connect( QEvent_DragEnter, {|p| ::execEvent( "frameSrc_dragEnterEvent", p ) } )
+      ::oUI:frameSrc:connect( QEvent_DragMove , {|p| ::execEvent( "frameSrc_dragMoveEvent" , p ) } )
+      ::oUI:frameSrc:connect( QEvent_Drop     , {|p| ::execEvent( "frameSrc_dropEvent"     , p ) } )
+
    ENDIF
 
    IF ::loadDefaults()
@@ -299,94 +312,30 @@ METHOD IdeProjectWizard:show()
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION blockBtnClicked( o, cEvent, nAct )
-   RETURN {|| o:execEvent( cEvent, nAct ) }
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeProjectWizard:loadSwichesSections()
-   LOCAL oTree := ::oUI:treeProps
-   LOCAL qItm, aAct, oFont, qTBtn
-
-   oFont := QTreeWidgetItem():font( 0 )
-   oFont:setBold( .t. )
-   FOR EACH aAct IN ::aItmProps
-      qItm := QTreeWidgetItem()
-      aAct[ 1 ] := qItm
-      qItm:setFlags( 0 )
-      qItm:setFlags( hb_bitOr( Qt_ItemIsSelectable, Qt_ItemIsDropEnabled, Qt_ItemIsEnabled ) )
-      qItm:setText( 0, space( 7 ) + aAct[ 2 ] )
-      qItm:setBackground( 0, aAct[ 3 ] )
-      qItm:setForeground( 0, QBrush( QColor( 255,255,255 ) ) )
-      qItm:setFont( 0, oFont )
-      qItm:setTooltip( 0, "Double-click to add a value !" )
-      oTree:addTopLevelItem( qItm )
-      oTree:setFirstItemColumnSpanned( qItm, .t. )
-      qItm:setChildIndicatorPolicy( QTreeWidgetItem_ShowIndicator )
-   NEXT
-   FOR EACH aAct IN ::aItmProps
-      qTBtn := QToolButton()
-      aAct[ 6 ] := qTBtn
-      qTBtn:setIcon( QIcon( hbide_image( "expand_m" ) ) )
-      qTBtn:setAutoFillBackground( .t. )
-      qTBtn:setAutoRaise( .t. )
-      qTBtn:setMaximumWidth( 20 )
-      qTBtn:setMaximumHeight( 20 )
-      qTBtn:setStyleSheet( "" )
-      qTBtn:setStyleSheet( aAct[ 7 ] )
-      qTBtn:connect( "clicked()", blockBtnClicked( Self, "qTBtn_clicked", aAct:__enumIndex() ) )
-      oTree:setItemWidget( aAct[ 1 ], 1, qTBtn )
-   NEXT
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeProjectWizard:loadSourcesSections()
-   LOCAL oTree := ::oUI:treeSrc
-   LOCAL qItm, aAct, oFont, qTBtn
-
-   oFont := QTreeWidgetItem():font( 0 )
-   oFont:setBold( .t. )
-   FOR EACH aAct IN ::aItmSrc
-      qItm := QTreeWidgetItem()
-      aAct[ 1 ] := qItm
-      qItm:setFlags( 0 )
-      qItm:setFlags( hb_bitOr( Qt_ItemIsSelectable, Qt_ItemIsDropEnabled, Qt_ItemIsEnabled ) )
-      qItm:setText( 0, "        " + aAct[ 2 ] )
-      qItm:setBackground( 0, aAct[ 3 ] )
-      qItm:setForeground( 0, QBrush( QColor( 255,255,255 ) ) )
-      qItm:setFont( 0, oFont )
-      qItm:setTooltip( 0, "Drag and drop a source OR select with open icon at the top !" )
-      oTree:addTopLevelItem( qItm )
-      oTree:setFirstItemColumnSpanned( qItm, .t. )
-      qItm:setChildIndicatorPolicy( QTreeWidgetItem_ShowIndicator )
-   NEXT
-   FOR EACH aAct IN ::aItmSrc
-      qTBtn := QToolButton()
-      aAct[ 6 ] := qTBtn
-      qTBtn:setIcon( QIcon( hbide_image( "expand_m" ) ) )
-      qTBtn:setAutoFillBackground( .t. )
-      qTBtn:setAutoRaise( .t. )
-      qTBtn:setMaximumWidth( 20 )
-      qTBtn:setMaximumHeight( 20 )
-      qTBtn:setStyleSheet( "" )
-      qTBtn:setStyleSheet( aAct[ 7 ] )
-      qTBtn:connect( "clicked()", blockBtnClicked( Self, "qSBtn_clicked", aAct:__enumIndex() ) )
-      oTree:setItemWidget( aAct[ 1 ], 1, qTBtn )
-   NEXT
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
-   LOCAL cText, qItm, n, i, oFont, aMenu, oParent, aFiles, aFilt, cFile, cExt, lTop, nChildren, qChild
+   LOCAL cText, qItm, n, i, oFont, aMenu, aFiles, aFilt, cFile, lTop, nChildren, qChild
+   LOCAL qMime, qUrl, qList, aItm
 
-   HB_SYMBOL_UNUSED( p )
    HB_SYMBOL_UNUSED( p1 )
 
    SWITCH xEvent
 
+   CASE "frameSrc_dragMoveEvent"
+   CASE "frameSrc_dragEnterEvent"
+      p:acceptProposedAction()
+      EXIT
+   CASE "frameSrc_dropEvent"
+      qMime := p:mimeData()
+      IF qMime:hasUrls()
+         qList := qMime:urls()
+         FOR i := 0 TO qList:size() - 1
+            qUrl := qList:at( i )
+            ::addSourceFile( hbide_pathToOSPath( qUrl:toLocalFile() ) )
+         NEXT
+         p:setDropAction( Qt_CopyAction )
+         p:accept()
+      ENDIF
+      EXIT
    CASE "treeProps_itemSelectionChanged"
       IF ! empty( qItm := ::oUI:treeProps:currentItem() )
          lTop := ::oUI:treeProps:indexOfTopLevelItem( qItm ) >= 0
@@ -440,7 +389,47 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
       ENDIF
       ::aItmSrc[ p,1 ]:setSelected( .t. )
       EXIT
-   CASE "toolGetSrc_clicked"
+   CASE "toolSrcDel_clicked"
+      IF hbide_getYesNo( "Do you really want to delete all sources ?", "Dangerous Action", "Confirmation Required!", ::oUI:oWidget )
+         FOR EACH aItm IN ::aItmSrc
+            IF ! empty( aItm[ 1 ] )
+               n := aItm[ 1 ]:childCount()
+               FOR i := 1 TO n
+                  aItm[ 1 ]:removeChild( aItm[ 1 ]:child( 0 ) )
+               NEXT
+            ENDIF
+         NEXT
+      ENDIF
+      EXIT
+   CASE "toolSrcMin_clicked"
+      FOR EACH aItm IN ::aItmSrc
+         IF ! empty( aItm[ 1 ] )
+            aItm[ 1 ]:setExpanded( .F. )
+         ENDIF
+      NEXT
+      EXIT
+   CASE "toolSrcMax_clicked"
+      FOR EACH aItm IN ::aItmSrc
+         IF ! empty( aItm[ 1 ] )
+            aItm[ 1 ]:setExpanded( .T. )
+         ENDIF
+      NEXT
+      EXIT
+   CASE "btnSwMin_clicked"
+      FOR EACH aItm IN ::aItmProps
+         IF ! empty( aItm[ 1 ] )
+            aItm[ 1 ]:setExpanded( .F. )
+         ENDIF
+      NEXT
+      EXIT
+   CASE "btnSwMax_clicked"
+      FOR EACH aItm IN ::aItmProps
+         IF ! empty( aItm[ 1 ] )
+            aItm[ 1 ]:setExpanded( .T. )
+         ENDIF
+      NEXT
+      EXIT
+   CASE "toolSrcGet_clicked"
       aFilt := {}
       aadd( aFilt, { "Program Files", "*.prg" } )
       aadd( aFilt, { "C Files"      , "*.c"   } )
@@ -454,19 +443,7 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
          oFont := QFont( "Courier New" )
          oFont:setPointSize( 8 )
          FOR EACH cFile IN aFiles
-            hb_fNameSplit( cFile, , , @cExt )
-            IF ( n := ascan( ::aItmSrc, {|e_| e_[ 5 ] == lower( cExt ) } ) ) == 0
-               n := len( ::aItmSrc )
-            ENDIF
-            oParent := ::aItmSrc[ n,1 ]
-            ::oUI:treeSrc:expandItem( oParent )
-            qItm := QTreeWidgetItem()
-            oParent:addChild( qItm )
-            qItm:setFlags( 0 )
-            qItm:setFlags( hb_bitOr( Qt_ItemIsSelectable, Qt_ItemIsDragEnabled, Qt_ItemIsEnabled ) )
-            qItm:setText( 0, cFile )
-            qItm:setFont( 0, oFont )
-            qItm:setBackground( 0, ::aItmSrc[ 1, 4 ] )
+            ::addSourceFile( cFile )
          NEXT
       ENDIF
       EXIT
@@ -474,15 +451,21 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
       IF ! empty( qItm := ::oUI:treeSrc:itemAt( p ) )
          cText := substr( qItm:text( 0 ), 8 )
          aMenu := {}
-         IF ( n := ascan( ::aItmSrc, {|e_| e_[ 2 ] == cText } ) ) == 0
-            aadd( aMenu, { ::oAC:getAction( "Delete" ) } )
-         ELSE
+         aadd( aMenu, { ::oAC:getAction( "Delete" ) } )
+         IF ( n := ascan( ::aItmSrc, {|e_| e_[ 2 ] == cText } ) ) > 0
             aadd( aMenu, { ::oAC:getAction( "SortAZ" ) } )
             aadd( aMenu, { ::oAC:getAction( "SortZA" ) } )
          ENDIF
          cText := hbide_execPopup( aMenu, ::oUI:treeSrc:mapToGlobal( p ), ::oUI:treeSrc )
          IF cText == "Delete"
-            ::deleteTreeItem( qItm )
+            IF n > 0
+               n := qItm:childCount()
+               FOR i := 1 TO n
+                  ::deleteTreeItem( qItm:child( 0 ) )
+               NEXT
+            ELSE
+               ::deleteTreeItem( qItm )
+            ENDIF
          ELSEIF cText == "Sort Ascending"
             ::aItmSrc[ n,1 ]:sortChildren( 0, Qt_AscendingOrder )
          ELSEIF cText == "Sort Descending"
@@ -494,15 +477,21 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
       IF ! empty( qItm := ::oUI:treeProps:itemAt( p ) )
          cText := substr( qItm:text( 0 ), 8 )
          aMenu := {}
-         IF ( n := ascan( ::aItmProps, {|e_| e_[ 2 ] == cText } ) ) == 0
-            aadd( aMenu, { ::oAC:getAction( "Delete" ) } )
-         ELSE
+         aadd( aMenu, { ::oAC:getAction( "Delete" ) } )
+         IF ( n := ascan( ::aItmProps, {|e_| e_[ 2 ] == cText } ) ) > 0
             aadd( aMenu, { ::oAC:getAction( "SortAZ" ) } )
             aadd( aMenu, { ::oAC:getAction( "SortZA" ) } )
          ENDIF
          cText := hbide_execPopup( aMenu, ::oUI:treeProps:mapToGlobal( p ), ::oUI:treeProps )
          IF cText == "Delete"
-            ::deleteTreeItem( qItm )
+            IF n > 0
+               n := qItm:childCount()
+               FOR i := 1 TO n
+                  ::deleteTreeItem( qItm:child( 0 ) )
+               NEXT
+            ELSE
+               ::deleteTreeItem( qItm )
+            ENDIF
          ELSEIF cText == "Sort Ascending"
             ::aItmProps[ n,1 ]:sortChildren( 0, Qt_AscendingOrder )
          ELSEIF cText == "Sort Descending"
@@ -578,6 +567,48 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeProjectWizard:addSourceFile( cFile )
+   LOCAL oParent, qItm, cExt, n, cSource, lExists, i
+   LOCAL oFont := QFont( "Courier New" )
+
+   oFont:setPointSize( 8 )
+
+   IF hbide_isValidText( cFile )
+      hb_fNameSplit( cFile, , , @cExt )
+      IF ( n := ascan( ::aItmSrc, {|e_| e_[ 5 ] == lower( cExt ) } ) ) == 0
+         n := len( ::aItmSrc )
+      ENDIF
+      oParent := ::aItmSrc[ n,1 ]
+
+      cSource := hbide_prepareSourceForHbp( hbide_stripRoot( ::cProjPath, cFile ) )
+
+      lExists := .f.
+      IF ( n := oParent:childCount() ) > 0
+         FOR i := 1 TO n
+            IF lower( oParent:child( i-1 ):text( 0 ) ) == lower( cSource )
+               lExists := .t.
+               EXIT
+            ENDIF
+         NEXT
+      ENDIF
+
+      IF ! lExists
+         oParent:setExpanded( .t. )
+         qItm := QTreeWidgetItem()
+         oParent:addChild( qItm )
+         qItm:setFlags( 0 )
+         qItm:setFlags( hb_bitOr( Qt_ItemIsSelectable, Qt_ItemIsDragEnabled, Qt_ItemIsEnabled ) )
+         qItm:setText( 0, cSource )
+         qItm:setTooltip( 0, cFile )
+         qItm:setFont( 0, oFont )
+         qItm:setBackground( 0, QBrush( QColor( 250, 250, 250 ) ) )
+      ENDIF
+   ENDIF
+
+   RETURN .t.
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeProjectWizard:addTreeItem( oParent )
    LOCAL oFont, qItm
 
@@ -592,7 +623,7 @@ METHOD IdeProjectWizard:addTreeItem( oParent )
    qItm:setFlags( hb_bitOr( Qt_ItemIsSelectable, Qt_ItemIsDragEnabled, Qt_ItemIsEnabled, Qt_ItemIsEditable ) )
    qItm:setText( 0, "" )
    qItm:setFont( 0, oFont )
-   qItm:setBackground( 0, QBrush( QColor( 245,245,245 ) ) )
+   qItm:setBackground( 0, QBrush( QColor( 250, 250, 250 ) ) )
    qItm:setFirstColumnSpanned( .t. )
 
    oParent:treeWidget():editItem( qItm, 0 )
@@ -612,6 +643,77 @@ METHOD IdeProjectWizard:deleteTreeItem( oChild )
    ENDIF
 
    RETURN .t.
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjectWizard:addDropIndicator( oTree, oNode, cMsg, cCSS, nIndex )
+   LOCAL qTBtn := QToolButton()
+
+   qTBtn:setIcon( QIcon( hbide_image( "expand_m" ) ) )
+   qTBtn:setAutoFillBackground( .t. )
+   qTBtn:setAutoRaise( .t. )
+   qTBtn:setMaximumWidth( 20 )
+   qTBtn:setMaximumHeight( 20 )
+   qTBtn:setStyleSheet( "" )
+   qTBtn:setStyleSheet( cCSS )
+   qTBtn:connect( "clicked()", {|| ::execEvent( cMsg, nIndex ) } )
+   oTree:setItemWidget( oNode, 1, qTBtn )
+
+   RETURN qTBtn
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjectWizard:loadSwichesSections()
+   LOCAL oTree := ::oUI:treeProps
+   LOCAL qItm, aAct, oFont
+
+   oFont := QTreeWidgetItem():font( 0 )
+   oFont:setBold( .t. )
+   FOR EACH aAct IN ::aItmProps
+      qItm := QTreeWidgetItem()
+      aAct[ 1 ] := qItm
+      qItm:setFlags( 0 )
+      qItm:setFlags( hb_bitOr( Qt_ItemIsSelectable, Qt_ItemIsDropEnabled, Qt_ItemIsEnabled ) )
+      qItm:setText( 0, space( 7 ) + aAct[ 2 ] )
+      qItm:setBackground( 0, aAct[ 3 ] )
+      qItm:setForeground( 0, QBrush( QColor( 255,255,255 ) ) )
+      qItm:setFont( 0, oFont )
+      qItm:setTooltip( 0, "Double-click to add a value !" )
+      oTree:addTopLevelItem( qItm )
+      oTree:setFirstItemColumnSpanned( qItm, .t. )
+      qItm:setChildIndicatorPolicy( QTreeWidgetItem_ShowIndicator )
+
+      aAct[ 6 ] := ::addDropIndicator( oTree, aAct[ 1 ], "qTBtn_clicked", aAct[ 7 ], aAct:__enumIndex() )
+   NEXT
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeProjectWizard:loadSourcesSections()
+   LOCAL oTree := ::oUI:treeSrc
+   LOCAL qItm, aAct, oFont
+
+   oFont := QTreeWidgetItem():font( 0 )
+   oFont:setBold( .t. )
+   FOR EACH aAct IN ::aItmSrc
+      qItm := QTreeWidgetItem()
+      aAct[ 1 ] := qItm
+      qItm:setFlags( 0 )
+      qItm:setFlags( hb_bitOr( Qt_ItemIsSelectable, Qt_ItemIsDropEnabled, Qt_ItemIsEnabled ) )
+      qItm:setText( 0, space( 7 ) + aAct[ 2 ] )
+      qItm:setBackground( 0, aAct[ 3 ] )
+      qItm:setForeground( 0, QBrush( QColor( 255,255,255 ) ) )
+      qItm:setFont( 0, oFont )
+      qItm:setTooltip( 0, "Drag and drop a source OR select with open icon at the top !" )
+      oTree:addTopLevelItem( qItm )
+      oTree:setFirstItemColumnSpanned( qItm, .t. )
+      qItm:setChildIndicatorPolicy( QTreeWidgetItem_ShowIndicator )
+
+      aAct[ 6 ] := ::addDropIndicator( oTree, aAct[ 1 ], "qSBtn_clicked", aAct[ 7 ], aAct:__enumIndex() )
+   NEXT
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 
