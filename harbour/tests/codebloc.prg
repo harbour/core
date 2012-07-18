@@ -11,67 +11,66 @@ PROCEDURE Main()
    LOCAL d
    LOCAL de
    LOCAL ar := { 1, 2 }
-   LOCAL crlf := Chr( 13 ) + Chr( 10 )
    LOCAL YY, X
    LOCAL x1, x2
 
    OutStd( "this should print first" )
-   OutStd( crlf )
+   OutStd( hb_eol() )
 
    Eval( a, " with parameters", " ... and it works!" )
-   OutStd( crlf )
+   OutStd( hb_eol() )
 
    d = "with access to local variables"
 
    a = {| b, c | OutStd( "I am a second codeblock " + d + b + ;
-      IIF( c == NIL, ' empty second parameter ', c ) ), OutStd( crlf ), "WITH return value" }
+      IIF( c == NIL, ' empty second parameter ', c ) ), OutStd( hb_eol() ), "WITH return value" }
    Eval( a, ", codeblock parameters" )
-   OutStd( crlf )
+   OutStd( hb_eol() )
 
    Eval( a, ", codeblock parameters ", "and with second parameter" )
-   OutStd( crlf )
+   OutStd( hb_eol() )
 
    OutStd( MyEval( a ) )
-   OutStd( crlf )
+   OutStd( hb_eol() )
 
    OtherTest( a )
-   OutStd( crlf )
+   OutStd( hb_eol() )
 
    AnotherTest( a, "==> Another " )
-   OutStd( crlf )
+   OutStd( hb_eol() )
 
    a = {| c | IIF( c == NIL, {| a | "First " + a }, {| a | "Second " + a } ) }
    a = Eval( a )
-   OutStd( crlf )
+   OutStd( hb_eol() )
    OutStd( Eval( a, "codeblock created in a codeblock" ) )
-   OutStd( crlf )
+   OutStd( hb_eol() )
 
    OutStd( ar[ 1 ] )
-   OutStd( crlf )
+   OutStd( hb_eol() )
    a := {|| ar[ 1 ] ++ }
    Eval( a )
    OutStd( ar[ 1 ] )
-   OutStd( crlf )
+   OutStd( hb_eol() )
 
    yy := 5
    x  := {| xx | OutStd( LTrim( Str(xx ) ) ), OutStd( "+" ), OutStd( LTrim( Str(yy ) ) ), OutStd( "=" ), xx + yy }
    OutStd( Eval( x, 1 ) )       //this is OK
-   OutStd( CRLF )
+   OutStd( hb_eol() )
    OutStd( Eval( x, 1, 2 ) )    //this should ignore unnecesary parameters
 
    QOut( Eval( RetBlock(), 5 ) )
 
    //   BugToFix()
-   OutStd( crlf )
+   OutStd( hb_eol() )
 
    OutStd( "Trying to use detached variable ..." )
-   OutStd( crlf )
+   OutStd( hb_eol() )
    x1 := 5
    x2 := 6
    de = DetachLocal( x1, x2 )
    OutStd( Eval( de ) )
    //changing the value of variables
-   OutStd( crlf )
+   OutStd( hb_eol() )
    x1 := 10
    x2 := 11
    QOut( Eval( de ) )

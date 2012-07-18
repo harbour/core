@@ -4,7 +4,6 @@
 
 #include "ord.ch"
 
-#define  CRLF            Chr(13)+Chr(10)
 #define  MAX_TEST_RECS   100
 #define  INDEX_KEY_CHAR  CHAR + Str( NUM ) + DTOS( DATE )
 #define  INDEX_KEY_NUM   NUM
@@ -15,389 +14,388 @@ EXTERNAL _ADS
 EXTERNAL DBFNTX
 EXTERNAL DBFCDX
 
-procedure Main( cRDDType, cAdsMode )
+PROCEDURE Main( cRDDType, cAdsMode )
 
-local cRDD, aStruct, xTemp, bMemoText
+   LOCAL cRDD, aStruct, xTemp, bMemoText
 
-field CHAR, NUM, DATE, LOG
+   FIELD CHAR, NUM, DATE, LOG
 
-bMemoText := { || "This is memo #" + LTrim( Str( RecNo() ) ) + "." + CRLF + ;
-                  CRLF + ;
-                  "This is a very long string. " + ;
-                  "This may seem silly however strings like this are still " + ;
-                  "used. Not by good programmers though, but I've seen " + ;
-                  "stuff like this used for Copyright messages and other " + ;
-                  "long text. What is the point to all of this you'd say. " + ;
-                  "Well I am coming to the point right now, the constant " + ;
-                  "string is limited to 256 characters and this string is " + ;
-                  "a lot bigger. Do you get my drift ? If there is somebody " + ;
-                  "who has read this line upto the very end: Esto es un " + ;
-                  "sombrero grande rid­culo." + CRLF + "/" + CRLF + "[;-)" + CRLF + "\" }
+   bMemoText := {|| "This is memo #" + LTrim( Str( RecNo() ) ) + "." + hb_eol() + ;
+      hb_eol() + ;
+      "This is a very long string. " + ;
+      "This may seem silly however strings like this are still " + ;
+      "used. Not by good programmers though, but I've seen " + ;
+      "stuff like this used for Copyright messages and other " + ;
+      "long text. What is the point to all of this you'd say. " + ;
+      "Well I am coming to the point right now, the constant " + ;
+      "string is limited to 256 characters and this string is " + ;
+      "a lot bigger. Do you get my drift ? If there is somebody " + ;
+      "who has read this line upto the very end: Esto es un " + ;
+      "sombrero grande rid­culo." + hb_eol() + "/" + hb_eol() + "[;-)" + hb_eol() + "\" }
 
-do case
+   DO CASE
 
-case Empty( cRDDType )
+   CASE Empty( cRDDType )
 
-    NotifyUser( "Usage: TESTRDD RDDTYPE [ADSMODE]" + CRLF + ;
-                CRLF + ;
-                "RDDTYPE = DBFNTX, DBFCDX, ADSCDX, ADSNTX or ADSADT" + CRLF + ;
-                CRLF + ;
-                "ADSMODE = LOCAL or SERVER (only applies to ADSCDX, ADSNTX and ADSADT)" + CRLF + ;
-                "(If specify SERVER, must be run from a drive suported by ADS server)", .t. )
+      NotifyUser( "Usage: TESTRDD RDDTYPE [ADSMODE]" + hb_eol() + ;
+         hb_eol() + ;
+         "RDDTYPE = DBFNTX, DBFCDX, ADSCDX, ADSNTX or ADSADT" + hb_eol() + ;
+         hb_eol() + ;
+         "ADSMODE = LOCAL or SERVER (only applies to ADSCDX, ADSNTX and ADSADT)" + hb_eol() + ;
+         "(If specify SERVER, must be run from a drive suported by ADS server)", .T. )
 
-case Left( cRDDType := Upper( AllTrim( cRDDType ) ), 3 ) == "ADS"
+   CASE Left( cRDDType := Upper( AllTrim( cRDDType ) ), 3 ) == "ADS"
 
-    // Do not include ads.ch as don't want unintended affects when not using
-    // ADS - If need behavior from ads.ch, include defines and undefs in
-    // these areas.
+      // Do not include ads.ch as don't want unintended affects when not using
+      // ADS - If need behavior from ads.ch, include defines and undefs in
+      // these areas.
 
-    #define ADS_LOCAL_SERVER  1
-    #define ADS_REMOTE_SERVER 2
-    #define ADS_NTX           1
-    #define ADS_CDX           2
-    #define ADS_ADT           3
+#define ADS_LOCAL_SERVER  1
+#define ADS_REMOTE_SERVER 2
+#define ADS_NTX           1
+#define ADS_CDX           2
+#define ADS_ADT           3
 
-    RDDRegister( "ADS", 1 )
-    RDDSetDefault( "ADS" )
+      rddRegister( "ADS", 1 )
+      rddSetDefault( "ADS" )
 
-    if Empty( cADSMode )
-        NotifyUser( "Missing ADS mode" )
-    endif
+      IF Empty( cADSMode )
+         NotifyUser( "Missing ADS mode" )
+      ENDIF
 
-    cADSMode := Upper( AllTrim( cADSMode ) )
+      cADSMode := Upper( AllTrim( cADSMode ) )
 
-    do case
-    case cADSMode == "LOCAL"  ; AdsSetServerType( ADS_LOCAL_SERVER )
-    case cADSMode == "SERVER" ; AdsSetServerType( ADS_REMOTE_SERVER )
-    otherwise                 ; NotifyUser( "Bad ADS mode" )
-    endcase
+      DO CASE
+      CASE cADSMode == "LOCAL"  ; AdsSetServerType( ADS_LOCAL_SERVER )
+      CASE cADSMode == "SERVER" ; AdsSetServerType( ADS_REMOTE_SERVER )
+      OTHERWISE                 ; NotifyUser( "Bad ADS mode" )
+      ENDCASE
 
-    do case
-    case cRDDType == "ADSNTX" ; AdsSetFileType( ADS_NTX ) ; cRDD := "ADSNTX"
-    case cRDDType == "ADSADT" ; AdsSetFileType( ADS_ADT ) ; cRDD := "ADSADT"
-    case cRDDType == "ADSCDX" ; AdsSetFileType( ADS_CDX ) ; cRDD := "ADSCDX"
-    otherwise                 ; NotifyUser( "Bad ADS flavor" )
-    endcase
+      DO CASE
+      CASE cRDDType == "ADSNTX" ; AdsSetFileType( ADS_NTX ) ; cRDD := "ADSNTX"
+      CASE cRDDType == "ADSADT" ; AdsSetFileType( ADS_ADT ) ; cRDD := "ADSADT"
+      CASE cRDDType == "ADSCDX" ; AdsSetFileType( ADS_CDX ) ; cRDD := "ADSCDX"
+      OTHERWISE                 ; NotifyUser( "Bad ADS flavor" )
+      ENDCASE
 
-    AdsLocking( .t. )
-    AdsRightsCheck( .t. )
+      AdsLocking( .T. )
+      AdsRightsCheck( .T. )
 
-    AdsSetDefault( "" )
-    AdsSetSearchPath( "" )
+      AdsSetDefault( "" )
+      AdsSetSearchPath( "" )
 
-    #undef ADS_LOCAL_SERVER
-    #undef ADS_REMOTE_SERVER
-    #undef ADS_NTX
-    #undef ADS_CDX
-    #undef ADS_ADT
+#undef ADS_LOCAL_SERVER
+#undef ADS_REMOTE_SERVER
+#undef ADS_NTX
+#undef ADS_CDX
+#undef ADS_ADT
 
-case cRDDType == "DBFCDX" .or. ;
-     cRDDType == "DBFNTX"
+   CASE cRDDType == "DBFCDX" .OR. ;
+        cRDDType == "DBFNTX"
 
-    RDDSetDefault( cRDD := cRDDType )
+      rddSetDefault( cRDD := cRDDType )
 
-otherwise
+   OTHERWISE
 
-    NotifyUser( "Bad DBF flavor" )
+      NotifyUser( "Bad DBF flavor" )
 
-endcase
+   ENDCASE
 
-// Delete test.* since may be changing RDD flavors (avoid conflicts)
-AEval( Directory( "test.*"  ), { | a | FErase( a[1] ) } )
-AEval( Directory( "test?.*" ), { | a | FErase( a[1] ) } )
+   // Delete test.* since may be changing RDD flavors (avoid conflicts)
+   AEval( Directory( "test.*"  ), {| a | FErase( a[ 1 ] ) } )
+   AEval( Directory( "test?.*" ), {| a | FErase( a[ 1 ] ) } )
 
-if File( "test.dbf" )
-    NotifyUser( "Cannot delete test.dbf" )
-endif
+   IF File( "test.dbf" )
+      NotifyUser( "Cannot delete test.dbf" )
+   ENDIF
 
-// TEST: DBCreate()
+   // TEST: DBCreate()
 
-DBCreate( "test.dbf", ;
-          aStruct := { { "CHAR", "C", 30, 0 }, ;
-                       { "NUM",  "N", 15, 3 }, ;
-                       { "DATE", "D",  8, 0 }, ;
-                       { "LOG",  "L",  1, 0 }, ;
-                       { "MEMO", "M", 10, 0 } } )
+   dbCreate( "test.dbf", ;
+      aStruct := { ;
+      { "CHAR", "C", 30, 0 }, ;
+      { "NUM",  "N", 15, 3 }, ;
+      { "DATE", "D",  8, 0 }, ;
+      { "LOG",  "L",  1, 0 }, ;
+      { "MEMO", "M", 10, 0 } } )
 
-if ! File( "test.dbf" )
-    NotifyUser( "Failed to create test.dbf" )
-endif
+   IF ! File( "test.dbf" )
+      NotifyUser( "Failed to create test.dbf" )
+   ENDIF
 
-// TEST: DBUseArea()/USE
+   // TEST: DBUseArea()/USE
 
-use test.dbf new shared alias MYTEST
+   USE test.dbf NEW shared ALIAS MYTEST
 
-if ! Alias() == "MYTEST"
-    NotifyUser( "Failed to open test.dbf" )
-endif
+   IF ! Alias() == "MYTEST"
+      NotifyUser( "Failed to open test.dbf" )
+   ENDIF
 
-// TEST: RDDName()
+   // TEST: RDDName()
 
-if ! RDDName() == cRDD
-    NotifyUser( "Failed to set RDD to " + cRDD )
-endif
+   IF ! rddName() == cRDD
+      NotifyUser( "Failed to set RDD to " + cRDD )
+   ENDIF
 
-// TEST: DBStruct()
+   // TEST: DBStruct()
 
-if ! CompareArray( aStruct, DBStruct() )
-    NotifyUser( "Resulting table structure is not what we asked for" )
-endif
+   IF ! CompareArray( aStruct, dbStruct() )
+      NotifyUser( "Resulting table structure is not what we asked for" )
+   ENDIF
 
-// TEST: Header()
+   // TEST: Header()
 
-if ! Header() == 194
-    NotifyUser( "Header() returned wrong size (" + LTrim( Str( Header() ) ) + " bytes)" )
-endif
+   IF ! Header() == 194
+      NotifyUser( "Header() returned wrong size (" + LTrim( Str( Header() ) ) + " bytes)" )
+   ENDIF
 
-// Add a mix of data to table
+   // Add a mix of data to table
 
-do while LastRec() < MAX_TEST_RECS
+   DO WHILE LastRec() < MAX_TEST_RECS
 
-    // TEST: DBAppend()/APPEND BLANK
+      // TEST: DBAppend()/APPEND BLANK
 
-    append blank
+      APPEND BLANK
 
-    // TEST: REPLACE
+      // TEST: REPLACE
 
-    replace CHAR with Chr( 65 + Val( SubStr( LTrim( Str( RecNo() ) ), 2, 1 ) ) ) + ;
-                      " RECORD " + LTrim( Str( RecNo() ) )
+      REPLACE CHAR WITH Chr( 65 + Val( SubStr( LTrim( Str( RecNo() ) ), 2, 1 ) ) ) + ;
+         " RECORD " + LTrim( Str( RecNo() ) )
 
-    // TEST: Direct field assigment
+      // TEST: Direct field assigment
 
-    MYTEST->NUM  := ( iif( RecNo() % 2 > 0, -1, 1 ) * RecNo() ) + ( RecNo() / 1000 )
-    MYTEST->DATE := Date() + Int( FIELD->NUM )
-    MYTEST->LOG  := ( FIELD->NUM < 0 )
-    MYTEST->MEMO := Eval( bMemoText )
+      MYTEST->NUM  := ( iif( RecNo() % 2 > 0, - 1, 1 ) * RecNo() ) + ( RecNo() / 1000 )
+      MYTEST->DATE := Date() + Int( FIELD->NUM )
+      MYTEST->LOG  := ( FIELD->NUM < 0 )
+      MYTEST->MEMO := Eval( bMemoText )
 
-enddo
+   ENDDO
 
-// TEST: LastRec()
+   // TEST: LastRec()
 
-if ! LastRec() == MAX_TEST_RECS
-    NotifyUser( "DbAppend and/or LastRec failed" )
-endif
+   IF ! LastRec() == MAX_TEST_RECS
+      NotifyUser( "DbAppend and/or LastRec failed" )
+   ENDIF
 
-// TEST: DbGoBotom()/GO BOTTOM
+   // TEST: DbGoBotom()/GO BOTTOM
 
-go bottom
+   GO BOTTOM
 
-if ! RecNo() == MAX_TEST_RECS
-    NotifyUser( "DbGoBottom failed" )
-endif
+   IF ! RecNo() == MAX_TEST_RECS
+      NotifyUser( "DbGoBottom failed" )
+   ENDIF
 
-// TEST: DbGoTop()/GO TOP
+   // TEST: DbGoTop()/GO TOP
 
-go top
+   GO TOP
 
-if ! RecNo() == 1
-    NotifyUser( "DbGoTop failed" )
-endif
+   IF ! RecNo() == 1
+      NotifyUser( "DbGoTop failed" )
+   ENDIF
 
-// Now check each and every record for accuracy
+   // Now check each and every record for accuracy
 
-do while ! EOF()
+   DO WHILE ! EOF()
 
-    // TEST: Field access
+      // TEST: Field access
 
-    if ! Trim( FIELD->CHAR ) == Chr( 65 + Val( SubStr( LTrim( Str( RecNo() ) ), 2, 1 ) ) ) + ;
-                                    " RECORD " + LTrim( Str( RecNo() ) ) .or. ;
-       ! FIELD->NUM == ( iif( RecNo() % 2 > 0, -1, 1 ) * RecNo() ) + ( RecNo() / 1000 ) .or. ;
-       ! FIELD->DATE == Date() + Int( FIELD->NUM ) .or. ;
-       ! FIELD->LOG == ( FIELD->NUM < 0 ) .or. ;
-       ! FIELD->MEMO == Eval( bMemoText )
+      IF ! Trim( FIELD->CHAR ) == Chr( 65 + Val( SubStr( LTrim( Str( RecNo() ) ), 2, 1 ) ) ) + ;
+            " RECORD " + LTrim( Str( RecNo() ) ) .OR. ;
+            ! FIELD->NUM == ( iif( RecNo() % 2 > 0, - 1, 1 ) * RecNo() ) + ( RecNo() / 1000 ) .OR. ;
+            ! FIELD->DATE == Date() + Int( FIELD->NUM ) .OR. ;
+            ! FIELD->LOG == ( FIELD->NUM < 0 ) .OR. ;
+            ! FIELD->MEMO == Eval( bMemoText )
 
-        NotifyUser( "Data in table is incorrect" )
+         NotifyUser( "Data in table is incorrect" )
 
-    endif
+      ENDIF
 
-    skip
+      SKIP
 
-enddo
+   ENDDO
 
-// TEST: Index creation
+   // TEST: Index creation
 
-index on INDEX_KEY_CHAR to TESTC
-index on INDEX_KEY_NUM  to TESTN additive
-index on INDEX_KEY_DATE to TESTD additive
-index on INDEX_KEY_LOG  to TESTL additive
+   INDEX ON INDEX_KEY_CHAR TO TESTC
+   INDEX ON INDEX_KEY_NUM  TO TESTN ADDITIVE
+   INDEX ON INDEX_KEY_DATE TO TESTD ADDITIVE
+   INDEX ON INDEX_KEY_LOG  TO TESTL ADDITIVE
 
-// TEST: IndexOrd()
+   // TEST: IndexOrd()
 
-if ! IndexOrd() == 4
-    NotifyUser( "Bad IndexOrd()" )
-endif
+   IF ! IndexOrd() == 4
+      NotifyUser( "Bad IndexOrd()" )
+   ENDIF
 
-// TEST: DBOI_KEYCOUNT
+   // TEST: DBOI_KEYCOUNT
 
-set order to 1
-if ! DbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
-    NotifyUser( "Bad DBOI_KEYCOUNT/1" )
-endif
+   SET ORDER TO 1
+   IF ! dbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
+      NotifyUser( "Bad DBOI_KEYCOUNT/1" )
+   ENDIF
 
-set order to 2
-if ! DbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
-    NotifyUser( "Bad DBOI_KEYCOUNT/2" )
-endif
+   SET ORDER TO 2
+   IF ! dbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
+      NotifyUser( "Bad DBOI_KEYCOUNT/2" )
+   ENDIF
 
-set order to 3
-if ! DbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
-    NotifyUser( "Bad DBOI_KEYCOUNT/3" )
-endif
+   SET ORDER TO 3
+   IF ! dbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
+      NotifyUser( "Bad DBOI_KEYCOUNT/3" )
+   ENDIF
 
-set order to 4
-if ! DbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
-    NotifyUser( "Bad DBOI_KEYCOUNT/4" )
-endif
+   SET ORDER TO 4
+   IF ! dbOrderInfo( DBOI_KEYCOUNT ) == MAX_TEST_RECS
+      NotifyUser( "Bad DBOI_KEYCOUNT/4" )
+   ENDIF
 
-// TEST: Character index
-set order to 1
-go top
-if ! DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_CHAR
-    NotifyUser( "Bad DBOI_KEYVAL (CHAR)" )
-endif
+   // TEST: Character index
+   SET ORDER TO 1
+   GO TOP
+   IF ! dbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_CHAR
+      NotifyUser( "Bad DBOI_KEYVAL (CHAR)" )
+   ENDIF
 
-// TEST: Positive index key
-set order to 2
-locate for FIELD->NUM > 0
-if ! DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_NUM
-    NotifyUser( "Bad DBOI_KEYVAL (NUM)" )
-endif
+   // TEST: Positive index key
+   SET ORDER TO 2
+   LOCATE for FIELD->NUM > 0
+   IF ! dbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_NUM
+      NotifyUser( "Bad DBOI_KEYVAL (NUM)" )
+   ENDIF
 
-// TEST: Negative index key
-set order to 2
-locate for FIELD->NUM < 0
-if ! DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_NUM
-    NotifyUser( "Bad DBOI_KEYVAL (NUM)" )
-endif
+   // TEST: Negative index key
+   SET ORDER TO 2
+   LOCATE for FIELD->NUM < 0
+   IF ! dbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_NUM
+      NotifyUser( "Bad DBOI_KEYVAL (NUM)" )
+   ENDIF
 
-// TEST: Date index
-set order to 3
-go bottom
-if ! DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_DATE
-    NotifyUser( "Bad DBOI_KEYVAL (DATE)" )
-endif
+   // TEST: Date index
+   SET ORDER TO 3
+   GO BOTTOM
+   IF ! dbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_DATE
+      NotifyUser( "Bad DBOI_KEYVAL (DATE)" )
+   ENDIF
 
-// TEST: Logical index
-set order to 4
-go top
-if ! DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_LOG
-    NotifyUser( "Bad DBOI_KEYVAL (LOG/1)" )
-endif
-go bottom
-if ! DbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_LOG
-    NotifyUser( "Bad DBOI_KEYVAL (LOG/2)" )
-endif
+   // TEST: Logical index
+   SET ORDER TO 4
+   GO TOP
+   IF ! dbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_LOG
+      NotifyUser( "Bad DBOI_KEYVAL (LOG/1)" )
+   ENDIF
+   GO BOTTOM
+   IF ! dbOrderInfo( DBOI_KEYVAL ) == INDEX_KEY_LOG
+      NotifyUser( "Bad DBOI_KEYVAL (LOG/2)" )
+   ENDIF
 
-// TEST: EXACT with a locate
+   // TEST: EXACT with a locate
 
-set order to 0
+   SET ORDER TO 0
 
-set exact on
-locate for FIELD->CHAR = "J RECORD"
-if ! EOF()
-    NotifyUser( "LOCATE with EXACT ON failed" )
-endif
+   SET EXACT ON
+   LOCATE for FIELD->CHAR = "J RECORD"
+   IF ! EOF()
+      NotifyUser( "LOCATE with EXACT ON failed" )
+   ENDIF
 
-set exact off
-locate for FIELD->CHAR = "J RECORD"
-if EOF()
-    NotifyUser( "LOCATE with EXACT OFF failed" )
-endif
+   SET EXACT OFF
+   LOCATE for FIELD->CHAR = "J RECORD"
+   IF EOF()
+      NotifyUser( "LOCATE with EXACT OFF failed" )
+   ENDIF
 
-// TEST: EXACT with an index (also tests COUNT)
+   // TEST: EXACT with an index (also tests COUNT)
 
-set exact on
-set order to 0
-count for Trim( FIELD->CHAR ) = "A RECORD 1" to xTemp  // Get proper count
-index on CHAR to TESTE for Trim( FIELD->CHAR ) = "A RECORD 1" additive
-if ! DbOrderInfo( DBOI_KEYCOUNT ) == xTemp
-    NotifyUser( "Bad conditional index count with EXACT ON" )
-endif
+   SET EXACT ON
+   SET ORDER TO 0
+   COUNT for Trim( FIELD->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count
+   INDEX ON CHAR TO TESTE for Trim( FIELD->CHAR ) = "A RECORD 1" additive
+   IF ! dbOrderInfo( DBOI_KEYCOUNT ) == xTemp
+      NotifyUser( "Bad conditional index count with EXACT ON" )
+   ENDIF
 
-set exact off
-set order to 0
-count for Trim( FIELD->CHAR ) = "A RECORD 1" to xTemp  // Get proper count
-index on CHAR to TESTE for Trim( FIELD->CHAR ) = "A RECORD 1" additive
-if ! DbOrderInfo( DBOI_KEYCOUNT ) == xTemp
-    NotifyUser( "Bad conditional index count with EXACT OFF" )
-endif
+   SET EXACT OFF
+   SET ORDER TO 0
+   COUNT for Trim( FIELD->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count
+   INDEX ON CHAR TO TESTE for Trim( FIELD->CHAR ) = "A RECORD 1" additive
+   IF ! dbOrderInfo( DBOI_KEYCOUNT ) == xTemp
+      NotifyUser( "Bad conditional index count with EXACT OFF" )
+   ENDIF
 
-//
-//
-// *********************************************
-// P U T   M O R E   R D D   T E S T S   H E R E
-// *********************************************
-//
-//
-//
+   //
+   //
+   // *********************************************
+   // P U T   M O R E   R D D   T E S T S   H E R E
+   // *********************************************
+   //
+   //
+   //
 
-// TEST: DBCloseArea()
+   // TEST: DBCloseArea()
 
-MYTEST->( DBCloseArea() )
+   MYTEST->( dbCloseArea() )
 
-if Select( "MYTEST" ) > 0
-    NotifyUser( "Failed to close table" )
-endif
+   IF SELECT( "MYTEST" ) > 0
+      NotifyUser( "Failed to close table" )
+   ENDIF
 
-NotifyUser( "Test PASSED! :-)", .t. )
+   NotifyUser( "Test PASSED! :-)", .T. )
 
-return
+   RETURN
 
+PROCEDURE ErrorSys()
 
-procedure ErrorSys()
-ErrorBlock( { |e| MyError( e ) } )
-return
+   ErrorBlock( {| e | MyError( e ) } )
 
+   RETURN
 
-static procedure MyError( e )
+STATIC PROCEDURE MyError( e )
 
-local cTrace := "", i := 1 /*Start are "real" error*/, cErr
+   LOCAL cTrace := "", i := 1 /* Start are "real" error */, cErr
 
-cErr := "Runtime error" + CRLF + ;
-        CRLF + ;
-        "Gencode: " + LTrim( Str( e:GenCode ) ) + CRLF + ;
-        "Desc: " + e:Description +  + CRLF + ;
-        "Sub-system: " + LTrim( Str( e:SubCode ) ) + CRLF + ;
-        CRLF + ;
-        "Call trace:" + CRLF + ;
-        CRLF
+   cErr := "Runtime error" + hb_eol() + ;
+      hb_eol() + ;
+      "Gencode: " + LTrim( Str( e:GenCode ) ) + hb_eol() + ;
+      "Desc: " + e:Description +  + hb_eol() + ;
+      "Sub-system: " + LTrim( Str( e:SubCode ) ) + hb_eol() + ;
+      hb_eol() + ;
+      "Call trace:" + hb_eol() + ;
+      hb_eol()
 
-do while ! Empty( ProcName( ++i ) )
-    cErr += Trim( ProcName( i ) ) + "(" + Ltrim( Str( ProcLine( i ) ) ) + ")" + CRLF
-enddo
+   DO WHILE ! Empty( ProcName( ++ i ) )
+      cErr += RTrim( ProcName( i ) ) + "(" + LTrim( Str( ProcLine( i ) ) ) + ")" + hb_eol()
+   ENDDO
 
-NotifyUser( cErr )  // Calls quit
+   NotifyUser( cErr )  // Calls quit
 
-return
+   RETURN
 
+STATIC FUNCTION CompareArray( a1, a2 )
 
-static function CompareArray( a1, a2 )
+   LOCAL i, j
 
-local i, j
+   IF ! Len( a1 ) == Len( a2 )
+      RETURN .F.
+   ENDIF
 
-if ! Len( a1 ) == Len( a2 )
-    return .f.
-endif
+   FOR i := 1 TO Len( a1 )
 
-for i := 1 to Len( a1 )
+      FOR j := 1 TO Len( a1[ i ] )
 
-    for j := 1 to Len( a1[i] )
+         IF ! a1[ i, j ] == a2[ i, j ]
+            RETURN .F.
+         ENDIF
 
-        if ! a1[i,j] == a2[i,j]
-            return .f.
-        endif
+      NEXT
 
-    next
+   NEXT
 
-next
+   RETURN .T.
 
-return .t.
+STATIC PROCEDURE NotifyUser( cErr, lNotError )
 
+   ? cErr
 
-static procedure NotifyUser( cErr, lNotError )
+   QUIT  // If remove this, will display all error without stopping
 
-? cErr
-
-Quit  // If remove this, will display all error without stopping
-
-return
+   RETURN

@@ -2,8 +2,7 @@
  * $Id$
  */
 
-#define EOL Chr( 13 ) + Chr( 10 )
-#command ? [<x,...>] => OutStd( EOL )[;OutStd( <x> )]
+#include "simpleio.ch"
 
 PROCEDURE Main()
 
@@ -40,7 +39,7 @@ PROCEDURE Main()
 
 PROCEDURE mkTest( lNewArea, cRdd, cFile, cAlias, lShared, lReadOnly )
 
-   LOCAL cbErr := ErrorBlock( { |oErr|break( oErr ) } ), oErr
+   LOCAL cbErr := ErrorBlock( {| oErr | Break( oErr ) } ), oErr
 
    NetErr( .F. )
    BEGIN SEQUENCE

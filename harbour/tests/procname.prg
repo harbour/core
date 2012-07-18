@@ -4,8 +4,6 @@
 
 // Testing Harbour ProcName() and ProcLine()
 
-#define CRLF Chr( 13 ) + Chr( 10 )
-
 PROCEDURE Main()
 
    Two()
@@ -35,7 +33,7 @@ FUNCTION Five()
    LOCAL n := 0
 
    WHILE ! Empty( ProcName( n ) )
-      QQOut( "Called from: ", ProcName( n ), ProcLine( n ++ ), CRLF )
+      QQOut( "Called from: ", ProcName( n ), ProcLine( n++ ), hb_eol() )
    ENDDO
 
    RETURN nil

@@ -15,7 +15,6 @@ PROCEDURE Main( cPort )
    LOCAL Socket, s
    LOCAL nResponse, cResponse
    LOCAL nTurn := 0, nTurn1 := 0
-   LOCAL CRLF := Chr( 13 ) + Chr( 10 )
    LOCAL bCont := .T.
 
    CLS
@@ -63,7 +62,7 @@ PROCEDURE Main( cPort )
       @ 7, 5 SAY "Receiving: "
       @ 8, 5
 
-      nResponse := hb_inetSend( s, "Welcome to my server!" + CRLF )
+      nResponse := hb_inetSend( s, "Welcome to my server!" + hb_eol() )
 
       DO WHILE bCont
          // This timeout ...
@@ -83,7 +82,7 @@ PROCEDURE Main( cPort )
             ENDIF
             @ 8, 5 SAY space(70)
             @ 8, 5 SAY cResponse
-            cResponse := "Count: " + Str( nResponse ) + " characters" + CRLF
+            cResponse := "Count: " + Str( nResponse ) + " characters" + hb_eol()
             hb_inetSend( s, cResponse )
 
          CASE hb_inetErrorCode( s ) == -1

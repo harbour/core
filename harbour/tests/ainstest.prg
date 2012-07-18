@@ -64,7 +64,6 @@ PROCEDURE Main()
 FUNCTION aDump( aShow )
 
    LOCAL n
-   LOCAL CRLF := Chr( 13 ) + Chr( 10 )
 
    QQOut( "Len=", hb_ntos( Len( aShow ) ) )
    QQOut( ": " )
@@ -76,7 +75,7 @@ FUNCTION aDump( aShow )
       QQOut( ValType( aShow[ n ] ) )
       QQOut( ":" )
       IF ValType( aShow[ n ] ) == "A"             /* Iterate array         */
-         QQOut( CRLF )
+         QQOut( hb_eol() )
          QQOut( "[" )
          aDump( aShow[ n ] )
          QQOut( "]" )
@@ -89,6 +88,6 @@ FUNCTION aDump( aShow )
       ENDIF
 
    NEXT
-   QQOut( CRLF )
+   QQOut( hb_eol() )
 
    RETURN nil
