@@ -3969,7 +3969,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF !( hbmk[ _HBMK_cPLAT ] == "wce" )
             IF hbmk[ _HBMK_lGUI ]
                AAdd( hbmk[ _HBMK_aOPTL ], "-mwindows" )
-               IF !l_lNOHBLIB
+               IF ! l_lNOHBLIB
                   l_cCMAIN := "hb_forceLinkMainWin"
                ENDIF
             ELSE
@@ -7565,7 +7565,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
       RETURN .F.
    ENDIF
 
-   IF !lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_DEP
+   IF ! lCMode .AND. hbmk[ _HBMK_nHEAD ] == _HEAD_DEP
       cDependency := FNameDirExtSet( cFileName, hbmk[ _HBMK_cWorkDir ], ".d" )
       IF ! hb_FGetDateTime( cDependency, @tTimeDependency ) .OR. ;
          tTimeDependency > tTimeParent
@@ -10600,7 +10600,7 @@ STATIC FUNCTION getFirstFunc( hbmk, cFile )
          /* do nothing */
       ELSEIF ! Empty( cExecNM := FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "nm" ) )
          cFuncList := ""
-         hb_processRun( cExecNM + " " + FNameEscape( cFile, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) + ;
+         hb_processRun( cExecNM + " " + FNameEscape( cFile, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) +;
             " -g -n" + iif( hbmk[ _HBMK_cCOMP ] == "darwin", "", " --defined-only -C" ),, @cFuncList )
          IF ( n := At( " T HB_FUN_", cFuncList ) ) != 0
             n += 10
@@ -11800,14 +11800,14 @@ FUNCTION hbmk_KEYW( hbmk, cFileName, cKeyword, cValue, cOperator )
       RETURN .T.
    ENDIF
 
-   IF ! HBMK_IS_IN( cKeyword, "|win|wce|dos|os2" + ;
-                              "|bsd|hpux|sunos|beos|qnx|android|vxworks|symbian|linux|darwin|cygwin|minix|aix" + ;
-                              "|msvc|msvc64|msvcia64|msvcarm" + ;
-                              "|pocc|pocc64|poccarm|xcc" + ;
-                              "|mingw|mingw64|mingwarm|bcc|watcom" + ;
-                              "|gcc|gccomf|djgpp" + ;
-                              "|hblib|hbdyn|hbdynvm|hbimplib|hbexe" + ;
-                              "|icc|iccia64|clang|open64|sunpro|diab|pcc" + ;
+   IF ! HBMK_IS_IN( cKeyword, "|win|wce|dos|os2" +;
+                              "|bsd|hpux|sunos|beos|qnx|android|vxworks|symbian|linux|darwin|cygwin|minix|aix" +;
+                              "|msvc|msvc64|msvcia64|msvcarm" +;
+                              "|pocc|pocc64|poccarm|xcc" +;
+                              "|mingw|mingw64|mingwarm|bcc|watcom" +;
+                              "|gcc|gccomf|djgpp" +;
+                              "|hblib|hbdyn|hbdynvm|hbimplib|hbexe" +;
+                              "|icc|iccia64|clang|open64|sunpro|diab|pcc" +;
                               "|x86|x86_64|ia64|arm|mips|sh" )
 
       /* handle pseudo-functions */
@@ -12801,7 +12801,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
       SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
 
       bKeyIns  := SetKey( K_INS, ;
-         {|| SetCursor( iif( ReadInsert( !ReadInsert() ), ;
+         {|| SetCursor( iif( ReadInsert( ! ReadInsert() ), ;
                           SC_NORMAL, SC_INSERT ) ) } )
       bKeyUp   := SetKey( K_UP, ;
          {|| iif( nHistIndex > 1, ;
@@ -12834,7 +12834,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
          LOOP
       ENDIF
 
-      IF Empty( s_aHistory ) .OR. ! ATail( s_aHistory ) == cLine
+      IF Empty( s_aHistory ) .OR. !( ATail( s_aHistory ) == cLine )
          IF Len( s_aHistory ) < HB_HISTORY_LEN
             AAdd( s_aHistory, cLine )
          ELSE
@@ -12918,18 +12918,18 @@ STATIC PROCEDURE __hbshell_Info( cCommand )
    ENDIF
    IF Used()
       hb_DispOutAt( 1, 0, ;
-         PadR( "RDD: " + PadR( rddName(), 6 ) + ;
-               " | Area:" + Str( Select(), 3 ) + ;
-               " | Dbf: " + PadR( Alias(), 10 ) + ;
-               " | Index: " + PadR( ordName( IndexOrd() ), 8 ) + ;
+         PadR( "RDD: " + PadR( rddName(), 6 ) +;
+               " | Area:" + Str( Select(), 3 ) +;
+               " | Dbf: " + PadR( Alias(), 10 ) +;
+               " | Index: " + PadR( ordName( IndexOrd() ), 8 ) +;
                " | # " + Str( RecNo(), 7 ) + "/" + Str( RecCount(), 7 ), ;
                MaxCol() + 1 ), "N/BG" )
    ELSE
       hb_DispOutAt( 1, 0, ;
-         PadR( "RDD: " + Space( 6 ) + ;
-               " | Area:" + Space( 3 ) + ;
-               " | Dbf: " + Space( 10 ) + ;
-               " | Index: " + Space( 8 ) + ;
+         PadR( "RDD: " + Space( 6 ) +;
+               " | Area:" + Space( 3 ) +;
+               " | Dbf: " + Space( 10 ) +;
+               " | Index: " + Space( 8 ) +;
                " | # " + Space( 7 ) + "/" + Space( 7 ), ;
                MaxCol() + 1 ), "N/BG" )
    ENDIF
@@ -12948,7 +12948,7 @@ STATIC PROCEDURE __hbshell_Err( oErr, cCommand )
    cMessage := I_( "Could not execute:" ) + ";;" + cCommand + ";;"
    IF oErr:ClassName == "ERROR"
       cMessage += oErr:Description
-      IF !Empty( oErr:Operation )
+      IF ! Empty( oErr:Operation )
          cMessage += " " + oErr:Operation
       ENDIF
       IF HB_ISARRAY( oErr:Args ) .AND. Len( oErr:Args ) > 0
@@ -12969,10 +12969,10 @@ STATIC PROCEDURE __hbshell_Err( oErr, cCommand )
 STATIC PROCEDURE __hbshell_Exec( cCommand )
    LOCAL pHRB, cHRB, cFunc, bBlock, nRowMin
 
-   cFunc := "STATIC FUNCTION __HBDOT()" + hb_eol() + ;
-            "RETURN {||" + hb_eol() + ;
-            "   " + cCommand + hb_eol() + ;
-            "   RETURN __mvSetBase()" + hb_eol() + ;
+   cFunc := "STATIC FUNCTION __HBDOT()" + hb_eol() +;
+            "RETURN {||" + hb_eol() +;
+            "   " + cCommand + hb_eol() +;
+            "   RETURN __mvSetBase()" + hb_eol() +;
             "}" + hb_eol()
 
    DevPos( s_nRow, s_nCol )
