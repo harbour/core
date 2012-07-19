@@ -1442,7 +1442,7 @@ HB_FUNC( __OLEGETACTIVEOBJECT ) /* ( cOleName | cCLSID  [, cIID ] ) */
       {
          lOleError = GetActiveObject( HB_ID_REF( ClassID ), NULL, &pUnk );
 
-         if ( lOleError == S_OK )
+         if( lOleError == S_OK )
          {
             lOleError = HB_VTBL( pUnk )->QueryInterface( HB_THIS_( pUnk ) HB_ID_REF( iid ), ( void** ) ( void * ) &pDisp );
             HB_VTBL( pUnk )->Release( HB_THIS( pUnk ) );
@@ -1602,7 +1602,7 @@ HB_FUNC( WIN_OLEERRORTEXT )
 
 /*
 
-VBScript and Harbour syntax and IDispatch:Invoke() usage differences 
+VBScript and Harbour syntax and IDispatch:Invoke() usage differences
 
 VBScript syntax          dispid        DISPATCH_* flags  argcnt | Harbour syntax      :Invoke parameters
 ================================================================+=======================================
@@ -1837,7 +1837,7 @@ HB_FUNC( WIN_OLEAUTO___OPINDEX )
       VariantClear( &variant );
 
       hb_errRT_OLE( lOleErrorEnum == S_OK ? EG_BOUND : EG_ARG, 1016, ( HB_ERRCODE ) lOleError,
-                    lOleErrorEnum == S_OK ? hb_langDGetErrorDesc( fAssign ? EG_ARRASSIGN : EG_ARRACCESS ) : szDescription, 
+                    lOleErrorEnum == S_OK ? hb_langDGetErrorDesc( fAssign ? EG_ARRASSIGN : EG_ARRACCESS ) : szDescription,
                     NULL, szSource );
 
       if( szDescription )
