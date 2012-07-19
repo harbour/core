@@ -27,9 +27,9 @@ proc main()
    memvar p
    local i, t
    local l, o
-   static s, s2[1]
+   static s, s2[ 1 ]
    private p
-   p := s2[1] := s := l := ""
+   p := s2[ 1 ] := s := l := ""
    t := secondsCPU()
    for i := 1 to N_LOOP
       l += chr( i )
@@ -44,7 +44,7 @@ proc main()
    ? "STATIC +=", t, "sec."
    t := secondsCPU()
    for i := 1 to N_LOOP
-      s2[1] += chr( i )
+      s2[ 1 ] += chr( i )
    next
    t := secondsCPU() - t
    ? "ARRAY[] +=", t, "sec."

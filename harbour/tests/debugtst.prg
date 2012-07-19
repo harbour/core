@@ -241,7 +241,7 @@ STATIC FUNCTION Transfer( x1, x2, x3, x4, x5, x6, x7, x8, x9, x10 ) /* etc */
          xData := aParam[ n ]
          IF ValType( xData ) == "A"
 
-            IF ValType( xData[1] ) == "A"       // 2D array passed
+            IF ValType( xData[ 1 ] ) == "A"     // 2D array passed
                xRet := __objSetValueList( self, xData )
             ELSE                                // 1D array passed
                xRet := __objSetValueList( self, { xData } )
@@ -249,7 +249,7 @@ STATIC FUNCTION Transfer( x1, x2, x3, x4, x5, x6, x7, x8, x9, x10 ) /* etc */
 
          ELSEIF ValType( xData ) == "O"         // Object passed
             xRet := ::Transfer( xData:Transfer() )
-         ELSEIF ValType( xData ) != "U"
+         ELSEIF !( ValType( xData ) == "U" )
             QOut( "TRANSFER: Incorrect argument(", n, ") ", xData )
          ENDIF
 

@@ -24,8 +24,8 @@ PROCEDURE CursTest( nCurs )
    LOCAL aNames := { "SC_NONE", "SC_NORMAL", "SC_INSERT", "SC_SPECIAL1", "SC_SPECIAL2" }
 
    SetCursor( nCurs )
-   ++ nCurs
-   ? PadR( aNames[nCurs], 11 ), PadR( aTypes[nCurs], 11 ), Str( SetCursor(), 3 )
+   ++nCurs
+   ? PadR( aNames[ nCurs ], 11 ), PadR( aTypes[ nCurs ], 11 ), Str( SetCursor(), 3 )
    Inkey( 0 )
 
    RETURN

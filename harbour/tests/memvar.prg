@@ -201,7 +201,7 @@ PROCEDURE TEST5()
 
    QOut( "==Test for memvars passed by reference and __PUBLIC/__PRIVATE " )
    QOut( "   uninitialized PUBLIC= ", mempublic )
-   // QOut( "uninitialized PUBLIC array (first item)=", public2[1] )
+   // QOut( "uninitialized PUBLIC array (first item)=", public2[ 1 ] )
    QOut( "initialized PUBLIC= ", public3 )
    QOut( "  uninitialized PRIVATE= ", memprivate )
    QOut( "uninitialized PARAMETER= ", memparam )

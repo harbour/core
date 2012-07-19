@@ -69,7 +69,7 @@ PROCEDURE Main()
 
    CASE "a&b"
    CASE 1 + 1
-   CASE { 11111111, 22222222222 }[1]
+   CASE { 11111111, 22222222222 }[ 1 ]
    CASE 1 + 1 + 1
       ? "3"
       EXIT

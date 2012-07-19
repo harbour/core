@@ -19,7 +19,7 @@ PROCEDURE Main()
 
    ? "========================================================"
    ? "before loop: ENUM=", ENUM
-   ? "before loop: a[1]=", a[1], "a[2]=", a[2], "a[3]=", a[3]
+   ? "before loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
    FOR EACH enum IN A
       ? "start: ENUM=", ENUM
       IF ENUM = "two"
@@ -28,7 +28,7 @@ PROCEDURE Main()
       ? "end:   ENUM=", ENUM, "| index:", ENUM:__enumIndex, "| value:", ENUM:__enumValue, "| base: ", ValType( ENUM:__enumBase )
    NEXT
    ? "after loop ENUM=", ENUM
-   ? "after loop: a[1]=", a[1], "a[2]=", a[2], "a[3]=", a[3]
+   ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
    ? "-----------------"
    ?
    Inkey( 0 )
@@ -37,7 +37,7 @@ PROCEDURE Main()
    ? "========================================================"
    ? "Testing passing by reference"
    ? "before loop: ENUM=", ENUM
-   ? "after loop: a[1]=", a[1], "a[2]=", a[2], "a[3]=", a[3]
+   ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
    FOR EACH ENUM IN A
       IF Upper( ENUM ) = "TWO"
          ENUM := Upper( ENUM )
@@ -47,13 +47,13 @@ PROCEDURE Main()
       ENDIF
    NEXT
    ? "after loop ENUM=", ENUM
-   ? "after loop: a[1]=", a[1], "a[2]=", a[2], "a[3]=", a[3]
+   ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
    Inkey( 0 )
 
    ? "========================================================"
    ? "Testing BREAK"
    ? "before loop: ENUM=", ENUM
-   ? "after loop: a[1]=", a[1], "a[2]=", a[2], "a[3]=", a[3]
+   ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
    BEGIN SEQUENCE
       FOR EACH enum IN A DESCEND
          ? "loop:   ENUM=", ENUM, "| index:", ENUM:__enumIndex, "| value:", ENUM:__enumValue, "| base: ", ValType( ENUM:__enumBase )
@@ -62,7 +62,7 @@ PROCEDURE Main()
 
    RECOVER USING i
       ? "after loop ENUM=", ENUM
-      ? "after loop: a[1]=", a[1], "a[2]=", a[2], "a[3]=", a[3]
+      ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
       ? "recover variable i=", i
    END SEQUENCE
    Inkey( 0 )

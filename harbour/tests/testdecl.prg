@@ -37,9 +37,9 @@ INIT PROCEDURE Main()
 
    DECLARE Var1
    DECLARE Var2 := 2
-   DECLARE aVar[2]
-   DECLARE Var3 := "Var9", Var4, aVar5[1]
-   DECLARE Var6, Var7:=7, aVar8[8]
+   DECLARE aVar[ 2 ]
+   DECLARE Var3 := "Var9", Var4, aVar5[ 1 ]
+   DECLARE Var6, Var7:=7, aVar8[ 8 ]
    DECLARE Var9
    DECLARE &var3
    DECLARE &Var3.
@@ -54,8 +54,8 @@ INIT PROCEDURE Main()
 
    ? M->Var2
 
-   M->aVar[1] := "Array Element"
-   ? M->aVar[1]
+   M->aVar[ 1 ] := "Array Element"
+   ? M->aVar[ 1 ]
 
    MyObj:cVar := "Hello"
    ? MyObj:cVar

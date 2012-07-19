@@ -566,7 +566,7 @@ nTimeTotST := nTimeTotMT := 0
             for j:=1 to nMT
                hb_mutexNotify( mtxJobs, i )
                hb_mutexSubscribe( mtxResults,, @x )
-               cTest := x[1]
+               cTest := x[ 1 ]
             next
             nTimeST := seconds() - nTimeST
             nTimeTotST += nTimeST
@@ -578,7 +578,7 @@ nTimeTotST := nTimeTotMT := 0
             next
             for j:=1 to nMT
                hb_mutexSubscribe( mtxResults,, @x )
-               cTest := x[1]
+               cTest := x[ 1 ]
             next
             nTimeMT := seconds() - nTimeMT
             nTimeTotMT += nTimeMT
@@ -706,8 +706,8 @@ static function errorArray()
 #endif
 
 static func dsp_result( aResult, nLoopOverHead )
-   return padr( "[ " + left( aResult[1], 56 ) + " ]", 60, "." ) + ;
-          strtran( str( max( aResult[2] - nLoopOverHead, 0 ), 8, 2 ), " ", "." )
+   return padr( "[ " + left( aResult[ 1 ], 56 ) + " ]", 60, "." ) + ;
+          strtran( str( max( aResult[ 2 ] - nLoopOverHead, 0 ), 8, 2 ), " ", "." )
 
 static func dsp_scaleResult( cTest, nTimeST, nTimeMT, nMT, nLoopOverHead )
    if .f.

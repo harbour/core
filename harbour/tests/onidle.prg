@@ -22,27 +22,27 @@ PROCEDURE Main()
    @ 11, 2 SAY "Memory after TEST() and before collecting" + Str( Memory( HB_MEM_USED ) )
    hb_gcAll()
    @ 12, 2 SAY "Memory after collecting" + Str( Memory( HB_MEM_USED ) )
-   nH1 := hb_idleAdd( {|| DevPos( 0,01 ), DevOut( Time() ) } )
-   nH2 := hb_idleAdd( {|| DevPos( 0,21 ), TEST(), DevOut( Memory(HB_MEM_USED ) ) } )
-   nH3 := hb_idleAdd( {|| DevPos( 0,41 ), iif( n == 4,n := 1,n ++ ), DevOut( aSign[n] ) } )
-   nH4 := hb_idleAdd( {|| DevPos( 0,61 ), DevOut( 1000 * (Seconds() - nPrev ) ), nPrev := Seconds() } )
+   nH1 := hb_idleAdd( {|| DevPos( 0, 01 ), DevOut( Time() ) } )
+   nH2 := hb_idleAdd( {|| DevPos( 0, 21 ), TEST(), DevOut( Memory(HB_MEM_USED ) ) } )
+   nH3 := hb_idleAdd( {|| DevPos( 0, 41 ), iif( n == 4, n := 1, n++ ), DevOut( aSign[ n ] ) } )
+   nH4 := hb_idleAdd( {|| DevPos( 0, 61 ), DevOut( 1000 * ( Seconds() - nPrev ) ), nPrev := Seconds() } )
 
    ? ValType( nH1 ), nH1, ValType( nH2 ), nH2, ValType( nH3 ), nH3, ValType( nH4 ), nH4
 
    Inkey( 30 )
-   IF !Empty( nH3 )
+   IF ! Empty( nH3 )
       @ 14, 2 SAY "Delete task 3: " + hb_ValToStr( nH3 )
       hb_idleDel( nH3 )
    ENDIF
-   IF !Empty( nH2 )
+   IF ! Empty( nH2 )
       @ 15, 2 SAY "Delete task 2: " + hb_ValToStr( nH2 )
       hb_idleDel( nH2 )
    ENDIF
-   IF !Empty( nH1 )
+   IF ! Empty( nH1 )
       @ 16, 2 SAY "Delete task 1: " + hb_ValToStr( nH1 )
       hb_idleDel( nH1 )
    ENDIF
-   IF !Empty( nH4 )
+   IF ! Empty( nH4 )
       @ 17, 2 SAY "Delete task 4: " + hb_ValToStr( nH4 )
       hb_idleDel( nH4 )
    ENDIF
