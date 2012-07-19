@@ -127,7 +127,9 @@ protected:
    QRegExp commentEndExpression;
    QRegExp commentSingleLine;
    QRegExp patternQuotation;
+   QRegExp definedConstants;
 
+   QTextCharFormat constantsFormat;
    QTextCharFormat keywordFormat;
    QTextCharFormat classFormat;
    QTextCharFormat singleLineCommentFormat;

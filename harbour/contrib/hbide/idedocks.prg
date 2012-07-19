@@ -73,6 +73,52 @@
 
 /*----------------------------------------------------------------------*/
 
+#define __QEvent_WindowStateChange__              2001
+#define __QEvent_Hide__                           2002
+#define __qSystemTrayIcon_activated__             2003
+#define __qSystemTrayIcon_show__                  2004
+#define __qSystemTrayIcon_close__                 2005
+#define __qTimer_timeOut__                        2006
+#define __buttonViewTabbed_clicked__              2007
+#define __x_mdiArea_subWindowActivated__          2008
+#define __buttonViewOrganized_clicked__           2009
+#define __buttonSaveLayout_clicked__              2010
+#define __buttonViewCascaded_clicked__            2011
+#define __buttonViewTiled_clicked__               2012
+#define __buttonViewMaximized_clicked__           2013
+#define __buttonViewStackedVert_clicked__         2014
+#define __buttonViewStackedHorz_clicked__         2015
+#define __buttonViewZoomedIn_clicked__            2016
+#define __buttonViewZoomedOut_clicked__           2017
+#define __mdiArea_subWindowActivated__            2018
+#define __editWidget_dragEnterEvent__             2019
+#define __editWidget_dragMoveEvent__              2020
+#define __editWidget_dropEvent__                  2021
+#define __mdiSubWindow_windowStateChanged__       2022
+#define __projectTree_dragEnterEvent__            2023
+#define __projectTree_dropEvent__                 2024
+#define __dockSkltnsTree_visibilityChanged__      2025
+#define __oFuncDock_visibilityChanged__           2026
+#define __qHelpBrw_contextMenuRequested__         2027
+#define __dockHelpDock_visibilityChanged__        2028
+#define __outputConsole_contextMenuRequested__    2029
+#define __dockThemes_visibilityChanged__          2030
+#define __dockProperties_visibilityChanged__      2031
+#define __dockFindInFiles_visibilityChanged__     2032
+#define __dockDocViewer_visibilityChanged__       2033
+#define __dockDocWriter_visibilityChanged__       2034
+#define __docFunctions_visibilityChanged__        2035
+#define __docEnvironments_visibilityChanged__     2036
+#define __docSkeletons_visibilityChanged__        2037
+#define __dockSourceThumbnail_visibilityChanged__ 2038
+#define __dockQScintilla_visibilityChanged__      2039
+#define __dockReportsManager_visibilityChanged__  2040
+#define __dockFormat_visibilityChanged__          2041
+#define __dockCuiEd_visibilityChanged__           2042
+#define __dockUISrc_visibilityChanged__           2043
+
+/*----------------------------------------------------------------------*/
+
 CLASS IdeDocks INHERIT IdeObject
 
    DATA   nPass                                   INIT   0
@@ -102,7 +148,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
-   METHOD execEvent( cEvent, p, p1 )
+   METHOD execEvent( nEvent, p, p1 )
    METHOD setView( cView )
    METHOD buildToolBarPanels()
    METHOD buildHelpWidget()
@@ -133,7 +179,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD dispEnvironment( cEnviron )
    //METHOD addPanelButton( cPanel )
    METHOD disblePanelButton( qTBtn )
-   METHOD getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags, cEventVisibility )
+   METHOD getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags )
    METHOD getPanelIcon( cView )
    METHOD animateComponents( nMode )
    METHOD buildSourceThumbnail()
@@ -473,8 +519,8 @@ METHOD IdeDocks:buildDialog()
       ENDIF
    ENDIF
 
-   ::oDlg:oWidget:connect( QEvent_WindowStateChange, {|e| ::execEvent( "QEvent_WindowStateChange", e ) } )
-   ::oDlg:oWidget:connect( QEvent_Hide             , {|e| ::execEvent( "QEvent_Hide"             , e ) } )
+   ::oDlg:oWidget:connect( QEvent_WindowStateChange, {|e| ::execEvent( __QEvent_WindowStateChange__, e ) } )
+   ::oDlg:oWidget:connect( QEvent_Hide             , {|e| ::execEvent( __QEvent_Hide__             , e ) } )
 
    ::buildSystemTray()
 
@@ -542,15 +588,15 @@ METHOD IdeDocks:buildSystemTray()
       ::oIde:oSys := QSystemTrayIcon( ::oDlg:oWidget )
       IF ( ::lSystemTrayAvailable := ::oSys:isSystemTrayAvailable() ) .AND. ::lMinimizeInSystemTray
          ::oSys:setIcon( QIcon( hbide_image( "hbide" ) ) )
-         ::oSys:connect( "activated(QSystemTrayIcon::ActivationReason)", {|p| ::execEvent( "qSystemTrayIcon_activated", p ) } )
+         ::oSys:connect( "activated(QSystemTrayIcon::ActivationReason)", {|p| ::execEvent( __qSystemTrayIcon_activated__, p ) } )
 
          ::oIde:oSysMenu := QMenu()
          ::qAct1 := ::oSysMenu:addAction( QIcon( hbide_image( "fullscreen" ) ), "&Show" )
          ::oSysMenu:addSeparator()
          ::qAct2 := ::oSysMenu:addAction( QIcon( hbide_image( "exit" ) ), "&Exit" )
 
-         ::qAct1:connect( "triggered(bool)", {|| ::execEvent( "qSystemTrayIcon_show"  ) } )
-         ::qAct2:connect( "triggered(bool)", {|| ::execEvent( "qSystemTrayIcon_close" ) } )
+         ::qAct1:connect( "triggered(bool)", {|| ::execEvent( __qSystemTrayIcon_show__  ) } )
+         ::qAct2:connect( "triggered(bool)", {|| ::execEvent( __qSystemTrayIcon_close__ ) } )
 
          ::oSys:setContextMenu( ::oSysMenu )
          ::oSys:hide()
@@ -562,42 +608,42 @@ METHOD IdeDocks:buildSystemTray()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeDocks:execEvent( cEvent, p, p1 )
+METHOD IdeDocks:execEvent( nEvent, p, p1 )
    LOCAL qEvent, qMime, qList, qUrl, i, n, oEdit, aMenu
 
    IF ::lQuitting
       RETURN Self
    ENDIF
 
-   SWITCH cEvent
-   CASE "dockUISrc_visibilityChanged"
+   SWITCH nEvent
+   CASE __dockUISrc_visibilityChanged__
       IF p; ::oUiS:show(); ENDIF
       IF ! p .AND. ! p1:isVisible()
          p1:raise()
       ENDIF
       EXIT
 
-   CASE "dockCuiEd_visibilityChanged"
+   CASE __dockCuiEd_visibilityChanged__
       IF p; ::oCUI:show(); ENDIF
       IF ! p .AND. ! p1:isVisible()
          p1:raise()
       ENDIF
       EXIT
 
-   CASE "dockFormat_visibilityChanged"
+   CASE __dockFormat_visibilityChanged__
       IF p; ::oFmt:show(); ENDIF
       IF ! p .AND. ! p1:isVisible()
          p1:raise()
       ENDIF
       EXIT
-   CASE "dockReportsManager_visibilityChanged"
+   CASE __dockReportsManager_visibilityChanged__
       IF !empty( p1 )
          IF ! p .AND. ! p1:isVisible()
             p1:raise()
          ENDIF
       ENDIF
       EXIT
-   CASE "dockQScintilla_visibilityChanged"
+   CASE __dockQScintilla_visibilityChanged__
       IF p; ::oBM:show() ; ENDIF
       IF !empty( p1 )
          IF ! p .AND. ! p1:isVisible()
@@ -605,7 +651,7 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
          ENDIF
       ENDIF
       EXIT
-   CASE "dockSourceThumbnail_visibilityChanged"
+   CASE __dockSourceThumbnail_visibilityChanged__
       IF p; ::oEM:showThumbnail(); ENDIF
       IF !empty( p1 )
          IF ! p .AND. ! p1:isVisible()
@@ -613,7 +659,7 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
          ENDIF
       ENDIF
       EXIT
-   CASE "dockSkltnsTree_visibilityChanged"
+   CASE __dockSkltnsTree_visibilityChanged__
       IF p; ::oSK:showTree(); ENDIF
       IF !empty( p1 )
          IF ! p .AND. ! p1:isVisible()
@@ -621,14 +667,14 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
          ENDIF
       ENDIF
       EXIT
-   CASE "dockHelpDock_visibilityChanged"
+   CASE __dockHelpDock_visibilityChanged__
       IF !empty( p1 )
          IF ! p .AND. ! p1:isVisible()
             p1:raise()
          ENDIF
       ENDIF
       EXIT
-   CASE "dockDocViewer_visibilityChanged"
+   CASE __dockDocViewer_visibilityChanged__
       IF p; ::oHL:show(); ENDIF
       IF !empty( p1 )
          IF ! p .AND. ! p1:isVisible()
@@ -636,7 +682,7 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
          ENDIF
       ENDIF
       EXIT
-   CASE "dockDocWriter_visibilityChanged"
+   CASE __dockDocWriter_visibilityChanged__
       IF p; ::oDW:show(); ENDIF
       IF !empty( p1 )
          IF ! p .AND. ! p1:isVisible()
@@ -644,14 +690,14 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
          ENDIF
       ENDIF
       EXIT
-   CASE "oFuncDock_visibilityChanged"
+   CASE __oFuncDock_visibilityChanged__
       IF !empty( p1 )
          IF ! p .AND. ! p1:isVisible()
             p1:raise()
          ENDIF
       ENDIF
       EXIT
-   CASE "docFunctions_visibilityChanged"
+   CASE __docFunctions_visibilityChanged__
       IF p; ::oFN:show(); ENDIF
       IF !empty( p1 )
          IF ! p .AND. ! p1:isVisible()
@@ -659,7 +705,7 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
          ENDIF
       ENDIF
       EXIT
-   CASE "dockProperties_visibilityChanged"
+   CASE __dockProperties_visibilityChanged__
       IF p; ::oPM:fetchProperties(); ENDIF
       IF !empty( p1 )
          IF ! p .AND. ! p1:isVisible()
@@ -667,7 +713,7 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
          ENDIF
       ENDIF
       EXIT
-   CASE "docEnvironments_visibilityChanged"
+   CASE __docEnvironments_visibilityChanged__
       IF p; ::oEV:show(); ENDIF
       IF !empty( p1 )
          IF ! p .AND. ! p1:isVisible()
@@ -675,7 +721,7 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
          ENDIF
       ENDIF
       EXIT
-   CASE "docSkeletons_visibilityChanged"
+   CASE __docSkeletons_visibilityChanged__
       IF p; ::oSK:show(); ENDIF
       IF !empty( p1 )
          IF ! p .AND. ! p1:isVisible()
@@ -683,7 +729,7 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
          ENDIF
       ENDIF
       EXIT
-   CASE "dockThemes_visibilityChanged"
+   CASE __dockThemes_visibilityChanged__
       IF p; ::oTH:show(); ENDIF
       IF !empty( p1 )
          IF ! p .AND. ! p1:isVisible()
@@ -691,7 +737,7 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
          ENDIF
       ENDIF
       EXIT
-   CASE "dockFindInFiles_visibilityChanged"
+   CASE __dockFindInFiles_visibilityChanged__
       IF p; ::oFF:show(); ENDIF
       IF !empty( p1 )
          IF ! p .AND. ! p1:isVisible()
@@ -700,10 +746,10 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
    /* Miscellaneous */
-   CASE "qHelpBrw_contextMenuRequested"
+   CASE __qHelpBrw_contextMenuRequested__
       hbide_popupBrwContextMenu( ::qHelpBrw, p )
       EXIT
-   CASE "outputConsole_contextMenuRequested"
+   CASE __outputConsole_contextMenuRequested__
       aMenu := {}
       aadd( aMenu, { "Clear"     , {|| ::oOutputResult:oWidget:clear()     } } )
       aadd( aMenu, { "" } )
@@ -712,11 +758,11 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
       hbide_execPopup( aMenu, p, ::oOutputResult:oWidget )
       EXIT
 
-   CASE "QEvent_WindowStateChange"
+   CASE QEvent_WindowStateChange
       ::nPrevWindowState := p:oldState()
       EXIT
 
-   CASE "QEvent_Hide"
+   CASE QEvent_Hide
       IF ::lSystemTrayAvailable .AND. ::lMinimizeInSystemTray
          qEvent := p
          IF ! ::lChanging
@@ -726,7 +772,7 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
                   ::qTimer := QTimer()
                   ::qTimer:setSingleShot( .t. )
                   ::qTimer:setInterval( 250 )
-                  ::qTimer:connect( "timeout()", {|| ::execEvent( "qTimer_timeOut" ) } )
+                  ::qTimer:connect( "timeout()", {|| ::execEvent( __qTimer_timeOut__ ) } )
                ENDIF
                ::qTimer:start()
                qEvent:ignore()
@@ -736,21 +782,21 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
-   CASE "qTimer_timeOut"
+   CASE __qTimer_timeOut__
       ::oDlg:hide()
       ::oSys:setToolTip( ::oDlg:oWidget:windowTitle() )
       ::oSys:show()
       EXIT
 
-   CASE "qSystemTrayIcon_close"
+   CASE __qSystemTrayIcon_close__
       PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
       EXIT
 
-   CASE "qSystemTrayIcon_show"
+   CASE __qSystemTrayIcon_show__
       ::showDlgBySystemTrayIconCommand()
       EXIT
 
-   CASE "qSystemTrayIcon_activated"
+   CASE __qSystemTrayIcon_activated__
       IF     p == QSystemTrayIcon_Trigger
          ::showDlgBySystemTrayIconCommand()
       ELSEIF p == QSystemTrayIcon_DoubleClick
@@ -759,13 +805,12 @@ METHOD IdeDocks:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
-   CASE "editWidget_dragMoveEvent"
-   CASE "editWidget_dragEnterEvent"
-HB_TRACE( HB_TR_DEBUG, "editWidget_dragEnterEvent", 0 )
+   CASE __editWidget_dragMoveEvent__
+   CASE __editWidget_dragEnterEvent__
       p:acceptProposedAction()
       EXIT
 
-   CASE "editWidget_dropEvent"
+   CASE __editWidget_dropEvent__
       qMime := p:mimeData()
       IF qMime:hasUrls()
          qList := qMime:urls()
@@ -782,13 +827,11 @@ HB_TRACE( HB_TR_DEBUG, "editWidget_dragEnterEvent", 0 )
       qMime := NIL
       EXIT
 
-   CASE "projectTree_dragEnterEvent"
-HB_TRACE( HB_TR_DEBUG, "projectTree_dragEnterEvent" )
+   CASE __projectTree_dragEnterEvent__
       p:acceptProposedAction()
       EXIT
 
-   CASE "projectTree_dropEvent"
-HB_TRACE( HB_TR_DEBUG, "projectTree_dropEvent" )
+   CASE __projectTree_dropEvent__
       qMime := p:mimeData()
       IF qMime:hasUrls()
          qList := qMime:urls()
@@ -801,7 +844,7 @@ HB_TRACE( HB_TR_DEBUG, "projectTree_dropEvent" )
       ENDIF
       EXIT
 
-   CASE "x_mdiArea_subWindowActivated"
+   CASE __x_mdiArea_subWindowActivated__
       IF ! empty( ::oIde:aMdies )
          IF ( n := ascan( ::oIde:aMdies, {|e| hbqt_IsEqual( e, p ) } ) )  > 0
 
@@ -823,47 +866,47 @@ HB_TRACE( HB_TR_DEBUG, "projectTree_dropEvent" )
       EXIT
 
    /* Left-toolbar actions */
-   CASE "buttonViewTabbed_clicked"
+   CASE __buttonViewTabbed_clicked__
       ::oStackedWidget:setViewMode( iif( ::oStackedWidget:viewMode() == QMdiArea_TabbedView, QMdiArea_SubWindowView, QMdiArea_TabbedView ) )
       EXIT
-   CASE "buttonViewOrganized_clicked"
+   CASE __buttonViewOrganized_clicked__
       ::oINI:nEditsViewStyle  := HBPMDI_STYLE_ORGANIZED
       ::restState()
       EXIT
-   CASE "buttonSaveLayout_clicked"
+   CASE __buttonSaveLayout_clicked__
       IF ::oINI:nEditsViewStyle == HBPMDI_STYLE_ORGANIZED
          ::savePanelsGeometry()
       ENDIF
       EXIT
-   CASE "buttonViewTiled_clicked"
+   CASE __buttonViewTiled_clicked__
       ::oStackedWidget:tileSubWindows()
       ::oINI:nEditsViewStyle  := HBPMDI_STYLE_TILED
       EXIT
-   CASE "buttonViewCascaded_clicked"
+   CASE __buttonViewCascaded_clicked__
       ::oStackedWidget:cascadeSubWindows()
       ::oINI:nEditsViewStyle  := HBPMDI_STYLE_CASCADED
       EXIT
-   CASE "buttonViewMaximized_clicked"
+   CASE __buttonViewMaximized_clicked__
       ::oINI:nEditsViewStyle  := HBPMDI_STYLE_MAXIMIZED
       ::stackMaximized()
       EXIT
-   CASE "buttonViewStackedVert_clicked"
+   CASE __buttonViewStackedVert_clicked__
       ::oINI:nEditsViewStyle  := HBPMDI_STYLE_TILEDVERT
       ::stackVertically()
       EXIT
-   CASE "buttonViewStackedHorz_clicked"
+   CASE __buttonViewStackedHorz_clicked__
       ::oINI:nEditsViewStyle  := HBPMDI_STYLE_TILEDHORZ
       ::stackHorizontally()
       EXIT
-   CASE "buttonViewZoomedIn_clicked"
+   CASE __buttonViewZoomedIn_clicked__
       ::stackZoom( +1 )
       EXIT
-   CASE "buttonViewZoomedOut_clicked"
+   CASE __buttonViewZoomedOut_clicked__
       ::stackZoom( -1 )
       EXIT
    /* Ends: MDI actions */
 
-   CASE "mdiSubWindow_windowStateChanged"
+   CASE __mdiSubWindow_windowStateChanged__
       IF ! empty( ::oIde:aMdies )
          IF ( n := ascan( ::oIde:aMdies, {|o| o == p } ) )  > 0
             ::aViewsInfo[ n, 3 ] := p1[ 1 ]
@@ -1029,7 +1072,7 @@ METHOD IdeDocks:showDlgBySystemTrayIconCommand()()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeDocks:getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags, cEventVisibility )
+METHOD IdeDocks:getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags )
    LOCAL oDock, nBasic
 
    DEFAULT nFlags TO 0
@@ -1046,10 +1089,6 @@ METHOD IdeDocks:getADockWidget( nAreas, cObjectName, cWindowTitle, nFlags, cEven
    oDock:oWidget:setFocusPolicy( Qt_NoFocus )
    oDock:oWidget:setStyleSheet( getStyleSheet( "QDockWidget", ::nAnimantionMode ) )
    oDock:hide()
-
-   IF !empty( cEventVisibility )
-      oDock:oWidget:connect( cEventVisibility, {|p| ::execEvent( cEventVisibility, p, oDock:oWidget ) } )
-   ENDIF
 
    RETURN oDock
 
@@ -1146,18 +1185,18 @@ METHOD IdeDocks:buildMdiToolbarLeft()
    ::qMdiToolbarL:setObjectName( "ToolbarEditingAreaLeft" )
    ::qMdiToolbarL:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
 
-   ::qMdiToolbarL:addToolButton( "ViewTabbed"     , "Toggle tabbed view"         , hbide_image( "view_tabbed"      ), {|| ::execEvent( "buttonViewTabbed_clicked"      ) }, .f. )
+   ::qMdiToolbarL:addToolButton( "ViewTabbed"     , "Toggle tabbed view"         , hbide_image( "view_tabbed"      ), {|| ::execEvent( __buttonViewTabbed_clicked__      ) }, .f. )
    ::qMdiToolbarL:addSeparator()
-   ::qMdiToolbarL:addToolButton( "ViewArranged"   , "View as arranged"           , hbide_image( "view_organized"   ), {|| ::execEvent( "buttonViewOrganized_clicked"   ) }, .f. )
-   ::qMdiToolbarL:addToolButton( "SaveLayout"     , "Save layout"                , hbide_image( "save3"            ), {|| ::execEvent( "buttonSaveLayout_clicked"      ) }, .f. )
+   ::qMdiToolbarL:addToolButton( "ViewArranged"   , "View as arranged"           , hbide_image( "view_organized"   ), {|| ::execEvent( __buttonViewOrganized_clicked__   ) }, .f. )
+   ::qMdiToolbarL:addToolButton( "SaveLayout"     , "Save layout"                , hbide_image( "save3"            ), {|| ::execEvent( __buttonSaveLayout_clicked__      ) }, .f. )
    ::qMdiToolbarL:addSeparator()
-   ::qMdiToolbarL:addToolButton( "ViewCascaded"   , "View as cascaded"           , hbide_image( "view_cascaded"    ), {|| ::execEvent( "buttonViewCascaded_clicked"    ) }, .f. )
-   ::qMdiToolbarL:addToolButton( "viewTiled"      , "View as tiled"              , hbide_image( "view_tiled"       ), {|| ::execEvent( "buttonViewTiled_clicked"       ) }, .f. )
-   ::qMdiToolbarL:addToolButton( "ViewMaximized"  , "View Maximized"             , hbide_image( "fullscreen"       ), {|| ::execEvent( "buttonViewMaximized_clicked"   ) }, .f. )
-   ::qMdiToolbarL:addToolButton( "ViewTiledVert"  , "View Vertically Tiled"      , hbide_image( "view_vertstacked" ), {|| ::execEvent( "buttonViewStackedVert_clicked" ) }, .f. )
-   ::qMdiToolbarL:addToolButton( "ViewTiledHorz"  , "View Horizontally Tiled"    , hbide_image( "view_horzstacked" ), {|| ::execEvent( "buttonViewStackedHorz_clicked" ) }, .f. )
-   ::qMdiToolbarL:addToolButton( "ViewZoomedIn"   , "View Zoom In"               , hbide_image( "view_zoomin"      ), {|| ::execEvent( "buttonViewZoomedIn_clicked"    ) }, .f. )
-   ::qMdiToolbarL:addToolButton( "ViewZoomedOut"  , "View Zoom Out"              , hbide_image( "view_zoomout"     ), {|| ::execEvent( "buttonViewZoomedOut_clicked"   ) }, .f. )
+   ::qMdiToolbarL:addToolButton( "ViewCascaded"   , "View as cascaded"           , hbide_image( "view_cascaded"    ), {|| ::execEvent( __buttonViewCascaded_clicked__    ) }, .f. )
+   ::qMdiToolbarL:addToolButton( "viewTiled"      , "View as tiled"              , hbide_image( "view_tiled"       ), {|| ::execEvent( __buttonViewTiled_clicked__       ) }, .f. )
+   ::qMdiToolbarL:addToolButton( "ViewMaximized"  , "View Maximized"             , hbide_image( "fullscreen"       ), {|| ::execEvent( __buttonViewMaximized_clicked__   ) }, .f. )
+   ::qMdiToolbarL:addToolButton( "ViewTiledVert"  , "View Vertically Tiled"      , hbide_image( "view_vertstacked" ), {|| ::execEvent( __buttonViewStackedVert_clicked__ ) }, .f. )
+   ::qMdiToolbarL:addToolButton( "ViewTiledHorz"  , "View Horizontally Tiled"    , hbide_image( "view_horzstacked" ), {|| ::execEvent( __buttonViewStackedHorz_clicked__ ) }, .f. )
+   ::qMdiToolbarL:addToolButton( "ViewZoomedIn"   , "View Zoom In"               , hbide_image( "view_zoomin"      ), {|| ::execEvent( __buttonViewZoomedIn_clicked__    ) }, .f. )
+   ::qMdiToolbarL:addToolButton( "ViewZoomedOut"  , "View Zoom Out"              , hbide_image( "view_zoomout"     ), {|| ::execEvent( __buttonViewZoomedOut_clicked__   ) }, .f. )
    ::qMdiToolbarL:addSeparator()
    ::qMdiToolbarL:addToolButton( "ToggleLineNos"  , "Toggle Line Numbers"        , hbide_image( "togglelinenumber" ), {|| ::oEM:toggleLineNumbers()                      }, .f. )
    ::qMdiToolbarL:addToolButton( "ToggleHorzRuler", "Toggle Horizontal Ruler"    , hbide_image( "horzruler"        ), {|| ::oEM:toggleHorzRuler()                        }, .f. )
@@ -1265,7 +1304,7 @@ METHOD IdeDocks:buildStackedWidget()
 
    ::oDa:addChild( ::oStackedWidget )
 
-   ::oStackedWidget:oWidget:connect( "subWindowActivated(QMdiSubWindow*)", {|p| ::execEvent( "mdiArea_subWindowActivated", p ) } )
+   ::oStackedWidget:oWidget:connect( "subWindowActivated(QMdiSubWindow*)", {|p| ::execEvent( __mdiArea_subWindowActivated__, p ) } )
 
    RETURN Self
 
@@ -1300,9 +1339,9 @@ METHOD IdeDocks:buildViewWidget( cView )
    qDrop := oFrame:oTabWidget:oWidget
 
    qDrop:setAcceptDrops( .t. )
-   qDrop:connect( QEvent_DragEnter, {|p| ::execEvent( "editWidget_dragEnterEvent", p ) } )
-   qDrop:connect( QEvent_DragMove , {|p| ::execEvent( "editWidget_dragMoveEvent" , p ) } )
-   qDrop:connect( QEvent_Drop     , {|p| ::execEvent( "editWidget_dropEvent"     , p ) } )
+   qDrop:connect( QEvent_DragEnter, {|p| ::execEvent( __editWidget_dragEnterEvent__, p ) } )
+   qDrop:connect( QEvent_DragMove , {|p| ::execEvent( __editWidget_dragMoveEvent__ , p ) } )
+   qDrop:connect( QEvent_Drop     , {|p| ::execEvent( __editWidget_dropEvent__     , p ) } )
 
    oFrame:oTabWidget:oWidget:setUsesScrollButtons( .t. )
    oFrame:oTabWidget:oWidget:setMovable( .t. )
@@ -1324,7 +1363,7 @@ METHOD IdeDocks:buildViewWidget( cView )
 
    ::oStackedWidget:oWidget:addSubWindow( qMdi )
    qMdi:connect( "windowStateChanged(Qt::WindowStates,Qt::WindowStates)", ;
-                              {|p,p1| ::execEvent( "mdiSubWindow_windowStateChanged", qMdi, { p, p1 } ) } )
+                              {|p,p1| ::execEvent( __mdiSubWindow_windowStateChanged__, qMdi, { p, p1 } ) } )
    ::setView( cView )
 
    RETURN oFrame
@@ -1483,8 +1522,8 @@ METHOD IdeDocks:buildProjectTree()
    qDrop := ::oDockPT:oWidget // ::oProjTree:oWidget
 
    qDrop:setAcceptDrops( .t. )
-   qDrop:connect( QEvent_DragEnter, {|p| ::execEvent( "projectTree_dragEnterEvent", p ) } )
-   qDrop:connect( QEvent_Drop     , {|p| ::execEvent( "projectTree_dropEvent"     , p ) } )
+   qDrop:connect( QEvent_DragEnter, {|p| ::execEvent( __projectTree_dragEnterEvent__, p ) } )
+   qDrop:connect( QEvent_Drop     , {|p| ::execEvent( __projectTree_dropEvent__     , p ) } )
 
    RETURN Self
 
@@ -1529,7 +1568,7 @@ METHOD IdeDocks:buildSkeletonsTree()
 
    ::oIde:oSkltnsTreeDock := ::getADockWidget( nAreas, "dockSkltnsTree", "Skeletons", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_LeftDockWidgetArea, ::oSkltnsTreeDock:oWidget, Qt_Vertical )
-   ::oSkltnsTreeDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "dockSkltnsTree_visibilityChanged", p, ::oSkltnsTreeDock:oWidget ) } )
+   ::oSkltnsTreeDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __dockSkltnsTree_visibilityChanged__, p, ::oSkltnsTreeDock:oWidget ) } )
 
    RETURN Self
 
@@ -1540,7 +1579,7 @@ METHOD IdeDocks:buildFuncList()
 
    ::oIde:oFuncDock := ::getADockWidget( nAreas, "dockFuncList", "Functions List", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oFuncDock:oWidget, Qt_Vertical )
-   ::oFuncDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "oFuncDock_visibilityChanged", p, ::oFuncDock:oWidget ) } )
+   ::oFuncDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __oFuncDock_visibilityChanged__, p, ::oFuncDock:oWidget ) } )
 
    ::oIde:oFuncList := XbpListBox():new( ::oFuncDock ):create( , , { 0,0 }, { 100,400 }, , .t. )
    ::oFuncList:oWidget:setEditTriggers( QAbstractItemView_NoEditTriggers )
@@ -1576,10 +1615,9 @@ METHOD IdeDocks:buildHelpWidget()
 
    ::oHelpDock:oWidget:setWidget( ::oIde:qHelpBrw )
 
-   //::oHelpDock:connect( ::qHelpBrw, "customContextMenuRequested(QPoint)", {|p| ::execEvent( "qHelpBrw_contextMenuRequested", p ) } )
-   ::qHelpBrw:connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( "qHelpBrw_contextMenuRequested", p ) } )
+   ::qHelpBrw:connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( __qHelpBrw_contextMenuRequested__, p ) } )
 
-   ::oHelpDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "dockHelpDock_visibilityChanged", p, ::oHelpDock:oWidget ) } )
+   ::oHelpDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __dockHelpDock_visibilityChanged__, p, ::oHelpDock:oWidget ) } )
 
    RETURN Self
 
@@ -1622,7 +1660,7 @@ METHOD IdeDocks:buildOutputResults()
 
    ::oDockB2:oWidget:setWidget( ::oOutputResult:oWidget )
 
-   ::oOutputResult:oWidget:connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( "outputConsole_contextMenuRequested", p ) } )
+   ::oOutputResult:oWidget:connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( __outputConsole_contextMenuRequested__, p ) } )
    ::oOutputResult:oWidget:connect( "copyAvailable(bool)", {|l| ::outputDoubleClicked( l ) } )
 
    RETURN Self
@@ -1855,7 +1893,7 @@ METHOD IdeDocks:buildThemesDock()
 
    ::oIde:oThemesDock := ::getADockWidget( nAreas, "dockThemes", "Theme Manager", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oThemesDock:oWidget, Qt_Horizontal )
-   ::oThemesDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "dockThemes_visibilityChanged", p, ::oThemesDock:oWidget ) } )
+   ::oThemesDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __dockThemes_visibilityChanged__, p, ::oThemesDock:oWidget ) } )
 
    RETURN Self
 
@@ -1866,7 +1904,7 @@ METHOD IdeDocks:buildPropertiesDock()
 
    ::oIde:oPropertiesDock := ::getADockWidget( nAreas, "dockProperties", "Project Properties", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oPropertiesDock:oWidget, Qt_Horizontal )
-   ::oPropertiesDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "dockProperties_visibilityChanged", p, ::oPropertiesDock:oWidget ) } )
+   ::oPropertiesDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __dockProperties_visibilityChanged__, p, ::oPropertiesDock:oWidget ) } )
 
    RETURN Self
 
@@ -1877,7 +1915,7 @@ METHOD IdeDocks:buildFindInFiles()
 
    ::oIde:oFindDock := ::getADockWidget( nAreas, "dockFindInFiles", "Find in Files", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oFindDock:oWidget, Qt_Horizontal )
-   ::oFindDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "dockFindInFiles_visibilityChanged", p, ::oFindDock:oWidget ) } )
+   ::oFindDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __dockFindInFiles_visibilityChanged__, p, ::oFindDock:oWidget ) } )
 
    RETURN Self
 
@@ -1888,7 +1926,7 @@ METHOD IdeDocks:buildDocViewer()
 
    ::oIde:oDocViewDock := ::getADockWidget( nAreas, "dockDocViewer", "Harbour Documentation", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oDocViewDock:oWidget, Qt_Horizontal )
-   ::oDocViewDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "dockDocViewer_visibilityChanged", p, ::oDocViewDock:oWidget ) } )
+   ::oDocViewDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __dockDocViewer_visibilityChanged__, p, ::oDocViewDock:oWidget ) } )
 
    RETURN Self
 
@@ -1899,7 +1937,7 @@ METHOD IdeDocks:buildDocWriter()
 
    ::oIde:oDocWriteDock := ::getADockWidget( nAreas, "dockDocWriter", "Documentation Writer", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oDocWriteDock:oWidget, Qt_Horizontal )
-   ::oDocWriteDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "dockDocWriter_visibilityChanged", p, ::oDocWriteDock:oWidget ) } )
+   ::oDocWriteDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __dockDocWriter_visibilityChanged__, p, ::oDocWriteDock:oWidget ) } )
 
    RETURN Self
 
@@ -1910,7 +1948,7 @@ METHOD IdeDocks:buildFunctionsDock()
 
    ::oIde:oFunctionsDock := ::getADockWidget( nAreas, "dockFunctions", "Projects Functions Lookup", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oFunctionsDock:oWidget, Qt_Horizontal )
-   ::oFunctionsDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "docFunctions_visibilityChanged", p, ::oFunctionsDock:oWidget ) } )
+   ::oFunctionsDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __docFunctions_visibilityChanged__, p, ::oFunctionsDock:oWidget ) } )
 
    RETURN Self
 
@@ -1921,7 +1959,7 @@ METHOD IdeDocks:buildEnvironDock()
 
    ::oIde:oEnvironDock := ::getADockWidget( nAreas, "dockEnvironments", "Compiler Environments", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oEnvironDock:oWidget, Qt_Horizontal )
-   ::oEnvironDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "docEnvironments_visibilityChanged", p, ::oEnvironDock:oWidget ) } )
+   ::oEnvironDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __docEnvironments_visibilityChanged__, p, ::oEnvironDock:oWidget ) } )
 
    RETURN Self
 
@@ -1932,7 +1970,7 @@ METHOD IdeDocks:buildSkeletonWidget()
 
    ::oIde:oSkeltnDock := ::getADockWidget( nAreas, "dockSkeleton", "Code Skeletons", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oSkeltnDock:oWidget, Qt_Horizontal )
-   ::oSkeltnDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "docSkeletons_visibilityChanged", p, ::oSkeltnDock:oWidget ) } )
+   ::oSkeltnDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __docSkeletons_visibilityChanged__, p, ::oSkeltnDock:oWidget ) } )
 
    RETURN Self
 
@@ -1944,7 +1982,7 @@ METHOD IdeDocks:buildSourceThumbnail()
 
    oDock := ::getADockWidget( nAreas, "dockSourceThumbnail", "Source Thumbnail", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, oDock:oWidget, Qt_Horizontal )
-   oDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "dockSourceThumbnail_visibilityChanged", p, oDock:oWidget ) } )
+   oDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __dockSourceThumbnail_visibilityChanged__, p, oDock:oWidget ) } )
    ::oIde:oSourceThumbnailDock := oDock
 
    RETURN Self
@@ -1956,7 +1994,7 @@ METHOD IdeDocks:buildQScintilla()
 
    ::oIde:oQScintillaDock := ::getADockWidget( nAreas, "dockQScintilla", "ideDBU", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oQScintillaDock:oWidget, Qt_Horizontal )
-   ::oQScintillaDock:oWidget:connect( "visibilityChanged(bool)"  , {|p| ::execEvent( "dockQScintilla_visibilityChanged", p, ::oQScintillaDock:oWidget ) } )
+   ::oQScintillaDock:oWidget:connect( "visibilityChanged(bool)"  , {|p| ::execEvent( __dockQScintilla_visibilityChanged__, p, ::oQScintillaDock:oWidget ) } )
 
    RETURN Self
 
@@ -1967,7 +2005,7 @@ METHOD IdeDocks:buildReportsDesignerWidget()
 
    ::oIde:oReportsManagerDock := ::getADockWidget( nAreas, "dockReportDesigner", "HBReportsManager", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oReportsManagerDock:oWidget, Qt_Horizontal )
-   ::oReportsManagerDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "dockReportsManager_visibilityChanged", p, ::oReportsManagerDock:oWidget ) } )
+   ::oReportsManagerDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __dockReportsManager_visibilityChanged__, p, ::oReportsManagerDock:oWidget ) } )
 
    RETURN Self
 
@@ -1978,7 +2016,7 @@ METHOD IdeDocks:buildFormatWidget()
 
    ::oIde:oFormatDock := ::getADockWidget( nAreas, "dockFormat", "Format Source", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oFormatDock:oWidget, Qt_Horizontal )
-   ::oFormatDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "dockFormat_visibilityChanged", p, ::oFormatDock:oWidget ) } )
+   ::oFormatDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __dockFormat_visibilityChanged__, p, ::oFormatDock:oWidget ) } )
 
    RETURN Self
 
@@ -1989,7 +2027,7 @@ METHOD IdeDocks:buildCuiEdWidget()
 
    ::oIde:oCuiEdDock := ::getADockWidget( nAreas, "dockCuiEd", "CUI Screen Designer", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oCuiEdDock:oWidget, Qt_Horizontal )
-   ::oCuiEdDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "dockCuiEd_visibilityChanged", p, ::oCuiEdDock:oWidget ) } )
+   ::oCuiEdDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __dockCuiEd_visibilityChanged__, p, ::oCuiEdDock:oWidget ) } )
 
    RETURN Self
 
@@ -2000,7 +2038,7 @@ METHOD IdeDocks:buildUISrcDock()
 
    ::oIde:oUISrcDock := ::getADockWidget( nAreas, "dockUISrc", "UI Source Manager", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oUISrcDock:oWidget, Qt_Horizontal )
-   ::oUISrcDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( "dockUISrc_visibilityChanged", p, ::oUISrcDock:oWidget ) } )
+   ::oUISrcDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __dockUISrc_visibilityChanged__, p, ::oUISrcDock:oWidget ) } )
 
    RETURN Self
 

@@ -72,21 +72,21 @@
 
 /*----------------------------------------------------------------------*/
 
-#define __customContextMenuRequested                1
-#define __textChanged                               2
-#define __copyAvailable                             3
-#define __modificationChanged                       4
-#define __redoAvailable                             5
-#define __selectionChanged                          6
-#define __undoAvailable                             7
-#define __updateRequest                             8
-#define __cursorPositionChanged                     9
+#define __customContextMenuRequested__            1
+#define __textChanged__                           2
+#define __copyAvailable__                         3
+#define __modificationChanged__                   4
+#define __redoAvailable__                         5
+#define __selectionChanged__                      6
+#define __undoAvailable__                         7
+#define __updateRequest__                         8
+#define __cursorPositionChanged__                 9
 
-#define __timerTimeout                              23
+#define __timerTimeout__                          23
 
-#define __selectionMode_stream                      1
-#define __selectionMode_column                      2
-#define __selectionMode_line                        3
+#define __selectionMode_stream__                  1
+#define __selectionMode_column__                  2
+#define __selectionMode_line__                    3
 
 /*----------------------------------------------------------------------*/
 
@@ -320,7 +320,7 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
 
    ::qTimer := QTimer()
    ::qTimer:setInterval( 2000 )
-   ::qTimer:connect( "timeout()",  {|| ::execEvent( __timerTimeout ) } )
+   ::qTimer:connect( "timeout()",  {|| ::execEvent( __timerTimeout__ ) } )
 
    RETURN Self
 
@@ -378,17 +378,17 @@ METHOD IdeEdit:disconnectEditSignals()
 
 METHOD IdeEdit:connectEditSignals()
 
-   ::qEdit:connect( "customContextMenuRequested(QPoint)", {|p   | ::execEvent( __customContextMenuRequested, p ) } )
-   ::qEdit:connect( "selectionChanged()"                , {|p   | ::execEvent( __selectionChanged, p ) } )
-   ::qEdit:connect( "cursorPositionChanged()"           , {|    | ::execEvent( __cursorPositionChanged,   ) } )
-   ::qEdit:connect( "copyAvailable(bool)"               , {|p   | ::execEvent( __copyAvailable, p ) } )
+   ::qEdit:connect( "customContextMenuRequested(QPoint)", {|p   | ::execEvent( __customContextMenuRequested__, p ) } )
+   ::qEdit:connect( "selectionChanged()"                , {|p   | ::execEvent( __selectionChanged__, p    ) } )
+   ::qEdit:connect( "cursorPositionChanged()"           , {|    | ::execEvent( __cursorPositionChanged__  ) } )
+   ::qEdit:connect( "copyAvailable(bool)"               , {|p   | ::execEvent( __copyAvailable__, p       ) } )
 
    #if 0
-   ::qEdit:connect( "modificationChanged(bool)"         , {|p   | ::execEvent( __modificationChanged, p ) } )
-   ::qEdit:connect( "textChanged()"                     , {|    | ::execEvent( __textChanged ) } )
-   ::qEdit:connect( "updateRequest(QRect,int)"          , {|p,p1| ::execEvent( __updateRequest, p, p1 ) } )
-   ::qEdit:connect( "redoAvailable(bool)"               , {|p   | ::execEvent( __redoAvailable, p ) } )
-   ::qEdit:connect( "undoAvailable(bool)"               , {|p   | ::execEvent( __undoAvailable, p ) } )
+   ::qEdit:connect( "modificationChanged(bool)"         , {|p   | ::execEvent( __modificationChanged__, p ) } )
+   ::qEdit:connect( "textChanged()"                     , {|    | ::execEvent( __textChanged__            ) } )
+   ::qEdit:connect( "updateRequest(QRect,int)"          , {|p,p1| ::execEvent( __updateRequest__, p, p1   ) } )
+   ::qEdit:connect( "redoAvailable(bool)"               , {|p   | ::execEvent( __redoAvailable__, p       ) } )
+   ::qEdit:connect( "undoAvailable(bool)"               , {|p   | ::execEvent( __undoAvailable__, p       ) } )
    #endif
 
    RETURN NIL
@@ -409,7 +409,7 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
 
    SWITCH nMode
 
-   CASE __timerTimeout
+   CASE __timerTimeout__
       IF empty( ::cProto )
          ::hidePrototype()
       ELSE
@@ -417,12 +417,12 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
       ENDIF
       EXIT
 
-   CASE __cursorPositionChanged
+   CASE __cursorPositionChanged__
       ::oEditor:dispEditInfo( ::qEdit )   /* Is a MUST */
       ::markCurrentFunction()             /* Optimized */
       EXIT
 
-   CASE __selectionChanged
+   CASE __selectionChanged__
       lOtherEdit := ! ( ::oEditor:qCqEdit == ::qEdit )
       IF lOtherEdit
          ::oEditor:qCqEdit := ::qEdit
@@ -442,14 +442,14 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
       ::oUpDn:show( Self )
       EXIT
 
-   CASE __copyAvailable
+   CASE __copyAvailable__
       IF p .AND. ::lCopyWhenDblClicked
          ::qEdit:copy()
       ENDIF
       ::lCopyWhenDblClicked := .f.
       EXIT
 
-   CASE __customContextMenuRequested
+   CASE __customContextMenuRequested__
       ::oEM:aActions[ 17, 2 ]:setEnabled( !empty( qCursor:selectedText() ) )
 
       n := ascan( ::oEditor:aEdits, {|o| o == Self } )
@@ -521,21 +521,21 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
       EXIT
 
    #if 0
-   CASE __textChanged
+   CASE __textChanged__
 //      HB_TRACE( HB_TR_ALWAYS, "textChanged()" )
 //      ::oEditor:setTabImage( ::qEdit )
 //      ::handlePreviousWord( ::lUpdatePrevWord )
       EXIT
-   CASE __modificationChanged
+   CASE __modificationChanged__
       ::oEditor:setTabImage( ::qEdit )
       EXIT
-   CASE __redoAvailable
+   CASE __redoAvailable__
       //HB_TRACE( HB_TR_DEBUG, "redoAvailable(bool)", p )
       EXIT
-   CASE __undoAvailable
+   CASE __undoAvailable__
       //HB_TRACE( HB_TR_DEBUG, "undoAvailable(bool)", p )
       EXIT
-   CASE __updateRequest
+   CASE __updateRequest__
       EXIT
    #endif
    ENDSWITCH
@@ -883,7 +883,7 @@ METHOD IdeEdit:copyBlockContents()
       cLine := strtran( cLine, chr( 13 ) )
       cLine := strtran( cLine, chr( 10 ) )
 
-      IF nMode == __selectionMode_stream
+      IF nMode == __selectionMode_stream__
          IF aCord[ 1 ] > aCord[ 3 ]  // Selection - bottom to top
             IF i == nT .AND. i == nB
                cLine := substr( cLine, min( aCord[ 2 ], aCord[ 4 ] ) + 1, nW )
@@ -902,10 +902,10 @@ METHOD IdeEdit:copyBlockContents()
             ENDIF
          ENDIF
 
-      ELSEIF nMode == __selectionMode_column
+      ELSEIF nMode == __selectionMode_column__
          cLine := pad( substr( cLine, nL + 1, nW ), nW )
 
-      ELSEIF nMode == __selectionMode_line
+      ELSEIF nMode == __selectionMode_line__
          // Nothing to do, complete line is already pulled
 
       ENDIF
@@ -949,14 +949,14 @@ METHOD IdeEdit:pasteBlockContents()
       ENDIF
    ENDIF
 
-   nPasteMode := iif( empty( nPasteMode ), __selectionMode_stream, nPasteMode )
+   nPasteMode := iif( empty( nPasteMode ), __selectionMode_stream__, nPasteMode )
    qCursor    := ::qEdit:textCursor()
    nCol       := qCursor:columnNumber()
 
    qCursor:beginEditBlock()
    //
    SWITCH nPasteMode
-   CASE __selectionMode_column
+   CASE __selectionMode_column__
       FOR i := 1 TO Len( aCopy )
          qCursor:insertText( aCopy[ i ] )
          IF i < Len( aCopy )
@@ -972,7 +972,7 @@ METHOD IdeEdit:pasteBlockContents()
          ENDIF
       NEXT
       EXIT
-   CASE __selectionMode_stream
+   CASE __selectionMode_stream__
       FOR i := 1 TO Len( aCopy )
          qCursor:insertText( aCopy[ i ] )
          IF i < Len( aCopy )
@@ -980,7 +980,7 @@ METHOD IdeEdit:pasteBlockContents()
          ENDIF
       NEXT
       EXIT
-   CASE __selectionMode_line
+   CASE __selectionMode_line__
       qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_MoveAnchor       )
       FOR i := 1 TO Len( aCopy )
          qCursor:insertText( aCopy[ i ] )
@@ -1059,7 +1059,7 @@ METHOD IdeEdit:deleteBlockContents( k )
    qCursor:beginEditBlock()
 
    IF k == Qt_Key_Backspace
-      IF nSelMode == __selectionMode_column
+      IF nSelMode == __selectionMode_column__
          FOR i := nT TO nB
             cLine := ::getLine( i + 1 )
             cLine := pad( substr( cLine, 1, nL - 1 ), nL - 1 ) + substr( cLine, nL + 1 )
@@ -1069,7 +1069,7 @@ METHOD IdeEdit:deleteBlockContents( k )
       ENDIF
    ELSE
       IF k == Qt_Key_Delete .OR. k == Qt_Key_X
-         IF nSelMode == __selectionMode_column
+         IF nSelMode == __selectionMode_column__
             FOR i := nT TO nB
                cLine := ::getLine( i + 1 )
                cLine := pad( substr( cLine, 1, nL ), nL ) + substr( cLine, nR + 1 )
@@ -1077,7 +1077,7 @@ METHOD IdeEdit:deleteBlockContents( k )
             NEXT
             hbide_qPositionCursor( qCursor, nT, nL )
 
-         ELSEIF nSelMode == __selectionMode_stream
+         ELSEIF nSelMode == __selectionMode_stream__
             hbide_qPositionCursor( qCursor, nT, nL )
             qCursor:movePosition( QTextCursor_Down       , QTextCursor_KeepAnchor, nB - nT )
             qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_KeepAnchor          )
@@ -1085,7 +1085,7 @@ METHOD IdeEdit:deleteBlockContents( k )
             qCursor:removeSelectedText()
             ::qEdit:hbSetSelectionInfo( { -1, -1, -1, -1, 1 } )
 
-         ELSEIF nSelMode == __selectionMode_line
+         ELSEIF nSelMode == __selectionMode_line__
             hbide_qPositionCursor( qCursor, nT, nL )
             qCursor:movePosition( QTextCursor_Down       , QTextCursor_KeepAnchor, nB - nT + 1 )
             qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_KeepAnchor          )
@@ -1125,14 +1125,14 @@ METHOD IdeEdit:blockComment()
          cLine := ::getLine( i + 1 )
 
          DO CASE
-         CASE nMode == __selectionMode_stream .OR. nMode == __selectionMode_line
+         CASE nMode == __selectionMode_stream__ .OR. nMode == __selectionMode_line__
             IF substr( cLine, 1, nLen ) == cComment
                cLine := substr( cLine, nLen + 1 )
             ELSE
                cLine := cComment + cLine
             ENDIF
 
-         CASE nMode == __selectionMode_column
+         CASE nMode == __selectionMode_column__
             IF substr( cLine, nL + 1, nLen ) == cComment
                cLine := pad( substr( cLine, 1, nL ), nL ) + substr( cLine, nL + nLen + 1 )
             ELSE
@@ -1170,14 +1170,14 @@ METHOD IdeEdit:streamComment()
          cLine := ::getLine( i + 1 )
 
          DO CASE
-         CASE nMode == __selectionMode_stream
+         CASE nMode == __selectionMode_stream__
             IF i == nT
                cLine := substr( cLine, 1, nL ) + "/* " + substr( cLine, nL + 1 )
             ELSEIF i == nB
                cLine := substr( cLine, 1, nR ) + " */" + substr( cLine, nR + 1 )
             ENDIF
 
-         CASE nMode == __selectionMode_line
+         CASE nMode == __selectionMode_line__
             IF i == nT
                cLine := "/* " + cLine
             ELSEIF i == nB
@@ -1215,7 +1215,7 @@ METHOD IdeEdit:blockIndent( nDirctn )
          cLine := ::getLine( i + 1 )
 
          DO CASE
-         CASE nMode == __selectionMode_stream .OR. nMode == __selectionMode_line
+         CASE nMode == __selectionMode_stream__ .OR. nMode == __selectionMode_line__
             IF nDirctn == -1
                IF left( cLine, 1 ) == " "
                   cLine := substr( cLine, 2 )
@@ -1224,7 +1224,7 @@ METHOD IdeEdit:blockIndent( nDirctn )
                cLine := " " + cLine
             ENDIF
 
-         CASE nMode == __selectionMode_column
+         CASE nMode == __selectionMode_column__
             cLineSel := pad( substr( cLine, nL + 1, nW ), nW )
             IF nDirctn == -1
                IF left( cLineSel, 1 ) == " "
@@ -1266,7 +1266,7 @@ METHOD IdeEdit:blockConvert( cMode )
          cLine := ::getLine( i + 1 )
 
          DO CASE
-         CASE nMode == __selectionMode_stream
+         CASE nMode == __selectionMode_stream__
             IF nT == nB
                cLine := substr( cLine, 1, nL ) + hbide_convertALine( substr( cLine, nL + 1, nW ), cMode ) + substr( cLine, nL + 1 + nW )
             ELSE
@@ -1279,10 +1279,10 @@ METHOD IdeEdit:blockConvert( cMode )
                ENDIF
             ENDIF
 
-         CASE nMode == __selectionMode_column
+         CASE nMode == __selectionMode_column__
             cLine := pad( substr( cLine, 1, nL ), nL ) + hbide_convertALine( pad( substr( cLine, nL + 1, nW ), nW ), cMode ) + substr( cLine, nR + 1 )
 
-         CASE nMode == __selectionMode_line
+         CASE nMode == __selectionMode_line__
             cLine := hbide_convertALine( cLine, cMode )
 
          ENDCASE
@@ -1310,7 +1310,7 @@ METHOD IdeEdit:getSelectedText()
    FOR i := nT TO nB
       cLine := ::getLine( i + 1 )
 
-      IF nMode == __selectionMode_stream
+      IF nMode == __selectionMode_stream__
          IF i == nT .AND. i == nB
             cLine := substr( cLine, nL + 1, nR - nL )
          ELSEIF i == nT
@@ -1319,10 +1319,10 @@ METHOD IdeEdit:getSelectedText()
             cLine := substr( cLine, 1, nR + 1 )
          ENDIF
 
-      ELSEIF nMode == __selectionMode_column
+      ELSEIF nMode == __selectionMode_column__
          cLine := pad( substr( cLine, nL + 1, nW ), nW )
 
-      ELSEIF nMode == __selectionMode_line
+      ELSEIF nMode == __selectionMode_line__
          // Nothing to do, complete line is already pulled
 
       ENDIF

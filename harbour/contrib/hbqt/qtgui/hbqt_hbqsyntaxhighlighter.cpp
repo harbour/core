@@ -95,10 +95,15 @@ HBQSyntaxHighlighter::HBQSyntaxHighlighter( QTextDocument * parent )
    commentEndExpression   = QRegExp( "\\*/" );
    commentSingleLine      = QRegExp( "//[^\n]*|^[ ]*\\*[^\n]*" );
    patternQuotation       = QRegExp( "\"[^\"]*\"|\'[^\']*\'" );
+// definedConstants       = QRegExp( "\b(__[A-Za-z0-9_]+__)\b" );
+   definedConstants       = QRegExp( "__[A-Za-z0-9_]+__" );
 
    initialized = false;
    type = 0;
    editor = NULL;
+
+   constantsFormat.setForeground( QColor( 255, 153, 51 ) );
+   constantsFormat.setFontWeight( 1000 );
 
    //entryHeaderFormat.setForeground( Qt::red );
    entryHeaderFormat.setForeground( QColor( 255, 153, 51 ) );
@@ -228,6 +233,15 @@ void HBQSyntaxHighlighter::highlightBlock( const QString &text )
             setFormat( index, length, rule.format );
             index = rule.pattern.indexIn( text, index + length );
          }
+      }
+
+      /* Defined constants */
+      index = definedConstants.indexIn( text );
+      while( index >= 0 )
+      {
+         length = definedConstants.matchedLength();
+         setFormat( index, length, constantsFormat );
+         index = definedConstants.indexIn( text, index + length );
       }
 
       /* Multi Line Comments - to ascertain if it is embedded in quotes */

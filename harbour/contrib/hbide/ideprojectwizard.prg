@@ -70,6 +70,34 @@
 #include "hbclass.ch"
 
 /*----------------------------------------------------------------------*/
+
+#define __frameSrc_dragMoveEvent__                2001
+#define __frameSrc_dragEnterEvent__               2002
+#define __frameSrc_dropEvent__                    2003
+#define __treeProps_itemSelectionChanged__        2004
+#define __treeProps_itemCollapsed__               2005
+#define __treeProps_itemExpanded__                2006
+#define __treeSrc_itemExpanded__                  2007
+#define __treeSrc_itemCollapsed__                 2008
+#define __qTBtn_clicked__                         2009
+#define __qSBtn_clicked__                         2010
+#define __toolSrcDel_clicked__                    2011
+#define __toolSrcMin_clicked__                    2012
+#define __toolSrcMax_clicked__                    2013
+#define __btnSwMin_clicked__                      2014
+#define __btnSwMax_clicked__                      2015
+#define __toolSrcGet_clicked__                    2016
+#define __treeSrc_contextMenuRequested__          2017
+#define __treeProps_contextMenuRequested__        2018
+#define __treeSrc_doubleClicked__                 2019
+#define __btnSw_clicked__                         2020
+#define __treeProps_doubleClicked__               2021
+#define __btnNew_clicked__                        2022
+#define __btnSave_clicked__                       2023
+#define __btnNext_clicked__                       2024
+#define __btnBack_clicked__                       2025
+
+/*----------------------------------------------------------------------*/
 //
 //                          Class IdeProjectWizard
 //
@@ -86,7 +114,7 @@ CREATE CLASS IdeProjectWizard INHERIT IdeObject
    METHOD  create( oIde )
    METHOD  destroy()
    METHOD  show()
-   METHOD  execEvent( xEvent, p, p1 )
+   METHOD  execEvent( nEvent, p, p1 )
    METHOD  loadDefaults()
    METHOD  saveProject()
    METHOD  clear()
@@ -211,25 +239,25 @@ METHOD IdeProjectWizard:show()
       ::oUI := ui_projectWizard():new(  ::oIde:oDlg:oWidget )
       ::oUI:oWidget:connect( QEvent_Close, {|| ::oUI:oWidget:done( 0 ) } )
 
-      ::oUI:btnSwAZ     : connect( "clicked()", {|| ::execEvent( "btnSw_clicked", "az"    ) } )
-      ::oUI:btnSwZA     : connect( "clicked()", {|| ::execEvent( "btnSw_clicked", "za"    ) } )
-      ::oUI:btnSwUpper  : connect( "clicked()", {|| ::execEvent( "btnSw_clicked", "upper" ) } )
-      ::oUI:btnSwLower  : connect( "clicked()", {|| ::execEvent( "btnSw_clicked", "lower" ) } )
-      ::oUI:btnSwDelete : connect( "clicked()", {|| ::execEvent( "btnSw_clicked", "delete") } )
+      ::oUI:btnSwAZ     : connect( "clicked()", {|| ::execEvent( __btnSw_clicked__, "az"    ) } )
+      ::oUI:btnSwZA     : connect( "clicked()", {|| ::execEvent( __btnSw_clicked__, "za"    ) } )
+      ::oUI:btnSwUpper  : connect( "clicked()", {|| ::execEvent( __btnSw_clicked__, "upper" ) } )
+      ::oUI:btnSwLower  : connect( "clicked()", {|| ::execEvent( __btnSw_clicked__, "lower" ) } )
+      ::oUI:btnSwDelete : connect( "clicked()", {|| ::execEvent( __btnSw_clicked__, "delete") } )
 
-      ::oUI:btnNext     : connect( "clicked()", {|| ::execEvent( "btnNext_clicked" ) } )
-      ::oUI:btnBack     : connect( "clicked()", {|| ::execEvent( "btnBack_clicked" ) } )
-      ::oUI:btnNew      : connect( "clicked()", {|| ::execEvent( "btnNew_clicked"  ) } )
-      ::oUI:btnSave     : connect( "clicked()", {|| ::execEvent( "btnSave_clicked" ) } )
+      ::oUI:btnNext     : connect( "clicked()", {|| ::execEvent( __btnNext_clicked__ ) } )
+      ::oUI:btnBack     : connect( "clicked()", {|| ::execEvent( __btnBack_clicked__ ) } )
+      ::oUI:btnNew      : connect( "clicked()", {|| ::execEvent( __btnNew_clicked__  ) } )
+      ::oUI:btnSave     : connect( "clicked()", {|| ::execEvent( __btnSave_clicked__ ) } )
       ::oUI:btnCancel   : connect( "clicked()", {|| ::oUI:oWidget:done( 0 ) } )
 
-      ::oUI:btnSwMax    : connect( "clicked()", {|| ::execEvent( "btnSwMax_clicked"   ) } )
-      ::oUI:btnSwMin    : connect( "clicked()", {|| ::execEvent( "btnSwMin_clicked"   ) } )
+      ::oUI:btnSwMax    : connect( "clicked()", {|| ::execEvent( __btnSwMax_clicked__   ) } )
+      ::oUI:btnSwMin    : connect( "clicked()", {|| ::execEvent( __btnSwMin_clicked__   ) } )
 
-      ::oUI:toolSrcGet  : connect( "clicked()", {|| ::execEvent( "toolSrcGet_clicked" ) } )
-      ::oUI:toolSrcMax  : connect( "clicked()", {|| ::execEvent( "toolSrcMax_clicked" ) } )
-      ::oUI:toolSrcMin  : connect( "clicked()", {|| ::execEvent( "toolSrcMin_clicked" ) } )
-      ::oUI:toolSrcDel  : connect( "clicked()", {|| ::execEvent( "toolSrcDel_clicked" ) } )
+      ::oUI:toolSrcGet  : connect( "clicked()", {|| ::execEvent( __toolSrcGet_clicked__ ) } )
+      ::oUI:toolSrcMax  : connect( "clicked()", {|| ::execEvent( __toolSrcMax_clicked__ ) } )
+      ::oUI:toolSrcMin  : connect( "clicked()", {|| ::execEvent( __toolSrcMin_clicked__ ) } )
+      ::oUI:toolSrcDel  : connect( "clicked()", {|| ::execEvent( __toolSrcDel_clicked__ ) } )
 
       ::oUI:comboProjType : addItem( "Executable"        )
       ::oUI:comboProjType : addItem( "Library"           )
@@ -257,11 +285,11 @@ METHOD IdeProjectWizard:show()
       ::oUI:treeProps:setDragDropMode( QAbstractItemView_InternalMove )
       ::oUI:treeProps:setRootIsDecorated( .F. ) /* Important to present as a list */
       ::oUI:treeProps:header():resizeSection( 0, 237 )
-      ::oUI:treeProps:connect( "itemCollapsed(QTreeWidgetItem*)"        , {|p   | ::execEvent( "treeProps_itemCollapsed"       , p     ) } )
-      ::oUI:treeProps:connect( "itemExpanded(QTreeWidgetItem*)"         , {|p   | ::execEvent( "treeProps_itemExpanded"        , p     ) } )
-      ::oUI:treeProps:connect( "customContextMenuRequested(QPoint)"     , {|p   | ::execEvent( "treeProps_contextMenuRequested", p     ) } )
-      ::oUI:treeProps:connect( "itemDoubleClicked(QTreeWidgetItem*,int)", {|p,p1| ::execEvent( "treeProps_doubleClicked"       , p, p1 ) } )
-      ::oUI:treeProps:connect( "itemSelectionChanged()"                 , {|    | ::execEvent( "treeProps_itemSelectionChanged"        ) } )
+      ::oUI:treeProps:connect( "itemCollapsed(QTreeWidgetItem*)"        , {|p   | ::execEvent( __treeProps_itemCollapsed__       , p     ) } )
+      ::oUI:treeProps:connect( "itemExpanded(QTreeWidgetItem*)"         , {|p   | ::execEvent( __treeProps_itemExpanded__        , p     ) } )
+      ::oUI:treeProps:connect( "customContextMenuRequested(QPoint)"     , {|p   | ::execEvent( __treeProps_contextMenuRequested__, p     ) } )
+      ::oUI:treeProps:connect( "itemDoubleClicked(QTreeWidgetItem*,int)", {|p,p1| ::execEvent( __treeProps_doubleClicked__       , p, p1 ) } )
+      ::oUI:treeProps:connect( "itemSelectionChanged()"                 , {|    | ::execEvent( __treeProps_itemSelectionChanged__        ) } )
 
       oBrush := QBrush( QColor( 248, 248, 248 ) )
 
@@ -280,10 +308,10 @@ METHOD IdeProjectWizard:show()
       ::oUI:treeSrc:setDragDropMode( QAbstractItemView_InternalMove )
       ::oUI:treeSrc:setRootIsDecorated( .F. ) /* Important to present as a list */
       ::oUI:treeSrc:header():resizeSection( 0, 393 )
-      ::oUI:treeSrc:connect( "itemCollapsed(QTreeWidgetItem*)"        , {|p   | ::execEvent( "treeSrc_itemCollapsed"       , p     ) } )
-      ::oUI:treeSrc:connect( "itemExpanded(QTreeWidgetItem*)"         , {|p   | ::execEvent( "treeSrc_itemExpanded"        , p     ) } )
-      ::oUI:treeSrc:connect( "customContextMenuRequested(QPoint)"     , {|p   | ::execEvent( "treeSrc_contextMenuRequested", p     ) } )
-      ::oUI:treeSrc:connect( "itemDoubleClicked(QTreeWidgetItem*,int)", {|p,p1| ::execEvent( "treeSrc_doubleClicked"       , p, p1 ) } )
+      ::oUI:treeSrc:connect( "itemCollapsed(QTreeWidgetItem*)"        , {|p   | ::execEvent( __treeSrc_itemCollapsed__       , p     ) } )
+      ::oUI:treeSrc:connect( "itemExpanded(QTreeWidgetItem*)"         , {|p   | ::execEvent( __treeSrc_itemExpanded__        , p     ) } )
+      ::oUI:treeSrc:connect( "customContextMenuRequested(QPoint)"     , {|p   | ::execEvent( __treeSrc_contextMenuRequested__, p     ) } )
+      ::oUI:treeSrc:connect( "itemDoubleClicked(QTreeWidgetItem*,int)", {|p,p1| ::execEvent( __treeSrc_doubleClicked__       , p, p1 ) } )
 
       aadd( ::aItmSrc, { NIL, "PRG Files"      , QBrush( QColor( 184, 184, 184 ) ), oBrush, ".prg", NIL, "background-color: rgb(184,184,184);" } )
       aadd( ::aItmSrc, { NIL, "C Files"        , QBrush( QColor( 176, 176, 176 ) ), oBrush, ".c"  , NIL, "background-color: rgb(176,176,176);" } )
@@ -297,9 +325,9 @@ METHOD IdeProjectWizard:show()
       ::clear()
 
       ::oUI:frameSrc:setAcceptDrops( .t. )
-      ::oUI:frameSrc:connect( QEvent_DragEnter, {|p| ::execEvent( "frameSrc_dragEnterEvent", p ) } )
-      ::oUI:frameSrc:connect( QEvent_DragMove , {|p| ::execEvent( "frameSrc_dragMoveEvent" , p ) } )
-      ::oUI:frameSrc:connect( QEvent_Drop     , {|p| ::execEvent( "frameSrc_dropEvent"     , p ) } )
+      ::oUI:frameSrc:connect( QEvent_DragEnter, {|p| ::execEvent( __frameSrc_dragEnterEvent__, p ) } )
+      ::oUI:frameSrc:connect( QEvent_DragMove , {|p| ::execEvent( __frameSrc_dragMoveEvent__ , p ) } )
+      ::oUI:frameSrc:connect( QEvent_Drop     , {|p| ::execEvent( __frameSrc_dropEvent__     , p ) } )
 
    ENDIF
 
@@ -312,19 +340,19 @@ METHOD IdeProjectWizard:show()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
+METHOD IdeProjectWizard:execEvent( nEvent, p, p1 )
    LOCAL cText, qItm, n, i, oFont, aMenu, aFiles, aFilt, cFile, lTop, nChildren, qChild
    LOCAL qMime, qUrl, qList, aItm
 
    HB_SYMBOL_UNUSED( p1 )
 
-   SWITCH xEvent
+   SWITCH nEvent
 
-   CASE "frameSrc_dragMoveEvent"
-   CASE "frameSrc_dragEnterEvent"
+   CASE __frameSrc_dragMoveEvent__
+   CASE __frameSrc_dragEnterEvent__
       p:acceptProposedAction()
       EXIT
-   CASE "frameSrc_dropEvent"
+   CASE __frameSrc_dropEvent__
       qMime := p:mimeData()
       IF qMime:hasUrls()
          qList := qMime:urls()
@@ -336,7 +364,7 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
          p:accept()
       ENDIF
       EXIT
-   CASE "treeProps_itemSelectionChanged"
+   CASE __treeProps_itemSelectionChanged__
       IF ! empty( qItm := ::oUI:treeProps:currentItem() )
          lTop := ::oUI:treeProps:indexOfTopLevelItem( qItm ) >= 0
          ::oUI:btnSwPlus:setEnabled( lTop )
@@ -344,26 +372,26 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
          ::oUI:btnSwZA:setEnabled( lTop )
       ENDIF
       EXIT
-   CASE "treeProps_itemCollapsed"
-   CASE "treeProps_itemExpanded"
+   CASE __treeProps_itemCollapsed__
+   CASE __treeProps_itemExpanded__
       IF ( n := ::oUI:treeProps:indexOfTopLevelItem( p ) ) >= 0
          n++
          IF hb_isObject( ::aItmProps[ n, 6 ] )
-            ::aItmProps[ n, 6 ]:setIcon( QIcon( hbide_image( iif( xEvent == "treeProps_itemExpanded", "collapse_m", "expand_m" ) ) ) )
+            ::aItmProps[ n, 6 ]:setIcon( QIcon( hbide_image( iif( nEvent == __treeProps_itemExpanded__, "collapse_m", "expand_m" ) ) ) )
          ENDIF
          p:setSelected( .t. )
       ENDIF
       EXIT
-   CASE "treeSrc_itemExpanded"
-   CASE "treeSrc_itemCollapsed"
+   CASE __treeSrc_itemExpanded__
+   CASE __treeSrc_itemCollapsed__
       IF ( n := ::oUI:treeSrc:indexOfTopLevelItem( p ) ) >= 0
          IF hb_isObject( ::aItmSrc[ n+1,6 ] )
-            ::aItmSrc[ n+1,6 ]:setIcon( QIcon( hbide_image( iif( xEvent == "treeSrc_itemCollapsed", "expand_m", "collapse_m" ) ) ) )
+            ::aItmSrc[ n+1,6 ]:setIcon( QIcon( hbide_image( iif( nEvent == __treeSrc_itemCollapsed__, "expand_m", "collapse_m" ) ) ) )
          ENDIF
          p:setSelected( .t. )
       ENDIF
       EXIT
-   CASE "qTBtn_clicked"
+   CASE __qTBtn_clicked__
       IF ::aItmProps[ p,1 ]:isExpanded()
          ::aItmProps[ p,1 ]:setExpanded( .f. )
       ELSE
@@ -376,7 +404,7 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
       ENDIF
       ::aItmProps[ p,1 ]:setSelected( .t. )
       EXIT
-   CASE "qSBtn_clicked"
+   CASE __qSBtn_clicked__
       IF ::aItmSrc[ p,1 ]:isExpanded()
          ::aItmSrc[ p,1 ]:setExpanded( .f. )
       ELSE
@@ -389,7 +417,7 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
       ENDIF
       ::aItmSrc[ p,1 ]:setSelected( .t. )
       EXIT
-   CASE "toolSrcDel_clicked"
+   CASE __toolSrcDel_clicked__
       IF hbide_getYesNo( "Do you really want to delete all sources ?", "Dangerous Action", "Confirmation Required!", ::oUI:oWidget )
          FOR EACH aItm IN ::aItmSrc
             IF ! empty( aItm[ 1 ] )
@@ -401,35 +429,35 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
          NEXT
       ENDIF
       EXIT
-   CASE "toolSrcMin_clicked"
+   CASE __toolSrcMin_clicked__
       FOR EACH aItm IN ::aItmSrc
          IF ! empty( aItm[ 1 ] )
             aItm[ 1 ]:setExpanded( .F. )
          ENDIF
       NEXT
       EXIT
-   CASE "toolSrcMax_clicked"
+   CASE __toolSrcMax_clicked__
       FOR EACH aItm IN ::aItmSrc
          IF ! empty( aItm[ 1 ] )
             aItm[ 1 ]:setExpanded( .T. )
          ENDIF
       NEXT
       EXIT
-   CASE "btnSwMin_clicked"
+   CASE __btnSwMin_clicked__
       FOR EACH aItm IN ::aItmProps
          IF ! empty( aItm[ 1 ] )
             aItm[ 1 ]:setExpanded( .F. )
          ENDIF
       NEXT
       EXIT
-   CASE "btnSwMax_clicked"
+   CASE __btnSwMax_clicked__
       FOR EACH aItm IN ::aItmProps
          IF ! empty( aItm[ 1 ] )
             aItm[ 1 ]:setExpanded( .T. )
          ENDIF
       NEXT
       EXIT
-   CASE "toolSrcGet_clicked"
+   CASE __toolSrcGet_clicked__
       aFilt := {}
       aadd( aFilt, { "Program Files", "*.prg" } )
       aadd( aFilt, { "C Files"      , "*.c"   } )
@@ -447,7 +475,7 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
          NEXT
       ENDIF
       EXIT
-   CASE "treeSrc_contextMenuRequested"
+   CASE __treeSrc_contextMenuRequested__
       IF ! empty( qItm := ::oUI:treeSrc:itemAt( p ) )
          cText := substr( qItm:text( 0 ), 8 )
          aMenu := {}
@@ -473,7 +501,7 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
          ENDIF
       ENDIF
       EXIT
-   CASE "treeProps_contextMenuRequested"
+   CASE __treeProps_contextMenuRequested__
       IF ! empty( qItm := ::oUI:treeProps:itemAt( p ) )
          cText := substr( qItm:text( 0 ), 8 )
          aMenu := {}
@@ -499,9 +527,9 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
          ENDIF
       ENDIF
       EXIT
-   CASE "treeSrc_doubleClicked"
+   CASE __treeSrc_doubleClicked__
       EXIT
-   CASE "btnSw_clicked"
+   CASE __btnSw_clicked__
       IF empty( qItm := ::oUI:treeProps:currentItem() )
          EXIT
       ENDIF
@@ -535,12 +563,12 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
          ENDSWITCH
       ENDIF
       EXIT
-   CASE "treeProps_doubleClicked"
+   CASE __treeProps_doubleClicked__
       IF ::oUI:treeProps:indexOfTopLevelItem( p ) >= 0
          ::addTreeItem( p )
       ENDIF
       EXIT
-   CASE "btnNew_clicked"
+   CASE __btnNew_clicked__
       IF ::lEdited .AND. hbide_getYesNo( "Create new without saving current ?", "Current project has not been saved !", "Please Confirm", ::oUI:oWidget )
          ::clear()
          IF ! ::loadDefaults()
@@ -548,15 +576,15 @@ METHOD IdeProjectWizard:execEvent( xEvent, p, p1 )
          ENDIF
       ENDIF
       EXIT
-   CASE "btnSave_clicked"
+   CASE __btnSave_clicked__
       ::saveProject()
       EXIT
-   CASE "btnNext_clicked"
+   CASE __btnNext_clicked__
       IF ::oUI:stackedWidget:currentIndex() == 0
          ::oUI:stackedWidget:setcurrentIndex( 1 )
       ENDIF
       EXIT
-   CASE "btnBack_clicked"
+   CASE __btnBack_clicked__
       IF ::oUI:stackedWidget:currentIndex() == 1
          ::oUI:stackedWidget:setcurrentIndex( 0 )
       ENDIF

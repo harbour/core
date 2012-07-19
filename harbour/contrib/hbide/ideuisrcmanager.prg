@@ -78,6 +78,15 @@
 #define  PNL_TYPE                                 3
 
 /*----------------------------------------------------------------------*/
+
+#define __dockUIScr_dragEnterEvent__              2001
+#define __dockUISrc_dropEvent__                   2002
+#define __mdiArea_subWindowActivated__            2003
+#define __buttonBuild_clicked__                   2004
+#define __buttonOpen_clicked__                    2005
+#define __child_object__                          2006
+
+/*----------------------------------------------------------------------*/
 //                            CLASS UISrcData
 /*----------------------------------------------------------------------*/
 
@@ -151,7 +160,7 @@ CLASS IdeUISrcManager INHERIT IdeObject
    METHOD create( oIde )
    METHOD show()
    METHOD destroy()
-   METHOD execEvent( cEvent, p, p1 )
+   METHOD execEvent( nEvent, p, p1 )
    METHOD buildToolbar()
    METHOD buildToolButton( qToolbar, aBtn )
    METHOD buildStatusPanels()
@@ -212,8 +221,8 @@ METHOD IdeUISrcManager:show()
    qDock := ::oIde:oUiSrcDock:oWidget
 
    qDock:setAcceptDrops( .t. )
-   qDock:connect( QEvent_DragEnter, {|p| ::execEvent( "dockUIScr_dragEnterEvent", p ) } )
-   qDock:connect( QEvent_Drop     , {|p| ::execEvent( "dockUISrc_dropEvent"     , p ) } )
+   qDock:connect( QEvent_DragEnter, {|p| ::execEvent( __dockUIScr_dragEnterEvent__, p ) } )
+   qDock:connect( QEvent_Drop     , {|p| ::execEvent( __dockUISrc_dropEvent__     , p ) } )
 
    ::qWidget := QWidget()
 
@@ -245,7 +254,7 @@ METHOD IdeUISrcManager:show()
    ::qMdiArea:setVerticalScrollBarPolicy( Qt_ScrollBarAsNeeded )
    ::qMdiArea:setHorizontalScrollBarPolicy( Qt_ScrollBarAsNeeded )
    ::qMdiArea:setViewMode( QMdiArea_SubWindowView )
-   ::qMdiArea:connect( "subWindowActivated(QMdiSubWindow*)", {|p| ::execEvent( "mdiArea_subWindowActivated", p ) } )
+   ::qMdiArea:connect( "subWindowActivated(QMdiSubWindow*)", {|p| ::execEvent( __mdiArea_subWindowActivated__, p ) } )
 
    ::qSplitter:addWidget( ::qMdiArea )
 
@@ -294,25 +303,25 @@ METHOD IdeUISrcManager:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeUISrcManager:execEvent( cEvent, p, p1 )
+METHOD IdeUISrcManager:execEvent( nEvent, p, p1 )
    LOCAL qList, qMime, qUrl, cExt, cUI
 
-   SWITCH cEvent
-   CASE "buttonBuild_clicked"
+   SWITCH nEvent
+   CASE __buttonBuild_clicked__
       ::buildSource()
       EXIT
 
-   CASE "buttonOpen_clicked"
+   CASE __buttonOpen_clicked__
       IF ! empty( cUI := hbide_fetchAFile( ::oIde:oDlg, "Select a .UI", { { "Qt Designer .UI File", "*.ui" } }, ::oIde:cWrkFolderLast ) )
          ::buildUiWidget( cUI )
       ENDIF
       EXIT
 
-   CASE "dockUIScr_dragEnterEvent"
+   CASE __dockUIScr_dragEnterEvent__
       p:acceptProposedAction()
       EXIT
 
-   CASE "dockUISrc_dropEvent"
+   CASE __dockUISrc_dropEvent__
       qMime := p:mimeData()
       IF qMime:hasUrls()
          qList := qMime:urls()
@@ -324,7 +333,7 @@ METHOD IdeUISrcManager:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
-   CASE "child_object"
+   CASE __child_object__
       IF empty( ::qCurrent ) .OR. ! ( ::qCurrent == p )
          ::saveMethod()
 
@@ -339,7 +348,7 @@ METHOD IdeUISrcManager:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
-   CASE "mdiArea_subWindowActivated"
+   CASE __mdiArea_subWindowActivated__
       EXIT
 
    ENDSWITCH
@@ -615,7 +624,7 @@ METHOD IdeUISrcManager:reloadIfOpen( cUI )
 
       IF ! empty( cObjName )
          IF __objHasMsg( ::qU, cObjName )
-            ::execEvent( "child_object", ::qU:&cObjName., cObjName )
+            ::execEvent( __child_object__, ::qU:&cObjName., cObjName )
          ENDIF
          IF ! empty( cAction )
             qList := ::qTree:findItems( cAction, Qt_MatchExactly, 0 )
@@ -846,9 +855,9 @@ METHOD IdeUISrcManager:buildToolbar()
    ::qToolbar:setIconSize( QSize( 16,16 ) )
    ::qToolbar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
 
-   ::buildToolButton( ::qToolbar, { "Open a .UI"  , "open3"  , {|| ::execEvent( "buttonOpen_clicked"  ) }, .f. } )
+   ::buildToolButton( ::qToolbar, { "Open a .UI"  , "open3"  , {|| ::execEvent( __buttonOpen_clicked__  ) }, .f. } )
    ::qToolbar:addWidget( ::sp0 )
-   ::buildToolButton( ::qToolbar, { "Build Source", "fileprg", {|| ::execEvent( "buttonBuild_clicked" ) }, .f. } )
+   ::buildToolButton( ::qToolbar, { "Build Source", "fileprg", {|| ::execEvent( __buttonBuild_clicked__ ) }, .f. } )
 
    RETURN Self
 
@@ -900,7 +909,7 @@ METHOD IdeUISrcManager:buildStatusPanels()
 /*------------------------------------------------------------------------*/
 
 STATIC FUNCTION getObject( oSelf, oHbQtUi, cObj )
-   RETURN {|...| oSelf:execEvent( "child_object", oHbQtUi:&cObj., cObj, ... ) }
+   RETURN {|...| oSelf:execEvent( __child_object__, oHbQtUi:&cObj., cObj, ... ) }
 
 /*----------------------------------------------------------------------*/
 

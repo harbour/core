@@ -75,6 +75,13 @@
 
 #define EDT_LINNO_WIDTH                           50
 
+#define __qcompleter_activated__                  2001
+#define __qFldsCompleter_activated__              2002
+#define __qDocModificationChanged__               2003
+#define __qDocContentsChange__                    2004
+#define __qTimeSave_timeout__                     2005
+#define __qTab_contextMenu__                      2006
+
 /*----------------------------------------------------------------------*/
 
 CLASS IdeEditsManager INHERIT IdeObject
@@ -93,7 +100,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD destroy()
    METHOD removeSourceInTree( cSourceFile )
    METHOD addSourceInTree( cSourceFile, cView )
-   METHOD execEvent( cEvent, p )
+   METHOD execEvent( nEvent, p )
    METHOD buildEditor( cSourceFile, nPos, nHPos, nVPos, cTheme, cView, aBookMarks )
    METHOD getTabBySource( cSource )
    METHOD getTabCurrent()
@@ -270,7 +277,7 @@ METHOD IdeEditsManager:create( oIde )
    ::oIde:qCompModel := QStringListModel()
    ::oIde:qCompleter := QCompleter()
    //
-   ::qCompleter:connect( "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
+   ::qCompleter:connect( "activated(QString)", {|p| ::execEvent( __qcompleter_activated__, p ) } )
 
    /* Define fields completer */
    ::qFldsStrList   := QStringList()
@@ -361,7 +368,7 @@ METHOD IdeEditsManager:updateCompleter()
    ::qCompleter:popup():setAlternatingRowColors( .t. )
    ::qCompleter:popup():setFont( QFont( "Courier New", 8 ) )
 
-   ::qCompleter:connect( "activated(QString)", {|p| ::execEvent( "qcompleter_activated", p ) } )
+   ::qCompleter:connect( "activated(QString)", {|p| ::execEvent( __qcompleter_activated__, p ) } )
 
    RETURN Self
 
@@ -418,25 +425,25 @@ METHOD IdeEditsManager:addSourceInTree( cSourceFile, cView )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditsManager:execEvent( cEvent, p )
+METHOD IdeEditsManager:execEvent( nEvent, p )
    LOCAL oEdit
 
    IF ::lQuitting
       RETURN Self
    ENDIF
 
-   DO CASE
-   CASE cEvent == "qFldsCompleter_activated"
+   SWITCH nEvent
+   CASE __qFldsCompleter_activated__
       IF !empty( oEdit := ::getEditObjectCurrent() )
          oEdit:completeFieldName( p )
       ENDIF
-
-   CASE cEvent == "qcompleter_activated"
+      EXIT
+   CASE __qcompleter_activated__
       IF !empty( oEdit := ::getEditObjectCurrent() )
          oEdit:completeCode( p )
       ENDIF
-
-   ENDCASE
+      EXIT
+   ENDSWITCH
 
    RETURN Nil
 
@@ -1267,7 +1274,7 @@ CLASS IdeEditor INHERIT IdeObject
    METHOD split( nOrient, oEditP )
    METHOD relay( oEdit )
    METHOD destroy()
-   METHOD execEvent( cEvent, p, p1, p2 )
+   METHOD execEvent( nEvent, p, p1, p2 )
    METHOD setDocumentProperties()
    METHOD activateTab( mp1, mp2, oXbp )
    METHOD buildTabPage( cSource )
@@ -1387,8 +1394,8 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
       ::qEdit:setTextInteractionFlags( Qt_TextSelectableByMouse + Qt_TextSelectableByKeyboard )
    ENDIF
 
-   ::qDocument:connect( "modificationChanged(bool)"  , {|p| ::execEvent( "qDocModificationChanged", p ) } )
-   ::qDocument:connect( "contentsChange(int,int,int)", {|p,p1,p2| ::execEvent( "qDocContentsChange", p, p1, p2 ) } )
+   ::qDocument:connect( "modificationChanged(bool)"  , {|p| ::execEvent( __qDocModificationChanged__, p ) } )
+   ::qDocument:connect( "contentsChange(int,int,int)", {|p,p1,p2| ::execEvent( __qDocContentsChange__, p, p1, p2 ) } )
 
    ::qDocument:setModified( .f. )
 
@@ -1650,7 +1657,7 @@ METHOD IdeEditor:setDocumentProperties()
       IF ::cType $ "PRG,C,CPP,H,CH,HBS"
          ::qTimerSave := QTimer()
          ::qTimerSave:setInterval( max( 30000, ::oINI:nTmpBkpPrd * 1000 ) )
-         ::qTimerSave:connect( "timeout()", {|| ::execEvent( "qTimeSave_timeout" ) } )
+         ::qTimerSave:connect( "timeout()", {|| ::execEvent( __qTimeSave_timeout__ ) } )
          ::qTimerSave:start()
       ENDIF
       ::oUpDn:show()
@@ -1673,36 +1680,31 @@ METHOD IdeEditor:setDocumentProperties()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEditor:execEvent( cEvent, p, p1, p2 )
-   LOCAL cFileTemp, aPops := {}
+METHOD IdeEditor:execEvent( nEvent, p, p1, p2 )
+   LOCAL cFileTemp
 
    IF ::lQuitting
       RETURN Self
    ENDIF
 
-   SWITCH cEvent
+   SWITCH nEvent
 
-   CASE "qDocModificationChanged"
+   CASE __qDocModificationChanged__
       ::setTabImage()
       EXIT
 
-   CASE "qDocContentsChange"
+   CASE __qDocContentsChange__
       IF p1 + p2 > 0
          ::qCoEdit:reformatLine( p, p1, p2 )
       ENDIF
       EXIT
 
-   CASE "qTimeSave_timeout"
+   CASE __qTimeSave_timeout__
       IF ::qDocument:isModified()
          cFileTemp := hbide_pathToOSPath( ::cPath + ::cFile + ::cExt + ".tmp" )
          hb_memowrit( cFileTemp, ::qEdit:toPlainText() )
       ENDIF
       EXIT
-
-   CASE "qTab_contextMenu"
-HB_TRACE( HB_TR_DEBUG, "IdeEditor:execEvent( cMode, p )" )
-      aadd( aPops, { "Close", {|| MsgBox( "closing" ) } } )
-      hbide_ExecPopup( aPops, p, ::oTab:oWidget )
 
    ENDSWITCH
 
