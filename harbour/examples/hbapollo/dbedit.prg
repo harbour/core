@@ -80,7 +80,7 @@ FUNCTION DBEDIT( nTop, nLeft, nBottom, nRight, ;
    IF !Used()
       RETURN .F.
    ELSEIF EOF()
-      dbGoBottom()
+      sx_dbGoBottom()
    ENDIF
 
    IF ! HB_ISNUMERIC( nTop ) .OR. nTop < 0
