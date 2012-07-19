@@ -71,6 +71,20 @@
 
 /*----------------------------------------------------------------------*/
 
+#define __editChangelog_textChanged__            2001
+#define __editUser_textChanged__                 2002
+#define __buttonOpen_clicked__                   2003
+#define __buttonNew_clicked__                    2004
+#define __buttonTitle_clicked__                  2005
+#define __buttonSource_clicked__                 2006
+#define __buttonDesc_clicked__                   2007
+#define __buttonSrcDesc_clicked__                2008
+#define __buttonClearDesc_clicked__              2009
+#define __buttonCancel_clicked__                 2010
+#define __buttonSave_clicked__                   2011
+
+/*----------------------------------------------------------------------*/
+
 CLASS IdeChangeLog INHERIT IdeObject
 
    DATA   nCntr                                   INIT 0
@@ -83,7 +97,7 @@ CLASS IdeChangeLog INHERIT IdeObject
    METHOD create( oIde )
    METHOD destroy()
    METHOD show()
-   METHOD execEvent( cEvent, p )
+   METHOD execEvent( nEvent, p )
    METHOD updateLog()
    METHOD refresh()
    METHOD addToLog( aLog )
@@ -144,20 +158,20 @@ METHOD IdeChangeLog:show()
       ::oUI:buttonDesc      :setToolTip( "Add Action_Description in current entry" )
       ::oUI:buttonSrcDesc   :setToolTip( "Add Source_Action_Description in current entry" )
 
-      ::oUI:buttonOpen      :connect( "clicked()", {|| ::execEvent( "buttonOpen_clicked"      ) } )
-      ::oUI:buttonNew       :connect( "clicked()", {|| ::execEvent( "buttonNew_clicked"       ) } )
+      ::oUI:buttonOpen      :connect( "clicked()", {|| ::execEvent( __buttonOpen_clicked__      ) } )
+      ::oUI:buttonNew       :connect( "clicked()", {|| ::execEvent( __buttonNew_clicked__       ) } )
 
-      ::oUI:buttonTitle     :connect( "clicked()", {|| ::execEvent( "buttonTitle_clicked"     ) } )
-      ::oUI:buttonSource    :connect( "clicked()", {|| ::execEvent( "buttonSource_clicked"    ) } )
-      ::oUI:buttonDesc      :connect( "clicked()", {|| ::execEvent( "buttonDesc_clicked"      ) } )
-      ::oUI:buttonSrcDesc   :connect( "clicked()", {|| ::execEvent( "buttonSrcDesc_clicked"   ) } )
-      ::oUI:buttonClearDesc :connect( "clicked()", {|| ::execEvent( "buttonClearDesc_clicked" ) } )
+      ::oUI:buttonTitle     :connect( "clicked()", {|| ::execEvent( __buttonTitle_clicked__     ) } )
+      ::oUI:buttonSource    :connect( "clicked()", {|| ::execEvent( __buttonSource_clicked__    ) } )
+      ::oUI:buttonDesc      :connect( "clicked()", {|| ::execEvent( __buttonDesc_clicked__      ) } )
+      ::oUI:buttonSrcDesc   :connect( "clicked()", {|| ::execEvent( __buttonSrcDesc_clicked__   ) } )
+      ::oUI:buttonClearDesc :connect( "clicked()", {|| ::execEvent( __buttonClearDesc_clicked__ ) } )
 
-      ::oUI:buttonCancel    :connect( "clicked()", {|| ::execEvent( "buttonCancel_clicked"    ) } )
-      ::oUI:buttonSave      :connect( "clicked()", {|| ::execEvent( "buttonSave_clicked"      ) } )
+      ::oUI:buttonCancel    :connect( "clicked()", {|| ::execEvent( __buttonCancel_clicked__    ) } )
+      ::oUI:buttonSave      :connect( "clicked()", {|| ::execEvent( __buttonSave_clicked__      ) } )
 
-      ::oUI:editChangelog   :connect( "textChanged(QString)", {|p| ::execEvent( "editChangelog_textChanged", p ) } )
-      ::oUI:editUser        :connect( "textChanged(QString)", {|p| ::execEvent( "editUser_textChanged"     , p ) } )
+      ::oUI:editChangelog   :connect( "textChanged(QString)", {|p| ::execEvent( __editChangelog_textChanged__, p ) } )
+      ::oUI:editUser        :connect( "textChanged(QString)", {|p| ::execEvent( __editUser_textChanged__     , p ) } )
 
       ::oUI:comboAction     :addItem( "! Fixed  : " )
       ::oUI:comboAction     :addItem( "* Changed: " )
@@ -226,18 +240,18 @@ STATIC FUNCTION hbide_getLogCounter( cBuffer )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeChangeLog:execEvent( cEvent, p )
+METHOD IdeChangeLog:execEvent( nEvent, p )
    LOCAL cTmp, cTmp1, s, n
 
    HB_SYMBOL_UNUSED( p )
 
    IF ::lQuitting
-      RETURN Self 
-   ENDIF 
+      RETURN Self
+   ENDIF
 
-   SWITCH cEvent
+   SWITCH nEvent
 
-   CASE "buttonTitle_clicked"
+   CASE __buttonTitle_clicked__
       IF ! empty( cTmp := ::oUI:comboTitle:currentText() )
          ::addToLog( { "Title", cTmp, "" } )
          ::refresh()
@@ -247,7 +261,7 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
          ENDIF
       ENDIF
       EXIT
-   CASE "buttonSource_clicked"
+   CASE __buttonSource_clicked__
       IF ! empty( cTmp := ::oUI:comboSources:currentText() )
          ::addToLog( { "Source", cTmp, "" } )
          ::refresh()
@@ -257,14 +271,14 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
          ENDIF
       ENDIF
       EXIT
-   CASE "buttonDesc_clicked"
+   CASE __buttonDesc_clicked__
       IF ! empty( cTmp := ::oUI:plainCurrentLog:toPlainText() )
          ::addToLog( { "Desc", ::oUI:comboAction:currentText(), cTmp } )
          ::oUI:plainCurrentLog:clear()
          ::refresh()
       ENDIF
       EXIT
-   CASE "buttonSrcDesc_clicked"
+   CASE __buttonSrcDesc_clicked__
       IF ! empty( cTmp := ::oUI:comboSources:currentText() )
          ::addToLog( { "Source", cTmp, "" } )
       ENDIF
@@ -274,10 +288,10 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
       ENDIF
       ::refresh()
       EXIT
-   CASE "buttonClearDesc_clicked"
+   CASE __buttonClearDesc_clicked__
       ::oUI:plainCurrentLog:clear()
       EXIT
-   CASE "buttonSave_clicked"
+   CASE __buttonSave_clicked__
       IF ! empty( cTmp := ::buildLogEntry() )
          cTmp1 := hb_memoread( ::oINI:cChangeLog )
          ::nCntr := hbide_getLogCounter( cTmp1 )
@@ -293,17 +307,17 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
          ::updateLog()
       ENDIF
       EXIT
-   CASE "buttonCancel_clicked"
+   CASE __buttonCancel_clicked__
       ::oUI:plainLogEntry:clear()
       EXIT
-   CASE "buttonOpen_clicked"
+   CASE __buttonOpen_clicked__
       cTmp := hbide_fetchAFile( ::oDlg, "Select a ChangeLog File" )
       IF ! empty( cTmp ) .AND. hb_fileExists( cTmp )
          ::oINI:cChangeLog := cTmp
          ::oUI:editChangelog:setText( ::oINI:cChangeLog )
       ENDIF
       EXIT
-   CASE "buttonNew_clicked"
+   CASE __buttonNew_clicked__
       cTmp := hbide_saveAFile( ::oDlg, "New ChangeLog File" )
       IF ! empty( cTmp )
          ::oINI:cChangeLog := cTmp
@@ -317,12 +331,12 @@ METHOD IdeChangeLog:execEvent( cEvent, p )
          ::oUI:editChangelog:setText( ::oINI:cChangeLog )
       ENDIF
       EXIT
-   CASE "editUser_textChanged"
+   CASE __editUser_textChanged__
       IF !empty( p )
          ::oINI:cUserChangeLog := p
       ENDIF
       EXIT
-   CASE "editChangelog_textChanged"
+   CASE __editChangelog_textChanged__
       IF ! empty( p ) .AND. hb_fileExists( p )
          ::oINI:cChangeLog := p
          ::oUI:editChangelog:setStyleSheet( "" )

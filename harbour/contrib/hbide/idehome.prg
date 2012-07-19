@@ -72,10 +72,10 @@
 
 /*----------------------------------------------------------------------*/
 
-#define browserStat_anchorClicked                 101
-#define browserWelcome_contextMenuRequested       102
-#define browserFaq_contextMenuRequested           103
-#define tabWidget_currentChanged                  104
+#define __browserStat_anchorClicked__             2001
+#define __browserWelcome_contextMenuRequested__   2002
+#define __browserFaq_contextMenuRequested__       2003
+#define __tabWidget_currentChanged__              2004
 
 /*----------------------------------------------------------------------*/
 
@@ -111,7 +111,7 @@ CLASS IdeHome INHERIT IdeObject
    METHOD create( oIde )
    METHOD destroy()
    METHOD refresh()
-   METHOD execEvent( nMode, p )
+   METHOD execEvent( nEvent, p )
    METHOD buildWelcomeTab()
    METHOD activateTab( mp1, mp2, oTab )
    METHOD addProjectsInfo( aHtm )
@@ -217,22 +217,22 @@ METHOD IdeHome:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeHome:execEvent( nMode, p )
+METHOD IdeHome:execEvent( nEvent, p )
    LOCAL cAct, cText, cExt
 
    IF ::lQuitting
       RETURN Self
    ENDIF
 
-   DO CASE
-   CASE nMode == "tabWidget_currentChanged"
+   SWITCH nEvent
+   CASE __tabWidget_currentChanged__
       IF p == 0
          ::qCurBrowser := ::qWelcomeBrowser
       ELSEIF p == 1
          ::qCurBrowser := ::qFaqBrowser
       ENDIF
-
-   CASE nMode == "browserStat_anchorClicked"
+      EXIT
+   CASE __browserStat_anchorClicked__
       cText := p:toString()
 
       IF "prj-" $ lower( cText )
@@ -252,9 +252,9 @@ METHOD IdeHome:execEvent( nMode, p )
          /* Stay on the Same Page */
          ::buildProjectDetails( ::cClickedProject )
       ENDIF
-
-   CASE nMode == "browserWelcome_contextMenuRequested"  .OR. nMode == "browserFaq_contextMenuRequested"
-
+      EXIT
+   CASE __browserWelcome_contextMenuRequested__
+   CASE __browserFaq_contextMenuRequested__
       IF !empty( cAct := hbide_popupBrwContextMenu( ::qCurBrowser, p ) )
          IF cAct $ "Back,Forward,Home"
             ::refresh()
@@ -262,8 +262,8 @@ METHOD IdeHome:execEvent( nMode, p )
             ::print()
          ENDIF
       ENDIF
-
-   ENDCASE
+      EXIT
+   ENDSWITCH
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -337,8 +337,8 @@ METHOD IdeHome:buildWelcomeTab()
    ::qWelcomeBrowser := qBrw
    ::qCurBrowser     := qBrw
 
-   qBrw:connect( "anchorClicked(QUrl)"               , {|p| ::execEvent( "browserStat_anchorClicked"          , p ) } )
-   qBrw:connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( "browserWelcome_contextMenuRequested", p ) } )
+   qBrw:connect( "anchorClicked(QUrl)"               , {|p| ::execEvent( __browserStat_anchorClicked__          , p ) } )
+   qBrw:connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( __browserWelcome_contextMenuRequested__, p ) } )
 
    qSList := QStringList()
    qSList:append( hb_dirBase() + "docs" )
@@ -537,7 +537,7 @@ METHOD IdeHome:buildFaqTab()
    qBrw:setContextMenuPolicy( Qt_CustomContextMenu )
    ::setStyleSheetTextBrowser( qBrw )
 
-   qBrw:connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( "browserFaq_contextMenuRequested", p  ) } )
+   qBrw:connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( __browserFaq_contextMenuRequested__, p  ) } )
 
    ::oFaqTab     := oTab
    ::qFaqBrowser := qBrw

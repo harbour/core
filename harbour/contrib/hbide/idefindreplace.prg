@@ -69,11 +69,24 @@
 #include "hbclass.ch"
 #include "hbqtgui.ch"
 
-#define __buttonPrev_clicked                      1
-#define __buttonNext_clicked                      2
-#define __buttonFirst_clicked                     3
-#define __buttonLast_clicked                      4
-#define __buttonAll_clicked                       5
+/*----------------------------------------------------------------------*/
+
+#define __buttonPrev_clicked__                    2001
+#define __buttonNext_clicked__                    2002
+#define __buttonFirst_clicked__                   2003
+#define __buttonLast_clicked__                    2004
+#define __buttonAll_clicked__                     2005
+#define __buttonClose__                           2006
+#define __buttonFolder__                          2007
+#define __buttonFind__                            2008
+#define __buttonRepl__                            2009
+#define __buttonStop__                            2010
+#define __checkAll__                              2011
+#define __comboFind__                             2012
+#define __checkListOnly__                         2013
+#define __checkFolders__                          2014
+#define __editResults__                           2015
+#define __editResults_contextMenu__               2016
 
 /*----------------------------------------------------------------------*/
 
@@ -146,23 +159,23 @@ METHOD IdeUpDown:create( oIde )
 
    ::oUI:buttonPrev:setIcon( QIcon( hbide_image( "go-prev" ) ) )
    ::oUI:buttonPrev:setToolTip( "Find Previous" )
-   ::oUI:buttonPrev:connect( "clicked()", {|| ::execEvent( __buttonPrev_clicked ) } )
+   ::oUI:buttonPrev:connect( "clicked()", {|| ::execEvent( __buttonPrev_clicked__ ) } )
    //
    ::oUI:buttonNext:setIcon( QIcon( hbide_image( "go-next" ) ) )
    ::oUI:buttonNext:setToolTip( "Find Next" )
-   ::oUI:buttonNext:connect( "clicked()", {|| ::execEvent( __buttonNext_clicked ) } )
+   ::oUI:buttonNext:connect( "clicked()", {|| ::execEvent( __buttonNext_clicked__ ) } )
    //
    ::oUI:buttonFirst:setIcon( QIcon( hbide_image( "go-first" ) ) )
    ::oUI:buttonFirst:setToolTip( "Find First" )
-   ::oUI:buttonFirst:connect( "clicked()", {|| ::execEvent( __buttonFirst_clicked ) } )
+   ::oUI:buttonFirst:connect( "clicked()", {|| ::execEvent( __buttonFirst_clicked__ ) } )
    //
    ::oUI:buttonLast:setIcon( QIcon( hbide_image( "go-last" ) ) )
    ::oUI:buttonLast:setToolTip( "Find Last" )
-   ::oUI:buttonLast:connect( "clicked()", {|| ::execEvent( __buttonLast_clicked ) } )
+   ::oUI:buttonLast:connect( "clicked()", {|| ::execEvent( __buttonLast_clicked__ ) } )
    //
    ::oUI:buttonAll:setIcon( QIcon( hbide_image( "hilight-all" ) ) )
    ::oUI:buttonAll:setToolTip( "Highlight All" )
-   ::oUI:buttonAll:connect( "clicked()", {|| ::execEvent( __buttonAll_clicked ) } )
+   ::oUI:buttonAll:connect( "clicked()", {|| ::execEvent( __buttonAll_clicked__ ) } )
 
    ::oUI:setEnabled( .f. )
 
@@ -184,19 +197,19 @@ METHOD IdeUpDown:execEvent( nEvent, p )
    IF !empty( cText )
       SWITCH nEvent
 
-      CASE __buttonPrev_clicked
+      CASE __buttonPrev_clicked__
          oEdit:findEx( cText, QTextDocument_FindBackward, 0 )
          EXIT
-      CASE __buttonNext_clicked
+      CASE __buttonNext_clicked__
          oEdit:findEx( cText, 0, 0 )
          EXIT
-      CASE __buttonFirst_clicked
+      CASE __buttonFirst_clicked__
          oEdit:findEx( cText, 0, 1 )
          EXIT
-      CASE __buttonLast_clicked
+      CASE __buttonLast_clicked__
          oEdit:findEx( cText, QTextDocument_FindBackward, 2 )
          EXIT
-      CASE __buttonAll_clicked
+      CASE __buttonAll_clicked__
          oEdit:highlightAll( cText )
          EXIT
       ENDSWITCH
@@ -753,7 +766,7 @@ CLASS IdeFindInFiles INHERIT IdeObject
    METHOD findInABunch( aFiles )
    METHOD showLog( nType, cMsg, aLines )
 
-   METHOD execEvent( cEvent, p )
+   METHOD execEvent( nEvent, p )
    METHOD execContextMenu( p )
    METHOD buildUI()
    METHOD replaceAll()
@@ -868,65 +881,65 @@ METHOD IdeFindInFiles:buildUI()
 
    /* Attach all signals */
    //
-   ::oUI:buttonClose  :connect( "clicked()"                   , {| | ::execEvent( "buttonClose"      ) } )
-   ::oUI:buttonFolder :connect( "clicked()"                   , {| | ::execEvent( "buttonFolder"     ) } )
-   ::oUI:buttonFind   :connect( "clicked()"                   , {| | ::execEvent( "buttonFind"       ) } )
-   ::oUI:buttonRepl   :connect( "clicked()"                   , {| | ::execEvent( "buttonRepl"       ) } )
-   ::oUI:buttonStop   :connect( "clicked()"                   , {| | ::execEvent( "buttonStop"       ) } )
-   ::oUI:checkAll     :connect( "stateChanged(int)"           , {|p| ::execEvent( "checkAll", p      ) } )
-   ::oUI:comboExpr    :connect( "currentIndexChanged(QString)", {|p| ::execEvent( "comboFind", p     ) } )
-   ::oUI:checkListOnly:connect( "stateChanged(int)"           , {|p| ::execEvent( "checkListOnly", p ) } )
-   ::oUI:checkFolders :connect( "stateChanged(int)"           , {|p| ::execEvent( "checkFolders", p  ) } )
-   ::oUI:editResults  :connect( "copyAvailable(bool)"         , {|l| ::execEvent( "editResults", l   ) } )
-   ::oUI:editResults  :connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( "editResults-contextMenu", p ) } )
+   ::oUI:buttonClose  :connect( "clicked()"                         , {| | ::execEvent( __buttonClose__                ) } )
+   ::oUI:buttonFolder :connect( "clicked()"                         , {| | ::execEvent( __buttonFolder__               ) } )
+   ::oUI:buttonFind   :connect( "clicked()"                         , {| | ::execEvent( __buttonFind__                 ) } )
+   ::oUI:buttonRepl   :connect( "clicked()"                         , {| | ::execEvent( __buttonRepl__                 ) } )
+   ::oUI:buttonStop   :connect( "clicked()"                         , {| | ::execEvent( __buttonStop__                 ) } )
+   ::oUI:checkAll     :connect( "stateChanged(int)"                 , {|p| ::execEvent( __checkAll__               , p ) } )
+   ::oUI:comboExpr    :connect( "currentIndexChanged(QString)"      , {|p| ::execEvent( __comboFind__              , p ) } )
+   ::oUI:checkListOnly:connect( "stateChanged(int)"                 , {|p| ::execEvent( __checkListOnly__          , p ) } )
+   ::oUI:checkFolders :connect( "stateChanged(int)"                 , {|p| ::execEvent( __checkFolders__           , p ) } )
+   ::oUI:editResults  :connect( "copyAvailable(bool)"               , {|p| ::execEvent( __editResults__            , p ) } )
+   ::oUI:editResults  :connect( "customContextMenuRequested(QPoint)", {|p| ::execEvent( __editResults_contextMenu__, p ) } )
 
    ::qEditFind := ::oUI:comboExpr:lineEdit()
-   ::qEditFind:connect( "returnPressed()", {|| ::execEvent( "buttonFind" ) } )
+   ::qEditFind:connect( "returnPressed()", {|| ::execEvent( __buttonFind__ ) } )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeFindInFiles:execEvent( cEvent, p )
+METHOD IdeFindInFiles:execEvent( nEvent, p )
    LOCAL cPath, qLineEdit, qCursor, cSource, v, nInfo
 
    IF ::lQuitting
       RETURN Self
    ENDIF
 
-   SWITCH cEvent
+   SWITCH nEvent
 
-   CASE "buttonClose"
+   CASE __buttonClose__
       ::oFindDock:hide()
       EXIT
 
-   CASE "comboFind"
+   CASE __comboFind__
       ::oIde:oSBar:getItem( SB_PNL_SEARCH ):caption := "FIND: " + p
       EXIT
 
-   CASE "checkListOnly"
+   CASE __checkListOnly__
       ::oUI:comboRepl:setEnabled( p == 0 )
       ::oUI:buttonRepl:setEnabled( !( p == 1 ) )
       EXIT
 
-   CASE "checkFolders"
+   CASE __checkFolders__
       ::oUI:comboFolder:setEnabled( p == 2 )
       ::oUI:checkSubFolders:setEnabled( p == 2 )
       EXIT
 
-   CASE "buttonFind"
+   CASE __buttonFind__
       ::find()
       EXIT
 
-   CASE "buttonRepl"
+   CASE __buttonRepl__
       ::replaceAll()
       EXIT
 
-   CASE "buttonStop"
+   CASE __buttonStop__
       ::lStop := .t.
       EXIT
 
-   CASE "buttonFolder"
+   CASE __buttonFolder__
       cPath := hbide_fetchADir( ::oDlg, "Select a folder for search operation", ::cLastFileOpenPath )
       IF !empty( cPath )
          ::oIde:cLastFileOpenPath := cPath
@@ -940,7 +953,7 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
       ENDIF
       EXIT
 
-   CASE "checkAll"
+   CASE __checkAll__
       v := !( p == 0 )
       ::oUI:checkPrg:setChecked( v )
       ::oUI:checkC:setChecked( v )
@@ -950,11 +963,11 @@ METHOD IdeFindInFiles:execEvent( cEvent, p )
       ::oUI:checkRc:setChecked( v )
       EXIT
 
-   CASE "editResults-contextMenu"
+   CASE __editResults_contextMenu__
       ::execContextMenu( p )
       EXIT
 
-   CASE "editResults"
+   CASE __editResults__
       IF p .AND. ! ::lNotDblClick
          qCursor := ::oUI:editResults:textCursor()
          nInfo := qCursor:blockNumber() + 1

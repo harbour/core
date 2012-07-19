@@ -96,6 +96,26 @@
 
 /*----------------------------------------------------------------------*/
 
+#define __buttonInstall_clicked__                 2001
+#define __buttonHome_clicked__                    2002
+#define __buttonBackward_clicked__                2003
+#define __buttonForward_clicked__                 2004
+#define __buttonUp_clicked__                      2005
+#define __buttonRefresh_clicked__                 2006
+#define __buttonPrint_clicked__                   2007
+#define __buttonPdf_clicked__                     2008
+#define __buttonPdfAll_clicked__                  2009
+#define __browserView_anchorClicked__             2010
+#define __tabWidgetContents_currentChanged__      2011
+#define __editInstall_textChanged__               2012
+#define __editIndex_textChanged__                 2013
+#define __editIndex_returnPressed__               2014
+#define __treeDoc_itemSelectionChanged__          2015
+#define __treeCategory_itemSelectionChanged__     2016
+#define __listIndex_ItemDoubleClicked__           2017
+
+/*----------------------------------------------------------------------*/
+
 CLASS IdeDocFunction
 
    DATA   cName                                   INIT ""
@@ -190,7 +210,7 @@ CLASS IdeHarbourHelp INHERIT IdeObject
    METHOD destroy()
    METHOD clear()
 
-   METHOD execEvent( nMode, p, p1 )
+   METHOD execEvent( nEvent, p, p1 )
 
    METHOD setImages()
    METHOD setTooltips()
@@ -472,32 +492,33 @@ METHOD IdeHarbourHelp:setParameters()
 
 METHOD IdeHarbourHelp:installSignals()
 
-   ::oUI:buttonInstall    :connect( "clicked()"                 , {| | ::execEvent( "buttonInstall_clicked"               ) } )
-   ::oUI:buttonHome       :connect( "clicked()"                 , {| | ::execEvent( "buttonHome_clicked"                  ) } )
-   ::oUI:buttonBackward   :connect( "clicked()"                 , {| | ::execEvent( "buttonBackward_clicked"              ) } )
-   ::oUI:buttonForward    :connect( "clicked()"                 , {| | ::execEvent( "buttonForward_clicked"               ) } )
-   ::oUI:buttonUp         :connect( "clicked()"                 , {| | ::execEvent( "buttonUp_clicked"                    ) } )
-   ::oUI:buttonRefresh    :connect( "clicked()"                 , {| | ::execEvent( "buttonRefresh_clicked"               ) } )
-   ::oUI:buttonPrint      :connect( "clicked()"                 , {| | ::execEvent( "buttonPrint_clicked"                 ) } )
-   ::oUI:buttonPdf        :connect( "clicked()"                 , {| | ::execEvent( "buttonPdf_clicked"                   ) } )
-   ::oUI:buttonPdfAll     :connect( "clicked()"                 , {| | ::execEvent( "buttonPdfAll_clicked"                ) } )
+   ::oUI:buttonInstall    :connect( "clicked()"                 , {| | ::execEvent( __buttonInstall_clicked__               ) } )
+   ::oUI:buttonHome       :connect( "clicked()"                 , {| | ::execEvent( __buttonHome_clicked__                  ) } )
+   ::oUI:buttonBackward   :connect( "clicked()"                 , {| | ::execEvent( __buttonBackward_clicked__              ) } )
+   ::oUI:buttonForward    :connect( "clicked()"                 , {| | ::execEvent( __buttonForward_clicked__               ) } )
+   ::oUI:buttonUp         :connect( "clicked()"                 , {| | ::execEvent( __buttonUp_clicked__                    ) } )
+   ::oUI:buttonRefresh    :connect( "clicked()"                 , {| | ::execEvent( __buttonRefresh_clicked__               ) } )
+   ::oUI:buttonPrint      :connect( "clicked()"                 , {| | ::execEvent( __buttonPrint_clicked__                 ) } )
+   ::oUI:buttonPdf        :connect( "clicked()"                 , {| | ::execEvent( __buttonPdf_clicked__                   ) } )
+   ::oUI:buttonPdfAll     :connect( "clicked()"                 , {| | ::execEvent( __buttonPdfAll_clicked__                ) } )
 
-   ::oUI:browserView      :connect( "anchorClicked(QUrl)"       , {|p| ::execEvent( "browserView_anchorClicked"       , p ) } )
-   ::oUI:tabWidgetContents:connect( "currentChanged(int)"       , {|p| ::execEvent( "tabWidgetContents_currentChanged", p ) } )
+   ::oUI:browserView      :connect( "anchorClicked(QUrl)"       , {|p| ::execEvent( __browserView_anchorClicked__       , p ) } )
+   ::oUI:tabWidgetContents:connect( "currentChanged(int)"       , {|p| ::execEvent( __tabWidgetContents_currentChanged__, p ) } )
 
-   ::oUI:editInstall      :connect( "textChanged(QString)"      , {|p| ::execEvent( "editInstall_textChanged"         , p ) } )
-   ::oUI:editIndex        :connect( "textChanged(QString)"      , {|p| ::execEvent( "editIndex_textChanged"           , p ) } )
-   ::oUI:editIndex        :connect( "returnPressed()"           , {| | ::execEvent( "editIndex_returnPressed"             ) } )
-   ::oUI:listIndex        :connect( "itemDoubleClicked(QListWidgetItem*)", {|p| ::execEvent( "listIndex_ItemDoubleClicked"     , p ) } )
+   ::oUI:editInstall      :connect( "textChanged(QString)"      , {|p| ::execEvent( __editInstall_textChanged__         , p ) } )
+   ::oUI:editIndex        :connect( "textChanged(QString)"      , {|p| ::execEvent( __editIndex_textChanged__           , p ) } )
+   ::oUI:editIndex        :connect( "returnPressed()"           , {| | ::execEvent( __editIndex_returnPressed__             ) } )
 
-   ::oUI:treeDoc          :connect( "itemSelectionChanged()"    , {| | ::execEvent( "treeDoc_itemSelectionChanged"        ) } )
-   ::oUI:treeCategory     :connect( "itemSelectionChanged()"    , {| | ::execEvent( "treeCategory_itemSelectionChanged"   ) } )
+   ::oUI:treeDoc          :connect( "itemSelectionChanged()"    , {| | ::execEvent( __treeDoc_itemSelectionChanged__        ) } )
+   ::oUI:treeCategory     :connect( "itemSelectionChanged()"    , {| | ::execEvent( __treeCategory_itemSelectionChanged__   ) } )
+
+   ::oUI:listIndex        :connect( "itemDoubleClicked(QListWidgetItem*)", {|p| ::execEvent( __listIndex_ItemDoubleClicked__, p ) } )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
+METHOD IdeHarbourHelp:execEvent( nEvent, p, p1 )
    LOCAL cPath, qTWItem, cText, n, nn, nLen, cLower
 
    HB_SYMBOL_UNUSED( p1 )
@@ -506,22 +527,22 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       RETURN Self
    ENDIF
 
-   SWITCH nMode
+   SWITCH nEvent
 
-   CASE "buttonInstall_clicked"
+   CASE __buttonInstall_clicked__
       cPath := hbide_fetchADir( ::oDocViewDock, "Harbour Install Root" )
       IF !empty( cPath )
          ::oUI:editInstall:setText( cPath )
       ENDIF
       EXIT
 
-   CASE "tabWidgetContents_currentChanged"
+   CASE __tabWidgetContents_currentChanged__
       IF p == 1
          ::oUI:editIndex:setFocus()
       ENDIF
       EXIT
 
-   CASE "browserView_anchorClicked"
+   CASE __browserView_anchorClicked__
       cText := lower( p:toString() )
       nLen := Len( cText )
       IF ( n := ascan( ::aFunctions, {|e_| left( e_[ 6 ], nLen ) == cText } ) ) > 0
@@ -530,19 +551,19 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       ENDIF
       EXIT
 
-   CASE "listIndex_ItemDoubleClicked"
+   CASE __listIndex_ItemDoubleClicked__
       ::populateIndexedSelection()
       ::oUI:editIndex:setFocus()
       EXIT
 
-   CASE "editIndex_returnPressed"
+   CASE __editIndex_returnPressed__
       IF !empty( ::oUI:editIndex:text() )
          ::populateIndexedSelection()
          ::oUI:editIndex:setFocus()
       ENDIF
       EXIT
 
-   CASE "editIndex_textChanged"
+   CASE __editIndex_textChanged__
       IF ( nLen := Len( p ) ) > 0
          cLower := lower( p )
          IF ( n := ascan( ::aFunctions, {|e_| left( e_[ 6 ], nLen ) == cLower } ) ) > 0
@@ -551,7 +572,7 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       ENDIF
       EXIT
 
-   CASE "editInstall_textChanged"
+   CASE __editInstall_textChanged__
       IF hb_dirExists( p )
          ::oUI:editInstall:setStyleSheet( "" )
          ::cPathInstall := hbide_pathStripLastSlash( hbide_pathNormalized( p, .f. ) )
@@ -561,25 +582,25 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       ENDIF
       EXIT
 
-   CASE "buttonHome_clicked"
+   CASE __buttonHome_clicked__
       IF !empty( ::aNodes )
          ::oUI:treeDoc:setCurrentItem( ::aNodes[ 1, 1 ], 0 )
       ENDIF
       EXIT
 
-   CASE "buttonBackward_clicked"
+   CASE __buttonBackward_clicked__
       IF ::nCurInHist > 1
          ::oUI:treeDoc:setCurrentItem( ::aNodes[ ::aHistory[ ::nCurInHist - 1 ], 1 ], 0 )
       ENDIF
       EXIT
 
-   CASE "buttonForward_clicked"
+   CASE __buttonForward_clicked__
       IF ::nCurInHist < Len( ::aHistory )
          ::oUI:treeDoc:setCurrentItem( ::aNodes[ ::aHistory[ ::nCurInHist + 1 ], 1 ], 0 )
       ENDIF
       EXIT
 
-   CASE "buttonUp_clicked"
+   CASE __buttonUp_clicked__
       IF ::nCurInHist > 1 .AND. ::nCurInHist <= Len( ::aHistory )
          IF ! empty( qTWItem := ::oUI:treeDoc:itemAbove( ::oUI:treeDoc:currentItem( 0 ) ) )
             ::oUI:treeDoc:setCurrentItem( qTWItem, 0 )
@@ -587,26 +608,26 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       ENDIF
       EXIT
 
-   CASE "buttonRefresh_clicked"
+   CASE __buttonRefresh_clicked__
       ::refreshDocTree()
       ::aProtoTypes := {}
       ::lLoadedProto := .f.
       ::oEM:updateCompleter()
       EXIT
 
-   CASE "buttonPrint_clicked"
+   CASE __buttonPrint_clicked__
       ::print()
       EXIT
 
-   CASE "buttonPdf_clicked"
+   CASE __buttonPdf_clicked__
       ::exportAsPdf()
       EXIT
 
-   CASE "buttonPdfAll_clicked"
+   CASE __buttonPdfAll_clicked__
       ::exportAsPdfAll()
       EXIT
 
-   CASE "treeCategory_itemSelectionChanged"
+   CASE __treeCategory_itemSelectionChanged__
       qTWItem := ::oUI:treeCategory:currentItem()
       n := ascan( ::aCategory, {|e_| hbqt_IsEqual( e_[ 5 ], qTWItem ) } )
       IF n > 0
@@ -616,7 +637,7 @@ METHOD IdeHarbourHelp:execEvent( nMode, p, p1 )
       ENDIF
       EXIT
 
-   CASE "treeDoc_itemSelectionChanged"
+   CASE __treeDoc_itemSelectionChanged__
       qTWItem := ::oUI:treeDoc:currentItem()
       cText   := qTWItem:text( 0 )
 

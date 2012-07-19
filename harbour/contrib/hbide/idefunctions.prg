@@ -82,6 +82,17 @@
 
 /*----------------------------------------------------------------------*/
 
+#define __editFunc_textChanged__                  2001
+#define __editFunc_returnPressed__                2002
+#define __buttonMark_clicked__                    2003
+#define __buttonLoad_clicked__                    2004
+#define __buttonTag_clicked__                     2005
+#define __buttonClose_clicked__                   2006
+#define __tableFuncList_itemSelectionChanged__    2007
+#define __tableFuncList_itemDoubleClicked__       2008
+
+/*----------------------------------------------------------------------*/
+
 CLASS IdeFunctions INHERIT IdeObject
 
    DATA   isNotSetYet                             INIT .t.
@@ -104,7 +115,7 @@ CLASS IdeFunctions INHERIT IdeObject
    METHOD populateTable()
    METHOD consolidateList()
    METHOD buildHeader()
-   METHOD execEvent( nMode, p )
+   METHOD execEvent( nEvent, p )
    METHOD openFunction( lCheckDuplicates )
    METHOD jumpToFunction( cWord )
    METHOD positionToFunction( cWord, lShowTip )
@@ -135,62 +146,63 @@ METHOD IdeFunctions:create( oIde )
 
    ::buildHeader()
 
-   ::oUI:editFunction :connect( "textChanged(QString)"        , {|p| ::execEvent( "editFunc_textChanged", p   ) } )
-   ::oUI:editFunction :connect( "returnPressed()"             , {| | ::execEvent( "editFunc_returnPressed"    ) } )
-   ::oUI:buttonMark   :connect( "clicked()"                   , {| | ::execEvent( "buttonMark_clicked"        ) } )
-   ::oUI:buttonLoad   :connect( "clicked()"                   , {| | ::execEvent( "buttonLoad_clicked"        ) } )
-   ::oUI:buttonTag    :connect( "clicked()"                   , {| | ::execEvent( "buttonTag_clicked"         ) } )
-   ::oUI:buttonClose  :connect( "clicked()"                   , {| | ::execEvent( "buttonClose_clicked"       ) } )
-   ::oUI:tableFuncList:connect( "itemSelectionChanged()"      , {| | ::execEvent( "tableFuncList_itemSelectionChanged" ) } )
-   ::oUI:tableFuncList:connect( "itemDoubleClicked(QTableWidgetItem*)", {|p| ::execEvent( "tableFuncList_itemDoubleClicked", p ) } )
+   ::oUI:editFunction :connect( "textChanged(QString)"        , {|p| ::execEvent( __editFunc_textChanged__  , p          ) } )
+   ::oUI:editFunction :connect( "returnPressed()"             , {| | ::execEvent( __editFunc_returnPressed__             ) } )
+   ::oUI:buttonMark   :connect( "clicked()"                   , {| | ::execEvent( __buttonMark_clicked__                 ) } )
+   ::oUI:buttonLoad   :connect( "clicked()"                   , {| | ::execEvent( __buttonLoad_clicked__                 ) } )
+   ::oUI:buttonTag    :connect( "clicked()"                   , {| | ::execEvent( __buttonTag_clicked__                  ) } )
+   ::oUI:buttonClose  :connect( "clicked()"                   , {| | ::execEvent( __buttonClose_clicked__                ) } )
+   ::oUI:tableFuncList:connect( "itemSelectionChanged()"      , {| | ::execEvent( __tableFuncList_itemSelectionChanged__ ) } )
+   ::oUI:tableFuncList:connect( "itemDoubleClicked(QTableWidgetItem*)", {|p| ::execEvent( __tableFuncList_itemDoubleClicked__, p ) } )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeFunctions:execEvent( nMode, p )
+METHOD IdeFunctions:execEvent( nEvent, p )
    LOCAL n, nLen
 
    IF ::lQuitting
       RETURN Self
    ENDIF
 
-   DO CASE
-   CASE nMode == "editFunc_textChanged"
+   SWITCH nEvent
+   CASE __editFunc_textChanged__
       p    := upper( p )
       nLen := Len( p )
       IF ( n := ascan( ::aList, {|e_| left( e_[ 1 ], nLen ) == p } ) ) > 0
          ::oUI:tableFuncList:setCurrentItem( ::aItems[ n ] )
       ENDIF
-
-   CASE nMode == "editFunc_returnPressed"
+      EXIT
+   CASE __editFunc_returnPressed__
       ::openFunction( .f. )
-
-   CASE nMode == "tableFuncList_itemDoubleClicked"
+      EXIT
+   CASE __tableFuncList_itemDoubleClicked__
       ::openFunction( .f. )
-
-   CASE nMode == "buttonMark_clicked"
+      EXIT
+   CASE __buttonMark_clicked__
       ::oUI:listProjects:show()
       ::listProjects()
-
-   CASE nMode == "buttonLoad_clicked"
+      EXIT
+   CASE __buttonLoad_clicked__
       ::oUI:listProjects:hide()
       ::loadTags()
-
-   CASE nMode == "buttonTag_clicked"
+      EXIT
+   CASE __buttonTag_clicked__
       ::oUI:listProjects:hide()
       ::buildTags()
       ::oEM:updateCompleter()
-
-   CASE nMode == "buttonClose_clicked"
+      EXIT
+   CASE __buttonClose_clicked__
       ::oFunctionsDock:hide()
-
-   CASE nMode == "tableFuncList_itemSelectionChanged"
+      EXIT
+   CASE __tableFuncList_itemSelectionChanged__
       n := ::oUI:tableFuncList:currentRow()
       IF n >= 0
          ::oUI:editSyntax:setText( ::aList[ n + 1, 2 ] )
       ENDIF
-   ENDCASE
+      EXIT
+   ENDSWITCH
 
    RETURN Self
 

@@ -82,6 +82,14 @@
 
 /*----------------------------------------------------------------------*/
 
+#define __listThemes_currentRowChanged__          2001
+#define __listItems_currentRowChanged__           2002
+#define __applyMenu_triggered_applyToCurrentTab__ 2003
+#define __applyMenu_triggered_applyToAllTabs__    2004
+#define __applyMenu_triggered_setAsDefault__      2005
+
+/*----------------------------------------------------------------------*/
+
 CLASS IdeThemes INHERIT IdeObject
 
    VAR    lDefault                                INIT .t.
@@ -113,7 +121,7 @@ CLASS IdeThemes INHERIT IdeObject
    METHOD contains( cTheme )
    METHOD load( cFile )
    METHOD save( lAsk )
-   METHOD execEvent( cEvent, p )
+   METHOD execEvent( nEvent, p )
    METHOD getThemeAttribute( cAttr, cTheme )
    METHOD buildSyntaxFormat( aAttr )
    METHOD setForeBackGround( qEdit, cTheme )
@@ -252,7 +260,7 @@ METHOD IdeThemes:create( oIde, cThemesFile )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeThemes:execEvent( cEvent, p )
+METHOD IdeThemes:execEvent( nEvent, p )
    LOCAL oEditor, a_
 
    HB_SYMBOL_UNUSED( p )
@@ -261,8 +269,8 @@ METHOD IdeThemes:execEvent( cEvent, p )
       RETURN Self
    ENDIF
 
-   SWITCH cEvent
-   CASE "listItems_currentRowChanged"
+   SWITCH nEvent
+   CASE __listItems_currentRowChanged__
       ::nCurItem  := p+1
       IF ::nCurItem == 13
          ::updateCurrentLineColor()
@@ -272,21 +280,21 @@ METHOD IdeThemes:execEvent( cEvent, p )
          ::setAttributes( p )
       ENDIF
       EXIT
-   CASE "listThemes_currentRowChanged"
+   CASE __listThemes_currentRowChanged__
       ::nCurTheme := p+1
       ::setTheme( p )
       EXIT
-   CASE "applyMenu_triggered_applyToAllTabs"
+   CASE __applyMenu_triggered_applyToAllTabs__
       FOR EACH a_ IN ::aTabs
          a_[ TAB_OEDITOR ]:applyTheme( ::aThemes[ ::nCurTheme, 1 ] )
       NEXT
       EXIT
-   CASE "applyMenu_triggered_applyToCurrentTab"
+   CASE __applyMenu_triggered_applyToCurrentTab__
       IF !empty( oEditor := ::oEM:getEditorCurrent() )
          oEditor:applyTheme( ::aThemes[ ::nCurTheme, 1 ] )
       ENDIF
       EXIT
-   CASE "applyMenu_triggered_setAsDefault"
+   CASE __applyMenu_triggered_setAsDefault__
       ::setWrkTheme( ::aThemes[ ::nCurTheme, 1 ] )
       EXIT
    ENDSWITCH
@@ -549,15 +557,15 @@ METHOD IdeThemes:show()
 
       ::oThemesDock:oWidget:setWidget( ::oUI:oWidget )
 
-      ::oUI:listThemes    :connect( "currentRowChanged(int)"  , {|i| ::execEvent( "listThemes_currentRowChanged", i ) } )
-      ::oUI:listItems     :connect( "currentRowChanged(int)"  , {|i| ::execEvent( "listItems_currentRowChanged", i )  } )
+      ::oUI:listThemes    :connect( "currentRowChanged(int)"  , {|i| ::execEvent( __listThemes_currentRowChanged__, i ) } )
+      ::oUI:listItems     :connect( "currentRowChanged(int)"  , {|i| ::execEvent( __listItems_currentRowChanged__, i )  } )
       ::oUI:buttonColor   :connect( "clicked()"               , {| | ::updateColor() } )
       ::oUI:buttonSave    :connect( "clicked()"               , {| | ::save( .f. )   } )
       ::oUI:buttonSaveAs  :connect( "clicked()"               , {| | ::save( .t. )   } )
       ::oUI:buttonCopy    :connect( "clicked()"               , {| | ::copy( .t. )   } )
-      ::oUI:buttonApply   :connect( "clicked()"               , {| | ::execEvent( "applyMenu_triggered_applyToCurrentTab" ) } )
-      ::oUI:buttonApplyAll:connect( "clicked()"               , {| | ::execEvent( "applyMenu_triggered_applyToAllTabs"    ) } )
-      ::oUI:buttonDefault :connect( "clicked()"               , {| | ::execEvent( "applyMenu_triggered_setAsDefault"      ) } )
+      ::oUI:buttonApply   :connect( "clicked()"               , {| | ::execEvent( __applyMenu_triggered_applyToCurrentTab__ ) } )
+      ::oUI:buttonApplyAll:connect( "clicked()"               , {| | ::execEvent( __applyMenu_triggered_applyToAllTabs__    ) } )
+      ::oUI:buttonDefault :connect( "clicked()"               , {| | ::execEvent( __applyMenu_triggered_setAsDefault__      ) } )
       ::oUI:checkItalic   :connect( "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_ITALIC, i ) } )
       ::oUI:checkBold     :connect( "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_BOLD  , i ) } )
       ::oUI:checkUnderline:connect( "stateChanged(int)"       , {|i| ::updateAttribute( THM_ATR_ULINE , i ) } )

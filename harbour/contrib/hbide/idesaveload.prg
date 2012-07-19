@@ -75,6 +75,60 @@
 #define INI_HBIDE_VRBLS                           30
 
 /*----------------------------------------------------------------------*/
+
+#define __buttonAddTextext_clicked__              2001
+#define __buttonDelTextext_clicked__              2002
+#define __buttonKeyAdd_clicked__                  2003
+#define __buttonKeyDel_clicked__                  2004
+#define __buttonKeyUp_clicked__                   2005
+#define __buttonKeyDown_clicked__                 2006
+#define __buttonSelFont_clicked__                 2007
+#define __buttonClose_clicked__                   2008
+#define __buttonOk_clicked__                      2009
+#define __buttonCancel_clicked__                  2010
+#define __treeWidget_itemSelectionChanged__       2011
+#define __comboStyle_currentIndexChanged__        2012
+#define __checkAnimated_stateChanged__            2013
+#define __checkHilightLine_stateChanged__         2014
+#define __checkHorzRuler_stateChanged__           2015
+#define __checkLineNumbers_stateChanged__         2016
+#define __checkShowLeftToolbar_stateChanged__     2017
+#define __checkShowTopToolbar_stateChanged__      2018
+#define __sliderValue_changed__                   2019
+#define __radioSection_clicked__                  2020
+#define __buttonThmAdd_clicked__                  2021
+#define __buttonThmDel_clicked__                  2022
+#define __buttonThmApp_clicked__                  2023
+#define __buttonThmSav_clicked__                  2024
+#define __listThemes_currentRowChanged__          2025
+#define __buttonHrbRoot_clicked__                 2026
+#define __buttonHbmk2_clicked__                   2027
+#define __buttonEnv_clicked__                     2028
+#define __buttonResources_clicked__               2029
+#define __buttonTemp_clicked__                    2030
+#define __buttonShortcuts_clicked__               2031
+#define __buttonSnippets_clicked__                2032
+#define __buttonThemes_clicked__                  2033
+#define __buttonViewIni_clicked__                 2034
+#define __buttonViewEnv_clicked__                 2035
+#define __buttonViewSnippets_clicked__            2036
+#define __buttonViewThemes_clicked__              2037
+#define __buttonDictPath_clicked__                2038
+#define __comboTabsShape_currentIndexChanged__    2039
+#define __comboLeftTabPos_currentIndexChanged__   2040
+#define __comboTopTabPos_currentIndexChanged__    2041
+#define __comboRightTabPos_currentIndexChanged__  2042
+#define __comboBottomTabPos_currentIndexChanged__ 2043
+#define __comboTBSize_currentIndexChanged__       2044
+#define __buttonVSSExe_clicked__                  2045
+#define __buttonVSSDatabase_clicked__             2046
+#define __buttonEditorX_clicked__                 2047
+#define __buttonEditorSaveAs_clicked__            2048
+#define __buttonEditorSave_clicked__              2049
+#define __buttonEditorClose_clicked__             2050
+#define __tableVar_keyPress__                     2051
+
+/*----------------------------------------------------------------------*/
 //
 //                            Class IdeINI
 //
@@ -1097,7 +1151,7 @@ CLASS IdeSetup INHERIT IdeObject
    METHOD create( oIde )
    METHOD destroy()
    METHOD show()
-   METHOD execEvent( cEvent, p, p1 )
+   METHOD execEvent( nEvent, p, p1 )
    METHOD buildTree()
    METHOD setSystemStyle( cStyle )
    METHOD setBaseColor()
@@ -1281,73 +1335,73 @@ METHOD IdeSetup:disConnectSlots()
 
 METHOD IdeSetup:connectSlots()
 
-   ::oUI:buttonAddTextExt    :connect( "clicked()"               , {| | ::execEvent( "buttonAddTextext_clicked"          ) } )
-   ::oUI:buttonDelTextExt    :connect( "clicked()"               , {| | ::execEvent( "buttonDelTextext_clicked"          ) } )
+   ::oUI:buttonAddTextExt    :connect( "clicked()"               , {| | ::execEvent( __buttonAddTextext_clicked__                       ) } )
+   ::oUI:buttonDelTextExt    :connect( "clicked()"               , {| | ::execEvent( __buttonDelTextext_clicked__                       ) } )
 
-   ::oUI:buttonKeyAdd        :connect( "clicked()"               , {| | ::execEvent( "buttonKeyAdd_clicked"              ) } )
-   ::oUI:buttonKeyDel        :connect( "clicked()"               , {| | ::execEvent( "buttonKeyDel_clicked"              ) } )
-   ::oUI:buttonKeyUp         :connect( "clicked()"               , {| | ::execEvent( "buttonKeyUp_clicked"               ) } )
-   ::oUI:buttonKeyDown       :connect( "clicked()"               , {| | ::execEvent( "buttonKeyDown_clicked"             ) } )
+   ::oUI:buttonKeyAdd        :connect( "clicked()"               , {| | ::execEvent( __buttonKeyAdd_clicked__                           ) } )
+   ::oUI:buttonKeyDel        :connect( "clicked()"               , {| | ::execEvent( __buttonKeyDel_clicked__                           ) } )
+   ::oUI:buttonKeyUp         :connect( "clicked()"               , {| | ::execEvent( __buttonKeyUp_clicked__                            ) } )
+   ::oUI:buttonKeyDown       :connect( "clicked()"               , {| | ::execEvent( __buttonKeyDown_clicked__                          ) } )
 
-   ::oUI:tableVar            :connect( "itemActivated(QTableWidgetItem*)", {|p| ::execEvent( "tableVar_keyPress", p              ) } )
+   ::oUI:buttonSelFont       :connect( "clicked()"               , {| | ::execEvent( __buttonSelFont_clicked__                          ) } )
+   ::oUI:buttonClose         :connect( "clicked()"               , {| | ::execEvent( __buttonClose_clicked__                            ) } )
+   ::oUI:buttonOk            :connect( "clicked()"               , {| | ::execEvent( __buttonOk_clicked__                               ) } )
+   ::oUI:buttonCancel        :connect( "clicked()"               , {| | ::execEvent( __buttonCancel_clicked__                           ) } )
+   ::oUI:treeWidget          :connect( "itemSelectionChanged()"  , {| | ::execEvent( __treeWidget_itemSelectionChanged__                ) } )
+   ::oUI:comboStyle          :connect( "currentIndexChanged(int)", {|i| ::execEvent( __comboStyle_currentIndexChanged__       , i       ) } )
 
-   ::oUI:buttonSelFont       :connect( "clicked()"               , {| | ::execEvent( "buttonSelFont_clicked"             ) } )
-   ::oUI:buttonClose         :connect( "clicked()"               , {| | ::execEvent( "buttonClose_clicked"               ) } )
-   ::oUI:buttonOk            :connect( "clicked()"               , {| | ::execEvent( "buttonOk_clicked"                  ) } )
-   ::oUI:buttonCancel        :connect( "clicked()"               , {| | ::execEvent( "buttonCancel_clicked"              ) } )
-   ::oUI:treeWidget          :connect( "itemSelectionChanged()"  , {| | ::execEvent( "treeWidget_itemSelectionChanged"   ) } )
-   ::oUI:comboStyle          :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboStyle_currentIndexChanged", i ) } )
+   ::oUI:checkAnimated       :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkAnimated_stateChanged__           , i       ) } )
 
-   ::oUI:checkAnimated       :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkAnimated_stateChanged", i     ) } )
+   ::oUI:checkHilightLine    :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkHilightLine_stateChanged__        , i       ) } )
+   ::oUI:checkHorzRuler      :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkHorzRuler_stateChanged__          , i       ) } )
+   ::oUI:checkLineNumbers    :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkLineNumbers_stateChanged__        , i       ) } )
+   ::oUI:checkShowLeftToolbar:connect( "stateChanged(int)"       , {|i| ::execEvent( __checkShowLeftToolbar_stateChanged__    , i       ) } )
+   ::oUI:checkShowTopToolbar :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkShowTopToolbar_stateChanged__     , i       ) } )
 
-   ::oUI:checkHilightLine    :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkHilightLine_stateChanged", i  ) } )
-   ::oUI:checkHorzRuler      :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkHorzRuler_stateChanged"  , i  ) } )
-   ::oUI:checkLineNumbers    :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkLineNumbers_stateChanged", i  ) } )
-   ::oUI:checkShowLeftToolbar:connect( "stateChanged(int)"       , {|i| ::execEvent( "checkShowLeftToolbar_stateChanged", i  ) } )
-   ::oUI:checkShowTopToolbar :connect( "stateChanged(int)"       , {|i| ::execEvent( "checkShowTopToolbar_stateChanged", i  ) } )
+   ::oUI:sliderRed           :connect( "valueChanged(int)"       , {|i| ::execEvent( __sliderValue_changed__                  , i, "R"  ) } )
+   ::oUI:sliderGreen         :connect( "valueChanged(int)"       , {|i| ::execEvent( __sliderValue_changed__                  , i, "G"  ) } )
+   ::oUI:sliderBlue          :connect( "valueChanged(int)"       , {|i| ::execEvent( __sliderValue_changed__                  , i, "B"  ) } )
 
-   ::oUI:sliderRed           :connect( "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "R"       ) } )
-   ::oUI:sliderGreen         :connect( "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "G"       ) } )
-   ::oUI:sliderBlue          :connect( "valueChanged(int)"       , {|i| ::execEvent( "sliderValue_changed", i, "B"       ) } )
+   ::oUI:radioSec1           :connect( "clicked()"               , {| | ::execEvent( __radioSection_clicked__                 , 1       ) } )
+   ::oUI:radioSec2           :connect( "clicked()"               , {| | ::execEvent( __radioSection_clicked__                 , 2       ) } )
+   ::oUI:radioSec3           :connect( "clicked()"               , {| | ::execEvent( __radioSection_clicked__                 , 3       ) } )
+   ::oUI:radioSec4           :connect( "clicked()"               , {| | ::execEvent( __radioSection_clicked__                 , 4       ) } )
+   ::oUI:radioSec5           :connect( "clicked()"               , {| | ::execEvent( __radioSection_clicked__                 , 5       ) } )
 
-   ::oUI:radioSec1           :connect( "clicked()"               , {| | ::execEvent( "radioSection_clicked", 1           ) } )
-   ::oUI:radioSec2           :connect( "clicked()"               , {| | ::execEvent( "radioSection_clicked", 2           ) } )
-   ::oUI:radioSec3           :connect( "clicked()"               , {| | ::execEvent( "radioSection_clicked", 3           ) } )
-   ::oUI:radioSec4           :connect( "clicked()"               , {| | ::execEvent( "radioSection_clicked", 4           ) } )
-   ::oUI:radioSec5           :connect( "clicked()"               , {| | ::execEvent( "radioSection_clicked", 5           ) } )
+   ::oUI:buttonThmAdd        :connect( "clicked()"               , {| | ::execEvent( __buttonThmAdd_clicked__                           ) } )
+   ::oUI:buttonThmDel        :connect( "clicked()"               , {| | ::execEvent( __buttonThmDel_clicked__                           ) } )
+   ::oUI:buttonThmApp        :connect( "clicked()"               , {| | ::execEvent( __buttonThmApp_clicked__                           ) } )
+   ::oUI:buttonThmSav        :connect( "clicked()"               , {| | ::execEvent( __buttonThmSav_clicked__                           ) } )
 
-   ::oUI:buttonThmAdd        :connect( "clicked()"               , {| | ::execEvent( "buttonThmAdd_clicked"              ) } )
-   ::oUI:buttonThmDel        :connect( "clicked()"               , {| | ::execEvent( "buttonThmDel_clicked"              ) } )
-   ::oUI:buttonThmApp        :connect( "clicked()"               , {| | ::execEvent( "buttonThmApp_clicked"              ) } )
-   ::oUI:buttonThmSav        :connect( "clicked()"               , {| | ::execEvent( "buttonThmSav_clicked"              ) } )
+   ::oUI:listThemes          :connect( "currentRowChanged(int)"  , {|i| ::execEvent( __listThemes_currentRowChanged__         , i       ) } )
 
-   ::oUI:listThemes          :connect( "currentRowChanged(int)"  , {|i| ::execEvent( "listThemes_currentRowChanged", i   ) } )
+   ::oUI:buttonPathHrbRoot   :connect( "clicked()"               , {| | ::execEvent( __buttonHrbRoot_clicked__                          ) } )
+   ::oUI:buttonPathHbmk2     :connect( "clicked()"               , {| | ::execEvent( __buttonHbmk2_clicked__                            ) } )
+   ::oUI:buttonPathEnv       :connect( "clicked()"               , {| | ::execEvent( __buttonEnv_clicked__                              ) } )
+   ::oUI:buttonPathResources :connect( "clicked()"               , {| | ::execEvent( __buttonResources_clicked__                        ) } )
+   ::oUI:buttonPathTemp      :connect( "clicked()"               , {| | ::execEvent( __buttonTemp_clicked__                             ) } )
+   ::oUI:buttonPathShortcuts :connect( "clicked()"               , {| | ::execEvent( __buttonShortcuts_clicked__                        ) } )
+   ::oUI:buttonPathSnippets  :connect( "clicked()"               , {| | ::execEvent( __buttonSnippets_clicked__                         ) } )
+   ::oUI:buttonPathThemes    :connect( "clicked()"               , {| | ::execEvent( __buttonThemes_clicked__                           ) } )
 
-   ::oUI:buttonPathHrbRoot   :connect( "clicked()"               , {| | ::execEvent( "buttonHrbRoot_clicked"             ) } )
-   ::oUI:buttonPathHbmk2     :connect( "clicked()"               , {| | ::execEvent( "buttonHbmk2_clicked"               ) } )
-   ::oUI:buttonPathEnv       :connect( "clicked()"               , {| | ::execEvent( "buttonEnv_clicked"                 ) } )
-   ::oUI:buttonPathResources :connect( "clicked()"               , {| | ::execEvent( "buttonResources_clicked"           ) } )
-   ::oUI:buttonPathTemp      :connect( "clicked()"               , {| | ::execEvent( "buttonTemp_clicked"                ) } )
-   ::oUI:buttonPathShortcuts :connect( "clicked()"               , {| | ::execEvent( "buttonShortcuts_clicked"           ) } )
-   ::oUI:buttonPathSnippets  :connect( "clicked()"               , {| | ::execEvent( "buttonSnippets_clicked"            ) } )
-   ::oUI:buttonPathThemes    :connect( "clicked()"               , {| | ::execEvent( "buttonThemes_clicked"              ) } )
+   ::oUI:buttonViewIni       :connect( "clicked()"               , {| | ::execEvent( __buttonViewIni_clicked__                          ) } )
+   ::oUI:buttonViewEnv       :connect( "clicked()"               , {| | ::execEvent( __buttonViewEnv_clicked__                          ) } )
+   ::oUI:buttonViewSnippets  :connect( "clicked()"               , {| | ::execEvent( __buttonViewSnippets_clicked__                     ) } )
+   ::oUI:buttonViewThemes    :connect( "clicked()"               , {| | ::execEvent( __buttonViewThemes_clicked__                       ) } )
 
-   ::oUI:buttonViewIni       :connect( "clicked()"               , {| | ::execEvent( "buttonViewIni_clicked"             ) } )
-   ::oUI:buttonViewEnv       :connect( "clicked()"               , {| | ::execEvent( "buttonViewEnv_clicked"             ) } )
-   ::oUI:buttonViewSnippets  :connect( "clicked()"               , {| | ::execEvent( "buttonViewSnippets_clicked"        ) } )
-   ::oUI:buttonViewThemes    :connect( "clicked()"               , {| | ::execEvent( "buttonViewThemes_clicked"          ) } )
+   ::oUI:buttonDictPath      :connect( "clicked()"               , {| | ::execEvent( __buttonDictPath_clicked__                         ) } )
 
-   ::oUI:buttonDictPath      :connect( "clicked()"               , {| | ::execEvent( "buttonDictPath_clicked"            ) } )
+   ::oUI:comboTabsShape      :connect( "currentIndexChanged(int)", {|i| ::execEvent( __comboTabsShape_currentIndexChanged__   , i       ) } )
+   ::oUI:comboLeftTabPos     :connect( "currentIndexChanged(int)", {|i| ::execEvent( __comboLeftTabPos_currentIndexChanged__  , i       ) } )
+   ::oUI:comboTopTabPos      :connect( "currentIndexChanged(int)", {|i| ::execEvent( __comboTopTabPos_currentIndexChanged__   , i       ) } )
+   ::oUI:comboRightTabPos    :connect( "currentIndexChanged(int)", {|i| ::execEvent( __comboRightTabPos_currentIndexChanged__ , i       ) } )
+   ::oUI:comboBottomTabPos   :connect( "currentIndexChanged(int)", {|i| ::execEvent( __comboBottomTabPos_currentIndexChanged__, i       ) } )
+   ::oUI:comboTBSize         :connect( "currentIndexChanged(int)", {|i| ::execEvent( __comboTBSize_currentIndexChanged__      , i       ) } )
 
-   ::oUI:comboTabsShape      :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboTabsShape_currentIndexChanged"   , i ) } )
-   ::oUI:comboLeftTabPos     :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboLeftTabPos_currentIndexChanged"  , i ) } )
-   ::oUI:comboTopTabPos      :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboTopTabPos_currentIndexChanged"   , i ) } )
-   ::oUI:comboRightTabPos    :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboRightTabPos_currentIndexChanged" , i ) } )
-   ::oUI:comboBottomTabPos   :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboBottomTabPos_currentIndexChanged", i ) } )
-   ::oUI:comboTBSize         :connect( "currentIndexChanged(int)", {|i| ::execEvent( "comboTBSize_currentIndexChanged"      , i ) } )
+   ::oUI:buttonVSSExe        :connect( "clicked()"               , {| | ::execEvent( __buttonVSSExe_clicked__                           ) } )
+   ::oUI:buttonVSSDatabase   :connect( "clicked()"               , {| | ::execEvent( __buttonVSSDatabase_clicked__                      ) } )
 
-   ::oUI:buttonVSSExe        :connect( "clicked()"               , {| | ::execEvent( "buttonVSSExe_clicked"              ) } )
-   ::oUI:buttonVSSDatabase   :connect( "clicked()"               , {| | ::execEvent( "buttonVSSDatabase_clicked"         ) } )
+   ::oUI:tableVar            :connect( "itemActivated(QTableWidgetItem*)", {|p| ::execEvent( __tableVar_keyPress__, p                  ) } )
 
    RETURN Self
 
@@ -1577,7 +1631,7 @@ METHOD IdeSetup:show()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeSetup:execEvent( cEvent, p, p1 )
+METHOD IdeSetup:execEvent( nEvent, p, p1 )
    LOCAL qItem, nIndex, qFontDlg, qFont, nOK, nRow, b_, q0, q1, nCol, w0, w1
    LOCAL aRGB, nSlot, qFrame, aGrad, n, cCSS, cTheme, cPath, cBuffer
 
@@ -1587,9 +1641,9 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       RETURN Self
    ENDIF
 
-   SWITCH cEvent
+   SWITCH nEvent
 
-   CASE "buttonSelFont_clicked"
+   CASE __buttonSelFont_clicked__
       qFont := QFont( ::oINI:cFontName, ::oINI:nPointSize )
       qFont:setFixedPitch( .t. )
       qFontDlg := QFontDialog( ::oUI:oWidget )
@@ -1606,23 +1660,23 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
-   CASE "checkAnimated_stateChanged"
+   CASE __checkAnimated_stateChanged__
       ::oDK:animateComponents( iif( p == 0, 0, 1 ) )
       EXIT
 
-   CASE "checkHilightLine_stateChanged"
+   CASE __checkHilightLine_stateChanged__
       ::oEM:toggleCurrentLineHighlightMode()
       EXIT
 
-   CASE "checkHorzRuler_stateChanged"
+   CASE __checkHorzRuler_stateChanged__
       ::oEM:toggleHorzRuler()
       EXIT
 
-   CASE "checkLineNumbers_stateChanged"
+   CASE __checkLineNumbers_stateChanged__
       ::oEM:toggleLineNumbers()
       EXIT
 
-   CASE "checkShowTopToolbar_stateChanged"
+   CASE __checkShowTopToolbar_stateChanged__
       IF ::oDK:qMdiToolbar:oWidget:isVisible()
          ::oDK:qMdiToolbar:hide()
       ELSE
@@ -1630,7 +1684,8 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       ENDIF
       ::oINI:lShowEditsTopToolbar := ::oDK:qMdiToolbar:oWidget:isVisible()
       EXIT
-   CASE "checkShowLeftToolbar_stateChanged"
+
+   CASE __checkShowLeftToolbar_stateChanged__
       IF ::oDK:qMdiToolbarL:oWidget:isVisible()
          ::oDK:qMdiToolbarL:hide()
       ELSE
@@ -1639,51 +1694,51 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       ::oINI:lShowEditsLeftToolbar := ::oDK:qMdiToolbarL:oWidget:isVisible()
       EXIT
 
-   CASE "treeWidget_itemSelectionChanged"
+   CASE __treeWidget_itemSelectionChanged__
       qItem  := ::oUI:treeWidget:currentItem()
       IF ( nIndex := ascan( ::aTree, qItem:text( 0 ) ) ) > 0
          ::oUI:stackedWidget:setCurrentIndex( nIndex - 1 )
       ENDIF
       EXIT
 
-   CASE "buttonCancel_clicked"
+   CASE __buttonCancel_clicked__
       ::oIde:oINI:cSetupDialogGeometry := hbide_posAndSize( ::oUI:oWidget )
       ::oUI:done( 0 )
       EXIT
 
-   CASE "buttonClose_clicked"
-   CASE "buttonOk_clicked"
+   CASE __buttonClose_clicked__
+   CASE __buttonOk_clicked__
       ::oIde:oINI:cSetupDialogGeometry := hbide_posAndSize( ::oUI:oWidget )
       ::retrieve()
       ::oUI:done( 1 )
       EXIT
 
-   CASE "comboStyle_currentIndexChanged"
+   CASE __comboStyle_currentIndexChanged__
       IF ( nIndex := ::oUI:comboStyle:currentIndex() ) > -1
          ::oINI:cIdeTheme := ::aStyles[ nIndex + 1 ]
          ::setSystemStyle( ::aStyles[ nIndex + 1 ] )
       ENDIF
       EXIT
 
-   CASE "buttonAddTextext_clicked"
+   CASE __buttonAddTextext_clicked__
       q0 := hbide_fetchAString( ::oUI, "", "Text File Extension" )
       IF !empty( q0 )
          ::oUI:listTextExt:addItem( lower( strtran( q0, "." ) ) )
       ENDIF
       EXIT
 
-   CASE "buttonDelTextext_clicked"
+   CASE __buttonDelTextext_clicked__
       IF ::oUI:listTextExt:currentRow() >= 0
          ::oUI:listTextExt:takeItem( ::oUI:listTextExt:currentRow() )
       ENDIF
       EXIT
 
-   CASE "buttonKeyAdd_clicked"
+   CASE __buttonKeyAdd_clicked__
       ::populateKeyTableRow( Len( ::aKeyItems ) + 1, "", "" )
       ::oUI:tableVar:setCurrentItem( ::aKeyItems[ Len( ::aKeyItems ), 1 ] )
       EXIT
 
-   CASE "buttonKeyDel_clicked"
+   CASE __buttonKeyDel_clicked__
       IF ( nRow := ::oUI:tableVar:currentRow() ) >= 0
          ::oUI:tableVar:removeRow( nRow )
          hb_adel( ::aKeyItems     , nRow + 1, .t. )
@@ -1691,7 +1746,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
-   CASE "buttonKeyUp_clicked"
+   CASE __buttonKeyUp_clicked__
       IF ( nRow := ::oUI:tableVar:currentRow() ) >= 1
          nCol := ::oUI:tableVar:currentColumn()
 
@@ -1716,7 +1771,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
-   CASE "buttonKeyDown_clicked"
+   CASE __buttonKeyDown_clicked__
       nRow := ::oUI:tableVar:currentRow()
       IF nRow >= 0 .AND. nRow + 1 < Len( ::aKeyItems )
 
@@ -1743,7 +1798,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
-   CASE "tableVar_keyPress"
+   CASE __tableVar_keyPress__
       IF ( nRow := ::oUI:tableVar:currentRow() ) >= 0
          HB_TRACE( HB_TR_DEBUG, "RECEIVING ENTER KEY" )
          ::oUI:tableVar:editItem( p )
@@ -1755,7 +1810,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
          #endif
       ENDIF
 
-   CASE "radioSection_clicked"
+   CASE __radioSection_clicked__
       ::nCurThemeSlot := p
       IF empty( aRGB := ::pullThemeColors( p ) )
          aRGB := { 0,0,0 }
@@ -1765,7 +1820,7 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       ::oUI:sliderBlue  : setValue( aRGB[ 3 ] )
       EXIT
 
-   CASE "sliderValue_changed"
+   CASE __sliderValue_changed__
       nSlot := ::nCurThemeSlot
 
       IF nSlot > 0
@@ -1791,10 +1846,10 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
-   CASE "listThemes_currentRowChanged"
+   CASE __listThemes_currentRowChanged__
       ::pushThemeColors( p + 1 )
       EXIT
-   CASE "buttonThmAdd_clicked"
+   CASE __buttonThmAdd_clicked__
       IF !empty( cTheme := hbide_fetchAString( ::oDlg:oWidget, cTheme, "Name the Theme", "New Theme" ) )
          aadd( ::oINI:aAppThemes, cTheme + "," + ::fetchThemeColorsString() )
          qItem := QListWidgetItem()
@@ -1804,115 +1859,112 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
          ::oUI:listThemes:setCurrentRow( Len( ::oINI:aAppThemes ) - 1 )
       ENDIF
       EXIT
-   CASE "buttonThmApp_clicked"
+   CASE __buttonThmApp_clicked__
       IF ( n := ::oUI:listThemes:currentRow() ) > -1
          hbide_setAppTheme( ::getThemeData( n + 1 ) )
          ::oDK:animateComponents( HBIDE_ANIMATION_GRADIENT )
       ENDIF
       EXIT
-   CASE "buttonThmDel_clicked"
+   CASE __buttonThmDel_clicked__
       EXIT
-   CASE "buttonThmSav_clicked"
+   CASE __buttonThmSav_clicked__
       IF ( n := ::oUI:listThemes:currentRow() ) > -1
          ::oINI:aAppThemes[ n + 1 ] := ::oUI:listThemes:currentItem():text() + "," + ;
                                        ::fetchThemeColorsString()
       ENDIF
       EXIT
-
-   CASE "buttonIni_clicked"
-      EXIT
-   CASE "buttonVSSExe_clicked"
+   CASE __buttonVSSExe_clicked__
       IF ! empty( cPath := hbide_fetchADir( ::oDlg, "Visual SourceSafe Installation Path", ::oINI:cVSSExe ) )
          ::oINI:cVSSExe := cPath
          ::oUI:editVSSExe:setText( hbide_pathStripLastSlash( cPath ) )
       ENDIF
       EXIT
-   CASE "buttonVSSDatabase_clicked"
+   CASE __buttonVSSDatabase_clicked__
       IF ! empty( cPath := hbide_fetchADir( ::oDlg, "Visual SourceSafe Database Path", ::oINI:cVSSDatabase ) )
          ::oINI:cVSSDatabase := cPath
          ::oUI:editVSSDatabase:setText( hbide_pathStripLastSlash( cPath ) )
       ENDIF
       EXIT
-   CASE "buttonHrbRoot_clicked"
+   CASE __buttonHrbRoot_clicked__
       IF ! empty( cPath := hbide_fetchADir( ::oDlg, "Harbour's Root Path", ::oINI:cPathHrbRoot ) )
          ::oINI:cPathHrbRoot := cPath
          ::oUI:editPathHrbRoot:setText( hbide_pathStripLastSlash( cPath ) )
       ENDIF
       EXIT
-   CASE "buttonHbmk2_clicked"
+   CASE __buttonHbmk2_clicked__
       IF !empty( cPath := hbide_fetchAFile( ::oDlg, "Location of hbmk2", ;
                                                        { { "Harbour Make - hbmk2", "*" } }, ::oINI:cPathHbMk2 ) )
          ::oINI:cPathhbMk2 := cPath
          ::oUI:editPathHbMk2:setText( cPath )
       ENDIF
       EXIT
-   CASE "buttonEnv_clicked"
+   CASE __buttonEnv_clicked__
       IF !empty( cPath := hbide_fetchAFile( ::oDlg, "Environment Definitions File ( .env )", ;
                                                        { { "Environment Files", "*.env" } }, ::oINI:getEnvFile() ) )
          ::oINI:cPathEnv := cPath
          ::oUI:editPathEnv:setText( cPath )
       ENDIF
       EXIT
-   CASE "buttonResources_clicked"
+   CASE __buttonResources_clicked__
       IF ! empty( cPath := hbide_fetchADir( ::oDlg, "Location of Resources ( Plugins, Dialogs, Images, Scripts )", ::oINI:getResourcesPath() ) )
          ::oINI:cPathResources := cPath
          ::oUI:editPathResources:setText( cPath )
       ENDIF
       EXIT
-   CASE "buttonTemp_clicked"
+   CASE __buttonTemp_clicked__
       IF ! empty( cPath := hbide_fetchADir( ::oDlg, "Location for Temporary and Transitory Files", ::oINI:getTempPath() ) )
          ::oINI:cPathTemp := cPath
          ::oUI:editPathTemp:setText( cPath )
       ENDIF
       EXIT
-   CASE "buttonShortcuts_clicked"
+   CASE __buttonShortcuts_clicked__
       IF !empty( cPath := hbide_fetchAFile( ::oDlg, "Keyboard Mapping Definitions File ( .scu )", ;
                                                        { { "Keyboard Mappings", "*.scu" } }, ::oINI:getShortcutsFile() ) )
          ::oINI:cPathShortcuts := cPath
          ::oUI:editPathShortcuts:setText( cPath )
       ENDIF
       EXIT
-   CASE "buttonSnippets_clicked"
+   CASE __buttonSnippets_clicked__
       IF !empty( cPath := hbide_fetchAFile( ::oDlg, "Code Snippets File ( .skl )", ;
                                                        { { "Code Snippets", "*.skl" } }, ::oINI:getSnippetsFile() ) )
          ::oINI:cPathSnippets := cPath
          ::oUI:editPathSnippets:setText( cPath )
       ENDIF
       EXIT
-   CASE "buttonThemes_clicked"
+   CASE __buttonThemes_clicked__
       IF !empty( cPath := hbide_fetchAFile( ::oDlg, "Syntax Highlighting Theme File ( .hbt )", ;
                                                        { { "Syntax Theme", "*.hbt" } }, ::oINI:getThemesFile() ) )
          ::oINI:cPathThemes := cPath
          ::oUI:editPathThemes:setText( cPath )
       ENDIF
       EXIT
-   CASE "buttonViewIni_clicked"
+   CASE __buttonViewIni_clicked__
       ::viewIt( ::oINI:getIniFile(), .t., .f., .f., .f. ) /* FileName, shouldSaveAs, shouldSave, shouldReadOnly, applyHiliter */
       EXIT
-   CASE "buttonViewEnv_clicked"
+   CASE __buttonViewEnv_clicked__
       ::viewIt( ::oINI:getEnvFile(), .t., .t., .f., .f. )
       EXIT
-   CASE "buttonViewSnippets_clicked"
+   CASE __buttonViewSnippets_clicked__
       ::viewIt( ::oINI:getSnippetsFile(), .t., .t., .f., .t. )
       EXIT
-   CASE "buttonViewThemes_clicked"
+   CASE __buttonViewThemes_clicked__
       ::viewIt( ::oINI:getThemesFile(), .t., .t., .f., .f. )
       EXIT
 
-   CASE "buttonEditorSaveAs_clicked"
+   CASE __buttonEditorSaveAs_clicked__
       IF ! empty( cBuffer := p:plainText:toPlainText() )
          IF ! empty( cPath := hbide_saveAFile( ::oDlg, "Save: " + p1, NIL, p1 ) )
             hb_memowrit( cPath, cBuffer )
          ENDIF
       ENDIF
       EXIT
-   CASE "buttonEditorSave_clicked"
+   CASE __buttonEditorSave_clicked__
       IF ! empty( cBuffer := p:plainText:toPlainText() )
          hb_memowrit( p1, cBuffer )
       ENDIF
       EXIT
-   CASE "buttonEditorClose_clicked"
-   CASE "buttonEditorX_clicked"
+   CASE __buttonEditorClose_clicked__
+   CASE __buttonEditorX_clicked__
       p:oWidget:disconnect( QEvent_Close )
       p:buttonSaveAs:disconnect( "clicked()"  )
       p:buttonSave:disconnect( "clicked()"  )
@@ -1923,28 +1975,28 @@ METHOD IdeSetup:execEvent( cEvent, p, p1 )
       EXIT
 
    /* Docking Widgets */
-   CASE "comboTabsShape_currentIndexChanged"
+   CASE __comboTabsShape_currentIndexChanged__
       ::oINI:nDocksTabShape := p
       ::oDlg:setTabShape( ::oINI:nDocksTabShape )
       EXIT
-   CASE "comboLeftTabPos_currentIndexChanged"
+   CASE __comboLeftTabPos_currentIndexChanged__
       ::oINI:nDocksLeftTabPos := p
       ::oDlg:setTabPosition( Qt_LeftDockWidgetArea  , ::oINI:nDocksLeftTabPos   )
       EXIT
-   CASE "comboTopTabPos_currentIndexChanged"
+   CASE __comboTopTabPos_currentIndexChanged__
       ::oINI:nDocksTopTabPos := p
       ::oDlg:setTabPosition( Qt_TopDockWidgetArea   , ::oINI:nDocksTopTabPos    )
       EXIT
-   CASE "comboRightTabPos_currentIndexChanged"
+   CASE __comboRightTabPos_currentIndexChanged__
       ::oINI:nDocksRightTabPos := p
       ::oDlg:setTabPosition( Qt_RightDockWidgetArea , ::oINI:nDocksRightTabPos  )
       EXIT
-   CASE "comboBottomTabPos_currentIndexChanged"
+   CASE __comboBottomTabPos_currentIndexChanged__
       ::oINI:nDocksBottomTabPos := p
       ::oDlg:setTabPosition( Qt_BottomDockWidgetArea, ::oINI:nDocksBottomTabPos )
       EXIT
 
-   CASE "comboTBSize_currentIndexChanged"
+   CASE __comboTBSize_currentIndexChanged__
       ::oINI:cToolbarSize := ::oUI:comboTBSize:currentText()
       ::oDK:setToolbarSize( val( ::oINI:cToolbarSize ) )
       EXIT
@@ -1972,10 +2024,10 @@ METHOD IdeSetup:viewIt( cFileName, lSaveAs, lSave, lReadOnly, lApplyHiliter )
       aadd( ::aHilighters, ::oTH:setSyntaxHilighting( oUI:plainText, "Bare Minimum" ) )
    ENDIF
 
-   oUI:oWidget       :connect( QEvent_Close, {|| ::execEvent( "buttonEditorX_clicked"     , oUI            ) } )
-   oUI:buttonSaveAs:connect( "clicked()" , {|| ::execEvent( "buttonEditorSaveAs_clicked", oUI, cFileName ) } )
-   oUI:buttonSave  :connect( "clicked()" , {|| ::execEvent( "buttonEditorSave_clicked"  , oUI, cFileName ) } )
-   oUI:buttonClose :connect( "clicked()" , {|| ::execEvent( "buttonEditorClose_clicked" , oUI            ) } )
+   oUI:oWidget     :connect( QEvent_Close, {|| ::execEvent( __buttonEditorX_clicked__     , oUI            ) } )
+   oUI:buttonSaveAs:connect( "clicked()" , {|| ::execEvent( __buttonEditorSaveAs_clicked__, oUI, cFileName ) } )
+   oUI:buttonSave  :connect( "clicked()" , {|| ::execEvent( __buttonEditorSave_clicked__  , oUI, cFileName ) } )
+   oUI:buttonClose :connect( "clicked()" , {|| ::execEvent( __buttonEditorClose_clicked__ , oUI            ) } )
 
    oUI:show()
 

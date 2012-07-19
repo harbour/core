@@ -92,7 +92,7 @@ CLASS IdeWizard INHERIT IdeObject
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
-   METHOD execEvent( nMode, p )
+   METHOD execEvent( nEvent, p )
    METHOD addIntroPage()
    METHOD addDescPage()
 
@@ -142,9 +142,9 @@ METHOD IdeWizard:destroy()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeWizard:execEvent( nMode, p )
+METHOD IdeWizard:execEvent( nEvent, p )
 
-   HB_SYMBOL_UNUSED( nMode )
+   HB_SYMBOL_UNUSED( nEvent )
    HB_SYMBOL_UNUSED( p )
 
    RETURN Self

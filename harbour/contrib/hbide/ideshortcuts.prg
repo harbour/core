@@ -72,17 +72,18 @@
 
 /*----------------------------------------------------------------------*/
 
-#define listMethods_itemDoubleClicked             101
-#define listMethods_currentRowChanged             102
-#define tableMacros_itemSelectionChanged          103
-#define tableMacros_itemDoubleClicked             104
-#define buttonSet_clicked                         105
-#define buttonNew_clicked                         106
-#define buttonTest_clicked                        107
-#define buttonLoad_clicked                        108
-#define buttonSave_clicked                        109
-#define buttonSaveAs_clicked                      110
-#define buttonDelete_clicked                      111
+#define __listMethods_itemDoubleClicked__         2001
+#define __listMethods_currentRowChanged__         2002
+#define __tableMacros_itemSelectionChanged__      2003
+#define __tableMacros_itemDoubleClicked__         2004
+#define __buttonSet_clicked__                     2005
+#define __buttonNew_clicked__                     2006
+#define __buttonTest_clicked__                    2007
+#define __buttonLoad_clicked__                    2008
+#define __buttonSave_clicked__                    2009
+#define __buttonSaveAs_clicked__                  2010
+#define __buttonDelete_clicked__                  2011
+#define __QEvent_KeyPress__                       2012
 
 /*----------------------------------------------------------------------*/
 
@@ -112,7 +113,7 @@ CLASS IdeShortcuts INHERIT IdeObject
    METHOD create( oIde )
    METHOD destroy()
    METHOD show()
-   METHOD execEvent( nMode, p )
+   METHOD execEvent( nEvent, p )
    METHOD buildUI()
    METHOD buildSignals()
 
@@ -307,19 +308,19 @@ METHOD IdeShortcuts:show()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeShortcuts:execEvent( nMode, p )
+METHOD IdeShortcuts:execEvent( nEvent, p )
    LOCAL nRow, cMethod, cFile, cPath, cTemp, cExt, a_
 
    IF ::lQuitting
       RETURN Self
    ENDIF
 
-   SWITCH nMode
+   SWITCH nEvent
 
-   CASE 21000
+   CASE __QEvent_KeyPress__
       MsgBox( "KeyPress on LabelMacros" )
       EXIT
-   CASE buttonDelete_clicked
+   CASE __buttonDelete_clicked__
       nRow := ::oUI:tableMacros:currentRow()
       IF nRow >= 0 .AND. nRow < Len( ::aDftSCuts )
          nRow++
@@ -333,7 +334,7 @@ METHOD IdeShortcuts:execEvent( nMode, p )
          ENDIF
       ENDIF
       EXIT
-   CASE buttonTest_clicked
+   CASE __buttonTest_clicked__
       IF .t.
          ::controls2vrbls()
          IF !empty( ::cBlock )
@@ -341,7 +342,7 @@ METHOD IdeShortcuts:execEvent( nMode, p )
          ENDIF
       ENDIF
       EXIT
-   CASE buttonLoad_clicked
+   CASE __buttonLoad_clicked__
       cTemp := hbide_fetchAFile( ::oDlg, "Select a macro file", { { "hbIDE Script File", "*.scu" } }, ::cPathShortcuts )
       IF ! Empty( cTemp )
          hb_fNameSplit( hbide_pathNormalized( cTemp, .f. ), @cPath, @cFile, @cExt )
@@ -355,10 +356,10 @@ METHOD IdeShortcuts:execEvent( nMode, p )
          ENDIF
       ENDIF
       EXIT
-   CASE buttonSave_clicked
+   CASE __buttonSave_clicked__
       hbide_saveShortcuts( ::oIde, ::aDftSCuts )
       EXIT
-   CASE buttonSaveAs_clicked
+   CASE __buttonSaveAs_clicked__
       cTemp := hbide_saveAFile( ::oDlg, "Select a macro file", { { "hbIDE Script File", "*.scu" } }, ::cPathShortcuts, ".scu" )
       IF ! Empty( cTemp )
          hb_fNameSplit( hbide_pathNormalized( cTemp, .f. ), @cPath, @cFile, @cExt )
@@ -366,7 +367,7 @@ METHOD IdeShortcuts:execEvent( nMode, p )
          hbide_saveShortcuts( ::oIde, ::aDftSCuts, cFile )
       ENDIF
       EXIT
-   CASE buttonNew_clicked
+   CASE __buttonNew_clicked__
       IF .t.
          ::controls2vrbls()
          IF !empty( ::cName )
@@ -381,8 +382,7 @@ METHOD IdeShortcuts:execEvent( nMode, p )
          ENDIF
       ENDIF
       EXIT
-
-   CASE buttonSet_clicked
+   CASE __buttonSet_clicked__
       nRow := ::oUI:tableMacros:currentRow()
       IF nRow >= 0 .AND. nRow < Len( ::aDftSCuts )
          nRow++
@@ -393,16 +393,16 @@ METHOD IdeShortcuts:execEvent( nMode, p )
          ENDIF
       ENDIF
       EXIT
-   CASE tableMacros_itemDoubleClicked
+   CASE __tableMacros_itemDoubleClicked__
       EXIT
-   CASE tableMacros_itemSelectionChanged
+   CASE __tableMacros_itemSelectionChanged__
       nRow := ::oUI:tableMacros:currentRow()
       IF nRow >= 0 .AND. nRow < Len( ::aDftSCuts )
          nRow++
          ::array2controls( nRow )
       ENDIF
       EXIT
-   CASE listMethods_itemDoubleClicked
+   CASE __listMethods_itemDoubleClicked__
       IF ( nRow := ::oUI:listMethods:currentRow() ) >= 0
          nRow++
          IF !empty( ::aMethods[ nRow, 2 ] )
@@ -411,7 +411,7 @@ METHOD IdeShortcuts:execEvent( nMode, p )
          ENDIF
       ENDIF
       EXIT
-   CASE listMethods_currentRowChanged
+   CASE __listMethods_currentRowChanged__
       IF p >= 0 .AND. p < Len( ::aMethods )
          ::oUI:texteditSyntax:setPlainText( ::aMethods[ p+1, 3 ] )
       ENDIF
@@ -593,7 +593,7 @@ METHOD IdeShortcuts:buildUI()
 
    /* Demonstration only */
    ::oUI:labelMacros:setFocusPolicy( Qt_StrongFocus )
-   ::oUI:labelMacros:connect( QEvent_KeyPress, {|p| ::execEvent( 21000, p ) } )
+   ::oUI:labelMacros:connect( QEvent_KeyPress, {|p| ::execEvent( __QEvent_KeyPress__, p ) } )
 
    RETURN Self
 
@@ -601,17 +601,17 @@ METHOD IdeShortcuts:buildUI()
 
 METHOD IdeShortcuts:buildSignals()
 
-   ::oUI:buttonNew   :connect( "clicked()"                   , {| | ::execEvent( buttonNew_clicked    ) } )
-   ::oUI:buttonSet   :connect( "clicked()"                   , {| | ::execEvent( buttonSet_clicked    ) } )
-   ::oUI:buttonTest  :connect( "clicked()"                   , {| | ::execEvent( buttonTest_clicked   ) } )
-   ::oUI:buttonLoad  :connect( "clicked()"                   , {| | ::execEvent( buttonLoad_clicked   ) } )
-   ::oUI:buttonSave  :connect( "clicked()"                   , {| | ::execEvent( buttonSave_clicked   ) } )
-   ::oUI:buttonSaveAs:connect( "clicked()"                   , {| | ::execEvent( buttonSaveAs_clicked ) } )
-   ::oUI:buttonDelete:connect( "clicked()"                   , {| | ::execEvent( buttonDelete_clicked ) } )
-   ::oUI:listMethods :connect( "itemDoubleClicked(QListWidgetItem*)"  , {|p| ::execEvent( listMethods_itemDoubleClicked, p ) } )
-   ::oUI:listMethods :connect( "currentRowChanged(int)"      , {|p| ::execEvent( listMethods_currentRowChanged, p ) } )
-   ::oUI:tableMacros :connect( "itemSelectionChanged()"      , {| | ::execEvent( tableMacros_itemSelectionChanged ) } )
-   ::oUI:tableMacros :connect( "itemDoubleClicked(QTableWidgetItem*)", {|p| ::execEvent( tableMacros_itemDoubleClicked, p ) } )
+   ::oUI:buttonNew   :connect( "clicked()"                   , {| | ::execEvent( __buttonNew_clicked__    ) } )
+   ::oUI:buttonSet   :connect( "clicked()"                   , {| | ::execEvent( __buttonSet_clicked__    ) } )
+   ::oUI:buttonTest  :connect( "clicked()"                   , {| | ::execEvent( __buttonTest_clicked__   ) } )
+   ::oUI:buttonLoad  :connect( "clicked()"                   , {| | ::execEvent( __buttonLoad_clicked__   ) } )
+   ::oUI:buttonSave  :connect( "clicked()"                   , {| | ::execEvent( __buttonSave_clicked__   ) } )
+   ::oUI:buttonSaveAs:connect( "clicked()"                   , {| | ::execEvent( __buttonSaveAs_clicked__ ) } )
+   ::oUI:buttonDelete:connect( "clicked()"                   , {| | ::execEvent( __buttonDelete_clicked__ ) } )
+   ::oUI:listMethods :connect( "itemDoubleClicked(QListWidgetItem*)", {|p| ::execEvent( __listMethods_itemDoubleClicked__, p ) } )
+   ::oUI:listMethods :connect( "currentRowChanged(int)"      , {|p| ::execEvent( __listMethods_currentRowChanged__, p ) } )
+   ::oUI:tableMacros :connect( "itemSelectionChanged()"      , {| | ::execEvent( __tableMacros_itemSelectionChanged__ ) } )
+   ::oUI:tableMacros :connect( "itemDoubleClicked(QTableWidgetItem*)", {|p| ::execEvent( __tableMacros_itemDoubleClicked__, p ) } )
 
    RETURN Self
 

@@ -71,6 +71,18 @@
 
 /*----------------------------------------------------------------------*/
 
+#define __buttonNew_clicked__                     2001
+#define __buttonRename_clicked__                  2002
+#define __buttonDelete_clicked__                  2003
+#define __buttonClear_clicked__                   2004
+#define __buttonGetSel_clicked__                  2005
+#define __buttonUpdate_clicked__                  2006
+#define __listNames_itemSelectionChanged__        2007
+#define __oTree_itemSelected__                    2008
+#define __oTree_contextMenu__                     2009
+
+/*----------------------------------------------------------------------*/
+
 CLASS IdeSkeletons INHERIT IdeObject
 
    DATA   oRoot
@@ -83,7 +95,7 @@ CLASS IdeSkeletons INHERIT IdeObject
    METHOD create( oIde )
    METHOD destroy()
    METHOD show()
-   METHOD execEvent( cEvent, p )
+   METHOD execEvent( nEvent, p )
    METHOD postSkeleton( cSkeleton )
    METHOD selectByMenuAndPostText( qEdit )
    METHOD getText( cSkeleton )
@@ -148,13 +160,13 @@ METHOD IdeSkeletons:show()
 
       ::oSkeltnDock:oWidget:setWidget( ::oUI:oWidget )
 
-      ::oUI:buttonNew   :connect( "clicked()"             , {|| ::execEvent( "buttonNew_clicked"              ) } )
-      ::oUI:buttonRename:connect( "clicked()"             , {|| ::execEvent( "buttonRename_clicked"           ) } )
-      ::oUI:buttonDelete:connect( "clicked()"             , {|| ::execEvent( "buttonDelete_clicked"           ) } )
-      ::oUI:buttonClear :connect( "clicked()"             , {|| ::execEvent( "buttonClear_clicked"            ) } )
-      ::oUI:buttonGetSel:connect( "clicked()"             , {|| ::execEvent( "buttonGetSel_clicked"           ) } )
-      ::oUI:buttonUpdate:connect( "clicked()"             , {|| ::execEvent( "buttonUpdate_clicked"           ) } )
-      ::oUI:listNames   :connect( "itemSelectionChanged()", {|| ::execEvent( "listNames_itemSelectionChanged" ) } )
+      ::oUI:buttonNew   :connect( "clicked()"             , {|| ::execEvent( __buttonNew_clicked__              ) } )
+      ::oUI:buttonRename:connect( "clicked()"             , {|| ::execEvent( __buttonRename_clicked__           ) } )
+      ::oUI:buttonDelete:connect( "clicked()"             , {|| ::execEvent( __buttonDelete_clicked__           ) } )
+      ::oUI:buttonClear :connect( "clicked()"             , {|| ::execEvent( __buttonClear_clicked__            ) } )
+      ::oUI:buttonGetSel:connect( "clicked()"             , {|| ::execEvent( __buttonGetSel_clicked__           ) } )
+      ::oUI:buttonUpdate:connect( "clicked()"             , {|| ::execEvent( __buttonUpdate_clicked__           ) } )
+      ::oUI:listNames   :connect( "itemSelectionChanged()", {|| ::execEvent( __listNames_itemSelectionChanged__ ) } )
 
       //::oUI:editCode:setFontFamily( "Courier New" )
       //::oUI:editCode:setFontPointSize( 10 )
@@ -167,19 +179,19 @@ METHOD IdeSkeletons:show()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeSkeletons:execEvent( cEvent, p )
+METHOD IdeSkeletons:execEvent( nEvent, p )
    LOCAL cName, qItem, cCode, n, cOpt
    LOCAL aPops := {}
 
    HB_SYMBOL_UNUSED( p )
 
    IF ::lQuitting
-      RETURN Self 
-   ENDIF 
+      RETURN Self
+   ENDIF
 
-   SWITCH cEvent
+   SWITCH nEvent
 
-   CASE "buttonNew_clicked"
+   CASE __buttonNew_clicked__
       IF !empty( cName := hbide_fetchAString( ::oUI:listNames, "", "Name", "New Skeleton" ) )
          ::oUI:listNames:addItem( cName )
          aadd( ::oIde:aSkltns, { cName, "" } )
@@ -187,33 +199,33 @@ METHOD IdeSkeletons:execEvent( cEvent, p )
       ENDIF
       EXIT
 
-   CASE "buttonRename_clicked"
+   CASE __buttonRename_clicked__
       qItem := ::oUI:listNames:currentItem()
       qItem:setText( ::rename( qItem:text() ) )
       EXIT
 
-   CASE "buttonDelete_clicked"
+   CASE __buttonDelete_clicked__
       qItem := ::oUI:listNames:currentItem()
       ::delete( qItem:text() )
       EXIT
 
-   CASE "buttonClear_clicked"
+   CASE __buttonClear_clicked__
       ::oUI:editCode:clear()
       EXIT
 
-   CASE "buttonGetSel_clicked"
+   CASE __buttonGetSel_clicked__
       IF !empty( cCode := ::oEM:getSelectedText() )
          // TODO: Format cCode
          ::oUI:editCode:setPlainText( cCode )
       ENDIF
       EXIT
 
-   CASE "buttonUpdate_clicked"
+   CASE __buttonUpdate_clicked__
       qItem := ::oUI:listNames:currentItem()
       ::save( qItem:text(), ::oUI:editCode:toPlainText() )
       EXIT
 
-   CASE "listNames_itemSelectionChanged"
+   CASE __listNames_itemSelectionChanged__
       qItem := ::oUI:listNames:currentItem()
       cName := qItem:text()
       IF ( n := ascan( ::aSkltns, {|e_| e_[ 1 ] == cName } ) ) > 0
@@ -221,7 +233,7 @@ METHOD IdeSkeletons:execEvent( cEvent, p )
       ENDIF
       EXIT
 
-   CASE "oTree_contextMenu"
+   CASE __oTree_contextMenu__
       IF p[ 3 ]:caption == "Skeletons"
          // Root node - nothing to do.
       ELSE
@@ -239,7 +251,7 @@ METHOD IdeSkeletons:execEvent( cEvent, p )
       ENDIF
       EXIT
 
-   CASE "oTree_itemSelected"
+   CASE __oTree_itemSelected__
       ::oIde:manageFocusInEditor()
       ::postSkeleton( p:caption )
       EXIT
@@ -502,8 +514,8 @@ METHOD IdeSkeletons:showTree()
       ::oTree:oWidget:setIconSize( QSize( 12,12 ) )
       ::oTree:oWidget:setIndentation( 12 )
 
-      ::oTree:itemSelected  := {|oItem         | ::execEvent( "oTree_itemSelected", oItem ) }
-      ::oTree:hbContextMenu := {|mp1, mp2, oXbp| ::execEvent( "oTree_contextMenu" , { mp1, mp2, oXbp } ) }
+      ::oTree:itemSelected  := {|oItem         | ::execEvent( __oTree_itemSelected__, oItem ) }
+      ::oTree:hbContextMenu := {|mp1, mp2, oXbp| ::execEvent( __oTree_contextMenu__ , { mp1, mp2, oXbp } ) }
 
       ::oRoot := ::oTree:rootItem:addItem( "Skeletons" )
 

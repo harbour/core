@@ -71,6 +71,24 @@
 
 /*----------------------------------------------------------------------*/
 
+#define __buttonAdd_clicked__                     2000
+#define __buttonDelete_clicked__                  2001
+#define __buttonUp_clicked__                      2002
+#define __buttonDown_clicked__                    2003
+#define __buttonExec_clicked__                    2004
+#define __buttonBrowse_clicked__                  2005
+#define __buttonUpdate_clicked__                  2006
+#define __buttonClose_clicked__                   2007
+#define __listNames_itemSelectionChanged__        2008
+#define __buttonSetImage_clicked__                2019
+#define __buttonUserToolbarUpd_clicked__          2010
+#define __comboToolbarAsgnd_currentIndexChanged__ 2011
+#define __listToolbars_itemSelectionChanged__     2012
+#define __checkToolActive_stateChanged__          2013
+#define __User_Toolbar_clicked__                  2014
+
+/*----------------------------------------------------------------------*/
+
 CLASS IdeToolsManager INHERIT IdeObject
 
    DATA   aAct                                    INIT   {}
@@ -93,7 +111,7 @@ CLASS IdeToolsManager INHERIT IdeObject
    METHOD create( oIde )
    METHOD destroy()
    METHOD show()
-   METHOD execEvent( cMode, p )
+   METHOD execEvent( nEvent, p )
    METHOD clearList()
    METHOD populateList( aList )
    METHOD execTool( ... )
@@ -229,24 +247,24 @@ METHOD IdeToolsManager:show()
       ::oUI:setMaximumHeight( ::oUI:height() )
       ::oUI:setMinimumHeight( ::oUI:height() )
 
-      ::oUI:buttonAdd   :connect( "clicked()", {|| ::execEvent( "buttonAdd_clicked"    ) } )
-      ::oUI:buttonDelete:connect( "clicked()", {|| ::execEvent( "buttonDelete_clicked" ) } )
-      ::oUI:buttonUp    :connect( "clicked()", {|| ::execEvent( "buttonUp_clicked"     ) } )
-      ::oUI:buttonDown  :connect( "clicked()", {|| ::execEvent( "buttonDown_clicked"   ) } )
-      ::oUI:buttonExec  :connect( "clicked()", {|| ::execEvent( "buttonExec_clicked"   ) } )
-      ::oUI:buttonBrowse:connect( "clicked()", {|| ::execEvent( "buttonBrowse_clicked" ) } )
-      ::oUI:buttonUpdate:connect( "clicked()", {|| ::execEvent( "buttonUpdate_clicked" ) } )
-      ::oUI:buttonClose :connect( "clicked()", {|| ::execEvent( "buttonClose_clicked"  ) } )
+      ::oUI:buttonAdd   :connect( "clicked()", {|| ::execEvent( __buttonAdd_clicked__    ) } )
+      ::oUI:buttonDelete:connect( "clicked()", {|| ::execEvent( __buttonDelete_clicked__ ) } )
+      ::oUI:buttonUp    :connect( "clicked()", {|| ::execEvent( __buttonUp_clicked__     ) } )
+      ::oUI:buttonDown  :connect( "clicked()", {|| ::execEvent( __buttonDown_clicked__   ) } )
+      ::oUI:buttonExec  :connect( "clicked()", {|| ::execEvent( __buttonExec_clicked__   ) } )
+      ::oUI:buttonBrowse:connect( "clicked()", {|| ::execEvent( __buttonBrowse_clicked__ ) } )
+      ::oUI:buttonUpdate:connect( "clicked()", {|| ::execEvent( __buttonUpdate_clicked__ ) } )
+      ::oUI:buttonClose :connect( "clicked()", {|| ::execEvent( __buttonClose_clicked__  ) } )
 
-      ::oUI:listNames   :connect( "itemSelectionChanged()", {|| ::execEvent( "listNames_itemSelectionChanged" ) } )
+      ::oUI:listNames   :connect( "itemSelectionChanged()", {|| ::execEvent( __listNames_itemSelectionChanged__ ) } )
 
       ::oUI:buttonBtnDown :setIcon( QIcon( hbide_image( "dc_down" ) ) )
       ::oUI:buttonBtnUp   :setIcon( QIcon( hbide_image( "dc_up"   ) ) )
 
       ::oUI:buttonSetImage:setIcon( QIcon( hbide_image( "open"    ) ) )
-      ::oUI:buttonSetImage:connect( "clicked()", {|| ::execEvent( "buttonSetImage_clicked" ) } )
+      ::oUI:buttonSetImage:connect( "clicked()", {|| ::execEvent( __buttonSetImage_clicked__ ) } )
 
-      ::oUI:buttonUserToolbarUpd:connect( "clicked()", {|| ::execEvent( "buttonUserToolbarUpd_clicked" ) } )
+      ::oUI:buttonUserToolbarUpd:connect( "clicked()", {|| ::execEvent( __buttonUserToolbarUpd_clicked__ ) } )
 
       ::oUI:comboToolbarAsgnd:addItem( "User_Toolbar_1" )
       ::oUI:comboToolbarAsgnd:addItem( "User_Toolbar_2" )
@@ -254,14 +272,14 @@ METHOD IdeToolsManager:show()
       ::oUI:comboToolbarAsgnd:addItem( "User_Toolbar_4" )
       ::oUI:comboToolbarAsgnd:addItem( "User_Toolbar_5" )
       ::oUI:comboToolbarAsgnd:setCurrentIndex( -1 )
-      ::oUI:comboToolbarAsgnd:connect( "currentIndexChanged(int)", {|p| ::execEvent( "comboToolbarAsgnd_currentIndexChanged", p ) } )
+      ::oUI:comboToolbarAsgnd:connect( "currentIndexChanged(int)", {|p| ::execEvent( __comboToolbarAsgnd_currentIndexChanged__, p ) } )
 
       ::oUI:listToolbars:addItem( "User_Toolbar_1" )
       ::oUI:listToolbars:addItem( "User_Toolbar_2" )
       ::oUI:listToolbars:addItem( "User_Toolbar_3" )
       ::oUI:listToolbars:addItem( "User_Toolbar_4" )
       ::oUI:listToolbars:addItem( "User_Toolbar_5" )
-      ::oUI:listToolbars:connect( "itemSelectionChanged()", {|| ::execEvent( "listToolbars_itemSelectionChanged" ) } )
+      ::oUI:listToolbars:connect( "itemSelectionChanged()", {|| ::execEvent( __listToolbars_itemSelectionChanged__ ) } )
 
       ::oUI:comboInitPos:addItem( "Left"   )
       ::oUI:comboInitPos:addItem( "Top"    )
@@ -276,13 +294,7 @@ METHOD IdeToolsManager:show()
       ::oUI:checkFloatable :setChecked( .t. )
 
       ::oUI:checkToolActive:setChecked( .t. )
-      #if 0
-      ::oUI:checkToolActive:connect( "stateChanged(int)", {|i| ::execEvent( "checkToolActive_stateChanged", i ) } )
-      #endif
-
-      #if 1
-      ::oUI:checkInactive:connect( "stateChanged(int)", {|i| ::execEvent( "checkToolActive_stateChanged", i ) } )
-      #endif
+      ::oUI:checkInactive:connect( "stateChanged(int)", {|p| ::execEvent( __checkToolActive_stateChanged__, p ) } )
 
       hdr_:= { { "Img", 30 }, { "Tool", 218 } }
       oTbl := ::oUI:tableButtons
@@ -316,7 +328,7 @@ METHOD IdeToolsManager:show()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeToolsManager:execEvent( cMode, p )
+METHOD IdeToolsManager:execEvent( nEvent, p )
    LOCAL cFile, cFileName, nIndex, qItem, cName, nRow
    LOCAL aTools := ::oINI:aTools
 
@@ -326,8 +338,8 @@ METHOD IdeToolsManager:execEvent( cMode, p )
       RETURN Self
    ENDIF
 
-   SWITCH cMode
-   CASE "checkToolActive_stateChanged"
+   SWITCH nEvent
+   CASE __checkToolActive_stateChanged__
       nRow := ::oUI:listToolbars:currentRow()
       ::aUserToolbars[ nRow + 1, 3 ] := "YES"
       IF !empty( ::aToolbars[ nRow + 1 ] )
@@ -338,38 +350,38 @@ METHOD IdeToolsManager:execEvent( cMode, p )
          ENDIF
       ENDIF
       EXIT
-   CASE "buttonSetImage_clicked"
+   CASE __buttonSetImage_clicked__
       cFileName := hbide_fetchAFile( ::oDlg, "Select an PNG image", { { "Image Files", "*.png" } },/* cFolder */ , /*cDftSuffix*/ )
       IF !empty( cFileName )
          ::oUI:editImage:setText( hbide_pathNormalized( cFileName, .f. ) )
          ::oUI:buttonSetImage:setIcon( QIcon( hbide_pathToOsPath( cFileName ) ) )
       ENDIF
       EXIT
-   CASE "buttonUserToolbarUpd_clicked"
+   CASE __buttonUserToolbarUpd_clicked__
       ::ini2toolbarControls( ::oUI:listToolbars:currentRow(), 2 )
       EXIT
-   CASE "listToolbars_itemSelectionChanged"
+   CASE __listToolbars_itemSelectionChanged__
       // Clear tableButtons and populate with new values
       ::ini2toolbarControls( ::oUI:listToolbars:currentRow(), 1 )
       ::populateButtonsTable( ::oUI:listToolbars:currentRow() )
       EXIT
-   CASE "comboToolbarAsgnd_currentIndexChanged"
+   CASE __comboToolbarAsgnd_currentIndexChanged__
       ::oUI:listToolbars:setCurrentRow( p )
       EXIT
-   CASE "listNames_itemSelectionChanged"
+   CASE __listNames_itemSelectionChanged__
       qItem := ::oUI:listNames:currentItem()
       cName := qItem:text()
       IF ( nIndex := ascan( aTools, {|e_| e_[ 1 ] == cName } ) ) > 0
          ::ini2Controls( nIndex )
       ENDIF
       EXIT
-   CASE "buttonAdd_clicked"
+   CASE __buttonAdd_clicked__
       IF !empty( ::oUI:editName:text() )
          ::controls2ini()
          ::oUI:listNames:addItem( ::oUI:editName:text() )
       ENDIF
       EXIT
-   CASE "buttonDelete_clicked"
+   CASE __buttonDelete_clicked__
       IF ::oUI:listNames:currentRow() >= 0
          qItem := ::oUI:listNames:currentItem()
          cName := qItem:text()
@@ -380,11 +392,11 @@ METHOD IdeToolsManager:execEvent( cMode, p )
          ENDIF
       ENDIF
       EXIT
-   CASE "buttonUp_clicked"
+   CASE __buttonUp_clicked__
       EXIT
-   CASE "buttonDown_clicked"
+   CASE __buttonDown_clicked__
       EXIT
-   CASE "buttonExec_clicked"
+   CASE __buttonExec_clicked__
       IF ! ::lExecuting
          ::lExecuting := .t.
          IF ::oUI:listNames:currentRow() >= 0
@@ -394,7 +406,7 @@ METHOD IdeToolsManager:execEvent( cMode, p )
          ::lExecuting := .f.
       ENDIF
       EXIT
-   CASE "buttonBrowse_clicked"
+   CASE __buttonBrowse_clicked__
       IF !empty( cFile := hbide_fetchAFile( ::oDlg, "Select a Tool" ) )
          hb_fNameSplit( cFile, , @cFileName )
          //::ini2controls()
@@ -402,7 +414,7 @@ METHOD IdeToolsManager:execEvent( cMode, p )
          ::oUI:editCmdLine : setText( cFile )
       ENDIF
       EXIT
-   CASE "buttonUpdate_clicked"
+   CASE __buttonUpdate_clicked__
       IF ( nRow := ::oUI:listNames:currentRow() ) >= 0
          qItem := ::oUI:listNames:currentItem()
          cName := qItem:text()
@@ -415,11 +427,11 @@ METHOD IdeToolsManager:execEvent( cMode, p )
          ENDIF
       ENDIF
       EXIT
-   CASE "buttonClose_clicked"
+   CASE __buttonClose_clicked__
       ::oIde:oINI:cToolsDialogGeometry := hbide_posAndSize( ::oUI:oWidget )
       ::oUI:done( 1 )
       EXIT
-   CASE "User_Toolbar_clicked"
+   CASE __User_Toolbar_clicked__
       ::execTool( p )
       EXIT
    ENDSWITCH
@@ -430,7 +442,7 @@ METHOD IdeToolsManager:execEvent( cMode, p )
 
 STATIC FUNCTION hbide_toolBlock( o, a_ )
    LOCAL cTool := a_[ 1 ]
-   RETURN {|| o:execEvent( "User_Toolbar_clicked", cTool ) }
+   RETURN {|| o:execEvent( __User_Toolbar_clicked__, cTool ) }
 
 /*----------------------------------------------------------------------*/
 

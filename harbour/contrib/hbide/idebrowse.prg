@@ -73,6 +73,49 @@
 
 /*----------------------------------------------------------------------*/
 
+#define __dockDbu_dragEnterEvent__                2011
+#define __dockDbu_dropEvent__                     2012
+#define __dbStruct_closeEvent__                   2013
+#define __fieldsTable_itemSelectionChanged__      2014
+#define __buttonCopyStruct_clicked__              2015
+#define __buttonOpen_clicked__                    2016
+#define __buttonShowForm_clicked__                2017
+#define __buttonDbStruct_clicked__                2018
+#define __buttonFind_clicked__                    2019
+#define __buttonGoto_clicked__                    2020
+#define __buttonClose_clicked__                   2021
+#define __buttonViewTabbed_clicked__              2022
+#define __buttonViewOrganized_clicked__           2023
+#define __buttonSaveLayout_clicked__              2024
+#define __buttonViewCascaded_clicked__            2025
+#define __buttonViewTiled_clicked__               2026
+#define __buttonViewMaximized_clicked__           2027
+#define __buttonViewStackedVert_clicked__         2028
+#define __buttonViewStackedHorz_clicked__         2029
+#define __buttonViewZoomedIn_clicked__            2030
+#define __buttonViewZoomedOut_clicked__           2031
+#define __buttonAppendRecord_clicked__            2032
+#define __buttonDelRecord_clicked__               2033
+#define __buttonLockRecord_clicked__              2034
+#define __buttonGoTop_clicked__                   2035
+#define __buttonGoBottom_clicked__                2036
+#define __buttonScrollToFirst_clicked__           2037
+#define __buttonScrollToLast_clicked__            2038
+#define __buttonSearchInTable_clicked__           2039
+#define __buttonZaptable_clicked__                2040
+#define __qPanelsButton_clicked__                 2041
+#define __buttonTables_clicked__                  2042
+#define __buttonIndex_clicked__                   2043
+#define __mdiArea_subWindowActivated__            2044
+#define __browse_navigate__                       2045
+#define __browse_keyboard__                       2046
+#define __timer_timeout__                         2047
+#define __browser_contextMenu__                   2048
+#define __mdiSubWindow_windowStateChanged__       2049
+#define __mdiSubWindow_buttonXclicked__           2050
+
+/*----------------------------------------------------------------------*/
+
 #define  BRW_TYPE_DBF                             1
 #define  BRW_TYPE_ARRAY                           2
 
@@ -149,7 +192,7 @@ CLASS IdeBrowseManager INHERIT IdeObject
    METHOD open( aDbfs )
    METHOD destroy()
    METHOD buildToolbar()
-   METHOD execEvent( cEvent, p, p1 )
+   METHOD execEvent( nEvent, p, p1 )
    METHOD addArray( aData, aAttr )
    METHOD getPanelNames()
    METHOD getPanelsInfo()
@@ -210,8 +253,8 @@ METHOD IdeBrowseManager:create( oIde )
    qDock:setWidget( ::qDbu )
 
    qDock:setAcceptDrops( .t. )
-   qDock:connect( QEvent_DragEnter, {|p| ::execEvent( "dockDbu_dragEnterEvent", p ) } )
-   qDock:connect( QEvent_Drop     , {|p| ::execEvent( "dockDbu_dropEvent"     , p ) } )
+   qDock:connect( QEvent_DragEnter, {|p| ::execEvent( __dockDbu_dragEnterEvent__, p ) } )
+   qDock:connect( QEvent_Drop     , {|p| ::execEvent( __dockDbu_dropEvent__     , p ) } )
 
    /* Layout applied to dbu widget */
    ::qLayout := QGridLayout()
@@ -555,7 +598,7 @@ METHOD IdeBrowseManager:setPanel( cPanel )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
+METHOD IdeBrowseManager:execEvent( nEvent, p, p1 )
    LOCAL cTable, cPath, cPanel, qMime, qList, i, cExt, qUrl, aStruct, cTmp
 
    HB_SYMBOL_UNUSED( p )
@@ -565,12 +608,12 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
       RETURN Self
    ENDIF
 
-   SWITCH cEvent
-   CASE "dockDbu_dragEnterEvent"
+   SWITCH nEvent
+   CASE __dockDbu_dragEnterEvent__
       p:acceptProposedAction()
       EXIT
 
-   CASE "dockDbu_dropEvent"
+   CASE __dockDbu_dropEvent__
       qMime := p:mimeData()
       IF qMime:hasUrls()
          qList := qMime:urls()
@@ -585,7 +628,7 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
-   CASE "buttonShowForm_clicked"
+   CASE __buttonShowForm_clicked__
       IF !empty( ::oCurBrw )
          IF ::oCurBrw:qScrollArea:isHidden()
             ::oCurBrw:qScrollArea:show()
@@ -597,13 +640,13 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
-   CASE "buttonClose_clicked"
+   CASE __buttonClose_clicked__
       IF !empty( ::oCurBrw )
          ::oCurPanel:destroyBrw( ::oCurBrw )
       ENDIF
       EXIT
 
-   CASE "buttonOpen_clicked"
+   CASE __buttonOpen_clicked__
       IF ::currentDriver() $ "DBFCDX,DBFNTX,DBFNSX,ADS"
          IF !empty( cTable := hbide_fetchAFile( ::oIde:oDlg, "Select a Table", { { "Database File", "*.dbf" } }, ::oIde:cWrkFolderLast ) )
             hb_fNameSplit( cTable, @cPath )
@@ -617,7 +660,7 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
       ENDIF
       EXIT
 
-   CASE "qPanelsButton_clicked"
+   CASE __qPanelsButton_clicked__
       cPanel := hbide_fetchAString( ::qToolbar, "New...", "Name the Panel", "New Panel" )
       IF !( cPanel == "New..." ) .AND. !( cPanel == "Main" )
          IF ::isPanel( cPanel )
@@ -630,116 +673,116 @@ METHOD IdeBrowseManager:execEvent( cEvent, p, p1 )
       EXIT
 
    /* Left-toolbar actions */
-   CASE "buttonViewTabbed_clicked"
+   CASE __buttonViewTabbed_clicked__
       ::oCurPanel:setViewMode( iif( ::oCurPanel:viewMode() == QMdiArea_TabbedView, QMdiArea_SubWindowView, QMdiArea_TabbedView ) )
       EXIT
-   CASE "buttonViewOrganized_clicked"
+   CASE __buttonViewOrganized_clicked__
       ::oCurPanel:setViewStyle( HBPMDI_STYLE_ORGANIZED )
       EXIT
-   CASE "buttonSaveLayout_clicked"
+   CASE __buttonSaveLayout_clicked__
       ::oCurPanel:saveGeometry()
       EXIT
-   CASE "buttonViewCascaded_clicked"
+   CASE __buttonViewCascaded_clicked__
       ::oCurPanel:setViewStyle( HBPMDI_STYLE_CASCADED )
       EXIT
-   CASE "buttonViewTiled_clicked"
+   CASE __buttonViewTiled_clicked__
       ::oCurPanel:setViewStyle( HBPMDI_STYLE_TILED )
       EXIT
-   CASE "buttonViewMaximized_clicked"
+   CASE __buttonViewMaximized_clicked__
       ::oCurPanel:setViewStyle( HBPMDI_STYLE_MAXIMIZED )
       EXIT
-   CASE "buttonViewStackedVert_clicked"
+   CASE __buttonViewStackedVert_clicked__
       ::oCurPanel:setViewStyle( HBPMDI_STYLE_TILEDVERT )
       EXIT
-   CASE "buttonViewStackedHorz_clicked"
+   CASE __buttonViewStackedHorz_clicked__
       ::oCurPanel:setViewStyle( HBPMDI_STYLE_TILEDHORZ )
       EXIT
-   CASE "buttonViewZoomedIn_clicked"
+   CASE __buttonViewZoomedIn_clicked__
       ::oCurPanel:tilesZoom( +1 )
       EXIT
-   CASE "buttonViewZoomedOut_clicked"
+   CASE __buttonViewZoomedOut_clicked__
       ::oCurPanel:tilesZoom( -1 )
       EXIT
 
    /* Left-toolbar Table Manipulation Actions */
-   CASE "buttonDbStruct_clicked"
+   CASE __buttonDbStruct_clicked__
       IF !empty( ::oCurBrw )
          ::showStruct()
       ENDIF
       EXIT
 
-   CASE "buttonTables_clicked"
+   CASE __buttonTables_clicked__
       ::showTablesTree()
       EXIT
 
-   CASE "buttonIndex_clicked"
+   CASE __buttonIndex_clicked__
       EXIT
 
-   CASE "dbStruct_closeEvent"
+   CASE __dbStruct_closeEvent__
       ::oIde:oINI:cDbStructDialogGeometry := hbide_posAndSize( ::qStruct:oWidget )
       ::qStruct:close()
       ::lStructOpen := .f.
       EXIT
 
-   CASE "fieldsTable_itemSelectionChanged"
+   CASE __fieldsTable_itemSelectionChanged__
       ::populateFieldData()
       EXIT
 
-   CASE "buttonFind_clicked"
+   CASE __buttonFind_clicked__
       IF !empty( ::oCurBrw )
          ::oCurBrw:searchAsk()
       ENDIF
       EXIT
 
-   CASE "buttonGoto_clicked"
+   CASE __buttonGoto_clicked__
       IF !empty( ::oCurBrw )
          ::oCurBrw:gotoAsk()
       ENDIF
       EXIT
 
-   CASE "buttonAppendRecord_clicked"
+   CASE __buttonAppendRecord_clicked__
       IF !empty( ::oCurBrw )
          ::oCurBrw:append()
       ENDIF
       EXIT
-   CASE "buttonDelRecord_clicked"
+   CASE __buttonDelRecord_clicked__
       IF !empty( ::oCurBrw )
          ::oCurBrw:delete( .t. )
       ENDIF
       EXIT
-   CASE "buttonLockRecord_clicked"
+   CASE __buttonLockRecord_clicked__
       IF !empty( ::oCurBrw )
          ::oCurBrw:lock()
       ENDIF
       EXIT
-   CASE "buttonGoTop_clicked"
+   CASE __buttonGoTop_clicked__
       IF !empty( ::oCurBrw )
          ::oCurBrw:goTop()
       ENDIF
       EXIT
-   CASE "buttonGoBottom_clicked"
+   CASE __buttonGoBottom_clicked__
       IF !empty( ::oCurBrw )
          ::oCurBrw:goBottom()
       ENDIF
       EXIT
-   CASE "buttonScrollToFirst_clicked"
+   CASE __buttonScrollToFirst_clicked__
       IF !empty( ::oCurBrw )
          ::oCurBrw:toColumn( 1 )
       ENDIF
       EXIT
-   CASE "buttonScrollToLast_clicked"
+   CASE __buttonScrollToLast_clicked__
       IF !empty( ::oCurBrw )
          ::oCurBrw:toColumn( Len( ::oCurBrw:aStruct ) )
       ENDIF
       EXIT
-   CASE "buttonSearchInTable_clicked"
+   CASE __buttonSearchInTable_clicked__
       IF !empty( ::oCurBrw )
          ::oCurBrw:searchAsk()
       ENDIF
       EXIT
-   CASE "buttonZaptable_clicked"
+   CASE __buttonZaptable_clicked__
       EXIT
-   CASE "buttonCopyStruct_clicked"
+   CASE __buttonCopyStruct_clicked__
       IF !empty( aStruct := ::oCurBrw:dbStruct() )
          i := 0
          aeval( aStruct, {|e_| iif( Len( e_[ 1 ] ) > i, i := len( e_[ 1 ] ), NIL ) } )
@@ -920,7 +963,7 @@ METHOD IdeBrowseManager:buildUiStruct()
    ::qStruct:setMinimumWidth( ::qStruct:width() )
    ::qStruct:setMaximumWidth( ::qStruct:width() )
 
-   ::qStruct:connect( QEvent_Close, {|| ::execEvent( "dbStruct_closeEvent" ) } )
+   ::qStruct:connect( QEvent_Close, {|| ::execEvent( __dbStruct_closeEvent__ ) } )
 
    oTbl := ::qStruct:tableFields
    oTbl:verticalHeader():hide()
@@ -942,9 +985,9 @@ METHOD IdeBrowseManager:buildUiStruct()
    ::qStruct:comboType:addItem( "Date"      )
    ::qStruct:comboType:addItem( "Logical"   )
 
-   oTbl:connect( "itemSelectionChanged()", {|| ::execEvent( "fieldsTable_itemSelectionChanged" ) } )
+   oTbl:connect( "itemSelectionChanged()", {|| ::execEvent( __fieldsTable_itemSelectionChanged__ ) } )
 
-   ::qStruct:buttonCopyStruct:connect( "clicked()", {|| ::execEvent( "buttonCopyStruct_clicked" ) } )
+   ::qStruct:buttonCopyStruct:connect( "clicked()", {|| ::execEvent( __buttonCopyStruct_clicked__ ) } )
 
    RETURN Self
 
@@ -1023,17 +1066,17 @@ METHOD IdeBrowseManager:buildToolbar()
    qTBar:addWidget( , ::sp0 )
    ::buildRddsCombo()
    ::buildConxnCombo()
-   qTBar:addToolButton( "Open"     , "Open a table"       , app_image( "open3"     ), {|| ::execEvent( "buttonOpen_clicked"          ) }, .f.  )
+   qTBar:addToolButton( "Open"     , "Open a table"       , app_image( "open3"     ), {|| ::execEvent( __buttonOpen_clicked__          ) }, .f.  )
    qTBar:addWidget( , ::sp1 )
-   qTBar:addToolButton( "Toggle"   , "Show/hide form view", app_image( "formview"  ), {|| ::execEvent( "buttonShowForm_clicked"      ) }, .t.  )
+   qTBar:addToolButton( "Toggle"   , "Show/hide form view", app_image( "formview"  ), {|| ::execEvent( __buttonShowForm_clicked__      ) }, .t.  )
    qTBar:addSeparator()
-   qTBar:addToolButton( "Structure", "Table Structure"    , app_image( "dbstruct"  ), {|| ::execEvent( "buttonDbStruct_clicked"      ) }, .f.  )
+   qTBar:addToolButton( "Structure", "Table Structure"    , app_image( "dbstruct"  ), {|| ::execEvent( __buttonDbStruct_clicked__      ) }, .f.  )
    qTBar:addSeparator()
    ::buildIndexButton()
-   qTBar:addToolButton( "Search"   , "Search in table"    , app_image( "find"      ), {|| ::execEvent( "buttonFind_clicked"          ) }, .f.  )
-   qTBar:addToolButton( "Goto"     , "Goto record"        , app_image( "gotoline3" ), {|| ::execEvent( "buttonGoto_clicked"          ) }, .f.  )
+   qTBar:addToolButton( "Search"   , "Search in table"    , app_image( "find"      ), {|| ::execEvent( __buttonFind_clicked__          ) }, .f.  )
+   qTBar:addToolButton( "Goto"     , "Goto record"        , app_image( "gotoline3" ), {|| ::execEvent( __buttonGoto_clicked__          ) }, .f.  )
    qTBar:addSeparator()
-   qTBar:addToolButton( "Close"    , "Close current table", app_image( "dc_delete" ), {|| ::execEvent( "buttonClose_clicked"         ) }, .f.  )
+   qTBar:addToolButton( "Close"    , "Close current table", app_image( "dc_delete" ), {|| ::execEvent( __buttonClose_clicked__         ) }, .f.  )
    qTBar:addWidget( , ::sp2 )
    ::buildTablesButton()
 
@@ -1054,32 +1097,32 @@ METHOD IdeBrowseManager:buildLeftToolbar()
    qTBar:setMaximumWidth( 24 )
    qTBar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
 
-   qTBar:addToolButton( "view_tabbed"     , "Toggle tabbed view"         , app_image( "view_tabbed"       ), {|| ::execEvent( "buttonViewTabbed_clicked"      ) }, .f. )
+   qTBar:addToolButton( "view_tabbed"     , "Toggle tabbed view"         , app_image( "view_tabbed"       ), {|| ::execEvent( __buttonViewTabbed_clicked__      ) }, .f. )
    qTBar:addSeparator()
-   qTBar:addToolButton( "view_organized"  , "View as arranged"           , app_image( "view_organized"    ), {|| ::execEvent( "buttonViewOrganized_clicked"   ) }, .f. )
-   qTBar:addToolButton( "save3"           , "Save layout"                , app_image( "save3"             ), {|| ::execEvent( "buttonSaveLayout_clicked"      ) }, .f. )
+   qTBar:addToolButton( "view_organized"  , "View as arranged"           , app_image( "view_organized"    ), {|| ::execEvent( __buttonViewOrganized_clicked__   ) }, .f. )
+   qTBar:addToolButton( "save3"           , "Save layout"                , app_image( "save3"             ), {|| ::execEvent( __buttonSaveLayout_clicked__      ) }, .f. )
    qTBar:addSeparator()
-   qTBar:addToolButton( "view_cascaded"   , "View as cascaded"           , app_image( "view_cascaded"     ), {|| ::execEvent( "buttonViewCascaded_clicked"    ) }, .f. )
-   qTBar:addToolButton( "view_tiled"      , "View as tiled"              , app_image( "view_tiled"        ), {|| ::execEvent( "buttonViewTiled_clicked"       ) }, .f. )
-   qTBar:addToolButton( "fullscreen"      , "View Maximized"             , app_image( "fullscreen"        ), {|| ::execEvent( "buttonViewMaximized_clicked"   ) }, .f. )
-   qTBar:addToolButton( "view_vertstacked", "View Vertically Tiled"      , app_image( "view_vertstacked"  ), {|| ::execEvent( "buttonViewStackedVert_clicked" ) }, .f. )
-   qTBar:addToolButton( "view_horzstacked", "View Horizontally Tiled"    , app_image( "view_horzstacked"  ), {|| ::execEvent( "buttonViewStackedHorz_clicked" ) }, .f. )
-   qTBar:addToolButton( "view_zoomin"     , "View Zoom In"               , app_image( "view_zoomin"       ), {|| ::execEvent( "buttonViewZoomedIn_clicked"    ) }, .f. )
-   qTBar:addToolButton( "view_zoomout"    , "View Zoom Out"              , app_image( "view_zoomout"      ), {|| ::execEvent( "buttonViewZoomedOut_clicked"   ) }, .f. )
+   qTBar:addToolButton( "view_cascaded"   , "View as cascaded"           , app_image( "view_cascaded"     ), {|| ::execEvent( __buttonViewCascaded_clicked__    ) }, .f. )
+   qTBar:addToolButton( "view_tiled"      , "View as tiled"              , app_image( "view_tiled"        ), {|| ::execEvent( __buttonViewTiled_clicked__       ) }, .f. )
+   qTBar:addToolButton( "fullscreen"      , "View Maximized"             , app_image( "fullscreen"        ), {|| ::execEvent( __buttonViewMaximized_clicked__   ) }, .f. )
+   qTBar:addToolButton( "view_vertstacked", "View Vertically Tiled"      , app_image( "view_vertstacked"  ), {|| ::execEvent( __buttonViewStackedVert_clicked__ ) }, .f. )
+   qTBar:addToolButton( "view_horzstacked", "View Horizontally Tiled"    , app_image( "view_horzstacked"  ), {|| ::execEvent( __buttonViewStackedHorz_clicked__ ) }, .f. )
+   qTBar:addToolButton( "view_zoomin"     , "View Zoom In"               , app_image( "view_zoomin"       ), {|| ::execEvent( __buttonViewZoomedIn_clicked__    ) }, .f. )
+   qTBar:addToolButton( "view_zoomout"    , "View Zoom Out"              , app_image( "view_zoomout"      ), {|| ::execEvent( __buttonViewZoomedOut_clicked__   ) }, .f. )
    qTBar:addSeparator()
 
-   qTBar:addToolButton( "database_add"     , "Append a record"           , app_image( "database_add"      ), {|| ::execEvent( "buttonAppendRecord_clicked"  ) }, .f. )
-   qTBar:addToolButton( "database_remove"  , "Delete a record"           , app_image( "database_remove"   ), {|| ::execEvent( "buttonDelRecord_clicked"     ) }, .f. )
-   qTBar:addToolButton( "database_lock"    , "Lock/Unlock Record"        , app_image( "database_lock"     ), {|| ::execEvent( "buttonLockRecord_clicked"    ) }, .f. )
+   qTBar:addToolButton( "database_add"     , "Append a record"           , app_image( "database_add"      ), {|| ::execEvent( __buttonAppendRecord_clicked__  ) }, .f. )
+   qTBar:addToolButton( "database_remove"  , "Delete a record"           , app_image( "database_remove"   ), {|| ::execEvent( __buttonDelRecord_clicked__     ) }, .f. )
+   qTBar:addToolButton( "database_lock"    , "Lock/Unlock Record"        , app_image( "database_lock"     ), {|| ::execEvent( __buttonLockRecord_clicked__    ) }, .f. )
    qTBar:addSeparator()
-   qTBar:addToolButton( "database_up"      , "Goto Top"                  , app_image( "database_up"       ), {|| ::execEvent( "buttonGoTop_clicked"         ) }, .f. )
-   qTBar:addToolButton( "database_down"    , "Goto Bottom"               , app_image( "database_down"     ), {|| ::execEvent( "buttonGoBottom_clicked"      ) }, .f. )
-   qTBar:addToolButton( "database_previous", "Scroll to First Column"    , app_image( "database_previous" ), {|| ::execEvent( "buttonScrollToFirst_clicked" ) }, .f. )
-   qTBar:addToolButton( "database_next"    , "Scroll to Last Column"     , app_image( "database_next"     ), {|| ::execEvent( "buttonScrollToLast_clicked"  ) }, .f. )
+   qTBar:addToolButton( "database_up"      , "Goto Top"                  , app_image( "database_up"       ), {|| ::execEvent( __buttonGoTop_clicked__         ) }, .f. )
+   qTBar:addToolButton( "database_down"    , "Goto Bottom"               , app_image( "database_down"     ), {|| ::execEvent( __buttonGoBottom_clicked__      ) }, .f. )
+   qTBar:addToolButton( "database_previous", "Scroll to First Column"    , app_image( "database_previous" ), {|| ::execEvent( __buttonScrollToFirst_clicked__ ) }, .f. )
+   qTBar:addToolButton( "database_next"    , "Scroll to Last Column"     , app_image( "database_next"     ), {|| ::execEvent( __buttonScrollToLast_clicked__  ) }, .f. )
    qTBar:addSeparator()
-   qTBar:addToolButton( "database_search"  , "Search in Table"           , app_image( "database_search"   ), {|| ::execEvent( "buttonSearchInTable_clicked" ) }, .f. )
+   qTBar:addToolButton( "database_search"  , "Search in Table"           , app_image( "database_search"   ), {|| ::execEvent( __buttonSearchInTable_clicked__ ) }, .f. )
    qTBar:addSeparator()
-   qTBar:addToolButton( "database_process" , "Zap Table"                 , app_image( "database_process"  ), {|| ::execEvent( "buttonZaptable_clicked"      ) }, .f. )
+   qTBar:addToolButton( "database_process" , "Zap Table"                 , app_image( "database_process"  ), {|| ::execEvent( __buttonZaptable_clicked__      ) }, .f. )
 
    RETURN NIL
 
@@ -1096,7 +1139,7 @@ METHOD IdeBrowseManager:buildPanelsButton()
    ::qPanelsButton:setPopupMode( QToolButton_MenuButtonPopup )
    ::qPanelsButton:setMenu( ::qPanelsMenu )
 
-   ::qPanelsButton:connect( "clicked()", {|| ::execEvent( "qPanelsButton_clicked" ) } )
+   ::qPanelsButton:connect( "clicked()", {|| ::execEvent( __qPanelsButton_clicked__ ) } )
 
    ::qToolbar:addWidget( , ::qPanelsButton )
 
@@ -1145,7 +1188,7 @@ METHOD IdeBrowseManager:buildTablesButton()
    ::qTablesButton:setPopupMode( QToolButton_MenuButtonPopup )
    ::qTablesButton:setMenu( ::qTablesMenu )
 
-   ::qTablesButton:connect( "clicked()", {|| ::execEvent( "buttonTables_clicked" ) } )
+   ::qTablesButton:connect( "clicked()", {|| ::execEvent( __buttonTables_clicked__ ) } )
 
    ::qToolbar:addWidget( , ::qTablesButton )
 
@@ -1164,7 +1207,7 @@ METHOD IdeBrowseManager:buildIndexButton()
    ::qIndexButton:setPopupMode( QToolButton_MenuButtonPopup )
    ::qIndexButton:setMenu( ::qIndexMenu )
 
-   ::qIndexButton:connect( "clicked()", {|| ::execEvent( "buttonIndex_clicked" ) } )
+   ::qIndexButton:connect( "clicked()", {|| ::execEvent( __buttonIndex_clicked__ ) } )
 
    ::qToolbar:addWidget( , ::qIndexButton )
 
@@ -1242,7 +1285,7 @@ CLASS IdeBrowsePanel INHERIT IdeObject
    METHOD new( oIde, cPanel, oManager )
    METHOD destroy()
    METHOD destroyBrw( oBrw )
-   METHOD execEvent( cEvent, p )
+   METHOD execEvent( nEvent, p )
    METHOD setCurrentBrowser( oBrw )
    METHOD getIndexInfo( oBrw )
    METHOD setIndex( oBrw, cIndex )
@@ -1279,7 +1322,7 @@ METHOD IdeBrowsePanel:new( oIde, cPanel, oManager )
    ::qWidget:setTabShape( QTabWidget_Triangular )
    ::qWidget:setViewMode( QMdiArea_TabbedView )
 
-   ::qWidget:connect( "subWindowActivated(QMdiSubWindow*)", {|p| ::execEvent( "mdiArea_subWindowActivated", p ) } )
+   ::qWidget:connect( "subWindowActivated(QMdiSubWindow*)", {|p| ::execEvent( __mdiArea_subWindowActivated__, p ) } )
 
    RETURN Self
 
@@ -1477,11 +1520,11 @@ METHOD IdeBrowsePanel:destroyBrw( oBrw )
 
 /*------------------------------------------------------------------------*/
 
-METHOD IdeBrowsePanel:execEvent( cEvent, p )
+METHOD IdeBrowsePanel:execEvent( nEvent, p )
    LOCAL n, oBrw
 
-   SWITCH cEvent
-   CASE "mdiArea_subWindowActivated"
+   SWITCH nEvent
+   CASE __mdiArea_subWindowActivated__
       IF ! empty( ::aBrowsers )
          IF ( n := ascan( ::aBrowsers, {|e_| hbqt_IsEqual( e_[ SUB_WINDOW ], p ) } ) )  > 0
             oBrw := ::aBrowsers[ n, SUB_BROWSER ]
@@ -1613,7 +1656,7 @@ CLASS IdeBrowse INHERIT IdeObject
    METHOD create( oIde, oManager, oPanel, aInfo )
    METHOD configure()
    METHOD destroy()
-   METHOD execEvent( cEvent, p, p1 )
+   METHOD execEvent( nEvent, p, p1 )
    METHOD buildBrowser()
    METHOD buildColumns()
    METHOD buildMdiWindow()
@@ -1789,12 +1832,12 @@ METHOD IdeBrowse:create( oIde, oManager, oPanel, aInfo )
    ::goto( max( 1, val( aInfo[ TBL_RECORD ] ) ) )
    ::oBrw:setCurrentIndex( .t. )
 
-   ::oBrw:navigate := {|mp1,mp2| ::execEvent( "browse_navigate", mp1, mp2 ) }
-   ::oBrw:keyboard := {|mp1,mp2| ::execEvent( "browse_keyboard", mp1, mp2 ) }
+   ::oBrw:navigate := {|mp1,mp2| ::execEvent( __browse_navigate__, mp1, mp2 ) }
+   ::oBrw:keyboard := {|mp1,mp2| ::execEvent( __browse_keyboard__, mp1, mp2 ) }
 
    ::qTimer := QTimer()
    ::qTimer:setInterval( 5 )
-   ::qTimer:connect( "timeout()",  {|| ::execEvent( "timer_timeout" ) } )
+   ::qTimer:connect( "timeout()",  {|| ::execEvent( __timer_timeout__ ) } )
 
    RETURN Self
 
@@ -1841,7 +1884,7 @@ METHOD IdeBrowse:buildBrowser()
    oXbpBrowse:phyPosBlock   := {| | ::ordKeyNo()      }
 
 
-   oXbpBrowse:hbContextMenu := {|mp1| ::execEvent( "browser_contextMenu", mp1 ) }
+   oXbpBrowse:hbContextMenu := {|mp1| ::execEvent( __browser_contextMenu__, mp1 ) }
 
    /* Form View */
    ::qForm := QWidget()
@@ -1957,8 +2000,8 @@ METHOD IdeBrowse:buildMdiWindow()
 
  * ::qMdi:connect( "aboutToActivate()", {|| ::execEvent( "mdiSubWindow_aboutToActivate" ) } )
    ::qMdi:connect( "windowStateChanged(Qt::WindowStates,Qt::WindowStates)", ;
-                                 {|p,p1| ::execEvent( "mdiSubWindow_windowStateChanged", p, p1 ) } )
-   ::qMdi:connect( QEvent_Close, {|oEvent| oEvent:accept(), ::execEvent( "mdiSubWindow_buttonXclicked" ) } )
+                                 {|p,p1| ::execEvent( __mdiSubWindow_windowStateChanged__, p, p1 ) } )
+   ::qMdi:connect( QEvent_Close, {|oEvent| oEvent:accept(), ::execEvent( __mdiSubWindow_buttonXclicked__ ) } )
 
    RETURN Self
 
@@ -1990,33 +2033,28 @@ METHOD IdeBrowse:configure()
 
 /*------------------------------------------------------------------------*/
 
-METHOD IdeBrowse:execEvent( cEvent, p, p1 )
+METHOD IdeBrowse:execEvent( nEvent, p, p1 )
 
    HB_SYMBOL_UNUSED( p  )
    HB_SYMBOL_UNUSED( p1 )
 
-   SWITCH cEvent
-   CASE "browse_navigate"
+   SWITCH nEvent
+   CASE __browse_navigate__
       ::dispInfo()
       ::populateForm()
       ::oManager:oCurBrw := Self
       ::oManager:qToolbar:setItemChecked( "Toggle", ! ::qForm:isHidden() )
       EXIT
-
-   CASE "browse_keyboard"
+   CASE __browse_keyboard__
       IF p == xbeK_CTRL_F
          ::searchAsk()
-
       ELSEIF p == xbeK_CTRL_G
          ::gotoAsk()
-
       ELSEIF p == xbeK_CTRL_E
          ::oBrw:oTableView:edit( ::oBrw:getCurrentIndex() )
-
       ENDIF
       EXIT
-
-   CASE "timer_timeout"
+   CASE __timer_timeout__
       ::oBrw:down()
       IF ::oBrw:hitBottom
          ::qTimer:stop()
@@ -2026,33 +2064,26 @@ METHOD IdeBrowse:execEvent( cEvent, p, p1 )
          ::dispInfo()
       ENDIF
       EXIT
-
-   CASE "mdiSubWindow_buttonXclicked"
+   CASE __mdiSubWindow_buttonXclicked__
       ::oPanel:destroyBrw( Self )
       EXIT
-
-   CASE "mdiSubWindow_aboutToActivate"
-      #if 0
+#if 0
+   CASE __browser_ScrollToColumn__
+   CASE __mdiSubWindow_aboutToActivate__
       ::oBrw:configure()
       ::oBrw:setCurrentIndex( .t. )
-      #endif
       EXIT
-
-   CASE "mdiSubWindow_windowStateChanged"
+#endif
+   CASE __mdiSubWindow_windowStateChanged__
       IF p1 == 8
          ::oPanel:setCurrentBrowser( Self )
       ENDIF
       EXIT
-
-   CASE "browser_contextMenu"
+   CASE __browser_contextMenu__
       IF empty( ::aMenu )
          ::buildContextMenu()
       ENDIF
       hbide_execPopup( ::aMenu, p, ::qMdi )
-      EXIT
-
-   CASE "browser_ScrollToColumn"
-
       EXIT
    ENDSWITCH
 
@@ -2119,7 +2150,7 @@ METHOD IdeBrowse:buildContextMenu()
    aadd( ::aMenu, { "" } )
 
    /* Miscellaneous */
-   aadd( ::aMenu, { "Form View"      , {|| ::oManager:execEvent( "buttonShowForm_clicked"  ) } } )
+   aadd( ::aMenu, { "Form View"      , {|| ::oManager:execEvent( __buttonShowForm_clicked__  ) } } )
 
 
    RETURN Self
