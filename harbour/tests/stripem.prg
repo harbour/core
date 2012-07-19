@@ -7,11 +7,7 @@
 #xtranslate Default( <Var>, <xVal> ) => iif( <Var> == NIL, <xVal>, <Var> )
 
 //
-// Strip
-//
 // The Harbour stripping command
-//
-// Date : 04/05/1999
 //
 // Usage : Strip( FileFrom, FileTo )
 //
@@ -84,10 +80,10 @@ FUNCTION TTextFile()                            // Parameter = dirty
       oFile:AddMethod( "Goto"   , @Goto()    )  // Go to line
 
       oFile:AddInline( "Run"    , ;             // Get/set data
-         { |self, xTxt, lCRLF|iif( ::cMode == "R", ::Read(), ::WriteLn( xTxt, lCRLF ) ) } )
-      oFile:AddInline( "Write"  , { |self, xTxt|::WriteLn( xTxt, .F. ) } )
+         {| self, xTxt, lCRLF | iif( ::cMode == "R", ::Read(), ::WriteLn( xTxt, lCRLF ) ) } )
+      oFile:AddInline( "Write"  , {| self, xTxt | ::WriteLn( xTxt, .F. ) } )
       // Write without CR
-      oFile:AddInline( "EoF"    , { |self|::lEoF } )
+      oFile:AddInline( "EoF"    , {| self | ::lEoF } )
       // End of file as function
       oFile:Create()
    ENDIF
@@ -282,7 +278,7 @@ FUNCTION ToChar( xVal )
       RETURN DToC( xVal )
 
    CASE cType == 'L'
-      RETURN IIF( xVal, ".T.", ".F." )
+      RETURN iif( xVal, ".T.", ".F." )
 
    CASE cType == 'M'
       RETURN xVal

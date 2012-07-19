@@ -12,9 +12,8 @@
  *
  */
 
-#define EOL chr(10)
 #xtranslate QQOUT([<x,...>]) => [OUTSTD(<x>)]
-#xtranslate QOUT([<x,...>]) => OUTSTD(EOL)[;OUTSTD(<x>)]
+#xtranslate QOUT([<x,...>]) => OUTSTD(hb_eol())[;OUTSTD(<x>)]
 
 #include "hbclass.ch"
 

@@ -13,14 +13,15 @@
 
 #include "hbclass.ch"
 
-memvar P
+MEMVAR P
 
-PROC MAIN()
+PROCEDURE Main()
+
    LOCAL bError
 
    PUBLIC P := NIL
 
-   bError := errorBlock( { | oErr | myErrorHandler( oErr ) } )
+   bError := ErrorBlock( {| oErr | myErrorHandler( oErr ) } )
 
    ? "First simple tests when object is not destroyed by GC"
    ? "====================================================="
@@ -37,66 +38,78 @@ PROC MAIN()
    GCFREETEST( 2 )
    GCFREETEST( 3 )
 
-   errorBlock( bError )
+   ErrorBlock( bError )
 
    ?
    ? "*** END OF TEST ***"
 
-return
+   RETURN
 
 STATIC PROCEDURE SIMPLETEST( type )
+
    LOCAL o
 
    ?
-   ? "=> o := myClass():new( " + ltrim( str( type ) ) + " )"
+   ? "=> o := myClass():new( " + hb_ntos( type ) + " )"
    o := myClass():new( type )
    ? "=> o:className() ->", o:className()
    ? "=> o := NIL"
-   begin sequence
+   BEGIN SEQUENCE
       o := NIL
    end
-RETURN
+
+   RETURN
 
 STATIC PROCEDURE GCFREETEST( type )
+
    LOCAL o, a
 
    ?
-   ? "=> o := myClass():new( " + ltrim( str( type ) ) + " )"
+   ? "=> o := myClass():new( " + hb_ntos( type ) + " )"
    o := myClass():new( type )
    ? "=> o:className() ->", o:className()
-   ? "=> create corss reference: a := { o, nil }; a[2] := a; a := NIL"
-   a := { o, nil }; a[2] := a; a := NIL
+   ? "=> create corss reference: a := { o, nil }; a[ 2 ] := a; a := NIL"
+   a := { o, nil }; a[ 2 ] := a; a := NIL
    ? "=> o := NIL"
-   begin sequence
+   BEGIN SEQUENCE
       o := NIL
-   end
+   END
    ? "=> hb_gcAll()"
-   begin sequence
+   BEGIN SEQUENCE
       hb_gcAll()
-   end
-RETURN
+   END
+
+   RETURN
 
 STATIC FUNCTION myErrorHandler( oErr )
-   ? "Error ->", ltrim( str( oErr:gencode ) ), ;
-     oErr:description + ":", oErr:operation
-   BREAK oErr
-RETURN NIL
 
+   ? "Error ->", hb_ntos( oErr:gencode ), ;
+      oErr:description + ":", oErr:operation
+   BREAK oErr
+
+   RETURN NIL
 
 CREATE CLASS myClass
-   VAR         type
+
+   VAR         TYPE
    VAR         var1
+
    CLASS VAR   var2
+
    METHOD      init
    DESTRUCTOR  dtor
+
 END CLASS
 
 METHOD INIT( type ) CLASS myClass
+
    ? "Hi, I'm INIT method of class:", self:classname()
    ::type := type
-RETURN self
+
+   RETURN self
 
 PROCEDURE DTOR CLASS myClass
+
    ? "   Hi, I'm desturctor of class: ", self:classname()
 
    IF ::type == 1
@@ -116,4 +129,4 @@ PROCEDURE DTOR CLASS myClass
       ? "   It's a safe destructor."
    ENDIF
 
-RETURN
+   RETURN

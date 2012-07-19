@@ -7,8 +7,6 @@
 //
 // Implementation of dynamic objects in Harbour
 //
-// Date : 1999/05/12
-//
 // Written by Eddie Runia <eddie@runia.com>
 // www - http://harbour-project.org
 //

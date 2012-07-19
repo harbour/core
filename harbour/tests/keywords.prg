@@ -212,7 +212,7 @@ begin sequence
   break->break :=break->break +break->break
   BREAK
   break :=break[ 2 ] //not allowed in Clipper
-  bReak :=IIF( bReak==1, BREAK(0), BREAK(bReak) )
+  bReak :=iif( bReak==1, BREAK(0), BREAK(bReak) )
 recover USING bReak
   BREAK( Break( break(0) ) )
 end

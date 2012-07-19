@@ -129,7 +129,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    Set( _SET_DELIMITERS, .T. )
 
    Set( _SET_DELIMCHARS, "<>" )
-   o := GetNew( 14, 16, { | x | iif( x == NIL, cStr01, cStr01 := x ) }, "cStr01",, "W+/N,BG/N" )
+   o := GetNew( 14, 16, {| x | iif( x == NIL, cStr01, cStr01 := x ) }, "cStr01",, "W+/N,BG/N" )
    TEST_LINE( o:display() )
    Set( _SET_DELIMCHARS, "()" )
    TEST_LINE( o:display() )

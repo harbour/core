@@ -40,7 +40,7 @@ FUNCTION TForm()
       oClass:AddMethod( "New",  @New() )  // define this class objects methods
       oClass:AddMethod( "Show", @Show() )
       oClass:AddInline( "CalcArea", ;
-         { |self| ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) } )
+         {| self | ( ::nRight - ::nLeft ) * ( ::nBottom - ::nTop ) } )
 
       oClass:Create()                     // builds this class
    ENDIF

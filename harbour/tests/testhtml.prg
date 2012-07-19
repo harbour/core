@@ -7,8 +7,6 @@
 *  testhtml.prg
 *  Harbour Test of a HTML-Generator class.
 *
-*  1999/05/30  First implementation.
-*
 *              Tips: - Use ShowResults to make dynamic html (to test dynamic
 *                      results, put the exe file on CGI-BIN dir or equivalent);
 *                    - Use SaveToFile to make static html page

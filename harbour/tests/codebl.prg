@@ -2,7 +2,7 @@
  * $Id$
  */
 
-STATIC cbStatic
+STATIC s_cbStatic
 
 PROCEDURE Main()
 
@@ -29,12 +29,12 @@ PROCEDURE Main()
 
    QOut( "Test for indirect detaching of local variables" )
    DetachToStatic( 1 )
-   mqout( 2, Eval( cbStatic, 1 ) )
-   mqout( 3, Eval( cbStatic, 2 ) )
-   cb := cbStatic
+   mqout( 2, Eval( s_cbStatic, 1 ) )
+   mqout( 3, Eval( s_cbStatic, 2 ) )
+   cb := s_cbStatic
    DetachToStatic( 100 )
-   mqout( 200, Eval( cbStatic, 100 ) )
-   mqout( 300, Eval( cbStatic, 200 ) )
+   mqout( 200, Eval( s_cbStatic, 100 ) )
+   mqout( 300, Eval( s_cbStatic, 200 ) )
    mqout( 4, Eval( cb, 3 ) )
 
    ReferParam()
@@ -62,8 +62,8 @@ PROCEDURE GetArray( a )
    a := Array( 100 )
    FOR i := 1 TO 100
       IF ( i % 6 ) == 0
-         a[ i-2 ] = NIL
-         a[ i-4 ] = NIL
+         a[ i - 2 ] = NIL
+         a[ i - 4 ] = NIL
       ENDIF
       a[ i ] := TestBlocks()
    NEXT
@@ -75,7 +75,7 @@ PROCEDURE PrintArray( a )
    LOCAL i
 
    FOR i := 1 TO 100
-      IF a[i] != NIL
+      IF a[ i ] != NIL
          Eval( a[ i ][ 2 ], i )
          mqout( i, Eval( a[ i ][ 1 ] ) )
       ENDIF
@@ -112,7 +112,7 @@ FUNCTION DoThing( n )
 
 FUNCTION DetachToStatic( n )
 
-   cbStatic = {| x | n + x }
+   s_cbStatic := {| x | n + x }
 
    RETURN NIL
 

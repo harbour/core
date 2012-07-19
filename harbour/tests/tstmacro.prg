@@ -100,7 +100,7 @@ FUNCTION SubFun()
 STATIC PROCEDURE TEST_TYPE()
 
    LOCAL v1, v2, v1a, v2a
-   LOCAL bErr := ErrorBlock( { |e|Break( e ) } ), oE
+   LOCAL bErr := ErrorBlock( {| e | Break( e ) } ), oE
 
    ?
    ? "=========== TYPE() function ================="

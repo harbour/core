@@ -430,9 +430,9 @@ PROCEDURE thFunc()
 
    oBrowse:ColSep        := " | "
    oBrowse:HeadSep       := "-+-"
-   oBrowse:GoTopBlock    := { || dbGoTop() }
-   oBrowse:GoBottomBlock := { || dbGoBottom() }
-   oBrowse:SkipBlock     := { | nSkip | dbSkipBlock( nSkip, oBrowse ) }
+   oBrowse:GoTopBlock    := {|| dbGoTop() }
+   oBrowse:GoBottomBlock := {|| dbGoBottom() }
+   oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip, oBrowse ) }
 
    FOR i := 1 TO Len( aStruct )
       oBrowse:AddColumn( TBColumnNew( aStruct[ i, 1 ], BlockField( i ) ) )
@@ -535,7 +535,7 @@ STATIC FUNCTION TBPrev( oTbr )
 
 STATIC FUNCTION BlockField( i )
 
-   RETURN { || FieldGet( i ) }
+   RETURN {|| FieldGet( i ) }
 
 //-------------------------------------------------------------------//
 

@@ -17,7 +17,7 @@ PROCEDURE Main()
 
    FOR i := 1 TO 3
       M->Macro := "Var" + Str( i, 1 )
-      bBlock[ i ] := { || &Macro }
+      bBlock[ i ] := {|| &Macro }
    NEXT
 
    ? "Early (Simple):"
@@ -28,7 +28,7 @@ PROCEDURE Main()
 
    FOR i := 1 TO 3
       M->Macro := "Var" + Str( i, 1 )
-      bBlock[ i ] := { || &Macro + "!" }
+      bBlock[ i ] := {|| &Macro + "!" }
    NEXT
 
    ?
@@ -40,7 +40,7 @@ PROCEDURE Main()
 
    FOR i := 1 TO 3
       M->Macro := "Var" + Str( i, 1 )
-      bBlock[ i ] := { || &( Macro ) }
+      bBlock[ i ] := {|| &( Macro ) }
    NEXT
 
    ?

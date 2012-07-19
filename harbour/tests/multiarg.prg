@@ -4,8 +4,6 @@
 
 // Testing of multiple arguments
 //
-// Date : 1999/05/24
-//
 // Written by Eddie Runia <eddie@runia.com>
 // www - http://harbour-project.org
 //

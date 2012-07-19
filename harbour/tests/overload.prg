@@ -3,16 +3,10 @@
  */
 
 //
-// DynObj
-//
 // Implementation of operator overload in Harbour
-//
-// Date : 1999/05/15
 //
 // Written by Eddie Runia <eddie@runia.com>
 // www - http://harbour-project.org
-//
-// Jfl 2001/11/18 command mode added
 //
 // Placed in the public domain
 //
@@ -41,8 +35,8 @@ PROCEDURE Main()
    QOut( "Greater than or Equal:", oString >= "Hello" )
    QOut( "Concatenation + :", oString + "Hello" )
    QOut( "Concatenation - :", oString - "Hello" )
-   QOut( "Array index[2] :", oString[2] )
-   QOut( "Array index[3] := 'X' :", oString[3] := 'X' )
+   QOut( "Array index[2] :", oString[ 2 ] )
+   QOut( "Array index[3] := 'X' :", oString[ 3 ] := 'X' )
    QOut( oString:cValue )
 
    RETURN nil
@@ -69,13 +63,13 @@ CREATE CLASS tString
 
 ENDCLASS
 
-
 /*
-function TString()
 
-   static oClass
+FUNCTION TString()
 
-   if oClass == nil
+   STATIC oClass
+
+   IF oClass == nil
       oClass = HBClass():New( "TSTRING" )  // starts a new class definition
 
       oClass:AddData( "cValue" )          // define this class objects datas
@@ -92,19 +86,19 @@ function TString()
       oClass:AddInline( "-" , {| self, cTest | ::cValue -  cTest } )
       oClass:AddInline( "$" , {| self, cTest | ::cValue $  cTest } )
 
-      oClass:AddInline( "HasMsg", {| self, cMsg | __ObjHasMsg( QSelf(), cMsg ) } )
+      oClass:AddInline( "HasMsg", {| self, cMsg | __objHasMsg( QSelf(), cMsg ) } )
 
       oClass:Create()                     // builds this class
-   endif
+   ENDIF
 
-return oClass:Instance()                  // builds an object of this class
+   RETURN oClass:Instance()                  // builds an object of this class
 
-static function New( cText )
+STATIC FUNCTION New( cText )
 
-   local Self := QSelf()
+   LOCAL Self := QSelf()
 
    ::cValue := cText
 
-return Self
+   RETURN Self
 
 */

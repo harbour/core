@@ -198,12 +198,12 @@ PROCEDURE Main()
    Inkey( 0 )
    CLS
 
-   ? "TESTDBF->( dbEval( { || QOut( TESTDBF->FIRST, TESTDBF->AGE ) }, ;"
-   ? "                   { || TESTDBF->AGE == 23 } ) )"
+   ? "TESTDBF->( dbEval( {|| QOut( TESTDBF->FIRST, TESTDBF->AGE ) }, ;"
+   ? "                   {|| TESTDBF->AGE == 23 } ) )"
    ? ""
    ? "dbCommit()"
-   TESTDBF->( dbEval( { || QOut( TESTDBF->FIRST, TESTDBF->AGE ) }, ;
-      { || TESTDBF->AGE == 23 } ) )
+   TESTDBF->( dbEval( {|| QOut( TESTDBF->FIRST, TESTDBF->AGE ) }, ;
+      {|| TESTDBF->AGE == 23 } ) )
    TESTDBF->( dbCommit() )
 
    ? "Press any key to continue..."
@@ -304,7 +304,7 @@ PROCEDURE Main()
    ? 'NEWRDD->( dbCloseArea() )'
    ? 'dbUseArea( .T., "DBF", "newrdd", "NEWRDD", .F., .F. )'
    ? 'nI := 1'
-   ? 'NEWRDD->( __dbPack( { || QOut( nI ), nI++ } ) )'
+   ? 'NEWRDD->( __dbPack( {|| QOut( nI ), nI++ } ) )'
    ? '? "RecCount:", NEWRDD->( RecCount() )'
    ? ""
    NEWRDD->( dbCloseArea() )
@@ -315,7 +315,7 @@ PROCEDURE Main()
    CLS
 
    nI := 1
-   NEWRDD->( __dbPack( { || QOut( nI ), nI ++ } ) )
+   NEWRDD->( __dbPack( {|| QOut( nI ), nI ++ } ) )
    ? "RecCount:", NEWRDD->( RecCount() )
 
    ? "Press any key to continue..."

@@ -38,7 +38,7 @@ proc main( cdp, info, unicode )
    for i := 1 to len( a )
       a[ i ] := i - 1
    next
-   asort( a,,, { |x,y| chr( x ) + chr( 0 ) < chr( y ) + chr( 0 ) } )
+   asort( a,,, {| x, y | chr( x ) + chr( 0 ) < chr( y ) + chr( 0 ) } )
 
    ? date(), time(), os(), version()
 #ifdef __HARBOUR__
@@ -402,7 +402,7 @@ static function genCP( id, info, unicode, lBin, lWarn, lMixed, cUp, cLo )
       lower[ i ] := asc( lower( c ) )
       tmp[ i ] := i - 1
    next
-   asort( tmp,,, { |x,y| chr( x ) + chr( 0 ) < chr( y ) + chr( 0 ) } )
+   asort( tmp,,, {| x, y | chr( x ) + chr( 0 ) < chr( y ) + chr( 0 ) } )
    for i := 1 to 256
       sort[ tmp[ i ] + 1 ] := i - 1
    next

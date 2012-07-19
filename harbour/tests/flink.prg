@@ -16,38 +16,38 @@ PROCEDURE Main()
 
    hb_MemoWrit( "_hb_h.tmp", ">h.tmp<" )
 
-   ? HB_FLINK()
-   ? FERROR()
+   ? hb_FLink()
+   ? FError()
 
-   ? HB_FLINKREAD()
-   ? FERROR()
+   ? hb_FLinkRead()
+   ? FError()
 
-   ? HB_FLINKREAD( "_hb_h.tmp" )
-   ? FERROR()
+   ? hb_FLinkRead( "_hb_h.tmp" )
+   ? FError()
 
-   ? HB_FLINK( "_hb_h.tmp", "_hb_hlnk.tmp" )
-   ? FERROR()
+   ? hb_FLink( "_hb_h.tmp", "_hb_hlnk.tmp" )
+   ? FError()
 
    hb_MemoWrit( "_hb_s.tmp", ">s.tmp<" )
 
    /* Requires special rights on Windows system,
       by default Administrators are allowed. */
 
-   ? HB_FLINKSYM()
-   ? FERROR()
+   ? hb_FLinkSym()
+   ? FError()
 
-   ? HB_FLINKSYM( "_hb_s.tmp", "_hb_slnk.tmp" )
-   ? FERROR()
+   ? hb_FLinkSym( "_hb_s.tmp", "_hb_slnk.tmp" )
+   ? FError()
 
-   ? HB_FLINKREAD( "_hb_slnk.tmp" )
-   ? FERROR()
+   ? hb_FLinkRead( "_hb_slnk.tmp" )
+   ? FError()
 
    hb_DirCreate( "_hb_d" )
 
-   ? HB_FLINKSYM( "_hb_d", "_hb_dlnk" )
-   ? FERROR()
+   ? hb_FLinkSym( "_hb_d", "_hb_dlnk" )
+   ? FError()
 
-   ? HB_FLINKREAD( "_hb_dlnk" )
-   ? FERROR()
+   ? hb_FLinkRead( "_hb_dlnk" )
+   ? FError()
 
    RETURN

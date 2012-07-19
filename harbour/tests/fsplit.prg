@@ -10,7 +10,7 @@ PROCEDURE Main( cSource, cSplit, nByte )
 
    RETURN
 
-FUNCTION fsplit ( csource, csplit, nbyte )
+FUNCTION fsplit( csource, csplit, nbyte )
 
    LOCAL i                           // general counter
    LOCAL ccommand      := ""         // dos command for joining files

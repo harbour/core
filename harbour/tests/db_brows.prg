@@ -7,8 +7,6 @@
 //+
 //+ Written by Alexander Kresin <alex@belacy.belgorod.su>
 //+
-//+ Date : 30/09/1999
-//+ Time : 19:20
 //+ Placed in the public domain
 //+
 //+    Source Module => db_brows.prg
@@ -780,16 +778,16 @@ FUNCTION InitList
    LI_NSTR    := LI_MSED := 1
    LI_CLR     := "W+/B"
    LI_CLRV    := "R/W"
-   LI_BSKIP   := { | a, x | HB_SYMBOL_UNUSED( a ), dbSkip( x ) }
-   LI_BGTOP   := { || DBGOTOP() }
-   LI_BGBOT   := { || dbGoBottom() }
-   LI_BEOF    := { || Eof() }
-   LI_BBOF    := { || Bof() }
-   LI_B1      := { | a | HB_SYMBOL_UNUSED( a ), DevPos( LI_Y2, LI_X1 + 2 ), DevOut( Str( RecNo(), 6 ) + "/" + Str( LI_KOLZ, 6 ) ) }
+   LI_BSKIP   := {| a, x | HB_SYMBOL_UNUSED( a ), dbSkip( x ) }
+   LI_BGTOP   := {|| DBGOTOP() }
+   LI_BGBOT   := {|| dbGoBottom() }
+   LI_BEOF    := {|| Eof() }
+   LI_BBOF    := {|| Bof() }
+   LI_B1      := {| a | HB_SYMBOL_UNUSED( a ), DevPos( LI_Y2, LI_X1 + 2 ), DevOut( Str( RecNo(), 6 ) + "/" + Str( LI_KOLZ, 6 ) ) }
    LI_FREEZE  := 0
-   LI_RCOU    := { || RecCount() }
-   LI_RECNO   := { || RecNo() }
-   LI_BGOTO   := { | a, n | HB_SYMBOL_UNUSED( a ), dbGoto( n ) }
+   LI_RCOU    := {|| RecCount() }
+   LI_RECNO   := {|| RecNo() }
+   LI_BGOTO   := {| a, n | HB_SYMBOL_UNUSED( a ), dbGoto( n ) }
    LI_PRFLT   := LI_LVIEW := .F.
    LI_LSOHR   := .T.
    LI_BDESHIN := LI_BDESHOUT := LI_MSF := LI_MSTYP := LI_NAMES := Nil

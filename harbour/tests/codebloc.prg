@@ -23,7 +23,7 @@ PROCEDURE Main()
    d = "with access to local variables"
 
    a = {| b, c | OutStd( "I am a second codeblock " + d + b + ;
-      IIF( c == NIL, ' empty second parameter ', c ) ), OutStd( hb_eol() ), "WITH return value" }
+      iif( c == NIL, ' empty second parameter ', c ) ), OutStd( hb_eol() ), "WITH return value" }
    Eval( a, ", codeblock parameters" )
    OutStd( hb_eol() )
 
@@ -39,7 +39,7 @@ PROCEDURE Main()
    AnotherTest( a, "==> Another " )
    OutStd( hb_eol() )
 
-   a = {| c | IIF( c == NIL, {| a | "First " + a }, {| a | "Second " + a } ) }
+   a = {| c | iif( c == NIL, {| a | "First " + a }, {| a | "Second " + a } ) }
    a = Eval( a )
    OutStd( hb_eol() )
    OutStd( Eval( a, "codeblock created in a codeblock" ) )

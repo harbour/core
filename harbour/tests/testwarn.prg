@@ -151,7 +151,7 @@ FUNCTION Test()
 FUNCTION Main2()
    Local n As Numeric, lVar AS LOGICAL
 
-   n := IIF( lVar, 'A', 3 ) //IIF() needs to be completed.
+   n := iif( lVar, 'A', 3 ) // iif() needs to be completed.
    n := 2
    n := 'a'
    n := Seconds() + 2
@@ -193,7 +193,7 @@ FUNCTION Main3()
 
    n := a
 
-   IIF( n, 2, 3 )
+   iif( n, 2, 3 )
 
    RETURN NIL
 

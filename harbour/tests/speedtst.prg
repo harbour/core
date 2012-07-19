@@ -343,31 +343,31 @@ TEST t021 WITH a := afill( array( ARR_LEN ), ;
 
 TEST t022 WITH d := date() CODE dtos( d - i % 10000 )
 
-TEST t023 CODE eval( { || i % ARR_LEN } )
+TEST t023 CODE eval( {|| i % ARR_LEN } )
 
-TEST t024 WITH bc := { || i % ARR_LEN } ;
-          INFO eval( bc := { || i % ARR_LEN } ) ;
+TEST t024 WITH bc := {|| i % ARR_LEN } ;
+          INFO eval( bc := {|| i % ARR_LEN } ) ;
           CODE eval( bc )
 
-TEST t025 CODE eval( { |x| x % ARR_LEN }, i )
+TEST t025 CODE eval( {| x | x % ARR_LEN }, i )
 
-TEST t026 WITH bc := { |x| x % ARR_LEN } ;
-          INFO eval( bc := { |x| x % ARR_LEN }, i ) ;
+TEST t026 WITH bc := {| x | x % ARR_LEN } ;
+          INFO eval( bc := {| x | x % ARR_LEN }, i ) ;
           CODE eval( bc, i )
 
-TEST t027 CODE eval( { |x| f1( x ) }, i )
+TEST t027 CODE eval( {| x | f1( x ) }, i )
 
-TEST t028 WITH bc := { |x| f1( x ) } ;
-          INFO eval( bc := { |x| f1( x ) }, i ) ;
+TEST t028 WITH bc := {| x | f1( x ) } ;
+          INFO eval( bc := {| x | f1( x ) }, i ) ;
           CODE eval( bc, i )
 
-TEST t029 WITH bc := mkBlock( "{ |x| f1( x ) }" ) ;
-          INFO eval( bc := &("{ |x| f1( x ) }"), i ) ;
+TEST t029 WITH bc := mkBlock( "{| x | f1( x ) }" ) ;
+          INFO eval( bc := &("{| x | f1( x ) }"), i ) ;
           CODE eval( bc, i )
 
 TEST t030 CODE x := &( 'f1(' + str(i) + ')' )
 
-TEST t031 WITH bc CODE bc := &( '{|x|f1(x)}' ), eval( bc, i )
+TEST t031 WITH bc CODE bc := &( '{| x |f1(x)}' ), eval( bc, i )
 
 TEST t032 CODE x := valtype( x ) +  valtype( i )
 
@@ -376,38 +376,38 @@ TEST t033 WITH a := afill( array( ARR_LEN ), ;
           CODE x := strzero( i % 100, 2 ) $ a[ i % ARR_LEN + 1 ]
 
 TEST t034 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
-          INIT aeval( a, { |x,i| a[i] := left( s + s, i ), x } ) ;
+          INIT aeval( a, {| x, i | a[i] := left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] == s
 
 TEST t035 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
-          INIT aeval( a, { |x,i| a[i] := left( s + s, i ), x } ) ;
+          INIT aeval( a, {| x, i | a[i] := left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] = s
 
 TEST t036 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
-          INIT aeval( a, { |x,i| a[i] := left( s + s, i ), x } ) ;
+          INIT aeval( a, {| x, i | a[i] := left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] >= s
 
 TEST t037 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
-          INIT aeval( a, { |x,i| a[i] := left( s + s, i ), x } ) ;
+          INIT aeval( a, {| x, i | a[i] := left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] <= s
 
 TEST t038 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
-          INIT aeval( a, { |x,i| a[i] := left( s + s, i ), x } ) ;
+          INIT aeval( a, {| x, i | a[i] := left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] < s
 
 TEST t039 WITH a := array( ARR_LEN ), s := dtos( date() ) ;
-          INIT aeval( a, { |x,i| a[i] := left( s + s, i ), x } ) ;
+          INIT aeval( a, {| x, i | a[i] := left( s + s, i ), x } ) ;
           CODE x := a[ i % ARR_LEN + 1 ] > s
 
 TEST t040 WITH a := array( ARR_LEN ) ;
-          INIT aeval( a, { |x,i| a[i] := i, x } ) ;
+          INIT aeval( a, {| x, i | a[i] := i, x } ) ;
           CODE ascan( a, i % ARR_LEN )
 
 TEST t041 WITH a := array( ARR_LEN ) ;
-          INIT aeval( a, { |x,i| a[i] := i, x } ) ;
-          CODE ascan( a, { |x| x == i % ARR_LEN } )
+          INIT aeval( a, {| x, i | a[i] := i, x } ) ;
+          CODE ascan( a, {| x | x == i % ARR_LEN } )
 
-TEST t042 WITH a := {}, a2 := { 1, 2, 3 }, bc := { |x| f1(x) }, ;
+TEST t042 WITH a := {}, a2 := { 1, 2, 3 }, bc := {| x | f1(x) }, ;
                s := dtos( date() ), s2 := "static text" ;
           CODE iif( i%1000==0, a:={}, ) , aadd(a,{i,1,.t.,s,s2,a2,bc})
 
@@ -435,7 +435,7 @@ TEST t050 WITH c := repl( dtos( date() ),5000 ), c2 ;
           INFO "f2( @c[1...40000] ), c2 := c" ;
           CODE f2( @c ), c2 := c
 
-TEST t051 WITH a := {}, a2 := { 1, 2, 3 }, bc := { |x| f1(x) }, ;
+TEST t051 WITH a := {}, a2 := { 1, 2, 3 }, bc := {| x | f1(x) }, ;
                s := dtos( date() ), s2 := "static text", n := 1.23 ;
           CODE f3( a, a2, s, i, s2, bc, i, n, x )
 

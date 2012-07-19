@@ -5,8 +5,6 @@
 //
 // Array Index tests
 //
-// Date : 1999/05/14
-//
 // Written by Eddie Runia <eddie@runia.com>
 // www - http://harbour-project.org
 //

@@ -25,17 +25,17 @@ PROCEDURE Main()
    oBrowse:ColSep        := "Ё"
    oBrowse:HeadSep        := "ям"
    oBrowse:FootSep        := "ом"
-   oBrowse:GoTopBlock    := { || n := 1 }
-   oBrowse:GoBottomBlock := { || n := Len( aTest0 ) }
-   oBrowse:SkipBlock     := { | nSkip, nPos | nPos := n, ;
+   oBrowse:GoTopBlock    := {|| n := 1 }
+   oBrowse:GoBottomBlock := {|| n := Len( aTest0 ) }
+   oBrowse:SkipBlock     := {| nSkip, nPos | nPos := n, ;
       n := iif( nSkip > 0, Min( Len( aTest0 ), n + nSkip ), ;
       Max( 1, n + nSkip ) ), n - nPos }
 
-   oBrowse:AddColumn( TBColumnNew( "First",  { || n } ) )
-   oBrowse:AddColumn( TBColumnNew( "Second", { || aTest0[ n ] } ) )
-   oBrowse:AddColumn( TBColumnNew( "Third",  { || aTest1[ n ] } ) )
-   oBrowse:AddColumn( TBColumnNew( "Forth",  { || aTest2[ n ] } ) )
-   oBrowse:AddColumn( TBColumnNew( "Fifth",  { || aTest3[ n ] } ) )
+   oBrowse:AddColumn( TBColumnNew( "First",  {|| n } ) )
+   oBrowse:AddColumn( TBColumnNew( "Second", {|| aTest0[ n ] } ) )
+   oBrowse:AddColumn( TBColumnNew( "Third",  {|| aTest1[ n ] } ) )
+   oBrowse:AddColumn( TBColumnNew( "Forth",  {|| aTest2[ n ] } ) )
+   oBrowse:AddColumn( TBColumnNew( "Fifth",  {|| aTest3[ n ] } ) )
    oBrowse:GetColumn( 1 ):Footing := 'Number'
    oBrowse:GetColumn( 2 ):Footing := 'Strins'
 

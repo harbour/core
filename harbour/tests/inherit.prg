@@ -5,11 +5,7 @@
 #include "set.ch"
 
 //
-// Inherit
-//
 // Test of inheritance
-//
-// Date : 30/05/1999
 //
 
 /*
@@ -71,10 +67,10 @@ FUNCTION TEmpty()
    IF oEmpty == NIL
       oEmpty := HBClass():New( "TEmpty" )             // Create a new class def
 
-      oEmpty:AddInline( "New", { |self|self } )
+      oEmpty:AddInline( "New", {| self |self } )
 
-      oEmpty:AddInline( "Run", { ||QOut( "Run !" ) } )  // Test command
-      oEmpty:AddInline( "Set", { |self, xParam|::Out := xParam } )
+      oEmpty:AddInline( "Run", {|| QOut( "Run !" ) } )  // Test command
+      oEmpty:AddInline( "Set", {| self, xParam | ::Out := xParam } )
       oEmpty:AddData( "Out", "Hi there" )            // Test command
       oEmpty:AddVirtual( "Dispose" )                 // Clean up code
 
@@ -93,7 +89,7 @@ FUNCTION TOnTop()
 
    IF oOnTop == NIL
       oOnTop := HBClass():New( "TOnTop", "TTextFile" )
-      oOnTop:AddInline( "Say", { |self, cArg| QOut( __objSendMsg(self, cArg ) ) } )
+      oOnTop:AddInline( "Say", {| self, cArg | QOut( __objSendMsg( self, cArg ) ) } )
       oOnTop:Create()
    ENDIF
 

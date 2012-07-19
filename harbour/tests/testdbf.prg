@@ -116,7 +116,7 @@ PROCEDURE Main()
    ? "Press any key..."
    Inkey( 0 )
 
-   MYALIAS->( dbSetFilter( { || MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8 }, ;
+   MYALIAS->( dbSetFilter( {|| MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8 }, ;
       "MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8" ) )
    MYALIAS->( dbGoTop() )
    DO WHILE !MYALIAS->( EOF() )
@@ -131,7 +131,7 @@ PROCEDURE Main()
    ? "Press any key..."
    Inkey( 0 )
 
-   MYALIAS->( dbSetFilter( { || MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8 }, ;
+   MYALIAS->( dbSetFilter( {|| MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8 }, ;
       "MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8" ) )
    MYALIAS->( dbGoTop() )
    DO WHILE !MYALIAS->( EOF() )
