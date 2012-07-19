@@ -84,15 +84,15 @@ PROCEDURE Main( optional )
   a := oB:aInstances[1]:oNext:cMyData2
   a := oB:aInstances[1]:oNext:cMyData
 
-  x := cOtherFunc( 'A' )
+  x := cOtherFunc( "A" )
   x := cOtherFunc( @Test )
-  x := cOtherFunc( 'A', 'A', 'A' )
+  x := cOtherFunc( "A", "A", "A" )
 
   M->TEST := "TEST"
 
-  a := 'A'
+  a := "A"
 
-  oB := 'a'
+  oB := "a"
 
   if lStatic
      Var1 := .F.
@@ -123,7 +123,7 @@ PROCEDURE SOMEPROC()
    Var1 := 1
 
    IF lGlobal = 0
-      ? 'lGlobal is NOT Numeric'
+      ? "lGlobal is NOT Numeric"
    ENDIF
 
    RETURN
@@ -151,9 +151,9 @@ FUNCTION Test()
 FUNCTION Main2()
    Local n As Numeric, lVar AS LOGICAL
 
-   n := iif( lVar, 'A', 3 ) // iif() needs to be completed.
+   n := iif( lVar, "A", 3 ) // iif() needs to be completed.
    n := 2
-   n := 'a'
+   n := "a"
    n := Seconds() + 2
    n := Int( seconds() + 2 )
 
@@ -183,11 +183,11 @@ FUNCTION Main3()
 
    n[2] := 4
 
-   cVar := {|nb AS NUMERIC , cb AS STRING, db AS DATE| n := .F., nb := 'A', cb := 1, db := 0, n := 'wrong type', 0 }
+   cVar := {|nb AS NUMERIC , cb AS STRING, db AS DATE| n := .F., nb := "A", cb := 1, db := 0, n := "wrong type", 0 }
 
    ? "This is a compiler test."
 
-   n := 'C is Wrong Type for n'
+   n := "C is Wrong Type for n"
 
    n := {1,2,3}
 
@@ -206,11 +206,11 @@ FUNCTION SomeTest( lVar AS LOGICAL )
 
    nVar := 1
 
-        nVar := 'A'
+        nVar := "A"
 
         cVar := 2
 
-   cVar := 'B'
+   cVar := "B"
 
         cVar := 2
 
@@ -241,7 +241,7 @@ FUNCTION nMyFunc( cVar AS STRING, nVar AS NUMERIC )
    RETURN nVar + 1
 
 FUNCTION cOtherFunc( )
-   RETURN 'Hello'
+   RETURN "Hello"
 
 FUNCTION ExtFun()
    RETURN 1

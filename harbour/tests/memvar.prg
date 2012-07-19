@@ -45,7 +45,7 @@ PROCEDURE Main()
    __Accept( "press Enter..." )
    Test6()
    __Accept( "press Enter..." )
-   Test7( 'value1', 2, .T. )
+   Test7( "value1", 2, .T. )
    __Accept( "press Enter..." )
    Test8()
    __Accept( "press Enter..." )
@@ -62,17 +62,17 @@ PROCEDURE Test1()
 
    QOut( "==Test 1==PUBLIC -> PRIVATE -> PUBLIC" )
    QOut( memvar1 )
-   memvar1 = 'main'
-   QOut( 'in MAIN=', memvar1 )
+   memvar1 := "main"
+   QOut( "in MAIN=", memvar1 )
    Scope( memvar1 )
-   QOut( 'back in MAIN=', memvar1 )
+   QOut( "back in MAIN=", memvar1 )
    QOut( "" )
 
    RETURN
 
 FUNCTION Scope( value )
 
-   PRIVA memvar1 := 'scope'
+   PRIVA memvar1 := "scope"
 
    Scope2()
    QOut( "in SCOPE=", memvar1 )
@@ -96,17 +96,17 @@ PROCEDURE Test2()
 
    QOut( "==Test 2==PUBLIC -> PUBLIC -> PUBLIC" )
    QOut( memvar2 )
-   memvar2 = 'main'
-   QOut( 'in MAIN=', memvar2 )
+   memvar2 := "main"
+   QOut( "in MAIN=", memvar2 )
    Scope3( memvar2 )
-   QOut( 'back in MAIN=', memvar2 )
+   QOut( "back in MAIN=", memvar2 )
    QOut( "" )
 
    RETURN
 
 FUNCTION Scope3( value )
 
-   PUBLIC memvar2 := 'scope'
+   PUBLIC memvar2 := "scope"
 
    Scope4()
    QOut( "in SCOPE=", memvar2 )
@@ -130,17 +130,17 @@ PROCEDURE Test3()
 
    QOut( "==Test 3==PUBLIC -> PRIVATE -> PUBLIC:=" )
    QOut( memvar3 )
-   memvar3 = 'main'
-   QOut( 'in MAIN=', memvar3 )
+   memvar3 := "main"
+   QOut( "in MAIN=", memvar3 )
    Scope5( memvar3 )
-   QOut( 'back in MAIN=', memvar3 )
+   QOut( "back in MAIN=", memvar3 )
    QOut( "" )
 
    RETURN
 
 FUNCTION Scope5( value )
 
-   PRIVATE memvar3 := 'scope'
+   PRIVATE memvar3 := "scope"
 
    Scope6()
    QOut( "in SCOPE=", memvar3 )
@@ -149,7 +149,7 @@ FUNCTION Scope5( value )
 
 PROCEDURE Scope6()
 
-   PUBLIC memvar3 := 'scope2'
+   PUBLIC memvar3 := "scope2"
 
    QOut( "in SCOPE2=", memvar3 )
 
@@ -164,17 +164,17 @@ PROCEDURE Test4()
 
    QOut( "==Test 4==PUBLIC -> PUBLIC -> PUBLIC:=" )
    QOut( memvar4 )
-   memvar4 = 'main'
-   QOut( 'in MAIN=', memvar4 )
+   memvar4 := "main"
+   QOut( "in MAIN=", memvar4 )
    Scope7( memvar4 )
-   QOut( 'back in MAIN=', memvar4 )
+   QOut( "back in MAIN=", memvar4 )
    QOut( "" )
 
    RETURN
 
 FUNCTION Scope7( value )
 
-   PUBLIC memvar4 := 'scope'
+   PUBLIC memvar4 := "scope"
 
    Scope8()
    QOut( "in SCOPE=", memvar4 )
@@ -183,7 +183,7 @@ FUNCTION Scope7( value )
 
 PROCEDURE Scope8()
 
-   PUBLIC memvar4 := 'scope2'
+   PUBLIC memvar4 := "scope2"
 
    QOut( "in SCOPE2=", memvar4 )
 
@@ -207,11 +207,11 @@ PROCEDURE TEST5()
    QOut( "uninitialized PARAMETER= ", memparam )
    // QOut( memnone )
 
-   mempublic = 'PUBLIC'
+   mempublic := "PUBLIC"
    QOut( "   PUBLIC with new value= ", mempublic )
-   memprivate = 'PRIVATE'
+   memprivate := "PRIVATE"
    QOut( "  PRIVATE with new value= ", memprivate )
-   memparam = 'PARAMETER'
+   memparam := "PARAMETER"
    QOut( "PARAMETER with new value= ", memparam )
    //  memnone =4
    //  Qout( memnone )
@@ -241,7 +241,7 @@ FUNCTION UseVar( value )
    QOut( "undeclared PRIVATE created by __PRIVATE function=", private2 )
    QOut( "undeclared PRIVATE created by __PRIVATE function=", private3 )
 
-   public1 := 'public created by __PUBLIC'
+   public1 := "public created by __PUBLIC"
 #endif
    QOut( "" )
 
@@ -249,7 +249,7 @@ FUNCTION UseVar( value )
 
 PROCEDURE UseRef( reference )
 
-   reference += ' variable'
+   reference += " variable"
 
    RETURN
 
@@ -258,19 +258,19 @@ PROCEDURE UseRef( reference )
 PROCEDURE Test6()
 
    PUBLIC publCB
-   PRIVATE privVar := ' (PRIVATE in MAIN) '
+   PRIVATE privVar := " (PRIVATE in MAIN) "
 
    QOut( "== Test for detached PRIVATE variables" )
-   DetachMemvar( 'detached memvar' )
-   QOut( Eval( publCB, 'in Main: ' ) )
+   DetachMemvar( "detached memvar" )
+   QOut( Eval( publCB, "in Main: " ) )
 
    RETURN
 
 PROCEDURE DetachMemvar( cValue )
 
-   PRIVATE privVar := ' (PRIVATE in DetachMemvar) '
+   PRIVATE privVar := " (PRIVATE in DetachMemvar) "
 
-   publCB = {| x | x + privVar + cValue }
+   publCB := {| x | x + privVar + cValue }
    QOut( Eval( publCB, "in DetachMemvar: " ) )
 
    RETURN
@@ -293,20 +293,20 @@ PROCEDURE Test7( )
 
 PROCEDURE Test8()
 
-   PRIVATE private1 := 'PRIVATE1'
+   PRIVATE private1 := "PRIVATE1"
 
-   QOut( 'In Test8 before UsePriv' )
+   QOut( "In Test8 before UsePriv" )
    QOut( "Private1 = ", private1 )
    UsePriv( private1 )
-   QOut( 'In Test8 after UsePriv' )
+   QOut( "In Test8 after UsePriv" )
    QOut( "Private1 = ", private1 )
 
    __Accept( "press Enter..." )
 
-   QOut( 'In Test8 before UsePriv with reference' )
+   QOut( "In Test8 before UsePriv with reference" )
    QOut( "Private1 = ", private1 )
    UsePriv( @private1 )
-   QOut( 'In Test8 after UsePriv with reference' )
+   QOut( "In Test8 after UsePriv with reference" )
    QOut( "Private1 = ", private1 )
 
    RETURN
@@ -315,11 +315,11 @@ PROCEDURE UsePriv()
 
    PARAMETERS param1
 
-   QOut( 'In UsePriv before UseParam' )
+   QOut( "In UsePriv before UseParam" )
    QOut( "Private1 = ", private1 )
    QOut( "Param1   = ", param1 )
    UseParam()
-   QOut( 'In UsePriv after UseParam' )
+   QOut( "In UsePriv after UseParam" )
    QOut( "Private1 = ", private1 )
    QOut( "Param1   = ", param1 )
 
@@ -329,13 +329,13 @@ PROCEDURE UseParam()
 
    PARAMETER param2
 
-   QOut( 'In UseParam before assignment' )
+   QOut( "In UseParam before assignment" )
    QOut( "Private1 = ", private1 )
    QOut( "Param1   = ", param1 )
    QOut( "Param2   = ", param2 )
-   param2 := 'PARAM2'
+   param2 := "PARAM2"
    param1 := "new value"
-   QOut( 'In UseParam after assignment' )
+   QOut( "In UseParam after assignment" )
    QOut( "Private1 = ", private1 )
    QOut( "Param1   = ", param1 )
    QOut( "Param2   = ", param2 )
@@ -370,8 +370,8 @@ STATIC FUNCTION memfunc( memfunc )
    PARA initmem
    QOut( "Tests for PARAMETERS, PRIVATE nad PUBLIC variables" )
    QOut( "" )
-   QOut( 'in INIT function - Passed parameter = ', memvar )
-   QOut( 'in INIT function - Passed parameter with different name = ', initmem )
+   QOut( "in INIT function - Passed parameter = ", memvar )
+   QOut( "in INIT function - Passed parameter with different name = ", initmem )
    QOut( "" )
 
    RETURN

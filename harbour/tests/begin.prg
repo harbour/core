@@ -11,7 +11,7 @@ MEMVAR mPrivate
 PROCEDURE Main()
 
    LOCAL oLocal
-   PRIVATE mPrivate := 'private value in MAIN'
+   PRIVATE mPrivate := "private value in MAIN"
 
    BEGIN SEQUENCE
       ? " Inside SEQUENCE 1"
@@ -81,7 +81,7 @@ PROCEDURE Main()
 
 PROCEDURE Break1()
 
-   PRIVATE mPrivate := 'VALUE from Break1'
+   PRIVATE mPrivate := "VALUE from Break1"
 
    BREAK M->mPrivate
 
@@ -93,7 +93,7 @@ PROCEDURE Break2()
       ? " Inside SEQUENCE 8"
       Break3( )
    RECOVER USING oMemvar
-      ? "  Recovering in 8 using...", Eval( oMemvar, ' eval in 8' )
+      ? "  Recovering in 8 using...", Eval( oMemvar, " eval in 8" )
       Break( "BREAK from recovery code" )
    END SEQUENCE
    ? "After SEQUENCE 8"
@@ -118,7 +118,7 @@ PROCEDURE Break3()
       Break4( " and parameter" )
 
    RECOVER USING oMemvar
-      ? "  Recovering in 9 using...", Eval( oMemvar, ' eval in 9' )
+      ? "  Recovering in 9 using...", Eval( oMemvar, " eval in 9" )
       Break( oMemvar )
    END SEQUENCE
    ? "After SEQUENCE 9"
@@ -127,7 +127,7 @@ PROCEDURE Break3()
 
 PROCEDURE Break4( cValue )
 
-   LOCAL oLocal := ' detached Break4 '
+   LOCAL oLocal := " detached Break4 "
 
    Break( {| x | oLocal + x + cValue } )
 

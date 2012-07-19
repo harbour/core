@@ -66,12 +66,12 @@ PROCEDURE Main()
                 'CLOSE ALL' }
 
    FOR j := 1 TO 2
-      QOut( iif( j = 1, "Before", "After" ) + " __pp_process()" )
+      QOut( iif( j == 1, "Before", "After" ) + " __pp_process()" )
       QOut( "===================" )
       QOut( "" )
       FOR i := 1 TO Len( aScript )
 
-         ? iif( j = 1, aScript[ i ], __pp_process( l_pp, aScript[ i ] ) )
+         ? iif( j == 1, aScript[ i ], __pp_process( l_pp, aScript[ i ] ) )
 
       NEXT
       QOut( "" )

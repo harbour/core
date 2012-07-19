@@ -62,8 +62,8 @@ PROCEDURE GetArray( a )
    a := Array( 100 )
    FOR i := 1 TO 100
       IF ( i % 6 ) == 0
-         a[ i - 2 ] = NIL
-         a[ i - 4 ] = NIL
+         a[ i - 2 ] := NIL
+         a[ i - 4 ] := NIL
       ENDIF
       a[ i ] := TestBlocks()
    NEXT

@@ -20,10 +20,10 @@ PROCEDURE Main()
    Eval( a, " with parameters", " ... and it works!" )
    OutStd( hb_eol() )
 
-   d = "with access to local variables"
+   d := "with access to local variables"
 
-   a = {| b, c | OutStd( "I am a second codeblock " + d + b + ;
-      iif( c == NIL, ' empty second parameter ', c ) ), OutStd( hb_eol() ), "WITH return value" }
+   a := {| b, c | OutStd( "I am a second codeblock " + d + b + ;
+      iif( c == NIL, " empty second parameter ", c ) ), OutStd( hb_eol() ), "WITH return value" }
    Eval( a, ", codeblock parameters" )
    OutStd( hb_eol() )
 
@@ -39,8 +39,8 @@ PROCEDURE Main()
    AnotherTest( a, "==> Another " )
    OutStd( hb_eol() )
 
-   a = {| c | iif( c == NIL, {| a | "First " + a }, {| a | "Second " + a } ) }
-   a = Eval( a )
+   a := {| c | iif( c == NIL, {| a | "First " + a }, {| a | "Second " + a } ) }
+   a := Eval( a )
    OutStd( hb_eol() )
    OutStd( Eval( a, "codeblock created in a codeblock" ) )
    OutStd( hb_eol() )
@@ -67,14 +67,14 @@ PROCEDURE Main()
    OutStd( hb_eol() )
    x1 := 5
    x2 := 6
-   de = DetachLocal( x1, x2 )
+   de := DetachLocal( x1, x2 )
    OutStd( Eval( de ) )
    //changing the value of variables
    OutStd( hb_eol() )
    x1 := 10
    x2 := 11
    QOut( Eval( de ) )
-   de = DetachLocal( x1, x2 )
+   de := DetachLocal( x1, x2 )
    QOut( Eval( de ) )
 
    RETURN
@@ -116,7 +116,7 @@ PROCEDURE BugToFix()
 
    LOCAL b, a := {|| a + b }
 
-   b = "bug "
+   b := "bug "
    Eval( a )
 
    RETURN

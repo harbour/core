@@ -90,9 +90,9 @@ PROCEDURE Main( filename )
    LOCAL vybkey := 1
 
    IF filename == Nil
-      ? 'Dbf browse demo'
-      ? 'Syntax:'
-      ? '', 'db_brows filename'
+      ? "Dbf browse demo"
+      ? "Syntax:"
+      ? "", "db_brows filename"
       QUIT
    ENDIF
    USE ( filename )
@@ -169,7 +169,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
                ELSEIF LI_MSTYP[ i ] == "N"
                   vartmp        := Str( vartmp )
                   LI_MSLEN[ i ] := Len( vartmp )
-                  LI_MSDEC[ i ] := iif( '.' $ vartmp, LI_MSLEN[ i ] - At( '.', vartmp ), 0 )
+                  LI_MSDEC[ i ] := iif( "." $ vartmp, LI_MSLEN[ i ] - At( ".", vartmp ), 0 )
                ELSEIF LI_MSTYP[ i ] == "D"
                   LI_MSLEN[ i ] := 8
                ELSEIF LI_MSTYP[ i ] == "L"

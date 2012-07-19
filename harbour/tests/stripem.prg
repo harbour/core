@@ -215,7 +215,7 @@ FUNCTION WriteLn( xTxt, lCRLF )
 
    if ::hFile == - 1
       QOut( "DosFile:Write : No file open" )
-   elseif ::cMode != 'W'
+   elseif ::cMode != "W"
       QOut( "File ", ::cFileName, " not opened for writing" )
    ELSE
       cBlock := ToChar( xTxt )                  // Convert to string
@@ -262,31 +262,31 @@ FUNCTION ToChar( xVal )
    LOCAL cType := ValType( xVal )
 
    DO CASE
-   CASE cType == 'U'
+   CASE cType == "U"
       RETURN "NIL"
 
-   CASE cType == 'A'
+   CASE cType == "A"
       RETURN "{}"
 
-   CASE cType == 'B'
+   CASE cType == "B"
       RETURN "{|| }"
 
-   CASE cType == 'C'
+   CASE cType == "C"
       RETURN xVal
 
-   CASE cType == 'D'
+   CASE cType == "D"
       RETURN DToC( xVal )
 
-   CASE cType == 'L'
+   CASE cType == "L"
       RETURN iif( xVal, ".T.", ".F." )
 
-   CASE cType == 'M'
+   CASE cType == "M"
       RETURN xVal
 
-   CASE cType == 'N'
+   CASE cType == "N"
       RETURN Str( xVal )
 
-   CASE cType == 'O'
+   CASE cType == "O"
       RETURN "{::}"
 
    ENDCASE

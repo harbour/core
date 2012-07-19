@@ -174,12 +174,12 @@ proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
             elseif substr( cParam, 10 ) == "all"
                nMT := -1
             else
-               lSyntax = .t.
+               lSyntax := .t.
             endif
          elseif empty( substr( cParam, 9 ) )
             nMT := -1
          else
-            lSyntax = .t.
+            lSyntax := .t.
          endif
       elseif cParam = "--exclude="
          if substr( cParam, 11 ) == "mem"
@@ -203,7 +203,7 @@ proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
       elseif cParam == "--stdout"
          s_lStdOut := .t.
       else
-         lSyntax = .t.
+         lSyntax := .t.
       endif
       if lSyntax
          ? "Unknown option:", cParam

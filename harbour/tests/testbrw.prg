@@ -36,15 +36,15 @@ PROCEDURE Main()
    oBrowse:AddColumn( TBColumnNew( "Third",  {|| aTest1[ n ] } ) )
    oBrowse:AddColumn( TBColumnNew( "Forth",  {|| aTest2[ n ] } ) )
    oBrowse:AddColumn( TBColumnNew( "Fifth",  {|| aTest3[ n ] } ) )
-   oBrowse:GetColumn( 1 ):Footing := 'Number'
-   oBrowse:GetColumn( 2 ):Footing := 'Strins'
+   oBrowse:GetColumn( 1 ):Footing := "Number"
+   oBrowse:GetColumn( 2 ):Footing := "Strins"
 
-   oBrowse:GetColumn( 2 ):Picture := '@!'
+   oBrowse:GetColumn( 2 ):Picture := "@!"
 
-   oBrowse:GetColumn( 3 ):Footing := 'Number'
-   oBrowse:GetColumn( 3 ):Picture := '999,999.99'
-   oBrowse:GetColumn( 4 ):Footing := 'Dates'
-   oBrowse:GetColumn( 5 ):Footing := 'Logical'
+   oBrowse:GetColumn( 3 ):Footing := "Number"
+   oBrowse:GetColumn( 3 ):Picture := "999,999.99"
+   oBrowse:GetColumn( 4 ):Footing := "Dates"
+   oBrowse:GetColumn( 5 ):Footing := "Logical"
    // needed since I've changed some columns _after_ I've added them to TBrowse object
    oBrowse:Configure()
 

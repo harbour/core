@@ -21,7 +21,7 @@ PROCEDURE Main()
    TEST->Age := 5
    ? FIELD->Age
 
-   TEST->( FieldPut( FieldPos( 'AGE' ), 6 ) )
+   TEST->( FieldPut( FieldPos( "AGE" ), 6 ) )
    ? FIELD->Age
 
    dbCloseArea()

@@ -108,7 +108,7 @@ PROCEDURE Main( cFrom )
 
          ACCEPT "Do you want do list all pcode values? (y/N) " TO m
 
-         IF m $ 'Yy'
+         IF m $ "Yy"
             ?
             cBlock := FReadStr( hFile, 4 )
             nFuncs := hb_BCode( hb_BSubStr( cBlock, 1, 1 ) )     + ;

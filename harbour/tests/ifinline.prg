@@ -15,7 +15,7 @@ PROCEDURE Main()
 
    QOut( "Now changing n to 2" )
 
-   n = 2
+   n := 2
 
    if( n == 1, QOut( 1 ), QOut( 2 ) )
 

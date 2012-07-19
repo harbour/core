@@ -24,8 +24,8 @@ PROCEDURE Main()
    TESTDBF->( dbGoTop() )
    //   WHILE !TESTDBF->( Eof() )
    //      TESTCDX->( dbAppend() )
-   //      TESTCDX->CHARACTER = TESTDBF->FIRST
-   //      TESTCDX->NUMERIC = TESTDBF->SALARY
+   //      TESTCDX->CHARACTER := TESTDBF->FIRST
+   //      TESTCDX->NUMERIC := TESTDBF->SALARY
    //      TESTCDX->MEMO := TESTDBF->FIRST + Chr( 13 ) + Chr( 10 ) + ;
    //                       TESTDBF->LAST + Chr( 13 ) + Chr( 10 ) + ;
    //                       TESTDBF->STREET

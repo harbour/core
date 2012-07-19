@@ -3,14 +3,16 @@
  */
 
 #ifdef __XHARBOUR__
-   #define OTHERWISE DEFAULT
+#define OTHERWISE DEFAULT
 #endif
 
 PROCEDURE Main()
+
    LOCAL a := 1
    PRIVATE b := "b"
 
 #ifndef __XHARBOUR__
+
    SWITCH a
    END
 #endif
@@ -39,7 +41,7 @@ PROCEDURE Main()
       ? "FOUND: 1"
    CASE "2"
       ? "FOUND: 2"
-   OTHERWISE
+      OTHERWISE
       ? "other"
    END
 
@@ -47,47 +49,47 @@ PROCEDURE Main()
    ?
    ? "44444444444444444444444444444444444"
    SWITCH a
-   OTHERWISE
+      OTHERWISE
       ? "OTHERWISE"
    END
 #endif
 
    ?
    ? "55555555555555555555555555555555555"
-   a := 'EE'
+   a := "EE"
 #ifndef __XHARBOUR__
    SWITCH a
    CASE 11
       ? "11"
-      exit
+      EXIT
 
-   CASE 'CCCC'+'DDDD'
-      ? a+a
+   CASE "CCCC" + "DDDD"
+      ? a + a
       EXIT
 
    CASE "a&b"
-   CASE 1+1
-   CASE {11111111,22222222222}[1]
-   CASE 1+1+1
+   CASE 1 + 1
+   CASE { 11111111, 22222222222 }[1]
+   CASE 1 + 1 + 1
       ? "3"
       EXIT
 
-   CASE 1+1*3
-   CASE 123+12*4-1*4+2
-   CASE 1-4
+   CASE 1 + 1 * 3
+   CASE 123 + 12 * 4 - 1 * 4 + 2
+   CASE 1 - 4
       ? "4"
       EXIT
    CASE 123456789
    CASE 0
       EXIT
-   CASE 'AAAA'
-   CASE 'BBBBB'
+   CASE "AAAA"
+   CASE "BBBBB"
       ? a
       EXIT
-   CASE CHR(12)+CHR(15)
+   CASE Chr( 12 ) + Chr( 15 )
       ? "CHR()"
       EXIT
-   OTHERWISE
+      OTHERWISE
       ? "NOT FOUND: running OTHER"
    END
 #endif
@@ -101,14 +103,14 @@ PROCEDURE Main()
       ? a
       EXIT
    CASE "2"
-      SWITCH a+a
+      SWITCH a + a
       CASE 1
          ? "Nested FOUND 1"
          EXIT
       CASE "22"
          ? "Nested FOUND: 22"
          EXIT
-      OTHERWISE
+         OTHERWISE
          ? "Nested OTHERWISE"
       END
       ?? "In CASE 1"

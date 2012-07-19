@@ -157,14 +157,14 @@ PROCEDURE Main()
 
    CLEAR SCREEN
 
-   SetColor( 'GB+/B,GR+/R,,,W/N' )
+   SetColor( "GB+/B,GR+/R,,,W/N" )
 
    SET CURSOR ON
 
    ASize( aPermits, Len( aPrompts ) )
 
    FOR x := 1 TO Len( aPrompts )
-      aPermits[ x ] := !( 'V' $ aPrompts[ x ] )
+      aPermits[ x ] := !( "V" $ aPrompts[ x ] )
    NEXT
 
 #define TEST1

@@ -23,13 +23,13 @@
 
 PROCEDURE Main()
 
-   //NIL, empty, numeric, and "not handled" - items
-   //must be inaccesible and invisible
+   // NIL, empty, numeric, and "not handled" - items
+   // must be inaccesible and invisible
    LOCAL aMenu1 := { " --Visky--", "", "not handled" }
    LOCAL aMenu2 := { " --Vodka--", " --Water--", NIL, "not handled" }
    LOCAL aMenu3 := { " --Grapa--", 33, "not handled" }
 
-   //for AC_NOITEM mode test
+   // for AC_NOITEM mode test
    LOCAL aMenu4 := { "", "not handled" }
 
 
@@ -37,8 +37,8 @@ PROCEDURE Main()
    LOCAL nCounter := 1
    LOCAL nKeyPressed
 
-   //set to True for items (de)highlighting
-   //algoritm in clipper
+   // set to True for items (de)highlighting
+   // algoritm in clipper
    PUBLIC lHiLiTest := .F.
 
 
@@ -56,8 +56,8 @@ PROCEDURE Main()
       CASE nCounter == 3
          AChoice( 2, 25, 3, 35, aMenu3, .T. )
       CASE nCounter == 4
-         //User function cUF2() fill screen with exclamation marks
-         //in clipper it doe's not called in AC_NOITEM mode
+         // User function cUF2() fill screen with exclamation marks
+         // in clipper it does not get called in AC_NOITEM mode
          AChoice( 2, 37, 3, 47, aMenu4, .T. , "cUF2" )
 
       ENDCASE
@@ -75,8 +75,8 @@ PROCEDURE Main()
 
    RETURN
 
-//Test for current and previous items
-//highliting-dehighliting algoritm
+// Test for current and previous items
+// highliting-dehighliting algoritm
 
 FUNCTION cUF( nMode, nCurElement, nRowPos )
 
@@ -101,8 +101,8 @@ FUNCTION cUF( nMode, nCurElement, nRowPos )
 
    RETURN nRetVal
 
-//test for AC_NOITEM mode
-//Clipper in AC_NOITEM mode do not call User Function
+// test for AC_NOITEM mode
+// Clipper in AC_NOITEM mode do not call User Function
 
 FUNCTION cUF2( nMode, nCurElement, nRowPos )
 

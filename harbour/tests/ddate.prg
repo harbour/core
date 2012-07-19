@@ -28,7 +28,7 @@ PROCEDURE Main()
    dDate := 0d20000229
    ? "Should be '2000.02.29' :", dDate
 
-   a := '0d20040229+1'
+   a := "0d20040229+1"
    ? "Should be '2004.03.01' :", &a
 
    a := "DATE() - 0d20051112"
