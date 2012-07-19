@@ -35,15 +35,15 @@
 HB_FUNC( FT_PRTSCR )
 {
 #if defined( HB_OS_DOS )
-   if ( HB_ISLOG( 1 ) )
+   if( HB_ISLOG( 1 ) )
    {
-      if ( hb_parl( 1 ) )
-          pbyte = 0;
+      if( hb_parl( 1 ) )
+         pbyte = 0;
       else
-          pbyte = 1;
+         pbyte = 1;
    }
 
-   if ( pbyte == 1)
+   if( pbyte == 1 )
       hb_retl( HB_FALSE );
    else
       hb_retl( HB_TRUE );
