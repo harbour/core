@@ -395,7 +395,7 @@ extern void        hb_stackUpdateAllocator( void *, PHB_ALLOCUPDT_FUNC, int );
 #define hb_stackDateBuffer( )       ( hb_stack.szDate )
 #define hb_stackItemBasePtr( )      ( &hb_stack.pItems )
 #define hb_stackGetStaticsBase( )   ( hb_stack.pStatics )
-#define hb_stackSetStaticsBase( p ) do { hb_stack.pStatics = ( p ); } while ( 0 )
+#define hb_stackSetStaticsBase( p ) do { hb_stack.pStatics = ( p ); } while( 0 )
 #define hb_stackGetRecoverBase( )   ( hb_stack.nRecoverBase )
 #define hb_stackSetRecoverBase( n ) do { hb_stack.nRecoverBase = ( n ); } while( 0 )
 #define hb_stackGetActionRequest( ) ( hb_stack.uiActionRequest )
@@ -404,16 +404,16 @@ extern void        hb_stackUpdateAllocator( void *, PHB_ALLOCUPDT_FUNC, int );
 #define hb_stackWithObjectOffset( ) ( hb_stack.nWithObject )
 #define hb_stackWithObjectSetOffset( n )  do { hb_stack.nWithObject = ( n ); } while( 0 )
 #define hb_stackGetCDP( )           ( hb_stack.pCDP )
-#define hb_stackSetCDP( p )         do { hb_stack.pCDP = ( p ); } while ( 0 )
+#define hb_stackSetCDP( p )         do { hb_stack.pCDP = ( p ); } while( 0 )
 #define hb_stackGetLang( )          ( hb_stack.pLang )
-#define hb_stackSetLang( p )        do { hb_stack.pLang = ( p ); } while ( 0 )
+#define hb_stackSetLang( p )        do { hb_stack.pLang = ( p ); } while( 0 )
 #define hb_stackGetI18N( )          ( hb_stack.pI18N )
-#define hb_stackSetI18N( p )        do { hb_stack.pI18N = ( p ); } while ( 0 )
+#define hb_stackSetI18N( p )        do { hb_stack.pI18N = ( p ); } while( 0 )
 
 #define hb_stackId( )               ( ( void * ) hb_stack_ref() )
 #if defined( HB_MT_VM )
 #  define hb_stackList()            ( hb_stack.pStackLst )
-#  define hb_stackListSet( p )      do { hb_stack.pStackLst = ( p ); } while ( 0 )
+#  define hb_stackListSet( p )      do { hb_stack.pStackLst = ( p ); } while( 0 )
 #  define hb_stackDynHandlesCount() ( hb_stack.iDynH )
 #  define hb_stackQuitState( )      ( hb_stack.uiQuitState != 0 )
 #  define hb_stackSetQuitState( n ) do { hb_stack.uiQuitState = ( n ); } while( 0 )
@@ -431,19 +431,19 @@ extern void        hb_stackUpdateAllocator( void *, PHB_ALLOCUPDT_FUNC, int );
 #define hb_stackDecrease( n )       do { \
                                        if( ( hb_stack.pPos -= (n) ) <= hb_stack.pBase ) \
                                           hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL ); \
-                                    } while ( 0 )
+                                    } while( 0 )
 
 #define hb_stackDec( )              do { \
                                        if( --hb_stack.pPos <= hb_stack.pBase ) \
                                           hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL ); \
-                                    } while ( 0 )
+                                    } while( 0 )
 
 #define hb_stackPop( )              do { \
                                        if( --hb_stack.pPos <= hb_stack.pBase ) \
                                           hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL ); \
                                        if( HB_IS_COMPLEX( * hb_stack.pPos ) ) \
                                           hb_itemClear( * hb_stack.pPos ); \
-                                    } while ( 0 )
+                                    } while( 0 )
 
 #define hb_stackPopReturn( )        do { \
                                        if( HB_IS_COMPLEX( &hb_stack.Return ) ) \
@@ -451,35 +451,35 @@ extern void        hb_stackUpdateAllocator( void *, PHB_ALLOCUPDT_FUNC, int );
                                        if( --hb_stack.pPos <= hb_stack.pBase ) \
                                           hb_errInternal( HB_EI_STACKUFLOW, NULL, NULL, NULL ); \
                                        hb_itemRawMove( &hb_stack.Return, * hb_stack.pPos ); \
-                                    } while ( 0 )
+                                    } while( 0 )
 
 #else
 
-#define hb_stackDecrease( n )       do { hb_stack.pPos -= (n); } while ( 0 )
-#define hb_stackDec( )              do { --hb_stack.pPos; } while ( 0 )
+#define hb_stackDecrease( n )       do { hb_stack.pPos -= (n); } while( 0 )
+#define hb_stackDec( )              do { --hb_stack.pPos; } while( 0 )
 #define hb_stackPop( )              do { --hb_stack.pPos; \
                                        if( HB_IS_COMPLEX( * hb_stack.pPos ) ) \
                                           hb_itemClear( * hb_stack.pPos ); \
-                                    } while ( 0 )
+                                    } while( 0 )
 #define hb_stackPopReturn( )        do { \
                                        if( HB_IS_COMPLEX( &hb_stack.Return ) ) \
                                           hb_itemClear( &hb_stack.Return ); \
                                        --hb_stack.pPos; \
                                        hb_itemRawMove( &hb_stack.Return, * hb_stack.pPos ); \
-                                    } while ( 0 )
+                                    } while( 0 )
 
 #endif /* HB_STACK_SAFEMACROS */
 
 #define hb_stackPush( )             do { \
                                        if( ++hb_stack.pPos == hb_stack.pEnd ) \
                                           hb_stackIncrease(); \
-                                    } while ( 0 )
+                                    } while( 0 )
 
 #define hb_stackPushReturn( )       do { \
                                        hb_itemRawMove( * hb_stack.pPos, &hb_stack.Return ); \
                                        if( ++hb_stack.pPos == hb_stack.pEnd ) \
                                           hb_stackIncrease(); \
-                                    } while ( 0 )
+                                    } while( 0 )
 
 #define hb_stackLocalVariable( i )  ( hb_stack.pBase[ ( i ) + 1 + \
                                        ( ( ( *hb_stack.pBase )->item.asSymbol.paramcnt > \

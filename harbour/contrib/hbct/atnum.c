@@ -86,7 +86,7 @@ static void do_atnum( int iSwitch )
 
       if( sIgnore >= sStrLen )
       {
-         switch ( iSwitch )
+         switch( iSwitch )
          {
             case DO_ATNUM_AFTERATNUM:
             {
@@ -149,7 +149,7 @@ static void do_atnum( int iSwitch )
 
          while( nMatchCounter < nCounter )
          {
-            switch ( iAtLike )
+            switch( iAtLike )
             {
                case CT_SETATLIKE_EXACT:
                   pc = ct_at_exact_forward( pcSubStr, sSubStrLen, pcStringToMatch,
@@ -169,7 +169,7 @@ static void do_atnum( int iSwitch )
             {
                /* no match found; if this happens at this point,
                   there are no <nCounter> matches, so return an empty string */
-               switch ( iSwitch )
+               switch( iSwitch )
                {
                   case DO_ATNUM_AFTERATNUM:
                   case DO_ATNUM_BEFORATNUM:
@@ -198,7 +198,7 @@ static void do_atnum( int iSwitch )
       {
          /* we have to find the last match and return the
             string after that last match */
-         switch ( iAtLike )
+         switch( iAtLike )
          {
             case CT_SETATLIKE_EXACT:
                pc = ct_at_exact_backward( pcString, sStrLen, pcStringToMatch,
@@ -216,7 +216,7 @@ static void do_atnum( int iSwitch )
          if( pc == NULL )
          {
             /* no matches found */
-            switch ( iSwitch )
+            switch( iSwitch )
             {
                case DO_ATNUM_AFTERATNUM:
                case DO_ATNUM_BEFORATNUM:
@@ -234,7 +234,7 @@ static void do_atnum( int iSwitch )
          }
       }
 
-      switch ( iSwitch )
+      switch( iSwitch )
       {
          case DO_ATNUM_AFTERATNUM:
             /* AFTERATNUM */
@@ -261,9 +261,9 @@ static void do_atnum( int iSwitch )
             break;
       }
    }
-   else                         /* ((ISCHAR (1)) && (ISCHAR (2))) */
+   else                         /* ( HB_ISCHAR ( 1 ) && HB_ISCHAR( 2 ) ) */
    {
-      switch ( iSwitch )
+      switch( iSwitch )
       {
          case DO_ATNUM_AFTERATNUM:
          case DO_ATNUM_BEFORATNUM:

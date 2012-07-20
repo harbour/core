@@ -79,7 +79,7 @@ static void do_count( int iSwitch )
 
       sRetVal = 0;
 
-      switch ( iSwitch )
+      switch( iSwitch )
       {
          case DO_COUNT_COUNTLEFT:
             pc = pcString;

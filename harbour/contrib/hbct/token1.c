@@ -83,7 +83,7 @@ static void do_token1( int iSwitch )
    int iParamCheck = 0;
    int iNoRef = ct_getref() && HB_ISBYREF( 1 );
 
-   switch ( iSwitch )
+   switch( iSwitch )
    {
       case DO_TOKEN1_TOKEN:
          s_iPreSeparator = s_iPostSeparator = -1;
@@ -197,7 +197,7 @@ static void do_token1( int iSwitch )
          {
             /* string ends with tokenizer (null string after tokenizer at
                end of string is not a token) */
-            switch ( iSwitch )
+            switch( iSwitch )
             {
                case DO_TOKEN1_TOKEN:
                {
@@ -241,7 +241,7 @@ static void do_token1( int iSwitch )
             return;
          }
 
-         switch ( iSwitch )
+         switch( iSwitch )
          {
             case DO_TOKEN1_TOKEN:
             case DO_TOKEN1_NUMTOKEN:
@@ -299,7 +299,7 @@ static void do_token1( int iSwitch )
          }
       }  /* while( nToken < nTokenCounter ) */
 
-      switch ( iSwitch )
+      switch( iSwitch )
       {
          case DO_TOKEN1_TOKEN:
          {
@@ -352,7 +352,7 @@ static void do_token1( int iSwitch )
    }
    else  /* iParamCheck */
    {
-      switch ( iSwitch )
+      switch( iSwitch )
       {
          case DO_TOKEN1_TOKEN:
          {

@@ -386,7 +386,7 @@ static void GDImageCreateFrom( int nType )
    if( iptr && sz )
    {
       /* Create Image */
-      switch ( nType )
+      switch( nType )
       {
          case IMAGE_JPEG :
               im = gdImageCreateFromJpegPtr( sz, iptr );

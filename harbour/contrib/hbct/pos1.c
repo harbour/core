@@ -122,7 +122,7 @@ static void do_pos1( int iSwitch )
       {
          int iDoRet = 0;
 
-         switch ( iSwitch )
+         switch( iSwitch )
          {
             case DO_POS1_POSALPHA:
                iDoRet = hb_charIsAlpha( ( HB_UCHAR ) *puc );
@@ -157,7 +157,7 @@ static void do_pos1( int iSwitch )
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
-         switch ( iSwitch )
+         switch( iSwitch )
          {
             case DO_POS1_POSALPHA:
                iError = CT_ERROR_POSALPHA;

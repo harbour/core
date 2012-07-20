@@ -191,7 +191,7 @@ static PMIXKEY mixKeyNew( PHB_ITEM pItem, HB_ULONG ulRecNo, HB_BYTE bType, HB_US
    pKey = ( PMIXKEY ) hb_xgrab( sizeof( HB_ULONG ) + uiLen );
    pKey->rec = ulRecNo;
 
-   switch ( bType )
+   switch( bType )
    {
       case 'C':
       {
@@ -1145,7 +1145,7 @@ static HB_ERRCODE adsxOrderCreate( ADSXAREAP pArea, LPDBORDERCREATEINFO pOrderIn
    pResult = pArea->adsarea.area.valResult;
    pArea->adsarea.area.valResult = NULL;
 
-   switch ( hb_itemType( pResult ) )
+   switch( hb_itemType( pResult ) )
    {
       case HB_IT_STRING:
       case HB_IT_STRING | HB_IT_MEMO:

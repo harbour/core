@@ -105,7 +105,7 @@ static void do_charswap( int iSwitch )
 
       for( pcSub = pcString; pcSub < pcString + sStrLen + 1 - iShift; pcSub += iShift )
       {
-         switch ( iSwitch )
+         switch( iSwitch )
          {
             case DO_CHARSWAP_WORDSWAP:
                pcRet[ sRetIndex++ ] = pcSub[ 2 ];

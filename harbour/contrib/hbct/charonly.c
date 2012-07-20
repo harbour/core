@@ -80,7 +80,7 @@ static void do_charonly( int iSwitch )
       const char * pcSub, * pc;
 
       /* check for zero-length strings  */
-      switch ( iSwitch )
+      switch( iSwitch )
       {
          case DO_CHARONLY_CHARONLY:
          case DO_CHARONLY_WORDONLY:
@@ -143,7 +143,7 @@ static void do_charonly( int iSwitch )
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
-         switch ( iSwitch )
+         switch( iSwitch )
          {
             case DO_CHARONLY_CHARONLY:
                iError = CT_ERROR_CHARONLY;

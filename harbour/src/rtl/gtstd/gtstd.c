@@ -707,7 +707,7 @@ static HB_BOOL hb_gt_std_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_std_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
-   switch ( iType )
+   switch( iType )
    {
       case HB_GTI_ISSCREENPOS:
       case HB_GTI_KBDSUPPORT:

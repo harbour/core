@@ -99,7 +99,7 @@ HB_FUNC( NUMAT )
 
       do
       {
-         switch ( iAtLike )
+         switch( iAtLike )
          {
             case CT_SETATLIKE_EXACT:
                pc = ct_at_exact_forward( pcSubStr, sSubStrLen, pcStringToMatch,

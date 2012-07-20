@@ -1043,7 +1043,7 @@ static const char * hb_fptGetMemoType( FPTAREAP pArea, HB_USHORT uiIndex )
 
       if( pArea->bMemoType == DB_MEMO_FPT )
       {
-         switch ( ulType )
+         switch( ulType )
          {
             case FPTIT_SIX_LNUM:
             case FPTIT_SIX_DNUM:
@@ -1093,7 +1093,7 @@ static const char * hb_fptGetMemoType( FPTAREAP pArea, HB_USHORT uiIndex )
       }
       else if( pArea->bMemoType == DB_MEMO_SMT )
       {
-         switch ( ulType )
+         switch( ulType )
          {
             case SMT_IT_NIL:
                return "U";
@@ -1469,7 +1469,7 @@ static HB_ERRCODE hb_fptReadSMTItem( FPTAREAP pArea, HB_BYTE ** pbMemoBuf, HB_BY
 
    if( bBufEnd - (*pbMemoBuf) >= 1 )
    {
-      switch ( *(*pbMemoBuf)++ )
+      switch( *(*pbMemoBuf)++ )
       {
          case SMT_IT_ARRAY:
             if( bBufEnd - (*pbMemoBuf) < 2 )
@@ -1596,7 +1596,7 @@ static HB_ULONG hb_fptCountSixItemLength( FPTAREAP pArea, PHB_ITEM pItem,
 {
    HB_ULONG ulLen, u, ulSize;
 
-   switch ( hb_itemType( pItem ) )
+   switch( hb_itemType( pItem ) )
    {
       case HB_IT_ARRAY: /* HB_IT_OBJECT == HB_IT_ARRAY */
          (*pulArrayCount)++;
@@ -1662,7 +1662,7 @@ static HB_ULONG hb_fptStoreSixItem( FPTAREAP pArea, PHB_ITEM pItem, HB_BYTE ** b
 
    memset( *bBufPtr, '\0', SIX_ITEM_BUFSIZE );
    ulSize = SIX_ITEM_BUFSIZE;
-   switch ( hb_itemType( pItem ) )
+   switch( hb_itemType( pItem ) )
    {
       case HB_IT_ARRAY: /* HB_IT_OBJECT == HB_IT_ARRAY */
          HB_PUT_LE_UINT16( &(*bBufPtr)[0], FPTIT_SIX_ARRAY );
@@ -1783,7 +1783,7 @@ static HB_ERRCODE hb_fptReadSixItem( FPTAREAP pArea, HB_BYTE ** pbMemoBuf, HB_BY
    if( bBufEnd - (*pbMemoBuf) >= ( HB_LONG ) ulLen )
    {
       usType = HB_GET_LE_UINT16( &(*pbMemoBuf)[0] );
-      switch ( usType )
+      switch( usType )
       {
          case FPTIT_SIX_LNUM:
             hb_itemPutNL( pItem, ( long ) HB_GET_LE_UINT32( &(*pbMemoBuf)[6] ) );
@@ -1889,7 +1889,7 @@ static HB_ULONG hb_fptCountFlexItemLength( FPTAREAP pArea, PHB_ITEM pItem,
    HB_ULONG ulLen, u, ulSize = 1;
    HB_MAXINT iVal;
 
-   switch ( hb_itemType( pItem ) )
+   switch( hb_itemType( pItem ) )
    {
       case HB_IT_ARRAY:
          (*pulArrayCount)++;
@@ -1952,7 +1952,7 @@ static void hb_fptStoreFlexItem( FPTAREAP pArea, PHB_ITEM pItem, HB_BYTE ** bBuf
    double dVal;
    int iWidth, iDec;
 
-   switch ( hb_itemType( pItem ) )
+   switch( hb_itemType( pItem ) )
    {
       case HB_IT_ARRAY:
          ulLen = hb_arrayLen( pItem ) & 0xFFFF;
@@ -2082,7 +2082,7 @@ static HB_ERRCODE hb_fptReadFlexItem( FPTAREAP pArea, HB_BYTE ** pbMemoBuf, HB_B
    {
       return EDBF_CORRUPT;
    }
-   switch ( usType )
+   switch( usType )
    {
       case FPTIT_FLEXAR_NIL:
          hb_itemClear( pItem );
@@ -3125,7 +3125,7 @@ static HB_ERRCODE hb_fptPutMemo( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pIt
    }
    else if( pArea->uiMemoVersion == DB_MEMOVER_FLEX )
    {
-      switch ( hb_itemType( pItem ) )
+      switch( hb_itemType( pItem ) )
       {
          case HB_IT_ARRAY:
             ulType = FPTIT_FLEX_ARRAY;

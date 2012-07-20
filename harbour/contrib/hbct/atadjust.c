@@ -129,7 +129,7 @@ HB_FUNC( ATADJUST )
 
          while( nMatchCounter < nCounter )
          {
-            switch ( iAtLike )
+            switch( iAtLike )
             {
                case CT_SETATLIKE_EXACT:
                   pc = ct_at_exact_forward( pcSubStr, sSubStrLen, pcStringToMatch,
@@ -164,7 +164,7 @@ HB_FUNC( ATADJUST )
       else /* ( HB_ISNUM( 4 ) && ( ( nCounter = hb_parns( 4 ) ) != 0 ) */
       {
          /* we have to find the last match */
-         switch ( iAtLike )
+         switch( iAtLike )
          {
             case CT_SETATLIKE_EXACT:
                pc = ct_at_exact_backward( pcString, sStrLen, pcStringToMatch,

@@ -124,7 +124,7 @@ HB_FUNC( ATREPL )
 
          while( nMatchCounter < nCounter )
          {
-            switch ( iAtLike )
+            switch( iAtLike )
             {
                case CT_SETATLIKE_EXACT:
                   pc = ( char * ) ct_at_exact_forward( pcRetSubStr, sRetSubStrLen, pcStringToMatch,
@@ -193,7 +193,7 @@ HB_FUNC( ATREPL )
          hb_xmemcpy( pcRetStr, pcString, nRetStrLen );
 
          /* we have to find the last match and replace it */
-         switch ( iAtLike )
+         switch( iAtLike )
          {
             case CT_SETATLIKE_EXACT:
                pc = ( char * ) ct_at_exact_backward( pcRetStr + nIgnore, nRetStrLen - nIgnore,

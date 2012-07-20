@@ -611,7 +611,7 @@ HB_FUNC( SX_GETVALUE )       /* ( cpFieldName ) */
             hb_retc( ( bTrim || bSetTrimmedON
                        ) ? ( char * ) sx_GetTrimString( cFieldName ) : ( char * ) sx_GetString( cFieldName ) );
             break;
-      }  /* end switch ( *cFieldType ) */
+      }  /* end switch( *cFieldType ) */
    }
 
    if( iWorkArea != SX_DUMMY_NUMBER )
@@ -667,7 +667,7 @@ HB_FUNC( SX_GETVALUEEX )  /* ( area ) */
             else
                hb_storvc( ( char * ) sx_GetString( cFieldName ), -1, i + 1 );
             break;
-      }  /* end switch ( *cFieldType ) */
+      }  /* end switch( *cFieldType ) */
    }
 
    if( ! ( iWorkArea == SX_DUMMY_NUMBER ) )

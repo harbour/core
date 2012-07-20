@@ -128,7 +128,7 @@ HB_FUNC( SX_PUTVALUEEX )  /* ( aValues, nArea ) */
                }
             }
             break;
-         }  /* end switch ( uVarType ) */
+         }  /* end switch( uVarType ) */
       }     /* end for( uiSize = 0; uiSize < uiLen; uiSize++ ) */
    }
 

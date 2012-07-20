@@ -83,7 +83,7 @@ void ct_charop( int iMode )
 
       pucResult = ( unsigned char * ) hb_xgrab( sStrLen + 1 );
 
-      switch ( iMode )
+      switch( iMode )
       {
          /* NOT */
          case CT_CHAROP_CHARNOT:
@@ -315,7 +315,7 @@ void ct_charop( int iMode )
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
-         switch ( iMode )
+         switch( iMode )
          {
             case CT_CHAROP_CHARADD:
                iError = CT_ERROR_CHARADD;

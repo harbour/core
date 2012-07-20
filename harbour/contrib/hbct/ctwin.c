@@ -1995,7 +1995,7 @@ static HB_BOOL hb_ctw_gt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_Info(%p,%d,%p)", pGT, iType, pInfo));
 
-   switch ( iType )
+   switch( iType )
    {
       case HB_GTI_ISCTWIN:
          pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_TRUE );

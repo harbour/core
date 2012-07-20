@@ -86,7 +86,7 @@ static void do_charone( int iSwitch )
          sDeleteSetLen = 0;
       }
 
-      switch ( iSwitch )
+      switch( iSwitch )
       {
          case DO_CHARONE_CHARONE:
             if( sStrLen > 1 )

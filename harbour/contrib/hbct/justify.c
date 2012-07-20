@@ -93,7 +93,7 @@ static void do_justify( int iSwitch )
 
       pcRet = ( char * ) hb_xgrab( sStrLen + 1 );
 
-      switch ( iSwitch )
+      switch( iSwitch )
       {
          case DO_JUSTIFY_JUSTLEFT:
             pc = pcString;
