@@ -495,7 +495,7 @@ METHOD IdeProjManager:pullHbpData( cHbp )
       cType := "Executable"
    ENDIF
 
-   /* Separate hbIDE specific flags */
+   /* Separate HbIDE specific flags */
    FOR EACH s IN aOptns
       IF ( n := at( c3rd, s ) ) > 0
          IF ( n1 := hb_at( " ", s, n ) ) > 0

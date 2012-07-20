@@ -673,7 +673,7 @@ METHOD HbIde:create( aParams )
    /* Console Editor */
    ::oCUI := IdeConsole():new():create( Self )
 
-   ::oDlg:show()     /* Shifted here - it gives the effect that time opening hbIDE is much less */
+   ::oDlg:show()     /* Shifted here - it gives the effect that time opening HbIDE is much less */
    qSplash:raise()
 
    /* Fill various elements of the IDE */

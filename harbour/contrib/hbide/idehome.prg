@@ -572,22 +572,22 @@ METHOD IdeHome:buildFaqTab()
 STATIC FUNCTION hbide_getFaqs()
    LOCAL a_:= {}, b_:= {}
 
-   aadd( a_, 'Does hbIDE support editing of same source at more than one place simultaneously ?' )
-   aadd( b_, 'Yes. hbIDE provides for splitting an editing window, horizontally and vertically, ' + ;
+   aadd( a_, 'Does HbIDE support editing of same source at more than one place simultaneously ?' )
+   aadd( b_, 'Yes. HbIDE provides for splitting an editing window, horizontally and vertically, ' + ;
              'both ways. Right-click anywhere in the editor, point to "Split..." and then ' + ;
              'click on required option.' )
 
-   aadd( a_, 'Does hbIDE support session management ?' )
+   aadd( a_, 'Does HbIDE support session management ?' )
    aadd( b_, 'Yes. And in a unique way. It provides to construct n number of "Panels" where you can spread ' + ;
              'sources. Each panel is given a name as well as corresponding button on the left-toolbar, a colored ' + ;
              'circle, to bring it forward. New panel can be created from selecting "New..." from drop-down ' + ;
              'list on top-toolbar and providing a name in the editing dialog. For this reason you will never ' + ;
-             'need to exit hbIDE and reenter again. It is a big productivity boost.' )
+             'need to exit HbIDE and reenter again. It is a big productivity boost.' )
 
-   aadd( a_, 'Does hbIDE allows to compile a project for different compilers and/or environments ?' )
-   aadd( b_, 'Yes. Infact this feature had been the one of the main reasons of hbIDEs existance. ' + ;
+   aadd( a_, 'Does HbIDE allows to compile a project for different compilers and/or environments ?' )
+   aadd( b_, 'Yes. Infact this feature had been the one of the main reasons of HbIDEs existance. ' + ;
              'All you have to do is to enter different environment settings in _ONE_ hbide.env file which ' + ;
-             'resides alongside hbide.ini. hbIDE provides the interface to manipulate this .env settings ' + ;
+             'resides alongside hbide.ini. HbIDE provides the interface to manipulate this .env settings ' + ;
              'which can be invoked from right-toolbar icon "Compiler Environments". Follow the input fields. ' + ;
              'A template is provided in "hbide.env", inspect it and you are through. Once hbide.env ' + ;
              'is ready, you will simply need to switch over the other environment which can be invoked ' + ;
@@ -595,13 +595,13 @@ STATIC FUNCTION hbide_getFaqs()
              'and click on listed options. Next step is just to build the project.' )
 
    aadd( a_, 'Can we keep any other content in hbide.ini ?' )
-   aadd( b_, 'No. hbide.ini is always re-written at the time hbIDE exits. Also this action is executed ' + ;
+   aadd( b_, 'No. hbide.ini is always re-written at the time HbIDE exits. Also this action is executed ' + ;
              'several times depending upon the underlying needs. However, you can alter the contents in some ' + ;
-             'sections, i.e., [Files], [Projects], etc., but only before running hbIDE. At exit, it will ' + ;
+             'sections, i.e., [Files], [Projects], etc., but only before running HbIDE. At exit, it will ' + ;
              're-write it again.' )
 
-   aadd( a_, 'Does hbIDE provides "intellisense" ? If yes, in what aspects ?' )
-   aadd( b_, 'Yes. Not so powerful yet, but "yes". hbIDE embeds two components as the basis of this intellisense, ' + ;
+   aadd( a_, 'Does HbIDE provides "intellisense" ? If yes, in what aspects ?' )
+   aadd( b_, 'Yes. Not so powerful yet, but "yes". HbIDE embeds two components as the basis of this intellisense, ' + ;
              hb_eol() + ;
              '   1. Harbour Documentation, and ' + hb_eol() + ;
              '   2. Project(s) Prototype Tagging. ' + hb_eol() + ;
@@ -609,12 +609,12 @@ STATIC FUNCTION hbide_getFaqs()
              'only when requested. Prototype Tagging extends one step forward as to offer to load only those ' + ;
              'projects which a developer will be working on during that session. Both components can be aligned ' + ;
              'on the side corners to provide always-on view of the actual contents. The moment you press "(" ' + ;
-             'hbIDE examines the contents of these components, if the function is available in Harbour Docs, ' + ;
+             'HbIDE examines the contents of these components, if the function is available in Harbour Docs, ' + ;
              'its details are dumped into the viewer, otherwise if the function is contained in the tagged ' + ;
              'prototypes, it is made current in the list, and a html formatted prototype is displayed as tooltip ' + ;
              'beneth the current caret position. ' + hb_eol() + ;
              hb_eol() + ;
-             'Code completion tool is almost done with, and probably will make up its presence in the hbIDE soon. ' )
+             'Code completion tool is almost done with, and probably will make up its presence in the HbIDE soon. ' )
 
    RETURN { a_, b_ }
 

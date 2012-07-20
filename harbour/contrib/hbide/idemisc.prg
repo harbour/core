@@ -989,7 +989,7 @@ FUNCTION hbide_help( nOption )
    SWITCH nOption
    CASE 1
       tit_ := 'About hbIde'
-      AAdd( txt_, "<b>Harbour IDE ( hbIDE )</b>" )
+      AAdd( txt_, "<b>Harbour IDE ( HbIDE )</b>" )
       AAdd( txt_, "Developed by" )
       AAdd( txt_, "Pritpal Bedi ( bedipritpal@hotmail.com )" )
       AAdd( txt_, "" )

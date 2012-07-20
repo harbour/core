@@ -227,7 +227,7 @@ CLASS HbqReportsManager
    DATA   symposis                                INIT "HBReports Designer"
    DATA   version                                 INIT 0.1
    DATA   title                                   INIT "Report"
-   DATA   author                                  INIT "hbIDE"
+   DATA   author                                  INIT "HbIDE"
    DATA   created                                 INIT date()
    DATA   modified                                INIT date()
 

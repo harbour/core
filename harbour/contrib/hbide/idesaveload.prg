@@ -1969,11 +1969,9 @@ METHOD IdeSetup:execEvent( nEvent, p, p1 )
       p:buttonSaveAs:disconnect( "clicked()"  )
       p:buttonSave:disconnect( "clicked()"  )
       p:buttonClose:disconnect( "clicked()"  )
-
       p:close()
-      p := NIL   /* Must Destroy It */
+      p:setParent( QWidget() )    /* Must Destroy It */
       EXIT
-
    /* Docking Widgets */
    CASE __comboTabsShape_currentIndexChanged__
       ::oINI:nDocksTabShape := p

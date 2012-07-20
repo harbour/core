@@ -601,17 +601,17 @@ METHOD IdeShortcuts:buildUI()
 
 METHOD IdeShortcuts:buildSignals()
 
-   ::oUI:buttonNew   :connect( "clicked()"                   , {| | ::execEvent( __buttonNew_clicked__    ) } )
-   ::oUI:buttonSet   :connect( "clicked()"                   , {| | ::execEvent( __buttonSet_clicked__    ) } )
-   ::oUI:buttonTest  :connect( "clicked()"                   , {| | ::execEvent( __buttonTest_clicked__   ) } )
-   ::oUI:buttonLoad  :connect( "clicked()"                   , {| | ::execEvent( __buttonLoad_clicked__   ) } )
-   ::oUI:buttonSave  :connect( "clicked()"                   , {| | ::execEvent( __buttonSave_clicked__   ) } )
-   ::oUI:buttonSaveAs:connect( "clicked()"                   , {| | ::execEvent( __buttonSaveAs_clicked__ ) } )
-   ::oUI:buttonDelete:connect( "clicked()"                   , {| | ::execEvent( __buttonDelete_clicked__ ) } )
-   ::oUI:listMethods :connect( "itemDoubleClicked(QListWidgetItem*)", {|p| ::execEvent( __listMethods_itemDoubleClicked__, p ) } )
-   ::oUI:listMethods :connect( "currentRowChanged(int)"      , {|p| ::execEvent( __listMethods_currentRowChanged__, p ) } )
-   ::oUI:tableMacros :connect( "itemSelectionChanged()"      , {| | ::execEvent( __tableMacros_itemSelectionChanged__ ) } )
-   ::oUI:tableMacros :connect( "itemDoubleClicked(QTableWidgetItem*)", {|p| ::execEvent( __tableMacros_itemDoubleClicked__, p ) } )
+   ::oUI:buttonNew   :connect( "clicked()"                           , {| | ::execEvent( __buttonNew_clicked__                   ) } )
+   ::oUI:buttonSet   :connect( "clicked()"                           , {| | ::execEvent( __buttonSet_clicked__                   ) } )
+   ::oUI:buttonTest  :connect( "clicked()"                           , {| | ::execEvent( __buttonTest_clicked__                  ) } )
+   ::oUI:buttonLoad  :connect( "clicked()"                           , {| | ::execEvent( __buttonLoad_clicked__                  ) } )
+   ::oUI:buttonSave  :connect( "clicked()"                           , {| | ::execEvent( __buttonSave_clicked__                  ) } )
+   ::oUI:buttonSaveAs:connect( "clicked()"                           , {| | ::execEvent( __buttonSaveAs_clicked__                ) } )
+   ::oUI:buttonDelete:connect( "clicked()"                           , {| | ::execEvent( __buttonDelete_clicked__                ) } )
+   ::oUI:listMethods :connect( "itemDoubleClicked(QListWidgetItem*)" , {|p| ::execEvent( __listMethods_itemDoubleClicked__   , p ) } )
+   ::oUI:listMethods :connect( "currentRowChanged(int)"              , {|p| ::execEvent( __listMethods_currentRowChanged__   , p ) } )
+   ::oUI:tableMacros :connect( "itemSelectionChanged()"              , {| | ::execEvent( __tableMacros_itemSelectionChanged__    ) } )
+   ::oUI:tableMacros :connect( "itemDoubleClicked(QTableWidgetItem*)", {|p| ::execEvent( __tableMacros_itemDoubleClicked__   , p ) } )
 
    RETURN Self
 
@@ -749,7 +749,7 @@ METHOD IdeShortcuts:test( cString, lWarn )
       ENDIF
    RECOVER USING oErr
       MsgBox( "Wrongly defined script, try: |v| ::method( v )", oErr:description )
-   ENDSEQUENCE
+   END SEQUENCE
 
    ErrorBlock( bError )
    ::oUI:raise()
@@ -1092,6 +1092,9 @@ METHOD IdeShortcuts:togglePersistentSelection()
 METHOD IdeShortcuts:clearSelection()
    RETURN ::oEdit:clearSelection()
 /*----------------------------------------------------------------------*/
+METHOD IdeShortcuts:findAgain()
+   RETURN ::oEdit:findEx()
+/*----------------------------------------------------------------------*/
 //                              Navigation
 /*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:home()
@@ -1135,12 +1138,6 @@ METHOD IdeShortcuts:find( cString, nPosFrom )
 /*----------------------------------------------------------------------*/
 //                     Other Cpmponents
 /*----------------------------------------------------------------------*/
-METHOD IdeShortcuts:findAgain()
-   IF !empty( ::qCurEdit )
-      ::oFR:find()
-   ENDIF
-   RETURN Self
-/*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:replace()
    IF !empty( ::qCurEdit )
       ::oFR:replace()
@@ -1156,7 +1153,7 @@ METHOD IdeShortcuts:help( cTopic )
 /*----------------------------------------------------------------------*/
 METHOD IdeShortcuts:exit( lWarn )
    IF HB_ISLOGICAL( lWarn ) .AND. lWarn
-      IF hbide_getYesNo( "Exit hbIDE ?", , "Macro Executed" )
+      IF hbide_getYesNo( "Exit HbIDE ?", , "Macro Executed" )
          PostAppEvent( xbeP_Close, NIL, NIL, ::oDlg )
       ENDIF
    ELSE
@@ -1361,7 +1358,7 @@ METHOD IdeShortcuts:loadMethods()
                        'Initiates a blank source file in an editing instance on the current panel.'  } )
    aadd( ::aMethods, { 'open()', ;
                        'open()', ;
-                       'Invokes "Open File" dialog and if a selection is made and such selection is a hbIDE supported valid text file, that is opened in a new editor instance on visible panel.'  } )
+                       'Invokes "Open File" dialog and if a selection is made and such selection is a HbIDE supported valid text file, that is opened in a new editor instance on visible panel.'  } )
    aadd( ::aMethods, { 'save()', ;
                        'save()', ;
                        'Saves the current editing instance if in modified state. Visual artifacts are updated accordingly.'  } )
@@ -1593,7 +1590,7 @@ METHOD IdeShortcuts:loadDftSCuts()
       aadd( b_, { "Redo"            , "Y"      , "NO", "YES", "NO" , "", '::redo()'              , "redo"            , "", "" } )
       aadd( b_, { "SelectAll"       , "A"      , "NO", "YES", "NO" , "", '::selectAll()'         , "selectall"       , "", "" } )
 
-      aadd( b_, { "New Source"      , "N"      , "NO", "YES", "NO" , "", '::newSource( "" )'     , "new"             , "", "" } )
+      aadd( b_, { "New Source"      , "N"      , "YES","NO" , "NO" , "", '::newSource( "" )'     , "new"             , "", "" } )
       aadd( b_, { "Open"            , "O"      , "NO", "YES", "NO" , "", '::open()'              , "open"            , "", "" } )
       aadd( b_, { "Save"            , "S"      , "NO", "YES", "NO" , "", '::save()'              , "save"            , "", "" } )
       aadd( b_, { "Save All"        , "S"      , "NO", "YES", "YES", "", '::saveAll()'           , "saveall"         , "", "" } )

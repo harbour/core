@@ -130,12 +130,12 @@
 #define  TBL_CURSOR                               7
 #define  TBL_GEOMETRY                             8
 #define  TBL_ROWPOS                               9
-#define  TBL_COLPOS                              10
-#define  TBL_HZSCROLL                            11
-#define  TBL_CONXN                               12
-#define  TBL_NEXT                                13
+#define  TBL_COLPOS                               10
+#define  TBL_HZSCROLL                             11
+#define  TBL_CONXN                                12
+#define  TBL_NEXT                                 13
 
-#define  TBL_VRBLS                               13
+#define  TBL_VRBLS                                13
 
 #define  SUB_ID                                   1
 #define  SUB_WINDOW                               2

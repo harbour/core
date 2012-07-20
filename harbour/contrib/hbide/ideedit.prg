@@ -214,8 +214,8 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD markCurrentFunction()
    METHOD copyBlockContents()
    METHOD pasteBlockContents()
-   METHOD insertBlockContents( aCord )
-   METHOD deleteBlockContents( k )
+   METHOD insertBlockContents( oKey )
+   METHOD cutBlockContents( k )
    METHOD zoom( nKey )
    METHOD blockConvert( cMode )
    METHOD dispStatusInfo()
@@ -309,11 +309,11 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
 
    ::connectEditSignals()
 
-   ::qEdit:connect( QEvent_KeyPress           , {|p| ::execKeyEvent( 101, QEvent_KeyPress, p ) } )
-   ::qEdit:connect( QEvent_Wheel              , {|p| ::execKeyEvent( 102, QEvent_Wheel   , p ) } )
-   ::qEdit:connect( QEvent_FocusIn            , {| | ::execKeyEvent( 104, QEvent_FocusIn     ) } )
-   ::qEdit:connect( QEvent_Resize             , {| | ::execKeyEvent( 106, QEvent_Resize      ) } )
-   ::qEdit:connect( QEvent_FocusOut           , {| | ::execKeyEvent( 105, QEvent_FocusOut    ) } )
+   ::qEdit:connect( QEvent_KeyPress           , {|p| ::execKeyEvent( 101, QEvent_KeyPress           , p ) } )
+   ::qEdit:connect( QEvent_Wheel              , {|p| ::execKeyEvent( 102, QEvent_Wheel              , p ) } )
+   ::qEdit:connect( QEvent_FocusIn            , {| | ::execKeyEvent( 104, QEvent_FocusIn                ) } )
+   ::qEdit:connect( QEvent_Resize             , {| | ::execKeyEvent( 106, QEvent_Resize                 ) } )
+   ::qEdit:connect( QEvent_FocusOut           , {| | ::execKeyEvent( 105, QEvent_FocusOut               ) } )
    ::qEdit:connect( QEvent_MouseButtonDblClick, {|p| ::execKeyEvent( 103, QEvent_MouseButtonDblClick, p ) } )
 
    ::qEdit:hbSetEventBlock( {|p,p1| ::execKeyEvent( 115, 1001, p, p1 ) } )
@@ -570,13 +570,11 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
             ::oFR:find( .f. )
          ENDIF
          EXIT
-
       CASE Qt_Key_Insert
          IF lCtrl
             ::copy()
          ENDIF
          EXIT
-
       CASE Qt_Key_Backspace
          IF ! lCtrl .AND. ! lAlt
             IF ::getLineNo() == ::nProtoLine .AND. ::getColumnNo() <= ::nProtoCol + 1
@@ -615,73 +613,66 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
          ENDIF
          EXIT
       ENDSWITCH
-
       EXIT
-
    CASE QEvent_Enter
    CASE QEvent_FocusIn
       IF key == QEvent_FocusIn
          ::oUpDn:show()
       ENDIF
       EXIT
-
    CASE QEvent_Resize
       ::oUpDn:show()
       EXIT
-
    CASE QEvent_Leave
    CASE QEvent_FocusOut
       EXIT
-
    CASE QEvent_Wheel
       EXIT
-
    CASE QEvent_MouseButtonDblClick
       ::lCopyWhenDblClicked := .t.
       EXIT
-
-   CASE 1001
-      IF p == QEvent_MouseButtonDblClick
+   CASE 1001                                /* Fired from hbqt_hbqplaintextedit.cpp */
+      SWITCH p
+      CASE QEvent_MouseButtonDblClick
          ::lCopyWhenDblClicked := .f.       /* not intuitive */
          ::clickFuncHelp()
-
-      ELSEIF p == QEvent_Paint
+         EXIT
+      CASE QEvent_Paint
          // ::oIde:testPainter( p1 )
-
-      ELSEIF p == 21000                     /* Sends Block Info { t,l,b,r,mode,state } hbGetBlockInfo() */
+         EXIT
+      CASE 21000                     /* Sends Block Info { t,l,b,r,mode,state } hbGetBlockInfo() */
          ::aSelectionInfo := p1
          ::oDK:setButtonState( "SelectionMode", ::aSelectionInfo[ 5 ] > 1 )
-
-      ELSEIF p == 21001
+         EXIT
+      CASE 21001
          ::handlePreviousWord( .t. )
-
-      ELSEIF p == 21002
+         EXIT
+      CASE 21002
          ::loadFuncHelp()
-
-      ELSEIF p == 21011
+         EXIT
+      CASE 21011
          ::copyBlockContents()
-
-      ELSEIF p == 21012
-         ::pasteBlockContents()// p1 )
-
-      ELSEIF p == 21013
+         EXIT
+      CASE 21012
+         ::pasteBlockContents()
+         EXIT
+      CASE 21013
          ::insertBlockContents( p1 )
-
-      ELSEIF p == 21014  /* ->hbCut() */
-         ::deleteBlockContents( p1 )
-
-      ELSEIF p == 21017                     /* Sends Block Info { t,l,b,r,mode,state } hbGetBlockInfo() */
+         EXIT
+      CASE 21014  /* ->hbCut() */
+         ::cutBlockContents( p1 )
+         EXIT
+      CASE 21017                     /* Sends Block Info { t,l,b,r,mode,state } hbGetBlockInfo() */
          ::aViewportInfo := p1
-
-      ELSEIF p == 21041
+         EXIT
+      CASE 21041
          ::qEdit:hbSetFieldsListActive( ::oEM:updateFieldsList( p1 ) )
-
-      ELSEIF p == 21042
+         EXIT
+      CASE 21042
          ::qEdit:hbSetFieldsListActive( ::oEM:updateFieldsList() )
-
-      ENDIF
+         EXIT
+      ENDSWITCH
       EXIT
-
    ENDSWITCH
 
    RETURN .F.  /* Important - NEVER CHANGE IT TO .T. */
@@ -996,18 +987,18 @@ METHOD IdeEdit:pasteBlockContents()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:insertBlockContents( aCord )
-   LOCAL nT, nL, nB, nR, nW, i, cLine, cKey, qCursor
+METHOD IdeEdit:insertBlockContents( oKey )
+   LOCAL nT, nL, nB, nR, nW, i, cLine, cKey, qCursor, aCord
 
    IF ::lReadOnly
       RETURN Self
    ENDIF
 
+   cKey := chr( hbxbp_QKeyEventToAppEvent( oKey ) )
+
+   aCord := ::aSelectionInfo
    hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
-
    nW := nR - nL
-
-   cKey := chr( hbxbp_QKeyEventToAppEvent( aCord[ 7 ] ) )
 
    qCursor := ::qEdit:textCursor()
    qCursor:beginEditBlock()
@@ -1039,7 +1030,7 @@ METHOD IdeEdit:insertBlockContents( aCord )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:deleteBlockContents( k )
+METHOD IdeEdit:cutBlockContents( k )
    LOCAL nT, nL, nB, nR, i, cLine, qCursor, nSelMode, aCord
 
    IF ::lReadOnly
@@ -1075,7 +1066,8 @@ METHOD IdeEdit:deleteBlockContents( k )
                cLine := pad( substr( cLine, 1, nL ), nL ) + substr( cLine, nR + 1 )
                hbide_qReplaceLine( qCursor, i, cLine )
             NEXT
-            hbide_qPositionCursor( qCursor, nT, nL )
+            //hbide_qPositionCursor( qCursor, nT, nL )
+            ::qEdit:hbSetSelectionInfo( { -1, -1, -1, -1, __selectionMode_column__ } )
 
          ELSEIF nSelMode == __selectionMode_stream__
             hbide_qPositionCursor( qCursor, nT, nL )
@@ -1083,20 +1075,20 @@ METHOD IdeEdit:deleteBlockContents( k )
             qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_KeepAnchor          )
             qCursor:movePosition( QTextCursor_Right      , QTextCursor_KeepAnchor, nR      )
             qCursor:removeSelectedText()
-            ::qEdit:hbSetSelectionInfo( { -1, -1, -1, -1, 1 } )
+            ::qEdit:hbSetSelectionInfo( { -1, -1, -1, -1, __selectionMode_stream__ } )
 
          ELSEIF nSelMode == __selectionMode_line__
             hbide_qPositionCursor( qCursor, nT, nL )
             qCursor:movePosition( QTextCursor_Down       , QTextCursor_KeepAnchor, nB - nT + 1 )
             qCursor:movePosition( QTextCursor_StartOfLine, QTextCursor_KeepAnchor          )
             qCursor:removeSelectedText()
-            ::qEdit:hbSetSelectionInfo( { -1, -1, -1, -1, 1 } )
+            ::qEdit:hbSetSelectionInfo( { -1, -1, -1, -1, __selectionMode_stream__ } )
             ::isLineSelectionON := .f.
 
          ENDIF
       ENDIF
    ENDIF
-   //
+
    ::qEdit:setTextCursor( qCursor )
    qCursor:endEditBlock()
 
@@ -1531,7 +1523,7 @@ METHOD IdeEdit:cut()
    IF ::lReadOnly
       RETURN Self
    ENDIF
-   ::deleteBlockContents( Qt_Key_X )
+   ::cutBlockContents( Qt_Key_X )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1548,7 +1540,7 @@ METHOD IdeEdit:paste()
       RETURN Self
    ENDIF
    IF ::aSelectionInfo[ 1 ] > -1
-      ::deleteBlockContents( Qt_Key_Delete )
+      ::cutBlockContents( Qt_Key_Delete )
    ENDIF
    ::pasteBlockContents()
 
@@ -1667,6 +1659,8 @@ METHOD IdeEdit:find( cText, nPosFrom )
 METHOD IdeEdit:findEx( cText, nFlags, nStart )
    LOCAL qCursor, lFound, nPos
 
+   DEFAULT cText  TO ::getSelectedText()
+   DEFAULT nFlags TO 0
    DEFAULT nStart TO 0
 
    qCursor := ::getCursor()

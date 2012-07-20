@@ -1048,7 +1048,7 @@ STATIC FUNCTION hbide_loadDefaultThemes()
    IF .t.
       aadd( aIni, "[ Controls ]                                                         " )
       aadd( aIni, "                                                                     " )
-      aadd( aIni, "dialogTitle                    = HBIDE - Source Syntax Highlighting  " )
+      aadd( aIni, "dialogTitle                    = HbIDE - Source Syntax Highlighting  " )
       aadd( aIni, "labelItem                      = Item                                " )
       aadd( aIni, "labelTheme                     = Theme                               " )
       aadd( aIni, "checkItalic                    = Italic                              " )
