@@ -162,7 +162,7 @@ static HB_FOFFSET getblock( HB_FOFFSET offset )
 
    /* if a full buffer's worth was not read in, make it full.   */
 
-   if( ( buffbot != buffsize ) && ( fsize > buffsize ) )
+   if( buffbot != buffsize && fsize > buffsize )
    {
       if( offset > 0 )
          hb_fsSeekLarge( infile, -buffsize, FS_END );
@@ -195,7 +195,7 @@ static void buff_align()
       i = bufftop;               /* start at the top of the file and scan */
                                  /* forward until a CR is reached.        */
 
-      while( ( buffer[ i ] != CR ) && ( i < buffbot ) )
+      while( buffer[ i ] != CR && i < buffbot )
          i++;
 
       bufftop = i + 2;
@@ -221,7 +221,7 @@ static void buff_align()
       i = buffbot;               /* point the end of the buffer to a valid */
                                  /* complete text line.                    */
 
-      while( ( buffer[ i ] != CR ) && ( i > bufftop ) )
+      while( buffer[ i ] != CR && i > bufftop )
          i--;
 
       buffbot = i + 2;
@@ -243,7 +243,7 @@ static void win_align()
    winbot   = wintop;            /* find out if there is enough text for */
    i        = 0;                 /* full window.                         */
 
-   while( ( winbot < buffbot ) && ( i < height ) )
+   while( winbot < buffbot && i < height )
    {
       if( buffer[ winbot ] == CR )
          i++;
@@ -259,7 +259,7 @@ static void win_align()
       wintop   = winbot;
       i        = 0;                         /* and setup wintop */
 
-      while( ( wintop > bufftop ) && ( i <= height ) )
+      while( wintop > bufftop && i <= height )
       {
          if( buffer[ wintop ] == LF )
             i++;
@@ -349,7 +349,7 @@ static void winup()
    bRefresh = HB_TRUE;
    k        = wintop - 3;
 
-   while( ( buffer[ k ] != CR ) && ( k > bufftop ) )
+   while( buffer[ k ] != CR && k > bufftop )
       k--;
 
    if( k >= bufftop )
@@ -375,7 +375,7 @@ static void winup()
          j = 0;
 
       buffoffset  = getblock( j );
-      wintop      = ( ( int ) ( i - buffoffset ) );
+      wintop      = ( int ) ( i - buffoffset );
 
       buff_align();
       win_align();
@@ -397,7 +397,7 @@ static void windown()
    bRefresh = HB_TRUE;
    k        = winbot;
 
-   while( ( buffer[ k ] != CR ) && ( k <= buffbot ) )
+   while( buffer[ k ] != CR && k <= buffbot )
       k++;
    k += 2;
 
@@ -424,7 +424,7 @@ static void windown()
       if( i < buffoffset )
          wintop = 0;
       else
-         wintop = ( ( int ) ( i - buffoffset ) );
+         wintop = ( int ) ( i - buffoffset );
 
       buff_align();
       win_align();
@@ -748,7 +748,7 @@ HB_FUNC( FT_DISPFILE )
             default: if( keytype == K_STRING )
                {
                   for( i = 0; i <= kcount; i++ )
-                     if( ( ch > 0 ) && ( ch < 256 ) )
+                     if( ch > 0 && ch < 256 )
                         if( ( int ) kstr[ i ] == ch )
                            bDone = HB_TRUE;
                   break;                                   /* if so terminate */

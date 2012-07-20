@@ -391,7 +391,7 @@ static long _ft_skip( long iRecs )
             /* get count of chars in this line */
             iByteCount = _findeol( cPtr, iBytesRemaining );
 
-            if( ( iByteCount > 0 ) && ( iByteCount != iBytesRemaining ) )
+            if( iByteCount > 0 && iByteCount != iBytesRemaining )
             {
                /* found a CRLF, iByteCount points to first char of next
                   record */
@@ -512,9 +512,9 @@ static long _ft_skip( long iRecs )
                   }
                }
             }
-            while( ( iBytesRemaining > 0 ) );
+            while( iBytesRemaining > 0 );
          }
-         while( ( fpOffset > 0 ) && ( iBytesRead == BUFFSIZE ) );
+         while( fpOffset > 0 && iBytesRead == BUFFSIZE );
       }
       else
       {

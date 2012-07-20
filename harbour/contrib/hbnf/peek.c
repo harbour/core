@@ -40,7 +40,7 @@ HB_FUNC( FT_PEEK )
    auto unsigned int    ProtMode = cpmiIsProtected();
    auto unsigned char * bytePtr;
 
-   if( ( PCOUNT >= 2 ) && ( HB_ISNUM( 1 ) ) && ( HB_ISNUM( 2 ) ) )
+   if( PCOUNT >= 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
    {
       FP_SEG( bytePtr ) = hb_parni( 1 );
       FP_OFF( bytePtr ) = hb_parni( 2 );
@@ -61,6 +61,4 @@ HB_FUNC( FT_PEEK )
    }
    else
       Bogus: hb_retni( -1 );
-
-   return;
 }
