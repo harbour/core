@@ -254,7 +254,7 @@ FUNCTION CBreader( oGet )
       oGet:killfocus()
    endif
 
-RETURN (NIL)  //cbreader()
+RETURN NIL  //cbreader()
 
 /* not used:
 static function MoveToGet(GetList, nPos)

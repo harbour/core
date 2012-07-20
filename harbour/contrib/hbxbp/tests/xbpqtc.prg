@@ -316,7 +316,7 @@ Function CreateInnerChildWindow( oODlg )
    oDlg:show()
    SetAppFocus( oDlg )
 
-   Return( NIL )
+   Return NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -344,7 +344,7 @@ Function CreateOuterChildWindow( oODlg, lMoveWithOwner )
 
    SetAppFocus( oDlg )
 
-   Return( NIL )
+   Return NIL
 
 /*----------------------------------------------------------------------*/
 

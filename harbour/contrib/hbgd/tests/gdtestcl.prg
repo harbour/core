@@ -180,9 +180,9 @@ PROCEDURE Main()
 
    //oI4:SetColor( black )
    //oI4:Say( 100, 10, "Valentina" )
-   IF Left( OS(), Len( "Linux" ) ) == "Linux"
+   #if defined( __PLATFORM__UNIX )
       oI4:SayFreeType( oI4:CenterWidth(), oI4:CenterHeight(), "GD power", "arib____", 40, 45 )
-   ELSE
+   #else
       nSecs := Seconds()
       ? "start write"
       FOR n := 0 TO 350 STEP 10
@@ -192,7 +192,7 @@ PROCEDURE Main()
       oI4:SetTransparent( blue )
       oI4:SayFreeType( oI4:CenterWidth() - 4, oI4:CenterHeight() + 4, "GD", "verdana", 70, n, gray )
       oI4:SayFreeType( oI4:CenterWidth(), oI4:CenterHeight(), "GD", "verdana", 70, n, blue )
-   ENDIF
+   #endif
    oI4:SaveJpeg( IMAGES_OUT + "writing.jpg" )
 
 

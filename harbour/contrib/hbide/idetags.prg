@@ -323,7 +323,7 @@ FUNCTION Summarize( aText, cComments, aSumData, nFileType )
       ENDIF
    NEXT
 
-   RETURN( aSummary )
+   RETURN aSummary
 
 /*----------------------------------------------------------------------*/
 /*
@@ -419,7 +419,7 @@ FUNCTION CheckComments( aText )
 
    NEXT
 
-   RETURN ( cComments )
+   RETURN cComments
 
 /*----------------------------------------------------------------------*/
 
@@ -443,6 +443,6 @@ STATIC FUNCTION IsInString( cText, nPos, nStart, cQuote )
       ENDIF
    NEXT
 
-   RETURN ( lInString )
+   RETURN lInString
 
 /*----------------------------------------------------------------------*/

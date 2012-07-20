@@ -157,7 +157,7 @@ FUNCTION Main2()
    n := Seconds() + 2
    n := Int( seconds() + 2 )
 
-   RETURN( NIL )
+   RETURN NIL
 
 FUNCTION Main3()
 

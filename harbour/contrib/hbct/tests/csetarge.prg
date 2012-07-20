@@ -67,7 +67,7 @@ PROCEDURE main
    QOut( "" )
    QOut( "Local error handler: " )
 
-   olderr := ErrorBlock( { | oerr | myerrhandler( oerr ) } )
+   olderr := ErrorBlock( {| oerr | myerrhandler( oerr ) } )
 
    // standard behaviour on argument error
    QOut( "" )
@@ -209,7 +209,7 @@ FUNCTION myerrhandler( oerr )
    QOut( "      err:operation....:", oerr:operation )
    QOut( "      len(err:args)....:", Len( oerr:args ) )
    FOR ni := 1 TO Len( oerr:args )
-      QOut( "          err:args[" + hb_ntos( ni ) + "]..:", oerr:args[ni] )
+      QOut( "          err:args[" + hb_ntos( ni ) + "]..:", oerr:args[ ni ] )
    NEXT
    QOut( "      err:genCode......:", oerr:genCode )
    QOut( "      err:subCode......:", oerr:subCode )
@@ -238,7 +238,7 @@ FUNCTION myerrhandler( oerr )
          QOut( "      6 is Block,  7 is Array,    8 is Object" )
          QOut( "      9 is unknown" )
          nDigit := Int( oerr:subCode % 10 )
-         QOut( "    Here it's a " + AllTrim( Str(nDigit ) ) + ", so I return a " )
+         QOut( "    Here it's a " + AllTrim( Str( nDigit ) ) + ", so I return a " )
          DO CASE
          CASE nDigit == 0
             QQOut( "NIL." )
@@ -266,7 +266,7 @@ FUNCTION myerrhandler( oerr )
 
          CASE nDigit == 6
             QQOut( "Block." )
-            Input := { ||NIL }
+            Input := {|| NIL }
 
          CASE nDigit == 7
             QQOut( "Array." )

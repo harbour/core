@@ -63,4 +63,4 @@ FUNCTION DetachVar( xLocal )
 
    STATIC xStatic := 100
 
-   RETURN( {| x | ++xStatic, x + xStatic + xLocal } )
+   RETURN {| x | ++xStatic, x + xStatic + xLocal }

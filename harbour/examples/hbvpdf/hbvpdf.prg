@@ -2342,7 +2342,7 @@ local nSpace  // := 3 // 3 - RGB, 1 - GREY, 4 - CMYK
 return aTemp
 
 STATIC FUNCTION FilePos( nHandle )
-RETURN ( FSEEK( nHandle, 0, FS_RELATIVE ) )
+RETURN FSEEK( nHandle, 0, FS_RELATIVE )
 
 STATIC FUNCTION Chr_RGB( cChar )
 RETURN str(asc( cChar ) / 255, 4, 2)
@@ -2416,7 +2416,7 @@ STATIC FUNCTION FileSize( nHandle )
    // Reset file position
    FSEEK( nHandle, nCurrent )
 
-RETURN ( nLength )
+RETURN nLength
 
 // next 3 function written by Peter Kulek
 //modified for compatibility with common.ch by V.K.

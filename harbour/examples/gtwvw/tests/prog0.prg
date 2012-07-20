@@ -257,7 +257,7 @@ local oldColor := setcolor(s_cStdColor)
 
    setcursor(oldCurs)
    setcolor(oldColor)
-return (nChoice==1)
+return nChoice==1
 
 function lBoxMessage(cMsg, cTitle)
 local nTopLine, ;
@@ -335,7 +335,7 @@ FUNCTION ZNEWWINDOW(wtype,r1,c1,r2,c2,ctitle, ccolor)
   endif
 
   SETCOLOR(cOldColor)
-RETURN(i+1)
+RETURN i+1
 
 FUNCTION ZREVWINDOW()
 * Closes the last window and remove it from window list
@@ -354,7 +354,7 @@ FUNCTION ZREVWINDOW()
   * remove window from list
   adel(s_zwin, i)
   asize(s_zwin, len(s_zwin)-1)
-RETURN(NIL)
+RETURN NIL
 
 function nCeiling(nNumber)
 local nTemp

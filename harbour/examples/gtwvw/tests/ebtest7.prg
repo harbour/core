@@ -927,4 +927,4 @@ return win_messagebox(nParent, cMessage, cCaption, nFlags)
 
 static function lShiftPressed()
 // #define VK_SHIFT            16
-return (wvw_GETKEYSTATE(16) < 0)
+return wvw_GETKEYSTATE(16) < 0

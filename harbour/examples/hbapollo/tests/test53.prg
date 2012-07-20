@@ -85,7 +85,7 @@ FUNCTION Test_1( nCommit )
    APPEND BLANK 10000
    j := 0
    sx_DbEval( ;
-      { || cPad := PADL( ++ j, 5, "0" )     , ;
+      {|| cPad := PADL( ++j, 5, "0" ) , ;
       sx_ReplaceEx( {                  ;
       { "MYCHAR",   "NAME_" + cPad }  , ;
       { "MYDATE",    date() + j    }  , ;

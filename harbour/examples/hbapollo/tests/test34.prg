@@ -24,8 +24,8 @@ PROCEDURE MAIN()
    SET EPOCH 1950
    SET DATE "DD/MM/YYYY"
 
-   IF File( "C:\WINDOWS\TEMP\myText.Txt" )
-      FErase( "C:\WINDOWS\TEMP\myText.Txt" )
+   IF File( "mytext.txt" )
+      FErase( "mytext.txt" )
    ENDIF
 
    CREATE DBF cFile STRUCT aStruct RDD SDENSX
@@ -61,7 +61,7 @@ Delimiter should be one of the followings:
    SPACE_DELIM
 */
 
-   COPYTEXT TO C:\WINDOWS\TEMP\mytext.txt DELIMITED WITH TAB_DELIM
+   COPYTEXT TO mytext.txt DELIMITED WITH TAB_DELIM
    // COPYTEXT TO mytext.txt DELIMITED WITH COMMA_DELIM
    // COPYTEXT TO mytext.txt DELIMITED WITH SDF_DELIM
    // COPYTEXT TO mytext.txt DELIMITED WITH SPACE_DELIM
@@ -71,7 +71,7 @@ Delimiter should be one of the followings:
    IF !empty( cApplication := appReg( "txt" ) )
       ? 'Now will browse text file ... Press any key ...'
       PAUSE
-      IF File( "c:\windows\temp\myText.Txt" )
-         __run( cApplication + " " + "c:\windows\temp\mytext.txt" )
+      IF File( "mytext.txt" )
+         __run( cApplication + " " + "mytext.txt" )
       ENDIF
    ENDIF

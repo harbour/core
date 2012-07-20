@@ -1582,7 +1582,7 @@ METHOD HbIde:CreateTags()
       ENDIF
    NEXT
 
-   RETURN ( NIL )
+   RETURN NIL
 
 //----------------------------------------------------------------------//
 /*

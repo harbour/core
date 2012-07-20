@@ -1070,7 +1070,7 @@ return .t.
 function lYesNo(cMsg, cTitle)
    default cTitle to "Konfirmasi"
 
-return (win_messagebox(WVW_GETWINDOWHANDLE(), cMsg, cTitle, MB_YESNO + MB_ICONQUESTION + MB_SYSTEMMODAL) == IDYES)
+return win_messagebox(WVW_GETWINDOWHANDLE(), cMsg, cTitle, MB_YESNO + MB_ICONQUESTION + MB_SYSTEMMODAL) == IDYES
 
 function lDebug(cMsg)
 return lBoxMessage(cMsg, "Debug")
@@ -1181,7 +1181,7 @@ FUNCTION SetDefaultWindowSize()
         CLS
      ENDIF
   ENDIF
-RETURN(Result)
+RETURN Result
 
 //static function isWinNT()
 //return lYesNo("I am preparing the 'best' font for you..." + CRLF+;

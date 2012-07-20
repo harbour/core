@@ -259,7 +259,7 @@ FUNCTION hbide_getYesNo( cMsg, cInfo, cTitle, qParent )
 
    oMB:setParent( QWidget() )
 
-   RETURN ( nRet == QMessageBox_Yes )
+   RETURN nRet == QMessageBox_Yes
 
 /*----------------------------------------------------------------------*/
 
@@ -575,7 +575,7 @@ FUNCTION hbide_isValidText( cSourceFile )
 
    hb_fNameSplit( cSourceFile, , , @cExt )
 
-   RETURN ( lower( cExt ) $ hbide_setIde():oINI:cTextFileExtensions )
+   RETURN lower( cExt ) $ hbide_setIde():oINI:cTextFileExtensions
 
 /*----------------------------------------------------------------------*/
 
@@ -584,7 +584,7 @@ FUNCTION hbide_isValidSource( cSourceFile )
 
    hb_fNameSplit( cSourceFile, , , @cExt )
 
-   RETURN ( lower( cExt ) $ ".c,.cpp,.prg,.res,.rc,.hb" )
+   RETURN lower( cExt ) $ ".c,.cpp,.prg,.res,.rc,.hb"
 
 /*----------------------------------------------------------------------*/
 
@@ -593,7 +593,7 @@ FUNCTION hbide_isSourcePPO( cSourceFile )
 
    hb_fNameSplit( cSourceFile, , , @cExt )
 
-   RETURN ( lower( cExt ) == ".ppo" )
+   RETURN lower( cExt ) == ".ppo"
 
 /*----------------------------------------------------------------------*/
 
@@ -602,7 +602,7 @@ FUNCTION hbide_isSourcePRG( cSourceFile )
 
    hb_fNameSplit( cSourceFile, , , @cExt )
 
-   RETURN ( lower( cExt ) == ".prg" )
+   RETURN lower( cExt ) == ".prg"
 
 /*----------------------------------------------------------------------*/
 
@@ -852,7 +852,7 @@ FUNCTION hbide_parseKeyValPair( s, cKey, cVal )
       lYes := ( !empty( cKey ) .and. !empty( cVal ) )
    ENDIF
 
-   RETURN ( lYes )
+   RETURN lYes
 
 /*----------------------------------------------------------------------*/
 

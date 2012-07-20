@@ -1649,4 +1649,4 @@ ENDIF
 
 ret_val := AT(f_str, SUBSTR(l_str, f_rom))
 
-RETURN(ret_val)
+RETURN ret_val

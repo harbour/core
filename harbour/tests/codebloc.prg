@@ -83,7 +83,7 @@ FUNCTION MyEval( bCodeBlock )
 
    LOCAL D := "this is another variable"
 
-   RETURN( Eval( bCodeBlock, " from ", "MyEval Function" ) )
+   RETURN Eval( bCodeBlock, " from ", "MyEval Function" )
 
 PROCEDURE OtherTest( cblock )
 
@@ -110,7 +110,7 @@ FUNCTION DetachLocal( x, y )
    LOCAL z := x + y
    LOCAL cb := {|| QOut( "z=x+y=" ), QOut( z ), QOut( "x*x=" ), QOut( x * x ), QOut( "x*x+z=" ), x * x + z }
 
-   RETURN( cb )
+   RETURN cb
 
 PROCEDURE BugToFix()
 
@@ -123,4 +123,4 @@ PROCEDURE BugToFix()
 
 FUNCTION RetBlock()
 
-   RETURN( {| x | x * x } )
+   RETURN {| x | x * x }

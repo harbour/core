@@ -229,7 +229,7 @@ FUNCTION MAIN( ... )
 
    SysSettings()
 
-   ErrorBlock( { | oError | uhttpd_DefError( oError ) } )
+   ErrorBlock( {| oError | uhttpd_DefError( oError ) } )
 
    // ----------------------- Parameters defaults -----------------------------
 
@@ -655,7 +655,7 @@ STATIC FUNCTION AcceptConnections()
    LOCAL pThread
    LOCAL lQuitRequest := .F.
 
-   ErrorBlock( { | oError | uhttpd_DefError( oError ) } )
+   ErrorBlock( {| oError | uhttpd_DefError( oError ) } )
 
    WriteToConsole( "Starting AcceptConnections()" )
 
@@ -811,7 +811,7 @@ STATIC FUNCTION ProcessConnection()
    hb_ToOutDebug( "nThreadId = %s\r\n", nThreadId )
 #endif
 
-   ErrorBlock( { | oError | uhttpd_DefError( oError ) } )
+   ErrorBlock( {| oError | uhttpd_DefError( oError ) } )
 
    WriteToConsole( "Starting ProcessConnections() " + hb_CStr( nThreadID ) )
 
@@ -970,7 +970,7 @@ STATIC FUNCTION ServiceConnection()
 
    PRIVATE _SERVER, _GET, _POST, _COOKIE, _SESSION, _REQUEST, _HTTP_REQUEST, _HTTP_RESPONSE, m_cPost
 
-   ErrorBlock( { | oError | uhttpd_DefError( oError ) } )
+   ErrorBlock( {| oError | uhttpd_DefError( oError ) } )
 
    nThreadId := hb_threadID()
 

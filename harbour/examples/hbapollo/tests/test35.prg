@@ -12,7 +12,7 @@
 
 PROCEDURE MAIN()
 
-   LOCAL cFile   := "c:\windows\temp\sixtest.dbf"
+   LOCAL cFile   := "sixtest.dbf"
    LOCAL aStruct := { ;
       { "MYCHAR"    , "C", 15, 0 }, ;
       { "MYDATE"    , "D", 8, 0 }, ;
@@ -25,8 +25,8 @@ PROCEDURE MAIN()
    SET EPOCH 1950
    SET DATE "DD/MM/YYYY"
 
-   IF File( "c:\windows\temp\myText.Txt" )
-      FErase( "c:\windows\temp\myText.Txt" )
+   IF File( "mytext.txt" )
+      FErase( "mytext.txt" )
    ENDIF
 
    CREATE DBF cFile STRUCT aStruct RDD SDENSX
@@ -68,7 +68,7 @@ PROCEDURE MAIN()
    // if no FIELDS clause is used, all fields will be printed
    // COPY TO mytext.txt ;
    // DELIMITED clause should come last
-   COPY TO c:\windows\temp\mytext.txt FIELDS MYCHAR, MYDATE, MYNUMBER1, MYNUMBER2, MYMEMO ;
+   COPY TO mytext.txt FIELDS MYCHAR, MYDATE, MYNUMBER1, MYNUMBER2, MYMEMO ;
       FOR sx_GetValue( "MYDATE" ) <= CTOD( "31/12/2008" ) ;
       NEXT 100 DELIMITED WITH CHR( 9 )
 
@@ -80,14 +80,14 @@ PROCEDURE MAIN()
 
    CLOSE ALL
 
-   // if file("c:\windows\temp\mytext.txt")
-   //   ? 'File c:\windows\temp\mytext.txt created ...'
+   // if file("mytext.txt")
+   //   ? 'File mytext.txt created ...'
    // endif
 
    IF !empty( cApplication := appReg( "txt" ) )
       ? 'Now will browse text file ... Press any key ...'
       PAUSE
-      IF File( "c:\windows\temp\myText.Txt" )
-         __Run( cApplication + " " + "c:\windows\temp\mytext.txt" )
+      IF File( "mytext.txt" )
+         __Run( cApplication + " " + "mytext.txt" )
       ENDIF
    ENDIF

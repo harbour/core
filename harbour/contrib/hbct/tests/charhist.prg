@@ -65,9 +65,9 @@ PROCEDURE Main()
 
    // simple tests
    QOut( "Simple tests:" )
-   QOut( [  charhist("Hello World !")] + "[109] == 3 ? --> ", charhist( "Hello World !" )[109] )
-   QOut( [  aeval(charhist("Hello World !"),{|x|nTotal+=x})] )
-   AEval( charhist( "Hello World !" ), { |x|nTotal += x } )
+   QOut( [  charhist("Hello World !")] + "[109] == 3 ? --> ", charhist( "Hello World !" )[ 109 ] )
+   QOut( [  aeval(charhist("Hello World !"), {| x | nTotal += x } ) ] )
+   AEval( charhist( "Hello World !" ), {| x | nTotal += x } )
    QOut( [    ==> nTotal == len("Hello World !") ? --> ], nTotal == Len( "Hello World !" ) )
 
    QOut( "End test of CHARHIST()" )

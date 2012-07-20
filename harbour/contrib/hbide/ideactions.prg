@@ -686,7 +686,7 @@ STATIC FUNCTION mnuNormalizeItem( cCaption )
       cKey := ''
    ENDIF
 
-   RETURN ( cIco + cCaption + cKey )
+   RETURN cIco + cCaption + cKey
 
 /*----------------------------------------------------------------------*/
 /*

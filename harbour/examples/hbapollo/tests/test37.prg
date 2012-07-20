@@ -11,7 +11,7 @@
 
 PROCEDURE MAIN()
 
-   LOCAL cFile   := "c:\windows\temp\sixtest.dbf"
+   LOCAL cFile   := "sixtest.dbf"
    LOCAL aStruct := { ;
       { "MYCHAR"    , "C", 15, 0 }, ;
       { "MYDATE"    , "D", 8, 0 }, ;
@@ -24,8 +24,8 @@ PROCEDURE MAIN()
    SET EPOCH 1950
    SET DATE "DD/MM/YYYY"
 
-   IF File( "c:\windows\temp\myText.Txt" )
-      FErase( "c:\windows\temp\myText.Txt" )
+   IF File( "mytext.txt" )
+      FErase( "mytext.txt" )
    ENDIF
 
    CREATE DBF cFile STRUCT aStruct

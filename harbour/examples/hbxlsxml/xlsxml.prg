@@ -9,7 +9,7 @@
  * www - http://www.xharbour.org http://harbour-project.org
  *
  * Thanks TO Robert F Greer, PHP original version
- * http://sourceforge.net/projects/excelwriterxml/ 
+ * http://sourceforge.net/projects/excelwriterxml/
  *
  * This program is free software; you can redistribute it AND/OR modify
  * it under the terms of the GNU General PUBLIC License as published by
@@ -65,52 +65,52 @@ CREATE CLASS ExcelWriterXML
    DATA   sheets                                  INIT {}
    DATA   lShowErrorSheet                         INIT .f.
    DATA   overwriteFile                           INIT .f.
-   DATA   docFileName                             
-   DATA   cDocTitle                                
-   DATA   cDocSubject                              
-   DATA   cDocAuthor                               
-   DATA   cDocCreated                              
-   DATA   cDocManager                              
-   DATA   cDocCompany                              
+   DATA   docFileName
+   DATA   cDocTitle
+   DATA   cDocSubject
+   DATA   cDocAuthor
+   DATA   cDocCreated
+   DATA   cDocManager
+   DATA   cDocCompany
    DATA   cDocVersion                             INIT "11.9999"
 
    DATA   cError                                  INIT ""
    DATA   errors                                  INIT .f.
-   
+
    METHOD New( fileName )
-   METHOD setOverwriteFile( overwrite ) 
-   METHOD showErrorSheet( show ) 
-   METHOD addError( cFunction, cMessage ) 
-   METHOD getDefaultStyle() 
-   METHOD addStyle( id ) 
-   METHOD addSheet( id ) 
-   METHOD checkSheetID( id ) 
-   METHOD checkStyleID( id ) 
+   METHOD setOverwriteFile( overwrite )
+   METHOD showErrorSheet( show )
+   METHOD addError( cFunction, cMessage )
+   METHOD getDefaultStyle()
+   METHOD addStyle( id )
+   METHOD addSheet( id )
+   METHOD checkSheetID( id )
+   METHOD checkStyleID( id )
    METHOD writeData( target )
-   METHOD docTitle( title ) 
-   METHOD docSubject( subject ) 
-   METHOD docAuthor( author ) 
-   METHOD docManager( manager ) 
-   METHOD docCompany( company ) 
-   
-   ENDCLASS 
+   METHOD docTitle( title )
+   METHOD docSubject( subject )
+   METHOD docAuthor( author )
+   METHOD docManager( manager )
+   METHOD docCompany( company )
+
+   ENDCLASS
 
 /*----------------------------------------------------------------------*/
-      
+
 METHOD ExcelWriterXML:new( fileName )
    LOCAL style
-   
+
    style := ::addStyle( 'DEFAULT' )
    style:name( 'Normal' )
    style:alignVertical( 'Bottom' )
-   
+
    IF empty( fileName )
       fileName := 'file.xml'
    ENDIF
-   
+
    ::docFileName := fileName
    ::cDocCreated := DTOS( DATE() ) + 'T' + TIME() + 'Z'
-      
+
    RETURN SELF
 
 /*----------------------------------------------------------------------*/
@@ -122,92 +122,92 @@ METHOD ExcelWriterXML:setOverwriteFile( overwrite )
    ELSE
       ::overwriteFile := overwrite
    ENDIF
-      
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-   
+
 METHOD ExcelWriterXML:showErrorSheet( show )
 
    IF ! ( VALTYPE( show ) == "L" )
       ::lShowErrorSheet := .t.
    ELSE
       ::lShowErrorSheet := show
-   ENDIF         
-   
+   ENDIF
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
 METHOD ExcelWriterXML:addError( cFunction, cMessage )
    LOCAL tmp
-   
+
    tmp := { 'FUNCTION' => cFunction,;
             'MESSAGE'  => cMessage  }
-           
+
    ::formatErrors += tmp
-      
+
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
-   
+
 METHOD ExcelWriterXML:getDefaultStyle()
 
    RETURN ::styles[ 1 ]
 
 /*----------------------------------------------------------------------*/
-      
-METHOD ExcelWriterXML:addStyle( id ) 
+
+METHOD ExcelWriterXML:addStyle( id )
    LOCAL style
 
    STATIC styleNum := 1
-   
+
    IF alltrim( id ) == ''
       id := NIL
    ENDIF
-   
+
    IF id == NIL
       id := 'CustomStyle' + ALLTRIM( STR( styleNum, 3 ) )
       styleNum++
    ENDIF
-   
+
    WHILE ! ::checkStyleID( id )
       id := 'CustomStyle' + ALLTRIM( STR( styleNum, 3 ) )
       styleNum++
    ENDDO
-   
+
    style := ExcelWriterXML_Style():new( id )
    AADD( ::styles, style )
-      
+
    RETURN style
-  
+
 /*----------------------------------------------------------------------*/
-    
-METHOD ExcelWriterXML:addSheet( id ) 
+
+METHOD ExcelWriterXML:addSheet( id )
    LOCAL sheet
-   
+
    STATIC sheetNum:= 1
-   
+
    IF id == NIL
       id := 'Sheet' + ALLTRIM( STR( sheetNum, 3 ) )
       sheetNum++
    ENDIF
-   
+
    WHILE ! ::checkSheetID( id )
       id := 'Sheet' + ALLTRIM( STR( sheetNum, 3 ) )
       sheetNum++
    ENDDO
-   
-   sheet := ExcelWriterXML_Sheet():New( id )    
+
+   sheet := ExcelWriterXML_Sheet():New( id )
    AADD( ::sheets, sheet )
-      
-   RETURN sheet 
+
+   RETURN sheet
 
 /*----------------------------------------------------------------------*/
-              
+
 METHOD ExcelWriterXML:checkSheetID( id )
    LOCAL sheet
-   
+
    IF len( ::sheets ) > 0
       FOR EACH sheet IN ::sheets
          IF id == sheet:getID()
@@ -217,16 +217,16 @@ METHOD ExcelWriterXML:checkSheetID( id )
    ELSE
       RETURN .t.
    ENDIF
-   
+
    RETURN .t.
 
 /*----------------------------------------------------------------------*/
-           
+
 METHOD ExcelWriterXML:checkStyleID( id )
    LOCAL style
-   
+
    IF LEN( ::styles ) > 0
-      FOR EACH style IN ::styles 
+      FOR EACH style IN ::styles
          IF id == style:getID()
             RETURN .f.
          ENDIF
@@ -234,27 +234,27 @@ METHOD ExcelWriterXML:checkStyleID( id )
    ELSE
       RETURN .t.
    ENDIF
-   
+
    RETURN .t.
 
 /*----------------------------------------------------------------------*/
-      
+
 METHOD ExcelWriterXML:writeData( target )
    LOCAL style, sheet, xml := "", handle, fileExists, format
-  
+
    LOCAL docTitle   := ''
    LOCAL docSubject := ''
    LOCAL docAuthor  := ''
    LOCAL docCreated := ''
    LOCAL docManager := ''
    LOCAL docCompany := ''
-   
+
    IF target == NIL
       ::cError := "Target filename missing!"
       ::errors := .t.
       RETURN .t.
-   ENDIF    
-   
+   ENDIF
+
    fileExists := hb_fileExists( target )
    IF ( fileExists == .t. .AND. ::overwriteFile == .f. )
       ::cError := target + " exists and overwriteFile is set to false"
@@ -267,29 +267,29 @@ METHOD ExcelWriterXML:writeData( target )
       ::errors := .t.
       RETURN .f.
    ENDIF
-   
+
    IF ::lShowErrorSheet == .t.
       format := ::addStyle( "formatErrorsHeader" )
       format:setFontBold()
       format:bgColor( "red" )
    ENDIF
-   
+
    IF ! empty( ::cDocTitle   ); docTitle   := "<Title>"   + OemToHtmlEspecial( ::cDocTitle   ) + "</Title>"   + HB_OsNewLine(); ENDIF
    IF ! empty( ::cDocSubject ); docSubject := "<Subject>" + OemToHtmlEspecial( ::cDocSubject ) + "</Subject>" + HB_OsNewLine(); ENDIF
    IF ! empty( ::cDocAuthor  ); docAuthor  := "<Author>"  + OemToHtmlEspecial( ::cDocAuthor  ) + "</Author>"  + HB_OsNewLine(); ENDIF
    IF ! empty( ::cDocCreated ); docCreated := "<Created>" + OemToHtmlEspecial( ::cDocCreated ) + "</Created>" + HB_OsNewLine(); ENDIF
    IF ! empty( ::cDocManager ); docManager := "<Manager>" + OemToHtmlEspecial( ::cDocManager ) + "</Manager>" + HB_OsNewLine(); ENDIF
    IF ! empty( ::cDocCompany ); docCompany := "<Company>" + OemToHtmlEspecial( ::cDocCompany ) + "</Company>" + HB_OsNewLine(); ENDIF
-   
-   xml := '<?xml version="1.0"?>' + HB_OsNewLine() 
-   xml += '<?mso-application progid="Excel.Sheet"?>' + HB_OsNewLine() 
-   xml += '<Workbook' + HB_OsNewLine() 
-   xml += 'xmlns="urn:schemas-microsoft-com:office:spreadsheet"' + HB_OsNewLine() 
-   xml += 'xmlns:o="urn:schemas-microsoft-com:office:office"' + HB_OsNewLine() 
-   xml += 'xmlns:x="urn:schemas-microsoft-com:office:excel"' + HB_OsNewLine() 
-   xml += 'xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"' + HB_OsNewLine() 
-   xml += 'xmlns:html="http://www.w3.org/TR/REC-html40">' + HB_OsNewLine() 
-   xml += '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">' + HB_OsNewLine() 
+
+   xml := '<?xml version="1.0"?>' + HB_OsNewLine()
+   xml += '<?mso-application progid="Excel.Sheet"?>' + HB_OsNewLine()
+   xml += '<Workbook' + HB_OsNewLine()
+   xml += 'xmlns="urn:schemas-microsoft-com:office:spreadsheet"' + HB_OsNewLine()
+   xml += 'xmlns:o="urn:schemas-microsoft-com:office:office"' + HB_OsNewLine()
+   xml += 'xmlns:x="urn:schemas-microsoft-com:office:excel"' + HB_OsNewLine()
+   xml += 'xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"' + HB_OsNewLine()
+   xml += 'xmlns:html="http://www.w3.org/TR/REC-html40">' + HB_OsNewLine()
+   xml += '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">' + HB_OsNewLine()
    IF ! empty( ::cDocTitle   ); xml += '   ' + docTitle  ; ENDIF
    IF ! empty( ::cDocSubject ); xml += '   ' + docSubject; ENDIF
    IF ! empty( ::cDocAuthor  ); xml += '   ' + docAuthor ; ENDIF
@@ -300,23 +300,23 @@ METHOD ExcelWriterXML:writeData( target )
    xml += '</DocumentProperties>' + HB_OsNewLine()
    xml += '<ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel" />' + HB_OsNewLine()
    xml += '<Styles>' + HB_OsNewLine()
-             
+
    fwrite( handle,xml )
    xml := ""
-   
-   FOR EACH style IN ::styles 
+
+   FOR EACH style IN ::styles
       xml += style:getStyleXML()
    NEXT
    xml += '</Styles>'+HB_OsNewLine()
-   
+
    fwrite( handle, xml )
    xml := ""
-   
+
    IF LEN( ::sheets ) == 0
       ::addSheet()
    ENDIF
    IF len( ::sheets ) > 0
-      FOR EACH sheet IN ::sheets 
+      FOR EACH sheet IN ::sheets
          xml += sheet:getSheetXML( handle )
          IF LEN( sheet:getErrors() ) > 0
              ::errors := .t.
@@ -326,106 +326,106 @@ METHOD ExcelWriterXML:writeData( target )
    IF LEN( ::formatErrors ) > 0
       ::errors := .t.
    ENDIF
-   
+
    xml += '</Workbook>'
-             
+
    fwrite( handle, xml )
    xml := ""
    fclose( handle )
-   
+
    RETURN .t.
- 
+
 /*----------------------------------------------------------------------*/
-                
+
 METHOD ExcelWriterXML:docTitle( title )
 
    IF HB_ISSTRING( title )
       ::cDocTitle := title
-   ENDIF    
-   
+   ENDIF
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-      
+
 METHOD ExcelWriterXML:docSubject( subject )
 
    IF HB_ISSTRING( subject )
       ::cDocSubject := subject
-   ENDIF    
-   
+   ENDIF
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-      
+
 METHOD ExcelWriterXML:docAuthor( author )
-   
+
    IF HB_ISSTRING( author )
       ::cDocAuthor := author
-   ENDIF 
-      
+   ENDIF
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-      
+
 METHOD ExcelWriterXML:docManager( manager )
 
    IF HB_ISSTRING( manager )
       ::cDocManager := manager
-   ENDIF    
-   
+   ENDIF
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-      
+
 METHOD ExcelWriterXML:docCompany( company )
 
    IF HB_ISSTRING( company )
       ::cDocCompany := company
-   ENDIF 
-   
+   ENDIF
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION AnsiToHtml( x )
 
-   RETURN( x )
+   RETURN x
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION OEMTOHTML( xtxt )
    LOCAL afrm, i, xret:= "", xpos
-   
+
    afrm := {;
-           { " ", "&aacute;" },;       
-           { "ƒ", "&acirc;"  },;      
-           { "…", "&agrave;" },;       
-           { "Æ", "&atilde;" },;       
-           { "‡", "&ccedil;" },;       
-           { "‚", "&eacute;" },;       
-           { "ˆ", "&ecirc;"  },;      
-           { "¡", "&iacute;" },;       
-           { "¢", "&oacute;" },;       
-           { "“", "&ocirc;"  },;      
-           { "ä", "&otilde;" },;       
-           { "£", "&uacute;" },;       
-           { "", "&uuml;"   },;     
-           { "µ", "&Aacute;" },;       
-           { "¶", "&Acirc;"  },;      
-           { "·", "&Agrave;" },;       
-           { "Ç", "&Atilde;" },;       
-           { "€", "&Ccedil;" },;       
-           { "", "&Eacute;" },;       
-           { "Ò", "&Ecirc;"  },;      
-           { "Ö", "&Iacute;" },;       
-           { "à", "&Oacute;" },;       
-           { "â", "&Ocirc;"  },;      
-           { "å", "&Otilde;" },;       
-           { "é", "&Uacute;" },;       
-           { "š", "&Uuml;"   },;  
+           { " ", "&aacute;" },;
+           { "?", "&acirc;"  },;
+           { "", "&agrave;" },;
+           { "Æ", "&atilde;" },;
+           { "+", "&ccedil;" },;
+           { "'", "&eacute;" },;
+           { "?", "&ecirc;"  },;
+           { "¡", "&iacute;" },;
+           { "¢", "&oacute;" },;
+           { """, "&ocirc;"  },;
+           { "ä", "&otilde;" },;
+           { "£", "&uacute;" },;
+           { "?", "&uuml;"   },;
+           { "u", "&Aacute;" },;
+           { "", "&Acirc;"  },;
+           { "", "&Agrave;" },;
+           { "Ç", "&Atilde;" },;
+           { "?", "&Ccedil;" },;
+           { "?", "&Eacute;" },;
+           { "Ò", "&Ecirc;"  },;
+           { "Ö", "&Iacute;" },;
+           { "à", "&Oacute;" },;
+           { "â", "&Ocirc;"  },;
+           { "å", "&Otilde;" },;
+           { "é", "&Uacute;" },;
+           { "š", "&Uuml;"   },;
            { "-", "&ndash;"  } ;
            }
-   
+
    FOR i:= 1 TO LEN( xtxt )
       IF( xpos:= ASCAN( afrm, {|x| SUBS( xtxt,i,1 ) == x[1] } ) ) > 0
          xret+= afrm[xpos,2]
@@ -433,23 +433,23 @@ FUNCTION OEMTOHTML( xtxt )
          xret+= SUBS( xtxt,i,1 )
       ENDIF
    NEXT
-   
-   RETURN( xret )
+
+   RETURN xret
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION OEMTOHTMLESPECIAL( xtxt )
    LOCAL afrm, i, xret:= "", xpos
-   
+
    xtxt := exretiraAcentos( xtxt )
    afrm := {;
-           { '&', "&amp;"  },;       
-           { '"', "&quot;" },;      
-           { "'", "&#039;" },;       
-           { "<", "&lt;"   },;       
-           { ">", "&gt;"   } ;       
+           { '&', "&amp;"  },;
+           { '"', "&quot;" },;
+           { "'", "&#039;" },;
+           { "<", "&lt;"   },;
+           { ">", "&gt;"   } ;
            }
-   
+
    FOR i := 1 TO LEN( xtxt )
       IF ( xpos := ASCAN( afrm, {|x| SUBSTR( xtxt, i, 1 ) == x[ 1 ] } ) ) > 0
          xret += afrm[xpos,2]
@@ -457,47 +457,47 @@ FUNCTION OEMTOHTMLESPECIAL( xtxt )
          xret += SUBSTR( xtxt,i,1 )
       ENDIF
    NEXT
-   
+
    RETURN xret
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION EXRETIRAACENTOS( xtxt )
    LOCAL afrm, i, xret:= "", xpos
-   
+
    afrm := {;
-           { " ", "a" },;       
-           { "ƒ", "a" },;      
-           { "…", "a" },;       
-           { "Æ", "a" },;       
-           { "‡", "c" },;       
-           { "‚", "e" },;       
-           { "ˆ", "e" },;      
-           { "¡", "i" },;       
-           { "¢", "o" },;       
-           { "“", "o" },;      
-           { "ä", "o" },;       
-           { "£", "u" },;       
-           { "", "u" },;     
-           { "µ", "A" },;       
-           { "¶", "A" },;      
-           { "·", "A" },;       
-           { "Ç", "A" },;       
-           { "€", "C" },;       
-           { "", "E" },;       
-           { "Ò", "E" },;      
-           { "Ö", "I" },;       
-           { "à", "O" },;       
-           { "â", "O" },;      
-           { "å", "O" },;       
-           { "é", "U" },;       
-           { "š", "U" },;  
+           { " ", "a" },;
+           { "?", "a" },;
+           { "", "a" },;
+           { "Æ", "a" },;
+           { "+", "c" },;
+           { "'", "e" },;
+           { "?", "e" },;
+           { "¡", "i" },;
+           { "¢", "o" },;
+           { """, "o" },;
+           { "ä", "o" },;
+           { "£", "u" },;
+           { "?", "u" },;
+           { "u", "A" },;
+           { "", "A" },;
+           { "", "A" },;
+           { "Ç", "A" },;
+           { "?", "C" },;
+           { "?", "E" },;
+           { "Ò", "E" },;
+           { "Ö", "I" },;
+           { "à", "O" },;
+           { "â", "O" },;
+           { "å", "O" },;
+           { "é", "U" },;
+           { "š", "U" },;
            { CHR( 166 ), "." },;
-           { CHR( 167 ), "." },;  
-           { CHR( 248 ), "." },;  
+           { CHR( 167 ), "." },;
+           { CHR( 248 ), "." },;
            { CHR( 141 ), ""  } ;
            }
-   
+
    FOR i := 1 TO LEN( xtxt )
       IF ( xpos:= ASCAN( afrm, { |x| SUBSTR( xtxt, i, 1 ) == x[ 1 ] } ) ) > 0
          xret += afrm[ xpos, 2 ]
@@ -505,7 +505,7 @@ FUNCTION EXRETIRAACENTOS( xtxt )
          xret += SUBSTR( xtxt, i, 1 )
       ENDIF
    NEXT
-   
+
    RETURN xret
 
 /*----------------------------------------------------------------------*/

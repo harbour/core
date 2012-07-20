@@ -65,7 +65,7 @@ FUNCTION TValue
 
    ENDIF
 
-   RETURN( oClass:Instance() )
+   RETURN oClass:Instance()
 
 STATIC FUNCTION New()
 

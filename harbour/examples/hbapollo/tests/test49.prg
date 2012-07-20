@@ -28,7 +28,7 @@ PROCEDURE MAIN()
    ? 'sx_LockCount()  =', __trim( sx_LockCount() )
    aLockList := sx_DBRlockList()
    ? 'aLockList := sx_DBRlockList() =>', __trim( len( aLockList ) )
-   aeval( aLockList, { |e, i| outstd( "aLockList[" + __trim(i ) + "] = " + __trim(e ), hb_eol() ) } )
+   aeval( aLockList, {| e, i | outstd( "aLockList[" + __trim(i ) + "] = " + __trim(e ), hb_eol() ) } )
 
    ?
    ? 'sx_Unlock( 10 ) =', sx_Unlock( 10 )
@@ -42,7 +42,7 @@ PROCEDURE MAIN()
    ? 'sx_LockCount()  =', __trim( sx_LockCount() )
    aLockList := sx_DBRlockList()
    ? 'aLockList := sx_DBRlockList() =>', __trim( len( aLockList ) )
-   aeval( aLockList, { |e, i| outstd( "aLockList[" + __trim(i ) + "] = " + __trim(e ), hb_eol() ) } )
+   aeval( aLockList, {| e, i | outstd( "aLockList[" + __trim(i ) + "] = " + __trim(e ), hb_eol() ) } )
 
    ?
    ? 'sx_Rlock( 10 )  =', sx_Rlock( 10 )
@@ -58,7 +58,7 @@ PROCEDURE MAIN()
    ? 'sx_LockCount()  =', __trim( sx_LockCount() )
    aLockList := sx_DBRlockList()
    ? 'aLockList := sx_DBRlockList() =>', __trim( len( aLockList ) )
-   aeval( aLockList, { |e, i| outstd( "aLockList[" + __trim(i ) + "] = " + __trim(e ), hb_eol() ) } )
+   aeval( aLockList, {| e, i | outstd( "aLockList[" + __trim(i ) + "] = " + __trim(e ), hb_eol() ) } )
 
    sx_UnLockAll()
 
@@ -67,7 +67,7 @@ PROCEDURE MAIN()
    ? 'sx_LockCount()  =', __trim( sx_LockCount() )
    aLockList := sx_DBRlockList()
    ? 'aLockList := sx_DBRlockList() =>', __trim( len( aLockList ) )
-   aeval( aLockList, { |e, i| outstd( "aLockList[" + __trim(i ) + "] = " + __trim(e ), hb_eol() ) } )
+   aeval( aLockList, {| e, i | outstd( "aLockList[" + __trim(i ) + "] = " + __trim(e ), hb_eol() ) } )
 
    ? sx_LastRec()
 
@@ -77,7 +77,7 @@ PROCEDURE MAIN()
    ? 'sx_LockCount()  =', __trim( sx_LockCount() )
    aLockList := sx_DBRlockList()
    ? 'aLockList := sx_DBRlockList() =>', __trim( len( aLockList ) )
-   aeval( aLockList, { |e, i| outstd( "aLockList[" + __trim(i ) + "] = " + __trim(e ), hb_eol() ) } )
+   aeval( aLockList, {| e, i | outstd( "aLockList[" + __trim(i ) + "] = " + __trim(e ), hb_eol() ) } )
    ?
    ? 'sx_DbrUnLock( aLockList ) =', sx_DbrUnLock( aLockList )
    // ? 'sx_UnLock( aLockList ) =', sx_UnLock( aLockList )
@@ -85,7 +85,7 @@ PROCEDURE MAIN()
    ? 'sx_LockCount()  =', __trim( sx_LockCount() )
    aLockList := sx_DBRlockList()
    ? 'aLockList := sx_DBRlockList() =>', __trim( len( aLockList ) )
-   aeval( aLockList, { |e, i| outstd( "aLockList[" + __trim(i ) + "] = " + __trim(e ), hb_eol() ) } )
+   aeval( aLockList, {| e, i | outstd( "aLockList[" + __trim(i ) + "] = " + __trim(e ), hb_eol() ) } )
 
    ? 'sx_LastRec()  =', sx_LastRec()
    ? 'sx_RecCount() =', sx_RecCount()

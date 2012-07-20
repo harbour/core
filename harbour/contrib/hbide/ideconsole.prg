@@ -3167,7 +3167,7 @@ STATIC FUNCTION VouchGetColor( cType, cColor )
 /*----------------------------------------------------------------------*/
 
 FUNCTION VouchInRange( v, r1, r2 )
-   RETURN ( v >= r1 .AND. v <= r2 )
+   RETURN v >= r1 .AND. v <= r2
 
 /*----------------------------------------------------------------------*/
 
@@ -3184,7 +3184,7 @@ FUNCTION pad_max( a_,lNum,max )
 /*----------------------------------------------------------------------*/
 
 FUNCTION VouchInArray( v,a_ )
-   RETURN( ascan( a_,{|e| e = v } ) > 0 )
+   RETURN ascan( a_,{|e| e = v } ) > 0
 
 //----------------------------------------------------------------------//
 
@@ -3553,7 +3553,7 @@ FUNCTION xtos( x )
 //----------------------------------------------------------------------//
 
 FUNCTION VouchRgb( nR, nG, nB )
-   RETURN ( nR +( nG * 256 ) +( nB * 256 * 256 ) )
+   RETURN nR +( nG * 256 ) +( nB * 256 * 256 )
 
 //---------------------------------------------------------------------//
 
@@ -4474,7 +4474,7 @@ FUNCTION VouchAChoice( nTop, nLft, nBtm, nRgt, acItems, xSelect, cUserFunc, nPos
 
    SetCursor( crs )
 
-   RETURN ( nChoice )
+   RETURN nChoice
 
 /*----------------------------------------------------------------------*/
 
@@ -5171,7 +5171,7 @@ STATIC FUNCTION Before( cDelim, cValue )
       cRetVal := left( cValue, at( cDelim, cValue ) - 1 )
    ENDIF
 
-   RETURN ( cRetVal )
+   RETURN cRetVal
 
 //----------------------------------------------------------------------//
 
@@ -5182,7 +5182,7 @@ STATIC FUNCTION After( cDelim, cValue )
       cRetVal := substr( cValue, at( cDelim, cValue ) + 1 )
    ENDIF
 
-   RETURN ( cRetVal )
+   RETURN cRetVal
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/

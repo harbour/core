@@ -55,7 +55,7 @@ PROCEDURE Main( cLng )
    ? "----------------"
    a := GET_IERR()
    FOR i := 1 TO Len( a )
-      ? PadR( a[i,1], 15 ) + "|" + PadR( aInt[i,2], 30 ) + "|" + PadR( a[i,2], 32 )
+      ? PadR( a[ i, 1 ], 15 ) + "|" + PadR( aInt[ i, 2 ], 30 ) + "|" + PadR( a[ i, 2 ], 32 )
    NEXT
    ?
    Inkey( 0 )
@@ -84,33 +84,34 @@ FUNCTION GET_DAYS()
 
    LOCAL i, n, aDays[ 7 ], dt := Date()
 
-   for i := 1 TO 7
+   FOR i := 1 TO 7
       n := DOW( dt )
       aDays[ n ] := CDOW( dt )
       ++dt
-   next
+   NEXT
 
-   RETURN ( aDays )
+   RETURN aDays
 
 FUNCTION GET_MONTHS()
 
-   LOCAL i, n, aMonths[12], dt := Date()
+   LOCAL i, n, aMonths[ 12 ], dt := Date()
 
    dt -= Day( dt ) - 1
-   for i := 1 TO 12
+   FOR i := 1 TO 12
       n := Month( dt )
       aMonths[ n ] := CMonth( dt )
       dt += 31
       dt -= Day( dt ) - 1
-   next
+   NEXT
 
-   RETURN ( aMonths )
+   RETURN aMonths
 
 FUNCTION GET_ERR()
 
    LOCAL aErr
 
-   aErr := { { "EG_ARG         ", hb_langErrMsg(  1 ) }, ;
+   aErr := {;
+      { "EG_ARG         ", hb_langErrMsg(  1 ) }, ;
       { "EG_BOUND       ", hb_langErrMsg(  2 ) }, ;
       { "EG_STROVERFLOW ", hb_langErrMsg(  3 ) }, ;
       { "EG_NUMOVERFLOW ", hb_langErrMsg(  4 ) }, ;

@@ -1,7 +1,7 @@
 /*
  * $Id$
  */
- 
+
 /*
  * Harbour Project source code:
  *
@@ -9,7 +9,7 @@
  * www - http://www.xharbour.org http://harbour-project.org
  *
  * Thanks TO Robert F Greer, PHP original version
- * http://sourceforge.net/projects/excelwriterxml/ 
+ * http://sourceforge.net/projects/excelwriterxml/
  *
  * This program is free software; you can redistribute it AND/OR modify
  * it under the terms of the GNU General PUBLIC License as published by
@@ -52,12 +52,12 @@
  *
  */
 /*----------------------------------------------------------------------*/
- 
+
 #include "hbclass.ch"
 
 /*----------------------------------------------------------------------*/
 
-CREATE CLASS ExcelWriterXML_Style 
+CREATE CLASS ExcelWriterXML_Style
 
    DATA   id
    DATA   name
@@ -65,14 +65,14 @@ CREATE CLASS ExcelWriterXML_Style
    DATA   useFont                                 INIT .f.
    DATA   useBorder                               INIT .f.
    DATA   useInterior                             INIT .f.
-                                                  
-   DATA   valign                                  
-   DATA   halign                                  
-   DATA   rotate                                  
+
+   DATA   valign
+   DATA   halign
+   DATA   rotate
    DATA   shrinktofit                             INIT 0
    DATA   verticaltext                            INIT 0
    DATA   wraptext                                INIT 0
-                                                  
+
    DATA   fontColor                               INIT 'Automatic'
    DATA   fontName
    DATA   fontFamily
@@ -83,76 +83,76 @@ CREATE CLASS ExcelWriterXML_Style
    DATA   strikethrough
    DATA   shadow
    DATA   outline
-          
+
    DATA   borderTop                               INIT {=>}
    DATA   borderBottom                            INIT {=>}
    DATA   borderLeft                              INIT {=>}
    DATA   borderRight                             INIT {=>}
    DATA   borderDL                                INIT {=>}
    DATA   borderDR                                INIT {=>}
-          
+
    DATA   interiorColor
    DATA   interiorPattern
    DATA   interiorPatternColor
-          
+
    DATA   numberFormat
-          
+
    DATA   formatErrors                            INIT {=>}
    DATA   namedColorsIE                           INIT {=>}
-   
-   METHOD new( id ) 
-   METHOD getID() 
-   METHOD getStyleXML() 
-   METHOD checkColor( color ) 
-   METHOD setName( name ) 
+
+   METHOD new( id )
+   METHOD getID()
+   METHOD getStyleXML()
+   METHOD checkColor( color )
+   METHOD setName( name )
    METHOD alignVertical( valign )
-   METHOD alignHorizontal( halign ) 
-   METHOD alignRotate( rotate ) 
-   METHOD alignShrinktofit() 
-   METHOD alignVerticaltext() 
-   METHOD alignWraptext() 
-   METHOD setFontSize( fontSize ) 
-   METHOD setFontColor( fontColor ) 
-   METHOD setFontName( fontName ) 
-   METHOD setFontFamily( fontFamily ) 
-   METHOD setFontBold() 
-   METHOD setFontItalic() 
-   METHOD setFontStrikethrough() 
-   METHOD setFontUnderline( uStyle ) 
-   METHOD setFontShadow() 
-   METHOD setFontOutline() 
-   METHOD border( position, weight, color, linestyle ) 
-   METHOD bgColor( color, pattern, patternColor ) 
-   METHOD bgPattern( pattern, color ) 
-   METHOD bgPatternColor( color ) 
-   METHOD setNumberFormat( formatString ) 
-   METHOD setNumberFormatDate() 
-   METHOD setNumberFormatTime() 
-   METHOD setNumberFormatDatetime() 
-   
-   ENDCLASS 
-   
+   METHOD alignHorizontal( halign )
+   METHOD alignRotate( rotate )
+   METHOD alignShrinktofit()
+   METHOD alignVerticaltext()
+   METHOD alignWraptext()
+   METHOD setFontSize( fontSize )
+   METHOD setFontColor( fontColor )
+   METHOD setFontName( fontName )
+   METHOD setFontFamily( fontFamily )
+   METHOD setFontBold()
+   METHOD setFontItalic()
+   METHOD setFontStrikethrough()
+   METHOD setFontUnderline( uStyle )
+   METHOD setFontShadow()
+   METHOD setFontOutline()
+   METHOD border( position, weight, color, linestyle )
+   METHOD bgColor( color, pattern, patternColor )
+   METHOD bgPattern( pattern, color )
+   METHOD bgPatternColor( color )
+   METHOD setNumberFormat( formatString )
+   METHOD setNumberFormatDate()
+   METHOD setNumberFormatTime()
+   METHOD setNumberFormatDatetime()
+
+   ENDCLASS
+
 /*----------------------------------------------------------------------*/
-   
+
 METHOD ExcelWriterXML_Style:New( id )
 
-   ::id:= id  
+   ::id:= id
    ::namedColorsIE := getColorIE()
-   
+
    RETURN SELF
-           
+
 /*----------------------------------------------------------------------*/
-   
+
 METHOD ExcelWriterXML_Style:getID()
 
    RETURN ::id
-   
+
 /*----------------------------------------------------------------------*/
 
-METHOD ExcelWriterXML_Style:getStyleXML()  
+METHOD ExcelWriterXML_Style:getStyleXML()
    LOCAL fontcolor, positions, position, auxdata, pData, bLinestyle, bColor, bWeight, xml
    LOCAL numberFormat
-   
+
    LOCAL name                 := ''
    LOCAL valign               := ''
    LOCAL halign               := ''
@@ -160,7 +160,7 @@ METHOD ExcelWriterXML_Style:getStyleXML()
    LOCAL shrinktofit          := ''
    LOCAL verticaltext         := ''
    LOCAL wraptext             := ''
-                     
+
    LOCAL bold                 := ''
    LOCAL italic               := ''
    LOCAL strikethrough        := ''
@@ -170,18 +170,18 @@ METHOD ExcelWriterXML_Style:getStyleXML()
    LOCAL fontName             := ''
    LOCAL fontFamily           := ''
    LOCAL fontSize             := ''
-   
+
    LOCAL borders              := ''
-   
+
    LOCAL interior             := ''
    LOCAL interiorColor        := ''
    LOCAL interiorPattern      := ''
    LOCAL interiorPatternColor := ''
-    
-   IF ! empty( ::name ) 
+
+   IF ! empty( ::name )
       name := 'ss:Name="'+::name+'"'
    ENDIF
-   
+
    IF ::useAlignment
       IF ! empty( ::valign )
          valign := 'ss:Vertical="' + ::valign + '"'
@@ -192,51 +192,51 @@ METHOD ExcelWriterXML_Style:getStyleXML()
       IF ! empty( ::rotate )
          rotate := 'ss:Rotate="' + ::rotate + '"'
       ENDIF
-      IF ! empty( ::shrinktofit ) 
+      IF ! empty( ::shrinktofit )
          shrinktofit := 'ss:ShrinkToFit="1"'
       ENDIF
-      IF ! empty( ::verticaltext ) 
+      IF ! empty( ::verticaltext )
          verticaltext := 'ss:VerticalText="1"'
       ENDIF
       IF ! empty( ::wraptext )
          wraptext := 'ss:WrapText="1"'
       ENDIF
    ENDIF
-   
+
    IF( ::useFont )
-      IF ! empty( ::fontColor ) 
+      IF ! empty( ::fontColor )
          fontColor := 'ss:Color="' + ::fontColor + '"'
       ENDIF
-      IF ! empty( ::bold ) 
+      IF ! empty( ::bold )
          bold := 'ss:Bold="1"'
       ENDIF
-      IF ! empty( ::italic ) 
+      IF ! empty( ::italic )
          italic := 'ss:Italic="1"'
       ENDIF
-      IF ! empty( ::strikethrough ) 
+      IF ! empty( ::strikethrough )
          strikethrough := 'ss:StrikeThrough="' + ::strikethrough + '"'
       ENDIF
-      IF ! empty( ::underline ) 
+      IF ! empty( ::underline )
          underline := 'ss:Underline="' + ::underline + '"'
       ENDIF
-      IF ! empty( ::outline ) 
+      IF ! empty( ::outline )
          outline := 'ss:Outline="1"'
       ENDIF
-      IF ! empty( ::shadow ) 
+      IF ! empty( ::shadow )
          shadow := 'ss:Shadow="1"'
       ENDIF
-      IF ! empty( ::fontName ) 
+      IF ! empty( ::fontName )
          fontName := 'ss:FontName="' + ::fontName + '"'
       ENDIF
-      IF ! empty( ::fontFamily ) 
+      IF ! empty( ::fontFamily )
          fontFamily := 'x:Family="' + ::fontFamily + '"'
       ENDIF
-      IF ! empty( ::fontSize ) 
+      IF ! empty( ::fontSize )
          fontSize := 'ss:Size="' + ALLTRIM( STR( ::fontSize, 10 ) ) + '"'
       ENDIF
    ENDIF
-   
-   IF ::useBorder 
+
+   IF ::useBorder
       borders := '      <Borders>'+HB_OsNewLine()
       positions := { ;
          'Top'           => ::borderTop,    ;
@@ -265,12 +265,12 @@ METHOD ExcelWriterXML_Style:getStyleXML()
       NEXT
       borders += '</Borders>' + HB_OsNewLine()
    ENDIF
-   
+
    IF ::useInterior
       IF ! empty( ::interiorColor )
          interiorColor := 'ss:Color="' + ::interiorColor + '"'
       ENDIF
-      IF ! empty( ::interiorPattern ) 
+      IF ! empty( ::interiorPattern )
          interiorPattern := 'ss:Pattern="' + ::interiorPattern + '"'
       ENDIF
       IF ! empty( ::interiorPatternColor )
@@ -278,15 +278,15 @@ METHOD ExcelWriterXML_Style:getStyleXML()
       ENDIF
       interior := '      <Interior ' + interiorColor + ' ' + interiorPattern + ' ' + interiorPatternColor + '/>' + HB_OsNewLine()
    ENDIF
-   
+
    IF ! empty( ::numberFormat )
       numberFormat := '      <NumberFormat ss:Format="' + ::numberFormat + '"/>' + HB_OsNewLine()
-   ELSE 
+   ELSE
       numberFormat := '      <NumberFormat/>' + HB_OsNewLine()
    ENDIF
-   
+
    xml := '   <Style ss:ID="' + ::id + '" ' + name + '>' + HB_OsNewLine()
-   IF ::useAlignment 
+   IF ::useAlignment
       xml += '      <Alignment ' + valign + ' ' + halign + ' ' + rotate + ' ' + shrinktofit + ' ' + wraptext + ' ' + verticaltext + '/>' + HB_OsNewLine()
    ENDIF
    IF ::useBorder
@@ -301,11 +301,11 @@ METHOD ExcelWriterXML_Style:getStyleXML()
    xml += numberFormat
    xml += '      <Protection/>'+HB_OsNewLine()
    xml += '   </Style>'+HB_OsNewLine()
-   
-   RETURN( xml )
-   
+
+   RETURN xml
+
 /*----------------------------------------------------------------------*/
-      
+
 METHOD ExcelWriterXML_Style:checkColor( color )
 
    IF LEFT( color, 1 ) == "#"
@@ -317,18 +317,18 @@ METHOD ExcelWriterXML_Style:checkColor( color )
       RETURN ''
    ENDIF
    RETURN NIL
-                
+
 /*----------------------------------------------------------------------*/
-                
+
 METHOD ExcelWriterXML_Style:setName( name )
 
    ::name := name
-   
+
    RETURN NIL
-           
+
 /*----------------------------------------------------------------------*/
-           
-METHOD ExcelWriterXML_Style:alignVertical( valign ) 
+
+METHOD ExcelWriterXML_Style:alignVertical( valign )
 
    IF ( valign != 'Automatic' .AND.;
         valign != 'Top'       .AND.;
@@ -338,9 +338,9 @@ METHOD ExcelWriterXML_Style:alignVertical( valign )
    ENDIF
    ::valign := valign
    ::useAlignment := .t.
-   
+
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD ExcelWriterXML_Style:alignHorizontal( halign )
@@ -353,66 +353,66 @@ METHOD ExcelWriterXML_Style:alignHorizontal( halign )
    ENDIF
    ::halign := halign
    ::useAlignment := .t.
-   
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-              
+
 METHOD ExcelWriterXML_Style:alignRotate( rotate )
 
    IF !HB_ISNUMERIC( rotate )
       RETURN NIL
    ENDIF
-   IF abs( rotate ) > 90 
+   IF abs( rotate ) > 90
       rotate := rotate % 90
    ENDIF
    ::rotate := ALLTRIM( STR( rotate, 3 ) )
    ::useAlignment := .t.
-   
+
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD ExcelWriterXML_Style:alignShrinktofit()
 
    ::shrinktofit  := 1
    ::useAlignment := .t.
-   
+
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD ExcelWriterXML_Style:alignVerticaltext()
 
    ::verticaltext := 1
    ::useAlignment := .t.
-   
+
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD ExcelWriterXML_Style:alignWraptext()
 
    ::wraptext     := 1
    ::useAlignment := .t.
-      
+
    RETURN NIL
-           
+
 /*----------------------------------------------------------------------*/
-           
+
 METHOD ExcelWriterXML_Style:setFontSize( fontSize )
 
    IF ! HB_ISNUMERIC( fontSize )
       fontSize := 10
    ENDIF
-   IF fontSize <= 0 
+   IF fontSize <= 0
       fontSize := 10
    ENDIF
    ::fontSize := fontSize
    ::useFont := .t.
-   
+
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD ExcelWriterXML_Style:setFontColor( fontColor )
@@ -423,9 +423,9 @@ METHOD ExcelWriterXML_Style:setFontColor( fontColor )
    ENDIF
    ::fontColor := fontColor
    ::useFont := .t.
-   
+
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD ExcelWriterXML_Style:setFontName( fontName )
@@ -435,9 +435,9 @@ METHOD ExcelWriterXML_Style:setFontName( fontName )
    ENDIF
    ::fontName := fontName
    ::useFont := .t.
-   
+
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
 
 METHOD ExcelWriterXML_Style:setFontFamily( fontFamily )
@@ -445,7 +445,7 @@ METHOD ExcelWriterXML_Style:setFontFamily( fontFamily )
    IF fontFamily == NIL
       fontFamily:= 'Swiss'
    ENDIF
-        
+
    IF ( fontFamily != 'Automatic'  .AND.;
         fontFamily != 'Decorative' .AND.;
         fontFamily != 'Modern'     .AND.;
@@ -456,63 +456,63 @@ METHOD ExcelWriterXML_Style:setFontFamily( fontFamily )
    ENDIF
    ::fontFamily := fontFamily
    ::useFont := .t.
-   
+
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
 
-METHOD ExcelWriterXML_Style:setFontBold()  
+METHOD ExcelWriterXML_Style:setFontBold()
 
    ::bold := 1
    ::useFont := .t.
-   
+
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
 
-METHOD ExcelWriterXML_Style:setFontItalic()  
+METHOD ExcelWriterXML_Style:setFontItalic()
 
    ::italic := 1
    ::useFont := .t.
-      
+
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
 
-METHOD ExcelWriterXML_Style:setFontStrikethrough()  
+METHOD ExcelWriterXML_Style:setFontStrikethrough()
 
    ::strikethrough := 1
    ::useFont := .t.
-   
+
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
 
-METHOD ExcelWriterXML_Style:setFontUnderline( uStyle ) 
+METHOD ExcelWriterXML_Style:setFontUnderline( uStyle )
 
-   IF uStyle == NIL    
+   IF uStyle == NIL
       uStyle := 'Single'
-   ENDIF 
+   ENDIF
    IF ( uStyle != 'None'             .AND.;
         uStyle != 'Single'           .AND.;
         uStyle != 'Double'           .AND.;
         uStyle != 'SingleAccounting' .AND.;
         uStyle != 'DoubleAccounting'      )
-      
-      RETURN NIL 
+
+      RETURN NIL
    ENDIF
    ::underline := uStyle
    ::useFont := .t.
-      
+
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
 
-METHOD ExcelWriterXML_Style:setFontShadow() 
+METHOD ExcelWriterXML_Style:setFontShadow()
 
    ::shadow := 1
    ::useFont := .t.
-      
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
@@ -521,14 +521,14 @@ METHOD ExcelWriterXML_Style:setFontOutline()
 
    ::outline := 1
    ::useFont := .t.
-      
+
    RETURN NIL
-           
+
 /*----------------------------------------------------------------------*/
-           
+
 METHOD ExcelWriterXML_Style:border( position,weight,color,linestyle )
    LOCAL tmp
-   
+
    IF position == NIL
       position := 'All'          // All, Left, Top, Right, Bottom, DiagonalLeft, DiagonalRight
    ENDIF
@@ -541,7 +541,7 @@ METHOD ExcelWriterXML_Style:border( position,weight,color,linestyle )
    IF linestyle == NIL
       linestyle := 'Continuous'  // None, Continuous, Dash, Dot, DashDot, DashDotDot, SlantDashDot, Double
    ENDIF
-   
+
    IF ( position != 'All'           .AND.;
         position != 'Left'          .AND.;
         position != 'Top'           .AND.;
@@ -549,23 +549,23 @@ METHOD ExcelWriterXML_Style:border( position,weight,color,linestyle )
         position != 'Bottom'        .AND.;
         position != 'DiagonalLeft'  .AND.;
         position != 'DiagonalRight'      )
-      
+
       position := 'All'
    ENDIF
-   
-   IF HB_ISNUMERIC( weight ) 
+
+   IF HB_ISNUMERIC( weight )
       IF abs( weight ) > 3
          weight := 3
       ENDIF
    ELSE
       weight := 1
    ENDIF
-   
+
    color:= ::checkColor( color )
    IF LEFT( color,1 ) != "#"
       color := 'Automatic'
    ENDIF
-   
+
    IF ( linestyle != 'None'         .AND.;
         linestyle != 'Continuous'   .AND.;
         linestyle != 'Dash'         .AND.;
@@ -574,40 +574,40 @@ METHOD ExcelWriterXML_Style:border( position,weight,color,linestyle )
         linestyle != 'DashDotDot'   .AND.;
         linestyle != 'SlantDashDot' .AND.;
         linestyle != 'Double'            )
-      
+
       linestyle:= 'Continuous'
    ENDIF
-   
+
    tmp := { ;
       'LineStyle' => linestyle,;
       'Color'     => color,    ;
       'Weight'    => weight }
-   
+
    IF position == 'Top'    .OR. position == 'All'
       ::borderTop := tmp
    ENDIF
    IF position == 'Bottom' .OR. position == 'All'
       ::borderBottom := tmp
    ENDIF
-   IF position == 'Left'    .OR. position == 'All' 
+   IF position == 'Left'    .OR. position == 'All'
       ::borderLeft := tmp
    ENDIF
-   IF position == 'Right'    .OR. position == 'All' 
+   IF position == 'Right'    .OR. position == 'All'
       ::borderRight := tmp
    ENDIF
-   IF position == 'DiagonalLeft' 
+   IF position == 'DiagonalLeft'
       ::borderDL := tmp
    ENDIF
-   IF position == 'DiagonalRight' 
+   IF position == 'DiagonalRight'
       ::borderDR := tmp
    ENDIF
-   
+
    ::useBorder := .t.
-      
+
    RETURN NIL
-           
+
 /*----------------------------------------------------------------------*/
-           
+
 METHOD ExcelWriterXML_Style:bgColor( color, pattern, patternColor )
 
    IF color == NIL
@@ -616,7 +616,7 @@ METHOD ExcelWriterXML_Style:bgColor( color, pattern, patternColor )
    IF pattern == NIL
       pattern := 'Solid'
    ENDIF
-   
+
    color := ::checkColor( color )
    IF LEFT( color,1 ) != "#"
       color := 'Yellow'
@@ -626,7 +626,7 @@ METHOD ExcelWriterXML_Style:bgColor( color, pattern, patternColor )
       ::bgPattern( pattern, patternColor )
    ENDIF
    ::useInterior:= .t.
-   
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
@@ -636,7 +636,7 @@ METHOD ExcelWriterXML_Style:bgPattern( pattern, color )
    IF pattern == NIL
       pattern := 'None'
    ENDIF
-   
+
    IF ( pattern != 'None'                  .AND.;
         pattern != 'Solid'                 .AND.;
         pattern != 'Gray75'                .AND.;
@@ -656,16 +656,16 @@ METHOD ExcelWriterXML_Style:bgPattern( pattern, color )
         pattern != 'ThinDiagStripe'        .AND.;
         pattern != 'ThinHorzCross'         .AND.;
         pattern != 'ThinDiagCross'              )
-      
+
       pattern:= 'None'
    ENDIF
-   
+
    ::interiorPattern := pattern
-   IF color != NIL  
+   IF color != NIL
       ::bgPatternColor( color )
    ENDIF
    ::useInterior := .t.
-   
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
@@ -683,7 +683,7 @@ METHOD ExcelWriterXML_Style:bgPatternColor( color )
    ENDIF
    ::interiorPatternColor := color
    ::useInterior := .t.
-   
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
@@ -691,7 +691,7 @@ METHOD ExcelWriterXML_Style:bgPatternColor( color )
 METHOD ExcelWriterXML_Style:setNumberFormat( formatString )
 
    ::numberFormat := formatString
-   
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
@@ -699,7 +699,7 @@ METHOD ExcelWriterXML_Style:setNumberFormat( formatString )
 METHOD ExcelWriterXML_Style:setNumberFormatDate()
 
    ::setNumberFormat( 'mm/dd/yy' )
-   
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
@@ -707,7 +707,7 @@ METHOD ExcelWriterXML_Style:setNumberFormatDate()
 METHOD ExcelWriterXML_Style:setNumberFormatTime()
 
    ::setNumberFormat( 'hh:mm:ss' )
-   
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
@@ -715,14 +715,14 @@ METHOD ExcelWriterXML_Style:setNumberFormatTime()
 METHOD ExcelWriterXML_Style:setNumberFormatDatetime()
 
    ::setNumberFormat( 'mm/dd/yy\ hh:mm:ss' )
-   
+
    RETURN NIL
-           
+
 /*----------------------------------------------------------------------*/
 
 FUNCTION getColorIE()
    LOCAL hcolor:= { => }
-   
+
    hcolor[ 'aliceblue'            ] := '#F0F8FF'
    hcolor[ 'antiquewhite'         ] := '#FAEBD7'
    hcolor[ 'aqua'                 ] := '#00FFFF'
@@ -863,7 +863,7 @@ FUNCTION getColorIE()
    hcolor[ 'whitesmoke'           ] := '#F5F5F5'
    hcolor[ 'yellow'               ] := '#FFFF00'
    hcolor[ 'yellowgreen'          ] := '#9ACD32'
-   
+
    RETURN hcolor
 
 /*----------------------------------------------------------------------*/

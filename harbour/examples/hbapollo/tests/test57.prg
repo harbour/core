@@ -10,7 +10,7 @@
 
 PROCEDURE MAIN()
 
-   LOCAL cFile   := "c:\windows\temp\sixtest.dbf"
+   LOCAL cFile   := "sixtest.dbf"
    LOCAL aStruct := { ;
       { "FIRST", "C", 25, 0 }, ;
       { "LAST", "C", 25, 0 }, ;

@@ -40,8 +40,8 @@ PROCEDURE MAIN()
 
    APPEND BLANK 10000
    j := 0
-   SX_DBEVAL( { ||;
-      cPad := PADL( ++ j, 5, "0" ), ;
+   SX_DBEVAL( {||;
+      cPad := PADL( ++j, 5, "0" ), ;
       SX_REPLACEEX( { ;
       { "MYDATE", date() + j }, ;
       { "MYCHAR", "NAME_" + cPad }, ;

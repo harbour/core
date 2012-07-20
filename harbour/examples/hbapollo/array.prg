@@ -87,7 +87,7 @@ STATIC FUNCTION _ftsavesub( xMemVar, nHandle, nErrorCode )
          nLen := Len( xMemVar )
          FWrite( nHandle, L2Bin( nLen ), 4 )
          IF FError() = 0
-            AEval( xMemVar, { |xMemVar1| lRet := _ftsavesub( xMemVar1, nHandle ) } )
+            AEval( xMemVar, {| xMemVar1 | lRet := _ftsavesub( xMemVar1, nHandle ) } )
          ELSE
             lRet = .F.
          ENDIF
