@@ -62,20 +62,20 @@
 
 /* New types */
 
-#if ! defined( HB_LEGACY_TYPES_ON )
+#if ! defined( HB_LEGACY_LEVEL4 ) || ! defined( HB_LEGACY_TYPES_ON )
 typedef unsigned char BYTE;
 #endif
 typedef BYTE *  BYTEP;
 typedef BYTEP   BYTEPP;
 typedef BYTEP   PBYTE;
 
-#if ! defined( HB_LEGACY_TYPES_ON )
+#if ! defined( HB_LEGACY_LEVEL4 ) || ! defined( HB_LEGACY_TYPES_ON )
 typedef short SHORT;
 #endif
 typedef SHORT * SHORTP;
 typedef SHORTP  PSHORT;
 
-#if ! defined( HB_LEGACY_TYPES_ON )
+#if ! defined( HB_LEGACY_LEVEL4 ) || ! defined( HB_LEGACY_TYPES_ON )
 typedef unsigned short USHORT;
 #endif
 typedef USHORT * USHORTP;
@@ -85,13 +85,13 @@ typedef unsigned int WORD;
 typedef WORD *  WORDP;
 typedef WORDP   PWORD;
 
-#if ! defined( HB_LEGACY_TYPES_ON )
+#if ! defined( HB_LEGACY_LEVEL4 ) || ! defined( HB_LEGACY_TYPES_ON )
 typedef long LONG;
 #endif
 typedef LONG *  LONGP;
 typedef LONGP   PLONG;
 
-#if ! defined( HB_LEGACY_TYPES_ON )
+#if ! defined( HB_LEGACY_LEVEL4 ) || ! defined( HB_LEGACY_TYPES_ON )
 typedef unsigned long ULONG;
 #endif
 typedef ULONG * ULONGP;
@@ -101,7 +101,7 @@ typedef unsigned long DWORD;
 typedef DWORD * DWORDP;
 typedef DWORDP  PDWORD;
 
-#if ! defined( HB_LEGACY_TYPES_ON )
+#if ! defined( HB_LEGACY_LEVEL4 ) || ! defined( HB_LEGACY_TYPES_ON )
 #undef BOOL
 typedef USHORT BOOL;
 #endif
@@ -129,7 +129,7 @@ typedef FUNCP * FUNCPP;
 #define HIDE    static
 #define CLIPPER HARBOUR
 
-#if ! defined( HB_LEGACY_TYPES_ON )
+#if ! defined( HB_LEGACY_LEVEL4 ) || ! defined( HB_LEGACY_TYPES_ON )
 #  undef FALSE
 #  define FALSE      0
 #  undef TRUE

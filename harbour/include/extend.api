@@ -85,7 +85,7 @@ typedef PHB_ITEM  ITEM;
 #define PCOUNT          hb_pcount()
 #define ALENGTH( n )    hb_parinfa( n, 0 )
 
-#if ! defined( HB_LEGACY_TYPES_ON )
+#if ! defined( HB_LEGACY_LEVEL4 ) || ! defined( HB_LEGACY_TYPES_ON )
    #define ISCHAR( n )           HB_ISCHAR( n )
    #define ISNUM( n )            HB_ISNUM( n )
    #define ISLOG( n )            HB_ISLOG( n )

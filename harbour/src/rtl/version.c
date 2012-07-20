@@ -224,6 +224,8 @@ HB_FUNC( HB_COMPILER )
    hb_retc_buffer( hb_verCompiler() );
 }
 
+#if defined( HB_LEGACY_LEVEL4 )
+
 HB_FUNC( HB_PCODEVER )
 {
    hb_retc_buffer( hb_verPCode() );
@@ -233,3 +235,5 @@ HB_FUNC( HB_BUILDDATE )
 {
    hb_retc_buffer( hb_verBuildDate() );
 }
+
+#endif

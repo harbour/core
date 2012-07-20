@@ -229,9 +229,9 @@ typedef unsigned int        HB_UINT;
 #endif
 
 /* Harbour abstract types */
-/* ...add them here... */
 #define HB_AREANO           HB_USHORT
 #define HB_FIELDNO          HB_USHORT
+#define HB_PARAMNO          HB_USHORT
 
 /* Convenience */
 typedef HB_UCHAR            HB_BYTE;
@@ -345,7 +345,7 @@ typedef HB_UCHAR            HB_U8;
 
 /* Legacy Windows/Clipper-style types */
 
-#if defined( HB_LEGACY_TYPES_ON )
+#if defined( HB_LEGACY_LEVEL4 ) && defined( HB_LEGACY_TYPES_ON )
 
    #if ! defined( HB_DONT_DEFINE_BOOL )
       #undef BOOL                         /* boolean */
