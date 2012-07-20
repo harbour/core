@@ -3065,7 +3065,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                }
                else
                {
-                  Time evtTime = ((XButtonEvent *) evt)->time;
+                  Time evtTime = ( ( XButtonEvent * ) evt )->time;
                   if( evtTime - wnd->mouseButtonsTime[ button ] <
                       ( Time ) HB_GTSELF_MOUSEGETDOUBLECLICKSPEED( wnd->pGT ) )
                      key = s_mouseDblPressKeys[ button ];

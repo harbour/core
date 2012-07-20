@@ -2292,8 +2292,8 @@ static const char *edesc[] =
 
 static const char *mxml_error_desc( MXML_ERROR_CODE code )
 {
-   int iCode = ((int)code) - 1;
-   if( iCode < 0 || iCode > (signed) (sizeof( edesc ) / sizeof( char * ) ) )
+   int iCode = ( ( int ) code ) - 1;
+   if( iCode < 0 || iCode > ( signed ) ( sizeof( edesc ) / sizeof( char * ) ) )
       return NULL;
 
    return edesc[ iCode ];
@@ -2319,7 +2319,7 @@ HB_FUNC( HBXML_DATAREAD )
 {
    PHB_ITEM pParam = hb_param( 2, HB_IT_ANY );
    PHB_ITEM pDoc = hb_param( 1, HB_IT_OBJECT );
-   int iStyle = hb_parni(3);
+   int iStyle = hb_parni( 3 );
    PHB_ITEM pRoot;
    MXML_REFIL refil;
    char buffer[ 512 ], * buf;

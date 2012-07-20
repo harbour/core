@@ -257,7 +257,7 @@ HB_FUNC( ATADJUST )
          }
       }
    }
-   else                         /* ((ISCHAR (1)) && (ISCHAR (2)) && (ISNUM (3))) */
+   else                         /* ( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISNUM( 3 ) ) */
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

@@ -263,7 +263,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
 
             pName->value.asSymbol.name = "__GETA";
             /* NOTE: a[ i, j ] is stored as: (pExprList)->(pIndex)
-             * ((a->[ i ])->[ j ])
+             * ( ( a->[ i ] )->[ j ] )
              */
             pVar = HB_EXPR_USE( pArg->value.asList.pExprList, HB_EA_REDUCE );
             pBase = pVar->ExprType == HB_ET_ARRAYAT ? pVar : NULL;

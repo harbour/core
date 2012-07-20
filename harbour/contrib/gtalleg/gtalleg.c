@@ -209,7 +209,7 @@ static const gtAllegKey s_CtrlTable[ GT_CTRL_TABLE_SIZE ] =
 #define GT_SCREENINIT()          do { if( !s_fInit ) \
                                          hb_gt_alleg_InitializeScreen( pGT, s_iScrHeight, s_iScrWidth, HB_TRUE ); \
                                     } while( 0 )
-#define MK_GT8BCOLOR(n)          ((n & 0xFF) / 16 | (n & 0xFF00) / 256)
+#define MK_GT8BCOLOR( n )        ( ( n & 0xFF ) / 16 | ( n & 0xFF00 ) / 256 )
 
 
 static void hb_gt_alleg_Error( const char * szMsg )
