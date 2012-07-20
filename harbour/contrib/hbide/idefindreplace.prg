@@ -1251,8 +1251,12 @@ METHOD IdeFindInFiles:findInABunch( aFiles )
       s := hbide_pathToOSPath( s )
       IF hb_fileExists( s )
          ::nSearched++
-         ::oSM:editSource( s, 0, 0, 0, NIL, "Main", .f., .t. )
-         aBuffer := hb_ATokens( StrTran( ::qCurEdit:toPlainText(), Chr( 13 ) ), Chr( 10 ) )
+         IF ::oEM:isOpen( s )
+            ::oSM:editSource( s, 0, 0, 0, NIL, "Main", .f., .t. )
+            aBuffer := hb_ATokens( StrTran( ::qCurEdit:toPlainText(), Chr( 13 ) ), Chr( 10 ) )
+         ELSE
+            aBuffer := hb_ATokens( StrTran( hb_MemoRead( s ), Chr( 13 ) ), Chr( 10 ) )
+         ENDIF
          nLine := 0
 
          IF ::lRegEx
