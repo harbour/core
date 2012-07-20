@@ -445,6 +445,7 @@ CLASS IdeFindReplace INHERIT IdeObject
    METHOD create( oIde )
    METHOD destroy()
    METHOD show()
+   METHOD getFocus()
    METHOD onClickReplace( nFrom )
    METHOD replaceSelection( cReplWith )
    METHOD replace()
@@ -465,13 +466,21 @@ METHOD IdeFindReplace:new( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeFindReplace:destroy()
+   RETURN Self
 
-   IF !empty( ::oUI )
-      ::qLineEdit:disConnect( "returnPressed()" )
-      ::qLineEdit:disConnect( "textChanged(QString)" )
-      ::qReplaceEdit:disConnect( "returnPressed()" )
-      ::oUI:destroy()
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFindReplace:getFocus()
+
+   ::oUI:comboFindWhat:setFocus()
+   ::qLineEdit:activateWindow()
+   ::qLineEdit:setFocus()
+
+   IF ! empty( ::cText := ::oEM:getSelectedText() )
+      ::qLineEdit:setText( ::cText )
+      ::updateFindReplaceData( "find" )
    ENDIF
+   ::qLineEdit:selectAll()
 
    RETURN Self
 
@@ -494,21 +503,24 @@ METHOD IdeFindReplace:create( oIde )
    ::oUI:radioDown:setChecked( .t. )
 
    ::oUI:connect( QEvent_Close, {|| ::oIde:oINI:cFindDialogGeometry := hbide_posAndSize( ::oUI:oWidget ) } )
+   ::oUI:connect( QEvent_Hide , {|| ::oIde:oINI:cFindDialogGeometry := hbide_posAndSize( ::oUI:oWidget ) } )
 
-   ::oUI:buttonFind   :connect( "clicked()"                   , {| | ::onClickFind()    } )
-   ::oUI:buttonReplace:connect( "clicked()"                   , {| | ::onClickReplace() } )
+   ::oUI:buttonFind   :connect( "clicked()"                   , {| | ::onClickFind( 0 ) } )
+   ::oUI:buttonReplace:connect( "clicked()"                   , {| | ::onClickReplace( 0 ) } )
    ::oUI:buttonClose  :connect( "clicked()"                   , {| | ::oIde:oINI:cFindDialogGeometry := hbide_posAndSize( ::oUI:oWidget ), ::oUI:hide() } )
-   ::oUI:comboFindWhat:connect( "editTextChanged(QString)"    , {| | ::oUI:radioEntire:setChecked( .t. ) } )
    ::oUI:comboFindWhat:connect( "currentIndexChanged(QString)", {|p| ::oIde:oSBar:getItem( SB_PNL_SEARCH ):caption := "FIND: " + p } )
    ::oUI:checkListOnly:connect( "stateChanged(int)"           , {|p| ::oUI:comboReplaceWith:setEnabled( p == 0 ), ;
                                                                              iif( p == 1, ::oUI:buttonReplace:setEnabled( .f. ), NIL ) } )
 
    ::qLineEdit := ::oUI:comboFindWhat:lineEdit()
-   ::qLineEdit:connect( "returnPressed()", {|| iif( empty( ::cText ), NIL, ;
-                                                  ::qLineEdit:setText( ::cText ) ), ::cText := "", ::onClickFind( 1 ) } )
+   ::qLineEdit:connect( "returnPressed()"     , {|| ::updateFindReplaceData( "find" ), ::onClickFind( 1 ) } )
+   ::qLineEdit:connect( "textChanged(QString)", {|| ::oUI:radioEntire:setChecked( .t. ) } )
 
    ::qReplaceEdit := ::oUI:comboReplaceWith:lineEdit()
-   ::qReplaceEdit:connect( "returnPressed()", {|| ::onClickReplace( 1 ) } )
+   ::qReplaceEdit:connect( "returnPressed()", {|| ::updateFindReplaceData( "replace" ), ::onClickReplace( 1 ) } )
+
+   ::oUI:comboFindWhat:setCurrentIndex( -1 )
+   ::oUI:comboReplaceWith:setCurrentIndex( -1 )
 
    RETURN Self
 
@@ -518,7 +530,6 @@ METHOD IdeFindReplace:show()
 
    IF ! ::oUI:isHidden()
       ::oIde:oINI:cFindDialogGeometry := hbide_posAndSize( ::oUI:oWidget )
-      ::oUI:hide()
    ENDIF
 
    ::oIde:setPosByIniEx( ::oUI:oWidget, ::oINI:cFindDialogGeometry )
@@ -527,14 +538,12 @@ METHOD IdeFindReplace:show()
    ::oUI:checkGlobal:setEnabled( .f. )
    ::oUI:checkNoPrompting:setEnabled( .f. )
    ::oUI:checkListOnly:setChecked( .f. )
-   ::oUI:comboFindWhat:setFocus()
 
-   IF ! empty( ::cText := ::oEM:getSelectedText() )
-      ::qLineEdit:setText( ::cText )
-      ::updateFindReplaceData( "find" )
+   ::getFocus()
+
+   IF ::oUI:isHidden()
+      ::oUI:show()
    ENDIF
-   ::qLineEdit:selectAll()
-   ::oUI:show()
 
    RETURN Self
 
@@ -543,17 +552,12 @@ METHOD IdeFindReplace:show()
 METHOD IdeFindReplace:onClickFind( nFrom )
    LOCAL lFound, nPos, qCursor
 
-   DEFAULT nFrom TO 0  // Click on Find Button
-
-   IF nFrom == 0
-      ::updateFindReplaceData( "find" )
-   ENDIF
+   HB_SYMBOL_UNUSED( nFrom )
 
    IF ::oUI:radioEntire:isChecked()
       ::oUI:radioFromCursor:setChecked( .t. )
       qCursor := ::qCurEdit:textCursor()
       nPos := qCursor:position()
-
       qCursor:setPosition( 0 )
       ::qCurEdit:setTextCursor( qCursor )
       IF ! ( lFound := ::find() )
@@ -569,13 +573,10 @@ METHOD IdeFindReplace:onClickFind( nFrom )
       ::oUI:checkGlobal:setEnabled( .t. )
       ::oUI:checkNoPrompting:setEnabled( .t. )
    ELSE
+      ::getFocus()
       ::oUI:buttonReplace:setEnabled( .f. )
       ::oUI:checkGlobal:setEnabled( .f. )
       ::oUI:checkNoPrompting:setEnabled( .f. )
-      ::oUI:hide()
-      ::oUI:show()
-      ::oUI:comboFindWhat:setFocus()
-      ::qLineEdit:selectAll()
    ENDIF
 
    RETURN Self
@@ -583,7 +584,7 @@ METHOD IdeFindReplace:onClickFind( nFrom )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeFindReplace:find( lWarn )
-   LOCAL nFlags, qfocus
+   LOCAL nFlags
    LOCAL cText := ::oUI:comboFindWhat:lineEdit():text()
    LOCAL lFound := .f.
 
@@ -595,9 +596,8 @@ METHOD IdeFindReplace:find( lWarn )
       nFlags += iif( ::oUI:radioUp:isChecked(), QTextDocument_FindBackward, 0 )
 
       IF ! ( lFound := ::oEM:getEditObjectCurrent():findEx( cText, nFlags ) ) .AND. lWarn
-         qFocus := ::oUI:focusWidget()
+         ::oEM:getEditObjectCurrent():clearSelection()
          hbide_showWarning( "Cannot find : " + cText )
-         qFocus:setFocus( 0 )
       ENDIF
    ENDIF
 
@@ -607,10 +607,7 @@ METHOD IdeFindReplace:find( lWarn )
 
 METHOD IdeFindReplace:onClickReplace( nFrom )
 
-   DEFAULT nFrom TO 0  // Click on Find Button
-   IF nFrom == 0
-      ::updateFindReplaceData( "replace" )
-   ENDIF
+   HB_SYMBOL_UNUSED( nFrom )
 
    IF ::oUI:comboReplaceWith:isEnabled()
       ::replace()
@@ -681,11 +678,8 @@ METHOD IdeFindReplace:updateFindReplaceData( cMode )
          IF ( nIndex := ascan( ::oINI:aFind, {|e| e == cData } ) ) == 0
             hb_ains( ::oINI:aFind, 1, cData, .t. )
             ::oUI:comboFindWhat:insertItem( 0, cData )
-         ELSE
-            ::oUI:comboFindWhat:setCurrentIndex( nIndex - 1 )
          ENDIF
       ENDIF
-      //
       ::oDK:setStatusText( SB_PNL_SEARCH, cData )
    ELSE
       cData := ::oUI:comboReplaceWith:lineEdit():text()
@@ -697,7 +691,7 @@ METHOD IdeFindReplace:updateFindReplaceData( cMode )
       ENDIF
    ENDIF
 
-   RETURN Self
+   RETURN nIndex
 
 /*----------------------------------------------------------------------*/
 //
@@ -863,7 +857,6 @@ METHOD IdeFindInFiles:buildUI()
             qItem:setFlags( Qt_ItemIsUserCheckable + Qt_ItemIsEnabled + Qt_ItemIsSelectable )
             qItem:setText( cProj )
             qItem:setCheckState( 0 )
-            //::oUI:listProjects:addItem_1( qItem )
             ::oUI:listProjects:addItem( qItem )
             aadd( ::aItems, qItem )
          ENDIF
@@ -871,8 +864,6 @@ METHOD IdeFindInFiles:buildUI()
    ENDIF
 
    ::oUI:editResults:setReadOnly( .t. )
-   //::oUI:editResults:setFontFamily( "Courier New" )
-   //::oUI:editResults:setFontPointSize( 10 )
    ::oUI:editResults:setFont( ::oIde:oFont:oWidget )
    ::oUI:editResults:setContextMenuPolicy( Qt_CustomContextMenu )
 
@@ -989,49 +980,6 @@ METHOD IdeFindInFiles:execEvent( nEvent, p )
       ENDIF
       EXIT
    ENDSWITCH
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeFindInFiles:replaceAll()
-   LOCAL nL, nB, qCursor, aFind
-   LOCAL cSource := ""
-
-   IF empty( ::cReplWith  := ::oUI:comboRepl:currentText() )
-      RETURN Self
-   ENDIF
-   nL := Len( ::cReplWith )
-
-   IF ! hbide_getYesNo( "Starting REPLACE operation", "No way to interrupt", "Critical" )
-      RETURN Self
-   ENDIF
-
-   FOR EACH aFind IN ::aInfo
-      IF aFind[ 1 ] == -2
-         IF ! ( cSource == aFind[ 2 ] )
-            cSource := aFind[ 2 ]
-            ::oSM:editSource( cSource, 0, 0, 0, NIL, "Main", .f., .t. )
-         ENDIF
-
-         qCursor := ::oIde:qCurEdit:textCursor()
-         qCursor:setPosition( 0 )
-         qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, aFind[ 3 ] - 1 )
-         qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, aFind[ 4 ] - 1 )
-         qCursor:movePosition( QTextCursor_Right, QTextCursor_KeepAnchor, Len( aFind[ 5 ] ) )
-         ::qCurEdit:setTextCursor( qCursor )
-
-         nB := qCursor:position()
-
-         qCursor:beginEditBlock()
-         qCursor:removeSelectedText()
-         qCursor:insertText( ::cReplWith )
-         qCursor:setPosition( nB + nL )
-         ::qCurEdit:setTextCursor( qCursor )
-         ::oEM:getEditObjectCurrent():clearSelection()
-         qCursor:endEditBlock()
-      ENDIF
-   NEXT
 
    RETURN Self
 
@@ -1303,7 +1251,8 @@ METHOD IdeFindInFiles:findInABunch( aFiles )
       s := hbide_pathToOSPath( s )
       IF hb_fileExists( s )
          ::nSearched++
-         aBuffer := hb_ATokens( StrTran( hb_MemoRead( s ), Chr( 13 ) ), Chr( 10 ) )
+         ::oSM:editSource( s, 0, 0, 0, NIL, "Main", .f., .t. )
+         aBuffer := hb_ATokens( StrTran( ::qCurEdit:toPlainText(), Chr( 13 ) ), Chr( 10 ) )
          nLine := 0
 
          IF ::lRegEx
@@ -1349,6 +1298,52 @@ METHOD IdeFindInFiles:findInABunch( aFiles )
    IF nNoMatch == Len( aFiles )
       ::showLog( LOG_INFO, "Searched (" + hb_ntos( Len( aFiles ) ) + ") files, no matches found" )
    ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeFindInFiles:replaceAll()
+   LOCAL nL, nB, qCursor, aFind
+   LOCAL cSource := ""
+
+   IF empty( ::cReplWith  := ::oUI:comboRepl:currentText() )
+      RETURN Self
+   ENDIF
+   nL := Len( ::cReplWith )
+
+   IF ! hbide_getYesNo( "Starting REPLACE operation", "No way to interrupt", "Critical" )
+      RETURN Self
+   ENDIF
+
+   FOR EACH aFind IN ::aInfo
+      IF aFind[ 1 ] == -2
+         IF ! ( cSource == aFind[ 2 ] )
+            cSource := aFind[ 2 ]
+            ::oSM:editSource( cSource, 0, 0, 0, NIL, "Main", .f., .t. )
+         ENDIF
+
+         qCursor := ::oIde:qCurEdit:textCursor()
+         qCursor:setPosition( 0 )
+         qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, aFind[ 3 ] - 1 )
+         qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, aFind[ 4 ] - 1 )
+         qCursor:movePosition( QTextCursor_Right, QTextCursor_KeepAnchor, Len( aFind[ 5 ] ) )
+         ::qCurEdit:setTextCursor( qCursor )
+
+         nB := qCursor:position()
+
+         qCursor:beginEditBlock()
+         qCursor:removeSelectedText()
+         qCursor:insertText( ::cReplWith )
+         qCursor:setPosition( nB + nL )
+         ::qCurEdit:setTextCursor( qCursor )
+         ::oEM:getEditObjectCurrent():clearSelection()
+         qCursor:endEditBlock()
+      ENDIF
+   NEXT
+
+   ::oUI:editResults:clear()   /* Mandatory - otherwise previous info will agin be inclusive */
+   ::aInfo := {}
 
    RETURN Self
 

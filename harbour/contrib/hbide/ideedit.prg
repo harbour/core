@@ -274,7 +274,7 @@ METHOD IdeEdit:new( oIde, oEditor, nMode )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:create( oIde, oEditor, nMode )
-   LOCAL nBlock
+   LOCAL nBlock, oPalette
 
    DEFAULT oIde    TO ::oIde
    DEFAULT oEditor TO ::oEditor
@@ -292,6 +292,10 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
    ::qEdit:setTabChangesFocus( .f. )
    ::qEdit:setFocusPolicy( Qt_StrongFocus )
    ::qEdit:setObjectName( hbide_getNextIDasString( "HBQPlainTextEdit" ) )
+
+   oPalette := ::qEdit:palette()
+   oPalette:setColor( QPalette_Inactive, QPalette_Highlight, QColor( Qt_yellow ) )
+   ::qEdit:setPalette( oPalette )
 
    ::setFont()
 
@@ -522,18 +526,15 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
 
    #if 0
    CASE __textChanged__
-//      HB_TRACE( HB_TR_ALWAYS, "textChanged()" )
-//      ::oEditor:setTabImage( ::qEdit )
-//      ::handlePreviousWord( ::lUpdatePrevWord )
+      ::oEditor:setTabImage( ::qEdit )
+      ::handlePreviousWord( ::lUpdatePrevWord )
       EXIT
    CASE __modificationChanged__
       ::oEditor:setTabImage( ::qEdit )
       EXIT
    CASE __redoAvailable__
-      //HB_TRACE( HB_TR_DEBUG, "redoAvailable(bool)", p )
       EXIT
    CASE __undoAvailable__
-      //HB_TRACE( HB_TR_DEBUG, "undoAvailable(bool)", p )
       EXIT
    CASE __updateRequest__
       EXIT
@@ -637,10 +638,7 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
          ::lCopyWhenDblClicked := .f.       /* not intuitive */
          ::clickFuncHelp()
          EXIT
-      CASE QEvent_Paint
-         // ::oIde:testPainter( p1 )
-         EXIT
-      CASE 21000                     /* Sends Block Info { t,l,b,r,mode,state } hbGetBlockInfo() */
+      CASE 21000                            /* Sends Block Info { t,l,b,r,mode,state } hbGetBlockInfo() */
          ::aSelectionInfo := p1
          ::oDK:setButtonState( "SelectionMode", ::aSelectionInfo[ 5 ] > 1 )
          EXIT
