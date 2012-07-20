@@ -26,12 +26,12 @@
 
 static int        _checkDelim( int _nDelim );
 static int        _checkDelimChar( const char * _cDelim );
-static const char *  aDelim[] =
+static const char *  s_aDelim[] =
 {
    "SDENTX",    "SDEFOX", "SDENSX", "SDENSX_DBT", "COMMA_DELIM", "SDF_FILE",
    "TAB_DELIM", "OEMNTX", "OEMFOX", "OEMNSX"
 };
-static int           nDelim[] = { 1, 2, 3, 4, 21, 22, 23, 31, 32, 33 };
+static int           s_nDelim[] = { 1, 2, 3, 4, 21, 22, 23, 31, 32, 33 };
 
 /* 2003.05.08 added parameter for work area to work on */
 HB_FUNC( SX_APPEND )
@@ -219,8 +219,8 @@ static int _checkDelim( int _nDelim )
 
    for( ui = 0; ui < 10; ui++ )
    {
-      if( _nDelim == nDelim[ ui ] )
-         return nDelim[ ui ];
+      if( _nDelim == s_nDelim[ ui ] )
+         return s_nDelim[ ui ];
    }
 
    return -1;
@@ -238,9 +238,9 @@ static int _checkDelimChar( const char * _cDelim )
 
    for( ui = 0; ui < 10; ui++ )
    {
-      if( strcmp( szTmp, aDelim[ ui ] ) == 0 )
+      if( strcmp( szTmp, s_aDelim[ ui ] ) == 0 )
       {
-         iResult = nDelim[ ui ];
+         iResult = s_nDelim[ ui ];
          break;
       }
    }

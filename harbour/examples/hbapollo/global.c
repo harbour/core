@@ -25,19 +25,19 @@
 #include "sxapi.h"
 
 /* Modified To return .T. if Century is set ON or .F. is Century is set OFF. */
-static HB_BOOL          bCenturyIsOn  = HB_FALSE;
-static char *        aFormat[]     =
+static HB_BOOL       s_bCenturyIsOn  = HB_FALSE;
+static char *        s_aFormat[]     =
 {
    "AMERICAN",   "ANSI",       "BRITISH",    "FRENCH",     "GERMAN",     "ITALIAN",  "SPANISH",
    "MM/DD/YY",   "YY.MM.DD",   "DD/MM/YY",   "DD/MM/YY",   "DD.MM.YY",   "DD-MM-YY",
    "DD-MM-YY",   "MM/DD/YYYY", "YYYY.MM.DD", "DD/MM/YYYY", "DD/MM/YYYY",
    "DD.MM.YYYY", "DD-MM-YYYY", "DD-MM-YYYY"
 };
-static HB_BOOL          lDeletedIsOn  = HB_FALSE;
-static int           iBaseYear     = 0;
-static HB_BOOL          bSetExactIsOn = HB_FALSE;
-static HB_BOOL          lSoftSeekIsOn;
-static const char *  sxApiRDD[]    =
+static HB_BOOL       s_lDeletedIsOn  = HB_FALSE;
+static int           s_iBaseYear     = 0;
+static HB_BOOL       s_bSetExactIsOn = HB_FALSE;
+static HB_BOOL       s_lSoftSeekIsOn;
+static const char *  s_sxApiRDD[]    =
 {
    "SDENTX", "SDEFOX", "SDENSX", "SDENSXDBT", "DBFNTX", "DBFIDX", "DBFNSX",
    "DBFNSXDBT"
@@ -67,12 +67,12 @@ HB_FUNC( SX_SETSOFTSEEK )
    PHB_ITEM pItem;
    WORD     wSoftSeek = 0;
 
-   lSoftSeekIsOn = hb_setGetSoftSeek();
+   s_lSoftSeekIsOn = hb_setGetSoftSeek();
 
-   hb_retl( lSoftSeekIsOn );
+   hb_retl( s_lSoftSeekIsOn );
 
    if( HB_ISLOG( 1 ) )
-      lSoftSeekIsOn = hb_parl( 1 );
+      s_lSoftSeekIsOn = hb_parl( 1 );
    else if( HB_ISCHAR( 1 ) )
    {
       HB_ISIZ  iLen    = hb_parclen( 1 ) + 1;
@@ -80,15 +80,15 @@ HB_FUNC( SX_SETSOFTSEEK )
 
       hb_snprintf( szTmp, iLen, "%s", hb_parc( 1 ) );
 
-      lSoftSeekIsOn = ( strcmp( _sx_upper( szTmp ), "ON" ) == 0 ) ? HB_TRUE : HB_FALSE;
+      s_lSoftSeekIsOn = ( strcmp( _sx_upper( szTmp ), "ON" ) == 0 ) ? HB_TRUE : HB_FALSE;
 
-      if( lSoftSeekIsOn )
+      if( s_lSoftSeekIsOn )
          wSoftSeek = 1;
 
       hb_xfree( szTmp );
    }
 
-   pItem = hb_itemPutL( NULL, lSoftSeekIsOn );
+   pItem = hb_itemPutL( NULL, s_lSoftSeekIsOn );
    hb_setSetItem( HB_SET_SOFTSEEK, pItem );
    hb_itemRelease( pItem );
 
@@ -121,12 +121,12 @@ HB_FUNC( SX_SETEXACT )
    PHB_ITEM pItem;
    WORD     wSetExact = 0;
 
-   bSetExactIsOn = hb_setGetExact();
+   s_bSetExactIsOn = hb_setGetExact();
 
-   hb_retl( bSetExactIsOn );
+   hb_retl( s_bSetExactIsOn );
 
    if( HB_ISLOG( 1 ) )
-      bSetExactIsOn = hb_parl( 1 );
+      s_bSetExactIsOn = hb_parl( 1 );
    else if( HB_ISCHAR( 1 ) )
    {
       HB_ISIZ  iLen    = hb_parclen( 1 ) + 1;
@@ -134,9 +134,9 @@ HB_FUNC( SX_SETEXACT )
 
       hb_snprintf( szTmp, iLen, "%s", hb_parc( 1 ) );
 
-      bSetExactIsOn = ( strcmp( _sx_upper( szTmp ), "ON" ) == 0 ) ? HB_TRUE : HB_FALSE;
+      s_bSetExactIsOn = ( strcmp( _sx_upper( szTmp ), "ON" ) == 0 ) ? HB_TRUE : HB_FALSE;
 
-      if( bSetExactIsOn )
+      if( s_bSetExactIsOn )
          wSetExact = 1;
 
       hb_xfree( szTmp );
@@ -144,7 +144,7 @@ HB_FUNC( SX_SETEXACT )
 
    sx_SetExact( wSetExact );
 
-   pItem = hb_itemPutL( NULL, bSetExactIsOn );
+   pItem = hb_itemPutL( NULL, s_bSetExactIsOn );
    hb_setSetItem( HB_SET_EXACT, pItem );
 
    hb_itemRelease( pItem );
@@ -176,18 +176,19 @@ HB_FUNC( SX_SETEPOCH )
    WORD     iEpoch;
    PHB_ITEM pItem;
 
-   iBaseYear = hb_setGetEpoch();
+   s_iBaseYear = hb_setGetEpoch();
 
-   hb_retni( iBaseYear );
+   hb_retni( s_iBaseYear );
 
    if( HB_ISNUM( 1 ) )
    {
-      iEpoch     = ( WORD ) hb_parni( 1 );
+      iEpoch = ( WORD ) hb_parni( 1 );
       if( iEpoch == 0 )
          hb_errRT_BASE( EG_ARG, 2020, NULL, "SX_SETEPOCH", 1, hb_paramError( 1 ) );
-      iBaseYear  = iEpoch;
 
-      pItem      = hb_itemPutNI( NULL, iEpoch );
+      s_iBaseYear = iEpoch;
+
+      pItem = hb_itemPutNI( NULL, iEpoch );
       hb_setSetItem( HB_SET_EPOCH, pItem );
       hb_itemRelease( pItem );
 
@@ -218,12 +219,12 @@ HB_FUNC( SX_SETDELETED )
    PHB_ITEM pItem;
    WORD     wDeleted = 0;
 
-   lDeletedIsOn = hb_setGetDeleted();
+   s_lDeletedIsOn = hb_setGetDeleted();
 
-   hb_retl( lDeletedIsOn );
+   hb_retl( s_lDeletedIsOn );
 
    if( HB_ISLOG( 1 ) )
-      lDeletedIsOn = hb_parl( 1 );
+      s_lDeletedIsOn = hb_parl( 1 );
    else if( HB_ISCHAR( 1 ) )
    {
       HB_ISIZ  iLen    = hb_parclen( 1 ) + 1;
@@ -231,15 +232,15 @@ HB_FUNC( SX_SETDELETED )
 
       hb_snprintf( szTmp, iLen, "%s", hb_parc( 1 ) );
 
-      lDeletedIsOn = ( strcmp( _sx_upper( szTmp ), "ON" ) == 0 ) ? HB_TRUE : HB_FALSE;
+      s_lDeletedIsOn = ( strcmp( _sx_upper( szTmp ), "ON" ) == 0 ) ? HB_TRUE : HB_FALSE;
 
-      if( lDeletedIsOn )
+      if( s_lDeletedIsOn )
          wDeleted = 1;
 
       hb_xfree( szTmp );
    }
 
-   pItem = hb_itemPutL( NULL, lDeletedIsOn );
+   pItem = hb_itemPutL( NULL, s_lDeletedIsOn );
    hb_setSetItem( HB_SET_DELETED, pItem );
    hb_itemRelease( pItem );
 
@@ -267,7 +268,7 @@ static int _sx_CheckFormat( char * cFormat )
 
    for( i = 0; i < 20; i++ )
    {
-      if( strcmp( aFormat[ i ], cFormat ) == 0 )
+      if( strcmp( s_aFormat[ i ], cFormat ) == 0 )
          return i;
    }
 
@@ -367,19 +368,19 @@ HB_FUNC( SX_SETDATEFORMAT )
    if( iChecked < 7 )
    {
       if( _sx_SetCentury() )
-         szDateFormat = aFormat[ iChecked + 14 ];
+         szDateFormat = s_aFormat[ iChecked + 14 ];
       else
-         szDateFormat = aFormat[ iChecked + 7 ];
+         szDateFormat = s_aFormat[ iChecked + 7 ];
    }
    else
-      szDateFormat = aFormat[ iChecked ];
+      szDateFormat = s_aFormat[ iChecked ];
 
    __hb_setDateFormat( szDateFormat );
 }
 
 HB_BOOL _sx_SetCentury()
 {
-   return bCenturyIsOn;
+   return s_bCenturyIsOn;
 }
 
 /*
@@ -399,10 +400,10 @@ HB_FUNC( SX_SETCENTURY )
 {
    WORD wCentury = 0;
 
-   hb_retl( bCenturyIsOn );
+   hb_retl( s_bCenturyIsOn );
 
    if( HB_ISLOG( 1 ) )
-      bCenturyIsOn = hb_parl( 1 );
+      s_bCenturyIsOn = hb_parl( 1 );
    else if( HB_ISCHAR( 1 ) )
    {
       HB_ISIZ  iLen    = hb_parclen( 1 ) + 1;
@@ -410,9 +411,9 @@ HB_FUNC( SX_SETCENTURY )
 
       hb_snprintf( szTmp, iLen, "%s", hb_parc( 1 ) );
 
-      bCenturyIsOn = ( strcmp( _sx_upper( szTmp ), "ON" ) == 0 ) ? HB_TRUE : HB_FALSE;
+      s_bCenturyIsOn = ( strcmp( _sx_upper( szTmp ), "ON" ) == 0 ) ? HB_TRUE : HB_FALSE;
 
-      if( bCenturyIsOn )
+      if( s_bCenturyIsOn )
          wCentury = 1;
 
       hb_xfree( szTmp );
@@ -771,7 +772,7 @@ HB_FUNC( SX_RDDSETDEFAULT )
 {
    int ui;
 
-   hb_retc( ( char * ) sxApiRDD[ i_sxApi_RDD_Default - 1 ] );
+   hb_retc( ( char * ) s_sxApiRDD[ i_sxApi_RDD_Default - 1 ] );
 
    if( HB_ISCHAR( 1 ) )
    {
@@ -799,7 +800,7 @@ int _sx_CheckRDD( const char * sSetDefault )
       #endif
       for( ui = 0; ui < 8; ui++ )
       {
-         if( strcmp( sxApiRDD[ ui ], sSetDefault /* szTmp */ ) == 0 )
+         if( strcmp( s_sxApiRDD[ ui ], sSetDefault /* szTmp */ ) == 0 )
          {
             bCorrect = HB_TRUE;
             break;

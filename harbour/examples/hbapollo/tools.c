@@ -27,22 +27,23 @@
 
 const char * _sx_CheckFileExt( const char * szFileName )
 {
-   PHB_FNAME   pFileName = hb_fsFNameSplit( szFileName );
-   static char _szFileName[ HB_PATH_MAX ];
+   static char s_szFileName[ HB_PATH_MAX ]; /* TOFIX */
 
-   memset( _szFileName, 0, HB_PATH_MAX  );
+   PHB_FNAME pFileName = hb_fsFNameSplit( szFileName );
+
+   memset( s_szFileName, 0, HB_PATH_MAX );
 
    if( ! pFileName->szExtension )
    {
       pFileName->szExtension = ".dbf";
-      hb_fsFNameMerge( _szFileName, pFileName );
+      hb_fsFNameMerge( s_szFileName, pFileName );
    }
    else
-      hb_xstrcpy( _szFileName, szFileName, 0 );
+      hb_xstrcpy( s_szFileName, szFileName, 0 );
 
    hb_xfree( pFileName );
 
-   return _szFileName;
+   return s_szFileName;
 }
 
 double sx_GetPrivateProfileDouble( LPSTR lpSectionName, LPSTR lpEntryName,
@@ -91,15 +92,12 @@ PHB_ITEM _sx_GetAlias( void )
 {
    PHB_ITEM pResult;
 
-#ifdef __cplusplus
-   static   PHB_DYNS
-#else
-   static PHB_DYNS pFunc = NULL;
-   if( ! pFunc )
-#endif
-   pFunc   = hb_dynsymFind( "CALIAS" );
+   static PHB_DYNS s_pFunc = NULL;
 
-   hb_objProcessMessage( hb_stackSelfItem(), pFunc, 0 );
+   if( ! s_pFunc )
+      s_pFunc = hb_dynsymFind( "CALIAS" );
+
+   hb_objProcessMessage( hb_stackSelfItem(), s_pFunc, 0 );
    pResult = hb_itemNew( NULL );
    hb_itemCopy( pResult, hb_stackReturnItem() );
    return pResult;

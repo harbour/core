@@ -53,10 +53,6 @@
    #include "sde7.h"
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 /* ******************************************************* */
 /* SDE defines                                             */
 /* ******************************************************* */
@@ -289,6 +285,8 @@ typedef struct SX_DBOPENINFO
    PHB_ITEM aFieldInfo;
 } SX_DBOPENINFO;
 
+HB_EXTERN_BEGIN
+
 extern LONG         _sx_SysProp( WORD uiSysItem, PVOID vpData );
 extern char *       _sx_randomname( const char * szPrefix );
 extern PHB_ITEM     _sx_FieldNames( void );
@@ -320,7 +318,7 @@ extern PHB_ITEM     _sx_GetAlias( void );
    int               i_sxApi_MemoBlock_Size;    /* Default Memo Block Size */
    int               i_sxApi_Error_Level;       /* Default ErrorLevel */
    int               i_sxApi_RDD_Default;       /* Default RDD Driver */
-   HB_BOOL              bSetTrimmedON       = HB_FALSE;
+   HB_BOOL           bSetTrimmedON       = HB_FALSE;
    PHB_ITEM          Opened_DBF_Property = NULL;
 #else
    extern int        i_sxApi_MemoBlock_Size;    /* Default Memo Block Size */
@@ -330,6 +328,8 @@ extern PHB_ITEM     _sx_GetAlias( void );
    extern PHB_ITEM   Opened_DBF_Property;
 #endif
 
+HB_EXTERN_END
+
 #define AMERICAN        0  /* MM/DD/YY */
 #define ANSI            1  /* YY.MM.DD */
 #define BRITISH         2  /* DD/MM/YY */
@@ -337,9 +337,5 @@ extern PHB_ITEM     _sx_GetAlias( void );
 #define GERMAN          4  /* DD.MM.YY */
 #define ITALIAN         5  /* DD-MM-YY */
 #define SPANISH         6  /* DD-MM-YY */
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif

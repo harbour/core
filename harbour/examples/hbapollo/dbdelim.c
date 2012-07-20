@@ -24,7 +24,7 @@
  */
 #include "sxapi.h"
 
-static HB_BOOL bSDF = HB_FALSE;
+static HB_BOOL s_bSDF = HB_FALSE;
 
 static void _sx_GetLine( PHB_ITEM pArray, FILE * hFileHandle, char * cDelimiter )
 {
@@ -46,7 +46,7 @@ static void _sx_GetLine( PHB_ITEM pArray, FILE * hFileHandle, char * cDelimiter 
             if( ! ( strcmp( cFieldType, "M" ) == 0 ) )
             {
                cTemp = ( char * ) sx_GetVariant( ( PBYTE ) cFieldName );
-               if( ! bSDF )
+               if( ! s_bSDF )
                   cTemp = _sx_rtrim( cTemp );
                else
                {
@@ -76,7 +76,7 @@ static void _sx_GetLine( PHB_ITEM pArray, FILE * hFileHandle, char * cDelimiter 
             if( ! ( strcmp( cFieldType, "M" ) == 0 ) )
             {
                cTemp = ( char * ) sx_GetVariant( ( PBYTE ) cFieldName );
-               if( ! bSDF )
+               if( ! s_bSDF )
                   cTemp = _sx_rtrim( cTemp );
                else
                {
@@ -140,9 +140,9 @@ HB_FUNC( __SX_DBDELIM )   /* (file, delim, afields, bfor, bwhile, nnext, nrec, l
          cDelimiter = " ";
 
       if( strcmp( cDelimiter, "SDF" ) == 0 )
-         bSDF = HB_TRUE;
+         s_bSDF = HB_TRUE;
       else
-         bSDF = HB_FALSE;
+         s_bSDF = HB_FALSE;
 
       /* CodeBlock passed ? */
       if( ! HB_ISNIL( 4 ) && ! HB_ISBLOCK( 4 ) )

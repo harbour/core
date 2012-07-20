@@ -26,16 +26,6 @@
 #define __SXAPI_INIT
 #include "sxapi.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-extern PHB_ITEM Opened_DBF_Property;
-
-#ifdef __cplusplus
-}
-#endif
-
 static void __sx_CreateINITFile( const char * pIniFile )
 {
    FILE * FIniHandle = hb_fopen( pIniFile, "w" );

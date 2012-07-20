@@ -24,11 +24,11 @@
  */
 #include "sxapi.h"
 
-static const char *  cRDD[] = { "SDENTX", "SDEFOX", "SDENSX", "SDENSX_DBT" };
-static const char *  aDescription[] =
+static const char *  s_cRDD[] = { "SDENTX", "SDEFOX", "SDENSX", "SDENSX_DBT" };
+static const char *  s_aDescription[] =
 {
    "WORKAREA (INTEGER)",  "FILENAME (STRING)",     "ALIAS (STRING)",
-   "SHARED (HB_BOOL)",       "READONLY (HB_BOOL)",       "RDE TYTE (INTEGER)",
+   "SHARED (BOOL)",       "READONLY (BOOL)",       "RDE TYTE (INTEGER)",
    "OPEN MODE (INTEGER)", "RDE TYPE (STRING)",     "COMMIT LEVEL (INTEGER)",
    "RECSIZE (INTEGER)",   "FIELD COUNT (INTEGER)", "DBF STRUCTURE (ARRAY)"
 };
@@ -66,11 +66,11 @@ void _sx_SetDBFInfo( int iOpenedArea, const char * szAlias, int iOpenMode,
    OpenInfo.uiArea        = ( HB_USHORT ) iOpenedArea;
    OpenInfo.cFilename     = ( char * ) sx_BaseName();
    OpenInfo.cAlias        = szAlias;
-   OpenInfo.fShared       = ( ( iOpenMode == 0 ) ? HB_TRUE : HB_FALSE );
-   OpenInfo.fReadonly     = ( ( iOpenMode == READONLY ) ? HB_TRUE : HB_FALSE );
+   OpenInfo.fShared       = ( ( iOpenMode == 0 ) ? TRUE : FALSE );
+   OpenInfo.fReadonly     = ( ( iOpenMode == READONLY ) ? TRUE : FALSE );
    OpenInfo.iRDEType      = ( HB_USHORT ) iRDEType;
    OpenInfo.iMode         = ( HB_USHORT ) iOpenMode;
-   OpenInfo.cRDD          = cRDD[ iRDEType - 1 ];
+   OpenInfo.cRDD          = s_cRDD[ iRDEType - 1 ];
    OpenInfo.iCommitLevel  = ( HB_USHORT ) sx_GetCommitLevel( ( WORD ) iOpenedArea );
    OpenInfo.iRecSize      = ( HB_USHORT ) sx_RecSize();
    OpenInfo.iFieldCount   = sx_FieldCount();
@@ -222,14 +222,14 @@ HB_FUNC( SX_DBINFO )
                   if( hb_arrayGetType( aDesc, j + 1 ) & HB_IT_STRING )
                   {
                      char * szStr = hb_arrayGetC( aDesc, j + 1 );
-                     hb_snprintf( szDesc, 255, "%s=%s", aDescription[ j ], szStr );
+                     hb_snprintf( szDesc, 255, "%s=%s", s_aDescription[ j ], szStr );
                      hb_xfree( szStr );
                   }
                   else if( hb_arrayGetType( aDesc, j + 1 ) & HB_IT_NUMERIC )
-                     hb_snprintf( szDesc, 255, "%s=%i", aDescription[ j ],
+                     hb_snprintf( szDesc, 255, "%s=%i", s_aDescription[ j ],
                                   hb_arrayGetNI( aDesc, j + 1 ) );
                   else if( hb_arrayGetType( aDesc, j + 1 ) & HB_IT_LOGICAL )
-                     hb_snprintf( szDesc, 255, "%s=%s", aDescription[ j ],
+                     hb_snprintf( szDesc, 255, "%s=%s", s_aDescription[ j ],
                                   hb_arrayGetL( aDesc, j + 1 ) ? ".T." : ".F." );
                   else if( hb_arrayGetType( aDesc, j + 1 ) & HB_IT_ARRAY )
                   {
