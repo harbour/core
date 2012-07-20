@@ -755,7 +755,7 @@ void hb_gcReleaseAll( void )
 
          s_pCurrBlock = s_pCurrBlock->pNext;
 
-      } while ( s_pCurrBlock && pAlloc != s_pCurrBlock );
+      } while( s_pCurrBlock && pAlloc != s_pCurrBlock );
 
       do
       {
@@ -765,7 +765,7 @@ void hb_gcReleaseAll( void )
          HB_GC_AUTO_DEC
          HB_GARBAGE_FREE( pDelete );
 
-      } while ( s_pCurrBlock );
+      } while( s_pCurrBlock );
    }
 
    s_bCollecting = HB_FALSE;

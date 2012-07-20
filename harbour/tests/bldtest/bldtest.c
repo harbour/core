@@ -74,7 +74,7 @@ int main( void )
 
    printf( "byte order translation: %s\n", i ? "OK" : "BAD" );
 
-   for ( l = 0; l < 4; l++ )
+   for( l = 0; l < 4; l++ )
    {
       n = HB_GET_BE_UINT16( &buf[ l ] );
       f = n == ( buf[ l ] * 256 + buf[ l + 1 ] ) ? 1 : 0;

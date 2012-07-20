@@ -226,7 +226,7 @@ HB_FUNC( CAIRO_SET_DASH )
          if( iCount )
             pDashes = ( double * ) hb_xgrab( iCount * sizeof( double ) );
 
-         for ( i = 0; i < iCount; i++ )
+         for( i = 0; i < iCount; i++ )
             pDashes[ i ] = hb_arrayGetND( pItem, ( HB_SIZE ) i + 1 );
          cairo_set_dash( pCairo, pDashes, iCount, hb_parnd( 3 ) );
 

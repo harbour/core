@@ -2011,7 +2011,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                if( pWVT->hWnd )
                {
 #if ( _WIN32_WINNT >= 0x0500 )
-                  if ( pWVT->pfnLayered )
+                  if( pWVT->pfnLayered )
                   {
                      SetWindowLong( pWVT->hWnd,
                                     GWL_EXSTYLE,

@@ -594,7 +594,7 @@ static PMIXUPDATE mixUpdateCreate( ADSXAREAP pArea )
       return NULL;
 
    iTag = 0;
-   while ( pTag )
+   while( pTag )
    {
       pTag = pTag->pNext;
       iTag++;
@@ -603,7 +603,7 @@ static PMIXUPDATE mixUpdateCreate( ADSXAREAP pArea )
    pUpdate = ( PMIXUPDATE ) hb_xgrab( sizeof( MIXUPDATE ) * iTag );
    pTag = pArea->pTagList;
    iTag = 0;
-   while ( pTag )
+   while( pTag )
    {
       PMIXKEY  pKey = mixKeyEval( pTag, pArea );
       HB_ULONG ulKeyPos;
@@ -621,7 +621,7 @@ static PMIXUPDATE mixUpdateCreate( ADSXAREAP pArea )
 static void mixUpdateDestroy( ADSXAREAP pArea, PMIXUPDATE pUpdate, int fUpdate )
 {
    PMIXTAG  pTag = pArea->pTagList;
-   int      iTag;  
+   int      iTag;
 
    if( ! pUpdate )
       return;
@@ -633,7 +633,7 @@ static void mixUpdateDestroy( ADSXAREAP pArea, PMIXUPDATE pUpdate, int fUpdate )
    }
 
    iTag = 0;
-   while ( pTag )
+   while( pTag )
    {
       HB_BOOL  bFor = pTag->pForItem == NULL || mixEvalCond( pTag->pForItem, pArea );
       if( pUpdate[ iTag ] == ( HB_ULONG ) -1 )
@@ -659,7 +659,7 @@ static void mixUpdateDestroy( ADSXAREAP pArea, PMIXUPDATE pUpdate, int fUpdate )
       else
       {
          PMIXKEY  pKey = mixKeyEval( pTag, pArea );
-         if( bFor ) 
+         if( bFor )
          {
             if( mixCompareKey( pTag, pUpdate[ iTag ], pKey ) != 0 )
             {
@@ -1334,7 +1334,7 @@ static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERIN
          if( HB_IS_STRING( pOrderInfo->itmOrder ) )
          {
             pTag = pArea->pTagList;
-            while ( pTag )
+            while( pTag )
             {
                if( ! hb_stricmp( hb_itemGetCPtr( pOrderInfo->itmOrder ), pTag->szName ) )
                   break;
@@ -1349,7 +1349,7 @@ static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERIN
             AdsGetNumIndexes( pArea->adsarea.hTable, &usOrder );
 
             pTag = usSearch <= usOrder ? NULL : pArea->pTagList;
-            while ( pTag )
+            while( pTag )
             {
                if( ++usOrder == usSearch )
                   break;
@@ -1513,7 +1513,7 @@ static HB_ERRCODE adsxOrderInfo( ADSXAREAP pArea, HB_USHORT uiIndex, LPDBORDERIN
          AdsGetNumIndexes( pArea->adsarea.hTable, &usOrder );
          pTag2 = pArea->pTagList;
          usOrder++;
-         while ( pTag2 && pTag != pTag2 )
+         while( pTag2 && pTag != pTag2 )
          {
             pTag2 = pTag2->pNext;
             usOrder++;

@@ -50,11 +50,11 @@
  *
  */
 
- /***************************************************************************
- *   The parts of this source are borrowed and adopted from eXaro project   *
- *                 Copyright (C) 2008 by BogDan Vatra                       *
- *                         bog_dan_ro@yahoo.com                             *
- ***************************************************************************/
+/***************************************************************************
+*   The parts of this source are borrowed and adopted from eXaro project   *
+*                 Copyright (C) 2008 by BogDan Vatra                       *
+*                         bog_dan_ro@yahoo.com                             *
+***************************************************************************/
 
 #include "hbqt.h"
 #include "hbapiitm.h"
@@ -66,20 +66,20 @@
 
 HBQGraphicsScene::HBQGraphicsScene( QObject * parent ) : QGraphicsScene( parent )
 {
-   block         = 0;
+   block          = 0;
 
-   m_magnets     = 0;
-   m_magnetArea  = 1;
-   m_paperBorder = 0;
-   m_pageBorder  = 0;
-   m_showGrid    = false;
-   m_pageSize    = QPrinter::A4;
-   m_orientation = QPrinter::Portrait;
+   m_magnets      = 0;
+   m_magnetArea   = 1;
+   m_paperBorder  = 0;
+   m_pageBorder   = 0;
+   m_showGrid     = false;
+   m_pageSize     = QPrinter::A4;
+   m_orientation  = QPrinter::Portrait;
 
    setPageSize( QPrinter::A4 );
    setOrientation( QPrinter::Portrait );
 
-   QFont m_font  = QFont( "Serif" );
+   QFont m_font = QFont( "Serif" );
    m_font.setPointSizeF( 3.5 );
    m_font.setStyleStrategy( QFont::PreferMatch );
    m_font.setStyleStrategy( QFont::ForceOutline );
@@ -102,11 +102,11 @@ void HBQGraphicsScene::hbSetBlock( PHB_ITEM b )
       block = hb_itemNew( b );
       // hb_gcUnlock( block );
 
-      QDesktopWidget * qWid = new QDesktopWidget();
+      QDesktopWidget *  qWid  = new QDesktopWidget();
 
-      PHB_ITEM p1 = hb_itemPutNI( NULL, 21001 );
-      PHB_ITEM p2 = hb_itemPutNI( NULL, qWid->screen()->physicalDpiX() );
-      PHB_ITEM p3 = hb_itemPutNI( NULL, qWid->screen()->physicalDpiY() );
+      PHB_ITEM          p1    = hb_itemPutNI( NULL, 21001 );
+      PHB_ITEM          p2    = hb_itemPutNI( NULL, qWid->screen()->physicalDpiX() );
+      PHB_ITEM          p3    = hb_itemPutNI( NULL, qWid->screen()->physicalDpiY() );
       hb_vmEvalBlockV( block, 3, p1, p2, p3 );
       hb_itemRelease( p1 );
       hb_itemRelease( p2 );
@@ -128,6 +128,7 @@ void HBQGraphicsScene::setGeometry( QRectF rect )
 void HBQGraphicsScene::updatePageRect()
 {
    QPrinter p;
+
    p.setOutputFormat( QPrinter::PdfFormat );
    p.setOrientation( ( QPrinter::Orientation ) orientation() );
    p.setPageSize( ( QPrinter::PageSize ) pageSize() );
@@ -141,10 +142,10 @@ int HBQGraphicsScene::pageSize()
 }
 void HBQGraphicsScene::setPageSize( int pageSize )
 {
-   m_pageSize = pageSize;
+   m_pageSize  = pageSize;
    updatePageRect();
    m_paperRect = sceneRect();
-   setGeometry( QRect( 10 / UNIT, 10 / UNIT, sceneRect().width() - 10 / UNIT * 2, sceneRect().height()- 10 / UNIT * 2 ) );
+   setGeometry( QRect( 10 / UNIT, 10 / UNIT, sceneRect().width() - 10 / UNIT * 2, sceneRect().height() - 10 / UNIT * 2 ) );
 }
 
 QRectF HBQGraphicsScene::paperRect()
@@ -162,9 +163,9 @@ int HBQGraphicsScene::orientation()
 }
 void HBQGraphicsScene::setOrientation( int orientation )
 {
-   m_orientation = orientation;
+   m_orientation  = orientation;
    updatePageRect();
-   m_paperRect = sceneRect();
+   m_paperRect    = sceneRect();
    setGeometry( QRect( 10 / UNIT, 10 / UNIT, sceneRect().width() - 10 / UNIT * 2, sceneRect().height() - 10 / UNIT * 2 ) );
 }
 
@@ -185,12 +186,14 @@ void HBQGraphicsScene::mouseMoveEvent( QGraphicsSceneMouseEvent * mouseEvent )
 {
    HBQGraphicsItem * item = NULL;
 
-   if( itemAt( mouseEvent->scenePos() ) ){
+   if( itemAt( mouseEvent->scenePos() ) )
+   {
       item = dynamic_cast< HBQGraphicsItem * >( itemAt( mouseEvent->scenePos() ) );
    }
    if( item && mouseEvent->buttons() == Qt::NoButton )
    {
-      if( item->objectType() == ( QString ) "Page" ){
+      if( item->objectType() == ( QString ) "Page" )
+      {
          item->setCursor( QCursor( Qt::ArrowCursor ) );
       }
       else
@@ -202,21 +205,22 @@ void HBQGraphicsScene::mouseMoveEvent( QGraphicsSceneMouseEvent * mouseEvent )
             if( ( pc & RESIZE_MODE_TOP && pc & RESIZE_MODE_LEFT ) || ( pc & RESIZE_MODE_BOTTOM && pc & RESIZE_MODE_RIGHT ) )
                item->setCursor( QCursor( Qt::SizeFDiagCursor ) );
             else
-               if( ( pc & RESIZE_MODE_TOP && pc & RESIZE_MODE_RIGHT ) || ( pc & RESIZE_MODE_BOTTOM && pc & RESIZE_MODE_LEFT ) )
-                  item->setCursor( QCursor( Qt::SizeBDiagCursor ) );
-               else
-                  if( ( pc & RESIZE_MODE_TOP ) || ( pc & RESIZE_MODE_BOTTOM ) )
-                     item->setCursor( QCursor( Qt::SizeVerCursor ) );
-                  else
-                     if( ( pc & RESIZE_MODE_RIGHT ) || ( pc & RESIZE_MODE_LEFT ) )
-                        item->setCursor( QCursor( Qt::SizeHorCursor ) );
-                     else
-                        if( pc & RESIZE_MODE_FIXEDPOS )
-                           item->setCursor( QCursor( Qt::ArrowCursor ) );
+            if( ( pc & RESIZE_MODE_TOP && pc & RESIZE_MODE_RIGHT ) || ( pc & RESIZE_MODE_BOTTOM && pc & RESIZE_MODE_LEFT ) )
+               item->setCursor( QCursor( Qt::SizeBDiagCursor ) );
+            else
+            if( ( pc & RESIZE_MODE_TOP ) || ( pc & RESIZE_MODE_BOTTOM ) )
+               item->setCursor( QCursor( Qt::SizeVerCursor ) );
+            else
+            if( ( pc & RESIZE_MODE_RIGHT ) || ( pc & RESIZE_MODE_LEFT ) )
+               item->setCursor( QCursor( Qt::SizeHorCursor ) );
+            else
+            if( pc & RESIZE_MODE_FIXEDPOS )
+               item->setCursor( QCursor( Qt::ArrowCursor ) );
          }
          else
          {
-            if( RESIZE_MODE_FIXED == pc ){
+            if( RESIZE_MODE_FIXED == pc )
+            {
                item->setCursor( QCursor( Qt::OpenHandCursor ) );
             }
          }
@@ -230,10 +234,12 @@ void HBQGraphicsScene::mouseMoveEvent( QGraphicsSceneMouseEvent * mouseEvent )
 
    item = 0;
 
-   if( selectedItems().size() ){
+   if( selectedItems().size() )
+   {
       item = dynamic_cast< HBQGraphicsItem * >( selectedItems()[ 0 ] );
    }
-   if( item && ! ( mouseEvent->modifiers() & Qt::ControlModifier ) ){
+   if( item && ! ( mouseEvent->modifiers() & Qt::ControlModifier ) )
+   {
       drawMagnets( item );
    }
 }
@@ -241,6 +247,7 @@ void HBQGraphicsScene::mouseMoveEvent( QGraphicsSceneMouseEvent * mouseEvent )
 void HBQGraphicsScene::mousePressEvent( QGraphicsSceneMouseEvent * event )
 {
    QPointF mousePos( event->buttonDownScenePos( Qt::LeftButton ).x(), event->buttonDownScenePos( Qt::LeftButton ).y() );
+
    movingItem = itemAt( mousePos.x(), mousePos.y() );
 
    if( movingItem != 0 && event->button() == Qt::LeftButton )
@@ -250,18 +257,23 @@ void HBQGraphicsScene::mousePressEvent( QGraphicsSceneMouseEvent * event )
 
    if( event->buttons() == Qt::LeftButton )
    {
-      if( ! itemAt( event->scenePos() ) ){
+      if( ! itemAt( event->scenePos() ) )
+      {
          emit itemSelected( parent(), event->scenePos() );
       }
-      else {
-         if( itemAt( event->scenePos()) == m_paperBorder || itemAt( event->scenePos() ) == m_pageBorder ){
+      else
+      {
+         if( itemAt( event->scenePos() ) == m_paperBorder || itemAt( event->scenePos() ) == m_pageBorder )
+         {
             emit itemSelected( this, event->scenePos() );
          }
       }
 
       HBQGraphicsItem * item = dynamic_cast< HBQGraphicsItem * >( itemAt( event->scenePos() ) );
-      if( ! item ){
-         if( block ){
+      if( ! item )
+      {
+         if( block )
+         {
             PHB_ITEM p1 = hb_itemPutNI( NULL, 21107 );
             hb_vmEvalBlockV( block, 1, p1 );
             hb_itemRelease( p1 );
@@ -273,13 +285,14 @@ void HBQGraphicsScene::mousePressEvent( QGraphicsSceneMouseEvent * event )
 void HBQGraphicsScene::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
 {
    foreach( QGraphicsItem * item, m_gideLines )
-      removeItem( item );
+   removeItem( item );
 
    m_gideLines.clear();
 
    if( movingItem != 0 && event->button() == Qt::LeftButton )
    {
-      if( mouseOldPos != movingItem->pos() ){
+      if( mouseOldPos != movingItem->pos() )
+      {
          emit itemMoved( dynamic_cast< QObject * >( movingItem ), mouseOldPos );
       }
       movingItem = 0;
@@ -294,7 +307,7 @@ void HBQGraphicsScene::mouseReleaseEvent( QGraphicsSceneMouseEvent * event )
 void HBQGraphicsScene::keyReleaseEvent( QKeyEvent * keyEvent )
 {
    foreach( QGraphicsItem * item, m_gideLines )
-      removeItem( item );
+   removeItem( item );
    m_gideLines.clear();
    QGraphicsScene::keyReleaseEvent( keyEvent );
 }
@@ -314,24 +327,24 @@ void HBQGraphicsScene::keyPressEvent( QKeyEvent * keyEvent )
    {
       foreach( QGraphicsItem * item, selectedItems() )
       {
-         itm = dynamic_cast< HBQGraphicsItem* >( item );
+         itm = dynamic_cast< HBQGraphicsItem * >( item );
          if( itm )
          {
-            QRectF curRect = itm->geometry();
-            QRectF rect;
+            QRectF   curRect = itm->geometry();
+            QRectF   rect;
             switch( keyEvent->key() )
             {
                case Qt::Key_Left:
-                  rect = QRectF( curRect.x() - 5, curRect.y(), curRect.width(), curRect.height() );
+                  rect  = QRectF( curRect.x() - 5, curRect.y(), curRect.width(), curRect.height() );
                   break;
                case Qt::Key_Right:
-                  rect = QRectF( curRect.x() + 5, curRect.y(), curRect.width(), curRect.height() );
+                  rect  = QRectF( curRect.x() + 5, curRect.y(), curRect.width(), curRect.height() );
                   break;
                case Qt::Key_Up:
-                  rect = QRectF( curRect.x(), curRect.y() - 5, curRect.width(), curRect.height() );
+                  rect  = QRectF( curRect.x(), curRect.y() - 5, curRect.width(), curRect.height() );
                   break;
                case Qt::Key_Down:
-                  rect = QRectF( curRect.x(), curRect.y() + 5, curRect.width(), curRect.height() );
+                  rect  = QRectF( curRect.x(), curRect.y() + 5, curRect.width(), curRect.height() );
                   break;
             }
             itm->setGeometry( rect );
@@ -344,24 +357,25 @@ void HBQGraphicsScene::keyPressEvent( QKeyEvent * keyEvent )
    {
       foreach( QGraphicsItem * item, selectedItems() )
       {
-         HBQGraphicsItem * itm = dynamic_cast< HBQGraphicsItem* >( item );
+         HBQGraphicsItem * itm = dynamic_cast< HBQGraphicsItem * >( item );
+
          if( itm )
          {
-            QRectF curRect = itm->geometry();
-            QRectF rect;
+            QRectF   curRect = itm->geometry();
+            QRectF   rect;
             switch( keyEvent->key() )
             {
                case Qt::Key_Left:
-                  rect = QRectF( curRect.x() - 1, curRect.y(), curRect.width(), curRect.height() );
+                  rect  = QRectF( curRect.x() - 1, curRect.y(), curRect.width(), curRect.height() );
                   break;
                case Qt::Key_Right:
-                  rect = QRectF( curRect.x() + 1, curRect.y(), curRect.width(), curRect.height() );
+                  rect  = QRectF( curRect.x() + 1, curRect.y(), curRect.width(), curRect.height() );
                   break;
                case Qt::Key_Up:
-                  rect = QRectF( curRect.x(), curRect.y() - 1, curRect.width(), curRect.height() );
+                  rect  = QRectF( curRect.x(), curRect.y() - 1, curRect.width(), curRect.height() );
                   break;
                case Qt::Key_Down:
-                  rect = QRectF( curRect.x(), curRect.y() + 1, curRect.width(), curRect.height() );
+                  rect  = QRectF( curRect.x(), curRect.y() + 1, curRect.width(), curRect.height() );
                   break;
             }
             itm->setGeometry( rect );
@@ -374,24 +388,25 @@ void HBQGraphicsScene::keyPressEvent( QKeyEvent * keyEvent )
    {
       foreach( QGraphicsItem * item, selectedItems() )
       {
-         HBQGraphicsItem * itm = dynamic_cast< HBQGraphicsItem* >( item );
+         HBQGraphicsItem * itm = dynamic_cast< HBQGraphicsItem * >( item );
+
          if( itm )
          {
-            QRectF curRect = itm->geometry();
-            QRectF rect;
+            QRectF   curRect = itm->geometry();
+            QRectF   rect;
             switch( keyEvent->key() )
             {
                case Qt::Key_Left:
-                  rect = QRectF( curRect.x(), curRect.y(), curRect.width() - 1, curRect.height() );
+                  rect  = QRectF( curRect.x(), curRect.y(), curRect.width() - 1, curRect.height() );
                   break;
                case Qt::Key_Right:
-                  rect = QRectF( curRect.x(), curRect.y(), curRect.width() + 1, curRect.height() );
+                  rect  = QRectF( curRect.x(), curRect.y(), curRect.width() + 1, curRect.height() );
                   break;
                case Qt::Key_Up:
-                  rect = QRectF( curRect.x(), curRect.y(), curRect.width(), curRect.height() - 1 );
+                  rect  = QRectF( curRect.x(), curRect.y(), curRect.width(), curRect.height() - 1 );
                   break;
                case Qt::Key_Down:
-                  rect = QRectF( curRect.x(), curRect.y(), curRect.width(), curRect.height() + 1 );
+                  rect  = QRectF( curRect.x(), curRect.y(), curRect.width(), curRect.height() + 1 );
                   break;
             }
             itm->setGeometry( rect );
@@ -408,8 +423,11 @@ void HBQGraphicsScene::keyPressEvent( QKeyEvent * keyEvent )
 void HBQGraphicsScene::contextMenuEvent( QGraphicsSceneContextMenuEvent * event )
 {
    HBQGraphicsItem * item = dynamic_cast< HBQGraphicsItem * >( itemAt( event->scenePos() ) );
-   if( ! item ){
-      if( block ){
+
+   if( ! item )
+   {
+      if( block )
+      {
          PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::GraphicsSceneContextMenu );
          PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, "HB_QGRAPHICSSCENECONTEXTMENUEVENT", NULL, 0 );
          hb_vmEvalBlockV( block, 2, p1, p2 );
@@ -473,12 +491,12 @@ void HBQGraphicsScene::dropEvent( QGraphicsSceneDragDropEvent * event )
 
       if( mime->hasFormat( ( QString ) "application/x-qabstractitemmodeldatalist" ) )
       {
-         PHB_ITEM p1 = hb_itemPutNI( NULL, ( int ) QEvent::GraphicsSceneDrop );
-         PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, "HB_QGRAPHICSSCENEDRAGDROPEVENT", NULL, 0 );
-         PHB_ITEM p3 = hb_itemNew( NULL );
+         PHB_ITEM          p1       = hb_itemPutNI( NULL, ( int ) QEvent::GraphicsSceneDrop );
+         PHB_ITEM          p2       = hbqt_bindGetHbObject( NULL, ( void * ) event, "HB_QGRAPHICSSCENEDRAGDROPEVENT", NULL, 0 );
+         PHB_ITEM          p3       = hb_itemNew( NULL );
 
-         QTreeWidget * tree = dynamic_cast< QTreeWidget * >( event->source() );
-         QTreeWidgetItem * curItem = dynamic_cast< QTreeWidgetItem * >( tree->currentItem() );
+         QTreeWidget *     tree     = dynamic_cast< QTreeWidget * >( event->source() );
+         QTreeWidgetItem * curItem  = dynamic_cast< QTreeWidgetItem * >( tree->currentItem() );
          if( tree->indexOfTopLevelItem( curItem ) == -1 )
          {
             QTreeWidgetItem * parent = dynamic_cast< QTreeWidgetItem * >( curItem->parent() );
@@ -533,7 +551,7 @@ void HBQGraphicsScene::drawBorder()
    m_paperBorder = addRect( m_paperRect );
 
    p.setStyle( Qt::SolidLine );
-   p.setColor( QColor( 0,0,255 ) );
+   p.setColor( QColor( 0, 0, 255 ) );
    p.setWidth( 4 );
    m_pageBorder = addRect( geometry() );
    m_pageBorder->setPen( p );
@@ -541,11 +559,11 @@ void HBQGraphicsScene::drawBorder()
    if( m_showGrid )
    {
       QPen p, p1;
-      p.setColor( QColor( 225,225,225 ) );
+      p.setColor( QColor( 225, 225, 225 ) );
       p.setWidth( 1 );
       p.setStyle( Qt::DotLine );
 
-      p1.setColor( QColor( 210,210,210 ) );
+      p1.setColor( QColor( 210, 210, 210 ) );
       p1.setWidth( 1 );
       p1.setStyle( Qt::DotLine );
 
@@ -556,18 +574,18 @@ void HBQGraphicsScene::drawBorder()
       for( int i = 0, n = 0; i < width(); i += ( 5.0 / UNIT ), n++ )
       {
          QGraphicsLineItem * line = new QGraphicsLineItem( m_paperBorder );
-         line->setPen( n%2 == 0 ? p : p1 );
+         line->setPen( n % 2 == 0 ? p : p1 );
          line->setLine( i, 0, i, height() );
       }
       for( int i = 0, n = 0; i < height(); i += ( 5.0 / UNIT ), n++ )
       {
          QGraphicsLineItem * line = new QGraphicsLineItem( m_paperBorder );
-         line->setPen( n%2 == 0 ? p : p1 );
+         line->setPen( n % 2 == 0 ? p : p1 );
          line->setLine( 0, i, width(), i );
       }
    }
-   m_pageBorder->setZValue( -1 ) ;
-   m_paperBorder->setZValue( -2 ) ;
+   m_pageBorder->setZValue( -1 );
+   m_paperBorder->setZValue( -2 );
 }
 
 /*----------------------------------------------------------------------*/
@@ -581,8 +599,8 @@ void HBQGraphicsScene::setLeftMagnet( bool magneted )
    else
    {
       int a = 0xffff;
-      a ^= Left;
-      m_magnets &= a;
+      a           ^= Left;
+      m_magnets   &= a;
    }
 }
 void HBQGraphicsScene::setRightMagnet( bool magneted )
@@ -592,8 +610,8 @@ void HBQGraphicsScene::setRightMagnet( bool magneted )
    else
    {
       int a = 0xffff;
-      a ^= Right;
-      m_magnets &= a;
+      a           ^= Right;
+      m_magnets   &= a;
    }
 }
 void HBQGraphicsScene::setTopMagnet( bool magneted )
@@ -603,8 +621,8 @@ void HBQGraphicsScene::setTopMagnet( bool magneted )
    else
    {
       int a = 0xffff;
-      a ^= Top;
-      m_magnets &= a;
+      a           ^= Top;
+      m_magnets   &= a;
    }
 }
 void HBQGraphicsScene::setBottomMagnet( bool magneted )
@@ -614,8 +632,8 @@ void HBQGraphicsScene::setBottomMagnet( bool magneted )
    else
    {
       int a = 0xffff;
-      a ^= Bottom;
-      m_magnets &= a;
+      a           ^= Bottom;
+      m_magnets   &= a;
    }
 }
 void HBQGraphicsScene::setHorizontalMagnet( bool magneted )
@@ -625,8 +643,8 @@ void HBQGraphicsScene::setHorizontalMagnet( bool magneted )
    else
    {
       int a = 0xffff;
-      a ^= Horizontal;
-      m_magnets &= a;
+      a           ^= Horizontal;
+      m_magnets   &= a;
    }
 }
 void HBQGraphicsScene::setVerticalMagnet( bool magneted )
@@ -636,19 +654,19 @@ void HBQGraphicsScene::setVerticalMagnet( bool magneted )
    else
    {
       int a = 0xffff;
-      a ^= Vertical;
-      m_magnets &= a;
+      a           ^= Vertical;
+      m_magnets   &= a;
    }
 }
 
 void HBQGraphicsScene::drawMagnets( HBQGraphicsItem * item )
 {
    foreach( QGraphicsItem * it, m_gideLines )
-      removeItem( it );
+   removeItem( it );
 
    m_gideLines.clear();
 
-   if ( ! m_magnets )
+   if( ! m_magnets )
       return;
 
    QPen p;
@@ -665,78 +683,78 @@ void HBQGraphicsScene::drawMagnets( HBQGraphicsItem * item )
 
       if( ( m_magnets & Left ) && abs( item->mapToScene( QPointF( 0, 0 ) ).x() - ite->mapToScene( QPointF( 0, 0 ) ).x() ) <= m_magnetArea )
       {
-         item->setGeometry(QRectF(ite->mapToItem(item->parentItem(), QPointF(0, 0)).x(), item->geometry().y(), item->geometry().width(), item->geometry().height()));
+         item->setGeometry( QRectF( ite->mapToItem( item->parentItem(), QPointF( 0, 0 ) ).x(), item->geometry().y(), item->geometry().width(), item->geometry().height() ) );
 
-         if (item->mapToScene(0, 0).y() < ite->mapToScene(0, ite->geometry().height()).y())
-            m_gideLines.push_back(addLine(item->mapToScene(0, 0).x(), item->mapToScene(0, 0).y(), item->mapToScene(0, 0).x(), ite->mapToScene(0, ite->geometry().height()).y(), p));
+         if( item->mapToScene( 0, 0 ).y() < ite->mapToScene( 0, ite->geometry().height() ).y() )
+            m_gideLines.push_back( addLine( item->mapToScene( 0, 0 ).x(), item->mapToScene( 0, 0 ).y(), item->mapToScene( 0, 0 ).x(), ite->mapToScene( 0, ite->geometry().height() ).y(), p ) );
          else
-            m_gideLines.push_back(addLine(item->mapToScene(0, 0).x(), ite->mapToScene(0, 0).y(), item->mapToScene(0, 0).x(), item->mapToScene(0, item->geometry().height()).y(), p));
+            m_gideLines.push_back( addLine( item->mapToScene( 0, 0 ).x(), ite->mapToScene( 0, 0 ).y(), item->mapToScene( 0, 0 ).x(), item->mapToScene( 0, item->geometry().height() ).y(), p ) );
       }
 
-      if ((m_magnets&Left) && abs(item->mapToScene(QPointF(0, 0)).x() - ite->mapToScene(QPointF(ite->geometry().width(), 0)).x()) <= m_magnetArea)
+      if( ( m_magnets & Left ) && abs( item->mapToScene( QPointF( 0, 0 ) ).x() - ite->mapToScene( QPointF( ite->geometry().width(), 0 ) ).x() ) <= m_magnetArea )
       {
-         item->setGeometry(QRectF(ite->mapToItem(item->parentItem(), QPointF(ite->geometry().width(), 0)).x(), item->geometry().y(), item->geometry().width(), item->geometry().height()));
+         item->setGeometry( QRectF( ite->mapToItem( item->parentItem(), QPointF( ite->geometry().width(), 0 ) ).x(), item->geometry().y(), item->geometry().width(), item->geometry().height() ) );
 
-         if (item->mapToScene(0, 0).y() < ite->mapToScene(0, ite->geometry().height()).y())
-            m_gideLines.push_back(addLine(item->mapToScene(0, 0).x(), item->mapToScene(0, 0).y(), item->mapToScene(0, 0).x(), ite->mapToScene(0, ite->geometry().height()).y(), p));
+         if( item->mapToScene( 0, 0 ).y() < ite->mapToScene( 0, ite->geometry().height() ).y() )
+            m_gideLines.push_back( addLine( item->mapToScene( 0, 0 ).x(), item->mapToScene( 0, 0 ).y(), item->mapToScene( 0, 0 ).x(), ite->mapToScene( 0, ite->geometry().height() ).y(), p ) );
          else
-            m_gideLines.push_back(addLine(item->mapToScene(0, 0).x(), ite->mapToScene(0, 0).y(), item->mapToScene(0, 0).x(), item->mapToScene(0, item->geometry().height()).y(), p));
+            m_gideLines.push_back( addLine( item->mapToScene( 0, 0 ).x(), ite->mapToScene( 0, 0 ).y(), item->mapToScene( 0, 0 ).x(), item->mapToScene( 0, item->geometry().height() ).y(), p ) );
       }
 
-      if ((m_magnets&Right) && abs(item->mapToScene(item->geometry().width(), 0).x() - ite->mapToScene(0, 0).x()) <= m_magnetArea)
+      if( ( m_magnets & Right ) && abs( item->mapToScene( item->geometry().width(), 0 ).x() - ite->mapToScene( 0, 0 ).x() ) <= m_magnetArea )
       {
-         item->setGeometry(QRectF(ite->mapToItem(item->parentItem(), 0, 0).x() - item->geometry().width(), item->geometry().y(), item->geometry().width(), item->geometry().height()));
+         item->setGeometry( QRectF( ite->mapToItem( item->parentItem(), 0, 0 ).x() - item->geometry().width(), item->geometry().y(), item->geometry().width(), item->geometry().height() ) );
 
-         if (item->mapToScene(item->geometry().width(), 0).y() < ite->mapToScene(ite->geometry().width(), ite->geometry().height()).y())
-            m_gideLines.push_back(addLine(item->mapToScene(item->geometry().width(), 0).x(), item->mapToScene(item->geometry().width(), 0).y(), item->mapToScene(item->geometry().width(), 0).x(), ite->mapToScene(ite->geometry().width(), ite->geometry().height()).y(), p));
+         if( item->mapToScene( item->geometry().width(), 0 ).y() < ite->mapToScene( ite->geometry().width(), ite->geometry().height() ).y() )
+            m_gideLines.push_back( addLine( item->mapToScene( item->geometry().width(), 0 ).x(), item->mapToScene( item->geometry().width(), 0 ).y(), item->mapToScene( item->geometry().width(), 0 ).x(), ite->mapToScene( ite->geometry().width(), ite->geometry().height() ).y(), p ) );
          else
-            m_gideLines.push_back(addLine(item->mapToScene(item->geometry().width(), 0).x(), ite->mapToScene(ite->geometry().width(), 0).y(), item->mapToScene(item->geometry().width(), 0).x(), item->mapToScene(item->geometry().width(), item->geometry().height()).y(), p));
+            m_gideLines.push_back( addLine( item->mapToScene( item->geometry().width(), 0 ).x(), ite->mapToScene( ite->geometry().width(), 0 ).y(), item->mapToScene( item->geometry().width(), 0 ).x(), item->mapToScene( item->geometry().width(), item->geometry().height() ).y(), p ) );
       }
 
-      if ((m_magnets&Right) && abs(item->mapToScene(item->geometry().width(), 0).x() - ite->mapToScene(ite->geometry().width(), 0).x()) <= m_magnetArea)
+      if( ( m_magnets & Right ) && abs( item->mapToScene( item->geometry().width(), 0 ).x() - ite->mapToScene( ite->geometry().width(), 0 ).x() ) <= m_magnetArea )
       {
-         item->setGeometry(QRectF(ite->mapToItem(item->parentItem(), ite->geometry().width(), 0).x() - item->geometry().width(), item->geometry().y(), item->geometry().width(), item->geometry().height()));
+         item->setGeometry( QRectF( ite->mapToItem( item->parentItem(), ite->geometry().width(), 0 ).x() - item->geometry().width(), item->geometry().y(), item->geometry().width(), item->geometry().height() ) );
 
-         if (item->mapToScene(item->geometry().width(), 0).y() < ite->mapToScene(ite->geometry().width(), ite->geometry().height()).y())
-            m_gideLines.push_back(addLine(item->mapToScene(item->geometry().width(), 0).x(), item->mapToScene(item->geometry().width(), 0).y(), ite->mapToScene(ite->geometry().width(), 0).x(), ite->mapToScene(ite->geometry().width(), ite->geometry().height()).y(), p));
+         if( item->mapToScene( item->geometry().width(), 0 ).y() < ite->mapToScene( ite->geometry().width(), ite->geometry().height() ).y() )
+            m_gideLines.push_back( addLine( item->mapToScene( item->geometry().width(), 0 ).x(), item->mapToScene( item->geometry().width(), 0 ).y(), ite->mapToScene( ite->geometry().width(), 0 ).x(), ite->mapToScene( ite->geometry().width(), ite->geometry().height() ).y(), p ) );
          else
-            m_gideLines.push_back(addLine(ite->mapToScene(ite->geometry().width(), 0).x(), ite->mapToScene(ite->geometry().width(), 0).y(), item->mapToScene(item->geometry().width(), 0).x(), item->mapToScene(item->geometry().width(), item->geometry().height()).y(), p));
+            m_gideLines.push_back( addLine( ite->mapToScene( ite->geometry().width(), 0 ).x(), ite->mapToScene( ite->geometry().width(), 0 ).y(), item->mapToScene( item->geometry().width(), 0 ).x(), item->mapToScene( item->geometry().width(), item->geometry().height() ).y(), p ) );
       }
 
-      if ((m_magnets&Top) && abs(item->mapToScene(QPointF(0, 0)).y() - ite->mapToScene(QPointF(0, 0)).y()) <= m_magnetArea)
+      if( ( m_magnets & Top ) && abs( item->mapToScene( QPointF( 0, 0 ) ).y() - ite->mapToScene( QPointF( 0, 0 ) ).y() ) <= m_magnetArea )
       {
-         item->setGeometry(QRectF(item->geometry().x(), ite->mapToItem(item->parentItem(), QPointF(0, 0)).y(), item->geometry().width(), item->geometry().height()));
-         m_gideLines.push_back(addLine(item->mapToScene(0, 0).x(), item->mapToScene(0, 0).y(), ite->mapToScene(0, 0).x(), item->mapToScene(0, 0).y(), p));
+         item->setGeometry( QRectF( item->geometry().x(), ite->mapToItem( item->parentItem(), QPointF( 0, 0 ) ).y(), item->geometry().width(), item->geometry().height() ) );
+         m_gideLines.push_back( addLine( item->mapToScene( 0, 0 ).x(), item->mapToScene( 0, 0 ).y(), ite->mapToScene( 0, 0 ).x(), item->mapToScene( 0, 0 ).y(), p ) );
       }
 
-      if ((m_magnets&Top) && abs(item->mapToScene(QPointF(0, 0)).y() - ite->mapToScene(QPointF(0, ite->geometry().height())).y()) <= m_magnetArea)
+      if( ( m_magnets & Top ) && abs( item->mapToScene( QPointF( 0, 0 ) ).y() - ite->mapToScene( QPointF( 0, ite->geometry().height() ) ).y() ) <= m_magnetArea )
       {
-         item->setGeometry(QRectF(item->geometry().x(), ite->mapToItem(item->parentItem(), QPointF(0, ite->geometry().height())).y(), item->geometry().width(), item->geometry().height()));
-         m_gideLines.push_back(addLine(item->mapToScene(0, 0).x(), item->mapToScene(0, 0).y(), ite->mapToScene(0, 0).x(), item->mapToScene(0, 0).y(), p));
+         item->setGeometry( QRectF( item->geometry().x(), ite->mapToItem( item->parentItem(), QPointF( 0, ite->geometry().height() ) ).y(), item->geometry().width(), item->geometry().height() ) );
+         m_gideLines.push_back( addLine( item->mapToScene( 0, 0 ).x(), item->mapToScene( 0, 0 ).y(), ite->mapToScene( 0, 0 ).x(), item->mapToScene( 0, 0 ).y(), p ) );
       }
 
-      if ((m_magnets&Bottom) && abs(item->mapToScene(QPointF(0, item->geometry().height())).y() - ite->mapToScene(QPointF(0, ite->geometry().height())).y()) <= m_magnetArea)
+      if( ( m_magnets & Bottom ) && abs( item->mapToScene( QPointF( 0, item->geometry().height() ) ).y() - ite->mapToScene( QPointF( 0, ite->geometry().height() ) ).y() ) <= m_magnetArea )
       {
-         item->setGeometry(QRectF(item->geometry().x(), ite->mapToItem(item->parentItem(), QPointF(0, ite->geometry().height())).y() - item->geometry().height(), item->geometry().width(), item->geometry().height()));
-         m_gideLines.push_back(addLine(item->mapToScene(0, 0).x(), item->mapToScene(0, item->geometry().height()).y(), ite->mapToScene(0, 0).x(), item->mapToScene(0, item->geometry().height()).y(), p));
+         item->setGeometry( QRectF( item->geometry().x(), ite->mapToItem( item->parentItem(), QPointF( 0, ite->geometry().height() ) ).y() - item->geometry().height(), item->geometry().width(), item->geometry().height() ) );
+         m_gideLines.push_back( addLine( item->mapToScene( 0, 0 ).x(), item->mapToScene( 0, item->geometry().height() ).y(), ite->mapToScene( 0, 0 ).x(), item->mapToScene( 0, item->geometry().height() ).y(), p ) );
       }
 
-      if ((m_magnets&Bottom) && abs(item->mapToScene(QPointF(0, item->geometry().height())).y() - ite->mapToScene(QPointF(0, 0)).y()) <= m_magnetArea)
+      if( ( m_magnets & Bottom ) && abs( item->mapToScene( QPointF( 0, item->geometry().height() ) ).y() - ite->mapToScene( QPointF( 0, 0 ) ).y() ) <= m_magnetArea )
       {
-         item->setGeometry(QRectF(item->geometry().x(), ite->mapToItem(item->parentItem(), QPointF(0, 0)).y() - item->geometry().height(), item->geometry().width(), item->geometry().height()));
-         m_gideLines.push_back(addLine(item->mapToScene(0, 0).x(), item->mapToScene(0, item->geometry().height()).y(), ite->mapToScene(0, 0).x(), item->mapToScene(0, item->geometry().height()).y(), p));
+         item->setGeometry( QRectF( item->geometry().x(), ite->mapToItem( item->parentItem(), QPointF( 0, 0 ) ).y() - item->geometry().height(), item->geometry().width(), item->geometry().height() ) );
+         m_gideLines.push_back( addLine( item->mapToScene( 0, 0 ).x(), item->mapToScene( 0, item->geometry().height() ).y(), ite->mapToScene( 0, 0 ).x(), item->mapToScene( 0, item->geometry().height() ).y(), p ) );
       }
 
-      if ((m_magnets&Horizontal) && abs(item->mapToScene(QPointF(0, item->geometry().height() / 2)).y() - ite->mapToScene(QPointF(0, ite->geometry().height() / 2)).y()) <= m_magnetArea)
+      if( ( m_magnets & Horizontal ) && abs( item->mapToScene( QPointF( 0, item->geometry().height() / 2 ) ).y() - ite->mapToScene( QPointF( 0, ite->geometry().height() / 2 ) ).y() ) <= m_magnetArea )
       {
-         item->setGeometry(QRectF(item->geometry().x(), ite->mapToItem(item->parentItem(), QPointF(0, ite->geometry().height() / 2)).y() - item->geometry().height() / 2, item->geometry().width(), item->geometry().height()));
-         m_gideLines.push_back(addLine(item->mapToScene(0, 0).x(), item->mapToScene(0, item->geometry().height() / 2).y(), ite->mapToScene(0, 0).x(), item->mapToScene(0, item->geometry().height() / 2).y(), p));
+         item->setGeometry( QRectF( item->geometry().x(), ite->mapToItem( item->parentItem(), QPointF( 0, ite->geometry().height() / 2 ) ).y() - item->geometry().height() / 2, item->geometry().width(), item->geometry().height() ) );
+         m_gideLines.push_back( addLine( item->mapToScene( 0, 0 ).x(), item->mapToScene( 0, item->geometry().height() / 2 ).y(), ite->mapToScene( 0, 0 ).x(), item->mapToScene( 0, item->geometry().height() / 2 ).y(), p ) );
       }
 
-      if ((m_magnets&Vertical) && abs(item->mapToScene(QPointF(item->geometry().width() / 2, 0)).x() - ite->mapToScene(QPointF(ite->geometry().width() / 2, 0)).x()) <= m_magnetArea)
+      if( ( m_magnets & Vertical ) && abs( item->mapToScene( QPointF( item->geometry().width() / 2, 0 ) ).x() - ite->mapToScene( QPointF( ite->geometry().width() / 2, 0 ) ).x() ) <= m_magnetArea )
       {
-         item->setGeometry(QRectF(ite->mapToItem(item->parentItem(), QPointF(ite->geometry().width() / 2, 0)).x() - item->geometry().width() / 2, item->geometry().y(), item->geometry().width(), item->geometry().height()));
-         m_gideLines.push_back(addLine(item->mapToScene(item->geometry().width() / 2, 0).x(), item->mapToScene(0, 0).y(), item->mapToScene(item->geometry().width() / 2, 0).x(), ite->mapToScene(0, ite->geometry().height()).y(), p));
+         item->setGeometry( QRectF( ite->mapToItem( item->parentItem(), QPointF( ite->geometry().width() / 2, 0 ) ).x() - item->geometry().width() / 2, item->geometry().y(), item->geometry().width(), item->geometry().height() ) );
+         m_gideLines.push_back( addLine( item->mapToScene( item->geometry().width() / 2, 0 ).x(), item->mapToScene( 0, 0 ).y(), item->mapToScene( item->geometry().width() / 2, 0 ).x(), ite->mapToScene( 0, ite->geometry().height() ).y(), p ) );
       }
    }
 }

@@ -911,7 +911,7 @@ HB_FUNC( HPDF_PAGE_SETDASH )
    int nPtns = hb_parni( 3 );
    int i;
 
-   for ( i = 0; i < nPtns; i++ )
+   for( i = 0; i < nPtns; i++ )
       dash.ptn[ i ] = ( HPDF_UINT16 ) hb_parvni( 2, i+1 );
 
    hb_retnl( ( long ) HPDF_Page_SetDash( ( HPDF_Page ) hb_parptr( 1 ), dash.ptn, nPtns, hb_parni( 4 ) ) );

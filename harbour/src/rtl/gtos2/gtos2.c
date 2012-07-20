@@ -624,7 +624,7 @@ static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
       else
          ch = ( int ) s_key->chScan + 256;
    }
-   else if ( s_key->fbStatus & KBDTRF_FINAL_CHAR_IN )
+   else if( s_key->fbStatus & KBDTRF_FINAL_CHAR_IN )
       ch = ( int ) s_key->chChar;
    else
       ch = 0;

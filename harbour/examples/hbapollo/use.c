@@ -263,11 +263,11 @@ HB_FUNC( SX_DBINFO )
 
                   hb_xfree( szDesc );
                   hb_itemRelease( pData );
-               }           /* for ( j = 0; j < hb_arrayLen( aDesc ); j++ ) */
-            }              /* for ( i = 0; i< hb_arrayLen( pInfo ); i++ ) */
+               }           /* for( j = 0; j < hb_arrayLen( aDesc ); j++ ) */
+            }              /* for( i = 0; i< hb_arrayLen( pInfo ); i++ ) */
 
             hb_itemReturnRelease( pInfo );
-         }                 /* (HB_ISLOG(2) && hb_parl(2) ) */
+         }                 /* ( HB_ISLOG( 2 ) && hb_parl( 2 ) ) */
          else
          {
             hb_itemReturn( Opened_DBF_Property );

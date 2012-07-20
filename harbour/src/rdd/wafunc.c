@@ -1211,7 +1211,7 @@ static HB_ERRCODE hb_rddCloseParentRel( AREAP pArea, void * pChildArea )
          else
             lpdbRelationPtr = &lpdbRelation->lpdbriNext;
       }
-      while ( *lpdbRelationPtr );
+      while( *lpdbRelationPtr );
    }
    return HB_SUCCESS;
 }

@@ -5839,7 +5839,7 @@ static HB_ERRCODE hb_nsxTagCreate( LPTAGINFO pTag, HB_BOOL fReindex )
       {
          if( pArea->dbfarea.area.lpdbOrdCondInfo->itmRecID )
             ulStartRec = hb_itemGetNL( pArea->dbfarea.area.lpdbOrdCondInfo->itmRecID );
-         if ( ulStartRec )
+         if( ulStartRec )
          {
             ulNextCount = 1;
          }

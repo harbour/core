@@ -368,7 +368,7 @@ static HB_ERRCODE sqlbaseSkip( SQLBASEAREAP pArea, HB_LONG lToSkip )
 
    if( lToSkip < 0 )
       pArea->area.fEof = HB_FALSE;
-   else /* if ( lToSkip > 0 ) */
+   else /* if( lToSkip > 0 ) */
       pArea->area.fBof = HB_FALSE;
 
    return errCode;
@@ -477,9 +477,9 @@ static HB_ERRCODE sqlbaseGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_IT
 static HB_ERRCODE sqlbaseGetVarLen( SQLBASEAREAP pArea, HB_USHORT uiIndex, HB_ULONG * pLength )
 {
    /*  TODO: should we use this code?
-      if ( pArea->area.lpFields[ uiIndex ].uiType == HB_IT_MEMO )
+      if( pArea->area.lpFields[ uiIndex ].uiType == HB_IT_MEMO )
       {
-      return pArea->pSDD->GetVarLen( pArea, uiIndex, pLength );
+         return pArea->pSDD->GetVarLen( pArea, uiIndex, pLength );
       }
     */
 
@@ -840,66 +840,66 @@ static HB_ERRCODE sqlbaseStructSize( SQLBASEAREAP pArea, HB_USHORT * uiSize )
 }
 
 
-/*
-   static HB_ERRCODE sqlbaseChildEnd( SQLBASEAREAP pArea, LPDBRELINFO pRelInfo )
-   {
+#if 0
+static HB_ERRCODE sqlbaseChildEnd( SQLBASEAREAP pArea, LPDBRELINFO pRelInfo )
+{
    HB_ERRCODE errCode;
 
-   if ( pArea->lpdbPendingRel == pRelInfo )
+   if( pArea->lpdbPendingRel == pRelInfo )
       errCode = SELF_FORCEREL( ( AREAP ) pArea );
    else
       errCode = HB_SUCCESS;
    SUPER_CHILDEND( ( AREAP ) pArea, pRelInfo );
    return errCode;
-   }
+}
 
 
-   static HB_ERRCODE sqlbaseChildStart( SQLBASEAREAP pArea, LPDBRELINFO pRelInfo )
-   {
-   if ( SELF_CHILDSYNC( ( AREAP ) pArea, pRelInfo ) != HB_SUCCESS )
+static HB_ERRCODE sqlbaseChildStart( SQLBASEAREAP pArea, LPDBRELINFO pRelInfo )
+{
+   if( SELF_CHILDSYNC( ( AREAP ) pArea, pRelInfo ) != HB_SUCCESS )
       return HB_FAILURE;
    return SUPER_CHILDSTART( ( AREAP ) pArea, pRelInfo );
-   }
+}
 
 
-   static HB_ERRCODE sqlbaseChildSync( SQLBASEAREAP pArea, LPDBRELINFO pRelInfo )
-   {
-   if ( SELF_GOCOLD( ( AREAP ) pArea ) != HB_SUCCESS )
+static HB_ERRCODE sqlbaseChildSync( SQLBASEAREAP pArea, LPDBRELINFO pRelInfo )
+{
+   if( SELF_GOCOLD( ( AREAP ) pArea ) != HB_SUCCESS )
       return HB_FAILURE;
 
    pArea->lpdbPendingRel = pRelInfo;
 
-   if ( pArea->lpdbRelations )
+   if( pArea->lpdbRelations )
       return SELF_SYNCCHILDREN( ( AREAP ) pArea );
 
    return HB_SUCCESS;
-   }
+}
 
 
-   static HB_ERRCODE sqlbaseForceRel( SQLBASEAREAP pArea )
-   {
-   if ( pArea->lpdbPendingRel )
+static HB_ERRCODE sqlbaseForceRel( SQLBASEAREAP pArea )
+{
+   if( pArea->lpdbPendingRel )
    {
       LPDBRELINFO lpdbPendingRel;
 
-      lpdbPendingRel = pArea->lpdbPendingRel;
-      pArea->lpdbPendingRel = NULL;
+      lpdbPendingRel          = pArea->lpdbPendingRel;
+      pArea->lpdbPendingRel   = NULL;
       return SELF_RELEVAL( ( AREAP ) pArea, lpdbPendingRel );
    }
    return HB_SUCCESS;
-   }
+}
 
 
-   static HB_ERRCODE sqlbaseSetFilter( SQLBASEAREAP pArea, LPDBFILTERINFO pFilterInfo )
+static HB_ERRCODE sqlbaseSetFilter( SQLBASEAREAP pArea, LPDBFILTERINFO pFilterInfo )
+{
+   if( pArea->lpdbPendingRel )
    {
-   if ( pArea->lpdbPendingRel )
-   {
-      if ( SELF_FORCEREL( ( AREAP ) pArea ) != HB_SUCCESS )
+      if( SELF_FORCEREL( ( AREAP ) pArea ) != HB_SUCCESS )
          return HB_FAILURE;
    }
    return SUPER_SETFILTER( ( AREAP ) pArea, pFilterInfo );
-   }
- */
+}
+#endif
 
 
 static HB_ERRCODE sqlbaseInit( LPRDDNODE pRDD )

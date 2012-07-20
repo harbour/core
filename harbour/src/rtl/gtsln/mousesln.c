@@ -136,19 +136,19 @@ static void hb_sln_CheckDoubleClick( void )
       TIMEVAL_GET( evtTime );
       if( usNewButtons & M_BUTTON_LEFT )
       {
-         if ( TIMEVAL_LESS( evtTime, mLeftDblckTime ) )
+         if( TIMEVAL_LESS( evtTime, mLeftDblckTime ) )
             s_usMouseState |= M_BUTTON_LDBLCK;
          TIMEVAL_ADD( mLeftDblckTime, evtTime, hb_mouseGetDoubleClickSpeed() );
       }
       if( usNewButtons & M_BUTTON_MIDDLE )
       {
-         if ( TIMEVAL_LESS( evtTime, mMiddleDblckTime ) )
+         if( TIMEVAL_LESS( evtTime, mMiddleDblckTime ) )
             s_usMouseState |= M_BUTTON_MDBLCK;
          TIMEVAL_ADD( mMiddleDblckTime, evtTime, hb_mouseGetDoubleClickSpeed() );
       }
       if( usNewButtons & M_BUTTON_RIGHT )
       {
-         if ( TIMEVAL_LESS( evtTime, mRightDblckTime ) )
+         if( TIMEVAL_LESS( evtTime, mRightDblckTime ) )
             s_usMouseState |= M_BUTTON_RDBLCK;
          TIMEVAL_ADD( mRightDblckTime, evtTime, hb_mouseGetDoubleClickSpeed() );
       }

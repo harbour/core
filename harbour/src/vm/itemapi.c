@@ -2425,7 +2425,7 @@ HB_BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
             iLast = iLast >= 5 ? 1 : 0;
 
             iPos = iSize;
-            while ( iPos-- > 0 )
+            while( iPos-- > 0 )
             {
                if( iDec == 0 || iPos != iDot )
                {
@@ -2488,7 +2488,7 @@ HB_BOOL hb_itemStrBuf( char * szResult, PHB_ITEM pNumber, int iSize, int iDec )
       }
 
       fNeg = ( nNumber < 0 );
-      while ( iPos-- > 0 )
+      while( iPos-- > 0 )
       {
          szResult[ iPos ] = '0' + ( char ) ( fNeg ? -( nNumber % 10 ) : ( nNumber % 10 ) );
          nNumber /= 10;

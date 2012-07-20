@@ -168,10 +168,10 @@ static HB_BOOL exportBufSqlVar( pgCopyContext * context, PHB_ITEM pValue, const 
          }
          else
          {
-            if( ! addStrnToContext( context, &szDate[ 0 ], 4 ) || 
-                ! addToContext( context, '-' ) || 
+            if( ! addStrnToContext( context, &szDate[ 0 ], 4 ) ||
+                ! addToContext( context, '-' ) ||
                 ! addStrnToContext( context, &szDate[ 4 ], 2 ) ||
-                ! addToContext( context, '-' ) || 
+                ! addToContext( context, '-' ) ||
                 ! addStrnToContext( context, &szDate[ 6 ], 2 ) )
                return HB_FALSE;
          }
@@ -187,8 +187,8 @@ static HB_BOOL exportBufSqlVar( pgCopyContext * context, PHB_ITEM pValue, const 
 
          hb_itemGetTDT( pValue, &lDate, &lTime );
          hb_timeStampStr( szDateTime, lDate, lTime );
-         if( ! addStrToContext( context, szQuote ) || 
-             ! addStrToContext( context, szDateTime ) || 
+         if( ! addStrToContext( context, szQuote ) ||
+             ! addStrToContext( context, szDateTime ) ||
              ! addStrToContext( context, szQuote ) )
             return HB_FALSE;
          break;
@@ -429,7 +429,7 @@ HB_FUNC( HB_PQCOPYFROMWA )
          }
 
          pgResult = PQgetResult( context->connection );
-         while ( pgResult )
+         while( pgResult )
          {
             if( PQresultStatus( pgResult ) != PGRES_COMMAND_OK )
                bFail = HB_TRUE;

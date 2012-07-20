@@ -286,14 +286,14 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
    pWVT->pSymWVT_MOUSE      = NULL;
    pWVT->pSymWVT_TIMER      = NULL;
    pWVT->pSymWVT_KEY        = NULL;
-   for ( iIndex = 0; iIndex < WVT_DLGML_MAX; iIndex++ )
+   for( iIndex = 0; iIndex < WVT_DLGML_MAX; iIndex++ )
    {
-      if ( pWVT->pFunc[ iIndex ] != NULL && pWVT->iType[ iIndex ] == 2 )
+      if( pWVT->pFunc[ iIndex ] != NULL && pWVT->iType[ iIndex ] == 2 )
       {
          hb_itemRelease( ( PHB_ITEM ) pWVT->pFunc[ iIndex ] );
          pWVT->pFunc[ iIndex ] = NULL;
       }
-      if ( pWVT->pcbFunc[ iIndex ] != NULL )
+      if( pWVT->pcbFunc[ iIndex ] != NULL )
       {
          hb_itemRelease( ( PHB_ITEM ) pWVT->pcbFunc[ iIndex ] );
          pWVT->pcbFunc[ iIndex ] = NULL;
@@ -3834,7 +3834,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                if( pWVT->hWnd )
                {
 #if ( _WIN32_WINNT >= 0x0500 ) && ! defined( HB_OS_WIN_CE )
-                  if ( s_guiData->pfnLayered )
+                  if( s_guiData->pfnLayered )
                   {
                      SetWindowLongPtr( pWVT->hWnd,
                                     GWL_EXSTYLE,
@@ -3853,7 +3853,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
       }
       case HB_GTI_PRESPARAMS:
-         if ( ! pWVT->hWnd )
+         if( ! pWVT->hWnd )
          {
             if( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY )
             {

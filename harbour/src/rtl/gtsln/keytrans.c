@@ -395,17 +395,17 @@ static void hb_sln_SortKeyTranslationTable( void )
 {
    int i, j, min, KeyTmp[ 2 ];
 
-   for ( i = 0; i < ( (int) KeyTranslationTableSize - 1 ); i++ )
+   for( i = 0; i < ( ( int ) KeyTranslationTableSize - 1 ); i++ )
    {
       min = i;
 
-      for ( j = i + 1; j < (int) KeyTranslationTableSize; j++ )
+      for( j = i + 1; j < ( int ) KeyTranslationTableSize; j++ )
       {
-         if ( KeyTranslationTable[ j ][ 0 ] < KeyTranslationTable[ min ][ 0 ] )
+         if( KeyTranslationTable[ j ][ 0 ] < KeyTranslationTable[ min ][ 0 ] )
             min = j;
       }
 
-      if ( min > i )
+      if( min > i )
       {
          KeyTmp[ 0 ] = KeyTranslationTable[ i ][ 0 ];
          KeyTmp[ 1 ] = KeyTranslationTable[ i ][ 1 ];
@@ -419,7 +419,7 @@ static void hb_sln_SortKeyTranslationTable( void )
    }
 
 /*
-   for ( i = 0; i < KeyTranslationTableSize; i++ )
+   for( i = 0; i < KeyTranslationTableSize; i++ )
       fprintf( stderr, "%02x %8x %8x\n", i, KeyTranslationTable[ i ][ 0 ], KeyTranslationTable[ i ][ 1 ] );
 */
 
@@ -432,8 +432,8 @@ static int hb_sln_FindKeyTranslation( int SlangKey )
 {
    int Start,Stop,CurPos;
 
-   if ( ( SlangKey >= KeyTranslationTable[ 0 ][ 0 ] ) &&
-        ( SlangKey <= KeyTranslationTable[ KeyTranslationTableSize - 1 ][ 0 ] ) )
+   if( ( SlangKey >= KeyTranslationTable[ 0 ][ 0 ] ) &&
+       ( SlangKey <= KeyTranslationTable[ KeyTranslationTableSize - 1 ][ 0 ] ) )
    {
       Start = 0; Stop = KeyTranslationTableSize - 1;
 
@@ -464,15 +464,15 @@ int hb_sln_SetKeyInKeyTranslationTable( int SlangKey, int ClipKey )
 {
    int i, Found = 0;
 
-   if ( ( SlangKey >= KeyTranslationTable[ 0 ][ 0 ] ) &&
-        ( SlangKey <= KeyTranslationTable[ KeyTranslationTableSize - 1 ][ 0 ] ) )
+   if( ( SlangKey >= KeyTranslationTable[ 0 ][ 0 ] ) &&
+       ( SlangKey <= KeyTranslationTable[ KeyTranslationTableSize - 1 ][ 0 ] ) )
    {
-      for ( i = 0; i < (int) KeyTranslationTableSize; i++ )
+      for( i = 0; i < ( int ) KeyTranslationTableSize; i++ )
       {
-         if ( SlangKey == KeyTranslationTable[ i ][ 0 ] )
+         if( SlangKey == KeyTranslationTable[ i ][ 0 ] )
             KeyTranslationTable[ i ][ 1 ] = ClipKey;
-       Found = 1;
-            /* we don't break here because SlangKey can be defined more than once */
+         Found = 1;
+         /* we don't break here because SlangKey can be defined more than once */
       }
    }
 

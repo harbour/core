@@ -102,9 +102,9 @@
 #     endif
 
 #     define hb_stack_alloc()    do { hb_stack_ptr = ( PHB_STACK ) \
-                                      hb_xgrab( sizeof( HB_STACK ) ); } while ( 0 )
+                                      hb_xgrab( sizeof( HB_STACK ) ); } while( 0 )
 #     define hb_stack_dealloc()  do { hb_xfree( hb_stack_ptr ); \
-                                      hb_stack_ptr = NULL; } while ( 0 )
+                                      hb_stack_ptr = NULL; } while( 0 )
 #     define hb_stack_ready()    (hb_stack_ptr != NULL)
 
 #  else
@@ -122,10 +122,10 @@
                                          s_fInited = HB_TRUE; } \
                                       hb_tls_set( hb_stack_key, \
                                                   hb_xgrab( sizeof( HB_STACK ) ) ); \
-                                 } while ( 0 )
+                                 } while( 0 )
 #     define hb_stack_dealloc()  do { hb_xfree( ( void * ) hb_tls_get( hb_stack_key ) ); \
                                       hb_tls_set( hb_stack_key, NULL ); } \
-                                 while ( 0 )
+                                 while( 0 )
 #     define hb_stack_ready()    ( s_fInited && hb_tls_get( hb_stack_key ) )
 
 #  endif /* HB_USE_TLS */

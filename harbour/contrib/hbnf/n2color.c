@@ -20,7 +20,7 @@
  * is nothing that is even remotely DOS-specific in the code!) And
  * converted tabs to spaces.
  *    Rev 2.0   03 Mar 1997 03:05:01   JO  / Phil Barnett
- *              commented out : if ( iColor > 15 ) in _ftI2Color()
+ *              commented out : if( iColor > 15 ) in _ftI2Color()
  *    Rev 1.0   01 Jan 1995 03:01:00   TED
  * Initial release
  *

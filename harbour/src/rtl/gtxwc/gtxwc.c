@@ -3285,14 +3285,14 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 #endif
          respond.xselection.property = req->property;
 
-         if ( req->target == s_atomTimestamp )
+         if( req->target == s_atomTimestamp )
          {
             long timeStamp = wnd->ClipboardTime;
             XChangeProperty( wnd->dpy, req->requestor, req->property,
                              s_atomInteger, 32, PropModeReplace,
                              ( unsigned char * ) &timeStamp, 1 );
          }
-         else if ( req->target == s_atomTargets )
+         else if( req->target == s_atomTargets )
          {
             long aProp[] = { s_atomTimestamp, s_atomTargets,
                              s_atomString, s_atomUTF8String,
@@ -5414,7 +5414,7 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          return HB_GTSUPER_GFXPRIMITIVE( pGT, iType, iTop, iLeft, iBottom, iRight, iColor );
    }
 
-   if ( HB_GTSELF_DISPCOUNT( pGT ) == 0 )
+   if( HB_GTSELF_DISPCOUNT( pGT ) == 0 )
    {
       hb_gt_xwc_RealRefresh( wnd );
    }

@@ -61,7 +61,7 @@ static char _itf_checksum( const char * szCode )
 {
    int   i, sum = 0;
 
-   for ( i = 0; szCode[ i ]; i++ )
+   for( i = 0; szCode[ i ]; i++ )
       sum += ( szCode[ i ] - '0' ) * ( i & 1 ? 1 : 3 );
    return '0' + ( 100000 - sum ) % 10;
 }

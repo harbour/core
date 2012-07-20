@@ -525,7 +525,7 @@ static void hb_gt_pca_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    {
       struct winsize win;
 
-      if ( ioctl( hFilenoStdout, TIOCGWINSZ, ( char * ) &win ) != -1 )
+      if( ioctl( hFilenoStdout, TIOCGWINSZ, ( char * ) &win ) != -1 )
       {
          iRows = win.ws_row;
          iCols = win.ws_col;

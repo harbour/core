@@ -60,7 +60,7 @@ static char _msi_checksum( const char * szCode )
    int   i, j = 1, k, sum = 0;
 
    /* Luhn algorithm */
-   for ( i = ( int ) strlen( szCode ) - 1; i >= 0; i-- )
+   for( i = ( int ) strlen( szCode ) - 1; i >= 0; i-- )
    {
       k = ( szCode[ i ] - '0' ) * ( j ? 2 : 1 );
       if( k > 9 )

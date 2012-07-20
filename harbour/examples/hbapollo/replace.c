@@ -79,7 +79,7 @@ HB_FUNC( SX_REPLACE )  /* ( cpFieldName, xData, cArea ) */
 
             hb_retc( ( char * ) pValue );
             break;
-         }     /* enf of if ( HB_IS_STRING( vData ) ) */
+         }     /* enf of if( HB_IS_STRING( vData ) ) */
 
          case HB_IT_DOUBLE:
          {
@@ -111,14 +111,14 @@ HB_FUNC( SX_REPLACE )  /* ( cpFieldName, xData, cArea ) */
             sx_Replace( cFieldName, R_LOGICAL, ( PVOID ) &pValue );
             hb_retl( pValue );
             break;
-         }     /* end of else if ( HB_IS_LOGICAL( vData ) ) */
+         }     /* end of else if( HB_IS_LOGICAL( vData ) ) */
 
          case HB_IT_DATE:
          {
             long lJulian = hb_itemGetDL( pItem );
             sx_Replace( cFieldName, R_JULIAN, ( PVOID ) &lJulian );
             break;
-         }     /* end of else if ( HB_IS_DATE( vData ) ) */
+         }     /* end of else if( HB_IS_DATE( vData ) ) */
       }
 
       /* Back to Previous Area */
@@ -229,7 +229,7 @@ HB_FUNC( SX_REPLACEEX )      /* ( aReplace, cArea ) */
          /* Give Protection of NOT an array */
          if( HB_IS_ARRAY( pInfo ) && hb_arrayLen( pInfo ) >= 2 )
          {
-            /* if ( pInfo->item.asArray.value->ulLen >= 2 ) */
+            /* if( pInfo->item.asArray.value->ulLen >= 2 ) */
             cFieldName = ( PBYTE ) hb_arrayGetC( pInfo, 1 );
             uVarType   = ( WORD ) hb_arrayGetType( pInfo, 2 );
             switch( uVarType )
