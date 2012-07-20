@@ -287,17 +287,17 @@ local ch
    do while !((ch:=inkey(0))==K_ESC)
       /* experiment with different paintrefresh interval:
       do case
-         case ch==asc("<")
-            wvw_setPaintRefresh( INT(wvw_setPaintRefresh() / 2) )
-            alert(wvw_setPaintRefresh())
-         case ch==asc(">")
-            wvw_setPaintRefresh( INT(wvw_setPaintRefresh() * 2) )
-            alert(wvw_setPaintRefresh())
-         case ch==asc("0")
-            wvw_setPaintRefresh( 0 )
-            alert(wvw_setPaintRefresh())
-         otherwise
-            * do nothing. inkey() has been handled by nAfterInket()
+      case ch==asc("<")
+         wvw_setPaintRefresh( INT(wvw_setPaintRefresh() / 2) )
+         alert(wvw_setPaintRefresh())
+      case ch==asc(">")
+         wvw_setPaintRefresh( INT(wvw_setPaintRefresh() * 2) )
+         alert(wvw_setPaintRefresh())
+      case ch==asc("0")
+         wvw_setPaintRefresh( 0 )
+         alert(wvw_setPaintRefresh())
+      otherwise
+         * do nothing. inkey() has been handled by nAfterInket()
       endcase
       */
    enddo
@@ -430,7 +430,7 @@ LOCAL nLeft    := 4
 LOCAL nBottom    := 21
 LOCAL nRight    := 75
 LOCAL nColGet := 8
-LOCAL get_1   := ctod( '' )
+LOCAL get_1   := SToD()
 LOCAL get_2   := Pad( 'Pritpal Bedi', 35 )
 LOCAL get_3   := Pad( '60, New Professor Colony', 35 )
 LOCAL get_4   := Pad( 'Ludhiana, INDIA', 35 )
@@ -680,22 +680,22 @@ local lNeedStabilize
    lNeedStabilize := .f.
    do while .t.  //dummy loop
       do case
-         case XBmsg == 0 //SB_LINEUP
-            if ordKeyNo() == 1; exit; endif
-            oBrowse:up()
-         case XBmsg == 1 //SB_LINEDOWN
-            if ordKeyNo() == ordKeyCount(); exit; endif
-            oBrowse:down()
-         case XBmsg == 2 //SB_PAGEUP
-            if ordKeyNo() == 1; exit; endif
-            oBrowse:pageup()
-         case XBmsg == 3 //SB_PAGEDOWN
-            if ordKeyNo() == ordKeyCount(); exit; endif
-            oBrowse:pagedown()
-         otherwise
-            * ignore
-            lNeedStabilize := .f.
-            exit
+      case XBmsg == 0 //SB_LINEUP
+         if ordKeyNo() == 1; exit; endif
+         oBrowse:up()
+      case XBmsg == 1 //SB_LINEDOWN
+         if ordKeyNo() == ordKeyCount(); exit; endif
+         oBrowse:down()
+      case XBmsg == 2 //SB_PAGEUP
+         if ordKeyNo() == 1; exit; endif
+         oBrowse:pageup()
+      case XBmsg == 3 //SB_PAGEDOWN
+         if ordKeyNo() == ordKeyCount(); exit; endif
+         oBrowse:pagedown()
+      otherwise
+         * ignore
+         lNeedStabilize := .f.
+         exit
       endcase
       lNeedStabilize := .t.
       exit
@@ -723,22 +723,22 @@ local lNeedStabilize
    lNeedStabilize := .f.
    do while .t.  //dummy loop
       do case
-         case XBmsg == 0 //SB_LINELEFT
-            if oBrowse:colPos== 1; exit; endif
-            oBrowse:left()
-         case XBmsg == 1 //SB_LINERIGHT
-            if oBrowse:colpos == oBrowse:colCount(); exit; endif
-            oBrowse:right()
-         case XBmsg == 2 //SB_PAGELEFT
-            if oBrowse:colPos== 1; exit; endif
-            oBrowse:panleft()
-         case XBmsg == 3 //SB_PAGERIGHT
-            if oBrowse:colpos == oBrowse:colCount(); exit; endif
-            oBrowse:panright()
-         otherwise
-            * ignore
-            lNeedStabilize := .f.
-            exit
+      case XBmsg == 0 //SB_LINELEFT
+         if oBrowse:colPos== 1; exit; endif
+         oBrowse:left()
+      case XBmsg == 1 //SB_LINERIGHT
+         if oBrowse:colpos == oBrowse:colCount(); exit; endif
+         oBrowse:right()
+      case XBmsg == 2 //SB_PAGELEFT
+         if oBrowse:colPos== 1; exit; endif
+         oBrowse:panleft()
+      case XBmsg == 3 //SB_PAGERIGHT
+         if oBrowse:colpos == oBrowse:colCount(); exit; endif
+         oBrowse:panright()
+      otherwise
+         * ignore
+         lNeedStabilize := .f.
+         exit
       endcase
       lNeedStabilize := .t.
       exit
@@ -1016,44 +1016,44 @@ local nkey := 0
    //xDisableToolbar(0)
 
    do case
-      case nMenuEvent==IDM_DEMO_GET
-         * lboxmessage("Demo GET")
-         Demo_Get()
-      case nMenuEvent==IDM_DEMO_BROWSE
-         * lboxmessage("Demo BROWSE")
-         Demo_Browse()
-      case nMenuEvent==IDM_DEMO_CONSOLE
-         * lboxmessage("Demo CONSOLE")
-         Demo_Console()
-      //case nMenuEvent==IDM_DEMO_COLOR
-      //   * lboxmessage("Demo COLOR")
-      //   Demo_Color()
-      case nMenuEvent==IDM_DEMO_EXIT
-         * lboxmessage("should EXIT!")
-         nkey := K_ESC
+   case nMenuEvent==IDM_DEMO_GET
+      * lboxmessage("Demo GET")
+      Demo_Get()
+   case nMenuEvent==IDM_DEMO_BROWSE
+      * lboxmessage("Demo BROWSE")
+      Demo_Browse()
+   case nMenuEvent==IDM_DEMO_CONSOLE
+      * lboxmessage("Demo CONSOLE")
+      Demo_Console()
+   //case nMenuEvent==IDM_DEMO_COLOR
+   //   * lboxmessage("Demo COLOR")
+   //   Demo_Color()
+   case nMenuEvent==IDM_DEMO_EXIT
+      * lboxmessage("should EXIT!")
+      nkey := K_ESC
 
-      case nMenuEvent==IDM_WINDOW_SPACING_INCREASE
-         WVW_SetLineSpacing(NIL, WVW_SetLineSpacing()+2)
-      case nMenuEvent==IDM_WINDOW_SPACING_DECREASE
-         WVW_SetLineSpacing(NIL, WVW_SetLineSpacing()-2)
-      case nMenuEvent==IDM_WINDOW_SPACING_DEFAULT
-         WVW_SetDefLineSpacing( WVW_SetLineSpacing() )
+   case nMenuEvent==IDM_WINDOW_SPACING_INCREASE
+      WVW_SetLineSpacing(NIL, WVW_SetLineSpacing()+2)
+   case nMenuEvent==IDM_WINDOW_SPACING_DECREASE
+      WVW_SetLineSpacing(NIL, WVW_SetLineSpacing()-2)
+   case nMenuEvent==IDM_WINDOW_SPACING_DEFAULT
+      WVW_SetDefLineSpacing( WVW_SetLineSpacing() )
 
-      case nMenuEvent==IDM_TOOLBAR_ENABLE
-         xEnableToolbar(0)
-      case nMenuEvent==IDM_TOOLBAR_DISABLE
-         xDisableToolbar(0)
-      case nMenuEvent==IDM_TOOLBAR_RESET
-         CreateToolbar(0)
-      case nMenuEvent==IDM_TOOLBAR_DELETE
-         WVW_TBdestroy(0)
+   case nMenuEvent==IDM_TOOLBAR_ENABLE
+      xEnableToolbar(0)
+   case nMenuEvent==IDM_TOOLBAR_DISABLE
+      xDisableToolbar(0)
+   case nMenuEvent==IDM_TOOLBAR_RESET
+      CreateToolbar(0)
+   case nMenuEvent==IDM_TOOLBAR_DELETE
+      WVW_TBdestroy(0)
 
-      case nMenuEvent==IDM_HELP_HELP
-         xHelp()
-      case nMenuEvent==IDM_HELP_INFO
-         xDebugInfo()
-      otherwise
-         lboxmessage("Sorry, unknown menu option")
+   case nMenuEvent==IDM_HELP_HELP
+      xHelp()
+   case nMenuEvent==IDM_HELP_INFO
+      xDebugInfo()
+   otherwise
+      lboxmessage("Sorry, unknown menu option")
    endcase
 
    //xEnableToolbar(0)
@@ -1165,16 +1165,16 @@ FUNCTION SetDefaultWindowSize()
   IF Result
      screenWidth := Wvw_GetScreenWidth()
      DO CASE
-        CASE screenWidth >= 1024
-          Result:= Wvw_SetFont(,'Terminal',20,10)
-        CASE screenWidth >= 800
-          IF HB_OSISWINNT()
-             Result:= Wvw_SetFont(,'Lucida Console',16,-8)
-          ELSE
-             Result:= Wvw_SetFont(,'System',16,-8)
-          ENDIF
-        OTHERWISE
-           Result:= Wvw_SetFont(,'Terminal',12,6)
+     CASE screenWidth >= 1024
+       Result:= Wvw_SetFont(,'Terminal',20,10)
+     CASE screenWidth >= 800
+       IF HB_OSISWINNT()
+          Result:= Wvw_SetFont(,'Lucida Console',16,-8)
+       ELSE
+          Result:= Wvw_SetFont(,'System',16,-8)
+       ENDIF
+     OTHERWISE
+        Result:= Wvw_SetFont(,'Terminal',12,6)
      ENDCASE
      IF Result
         Wvw_SetCodePage(,255)  // #define OEM_CHARSET 255 - from wingdi.h

@@ -24,7 +24,7 @@ PROCEDURE MAIN()
    CLS
    SX_RDDSETDEFAULT( "SDEFOX" )
    SET EPOCH 1950
-   SET DATE "DD/MM/YYYY"
+   SET DATE ANSI
 
    ?
    ? 'Creating DBF ...'

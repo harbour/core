@@ -26,7 +26,7 @@ PROCEDURE MAIN()
    LOCAL nCount, i, cFieldName
 
    SET RDD SDENSX
-   SET DATE "dd/mm/yyyy"
+   SET DATE ANSI
    CREATE TABLE "TEST1" STRUCT aStruct1
    USE "test1"
    APPEND BLANK

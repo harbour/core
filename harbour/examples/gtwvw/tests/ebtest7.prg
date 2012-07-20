@@ -98,7 +98,7 @@ static snsession := 0
 local aEBGets := {}
 local cName      := space(30)
 local cNickName  := space(10)
-local dBirthdate := ctod("")
+local dBirthdate := SToD()
 local nBudget    := 125000
 local cRemark    := "Some notes" + chr(13)+chr(10) +;
                     "about this person"
@@ -178,18 +178,18 @@ function AddEBGet(aEBGets, mnrow, mncol, mxValue, mcVarName, mbAssign, mcLabel, 
 local mcVarType, mbText
    mcVarType := valtype(mxValue)
    do case
-      case mcVarType=="C"
-         mcPict := iif(valtype(mcPict)=="C",mcPict,repl("X", len(mxValue)))
-         mbText := {||mxValue}
-      case mcVarType=="N"
-         mcPict := iif(valtype(mcPict)=="C",mcPict,"999,999,999.99")
-         mbText := {||trans(mxValue, mcPict)}
-      case mcVarType=="D"
-         mcPict := iif(valtype(mcPict)=="C",mcPict,"99/99/9999")
-         mbText := {||dtoc(mxValue)}
-      otherwise
-         * unsupported valtype
-         return .f.
+   case mcVarType=="C"
+      mcPict := iif(valtype(mcPict)=="C",mcPict,repl("X", len(mxValue)))
+      mbText := {||mxValue}
+   case mcVarType=="N"
+      mcPict := iif(valtype(mcPict)=="C",mcPict,"999,999,999.99")
+      mbText := {||trans(mxValue, mcPict)}
+   case mcVarType=="D"
+      mcPict := iif(valtype(mcPict)=="C",mcPict,"99/99/9999")
+      mbText := {||dtoc(mxValue)}
+   otherwise
+      * unsupported valtype
+      return .f.
    endcase
 
    if !(valtype(aEBGets)=="A")
@@ -293,20 +293,20 @@ local nfocus, lchangefocus
       elseif ch!=0
          lchangefocus := .t.
          do case
-            case ch==K_TAB .or. ch==K_DOWN .or. ch==K_ENTER
-               if nFocus<(nNumGets+2)  //incl buttons
-                  nFocus++
-               else
-                  nFocus:=1
-               endif
-            case ch==K_SH_TAB .or. ch==K_UP
-               if nFocus>1
-                  nFocus--
-               else
-                  nFocus := nNumGets+2
-               endif
-            otherwise
-               lchangefocus := .f. //!wvw_ebisfocused(nwinnum, aEBGets[nFocus][__GET_NEBID])
+         case ch==K_TAB .or. ch==K_DOWN .or. ch==K_ENTER
+            if nFocus<(nNumGets+2)  //incl buttons
+               nFocus++
+            else
+               nFocus:=1
+            endif
+         case ch==K_SH_TAB .or. ch==K_UP
+            if nFocus>1
+               nFocus--
+            else
+               nFocus := nNumGets+2
+            endif
+         otherwise
+            lchangefocus := .f. //!wvw_ebisfocused(nwinnum, aEBGets[nFocus][__GET_NEBID])
          endcase
          if lchangefocus
             if nFocus<=nNumGets
@@ -356,20 +356,20 @@ local nFocus, lchangefocus
    endif
    lchangefocus := .t.
    do case
-      case ch==K_TAB .and. !lShiftPressed()
-         if nFocus<(nNumGets+2)  //incl buttons
-            nFocus++
-         else
-            nFocus:=1
-         endif
-      case ch==K_TAB .and. lShiftPressed()
-         if nFocus>1
-            nFocus--
-         else
-            nFocus := nNumGets+2
-         endif
-      otherwise
-         lchangefocus := .f.
+   case ch==K_TAB .and. !lShiftPressed()
+      if nFocus<(nNumGets+2)  //incl buttons
+         nFocus++
+      else
+         nFocus:=1
+      endif
+   case ch==K_TAB .and. lShiftPressed()
+      if nFocus>1
+         nFocus--
+      else
+         nFocus := nNumGets+2
+      endif
+   otherwise
+      lchangefocus := .f.
    endcase
    if lchangefocus
       if nFocus<=nNumGets
@@ -499,31 +499,31 @@ local nwasfocus
   mlmultiline := aEBGets[nIndex][__GET_LMULTILINE]
 
   do case
-     case nEvent==EN_KILLFOCUS
-        if !mlmultiline .and. mcvaltype $ "ND"
-           ctext := wvw_ebgettext(nwinnum, nid)
-           if mcvaltype=="D" .and. IsBadDate(ctext)
-              * don't leave it in an invalid state
-              wvw_ebsetfocus(nwinnum, nid)
-           else
-              wvw_ebsettext(nwinnum, nId, transform(GetValFromText(ctext,mcvaltype), mcpict))
-           endif
+  case nEvent==EN_KILLFOCUS
+     if !mlmultiline .and. mcvaltype $ "ND"
+        ctext := wvw_ebgettext(nwinnum, nid)
+        if mcvaltype=="D" .and. IsBadDate(ctext)
+           * don't leave it in an invalid state
+           wvw_ebsetfocus(nwinnum, nid)
+        else
+           wvw_ebsettext(nwinnum, nId, transform(GetValFromText(ctext,mcvaltype), mcpict))
         endif
-     case nEvent==EN_SETFOCUS
-        if !mlmultiline .and. mcvaltype=="N"
-           ctext := wvw_ebgettext(nwinnum, nid)
-           wvw_ebsettext(nwinnum, nId, transform(GetValFromText(ctext,mcvaltype), GetNumMask(mcpict, mcvaltype)))
-        endif
-        wvw_ebsetsel(nwinnum, nid, 0, -1)
-        nwasFocus := nFocused(aEBGets)
-        if nwasFocus!=0
-           aEBGets[nwasFocus][__GET_LFOCUSED] := .f.
-        endif
-        aEBGets[nIndex][__GET_LFOCUSED] := .t.
-     case nEvent==EN_CHANGE
-        if !mlmultiline
-           ProcessCharMask(nwinnum, nId, mcvaltype, mcpict)
-        endif
+     endif
+  case nEvent==EN_SETFOCUS
+     if !mlmultiline .and. mcvaltype=="N"
+        ctext := wvw_ebgettext(nwinnum, nid)
+        wvw_ebsettext(nwinnum, nId, transform(GetValFromText(ctext,mcvaltype), GetNumMask(mcpict, mcvaltype)))
+     endif
+     wvw_ebsetsel(nwinnum, nid, 0, -1)
+     nwasFocus := nFocused(aEBGets)
+     if nwasFocus!=0
+        aEBGets[nwasFocus][__GET_LFOCUSED] := .f.
+     endif
+     aEBGets[nIndex][__GET_LFOCUSED] := .t.
+  case nEvent==EN_CHANGE
+     if !mlmultiline
+        ProcessCharMask(nwinnum, nId, mcvaltype, mcpict)
+     endif
   endcase
   bBusy := .f.
 return NIL
@@ -626,57 +626,57 @@ Local ol := 0
       CM := SubStr (Mask , x , 1 )
 
       Do Case
-         Case (CM) == 'A' .or. (CM) == '!'
-            If IsAlpha ( CB ) .Or. CB == ' '
-               if (CM)=="!"
-                  OutBuffer := OutBuffer + UPPER(CB)
-               else
-                  OutBuffer := OutBuffer + CB
-               endif
-            Else
-               if x == icp
-                  BadEntry := .T.
-                  OutBuffer := OutBuffer + OldChar
-               Else
-                  OutBuffer := OutBuffer + ' '
-               EndIf
-            EndIf
-
-         Case CM == '9'
-            If IsDigit ( CB ) .Or. CB == ' ' .Or.;
-               ( mcvaltype=="N" .and.; //x
-                 CB == '-' .And. x == fnb .And. Pcount() > 1 )
-
+      Case (CM) == 'A' .or. (CM) == '!'
+         If IsAlpha ( CB ) .Or. CB == ' '
+            if (CM)=="!"
+               OutBuffer := OutBuffer + UPPER(CB)
+            else
                OutBuffer := OutBuffer + CB
+            endif
+         Else
+            if x == icp
+               BadEntry := .T.
+               OutBuffer := OutBuffer + OldChar
             Else
-               if x == icp
-                  BadEntry := .T.
-                  OutBuffer := OutBuffer + OldChar
-               Else
-                  OutBuffer := OutBuffer + ' '
-               EndIf
+               OutBuffer := OutBuffer + ' '
             EndIf
+         EndIf
 
-         Case CM == ' '
-            If CB == ' '
-               OutBuffer := OutBuffer + CB
-            Else
-               if x == icp
-                  BadEntry := .T.
-                  OutBuffer := OutBuffer + OldChar
-               Else
-                  OutBuffer := OutBuffer + ' '
-               EndIf
-            EndIf
+      Case CM == '9'
+         If IsDigit ( CB ) .Or. CB == ' ' .Or.;
+            ( mcvaltype=="N" .and.; //x
+              CB == '-' .And. x == fnb .And. Pcount() > 1 )
 
-         //x
-         Case CM == 'X'
             OutBuffer := OutBuffer + CB
+         Else
+            if x == icp
+               BadEntry := .T.
+               OutBuffer := OutBuffer + OldChar
+            Else
+               OutBuffer := OutBuffer + ' '
+            EndIf
+         EndIf
 
-         OtherWise
-            OutBuffer := OutBuffer + CM
+      Case CM == ' '
+         If CB == ' '
+            OutBuffer := OutBuffer + CB
+         Else
+            if x == icp
+               BadEntry := .T.
+               OutBuffer := OutBuffer + OldChar
+            Else
+               OutBuffer := OutBuffer + ' '
+            EndIf
+         EndIf
 
-      End Case
+      //x
+      Case CM == 'X'
+         OutBuffer := OutBuffer + CB
+
+      OtherWise
+         OutBuffer := OutBuffer + CM
+
+      EndCase
    Next x
 
    // Replace Content
@@ -742,15 +742,15 @@ Local lPassed:=.t.,CB,CM,x
          CB := SubStr ( cString , x , 1 )
          CM := SubStr ( cMask , x , 1 )
          Do Case
-            Case CM == '9'
-               If IsDigit ( CB ) .Or. CB == ' '
-                  * lPassed:=.t.
-               Else
-                  Return .f.
-               EndIf
-            OtherWise
+         Case CM == '9'
+            If IsDigit ( CB ) .Or. CB == ' '
                * lPassed:=.t.
-         End Case
+            Else
+               Return .f.
+            EndIf
+         OtherWise
+            * lPassed:=.t.
+         EndCase
       next i
       return .t.
    endif
@@ -761,27 +761,27 @@ Local lPassed:=.t.,CB,CM,x
       CM := SubStr ( cMask , x , 1 )
       Do Case
       // JK
-         Case (CM) == 'A' .or. (CM) == '!'
-            If IsAlpha ( CB ) .Or. CB == ' '
-               * lPassed:=.t.
-            Else
-               Return .f.
-            EndIf
-         Case CM == '9'
-            If IsDigit ( CB ) .Or. CB == ' '
-               * lPassed:=.t.
-            Else
-               Return .f.
-            EndIf
-         Case CM == ' '
-            If CB == ' '
-               * lPassed:=.t.
-            Else
-               Return .f.
-            EndIf
-         OtherWise
+      Case (CM) == 'A' .or. (CM) == '!'
+         If IsAlpha ( CB ) .Or. CB == ' '
             * lPassed:=.t.
-      End Case
+         Else
+            Return .f.
+         EndIf
+      Case CM == '9'
+         If IsDigit ( CB ) .Or. CB == ' '
+            * lPassed:=.t.
+         Else
+            Return .f.
+         EndIf
+      Case CM == ' '
+         If CB == ' '
+            * lPassed:=.t.
+         Else
+            Return .f.
+         EndIf
+      OtherWise
+         * lPassed:=.t.
+      EndCase
    next i
 Return .t. //lPassed
 
@@ -888,18 +888,18 @@ local bhandler
    * now we handle input on other non-topmost windows
 
    do case
-      case message==WM_CHAR
-         ch := wParam
-         bhandler := inp_handler(nWinNum)
-         if valtype(bhandler)=="B"
-            eval( bhandler, nWinNum, ch )
-            return .t.
-         else
-            return .f.
-         endif
-      otherwise
-         * ignore
+   case message==WM_CHAR
+      ch := wParam
+      bhandler := inp_handler(nWinNum)
+      if valtype(bhandler)=="B"
+         eval( bhandler, nWinNum, ch )
          return .t.
+      else
+         return .f.
+      endif
+   otherwise
+      * ignore
+      return .t.
    endcase
 
 return .f.//WVW_INPUTFOCUS()

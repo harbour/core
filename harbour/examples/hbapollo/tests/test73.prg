@@ -13,7 +13,7 @@ PROCEDURE MAIN()
    LOCAL aStruct1 := { { "PART_NO","C",10,0 }, { "PRICE","N",10,2 }, { "NOTES","M",10,0 } }
 
    SET RDD SDEFOX
-   SET DATE "dd/mm/yyyy"
+   SET DATE ANSI
    CREATE TABLE "TEST1" STRUCT aStruct1
    USE "test1"
    APPEND BLANK

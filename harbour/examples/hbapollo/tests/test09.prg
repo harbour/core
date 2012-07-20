@@ -18,9 +18,9 @@
       "DD-MM-YY"
       "MM/DD/YYYY"
       "YYYY.MM.DD"
-      "DD/MM/YYYY"
+      ANSI
       "DD.MM.YYYY"
-      "DD-MM-YYYY"
+      ANSI
 */
 #include "sixapi.ch"
 
@@ -53,9 +53,9 @@ PROCEDURE MAIN()
    ? "Before :", sx_SetDateFormat( "DD-MM-YY"   ), ", Now :", sx_SetDateFormat(), ", Date() =", Date()
    ? "Before :", sx_SetDateFormat( "MM/DD/YYYY" ), ", Now :", sx_SetDateFormat(), ", Date() =", Date()
    ? "Before :", sx_SetDateFormat( "YYYY.MM.DD" ), ", Now :", sx_SetDateFormat(), ", Date() =", Date()
-   ? "Before :", sx_SetDateFormat( "DD/MM/YYYY" ), ", Now :", sx_SetDateFormat(), ", Date() =", Date()
+   ? "Before :", sx_SetDateFormat( ANSI ), ", Now :", sx_SetDateFormat(), ", Date() =", Date()
    ? "Before :", sx_SetDateFormat( "DD.MM.YYYY" ), ", Now :", sx_SetDateFormat(), ", Date() =", Date()
-   ? "Before :", sx_SetDateFormat( "DD-MM-YYYY" ), ", Now :", sx_SetDateFormat(), ", Date() =", Date()
+   ? "Before :", sx_SetDateFormat( ANSI ), ", Now :", sx_SetDateFormat(), ", Date() =", Date()
    BEGIN SEQUENCE WITH {| e | Break( e ) }
       ? sx_SetDateFormat( "YYYY-MM-DD" ), Date()
    RECOVER USING e

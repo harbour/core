@@ -22,7 +22,7 @@ PROCEDURE MAIN()
    LOCAL nIndex, cOldColor, nAverage1, nAverage2
 
    SET EPOCH 1950
-   SET DATE "DD/MM/YYYY"
+   SET DATE ANSI
 
    CREATE DBF cFile STRUCT aStruct RDD SDENSX
 
@@ -91,7 +91,7 @@ PROCEDURE MAIN()
    ? 'Now testing sx_DBEval with the following expressions :'
    ?
    ? 'AVERAGE MYNUMBER1, MYNUMBER2 TO nAverage1, nAverage2 ;'
-   ? '    FOR sx_GetValue("MYDATE") <= CTOD("31/12/2008")'
+   ? '    FOR sx_GetValue("MYDATE") <= STOD("20081231")'
    ?
    ? 'Press any key ...'
    PAUSE
@@ -100,7 +100,7 @@ PROCEDURE MAIN()
    ? 'Working .....'
    GO TOP
    AVERAGE MYNUMBER1, MYNUMBER2 TO nAverage1, nAverage2 ;
-      FOR sx_GetValue( "MYDATE" ) <= CTOD( "31/12/2008" )
+      FOR sx_GetValue( "MYDATE" ) <= STOD( "20081231" )
    ?
    ? "Start : ", n
    ? "End   : ", seconds()

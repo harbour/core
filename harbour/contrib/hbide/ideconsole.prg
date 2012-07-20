@@ -3119,7 +3119,7 @@ STATIC FUNCTION VouchVrbBlank( o_ )
    CASE "N"
       RETURN 0
    CASE "D"
-      RETURN ctod( "" )
+      RETURN hb_stod()
    CASE "L"
       RETURN .f.
    ENDSWITCH

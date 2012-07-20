@@ -22,7 +22,7 @@ PROCEDURE MAIN()
    LOCAL nIndex, cOldColor, nSum1, nSum2
 
    SET EPOCH 1950
-   SET DATE "DD/MM/YYYY"
+   SET DATE ANSI
 
    CREATE DBF cFile STRUCT aStruct RDD SDENSX
 
@@ -91,7 +91,7 @@ PROCEDURE MAIN()
    ? 'Now testing sx_DBEval with the following expressions :'
    ?
    ? 'SUM MYNUMBER1, MYNUMBER2 TO nSum1, nSum2 ;'
-   ? '    FOR sx_GetValue("MYDATE") <= CTOD("31/12/2003")'
+   ? '    FOR sx_GetValue("MYDATE") <= STOD("20031231")'
    ?
    ? 'Press any key ...'
    PAUSE
@@ -100,7 +100,7 @@ PROCEDURE MAIN()
    ? 'Working .....'
    GO TOP
    SUM MYNUMBER1, MYNUMBER2 TO nSum1, nSum2 ;
-      FOR sx_GetValue( "MYDATE" ) <= CTOD( "31/12/2003" )
+      FOR sx_GetValue( "MYDATE" ) <= STOD( "20031231" )
    ?
    ? "Start : ", n
    ? "End   : ", seconds()

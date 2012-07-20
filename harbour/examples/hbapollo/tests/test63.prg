@@ -15,7 +15,7 @@ PROCEDURE MAIN()
    LOCAL aStruct1 := { { "PART_NO","C",10,0 }, { "PRICE","N",10,2 }, { "NOTES","M",10,0 } }
    LOCAL aStruct2 := { { "CUST_NAME","C",20,0 }, { "AMOUNT","N",12,0 }, { "DUEDATE","D",8,0 }, { "PAID","L",1,0 } }
 
-   SET DATE "dd/mm/yyyy"
+   SET DATE ANSI
    CREATE TABLE "TEST1" STRUCT aStruct1 RDD SDEFOX
    CREATE TABLE "TEST2" STRUCT aStruct2 RDD SDENSX
    USE "test1" ALIAS ONE READONLY RDD SDEFOX

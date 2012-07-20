@@ -23,7 +23,7 @@ PROCEDURE MAIN()
    LOCAL nIndex, cOldColor
 
    SET EPOCH 1950
-   SET DATE "DD/MM/YYYY"
+   SET DATE ANSI
 
    // This is the usual behaviour of NSX file
    // Erase the Old NSX if we are to create new one

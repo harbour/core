@@ -110,14 +110,14 @@ static function MenuAction(nWinNum, nCommand)
 * Handle Menu/Toolbar actions
 
    do case
-      case nCommand==IDM_OPENWIN
-         OpenNewWindow()
-      case nCommand==IDM_CLOSEWIN
-         CloseLastWindow()
-      case nCommand==IDM_ARRANGEWIN
-         wvw_xReposWindow()
-      otherwise
-         wvw_messagebox(nWinNum, "Unknown menu command", "Internal Error", MB_OK+MB_ICONEXCLAMATION)
+   case nCommand==IDM_OPENWIN
+      OpenNewWindow()
+   case nCommand==IDM_CLOSEWIN
+      CloseLastWindow()
+   case nCommand==IDM_ARRANGEWIN
+      wvw_xReposWindow()
+   otherwise
+      wvw_messagebox(nWinNum, "Unknown menu command", "Internal Error", MB_OK+MB_ICONEXCLAMATION)
    endcase
 
 return NIL
@@ -244,13 +244,13 @@ local nCommand, ch
    * (TODO: create a sample of pushbutton event here)
 
    do case
-      case message==WM_CHAR
-         ch := wParam
-         eval( s_akeyhandlers[nWinNum], nWinNum, ch )
-         return .t.
-      otherwise
-         * let it be ignored
-         return .t.
+   case message==WM_CHAR
+      ch := wParam
+      eval( s_akeyhandlers[nWinNum], nWinNum, ch )
+      return .t.
+   otherwise
+      * let it be ignored
+      return .t.
    endcase
 
    /*

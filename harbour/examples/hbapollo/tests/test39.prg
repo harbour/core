@@ -21,7 +21,7 @@ PROCEDURE MAIN()
    LOCAL j, n := seconds(), nArea, cPad
 
    SET EPOCH 1950
-   SET DATE "DD/MM/YYYY"
+   SET DATE ANSI
 
    IF File( "myText.Txt" )
       FErase( "myText.Txt" )

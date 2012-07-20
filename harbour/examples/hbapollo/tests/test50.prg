@@ -15,7 +15,7 @@ PROCEDURE MAIN()
 
    SX_RDDSETDEFAULT( "SDEFOX" )
    SET EPOCH 1950
-   SET DATE "DD/MM/YYYY"
+   SET DATE ANSI
    SX_COMMITLEVEL( 2 )
 
    IF file( "test\mytest.cdx" )

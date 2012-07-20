@@ -87,7 +87,7 @@ EXIT PROCEDURE CleanHandles()
 PROCEDURE Main()
    LOCAL aLastPaint, clr, scr, pGT
    LOCAL hPopup
-   LOCAL dDate     := ctod( "" )
+   LOCAL dDate     := stod()
    LOCAL cName     := Pad( "Pritpal Bedi", 35 )
    LOCAL cAdd1     := Pad( "60, New Professor Colony", 35 )
    LOCAL cAdd2     := Pad( "Ludhiana, INDIA", 35 )
@@ -171,7 +171,7 @@ PROCEDURE Main()
    @ 12, nColGet SAY "<" + PadC( "Address", 33 ) + ">"
    @ 16, 61      SAY "< Salary >"
 
-   dDate := ctod( "04/01/04" )
+   dDate := stod( "20040401" )
 
    @  7, nColGet GET dDate WHEN  DispStatusMsg( "Date must be valid" ) VALID ClearStatusMsg()
    @ 10, nColGet GET cName WHEN  DispStatusMsg( "Must be one of the list!" ) VALID ( VouChoice() < 7 .and. ClearStatusMsg() )
@@ -226,7 +226,7 @@ PROCEDURE WvtConsoleGets( nMode )
 //----------------------------------------------------------------------//
 
 PROCEDURE WvtNextGetsConsole()
-   LOCAL dDate      := ctod( "" )
+   LOCAL dDate      := stod()
    LOCAL cName      := Space( 35 )
    LOCAL cAdd1      := Space( 35 )
    LOCAL cAdd2      := Space( 35 )
@@ -275,7 +275,7 @@ PROCEDURE WvtNextGets()
 
 PROCEDURE WvtNextGets_X()
    LOCAL aLastPaint, clr
-   LOCAL dDate      := ctod( "" )
+   LOCAL dDate      := stod()
    LOCAL cName      := Space( 35 )
    LOCAL cAdd1      := Space( 35 )
    LOCAL cAdd2      := Space( 35 )
@@ -635,6 +635,3 @@ FUNCTION BuildButtons()
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-
-
-

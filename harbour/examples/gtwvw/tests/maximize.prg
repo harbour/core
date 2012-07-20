@@ -85,36 +85,36 @@ local lNeedReset := .f., ;
    s_lSizeReady := .f.
 
    do case
-      case wParam == 2 //SIZE_MAXIMIZED
-         //alert("MAXIMIZE")
-         * reset is required only if we are changing size
-         lNeedReset := maxcol() != wvw_maxmaxcol();
-                       .or. maxrow() != wvw_maxmaxrow()
+   case wParam == 2 //SIZE_MAXIMIZED
+      //alert("MAXIMIZE")
+      * reset is required only if we are changing size
+      lNeedReset := maxcol() != wvw_maxmaxcol();
+                    .or. maxrow() != wvw_maxmaxrow()
 
-         if lNeedReset
-            maxsavedscrrow := min(min(s_nNormalMaxrow, wvw_maxmaxrow()),maxrow())
-            maxsavedscrcol := min(min(s_nNormalMaxcol, wvw_maxmaxcol()),maxcol())
-            cScreen := savescreen(0,0,maxsavedscrrow, maxsavedscrcol)
-            if setmode(wvw_maxmaxrow()+1, wvw_maxmaxcol()+1) //adjust maxrow() & maxcol()
-               restscreen(0,0,maxsavedscrrow, maxsavedscrcol, cScreen)
-            endif
-            diminfo()  //updatescr()
+      if lNeedReset
+         maxsavedscrrow := min(min(s_nNormalMaxrow, wvw_maxmaxrow()),maxrow())
+         maxsavedscrcol := min(min(s_nNormalMaxcol, wvw_maxmaxcol()),maxcol())
+         cScreen := savescreen(0,0,maxsavedscrrow, maxsavedscrcol)
+         if setmode(wvw_maxmaxrow()+1, wvw_maxmaxcol()+1) //adjust maxrow() & maxcol()
+            restscreen(0,0,maxsavedscrrow, maxsavedscrcol, cScreen)
          endif
-      case wParam == 0 //SIZE_RESTORED
-         //alert("RESTORE")
-         lNeedReset := maxcol() != s_nNormalMaxcol .or.;
-                       maxrow() != s_nNormalMaxrow
-         if lNeedReset
-            maxsavedscrrow := min(s_nNormalMaxrow, maxrow())
-            maxsavedscrcol := min(s_nNormalMaxcol, maxcol())
-            cScreen := savescreen(0,0,maxsavedscrrow, maxsavedscrcol)
-            if setmode(s_nNormalMaxrow+1,s_nNormalMaxcol+1)
-               restscreen(0,0,maxsavedscrrow, maxsavedscrcol, cScreen)
-            endif
-            diminfo()  //updatescr()
+         diminfo()  //updatescr()
+      endif
+   case wParam == 0 //SIZE_RESTORED
+      //alert("RESTORE")
+      lNeedReset := maxcol() != s_nNormalMaxcol .or.;
+                    maxrow() != s_nNormalMaxrow
+      if lNeedReset
+         maxsavedscrrow := min(s_nNormalMaxrow, maxrow())
+         maxsavedscrcol := min(s_nNormalMaxcol, maxcol())
+         cScreen := savescreen(0,0,maxsavedscrrow, maxsavedscrcol)
+         if setmode(s_nNormalMaxrow+1,s_nNormalMaxcol+1)
+            restscreen(0,0,maxsavedscrrow, maxsavedscrcol, cScreen)
          endif
-      otherwise
-         * do nothing
+         diminfo()  //updatescr()
+      endif
+   otherwise
+      * do nothing
    endcase
 
    * allow next call

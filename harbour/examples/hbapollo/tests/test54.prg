@@ -26,7 +26,7 @@ PROCEDURE MAIN()
    // SET CENTURY ON
    // Automatically ON woth the following date format
    SET EPOCH 1950
-   SET DATE "DD-MM-YYYY"
+   SET DATE ANSI
 
    // Set Trim On to RTRIM String Value of FieldGets
    // Default is OFF

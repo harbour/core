@@ -22,7 +22,7 @@ PROCEDURE MAIN()
    LOCAL j, n := seconds(), nArea, cPad
 
    SET EPOCH 1950
-   SET DATE "DD/MM/YYYY"
+   SET DATE ANSI
 
    IF File( "mytext.txt" )
       FErase( "mytext.txt" )
@@ -61,12 +61,12 @@ PROCEDURE MAIN()
    n := seconds()
    ?
    ? 'COPY TO MYCOPY FIELDS MYCHAR,MYNUMBER1,MYLOGICAL;'
-   ? '   WHILE SX_GETVALUE("MYDATE")<= CTOD("31/12/2003")'
+   ? '   WHILE SX_GETVALUE("MYDATE")<= STOD("20031231")'
 
    // COPY TO MYCOPY ALL
 
    COPY TO MYCOPY FIELDS MYCHAR, MYNUMBER1, MYLOGICAL ;
-      WHILE SX_GETVALUE( "MYDATE" ) <= CTOD( "31/12/2003" )
+      WHILE SX_GETVALUE( "MYDATE" ) <= STOD( "20031231" )
 
    ?
    ? "Start : ", n
@@ -86,9 +86,9 @@ PROCEDURE MAIN()
    PAUSE
    n := seconds()
    ?
-   ? 'COPY TO MYCOPY WHILE SX_GETVALUE("MYDATE")<= CTOD("31/12/2003")'
+   ? 'COPY TO MYCOPY WHILE SX_GETVALUE("MYDATE")<= STOD("20031231")'
 
-   COPY TO MYCOPY WHILE SX_GETVALUE( "MYDATE" ) <= CTOD( "31/12/2003" )
+   COPY TO MYCOPY WHILE SX_GETVALUE( "MYDATE" ) <= STOD( "20031231" )
 
    ?
    ? "Start : ", n

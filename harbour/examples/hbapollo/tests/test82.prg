@@ -13,7 +13,7 @@ PROCEDURE MAIN()
    LOCAL aValue, i, j
    LOCAL aStruct1 := { { "NO","C",5,0 }, { "BINARY","M",10,0 } }
 
-   SET DATE "dd/mm/yyyy"
+   SET DATE ANSI
    CREATE TABLE "TEST1" STRUCT aStruct1 RDD SDEFOX
    USE "test1" ALIAS ONE RDD SDEFOX
    APPEND BLANK

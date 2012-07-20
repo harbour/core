@@ -23,7 +23,7 @@ PROCEDURE MAIN()
    LOCAL nIndex, cOldColor, nAverage1, nAverage2, cApplication
 
    SET EPOCH 1950
-   SET DATE "DD/MM/YYYY"
+   SET DATE ANSI
 
    IF File( "mytext.txt" )
       FErase( "mytext.txt" )
@@ -60,7 +60,7 @@ PROCEDURE MAIN()
    ?
    n := seconds()
    ? 'COPY TO mytext.txt FIELDS MYCHAR, MYDATE, MYNUMBER1, MYNUMBER2, MYMEMO ;'
-   ? '   FOR sx_GetValue( "MYDATE" ) <= CTOD("31/12/2008") ;'
+   ? '   FOR sx_GetValue( "MYDATE" ) <= STOD("20081231") ;'
    ? '   NEXT 100 DELIMITED WITH CHR(9)'
    ? 'Please note that MEMO field will not be printed'
 
@@ -69,7 +69,7 @@ PROCEDURE MAIN()
    // COPY TO mytext.txt ;
    // DELIMITED clause should come last
    COPY TO mytext.txt FIELDS MYCHAR, MYDATE, MYNUMBER1, MYNUMBER2, MYMEMO ;
-      FOR sx_GetValue( "MYDATE" ) <= CTOD( "31/12/2008" ) ;
+      FOR sx_GetValue( "MYDATE" ) <= STOD( "20081231" ) ;
       NEXT 100 DELIMITED WITH CHR( 9 )
 
    ?

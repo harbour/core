@@ -65,15 +65,15 @@ local ch,ncursor
    nPos := 1
    do while (ch:=inkey(0))!=_SECRET_KEY
       do case
-         case ch==K_TAB .or. ch==K_ENTER
-            if nPos==2 .and. ch==K_ENTER .and. wvw_pbEnable(NIL, nPBid)
-               keyboard(_SECRET_KEY)
-               loop
-            else
-               nPos++
-            endif
-         case ch==K_SH_TAB
-            nPos--
+      case ch==K_TAB .or. ch==K_ENTER
+         if nPos==2 .and. ch==K_ENTER .and. wvw_pbEnable(NIL, nPBid)
+            keyboard(_SECRET_KEY)
+            loop
+         else
+            nPos++
+         endif
+      case ch==K_SH_TAB
+         nPos--
       endcase
       if nPos>2
          nPos := 1
@@ -81,11 +81,11 @@ local ch,ncursor
          nPos:=2
       endif
       do case
-         case nPos==1
-            wvw_cbSetFocus(NIL, nCBid)
-         case nPos==2
-            wvw_pbSetFocus(NIL, nPBid)
-            wvw_pbSetStyle(NIL, nPBid, 1) //BS_DEFPUSHBUTTON
+      case nPos==1
+         wvw_cbSetFocus(NIL, nCBid)
+      case nPos==2
+         wvw_pbSetFocus(NIL, nPBid)
+         wvw_pbSetStyle(NIL, nPBid, 1) //BS_DEFPUSHBUTTON
       endcase
    enddo
 
@@ -100,25 +100,25 @@ return  //main
 
 static function CBhandler(nWinNum,nId,nEvent,nIndex, nPBid)
    do case
-      case nEvent==3 //CBN_SETFOCUS
-         * none
-      case nEvent==4 //CBN_KILLFOCUS
-         * none
+   case nEvent==3 //CBN_SETFOCUS
+      * none
+   case nEvent==4 //CBN_KILLFOCUS
+      * none
+      if nIndex==0
+         wvw_pbEnable(nWinNum, nPBid, .t.)
+      else
+         wvw_pbEnable(nWinNum, nPBid, .f.)
+      endif
+   case nEvent==1 //CBN_SELCHANGE
+      if !wvw_cbIsDropped(nWinNum, nId)
+         * nIndex is 0-based
          if nIndex==0
             wvw_pbEnable(nWinNum, nPBid, .t.)
          else
             wvw_pbEnable(nWinNum, nPBid, .f.)
          endif
-      case nEvent==1 //CBN_SELCHANGE
-         if !wvw_cbIsDropped(nWinNum, nId)
-            * nIndex is 0-based
-            if nIndex==0
-               wvw_pbEnable(nWinNum, nPBid, .t.)
-            else
-               wvw_pbEnable(nWinNum, nPBid, .f.)
-            endif
-            wvw_cbSetFocus(nWinNum, nId)
-         endif
+         wvw_cbSetFocus(nWinNum, nId)
+      endif
    endcase
 
 return NIL

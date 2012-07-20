@@ -420,10 +420,10 @@ local i
            oMouseObj:OnMouseOut()
         else
            do case
-              case nkey == K_LBUTTONUP
-                 if oMouseObj:lPressed
-                    oMouseObj:OnReleaseOut()
-                 endif
+           case nkey == K_LBUTTONUP
+              if oMouseObj:lPressed
+                 oMouseObj:OnReleaseOut()
+              endif
            endcase
         endif
 
@@ -435,14 +435,14 @@ local i
            oMouseObj:OnMouseOver()
         else
            do case
-              case nkey == K_LDBLCLK
-                 * currently button not handle this events,
-                 * so we will treat it as single key press
-                 oMouseObj:OnPress()
-              case nkey == K_LBUTTONDOWN
-                 oMouseObj:OnPress()
-              case nkey == K_LBUTTONUP
-                 oMouseObj:OnRelease()
+           case nkey == K_LDBLCLK
+              * currently button not handle this events,
+              * so we will treat it as single key press
+              oMouseObj:OnPress()
+           case nkey == K_LBUTTONDOWN
+              oMouseObj:OnPress()
+           case nkey == K_LBUTTONUP
+              oMouseObj:OnRelease()
            endcase
         endif
 
@@ -483,14 +483,14 @@ local nCurWindow
      oMouseObj := s_amouseobjlist[nCurWindow+1][i][2]
 
      do case
-        case (s_amouseobjlist[nCurWindow+1][i][1]==_MOBJECT_BUTTON)
-           nButtonChecker(nkey, oMouseObj)
-        case (s_amouseobjlist[nCurWindow+1][i][1]==_MOBJECT_HSCROLL)
-           nScrollChecker(nkey, "H", oMouseObj)
-        case (s_amouseobjlist[nCurWindow+1][i][1]==_MOBJECT_VSCROLL)
-           nScrollChecker(nkey, "V", oMouseObj)
-        otherwise
-           * runtime error!
+     case (s_amouseobjlist[nCurWindow+1][i][1]==_MOBJECT_BUTTON)
+        nButtonChecker(nkey, oMouseObj)
+     case (s_amouseobjlist[nCurWindow+1][i][1]==_MOBJECT_HSCROLL)
+        nScrollChecker(nkey, "H", oMouseObj)
+     case (s_amouseobjlist[nCurWindow+1][i][1]==_MOBJECT_VSCROLL)
+        nScrollChecker(nkey, "V", oMouseObj)
+     otherwise
+        * runtime error!
      endcase
 
   next

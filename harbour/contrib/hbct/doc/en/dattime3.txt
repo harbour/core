@@ -24,9 +24,9 @@
  *      the <nDelay> parameter in 1/100th seconds.  Subsequently, the function
  *      can be implemented without a parameter for additional loop conditions.
  *      It returns .T., as long as the designated time span has not yet run out.
- * 
+ *
  *      Note
- * 
+ *
  *      The function notes the status of the internal timer at
  *      initialization.  From that point on, the initialization should always
  *      precede the respective DO WHILE; otherwise, the time delay is
@@ -34,13 +34,13 @@
  *      is taken into account.
  *  $EXAMPLES$
  *      Run a loop for 5 seconds:
- * 
+ *
  *      WAITPERIOD(500)               // Initialization, 5 seconds
  *      DO WHILE <cond1> .AND. <cond2> .AND. WAITPERIOD()
  *        *...
  *      ENDDO
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -50,7 +50,7 @@
  *  $FILES$
  *      Source is dattime3.c, library is libct.
  *  $SEEALSO$
- * 
+ *
  *  $END$
  */
 
@@ -74,9 +74,9 @@
  *      check time inputs was unavoidable up to now.  TIMEVALID() permits
  *      Complete checking of a time designation.  You can use this FUNCTION
  *      effectively with a VALID clause within a READ mask.
- * 
+ *
  *      Note
- * 
+ *
  *      Note the format for time designations.  There must always be
  *      two digits for hours, minutes, seconds, and hundredths; otherwise,
  *      the time it is regarded as invalid.  Valid examples are "12",
@@ -88,21 +88,21 @@
  *  $EXAMPLES$
  *      Using the VALID clause with TRIM, all valid times are
  *      accepted, even IF no seconds or minutes are specIFied:
- * 
+ *
  *      cBegin  :=  SPACE(11)
  *      @ 5, 10 SAY "Please input time for beginning work:";
  *      GET cBegin VALID TIMEVALID(TRIM(cBegin))
  *      READ
- * 
+ *
  *      Using a VALID clause without TRIM, hours and minutes must be
  *      specified, so that TIMEVALID() can confirm a valid time:
- * 
+ *
  *      cBegin  :=  SPACE(5)
  *      @ 5, 10 SAY "Please input time for beginning work:";
  *      GET cBegin VALID TIMEVALID(cBegin)
  *      READ
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -128,7 +128,7 @@
  *  $ARGUMENTS$
  *      <cTime>  Designates a character string that contains the time that
  *      is to become the system time.
- * 
+ *
  *      <lMode>  Designates whether the time should also be set in the
  *      CMOS-RAM of an AT.  The default is do not write to CMOS-RAM. Note that in
  *      Windows plataform this adjust is automatic, therefore this parameter is
@@ -142,19 +142,19 @@
  *  $EXAMPLES$
  *      Set the system time in each case; but the hardware clock only
  *      on an AT:
- * 
+ *
  *      cNewTime  :=  "10:20:00"
  *      IF ISAT()
  *        SETTIME(cNewTime, .T.)
  *      ELSE
  *        SETTIME(cNewTime)
  *      ENDIF
- * 
+ *
  *      Or, more compactly:
- * 
+ *
  *      SETTIME(cNewTime, ISAT())
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -179,7 +179,7 @@
  *      SETDATE(<dDate>, [<lMode>]) --> lSet
  *  $ARGUMENTS$
  *      <dDate>  Designates which date to use to set the system date.
- * 
+ *
  *      <lMode>  Designates whether the date should also be set in the CMOS-
  *      RAM of an AT.  The default is do not write (.F.). Note that in Windows
  *      plataform this adjust is automatic, therefore this parameter is without
@@ -193,19 +193,19 @@
  *  $EXAMPLES$
  *      Set the system date in each case; but the hardware clock only
  *      on an AT:
- * 
- *      dNewDate  :=  CTOD("07/30/91")
+ *
+ *      dNewDate := SToD( "19910730" )
  *      IF ISAT()
- *         SETDATE(dNewDate, .T.)
+ *         SETDATE( dNewDate, .T. )
  *      ELSE
- *         SETDATE(dNewDate)
+ *         SETDATE( dNewDate )
  *      ENDIF
- * 
+ *
  *      Or, more compactly:
- * 
- *      SETDATE(dNewDate, ISAT())
+ *
+ *      SETDATE( dNewDate, ISAT() )
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

@@ -18,7 +18,7 @@ PROCEDURE MAIN()
    LOCAL nIndex
 
    SET EPOCH 1950
-   SET DATE "DD/MM/YYYY"
+   SET DATE ANSI
 
    IF FILE( "sixtest.nsx" )
       FERASE( "sixtest.nsx" )

@@ -30,7 +30,7 @@ PROCEDURE MAIN()
    LOCAL i, cPad
 
    SET EPOCH 1950
-   SET DATE "DD/MM/YYYY"
+   SET DATE ANSI
 
    // Making comma delimited dummy file to append to DBF file
    ?

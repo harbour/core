@@ -166,7 +166,7 @@ FUNCTION addmtest()
    //: This version will only accept an nMonths value of from 0 to 70
 
    LOCAL getlist := {}
-   LOCAL ddate   := CToD( "  /  /    " )
+   LOCAL ddate   := SToD()
    LOCAL c       := .T.
    LOCAL mnth    := 0
    LOCAL nKey
@@ -214,7 +214,7 @@ FUNCTION bomtest()
    //: =============
 
    LOCAL getlist := {}
-   LOCAL ddate   := CToD( "  /  /    " )
+   LOCAL ddate   := SToD()
    LOCAL c       := .T.
    LOCAL nKey
 
@@ -258,7 +258,7 @@ FUNCTION boqtest()
    //: =============
 
    LOCAL getlist := {}
-   LOCAL ddate   := CToD( "  /  /    " )
+   LOCAL ddate   := SToD()
    LOCAL c       := .T.
    LOCAL nKey
 
@@ -304,7 +304,7 @@ FUNCTION boytest()
    //: =============
 
    LOCAL getlist := {}
-   LOCAL ddate   := CToD( "  /  /    " )
+   LOCAL ddate   := SToD()
    LOCAL c       := .T.
    LOCAL nkey
 
@@ -331,7 +331,7 @@ FUNCTION boytest()
          Inkey( 0 )
          SET CURSOR ON
 
-         ddate   := CToD( "  /  /    " )
+         ddate   := SToD()
 
       ENDIF
 
@@ -346,7 +346,7 @@ FUNCTION boytest()
 FUNCTION ctodowtest()
 
    //:----------------------------------------------------------------
-   //: ctodow( cDow)
+   //: ctodow( cDow )
    //: ==============
    //: Convert name of day of the week to its ordinal number
    //: if cDow is invalid, returns 0
@@ -587,7 +587,7 @@ FUNCTION dmytest()
    //: only.
 
    LOCAL getlist := {}
-   LOCAL ddate   := CToD( "  /  /    " )
+   LOCAL ddate   := SToD()
    LOCAL cMode   := Space( 1 )
    LOCAL lmode
    LOCAL c       := .T.
@@ -623,7 +623,7 @@ FUNCTION dmytest()
          Inkey( 0 )
          SET CURSOR ON
 
-         ddate := CToD( "  /  /    " )
+         ddate := SToD()
          cMode := Space( 1 )
 
       ENDIF
@@ -645,7 +645,7 @@ FUNCTION doytest()
    //: if dDate is invalid, returns 0
 
    LOCAL getlist := {}
-   LOCAL ddate   := CToD( "  /  /    " )
+   LOCAL ddate   := SToD()
    LOCAL c       := .T.
    LOCAL nKey
 
@@ -672,7 +672,7 @@ FUNCTION doytest()
          Inkey( 0 )
          SET CURSOR ON
 
-         ddate := CToD( "  /  /    " )
+         ddate := SToD()
 
       ENDIF
 
@@ -693,7 +693,7 @@ FUNCTION eomtest()
    //: date.
 
    LOCAL getlist := {}
-   LOCAL ddate := CToD( "  /  /    " )
+   LOCAL ddate := SToD()
    LOCAL c     := .T.
    LOCAL nKey
 
@@ -721,7 +721,7 @@ FUNCTION eomtest()
          Inkey( 0 )
          SET CURSOR ON
 
-         ddate := CToD( "  /  /    " )
+         ddate := SToD()
 
       ENDIF
 
@@ -741,7 +741,7 @@ FUNCTION eoqtest()
    //: Returns the last date in the quarter in which ddate falls.
 
    LOCAL getlist := {}
-   LOCAL ddate := CToD( "  /  /    " )
+   LOCAL ddate := SToD()
    LOCAL c     := .T.
    LOCAL nKey
 
@@ -769,7 +769,7 @@ FUNCTION eoqtest()
          Inkey( 0 )
          SET CURSOR ON
 
-         ddate := CToD( "  /  /    " )
+         ddate := SToD()
 
       ENDIF
 
@@ -790,7 +790,7 @@ FUNCTION eoytest()
    //: date.
 
    LOCAL getlist := {}
-   LOCAL ddate := CToD( "  /  /    " )
+   LOCAL ddate := SToD()
    LOCAL c     := .T.
    LOCAL nKey
 
@@ -818,7 +818,7 @@ FUNCTION eoytest()
          Inkey( 0 )
          SET CURSOR ON
 
-         ddate := CToD( "  /  /    " )
+         ddate := SToD()
 
       ENDIF
 
@@ -839,7 +839,7 @@ FUNCTION isleaptest()
    //:  Leap years are exactly divisible by 4 and 1,000 but not 100.
 
    LOCAL getlist := {}
-   LOCAL ddate := CToD( "  /  /    " )
+   LOCAL ddate := SToD()
    LOCAL c     := .T.
    LOCAL cResult
    LOCAL nKey
@@ -873,7 +873,7 @@ FUNCTION isleaptest()
          Inkey( 0 )
          SET CURSOR ON
 
-         ddate := CToD( "  /  /    " )
+         ddate := SToD()
 
       ENDIF
 
@@ -896,7 +896,7 @@ FUNCTION lastdayomtest()
    //: If xDate is invalid, returns 0
 
    LOCAL getlist := {}
-   LOCAL ddate := CToD( "  /  /    " )
+   LOCAL ddate := SToD()
    LOCAL c     := .T.
    LOCAL nKey
    LOCAL cMth  := "  "
@@ -931,7 +931,7 @@ FUNCTION lastdayomtest()
          Inkey( 0 )
          SET CURSOR ON
 
-         ddate := CToD( "  /  /    " )
+         ddate := SToD()
          cMth  := "  "
 
       ENDIF
@@ -954,7 +954,7 @@ FUNCTION mdytest()
    //: This version does not observe the Nations module. English only.
 
    LOCAL getlist := {}
-   LOCAL ddate := CToD( "  /  /    " )
+   LOCAL ddate := SToD()
    LOCAL c     := .T.
    LOCAL nKey
 
@@ -983,7 +983,7 @@ FUNCTION mdytest()
          Inkey( 0 )
          SET CURSOR ON
 
-         ddate := CToD( "  /  /    " )
+         ddate := SToD()
 
       ENDIF
 
@@ -1104,7 +1104,7 @@ FUNCTION qtrtest()
    //:  the system date is used.
 
    LOCAL getlist := {}
-   LOCAL ddate  := CToD( "  /  /    " )
+   LOCAL ddate  := SToD()
    LOCAL c      := .T.
    LOCAL nKey
 
@@ -1132,7 +1132,7 @@ FUNCTION qtrtest()
          Inkey( 0 )
          SET CURSOR ON
 
-         ddate  := CToD( "  /  /    " )
+         ddate  := SToD()
 
       ENDIF
 
@@ -1227,11 +1227,11 @@ FUNCTION weektest()
    //:  nWeek := week( ddate, lSWN )
    //:  =============================
    //:  Returns the calendar week as a number. If no date is specified,
-   //:  the system date is used. An empty date viz ctod("  /  /  ")
+   //:  the system date is used. An empty date viz stod()
    //:  returns 0.
 
    LOCAL getlist := {}
-   LOCAL ddate  := CToD( "  /  /    " )
+   LOCAL ddate  := SToD()
    LOCAL c      := .T.
    LOCAL nKey
    LOCAL cMode := Space( 1 )
@@ -1264,7 +1264,7 @@ FUNCTION weektest()
          Inkey( 0 )
          SET CURSOR ON
 
-         ddate  := CToD( "  /  /    " )
+         ddate  := SToD()
 
       ENDIF
 

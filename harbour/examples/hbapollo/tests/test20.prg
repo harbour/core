@@ -16,7 +16,7 @@ PROCEDURE MAIN()
    LOCAL nOrd
 
    SET EPOCH 1950
-   SET DATE "DD/MM/YYYY"
+   SET DATE ANSI
 
    IF FILE( "sixtest.nsx" )
       FERASE( "sixtest.nsx" )

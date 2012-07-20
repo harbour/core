@@ -17,7 +17,7 @@ PROCEDURE MAIN()
    LOCAL aStruct2 := { { "CUST_NAME","C",20,0 }, { "AMOUNT","N",12,0 }, { "DUEDATE","D",8,0 }, { "PAID","L",1,0 } }
 
    SET RDD SDEFOX
-   SET DATE "dd/mm/yyyy"
+   SET DATE ANSI
    CREATE TABLE "TEST1" STRUCT aStruct1
    CREATE TABLE "TEST2" STRUCT aStruct2
    USE "test1" ALIAS ONE readonly

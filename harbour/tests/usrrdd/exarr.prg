@@ -100,7 +100,7 @@ PROCEDURE MAIN()
    dbAppend()
    field->name     := "Giudice Francesco Saverio"
    field->address  := "Main Street 10"
-   field->birthday := CToD( "03/01/1967" )
+   field->birthday := SToD( "19670103" )
    field->age      := 39
 
    ? RECNO(), '"' + FIELD->NAME + '"'
@@ -108,7 +108,7 @@ PROCEDURE MAIN()
    dbAppend()
    field->name     := "Mouse Mickey"
    field->address  := "Main Street 20"
-   field->birthday := CToD( "01/01/1940" )
+   field->birthday := SToD( "19400101" )
    field->age      := 66
 
    WHILE !EOF()
@@ -143,4 +143,3 @@ PROCEDURE MAIN()
    BROWSE()
 
 RETURN
-

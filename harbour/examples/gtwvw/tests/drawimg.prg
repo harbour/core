@@ -209,14 +209,14 @@ METHOD Draw() CLASS wPaintObj
    endif
 
    do case
-      case ::nType==WPAINTOBJ_IMAGE
-         if !empty(::cImage)
-            WVW_DRAWIMAGE( ::nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ;
-                           ::cImage, ::aOffTLBR, ::lTransp )
-         endif
+   case ::nType==WPAINTOBJ_IMAGE
+      if !empty(::cImage)
+         WVW_DRAWIMAGE( ::nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ;
+                        ::cImage, ::aOffTLBR, ::lTransp )
+      endif
 
-      otherwise
-         * lBoxErrMessage()
+   otherwise
+      * lBoxErrMessage()
    endcase
 
 RETURN NIL  //DRAW()
@@ -232,16 +232,16 @@ local nRow1, nCol1, nRow2, nCol2, nMaxRow, nMaxCol
    nMaxCol := maxcol()
 
    do case
-      case ::nType==WPAINTOBJ_LABEL
-         nRow1 := ::nRow1
-         nCol1 := ::nCol1
-         nRow2 := ::nRow2
-         nCol2 := ::nCol2
-      otherwise
-         nRow1 := max(::nRow1-1, 0)
-         nCol1 := max(::nCol1-1, 0)
-         nRow2 := min(::nRow2+1, nMaxRow)
-         nCol2 := min(::nCol2+1, nMaxCol)
+   case ::nType==WPAINTOBJ_LABEL
+      nRow1 := ::nRow1
+      nCol1 := ::nCol1
+      nRow2 := ::nRow2
+      nCol2 := ::nCol2
+   otherwise
+      nRow1 := max(::nRow1-1, 0)
+      nCol1 := max(::nCol1-1, 0)
+      nRow2 := min(::nRow2+1, nMaxRow)
+      nCol2 := min(::nCol2+1, nMaxCol)
    endcase
 
    cScreen := savescreen(nRow1, nCol1, nRow2, nCol2)

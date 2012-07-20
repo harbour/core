@@ -30,12 +30,12 @@
 #define IS_LOGICAL(x)                (VALTYPE(x) == "L")
 #define IS_NUMERIC(x)                (VALTYPE(x) == "N")
 #define CASE_AT(x,y,z)               z[AT(x,y)+1]
-#define TRIM_NUMBER(x)               LTRIM(STR(x))
+#define TRIM_NUMBER(x)               hb_ntos(x)
 #define NULL                         ""
 #define IS_NOT_CHAR(x)               (VALTYPE(x) != "C")
 #define IS_NOT_DATE(x)               (VALTYPE(x) != "D")
-#define EARLIEST_DATE                CTOD("01/01/0100")
-#define BLANK_DATE                   CTOD(NULL)
+#define EARLIEST_DATE                STOD("01000101")
+#define BLANK_DATE                   STOD()
 #define IS_NOT_ARRAY(x)              (VALTYPE(x) != "A")
 #define IS_NOT_LOGICAL(x)            (VALTYPE(x) != "L")
 #define IS_NOT_NUMERIC(x)            (VALTYPE(x) != "N")

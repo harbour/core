@@ -20,7 +20,7 @@ PROCEDURE MAIN()
 
    SX_RDDSETDEFAULT( "SDEFOX" )
    SET EPOCH 1950
-   SET DATE "DD/MM/YYYY"
+   SET DATE ANSI
    ?
    ? 'Using APPEND BLANK 10000 ... Press any key ...'
    PAUSE

@@ -22,7 +22,7 @@ PROCEDURE MAIN()
    LOCAL j, aStructure
 
    SET EPOCH 1950
-   SET DATE "DD/MM/YYYY"
+   SET DATE ANSI
 
    IF File( "mytext.txt" )
       FErase( "mytext.txt" )

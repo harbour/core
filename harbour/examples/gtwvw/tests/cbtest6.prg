@@ -133,54 +133,54 @@ local oGet := GetActive()
    endif
 
    do case
-      case nEvent==3 //CBN_SETFOCUS
-         i := ascan(GetList, {|x|x:Name==cVar})
-         if i>0
-            /* !oGet:HasFocus means
-             * CBN_SETFOCUS was NOT initiated from mouseclick
-             * then we don't need to bother about setting focus to the
-             * new GET. GetSys has already done that via CBreader().
-             * It is CBreader() that brought us here, so ignore it.
+   case nEvent==3 //CBN_SETFOCUS
+      i := ascan(GetList, {|x|x:Name==cVar})
+      if i>0
+         /* !oGet:HasFocus means
+          * CBN_SETFOCUS was NOT initiated from mouseclick
+          * then we don't need to bother about setting focus to the
+          * new GET. GetSys has already done that via CBreader().
+          * It is CBreader() that brought us here, so ignore it.
+          */
+         if oGet:HasFocus
+            /* So user has jumped here by clicking on the combobox.
+             * And this combobox has oNewGet beneath it.
+             * But do NOT assign oGetList:oGet into this oNewGet
+             * from within here!
+             * Remember that the reader() is still suspended
+             * on inkey(0). If we change the ActiveGet from here, then
+             * when we leave this CB (eg. by means of K_TAB)
+             * this reader() will resume, but alas the active get
+             * is no longer the same! Thus reader() most likely
+             * will behave incorrectly.
+             *
+             * The trick is simple:
+             * reject the SETFOCUS. This will cause reader()
+             * resume its action on inkey(0).
+             * All we have to do here is emulate the mouseclick
+             * event on oNewGet object beneath the CB, ie.
+             * putting K_LBUTTONDOWN into keyboard buffer
+             * at proper coordinate.
+             * We will then arrive at cbreader().
              */
-            if oGet:HasFocus
-               /* So user has jumped here by clicking on the combobox.
-                * And this combobox has oNewGet beneath it.
-                * But do NOT assign oGetList:oGet into this oNewGet
-                * from within here!
-                * Remember that the reader() is still suspended
-                * on inkey(0). If we change the ActiveGet from here, then
-                * when we leave this CB (eg. by means of K_TAB)
-                * this reader() will resume, but alas the active get
-                * is no longer the same! Thus reader() most likely
-                * will behave incorrectly.
-                *
-                * The trick is simple:
-                * reject the SETFOCUS. This will cause reader()
-                * resume its action on inkey(0).
-                * All we have to do here is emulate the mouseclick
-                * event on oNewGet object beneath the CB, ie.
-                * putting K_LBUTTONDOWN into keyboard buffer
-                * at proper coordinate.
-                * We will then arrive at cbreader().
-                */
 
-               SetWinFocus(nWinNum)
-               msetpos(GetList[i]:row, GetList[i]:col+1)
-               keyboard(K_LBUTTONDOWN)
-            endif //oGet:HasFocus
+            SetWinFocus(nWinNum)
+            msetpos(GetList[i]:row, GetList[i]:col+1)
+            keyboard(K_LBUTTONDOWN)
+         endif //oGet:HasFocus
 
-         else  //i==0
-            /* there's no GET object beneath the combobox.
-             * This must be a combobox living in the wild.
-             * Do what you want with it, we do nothing here.
-             */
-         endif
+      else  //i==0
+         /* there's no GET object beneath the combobox.
+          * This must be a combobox living in the wild.
+          * Do what you want with it, we do nothing here.
+          */
+      endif
 
-      case nEvent==4 //CBN_KILLFOCUS
-         // put current content of combobox into GET variable beneath it.
-         cCurSel := wvw_cbGetCurText(nWinNum, nId)
-         oGet:varput(cCurSel)
-         oGet:display() //this is optional
+   case nEvent==4 //CBN_KILLFOCUS
+      // put current content of combobox into GET variable beneath it.
+      cCurSel := wvw_cbGetCurText(nWinNum, nId)
+      oGet:varput(cCurSel)
+      oGet:display() //this is optional
 
    endcase
 return NIL

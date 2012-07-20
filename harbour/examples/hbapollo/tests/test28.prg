@@ -23,7 +23,7 @@ PROCEDURE MAIN()
    LOCAL nIndex, cOldColor, nCount
 
    SET EPOCH 1950
-   SET DATE "DD/MM/YYYY"
+   SET DATE ANSI
 
    CREATE DBF cFile STRUCT aStruct RDD SDENSX
 
@@ -53,8 +53,8 @@ PROCEDURE MAIN()
    ?
    ? 'Now testing sx_DBEval with the following expressions :'
    ?
-   ? 'COUNT TO nCount FOR sx_GetValue("MYDATE") >= CTOD("01/01/2008")   ;'
-   ? '                .AND. sx_GetValue("MYDATE") <= CTOD("31/12/2008") ;'
+   ? 'COUNT TO nCount FOR sx_GetValue("MYDATE") >= STOD("20080101")   ;'
+   ? '                .AND. sx_GetValue("MYDATE") <= STOD("20081231") ;'
    ? '                NEXT 365'
    ?
    ? 'Press any key ...'
@@ -63,8 +63,8 @@ PROCEDURE MAIN()
    ?
    ? 'Working .....'
    GO TOP
-   COUNT TO nCount FOR sx_GetValue( "MYDATE" ) >= CTOD( "01/01/2008" )  ;
-      .AND. sx_GetValue( "MYDATE" ) <= CTOD( "31/12/2008" ) ;
+   COUNT TO nCount FOR sx_GetValue( "MYDATE" ) >= STOD( "20080101" )  ;
+      .AND. sx_GetValue( "MYDATE" ) <= STOD( "20081231" ) ;
       NEXT 365
    ?
    ? "Start : ", n

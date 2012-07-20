@@ -262,7 +262,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
 
    aGets_:= { pad("Pritpal",20 ), pad( "Bedi",20 ), pad( "60, New Professor Colony",30 ), ;
               pad( "Ludhiana, INDIA",30 ),;
-              "PB", pad( "141004",10 ), ctod( "22/06/04" ), .t., 48, 17000, ;
+              "PB", pad( "141004",10 ), stod( "20040622" ), .t., 48, 17000, ;
               pad( "Wvtgui is a classical example of Harbour capabilities...",65 ) }
 
    oGet1 := WvtGets():New( oDlg, , 4, 2, 37, 62 )
