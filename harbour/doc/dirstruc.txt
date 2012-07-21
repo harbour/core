@@ -91,7 +91,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 |                         which where written using some xHarcour extensions,
 |                         to be complied by Harbour.
 |
-+---examples        - Sample files and small applications.
++---extras          - Sample files and small applications.
 |   |
 |   +---dbu         - Make files (without source) for CA-Cl*pper DBU.
 |   |
