@@ -18,7 +18,7 @@ PROCEDURE MAIN()
    SPANISH "DD-MM-YY"
 */
 
-   SET DATE BRITISH
+   SET DATE ANSI
 
 /*
    Indicates whether or not the two digits of the year designating

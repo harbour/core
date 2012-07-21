@@ -77,13 +77,13 @@
   FUNCTION DEMO()
      LOCAL nNum, dDate, aTestData := {}, aTemp, cFY_Start, nDOW_Start
 
-*    SET DATE American                         // User's normal date format
+*    SET DATE ANSI                             // User's normal date format
      aTemp      := FT_DATECNFG()               // Get/Set cFY_Start & nDOW_Start.
-*    aTemp      := FT_DATECNFG("03/01/80", 1)  // Date string in user's format.
+*    aTemp      := FT_DATECNFG("1980.01.03", 1)  // Date string in user's format.
      cFY_Start  := aTemp[1]                    // See FT_DATECNFG() in ft_date0.prg
      NDOW_START := ATEMP[2]                    // FOR PARAMETERS.
      DDATE      := DATE()
-*    dDate      := CTOD("02/29/88")            // Test date, in user's normal date format
+*    dDate      := STOD("19880229")            // Test date, in user's normal date format
 
      cls
      ?    "Given       Date:  "

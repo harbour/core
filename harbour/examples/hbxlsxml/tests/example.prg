@@ -9,7 +9,7 @@
  * www - http://www.xharbour.org http://harbour-project.org
  *
  * Thanks TO Robert F Greer, PHP original version
- * http://sourceforge.net/projects/excelwriterxml/ 
+ * http://sourceforge.net/projects/excelwriterxml/
  *
  * This program is free software; you can redistribute it AND/OR modify
  * it under the terms of the GNU General PUBLIC License as published by
@@ -56,115 +56,115 @@
 FUNCTION main()
    LOCAL oXml, oSheet, xarquivo := "example.xml"
    LOCAL i, xqtddoc, xttotnot, xtbascal, xtvlricm, xtbasipi, xtvlripi, aDoc, nLinha
-   LOCAL xEmpresa   
-   LOCAL xDataImp   
-   LOCAL xTitulo    
-   LOCAL xPeriodo   
-   LOCAL xOrdem 
-   
-   SET DATE TO BRITISH
-   
+   LOCAL xEmpresa
+   LOCAL xDataImp
+   LOCAL xTitulo
+   LOCAL xPeriodo
+   LOCAL xOrdem
+
+   SET DATE ANSI
+
    oXml:= ExcelWriterXML():New(xarquivo)
    oXml:setOverwriteFile(.t.)
-      
-   WITH OBJECT oXml:addStyle('textLeft')             
-      :alignHorizontal('Left')        
+
+   WITH OBJECT oXml:addStyle('textLeft')
+      :alignHorizontal('Left')
       :alignVertical('Center')
       :fontSize(10)
    END WITH
-   
-   WITH OBJECT oXml:addStyle('textLeftWrap')             
-      :alignHorizontal('Left')        
-      :alignVertical('Center')              
+
+   WITH OBJECT oXml:addStyle('textLeftWrap')
+      :alignHorizontal('Left')
+      :alignVertical('Center')
       :alignWraptext()
       :fontSize(10)
    END WITH
-   WITH OBJECT oXml:addStyle('textLeftBold')             
-      :alignHorizontal('Left')        
-      :alignVertical('Center')
-      :fontSize(10)
-      :setFontBold()                  
-   END WITH
-   
-   WITH OBJECT oXml:addStyle('textLeftBoldCor')             
-      :alignHorizontal('Left')        
-      :alignVertical('Center')
-      :fontSize(10)
-      :setFontBold()                  
-      :bgColor('lightblue')                              
-      :alignWraptext()
-   END WITH
-   
-   WITH OBJECT oXml:addStyle('textRight')             
-      :alignHorizontal('Right')        
-      :alignVertical('Center')
-      :fontSize(10)
-   END WITH
-   
-   WITH OBJECT oXml:addStyle('textRightBold')             
-      :alignHorizontal('Right')        
+   WITH OBJECT oXml:addStyle('textLeftBold')
+      :alignHorizontal('Left')
       :alignVertical('Center')
       :fontSize(10)
       :setFontBold()
    END WITH
-   
-   WITH OBJECT oXml:addStyle('textRightBoldCor')             
-      :alignHorizontal('Right')        
+
+   WITH OBJECT oXml:addStyle('textLeftBoldCor')
+      :alignHorizontal('Left')
       :alignVertical('Center')
       :fontSize(10)
       :setFontBold()
       :bgColor('lightblue')
       :alignWraptext()
    END WITH
-   
-   WITH OBJECT oXml:addStyle('numberRight')             
+
+   WITH OBJECT oXml:addStyle('textRight')
       :alignHorizontal('Right')
       :alignVertical('Center')
-      :setNumberFormat('#,##0.00')         
       :fontSize(10)
    END WITH
-   
-   WITH OBJECT oXml:addStyle('numberRightBold')             
+
+   WITH OBJECT oXml:addStyle('textRightBold')
       :alignHorizontal('Right')
       :alignVertical('Center')
-      :setNumberFormat('#,##0.00')         
       :fontSize(10)
       :setFontBold()
    END WITH
-   
-   WITH OBJECT oXml:addStyle('numberRightBoldCor')             
+
+   WITH OBJECT oXml:addStyle('textRightBoldCor')
       :alignHorizontal('Right')
       :alignVertical('Center')
-      :setNumberFormat('#,##0.00')         
+      :fontSize(10)
+      :setFontBold()
+      :bgColor('lightblue')
+      :alignWraptext()
+   END WITH
+
+   WITH OBJECT oXml:addStyle('numberRight')
+      :alignHorizontal('Right')
+      :alignVertical('Center')
+      :setNumberFormat('#,##0.00')
+      :fontSize(10)
+   END WITH
+
+   WITH OBJECT oXml:addStyle('numberRightBold')
+      :alignHorizontal('Right')
+      :alignVertical('Center')
+      :setNumberFormat('#,##0.00')
+      :fontSize(10)
+      :setFontBold()
+   END WITH
+
+   WITH OBJECT oXml:addStyle('numberRightBoldCor')
+      :alignHorizontal('Right')
+      :alignVertical('Center')
+      :setNumberFormat('#,##0.00')
       :fontSize(10)
       :setFontBold()
       :bgColor('lightblue')
    END WITH
-   
-   WITH OBJECT oXml:addStyle('numberRightZero')             
+
+   WITH OBJECT oXml:addStyle('numberRightZero')
       :alignHorizontal('Right')
       :alignVertical('Center')
-      :setNumberFormat('#,##0.00;[Red]-#,##0.00;;@') //'#,###.00')         
-      :fontSize(10)    
+      :setNumberFormat('#,##0.00;[Red]-#,##0.00;;@') //'#,###.00')
+      :fontSize(10)
       :setFontBold()
    END WITH
-   
-   WITH OBJECT oXml:addStyle('Cabec')             
-      :alignHorizontal('Left')        
+
+   WITH OBJECT oXml:addStyle('Cabec')
+      :alignHorizontal('Left')
       :alignVertical('Center')
       :fontSize(12)
       :setFontBold()
    END WITH
-   
-   WITH OBJECT oXml:addStyle('CabecRight')             
-      :alignHorizontal('Right')        
+
+   WITH OBJECT oXml:addStyle('CabecRight')
+      :alignHorizontal('Right')
       :alignVertical('Center')
       :fontSize(12)
       :setFontBold()
    END WITH
-   
-   oSheet := oXml:addSheet('Plan1')     
-   
+
+   oSheet := oXml:addSheet('Plan1')
+
    WITH OBJECT oSheet
       :columnWidth( 1,  70 ) // N.Fiscal
       :columnWidth( 2,  20 ) // TM
@@ -173,34 +173,34 @@ FUNCTION main()
       :columnWidth( 5,  50 ) // CFOP
       :columnWidth( 6,  50 ) // C›d. Cliente/Fornecedor
       :columnWidth( 7, 300 ) // Nome Cliente/Fornecedor
-      :columnWidth( 8,  20 ) // UF       
-      :columnWidth( 9,  80 ) // Vlr.Tot. 
+      :columnWidth( 8,  20 ) // UF
+      :columnWidth( 9,  80 ) // Vlr.Tot.
       :columnWidth(10,  80 ) // Base Calc.
       :columnWidth(11,  80 ) // Vlr ICMS
       :columnWidth(12,  80 ) // Base IPI
       :columnWidth(13,  80 ) // Valor IPI
-   
+
       xEmpresa:= "EMPRESA DEMONSTRACAO LTDA"
       xDataImp:= "22.03.2011"
       xTitulo := "RELATORIO PARA DEMONSTRAR XML EXCEL"
       xPeriodo:= "01.02.2011 a 28.02.2011"
       xOrdem  := "DATA DE EMISSAO"
-      
+
       nLinha:= 0
-      
-      :writeString(++nLinha,1,xEmpresa ,'Cabec')  
+
+      :writeString(++nLinha,1,xEmpresa ,'Cabec')
       :cellMerge(    nLinha,1, 5, 0)
-      :writeString(  nLinha,12,"Data:"+xDataImp ,'CabecRight')  
+      :writeString(  nLinha,12,"Data:"+xDataImp ,'CabecRight')
       :cellMerge(    nLinha,12, 1, 0)
-      :writeString(++nLinha,1,xTitulo  ,'Cabec')  
+      :writeString(++nLinha,1,xTitulo  ,'Cabec')
       :cellMerge(    nLinha,1, 5, 0)
-      :writeString(++nLinha,1,xPeriodo ,'Cabec')  
+      :writeString(++nLinha,1,xPeriodo ,'Cabec')
       :cellMerge(    nLinha,1, 5, 0)
-      :writeString(++nLinha,1,xOrdem   ,'Cabec')  
+      :writeString(++nLinha,1,xOrdem   ,'Cabec')
       :cellMerge(    nLinha,1, 5, 0)
    END WITH
-   
-   WITH OBJECT oSheet   
+
+   WITH OBJECT oSheet
       :writeString(++nLinha, 1,"N.Fiscal"          ,'textLeftBoldCor' )
       :writeString(  nLinha, 2,"TM"                ,'textLeftBoldCor' )
       :writeString(  nLinha, 3,"Data Movto"        ,'textLeftBoldCor' )
@@ -215,7 +215,7 @@ FUNCTION main()
       :writeString(  nLinha,12,"Base IPI"          ,'textRightBoldCor')
       :writeString(  nLinha,13,"Valor IPI"         ,'textRightBoldCor')
    END WITH
-   
+
    aDoc:= {}
    FOR i:= 1 TO 40
       AADD( aDoc,;
@@ -233,11 +233,11 @@ FUNCTION main()
              i*100,;
              i*100*0.10 } )
    NEXT
-   
+
    xqtddoc:= xttotnot:= xtbascal:= xtvlricm:= xtbasipi:= xtvlripi:= 0
-   
+
    FOR i:= 1 TO 40
-      WITH OBJECT oSheet 
+      WITH OBJECT oSheet
          :writeString(++nLinha, 1,aDoc[i,1],'textLeft')
          :writeString(  nLinha, 2,aDoc[i,2],'textLeft')
          :writeString(  nLinha, 3,DTOC(aDoc[i,3]),'textLeft')
@@ -257,10 +257,10 @@ FUNCTION main()
       xtbascal+= aDoc[i,10]
       xtvlricm+= aDoc[i,11]
       xtbasipi+= aDoc[i,12]
-      xtvlripi+= aDoc[i,13] 
+      xtvlripi+= aDoc[i,13]
    NEXT
-   
-   WITH OBJECT oSheet 
+
+   WITH OBJECT oSheet
       :writeString(++nLinha, 1,"",'textLeft')
       :writeString(  nLinha, 2,"",'textLeft')
       :writeString(  nLinha, 3,"",'textLeft')
@@ -268,7 +268,7 @@ FUNCTION main()
       :writeString(  nLinha, 5,"",'textLeft')
       :writeString(  nLinha, 6,"",'textLeft')
       :writeString(  nLinha, 7,"TOTAL ==> "+STR(xqtddoc,5)+" documentos",'textLeftBold')
-      :writeString(  nLinha, 8,"",'textLeft')             
+      :writeString(  nLinha, 8,"",'textLeft')
       :writeFormula('Number',nLinha,9,'=SUM(R[-40]C:R[-1]C)','numberRightBold')
       //:writeNumber(  nLinha, 9,xttotnot,'numberRightBold')
       :writeNumber(  nLinha,10,xtbascal,'numberRightBold')
@@ -276,10 +276,10 @@ FUNCTION main()
       :writeNumber(  nLinha,12,xtbasipi,'numberRightBold')
       :writeNumber(  nLinha,13,xtvlripi,'numberRightBold')
    END WITH
-   
+
    oXml:writeData(xarquivo)
-   
+
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-      
+

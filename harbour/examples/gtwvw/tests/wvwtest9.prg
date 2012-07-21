@@ -177,7 +177,7 @@ local ch
 
    SET( _SET_EVENTMASK, INKEY_ALL )
 
-   SET DATE BRITISH
+   SET DATE ANSI
    SET SCOREBOARD OFF
    //wvw_SetPaintRefresh(0)
    wvw_SetVertCaret(.t.)

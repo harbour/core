@@ -2,11 +2,11 @@
  * $Id$
  */
 
-//ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ\\
+//-------------------------\\
 
 #include             "hbvpdf.ch"
 
-//ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ\\
+//-------------------------\\
 
 function Main()
 
@@ -31,7 +31,7 @@ function Main()
 
    oPdf := tPdf():New( 'test.pdf', 200, .t. )
    oPdf:EditOnHeader()
-   oPdf:Image( 'files\color.tif', 0, 0, "M" ) 
+   oPdf:Image( 'files\color.tif', 0, 0, "M" )
    oPdf:EditOffHeader()
    oPdf:SaveHeader( 'test.hea' )
    oPdf:CloseHeader()
@@ -125,7 +125,7 @@ function Main()
    oPdf:BookAdd( "Pictures", 1, oPdf:aReport[ REPORTPAGE ], 0 )
    oPdf:BookAdd( "TIFF", 2, oPdf:aReport[ REPORTPAGE ], 0 )
    //             file,    row, col, units, height, width
-   oPdf:Image( 'files\color.tif', 0,   0,   "M" ) 
+   oPdf:Image( 'files\color.tif', 0,   0,   "M" )
    oPdf:RJust( oPdf:Underline("TIFF"), nK++, oPdf:aReport[ REPORTWIDTH ], "R")
 
    oPdf:NewPage( "LETTER", "P", 6 )
@@ -161,11 +161,11 @@ function Main()
 
 return nil
 
-//ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ\\
+//-------------------------\\
 //
 // This function called only used in tstPdf.prg
 //
-static function cton( cString, nBase ) 
+static function cton( cString, nBase )
 local cTemp, nI, cChar, n := 0, nLen
 
    nLen := len( cString )
@@ -186,4 +186,4 @@ local cTemp, nI, cChar, n := 0, nLen
 
 return n
 
-//ÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ\\
+//-------------------------\\

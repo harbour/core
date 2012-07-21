@@ -105,7 +105,7 @@ PROCEDURE Main()
    LOCAL oLastMenu
    LOCAL oError := ErrorBlock( {|o| MyError( o ) } )
 
-   SET DATE BRITISH
+   SET DATE ANSI
 
    SET( _SET_EVENTMASK, INKEY_ALL + HB_INKEY_GTEVENT )
 

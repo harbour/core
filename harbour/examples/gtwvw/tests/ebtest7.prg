@@ -58,7 +58,7 @@ local nOpen, nClose
 local lClosepermitted := .f.
 local bSetKey := SETKEY(K_F8, {|| MyHelp()})
    SET CENTURY ON
-   SET DATE BRITISH
+   SET DATE ANSI
    setmode(4,54)   //a small window
    setcolor("N/W")
    Wvw_SetFont(0, "Courier New",16,-7)

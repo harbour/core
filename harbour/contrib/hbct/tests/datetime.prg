@@ -89,7 +89,7 @@ PROCEDURE Main()
       "stod( ansi date)    Returns Clipper date     ", ;
       "week( ddate, lSWN ) Returns numbef of week   ", }
 
-   SET DATE british
+   SET DATE ANSI
    SET CENTURY ON
 
    cls

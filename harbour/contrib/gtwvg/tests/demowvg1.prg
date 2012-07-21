@@ -35,7 +35,7 @@ MEMVAR GetList
 FUNCTION Main()
    LOCAL aPaint
 
-   SET DATE BRITISH
+   SET DATE ANSI
    SET( _SET_EVENTMASK, INKEY_ALL + HB_INKEY_GTEVENT )
 
    Wvt_SetGui( .t. )
