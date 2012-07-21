@@ -9,7 +9,7 @@
  * www - http://www.xharbour.org http://harbour-project.org
  *
  * Thanks TO Robert F Greer, PHP original version
- * http://sourceforge.net/projects/excelwriterxml/ 
+ * http://sourceforge.net/projects/excelwriterxml/
  *
  * This program is free software; you can redistribute it AND/OR modify
  * it under the terms of the GNU General PUBLIC License as published by
@@ -56,9 +56,9 @@
 FUNCTION main()
    LOCAL xml, format1, format2, format3, format4
    LOCAL sheet1, sheet2, sheet4
-   
+
    xml = ExcelWriterXML():new('my file.xml')
-   
+
    /**
     * Add some general properties to the document
     */
@@ -66,12 +66,12 @@ FUNCTION main()
    xml:docAuthor('Robert F Greer')
    xml:docCompany('Greers.Org')
    xml:docManager('Wife')
-   
+
    /**
     * Choose to show any formatting/input errors on a seperate sheet
     */
    //xml:showErrorSheet(.t.)
-   
+
    /**
     * Show the style options
     */
@@ -79,15 +79,15 @@ FUNCTION main()
    format1:alignRotate(60)
    format1:alignHorizontal('Left')
    format1:setFontSize('18')
-   
+
    format2 = xml:addStyle('verticaltext_left')
    format2:alignVerticaltext(45)
    format2:alignHorizontal('Left')
-   
+
    format3 = xml:addStyle('wraptext_top')
    format3:alignWraptext()
    format3:alignVertical('Top')
-   
+
    /**
     * Create a new sheet with the XML document
     */
@@ -101,8 +101,8 @@ FUNCTION main()
    sheet1:writeString(1,2,'vertical left','verticaltext_left')
    sheet1:writeString(1,3,'this text has been wrapped and is aligned at the top','wraptext_top')
    //sheet1:writeString(1,4,'No style applied')
-   
-   
+
+
    sheet2 = xml:addSheet('Formulas')
    /**
     * Wrote three numbers.
@@ -123,7 +123,7 @@ FUNCTION main()
    sheet2:writeString(5,1,'=SUM(R1C2:R3C2)')
    sheet2:writeFormula('Number',5,2,'=SUM(R1C1:R3C2)')
    //sheet2:addComment(5,2,'Here is my formula: =SUM(R1C1:R3C2)')
-   
+
    sheet4 = xml:addSheet('more formatting')
    format4 = xml:addStyle('my style')
    format4:setFontBold()
@@ -139,14 +139,14 @@ FUNCTION main()
    sheet4:writeString(2,1,'formatted text + cell color + merged + underlined',format4)
    // Merge (2,1) with 4 columns to the right and 2 rows down
    sheet4:cellMerge(2,1,4,2)
-   
+
    /**
     * Send the headers, then output the data
     */
    //xml:sendHeaders()
    xml:writeData('example2.xml')
-   
-   RETURN NIL 
+
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
-   
+
