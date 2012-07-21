@@ -52,128 +52,127 @@
 
 #include "inkey.ch"
 
-procedure main(...)
+PROCEDURE Main( ... )
 
-   local cTok
-   local cHostName := "localhost"
-   local cUser := "root"
-   local cPassWord := ""
-   local cDataBase, cTable, cFile
-   local aDbfStruct, i
-   local lCreateTable := .F.
-   local oServer, oTable, oRecord
+   LOCAL cTok
+   LOCAL cHostName := "localhost"
+   LOCAL cUser := "root"
+   LOCAL cPassWord := ""
+   LOCAL cDataBase, cTable, cFile
+   LOCAL aDbfStruct, i
+   LOCAL lCreateTable := .F.
+   LOCAL oServer, oTable, oRecord
 
    SET CENTURY ON
-   SET EPOCH TO 1960
 
-   // At present time (23/10/00) DBFCDX is default RDD and DBFNTX is
+   // At present time (23/10/2000) DBFCDX is default RDD and DBFNTX is
    // now DBF (I mean the one able to handle .dbt-s :-))
    rddSetDefault( "DBF" )
 
-   if PCount() < 6
+   IF PCount() < 6
       help()
-      quit
-   endif
+      QUIT
+   ENDIF
 
    i := 1
    // Scan parameters and setup workings
-   while (i <= PCount())
+   WHILE i <= PCount()
 
-      cTok := hb_PValue(i++)
+      cTok := hb_PValue( i ++ )
 
-      do case
-      case cTok == "-h"
-         cHostName := hb_PValue(i++)
+      DO CASE
+      CASE cTok == "-h"
+         cHostName := hb_PValue( i ++ )
 
-      case cTok == "-d"
-         cDataBase := hb_PValue(i++)
+      CASE cTok == "-d"
+         cDataBase := hb_PValue( i ++ )
 
-      case cTok == "-t"
-         cTable := hb_PValue(i++)
+      CASE cTok == "-t"
+         cTable := hb_PValue( i ++ )
 
-      case cTok == "-f"
-         cFile := hb_PValue(i++)
+      CASE cTok == "-f"
+         cFile := hb_PValue( i ++ )
 
-      case cTok == "-u"
-         cUser := hb_PValue(i++)
+      CASE cTok == "-u"
+         cUser := hb_PValue( i ++ )
 
-      case cTok == "-p"
-         cPassWord := hb_PValue(i++)
+      CASE cTok == "-p"
+         cPassWord := hb_PValue( i ++ )
 
-      case cTok == "-c"
+      CASE cTok == "-c"
          lCreateTable := .T.
 
-      otherwise
+         OTHERWISE
          help()
-         quit
-      endcase
-   enddo
+         QUIT
+      ENDCASE
+   ENDDO
 
-   dbUseArea(.T.,, cFile, "dbffile",, .T.)
-   aDbfStruct := dbffile->(dbStruct())
+   dbUseArea( .T. , , cFile, "dbffile", , .T. )
+   aDbfStruct := dbffile -> ( dbStruct() )
 
-   oServer := TMySQLServer():New(cHostName, cUser, cPassWord)
-   if oServer:NetErr()
+   oServer := TMySQLServer():New( cHostName, cUser, cPassWord )
+   IF oServer:NetErr()
       ? oServer:Error()
-      quit
-   endif
+      QUIT
+   ENDIF
 
-   oServer:SelectDB(cDataBase)
-   if oServer:NetErr()
+   oServer:SelectDB( cDataBase )
+   IF oServer:NetErr()
       ? oServer:Error()
-      quit
-   endif
+      QUIT
+   ENDIF
 
-   if lCreateTable
-      if Ascan(oServer:ListTables(), cTable) > 0
-         oServer:DeleteTable(cTable)
-         if oServer:NetErr()
+   IF lCreateTable
+      IF AScan( oServer:ListTables(), cTable ) > 0
+         oServer:DeleteTable( cTable )
+         IF oServer:NetErr()
             ? oServer:Error()
-            quit
-         endif
-      endif
-      oServer:CreateTable(cTable, aDbfStruct)
-      if oServer:NetErr()
+            QUIT
+         ENDIF
+      ENDIF
+      oServer:CreateTable( cTable, aDbfStruct )
+      IF oServer:NetErr()
          ? oServer:Error()
-         quit
-      endif
-   endif
+         QUIT
+      ENDIF
+   ENDIF
 
    // Initialize MySQL table
-   oTable := oServer:Query("SELECT * FROM " + cTable + " LIMIT 1")
-   if oTable:NetErr()
-      Alert(oTable:Error())
-      quit
-   endif
+   oTable := oServer:Query( "SELECT * FROM " + cTable + " LIMIT 1" )
+   IF oTable:NetErr()
+      Alert( oTable:Error() )
+      QUIT
+   ENDIF
 
-   while !dbffile->(eof()) .AND. Inkey() != K_ESC
+   WHILE !dbffile -> ( EOF() ) .AND. Inkey() != K_ESC
 
       oRecord := oTable:GetBlankRow()
 
-      for i := 1 to dbffile->(FCount())
-         oRecord:FieldPut(i, dbffile->(FieldGet(i)))
+      for i := 1 TO dbffile -> ( FCount() )
+         oRecord:FieldPut( i, dbffile -> ( FieldGet(i ) ) )
       next
 
-      oTable:Append(oRecord)
-      if oTable:NetErr()
-         Alert(oTable:Error())
-      endif
+      oTable:Append( oRecord )
+      IF oTable:NetErr()
+         Alert( oTable:Error() )
+      ENDIF
 
-      dbffile->(dbSkip())
+      dbffile -> ( dbSkip() )
 
-      DevPos(Row(), 1)
-      if (dbffile->(RecNo()) % 100) == 0
-         DevOut("imported recs: " + Str(dbffile->(RecNo())))
-      endif
-   enddo
+      DevPos( Row(), 1 )
+      IF ( dbffile -> ( RecNo() ) % 100 ) == 0
+         DevOut( "imported recs: " + Str( dbffile -> (RecNo() ) ) )
+      ENDIF
+   ENDDO
 
-   dbffile->(dbCloseArea())
+   dbffile -> ( dbCloseArea() )
    oTable:Destroy()
    oServer:Destroy()
-return
 
+   RETURN
 
-procedure Help()
+PROCEDURE Help()
 
    ? "dbf2MySQL - dbf file to MySQL table conversion utility"
    ? "-h hostname (default: localhost)"
@@ -186,4 +185,4 @@ procedure Help()
    ? "all parameters but -h -u -p -c are mandatory"
    ? ""
 
-return
+   RETURN

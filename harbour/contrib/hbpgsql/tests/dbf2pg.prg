@@ -77,7 +77,6 @@ PROCEDURE Main( ... )
 
    SET CENTURY ON
    SET DATE ANSI
-   SET EPOCH TO 1960
    SET DELETE ON
 
    rddSetDefault( "DBFDBT" )

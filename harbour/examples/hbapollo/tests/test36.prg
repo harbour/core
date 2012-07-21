@@ -22,7 +22,7 @@ PROCEDURE MAIN()
    LOCAL j, n := seconds(), nArea, cPad
    LOCAL nIndex, cOldColor, nAverage1, nAverage2, cApplication
 
-   SET EPOCH 1950
+   SET CENTURY ON
    SET DATE ANSI
 
    IF File( "mytext.txt" )

@@ -21,7 +21,7 @@ PROCEDURE MAIN()
       { "MYMEMO"    , "M", 10, 0 } }
    LOCAL j, aStructure
 
-   SET EPOCH 1950
+   SET CENTURY ON
    SET DATE ANSI
 
    IF File( "mytext.txt" )

@@ -15,7 +15,7 @@ PROCEDURE MAIN()
    LOCAL j, n := seconds(), nArea
    LOCAL nOrd
 
-   SET EPOCH 1950
+   SET CENTURY ON
    SET DATE ANSI
 
    IF FILE( "sixtest.nsx" )

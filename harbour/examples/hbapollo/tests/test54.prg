@@ -23,9 +23,7 @@ PROCEDURE MAIN()
    LOCAL j, n := seconds(), nArea
    LOCAL aGet
 
-   // SET CENTURY ON
-   // Automatically ON woth the following date format
-   SET EPOCH 1950
+   SET CENTURY ON
    SET DATE ANSI
 
    // Set Trim On to RTRIM String Value of FieldGets

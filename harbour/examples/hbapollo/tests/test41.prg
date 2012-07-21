@@ -19,7 +19,7 @@ PROCEDURE MAIN()
    LOCAL j, n := seconds()
 
    SX_RDDSETDEFAULT( "SDEFOX" )
-   SET EPOCH 1950
+   SET CENTURY ON
    SET DATE ANSI
    ?
    ? 'Using APPEND BLANK 10000 ... Press any key ...'

@@ -22,7 +22,7 @@ PROCEDURE MAIN()
    LOCAL j, n := seconds(), nArea, cPad
    LOCAL nIndex, cOldColor, nCount
 
-   SET EPOCH 1950
+   SET CENTURY ON
    SET DATE ANSI
 
    CREATE DBF cFile STRUCT aStruct RDD SDENSX

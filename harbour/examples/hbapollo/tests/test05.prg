@@ -38,22 +38,6 @@ PROCEDURE MAIN()
 */
    SET DELETED ON
 
-/*
-   Determines the interpretation of date strings with only two year digits.
-   When such a string is converted to a date value, its year digits are
-   compared with the year digits of iBaseYear.  If the year digits in the
-   date are greater than or equal to the year digits of iBaseYear, the date
-   is assumed to fall within the same century as iBaseYear.  Otherwise,
-   the date is assumed to fall in the following century.
-
-   iBaseYear specifies the base year of a 100-year period in which all dates
-   containing only two year digits are assumed to fall.
-
-   The default epoch value is 1900, causing dates with no century digits
-   to be interpreted as falling within the twentieth century.
-*/
-   SET EPOCH 1950
-
 /* Indicates whether or not Seeks are to return True if a partial key
    match is made. If True, key searches made with sx_Seek must match
    exactly in content and length.  Partial key matches will result in

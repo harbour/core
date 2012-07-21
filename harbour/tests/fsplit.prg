@@ -36,7 +36,7 @@ FUNCTION fsplit( csource, csplit, nbyte )
 
    // y2k compliance
    SET DATE ANSI
-   SET EPOCH TO Year( Date() ) - 50
+   SET CENTURY ON
 
    // no params passed
    IF PCount() == 0

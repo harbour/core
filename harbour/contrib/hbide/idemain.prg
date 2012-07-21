@@ -126,7 +126,6 @@ FUNCTION Main( ... )
 
    SET DATE TO ANSI
    SET CENTURY ON
-   SET EPOCH TO 1970
 
    QResource():registerResource_1( hbqtres_HbIde() )
 

@@ -29,8 +29,8 @@ PROCEDURE MAIN()
       { "_SALARY", "N", 12, 0 } }
    LOCAL i, cPad
 
-   SET EPOCH 1950
    SET DATE ANSI
+   SET CENTURY ON
 
    // Making comma delimited dummy file to append to DBF file
    ?
@@ -38,7 +38,7 @@ PROCEDURE MAIN()
    nHandle := FCreate( "testing.txt" )
    FOR i := 1 TO 1000
       cPad := padl( i, 5, "0" )
-      FWrite( nHAndle, "First_" + cPad + CHR( 9 ) + "Last_" + cPad + CHR( 9 ) + str( i * 2 ) + CHR( 13 ) + CHR( 10 ) )
+      FWrite( nHAndle, "First_" + cPad + CHR( 9 ) + "Last_" + cPad + CHR( 9 ) + str( i * 2 ) + hb_eol() )
    NEXT
    FClose( nHandle )
 

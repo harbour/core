@@ -22,7 +22,7 @@ PROCEDURE MAIN()
    LOCAL j, n := seconds(), nArea, cPad
    LOCAL nIndex, cOldColor
 
-   SET EPOCH 1950
+   SET CENTURY ON
    SET DATE ANSI
 
    // This is the usual behaviour of NSX file

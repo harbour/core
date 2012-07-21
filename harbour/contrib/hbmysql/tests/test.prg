@@ -58,7 +58,6 @@ PROCEDURE Main( cArg )
    LOCAL oQuery
 
    SET CENTURY ON
-   SET EPOCH TO 1960
 
    oServer := TMySQLServer():New( "localhost", "root", "" )
    IF oServer:NetErr()

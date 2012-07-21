@@ -20,7 +20,7 @@ PROCEDURE MAIN()
       { "MYNUMBER2" , "N", 8, 0 } }
    LOCAL j, n := seconds(), nArea, cPad
 
-   SET EPOCH 1950
+   SET CENTURY ON
    SET DATE ANSI
 
    IF File( "myText.Txt" )

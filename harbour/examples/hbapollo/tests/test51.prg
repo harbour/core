@@ -78,7 +78,7 @@ FUNCTION Test_1( nCommit )
    LOCAL j, n := seconds(), nArea, cPad
    LOCAL cApplication
 
-   SET EPOCH 1950
+   SET CENTURY ON
    SET DATE ANSI
 
    CREATE DBF cFile STRUCT aStruct RDD SDENTX
