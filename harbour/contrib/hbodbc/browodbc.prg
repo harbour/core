@@ -195,8 +195,8 @@ STATIC PROCEDURE Statline( oBrw, oDataSource )
       @ nTop, nRight - 40 SAY "         "
       @ nTop, nRight - 20 SAY "                <new>"
    ELSE
-      @ nTop, nRight - 20 SAY PadR( LTrim( Str( oDataSource:RecNo() ) ) + "/" +;
-                                    Ltrim( Str( oDataSource:LastRec() ) ), 16 ) +;
+      @ nTop, nRight - 20 SAY PadR( hb_ntos( oDataSource:RecNo() ) + "/" +;
+                                    hb_ntos( oDataSource:LastRec() ), 16 ) +;
                               iif( oBrw:hitTop, "<bof>", "     " )+;
                               iif( oBrw:hitBottom, "<eof>", "     " )
    ENDIF

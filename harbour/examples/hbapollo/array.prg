@@ -104,7 +104,7 @@ STATIC FUNCTION _ftsavesub( xMemVar, nHandle, nErrorCode )
       CASE cValType = "L"
          nLen := 1
          FWrite( nHandle, L2Bin( nLen ), 4 )
-         FWrite( nHandle, IIF( xMemVar, "T", "F" ) )
+         FWrite( nHandle, iif( xMemVar, "T", "F" ) )
       CASE cValType = "N"
          cString := Str( xMemVar )
          nLen := Len( cString )

@@ -25,7 +25,7 @@
  *     for keypress).  Therefore, it is necessary to differentiate between
  *     an explicit NIL and one that is a result of a formal parameter NOT
  *     being received.
- * 
+ *
  *     FT_SINKEY() differs from the standard INKEY() in that it will
  *     respond to any keys set with SET KEY TO or SetKey().
  *  $EXAMPLES$

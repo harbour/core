@@ -23,7 +23,7 @@
  *     corresponding number.
  *  $EXAMPLES$
  *     nColor := FT_COLOR2N( "gr+/b" )         // returns 30
- * 
+ *
  *     FT_SETATTR( 0, 0, 10, 10, nColor )
  *  $SEEALSO$
  *     FT_N2COLOR()

@@ -56,7 +56,7 @@ STATIC PROC draw_table( hCairo, nX, nY, aCol )
      aWidth[ nI ] := MAX( aWidth[ nI ], cairo_text_extents( hCairo, aCol[ nI, 1 ] )[ 5 ] ) + 20
    NEXT
    nW := 0
-   AEVAL( aWidth, {|X| nW += X} )
+   AEVAL( aWidth, {| X | nW += X } )
 
    cairo_move_to( hCairo, nX, nY )
    cairo_rel_line_to( hCairo, nW, 0 )
@@ -120,4 +120,3 @@ STATIC PROC show_text_center( hCairo, cText )
    cairo_rel_move_to( hCairo, -0.5 * cairo_text_extents( hCairo, cText )[ 5 ], 0 )
    cairo_show_text( hCairo, cText )
 RETURN
-

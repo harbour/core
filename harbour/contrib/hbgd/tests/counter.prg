@@ -50,13 +50,13 @@ PROCEDURE Main( cValue, cBaseImage )
    ? "Value = ", cValue
 
    // To set fonts run this command:
-   // for windows: SET GDFONTPATH=C:\windows\fonts
+   // for windows: SET GDFONTPATH=%WINDIR%\fonts
    // per linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType
 
-   // SET GDFONTPATH=C:\windows\fonts
+   // SET GDFONTPATH=%WINDIR%\fonts
    //IF GetEnv( "GDFONTPATH" ) == ""
    //   ? "Please set GDFONTPATH"
-   //   ? "On Windows: SET GDFONTPATH=C:\windows\fonts"
+   //   ? "On Windows: SET GDFONTPATH=%WINDIR%\fonts"
    //   ? "On Linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType"
    //   ?
    //ENDIF

@@ -15,12 +15,12 @@
  *  $ARGUMENTS$
  *     <nInitialInvestment> is the amount of cash invested for purposes
  *     of generating the cash flows.
- * 
+ *
  *     <nInterestRate> is the annual interest rate used to discount
  *     expected cash flows (10.5% = 10.5, not .105).
- * 
+ *
  *     <aCashFlow> is an array of the expected cash receipts each year.
- * 
+ *
  *     <nNoOfCashFlows> is the number of years cash flows are expected
  *     (optional, Len( aCashFlow ) ).
  *  $RETURNS$
@@ -32,12 +32,12 @@
  *     of the expected cash flow(s) from the investment.  The present
  *     value of the expected cashflow(s) is calculated at the specified
  *     interest rate, which is often referred to as the "cost of capital".
- * 
+ *
  *     This function can be used to evaluate alternative investments.
  *     The larger the NPV, the more profitable the investment.  See
  *     also the FutureValue and PresentValue for further explanations.
  *     The formula to calculate the net present value is:
- * 
+ *
  *     NetPresentValue = SUM(CashFlow[i] / ((1 + InterestRate) ** i))
  *                       FOR i = 1 TO NoOfCashFlows
  *  $EXAMPLES$

@@ -20,7 +20,7 @@
  *     Returns the date of Easter for any year after 1582 up to Clipper's
  *     limit which the manual states is 9999, but the Guide agrees with
  *     the actual imposed limit of 2999.
- * 
+ *
  *     This function can be useful in calender type programs that indicate
  *     when holidays occur.
  *  $EXAMPLES$

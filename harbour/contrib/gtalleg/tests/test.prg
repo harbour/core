@@ -8,6 +8,6 @@ ANNOUNCE HB_GTSYS
 PROCEDURE Main()
 
    CLS
-   ALERT( "Hello world!" )
+   Alert( "Hello world!" )
 
    RETURN

@@ -95,16 +95,16 @@ PROCEDURE xhb_ErrorSys()
    RETURN
 
 STATIC FUNCTION err_ModuleName( oError, n )
-   RETURN IIF( __objHasMsg( oError, "MODULENAME" ), oError:ModuleName, ;
-               IIF( n != NIL, ProcFile( n ), NIL ) )
+   RETURN iif( __objHasMsg( oError, "MODULENAME" ), oError:ModuleName, ;
+               iif( n != NIL, ProcFile( n ), NIL ) )
 
 STATIC FUNCTION err_ProcName( oError, n )
-   RETURN IIF( __objHasMsg( oError, "PROCNAME" ), oError:ProcName, ;
-               IIF( n != NIL, ProcName( n ), NIL ) )
+   RETURN iif( __objHasMsg( oError, "PROCNAME" ), oError:ProcName, ;
+               iif( n != NIL, ProcName( n ), NIL ) )
 
 STATIC FUNCTION err_ProcLine( oError, n )
-   RETURN IIF( __objHasMsg( oError, "PROCLINE" ), oError:ProcLine, ;
-               IIF( n != NIL, ProcLine( n ), NIL ) )
+   RETURN iif( __objHasMsg( oError, "PROCLINE" ), oError:ProcLine, ;
+               iif( n != NIL, ProcLine( n ), NIL ) )
 
 STATIC FUNCTION xhb_DefError( oError )
    LOCAL cMessage

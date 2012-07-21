@@ -14,10 +14,10 @@
  *                -> nMedian
  *  $ARGUMENTS$
  *     <aArray> is the array containing the elements to be averaged.
- * 
+ *
  *     <nStart> is the first array element to include,
  *     defaults to first element.
- * 
+ *
  *     <nEnd> is the last array element to include,
  *     defaults to last element.
  *  $RETURNS$
@@ -32,11 +32,11 @@
  *     values in the set.
  *  $EXAMPLES$
  *     FT_AMEDIAN( aArray )      // Return Median for entire array
- * 
+ *
  *     FT_AMEDIAN( aArray, 2)    // Return Median for elements from 2 to end
- * 
+ *
  *     FT_AMEDIAN( aArray, ,9)   // Return Median for 1st 9 elements
- * 
+ *
  *     FT_AMEDIAN( aArray,8,40 ) // Return Median for elements 8 to 40
  *  $END$
  */

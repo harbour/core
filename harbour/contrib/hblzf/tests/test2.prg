@@ -46,8 +46,8 @@ STATIC PROCEDURE MakeTest( ... )
       cFmt := hb_strFormat( ;
          "%s: %d -> %d, Ratio %.2f%%, Times %.2f", ;
          e:__enumKey(), ;
-         Len( IIf( lCmp, hb_pValue( 3 ), e2 ) ), Len( cRes ), ;
-         ( Len( cRes ) / Len( IIf( lCmp, hb_pValue( 3 ), e2 ) ) ) * 100, ;
+         Len( iif( lCmp, hb_pValue( 3 ), e2 ) ), Len( cRes ), ;
+         ( Len( cRes ) / Len( iif( lCmp, hb_pValue( 3 ), e2 ) ) ) * 100, ;
          nEnd - nBegin;
          )
       ? cFmt

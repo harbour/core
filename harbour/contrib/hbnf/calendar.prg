@@ -52,14 +52,14 @@ FUNCTION FT_CALENDAR (nRow, nCol, cColor, lShadow, lShowHelp)
  LOCAL  aRetVal[8]
  LOCAL  nHelpRow, cSaveHelp, lHelpIsDisplayed :=.F.
 
- nRow    := IIF ( nRow != NIL, nRow, 1 )           //check display row
- nCol    := IIF ( nCol != NIL, nCol, 63)           //check display col
- cColor  := IIF ( cColor != NIL, cColor, 'W+/G' )  //check display color
- lShadow := IIF ( lShadow == NIL , .F., lShadow )  //check shadow switch
- lShowHelp := IIF ( lShowHelp == NIL , .F., lShowHelp )//check help switch
+ nRow    := iif( nRow != NIL, nRow, 1 )           //check display row
+ nCol    := iif( nCol != NIL, nCol, 63)           //check display col
+ cColor  := iif( cColor != NIL, cColor, 'W+/G' )  //check display color
+ lShadow := iif( lShadow == NIL , .F., lShadow )  //check shadow switch
+ lShowHelp := iif( lShowHelp == NIL , .F., lShowHelp )//check help switch
 
- nRow := IIF ( nRow <1 .OR. nRow >21,  1, nRow )   //check row bounds
- nCol := IIF ( nCol <1 .OR. nCol >63, 63, nCol )   //check col bounds
+ nRow := iif( nRow <1 .OR. nRow >21,  1, nRow )   //check row bounds
+ nCol := iif( nCol <1 .OR. nCol >63, 63, nCol )   //check col bounds
 
  cSavColor   := SETCOLOR(cColor)  //save current and set display color
  cSaveScreen := SAVESCREEN( nRow-1, nCol-1, nRow+3, nCol+17 ) //save screen
@@ -71,7 +71,7 @@ FUNCTION FT_CALENDAR (nRow, nCol, cColor, lShadow, lShowHelp)
  ENDIF
 
  IF lShowHelp
-   nHelpRow := IIF (nRow > 10 , nRow - 10 , nRow + 6 )
+   nHelpRow := iif(nRow > 10 , nRow - 10 , nRow + 6 )
  ENDIF
 
  DO WHILE nKey != K_ESC
@@ -151,7 +151,7 @@ FUNCTION FT_CALENDAR (nRow, nCol, cColor, lShadow, lShowHelp)
  STATIC FUNCTION JDOY (nYear, nMonth, nDay)
   LOCAL cString :='000031059090120151181212243273304334'
   RETURN VALS(cString,(nMonth-1)*3+1,3) + nDay +;
-             IIF( nYear%4==0.AND.nMonth>2, 1, 0)
+             iif( nYear%4==0.AND.nMonth>2, 1, 0)
 
  STATIC FUNCTION VALS (cString, nOffset, nChar)
  RETURN VAL(SUBSTR(cString,nOffset,nChar))

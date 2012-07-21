@@ -199,7 +199,7 @@ METHOD Put() CLASS THtmlControl
    ::form := HtmlFormName()
    ::oHtm := HtmlPageObject()
 
-   ::cOutput += IIF( ::lBreak, CRLF() + "<BR>", CRLF() )
+   ::cOutput += iif( ::lBreak, CRLF() + "<BR>", CRLF() )
    IF ::lLabel
       ::cOutPut += CRLF() + "<LABEL>" + CRLF()
    ENDIF
@@ -349,13 +349,13 @@ METHOD Put() CLASS THtmlControl
 
       FOR i := 1 TO Len( ::aOptions )
          cStr := "<OPTION"
-         cStr += IIF( ::aOptions[ i, _OPTION_VALUE ] != NIL, ;
+         cStr += iif( ::aOptions[ i, _OPTION_VALUE ] != NIL, ;
                      " value=" + ::aOptions[ i, _OPTION_VALUE ], "" )
-         cStr += IIF( ::aOptions[ i, _OPTION_LABEL ] != NIL, ;
+         cStr += iif( ::aOptions[ i, _OPTION_LABEL ] != NIL, ;
                      " label=" + ::aOptions[ i, _OPTION_LABEL ], "" )
-         cStr += IIF( ::aOptions[ i, _OPTION_SELECTED ] == .T., ;
+         cStr += iif( ::aOptions[ i, _OPTION_SELECTED ] == .T., ;
                      " SELECTED ", "" )
-         cStr += IIF( ::aOptions[ i, _OPTION_DISABLED ] == .T., ;
+         cStr += iif( ::aOptions[ i, _OPTION_DISABLED ] == .T., ;
                      " DISABLED ", "" )
          cStr += ">" + ::aOptions[ i, _OPTION_TEXT ] + "</OPTION>" + CRLF()
          //Fwrite( ::nH, cStr )
@@ -488,7 +488,7 @@ CLASS THtmlForm
 
    METHOD setwidth( c ) INLINE ::width := c
 
-   METHOD AddControl( o ) INLINE IIF( HB_ISOBJECT( o ), ( o:nH := ::nH, o:Form := Self ), ),;
+   METHOD AddControl( o ) INLINE iif( HB_ISOBJECT( o ), ( o:nH := ::nH, o:Form := Self ), ),;
           Aadd( ::aControls, o )
 
    METHOD PutControls() INLINE Aeval( ::aControls, {| e | e:Put() } )
@@ -681,7 +681,7 @@ METHOD Put( lPutControls ) CLASS THtmlForm
 //   Fwrite( ::nH, ::cOutput )
 ::oHtm:cStr += ::cOutput
    IF lPutControls
-      Aeval( ::aControls, {| e | IIF( HB_ISOBJECT( e ), ;
+      Aeval( ::aControls, {| e | iif( HB_ISOBJECT( e ), ;
                             e:Put(), ::oHtm:cStr += e  ) } )
    ENDIF
 

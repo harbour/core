@@ -14,7 +14,7 @@
  *  $ARGUMENTS$
  *     <dGivenDate> is any valid date in any valid format.
  *     Defaults to DATE() if not supplied.
- * 
+ *
  *     <lIsEnd> is a logical variable. .F. = adjust for beginning of
  *     period mode, .T. = adjust for end of period mode.  Defaults to
  *     beginning of period mode.
@@ -22,17 +22,17 @@
  *     An adjusted date dependent upon mode and work week start day.
  *  $DESCRIPTION$
  *     Called by other FT_ACCT.. functions. The algorithm is:
- * 
+ *
  *     Beginning of period mode:
- * 
+ *
  *        If dGivenDate is in last 3 days of work week
  *           Return next week's start date
  *        Else
  *           Return this week's start date
  *        Endif
- * 
+ *
  *     End of period mode:
- * 
+ *
  *        If dGivenDate is in last 4 days of work week
  *           Return this week's end date
  *        Else
@@ -40,18 +40,18 @@
  *        Endif
  *  $EXAMPLES$
  *     Beginning of period mode (lIsEnd == .F.)
- * 
+ *
  *       dDate := Ctod( "01/31/91" )  // In last 3 days of work week
  *       ? FT_ACCTADJ( dDate )        // 02/03/91 (next week's start)
- * 
+ *
  *       dDate := Ctod( "03/31/91" )  // Not in last 3 days of work week
  *       ? FT_ACCTADJ( dDate )        // 03/31/91 (this week's start)
- * 
+ *
  *     End of period mode (lIsEnd == .T.)
- * 
+ *
  *       dDate := Ctod( "01/31/91" )  // In last 4 days of work week
  *       ? FT_ACCTADJ( dDate, .T. )   // 02/02/91 (this week's end)
- * 
+ *
  *       dDate := Ctod( "03/31/91" )  // Not in last 4 days of work week
  *       ? FT_ACCTADJ( dDate, .T. )   // 03/30/91 (prior week's end)
  *  $SEEALSO$

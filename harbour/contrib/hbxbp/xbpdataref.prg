@@ -140,7 +140,7 @@ METHOD DataRef:setData( xValue, mp2 )
 
    HB_SYMBOL_UNUSED( mp2 )
 
-//HB_TRACE( HB_TR_DEBUG, cClass +' '+ ::cargo +"..."+ IIF(empty(xValue)," empty ",valtype(xValue)) )
+//HB_TRACE( HB_TR_DEBUG, cClass +' '+ ::cargo +"..."+ iif(empty(xValue)," empty ",valtype(xValue)) )
 
    IF HB_ISBLOCK( ::dataLink )
       ::sl_editBuffer := eval( ::dataLink, xValue )
@@ -155,7 +155,7 @@ METHOD DataRef:setData( xValue, mp2 )
       ::oWidget:setChecked( ::sl_editBuffer )
 
    CASE cClass == "XBP3STATE"
-      ::oWidget:setCheckState( IIF( ::sl_editBuffer == 1, 2, IIF( ::sl_editBuffer == 2, 1, 0 ) ) )
+      ::oWidget:setCheckState( iif( ::sl_editBuffer == 1, 2, iif( ::sl_editBuffer == 2, 1, 0 ) ) )
 
    CASE cClass == "XBPLISTBOX"
       IF !empty( ::sl_editBuffer )

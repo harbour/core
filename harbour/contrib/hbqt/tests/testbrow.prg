@@ -145,7 +145,7 @@ STATIC FUNCTION my_browse( nArea, aStru, t, role, x, y )
          CASE "N"
             RETURN hb_NToS( FieldGet( x + 1 ) )
          CASE "L"
-            RETURN IIf( FieldGet( x + 1 ), "Yes", "No" )
+            RETURN iif( FieldGet( x + 1 ), "Yes", "No" )
          CASE "D"
             RETURN DToC( FieldGet( x + 1 ) )
          ENDSWITCH
@@ -159,7 +159,7 @@ STATIC FUNCTION my_browse( nArea, aStru, t, role, x, y )
          CASE "N"
             RETURN hb_NToS( FieldGet( x + 1 ) )
          CASE "L"
-            RETURN IIf( FieldGet( x + 1 ), "Y", "N" )
+            RETURN iif( FieldGet( x + 1 ), "Y", "N" )
          CASE "D"
             RETURN DToC( FieldGet( x + 1 ) )
          ENDSWITCH
@@ -171,7 +171,7 @@ STATIC FUNCTION my_browse( nArea, aStru, t, role, x, y )
             RETURN oColorN
          CASE "L"
             DBGoto( y + 1 )
-            RETURN IIf( FieldGet( x + 1 ), oColorLY, oColorLN )
+            RETURN iif( FieldGet( x + 1 ), oColorLY, oColorLN )
          CASE "D"
             RETURN oColorD
          ENDSWITCH

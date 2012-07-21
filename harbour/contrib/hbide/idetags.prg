@@ -285,7 +285,7 @@ FUNCTION Summarize( aText, cComments, aSumData, nFileType )
                      ccLine := ""
                      c := ""
 
-                     AEval( a, {|x| c += x, nNest := Max( 0, nNest + IIf( x == "{", 1, IIf( x == "}", -1, 0 ) ) ) } )
+                     AEval( a, {|x| c += x, nNest := Max( 0, nNest + iif( x == "{", 1, iif( x == "}", -1, 0 ) ) ) } )
                      ccLine := AllTrim( c )
                   ELSE
                      IF ! Empty( cLine )
@@ -295,7 +295,7 @@ FUNCTION Summarize( aText, cComments, aSumData, nFileType )
                            ccLine := ""
                            nLine  := i+1
                         ELSE
-                           AEval( a, {|x| IIf( x == ";", ( nLine := i+1, ccLine :="",  c := "" ), c += x ), nNest := Max( 0, nNest + IIf( x == "{", 1, IIf( x == "}", -1, 0 ) ) ) } )
+                           AEval( a, {|x| iif( x == ";", ( nLine := i+1, ccLine :="",  c := "" ), c += x ), nNest := Max( 0, nNest + iif( x == "{", 1, iif( x == "}", -1, 0 ) ) ) } )
                         ENDIF
                         IF !lInComment .AND. ! Empty(c)
                            ccLine += AllTrim( c ) + " "
@@ -315,7 +315,7 @@ FUNCTION Summarize( aText, cComments, aSumData, nFileType )
 
               ELSE
                  a := ParsExpr( aText[ i ], .F. , @lInComment, , .F., .F.)
-                 AEval( a,{|x| nNest := Max( 0, nNest + IIf( x == "{", 1, IIf( x == "}", -1, 0 ) ) ) } )
+                 AEval( a,{|x| nNest := Max( 0, nNest + iif( x == "{", 1, iif( x == "}", -1, 0 ) ) ) } )
                  ccLine := ""
                  nLine  := i+1
               ENDIF

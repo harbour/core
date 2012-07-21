@@ -58,7 +58,7 @@ FUNCTION FT_NWUID( nConn )
         cReqPkt,                 ;
         cRepPkt
 
-  nConn := IIF( nConn == nil, FT_NWLSTAT(), nConn )
+  nConn := iif( nConn == nil, FT_NWLSTAT(), nConn )
 
   // Set up request packet
 

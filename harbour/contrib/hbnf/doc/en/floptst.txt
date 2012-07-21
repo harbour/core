@@ -25,19 +25,19 @@
  *      ISDRIVE() returns just .T. or .F. depending if the diskette drive is
  *      ready or not, FT_FLOPTST() returns a numeric code designating the
  *      diskette drive's status.
- * 
+ *
  *      FT_FLOPTST() is particularly useful in backup and restore programs
  *      that need to test the floppy drive before writing/reading from a
  *      floppy disk.
- * 
+ *
  *      No testing has been performed on systems with more than 2 floppy
  *      drives.  If the third drive is "C" and the fourth "D" then there
  *      should be no problems.
- * 
+ *
  *      This function does not currently check subst'd drives.  So if you
  *      have SUBST E: A:\ then FT_FLOPTST( ASC("E")-ASC("A") ) == 4
  *      Any suggestions to fix this limitation are appreciated.
- * 
+ *
  *  $EXAMPLES$
  *      iStatus := FT_FLOPTST( 0 )
  *      DO CASE

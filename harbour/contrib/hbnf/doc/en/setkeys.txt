@@ -23,18 +23,18 @@
  *     function accomplishes the same task but without the side effects.  It
  *     does so by directly modifying the memory location where Clipper stores
  *     the LastKey() value.
- * 
+ *
  *     Some highly unorthodox programming techniques, not to mention rather
  *     strange use of Clipper internals, was necessary to make this function
  *     work.  If this makes you uncomfortable, then don't use this function,
  *     you worthless crybaby.
  *  $EXAMPLES$
  *     keyboard chr( K_ESC )
- * 
+ *
  *     ? lastkey()  // returns 27
- * 
+ *
  *     FT_LastKey( K_F1 )
- * 
+ *
  *     ? lastkey()  // now returns 28
  *  $END$
  */

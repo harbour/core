@@ -368,7 +368,7 @@ METHOD tPdf:BookAdd( cTitle, nLevel, nPage, nLine )
 METHOD BookAdd( cTitle, nLevel, nPage, nLine )
 #endif
 
-aadd( ::aReport[ BOOKMARK ], { nLevel, alltrim( cTitle ), 0, 0, 0, 0, 0, 0, nPage, IIF( nLevel == 1, ::aReport[ PAGEY ], ::aReport[ PAGEY ] - nLine * 72 / ::aReport[ LPI ] ) })
+aadd( ::aReport[ BOOKMARK ], { nLevel, alltrim( cTitle ), 0, 0, 0, 0, 0, 0, nPage, iif( nLevel == 1, ::aReport[ PAGEY ], ::aReport[ PAGEY ] - nLine * 72 / ::aReport[ LPI ] ) })
 
 RETURN self
 
@@ -503,7 +503,7 @@ local nLen, nAt
 DEFAULT nRow TO ::aReport[ REPORTLINE ]
 DEFAULT cUnits TO "R"
 DEFAULT lExact TO .f.
-DEFAULT nCol TO IIF( cUnits == "R", ::aReport[ REPORTWIDTH ] / 2, ::aReport[ PAGEX ] / 72 * 25.4 / 2 )
+DEFAULT nCol TO iif( cUnits == "R", ::aReport[ REPORTWIDTH ] / 2, ::aReport[ PAGEX ] / 72 * 25.4 / 2 )
 
    IF ::aReport[ HEADEREDIT ]
       return ::Header( "PDFCENTER", cId, { cString, nRow, nCol, cUnits, lExact } )
@@ -520,7 +520,7 @@ DEFAULT nCol TO IIF( cUnits == "R", ::aReport[ REPORTWIDTH ] / 2, ::aReport[ PAG
          nRow := nRow + ::aReport[ PDFTOP]
       ENDIF
    ENDIF
-   ::AtSay( cString, ::R2M( nRow ), IIF( cUnits == "R", ::aReport[ PDFLEFT ] + ( ::aReport[ PAGEX ] / 72 * 25.4 - 2 * ::aReport[ PDFLEFT ] ) * nCol / ::aReport[ REPORTWIDTH ], nCol ) - nLen, "M", lExact )
+   ::AtSay( cString, ::R2M( nRow ), iif( cUnits == "R", ::aReport[ PDFLEFT ] + ( ::aReport[ PAGEX ] / 72 * 25.4 - 2 * ::aReport[ PDFLEFT ] ) * nCol / ::aReport[ REPORTWIDTH ], nCol ) - nLen, "M", lExact )
 RETURN self
 
 //-------------------------\\
@@ -577,7 +577,7 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
    ++::aReport[ REPORTOBJ ]
    aadd( ::aReport[ REFS ], ::aReport[ DOCLEN ] )
    cTemp := ltrim(str( ::aReport[ REPORTOBJ ] )) + " 0 obj" + CRLF + ;
-   "<< /Type /Catalog /Pages 1 0 R /Outlines " + ltrim(str( ::aReport[ REPORTOBJ ] + 1 )) + " 0 R" + IIF( ( nBookLen := len( ::aReport[ BOOKMARK ] )) > 0, " /PageMode /UseOutlines", "") + " >>" + CRLF + "endobj" + CRLF
+   "<< /Type /Catalog /Pages 1 0 R /Outlines " + ltrim(str( ::aReport[ REPORTOBJ ] + 1 )) + " 0 R" + iif( ( nBookLen := len( ::aReport[ BOOKMARK ] )) > 0, " /PageMode /UseOutlines", "") + " >>" + CRLF + "endobj" + CRLF
    ::aReport[ DOCLEN ] += len( cTemp )
    fwrite( ::aReport[ HANDLE ], cTemp )
 
@@ -621,11 +621,11 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
                  "/Parent " + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKPARENT ])) + " 0 R" + CRLF + ;
                  "/Dest [" + ltrim(str( ::aReport[ PAGES ][ ::aReport[ BOOKMARK ][ nRecno ][ BOOKPAGE ] ] )) + " 0 R /XYZ 0 " + ltrim( str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKCOORD ])) + " 0]" + CRLF + ;
                  "/Title (" + alltrim( ::aReport[ BOOKMARK ][ nRecno ][ BOOKTITLE ]) + ")" + CRLF + ;
-                 IIF( ::aReport[ BOOKMARK ][ nRecno ][ BOOKPREV ] > 0, "/Prev " + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKPREV ])) + " 0 R" + CRLF, "") + ;
-                 IIF( ::aReport[ BOOKMARK ][ nRecno ][ BOOKNEXT ] > 0, "/Next " + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKNEXT ])) + " 0 R" + CRLF, "") + ;
-                 IIF( ::aReport[ BOOKMARK ][ nRecno ][ BOOKFIRST ] > 0, "/First " + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKFIRST ])) + " 0 R" + CRLF, "") + ;
-                 IIF( ::aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ] > 0, "/Last " + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ])) + " 0 R" + CRLF, "") + ;
-                 IIF( ::aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ] != 0, "/Count " + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ])) + CRLF, "") + ;
+                 iif( ::aReport[ BOOKMARK ][ nRecno ][ BOOKPREV ] > 0, "/Prev " + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKPREV ])) + " 0 R" + CRLF, "") + ;
+                 iif( ::aReport[ BOOKMARK ][ nRecno ][ BOOKNEXT ] > 0, "/Next " + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKNEXT ])) + " 0 R" + CRLF, "") + ;
+                 iif( ::aReport[ BOOKMARK ][ nRecno ][ BOOKFIRST ] > 0, "/First " + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKFIRST ])) + " 0 R" + CRLF, "") + ;
+                 iif( ::aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ] > 0, "/Last " + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ])) + " 0 R" + CRLF, "") + ;
+                 iif( ::aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ] != 0, "/Count " + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ])) + CRLF, "") + ;
                  ">>" + CRLF + "endobj" + CRLF
 //                 "/Dest [" + ltrim(str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKPAGE ] * 3 )) + " 0 R /XYZ 0 " + ltrim( str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKCOORD ])) + " 0]" + CRLF + ;
 //                 "/Dest [" + ltrim(str( ::aReport[ PAGES ][ nRecno ] )) + " 0 R /XYZ 0 " + ltrim( str( ::aReport[ BOOKMARK ][ nRecno ][ BOOKCOORD ])) + " 0]" + CRLF + ;
@@ -910,7 +910,7 @@ DEFAULT lExact TO .f.
          nRow := nRow + ::aReport[ PDFTOP]
       ENDIF
    ENDIF
-   ::AtSay( cString, ::R2M( nRow ), IIF( cUnits == "R", ::aReport[ PDFLEFT ] + ( ::aReport[ PAGEX ] / 72 * 25.4 - 2 * ::aReport[ PDFLEFT ] ) * nCol / ::aReport[ REPORTWIDTH ] - nAdj, nCol ) - nLen, "M", lExact )
+   ::AtSay( cString, ::R2M( nRow ), iif( cUnits == "R", ::aReport[ PDFLEFT ] + ( ::aReport[ PAGEX ] / 72 * 25.4 - 2 * ::aReport[ PDFLEFT ] ) * nCol / ::aReport[ REPORTWIDTH ] - nAdj, nCol ) - nLen, "M", lExact )
 RETURN self
 
 //-------------------------\\
@@ -1903,7 +1903,7 @@ local nFirst := 0, nLen := len( ::aReport[ BOOKMARK ] )
          nFirst := nRecno
       ENDIF
    ENDIF
-return IIF( nFirst == 0, nFirst, nObj + nFirst )
+return iif( nFirst == 0, nFirst, nObj + nFirst )
 
 //-------------------------\\
 
@@ -1925,7 +1925,7 @@ local nLast := 0, nLen := len( ::aReport[ BOOKMARK ] )
          enddo
       ENDIF
    ENDIF
-return IIF( nLast == 0, nLast, nObj + nLast )
+return iif( nLast == 0, nLast, nObj + nLast )
 
 //-------------------------\\
 
@@ -1949,7 +1949,7 @@ local nTempLevel, nNext := 0, nLen := len( ::aReport[ BOOKMARK ] )
       ENDIF
       ++nRecno
    enddo
-return IIF( nNext == 0, nNext, nObj + nNext )
+return iif( nNext == 0, nNext, nObj + nNext )
 
 //-------------------------\\
 
@@ -1970,7 +1970,7 @@ local nParent := 0
       ENDIF
       --nRecno
    enddo
-return IIF( nParent == 0, nObj - 1, nObj + nParent )
+return iif( nParent == 0, nObj - 1, nObj + nParent )
 
 //-------------------------\\
 
@@ -1995,7 +1995,7 @@ local nPrev := 0
       ENDIF
       --nRecno
    enddo
-return IIF( nPrev == 0, nPrev, nObj + nPrev )
+return iif( nPrev == 0, nPrev, nObj + nPrev )
 
 //-------------------------\\
 
@@ -2160,7 +2160,7 @@ local nAt, cAt, nCRLF, nNew, nRat, nRet := 0
    cAt := substr( cString, nAt, attoken( cString, cDelim, nI + 1 ) - nAt )
    nCRLF := numat( chr(13) + chr(10), cAt )
    nRat := rat( chr(13) + chr(10), cAt )
-   nNew := len( cAt ) - nRat - IIF( nRat > 0, 1, 0 )
+   nNew := len( cAt ) - nRat - iif( nRat > 0, 1, 0 )
    IF nCRLF > 1 .or. ( nCRLF == 1 .and. nNew > 0 )
       nRet := nCRLF
    ENDIF
@@ -2246,12 +2246,12 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
       for nI := 1 to len( ::aReport[ PAGEIMAGES ] )
          cTemp += CRLF + "q"
          nImage := ascan( ::aReport[ IMAGES ], { |arr| arr[1] == ::aReport[ PAGEIMAGES ][ nI ][ 1 ] } )
-         cTemp += CRLF + ltrim(str( IIF( ::aReport[ PAGEIMAGES ][ nI ][ 5 ] == 0, ::M2X( ::aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_WIDTH ] / ::aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_XRES ] * 25.4 ), ::aReport[ PAGEIMAGES ][ nI ][ 5 ]))) + ;
+         cTemp += CRLF + ltrim(str( iif( ::aReport[ PAGEIMAGES ][ nI ][ 5 ] == 0, ::M2X( ::aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_WIDTH ] / ::aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_XRES ] * 25.4 ), ::aReport[ PAGEIMAGES ][ nI ][ 5 ]))) + ;
          " 0 0 " + ;
-         ltrim(str( IIF( ::aReport[ PAGEIMAGES ][ nI ][ 4 ] == 0, ::M2X( ::aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_HEIGHT ] / ::aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_YRES ] * 25.4 ), ::aReport[ PAGEIMAGES ][ nI ][ 4 ]))) + ;
+         ltrim(str( iif( ::aReport[ PAGEIMAGES ][ nI ][ 4 ] == 0, ::M2X( ::aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_HEIGHT ] / ::aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_YRES ] * 25.4 ), ::aReport[ PAGEIMAGES ][ nI ][ 4 ]))) + ;
          " " + ltrim(str( ::aReport[ PAGEIMAGES ][ nI ][ 3 ] )) + ;
          " " + ltrim(str( ::aReport[ PAGEY ] - ::aReport[ PAGEIMAGES ][ nI ][ 2 ] - ;
-         IIF( ::aReport[ PAGEIMAGES ][ nI ][ 4 ] == 0, ::M2X( ::aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_HEIGHT ] / ::aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_YRES ] * 25.4 ), ::aReport[ PAGEIMAGES ][ nI ][ 4 ]))) + " cm"
+         iif( ::aReport[ PAGEIMAGES ][ nI ][ 4 ] == 0, ::M2X( ::aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_HEIGHT ] / ::aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_YRES ] * 25.4 ), ::aReport[ PAGEIMAGES ][ nI ][ 4 ]))) + " cm"
          cTemp += CRLF + "/Image" + ltrim(str( nImage )) + " Do"
          cTemp += CRLF + "Q"
       next
@@ -2307,11 +2307,11 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
           "/Type /XObject" + CRLF + ;
           "/Subtype /Image" + CRLF + ;
           "/Name /Image" + ltrim(str(nI)) + CRLF + ;
-          "/Filter [" + IIF( at( ".jpg", lower( ::aReport[ IMAGES ][ nI ][ 1 ]) ) > 0, " /DCTDecode", "" ) + " ]" + CRLF + ;
+          "/Filter [" + iif( at( ".jpg", lower( ::aReport[ IMAGES ][ nI ][ 1 ]) ) > 0, " /DCTDecode", "" ) + " ]" + CRLF + ;
           "/Width " + ltrim(str( ::aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_WIDTH ] )) + CRLF + ;
           "/Height " + ltrim(str( ::aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_HEIGHT ] )) + CRLF + ;
           "/BitsPerComponent " + ltrim(str( ::aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_BITS ] )) + CRLF + ;
-          "/ColorSpace /" + IIF( ::aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_BITS ] == 1, "DeviceGray", "DeviceRGB") + CRLF + ;
+          "/ColorSpace /" + iif( ::aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_BITS ] == 1, "DeviceGray", "DeviceRGB") + CRLF + ;
           "/Length " + ltrim(str( ::aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_LENGTH ])) + CRLF + ;
           ">>" + CRLF + ;
           "stream" + CRLF

@@ -184,10 +184,10 @@
 
   *------------------------------------------------
   STATIC FUNCTION _ftRow( nElem )  //  Determine which row to print on
-  RETURN IIF( nElem > 40, nElem - 40, IIF( nElem > 20, nElem - 20, nElem ) )
+  RETURN iif( nElem > 40, nElem - 40, iif( nElem > 20, nElem - 20, nElem ) )
   *------------------------------------------------
   STATIC FUNCTION _ftCol( nElem )  //  Determine which column to start print
-  RETURN IIF( nElem > 40,  55, IIF( nElem > 20, 28, 1 ) )
+  RETURN iif( nElem > 40,  55, iif( nElem > 20, 28, 1 ) )
   *------------------------------------------------
 
 #endif
@@ -199,8 +199,8 @@ FUNCTION FT_METAPH ( cName, nSize )
 
 LOCAL cMeta
 
-cName := IIF( cName == NIL, "", cName )  //  catch-all
-nSize := IIF( nSize == NIL, 4,  nSize )  //  default size: 4-bytes
+cName := iif( cName == NIL, "", cName )  //  catch-all
+nSize := iif( nSize == NIL, 4,  nSize )  //  default size: 4-bytes
 
 //  Remove non-alpha characters and make upper case.
 //  The string is padded with 1 space at the beginning & end.

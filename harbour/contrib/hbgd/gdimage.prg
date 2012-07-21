@@ -84,25 +84,25 @@ CREATE CLASS GDImage
    METHOD CreateTrueColor( sx, sy )        INLINE ::pImage := gdImageCreateTrueColor( sx, sy ), Self
 
    // Load From File
-   METHOD LoadFromPng( cFile )             INLINE ::pImage := gdImageCreateFromPng( cFile )          , IIF( ::pImage != NIL, Self, NIL )
-   METHOD LoadFromJpeg( cFile )            INLINE ::pImage := gdImageCreateFromJpeg( cFile )         , IIF( ::pImage != NIL, Self, NIL )
-   METHOD LoadFromWBmp( cFile )            INLINE ::pImage := gdImageCreateFromWBMP( cFile )         , IIF( ::pImage != NIL, Self, NIL )
-   METHOD LoadFromGd( cFile )              INLINE ::pImage := gdImageCreateFromGD( cFile )           , IIF( ::pImage != NIL, Self, NIL )
-   METHOD LoadFromGif( cFile )             INLINE ::pImage := gdImageCreateFromGif( cFile )          , IIF( ::pImage != NIL, Self, NIL )
+   METHOD LoadFromPng( cFile )             INLINE ::pImage := gdImageCreateFromPng( cFile )          , iif( ::pImage != NIL, Self, NIL )
+   METHOD LoadFromJpeg( cFile )            INLINE ::pImage := gdImageCreateFromJpeg( cFile )         , iif( ::pImage != NIL, Self, NIL )
+   METHOD LoadFromWBmp( cFile )            INLINE ::pImage := gdImageCreateFromWBMP( cFile )         , iif( ::pImage != NIL, Self, NIL )
+   METHOD LoadFromGd( cFile )              INLINE ::pImage := gdImageCreateFromGD( cFile )           , iif( ::pImage != NIL, Self, NIL )
+   METHOD LoadFromGif( cFile )             INLINE ::pImage := gdImageCreateFromGif( cFile )          , iif( ::pImage != NIL, Self, NIL )
 
    // Load From a specific File handle
-   METHOD InputPng( nHandle, nSize )       INLINE ::pImage := gdImageCreateFromPng( nHandle, nSize ) , IIF( ::pImage != NIL, Self, NIL )
-   METHOD InputJpeg( nHandle, nSize )      INLINE ::pImage := gdImageCreateFromJpeg( nHandle, nSize ), IIF( ::pImage != NIL, Self, NIL )
-   METHOD InputWBmp( nHandle, nSize )      INLINE ::pImage := gdImageCreateFromWBMP( nHandle, nSize ), IIF( ::pImage != NIL, Self, NIL )
-   METHOD InputGd( nHandle, nSize )        INLINE ::pImage := gdImageCreateFromGD( nHandle, nSize )  , IIF( ::pImage != NIL, Self, NIL )
-   METHOD InputGif( nHandle, nSize )       INLINE ::pImage := gdImageCreateFromGif( nHandle, nSize ) , IIF( ::pImage != NIL, Self, NIL )
+   METHOD InputPng( nHandle, nSize )       INLINE ::pImage := gdImageCreateFromPng( nHandle, nSize ) , iif( ::pImage != NIL, Self, NIL )
+   METHOD InputJpeg( nHandle, nSize )      INLINE ::pImage := gdImageCreateFromJpeg( nHandle, nSize ), iif( ::pImage != NIL, Self, NIL )
+   METHOD InputWBmp( nHandle, nSize )      INLINE ::pImage := gdImageCreateFromWBMP( nHandle, nSize ), iif( ::pImage != NIL, Self, NIL )
+   METHOD InputGd( nHandle, nSize )        INLINE ::pImage := gdImageCreateFromGD( nHandle, nSize )  , iif( ::pImage != NIL, Self, NIL )
+   METHOD InputGif( nHandle, nSize )       INLINE ::pImage := gdImageCreateFromGif( nHandle, nSize ) , iif( ::pImage != NIL, Self, NIL )
 
    // Create from an image pointer in memory
-   METHOD CreateFromPng( pImage, nSize )   INLINE ::pImage := gdImageCreateFromPng( pImage, nSize )  , IIF( ::pImage != NIL, Self, NIL )
-   METHOD CreateFromJpeg( pImage, nSize )  INLINE ::pImage := gdImageCreateFromJpeg( pImage, nSize ) , IIF( ::pImage != NIL, Self, NIL )
-   METHOD CreateFromWBmp( pImage, nSize )  INLINE ::pImage := gdImageCreateFromWBMP( pImage, nSize ) , IIF( ::pImage != NIL, Self, NIL )
-   METHOD CreateFromGd( pImage, nSize )    INLINE ::pImage := gdImageCreateFromGD( pImage, nSize )   , IIF( ::pImage != NIL, Self, NIL )
-   METHOD CreateFromGif( pImage, nSize )   INLINE ::pImage := gdImageCreateFromGif( pImage, nSize )  , IIF( ::pImage != NIL, Self, NIL )
+   METHOD CreateFromPng( pImage, nSize )   INLINE ::pImage := gdImageCreateFromPng( pImage, nSize )  , iif( ::pImage != NIL, Self, NIL )
+   METHOD CreateFromJpeg( pImage, nSize )  INLINE ::pImage := gdImageCreateFromJpeg( pImage, nSize ) , iif( ::pImage != NIL, Self, NIL )
+   METHOD CreateFromWBmp( pImage, nSize )  INLINE ::pImage := gdImageCreateFromWBMP( pImage, nSize ) , iif( ::pImage != NIL, Self, NIL )
+   METHOD CreateFromGd( pImage, nSize )    INLINE ::pImage := gdImageCreateFromGD( pImage, nSize )   , iif( ::pImage != NIL, Self, NIL )
+   METHOD CreateFromGif( pImage, nSize )   INLINE ::pImage := gdImageCreateFromGif( pImage, nSize )  , iif( ::pImage != NIL, Self, NIL )
 
    METHOD LoadFromFile( cFile )
 
@@ -116,11 +116,11 @@ CREATE CLASS GDImage
    METHOD SaveToFile( cFile )              INLINE gdImageToFile( Self, cFile )
 
    // Output To a specified File handle
-   METHOD OutputPng( nHandle, nLevel )     INLINE IIF( nHandle == NIL, nHandle := 1, ), gdImagePng( ::pImage, nHandle, nLevel )
-   METHOD OutputJpeg( nHandle, nLevel )    INLINE IIF( nHandle == NIL, nHandle := 1, ), gdImageJpeg( ::pImage, nHandle, nLevel )
-   METHOD OutputWBmp( nHandle, nFG )       INLINE IIF( nHandle == NIL, nHandle := 1, ), gdImageWBmp( ::pImage, nHandle, nFG )
-   METHOD OutputGd( nHandle )              INLINE IIF( nHandle == NIL, nHandle := 1, ), gdImageGd( ::pImage, nHandle )
-   METHOD OutputGif( nHandle )             INLINE IIF( nHandle == NIL, nHandle := 1, ), gdImageGif( ::pImage, nHandle )
+   METHOD OutputPng( nHandle, nLevel )     INLINE iif( nHandle == NIL, nHandle := 1, ), gdImagePng( ::pImage, nHandle, nLevel )
+   METHOD OutputJpeg( nHandle, nLevel )    INLINE iif( nHandle == NIL, nHandle := 1, ), gdImageJpeg( ::pImage, nHandle, nLevel )
+   METHOD OutputWBmp( nHandle, nFG )       INLINE iif( nHandle == NIL, nHandle := 1, ), gdImageWBmp( ::pImage, nHandle, nFG )
+   METHOD OutputGd( nHandle )              INLINE iif( nHandle == NIL, nHandle := 1, ), gdImageGd( ::pImage, nHandle )
+   METHOD OutputGif( nHandle )             INLINE iif( nHandle == NIL, nHandle := 1, ), gdImageGif( ::pImage, nHandle )
 
    METHOD Output( nHandle )                INLINE gdImageToHandle( ::pImage, nHandle )
 
@@ -243,7 +243,7 @@ CREATE CLASS GDImage
                                                       gdImageFTSize( cString, cFontName, nPitch )
 
    /* COLOR HANDLING FUNCTIONS */
-   METHOD SetColor( r, g, b )              INLINE IIF( PCount() == 2, ::pColor := r, ::pColor := gdImageColorAllocate( ::pImage, r, g, b ) )
+   METHOD SetColor( r, g, b )              INLINE iif( PCount() == 2, ::pColor := r, ::pColor := gdImageColorAllocate( ::pImage, r, g, b ) )
    METHOD DelColor( pColor )               INLINE ::pColor := NIL, gdImageColorDeAllocate( ::pImage, pColor )
    METHOD SetColorAlpha( r, g, b, a )      INLINE ::pColor := gdImageColorAllocateAlpha( ::pImage, r, g, b, a)
    METHOD SetColorClosest( r, g, b )       INLINE ::pColor := gdImageColorClosest( ::pImage, r, g, b )

@@ -13,10 +13,10 @@
  *     FT_ASUM( <aArray> [, <nStartIndex> [, <nEndIndex> ] ] ) -> nSum
  *  $ARGUMENTS$
  *     <aArray> is the array containing the elements to be summed.
- * 
+ *
  *     <nStartIndex> is the first array item to include,
  *     defaults to first element.
- * 
+ *
  *     <nEndIndex> is the last array element to include,
  *     defaults to all elements.
  *  $RETURNS$
@@ -26,11 +26,11 @@
  *     lengths of a character array.
  *  $EXAMPLES$
  *     FT_ASUM(aSubTotals)               // Sum the Entire Array
- * 
+ *
  *     FT_ASUM(aSubTotals, 5)            // Sum from the 5th Element On
- * 
+ *
  *     FT_ASUM(aSubTotals, , 10)         // Sum the 1st 10 Elements
- * 
+ *
  *     FT_ASUM(aSubTotals, 5, 10)        // Sum Elements 5-10
  *  $END$
  */

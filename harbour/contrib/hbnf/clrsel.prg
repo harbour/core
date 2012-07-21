@@ -76,8 +76,8 @@
            DispBox( <t>, <l>, <b>, <r>, REPLICATE(<c>,9) )
 
 #command DEFAULT <p> TO <val> [, <pn> TO <valn> ]  =>;
-         <p> := IIF( <p> == Nil, <val>, <p> );     ;
-         [ <pn> := IIF( <pn> == Nil, <valn>, <pn> ) ]
+         <p> := iif( <p> == Nil, <val>, <p> );     ;
+         [ <pn> := iif( <pn> == Nil, <valn>, <pn> ) ]
 
 *------------------------------------------------
 //  Demo of FT_ClrSel()
@@ -173,11 +173,11 @@ DEFAULT cChr TO chr(254)+chr(254)
 cChr := PadR( cChr, 2 )
 
 SETCURSOR( SC_NONE )
-SETCOLOR( IIF( lColour, "GR+/N,,N/N", "W+/N,,N/N" ) )
+SETCOLOR( iif( lColour, "GR+/N,,N/N", "W+/N,,N/N" ) )
 CLS
 
 *.... initialize the colour palette
-aClrPal := _ftInitPal( IIF( lColour, aClrTab, aClrBW ) )
+aClrPal := _ftInitPal( iif( lColour, aClrTab, aClrBW ) )
 
 *.... paint the colours on the screen
 _ftShowPal( aClrPal, cChr )
@@ -199,7 +199,7 @@ nL := MAX( INT( (27-nLen) /2 )-2, 1 )
 nR := MIN( nL + nLen + 3, 26 )
 
 *.... set up the window for aChoice
-SETCOLOR( IIF( lColour, "N/W,W+/R", "N/W,W+/N" ) )
+SETCOLOR( iif( lColour, "N/W,W+/R", "N/W,W+/N" ) )
 ClearS( nT, nL,   nB, nR )
 
 *.... prompt for colour setting and modify
@@ -224,7 +224,7 @@ FT_RestSets( aEnvSav )
 RESTSCREEN( 00, 00, MAXROW(), MAXCOL(), cScrSav )
 SETPOS( nRowSav, nColSav )
 
-RETURN IIF( nChoice == 1, aClrs, aClrOld )
+RETURN iif( nChoice == 1, aClrs, aClrOld )
 
 *------------------------------------------------
 STATIC FUNCTION _ftHiLite( nRow, nCol, cStr, nLen )
@@ -281,7 +281,7 @@ IF !( aOpt[ C_TYPE ] == "T" )  // no prompt for titles
   *.... we need to know top,left,bottom,right for the prompt window
   aEval( aPrompt, { |cPrompt| nLen := MAX( nLen, LEN( cPrompt ) ) } )
   nLen := MAX( nLen, LEN( aOpt[ C_NAME ] ) + 2 )
-  nT := IIF( aOpt[ C_TYPE ] == "M", 18, 19 )
+  nT := iif( aOpt[ C_TYPE ] == "M", 18, 19 )
   nB := nT + LEN(aPrompt) + 1
   nL := MAX( INT( (27-nLen) /2 )-2, 1 )
   nR := MIN( nL + nLen + 3, 26 )
@@ -297,7 +297,7 @@ DO WHILE .T.
   _ftShowIt( aOpt )
 
   IF !( aOpt[ C_TYPE ] == "T" )  // no prompt for titles
-    SETCOLOR( IIF( lColour, "N/W,W+/R,,,N/W", "N/W,W+/N,,,N/W" ) )
+    SETCOLOR( iif( lColour, "N/W,W+/R,,,N/W", "N/W,W+/N,,,N/W" ) )
     Double( nT, nL+1, nB, nR-1 )
     @ nT, nL+2 SAY PadC( " "+ aOpt[C_NAME] +" ", nR -nL -3, "Í" )
     FOR nX := 1 TO LEN( aPrompt )
@@ -321,7 +321,7 @@ DO WHILE .T.
   aClrs := _ftChr2Arr( aOpt[ C_CLR ] )   // place color string in an array
   aSize( aClrs, 5 )                      // make sure there are 5 settings
   *.... empty elements are made Nil so they can be defaulted
-  aEval( aClrs, { |v,e| aClrs[e] := IIF( EMPTY(v), Nil, ALLTRIM(v) ) } )
+  aEval( aClrs, { |v,e| aClrs[e] := iif( EMPTY(v), Nil, ALLTRIM(v) ) } )
   DEFAULT aClrs[1] TO "W/N"
   DEFAULT aClrs[2] TO "N/W"   // place default colours into
   DEFAULT aClrs[3] TO "N/N"   // elements which are empty
@@ -484,14 +484,14 @@ NEXT
 
 IF ! lFound
   nR := 1                         // black background
-  nC := IIF( nDim == 5, 3, 8 )    // white foreground
+  nC := iif( nDim == 5, 3, 8 )    // white foreground
 ENDIF
 
 DO WHILE .T.
 
   *.... make sure array boundary not exceeded
-  nR := IIF( nR > nDim, 1, IIF( nR == 0, nDim, nR ) )
-  nC := IIF( nC > nDim, 1, IIF( nC == 0, nDim, nC ) )
+  nR := iif( nR > nDim, 1, iif( nR == 0, nDim, nR ) )
+  nC := iif( nC > nDim, 1, iif( nC == 0, nDim, nC ) )
 
   *.... place selected colour in the appropriate spot in clr string
   aOpt[ C_CLR ] := _ftClrPut( aOpt[ C_CLR ], nElem, aClrPal[ nR, nC ] )
@@ -560,7 +560,7 @@ NEXT
 n := nElem + 18
 DO WHILE .T.
   *.... make sure boundary not exeeded
-  n := IIF( n > Len(aChar)+18, 19, IIF( n < 19, Len(aChar)+18, n ) )
+  n := iif( n > Len(aChar)+18, 19, iif( n < 19, Len(aChar)+18, n ) )
 
   *.... show sample window
   aOpt[ C_CHAR ] := aChar[ n-18 ] // place in array
@@ -602,7 +602,7 @@ cString += cDelim
 DO WHILE .T.
   IF EMPTY( cString ) ;  EXIT ;  ENDIF
   n := AT( cDelim, cString )
-  AADD( aArray, IIF( n == 1, "", LEFT( cString, n - 1 ) ) )
+  AADD( aArray, iif( n == 1, "", LEFT( cString, n - 1 ) ) )
   cString := SUBS( cString, n + 1 )
 ENDDO
 
@@ -618,7 +618,7 @@ LOCAL cString := ""
 DEFAULT aArray TO {}
 DEFAULT cDelim TO ","
 
-AEVAL( aArray, { |v,e| cString += IIF( e == 1, v, cDelim + v ) } )
+AEVAL( aArray, { |v,e| cString += iif( e == 1, v, cDelim + v ) } )
 
 RETURN cString
 
@@ -659,8 +659,8 @@ LOCAL aClrPal := ARRAY( nDim*2, nDim*2 )
 FOR nF := 1 TO nDim*2
   FOR nB := 1 TO nDim*2
     aClrPal[ nF, nB ] :=;
-      IIF( nF <= nDim, aClrTab[ nF ], aClrTab[ nF-nDim ] +"+" ) +"/"+;
-      IIF( nB <= nDim, aClrTab[ nB ], aClrTab[ nB-nDim ] +"*" )
+      iif( nF <= nDim, aClrTab[ nF ], aClrTab[ nF-nDim ] +"+" ) +"/"+;
+      iif( nB <= nDim, aClrTab[ nB ], aClrTab[ nB-nDim ] +"*" )
   NEXT
 NEXT
 
@@ -676,7 +676,7 @@ LOCAL n := 1
 
 DO WHILE lIdentical .AND. n <= LEN(aArr1)
   IF VALTYPE( aArr1[n] ) == VALTYPE( aArr2[n] )
-    lIdentical := IIF( VALTYPE( aArr1[n] ) == "A",     ;
+    lIdentical := iif( VALTYPE( aArr1[n] ) == "A",     ;
                        _ftIdentArr( aArr1[n], aArr2[n] ), ;
                        aArr1[n] == aArr2[n] )
   ELSE

@@ -209,7 +209,7 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
    LOCAL column, cell, xData, type, mergecell, comment, style, colIndex, colWidth
    LOCAL row, rowData, rowHeight, formula
 
-   displayRightToLeft := IIF( ::ldisplayRightToLeft, 'ss:RightToLeft="1"', "" )
+   displayRightToLeft := iif( ::ldisplayRightToLeft, 'ss:RightToLeft="1"', "" )
 
    xml := '<Worksheet ss:Name="' + ::id + '" ' + displayRightToLeft + '>' + HB_OsNewLine()
    xml += '   <Table>' + HB_OsNewLine()

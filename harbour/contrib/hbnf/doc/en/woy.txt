@@ -25,23 +25,23 @@
  *     Date validation must be external to this function.
  *  $EXAMPLES$
  *     These code fragments find the week number, given a date.
- * 
+ *
  *     // literal character date
  *     dDate  := CTOD("01/01/91")
  *     nWkNum := FT_WOY(dDate)              // result:  1
- * 
+ *
  *     // presume DOS date to be 01/06/91
  *     nWkNum := FT_WOY(DATE())             // result:  2
- * 
+ *
  *     // date input
  *     cDate  := SPACE(8)
  *     @ 4,10 get cDate PICT "##/##/##"     // input 07/04/91
  *     READ
  *     nWkNum := FT_WOY(CTOD(cDate))        // result: 27
- * 
+ *
  *     // last day of year
  *     nWkNum := FT_WOY(CTOD("12/31/91"))    // result: 53
- * 
+ *
  *     For a demonstration of this function, compile and link the
  *     program woy.prg in the Nanforum Toolkit source code.
  *  $END$
@@ -67,23 +67,23 @@
  *     Date validation must be external to this function.
  *  $EXAMPLES$
  *     These code fragments find the day number, given a date.
- * 
+ *
  *     // literal character date
  *     dDate  := CTOD("01/01/91")
  *     nDayNum := FT_DOY(dDate)              // result:  1
- * 
+ *
  *     // presume DOS date to be 01/06/91
  *     nDayNum := FT_DOY(DATE())             // result:  6
- * 
+ *
  *     // date input
  *     cDate  := SPACE(8)
  *     @ 4,10 get cDate PICT "##/##/##"      // input 07/04/91
  *     READ
  *     nDayNum := FT_DOY(CTOD(cDate))        // result: 185
- * 
+ *
  *     // last day of year
  *     nDayNum := FT_DOY(CTOD("12/31/91"))    // result: 365
- * 
+ *
  *     For a demonstration of this function, compile and link the
  *     program woy.prg in the Nanforum Toolkit source code.
  *  $END$

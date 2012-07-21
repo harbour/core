@@ -24,10 +24,10 @@ PROCEDURE Main()
 
    // LOCAL aClip
 
-   // SET GDFONTPATH=C:\windows\fonts
+   // SET GDFONTPATH=%WINDIR%\fonts
    IF GetEnv( "GDFONTPATH" ) == ""
       ? "Please set GDFONTPATH"
-      ? "On Windows: SET GDFONTPATH=C:\windows\fonts"
+      ? "On Windows: SET GDFONTPATH=%WINDIR%\fonts"
       ? "On Linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType"
       ?
    ENDIF
@@ -100,7 +100,7 @@ PROCEDURE Main()
 
    /* Draw an arc */
    oI:Arc( 50, 50, 40, 40, 30, 190, , red )
-   oI:Circle( 50, 150, 45, .T. , green )
+   oI:Circle( 50, 150, 45, .T., green )
    oI:Ellipse( 120, 120, 50, 20, , green )
 
    /* Draw a character. */

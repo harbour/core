@@ -616,8 +616,8 @@ METHOD New( nLevel, cDBFName, cIndexName, aStruct, cDriver ) CLASS HB_LogDbf
       IF Empty( cExt )
          cExt := "dbf"
       ENDIF
-      ::cDBFName := IIF( !Empty( cDrive ), cDrive + ":\", "" ) + ;
-                    IIF( !Empty( cPath ) , cPath + "\", "" ) + ;
+      ::cDBFName := iif( !Empty( cDrive ), cDrive + ":\", "" ) + ;
+                    iif( !Empty( cPath ) , cPath + "\", "" ) + ;
                     cName + cExt
       //__OutDebug( "::cDBFName", ::cDBFName )
    ENDIF
@@ -627,8 +627,8 @@ METHOD New( nLevel, cDBFName, cIndexName, aStruct, cDriver ) CLASS HB_LogDbf
       IF Empty( cExt )
          cExt := "cdx"
       ENDIF
-      ::cIndexName := IIF( !Empty( cDrive ), cDrive + ":\", "" ) + ;
-                      IIF( !Empty( cPath ) , cPath + "\", "" ) + ;
+      ::cIndexName := iif( !Empty( cDrive ), cDrive + ":\", "" ) + ;
+                      iif( !Empty( cPath ) , cPath + "\", "" ) + ;
                       cName + cExt
       //__OutDebug( "::cCDXName", ::cCDXName )
    ENDIF

@@ -24,11 +24,11 @@
  *     FT_DATECNFG().
  *  $EXAMPLES$
  *     dDate := CTOD( "09/15/90" )
- * 
+ *
  *     ? DOW( dDate )               // 7
  *     ? CDOW( dDate )              // Saturday
  *     ? FT_DAYTOBOW( dDate )       // 6
- * 
+ *
  *     // change beginning of week to Friday  (yeah!)
  *     FT_DATECNFG( , 6 )
  *     ? DOW( dDate )               // 7

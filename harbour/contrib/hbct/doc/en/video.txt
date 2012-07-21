@@ -12,15 +12,15 @@
  *  $SYNTAX$
  *      CHARPIX() --> nHeight
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
  *      Returns the number of scan lines per character.
  *  $DESCRIPTION$
  *      Returns the number of scan lines per character.
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -30,7 +30,7 @@
  *  $FILES$
  *      Source is video.c, library is libct.
  *  $SEEALSO$
- * 
+ *
  *  $END$
  */
 
@@ -56,11 +56,11 @@
  *  $RETURNS$
  *      Returns .T. on success.
  *  $DESCRIPTION$
- * 
+ *
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -84,15 +84,15 @@
  *  $SYNTAX$
  *      VIDEOTYPE() --> nMask
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      TODO: Finish documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -124,13 +124,13 @@
  *      <nCounter> Number of characters to load.
  *      <lCompute> When .T., the function computes font height automatically.
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      TODO: Finish documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -140,6 +140,6 @@
  *  $FILES$
  *      Source is video.c, library is libct.
  *  $SEEALSO$
- * 
+ *
  *  $END$
  */

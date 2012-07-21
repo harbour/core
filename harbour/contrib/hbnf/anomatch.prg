@@ -44,7 +44,7 @@ FUNCTION FT_ANOMATCHES(aArray, bCompareBlock, nStartIndex, nEndIndex)
 
    AEVAL(aArray, ;
          { | xElement | ;
-           IIF(EVAL(bCompareBlock, xElement), nNoOfMatches++, NIL) }, ;
+           iif(EVAL(bCompareBlock, xElement), nNoOfMatches++, NIL) }, ;
          nStartIndex, nEndIndex - nStartIndex + 1)
 
    RETURN nNoOfMatches                // FT_ANoMatches

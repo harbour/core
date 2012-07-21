@@ -13,9 +13,9 @@
  *     FT_BLINK( <cMsg>, [ <nRow> ], [ <nCol> ] ) -> NIL
  *  $ARGUMENTS$
  *     <cMsg> is the string to blink.
- * 
+ *
  *     <nRow> is an optional screen row for @...SAY, default current.
- * 
+ *
  *     <nCol> is an optional screen col for @...say, default current.
  *  $RETURNS$
  *     NIL
@@ -24,7 +24,7 @@
  *     Restores colors on return.
  *  $EXAMPLES$
  *     FT_BLINK( "WAIT", 5, 10 )   // Blinks "WAIT" in current colors @ 5,10
- * 
+ *
  *     @5,10 SAY "WAIT - Printing Report"
  *     FT_BLINK( "..." )           //  Blink "..." after wait message...
  *  $END$

@@ -170,7 +170,7 @@
  *      the following formula:
  *
  *      <fixed>
- *      nLength := IIF( FIELD->FIELD_TYPE == "C", ;
+ *      nLength := iif( FIELD->FIELD_TYPE == "C", ;
  *                      FIELD->FIELD_DEC * 256 + FIELD->FIELD_LEN, ;
  *                      FIELD->FIELD_LEN )
  *      </fixed>
@@ -248,7 +248,7 @@
  *      the following formula:
  *
  *      <fixed>
- *      nLength := IIF( FIELD->FIELD_TYPE == "C", ;
+ *      nLength := iif( FIELD->FIELD_TYPE == "C", ;
  *                      FIELD->FIELD_DEC * 256 + FIELD->FIELD_LEN, ;
  *                      FIELD->FIELD_LEN )
  *      </fixed>

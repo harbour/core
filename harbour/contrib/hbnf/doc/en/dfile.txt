@@ -34,21 +34,21 @@
  *     Note: make sure you allocate a buffer large enough to hold enough
  *     data for the number of lines that you have in the window.  Use the
  *     following formula as a guideline:
- * 
+ *
  *        buffer size = (# of line) + 1 * RMargin
- * 
+ *
  *     This is the smallest you should make the buffer.  For normal use,
  *     4096 bytes is recommended
  *  $EXAMPLES$
  *     @ 4,9 TO 11,71
- * 
+ *
  *     FT_DFSETUP("test.txt", 5, 10, 10, 70, 1, 7, 15,;
  *                "AaBb" + Chr(143), .T., 5, 132, 4096)
- * 
+ *
  *     cKey = FT_DISPFILE()
- * 
+ *
  *     FT_DFCLOSE()
- * 
+ *
  *     @ 20,0 SAY "Key that terminated FT_DISPFILE() was: " + '[' + cKey + ']'
  *  $SEEALSO$
  *     FT_DISPFILE() FT_DFCLOSE()
@@ -72,14 +72,14 @@
  *     Closes the file opened by FT_DFSETUP()
  *  $EXAMPLES$
  *     @ 4,9 TO 11,71
- * 
+ *
  *     FT_DFSETUP("test.txt", 5, 10, 10, 70, 1, 7, 15,;
  *                 "AaBb" + Chr(143), .T., 5, 132, 4096)
- * 
+ *
  *     cKey = FT_DISPFILE()
- * 
+ *
  *     FT_DFCLOSE()
- * 
+ *
  *     @ 20,0 SAY "Key that terminated FT_DISPFILE() was: " + '[' + cKey + ']'
  *  $SEEALSO$
  *     FT_DFSETUP() FT_DISPFILE()

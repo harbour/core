@@ -71,7 +71,7 @@ STATIC FUNC xhb_cgi_DefError( e )
    LOCAL i
    LOCAL cMessage   := ""
    LOCAL cErrString := ""
-   LOCAL nH         := IIF( HtmlPageHandle() == NIL, 0, HtmlPageHandle() )
+   LOCAL nH         := iif( HtmlPageHandle() == NIL, 0, HtmlPageHandle() )
 
    // by default, division by zero yields zero
    IF e:genCode == EG_ZERODIV

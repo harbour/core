@@ -12,7 +12,7 @@ PROC main()
    draw( hSurface )
    cairo_surface_destroy( hSurface )
 
-   hSurface := cairo_image_surface_create( "fancytxt.pdf", 567, 794 ) 
+   hSurface := cairo_image_surface_create( "fancytxt.pdf", 567, 794 )
    draw( hSurface )
    cairo_surface_write_to_png( hSurface, "fancytxt.png" )
    cairo_surface_destroy( hSurface )
@@ -24,8 +24,8 @@ PROC draw( hSurface )
 
    hCairo := cairo_create( hSurface )
    cairo_set_tolerance( hCairo, 0.01 )
-   
-   // Draw base line 
+
+   // Draw base line
    cairo_move_to( hCairo, 50, 650 )
    cairo_rel_line_to( hCairo, 250, 50 )
    cairo_rel_curve_to( hCairo, 100, 20, 200, -50, 200, -150 )
@@ -98,19 +98,19 @@ STATIC PROC transform_point( nX, nY, hPath, aLengths )
       IF nType == CAIRO_PATH_MOVE_TO .OR. nType == CAIRO_PATH_LINE_TO
          aLast := aPoints[ 1 ]
       ELSEIF nType == CAIRO_PATH_CURVE_TO
-         aLast := aPoints[ 3 ] 
+         aLast := aPoints[ 3 ]
       ENDIF
    ENDDO
 
-   IF nType == CAIRO_PATH_MOVE_TO 
+   IF nType == CAIRO_PATH_MOVE_TO
    ELSEIF nType == CAIRO_PATH_LINE_TO
-      nRatio := nNX / aLengths[ nI ]                
+      nRatio := nNX / aLengths[ nI ]
       nX := aLast[ 1 ] * (1 - nRatio) + aPoints[ 1, 1 ] * nRatio
       nY := aLast[ 2 ] * (1 - nRatio) + aPoints[ 1, 2 ] * nRatio
-         
+
       nDX := -(aLast[ 1 ] - aPoints[ 1, 1 ])
       nDY := -(aLast[ 2 ] - aPoints[ 1, 2 ])
-         
+
       nRatio := nNY / aLengths[ nI ]
       nX += -nDY * nRatio
       nY += nDX * nRatio
@@ -129,7 +129,7 @@ STATIC PROC transform_point( nX, nY, hPath, aLengths )
       nY += nDX * nRatio
    ENDIF
    cairo_path_iterator_destroy( hIterator )
-RETURN 
+RETURN
 
 
 STATIC FUNC path_lengths( hPath )
@@ -143,7 +143,7 @@ STATIC FUNC path_lengths( hPath )
       IF nType == CAIRO_PATH_MOVE_TO
          aLast := aPoints[ 1 ]
       ELSEIF nType == CAIRO_PATH_LINE_TO
-         nLen := distance( aLast[ 1 ], aLast[ 2 ], aPoints[ 1, 1 ], aPoints[ 1, 2 ] ) 
+         nLen := distance( aLast[ 1 ], aLast[ 2 ], aPoints[ 1, 1 ], aPoints[ 1, 2 ] )
          aLast := aPoints[ 1 ]
       ELSEIF nType == CAIRO_PATH_CURVE_TO
          nLen := curve_length( aLast[ 1 ], aLast[ 2 ], aPoints[ 1, 1 ], aPoints[ 1, 2 ], ;
@@ -155,7 +155,7 @@ STATIC FUNC path_lengths( hPath )
    cairo_path_iterator_destroy( hIterator )
 RETURN aRet
 
-  
+
 STATIC FUNC distance( nX1, nY1, nX2, nY2 )
 RETURN sqrt( (nX1-nX2)^2 + (nY1-nY2)^2 )
 
@@ -173,7 +173,7 @@ STATIC FUNC curve_length( nX1, nY1, nX2, nY2, nX3, nY3, nX4, nY4 )
       IF nType == CAIRO_PATH_MOVE_TO
          aLast := aPoints
       ELSEIF nType == CAIRO_PATH_LINE_TO
-         nLength += distance(aLast[ 1 ], aLast[ 2 ], aPoints[ 1 ], aPoints[ 2 ] )
+         nLength += distance( aLast[ 1 ], aLast[ 2 ], aPoints[ 1 ], aPoints[ 2 ] )
          aLast := aPoints
       ENDIF
    ENDDO

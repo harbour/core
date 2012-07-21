@@ -15,7 +15,7 @@
  *      None
  *  $RETURNS$
  *      nRetcode will be set as follows on exit:
- * 
+ *
  *          0 if SHARE not loaded but ok to load
  *          1 if SHARE not loaded and not ok to load
  *        255 if SHARE loaded

@@ -59,18 +59,18 @@ MEMVAR _REQUEST
 //#pragma escapedstrings = on
 
 FUNCTION HRBMAIN()
-  LOCAL cHtml := ""
-  LOCAL cCookie := uhttpd_GetField( "mycookie" )
-  LOCAL cAction := uhttpd_GetField( "action" )
-  LOCAL oCookie
+   LOCAL cHtml := ""
+   LOCAL cCookie := uhttpd_GetField( "mycookie" )
+   LOCAL cAction := uhttpd_GetField( "action" )
+   LOCAL oCookie
 
-  //hb_ToOutDebug( "cCookie = %s, cAction = %s\n\r", hb_ValToExp( cCookie ), cAction )
+   //hb_ToOutDebug( "cCookie = %s, cAction = %s\n\r", hb_ValToExp( cCookie ), cAction )
 
-  DEFAULT cCookie TO ""
-  DEFAULT cAction TO ""
+   DEFAULT cCookie TO ""
+   DEFAULT cAction TO ""
 
-  // Sample page embedded
-  TEXT INTO cHtml
+   // Sample page embedded
+   TEXT INTO cHtml
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -95,22 +95,22 @@ Pressing button you will redirect to /info page. Look at COOKIE values.
 
 </body>
 </html>
-  ENDTEXT
+   ENDTEXT
 
-  IF Empty( cAction )
-     // Set a simple cookie
-     oCookie := uhttpd_CookieNew( "localhost", "/", 1, 0 )
-     // cleaning previous cookie
-     oCookie:DeleteCookie( "mycookie" )
+   IF Empty( cAction )
+      // Set a simple cookie
+      oCookie := uhttpd_CookieNew( "localhost", "/", 1, 0 )
+      // cleaning previous cookie
+      oCookie:DeleteCookie( "mycookie" )
 
-     cHtml := StrTran( cHtml, "<%COOKIE_VALUE%>", cCookie )
-  ELSEIF cAction == "gotoinfo"
-     // Set a simple cookie
-     oCookie := uhttpd_CookieNew( "localhost", "/", 1, 0 )
-     oCookie:SetCookie( "mycookie", cCookie )
-     uhttpd_SetHeader( "Location", "/info" )
-     //uhttpd_Write( "cookie set <a href='/info'>Go to info page</a>" )
-     RETURN NIL
-  ENDIF
+      cHtml := StrTran( cHtml, "<%COOKIE_VALUE%>", cCookie )
+   ELSEIF cAction == "gotoinfo"
+      // Set a simple cookie
+      oCookie := uhttpd_CookieNew( "localhost", "/", 1, 0 )
+      oCookie:SetCookie( "mycookie", cCookie )
+      uhttpd_SetHeader( "Location", "/info" )
+      //uhttpd_Write( "cookie set <a href='/info'>Go to info page</a>" )
+      RETURN NIL
+   ENDIF
 
-RETURN cHtml
+   RETURN cHtml

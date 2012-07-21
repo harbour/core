@@ -89,9 +89,9 @@ STATIC FUNCTION s_valToExp( xVal, cInd, hRefs, cRefs )
    CASE "C"
    CASE "M" ; RETURN hb_StrToExp( xVal )
    CASE "N" ; RETURN hb_ntos( xVal )
-   CASE "D" ; RETURN IIF( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
+   CASE "D" ; RETURN iif( Empty( xVal ), "0d00000000", "0d" + DToS( xVal ) )
    CASE "T" ; RETURN 't"' + hb_TSToStr( xVal, .T. ) + '"'
-   CASE "L" ; RETURN IIF( xVal, ".T.", ".F." )
+   CASE "L" ; RETURN iif( xVal, ".T.", ".F." )
    CASE "S" ; RETURN "@" + xVal:name + "()"
    CASE "A"
    CASE "O"
@@ -118,7 +118,7 @@ STATIC FUNCTION s_valToExp( xVal, cInd, hRefs, cRefs )
             cVal := "{"
             FOR EACH tmp IN xVal
                cKey := s_valToExp( tmp:__enumKey() )
-               cVal += IIF( tmp:__enumIndex() == 1, "", ", " ) + ;
+               cVal += iif( tmp:__enumIndex() == 1, "", ", " ) + ;
                        cKey + "=>" + ;
                        s_valToExp( tmp, cInd + cKey, hRefs, @cRefs )
             NEXT
@@ -127,7 +127,7 @@ STATIC FUNCTION s_valToExp( xVal, cInd, hRefs, cRefs )
       ELSE
          cVal := "{"
          FOR EACH tmp IN xVal
-            cVal += IIF( tmp:__enumIndex() == 1, "", ", " ) + ;
+            cVal += iif( tmp:__enumIndex() == 1, "", ", " ) + ;
                     s_valToExp( tmp, cInd + hb_ntos( tmp:__enumIndex() ), hRefs, @cRefs )
          NEXT
          cVal += "}"
@@ -157,7 +157,7 @@ FUNCTION __itemSetRef( xVal, aRefs )
 
    FOR EACH aRef in aRefs
       xVal[ hb_arrayToParams( aRef[ 1 ] ) ] := ;
-         IIF( aRef[ 2 ] == NIL, xVal, xVal[ hb_arrayToParams( aRef[ 2 ] ) ] )
+         iif( aRef[ 2 ] == NIL, xVal, xVal[ hb_arrayToParams( aRef[ 2 ] ) ] )
    NEXT
 
    RETURN xVal

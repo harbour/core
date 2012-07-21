@@ -13,9 +13,9 @@
  *      FT_SETRATE( [ <nDelayTime> ] [, <nRepeatRate> ] ) -> NIL
  *  $ARGUMENTS$
  *      <nDelayTime> is the keyboard delay time.
- * 
+ *
  *      <nRepeatRate> is the keyboard repeat rate.
- * 
+ *
  *           ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿  ÚÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ¿
  *           ³ nDelayTime      DELAY ³  ³ RepeatRate      SPEED  ³
  *           ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´  ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´
@@ -58,7 +58,7 @@
  *     This routine is used to adjust the IBM PC/AT and PS/2 "typematic"
  *     repeat and delay feature.  This is used to allow the users of your
  *     application to adjust these speeds to the most comfortable level.
- * 
+ *
  *     This source code is written for Microsoft Assembler v5.1.
  *  $EXAMPLES$
  *     FT_SETRATE(0,0)    // Set keyboard to fastest possible settings

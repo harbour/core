@@ -19,9 +19,9 @@
  *      Be aware that calls to this functions do _NOT_ affect the
  *      calculation precision of the math functions at the moment.
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -31,7 +31,7 @@
  *  $FILES$
  *      Source is ctmath.c, library is ct3.
  *  $SEEALSO$
- * 
+ *
  *  $END$
  */
 
@@ -45,16 +45,16 @@
  *  $SYNTAX$
  *      GETPREC () -> nDigits
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
  *      nDigits        digit count between 1 and 16
  *  $DESCRIPTION$
  *      Be aware that calls to this functions do _NOT_ affect the
  *      calculation precision of the math functions at the moment.
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -64,6 +64,6 @@
  *  $FILES$
  *      Source is ctmath.c, library is ct3.
  *  $SEEALSO$
- * 
+ *
  *  $END$
  */

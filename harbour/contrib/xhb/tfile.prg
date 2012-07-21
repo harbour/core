@@ -280,7 +280,7 @@ METHOD ReadByte() CLASS TCgiFile
 
    nBytes := Fread( ::Handle, @cBuff, hb_BLen( cBuff ) )
 
-RETURN IIF( nBytes > 0, Asc( cBuff ), - 1 )
+RETURN iif( nBytes > 0, Asc( cBuff ), - 1 )
 
 /*
 **   ::ReadInt() --> nUnsignedInt or -1 if unsuccessfull
@@ -294,7 +294,7 @@ METHOD ReadInt() CLASS TCgiFile
 
    nBytes := Fread( ::Handle, @cBuff, hb_BLen( cBuff ) )
 
-RETURN IIF( nBytes > 0, Bin2i( cBuff ), - 1 )
+RETURN iif( nBytes > 0, Bin2i( cBuff ), - 1 )
 
 /*
 **   ::ReadLong() --> nLong  or -1 if unsuccessfull
@@ -308,7 +308,7 @@ METHOD ReadLong() CLASS TCgiFile
 
    nBytes := Fread( ::Handle, @cBuff, hb_BLen( cBuff ) )
 
-RETURN IIF( nBytes > 0, Bin2l( cBuff ), - 1 )
+RETURN iif( nBytes > 0, Bin2l( cBuff ), - 1 )
 
 /*
 **   ::WriteByte( nByte ) --> lSuccess
@@ -529,4 +529,4 @@ METHOD PrevLine( nBytes ) CLASS TCgiFile
 
    ENDIF
 
-RETURN IIF( lMoved, ::Buffer, "" )
+RETURN iif( lMoved, ::Buffer, "" )

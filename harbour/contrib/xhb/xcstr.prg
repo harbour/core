@@ -84,7 +84,7 @@ FUNCTION CStrToVal( cExp, cType )
       ENDIF
 
    CASE 'L'
-      RETURN IIF( cExp[1] == 'T' .OR. cExp[1] == 'Y' .OR. cExp[2] == 'T' .OR. cExp[2] == 'Y', .T., .F. )
+      RETURN iif( cExp[1] == 'T' .OR. cExp[1] == 'Y' .OR. cExp[2] == 'T' .OR. cExp[2] == 'Y', .T., .F. )
 
    CASE 'N'
       RETURN Val( cExp )
@@ -147,7 +147,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
       RETURN "hb_SToD( '" + dToS( xVal ) + "' )"
 
    CASE 'L'
-      RETURN IIF( xVal, ".T.", ".F." )
+      RETURN iif( xVal, ".T.", ".F." )
 
    CASE 'N'
       RETURN hb_nToS( xVal )
@@ -383,7 +383,7 @@ FUNCTION ValToNumber( xVal )
       RETURN xVal - 0d19000101
 
    CASE 'L'
-      RETURN IIF( xVal, 1, 0 )
+      RETURN iif( xVal, 1, 0 )
 
    CASE 'O'
       RETURN xVal:hClass

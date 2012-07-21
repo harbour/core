@@ -154,7 +154,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
       cProto := ""
    ENDIF
 
-   cUri += cProto + IIF( !Empty( cProto ), "://", "" )
+   cUri += cProto + iif( !Empty( cProto ), "://", "" )
 
    // Now we have:
    // [username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
@@ -340,7 +340,7 @@ FUNCTION uhttpd_URLEncode( cString, lComplete )
               cChar == '/' .OR. cChar == ';' .OR. cChar == '_'
             cRet += cChar
 
-         CASE IIF( !lComplete, cChar == ':' .OR. cChar == '?' .OR. cChar == '=', .F. )
+         CASE iif( !lComplete, cChar == ':' .OR. cChar == '?' .OR. cChar == '=', .F. )
             cRet += cChar
 
          OTHERWISE
@@ -515,7 +515,7 @@ RETURN cString
 
 FUNCTION uhttpd_StrStr( cString, cSearch )
   LOCAL nPos := AT( cSearch, cString )
-  LOCAL cVal := IIF( nPos > 0, SubStr( cString, nPos ), NIL )
+  LOCAL cVal := iif( nPos > 0, SubStr( cString, nPos ), NIL )
 RETURN cVal
 
 FUNCTION uhttpd_StrIStr( cString, cSearch )
@@ -753,7 +753,7 @@ FUNCTION uhttpd_SplitFileName( cFile )
 
    cSep := hb_ps()
 
-   hFile:FULLPATH := IIF( !Empty( hFile:PATH ), IIF( !( Right( hFile:PATH, Len( cSep ) ) == cSep ), hFile:PATH + cSep, hFile:PATH ), "" )
+   hFile:FULLPATH := iif( !Empty( hFile:PATH ), iif( !( Right( hFile:PATH, Len( cSep ) ) == cSep ), hFile:PATH + cSep, hFile:PATH ), "" )
    hFile:UNC      := hFile:FULLPATH + hFile:FULLNAME
 
 RETURN hFile
@@ -798,7 +798,7 @@ FUNCTION uhttpd_CStrToVal( cExp, cType )
          ENDIF
 
       CASE 'L'
-         RETURN IIF( cExp[1] == 'T' .OR. cExp[1] == 'Y' .OR. cExp[2] == 'T' .OR. cExp[2] == 'Y', .T., .F. )
+         RETURN iif( cExp[1] == 'T' .OR. cExp[1] == 'Y' .OR. cExp[2] == 'T' .OR. cExp[2] == 'Y', .T., .F. )
 
       CASE 'N'
          RETURN Val( cExp )
@@ -851,7 +851,7 @@ FUNCTION uhttpd_HGetValue( hHash, cKey )
    LOCAL nPos
    LOCAL xVal
    IF hHash != NIL
-      xVal := IIF( ( nPos := hb_HPos( hHash, cKey )) == 0, NIL, hb_HValueAt( hHash, nPos) )
+      xVal := iif( ( nPos := hb_HPos( hHash, cKey )) == 0, NIL, hb_HValueAt( hHash, nPos) )
    ENDIF
-   //RETURN IIF( cKey IN hHash:Keys, hHash[ cKey ], NIL )
+   //RETURN iif( cKey IN hHash:Keys, hHash[ cKey ], NIL )
    RETURN xVal

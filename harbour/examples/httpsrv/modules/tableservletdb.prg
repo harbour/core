@@ -50,15 +50,10 @@
  *
  */
 
-#include "common.ch"
 #include "hbclass.ch"
 
-#define CRLF ( chr(13)+chr(10) )
-#ifdef __PLATFORM__WINDOWS
-#define TABLE_NAME_PATH "..\..\..\tests\test.dbf"
-#else
-#define TABLE_NAME_PATH "../../../tests/test.dbf"
-#endif
+#define CRLF ( chr( 13 ) + chr( 10 ) )
+#define TABLE_NAME_PATH ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + "test.dbf"
 #define SIMULATE_SLOW_REPLY
 
 MEMVAR _REQUEST // defined in uHTTPD
@@ -73,13 +68,13 @@ FUNCTION HRBMAIN()
 
    DEFAULT hGets TO { => }
 
-   IF HB_HHasKey( hGets, "page" )
+   IF hb_HHasKey( hGets, "page" )
 
       cPage := hGets[ "page" ]
 
       oTM  := TableManager():New()
 
-      IF ( oTM:Open() )
+      IF oTM:Open()
 
          oTM:Read()
          cXml := oTM:getXmlData( Val( cPage ) )
@@ -88,7 +83,7 @@ FUNCTION HRBMAIN()
 
       ENDIF
 
-   ELSEIF HB_HHasKey( hGets, "count" )
+   ELSEIF hb_HHasKey( hGets, "count" )
 
       cCount := hGets[ "count" ]
 
@@ -109,7 +104,7 @@ FUNCTION HRBMAIN()
    ENDIF
 
 
-   IF !Empty( cXml )
+   IF ! Empty( cXml )
 
       uhttpd_SetHeader( "Content-Type", "text/xml" )
       // cache control
@@ -120,13 +115,13 @@ FUNCTION HRBMAIN()
 
    ELSE
 
-      uhttpd_SetHeader("Content-Type", "text/xml")
+      uhttpd_SetHeader( "Content-Type", "text/xml" )
       uhttpd_Write( '<?xml version="1.0" encoding="ISO-8859-1"?>' )
       uhttpd_Write( '<pages><page>No Data</page></pages>' )
 
    ENDIF
 
-RETURN TRUE // I Handle HTML Output
+   RETURN .T. // I Handle HTML Output
 
 /*
   TableManager
@@ -134,57 +129,62 @@ RETURN TRUE // I Handle HTML Output
 
 CLASS TableManager
 
-    CLASSVAR ROWS_PER_PAGE INIT 23
+   CLASSVAR ROWS_PER_PAGE INIT 23
 
-    VAR aData               INIT {}
+   VAR aData               INIT {}
 
-    VAR cTable              INIT TABLE_NAME_PATH
-    VAR lOpened             INIT FALSE
+   VAR cTable              INIT TABLE_NAME_PATH
+   VAR lOpened             INIT .F.
 
-    METHOD New()
-    METHOD Open()
-    METHOD Close()          INLINE IIF( ::lOpened, ( table->( dbCloseArea() ), ::lOpened := FALSE ), )
-    METHOD Read()
-    METHOD getLastRec()     INLINE table->( LastRec() )
-    METHOD getXmlData( page )
-    METHOD getXmlCount( ncount )
-    METHOD xmlEncode( input )
+   METHOD New()
+   METHOD Open()
+   METHOD CLOSE()          INLINE iif( ::lOpened, ( table->( dbCloseArea() ), ::lOpened := .F. ), )
+   METHOD READ()
+   METHOD getLastRec()     INLINE table->( LastRec() )
+   METHOD getXmlData( page )
+   METHOD getXmlCount( ncount )
+   METHOD xmlEncode( input )
+
 ENDCLASS
 
 METHOD New() CLASS TableManager
-RETURN Self
+
+   RETURN Self
 
 METHOD Open() CLASS TableManager
+
    LOCAL cDBF := ::cTable
 
    //hb_ToOutDebug( "CurPath = %s", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
    //hb_ToOutDebug( "before: cDBF = %s, Used() = %s\n", cDBF, Used() )
 
-   IF !::lOpened
+   IF ! ::lOpened
 
       CLOSE ALL
       USE ( cDBF ) ALIAS table SHARED NEW
       //hb_ToOutDebug( "after: cDBF = %s, Used() = %s\n", cDBF, Used() )
-      ::lOpened := USED()
+      ::lOpened := Used()
 
    ENDIF
 
-RETURN ::lOpened
+   RETURN ::lOpened
 
-METHOD Read() CLASS TableManager
-   LOCAL hMap, lOk := FALSE
+METHOD READ() CLASS TableManager
+
+   LOCAL hMap, lOk := .F.
 
 #ifdef SIMULATE_SLOW_REPLY
+
    // force slow connection to simulate long reply
-   HB_IDLESLEEP(0.5)
+   hb_idleSleep( 0.5 )
 #endif
 
    IF ::lOpened
 
       table->( dbGoTop() )
       //n := 0
-      DO WHILE table->( !Eof() ) //.AND. ++n < 50
+      DO WHILE table->( !EOF() ) //.AND. ++n < 50
 
          hMap := { => }
          hMap[ "recno"   ] := StrZero( table->( RecNo() ), 4 )
@@ -193,15 +193,15 @@ METHOD Read() CLASS TableManager
          hMap[ "city"    ] := RTrim( table->city )
          hMap[ "state"   ] := table->state
          hMap[ "zip"     ] := table->zip
-         aAdd( ::aData, hMap )
+         AAdd( ::aData, hMap )
          table->( dbSkip() )
       ENDDO
 
-      lOk := TRUE
+      lOk := .T.
 
    ENDIF
 
-RETURN lOK
+   RETURN lOK
 
 /**
  * Builds a <code>String</code> of XML representing the aData for the
@@ -236,6 +236,7 @@ RETURN lOK
  */
 
 METHOD getXmlData( page ) CLASS TableManager
+
    LOCAL startIndex, stopIndex
    LOCAL xml, i, map, key, cString
 
@@ -246,13 +247,13 @@ METHOD getXmlData( page ) CLASS TableManager
     */
 
    // Calculate the start and end indexes of the table data.
-   startIndex := (page - 1) * ::ROWS_PER_PAGE
+   startIndex := ( page - 1 ) * ::ROWS_PER_PAGE
    stopIndex  := startIndex + ::ROWS_PER_PAGE
    stopIndex  := Min( Len( ::aData ), stopIndex )
 
    // Check the validity of the page index.
-   IF ( startIndex < 0 .OR. startIndex >= stopIndex )
-       //throw new IllegalArgumentException("Page index is out of bounds.");
+   IF startIndex < 0 .OR. startIndex >= stopIndex
+      //throw new IllegalArgumentException("Page index is out of bounds.");
    ENDIF
 
    xml := BasicXML():New()
@@ -264,8 +265,8 @@ METHOD getXmlData( page ) CLASS TableManager
 
    // Add nodes describing the table columns
    xml:append( "<header>" )
-   xml:append( '<cell key="recno">RecNo</cell>')
-   xml:append( '<cell key="name">Name</cell>')
+   xml:append( '<cell key="recno">RecNo</cell>' )
+   xml:append( '<cell key="name">Name</cell>' )
    xml:append( '<cell key="address">Address</cell>' )
    xml:append( '<cell key="city">City</cell>' )
    xml:append( '<cell key="state">State</cell>' )
@@ -274,39 +275,40 @@ METHOD getXmlData( page ) CLASS TableManager
 
    // Add nodes for each row.
    FOR i := startIndex + 1 TO stopIndex
-       map := ::aData[ i ]
+      map := ::aData[ i ]
 
-       // Add the opening <row> tag
-       xml:append( "<row>" )
+      // Add the opening <row> tag
+      xml:append( "<row>" )
 
-       // For each entry in the HashMap, add a node
-       // e.g., <address>123 four street</address>
-       FOR EACH key IN map:Keys
+      // For each entry in the HashMap, add a node
+      // e.g., <address>123 four street</address>
+      FOR EACH KEY IN map:Keys
 
-           cString := '<cell key="' + key + '">'
-           cString += ::xmlEncode( hb_cStr( map[ key ] ) )
-           cString += "</cell>"
+         cString := '<cell key="' + key + '">'
+         cString += ::xmlEncode( hb_CStr( map[ key ] ) )
+         cString += "</cell>"
 
-           xml:append( cString )
+         xml:append( cString )
 
-       NEXT
+      NEXT
 
-       // Add the closing </row> tag
-       xml:append( "</row>" )
+      // Add the closing </row> tag
+      xml:append( "</row>" )
 
    NEXT
 
    // Add the closing </table> tag
    xml:append( "</table>" )
 
-RETURN xml:toString()
+   RETURN xml:toString()
 
 METHOD getXmlCount( nCount ) CLASS TableManager
+
    LOCAL xml, n
    LOCAL nPages := nCount / ::ROWS_PER_PAGE
 
    IF Int( nPages ) < nPages
-      nPages++
+      nPages ++
    ENDIF
 
    xml := BasicXML():New()
@@ -315,26 +317,27 @@ METHOD getXmlCount( nCount ) CLASS TableManager
 
    xml:append( "<pages>" )
    FOR n := 1 TO nPages
-       xml:append( "<page>" + LTrim( Str( n ) ) + "</page>" )
+      xml:append( "<page>" + LTrim( Str( n ) ) + "</page>" )
    NEXT
    xml:append( "</pages>" )
 
-RETURN xml:toString()
+   RETURN xml:toString()
 
-    /**
-     * Replaces characters commonly used in XML with symbolic representations
-     * such that they are interpretted correctly by XML parsers.
-     *
-     * @param input
-     *            the string to encode.
-     * @return the encoded version of the specified string
-     */
+/**
+ * Replaces characters commonly used in XML with symbolic representations
+ * such that they are interpretted correctly by XML parsers.
+ *
+ * @param input
+ *            the string to encode.
+ * @return the encoded version of the specified string
+ */
+
 METHOD xmlEncode( input ) CLASS TableManager
 
    LOCAL out, i, c
 
    IF input == NIL
-      RETURN input
+      RETURN INPUT
    ENDIF
 
    // Go through the input string and replace the following
@@ -349,60 +352,62 @@ METHOD xmlEncode( input ) CLASS TableManager
    out := ""
 
    FOR i := 1 TO Len( input )
-       c := SubStr( input, i, 1 )
-       switch ( c )
-       case '&'
-           out += "&amp;"
-           exit
-       case "'"
-           out += "&apos;"
-           exit
-       case '"'
-           out += "&quot;"
-           exit
-       case '<'
-           out += "&lt;"
-           exit
-       case '>'
-           out += "&gt;"
-           exit
-       //case ' '
-       //    out += "&nbsp;"
-       //    exit
-       case Chr( 9 ) //E'\t'
-       case Chr( 13 ) //E'\r'
-       case Chr( 10 ) //E'\n'
-           out += c
-           exit
-       OTHERWISE
-           // All non-ascii
-           if ( Asc( c ) <= 0x1F .OR. Asc( c ) >= 0x80 )
-               out += "&#x" + hb_NumToHex( Asc( c ) ) + ";"
-           else
-               out += c
-           endif
-           exit
-       end
+      c := SubStr( input, i, 1 )
+      SWITCH c
+      CASE '&'
+         out += "&amp;"
+         EXIT
+      CASE "'"
+         out += "&apos;"
+         EXIT
+      CASE '"'
+         out += "&quot;"
+         EXIT
+      CASE '<'
+         out += "&lt;"
+         EXIT
+      CASE '>'
+         out += "&gt;"
+         EXIT
+         //case ' '
+         //    out += "&nbsp;"
+         //    exit
+      CASE Chr( 9 ) //E'\t'
+      CASE Chr( 13 ) //E'\r'
+      CASE Chr( 10 ) //E'\n'
+         out += c
+         EXIT
+      OTHERWISE
+         // All non-ascii
+         IF Asc( c ) <= 0x1F .OR. Asc( c ) >= 0x80
+            out += "&#x" + hb_NumToHex( Asc( c ) ) + ";"
+         ELSE
+            out += c
+         ENDIF
+         EXIT
+      ENDSWITCH
    NEXT
 
-RETURN out
+   RETURN out
 
 CLASS BasicXML
+
    VAR aData         INIT {}
 
    METHOD New()              CONSTRUCTOR
-   METHOD Append( cString )  INLINE aAdd( ::aData, cString )
+   METHOD APPEND( cString )  INLINE AAdd( ::aData, cString )
    METHOD ToString()
 
 ENDCLASS
 
 METHOD New() CLASS BasicXML
 
-RETURN Self
+   RETURN Self
 
 METHOD ToString() CLASS BasicXML
-  LOCAL s := ""
 
-  aEval( ::aData, {|c| s += c + IIF( Right( c, 1 ) == ">", CRLF, "" ) } )
+   LOCAL s := ""
 
-RETURN s
+   AEval( ::aData, {| c | s += c + iif( Right( c, 1 ) == ">", CRLF, "" ) } )
+
+   RETURN s

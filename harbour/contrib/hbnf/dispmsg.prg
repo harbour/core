@@ -51,15 +51,15 @@ PROCEDURE Main( cCmdLine )
 
    lColor := .T.
 
-   cNormH := IIF( lColor, "W+/BG","W+/N" )
-   cNormN := IIF( lColor, "N/BG" ,"W/N"  )
-   cNormE := IIF( lColor, "N/W" , "N/W"  )
-   cWindH := IIF( lColor, "W+/B", "W+/N" )
-   cWindN := IIF( lColor, "W/B" , "W/N"  )
-   cWindE := IIF( lColor, "N/W" , "N/W"  )
-   cErrH  := IIF( lColor, "W+/R", "W+/N" )
-   cErrN  := IIF( lColor, "W/R" , "W/N"  )
-   cErrE  := IIF( lColor, "N/W" , "N/W"  )
+   cNormH := iif( lColor, "W+/BG","W+/N" )
+   cNormN := iif( lColor, "N/BG" ,"W/N"  )
+   cNormE := iif( lColor, "N/W" , "N/W"  )
+   cWindH := iif( lColor, "W+/B", "W+/N" )
+   cWindN := iif( lColor, "W/B" , "W/N"  )
+   cWindE := iif( lColor, "N/W" , "N/W"  )
+   cErrH  := iif( lColor, "W+/R", "W+/N" )
+   cErrN  := iif( lColor, "W/R" , "W/N"  )
+   cErrE  := iif( lColor, "N/W" , "N/W"  )
 
    cDosScrn := SAVESCREEN()
    nDosRow := ROW()
@@ -164,7 +164,7 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
       cnBoxString := "ÚÄ¿³ÙÄÀ³ "
    ENDIF
 
-   lShadow := IIF( lShadow == NIL, .T., lShadow )
+   lShadow := iif( lShadow == NIL, .T., lShadow )
 
    cOldScreen := SAVESCREEN( nBoxTop, nBoxLeft, nBoxBottom+1, nBoxRight+2 )
 

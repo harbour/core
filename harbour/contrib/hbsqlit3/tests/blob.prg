@@ -86,8 +86,8 @@ PROCEDURE Main()
       ENDIF
 
       ? ""
-      ? "The number of database rows that were changed: " + ltrim( str( sqlite3_changes( db ) ) )
-      ? "Total changes: " + ltrim( str( sqlite3_total_changes( db ) ) )
+      ? "The number of database rows that were changed: " + hb_ntos( sqlite3_changes( db ) )
+      ? "Total changes: " + hb_ntos( sqlite3_total_changes( db ) )
       ? ""
       sqlite3_sleep( 3000 )
 

@@ -13,9 +13,9 @@
  *     FT_POKE( <nSegment>, <nOffset>, <nValue> ) -> lResult
  *  $ARGUMENTS$
  *     <nSegment> is the segment of the desired memory address.
- * 
+ *
  *     <nOffset>  is the offset of the desired memory address.
- * 
+ *
  *     <nValue>   is the value to write to the desired memory address.
  *  $RETURNS$
  *     <lResult> will be .T. if all parameters were valid and the function was
@@ -27,7 +27,7 @@
  *     specified address.  The value must be passed as a numeric; if the byte
  *     you wish to use is stored as a character, use the Asc() function
  *     to convert it.
- * 
+ *
  *     This function was written for version 5.1 of MicroSoft C.  You may
  *     have to modify the source code to use another compiler.
  *  $EXAMPLES$

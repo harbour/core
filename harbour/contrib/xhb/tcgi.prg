@@ -197,7 +197,7 @@ METHOD ToObject() CLASS TCgi
    oNew:Content_Type      := ::Content_Type
    oNew:Content_Length    := ::Content_Length
    oNew:Annotation_Server := ::Annotation_Server
-   oNew:nH                := IIF( HtmlPageHandle() == NIL, STD_OUT, HtmlPageHandle() )
+   oNew:nH                := iif( HtmlPageHandle() == NIL, STD_OUT, HtmlPageHandle() )
 
    RETURN oNew
 

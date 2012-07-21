@@ -114,7 +114,7 @@ function hb_MutexTryLock( mtx )
 
 
 function hb_MutexTimeOutLock( mtx, nTimeOut )
-   return hb_mutexLock( mtx, IIF( HB_ISNUMERIC( nTimeOut ), nTimeOut / 1000, 0 ) )
+   return hb_mutexLock( mtx, iif( HB_ISNUMERIC( nTimeOut ), nTimeOut / 1000, 0 ) )
 
 
 function GetSystemThreadId( pThID )

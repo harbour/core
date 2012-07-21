@@ -20,7 +20,7 @@
  *  $DESCRIPTION$
  *     Use this function if you prefer to change the active directory
  *     instead of relying on the SET PATH command.
- * 
+ *
  *     The source code is written to adhere to Turbo Assembler's IDEAL mode.
  *     To use another assembler, you will need to rearrange the PROC and
  *     SEGMENT directives, and also the ENDP and ENDS directives (a very

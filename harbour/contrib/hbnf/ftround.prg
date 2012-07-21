@@ -73,11 +73,11 @@ FUNCTION FT_ROUND(nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
       IF (ABS(INT(nResult * nRoundToAmount) - (nResult * nRoundToAmount)) > ;
           nAcceptableError)
                                         // No, Are We Rounding Down??
-         nResult -= IIF(LEFT(cRoundDirection,1) == ROUND_DOWN, ;
+         nResult -= iif(LEFT(cRoundDirection,1) == ROUND_DOWN, ;
                                       ; // Yes, Make Downward Adjustment
                         1 / nRoundToAmount / 2, ;
                                       ; // Are We Rounding Up??
-                        IIF(LEFT(cRoundDirection,1) == ROUND_UP , ;
+                        iif(LEFT(cRoundDirection,1) == ROUND_UP , ;
                                       ; // Yes, Make Upward Adjustment
                             -1 / (nRoundToAmount) / 2, ;
                                       ; // No, Rounding Normal, No Adjustment

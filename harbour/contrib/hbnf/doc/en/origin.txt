@@ -20,15 +20,15 @@
  *     Often users will install multiple copies of application software,
  *     especially on networks and in situations where the user is trying
  *     to get around a copy protection scheme.
- * 
+ *
  *     This function enables you to learn the name and source location
  *     of the currently executing file, so that you may take whatever
  *     action you need to.
- * 
+ *
  *     Requires DOS v3.xx and above.
  *  $EXAMPLES$
  *     cMyFile := FT_ORIGIN()
- * 
+ *
  *     IF cMyFile != "C:\appdir\myfile.exe"
  *        ?"Incorrect startup file.  Please remove/rename and start again"
  *        QUIT

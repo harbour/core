@@ -22,10 +22,10 @@ PROCEDURE Main()
 
    // LOCAL aClip
 
-   // SET GDFONTPATH=C:\windows\fonts
+   // SET GDFONTPATH=%WINDIR%\fonts
    IF GetEnv( "GDFONTPATH" ) == ""
       ? "Please set GDFONTPATH"
-      ? "On Windows: SET GDFONTPATH=C:\windows\fonts"
+      ? "On Windows: SET GDFONTPATH=%WINDIR%\fonts"
       ? "On Linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType"
       ?
    ENDIF

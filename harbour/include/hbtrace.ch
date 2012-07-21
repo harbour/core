@@ -106,6 +106,6 @@
 #xtranslate HB_TRACE_STEALTH( <l>, <x,...> ) => HB_TRACE( <l>, <x> )
 #xtranslate HB_TRACE( <l>, ( <x,...> ) )     => HB_TRACE( <l>, <x> )
 #xtranslate HB_TRACE( <l>, <x,...> )     => ;
-            IIF( HB_TR_LEVEL >= <l>, HB_TRACELOGAT( <l>, <x> ), )
+            iif( HB_TR_LEVEL >= <l>, HB_TRACELOGAT( <l>, <x> ), )
 
 #endif /* HB_TRACE_CH_ */

@@ -68,8 +68,8 @@
 #define nTotTran LEN(aTrans)
 
 #command DEFAULT <p> TO <val> [,<pn> TO <valn>] =>         ;
-                 <p>    := IIF(<p>  == NIL, <val>,  <p>)    ;
-                 [;<pn> := IIF(<pn> == NIL, <valn>, <pn>)]
+                 <p>    := iif(<p>  == NIL, <val>,  <p>)    ;
+                 [;<pn> := iif(<pn> == NIL, <valn>, <pn>)]
 
 #command DISPMESSAGE <mess>,<t>,<l>,<b>,<r> =>                        ;
          _ftPushKeys(); KEYBOARD CHR(K_CTRL_PGDN)+CHR(K_CTRL_W)      ;;
@@ -218,8 +218,8 @@ FUNCTION FT_Adder()
 
   nTopOS       := INT((MAXROW()-24)/2)  // Using the TopOffSet & LeftOffSet
   nLeftOS      := INT((MAXCOL()-79)/2)  // the Adder will always be centered
-  nAddSpace    := IIF(lShowRight,40,0)+nLeftOS
-  nTapeSpace   := IIF(lShowRight,0,40)+nLeftOS
+  nAddSpace    := iif(lShowRight,40,0)+nLeftOS
+  nTapeSpace   := iif(lShowRight,0,40)+nLeftOS
 
   // Set Up the STATIC variables
   aKeys      := {}
@@ -282,8 +282,8 @@ FUNCTION FT_Adder()
                              nTopOS,25+nAddSpace))
         _ftPopWin()                     // Remove Adder
         lShowRight := !lShowRight
-        nAddSpace  := IIF(lShowRight,40,0)+nLeftOS
-        nTapeSpace := IIF(lShowRight,0,40)+nLeftOS
+        nAddSpace  := iif(lShowRight,40,0)+nLeftOS
+        nTapeSpace := iif(lShowRight,0,40)+nLeftOS
         _ftAddScreen(aAdder)
         _ftDispTotal(aAdder)
         IF lTape
@@ -293,7 +293,7 @@ FUNCTION FT_Adder()
         @ 4+nTopOS, 8+nAddSpace SAY cTotal
         IF !EMPTY(cMoveTotSubTot)
           _ftSetWinColor(W_CURR,W_SCREEN)
-          @ 6+nTopOS,18+nAddSpace SAY IIF(cMoveTotSubTot=="T", "   <TOTAL>",  ;
+          @ 6+nTopOS,18+nAddSpace SAY iif(cMoveTotSubTot=="T", "   <TOTAL>",  ;
                                                              "<SUBTOTAL>")
           _ftSetWinColor(W_CURR,W_PROMPT)
         ENDIF
@@ -309,7 +309,7 @@ FUNCTION FT_Adder()
           _ftSetWinColor(W_CURR,W_PROMPT)
           CLEAR TYPEAHEAD
         ELSE
-          _ftError("there are " + IIF(nTotTran > 0, "only " +                 ;
+          _ftError("there are " + iif(nTotTran > 0, "only " +                 ;
                    LTRIM(STR(nTotTran, 3, 0)), "no") +                       ;
                    " transactions entered so far."   +                       ;
                    " No need to scroll!")
@@ -434,7 +434,7 @@ STATIC FUNCTION _ftChangeDec(aAdder, nNumDec)
     cTotPict := _ftPosRepl(cDefTotPict, ".", 19 - ABS(nNumDec))
 
     cTotPict := RIGHT(_ftStuffComma(cTotPict), 19 )
-    cTotPict := IIF(nNumDec==2 .OR. nNumDec==6, " "+RIGHT(cTotPict,18),cTotPict)
+    cTotPict := iif(nNumDec==2 .OR. nNumDec==6, " "+RIGHT(cTotPict,18),cTotPict)
 
     nMaxDeci := nNumDec
 
@@ -835,7 +835,7 @@ STATIC FUNCTION _ftUpdateTrans(aAdder, lTypeTotal, nAmount)
 
   LOCAL lUseTotal := (nAmount == NIL)
 
-  nAmount := IIF(nAmount==NIL,0,nAmount)
+  nAmount := iif(nAmount==NIL,0,nAmount)
   IF lClAdder                     // Clear the adder (they pressed <DEL> twice
     AADD(aTrans,STR(0,22,nMaxDeci)+" C")
     IF lTape                            // If there is a tape Show Clear
@@ -845,16 +845,16 @@ STATIC FUNCTION _ftUpdateTrans(aAdder, lTypeTotal, nAmount)
   ENDIF
 
   IF lTypeTotal                         // If lTypeTotal=.T. Update from total
-    AADD(aTrans,STR(IIF(lUseTotal,nTotal,nAmount),22,nMaxDeci) )
+    AADD(aTrans,STR(iif(lUseTotal,nTotal,nAmount),22,nMaxDeci) )
     aTrans[nTotTran] := _ftStuffComma(aTrans[nTotTran], .T.) + " *"+         ;
-                                     IIF(lAddError,"ER","")
+                                     iif(lAddError,"ER","")
 
   ELSE                            // If lTypeTotal=.F. Update from nNumTotal
-    AADD(aTrans,STR(IIF(lUseTotal,nTotal,nAmount),22,nMaxDeci))
+    AADD(aTrans,STR(iif(lUseTotal,nTotal,nAmount),22,nMaxDeci))
 
     aTrans[nTotTran] := _ftStuffComma(aTrans[nTotTran], .T.) +               ;
-      IIF(lSubRtn," S",IIF(nAddMode==1," +",IIF(nAddMode==2," -",IF             ;
-      (lTotalOk," =",IIF(nAddMode==3," X"," /"))))) + IIF(lAddError,"ER","")
+      iif(lSubRtn," S",iif(nAddMode==1," +",iif(nAddMode==2," -",IF             ;
+      (lTotalOk," =",iif(nAddMode==3," X"," /"))))) + iif(lAddError,"ER","")
 
   ENDIF
 
@@ -897,8 +897,8 @@ RETURN NIL
   +--------------------------------------------------------------------------+
 */
 STATIC FUNCTION _ftRoundIt(nNumber, nPlaces)
-  nPlaces := IIF( nPlaces == NIL, 0, nPlaces )
-RETURN IIF(nNumber < 0.0, -1.0, 1.0) *                                        ;
+  nPlaces := iif( nPlaces == NIL, 0, nPlaces )
+RETURN iif(nNumber < 0.0, -1.0, 1.0) *                                        ;
        INT( ABS(nNumber) * 10 ^ nPlaces + 0.50 + 10 ^ -12 ) / 10 ^ nPlaces
 
 /*+- Function ---------------------------------------------------------------+
@@ -1083,12 +1083,12 @@ STATIC FUNCTION _ftPushMessage(cMessage,lWait,cTitle,cBotTitle,xQuiet, nTop)
         nOldRow     := ROW(),                                                ;
         nOldCol     := COL(),                                                ;
         nOldCurs    := SETCURSOR(SC_NONE),                                   ;
-        nWinColor   := IIF(nWinColor == NIL, W_CURR, nWinColor)
+        nWinColor   := iif(nWinColor == NIL, W_CURR, nWinColor)
 
   cOldDevic := SET(_SET_DEVICE, "SCREEN")
   lOldPrint := SET(_SET_PRINTER, .F.)
   nMessLen  := LEN(cMessage)
-  nWide     := IIF(nMessLen>72,72,IIF(nMessLen<12,12,nMessLen))
+  nWide     := iif(nMessLen>72,72,iif(nMessLen<12,12,nMessLen))
   nNumRows  := MLCOUNT(cMessage,nWide)
 
   // If they didn't say what the top row is, Center it on the screen
@@ -1097,7 +1097,7 @@ STATIC FUNCTION _ftPushMessage(cMessage,lWait,cTitle,cBotTitle,xQuiet, nTop)
   nBottom   := nTop+nNumRows+2
   nLeft     := INT((MAXCOL()-nWide)/2)-3
   nRight    := nLeft+nWide+4
-  lWait     := IIF(lWait == NIL, .F., lWait)
+  lWait     := iif(lWait == NIL, .F., lWait)
 
   _ftPushWin(nTop,nLeft,nBottom,nRight,cTitle,cBotTitle,nWinColor)
   DISPMESSAGE cMessage,nTop+1,nLeft+2,nBottom-1,nRight-2
@@ -1159,8 +1159,8 @@ STATIC FUNCTION _ftQuest(cMessage,xVarVal,cPict,bValid,lNoESC,nWinColor,nTop)
   LOCAL nOldRow, nOldCol, cOldColor, nMessLen, nWide, nNumRows, nBottom, nLeft
   LOCAL nRight, oNewGet, nNumMessRow, nLenLastRow, lGetOnNextLine, nOldCurs
   LOCAL cVarType := VALTYPE(xVarVal)
-  LOCAL nVarLen  := IIF(cVarType=="C",LEN(xVarVal),IIF(cVarType=="D",8,          ;
-                       IIF(cVarType=="L",1,IIF(cVarType=="N",IIF(cPict==NIL,9,     ;
+  LOCAL nVarLen  := iif(cVarType=="C",LEN(xVarVal),iif(cVarType=="D",8,          ;
+                       iif(cVarType=="L",1,iif(cVarType=="N",iif(cPict==NIL,9,     ;
                        LEN(cPict)),0))))
   LOCAL nOldLastKey := LASTKEY()
   LOCAL cOldDevice  := SET(_SET_DEVICE, "SCREEN"),                           ;
@@ -1170,34 +1170,34 @@ STATIC FUNCTION _ftQuest(cMessage,xVarVal,cPict,bValid,lNoESC,nWinColor,nTop)
   nOldCol   := COL()
   nOldCurs  := SETCURSOR(SC_NONE)
   cOldColor := SETCOLOR()
-  lNoESC    := IIF(lNoESC==NIL,.F.,lNoESC)
+  lNoESC    := iif(lNoESC==NIL,.F.,lNoESC)
 
   nMessLen  := LEN(cMessage)+nVarLen+1
-  nWide     := IIF(nMessLen>66,66,IIF(nMessLen<12,12,nMessLen))
+  nWide     := iif(nMessLen>66,66,iif(nMessLen<12,12,nMessLen))
 
   nNumMessRow    := MLCOUNT(cMessage,nWide)
   nLenLastRow    := LEN(TRIM(MEMOLINE(cMessage,nWide,nNumMessRow)))
   lGetOnNextLine := (nLenLastRow + nVarLen) > nWide
-  nNumRows       := nNumMessRow + IIF(lGetOnNextLine,1,0)
+  nNumRows       := nNumMessRow + iif(lGetOnNextLine,1,0)
 
   // Center it in the screen
-  nTop        := IIF(nTop==NIL,INT((MAXROW() - nNumRows)/2),nTop)
+  nTop        := iif(nTop==NIL,INT((MAXROW() - nNumRows)/2),nTop)
   nBottom     := nTop+nNumRows+1
   nLeft       := INT((MAXCOL()-nWide)/2)-4
   nRight      := nLeft+nWide+4
 
-  _ftPushWin(nTop,nLeft,nBottom,nRight,"QUESTION ?",IIF(VALTYPE(xVarVal)=="C"  ;
+  _ftPushWin(nTop,nLeft,nBottom,nRight,"QUESTION ?",iif(VALTYPE(xVarVal)=="C"  ;
           .AND. nVarLen>nWide,CHR(27)+" scroll "+ CHR(26),NIL),nWinColor)
   DISPMESSAGE cMessage,nTop+1,nLeft+2,nBottom-1,nRight-2
 
-  oNewGet := GetNew( IIF(lGetOnNextLine,Row()+1,Row()),                       ;
-                     IIF(lGetOnNextLine,nLeft+2,Col()+1),                     ;
-                     {|x| IIF(PCOUNT() > 0, xVarVal := x, xVarVal)},          ;
+  oNewGet := GetNew( iif(lGetOnNextLine,Row()+1,Row()),                       ;
+                     iif(lGetOnNextLine,nLeft+2,Col()+1),                     ;
+                     {|x| iif(PCOUNT() > 0, xVarVal := x, xVarVal)},          ;
                      "xVarVal" )
 
   // If the input line is character & wider than window SCROLL
   IF lGetOnNextLine .AND. VALTYPE(xVarVal)=="C" .AND. nVarLen>nWide
-    oNewGet:Picture   := "@S"+LTRIM(STR(nWide,4,0))+IIF(cPict==NIL,""," "+cPict)
+    oNewGet:Picture   := "@S"+LTRIM(STR(nWide,4,0))+iif(cPict==NIL,""," "+cPict)
   ENDIF
 
   IF cPict != NIL                       // Use the picture they passed
@@ -1212,7 +1212,7 @@ STATIC FUNCTION _ftQuest(cMessage,xVarVal,cPict,bValid,lNoESC,nWinColor,nTop)
     ENDIF
   ENDIF
 
-  oNewGet:PostBlock := IIF(bValid==NIL,NIL,bValid)
+  oNewGet:PostBlock := iif(bValid==NIL,NIL,bValid)
 
   oNewGet:Display()
 
@@ -1297,7 +1297,7 @@ STATIC FUNCTION _ftError(cMessage, xDontReset)
   LOCAL nOldRow,nOldCol,nOldCurs,nTop,nLeft,nBot,nRight,cOldColor,           ;
         nOldLastKey,cErrorScr,nMessLen,nWide,nNumRows,nKey,                  ;
         cOldDevic,lOldPrint,                                                 ;
-        lResetLKey := IIF(xDontReset==NIL, .T., .F.)
+        lResetLKey := iif(xDontReset==NIL, .T., .F.)
 
   nOldLastKey := LASTKEY()
   nOldRow  := ROW()
@@ -1308,7 +1308,7 @@ STATIC FUNCTION _ftError(cMessage, xDontReset)
   lOldPrint := SET(_SET_PRINTER, .F.)
   cMessage := "I'm sorry but, " + cMessage
   nMessLen := LEN(cMessage)
-  nWide    := IIF(nMessLen>66,66,IIF(nMessLen<12,12,nMessLen))
+  nWide    := iif(nMessLen>66,66,iif(nMessLen<12,12,nMessLen))
   nNumRows := MLCOUNT(cMessage,nWide)
   nTop     := INT((MAXROW() - nNumRows)/2)  // Center it in the screen
   nBot     := nTop+3+nNumRows
@@ -1355,9 +1355,9 @@ STATIC FUNCTION _ftStuffComma(cStrToStuff,lTrimStuffedStr)
 
   LOCAL nDecPosit, x
 
-  lTrimStuffedStr := IIF(lTrimStuffedStr==NIL,.F.,lTrimStuffedStr)
+  lTrimStuffedStr := iif(lTrimStuffedStr==NIL,.F.,lTrimStuffedStr)
   IF !("." $ cStrToStuff)
-    cStrToStuff := _ftPosIns(cStrToStuff,".",IIF("C"$cStrToStuff .OR.         ;
+    cStrToStuff := _ftPosIns(cStrToStuff,".",iif("C"$cStrToStuff .OR.         ;
                    "E"$cStrToStuff .OR. "+"$cStrToStuff .OR. "-"$cStrToStuff ;
                    .OR. "X"$cStrToStuff .OR. "*"$cStrToStuff .OR.            ;
                    ""$cStrToStuff .OR. "/"$cStrToStuff .OR. "="$cStrToStuff,;
@@ -1410,11 +1410,11 @@ STATIC FUNCTION _ftSetSCRColor(nStd,nEnh,nBord,nBack,nUnsel)
     _ftInitColors()
   ENDIF
 
-  nStd  := IIF(nStd   == NIL, 8,    nStd)
-  nEnh  := IIF(nEnh   == NIL, 8,    nEnh)
-  nBord := IIF(nBord  == NIL, 8,    nBord)
-  nBack := IIF(nBack  == NIL, 8,    nBack)
-  nUnsel:= IIF(nUnsel == NIL, nEnh, nUnsel)
+  nStd  := iif(nStd   == NIL, 8,    nStd)
+  nEnh  := iif(nEnh   == NIL, 8,    nEnh)
+  nBord := iif(nBord  == NIL, 8,    nBord)
+  nBack := iif(nBack  == NIL, 8,    nBack)
+  nUnsel:= iif(nUnsel == NIL, nEnh, nUnsel)
 
 RETURN SETCOLOR(aStdColor[nStd]+","+aStdColor[nEnh]+","+aStdColor[nBord]+","+;
   aStdColor[nBack]+","+aStdColor[nUnsel])
@@ -1456,7 +1456,7 @@ STATIC FUNCTION _ftPushWin(t,l,b,r,cTitle,cBotTitle,nWinColor)
 
   LOCAL lAutoWindow := nWinColor==NIL
 
-  nWinColor := IIF(nWinColor==NIL,_ftNextWinColor(),nWinColor)
+  nWinColor := iif(nWinColor==NIL,_ftNextWinColor(),nWinColor)
   AADD(aWindow,{t,l,b,r,nWinColor,SAVESCREEN(t,l,b+1,r+2),lAutoWindow})
   _ftShadow(b+1,l+2,b+1,r+2)
   _ftShadow(t+1,r+1,b,r+2)
@@ -1541,12 +1541,12 @@ RETURN NIL
 */
 STATIC FUNCTION _ftSetWinColor(nWin,nStd,nEnh,nBord,nBack,nUnsel)
 
-  nWin  := IIF(nWin   == NIL, nWinColor, nWin)
-  nStd  := IIF(nStd   == NIL, 7,         nStd)
-  nEnh  := IIF(nEnh   == NIL, 7,         nEnh)
-  nBord := IIF(nBord  == NIL, 7,         nBord)
-  nBack := IIF(nBack  == NIL, 7,         nBack)
-  nUnsel:= IIF(nUnsel == NIL, nEnh,      nUnsel)
+  nWin  := iif(nWin   == NIL, nWinColor, nWin)
+  nStd  := iif(nStd   == NIL, 7,         nStd)
+  nEnh  := iif(nEnh   == NIL, 7,         nEnh)
+  nBord := iif(nBord  == NIL, 7,         nBord)
+  nBack := iif(nBack  == NIL, 7,         nBack)
+  nUnsel:= iif(nUnsel == NIL, nEnh,      nUnsel)
 
 RETURN SETCOLOR(aWinColor[nStd,nWin]+","+aWinColor[nEnh,nWin]+","+           ;
   aWinColor[nBord,nWin]+","+aWinColor[nBack,nWin]+","+aWinColor[nUnsel,nWin])
@@ -1586,12 +1586,12 @@ RETURN NIL
   |    Copyright: None - Public Domain                                       |
   +--------------------------------------------------------------------------+
   |    Arguments: None                                                       |
-  | Return Value: nWinColor := IIF(nWinColor==1,4,nWinColor-1)               |
+  | Return Value: nWinColor := iif(nWinColor==1,4,nWinColor-1)               |
   |        Notes: If we are already on window #1 restart count by using # 4. |
   +--------------------------------------------------------------------------+
 */
 STATIC FUNCTION _ftLastWinColor
-RETURN nWinColor := IIF(nWinColor==1,4,nWinColor-1)
+RETURN nWinColor := iif(nWinColor==1,4,nWinColor-1)
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftNextWinColor       Docs: Keith A. Wire                  |
@@ -1603,7 +1603,7 @@ RETURN nWinColor := IIF(nWinColor==1,4,nWinColor-1)
   |    Copyright: None - Public Domain                                       |
   +--------------------------------------------------------------------------+
   |    Arguments: None                                                       |
-  | Return Value: nWinColor := (IIF(nWinColor<4,nWinColor+1,1))              |
+  | Return Value: nWinColor := (iif(nWinColor<4,nWinColor+1,1))              |
   |        Notes: If we are already on window #4 restart count by using # 1. |
   +--------------------------------------------------------------------------+
 */
@@ -1612,7 +1612,7 @@ STATIC FUNCTION _ftNextWinColor
     _ftInitColors()
   ENDIF
 
-RETURN nWinColor := (IIF(nWinColor<4,nWinColor+1,1))
+RETURN nWinColor := (iif(nWinColor<4,nWinColor+1,1))
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftWinTitle()         Docs: Keith A. Wire                  |
@@ -1633,7 +1633,7 @@ STATIC FUNCTION _ftWinTitle(cTheTitle,cTopOrBot)
   LOCAL nCurWin  :=LEN(aWindow),                                             ;
         nLenTitle:=LEN(cTheTitle)
 
-  @ aWindow[nCurWin,IIF(cTopOrBot==NIL,1,3)],(aWindow[nCurWin,4]-            ;
+  @ aWindow[nCurWin,iif(cTopOrBot==NIL,1,3)],(aWindow[nCurWin,4]-            ;
     aWindow[nCurWin,2]-nLenTitle)/2+aWindow[nCurWin,2] SAY " "+cTheTitle+" "
 
 RETURN NIL

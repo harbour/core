@@ -117,7 +117,7 @@ FUNCTION B2_QDBFBrowse( o, nT, nRole, nX, nY )
             xRet := hb_NToS( FieldGet( nX + 1 ) )
             EXIT
          CASE "L"
-            xRet := IIf( FieldGet( nX + 1 ), "Yes", "No" )
+            xRet := iif( FieldGet( nX + 1 ), "Yes", "No" )
             EXIT
          CASE "D"
             xRet := DToC( FieldGet( nX + 1 ) )
@@ -140,7 +140,7 @@ FUNCTION B2_QDBFBrowse( o, nT, nRole, nX, nY )
             xRet := hb_NToS( FieldGet( nX + 1 ) )
             EXIT
          CASE "L"
-            xRet := IIf( FieldGet( nX + 1 ), "Y", "N" )
+            xRet := iif( FieldGet( nX + 1 ), "Y", "N" )
             EXIT
          CASE "D"
             xRet := DToC( FieldGet( nX + 1 ) )

@@ -252,13 +252,13 @@ METHOD ExcelWriterXML_Style:getStyleXML()
          IF empty( pData )
             LOOP
          ENDIF
-         bLinestyle := IIF( hb_hPos( pData, 'LineStyle' ) > 0,;
+         bLinestyle := iif( hb_hPos( pData, 'LineStyle' ) > 0,;
             'ss:LineStyle="' + pData[ 'LineStyle' ] + '"', ;
             '' )
-         bColor := IIF( hb_hPos( pData, 'Color' ) > 0,;
+         bColor := iif( hb_hPos( pData, 'Color' ) > 0,;
             'ss:Color="' + pData[ 'Color' ] + '"',;
             '' )
-         bWeight := IIF( hb_hPos( pData, 'Weight' ) > 0,;
+         bWeight := iif( hb_hPos( pData, 'Weight' ) > 0,;
             'ss:Weight="' + STR( pData[ 'Weight' ], 1 ) + '"',;
             '' )
          borders += '<Border ss:Position="' + position + '" ' + bLinestyle + ' ' + bColor + ' ' + bWeight + '/>' + HB_OsNewLine()

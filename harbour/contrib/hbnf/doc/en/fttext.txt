@@ -11,50 +11,50 @@
  *     Open or close a text file for use by the FT_F* functions
  *  $SYNTAX$
  *     FT_FUSE( [ <cFile> ] [, <nMode> ] ) -> nHandle | 0
- * 
+ *
  *  $ARGUMENTS$
  *     ^b<cFile>^n is the text file you want to open.  If not specified,
  *     the file currently open, if any, will be closed.
- * 
+ *
  *     ^b<nMode>^n is the open mode for the file.  Please refer to the
  *     discussion of open modes under FOPEN() in the Clipper manual
  *     and fileio.ch for a list of allowable open modes.  If not
  *     specified, the file will be opened with a mode of
  *     FO_READ + FO_SHARED (64).
- * 
+ *
  *  $RETURNS$
  *     If ^b<cFile>^n is passed and the file is opened successfully, an
  *     integer containing the text file's workarea.  If the file cannot be
  *     opened, -1 will be returned.  In this case, check the return value
  *     of ^bft_fError()^n for the cause of the error.
- * 
+ *
  *     If FT_FUSE() is called without any arguments, it will close the
  *     text file in the current "text area" and return 0.
- * 
+ *
  *     If a read error occurs ^ft_fError()^n will contain the error code.
- * 
+ *
  *  $DESCRIPTION$
  *     The FT_F*() file functions are for reading text files, that is,
  *     files where each line (record) is delimited by a CRLF pair.
- * 
+ *
  *     Each file is opened in its own "workarea", similar to the concept
  *     use by dbf files.  As provided, a maximum of 10 files (in 10
  *     workareas) can be opened (assuming there are sufficient file
  *     handles available).  That number may be increased by modifying
  *     the #define TEXT_WORKAREAS in the C source code and recompiling.
- * 
+ *
  *  $EXAMPLES$
  *     #include "fileio.ch"
- * 
+ *
  *     // open a text file for reading
  *     ft_fUse( "text.txt" )
- * 
+ *
  *     // open a text file for reading and writing
  *     ft_fUse( "text.txt", FO_READWRITE + FO_SHARED )
- * 
+ *
  *     // close file
  *     ft_fUse()
- * 
+ *
  *  $SEEALSO$
  *     FT_FUSE() FT_FSELECT()
  *  $END$
@@ -69,46 +69,46 @@
  *     Select a text file workarea
  *  $SYNTAX$
  *     FT_FSELECT( [ <nNewArea> ] ) -> nPreviousArea
- * 
+ *
  *  $ARGUMENTS$
  *     ^b<nNewArea>^n is the text file workarea to select.
- * 
+ *
  *  $RETURNS$
  *     The current selected text file area.
- * 
+ *
  *  $DESCRIPTION$
  *     This function selects a text file "workarea" from 1 to 10.  A
  *     file may or may not be open in the selected area.
- * 
+ *
  *     Passing 0 for ^b<nNewArea>^n selects the next available workarea,
  *     similar to Clipper's SELECT 0 command.  If no more workareas are
  *     available the current workarea is not changed.
- * 
+ *
  *     Each file is opened in its own "workarea", similar to the concept
  *     used by dbf files.  As provided, a maximum of 10 files (in 10
  *     workareas) can be opened (assuming there are sufficient file
  *     handles available).  That number may be increased by modifying
  *     the #define TEXT_WORKAREAS in the C source code and recompiling.
- * 
+ *
  *     All the FT_F*() file functions operate on the file in the currently
  *     selected text file workarea.
- * 
+ *
  *     Text file workareas are separate from and independent of Clipper's
  *     database workareas.
- * 
+ *
  *  $EXAMPLES$
  *     FT_FSELECT(1)
- * 
+ *
  *     nFile1 := FT_FUSE( "temp.c" )
- * 
+ *
  *     ? FT_FLASTRE()                 // no. of lines in temp.c
- * 
+ *
  *     FT_FSELECT(2)
- * 
+ *
  *     nFile2 := FT_FUSE( "temp.h" )
- * 
+ *
  *     ? FT_FLASTRE()                 // no. of lines in temp.h
- * 
+ *
  *  $SEEALSO$
  *     FT_FUSE()
  *  $END$
@@ -123,34 +123,34 @@
  *     Go to the first record in a text file
  *  $SYNTAX$
  *     FT_FGOTOP() -> NIL
- * 
+ *
  *  $ARGUMENTS$
  *     None
- * 
+ *
  *  $RETURNS$
  *     NIL
- * 
+ *
  *  $DESCRIPTION$
  *     This function moves the record pointer to the first record
  *     in the currently selected text file workarea.
- * 
+ *
  *     A text file "record" is a line of text terminated by a CRLF pair.
- * 
+ *
  *  $EXAMPLES$
  *     FT_FUSE( "text.c" )      // open text file
- * 
+ *
  *     DO WHILE !FT_FEOF()
- * 
+ *
  *        ? FT_FREADLN()        // read thru file
- * 
+ *
  *        FT_FSKIP()
- * 
+ *
  *     ENDDO
- * 
+ *
  *     FT_FGOTOP()              // go back to top
- * 
+ *
  *     ? FT_FRECNO()            // 1
- * 
+ *
  *  $SEEALSO$
  *     FT_FSELECT() FT_FUSE() FT_FRECNO() FT_FGOBOT()
  *  $END$
@@ -165,30 +165,30 @@
  *     Return the error code for a text file operation
  *  $SYNTAX$
  *     FT_FERROR() -> nErrorNo
- * 
+ *
  *  $ARGUMENTS$
  *     None
- * 
+ *
  *  $RETURNS$
  *     The DOS error code if one occurred.  See a reference on DOS error
  *     codes for an explanation of what the code means.
- * 
+ *
  *  $DESCRIPTION$
  *     This function returns the DOS error code associated with a file
  *     operation on the currently selected text file.
- * 
+ *
  *     Errors could stem from any open, create, read or write operation,
  *     among others.
- * 
+ *
  *  $EXAMPLES$
  *     if ft_fUse( "text.c" ) < 0     // open text file
  *        err := ft_fError();
  *        QOUT( 'Error opening file "Text.c", error code (' + ;
  *                  LTRIM( STR( err ) ) + ')' )
  *     endif
- * 
+ *
  *  $SEEALSO$
- * 
+ *
  *  $END$
  */
 
@@ -201,34 +201,34 @@
  *     Return the current record number of a text file
  *  $SYNTAX$
  *     FT_FRECNO() -> nRecNo
- * 
+ *
  *  $ARGUMENTS$
  *     None
- * 
+ *
  *  $RETURNS$
  *     The current record number of a text file or 0 if no file is open.
- * 
+ *
  *  $DESCRIPTION$
  *     This function returns the current record number of the file open
  *     in the currently selected text file workarea.
- * 
+ *
  *     A text file "record" is a line of text terminated by a CRLF pair.
- * 
+ *
  *  $EXAMPLES$
  *     FT_FUSE( "text.c" )      // open text file
- * 
+ *
  *     DO WHILE !FT_FEOF()
- * 
+ *
  *        ? FT_FREADLN()        // read thru file
- * 
+ *
  *        FT_FSKIP()
- * 
+ *
  *     ENDDO
- * 
+ *
  *     FT_FGOTOP()              // go back to top
- * 
+ *
  *     ? FT_FRECNO()            // 1
- * 
+ *
  *  $SEEALSO$
  *      FT_FSELECT() FT_FUSE() FT_FGOTOP() FT_FGOBOT()
  *  $END$
@@ -243,29 +243,29 @@
  *     Go to the last record in a text file
  *  $SYNTAX$
  *     FT_FGOBOT() -> NIL
- * 
+ *
  *  $ARGUMENTS$
  *     None
- * 
+ *
  *  $RETURNS$
  *     NIL
- * 
+ *
  *  $DESCRIPTION$
  *     This function moves the record pointer to the last record of the
  *     file in the currently selected text file workarea.
- * 
+ *
  *     If a read error occurs ^ft_fError()^n will contain the error code.
- * 
+ *
  *     A text file "record" is a line of text terminated by a CRLF pair.
- * 
+ *
  *  $EXAMPLES$
  *     // read last line
  *     FT_FUSE( "text.c" )
- * 
+ *
  *     FT_FGOBOT()
- * 
+ *
  *     ? FT_FREADLN()
- * 
+ *
  *  $SEEALSO$
  *     FT_FSELECT() FT_FUSE() FT_FGOTOP() FT_FRECNO() FT_FREADLN()
  *  $END$
@@ -280,42 +280,42 @@
  *     Move the record pointer to a new position in a text file
  *  $SYNTAX$
  *     FT_FSKIP( [ <nLines> ] ) -> nLinesSkipped
- * 
+ *
  *  $ARGUMENTS$
  *     <nLines> is the number of lines to skip.  Defaults to 1 if
  *     not specified.
- * 
+ *
  *  $RETURNS$
  *     The number of lines actually skipped.  If the file's EOF or
  *     BOF was encountered before ^b<nLines>^n could be skipped, the
  *     return value will be less than ^b<nLines>^n.
- * 
+ *
  *  $DESCRIPTION$
  *     This function moves the text file record pointer, similar to
  *     the CLIPPER SKIP command.
- * 
+ *
  *     Use the return value to determine how many records were actually
  *     skipped, for example to write a custom skipper function for
  *     TBrowse'g text files.
- * 
+ *
  *     If a read error occurs ^ft_fError()^n will contain the error code.
- * 
+ *
  *     A text file "record" is a line of text terminated by a CRLF pair.
- * 
+ *
  *  $EXAMPLES$
  *     // display each record of a text file
- * 
+ *
  *     FT_FUSE( "text.c" )
- * 
+ *
  *     DO WHILE ! FT_FEOF()
- * 
+ *
  *        ? FT_FREADLN()
- * 
+ *
  *        FT_FSKIP()
- * 
+ *
  *     ENDDO
- * 
- * 
+ *
+ *
  *  $SEEALSO$
  *     FT_FRECNO() FT_FGOTOP()
  *  $END$
@@ -330,41 +330,41 @@
  *     Read a line from the currently selected text file
  *  $SYNTAX$
  *     FT_FREADLN() -> cLine
- * 
+ *
  *  $ARGUMENTS$
  *     None
- * 
+ *
  *  $RETURNS$
  *     A string containing the current record in a text file.
- * 
+ *
  *  $DESCRIPTION$
  *     This function returns a line of text read from the file in the
  *     currently selected text file workarea.  Text lines are delimited
  *     with a CRLF pair.  The record pointer is not moved.
- * 
+ *
  *     Currently the maximum record size is 4096 characters.  You may
  *     increase the maximum record size by changing the value of ^b#define
  *     ^bBUFFSIZE^n in the C source and recompiling, however you should
  *     consider the performance implications if you do (all read and writes
  *     use this buffer size, including ft_fSkip()'s and ft_fGoto()'s).
- * 
+ *
  *     If a read error occurs ^ft_fError()^n will contain the error code.
- * 
+ *
  *     A text file "record" is a line of text terminated by a CRLF pair.
- * 
+ *
  *  $EXAMPLES$
  *     // display each record of a text file
- * 
+ *
  *     FT_FUSE( "text.c" )
- * 
+ *
  *     DO WHILE ! FT_FEOF()
- * 
+ *
  *        ? FT_FREADLN()
- * 
+ *
  *        FT_FSKIP()
- * 
+ *
  *     ENDDO
- * 
+ *
  *  $SEEALSO$
  *     FT_FUSE() FT_FWRITELN() FT_FRECNO() FT_FGOTOP()
  *  $END$
@@ -379,16 +379,16 @@
  *     Deletes a line from the currently selected text file
  *  $SYNTAX$
  *     FT_FDELETE( [ < nLines > ] ) -> lSuccess
- * 
+ *
  *  $ARGUMENTS$
  *     ^b<nLines>^n is the number of lines to be eliminated, beginning with
  *     the current record position.
- * 
+ *
  *     If ^b<nLines>^n is omitted, the current record is deleted only.
- * 
+ *
  *  $RETURNS$
  *     TRUE if successful, otherwise check ^ft_fError()^n for error code.
- * 
+ *
  *  $DESCRIPTION$
  *     This function deletes one or several lines of text from the file
  *     in the currently selected text file workarea.  Text lines are
@@ -396,13 +396,13 @@
  *     unless the deleted lines occur at the end of the file, in which
  *     case ^bft_fRecno()^n will equal ^bft_fLastRe()^n and ^bft_fEOF()^n
  *     will be set to TRUE.
- * 
+ *
  *  $EXAMPLES$
  *     // delete the next 4 lines from a file
  *     FT_FUSE( "test.txt" )
- * 
+ *
  *     FT_FDELETE( 4 )
- * 
+ *
  *  $SEEALSO$
  *     FT_FAPPEND() FT_FRECNO() FT_FINSERT()
  *  $END$
@@ -417,35 +417,35 @@
  *     Inserts a line in the currently selected text file
  *  $SYNTAX$
  *     FT_FINSERT( [ < nLines > ] ) -> lSuccess
- * 
+ *
  *  $ARGUMENTS$
  *     ^b<nLines>^n is the number of lines that should be inserted at the
  *     current record position.
- * 
+ *
  *     If ^b<nLines>^n is omitted, one record is inserted.
- * 
+ *
  *  $RETURNS$
  *     ^blSuccess^n is TRUE if the insert succeeded, FALSE if not.  If
  *     false check the return value of ^bft_fError()^n for the reason.
- * 
+ *
  *  $DESCRIPTION$
  *     This function inserts a line of text in the file in the currently
  *     selected text file workarea.  Text lines are delimited with a
  *     CRLF pair.
- * 
+ *
  *     The record pointer is not moved.
- * 
+ *
  *     A text file "record" is a line of text terminated by a CRLF pair.
  *     Each line inserted with this function will be empty.
- * 
+ *
  *  $EXAMPLES$
  *     // add a couple of blank lines of text to a file
  *     ft fUse( "test.txt" )
- * 
+ *
  *     ft_fGoTo( 10 )
- * 
+ *
  *     ft_fInsert( 5 )
- * 
+ *
  *  $SEEALSO$
  *     FT_FAPPEND() FT_FRECNO() FT_FDELETE() FT_FLASTRE()
  *  $END$
@@ -460,27 +460,27 @@
  *     Appends a line to the currently selected text file
  *  $SYNTAX$
  *     FT_FAPPEND( [ < nLines > ] ) -> NIL
- * 
+ *
  *  $ARGUMENTS$
  *     <nLines> is the number of lines that should be appended to the
  *     end of the currently selected text file.
- * 
+ *
  *     If <nLines> is omitted, one record is appended.
- * 
+ *
  *  $RETURNS$
  *     lSuccess.  If FALSE, check ^bft_fError()^n for the error code.
- * 
+ *
  *  $DESCRIPTION$
  *     This function appends a line of text to the file in the currently
  *     selected text file workarea.  Text lines are delimited with a
  *     CRLF pair.  The record pointer is moved to the last appended
  *     record.
- * 
+ *
  *     Multiple lines may be appended with one call to FT_FAPPEND().
- * 
+ *
  *     A text file "record" is a line of text terminated by a CRLF pair.
  *     Each line appended with this function will be empty.
- * 
+ *
  *     NOTE:  Occasionally a text file may contain a non-CRLF terminated
  *     line, at the end of the file ("stragglers").  This function assumes
  *     these stragglers to be the last line of the file, and begins
@@ -488,17 +488,17 @@
  *     last line in the text file is not terminated with a CRLF pair prior
  *     to calling FT_FAPPEND(), the function will terminate that last line
  *     before appending any new lines.
- * 
+ *
  *  $EXAMPLES$
  *     // add a blank line of text to a file
  *     FT_FUSE( "test.txt" )
- * 
+ *
  *     ?FT_FRECNO()           // displays 5
- * 
+ *
  *     FT_FAPPEND()
- * 
+ *
  *     ?FT_FRECNO()           // displays 6
- * 
+ *
  *  $SEEALSO$
  *     FT_FRECNO() FT_FDELETE() FT_FINSERT() FT_FLASTRE()
  *  $END$
@@ -513,49 +513,49 @@
  *     Write a line to the currently selected text file
  *  $SYNTAX$
  *     FT_FWRITELN( < cData >, [ < lInsert > ] ) -> lSuccess
- * 
+ *
  *  $ARGUMENTS$
  *     <cData> is a string of data to write to the file at the current
  *      record position.
- * 
+ *
  *     <lInsert> is a logical indicating whether the contents
  *     of the current record are to be preserved, that is, if lInsert
  *     evaluates to .T., the a new record is inserted at the current
  *     position.  The current record then is pushed down to FT_FRECNO()+1.
- * 
+ *
  *     If lInsert is .F. or omitted, the current record is replaced by
  *     cData.
- * 
+ *
  *  $RETURNS$
  *     TRUE if successful, otherwise check ^ft_fError()^n for error code.
- * 
+ *
  *  $DESCRIPTION$
  *     This function writes a line of text to the file in the currently
  *     selected text file workarea.  Text lines are delimited with a
  *     CRLF pair.  The record pointer is not moved.
- * 
+ *
  *     The contents of the current record are updated to reflect the new
  *     new line written, unless the Insert option is selected.
- * 
+ *
  *     Writing a null string has the effect of clearing the current line
  *     if in overstrike mode, else inserting a new line (same as
  *     FT_FINSERT()).
- * 
+ *
  *     A text file "record" is a line of text terminated by a CRLF pair.
- * 
+ *
  *  $EXAMPLES$
  *     // write a line of text to a file
- * 
+ *
  *     FT_FUSE( "config.sys" )
- * 
+ *
  *     DO WHILE UPPER( FT_FREADLN() ) != "FILES=" .AND. !F_FEOF()
- * 
+ *
  *        FT_FSKIP()
- * 
+ *
  *     ENDDO
- * 
+ *
  *     FT_FWRITELN( "FILES=30", FT_FEOF() )
- * 
+ *
  *  $SEEALSO$
  *     FT_FREADLN() FT_FRECNO() FT_FINSERT() FT_FDELETE()
  *  $END$
@@ -570,25 +570,25 @@
  *     Get the no. of records in the currently selected text file
  *  $SYNTAX$
  *     FT_FLASTRE() -> nLastRecordNum
- * 
+ *
  *  $ARGUMENTS$
  *     None
- * 
+ *
  *  $RETURNS$
  *     An integer containing the number of records in the text file in
  *     the currently selected text file workarea, or zero if no file
  *     is currently open in the workarea.
- * 
+ *
  *  $DESCRIPTION$
  *     This function returns the number of the last record in a text file.
- * 
+ *
  *     A text file "record" is a line of text terminated by a CRLF pair.
- * 
+ *
  *  $EXAMPLES$
  *     FT_FUSE( "text.c" )
- * 
+ *
  *     ? FT_FLASTRE()
- * 
+ *
  *  $SEEALSO$
  *     FT_FUSE() FT_FRECNO()
  *  $END$
@@ -603,28 +603,28 @@
  *     Determine if end of text file has been encountered
  *  $SYNTAX$
  *     FT_FEOF() -> lResult
- * 
+ *
  *  $ARGUMENTS$
  *     None
- * 
+ *
  *  $RETURNS$
  *     .T. if an attempt was made to skip past the last record of
  *     the currently selected text file, otherwise .F.
- * 
+ *
  *  $DESCRIPTION$
  *     This function is similar to the CLIPPER Eof() function.
- * 
+ *
  *     A text file "record" is a line of text terminated by a CRLF pair.
- * 
+ *
  *  $EXAMPLES$
  *     FT_FUSE( "fttext.c" )
- * 
+ *
  *     ? FT_FEOF()        // .F.
- * 
+ *
  *     FT_FSKIP()
- * 
+ *
  *     ? FT_FEOF()        // .T.
- * 
+ *
  *  $SEEALSO$
  *     FT_FUSE() FT_FSKIP()
  *  $END$
@@ -639,30 +639,30 @@
  *     Determine if attempt to skip past beginning of text file
  *  $SYNTAX$
  *     FT_FBOF() -> lResult
- * 
+ *
  *  $ARGUMENTS$
  *     None
- * 
+ *
  *  $RETURNS$
  *     .T. if an attempt was made to skip past the first record of
  *     the currently selected text file, otherwise .F.
- * 
+ *
  *  $DESCRIPTION$
  *     This function is similar to the CLIPPER Bof() function.
- * 
+ *
  *     A text file "record" is a line of text terminated by a CRLF pair.
- * 
+ *
  *  $EXAMPLES$
  *     FT_FUSE( "fttext.c" )
- * 
+ *
  *     FT_FGOTOP()
- * 
+ *
  *     ? FT_FBOF()        // .F.
- * 
+ *
  *     FT_FSKIP(-1)
- * 
+ *
  *     ? FT_FBOF()        // .T.
- * 
+ *
  *  $SEEALSO$
  *     FT_FSKIP() FT_EOF() FT_GOTOP()
  *  $END$
@@ -677,20 +677,20 @@
  *     Move record pointer to specific record in a text file
  *  $SYNTAX$
  *     FT_FGOTO( nLine ) -> NIL
- * 
+ *
  *  $ARGUMENTS$
  *     <nLine> is the record number to go to.
- * 
+ *
  *  $RETURNS$
  *     NIL
- * 
+ *
  *  $DESCRIPTION$
  *     This function moves the record pointer to a specific record
  *     in the file in the currently selected text file workarea.  If
  *     the record number requested is greater than the number of records
  *     in the file, the record pointer will be positioned at the last
  *     record.
- * 
+ *
  *     Internally, the function operates differently depending on how
  *     you invoke it.  Passing a value for ^b<nLine>^n results in what
  *     is effectively a skip operation, which is fairly quick.  However
@@ -699,18 +699,18 @@
  *     required number of records.  Hence if your file is relatively
  *     large and the current record is a high number, you may see some
  *     delay as ft_fGoTo(0) skips through the file.
- * 
+ *
  *     A text file "record" is a line of text terminated by a CRLF pair.
- * 
+ *
  *  $EXAMPLES$
  *     // read 5th line of text from file
- * 
+ *
  *     ft_fUse( "fttext.c" )
- * 
+ *
  *     ft_fGoTo(5)
- * 
+ *
  *     cText := ft_fReadLN()
- * 
+ *
  *  $SEEALSO$
  *    FT_FRECNO() FT_FGOTOP() FT_FREADLN()
  *  $END$

@@ -211,7 +211,7 @@ METHOD AddItem( name, url, bgColor ) CLASS TJsList
    DEFAULT name TO "o"
    DEFAULT url TO ""
    cUrl := [<A HREF='] + url + ['>] + htmlSpace( 2 ) + name + htmlSpace( 2 )
-   cStr += ::cCurrentNode + '.addItem( "' + cUrl + '"' + IIF( bgColor != NIL, ',"' + bgColor + '"', "" ) + ');' + CRLF()
+   cStr += ::cCurrentNode + '.addItem( "' + cUrl + '"' + iif( bgColor != NIL, ',"' + bgColor + '"', "" ) + ');' + CRLF()
    ::nItems ++
    Aadd( ::aScript, cStr )
 RETURN self

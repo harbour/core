@@ -25,18 +25,18 @@
  *     FT_NWUID() returns the current NetWare userid, or "login
  *     name."  This is useful for implementing security or audit
  *     trail procedures within your programs.
- * 
+ *
  *     There is no simple way a user can "fool" this function into
  *     retrieving an incorrect value, provided a NetWare shell is loaded.
- * 
+ *
  *     This function requires FT_INT86() and FT_NWLSTAT()
- * 
+ *
  *     This function does NOT test for the existence of the NetWare shell.
  *     The behavior is undefined if no shell is loaded. You'll usually get
  *     garbage.  This function has not been tested on NetWare 386.
  *  $EXAMPLES$
  *     QOut( "I am: " + FT_NWUID() )
- * 
+ *
  *     FOR x := 1 TO 100
  *       cUid := FT_NWUID( x )
  *       IF .NOT Empty( cUid )

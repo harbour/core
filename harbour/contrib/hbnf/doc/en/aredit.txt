@@ -14,15 +14,15 @@
  *        <nElem>, <aHeadings>, <aBlocks> [, <bGetFunc> ] ) -> xElement
  *  $ARGUMENTS$
  *     <nTop>, <nLeft>, <nBottom>, <nRight> are coordinates for TBrowse
- * 
+ *
  *     <Array Name> is name of 2 dimensional to array edit
- * 
+ *
  *     <nElem>      is pointer for element in array
- * 
+ *
  *     <aHeadings>  is array of column headings
- * 
+ *
  *     <aBlocks>    is array of blocks describing each array element
- * 
+ *
  *     [ <bGetFunc> ] is get editing function for handling individual elements
  *  $RETURNS$
  *     Value of element positioned on when exit FT_AREDIT()
@@ -33,43 +33,43 @@
  *     and pass a UDF with information to edit the individual gets.
  *  $EXAMPLES$
  *      FT_AREDIT(3, 5, 18, 75, ar, @nElem, aHeadings, aBlocks)
- * 
+ *
  *      This example will allow you to browse a 2 dimensional array
  *      But you can't edit it since there is no GetBlock UDF
  *      It allows the user to hit ENTER to select an element or ESC to
  *      return 0
- * 
+ *
  *      * This second example shows how to edit a 2 dimensional array
  *      * as might be done to edit an invoice
- * 
+ *
  *            LOCAL i, ar[3, 26], aBlocks[3], aHeadings[3]
  *            LOCAL nElem := 1, bGetFunc
- * 
+ *
  *      * Set up two dimensional array "ar"
- * 
+ *
  *            FOR i = 1 TO 26
  *               ar[1, i] := i          //  1  ->  26  Numeric
  *               ar[2, i] := CHR(i+64)  // "A" -> "Z"  Character
  *               ar[3, i] := CHR(91-i)  // "Z" -> "A"  Character
  *             NEXT i
- * 
+ *
  *      * SET UP aHeadings Array for column headings
- * 
+ *
  *            aHeadings  := { "Numbers", "Letters", "Reverse" }
- * 
+ *
  *      * Need to set up individual array blocks for each TBrowse column
- * 
+ *
  *        aBlocks[1] := {|| STR(ar[1, nElem], 2) } // prevent default 10 spaces
  *        aBlocks[2] := {|| ar[2, nElem] }
  *        aBlocks[3] := {|| ar[3, nElem] }
- * 
+ *
  *      * set up TestGet() as the passed Get Function so FT_ArEdit knows how
  *      * to edit the individual gets.
- * 
+ *
  *        bGetFunc   := { | b, ar, nDim, nElem | TestGet(b, ar, nDim, nElem) }
  *        SetColor( "N/W, W/N, , , W/N" )
  *        CLEAR SCREEN
  *        FT_AREDIT(3, 5, 18, 75, ar, @nElem, aHeadings, aBlocks, bGetFunc)
- * 
+ *
  *  $END$
  */

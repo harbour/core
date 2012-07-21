@@ -549,7 +549,7 @@ METHOD BuildCommandWindow() CLASS HBDebugger
                              ::oGet:setColor( __DbgColors()[ 2 ] ):display(),;
                              hb_ClrArea( ::oWndCommand:nTop + 1, ::oWndCommand:nLeft + 1,;
                              ::oWndCommand:nBottom - 2, ::oWndCommand:nRight - 1,;
-                             IIF( ::lMonoDisplay, 15, hb_ColorToN( __DbgColors()[ 2 ] ) ) ) }
+                             iif( ::lMonoDisplay, 15, hb_ColorToN( __DbgColors()[ 2 ] ) ) ) }
    AAdd( ::aWindows, ::oWndCommand )
 
    ::aLastCommands := { "" }
@@ -3337,14 +3337,14 @@ FUNCTION __dbgAchoice( nTop, nLeft, nBottom, nRight, aItems, cColors )
    LOCAL nLen
 
    oBrw := HBDbBrowser():New( nTop, nLeft, nBottom, nRight )
-   oBrw:colorSpec := IIF( HB_ISSTRING( cColors ), cColors, SetColor() )
+   oBrw:colorSpec := iif( HB_ISSTRING( cColors ), cColors, SetColor() )
    nLen := nRight - nLeft + 1
    nRow := 1
    oCol := HBDbColumnNew( "", {|| PadR( aItems[ nRow ], nLen ) } )
    oBrw:AddColumn( oCol )
    oBrw:goTopBlock := {|| nRow := 1 }
    oBrw:goBottomBlock := {|| nRow := Len( aItems ) }
-   oBrw:skipBlock := {| n | n := IIF( n < 0, Max( n, 1 - nRow ), ;
+   oBrw:skipBlock := {| n | n := iif( n < 0, Max( n, 1 - nRow ), ;
                                              Min( Len( aItems ) - nRow, n ) ), ;
                             nRow += n, n }
    WHILE .T.

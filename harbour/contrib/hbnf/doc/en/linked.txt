@@ -21,19 +21,19 @@
  *  $DESCRIPTION$
  *     This function would be used in data driven application to determine
  *     whether or not a macro compiled function was linked in.
- * 
+ *
  *     Several functions can be passed, and nested, in <cString>.
- * 
+ *
  *     Caveat: Some function calls are converted by the preprocessor
  *     into other function calls. You cannot have these types of
  *     functions in a macro compiled string as they never exist at
  *     runtime. FT_LINKED will correctly tell you that they are invalid.
- * 
+ *
  *     For instance: there is no function called SORT() in any of the
  *     Nantucket LIBraries, but it is a valid CLIPPER command because the
  *     preprocessor will convert it to other function calls.
- * 
- * 
+ *
+ *
  *  $EXAMPLES$
  *     cString := "FT_GoodFunc(BadFunc(3,2))"
  *     IF FT_LINKED(cString)
@@ -41,7 +41,7 @@
  *     ELSE
  *        ALERT("Error: "+cString+" was not linked in. Called by FT_LINKED()")
  *     ENDIF
- * 
- * 
+ *
+ *
  *  $END$
  */

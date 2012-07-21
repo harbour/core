@@ -20,34 +20,34 @@
  *        aFields := {}
  *        AADD(aFields, {"Last Name" , {||Names->Last}  } )
  *        AADD(aFields, {"First Name", {||Names->First} } )
- * 
+ *
  *     <bWhileCond> is the limiting WHILE condition as a block.
  *        Example 1: { ||Names->Last == "JONES" }
  *        Example 2: { ||Names->Last == "JONES" .AND. Names->First == "A"  }
- * 
+ *
  *     <cKey> is the key to find top condition of WHILE.
  *        cLast  := "JONES     "
  *        cFirst := "A"
  *        Example 1: cKey := cLast
  *        Example 2: cKey := cLast + cFirst
- * 
+ *
  *     <nFreeze> is number of fields to freeze in TBrowse.  Defaults
  *     to 0 if not passed.
- * 
+ *
  *     <lSaveScrn> is a logical indicating whether or not you want to
  *     save the screen from the calling program.  Defaults to .T. if
  *     not passed.
- * 
+ *
  *     <cColorList> is a list of colors for the TBrowse columns.
  *     The 1st color is used as SAY/TBrowse Background and the
  *     3rd and 4th colors are used as part of column:defColor := {3, 4}
- * 
+ *
  *     Thus if you pass a cColorList, you MUST pass at least 4 colors.
  *     Defaults to "N/W, N/BG, B/W, B/BG, B/W, B/BG, R/W, B/R" if not passed.
- * 
+ *
  *     <cColorShad> is the color of the TBrowse box shadow.  Defaults
  *     to "N/N" if not passed.
- * 
+ *
  *     <nTop>, <nLeft>, <nBottom>, <nRight> are the coordinates of
  *     the area to display the TBrowse in.  Defaults to 2, 2,
  *     MAXROW() - 2, MAXCOL() - 2 with shadowed box, i.e. full screen.
@@ -70,15 +70,15 @@
  *     LOCAL lSaveScrn  := .t.
  *     LOCAL cColorList := "N/W, N/BG, B/W, B/BG, B/W, B/BG, R/W, B/R"
  *     LOCAL cColorShad := "N/N"
- * 
+ *
  *     USE TBNames INDEX TBNames NEW // indexed on Last + First
- * 
+ *
  *     * Pass Heading as character and Field as Block including Alias
  *     * To eliminate the need to use FIELDWBLOCK() function in FT_BRWSWHL()
  *     AADD(aFields, {"Last Name" , {||TBNames->Last}  } )
  *     AADD(aFields, {"First Name", {||TBNames->First} } )
  *     AADD(aFields, {"City"      , {||TBNames->City}  } )
- * 
+ *
  *     IF FT_BRWSWHL( aFields, bWhile, cKey, nFreeze, lSaveScrn, ;
  *        cColorList, cColorShad, 3, 6, MaxRow() - 2, MaxCol() - 6) == 0
  *        ? "Sorry, NO Records Were Selected"

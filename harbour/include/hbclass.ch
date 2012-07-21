@@ -258,7 +258,7 @@ DECLARE HBClass ;
       if s_oClass == NIL .and. __clsLockDef( @s_oClass ) ;;
          begin sequence ;;
             nScope := HB_OO_CLSTP_EXPORTED ; HB_SYMBOL_UNUSED( nScope ) ;;
-            oClass  := IIF(<.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)> , __HB_CLS_PAR( [ @<SuperClass1>() ] [ , @<SuperClassN>() ] ), @__HB_CLS_OPT([__HB_CLS_ASID(<FuncName>),] <ClassName>)() [, <.modulfriend.> ] ) ) ;;
+            oClass  := iif(<.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)> , __HB_CLS_PAR( [ @<SuperClass1>() ] [ , @<SuperClassN>() ] ), @__HB_CLS_OPT([__HB_CLS_ASID(<FuncName>),] <ClassName>)() [, <.modulfriend.> ] ) ) ;;
    #undef  _CLASS_NAME_ ; #define _CLASS_NAME_ <ClassName> ;;
    #undef  _CLASS_MODE_ ; #define _CLASS_MODE_ _CLASS_DECLARATION_ ;
    [ ; #translate Super( <SuperClassN> ): => ::<SuperClassN>: ] ;

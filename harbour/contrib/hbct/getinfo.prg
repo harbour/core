@@ -77,7 +77,7 @@ FUNCTION GETFLDROW( nField )
    ELSEIF nField >= 1 .AND. nField <= LEN( GetList )
       oGet := GetList[ nField ]
    ENDIF
-   RETURN IIF( oGet != NIL, oGet:Row, -1 )
+   RETURN iif( oGet != NIL, oGet:Row, -1 )
 
 FUNCTION GETFLDCOL( nField )
    LOCAL oGet
@@ -86,7 +86,7 @@ FUNCTION GETFLDCOL( nField )
    ELSEIF nField >= 1 .AND. nField <= LEN( GetList )
       oGet := GetList[ nField ]
    ENDIF
-   RETURN IIF( oGet != NIL, oGet:Col, -1 )
+   RETURN iif( oGet != NIL, oGet:Col, -1 )
 
 FUNCTION GETFLDVAR( nField )
    LOCAL oGet
@@ -95,4 +95,4 @@ FUNCTION GETFLDVAR( nField )
    ELSEIF nField >= 1 .AND. nField <= LEN( GetList )
       oGet := GetList[ nField ]
    ENDIF
-   RETURN IIF( oGet != NIL, oGet:Name, -1 )
+   RETURN iif( oGet != NIL, oGet:Name, -1 )

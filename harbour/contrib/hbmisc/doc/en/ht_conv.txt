@@ -23,11 +23,11 @@
  *  $SYNTAX$
  *      ISBIN(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> STRING TO BE CHECKED   
+ *      <cN> STRING TO BE CHECKED
  *  $RETURNS$
- *      <cNr> .T. IF THE STRING IS BYNARY,otherwise .F.   
+ *      <cNr> .T. IF THE STRING IS BYNARY,otherwise .F.
  *  $DESCRIPTION$
- *      check if the passed string is a bynary number or not   
+ *      check if the passed string is a bynary number or not
  *  $FILES$
  *      Library is libmisc
  *  $SEEALSO$
@@ -45,11 +45,11 @@
  *  $SYNTAX$
  *      ISOCTAL(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> STRING TO BE CHECKED   
+ *      <cN> STRING TO BE CHECKED
  *  $RETURNS$
- *   <cNr> .T. IF THE STRING IS OCTAL;otherwise .F.   
+ *   <cNr> .T. IF THE STRING IS OCTAL;otherwise .F.
  *  $DESCRIPTION$
- *      check if the passed string is a octal number or not   
+ *      check if the passed string is a octal number or not
  *  $FILES$
  *      Library is libmisc
  *  $SEEALSO$
@@ -67,11 +67,11 @@
  *  $SYNTAX$
  *      ISDEC(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> STRING TO BE CHECKED   
+ *      <cN> STRING TO BE CHECKED
  *  $RETURNS$
- *      <cNr> .T. IF THE STRING IS DECIMAL;otherwise .F.   
+ *      <cNr> .T. IF THE STRING IS DECIMAL;otherwise .F.
  *  $DESCRIPTION$
- *      check if the passed string is a decimal number or not   
+ *      check if the passed string is a decimal number or not
  *  $FILES$
  *      Library is libmisc
  *  $SEEALSO$
@@ -89,11 +89,11 @@
  *  $SYNTAX$
  *      ISHEXA(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> STRING TO BE CHECKED   
+ *      <cN> STRING TO BE CHECKED
  *  $RETURNS$
- *      <cNr> .T. IF THE STRING IS HEXA;otherwise .F.   
+ *      <cNr> .T. IF THE STRING IS HEXA;otherwise .F.
  *  $DESCRIPTION$
- *      check if the passed string is a hexa number or not   
+ *      check if the passed string is a hexa number or not
  *  $FILES$
  *      Library is libmisc
  *  $SEEALSO$
@@ -111,12 +111,12 @@
  *  $SYNTAX$
  *      DECTOBIN(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED   
+ *      <cN> NUMBER TO BE CONVERTED
  *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED   
+ *      <cNr>  NUMBER CONVERTED
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an decimal value
- *      to an binary value.   
+ *      to an binary value.
  *  $FILES$
  *      Library is libmisc
  *  $SEEALSO$
@@ -134,12 +134,12 @@
  *  $SYNTAX$
  *      DECTOOCTAL(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED   
+ *      <cN> NUMBER TO BE CONVERTED
  *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED   
+ *      <cNr>  NUMBER CONVERTED
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an decimal value
- *      to an octal value.   
+ *      to an octal value.
  *  $FILES$
  *      Library is libmisc
  *  $SEEALSO$
@@ -157,12 +157,12 @@
  *  $SYNTAX$
  *      DECTOHEXA(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED   
+ *      <cN> NUMBER TO BE CONVERTED
  *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED   
+ *      <cNr>  NUMBER CONVERTED
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an decimal value
- *      to an hexadecimal value.   
+ *      to an hexadecimal value.
  *  $FILES$
  *      Library is libmisc
  *  $SEEALSO$
@@ -180,12 +180,12 @@
  *  $SYNTAX$
  *      BIntODEC(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED   
+ *      <cN> NUMBER TO BE CONVERTED
  *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED   
+ *      <cNr>  NUMBER CONVERTED
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an binary value
- *      to a numeric decimal value.   
+ *      to a numeric decimal value.
  *  $FILES$
  *      Library is libmisc
  *  $SEEALSO$
@@ -203,12 +203,12 @@
  *  $SYNTAX$
  *      OCTALTODEC(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED   
+ *      <cN> NUMBER TO BE CONVERTED
  *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED   
+ *      <cNr>  NUMBER CONVERTED
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an octal value
- *      to a numeric decimal value.   
+ *      to a numeric decimal value.
  *  $FILES$
  *      Library is libmisc
  *  $SEEALSO$
@@ -226,12 +226,12 @@
  *  $SYNTAX$
  *      HEXATODEC(<cN>) -><cNr>
  *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED   
+ *      <cN> NUMBER TO BE CONVERTED
  *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED   
+ *      <cNr>  NUMBER CONVERTED
  *  $DESCRIPTION$
  *      This function converts a string <cN> from an hexadecimal value
- *      to a numeric decimal value.   
+ *      to a numeric decimal value.
  *  $FILES$
  *      Library is libmisc
  *  $SEEALSO$

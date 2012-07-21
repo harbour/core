@@ -44,7 +44,7 @@
  *  $DESCRIPTION$
  *     Function to return the available space on the passed
  *     drive letter or the default drive if no drive is passed.
- * 
+ *
  *     Uses FT_INT86() through the internal function _ftDiskInfo().
  *  $EXAMPLES$
  *     ? FT_DSKFREE()  // Returns free space on default drive.

@@ -91,7 +91,7 @@ METHOD new( nRow, nCol, nWidth, cValue, cColor, nSize ) CLASS HbDbInput
    ::nRow   := nRow
    ::nCol   := nCol
    ::nWidth := nWidth
-   ::nSize  := IIF( HB_ISNUMERIC( nSize ), nSize, nWidth )
+   ::nSize  := iif( HB_ISNUMERIC( nSize ), nSize, nWidth )
    ::cValue := PadR( cValue, ::nSize )
    ::nRow   := nRow
 
@@ -104,7 +104,7 @@ METHOD setColor( cColor ) CLASS HbDbInput
    ::acColor:= { hb_ColorIndex( cColor, CLR_STANDARD ), ;
                  hb_ColorIndex( cColor, CLR_ENHANCED ) }
    IF hb_colorToN( ::acColor[ 2 ] ) == -1
-      ::acColor[ 2 ] := IIF( hb_colorToN( ::acColor[ 1 ] ) != -1, ;
+      ::acColor[ 2 ] := iif( hb_colorToN( ::acColor[ 1 ] ) != -1, ;
                              ::acColor[ 1 ], ;
                              hb_ColorIndex( SetColor(), CLR_ENHANCED ) )
    ENDIF
@@ -148,10 +148,10 @@ METHOD display() CLASS HbDbInput
       ::nFirst := ::nPos - ::nWidth + 1
    ENDIF
    hb_dispOutAt( ::nRow, ::nCol, Substr( ::cValue, ::nFirst, ::nWidth ), ;
-                 ::acColor[ IIF( ::lFocus, 2, 1 ) ] )
+                 ::acColor[ iif( ::lFocus, 2, 1 ) ] )
    IF ::lFocus
       SetPos( ::nRow, ::nCol + ::nPos - ::nFirst )
-      SetCursor( IIF( Set( _SET_INSERT ), SC_INSERT, SC_NORMAL ) )
+      SetCursor( iif( Set( _SET_INSERT ), SC_INSERT, SC_NORMAL ) )
    ENDIF
    RETURN Self
 

@@ -15,18 +15,18 @@
  *               [, <nAcceptableError> ] ] ] ] )            -> nNumber
  *  $ARGUMENTS$
  *     <nNumber> is the number to round
- * 
+ *
  *     <nRoundToAmount> is the fraction to round to or the number of places,
  *     default is 2.
- * 
+ *
  *     <cRoundType> is the type of rounding desired
- * 
+ *
  *        "D" for Decimal       (3 for thousandth, 1/1000)  (default)
  *        "F" for Fraction      (3 for thirds, 1/3)
  *        "W" for Whole numbers (3 for thousand, 1000)
- * 
+ *
  *     <cRoundDirection> is the direction to round the number toward
- * 
+ *
  *        "U" to round Up      1.31 ->  1.4
  *                            -1.31 -> -1.4
  *        "D" to round Down    1.36 ->  1.3
@@ -35,7 +35,7 @@
  *                            -1.5  -> -2
  *                             1.49 ->  1
  *                            -1.49 -> -1
- * 
+ *
  *     <nAcceptableError> is the amount that is considered acceptable
  *     to be within, i.e., if you're within this amount of the number
  *     you don't need to round
@@ -50,16 +50,16 @@
  *  $EXAMPLES$
  *     // round normal to 2 decimal places
  *     nDollars := FT_ROUND(nDollars)
- * 
+ *
  *     // round normal to 6 decimal places
  *     nIntRate := FT_ROUND(nIntRate, 6)
- * 
+ *
  *     // round to nearest thousands
  *     nPrice   := FT_ROUND(nPrice, 3, NEAREST_WHOLE_NUMBER)
- * 
+ *
  *     // round Up to nearest third
  *     nAmount  := FT_ROUND(nAmount, 3, NEAREST_FRACTION, ROUND_UP)
- * 
+ *
  *     // round down to 3 decimals Within .005
  *     nAvg     := FT_ROUND(nAvg, 3, , ROUND_DOWN, .005)
  *  $END$

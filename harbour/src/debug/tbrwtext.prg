@@ -109,8 +109,8 @@ CREATE CLASS HBBrwText
    METHOD GoTop() INLINE ::oBrw:GoTop():ForceStable(), Self
    METHOD GoBottom() INLINE ::oBrw:GoBottom():ForceStable(), Self
 
-   METHOD Right() INLINE IIF( ::nLineOffset < ::nMaxLineLen, ( ::nLineOffset++, ::oBrw:RefreshAll():ForceStable() ), ), Self
-   METHOD Left() INLINE IIF( ::nLineOffset > 1, ( ::nLineOffset--, ::oBrw:RefreshAll():ForceStable() ), ), Self
+   METHOD Right() INLINE iif( ::nLineOffset < ::nMaxLineLen, ( ::nLineOffset++, ::oBrw:RefreshAll():ForceStable() ), ), Self
+   METHOD Left() INLINE iif( ::nLineOffset > 1, ( ::nLineOffset--, ::oBrw:RefreshAll():ForceStable() ), ), Self
 
    METHOD RowPos() INLINE ::nRow
 
@@ -280,7 +280,7 @@ METHOD Search( cString, lCaseSensitive, nMode ) CLASS HBBrwText
    n := ::nRow
 
    DO WHILE Eval( bMove ) != 0
-      IF cString $ IIF( lCaseSensitive, ::aRows[ ::nRow ], Upper( ::aRows[ ::nRow ] ) )
+      IF cString $ iif( lCaseSensitive, ::aRows[ ::nRow ], Upper( ::aRows[ ::nRow ] ) )
          lFound := .T.
          ::oBrw:MoveCursor( ::nRow - n )
          ::RefreshAll()

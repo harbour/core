@@ -26,25 +26,25 @@
  *     works with LPT1.  Furthermore, it talks directly to the hardware, so
  *     if you have redirected LPT1 via the DOS MODE command, the IsPrinter()
  *     function will return erroneous results.
- * 
+ *
  *     This function offers a better alternative.  Instead of talking to the
  *     hardware, it issues a DOS call that checks to see if the device is
  *     ready or not.  That gives DOS an opportunity to deal with any
  *     redirections, and since you pass the device name as a parameter, you
  *     can test any device, not just LPT1 (note that the function defaults
  *     to PRN if you fail to pass a valid parameter).
- * 
+ *
  *     The function also temporarily traps the DOS critical error handler so
  *     you don't get any nasty error messages if the device isn't ready.  It
  *     restores the old critical error handler before exiting.
- * 
+ *
  *     Note that although this function is mainly designed for testing
  *     printers, you can also check to see if a drive is ready.  Since DOS
  *     thinks the NUL device exists on every drive, you can pass a drive
  *     letter followed by NUL as a parameter.  If DOS is able to open the
  *     NUL device, then the drive is ready, otherwise the door is open or
  *     something else is wrong.
- * 
+ *
  *     The source code is written to adhere to Turbo Assembler's IDEAL mode.
  *     To use another assembler, you will need to rearrange the PROC and
  *     SEGMENT directives, and also the ENDP and ENDS directives (a very
@@ -53,11 +53,11 @@
  *     IF ! FT_ISPRINT()
  *        Qout( "PRN is not ready!" )
  *     ENDIF
- * 
+ *
  *     IF ! FT_ISPRINT( "COM2" )
  *        Qout( "Check the device on COM2.  Something is wrong." )
  *     ENDIF
- * 
+ *
  *     IF ! FT_ISPRINT( "A:\nul" )
  *        Qout( "Oops, better check drive A!" )
  *     ENDIF

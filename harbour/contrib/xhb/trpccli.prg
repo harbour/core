@@ -116,13 +116,13 @@ CLASS tRPCClient
    METHOD HasError()                INLINE ::nErrorCode != 0 .or. ::TcpHasError() .or. ::UdpHasError()
    METHOD GetErrorCode()            INLINE ::nErrorCode
 
-   METHOD TcpHasError()             INLINE IIF( Empty( ::skTCP ), .F., hb_inetErrorCode( ::skTCP ) > 0 )
-   METHOD GetTcpErrorCode()         INLINE IIF( Empty( ::skTCP ), 0, hb_inetErrorCode( ::skTCP ) )
-   METHOD GetTcpErrorDesc()         INLINE IIF( Empty( ::skTCP ), "", hb_inetErrorDesc( ::skTCP ) )
+   METHOD TcpHasError()             INLINE iif( Empty( ::skTCP ), .F., hb_inetErrorCode( ::skTCP ) > 0 )
+   METHOD GetTcpErrorCode()         INLINE iif( Empty( ::skTCP ), 0, hb_inetErrorCode( ::skTCP ) )
+   METHOD GetTcpErrorDesc()         INLINE iif( Empty( ::skTCP ), "", hb_inetErrorDesc( ::skTCP ) )
 
-   METHOD UdpHasError()             INLINE IIF( Empty( ::skUDP ), .F., hb_inetErrorCode( ::skUDP ) > 0 )
-   METHOD UdpGetErrorCode()         INLINE IIF( Empty( ::skUDP ), 0, hb_inetErrorCode( ::skUDP ) )
-   METHOD UdpGetErrorDesc()         INLINE IIF( Empty( ::skUDP ), "", hb_inetErrorDesc( ::skUDP ) )
+   METHOD UdpHasError()             INLINE iif( Empty( ::skUDP ), .F., hb_inetErrorCode( ::skUDP ) > 0 )
+   METHOD UdpGetErrorCode()         INLINE iif( Empty( ::skUDP ), 0, hb_inetErrorCode( ::skUDP ) )
+   METHOD UdpGetErrorDesc()         INLINE iif( Empty( ::skUDP ), "", hb_inetErrorDesc( ::skUDP ) )
    /* Used to retreive data from scans */
    METHOD GetFunctionName( xId )
    METHOD GetServerName( xId )
@@ -203,8 +203,8 @@ METHOD New( cNetwork, nTcpPort, nUdpPort ) CLASS tRPCClient
    ::nErrorCode := 0 // no RPC error
    ::cServer := NIL // no server
 
-   ::nUdpPort := IIF( nUdpPort == NIL, 1139, nUdpPort )
-   ::nTcpPort := IIF( nTcpPort == NIL, 1140, nTcpPort )
+   ::nUdpPort := iif( nUdpPort == NIL, 1139, nUdpPort )
+   ::nTcpPort := iif( nTcpPort == NIL, 1140, nTcpPort )
 
    ::skTcp := hb_inetCreate()
    ::skUdp := hb_inetDGram( .T. )

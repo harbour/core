@@ -25,24 +25,24 @@
  *      This distance is a measure for the number of single character replace/insert/delete operations (so called
  *      "point mutations") required to transform <cString1> into <cString2> and its value will be the smallest sum of
  *      the penalty points of the required operations.
- * 
+ *
  *      Be aware that this function is both quite time - O(len(cString1)*len(cString2)) - and memory consuming -
  *      O((len(cString1)+1)*(len(cString2)+1)*sizeof(int)) - so keep the strings as short as possible.
  *      E.g., on common 32 bit systems (sizeof(int) == 4), calling strdiff() with two strings of 1024 bytes
  *      in length will consume 4 MB of memory. To not impose unneeded restrictions, the function will only check if
  *      (len(cString1)+1)*(len(cString2)+1)*sizeof(int) <= UINT_MAX, although allocing UINT_MAX bytes will not
  *      work on most systems. If this simple check fails, -1 is returned.
- * 
+ *
  *      Also, be aware that there can be an overflow when the penalty points are summed up: Assuming that the
  *      number of transformation operations is in the order of max(len(cString1),len(cString2)), the penalty point
  *      sum, that is internally stored in an "int" variable, is in the order of
  *      (max(len(cString1),len(cString2))*max(nReplacementPenalty,nDeletionPenalty,nInsertionPentaly).
  *      The STRDIFF() does not do an overflow check due to time performance reasons. Future versions of STRDIFF()
  *      could use a type different to "int" to store the penalty point sum to save memory or to avoid overflows.
- * 
+ *
  *      The function is aware of the settings done by SETATLIKE(), that means that the wildchar character
  *      is considered equal to ALL characters.
- * 
+ *
  *  $EXAMPLES$
  *      ? strdiff("ABC", "ADC") // 3, one character replaced
  *      ? strdiff("ABC", "AEC") // 3, dito

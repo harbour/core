@@ -13,15 +13,15 @@
  *      CHARRELA (<cStringToMatch1>, <cString1>,
  *                <cStringToMatch2>, <cString2>) -> nPosition
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      TODO: add documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -47,15 +47,15 @@
  *                  <cStringToMatch2>, <[@]cString2>,
  *                  <cReplacement>) -> cString
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      TODO: add documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$

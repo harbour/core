@@ -12,15 +12,15 @@
  *  $SYNTAX$
  *      CTODOW (<cName>) -> nOrdinal
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      TODO: add documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -44,15 +44,15 @@
  *  $SYNTAX$
  *      CTOMONTH (<cName>) -> nOrdinal
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      TODO: add documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -76,17 +76,17 @@
  *  $SYNTAX$
  *      DMY ([<dDate>][, <lMode>]) -> cDateString
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      Returns the date as a string in DD Month YY format. If lmode
  *      is TRUE, a "." is inserted after the DD
  *      TODO: add further documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -110,17 +110,17 @@
  *  $SYNTAX$
  *      MDY ([<dDate>]) -> cDateString
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      Returns the date as a string in Month DD, YY or Month DD, YYYY
  *      If dDate is NULL, the system date is used
  *      TODO: add further documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -144,15 +144,15 @@
  *  $SYNTAX$
  *      ADDMONTH ([<dDate>,] <nMonths>) -> dShiftedDate
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      TODO: add documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -162,7 +162,7 @@
  *  $FILES$
  *      Source is dattime2.prg, library is libct.
  *  $SEEALSO$
- * 
+ *
  *  $END$
  */
 
@@ -176,17 +176,17 @@
  *  $SYNTAX$
  *      DMY ([<dDate>]) -> nDayOfYear
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      Determines the day of the year for a specific date
  *      if dDate is invalid, returns 0
  *      TODO: add further documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -196,7 +196,7 @@
  *  $FILES$
  *      Source is dattime2.prg, library is libct.
  *  $SEEALSO$
- * 
+ *
  *  $END$
  */
 
@@ -210,15 +210,15 @@
  *  $SYNTAX$
  *      ISLEAP ([<dDate>]) -> lIsLeap
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      TODO: add further documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -228,7 +228,7 @@
  *  $FILES$
  *      Source is dattime2.prg, library is libct.
  *  $SEEALSO$
- * 
+ *
  *  $END$
  */
 
@@ -242,17 +242,17 @@
  *  $SYNTAX$
  *      DAYSTOMONTH (<nMonth>, <lLeapYear>) -> nDaysToMonth
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      lLeap is FALSE for a non-leap year but TRUE if it is. If so and nMonth
  *      is greater than 2, ndays is incremented
  *      TODO: add further documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -276,15 +276,15 @@
  *  $SYNTAX$
  *      DAYSINMONTH (<nMonth>, <lLeapYear>) -> nDaysInMonth
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      TODO: add documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -308,17 +308,17 @@
  *  $SYNTAX$
  *      QUARTER ([<dDate>]) -> nQuarter
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      Returns a number equal to the quarter in which ddate
  *      falls. If ddate  is empty, the system date is employed.
  *      TODO: add further documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -328,7 +328,7 @@
  *  $FILES$
  *      Source is dattime2.prg, library is libct.
  *  $SEEALSO$
- * 
+ *
  *  $END$
  */
 
@@ -342,18 +342,18 @@
  *  $SYNTAX$
  *      LASTDAYOM ([<dDate|nMonth>]) -> nDaysInMonth
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      <dDate|nMonth> can be a date or a month number. If empty uses the
  *      system date.  If nMonth is a 2, lastdayom() will not know if it
  *      is a leap year or not. If dDate is invalid, returns 0
  *      TODO: add further documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -377,15 +377,15 @@
  *  $SYNTAX$
  *      NTOCDOW (<nDay>) -> cDay
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      TODO: add documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -409,15 +409,15 @@
  *  $SYNTAX$
  *      NTOCMONTH (<nMonth>) -> cMonth
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      TODO: add documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -441,9 +441,9 @@
  *  $SYNTAX$
  *      WEEK ([<dDate>][, <lSWN>]) -> nWeek
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      Returns the calendar week a number. If no date is specified,
  *      the system date is used. An empty date viz ctod("  /  /  ")
@@ -457,9 +457,9 @@
  *      will be calculated
  *      TODO: add further documentation
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -469,6 +469,6 @@
  *  $FILES$
  *      Source is dattime2.prg, library is libct.
  *  $SEEALSO$
- * 
+ *
  *  $END$
  */

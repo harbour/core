@@ -225,10 +225,10 @@ METHOD XbpPrinter:resolution()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpPrinter:setCollationMode( nMode )
-   LOCAL nModeOld := IIF( ::oWidget:collateCopies(), XBPPRN_COLLATIONMODE_ON, XBPPRN_COLLATIONMODE_OFF )
+   LOCAL nModeOld := iif( ::oWidget:collateCopies(), XBPPRN_COLLATIONMODE_ON, XBPPRN_COLLATIONMODE_OFF )
 
    IF HB_ISNUMERIC( nMode )
-      ::oWidget:setCollateCopies( IIF( nMode == XBPPRN_COLLATIONMODE_ON, .t., .f. ) )
+      ::oWidget:setCollateCopies( iif( nMode == XBPPRN_COLLATIONMODE_ON, .t., .f. ) )
    ENDIF
 
    RETURN nModeOld
@@ -236,10 +236,10 @@ METHOD XbpPrinter:setCollationMode( nMode )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpPrinter:setColorMode( nMode )
-   LOCAL nModeOld := IIF( ::oWidget:colorMode() == QPrinter_Color, XBPPRN_COLORMODE_ON, XBPPRN_COLORMODE_OFF )
+   LOCAL nModeOld := iif( ::oWidget:colorMode() == QPrinter_Color, XBPPRN_COLORMODE_ON, XBPPRN_COLORMODE_OFF )
 
    IF HB_ISNUMERIC( nMode )
-      ::oWidget:setColorMode( IIF( nMode == XBPPRN_COLORMODE_ON, QPrinter_Color, QPrinter_GrayScale ) )
+      ::oWidget:setColorMode( iif( nMode == XBPPRN_COLORMODE_ON, QPrinter_Color, QPrinter_GrayScale ) )
    ENDIF
 
    RETURN nModeOld
@@ -399,7 +399,7 @@ METHOD XbpPrinter:setNumCopies( nNumCopies )
 /*----------------------------------------------------------------------*/
 
 METHOD XbpPrinter:setOrientation( nOrientation )
-   LOCAL nOldOrientation := IIF( ::oWidget:orientation() == QPrinter_Landscape, XBPPRN_ORIENT_LANDSCAPE, XBPPRN_ORIENT_PORTRAIT )
+   LOCAL nOldOrientation := iif( ::oWidget:orientation() == QPrinter_Landscape, XBPPRN_ORIENT_LANDSCAPE, XBPPRN_ORIENT_PORTRAIT )
 
    IF HB_ISNUMERIC( nOrientation )
       ::oWidget:setOrientation( iif( nOrientation == XBPPRN_ORIENT_LANDSCAPE, QPrinter_Landscape, QPrinter_Portrait ) )
@@ -472,7 +472,7 @@ METHOD XbpPrinter:setResolution( anResolution )
    LOCAL aOldResolution := { ::getEngineProperty( QPrintEngine_PPK_Resolution ), ::oWidget:resolution() }
 
    IF HB_ISNUMERIC( anResolution ) .or. HB_ISARRAY( anResolution )
-      ::oWidget:setResolution( IIF( HB_ISNUMERIC( anResolution ), anResolution, anResolution[ 1 ] ) )
+      ::oWidget:setResolution( iif( HB_ISNUMERIC( anResolution ), anResolution, anResolution[ 1 ] ) )
    ENDIF
 
    RETURN aOldResolution

@@ -13,12 +13,12 @@
  *     FT_AT2( <cSearch>, <cTarget> [, <nOccurs> [, <lCaseSens> ] ] ) -> nPos
  *  $ARGUMENTS$
  *     <cSearch> is the character substring to search for.
- * 
+ *
  *     <cTarget> is the character string to search.
- * 
+ *
  *     <nOccurs> is the occurrence of cSearch to look for,
  *                defaults to 1.
- * 
+ *
  *     <lCaseSens> is a logical value denoting case sensitivity.
  *                If .F., then search is NOT sensitive to case,
  *                defaults to .T.
@@ -30,11 +30,11 @@
  *  $EXAMPLES$
  *     cSearch := "t"
  *     cTarget := "This is the day that the Lord has made."
- * 
+ *
  *     FT_AT2( cSearch, cTarget )            // Returns ( 9 )
- * 
+ *
  *     FT_AT2( cSearch, cTarget, 2 )         // Returns ( 17 )
- * 
+ *
  *     FT_AT2( cSearch, cTarget, 2, .F. )    // Returns ( 9 )
  *  $SEEALSO$
  *    FT_FINDITH(), FT_RAT2()
@@ -52,12 +52,12 @@
  *     FT_RAT2( <cSearch>, <cTarget> [, <nOccurs> [, <lCaseSens> ] ] ) -> nPos
  *  $ARGUMENTS$
  *     <cSearch> is the character substring to search for.
- * 
+ *
  *     <cTarget> is the character string to search.
- * 
+ *
  *     <nOccurs> is the occurrence of cSearch to look for,
  *                defaults to 1.
- * 
+ *
  *     <lCaseSens> is a logical value denoting case sensitivity.
  *                If .F., then search is NOT sensitive to case,
  *                defaults to .T.
@@ -69,11 +69,11 @@
  *  $EXAMPLES$
  *     cSearch := "t"
  *     cTarget := "This is the day that the Lord has made."
- * 
+ *
  *     FT_RAT2( cSearch, cTarget )           // Returns ( 22 )
- * 
+ *
  *     FT_RAT2( cSearch, cTarget, 2 )        // Returns ( 20 )
- * 
+ *
  *     FT_RAT2( cSearch, cTarget, 2, .F. )   // Returns ( 22 )
  *  $SEEALSO$
  *    FT_FINDITH(), FT_AT2()

@@ -166,7 +166,7 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
 
    SWITCH nType
    CASE NET_RECLOCK                        // 1 = Record Lock...
-      xIdentifier := IIF( lReleaseLocks, NIL, RECNO() )
+      xIdentifier := iif( lReleaseLocks, NIL, RECNO() )
       bOperation  := {| x | DBRLOCK( x ) }
       exit
    CASE NET_FILELOCK                       // 2 = File Lock...

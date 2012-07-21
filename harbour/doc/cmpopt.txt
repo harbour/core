@@ -129,8 +129,8 @@ arguments are well known and can be calculated at compile time:
       .NOT. .F.               => .T.
       <lConst1> .AND. <lConst2> => <lConst>
       <lConst1> .OR. <lConst2> => <lConst>
-      IIF( .T., <expr1>, <expr2> ) => <expr1>
-      IIF( .F., <expr1>, <expr2> ) => <expr2>
+      iif( .T., <expr1>, <expr2> ) => <expr1>
+      iif( .F., <expr1>, <expr2> ) => <expr2>
 
    - optimizations which can be disabled by -z compiler switch
 

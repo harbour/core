@@ -56,46 +56,38 @@ MEMVAR _SERVER // defined in uHTTPD
 MEMVAR _REQUEST // defined in uHTTPD
 
 #include "common.ch"
-//#include "xhb.ch"
 #include "gd.ch"
 
-#ifdef __PLATFORM__UNIX
-#define IMAGES_IN  "../../../contrib/hbgd/tests/digits/"
-#define IMAGES_OUT ( _SERVER[ "DOCUMENT_ROOT" ] + "/counter/" )
-#else
-#define IMAGES_IN  "..\..\..\contrib\hbgd\tests\digits\"
-#define IMAGES_OUT ( _SERVER[ "DOCUMENT_ROOT" ] + "\counter\" )
-#endif
+#define IMAGES_IN  ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "contrib" + hb_ps() + "hbgd" + hb_ps() + "tests" + hb_ps() + "digits" + hb_ps()
+#define IMAGES_OUT ( _SERVER[ "DOCUMENT_ROOT" ] + hb_ps() + "counter" + hb_ps() )
 
 #define DISPLAY_NUM  10
 
 FUNCTION HRBMAIN()
-  LOCAL cHtml
-  //LOCAL cBaseImage
+   LOCAL cHtml
 
-  IF HB_HHasKey( _REQUEST, "w" )
+   IF HB_HHasKey( _REQUEST, "w" )
 
-     cHtml := CreateCounter( AllTrim( Str( Val( _REQUEST[ "w" ] ) ) ) )
-     //hb_ToOutDebug( hb_sprintf( "CreateCounter = %s", cHtml ) )
-     IF !Empty( cHtml )
-        uhttpd_SetHeader( "Content-Type", "image/gif" )
-        uhttpd_SetHeader( "Pragma", "no-cache" )
-        uhttpd_SetHeader( "Content-Disposition", "inline; filename=counter" + hb_ntos( hb_randomint( 100 ) ) + ".gif" )
-        uhttpd_Write( cHtml )
-     ELSE
-        uhttpd_SetHeader( "Content-Type", "text/html" )
-        uhttpd_Write( "<h1>Error: No image created</h1>" )
-     ENDIF
+      cHtml := CreateCounter( hb_ntos( Val( _REQUEST[ "w" ] ) ) )
+      IF !Empty( cHtml )
+         uhttpd_SetHeader( "Content-Type", "image/gif" )
+         uhttpd_SetHeader( "Pragma", "no-cache" )
+         uhttpd_SetHeader( "Content-Disposition", "inline; filename=counter" + hb_ntos( hb_randomint( 100 ) ) + ".gif" )
+         uhttpd_Write( cHtml )
+      ELSE
+         uhttpd_SetHeader( "Content-Type", "text/html" )
+         uhttpd_Write( "<h1>Error: No image created</h1>" )
+      ENDIF
 
 
-  ELSE
+   ELSE
 
-     uhttpd_SetHeader( "Content-Type", "text/html" )
-     uhttpd_Write( "<h1>Error: no parameters passed</h1>" )
+      uhttpd_SetHeader( "Content-Type", "text/html" )
+      uhttpd_Write( "<h1>Error: no parameters passed</h1>" )
 
-  ENDIF
+   ENDIF
 
-RETURN TRUE
+   RETURN .T.
 
 STATIC FUNCTION CreateCounter( cValue, cBaseImage )
 
@@ -130,13 +122,13 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    //? "Value = ", cValue
 
    // To set fonts run this command:
-   // for windows: SET GDFONTPATH=c:\windows\fonts
+   // for windows: SET GDFONTPATH=%WINDIR%\fonts
    // per linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType
 
-   // SET GDFONTPATH=c:\windows\fonts
+   // SET GDFONTPATH=%WINDIR%\fonts
    //IF GetEnv( "GDFONTPATH" ) == ""
    //   ? "Please set GDFONTPATH"
-   //   ? "On Windows: SET GDFONTPATH=c:\windows\fonts"
+   //   ? "On Windows: SET GDFONTPATH=%WINDIR%\fonts"
    //   ? "On Linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType"
    //   ?
    //ENDIF
@@ -159,14 +151,14 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
 
    // Check base digits image
    DO CASE
-      CASE nWidth % 10 == 0   // 0..9 digits
-           nDigits := 10
-      CASE nWidth % 11 == 0   // 0..9 :
-           nDigits := 11
-      CASE nWidth % 13 == 0   // 0..9 : am pm
-           nDigits := 13
-      OTHERWISE
-           uhttpd_Write( "Error on digits image" )
+   CASE nWidth % 10 == 0   // 0..9 digits
+      nDigits := 10
+   CASE nWidth % 11 == 0   // 0..9 :
+      nDigits := 11
+   CASE nWidth % 13 == 0   // 0..9 : am pm
+      nDigits := 13
+   OTHERWISE
+      uhttpd_Write( "Error on digits image" )
    ENDCASE
    nNumWidth := nWidth / nDigits
 
@@ -207,7 +199,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
        // Set the digit as tile that I have to use to fill position in counter
        oI:SetTile( oTemp )
        // Fill the position with the image digit
-       oI:Rectangle( (n - 1) * nNumWidth, 0, (n - 1) * nNumWidth + nNumWidth, nHeight, TRUE, gdTiled )
+       oI:Rectangle( (n - 1) * nNumWidth, 0, (n - 1) * nNumWidth + nNumWidth, nHeight, .T., gdTiled )
    NEXT
 
    /* Write Final Counter Image */
@@ -221,7 +213,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    //? "Look at " + IMAGES_OUT + " folder for output images"
    //?
 
-//RETURN cFile
-RETURN oI:ToStringGif()
+// RETURN cFile
+   RETURN oI:ToStringGif()
 
 #endif

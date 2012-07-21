@@ -14,11 +14,11 @@
  *                 [, <lIgnoreCase> ] ) -> <nStringPosition>
  *  $ARGUMENTS$
  *     <cCheckFor> is the string to search for.
- * 
+ *
  *     <cCheckIn> is the string to search.
- * 
+ *
  *     <nWhichOccurrence> is the number of the occurrence to find.
- * 
+ *
  *     <lIgnoreCase> is a logical indicating if the search is to be case
  *        sensitive.  The default is no case sensitivity (.F.).
  *  $RETURNS$
@@ -30,7 +30,7 @@
  *     // Find the Position in cMemoString of
  *     // the 10th Occurrence of "the", case
  *     // insensitive
- * 
+ *
  *     nNextPosition := FT_FINDITH("the", cMemoString, 10)
  *  $SEEALSO$
  *     FT_AT2()

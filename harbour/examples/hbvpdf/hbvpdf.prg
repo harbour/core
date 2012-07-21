@@ -133,7 +133,7 @@ return nil
 ===================================================                           */
 function pdfBookAdd( cTitle, nLevel, nPage, nLine )                           /*
 ===================================================                           */
-   aadd( t_aReport[ BOOKMARK ], { nLevel, alltrim( cTitle ), 0, 0, 0, 0, 0, 0, nPage, IIF( nLevel == 1, t_aReport[ PAGEY ], t_aReport[ PAGEY ] - nLine * 72 / t_aReport[ LPI ] ) })
+   aadd( t_aReport[ BOOKMARK ], { nLevel, alltrim( cTitle ), 0, 0, 0, 0, 0, 0, nPage, iif( nLevel == 1, t_aReport[ PAGEY ], t_aReport[ PAGEY ] - nLine * 72 / t_aReport[ LPI ] ) })
 return Nil
                                                                               /*
 ========================                                                      */
@@ -170,7 +170,7 @@ local nFirst := 0, nLen := len( t_aReport[ BOOKMARK ] )
          nFirst := nRecno
       ENDIF
    ENDIF
-return IIF( nFirst == 0, nFirst, nObj + nFirst )
+return iif( nFirst == 0, nFirst, nObj + nFirst )
                                                                               /*
 ======================================================                        */
 static function pdfBookLast( nRecno, nCurLevel, nObj )                        /*
@@ -187,7 +187,7 @@ local nLast := 0, nLen := len( t_aReport[ BOOKMARK ] )
          enddo
       ENDIF
    ENDIF
-return IIF( nLast == 0, nLast, nObj + nLast )
+return iif( nLast == 0, nLast, nObj + nLast )
                                                                               /*
 ======================================================                        */
 static function pdfBookNext( nRecno, nCurLevel, nObj )                        /*
@@ -206,7 +206,7 @@ local nTempLevel, nNext := 0, nLen := len( t_aReport[ BOOKMARK ] )
       ENDIF
       ++nRecno
    enddo
-return IIF( nNext == 0, nNext, nObj + nNext )
+return iif( nNext == 0, nNext, nObj + nNext )
                                                                               /*
 =======================                                                       */
 function pdfBookOpen( )                                                       /*
@@ -228,7 +228,7 @@ local nParent := 0
       ENDIF
       --nRecno
    enddo
-return IIF( nParent == 0, nObj - 1, nObj + nParent )
+return iif( nParent == 0, nObj - 1, nObj + nParent )
                                                                               /*
 ======================================================                        */
 static function pdfBookPrev( nRecno, nCurLevel, nObj )                        /*
@@ -248,7 +248,7 @@ local nPrev := 0
       ENDIF
       --nRecno
    enddo
-return IIF( nPrev == 0, nPrev, nObj + nPrev )
+return iif( nPrev == 0, nPrev, nObj + nPrev )
                                                                               /*
 ===============================================================               */
 function pdfBox( x1, y1, x2, y2, nBorder, nShade, cUnits, cColor, cId )       /*
@@ -348,7 +348,7 @@ local nLen, nAt
 DEFAULT nRow to t_aReport[ REPORTLINE ]
 DEFAULT cUnits to "R"
 DEFAULT lExact to .f.
-DEFAULT nCol to IIF( cUnits == "R", t_aReport[ REPORTWIDTH ] / 2, t_aReport[ PAGEX ] / 72 * 25.4 / 2 )
+DEFAULT nCol to iif( cUnits == "R", t_aReport[ REPORTWIDTH ] / 2, t_aReport[ PAGEX ] / 72 * 25.4 / 2 )
 
    IF t_aReport[ HEADEREDIT ]
       return pdfHeader( "PDFCENTER", cId, { cString, nRow, nCol, cUnits, lExact } )
@@ -365,7 +365,7 @@ DEFAULT nCol to IIF( cUnits == "R", t_aReport[ REPORTWIDTH ] / 2, t_aReport[ PAG
          nRow := nRow + t_aReport[ PDFTOP ]
       ENDIF
    ENDIF
-   pdfAtSay( cString, pdfR2M( nRow ), IIF( cUnits == "R", t_aReport[ PDFLEFT ] + ( t_aReport[ PAGEX ] / 72 * 25.4 - 2 * t_aReport[ PDFLEFT ] ) * nCol / t_aReport[ REPORTWIDTH ], nCol ) - nLen, "M", lExact )
+   pdfAtSay( cString, pdfR2M( nRow ), iif( cUnits == "R", t_aReport[ PDFLEFT ] + ( t_aReport[ PAGEX ] / 72 * 25.4 - 2 * t_aReport[ PDFLEFT ] ) * nCol / t_aReport[ REPORTWIDTH ], nCol ) - nLen, "M", lExact )
 return nil
                                                                               /*
 ====================================                                          */
@@ -427,7 +427,7 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
    ++t_aReport[ REPORTOBJ ]
    aadd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
    cTemp := ltrim(str( t_aReport[ REPORTOBJ ] )) + " 0 obj" + CRLF + ;
-   "<< /Type /Catalog /Pages 1 0 R /Outlines " + ltrim(str( t_aReport[ REPORTOBJ ] + 1 )) + " 0 R" + IIF( ( nBookLen := len( t_aReport[ BOOKMARK ] )) > 0, " /PageMode /UseOutlines", "") + " >>" + CRLF + "endobj" + CRLF
+   "<< /Type /Catalog /Pages 1 0 R /Outlines " + ltrim(str( t_aReport[ REPORTOBJ ] + 1 )) + " 0 R" + iif( ( nBookLen := len( t_aReport[ BOOKMARK ] )) > 0, " /PageMode /UseOutlines", "") + " >>" + CRLF + "endobj" + CRLF
    t_aReport[ DOCLEN ] += len( cTemp )
    fwrite( t_aReport[ HANDLE ], cTemp )
 
@@ -470,11 +470,11 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
                  "/Parent " + ltrim(str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKPARENT ])) + " 0 R" + CRLF + ;
                  "/Dest [" + ltrim(str( t_aReport[ PAGES ][ t_aReport[ BOOKMARK ][ nRecno ][ BOOKPAGE ] ] )) + " 0 R /XYZ 0 " + ltrim( str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKCOORD ])) + " 0]" + CRLF + ;
                  "/Title (" + alltrim( t_aReport[ BOOKMARK ][ nRecno ][ BOOKTITLE ]) + ")" + CRLF + ;
-                 IIF( t_aReport[ BOOKMARK ][ nRecno ][ BOOKPREV ] > 0, "/Prev " + ltrim(str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKPREV ])) + " 0 R" + CRLF, "") + ;
-                 IIF( t_aReport[ BOOKMARK ][ nRecno ][ BOOKNEXT ] > 0, "/Next " + ltrim(str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKNEXT ])) + " 0 R" + CRLF, "") + ;
-                 IIF( t_aReport[ BOOKMARK ][ nRecno ][ BOOKFIRST ] > 0, "/First " + ltrim(str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKFIRST ])) + " 0 R" + CRLF, "") + ;
-                 IIF( t_aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ] > 0, "/Last " + ltrim(str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ])) + " 0 R" + CRLF, "") + ;
-                 IIF( t_aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ] != 0, "/Count " + ltrim(str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ])) + CRLF, "") + ;
+                 iif( t_aReport[ BOOKMARK ][ nRecno ][ BOOKPREV ] > 0, "/Prev " + ltrim(str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKPREV ])) + " 0 R" + CRLF, "") + ;
+                 iif( t_aReport[ BOOKMARK ][ nRecno ][ BOOKNEXT ] > 0, "/Next " + ltrim(str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKNEXT ])) + " 0 R" + CRLF, "") + ;
+                 iif( t_aReport[ BOOKMARK ][ nRecno ][ BOOKFIRST ] > 0, "/First " + ltrim(str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKFIRST ])) + " 0 R" + CRLF, "") + ;
+                 iif( t_aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ] > 0, "/Last " + ltrim(str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ])) + " 0 R" + CRLF, "") + ;
+                 iif( t_aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ] != 0, "/Count " + ltrim(str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ])) + CRLF, "") + ;
                  ">>" + CRLF + "endobj" + CRLF
 
          aadd( t_aReport[ REFS ], t_aReport[ DOCLEN ] + 2 )
@@ -595,12 +595,12 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
       for nI := 1 to len( t_aReport[ PAGEIMAGES ] )
          cTemp += CRLF + "q"
          nImage := ascan( t_aReport[ IMAGES ], { |arr| arr[1] == t_aReport[ PAGEIMAGES ][ nI ][ 1 ] } )
-         cTemp += CRLF + ltrim(str( IIF( t_aReport[ PAGEIMAGES ][ nI ][ 5 ] == 0, pdfM2X( t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_WIDTH ] / t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_XRES ] * 25.4 ), t_aReport[ PAGEIMAGES ][ nI ][ 5 ]))) + ;
+         cTemp += CRLF + ltrim(str( iif( t_aReport[ PAGEIMAGES ][ nI ][ 5 ] == 0, pdfM2X( t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_WIDTH ] / t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_XRES ] * 25.4 ), t_aReport[ PAGEIMAGES ][ nI ][ 5 ]))) + ;
          " 0 0 " + ;
-         ltrim(str( IIF( t_aReport[ PAGEIMAGES ][ nI ][ 4 ] == 0, pdfM2X( t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_HEIGHT ] / t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_YRES ] * 25.4 ), t_aReport[ PAGEIMAGES ][ nI ][ 4 ]))) + ;
+         ltrim(str( iif( t_aReport[ PAGEIMAGES ][ nI ][ 4 ] == 0, pdfM2X( t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_HEIGHT ] / t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_YRES ] * 25.4 ), t_aReport[ PAGEIMAGES ][ nI ][ 4 ]))) + ;
          " " + ltrim(str( t_aReport[ PAGEIMAGES ][ nI ][ 3 ] )) + ;
          " " + ltrim(str( t_aReport[ PAGEY ] - t_aReport[ PAGEIMAGES ][ nI ][ 2 ] - ;
-         IIF( t_aReport[ PAGEIMAGES ][ nI ][ 4 ] == 0, pdfM2X( t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_HEIGHT ] / t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_YRES ] * 25.4 ), t_aReport[ PAGEIMAGES ][ nI ][ 4 ]))) + " cm"
+         iif( t_aReport[ PAGEIMAGES ][ nI ][ 4 ] == 0, pdfM2X( t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_HEIGHT ] / t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_YRES ] * 25.4 ), t_aReport[ PAGEIMAGES ][ nI ][ 4 ]))) + " cm"
          cTemp += CRLF + "/Image" + ltrim(str( nImage )) + " Do"
          cTemp += CRLF + "Q"
       next
@@ -658,11 +658,11 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
          "/Type /XObject" + CRLF + ;
          "/Subtype /Image" + CRLF + ;
          "/Name /Image" + ltrim(str(nI)) + CRLF + ;
-         "/Filter [" + IIF( at( ".jpg", lower( t_aReport[ IMAGES ][ nI ][ 1 ]) ) > 0, " /DCTDecode", "" ) + " ]" + CRLF + ;
+         "/Filter [" + iif( at( ".jpg", lower( t_aReport[ IMAGES ][ nI ][ 1 ]) ) > 0, " /DCTDecode", "" ) + " ]" + CRLF + ;
          "/Width " + ltrim(str( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_WIDTH ] )) + CRLF + ;
          "/Height " + ltrim(str( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_HEIGHT ] )) + CRLF + ;
          "/BitsPerComponent " + ltrim(str( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_BITS ] )) + CRLF + ;
-         "/ColorSpace /" + IIF( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_SPACE ] == 1, "DeviceGray", "DeviceRGB") + CRLF + ;
+         "/ColorSpace /" + iif( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_SPACE ] == 1, "DeviceGray", "DeviceRGB") + CRLF + ;
          "/Length " + ltrim(str( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_LENGTH ])) + CRLF + ;
          ">>" + CRLF + ;
          "stream" + CRLF
@@ -1068,7 +1068,7 @@ DEFAULT lExact to .f.
          nRow := nRow + t_aReport[ PDFTOP ]
       ENDIF
    ENDIF
-   pdfAtSay( cString, pdfR2M( nRow ), IIF( cUnits == "R", t_aReport[ PDFLEFT ] + ( t_aReport[ PAGEX ] / 72 * 25.4 - 2 * t_aReport[ PDFLEFT ] ) * nCol / t_aReport[ REPORTWIDTH ] - nAdj, nCol ) - nLen, "M", lExact )
+   pdfAtSay( cString, pdfR2M( nRow ), iif( cUnits == "R", t_aReport[ PDFLEFT ] + ( t_aReport[ PAGEX ] / 72 * 25.4 - 2 * t_aReport[ PDFLEFT ] ) * nCol / t_aReport[ REPORTWIDTH ] - nAdj, nCol ) - nLen, "M", lExact )
 return nil
                                                                               /*
 ==================================================                            */
@@ -1294,7 +1294,7 @@ local nAt, cAt, nCRLF, nNew, nRat, nRet := 0
    cAt := substr( cString, nAt, attoken( cString, cDelim, nI + 1 ) - nAt )
    nCRLF := numat( chr(13) + chr(10), cAt )
    nRat := rat( chr(13) + chr(10), cAt )
-   nNew := len( cAt ) - nRat - IIF( nRat > 0, 1, 0 )
+   nNew := len( cAt ) - nRat - iif( nRat > 0, 1, 0 )
    IF nCRLF > 1 .or. ( nCRLF == 1 .and. nNew > 0 )
       nRet := nCRLF
    ENDIF

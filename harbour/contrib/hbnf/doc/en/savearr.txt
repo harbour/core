@@ -14,13 +14,13 @@
  *  $ARGUMENTS$
  *     <aArray> is any Clipper array except those containing
  *     compiled code blocks.
- * 
+ *
  *     <cFileName> is a DOS file name.
- * 
+ *
  *     <nErrorCode> will return any DOS file error.
- * 
+ *
  *     All arguments are required.
- * 
+ *
  *  $RETURNS$
  *     .F. if there was a DOS file error or the array contained
  *     code blocks, otherwise returns .T.
@@ -29,14 +29,14 @@
  *     containing compiled code blocks, to a disc file.  The
  *     array can be restored from the disc file using
  *     FT_RESTARR().
- * 
+ *
  *     [10/1/92 Librarian note:
- * 
+ *
  *     This function does not appear to work with multi-dimensional
  *     arrays.  If you'd care to modify it to support this feature,
  *     please do and send it to Glenn Scott 71620,1521.]
- * 
- * 
+ *
+ *
  *  $EXAMPLES$
  *    aArray := { {'Invoice 1',CTOD('04/15/91'),1234.32,.T.},;
  *                {'Invoice 2',DATE(),234.98,.F.},;
@@ -51,7 +51,7 @@
  *    ELSE
  *      ? 'Error writing array'
  *    ENDIF
- * 
+ *
  *  $SEEALSO$
  *     FT_RESTARR()
  *  $END$
@@ -68,22 +68,22 @@
  *     FT_RESTARR( <cFileName>, <nErrorCode> ) -> aArray
  *  $ARGUMENTS$
  *     <cFileName> is a DOS file name.
- * 
+ *
  *     <nErrorCode> will return any DOS file error.
- * 
+ *
  *     All arguments are required.
  *  $RETURNS$
  *     Return an array variable.
  *  $DESCRIPTION$
  *     FT_RESTARR() restores an array which was saved to
  *     a disc file using FT_SAVEARR().
- * 
+ *
  *     [10/1/92 Librarian note:
- * 
+ *
  *     This function does not appear to work with multi-dimensional
  *     arrays.  If you'd care to modify it to support this feature,
  *     please do and send it to Glenn Scott 71620,1521.]
- * 
+ *
  *  $EXAMPLES$
  *    aArray := { {'Invoice 1',CTOD('04/15/91'),1234.32,.T.},;
  *                {'Invoice 2',DATE(),234.98,.F.},;
@@ -98,7 +98,7 @@
  *    ELSE
  *      ? 'Error writing array'
  *    ENDIF
- * 
+ *
  *  $SEEALSO$
  *     FT_SAVEARR()
  *  $END$

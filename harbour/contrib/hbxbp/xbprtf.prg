@@ -481,7 +481,7 @@ METHOD XbpRtf:selCharOffset( ... )                          // 0
    IF len( aP ) >= 1 .and. HB_ISNUMERIC( aP[ 1 ] )
       ::oTextCharFormat := ::oCurCursor:charFormat()
       IF ::oTextCharFormat:isValid()
-         nAlign := IIF( aP[ 1 ] < 0, -1, IIF( aP[ 1 ] > 0, 1, 0 ) )
+         nAlign := iif( aP[ 1 ] < 0, -1, iif( aP[ 1 ] > 0, 1, 0 ) )
          xRet   := ::oTextCharFormat:verticalAlignment()
          ::oTextCharFormat:setVerticalAlignment( hbxbp_ConvertAFactFromXBP( "RtfVerticalAlign", nAlign ) )
          ::oCurCursor:setCharFormat( ::oTextCharFormat )

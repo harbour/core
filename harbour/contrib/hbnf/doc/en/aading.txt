@@ -14,14 +14,14 @@
  *             -> aNewArray
  *  $ARGUMENTS$
  *     <aList1> is the primary array.
- * 
+ *
  *     <aList2> is the secondary array.
- * 
+ *
  *     <lTrimmer> is a logical value denoting whether leading or
  *             trailing spaces should be included in the
  *             comparison. If .T., then ignores spaces in
  *             comparison, defaults to .T., .F. includes spaces.
- * 
+ *
  *     <lCaseSens> is a logical value denoting case sensitivity.
  *             If .T., then comparison is sensitive to case,
  *             defaults to .T., .F. ignores case.
@@ -34,15 +34,15 @@
  *  $EXAMPLES$
  *     aList1 := {"apple", "orange", "pear"}
  *     aList2 := {"apple ", "banana", "PEAR"}
- * 
+ *
  *     FT_AADDITION( aList1, aList2 )
  *          // ignores spaces, sensitive to case
  *          // returns {"apple","orange","pear","banana","PEAR"}
- * 
+ *
  *     FT_AADDITION( aList1, aList2, , .F. )
  *          // ignores spaces, not sensitive to case
  *          // returns {"apple","orange","pear","banana"}
- * 
+ *
  *     FT_AADDITION( aList1, aList2, .F., .F. )
  *          // sensitive to spaces, not sensitive to case
  *          // returns {"apple","orange","pear","apple ","banana"}

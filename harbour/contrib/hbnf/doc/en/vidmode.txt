@@ -23,7 +23,7 @@
  *     (Microsoft Press)
  *  $EXAMPLES$
  *        FUNCTION Main( cMode )
- * 
+ *
  *          FT_SETMODE( VAL( cMode ) )
  *          QOUT( "Video mode is: " + STR( FT_GETMODE() ) )
  *          RETURN NIL
@@ -53,10 +53,10 @@
  *     (Microsoft Press)
  *  $EXAMPLES$
  *        function main( cMode )
- * 
+ *
  *          FT_SETMODE( val( cMode ) )
  *          QOut( "Video mode is: " + str( FT_GETMODE() ) )
  *          RETURN NIL
- * 
+ *
  *  $END$
  */

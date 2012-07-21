@@ -123,8 +123,8 @@ STATIC FUNCTION FCM_OPEN( nWA, aOpenInfo )
       aOpenInfo[ UR_OI_ALIAS ] := cName
    ENDIF
 
-   nMode := IIF( aOpenInfo[ UR_OI_SHARED ], FO_SHARED , FO_EXCLUSIVE ) + ;
-            IIF( aOpenInfo[ UR_OI_READONLY ], FO_READ, FO_READWRITE )
+   nMode := iif( aOpenInfo[ UR_OI_SHARED ], FO_SHARED , FO_EXCLUSIVE ) + ;
+            iif( aOpenInfo[ UR_OI_READONLY ], FO_READ, FO_READWRITE )
 
    aRData := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
    aWData := USRRDD_AREADATA( nWA )

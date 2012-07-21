@@ -14,13 +14,13 @@
  *  $ARGUMENTS$
  *     <aMenuarray> is an array of menu options, messages, and action
  *      blocks.
- * 
+ *
  *     Each element in this array is a nested array with the structure:
- * 
+ *
  *        element[x, 1] = menu option
  *        element[x, 2] = message to be displayed when option is highlighted
  *        element[x, 3] = code block to be executed when option is selected
- * 
+ *
  *     <cColors> is a string containing colors for the prompts, in the same
  *     format as that returned by Set( _SET_COLOR ).  If not supplied,
  *     colors default to the current color setting.
@@ -32,7 +32,7 @@
  *     length, a box is drawn around the prompts, the box is automatically
  *     centered on the screen, and the underlying screen is restored after
  *     a menu selection has been made.
- * 
+ *
  *     Additionally, because you can tie action blocks to each menu
  *     option, you can save on a lot of DO CASE or IF..ELSEIF code in your
  *     main program.  See the test code for a succinct demonstration.

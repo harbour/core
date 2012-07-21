@@ -13,7 +13,7 @@
  *     FT_PEEK( <nSegment>, <nOffset> ) -> nValue
  *  $ARGUMENTS$
  *     <nSegment> is the segment of the desired memory address.
- * 
+ *
  *     <nOffset>  is the offset of the desired memory address.
  *  $RETURNS$
  *     <nValue> will be a value from 0 to 255 if all parameters were valid and
@@ -24,7 +24,7 @@
  *     location.  The function will return the byte at the specified
  *     address as a numeric value.  If you need this value as a character,
  *     use the Chr() function to convert it.
- * 
+ *
  *     This function was written for version 5.1 of MicroSoft C.  You may
  *     have to modify the source code to use another compiler.
  *  $EXAMPLES$

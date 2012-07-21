@@ -179,7 +179,7 @@ METHOD XbpPrintDialog:display( oXbpPrinter )
       ::printToFile := hb_bitAnd( nOpt, QAbstractPrintDialog_PrintToFile ) == QAbstractPrintDialog_PrintToFile
 
       n := oXbpPrinter:oWidget:setPrintRange()
-      ::printRange := IIF( n == 0, XBPPDLG_PRINT_ALLPAGES, IIF( n == 1, XBPPDLG_PRINT_MARK, XBPPDLG_PRINT_PAGERANGE ) )
+      ::printRange := iif( n == 0, XBPPDLG_PRINT_ALLPAGES, iif( n == 1, XBPPDLG_PRINT_MARK, XBPPDLG_PRINT_PAGERANGE ) )
 
       ::pageRangeSelected := { oXbpPrinter:oWidget:fromPage(), oXbpPrinter:oWidget:toPage() }
    ENDIF

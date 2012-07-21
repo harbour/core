@@ -23,9 +23,9 @@
  *     function will return that number.  This will be a number from 1 to 100
  *     under NetWare 286, or from 1 to 250 under NetWare 386.  This is *not*
  *     the same as a physical station number.
- * 
+ *
  *     This function requires FT_INT86().
- * 
+ *
  *     This function does NOT test for the existence of the NetWare shell.
  *     The behavior is undefined if no shell is loaded.
  *  $EXAMPLES$

@@ -8,7 +8,7 @@
 #include "box.ch"
 
 
-#define IIFNIL( isnil, notnil ) IIF(notnil==NIL, isnil, notnil)
+#define IIFNIL( isnil, notnil ) iif(notnil==NIL, isnil, notnil)
 
 #define EDIT_LOWER      0       // convert to lowercase
 #define EDIT_UPPER      1       // convert to uppercase
@@ -265,13 +265,13 @@ FUNCTION EditorFile( xInput, cOutput, nLineLen, ;
       nLen := s_nESize
    ENDIF
 
-   nSize := IIF( nLen < 8192, nLen*2, INT(nLen*1.5) )
+   nSize := iif( nLen < 8192, nLen*2, INT(nLen*1.5) )
    oEdit := EditorNew( 01,00,23,79, nLineLen, "---      ", cOutput, , ;
                      nSize, nEscape )
 
    IF nHandle > 0
       ED_ReadText( oEdit[E_EDIT], nHandle, 0, nLen, ;
-                   IIF( lConv==NIL, .F., lConv ) )
+                   iif( lConv==NIL, .F., lConv ) )
       IF lClose
          FCLOSE( nHandle )
       ENDIF
@@ -301,7 +301,7 @@ FUNCTION EditorFile( xInput, cOutput, nLineLen, ;
 FUNCTION EditorRead( oEditor, nHandle, nOffset, nLen, lConv )
 
    RETURN ED_ReadText( oEditor[E_EDIT], nHandle, nOffset, nLen, ;
-                       IIF( lConv==NIL, .T., lConv ) )
+                       iif( lConv==NIL, .T., lConv ) )
 
 //---------------------------------------------------------
 //03-06-93 08:31pm
@@ -324,7 +324,7 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
 
    oEdit[E_INSERT] := SET( _SET_INSERT )
 //   SayInsert()
-   nCursor := SetCursor( IIF(oEdit[E_INSERT], SC_NORMAL, SC_SPECIAL1) )
+   nCursor := SetCursor( iif(oEdit[E_INSERT], SC_NORMAL, SC_SPECIAL1) )
    IF HB_ISLOGICAL( lEdit )
       oEdit[E_MODE] := lEdit
    ENDIF
@@ -450,7 +450,7 @@ STATIC PROCEDURE EditorKeys( oEdit, nKey )
    CASE nKey == K_INS
       oEdit[E_INSERT] := !oEdit[E_INSERT]
       SET( _SET_INSERT, oEdit[E_INSERT] )
-      SetCursor( IIF(oEdit[E_INSERT], SC_NORMAL, SC_SPECIAL1) )
+      SetCursor( iif(oEdit[E_INSERT], SC_NORMAL, SC_SPECIAL1) )
 //    SayInsert()
 
    ENDCASE

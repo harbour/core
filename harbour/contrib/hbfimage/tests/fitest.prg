@@ -19,6 +19,7 @@ PROCEDURE Main()
 
    LOCAL im, clone, rotated, rotatedEx, rescale, im2, im3
    LOCAL centerX, centerY, width, height
+
 // LOCAL bmpinfoheader
    LOCAL bmpinfo
 // LOCAL bkcolor
@@ -29,7 +30,7 @@ PROCEDURE Main()
    //? "Press Alt-D + Enter to activate debug"
    //AltD( .T. )
    //Inkey(0)
- altd()
+   AltD()
    // Check output directory
    IF !hb_DirExists( IMAGES_OUT )
 #ifdef HB_COMPAT_C53
@@ -106,12 +107,12 @@ PROCEDURE Main()
    fi_Unload( im2 )
 
    im2 := fi_Clone( im )
-   ? "Adjust Brightness:", fi_AdjustBrightness( im2, -30 )
+   ? "Adjust Brightness:", fi_AdjustBrightness( im2, - 30 )
    ? "Save JPG ?       :", fi_Save( FIF_JPEG, im2, IMAGES_OUT + "adjbrigh.jpg", JPEG_DEFAULT )
    fi_Unload( im2 )
 
    im2 := fi_Clone( im )
-   ? "Adjust Contrast ?:", fi_AdjustContrast( im2, -30 )
+   ? "Adjust Contrast ?:", fi_AdjustContrast( im2, - 30 )
    ? "Save JPG ?       :", fi_Save( FIF_JPEG, im2, IMAGES_OUT + "adjcontr.jpg", JPEG_DEFAULT )
    fi_Unload( im2 )
 
@@ -171,23 +172,23 @@ PROCEDURE Main()
 
    //bkcolor:rgbBlue := 205
    //? fi_SetBackgroundColor( im, hb_String2Pointer( bkcolor:Value() ) )
-   Tracelog("linha 168")
+   Tracelog( "linha 168" )
    //? fi_SetBackgroundColor( im, bkcolor:Value() )
-   Tracelog("linha 170")
+   Tracelog( "linha 170" )
    //? bkcolor:SayMembers(" ", .t., .t.)
-   Tracelog("linha 162")
+   Tracelog( "linha 162" )
    //? bkcolor:Pointer( fi_GetBackgroundColor( im ) )
    //? fi_GetBackgroundColor( im, @bkcolor:Value() )
    //bkcolor:Buffer( appo )
-   Tracelog("linha 176")
+   Tracelog( "linha 176" )
    //? bkcolor:SayMembers(" ", .t., .t.)
 
-   Tracelog("linha 179")
+   Tracelog( "linha 179" )
    //iccprofile:Pointer( fi_GetICCProfile( im ) )
-   Tracelog("linha 181")
+   Tracelog( "linha 181" )
    //? "Header           :", ValToPrg( iccprofile )
-   Tracelog("linha 183")
-   //? iccprofile:SayMembers(" ", .t., .t.)
+   Tracelog( "linha 183" )
+   //? iccprofile:SayMembers(" ", .T., .T. )
 
    //bmpinfoheader:Reset()
    //appo := NIL
@@ -200,12 +201,12 @@ PROCEDURE Main()
 
    //
 
-   IF (nH := FOpen(IMAGES_IN + "sample1.jpg")) != F_ERROR
-      nLen := FSeek(nH, 0, FS_END)
-      FSeek(nH, 0, FS_SET)
-      cStr := space(nLen)
-      fRead(nH, @cStr, nLen)
-      FClose(nH)
+   IF ( nH := FOpen( IMAGES_IN + "sample1.jpg" ) ) != F_ERROR
+      nLen := FSeek( nH, 0, FS_END )
+      FSeek( nH, 0, FS_SET )
+      cStr := Space( nLen )
+      FRead( nH, @cStr, nLen )
+      FClose( nH )
 
       ? "Load JPEG from memory"
       im := fi_LoadFromMem( FIF_JPEG, cStr, JPEG_DEFAULT )
@@ -226,36 +227,41 @@ PROCEDURE Main()
    RETURN
 
 PROCEDURE fi_Error( cFormat, cMessage )
+
    ? "ERROR!..."
    ? "Format  : ", cFormat
    ? "Message : ", cMessage
+
    RETURN
 
 PROCEDURE TraceLog( c )
+
    HB_SYMBOL_UNUSED( c )
+
    RETURN
 
 FUNCTION ValToPrg( xValue )
+
    LOCAL cType := ValType( xValue )
 
    DO CASE
    CASE cType == "C"
 
-      xValue := StrTran( xValue, Chr(0), '"+Chr(0)+"' )
-      xValue := StrTran( xValue, Chr(9), '"+Chr(9)+"' )
-      xValue := StrTran( xValue, Chr(10), '"+Chr(10)+"' )
-      xValue := StrTran( xValue, Chr(13), '"+Chr(13)+"' )
-      xValue := StrTran( xValue, Chr(26), '"+Chr(26)+"' )
+      xValue := StrTran( xValue, Chr( 0 ), '" + Chr( 0 ) + "' )
+      xValue := StrTran( xValue, Chr( 9 ), '" + Chr( 9 ) + "' )
+      xValue := StrTran( xValue, Chr( 10 ), '" + Chr( 10 ) + "' )
+      xValue := StrTran( xValue, Chr( 13 ), '" + Chr( 13 ) + "' )
+      xValue := StrTran( xValue, Chr( 26 ), '" + Chr( 26 ) + "' )
 
       RETURN '"' + xValue + '"'
 
-   CASE cType == "N" ; RETURN LTrim( Str( xValue ) )
+   CASE cType == "N" ; RETURN hb_ntos( xValue )
    CASE cType == "D" ; RETURN 'HB_SToD("' + DToS( xValue ) + '")'
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
    CASE cType == "U" ; RETURN "NIL"
    CASE cType == "B" ; RETURN '{||...}'
-   CASE cType == "A" ; RETURN '{.[' + LTrim( Str( Len( xValue ) ) ) + '].}'
+   CASE cType == "A" ; RETURN '{.[' + hb_ntos( Len( xValue ) ) + '].}'
    CASE cType == "M" ; RETURN 'M:"' + xValue + '"'
    ENDCASE
 

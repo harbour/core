@@ -203,9 +203,9 @@ FUNCTION HB_CStructureID( cStructure, lInplace )
          nID := s_aSynonyms[nID][2]
       ENDIF
 
-      nID += IIF( lInplace, 0, CTYPE_STRUCTURE_PTR - CTYPE_STRUCTURE )
+      nID += iif( lInplace, 0, CTYPE_STRUCTURE_PTR - CTYPE_STRUCTURE )
    ELSE
-      nID += IIF( lInplace, CTYPE_STRUCTURE, CTYPE_STRUCTURE_PTR )
+      nID += iif( lInplace, CTYPE_STRUCTURE, CTYPE_STRUCTURE_PTR )
    ENDIF
 
    //TraceLog( cStructure, nID )
@@ -491,8 +491,8 @@ STATIC FUNCTION SayMembers( cPad, lShowMembers, lReturnString )
             xProperty:SayMembers( cPad + cPad, lShowMembers )
          ENDIF
       ELSE
-         //QOut( cPad + IIF( lShowMembers, acMembers[ xProperty:__enumIndex() ], "" ) + ":", xProperty )
-         cOut += hb_eol() + cPad + IIF( lShowMembers, QSelf():acMembers[ xProperty:__enumIndex() ], "" ) + ":" + hb_cStr( xProperty )
+         //QOut( cPad + iif( lShowMembers, acMembers[ xProperty:__enumIndex() ], "" ) + ":", xProperty )
+         cOut += hb_eol() + cPad + iif( lShowMembers, QSelf():acMembers[ xProperty:__enumIndex() ], "" ) + ":" + hb_cStr( xProperty )
       ENDIF
    NEXT
 
@@ -500,7 +500,7 @@ STATIC FUNCTION SayMembers( cPad, lShowMembers, lReturnString )
       QOut( cOut )
    ENDIF
 
-   RETURN IIF( lReturnString, cOut, QSelf() )
+   RETURN iif( lReturnString, cOut, QSelf() )
 
 //---------------------------------------------------------------------------//
 STATIC FUNCTION Reset()

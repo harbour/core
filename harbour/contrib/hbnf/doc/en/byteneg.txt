@@ -22,16 +22,16 @@
  *     Can be used for bit-wise byte manipulation.  In effect, this is a
  *     bit-by-bit NEG (two's complement) operation.  Equivalent to NEG
  *     assembler instruction.
- * 
+ *
  *     This function is presented to illustrate that bit-wise operations
  *     are possible with Clipper code.  For greater speed, write .c or
  *     .asm versions and use the Clipper Extend system.
  *  $EXAMPLES$
  *     This code performs a bit-wise NEG on byte represented by CHR(32):
- * 
+ *
  *          cNewByte := FT_BYTENOT(CHR(32))
  *          ? asc(cNewByte)                  // result: 224
- * 
+ *
  *     For a demonstration of Clipper bit manipulations, compile and
  *     link the program bittest.prg in the Nanforum Toolkit source code.
  *  $SEEALSO$

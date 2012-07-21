@@ -21,15 +21,15 @@
  *     return the current DOS version.  It does this by setting up
  *     an array corresponding to machine registers and then calling
  *     the toolkit function FT_INT86().
- * 
+ *
  *     It returns a character string corresponding to the DOS
  *     version, as follows:  The major version, a period ("."), then
  *     the minor version.
- * 
- * 
+ *
+ *
  *  $EXAMPLES$
  *      FUNCTION main()
  *      RETURN QOut( "Dos version: " + FT_DOSVER() )
- * 
+ *
  *  $END$
  */

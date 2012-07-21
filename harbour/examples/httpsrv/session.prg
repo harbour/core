@@ -61,8 +61,8 @@
 #command IF <lexpr> THEN <statement1> ELSE <statement2> =>;
          IF (<lexpr>) ; <statement1> ; ELSE ; <statement2> ; END
 
-#xtranslate SetNewValueReturnOld( <p>, <v> ) => LOCAL xOld, xOld := <p>, IIF( <v> != NIL, <p> := <v>,  ), xOld
-#xtranslate DEFAULT( <p>, <v> ) => ( <p> := IIF( <p> == NIL, <v>, <p> ) )
+#xtranslate SetNewValueReturnOld( <p>, <v> ) => LOCAL xOld, xOld := <p>, iif( <v> != NIL, <p> := <v>,  ), xOld
+#xtranslate DEFAULT( <p>, <v> ) => ( <p> := iif( <p> == NIL, <v>, <p> ) )
 
 
 MEMVAR _COOKIE, _SESSION, _REQUEST, _SERVER
@@ -791,7 +791,7 @@ METHOD Encode() CLASS uhttpd_Session
 
   ENDIF
 
-RETURN IIF( !Empty( aSerial ), HB_Serialize( aSerial ), NIL )
+RETURN iif( !Empty( aSerial ), HB_Serialize( aSerial ), NIL )
 
 METHOD Decode( cData ) CLASS uhttpd_Session
   LOCAL lOk := .T.

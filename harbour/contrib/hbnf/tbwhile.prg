@@ -57,8 +57,8 @@
 
 #command DEFAULT <param> TO <val> [, <paramn> TO <valn> ];
 => ;
-         <param> := IIF(<param> == NIL, <val>, <param> ) ;
-         [; <paramn> := IIF(<paramn> == NIL, <valn>, <paramn> ) ]
+         <param> := iif(<param> == NIL, <val>, <param> ) ;
+         [; <paramn> := iif(<paramn> == NIL, <valn>, <paramn> ) ]
 #include "inkey.ch"
 #include "setcurs.ch"
 

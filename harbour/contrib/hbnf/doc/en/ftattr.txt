@@ -21,16 +21,16 @@
  *     This function is similar to Clipper's SaveScreen(), except that it only
  *     saves the attribute bytes.  This is useful if you want to change the
  *     screen color without affecting the text.
- * 
+ *
  *     *** INTERNALS ALERT ***
- * 
+ *
  *     This function calls the Clipper internal __gtMaxCol to obtain the
  *     maximum column value for the current video mode.  If you're too gutless
  *     to use internals, then this function isn't for you.
  *  $EXAMPLES$
  *     // Save attributes of row 4
  *     cBuffer := FT_SAVEATT( 4, 0, 4, maxcol())
- * 
+ *
  *     // Save attributes from middle of screen
  *     cBuffer := FT_SAVEATT(10,20,14,59)
  *  $SEEALSO$
@@ -59,16 +59,16 @@
  *     This function is similar to Clipper's RestScreen(), except that it only
  *     restores the attribute bytes.  This is useful if you want to change the
  *     screen color without affecting the text.
- * 
+ *
  *     *** INTERNALS ALERT ***
- * 
+ *
  *     This function calls the Clipper internals __gtSave and __gtRest to
  *     manipulate the the screen image.  If you're too gutless to use
  *     internals, then this function isn't for you.
  *  $EXAMPLES$
  *     // Restore attributes of row 4
  *     FT_RESTATT( 4, 0, 4, maxcol(), cBuffer)
- * 
+ *
  *     // Restore attributes to middle of screen
  *     FT_RESTATT(10,20,14,59,cBuffer)
  *  $SEEALSO$

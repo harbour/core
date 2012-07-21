@@ -30,9 +30,9 @@
  *  $DESCRIPTION$
  *      <TODO: add a description, some examples and tests here>
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

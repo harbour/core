@@ -12,9 +12,9 @@
  *  $SYNTAX$
  *      RANGEREM (<cChar1|nChar1>, <cChar2|nChar2>, <cString>) -> cString
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      TODO: add documentation
  *  $EXAMPLES$
@@ -50,9 +50,9 @@
  *      RANGEREPL (<cChar1|nChar1>, <cChar2|nChar2>,
  *                 <[@]cString>, <cReplacementChar|nReplacementChar>) -> cString
  *  $ARGUMENTS$
- * 
+ *
  *  $RETURNS$
- * 
+ *
  *  $DESCRIPTION$
  *      TODO: add documentation
  *  $EXAMPLES$

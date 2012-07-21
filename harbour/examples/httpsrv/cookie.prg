@@ -123,7 +123,7 @@ METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpO
    // Rebuild cookie string as per RFC2616 (comma separated list)
    cStr     := ""
    nCookies := Len( ::aCookies )
-   aEval( ::aCookies, {|e, i| cStr += e[ 1 ] + "=" + e[ 2 ] + IIF( i < nCookies, ",", "" ) } )
+   aEval( ::aCookies, {|e, i| cStr += e[ 1 ] + "=" + e[ 2 ] + iif( i < nCookies, ",", "" ) } )
 
    //cStr := cCookieName + "=" + uhttpd_UrlEncode( hb_cStr( xValue ) )
 

@@ -14,15 +14,15 @@
  *                    [, <nStartIndex> [, <nEndIndex> ] ] ) -> nNoOfMatches
  *  $ARGUMENTS$
  *     <aArray> is the array to be searched
- * 
+ *
  *     <bCompareBlock> is a code block containing the expression for
  *     the array elements to be tested with.  Each element is passed
  *     as a parameter to the block.  If the block returns .T., the
  *     number of matches will be incremented by one.
- * 
+ *
  *     <nStartIndex> is the first array item to include in the search,
  *     defaults to first element.
- * 
+ *
  *     <nEndIndex> is the last array element to include in the search,
  *     defaults to all elements.
  *  $RETURNS$
@@ -33,13 +33,13 @@
  *  $EXAMPLES$
  *     // Search the Entire Array
  *     FT_ANOMATCHES(aTries, { | x | x <= 100 } )
- * 
+ *
  *     // Search from the 5th Element On
  *     FT_ANOMATCHES(aCodes, { | x | UPPER(x) == cCurrentCode }, 5)
- * 
+ *
  *     // Search the 1st 10 Elements
  *     FT_ANOMATCHES(aDates, { | x | IS_BETWEEN(DATE()-7,x,DATE() + 7) }, 10)
- * 
+ *
  *     // Search Elements 5-10
  *     FT_ANOMATCHES(aNames, { | x | x <= cLastGoodName }, 5, 10)
  *  $END$

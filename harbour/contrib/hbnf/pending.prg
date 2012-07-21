@@ -50,11 +50,11 @@ FUNCTION FT_PENDING (cMsg, nRow, nCol, nWait, cColor)
     RETURN NIL
  ENDIF
 
- nRow1 := IIF( nRow != NIL, nRow, nRow1 )  //reset display row
- nCol1 := IIF( nCol != NIL, nCol, nCol1 )  //reset display col
+ nRow1 := iif( nRow != NIL, nRow, nRow1 )  //reset display row
+ nCol1 := iif( nCol != NIL, nCol, nCol1 )  //reset display col
 
- nWait1 := IIF( nWait != NIL, nWait, nWait1)     //reset display wait
- cColor1 := IIF( cColor != NIL, cColor, cColor1)  //reset display color
+ nWait1 := iif( nWait != NIL, nWait, nWait1)     //reset display wait
+ cColor1 := iif( cColor != NIL, cColor, cColor1)  //reset display color
 
  nThis_Time := SECONDS()                //time of current message
 

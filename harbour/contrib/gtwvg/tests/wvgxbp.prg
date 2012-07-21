@@ -216,7 +216,7 @@ FUNCTION demoxbp()
    oXbp:autoTab        := .T.
    oXbp:bufferLength   := 20
    // Data code block containing assignment to LOCAL variable
-   oXbp:dataLink       := {|x| IIf( x == NIL, cVarA, cVarA := x ) }
+   oXbp:dataLink       := {|x| iif( x == NIL, cVarA, cVarA := x ) }
    oXbp:create( oStatic2, , { 10,170 }, { 150,20 } )
    oXbp:setData()
    // Assign the value of the edit buffer to a LOCAL variable when the input focus is lost
@@ -226,7 +226,7 @@ FUNCTION demoxbp()
    oXbp                := WvgSLE():new( , , { 10,200 }, { 150,20 } )
    oXbp:tabStop        := .T.
    oXbp:bufferLength   := 15
-   oXbp:dataLink       := {|x| IIf( x == NIL, cVarB, cVarB := x ) }
+   oXbp:dataLink       := {|x| iif( x == NIL, cVarB, cVarB := x ) }
    oXbp:create( oStatic2 )
    oXbp:setData()
    oXbp:killInputFocus := { |x,y,oSLE| x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
@@ -238,7 +238,7 @@ FUNCTION demoxbp()
    oMLE    := WvgMLE():new()
    oMLE:wordWrap := .F.
    oMLE:border   := .t.
-   oMLE:dataLink := {|x| IIf( x==NIL, cText, cText := x ) }
+   oMLE:dataLink := {|x| iif( x==NIL, cText, cText := x ) }
    oMLE:create( oStatic2, , { 180,10 }, { 310,250 } )
    // Copy text from LOCAL variable into edit buffer via :dataLink
    oMLE:setData()

@@ -71,4 +71,4 @@ FUNCTION FT_WorkDays( dStart, dStop )
 
    ENDIF
 
-RETURN ( IIF(nWorkDays>0,nWorkDays,0) )
+RETURN ( iif(nWorkDays>0,nWorkDays,0) )

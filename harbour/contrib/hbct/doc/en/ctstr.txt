@@ -21,7 +21,7 @@
  *      Within the CT3 functions, the following functions do not
  *      change the length of a string passed as parameter while
  *      transforming this string:
- * 
+ *
  *      ADDASCII()   BLANK()       CHARADD()
  *      CHARAND()    CHARMIRR()    CHARNOT()
  *      CHAROR()     CHARRELREP()  CHARREPL()
@@ -31,18 +31,18 @@
  *      REPLALL()    REPLLEFT()    REPLRIGHT()
  *      TOKENLOWER() TOKENUPPER()  WORDREPL()
  *      WORDSWAP()
- * 
+ *
  *      Thus, these functions allow to pass the string by reference [@] to
  *      the function so that it may not be necessary to return the transformed
  *      string. By calling CSETREF (.T.), the above mentioned functions return
  *      the value .F. instead of the transformed string if the string is
  *      passed by reference to the function.
  *      The switch is turned off (.F.) by default.
- * 
+ *
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -81,18 +81,18 @@
  *                      current state of the switch
  *  $DESCRIPTION$
  *      CSETATMUPA determines how the following CT3 string functions
- * 
+ *
  *      ATNUM()       AFTERATNUM()  BEFORATNUM()
  *      ATREPL()      NUMAT()       ATADJUST()
  *      WORDTOCHAR()  WORDREPL()
- * 
+ *
  *      perform their work. See the respective function documentation for a
  *      further description how the switch influences these functions.
- * 
+ *
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -134,27 +134,27 @@
  *  $DESCRIPTION$
  *      In the following CT3 functions, strings are compared on a character
  *      base:
- * 
+ *
  *      ATADJUST()    ATNUM()    AFTERATNUM()
  *      BEFOREATNUM() ATREPL()   NUMAT()
  *      STRDIFF()
- * 
+ *
  *      With the SETATLIKE function, one can determine when characters are
  *      considered to match within these functions. If CT_SETATLIKE_WILDCARD
  *      is set (e.g. "?"), then "?" matches every other character.
- * 
+ *
  *      <nMode> can be one of the following values that are defined
  *      in ct.ch
- * 
+ *
  *      Definition            | Value
  *      ----------------------|------
  *      CT_SETATLIKE_EXACT    |   0
  *      CT_SETATLIKE_WILDCARD |   1
- * 
+ *
  *  $EXAMPLES$
- * 
+ *
  *  $TESTS$
- * 
+ *
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -166,6 +166,6 @@
  *  $FILES$
  *      Source is ctstr.c, header is ct.ch, library is ct3.
  *  $SEEALSO$
- * 
+ *
  *  $END$
  */

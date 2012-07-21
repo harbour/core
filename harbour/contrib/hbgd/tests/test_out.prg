@@ -10,7 +10,7 @@
 
 #include "gd.ch"
 
-#command WRITE <c> => FWrite( 1, <c> + CHR(13)+CHR(10) )
+#command WRITE <c> => FWrite( 1, <c> + CHR( 13 ) + CHR( 10 ) )
 #command OutHTML <c> => WRITE <c>
 
 PROCEDURE Main( ... )
@@ -25,7 +25,7 @@ PROCEDURE Main( ... )
    // LOCAL cText
 
    IF Empty( aParams )
-      IF !Empty( cQuery )
+      IF ! Empty( cQuery )
          hParams := GetVars( cQuery )
       ENDIF
    ELSE
@@ -35,7 +35,7 @@ PROCEDURE Main( ... )
    //-----------------------------------------------------------------------------------------
 
    // Gestione parametri
-   IF !Empty( hParams )
+   IF ! Empty( hParams )
       FOR EACH cPar IN hParams:Keys
 
          DO CASE
@@ -76,15 +76,15 @@ PROCEDURE Main( ... )
       //OutHTML ValToPrg( hParams ) + "<br>"
       //OutHTML ValToPrg( cParams ) + "<br>"
       //OutHTML ValToPrg( cQuery ) + "<br>"
-      //OutHTML "<img src='test_out.exe?img=" + cPhoto + "&width=" + AllTrim( Str( nWidth ) ) + "&height=" + AllTrim( Str( nHeight ) ) + "'>" + "<br>"
+      //OutHTML "<img src='test_out.exe?img=" + cPhoto + "&width=" + hb_ntos( nWidth ) + "&height=" + hb_ntos( nHeight ) + "'>" + "<br>"
       OutHTML "<table border=1>"
       OutHTML "<tr><td align='center'>"
       OutHTML "<img src='test_out.exe?img=" + cPhoto + "'>" + "<br>"
       OutHTML "</td></tr>"
       OutHTML "<tr><td align='center'>"
       OutHTML "<img src='test_out.exe?img=" + cPhoto + ;
-         iif( nWidth != NIL , "&width="  + AllTrim( Str( nWidth ) ) , "" ) + ;
-         iif( nHeight != NIL, "&height=" + AllTrim( Str( nHeight ) ), "" ) + ;
+         iif( nWidth != NIL , "&width="  + hb_ntos( nWidth ) , "" ) + ;
+         iif( nHeight != NIL, "&height=" + hb_ntos( nHeight ), "" ) + ;
          "'>" + "<br>"
       OutHTML "</td></tr>"
       OutHTML "<tr><td align='center'>"
@@ -92,7 +92,7 @@ PROCEDURE Main( ... )
       OutHTML "</td></tr>"
       OutHTML "</table>"
       OutHTML "<br>"
-      //OutHTML "<img src='test_out.exe?img=" + cText + "_2&pt=" + AllTrim( Str( nPt ) ) + "'>" + "<br>"
+      //OutHTML "<img src='test_out.exe?img=" + cText + "_2&pt=" + hb_ntos( nPt ) + "'>" + "<br>"
       //OutHTML OS() + "<br>"
       //OutHTML iif( OS_ISWINNT(), "WIN NT", "NON WIN NT" ) + "<br>"
       EndHTML()
@@ -125,7 +125,7 @@ PROCEDURE EndHTML()
 
    RETURN
 
-// per windows: SET GDFONTPATH=C:\windows\fonts
+// per windows: SET GDFONTPATH=%WINDIR%\fonts
 // per linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType
 
 PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )

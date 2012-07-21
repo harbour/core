@@ -337,7 +337,7 @@ FUNCTION MAIN( ... )
    // i.e. we can have /info or /Info that will be different unless lScriptAliasMixedCase will be .F.
    FOR EACH xVal IN hDefault[ "SCRIPTALIASES" ]
        IF HB_ISSTRING( xVal )
-          hb_HSet( s_hScriptAliases, IIF( lScriptAliasMixedCase, xVal:__enumKey(), Upper( xVal:__enumKey() ) ), xVal )
+          hb_HSet( s_hScriptAliases, iif( lScriptAliasMixedCase, xVal:__enumKey(), Upper( xVal:__enumKey() ) ), xVal )
        ENDIF
    NEXT
 
@@ -1185,7 +1185,7 @@ STATIC FUNCTION ParseRequest( cRequest )
           EXIT
        ELSE
           aVal := uhttpd_split( ":", cReq, 1 )
-          hb_HSet( _HTTP_REQUEST, aVal[ 1 ], IIF( Len( aVal ) == 2, AllTrim( aVal[ 2 ] ), NIL ) )
+          hb_HSet( _HTTP_REQUEST, aVal[ 1 ], iif( Len( aVal ) == 2, AllTrim( aVal[ 2 ] ), NIL ) )
        ENDIF
    NEXT
 
@@ -1427,8 +1427,8 @@ STATIC PROCEDURE WriteToLog( cRequest )
                        aMonths[ VAL( SUBSTR( cDate, 5, 2 ) ) ] + ;
                        "/" + LEFT( cDate, 4 ) + ":" + cTime + ' ' + cBias + '] "' + ;
                        LEFT( cRequest, AT( CR_LF, cRequest ) - 1 ) + '" ' + ;
-                       LTRIM( STR( t_nStatusCode ) ) + " " + IIF( nSize == 0, "-", LTRIM( STR( nSize ) ) ) + ;
-                       ' "' + IIF( Empty( cReferer ), "-", cReferer ) + '" "' + _SERVER[ "HTTP_USER_AGENT" ] + ;
+                       LTRIM( STR( t_nStatusCode ) ) + " " + iif( nSize == 0, "-", LTRIM( STR( nSize ) ) ) + ;
+                       ' "' + iif( Empty( cReferer ), "-", cReferer ) + '" "' + _SERVER[ "HTTP_USER_AGENT" ] + ;
                        '"' + hb_eol()
 
       //hb_ToOutDebug( "AccessLog = %s \n\r", cAccess )
@@ -1499,7 +1499,7 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
          // Sending POST variables to CGI via STD_IN
          cSend := ""
          FOR EACH v IN _POST
-             cSend += v:__enumKey() + "=" + LTrim( hb_cStr( v ) ) + IIF( v:__enumIndex() < Len( _POST ), "&", "" )
+             cSend += v:__enumKey() + "=" + LTrim( hb_cStr( v ) ) + iif( v:__enumIndex() < Len( _POST ), "&", "" )
          NEXT
          FWrite( hIn, cSend )
          //hb_toOutDebug( "Sending: %s\n\r", cSend )
@@ -1895,7 +1895,7 @@ STATIC FUNCTION uproc_default()
 
             // Search for directory index file, i.e.: index.html
             IF ASCAN( s_aDirectoryIndex, ;
-                      {|x| IIF( HB_FileExists( uhttpd_OSFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
+                      {|x| iif( HB_FileExists( uhttpd_OSFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
 
                // I have to check filename again (behaviour changes on extension file name)
                // resetting extension
@@ -2012,7 +2012,7 @@ STATIC PROCEDURE ShowServerStatus()
       uhttpd_Write( '<br>Total Connections: ' + Str( s_nTotConnections ) )
       cThreads := ""
       aEval( s_aRunningThreads, {|e| cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
-      cThreads := "{ " + IIF( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
+      cThreads := "{ " + iif( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
       uhttpd_Write( '<br>Running Threads: ' + cThreads )
 
 #ifndef FIXED_THREADS
@@ -2022,7 +2022,7 @@ STATIC PROCEDURE ShowServerStatus()
       uhttpd_Write( '<br>Total Service Connections: ' + Str( s_nTotServiceConnections ) )
       cThreads := ""
       aEval( s_aServiceThreads, {|e| cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
-      cThreads := "{ " + IIF( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
+      cThreads := "{ " + iif( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
       uhttpd_Write( '<br>Service Threads: ' + cThreads )
 #endif // FIXED_THREADS
 
@@ -2044,18 +2044,18 @@ STATIC PROCEDURE ShowFolder( cDir )
    aDir := DIRECTORY( uhttpd_OSFileName( cDir ), "D" )
    IF HB_HHasKey( _GET, "s" )
       IF _GET[ "s" ] == "s"
-         ASORT( aDir,,, {|X,Y| IIF( X[ 5 ] == "D", IIF( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-                                    IIF( Y[ 5 ] == "D", .F., X[ 2 ] < Y[ 2 ] ) ) } )
+         ASORT( aDir,,, {|X,Y| iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
+                                    iif( Y[ 5 ] == "D", .F., X[ 2 ] < Y[ 2 ] ) ) } )
       ELSEIF _GET[ "s" ] == "m"
-         ASORT( aDir,,, {|X,Y| IIF( X[ 5 ] == "D", IIF( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T.), ;
-                                    IIF( Y[ 5 ] == "D", .F., DTOS( X[ 3 ] ) + X[ 4 ] < DTOS( Y[ 3 ] ) + Y[ 4 ] ) ) } )
+         ASORT( aDir,,, {|X,Y| iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T.), ;
+                                    iif( Y[ 5 ] == "D", .F., DTOS( X[ 3 ] ) + X[ 4 ] < DTOS( Y[ 3 ] ) + Y[ 4 ] ) ) } )
       ELSE
-         ASORT( aDir,,, {|X,Y| IIF( X[ 5 ] == "D", IIF( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-                                    IIF( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
+         ASORT( aDir,,, {|X,Y| iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
+                                    iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
       ENDIF
    ELSE
-      ASORT( aDir,,, {|X,Y| IIF( X[ 5 ] == "D", IIF( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-                                 IIF( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
+      ASORT( aDir,,, {|X,Y| iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
+                                 iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
    ENDIF
 
    uhttpd_Write( '<html><body><h1>Index of ' + _SERVER[ "SCRIPT_NAME" ] + '</h1><pre>      ')
@@ -2626,7 +2626,7 @@ STATIC FUNCTION Handler_ServerStatus()
       uhttpd_Write( '<br>Total Connections: ' + Str( s_nTotConnections ) )
       cThreads := ""
       aEval( s_aRunningThreads, {|e| cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
-      cThreads := "{ " + IIF( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
+      cThreads := "{ " + iif( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
       uhttpd_Write( '<br>Running Threads: ' + cThreads )
 
 #ifndef FIXED_THREADS
@@ -2636,7 +2636,7 @@ STATIC FUNCTION Handler_ServerStatus()
       uhttpd_Write( '<br>Total Service Connections: ' + Str( s_nTotServiceConnections ) )
       cThreads := ""
       aEval( s_aServiceThreads, {|e| cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
-      cThreads := "{ " + IIF( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
+      cThreads := "{ " + iif( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
       uhttpd_Write( '<br>Service Threads: ' + cThreads )
 #endif // FIXED_THREADS
 

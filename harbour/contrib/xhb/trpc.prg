@@ -240,7 +240,7 @@ METHOD New( cFname, cSerial, nAuthLevel, oExec, oMeth ) CLASS tRPCFunction
 
    ::cName := aFuncDef[2]
    cParam := aFuncDef[3]
-   ::cReturn := IIF( Len( aFuncDef ) == 4, aFuncDef[4], aFuncDef[5] )
+   ::cReturn := iif( Len( aFuncDef ) == 4, aFuncDef[4], aFuncDef[5] )
 
    // analyze parameter list
    IF Len( Trim( cParam ) ) > 0
@@ -303,7 +303,7 @@ METHOD Run( aParams, oClient ) CLASS tRPCFunction
       RETURN NIL
    ENDIF
 
-   nStart := IIF( HB_ISOBJECT( ::aCall[1] ), 3, 2 )
+   nStart := iif( HB_ISOBJECT( ::aCall[1] ), 3, 2 )
 
    FOR nCount := 1 TO Len( aParams )
       ::aCall[ nStart ] := aParams[ nCount ]

@@ -637,7 +637,7 @@ FUNCTION Build_CheckBox( oWnd )
    // Determine state using mp1
    oXbp:selected := ;
       {| mp1, mp2, oChk| HB_SYMBOL_UNUSED( mp2 ), HB_SYMBOL_UNUSED( oChk ), ;
-                   MsgBox( "Checkbox A", IIf( mp1, "selected", "not selected" ) ) }
+                   MsgBox( "Checkbox A", iif( mp1, "selected", "not selected" ) ) }
 
    // Create second checkbox, specify position using :new()
    oXbp := XbpCheckbox():new( oWnd, , {30,70}, {100,30} )
@@ -648,7 +648,7 @@ FUNCTION Build_CheckBox( oWnd )
    oXbp:selected := ;
       {| mp1, mp2, oChk| HB_SYMBOL_UNUSED( mp1 ), HB_SYMBOL_UNUSED( mp2 ), ;
              MsgBox( "Checkbox B", ;
-                      IIf( oChk:getData(), "selected", ;
+                      iif( oChk:getData(), "selected", ;
                                  "not selected" ) ) }
    RETURN nil
 
@@ -756,7 +756,7 @@ STATIC FUNCTION Build_ComboBox( oWnd )
    oCombo:create( oWnd,, {180, 10}, {200, 30} )
 
    // Link data from entry field to LOCAL variable
-   oCombo:XbpSLE:dataLink := {|x| IIf( x==NIL, cDay, cDay := x ) }
+   oCombo:XbpSLE:dataLink := {|x| iif( x==NIL, cDay, cDay := x ) }
    oCombo:XbpSLE:setData()
 
    // Code block for selection:
@@ -813,7 +813,7 @@ FUNCTION Build_SLEs( oWnd )
    oXbp              := XbpSLE():new( oWnd, , {180,300}, {90,30} )
    oXbp:tabStop      := .T.
    oXbp:bufferLength := 15
-   oXbp:dataLink     := {|x| IIf( x==NIL, cVarA, cVarA := x ) }
+   oXbp:dataLink     := {|x| iif( x==NIL, cVarA, cVarA := x ) }
    oXbp:create()
    oXbp:setData()
    //oXbp:setInputFocus  := { |x,y,oSLE| oSLE:getData(), Qt_QDebug( "Var A =" + cVarA ) }
@@ -825,7 +825,7 @@ FUNCTION Build_SLEs( oWnd )
    oXbp:autoTab      := .T.
    oXbp:bufferLength := 20
    // Data code block containing assignment to LOCAL variable
-   oXbp:dataLink     := {|x| IIf( x==NIL, cVarB, cVarB := x ) }
+   oXbp:dataLink     := {|x| iif( x==NIL, cVarB, cVarB := x ) }
    oXbp:create( oWnd, , {290,300}, {90,30} )
    oXbp:setData()
    // Assign the value of the edit buffer to a LOCAL variable
@@ -868,7 +868,7 @@ FUNCTION Build_MLE( oWnd )
    // assign data code block accessing LOCAL variable
    oMLE          := XbpMLE():new()
    oMLE:wordWrap := .t.
-   oMLE:dataLink := {|x| IIf( x==NIL, cText, cText := x ) }
+   oMLE:dataLink := {|x| iif( x==NIL, cText, cText := x ) }
    oMLE:create( oWnd, , {10,10}, {oWnd:currentSize()[1]-25,oWnd:currentSize()[2]-45} )
 
    // Copy text from LOCAL variable into edit buffer
@@ -913,7 +913,7 @@ FUNCTION Build_SpinButtons( oWnd )
    oSpinGreen:align := 3
    oSpinGreen:create()
    oSpinGreen:setNumLimits( 0, 255 )
-   oSpinGreen:dataLink := {|x| IIf( x==NIL, nGreen, nGreen := x ) }
+   oSpinGreen:dataLink := {|x| iif( x==NIL, nGreen, nGreen := x ) }
    oSpinGreen:endSpin  := bCallback
    oSpinGreen:keyboard := bCallback
    oSpinGreen:setData()
@@ -924,7 +924,7 @@ FUNCTION Build_SpinButtons( oWnd )
    oSpinBlue:master := oSpinGreen
    oSpinBlue:create()
    oSpinBlue:setNumLimits( 0, 255 )
-   oSpinBlue:dataLink := {|x| IIf( x==NIL, nBlue, nBlue := x ) }
+   oSpinBlue:dataLink := {|x| iif( x==NIL, nBlue, nBlue := x ) }
    oSpinBlue:endSpin  := bCallback
    oSpinBlue:keyboard := bCallback
 
@@ -997,9 +997,9 @@ PROCEDURE WorkAreaInfo( oTree, iIndex )
    ** Third level -> status information
 
 PROCEDURE WAStatus( oItem, iIndex )
-   oItem:addItem( "Bof() = "    + IIf( iIndex%2 == 0, ".T.", ".F." ) )
-   oItem:addItem( "Eof() = "    + IIf( iIndex%3 == 0, ".T.", ".F." ) )
-   oItem:addItem( "Found() = "  + IIf( iIndex%4 == 0, ".T.", ".F." ) )
+   oItem:addItem( "Bof() = "    + iif( iIndex%2 == 0, ".T.", ".F." ) )
+   oItem:addItem( "Eof() = "    + iif( iIndex%3 == 0, ".T.", ".F." ) )
+   oItem:addItem( "Found() = "  + iif( iIndex%4 == 0, ".T.", ".F." ) )
    oItem:addItem( "Recno() = "  + Ltrim( Str( iIndex  ) ) )
    oItem:addItem( "LastRec() =" + Ltrim( Str( iIndex )+'....PPP' ) )
 
