@@ -52,8 +52,8 @@
  */
 
 /* Language name: Chinese Traditional */
-/* ISO language code (2 chars): ZH    */
-/* Codepage: 950 for ZH-HK,ZH-TW      */
+/* ISO language code (2 chars): ZH */
+/* Codepage: 950 for ZH-HK,ZH-TW */
 
 #include "hbapilng.h"
 

@@ -52,8 +52,8 @@
  */
 
 /* Language name: Chinese Simplified */
-/* ISO language code (2 chars): ZH   */
-/* Codepage: 936 for ZH,ZH-CN,ZH-SG  */
+/* ISO language code (2 chars): ZH */
+/* Codepage: 936 for ZH,ZH-CN,ZH-SG */
 
 #include "hbapilng.h"
 
