@@ -133,7 +133,7 @@ THREAD STATIC lAdderOpen := .F.,                                             ;
 
     SET SCOREBOARD OFF
     _ftSetScrColor(STD_SCREEN,STD_VARIABLE)
-    CLEAR SCREEN
+    CLS
 
     SET KEY K_ALT_A  TO FT_Adder        // Make <ALT-A> call FT_Adder
 

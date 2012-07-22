@@ -16,7 +16,7 @@ PROCEDURE Main( cName )
    LOCAL nRow := 1
 
    SET COLOR TO w +/ b
-   CLEAR SCREEN
+   CLS
    @ nRow++, 20 SAY "H A R B O U R - .ini file parser test"
    @ nRow++, 5 SAY "Call from command line using a .ini filename as the only parameter"
    nRow++

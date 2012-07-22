@@ -72,7 +72,7 @@ PROCEDURE Main()
       ELSEIF k == Asc( "C" ) .OR. k == Asc( "c" )
          wclose()
       ELSEIF k == Asc( "Q" ) .OR. k == Asc( "q" )
-         CLEAR SCREEN
+         CLS
       ELSEIF k == Asc( "B" ) .OR. k == Asc( "b" )
          IF lBoard
             wboard( 0, 0, MaxRow( .T. ) - 1, MaxCol( .T. ) )

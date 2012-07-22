@@ -28,7 +28,7 @@ PROCEDURE Main()
 
    DO WHILE nMode != 0
 
-      CLEAR SCREEN
+      CLS
       @ 0, 0 SAY "Select the video mode you want to test.."
 
       FOR nRow := 1 TO 5
@@ -65,7 +65,8 @@ PROCEDURE TESTBOX( cMode )
    // Simple testing screen..
    //***************************************************************************
    LOCAL nRow
-   CLEAR SCREEN
+
+   CLS
    @ 0, 0 TO MaxRow(), MaxCol() DOUBLE
    @ 0, 3 SAY cMode
    @ MaxRow(), 3 SAY " Press a key "

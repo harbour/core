@@ -103,7 +103,7 @@
      AADD(aFields, {"City"      , {||TBNames->City}  } )
 
      cOldColor := SetColor("N/BG")
-     CLEAR SCREEN
+     CLS
      @ 5,10 SAY "Enter First Letter Of Last Name:" GET cKey PICTURE "!"
      READ
 
@@ -130,7 +130,7 @@
 
      WAIT
      SetColor(cOldColor)
-     CLEAR SCREEN
+     CLS
   RETURN nil
 
   STATIC FUNCTION make_dbf
@@ -251,7 +251,7 @@ FUNCTION FT_BRWSWHL(aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
 
    IF .NOT. lKeepScrn
       SetColor(cColorBack)
-      CLEAR SCREEN
+      CLS
    ENDIF
 
    /* make a window shadow */

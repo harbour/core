@@ -22,23 +22,22 @@
       #ifndef __HARBOUR__
          #xtranslate hb_secondsCPU( [<x>] ) => Seconds( [<x>] )
       #endif
-      #define EOL Chr( 13 ) + Chr( 10 )
    #endif
 #endif
 
-#ifndef EOL
-#define EOL Chr( 10 )
+#ifndef __HARBOUR__
+   #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
 #endif
 
-#command ? => outstd(EOL);outerr(EOL)
-#command ? <xx,...> => outstd(<xx>, EOL);outerr(<xx>, EOL)
+#command ? => OutStd( hb_eol() ); OutErr( hb_eol() )
+#command ? <xx,...> => OutStd( <xx>, hb_eol() ); OutErr( <xx>, hb_eol() )
 
 #ifdef FlagShip
 
 STATIC nDispCount := 0
 
-#xtranslate dispbegin() => iif( ( ++nDispCount ) == 1, DispBegin( NIL ), )
-#xtranslate dispend()   => iif( nDispCount > 0 .AND. ( --nDispCount ) == 0, DispEnd( NIL ), )
+#xtranslate DispBegin() => iif( ( ++nDispCount ) == 1, DispBegin( NIL ), )
+#xtranslate DispEnd()   => iif( nDispCount > 0 .AND. ( --nDispCount ) == 0, DispEnd( NIL ), )
 
 #endif
 
@@ -62,8 +61,7 @@ PROCEDURE Main()
 
 STATIC FUNCTION Initialise()
 
-// SetMode( 25, 80 )
-   SET colour TO "W+/BG"
+   SET COLOUR TO "W+/BG"
    DispBox( 0, 0, MaxRow(), MaxCol(), Replicate( Chr(176 ),9 ), "BG/B" )
 
    RETURN NIL
@@ -221,7 +219,7 @@ STATIC FUNCTION Summary( aResult )
 
    LOCAL i
 
-   CLEAR SCREEN
+   CLS
    ? "Resolution:  " + hb_ntos( MaxRow() + 1 ) + " x " + hb_ntos( MaxCol() + 1 ) + " " + Version()
    FOR i := 1 TO Len( aResult )
       ? aResult[ i ]

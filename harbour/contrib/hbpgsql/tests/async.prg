@@ -11,7 +11,7 @@
 PROCEDURE Main( cServer, cDatabase, cUser, cPass )
    LOCAL conn
 
-   CLEAR SCREEN
+   CLS
 
    ? "Connect", conn := PQconnectDB( "dbname = " + cDatabase + " host = " + cServer + " user = " + cUser + " password = " + cPass + " port = 5432" )
 

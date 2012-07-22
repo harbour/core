@@ -70,7 +70,7 @@ private M_C := dtos(date()),;
 #endif
 #ifdef __CLIP__
    SET MACRO_IN_STRING OFF
-   //CLEAR SCREEN
+   //CLS
 #endif
 #ifdef FlagShip
    FS_SET( "zerobyte", .t. )

@@ -148,7 +148,7 @@ PROCEDURE Main()
 
 STATIC PROCEDURE DrawScreen( cTitle )
 
-   CLEAR SCREEN
+   CLS
 
    @ 0, 0 SAY PadR( cTitle, MaxCol() + 1 ) COLOR "N/W"
 

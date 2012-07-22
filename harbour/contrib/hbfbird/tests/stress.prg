@@ -19,7 +19,7 @@ PROCEDURE Main()
    LOCAL nDialect := 1
    LOCAL cQuery, cName
 
-   CLEAR SCREEN
+   CLS
 
    hb_FNameSplit( hb_argv( 0 ), NIL, @cName, NIL )
    cDatabase := hb_DirTemp() + cName + ".fdb"

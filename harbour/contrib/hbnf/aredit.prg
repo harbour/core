@@ -72,13 +72,13 @@
 
       SET SCOREBOARD OFF
       SetColor( "W/N")
-      CLEAR SCREEN
+      CLS
       @ 21,4 SAY "Use Cursor Keys To Move Between Fields, <F7> = Delete Row, <F8> = Add Row"
       @ 22,7 SAY "<ESC> = Quit Array Edit, <Enter> or <Any Other Key> Edits Element"
       SetColor( "N/W, W/N, , , W/N" )
       cRet := FT_ArEdit(3, 5, 18, 75, ar, @nElem, aHeadings, aBlocks, bGetFunc)
       SetColor( "W/N")
-      CLEAR SCREEN
+      CLS
       ? cRet
       ? "Lastkey() = ESC:", LASTKEY() == K_ESC
    RETURN

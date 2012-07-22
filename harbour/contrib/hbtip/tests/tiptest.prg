@@ -56,7 +56,7 @@ PROCEDURE MAIN( cUrl, cFile )
    LOCAL cData
 
    SET COLOR TO w +/ b
-   CLEAR SCREEN
+   CLS
    @ 1, 6 SAY "X H A R B O U R - TIP (class based internet client protocol) test"
 
 

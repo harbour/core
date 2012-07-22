@@ -12,7 +12,7 @@ PROCEDURE Main()
 
    SET KEY K_F8 TO RECURSE()
 
-   CLEAR SCREEN
+   CLS
 
    @  1, 10 PROMPT "Menu Item 1" MESSAGE "Menu Message 1"
    @  2, 10 PROMPT "Menu Item 2" MESSAGE "Menu Message 2"
@@ -30,7 +30,7 @@ PROCEDURE Main()
 
    SET KEY K_F8 TO RECURSE()
 
-   CLEAR SCREEN
+   CLS
 
    @  1, 10 PROMPT "Menu Item 1" MESSAGE "Menu Message 1"
    @  2, 10 PROMPT "Menu Item 2" MESSAGE "Menu Message 2"

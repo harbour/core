@@ -10,7 +10,7 @@ PROCEDURE main()
    LOCAL cUser := "user"
    LOCAL cPass := "pass"
 
-   CLEAR SCREEN
+   CLS
 
    conn := PQsetdbLogin( "localhost", "5432", NIL, NIL, cDb, cUser, cPass )
    ? PQdb( conn ), PQuser( conn ), PQpass( conn ), PQhost( conn ), PQport( conn ), PQtty( conn ), PQoptions( conn )

@@ -22,8 +22,6 @@ PROCEDURE Main( cServer, cDatabase, cUser, cPass )
    LOCAL i
    LOCAL cQuery
 
-   SetMode( 25, 80 )
-
    IF SQLConnect( cServer, cDatabase, cUser, cPass )
       QuickQuery( "DROP TABLE test" )
 

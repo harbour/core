@@ -60,7 +60,7 @@ PROCEDURE MAIN()
    SET DATE ANSI
    SET CENTURY ON
    SET DELETED OFF
-   CLEAR SCREEN
+   CLS
 
    ? "Create a new dbf in memory using dbCreate() command"
    aStruct := { ;

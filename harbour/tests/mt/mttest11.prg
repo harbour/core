@@ -16,7 +16,7 @@ proc main()
    local getList := {}
    local cVar := space( 20 )
 
-   CLEAR SCREEN
+   CLS
 
    if ! hb_mtvm()
       ? "No MT support in HVM. Clock will not be shown."

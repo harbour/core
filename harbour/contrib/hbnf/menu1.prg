@@ -150,7 +150,7 @@ THREAD STATIC NHPOS, NVPOS, NMAXROW, NMAXCOL
    nMaxRow := MAXROW()
    SETBLINK(.f.)
    SETCOLOR( cWindN + "*" )
-   CLEAR SCREEN
+   CLS
    SETCOLOR( cNormN )
    @ nMaxRow, 0
    @ nMaxRow, 0 SAY hb_UTF8ToStr( " FT_MENU1 1.0 │ " )
@@ -183,7 +183,7 @@ THREAD STATIC NHPOS, NVPOS, NMAXROW, NMAXCOL
 
    FUNCTION fubar()
    LOCAL OldColor:= SETCOLOR( "W/N" )
-   CLEAR SCREEN
+   CLS
    Qout( "Press Any Key" )
    INKEY(0)
    SETCOLOR( OldColor )

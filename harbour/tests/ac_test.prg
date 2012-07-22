@@ -155,7 +155,7 @@ PROCEDURE Main()
    LOCAL nChoice
    LOCAL ncntr
 
-   CLEAR SCREEN
+   CLS
 
    SetColor( "GB+/B,GR+/R,,,W/N" )
 
@@ -181,7 +181,7 @@ PROCEDURE Main()
    nChoice := AChoice( 5, 10, 20, 70, aPrompts, aPermits, "cUserFunction" )
 
    SetPos( 0, 0 )
-   // clear screen
+   // CLS
    ? nChoice
 
    IF nChoice > 0

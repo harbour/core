@@ -68,7 +68,7 @@
  *
  *        bGetFunc   := { | b, ar, nDim, nElem | TestGet(b, ar, nDim, nElem) }
  *        SetColor( "N/W, W/N, , , W/N" )
- *        CLEAR SCREEN
+ *        CLS
  *        FT_AREDIT(3, 5, 18, 75, ar, @nElem, aHeadings, aBlocks, bGetFunc)
  *
  *  $END$

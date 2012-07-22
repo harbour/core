@@ -9,6 +9,10 @@
 
 // TODO: add test for "step 0"
 
+#ifndef __HARBOUR__
+   #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
+#endif
+
 STATIC snFrom
 STATIC snTo
 STATIC snStep
@@ -39,10 +43,10 @@ PROCEDURE Main()
       OutStd( " From: " ) ; OutStd( snFrom )
       OutStd( "   To: " ) ; OutStd( snTo )
       OutStd( " Step: " ) ; OutStd( snStep )
-      OutStd( Chr( 13 ) + Chr( 10 ) )
+      OutStd( hb_eol() )
 
       FOR n := Eval( {|| ValFrom() } ) TO Eval( {|| ValTo() } ) STEP Eval( {|| ValStep() } )
-         OutStd( "Exec " ) ; OutStd( n ) ; OutStd( Chr( 13 ) + Chr( 10 ) )
+         OutStd( "Exec " ) ; OutStd( n ) ; OutStd( hb_eol() )
       NEXT n
 
    NEXT
@@ -51,18 +55,18 @@ PROCEDURE Main()
 
 STATIC FUNCTION ValFrom()
 
-   OutStd( "From" ) ; OutStd( Chr( 13 ) + Chr( 10 ) )
+   OutStd( "From" ) ; OutStd( hb_eol() )
 
    RETURN snFrom
 
 STATIC FUNCTION ValTo()
 
-   OutStd( "To" ) ; OutStd( Chr( 13 ) + Chr( 10 ) )
+   OutStd( "To" ) ; OutStd( hb_eol() )
 
    RETURN snTo
 
 STATIC FUNCTION ValStep()
 
-   OutStd( "Step" ) ; OutStd( Chr( 13 ) + Chr( 10 ) )
+   OutStd( "Step" ) ; OutStd( hb_eol() )
 
    RETURN snStep

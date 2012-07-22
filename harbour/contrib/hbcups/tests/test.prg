@@ -21,7 +21,7 @@ PROCEDURE Main()
 
    IF Empty( cupsGetDefault() )
       WAIT
-      CLEAR SCREEN
+      CLS
       aPrinter := cupsGetDests()
       i := AChoice( 2, 5, 30, Len( aPrinter ) + 2, aPrinter )
       ? "Printing... Job ID:", cupsPrintFile( aPrinter[ i ], "test.prg", "Harbour CUPS Printing" )

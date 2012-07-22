@@ -14,8 +14,7 @@ PROCEDURE Main()
 
    LOCAL max_row, max_col, boxColor := "W+/B,N/BG", lineColor := "W+/R, N/BG"
 
-   SetMode( 50, 80 )
-   CLEAR SCREEN
+   CLS
    max_row := MaxRow()
    max_col := MaxCol()
 
