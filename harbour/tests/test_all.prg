@@ -67,7 +67,7 @@ FUNCTION TestIt( cFile )
          nH2 := FOpen( "nottestd.txt", FO_WRITE )
       ENDIF
       FSeek( nH2, 0, FS_END )
-      FWrite( nH2, DToC( Date() ) + "  " + Time() + "  " + cFile + Chr( 13 ) + Chr( 10 ) )
+      FWrite( nH2, DToC( Date() ) + "  " + Time() + "  " + cFile + hb_eol() )
       FClose( nH2 )
    ENDIF
 

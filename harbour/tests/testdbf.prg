@@ -4,7 +4,8 @@
 
 PROCEDURE Main()
 
-   LOCAL nI, aStruct := { { "CHARACTER", "C", 25, 0 }, ;
+   LOCAL nI, aStruct := { ;
+      { "CHARACTER", "C", 25, 0 }, ;
       { "NUMERIC",   "N",  8, 0 }, ;
       { "DOUBLE",    "N",  8, 2 }, ;
       { "DATE",      "D",  8, 0 }, ;

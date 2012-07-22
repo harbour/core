@@ -598,7 +598,7 @@ METHOD SessionRead( cID ) CLASS uhttpd_Session
   //TraceLog( "SessionRead: cFile", cFile )
   IF File( cFile )
      DO WHILE nRetry++ <= ::nFileRetry
-        IF ( nH := FOpen( cFile, FO_READ + FO_DENYWRITE ) ) != -1
+        IF ( nH := FOpen( cFile, FO_READ + FO_DENYWRITE ) ) != F_ERROR
 
            nRetry := 0
            DO WHILE nRetry++ <= ::nFileRetry
@@ -642,7 +642,7 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
   //TraceLog( "SessionWrite() - cFile", cFile )
   IF nFileSize > 0
      DO WHILE nRetry++ <= ::nFileRetry
-        IF ( nH := hb_FCreate( cFile, FC_NORMAL, FO_READWRITE + FO_DENYWRITE ) ) != -1
+        IF ( nH := hb_FCreate( cFile, FC_NORMAL, FO_READWRITE + FO_DENYWRITE ) ) != F_ERROR
            IF ( FWrite( nH, @cData,  nFileSize ) ) != nFileSize
               uhttpd_Die( "ERROR: On writing session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
            ELSE

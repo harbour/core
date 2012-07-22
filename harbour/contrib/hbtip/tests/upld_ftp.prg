@@ -9,7 +9,7 @@
 
 #include "directry.ch"
 
-PROCEDURE MAIN( cMask )
+PROCEDURE Main( cMask )
 
    ? TRP20FTPEnv( cMask  )
 
@@ -71,11 +71,11 @@ STATIC FUNCTION TRP20FTPEnv( cCarpeta )
       ELSE
          cStr := "No se ha podido conectar con el servidor FTP" + " " + oURL:cServer
          IF oFTP:SocketCon == NIL
-            cStr += Chr( 13 ) + Chr( 10 ) + "Conexión no inicializada"
+            cStr += hb_eol() + "Conexión no inicializada"
          ELSEIF hb_InetErrorCode( oFTP:SocketCon ) == 0
-            cStr += Chr( 13 ) + Chr( 10 ) + "Respuesta del servidor:" + " " + oFTP:cReply
+            cStr += hb_eol() + "Respuesta del servidor:" + " " + oFTP:cReply
          ELSE
-            cStr += Chr( 13 ) + Chr( 10 ) + "Error en la conexión:" + " " + hb_InetErrorDesc( oFTP:SocketCon )
+            cStr += hb_eol() + "Error en la conexión:" + " " + hb_InetErrorDesc( oFTP:SocketCon )
          ENDIF
          ? cStr
          lRetorno := .F.

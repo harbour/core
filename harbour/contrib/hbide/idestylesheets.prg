@@ -506,7 +506,7 @@ FUNCTION hbide_buildGradientString( aGrands )
       s += "stop:" + hb_ntos( a_[ 1 ] ) + " " + hbide_rgbString( a_[ 2 ], a_[ 3 ], a_[ 4 ] ) + ", "
    NEXT
 
-   RETURN substr( s, 1, hb_BLen( s ) - 2 )
+   RETURN substr( s, 1, Len( s ) - 2 )
 
 /*----------------------------------------------------------------------*/
 

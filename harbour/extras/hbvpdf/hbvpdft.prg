@@ -2508,7 +2508,7 @@ local lOpen  := ( hFile != nil )
 nDepth := iif( HB_ISNUMERIC( nDepth ), nDepth, 0 )
 //if hFile == NIL
 if !lOpen
-   if ( hFile := fCreate( cFile,FC_NORMAL ) ) == -1
+   if ( hFile := fCreate( cFile,FC_NORMAL ) ) == F_ERROR
       return nBytes
    endif
 endif
@@ -2557,7 +2557,7 @@ local aRay   := {}
 local lOpen  := ( hFile != nil )
 
 if hFile == NIL        // First Timer
-   if ( hFile := fOpen( cFile,FO_READ ) ) == -1
+   if ( hFile := fOpen( cFile,FO_READ ) ) == F_ERROR
       return aRay
    endif
    cData := space( 3 )

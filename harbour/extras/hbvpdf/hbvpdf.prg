@@ -2426,7 +2426,7 @@ local nBytes := 0
 local i
 nDepth := iif(HB_ISNUMERIC(nDepth),nDepth,0)
 if hFile == NIL
-   if (hFile := fCreate(cFile,FC_NORMAL)) == -1
+   if (hFile := fCreate(cFile,FC_NORMAL)) == F_ERROR
       return nBytes
    endif
 endif
@@ -2465,7 +2465,7 @@ LOCAL cData,cType,nDataLen,nBytes
 local nDepth := 0
 local aRay   := {}
 if hFile == NIL
-     if (hFile:=fOpen(cFile,FO_READ)) == -1
+     if (hFile:=fOpen(cFile,FO_READ)) == F_ERROR
          return aRay
      endif
      cData := space(3)

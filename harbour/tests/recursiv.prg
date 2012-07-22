@@ -6,7 +6,7 @@
 
 PROCEDURE Main()
 
-   QOut( "Testing recursive calls" + Chr( 13 ) + Chr( 10 ) )
+   QOut( "Testing recursive calls" + hb_eol() )
 
    QOut( f( 10 ) )
 

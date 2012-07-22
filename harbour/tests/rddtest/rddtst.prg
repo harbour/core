@@ -44,8 +44,10 @@
 REQUEST DBFCDX
 field FSTR, FNUM
 
+#include "fileio.ch"
+
 #ifdef _TEST_CREATE_
-  static hMake := -1
+  static hMake := F_ERROR
 #endif
 static nTested := 0
 static nErrors := 0
@@ -103,7 +105,7 @@ rddSetDefault(rdd)
   if empty(cOutFile)
     ? "Syntax: <outfile.prg> [<rddname>]"
     quit
-  elseif (hMake:=fcreate(cOutFile))==-1
+  elseif (hMake:=fcreate(cOutFile))==F_ERROR
     ? "Cannot create file: ", cOutFile
     quit
   endif
@@ -148,7 +150,7 @@ return nil
 static function test_close()
 local cOut
 #ifdef _TEST_CREATE_
-  if hMake != -1
+  if hMake != F_ERROR
     cOut:=EOL+;
           'RETURN NIL'+EOL
     if !fwrite(hMake, cOut)==len(cOut)

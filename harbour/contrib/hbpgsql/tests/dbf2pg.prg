@@ -7,8 +7,8 @@
  * dbf2pg.prg - converts a .dbf file into a Postgres table
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
- * (The Original file was ported from Mysql and changed by Rodrigo Moreno rodrigo_moreno@yahoo.com)
- * * www - http://harbour-project.org
+ * (The original file was ported from mysql and changed by Rodrigo Moreno rodrigo_moreno@yahoo.com)
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,6 +52,7 @@
  */
 
 #include "inkey.ch"
+#include "fileio.ch"
 
 PROCEDURE Main( ... )
 
@@ -136,7 +137,7 @@ PROCEDURE Main( ... )
    ENDDO
 
    // create log file
-   IF ( nHandle := FCreate( RTrim( cTable ) + ".log" ) ) == -1
+   IF ( nHandle := FCreate( RTrim( cTable ) + ".log" ) ) == F_ERROR
       ? "Cannot create log file"
       QUIT
    ENDIF

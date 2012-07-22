@@ -76,28 +76,28 @@ PROCEDURE Main( ... )
 
    i := 1
    // Scan parameters and setup workings
-   WHILE i <= PCount()
+   DO WHILE i <= PCount()
 
-      cTok := hb_PValue( i ++ )
+      cTok := hb_PValue( i++ )
 
       DO CASE
       CASE cTok == "-h"
-         cHostName := hb_PValue( i ++ )
+         cHostName := hb_PValue( i++ )
 
       CASE cTok == "-d"
-         cDataBase := hb_PValue( i ++ )
+         cDataBase := hb_PValue( i++ )
 
       CASE cTok == "-t"
-         cTable := hb_PValue( i ++ )
+         cTable := hb_PValue( i++ )
 
       CASE cTok == "-f"
-         cFile := hb_PValue( i ++ )
+         cFile := hb_PValue( i++ )
 
       CASE cTok == "-u"
-         cUser := hb_PValue( i ++ )
+         cUser := hb_PValue( i++ )
 
       CASE cTok == "-p"
-         cPassWord := hb_PValue( i ++ )
+         cPassWord := hb_PValue( i++ )
 
       CASE cTok == "-c"
          lCreateTable := .T.
@@ -109,7 +109,7 @@ PROCEDURE Main( ... )
    ENDDO
 
    dbUseArea( .T. , , cFile, "dbffile", , .T. )
-   aDbfStruct := dbffile -> ( dbStruct() )
+   aDbfStruct := dbffile->( dbStruct() )
 
    oServer := TMySQLServer():New( cHostName, cUser, cPassWord )
    IF oServer:NetErr()
@@ -145,12 +145,12 @@ PROCEDURE Main( ... )
       QUIT
    ENDIF
 
-   WHILE !dbffile -> ( EOF() ) .AND. Inkey() != K_ESC
+   DO WHILE ! dbffile->( EOF() ) .AND. Inkey() != K_ESC
 
       oRecord := oTable:GetBlankRow()
 
-      for i := 1 TO dbffile -> ( FCount() )
-         oRecord:FieldPut( i, dbffile -> ( FieldGet(i ) ) )
+      for i := 1 TO dbffile->( FCount() )
+         oRecord:FieldPut( i, dbffile->( FieldGet(i ) ) )
       next
 
       oTable:Append( oRecord )
@@ -158,15 +158,15 @@ PROCEDURE Main( ... )
          Alert( oTable:Error() )
       ENDIF
 
-      dbffile -> ( dbSkip() )
+      dbffile->( dbSkip() )
 
       DevPos( Row(), 1 )
-      IF ( dbffile -> ( RecNo() ) % 100 ) == 0
-         DevOut( "imported recs: " + Str( dbffile -> (RecNo() ) ) )
+      IF ( dbffile->( RecNo() ) % 100 ) == 0
+         DevOut( "imported recs: " + hb_ntos( dbffile->(RecNo() ) ) )
       ENDIF
    ENDDO
 
-   dbffile -> ( dbCloseArea() )
+   dbffile->( dbCloseArea() )
    oTable:Destroy()
    oServer:Destroy()
 

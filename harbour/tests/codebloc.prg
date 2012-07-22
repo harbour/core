@@ -98,9 +98,9 @@ PROCEDURE OtherTest( cblock )
 PROCEDURE AnotherTest( cb, a )
 
    OutStd( Eval( cb, a ) )
-   OutStd( Chr( 13 ) + Chr( 10 ) )
+   OutStd( hb_eol() )
    OutStd( Eval( cb, a, "again and again" ) )
-   OutStd( Chr( 13 ) + Chr( 10 ) )
+   OutStd( hb_eol() )
 
    RETURN
 
