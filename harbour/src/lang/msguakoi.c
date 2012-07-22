@@ -200,5 +200,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      UAKOI8
+#define HB_LANG_ID      UAKOI
 #include "hbmsgreg.h"
