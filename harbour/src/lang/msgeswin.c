@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (ES)
+ * Language Support Module (ESWIN)
  *
  * Copyright 2000 Jose Lalin <dezac@corevia.com>
  * www - http://harbour-project.org

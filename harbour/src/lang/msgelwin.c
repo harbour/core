@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (EL)
+ * Language Support Module (ELWIN)
  *
  * Copyright 2004 Pete Dionisopoulos <pete_westg@yahoo.gr>
  * www - http://harbour-project.org

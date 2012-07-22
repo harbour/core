@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module ( LTWIN )
+ * Language Support Module (LTWIN)
  *
  * Copyright 2003 Mindaugas Kavaliauskas <dbtopas@dbtopas.lt>
  * www - http://harbour-project.org
