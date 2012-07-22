@@ -54,7 +54,7 @@
        nHilightMode ==
    HPDF_ANNOT_NO_HIGHTLIGHT       1     No highlighting.
    HPDF_ANNOT_INVERT_BOX          2     Invert the contents of the area of annotation.
-   HPDF_ANNOT_INVERT_BORDER       3     Invert the annotation’s border.
+   HPDF_ANNOT_INVERT_BORDER       3     Invert the annotation's border.
    HPDF_ANNOT_DOWN_APPEARANCE     4     Dent the annotation.
 */
 HB_FUNC( HPDF_LINKANNOT_SETHIGHLIGHTMODE )

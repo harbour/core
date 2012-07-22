@@ -22,7 +22,7 @@ PROCEDURE Main()
    LOCAL ctest := ""
 
    // create a plain text file
-   ctest += "This is +bHarbour © RTF Class-b" + CRLF
+   ctest += "This is +bHarbour (C) RTF Class-b" + CRLF
    ctest += "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG" + CRLF
    ctest += "+bTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG-b" + CRLF
    ctest += "+iTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG-i" + CRLF

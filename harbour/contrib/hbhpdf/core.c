@@ -452,14 +452,14 @@ HB_FUNC( HPDF_PAGE_SETHEIGHT )
 /*----------------------------------------------------------------------*/
 /* HPdf_Page_SetSize( hPage, nSize, nOrientation = 1 Portrait, 2 Landscape ) -> hStatus
        nSize ==
-   HPDF_PAGE_SIZE_LETTER         1      8½ x 11 (Inches) 612 x 792
-   HPDF_PAGE_SIZE_LEGAL          2      8½ x 14 (Inches) 612 x 1008
-   HPDF_PAGE_SIZE_A3             3      297 × 420 (mm) 841.89 x 1199.551
-   HPDF_PAGE_SIZE_A4             4      210 × 297 (mm)  595.276 x 841.89
-   HPDF_PAGE_SIZE_A5             5      148 × 210 (mm) 419.528 x 595.276
-   HPDF_PAGE_SIZE_B4             6      250 × 353 (mm)  708.661 x 1000.63
-   HPDF_PAGE_SIZE_B5             7      176 × 250 (mm) 498.898 x 708.661
-   HPDF_PAGE_SIZE_EXECUTIVE      8      7½ x 10½ (Inches) 522 x 756
+   HPDF_PAGE_SIZE_LETTER         1      8.5 x 11 (Inches) 612 x 792
+   HPDF_PAGE_SIZE_LEGAL          2      8.5 x 14 (Inches) 612 x 1008
+   HPDF_PAGE_SIZE_A3             3      297 x 420 (mm) 841.89 x 1199.551
+   HPDF_PAGE_SIZE_A4             4      210 x 297 (mm)  595.276 x 841.89
+   HPDF_PAGE_SIZE_A5             5      148 x 210 (mm) 419.528 x 595.276
+   HPDF_PAGE_SIZE_B4             6      250 x 353 (mm)  708.661 x 1000.63
+   HPDF_PAGE_SIZE_B5             7      176 x 250 (mm) 498.898 x 708.661
+   HPDF_PAGE_SIZE_EXECUTIVE      8      7.5 x 10.5 (Inches) 522 x 756
    HPDF_PAGE_SIZE_US4x6          9      4 x 6 (Inches) 288 x 432
    HPDF_PAGE_SIZE_US4x8         10      4 x 8 (Inches) 288 x 576
    HPDF_PAGE_SIZE_US5x7         11      5 x 7 (Inches) 360 x 504

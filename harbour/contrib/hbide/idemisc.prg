@@ -965,7 +965,7 @@ function hbide_toString( x, lLineFeed, lInherited, lType, cFile, lForceLineFeed 
 
    CASE ( t == "O" )
       IF lInherited
-         // É necessário linkar \harbour\lib\xhb.lib
+         // E necessario linkar \harbour\lib\xhb.lib
          // s := iif( lType, "[O]=", "" ) + hb_dumpvar( x ) + iif( lLineFeed, hb_eol(), "" )
          s := '' + iif( lLineFeed, hb_eol(), "" )
       ELSE

@@ -388,7 +388,7 @@ FUNCTION SQLExecQuery( cQuery )
 
    oQuery := s_oServer:Query( cQuery )
    IF oQuery:NetErr()
-      Alert( "Nao foi possível executar " + cQuery + ":" + oQuery:ErrorMsg() )
+      Alert( "Cannot execute " + cQuery + ":" + oQuery:ErrorMsg() )
 
       result := .F.
    ELSE

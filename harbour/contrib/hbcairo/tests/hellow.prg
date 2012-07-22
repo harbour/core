@@ -2,6 +2,7 @@
  * $Id$
  */
 
+/* UTF-8 */
 
 #include "hbcairo.ch"
 
@@ -17,10 +18,10 @@ PROC main()
    cairo_select_font_face( hCairo, "sans-serif", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD )
    cairo_set_font_size( hCairo, 16 )
    cairo_set_source_rgb( hCairo, 0, 0, 0 )  // black
-   
+
    cairo_move_to( hCairo, 50, 50 )
    cairo_show_text( hCairo, "Hello, World!" )
-   
+
    cairo_set_line_width( hCairo, 1 )
    FOR nI := 1 TO 10
       cairo_set_source_rgb( hCairo, HB_RANDOM(), HB_RANDOM(), HB_RANDOM() )
@@ -33,7 +34,7 @@ PROC main()
    cairo_set_font_size( hCairo, 10 )
    cairo_set_source_rgb( hCairo, 0, 0, 0 )
    cairo_move_to( hCairo, 50, 300 )
-   cairo_show_text( hCairo, "Plaukë þàselë per eþerëlá..." )
+   cairo_show_text( hCairo, hb_UTF8ToStr( "PlaukÄ— Å¾Ä…selÄ— per eÅ¾erÄ—lÄ¯..." ) )
 
    cairo_show_page( hCairo )
    cairo_destroy( hCairo )

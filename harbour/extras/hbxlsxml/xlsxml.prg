@@ -397,33 +397,33 @@ FUNCTION OEMTOHTML( xtxt )
    LOCAL afrm, i, xret:= "", xpos
 
    afrm := {;
-           { " ", "&aacute;" },;
-           { "?", "&acirc;"  },;
-           { "", "&agrave;" },;
-           { "Æ", "&atilde;" },;
-           { "+", "&ccedil;" },;
-           { "'", "&eacute;" },;
-           { "?", "&ecirc;"  },;
-           { "¡", "&iacute;" },;
-           { "¢", "&oacute;" },;
-           { """, "&ocirc;"  },;
-           { "ä", "&otilde;" },;
-           { "£", "&uacute;" },;
-           { "?", "&uuml;"   },;
-           { "u", "&Aacute;" },;
-           { "", "&Acirc;"  },;
-           { "", "&Agrave;" },;
-           { "Ç", "&Atilde;" },;
-           { "?", "&Ccedil;" },;
-           { "?", "&Eacute;" },;
-           { "Ò", "&Ecirc;"  },;
-           { "Ö", "&Iacute;" },;
-           { "à", "&Oacute;" },;
-           { "â", "&Ocirc;"  },;
-           { "å", "&Otilde;" },;
-           { "é", "&Uacute;" },;
-           { "š", "&Uuml;"   },;
-           { "-", "&ndash;"  } ;
+           { Chr( 160 ), "&aacute;" },;
+           { Chr(  63 ), "&acirc;"  },;
+           { Chr(   7 ), "&agrave;" },;
+           { Chr( 198 ), "&atilde;" },;
+           { Chr(  43 ), "&ccedil;" },;
+           { Chr(  39 ), "&eacute;" },;
+           { Chr(  63 ), "&ecirc;"  },;
+           { Chr( 161 ), "&iacute;" },;
+           { Chr( 162 ), "&oacute;" },;
+           { Chr( 147 ), "&ocirc;"  },;
+           { Chr( 228 ), "&otilde;" },;
+           { Chr( 163 ), "&uacute;" },;
+           { Chr(  63 ), "&uuml;"   },;
+           { Chr( 117 ), "&Aacute;" },;
+           { Chr(  20 ), "&Acirc;"  },;
+           { Chr(   7 ), "&Agrave;" },;
+           { Chr( 199 ), "&Atilde;" },;
+           { Chr(  63 ), "&Ccedil;" },;
+           { Chr(  63 ), "&Eacute;" },;
+           { Chr( 210 ), "&Ecirc;"  },;
+           { Chr( 214 ), "&Iacute;" },;
+           { Chr( 224 ), "&Oacute;" },;
+           { Chr( 226 ), "&Ocirc;"  },;
+           { Chr( 229 ), "&Otilde;" },;
+           { Chr( 233 ), "&Uacute;" },;
+           { Chr( 154 ), "&Uuml;"   },;
+           { Chr(  45 ), "&ndash;"  } ;
            }
 
    FOR i:= 1 TO LEN( xtxt )
@@ -466,36 +466,36 @@ FUNCTION EXRETIRAACENTOS( xtxt )
    LOCAL afrm, i, xret:= "", xpos
 
    afrm := {;
-           { " ", "a" },;
-           { "?", "a" },;
-           { "", "a" },;
-           { "Æ", "a" },;
-           { "+", "c" },;
-           { "'", "e" },;
-           { "?", "e" },;
-           { "¡", "i" },;
-           { "¢", "o" },;
-           { """, "o" },;
-           { "ä", "o" },;
-           { "£", "u" },;
-           { "?", "u" },;
-           { "u", "A" },;
-           { "", "A" },;
-           { "", "A" },;
-           { "Ç", "A" },;
-           { "?", "C" },;
-           { "?", "E" },;
-           { "Ò", "E" },;
-           { "Ö", "I" },;
-           { "à", "O" },;
-           { "â", "O" },;
-           { "å", "O" },;
-           { "é", "U" },;
-           { "š", "U" },;
-           { CHR( 166 ), "." },;
-           { CHR( 167 ), "." },;
-           { CHR( 248 ), "." },;
-           { CHR( 141 ), ""  } ;
+           { Chr( 160 ), "a" },;
+           { Chr(  63 ), "a" },;
+           { Chr(   7 ), "a" },;
+           { Chr( 198 ), "a" },;
+           { Chr(  43 ), "c" },;
+           { Chr(  39 ), "e" },;
+           { Chr(  63 ), "e" },;
+           { Chr( 161 ), "i" },;
+           { Chr( 162 ), "o" },;
+           { Chr( 147 ), "o" },;
+           { Chr( 228 ), "o" },;
+           { Chr( 163 ), "u" },;
+           { Chr(  63 ), "u" },;
+           { Chr( 117 ), "A" },;
+           { Chr(  20 ), "A" },;
+           { Chr(   7 ), "A" },;
+           { Chr( 199 ), "A" },;
+           { Chr(  63 ), "C" },;
+           { Chr(  63 ), "E" },;
+           { Chr( 210 ), "E" },;
+           { Chr( 214 ), "I" },;
+           { Chr( 224 ), "O" },;
+           { Chr( 226 ), "O" },;
+           { Chr( 229 ), "O" },;
+           { Chr( 233 ), "U" },;
+           { Chr( 154 ), "U" },;
+           { Chr( 166 ), "." },;
+           { Chr( 167 ), "." },;
+           { Chr( 248 ), "." },;
+           { Chr( 141 ), ""  } ;
            }
 
    FOR i := 1 TO LEN( xtxt )

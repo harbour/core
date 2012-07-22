@@ -1267,7 +1267,7 @@ STATIC FUNCTION Page_Annotation( pdf )
 
    encoding := HPDF_GetEncoder( pdf, "ISO8859-2" )
 
-   HPDF_Page_CreateTextAnnot( page, rect8, "Annotation with ISO8859 text гдежзий", encoding )
+   HPDF_Page_CreateTextAnnot( page, rect8, "Annotation with ISO8859 text " + hb_BChar( 211 ) + hb_BChar( 212 ) + hb_BChar( 213 ) + hb_BChar( 214 ) + hb_BChar( 215 ) + hb_BChar( 216 ) + hb_BChar( 217 ), encoding )
 
    HPDF_Page_SetFontAndSize( page, font, 11 )
 

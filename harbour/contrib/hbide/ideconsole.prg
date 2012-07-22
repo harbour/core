@@ -4433,7 +4433,7 @@ FUNCTION hbcui_test()
    /* HB_SCREEN_BEGINS <test> */
 
    /// 1 1 . 9 0
-   @ 1, 2     , 12, 36 BOX "+-+¦+-+¦"
+   @ 1, 2     , 12, 36 BOX "+-+|+-+|"
    /// 2 3 C 5 0
    @ 3, 4     SAY "Name "
    /// 3 3 C 15 0

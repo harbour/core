@@ -171,7 +171,7 @@ FUNCTION main()
       :columnWidth( 3,  70 ) // Data Movto
       :columnWidth( 4,  70 ) // Data Emis.
       :columnWidth( 5,  50 ) // CFOP
-      :columnWidth( 6,  50 ) // C›d. Cliente/Fornecedor
+      :columnWidth( 6,  50 ) // Cod. Cliente/Fornecedor
       :columnWidth( 7, 300 ) // Nome Cliente/Fornecedor
       :columnWidth( 8,  20 ) // UF
       :columnWidth( 9,  80 ) // Vlr.Tot.
@@ -206,7 +206,7 @@ FUNCTION main()
       :writeString(  nLinha, 3,"Data Movto"        ,'textLeftBoldCor' )
       :writeString(  nLinha, 4,"Data Emis."        ,'textLeftBoldCor' )
       :writeString(  nLinha, 5,"CFOP"              ,'textLeftBoldCor' )
-      :writeString(  nLinha, 6,"C›digo"            ,'textLeftBoldCor' )
+      :writeString(  nLinha, 6,"Codigo"            ,'textLeftBoldCor' )
       :writeString(  nLinha, 7,"Cliente/Fornecedor",'textLeftBoldCor' )
       :writeString(  nLinha, 8,"UF"                ,'textLeftBoldCor' )
       :writeString(  nLinha, 9,"Vlr.Tot."          ,'textRightBoldCor')
