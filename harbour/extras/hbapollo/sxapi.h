@@ -23,8 +23,8 @@
  * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
  */
 
-#ifndef __SIXAPIC__
-#define __SIXAPIC__
+#ifndef __SXAPI_H
+#define __SXAPI_H
 
 /* NOTE: This hack is needed to suppress 'non-ANSI
          keyword' warnings inside Sde61.h. */
@@ -116,13 +116,5 @@ extern PHB_ITEM     _sx_GetAlias( void );
 #endif
 
 HB_EXTERN_END
-
-#define AMERICAN        0  /* MM/DD/YY */
-#define ANSI            1  /* YY.MM.DD */
-#define BRITISH         2  /* DD/MM/YY */
-#define FRENCH          3  /* DD/MM/YY */
-#define GERMAN          4  /* DD.MM.YY */
-#define ITALIAN         5  /* DD-MM-YY */
-#define SPANISH         6  /* DD-MM-YY */
 
 #endif
