@@ -33,9 +33,9 @@
 #include "setcurs.ch"
 
 #translate SINGLEBOX(<top>, <left>, <bottom>, <right>) => ;
-           @ <top>, <left>, <bottom>, <right> BOX "ÚÄ¿³ÙÄÀ³ "
+           @ <top>, <left>, <bottom>, <right> BOX hb_UTF8ToStr( "â”Œâ”€â”â”‚â”˜â”€â””â”‚ " )
 #translate DOUBLEBOX(<top>, <left>, <bottom>, <right>) => ;
-           @ <top>, <left>, <bottom>, <right> BOX 'ÉÍ»º¼ÍÈº '
+           @ <top>, <left>, <bottom>, <right> BOX hb_UTF8ToStr( 'â•”â•â•—â•‘â•â•â•šâ•‘ ' )
 memvar getlist
 
 /*
@@ -160,7 +160,7 @@ return NIL
 static function DrawBox(nelement)
 setcolor(iif(board_[nelement][4], '+w/rb', 'w/n'))
 @ board_[nelement][1,1], board_[nelement][1,2], board_[nelement][1,3], ;
-  board_[nelement][1,4] box "ÚÄ¿³ÙÄÀ³ "
+  board_[nelement][1,4] box hb_UTF8ToStr( "â”Œâ”€â”â”‚â”˜â”€â””â”‚ " )
 DevPos(board_[nelement][1,1] + 1, board_[nelement][1,2] + 2)
 DevOut(ltrim(str(nelement)))
 return NIL

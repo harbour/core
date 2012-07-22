@@ -1425,7 +1425,7 @@ for i := 1 to 26
          cBuf := substr(cBuf,5)
          z    := 1
          do while !empty(cBuf)
-            if substr(cBuf,z,1)>="€"
+            if substr(cBuf,z,1)>=Chr(128)
                cWord := substr(cBuf,1,z)
                append blank
                replace DICT->word with temp+ExtractWord(cWord)

@@ -159,9 +159,9 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    // consistent with DISPBOX()
 
    IF cnBoxString == NIL .OR. cnBoxString == 2
-      cnBoxString := "ÉÍ»º¼ÍÈº "
+      cnBoxString := hb_UTF8ToStr( "â•”â•â•—â•‘â•â•â•šâ•‘ " )
    ELSEIF cnBoxString == 1
-      cnBoxString := "ÚÄ¿³ÙÄÀ³ "
+      cnBoxString := hb_UTF8ToStr( "â”Œâ”€â”â”‚â”˜â”€â””â”‚ " )
    ENDIF
 
    lShadow := iif( lShadow == NIL, .T., lShadow )

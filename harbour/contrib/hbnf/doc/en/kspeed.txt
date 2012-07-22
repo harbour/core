@@ -16,42 +16,42 @@
  *
  *      <nRepeatRate> is the keyboard repeat rate.
  *
- *           �����������������������Ŀ  ������������������������Ŀ
- *           � nDelayTime      DELAY �  � RepeatRate      SPEED  �
- *           �����������������������Ĵ  ������������������������Ĵ
- *           �     0           250ms �  �    0           30.0cps �
- *           �     1 (default) 500ms �  �    1           26.7cps �
- *           �     2           750ms �  �    2           24.0cps �
- *           �     3          1000ms �  �    3           21.8cps �
- *           �������������������������  �    4           20.0cps �
- *                                      �    5           18.5cps �
- *                                      �    6           17.1cps �
- *                                      �    7           16.0cps �
- *                                      �    8           15.0cps �
- *                                      �    9           13.3cps �
- *                                      �   10           12.0cps �
- *                                      �   11           10.9cps �
- *                                      �   12 (default) 10.0cps �
- *                                      �   13            9.2cps �
- *                                      �   14            8.6cps �
- *                                      �   15            8.0cps �
- *                                      �   16            7.5cps �
- *                                      �   17            6.7cps �
- *                                      �   18            6.0cps �
- *                                      �   19            5.5cps �
- *                                      �   20            5.0cps �
- *                                      �   21            4.6cps �
- *                                      �   22            4.3cps �
- *                                      �   23            4.0cps �
- *                                      �   24            3.7cps �
- *                                      �   25            3.3cps �
- *                                      �   26            3.0cps �
- *                                      �   27            2.7cps �
- *                                      �   28            2.5cps �
- *                                      �   29            2.3cps �
- *                                      �   30            2.1cps �
- *                                      �   31            2.0cps �
- *                                      ��������������������������
+ *           ┌───────────────────────┐  ┌────────────────────────┐
+ *           │ nDelayTime      DELAY │  │ RepeatRate      SPEED  │
+ *           ├───────────────────────┤  ├────────────────────────┤
+ *           │     0           250ms │  │    0           30.0cps │
+ *           │     1 (default) 500ms │  │    1           26.7cps │
+ *           │     2           750ms │  │    2           24.0cps │
+ *           │     3          1000ms │  │    3           21.8cps │
+ *           └───────────────────────┘  │    4           20.0cps │
+ *                                      │    5           18.5cps │
+ *                                      │    6           17.1cps │
+ *                                      │    7           16.0cps │
+ *                                      │    8           15.0cps │
+ *                                      │    9           13.3cps │
+ *                                      │   10           12.0cps │
+ *                                      │   11           10.9cps │
+ *                                      │   12 (default) 10.0cps │
+ *                                      │   13            9.2cps │
+ *                                      │   14            8.6cps │
+ *                                      │   15            8.0cps │
+ *                                      │   16            7.5cps │
+ *                                      │   17            6.7cps │
+ *                                      │   18            6.0cps │
+ *                                      │   19            5.5cps │
+ *                                      │   20            5.0cps │
+ *                                      │   21            4.6cps │
+ *                                      │   22            4.3cps │
+ *                                      │   23            4.0cps │
+ *                                      │   24            3.7cps │
+ *                                      │   25            3.3cps │
+ *                                      │   26            3.0cps │
+ *                                      │   27            2.7cps │
+ *                                      │   28            2.5cps │
+ *                                      │   29            2.3cps │
+ *                                      │   30            2.1cps │
+ *                                      │   31            2.0cps │
+ *                                      └────────────────────────┘
  *  $RETURNS$
  *     NIL
  *  $DESCRIPTION$

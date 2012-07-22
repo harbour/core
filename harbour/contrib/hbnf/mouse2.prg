@@ -111,7 +111,7 @@ THREAD static lMinit:=.F.
 
      * ..... Set up the screen
      cSavClr := setcolor( "w/n" )
-     @ 0,0,maxrow(),maxcol() box "°°°°°°°°°"
+     @ 0,0,maxrow(),maxcol() box hb_UTF8ToStr( "â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘â–‘" )
 
      setcolor( "GR+/RB" )
      scroll( 7,2,19,63,0 )

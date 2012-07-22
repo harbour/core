@@ -153,13 +153,13 @@ THREAD STATIC NHPOS, NVPOS, NMAXROW, NMAXCOL
    CLEAR SCREEN
    SETCOLOR( cNormN )
    @ nMaxRow, 0
-   @ nMaxRow, 0 SAY " FT_MENU1 1.0 � "
+   @ nMaxRow, 0 SAY hb_UTF8ToStr( " FT_MENU1 1.0 │ " )
    @ NMAXROW,16 SAY "WRITTEN BY PAUL FERRARA [76702,556] FOR NANFORUM.LIB"
-   @ NMAXROW,69 SAY "� "+DTOC( DATE() )
+   @ NMAXROW,69 SAY hb_UTF8ToStr( "│ " )+DTOC( DATE() )
 
    SETCOLOR( cErrH )
-   @ nMaxRow-11, 23, nMaxRow-3, 56 BOX "�Ŀ����� "
-   @ nMaxRow- 9,23 SAY "��������������������������������Ĵ"
+   @ nMaxRow-11, 23, nMaxRow-3, 56 BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
+   @ nMaxRow- 9,23 SAY hb_UTF8ToStr( "├────────────────────────────────┤" )
    SETCOLOR( cErrN )
    @ nMaxRow-10,33 SAY "Navigation Keys"
    @ nMaxRow- 8,25 SAY "LeftArrow   RightArrow   Alt-E"
@@ -279,7 +279,7 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
          FT_SHADOW( nTopRow+1, aBoxLoc[nHpos], LEN(aChoices[nHpos,1])+nTopRow+2, aBarWidth[nHpos]+3+aBoxLoc[nHpos] )
       ENDIF
       SETCOLOR( cBorder )
-      @  nTopRow+1, aBoxLoc[nHpos], LEN(aChoices[nHpos,1])+nTopRow+2, aBarWidth[nHpos]+3+aBoxLoc[nHpos] BOX "�ͻ���Ⱥ "
+      @  nTopRow+1, aBoxLoc[nHpos], LEN(aChoices[nHpos,1])+nTopRow+2, aBarWidth[nHpos]+3+aBoxLoc[nHpos] BOX "╔═╗║╝═╚║ "
       SETCOLOR( cBox +","+ cCurrent +",,,"+ cUnselec )
       nVpos := ACHOICE( nTopRow+2, aBoxLoc[nHpos]+2, LEN(aChoices[nHpos,1])+nTopRow+2, aBarWidth[nHpos]+1+aBoxLoc[nHpos], aChoices[nHpos,1], aChoices[nHpos,3], "__ftAcUdf", aLastSel[nHpos])
       DO CASE
@@ -347,7 +347,7 @@ STATIC FUNCTION _ftBailOut( cBorder, cBox )
    sOldScreen := SAVESCREEN(nMaxRow/2-1, 24, nMaxRow/2+2, 55)
    cOldColor := SETCOLOR( cBorder )
    FT_SHADOW( nMaxRow/2-1, 24, nMaxRow/2+2, 55 )
-   @ nMaxRow/2-1, 24, nMaxRow/2+2, 55 BOX "�ͻ���Ⱥ "
+   @ nMaxRow/2-1, 24, nMaxRow/2+2, 55 BOX hb_UTF8ToStr( "╔═╗║╝═╚║ " )
    SETCOLOR( cBox )
    @ nMaxRow/2,  26 SAY "Press ESCape To Confirm Exit"
    @ nMaxRow/2+1,27 SAY "Or Any Other Key To Resume"

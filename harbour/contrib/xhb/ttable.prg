@@ -100,8 +100,8 @@ FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, ;
    DO WHILE ( lforever .or. nSeconds > 0 ) .and. LASTKEY() != K_ESC
       IF !lfirstPass
          DISPOUTAT( MAXROW(), 0, ;
-                    PADC( "Network retry ³ " + ;
-                    LTRIM( STR( nSeconds, 4, 1 ) ) + " ³ ESCape = Exit ", ;
+                    PADC( "Network retry | " + ;
+                    LTRIM( STR( nSeconds, 4, 1 ) ) + " | ESCape = Exit ", ;
                     MAXCOL() + 1 ), ;
                     scNetMsgColor )
          lFirstPass := .F.
@@ -208,7 +208,7 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
             ENDIF
 
             DISPOUTAT( MAXROW(), 0, ;
-                       PADC( "Network Retry " + cWord + " ³ " + STR( nSeconds, 3 ) + " ³ ESC Exit", MAXCOL() + 1 ), ;
+                       PADC( "Network Retry " + cWord + " | " + STR( nSeconds, 3 ) + " | ESC Exit", MAXCOL() + 1 ), ;
                        scNetMsgColor )
 
             nKey := INKEY( 1 )          //TONE( 1,1 )

@@ -534,12 +534,12 @@ PROCEDURE Main_MISC()
    TEST_LINE( Eval( NIL )                     , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:NIL F:S" )
    TEST_LINE( Eval( 1 )                       , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:N:1 F:S" )
    TEST_LINE( Eval( @sbBlock )                , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:B:{||...} F:S" ) /* CA-Cl*pper returns "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:{||...} F:S" */
-   TEST_LINE( Eval( {|p1| p1 },"A","B")       , "A"                                       )
-   TEST_LINE( Eval( {|p1,p2| p1+p2 },"A","B") , "AB"                                      )
+   TEST_LINE( Eval( {| p1 | p1 },"A","B")     , "A"                                       )
+   TEST_LINE( Eval( {| p1, p2 | p1 + p2 },"A","B"), "AB"                                      )
 #ifdef __HARBOUR__
-   TEST_LINE( Eval( {|p1,p2,p3| HB_SYMBOL_UNUSED(p2), HB_SYMBOL_UNUSED(p3), p1 },"A","B") , "A"                                       )
+   TEST_LINE( Eval( {| p1, p2, p3 | HB_SYMBOL_UNUSED( p2 ), HB_SYMBOL_UNUSED( p3 ), p1 }, "A", "B" ), "A"                                       )
 #else
-   TEST_LINE( Eval( {|p1,p2,p3| p1 },"A","B") , "A"                                       )
+   TEST_LINE( Eval( {| p1, p2, p3 | p1 }, "A", "B" ) , "A"                                       )
 #endif
    TEST_LINE( suNIL:Eval()                    , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:NIL F:S" )
    TEST_LINE( scString:Eval()                 , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:C:HELLO F:S" )
@@ -856,8 +856,8 @@ PROCEDURE Main_MISC()
 #ifdef __HARBOUR__
    TEST_LINE( HardCR(@scString)                                             , "HELLO"                                                                            ) /* Bug in CA-Cl*pper, it will return "" */
 #endif
-   TEST_LINE( HardCR("H"+SO+LF+"P"+SO+LF+"W"+SO+"M")                        , "H"+Chr(13)+""+Chr(10)+"P"+Chr(13)+""+Chr(10)+"WçM"                                )
-   TEST_LINE( HardCR("H"+NU+"B"+SO+LF+NU+"P"+SO+LF+"W"+SO+"M"+NU)           , "H"+Chr(0)+"B"+Chr(13)+""+Chr(10)+""+Chr(0)+"P"+Chr(13)+""+Chr(10)+"WçM"+Chr(0)+"" )
+   TEST_LINE( HardCR("H"+SO+LF+"P"+SO+LF+"W"+SO+"M")                        , "H"+Chr(13)+""+Chr(10)+"P"+Chr(13)+""+Chr(10)+"W"+Chr(141)+"M"                                )
+   TEST_LINE( HardCR("H"+NU+"B"+SO+LF+NU+"P"+SO+LF+"W"+SO+"M"+NU)           , "H"+Chr(0)+"B"+Chr(13)+""+Chr(10)+""+Chr(0)+"P"+Chr(13)+""+Chr(10)+"W"+Chr(141)+"M"+Chr(0)+"" )
 
    /* MEMOTRAN() */
 
@@ -872,9 +872,9 @@ PROCEDURE Main_MISC()
 #endif
    TEST_LINE( MemoTran("H"+SO+LF+"P"+CR+LF+"M")                             , "H P;M"                                            )
    TEST_LINE( MemoTran("H"+NU+"O"+SO+LF+"P"+CR+LF+"M"+NU+"I")               , "H"+Chr(0)+"O P;M"+Chr(0)+"I"                      )
-   TEST_LINE( MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR)            , "M"+Chr(13)+"s;wçw h"+Chr(13)+""                   )
-   TEST_LINE( MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR,"111","222"), "M"+Chr(13)+"s1wçw2h"+Chr(13)+""                   )
-   TEST_LINE( MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR,"","")      , "M"+Chr(13)+"s"+Chr(0)+"wçw"+Chr(0)+"h"+Chr(13)+"" )
+   TEST_LINE( MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR)            , "M"+Chr(13)+"s;w"+Chr(141)+"w h"+Chr(13)+""        )
+   TEST_LINE( MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR,"111","222"), "M"+Chr(13)+"s1w"+Chr(141)+"w2h"+Chr(13)+""        )
+   TEST_LINE( MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR,"","")      , "M"+Chr(13)+"s"+Chr(0)+"w"+Chr(141)+"w"+Chr(0)+"h"+Chr(13)+"" )
 
    /* MEMOWRITE()/MEMOREAD() */
 
@@ -889,7 +889,7 @@ PROCEDURE Main_MISC()
    TEST_LINE( MemoWrit("$$MEMOFI.TMP",Chr(26))   , .T.              )
    TEST_LINE( MemoRead("$$MEMOFI.TMP")           , ""+Chr(26)+""    )
    TEST_LINE( MemoWrit("$$MEMOFI.TMP",scStringW) , .T.              )
-   TEST_LINE( MemoRead("$$MEMOFI.TMP")           , ""+Chr(13)+""+Chr(10)+"ç"+Chr(10)+""+Chr(9)+"" )
+   TEST_LINE( MemoRead("$$MEMOFI.TMP")           , ""+Chr(13)+""+Chr(10)+Chr(141)+Chr(10)+""+Chr(9)+"" )
    TEST_LINE( MemoWrit(BADFNAME2()   ,scStringZ) , .F.              )
 #ifndef __XPP__
    TEST_LINE( MemoRead()                         , ""               )

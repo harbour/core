@@ -53,7 +53,7 @@
  *                 a more appropriate test display.
  *
  *         [4]  cFillChar  is the character (for desktop background only)
- *                 Default is CHR(177) "±±±±±±±±±±±±±±"
+ *                 Default is CHR(177) "â–’â–’â–’â–’â–’â–’â–’â–’â–’â–’â–’â–’â–’â–’"
  *
  *
  *     <lClrMode>   .T.  use colour palette
@@ -63,7 +63,7 @@
  *
  *     <cTestChr>  2 Byte character string for colour test display
  *
- *                 Default is the CHR(254)+CHR(254)  "þþ"
+ *                 Default is the CHR(254)+CHR(254)  "â– â– "
  *
  *  $RETURNS$
  *     An array identical to the one passed, with new selected colours
@@ -85,7 +85,7 @@
  *     *.... a typical application might have the following different settings
  *     *     normally these would be stored in a .dbf/.dbv
  *     aClrs := {;
- *        { "Desktop",        "N/BG",                         "D", "±" }, ;
+ *        { "Desktop",        "N/BG",                         "D", "â–’" }, ;
  *        { "Title",          "N/W",                          "T"      }, ;
  *        { "Top Menu",       "N/BG,N/W,W+/BG,W+/N,GR+/N",    "M"      }, ;
  *        { "Sub Menu",       "W+/N*,GR+/N*,GR+/N*,W+/R,G+/R","M"      }, ;

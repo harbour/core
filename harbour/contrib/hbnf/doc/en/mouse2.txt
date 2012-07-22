@@ -512,8 +512,8 @@
  *     intensity and forground and background colors. The mask is represented in
  *     the diagram below:
  *
- *     Bit:     ³15    ³14      12³11       ³10       8³7       0³
- *     Function:³blink ³background³intensity³foreground³character³
+ *     Bit:     â”‚15    â”‚14      12â”‚11       â”‚10       8â”‚7       0â”‚
+ *     Function:â”‚blink â”‚backgroundâ”‚intensityâ”‚foregroundâ”‚characterâ”‚
  *
  *     Blinking and high intensity are on when the bit is 1. The background and
  *     foreground indicate which colors are used for each. The software mouse
@@ -523,10 +523,10 @@
  *     Thus to keep the character the same but invert the foreground and
  *     background colors the following values would be used:
  *
- *     Bit:     ³15    ³14      12³11       ³10       8³7       0³
- *     Function:³blink ³background³intensity³foreground³character³
- *     screen:  ³  0   ³   111    ³    0    ³   111    ³11111111 ³ =30719
- *     cursor:  ³  0   ³   111    ³    0    ³   111    ³00000000 ³ =30464
+ *     Bit:     â”‚15    â”‚14      12â”‚11       â”‚10       8â”‚7       0â”‚
+ *     Function:â”‚blink â”‚backgroundâ”‚intensityâ”‚foregroundâ”‚characterâ”‚
+ *     screen:  â”‚  0   â”‚   111    â”‚    0    â”‚   111    â”‚11111111 â”‚ =30719
+ *     cursor:  â”‚  0   â”‚   111    â”‚    0    â”‚   111    â”‚00000000 â”‚ =30464
  *
  *     The hardware cursor is the text cursor provided by the video board. One
  *     specifies the range of scan lines which are on using <nScrMask> and

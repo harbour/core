@@ -300,9 +300,9 @@ DEFAULT cColor to ""
       IF nBorder > 0
 /*
             1
-         ÚÄÄÄÄÄ¿
-       4 ³     ³ 2
-         ÀÄÄÄÄÄÙ
+         +-----+
+       4 |     | 2
+         +-----+
             3
 */
          t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + ltrim(str( y1 )) + " " + ltrim(str( t_aReport[ PAGEY ] - x1 )) + " " + ltrim(str( y2 - y1 )) + " -" + ltrim(str( nBorder )) + " re f"

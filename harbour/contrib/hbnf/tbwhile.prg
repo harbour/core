@@ -195,9 +195,9 @@ FUNCTION FT_BRWSWHL(aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
    b := TBrowseDB(nTop, nLeft, nBottom, nRight)
 
    /* default heading and column separators */
-   b:headSep := "Õ—Õ"
-   b:colSep  := " ≥ "
-   b:footSep := "ÕœÕ"
+   b:headSep := hb_UTF8ToStr( "‚ïê‚ï§‚ïê" )
+   b:colSep  := hb_UTF8ToStr( " ‚îÇ " )
+   b:footSep := hb_UTF8ToStr( "‚ïê‚ïß‚ïê" )
 
    /* add custom 'TbSkipWhil' (to handle passed condition) */
    b:skipBlock := {|x| TbSkipWhil(x, bWhileCond)}

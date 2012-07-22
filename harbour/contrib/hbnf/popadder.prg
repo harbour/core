@@ -61,7 +61,7 @@
 #define K_MULTIPLY 42
 #define K_DIVIDE   47
 #define K_ZERO     48
-#define B_DOUBLE "им╩╨╪мх╨ "
+#define B_DOUBLE "Б∙■Б∙░Б∙≈Б∙▒Б∙²Б∙░Б∙ Б∙▒ "
 #define B_SINGLE "+-+|+-+| "
 
 #define CRLF CHR(13)+CHR(10)
@@ -367,21 +367,21 @@ STATIC FUNCTION _ftAddScreen(aAdder)
   _ftPushWin(2+nTopOS,2+nAddSpace,22+nTopOS,30+nAddSpace,"   Adder   ",      ;
           "<F-1> for Help",,B_DOUBLE)
   nCol := 5+nAddSpace
-  @  7+nTopOS, nCol SAY '      зддд© зддд© зддд©'
-  @  8+nTopOS, nCol SAY '      Ё   Ё Ё   Ё Ё   Ё'
-  @  9+nTopOS, nCol SAY '      юддды юддды юддды'
-  @ 10+nTopOS, nCol SAY 'зддд© зддд© зддд© зддд©'
-  @ 11+nTopOS, nCol SAY 'Ё   Ё Ё   Ё Ё   Ё Ё   Ё'
-  @ 12+nTopOS, nCol SAY 'юддды юддды юддды Ё   Ё'
-  @ 13+nTopOS, nCol SAY 'зддд© зддд© зддд© Ё   Ё'
-  @ 14+nTopOS, nCol SAY 'Ё   Ё Ё   Ё Ё   Ё Ё   Ё'
-  @ 15+nTopOS, nCol SAY 'юддды юддды юддды юддды'
-  @ 16+nTopOS, nCol SAY 'зддд© зддд© зддд© зддд©'
-  @ 17+nTopOS, nCol SAY 'Ё   Ё Ё   Ё Ё   Ё Ё   Ё'
-  @ 18+nTopOS, nCol SAY 'юддды юддды юддды Ё   Ё'
-  @ 19+nTopOS, nCol SAY 'зддддддддд© зддд© Ё   Ё'
-  @ 20+nTopOS, nCol SAY 'Ё         Ё Ё   Ё Ё   Ё'
-  @ 21+nTopOS, nCol SAY 'юддддддддды юддды юддды'
+  @  7+nTopOS, nCol SAY hb_UTF8ToStr( '      Б■▄Б■─Б■─Б■─Б■░ Б■▄Б■─Б■─Б■─Б■░ Б■▄Б■─Б■─Б■─Б■░' )
+  @  8+nTopOS, nCol SAY hb_UTF8ToStr( '      Б■┌   Б■┌ Б■┌   Б■┌ Б■┌   Б■┌' )
+  @  9+nTopOS, nCol SAY hb_UTF8ToStr( '      Б■■Б■─Б■─Б■─Б■≤ Б■■Б■─Б■─Б■─Б■≤ Б■■Б■─Б■─Б■─Б■≤' )
+  @ 10+nTopOS, nCol SAY hb_UTF8ToStr( 'Б■▄Б■─Б■─Б■─Б■░ Б■▄Б■─Б■─Б■─Б■░ Б■▄Б■─Б■─Б■─Б■░ Б■▄Б■─Б■─Б■─Б■░' )
+  @ 11+nTopOS, nCol SAY hb_UTF8ToStr( 'Б■┌   Б■┌ Б■┌   Б■┌ Б■┌   Б■┌ Б■┌   Б■┌' )
+  @ 12+nTopOS, nCol SAY hb_UTF8ToStr( 'Б■■Б■─Б■─Б■─Б■≤ Б■■Б■─Б■─Б■─Б■≤ Б■■Б■─Б■─Б■─Б■≤ Б■┌   Б■┌' )
+  @ 13+nTopOS, nCol SAY hb_UTF8ToStr( 'Б■▄Б■─Б■─Б■─Б■░ Б■▄Б■─Б■─Б■─Б■░ Б■▄Б■─Б■─Б■─Б■░ Б■┌   Б■┌' )
+  @ 14+nTopOS, nCol SAY hb_UTF8ToStr( 'Б■┌   Б■┌ Б■┌   Б■┌ Б■┌   Б■┌ Б■┌   Б■┌' )
+  @ 15+nTopOS, nCol SAY hb_UTF8ToStr( 'Б■■Б■─Б■─Б■─Б■≤ Б■■Б■─Б■─Б■─Б■≤ Б■■Б■─Б■─Б■─Б■≤ Б■■Б■─Б■─Б■─Б■≤' )
+  @ 16+nTopOS, nCol SAY hb_UTF8ToStr( 'Б■▄Б■─Б■─Б■─Б■░ Б■▄Б■─Б■─Б■─Б■░ Б■▄Б■─Б■─Б■─Б■░ Б■▄Б■─Б■─Б■─Б■░' )
+  @ 17+nTopOS, nCol SAY hb_UTF8ToStr( 'Б■┌   Б■┌ Б■┌   Б■┌ Б■┌   Б■┌ Б■┌   Б■┌' )
+  @ 18+nTopOS, nCol SAY hb_UTF8ToStr( 'Б■■Б■─Б■─Б■─Б■≤ Б■■Б■─Б■─Б■─Б■≤ Б■■Б■─Б■─Б■─Б■≤ Б■┌   Б■┌' )
+  @ 19+nTopOS, nCol SAY hb_UTF8ToStr( 'Б■▄Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■░ Б■▄Б■─Б■─Б■─Б■░ Б■┌   Б■┌' )
+  @ 20+nTopOS, nCol SAY hb_UTF8ToStr( 'Б■┌         Б■┌ Б■┌   Б■┌ Б■┌   Б■┌' )
+  @ 21+nTopOS, nCol SAY hb_UTF8ToStr( 'Б■■Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■─Б■≤ Б■■Б■─Б■─Б■─Б■≤ Б■■Б■─Б■─Б■─Б■≤' )
   _ftSetWinColor(W_CURR,W_TITLE)
   nCol := 7+nAddSpace
   @ 11+nTopOS, nCol SAY "7"
@@ -777,7 +777,7 @@ STATIC FUNCTION _ftAddHelp
                  "         <M>ove     - the Adder from right to left"  +CRLF+;
                  "         <T>ape     - turn Tape Display On or Off"   +CRLF+;
                  "         <S>croll   - the tape display"       + CRLF +CRLF+;
-                 "         <DEL> ---б-- 1st Clear entry"               +CRLF+;
+                 "         <DEL> ---Б■╛-- 1st Clear entry"               +CRLF+;
                  "                  +-- 2nd Clear ADDER"               +CRLF+;
                  "         <ESC>      - Quit"                          +CRLF+;
                  "         <F10>      - return a <TOTAL> to the active get"

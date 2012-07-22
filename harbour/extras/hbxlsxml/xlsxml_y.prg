@@ -533,10 +533,10 @@ METHOD ExcelWriterXML_Style:border( position,weight,color,linestyle )
       position := 'All'          // All, Left, Top, Right, Bottom, DiagonalLeft, DiagonalRight
    ENDIF
    IF weight == NIL
-      weight := '1'              // 0—Hairline, 1—Thin, 2—Medium, 3—Thick
+      weight := '1'              // 0-Hairline, 1-Thin, 2-Medium, 3-Thick
    ENDIF
    IF color == NIL
-      color := 'Automatic'       // Automatic, 6-hexadecimal digit number IN "#rrggbb" format OR it can be any of the Microsoft® Internet Explorer named colors
+      color := 'Automatic'       // Automatic, 6-hexadecimal digit number IN "#rrggbb" format OR it can be any of the MS Internet Explorer named colors
    ENDIF
    IF linestyle == NIL
       linestyle := 'Continuous'  // None, Continuous, Dash, Dot, DashDot, DashDotDot, SlantDashDot, Double
