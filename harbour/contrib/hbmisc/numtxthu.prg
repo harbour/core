@@ -50,14 +50,16 @@
  *
  */
 
+/* UTF-8 */
+
 FUNCTION NumToTxtHU( nValue )
-   LOCAL aTort := { "tized", "sz†zad", "ezred", "t°zezred", "sz†zezred", "milliomod", "milli†rdod" }
+   LOCAL aTort := { "tized", "sz√°zad", "ezred", "t√≠zezred", "sz√°zezred", "milliomod", "milli√°rdod" }
    LOCAL cRetVal
    LOCAL tmp, tmp1, tmp2
 
    IF nValue < 0
       nValue := -nValue
-      cRetVal := "m°nusz "
+      cRetVal := "m√≠nusz "
    ELSE
       cRetVal := ""
    ENDIF
@@ -76,16 +78,16 @@ FUNCTION NumToTxtHU( nValue )
          tmp1--
       ENDDO
 
-      cRetVal += " egÇsz " + NumToTxtRaw( tmp * ( 10 ^ tmp1 ) ) + iif( tmp1 >= 1 .AND. tmp1 <= Len( aTort ), " " + aTort[ tmp1 ], "" )
+      cRetVal += " eg√©sz " + NumToTxtRaw( tmp * ( 10 ^ tmp1 ) ) + iif( tmp1 >= 1 .AND. tmp1 <= Len( aTort ), " " + aTort[ tmp1 ], "" )
    ENDIF
 
-   RETURN cRetVal
+   RETURN hb_UTF8ToStr( cRetVal )
 
 STATIC FUNCTION NumToTxtRaw( nValue )
-   LOCAL aEgesz  := { "", "ezer" , "milli¢", "milli†rd", "billi¢" , "trilli¢", "kvadrilli¢", "kvintilli¢" } // , "szextilli¢", "szeptilli¢", "oktilli¢", "nontilli¢" }
-   LOCAL aEgyes  := { "", "egy"  , "kettã" , "h†rom"   , "nÇgy"   , "ît"     , "hat"       , "hÇt"       , "nyolc"     , "kilenc" }
-   LOCAL aTizes1 := { "", "t°z"  , "h£sz"  , "harminc" , "negyven", "îtven"  , "hatvan"    , "hetven"    , "nyolcvan"  , "kilencven" }
-   LOCAL aTizes2 := { "", "tizen", "huszon", "harminc" , "negyven", "îtven"  , "hatvan"    , "hetven"    , "nyolcvan"  , "kilencven" }
+   LOCAL aEgesz  := { "", "ezer" , "milli√≥", "milli√°rd", "billi√≥" , "trilli√≥", "kvadrilli√≥", "kvintilli√≥" } // , "szextilli√≥", "szeptilli√≥", "oktilli√≥", "nontilli√≥" }
+   LOCAL aEgyes  := { "", "egy"  , "kett≈ë" , "h√°rom"   , "n√©gy"   , "√∂t"     , "hat"       , "h√©t"       , "nyolc"     , "kilenc" }
+   LOCAL aTizes1 := { "", "t√≠z"  , "h√∫sz"  , "harminc" , "negyven", "√∂tven"  , "hatvan"    , "hetven"    , "nyolcvan"  , "kilencven" }
+   LOCAL aTizes2 := { "", "tizen", "huszon", "harminc" , "negyven", "√∂tven"  , "hatvan"    , "hetven"    , "nyolcvan"  , "kilencven" }
 
    LOCAL aDigit
    LOCAL nLen
@@ -108,7 +110,7 @@ STATIC FUNCTION NumToTxtRaw( nValue )
          aDigit[ tmp + 2 ] != 0
 
          cValue += iif( Empty( cValue ), "", "-") +;
-                   iif( aDigit[ tmp ] != 0, aEgyes[ aDigit[ tmp ] + 1 ] + "sz†z", "" ) +;
+                   iif( aDigit[ tmp ] != 0, aEgyes[ aDigit[ tmp ] + 1 ] + "sz√°z", "" ) +;
                    iif( aDigit[ tmp + 2 ] == 0, aTizes1[ aDigit[ tmp + 1 ] + 1 ], aTizes2[ aDigit[ tmp + 1 ] + 1 ] ) +;
                    aEgyes[ aDigit[ tmp + 2 ] + 1 ] +;
                    aEgesz[ ( Int( ( nLen - tmp ) / 3 ) ) + 1 ]

@@ -115,16 +115,16 @@ and this can be done from a script which runs a Harbour program.
 
 Let's see an example.
 
-Suppose one national language has three national characters : '¡ÆÊ' which
+Suppose one national language has three national characters : 'Ä„Ä†Ä˜' which
 correspond to 'ACE' in a lower 128 bytes ASCII table. 'Corresponding' means
-that to get a '¡' nation char one has to press a special keyboard modifier
+that to get a 'Ä„' nation char one has to press a special keyboard modifier
 (like ALT+R for example) plus an 'A' char.
 
 HRBNATIONCHARS should be defined as :
 
-        HRBNATIONCHARS=A¡CÆEÊ
+        HRBNATIONCHARS=AÄ„CÄ†EÄ˜
 
-   where A¡ is a first pair, CÆ is a second pair and so on
+   where AÄ„ is a first pair, CÄ† is a second pair and so on
 
 Suppose also we are working on a terminal which does not allow to enter
 national characters by pressing ALTR+A, ALTR+C, ALTR+E. Because we like
@@ -138,7 +138,7 @@ or in other way :
 
         HRBNATIONDEADKEY=`echo -ne '\140`'
 
-Now we can enter ¡ by pressing ` and then A, Æ by pressing ` and then C,
+Now we can enter Ä„ by pressing ` and then A, Ä† by pressing ` and then C,
 and so on. To get '`' character we need to double press `.
 
 

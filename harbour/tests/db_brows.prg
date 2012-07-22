@@ -30,6 +30,8 @@
 //+
 //+--------------------------------------------------------------------
 
+/* UTF-8 */
+
 #include "fileio.ch"
 
 #define LI_LEN          42
@@ -142,7 +144,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
       mslist := InitList()
    ENDIF
    IF !( Type( "str_bar" ) == "C" )
-      PRIVATE str_bar := "-■"
+      PRIVATE str_bar := hb_UTF8ToStr( "-тЦа" )
    ENDIF
    LI_Y1 := y1
    LI_X1 := x1
@@ -193,7 +195,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
    ENDIF
    oldcolors := SetColor()
    SetColor( LI_CLR )
-   @ LI_Y1, LI_X1, LI_Y2, LI_X2 BOX "┌─┐│┘─└│ "
+   @ LI_Y1, LI_X1, LI_Y2, LI_X2 BOX hb_UTF8ToStr( "тФМтФАтФРтФВтФШтФАтФФтФВ " )
    IF title != Nil
       @ LI_Y1, ( LI_X2 - LI_X1 - 1 - Len( title ) ) / 2 + LI_X1 SAY " " + title + " "
    ENDIF
@@ -231,12 +233,12 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
       SetColor( LI_CLR )
       Eval( LI_B1, mslist )
       //     IF predit>1
-      //      SETCOLOR(LI_CLRV+"*")                 // Выделить строку
+      //      SETCOLOR(LI_CLRV+"*")
       //     ELSE
       SetColor( LI_CLRV )
       //     ENDIF
       VIVSTR( mslist, LI_NSTR + LI_Y1, iif( predit > 1, LI_COLPOS, 0 ) )
-      SetColor( LI_CLR )                // Убрать выделение
+      SetColor( LI_CLR )
       //
 #ifdef RDD_AX
       @ LI_Y1 + 2, LI_X2, LI_Y2 - 2, LI_X2 BOX Left( str_bar, 1 )
@@ -298,10 +300,10 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
          xkey := Inkey( 0 )
 #endif
       ENDIF
-      VIVSTR( mslist, LI_NSTR + LI_Y1, 0 )                  // строки
+      VIVSTR( mslist, LI_NSTR + LI_Y1, 0 )
       IF xkey < 500
          DO CASE
-         CASE xkey == 24                 // Курсор вниз
+         CASE xkey == 24
             IF ( LI_KOLZ > 0 .OR. predit == 3 ) .AND. ( LI_KOLZ == 0 .OR. ! Eval( LI_BEOF, mslist ) )
                Eval( LI_BSKIP, mslist, 1 )
                IF Eval( LI_BEOF, mslist ) .AND. ( predit < 3 .OR. LI_PRFLT )
@@ -331,7 +333,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
                   ENDIF
                ENDIF
             ENDIF
-         CASE xkey == 5 .AND. LI_KOLZ > 0                    // Курсор вверх
+         CASE xkey == 5 .AND. LI_KOLZ > 0
             Eval( LI_BSKIP, mslist, - 1 )
             IF Eval( LI_BBOF, mslist )
                Eval( LI_BGTOP, mslist )
@@ -343,7 +345,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
                   VIVSTR( mslist, LI_Y1 + 1, 0 )
                ENDIF
             ENDIF
-         CASE xkey == 4 .AND. LI_KOLZ != 0                   // Курсор вправо
+         CASE xkey == 4 .AND. LI_KOLZ != 0
             IF predit > 1
                IF LI_COLPOS < LI_NCOLUMNS
                   LI_COLPOS ++
@@ -363,7 +365,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
                Eval( LI_BSKIP, mslist, LI_NSTR - 1 )
             ENDIF
             VIVNAMES( mslist, LI_NLEFT )
-         CASE xkey == 19                 // Курсор влево
+         CASE xkey == 19                 // ├и╧А╬▒├Я┬л╬▒ ├│┬╜├С├│┬л
             IF predit > 1
                IF LI_COLPOS != 1
                   LI_COLPOS --
@@ -415,7 +417,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
             rezproc := xkey
          CASE ( xkey == 13 .OR. ( xkey > 47 .AND. xkey < 58 ) .OR. ( xkey > 64 .AND. xkey < 91 ) ;
                .OR. ( xkey > 96 .AND. xkey < 123 ) .OR. ( xkey > 127 .AND. xkey < 176 ) .OR. ( xkey > 223 .AND. xkey < 240 ) ) .AND. predit > 1             // Enter
-            //   Редактирование
+            //   ├Й├С├▒├б┬м╬У┬┐╬▒┬л├│├б┬б┬┐├С
             fipos := LI_COLPOS + LI_NLEFT - 1 - LI_FREEZE
             IF LI_WHEN == Nil .OR. Len( LI_WHEN ) < fipos .OR. LI_WHEN[ fipos ] == Nil .OR. Eval( LI_WHEN[ fipos ] )
                IF ValType( LI_MSED ) != "N"
@@ -779,7 +781,7 @@ FUNCTION InitList
    LI_CLR     := "W+/B"
    LI_CLRV    := "R/W"
    LI_BSKIP   := {| a, x | HB_SYMBOL_UNUSED( a ), dbSkip( x ) }
-   LI_BGTOP   := {|| DBGOTOP() }
+   LI_BGTOP   := {|| dbGoTop() }
    LI_BGBOT   := {|| dbGoBottom() }
    LI_BEOF    := {|| Eof() }
    LI_BBOF    := {|| Bof() }

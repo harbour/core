@@ -11,6 +11,8 @@
  *
  */
 
+/* UTF-8 */
+
 #include "inkey.ch"
 #include "button.ch"
 #include "setcurs.ch"
@@ -33,7 +35,8 @@ PROCEDURE Main()
    nRight  := 70
    cColor  := "W+/R,G+/BR,RG+/B,BG+/G,N/GR,GR+/BG,B/GR*"
 
-   SET DATE FORMAT TO "yyyy/mm/dd"
+   SET DATE ANSI
+   SET CENTURY ON
 
    // enable mouse events in CL53/Harbour
 #ifdef _SET_EVENTMASK
@@ -45,15 +48,15 @@ PROCEDURE Main()
    CLS
    DispBox( nTop, nLeft, nBottom, nRight, B_DOUBLE_SINGLE, cColor )
    oBrw := TBRowseNew( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 )
-   DispOutAt( nTop + 3,    nLeft,  "√", cColor )
-   DispOutAt( nTop + 3,    nRight, "¥", cColor )
-   DispOutAt( nBottom - 2, nLeft,  "√", cColor )
-   DispOutAt( nBottom - 2, nRight, "¥", cColor )
+   DispOutAt( nTop + 3,    nLeft,  hb_UTF8ToStr( "‚îú" ), cColor )
+   DispOutAt( nTop + 3,    nRight, hb_UTF8ToStr( "‚î§" ), cColor )
+   DispOutAt( nBottom - 2, nLeft,  hb_UTF8ToStr( "‚îú" ), cColor )
+   DispOutAt( nBottom - 2, nRight, hb_UTF8ToStr( "‚î§" ), cColor )
 
    oBrw:colorSpec( cColor )
-   oBrw:headSep := "ø ⁄ƒ"
-   oBrw:footSep := "Ÿ ¿ƒ"
-   oBrw:colSep  := "≥ ≥"
+   oBrw:headSep := hb_UTF8ToStr( "‚îê ‚îå‚îÄ" )
+   oBrw:footSep := hb_UTF8ToStr( "‚îò ‚îî‚îÄ" )
+   oBrw:colSep  := hb_UTF8ToStr( "‚îÇ ‚îÇ" )
 
    oBrw:SkipBlock     := {| n | hb_idleSleep( 0.2 ), ;
       n := iif( n < 0, Max( n, 1 - s_nPos ), ;
@@ -70,15 +73,15 @@ PROCEDURE Main()
    oCol2 := TBColumnNew( "COL;2",  {|| s_nCount ++ } )
    oCol2:defColor := { 3, 4, 5, 6 }
    oCol2:footing := "counter"
-   oCol2:headSep := "ø ⁄ƒ¥HIDE√ƒ"
+   oCol2:headSep := hb_UTF8ToStr( "‚îê ‚îå‚îÄ‚î§HIDE‚îú‚îÄ" )
 
    oCol3 := TBColumnNew( "COL 3",  {|| s_nPos % 3 == 0 } )
    oCol3:defColor := { 5, 6, 2, 3 }
    oCol3:footing := "logical"
    oCol3:picture := "@YR [Y]"  // Clipper wrongly calculate the size here
-   oCol3:headSep := "∑ ÷ƒ¥HIDE√ƒ"
-   oCol3:footSep := "Ω ”ƒ"
-   oCol3:colSep  := "∫ ∫"
+   oCol3:headSep := hb_UTF8ToStr( "‚ïñ ‚ïì‚îÄ‚î§HIDE‚îú‚îÄ" )
+   oCol3:footSep := hb_UTF8ToStr( "‚ïú ‚ïô‚îÄ" )
+   oCol3:colSep  := hb_UTF8ToStr( "‚ïë ‚ïë" )
 
    oCol4 := TBColumnNew( "   SHOW;   ALL",  {|| Date() - s_nPos } )
    oCol4:defColor := { 6, 3, 4, 2 }

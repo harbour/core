@@ -52,7 +52,7 @@ PROCEDURE Main()
          "string is limited to 256 characters and this string is " + ;
          "a lot bigger. Do you get my drift ? If there is somebody " + ;
          "who has read this line upto the very end: Esto es un " + ;
-         "sombrero grande rid¡culo." + Chr( 13 ) + Chr( 10 ) + ;
+         "sombrero grande ridiculo." + Chr( 13 ) + Chr( 10 ) + ;
          "/" + Chr( 13 ) + Chr( 10 ) + "[;-)" + Chr( 13 ) + Chr( 10 ) + ;
          "\"
    NEXT

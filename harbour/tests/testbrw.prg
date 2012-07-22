@@ -2,6 +2,8 @@
  * $Id$
  */
 
+/* UTF-8 */
+
 // Harbour Class TBrowse and TBColumn sample
 
 #include "inkey.ch"
@@ -22,9 +24,9 @@ PROCEDURE Main()
    LOCAL nTmpRow, nTmpCol
 
    oBrowse:colorSpec     := "W+/B, N/BG"
-   oBrowse:ColSep        := "≥"
-   oBrowse:HeadSep        := "—Õ"
-   oBrowse:FootSep        := "œÕ"
+   oBrowse:ColSep        := hb_UTF8ToStr( "‚îÇ" )
+   oBrowse:HeadSep       := hb_UTF8ToStr( "‚ï§‚ïê" )
+   oBrowse:FootSep       := hb_UTF8ToStr( "‚ïß‚ïê" )
    oBrowse:GoTopBlock    := {|| n := 1 }
    oBrowse:GoBottomBlock := {|| n := Len( aTest0 ) }
    oBrowse:SkipBlock     := {| nSkip, nPos | nPos := n, ;
@@ -56,7 +58,7 @@ PROCEDURE Main()
    cColor := SetColor( "W+/B" )
    nRow := Row()
    nCol := Col()
-   @ 4, 4, 17, 31 BOX "⁄ƒø≥Ÿƒ¿≥ "
+   @ 4, 4, 17, 31 BOX hb_UTF8ToStr( "‚îå‚îÄ‚îê‚îÇ‚îò‚îÄ‚îî‚îÇ " )
 #ifdef HB_COMPAT_C53
    oBrowse:SetKey( 0, {| ob, nkey | Defproc( ob,nKey ) } )
    WHILE .T.

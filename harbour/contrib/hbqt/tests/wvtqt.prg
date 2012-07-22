@@ -14,6 +14,8 @@
 //----------------------------------------------------------------------//
 //----------------------------------------------------------------------//
 
+/* UTF-8 */
+
 #include "hbgtinfo.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -253,8 +255,8 @@ PROCEDURE thFunc()
 
    oBrowse := TBrowse():New( 1, 0, maxrow(), maxcol() )
 
-   oBrowse:ColSep        := " ³ "
-   oBrowse:HeadSep       := "ÄÂÄ"
+   oBrowse:ColSep        := hb_UTF8ToStr( " â”‚ " )
+   oBrowse:HeadSep       := hb_UTF8ToStr( "â”€â”¬â”€" )
    oBrowse:GoTopBlock    := {|| dbGoTop() }
    oBrowse:GoBottomBlock := {|| dbGoBottom() }
    oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip, oBrowse ) }

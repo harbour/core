@@ -27,14 +27,8 @@ PROCEDURE Main()
    @ MaxRow() - 1, 10 SAY "X:"
 
    @ nR    ,  2 SAY "Mouse Type    : "
-   @ nR + 1,  2 SAY "Buttons number: "
-   @ nR + 1, 18 SAY NUMBUTTONS() PICT "9"
 
-   IF NUMBUTTONS() == 2
-      @ nR, 18 SAY "Micros*ft mouse"
-   ELSE
-      @ nR, 18 SAY "Mouse System"
-   ENDIF
+   @ nR, 18 SAY "Mouse System"
 
    @ MaxRow() - 2, 68 TO MaxRow(), MaxCol() DOUBLE
    @ MaxRow() - 1, 70 SAY "Exit"
@@ -77,7 +71,7 @@ FUNCTION MINRECT( nTop, nLeft, nBott, nRight )
 
    // First test: Check the boundaries of the main window
 
-PROCEDURE TEST1
+PROCEDURE TEST1()
 
    LOCAL nKey
 
@@ -139,32 +133,23 @@ PROCEDURE TEST1
 
    // Second test: check the button pressing
 
-PROCEDURE TEST2 ( nR, nC )
+PROCEDURE TEST2( nR, nC )
 
    LOCAL cSkip := "", nKey, nPress := 0
 
-   @ nR     , nC SAY  "ÚÄÄÄÄÄÄÄÄÄÁÄÄÄÄÄÄÄÄÄ¿"
-   @ nR +  1, nC SAY  "³ ÉÍÍÍ»       ÉÍÍÍ» ³"
-   @ nR +  2, nC SAY  "³ º   º       º   º ³"
-   @ nR +  3, nC SAY  "³ º   º       º   º ³"
-   @ nR +  4, nC SAY  "³ ÈÍÍÍ¼       ÈÍÍÍ¼ ³"
-   @ nR +  5, nC SAY  "ÃÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄ´"
-   @ nR +  6, nC SAY  "³  Up          Up   ³"
-   @ nR +  7, nC SAY  "³                   ³"
-   @ nR +  8, nC SAY  "³                   ³"
-   @ nR +  9, nC SAY  "³           Harbour ³"
-   @ nR + 10, nC SAY  "³            mouse  ³"
-   @ nR + 11, nC SAY  "ÀÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÄÙ"
+   @ nR     , nC SAY  "+---------|---------+"
+   @ nR +  1, nC SAY  "| +===+ +===+ +===+ |"
+   @ nR +  2, nC SAY  "| |   | |   | |   | |"
+   @ nR +  3, nC SAY  "| |   | |   | |   | |"
+   @ nR +  4, nC SAY  "| +===+ +===+ +===+ |"
+   @ nR +  6, nC SAY  "|  Up    Up    Up   |"
+   @ nR +  7, nC SAY  "|                   |"
+   @ nR +  8, nC SAY  "|                   |"
+   @ nR +  9, nC SAY  "|           Harbour |"
+   @ nR + 10, nC SAY  "|            mouse  |"
+   @ nR + 11, nC SAY  "+-------------------+"
 
-   IF NUMBUTTONS() == 3
-      @ nR + 1, nC SAY  "³ ÉÍÍÍ» ÉÍÍÍ» ÉÍÍÍ» ³"
-      @ nR + 2, nC SAY  "³ º   º º   º º   º ³"
-      @ nR + 3, nC SAY  "³ º   º º   º º   º ³"
-      @ nR + 4, nC SAY  "³ ÈÍÍÍ¼ ÈÍÍÍ¼ ÈÍÍÍ¼ ³"
-      @ nR + 6, nC SAY  "³  Up    Up    Up   ³"
-   ENDIF
-
-   Set( _Set_EVENTMASK, INKEY_ALL )
+   SET( _SET_EVENTMASK, INKEY_ALL )
 
    IF ! Empty( cSkip )
       IF Upper( cSkip ) == "BREAK"
@@ -191,8 +176,8 @@ PROCEDURE TEST2 ( nR, nC )
 
       CASE nKey == K_LBUTTONDOWN
          // Left mouse button was pushed
-         @ nR + 2, nC + 3 SAY "°°°"
-         @ nR + 3, nC + 3 SAY "°°°"
+         @ nR + 2, nC + 3 SAY "XXX"
+         @ nR + 3, nC + 3 SAY "XXX"
          @ nR + 6, nC + 3 SAY "Down"
          nPress ++
 
@@ -204,8 +189,8 @@ PROCEDURE TEST2 ( nR, nC )
 
       CASE nKey == K_MBUTTONDOWN
          // Middle mouse button was pushed
-         @ nR + 2, nC + 10 SAY "°°°"
-         @ nR + 3, nC + 10 SAY "°°°"
+         @ nR + 2, nC + 10 SAY "XXX"
+         @ nR + 3, nC + 10 SAY "XXX"
          @ nR + 6, nC + 10 SAY "Down"
          nPress ++
 
@@ -215,8 +200,8 @@ PROCEDURE TEST2 ( nR, nC )
 
       CASE nKey == K_RBUTTONDOWN
          // Right mouse button was pushed
-         @ nR + 2, nC + 15 SAY "°°°"
-         @ nR + 3, nC + 15 SAY "°°°"
+         @ nR + 2, nC + 15 SAY "XXX"
+         @ nR + 3, nC + 15 SAY "XXX"
          @ nR + 6, nC + 15 SAY "Down"
          nPress ++
 
@@ -234,11 +219,11 @@ PROCEDURE TEST2 ( nR, nC )
          // "The right mouse button was double-clicked."
          @ 14, 22 SAY "Pass"
 
-         OTHERWISE
+      OTHERWISE
          @ MaxRow(), 20 SAY "A keyboard key was pressed: "
          @ MaxRow(), 48 SAY nKey
          @ MaxRow(), 58 SAY iif( nKey >= 32 .AND. nKey <= 255, Chr( nKey ), "" )
-      END CASE
+      ENDCASE
 
       IF nPress > 6
          EXIT

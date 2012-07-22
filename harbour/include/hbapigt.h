@@ -101,28 +101,14 @@ HB_EXTERN_BEGIN
 #define HB_GT_ATTR_REFRESH    0x80
 
 /* strings for borders (same as box.ch, but defined for use by C) */
-
-/* Note. This part will never be used, but is being kept in the source,
-         so that if you use code page 437, you can see what the line
-         draw characters are supposed to look like.
-                                01234567
-#define _B_SINGLE              "ÚÄ¿³ÙÄÀ³"
-#define _B_DOUBLE              "ÉÍ»º¼ÍÈº"
-#define _B_SINGLE_DOUBLE       "ÖÄ·º½ÄÓº"
-#define _B_DOUBLE_SINGLE       "ÕÍ¸³¾ÍÔ³"
-#define HB_B_SINGLE_V          '³'
-#define HB_B_SINGLE_H          'Ä'
-#define HB_B_DOUBLE_V          'º'
-#define HB_B_DOUBLE_H          'Í'
-*/
-#define _B_SINGLE              "\xDA\xC4\xBF\xB3\xD9\xC4\xC0\xB3"
-#define _B_DOUBLE              "\xC9\xCD\xBB\xBA\xBC\xCD\xC8\xBA"
-#define _B_SINGLE_DOUBLE       "\xD6\xC4\xB7\xBA\xBD\xC4\xD3\xBA"
-#define _B_DOUBLE_SINGLE       "\xD5\xCD\xB8\xB3\xBE\xCD\xD4\xB3"
-#define HB_B_SINGLE_V          '\xB3'
-#define HB_B_SINGLE_H          '\xC4'
-#define HB_B_DOUBLE_V          '\xBA'
-#define HB_B_DOUBLE_H          '\xCD'
+#define _B_SINGLE              "\xDA\xC4\xBF\xB3\xD9\xC4\xC0\xB3"  /* "ÚÄ¿³ÙÄÀ³" */
+#define _B_DOUBLE              "\xC9\xCD\xBB\xBA\xBC\xCD\xC8\xBA"  /* "ÉÍ»º¼ÍÈº" */
+#define _B_SINGLE_DOUBLE       "\xD6\xC4\xB7\xBA\xBD\xC4\xD3\xBA"  /* "ÖÄ·º½ÄÓº" */
+#define _B_DOUBLE_SINGLE       "\xD5\xCD\xB8\xB3\xBE\xCD\xD4\xB3"  /* "ÕÍ¸³¾ÍÔ³" */
+#define HB_B_SINGLE_V          '\xB3'                              /* '³' */
+#define HB_B_SINGLE_H          '\xC4'                              /* 'Ä' */
+#define HB_B_DOUBLE_V          '\xBA'                              /* 'º' */
+#define HB_B_DOUBLE_H          '\xCD'                              /* 'Í' */
 
 #define HB_B_SINGLE_W         { 0x250C, 0x2500, 0x2510, 0x2502, 0x2518, 0x2500, 0x2514, 0x2502, 0x0000 }
 #define HB_B_DOUBLE_W         { 0x2554, 0x2550, 0x2557, 0x2551, 0x255D, 0x2550, 0x255A, 0x2551, 0x0000 }

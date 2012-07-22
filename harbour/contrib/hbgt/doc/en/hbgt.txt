@@ -453,7 +453,7 @@
  *  $EXAMPLES$
  *      ? gt_strexpand("abc")                    // prints "a b c"
  *      ? gt_strexpand("abc", 2)                 // prints "a  b  c"
- *      ? gt_strexpand("abc", 2, 'þ')            // prints "aþþbþþc"
+ *      ? gt_strexpand("abc", 2, '|')            // prints "a||b||c"
  *  $TESTS$
  *  $STATUS$
  *      R
@@ -713,5 +713,3 @@
  *      GT_NEWFLAG() GT_SETFLAG() GT_CLRFLAG()
  *  $END$
  */
-
-

@@ -265,7 +265,7 @@ if sp_init()
                       z   := fat( cTemp, cBuf,z )
                       if z < 6
                          exit
-                      elseif substr(cBuf,z-1,1) < "€"
+                      elseif substr(cBuf,z-1,1) < Chr( 128 )
                          z++
                       else
                          exit

@@ -12,12 +12,16 @@
  *
  */
 
+/* UTF-8 */
+
 #include "hbgtinfo.ch"
 
-#define POL_MAZ   "������������������"
-#define POL_ISO   "��ʣ�Ӧ������󶼿"
-#define POL_852   "�������������䢘��"
-#define POL_WIN   "��ʣ�ӌ������󜟿"
+#define POL_MAZ   hb_Translate( "ĄĆĘŁŃÓŚŹŻąćęłńóśźż", "UTF8", "PLMAZ" )
+#define POL_ISO   hb_Translate( "ĄĆĘŁŃÓŚŹŻąćęłńóśźż", "UTF8", "PLISO" )
+#define POL_852   hb_Translate( "ĄĆĘŁŃÓŚŹŻąćęłńóśźż", "UTF8", "PL852" )
+#define POL_WIN   hb_Translate( "ĄĆĘŁŃÓŚŹŻąćęłńóśźż", "UTF8", "PLWIN" )
+
+REQUEST HB_CODEPAGE_UTF8
 
 REQUEST HB_CODEPAGE_PLMAZ
 REQUEST HB_CODEPAGE_PLISO
@@ -61,11 +65,11 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
       ?
    NEXT
    Inkey( 0 )
-   ?; dspboxch( "���Ŀ  ���ͻ  ���͸  ���ķ  ��� ����  � � � �" )
-   ?; dspboxch( "� � �  � � �  ���Ĵ  ���Ķ  ���" )
-   ?; dspboxch( "���Ĵ  ���͹  � � �  � � �  ��� ���" )
-   ?; dspboxch( "� � �  � � �  ���͵  ���͹  ���" )
-   ?; dspboxch( "�����  ���ͼ  ���;  ���Ľ  ��� � � �" )
+   ?; dspboxch( hb_UTF8ToStr( "┌─┬─┐  ╔═╦═╗  ╒═╤═╕  ╓─╥─╖  ▄▄▄ ░▒▓█  ░ ▒ ▓ █" ) )
+   ?; dspboxch( hb_UTF8ToStr( "│ │ │  ║ ║ ║  ├─┼─┤  ╟─╫─╢  ▌■▐" ) )
+   ?; dspboxch( hb_UTF8ToStr( "├─┼─┤  ╠═╬═╣  │ │ │  ║ ║ ║  ▌█▐ █■█" ) )
+   ?; dspboxch( hb_UTF8ToStr( "│ │ │  ║ ║ ║  ╞═╪═╡  ╠═╬═╣  ▌■▐" ) )
+   ?; dspboxch( hb_UTF8ToStr( "└─┴─┘  ╚═╩═╝  ╘═╧═╛  ╙─╨─╜  ▀▀▀ √ « »" ) )
    ?
    ? "ISO-8859-2: say[ " + POL_ISO + " ]"; dspboxch( ", box[ " + POL_ISO + " ]" )
    ? "   Mazovia: say[ " + POL_MAZ + " ]"; dspboxch( ", box[ " + POL_MAZ + " ]" )

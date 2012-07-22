@@ -31,7 +31,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
       "string is limited to 256 characters and this string is " + ;
       "a lot bigger. Do you get my drift ? If there is somebody " + ;
       "who has read this line upto the very end: Esto es un " + ;
-      "sombrero grande rid­culo." + hb_eol() + "/" + hb_eol() + "[;-)" + hb_eol() + "\" }
+      "sombrero grande ridiculo." + hb_eol() + "/" + hb_eol() + "[;-)" + hb_eol() + "\" }
 
    DO CASE
 
