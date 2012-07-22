@@ -1328,7 +1328,7 @@ HB_FUNC( HPDF_FONT_GETBBOX )
    HPDF_Box rc;
    PHB_ITEM info = hb_itemArrayNew( 4 );
 
-   rc =  HPDF_Font_GetBBox( ( HPDF_Font ) hb_parptr( 1 ) );
+   rc = HPDF_Font_GetBBox( ( HPDF_Font ) hb_parptr( 1 ) );
 
    hb_arraySetND( info, 1, rc.left   );
    hb_arraySetND( info, 2, rc.top    );

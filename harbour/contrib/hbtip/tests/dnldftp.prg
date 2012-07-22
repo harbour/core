@@ -23,7 +23,7 @@ STATIC FUNCTION TRP20FTPEnv( cCarpeta )
    LOCAL aFiles
    LOCAL cUrl
    LOCAL cStr
-   LOCAL lRetorno  := .T.
+   LOCAL lRetVal  := .T.
    LOCAL oUrl
    LOCAL oFTP
    LOCAL cUser
@@ -56,26 +56,26 @@ STATIC FUNCTION TRP20FTPEnv( cCarpeta )
 
       IF oFTP:Open( cUrl )
          FOR EACH cFile IN afiles
-            IF !oFtp:DownloadFile( cFile[ 1 ] )
-               lRetorno := .F.
+            IF ! oFtp:DownloadFile( cFile[ 1 ] )
+               lRetVal := .F.
                EXIT
             ELSE
-               lRetorno := .T.
+               lRetVal := .T.
             ENDIF
          NEXT
          oFTP:Close()
       ELSE
-         cStr := "No se ha podido conectar con el servidor FTP" + " " + oURL:cServer
+         cStr := "Could not connect to FTP server " + oURL:cServer
          IF oFTP:SocketCon == NIL
-            cStr += hb_eol() + "Conexión no inicializada"
+            cStr += hb_eol() + "Connection not initialized"
          ELSEIF hb_InetErrorCode( oFTP:SocketCon ) == 0
-            cStr += hb_eol() + "Respuesta del servidor:" + " " + oFTP:cReply
+            cStr += hb_eol() + "Server response:" + " " + oFTP:cReply
          ELSE
-            cStr += hb_eol() + "Error en la conexión:" + " " + hb_InetErrorDesc( oFTP:SocketCon )
+            cStr += hb_eol() + "Error in connection:" + " " + hb_InetErrorDesc( oFTP:SocketCon )
          ENDIF
          ? cStr
-         lRetorno := .F.
+         lRetVal := .F.
       ENDIF
    ENDIF
 
-   RETURN lRetorno
+   RETURN lRetVal

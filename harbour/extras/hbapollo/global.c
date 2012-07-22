@@ -424,10 +424,10 @@ HB_FUNC( SX_SETCENTURY )
 
 HB_FUNC( SX_SETAUTOOPEN )
 {
-   HB_BOOL lAuto = ! _sx_SysProp( SDE_SP_GETDISABLEAUTO, NULL );
+   HB_BOOL lAuto = ! sx_SysProp( SDE_SP_GETDISABLEAUTO, NULL );
 
    if( HB_ISLOG( 1 ) )
-      _sx_SysProp( SDE_SP_SETDISABLEAUTO, ( PVOID ) ( ! hb_parl( 1 ) ) );
+      sx_SysProp( SDE_SP_SETDISABLEAUTO, ( PVOID ) ( ! hb_parl( 1 ) ) );
    hb_retl( lAuto );
 }
 
@@ -438,7 +438,7 @@ HB_FUNC( SX_ISAUTOOPENDISABLED )
 
 HB_FUNC( SX_DISABLEAUTOOPEN )
 {
-   hb_retl( _sx_SysProp( SDE_SP_SETDISABLEAUTO, ( PVOID ) 1 ) );
+   hb_retl( sx_SysProp( SDE_SP_SETDISABLEAUTO, ( PVOID ) 1 ) );
 }
 
 HB_FUNC( SX_SETCHRCOLLATE )

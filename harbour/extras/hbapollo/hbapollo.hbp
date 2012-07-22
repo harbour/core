@@ -11,15 +11,17 @@
 
 -w3 -es2
 
+-warn=no
+
 {HB_WITH_APOLLO_VER61}-depkeyhead=apollo:Sde61.h
 {!HB_WITH_APOLLO_VER61}-depkeyhead=apollo:Sde7.h
 -depcontrol=apollo:${HB_WITH_APOLLO}
 -depincpath=apollo:/usr/include
 -depincpath=apollo:/boot/common/include
+-depimplibs=apollo:../sde7.dll
+-depimplibs=apollo:../fts32.dll
 
 {HB_WITH_APOLLO_VER61}-cflag=-DHB_WITH_APOLLO_VER61
-
-{hbdyn}-cflag=_SDELIB_
 
 -instfile=inc:sixapi.ch
 -instfile=inc:unsix.ch

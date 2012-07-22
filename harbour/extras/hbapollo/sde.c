@@ -127,7 +127,7 @@ static void hb_sixapiRddInit( void * cargo )
 
    /* Disable AutoOpen Index File */
    if( iAutoOpenDisabled == 1 )
-      _sx_SysProp( SDE_SP_SETDISABLEAUTO, ( PVOID ) 1 );
+      sx_SysProp( SDE_SP_SETDISABLEAUTO, ( PVOID ) 1 );
 
    sx_ErrorLevel( ( WORD ) i_sxApi_Error_Level );
    sx_CommitLevel( ( WORD ) iCommitLevel );
