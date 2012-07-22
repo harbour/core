@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "ESWIN",                     /* ID */
       "Spanish",                   /* Name (in English) */
       "Español",                   /* Name (in native language) */
-      "ESWIN",                     /* RFC ID */
+      "ES",                        /* RFC ID */
       "Windows-1252",              /* Codepage */
       "",                          /* Version */
 
