@@ -20,6 +20,8 @@
 -depincpath=apollo:/boot/common/include
 -depimplibs=apollo:../sde7.dll
 -depimplibs=apollo:../fts32.dll
+-depimplibs=apollo:sde7.lib
+-depimplibs=apollo:fts32.lib
 
 {HB_WITH_APOLLO_VER61}-cflag=-DHB_WITH_APOLLO_VER61
 
