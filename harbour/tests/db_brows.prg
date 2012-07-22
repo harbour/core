@@ -365,7 +365,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
                Eval( LI_BSKIP, mslist, LI_NSTR - 1 )
             ENDIF
             VIVNAMES( mslist, LI_NLEFT )
-         CASE xkey == 19                 // èπαß«α ó½Ñó«
+         CASE xkey == 19
             IF predit > 1
                IF LI_COLPOS != 1
                   LI_COLPOS --
@@ -417,7 +417,6 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
             rezproc := xkey
          CASE ( xkey == 13 .OR. ( xkey > 47 .AND. xkey < 58 ) .OR. ( xkey > 64 .AND. xkey < 91 ) ;
                .OR. ( xkey > 96 .AND. xkey < 123 ) .OR. ( xkey > 127 .AND. xkey < 176 ) .OR. ( xkey > 223 .AND. xkey < 240 ) ) .AND. predit > 1             // Enter
-            //   ÉÑñá¬Γ¿α«óá¡¿Ñ
             fipos := LI_COLPOS + LI_NLEFT - 1 - LI_FREEZE
             IF LI_WHEN == Nil .OR. Len( LI_WHEN ) < fipos .OR. LI_WHEN[ fipos ] == Nil .OR. Eval( LI_WHEN[ fipos ] )
                IF ValType( LI_MSED ) != "N"

@@ -101,14 +101,14 @@ HB_EXTERN_BEGIN
 #define HB_GT_ATTR_REFRESH    0x80
 
 /* strings for borders (same as box.ch, but defined for use by C) */
-#define _B_SINGLE              "\xDA\xC4\xBF\xB3\xD9\xC4\xC0\xB3"  /* "⁄ƒø≥Ÿƒ¿≥" */
-#define _B_DOUBLE              "\xC9\xCD\xBB\xBA\xBC\xCD\xC8\xBA"  /* "…Õª∫ºÕ»∫" */
-#define _B_SINGLE_DOUBLE       "\xD6\xC4\xB7\xBA\xBD\xC4\xD3\xBA"  /* "÷ƒ∑∫Ωƒ”∫" */
-#define _B_DOUBLE_SINGLE       "\xD5\xCD\xB8\xB3\xBE\xCD\xD4\xB3"  /* "’Õ∏≥æÕ‘≥" */
-#define HB_B_SINGLE_V          '\xB3'                              /* '≥' */
-#define HB_B_SINGLE_H          '\xC4'                              /* 'ƒ' */
-#define HB_B_DOUBLE_V          '\xBA'                              /* '∫' */
-#define HB_B_DOUBLE_H          '\xCD'                              /* 'Õ' */
+#define _B_SINGLE              "\xDA\xC4\xBF\xB3\xD9\xC4\xC0\xB3"  /* "‚îå‚îÄ‚îê‚îÇ‚îò‚îÄ‚îî‚îÇ" */
+#define _B_DOUBLE              "\xC9\xCD\xBB\xBA\xBC\xCD\xC8\xBA"  /* "‚ïî‚ïê‚ïó‚ïë‚ïù‚ïê‚ïö‚ïë" */
+#define _B_SINGLE_DOUBLE       "\xD6\xC4\xB7\xBA\xBD\xC4\xD3\xBA"  /* "‚ïì‚îÄ‚ïñ‚ïë‚ïú‚îÄ‚ïô‚ïë" */
+#define _B_DOUBLE_SINGLE       "\xD5\xCD\xB8\xB3\xBE\xCD\xD4\xB3"  /* "‚ïí‚ïê‚ïï‚îÇ‚ïõ‚ïê‚ïò‚îÇ" */
+#define HB_B_SINGLE_V          '\xB3'                              /* '‚îÇ' */
+#define HB_B_SINGLE_H          '\xC4'                              /* '‚îÄ' */
+#define HB_B_DOUBLE_V          '\xBA'                              /* '‚ïë' */
+#define HB_B_DOUBLE_H          '\xCD'                              /* '‚ïê' */
 
 #define HB_B_SINGLE_W         { 0x250C, 0x2500, 0x2510, 0x2502, 0x2518, 0x2500, 0x2514, 0x2502, 0x0000 }
 #define HB_B_DOUBLE_W         { 0x2554, 0x2550, 0x2557, 0x2551, 0x255D, 0x2550, 0x255A, 0x2551, 0x0000 }
