@@ -61,7 +61,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "RUKOI8",                    /* ID */
+      "RUKOI",                     /* ID */
       "Russian",                   /* Name (in English) */
       "Русский",                   /* Name (in native language) */
       "RU",                        /* RFC ID */

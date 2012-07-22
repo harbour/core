@@ -61,7 +61,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "UAKOI8",                    /* ID */
+      "UAKOI",                     /* ID */
       "Ukrainian",                 /* Name (in English) */
       "Укра╓нська",                /* Name (in native language) */
       "UA",                        /* RFC ID */
