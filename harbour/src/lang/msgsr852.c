@@ -52,7 +52,7 @@
 
 /* Language name: Serbian */
 /* ISO language code (2 chars): SR */
-/* Codepage: Latin II 852 */
+/* Codepage: CP-852 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Serbian",                   /* Name (in English) */
       "Srpski",                    /* Name (in native language) */
       "SR",                        /* RFC ID */
-      "852",                       /* Codepage */
+      "CP-852",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

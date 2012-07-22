@@ -52,7 +52,7 @@
 
 /* Language name: Galician */
 /* ISO language code (2 chars): GL */
-/* Codepage: ???? */
+/* Codepage: CP-850 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Galician",                  /* Name (in English) */
       "Galego",                    /* Name (in native language) */
       "GL",                        /* RFC ID */
-      "850",                       /* Codepage */
+      "CP-850",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

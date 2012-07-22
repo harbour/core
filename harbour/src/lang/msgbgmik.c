@@ -52,7 +52,7 @@
 
 /* Language name: Bulgarian */
 /* ISO language code (2 chars): BG */
-/* Codepage: DOS-MIK */
+/* Codepage: MIK */
 
 #include "hbapilng.h"
 

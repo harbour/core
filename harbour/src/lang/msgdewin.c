@@ -1,6 +1,5 @@
 /*
  * $Id$
- * modified 2003 Guenther Steiner <byte-one@aon.at>
  */
 
 /*
@@ -8,6 +7,7 @@
  * Language Support Module (DEWIN)
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
+ * modified 2003 Guenther Steiner <byte-one@aon.at>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,9 +51,9 @@
  *
  */
 
-/* Language name: German WIN*/
+/* Language name: German */
 /* ISO language code (2 chars): DE */
-/* Codepage: ANSI */
+/* Codepage: Windows-1252 */
 
 #include "hbapilng.h"
 
@@ -62,11 +62,11 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "DEWIN",                        /* ID */
-      "German ANSI",                    /* Name (in English) */
-      "Deutsch ANSI",                   /* Name (in native language) */
-      "DEWIN",                        /* RFC ID */
-      "ANSI",                       /* Codepage */
+      "DEWIN",                     /* ID */
+      "German",                    /* Name (in English) */
+      "Deutsch",                   /* Name (in native language) */
+      "DE",                        /* RFC ID */
+      "Windows-1252",              /* Codepage */
       "",                          /* Version */
 
       /* Month names */

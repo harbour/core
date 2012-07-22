@@ -52,7 +52,7 @@
 
 /* Language name: Russian */
 /* ISO language code (2 chars): RU */
-/* Codepage: 866 */
+/* Codepage: CP-866 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Russian",                   /* Name (in English) */
       "Русский",                   /* Name (in native language) */
       "RU",                        /* RFC ID */
-      "866",                       /* Codepage */
+      "CP-866",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

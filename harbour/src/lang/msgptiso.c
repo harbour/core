@@ -77,7 +77,7 @@ static HB_LANG s_lang =
       "Portuguese",                /* Name (in English) */
       "Portugues",                 /* Name (in native language) */
       "PT",                        /* RFC ID */
-      "850",                       /* Codepage */
+      "ISO-8859-1",                /* Codepage */
       "",                          /* Version */
 
       /* Month names */

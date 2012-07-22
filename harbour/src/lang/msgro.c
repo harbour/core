@@ -52,7 +52,7 @@
 
 /* Language name: Romanian */
 /* ISO language code (2 chars): RO */
-/* Codepage: 852 */
+/* Codepage: CP-852 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Romanian",                  /* Name (in English) */
       "Romƒn",                     /* Name (in native language) */
       "RO",                        /* RFC ID */
-      "852",                       /* Codepage */
+      "CP-852",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

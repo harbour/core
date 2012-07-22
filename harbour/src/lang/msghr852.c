@@ -51,9 +51,9 @@
  *
  */
 
-/* Language name: CROATIAN */
+/* Language name: Croatian */
 /* ISO language code (2 chars): HR */
-/* Codepage: 852 */
+/* Codepage: CP-852 */
 
 #include "hbapilng.h"
 
@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Croatian",                  /* Name (in English) */
       "Hrvatski",                  /* Name (in native language) */
       "HR",                        /* RFC ID */
-      "852",                       /* Codepage */
+      "CP-852",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

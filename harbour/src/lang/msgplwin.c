@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (PL Windows CP1250)
+ * Language Support Module (PL Windows-1250)
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://harbour-project.org
@@ -52,7 +52,7 @@
 
 /* Language name: Polish */
 /* ISO language code (2 chars): PL */
-/* Codepage: 1250 */
+/* Codepage: Windows-1250 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Polish",                    /* Name (in English) */
       "Polski",                    /* Name (in native language) */
       "PL",                        /* RFC ID */
-      "1250",                      /* Codepage */
+      "Windows-1250",              /* Codepage */
       "",                          /* Version */
 
       /* Month names */

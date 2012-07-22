@@ -52,7 +52,7 @@
 
 /* Language name: Slovenian */
 /* ISO language code (2 chars): SL */
-/* Codepage: Latin II 852 */
+/* Codepage: CP-852 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Slovenian",                 /* Name (in English) */
       "SlovençŸina",               /* Name (in native language) */
       "SL",                        /* RFC ID */
-      "852",                       /* Codepage */
+      "CP-852",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

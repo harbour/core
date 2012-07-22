@@ -52,7 +52,7 @@
 
 /* Language name: Swedish */
 /* ISO language code (2 chars): SV */
-/* Codepage: 850 */
+/* Codepage: CP-850 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Swedish",                   /* Name (in English) */
       "svenska",                   /* Name (in native language) */
       "SV",                        /* RFC ID */
-      "850",                       /* Codepage */
+      "CP-850",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

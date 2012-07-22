@@ -52,7 +52,7 @@
 
 /* Language name: Indonesian */
 /* ISO language code (2 chars): ID */
-/* Codepage: 437 */
+/* Codepage: CP-437 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Indonesian",                /* Name (in English) */
       "Bahasa Indonesia",          /* Name (in native language) */
       "ID",                        /* RFC ID */
-      "437",                       /* Codepage */
+      "CP-437",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

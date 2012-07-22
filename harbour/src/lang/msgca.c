@@ -52,7 +52,7 @@
 
 /* Language name: Catalan */
 /* ISO language code (2 chars): CA */
-/* Codepage: ???? */
+/* Codepage: CP-850 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Catalan",                   /* Name (in English) */
       "Catal n",                   /* Name (in native language) */
       "CA",                        /* RFC ID */
-      "850",                       /* Codepage */
+      "CP-850",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

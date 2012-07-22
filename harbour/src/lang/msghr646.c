@@ -50,7 +50,7 @@
  *
  */
 
-/* Language name: CROATIAN */
+/* Language name: Croatian */
 /* ISO language code (2 chars): HR */
 /* Codepage: ISO-646-YU (CROSCII) */
 

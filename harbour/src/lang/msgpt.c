@@ -64,7 +64,7 @@
 
 /* Language name: Portuguese */
 /* ISO language code (2 chars): PT */
-/* Codepage: 850 */
+/* Codepage: CP-850 */
 
 #include "hbapilng.h"
 
@@ -77,7 +77,7 @@ static HB_LANG s_lang =
       "Portuguese",                /* Name (in English) */
       "Portugues",                 /* Name (in native language) */
       "PT",                        /* RFC ID */
-      "850",                       /* Codepage */
+      "CP-850",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

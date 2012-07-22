@@ -50,9 +50,9 @@
  *
  */
 
-/* Language name: Serbian          */
+/* Language name: Serbian */
 /* ISO language code (2 chars): SR */
-/* Codepage: Windows-1251          */
+/* Codepage: Windows-1251 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Serbian",                   /* Name (in English) */
       "Ñðïñêè",                    /* Name (in native language) */
       "SR",                        /* RFC ID */
-      "1251",                      /* Codepage */
+      "Windows-1251",              /* Codepage */
       "",                          /* Version */
 
       /* Month names */

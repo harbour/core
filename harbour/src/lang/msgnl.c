@@ -52,7 +52,7 @@
 
 /* Language name: Dutch */
 /* ISO language code (2 chars): NL */
-/* Codepage: 437 */
+/* Codepage: CP-437 */
 
 #include "hbapilng.h"
 
@@ -61,11 +61,11 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "NL",             /* ID */
-      "Dutch",          /* Name (in English) */
-      "Nederlands",     /* Name (in native language) */
-      "NL",             /* RFC ID */
-      "437",            /* Codepage */
+      "NL",                        /* ID */
+      "Dutch",                     /* Name (in English) */
+      "Nederlands",                /* Name (in native language) */
+      "NL",                        /* RFC ID */
+      "CP-437",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

@@ -52,7 +52,7 @@
 
 /* Language name: Basque */
 /* ISO language code (2 chars): EU */
-/* Codepage: ???? */
+/* Codepage: CP-850 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Basque",                    /* Name (in English) */
       "English",                   /* Name (in native language) */
       "EU",                        /* RFC ID */
-      "850",                       /* Codepage */
+      "CP-850",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

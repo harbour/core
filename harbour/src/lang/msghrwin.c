@@ -52,7 +52,7 @@
  *
  */
 
-/* Language name: CROATIAN */
+/* Language name: Croatian */
 /* ISO language code (2 chars): HR */
 /* Codepage: Windows-1250 */
 
@@ -67,7 +67,7 @@ static HB_LANG s_lang =
       "Croatian",                  /* Name (in English) */
       "Hrvatski",                  /* Name (in native language) */
       "HR",                        /* RFC ID */
-      "1250",                      /* Codepage */
+      "Windows-1250",              /* Codepage */
       "",                          /* Version */
 
       /* Month names */

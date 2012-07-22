@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Russian",                   /* Name (in English) */
       "Русский",                   /* Name (in native language) */
       "RU",                        /* RFC ID */
-      "1251",                      /* Codepage */
+      "Windows-1251",              /* Codepage */
       "",                          /* Version */
 
       /* Month names */

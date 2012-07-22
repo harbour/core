@@ -51,9 +51,9 @@
  *
  */
 
-/* Language name: Hebrew - Windows */
+/* Language name: Hebrew */
 /* ISO language code (2 chars): HE */
-/* Codepage: Windows-1255          */
+/* Codepage: Windows-1255 */
 
 #include "hbapilng.h"
 
@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Hebrew",                    /* Name (in English) */
       "עברית",                     /* Name (in native language) */
       "HE",                        /* RFC ID */
-      "1255",                      /* Codepage */
+      "Windows-1255",              /* Codepage */
       "",                          /* Version */
 
       /* Month names */

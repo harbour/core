@@ -52,7 +52,7 @@
 
 /* Language name: French */
 /* ISO language code (2 chars): FR */
-/* Codepage: ???? */
+/* Codepage: CP-850 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "French",                    /* Name (in English) */
       "fran‡ais",                  /* Name (in native language) */
       "FR",                        /* RFC ID */
-      "850",                       /* Codepage */
+      "CP-850",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

@@ -54,7 +54,7 @@
 
 /* Language name: Czech */
 /* ISO language code (2 chars): CS */
-/* Codepage: 852 */
+/* Codepage: CP-852 */
 
 #include "hbapilng.h"
 
@@ -67,7 +67,7 @@ static HB_LANG s_lang =
       "Czech",                     /* Name (in English) */
       "¬esky",                     /* Name (in native language) */
       "CS",                        /* RFC ID */
-      "852",                       /* Codepage */
+      "CP-852",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

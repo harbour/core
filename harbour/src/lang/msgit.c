@@ -52,7 +52,7 @@
 
 /* Language name: Italian */
 /* ISO language code (2 chars): IT */
-/* Codepage: 437 */
+/* Codepage: CP-437 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Italian",                   /* Name (in English) */
       "Italiano",                  /* Name (in native language) */
       "IT",                        /* RFC ID */
-      "437",                       /* Codepage */
+      "CP-437",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

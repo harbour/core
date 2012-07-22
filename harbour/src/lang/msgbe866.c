@@ -52,7 +52,7 @@
 
 /* Language name: Belorussian */
 /* ISO language code (2 chars): BE */
-/* Codepage: 866 */
+/* Codepage: CP-866 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Belorussian",               /* Name (in English) */
       "Беларуская ",               /* Name (in native language) */
       "BY",                        /* RFC ID */
-      "866",                       /* Codepage */
+      "CP-866",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

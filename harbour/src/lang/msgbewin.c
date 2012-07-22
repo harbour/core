@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Belorussian",               /* Name (in English) */
       "Беларуская ",               /* Name (in native language) */
       "BY",                        /* RFC ID */
-      "1251",                      /* Codepage */
+      "Windows-1251",              /* Codepage */
       "",                          /* Version */
 
       /* Month names */

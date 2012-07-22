@@ -53,7 +53,7 @@
 
 /* Language name: Icelandic */
 /* ISO language code (2 chars): IS */
-/* Codepage: 850 */
+/* Codepage: CP-850 */
 
 #include "hbapilng.h"
 
@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Icelandic",                 /* Name (in English) */
       "Öslenska",                  /* Name (in native language) */
       "IS",                        /* RFC ID */
-      "850",                       /* Codepage */
+      "CP-850",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

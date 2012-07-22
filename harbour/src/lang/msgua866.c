@@ -52,7 +52,7 @@
 
 /* Language name: Ukrainian */
 /* ISO language code (2 chars): UA */
-/* Codepage: 866 */
+/* Codepage: CP-866 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Ukrainian",                 /* Name (in English) */
       "Українська",                /* Name (in native language) */
       "UA",                        /* RFC ID */
-      "866",                       /* Codepage */
+      "CP-866",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

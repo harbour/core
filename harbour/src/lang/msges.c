@@ -52,7 +52,7 @@
 
 /* Language name: Spanish */
 /* ISO language code (2 chars): ES */
-/* Codepage: 850 */
+/* Codepage: CP-850 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Spanish",                   /* Name (in English) */
       "Espa¤ol",                   /* Name (in native language) */
       "ES",                        /* RFC ID */
-      "850",                       /* Codepage */
+      "CP-850",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

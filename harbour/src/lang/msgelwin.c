@@ -50,9 +50,9 @@
  *
  */
 
-/* Language name: Greek WIN */
+/* Language name: Greek */
 /* ISO language code (2 chars): EL */
-/* Codepage: ANSI - 1253 */
+/* Codepage: Windows-1253 */
 
 #include "hbapilng.h"
 
@@ -65,8 +65,8 @@ static HB_LANG s_lang =
       "Greek ANSI",                         /* Name (in English) */
       "Ελληνικά ANSI",                      /* Name (in native language) */
       "EL",                                 /* RFC ID */
-      "ANSI-1253",                          /* Codepage */
-      "",                          /* Version */
+      "Windows-1253",                       /* Codepage */
+      "",                                   /* Version */
 
       /* Month names */
 

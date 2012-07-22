@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "English",                   /* Name (in English) */
       "English",                   /* Name (in native language) */
       "EN",                        /* RFC ID */
-      "IBM-437",                   /* Codepage */
+      "CP-437",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

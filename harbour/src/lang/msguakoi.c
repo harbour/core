@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (UAKOI8)
+ * Language Support Module (UAKOI)
  *
  * Copyright 2004 Pavel Tsarenko <tpe2@mail.ru>
  * www - http://www.xharbour.org
@@ -52,7 +52,7 @@
 
 /* Language name: Ukrainian */
 /* ISO language code (2 chars): UA */
-/* Codepage: KOI-8U */
+/* Codepage: KOI8-U */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Ukrainian",                 /* Name (in English) */
       "Укра╓нська",                /* Name (in native language) */
       "UA",                        /* RFC ID */
-      "KOI8U",                     /* Codepage */
+      "KOI8-U",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

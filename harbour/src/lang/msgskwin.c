@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (SKWIN) WIN1250
+ * Language Support Module (SKWIN)
  *
  * Copyright 2008,2012 Gyula Bartal <gybartal@gmail.com> (from msgcswin.c)
  * Update December 25, 2011 Jaroslav Janik <Jaroslav.Janik@siemens.com>
@@ -53,7 +53,7 @@
 
 /* Language name: Slovak */
 /* ISO language code (2 chars): SK */
-/* Codepage: 1250 */
+/* Codepage: Windows-1250 */
 
 #include "hbapilng.h"
 
@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Slovak",                    /* Name (in English) */
       "Slovensky",                 /* Name (in native language) */
       "SK",                        /* RFC ID */
-      "1250",                      /* Codepage */
+      "Windows-1250",              /* Codepage */
       "",                          /* Version */
 
       /* Month names */

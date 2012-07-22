@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (CSWIN) WIN1250
+ * Language Support Module (CSWIN)
  *
  * Copyright 2000 Viktor Szakats (harbour syenar.net) (English, from msg_tpl.c)
  * Copyright 2000 Roman Masek <woodoo@iol.cz>
@@ -55,7 +55,7 @@
 
 /* Language name: Czech */
 /* ISO language code (2 chars): CS */
-/* Codepage: 1250 */
+/* Codepage: Windows-1250 */
 
 #include "hbapilng.h"
 
@@ -68,8 +68,8 @@ static HB_LANG s_lang =
       "Czech",                        /* Name (in English) */
       "Èesky",                        /* Name (in native language) */
       "CS",                           /* RFC ID */
-      "1250",                         /* Codepage */
-      "",                          /* Version */
+      "Windows-1250",                 /* Codepage */
+      "",                             /* Version */
 
       /* Month names */
 

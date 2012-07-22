@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (SK Kamenicky ["895"])
+ * Language Support Module (SK Kamenicky ("895"))
  *
  * Copyright 2008,2012 Gyula Bartal <gybartal@gmail.com> (from msgskwin.c)
  * Update December 25, 2011 Jaroslav Janik <Jaroslav.Janik@siemens.com>
@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Slovak",                    /* Name (in English) */
       "Slovensky",                 /* Name (in native language) */
       "SK",                        /* RFC ID */
-      "kamenicky",                 /* Codepage */
+      "Kamenicky",                 /* Codepage */
       "",                          /* Version */
 
       /* Month names */

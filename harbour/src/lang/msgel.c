@@ -52,7 +52,7 @@
 
 /* Language name: Greek */
 /* ISO language code (2 chars): EL */
-/* Codepage: 737 */
+/* Codepage: CP-737 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Greek",                     /* Name (in English) */
       "„¢¢ž¤ ¡á",                  /* Name (in native language) */
       "EL",                        /* RFC ID */
-      "737",                       /* Codepage */
+      "CP-737",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (Template)
+ * Language Support Module (TR857)
  *
  * Copyright 2006 { Translation by : Bicahi Esgici <esgici@yahoo.com> }
  * www - http://harbour-project.org
@@ -51,8 +51,8 @@
  */
 
 /* Language name: Turkish */
-/* ISO language code : TR */
-/* Codepage: 857 ( OEM )  */
+/* ISO language code (2 chars): TR */
+/* Codepage: CP-857 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Turkish",                   /* Name (in English) */
       "TÅrkáe",                    /* Name (in native language) */
       "TR",                        /* RFC ID */
-      "857",                       /* Codepage */
+      "CP-857",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

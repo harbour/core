@@ -51,9 +51,9 @@
  *
  */
 
-/* Language name: Spanish WIN */
+/* Language name: Spanish */
 /* ISO language code (2 chars): ES */
-/* Codepage: ANSI */
+/* Codepage: Windows-1252 */
 
 #include "hbapilng.h"
 
@@ -63,10 +63,10 @@ static HB_LANG s_lang =
       /* Identification */
 
       "ESWIN",                     /* ID */
-      "Spanish ANSI",              /* Name (in English) */
-      "Español ANSI",              /* Name (in native language) */
+      "Spanish",                   /* Name (in English) */
+      "Español",                   /* Name (in native language) */
       "ESWIN",                     /* RFC ID */
-      "ANSI",                      /* Codepage */
+      "Windows-1252",              /* Codepage */
       "",                          /* Version */
 
       /* Month names */

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (RUKOI-8)
+ * Language Support Module (RUKOI)
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://harbour-project.org
@@ -52,7 +52,7 @@
 
 /* Language name: Russian */
 /* ISO language code (2 chars): RU */
-/* Codepage: KOI-8 */
+/* Codepage: KOI8 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Russian",                   /* Name (in English) */
       "Русский",                   /* Name (in native language) */
       "RU",                        /* RFC ID */
-      "KOI8",                       /* Codepage */
+      "KOI8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

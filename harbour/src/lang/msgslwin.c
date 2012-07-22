@@ -52,7 +52,7 @@
 
 /* Language name: Slovenian */
 /* ISO language code (2 chars): SL */
-/* Codepage: 1250 */
+/* Codepage: Windows-1250 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Slovenian",                 /* Name (in English) */
       "Slovenšèina",               /* Name (in native language) */
       "SL",                        /* RFC ID */
-      "1250",                      /* Codepage */
+      "Windows-1250",              /* Codepage */
       "",                          /* Version */
 
       /* Month names */

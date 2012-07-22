@@ -52,7 +52,7 @@
 
 /* Language name: German */
 /* ISO language code (2 chars): DE */
-/* Codepage: 850 */
+/* Codepage: CP-850 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "German",                    /* Name (in English) */
       "deutsch",                   /* Name (in native language) */
       "DE",                        /* RFC ID */
-      "850",                       /* Codepage */
+      "CP-850",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */

@@ -50,7 +50,7 @@
  *
  */
 
-/* Language name: Swedish WIN*/
+/* Language name: Swedish */
 /* ISO language code (2 chars): SV */
 /* Codepage: Windows-1252 */
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Swedish",                   /* Name (in English) */
       "svenska",                   /* Name (in native language) */
       "SV",                        /* RFC ID */
-      "1252",                      /* Codepage */
+      "Windows-1252",              /* Codepage */
       "",                          /* Version */
 
       /* Month names */

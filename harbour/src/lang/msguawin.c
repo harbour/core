@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Ukrainian",                 /* Name (in English) */
       "Українська",                /* Name (in native language) */
       "UA",                        /* RFC ID */
-      "1251",                      /* Codepage */
+      "Windows-1251",              /* Codepage */
       "",                          /* Version */
 
       /* Month names */

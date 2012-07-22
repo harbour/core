@@ -54,7 +54,7 @@
 
 /* Language name: Czech */
 /* ISO language code (2 chars): CS */
-/* Codepage:  Kamenickych (CS2) */
+/* Codepage: Kamenickych (CS2) */
 
 #include "hbapilng.h"
 

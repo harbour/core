@@ -51,9 +51,9 @@
  *
  */
 
-/* Language name: Hebrew - Dos     */
+/* Language name: Hebrew */
 /* ISO language code (2 chars): HE */
-/* Codepage: 862                   */
+/* Codepage: CP-862 */
 
 #include "hbapilng.h"
 
@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Hebrew",                    /* Name (in English) */
       "öâòÅí",                     /* Name (in native language) */
       "HE",                        /* RFC ID */
-      "862",                       /* Codepage */
+      "CP-862",                    /* Codepage */
       "",                          /* Version */
 
       /* Month names */
