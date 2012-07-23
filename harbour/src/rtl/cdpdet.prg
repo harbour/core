@@ -309,6 +309,7 @@ STATIC FUNCTION __CtryStdToCtry( cCtryStd )
       CASE "en-za"
       CASE "en-zw"
       CASE "en"         ; cCtryHb := "EN" ; EXIT
+      CASE "eo"         ; EXIT
       CASE "es-ar"
       CASE "es-bo"
       CASE "es-cl"
@@ -350,8 +351,8 @@ STATIC FUNCTION __CtryStdToCtry( cCtryStd )
       CASE "gl"         ; EXIT
       CASE "gu-in"      ; EXIT
       CASE "gu"         ; EXIT
-      CASE "he-il"      ; EXIT
-      CASE "he"         ; EXIT
+      CASE "he-il"
+      CASE "he"         ; cCtryHb := "HE" ; EXIT
       CASE "hi-in"      ; EXIT
       CASE "hi"         ; EXIT
       CASE "hr-hr"
