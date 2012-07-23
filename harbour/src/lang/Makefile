@@ -31,6 +31,7 @@ C_SOURCES := \
    msgruutf.c \
    msgskutf.c \
    msgslutf.c \
+   msgsrlat.c \
    msgsrutf.c \
    msgsvutf.c \
    msgtrutf.c \

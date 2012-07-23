@@ -109,8 +109,8 @@ FUNCTION hb_langSelect( cLangID )
       CASE "SL852"  ; hb_langNew( cLangID, "SL852" , "SLUTF", "UTF8" ) ; EXIT
       CASE "SLISO"  ; hb_langNew( cLangID, "SLISO" , "SLUTF", "UTF8" ) ; EXIT
       CASE "SLWIN"  ; hb_langNew( cLangID, "SLWIN" , "SLUTF", "UTF8" ) ; EXIT
-      CASE "SR852"  ; hb_langNew( cLangID, "SL852" , "SRUTF", "UTF8" ) ; EXIT
-      CASE "SRISO"  ; hb_langNew( cLangID, "SLISO" , "SRUTF", "UTF8" ) ; EXIT
+      CASE "SR852"  ; hb_langNew( cLangID, "SL852" , "SRLAT", "UTF8" ) ; EXIT
+      CASE "SRISO"  ; hb_langNew( cLangID, "SLISO" , "SRLAT", "UTF8" ) ; EXIT
       CASE "SRWIN"  ; hb_langNew( cLangID, "SRWIN" , "SRUTF", "UTF8" ) ; EXIT
       CASE "SV"     ; hb_langNew( cLangID, "SV850" , "SVUTF", "UTF8" ) ; EXIT
       CASE "SVWIN"  ; hb_langNew( cLangID, "SVWIN" , "SVUTF", "UTF8" ) ; EXIT

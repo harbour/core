@@ -50,7 +50,7 @@
  *
  */
 
-/* Language name: Serbian */
+/* Language name: Serbian (cyrillic) */
 /* ISO language code (2 chars): SR */
 /* Codepage: UTF-8 */
 
@@ -62,7 +62,7 @@ static HB_LANG s_lang =
       /* Identification */
 
       "SRUTF",                     /* ID */
-      "Serbian",                   /* Name (in English) */
+      "Serbian (cyrillic)",        /* Name (in English) */
       "Српски",                    /* Name (in native language) */
       "SR",                        /* RFC ID */
       "UTF-8",                     /* Codepage */
