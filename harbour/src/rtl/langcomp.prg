@@ -88,7 +88,6 @@ FUNCTION hb_langSelect( cLangID )
       CASE "HRISO"  ; hb_langNew( cLangID, "HRISO" , "HRUTF", "UTF8" ) ; EXIT
       CASE "HRWIN"  ; hb_langNew( cLangID, "HRWIN" , "HRUTF", "UTF8" ) ; EXIT
       CASE "HU852"  ; hb_langNew( cLangID, "HU852" , "HUUTF", "UTF8" ) ; EXIT
-//    CASE "HUCWI"  ; hb_langNew( cLangID, "?????" , "HUUTF", "UTF8" ) ; EXIT
       CASE "HUISO"  ; hb_langNew( cLangID, "HUISO" , "HUUTF", "UTF8" ) ; EXIT
       CASE "HUWIN"  ; hb_langNew( cLangID, "HUWIN" , "HUUTF", "UTF8" ) ; EXIT
       CASE "ID"     ; hb_langNew( cLangID, "EN"    , "IDUTF", "UTF8" ) ; EXIT

@@ -208,7 +208,6 @@
  *      Hebrew                862            HE862
  *      Hebrew                Windows-1255   HEWIN
  *      Hungarian             852            HU852
- *      Hungarian             CWI-2          HUCWI
  *      Hungarian             ISO-8859-2     HUISO
  *      Hungarian             Windows-1250   HUWIN
  *      Icelandic             850            IS850

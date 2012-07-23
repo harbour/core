@@ -40,7 +40,6 @@ C_SOURCES := \
 C_SOURCES += \
    msghe862.c \
    msghewin.c \
-   msghucwi.c \
    msgko.c \
    msgsr852.c \
    msgsriso.c \
