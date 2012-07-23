@@ -128,7 +128,7 @@ FUNCTION hb_langSelect( cLangID )
       CASE "UAKOI"  ; hb_langNew( cLangID, "UAKOI8", "UAUTF", "UTF8" ) ; EXIT
       CASE "UAKOI8" ; hb_langNew( cLangID, "UAKOI8", "UAUTF", "UTF8" ) ; EXIT
       CASE "UAWIN"  ; hb_langNew( cLangID, "UA1125", "UAUTF", "UTF8" ) ; EXIT
-//    CASE "ZHB5"   ; hb_langNew( cLangID, "?????" , "ZHUTF", "UTF8" ) ; EXIT
+      CASE "ZHB5"   ; hb_langNew( cLangID, "CP950" , "ZHUTF", "UTF8" ) ; EXIT
 //    CASE "ZHGB"   ; hb_langNew( cLangID, "?????" , "ZHUTF", "UTF8" ) ; EXIT
       ENDSWITCH
    ENDIF

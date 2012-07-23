@@ -45,7 +45,6 @@ C_SOURCES += \
    msgsr852.c \
    msgsriso.c \
    msguados.c \
-   msgzhb5.c \
    msgzhgb.c \
 
 LIBNAME := hblang
