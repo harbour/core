@@ -63,7 +63,7 @@ static HB_LANG s_lang =
 
       "BEUTF",                     /* ID */
       "Belorussian",               /* Name (in English) */
-      "Беларуская ",               /* Name (in native language) */
+      "Беларуская",                /* Name (in native language) */
       "BY",                        /* RFC ID */
       "UTF-8",                     /* Codepage */
       "",                          /* Version */

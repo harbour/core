@@ -51,7 +51,7 @@
  */
 
 /* Language name: <Your language> */
-/* ISO language code (2 chars): (please look it up in /doc/lang_id.txt) */
+/* ISO language code (2 chars): (please look it up at https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) */
 /* Codepage: UTF-8 */
 
 #include "hbapilng.h"

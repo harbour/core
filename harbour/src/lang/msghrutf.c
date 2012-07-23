@@ -72,8 +72,8 @@ static HB_LANG s_lang =
 
       /* Month names */
 
-      "sijecanj",
-      "veljaca",
+      "siječanj",
+      "veljača",
       "ožujak",
       "travanj",
       "svibanj",
@@ -91,7 +91,7 @@ static HB_LANG s_lang =
       "ponedjeljak",
       "utorak",
       "srijeda",
-      "cetvrtak",
+      "četvrtak",
       "petak",
       "subota",
 
