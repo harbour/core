@@ -5,6 +5,39 @@
 ROOT := ../../
 
 C_SOURCES := \
+   msgbeutf.c \
+   msgbgutf.c \
+   msgcautf.c \
+   msgcsutf.c \
+   msgdeutf.c \
+   msgelutf.c \
+   msgeoutf.c \
+   msgesutf.c \
+   msgeuutf.c \
+   msgfrutf.c \
+   msgglutf.c \
+   msgheutf.c \
+   msghrutf.c \
+   msghuutf.c \
+   msgidutf.c \
+   msgisutf.c \
+   msgitutf.c \
+   msgkoutf.c \
+   msgltutf.c \
+   msgnlutf.c \
+   msgplutf.c \
+   msgptutf.c \
+   msgroutf.c \
+   msgruutf.c \
+   msgskutf.c \
+   msgslutf.c \
+   msgsrutf.c \
+   msgsvutf.c \
+   msgtrutf.c \
+   msguautf.c \
+   msgzhutf.c \
+
+C_SOURCES += \
    msgbe866.c \
    msgbewin.c \
    msgbg866.c \
@@ -35,7 +68,6 @@ C_SOURCES := \
    msghu852.c \
    msghucwi.c \
    msghuiso.c \
-   msghuutf.c \
    msghuwin.c \
    msgid.c \
    msgis850.c \
