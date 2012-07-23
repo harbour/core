@@ -486,7 +486,6 @@ static int hb_gt_wvt_FireEvent( PHB_GTWVT pWVT, int nEvent, PHB_ITEM pParams )
 
          if( pWVT->pNotifierGUI )
          {
-//OutputDebugString( L"if( pWVT->pNotifierGUI )" );
             nResult = hb_itemGetNI( hb_vmEvalBlockV( pWVT->pNotifierGUI, 2, pEvent, pParams ) );
          }
 

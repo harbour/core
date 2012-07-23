@@ -77,6 +77,12 @@
 
 /*----------------------------------------------------------------------*/
 
+#ifndef __DBG_PARTS__
+#xtranslate hb_traceLog( [<x,...>] ) =>
+#endif
+
+/*----------------------------------------------------------------------*/
+
 CLASS WvgActiveXControl FROM WvgWindow
 
    DATA   oOLE
@@ -202,7 +208,7 @@ PROCEDURE execEvent( nEvent, ... ) CLASS WvgActiveXControl
    LOCAL aEvents := { ... }
 
    aEval( aEvents, { | xEvent | cEvents += HB_ValToStr( xEvent ) + ", " } )
-   WAPI_OutputDebugString( cEvents )
+   hb_TraceLog( cEvents )
 #endif
 
    IF hb_hHaskey( ::hEvents, nEvent )
@@ -230,9 +236,6 @@ METHOD WvgActiveXControl:handleEvent( nEvent, aNM )
       EXIT
 
    CASE HB_GTE_ANY
-      IF aNM[ 1 ] == WM_LBUTTONUP
-uiDebug( "here the event is caught" )
-      ENDIF
       EXIT
 
    ENDSWITCH
@@ -243,7 +246,7 @@ uiDebug( "here the event is caught" )
 
 METHOD WvgActiveXControl:OnError()
 #if 0
-   WAPI_OutputDebugString( "HI: " + HB_ValToStr( __GetMessage() ) + " : " + str( len( HB_AParams() ) ) )
+   hb_TraceLog( "HI: " + HB_ValToStr( __GetMessage() ) + " : " + str( len( HB_AParams() ) ) )
 #endif
    RETURN HB_ExecFromArray( ::oOLE, __GetMessage(), HB_AParams() )
 
