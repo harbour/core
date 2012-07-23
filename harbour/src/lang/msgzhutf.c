@@ -51,7 +51,7 @@
  *
  */
 
-/* Language name: Chinese Simplified */
+/* Language name: Chinese Traditional */
 /* ISO language code (2 chars): ZH */
 /* Codepage: UTF-8 */
 
@@ -63,8 +63,8 @@ static HB_LANG s_lang =
       /* Identification */
 
       "ZHUTF",                     /* ID */
-      "Chinese Simplified",        /* Name (in English) */
-      "中文简体GB",                    /* Name (in native language) */
+      "Chinese Traditional",       /* Name (in English) */
+      "中文繁體",                      /* Name (in native language) */
       "ZH",                        /* RFC ID */
       "UTF-8",                     /* Codepage */
       "",                          /* Version */
@@ -96,19 +96,19 @@ static HB_LANG s_lang =
 
       /* CA-Cl*pper compatible natmsg items */
 
-      "数据库文件        # 记录       最后更新        大小",
-      "需要更多的例子吗?",
-      "页码:",
-      "** 小计 **",
-      "* 子小计 *",
-      "*** 合计 ***",
+      "數據庫檔案        # 記錄       最後更新        大小",
+      "需要更多的例子嗎?",
+      "頁碼:",
+      "** 小計 **",
+      "* 子小計 *",
+      "*** 合計 ***",
       "插入",
       "    ",
       "日期非法",
-      "范围: ",
+      "範圍: ",
       " - ",
       "Y/N",
-      "非法表达式",
+      "非法表達式",
 
       /* Error description names */
 

@@ -93,7 +93,6 @@ FUNCTION hb_langSelect( cLangID )
          CASE "ID"     ; hb_langNew( cLangID, "EN"    , "IDUTF", "UTF8" ) ; EXIT
          CASE "IS850"  ; hb_langNew( cLangID, "IS850" , "ISUTF", "UTF8" ) ; EXIT
          CASE "IT"     ; hb_langNew( cLangID, "IT850" , "ITUTF", "UTF8" ) ; EXIT
-//       CASE "KO"     ; hb_langNew( cLangID, "?????" , "KOUTF", "UTF8" ) ; EXIT
          CASE "LTWIN"  ; hb_langNew( cLangID, "LTWIN" , "LTUTF", "UTF8" ) ; EXIT
          CASE "NL"     ; hb_langNew( cLangID, "EN"    , "NLUTF", "UTF8" ) ; EXIT
          CASE "PL852"  ; hb_langNew( cLangID, "PL852" , "PLUTF", "UTF8" ) ; EXIT
@@ -126,8 +125,9 @@ FUNCTION hb_langSelect( cLangID )
          CASE "UAKOI8" ; hb_langNew( cLangID, "UAKOI8", "UAUTF", "UTF8" ) ; EXIT
          CASE "UAWIN"  ; hb_langNew( cLangID, "UA1125", "UAUTF", "UTF8" ) ; EXIT
          CASE "ZHB5"   ; hb_langNew( cLangID, "BIG5"  , "ZHUTF", "UTF8" ) ; EXIT
-//       CASE "ZHGB"   ; hb_langNew( cLangID, "?????" , "ZHUTF", "UTF8" ) ; EXIT
+         CASE "ZHGB"   ; hb_langNew( cLangID, "BIG5"  , "ZHSIM", "UTF8" ) ; EXIT /* INCOMPATIBILITY: Was using CP936 in legacy implementation. */
          ENDSWITCH
+         /* INCOMPATIBILITY: "KO" (Korean) using CP949 is not supported anymore. */
       ENDIF
    ENDIF
 
@@ -334,7 +334,7 @@ STATIC FUNCTION __CtryStdToBaseLangID( cCtryStd )
       CASE "uz"         ; EXIT
       CASE "vi-vn"      ; EXIT
       CASE "vi"         ; EXIT
-      CASE "zh-chs"
+      CASE "zh-chs"     ; cCtryHb := "ZHSIM" ; EXIT
       CASE "zh-cht"
       CASE "zh-cn"
       CASE "zh-hk"

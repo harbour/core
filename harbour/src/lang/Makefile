@@ -36,11 +36,8 @@ C_SOURCES := \
    msgsvutf.c \
    msgtrutf.c \
    msguautf.c \
+   msgzhsim.c \
    msgzhutf.c \
-
-C_SOURCES += \
-   msgko.c \
-   msgzhgb.c \
 
 LIBNAME := hblang
 

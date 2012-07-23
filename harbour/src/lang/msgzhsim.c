@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (ZHGB)
+ * Language Support Module (ZHSIM)
  *
  * Copyright 1999-2001 dongming <dongming@km169.net>
  *                           or <freexbase@yahoo.com.cn>
@@ -53,7 +53,7 @@
 
 /* Language name: Chinese Simplified */
 /* ISO language code (2 chars): ZH */
-/* Codepage: 936 for ZH,ZH-CN,ZH-SG */
+/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 
@@ -62,53 +62,53 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "ZHGB",                      /* ID */
+      "ZHSIM",                     /* ID */
       "Chinese Simplified",        /* Name (in English) */
-      "ÖĞÎÄ¼òÌåGB",                /* Name (in native language) */
+      "ä¸­æ–‡ç®€ä½“",                      /* Name (in native language) */
       "ZH",                        /* RFC ID */
-      "936",                       /* Codepage */
+      "UTF-8",                     /* Codepage */
       "",                          /* Version */
 
       /* Month names */
 
-      "Ò»ÔÂ",
-      "¶şÔÂ",
-      "ÈıÔÂ",
-      "ËÄÔÂ",
-      "ÎåÔÂ",
-      "ÁùÔÂ",
-      "ÆßÔÂ",
-      "°ËÔÂ",
-      "¾ÅÔÂ",
-      "Ê®ÔÂ",
-      "Ê®Ò»ÔÂ",
-      "Ê®¶şÔÂ",
+      "ä¸€æœˆ",
+      "äºŒæœˆ",
+      "ä¸‰æœˆ",
+      "å››æœˆ",
+      "äº”æœˆ",
+      "å…­æœˆ",
+      "ä¸ƒæœˆ",
+      "å…«æœˆ",
+      "ä¹æœˆ",
+      "åæœˆ",
+      "åä¸€æœˆ",
+      "åäºŒæœˆ",
 
       /* Day names */
 
-      "ĞÇÆÚÈÕ",
-      "ĞÇÆÚÒ»",
-      "ĞÇÆÚ¶ş",
-      "ĞÇÆÚÈı",
-      "ĞÇÆÚËÄ",
-      "ĞÇÆÚÎå",
-      "ĞÇÆÚÁù",
+      "æ˜ŸæœŸæ—¥",
+      "æ˜ŸæœŸä¸€",
+      "æ˜ŸæœŸäºŒ",
+      "æ˜ŸæœŸä¸‰",
+      "æ˜ŸæœŸå››",
+      "æ˜ŸæœŸäº”",
+      "æ˜ŸæœŸå…­",
 
       /* CA-Cl*pper compatible natmsg items */
 
-      "Êı¾İ¿âÎÄ¼ş        # ¼ÇÂ¼       ×îºó¸üĞÂ        ´óĞ¡",
-      "ĞèÒª¸ü¶àµÄÀı×ÓÂğ?",
-      "Ò³Âë:",
-      "** Ğ¡¼Æ **",
-      "* ×ÓĞ¡¼Æ *",
-      "*** ºÏ¼Æ ***",
-      "²åÈë",
+      "æ•°æ®åº“æ–‡ä»¶        # è®°å½•       æœ€åæ›´æ–°        å¤§å°",
+      "éœ€è¦æ›´å¤šçš„ä¾‹å­å—?",
+      "é¡µç :",
+      "** å°è®¡ **",
+      "* å­å°è®¡ *",
+      "*** åˆè®¡ ***",
+      "æ’å…¥",
       "    ",
-      "ÈÕÆÚ·Ç·¨",
-      "·¶Î§: ",
+      "æ—¥æœŸéæ³•",
+      "èŒƒå›´: ",
       " - ",
       "Y/N",
-      "·Ç·¨±í´ïÊ½",
+      "éæ³•è¡¨è¾¾å¼",
 
       /* Error description names */
 
@@ -201,5 +201,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      ZHGB
+#define HB_LANG_ID      ZHSIM
 #include "hbmsgreg.h"
