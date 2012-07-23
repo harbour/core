@@ -203,7 +203,7 @@ STATIC FUNCTION uiXtoS( xVar )
    CASE cType == "D"
       RETURN dtoc( xVar )
    CASE cType == "L"
-      RETURN IF( xVar, "Yes", "No" )
+      RETURN iif( xVar, "Yes", "No" )
    CASE cType == "M"
       RETURN xVar
    CASE cType == "C"
@@ -245,7 +245,7 @@ STATIC FUNCTION PP_Debug( oXbp )
    LOCAL s := ''
 
    aeval( aPP, {|e_| s += ( hb_ntos( e_[ 1 ] ) +' '+ valtype( e_[ 2 ] ) +' '+ ;
-        IF( valtype( e_[ 2 ] )=='N', hb_ntos( e_[ 2 ] ), ' ' ) + ';  '+ CRLF ) } )
+        iif( valtype( e_[ 2 ] )=='N', hb_ntos( e_[ 2 ] ), ' ' ) + ';  '+ CRLF ) } )
 
    MsgBox( s )
 
@@ -307,7 +307,7 @@ STATIC FUNCTION Build_MenuBar( oDlg )
    oMenuBar:addItem( { oSubMenu, NIL } )
    //
    oSubMenu:insItem( 2, { "This executes MsgBox()"          , {|| MyFunctionXbp( 103 ) }, , XBPMENUBAR_MIA_CHECKED } )
-   oSubMenu:itemMarked := {|mp1| IF( mp1 == 5, MsgBox( "WOW - ::itemMarked - Activated" ), NIL ) }
+   oSubMenu:itemMarked := {|mp1| iif( mp1 == 5, MsgBox( "WOW - ::itemMarked - Activated" ), NIL ) }
 
    /* Menu colors are being honored in Harbour only */
    oSubMenu:setColorBG( GraMakeRGBColor( { 134,128,250 } ) )
@@ -609,7 +609,7 @@ FUNCTION Build_RadioButton( oStatic )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION SetMaximized( aTabs, nMax )
-   RETURN {|| aeval( aTabs, {|o,i| IF( i != nMax, o:minimize(), ) } ), aTabs[ nMax ]:maximize() }
+   RETURN {|| aeval( aTabs, {|o,i| iif( i != nMax, o:minimize(), ) } ), aTabs[ nMax ]:maximize() }
 
 /*----------------------------------------------------------------------*/
 
@@ -1412,12 +1412,12 @@ STATIC FUNCTION Build_Rtf( oWnd )
    oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*2, nT-25}, {nW,nH} )
    oBtn:caption := 'Font++'
    oBtn:create()
-   oBtn:activate := {|x| x := oRTF:selFontSize, IF( x == 0, x := 11, ), oRTF:selFontSize := x+1 }
+   oBtn:activate := {|x| x := oRTF:selFontSize, iif( x == 0, x := 11, ), oRTF:selFontSize := x+1 }
 
    oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*3, nT-25}, {nW,nH} )
    oBtn:caption := 'Font--'
    oBtn:create()
-   oBtn:activate := {|x| x := oRTF:selFontSize, IF( x == 0, x := 11, ), oRTF:selFontSize := x-1 }
+   oBtn:activate := {|x| x := oRTF:selFontSize, iif( x == 0, x := 11, ), oRTF:selFontSize := x-1 }
 
    oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*4, nT-25}, {nW,nH} )
    oBtn:caption := 'Print'
@@ -1616,7 +1616,7 @@ STATIC FUNCTION Build_Browse( oWnd )
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:type     := XBPCOL_TYPE_FILEICON
    cPath := hb_DirBase() + hb_ps()
-   oXbpColumn:dataLink := {|n| n := recno(), IF( n%3 == 0, cPath + "abs3.png", IF( n%5 == 0, cPath + "copy.png", cPath + "vr.png" ) ) }
+   oXbpColumn:dataLink := {|n| n := recno(), iif( n%3 == 0, cPath + "abs3.png", iif( n%5 == 0, cPath + "copy.png", cPath + "vr.png" ) ) }
    oXbpColumn:create( , , , , aPresParam )
    //
    oXbpBrowse:addColumn( oXbpColumn )
@@ -1641,7 +1641,7 @@ STATIC FUNCTION Build_Browse( oWnd )
 
    oXbpColumn            := XbpColumn():new()
    oXbpColumn:dataLink   := {|| test->Last }
-   oXbpColumn:colorBlock := {|x| IF( left( x,1 ) $ "L,H", { GRA_CLR_BLUE, GRA_CLR_YELLOW }, { NIL, NIL } ) }
+   oXbpColumn:colorBlock := {|x| iif( left( x,1 ) $ "L,H", { GRA_CLR_BLUE, GRA_CLR_YELLOW }, { NIL, NIL } ) }
    oXbpColumn:create( , , , , aPresParam )
    //
    oXbpBrowse:addColumn( oXbpColumn )
@@ -1691,7 +1691,7 @@ STATIC FUNCTION Build_Browse( oWnd )
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:dataLink := {|| test->Salary }
    oXbpColumn:create( , , , , aPresParam )
-   oXbpColumn:colorBlock := {|x| IF( x < 40000, { NIL, RGB( 255,0,0 ) }, {NIL,NIL} ) }
+   oXbpColumn:colorBlock := {|x| iif( x < 40000, { NIL, RGB( 255,0,0 ) }, {NIL,NIL} ) }
    //
    oXbpBrowse:addColumn( oXbpColumn )
 

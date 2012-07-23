@@ -2644,7 +2644,7 @@ METHOD hbCUIEditor:scrAddTxt( nMode )
    ENDIF
 
    DO WHILE .t.
-      IF( n := ascan( ::obj_, {|e_| e_[ OBJ_TYPE ] == OBJ_O_TEXT .AND. e_[ OBJ_ROW ] == ::nRowRep } ) ) > 0
+      IF ( n := ascan( ::obj_, {|e_| e_[ OBJ_TYPE ] == OBJ_O_TEXT .AND. e_[ OBJ_ROW ] == ::nRowRep } ) ) > 0
          VouchAShrink( ::obj_,n )
       ELSE
          EXIT
@@ -2654,7 +2654,7 @@ METHOD hbCUIEditor:scrAddTxt( nMode )
    aeval( txt_, {|e_| iif( e_[ OBJ_ROW ] > 0, aadd( ::obj_, e_ ), '' ) } )
 
    DO WHILE .t.
-      IF( n := ascan( ::obj_,{|e_| e_[ OBJ_TO_COL ] < e_[ OBJ_COL ] } ) ) > 0
+      IF ( n := ascan( ::obj_,{|e_| e_[ OBJ_TO_COL ] < e_[ OBJ_COL ] } ) ) > 0
          VouchAShrink( ::obj_, n )
       ELSE
          EXIT
@@ -3426,7 +3426,7 @@ STATIC FUNCTION scan_ff( elem, a_, c /*, nFrom */ )
 
    c := lower( substr( c,1,1 ) )
    nLen := Len( c )
-   IF( na := ascan( a_,{|e| lower( substr( ltrim( e ),1,nLen ) ) == c }, min( elem+1, Len( a_ ) ) ) ) == 0
+   IF ( na := ascan( a_,{|e| lower( substr( ltrim( e ),1,nLen ) ) == c }, min( elem+1, Len( a_ ) ) ) ) == 0
       na := ascan( a_,{|e| lower( substr( ltrim( e ),1,nlen ) ) == c },1,elem-1 )
    ENDIF
 
@@ -3589,7 +3589,7 @@ FUNCTION VouchMenuMM( mnu_,nInit,msg,lExact,aSel )
 
    aeval( mnu_,{|e_| aadd( m_,e_[ 1 ] ) } )
 
-   IF( t := valtype( nInit ) == 'C' )
+   IF ( t := valtype( nInit ) ) == 'C'
       //nInit := iif( lExact, nInit, trim( nInit ) )
    ENDIF
 
@@ -3996,11 +3996,11 @@ FUNCTION VouchFunc2( nMode, nElem, nRel, nKey, cgo_ )
                cgo_[CGO_POS] := min( cgo_[CGO_POS]+1,Len( cgo_[CGO_CH_] ) )
                RETURN AC_ABORT
             ELSE
-               IF( n:=val( substr( cgo_[CGO_CH_,cgo_[CGO_POS]],1,4 ) ) )>0
+               IF ( n:=val( substr( cgo_[CGO_CH_,cgo_[CGO_POS]],1,4 ) ) )>0
                   cgo_[CGO_CH_,cgo_[CGO_POS]] := "    "+substr( cgo_[CGO_CH_,cgo_[CGO_POS]],5 )
                   cgo_[CGO_POS] := min( cgo_[CGO_POS]+1,Len( cgo_[CGO_CH_] ) )
                   FOR i := 1 TO Len( cgo_[CGO_CH_] )
-                     IF( nn := val( left( cgo_[CGO_CH_,i],4 ) ) )>0
+                     IF ( nn := val( left( cgo_[CGO_CH_,i],4 ) ) )>0
                         IF nn > n
                            nn := nn - 1
                            s := iif( nn > 0,pad( hb_ntos( nn ),4 ),"    " )
@@ -4578,7 +4578,7 @@ METHOD AChoiceNew:init( nTop, nLft, nBtm, nRgt, acItems, xSelect, ;
    ::nAtTop      := 1                    // The number of the item at the top
    ::nAtBtm      := 1                    // The number of the item at the bottom
    ::nItems      := 0                    // The number of items
-   ::bScan       := {| cX | IF( left( cX, 1 ) == upper( chr( ::nKey ) ), .T., .F. ) }
+   ::bScan       := {| cX | iif( left( cX, 1 ) == upper( chr( ::nKey ) ), .T., .F. ) }
    ::lUserFunc   := ( !empty( ::cUserFunc ) )
    ::nUserFunc   := 0                    // RETURN value FROM user FUNCTION
    ::bUserFunc   := {|| AC_ABORT }       // Block form of user FUNCTION
@@ -4605,7 +4605,7 @@ METHOD AChoiceNew:init( nTop, nLft, nBtm, nRgt, acItems, xSelect, ;
    ::nNumCols := ::nRight - ::nLeft + 1
    ::nNumRows := ::nBottom - ::nTop + 1
 
-   aeval( ::acItems, {| x | IF( valtype( x ) == "C", aadd( ::acCopy, padr( x, ::nNumCols ) ), .F. ) } )
+   aeval( ::acItems, {| x | iif( valtype( x ) == "C", aadd( ::acCopy, padr( x, ::nNumCols ) ), .F. ) } )
    ::nItems := Len( ::acCopy )
 
    ::alSelect := array( ::nItems )
@@ -4833,8 +4833,8 @@ METHOD AChoiceNew:DispPageNew()
 METHOD AChoiceNew:DispLineNew( nPos, nRow, lHiLite )
 
    DispOutAt( nRow, ::nLeft, ::acCopy[ nPos ],;
-                IF( ::alSelect[ nPos ], ;
-                  IF( lHiLite, ::cHiClr, ::cLoClr ), ::cUnClr ), ::oWin )
+                iif( ::alSelect[ nPos ], ;
+                  iif( lHiLite, ::cHiClr, ::cLoClr ), ::cUnClr ), ::oWin )
 
    RETURN SELF
 

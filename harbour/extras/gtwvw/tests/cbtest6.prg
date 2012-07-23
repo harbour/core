@@ -46,7 +46,7 @@ MEMVAR __nCBid__,__temp__
                                   NIL,NIL,s_nCB_Kbd,NIL);                     ;
             AADD(s_aComboList, {__nCBid__, <"var"> });                        ;
             __temp__ := wvw_cbFindString(NIL, __nCBid__, <var> );             ;
-            if(__temp__>=0, wvw_cbSetIndex(NIL, __nCBid__, __temp__),NIL);    ;
+            iif(__temp__>=0, wvw_cbSetIndex(NIL, __nCBid__, __temp__),NIL);   ;
             setpos(<row>,<col>);                                              ;
             AAdd(GetList,_GET_(<var>,<"var">,repl("X",<nWidth>),,) ) ;        ;
             ATAIL(GetList):cargo := __nCBid__;                                ;

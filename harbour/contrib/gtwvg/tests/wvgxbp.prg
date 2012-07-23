@@ -120,7 +120,7 @@ FUNCTION demoxbp()
    oTree:create()
    oTree:setColorBG( RGB( 120,15,240 ) )
    oTree:setColorFG( RGB( 15,240,120 ) )
-   oTree:itemSelected := {|oItem| IF( oItem != NIL, WVG_MessageBox( , oItem:caption ), NIL ) }
+   oTree:itemSelected := {|oItem| iif( oItem != NIL, WVG_MessageBox( , oItem:caption ), NIL ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
 
@@ -184,7 +184,7 @@ FUNCTION demoxbp()
    oRadio  := WvgRadioButton():new( oStatic2,, { 10,10 }, { 100,15 } )
    oRadio:caption   := "Com 1"
    oRadio:selection := .T.
-   oRadio:selected  := {|m1,m2,obj| m1:=m1, m2:=m2, WVG_MessageBox( , obj:caption + IF( obj:selection, '< S >', '< N >' ) ) }
+   oRadio:selected  := {|m1,m2,obj| m1:=m1, m2:=m2, WVG_MessageBox( , obj:caption + iif( obj:selection, '< S >', '< N >' ) ) }
    oRadio:create()
 
    oRadio  := WvgRadioButton():new( oStatic2,, { 10,35 }, { 100,15 } )
@@ -194,7 +194,7 @@ FUNCTION demoxbp()
    oCheck  := WvgCheckBox():New( oStatic2, , { 10,70 }, { 100,15 }, , .t. )
    oCheck:caption   := 'Checkbox A'
    oCheck:create()
-   oCheck:selected  := {|m1,m2,o| m1:=m1,m2:=m2, WVG_MessageBox( , IF( o:getData(), 'I am selected','I am not selected' ) ) }
+   oCheck:selected  := {|m1,m2,o| m1:=m1,m2:=m2, WVG_MessageBox( , iif( o:getData(), 'I am selected','I am not selected' ) ) }
 
    // Create first 3State button, passing the position to :create()
    oXbp    := Wvg3State():new()
@@ -244,11 +244,11 @@ FUNCTION demoxbp()
    oMLE:setData()
 
    //--------------------------- Misc Config ------------------------\\
-   oTBar:buttonClick := {|oBtn| IF( oBtn:caption == 'Hide'   , oStatic:hide(), nil ),;
-                                IF( oBtn:caption == 'Show'   , oStatic:show(), nil ),;
-                                IF( oBtn:caption == 'Tools'  , oStatic2:show():toFront(), nil ),;
-                                IF( oBtn:caption == 'FontDlg', ExeFontDialogXbp( oCrt ), nil ),;
-                                IF( oBtn:caption $ 'Hide,Show', oCrt:sendMessage( WM_SIZE, 0, 0 ), NIL ),;
+   oTBar:buttonClick := {|oBtn| iif( oBtn:caption == 'Hide'   , oStatic:hide(), nil ),;
+                                iif( oBtn:caption == 'Show'   , oStatic:show(), nil ),;
+                                iif( oBtn:caption == 'Tools'  , oStatic2:show():toFront(), nil ),;
+                                iif( oBtn:caption == 'FontDlg', ExeFontDialogXbp( oCrt ), nil ),;
+                                iif( oBtn:caption $ 'Hide,Show', oCrt:sendMessage( WM_SIZE, 0, 0 ), NIL ),;
                                     oPanel2:caption := "Button [ " + oBtn:caption + " ] clicked!" }
 
    oCrt:resize := {|| ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr ) }
@@ -325,7 +325,7 @@ STATIC FUNCTION ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
 
    oSubMenu       := WvgMenu():new( oMenuBar ):create()
    oSubMenu:title := "F~eatures"
-   oSubMenu:addItem( { "~Hide or Show Left Panel" , {|| IF( oStatic:isVisible, ;
+   oSubMenu:addItem( { "~Hide or Show Left Panel" , {|| iif( oStatic:isVisible, ;
                               oStatic:hide(), oStatic:show() ), oCrt:sendMessage( WM_SIZE,0,0 ) } } )
    oSubMenu:addItem( { "~Show My Panel" , {|| oStatic2:show():toFront() } } )
    oSubMenu:addItem()

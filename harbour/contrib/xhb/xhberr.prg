@@ -250,7 +250,7 @@ STATIC FUNCTION ErrorMessage( oError )
      LOCAL cMessage
 
      // start error message
-     cMessage := Iif( oError:severity > ES_WARNING, "Error", "Warning" ) + " "
+     cMessage := iif( oError:severity > ES_WARNING, "Error", "Warning" ) + " "
 
      // add subsystem name if available
      If HB_ISSTRING( oError:subsystem )
@@ -355,7 +355,7 @@ STATIC FUNCTION LogError( oerr )
         FWriteLine( nHandle, "xHarbour built on..: " + hb_builddate() )
         FWriteLine( nHandle, "C/C++ compiler.....: " + hb_compiler() )
 
-        FWriteLine( nHandle, "Multi Threading....: " + If( hb_mtvm(),"YES","NO" ) )
+        FWriteLine( nHandle, "Multi Threading....: " + iif( hb_mtvm(),"YES","NO" ) )
         FWriteLine( nHandle, "VM Optimization....: " + strvalue( Hb_VmMode() ) )
 
         IF hb_IsFunction( "Select" )
@@ -577,11 +577,11 @@ STATIC FUNCTION LogError( oerr )
      *    cVarName  := Left( nMemWidth, At( Chr( 0 ), nMemWidth ) - 1 )
      *    cVarType  := Substr( nMemWidth, 12, 1 )
      *    cVarRec   := Bin2w( Right( nMemWidth, 2 ) )
-     *    nMemCount := If( cVarType IN Chr( 195 ) + Chr( 204 ), 14 + cVarRec, 22 )
+     *    nMemCount := iif( cVarType IN Chr( 195 ) + Chr( 204 ), 14 + cVarRec, 22 )
      *    Fseek( nMemHandle, nMemCount, 1 )
      *    cTemp  := Left( cVarName + Space( 10 ), 10 )
      *    cTemp  += " TYPE " + Type( cVarName )
-     *    cTemp  += " " + If( Type( cVarName ) == "C", '"' + &cVarName + '"', strvalue( &cVarName ) )
+     *    cTemp  += " " + iif( Type( cVarName ) == "C", '"' + &cVarName + '"', strvalue( &cVarName ) )
      *    nBytes := 0
      *    Switch ValType( cVarName )
      *        Case "C"

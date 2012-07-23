@@ -70,22 +70,22 @@ FUNCTION Main()
       // Reads all "Header" fields from CGI
       FOR i := 1 TO oIni:ReadNumber( "Header", "DataFields", 0 )
 
-         cField := oIni:ReadString( "Header", "DataField"+ltrim(str(i)), "" )
-         oIni:WriteString( "Entries", cField + ltrim(str(nEntry)), ;
-           strtran( strtran( oHTML:QueryFields( cField ), chr(10), "" ), chr(13), "<BR>" ) )
+         cField := oIni:ReadString( "Header", "DataField" + hb_ntos( i ), "" )
+         oIni:WriteString( "Entries", cField + hb_ntos( nEntry ), ;
+            StrTran( StrTran( oHTML:QueryFields( cField ), Chr( 10 ), "" ), Chr( 13 ), "<br />" ) )
 
       NEXT
 
       // Write fields to .ini file
-      oIni:WriteString( "Entries", "DateTime" + ltrim(str(nEntry)), ;
-        cmonth( date() ) + " " + ltrim(str(day(date()))) + ", " + ;
-        ltrim(str(year(date()))) + " " + time() )
+      oIni:WriteString( "Entries", "DateTime" + hb_ntos( nEntry ), ;
+         CMonth( Date() ) + " " + hb_ntos( Day( Date() ) ) + ", " + ;
+         hb_ntos( Year( Date() ) ) + " " + Time() )
 
       oIni:UpdateFile()
 
-      oHTML:cContent := '<HTML><HEAD><META HTTP-EQUIV="Refresh" ' + ;
-         'CONTENT="0;URL=/cgi-bin/guestbk.exe"></HEAD>'  + ;
-         '<BODY></BODY></HTML>'
+      oHTML:cContent := '<html><head><meta http-equiv="Refresh" ' + ;
+         'content="0;url=/cgi-bin/guestbk.exe"></HEAD>'  + ;
+         '<body></body></html>'
 
       oHTML:ShowResult()
 
@@ -111,13 +111,13 @@ FUNCTION Main()
 
          FOR j := 1 TO oIni:ReadNumber( "Header", "DataFields", 0 )
 
-            cField := oIni:ReadString( "Header", "DataField" + ltrim( str(j) ), "" )
-            aadd( aLine, { cField, ;
-              oIni:ReadString( "Entries", cField + ltrim( str(i) ), "" ) } )
+            cField := oIni:ReadString( "Header", "DataField" + hb_ntos( j ), "" )
+            AAdd( aLine, { cField, ;
+               oIni:ReadString( "Entries", cField + hb_ntos( i ), "" ) } )
 
          NEXT
 
-         aadd( aEntries, aLine )
+         AAdd( aEntries, aLine )
 
          i--
 
@@ -126,29 +126,29 @@ FUNCTION Main()
       cCode := ""
 
       // Formats each line according to the INI file
-      FOR i := 1 TO len( aEntries )
+      FOR i := 1 TO Len( aEntries )
 
-         cCode += "<TABLE WIDTH=100% CELLSPACING=0>" + chr(13) + chr(10)
+         cCode += "<table width=100% cellspacing=0>" + Chr( 13 ) + Chr( 10 )
          cColor := iif( Mod( i, 2 ) == 0, cEvenColor, cOddColor )
 
          FOR j := 1 TO oIni:ReadNumber( "Format", "FormatLines", 0 )
 
-            cCode += "<TR><TD BGCOLOR='" + cColor +"'>"
+            cCode += "<tr><td bgcolor='" + cColor + "'>"
 
-            cLine := oIni:ReadString( "Format", "Format" + ltrim(str(j)), "" )
-            FOR l := 1 TO len( aEntries[i] )
-               cLine := strtran( cLine, "<#" + aEntries[i,l,1] + ">", ;
-                 aEntries[i,l,2] )
+            cLine := oIni:ReadString( "Format", "Format" + hb_ntos( j ), "" )
+            FOR l := 1 TO Len( aEntries[ i ] )
+               cLine := StrTran( cLine, "<#" + aEntries[ i, l, 1 ] + ">", ;
+                  aEntries[ i, l, 2 ] )
             NEXT
 
-            cLine := strtran( cLine, "<#DateTime>", ;
-              oIni:ReadString( "Entries", "DateTime" + ltrim(str(len(aEntries)-i+1)), "" ) )
+            cLine := StrTran( cLine, "<#DateTime>", ;
+               oIni:ReadString( "Entries", "DateTime" + hb_ntos( Len(aEntries ) - i + 1 ), "" ) )
 
-            cCode += cLine + "</TD></TR>" + chr(13)+chr(10)
+            cCode += cLine + "</td></tr>" + Chr( 13 ) + Chr( 10 )
 
          NEXT
 
-         cCode += "</TABLE>" + chr(13)+chr(10)
+         cCode += "</table>" + Chr( 13 ) + Chr( 10 )
 
       NEXT
 

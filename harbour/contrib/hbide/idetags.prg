@@ -176,13 +176,13 @@ FUNCTION UpdateTags( cModule, aSummary, aSumData, aFuncList, aLines, aText )
                         cModule        ,;
                         cSyntax        ,;
                         cType          ,;
-                        Iif( LEFTEQUAL( cType, "METH" ), ":", "" ) + cSyntax, ;
+                        iif( LEFTEQUAL( cType, "METH" ), ":", "" ) + cSyntax, ;
                         aText[ aSumData[ i,2 ] ] ;
                      };
              )
       ENDIF
 
-      AAdd( aFuncList, { Iif( LEFTEQUAL( cType, "METH" ), ":", "" ) + cSyntax, aSumData[ i, 2 ], aSumData[ i, 1 ] } )
+      AAdd( aFuncList, { iif( LEFTEQUAL( cType, "METH" ), ":", "" ) + cSyntax, aSumData[ i, 2 ], aSumData[ i, 1 ] } )
       AAdd( aLines, i )
    NEXT
 

@@ -751,23 +751,23 @@ STATIC FUNCTION FT_ELAPSED(dStart, dEnd, cTimeStart, cTimeEnd)
      dEnd     := DATE()
   ENDIF
 
-  IF( VALTYPE(cTimeStart) != 'C', cTimeStart := '00:00:00', )
-  IF( VALTYPE(cTimeEnd)   != 'C', cTimeEnd   := '00:00:00', )
+  iif( VALTYPE(cTimeStart) != 'C', cTimeStart := '00:00:00', )
+  iif( VALTYPE(cTimeEnd)   != 'C', cTimeEnd   := '00:00:00', )
 
   nTotalSec  := (dEnd - dStart) * 86400                              + ;
                 VAL(cTimeEnd)   *  3600                              + ;
                 VAL(SUBSTR(cTimeEnd,AT(':', cTimeEnd)+1,2)) * 60     + ;
-                IF(RAT(':', cTimeEnd) == AT(':', cTimeEnd), 0,         ;
+                iif(RAT(':', cTimeEnd) == AT(':', cTimeEnd), 0,        ;
                 VAL(SUBSTR(cTimeEnd,RAT(':', cTimeEnd)+1)))          - ;
                 VAL(cTimeStart) * 3600                               - ;
                 VAL(SUBSTR(cTimeStart,AT(':', cTimeStart)+1,2)) * 60 - ;
-                IF(RAT(':', cTimeStart) == AT(':', cTimeStart), 0,     ;
+                iif(RAT(':', cTimeStart) == AT(':', cTimeStart), 0,    ;
                 VAL(SUBSTR(cTimeStart,RAT(':', cTimeStart)+1)))
 
   nTemp := nTotalSec
 
   FOR nCtr := 1 to 4
-     nConstant := IF(nCtr == 1, 86400, IF(nCtr == 2, 3600, IF( nCtr == 3, 60, 1)))
+     nConstant := iif(nCtr == 1, 86400, iif(nCtr == 2, 3600, iif( nCtr == 3, 60, 1)))
      aRetVal[nCtr,1] := INT(nTemp/nConstant)
      aRetval[nCtr,2] := nTotalSec / nConstant
      nTemp -= aRetVal[nCtr,1] * nConstant

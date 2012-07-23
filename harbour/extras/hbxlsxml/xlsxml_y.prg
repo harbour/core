@@ -203,7 +203,7 @@ METHOD ExcelWriterXML_Style:getStyleXML()
       ENDIF
    ENDIF
 
-   IF( ::useFont )
+   IF ::useFont
       IF ! empty( ::fontColor )
          fontColor := 'ss:Color="' + ::fontColor + '"'
       ENDIF

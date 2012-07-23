@@ -92,7 +92,7 @@ CLASS WvgCheckBox  INHERIT  WvgWindow, WvgDataRef
    #if 0
    METHOD   editBuffer()                          INLINE ( WVG_Button_GetCheck( ::hWnd ) == BST_CHECKED )
    METHOD   getData()                             INLINE ( WVG_Button_GetCheck( ::hWnd ) == BST_CHECKED )
-   METHOD   setData( lCheck )                     INLINE ::sendMessage( BM_SETCHECK, IF( lCheck, BST_CHECKED, BST_UNCHECKED ), 0 )
+   METHOD   setData( lCheck )                     INLINE ::sendMessage( BM_SETCHECK, iif( lCheck, BST_CHECKED, BST_UNCHECKED ), 0 )
    #endif
    METHOD   setCaption( xCaption )
 

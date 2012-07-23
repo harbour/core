@@ -1813,7 +1813,7 @@ FUNCTION uhttpd_join( cSeparator, aData )
       ENDIF
       IF     VALTYPE(aData[nI]) $ "CM";  cRet += aData[nI]
       ELSEIF VALTYPE(aData[nI]) == "N";  cRet += LTRIM(STR(aData[nI]))
-      ELSEIF VALTYPE(aData[nI]) == "D";  cRet += IF(!EMPTY(aData[nI]), DTOC(aData[nI]), "")
+      ELSEIF VALTYPE(aData[nI]) == "D";  cRet += iif(!EMPTY(aData[nI]), DTOC(aData[nI]), "")
       ELSE
       ENDIF
    NEXT

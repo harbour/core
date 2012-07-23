@@ -45,7 +45,7 @@ PROCEDURE MAIN()
    ? 'sxApi way ...'
    ?
    ? "TEST" $ sx_GetValue( "MYCHAR" )
-   ? IF( sx_GetValue( "MYLOGIC" ), "TRUE", "FALSE" )
+   ? iif( sx_GetValue( "MYLOGIC" ), "TRUE", "FALSE" )
    ? sx_GetValue( "MYNUMBER1" ) + sx_GetValue( "MYNUMBER2" )
    ? sx_GetValue( "MYDATE" ) + 30
    ?

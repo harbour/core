@@ -1,3 +1,7 @@
+/*
+ * $Id$
+ */
+
 Harbour Guestbook
 Felipe Coury <fcoury@flexsys-ci.com>
 
@@ -17,8 +21,8 @@ The best thing about this guestbook is its highly
 configurable architecture. Please review guestbk.ini
 for configuration options and further explanation.
 
-That's it !!!
+That's it!
 
 PS: If you don't have a WebServer, I will be pleased to
 demonstrate it to you. Just contact me via ICQ, my
-UIN is #19504786. Thanks!!!
+UIN is #19504786. Thanks!

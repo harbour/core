@@ -660,7 +660,7 @@ CLASS HBTable
    METHOD goTop() INLINE ( ::Alias )->( DBGOTOP() )
    METHOD goBottom() INLINE ( ::Alias )->( DBGOBOTTOM() )
    METHOD SetFocus() INLINE ( ::Alias )->( SELECT( ::ALias ) )
-   METHOD Append( l ) INLINE IF( ::isNet, ( ::Alias )->( NetAppend( l ) ), ;
+   METHOD Append( l ) INLINE iif( ::isNet, ( ::Alias )->( NetAppend( l ) ), ;
    ( ::alias )->( DBAPPEND() ) )
    METHOD RECALL(  ) INLINE ( ::Alias )->( NetRecall(  ) )
 
@@ -758,7 +758,7 @@ CLASS HBTable
 
    METHOD DBFILTER() INLINE ( ::Alias )->( DBFILTER() )
    METHOD SetFilter( c ) INLINE ;
-   IF( c != NIL, ( ::Alias )->( DBSETFILTER( hb_macroBlock( c ), c ) ), ;
+   iif( c != NIL, ( ::Alias )->( DBSETFILTER( hb_macroBlock( c ), c ) ), ;
    ( ::Alias )->( DBCLEARFILTER() ) )
 
    METHOD AddChild( oChild, cKey )
@@ -1087,7 +1087,7 @@ METHOD __oTDelete( lKeepBuffer )        // ::Delete()
    ::Read()
 
    IF ::isNet
-      lRet := IF( ( ::Alias )->( NetDelete() ), .T., .F. )
+      lRet := iif( ( ::Alias )->( NetDelete() ), .T., .F. )
    ELSE
       ( ::alias )->( DBDELETE() ) ; lRet := .T.
    ENDIF
@@ -1428,7 +1428,7 @@ RETURN
 STATIC FUNCTION FixExt( cFileName )
 
    LOCAL nLeft := AT( ".", cFilename )
-RETURN LEFT( cFileName, IF( nLeft == 0, ;
+RETURN LEFT( cFileName, iif( nLeft == 0, ;
        LEN( cFilename ), ;
        nLeft - 1 ) )
 
@@ -1467,7 +1467,7 @@ METHOD OnError( uParam ) CLASS HBTable
    nPos := (::Alias)->( FieldPos(cMsg) )
 
    if nPos != 0
-      uRet := (::Alias)->( if(uParam == nil, FieldGet(nPos), FieldPut(nPos, uParam)) )
+      uRet := (::Alias)->( iif( uParam == nil, FieldGet(nPos), FieldPut(nPos, uParam)) )
    else
 
       oErr := ErrorNew()

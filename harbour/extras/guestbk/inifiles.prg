@@ -2,10 +2,11 @@
  * $Id$
  */
 
-function TIniFile()
-   static oClass
+FUNCTION TIniFile()
 
-   if oClass == nil
+   STATIC oClass
+
+   IF oClass == nil
       oClass := HBClass():New( "TINIFILE" ) // starts a new class definition
 
       oClass:AddData( "FileName" )           // define this class objects datas
@@ -27,284 +28,307 @@ function TIniFile()
       oClass:AddMethod( "UpdateFile", @UpdateFile() )
 
       oClass:Create()                     // builds this class
-   endif
-return oClass:Instance()                  // builds an object of this class
+   ENDIF
 
-static function New(cFileName)
-   local Self := QSelf()
-   local Done, hFile, cFile, cLine, cIdent, nPos
-   local CurrArray
+   RETURN oClass:Instance()                  // builds an object of this class
 
-   if empty(cFileName)
+STATIC FUNCTION New( cFileName )
+
+   LOCAL Self := QSelf()
+   LOCAL Done, hFile, cFile, cLine, cIdent, nPos
+   LOCAL CurrArray
+
+   IF Empty( cFileName )
       // raise an error?
-      outerr("No filename passed to TIniFile():New()")
-      return nil
+      OutErr( "No filename passed to TIniFile():New()" )
+      RETURN nil
 
-   else
+   ELSE
       ::FileName := cFilename
       ::Contents := {}
       CurrArray := ::Contents
 
-      if File(cFileName)
-         hFile := fopen(cFilename, 0)
-
-      else
-         hFile := fcreate(cFilename)
-      endif
+      IF File( cFileName )
+         hFile := FOpen( cFilename, 0 )
+      ELSE
+         hFile := FCreate( cFilename )
+      ENDIF
 
       cLine := ""
-      Done := .f.
-      while !Done
-         cFile := space(256)
-         Done := (fread(hFile, @cFile, 256) <= 0)
+      Done := .F.
+      WHILE ! Done
+         cFile := Space( 256 )
+         Done := ( FRead( hFile, @cFile, 256 ) <= 0 )
 
-         cFile := strtran(cFile, chr(10), "") // so we can just search for CHR(13)
+         cFile := StrTran( cFile, Chr( 10 ), "" ) // so we can just search for CHR(13)
 
          // prepend last read
          cFile := cLine + cFile
-         while !empty(cFile)
-            if (nPos := at(chr(13), cFile)) > 0
-               cLine := left(cFile, nPos - 1)
-               cFile := substr(cFile, nPos + 1)
+         WHILE ! Empty( cFile )
+            IF ( nPos := At( Chr(13 ), cFile ) ) > 0
+               cLine := Left( cFile, nPos - 1 )
+               cFile := SubStr( cFile, nPos + 1 )
 
-               if !empty(cLine)
-                  if Left(cLine, 1) == "[" // new section
-                     if (nPos := At("]", cLine)) > 1
-                        cLine := substr(cLine, 2, nPos - 2);
+               IF ! Empty( cLine )
+                  IF Left( cLine, 1 ) == "[" // new section
+                     IF ( nPos := At( "]", cLine ) ) > 1
+                        cLine := SubStr( cLine, 2, nPos - 2 )
+                     ELSE
+                        cLine := SubStr( cLine, 2 )
+                     ENDIF
 
-                     else
-                        cLine := substr(cLine, 2)
-                     endif
+                     AAdd( ::Contents, { cLine, { /* this will be CurrArray */ } } )
+                     CurrArray := ::Contents[ Len( ::Contents ) ][ 2 ]
 
-                     AAdd(::Contents, { cLine, { /* this will be CurrArray */ } } )
-                     CurrArray := ::Contents[Len(::Contents)][2]
-
-                  elseif Left(cLine, 1) == ";" // preserve comments
+                  ELSEIF Left( cLine, 1 ) == ";" // preserve comments
                      AAdd( CurrArray, { NIL, cLine } )
 
-                  else
-                     if (nPos := At("=", cLine)) > 0
-                        cIdent := Left(cLine, nPos - 1)
-                        cLine := SubStr(cLine, nPos + 1)
+                  ELSE
+                     IF ( nPos := At( "=", cLine ) ) > 0
+                        cIdent := Left( cLine, nPos - 1 )
+                        cLine := SubStr( cLine, nPos + 1 )
 
                         AAdd( CurrArray, { cIdent, cLine } )
 
-                     else
+                     ELSE
                         AAdd( CurrArray, { cLine, "" } )
-                     endif
-                  endif
+                     ENDIF
+                  ENDIF
                   cLine := "" // to stop prepend later on
-               endif
+               ENDIF
 
-            else
+            ELSE
                cLine := cFile
                cFile := ""
-            endif
+            ENDIF
          end
       end
 
-      fclose(hFile)
-   endif
-return Self
+      FClose( hFile )
+   ENDIF
 
-static function ReadString(cSection, cIdent, cDefault)
-   local Self := QSelf()
-   local cResult := cDefault
-   local i, j, cFind
+   RETURN Self
 
-   if Empty(cSection)
-      cFind := lower(cIdent)
-      j := AScan( ::Contents, {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cFind .and. HB_ISSTRING(x[2]) } )
+STATIC FUNCTION ReadString( cSection, cIdent, cDefault )
 
-      if j > 0
-          cResult := ::Contents[j][2]
-      endif
+   LOCAL Self := QSelf()
+   LOCAL cResult := cDefault
+   LOCAL i, j, cFind
 
-   else
-      cFind := lower(cSection)
-      i := AScan( ::Contents, {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cFind} )
+   IF Empty( cSection )
+      cFind := Lower( cIdent )
+      j := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind .AND. HB_ISSTRING( x[ 2 ] ) } )
 
-      if i > 0
-         cFind := lower(cIdent)
-         j := AScan( ::Contents[i][2], {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cFind} )
+      IF j > 0
+         cResult := ::Contents[ j ][ 2 ]
+      ENDIF
 
-         if j > 0
-            cResult := ::Contents[i][2][j][2]
-         endif
-      endif
-   endif
-return cResult
+   ELSE
+      cFind := Lower( cSection )
+      i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind } )
 
-static procedure WriteString(cSection, cIdent, cString)
-   local Self := QSelf()
-   local i, j, cFind
+      IF i > 0
+         cFind := Lower( cIdent )
+         j := AScan( ::Contents[ i ][ 2 ], {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind } )
 
-   if Empty(cIdent)
-      outerr("Must specify an identifier")
+         IF j > 0
+            cResult := ::Contents[ i ][ 2 ][ j ][ 2 ]
+         ENDIF
+      ENDIF
+   ENDIF
 
-   elseif Empty(cSection)
-      cFind := lower(cIdent)
-      j := AScan( ::Contents, {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cFind .and. HB_ISSTRING(x[2]) } )
+   RETURN cResult
 
-      if j > 0
-         ::Contents[j][2] := cString
+STATIC PROCEDURE WriteString( cSection, cIdent, cString )
 
-      else
-         AAdd(::Contents, nil)
-         AIns(::Contents, 1)
-         ::Contents[1] := {cIdent, cString}
-      endif
+   LOCAL Self := QSelf()
+   LOCAL i, j, cFind
 
-   else
-      cFind := lower(cSection)
-      if (i := AScan( ::Contents, {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cFind .and. HB_ISARRAY(x[2]) })) > 0
-         cFind := lower(cIdent)
-         j := AScan( ::Contents[i][2], {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cFind} )
+   IF Empty( cIdent )
+      OutErr( "Must specify an identifier" )
 
-         if j > 0
-            ::Contents[i][2][j][2] := cString
+   ELSEIF Empty( cSection )
+      cFind := Lower( cIdent )
+      j := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind .AND. HB_ISSTRING( x[ 2 ] ) } )
 
-         else
-            AAdd( ::Contents[i][2], {cIdent, cString} )
-         endif
+      IF j > 0
+         ::Contents[ j ][ 2 ] := cString
+      ELSE
+         AAdd( ::Contents, nil )
+         AIns( ::Contents, 1 )
+         ::Contents[ 1 ] := { cIdent, cString }
+      ENDIF
 
-      else
-         AAdd( ::Contents, {cSection, {{cIdent, cString}}} )
-      endif
-   endif
-return
+   ELSE
+      cFind := Lower( cSection )
+      IF ( i := AScan( ::Contents, {| x | HB_ISSTRING(x[ 1 ] ) .AND. Lower(x[ 1 ] ) == cFind .AND. HB_ISARRAY(x[ 2 ] ) } ) ) > 0
+         cFind := Lower( cIdent )
+         j := AScan( ::Contents[ i ][ 2 ], {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind } )
 
-static function ReadNumber(cSection, cIdent, nDefault)
-   local Self := QSelf()
-return Val( ::ReadString(cSection, cIdent, str(nDefault)) )
+         IF j > 0
+            ::Contents[ i ][ 2 ][ j ][ 2 ] := cString
+         ELSE
+            AAdd( ::Contents[ i ][ 2 ], { cIdent, cString } )
+         ENDIF
 
-static procedure WriteNumber(cSection, cIdent, nNumber)
-   local Self := QSelf()
+      ELSE
+         AAdd( ::Contents, { cSection, { {cIdent, cString} } } )
+      ENDIF
+   ENDIF
 
-   ::WriteString( cSection, cIdent, alltrim(str(nNumber)) )
-return
+   RETURN
 
-static function ReadDate(cSection, cIdent, dDefault)
-   local Self := QSelf()
-return SToD( ::ReadString(cSection, cIdent, DToS(dDefault)) )
+STATIC FUNCTION ReadNumber( cSection, cIdent, nDefault )
 
-static procedure WriteDate(cSection, cIdent, dDate)
-   local Self := QSelf()
+   LOCAL Self := QSelf()
 
-   ::WriteString( cSection, cIdent, DToS(dDate) )
-return
+   RETURN Val( ::ReadString( cSection, cIdent, Str(nDefault ) ) )
 
-static function ReadBool(cSection, cIdent, lDefault)
-   local Self := QSelf()
-   local cDefault := Iif( lDefault, ".t.", ".f." )
+STATIC PROCEDURE WriteNumber( cSection, cIdent, nNumber )
 
-return ::ReadString(cSection, cIdent, cDefault) == ".t."
+   LOCAL Self := QSelf()
 
-static procedure WriteBool(cSection, cIdent, lBool)
-   local Self := QSelf()
+   ::WriteString( cSection, cIdent, hb_ntos( nNumber ) )
 
-   ::WriteString( cSection, cIdent, Iif(lBool, ".t.", ".f.") )
-return
+   RETURN
 
-static procedure DeleteKey(cSection, cIdent)
-   local Self := QSelf()
-   local i, j
+STATIC FUNCTION ReadDate( cSection, cIdent, dDefault )
 
-   cSection := lower(cSection)
-   i := AScan( ::Contents, {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cSection} )
+   LOCAL Self := QSelf()
 
-   if i > 0
-      cIdent := lower(cIdent)
-      j := AScan( ::Contents[i][2], {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cIdent} )
+   RETURN SToD( ::ReadString( cSection, cIdent, DToS(dDefault ) ) )
 
-      ADel( ::Contents[i][2], j )
-      ASize( ::Contents[i][2], Len(::Contents[i][2]) - 1 )
-   endif
-return
+STATIC PROCEDURE WriteDate( cSection, cIdent, dDate )
 
-static procedure EraseSection(cSection)
-   local Self := QSelf()
-   local i
+   LOCAL Self := QSelf()
 
-   if Empty(cSection)
-      while (i := AScan( ::Contents, {|x| HB_ISSTRING(x[1]) .and. HB_ISSTRING(x[2]) })) > 0
+   ::WriteString( cSection, cIdent, DToS( dDate ) )
+
+   RETURN
+
+STATIC FUNCTION ReadBool( cSection, cIdent, lDefault )
+
+   LOCAL Self := QSelf()
+   LOCAL cDefault := iif( lDefault, ".t.", ".f." )
+
+   RETURN ::ReadString( cSection, cIdent, cDefault ) == ".t."
+
+STATIC PROCEDURE WriteBool( cSection, cIdent, lBool )
+
+   LOCAL Self := QSelf()
+
+   ::WriteString( cSection, cIdent, iif( lBool, ".t.", ".f." ) )
+
+   RETURN
+
+STATIC PROCEDURE DeleteKey( cSection, cIdent )
+
+   LOCAL Self := QSelf()
+   LOCAL i, j
+
+   cSection := Lower( cSection )
+   i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cSection } )
+
+   IF i > 0
+      cIdent := Lower( cIdent )
+      j := AScan( ::Contents[ i ][ 2 ], {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cIdent } )
+
+      ADel( ::Contents[ i ][ 2 ], j )
+      ASize( ::Contents[ i ][ 2 ], Len( ::Contents[ i ][ 2 ] ) - 1 )
+   ENDIF
+
+   RETURN
+
+STATIC PROCEDURE EraseSection( cSection )
+
+   LOCAL Self := QSelf()
+   LOCAL i
+
+   IF Empty( cSection )
+      WHILE ( i := AScan( ::Contents, {| x | HB_ISSTRING(x[ 1 ] ) .AND. HB_ISSTRING(x[ 2 ] ) } ) ) > 0
          ADel( ::Contents, i )
-         ASize( ::Contents, len(::Contents) - 1 )
+         ASize( ::Contents, Len( ::Contents ) - 1 )
       end
 
-   else
-      cSection := lower(cSection)
-      if (i := AScan( ::Contents, {|x| HB_ISSTRING(x[1]) .and. lower(x[1]) == cSection .and. HB_ISARRAY(x[2]) })) > 0
+   ELSE
+      cSection := Lower( cSection )
+      IF ( i := AScan( ::Contents, {| x | HB_ISSTRING(x[ 1 ] ) .AND. Lower(x[ 1 ] ) == cSection .AND. HB_ISARRAY(x[ 2 ] ) } ) ) > 0
          ADel( ::Contents, i )
-         ASize( ::Contents, Len(::Contents) - 1 )
-      endif
-   endif
-return
+         ASize( ::Contents, Len( ::Contents ) - 1 )
+      ENDIF
+   ENDIF
 
-static function ReadSection(cSection)
-   local Self := QSelf()
-   local i, j, aSection := {}
+   RETURN
 
-   if Empty(cSection)
-      for i := 1 to len(::Contents)
-         if HB_ISSTRING(::Contents[i][1]) .and. HB_ISSTRING(::Contents[i][2])
-            aadd(aSection, ::Contents[i][1])
-         endif
-      next
+STATIC FUNCTION ReadSection( cSection )
 
-   else
-      cSection := lower(cSection)
-      if (i := AScan( ::Contents, {|x| HB_ISSTRING(x[1]) .and. x[1] == cSection .and. HB_ISARRAY(x[2]) })) > 0
+   LOCAL Self := QSelf()
+   LOCAL i, j, aSection := {}
 
-         for j := 1 to Len(::Contents[i][2])
+   IF Empty( cSection )
+      FOR i := 1 TO Len( ::Contents )
+         IF HB_ISSTRING( ::Contents[ i ][ 1 ] ) .AND. HB_ISSTRING( ::Contents[ i ][ 2 ] )
+            AAdd( aSection, ::Contents[ i ][ 1 ] )
+         ENDIF
+      NEXT
 
-            if ::Contents[i][2][j][1] != NIL
-               AAdd(aSection, ::Contents[i][2][j][1])
-            endif
-         next
-      endif
-   endif
-return aSection
+   ELSE
+      cSection := Lower( cSection )
+      IF ( i := AScan( ::Contents, {| x | HB_ISSTRING(x[ 1 ] ) .AND. x[ 1 ] == cSection .AND. HB_ISARRAY(x[ 2 ] ) } ) ) > 0
 
-static function ReadSections()
-   local Self := QSelf()
-   local i, aSections := {}
+         FOR j := 1 TO Len( ::Contents[ i ][ 2 ] )
 
-   for i := 1 to Len(::Contents)
+            IF ::Contents[ i ][ 2 ][ j ][ 1 ] != NIL
+               AAdd( aSection, ::Contents[ i ][ 2 ][ j ][ 1 ] )
+            ENDIF
+         NEXT
+      ENDIF
+   ENDIF
 
-      if HB_ISARRAY(::Contents[i][2])
-         AAdd(aSections, ::Contents[i][1])
-      endif
-   next
-return aSections
+   RETURN aSection
 
-static procedure UpdateFile()
-   local Self := QSelf()
-   local i, j, hFile
+STATIC FUNCTION ReadSections()
 
-   hFile := fcreate(::Filename)
+   LOCAL Self := QSelf()
+   LOCAL i, aSections := {}
 
-   for i := 1 to Len(::Contents)
-      if ::Contents[i][1] == NIL
-         fwrite(hFile, ::Contents[i][2] + Chr(13) + Chr(10))
+   FOR i := 1 TO Len( ::Contents )
 
-      elseif HB_ISARRAY(::Contents[i][2])
-         fwrite(hFile, "[" + ::Contents[i][1] + "]" + Chr(13) + Chr(10))
-         for j := 1 to Len(::Contents[i][2])
+      IF HB_ISARRAY( ::Contents[ i ][ 2 ] )
+         AAdd( aSections, ::Contents[ i ][ 1 ] )
+      ENDIF
+   NEXT
 
-            if ::Contents[i][2][j][1] == NIL
-               fwrite(hFile, ::Contents[i][2][j][2] + Chr(13) + Chr(10))
+   RETURN aSections
 
-            else
-               fwrite(hFile, ::Contents[i][2][j][1] + "=" + ::Contents[i][2][j][2] + Chr(13) + Chr(10))
-            endif
-         next
-         fwrite(hFile, Chr(13) + Chr(10))
+STATIC PROCEDURE UpdateFile()
 
-      elseif HB_ISSTRING(::Contents[i][2])
-         fwrite(hFile, ::Contents[i][1] + "=" + ::Contents[i][2] + Chr(13) + Chr(10))
+   LOCAL Self := QSelf()
+   LOCAL i, j, hFile
 
-      endif
-   next
-   fclose(hFile)
-return
+   hFile := FCreate( ::Filename )
+
+   FOR i := 1 TO Len( ::Contents )
+      if ::Contents[ i ][ 1 ] == NIL
+         FWrite( hFile, ::Contents[ i ][ 2 ] + Chr( 13 ) + Chr( 10 ) )
+
+      ELSEIF HB_ISARRAY( ::Contents[ i ][ 2 ] )
+         FWrite( hFile, "[" + ::Contents[ i ][ 1 ] + "]" + Chr( 13 ) + Chr( 10 ) )
+         FOR j := 1 TO Len( ::Contents[ i ][ 2 ] )
+
+            if ::Contents[ i ][ 2 ][ j ][ 1 ] == NIL
+               FWrite( hFile, ::Contents[ i ][ 2 ][ j ][ 2 ] + Chr( 13 ) + Chr( 10 ) )
+            ELSE
+               FWrite( hFile, ::Contents[ i ][ 2 ][ j ][ 1 ] + "=" + ::Contents[ i ][ 2 ][ j ][ 2 ] + Chr( 13 ) + Chr( 10 ) )
+            ENDIF
+         NEXT
+         FWrite( hFile, Chr( 13 ) + Chr( 10 ) )
+
+      ELSEIF HB_ISSTRING( ::Contents[ i ][ 2 ] )
+         FWrite( hFile, ::Contents[ i ][ 1 ] + "=" + ::Contents[ i ][ 2 ] + Chr( 13 ) + Chr( 10 ) )
+
+      ENDIF
+   NEXT
+   FClose( hFile )
+
+   RETURN

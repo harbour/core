@@ -25,4 +25,4 @@
 
 FUNCTION sx_FieldBlock( cFieldName )
 
-   RETURN {| arg | if( arg == NIL, sx_GetValue( cFieldName ), sx_Replace( cFieldName, arg ) ) }
+   RETURN {| arg | iif( arg == NIL, sx_GetValue( cFieldName ), sx_Replace( cFieldName, arg ) ) }

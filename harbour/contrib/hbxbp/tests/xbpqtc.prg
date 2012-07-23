@@ -185,7 +185,7 @@ STATIC FUNCTION Build_MenuBar( oDlg )
    oMenuBar:addItem( { oSubMenu, NIL } )
    //
    oSubMenu:insItem( 2, { "This executes MsgBox()"          , {|| MyFunctionXbp( 103 ) }, , XBPMENUBAR_MIA_CHECKED } )
-   oSubMenu:itemMarked := {|mp1| IF( mp1 == 5, MsgBox( "WOW - ::itemMarked - Activated" ), NIL ) }
+   oSubMenu:itemMarked := {|mp1| iif( mp1 == 5, MsgBox( "WOW - ::itemMarked - Activated" ), NIL ) }
 
    /* Menu colors are being honored in Harbour only */
    oSubMenu:setColorBG( GraMakeRGBColor( { 134,128,250 } ) )
@@ -545,7 +545,7 @@ STATIC FUNCTION uiXtoS( xVar )
    CASE cType == "D"
       RETURN dtoc( xVar )
    CASE cType == "L"
-      RETURN IF( xVar, "Yes", "No" )
+      RETURN iif( xVar, "Yes", "No" )
    CASE cType == "M"
       RETURN xVar
    CASE cType == "C"
@@ -587,7 +587,7 @@ STATIC FUNCTION PP_Debug( oXbp )
    LOCAL s := ''
 
    aeval( aPP, {|e_| s += ( hb_ntos( e_[ 1 ] ) +' '+ valtype( e_[ 2 ] ) +' '+ ;
-        IF( valtype( e_[ 2 ] )=='N', hb_ntos( e_[ 2 ] ), ' ' ) + ';  '+ CRLF ) } )
+        iif( valtype( e_[ 2 ] )=='N', hb_ntos( e_[ 2 ] ), ' ' ) + ';  '+ CRLF ) } )
 
    MsgBox( s )
 

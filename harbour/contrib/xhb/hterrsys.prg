@@ -203,7 +203,7 @@ STATIC FUNC ErrorMessage( e )
    LOCAL cMessage := ""
 
    // start error message
-   cMessage += IF( e:severity > ES_WARNING, "Error ", "Warning " )
+   cMessage += iif( e:severity > ES_WARNING, "Error ", "Warning " )
 
    // add subsystem name if available
    IF HB_ISSTRING( e:subsystem )

@@ -509,7 +509,7 @@ FUNCTION hbxbp_QKeyEventToAppEvent( oKeyEvent )
       c := xbeK_                 ; EXIT
 #endif
    OTHERWISE
-      IF( ( key >= 0 ) .and. ( key <= 255 ) )
+      IF key >= 0 .and. key <= 255
          c := key
       ENDIF
       EXIT
@@ -1062,4 +1062,3 @@ FUNCTION hbxbp_appEventModifier( key )
    ENDSWITCH
 
    RETURN Qt_NoModifier
-

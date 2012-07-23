@@ -94,13 +94,13 @@ CLASS TJsWindow
 
    METHOD Paragraph() INLINE ::QOut( "<P></P>" )
 
-   METHOD CENTER( l ) INLINE ::QOut( If( l, "<CENTER>", "</CENTER>" ) )
+   METHOD CENTER( l ) INLINE ::QOut( iif( l, "<CENTER>", "</CENTER>" ) )
 
-   METHOD bold( l ) INLINE ::QOut( If( l, "<B>", "</B>" ) )
+   METHOD bold( l ) INLINE ::QOut( iif( l, "<B>", "</B>" ) )
 
-   METHOD Italic( l ) INLINE ::QOut( If( l, "<I>", "</I>" ) )
+   METHOD Italic( l ) INLINE ::QOut( iif( l, "<I>", "</I>" ) )
 
-   METHOD ULine( l ) INLINE ::QOut( If( l, "<U>", "</U>" ) )
+   METHOD ULine( l ) INLINE ::QOut( iif( l, "<U>", "</U>" ) )
 
    METHOD Put()
 
@@ -245,7 +245,7 @@ METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
       cStr += "copyHistory=no,"
    ENDIF
 
-   ::features += IF( Empty( ::Features ), cStr + ",", cStr )
+   ::features += iif( Empty( ::Features ), cStr + ",", cStr )
 
 RETURN Self
 
@@ -274,7 +274,7 @@ METHOD SetSize( x, y, h, w ) CLASS TJsWindow
    cStr += "height=" + hb_ntos( ::height ) + ","
    cStr += "width=" + hb_ntos( ::width )
 
-   ::features += IF( Empty( ::Features ), cStr + ",", cStr )
+   ::features += iif( Empty( ::Features ), cStr + ",", cStr )
 
 RETURN Self
 

@@ -93,8 +93,8 @@ PROCEDURE Main()
    LOCAL q, a_, j
    LOCAL nTimes := 20
    LOCAL nLoops := 5
-   
-   FOR j := 1 TO nLoops   
+
+   FOR j := 1 TO nLoops
       msgbox( hb_ntos( j ) + " : Building start..." )
       a_:= {}
       FOR q := 1 TO nTimes
@@ -106,20 +106,20 @@ PROCEDURE Main()
          //aadd( a_, QTreeWidget() )
          //aadd( a_, QMainWindow() )
          //aadd( a_, QWidget() )
-      NEXT 
+      NEXT
       msgbox( "Destroying Starts..." )
       FOR q := 1 TO nTimes
-         __hbqt_destroy( a_[ q ] )   
-         a_[ q ] := NIL 
-      NEXT 
-   NEXT 
-   msgbox( "Done" )   
+         __hbqt_destroy( a_[ q ] )
+         a_[ q ] := NIL
+      NEXT
+   NEXT
+   msgbox( "Done" )
 #else
    _BuildADialog()
-#endif   
-   
-   RETURN 
-   
+#endif
+
+   RETURN
+
 /*----------------------------------------------------------------------*/
 
 FUNCTION _BuildADialog()
@@ -278,7 +278,7 @@ STATIC FUNCTION uiXtoS( xVar )
    CASE cType == "D"
       RETURN dtoc( xVar )
    CASE cType == "L"
-      RETURN IF( xVar, "Yes", "No" )
+      RETURN iif( xVar, "Yes", "No" )
    CASE cType == "M"
       RETURN xVar
    CASE cType == "C"
@@ -320,7 +320,7 @@ STATIC FUNCTION PP_Debug( oXbp )
    LOCAL s := ''
 
    aeval( aPP, {|e_| s += ( hb_ntos( e_[ 1 ] ) +' '+ valtype( e_[ 2 ] ) +' '+ ;
-        IF( valtype( e_[ 2 ] )=='N', hb_ntos( e_[ 2 ] ), ' ' ) + ';  '+ CRLF ) } )
+        iif( valtype( e_[ 2 ] )=='N', hb_ntos( e_[ 2 ] ), ' ' ) + ';  '+ CRLF ) } )
 
    MsgBox( s )
 
@@ -381,7 +381,7 @@ STATIC FUNCTION Build_MenuBar( oDlg )
    oMenuBar:addItem( { oSubMenu, NIL } )
    //
    oSubMenu:insItem( 2, { "This executes MsgBox()"          , {|| MyFunctionXbp( 103 ) }, , XBPMENUBAR_MIA_CHECKED } )
-   oSubMenu:itemMarked := {|mp1| IF( mp1 == 5, MsgBox( "WOW - ::itemMarked - Activated" ), NIL ) }
+   oSubMenu:itemMarked := {|mp1| iif( mp1 == 5, MsgBox( "WOW - ::itemMarked - Activated" ), NIL ) }
 
    /* Menu colors are being honored in Harbour only */
 //   oSubMenu:setColorBG( GraMakeRGBColor( { 134,128,250 } ) )
@@ -711,7 +711,7 @@ FUNCTION Build_RadioButton( oStatic )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION SetMaximized( aTabs, nMax )
-   RETURN {|| aeval( aTabs, {|o,i| IF( i != nMax, o:minimize(), ) } ), aTabs[ nMax ]:maximize() }
+   RETURN {|| aeval( aTabs, {|o,i| iif( i != nMax, o:minimize(), ) } ), aTabs[ nMax ]:maximize() }
 
 /*----------------------------------------------------------------------*/
 
@@ -1327,7 +1327,7 @@ FUNCTION Build_FileDialog( oWnd, cMode )
       aFiles := oDlg:open( "c:\temp", , .t. )
       IF !empty( aFiles )
          aeval( aFiles, {|e| HB_SYMBOL_UNUSED( e ) } )
-      ENDIF 
+      ENDIF
    ELSE
       oDlg:title       := "Save this Database"
       oDlg:fileFilters := { { "Database Files", "*.dbf" } }
@@ -1520,12 +1520,12 @@ FUNCTION Build_Rtf( oWnd )
    oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*2, nT-25}, {nW,nH} )
    oBtn:caption := 'Font++'
    oBtn:create()
-   oBtn:activate := {|x| x := oRTF:selFontSize, IF( x == 0, x := 11, ), oRTF:selFontSize := x+1 }
+   oBtn:activate := {|x| x := oRTF:selFontSize, iif( x == 0, x := 11, ), oRTF:selFontSize := x+1 }
 
    oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*3, nT-25}, {nW,nH} )
    oBtn:caption := 'Font--'
    oBtn:create()
-   oBtn:activate := {|x| x := oRTF:selFontSize, IF( x == 0, x := 11, ), oRTF:selFontSize := x-1 }
+   oBtn:activate := {|x| x := oRTF:selFontSize, iif( x == 0, x := 11, ), oRTF:selFontSize := x-1 }
 
    oBtn := XbpPushButton():new( oWnd, , {10+(nW+nG)*4, nT-25}, {nW,nH} )
    oBtn:caption := 'Print'
@@ -1668,7 +1668,7 @@ STATIC FUNCTION RtfApplyFont( oRTF )
 FUNCTION Build_Browse_Y( oWnd )
    LOCAL cPath := hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps()
    LOCAL oXbpBrowse, aStruct, a_, oXbpColumn , aPresParam
-   
+
    USE ( cPath + "test.dbf" ) NEW SHARED READONLY VIA 'DBFCDX'
    dbGotop()
    aStruct := DbStruct()
@@ -1689,7 +1689,7 @@ FUNCTION Build_Browse_Y( oWnd )
    oXbpBrowse:posBlock      := {| | RecNo()          }
    oXbpBrowse:goPosBlock    := {|n| DbGoto( n )      }
    oXbpBrowse:phyPosBlock   := {| | RecNo()          }
-   
+
    FOR EACH a_ IN aStruct
       aPresParam := getPP( a_ )
 
@@ -1699,11 +1699,11 @@ FUNCTION Build_Browse_Y( oWnd )
 
       oXbpBrowse:addColumn( oXbpColumn )
    NEXT
-   
+
    RETURN NIL
-   
+
 /*----------------------------------------------------------------------*/
-   
+
 FUNCTION dataLink( nField )
    RETURN {|| fieldget( nField ) }
 
@@ -1804,7 +1804,7 @@ FUNCTION Build_Browse( oWnd )
    aadd( aPresParam, { XBP_PP_COL_FA_FGCLR        , GRA_CLR_BLACK              } )
    aadd( aPresParam, { XBP_PP_COL_FA_BGCLR        , GRA_CLR_DARKGRAY           } )
    aadd( aPresParam, { XBP_PP_COL_FA_HEIGHT       , 25                         } )
-   //   
+   //
    oXbpColumn            := XbpColumn():new()
    oXbpColumn:dataLink   := {|| test->Last }
    oXbpColumn:colorBlock := {|x| iif( left( x,1 ) $ "L,H", { GRA_CLR_BLUE, GRA_CLR_YELLOW }, { NIL, NIL } ) }
@@ -1857,7 +1857,7 @@ FUNCTION Build_Browse( oWnd )
    oXbpColumn          := XbpColumn():new()
    oXbpColumn:dataLink := {|| test->Salary }
    oXbpColumn:create( , , , , aPresParam )
-   oXbpColumn:colorBlock := {|x| IF( x < 40000, { NIL, RGB( 255,0,0 ) }, {NIL,NIL} ) }
+   oXbpColumn:colorBlock := {|x| iif( x < 40000, { NIL, RGB( 255,0,0 ) }, {NIL,NIL} ) }
    //
    oXbpBrowse:addColumn( oXbpColumn )
 
@@ -2065,4 +2065,3 @@ STATIC FUNCTION Build_ConfirmBox( oWnd )
             str( ConfirmBox( oWnd, "What do you want ?", "Confirm Status", XBPMB_YESNOCANCEL, XBPMB_WARNING, 2 ) ) )
 
 /*----------------------------------------------------------------------*/
-

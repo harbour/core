@@ -1084,6 +1084,6 @@ RETURN(.t.)
      ?? '  '
      ?? STR(aTest[nk, 3])
      ?? '  '
-     ?? IF(aTest[nk, 4], 'true', 'false')
+     ?? iif(aTest[nk, 4], 'true', 'false')
    NEXT
  RETURN Nil

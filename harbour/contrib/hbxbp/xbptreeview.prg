@@ -117,7 +117,7 @@ CLASS XbpTreeView  INHERIT  XbpWindow, DataRef
    METHOD   setColorBG( nRGB )                    INLINE WVG_TreeView_SetBkColor( ::hWnd, nRGB )
    METHOD   setColorLines( nRGB )                 INLINE WVG_TreeView_SetLineColor( ::hWnd, nRGB )
    METHOD   showExpanded( lExpanded, nLevels )    INLINE Wvg_TreeView_ShowExpanded( ::hWnd, ;
-                                                         IF( HB_ISNIL( lExpanded ), .f., lExpanded ), nLevels )
+                                                         iif( HB_ISNIL( lExpanded ), .f., lExpanded ), nLevels )
    #endif
    ENDCLASS
 

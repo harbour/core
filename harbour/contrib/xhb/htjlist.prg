@@ -134,7 +134,7 @@ METHOD New( name, lOpen, width, height, bgColor, ;
 
    cStr += ""       //SPACE(10)
    cStr += name + " = new List("
-   cStr += IF( lOpen, "true,", "false," )
+   cStr += iif( lOpen, "true,", "false," )
    cStr += hb_ntos( width ) + ","
    cStr += hb_ntos( height ) + ","
    cStr += '"' + BGCOLOR + '"' + ");" + CRLF()
@@ -161,7 +161,7 @@ METHOD NewNode( name, lOpen, width, height, bgColor ) CLASS TJsList
    DEFAULT BGCOLOR TO "white"
    cStr += ""       //SPACE(10)
    cStr += name + "= new List("
-   cStr += IF( lOpen, "true,", "false," )
+   cStr += iif( lOpen, "true,", "false," )
    cStr += hb_ntos( width ) + ","
    cStr += hb_ntos( height ) + ","
    cStr += '"' + BGCOLOR + '"' + ");" + CRLF()
@@ -230,7 +230,7 @@ METHOD AddLink( name, url, img, bgColor ) CLASS TJsList
    DEFAULT url TO ""
    DEFAULT img TO "webpage.jpg"
    cUrl := "<A HREF='" + url + "'><IMG SRC='" + img + "' border=0 align=absmiddle>" + htmlSpace( 2 ) + name + htmlSpace( 2 )
-   cStr += ::cCurrentNode + '.addItem( "' + curl + '"' + IF( bgColor != NIL, ',"' + bgColor + '"', "" ) + ');' + CRLF()
+   cStr += ::cCurrentNode + '.addItem( "' + curl + '"' + iif( bgColor != NIL, ',"' + bgColor + '"', "" ) + ');' + CRLF()
    ::nItems ++
    Aadd( ::aScript, cStr )
 RETURN self
