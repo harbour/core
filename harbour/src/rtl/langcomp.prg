@@ -104,7 +104,6 @@ FUNCTION hb_langSelect( cLangID )
       CASE "PTISO"  ; hb_langNew( cLangID, "PTISO" , "PTUTF", "UTF8" ) ; EXIT
       CASE "RO"     ; hb_langNew( cLangID, "RO852" , "ROUTF", "UTF8" ) ; EXIT
       CASE "RU866"  ; hb_langNew( cLangID, "RU866" , "RUUTF", "UTF8" ) ; EXIT
-      CASE "RUKOI"  ; hb_langNew( cLangID, "RUKOI8", "RUUTF", "UTF8" ) ; EXIT
       CASE "RUKOI8" ; hb_langNew( cLangID, "RUKOI8", "RUUTF", "UTF8" ) ; EXIT
       CASE "RUWIN"  ; hb_langNew( cLangID, "RU1251", "RUUTF", "UTF8" ) ; EXIT
       CASE "SK852"  ; hb_langNew( cLangID, "SK852" , "SKUTF", "UTF8" ) ; EXIT
@@ -124,7 +123,6 @@ FUNCTION hb_langSelect( cLangID )
       CASE "TRWIN"  ; hb_langNew( cLangID, "TRWIN" , "TRUTF", "UTF8" ) ; EXIT
       CASE "UA866"  ; hb_langNew( cLangID, "UA866" , "UAUTF", "UTF8" ) ; EXIT
 //    CASE "UADOS"  ; hb_langNew( cLangID, "?????" , "UAUTF", "UTF8" ) ; EXIT
-      CASE "UAKOI"  ; hb_langNew( cLangID, "UAKOI8", "UAUTF", "UTF8" ) ; EXIT
       CASE "UAKOI8" ; hb_langNew( cLangID, "UAKOI8", "UAUTF", "UTF8" ) ; EXIT
       CASE "UAWIN"  ; hb_langNew( cLangID, "UA1125", "UAUTF", "UTF8" ) ; EXIT
       CASE "ZHB5"   ; hb_langNew( cLangID, "BIG5"  , "ZHUTF", "UTF8" ) ; EXIT
