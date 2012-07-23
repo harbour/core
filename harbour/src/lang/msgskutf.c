@@ -153,6 +153,7 @@ static HB_LANG s_lang =
       "Uzamknutie nutné",
       "Zlyhanie uzamkutia pri pridávaní",
       "Zlyhanie uzamknutia",
+      "Lock Failure",
       "",
       "",
       "",

@@ -154,6 +154,8 @@ static HB_LANG s_lang =
       "Požadováno uzamknutí",
       "Zámek při přidání záznamu selhal",
       "Zámek selhal",
+      "Append lock failed",
+      "Lock Failure",
       "",
       "",
       "",
