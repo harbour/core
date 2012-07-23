@@ -61,12 +61,12 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "ELUTF",                              /* ID */
-      "Greek ANSI",                         /* Name (in English) */
-      "Ελληνικά ANSI",                      /* Name (in native language) */
-      "EL",                                 /* RFC ID */
-      "UTF-8",                              /* Codepage */
-      "",                                   /* Version */
+      "ELUTF",                     /* ID */
+      "Greek ANSI",                /* Name (in English) */
+      "Ελληνικά ANSI",             /* Name (in native language) */
+      "EL",                        /* RFC ID */
+      "UTF-8",                     /* Codepage */
+      "",                          /* Version */
 
       /* Month names */
 

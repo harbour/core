@@ -64,12 +64,12 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "CSUTF",                        /* ID */
-      "Czech",                        /* Name (in English) */
-      "Česky",                        /* Name (in native language) */
-      "CS",                           /* RFC ID */
-      "UTF-8",                        /* Codepage */
-      "",                             /* Version */
+      "CSUTF",                     /* ID */
+      "Czech",                     /* Name (in English) */
+      "Česky",                     /* Name (in native language) */
+      "CS",                        /* RFC ID */
+      "UTF-8",                     /* Codepage */
+      "",                          /* Version */
 
       /* Month names */
 
