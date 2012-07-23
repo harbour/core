@@ -239,6 +239,7 @@ PRG_SOURCES := \
    hbi18n2.prg \
    hbini.prg \
    input.prg \
+   langcomp.prg \
    libname.prg \
    listbox.prg \
    memoedit.prg \

@@ -449,7 +449,7 @@ const char * hb_langDGetErrorDesc( int iIndex )
 
 /* Harbour interface */
 
-HB_FUNC( HB_LANGSELECT )
+HB_FUNC( __HB_LANGSELECT )
 {
    const char * szNewLang;
 
