@@ -61,7 +61,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "BGWIN",                     /* ID */
+      "BGUTF",                     /* ID */
       "Bulgarian",                 /* Name (in English) */
       "Български",                 /* Name (in native language) */
       "BG",                        /* RFC ID */
