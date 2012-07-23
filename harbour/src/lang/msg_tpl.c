@@ -52,7 +52,7 @@
 
 /* Language name: <Your language> */
 /* ISO language code (2 chars): (please look it up in /doc/lang_id.txt) */
-/* Codepage: <Your codepage> */
+/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 
@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "English",                   /* Name (in English) */
       "English",                   /* Name (in native language) */
       "EN",                        /* RFC ID */
-      "CP-437",                    /* Codepage */
+      "UTF-8",                     /* Codepage */
       "",                          /* Version */
 
       /* Month names */
