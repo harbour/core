@@ -38,6 +38,8 @@ C_SOURCES := \
    cpfr850m.c \
    cpfriso.c \
    cpfrwin.c \
+   cphe862.c \
+   cphewin.c \
    cphr646.c \
    cphr852.c \
    cphriso.c \

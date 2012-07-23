@@ -38,12 +38,7 @@ C_SOURCES := \
    msgzhutf.c \
 
 C_SOURCES += \
-   msghe862.c \
-   msghewin.c \
    msgko.c \
-   msgsr852.c \
-   msgsriso.c \
-   msguados.c \
    msgzhgb.c \
 
 LIBNAME := hblang

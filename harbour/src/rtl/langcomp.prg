@@ -81,8 +81,8 @@ FUNCTION hb_langSelect( cLangID )
       CASE "EU"     ; hb_langNew( cLangID, "ES850" , "EUUTF", "UTF8" ) ; EXIT
       CASE "FR"     ; hb_langNew( cLangID, "FR850" , "FRUTF", "UTF8" ) ; EXIT
       CASE "GL"     ; hb_langNew( cLangID, "ES850" , "GLUTF", "UTF8" ) ; EXIT
-//    CASE "HE862"  ; hb_langNew( cLangID, "?????" , "HEUTF", "UTF8" ) ; EXIT
-//    CASE "HEWIN"  ; hb_langNew( cLangID, "?????" , "HEUTF", "UTF8" ) ; EXIT
+      CASE "HE862"  ; hb_langNew( cLangID, "HE862" , "HEUTF", "UTF8" ) ; EXIT
+      CASE "HEWIN"  ; hb_langNew( cLangID, "HEWIN" , "HEUTF", "UTF8" ) ; EXIT
       CASE "HR646"  ; hb_langNew( cLangID, "HR646" , "HRUTF", "UTF8" ) ; EXIT
       CASE "HR852"  ; hb_langNew( cLangID, "HR852" , "HRUTF", "UTF8" ) ; EXIT
       CASE "HRISO"  ; hb_langNew( cLangID, "HRISO" , "HRUTF", "UTF8" ) ; EXIT
@@ -114,15 +114,15 @@ FUNCTION hb_langSelect( cLangID )
       CASE "SL852"  ; hb_langNew( cLangID, "SL852" , "SLUTF", "UTF8" ) ; EXIT
       CASE "SLISO"  ; hb_langNew( cLangID, "SLISO" , "SLUTF", "UTF8" ) ; EXIT
       CASE "SLWIN"  ; hb_langNew( cLangID, "SLWIN" , "SLUTF", "UTF8" ) ; EXIT
-//    CASE "SR852"  ; hb_langNew( cLangID, "?????" , "SRUTF", "UTF8" ) ; EXIT
-//    CASE "SRISO"  ; hb_langNew( cLangID, "?????" , "SRUTF", "UTF8" ) ; EXIT
+      CASE "SR852"  ; hb_langNew( cLangID, "SL852" , "SRUTF", "UTF8" ) ; EXIT
+      CASE "SRISO"  ; hb_langNew( cLangID, "SLISO" , "SRUTF", "UTF8" ) ; EXIT
       CASE "SRWIN"  ; hb_langNew( cLangID, "SRWIN" , "SRUTF", "UTF8" ) ; EXIT
       CASE "SV"     ; hb_langNew( cLangID, "SV850" , "SVUTF", "UTF8" ) ; EXIT
       CASE "SVWIN"  ; hb_langNew( cLangID, "SVWIN" , "SVUTF", "UTF8" ) ; EXIT
       CASE "TR857"  ; hb_langNew( cLangID, "TR857" , "TRUTF", "UTF8" ) ; EXIT
       CASE "TRWIN"  ; hb_langNew( cLangID, "TRWIN" , "TRUTF", "UTF8" ) ; EXIT
       CASE "UA866"  ; hb_langNew( cLangID, "UA866" , "UAUTF", "UTF8" ) ; EXIT
-//    CASE "UADOS"  ; hb_langNew( cLangID, "?????" , "UAUTF", "UTF8" ) ; EXIT
+      CASE "UADOS"  ; hb_langNew( cLangID, "UA1125", "UAUTF", "UTF8" ) ; EXIT
       CASE "UAKOI8" ; hb_langNew( cLangID, "UAKOI8", "UAUTF", "UTF8" ) ; EXIT
       CASE "UAWIN"  ; hb_langNew( cLangID, "UA1125", "UAUTF", "UTF8" ) ; EXIT
       CASE "ZHB5"   ; hb_langNew( cLangID, "BIG5"  , "ZHUTF", "UTF8" ) ; EXIT
