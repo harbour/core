@@ -240,6 +240,7 @@ PRG_SOURCES := \
    hbini.prg \
    input.prg \
    langcomp.prg \
+   langlgcy.prg \
    libname.prg \
    listbox.prg \
    memoedit.prg \

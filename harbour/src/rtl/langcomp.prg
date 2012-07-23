@@ -50,11 +50,6 @@
  *
  */
 
-#include "hbextcdp.ch"
-#include "hbextlng.ch"
-
-REQUEST HB_CODEPAGE_UTF8
-
 FUNCTION hb_langSelect( cLangID )
 
    IF HB_ISSTRING( cLangID )
