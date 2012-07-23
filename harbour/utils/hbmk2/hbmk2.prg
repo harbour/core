@@ -137,6 +137,7 @@
 #ifndef _HBMK_EMBEDDED_
 
 #include "hbextcdp.ch"
+#include "hbextlng.ch"
 
 /* For -u support we use 'WHILE' instead of 'DO WHILE',
    'EXTERNAL' instead of 'REQUEST'
@@ -2350,6 +2351,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE cParamL == "-debugi18n"       ; hbmk[ _HBMK_lDEBUGI18N ]   := .T.
       CASE cParamL == "-debugdepd"       ; hbmk[ _HBMK_lDEBUGDEPD ]   := .T.
       CASE cParamL == "-debugpars"       ; hbmk[ _HBMK_lDEBUGPARS ]   := .T.
+      CASE cParamL == "-debugrte"        ; nLevel += cParamL /* invalid code to trigger RTE */
       CASE cParamL == "-nulrdd"          ; hbmk[ _HBMK_lNULRDD ]      := .T.
       CASE cParamL == "-nulrdd-"         ; hbmk[ _HBMK_lNULRDD ]      := .F.
       CASE cParamL == "-nodefgt"         ; hbmk[ _HBMK_aLIBCOREGT ]   := {}
@@ -13565,21 +13567,29 @@ STATIC FUNCTION GetUILang()
 STATIC PROCEDURE SetUILang( cUILNG )
    LOCAL tmp
 
-   IF cUILNG == "en"
-      hb_i18n_Set( NIL )
-   ELSE
-      tmp := "${hb_root}" + _SELF_NAME_ + ".${hb_lng}.hbl"
-      tmp := StrTran( tmp, "${hb_root}", hb_DirSepAdd( hb_DirBase() ) )
-      tmp := StrTran( tmp, "${hb_lng}", StrTran( cUILNG, "-", "_" ) )
-      hb_i18n_Set( iif( hb_i18n_Check( tmp := hb_MemoRead( tmp ) ), hb_i18n_RestoreTable( tmp ), NIL ) )
-   ENDIF
-
    /* Setup input CP of the translation */
    hb_cdpSelect( "UTF8EX" )
 
    /* Configure terminal and OS codepage */
    hb_SetTermCP( hb_cdpTerm() )
    Set( _SET_OSCODEPAGE, hb_cdpOS() )
+
+   /* Configure language */
+   IF cUILNG == "en"
+      hb_i18n_Set( NIL )
+      hb_langSelect( cUILNG )
+   ELSE
+      tmp := "${hb_root}" + _SELF_NAME_ + ".${hb_lng}.hbl"
+      tmp := StrTran( tmp, "${hb_root}", hb_DirSepAdd( hb_DirBase() ) )
+      tmp := StrTran( tmp, "${hb_lng}", StrTran( cUILNG, "-", "_" ) )
+      IF hb_i18n_Check( tmp := hb_MemoRead( tmp ) )
+         hb_i18n_Set( hb_i18n_RestoreTable( tmp ) )
+         hb_langSelect( cUILNG )
+      ELSE
+         hb_i18n_Set( NIL )
+         hb_langSelect( "en" )
+      ENDIF
+   ENDIF
 
    RETURN
 
