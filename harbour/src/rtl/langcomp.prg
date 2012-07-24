@@ -52,7 +52,7 @@
 
 REQUEST HB_CODEPAGE_UTF8
 
-#ifdef HB_LEGACY_LEVEL5
+#ifdef HB_LEGACY_LEVEL4
    /* Required for legacy language modules with a two character ID.
       These cannot have a compatibility puller symbol in langlgcy.prg,
       which in turn pulls all CP modules, so we're pulling them from
@@ -71,31 +71,23 @@ FUNCTION hb_langSelect( cLangID, cCP )
 
       cCPDef := hb_cdpSelect()
 
-#ifdef HB_LEGACY_LEVEL5
+#ifdef HB_LEGACY_LEVEL4
 
       /* Emulate legacy Harbour language modules for compatibility */
-      SWITCH cLangID
+      SWITCH Upper( cLangID )
       CASE "BE866"  ; cCPDef := "BG866" ; cLangIDBase := "be" ; EXIT
       CASE "BEWIN"  ; cCPDef := "BGWIN" ; cLangIDBase := "be" ; EXIT
       CASE "BG866"  ; cCPDef := "BG866" ; cLangIDBase := "bg" ; EXIT
       CASE "BGISO"  ; cCPDef := "BGISO" ; cLangIDBase := "bg" ; EXIT
       CASE "BGMIK"  ; cCPDef := "BGMIK" ; cLangIDBase := "bg" ; EXIT
       CASE "BGWIN"  ; cCPDef := "BGWIN" ; cLangIDBase := "bg" ; EXIT
-      CASE "CA"     ; cCPDef := "DE850" ; cLangIDBase := "ca" ; EXIT
       CASE "CS852"  ; cCPDef := "CS852" ; cLangIDBase := "cs" ; EXIT
       CASE "CSISO"  ; cCPDef := "CSISO" ; cLangIDBase := "cs" ; EXIT
       CASE "CSKAM"  ; cCPDef := "CSKAMC"; cLangIDBase := "cs" ; EXIT
       CASE "CSWIN"  ; cCPDef := "CSWIN" ; cLangIDBase := "cs" ; EXIT
-      CASE "DE"     ; cCPDef := "DE850" ; cLangIDBase := "de" ; EXIT
       CASE "DEWIN"  ; cCPDef := "DEWIN" ; cLangIDBase := "de" ; EXIT
-      CASE "EL"     ; cCPDef := "EL737" ; cLangIDBase := "el" ; EXIT
       CASE "ELWIN"  ; cCPDef := "ELWIN" ; cLangIDBase := "el" ; EXIT
-      CASE "EO"     ; cCPDef := "DE850" ; cLangIDBase := "eo" ; EXIT
-      CASE "ES"     ; cCPDef := "DE850" ; cLangIDBase := "es" ; EXIT
       CASE "ESWIN"  ; cCPDef := "ESWIN" ; cLangIDBase := "es" ; EXIT
-      CASE "EU"     ; cCPDef := "DE850" ; cLangIDBase := "eu" ; EXIT
-      CASE "FR"     ; cCPDef := "DE850" ; cLangIDBase := "fr" ; EXIT
-      CASE "GL"     ; cCPDef := "DE850" ; cLangIDBase := "gl" ; EXIT
       CASE "HE862"  ; cCPDef := "HE862" ; cLangIDBase := "he" ; EXIT
       CASE "HEWIN"  ; cCPDef := "HEWIN" ; cLangIDBase := "he" ; EXIT
       CASE "HR646"  ; cCPDef := "HR646" ; cLangIDBase := "hr" ; EXIT
@@ -105,19 +97,13 @@ FUNCTION hb_langSelect( cLangID, cCP )
       CASE "HU852"  ; cCPDef := "HU852" ; cLangIDBase := "hu" ; EXIT
       CASE "HUISO"  ; cCPDef := "HUISO" ; cLangIDBase := "hu" ; EXIT
       CASE "HUWIN"  ; cCPDef := "HUWIN" ; cLangIDBase := "hu" ; EXIT
-      CASE "ID"     ; cCPDef := "EN"    ; cLangIDBase := "id" ; EXIT
       CASE "IS850"  ; cCPDef := "IS850" ; cLangIDBase := "is" ; EXIT
-      CASE "IT"     ; cCPDef := "DE850" ; cLangIDBase := "it" ; EXIT
-      /* INCOMPATIBILITY: "KO" (Korean) using CP949 is not supported anymore. */
       CASE "LTWIN"  ; cCPDef := "LTWIN" ; cLangIDBase := "lt" ; EXIT
-      CASE "NL"     ; cCPDef := "EN"    ; cLangIDBase := "nl" ; EXIT
       CASE "PL852"  ; cCPDef := "PL852" ; cLangIDBase := "pl" ; EXIT
       CASE "PLISO"  ; cCPDef := "PLISO" ; cLangIDBase := "pl" ; EXIT
       CASE "PLMAZ"  ; cCPDef := "PLMAZ" ; cLangIDBase := "pl" ; EXIT
       CASE "PLWIN"  ; cCPDef := "PLWIN" ; cLangIDBase := "pl" ; EXIT
-      CASE "PT"     ; cCPDef := "DE850" ; cLangIDBase := "pt" ; EXIT
       CASE "PTISO"  ; cCPDef := "PTISO" ; cLangIDBase := "pt" ; EXIT
-      CASE "RO"     ; cCPDef := "CS852" ; cLangIDBase := "ro" ; EXIT
       CASE "RU866"  ; cCPDef := "RU866" ; cLangIDBase := "ru" ; EXIT
       CASE "RUKOI8" ; cCPDef := "RUKOI8"; cLangIDBase := "ru" ; EXIT
       CASE "RUWIN"  ; cCPDef := "RU1251"; cLangIDBase := "ru" ; EXIT
@@ -132,7 +118,6 @@ FUNCTION hb_langSelect( cLangID, cCP )
       CASE "SR852"  ; cCPDef := "SL852" ; cLangIDBase := "sr_lat" ; EXIT
       CASE "SRISO"  ; cCPDef := "SLISO" ; cLangIDBase := "sr_lat" ; EXIT
       CASE "SRWIN"  ; cCPDef := "SRWIN" ; cLangIDBase := "sr_cyr" ; EXIT
-      CASE "SV"     ; cCPDef := "DE850" ; cLangIDBase := "sv" ; EXIT
       CASE "SVWIN"  ; cCPDef := "SVWIN" ; cLangIDBase := "sv" ; EXIT
       CASE "TR857"  ; cCPDef := "TR857" ; cLangIDBase := "tr" ; EXIT
       CASE "TRWIN"  ; cCPDef := "TRWIN" ; cLangIDBase := "tr" ; EXIT
@@ -142,6 +127,27 @@ FUNCTION hb_langSelect( cLangID, cCP )
       CASE "UAWIN"  ; cCPDef := "UA1125"; cLangIDBase := "uk" ; EXIT
       CASE "ZHB5"   ; cCPDef := "BIG5"  ; cLangIDBase := "zh_tra" ; EXIT
       CASE "ZHGB"   ; cCPDef := "BIG5"  ; cLangIDBase := "zh_sim" ; EXIT /* INCOMPATIBILITY: Was using CP936 in legacy implementation. */
+      OTHERWISE
+         /* Case sensitive legacy IDs. Lowercase flavours denote new
+            language module IDs, so they won't be recognized as
+            compatibility ones. INCOMPATIBLE. */
+         SWITCH cLangID
+         CASE "CA"     ; cCPDef := "DE850" ; cLangIDBase := "ca" ; EXIT
+         CASE "DE"     ; cCPDef := "DE850" ; cLangIDBase := "de" ; EXIT
+         CASE "EL"     ; cCPDef := "EL737" ; cLangIDBase := "el" ; EXIT
+         CASE "EO"     ; cCPDef := "DE850" ; cLangIDBase := "eo" ; EXIT
+         CASE "ES"     ; cCPDef := "DE850" ; cLangIDBase := "es" ; EXIT
+         CASE "EU"     ; cCPDef := "DE850" ; cLangIDBase := "eu" ; EXIT
+         CASE "FR"     ; cCPDef := "DE850" ; cLangIDBase := "fr" ; EXIT
+         CASE "GL"     ; cCPDef := "DE850" ; cLangIDBase := "gl" ; EXIT
+         CASE "ID"     ; cCPDef := "EN"    ; cLangIDBase := "id" ; EXIT
+         CASE "IT"     ; cCPDef := "DE850" ; cLangIDBase := "it" ; EXIT
+         /* INCOMPATIBILITY: "KO" (Korean) using CP949 is not supported anymore. */
+         CASE "NL"     ; cCPDef := "EN"    ; cLangIDBase := "nl" ; EXIT
+         CASE "PT"     ; cCPDef := "DE850" ; cLangIDBase := "pt" ; EXIT
+         CASE "RO"     ; cCPDef := "CS852" ; cLangIDBase := "ro" ; EXIT
+         CASE "SV"     ; cCPDef := "DE850" ; cLangIDBase := "sv" ; EXIT
+         ENDSWITCH
       ENDSWITCH
 
 #endif
@@ -150,7 +156,7 @@ FUNCTION hb_langSelect( cLangID, cCP )
          cCP := cCPDef
       ENDIF
 
-#ifdef HB_LEGACY_LEVEL5
+#ifdef HB_LEGACY_LEVEL4
       IF ! Empty( cLangIDBase )
          /* Legacy emulation */
          cLangID := cLangIDBase
@@ -163,7 +169,7 @@ FUNCTION hb_langSelect( cLangID, cCP )
             /* Normal case */
             cLangIDBase := cLangID
          ENDIF
-#ifdef HB_LEGACY_LEVEL5
+#ifdef HB_LEGACY_LEVEL4
       ENDIF
 #endif
 

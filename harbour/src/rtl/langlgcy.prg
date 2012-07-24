@@ -50,7 +50,7 @@
  *
  */
 
-#ifdef HB_LEGACY_LEVEL5
+#ifdef HB_LEGACY_LEVEL4
 
 #include "hbextcdp.ch"
 #include "hbextlng.ch"
