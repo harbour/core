@@ -359,6 +359,7 @@ METHOD IdeActions:buildToolBar()
    oTBar:addItem( ::getAction( "TB_RebuildLaunch"     ), , , , , , "RebuildLaunch"     )
    oTBar:addItem( , , , , , nSep )
    ::oActToolsBtn := oTBar:oWidget:addWidget( ::oIde:oTM:buildToolsButton() )
+   ::oActToolsBtn := oTBar:oWidget:addWidget( ::oIde:oTM:buildViewsButton() )
 
    ::oIde:oMainToolbar := oTBar
 

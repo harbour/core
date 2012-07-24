@@ -94,6 +94,8 @@ CLASS IdeToolsManager INHERIT IdeObject
    DATA   aAct                                    INIT   {}
    DATA   qToolsMenu
    DATA   qToolsButton
+   DATA   qViewsMenu
+   DATA   qViewsButton
    DATA   aPanelsAct                              INIT   {}
    DATA   qPanelsButton
    DATA   qPanelsMenu
@@ -128,6 +130,9 @@ CLASS IdeToolsManager INHERIT IdeObject
    METHOD buildUserToolbars()
    METHOD populatePlugins( lClear )
    METHOD setStyleSheet( cCSS )
+   METHOD buildViewsButton()
+   METHOD saveView()
+   METHOD execView( cView )
 
    ENDCLASS
 
@@ -839,6 +844,64 @@ METHOD IdeToolsManager:finished( nEC, nES, oHbp )
 
    ::oOutputResult:oWidget:append( hbide_outputLine() )
    ::oOutputResult:oWidget:append( "Finished: Exit Code = " + hb_ntos( nEC ) + " Status = " + hb_ntos( nES ) )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_blockView( oSelf, cView )
+   RETURN {|| oSelf:execView( cView ) }
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeToolsManager:buildViewsButton()
+   LOCAL a_, b_, qAct, aSettings, cPath, cView
+
+   cPath := ::oINI:getIniPath()
+   b_:= directory( cPath + "*.ide"  )
+   aSettings := {}
+   FOR EACH a_ IN b_
+      IF ! ( a_[ 1 ] == "settings.ide" .AND. a_[ 1 ] == "tempsettings.ide" )
+         aadd( aSettings, strtran( a_[ 1 ], ".ide" ) )
+      ENDIF
+   NEXT
+
+   ::qViewsMenu := QMenu()
+   ::qViewsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
+   FOR EACH cView IN aSettings
+      qAct := ::qViewsMenu:addAction( cView )
+      qAct:connect( "triggered(bool)", hbide_blockView( Self, cView ) )
+      aadd( ::aAct, qAct )
+   NEXT
+   ::qViewsButton := QToolButton()
+   ::qViewsButton:setTooltip( "HbIDE Views" )
+   ::qViewsButton:setIcon( QIcon( hbide_image( "view_docks" ) ) )
+   ::qViewsButton:setPopupMode( QToolButton_MenuButtonPopup )
+   ::qViewsButton:setMenu( ::qViewsMenu )
+   ::qViewsButton:connect( "clicked()", {|| ::saveView() } )
+
+   RETURN ::qViewsButton
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeToolsManager:execView( cView )
+   HB_SYMBOL_UNUSED( cView )
+   hbide_restSettings( ::oIde, cView + ".ide" )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeToolsManager:saveView()
+   LOCAL cView, qAct
+
+   cView := lower( trim( hbide_fetchAString( ::oDlg:oWidget, "", "HbIDE View Name", "New View" ) ) )
+   IF ! empty( cView ) .AND. cView != "settings" .AND. cView != "tempsettings"
+      cView := strtran( cView, " ", "_" )
+      hbide_saveSettings( ::oIde, cView + ".ide" )
+      qAct := ::qViewsMenu:addAction( cView )
+      qAct:connect( "triggered(bool)", hbide_blockView( Self, cView ) )
+      aadd( ::aAct, qAct )
+   ENDIF
 
    RETURN Self
 

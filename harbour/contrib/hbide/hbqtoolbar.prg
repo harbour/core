@@ -79,12 +79,12 @@ CLASS HbqToolbar
    DATA   hItems                                  INIT   {=>}
    DATA   hActions                                INIT   {=>}
 
-   DATA   allowedAreas                            INIT   Qt_TopToolBarArea
+   DATA   allowedAreas                            INIT   Qt_TopToolBarArea + Qt_LeftToolBarArea + Qt_BottomToolBarArea + Qt_RightToolBarArea
    DATA   initialArea                             INIT   Qt_TopToolBarArea
    DATA   orientation                             INIT   Qt_Horizontal
-   DATA   size                                   
-   DATA   moveable                                INIT   .f.
-   DATA   floatable                               INIT   .f.
+   DATA   size
+   DATA   moveable                                INIT   .T.
+   DATA   floatable                               INIT   .T.
 
    DATA   lPressed                                INIT   .f.
    DATA   qPos
@@ -133,7 +133,7 @@ METHOD HbqToolbar:create( cName, oParent )
    DEFAULT ::cName TO "HbqToolbar_" + hb_ntos( ++nID )
 
    DEFAULT ::size TO QSize( 16,16 )
-   
+
    ::oWidget := QToolbar()
    ::oWidget:setObjectName( ::cName )
    ::oWidget:setAllowedAreas( ::allowedAreas )
@@ -149,7 +149,7 @@ METHOD HbqToolbar:create( cName, oParent )
 
 METHOD HbqToolbar:onError( ... )
    LOCAL cMsg := __GetMessage()
-  
+
    IF SubStr( cMsg, 1, 1 ) == "_"
       cMsg := SubStr( cMsg, 2 )
    ENDIF
@@ -188,8 +188,8 @@ METHOD HbqToolbar:destroy()
    ::qByte              := NIL
    ::oWidget            := NIL
 
-   ::hActions           := NIL 
-   
+   ::hActions           := NIL
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -257,7 +257,7 @@ METHOD HbqToolbar:addWidget( cName, qWidget )
    ::hItems[ cName ] := qWidget
    ::hActions[ cName ] := qAction
 
-   RETURN NIL 
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -270,7 +270,7 @@ METHOD HbqToolbar:addSeparator()
    ::hItems[ cName ] := cName
    ::hActions[ cName ] := qAction
 
-   RETURN NIL 
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -283,7 +283,7 @@ METHOD HbqToolbar:addAction( cName, qAction )
    ::hItems[ cName ] := cName
    ::hActions[ cName ] := qAction
 
-   RETURN NIL 
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -316,7 +316,7 @@ METHOD HbqToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDra
 
    ::hItems[ cName ] := oButton
    ::hActions[ cName ] := oActBtn
-   
+
    RETURN oButton
 
 /*----------------------------------------------------------------------*/

@@ -1309,7 +1309,7 @@ FUNCTION hbide_fetchADate( qParent, cTitle, cPrompt, dDefault )
 /*------------------------------------------------------------------------*/
 
 FUNCTION hbide_fetchAString( qParent, cDefault, cWhat, cTitle )
-   LOCAL qGo
+   LOCAL qGo, cText
 
    DEFAULT cDefault TO ""
    DEFAULT cWhat    TO ""
@@ -1321,8 +1321,10 @@ FUNCTION hbide_fetchAString( qParent, cDefault, cWhat, cTitle )
    qGo:setWindowTitle( cTitle )
 
    qGo:exec()
+   cText := qGo:textValue()
+   qGo:setParent( QWidget() )
 
-   RETURN qGo:textValue()
+   RETURN cText
 
 /*----------------------------------------------------------------------*/
 /*

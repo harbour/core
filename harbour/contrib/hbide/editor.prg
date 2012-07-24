@@ -1751,7 +1751,7 @@ METHOD IdeEditor:buildTabPage( cSource )
    IF Empty( cSource )
       ::oTab:caption := "Untitled " + hb_ntos( hbide_getNextUntitled() )
    ELSE
-      ::oTab:caption := ::cFile + ::cExt
+      ::oTab:caption := ::cFile // + ::cExt  /* to reduce the tab width which eventually leads to good visibility of tabs */
    ENDIF
    ::oTab:minimized := .F.
 
