@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Icelandic",                 /* Name (in English) */
       "Íslenska",                  /* Name (in native language) */
       "IS",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

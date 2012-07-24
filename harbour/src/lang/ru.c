@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Russian",                   /* Name (in English) */
       "Русский",                   /* Name (in native language) */
       "RU",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

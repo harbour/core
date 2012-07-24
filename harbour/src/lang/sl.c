@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Slovenian",                 /* Name (in English) */
       "Slovenščina",               /* Name (in native language) */
       "SL",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

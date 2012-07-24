@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Chinese Simplified",        /* Name (in English) */
       "中文简体",                      /* Name (in native language) */
       "ZH",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

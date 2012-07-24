@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Lithuanian",                /* Name (in English) */
       "Lietuvių",                  /* Name (in native language) */
       "LT",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

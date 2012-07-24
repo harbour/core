@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Korean",                    /* Name (in English) */
       "한국어",                       /* Name (in native language) */
       "KO",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

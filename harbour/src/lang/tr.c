@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Turkish",                   /* Name (in English) */
       "Türkçe",                    /* Name (in native language) */
       "TR",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

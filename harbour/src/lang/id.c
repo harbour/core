@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Indonesian",                /* Name (in English) */
       "Bahasa Indonesia",          /* Name (in native language) */
       "ID",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

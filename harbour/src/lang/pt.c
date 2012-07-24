@@ -77,7 +77,7 @@ static HB_LANG s_lang =
       "Portuguese",                /* Name (in English) */
       "Portugues",                 /* Name (in native language) */
       "PT",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */
@@ -198,7 +198,7 @@ static HB_LANG s_lang =
       "Tipo incorreto de item na pilha tentando executar um pop de %s",
       "Stack underflow",
       "Um item iria ser copiado para ele mesmo em %s",
-      "Symbol item inválido passado como memvar  %s",
+      "Symbol item inválido passado como memvar %s",
       "Memory buffer overflow",
       "hb_xgrab requisitou para alocar zero bytes",
       "hb_xrealloc requisitou para redimensiorar para zero byte",

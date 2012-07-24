@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Bulgarian",                 /* Name (in English) */
       "Български",                 /* Name (in native language) */
       "BG",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

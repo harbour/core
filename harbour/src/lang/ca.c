@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Catalan",                   /* Name (in English) */
       "Catalán",                   /* Name (in native language) */
       "CA",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

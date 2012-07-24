@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Greek",                     /* Name (in English) */
       "Ελληνικά",                  /* Name (in native language) */
       "EL",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

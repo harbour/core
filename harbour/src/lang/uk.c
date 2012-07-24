@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Ukrainian",                 /* Name (in English) */
       "Украєнська",                /* Name (in native language) */
       "UA",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "German",                    /* Name (in English) */
       "Deutsch",                   /* Name (in native language) */
       "DE",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

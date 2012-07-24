@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Serbian (latin)",           /* Name (in English) */
       "Srpski",                    /* Name (in native language) */
       "SR",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

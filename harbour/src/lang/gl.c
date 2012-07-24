@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Galician",                  /* Name (in English) */
       "Galego",                    /* Name (in native language) */
       "GL",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

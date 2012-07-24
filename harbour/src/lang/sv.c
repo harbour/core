@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Swedish",                   /* Name (in English) */
       "svenska",                   /* Name (in native language) */
       "SV",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

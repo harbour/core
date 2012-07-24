@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Basque",                    /* Name (in English) */
       "English",                   /* Name (in native language) */
       "EU",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

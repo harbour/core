@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Hebrew",                    /* Name (in English) */
       "עברית",                     /* Name (in native language) */
       "HE",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

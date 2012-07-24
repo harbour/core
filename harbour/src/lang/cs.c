@@ -68,7 +68,7 @@ static HB_LANG s_lang =
       "Czech",                     /* Name (in English) */
       "Česky",                     /* Name (in native language) */
       "CS",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

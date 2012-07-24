@@ -66,7 +66,7 @@ static HB_LANG s_lang =
       "Spanish",                   /* Name (in English) */
       "Español",                   /* Name (in native language) */
       "ES",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

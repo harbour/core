@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Hungarian",                 /* Name (in English) */
       "Magyar",                    /* Name (in native language) */
       "HU",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

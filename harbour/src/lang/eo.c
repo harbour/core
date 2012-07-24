@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Esperanto",                 /* Name (in English) */
       "Esperanto",                 /* Name (in native language) */
       "EO",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */

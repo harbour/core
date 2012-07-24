@@ -65,7 +65,7 @@ static HB_LANG s_lang =
       "Polish",                    /* Name (in English) */
       "Polski",                    /* Name (in native language) */
       "PL",                        /* RFC ID */
-      "UTF-8",                     /* Codepage */
+      "UTF8",                      /* Codepage */
       "",                          /* Version */
 
       /* Month names */
