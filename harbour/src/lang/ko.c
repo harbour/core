@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (KOUTF)
+ * Language Support Module (ko)
  *
  * Copyright 2000 Kwon, Oh-Jun <ohjun@fivetech.net>
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "KOUTF",                     /* ISO ID (2 chars) */
+      "ko",                        /* ISO ID (2 chars) */
       "Korean",                    /* Name (in English) */
       "한국어",                       /* Name (in native language) */
       "KO",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      KOUTF
+#define HB_LANG_ID      KO
 #include "hbmsgreg.h"

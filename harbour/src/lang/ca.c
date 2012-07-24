@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (CAUTF)
+ * Language Support Module (ca)
  *
  * Copyright 2000 Jose Lalin <dezac@corevia.com>
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "CAUTF",                     /* ISO ID (2 chars) */
+      "ca",                        /* ISO ID (2 chars) */
       "Catalan",                   /* Name (in English) */
       "Catalán",                   /* Name (in native language) */
       "CA",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      CAUTF
+#define HB_LANG_ID      CA
 #include "hbmsgreg.h"

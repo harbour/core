@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (SRLAT)
+ * Language Support Module (sr_lat)
  *
  * Copyright 2000 Davor Siklic <siki@msoft.cz>
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "SRLAT",                     /* ISO ID (2 chars) */
+      "sr_lat",                    /* ISO ID (2 chars) */
       "Serbian (latin)",           /* Name (in English) */
       "Srpski",                    /* Name (in native language) */
       "SR",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      SRLAT
+#define HB_LANG_ID      SR_LAT
 #include "hbmsgreg.h"

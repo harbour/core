@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (SRUTF)
+ * Language Support Module (sr_cyr)
  *
  * Copyright 2003 Srdjan Dragojlovic <digikv@yahoo.com>
  * www - http://www.xharbour.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "SRUTF",                     /* ISO ID (2 chars) */
+      "sr_cyr",                    /* ISO ID (2 chars) */
       "Serbian (cyrillic)",        /* Name (in English) */
       "Српски",                    /* Name (in native language) */
       "SR",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      SRUTF
+#define HB_LANG_ID      SR_CYR
 #include "hbmsgreg.h"

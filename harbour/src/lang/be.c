@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (BEUTF)
+ * Language Support Module (be)
  *
  * Copyright 2004 Pavel Tsarenko <tpe2@mail.ru>
  * www - http://www.xharbour.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "BEUTF",                     /* ISO ID (2 chars) */
+      "be",                        /* ISO ID (2 chars) */
       "Belorussian",               /* Name (in English) */
       "Беларуская",                /* Name (in native language) */
       "BY",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      BEUTF
+#define HB_LANG_ID      BE
 #include "hbmsgreg.h"

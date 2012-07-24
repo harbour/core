@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (FRUTF)
+ * Language Support Module (fr)
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "FRUTF",                     /* ISO ID (2 chars) */
+      "fr",                        /* ISO ID (2 chars) */
       "French",                    /* Name (in English) */
       "français",                  /* Name (in native language) */
       "FR",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      FRUTF
+#define HB_LANG_ID      FR
 #include "hbmsgreg.h"

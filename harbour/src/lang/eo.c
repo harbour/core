@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (EOUTF)
+ * Language Support Module (eo)
  *
  * Copyright 2000 Jose Lalin <dezac@corevia.com>
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "EOUTF",                     /* ISO ID (2 chars) */
+      "eo",                        /* ISO ID (2 chars) */
       "Esperanto",                 /* Name (in English) */
       "Esperanto",                 /* Name (in native language) */
       "EO",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      EOUTF
+#define HB_LANG_ID      EO
 #include "hbmsgreg.h"

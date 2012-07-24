@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (SVUTF)
+ * Language Support Module (sv)
  *
  * Copyright 2006 Klas Engwall <klas dot engwall at engwall dot com>
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "SVUTF",                     /* ISO ID (2 chars) */
+      "sv",                        /* ISO ID (2 chars) */
       "Swedish",                   /* Name (in English) */
       "svenska",                   /* Name (in native language) */
       "SV",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      SVUTF
+#define HB_LANG_ID      SV
 #include "hbmsgreg.h"

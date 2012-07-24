@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (HEUTF)
+ * Language Support Module (he)
  *
  * Copyright 2000 Viktor Szakats (harbour syenar.net) (English)
  * Copyright 2000 Chen Kedem <niki@synel.co.il> (Hebrew)
@@ -58,7 +58,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "HEUTF",                     /* ISO ID (2 chars) */
+      "he",                        /* ISO ID (2 chars) */
       "Hebrew",                    /* Name (in English) */
       "עברית",                     /* Name (in native language) */
       "HE",                        /* RFC ID */
@@ -197,5 +197,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      HEUTF
+#define HB_LANG_ID      HE
 #include "hbmsgreg.h"

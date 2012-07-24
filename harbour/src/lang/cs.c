@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (CSUTF)
+ * Language Support Module (cs)
  *
  * Copyright 2000 Viktor Szakats (harbour syenar.net) (English)
  * Copyright 2000 Roman Masek <woodoo@iol.cz>
@@ -60,7 +60,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "CSUTF",                     /* ISO ID (2 chars) */
+      "cs",                        /* ISO ID (2 chars) */
       "Czech",                     /* Name (in English) */
       "Česky",                     /* Name (in native language) */
       "CS",                        /* RFC ID */
@@ -199,5 +199,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      CSUTF
+#define HB_LANG_ID      CS
 #include "hbmsgreg.h"

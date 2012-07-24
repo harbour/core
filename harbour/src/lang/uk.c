@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (UAUTF)
+ * Language Support Module (uk)
  *
  * Copyright 2004 Pavel Tsarenko <tpe2@mail.ru>
  * www - http://www.xharbour.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "UAUTF",                     /* ISO ID (2 chars) */
+      "uk",                        /* ISO ID (2 chars) */
       "Ukrainian",                 /* Name (in English) */
       "Украєнська",                /* Name (in native language) */
       "UA",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      UAUTF
+#define HB_LANG_ID      UK
 #include "hbmsgreg.h"

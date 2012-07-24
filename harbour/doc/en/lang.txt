@@ -10,7 +10,7 @@
  *    Documentation for: HB_LANGNAME(), HB_LANGSELECT()
  *
  * Copyright 2004 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: HB_LANGERRMSG(),HB_LANGMESSAGE(),HB_SETCODEPAGE(),
+ *    Documentation for: HB_LANGERRMSG(),HB_LANGMESSAGE(),HB_CDPSELECT(),
  *                       HB_TRANSLATE()
  *
  * See COPYING for licensing terms.
@@ -46,7 +46,7 @@
  *      PROCEDURE Main()
  *         // English: Argument error
  *         ? "English:", HB_LANGERRMSG( EG_ARG )
- *         HB_LANGSELECT( "ES" )
+ *          "ES" )
  *         // Spanish: Error de argumento
  *         ? "Spanish:", HB_LANGERRMSG( EG_ARG )
  *         RETURN
@@ -93,7 +93,7 @@
  *      PROCEDURE Main()
  *         // English: Monday
  *         ? "English:", HB_LANGMESSAGE( HB_LANG_ITEM_BASE_DAY + 1 )
- *         HB_LANGSELECT( "ES" )
+ *          "ES" )
  *         // Spanish: Lunes
  *         ? "Spanish:", HB_LANGMESSAGE( HB_LANG_ITEM_BASE_DAY + 1 )
  *         RETURN
@@ -135,17 +135,17 @@
  *      REQUEST HB_LANG_RO
  *      REQUEST HB_LANG_ES
  *      PROCEDURE Main()
- *         HB_LANGSELECT( "PT" )       // Default language is now Portuguese
- *         ? CDOW( DATE() )            //Segunda-feira
- *         ? "Current language is ", HB_LANGNAME()             // Portuguese
- *         ? "Old language id selected is ", HB_LANGSELECT()   // PT
- *         HB_LANGSELECT( "RO" )       // Default language is now Romanian
- *         ? CMONTH( DATE() )          // Mai
- *         ? "Old language id selected is ", HB_LANGSELECT()   // RO
- *         HB_LANGSELECT( "ES" )       // Default language is now Spanish
- *         ? "Current language is ",HB_LANGNAME()              // Spanish
- *         ? CMONTH( DATE() )          // Mayo
- *         ? CDOW( DATE() )            // Lunes
+ *         hb_langSelect( "pt" )       // Default language is now Portuguese
+ *         ? CDOW( Date() )            //Segunda-feira
+ *         ? "Current language is ", hb_langName()             // Portuguese
+ *         ? "Old language id selected is ", hb_langSelect()   // PT
+ *         hb_langSelect( "ro" )       // Default language is now Romanian
+ *         ? CMONTH( Date() )          // Mai
+ *         ? "Old language id selected is ", hb_langSelect()   // RO
+ *         hb_langSelect( "es" )       // Default language is now Spanish
+ *         ? "Current language is ",hb_langName()              // Spanish
+ *         ? CMONTH( Date() )          // Mayo
+ *         ? CDOW( Date() )            // Lunes
  *         RETURN
  *  $TESTS$
  *      See tests/langapi.prg, tests/langmsg.prg
@@ -174,67 +174,50 @@
  *  $ONELINER$
  *      Select a specific nation message module
  *  $SYNTAX$
- *      HB_LANGSELECT( [<cNewLang>] ) --> cOldLang
+ *      HB_LANGSELECT( [ <cNewLang> ][, <cCodepage> ] ) --> cOldLang
  *  $ARGUMENTS$
  *      <cNewLang>  The optional ID of the country language module.
  *      Possible values for <cNewLang> are below as defined in the
  *      Lang library, sorted by language.
+ *      <cCodepage>  Optional codepage ID into which the language
+ *      module strings are automatically converted by Harbour.
  *
  *      <table>
- *      Language              Codepage       <cNewLang>
+ *      Language              <cNewLang>
  *
- *      Bulgarian             866            BG866
- *      Bulgarian             ISO-8859-5     BGISO
- *      Bulgarian             Windows-1251   BGWIN
- *      Basque                850            EU
- *      Catalan               850            CA
- *      Chinese Simplified    936            ZHGB
- *      Chinese Traditional   950            ZHB5
- *      Croatian              852            HR852
- *      Croatian              ISO-8859-2     HRISO
- *      Czech                 852            CS852
- *      Czech                 ISO-8859-2     CSISO
- *      Czech                 Kamenickych    CSKAM
- *      Czech                 Windows-1250   CSWIN
- *      Dutch                 437            NL
- *      English               437            EN
- *      Esperanto             850            EO
- *      French                850            FR
- *      Galician              850            GL
- *      German                850            DE
- *      German ANSI           ANSI           DEWIN
- *      Greek                 737            EL
- *      Greek ANSI            Windows-1253   ELWIN
- *      Hebrew                862            HE862
- *      Hebrew                Windows-1255   HEWIN
- *      Hungarian             852            HU852
- *      Hungarian             ISO-8859-2     HUISO
- *      Hungarian             Windows-1250   HUWIN
- *      Icelandic             850            IS850
- *      Indonesian            437            ID
- *      Italian               437            IT
- *      Korean                949            KO
- *      Lithuanian            Windows-1257   LT
- *      Polish                852            PL852
- *      Polish                ISO-8859-2     PLISO
- *      Polish                Mazowia        PLMAZ
- *      Polish                Windows-1250   PLWIN
- *      Portuguese            850            PT
- *      Romanian              852            RO
- *      Russian               866            RU866
- *      Russian               KOI-8          RUKOI8
- *      Russian               Windows-1251   RUWIN
- *      Serbian               852            SR852
- *      Serbian               ISO-8859-2     SRISO
- *      Serbian               Windows-1251   SRWIN
- *      Slovenian             437            SL437
- *      Slovenian             852            SL852
- *      Slovenian             ISO-8859-2     SLISO
- *      Slovenian             Windows-1250   SLWIN
- *      Spanish               850            ES
- *      Spanish ANSI          ANSI           ESWIN
- *      Turkish               857            TR857
- *      Turkish               Windows-1254   TRWIN
+ *      Basque                eu
+ *      Belorussian           be
+ *      Bulgarian             bg
+ *      Catalan               ca
+ *      Chinese Simplified    zh_sim
+ *      Chinese Traditional   zh_tra
+ *      Croatian              hr
+ *      Czech                 cs
+ *      Dutch                 nl
+ *      Esperanto             eo
+ *      French                fr
+ *      Galician              gl
+ *      German                de
+ *      Greek                 el
+ *      Hebrew                he
+ *      Hungarian             hu
+ *      Icelandic             is
+ *      Indonesian            id
+ *      Italian               it
+ *      Korean                ko
+ *      Lithuanian            lt
+ *      Polish                pl
+ *      Portuguese            pt
+ *      Romanian              ro
+ *      Russian               ru
+ *      Serbian (cyrillic)    sr_cyr
+ *      Serbian (latin)       sr_lat
+ *      Slovak                sk
+ *      Slovenian             sl
+ *      Spanish               es
+ *      Swedish               sv
+ *      Turkish               tr
+ *      Ukrainian             uk
  *      </table>
  *  $RETURNS$
  *      <cOldLang>   The old language indentifier
@@ -253,15 +236,15 @@
  *      REQUEST HB_LANG_RO
  *      REQUEST HB_LANG_ES
  *      PROCEDURE Main()
- *         HB_LANGSELECT( "PT" )       // Default language is now Portuguese
- *         ? CDOW( DATE() )            // Segunda-feira
+ *         HB_LANGSELECT( "pt" )       // Default language is now Portuguese
+ *         ? CDOW( Date() )            // Segunda-feira
  *         ? "Old language id selected is ", HB_LANGSELECT()   // PT
- *         HB_LANGSELECT( "RO" )       // Default language is now Romanian
- *         ? CMONTH( DATE() )          // Mai
+ *         HB_LANGSELECT( "ro" )       // Default language is now Romanian
+ *         ? CMONTH( Date() )          // Mai
  *         ? "Old language id selected is ", HB_LANGSELECT()   // RO
- *         HB_LANGSELECT( "ES" )       // Default language is now Spanish
- *         ? CMONTH( DATE() )          // Mayo
- *         ? CDOW( DATE() )            // Lunes
+ *         HB_LANGSELECT( "es" )       // Default language is now Spanish
+ *         ? CMONTH( Date() )          // Mayo
+ *         ? CDOW( Date() )            // Lunes
  *         RETURN
  *  $TESTS$
  *      See tests/langapi.prg, tests/langmsg.prg
@@ -274,7 +257,7 @@
  *  $FILES$
  *      Libraty are rtl, lang
  *  $SEEALSO$
- *      HB_LANGNAME(),HB_SETCODEPAGE(),NATIONMSG(),REQUEST
+ *      HB_LANGNAME(),HB_CDPSELECT(),NATIONMSG(),REQUEST
  *  $END$
  */
 
@@ -282,7 +265,7 @@
  *  $TEMPLATE$
  *      Function
  *  $NAME$
- *      HB_SETCODEPAGE()
+ *      HB_CDPSELECT()
  *  $CATEGORY$
  *      API
  *  $SUBCATEGORY$
@@ -290,7 +273,7 @@
  *  $ONELINER$
  *      Select the active code page by language ID
  *  $SYNTAX$
- *      HB_SETCODEPAGE( [<cNewLang>] ) --> cOldLang
+ *      HB_CDPSELECT( [<cNewLang>] ) --> cOldLang
  *  $ARGUMENTS$
  *      <cNewLang>  The optional ID of the country language module.
  *      Possible values for <cNewLang> are below as defined in the
@@ -360,7 +343,7 @@
  *  $RETURNS$
  *      <cOldLang>   The old language indentifier
  *  $DESCRIPTION$
- *      HB_SETCODEPAGE() set the active code page use by Harbour for
+ *      HB_CDPSELECT() set the active code page use by Harbour for
  *      sorting and comparing strings. The default code page use ASCII
  *      order (cLang == "EN").
  *
@@ -370,13 +353,13 @@
  *  $EXAMPLES$
  *      REQUEST HB_CODEPAGE_HU852
  *      PROCEDURE Main()
- *         LOCAL cTxt := CHR( 71 ) + " > " + CHR( 144 ) + " is"
- *         ? HB_SETCODEPAGE()               // EN
- *         ? cTxt, CHR( 71 ) > CHR( 144 )   // G > É is .F.
- *         ? HB_SETCODEPAGE( "HU852" )      // EN
- *         ? cTxt, CHR( 71 ) > CHR( 144 )   // G > É is .T.
- *         ? HB_SETCODEPAGE( "EN" )         // HU852
- *         ? cTxt, CHR( 71 ) > CHR( 144 )   // G > É is .F.
+ *         LOCAL cTxt := Chr( 71 ) + " > " + Chr( 144 ) + " is"
+ *         ? hb_cdpSelect()                 // EN
+ *         ? cTxt, Chr( 71 ) > Chr( 144 )   // G > É is .F.
+ *         ? hb_cdpSelect( "HU852" )        // EN
+ *         ? cTxt, Chr( 71 ) > Chr( 144 )   // G > É is .T.
+ *         ? hb_cdpSelect( "EN" )           // HU852
+ *         ? cTxt, Chr( 71 ) > Chr( 144 )   // G > É is .F.
  *         RETURN
  *  $STATUS$
  *      R
@@ -433,9 +416,9 @@
  *      REQUEST HB_CODEPAGE_DE
  *      REQUEST HB_CODEPAGE_DEWIN
  *      PROCEDURE Main()
- *         LOCAL cTxt := "A" + CHR( 142 ) + "BC"
- *         ? "German 850  text:", cTxt
- *         ? "German ANSI text:", HB_TRANSLATE( cTxt, "DE", "DEWIN" )
+ *         LOCAL cTxt := "A" + Chr( 142 ) + "BC"
+ *         ? "German CP-850 text:", cTxt
+ *         ? "German Windows-1252 text:", hb_Translate( cTxt, "DE", "DEWIN" )
  *         RETURN
  *  $STATUS$
  *      R
@@ -446,6 +429,6 @@
  *  $FILES$
  *      Libraty are rtl, codepage
  *  $SEEALSO$
- *      HB_LANGSELECT(),HB_SETCODEPAGE(),NATIONMSG(),REQUEST
+ *      HB_LANGSELECT(),HB_CDPSELECT(),NATIONMSG(),REQUEST
  *  $END$
  */

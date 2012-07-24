@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (RUUTF)
+ * Language Support Module (ru)
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "RUUTF",                     /* ISO ID (2 chars) */
+      "ru",                        /* ISO ID (2 chars) */
       "Russian",                   /* Name (in English) */
       "Русский",                   /* Name (in native language) */
       "RU",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      RUUTF
+#define HB_LANG_ID      RU
 #include "hbmsgreg.h"

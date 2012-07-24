@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (PTUTF)
+ * Language Support Module (pt)
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * Copyright 2000 Felipe Coury <fcoury@creation.com.br> (small fixes, internal error names)
@@ -58,7 +58,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "PTUTF",                     /* ISO ID (2 chars) */
+      "pt",                        /* ISO ID (2 chars) */
       "Portuguese",                /* Name (in English) */
       "Portugues",                 /* Name (in native language) */
       "PT",                        /* RFC ID */
@@ -197,5 +197,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      PTUTF
+#define HB_LANG_ID      PT
 #include "hbmsgreg.h"

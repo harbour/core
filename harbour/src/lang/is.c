@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (ISUTF)
+ * Language Support Module (is)
  *
  * Copyright 2000 Viktor Szakats (harbour syenar.net) (English)
  * Copyright 2000 David G. Holm <dholm@jsd-llc.com> (Icelandic)
@@ -58,7 +58,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "ISUTF",                     /* ISO ID (2 chars) */
+      "is",                        /* ISO ID (2 chars) */
       "Icelandic",                 /* Name (in English) */
       "Íslenska",                  /* Name (in native language) */
       "IS",                        /* RFC ID */
@@ -197,5 +197,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      ISUTF
+#define HB_LANG_ID      IS
 #include "hbmsgreg.h"

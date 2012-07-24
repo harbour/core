@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (ROUTF)
+ * Language Support Module (ro)
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "ROUTF",                     /* ISO ID (2 chars) */
+      "ro",                        /* ISO ID (2 chars) */
       "Romanian",                  /* Name (in English) */
       "Român",                     /* Name (in native language) */
       "RO",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      ROUTF
+#define HB_LANG_ID      RO
 #include "hbmsgreg.h"

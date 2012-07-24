@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (IDUTF)
+ * Language Support Module (id)
  *
  * Copyright 2000 Andi Jahja <andij@aonlippo.co.id>
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "IDUTF",                     /* ISO ID (2 chars) */
+      "id",                        /* ISO ID (2 chars) */
       "Indonesian",                /* Name (in English) */
       "Bahasa Indonesia",          /* Name (in native language) */
       "ID",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      IDUTF
+#define HB_LANG_ID      ID
 #include "hbmsgreg.h"

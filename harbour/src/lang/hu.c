@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (HUUTF)
+ * Language Support Module (hu)
  *
  * Copyright 2012 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "HUUTF",                     /* ISO ID (2 chars) */
+      "hu",                        /* ISO ID (2 chars) */
       "Hungarian",                 /* Name (in English) */
       "Magyar",                    /* Name (in native language) */
       "HU",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      HUUTF
+#define HB_LANG_ID      HU
 #include "hbmsgreg.h"

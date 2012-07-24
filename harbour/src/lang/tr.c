@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (TRUTF)
+ * Language Support Module (tr)
  *
  * Copyright 2006 Bicahi Esgici <esgici@yahoo.com>
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "TRUTF",                     /* ISO ID (2 chars) */
+      "tr",                        /* ISO ID (2 chars) */
       "Turkish",                   /* Name (in English) */
       "Türkçe",                    /* Name (in native language) */
       "TR",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      TRUTF
+#define HB_LANG_ID      TR
 #include "hbmsgreg.h"

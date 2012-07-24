@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (NLUTF)
+ * Language Support Module (nl)
  *
  * Copyright 2007 Rene Koot <rene / at / plantenkennis.com>
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "NLUTF",                     /* ISO ID (2 chars) */
+      "nl",                        /* ISO ID (2 chars) */
       "Dutch",                     /* Name (in English) */
       "Nederlands",                /* Name (in native language) */
       "NL",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      NLUTF
+#define HB_LANG_ID      NL
 #include "hbmsgreg.h"

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (ELUTF)
+ * Language Support Module (el)
  *
  * Copyright 2004 Pete Dionisopoulos <pete_westg@yahoo.gr>
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "ELUTF",                     /* ISO ID (2 chars) */
+      "el",                        /* ISO ID (2 chars) */
       "Greek",                     /* Name (in English) */
       "Ελληνικά",                  /* Name (in native language) */
       "EL",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      ELUTF
+#define HB_LANG_ID      EL
 #include "hbmsgreg.h"

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (ZHSIM)
+ * Language Support Module (zh_sim)
  *
  * Copyright 1999-2001 dongming <dongming@km169.net>/<freexbase@yahoo.com.cn>
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "ZHSIM",                     /* ISO ID (2 chars) */
+      "zh_sim",                    /* ISO ID (2 chars) */
       "Chinese Simplified",        /* Name (in English) */
       "中文简体",                      /* Name (in native language) */
       "ZH",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      ZHSIM
+#define HB_LANG_ID      ZH_SIM
 #include "hbmsgreg.h"

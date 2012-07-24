@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (SKUTF)
+ * Language Support Module (sk)
  *
  * Copyright 2008, 2012 Gyula Bartal <gybartal@gmail.com> (from CSWIN)
  * Update December 25, 2011 Jaroslav Janik <Jaroslav.Janik@siemens.com>
@@ -58,7 +58,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "SKUTF",                     /* ISO ID (2 chars) */
+      "sk",                        /* ISO ID (2 chars) */
       "Slovak",                    /* Name (in English) */
       "Slovensky",                 /* Name (in native language) */
       "SK",                        /* RFC ID */
@@ -197,5 +197,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      SKUTF
+#define HB_LANG_ID      SK
 #include "hbmsgreg.h"

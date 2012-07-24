@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (SLUTF)
+ * Language Support Module (sl)
  *
  * Copyright 2003 Mitja Podgornik <Mitja.Podgornik@zgs.gov.si>
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "SLUTF",                     /* ISO ID (2 chars) */
+      "sl",                        /* ISO ID (2 chars) */
       "Slovenian",                 /* Name (in English) */
       "Slovenščina",               /* Name (in native language) */
       "SL",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      SLUTF
+#define HB_LANG_ID      SL
 #include "hbmsgreg.h"

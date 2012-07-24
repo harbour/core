@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (ZHUTF)
+ * Language Support Module (zh_tra)
  *
  * Copyright 1999-2001 dongming <dongming@km169.net>/<freexbase@yahoo.com.cn>
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "ZHUTF",                     /* ISO ID (2 chars) */
+      "zh_tra",                    /* ISO ID (2 chars) */
       "Chinese Traditional",       /* Name (in English) */
       "中文繁體",                      /* Name (in native language) */
       "ZH",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      ZHUTF
+#define HB_LANG_ID      ZH_TRA
 #include "hbmsgreg.h"

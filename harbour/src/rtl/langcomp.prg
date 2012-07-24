@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * The Language API compatibility layer
+ * The Language API module selection
  *
  * Copyright 2012 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
@@ -50,94 +50,136 @@
  *
  */
 
-FUNCTION hb_langSelect( cLangID )
+REQUEST HB_CODEPAGE_UTF8
+
+#ifdef HB_LEGACY_LEVEL5
+   /* Required for legacy language modules with a two character ID.
+      These cannot have a compatibility puller symbol in langlgcy.prg,
+      which in turn pulls all CP modules, so we're pulling them from
+      here. */
+   REQUEST HB_CODEPAGE_CS852
+   REQUEST HB_CODEPAGE_DE850
+   REQUEST HB_CODEPAGE_EL737
+#endif
+
+FUNCTION hb_langSelect( cLangID, cCP )
    LOCAL tmp
+   LOCAL cCPDef
+   LOCAL cLangIDBase
 
    IF HB_ISSTRING( cLangID )
-      tmp := __CtryStdToBaseLangID( cLangID )
-      IF ! Empty( tmp )
-         hb_langNew( cLangID, hb_cdpSelect(), tmp, "UTF8" )
+
+      cCPDef := hb_cdpSelect()
+
+#ifdef HB_LEGACY_LEVEL5
+
+      /* Emulate legacy Harbour language modules for compatibility */
+      SWITCH cLangID
+      CASE "BE866"  ; cCPDef := "BG866" ; cLangIDBase := "be" ; EXIT
+      CASE "BEWIN"  ; cCPDef := "BGWIN" ; cLangIDBase := "be" ; EXIT
+      CASE "BG866"  ; cCPDef := "BG866" ; cLangIDBase := "bg" ; EXIT
+      CASE "BGISO"  ; cCPDef := "BGISO" ; cLangIDBase := "bg" ; EXIT
+      CASE "BGMIK"  ; cCPDef := "BGMIK" ; cLangIDBase := "bg" ; EXIT
+      CASE "BGWIN"  ; cCPDef := "BGWIN" ; cLangIDBase := "bg" ; EXIT
+      CASE "CA"     ; cCPDef := "DE850" ; cLangIDBase := "ca" ; EXIT
+      CASE "CS852"  ; cCPDef := "CS852" ; cLangIDBase := "cs" ; EXIT
+      CASE "CSISO"  ; cCPDef := "CSISO" ; cLangIDBase := "cs" ; EXIT
+      CASE "CSKAM"  ; cCPDef := "CSKAMC"; cLangIDBase := "cs" ; EXIT
+      CASE "CSWIN"  ; cCPDef := "CSWIN" ; cLangIDBase := "cs" ; EXIT
+      CASE "DE"     ; cCPDef := "DE850" ; cLangIDBase := "de" ; EXIT
+      CASE "DEWIN"  ; cCPDef := "DEWIN" ; cLangIDBase := "de" ; EXIT
+      CASE "EL"     ; cCPDef := "EL737" ; cLangIDBase := "el" ; EXIT
+      CASE "ELWIN"  ; cCPDef := "ELWIN" ; cLangIDBase := "el" ; EXIT
+      CASE "EO"     ; cCPDef := "DE850" ; cLangIDBase := "eo" ; EXIT
+      CASE "ES"     ; cCPDef := "DE850" ; cLangIDBase := "es" ; EXIT
+      CASE "ESWIN"  ; cCPDef := "ESWIN" ; cLangIDBase := "es" ; EXIT
+      CASE "EU"     ; cCPDef := "DE850" ; cLangIDBase := "eu" ; EXIT
+      CASE "FR"     ; cCPDef := "DE850" ; cLangIDBase := "fr" ; EXIT
+      CASE "GL"     ; cCPDef := "DE850" ; cLangIDBase := "gl" ; EXIT
+      CASE "HE862"  ; cCPDef := "HE862" ; cLangIDBase := "he" ; EXIT
+      CASE "HEWIN"  ; cCPDef := "HEWIN" ; cLangIDBase := "he" ; EXIT
+      CASE "HR646"  ; cCPDef := "HR646" ; cLangIDBase := "hr" ; EXIT
+      CASE "HR852"  ; cCPDef := "HR852" ; cLangIDBase := "hr" ; EXIT
+      CASE "HRISO"  ; cCPDef := "HRISO" ; cLangIDBase := "hr" ; EXIT
+      CASE "HRWIN"  ; cCPDef := "HRWIN" ; cLangIDBase := "hr" ; EXIT
+      CASE "HU852"  ; cCPDef := "HU852" ; cLangIDBase := "hu" ; EXIT
+      CASE "HUISO"  ; cCPDef := "HUISO" ; cLangIDBase := "hu" ; EXIT
+      CASE "HUWIN"  ; cCPDef := "HUWIN" ; cLangIDBase := "hu" ; EXIT
+      CASE "ID"     ; cCPDef := "EN"    ; cLangIDBase := "id" ; EXIT
+      CASE "IS850"  ; cCPDef := "IS850" ; cLangIDBase := "is" ; EXIT
+      CASE "IT"     ; cCPDef := "DE850" ; cLangIDBase := "it" ; EXIT
+      /* INCOMPATIBILITY: "KO" (Korean) using CP949 is not supported anymore. */
+      CASE "LTWIN"  ; cCPDef := "LTWIN" ; cLangIDBase := "lt" ; EXIT
+      CASE "NL"     ; cCPDef := "EN"    ; cLangIDBase := "nl" ; EXIT
+      CASE "PL852"  ; cCPDef := "PL852" ; cLangIDBase := "pl" ; EXIT
+      CASE "PLISO"  ; cCPDef := "PLISO" ; cLangIDBase := "pl" ; EXIT
+      CASE "PLMAZ"  ; cCPDef := "PLMAZ" ; cLangIDBase := "pl" ; EXIT
+      CASE "PLWIN"  ; cCPDef := "PLWIN" ; cLangIDBase := "pl" ; EXIT
+      CASE "PT"     ; cCPDef := "DE850" ; cLangIDBase := "pt" ; EXIT
+      CASE "PTISO"  ; cCPDef := "PTISO" ; cLangIDBase := "pt" ; EXIT
+      CASE "RO"     ; cCPDef := "CS852" ; cLangIDBase := "ro" ; EXIT
+      CASE "RU866"  ; cCPDef := "RU866" ; cLangIDBase := "ru" ; EXIT
+      CASE "RUKOI8" ; cCPDef := "RUKOI8"; cLangIDBase := "ru" ; EXIT
+      CASE "RUWIN"  ; cCPDef := "RU1251"; cLangIDBase := "ru" ; EXIT
+      CASE "SK852"  ; cCPDef := "SK852" ; cLangIDBase := "sk" ; EXIT
+      CASE "SKISO"  ; cCPDef := "SKISO" ; cLangIDBase := "sk" ; EXIT
+      CASE "SKKAM"  ; cCPDef := "SKKAMC"; cLangIDBase := "sk" ; EXIT
+      CASE "SKWIN"  ; cCPDef := "SKWIN" ; cLangIDBase := "sk" ; EXIT
+      CASE "SL646"  ; cCPDef := "SL646" ; cLangIDBase := "sl" ; EXIT
+      CASE "SL852"  ; cCPDef := "SL852" ; cLangIDBase := "sl" ; EXIT
+      CASE "SLISO"  ; cCPDef := "SLISO" ; cLangIDBase := "sl" ; EXIT
+      CASE "SLWIN"  ; cCPDef := "SLWIN" ; cLangIDBase := "sl" ; EXIT
+      CASE "SR852"  ; cCPDef := "SL852" ; cLangIDBase := "sr_lat" ; EXIT
+      CASE "SRISO"  ; cCPDef := "SLISO" ; cLangIDBase := "sr_lat" ; EXIT
+      CASE "SRWIN"  ; cCPDef := "SRWIN" ; cLangIDBase := "sr_cyr" ; EXIT
+      CASE "SV"     ; cCPDef := "DE850" ; cLangIDBase := "sv" ; EXIT
+      CASE "SVWIN"  ; cCPDef := "SVWIN" ; cLangIDBase := "sv" ; EXIT
+      CASE "TR857"  ; cCPDef := "TR857" ; cLangIDBase := "tr" ; EXIT
+      CASE "TRWIN"  ; cCPDef := "TRWIN" ; cLangIDBase := "tr" ; EXIT
+      CASE "UA866"  ; cCPDef := "UA866" ; cLangIDBase := "uk" ; EXIT
+      CASE "UADOS"  ; cCPDef := "UA1125"; cLangIDBase := "uk" ; EXIT
+      CASE "UAKOI8" ; cCPDef := "UAKOI8"; cLangIDBase := "uk" ; EXIT
+      CASE "UAWIN"  ; cCPDef := "UA1125"; cLangIDBase := "uk" ; EXIT
+      CASE "ZHB5"   ; cCPDef := "BIG5"  ; cLangIDBase := "zh_tra" ; EXIT
+      CASE "ZHGB"   ; cCPDef := "BIG5"  ; cLangIDBase := "zh_sim" ; EXIT /* INCOMPATIBILITY: Was using CP936 in legacy implementation. */
+      ENDSWITCH
+
+#endif
+
+      IF ! HB_ISSTRING( cCP )
+         cCP := cCPDef
+      ENDIF
+
+#ifdef HB_LEGACY_LEVEL5
+      IF ! Empty( cLangIDBase )
+         /* Legacy emulation */
+         cLangID := cLangIDBase
       ELSE
-         /* For compatibility with legacy codepages */
-         SWITCH cLangID
-         CASE "BE866"  ; hb_langNew( cLangID, "BG866" , "BEUTF", "UTF8" ) ; EXIT
-         CASE "BEWIN"  ; hb_langNew( cLangID, "BGWIN" , "BEUTF", "UTF8" ) ; EXIT
-         CASE "BG866"  ; hb_langNew( cLangID, "BG866" , "BGUTF", "UTF8" ) ; EXIT
-         CASE "BGISO"  ; hb_langNew( cLangID, "BGISO" , "BGUTF", "UTF8" ) ; EXIT
-         CASE "BGMIK"  ; hb_langNew( cLangID, "BGMIK" , "BGUTF", "UTF8" ) ; EXIT
-         CASE "BGWIN"  ; hb_langNew( cLangID, "BGWIN" , "BGUTF", "UTF8" ) ; EXIT
-         CASE "CA"     ; hb_langNew( cLangID, "ES850" , "CAUTF", "UTF8" ) ; EXIT
-         CASE "CS852"  ; hb_langNew( cLangID, "CS852" , "CSUTF", "UTF8" ) ; EXIT
-         CASE "CSISO"  ; hb_langNew( cLangID, "CSISO" , "CSUTF", "UTF8" ) ; EXIT
-         CASE "CSKAM"  ; hb_langNew( cLangID, "CSKAMC", "CSUTF", "UTF8" ) ; EXIT
-         CASE "CSWIN"  ; hb_langNew( cLangID, "CSWIN" , "CSUTF", "UTF8" ) ; EXIT
-         CASE "DE"     ; hb_langNew( cLangID, "DE850" , "DEUTF", "UTF8" ) ; EXIT
-         CASE "DEWIN"  ; hb_langNew( cLangID, "DEWIN" , "DEUTF", "UTF8" ) ; EXIT
-         CASE "EL"     ; hb_langNew( cLangID, "EL737" , "ELUTF", "UTF8" ) ; EXIT
-         CASE "ELWIN"  ; hb_langNew( cLangID, "ELWIN" , "ELUTF", "UTF8" ) ; EXIT
-         CASE "EO"     ; hb_langNew( cLangID, "ES850" , "EOUTF", "UTF8" ) ; EXIT
-         CASE "ES"     ; hb_langNew( cLangID, "ES850" , "ESUTF", "UTF8" ) ; EXIT
-         CASE "ESWIN"  ; hb_langNew( cLangID, "ESWIN" , "ESUTF", "UTF8" ) ; EXIT
-         CASE "EU"     ; hb_langNew( cLangID, "ES850" , "EUUTF", "UTF8" ) ; EXIT
-         CASE "FR"     ; hb_langNew( cLangID, "FR850" , "FRUTF", "UTF8" ) ; EXIT
-         CASE "GL"     ; hb_langNew( cLangID, "ES850" , "GLUTF", "UTF8" ) ; EXIT
-         CASE "HE862"  ; hb_langNew( cLangID, "HE862" , "HEUTF", "UTF8" ) ; EXIT
-         CASE "HEWIN"  ; hb_langNew( cLangID, "HEWIN" , "HEUTF", "UTF8" ) ; EXIT
-         CASE "HR646"  ; hb_langNew( cLangID, "HR646" , "HRUTF", "UTF8" ) ; EXIT
-         CASE "HR852"  ; hb_langNew( cLangID, "HR852" , "HRUTF", "UTF8" ) ; EXIT
-         CASE "HRISO"  ; hb_langNew( cLangID, "HRISO" , "HRUTF", "UTF8" ) ; EXIT
-         CASE "HRWIN"  ; hb_langNew( cLangID, "HRWIN" , "HRUTF", "UTF8" ) ; EXIT
-         CASE "HU852"  ; hb_langNew( cLangID, "HU852" , "HUUTF", "UTF8" ) ; EXIT
-         CASE "HUISO"  ; hb_langNew( cLangID, "HUISO" , "HUUTF", "UTF8" ) ; EXIT
-         CASE "HUWIN"  ; hb_langNew( cLangID, "HUWIN" , "HUUTF", "UTF8" ) ; EXIT
-         CASE "ID"     ; hb_langNew( cLangID, "EN"    , "IDUTF", "UTF8" ) ; EXIT
-         CASE "IS850"  ; hb_langNew( cLangID, "IS850" , "ISUTF", "UTF8" ) ; EXIT
-         CASE "IT"     ; hb_langNew( cLangID, "IT850" , "ITUTF", "UTF8" ) ; EXIT
-         CASE "LTWIN"  ; hb_langNew( cLangID, "LTWIN" , "LTUTF", "UTF8" ) ; EXIT
-         CASE "NL"     ; hb_langNew( cLangID, "EN"    , "NLUTF", "UTF8" ) ; EXIT
-         CASE "PL852"  ; hb_langNew( cLangID, "PL852" , "PLUTF", "UTF8" ) ; EXIT
-         CASE "PLISO"  ; hb_langNew( cLangID, "PLISO" , "PLUTF", "UTF8" ) ; EXIT
-         CASE "PLMAZ"  ; hb_langNew( cLangID, "PLMAZ" , "PLUTF", "UTF8" ) ; EXIT
-         CASE "PLWIN"  ; hb_langNew( cLangID, "PLWIN" , "PLUTF", "UTF8" ) ; EXIT
-         CASE "PT"     ; hb_langNew( cLangID, "PT850" , "PTUTF", "UTF8" ) ; EXIT
-         CASE "PTISO"  ; hb_langNew( cLangID, "PTISO" , "PTUTF", "UTF8" ) ; EXIT
-         CASE "RO"     ; hb_langNew( cLangID, "RO852" , "ROUTF", "UTF8" ) ; EXIT
-         CASE "RU866"  ; hb_langNew( cLangID, "RU866" , "RUUTF", "UTF8" ) ; EXIT
-         CASE "RUKOI8" ; hb_langNew( cLangID, "RUKOI8", "RUUTF", "UTF8" ) ; EXIT
-         CASE "RUWIN"  ; hb_langNew( cLangID, "RU1251", "RUUTF", "UTF8" ) ; EXIT
-         CASE "SK852"  ; hb_langNew( cLangID, "SK852" , "SKUTF", "UTF8" ) ; EXIT
-         CASE "SKISO"  ; hb_langNew( cLangID, "SKISO" , "SKUTF", "UTF8" ) ; EXIT
-         CASE "SKKAM"  ; hb_langNew( cLangID, "SKKAMC", "SKUTF", "UTF8" ) ; EXIT
-         CASE "SKWIN"  ; hb_langNew( cLangID, "SKWIN" , "SKUTF", "UTF8" ) ; EXIT
-         CASE "SL646"  ; hb_langNew( cLangID, "SL646" , "SLUTF", "UTF8" ) ; EXIT
-         CASE "SL852"  ; hb_langNew( cLangID, "SL852" , "SLUTF", "UTF8" ) ; EXIT
-         CASE "SLISO"  ; hb_langNew( cLangID, "SLISO" , "SLUTF", "UTF8" ) ; EXIT
-         CASE "SLWIN"  ; hb_langNew( cLangID, "SLWIN" , "SLUTF", "UTF8" ) ; EXIT
-         CASE "SR852"  ; hb_langNew( cLangID, "SL852" , "SRLAT", "UTF8" ) ; EXIT
-         CASE "SRISO"  ; hb_langNew( cLangID, "SLISO" , "SRLAT", "UTF8" ) ; EXIT
-         CASE "SRWIN"  ; hb_langNew( cLangID, "SRWIN" , "SRUTF", "UTF8" ) ; EXIT
-         CASE "SV"     ; hb_langNew( cLangID, "SV850" , "SVUTF", "UTF8" ) ; EXIT
-         CASE "SVWIN"  ; hb_langNew( cLangID, "SVWIN" , "SVUTF", "UTF8" ) ; EXIT
-         CASE "TR857"  ; hb_langNew( cLangID, "TR857" , "TRUTF", "UTF8" ) ; EXIT
-         CASE "TRWIN"  ; hb_langNew( cLangID, "TRWIN" , "TRUTF", "UTF8" ) ; EXIT
-         CASE "UA866"  ; hb_langNew( cLangID, "UA866" , "UAUTF", "UTF8" ) ; EXIT
-         CASE "UADOS"  ; hb_langNew( cLangID, "UA1125", "UAUTF", "UTF8" ) ; EXIT
-         CASE "UAKOI8" ; hb_langNew( cLangID, "UAKOI8", "UAUTF", "UTF8" ) ; EXIT
-         CASE "UAWIN"  ; hb_langNew( cLangID, "UA1125", "UAUTF", "UTF8" ) ; EXIT
-         CASE "ZHB5"   ; hb_langNew( cLangID, "BIG5"  , "ZHUTF", "UTF8" ) ; EXIT
-         CASE "ZHGB"   ; hb_langNew( cLangID, "BIG5"  , "ZHSIM", "UTF8" ) ; EXIT /* INCOMPATIBILITY: Was using CP936 in legacy implementation. */
-         ENDSWITCH
-         /* INCOMPATIBILITY: "KO" (Korean) using CP949 is not supported anymore. */
+#endif
+         /* Support standard ISO language IDs */
+         IF ! Empty( tmp := __LangStdToLangHb( cLangID ) )
+            cLangID := cLangIDBase := tmp
+         ELSE
+            /* Normal case */
+            cLangIDBase := cLangID
+         ENDIF
+#ifdef HB_LEGACY_LEVEL5
+      ENDIF
+#endif
+
+      IF ! hb_cdpIsUTF8( cCP )
+         cLangID += "." + cCP
+         hb_langNew( cLangID, cCP, cLangIDBase, "UTF8" )
       ENDIF
    ENDIF
 
    RETURN __hb_langSelect( cLangID )
 
-STATIC FUNCTION __CtryStdToBaseLangID( cCtryStd )
-   LOCAL cCtryHb := ""
+STATIC FUNCTION __LangStdToLangHb( cLangStd )
+   LOCAL cLangHb := ""
 
-   IF HB_ISSTRING( cCtryStd )
-      SWITCH Lower( cCtryStd )
+   IF HB_ISSTRING( cLangStd )
+      SWITCH Lower( cLangStd )
       CASE "af-za"      ; EXIT
       CASE "af"         ; EXIT
       CASE "ar-ae"      ; EXIT
@@ -161,14 +203,14 @@ STATIC FUNCTION __CtryStdToBaseLangID( cCtryStd )
       CASE "az-az-latn" ; EXIT
       CASE "az"         ; EXIT
       CASE "be-by"      ; EXIT
-      CASE "be"         ; cCtryHb := "BEUTF" ; EXIT
+      CASE "be"         ; cLangHb := "be" ; EXIT
       CASE "bg-bg"
-      CASE "bg"         ; cCtryHb := "BGUTF" ; EXIT
+      CASE "bg"         ; cLangHb := "bg" ; EXIT
       CASE "ca-es"
-      CASE "ca"         ; cCtryHb := "CAUTF" ; EXIT
+      CASE "ca"         ; cLangHb := "ca" ; EXIT
       CASE "cy-gb"      ; EXIT
       CASE "cs-cz"
-      CASE "cs"         ; cCtryHb := "CSUTF" ; EXIT
+      CASE "cs"         ; cLangHb := "cs" ; EXIT
       CASE "da-dk"      ; EXIT
       CASE "da"         ; EXIT
       CASE "de-at"
@@ -176,11 +218,11 @@ STATIC FUNCTION __CtryStdToBaseLangID( cCtryStd )
       CASE "de-de"
       CASE "de-li"
       CASE "de-lu"
-      CASE "de"         ; cCtryHb := "DEUTF" ; EXIT
+      CASE "de"         ; cLangHb := "de" ; EXIT
       CASE "div-mv"     ; EXIT
       CASE "div"        ; EXIT
       CASE "el-gr"
-      CASE "el"         ; cCtryHb := "ELUTF" ; EXIT
+      CASE "el"         ; cLangHb := "el" ; EXIT
       CASE "en-au"
       CASE "en-bz"
       CASE "en-ca"
@@ -194,8 +236,8 @@ STATIC FUNCTION __CtryStdToBaseLangID( cCtryStd )
       CASE "en-us"
       CASE "en-za"
       CASE "en-zw"
-      CASE "en"         ; cCtryHb := "EN" ; EXIT
-      CASE "eo"         ; cCtryHb := "EOUTF" ; EXIT
+      CASE "en"         ; cLangHb := "en" ; EXIT
+      CASE "eo"         ; cLangHb := "eo" ; EXIT
       CASE "es-ar"
       CASE "es-bo"
       CASE "es-cl"
@@ -215,11 +257,11 @@ STATIC FUNCTION __CtryStdToBaseLangID( cCtryStd )
       CASE "es-sv"
       CASE "es-uy"
       CASE "es-ve"
-      CASE "es"         ; cCtryHb := "ESUTF" ; EXIT
+      CASE "es"         ; cLangHb := "es" ; EXIT
       CASE "et-ee"      ; EXIT
       CASE "et"         ; EXIT
       CASE "eu-es"
-      CASE "eu"         ; cCtryHb := "EUUTF" ; EXIT
+      CASE "eu"         ; cLangHb := "eu" ; EXIT
       CASE "fa-ir"      ; EXIT
       CASE "fa"         ; EXIT
       CASE "fi-fi"      ; EXIT
@@ -232,28 +274,28 @@ STATIC FUNCTION __CtryStdToBaseLangID( cCtryStd )
       CASE "fr-fr"
       CASE "fr-lu"
       CASE "fr-mc"
-      CASE "fr"         ; cCtryHb := "FRUTF" ; EXIT
+      CASE "fr"         ; cLangHb := "fr" ; EXIT
       CASE "gl-es"
-      CASE "gl"         ; cCtryHb := "GLUTF" ; EXIT
+      CASE "gl"         ; cLangHb := "gl" ; EXIT
       CASE "gu-in"      ; EXIT
       CASE "gu"         ; EXIT
       CASE "he-il"
-      CASE "he"         ; cCtryHb := "HEUTF" ; EXIT
+      CASE "he"         ; cLangHb := "he" ; EXIT
       CASE "hi-in"      ; EXIT
       CASE "hi"         ; EXIT
       CASE "hr-hr"
-      CASE "hr"         ; cCtryHb := "HRUTF" ; EXIT
+      CASE "hr"         ; cLangHb := "hr" ; EXIT
       CASE "hu-hu"
-      CASE "hu"         ; cCtryHb := "HUUTF" ; EXIT
+      CASE "hu"         ; cLangHb := "hu" ; EXIT
       CASE "hy-am"      ; EXIT
       CASE "hy"         ; EXIT
       CASE "id-id"
-      CASE "id"         ; cCtryHb := "IDUTF" ; EXIT
+      CASE "id"         ; cLangHb := "id" ; EXIT
       CASE "is-is"
-      CASE "is"         ; cCtryHb := "ISUTF" ; EXIT
+      CASE "is"         ; cLangHb := "is" ; EXIT
       CASE "it-ch"
       CASE "it-it"
-      CASE "it"         ; cCtryHb := "ITUTF" ; EXIT
+      CASE "it"         ; cLangHb := "it" ; EXIT
       CASE "ja-jp"      ; EXIT
       CASE "ja"         ; EXIT
       CASE "ka-ge"      ; EXIT
@@ -263,13 +305,13 @@ STATIC FUNCTION __CtryStdToBaseLangID( cCtryStd )
       CASE "kn-in"      ; EXIT
       CASE "kn"         ; EXIT
       CASE "ko-kr"
-      CASE "ko"         ; cCtryHb := "KOUTF" ; EXIT
+      CASE "ko"         ; cLangHb := "ko" ; EXIT
       CASE "kok-in"     ; EXIT
       CASE "kok"        ; EXIT
       CASE "ky-kz"      ; EXIT
       CASE "ky"         ; EXIT
       CASE "lt-lt"
-      CASE "lt"         ; cCtryHb := "LTUTF" ; EXIT
+      CASE "lt"         ; cLangHb := "lt" ; EXIT
       CASE "lv-lv"      ; EXIT
       CASE "lv"         ; EXIT
       CASE "mk-mk"      ; EXIT
@@ -284,33 +326,33 @@ STATIC FUNCTION __CtryStdToBaseLangID( cCtryStd )
       CASE "nb-no"      ; EXIT
       CASE "nl-be"
       CASE "nl-nl"
-      CASE "nl"         ; cCtryHb := "NLUTF" ; EXIT
+      CASE "nl"         ; cLangHb := "nl" ; EXIT
       CASE "nn-no"      ; EXIT
       CASE "no"         ; EXIT
       CASE "pa-in"      ; EXIT
       CASE "pa"         ; EXIT
       CASE "pl-pl"
-      CASE "pl"         ; cCtryHb := "PLUTF" ; EXIT
+      CASE "pl"         ; cLangHb := "pl" ; EXIT
       CASE "pt-br"
       CASE "pt-pt"
-      CASE "pt"         ; cCtryHb := "PTUTF" ; EXIT
+      CASE "pt"         ; cLangHb := "pt" ; EXIT
       CASE "ro-ro"
-      CASE "ro"         ; cCtryHb := "ROUTF" ; EXIT
+      CASE "ro"         ; cLangHb := "ro" ; EXIT
       CASE "ru-ru"
-      CASE "ru"         ; cCtryHb := "RUUTF" ; EXIT
+      CASE "ru"         ; cLangHb := "ru" ; EXIT
       CASE "sa-in"      ; EXIT
       CASE "sa"         ; EXIT
       CASE "sk-sk"
-      CASE "sk"         ; cCtryHb := "SKUTF" ; EXIT
+      CASE "sk"         ; cLangHb := "sk" ; EXIT
       CASE "sl-si"
-      CASE "sl"         ; cCtryHb := "SLUTF" ; EXIT
+      CASE "sl"         ; cLangHb := "sl" ; EXIT
       CASE "sq-al"      ; EXIT
       CASE "sq"         ; EXIT
-      CASE "sr-sp-cyrl" ; cCtryHb := "SRUTF" ; EXIT
-      CASE "sr-sp-latn" ; cCtryHb := "SRLAT" ; EXIT
+      CASE "sr-sp-cyrl" ; cLangHb := "sr_cyrl" ; EXIT
+      CASE "sr-sp-latn" ; cLangHb := "sr_lat" ; EXIT
       CASE "sv-fi"
       CASE "sv-se"
-      CASE "sv"         ; cCtryHb := "SVUTF" ; EXIT
+      CASE "sv"         ; cLangHb := "sv" ; EXIT
       CASE "sw-ke"      ; EXIT
       CASE "sw"         ; EXIT
       CASE "syr-sy"     ; EXIT
@@ -322,11 +364,11 @@ STATIC FUNCTION __CtryStdToBaseLangID( cCtryStd )
       CASE "th-th"      ; EXIT
       CASE "th"         ; EXIT
       CASE "tr-tr"
-      CASE "tr"         ; cCtryHb := "TRUTF" ; EXIT
+      CASE "tr"         ; cLangHb := "tr" ; EXIT
       CASE "tt-ru"      ; EXIT
       CASE "tt"         ; EXIT
       CASE "uk-ua"
-      CASE "uk"         ; cCtryHb := "UAUTF" ; EXIT
+      CASE "uk"         ; cLangHb := "uk" ; EXIT
       CASE "ur-pk"      ; EXIT
       CASE "ur"         ; EXIT
       CASE "uz-uz-cyrl" ; EXIT
@@ -334,14 +376,14 @@ STATIC FUNCTION __CtryStdToBaseLangID( cCtryStd )
       CASE "uz"         ; EXIT
       CASE "vi-vn"      ; EXIT
       CASE "vi"         ; EXIT
-      CASE "zh-chs"     ; cCtryHb := "ZHSIM" ; EXIT
+      CASE "zh-chs"     ; cLangHb := "zh_sim" ; EXIT
       CASE "zh-cht"
       CASE "zh-cn"
       CASE "zh-hk"
       CASE "zh-mo"
       CASE "zh-sg"
-      CASE "zh-tw"      ; cCtryHb := "ZHUTF" ; EXIT
+      CASE "zh-tw"      ; cLangHb := "zh_tra" ; EXIT
       ENDSWITCH
    ENDIF
 
-   RETURN cCtryHb
+   RETURN cLangHb

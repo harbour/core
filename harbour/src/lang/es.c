@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (ESUTF)
+ * Language Support Module (es)
  *
  * Copyright 2000 Jose Lalin <dezac@corevia.com>
  * Adapted to Windows by Antonio Linares <alinares@fivetechsoft.com>
@@ -58,7 +58,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "ESUTF",                     /* ISO ID (2 chars) */
+      "es",                        /* ISO ID (2 chars) */
       "Spanish",                   /* Name (in English) */
       "Español",                   /* Name (in native language) */
       "ES",                        /* RFC ID */
@@ -197,5 +197,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      ESUTF
+#define HB_LANG_ID      ES
 #include "hbmsgreg.h"

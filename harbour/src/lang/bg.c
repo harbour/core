@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (BGUTF)
+ * Language Support Module (bg)
  *
  * Copyright 1999-2005 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "BGUTF",                     /* ISO ID (2 chars) */
+      "bg",                        /* ISO ID (2 chars) */
       "Bulgarian",                 /* Name (in English) */
       "Български",                 /* Name (in native language) */
       "BG",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      BGUTF
+#define HB_LANG_ID      BG
 #include "hbmsgreg.h"

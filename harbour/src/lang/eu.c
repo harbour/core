@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (EUUTF)
+ * Language Support Module (eu)
  *
  * Copyright 2000 Nicolas del Pozo <niko@geroa.com>
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "EUUTF",                     /* ISO ID (2 chars) */
+      "eu",                        /* ISO ID (2 chars) */
       "Basque",                    /* Name (in English) */
       "English",                   /* Name (in native language) */
       "EU",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      EUUTF
+#define HB_LANG_ID      EU
 #include "hbmsgreg.h"

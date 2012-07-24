@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (DEUTF)
+ * Language Support Module (de)
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * modified 2003 Guenther Steiner <byte-one@aon.at>
@@ -58,7 +58,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "DEUTF",                     /* ISO ID (2 chars) */
+      "de",                        /* ISO ID (2 chars) */
       "German",                    /* Name (in English) */
       "Deutsch",                   /* Name (in native language) */
       "DE",                        /* RFC ID */
@@ -197,5 +197,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      DEUTF
+#define HB_LANG_ID      DE
 #include "hbmsgreg.h"

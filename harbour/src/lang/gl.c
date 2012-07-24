@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (GLUTF)
+ * Language Support Module (gl)
  *
  * Copyright 2000 Jose Lalin <dezac@corevia.com>
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "GLUTF",                     /* ISO ID (2 chars) */
+      "gl",                        /* ISO ID (2 chars) */
       "Galician",                  /* Name (in English) */
       "Galego",                    /* Name (in native language) */
       "GL",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      GLUTF
+#define HB_LANG_ID      GL
 #include "hbmsgreg.h"

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (Template)
+ * Language Support Module (en) (Template)
  *
  * Copyright 1999-2005 {list of individual authors and e-mail addresses}
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "EN",                        /* ISO ID (2 chars) */
+      "en",                        /* ISO ID (2 chars) */
       "English",                   /* Name (in English) */
       "English",                   /* Name (in native language) */
       "EN",                        /* RFC ID */

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (PLUTF)
+ * Language Support Module (pl)
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "PLUTF",                     /* ISO ID (2 chars) */
+      "pl",                        /* ISO ID (2 chars) */
       "Polish",                    /* Name (in English) */
       "Polski",                    /* Name (in native language) */
       "PL",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      PLUTF
+#define HB_LANG_ID      PL
 #include "hbmsgreg.h"

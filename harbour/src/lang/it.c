@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (ITUTF)
+ * Language Support Module (it)
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "ITUTF",                     /* ISO ID (2 chars) */
+      "it",                        /* ISO ID (2 chars) */
       "Italian",                   /* Name (in English) */
       "Italiano",                  /* Name (in native language) */
       "IT",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      ITUTF
+#define HB_LANG_ID      IT
 #include "hbmsgreg.h"

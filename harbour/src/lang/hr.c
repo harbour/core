@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (HRUTF)
+ * Language Support Module (hr)
  *
  * Copyright 2000 Viktor Szakats (harbour syenar.net) (English)
  * Copyright 2000 Davor Siklic <siki@msoft.cz>
@@ -59,7 +59,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "HRUTF",                     /* ISO ID (2 chars) */
+      "hr",                        /* ISO ID (2 chars) */
       "Croatian",                  /* Name (in English) */
       "Hrvatski",                  /* Name (in native language) */
       "HR",                        /* RFC ID */
@@ -198,5 +198,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      HRUTF
+#define HB_LANG_ID      HR
 #include "hbmsgreg.h"

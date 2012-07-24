@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Language Support Module (LTUTF)
+ * Language Support Module (lt)
  *
  * Copyright 2003 Mindaugas Kavaliauskas <dbtopas@dbtopas.lt>
  * www - http://harbour-project.org
@@ -57,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "LTUTF",                     /* ISO ID (2 chars) */
+      "lt",                        /* ISO ID (2 chars) */
       "Lithuanian",                /* Name (in English) */
       "Lietuvių",                  /* Name (in native language) */
       "LT",                        /* RFC ID */
@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      LTUTF
+#define HB_LANG_ID      LT
 #include "hbmsgreg.h"
