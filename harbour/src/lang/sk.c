@@ -143,7 +143,7 @@ static HB_LANG s_lang =
       "Index poškodený",
       "Chyba typu dát",
       "Chyba dĺžky dát",
-      "Nepoužitá pracovná oblasť ",
+      "Nepoužitá pracovná oblasť",
       "Nezoradená pracovná oblasť",
       "Nutný výhradný prístup",
       "Uzamknutie nutné",
