@@ -282,6 +282,8 @@ static HB_BOOL hb_langTranslate( const char * szNewId, PHB_LANG lang, PHB_CODEPA
 
       if( i == HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_ID )
          pszTrans = hb_strdup( szNewId );
+      else if( i == HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_CODEPAGE )
+         pszTrans = hb_strdup( cdpOut->id );
       else
          pszTrans = hb_cdpDup( lang->pItemList[ i ], cdpIn, cdpOut );
 
