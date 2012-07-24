@@ -196,5 +196,5 @@ static HB_LANG s_lang =
    }
 };
 
-#define HB_LANG_ID      EN
+#define HB_LANG_ID      EN /* ISO ID in uppercase */
 #include "hbmsgreg.h"
