@@ -3060,6 +3060,8 @@ static PHB_CODEPAGE * hb_cdpFindPos( const char * id )
    {
       if( strcmp( ( *cdp_ptr )->id, id ) == 0 )
          break;
+      if( hb_stricmp( ( *cdp_ptr )->uniTable->uniID, id ) == 0 )
+         break;
       cdp_ptr = &( *cdp_ptr )->next;
    }
 
