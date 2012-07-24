@@ -80,9 +80,6 @@ HB_EXTERN_END
 
 #include <QtGui/QApplication>
 
-#define selectionState_off                        0
-#define selectionState_on                         1
-
 #define selectionMode_none                        0
 #define selectionMode_stream                      1
 #define selectionMode_column                      2
@@ -91,6 +88,10 @@ HB_EXTERN_END
 #define selectionDisplay_none                     0
 #define selectionDisplay_qt                       1
 #define selectionDisplay_ide                      2
+
+#define mouseMode_none                            0
+#define mouseMode_select                          1
+#define mouseMode_drag                            2
 
 /*----------------------------------------------------------------------*/
 
@@ -111,7 +112,6 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    columnEnds               = -1;
    rowBegins                = -1;
    rowEnds                  = -1;
-   selectionState           = selectionState_off;
    selectionMode            = selectionMode_stream;
    selectionDisplay         = selectionDisplay_none;
    isColumnSelectionON      = false;
@@ -130,6 +130,9 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    isCompletionTipsActive   = true;
    isInDrag                 = false;
    dragStartPosition        = QPoint();
+   clickPos                 = QPoint();
+   iClicks                  = 0;
+   mouseMode                = mouseMode_none;
 
    #if 0
    QTextFrameFormat format( this->document()->rootFrame()->frameFormat() );
@@ -307,7 +310,6 @@ void HBQPlainTextEdit::hbSetEventBlock( PHB_ITEM pBlock )
    if( pBlock )
    {
       block = hb_itemNew( pBlock );
-      // hb_gcUnlock( block );
    }
 }
 
@@ -340,28 +342,7 @@ void HBQPlainTextEdit::hbSetProtoStyle( const QString & css )
 
 bool HBQPlainTextEdit::event( QEvent *event )
 {
-   if( event->type() == QEvent::KeyPress )
-   {
-      QKeyEvent *keyEvent = ( QKeyEvent * ) event;
-      if( ( keyEvent->key() == Qt::Key_Tab ) && ( keyEvent->modifiers() & Qt::ControlModifier ) )
-      {
-         return false;
-      }
-      else
-      {
-         if( ( keyEvent->key() == Qt::Key_Tab ) && !( keyEvent->modifiers() & Qt::ControlModifier & Qt::AltModifier & Qt::ShiftModifier ) )
-         {
-            this->hbInsertTab( 0 );
-            return true;
-         }
-         else if( ( keyEvent->key() == Qt::Key_Backtab ) && ( keyEvent->modifiers() & Qt::ShiftModifier ) )
-         {
-            this->hbInsertTab( 1 );
-            return true;
-         }
-      }
-   }
-   else if( event->type() == QEvent::ToolTip )
+   if( event->type() == QEvent::ToolTip )
    {
       event->ignore();
       #if 0
@@ -374,7 +355,6 @@ bool HBQPlainTextEdit::event( QEvent *event )
       #endif
       return false;//true;
    }
-
    return QPlainTextEdit::event( event );
 }
 
@@ -434,7 +414,27 @@ bool HBQPlainTextEdit::isCursorInSelection()
    int col = c.columnNumber();
    int row = c.blockNumber();
 
-   return( col >= cb && col <= ce && row >= rb && row <= re );
+   if( selectionMode == selectionMode_column )
+   {
+      HB_TRACE( HB_TR_DEBUG, ( "isCursorInSelection( Modif %i %i %i %i RC %i %i Cur %i %i", rb, cb, re, ce, rowBegins, columnBegins, row, col ) );
+      return( col >= cb && col <= ce && row >= rb && row <= re );
+   }
+   else
+   {
+      if( row == rb )
+      {
+         return( col >= cb );
+      }
+      else if( row == re )
+      {
+         return( col <= ce );
+      }
+      else if( row >= rb && row <= re )
+      {
+         return( true );
+      }
+   }
+   return( false );
 }
 
 /*----------------------------------------------------------------------*/
@@ -453,7 +453,7 @@ void HBQPlainTextEdit::hbPostSelectionInfo()
       hb_arraySetNI( p2, 3, rowEnds        );
       hb_arraySetNI( p2, 4, columnEnds     );
       hb_arraySetNI( p2, 5, selectionMode  );
-      hb_arraySetNI( p2, 6, selectionState );
+      hb_arraySetNI( p2, 6, 0              );
       hb_arraySetNI( p2, 7, 0              );
 
       hb_vmEvalBlockV( block, 2, p1, p2 );
@@ -467,7 +467,6 @@ void HBQPlainTextEdit::hbPostSelectionInfo()
 
 void HBQPlainTextEdit::hbClearSelection()
 {
-   setCursorWidth( 1 );
    rowBegins    = -1;
    rowEnds      = -1;
    columnBegins = -1;
@@ -479,7 +478,6 @@ void HBQPlainTextEdit::hbClearSelection()
 
 void HBQPlainTextEdit::hbSelectAll()
 {
-   setCursorWidth( 1 );
    rowBegins    = 0;
    rowEnds      = document()->blockCount();
    columnBegins = 0;
@@ -536,7 +534,6 @@ void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool byApplication )
             }
             setTextCursor( c );
          }
-         setCursorWidth( 1 );
       }
       else
       {
@@ -544,7 +541,6 @@ void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool byApplication )
          {
             case selectionMode_stream:
             {
-               setCursorWidth( 1 );
                selectionMode       = selectionMode_stream;
                isStreamSelectionON = true;
                isColumnSelectionON = false;
@@ -560,8 +556,6 @@ void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool byApplication )
             }
             case selectionMode_column:
             {
-               setCursorWidth( 0 );
-
                selectionMode       = selectionMode_column;
                isStreamSelectionON = false;
                isColumnSelectionON = true;
@@ -578,7 +572,6 @@ void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool byApplication )
             }
             case selectionMode_line:
             {
-               setCursorWidth( 1 );
                selectionMode       = selectionMode_line;
                isStreamSelectionON = false;
                isColumnSelectionON = false;
@@ -603,7 +596,6 @@ void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool byApplication )
          {
             case selectionMode_stream:
             {
-               setCursorWidth( 1 );
                if( columnBegins >= 0 )
                {
                   hbToStream();
@@ -615,7 +607,6 @@ void HBQPlainTextEdit::hbSetSelectionMode( int mode, bool byApplication )
             }
             case selectionMode_column:
             {
-               setCursorWidth( 0 );
                selectionMode       = selectionMode_column;
                isColumnSelectionON = true;
                isLineSelectionON   = false;
@@ -768,13 +759,16 @@ void HBQPlainTextEdit::dropEvent( QDropEvent *event )
          if( ( selectionMode == selectionMode_stream || selectionMode == selectionMode_line ) && row >= rowBegins && row <= rowEnds )
          {
             setTextCursor( c );
+            mouseMode = mouseMode_select;
          }
          else if( selectionMode == selectionMode_column && row >= rowBegins && row <= rowEnds && col >= columnBegins && col <= columnEnds )
          {
             setTextCursor( c );
+            mouseMode = mouseMode_select;
          }
          else
          {
+            mouseMode = mouseMode_none;
             hbCopy();
             if( event->dropAction() != Qt::CopyAction )
             {
@@ -818,7 +812,6 @@ void HBQPlainTextEdit::dropEvent( QDropEvent *event )
             {
                setTextCursor( c );
             }
-            selectionState = 0;
             hbClearSelection();
             hbPaste();
             hbPostSelectionInfo();
@@ -887,79 +880,27 @@ void HBQPlainTextEdit::mouseDoubleClickEvent( QMouseEvent *event )
    QTextCursor c( textCursor() );
    if( c.hasSelection() )
    {
-      rowBegins     = c.blockNumber();
-      rowEnds       = rowBegins;
-      columnEnds    = c.columnNumber();
-      columnBegins  = columnEnds - ( c.selectionEnd() - c.selectionStart() );
-      selectionMode = selectionMode_stream;
+      rowBegins      = c.blockNumber();
+      rowEnds        = rowBegins;
+      columnEnds     = c.columnNumber();
+      columnBegins   = columnEnds - ( c.selectionEnd() - c.selectionStart() );
+      selectionMode  = selectionMode_stream;
+      mouseMode      = mouseMode_select;
       c.clearSelection();
       setTextCursor( c );
       hbPostSelectionInfo();
+      clickPos = event->pos();
+      iClicks = 2;
+      repaint();
    }
-
+#if 0
    if( block )
    {
       PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::MouseButtonDblClick );
       hb_vmEvalBlockV( block, 1, p1 );
       hb_itemRelease( p1 );
    }
-}
-
-/*----------------------------------------------------------------------*/
-
-void HBQPlainTextEdit::mousePressEvent( QMouseEvent *event )
-{
-   if( isSelectionByApplication )
-   {
-      if( isColumnSelectionON )
-      {
-         event->accept();
-      }
-      else
-      {
-         QPlainTextEdit::mousePressEvent( event );
-      }
-      return;
-   }
-
-   if( event->modifiers() & Qt::ShiftModifier )
-   {
-      QTextCursor c( textCursor() );
-      rowBegins    = c.blockNumber();
-      columnBegins = c.columnNumber();
-
-      QPlainTextEdit::mousePressEvent( event );
-
-      c = textCursor();
-      rowEnds    = c.blockNumber();
-      columnEnds = c.columnNumber();
-
-      selectionState = 1;
-      setCursorWidth( 1 );
-      selectionMode = selectionMode_stream;
-      hbPostSelectionInfo();
-      repaint();
-   }
-   else
-   {
-      if( event->buttons() & Qt::LeftButton )
-      {
-         setCursorWidth( 1 );
-
-         QTextCursor c( cursorForPosition( event->pos() ) );
-         int row = c.blockNumber();
-         int col = c.columnNumber();
-         if( ( selectionMode == selectionMode_stream || selectionMode == selectionMode_line ) && row >= rowBegins && row <= rowEnds )
-         {
-            dragStartPosition = event->pos();
-         }
-         else if( selectionMode == selectionMode_column && row >= rowBegins && row <= rowEnds && col >= columnBegins && col <= columnEnds )
-         {
-            dragStartPosition = event->pos();
-         }
-      }
-      QPlainTextEdit::mousePressEvent( event );
-   }
+#endif
 }
 
 /*----------------------------------------------------------------------*/
@@ -990,21 +931,85 @@ void HBQPlainTextEdit::mouseReleaseEvent( QMouseEvent *event )
    }
    else
    {
-      if( selectionState == 1 )
+      QPlainTextEdit::mouseReleaseEvent( event );
+   }
+}
+
+/*----------------------------------------------------------------------*/
+
+void HBQPlainTextEdit::mousePressEvent( QMouseEvent *event )
+{
+   if( isSelectionByApplication )
+   {
+      if( isColumnSelectionON )
       {
-         selectionState = 0;
-         if( ! isSelectionPersistent )
-         {
-            hbClearSelection();
-            repaint();
-         }
+         event->accept();
       }
       else
       {
-         selectionState = 1;
+         QPlainTextEdit::mousePressEvent( event );
       }
-      setCursorWidth( 1 );
+      return;
+   }
+   else if( event->modifiers() & Qt::ShiftModifier )
+   {
+      QTextCursor c( textCursor() );
+      rowBegins    = c.blockNumber();
+      columnBegins = c.columnNumber();
+
+      QPlainTextEdit::mousePressEvent( event );
+
+      c = textCursor();
+      rowEnds    = c.blockNumber();
+      columnEnds = c.columnNumber();
+      c.clearSelection();
+      setTextCursor( c );
+      selectionMode = selectionMode_stream;
       hbPostSelectionInfo();
+      repaint();
+   }
+   else
+   {
+      if( event->buttons() & Qt::LeftButton )
+      {
+         QTextCursor c( cursorForPosition( event->pos() ) );
+
+         if( iClicks == 2 )      /* Handle Tripple-click */
+         {
+            iClicks = 0;
+            if( ( event->pos() - clickPos ).manhattanLength() < QApplication::startDragDistance() )
+            {
+               selectionMode = selectionMode_stream;
+               c.movePosition( QTextCursor::EndOfLine );
+               columnBegins = 0;
+               columnEnds = c.columnNumber();
+               hbPostSelectionInfo();
+               setTextCursor( c );
+               event->accept();
+               repaint();
+            }
+            else
+            {
+               QPlainTextEdit::mousePressEvent( event );
+               hbClearSelection();
+            }
+         }
+         else
+         {
+            QPlainTextEdit::mousePressEvent( event );
+            dragStartPosition = event->pos();
+            if( mouseMode == mouseMode_select && isCursorInSelection() )
+            {
+               mouseMode = mouseMode_drag;
+            }
+            else
+            {
+               mouseMode = mouseMode_none;
+               hbClearSelection();
+               repaint();
+            }
+         }
+      }
    }
 }
 
@@ -1025,7 +1030,7 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
    }
    if( event->buttons() & Qt::LeftButton )
    {
-      if( ( event->pos() - dragStartPosition ).manhattanLength() < QApplication::startDragDistance() )
+      if( mouseMode == mouseMode_drag && ( event->pos() - dragStartPosition ).manhattanLength() < QApplication::startDragDistance() )
       {
          QTextCursor c( cursorForPosition( event->pos() ) );
          int row = c.blockNumber();
@@ -1052,26 +1057,17 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
          }
       }
 
-      if( selectionState == 1 )
-      {
-         selectionState = 2;
-         hbClearSelection();
-      }
-
       if( columnBegins == -1 )
       {
-         if( selectionMode == selectionMode_column )
-            setCursorWidth( 0 );
-
          QTextCursor c( textCursor() );
-
          rowBegins    = c.blockNumber();
          columnBegins = c.columnNumber();
          rowEnds      = rowBegins;
          columnEnds   = columnBegins;
+         mouseMode    = mouseMode_select;
          QPlainTextEdit::mouseMoveEvent( event );
       }
-      else
+      else if( mouseMode == mouseMode_select )
       {
          if( selectionMode == selectionMode_column )
          {
@@ -1081,7 +1077,6 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
          }
          QPlainTextEdit::mouseMoveEvent( event );
          QTextCursor c = textCursor();
-
          if( selectionMode != selectionMode_column )
          {
             rowEnds    = c.blockNumber();
@@ -1089,7 +1084,6 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
          }
          c.clearSelection();
          setTextCursor( c );
-//       repaint();   /* NOT REQUIRED : QPlainTextEdit::mouseMoveEvent( event ); */
       }
       hbPostSelectionInfo();
    }
@@ -1103,12 +1097,330 @@ void HBQPlainTextEdit::keyReleaseEvent( QKeyEvent * event )
 
    if( ( event->modifiers() & Qt::ControlModifier ) && event->text() == "" )
    {
-      if( selectionState == 2 )
+      hbPostSelectionInfo();
+   }
+}
+
+/*----------------------------------------------------------------------*/
+
+void HBQPlainTextEdit::hbHandleKey( QKeyEvent * event, int k, int selMode, bool shift )
+{
+   Q_UNUSED( selMode );
+   Q_UNUSED( shift );
+
+   switch( k )
+   {
+      case Qt::Key_Right:
       {
-         selectionState = 1;
-         emit selectionChanged();
+         event->ignore();
+         QTextCursor c( textCursor() );
+         QTextCursor cc( textCursor() );
+         cc.movePosition( QTextCursor::EndOfLine );
+         if( columnEnds < cc.columnNumber() )
+         {
+            c.movePosition( QTextCursor::Right );
+            setTextCursor( c );
+         }
+         columnEnds++;
+         break;
+      }
+      case Qt::Key_Left:
+      {
+         event->ignore();
+         QTextCursor c( textCursor() );
+         if( columnEnds >= 0 )
+         {
+            if( columnEnds <= c.columnNumber() )
+            {
+               c.movePosition( QTextCursor::Left );
+               setTextCursor( c );
+            }
+            columnEnds--;
+         }
+         break;
+      }
+      case Qt::Key_Home:
+      case Qt::Key_End:
+      {
+         QPlainTextEdit::keyPressEvent( event );
+         columnEnds = textCursor().columnNumber();
+         break;
+      }
+      case Qt::Key_Up:
+      case Qt::Key_PageUp:
+      case Qt::Key_Down:
+      case Qt::Key_PageDown:
+      {
+         QPlainTextEdit::keyPressEvent( event );
+         rowEnds = textCursor().blockNumber();
+         break;
       }
    }
+}
+
+/*----------------------------------------------------------------------*/
+
+bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
+{
+   int k;
+   bool ctrl, shift, isNavable;
+
+   if( isSelectionByApplication )
+   {
+      return hbKeyPressSelectionByApplication( event );
+   }
+   k = event->key();
+   ctrl  = event->modifiers() & Qt::ControlModifier;
+   shift = event->modifiers() & Qt::ShiftModifier;
+   isNavable = isNavableKey( k );
+
+   if( ctrl && shift && ! isNavable )
+   {
+      return false;
+   }
+   if( ctrl && event->text().isEmpty() && ! isNavable )
+   {
+      return false;
+   }
+   if( ctrl && ( k == Qt::Key_C || k == Qt::Key_V || k == Qt::Key_X ||
+                 k == Qt::Key_A || k == Qt::Key_Z || k == Qt::Key_Y ) )
+   {
+      event->ignore();
+      return true;
+   }
+
+   bool bClear = false;
+
+   if( shift && isNavable )
+   {
+      if( selectionMode == selectionMode_line )
+      {
+         selectionMode = selectionMode_stream;
+         hbPostSelectionInfo();
+      }
+
+      isShiftPressed = true;
+
+      event->accept();
+      QTextCursor c( textCursor() );
+      c.clearSelection();
+      setTextCursor( c );
+
+      if( columnBegins == -1 || columnEnds == -1 || rowBegins == -1 || rowEnds == -1 )
+      {
+         rowBegins      = c.blockNumber();
+         columnBegins   = c.columnNumber();
+         rowEnds        = rowBegins;
+         columnEnds     = columnBegins;
+         hbPostSelectionInfo();
+      }
+
+      /* Push key back to system without the shift modifier - it will position position the cursor as intended */
+      QKeyEvent * ev = new QKeyEvent( event->type(), event->key(), ctrl ? Qt::ControlModifier : Qt::NoModifier, event->text() );
+      keyPressEvent( ev );
+      return true;
+   }
+
+   if( isShiftPressed && isNavable )
+   {
+      isShiftPressed = false;
+
+      if( selectionMode == selectionMode_stream )
+      {
+         QPlainTextEdit::keyPressEvent( event );
+         rowEnds    = textCursor().blockNumber();
+         columnEnds = textCursor().columnNumber();
+      }
+      else if( selectionMode == selectionMode_column )
+      {
+         hbHandleKey( event, k, selectionMode_column, true );
+      }
+      hbPostSelectionInfo();
+      repaint();                     /* A Must Here , otherwise selection will not be reflected */
+      return true;
+   }
+   else if( ctrl && isNavable && selectionMode == selectionMode_column && columnBegins >= 0 && columnBegins == columnEnds )
+   {
+      hbHandleKey( event, k, selectionMode_column, false );
+      columnBegins = columnEnds;
+      hbPostSelectionInfo();
+      repaint();
+      return true;
+   }
+   else if( ! ctrl && k >= ' ' && k < 127 && columnBegins >= 0 && selectionMode == selectionMode_column )
+   {
+      if( isCursorInSelection() )
+      {
+         if( block )
+         {
+            PHB_ITEM p1 = hb_itemPutNI( NULL, 21013 );
+            PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, "HB_QKEYEVENT", NULL, 0 ) ;
+            hb_vmEvalBlockV( block, 2, p1, p2 );
+            hb_itemRelease( p1 );
+            hb_itemRelease( p2 );
+
+            if( columnBegins == columnEnds )
+            {
+               columnBegins++;
+               columnEnds++;
+               hbPostSelectionInfo();
+            }
+            event->accept();
+            repaint();
+            return true;
+         }
+      }
+      else
+      {
+         bClear = true;
+      }
+   }
+   else if( ! ctrl && ( k == Qt::Key_Backspace || k == Qt::Key_Delete ) && columnBegins >= 0 )
+   {
+      if( selectionMode == selectionMode_column )
+      {
+         hbCut( k );
+         if( k == Qt::Key_Backspace )
+         {
+            columnBegins--;
+            columnEnds--;
+         }
+         else
+         {
+            columnEnds = columnBegins;
+         }
+         event->accept();
+         hbPostSelectionInfo();
+         repaint();
+         return true;
+      }
+      else   /* selectionMode == selectionMode_stream || selectionMode == selectionMode_line */
+      {
+         hbCut( Qt::Key_Delete );
+         repaint();
+         hbPostSelectionInfo();
+         if( k == Qt::Key_Delete )
+         {
+            event->accept();
+            return true;
+         }
+      }
+   }
+   else if( ! ctrl && k >= ' ' && k < 127 && columnBegins >= 0 && selectionMode == selectionMode_stream )
+   {
+      hbCut( Qt::Key_Delete );
+      hbClearSelection();
+   }
+   else if( ! ctrl && k >= ' ' && k < 127 )
+   {
+      bClear = true;
+   }
+   else if( isNavable )
+   {
+      bClear = true;
+   }
+
+   if( bClear )
+   {
+      if( isSelectionPersistent )
+      {
+         if( columnBegins >= 0 )
+         {
+            if( columnEnds == columnBegins )
+            {
+               hbClearSelection();
+            }
+            hbPostSelectionInfo();
+         }
+      }
+      else
+      {
+         if( columnBegins >= 0 )
+         {
+            hbClearSelection();
+            hbPostSelectionInfo();
+            repaint();
+         }
+      }
+   }
+   return false;
+}
+
+/*----------------------------------------------------------------------*/
+
+void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
+{
+   if( hbHandlePopup( event ) )
+   {
+      return;
+   }
+   if( hbKeyPressSelection( event ) )
+   {
+      return;
+   }
+
+   QPlainTextEdit::keyPressEvent( event );
+
+   if( ! isCodeCompletionActive )
+   {
+      if( c ){
+         c->popup()->hide();
+      }
+      return;
+   }
+
+   if( ! c )
+   {
+      return;
+   }
+   if( isTipActive )
+   {
+      c->popup()->hide();
+      return;
+   }
+
+   if( ! isAliasCompleter )
+   {
+      hbRefreshCompleter( hbTextAlias() );
+   }
+
+   if( ( event->modifiers() & ( Qt::ControlModifier | Qt::AltModifier ) ) )
+   {
+      c->popup()->hide();
+      return;
+   }
+   const bool ctrlOrShift = event->modifiers() & ( Qt::ControlModifier | Qt::ShiftModifier );
+   if( ctrlOrShift && event->text().isEmpty() )
+   {
+      return;
+   }
+   static  QString            eow( " ~!@#$%^&*()+{}|:\"<>?,./;'[]\\-=" );               /* end of word */
+   bool    hasModifier      = ( event->modifiers() != Qt::NoModifier ) && !ctrlOrShift;
+   QString completionPrefix = hbTextUnderCursor( true );
+   /*QString completionPrefix = hbTextUnderCursor( false );*/
+
+   if( hasModifier ||
+         event->text().isEmpty() ||
+            completionPrefix.length() < ( isAliasCompleter ? 0 : 1 ) ||
+                eow.contains( event->text().right( 1 ) ) )
+   {
+      c->popup()->hide();
+      return;
+   }
+
+   if( completionPrefix != c->completionPrefix() )
+   {
+      c->setCompletionPrefix( completionPrefix );
+      c->popup()->setCurrentIndex( c->completionModel()->index( 0, 0 ) );
+   }
+   QRect cr = cursorRect();
+
+   c->popup()->setMaximumWidth( viewport()->width() );
+   cr.setWidth( c->popup()->sizeHintForColumn( 0 ) + c->popup()->verticalScrollBar()->sizeHint().width() );
+   cr.setTop( cr.top() + horzRulerHeight + 5 );
+   cr.setBottom( cr.bottom() + horzRulerHeight + 5 );
+
+   c->complete( cr ); /* pop it up! */
 }
 
 /*----------------------------------------------------------------------*/
@@ -1208,343 +1520,42 @@ bool HBQPlainTextEdit::hbKeyPressSelectionByApplication( QKeyEvent * event )
 
 /*----------------------------------------------------------------------*/
 
-bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
-{
-   int k;
-   bool ctrl, shift, isNavable;
-
-   if( isSelectionByApplication ) {
-      return hbKeyPressSelectionByApplication( event );
-   }
-
-   k = event->key();
-   ctrl  = event->modifiers() & Qt::ControlModifier;
-   shift = event->modifiers() & Qt::ShiftModifier;
-   isNavable = isNavableKey( k );
-
-   if( ctrl && shift && ! isNavable ) {
-      return false;
-   }
-   if( ctrl && event->text().isEmpty() && ! isNavable ) {
-      return false;
-   }
-   if( ctrl && ( k == Qt::Key_C || k == Qt::Key_V || k == Qt::Key_X ||
-                 k == Qt::Key_A || k == Qt::Key_Z || k == Qt::Key_Y ) ) {
-      event->ignore();
-      return true;
-   }
-
-   bool bClear = false;
-
-   if( shift && isNavable )
-   {
-      if( selectionMode == selectionMode_line )
-      {
-         selectionMode = selectionMode_stream;
-         selectionState = 0;
-         hbPostSelectionInfo();
-      }
-      if( selectionState == 0 )
-      {
-         hbClearSelection();
-      }
-
-      isShiftPressed = true;
-
-      event->accept();
-      QTextCursor c( textCursor() );
-      c.clearSelection();
-      setTextCursor( c );
-
-      if( columnBegins == -1 )
-      {
-         if( selectionMode == selectionMode_column )
-         {
-            setCursorWidth( 0 );
-         }
-         selectionState = 2;
-         rowBegins      = c.blockNumber();
-         columnBegins   = c.columnNumber();
-         rowEnds        = rowBegins;
-         columnEnds     = columnBegins;
-         hbPostSelectionInfo();
-      }
-
-      QKeyEvent * ev = new QKeyEvent( event->type(), event->key(), ctrl ? Qt::ControlModifier : Qt::NoModifier, event->text() );
-      keyPressEvent( ev );
-      return true;
-   }
-
-   if( isShiftPressed && isNavable )
-   {
-      isShiftPressed = false;
-
-      if( selectionMode == selectionMode_stream )
-      {
-         QPlainTextEdit::keyPressEvent( event );
-         rowEnds    = textCursor().blockNumber();
-         columnEnds = textCursor().columnNumber();
-      }
-      else if( selectionMode == selectionMode_column )
-      {
-         switch( k )
-         {
-            case Qt::Key_Right:
-            {
-               QTextCursor c( textCursor() );
-               c.movePosition( QTextCursor::EndOfLine );
-               if( columnEnds < c.columnNumber() )
-               {
-                  QPlainTextEdit::keyPressEvent( event );
-                  ensureCursorVisible();
-               }
-               else
-               {
-                  event->ignore();
-               }
-               columnEnds++;
-               break;
-            }
-            case Qt::Key_Left:
-            {
-               QTextCursor c( textCursor() );
-               int col = c.columnNumber();
-               if( col > 0 )
-               {
-                  QPlainTextEdit::keyPressEvent( event );
-                  columnEnds--;
-               }
-               else
-               {
-                  event->ignore();
-               }
-               break;
-            }
-            case Qt::Key_Home:
-            case Qt::Key_End:
-            {
-               QPlainTextEdit::keyPressEvent( event );
-               columnEnds = textCursor().columnNumber();
-               break;
-            }
-            case Qt::Key_Up:
-            case Qt::Key_PageUp:
-            case Qt::Key_Down:
-            case Qt::Key_PageDown:
-            {
-               QPlainTextEdit::keyPressEvent( event );
-               rowEnds = textCursor().blockNumber();
-               break;
-            }
-         }
-      }
-      hbPostSelectionInfo();
-      repaint();                     /* A Must Here , otherwise selection will not be reflected */
-      return true;
-   }
-   else if( ! ctrl && k >= ' ' && k < 127 && columnBegins >= 0 && selectionMode == selectionMode_column )
-   {
-      if( ( columnBegins == columnEnds && selectionState > 0 ) || isCursorInSelection() )
-      {
-         if( block )
-         {
-            PHB_ITEM p1 = hb_itemPutNI( NULL, 21013 );
-            PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, "HB_QKEYEVENT", NULL, 0 ) ;
-            hb_vmEvalBlockV( block, 2, p1, p2 );
-            hb_itemRelease( p1 );
-            hb_itemRelease( p2 );
-
-            if( columnBegins == columnEnds )
-            {
-               columnBegins++;
-               columnEnds++;
-               hbPostSelectionInfo();
-            }
-            event->accept();
-            repaint();
-            return true;
-         }
-      }
-      else
-      {
-         bClear = true;
-      }
-   }
-   else if( ! ctrl && ( k == Qt::Key_Backspace || k == Qt::Key_Delete ) && columnBegins >= 0  && selectionState > 0  )
-   {
-      if( selectionMode == selectionMode_column )
-      {
-         hbCut( k );
-         if( k == Qt::Key_Backspace )
-         {
-            columnBegins--;
-            columnEnds--;
-         }
-         else
-         {
-            columnEnds = columnBegins;
-         }
-         hbPostSelectionInfo();
-         event->accept();
-         repaint();
-         return true;
-      }
-      else   /* selectionMode == selectionMode_stream || selectionMode == selectionMode_line */
-      {
-         hbCut( Qt::Key_Delete );
-         repaint();
-         selectionState = 0;
-         hbPostSelectionInfo();
-         if( k == Qt::Key_Delete )
-         {
-            event->accept();
-            return true;
-         }
-      }
-   }
-   else if( ! ctrl && k >= ' ' && k < 127 && columnBegins >= 0 && selectionMode == selectionMode_stream )
-   {
-      hbCut( Qt::Key_Delete );
-      hbClearSelection();
-      selectionState = 0;
-   }
-   else if( ! ctrl && k >= ' ' && k < 127 )
-   {
-      bClear = true;
-   }
-   else if( isNavable )
-   {
-      bClear = true;
-   }
-
-   if( bClear )
-   {
-      if( isSelectionPersistent )
-      {
-         if( selectionState > 0 )
-         {
-            setCursorWidth( 1 );
-            selectionState = 0;
-            if( columnEnds == columnBegins )
-            {
-               hbClearSelection();
-            }
-            hbPostSelectionInfo();
-         }
-      }
-      else
-      {
-         if( selectionState > 0 )
-         {
-            setCursorWidth( 1 );
-            selectionState = 0;
-            hbClearSelection();
-            hbPostSelectionInfo();
-            repaint();
-         }
-      }
-   }
-   return false;
-}
-
-/*----------------------------------------------------------------------*/
-
-void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
+bool HBQPlainTextEdit::hbHandlePopup( QKeyEvent * event )
 {
    if( c && c->popup()->isVisible() )
    {
       /* The following keys are forwarded by the completer to the widget */
       switch( event->key() )
       {
-      case Qt::Key_Enter   :
-      case Qt::Key_Return  :
-      case Qt::Key_Escape  :
-      case Qt::Key_Tab     :
-      case Qt::Key_Backtab :
-         event->ignore();
-         return;                                    /* let the completer do default behavior */
-      case Qt::Key_Space:
-         if( block )
-         {
-            PHB_ITEM p1 = hb_itemPutNI( NULL, 21001 );
-            hb_vmEvalBlockV( block, 1, p1 );
-            hb_itemRelease( p1 );
-            hbRefreshCompleter();                   /* Watch closely */
-         }
-         break;
-      case Qt::Key_ParenLeft:
-         if( block )
-         {
-            PHB_ITEM p1 = hb_itemPutNI( NULL, 21002 );
-            hb_vmEvalBlockV( block, 1, p1 );
-            hb_itemRelease( p1 );
-         }
-         break;
-      default:
-         break;
+         case Qt::Key_Enter   :
+         case Qt::Key_Return  :
+         case Qt::Key_Escape  :
+         case Qt::Key_Tab     :
+         case Qt::Key_Backtab :
+            event->ignore();
+            return true;                                    /* let the completer do default behavior */
+         case Qt::Key_Space:
+            if( block )
+            {
+               PHB_ITEM p1 = hb_itemPutNI( NULL, 21001 );
+               hb_vmEvalBlockV( block, 1, p1 );
+               hb_itemRelease( p1 );
+               hbRefreshCompleter();                   /* Watch closely */
+            }
+            break;
+         case Qt::Key_ParenLeft:
+            if( block )
+            {
+               PHB_ITEM p1 = hb_itemPutNI( NULL, 21002 );
+               hb_vmEvalBlockV( block, 1, p1 );
+               hb_itemRelease( p1 );
+            }
+            break;
+         default:
+            break;
       }
    }
-
-   if( hbKeyPressSelection( event ) )
-   {
-      return;
-   }
-
-   QPlainTextEdit::keyPressEvent( event );
-
-   if( ! isCodeCompletionActive ){
-      if( c ){
-         c->popup()->hide();
-      }
-      return;
-   }
-
-   if( ! c ){
-      return;
-   }
-   if( isTipActive ){
-      c->popup()->hide();
-      return;
-   }
-
-   if( ! isAliasCompleter ){
-      hbRefreshCompleter( hbTextAlias() );
-   }
-
-   if( ( event->modifiers() & ( Qt::ControlModifier | Qt::AltModifier ) ) ){
-      c->popup()->hide();
-      return;
-   }
-   const bool ctrlOrShift = event->modifiers() & ( Qt::ControlModifier | Qt::ShiftModifier );
-   if( ctrlOrShift && event->text().isEmpty() ){
-      return;
-   }
-   static  QString            eow( " ~!@#$%^&*()+{}|:\"<>?,./;'[]\\-=" );               /* end of word */
-   bool    hasModifier      = ( event->modifiers() != Qt::NoModifier ) && !ctrlOrShift;
-   QString completionPrefix = hbTextUnderCursor( true );
-   /*QString completionPrefix = hbTextUnderCursor( false );*/
-
-   if( hasModifier ||
-         event->text().isEmpty() ||
-            completionPrefix.length() < ( isAliasCompleter ? 0 : 1 ) ||
-                eow.contains( event->text().right( 1 ) ) )
-   {
-      c->popup()->hide();
-      return;
-   }
-
-   if( completionPrefix != c->completionPrefix() ) {
-      c->setCompletionPrefix( completionPrefix );
-      c->popup()->setCurrentIndex( c->completionModel()->index( 0, 0 ) );
-   }
-   QRect cr = cursorRect();
-
-   c->popup()->setMaximumWidth( viewport()->width() );
-   cr.setWidth( c->popup()->sizeHintForColumn( 0 ) + c->popup()->verticalScrollBar()->sizeHint().width() );
-   cr.setTop( cr.top() + horzRulerHeight + 5 );
-   cr.setBottom( cr.bottom() + horzRulerHeight + 5 );
-
-   c->complete( cr ); /* pop it up! */
+   return false;
 }
 
 /*----------------------------------------------------------------------*/

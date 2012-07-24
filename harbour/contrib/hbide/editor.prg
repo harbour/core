@@ -300,6 +300,7 @@ METHOD IdeEditsManager:updateFieldsList( cAlias )
    LOCAL aFlds
 
    IF ! empty( cAlias ) .AND. ! empty( aFlds := ::oBM:fetchFldsList( cAlias ) )
+
       asort( aFlds, , , {|e,f| lower( e ) < lower( f ) } )
 
       ::qFldsStrList:clear()
@@ -307,8 +308,8 @@ METHOD IdeEditsManager:updateFieldsList( cAlias )
       ::qFldsModel:setStringList( ::qFldsStrList )
 
       ::qCompleter:setModel( ::qFldsModel )
-      RETURN .t.
 
+      RETURN .t.
    ELSE
       ::qCompleter:setModel( ::qCompModel )
 
@@ -2040,3 +2041,4 @@ STATIC FUNCTION hbide_qtDesigner()
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
+

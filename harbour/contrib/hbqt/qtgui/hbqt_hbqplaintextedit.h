@@ -153,7 +153,6 @@ private:
    int            rowEnds;
    int            columnBegins;
    int            columnEnds;
-   int            selectionState;
    int            selectionMode;
    int            selectionDisplay;
    bool           isStreamSelectionON;
@@ -177,6 +176,9 @@ private:
    bool           isCompletionTipsActive;
    bool           isInDrag;
    QPoint         dragStartPosition;
+   QPoint         clickPos;
+   int            iClicks;
+   int            mouseMode;
 
 protected:
    bool           event( QEvent * event );
@@ -191,6 +193,8 @@ protected:
    void           dragEnterEvent( QDragEnterEvent * event );
    void           dragMoveEvent( QDragMoveEvent * event );
    void           dropEvent( QDropEvent * event );
+   void           hbHandleKey( QKeyEvent * event, int k, int selMode, bool shift );
+   bool           hbHandlePopup( QKeyEvent * event );
 
 public slots:
    QString        hbTextAlias();
