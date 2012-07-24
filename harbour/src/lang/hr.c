@@ -52,8 +52,6 @@
  *
  */
 
-/* ISO language code (2 chars): HR */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -61,7 +59,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "HRUTF",                     /* ID */
+      "HRUTF",                     /* ISO ID (2 chars) */
       "Croatian",                  /* Name (in English) */
       "Hrvatski",                  /* Name (in native language) */
       "HR",                        /* RFC ID */

@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): EL */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "ELUTF",                     /* ID */
+      "ELUTF",                     /* ISO ID (2 chars) */
       "Greek",                     /* Name (in English) */
       "Ελληνικά",                  /* Name (in native language) */
       "EL",                        /* RFC ID */

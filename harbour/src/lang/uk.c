@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): UA */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "UAUTF",                     /* ID */
+      "UAUTF",                     /* ISO ID (2 chars) */
       "Ukrainian",                 /* Name (in English) */
       "Украєнська",                /* Name (in native language) */
       "UA",                        /* RFC ID */

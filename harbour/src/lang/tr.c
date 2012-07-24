@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): TR */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "TRUTF",                     /* ID */
+      "TRUTF",                     /* ISO ID (2 chars) */
       "Turkish",                   /* Name (in English) */
       "Türkçe",                    /* Name (in native language) */
       "TR",                        /* RFC ID */

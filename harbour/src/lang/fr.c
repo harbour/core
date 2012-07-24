@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): FR */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "FRUTF",                     /* ID */
+      "FRUTF",                     /* ISO ID (2 chars) */
       "French",                    /* Name (in English) */
       "français",                  /* Name (in native language) */
       "FR",                        /* RFC ID */

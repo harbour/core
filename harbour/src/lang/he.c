@@ -51,8 +51,6 @@
  *
  */
 
-/* ISO language code (2 chars): HE */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -60,7 +58,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "HEUTF",                     /* ID */
+      "HEUTF",                     /* ISO ID (2 chars) */
       "Hebrew",                    /* Name (in English) */
       "עברית",                     /* Name (in native language) */
       "HE",                        /* RFC ID */

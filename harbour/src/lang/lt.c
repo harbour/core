@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): LT */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "LTUTF",                     /* ID */
+      "LTUTF",                     /* ISO ID (2 chars) */
       "Lithuanian",                /* Name (in English) */
       "Lietuvių",                  /* Name (in native language) */
       "LT",                        /* RFC ID */

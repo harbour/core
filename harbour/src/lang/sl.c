@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): SL */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "SLUTF",                     /* ID */
+      "SLUTF",                     /* ISO ID (2 chars) */
       "Slovenian",                 /* Name (in English) */
       "Slovenščina",               /* Name (in native language) */
       "SL",                        /* RFC ID */

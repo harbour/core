@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): IT */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "ITUTF",                     /* ID */
+      "ITUTF",                     /* ISO ID (2 chars) */
       "Italian",                   /* Name (in English) */
       "Italiano",                  /* Name (in native language) */
       "IT",                        /* RFC ID */

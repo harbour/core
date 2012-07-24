@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): HU */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "HUUTF",                     /* ID */
+      "HUUTF",                     /* ISO ID (2 chars) */
       "Hungarian",                 /* Name (in English) */
       "Magyar",                    /* Name (in native language) */
       "HU",                        /* RFC ID */

@@ -53,8 +53,6 @@
  *
  */
 
-/* ISO language code (2 chars): CS */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -62,7 +60,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "CSUTF",                     /* ID */
+      "CSUTF",                     /* ISO ID (2 chars) */
       "Czech",                     /* Name (in English) */
       "Česky",                     /* Name (in native language) */
       "CS",                        /* RFC ID */

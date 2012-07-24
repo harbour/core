@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): NL */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "NLUTF",                     /* ID */
+      "NLUTF",                     /* ISO ID (2 chars) */
       "Dutch",                     /* Name (in English) */
       "Nederlands",                /* Name (in native language) */
       "NL",                        /* RFC ID */

@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): GL */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "GLUTF",                     /* ID */
+      "GLUTF",                     /* ISO ID (2 chars) */
       "Galician",                  /* Name (in English) */
       "Galego",                    /* Name (in native language) */
       "GL",                        /* RFC ID */

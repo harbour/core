@@ -51,8 +51,6 @@
  *
  */
 
-/* ISO language code (2 chars): PT */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -60,7 +58,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "PTUTF",                     /* ID */
+      "PTUTF",                     /* ISO ID (2 chars) */
       "Portuguese",                /* Name (in English) */
       "Portugues",                 /* Name (in native language) */
       "PT",                        /* RFC ID */

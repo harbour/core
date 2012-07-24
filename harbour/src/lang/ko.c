@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): KO */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "KOUTF",                     /* ID */
+      "KOUTF",                     /* ISO ID (2 chars) */
       "Korean",                    /* Name (in English) */
       "한국어",                       /* Name (in native language) */
       "KO",                        /* RFC ID */

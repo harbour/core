@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): RU */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "RUUTF",                     /* ID */
+      "RUUTF",                     /* ISO ID (2 chars) */
       "Russian",                   /* Name (in English) */
       "Русский",                   /* Name (in native language) */
       "RU",                        /* RFC ID */

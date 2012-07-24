@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): (please look it up at https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "EN",                        /* ID */
+      "EN",                        /* ISO ID (2 chars) */
       "English",                   /* Name (in English) */
       "English",                   /* Name (in native language) */
       "EN",                        /* RFC ID */

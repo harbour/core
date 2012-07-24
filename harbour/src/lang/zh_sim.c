@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): ZH */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "ZHSIM",                     /* ID */
+      "ZHSIM",                     /* ISO ID (2 chars) */
       "Chinese Simplified",        /* Name (in English) */
       "中文简体",                      /* Name (in native language) */
       "ZH",                        /* RFC ID */

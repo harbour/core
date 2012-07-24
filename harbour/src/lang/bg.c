@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): BG */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "BGUTF",                     /* ID */
+      "BGUTF",                     /* ISO ID (2 chars) */
       "Bulgarian",                 /* Name (in English) */
       "Български",                 /* Name (in native language) */
       "BG",                        /* RFC ID */

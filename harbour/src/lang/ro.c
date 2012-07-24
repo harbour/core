@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): RO */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "ROUTF",                     /* ID */
+      "ROUTF",                     /* ISO ID (2 chars) */
       "Romanian",                  /* Name (in English) */
       "Român",                     /* Name (in native language) */
       "RO",                        /* RFC ID */

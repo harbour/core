@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): CA */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "CAUTF",                     /* ID */
+      "CAUTF",                     /* ISO ID (2 chars) */
       "Catalan",                   /* Name (in English) */
       "Catalán",                   /* Name (in native language) */
       "CA",                        /* RFC ID */

@@ -51,8 +51,6 @@
  *
  */
 
-/* ISO language code (2 chars): IS */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -60,7 +58,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "ISUTF",                     /* ID */
+      "ISUTF",                     /* ISO ID (2 chars) */
       "Icelandic",                 /* Name (in English) */
       "Íslenska",                  /* Name (in native language) */
       "IS",                        /* RFC ID */

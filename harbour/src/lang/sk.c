@@ -51,8 +51,6 @@
  *
  */
 
-/* ISO language code (2 chars): SK */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -60,7 +58,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "SKUTF",                     /* ID */
+      "SKUTF",                     /* ISO ID (2 chars) */
       "Slovak",                    /* Name (in English) */
       "Slovensky",                 /* Name (in native language) */
       "SK",                        /* RFC ID */

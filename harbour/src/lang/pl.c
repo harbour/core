@@ -50,8 +50,6 @@
  *
  */
 
-/* ISO language code (2 chars): PL */
-
 #include "hbapilng.h"
 
 static HB_LANG s_lang =
@@ -59,7 +57,7 @@ static HB_LANG s_lang =
    {
       /* Identification */
 
-      "PLUTF",                     /* ID */
+      "PLUTF",                     /* ISO ID (2 chars) */
       "Polish",                    /* Name (in English) */
       "Polski",                    /* Name (in native language) */
       "PL",                        /* RFC ID */
