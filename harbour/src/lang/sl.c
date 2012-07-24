@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Slovenian */
 /* ISO language code (2 chars): SL */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Serbian (latin) */
 /* ISO language code (2 chars): SR */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

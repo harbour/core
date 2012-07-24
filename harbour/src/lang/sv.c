@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Swedish */
 /* ISO language code (2 chars): SV */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

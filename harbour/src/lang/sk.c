@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Language Support Module (SKUTF)
  *
- * Copyright 2008,2012 Gyula Bartal <gybartal@gmail.com> (from msgcswin.c)
+ * Copyright 2008, 2012 Gyula Bartal <gybartal@gmail.com> (from CSWIN)
  * Update December 25, 2011 Jaroslav Janik <Jaroslav.Janik@siemens.com>
  * www - http://harbour-project.org
  *
@@ -51,9 +51,7 @@
  *
  */
 
-/* Language name: Slovak */
 /* ISO language code (2 chars): SK */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

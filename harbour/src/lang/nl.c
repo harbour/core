@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Dutch */
 /* ISO language code (2 chars): NL */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

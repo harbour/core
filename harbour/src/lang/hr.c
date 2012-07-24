@@ -6,9 +6,9 @@
  * Harbour Project source code:
  * Language Support Module (HRUTF)
  *
- * Copyright 2000 Viktor Szakats (harbour syenar.net) (English, from msg_tpl.c)
+ * Copyright 2000 Viktor Szakats (harbour syenar.net) (English)
  * Copyright 2000 Davor Siklic <siki@msoft.cz>
- * Copyright 2003 Vladimir Miholic <vmiholic@sk.hinet.hr> (Croatien from msg_hr852.c)
+ * Copyright 2003 Vladimir Miholic <vmiholic@sk.hinet.hr> (Croatien)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,9 +52,7 @@
  *
  */
 
-/* Language name: Croatian */
 /* ISO language code (2 chars): HR */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

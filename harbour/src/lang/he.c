@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Language Support Module (HEUTF)
  *
- * Copyright 2000 Viktor Szakats (harbour syenar.net) (English, from msgen.c)
+ * Copyright 2000 Viktor Szakats (harbour syenar.net) (English)
  * Copyright 2000 Chen Kedem <niki@synel.co.il> (Hebrew)
  * www - http://harbour-project.org
  *
@@ -51,9 +51,7 @@
  *
  */
 
-/* Language name: Hebrew */
 /* ISO language code (2 chars): HE */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

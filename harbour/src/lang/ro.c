@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Romanian */
 /* ISO language code (2 chars): RO */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

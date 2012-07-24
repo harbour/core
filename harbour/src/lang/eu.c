@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Basque */
 /* ISO language code (2 chars): EU */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: French */
 /* ISO language code (2 chars): FR */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

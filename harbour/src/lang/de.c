@@ -51,9 +51,7 @@
  *
  */
 
-/* Language name: German */
 /* ISO language code (2 chars): DE */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

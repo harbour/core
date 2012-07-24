@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Esperanto */
 /* ISO language code (2 chars): EO */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

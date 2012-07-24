@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Italian */
 /* ISO language code (2 chars): IT */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

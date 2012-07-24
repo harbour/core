@@ -7,8 +7,8 @@
  * Language Support Module (ESUTF)
  *
  * Copyright 2000 Jose Lalin <dezac@corevia.com>
- * www - http://harbour-project.org
  * Adapted to Windows by Antonio Linares <alinares@fivetechsoft.com>
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -51,9 +51,7 @@
  *
  */
 
-/* Language name: Spanish */
 /* ISO language code (2 chars): ES */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

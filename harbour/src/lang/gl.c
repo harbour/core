@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Galician */
 /* ISO language code (2 chars): GL */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

@@ -7,6 +7,7 @@
  * Language Support Module (PTUTF)
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
+ * Copyright 2000 Felipe Coury <fcoury@creation.com.br> (small fixes, internal error names)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +51,7 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2000 Felipe Coury <fcoury@creation.com.br>
- *    Small fixes
- *    Internal error names
- *
- * See COPYING for licensing terms.
- *
- */
-
-/* Language name: Portuguese */
 /* ISO language code (2 chars): PT */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

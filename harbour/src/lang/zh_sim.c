@@ -6,8 +6,7 @@
  * Harbour Project source code:
  * Language Support Module (ZHSIM)
  *
- * Copyright 1999-2001 dongming <dongming@km169.net>
- *                           or <freexbase@yahoo.com.cn>
+ * Copyright 1999-2001 dongming <dongming@km169.net>/<freexbase@yahoo.com.cn>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,9 +50,7 @@
  *
  */
 
-/* Language name: Chinese Simplified */
 /* ISO language code (2 chars): ZH */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

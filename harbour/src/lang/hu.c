@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Hungarian */
 /* ISO language code (2 chars): HU */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

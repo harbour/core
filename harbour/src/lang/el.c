@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Greek */
 /* ISO language code (2 chars): EL */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

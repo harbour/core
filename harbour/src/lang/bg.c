@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Bulgarian */
 /* ISO language code (2 chars): BG */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

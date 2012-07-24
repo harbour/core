@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Language Support Module (TRUTF)
  *
- * Copyright 2006 { Translation by : Bicahi Esgici <esgici@yahoo.com> }
+ * Copyright 2006 Bicahi Esgici <esgici@yahoo.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Turkish */
 /* ISO language code (2 chars): TR */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

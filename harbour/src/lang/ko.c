@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Korean */
 /* ISO language code (2 chars): KO */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

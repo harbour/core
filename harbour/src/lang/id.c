@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Indonesian */
 /* ISO language code (2 chars): ID */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Polish */
 /* ISO language code (2 chars): PL */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Ukrainian */
 /* ISO language code (2 chars): UA */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

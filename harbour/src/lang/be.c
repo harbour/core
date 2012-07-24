@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Belorussian */
 /* ISO language code (2 chars): BE */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Lithuanian */
 /* ISO language code (2 chars): LT */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

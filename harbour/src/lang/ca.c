@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Catalan */
 /* ISO language code (2 chars): CA */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

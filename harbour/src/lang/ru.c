@@ -50,9 +50,7 @@
  *
  */
 
-/* Language name: Russian */
 /* ISO language code (2 chars): RU */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 

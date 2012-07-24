@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Language Support Module (ISUTF)
  *
- * Copyright 2000 Viktor Szakats (harbour syenar.net) (English, from msgen.c)
+ * Copyright 2000 Viktor Szakats (harbour syenar.net) (English)
  * Copyright 2000 David G. Holm <dholm@jsd-llc.com> (Icelandic)
  * www - http://harbour-project.org
  *
@@ -51,9 +51,7 @@
  *
  */
 
-/* Language name: Icelandic */
 /* ISO language code (2 chars): IS */
-/* Codepage: UTF-8 */
 
 #include "hbapilng.h"
 
