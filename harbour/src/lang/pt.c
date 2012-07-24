@@ -127,7 +127,7 @@ static HB_LANG s_lang =
       "Erro nos parâmetros",
       "Erro de limite",
       "Overflow de string",
-      "Overflow numÚrico",
+      "Overflow numérico",
       "Divisão por zero",
       "Erro numérico",
       "Erro de sintaxe",
