@@ -59,7 +59,7 @@ static HB_LANG s_lang =
 
       "uk",                        /* ISO ID (2 chars) */
       "Ukrainian",                 /* Name (in English) */
-      "Украєнська",                /* Name (in native language) */
+      "Українська",                /* Name (in native language) */
       "UA",                        /* RFC ID */
       "UTF8",                      /* Codepage */
       "",                          /* Version */

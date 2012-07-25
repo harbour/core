@@ -124,7 +124,7 @@ FUNCTION hb_langSelect( cLangID, cCP )
       CASE "UA866"  ; cCPDef := "UA866" ; cLangIDBase := "uk" ; EXIT
       CASE "UADOS"  ; cCPDef := "UA1125"; cLangIDBase := "uk" ; EXIT
       CASE "UAKOI8" ; cCPDef := "UAKOI8"; cLangIDBase := "uk" ; EXIT
-      CASE "UAWIN"  ; cCPDef := "UA1125"; cLangIDBase := "uk" ; EXIT
+      CASE "UAWIN"  ; cCPDef := "UA1251"; cLangIDBase := "uk" ; EXIT
       CASE "ZHB5"   ; cCPDef := "BIG5"  ; cLangIDBase := "zh_tra" ; EXIT
       CASE "ZHGB"   ; cCPDef := "BIG5"  ; cLangIDBase := "zh_sim" ; EXIT /* INCOMPATIBILITY: Was using CP936 in legacy implementation. */
       OTHERWISE

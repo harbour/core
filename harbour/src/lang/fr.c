@@ -70,7 +70,7 @@ static HB_LANG s_lang =
       "Février",
       "Mars",
       "Avril",
-      "May",
+      "Mai",
       "Juin",
       "Juillet",
       "Août",
