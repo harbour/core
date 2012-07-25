@@ -1,0 +1,131 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Does HbIDE support editing of sa</title>
+<style>
+<!--
+
+p { white-space: pre-wrap; }
+-->
+</style>
+</head>
+
+<body>
+
+<table border="0" style="margin: 0px" align="center" width="95%" cellspacing="2" cellpadding="0" id="table1">
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>
+		<p style="-qt-block-indent: 0; text-indent: 0px; margin: 0px">
+		<span style="font-size: large; color: #ff0000">Does HbIDE support 
+		editing of same source at more than one place simultaneously ?</span>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<p style="-qt-block-indent: 0; text-indent: 0px; margin: 0px">
+		<span style="font-size: medium; color: #000000">Yes. HbIDE provides for 
+		splitting an editing window, horizontally and vertically, both ways. 
+		Right-click anywhere in the editor, point to &quot;Split...&quot; and then click 
+		on required option.</span> </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>
+		<p style="-qt-block-indent: 0; text-indent: 0px; margin: 0px">
+		<span style="font-size: large; color: #ff0000">Does HbIDE support 
+		session management ?</span> </td>
+	</tr>
+	<tr>
+		<td>
+		<p style="-qt-block-indent: 0; text-indent: 0px; margin: 0px">
+		<span style="font-size: medium; color: #000000">Yes. And in a unique 
+		way. It provides to construct n number of &quot;Panels&quot; where you can spread 
+		sources. Each panel is given a name as well as corresponding button on 
+		the left-toolbar, a colored circle, to bring it forward. New panel can 
+		be created from selecting &quot;New...&quot; from drop-down list on top-toolbar 
+		and providing a name in the editing dialog. For this reason you will 
+		never need to exit HbIDE and reenter again. It is a big productivity 
+		boost.</span> </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>
+		<p style="-qt-block-indent: 0; text-indent: 0px; margin: 0px">
+		<span style="font-size: large; color: #ff0000">Does HbIDE allows to 
+		compile a project for different compilers and/or environments ?</span>
+		</td>
+	</tr>
+	<tr>
+		<td>
+		<p style="-qt-block-indent: 0; text-indent: 0px; margin: 0px">
+		<span style="font-size: medium; color: #000000">Yes. Infact this feature 
+		had been the one of the main reasons of HbIDEs existance. All you have 
+		to do is to enter different environment settings in _ONE_ hbide.env file 
+		which resides alongside hbide.ini. HbIDE provides the interface to 
+		manipulate this .env settings which can be invoked from right-toolbar 
+		icon &quot;Compiler Environments&quot;. Follow the input fields. A template is 
+		provided in &quot;hbide.env&quot;, inspect it and you are through. Once hbide.env 
+		is ready, you will simply need to switch over the other environment 
+		which can be invoked via right-click on a project node in &quot;Projects&quot; 
+		tree and point to &quot;Select an environment&quot; and click on listed options. 
+		Next step is just to build the project.</span> </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>
+		<p style="-qt-block-indent: 0; text-indent: 0px; margin: 0px">
+		<span style="font-size: large; color: #ff0000">Can we keep any other 
+		content in hbide.ini ?</span> </td>
+	</tr>
+	<tr>
+		<td>
+		<p style="-qt-block-indent: 0; text-indent: 0px; margin: 0px">
+		<span style="font-size: medium; color: #000000">No. hbide.ini is always 
+		re-written at the time HbIDE exits. Also this action is executed several 
+		times depending upon the underlying needs. However, you can alter the 
+		contents in some sections, i.e., [Files], [Projects], etc., but only 
+		before running HbIDE. At exit, it will re-write it again.</span> </td>
+	</tr>
+	<tr>
+		<td>&nbsp;</td>
+	</tr>
+	<tr>
+		<td>
+		<p style="-qt-block-indent: 0; text-indent: 0px; margin: 0px">
+		<span style="font-size: large; color: #ff0000">Does HbIDE provides &quot;intellisense&quot; 
+		? If yes, in what aspects ?</span> </td>
+	</tr>
+	<tr>
+		<td>
+		<p style="-qt-block-indent: 0; text-indent: 0px; margin: 0px">
+		<span style="font-size: medium; color: #000000">Yes. Not so powerful 
+		yet, but &quot;yes&quot;. HbIDE embeds two components as the basis of this 
+		intellisense, 1. Harbour Documentation, and 2. Project(s) Prototype 
+		Tagging. Both these components can be pressed in servive simultaneously 
+		and as per need. Both are loaded only when requested. Prototype Tagging 
+		extends one step forward as to offer to load only those projects which a 
+		developer will be working on during that session. Both components can be 
+		aligned on the side corners to provide always-on view of the actual 
+		contents. The moment you press &quot;(&quot; HbIDE examines the contents of these 
+		components, if the function is available in Harbour Docs, its details 
+		are dumped into the viewer, otherwise if the function is contained in 
+		the tagged prototypes, it is made current in the list, and a html 
+		formatted prototype is displayed as tooltip beneth the current caret 
+		position. Code completion tool is almost done with, and probably will 
+		make up its presence in the HbIDE soon. </span></td>
+	</tr>
+</table>
+
+</body>
+
+</html>

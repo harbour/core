@@ -296,5 +296,6 @@
     <file>resources/expand_m.png</file>
     <file>resources/collapse_m.png</file>
     <file>resources/view_docks.png</file>
+    <file>docs/faq.htm</file>
   </qresource>
 </RCC>

@@ -1606,12 +1606,7 @@ METHOD IdeDocks:buildHelpWidget()
    ::qHelpBrw:setContextMenuPolicy( Qt_CustomContextMenu )
    ::qHelpBrw:setOpenExternalLinks( .t. )
 
-   qUrl := QUrl( "idemainpage.html" )
-   qStr := QStringList()
-   qStr:append( hb_dirBase() + "docs" )
-
-   ::qHelpBrw:setSearchPaths( qStr )
-   ::qHelpBrw:setSource( qUrl )
+   ::qHelpBrw:setSource( QUrl( "qrc:///docs/faq.htm" ) )
 
    ::oHelpDock:oWidget:setWidget( ::oIde:qHelpBrw )
 
