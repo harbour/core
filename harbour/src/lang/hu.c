@@ -103,7 +103,7 @@ static HB_LANG s_lang =
       " Határok ",
       " - ",
       "I/N",
-      "INVALID EXPRESSION",
+      "HIBÁS KIFEJEZÉS",
 
       /* Error description names */
 
