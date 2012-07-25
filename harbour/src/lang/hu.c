@@ -167,7 +167,7 @@ static HB_LANG s_lang =
       "Túl sok rekurzív hiba kezelő hívás",
       "Az RDD hibás vagy nem sikerült betölteni",
       "Nem megfelelő típusú metódus (%s)",
-      "hb_xgrab nem tud memóriát foglalni",
+      "hb_xgrab nem tud memóriát lefoglalni",
       "hb_xrealloc NULL mutatóval került meghívásra",
       "hb_xrealloc hibás mutatóval került meghívásra",
       "hb_xrealloc nem tud memóriát újrafoglalni",
