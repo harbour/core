@@ -1596,7 +1596,6 @@ METHOD IdeDocks:buildFuncList()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDocks:buildHelpWidget()
-   LOCAL qUrl, qStr
 
    ::oIde:oHelpDock := ::getADockWidget( Qt_RightDockWidgetArea, "dockHelp", "hbIDE Help", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oHelpDock:oWidget, Qt_Horizontal )
