@@ -95,6 +95,7 @@ changelog.ui
 projectwizard.ui
 
 hbide.qrc
+settings.qrc
 
 -3rd=hbide_file=hbide.ch
 

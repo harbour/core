@@ -286,7 +286,7 @@ FUNCTION hbide_getYesNoCancel( cMsg, cInfo, cTitle )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_fetchAFile( oWnd, cTitle, aFlt, cDftDir, cDftSuffix, lAllowMulti )
-   LOCAL oDlg, cFile
+   LOCAL oDlg
 
    DEFAULT cTitle  TO "Please Select a File"
    DEFAULT aFlt    TO { { "All Files", "*" } }
@@ -302,15 +302,12 @@ FUNCTION hbide_fetchAFile( oWnd, cTitle, aFlt, cDftDir, cDftSuffix, lAllowMulti 
       oDlg:oWidget:setDefaultSuffix( cDftSuffix )
    ENDIF
 
-   cFile := oDlg:open( cDftDir, , lAllowMulti )
-   oDlg:destroy()
-
-   RETURN cFile
+   RETURN oDlg:open( cDftDir, , lAllowMulti )
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_saveAFile( oWnd, cTitle, aFlt, cDftFile, cDftSuffix )
-   LOCAL oDlg, cFile
+   LOCAL oDlg
 
    DEFAULT cTitle  TO "Please Select a File"
 
@@ -323,10 +320,7 @@ FUNCTION hbide_saveAFile( oWnd, cTitle, aFlt, cDftFile, cDftSuffix )
       oDlg:oWidget:setDefaultSuffix( cDftSuffix )
    ENDIF
 
-   cFile := oDlg:saveAs( cDftFile, .f., .t. )
-   oDlg:destroy()
-
-   RETURN cFile
+   RETURN oDlg:saveAs( cDftFile, .f., .t. )
 
 /*----------------------------------------------------------------------*/
 /* Function to user select a existing folder

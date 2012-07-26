@@ -92,6 +92,7 @@
 CLASS IdeToolsManager INHERIT IdeObject
 
    DATA   aAct                                    INIT   {}
+   DATA   aSetAct                                 INIT   {}
    DATA   qToolsMenu
    DATA   qToolsButton
    DATA   qViewsMenu
@@ -105,6 +106,7 @@ CLASS IdeToolsManager INHERIT IdeObject
    DATA   aBtns                                   INIT   {}
    DATA   aToolbars                               INIT   { NIL,NIL,NIL,NIL,NIL }
    DATA   aPlugins                                INIT   {}
+   DATA   cSetsFolderLast
 
    ACCESS aTools                                  INLINE ::oINI:aTools
    ACCESS aUserToolBars                           INLINE ::oINI:aUserToolbars
@@ -141,6 +143,8 @@ CLASS IdeToolsManager INHERIT IdeObject
 METHOD IdeToolsManager:new( oIde )
 
    ::oIde := oIde
+
+   ::cSetsFolderLast := oIde:oINI:getINIPath()
 
    RETURN Self
 
@@ -859,21 +863,30 @@ METHOD IdeToolsManager:buildViewsButton()
 
    cPath := ::oINI:getIniPath()
    b_:= directory( cPath + "*.ide"  )
+
    aSettings := {}
+   aadd( aSettings, "Browse..." )
+   aadd( aSettings, "..." )
+   aadd( aSettings, "Pritpals Favourite" )
+   aadd( aSettings, "..." )
    FOR EACH a_ IN b_
-      IF ! ( a_[ 1 ] == "settings.ide" .AND. a_[ 1 ] == "tempsettings.ide" )
-         aadd( aSettings, strtran( a_[ 1 ], ".ide" ) )
+      IF ! ( a_[ 1 ] == "settings.ide" ) .AND. ! ( a_[ 1 ] == "tempsettings.ide" )
+         aadd( aSettings, hbide_pathNormalized( cPath + a_[ 1 ] ) )
       ENDIF
    NEXT
-
    ::qViewsMenu := QMenu()
    ::qViewsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
    FOR EACH cView IN aSettings
-      qAct := ::qViewsMenu:addAction( cView )
-      qAct:connect( "triggered(bool)", hbide_blockView( Self, cView ) )
-      aadd( ::aAct, qAct )
+      IF cView == "..."
+         qAct := ::qViewsMenu:addSeparator()
+      ELSE
+         qAct := ::qViewsMenu:addAction( cView )
+         qAct:connect( "triggered(bool)", hbide_blockView( Self, cView ) )
+      ENDIF
+      aadd( ::aSetAct, { qAct, cView } )
    NEXT
    ::qViewsButton := QToolButton()
+   ::qViewsButton:setObjectName( "HbIDE Views" )
    ::qViewsButton:setTooltip( "HbIDE Views" )
    ::qViewsButton:setIcon( QIcon( hbide_image( "view_docks" ) ) )
    ::qViewsButton:setPopupMode( QToolButton_MenuButtonPopup )
@@ -884,25 +897,42 @@ METHOD IdeToolsManager:buildViewsButton()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeToolsManager:execView( cView )
-   HB_SYMBOL_UNUSED( cView )
-   hbide_restSettings( ::oIde, cView + ".ide" )
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeToolsManager:saveView()
    LOCAL cView, qAct
 
-   cView := lower( trim( hbide_fetchAString( ::oDlg:oWidget, "", "HbIDE View Name", "New View" ) ) )
-   IF ! empty( cView ) .AND. cView != "settings" .AND. cView != "tempsettings"
-      cView := strtran( cView, " ", "_" )
-      hbide_saveSettings( ::oIde, cView + ".ide" )
-      qAct := ::qViewsMenu:addAction( cView )
-      qAct:connect( "triggered(bool)", hbide_blockView( Self, cView ) )
-      aadd( ::aAct, qAct )
+   cView := hbide_saveAFile( ::oDlg, "Select a HbIDE Settings File", { { "HbIDE Settings", "*.ide" } }, ::cSetsFolderLast, "ide" )
+   IF ! empty( cView )
+      ::cSetsFolderLast := cView
+      cView := lower( hbide_pathNormalized( cView ) )
+      hbide_saveEnvironment( ::oIde, cView )
+
+      IF ascan( ::aSetAct, {|e_| e_[ 2 ] == cView } ) == 0
+         qAct := ::qViewsMenu:addAction( cView )
+         qAct:connect( "triggered(bool)", hbide_blockView( Self, cView ) )
+         aadd( ::aAct, { qAct, cView } )
+      ENDIF
    ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeToolsManager:execView( cView )
+
+   IF cView == "Browse..."
+      cView := hbide_fetchAFile( ::oDlg, "Select a HbIDE Settings File", { { "HbIDE Settings", "*.ide" } }, ::cSetsFolderLast, "ide", .f. )
+      IF empty( cView )
+         RETURN Self
+      ENDIF
+      ::cSetsFolderLast := cView
+      hbide_restEnvironment( ::oIde, cView )
+   ELSEIF cView == "Pritpals Favourite"
+      hbide_restEnvironment_byResource( ::oIde, "pritpalsfav" )
+   ELSE
+      hbide_restEnvironment( ::oIde, cView )
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+

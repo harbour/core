@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -1557,4 +1557,5 @@ STATIC FUNCTION hbide_isSourceOfType( cSource, aFilter )
    RETURN  ascan( aFilter, {|e| cExt $ e } ) > 0
 
 /*----------------------------------------------------------------------*/
+
 

@@ -128,6 +128,7 @@ FUNCTION Main( ... )
    SET CENTURY ON
 
    QResource():registerResource_1( hbqtres_HbIde() )
+   QResource():registerResource_1( hbqtres_Settings() )
 
    oTmp := HbIde():new( hb_aParams() )
 #if 0

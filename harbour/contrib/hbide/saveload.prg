@@ -66,6 +66,7 @@
 
 #include "hbide.ch"
 #include "common.ch"
+#include "fileio.ch"
 #include "hbclass.ch"
 #include "hbqtgui.ch"
 
@@ -2269,3 +2270,65 @@ METHOD IdeSetup:setBaseColor()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbide_saveEnvironment( oIde, cFile )
+   LOCAL cPath, cExt, oSettings
+
+   DEFAULT cFile TO "settings.ide"
+
+   cFile := lower( cFile )
+   hb_fNameSplit( cFile, @cPath, @cFile, @cExt )
+   IF empty( cExt )
+      cExt := ".ide"
+   ENDIF
+   IF lower( cExt ) != ".ide"
+      RETURN NIL
+   ENDIF
+   IF empty( cPath )
+      cPath := oIde:oINI:getINIPath()
+   ENDIF
+
+   oSettings := QSettings( cPath + cFile + cExt, QSettings_IniFormat )
+
+   HB_TRACE( HB_TR_ALWAYS, oSettings:fileName() )
+
+   oSettings:setValue( "hbidesettings", QVariant( oIde:oDlg:oWidget:saveState() ) )
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_restEnvironment( oIde, cFile )
+   LOCAL cPath, cExt, oSettings
+
+   DEFAULT cFile TO "settings.ide"
+
+   cFile := lower( cFile )
+   hb_fNameSplit( cFile, @cPath, @cFile, @cExt )
+   IF empty( cExt )
+      cExt := ".ide"
+   ENDIF
+   IF lower( cExt ) != ".ide"
+      RETURN NIL
+   ENDIF
+   IF empty( cPath )
+      cPath := oIde:oINI:getINIPath()
+   ENDIF
+
+   oSettings := QSettings( cPath + cFile + cExt, QSettings_IniFormat )
+
+   oIde:oDlg:oWidget:restoreState( oSettings:value( "hbidesettings" ):toByteArray() )
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_restEnvironment_byResource( oIde, cFile )
+   LOCAL oSettings := QSettings( ":/env/" + cFile + ".ide", QSettings_IniFormat )
+
+   oIde:oDlg:oWidget:restoreState( oSettings:value( "hbidesettings" ):toByteArray() )
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+

@@ -359,7 +359,9 @@ METHOD IdeActions:buildToolBar()
    oTBar:addItem( ::getAction( "TB_RebuildLaunch"     ), , , , , , "RebuildLaunch"     )
    oTBar:addItem( , , , , , nSep )
    ::oActToolsBtn := oTBar:oWidget:addWidget( ::oIde:oTM:buildToolsButton() )
+   oTBar:addItem( , , , , , nSep )
    ::oActToolsBtn := oTBar:oWidget:addWidget( ::oIde:oTM:buildViewsButton() )
+   oTBar:addItem( , , , , , nSep )
 
    ::oIde:oMainToolbar := oTBar
 
@@ -615,7 +617,6 @@ METHOD IdeActions:buildMainMenu()
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "ChangeLog"           ), {|| oIde:execAction( "ChangeLog"          ) } } )
    hbide_menuAddSep( oSubMenu )
-
    oSubMenu2 := hbide_buildCDPMenu( oIde, oSubMenu ) //hbide_buildCodecMenu( oIde, oSubMenu )
 //   oSubMenu2:title := "~CodePage"
    oSubMenu:addItem( { oSubMenu2, _T( "~CodePage" ) } )

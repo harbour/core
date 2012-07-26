@@ -2396,6 +2396,26 @@
 #define QTreeWidgetItem_Type                                 0     // The default type for tree widget items.
 #define QTreeWidgetItem_UserType                             1000  // The minimum value for custom types. Values below UserType are reserved by Qt.
 
+#define QSettings_NativeFormat                               0     // Store the settings using the most appropriate storage format for the platform. On Windows, this means the system registry; on Mac OS X, this means the CFPreferences API; on Unix, this means textual configuration files in INI format.
+#define QSettings_IniFormat                                  1     // Store the settings in INI files.
+#define QSettings_InvalidFormat                              16    // Special value returned by registerFormat().
+
+#define QSettings_UserScope                                  0     // Store settings in a location specific to the current user (e.g., in the user's home directory).
+#define QSettings_SystemScope                                1     // Store settings in a global location, so that all users on the same machine access the same set of settings.
+
+#define QSettings_NoError                                    0     // No error occurred.
+#define QSettings_AccessError                                1     // An access error occurred (e.g. trying to write to a read-only file).
+#define QSettings_FormatError                                2     // A format error occurred (e.g. loading a malformed INI file).
+
+#define QIODevice_NotOpen                                    0x0000   // The device is not open.
+#define QIODevice_ReadOnly                                   0x0001   // The device is open for reading.
+#define QIODevice_WriteOnly                                  0x0002   // The device is open for writing.
+#define QIODevice_ReadWrite                                  hb_bitOr( QIODevice_ReadOnly, QIODevice_WriteOnly ) // The device is open for reading and writing.
+#define QIODevice_Append                                     0x0004   // The device is opened in append mode, so that all data is written to the end of the file.
+#define QIODevice_Truncate                                   0x0008   // If possible, the device is truncated before it is opened. All earlier contents of the device are lost.
+#define QIODevice_Text                                       0x0010   // When reading, the end-of-line terminators are translated to '\n'. When writing, the end-of-line terminators are translated to the local encoding, for example '\r\n' for Win32.
+#define QIODevice_Unbuffered                                 0x0020   // Any buffer in the device is bypassed.
+
 /*----------------------------------------------------------------------*/
 //                        HBQT Defined Constants
 /*----------------------------------------------------------------------*/
