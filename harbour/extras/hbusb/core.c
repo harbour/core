@@ -1,476 +1,330 @@
-// usb4h.c
-
 /*
+ * $Id$
+ */
 
-UU            UU        SSSSSSS       BBBBBBBBB           4444       HH        HH     
-UU            UU      SSS     SSS     BB      BBB        44 44       HH        HH 
-UU            UU     SS         SS    BB        BB      44  44       HH        HH 
-UU            UU     SS               BB        BB     44   44       HH        HH 
-UU            UU      SSS             BB      BBB     44    44       HH        HH  
-UU            UU        SSSSSS        BBBBBBBBB      444444444444    HHHHHHHHHHHH    
-UU            UU             SSS      BB      BBB           44       HH        HH 
- UU          UU                SS     BB        BB          44       HH        HH 
-  UU        UU       SS        SS     BB        BB          44       HH        HH 
-   UUU    UUU         SSS    SSS      BB      BBB           44       HH        HH 
-     UUUUUU             SSSSSS        BBBBBBBBB             44       HH        HH 
+/* TODO: change raw pointers to GC collected ones? */
 
-*/
+#include "hbapi.h"
 
-#include <hbapi.h>
-#include <libusb.h>
+#include "libusb.h"
 
+/* ------------ library initialisation and deinitialisation -------------------- */
 
-
-/*===============================================================================
-  |                                                                             |
-  |             library initialisation and deinitialisation                     |
-  |                                                                             |
-  ===============================================================================*/
-
-/*    USB4H_Init()
-
-      Initialises USB4H (libusb).
-
-      Must be called before calling any other USB4H functions.
-
-      Getting a context is optional.  */
-
-
-HB_FUNC( USB4H_INIT )
+/* Initialises libusb.
+   Must be called before calling any other libusb functions.
+   Getting a context is optional. */
+HB_FUNC( LIBUSB_INIT )
 {
-  int            success;
-  libusb_context * context;
-  if ( hb_parl( 1 ) )
-    {
+   int success;
+
+   if( HB_ISBYREF( 1 ) )
+   {
+      libusb_context * context;
       success = libusb_init( &context );
-      if ( success == 0 )
-      {
-        hb_stornl( ( ULONG ) context, 2 );
-      }
-    }   
+      hb_storptr( success == 0 ? context : NULL, 1 );
+   }
    else
-    { 
-      success = libusb_init( NULL );    
-    }
-  hb_retni( success );
+      success = libusb_init( NULL );
+
+   hb_retni( success );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_Exit()
-
-      Deinitialise USB4H (libusb).  */
-
-HB_FUNC( USB4H_EXIT )
+/* Deinitialise libusb. */
+HB_FUNC( LIBUSB_EXIT )
 {
-  libusb_exit( ( libusb_context * ) hb_parnl( 1 ) );
-  hb_ret();    
+   libusb_exit( ( libusb_context * ) hb_parptr( 1 ) );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_SetDebug()
-
-      Sets the message verbosity.
-
-      Refer to usb4h.ch for options    */
-
-
-HB_FUNC( USB4H_SETDEBUG )
+/* Sets the message verbosity.
+   Refer to hbusb.ch for options */
+HB_FUNC( LIBUSB_SET_DEBUG )
 {
-  libusb_set_debug( ( libusb_context * ) hb_parnl( 1 ), hb_parni( 2 ) );
-  hb_ret();    
+   libusb_set_debug( ( libusb_context * ) hb_parptr( 1 ), hb_parni( 2 ) );
 }
 
-//-------------------------------------------------------------------------------
+/* ------------------- device handling and enumeration ------------------------- */
 
-/*===============================================================================
-  |                                                                             |
-  |                    device handling and enumeration                          |
-  |                                                                             |
-  ===============================================================================*/
-
-/*    USB4H_GetDeviceList()
-
-      Returns a list of USB devcices attached to your system.  */
-
-HB_FUNC( USB4H_GETDEVICELIST )
+/* Returns a list of USB devcices attached to your system. */
+HB_FUNC( LIBUSB_GET_DEVICE_LIST )
 {
-  libusb_device ** devicelist;
-  ssize_t count;
-  count = libusb_get_device_list( ( libusb_context * ) hb_parnl( 1 ), &devicelist );
-  hb_stornl( ( ULONG ) devicelist, 2 );
-  hb_retni( count );
+   libusb_device **  devicelist;
+   ssize_t           count;
+
+   count = libusb_get_device_list( ( libusb_context * ) hb_parptr( 1 ), &devicelist );
+
+   hb_storptr( devicelist, 2 );
+
+   hb_retns( ( HB_SIZE ) count );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_FreeDeviceList()
-
-      Frees the list returned by USB4H_GetDeviceList.  */
-
-HB_FUNC( USB4H_FREEDEVICELIST )
+/* Frees the list returned by LIBUSB_GetDeviceList(). */
+HB_FUNC( LIBUSB_FREE_DEVICE_LIST )
 {
-  libusb_free_device_list( ( libusb_device ** ) hb_parnl( 1 ), hb_parni( 2 ) );
-  hb_ret();
+   libusb_free_device_list( ( libusb_device ** ) hb_parptr( 1 ), hb_parni( 2 ) );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_GetBusNumber()
-
-      Gets the number of the bus that a device is attached to.  */
-
-HB_FUNC( USB4H_GETBUSNUMBER )
+/* Gets the number of the bus that a device is attached to. */
+HB_FUNC( LIBUSB_GET_BUS_NUMBER )
 {
-  uint8_t busnumber;
-  libusb_device ** devicelist;  
-  devicelist = ( ( libusb_device ** ) hb_parnl( 1 ) );
-  busnumber = libusb_get_bus_number( devicelist[ hb_parni( 2 ) ] );
-  hb_retni( busnumber );
+   uint8_t           busnumber;
+   libusb_device **  devicelist;
+
+   devicelist  = ( libusb_device ** ) hb_parptr( 1 );
+   busnumber   = libusb_get_bus_number( devicelist[ hb_parni( 2 ) ] );
+
+   hb_retni( busnumber );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_GetDeviceAddress()
-
-      Gets the address on the bus that a device is attached to.  */
-
-HB_FUNC( USB4H_GETDEVICEADDRESS )
+/* Gets the address on the bus that a device is attached to. */
+HB_FUNC( LIBUSB_GET_DEVICE_ADDRESS )
 {
-  uint8_t deviceaddress;
-  libusb_device ** devicelist;  
-  devicelist = ( ( libusb_device ** ) hb_parnl( 1 ) );
-  deviceaddress = libusb_get_device_address( devicelist[ hb_parni( 2 ) ] );
-  hb_retni( deviceaddress );
+   uint8_t           deviceaddress;
+   libusb_device **  devicelist;
+
+   devicelist     = ( libusb_device ** ) hb_parptr( 1 );
+   deviceaddress  = libusb_get_device_address( devicelist[ hb_parni( 2 ) ] );
+
+   hb_retni( deviceaddress );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_GetDeviceSpeed()
-
-      Gets the negotiated connection speed for a device.  
-
-      Refer to usb4h.ch for speeds.  */
-
-/*
-HB_FUNC( USB4H_GETDEVICESPEED )
+/* Gets the negotiated connection speed for a device.
+   Refer to hbusb.ch for speeds. */
+#if 0
+HB_FUNC( LIBUSB_GET_DEVICE_SPEED )
 {
-  int devicespeed;
-  libusb_device ** devicelist;  
-  devicelist = ( ( libusb_device ** ) hb_parnl( 1 ) );
-  devicespeed = libusb_get_device_speed( devicelist[ hb_parni( 2 ) ] );
-  hb_retni( devicespeed );
+   int devicespeed;
+   libusb_device ** devicelist;
+
+   devicelist  = ( libusb_device ** ) hb_parptr( 1 );
+   devicespeed = libusb_get_device_speed( devicelist[ hb_parni( 2 ) ] );
+
+   hb_retni( devicespeed );
 }
-*/
+#endif
 
-//-------------------------------------------------------------------------------
-
-/* 
-USB4H_GetMaxPacketSize()
-
-Gets the maximum packet size for a particular endpoint in the active device configuration.  */
-
-HB_FUNC( USB4H_GETMAXPACKETSIZE )
+/* Gets the maximum packet size for a particular endpoint in the active device configuration. */
+HB_FUNC( LIBUSB_GET_MAX_PACKET_SIZE )
 {
-  int maxpacketsize;
-  libusb_device ** devicelist;  
-  devicelist = ( libusb_device ** ) hb_parnl( 1 );
-  maxpacketsize = libusb_get_max_packet_size( devicelist[ hb_parni( 2 ) ], ( unsigned char )  hb_parni( 3 ) );
-  hb_retni( maxpacketsize );
+   int               maxpacketsize;
+   libusb_device **  devicelist;
+
+   devicelist     = ( libusb_device ** ) hb_parptr( 1 );
+   maxpacketsize  = libusb_get_max_packet_size( devicelist[ hb_parni( 2 ) ], ( unsigned char ) hb_parni( 3 ) );
+
+   hb_retni( maxpacketsize );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_RefDevice()
-
-      Increments the reference count of a device.  */
-
-HB_FUNC( USB4H_REFDEVICE )
+/* Increments the reference count of a device. */
+HB_FUNC( LIBUSB_REF_DEVICE )
 {
-  libusb_device *device;
-  libusb_device ** devicelist; 
-  devicelist = ( libusb_device ** ) hb_parnl( 1 );
-  device = libusb_ref_device( devicelist[ hb_parni( 2 ) ] );
-  hb_ret();
+   libusb_device *   device;
+   libusb_device **  devicelist;
+
+   devicelist  = ( libusb_device ** ) hb_parptr( 1 );
+   device      = libusb_ref_device( devicelist[ hb_parni( 2 ) ] );
+
+   HB_SYMBOL_UNUSED( device );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_UnrefDevice()
-
-      Decrements the reference count of a device  */
-
-HB_FUNC( USB4H_UNREFDEVICE )
+/* Decrements the reference count of a device  */
+HB_FUNC( LIBUSB_UNREF_DEVICE )
 {
-  libusb_device ** devicelist; 
-  devicelist = ( libusb_device ** ) hb_parnl( 1 );
-  libusb_unref_device( devicelist[ hb_parni( 2 ) ] );
-  hb_ret();
+   libusb_device ** devicelist;
+
+   devicelist = ( libusb_device ** ) hb_parptr( 1 );
+   libusb_unref_device( devicelist[ hb_parni( 2 ) ] );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_Open()
-
-      Open a device and obtain a device handle  */
-
-HB_FUNC( USB4H_OPEN )
+/* Open a device and obtain a device handle  */
+HB_FUNC( LIBUSB_OPEN )
 {
-  int success;
-  libusb_device_handle * handle;
-  libusb_device ** devicelist; 
-  devicelist = ( libusb_device ** ) hb_parnl( 1 );
-  success = libusb_open( devicelist[ hb_parni( 2 ) ], &handle );
-  if ( success == 0 )
-  {
-    hb_stornl( ( ULONG ) handle, 3 );
-  }
-  hb_retni( success );
+   int                     success;
+   libusb_device_handle *  handle;
+   libusb_device **        devicelist;
+
+   devicelist  = ( libusb_device ** ) hb_parptr( 1 );
+   success     = libusb_open( devicelist[ hb_parni( 2 ) ], &handle );
+
+   hb_storptr( success == 0 ? handle : NULL, 3 );
+
+   hb_retni( success );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_OpenDeviceWithVIDPID()
-      
-      Find a device with known Vendor IID and Product ID.  */
-
-
-HB_FUNC( USB4H_OPENDEVICEWITHVIDPID )
+/* Find a device with known Vendor IID and Product ID. */
+HB_FUNC( LIBUSB_OPEN_DEVICE_WITH_VID_PID )
 {
-  libusb_device_handle * handle;
-  handle = libusb_open_device_with_vid_pid( ( libusb_context * ) hb_parnl( 1 ), hb_parni( 2 ), hb_parni( 3 ) );
-  hb_retnl( ( ULONG ) handle );
+   libusb_device_handle * handle;
+
+   handle = libusb_open_device_with_vid_pid( ( libusb_context * ) hb_parptr( 1 ), ( uint16_t ) hb_parni( 2 ), ( uint16_t ) hb_parni( 3 ) );
+
+   hb_retptr( handle );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_Close()
-
-      Close a device handle.  */
-
-HB_FUNC( USB4H_CLOSE )
+/* Close a device handle. */
+HB_FUNC( LIBUSB_CLOSE )
 {
-  libusb_close( ( libusb_device_handle * ) hb_parnl( 1 ) );
-  hb_ret();
+   libusb_close( ( libusb_device_handle * ) hb_parptr( 1 ) );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_GetDevice()
-
-      Get the underlying device for a handle. */
-
-HB_FUNC( USB4H_GETDEVICE )
+/* Get the underlying device for a handle. */
+HB_FUNC( LIBUSB_GET_DEVICE )
 {
-  libusb_device * device;
-  device = libusb_get_device( ( libusb_device_handle * ) hb_parnl( 1 ) );
-  hb_retnl( ( ULONG ) device );
+   libusb_device * device;
+
+   device = libusb_get_device( ( libusb_device_handle * ) hb_parptr( 1 ) );
+
+   hb_retptr( device );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_GetConfiguration()
-
-      Get the configuration value of the currently active configuration.  */
-
-HB_FUNC( USB4H_GETCONFIGURATION )
+/* Get the configuration value of the currently active configuration. */
+HB_FUNC( LIBUSB_GET_CONFIGURATION )
 {
-  int configuration;
-  int success;
-  configuration = 0;
-  success = libusb_get_configuration( ( libusb_device_handle * ) hb_parnl( 1 ), &configuration );
-  if ( success == 0 )
-  {
-    hb_storni( configuration, 2 );
-  }
-  hb_retni( success );
+   int configuration;
+   int success;
+
+   configuration  = 0;
+   success        = libusb_get_configuration( ( libusb_device_handle * ) hb_parptr( 1 ), &configuration );
+
+   hb_storni( success == 0 ? configuration : 0, 2 );
+
+   hb_retni( success );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_SetConfiguration()
-
-      Set the active configuration for a device.  */
-
-HB_FUNC( USB4H_SETCONFIGURATION )
+/* Set the active configuration for a device. */
+HB_FUNC( LIBUSB_SET_CONFIGURATION )
 {
-  int configuration;
-  int success;
-  success = libusb_set_configuration( ( libusb_device_handle * ) hb_parnl( 1 ), hb_parni( 2 ) );
-  hb_retni( success );  
+   int success;
+
+   success = libusb_set_configuration( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ) );
+
+   hb_retni( success );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_ClaimInterface()
-
-      Claim an interface on a given device handle.
-
-      Required before you can perform I/O on any of its endpoints.  */
-
-HB_FUNC( USB4H_CLAIMINTERFACE )
+/* Claim an interface on a given device handle.
+   Required before you can perform I/O on any of its endpoints. */
+HB_FUNC( LIBUSB_CLAIM_INTERFACE )
 {
-  int success;
-  success = libusb_claim_interface( ( libusb_device_handle * ) hb_parnl( 1 ), hb_parni( 2 ) );
-  hb_retni( success ); 
+   int success;
+
+   success = libusb_claim_interface( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ) );
+
+   hb_retni( success );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_ReleaseInterface()
-
-      Release a previously claimed interface.  */
-
-HB_FUNC( USB4H_RELEASEINTERFACE )
+/* Release a previously claimed interface. */
+HB_FUNC( LIBUSB_RELEASE_INTERFACE )
 {
-  int success;
-  success = libusb_release_interface( ( libusb_device_handle * ) hb_parnl( 1 ), hb_parni( 2 ) );
-  hb_retni( success ); 
+   int success;
+
+   success = libusb_release_interface( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ) );
+
+   hb_retni( success );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_SetInterfaceAltSetting()
-
-      Activate an alternate setting for an interface.  */
-
-HB_FUNC( USB4H_SETINTERFACEALTSETTING )
+/* Activate an alternate setting for an interface. */
+HB_FUNC( LIBUSB_SET_INTERFACE_ALT_SETTING )
 {
-  int success;
-  success = libusb_set_interface_alt_setting( ( libusb_device_handle * ) hb_parnl( 1 ), hb_parni( 2 ), hb_parni( 3 ) );
-  hb_retni( success );
+   int success;
+
+   success = libusb_set_interface_alt_setting( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ), hb_parni( 3 ) );
+
+   hb_retni( success );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_ClearHalt()
-
-      Clear the halt / stall condition for an endpoint  */
-
-HB_FUNC( USB4H_CLEARHALT )
+/* Clear the halt / stall condition for an endpoint  */
+HB_FUNC( LIBUSB_CLEAR_HALT )
 {
-  int success;
-  success = libusb_clear_halt( ( libusb_device_handle * ) hb_parnl( 1 ), ( unsigned char ) hb_parni( 2 ) );
-  hb_retni( success );
+   int success;
+
+   success = libusb_clear_halt( ( libusb_device_handle * ) hb_parptr( 1 ), ( unsigned char ) hb_parni( 2 ) );
+
+   hb_retni( success );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_ResetDevice()
-
-      Perform a USB port reset to reinitialise a device.  */
-
-HB_FUNC( USB4H_RESETDEVICE )
+/* Perform a USB port reset to reinitialise a device. */
+HB_FUNC( LIBUSB_RESET_DEVICE )
 {
-  int success;
-  success = libusb_reset_device( ( libusb_device_handle * ) hb_parnl( 1 ) );
-  hb_retni( success ); 
+   int success;
+
+   success = libusb_reset_device( ( libusb_device_handle * ) hb_parptr( 1 ) );
+
+   hb_retni( success );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_KernelDriverActive()
-
-      Determine if a kernel driver is active on an interfacc.  */
-
-HB_FUNC( USB4H_KERNELDRIVERACTIVE )
+/* Determine if a kernel driver is active on an interfacc. */
+HB_FUNC( LIBUSB_KERNEL_DRIVER_ACTIVE )
 {
-  int isactive;
-  isactive = libusb_kernel_driver_active( ( libusb_device_handle * ) hb_parnl( 1 ), hb_parni( 2 ) );
-  hb_retni( isactive );
+   int isactive;
+
+   isactive = libusb_kernel_driver_active( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ) );
+
+   hb_retni( isactive );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_DetachKernelDriver()
-
-      Detach a kernel driver from an interface.  */
-
-HB_FUNC( USB4H_DETACHKERNELDRIVER )
+/* Detach a kernel driver from an interface. */
+HB_FUNC( LIBUSB_DETACH_KERNEL_DRIVER )
 {
-  int success;
-  success = libusb_detach_kernel_driver( ( libusb_device_handle * ) hb_parnl( 1 ), hb_parni( 2 ) );
-  hb_retni( success );
+   hb_retni( libusb_detach_kernel_driver( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ) ) );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_AttachKernelDriver()
-
-      Reattach a kernel driver which was previously detached.  */
-
-HB_FUNC( USB4H_ATTACHKERNELDRIVER )
+/* Reattach a kernel driver which was previously detached. */
+HB_FUNC( LIBUSB_ATTACH_KERNEL_DRIVER )
 {
-  int success;
-  success = libusb_attach_kernel_driver( ( libusb_device_handle * ) hb_parnl( 1 ), hb_parni( 2 ) );
-  hb_retni( success );
+   int success;
+
+   success = libusb_attach_kernel_driver( ( libusb_device_handle * ) hb_parptr( 1 ), hb_parni( 2 ) );
+
+   hb_retni( success );
 }
 
-//-------------------------------------------------------------------------------
+/* ------------------------------ USB descriptors ------------------------------ */
 
-/*===============================================================================
-  |                                                                             |
-  |                               USB descriptors                               |
-  |                                                                             |
-  ===============================================================================*/
-
-/*    USB4H_GetDeviceDescriptor()
-
-      Get the USB descriptor for a given device.  */
-
-HB_FUNC( USB4H_GETDEVICEDESCRIPTOR )
+/* Get the USB descriptor for a given device. */
+HB_FUNC( LIBUSB_GET_DEVICE_DESCRIPTOR )
 {
-  struct libusb_device_descriptor desc;
-  libusb_device ** devicelist; 
-  int success; 
-  devicelist = ( libusb_device ** ) hb_parnl( 1 );
-  success = libusb_get_device_descriptor( devicelist[ hb_parni( 2 ) ], &desc );
-  hb_stornl( ( ULONG ) &desc, 3 );
-  hb_storni( desc.idVendor, 4 );
-  hb_storni( desc.idProduct, 5 );
-  hb_storni( (int ) desc.bNumConfigurations, 6 );
-  hb_retni( success );
+   struct libusb_device_descriptor  desc;
+   libusb_device **                 devicelist;
+   int                              success;
+
+   devicelist  = ( libusb_device ** ) hb_parptr( 1 );
+   success     = libusb_get_device_descriptor( devicelist[ hb_parni( 2 ) ], &desc );
+
+   hb_storptr( &desc, 3 );
+   hb_storni( desc.idVendor, 4 );
+   hb_storni( desc.idProduct, 5 );
+   hb_storni( ( int ) desc.bNumConfigurations, 6 );
+
+   hb_retni( success );
 }
 
-//-------------------------------------------------------------------------------
+/* --------------------------- synchronous device I/O -------------------------- */
 
-/*===============================================================================
-  |                                                                             |
-  |                            synchronous device I/O                           |
-  |                                                                             |
-  ===============================================================================*/
-
-/*    USB4H_BulkTransfer()
-
-      Perform a USB bulk transfer.  */
-
-HB_FUNC( USB4H_BULKTRANSFER )
+/* Perform a USB bulk transfer. */
+HB_FUNC( LIBUSB_BULK_TRANSFER )
 {
-  int success;
-  unsigned char data[512];
-  int transferred;
-  success = libusb_bulk_transfer( ( libusb_device_handle * ) hb_parnl( 1 ), ( unsigned char ) hb_parni( 2 ), data, 512, &transferred, hb_parni( 3 ) );
-  hb_storclen( data, ( long ) transferred, 4 );
-  hb_storni( transferred, 5 );
-  hb_retni( success );
+   int            success;
+   unsigned char  data[ 512 ];
+   int            transferred;
+
+   success = libusb_bulk_transfer( ( libusb_device_handle * ) hb_parptr( 1 ), ( unsigned char ) hb_parni( 2 ), data, sizeof( data ), &transferred, hb_parni( 3 ) );
+
+   hb_storclen( ( char * ) data, ( HB_ISIZ ) transferred, 4 );
+   hb_storni( transferred, 5 );
+
+   hb_retni( success );
 }
 
-//-------------------------------------------------------------------------------
-
-/*    USB4H_InterruptTransfer()
-
-      Perform a USB interrupt transfer.  */
-
-HB_FUNC( USB4H_INTERRUPTTRANSFER )
+/* Perform a USB interrupt transfer. */
+HB_FUNC( LIBUSB_INTERRUPT_TRANSFER )
 {
-  int success;
-  unsigned char data[512];
-  int transferred;
-  success = libusb_interrupt_transfer( ( libusb_device_handle * ) hb_parnl( 1 ), ( unsigned char ) hb_parni( 2 ), data, 512, &transferred, hb_parni( 3 ) );
-  hb_storclen( data, ( long ) transferred, 4 );
-  hb_storni( transferred, 5 );
-  hb_retni( success );
+   int            success;
+   unsigned char  data[ 512 ];
+   int            transferred;
+
+   success = libusb_interrupt_transfer( ( libusb_device_handle * ) hb_parptr( 1 ), ( unsigned char ) hb_parni( 2 ), data, sizeof( data ), &transferred, hb_parni( 3 ) );
+
+   hb_storclen( ( char * ) data, ( HB_ISIZ ) transferred, 4 );
+   hb_storni( transferred, 5 );
+
+   hb_retni( success );
 }
-
-

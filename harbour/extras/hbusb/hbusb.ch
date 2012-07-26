@@ -1,10 +1,10 @@
-// usb4h.ch
+/*
+ * $Id$
+ */
 
-// Header file for the USB4H library
+#define LIBUSB_UNREF_DEVICES        1
 
-#define USB4H_UNREF_DEVICES         1
+#define LIBUSB_KERNEL_HAS_INTERFACE 1
 
-#define USB4H_KERNEL_HAS_INTERFACE  1
-
-#define USB4H_ENDPOINT_IN         129  // should be 128 and then && 1 when required
-#define USB4H_ENDPOINT_OUT          0
+#define LIBUSB_ENDPOINT_IN          129 /* Should be 128 and then && 1 when required */
+#define LIBUSB_ENDPOINT_OUT         0

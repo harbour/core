@@ -1,110 +1,126 @@
-// testusb4h.prg
+/*
+ * $Id: array.prg 17867 2012-07-21 16:48:00Z vszakats $
+ */
 
-#include "usb4h.ch"  
+#include "simpleio.ch"
 
-FUNCTION Main()
+#include "hbusb.ch"
 
-  QOut( "Initialising USB4H" )
-  int_RetVal := USB4H_Init( 0 )
-  QQOut( " returns", int_RetVal )
+PROCEDURE Main()
 
-  int_DeviceList := 0
-  QOut( "Getting Device List" ) 
-  int_DeviceCount := USB4H_GetDeviceList( 0, @int_DeviceList ) 
-  QQOut( " returns", int_DeviceCount, "which is the number of USB devices found" )
-  QOut( "Device list address is", int_DeviceList )
+   LOCAL nRetVal
+   LOCAL pDeviceList
+   LOCAL nDeviceCount
+   LOCAL nDeviceNumber
+   LOCAL nBusNumber
+   LOCAL nDeviceAddress
+   LOCAL pDescriptor
+   LOCAL nVendorID
+   LOCAL nProductID
+   LOCAL nNumConfigurations
+   LOCAL pDeviceHandle
+   LOCAL cData
+   LOCAL nLength
+   LOCAL tmp
 
-  FOR int_DeviceNumber = 0 TO int_DeviceCount - 1
-    int_BusNumber := USB4H_GetBusNumber( int_DeviceList, int_DeviceNumber )
-    QOut( "Bus Number:", LTrim( Str( int_BusNumber ) ) )
-    int_DeviceAddress := USB4H_GetDeviceAddress( int_DeviceList, int_DeviceNumber )
-    QQOut( "   Address:", LTrim( Str( int_DeviceAddress ) ) )
-    int_Descriptor := 0
-    int_VendorID   := 0
-    int_ProductID  := 0
-    int_NumConfigurations := 0
-    int_RetVal := USB4H_GetDeviceDescriptor( int_DeviceList, int_DeviceNumber, @int_Descriptor, @int_VendorID, @int_ProductID, @int_NumConfigurations )
-    // QOut( int_Descriptor )
-    QQOut( "  Vendor:", LTrim( Str( int_VendorID ) ) )
-    QQOut( "  Product:", LTrim( Str( int_ProductID ) ) )
-    QQOut( "  Config Count:", LTrim( Str( int_NumConfigurations ) ) )
-  NEXT
+   ? "Initialising libusb"
+   nRetVal := libusb_init()
+   ?? " returns", nRetVal
 
-  QOut( "Freeing Device List" )
-  USB4H_FreeDeviceList( 0 )
+   ? "Getting Device List"
+   nDeviceCount := libusb_get_device_list( NIL, @pDeviceList )
+   ?? " returns", nDeviceCount, "which is the number of USB devices found"
+   ? "Device list address is", pDeviceList
 
-  QOut()
-  QOut( "Opening Device" )
-  int_DeviceHandle := USB4H_OpenDeviceWithVIDPID( 0, 1523, 255 )
-  QOut( "returns", int_DeviceHandle )
+   FOR nDeviceNumber := 0 TO nDeviceCount - 1
+      nBusNumber := libusb_get_bus_number( pDeviceList, nDeviceNumber )
+      ? "Bus Number:", hb_ntos( nBusNumber )
+      nDeviceAddress := libusb_get_device_address( pDeviceList, nDeviceNumber )
+      ?? "   Address:", hb_ntos( nDeviceAddress )
+      nRetVal := libusb_get_device_descriptor( pDeviceList, nDeviceNumber, @pDescriptor, @nVendorID, @nProductID, @nNumConfigurations )
+      ?? "  return:", hb_ntos( nRetVal )
+      ?? "  Vendor:", hb_ntos( nVendorID )
+      ?? "  Product:", hb_ntos( nProductID )
+      ?? "  Config Count:", hb_ntos( nNumConfigurations )
+   NEXT
 
-  IF int_DeviceHandle < 1
-    QOut( "Cannot open the device" )
+   ? "Freeing Device List"
+   libusb_free_device_list( NIL )
+
+   ?
+   ? "Opening Device"
+   pDeviceHandle := libusb_open_device_with_vid_pid( NIL, 1523, 255 )
+   ? "returns", pDeviceHandle
+
+   IF Empty( pDeviceHandle )
+      ? "Cannot open the device"
    ELSE
-    QOut( "Testing for kernel having claimed interface" )
-    int_RetVal := USB4H_KernelDriverActive( int_DeviceHandle, 0 )
-    QOut( "returns", int_RetVal )
+      ? "Testing for kernel having claimed interface"
+      nRetVal := libusb_kernel_driver_active( pDeviceHandle, 0 )
+      ? "returns", nRetVal
 
-    IF int_RetVal == USB4H_KERNEL_HAS_INTERFACE
-      QOut( "Kernel has interface" )
-      QOut( "Detaching Kernel from interface" )
-      int_RetVal := USB4H_DetachKernelDriver( int_DeviceHandle, 0 )
-      QOut( "returns", int_RetVal )
-    ENDIF
-    QOut( "Claiming Interface" )
-    int_RetVal := USB4H_ClaimInterface( int_DeviceHandle, 0 )
-    QOut( "returns", int_RetVal )
-
-    str_Data := Space( 512 )
-    int_Length := 0
-    QOut( "Querying device" )
-    FOR jj = 1 TO 500
-      int_RetVal := USB4H_BulkTransfer( int_DeviceHandle, USB4H_ENDPOINT_IN, 100, @str_Data, @int_Length )
-      IF Len( str_Data ) > 0
-        SWITCH Asc( SubStr( str_Data, -2, 1 ) )
-          CASE 0
-            QOut( "Clear" )
-            EXIT
-          CASE 1
-            QOut( "Left Pedal" )
-            EXIT  
-          CASE 2 
-            QOut( "Middle Pedal" )
-            EXIT
-          CASE 3
-            QOut( "Left and Middle Pedals" )  
-            EXIT
-          CASE 4 
-            QOut( "Right Pedal" )
-            EXIT
-          CASE 5
-            QOut( "Left and Right Pedals" )
-            EXIT
-          CASE 6
-            QOut( "Middle and Right Pedals" )
-            EXIT
-          CASE 7
-            QOut( "All Three Pedals" )
-            EXIT
-          OTHERWISE
-            QOut( "Error" )   
-        ENDSWITCH
+      IF nRetVal == LIBUSB_KERNEL_HAS_INTERFACE
+         ? "Kernel has interface"
+         ? "Detaching Kernel from interface"
+         nRetVal := libusb_detach_kernel_driver( pDeviceHandle, 0 )
+         ? "returns", nRetVal
       ENDIF
-    NEXT
+      ? "Claiming Interface"
+      nRetVal := libusb_claim_interface( pDeviceHandle, 0 )
+      ? "returns", nRetVal
 
-    QOut( "Releasing Interface" )
-    int_RetVal := USB4H_ReleaseInterface( int_DeviceHandle, 0 )
-    QOut( "returns", int_RetVal )
+      cData := Space( 512 )
+      nLength := 0
+      ? "Querying device"
+      FOR tmp := 1 TO 500
+         nRetVal := libusb_bulk_transfer( pDeviceHandle, LIBUSB_ENDPOINT_IN, 100, @cData, @nLength )
+         HB_SYMBOL_UNUSED( nRetVal )
+         IF hb_BLen( cData ) > 0
+            SWITCH hb_BCode( hb_BSubStr( cData, -2, 1 ) )
+            CASE 0
+               ? "Clear"
+               EXIT
+            CASE 1
+               ? "Left Pedal"
+               EXIT
+            CASE 2
+               ? "Middle Pedal"
+               EXIT
+            CASE 3
+               ? "Left and Middle Pedals"
+               EXIT
+            CASE 4
+               ? "Right Pedal"
+               EXIT
+            CASE 5
+               ? "Left and Right Pedals"
+               EXIT
+            CASE 6
+               ? "Middle and Right Pedals"
+               EXIT
+            CASE 7
+               ? "All Three Pedals"
+               EXIT
+            OTHERWISE
+               ? "Error"
+            ENDSWITCH
+         ENDIF
+      NEXT
 
-    QOut( "Reattaching Kernel to interface" )
-    int_RetVal := USB4H_AttachKernelDriver( int_DeviceHandle, 0 )
-    QOut( "returns", int_RetVal )
+      ? "Releasing Interface"
+      nRetVal := libusb_release_interface( pDeviceHandle, 0 )
+      ? "returns", nRetVal
 
-  ENDIF
-  QOut( "Closing Device" )
-  USB4H_Close( int_DeviceHandle )
+      ? "Reattaching Kernel to interface"
+      nRetVal := libusb_attach_kernel_driver( pDeviceHandle, 0 )
+      ? "returns", nRetVal
+   ENDIF
 
-  QOut( "Deinitialising USB4H" )
-  USB4H_Exit()
-  QQOut( " done" )
-  QUIT
+   ? "Closing Device"
+   libusb_close( pDeviceHandle )
+
+   ? "Deinitialising libusb"
+   libusb_exit()
+   ?? " done"
+
+   RETURN
