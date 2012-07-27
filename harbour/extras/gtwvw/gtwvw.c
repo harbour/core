@@ -498,7 +498,7 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_pWvwData->s_pWindows[0]->hCompDC = CreateCompatibleDC( s_pWvwData->s_pWindows[0]->hdc );
 
    /*
-      Ap¢s o Device Context e as PENs e BRUSHes criados, atribuo uma PEN e um BRUSH qualquer apenas para pegar
+      Apos o Device Context e as PENs e BRUSHes criados, atribuo uma PEN e um BRUSH qualquer apenas para pegar
       o handle original da PEN e BRUSH do Device Context
    */
    s_pWvwData->s_sApp->OriginalPen   = (HPEN) SelectObject( s_pWvwData->s_pWindows[0]->hdc, (HPEN) s_pWvwData->s_sApp->penWhite );
