@@ -40,14 +40,14 @@
  *      This function determines the type of a field, designated by its
  *      number.
  *  $EXAMPLES$
- *      FUNCTION Main()
- *      LOCAL i
- *      USE Tests NEW
- *      FOR i = 1 TO FCOUNT()
- *        ? FieldType( i )
- *      NEXT
- *      USE
- *      RETURN NIL
+ *      PROCEDURE Main()
+ *         LOCAL i
+ *         USE tests NEW
+ *         FOR i := 1 TO FCount()
+ *            ? FieldType( i )
+ *         NEXT
+ *         USE
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -77,13 +77,13 @@
  *      This function determines the size of a field, designated by its number.
  *  $EXAMPLES$
  *      FUNCTION Main()
- *      LOCAL i
- *      USE Tests NEW
- *      FOR i = 1 TO FCOUNT()
- *        ? FieldSize( i )
- *      NEXT
- *      USE
- *      RETURN NIL
+ *         LOCAL i
+ *         USE tests NEW
+ *         FOR i := 1 TO FCount()
+ *            ? FieldSize( i )
+ *         NEXT
+ *         USE
+ *         RETURN
  *  </fixed>
  *  $STATUS$
  *      R
@@ -115,13 +115,13 @@
  *      This function determines the number of decimal places of a given numeric field.
  *  $EXAMPLES$
  *      FUNCTION Main()
- *      LOCAL i
- *      USE Tests NEW
- *      FOR i = 1 TO FCOUNT()
- *        ? FieldDeci( i )
- *      NEXT
- *      USE
- *      RETURN NIL
+ *         LOCAL i
+ *         USE tests NEW
+ *         FOR i := 1 TO FCount()
+ *            ? FieldDeci( i )
+ *         NEXT
+ *         USE
+ *         RETURN
  *  </fixed>
  *  $STATUS$
  *      R

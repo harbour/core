@@ -38,19 +38,19 @@
  *         WriteLink(<cLink>,<cName>)  Write a link to another topic   </par>
  *         WriteText(<cText>)   Write any text   </par>
  *  $EXAMPLES$
- *      FUNCTION MAIN()
+ *      PROCEDURE Main()
+ *         LOCAL oHtm
  *
- *      LOCAL oHtm
+ *         oHtm := THTML():New( "www\harbour.html" )
+ *         oHtm:WriteTitle( "Harbour Reference Guide" )
+ *         oHtm:WritePar( "HARBOUR" )
+ *         oHtm:WriteLink( "OverView" )
+ *         oHtm:WriteLink( "License" )
+ *         oHtm:WriteLink( "http://www.gnu.org/copyleft/gpl" )
+ *         oHtm:WritePar( "See the Links Above" )
+ *         oHtm:Close()
  *
- *      oHtm := THTML():New( "www\harbour.html" )
- *      oHtm:WriteTitle( "Harbour Reference Guide" )
- *      oHtm:WritePar( "HARBOUR" )
- *      oHtm:WriteLink( "OverView" )
- *      oHtm:WriteLink( "License" )
- *      oHtm:WriteLink( "http://www.gnu.org/copyleft/gpl" )
- *      oHtm:WritePar( "See the Links Above" )
- *      oHtm:Close()
- *      RETURN Nil
+ *         RETURN
  *  </par>
  *  $STATUS$
  *      R
@@ -89,19 +89,19 @@
  *         ScanLink(<clink>)     Scan the aLinkRef array for a valid topic   </par>
  *         DosToOs2Text(<cText>) Convert a Dos string to a OS/2 String   </par>
  *  $EXAMPLES$
- *      FUNCTION MAIN()
+ *      PROCEDURE Main()
+ *         LOCAL oNg
  *
- *      LOCAL oNg
+ *         oNg := TOs2():New( "ngi\harbour.ngi" )
+ *         oNg:WriteTitle( "Harbour Reference Guide" )
+ *         oNg:WritePar( "HARBOUR" )
+ *         oNg:WriteLink( "OverView" )
+ *         oNg:WriteLink( "License" )
  *
- *      oNg := TOs2():New( "ngi\harbour.ngi" )
- *      oNg:WriteTitle( "Harbour Reference Guide" )
- *      oNg:WritePar( "HARBOUR" )
- *      oNg:WriteLink( "OverView" )
- *      oNg:WriteLink( "License" )
+ *         oNg:WritePar( "See the Links Above" )
+ *         oNg:Close()
  *
- *      oNg:WritePar( "See the Links Above" )
- *      oNg:Close()
- *      RETURN Nil
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -137,19 +137,19 @@
  *         WriteParBold(<cPar>) Same as WritePar(), but the text is bold   </par>
  *         WriteLink(<cLink>)   Write a link to another topic   </par>
  *  $EXAMPLES$
- *      FUNCTION MAIN()
+ *      PROCEDURE Main()
+ *         LOCAL oNg
  *
- *      LOCAL oNg
+ *         oNg := TNortonGuide():New( "ngi\harbour.ngi" )
+ *         oNg:WriteTitle( "Harbour Reference Guide" )
+ *         oNg:WritePar( "HARBOUR" )
+ *         oNg:WriteLink( "OverView" )
+ *         oNg:WriteLink( "License" )
  *
- *      oNg := TNortonGuide():New( "ngi\harbour.ngi" )
- *      oNg:WriteTitle( "Harbour Reference Guide" )
- *      oNg:WritePar( "HARBOUR" )
- *      oNg:WriteLink( "OverView" )
- *      oNg:WriteLink( "License" )
+ *         oNg:WritePar( "See the Links Above" )
+ *         oNg:Close()
  *
- *      oNg:WritePar( "See the Links Above" )
- *      oNg:Close()
- *      RETURN Nil
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -187,20 +187,20 @@
  *         WriteHeader()        Write the RTF header   </par>
  *         EndPar()             Write the end paragraph delimiter   </par>
  *  $EXAMPLES$
- *      FUNCTION MAIN()
+ *      PROCEDURE Main()
+ *         LOCAL oRtf
  *
- *      LOCAL oRtf
+ *         oRtf := TRtf():New( "rtf\harbour.rtf" )
+ *         oRtf:WriteHeader()
+ *         oRtf:WriteTitle( "Harbour Reference Guide" )
+ *         oRtf:WritePar( "HARBOUR" ):Endpar()
+ *         oRtf:WriteLink( "OverView" )
+ *         oRtf:WriteLink( "License" )
  *
- *      oRtf := TRtf():New( "rtf\harbour.rtf" )
- *      oRtf:WriteHeader()
- *      oRtf:WriteTitle( "Harbour Reference Guide" )
- *      oRtf:WritePar( "HARBOUR" ):Endpar()
- *      oRtf:WriteLink( "OverView" )
- *      oRtf:WriteLink( "License" )
+ *         oRtf:WritePar( "See the Links Above" ):EndPar()
+ *         oRtf:Close()
  *
- *      oRtf:WritePar( "See the Links Above" ):EndPar()
- *      oRtf:Close()
- *      RETURN Nil
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -237,19 +237,19 @@
  *         WriteLink(<cLink>)   Write a link to another topic   </par>
  *         WriteText()          Writes text without formating   </par>
  *  $EXAMPLES$
- *      FUNCTION MAIN()
+ *      PROCEDURE Main()
+ *         LOCAL oTroff
  *
- *      LOCAL oTroff
- *      oTroff := TTroff():New( "tr\harbour.ngi" )
- *      oTroff:WriteTitle( "Harbour Reference Guide" )
- *      oTroff:WritePar( "HARBOUR" )
- *      oTroff:WriteLink( "OverView" )
- *      oTroff:WriteLink( "License" )
+ *         oTroff := TTroff():New( "tr\harbour.ngi" )
+ *         oTroff:WriteTitle( "Harbour Reference Guide" )
+ *         oTroff:WritePar( "HARBOUR" )
+ *         oTroff:WriteLink( "OverView" )
+ *         oTroff:WriteLink( "License" )
  *
- *      oTroff:WritePar( "See the Links Above" )
- *      oTroff:Close()
+ *         oTroff:WritePar( "See the Links Above" )
+ *         oTroff:Close()
  *
- *      RETURN Nil
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

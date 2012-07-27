@@ -32,8 +32,8 @@
  *      selected current language.
  *  $EXAMPLES$
  *      aMonths := AMonths()
- *      ? aMonths[1] -> January
- *      ? aMonths[1] -> Enero (if the selected language is Spanish)
+ *      ? aMonths[ 1 ] // -> January
+ *      ? aMonths[ 1 ] // -> Enero (if the selected language is Spanish)
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -65,8 +65,8 @@
  *      selected current language.
  *  $EXAMPLES$
  *      aDays := ADays()
- *      ? aDays[1] -> Sunday
- *      ? aDays[1] -> Domingo (if the selected language is Spanish)
+ *      ? aDays[ 1 ] // -> Sunday
+ *      ? aDays[ 1 ] // -> Domingo (if the selected language is Spanish)
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -97,8 +97,8 @@
  *      This function returns true if the given date is a leap year and
  *      false if isn't.
  *  $EXAMPLES$
- *      ? IsLeapYear( DToC( "01/01/2000" ) ) -> .t.
- *      ? IsLeapYear( DToC( "01/01/2001" ) ) -> .f.
+ *      ? IsLeapYear( hb_SToD( "20000101" ) ) // -> .T.
+ *      ? IsLeapYear( hb_SToD( "20010101" ) ) // -> .F.
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -128,8 +128,8 @@
  *  $DESCRIPTION$
  *      This function returns the number of days of the given date month.
  *  $EXAMPLES$
- *      ? DaysInMonth( DToC( "01/01/2000" ) ) -> 31
- *      ? DaysInMonth( DToC( "02/01/2000" ) ) -> 29
+ *      ? DaysInMonth( hb_SToD( "20000101" ) ) // -> 31
+ *      ? DaysInMonth( hb_SToD( "20000201" ) ) // -> 29
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -159,8 +159,9 @@
  *  $DESCRIPTION$
  *      This function returns the last day of a given month date.
  *  $EXAMPLES$
- *      ? EOM( DToC( "01/01/2000" ) ) -> "01/31/2000"
- *      ? EOM( DToC( "02/01/2000" ) ) -> "01/29/2000"
+ *      SET DATE ANSI
+ *      ? EOM( hb_SToD( "20000101" ) ) // -> "2000.01.31"
+ *      ? EOM( hb_SToD( "20000201" ) ) // -> "2000.02.29"
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -190,8 +191,9 @@
  *  $DESCRIPTION$
  *      This function returns the first day of a given month date.
  *  $EXAMPLES$
- *      ? BOM( DToC( "01/25/2000" ) ) -> "01/01/2000"
- *      ? BOM( DToC( "02/24/2000" ) ) -> "02/01/2000"
+ *      SET DATE ANSI
+ *      ? BOM( hb_SToD( "20000125" ) ) // -> "2000.01.01"
+ *      ? BOM( hb_SToD( "20000224" ) ) // -> "2000.02.01"
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -221,8 +223,8 @@
  *  $DESCRIPTION$
  *      This function returns the day number of the year for a given date.
  *  $EXAMPLES$
- *      ? DOY( DToC( "01/31/2000" ) ) -> 31
- *      ? DOY( DToC( "02/20/2000" ) ) -> 51
+ *      ? DOY( hb_SToD( "20000131" ) ) // -> 31
+ *      ? DOY( hb_SToD( "20000220" ) ) // -> 51
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -255,8 +257,8 @@
  *      It returns the week number in ISO format ( range 0 - 52, by default
  *      or passing TRUE as second parameter) or 1 - 52 if lIso is FALSE.
  *  $EXAMPLES$
- *      ? WOY( DToC( "01/31/2000" ) ) -> 3
- *      ? WOY( DToC( "01/31/2000" ), FALSE ) -> 4
+ *      ? WOY( hb_SToD( "20000131" ) ) // -> 3
+ *      ? WOY( hb_SToD( "20000131" ), .F. ) // -> 4
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -286,8 +288,9 @@
  *  $DESCRIPTION$
  *      This function returns the last date of a given year date.
  *  $EXAMPLES$
- *      ? EOY( DToC( "01/01/2000" ) ) -> "31/12/2000"
- *      ? EOY( DToC( "01/01/2001" ) ) -> "31/12/2001"
+ *      SET DATE ANSI
+ *      ? EOY( hb_SToD( "20000101" ) ) // -> "2000.12.31"
+ *      ? EOY( hb_SToD( "20010101" ) ) // -> "2001.12.31"
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -317,8 +320,9 @@
  *  $DESCRIPTION$
  *      This function returns the first date of a given year date.
  *  $EXAMPLES$
- *      ? BOY( DToC( "01/25/2000" ) ) -> "01/01/2000"
- *      ? BOY( DToC( "02/24/2001" ) ) -> "01/01/2001"
+ *      SET DATE ANSI
+ *      ? BOY( hb_SToD( "20000125" ) ) // -> "2000.01.01"
+ *      ? BOY( hb_SToD( "20010224" ) ) // -> "2001.01.01"
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
