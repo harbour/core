@@ -65,27 +65,21 @@
  *
  *         ErrorMsg([<cPre>]) Returns a formatted error message.   </par>
  *  $EXAMPLES$
- *      #ifdef __HARBOUR__
- *       #define NEW_LINE CHR( 10 )
- *      #else
- *       #define NEW_LINE CHR( 13 ) + CHR( 10 )
- *      #endif
- *      #include "fileio.ch"
- *
  *      PROCEDURE Main( cFile )
- *      LOCAL oFile := TFileRead():New( cFile )
+ *         LOCAL oFile := TFileRead():New( cFile )
  *
  *         oFile:Open()
  *         IF oFile:Error()
- *            QOUT( oFile:ErrorMsg( "FileRead: " ) )
+ *            OutStd( oFile:ErrorMsg( "FileRead: " ) )
+ *            OutStd( hb_eol() )
  *         ELSE
- *            WHILE oFile:MoreToRead()
- *               OUTSTD( oFile:ReadLine() )
- *               OUTSTD( NEW_LINE )
- *            END WHILE
+ *            DO WHILE oFile:MoreToRead()
+ *               OutStd( oFile:ReadLine() )
+ *               OutStd( hb_eol() )
+ *            ENDDO
  *            oFile:Close()
- *         END IF
- *      QUIT
+ *         ENDIF
+ *         RETURN
  *  $TESTS$
  *      See Examples
  *  $STATUS$
