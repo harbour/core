@@ -25,23 +25,23 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC hb_tinymt32_generate_32double
-DYNAMIC hb_tinymt32_generate_float
-DYNAMIC hb_tinymt32_generate_float01
-DYNAMIC hb_tinymt32_generate_float12
-DYNAMIC hb_tinymt32_generate_floatoc
-DYNAMIC hb_tinymt32_generate_floatoo
-DYNAMIC hb_tinymt32_generate_uint32
-DYNAMIC hb_tinymt32_init
-DYNAMIC hb_tinymt32_init_by_array
-DYNAMIC hb_tinymt64_generate_double
-DYNAMIC hb_tinymt64_generate_double01
-DYNAMIC hb_tinymt64_generate_double12
-DYNAMIC hb_tinymt64_generate_doubleoc
-DYNAMIC hb_tinymt64_generate_doubleoo
-DYNAMIC hb_tinymt64_generate_uint64
-DYNAMIC hb_tinymt64_init
-DYNAMIC hb_tinymt64_init_by_array
+DYNAMIC tinymt32_generate_32double
+DYNAMIC tinymt32_generate_float
+DYNAMIC tinymt32_generate_float01
+DYNAMIC tinymt32_generate_float12
+DYNAMIC tinymt32_generate_floatOC
+DYNAMIC tinymt32_generate_floatOO
+DYNAMIC tinymt32_generate_uint32
+DYNAMIC tinymt32_init
+DYNAMIC tinymt32_init_by_array
+DYNAMIC tinymt64_generate_double
+DYNAMIC tinymt64_generate_double01
+DYNAMIC tinymt64_generate_double12
+DYNAMIC tinymt64_generate_doubleOC
+DYNAMIC tinymt64_generate_doubleOO
+DYNAMIC tinymt64_generate_uint64
+DYNAMIC tinymt64_init
+DYNAMIC tinymt64_init_by_array
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTINYMT__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

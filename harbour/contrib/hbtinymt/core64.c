@@ -64,7 +64,7 @@ typedef struct
 static HB_TSD_NEW( s_tinymtData, sizeof( HB_TINYMTDATA ), NULL, NULL );
 
 /* Syntax: HB_TINYMT64_INIT( <nVector1>, <nVector2>, <nVector3>, [<nSeed>] ) -> <lSuccess> */
-HB_FUNC( HB_TINYMT64_INIT )
+HB_FUNC( TINYMT64_INIT )
 {
    if( hb_pcount() >= 3 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
@@ -85,7 +85,7 @@ HB_FUNC( HB_TINYMT64_INIT )
 }
 
 /* Syntax: HB_TINYMT64_INIT_BY_ARRAY( { <nVector1>, <nVector2>, <nVector3> }, [<nSeed>], [<nKeyLength>] ) -> <lSuccess> */
-HB_FUNC( HB_TINYMT64_INIT_BY_ARRAY )
+HB_FUNC( TINYMT64_INIT_BY_ARRAY )
 {
    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
@@ -109,42 +109,42 @@ HB_FUNC( HB_TINYMT64_INIT_BY_ARRAY )
       hb_retl( HB_FALSE );
 }
 
-HB_FUNC( HB_TINYMT64_GENERATE_UINT64 )
+HB_FUNC( TINYMT64_GENERATE_UINT64 )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
    hb_retnint( tinymt64_generate_uint64( &tinymtData->tinymt ) );
 }
 
-HB_FUNC( HB_TINYMT64_GENERATE_DOUBLE )
+HB_FUNC( TINYMT64_GENERATE_DOUBLE )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
    hb_retnd( tinymt64_generate_double( &tinymtData->tinymt ) );
 }
 
-HB_FUNC( HB_TINYMT64_GENERATE_DOUBLE01 )
+HB_FUNC( TINYMT64_GENERATE_DOUBLE01 )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
    hb_retnd( tinymt64_generate_double01( &tinymtData->tinymt ) );
 }
 
-HB_FUNC( HB_TINYMT64_GENERATE_DOUBLE12 )
+HB_FUNC( TINYMT64_GENERATE_DOUBLE12 )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
    hb_retnd( tinymt64_generate_double12( &tinymtData->tinymt ) );
 }
 
-HB_FUNC( HB_TINYMT64_GENERATE_DOUBLEOC )
+HB_FUNC( TINYMT64_GENERATE_DOUBLEOC )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
    hb_retnd( tinymt64_generate_doubleOC( &tinymtData->tinymt ) );
 }
 
-HB_FUNC( HB_TINYMT64_GENERATE_DOUBLEOO )
+HB_FUNC( TINYMT64_GENERATE_DOUBLEOO )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 

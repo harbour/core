@@ -63,7 +63,7 @@ typedef struct
 static HB_TSD_NEW( s_tinymtData, sizeof( HB_TINYMTDATA ), NULL, NULL );
 
 /* Syntax: HB_TINYMT32_INIT( <nVector1>, <nVector2>, <nVector3>, [<nSeed>] ) -> <lSuccess> */
-HB_FUNC( HB_TINYMT32_INIT )
+HB_FUNC( TINYMT32_INIT )
 {
    if( hb_pcount() >= 3 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
    {
@@ -84,7 +84,7 @@ HB_FUNC( HB_TINYMT32_INIT )
 }
 
 /* Syntax: HB_TINYMT32_INIT_BY_ARRAY( { <nVector1>, <nVector2>, <nVector3> }, [<nSeed>], [<nKeyLength>] ) -> <lSuccess> */
-HB_FUNC( HB_TINYMT32_INIT_BY_ARRAY )
+HB_FUNC( TINYMT32_INIT_BY_ARRAY )
 {
    PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
 
@@ -108,49 +108,49 @@ HB_FUNC( HB_TINYMT32_INIT_BY_ARRAY )
       hb_retl( HB_FALSE );
 }
 
-HB_FUNC( HB_TINYMT32_GENERATE_UINT32 )
+HB_FUNC( TINYMT32_GENERATE_UINT32 )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
    hb_retnint( tinymt32_generate_uint32( &tinymtData->tinymt ) );
 }
 
-HB_FUNC( HB_TINYMT32_GENERATE_FLOAT )
+HB_FUNC( TINYMT32_GENERATE_FLOAT )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
    hb_retnd( tinymt32_generate_float( &tinymtData->tinymt ) );
 }
 
-HB_FUNC( HB_TINYMT32_GENERATE_FLOAT01 )
+HB_FUNC( TINYMT32_GENERATE_FLOAT01 )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
    hb_retnd( tinymt32_generate_float01( &tinymtData->tinymt ) );
 }
 
-HB_FUNC( HB_TINYMT32_GENERATE_FLOAT12 )
+HB_FUNC( TINYMT32_GENERATE_FLOAT12 )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
    hb_retnd( tinymt32_generate_float12( &tinymtData->tinymt ) );
 }
 
-HB_FUNC( HB_TINYMT32_GENERATE_FLOATOC )
+HB_FUNC( TINYMT32_GENERATE_FLOATOC )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
    hb_retnd( tinymt32_generate_floatOC( &tinymtData->tinymt ) );
 }
 
-HB_FUNC( HB_TINYMT32_GENERATE_FLOATOO )
+HB_FUNC( TINYMT32_GENERATE_FLOATOO )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
    hb_retnd( tinymt32_generate_floatOO( &tinymtData->tinymt ) );
 }
 
-HB_FUNC( HB_TINYMT32_GENERATE_32DOUBLE )
+HB_FUNC( TINYMT32_GENERATE_32DOUBLE )
 {
    PHB_TINYMTDATA tinymtData = ( PHB_TINYMTDATA ) hb_stackGetTSD( &s_tinymtData );
 
