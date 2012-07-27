@@ -504,7 +504,7 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_pWvwData->s_sApp->OriginalPen   = (HPEN) SelectObject( s_pWvwData->s_pWindows[0]->hdc, (HPEN) s_pWvwData->s_sApp->penWhite );
    s_pWvwData->s_sApp->OriginalBrush = (HBRUSH) SelectObject( s_pWvwData->s_pWindows[0]->hdc, (HBRUSH) s_pWvwData->s_sApp->currentBrush );
    /*
-      E, logo ap¢s, restaura aos valores originais mantendo em s_pWvwData->s_sApp os valores salvos para restaura‡Æo
+      E, logo apos, restaura aos valores originais mantendo em s_pWvwData->s_sApp os valores salvos para restauracao
       quando for utilizar DeleteObject()
    */
    SelectObject( s_pWvwData->s_pWindows[0]->hdc, (HPEN) s_pWvwData->s_sApp->OriginalPen );
@@ -572,9 +572,9 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
          DeleteObject( ( HFONT ) pWindowData->hFont );
 
          /*
-           Faz apenas para a janela 0 (a primeira) j  que existe, na cria‡Æo das mesmas, uma condi‡Æo para que
+           Faz apenas para a janela 0 (a primeira) ja que existe, na criacao das mesmas, uma condicao para que
            apenas a primeira seja criada
-           Obs: A exclusÆo desses objetos precisa ocorrer antes da Release do Device Context
+           Obs: A exclusao desses objetos precisa ocorrer antes da Release do Device Context
          */
          if (j==0)
          {
@@ -585,7 +585,7 @@ static void hb_gt_wvw_Exit( PHB_GT pGT )
             SelectObject( s_pWvwData->s_pWindows[0]->hdc, (HBRUSH) s_pWvwData->s_sApp->OriginalBrush );
 
             /*
-             Com PENs e BRUSHes liberadas, efetua exclusÆo
+             Com PENs e BRUSHes liberadas, efetua exclusao
             */
             if (s_pWvwData->s_sApp->penWhite)
             {
@@ -5806,11 +5806,11 @@ static UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int iRow1, int iCol1, int 
     s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows-1 ]->hIcon = NULL;
 
     /*
-       Ap¢s o Device Context e as PENs e BRUSHes criados, atribuo uma PEN e um BRUSH qualquer apenas para pegar
+       Apos o Device Context e as PENs e BRUSHes criados, atribuo uma PEN e um BRUSH qualquer apenas para pegar
        o handle original da PEN e BRUSH do Device Context
     */
     /*
-       E, logo ap¢s, restaura aos valores originais mantendo em s_pWvwData->s_sApp os valores salvos para restaura‡Æo
+       E, logo apos, restaura aos valores originais mantendo em s_pWvwData->s_sApp os valores salvos para restauracao
        quando for utilizar DeleteObject()
     */
     SelectObject( s_pWvwData->s_pWindows[s_pWvwData->s_usNumWindows-1]->hdc, (HPEN) s_pWvwData->s_sApp->OriginalPen );

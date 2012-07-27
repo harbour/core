@@ -1938,7 +1938,7 @@ HB_FUNC( WVW_DRAWRECTANGLE )
             usLeft   = ( USHORT )hb_parni( 3 ),
             usBottom = ( USHORT )hb_parni( 4 ),
             usRight  = ( USHORT )hb_parni( 5 );
-   // Ref.: 28454 - M rson de Paula - 11/27/2007
+   // Ref.: 28454 - Marson de Paula - 11/27/2007
    BOOL     bUsaCurrentPen = ( HB_ISNIL( 7 ) ? TRUE : hb_parl( 7 ) );
 
    iOffTop    = !HB_ISNIL( 6 ) ? hb_parvni( 6,1 ) : 0 ;
@@ -1963,7 +1963,7 @@ HB_FUNC( WVW_DRAWRECTANGLE )
    iRight  = xy.x-1 + iOffRight;
 
    SelectObject( pWindowData->hdc, s_sApp->currentBrush );
-   // Ref.: 28454 - M rson de Paula - 11/27/2007
+   // Ref.: 28454 - Marson de Paula - 11/27/2007
    if ( bUsaCurrentPen )
    {
       SelectObject( pWindowData->hdc, s_sApp->currentPen );
