@@ -8705,35 +8705,6 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
 
    RETURN
 
-/* Public functions accessible for plugins (compatibility) */
-
-#if defined( HB_LEGACY_LEVEL4 )
-
-FUNCTION hbmk2_FindInPath( ... )                    ; RETURN hbmk_FindInPath( ... )
-FUNCTION hbmk2_PathSepToForward( ... )              ; RETURN hbmk_PathSepToForward( ... )
-FUNCTION hbmk2_PathSepToSelf( ... )                 ; RETURN hbmk_PathSepToSelf( ... )
-FUNCTION hbmk2_FNameDirExtSet( ... )                ; RETURN hbmk_FNameDirExtSet( ... )
-FUNCTION hbmk2_FNameEscape( ... )                   ; RETURN hbmk_FNameEscape( ... )
-FUNCTION hbmk2_FNameToSymbol( ... )                 ; RETURN hbmk_FNameToSymbol( ... )
-FUNCTION hbmk2_StrStripQuote( ... )                 ; RETURN hbmk_StrStripQuote( ... )
-FUNCTION hbmk2_OutStdRaw( ... )                     ; RETURN hbmk_OutStdRaw( ... )
-FUNCTION hbmk2_OutErrRaw( ... )                     ; RETURN hbmk_OutErrRaw( ... )
-FUNCTION hbmk2_ArrayToList( ... )                   ; RETURN hbmk_ArrayToList( ... )
-FUNCTION hbmk2_PathFromWorkdirToCWD( ... )          ; RETURN hbmk_PathFromWorkdirToCWD( ... )
-FUNCTION hbmk2_Macro( ... )                         ; RETURN hbmk_Macro( ... )
-FUNCTION hbmk2_OutStd( ... )                        ; RETURN hbmk_OutStd( ... )
-FUNCTION hbmk2_OutErr( ... )                        ; RETURN hbmk_OutErr( ... )
-FUNCTION hbmk2_PathSepToTarget( ... )               ; RETURN hbmk_PathSepToTarget( ... )
-FUNCTION hbmk2_AddInput_PRG( ... )                  ; RETURN hbmk_AddInput_PRG( ... )
-FUNCTION hbmk2_AddInput_C( ... )                    ; RETURN hbmk_AddInput_C( ... )
-FUNCTION hbmk2_AddInput_CPP( ... )                  ; RETURN hbmk_AddInput_CPP( ... )
-FUNCTION hbmk2_AddInput_RC( ... )                   ; RETURN hbmk_AddInput_RC( ... )
-FUNCTION hbmk2_AddInput_OBJ( ... )                  ; RETURN hbmk_AddInput_OBJ( ... )
-FUNCTION hbmk2_AddInput_INSTFILE( ... )             ; RETURN hbmk_AddInput_INSTFILE( ... )
-FUNCTION hbmk2_Register_Input_File_Extension( ... ) ; RETURN hbmk_Register_Input_File_Extension( ... )
-
-#endif
-
 /* Public functions accessible for plugins */
 
 FUNCTION hbmk_FindInPath( ... )       ; RETURN FindInPath( ... )
