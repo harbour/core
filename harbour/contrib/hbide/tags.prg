@@ -226,6 +226,7 @@ FUNCTION Summarize( aText, cComments, aSumData, nFileType )
                LEFTEQUAL( cLine, 'EXIT FUNC'         ) .OR. ;
                LEFTEQUAL( cLine, 'EXIT PROC'         ) .OR. ;
                LEFTEQUAL( cLine, 'CLASS '            ) .OR. ;
+               LEFTEQUAL( cLine, 'CREATE CLASS '     ) .OR. ;
                LEFTEQUAL( cLine, 'INIT CLASS '       )
 
                // check for multiline declaration
@@ -262,7 +263,7 @@ FUNCTION Summarize( aText, cComments, aSumData, nFileType )
                aAdd( aSummary, Str( nLine, 5, 0 ) + ': ' +  c )
 
                IF ! lInClass
-                  lInClass := LEFTEQUAL( cLine, 'CLASS ' )
+                  lInClass := LEFTEQUAL( cLine, 'CLASS ' ) .OR. LEFTEQUAL( cLine, 'CREATE CLASS ' )
                ENDIF
             ELSEIF LEFTEQUAL( cLine, "#PRAGMA BEGINDUMP" )
                nType  := 1
