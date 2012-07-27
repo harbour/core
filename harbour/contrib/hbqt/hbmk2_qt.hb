@@ -408,7 +408,7 @@ STATIC FUNCTION qt_tool_detect( hbmk, cName, cEnvQT, lPostfix )
    LOCAL aEnvList
    LOCAL cStdErr
 
-   IF ! hb_isLogical( lPostfix )
+   IF ! HB_ISLOGICAL( lPostfix )
       lPostfix := .T.
    ENDIF
 

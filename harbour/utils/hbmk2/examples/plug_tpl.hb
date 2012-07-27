@@ -31,6 +31,8 @@
 
 #pragma warninglevel=3
 
+#if defined( __HBSCRIPT__HBMK_PLUGIN )
+
 FUNCTION hbmk_plugin_tpl( hbmk )
    LOCAL tmp
 
@@ -57,3 +59,10 @@ FUNCTION hbmk_plugin_tpl( hbmk )
    ENDSWITCH
 
    RETURN NIL
+
+#else
+
+PROCEDURE Main()
+   OutStd( "Cannot be run in standalone mode. Use it with -plugin= option of hbmk2." + hb_eol() )
+
+#endif
