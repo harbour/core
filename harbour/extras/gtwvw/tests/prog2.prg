@@ -59,7 +59,7 @@ local nMaxRow := maxrow(), nMaxCol := maxcol()
    for i := 1 to maxrow()-1
       for j := 0 to maxcol()
          devpos(i,j)
-         devout("±")
+         devout( hb_UTF8ToStr( "â–’" ) )
       next
    next
    DISPEND()
@@ -92,7 +92,7 @@ local oldCurs := setcursor(SC_NORMAL)
 MEMVAR __temp__
 #ENDIF
 
-   nWin := znewwindow("ÚÄ¿³ÙÄÀ³",10,20,22,59,"Some Window")
+   nWin := znewwindow( hb_UTF8ToStr( "â”Œâ”€â”â”‚â”˜â”€â””â”‚" ),10,20,22,59,"Some Window")
 
  #IFDEF __GTWVW__
    AddMiscObjects( nWin, {|nWindow| __temp__:= nWindow, aEval( GetList, {|oGet| WVW_DrawBoxGet( __temp__, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
@@ -161,7 +161,7 @@ FUNCTION xBrowse1()
 
    oBrowse:configure()
 
-   nWin := znewwindow("ÚÄ¿³ÙÄÀ³",nTop,nLeft,nBottom,nRight, "test.dbf")
+   nWin := znewwindow( hb_UTF8ToStr( "â”Œâ”€â”â”‚â”˜â”€â””â”‚" ),nTop,nLeft,nBottom,nRight, "test.dbf")
 
  #IFDEF __GTWVW__
    Wvw_SetPen( 0, 0, rgb( 210,1210,210 ) )
@@ -311,7 +311,7 @@ local oldColor := setcolor(s_cStdColor)
    nRight := nLeft + nWidth + 1
 
    * open window
-   nWinNum := znewwindow("ÚÄ¿³ÙÄÀ³", nTopLine, nLeft, nBotLine, nRight, cMsg)
+   nWinNum := znewwindow( hb_UTF8ToStr( "â”Œâ”€â”â”‚â”˜â”€â””â”‚" ), nTopLine, nLeft, nBotLine, nRight, cMsg)
 
    @ nTopLine+1, nLeft+1 PROMPT padr("Yes", nWidth)
    @ nTopLine+2, nLeft+1 PROMPT padr("No", nWidth)
@@ -353,7 +353,7 @@ local oldColor := setcolor(s_cStdColor)
    nRight := nLeft + nMaxWidth + 1
 
    * open window
-   nWinNum := znewwindow("ÚÄ¿³ÙÄÀ³", nTopLine, nLeft, nBotLine, nRight, cTitle)
+   nWinNum := znewwindow( hb_UTF8ToStr( "â”Œâ”€â”â”‚â”˜â”€â””â”‚" ), nTopLine, nLeft, nBotLine, nRight, cTitle)
    DISPBEGIN()
    for i := 1 to nNumLines
      cAline := MEMOLINE(cMsg, nWidth, i)
@@ -373,7 +373,7 @@ return .t.
 
 FUNCTION ZNEWWINDOW(wtype,r1,c1,r2,c2,ctitle, ccolor)
 * Draw a new window on screen and register it in window list
-* wtype       : Window border type, eg. "ÚÄ¿³ÙÄÀ³"
+* wtype       : Window border type, eg. "â”Œâ”€â”â”‚â”˜â”€â””â”‚"
 * r1,c1,r2,c2 : coordinates
 * Return      : Numeric id of the new window
   local i:=len(s_zwin)

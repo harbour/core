@@ -1809,7 +1809,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
                      the definition of the field.
       8 = SSHORT     A 16-bit (2-byte) signed (twos-complement) integer.
       9 = SLONG      A 32-bit (4-byte) signed (twos-complement) integer.
-      10 = SRATIONAL Two SLONG’s: the first represents the numerator of a
+      10 = SRATIONAL Two SLONG's: the first represents the numerator of a
                      fraction, the second the denominator.
       11 = FLOAT     Single precision (4-byte) IEEE format.
       12 = DOUBLE    Double precision (8-byte) IEEE format.

@@ -228,7 +228,7 @@
  */
 #define WVW_DEFAULT_MAX_BMCACHE 20
 
-/* Como as descriá‰es s∆o grandes, precisei aumetar isso - Peluffo - 26/10/2007
+/* Como as descricoes sao grandes, precisei aumetar isso - Peluffo - 26/10/2007
    #define WVW_TB_LABELMAXLENGTH 40
  */
 #define WVW_TB_LABELMAXLENGTH 100

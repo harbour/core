@@ -38,7 +38,7 @@ local i,j
    for i := 1 to maxrow()-1
       for j := 0 to maxcol()
          devpos(i,j)
-         devout("±")
+         devout( hb_UTF8ToStr( "â–’" ) )
       next
    next
    DISPEND()
@@ -64,7 +64,7 @@ local lDone := .f.
 local getlist := {}
 local oldCurs := setcursor(SC_NORMAL)
 
-   nWin := znewwindow("ÚÄ¿³ÙÄÀ³",10,20,22,59,"Some Window")
+   nWin := znewwindow( hb_UTF8ToStr( "â”Œâ”€â”â”‚â”˜â”€â””â”‚" ),10,20,22,59,"Some Window")
 
    //@ 21,21 say "Inside the window" color "R/W"
    //@ 23,0  say "Outside the window" color "R/W"
@@ -98,7 +98,7 @@ FUNCTION xBrowse1()
    LOCAL nCursor := setCursor( 0 )
    LOCAL nWin
 
-   USE '..\..\..\tests\TEST' NEW
+   USE '..\..\..\tests\test' NEW
    if NetErr()
       return nil
    endif
@@ -107,8 +107,8 @@ FUNCTION xBrowse1()
    SetColor( 'N/W*,N/GR*,,,N/W* ' )
    oBrowse := TBrowseNew( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 )
 
-   oBrowse:ColSep        := chr(179) //'|'
-   oBrowse:HeadSep       := chr(205) //'_'
+   oBrowse:ColSep        := hb_UTF8ToStr( "â”‚" )
+   oBrowse:HeadSep       := hb_UTF8ToStr( "â”€" )
    oBrowse:GoTopBlock    := { || dbGoTop() }
    oBrowse:GoBottomBlock := { || dbGoBottom() }
    oBrowse:SkipBlock     := { | nSkip | dbSkipBlock( nSkip,oBrowse ) }
@@ -120,7 +120,7 @@ FUNCTION xBrowse1()
 
    oBrowse:configure()
 
-   nWin := znewwindow("ÚÄ¿³ÙÄÀ³",nTop,nLeft,nBottom,nRight, "test.dbf")
+   nWin := znewwindow( hb_UTF8ToStr( "â”Œâ”€â”â”‚â”˜â”€â””â”‚" ),nTop,nLeft,nBottom,nRight, "test.dbf")
 
    While !lEnd
       oBrowse:ForceStable()
@@ -246,7 +246,7 @@ local oldColor := setcolor(s_cStdColor)
    nRight := nLeft + nWidth + 1
 
    * open window
-   nWinNum := znewwindow("ÚÄ¿³ÙÄÀ³", nTopLine, nLeft, nBotLine, nRight, cMsg)
+   nWinNum := znewwindow( hb_UTF8ToStr( "â”Œâ”€â”â”‚â”˜â”€â””â”‚" ), nTopLine, nLeft, nBotLine, nRight, cMsg)
 
    @ nTopLine+1, nLeft+1 PROMPT padr("Yes", nWidth)
    @ nTopLine+2, nLeft+1 PROMPT padr("No", nWidth)
@@ -288,7 +288,7 @@ local oldColor := setcolor(s_cStdColor)
    nRight := nLeft + nMaxWidth + 1
 
    * open window
-   nWinNum := znewwindow("ÚÄ¿³ÙÄÀ³", nTopLine, nLeft, nBotLine, nRight, cTitle)
+   nWinNum := znewwindow( hb_UTF8ToStr( "â”Œâ”€â”â”‚â”˜â”€â””â”‚" ), nTopLine, nLeft, nBotLine, nRight, cTitle)
    DISPBEGIN()
    for i := 1 to nNumLines
      cAline := MEMOLINE(cMsg, nWidth, i)
@@ -308,7 +308,7 @@ return .t.
 
 FUNCTION ZNEWWINDOW(wtype,r1,c1,r2,c2,ctitle, ccolor)
 * Draw a new window on screen and register it in window list
-* wtype       : Window border type, eg. "ÚÄ¿³ÙÄÀ³"
+* wtype       : Window border type, eg. "â”Œâ”€â”â”‚â”˜â”€â””â”‚"
 * r1,c1,r2,c2 : coordinates
 * Return      : Numeric id of the new window
   local i:=len(s_zwin)
