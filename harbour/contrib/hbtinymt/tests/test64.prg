@@ -18,8 +18,8 @@ PROCEDURE Main()
       TestMatrix( "Double numbers r, where 0.0 <= r < 1.0", {|| PadL( tinymt64_generate_double(), 30 ) } )
       TestMatrix( "Double numbers r, where 0.0 <= r < 1.0", {|| PadL( tinymt64_generate_double01(), 30 ) } )
       TestMatrix( "Double numbers r, where 1.0 <= r < 2.0", {|| PadL( tinymt64_generate_double12(), 30 ) } )
-      TestMatrix( "Double numbers r, where 0.0 < r <= 1.0", {|| PadL( tinymt64_generate_doubleoc(), 30 ) } )
-      TestMatrix( "Double numbers r, where 0.0 < r < 1.0" , {|| PadL( tinymt64_generate_doubleoo(), 30 ) } )
+      TestMatrix( "Double numbers r, where 0.0 < r <= 1.0", {|| PadL( tinymt64_generate_doubleOC(), 30 ) } )
+      TestMatrix( "Double numbers r, where 0.0 < r < 1.0" , {|| PadL( tinymt64_generate_doubleOO(), 30 ) } )
    ENDIF
 
    RETURN
