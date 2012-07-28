@@ -1301,6 +1301,8 @@ METHOD IdeDocks:buildStackedWidget()
    ::oStackedWidget:oWidget:setVerticalScrollBarPolicy( Qt_ScrollBarAsNeeded )
    ::oStackedWidget:oWidget:setHorizontalScrollBarPolicy( Qt_ScrollBarAsNeeded )
    ::oStackedWidget:oWidget:setActivationOrder( QMdiArea_CreationOrder )
+   ::oStackedWidget:oWidget:setTabsMovable( .t. )
+// ::oStackedWidget:oWidget:setTabsClosable( .t. )  /* Later */
 
    ::oDa:addChild( ::oStackedWidget )
 

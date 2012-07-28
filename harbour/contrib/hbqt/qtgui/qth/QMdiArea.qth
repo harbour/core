@@ -64,11 +64,15 @@ void setDocumentMode ( bool enabled )
 void setOption ( AreaOption option, bool on = true )
 void setTabPosition ( QTabWidget::TabPosition position )
 void setTabShape ( QTabWidget::TabShape shape )
+void setTabsClosable ( bool closable )                             [*V=0x040800*]
+void setTabsMovable ( bool movable )                               [*V=0x040800*]
 void setViewMode ( ViewMode mode )
 QList<QMdiSubWindow *> subWindowList ( WindowOrder order = CreationOrder ) const
 QTabWidget::TabPosition tabPosition () const
 QTabWidget::TabShape tabShape () const
 bool testOption ( AreaOption option ) const
+bool tabsClosable () const                                         [*V=0x040800*]
+bool tabsMovable () const                                          [*V=0x040800*]
 ViewMode viewMode () const
 </PROTOS>
 

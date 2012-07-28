@@ -57,7 +57,7 @@
  *
  *                            Harbour-Qt IDE
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                               14Jul2012
  */
 /*----------------------------------------------------------------------*/
@@ -97,10 +97,6 @@
 #define __btnNext_clicked__                       2024
 #define __btnBack_clicked__                       2025
 
-/*----------------------------------------------------------------------*/
-//
-//                          Class IdeProjectWizard
-//
 /*----------------------------------------------------------------------*/
 
 CREATE CLASS IdeProjectWizard INHERIT IdeObject
@@ -245,19 +241,19 @@ METHOD IdeProjectWizard:show()
       ::oUI:btnSwLower  : connect( "clicked()", {|| ::execEvent( __btnSw_clicked__, "lower" ) } )
       ::oUI:btnSwDelete : connect( "clicked()", {|| ::execEvent( __btnSw_clicked__, "delete") } )
 
-      ::oUI:btnNext     : connect( "clicked()", {|| ::execEvent( __btnNext_clicked__ ) } )
-      ::oUI:btnBack     : connect( "clicked()", {|| ::execEvent( __btnBack_clicked__ ) } )
-      ::oUI:btnNew      : connect( "clicked()", {|| ::execEvent( __btnNew_clicked__  ) } )
-      ::oUI:btnSave     : connect( "clicked()", {|| ::execEvent( __btnSave_clicked__ ) } )
+      ::oUI:btnNext     : connect( "clicked()", {|| ::execEvent( __btnNext_clicked__        ) } )
+      ::oUI:btnBack     : connect( "clicked()", {|| ::execEvent( __btnBack_clicked__        ) } )
+      ::oUI:btnNew      : connect( "clicked()", {|| ::execEvent( __btnNew_clicked__         ) } )
+      ::oUI:btnSave     : connect( "clicked()", {|| ::execEvent( __btnSave_clicked__        ) } )
       ::oUI:btnCancel   : connect( "clicked()", {|| ::oUI:oWidget:done( 0 ) } )
 
-      ::oUI:btnSwMax    : connect( "clicked()", {|| ::execEvent( __btnSwMax_clicked__   ) } )
-      ::oUI:btnSwMin    : connect( "clicked()", {|| ::execEvent( __btnSwMin_clicked__   ) } )
+      ::oUI:btnSwMax    : connect( "clicked()", {|| ::execEvent( __btnSwMax_clicked__       ) } )
+      ::oUI:btnSwMin    : connect( "clicked()", {|| ::execEvent( __btnSwMin_clicked__       ) } )
 
-      ::oUI:toolSrcGet  : connect( "clicked()", {|| ::execEvent( __toolSrcGet_clicked__ ) } )
-      ::oUI:toolSrcMax  : connect( "clicked()", {|| ::execEvent( __toolSrcMax_clicked__ ) } )
-      ::oUI:toolSrcMin  : connect( "clicked()", {|| ::execEvent( __toolSrcMin_clicked__ ) } )
-      ::oUI:toolSrcDel  : connect( "clicked()", {|| ::execEvent( __toolSrcDel_clicked__ ) } )
+      ::oUI:toolSrcGet  : connect( "clicked()", {|| ::execEvent( __toolSrcGet_clicked__     ) } )
+      ::oUI:toolSrcMax  : connect( "clicked()", {|| ::execEvent( __toolSrcMax_clicked__     ) } )
+      ::oUI:toolSrcMin  : connect( "clicked()", {|| ::execEvent( __toolSrcMin_clicked__     ) } )
+      ::oUI:toolSrcDel  : connect( "clicked()", {|| ::execEvent( __toolSrcDel_clicked__     ) } )
 
       ::oUI:comboProjType : addItem( "Executable"        )
       ::oUI:comboProjType : addItem( "Library"           )
@@ -293,12 +289,15 @@ METHOD IdeProjectWizard:show()
 
       oBrush := QBrush( QColor( 248, 248, 248 ) )
 
-      aadd( ::aItmProps, { NIL, "Libraries"                , QBrush( QColor( 144, 144, 144 ) ),  oBrush, NIL, NIL, "background-color: rgb(144,144,144);" } )
-      aadd( ::aItmProps, { NIL, "Library Paths"            , QBrush( QColor( 152, 152, 152 ) ),  oBrush, NIL, NIL, "background-color: rgb(152,152,152);" } )
-      aadd( ::aItmProps, { NIL, "Include Paths"            , QBrush( QColor( 160, 160, 160 ) ),  oBrush, NIL, NIL, "background-color: rgb(160,160,160);" } )
-      aadd( ::aItmProps, { NIL, "PRG Defines"              , QBrush( QColor( 168, 168, 168 ) ),  oBrush, NIL, NIL, "background-color: rgb(168,168,168);" } )
-      aadd( ::aItmProps, { NIL, "PRG Undefines"            , QBrush( QColor( 176, 176, 176 ) ),  oBrush, NIL, NIL, "background-color: rgb(176,176,176);" } )
-      aadd( ::aItmProps, { NIL, "hbmk2 Command-line params", QBrush( QColor( 184, 184, 184 ) ),  oBrush, NIL, NIL, "background-color: rgb(184,184,184);" } )
+      aadd( ::aItmProps, { NIL, "Hbc Files"                     , QBrush( QColor( 136, 136, 136 ) ),  oBrush, NIL, NIL, "background-color: rgb(136,136,136);" } )
+      aadd( ::aItmProps, { NIL, "Libraries"                     , QBrush( QColor( 144, 144, 144 ) ),  oBrush, NIL, NIL, "background-color: rgb(144,144,144);" } )
+      aadd( ::aItmProps, { NIL, "Library Paths"                 , QBrush( QColor( 152, 152, 152 ) ),  oBrush, NIL, NIL, "background-color: rgb(152,152,152);" } )
+      aadd( ::aItmProps, { NIL, "Include Paths"                 , QBrush( QColor( 160, 160, 160 ) ),  oBrush, NIL, NIL, "background-color: rgb(160,160,160);" } )
+      aadd( ::aItmProps, { NIL, "PRG Defines"                   , QBrush( QColor( 168, 168, 168 ) ),  oBrush, NIL, NIL, "background-color: rgb(168,168,168);" } )
+      aadd( ::aItmProps, { NIL, "PRG Undefines"                 , QBrush( QColor( 176, 176, 176 ) ),  oBrush, NIL, NIL, "background-color: rgb(176,176,176);" } )
+      aadd( ::aItmProps, { NIL, "hbmk2 Command-Line Params"     , QBrush( QColor( 184, 184, 184 ) ),  oBrush, NIL, NIL, "background-color: rgb(184,184,184);" } )
+      aadd( ::aItmProps, { NIL, "Batch File Commands"           , QBrush( QColor( 192, 192, 192 ) ),  oBrush, NIL, NIL, "background-color: rgb(192,192,192);" } )
+      aadd( ::aItmProps, { NIL, "Actions after Successful Build", QBrush( QColor( 200, 200, 200 ) ),  oBrush, NIL, NIL, "background-color: rgb(200,200,200);" } )
 
 
       ::oUI:treeSrc:setContextMenuPolicy( Qt_CustomContextMenu )
@@ -358,7 +357,7 @@ METHOD IdeProjectWizard:execEvent( nEvent, p, p1 )
          qList := qMime:urls()
          FOR i := 0 TO qList:size() - 1
             qUrl := qList:at( i )
-            ::addSourceFile( hbide_pathToOSPath( qUrl:toLocalFile() ) )
+            ::addSourceFile( qUrl:toLocalFile() )  /* Raw Form Only */
          NEXT
          p:setDropAction( Qt_CopyAction )
          p:accept()
@@ -608,7 +607,8 @@ METHOD IdeProjectWizard:addSourceFile( cFile )
       ENDIF
       oParent := ::aItmSrc[ n,1 ]
 
-      cSource := hbide_prepareSourceForHbp( hbide_stripRoot( ::cProjPath, cFile ) )
+   // cSource := hbide_prepareSourceForHbp( hbide_stripRoot( ::cProjPath, cFile ) ) /* this action be performed on final .hbp */
+      cSource := cFile
 
       lExists := .f.
       IF ( n := oParent:childCount() ) > 0
@@ -781,3 +781,81 @@ METHOD IdeProjectWizard:saveProject()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+//                          CLASS IdeExProject
+/*----------------------------------------------------------------------*/
+
+CREATE CLASS IdeExProject
+
+   DATA   cPathTmplt
+   DATA   cPathHbp
+
+   DATA   aSrcALL                                 INIT {}
+   DATA   aSrcPRG                                 INIT {}
+   DATA   aSrcC                                   INIT {}
+   DATA   aSrcCPP                                 INIT {}
+   DATA   aSrcCH                                  INIT {}
+   DATA   aSrcH                                   INIT {}
+   DATA   aSrcUI                                  INIT {}
+   DATA   aSrcRest                                INIT {}
+
+   DATA   aHbc                                    INIT {}
+   DATA   aFlags
+
+   METHOD new( cPathTmplt )
+   METHOD create( cPathTmplt )
+   METHOD loadUI( oUI )
+   METHOD saveUI( oUI )
+   METHOD load()
+   METHOD save( nMode )
+
+   ENDCLASS
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeExProject:new( cPathTmplt )
+
+   hb_default( cPathTmplt, ::cPathTmplt )
+
+   ::cPathTmplt := cPathTmplt
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeExProject:create( cPathTmplt )
+
+   hb_default( cPathTmplt, ::cPathTmplt )
+
+   ::cPathTmplt := cPathTmplt
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeExProject:load()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeExProject:save( nMode )
+   HB_SYMBOL_UNUSED( nMode )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeExProject:loadUI( oUI )
+   HB_SYMBOL_UNUSED( oUI )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeExProject:saveUI( oUI )
+   HB_SYMBOL_UNUSED( oUI )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+

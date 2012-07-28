@@ -1251,7 +1251,6 @@ METHOD HbIde:manageFocusInEditor()
    LOCAL qEdit
 
    IF !empty( qEdit := ::oEM:getEditCurrent() )
-//      HB_TRACE( HB_TR_DEBUG, 1000001 )
       qEdit:setFocus( 0 )
    ENDIF
 
@@ -1343,6 +1342,7 @@ METHOD HbIde:updateProjectTree( aPrj )
    IF empty( oP )
       oParent:expand( .t. )
       oP := oParent:addItem( oProject:title )
+      oP:tooltipText := hbide_pathNormalized( ::oPM:getProjectFileNameFromTitle( oProject:title ) )
       aadd( ::aProjData, { oP, "Project Name", oParent, oProject:title, aPrj, oProject } )
    ENDIF
    FOR EACH oSource IN oProject:hSources
@@ -1398,7 +1398,6 @@ METHOD HbIde:manageItemSelected( oXbpTreeItem )
 
    ENDCASE
 
-   // ::manageFocusInEditor()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
