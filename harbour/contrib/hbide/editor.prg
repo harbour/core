@@ -228,6 +228,7 @@ METHOD IdeEditsManager:destroy()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEditsManager:create( oIde )
+   LOCAL qAct
 
    DEFAULT oIde TO ::oIde
 
@@ -252,14 +253,18 @@ METHOD IdeEditsManager:create( oIde )
    aadd( ::aActions, { ""             , ::qContextMenu:addSeparator() } )
    aadd( ::aActions, { "Apply Theme"  , ::qContextMenu:addAction( "Apply Theme"                      ) } )
    aadd( ::aActions, { "Save as Skltn", ::qContextMenu:addAction( "Save as Skeleton..."              ) } )
-   ::qContextSub := ::qContextMenu:addMenu( "Split" )
+   ::qContextSub := ::qContextMenu:addMenu( QIcon( hbide_image( "split" ) ), "Split" )
    //
-   aadd( ::aActions, { "Split H"      , ::qContextSub:addAction( "Split Horizontally" ) } )
-   aadd( ::aActions, { "Split V"      , ::qContextSub:addAction( "Split Vertically"   ) } )
+   ::qContextSub:addAction( qAct := ::oAC:getAction( "SplitH" ) )
+   aadd( ::aActions, { "Split H"      , qAct } )
+   ::qContextSub:addAction( qAct := ::oAC:getAction( "SplitV" ) )
+   aadd( ::aActions, { "Split V"      , qAct } )
    aadd( ::aActions, { ""             , ::qContextSub:addSeparator() } )
-   aadd( ::aActions, { "Close Split"  , ::qContextSub:addAction( "Close Split Window" ) } )
+   ::qContextSub:addAction( qAct := ::oAC:getAction( "SplitClose" ) )
+   aadd( ::aActions, { "Close Split"  , qAct } )
    aadd( ::aActions, { ""             , ::qContextSub:addSeparator() } )
-   aadd( ::aActions, { "Format"       , ::qContextMenu:addAction( ::oFormatDock:oWidget:toggleViewAction() ) } )
+   ::qContextMenu:addAction( qAct := ::oFormatDock:oWidget:toggleViewAction() )
+   aadd( ::aActions, { "Format"       , qAct } )
    //
    ::qSrcControlSub := ::qContextMenu:addMenu( "Source Control - VSS" )
    aadd( ::aActions, { "Get"          , ::qSrcControlSub:addAction( "Get Latest Version" ) } )

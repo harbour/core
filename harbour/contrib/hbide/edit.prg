@@ -462,7 +462,6 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
       ::oEM:aActions[ 18, 2 ]:setEnabled( Len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 1 )
       ::oEM:aActions[ 19, 2 ]:setEnabled( Len( ::oEditor:aEdits ) == 0 .OR. ::oEditor:nSplOrient == -1 .OR. ::oEditor:nSplOrient == 2 )
       ::oEM:aActions[ 21, 2 ]:setEnabled( n > 0 )
-
       IF empty( qAct := ::oEM:qContextMenu:exec( ::qEdit:mapToGlobal( p ) ) )
          RETURN Self
       ENDIF
@@ -474,7 +473,7 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
       CASE "Split Vertically"
          ::oEditor:split( 2, Self )
          EXIT
-      CASE "Close Split Window"
+      CASE "Close Splitted Instance"
          IF n > 0  /* 1 == Main Edit */
             hb_adel( ::oEditor:aEdits, n, .t. )
             ::oEditor:qCqEdit := ::oEditor:qEdit

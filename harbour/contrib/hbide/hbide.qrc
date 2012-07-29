@@ -316,6 +316,10 @@
     <file>resources/b_18.png</file>
     <file>resources/b_19.png</file>
     <file>resources/b_20.png</file>
+    <file>resources/split.png</file>
+    <file>resources/split_close.png</file>
+    <file>resources/split_h.png</file>
+    <file>resources/split_v.png</file>
     <file>docs/faq.htm</file>
   </qresource>
 </RCC>

@@ -320,6 +320,11 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "Delete"               , "Delete"                       , "dc_delete"      , ""     , "No", "Yes" } )
    aadd( aAct, { "SortAZ"               , "Sort Ascending"               , "sort"           , ""     , "No", "Yes" } )
    aadd( aAct, { "SortZA"               , "Sort Descending"              , "sortdescend"    , ""     , "No", "Yes" } )
+   //
+   aadd( aAct, { "Split"               , "Split Editing Instance"        , "split"          , ""     , "No", "Yes" } )
+   aadd( aAct, { "SplitClose"          , "Close Splitted Instance"       , "split_close"    , ""     , "No", "Yes" } )
+   aadd( aAct, { "SplitH"              , "Split Horizontally"            , "split_h"        , ""     , "No", "Yes" } )
+   aadd( aAct, { "SplitV"              , "Split Vertically"              , "split_v"        , ""     , "No", "Yes" } )
 
    RETURN aAct
 
