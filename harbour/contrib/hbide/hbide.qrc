@@ -296,6 +296,26 @@
     <file>resources/expand_m.png</file>
     <file>resources/collapse_m.png</file>
     <file>resources/view_docks.png</file>
+    <file>resources/b_1.png</file>
+    <file>resources/b_2.png</file>
+    <file>resources/b_3.png</file>
+    <file>resources/b_4.png</file>
+    <file>resources/b_5.png</file>
+    <file>resources/b_6.png</file>
+    <file>resources/b_7.png</file>
+    <file>resources/b_8.png</file>
+    <file>resources/b_9.png</file>
+    <file>resources/b_10.png</file>
+    <file>resources/b_11.png</file>
+    <file>resources/b_12.png</file>
+    <file>resources/b_13.png</file>
+    <file>resources/b_14.png</file>
+    <file>resources/b_15.png</file>
+    <file>resources/b_16.png</file>
+    <file>resources/b_17.png</file>
+    <file>resources/b_18.png</file>
+    <file>resources/b_19.png</file>
+    <file>resources/b_20.png</file>
     <file>docs/faq.htm</file>
   </qresource>
 </RCC>

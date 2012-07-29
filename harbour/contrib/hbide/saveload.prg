@@ -395,7 +395,7 @@ METHOD IdeINI:showHideDocks()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeINI:save( cHbideIni )
-   LOCAL j, nTab, pTab, n, txt_, oEdit, nTabs, nn, a_, s
+   LOCAL j, nTab, pTab, n, txt_, oEdit, nTabs, nn, a_, s, qLst, k, cView
 
    DEFAULT cHbideIni TO ::oIde:cProjIni
 
@@ -501,8 +501,13 @@ METHOD IdeINI:save( cHbideIni )
    /*-------------------   FILES   -------------------*/
    aadd( txt_, "[FILES]" )
    aadd( txt_, " " )
+   qLst := ::oStackedWidget:oWidget:subWindowList( QMdiArea_StackingOrder )  /* The order tabs are visible */
    nn := 0
-   FOR j := 1 TO Len( ::oIde:aViews )
+   FOR k := 1 TO qLst:count()
+      cView := qLst:at( k - 1 ):objectName()
+
+      j := ascan( ::oDK:aViewsInfo, {|e_| e_[ 1 ] == cView } )
+
       ::oIde:lClosing := .t.
       ::oDK:setView( ::oIde:aViews[ j ]:oWidget:objectName() )
 
@@ -2289,9 +2294,6 @@ FUNCTION hbide_saveEnvironment( oIde, cFile )
    ENDIF
 
    oSettings := QSettings( cPath + cFile + cExt, QSettings_IniFormat )
-
-   HB_TRACE( HB_TR_ALWAYS, oSettings:fileName() )
-
    oSettings:setValue( "hbidesettings", QVariant( oIde:oDlg:oWidget:saveState() ) )
 
    RETURN NIL
@@ -2316,7 +2318,6 @@ FUNCTION hbide_restEnvironment( oIde, cFile )
    ENDIF
 
    oSettings := QSettings( cPath + cFile + cExt, QSettings_IniFormat )
-
    oIde:oDlg:oWidget:restoreState( oSettings:value( "hbidesettings" ):toByteArray() )
 
    RETURN NIL

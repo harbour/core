@@ -392,8 +392,14 @@ METHOD IdeDocks:destroy()
 /*------------------------------------------------------------------------*/
 
 METHOD IdeDocks:getEditorPanelsInfo()
-   LOCAL b_, a_:= {}
-   FOR EACH b_ IN ::aViewsInfo
+   LOCAL qLst, cView, k, j, b_, a_:= {}
+
+   qLst := ::oStackedWidget:oWidget:subWindowList( QMdiArea_StackingOrder )  /* The order tabs are visible */
+   FOR k := 1 TO qLst:count()
+      cView := qLst:at( k - 1 ):objectName()
+      j := ascan( ::aViewsInfo, {|e_| e_[ 1 ] == cView } )
+      b_:= ::aViewsInfo[ j ]
+
       aadd( a_, b_[ 1 ] + "," + ;
                 iif( empty( b_[ 2 ] ), "",  hbide_nArray2String( { b_[ 2 ]:x(), b_[ 2 ]:y(), b_[ 2 ]:width(), b_[ 2 ]:height() } ) ) + "," + ;
                 hb_ntos( b_[ 3 ] ) + "," + hb_ntos( b_[ 4 ] ) + "," + ;
@@ -416,7 +422,7 @@ METHOD IdeDocks:buildDialog()
 
    ::oDlg:close := {|| hbide_setClose( hbide_getYesNo( "hbIDE is about to be closed!", "Are you sure?" ) ), ;
                                                                       PostAppEvent( xbeP_Close, , , ::oDlg ) }
-   //::oDlg:setDockOptions( QMainWindow_AllowTabbedDocks + QMainWindow_ForceTabbedDocks )
+   ::oDlg:setDockOptions( QMainWindow_AllowTabbedDocks + QMainWindow_AllowNestedDocks + QMainWindow_AnimatedDocks )
    ::oDlg:setTabShape( ::oINI:nDocksTabShape )
    ::oDlg:setTabPosition( Qt_RightDockWidgetArea , ::oINI:nDocksRightTabPos  )
    ::oDlg:setTabPosition( Qt_BottomDockWidgetArea, ::oINI:nDocksBottomTabPos )
@@ -560,23 +566,6 @@ METHOD IdeDocks:buildDockWidgets()
    /* Bottom Docks */
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB:oWidget              , ::oDockB1:oWidget              )
    ::oDlg:oWidget:tabifyDockWidget( ::oDockB1:oWidget             , ::oDockB2:oWidget              )
-
-   /* Right Docks */
-   ::oDlg:oWidget:tabifyDockWidget( ::oHelpDock:oWidget           , ::oDocViewDock:oWidget         )
-   ::oDlg:oWidget:tabifyDockWidget( ::oDocViewDock:oWidget        , ::oFuncDock:oWidget            )
-   ::oDlg:oWidget:tabifyDockWidget( ::oFuncDock:oWidget           , ::oFunctionsDock:oWidget       )
-   ::oDlg:oWidget:tabifyDockWidget( ::oFunctionsDock:oWidget      , ::oPropertiesDock:oWidget      )
-   ::oDlg:oWidget:tabifyDockWidget( ::oPropertiesDock:oWidget     , ::oEnvironDock:oWidget         )
-   ::oDlg:oWidget:tabifyDockWidget( ::oEnvironDock:oWidget        , ::oSkeltnDock:oWidget          )
-   ::oDlg:oWidget:tabifyDockWidget( ::oSkeltnDock:oWidget         , ::oThemesDock:oWidget          )
-   ::oDlg:oWidget:tabifyDockWidget( ::oThemesDock:oWidget         , ::oFindDock:oWidget            )
-   ::oDlg:oWidget:tabifyDockWidget( ::oFindDock:oWidget           , ::oDocWriteDock:oWidget        )
-   ::oDlg:oWidget:tabifyDockWidget( ::oDocWriteDock:oWidget       , ::oSourceThumbnailDock:oWidget )
-   ::oDlg:oWidget:tabifyDockWidget( ::oSourceThumbnailDock:oWidget, ::oQScintillaDock:oWidget      )
-   ::oDlg:oWidget:tabifyDockWidget( ::oQScintillaDock:oWidget     , ::oReportsManagerDock:oWidget  )
-   ::oDlg:oWidget:tabifyDockWidget( ::oReportsManagerDock:oWidget , ::oFormatDock:oWidget          )
-   ::oDlg:oWidget:tabifyDockWidget( ::oFormatDock:oWidget         , ::oCuiEdDock:oWidget           )
-   ::oDlg:oWidget:tabifyDockWidget( ::oCuiEdDock:oWidget          , ::oUiSrcDock:oWidget           )
 
    RETURN Self
 
@@ -1468,7 +1457,11 @@ METHOD IdeDocks:getPanelIcon( cView )
    LOCAL n
 
    IF ( n := ascan( ::aViewsInfo, {|e_| e_[ 1 ] == cView } ) ) > 0
-      RETURN hbide_image( "panel_" + hb_ntos( n ) )
+      IF n > 20
+         n -= 20
+      ENDIF
+   // RETURN hbide_image( "panel_" + hb_ntos( n ) )
+      RETURN hbide_image( "b_" + hb_ntos( n ) )
    ENDIF
 
    RETURN ""

@@ -118,7 +118,7 @@ CREATE CLASS IdeProjectWizard INHERIT IdeObject
    METHOD  loadSwichesSections()
    METHOD  deleteTreeItem( oChild )
    METHOD  addTreeItem( oParent )
-   METHOD  addDropIndicator( oTree, oNode, cMsg, cCSS, nIndex )
+   METHOD  addDropIndicator( oTree, oNode, nMsg, cCSS, nIndex )
    METHOD  addSourceFile( cFile )
 
    ENDCLASS
@@ -674,7 +674,7 @@ METHOD IdeProjectWizard:deleteTreeItem( oChild )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeProjectWizard:addDropIndicator( oTree, oNode, cMsg, cCSS, nIndex )
+METHOD IdeProjectWizard:addDropIndicator( oTree, oNode, nMsg, cCSS, nIndex )
    LOCAL qTBtn := QToolButton()
 
    qTBtn:setIcon( QIcon( hbide_image( "expand_m" ) ) )
@@ -684,7 +684,7 @@ METHOD IdeProjectWizard:addDropIndicator( oTree, oNode, cMsg, cCSS, nIndex )
    qTBtn:setMaximumHeight( 20 )
    qTBtn:setStyleSheet( "" )
    qTBtn:setStyleSheet( cCSS )
-   qTBtn:connect( "clicked()", {|| ::execEvent( cMsg, nIndex ) } )
+   qTBtn:connect( "clicked()", {|| ::execEvent( nMsg, nIndex ) } )
    oTree:setItemWidget( oNode, 1, qTBtn )
 
    RETURN qTBtn
@@ -711,7 +711,7 @@ METHOD IdeProjectWizard:loadSwichesSections()
       oTree:setFirstItemColumnSpanned( qItm, .t. )
       qItm:setChildIndicatorPolicy( QTreeWidgetItem_ShowIndicator )
 
-      aAct[ 6 ] := ::addDropIndicator( oTree, aAct[ 1 ], "qTBtn_clicked", aAct[ 7 ], aAct:__enumIndex() )
+      aAct[ 6 ] := ::addDropIndicator( oTree, aAct[ 1 ], __qTBtn_clicked__, aAct[ 7 ], aAct:__enumIndex() )
    NEXT
 
    RETURN Self
@@ -738,7 +738,7 @@ METHOD IdeProjectWizard:loadSourcesSections()
       oTree:setFirstItemColumnSpanned( qItm, .t. )
       qItm:setChildIndicatorPolicy( QTreeWidgetItem_ShowIndicator )
 
-      aAct[ 6 ] := ::addDropIndicator( oTree, aAct[ 1 ], "qSBtn_clicked", aAct[ 7 ], aAct:__enumIndex() )
+      aAct[ 6 ] := ::addDropIndicator( oTree, aAct[ 1 ], __qSBtn_clicked__, aAct[ 7 ], aAct:__enumIndex() )
    NEXT
 
    RETURN Self
@@ -785,6 +785,8 @@ METHOD IdeProjectWizard:saveProject()
 /*----------------------------------------------------------------------*/
 
 CREATE CLASS IdeExProject
+
+   DATA   cTmplt                                  INIT ""
 
    DATA   cPathTmplt
    DATA   cPathHbp
@@ -847,6 +849,7 @@ METHOD IdeExProject:save( nMode )
 
 METHOD IdeExProject:loadUI( oUI )
    HB_SYMBOL_UNUSED( oUI )
+
 
    RETURN Self
 
