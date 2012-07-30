@@ -328,8 +328,8 @@ SectionEnd
 
 ; The stuff to install
 Section "Examples" hb_examples
-  SetOutPath $INSTDIR\examples
-  File /r "$%HB_ABSROOT%examples\*.*"
+  SetOutPath $INSTDIR\extras
+  File /r "$%HB_ABSROOT%extras\*.*"
   SetOutPath $INSTDIR\tests
   File /r "$%HB_ABSROOT%tests\*.*"
   SetOutPath $INSTDIR\contrib
