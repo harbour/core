@@ -10,9 +10,9 @@
  *  $ONELINER$
  *      Adjusts a sequence within a string to a specified position
  *  $SYNTAX$
- *      ATADJUST (<cStringToMatch>, <cString>, <nAdjustPosition>,
+ *      ATADJUST( <cStringToMatch>, <cString>, <nAdjustPosition>,
  *                [<nCounter>], [<nIgnore>],
- *                [<nFillChar|cFillChar>]) -> cString
+ *                [<nFillChar|cFillChar>] ) -> cString
  *  $ARGUMENTS$
  *      <cStringToMatch>        is the sequence to be adjusted within <cString>
  *      <cString>               is the string that contains <cStringToMatch>

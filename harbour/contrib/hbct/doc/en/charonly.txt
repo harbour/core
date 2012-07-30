@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Intersectional set of two strings based on characters
  *  $SYNTAX$
- *      CHARONLY (<cThisCharactersOnly>, <cString>) -> cReducedString
+ *      CHARONLY( <cThisCharactersOnly>, <cString> ) -> cReducedString
  *  $ARGUMENTS$
  *      <cThisCharactersOnly>   specifies the characters that must not be
  *                              deleted in <cString>.
@@ -23,11 +23,11 @@
  *      strings. To do this, it deletes all characters from <cString> that
  *      do not appear in <cThisCharacterOnly>.
  *  $EXAMPLES$
- *      ? CHARONLY("0123456789", "0211 - 38 99 77")  //  "0211389977"
- *      ? CHARONLY("0123456789", "0211/ 389 977")    //  "0211389977"
+ *      ? CHARONLY( "0123456789", "0211 - 38 99 77" )  //  "0211389977"
+ *      ? CHARONLY( "0123456789", "0211/ 389 977" )    //  "0211389977"
  *  $TESTS$
- *      CHARONLY("0123456789", "0211 - 38 99 77") == "0211389977"
- *      CHARONLY("0123456789", "0211/ 389 977")   == "0211389977"
+ *      CHARONLY( "0123456789", "0211 - 38 99 77" ) == "0211389977"
+ *      CHARONLY( "0123456789", "0211/ 389 977" )   == "0211389977"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -49,7 +49,7 @@
  *  $ONELINER$
  *      Intersectional set of two strings based on double characters
  *  $SYNTAX$
- *      WORDONLY (<cThisDoubleCharactersOnly>, <cString>) -> cReducedString
+ *      WORDONLY( <cThisDoubleCharactersOnly>, <cString> ) -> cReducedString
  *  $ARGUMENTS$
  *      <cThisDoubleCharactersOnly> specifies the double characters that must
  *                                  not be deleted in <cString>.
@@ -62,11 +62,11 @@
  *      strings based on double characters. To do this, it deletes all double
  *      characters from <cString> that do not appear in <cThisDoubleCharacterOnly>.
  *  $EXAMPLES$
- *      ? WORDONLY("AABBCCDD", "XXAAYYBBZZ")  // "AABB"
- *      ? WORDONLY("AABBCCDD", "XAAYYYBBZZ")  // "BB"
+ *      ? WORDONLY( "AABBCCDD", "XXAAYYBBZZ" )  // "AABB"
+ *      ? WORDONLY( "AABBCCDD", "XAAYYYBBZZ" )  // "BB"
  *  $TESTS$
- *      WORDONLY("AABBCCDD", "XXAAYYBBZZ") == "AABB"
- *      WORDONLY("AABBCCDD", "XAAYYYBBZZ") == "BB"
+ *      WORDONLY( "AABBCCDD", "XXAAYYBBZZ" ) == "AABB"
+ *      WORDONLY( "AABBCCDD", "XAAYYYBBZZ" ) == "BB"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -88,7 +88,7 @@
  *  $ONELINER$
  *      Removes characters from a string
  *  $SYNTAX$
- *      CHARREM (<cDeleteThisCharacters>, <cString>) -> cReducedString
+ *      CHARREM( <cDeleteThisCharacters>, <cString> ) -> cReducedString
  *  $ARGUMENTS$
  *      <cDeleteThisCharacters>   specifies the characters that should
  *                                be deleted in <cString>
@@ -100,11 +100,11 @@
  *      The CHARREM() function deletes the characters specified in
  *      <cDeleteThisCharacters> from <cString>.
  *  $EXAMPLES$
- *      ? CHARREM(" ", " 1  2  ")   // "12"
- *      ? CHARREM("3y", "xyz123")   // "xz12"
+ *      ? CHARREM( " ", " 1  2  " )   // "12"
+ *      ? CHARREM( "3y", "xyz123" )   // "xz12"
  *  $TESTS$
- *      CHARREM(" ", " 1  2  ") == "12"
- *      CHARREM("3y", "xyz123") == "xz12"
+ *      CHARREM( " ", " 1  2  " ) == "12"
+ *      CHARREM( "3y", "xyz123" ) == "xz12"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -126,7 +126,7 @@
  *  $ONELINER$
  *      Removes characters from a string
  *  $SYNTAX$
- *      WORDREM (<cDeleteThisDoubleCharacters>, <cString>) -> cReducedString
+ *      WORDREM( <cDeleteThisDoubleCharacters>, <cString> ) -> cReducedString
  *  $ARGUMENTS$
  *      <cDeleteThisDoubleCharacters>   specifies the double characters that
  *                                      should be deleted in <cString>
@@ -139,11 +139,11 @@
  *      The WORDREM() function deletes the double characters specified in
  *      <cDeleteThisDoubleCharacters> from <cString>.
  *  $EXAMPLES$
- *      ? WORDREM("abcd", "0ab1cd")   // "0ab1"
- *      ? WORDREM("abcd", "ab0cd1")   // "0cd1"
+ *      ? WORDREM( "abcd", "0ab1cd" )   // "0ab1"
+ *      ? WORDREM( "abcd", "ab0cd1" )   // "0cd1"
  *  $TESTS$
- *      WORDREM("abcd", "0ab1cd") == "0ab1"
- *      WORDREM("abcd", "ab0cd1") == "0cd1"
+ *      WORDREM( "abcd", "0ab1cd" ) == "0ab1"
+ *      WORDREM( "abcd", "ab0cd1" ) == "0cd1"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

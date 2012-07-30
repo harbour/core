@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Returns the characters on the even positions in a string
  *  $SYNTAX$
- *      CHAREVEN (<cString>) --> cEvenString
+ *      CHAREVEN( <cString> ) --> cEvenString
  *  $ARGUMENTS$
  *      <cString>      processed string
  *  $RETURNS$
@@ -20,11 +20,11 @@
  *      The CHAREVEN() function looks for the characters on the even positions
  *      in a given string, collects them and returns them as a string.
  *  $EXAMPLES$
- *      ? CHAREVEN (" H E L L O !") -> "HELLO!"
+ *      ? CHAREVEN( " H E L L O !" ) // -> "HELLO!"
  *  $TESTS$
- *      CHAREVEN (" 1 2 3 4 5") == "12345"
- *      CHAREVEN (" 1 2 3 4 ") == "1234"
- *      CHAREVEN (" ") == ""
+ *      CHAREVEN( " 1 2 3 4 5" ) == "12345"
+ *      CHAREVEN( " 1 2 3 4 " ) == "1234"
+ *      CHAREVEN( " " ) == ""
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -46,7 +46,7 @@
  *  $ONELINER$
  *      Returns the characters on the odd positions in a string
  *  $SYNTAX$
- *      CHARODD (<cString>) --> cOddString
+ *      CHARODD( <cString> ) --> cOddString
  *  $ARGUMENTS$
  *      <cString>      processed string
  *  $RETURNS$
@@ -56,10 +56,10 @@
  *      The CHARODD() function looks for the characters on the odd positions
  *      in a given string, collects them and returns them as a string.
  *  $EXAMPLES$
- *      ? CHARODD ("H E L L O ! ") -> "HELLO!"
+ *      ? CHARODD( "H E L L O ! " ) // -> "HELLO!"
  *  $TESTS$
- *      CHARODD ("1A2B3C4D5E") == "12345"
- *      CHARODD ("1A2B3C4D5")  == "12345"
+ *      CHARODD( "1A2B3C4D5E" ) == "12345"
+ *      CHARODD( "1A2B3C4D5" )  == "12345"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

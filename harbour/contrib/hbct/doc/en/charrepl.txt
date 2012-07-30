@@ -10,8 +10,8 @@
  *  $ONELINER$
  *      Replacement of characters
  *  $SYNTAX$
- *      CHARREPL (<cSearchString>, <[@]cString>,
- *                <cReplaceString>, [<lMode>]) -> cString
+ *      CHARREPL( <cSearchString>, <[@]cString>,
+ *                <cReplaceString>, [<lMode>] ) -> cString
  *  $ARGUMENTS$
  *      <cSearchString>    is a string of characters that should be replaced
  *      <[@]cString>       is the processed string
@@ -41,17 +41,17 @@
  *      One can omit the return value by setting the CSETREF() switch to .T.,
  *      but then one must pass <cString> by reference to get the result.
  *  $EXAMPLES$
- *      ? charrepl ("1234", "1x2y3z", "abcd")            // "axbycz"
- *      ? charrepl ("abcdefghij", "jhfdb", "1234567890") // "08642"
- *      ? charrepl ("abcdefghij", "jhfdb", "12345")      // "55542"
- *      ? charrepl ("1234", "1234", "234A")              // "AAAA"
- *      ? charrepl ("1234", "1234", "234A", .T.)         // "234A"
+ *      ? charrepl( "1234", "1x2y3z", "abcd" )            // "axbycz"
+ *      ? charrepl( "abcdefghij", "jhfdb", "1234567890" ) // "08642"
+ *      ? charrepl( "abcdefghij", "jhfdb", "12345" )      // "55542"
+ *      ? charrepl( "1234", "1234", "234A" )              // "AAAA"
+ *      ? charrepl( "1234", "1234", "234A", .T. )         // "234A"
  *  $TESTS$
- *      charrepl ("1234", "1x2y3z", "abcd") == "axbycz"
- *      charrepl ("abcdefghij", "jhfdb", "1234567890") == "08642"
- *      charrepl ("abcdefghij", "jhfdb", "12345") == "55542"
- *      charrepl ("1234", "1234", "234A") == "AAAA"
- *      charrepl ("1234", "1234", "234A", .T.) == "234A"
+ *      charrepl( "1234", "1x2y3z", "abcd" ) == "axbycz"
+ *      charrepl( "abcdefghij", "jhfdb", "1234567890" ) == "08642"
+ *      charrepl( "abcdefghij", "jhfdb", "12345" ) == "55542"
+ *      charrepl( "1234", "1234", "234A" ) == "AAAA"
+ *      charrepl( "1234", "1234", "234A", .T. ) == "234A"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

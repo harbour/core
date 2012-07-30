@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      ASCII value of a character at a certain position
  *  $SYNTAX$
- *      ASCPOS (<cString>, [<nPosition>]) --> nAsciiValue
+ *      ASCPOS( <cString>, [<nPosition>] ) --> nAsciiValue
  *  $ARGUMENTS$
  *      <cString>      is the processed string
  *      [<nPosition>]  is an optional position within <cString>
@@ -23,12 +23,12 @@
  *      can be found at the position <nPosition> in <cString>. If <nPosition>
  *      is larger than the length of <cString>, 0 is returned.
  *  $EXAMPLES$
- *      ? ascpos ("0123456789") --> 57
- *      ? ascpos ("0123456789",1) --> 48
+ *      ? ascpos( "0123456789" ) // --> 57
+ *      ? ascpos( "0123456789", 1 ) // --> 48
  *  $TESTS$
- *      ascpos ("0123456789") == 57
- *      ascpos ("0123456789",1) == 48
- *      ascpos ("0123456789",11) == 0  // <nPosition> to large !
+ *      ascpos( "0123456789" ) == 57
+ *      ascpos( "0123456789", 1 ) == 48
+ *      ascpos( "0123456789", 11 ) == 0  // <nPosition> to large !
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -50,7 +50,7 @@
  *  $ONELINER$
  *      Numerical value of a character at a certain position
  *  $SYNTAX$
- *      VALPOS (<cString>, [<nPosition>]) --> nDigitValue
+ *      VALPOS( <cString>, [<nPosition>] ) --> nDigitValue
  *  $ARGUMENTS$
  *      <cString>      is the processed string
  *      [<nPosition>]  is an optional position within <cString>
@@ -64,13 +64,13 @@
  *      can be found at this position or if <nPosition>
  *      is larger than the length of <cString>, 0 is returned.
  *  $EXAMPLES$
- *      ? valpos ("1234x56789") --> 9
- *      ? valpos ("1234x56789",1) --> 1
+ *      ? valpos( "1234x56789" ) // --> 9
+ *      ? valpos( "1234x56789", 1 ) // --> 1
  *  $TESTS$
- *      valpos ("1234x56789") == 9
- *      valpos ("1234x56789",1) == 1
- *      valpos ("1234x56789",11) == 0  // <nPosition> to large !
- *      valpos ("1234x56789",5) == 0   // "x" is not a digit !
+ *      valpos( "1234x56789" ) == 9
+ *      valpos( "1234x56789", 1 ) == 1
+ *      valpos( "1234x56789", 11 ) == 0  // <nPosition> to large !
+ *      valpos( "1234x56789", 5 ) == 0   // "x" is not a digit !
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

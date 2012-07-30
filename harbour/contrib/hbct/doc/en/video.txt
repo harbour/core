@@ -42,8 +42,8 @@
  *  $ONELINER$
  *      Changes VGA palette colors
  *  $SYNTAX$
- *      VGAPALETTE([<cColor|nColor>, [<nRedValue>, <nGreenValue>,
- *                                    <nBlueValue]]) --> lValid
+ *      VGAPALETTE( [<cColor|nColor>, [<nRedValue>, <nGreenValue>,
+ *                                     <nBlueValue]] ) --> lValid
  *  $ARGUMENTS$
  *      <cColor|nColor> - the color to change in CA-Cl*pper color notation or
  *              as a number from 0 to 15.
@@ -114,9 +114,9 @@
  *  $ONELINER$
  *      Loads font from a string.
  *  $SYNTAX$
- *      SETFONT(<cFontString>, [<nFontArea>], [<nOffset>], [<nCounter>]) --> nError
+ *      SETFONT( <cFontString>, [<nFontArea>], [<nOffset>], [<nCounter>] ) --> nError
  *          or:
- *      SETFONT(<cFontString>, [<nFontArea>], [<lCompute>]) --> nError
+ *      SETFONT( <cFontString>, [<nFontArea>], [<lCompute>] ) --> nError
  *  $ARGUMENTS$
  *      <cFontString> Binary string containing a valid font definition.
  *      <nFontArea> Number of a font area where the font must be loaded.

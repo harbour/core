@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      convert name of day of the week to its ordinal number
  *  $SYNTAX$
- *      CTODOW (<cName>) -> nOrdinal
+ *      CTODOW( <cName> ) -> nOrdinal
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -42,7 +42,7 @@
  *  $ONELINER$
  *      convert name of month to its ordinal number
  *  $SYNTAX$
- *      CTOMONTH (<cName>) -> nOrdinal
+ *      CTOMONTH( <cName> ) -> nOrdinal
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -74,7 +74,7 @@
  *  $ONELINER$
  *      Returns the date as a string in DD Month YY format
  *  $SYNTAX$
- *      DMY ([<dDate>][, <lMode>]) -> cDateString
+ *      DMY( [<dDate>][, <lMode>] ) -> cDateString
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -108,7 +108,7 @@
  *  $ONELINER$
  *      Returns the date as a string in Month DD, YY or Month DD, YYYY
  *  $SYNTAX$
- *      MDY ([<dDate>]) -> cDateString
+ *      MDY( [<dDate>] ) -> cDateString
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -142,7 +142,7 @@
  *  $ONELINER$
  *      add months to a date
  *  $SYNTAX$
- *      ADDMONTH ([<dDate>,] <nMonths>) -> dShiftedDate
+ *      ADDMONTH( [<dDate>,] <nMonths> ) -> dShiftedDate
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -174,7 +174,7 @@
  *  $ONELINER$
  *      Determines the day of the year for a specific date
  *  $SYNTAX$
- *      DMY ([<dDate>]) -> nDayOfYear
+ *      DMY( [<dDate>] ) -> nDayOfYear
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -208,7 +208,7 @@
  *  $ONELINER$
  *      determines of year of date is a leap year
  *  $SYNTAX$
- *      ISLEAP ([<dDate>]) -> lIsLeap
+ *      ISLEAP( [<dDate>] ) -> lIsLeap
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -240,7 +240,7 @@
  *  $ONELINER$
  *      Total number of days from first of Jan to beginning of nMonth.
  *  $SYNTAX$
- *      DAYSTOMONTH (<nMonth>, <lLeapYear>) -> nDaysToMonth
+ *      DAYSTOMONTH( <nMonth>, <lLeapYear> ) -> nDaysToMonth
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -306,7 +306,7 @@
  *  $ONELINER$
  *      Returns a number equal to the quarter in which a date falls
  *  $SYNTAX$
- *      QUARTER ([<dDate>]) -> nQuarter
+ *      QUARTER( [<dDate>] ) -> nQuarter
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -340,7 +340,7 @@
  *  $ONELINER$
  *      Returns the the number of days in the month.
  *  $SYNTAX$
- *      LASTDAYOM ([<dDate|nMonth>]) -> nDaysInMonth
+ *      LASTDAYOM( [<dDate|nMonth>] ) -> nDaysInMonth
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -375,7 +375,7 @@
  *  $ONELINER$
  *      (num of day) -> day name
  *  $SYNTAX$
- *      NTOCDOW (<nDay>) -> cDay
+ *      NTOCDOW( <nDay> ) -> cDay
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -407,7 +407,7 @@
  *  $ONELINER$
  *      (num of month ) -> Month Name
  *  $SYNTAX$
- *      NTOCMONTH (<nMonth>) -> cMonth
+ *      NTOCMONTH( <nMonth> ) -> cMonth
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -439,14 +439,14 @@
  *  $ONELINER$
  *      Returns the calendar week a number
  *  $SYNTAX$
- *      WEEK ([<dDate>][, <lSWN>]) -> nWeek
+ *      WEEK( [<dDate>][, <lSWN>] ) -> nWeek
  *  $ARGUMENTS$
  *
  *  $RETURNS$
  *
  *  $DESCRIPTION$
  *      Returns the calendar week a number. If no date is specified,
- *      the system date is used. An empty date viz ctod("  /  /  ")
+ *      the system date is used. An empty date via hb_SToD("")
  *      returns 0.
  *      If <lSWN> is .T., week() will calculate the "simple week number", defined by
  *         - week #1 starts on January, 1st

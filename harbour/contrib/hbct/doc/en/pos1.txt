@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Left-most position of a letter in a string
  *  $SYNTAX$
- *      POSALPHA (<cString>, [<lMode>], [<nIgnore>]) -> nPosition
+ *      POSALPHA( <cString>, [<lMode>], [<nIgnore>] ) -> nPosition
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -42,7 +42,7 @@
  *  $ONELINER$
  *      Left-most position of a lowercase letter in a string
  *  $SYNTAX$
- *      POSLOWER (<cString>, [<lMode>], [<nIgnore>]) -> nPosition
+ *      POSLOWER( <cString>, [<lMode>], [<nIgnore>] ) -> nPosition
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -74,8 +74,8 @@
  *  $ONELINER$
  *      Left-most position of a character from a set in a string
  *  $SYNTAX$
- *      POSRANGE (<cChar1>, <cChar2>, <cString>, [<lMode>],
- *                [<nIgnore>]) -> nPosition
+ *      POSRANGE( <cChar1>, <cChar2>, <cString>, [<lMode>],
+ *                [<nIgnore>] ) -> nPosition
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -107,7 +107,7 @@
  *  $ONELINER$
  *      Left-most position of an uppercase letter in a string
  *  $SYNTAX$
- *      POSUPPER (<cString>, [<lMode>], [<nIgnore>]) -> nPosition
+ *      POSUPPER( <cString>, [<lMode>], [<nIgnore>] ) -> nPosition
  *  $ARGUMENTS$
  *
  *  $RETURNS$

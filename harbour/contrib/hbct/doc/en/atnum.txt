@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Returns string portion after nth occurence of substring
  *  $SYNTAX$
- *      AFTERATNUM (<cStringToMatch>, <cString>, [<nCounter>],
+ *      AFTERATNUM( <cStringToMatch>, <cString>, [<nCounter>],
  *                  [<nIgnore>] ) --> cRestString
  *  $ARGUMENTS$
  *      <cStringToMatch>    is the substring scanned for
@@ -38,13 +38,13 @@
  *      second character of the matched substring otherwise.
  *      The function will also consider the settings of SETATLIKE().
  *  $EXAMPLES$
- *      ? AFTERATNUM ("!", "What is the answer ? 4 ! 5 !") -> ""
- *      ? AFTERATNUM ("!", "What is the answer ? 4 ! 5 ?") -> " 5 ?"
+ *      ? AFTERATNUM( "!", "What is the answer ? 4 ! 5 !" ) // -> ""
+ *      ? AFTERATNUM( "!", "What is the answer ? 4 ! 5 ?" ) // -> " 5 ?"
  *      <TODO: add some examples here with csetatmupa() and setatlike()>
  *  $TESTS$
- *      AFTERATNUM ("..", "..This..is..a..test!") == "test!"
- *      AFTERATNUM ("..", "..This..is..a..test!", 2) == "is..a..test!"
- *      AFTERATNUM ("..", "..This..is..a..test!", 2, 2) == "a..test!"
+ *      AFTERATNUM( "..", "..This..is..a..test!" ) == "test!"
+ *      AFTERATNUM( "..", "..This..is..a..test!", 2 ) == "is..a..test!"
+ *      AFTERATNUM( "..", "..This..is..a..test!", 2, 2 ) == "a..test!"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -66,7 +66,7 @@
  *  $ONELINER$
  *      Returns string portion before nth occurence of substring
  *  $SYNTAX$
- *      BEFORATNUM (<cStringToMatch>, <cString>, [<nCounter>],
+ *      BEFORATNUM( <cStringToMatch>, <cString>, [<nCounter>],
  *                  [<nIgnore>] ) --> cRestString
  *  $ARGUMENTS$
  *      <cStringToMatch>    is the substring scanned for
@@ -94,13 +94,13 @@
  *      second character of the matched substring otherwise.
  *      The function will also consider the settings of SETATLIKE().
  *  $EXAMPLES$
- *      ? BEFORATNUM ("!", "What is the answer ? 4 ! 5 !") -> "What is the answer ? 4 ! 5 "
- *      ? BEFORATNUM ("!", "What is the answer ? 4 ! 5 ?") -> "What is the answer ? 4 "
+ *      ? BEFORATNUM( "!", "What is the answer ? 4 ! 5 !" ) // -> "What is the answer ? 4 ! 5 "
+ *      ? BEFORATNUM( "!", "What is the answer ? 4 ! 5 ?" ) // -> "What is the answer ? 4 "
  *      <TODO: add some examples here with csetatmupa() and setatlike()>
  *  $TESTS$
- *      BEFORATNUM ("..", "..This..is..a..test!") == "..This..is..a"
- *      BEFORATNUM ("..", "..This..is..a..test!", 2) == "..This"
- *      BEFORATNUM ("..", "..This..is..a..test!", 2, 2) == "..This..is"
+ *      BEFORATNUM( "..", "..This..is..a..test!" ) == "..This..is..a"
+ *      BEFORATNUM( "..", "..This..is..a..test!", 2 ) == "..This"
+ *      BEFORATNUM( "..", "..This..is..a..test!", 2, 2 ) == "..This..is"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -149,13 +149,13 @@
  *      second character of the matched substring otherwise.
  *      The function will also consider the settings of SETATLIKE().
  *  $EXAMPLES$
- *      ? ATNUM ("!", "What is the answer ? 4 ! 5 !") -> 28
- *      ? ATNUM ("!", "What is the answer ? 4 ! 5 ?") -> 24
+ *      ? ATNUM( "!", "What is the answer ? 4 ! 5 !" ) // -> 28
+ *      ? ATNUM( "!", "What is the answer ? 4 ! 5 ?" ) // -> 24
  *      <TODO: add some examples here with csetatmupa() and setatlike()>
  *  $TESTS$
- *      ATNUM ("..", "..This..is..a..test!") == 14
- *      ATNUM ("..", "..This..is..a..test!", 2) == 7
- *      ATNUM ("..", "..This..is..a..test!", 2, 2) == 11
+ *      ATNUM( "..", "..This..is..a..test!" ) == 14
+ *      ATNUM( "..", "..This..is..a..test!", 2 ) == 7
+ *      ATNUM( "..", "..This..is..a..test!", 2, 2 ) == 11
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

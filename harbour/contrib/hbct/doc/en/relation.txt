@@ -10,8 +10,8 @@
  *  $ONELINER$
  *      Character relation of two strings
  *  $SYNTAX$
- *      CHARRELA (<cStringToMatch1>, <cString1>,
- *                <cStringToMatch2>, <cString2>) -> nPosition
+ *      CHARRELA( <cStringToMatch1>, <cString1>,
+ *                <cStringToMatch2>, <cString2> ) -> nPosition
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -43,9 +43,9 @@
  *  $ONELINER$
  *      Relation dependant character replacement
  *  $SYNTAX$
- *      CHARRELREP (<cStringToMatch1>, <cString1>,
+ *      CHARRELREP( <cStringToMatch1>, <cString1>,
  *                  <cStringToMatch2>, <[@]cString2>,
- *                  <cReplacement>) -> cString
+ *                  <cReplacement> ) -> cString
  *  $ARGUMENTS$
  *
  *  $RETURNS$

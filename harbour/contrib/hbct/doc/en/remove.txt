@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Remove certain characters at the left and right of a string
  *  $SYNTAX$
- *      REMALL (<cString>, [<cSearch|nSearch>]) -> cString
+ *      REMALL( <cString>, [<cSearch|nSearch>] ) -> cString
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -42,7 +42,7 @@
  *  $ONELINER$
  *      Remove certain characters at the left of a string
  *  $SYNTAX$
- *      REMLEFT (<cString>, [<cSearch|nSearch>]) -> cString
+ *      REMLEFT( <cString>, [<cSearch|nSearch>] ) -> cString
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -74,7 +74,7 @@
  *  $ONELINER$
  *      Remove certain characters at the right of a string
  *  $SYNTAX$
- *      REMRIGHT (<cString>, [<cSearch|nSearch>]) -> cString
+ *      REMRIGHT( <cString>, [<cSearch|nSearch>] ) -> cString
  *  $ARGUMENTS$
  *
  *  $RETURNS$

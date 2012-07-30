@@ -23,7 +23,7 @@
  *
  *             The following calculation reproduces the original value:
  *
- *      MANTISSA(<nFloatingPointNumber>)* 2^EXPONENT(<nFloatingPointNumber>) =
+ *      MANTISSA( <nFloatingPointNumber> ) * 2 ^ EXPONENT( <nFloatingPointNumber> ) =
  *      <nFloatingPointNumber>
  *
  *      TODO: add documentation

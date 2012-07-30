@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Swap the contents of two strings
  *  $SYNTAX$
- *      STRSWAP (<[@]cString1>, <[@]cString2>) -> cString
+ *      STRSWAP( <[@]cString1>, <[@]cString2> ) -> cString
  *  $ARGUMENTS$
  *
  *  $RETURNS$

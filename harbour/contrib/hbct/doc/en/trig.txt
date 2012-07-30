@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Returns Pi, the perimeter-to-diameter-ratio of a circle
  *  $SYNTAX$
- *      PI () -> nPi
+ *      PI() -> nPi
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -23,7 +23,7 @@
  *      // the diameter of a circle-like swimming pool is 3.4 meters, how
  *      // long is the perimeter ?
  *
- *      ? str(PI()*3.4,5,3)+" meters"   --> 10.681 meters
+ *      ? Str( PI() * 3.4, 5, 3 ) + " meters" // --> 10.681 meters
  *  $TESTS$
  *
  *  $STATUS$
@@ -59,13 +59,13 @@
  *      A common geometric interpretation of the SIN() function is the
  *      counterkathede-hypotenuse-ratio of a right-angled triangle.
  *  $EXAMPLES$
- *      ? sin (0.0) --> 0.0
- *      ? sin (1.0) --> 0.8414...
+ *      ? sin( 0.0 ) // --> 0.0
+ *      ? sin( 1.0 ) // --> 0.8414...
  *  $TESTS$
- *      sin (0.0) == 0.0
- *      sin (PI()/4) == sqrt(1/2)
- *      sin (PI()/2) == 1.0
- *      sin (PI()) == 0.0
+ *      sin( 0.0 ) == 0.0
+ *      sin( PI() / 4 ) == sqrt( 1 / 2 )
+ *      sin( PI() / 2 ) == 1.0
+ *      sin( PI() ) == 0.0
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -87,7 +87,7 @@
  *  $ONELINER$
  *      Cosine of the argument
  *  $SYNTAX$
- *      COS (nRadiant) -> nCosine
+ *      COS( nRadiant ) -> nCosine
  *  $ARGUMENTS$
  *      <nRadiant>       an angle size given in radiants
  *  $RETURNS$
@@ -99,13 +99,13 @@
  *      A common geometric interpretation of the COS() function is the
  *      ankathede-hypotenuse-ratio of a right-angled triangle.
  *  $EXAMPLES$
- *      ? cos (0.0) --> 1.0
- *      ? cos (1.0) --> 0.5403...
+ *      ? cos( 0.0 ) // --> 1.0
+ *      ? cos( 1.0 ) // --> 0.5403...
  *  $TESTS$
- *      cos (0.0) == 1.0
- *      cos (PI()/4) == sqrt(1/2)
- *      cos (PI()/2) == 0.0
- *      cos (PI()) == -1.0
+ *      cos( 0.0) == 1.0
+ *      cos( PI() / 4 ) == sqrt( 1 / 2 )
+ *      cos( PI() / 2 ) == 0.0
+ *      cos( PI() ) == -1.0
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -127,7 +127,7 @@
  *  $ONELINER$
  *      Tangent of the argument
  *  $SYNTAX$
- *      TAN (nRadiant) -> nTangent
+ *      TAN( nRadiant ) -> nTangent
  *  $ARGUMENTS$
  *      <nRadiant>       an angle size given in radiants
  *  $RETURNS$
@@ -140,12 +140,12 @@
  *      counterkathede-ankathede-ratio of a right-angled triangle, or,
  *      tan(x) = sin(x)/cos(x).
  *  $EXAMPLES$
- *      ? tan (0.0) --> 0.0
- *      ? tan (1.0) --> 1.5574...
+ *      ? tan( 0.0 ) // --> 0.0
+ *      ? tan( 1.0 ) // --> 1.5574...
  *  $TESTS$
- *      tan (0.0) == 0.0
- *      tan (PI()/4) == 1
- *      tan (PI()) == 0.0
+ *      tan( 0.0 ) == 0.0
+ *      tan( PI() / 4 ) == 1
+ *      tan( PI() ) == 0.0
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -167,7 +167,7 @@
  *  $ONELINER$
  *      Cotangent of the argument
  *  $SYNTAX$
- *      COT (nRadiant) -> nCotangent
+ *      COT( nRadiant ) -> nCotangent
  *  $ARGUMENTS$
  *      <nRadiant>       an angle size given in radiants
  *  $RETURNS$
@@ -180,10 +180,10 @@
  *      ankathede-counterkathede-ratio of a right-angled triangle, or,
  *      cot(x) = cos(x)/sin(x)=1/tan(x).
  *  $EXAMPLES$
- *      ? cot (1.0) --> 0.6420...
+ *      ? cot( 1.0 ) // --> 0.6420...
  *  $TESTS$
- *      cot (PI()/4) == 1
- *      cot (PI()/2) == 0
+ *      cot( PI() / 4 ) == 1
+ *      cot( PI() / 2 ) == 0
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -205,7 +205,7 @@
  *  $ONELINER$
  *      Arcus sine of the argument
  *  $SYNTAX$
- *      ASIN (nSine) -> nRadiant
+ *      ASIN( nSine ) -> nRadiant
  *  $ARGUMENTS$
  *      <nSine>         the sine of an angle
  *  $RETURNS$
@@ -218,13 +218,13 @@
  *      Note, that <nSine> must be between -1 and 1 and that <nRadiant>
  *      is always between -PI()/2 and PI()/2.
  *  $EXAMPLES$
- *      ? asin (0.0) --> 0.0
- *      ? asin (0.5) --> 0.5235...
+ *      ? asin( 0.0 ) // --> 0.0
+ *      ? asin( 0.5 ) // --> 0.5235...
  *  $TESTS$
- *      asin (0.0) == 0.0
- *      asin (sqrt(1/2)) == PI()/4
- *      asin (1.0) == PI()/2
- *      asin (0.0) == 0.0  // and not PI(), since the smallest angle is returned !
+ *      asin( 0.0 ) == 0.0
+ *      asin( sqrt( 1 / 2 ) ) == PI() / 4
+ *      asin( 1.0 ) == PI() / 2
+ *      asin( 0.0 ) == 0.0  // and not PI(), since the smallest angle is returned !
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -246,7 +246,7 @@
  *  $ONELINER$
  *      Arcus cosine of the argument
  *  $SYNTAX$
- *      ACOS (nCosine) -> nRadiant
+ *      ACOS( nCosine ) -> nRadiant
  *  $ARGUMENTS$
  *      <nCosine>       the cosine of an angle
  *  $RETURNS$
@@ -259,14 +259,14 @@
  *      Note, that <nCosine> must be between -1 and 1 and that <nRadiant>
  *      is always between 0 and PI().
  *  $EXAMPLES$
- *      ? acos (0.0) --> PI()/2
- *      ? acos (0.5) --> 1.04719...
+ *      ? acos( 0.0 ) // --> PI() / 2
+ *      ? acos( 0.5 ) // --> 1.04719...
  *  $TESTS$
- *      acos (0.0) == PI()/2
- *      acos (sqrt(1/2)) == PI()/4
- *      acos (1.0) == 0.0
- *      acos (-1.0) == PI()
- *      acos (0.0) == PI()/2  // and not -PI()/2, although cos (-PI()/2) == 0.0 !
+ *      acos( 0.0 ) == PI() / 2
+ *      acos( sqrt( 1 / 2 ) ) == PI() / 4
+ *      acos( 1.0 ) == 0.0
+ *      acos( -1.0 ) == PI()
+ *      acos( 0.0 ) == PI() / 2  // and not -PI()/2, although cos (-PI()/2) == 0.0 !
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -288,7 +288,7 @@
  *  $ONELINER$
  *      Arcus tangent of the argument
  *  $SYNTAX$
- *      ACOS (nTangent) -> nRadiant
+ *      ACOS( nTangent ) -> nRadiant
  *  $ARGUMENTS$
  *      <nTangent>      the tangent of an angle
  *  $RETURNS$
@@ -299,12 +299,12 @@
  *      The return value is given in radiants between -PI()/2 and PI()/2
  *      (full angle equals 2*Pi - see DTOR() if you need to convert it into degress).
  *  $EXAMPLES$
- *      ? atan (0.0) --> 0.0
- *      ? atan (0.5) --> 0.4636...
+ *      ? atan( 0.0 ) // --> 0.0
+ *      ? atan( 0.5 ) // --> 0.4636...
  *  $TESTS$
- *      atan (0.0) == 0.0
- *      atan (1.0) == PI()/4
- *      atan (0.0) == 0.0 // and not PI(), although tan (PI()) == 0.0 !
+ *      atan( 0.0 ) == 0.0
+ *      atan( 1.0 ) == PI() / 4
+ *      atan( 0.0 ) == 0.0 // and not PI(), although tan( PI() ) == 0.0 !
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -326,7 +326,7 @@
  *  $ONELINER$
  *      Arcus tangent a sine and a cosine argument
  *  $SYNTAX$
- *      ATN2 (nSine, nCosine) -> nRadiant
+ *      ATN2( nSine, nCosine ) -> nRadiant
  *  $ARGUMENTS$
  *      <nSine>         the sine of an angle
  *      <nCosine>       the cosine of an angle
@@ -344,12 +344,12 @@
  *      The return value is given in radiants (full angle equals 2*Pi -
  *      see DTOR() if you need to convert it into degress).
  *  $EXAMPLES$
- *      ? atn2 (0.0, 1.0) --> 0.0
- *      ? atn2 (sqrt(1/2), sqrt(1/2)) --> PI()/4
+ *      ? atn2( 0.0, 1.0 ) // --> 0.0
+ *      ? atn2( sqrt( 1 / 2 ), sqrt( 1 / 2 ) ) // --> PI() / 4
  *  $TESTS$
- *      atn2 (0.0, 1.0) == 0.0
- *      atn2 (sqrt(1/2),sqrt(1/2)) == PI()/4
- *      atn2 (-sqrt(1/2),-sqrt(1/2)) == -3/4*PI()  // atan() would return PI()/4 !
+ *      atn2( 0.0, 1.0 ) == 0.0
+ *      atn2( sqrt( 1 / 2 ), sqrt( 1 / 2 ) ) == PI() / 4
+ *      atn2( -sqrt( 1 / 2 ), -sqrt( 1 / 2 ) ) == -3 / 4 * PI()  // atan() would return PI() / 4 !
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -371,7 +371,7 @@
  *  $ONELINER$
  *      Hyperbolic Sine of the argument
  *  $SYNTAX$
- *      SINH (nArea) -> nHyperbolicSine
+ *      SINH( nArea ) -> nHyperbolicSine
  *  $ARGUMENTS$
  *      <nArea>            the size of the area (see below)
  *  $RETURNS$
@@ -384,11 +384,11 @@
  *      that is bound by the x axis, a straight line through the point of
  *      origin (this one is fixed by the area) and the hyperbola x^2-y^2=1.
  *  $EXAMPLES$
- *      ? sinh (0.0) --> 0.0
- *      ? sinh (1.0) --> 1.1752...
+ *      ? sinh( 0.0 ) // --> 0.0
+ *      ? sinh( 1.0 ) // --> 1.1752...
  *  $TESTS$
- *      sinh (0.0) == 0.0
- *      sinh (-0.5) == -sinh(0.5)
+ *      sinh( 0.0 ) == 0.0
+ *      sinh( -0.5 ) == -sinh( 0.5 )
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -410,7 +410,7 @@
  *  $ONELINER$
  *      Hyperbolic Cosine of the argument
  *  $SYNTAX$
- *      COSH (nArea) -> nHyperbolicCosine
+ *      COSH( nArea ) -> nHyperbolicCosine
  *  $ARGUMENTS$
  *      <nArea>              the size of the area (see below)
  *  $RETURNS$
@@ -423,11 +423,11 @@
  *      that is bound by the x axis, a straight line through the point of
  *      origin (this one is fixed by the area) and the hyperbola x^2-y^2=1.
  *  $EXAMPLES$
- *      ? cosh (0.0) --> 1.0
- *      ? cosh (1.0) --> 1.5430...
+ *      ? cosh( 0.0 ) // --> 1.0
+ *      ? cosh( 1.0 ) // --> 1.5430...
  *  $TESTS$
- *      cosh (0.0) == 1.0
- *      cosh (-0.5) == cosh(0.5)
+ *      cosh( 0.0 ) == 1.0
+ *      cosh( -0.5 ) == cosh( 0.5 )
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -449,7 +449,7 @@
  *  $ONELINER$
  *      Hyperbolic Tangent of the argument
  *  $SYNTAX$
- *      TANH (nArea) -> nHyperbolicTangent
+ *      TANH( nArea ) -> nHyperbolicTangent
  *  $ARGUMENTS$
  *      <nArea>               the size of the area (see below)
  *  $RETURNS$
@@ -458,11 +458,11 @@
  *      The function TANH() calculates the hyperbolic tangent of the argument.
  *      In analytical mathematics it is defined as SINH(x)/COSH(x).
  *  $EXAMPLES$
- *      ? tanh (0.0) --> 0.0
- *      ? tanh (1.0) --> 0.7615...
+ *      ? tanh( 0.0 ) // --> 0.0
+ *      ? tanh( 1.0 ) // --> 0.7615...
  *  $TESTS$
- *      tanh (0.0) == 0.0
- *      tanh (-0.5) == -tanh(0.5)
+ *      tanh( 0.0 ) == 0.0
+ *      tanh( -0.5 ) == -tanh( 0.5 )
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -484,7 +484,7 @@
  *  $ONELINER$
  *      Convert radiant to degree
  *  $SYNTAX$
- *      RTOD (nRadiant) -> nDegree
+ *      RTOD( nRadiant ) -> nDegree
  *  $ARGUMENTS$
  *      <nRadiant>         the size of an angle in radiant
  *  $RETURNS$
@@ -494,11 +494,11 @@
  *      in radiant (like those returned by the asin, acos or atan function)
  *      to degrees that are commonly used geometry and technics.
  *  $EXAMPLES$
- *      ? rtod (PI()) --> 180
- *      ? tanh (PI()/3) --> 60
+ *      ? rtod( PI() ) // --> 180
+ *      ? tanh( PI() / 3 ) // --> 60
  *  $TESTS$
- *      rtod (0.0) == 0.0
- *      rtod (PI()) == 180.0
+ *      rtod( 0.0 ) == 0.0
+ *      rtod( PI() ) == 180.0
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -520,7 +520,7 @@
  *  $ONELINER$
  *      Convert degree to radiant
  *  $SYNTAX$
- *      DTOR (nDegree) -> nRadiant
+ *      DTOR( nDegree ) -> nRadiant
  *  $ARGUMENTS$
  *      <nDegree>          the size of that angle in degree
  *  $RETURNS$
@@ -529,11 +529,11 @@
  *      The function DTOR() can be used to convert sizes of angles given
  *      in degrees to radiant (as expected by sin, cos or tan functions).
  *  $EXAMPLES$
- *      ? dtor (180) --> PI()
- *      ? dtor (60) --> PI()/3
+ *      ? dtor( 180 ) // --> PI()
+ *      ? dtor( 60 ) // --> PI() / 3
  *  $TESTS$
- *      dtor (0.0) == 0.0
- *      dtor (180.0) == PI()
+ *      dtor( 0.0 ) == 0.0
+ *      dtor( 180.0 ) == PI()
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

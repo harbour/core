@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Replace character at a certain position within a string
  *  $SYNTAX$
- *      POSCHAR (<[@]cString>, <cCharacter|nCharacter>, [<nPosition>]) -> cString
+ *      POSCHAR( <[@]cString>, <cCharacter|nCharacter>, [<nPosition>] ) -> cString
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -42,7 +42,7 @@
  *  $ONELINER$
  *      Delete characters at a certain position within a string
  *  $SYNTAX$
- *      POSDEL (<cString>, [<nStartPosition>], <nLength>) -> cString
+ *      POSDEL( <cString>, [<nStartPosition>], <nLength> ) -> cString
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -74,7 +74,7 @@
  *  $ONELINER$
  *      Insert characters at a certain position within a string
  *  $SYNTAX$
- *      POSINS (<cString>, <cInsert>, [<nPosition>]) -> cString
+ *      POSINS( <cString>, <cInsert>, [<nPosition>] ) -> cString
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -106,7 +106,7 @@
  *  $ONELINER$
  *      Replace characters at a certain position within a string
  *  $SYNTAX$
- *      POSREPL (<[@]cString>, <cReplacement>, [<nStartPosition>]) -> cString
+ *      POSREPL( <[@]cString>, <cReplacement>, [<nStartPosition>] ) -> cString
  *  $ARGUMENTS$
  *
  *  $RETURNS$

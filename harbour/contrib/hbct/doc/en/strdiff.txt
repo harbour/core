@@ -10,8 +10,8 @@
  *  $ONELINER$
  *      Evaluate the "Edit (Levensthein) Distance" of two strings
  *  $SYNTAX$
- *      STRDIFF (<cString1>, <cString2>, [<nReplacementPenalty>], [<nDeletionPenalty>],
- *               [<nInsertionPenalty>]) -> <nDistance>
+ *      STRDIFF( <cString1>, <cString2>, [<nReplacementPenalty>], [<nDeletionPenalty>],
+ *               [<nInsertionPenalty>] ) -> <nDistance>
  *  $ARGUMENTS$
  *      <cString1>              string at the "starting point" of the transformation process, default is ""
  *      <cString2>              string at the "end point" of the transformation process, default is ""
@@ -44,19 +44,19 @@
  *      is considered equal to ALL characters.
  *
  *  $EXAMPLES$
- *      ? strdiff("ABC", "ADC") // 3, one character replaced
- *      ? strdiff("ABC", "AEC") // 3, dito
- *      ? strdiff("CBA", "ABC") // 6, two characters replaced
- *      ? strdiff("ABC", "AXBC") // 1, one character inserted
- *      ? strdiff("AXBC", "ABC") // 6, one character removed
- *      ? strdiff("AXBC", "ADC") // 9, one character removed and one replaced
+ *      ? strdiff( "ABC", "ADC" ) // 3, one character replaced
+ *      ? strdiff( "ABC", "AEC" ) // 3, dito
+ *      ? strdiff( "CBA", "ABC" ) // 6, two characters replaced
+ *      ? strdiff( "ABC", "AXBC" ) // 1, one character inserted
+ *      ? strdiff( "AXBC", "ABC" ) // 6, one character removed
+ *      ? strdiff( "AXBC", "ADC" ) // 9, one character removed and one replaced
  *  $TESTS$
- *      strdiff("ABC", "ADC") == 3
- *      strdiff("ABC", "AEC") == 3
- *      strdiff("CBA", "ABC") == 6
- *      strdiff("ABC", "AXBC") == 1
- *      strdiff("AXBC", "ABC") == 6
- *      strdiff("AXBC", "ADC") == 9
+ *      strdiff( "ABC", "ADC" ) == 3
+ *      strdiff( "ABC", "AEC" ) == 3
+ *      strdiff( "CBA", "ABC" ) == 6
+ *      strdiff( "ABC", "AXBC" ) == 1
+ *      strdiff( "AXBC", "ABC" ) == 6
+ *      strdiff( "AXBC", "ADC" ) == 9
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

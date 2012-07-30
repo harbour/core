@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      The left-most position there two string differ
  *  $SYNTAX$
- *      POSDIFF (<cString1>, <cString2>, [<nIgnore>]) -> nPosition
+ *      POSDIFF( <cString1>, <cString2>, [<nIgnore>] ) -> nPosition
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -42,7 +42,7 @@
  *  $ONELINER$
  *      The left-most position there two string begin to be equal
  *  $SYNTAX$
- *      POSEQUAL (<cString1>, <cString2>, [<nCompare>], [<nIgnore>]) -> nPosition
+ *      POSEQUAL( <cString1>, <cString2>, [<nCompare>], [<nIgnore>] ) -> nPosition
  *  $ARGUMENTS$
  *
  *  $RETURNS$

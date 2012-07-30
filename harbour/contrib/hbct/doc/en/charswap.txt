@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Swap neighbouring characters in a string
  *  $SYNTAX$
- *      CHARSWAP (<[@]cString>) -> cSwappedString
+ *      CHARSWAP( <[@]cString> ) -> cSwappedString
  *  $ARGUMENTS$
  *      <[@]cString>      is the string that should be processed
  *  $RETURNS$
@@ -22,11 +22,11 @@
  *      By setting the CSETREF() switch to .T., one can omit the return value
  *      of this functin, but one must then pass <cString> by reference.
  *  $EXAMPLES$
- *      ? CHARSWAP("0123456789")   // "1032547698"
- *      ? CHARSWAP("ABCDEFGHIJK")  // "BADCFEHGJIK"
+ *      ? CHARSWAP( "0123456789" )   // "1032547698"
+ *      ? CHARSWAP( "ABCDEFGHIJK" )  // "BADCFEHGJIK"
  *  $TESTS$
- *      CHARSWAP("0123456789")  == "1032547698"
- *      CHARSWAP("ABCDEFGHIJK") == "BADCFEHGJIK"
+ *      CHARSWAP( "0123456789" )  == "1032547698"
+ *      CHARSWAP( "ABCDEFGHIJK" ) == "BADCFEHGJIK"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -48,7 +48,7 @@
  *  $ONELINER$
  *      Swap neighbouring double characters in a string
  *  $SYNTAX$
- *      WORDSWAP (<[@]cString> [, <lSwapCharacters>]) -> cSwappedString
+ *      WORDSWAP( <[@]cString> [, <lSwapCharacters>] ) -> cSwappedString
  *  $ARGUMENTS$
  *      <[@]cString>         is the string that should be processed
  *      [<lSwapCharacters>]  specifies whether an additional swap should be
@@ -66,11 +66,11 @@
  *      By setting the CSETREF() switch to .T., one can omit the return value
  *      of this functin, but one must then pass <cString> by reference.
  *  $EXAMPLES$
- *      ? WORDSWAP("1234567890")        // "3412785690"
- *      ? WORDSWAP("1234567890", .t.)   // "4321876590"
+ *      ? WORDSWAP( "1234567890" )       // "3412785690"
+ *      ? WORDSWAP( "1234567890", .T. )  // "4321876590"
  *  $TESTS$
- *      WORDSWAP("1234567890")      == "3412785690"
- *      WORDSWAP("1234567890", .t.) == "4321876590"
+ *      WORDSWAP( "1234567890" )      == "3412785690"
+ *      WORDSWAP( "1234567890", .T. ) == "4321876590"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

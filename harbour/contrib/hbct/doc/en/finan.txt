@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Future value of a capital
  *  $SYNTAX$
- *      FV (nDeposit, nInterest, nPeriods) --> nFutureValue
+ *      FV( nDeposit, nInterest, nPeriods ) --> nFutureValue
  *  $ARGUMENTS$
  *      <nDeposit>     amount of money invested per period
  *      <nInterest>    rate of interest per period, 1 == 100%
@@ -37,10 +37,10 @@
  *      // Payment of 1000 per year for 10 years at a interest rate
  *      // of 5 per cent per year
  *
- *      ? fv (1000, 0.05, 10)  --> 12577.893
+ *      ? fv( 1000, 0.05, 10 ) // --> 12577.893
  *  $TESTS$
- *      fv (1000, 0.00, 10) == 10000.0
- *      fv (1000, 0.05, 10) == 12577.893
+ *      fv( 1000, 0.00, 10 ) == 10000.0
+ *      fv( 1000, 0.05, 10 ) == 12577.893
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -62,7 +62,7 @@
  *  $ONELINER$
  *      Present value of a loan
  *  $SYNTAX$
- *      PV (nPayment, nInterest, nPeriods) --> nPresentValue
+ *      PV( nPayment, nInterest, nPeriods ) --> nPresentValue
  *  $ARGUMENTS$
  *      <nPayment>     amount of money paid back per period
  *      <nInterest>    rate of interest per period, 1 == 100%
@@ -88,10 +88,10 @@
  *      // of 6000 Dollars (the amount you will pay back) the bank will pay
  *      // you
  *
- *      ? pv (100, 0.005, 60)  --> 5172.56
+ *      ? pv( 100, 0.005, 60 ) // --> 5172.56
  *  $TESTS$
- *      pv (100, 0.0, 60)   == 6000.0
- *      pv (100, 0.005, 60) == 5172.56
+ *      pv( 100, 0.0, 60 )   == 6000.0
+ *      pv( 100, 0.005, 60 ) == 5172.56
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -113,7 +113,7 @@
  *  $ONELINER$
  *      Payments for a loan
  *  $SYNTAX$
- *      PAYMENT (nLoan, nInterest, nPeriods) --> nPayment
+ *      PAYMENT( nLoan, nInterest, nPeriods ) --> nPayment
  *  $ARGUMENTS$
  *      <nLoan>        amount of money you get from the bank
  *      <nInterest>    rate of interest per period, 1 == 100%
@@ -137,10 +137,10 @@
  *      // month (6% per year).
  *      // For 5 years, you have to pay back every month
  *
- *      ? payment (5172.56, 0.005, 60)  --> 100.00
+ *      ? payment( 5172.56, 0.005, 60 ) // --> 100.00
  *  $TESTS$
- *      payment (5172.56, 0.0, 60)   == 86.21
- *      payment (5172.56, 0.005, 60) == 100.00
+ *      payment( 5172.56, 0.0, 60 )   == 86.21
+ *      payment( 5172.56, 0.005, 60 ) == 100.00
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -162,7 +162,7 @@
  *  $ONELINER$
  *      Number of periods for a loan
  *  $SYNTAX$
- *      PERIODS (nLoan, nPayment, nInterest) --> nPeriods
+ *      PERIODS( nLoan, nPayment, nInterest ) --> nPeriods
  *  $ARGUMENTS$
  *      <nLoan>        amount of money you get from the bank
  *      <nPayment>     amount of money you pay back per period
@@ -189,12 +189,12 @@
  *      // month (6% per year).
  *      // You can afford to pay 100 back every month, so you need
  *
- *      ? periods (5172.56, 100, 0.005)  --> 60.0
+ *      ? periods( 5172.56, 100, 0.005 ) // --> 60.0
  *
  *      // months to cancel the loan.
  *  $TESTS$
- *      periods (5172.56, 100, 0.005) == 60.0
- *      periods (5172.56, 100, 0.0) == 51.7256
+ *      periods( 5172.56, 100, 0.005 ) == 60.0
+ *      periods( 5172.56, 100, 0.0 ) == 51.7256
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -216,7 +216,7 @@
  *  $ONELINER$
  *      Estimate rate of interest for a loan
  *  $SYNTAX$
- *      RATE (nLoan, nPayment, nPeriods) --> nRate
+ *      RATE( nLoan, nPayment, nPeriods ) --> nRate
  *  $ARGUMENTS$
  *      <nLoan>          amount of money you get from the bank
  *      <nPayment>       amount of money you pay back per period
@@ -237,11 +237,11 @@
  *      // 5 years (60 months). The effective interest rate per
  *      // period (=month) is
  *
- *      ? rate (5172.56, 100, 60)  --> 0.005
+ *      ? rate( 5172.56, 100, 60 ) // --> 0.005
  *
  *  $TESTS$
- *      rate (5172.56, 100, 60.0) == 0.005
- *      rate (6000.0, 100, 60.0) == 0.0
+ *      rate( 5172.56, 100, 60.0 ) == 0.005
+ *      rate( 6000.0, 100, 60.0 ) == 0.0
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

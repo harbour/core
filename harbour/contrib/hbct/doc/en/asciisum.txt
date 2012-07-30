@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      calculate the sum of the ASCII values of the characters in a string
  *  $SYNTAX$
- *      ASCIISUM (<cString>) --> nAsciiSum
+ *      ASCIISUM( <cString> ) --> nAsciiSum
  *  $ARGUMENTS$
  *      <cString>      the string to be processed
  *  $RETURNS$
@@ -21,12 +21,12 @@
  *      i.e. a change of position of a certain character in the string does
  *      not change the ascii sum.
  *  $EXAMPLES$
- *      ? asciisum ("ABC")  -->  197
- *      ? asciisum ("ACB")  -->  197
+ *      ? asciisum( "ABC" ) // -->  197
+ *      ? asciisum( "ACB" ) // -->  197
  *  $TESTS$
- *      asciisum (replicate ("A", 10000)) == 650000
- *      asciisum ("0123456789") == 525
- *      asciisum (nil) == 0
+ *      asciisum( Replicate( "A", 10000 ) ) == 650000
+ *      asciisum( "0123456789" ) == 525
+ *      asciisum( NIL ) == 0
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

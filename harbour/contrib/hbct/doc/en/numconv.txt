@@ -10,7 +10,7 @@
  *  $ONELINER$
  *
  *  $SYNTAX$
- *      NTOC (<xNumber>[, <nBase>][,<nLength>][,<cPadChar>]) -> <cNumber>
+ *      NTOC( <xNumber>[, <nBase>][,<nLength>][,<cPadChar>] ) -> <cNumber>
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -42,7 +42,7 @@
  *  $ONELINER$
  *
  *  $SYNTAX$
- *      CTON (<xNumber>[, <nBase>][,<lMode>]) -> <nNumber>
+ *      CTON( <xNumber>[, <nBase>][,<lMode>] ) -> <nNumber>
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -74,7 +74,7 @@
  *  $ONELINER$
  *
  *  $SYNTAX$
- *      BITTOC (<nInteger>, <cBitPattern>[,<lMode>]) -> <cBitString>
+ *      BITTOC( <nInteger>, <cBitPattern>[,<lMode>] ) -> <cBitString>
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -106,7 +106,7 @@
  *  $ONELINER$
  *
  *  $SYNTAX$
- *      CTOBIT (<cBitString>, <cBitPattern>) -> <nWord>
+ *      CTOBIT( <cBitString>, <cBitPattern> ) -> <nWord>
  *  $ARGUMENTS$
  *
  *  $RETURNS$

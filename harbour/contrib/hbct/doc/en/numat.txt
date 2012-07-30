@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Number of occurrences of a sequence in a string
  *  $SYNTAX$
- *      NUMAT (<cStringToMatch>, <cString>, [<nIgnore>]) --> nCount
+ *      NUMAT( <cStringToMatch>, <cString>, [<nIgnore>] ) --> nCount
  *  $ARGUMENTS$
  *
  *  $RETURNS$

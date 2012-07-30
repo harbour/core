@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Mirror a string
  *  $SYNTAX$
- *      CHARMIRR (<[@]cString>, [<lDontMirrorSpaces>]) -> cMirroredString
+ *      CHARMIRR( <[@]cString>, [<lDontMirrorSpaces>] ) -> cMirroredString
  *  $ARGUMENTS$
  *      <[@]cString>            is the string that should be mirrored
  *      [<lDontMirrorSpaces>]   if set to .T., spaces at the end of
@@ -27,13 +27,13 @@
  *      switch to .T., but <cString> must then be passed by reference to get
  *      a result.
  *  $EXAMPLES$
- *      ? charmirr ("racecar")        // "racecar"
- *      ? charmirr ("racecar  ", .T.) // "racecar  "
- *      ? charmirr ("racecar  ", .F.) // "  racecar"
+ *      ? charmirr( "racecar" )        // "racecar"
+ *      ? charmirr( "racecar  ", .T. ) // "racecar  "
+ *      ? charmirr( "racecar  ", .F. ) // "  racecar"
  *  $TESTS$
- *      charmirr ("racecar") == "racecar"
- *      charmirr ("racecar  ", .T.) == "racecar  "
- *      charmirr ("racecar  ", .F.) == "  racecar"
+ *      charmirr( "racecar" ) == "racecar"
+ *      charmirr( "racecar  ", .T. ) == "racecar  "
+ *      charmirr( "racecar  ", .F. ) == "  racecar"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

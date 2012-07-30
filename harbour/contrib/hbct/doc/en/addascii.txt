@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Add an integer value to an ascii value of a string
  *  $SYNTAX$
- *      ADDASCII (<[@]cString>, <nValue>, [<nPosition>], [<lCarryOver>]) --> cString
+ *      ADDASCII( <[@]cString>, <nValue>, [<nPosition>], [<lCarryOver>] ) --> cString
  *  $ARGUMENTS$
  *      <[@]cString>   is the string that should be edited
  *      <nValue>       is a integer value that should be added to the
@@ -40,17 +40,17 @@
  *      // Add 32 to the ASCII value of the character at the last position
  *      // in the string
  *
- *      ? addascii ("SmitH", 32)  --> "Smith"
+ *      ? addascii( "SmitH", 32 ) // --> "Smith"
  *  $TESTS$
- *      addascii ("0000", 1, 1) == "1000"
- *      addascii ("0000", 1) == "0001"
- *      addascii ("AAAA", -255, 1) == "BAAA"
- *      addascii ("AAAA", -255) == "AAAB"
- *      addascii ("AAAA", 1, 2, .T.) == "ABAA"
- *      addascii ("AAAA", 257, 2, .T.) == "BBAA"
- *      addascii ("AAAA", 257, 2, .F.) == "ABAA"
- *      addascii ("AAAA", 258,, .T.) == "AABC"
- *      addascii ("ABBA", -257, 3, .T.) == "AAAA"
+ *      addascii( "0000", 1, 1 ) == "1000"
+ *      addascii( "0000", 1 ) == "0001"
+ *      addascii( "AAAA", -255, 1 ) == "BAAA"
+ *      addascii( "AAAA", -255 ) == "AAAB"
+ *      addascii( "AAAA", 1, 2, .T. ) == "ABAA"
+ *      addascii( "AAAA", 257, 2, .T. ) == "BBAA"
+ *      addascii( "AAAA", 257, 2, .F. ) == "ABAA"
+ *      addascii( "AAAA", 258,, .T. ) == "AABC"
+ *      addascii( "ABBA", -257, 3, .T. ) == "AAAA"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

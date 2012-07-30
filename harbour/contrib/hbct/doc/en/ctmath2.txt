@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Rounds down a number to the next integer
  *  $SYNTAX$
- *      FLOOR (nNumber) -> nDownRoundedNumber
+ *      FLOOR( <nNumber> ) -> nDownRoundedNumber
  *  $ARGUMENTS$
  *      <nNumber>             number to round down
  *  $RETURNS$
@@ -19,11 +19,11 @@
  *      The function FLOOR() determines the biggest integer that is smaller
  *      than <nNumber>.
  *  $EXAMPLES$
- *      ? floor (1.1)   --> 1.0
- *      ? floor (-1.1)  --> -2.0
+ *      ? floor( 1.1 )  // --> 1.0
+ *      ? floor( -1.1 ) // --> -2.0
  *  $TESTS$
- *      floor (1.1)  == 1.0
- *      floor (-1.1) == -2.0
+ *      floor( 1.1 )  == 1.0
+ *      floor( -1.1 ) == -2.0
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -45,7 +45,7 @@
  *  $ONELINER$
  *      Rounds up a number to the next integer
  *  $SYNTAX$
- *      CEILING (nNumber) -> nUpRoundedNumber
+ *      CEILING( <nNumber> ) -> nUpRoundedNumber
  *  $ARGUMENTS$
  *      <nNumber>             number to round up
  *  $RETURNS$
@@ -54,11 +54,11 @@
  *      The function CEILING() determines the smallest integer that is bigger
  *      than <nNumber>.
  *  $EXAMPLES$
- *      ? ceiling (1.1)   --> 2.0
- *      ? ceiling (-1.1)  --> -1.0
+ *      ? ceiling( 1.1 )  // --> 2.0
+ *      ? ceiling( -1.1 ) // --> -1.0
  *  $TESTS$
- *      ceiling (1.1)  == 2.0
- *      ceiling (-1.1) == -1.0
+ *      ceiling( 1.1 )  == 2.0
+ *      ceiling( -1.1 ) == -1.0
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -80,7 +80,7 @@
  *  $ONELINER$
  *      Sign of a number
  *  $SYNTAX$
- *      SIGN (nNumber) -> nSign
+ *      SIGN( <nNumber> ) -> nSign
  *  $ARGUMENTS$
  *      <nNumber>             a number
  *  $RETURNS$
@@ -91,13 +91,13 @@
  *      If <nNumber> is < 0, then SIGN(<nNumber>) returns -1
  *      If <nNumber> is == 0, then SIGN(<nNumber>) returns 0
  *  $EXAMPLES$
- *      ? sign (1.1)   --> 1
- *      ? sign (-1.1)  --> -1
- *      ? sign (0.0)  --> 0
+ *      ? sign( 1.1 )   // --> 1
+ *      ? sign( -1.1 )  // --> -1
+ *      ? sign( 0.0 )   // --> 0
  *  $TESTS$
- *      sign (1.1)  == 1
- *      sign (-1.1) == -1
- *      sign (0.0)  == 0
+ *      sign( 1.1 )  == 1
+ *      sign( -1.1 ) == -1
+ *      sign( 0.0 )  == 0
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -119,7 +119,7 @@
  *  $ONELINER$
  *      Decadic logarithm of a number
  *  $SYNTAX$
- *      LOG10 (nNumber) -> nLogarithm
+ *      LOG10( <nNumber> ) -> nLogarithm
  *  $ARGUMENTS$
  *      <nNumber>             number to logarithm
  *  $RETURNS$
@@ -128,11 +128,11 @@
  *      The function LOG10() calculates the decadic logarithm of <nNumber>,
  *      i.e. 10^<nLogarithm> == <nNumber>.
  *  $EXAMPLES$
- *      ? log10 (10.0)       --> 1.0
- *      ? log10 (sqrt(10.0)) --> 0.5
+ *      ? log10( 10.0 )         // --> 1.0
+ *      ? log10( sqrt( 10.0 ) ) // --> 0.5
  *  $TESTS$
- *      log10 (10.0)       == 1.0
- *      log10 (sqrt(10.0)) == 0.5
+ *      log10( 10.0 )         == 1.0
+ *      log10( sqrt( 10.0 ) ) == 0.5
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -154,7 +154,7 @@
  *  $ONELINER$
  *      Calculates faculty
  *  $SYNTAX$
- *      FACT (nNumber) -> nFaculty
+ *      FACT( <nNumber> ) -> nFaculty
  *  $ARGUMENTS$
  *      <nNumber>          number between 0 and 21
  *  $RETURNS$
@@ -165,13 +165,13 @@
  *      used in statistics. Note, that faculties above 21 are too big
  *      so that the function must return a -1.
  *  $EXAMPLES$
- *      ? fact (0)  --> 1
- *      ? fact (1)  --> 1
- *      ? fact (4)  --> 24
+ *      ? fact( 0 ) // --> 1
+ *      ? fact( 1 ) // --> 1
+ *      ? fact( 4 ) // --> 24
  *  $TESTS$
- *      fact (0) == 1
- *      fact (1) == 1
- *      fact (4) == 24
+ *      fact( 0 ) == 1
+ *      fact( 1 ) == 1
+ *      fact( 4 ) == 24
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

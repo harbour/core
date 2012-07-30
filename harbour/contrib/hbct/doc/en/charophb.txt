@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Subtracts corresponding ASCII value of two strings
  *  $SYNTAX$
- *      CHARSUB (<[@]cString1>, <cString2>) --> cSubString
+ *      CHARSUB( <[@]cString1>, <cString2>) --> cSubString
  *  $ARGUMENTS$
  *      <[@]cString1>   first string
  *      <cString2>      second string
@@ -28,14 +28,14 @@
  *      <cString2> has been processed, the function restarts with the first
  *      character of <cString2>.
  *  $EXAMPLES$
- *      ? charsub ("012345678", chr(1)) --> "/01234567"
- *      ? charsub ("123456789", chr(255)) --> "23456789:"
- *      ? charsub ("9999", chr(0)+chr(1)+chr(2)+chr(3)) --> "9876"
+ *      ? charsub( "012345678", Chr( 1 ) ) // --> "/01234567"
+ *      ? charsub( "123456789", Chr( 255 ) ) // --> "23456789:"
+ *      ? charsub( "9999", Chr( 0 ) + Chr( 1 ) + Chr( 2 ) + Chr( 3 ) ) // --> "9876"
  *  $TESTS$
- *      charsub ("123456789", chr(1)) == "012345678"
- *      charsub ("123456789", chr(1)+chr(2)) == "002244668"
- *      charsub ("012345678", chr(255)) == "123456789"
- *      charsub ("012345678", chr(255)+chr(254)) == "133557799"
+ *      charsub( "123456789", Chr( 1 ) ) == "012345678"
+ *      charsub( "123456789", Chr( 1 ) + Chr( 2 ) ) == "002244668"
+ *      charsub( "012345678", Chr( 255 ) ) == "123456789"
+ *      charsub( "012345678", Chr( 255 ) + Chr( 254 ) ) == "133557799"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -60,7 +60,7 @@
  *  $ONELINER$
  *      Process each character in a string with bitwise SHIFT LEFT operation
  *  $SYNTAX$
- *      CHARSHL (<[@]cString>, <nBitsToSHL> ) --> cSHLString
+ *      CHARSHL( <[@]cString>, <nBitsToSHL> ) --> cSHLString
  *  $ARGUMENTS$
  *      <[@]cString>    string to be processed
  *      <nBitsToSHL>    number of bit positions to be shifted to the left
@@ -78,10 +78,10 @@
  *      stored in <cString>, too. By setting the CSETREF()-switch to .T.,
  *      the return value can be omitted.
  *  $EXAMPLES$
- *      ? charshl (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+chr(64)+chr(128), 3)
- *        --> chr(8)+chr(16)+chr(32)+chr(64)+chr(128)+chr(0)+chr(0)+chr(0)
+ *      ? charshl( Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128), 3 )
+ *      // --> Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128)+Chr(0)+Chr(0)+Chr(0)
  *  $TESTS$
- *      charshl (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+chr(64)+chr(128), 3) == chr(8)+chr(16)+chr(32)+chr(64)+chr(128)+chr(0)+chr(0)+chr(0)
+ *      charshl( Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128), 3 ) == Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128)+Chr(0)+Chr(0)+Chr(0)
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -106,7 +106,7 @@
  *  $ONELINER$
  *      Process each character in a string with bitwise SHIFT RIGHT operation
  *  $SYNTAX$
- *      CHARSHR (<[@]cString>, <nBitsToSHR> ) --> cSHRString
+ *      CHARSHR( <[@]cString>, <nBitsToSHR> ) --> cSHRString
  *  $ARGUMENTS$
  *      <[@]cString>    string to be processed
  *      <nBitsToSHR>    number of bit positions to be shifted to the right
@@ -124,10 +124,10 @@
  *      stored in <cString>, too. By setting the CSETREF()-switch to .T.,
  *      the return value can be omitted.
  *  $EXAMPLES$
- *      ? charshr (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+chr(64)+chr(128), 3)
- *        --> chr(0)+chr(0)+chr(0)+chr(1)+chr(2)+chr(4)+chr(8)+chr(16)
+ *      ? charshr( Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128), 3 )
+ *      // --> Chr(0)+Chr(0)+Chr(0)+Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)
  *  $TESTS$
- *      charshr (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+chr(64)+chr(128), 3) == chr(0)+chr(0)+chr(0)+chr(1)+chr(2)+chr(4)+chr(8)+chr(16)
+ *      charshr( Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128), 3 ) == Chr(0)+Chr(0)+Chr(0)+Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -152,7 +152,7 @@
  *  $ONELINER$
  *      Process each character in a string with bitwise ROLL LEFT operation
  *  $SYNTAX$
- *      CHARRLL (<[@]cString>, <nBitsToRLL> ) --> cRLLString
+ *      CHARRLL( <[@]cString>, <nBitsToRLL> ) --> cRLLString
  *  $ARGUMENTS$
  *      <[@]cString>    string to be processed
  *      <nBitsToRLL>    number of bit positions to be rolled to the left
@@ -170,10 +170,10 @@
  *      stored in <cString>, too. By setting the CSETREF()-switch to .T.,
  *      the return value can be omitted.
  *  $EXAMPLES$
- *      ? charrll (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+chr(64)+chr(128), 3)
- *        --> chr(8)+chr(16)+chr(32)+chr(64)+chr(128)+chr(1)+chr(2)+chr(4)
+ *      ? charrll( Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128), 3 )
+ *      // --> Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128)+Chr(1)+Chr(2)+Chr(4)
  *  $TESTS$
- *      charrll (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+chr(64)+chr(128), 3) == chr(8)+chr(16)+chr(32)+chr(64)+chr(128)+chr(1)+chr(2)+chr(4)
+ *      charrll( Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128), 3 ) == Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128)+Chr(1)+Chr(2)+Chr(4)
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -198,7 +198,7 @@
  *  $ONELINER$
  *      Process each character in a string with bitwise ROLL RIGHT operation
  *  $SYNTAX$
- *      CHARRLR (<[@]cString>, <nBitsToRLR> ) --> cRLRString
+ *      CHARRLR( <[@]cString>, <nBitsToRLR> ) --> cRLRString
  *  $ARGUMENTS$
  *      <[@]cString>    string to be processed
  *      <nBitsToRLR>    number of bit positions to be rolled to the right
@@ -216,10 +216,10 @@
  *      stored in <cString>, too. By setting the CSETREF()-switch to .T.,
  *      the return value can be omitted.
  *  $EXAMPLES$
- *      ? charrlr (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+chr(64)+chr(128), 3)
- *        --> chr(32)+chr(64)+chr(128)+chr(1)+chr(2)+chr(4)+chr(8)+chr(16)
+ *      ? charrlr( Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128), 3 )
+ *      // --> Chr(32)+Chr(64)+Chr(128)+Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)
  *  $TESTS$
- *      charrlr (chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+chr(64)+chr(128), 3) == chr(32)+chr(64)+chr(128)+chr(1)+chr(2)+chr(4)+chr(8)+chr(16)
+ *      charrlr( Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128), 3 ) == Chr(32)+Chr(64)+Chr(128)+Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

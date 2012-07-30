@@ -10,7 +10,7 @@
  *  $ONELINER$
  *
  *  $SYNTAX$
- *      KSETINS ([<lNewSwitch>]) -> lOldSwitch
+ *      KSETINS( [<lNewSwitch>] ) -> lOldSwitch
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -42,7 +42,7 @@
  *  $ONELINER$
  *
  *  $SYNTAX$
- *      KSETCAPS ([<lNewSwitch>]) -> lOldSwitch
+ *      KSETCAPS( [<lNewSwitch>] ) -> lOldSwitch
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -74,7 +74,7 @@
  *  $ONELINER$
  *
  *  $SYNTAX$
- *      KSETNUM ([<lNewSwitch>]) -> lOldSwitch
+ *      KSETNUM( [<lNewSwitch>] ) -> lOldSwitch
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -106,7 +106,7 @@
  *  $ONELINER$
  *
  *  $SYNTAX$
- *      KSETSCROLL ([<lNewSwitch>]) -> lOldSwitch
+ *      KSETSCROLL( [<lNewSwitch>] ) -> lOldSwitch
  *  $ARGUMENTS$
  *
  *  $RETURNS$

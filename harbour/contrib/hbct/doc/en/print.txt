@@ -10,7 +10,7 @@
  *  $ONELINER$
  *
  *  $SYNTAX$
- *      PRINTSTAT ([<nPrinter>]) -> nState
+ *      PRINTSTAT( [<nPrinter>] ) -> nState
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -42,7 +42,7 @@
  *  $ONELINER$
  *
  *  $SYNTAX$
- *      PRINTREADY ([<nPrinter>]) -> lPrinterReady
+ *      PRINTREADY( [<nPrinter>] ) -> lPrinterReady
  *  $ARGUMENTS$
  *
  *  $RETURNS$

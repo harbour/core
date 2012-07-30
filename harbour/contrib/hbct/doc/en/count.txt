@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Count a certain character at the beginning of a string
  *  $SYNTAX$
- *      COUNTLEFT (<cString>, [<cSearch|nSearch>]) -> nCount
+ *      COUNTLEFT( <cString>, [<cSearch|nSearch>] ) -> nCount
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -42,7 +42,7 @@
  *  $ONELINER$
  *      Count a certain character at the end of a string
  *  $SYNTAX$
- *      COUNTRIGHT (<cString>, [<cSearch|nSearch>]) -> nCount
+ *      COUNTRIGHT( <cString>, [<cSearch|nSearch>] ) -> nCount
  *  $ARGUMENTS$
  *
  *  $RETURNS$

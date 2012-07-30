@@ -10,8 +10,8 @@
  *  $ONELINER$
  *      Search and replace sequences in a string
  *  $SYNTAX$
- *      ATREPL (<cStringToMatch>, <cString>, <cReplacement>, [<nCounter>],
- *              [<lMode>], [<nIgnore>]) --> cString
+ *      ATREPL( <cStringToMatch>, <cString>, <cReplacement>, [<nCounter>],
+ *              [<lMode>], [<nIgnore>] ) --> cString
  *  $ARGUMENTS$
  *      <cStringToMatch>   is the substring searched for in <cString>
  *      <cString>          is the processed string
@@ -44,15 +44,15 @@
  *      The function allows the use of wildcards in <cStringToMatch>
  *      and looks for the settings of SETATLIKE().
  *  $EXAMPLES$
- *      ? ATREPL("ABC", "ABCDABCDABC", "xx")    --> "xxDxxDxx"
- *      ? ATREPL("ABC", "ABCDABC", "ZYXW")      --> "ZYXWDZYXW"
- *      ? ATREPL("ABC", "ABCDABCDABC", "xx", 2) --> "xxDxxDABC"
- *      ? ATREPL("ABC", "ABCDABCDABC", "xx", 2, .T.)  --> "ABCDxxDABC"
+ *      ? ATREPL( "ABC", "ABCDABCDABC", "xx" )    // --> "xxDxxDxx"
+ *      ? ATREPL( "ABC", "ABCDABC", "ZYXW" )      // --> "ZYXWDZYXW"
+ *      ? ATREPL( "ABC", "ABCDABCDABC", "xx", 2 ) // --> "xxDxxDABC"
+ *      ? ATREPL( "ABC", "ABCDABCDABC", "xx", 2, .T. )  // --> "ABCDxxDABC"
  *  $TESTS$
- *      ATREPL("ABC", "ABCDABCDABC", "xx") == "xxDxxDxx"
- *      ATREPL("ABC", "ABCDABC", "ZYXW") == "ZYXWDZYXW"
- *      ATREPL("ABC", "ABCDABCDABC", "xx", 2) == "xxDxxDABC"
- *      ATREPL("ABC", "ABCDABCDABC", "xx", 2, .T.) == "ABCDxxDABC"
+ *      ATREPL( "ABC", "ABCDABCDABC", "xx" ) == "xxDxxDxx"
+ *      ATREPL( "ABC", "ABCDABC", "ZYXW" ) == "ZYXWDZYXW"
+ *      ATREPL( "ABC", "ABCDABCDABC", "xx", 2 ) == "xxDxxDABC"
+ *      ATREPL( "ABC", "ABCDABCDABC", "xx", 2, .T. ) == "ABCDxxDABC"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

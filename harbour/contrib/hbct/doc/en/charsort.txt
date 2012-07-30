@@ -10,9 +10,9 @@
  *  $ONELINER$
  *      Sort sequences within a string.
  *  $SYNTAX$
- *      CHARSORT (<[@]cString>, [<nElementLength>], [<nCompareLength>],
+ *      CHARSORT( <[@]cString>, [<nElementLength>], [<nCompareLength>],
  *                [<nIgnoreCharacters>], [<nElemenOffset>], [<nSortLength>],
- *                [<lDescending>]) -> cSortedString
+ *                [<lDescending>] ) -> cSortedString
  *  $ARGUMENTS$
  *      <[@]cString>             is the string that should be processed
  *      [<nElementLength>]       specifies the length of the elements that
@@ -55,21 +55,21 @@
  *      By setting the CSETREF() switch to .T., one can omit the return value
  *      of the function, but one must then pass <cString> by reference.
  *  $EXAMPLES$
- *      ? CHARSORT("qwert")                     // "eqrtw"
- *      ? CHARSORT("qwert", 2)                  // "erqwt"
- *      ? CHARSORT("b1a4a3a2a1", 2, 1)          // "a2a1a3a4b1"
- *      ? CHARSORT("XXXqwert", 1, 1, 3)         // "XXXeqrtw"
- *      ? CHARSORT("b1a4a3a2a1", 2, 1, 0, 1)    // "a1b1a2a3a4"
- *      ? CHARSORT("384172852", 1, 1, 0, 0, 4)  // "134872852"
- *      ? CHARSORT("qwert", .T.)                // "wtrqe"
+ *      ? CHARSORT( "qwert" )                     // "eqrtw"
+ *      ? CHARSORT( "qwert", 2 )                  // "erqwt"
+ *      ? CHARSORT( "b1a4a3a2a1", 2, 1 )          // "a2a1a3a4b1"
+ *      ? CHARSORT( "XXXqwert", 1, 1, 3 )         // "XXXeqrtw"
+ *      ? CHARSORT( "b1a4a3a2a1", 2, 1, 0, 1 )    // "a1b1a2a3a4"
+ *      ? CHARSORT( "384172852", 1, 1, 0, 0, 4 )  // "134872852"
+ *      ? CHARSORT( "qwert", .T. )                // "wtrqe"
  *  $TESTS$
- *      CHARSORT("qwert")                     == "eqrtw"
- *      CHARSORT("qwert", 2)                  == "erqwt"
- *      CHARSORT("b1a4a3a2a1", 2, 1)          == "a2a1a3a4b1"
- *      CHARSORT("XXXqwert", 1, 1, 3)         == "XXXeqrtw"
- *      CHARSORT("b1a4a3a2a1", 2, 1, 0, 1)    == "a1b1a2a3a4"
- *      CHARSORT("384172852", 1, 1, 0, 0, 4)  == "134872852"
- *      CHARSORT("qwert", .T.)                == "wtrqe"
+ *      CHARSORT( "qwert" )                     == "eqrtw"
+ *      CHARSORT( "qwert", 2 )                  == "erqwt"
+ *      CHARSORT( "b1a4a3a2a1", 2, 1 )          == "a2a1a3a4b1"
+ *      CHARSORT( "XXXqwert", 1, 1, 3 )         == "XXXeqrtw"
+ *      CHARSORT( "b1a4a3a2a1", 2, 1, 0, 1 )    == "a1b1a2a3a4"
+ *      CHARSORT( "384172852", 1, 1, 0, 0, 4 )  == "134872852"
+ *      CHARSORT( "qwert", .T. )                == "wtrqe"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

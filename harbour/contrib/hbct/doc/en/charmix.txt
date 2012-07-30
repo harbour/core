@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Mix two strings
  *  $SYNTAX$
- *      CHARMIX (<cString1>[, <cString2>]) --> cMixedString
+ *      CHARMIX( <cString1>[, <cString2>] ) --> cMixedString
  *  $ARGUMENTS$
  *      <cString1>     String that will be mixed with the characters from <cString2>
  *      [<cString2>]   String whose characters will be mixed with the one from
@@ -27,17 +27,17 @@
  *      the begin of <cString2> again. If on the other hand <cString2> is
  *      longer than <cString1>, the surplus characters will be omitted.
  *  $EXAMPLES$
- *      ? CHARMIX("ABC", "123")    // "A1B2C3"
- *      ? CHARMIX("ABCDE", "12")   // "A1B2C1D2E1"
- *      ? CHARMIX("AB", "12345")   // "A1B2"
- *      ? CHARMIX("HELLO", " ")    //  "H E L L O "
- *      ? CHARMIX("HELLO", "")     //  "HELLO"
+ *      ? CHARMIX( "ABC", "123" )    // "A1B2C3"
+ *      ? CHARMIX( "ABCDE", "12" )   // "A1B2C1D2E1"
+ *      ? CHARMIX( "AB", "12345" )   // "A1B2"
+ *      ? CHARMIX( "HELLO", " " )    //  "H E L L O "
+ *      ? CHARMIX( "HELLO", "" )     //  "HELLO"
  *  $TESTS$
- *      CHARMIX("ABC", "123")  == "A1B2C3"
- *      CHARMIX("ABCDE", "12") == "A1B2C1D2E1"
- *      CHARMIX("AB", "12345") == "A1B2"
- *      CHARMIX("HELLO", " ")  == "H E L L O "
- *      CHARMIX("HELLO", "")   == "HELLO"
+ *      CHARMIX( "ABC", "123" )  == "A1B2C3"
+ *      CHARMIX( "ABCDE", "12" ) == "A1B2C1D2E1"
+ *      CHARMIX( "AB", "12345") == "A1B2"
+ *      CHARMIX( "HELLO", " " )   == "H E L L O "
+ *      CHARMIX( "HELLO", "" )   == "HELLO"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

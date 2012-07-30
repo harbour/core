@@ -10,7 +10,7 @@
  *  $ONELINER$
  *
  *  $SYNTAX$
- *      SCREENATTR ( [<nRow>],[<nColumn>] ) -> <nAttr>
+ *      SCREENATTR( [<nRow>],[<nColumn>] ) -> <nAttr>
  *  $ARGUMENTS$
  *   <nRow>     Designates the line from which to determine the attribute.
  *              The default is the cursor line.
@@ -52,7 +52,7 @@
  *  $ONELINER$
  *
  *  $SYNTAX$
- *      SCREENMIX (<cCharString>, <cAttributeString>, [<nRow>], [<nCol>]) -> <cEmptyString>
+ *      SCREENMIX( <cCharString>, <cAttributeString>, [<nRow>], [<nCol>] ) -> <cEmptyString>
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -151,10 +151,10 @@
  *  $ONELINER$
  *
  *  $SYNTAX$
- *      UNTEXTWIN(<nTopLine>, <nLeftColumn>, <nBottomLine>, <nRightColumn>,
- *                <cReplacementCharacter|nReplacementCharacter>,
- *                [<cInitialCharacter|nInitialCharacter>],
- *                [<cEndCharacter|nEndCharacter>]) --> cNull
+ *      UNTEXTWIN( <nTopLine>, <nLeftColumn>, <nBottomLine>, <nRightColumn>,
+ *                 <cReplacementCharacter|nReplacementCharacter>,
+ *                 [<cInitialCharacter|nInitialCharacter>],
+ *                 [<cEndCharacter|nEndCharacter>] ) --> cNull
  *  $ARGUMENTS$
  *   <nTopLine>  Designates the line for the upper-left corner of the
  *     area.
@@ -204,8 +204,8 @@
  *  $ONELINER$
  *
  *  $SYNTAX$
- *      CHARWIN (<nTop>, <nLeft>, <nBottom>, <nRight>, [<cNewChar|nNewChar>],
- *               [<cOldChar|nOldChar>]) --> <cEmptyString>
+ *      CHARWIN( <nTop>, <nLeft>, <nBottom>, <nRight>, [<cNewChar|nNewChar>],
+ *               [<cOldChar|nOldChar>] ) --> <cEmptyString>
  *  $ARGUMENTS$
  *    <nTop> - top row number, default 0
  *    <nLeft> - left column number, default 0
@@ -247,8 +247,8 @@
  *  $ONELINER$
  *
  *  $SYNTAX$
- *      COLORWIN([<nTopLine>], [<nLeftCol>], [<nBottomLine>], [<nRightCol>],
- *               [<cNewAttr|nNewAttr>], [<cOldAttr|nOldAttr>]) --> cNull
+ *      COLORWIN( [<nTopLine>], [<nLeftCol>], [<nBottomLine>], [<nRightCol>],
+ *                [<cNewAttr|nNewAttr>], [<cOldAttr|nOldAttr>] ) --> cNull
  *  $ARGUMENTS$
  *   <nTopLine>  Designates the topmost line to begin processing.  The
  *     default is the cursor line.
@@ -292,7 +292,7 @@
  *  $ONELINER$
  *
  *  $SYNTAX$
- *      SCREENTEXT(<nTop>, <nLeft>, <nBottom>, <nRight>)
+ *      SCREENTEXT( <nTop>, <nLeft>, <nBottom>, <nRight> )
  *  $ARGUMENTS$
  *    <nTop> - top row number, default 0
  *    <nLeft> - left column number, default 0
@@ -328,7 +328,7 @@
  *  $ONELINER$
  *
  *  $SYNTAX$
- *      COLORREPL([<cNewAttr|nNewAttr>], [<cOldAttr|nOldAttr>]) --> cNull
+ *      COLORREPL( [<cNewAttr|nNewAttr>], [<cOldAttr|nOldAttr>] ) --> cNull
  *  $ARGUMENTS$
  *   <cNewAttr|nNewAttr>  Designates the new attribute.  The default is
  *     CLEARA.

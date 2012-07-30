@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Move characters from the beginning to the end of a string
  *  $SYNTAX$
- *      JUSTLEFT (<[@]cString>, [<cChar>|<nChar>]) -> cJustifiedString
+ *      JUSTLEFT( <[@]cString>, [<cChar>|<nChar>] ) -> cJustifiedString
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -42,7 +42,7 @@
  *  $ONELINER$
  *      Move characters from the end to the beginning of a string
  *  $SYNTAX$
- *      JUSTRIGHT (<[@]cString>, [<cChar>|<nChar>]) -> cJustifiedString
+ *      JUSTRIGHT( <[@]cString>, [<cChar>|<nChar>] ) -> cJustifiedString
  *  $ARGUMENTS$
  *
  *  $RETURNS$

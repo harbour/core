@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Determine return value of reference sensitive CT3 string functions
  *  $SYNTAX$
- *      CSETREF ([<lNewSwitch>]) -> lOldSwitch
+ *      CSETREF( [<lNewSwitch>] ) -> lOldSwitch
  *  $ARGUMENTS$
  *      [<lNewSwitch>]  .T. -> suppress return value
  *                      .F. -> do not suppress return value
@@ -72,7 +72,7 @@
  *  $ONELINER$
  *      Determine "multi-pass" behaviour in some string functions
  *  $SYNTAX$
- *      CSETATMUPA ([<lNewSwitch>]) -> lOldSwitch
+ *      CSETATMUPA( [<lNewSwitch>] ) -> lOldSwitch
  *  $ARGUMENTS$
  *      [<lNewSwitch>]  .T. -> turn "multi-pass" on
  *                      .F. -> turn "multi-pass" off

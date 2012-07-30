@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Initializes the CT3 library
  *  $SYNTAX$
- *      CTINIT () -> lInitialized
+ *      CTINIT() -> lInitialized
  *  $ARGUMENTS$
  *      None
  *  $RETURNS$
@@ -46,7 +46,7 @@
  *  $ONELINER$
  *      Uninitializes the CT3 library
  *  $SYNTAX$
- *      CTEXIT () -> nil
+ *      CTEXIT() -> nil
  *  $ARGUMENTS$
  *      none
  *  $RETURNS$

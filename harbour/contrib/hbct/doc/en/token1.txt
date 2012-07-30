@@ -10,8 +10,8 @@
  *  $ONELINER$
  *      Position of a token in a string
  *  $SYNTAX$
- *      ATTOKEN (<cString>, [<cTokenizer>],
- *               [<nTokenCount>], [<nSkipWidth>]) -> nPosition
+ *      ATTOKEN( <cString>, [<cTokenizer>],
+ *               [<nTokenCount>], [<nSkipWidth>] ) -> nPosition
  *  $ARGUMENTS$
  *      <cString>          is the processed string
  *      [<cTokenizer>]     is a list of characters separating the tokens
@@ -42,13 +42,13 @@
  *      empty tokens, simply look if the character at the returned position
  *      is within the tokenizer list.
  *  $EXAMPLES$
- *      attoken ("Hello, World!")  --> 8  // empty strings after tokenizer
- *                                        // are not a token !
+ *      attoken( "Hello, World!" ) // --> 8  // empty strings after tokenizer
+ *                                           // are not a token !
  *  $TESTS$
- *      attoken ("Hello, World!") == 8
- *      attoken ("Hello, World!",,2) == 8
- *      attoken ("Hello, World!",,2,1) == 7
- *      attoken ("Hello, World!"," ",2,1) == 8
+ *      attoken( "Hello, World!" ) == 8
+ *      attoken( "Hello, World!",, 2 ) == 8
+ *      attoken( "Hello, World!",, 2, 1 ) == 7
+ *      attoken( "Hello, World!", " ", 2, 1 ) == 8
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -72,9 +72,9 @@
  *  $ONELINER$
  *      Tokens of a string
  *  $SYNTAX$
- *      TOKEN (<cString>, [<cTokenizer>],
+ *      TOKEN( <cString>, [<cTokenizer>],
  *             [<nTokenCount], [<nSkipWidth>],
- *             [<@cPreTokenSep>], [<@cPostTokenSep>]) -> cToken
+ *             [<@cPreTokenSep>], [<@cPostTokenSep>] ) -> cToken
  *  $ARGUMENTS$
  *      <cString>          is the processed string
  *      [<cTokenizer>]     is a list of characters separating the tokens
@@ -108,15 +108,15 @@
  *      Therefore, additional calls to the TOKENSEP() function are not
  *      necessary.
  *  $EXAMPLES$
- *      ? token ("Hello, World!")         -->  "World"
- *      ? token ("Hello, World!",,2,1)    --> ""
- *      ? token ("Hello, World!",",",2,1) --> " World!"
- *      ? token ("Hello, World!"," ",2,1) --> "World!"
+ *      ? token( "Hello, World!" )            -->  "World"
+ *      ? token( "Hello, World!",, 2, 1 )     --> ""
+ *      ? token( "Hello, World!", ",", 2, 1 ) --> " World!"
+ *      ? token( "Hello, World!", " ", 2, 1 ) --> "World!"
  *  $TESTS$
- *      token ("Hello, World!") == "World"
- *      token ("Hello, World!",,2,1) == ""
- *      token ("Hello, World!",",",2,1) == " World!"
- *      token ("Hello, World!"," ",2,1) == "World!"
+ *      token( "Hello, World!" )            == "World"
+ *      token( "Hello, World!",, 2, 1 )     == ""
+ *      token( "Hello, World!", ",", 2, 1 ) == " World!"
+ *      token( "Hello, World!", " ", 2, 1 ) == "World!"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -140,7 +140,7 @@
  *  $ONELINER$
  *      Retrieves the number of tokens in a string
  *  $SYNTAX$
- *      NUMTOKEN (<cString>, [<cTokenizer>], [<nSkipWidth>]) -> nTokenCount
+ *      NUMTOKEN( <cString>, [<cTokenizer>], [<nSkipWidth>] ) -> nTokenCount
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -150,9 +150,9 @@
  *  $EXAMPLES$
  *
  *  $TESTS$
- *      numtoken ("Hello, World!") ==  2
- *      numtoken ("This is good. See you! How do you do?",".!?") == 3
- *      numtoken ("one,,three,four,,six",",",1) ==  6
+ *      numtoken( "Hello, World!" ) ==  2
+ *      numtoken( "This is good. See you! How do you do?", ".!?" ) == 3
+ *      numtoken( "one,,three,four,,six", ",", 1 ) ==  6
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -174,8 +174,8 @@
  *  $ONELINER$
  *      Change the first letter of tokens to lower case
  *  $SYNTAX$
- *      TOKENLOWER (<[@]cString>, [<cTokenizer>], [<nTokenCount>],
- *                  [<nSkipWidth>]) -> cString
+ *      TOKENLOWER( <[@]cString>, [<cTokenizer>], [<nTokenCount>],
+ *                  [<nSkipWidth>] ) -> cString
  *  $ARGUMENTS$
  *      <[@]cString>      is the processed string
  *      [<cTokenizer>]    is a list of characters separating the tokens
@@ -203,15 +203,15 @@
  *      switch to .T., but you must then pass <cString> by reference to get
  *      the result.
  *  $EXAMPLES$
- *      ? tokenlower("Hello, World, here I am!")       // "hello, world, here i am!"
- *      ? tokenlower("Hello, World, here I am!",,3)    // "hello, world, here I am!"
- *      ? tokenlower("Hello, World, here I am!",",",3) // "hello, World, here I am!"
- *      ? tokenlower("Hello, World, here I am!"," W")  // "hello, World, here i am!"
+ *      ? tokenlower( "Hello, World, here I am!" )         // "hello, world, here i am!"
+ *      ? tokenlower( "Hello, World, here I am!",, 3 )     // "hello, world, here I am!"
+ *      ? tokenlower( "Hello, World, here I am!", ",", 3 ) // "hello, World, here I am!"
+ *      ? tokenlower( "Hello, World, here I am!", " W" )   // "hello, World, here i am!"
  *  $TESTS$
- *      tokenlower("Hello, World, here I am!") == "hello, world, here i am!"
- *      tokenlower("Hello, World, here I am!",,3)    == "hello, world, here I am!"
- *      tokenlower("Hello, World, here I am!",",",3) == "hello, World, here I am!"
- *      tokenlower("Hello, World, here I am!"," W")  == "hello, World, here i am!"
+ *      tokenlower( "Hello, World, here I am!" )         == "hello, world, here i am!"
+ *      tokenlower( "Hello, World, here I am!",, 3 )     == "hello, world, here I am!"
+ *      tokenlower( "Hello, World, here I am!", ",", 3 ) == "hello, World, here I am!"
+ *      tokenlower( "Hello, World, here I am!", " W" )   == "hello, World, here i am!"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -235,8 +235,8 @@
  *  $ONELINER$
  *      Change the first letter of tokens to upper case
  *  $SYNTAX$
- *      TOKENUPPER (<[@]cString>, [<cTokenizer>], [<nTokenCount>],
- *                  [<nSkipWidth>]) -> cString
+ *      TOKENUPPER( <[@]cString>, [<cTokenizer>], [<nTokenCount>],
+ *                  [<nSkipWidth>] ) -> cString
  *  $ARGUMENTS$
  *      <[@]cString>      is the processed string
  *      [<cTokenizer>]    is a list of characters separating the tokens
@@ -264,15 +264,15 @@
  *      switch to .T., but you must then pass <cString> by reference to get
  *      the result.
  *  $EXAMPLES$
- *      ? tokenupper("Hello, world, here I am!")       // "Hello, World, Here I Am!"
- *      ? tokenupper("Hello, world, here I am!",,3)    // "Hello, World, Here I am!"
- *      ? tokenupper("Hello, world, here I am!",",",3) // "Hello, world, here I am!"
- *      ? tokenupper("Hello, world, here I am!"," w")  // "Hello, wOrld, Here I Am!"
+ *      ? tokenupper( "Hello, world, here I am!" )         // "Hello, World, Here I Am!"
+ *      ? tokenupper( "Hello, world, here I am!",, 3 )     // "Hello, World, Here I am!"
+ *      ? tokenupper( "Hello, world, here I am!", ",", 3 ) // "Hello, world, here I am!"
+ *      ? tokenupper( "Hello, world, here I am!", " w" )   // "Hello, wOrld, Here I Am!"
  *  $TESTS$
- *      tokenupper("Hello, world, here I am!")       == "Hello, World, Here I Am!"
- *      tokenupper("Hello, world, here I am!",,3)    == "Hello, World, Here I am!"
- *      tokenupper("Hello, world, here I am!",",",3) == "Hello, world, here I am!"
- *      tokenupper("Hello, world, here I am!"," w")  == "Hello, wOrld, Here I Am!"
+ *      tokenupper( "Hello, world, here I am!" )         == "Hello, World, Here I Am!"
+ *      tokenupper( "Hello, world, here I am!",, 3 )     == "Hello, World, Here I am!"
+ *      tokenupper( "Hello, world, here I am!", ",", 3 ) == "Hello, world, here I am!"
+ *      tokenupper( "Hello, world, here I am!", " w" )   == "Hello, wOrld, Here I Am!"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -296,7 +296,7 @@
  *  $ONELINER$
  *      Retrieves the token separators of the last token() call
  *  $SYNTAX$
- *      TOKENSEP ([<lMode>]) -> cSeparator
+ *      TOKENSEP( [<lMode>] ) -> cSeparator
  *  $ARGUMENTS$
  *      [<lMode>]   if set to .T., the token separator BEHIND the token
  *                  retrieved from the token() call will be returned.

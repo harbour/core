@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Replace certain characters at the left and right of a string
  *  $SYNTAX$
- *      REPLALL (<cString>, <cReplace|nReplace>, [<cSearch|nSearch>]) -> cString
+ *      REPLALL( <cString>, <cReplace|nReplace>, [<cSearch|nSearch>] ) -> cString
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -42,7 +42,7 @@
  *  $ONELINER$
  *      Replace certain characters at the left of a string
  *  $SYNTAX$
- *      REPLLEFT (<cString>, <cReplace|nReplace>, [<cSearch|nSearch>]) -> cString
+ *      REPLLEFT( <cString>, <cReplace|nReplace>, [<cSearch|nSearch>] ) -> cString
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -74,7 +74,7 @@
  *  $ONELINER$
  *      Replace certain characters at the right of a string
  *  $SYNTAX$
- *      REPLRIGHT (<cString>, <cReplace|nReplace>, [<cSearch|nSearch>]) -> cString
+ *      REPLRIGHT( <cString>, <cReplace|nReplace>, [<cSearch|nSearch>] ) -> cString
  *  $ARGUMENTS$
  *
  *  $RETURNS$

@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Generates a sorted list of all characters in a string
  *  $SYNTAX$
- *      CHARSLIST ([<cString>]) -> cSortedCharacterList
+ *      CHARSLIST( [<cString>] ) -> cSortedCharacterList
  *  $ARGUMENTS$
  *      [<cString>]       is the string for whom the function generates a
  *                        sorted list of all characters
@@ -23,11 +23,11 @@
  *      only once, so that its maximum length is 256. The function
  *      gives the same result as CHARSORT(CHARLIST(<cString>))
  *  $EXAMPLES$
- *      ? charslist ("Hello World !") --> " !HWdelor"
+ *      ? charslist( "Hello World !" ) // --> " !HWdelor"
  *  $TESTS$
- *      charslist ("Hello World !") == " !HWdelor"
- *      charslist ("Hello World !") == charsort (charlist ("Hello World !"))
- *      charslist (nil) == ""
+ *      charslist( "Hello World !" ) == " !HWdelor"
+ *      charslist( "Hello World !" ) == charsort (charlist ("Hello World !"))
+ *      charslist( NIL ) == ""
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -49,7 +49,7 @@
  *  $ONELINER$
  *      Generates a character histogram of a string
  *  $SYNTAX$
- *      CHARHIST ([<cString>]) -> aCharacterCount
+ *      CHARHIST( [<cString>] ) -> aCharacterCount
  *  $ARGUMENTS$
  *      [<cString>]       is the string for whom the function generates a
  *                        character histogram
@@ -63,10 +63,10 @@
  *      in an 256-element array where the nth element contains the count
  *      of ASCII character #(n-1) in <cString>.
  *  $EXAMPLES$
- *      ? charhist ("Hello World !")[109] --> 3  // chr(108)=="l"
+ *      ? charhist( "Hello World !" )[ 109 ] // --> 3  // Chr( 108 ) == "l"
  *  $TESTS$
- *      charhist ("Hello World !")[109] == 3
- *      eval ({||aeval (charhist ("Hello World !"),{|x|nTotal+=x}),nTotal==len("Hello World !")}
+ *      charhist( "Hello World !" )[ 109 ] == 3
+ *      eval( {|| AEval( charhist( "Hello World !" ), {| x | nTotal += x } ), nTotal == Len( "Hello World !" ) }
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

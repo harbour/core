@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      _B_egin _O_f _M_onth
  *  $SYNTAX$
- *      BOM ([<dDate>]) -> dDateBeginOfMonth
+ *      BOM( [<dDate>] ) -> dDateBeginOfMonth
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -42,7 +42,7 @@
  *  $ONELINER$
  *      _E_nd _O_f _M_onth
  *  $SYNTAX$
- *      EOM ([<dDate>]) -> dDateEndOfMonth
+ *      EOM( [<dDate>] ) -> dDateEndOfMonth
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -74,7 +74,7 @@
  *  $ONELINER$
  *      _B_egin _O_f _Q_uarter
  *  $SYNTAX$
- *      BOQ ([<dDate>]) -> dDateBeginOfQuarter
+ *      BOQ( [<dDate>] ) -> dDateBeginOfQuarter
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -106,7 +106,7 @@
  *  $ONELINER$
  *      _E_nd _O_f _Q_uarter
  *  $SYNTAX$
- *      EOQ ([<dDate>]) -> dDateEndOfQuarter
+ *      EOQ( [<dDate>] ) -> dDateEndOfQuarter
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -138,7 +138,7 @@
  *  $ONELINER$
  *      _B_egin _O_f _Y_ear
  *  $SYNTAX$
- *      BOY ([<dDate>]) -> dDateBeginOfYear
+ *      BOY( [<dDate>] ) -> dDateBeginOfYear
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -170,7 +170,7 @@
  *  $ONELINER$
  *      _E_nd _O_f _Y_ear
  *  $SYNTAX$
- *      EOY ([<dDate>]) -> dDateEndOfYear
+ *      EOY( [<dDate>] ) -> dDateEndOfYear
  *  $ARGUMENTS$
  *
  *  $RETURNS$

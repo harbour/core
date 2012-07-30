@@ -10,8 +10,8 @@
  *  $ONELINER$
  *      Replacement of double characters
  *  $SYNTAX$
- *      WORDREPL (<cDoubleCharacterSearchString>, <[@]cString>,
- *                <cDoubleCharacterReplaceString>, [<lMode>]) -> cString
+ *      WORDREPL( <cDoubleCharacterSearchString>, <[@]cString>,
+ *                <cDoubleCharacterReplaceString>, [<lMode>] ) -> cString
  *  $ARGUMENTS$
  *      <cDoubleCharacterSearchString>   is a string of double characters
  *                                       that should be replaced
@@ -41,18 +41,18 @@
  *      One can omit the return value of this function by setting the CSETREF()
  *      to .T., but one must then pass <cString> by reference to get a result.
  *  $EXAMPLES$
- *      ? wordrepl("CC", "AABBCCDDEE", "XX") // "AABBXXDDEE"
- *      ? wordrepl("aa", "1aaaa", "ba")      // "1abaa"
- *      ? wordrepl("aa", "1aaaa", "ba", .T.) // "1baba"
- *      csetatmupa(.T.)
- *      ? wordrepl("aa", "1aaaa", "ba")      // "1abaa"
- *      ? wordrepl("aa", "1aaaa", "ba", .T.) // "1bbba"
+ *      ? wordrepl( "CC", "AABBCCDDEE", "XX" ) // "AABBXXDDEE"
+ *      ? wordrepl( "aa", "1aaaa", "ba" )      // "1abaa"
+ *      ? wordrepl( "aa", "1aaaa", "ba", .T. ) // "1baba"
+ *      csetatmupa( .T. )
+ *      ? wordrepl( "aa", "1aaaa", "ba" )      // "1abaa"
+ *      ? wordrepl( "aa", "1aaaa", "ba", .T. ) // "1bbba"
  *  $TESTS$
- *      wordrepl("CC", "AABBCCDDEE", "XX") == "AABBXXDDEE"
- *      wordrepl("aa", "1aaaa", "ba")      == "1abaa"
- *      wordrepl("aa", "1aaaa", "ba", .T.) == "1baba"
- *      eval ({||csetatmupa(.T.),wordrepl("aa", "1aaaa", "ba")}) == "1abaa"
- *      eval ({||csetatmupa(.T.),wordrepl("aa", "1aaaa", "ba", .T.)}) == "1bbba"
+ *      wordrepl( "CC", "AABBCCDDEE", "XX" ) == "AABBXXDDEE"
+ *      wordrepl( "aa", "1aaaa", "ba" )      == "1abaa"
+ *      wordrepl( "aa", "1aaaa", "ba", .T. ) == "1baba"
+ *      Eval( {|| csetatmupa( .T. ), wordrepl( "aa", "1aaaa", "ba" ) } ) == "1abaa"
+ *      Eval( {|| csetatmupa( .T. ), wordrepl( "aa", "1aaaa", "ba", .T. ) } ) == "1bbba"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

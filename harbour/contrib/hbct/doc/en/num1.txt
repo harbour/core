@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Temperature conversion Fahrenheit to Celsius
  *  $SYNTAX$
- *      CELSIUS (nDegreeFahrenheit) --> nDegreeCelsius
+ *      CELSIUS( nDegreeFahrenheit ) --> nDegreeCelsius
  *  $ARGUMENTS$
  *      <nDegreeFahrenheit>     temperature in degree Fahrenheit
  *  $RETURNS$
@@ -20,12 +20,12 @@
  *      to the Celsius scale.
  *  $EXAMPLES$
  *      // melting point of water in standard conditions
- *      ? celsius (32.0)       --> 0.0
+ *      ? celsius( 32.0 )      // --> 0.0
  *      // boiling point of water in standard conditions
- *      ? celsius (212.0)      --> 100.0
+ *      ? celsius( 212.0 )     // --> 100.0
  *  $TESTS$
- *      celsius (32.0)  == 0.0
- *      celsius (212.0) == 100.0
+ *      celsius( 32.0 )  == 0.0
+ *      celsius( 212.0 ) == 100.0
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -47,7 +47,7 @@
  *  $ONELINER$
  *      Temperature conversion Celsius to Fahrenheit
  *  $SYNTAX$
- *      FAHRENHEIT (nDegreeCelsius) --> nDegreeFahrenheit
+ *      FAHRENHEIT( nDegreeCelsius ) --> nDegreeFahrenheit
  *  $ARGUMENTS$
  *      <nDegreeCelsius>        temperate in degree Celsius
  *  $RETURNS$
@@ -57,12 +57,12 @@
  *      to the Fahrenheit scale.
  *  $EXAMPLES$
  *      // melting point of water in standard conditions
- *      ? fahrenheit (0.0)       --> 32.0
+ *      ? fahrenheit( 0.0 )       // --> 32.0
  *      // boiling point of water in standard conditions
- *      ? fahrenheit (100.0)      --> 212.0
+ *      ? fahrenheit( 100.0 )     // --> 212.0
  *  $TESTS$
- *      fahrenheit (0.0) == 32.0
- *      celsius (100.0) == 212.0
+ *      fahrenheit( 0.0 ) == 32.0
+ *      celsius( 100.0 ) == 212.0
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -84,7 +84,7 @@
  *  $ONELINER$
  *      Returns the largest floating point number available in the system
  *  $SYNTAX$
- *      INFINITY ([<lPlatformIndependant>]) --> nLargestNumber
+ *      INFINITY( [<lPlatformIndependant>] ) --> nLargestNumber
  *  $ARGUMENTS$
  *      [<lPlatformIndependant>]   .T., if the function should return
  *                                 the maximum floating point value

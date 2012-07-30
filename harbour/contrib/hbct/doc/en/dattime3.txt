@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Pauses a specified time in increments of 1/100 seconds
  *  $SYNTAX$
- *      WAITPERIOD([<nDelay>]) --> lNotElapsed
+ *      WAITPERIOD( [<nDelay>] ) --> lNotElapsed
  *  $ARGUMENTS$
  *      <nDelay>  Designates the waiting period at initialization in
  *      1/100ths of seconds.  Values from 1 to 8, 640, 000 (one day) are
@@ -35,9 +35,9 @@
  *  $EXAMPLES$
  *      Run a loop for 5 seconds:
  *
- *      WAITPERIOD(500)               // Initialization, 5 seconds
+ *      WAITPERIOD( 500 )             // Initialization, 5 seconds
  *      DO WHILE <cond1> .AND. <cond2> .AND. WAITPERIOD()
- *        *...
+ *         *...
  *      ENDDO
  *  $TESTS$
  *
@@ -62,7 +62,7 @@
  *  $ONELINER$
  *      Determines whether a specIFied time is valid
  *  $SYNTAX$
- *      TIMEVALID(<cTime>) --> lValid
+ *      TIMEVALID( <cTime> ) --> lValid
  *  $ARGUMENTS$
  *      <cTime>  Designates a character string that contains the time to
  *      test.
@@ -89,17 +89,17 @@
  *      Using the VALID clause with TRIM, all valid times are
  *      accepted, even IF no seconds or minutes are specIFied:
  *
- *      cBegin  :=  SPACE(11)
+ *      cBegin := SPACE( 11 )
  *      @ 5, 10 SAY "Please input time for beginning work:";
- *      GET cBegin VALID TIMEVALID(TRIM(cBegin))
+ *      GET cBegin VALID TIMEVALID( TRIM( cBegin ) )
  *      READ
  *
  *      Using a VALID clause without TRIM, hours and minutes must be
  *      specified, so that TIMEVALID() can confirm a valid time:
  *
- *      cBegin  :=  SPACE(5)
+ *      cBegin := SPACE( 5 )
  *      @ 5, 10 SAY "Please input time for beginning work:";
- *      GET cBegin VALID TIMEVALID(cBegin)
+ *      GET cBegin VALID TIMEVALID( cBegin )
  *      READ
  *  $TESTS$
  *
@@ -124,7 +124,7 @@
  *  $ONELINER$
  *      Sets the system clock
  *  $SYNTAX$
- *      SETTIME(<cTime>, [<lMode>]) --> lSet
+ *      SETTIME( <cTime>, [<lMode>] ) --> lSet
  *  $ARGUMENTS$
  *      <cTime>  Designates a character string that contains the time that
  *      is to become the system time.
@@ -143,16 +143,16 @@
  *      Set the system time in each case; but the hardware clock only
  *      on an AT:
  *
- *      cNewTime  :=  "10:20:00"
+ *      cNewTime := "10:20:00"
  *      IF ISAT()
- *        SETTIME(cNewTime, .T.)
+ *         SETTIME( cNewTime, .T. )
  *      ELSE
- *        SETTIME(cNewTime)
+ *         SETTIME( cNewTime )
  *      ENDIF
  *
  *      Or, more compactly:
  *
- *      SETTIME(cNewTime, ISAT())
+ *      SETTIME( cNewTime, ISAT() )
  *  $TESTS$
  *
  *  $STATUS$
@@ -176,7 +176,7 @@
  *  $ONELINER$
  *      Sets the system date
  *  $SYNTAX$
- *      SETDATE(<dDate>, [<lMode>]) --> lSet
+ *      SETDATE( <dDate>, [<lMode>] ) --> lSet
  *  $ARGUMENTS$
  *      <dDate>  Designates which date to use to set the system date.
  *

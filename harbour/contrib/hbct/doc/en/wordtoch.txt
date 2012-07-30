@@ -10,8 +10,8 @@
  *  $ONELINER$
  *      Replace double with single characters
  *  $SYNTAX$
- *      WORDTOCHAR (<cDoubleCharacterSearchString>, <cString>,
- *                  <cSingleCharacterReplaceString>) -> cString
+ *      WORDTOCHAR( <cDoubleCharacterSearchString>, <cString>,
+ *                  <cSingleCharacterReplaceString> ) -> cString
  *  $ARGUMENTS$
  *
  *  $RETURNS$

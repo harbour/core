@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Generates a list of all characters in a string
  *  $SYNTAX$
- *      CHARLIST ([<cString>]) -> cCharacterList
+ *      CHARLIST( [<cString>] ) -> cCharacterList
  *  $ARGUMENTS$
  *      [<cString>]       is the string for whom the function generates a list
  *                        of all characters
@@ -23,10 +23,10 @@
  *      only once, so that its maximum length is 256. The list lists those
  *      characters first that are occuring in <cString> first.
  *  $EXAMPLES$
- *      ? charlist ("Hello World !") --> "Helo Wrd!"
+ *      ? charlist( "Hello World !" ) // --> "Helo Wrd!"
  *  $TESTS$
- *      charlist ("Hello World !") == "Helo Wrd!"
- *      charlist (nil) == ""
+ *      charlist( "Hello World !" ) == "Helo Wrd!"
+ *      charlist( NIL ) == ""
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -48,7 +48,7 @@
  *  $ONELINER$
  *      Generates a list of all characters not contained in a string
  *  $SYNTAX$
- *      CHARNOLIST ([<cString>]) -> cCharacterList
+ *      CHARNOLIST( [<cString>] ) -> cCharacterList
  *  $ARGUMENTS$
  *      [<cString>]       is the string for whom the function generates a list
  *                        of all characters not contained in that string
@@ -61,10 +61,10 @@
  *      only once, so that its maximum length is 256. The list is alphabetically
  *      sorted.
  *  $EXAMPLES$
- *      ? charnolist (charnolist ("Hello World !")) --> " !HWdelor"
+ *      ? charnolist( charnolist( "Hello World !" ) ) // --> " !HWdelor"
  *  $TESTS$
- *      charnolist (charnolist ("Hello World !")) == charslist ("Hello World !")
- *      charnolist (charnolist (nil)) == ""
+ *      charnolist( charnolist( "Hello World !" ) ) == charslist( "Hello World !" )
+ *      charnolist( charnolist( NIL ) ) == ""
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

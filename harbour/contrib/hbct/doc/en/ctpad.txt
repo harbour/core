@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Fills string to a certain length on the left
  *  $SYNTAX$
- *      PADLEFT (<cString>,<nLength>, [<cChar|nChar>]) -> cString
+ *      PADLEFT( <cString>, <nLength>, [<cChar|nChar>] ) -> cString
  *  $ARGUMENTS$
  *
  *  $RETURNS$
@@ -42,7 +42,7 @@
  *  $ONELINER$
  *      Fills string to a certain length on the right
  *  $SYNTAX$
- *      PADRIGHT (<cString>,<nLength>, [<cChar|nChar>]) -> cString
+ *      PADRIGHT( <cString>, <nLength>, [<cChar|nChar>] ) -> cString
  *  $ARGUMENTS$
  *
  *  $RETURNS$

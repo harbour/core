@@ -10,7 +10,7 @@
  *  $ONELINER$
  *      Sets argument error behaviour
  *  $SYNTAX$
- *      CSETARGERR ([<nNewMode>]) -> <nOldMode>
+ *      CSETARGERR( [<nNewMode>] ) -> <nOldMode>
  *  $ARGUMENTS$
  *      [<nNewMode>]   New argument error throwing mode
  *  $RETURNS$
@@ -53,7 +53,7 @@
  *  $ONELINER$
  *      Initializes the CT3 library, C part
  *  $SYNTAX$
- *      CTCINIT () -> lInitialized
+ *      CTCINIT() -> lInitialized
  *  $ARGUMENTS$
  *      None
  *  $RETURNS$
@@ -86,7 +86,7 @@
  *  $ONELINER$
  *      Uninitializes the CT3 library, C part
  *  $SYNTAX$
- *      CTCEXIT () -> nil
+ *      CTCEXIT() -> NIL
  *  $ARGUMENTS$
  *      none
  *  $RETURNS$

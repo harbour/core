@@ -62,9 +62,9 @@
  *  $ONELINER$
  *      Pack fill characters to appropriate tab characters
  *  $SYNTAX$
- *      TABPACK (<cString>, [<nTabWidth>], [<cFillChar|nFillChar>],
+ *      TABPACK( <cString>, [<nTabWidth>], [<cFillChar|nFillChar>],
  *               [<cNewLineCharacters>], [<cTabChar|nTabChar>],
- *               [<lIgnore141>]) -> cPackedString
+ *               [<lIgnore141>] ) -> cPackedString
  *  $ARGUMENTS$
  *      <cString>
  *      <nTabWidth>
