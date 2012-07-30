@@ -25,7 +25,7 @@ HARBOUR
    using Harbour in any ways. For more legal details, see COPYING.
 
    If you think you can make Harbour better, start to contribute.
-   See this section: HOW TO PARTICIPATE
+   See this section: 'HOW TO PARTICIPATE'
 
 
 1. HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
@@ -33,7 +33,7 @@ HARBOUR
 
    ==========================================================================
    NOTE: Before reporting a problem to developers, make sure to read the
-         TROUBLESHOOTING section in this document and try the suggestions
+         'TROUBLESHOOTING' section in this document and try the suggestions
          you find there.
    ==========================================================================
 
@@ -57,7 +57,7 @@ HARBOUR
           your setup. It's also highly discouraged to keep multiple copies
           of the same compiler, or different versions of the same compiler
           in PATH at the same time. For the list of supported compilers,
-          look up the relevant section in this document.
+          look up 'SUPPORTED PLATFORMS AND C COMPILERS' section.
       3.) GNU Make 3.81 or upper is required. A copy of this tool
           is included in all Harbour packages, so you don't have to do
           anything.
@@ -558,7 +558,7 @@ HARBOUR
    minix    - Minix 3 (tested on 3.1.8; earlier releases probably will not work)
    aix      - IBM AIX
    win      - MS Windows (all flavors)
-              (see LINKS section for Win9x requirements)
+              (see 'LINKS' section for Win9x requirements)
    wce      - MS Windows CE
    dos      - MS-DOS (32-bit protected mode only)
               (MS-DOS compatible systems also work, like dosemu)
@@ -711,7 +711,7 @@ HARBOUR
    - HB_PLATFORM                 Override platform autodetection
    - HB_COMPILER                 Override C compiler autodetection
                                  See this section for possible values:
-                                 SUPPORTED PLATFORMS AND C COMPILERS
+                                 'SUPPORTED PLATFORMS AND C COMPILERS'
                                  See also: HB_CC* settings.
 
    Special
@@ -1239,13 +1239,13 @@ HARBOUR
 
           Download binary archive from this page and unpack or install:
              http://sourceforge.net/projects/harbour-project/files/
-             (choose latest version number)
+             (choose highest version number)
 
       2.) Harbour stable source download
 
           Download source archive from this page and unpack:
              http://sourceforge.net/projects/harbour-project/files/source/
-             (choose latest version number)
+             (choose highest version number)
 
 
    Unstable versions
@@ -1289,7 +1289,7 @@ HARBOUR
    2.  Make sure to do a 'make clean' before doing a build after refreshing
        the sources.
    3.  If that still fails, make sure to install fresh source tree in a new
-       local directory and start over. See HOW TO GET HARBOUR section for
+       local directory and start over. See 'HOW TO GET HARBOUR' section for
        instructions to get the source.
    4.  If you are doing a cross-build, make sure to have rebuilt the native
        Harbour executables for your host platform. See 'HB_HOST_BIN'
@@ -1319,10 +1319,10 @@ HARBOUR
           set HB_INC_*=
           set HB_DIR_*=
           set HB_LEX=
-   7.  Remove any Harbour build settings documented in OPTIONS AVAILABLE WHEN
-       BUILDING HARBOUR section.
+   7.  Remove any Harbour build settings documented in 'OPTIONS AVAILABLE WHEN
+       BUILDING HARBOUR' section.
    8.  Try to do no or only small modifications at once to command examples
-       included in EXAMPLES section of this document. If it doesn't work,
+       included in 'EXAMPLES' section of this document. If it doesn't work,
        fall back to documented examples _as is_.
    9.  If everything fails and you are to report a problem to Harbour developers,
        make sure to include your OS version/language/CPU architecture,
@@ -1335,7 +1335,7 @@ HARBOUR
        problematic behavior occurred _first_. Make sure to not only include
        a link failure or a make tool failure, as it's most of the time not
        enough information. Compress your log using zip if it is larger
-       than 25KB. (use the extension .zip)
+       than 25KB. (use the extension '.zip')
        With these, you have much better chance to get useful or any response.
    10. Do not alter the directory layout and files in Harbour and 3rd party
        packages.
@@ -1347,7 +1347,7 @@ HARBOUR
        core components from makefiles and custom environment. F.e. it's
        commom mistake to add C compiler header and/or lib dirs, Harbour core
        header and/or lib dirs, built-in constants to makefiles or environment.
-       No such thing is necessary and all of these are automatically handled
+       No such thing is necessary as all of these are automatically handled
        by hbmk2. IOW start simple and don't be overbusy with "fine-tuning"
        your configuration. If you need to, the problem is most probably
        elsewhere. It's also good idea to try with Harbour nightly binary or
@@ -1358,8 +1358,8 @@ HARBOUR
        the problem using official stable or nightly Harbour build.
        Do not post executables and other binary files. If your source contains
        non-ASCII (national, accented, special) chars, clearly mark the
-       codepage/encoding used or attach the files compressed with zip.
-       (use the extension .zip)
+       codepage/encoding used and attach the files compressed with zip.
+       (use the extension '.zip')
        See more on self-contained examples: http://sscce.org/
    13. If your example involves compatibility components, make sure to test
        it against original implementation (for example, test legacy Clipper
