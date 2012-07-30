@@ -31,7 +31,7 @@ rem ; Assemble unified package from per-target builds
 if exist %HB_ABSROOT% rd /q /s %HB_ABSROOT%
 
 xcopy /y       %~dp0RELNOTES                                                              %HB_ABSROOT%
-xcopy /y /s    %~dp0..\..\examples\*.*                                                    %HB_ABSROOT%examples\
+xcopy /y /s    %~dp0..\..\extras\*.*                                                      %HB_ABSROOT%extras\
 xcopy /y /s    %~dp0..\..\tests\*.*                                                       %HB_ABSROOT%tests\
 xcopy /y       %~dp0HARBOUR_README_ADDONS                                                 %HB_ABSROOT%addons\
 xcopy /y       %~dp0HARBOUR_README_DJGPP                                                  %HB_ABSROOT%comp\djgpp\
@@ -175,7 +175,7 @@ rem echo "%HB_DR%bin\harbour-%HB_VS%-os2.dll"           >> _hbfiles
 echo "%HB_DR%tests\*.*"                             >> _hbfiles
 echo "%HB_DR%doc\*.*"                               >> _hbfiles
 echo "%HB_DR%comp\mingw\*"                          >> _hbfiles
-echo "%HB_DR%examples\*.*"                          >> _hbfiles
+echo "%HB_DR%extras\*.*"                            >> _hbfiles
 echo "%HB_DR%contrib\*.*"                           >> _hbfiles
 
 if exist %HB_RT%harbour-%HB_VF%-win.7z del %HB_RT%harbour-%HB_VF%-win.7z

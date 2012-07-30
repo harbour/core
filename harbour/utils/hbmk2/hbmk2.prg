@@ -92,7 +92,7 @@
          Instead, 3rd party Harbour packages are recommended to maintain
          and provide .hbc files themselves, as part of their standard
          distribution packages. You can find a few such .hbc examples in
-         the 'examples' directory. For Harbour contribs, the recommended
+         the 'extras' directory. For Harbour contribs, the recommended
          method is to supply and maintain .hbc files in their respective
          directories, usually under tests (or utils, examples). As of this
          writing, most of them has one created.
