@@ -455,7 +455,7 @@ METHOD getcookies( cHost, cPath ) CLASS tIPClientHTTP
       ASort( aPathKeys,,, {| cX, cY | Len( cX ) > Len( cY ) } )
       b := Len( aPathKeys )
       FOR a := 1 TO b
-         aKeys := hb_Hkeyat( ::hCookies[ aDomKeys[ x ] ] [ aPathKeys[ a ] ] )
+         aKeys := hb_Hkeys( ::hCookies[ aDomKeys[ x ] ][ aPathKeys[ a ] ] )
          d := Len( aKeys )
          FOR c := 1 TO d
             IF ! Empty( cOut )
