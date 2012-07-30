@@ -27,10 +27,7 @@
  *
  */
 
-/* TODO:
-     - Make home project detection more robust in stdalone mode.
-
-   NOTE:
+/* NOTE:
      - 'install' is ignored in stdalone mode. It would be needed to
        replicate the install dir defaulting logic found in global.mk
        to implement it.
