@@ -238,7 +238,12 @@ HARBOUR
    If you want to rebuild one specific contrib package, use this:
 
       cd contrib/<name>
-      ../../bin/<plat>/<comp>/hbmk2 ../make.hb [clean] [install] [custom hbmk2 options]
+      ../../bin/<plat>/<comp>/hbmk2 ../make.hb [clean] [custom hbmk2 options]
+
+      NOTE: 'install' doesn't work when doing a partial [re]build 
+            at this time. To work this around, simply avoid 'install' 
+            completely, do a complete rebuild or copy the created 
+            lib(s) manually.
 
 
 3. HOW TO CREATE DISTRIBUTABLE PACKAGES
