@@ -34,7 +34,7 @@ PROCEDURE Main( cContains )
 
    RETURN
 
-PROCEDURE WalkDir( cDir, cContains )
+STATIC PROCEDURE WalkDir( cDir, cContains )
    LOCAL aFile
 
    FOR EACH aFile IN Directory( cDir + hb_osFileMask(), "D" )
@@ -48,7 +48,7 @@ PROCEDURE WalkDir( cDir, cContains )
 
    RETURN
 
-PROCEDURE ProcessFile( cFileName, cContains )
+STATIC PROCEDURE ProcessFile( cFileName, cContains )
    LOCAL cDynamic
    LOCAL lFirst := .T.
 
