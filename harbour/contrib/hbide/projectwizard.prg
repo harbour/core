@@ -712,7 +712,7 @@ METHOD IdeProjectWizard:loadDefaults()
          RETURN .f.
       ENDIF
 
-      IF hb_fileExists( cPath + cName + ".hbptmplt" )
+      IF hb_fileExists( cPath + cName + ".tpl" )
          lTmpltExists := .t.
       ELSEIF hb_fileExists( cProjPath )
          MsgBox( "Project file already exists, cannot reload in wizard!" )
@@ -721,7 +721,7 @@ METHOD IdeProjectWizard:loadDefaults()
       ::cProjPath := cPath
 
       IF lTmpltExists
-         ::oProject:load( cPath + cName + ".hbptmplt" )
+         ::oProject:load( cPath + cName + ".tpl" )
          ::oProject:loadUI( Self, UI_LOAD_NORMAL )
       ELSE
          ::oUI:editProjPath:setText( cProjPath )
@@ -741,7 +741,7 @@ METHOD IdeProjectWizard:saveProject()
 
    ::oProject:saveUI( Self )
    hb_fNameSplit( ::oUI:editProjPath:text(), @cPath, @cFile, @cExt )
-   ::oProject:save( cPath + cFile + ".hbptmplt" )
+   ::oProject:save( cPath + cFile + ".tpl" )
 
    RETURN Self
 
@@ -1477,4 +1477,3 @@ METHOD IdeExProject:load( cPathTmplt )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
