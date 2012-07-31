@@ -1279,7 +1279,7 @@
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <widget class="QPlainTextEdit" name="plainSwitches">
+     <widget class="QPlainTextEdit" name="plainExtras">
       <property name="geometry">
        <rect>
         <x>8</x>
