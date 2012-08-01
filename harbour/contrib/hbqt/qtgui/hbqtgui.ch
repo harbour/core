@@ -2424,7 +2424,7 @@
 #define QDir_NoDotAndDotDot                                  0x1000  // Do not list the special entries "." and "..".
 #define QDir_NoDot                                           0x2000  // Do not list the special entry ".".
 #define QDir_NoDotDot                                        0x4000  // Do not list the special entry "..".
-#define QDir_AllEntries                                      hb_bitOr( Qt_Dirs, Qt_Files, Qt_Drives ) // List directories, files, drives and symlinks (this does not list broken symlinks unless you specify System).
+#define QDir_AllEntries                                      hb_bitOr( QDir_Dirs, QDir_Files, QDir_Drives ) // List directories, files, drives and symlinks (this does not list broken symlinks unless you specify System).
 #define QDir_Readable                                        0x010   // List files for which the application has read access. The Readable value needs to be combined with Dirs or Files.
 #define QDir_Writable                                        0x020   // List files for which the application has write access. The Writable value needs to be combined with Dirs or Files.
 #define QDir_Executable                                      0x040   // List files for which the application has execute access. The Executable value needs to be combined with Dirs or Files.
