@@ -2416,6 +2416,34 @@
 #define QIODevice_Text                                       0x0010   // When reading, the end-of-line terminators are translated to '\n'. When writing, the end-of-line terminators are translated to the local encoding, for example '\r\n' for Win32.
 #define QIODevice_Unbuffered                                 0x0020   // Any buffer in the device is bypassed.
 
+#define QDir_Dirs                                            0x001   // List directories that match the filters.
+#define QDir_AllDirs                                         0x400   // List all directories; i.e. don't apply the filters to directory names.
+#define QDir_Files                                           0x002   // List files.
+#define QDir_Drives                                          0x004   // List disk drives (ignored under Unix).
+#define QDir_NoSymLinks                                      0x008   // Do not list symbolic links (ignored by operating systems that don't support symbolic links).
+#define QDir_NoDotAndDotDot                                  0x1000  // Do not list the special entries "." and "..".
+#define QDir_NoDot                                           0x2000  // Do not list the special entry ".".
+#define QDir_NoDotDot                                        0x4000  // Do not list the special entry "..".
+#define QDir_AllEntries                                      hb_bitOr( Qt_Dirs, Qt_Files, Qt_Drives ) // List directories, files, drives and symlinks (this does not list broken symlinks unless you specify System).
+#define QDir_Readable                                        0x010   // List files for which the application has read access. The Readable value needs to be combined with Dirs or Files.
+#define QDir_Writable                                        0x020   // List files for which the application has write access. The Writable value needs to be combined with Dirs or Files.
+#define QDir_Executable                                      0x040   // List files for which the application has execute access. The Executable value needs to be combined with Dirs or Files.
+#define QDir_Modified                                        0x080   // Only list files that have been modified (ignored on Unix).
+#define QDir_Hidden                                          0x100   // List hidden files (on Unix, files starting with a ".").
+#define QDir_System                                          0x200   // List system files (on Unix, FIFOs, sockets and device files are included; on Windows, .lnk files are included)
+#define QDir_CaseSensitive                                   0x800   // The filter should be case sensitive.
+#define QDir_Name                                            0x00    // Sort by name.
+#define QDir_Time                                            0x01    // Sort by time (modification time).
+#define QDir_Size                                            0x02    // Sort by file size.
+#define QDir_Type                                            0x80    // Sort by file type (extension).
+#define QDir_Unsorted                                        0x03    // Do not sort.
+#define QDir_NoSort                                          -1      // Not sorted by default.
+#define QDir_DirsFirst                                       0x04    // Put the directories first, then the files.
+#define QDir_DirsLast                                        0x20    // Put the files first, then the directories.
+#define QDir_Reversed                                        0x08    // Reverse the sort order.
+#define QDir_IgnoreCase                                      0x10    // Sort case-insensitively.
+#define QDir_LocaleAware                                     0x40    // Sort items appropriately using the current locale settings.
+
 /*----------------------------------------------------------------------*/
 //                        HBQT Defined Constants
 /*----------------------------------------------------------------------*/
