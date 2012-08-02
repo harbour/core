@@ -1424,11 +1424,11 @@ STATIC PROCEDURE hbide_HBPLoad( aParams, cFileName )
                   #if 0
                   DO CASE
                   CASE !( Left( cParamNQ, 1 ) == "-" ) .AND. Len( cParamNQ ) >= 1 .AND. Left( cParamNQ, 1 ) == "@" .AND. ;
-                       !( Lower( hbide_HBPExtGet( cParamNQ ) ) == ".clp" )
+                       !( Lower( hb_FNameExt( cParamNQ ) ) == ".clp" )
                      /* skip recurse */
                   CASE !( Left( cParamNQ, 1 ) == "-" ) .AND. ;
-                       ( Lower( hbide_HBPExtGet( cParamNQ ) ) == ".hbm" .OR. ;
-                         Lower( hbide_HBPExtGet( cParamNQ ) ) == ".hbp" )
+                       ( Lower( hb_FNameExt( cParamNQ ) ) == ".hbm" .OR. ;
+                         Lower( hb_FNameExt( cParamNQ ) ) == ".hbp" )
                      /* skip recurse */
                   OTHERWISE
                      AAdd( aParams, { cParam, cFileName, cLine:__enumIndex() } )
@@ -1449,15 +1449,6 @@ STATIC FUNCTION hbide_HBPStrStripQuote( cString )
    RETURN iif( Left( cString, 1 ) == '"' .AND. Right( cString, 1 ) == '"',;
              SubStr( cString, 2, Len( cString ) - 2 ),;
              cString )
-
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION hbide_HBPExtGet( cFileName )
-   LOCAL cExt
-
-   hb_FNameSplit( cFileName, , , @cExt )
-
-   RETURN cExt
 
 /*----------------------------------------------------------------------*/
 //
