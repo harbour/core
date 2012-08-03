@@ -41,6 +41,12 @@
  *
  *          The compiler generates all information required for debugging
  *
+ *      /build           display detailed version info   </par>
+ *      =================   </par>
+ *
+ *      /credits         display credits  </par>
+ *      =================   </par>
+ *
  *      /d<id>[=<val>]   #define <id>   </par>
  *      =================   </par>
  *
@@ -58,41 +64,66 @@
  *          /es2        - all warnings are treated as errors and no output
  *                        file is created. The exit code is set to a non-zero
  *                        value.
-
+ *
+ *      /fn[:[l|u]|-]    set filename casing (l=lower u=upper) </par>
+ *      =================   </par>
+ *
+ *      /fd[:[l|u]|-]    set directory casing (l=lower u=upper)   </par>
+ *      =================   </par>
+ *
+ *      /fp[:<char>]     set path separator  </par>
+ *      =================   </par>
+ *
+ *      /fs[-]           turn filename space trimming on or off (default)  </par>
+ *      =================   </par>
+ *
  *      /g<type>         output type generated is <type> </par>
  *      =================   </par>
  *
  *          /gc[<type>]  output type: C source (.c) (default)
- *                          <type>: 0=compact 1=normal 2=verbose (default)
- *                                  3=generate real C code instead of PCODE
- *                                    array called by a C wrapper.
- *
- *          /go          output type: Platform dependant object module
+ *                          <type>: 0=compact (default) 1=normal 2=verbose
+ *                                  3=generate real C code
  *
  *          /gh          output type: Harbour Portable Object (.hrb)
  *
-
- *      /i<path>         add #include file search path   </par>
+ *          /gd[.<destext>]  generate dependencies list into (.d) file
+ *
+ *          /ge[<mode>]      error output <mode>: 0=Clipper (default)
+ *                                                1=IDE friendly
+ *
+ *      /i<path>         #include file search path   </par>
  *      =================   </par>
  *
- *      /k<mode>         enable <mode> compatibility mode  </par>
- *      =================                                  </par>
+ *      /i[-|+]          disable/enable support for INCLUDE envvar   </par>
+ *      =================   </par>
  *
- *          /kc          clear all flags (strict CA-Cl*pper compatibility)
+ *      /j[<file>]       generate i18n gettext file (.pot)  </par>
+ *      =================   </par>
  *
- *          /kh          Harbour extensions (default)
+ *      /k<mode>         compilation mode (type -k? for more data)  </par>
+ *      =================  </par>
  *
- *          /ki          HB_INLINE support enabled (default)
+ *          /kc          clear all flags (strict Clipper mode)
  *
- *          /kr          use runtime settings for the macro compiler
+ *          /kh          Harbour mode (default)
  *
- *          /ks          enable support for strings as array of bytes (default)
+ *          /ko          allow operator optimizations
  *
- *          /kx          other Xbase++ dialects extensions (default)
+ *          /ki          enable support for HB_INLINE (default)
  *
- *          /kJ          disable optimalization of jump and noop pcodes
+ *          /kr          runtime settings enabled
  *
- *          /k?          invoke help information
+ *          /ks          allow indexed assignment on all types
+ *
+ *          /kx          extended Xbase++ mode (default)
+ *
+ *          /ku          strings in user encoding
+ *
+ *          /kj          turn off jump optimization in pcode
+ *
+ *          /km          turn off macrotext substitution
+ *
+ *          /k?          this info
  *
  *      /l               suppress line number information      </par>
  *      =================   </par>
@@ -101,11 +132,14 @@
  *          the output file. The PROCLINE() function will return 0 for
  *          modules compiled using this option.
  *
- *      /m               compile current module only   </par>
+ *      /m               compile module only   </par>
  *      =================   </par>
  *
- *      /n               no implicit starting procedure   </par>
+ *      /n[<type>]       no implicit starting procedure   </par>
  *      =================   </par>
+ *                         <type>: 0=no implicit starting procedure
+ *                                 1=no starting procedure at all
+ *                                 2=add starting procedure if necessary
  *
  *          The compiler does not create a procedure with the same name as
  *          the compiled file. This means that any declarations placed
@@ -115,7 +149,7 @@
  *          placed at the beginning of the file and before the first
  *          PROCEDURE/FUNCTION statement are ignored.
  *
- *      /o<path>         output file drive and/or path   </par>
+ *      /o<path>         object file drive and/or path   </par>
  *      =================   </par>
  *
  *      /p               generate pre-processed output (.ppo) file   </par>
@@ -124,13 +158,18 @@
  *          The compiler only creates the file that contains the result of
  *          pre-processing the source file.
  *
+ *      /p+              generate pre-processor trace (.ppt) file </par>
+ *      =================   </par>
+ *
  *      /q               quiet   </par>
  *      =================   </par>
  *
  *          The compiler does not print any messages during compiling
  *          (except the copyright info).
  *
- *          /q0     be really quiet and don't display even the copyright info
+ *          /q0     quiet and don't display program header
+ *
+ *          /q2     disable all output messages
  *
  *      /r[<lib>]        request linker to search <lib> (or none)   </par>
  *      =================   </par>
@@ -147,7 +186,7 @@
  *          for example:
  *          #command ( => (,7
  *
- *      /s               syntax check only   </par>
+ *      /s[m]            syntax check only [minimal for dependencies list] </par>
  *      =================   </par>
  *
  *          The compiler checks the syntax only. No output file is generated.
@@ -158,7 +197,13 @@
  *          Currently not used in Harbour (the Harbour compiler does not
  *          create any temporary files).
  *
- *      /u[<file>]       use command definition set in <file> (or none)   </par>
+ *      /u[<file>]       use command def set in <file> (or none)  </par>
+ *      =================   </par>
+ *
+ *      /u+<file>        add command def set from <file> </par>
+ *      =================   </par>
+ *
+ *      /undef:<id>      #undef <id>   </par>
  *      =================   </par>
  *
  *      /v               variables are assumed M->   </par>
@@ -168,7 +213,7 @@
  *          variables (private or public variables). If this switch is not
  *          used then the scope of such variables is checked at runtime.
  *
- *      /w[<level>]      set warning level number (0..4, default 1)   </par>
+ *      /w[<level>]      set warning level number (0..3, default 1)  </par>
  *      =================   </par>
  *
  *          /w0         - no warnings
@@ -182,11 +227,6 @@
  *                        warns against declared types, or types which may be
  *                        calculated at compile time
  *
- *          /w4         - Enables warning about suspicious operations, which
- *                        means if you mix undeclared types, or types which
- *                        can not be calculated at compile time,together with
- *                        declared types, a warning will be  generated.
- *
  *      /x[<prefix>]     set symbol init function name prefix (for .c only)   </par>
  *      =================   </par>
  *
@@ -196,14 +236,7 @@
  *          prefix can be used to suppress problems with duplicated symbols
  *          during linking an application with some third party libraries.
  *
- *      /y               trace lex & yacc activity   </par>
- *      =================   </par>
- *
- *          The Harbour compiler uses the FLEX and YACC utilities to parse
- *          the source code and to generate the required output file. This
- *          option traces the activity of these utilities.
- *
- *      /z               suppress logical shortcutting (.and. & .or.)   </par>
+ *      /z               suppress shortcutting (.and. & .or.)  </par>
  *      =================   </par>
  *
  *      Compilation in batch mode.   </par>

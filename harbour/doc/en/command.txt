@@ -197,7 +197,7 @@
  *      entire class. Each CLASSDATA exists only once, no matter how many
  *      objects are created. A common usage is for a counter that is
  *      incremented whenever an object is created and decremented when one
- *      is destroyed, thus monitoring the number of objects in existance
+ *      is destroyed, thus monitoring the number of objects in existence
  *      for this class.
  *
  *      You can use the "AS <type>" clause to enforce that the CLASSDATA is

@@ -87,7 +87,7 @@
  *
  *      Exceptions:
  *
- *      - Handlig of the /CREDIT undocumented switch on Harbour command line
+ *      - Handling of the /CREDIT undocumented switch on Harbour command line
  *      is unusual, check the current code for this.
  *
  *      - The CLIPPER, HARBOUR and Harbour application command line parsing
@@ -95,7 +95,7 @@
  *
  *      Notes:
  *
- *      - All occurences where a path is accepted, Harbour should handle the
+ *      - All occurrences where a path is accepted, Harbour should handle the
  *        quote char to specify path containing space, negative sign, slash,
  *        or any other chars with special meaning.
  *
