@@ -237,6 +237,9 @@ CLASS IdeINI INHERIT IdeObject
    DATA   nEditsViewStyle                         INIT  0
    DATA   cToolbarSize                            INIT  "12"
 
+   DATA   nPanelsTabPosition                      INIT 0
+   DATA   nPanelsTabShape                         INIT 1
+
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
@@ -266,25 +269,6 @@ METHOD IdeINI:new( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeINI:destroy()
-
-   ::aINI              := NIL
-   ::aAppThemes        := NIL
-
-   ::aProjFiles        := NIL
-   ::aFiles            := NIL
-   ::aFind             := NIL
-   ::aReplace          := NIL
-   ::aRecentProjects   := NIL
-   ::aRecentFiles      := NIL
-   ::aFolders          := NIL
-   ::aViews            := NIL
-   ::aTaggedProjects   := NIL
-   ::aTools            := NIL
-   ::aUserToolbars     := NIL
-   ::aKeywords         := NIL
-   ::aDbuPanelNames    := NIL
-   ::aDbuPanelsInfo    := NIL
-   ::aDictionaries     := NIL
 
    RETURN NIL
 
@@ -395,7 +379,7 @@ METHOD IdeINI:showHideDocks()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeINI:save( cHbideIni )
-   LOCAL j, nTab, pTab, n, txt_, oEdit, nTabs, nn, a_, s, qLst, k, cView
+   LOCAL j, nTab, pTab, n, txt_, oEdit, nTabs, nn, a_, s, qLst, k
 
    DEFAULT cHbideIni TO ::oIde:cProjIni
 
@@ -489,6 +473,8 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "VSSDatabase"               + "=" +   ::cVSSDatabase                                     )
    aadd( txt_, "EditsViewStyle"            + "=" +   hb_ntos( ::nEditsViewStyle )                       )
    aadd( txt_, "ToolbarSize"               + "=" +   ::cToolbarSize                                     )
+   aadd( txt_, "PanelsTabPosition"         + "=" +   hb_ntos( ::nPanelsTabPosition )                    )
+   aadd( txt_, "PanelsTabShape"            + "=" +   hb_ntos( ::nPanelsTabShape )                       )
 
    aadd( txt_, "" )
    aadd( txt_, "[PROJECTS]" )
@@ -504,10 +490,12 @@ METHOD IdeINI:save( cHbideIni )
    qLst := ::oStackedWidget:oWidget:subWindowList( QMdiArea_StackingOrder )  /* The order tabs are visible */
    nn := 0
    FOR k := 1 TO qLst:count()
+#if 0
       cView := qLst:at( k - 1 ):objectName()
-
-      j := ascan( ::oDK:aViewsInfo, {|e_| e_[ 1 ] == cView } )
-
+      ascan( ::oDK:aViewsInfo, {|e_| e_[ 1 ] == cView } )          /* Not successful, QMdiArea has no method to determine the tab order */
+#else
+      j := k
+#endif
       ::oIde:lClosing := .t.
       ::oDK:setView( ::oIde:aViews[ j ]:oWidget:objectName() )
 
@@ -818,6 +806,8 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "VSSDatabase"                 ; ::cVSSDatabase                      := cVal ; EXIT
                      CASE "EditsViewStyle"              ; ::nEditsViewStyle                   := val( cVal ); EXIT
                      CASE "ToolbarSize"                 ; ::cToolbarSize                      := cVal ; EXIT
+                     CASE "PanelsTabPosition"           ; ::nPanelsTabPosition                := val( cVal ); EXIT
+                     CASE "PanelsTabShape"              ; ::nPanelsTabShape                   := val( cVal ); EXIT
 
                      ENDSWITCH
                   ENDIF

@@ -93,6 +93,7 @@ updown_v.ui
 format.ui
 changelog.ui
 projectwizard.ui
+panels.ui
 
 hbide.qrc
 settings.qrc

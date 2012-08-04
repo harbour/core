@@ -392,12 +392,16 @@ METHOD IdeDocks:destroy()
 /*------------------------------------------------------------------------*/
 
 METHOD IdeDocks:getEditorPanelsInfo()
-   LOCAL qLst, cView, k, j, b_, a_:= {}
+   LOCAL qLst, k, j, b_, a_:= {}
 
    qLst := ::oStackedWidget:oWidget:subWindowList( QMdiArea_StackingOrder )  /* The order tabs are visible */
    FOR k := 1 TO qLst:count()
+#if 0
       cView := qLst:at( k - 1 ):objectName()
-      j := ascan( ::aViewsInfo, {|e_| e_[ 1 ] == cView } )
+      ascan( ::aViewsInfo, {|e_| e_[ 1 ] == cView } )
+#else
+      j := k
+#endif
       b_:= ::aViewsInfo[ j ]
 
       aadd( a_, b_[ 1 ] + "," + ;
@@ -1113,7 +1117,7 @@ METHOD IdeDocks:setView( cView )
 
    CASE "New..."
       cView := hbide_fetchAString( ::qViewsCombo, cView, "Name the View", "New View" )
-      IF !( cView == "New..." ) .AND. !( cView == "Stats" ) .AND. !( cView == "Main" )
+      IF !( cView == "New..." ) .AND. !( cView == "Main" )
          IF ascan( ::aViewsInfo, {|e_| e_[ 1 ] == cView } ) > 0
             MsgBox( "View: " + cView + ", already exists" )
          ELSE
@@ -1141,6 +1145,11 @@ METHOD IdeDocks:setView( cView )
 
          ::oStackedWidget:oWidget:setActiveSubWindow( ::oIde:aMdies[ n ] )
          ::setStatusText( SB_PNL_VIEW, ::cWrkView )
+      ELSE
+         aadd( ::aViewsInfo, { cView, NIL, 0, 0, 0, 0 } )
+         ::oTM:addPanelsMenu( cView )
+         ::buildViewWidget( cView )
+         ::setView( cView )
       ENDIF
       EXIT
 
@@ -1285,13 +1294,14 @@ METHOD IdeDocks:buildStackedWidget()
    ::oStackedWidget:oWidget := QMdiArea( ::oDa:oWidget )
    ::oStackedWidget:oWidget:setObjectName( "editMdiArea" )
    ::oStackedWidget:oWidget:setDocumentMode( .t. )
-   ::oStackedWidget:oWidget:setTabShape( QTabWidget_Triangular )
    ::oStackedWidget:oWidget:setOption( QMdiArea_DontMaximizeSubWindowOnActivation, .t. )
    ::oStackedWidget:oWidget:setVerticalScrollBarPolicy( Qt_ScrollBarAsNeeded )
    ::oStackedWidget:oWidget:setHorizontalScrollBarPolicy( Qt_ScrollBarAsNeeded )
    ::oStackedWidget:oWidget:setActivationOrder( QMdiArea_CreationOrder )
    ::oStackedWidget:oWidget:setTabsMovable( .t. )
 // ::oStackedWidget:oWidget:setTabsClosable( .t. )  /* Later */
+   ::oStackedWidget:setTabShape( ::oINI:nPanelsTabShape )
+   ::oStackedWidget:setTabPosition( ::oINI:nPanelsTabPosition )
 
    ::oDa:addChild( ::oStackedWidget )
 

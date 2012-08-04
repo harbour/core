@@ -107,6 +107,7 @@ CLASS IdeToolsManager INHERIT IdeObject
    DATA   aToolbars                               INIT   { NIL,NIL,NIL,NIL,NIL }
    DATA   aPlugins                                INIT   {}
    DATA   cSetsFolderLast
+   DATA   oUIPnls
 
    ACCESS aTools                                  INLINE ::oINI:aTools
    ACCESS aUserToolBars                           INLINE ::oINI:aUserToolbars
@@ -135,6 +136,8 @@ CLASS IdeToolsManager INHERIT IdeObject
    METHOD buildViewsButton()
    METHOD saveView()
    METHOD execView( cView )
+   METHOD managePanels()
+   METHOD arrangePanels()
 
    ENDCLASS
 
@@ -706,39 +709,6 @@ METHOD IdeToolsManager:buildToolsButton()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeToolsManager:buildPanelsButton()
-   LOCAL s, a_
-
-   ::qPanelsMenu := QMenu()
-   ::qPanelsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
-   FOR EACH s IN ::oINI:aViews
-      a_:= hb_atokens( s, "," )
-      ::addPanelsMenu( a_[ 1 ] )
-   NEXT
-   ::qPanelsButton := QToolButton()
-   ::qPanelsButton:setTooltip( "Panels" )
-   ::qPanelsButton:setIcon( QIcon( hbide_image( "panel_8" ) ) )
-   ::qPanelsButton:setPopupMode( QToolButton_MenuButtonPopup )
-   ::qPanelsButton:setMenu( ::qPanelsMenu )
-
-   ::qPanelsButton:connect( "clicked()", {|| ::oDK:setView( "New..." ) } )
-
-   RETURN ::qPanelsButton
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeToolsManager:addPanelsMenu( cPrompt )
-   LOCAL qAct
-
-   qAct := ::qPanelsMenu:addAction( cPrompt )
-   qAct:setIcon( QIcon( ::oDK:getPanelIcon( cPrompt ) ) )
-   qAct:connect( "triggered(bool)", {|| ::oDK:setView( cPrompt ) } )
-   aadd( ::aPanelsAct, qAct )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeToolsManager:execToolByParams( cCmd, cParams, cStartIn, lCapture, lOpen )
    LOCAL cArg, lTokened
 
@@ -935,4 +905,111 @@ METHOD IdeToolsManager:execView( cView )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeToolsManager:buildPanelsButton()
+   LOCAL s, a_
+
+   ::qPanelsMenu := QMenu()
+   ::qPanelsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", ::nAnimantionMode ) )
+   FOR EACH s IN ::oINI:aViews
+      a_:= hb_atokens( s, "," )
+      ::addPanelsMenu( a_[ 1 ] )
+   NEXT
+   ::qPanelsButton := QToolButton()
+   ::qPanelsButton:setTooltip( "Panels" )
+   ::qPanelsButton:setIcon( QIcon( hbide_image( "b_20" ) ) ) //panel_8" ) ) )
+   ::qPanelsButton:setPopupMode( QToolButton_MenuButtonPopup )
+   ::qPanelsButton:setMenu( ::qPanelsMenu )
+
+// ::qPanelsButton:connect( "clicked()", {|| ::oDK:setView( "New..." ) } )
+   ::qPanelsButton:connect( "clicked()", {|| ::managePanels() } )
+
+   RETURN ::qPanelsButton
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeToolsManager:addPanelsMenu( cPrompt )
+   LOCAL qAct
+
+   qAct := ::qPanelsMenu:addAction( cPrompt )
+   qAct:setIcon( QIcon( ::oDK:getPanelIcon( cPrompt ) ) )
+   qAct:connect( "triggered(bool)", {|| ::oDK:setView( cPrompt ) } )
+   aadd( ::aPanelsAct, qAct )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeToolsManager:managePanels()
+   LOCAL a_
+
+   IF empty( ::oUIPnls )
+      ::oUIPnls := ui_panels():new( ::oDlg:oWidget )
+
+      ::oUIPnls:listOrder:setDragEnabled( .t. )
+      ::oUIPnls:listOrder:setAcceptDrops( .t. )
+      ::oUIPnls:listOrder:setDragDropMode( QAbstractItemView_InternalMove )
+
+      ::oUIPnls:comboPos:addItem( "Top" )
+      ::oUIPnls:comboPos:addItem( "Bottom" )
+      ::oUIPnls:comboPos:addItem( "Left" )
+      ::oUIPnls:comboPos:addItem( "Right" )
+      ::oUIPnls:comboPos:setCurrentIndex( ::oINI:nPanelsTabPosition )
+
+      ::oUIPnls:comboShape:addItem( "Round" )
+      ::oUIPnls:comboShape:addItem( "Triangular" )
+      ::oUIPnls:comboShape:setCurrentIndex( ::oINI:nPanelsTabShape )
+
+      ::oUIPnls          : connect( QEvent_Close, {|| ::oUIPnls:hide()  } )
+      ::oUIPnls:btnOk    : connect( "clicked()" , {|| ::oUIPnls:hide(), ::arrangePanels() } )
+      ::oUIPnls:btnCancel: connect( "clicked()" , {|| ::oUIPnls:hide()  } )
+   ENDIF
+
+   ::oUIPnls:move( ::qPanelsButton:mapToGlobal( QPoint( 0, 20 ) ) )
+   ::oUIPnls:listOrder:clear()
+   ::oUIPnls:comboDelete:clear()
+   FOR EACH a_ IN ::oDK:aViewsInfo
+      ::oUIPnls:listOrder:addItem( a_[ 1 ] )
+      ::oUIPnls:comboDelete:addItem( a_[ 1 ] )
+   NEXT
+   ::oUIPnls:comboDelete:setCurrentIndex( -1 )
+   ::oUIPnls:show()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeToolsManager:arrangePanels()
+   LOCAL a_:={}, v_:={}, w_:={}, n, i, cView
+
+   ::oINI:nPanelsTabShape := ::oUIPnls:comboShape:currentIndex()
+   ::oINI:nPanelsTabPosition := ::oUIPnls:comboPos:currentIndex()
+
+   /* These are easy */
+   ::oDK:oStackedWidget:setTabShape( ::oINI:nPanelsTabShape )
+   ::oDK:oStackedWidget:setTabPosition( ::oINI:nPanelsTabPosition )
+
+   /* Rearrange panels */
+   FOR i := 1 TO ::oUIPnls:listOrder:count()
+      cView := ::oUIPnls:listOrder:item( i - 1 ):text()
+      aadd( a_, ascan( ::oDK:aViewsInfo, {|e_| e_[ 1 ] == cView } ) )
+   NEXT
+   FOR EACH n IN a_
+      aadd( v_, ::oDK:aViewsInfo[ n ] )
+      aadd( w_, ::oIde:aViews[ n ] )
+   NEXT
+   ::oDK:aViewsInfo := v_
+   ::oIde:aViews    := w_
+
+   /* tobe done at the end after re-order */
+   IF ! empty( cView := trim( ::oUIPnls:editView:text() ) )
+      ::oDK:setView( cView )
+      ::oDK:setView( cView )
+   ENDIF
+   MsgBox( "You will need to close HbIDE for panels re-order to take effect !" )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 
