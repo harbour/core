@@ -1238,7 +1238,11 @@ METHOD IdeEdit:handleTab( key )
       ENDIF
       cLine := ::getLine( nRow + 1 )
       IF key == Qt_Key_Tab
-         cLine := substr( cLine, 1, nCol ) + cComment + substr( cLine, nCol + 1 )
+         IF empty( cLine )
+            cLine := cComment
+         ELSE
+            cLine := substr( cLine, 1, nCol ) + cComment + substr( cLine, nCol + 1 )
+         ENDIF
       ELSE
          cLine := substr( cLine, 1, nCol - nLen ) + substr( cLine, nCol + 1 )
       ENDIF

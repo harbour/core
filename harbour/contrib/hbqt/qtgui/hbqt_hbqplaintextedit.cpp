@@ -1249,26 +1249,23 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
    }
    else if( ! ctrl && k >= ' ' && k < 127 && columnBegins >= 0 && selectionMode == selectionMode_column )
    {
-      if( isCursorInSelection() )
+      if( block )
       {
-         if( block )
-         {
-            PHB_ITEM p1 = hb_itemPutNI( NULL, 21013 );
-            PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, "HB_QKEYEVENT", NULL, 0 ) ;
-            hb_vmEvalBlockV( block, 2, p1, p2 );
-            hb_itemRelease( p1 );
-            hb_itemRelease( p2 );
+         PHB_ITEM p1 = hb_itemPutNI( NULL, 21013 );
+         PHB_ITEM p2 = hbqt_bindGetHbObject( NULL, ( void * ) event, "HB_QKEYEVENT", NULL, 0 ) ;
+         hb_vmEvalBlockV( block, 2, p1, p2 );
+         hb_itemRelease( p1 );
+         hb_itemRelease( p2 );
 
-            if( columnBegins == columnEnds )
-            {
-               columnBegins++;
-               columnEnds++;
-               hbPostSelectionInfo();
-            }
-            event->accept();
-            repaint();
-            return true;
+         if( columnBegins == columnEnds )
+         {
+            columnBegins++;
+            columnEnds++;
+            hbPostSelectionInfo();
          }
+         event->accept();
+         repaint();
+         return true;
       }
       else
       {
