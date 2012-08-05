@@ -1,4 +1,4 @@
-/*
+         /*
  * $Id$
  */
 
@@ -138,6 +138,7 @@ CLASS IdeToolsManager INHERIT IdeObject
    METHOD execView( cView )
    METHOD managePanels()
    METHOD arrangePanels()
+   METHOD deletePanel( cView )
 
    ENDCLASS
 
@@ -981,6 +982,7 @@ METHOD IdeToolsManager:managePanels()
 
 METHOD IdeToolsManager:arrangePanels()
    LOCAL a_:={}, v_:={}, w_:={}, n, i, cView
+   LOCAL lOrder := .f.
 
    ::oINI:nPanelsTabShape := ::oUIPnls:comboShape:currentIndex()
    ::oINI:nPanelsTabPosition := ::oUIPnls:comboPos:currentIndex()
@@ -992,24 +994,64 @@ METHOD IdeToolsManager:arrangePanels()
    /* Rearrange panels */
    FOR i := 1 TO ::oUIPnls:listOrder:count()
       cView := ::oUIPnls:listOrder:item( i - 1 ):text()
-      aadd( a_, ascan( ::oDK:aViewsInfo, {|e_| e_[ 1 ] == cView } ) )
+      n := ascan( ::oDK:aViewsInfo, {|e_| e_[ 1 ] == cView } )
+      aadd( a_, n )
+      IF n != i
+         lOrder := .t.
+      ENDIF
    NEXT
-   FOR EACH n IN a_
-      aadd( v_, ::oDK:aViewsInfo[ n ] )
-      aadd( w_, ::oIde:aViews[ n ] )
-   NEXT
-   ::oDK:aViewsInfo := v_
-   ::oIde:aViews    := w_
+   IF lOrder
+      FOR EACH n IN a_
+         aadd( v_, ::oDK:aViewsInfo[ n ] )
+         aadd( w_, ::oIde:aViews[ n ] )
+      NEXT
+      ::oDK:aViewsInfo := v_
+      ::oIde:aViews    := w_
+   ENDIF
 
    /* tobe done at the end after re-order */
    IF ! empty( cView := trim( ::oUIPnls:editView:text() ) )
       ::oDK:setView( cView )
-      ::oDK:setView( cView )
    ENDIF
-   MsgBox( "You will need to close HbIDE for panels re-order to take effect !" )
+   IF ::oUIPnls:comboDelete:currentIndex() >= 0
+      ::deletePanel( ::oUIPnls:comboDelete:currentText() )
+   ENDIF
+   /* Reordering needs that HbIDE be re-executed */
+   IF lOrder
+      MsgBox( "You will need to close HbIDE for panels re-order to take effect !" )
+   ENDIF
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeToolsManager:deletePanel( cView )
+   LOCAL nTab, n, pTab, oEdit
+
+   ::oDK:setView( cView )
+   IF ! hbide_getYesNo( "Are you sure to remove - " + cView + " - panel ?" )
+      RETURN NIL
+   ENDIF
+
+   DO WHILE ::oIde:qTabWidget:count() > 0
+      pTab  := ::oIde:qTabWidget:widget( 0 )
+      IF ( nTab  := ascan( ::oIde:aTabs, {|e_| hbqt_IsEqual( e_[ 1 ]:oWidget, pTab ) } ) ) > 0
+         oEdit := ::oIde:aTabs[ nTab, TAB_OEDITOR ]
+         IF ! Empty( oEdit:sourceFile ) .AND. !( ".ppo" == lower( oEdit:cExt ) )
+            ::oSM:closeSource( nTab, .F., .F., .T. )  /* This deletes the tabs also */
+         ENDIF
+      ENDIF
+   ENDDO
+
+   n := ascan( ::oDK:aViewsInfo, {|e_| e_[ 1 ] == cView } )
+   //
+   ::oStackedWidget:oWidget:removeSubWindow( ::oIde:aMdies[ n ] )
+   ::oIde:aMdies[ n ]:setParent( QWidget() )  /* Release memory */
+   hb_adel( ::oIde:aMdies   , n, .t. )
+   hb_adel( ::oDK:aViewsInfo, n, .t. )
+   hb_adel( ::oIde:aViews   , n, .t. )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
 
