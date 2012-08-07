@@ -483,17 +483,27 @@ METHOD IdeSourcesManager:openSource()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSourcesManager:selectSource( cMode, cFile, cTitle, cDftPath )
-   LOCAL oDlg, cPath
+   LOCAL oDlg, cPath, aFltr := {}
 
    DEFAULT cDftPath TO ::cLastFileOpenPath
+
+   AAdd( aFltr, { "All Files"  , "*.*"   } )
+   AAdd( aFltr, { "PRG Sources", "*.prg" } )
+   AAdd( aFltr, { "C Sources"  , "*.c"   } )
+   AAdd( aFltr, { "CPP Sources", "*.cpp" } )
+   AAdd( aFltr, { "H Headers"  , "*.h"   } )
+   AAdd( aFltr, { "CH Headers" , "*.ch"  } )
+   AAdd( aFltr, { "UI Files"   , "*.ui"  } )
+   AAdd( aFltr, { "QRC Files"  , "*.qrc" } )
+   AAdd( aFltr, { "HBC Files"  , "*.hbc" } )
 
    oDlg := XbpFileDialog():new():create( ::oDlg, , { 10,10 } )
 
    IF cMode == "open"
       oDlg:title       := "Select a Source File"
       oDlg:center      := .t.
-      oDlg:fileFilters := { { "All Files"  , "*.*"   }, { "PRG Sources", "*.prg" }, { "C Sources" , "*.c"  },;
-                            { "CPP Sources", "*.cpp" }, { "H Headers"  , "*.h"   }, { "CH Headers", "*.ch" } }
+      oDlg:fileFilters := aFltr
+
       cFile := oDlg:open( cDftPath, , .f. )
       IF !empty( cFile )
          ::oIde:cLastFileOpenPath := cFile
@@ -503,8 +513,8 @@ METHOD IdeSourcesManager:selectSource( cMode, cFile, cTitle, cDftPath )
       oDlg:title       := "Select Sources"
       oDlg:center      := .t.
       oDlg:defExtension:= 'prg'
-      oDlg:fileFilters := { { "All Files"  , "*.*"   }, { "PRG Sources", "*.prg" }, { "C Sources" , "*.c"  },;
-                            { "CPP Sources", "*.cpp" }, { "H Headers"  , "*.h"   }, { "CH Headers", "*.ch" } }
+      oDlg:fileFilters := aFltr
+
       cFile := oDlg:open( cDftPath, , .t. )
       IF !empty( cFile ) .AND. !empty( cFile[ 1 ] )
          ::oIde:cLastFileOpenPath := cFile[ 1 ]
@@ -523,8 +533,7 @@ METHOD IdeSourcesManager:selectSource( cMode, cFile, cTitle, cDftPath )
          Endif
       Endif
 
-      oDlg:fileFilters := { { "PRG Sources", "*.prg" }, { "C Sources", "*.c" }, { "CPP Sources", "*.cpp" }, ;
-                                                        { "H Headers", "*.h" }, { "CH Headers", "*.ch" } }
+      oDlg:fileFilters := aFltr
       cFile := oDlg:saveAs( cPath )
 
    ELSE

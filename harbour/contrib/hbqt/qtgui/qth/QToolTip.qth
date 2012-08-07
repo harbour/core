@@ -1,0 +1,100 @@
+/*
+ * $Id$
+ */
+
+/*
+ * Harbour Qt wrapper generator control file
+ *
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
+ * www - http://www.harbour-project.org
+ *
+ * See COPYING for licensing terms.
+ */
+
+<CLASS>
+Inherit     = 
+New         = 
+QObject     = no
+</CLASS>
+
+<CODE>
+#include <QtGui/QToolTip>
+
+
+/*
+ * QToolTip()
+ * ~QToolBox ()
+ */
+HB_FUNC( QT_QTOOLTIP )
+{
+   HB_FUNC_EXEC( HB_QTOOLTIP );
+}
+</CODE>
+
+<PROTOS>
+QFont font (){
+   hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, new QFont( QToolTip::font() ), "HB_QFONT", hbqt_del_QFont, HBQT_BIT_OWNER ) );
+}
+void hideText (){
+   QToolTip::hideText();
+}
+bool isVisible (){
+   hb_retl( QToolTip::isVisible() );
+}
+QPalette palette (){
+   hb_itemReturnRelease( hbqt_bindGetHbObject( NULL, new QPalette( QToolTip::palette() ), "HB_QPALETTE", hbqt_del_QFont, HBQT_BIT_OWNER ) );
+}
+void setFont ( const QFont & font ){
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "HB_QFONT" ) )
+   {
+      QToolTip::setFont( *hbqt_par_QFont( 1 ) );
+   }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+}
+void setPalette ( const QPalette & palette ){
+   if( hb_pcount() == 1 && hbqt_par_isDerivedFrom( 1, "HB_QPALETTE" ) )
+   {
+      QToolTip::setPalette( *hbqt_par_QPalette( 1 ) );
+   }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+}
+void showText ( const QPoint & pos, const QString & text, QWidget * w, const QRect & rect ){
+   if( hb_pcount() == 4 && hbqt_par_isDerivedFrom( 1, "QPOINT" ) && HB_ISCHAR( 2 ) && hbqt_par_isDerivedFrom( 3, "QWIDGET" ) && hbqt_par_isDerivedFrom( 4, "QRECT" ) )
+   {
+      void * pText01 = NULL;
+      QToolTip::showText( *hbqt_par_QPoint( 1 ), ( QString ) hb_parstr_utf8( 2, &pText01, NULL ), hbqt_par_QWidget( 3 ), *hbqt_par_QRect( 4 ) );
+      hb_strfree( pText01 );
+   }
+   else if( hb_pcount() == 3 && hbqt_par_isDerivedFrom( 1, "QPOINT" ) && HB_ISCHAR( 2 ) && hbqt_par_isDerivedFrom( 3, "QWIDGET" ) )
+   {
+      void * pText01 = NULL;
+      QToolTip::showText( *hbqt_par_QPoint( 1 ), ( QString ) hb_parstr_utf8( 2, &pText01, NULL ), hbqt_par_QWidget( 3 ) );
+      hb_strfree( pText01 );
+   }
+   else if( hb_pcount() == 2 && hbqt_par_isDerivedFrom( 1, "QPOINT" ) && HB_ISCHAR( 2 ) )
+   {
+      void * pText01 = NULL;
+      QToolTip::showText( *hbqt_par_QPoint( 1 ), ( QString ) hb_parstr_utf8( 2, &pText01, NULL ) );
+      hb_strfree( pText01 );
+   }
+   else
+   {
+      hb_errRT_BASE( EG_ARG, 9999, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+   }
+}
+QString text (){
+   hb_retstr_utf8( QToolTip::text().toUtf8().data() );
+}
+</PROTOS>
+
+<SLOTS>
+</SLOTS>
+
+<SIGNALS>
+</SIGNALS>
