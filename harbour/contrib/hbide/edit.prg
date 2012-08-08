@@ -2950,7 +2950,8 @@ FUNCTION hbide_isHarbourFunction( cWord, cCased )
    IF empty( s_b_ )
       s_b_:= {=>}
       hb_hCaseMatch( s_b_, .f. )
-      a_:= hb_aTokens( strtran( hbide_getFileContentsFromResource( "hbfunc.txt" ), chr( 13 ) + chr( 10 ), chr( 10 ) ), chr( 10 ) )
+      //a_:= hb_aTokens( strtran( hbide_getFileContentsFromResource( "hbfunc.txt" ), chr( 13 ) + chr( 10 ), chr( 10 ) ), chr( 10 ) )
+      a_:= __hb_extern_get_exception_list( hbide_getHarbourHbx() )
       FOR EACH s IN a_
          IF ! empty( s )
             s := alltrim( s )
@@ -2992,5 +2993,28 @@ FUNCTION hbide_isUserFunction( cWord, cCased )
    ENDIF
 
    RETURN .F.
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION __hb_extern_get_exception_list( cFile )
+   LOCAL pRegex
+   LOCAL tmp
+   LOCAL aDynamic := {}
+
+   IF ! Empty( cFile ) .AND. ;
+      ! Empty( pRegex := hb_regexComp( "^DYNAMIC ([a-zA-Z0-9_]*)$", .T., .T. ) )
+      FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+         AAdd( aDynamic, tmp[ 2 ] )
+      NEXT
+   ENDIF
+
+   RETURN aDynamic
+
+/*----------------------------------------------------------------------*/
+
+#pragma -km+
+
+FUNCTION hbide_getHarbourHbx()
+   #pragma __binarystreaminclude "harbour.hbx" | RETURN %s
 
 /*----------------------------------------------------------------------*/
