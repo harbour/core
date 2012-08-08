@@ -2323,3 +2323,8 @@ FUNCTION hbide_restEnvironment_byResource( oIde, cFile )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_getFileContentsFromResource( cFile )
+
+   RETURN QResource( ":/" + cFile ):data()
+
+/*----------------------------------------------------------------------*/

@@ -1275,6 +1275,8 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   nSplOrient                              INIT  -1
    DATA   qSplitter
 
+   DATA   lIsPRG                                  INIT .t.
+
    METHOD new( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView )
    METHOD create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, aBookMarks )
    METHOD split( nOrient, oEditP )
@@ -1366,6 +1368,8 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
 
    ::cType := upper( strtran( ::cExt, ".", "" ) )
    ::cType := iif( ::cType $ "PRG,C,CPP,H,CH,PPO,HBS", ::cType, "U" )
+
+   ::lIsPRG := ::cType $ "PRG,HB"
 
    ::buildTabPage( ::sourceFile )
 

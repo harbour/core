@@ -321,5 +321,6 @@
     <file>resources/split_h.png</file>
     <file>resources/split_v.png</file>
     <file>docs/faq.htm</file>
+    <file>hbfunc.txt</file>
   </qresource>
 </RCC>

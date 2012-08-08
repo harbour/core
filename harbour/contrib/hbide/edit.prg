@@ -137,6 +137,7 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   lReadOnly                               INIT .F.
    DATA   isHighLighted                           INIT .f.
    DATA   cLastWord, cCurWord
+   DATA   hLogicals
 
    METHOD new( oIde, oEditor, nMode )
    METHOD create( oIde, oEditor, nMode )
@@ -269,6 +270,10 @@ METHOD IdeEdit:new( oIde, oEditor, nMode )
    ::fontFamily       := ::oINI:cFontName
    ::pointSize        := ::oINI:nPointSize
    ::currentPointSize := ::oINI:nPointSize
+
+   ::hLogicals := {=>}
+   hb_hCaseMatch( ::hLogicals, .F. )
+   ::hLogicals := { "t" => NIL, "f" => NIL, "or" => NIL, "and" => NIL, "not" => NIL }
 
    RETURN Self
 
@@ -2226,20 +2231,130 @@ METHOD IdeEdit:insertText( cText )
 
 METHOD IdeEdit:reformatLine( nPos, nAdded, nDeleted )
    LOCAL cProto, nRows, nCols
-   //LOCAL cWord, nColumn
-   //LOCAL qCursor := ::qEdit:textCursor()
-   //LOCAL cLine := ::getLine()
 
-   HB_SYMBOL_UNUSED( nPos )
-   HB_SYMBOL_UNUSED( nAdded )
-   HB_SYMBOL_UNUSED( nDeleted )
+#if 1
+   LOCAL cPWord, cPPWord, nPostn, nLine, nLPrev, nLPrevPrev, nCPrev, nCPrevPrev, nOff, cCased, cCWord
+   LOCAL qCursor := ::qEdit:textCursor()
 
-   //nColumn := qCursor:columnNumber() + 1
-   //cWord := ::getWord()
+   nPostn := qCursor:position()
+   nLine  := qCursor:blockNumber()
 
-   //HB_TRACE( HB_TR_ALWAYS, nPos, nAdded, nDeleted, nColumn, len( cWord ), cWord )
+   IF qCursor:columnNumber() > 0
+      qCursor:movePosition( QTextCursor_Left, QTextCursor_KeepAnchor, 1 )
+      cCWord := qCursor:selectedText()
+      qCursor:clearSelection()
+      qCursor:setPosition( nPostn )
+   ELSE
+      cCWord := ""
+   ENDIF
+
+   qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 1 )
+   nLPrev := qCursor:blockNumber()
+   IF nLPrev == nLine
+      nCPrev := qCursor:columnNumber()
+      qCursor:select( QTextCursor_WordUnderCursor )
+      cPWord := qCursor:selectedText()
+      //
+      qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
+      nLPrevPrev := qCursor:blockNumber()
+      IF nLPrevPrev == nLine
+         nCPrevPrev := qCursor:columnNumber()
+         qCursor:select( QTextCursor_WordUnderCursor )
+         cPPWord := qCursor:selectedText()
+      ELSE
+         nCPrevPrev := -1
+         cPPWord := ""
+      ENDIF
+
+//    HB_TRACE( HB_TR_ALWAYS, "PP", cPPWord, "P", cPWord, len( cPPWord ), len( cPWord ), cCWord, len( cCWord ) )
+
+      qCursor:clearSelection()
+      qCursor:setPosition( nPostn )
+
+      IF cPWord == "." .AND. cPPWord $ ::hLogicals
+         IF ::oEditor:lIsPRG .AND. ! ::oINI:lSupressHbKWordsToUpper
+            qCursor:beginEditBlock()
+            qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
+            qCursor:select( QTextCursor_WordUnderCursor )
+            qCursor:removeSelectedText()
+            qCursor:insertText( upper( cPPWord ) )
+            qCursor:endEditBlock()
+         ENDIF
+
+      ELSEIF cPWord == "(" .AND. hbide_isHarbourFunction( cPPWord, @cCased )
+         IF ::oEditor:lIsPRG
+            qCursor:beginEditBlock()
+            qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
+            qCursor:select( QTextCursor_WordUnderCursor )
+            qCursor:removeSelectedText()
+            qCursor:insertText( cCased )
+            qCursor:endEditBlock()
+         ENDIF
+
+      ELSEIF cCWord == " " .AND. cPPWord != "#" .AND. hbide_isHarbourKeyword( cPWord )
+         IF ::oEditor:lIsPRG .AND. ! ::oINI:lSupressHbKWordsToUpper
+            qCursor:beginEditBlock()
+            qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 1 )
+            qCursor:select( QTextCursor_WordUnderCursor )
+            qCursor:removeSelectedText()
+            qCursor:insertText( upper( cPWord ) )
+            qCursor:endEditBlock()
+         ENDIF
+#if 0
+      ELSEIF nLPrevPrev == nLine .AND. hbide_isHarbourKeyword( cPPWord )
+         IF ::oEditor:lIsPRG .AND. ! ::oINI:lSupressHbKWordsToUpper
+            qCursor:beginEditBlock()
+            qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
+            qCursor:select( QTextCursor_WordUnderCursor )
+            qCursor:removeSelectedText()
+            qCursor:insertText( upper( cPPWord ) )
+            qCursor:endEditBlock()
+         ENDIF
+#endif
+      ENDIF
+
+      IF ::oEditor:lIsPRG .AND. empty( cPPWord ) .AND. cCWord == " " /* Operational on PRG sources only */
+         IF hbide_isStartingKeyword( cPWord, ::oIde )
+            qCursor:beginEditBlock()
+            qCursor:movePosition( QTextCursor_StartOfBlock )
+            qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nCPrev )
+            qCursor:removeSelectedText()
+            qCursor:endEditBlock()
+
+         ELSEIF hbide_isMinimumIndentableKeyword( cPWord, ::oIde ) .AND. ::oINI:lAutoIndent
+            qCursor:beginEditBlock()
+            qCursor:movePosition( QTextCursor_StartOfBlock )
+            qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nCPrev )
+            qCursor:removeSelectedText()
+            qCursor:insertText( space( ::nTabSpaces ) )
+            qCursor:endEditBlock()
+
+         ELSEIF hbide_isIndentableKeyword( cPWord, ::oIde ) .AND. ::oINI:lAutoIndent
+            IF nCPrev < ::nTabSpaces
+               nOff := ::nTabSpaces - nCPrev
+               qCursor:beginEditBlock()
+               qCursor:movePosition( QTextCursor_StartOfBlock )
+               qCursor:insertText( space( nOff ) )
+               qCursor:endEditBlock()
+            ELSEIF ( nOff := nCPrev % ::nTabSpaces ) > 0
+               qCursor:beginEditBlock()
+               qCursor:movePosition( QTextCursor_StartOfBlock )
+               qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nOff )
+               qCursor:removeSelectedText()
+               qCursor:endEditBlock()
+            ENDIF
+         ENDIF
+      ENDIF
+   ENDIF
+   HB_SYMBOL_UNUSED( nCPrevPrev )
+
+#else
 
    ::handlePreviousWord( ::lUpdatePrevWord )
+
+#endif
+
+
    ::handleCurrentIndent()
 
    IF ::nProtoLine != -1
@@ -2252,6 +2367,10 @@ METHOD IdeEdit:reformatLine( nPos, nAdded, nDeleted )
          ENDIF
       ENDIF
    ENDIF
+
+   HB_SYMBOL_UNUSED( nPos )
+   HB_SYMBOL_UNUSED( nAdded )
+   HB_SYMBOL_UNUSED( nDeleted )
 
    RETURN Self
 
@@ -2272,7 +2391,7 @@ METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
    cText      := qTextBlock:text()
    nCol       := qCursor:columnNumber()
    IF ( substr( cText, nCol - 1, 1 ) == " " )
-      RETURN nil
+      RETURN NIL
    ENDIF
    nSpace := iif( substr( cText, nCol, 1 ) == " ", 1, 0 )
    cWord  := hbide_getPreviousWord( cText, nCol + 1 )
@@ -2597,6 +2716,96 @@ FUNCTION hbide_getFrontSpacesAndWord( cText, cWord )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_formatProto_1( cProto, cText, nProtoCol, nCurCol, nRows, nCols )
+   LOCAL s, nArgs, cArgs, aArgs, cArg, n, n1, i, nnn, cPro, cFunc
+
+   IF nCurCol > nProtoCol
+      n  := at( "(", cProto ) ; n1 := at( ")", cProto )
+      IF n > 0 .AND. n1 > 0 .AND. "," $ cProto
+         cProto := substr( cProto, 1, n1 )
+
+         s := substr( cText, nProtoCol, nCurCol - nProtoCol )
+         nArgs := 1
+         FOR i := 1 TO Len( s )
+            IF substr( s, i, 1 ) == ","
+               nArgs++
+            ENDIF
+         NEXT
+
+         nRows := 1; nCols := 0
+
+         IF nArgs > 0
+            n := at( "(", cProto ) ; n1 := at( ")", cProto )
+
+            cFunc := substr( cProto, 1, n - 1 )
+            cArgs := substr( cProto, n + 1, n1 - n - 1 )
+            aArgs := hb_aTokens( cArgs, "," )
+            cArgs := ""
+            nCols := Len( cFunc ) + 1
+            FOR EACH cArg IN aArgs
+               cArg := alltrim( cArg )
+
+               nRows++
+               nCols := max( nCols, Len( cArg ) + 3 )
+
+               cArg := StrTran( cArg, "<", "&lt;" )
+               cArg := StrTran( cArg, ">", "&gt;" )
+
+               nnn  := cArg:__enumIndex()
+               IF nnn == nArgs
+                  cArg := "<font color=red><b>" + cArg + "</b></font>"
+               ENDIF
+               IF nnn == Len( aArgs )
+                  cArgs += "<br>" + "   " + cArg
+               ELSE
+                  cArgs += "<br>" + "   " + cArg + "<font color=red><b>" + "," + "</b></font>"
+               ENDIF
+            NEXT
+            nCols += iif( nCols <= Len( cFunc ), 0, 1 )
+
+            //cPro  := "<p style='white-space:pre'>" + "<font color=darkgreen><b>" + cFunc + "</b></font>" + ;
+            cPro  := "<p style='white-space:pre'>" + "<b>" + cFunc + "</b>" + ;
+                        "<font color=red><b>" + "(" + "</b></font>" + ;
+                           cArgs + ;
+                              "<font color=red><b>" + ")" + "</font>" + "</b></p>"
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN cPro
+
+/*------------------------------------------------------------------------*/
+
+FUNCTION hbide_formatProto( cProto )
+   LOCAL n, n1, cArgs
+
+   cProto := StrTran( cProto, "<", "&lt;" )
+   cProto := StrTran( cProto, ">", "&gt;" )
+
+   n  := at( "(", cProto )
+   n1 := at( ")", cProto )
+
+   IF n > 0 .AND. n1 > 0
+      cArgs  := substr( cProto, n + 1, n1 - n - 1 )
+      cArgs  := strtran( cArgs, ",", "<font color=red><b>" + "," + "</b></font>" )
+      cProto := "<p style='white-space:pre'>" + "<b>" + substr( cProto, 1, n - 1 ) + "</b>" + ;
+                   "<font color=red><b>" + "(" + "</b></font>" + ;
+                      cArgs + ;
+                         "<font color=red><b>" + ")" + "</font>" + "</b></p>"
+   ENDIF
+   RETURN cProto
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_normalizeRect( aCord, nT, nL, nB, nR )
+   nT := iif( aCord[ 1 ] > aCord[ 3 ], aCord[ 3 ], aCord[ 1 ] )
+   nB := iif( aCord[ 1 ] > aCord[ 3 ], aCord[ 1 ], aCord[ 3 ] )
+   nL := iif( aCord[ 2 ] > aCord[ 4 ], aCord[ 4 ], aCord[ 2 ] )
+   nR := iif( aCord[ 2 ] > aCord[ 4 ], aCord[ 2 ], aCord[ 4 ] )
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
 FUNCTION hbide_isStartingKeyword( cWord, oIde )
    LOCAL s_b_
 
@@ -2726,11 +2935,7 @@ FUNCTION hbide_harbourKeywords()
                     'handler' => NIL,;
                     'loop' => NIL,;
                     'in' => NIL,;
-                    'nil' => NIL,;
-                    'or' => NIL,;
-                    'not' => NIL,;
-                    'and' => NIL }
-
+                    'nil' => NIL }
    RETURN s_b_
 
 /*----------------------------------------------------------------------*/
@@ -2743,93 +2948,29 @@ FUNCTION hbide_isHarbourKeyword( cWord, oIde )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_formatProto_1( cProto, cText, nProtoCol, nCurCol, nRows, nCols )
-   LOCAL s, nArgs, cArgs, aArgs, cArg, n, n1, i, nnn, cPro, cFunc
+FUNCTION hbide_isHarbourFunction( cWord, cCased )
+   LOCAL s, a_
 
-   IF nCurCol > nProtoCol
-      n  := at( "(", cProto ) ; n1 := at( ")", cProto )
-      IF n > 0 .AND. n1 > 0 .AND. "," $ cProto
-         cProto := substr( cProto, 1, n1 )
+   STATIC s_b_
 
-         s := substr( cText, nProtoCol, nCurCol - nProtoCol )
-         nArgs := 1
-         FOR i := 1 TO Len( s )
-            IF substr( s, i, 1 ) == ","
-               nArgs++
-            ENDIF
-         NEXT
-
-         nRows := 1; nCols := 0
-
-         IF nArgs > 0
-            n := at( "(", cProto ) ; n1 := at( ")", cProto )
-
-            cFunc := substr( cProto, 1, n - 1 )
-            cArgs := substr( cProto, n + 1, n1 - n - 1 )
-            aArgs := hb_aTokens( cArgs, "," )
-            cArgs := ""
-            nCols := Len( cFunc ) + 1
-            FOR EACH cArg IN aArgs
-               cArg := alltrim( cArg )
-
-               nRows++
-               nCols := max( nCols, Len( cArg ) + 3 )
-
-               cArg := StrTran( cArg, "<", "&lt;" )
-               cArg := StrTran( cArg, ">", "&gt;" )
-
-               nnn  := cArg:__enumIndex()
-               IF nnn == nArgs
-                  cArg := "<font color=red><b>" + cArg + "</b></font>"
-               ENDIF
-               IF nnn == Len( aArgs )
-                  cArgs += "<br>" + "   " + cArg
-               ELSE
-                  cArgs += "<br>" + "   " + cArg + "<font color=red><b>" + "," + "</b></font>"
-               ENDIF
-            NEXT
-            nCols += iif( nCols <= Len( cFunc ), 0, 1 )
-
-            //cPro  := "<p style='white-space:pre'>" + "<font color=darkgreen><b>" + cFunc + "</b></font>" + ;
-            cPro  := "<p style='white-space:pre'>" + "<b>" + cFunc + "</b>" + ;
-                        "<font color=red><b>" + "(" + "</b></font>" + ;
-                           cArgs + ;
-                              "<font color=red><b>" + ")" + "</font>" + "</b></p>"
+   IF empty( s_b_ )
+      s_b_:= {=>}
+      hb_hCaseMatch( s_b_, .f. )
+      a_:= hb_aTokens( strtran( hbide_getFileContentsFromResource( "hbfunc.txt" ), chr( 13 ) + chr( 10 ), chr( 10 ) ), chr( 10 ) )
+      FOR EACH s IN a_
+         IF ! empty( s )
+            s := alltrim( s )
+            s_b_[ s ] := s
          ENDIF
-      ENDIF
+      NEXT
    ENDIF
 
-   RETURN cPro
-
-/*------------------------------------------------------------------------*/
-
-FUNCTION hbide_formatProto( cProto )
-   LOCAL n, n1, cArgs
-
-   cProto := StrTran( cProto, "<", "&lt;" )
-   cProto := StrTran( cProto, ">", "&gt;" )
-
-   n  := at( "(", cProto )
-   n1 := at( ")", cProto )
-
-   IF n > 0 .AND. n1 > 0
-      cArgs  := substr( cProto, n + 1, n1 - n - 1 )
-      cArgs  := strtran( cArgs, ",", "<font color=red><b>" + "," + "</b></font>" )
-      cProto := "<p style='white-space:pre'>" + "<b>" + substr( cProto, 1, n - 1 ) + "</b>" + ;
-                   "<font color=red><b>" + "(" + "</b></font>" + ;
-                      cArgs + ;
-                         "<font color=red><b>" + ")" + "</font>" + "</b></p>"
+   IF cWord $ s_b_
+      cCased := s_b_[ cWord ]
+      RETURN .T.
    ENDIF
-   RETURN cProto
 
-/*----------------------------------------------------------------------*/
-
-STATIC FUNCTION hbide_normalizeRect( aCord, nT, nL, nB, nR )
-   nT := iif( aCord[ 1 ] > aCord[ 3 ], aCord[ 3 ], aCord[ 1 ] )
-   nB := iif( aCord[ 1 ] > aCord[ 3 ], aCord[ 1 ], aCord[ 3 ] )
-   nL := iif( aCord[ 2 ] > aCord[ 4 ], aCord[ 4 ], aCord[ 2 ] )
-   nR := iif( aCord[ 2 ] > aCord[ 4 ], aCord[ 2 ], aCord[ 4 ] )
-   RETURN NIL
+   RETURN .f.
 
 /*----------------------------------------------------------------------*/
 
