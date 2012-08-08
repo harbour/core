@@ -2291,6 +2291,16 @@ METHOD IdeEdit:reformatLine( nPos, nAdded, nDeleted )
             qCursor:endEditBlock()
          ENDIF
 
+      ELSEIF ( cPWord == "(" .OR. cPWord == " " ) .AND. hbide_isUserFunction( cPPWord, @cCased ) /* User dictionaries : base work */
+         IF ::oEditor:lIsPRG
+            qCursor:beginEditBlock()
+            qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
+            qCursor:select( QTextCursor_WordUnderCursor )
+            qCursor:removeSelectedText()
+            qCursor:insertText( cCased )
+            qCursor:endEditBlock()
+         ENDIF
+
       ELSEIF cCWord == " " .AND. cPPWord != "#" .AND. hbide_isHarbourKeyword( cPWord )
          IF ::oEditor:lIsPRG .AND. ! ::oINI:lSupressHbKWordsToUpper
             qCursor:beginEditBlock()
@@ -2950,7 +2960,6 @@ FUNCTION hbide_isHarbourKeyword( cWord, oIde )
 
 FUNCTION hbide_isHarbourFunction( cWord, cCased )
    LOCAL s, a_
-
    STATIC s_b_
 
    IF empty( s_b_ )
@@ -2964,7 +2973,6 @@ FUNCTION hbide_isHarbourFunction( cWord, cCased )
          ENDIF
       NEXT
    ENDIF
-
    IF cWord $ s_b_
       cCased := s_b_[ cWord ]
       RETURN .T.
@@ -2974,3 +2982,30 @@ FUNCTION hbide_isHarbourFunction( cWord, cCased )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_isUserFunction( cWord, cCased )
+   LOCAL s, a_, aDict, oDict
+   STATIC s_b_
+
+   IF empty( s_b_ )
+      s_b_:= {=>}
+      hb_hCaseMatch( s_b_, .f. )
+      aDict := hbide_setIDE():aUserDict
+      FOR EACH oDict IN aDict
+         IF !Empty( oDict:aItems )
+            FOR EACH a_ IN oDict:aItems
+               s := AllTrim( a_[ 1 ] )
+               IF ! Empty( s )
+                  s_b_[ s ] := s
+               ENDIF
+            NEXT
+         ENDIF
+      NEXT
+   ENDIF
+   IF cWord $ s_b_
+      cCased := s_b_[ cWord ]
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
+
+/*----------------------------------------------------------------------*/

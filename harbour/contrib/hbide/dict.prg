@@ -84,8 +84,8 @@
 
 FUNCTION hbide_loadUserDictionaries( oIde )
    //                File  , CaseSensitive , ConvMode=asis, upper, lower , include in autocomplete, bgColor
-   #if 0
-   LOCAL aDict := { "C:\harbour\contrib\hbide\hbide.dic;NO;ASIS;YES;{122,133,233}" }
+   #if 1
+   LOCAL aDict := { "E:\harbour\contrib\hbide\projects\my.dic;NO;ASIS;YES;{122,133,233}" }
    #else
    LOCAL aDict := {}
    #endif
@@ -141,15 +141,6 @@ METHOD IdeDictionary:create( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDictionary:destroy()
-
-   ::cDictInfo        := NIL
-   ::cFilename        := NIL
-   ::lCaseSensitive   := NIL
-   ::cConvMode        := NIL
-   ::lAutoComplete    := NIL
-   ::cBgColor         := NIL
-   ::qBgColor         := NIL
-   ::aItems           := NIL
 
    RETURN Self
 

@@ -524,7 +524,7 @@ METHOD IdeThemes:mergeUserDictionaries( qHiliter, cTheme )
          s := substr( s, 1, Len( s ) - 1 )
 
          qRegExp := QRegExp()
-         qRegExp:setCaseSensitivity( oDict:lCaseSensitive )
+         //qRegExp:setCaseSensitivity( oDict:lCaseSensitive )
          qRegExp:setPattern( s )
 
          aAttr := ::getThemeAttribute( "UserDictionary", cTheme )  // cName after slots are implemented
