@@ -1,4 +1,4 @@
-/*
+               /*
  * $Id$
  */
 
@@ -1241,18 +1241,14 @@ METHOD IdeEdit:handleTab( key )
       IF nL >= 0    /* Selection is marked */
          ::cutBlockContents( Qt_Key_Delete )
       ENDIF
-      cLine := ::getLine( nRow + 1 )
       IF key == Qt_Key_Tab
-         IF empty( cLine )
-            cLine := cComment
-         ELSE
-            cLine := substr( cLine, 1, nCol ) + cComment + substr( cLine, nCol + 1 )
-         ENDIF
+         qCursor:insertText( Space( ::nTabSpaces ) )
       ELSE
+         cLine := ::getLine( nRow + 1 )
          cLine := substr( cLine, 1, nCol - nLen ) + substr( cLine, nCol + 1 )
+         hbide_qReplaceLine( qCursor, nRow, cLine )
+         hbide_qPositionCursor( qCursor, nRow, max( 0, nCol + nOff ) )
       ENDIF
-      hbide_qReplaceLine( qCursor, nRow, cLine )
-      hbide_qPositionCursor( qCursor, nRow, max( 0, nCol + nOff ) )
       EXIT
    ENDSWITCH
    ::qEdit:setTextCursor( qCursor )
@@ -2231,139 +2227,128 @@ METHOD IdeEdit:insertText( cText )
 
 METHOD IdeEdit:reformatLine( nPos, nAdded, nDeleted )
    LOCAL cProto, nRows, nCols
-
-#if 1
-   LOCAL cPWord, cPPWord, nPostn, nLine, nLPrev, nLPrevPrev, nCPrev, nCPrevPrev, nOff, cCased, cCWord
+   LOCAL cPWord, cPPWord, nPostn, nLine, nLPrev, nLPrevPrev, nCPrev, nCPrevPrev, nOff, cCased, cCWord, cRest
    LOCAL qCursor := ::qEdit:textCursor()
 
-   nPostn := qCursor:position()
-   nLine  := qCursor:blockNumber()
+   IF ::oEditor:lIsPRG
+      nPostn := qCursor:position()
+      nLine  := qCursor:blockNumber()
 
-   IF qCursor:columnNumber() > 0
-      qCursor:movePosition( QTextCursor_Left, QTextCursor_KeepAnchor, 1 )
-      cCWord := qCursor:selectedText()
-      qCursor:clearSelection()
-      qCursor:setPosition( nPostn )
-   ELSE
-      cCWord := ""
-   ENDIF
-
-   qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 1 )
-   nLPrev := qCursor:blockNumber()
-   IF nLPrev == nLine
-      nCPrev := qCursor:columnNumber()
-      qCursor:select( QTextCursor_WordUnderCursor )
-      cPWord := qCursor:selectedText()
-      //
-      qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
-      nLPrevPrev := qCursor:blockNumber()
-      IF nLPrevPrev == nLine
-         nCPrevPrev := qCursor:columnNumber()
-         qCursor:select( QTextCursor_WordUnderCursor )
-         cPPWord := qCursor:selectedText()
+      /* Just preceding character our cursor is landing */
+      IF qCursor:columnNumber() > 0
+         qCursor:movePosition( QTextCursor_Left, QTextCursor_KeepAnchor, 1 )
+         cCWord := qCursor:selectedText()
+         qCursor:clearSelection()
+         qCursor:setPosition( nPostn )
       ELSE
-         nCPrevPrev := -1
-         cPPWord := ""
+         cCWord := ""
       ENDIF
 
-//    HB_TRACE( HB_TR_ALWAYS, "PP", cPPWord, "P", cPWord, len( cPPWord ), len( cPWord ), cCWord, len( cCWord ) )
-
+      /* Check if we are not inside somewhere */
+      qCursor:movePosition( QTextCursor_EndOfLine, QTextCursor_KeepAnchor )
+      IF qCursor:blockNumber() == nLine
+         cRest := qCursor:selectedText()
+      ELSE
+         cRest := ""
+      ENDIF
       qCursor:clearSelection()
       qCursor:setPosition( nPostn )
 
-      IF cPWord == "." .AND. cPPWord $ ::hLogicals
-         IF ::oEditor:lIsPRG .AND. ! ::oINI:lSupressHbKWordsToUpper
-            qCursor:beginEditBlock()
-            qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
+      qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 1 )
+      nLPrev := qCursor:blockNumber()
+      IF nLPrev == nLine
+         nCPrev := qCursor:columnNumber()
+         qCursor:select( QTextCursor_WordUnderCursor )
+         cPWord := qCursor:selectedText()
+         //
+         qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
+         nLPrevPrev := qCursor:blockNumber()
+         IF nLPrevPrev == nLine
+            nCPrevPrev := qCursor:columnNumber()
             qCursor:select( QTextCursor_WordUnderCursor )
-            qCursor:removeSelectedText()
-            qCursor:insertText( upper( cPPWord ) )
-            qCursor:endEditBlock()
+            cPPWord := qCursor:selectedText()
+         ELSE
+            nCPrevPrev := -1
+            cPPWord := ""
          ENDIF
 
-      ELSEIF cPWord == "(" .AND. hbide_isHarbourFunction( cPPWord, @cCased )
-         IF ::oEditor:lIsPRG
-            qCursor:beginEditBlock()
-            qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
-            qCursor:select( QTextCursor_WordUnderCursor )
-            qCursor:removeSelectedText()
-            qCursor:insertText( cCased )
-            qCursor:endEditBlock()
-         ENDIF
+         // HB_TRACE( HB_TR_ALWAYS, "PP=", cPPWord, "P=", cPWord, "C=", cCWord, "R=", cRest )
 
-      ELSEIF ( cPWord == "(" .OR. cPWord == " " ) .AND. hbide_isUserFunction( cPPWord, @cCased ) /* User dictionaries : base work */
-         IF ::oEditor:lIsPRG
-            qCursor:beginEditBlock()
-            qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
-            qCursor:select( QTextCursor_WordUnderCursor )
-            qCursor:removeSelectedText()
-            qCursor:insertText( cCased )
-            qCursor:endEditBlock()
-         ENDIF
+         qCursor:clearSelection()
+         qCursor:setPosition( nPostn )
+         qCursor:beginEditBlock()
 
-      ELSEIF cCWord == " " .AND. cPPWord != "#" .AND. hbide_isHarbourKeyword( cPWord )
-         IF ::oEditor:lIsPRG .AND. ! ::oINI:lSupressHbKWordsToUpper
-            qCursor:beginEditBlock()
-            qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 1 )
-            qCursor:select( QTextCursor_WordUnderCursor )
-            qCursor:removeSelectedText()
-            qCursor:insertText( upper( cPWord ) )
-            qCursor:endEditBlock()
-         ENDIF
-#if 0
-      ELSEIF nLPrevPrev == nLine .AND. hbide_isHarbourKeyword( cPPWord )
-         IF ::oEditor:lIsPRG .AND. ! ::oINI:lSupressHbKWordsToUpper
-            qCursor:beginEditBlock()
-            qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
-            qCursor:select( QTextCursor_WordUnderCursor )
-            qCursor:removeSelectedText()
-            qCursor:insertText( upper( cPPWord ) )
-            qCursor:endEditBlock()
-         ENDIF
-#endif
-      ENDIF
-
-      IF ::oEditor:lIsPRG .AND. empty( cPPWord ) .AND. cCWord == " " /* Operational on PRG sources only */
-         IF hbide_isStartingKeyword( cPWord, ::oIde )
-            qCursor:beginEditBlock()
-            qCursor:movePosition( QTextCursor_StartOfBlock )
-            qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nCPrev )
-            qCursor:removeSelectedText()
-            qCursor:endEditBlock()
-
-         ELSEIF hbide_isMinimumIndentableKeyword( cPWord, ::oIde ) .AND. ::oINI:lAutoIndent
-            qCursor:beginEditBlock()
-            qCursor:movePosition( QTextCursor_StartOfBlock )
-            qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nCPrev )
-            qCursor:removeSelectedText()
-            qCursor:insertText( space( ::nTabSpaces ) )
-            qCursor:endEditBlock()
-
-         ELSEIF hbide_isIndentableKeyword( cPWord, ::oIde ) .AND. ::oINI:lAutoIndent
-            IF nCPrev < ::nTabSpaces
-               nOff := ::nTabSpaces - nCPrev
-               qCursor:beginEditBlock()
-               qCursor:movePosition( QTextCursor_StartOfBlock )
-               qCursor:insertText( space( nOff ) )
-               qCursor:endEditBlock()
-            ELSEIF ( nOff := nCPrev % ::nTabSpaces ) > 0
-               qCursor:beginEditBlock()
-               qCursor:movePosition( QTextCursor_StartOfBlock )
-               qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nOff )
+         IF cPWord == "." .AND. cPPWord $ ::hLogicals
+            IF ! ::oINI:lSupressHbKWordsToUpper
+               qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
+               qCursor:select( QTextCursor_WordUnderCursor )
                qCursor:removeSelectedText()
-               qCursor:endEditBlock()
+               qCursor:insertText( upper( cPPWord ) )
+            ENDIF
+
+         ELSEIF cPWord == "(" .AND. hbide_isHarbourFunction( cPPWord, @cCased )
+            IF .T.
+               qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
+               qCursor:select( QTextCursor_WordUnderCursor )
+               qCursor:removeSelectedText()
+               qCursor:insertText( cCased )
+               #if 0 /* Not working - will check later */
+               IF Empty( cRest )
+                  HB_TRACE( HB_TR_ALWAYS, "i am here" )
+                  qCursor:setPosition( nPostn )
+                  qCursor:insertText( "  )" )
+                  qCursor:setPosition( nPostn + 1 )
+                  ::qEdit:setTextCursor( qCursor )
+               ENDIF
+               #endif
+            ENDIF
+
+         ELSEIF ( cPWord == "(" .OR. cCWord == " " ) .AND. hbide_isUserFunction( cPPWord, @cCased ) /* User dictionaries : base work */
+            IF .T.
+               qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
+               qCursor:select( QTextCursor_WordUnderCursor )
+               qCursor:removeSelectedText()
+               qCursor:insertText( cCased )
+            ENDIF
+
+         ELSEIF cCWord == " " .AND. cPPWord != "#" .AND. hbide_isHarbourKeyword( cPWord )
+            IF ! ::oINI:lSupressHbKWordsToUpper
+               qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 1 )
+               qCursor:select( QTextCursor_WordUnderCursor )
+               qCursor:removeSelectedText()
+               qCursor:insertText( upper( cPWord ) )
+            ENDIF
+
+         ENDIF
+
+         IF empty( cPPWord ) .AND. cCWord == " "
+            IF hbide_isStartingKeyword( cPWord, ::oIde )
+               qCursor:movePosition( QTextCursor_StartOfBlock )
+               qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nCPrev )
+               qCursor:removeSelectedText()
+
+            ELSEIF hbide_isMinimumIndentableKeyword( cPWord, ::oIde ) .AND. ::oINI:lAutoIndent
+               qCursor:movePosition( QTextCursor_StartOfBlock )
+               qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nCPrev )
+               qCursor:removeSelectedText()
+               qCursor:insertText( space( ::nTabSpaces ) )
+
+            ELSEIF hbide_isIndentableKeyword( cPWord, ::oIde ) .AND. ::oINI:lAutoIndent
+               IF nCPrev < ::nTabSpaces
+                  nOff := ::nTabSpaces - nCPrev
+                  qCursor:movePosition( QTextCursor_StartOfBlock )
+                  qCursor:insertText( space( nOff ) )
+               ELSEIF ( nOff := nCPrev % ::nTabSpaces ) > 0
+                  qCursor:movePosition( QTextCursor_StartOfBlock )
+                  qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nOff )
+                  qCursor:removeSelectedText()
+               ENDIF
             ENDIF
          ENDIF
+         qCursor:endEditBlock()
       ENDIF
+      HB_SYMBOL_UNUSED( nCPrevPrev )
    ENDIF
-   HB_SYMBOL_UNUSED( nCPrevPrev )
-
-#else
-
-   ::handlePreviousWord( ::lUpdatePrevWord )
-
-#endif
-
 
    ::handleCurrentIndent()
 
@@ -2382,7 +2367,7 @@ METHOD IdeEdit:reformatLine( nPos, nAdded, nDeleted )
    HB_SYMBOL_UNUSED( nAdded )
    HB_SYMBOL_UNUSED( nDeleted )
 
-   RETURN Self
+   RETURN cRest
 
 /*----------------------------------------------------------------------*/
 
