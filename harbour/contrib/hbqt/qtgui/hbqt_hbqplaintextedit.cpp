@@ -134,13 +134,6 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    iClicks                  = 0;
    mouseMode                = mouseMode_none;
 
-   #if 0
-   QTextFrameFormat format( this->document()->rootFrame()->frameFormat() );
-   format.setMargin( 0 );
-   format.setPadding( 0 );
-   this->rootFrame().setFrameFormat( format );
-   #endif
-
    connect( this, SIGNAL( blockCountChanged( int ) )           , this, SLOT( hbUpdateLineNumberAreaWidth( int ) ) );
    connect( this, SIGNAL( updateRequest( const QRect &, int ) ), this, SLOT( hbUpdateLineNumberArea( const QRect &, int ) ) );
 
@@ -156,33 +149,6 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    m_selectionColor = pl.color( QPalette::Highlight );
 
    setContentsMargins( 0,0,0,0 );
-
-   ttFrame = new QFrame( this );
-   ttFrame->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
-   ttLayout = new QVBoxLayout( ttFrame );
-   ttFrame->setLayout( ttLayout );
-   ttLabel = new QLabel( ttFrame );
-   ttLabel->setWordWrap( true );
-   ttLabel->setText( "" );
-   hbSetProtoStyle();
-   ttLayout->addWidget( ttLabel );
-
-   ttTextEdit = new QTextEdit( ttFrame );
-   ttTextEdit->setStyleSheet( "background-color: rgb(255,255,174); border: 1px solid black;" );// padding: 3px;" );
-   ttTextEdit->setFocusPolicy( Qt::NoFocus );
-   ttTextEdit->setReadOnly( true );
-   ttTextEdit->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
-   ttTextEdit->setFont( QFont( "Courier New", 10 ) );
-   ttLayout->addWidget( ttTextEdit );
-
-   ttFrame->setFocusPolicy( Qt::NoFocus );
-   ttFrame->hide();
-
-   #if 0
-   timer                    = new QTimer( this );
-   connect( timer, SIGNAL( timeout() ), this, SLOT( hbUpdateCaret() ) );
-   timer->start( 500 );
-   #endif
 
    QTextDocument * doc = document();
    doc->setDocumentMargin( 0 );
@@ -249,58 +215,20 @@ void HBQPlainTextEdit::hbGetViewportInfo()
 
 void HBQPlainTextEdit::hbShowPrototype( const QString & tip, int rows, int cols )
 {
-   if( ! isCompletionTipsActive ){
-      ttTextEdit->hide();
-      ttLabel->hide();
+   Q_UNUSED( rows );
+   Q_UNUSED( cols );
+
+   if( ! isCompletionTipsActive )
+   {
+      QToolTip::hideText();
       return;
    }
-
-   if( rows <= 1 )
-   {
-      ttLabel->setText( tip );
-      ttTextEdit->setText( "" );
-      ttTextEdit->hide();
-      ttLabel->show();
-   }
-   else
-   {
-      ttLabel->setText( "" );
-      ttTextEdit->setText( tip );
-      ttLabel->hide();
-      ttTextEdit->show();
-   }
-
    if( tip == ( QString ) "" )
    {
-      isTipActive = false;
-      ttFrame->hide();
+      QToolTip::hideText();
+      return;
    }
-   else
-   {
-      isTipActive = true;
-
-      if( rows > 1 )
-      {
-         int h = ( ttTextEdit->fontMetrics().height() * rows ) + 12 + 24;
-         int w = ( ttTextEdit->fontMetrics().averageCharWidth() * cols ) + 12 + 24;
-
-         ttFrame->setMinimumHeight( h );
-         ttFrame->setMinimumWidth( w );
-         ttFrame->setMaximumHeight( h );
-         ttFrame->setMaximumWidth( w );
-      }
-
-      QRect  r = cursorRect();
-      int    w = ttFrame->width();
-
-      int    x = r.x()-r.width();
-      int nOff = viewport()->width() - ( x + w );
-      if( nOff < 0 )
-         x = qMax( 0, x + nOff );
-      ttFrame->move( qMax( 0, x ), r.y() + 7 + horzRulerHeight );
-
-      ttFrame->show();
-   }
+   QToolTip::showText( viewport()->mapToGlobal( QPoint( cursorRect().x(), cursorRect().y() ) ), tip );
 }
 
 /*----------------------------------------------------------------------*/
@@ -326,16 +254,6 @@ void HBQPlainTextEdit::hbApplyKey( int key, Qt::KeyboardModifiers modifiers, con
 void HBQPlainTextEdit::hbRefresh()
 {
    repaint();
-}
-
-/*----------------------------------------------------------------------*/
-
-void HBQPlainTextEdit::hbSetProtoStyle( const QString & css )
-{
-   if( css == ( QString ) "" )
-      ttLabel->setStyleSheet( "background-color: rgb(255,255,174); border: 1px solid black; padding: 3px;" );
-   else
-      ttLabel->setStyleSheet( css );
 }
 
 /*----------------------------------------------------------------------*/
@@ -2225,13 +2143,6 @@ void HBQPlainTextEdit::hbUpdateHorzRuler( const QRect & rect, int dy )
    if( dy == 0 )
    {
       horzRuler->update();
-   }
-   else
-   {
-      if( isTipActive )
-      {
-         ttFrame->move( ttFrame->x(), ttFrame->y() + dy );
-      }
    }
 }
 

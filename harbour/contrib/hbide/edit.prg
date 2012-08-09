@@ -250,7 +250,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD parseCodeCompletion( cSyntax )
 
    METHOD highlightPage()
-   METHOD reformatLine( nPos, nAdded, nDeleted )
+   METHOD reformatLine( nPos, nDeleted, nAdded )
    METHOD handleTab( key )
 
    ENDCLASS
@@ -611,6 +611,7 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
             ::loadFuncHelp()     // Also invokes prototype display
          ENDIF
          EXIT
+      CASE Qt_Key_Escape
       CASE Qt_Key_ParenRight
          IF ! lCtrl .AND. ! lAlt
             ::hidePrototype()
@@ -2225,31 +2226,26 @@ METHOD IdeEdit:insertText( cText )
 /*----------------------------------------------------------------------*/
 /* called via qDocument:contentsChange(*/
 
-METHOD IdeEdit:reformatLine( nPos, nAdded, nDeleted )
+METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
    LOCAL cProto, nRows, nCols
-   LOCAL cPWord, cPPWord, nPostn, nLine, nLPrev, nLPrevPrev, nCPrev, nCPrevPrev, nOff, cCased, cCWord, cRest
+   LOCAL cPWord, cPPWord, nPostn, nLine, nLPrev, nLPrevPrev, nCPrev, nCPrevPrev, nOff, cCased
+   LOCAL cCWord  := ""
+   LOCAL cRest   := ""
    LOCAL qCursor := ::qEdit:textCursor()
 
    IF ::oEditor:lIsPRG
       nPostn := qCursor:position()
       nLine  := qCursor:blockNumber()
 
-      /* Just preceding character our cursor is landing */
       IF qCursor:columnNumber() > 0
          qCursor:movePosition( QTextCursor_Left, QTextCursor_KeepAnchor, 1 )
          cCWord := qCursor:selectedText()
          qCursor:clearSelection()
          qCursor:setPosition( nPostn )
-      ELSE
-         cCWord := ""
       ENDIF
 
-      /* Check if we are not inside somewhere */
-      qCursor:movePosition( QTextCursor_EndOfLine, QTextCursor_KeepAnchor )
-      IF qCursor:blockNumber() == nLine
+      IF qCursor:movePosition( QTextCursor_EndOfLine, QTextCursor_KeepAnchor ) .AND. qCursor:position() > nPostn
          cRest := qCursor:selectedText()
-      ELSE
-         cRest := ""
       ENDIF
       qCursor:clearSelection()
       qCursor:setPosition( nPostn )
@@ -2260,7 +2256,9 @@ METHOD IdeEdit:reformatLine( nPos, nAdded, nDeleted )
          nCPrev := qCursor:columnNumber()
          qCursor:select( QTextCursor_WordUnderCursor )
          cPWord := qCursor:selectedText()
-         //
+         qCursor:clearSelection()
+         qCursor:setPosition( nPostn )
+
          qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
          nLPrevPrev := qCursor:blockNumber()
          IF nLPrevPrev == nLine
@@ -2271,11 +2269,11 @@ METHOD IdeEdit:reformatLine( nPos, nAdded, nDeleted )
             nCPrevPrev := -1
             cPPWord := ""
          ENDIF
-
-         // HB_TRACE( HB_TR_ALWAYS, "PP=", cPPWord, "P=", cPWord, "C=", cCWord, "R=", cRest )
-
          qCursor:clearSelection()
          qCursor:setPosition( nPostn )
+
+//       HB_TRACE( HB_TR_ALWAYS, "PP=", cPPWord, "P=", cPWord, "C=", cCWord, "R=", cRest )
+
          qCursor:beginEditBlock()
 
          IF cPWord == "." .AND. cPPWord $ ::hLogicals
@@ -2284,7 +2282,13 @@ METHOD IdeEdit:reformatLine( nPos, nAdded, nDeleted )
                qCursor:select( QTextCursor_WordUnderCursor )
                qCursor:removeSelectedText()
                qCursor:insertText( upper( cPPWord ) )
+               qCursor:setPosition( nPostn )
             ENDIF
+
+         #if 0
+         ELSEIF cPWord == ":=" .AND. cCWord == "=" .AND. nAdded == 1
+            qCursor:insertText( " " )
+         #endif
 
          ELSEIF cPWord == "(" .AND. hbide_isHarbourFunction( cPPWord, @cCased )
             IF .T.
@@ -2292,13 +2296,10 @@ METHOD IdeEdit:reformatLine( nPos, nAdded, nDeleted )
                qCursor:select( QTextCursor_WordUnderCursor )
                qCursor:removeSelectedText()
                qCursor:insertText( cCased )
-               #if 0 /* Not working - will check later */
-               IF Empty( cRest )
-                  HB_TRACE( HB_TR_ALWAYS, "i am here" )
-                  qCursor:setPosition( nPostn )
-                  qCursor:insertText( "  )" )
-                  qCursor:setPosition( nPostn + 1 )
-                  ::qEdit:setTextCursor( qCursor )
+               qCursor:setPosition( nPostn )
+               #if 0
+               IF cCWord == "(" .AND. nAdded == 1
+                  qCursor:insertText( " " )
                ENDIF
                #endif
             ENDIF
@@ -2309,6 +2310,7 @@ METHOD IdeEdit:reformatLine( nPos, nAdded, nDeleted )
                qCursor:select( QTextCursor_WordUnderCursor )
                qCursor:removeSelectedText()
                qCursor:insertText( cCased )
+               qCursor:setPosition( nPostn )
             ENDIF
 
          ELSEIF cCWord == " " .AND. cPPWord != "#" .AND. hbide_isHarbourKeyword( cPWord )
@@ -2317,6 +2319,7 @@ METHOD IdeEdit:reformatLine( nPos, nAdded, nDeleted )
                qCursor:select( QTextCursor_WordUnderCursor )
                qCursor:removeSelectedText()
                qCursor:insertText( upper( cPWord ) )
+               qCursor:setPosition( nPostn )
             ENDIF
 
          ENDIF
@@ -2343,8 +2346,11 @@ METHOD IdeEdit:reformatLine( nPos, nAdded, nDeleted )
                   qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nOff )
                   qCursor:removeSelectedText()
                ENDIF
+
             ENDIF
          ENDIF
+
+         ::qEdit:setTextCursor( qCursor )
          qCursor:endEditBlock()
       ENDIF
       HB_SYMBOL_UNUSED( nCPrevPrev )
@@ -2364,8 +2370,8 @@ METHOD IdeEdit:reformatLine( nPos, nAdded, nDeleted )
    ENDIF
 
    HB_SYMBOL_UNUSED( nPos )
-   HB_SYMBOL_UNUSED( nAdded )
    HB_SYMBOL_UNUSED( nDeleted )
+   HB_SYMBOL_UNUSED( nAdded )
 
    RETURN cRest
 
@@ -2950,7 +2956,7 @@ FUNCTION hbide_isHarbourFunction( cWord, cCased )
    IF empty( s_b_ )
       s_b_:= {=>}
       hb_hCaseMatch( s_b_, .f. )
-      //a_:= hb_aTokens( strtran( hbide_getFileContentsFromResource( "hbfunc.txt" ), chr( 13 ) + chr( 10 ), chr( 10 ) ), chr( 10 ) )
+
       a_:= __hb_extern_get_exception_list( hbide_getHarbourHbx() )
       FOR EACH s IN a_
          IF ! empty( s )
@@ -2995,7 +3001,7 @@ FUNCTION hbide_isUserFunction( cWord, cCased )
    RETURN .F.
 
 /*----------------------------------------------------------------------*/
-
+/* Pulled from harbour/bin/find.hb and adopted for file as buffer */
 STATIC FUNCTION __hb_extern_get_exception_list( cFile )
    LOCAL pRegex
    LOCAL tmp

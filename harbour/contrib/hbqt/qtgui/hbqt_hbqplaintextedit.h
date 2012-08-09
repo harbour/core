@@ -135,10 +135,12 @@ private:
    QList<int>     bookMarksGoto;
    QWidget      * lineNumberArea;
    QFrame       * horzRuler;
+#if 0
    QFrame       * ttFrame;
    QVBoxLayout  * ttLayout;
    QLabel       * ttLabel;
    QTextEdit    * ttTextEdit;
+#endif
    int            spaces;
    bool           numberBlock;
    bool           highlightCurLine;
@@ -238,7 +240,6 @@ public slots:
    void           hbHighlightArea( int, int, int, int, int );
    void           hbTogglePersistentSelection();
    void           hbHorzRulerVisible( bool visible ) { hbUpdateHorzRulerHeight( visible ? 20 : 0 ); };
-   void           hbSetProtoStyle( const QString & css = "" );
    void           hbSelectAll();
    void           hbSetFieldsListActive( bool active ) { isAliasCompleter = active; };
    void           hbRefreshCompleter( const QString & alias = "" );
