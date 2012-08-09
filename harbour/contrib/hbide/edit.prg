@@ -2227,7 +2227,7 @@ METHOD IdeEdit:insertText( cText )
 /* called via qDocument:contentsChange(*/
 
 METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
-   LOCAL cProto, nRows, nCols
+   LOCAL cProto, nRows, nCols, nCol
    LOCAL cPWord, cPPWord, nPostn, nLine, nLPrev, nLPrevPrev, nCPrev, nCPrevPrev, nOff, cCased
    LOCAL cCWord  := ""
    LOCAL cRest   := ""
@@ -2237,11 +2237,8 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
       nPostn := qCursor:position()
       nLine  := qCursor:blockNumber()
 
-      IF qCursor:columnNumber() > 0
-         qCursor:movePosition( QTextCursor_Left, QTextCursor_KeepAnchor, 1 )
-         cCWord := qCursor:selectedText()
-         qCursor:clearSelection()
-         qCursor:setPosition( nPostn )
+      IF ( nCol := nPostn - qCursor:block():position() ) > 0
+         cCWord := SubStr( qCursor:block():text(), nCol, 1 )
       ENDIF
 
       IF qCursor:movePosition( QTextCursor_EndOfLine, QTextCursor_KeepAnchor ) .AND. qCursor:position() > nPostn
@@ -2253,7 +2250,7 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
       qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 1 )
       nLPrev := qCursor:blockNumber()
       IF nLPrev == nLine
-         nCPrev := qCursor:columnNumber()
+         nCPrev := qCursor:position() - qCursor:block():position()
          qCursor:select( QTextCursor_WordUnderCursor )
          cPWord := qCursor:selectedText()
          qCursor:clearSelection()
@@ -2262,7 +2259,7 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
          qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
          nLPrevPrev := qCursor:blockNumber()
          IF nLPrevPrev == nLine
-            nCPrevPrev := qCursor:columnNumber()
+            nCPrevPrev := qCursor:position() - qCursor:block():position()
             qCursor:select( QTextCursor_WordUnderCursor )
             cPPWord := qCursor:selectedText()
          ELSE
@@ -2272,7 +2269,7 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
          qCursor:clearSelection()
          qCursor:setPosition( nPostn )
 
-//       HB_TRACE( HB_TR_ALWAYS, "PP=", cPPWord, "P=", cPWord, "C=", cCWord, "R=", cRest )
+         //HB_TRACE( HB_TR_ALWAYS, "PP<", cPPWord, "> P<", cPWord, "> C<", cCWord, "> R<", cRest, ">" )
 
          qCursor:beginEditBlock()
 
@@ -2285,33 +2282,35 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
                qCursor:setPosition( nPostn )
             ENDIF
 
-         #if 0
+         #if 0      /* CONFIGURABLE */
          ELSEIF cPWord == ":=" .AND. cCWord == "=" .AND. nAdded == 1
             qCursor:insertText( " " )
          #endif
 
-         ELSEIF cPWord == "(" .AND. hbide_isHarbourFunction( cPPWord, @cCased )
-            IF .T.
-               qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
-               qCursor:select( QTextCursor_WordUnderCursor )
-               qCursor:removeSelectedText()
-               qCursor:insertText( cCased )
-               qCursor:setPosition( nPostn )
-               #if 0
+         ELSEIF cCWord == "(" .AND. hbide_isHarbourFunction( cPPWord, @cCased )
+            hbide_replaceWord( qCursor, 2, cCased, nPostn )
+            #if 0   /* CONFIGURABLE */
                IF cCWord == "(" .AND. nAdded == 1
-                  qCursor:insertText( " " )
+                  qCursor:insertText( " )" )
                ENDIF
-               #endif
-            ENDIF
+            #endif
+            qCursor:setPosition( nPostn )
+
+         ELSEIF cCWord == "(" .AND. hbide_isQtFunction( cPPWord, @cCased )
+            hbide_replaceWord( qCursor, 2, cCased, nPostn )
+            #if 0   /* CONFIGURABLE */
+               IF cCWord == "(" .AND. nAdded == 1
+                  qCursor:insertText( " )" )
+               ENDIF
+            #endif
+            qCursor:setPosition( nPostn )
 
          ELSEIF ( cPWord == "(" .OR. cCWord == " " ) .AND. hbide_isUserFunction( cPPWord, @cCased ) /* User dictionaries : base work */
-            IF .T.
-               qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
-               qCursor:select( QTextCursor_WordUnderCursor )
-               qCursor:removeSelectedText()
-               qCursor:insertText( cCased )
-               qCursor:setPosition( nPostn )
-            ENDIF
+            qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
+            qCursor:select( QTextCursor_WordUnderCursor )
+            qCursor:removeSelectedText()
+            qCursor:insertText( cCased )
+            qCursor:setPosition( nPostn )
 
          ELSEIF cCWord == " " .AND. cPPWord != "#" .AND. hbide_isHarbourKeyword( cPWord )
             IF ! ::oINI:lSupressHbKWordsToUpper
@@ -2395,6 +2394,18 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
    HB_SYMBOL_UNUSED( nAdded )
 
    RETURN cRest
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_replaceWord( qCursor, nWord, cWord, nPostn )
+
+   qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, nWord )
+   qCursor:select( QTextCursor_WordUnderCursor )
+   qCursor:removeSelectedText()
+   qCursor:insertText( cWord )
+   qCursor:setPosition( nPostn )
+
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -2917,15 +2928,17 @@ FUNCTION hbide_isStartingKeyword( cWord, oIde )
    IF empty( s_b_ )
       IF ! oIde:oINI:lReturnAsBeginKeyword
          s_b_ := { ;
-                    'function' => NIL,;
-                    'class' => NIL,;
-                    'method' => NIL }
+                    'function'  => NIL,;
+                    'procedure' => NIL,;
+                    'class'     => NIL,;
+                    'method'    => NIL }
       ELSE
          s_b_ := { ;
-                    'function' => NIL,;
-                    'class' => NIL,;
-                    'return' => NIL,;
-                    'method' => NIL }
+                    'function'  => NIL,;
+                    'procedure' => NIL,;
+                    'class'     => NIL,;
+                    'return'    => NIL,;
+                    'method'    => NIL }
       ENDIF
    ENDIF
 
@@ -2939,14 +2952,18 @@ FUNCTION hbide_isMinimumIndentableKeyword( cWord, oIde )
    IF empty( s_b_ )
       IF ! oIde:oINI:lReturnAsBeginKeyword
          s_b_ := { ;
-                    'local' => NIL,;
-                    'static' => NIL,;
-                    'return' => NIL,;
+                    'local'   => NIL,;
+                    'static'  => NIL,;
+                    'return'  => NIL,;
+                    'private' => NIL,;
+                    'public'  => NIL,;
                     'default' => NIL }
       ELSE
          s_b_ := { ;
-                    'local' => NIL,;
-                    'static' => NIL,;
+                    'local'   => NIL,;
+                    'private' => NIL,;
+                    'public'  => NIL,;
+                    'static'  => NIL,;
                     'default' => NIL }
       ENDIF
    ENDIF
@@ -2957,24 +2974,24 @@ FUNCTION hbide_isMinimumIndentableKeyword( cWord, oIde )
 
 FUNCTION hbide_isIndentableKeyword( cWord, oIde )
    STATIC s_b_ := { ;
-                    'if' => NIL,;
-                    'else' => NIL,;
-                    'elseif' => NIL,;
-                    'docase' => NIL,;
-                    'case' => NIL,;
+                    'if'        => NIL,;
+                    'else'      => NIL,;
+                    'elseif'    => NIL,;
+                    'docase'    => NIL,;
+                    'case'      => NIL,;
                     'otherwise' => NIL,;
-                    'do' => NIL,;
-                    'while' => NIL,;
-                    'switch' => NIL,;
-                    'for' => NIL,;
-                    'next' => NIL,;
-                    'begin' => NIL,;
-                    'sequence' => NIL,;
-                    'try' => NIL,;
-                    'catch' => NIL,;
-                    'always' => NIL,;
-                    'recover' => NIL,;
-                    'finally' => NIL }
+                    'do'        => NIL,;
+                    'while'     => NIL,;
+                    'switch'    => NIL,;
+                    'for'       => NIL,;
+                    'next'      => NIL,;
+                    'begin'     => NIL,;
+                    'sequence'  => NIL,;
+                    'try'       => NIL,;
+                    'catch'     => NIL,;
+                    'always'    => NIL,;
+                    'recover'   => NIL,;
+                    'finally'   => NIL }
 
    HB_SYMBOL_UNUSED( oIde )
 
@@ -2984,63 +3001,63 @@ FUNCTION hbide_isIndentableKeyword( cWord, oIde )
 
 FUNCTION hbide_harbourKeywords()
    STATIC s_b_ := { ;
-                    'function' => NIL,;
-                    'procedure' => NIL,;
-                    'thread' => NIL,;
-                    'return' => NIL,;
-                    'request' => NIL,;
-                    'static' => NIL,;
-                    'local' => NIL,;
-                    'default' => NIL,;
-                    'if' => NIL,;
-                    'else' => NIL,;
-                    'elseif' => NIL,;
-                    'endif' => NIL,;
-                    'end' => NIL,;
-                    'endswitch' => NIL,;
-                    'docase' => NIL,;
-                    'case' => NIL,;
-                    'endcase' => NIL,;
-                    'otherwise' => NIL,;
-                    'switch' => NIL,;
-                    'do' => NIL,;
-                    'while' => NIL,;
-                    'enddo' => NIL,;
-                    'exit' => NIL,;
-                    'for' => NIL,;
-                    'each' => NIL,;
-                    'next' => NIL,;
-                    'step' => NIL,;
-                    'to' => NIL,;
-                    'class' => NIL,;
-                    'endclass' => NIL,;
-                    'method' => NIL,;
-                    'data' => NIL,;
-                    'var' => NIL,;
-                    'destructor' => NIL,;
-                    'inline' => NIL,;
-                    'setget' => NIL,;
-                    'assign' => NIL,;
-                    'access' => NIL,;
-                    'inherit' => NIL,;
-                    'init' => NIL,;
-                    'create' => NIL,;
-                    'virtual' => NIL,;
-                    'message' => NIL,;
-                    'begin' => NIL,;
-                    'sequence' => NIL,;
-                    'try' => NIL,;
-                    'catch' => NIL,;
-                    'always' => NIL,;
-                    'recover' => NIL,;
-                    'with' => NIL,;
-                    'replace' => NIL,;
+                    'function'         => NIL,;
+                    'procedure'        => NIL,;
+                    'thread'           => NIL,;
+                    'return'           => NIL,;
+                    'request'          => NIL,;
+                    'static'           => NIL,;
+                    'local'            => NIL,;
+                    'default'          => NIL,;
+                    'if'               => NIL,;
+                    'else'             => NIL,;
+                    'elseif'           => NIL,;
+                    'endif'            => NIL,;
+                    'end'              => NIL,;
+                    'endswitch'        => NIL,;
+                    'docase'           => NIL,;
+                    'case'             => NIL,;
+                    'endcase'          => NIL,;
+                    'otherwise'        => NIL,;
+                    'switch'           => NIL,;
+                    'do'               => NIL,;
+                    'while'            => NIL,;
+                    'enddo'            => NIL,;
+                    'exit'             => NIL,;
+                    'for'              => NIL,;
+                    'each'             => NIL,;
+                    'next'             => NIL,;
+                    'step'             => NIL,;
+                    'to'               => NIL,;
+                    'class'            => NIL,;
+                    'endclass'         => NIL,;
+                    'method'           => NIL,;
+                    'data'             => NIL,;
+                    'var'              => NIL,;
+                    'destructor'       => NIL,;
+                    'inline'           => NIL,;
+                    'setget'           => NIL,;
+                    'assign'           => NIL,;
+                    'access'           => NIL,;
+                    'inherit'          => NIL,;
+                    'init'             => NIL,;
+                    'create'           => NIL,;
+                    'virtual'          => NIL,;
+                    'message'          => NIL,;
+                    'begin'            => NIL,;
+                    'sequence'         => NIL,;
+                    'try'              => NIL,;
+                    'catch'            => NIL,;
+                    'always'           => NIL,;
+                    'recover'          => NIL,;
+                    'with'             => NIL,;
+                    'replace'          => NIL,;
                     'hb_symbol_unused' => NIL,;
-                    'error' => NIL,;
-                    'handler' => NIL,;
-                    'loop' => NIL,;
-                    'in' => NIL,;
-                    'nil' => NIL }
+                    'error'            => NIL,;
+                    'handler'          => NIL,;
+                    'loop'             => NIL,;
+                    'in'               => NIL,;
+                    'nil'              => NIL }
    RETURN s_b_
 
 /*----------------------------------------------------------------------*/
@@ -3053,21 +3070,27 @@ FUNCTION hbide_isHarbourKeyword( cWord, oIde )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_isHarbourFunction( cWord, cCased )
-   LOCAL s, a_
-   STATIC s_b_
+STATIC FUNCTION hbide_addInList( hHash, aList )
+   LOCAL s
 
+   FOR EACH s IN aList
+      IF ! empty( s )
+         s := alltrim( s )
+         hHash[ s ] := s
+      ENDIF
+   NEXT
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_isHarbourFunction( cWord, cCased )
+
+   STATIC s_b_
    IF empty( s_b_ )
       s_b_:= {=>}
       hb_hCaseMatch( s_b_, .f. )
-
-      a_:= __hb_extern_get_exception_list( hbide_getHarbourHbx() )
-      FOR EACH s IN a_
-         IF ! empty( s )
-            s := alltrim( s )
-            s_b_[ s ] := s
-         ENDIF
-      NEXT
+      hbide_addInList( s_b_, hbide_getHarbourFunctions( hbide_getHarbourHbx() ) )
    ENDIF
    IF cWord $ s_b_
       cCased := s_b_[ cWord ]
@@ -3078,10 +3101,29 @@ FUNCTION hbide_isHarbourFunction( cWord, cCased )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_isUserFunction( cWord, cCased )
-   LOCAL s, a_, aDict, oDict
-   STATIC s_b_
+STATIC FUNCTION hbide_isQtFunction( cWord, cCased )
 
+   STATIC s_b_
+   IF empty( s_b_ )
+      s_b_:= {=>}
+      hb_hCaseMatch( s_b_, .f. )
+      hbide_addInList( s_b_, hbide_getQtFunctions( hbide_getQtCoreFilelist() ) )
+      hbide_addInList( s_b_, hbide_getQtFunctions( hbide_getQtGuiFilelist() ) )
+      hbide_addInList( s_b_, hbide_getQtFunctions( hbide_getQtNetworkFilelist() ) )
+   ENDIF
+   IF cWord $ s_b_
+      cCased := s_b_[ cWord ]
+      RETURN .T.
+   ENDIF
+
+   RETURN .f.
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_isUserFunction( cWord, cCased )
+   LOCAL s, a_, aDict, oDict
+
+   STATIC s_b_
    IF empty( s_b_ )
       s_b_:= {=>}
       hb_hCaseMatch( s_b_, .f. )
@@ -3106,7 +3148,7 @@ FUNCTION hbide_isUserFunction( cWord, cCased )
 
 /*----------------------------------------------------------------------*/
 /* Pulled from harbour/bin/find.hb and adopted for file as buffer */
-STATIC FUNCTION __hb_extern_get_exception_list( cFile )
+STATIC FUNCTION hbide_getHarbourFunctions( cFile )
    LOCAL pRegex
    LOCAL tmp
    LOCAL aDynamic := {}
@@ -3122,9 +3164,33 @@ STATIC FUNCTION __hb_extern_get_exception_list( cFile )
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION hbide_getQtFunctions( cBuffer )
+   LOCAL pRegex
+   LOCAL tmp
+   LOCAL aDynamic := {}
+
+   IF ! Empty( cBuffer ) .AND. ;
+      ! Empty( pRegex := hb_regexComp( "^([a-zA-Z0-9_]*.qth)$", .T., .T. ) )
+      FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cBuffer, Chr( 13 ) ),,,,, .T. )
+         AAdd( aDynamic, StrTran( tmp[ 1 ], ".qth" ) )
+      NEXT
+   ENDIF
+
+   RETURN aDynamic
+
+/*----------------------------------------------------------------------*/
 #pragma -km+
 
 FUNCTION hbide_getHarbourHbx()
    #pragma __binarystreaminclude "harbour.hbx" | RETURN %s
+
+FUNCTION hbide_getQtGuiFilelist()
+   #pragma __binarystreaminclude "../hbqt/qtgui/qth/filelist.hbm" | RETURN %s
+
+FUNCTION hbide_getQtCoreFilelist()
+   #pragma __binarystreaminclude "../hbqt/qtcore/qth/filelist.hbm" | RETURN %s
+
+FUNCTION hbide_getQtNetworkFilelist()
+   #pragma __binarystreaminclude "../hbqt/qtnetwork/qth/filelist.hbm" | RETURN %s
 
 /*----------------------------------------------------------------------*/
