@@ -2227,7 +2227,7 @@ METHOD IdeEdit:insertText( cText )
 /* called via qDocument:contentsChange(*/
 
 METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
-   LOCAL cProto, nRows, nCols, nCol
+   LOCAL cProto, nRows, nCols, nCol, cWord
    LOCAL cPWord, cPPWord, nPostn, nLine, nLPrev, nLPrevPrev, nCPrev, nCPrevPrev, nOff, cCased
    LOCAL cCWord  := ""
    LOCAL cRest   := ""
@@ -2305,7 +2305,7 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
             #endif
             qCursor:setPosition( nPostn )
 
-         ELSEIF ( cPWord == "(" .OR. cCWord == " " ) .AND. hbide_isUserFunction( cPPWord, @cCased ) /* User dictionaries : base work */
+         ELSEIF ( cCWord == "(" .OR. cCWord == " " ) .AND. hbide_isUserFunction( cPPWord, @cCased ) /* User dictionaries : base work */
             qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
             qCursor:select( QTextCursor_WordUnderCursor )
             qCursor:removeSelectedText()
@@ -2350,26 +2350,27 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
                   qCursor:movePosition( QTextCursor_EndOfLine )
 
                ENDIF
-
             ENDIF
          ENDIF
 
          IF .T.  /* CONFIGURABLE */
             IF cCWord == " " .AND. nAdded == 1
-               IF Lower( cPWord ) == "if"
+               cWord := Lower( cPWord )
+               IF cWord == "if"
                   hbide_appendEndif( qCursor, hbide_getFrontSpacesAndWord( qCursor:block():text() ), qCursor:position() )
-               ELSEIF Lower( cPWord ) == "for"
+               ELSEIF cWord == "for"
                   hbide_appendFor( qCursor, hbide_getFrontSpacesAndWord( qCursor:block():text() ), qCursor:position() )
-               ELSEIF Lower( cPWord ) == "switch"                               /* CASE indentation: CONFIGURABLE */
+               ELSEIF cWord == "switch"                               /* CASE indentation: CONFIGURABLE */
                   hbide_appendSwitch( qCursor, hbide_getFrontSpacesAndWord( qCursor:block():text() ), qCursor:position(), ::nTabSpaces )
-               ELSEIF Lower( cPPWord ) == "do" .AND. Lower( cPWord ) == "case"  /* CASE indentation: CONFIGURABLE */
+               ELSEIF Lower( cPPWord ) == "do" .AND. cWord == "case"  /* CASE indentation: CONFIGURABLE */
                   hbide_appendCase( qCursor, hbide_getFrontSpacesAndWord( qCursor:block():text() ), qCursor:position() )
-               ELSEIF Lower( cPPWord ) == "do" .AND. Lower( cPWord ) == "while"
+               ELSEIF Lower( cPPWord ) == "do" .AND. cWord == "while"
                   hbide_appendWhile( qCursor, hbide_getFrontSpacesAndWord( qCursor:block():text() ), qCursor:position() )
+               ELSEIF cWord == "elseif" .OR. cWord == "else"
+                  hbide_alignToPrevWord( qCursor, "if", "endif", Len( cWord ), nPostn )
                ENDIF
             ENDIF
          ENDIF
-
          ::qEdit:setTextCursor( qCursor )
          qCursor:endEditBlock()
       ENDIF
@@ -2397,6 +2398,38 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION hbide_alignToPrevWord( qCursor, cWord, cEWord, nLenCWord, nPostn )
+   LOCAL cFWord, nCol, nInner := 0
+   LOCAL lFound := .F.
+
+   DO WHILE .T.
+      IF qCursor:movePosition( QTextCursor_Up, QTextCursor_MoveAnchor )
+         nCol := hbide_getFrontSpacesAndWord( qCursor:block():text(), @cFWord )
+         IF Lower( cFWord ) == cWord .AND. nInner == 0
+            lFound := .T.
+            EXIT
+         ELSEIF Lower( cFWord ) == cWord .AND. nInner > 0
+            nInner--
+         ELSEIF Lower( cFWord ) == cEWord
+            nInner++
+         ENDIF
+      ELSE
+         EXIT
+      ENDIF
+   ENDDO
+   qCursor:setPosition( nPostn )
+   IF lFound
+      qCursor:movePosition( QTextCursor_StartOfBlock, QTextCursor_MoveAnchor )
+      qCursor:movePosition( QTextCursor_NextWord, QTextCursor_KeepAnchor )
+      qCursor:removeSelectedText()
+      qCursor:insertText( Space( nCol ) )
+      qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, nLenCWord + 1 )
+   ENDIF
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
 STATIC FUNCTION hbide_replaceWord( qCursor, nWord, cWord, nPostn )
 
    qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, nWord )
@@ -2413,7 +2446,7 @@ STATIC FUNCTION hbide_appendCase( qCursor, nIndent, nCurPos )
    LOCAL i
    LOCAL nCases := 3  /* CONFIGURABLE */
 
-   qCursor:beginEditBlock()
+//   qCursor:beginEditBlock()
    qCursor:movePosition( QTextCursor_EndOfBlock )
    FOR i := 1 TO nCases
       qCursor:insertBlock()
@@ -2426,7 +2459,7 @@ STATIC FUNCTION hbide_appendCase( qCursor, nIndent, nCurPos )
    qCursor:setPosition( nCurPos )
    qCursor:movePosition( QTextCursor_NextBlock )
    qCursor:movePosition( QTextCursor_EndOfLine )
-   qCursor:endEditBlock()
+//   qCursor:endEditBlock()
 
    RETURN NIL
 
@@ -2436,7 +2469,7 @@ STATIC FUNCTION hbide_appendSwitch( qCursor, nIndent, nCurPos, nTabSpaces )
    LOCAL i
    LOCAL nCases := 3  /* CONFIGURABLE */
 
-   qCursor:beginEditBlock()
+//   qCursor:beginEditBlock()
    qCursor:movePosition( QTextCursor_EndOfBlock )
    FOR i := 1 TO nCases
       qCursor:insertBlock()
@@ -2447,7 +2480,7 @@ STATIC FUNCTION hbide_appendSwitch( qCursor, nIndent, nCurPos, nTabSpaces )
    qCursor:insertBlock()
    qCursor:insertText( Space( nIndent ) + "ENDSWITCH" )
    qCursor:setPosition( nCurPos )
-   qCursor:endEditBlock()
+//   qCursor:endEditBlock()
 
    RETURN NIL
 
@@ -2455,12 +2488,12 @@ STATIC FUNCTION hbide_appendSwitch( qCursor, nIndent, nCurPos, nTabSpaces )
 
 STATIC FUNCTION hbide_appendWhile( qCursor, nIndent, nCurPos )
 
-   qCursor:beginEditBlock()
+//   qCursor:beginEditBlock()
    qCursor:movePosition( QTextCursor_EndOfBlock )
    qCursor:insertBlock()
    qCursor:insertText( Space( nIndent ) + "ENDDO" )
    qCursor:setPosition( nCurPos )
-   qCursor:endEditBlock()
+//   qCursor:endEditBlock()
 
    RETURN NIL
 
@@ -2468,12 +2501,12 @@ STATIC FUNCTION hbide_appendWhile( qCursor, nIndent, nCurPos )
 
 STATIC FUNCTION hbide_appendFor( qCursor, nIndent, nCurPos )
 
-   qCursor:beginEditBlock()
+//   qCursor:beginEditBlock()
    qCursor:movePosition( QTextCursor_EndOfBlock )
    qCursor:insertBlock()
    qCursor:insertText( Space( nIndent ) + "NEXT" )
    qCursor:setPosition( nCurPos )
-   qCursor:endEditBlock()
+//   qCursor:endEditBlock()
 
    RETURN NIL
 
@@ -2481,12 +2514,12 @@ STATIC FUNCTION hbide_appendFor( qCursor, nIndent, nCurPos )
 
 STATIC FUNCTION hbide_appendEndif( qCursor, nIndent, nCurPos )
 
-   qCursor:beginEditBlock()
+//   qCursor:beginEditBlock()
    qCursor:movePosition( QTextCursor_EndOfBlock )
    qCursor:insertBlock()
    qCursor:insertText( Space( nIndent ) + "ENDIF" )
    qCursor:setPosition( nCurPos )
-   qCursor:endEditBlock()
+//   qCursor:endEditBlock()
 
    RETURN NIL
 
