@@ -187,7 +187,7 @@ int HBQSlots::hbDisconnect( PHB_ITEM pObj, char * pszSignal )
       {
          if( QMetaObject::disconnect( object, signalId, 0, 0 ) )
          {
-            HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s ) %i", pszSignal, i ) );
+            HB_TRACE( HB_TR_DEBUG, ( "HBQSlots::hbDisconnect( %s ) %i", pszSignal, signalId ) );
             nResult = 0;
          }
          else
