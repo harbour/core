@@ -240,6 +240,26 @@ CLASS IdeINI INHERIT IdeObject
    DATA   nPanelsTabPosition                      INIT 0
    DATA   nPanelsTabShape                         INIT 1
 
+   DATA   lISClosing                              INIT .T.
+   DATA   lISIf                                   INIT .T.
+   DATA   lISFor                                  INIT .T.
+   DATA   lISDoWhile                              INIT .T.
+   DATA   lISDoCase                               INIT .T.
+   DATA   lISSwitch                               INIT .T.
+   DATA   lISElse                                 INIT .F.
+   DATA   lISCaseOWise                            INIT .F.
+   DATA   lISSwitchOWise                          INIT .F.
+   DATA   lISExitSameLine                         INIT .F.
+   DATA   nISCaseCases                            INIT 3
+   DATA   nISSwitchCases                          INIT 3
+   DATA   lISClosingP                             INIT .F.
+   DATA   lISSpaceP                               INIT .F.
+   DATA   lISCodeBlock                            INIT .T.
+   DATA   lISOperator                             INIT .F.
+   DATA   lISAlignAssign                          INIT .F.
+   DATA   lISFmtLine                              INIT .F.
+   DATA   lISEmbrace                              INIT .F.
+
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
@@ -475,6 +495,26 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "ToolbarSize"               + "=" +   ::cToolbarSize                                     )
    aadd( txt_, "PanelsTabPosition"         + "=" +   hb_ntos( ::nPanelsTabPosition )                    )
    aadd( txt_, "PanelsTabShape"            + "=" +   hb_ntos( ::nPanelsTabShape )                       )
+
+   aadd( txt_, "ISClosing"                 + "=" +   iif( ::lISClosing             , "YES", "NO" )      )
+   aadd( txt_, "ISIf"                      + "=" +   iif( ::lISIf                  , "YES", "NO" )      )
+   aadd( txt_, "ISFor"                     + "=" +   iif( ::lISFor                 , "YES", "NO" )      )
+   aadd( txt_, "ISDoWhile"                 + "=" +   iif( ::lISDoWhile             , "YES", "NO" )      )
+   aadd( txt_, "ISDoCase"                  + "=" +   iif( ::lISDoCase              , "YES", "NO" )      )
+   aadd( txt_, "ISSwitch"                  + "=" +   iif( ::lISSwitch              , "YES", "NO" )      )
+   aadd( txt_, "ISElse"                    + "=" +   iif( ::lISElse                , "YES", "NO" )      )
+   aadd( txt_, "ISCaseOWise"               + "=" +   iif( ::lISCaseOWise           , "YES", "NO" )      )
+   aadd( txt_, "ISSwitchOWise"             + "=" +   iif( ::lISSwitchOWise         , "YES", "NO" )      )
+   aadd( txt_, "ISExitSameLine"            + "=" +   iif( ::lISExitSameLine        , "YES", "NO" )      )
+   aadd( txt_, "ISCaseCases"               + "=" +   hb_ntos( ::nISCaseCases  )                         )
+   aadd( txt_, "ISSwitchCases"             + "=" +   hb_ntos( ::nISSwitchCases )                        )
+   aadd( txt_, "ISClosingP"                + "=" +   iif( ::lISClosingP            , "YES", "NO" )      )
+   aadd( txt_, "ISSpaceP"                  + "=" +   iif( ::lISSpaceP              , "YES", "NO" )      )
+   aadd( txt_, "ISCodeBlock"               + "=" +   iif( ::lISCodeBlock           , "YES", "NO" )      )
+   aadd( txt_, "ISOperator"                + "=" +   iif( ::lISOperator            , "YES", "NO" )      )
+   aadd( txt_, "ISAlignAssign"             + "=" +   iif( ::lISAlignAssign         , "YES", "NO" )      )
+   AAdd( txt_, "ISFmtLine"                 + "=" +   iif( ::lISFmtLine             , "YES", "NO" )      )
+   AAdd( txt_, "ISEmbrace"                 + "=" +   iif( ::lISEmbrace             , "YES", "NO" )      )
 
    aadd( txt_, "" )
    aadd( txt_, "[PROJECTS]" )
@@ -809,6 +849,26 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "PanelsTabPosition"           ; ::nPanelsTabPosition                := val( cVal ); EXIT
                      CASE "PanelsTabShape"              ; ::nPanelsTabShape                   := val( cVal ); EXIT
 
+                     CASE "ISClosing"                   ; ::lISClosing                        := !( cVal == "NO" ) ; EXIT
+                     CASE "ISIf"                        ; ::lISIf                             := !( cVal == "NO" ) ; EXIT
+                     CASE "ISFor"                       ; ::lISFor                            := !( cVal == "NO" ) ; EXIT
+                     CASE "ISDoWhile"                   ; ::lISDoWhile                        := !( cVal == "NO" ) ; EXIT
+                     CASE "ISDoCase"                    ; ::lISDoCase                         := !( cVal == "NO" ) ; EXIT
+                     CASE "ISSwitch"                    ; ::lISSwitch                         := !( cVal == "NO" ) ; EXIT
+                     CASE "ISElse"                      ; ::lISElse                           := !( cVal == "NO" ) ; EXIT
+                     CASE "ISCaseOWise"                 ; ::lISCaseOWise                      := !( cVal == "NO" ) ; EXIT
+                     CASE "ISSwitchOWise"               ; ::lISSwitchOWise                    := !( cVal == "NO" ) ; EXIT
+                     CASE "ISExitSameLine"              ; ::lISExitSameLine                   := !( cVal == "NO" ) ; EXIT
+                     CASE "ISCaseCases"                 ; ::nISCaseCases                      := val( cVal )       ; EXIT
+                     CASE "ISSwitchCases"               ; ::nISSwitchCases                    := val( cVal )       ; EXIT
+                     CASE "ISClosingP"                  ; ::lISClosingP                       := !( cVal == "NO" ) ; EXIT
+                     CASE "ISSpaceP"                    ; ::lISSpaceP                         := !( cVal == "NO" ) ; EXIT
+                     CASE "ISCodeBlock"                 ; ::lISCodeBlock                      := !( cVal == "NO" ) ; EXIT
+                     CASE "ISOperator"                  ; ::lISOperator                       := !( cVal == "NO" ) ; EXIT
+                     CASE "ISAlignAssign"               ; ::lISAlignAssign                    := !( cVal == "NO" ) ; EXIT
+                     CASE "ISFmtLine"                   ; ::lISFmtLine                        := !( cVal == "NO" ) ; EXIT
+                     CASE "ISEmbrace"                   ; ::lISEmbrace                        := !( cVal == "NO" ) ; EXIT
+
                      ENDSWITCH
                   ENDIF
 
@@ -1133,7 +1193,7 @@ CLASS IdeSetup INHERIT IdeObject
    DATA   oINI
    DATA   qOrgPalette
    DATA   aItems                                  INIT {}
-   DATA   aTree                                   INIT { "General", "Selections", "Font", "Paths", "Variables", "Dictionaries", "Themes", "Formatting", "VSS" }
+   DATA   aTree                                   INIT { "General", "Intelli-sense", "Selections", "Font", "Paths", "Variables", "Dictionaries", "Themes", "Formatting", "VSS" }
    DATA   aStyles                                 INIT { "cleanlooks", "windows", "windowsxp", ;
                                                          "windowsvista", "cde", "motif", "plastique", "macintosh" }
    DATA   aKeyItems                               INIT {}
@@ -1453,6 +1513,27 @@ METHOD IdeSetup:retrieve()
    ::oINI:cPathSnippets            := ::oUI:editPathSnippets   : text()
    ::oINI:cPathThemes              := ::oUI:editPathThemes     : text()
 
+   /* Intelli-sense */
+   ::oINI:lISClosing               := ::oUI:grpISClosing       : isChecked()
+   ::oINI:lISIf                    := ::oUI:chkISIf            : isChecked()
+   ::oINI:lISFor                   := ::oUI:chkISFor           : isChecked()
+   ::oINI:lISDoWhile               := ::oUI:chkISDoWhile       : isChecked()
+   ::oINI:lISDoCase                := ::oUI:chkISDoCase        : isChecked()
+   ::oINI:lISSwitch                := ::oUI:chkISSwitch        : isChecked()
+   ::oINI:lISElse                  := ::oUI:chkISElse          : isChecked()
+   ::oINI:lISCaseOWise             := ::oUI:chkISCaseOWise     : isChecked()
+   ::oINI:lISSwitchOWise           := ::oUI:chkISSwitchOWise   : isChecked()
+   ::oINI:lISExitSameLine          := ::oUI:chkISExitSameLine  : isChecked()
+   ::oINI:nISCaseCases             := ::oUI:spinISCaseCases    : value()
+   ::oINI:nISSwitchCases           := ::oUI:spinISSwitchCases  : value()
+   ::oINI:lISClosingP              := ::oUI:chkISClosingP      : isChecked()
+   ::oINI:lISSpaceP                := ::oUI:chkISSpaceP        : isChecked()
+   ::oINI:lISCodeBlock             := ::oUI:chkISCodeBlock     : isChecked()
+   ::oINI:lISOperator              := ::oUI:chkISOperator      : isChecked()
+   ::oINI:lISAlignAssign           := ::oUI:chkISAlignAssign   : isChecked()
+   ::oINI:lISFmtLine               := ::oUI:chkISFmtLine       : isChecked()
+   ::oINI:lISEmbrace               := ::oUI:ChkISEmbrace       : isChecked()
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -1543,14 +1624,35 @@ METHOD IdeSetup:populate()
    ::oUI:editSec5:setReadOnly( .t. )
 
    /* Dock Widgets */
-   ::oUI:comboTabsShape:setCurrentIndex( ::oINI:nDocksTabShape )
-   ::oUI:comboLeftTabPos:setCurrentIndex( ::oINI:nDocksLeftTabPos )
-   ::oUI:comboTopTabPos:setCurrentIndex( ::oINI:nDocksTopTabPos )
-   ::oUI:comboRightTabPos:setCurrentIndex( ::oINI:nDocksRightTabPos )
-   ::oUI:comboBottomTabPos:setCurrentIndex( ::oINI:nDocksBottomTabPos )
+   ::oUI:comboTabsShape     : setCurrentIndex( ::oINI:nDocksTabShape     )
+   ::oUI:comboLeftTabPos    : setCurrentIndex( ::oINI:nDocksLeftTabPos   )
+   ::oUI:comboTopTabPos     : setCurrentIndex( ::oINI:nDocksTopTabPos    )
+   ::oUI:comboRightTabPos   : setCurrentIndex( ::oINI:nDocksRightTabPos  )
+   ::oUI:comboBottomTabPos  : setCurrentIndex( ::oINI:nDocksBottomTabPos )
 
-   ::oUI:editVSSExe:setText( ::oINI:cVSSExe )
-   ::oUI:editVSSDatabase:setText( ::oINI:cVSSDatabase )
+   ::oUI:editVSSExe         : setText( ::oINI:cVSSExe      )
+   ::oUI:editVSSDatabase    : setText( ::oINI:cVSSDatabase )
+
+   /* Intelli-sense */
+   ::oUI:grpISClosing       : setChecked( ::oINI:lISClosing      )
+   ::oUI:chkISIf            : setChecked( ::oINI:lISIf           )
+   ::oUI:chkISFor           : setChecked( ::oINI:lISFor          )
+   ::oUI:chkISDoWhile       : setChecked( ::oINI:lISDoWhile      )
+   ::oUI:chkISDoCase        : setChecked( ::oINI:lISDoCase       )
+   ::oUI:chkISSwitch        : setChecked( ::oINI:lISSwitch       )
+   ::oUI:chkISElse          : setChecked( ::oINI:lISElse         )
+   ::oUI:chkISCaseOWise     : setChecked( ::oINI:lISCaseOWise    )
+   ::oUI:chkISSwitchOWise   : setChecked( ::oINI:lISSwitchOWise  )
+   ::oUI:chkISExitSameLine  : setChecked( ::oINI:lISExitSameLine )
+   ::oUI:spinISCaseCases    : setValue(   ::oINI:nISCaseCases    )
+   ::oUI:spinISSwitchCases  : setValue(   ::oINI:nISSwitchCases  )
+   ::oUI:chkISClosingP      : setChecked( ::oINI:lISClosingP     )
+   ::oUI:chkISSpaceP        : setChecked( ::oINI:lISSpaceP       )
+   ::oUI:chkISCodeBlock     : setChecked( ::oINI:lISCodeBlock    )
+   ::oUI:chkISOperator      : setChecked( ::oINI:lISOperator     )
+   ::oUI:chkISAlignAssign   : setChecked( ::oINI:lISAlignAssign  )
+   ::oUI:chkISFmtLine       : setChecked( ::oINI:lISFmtLine      )
+   ::oUI:chkISEmbrace       : setChecked( ::oINI:lISEmbrace      )
 
    ::connectSlots()
 
