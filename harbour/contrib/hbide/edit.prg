@@ -2228,6 +2228,9 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
    LOCAL qCursor := ::qEdit:textCursor()
 
    IF ::oEditor:lIsPRG
+      qCursor:joinPreviousEditBlock()
+   // qCursor:beginEditBlock()   /* Why this misbehaves - stops TO undo previous stacks */
+
       nPostn := qCursor:position()
       nLine  := qCursor:blockNumber()
 
@@ -2264,8 +2267,6 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
          qCursor:setPosition( nPostn )
 
          //HB_TRACE( HB_TR_ALWAYS, "PP<", cPPWord, "> P<", cPWord, "> C<", cCWord, "> R<", cRest, ">" )
-
-         qCursor:beginEditBlock()
 
          // Group I operations
          IF cPWord == "." .AND. cPPWord $ ::hLogicals     /* ALWAYS */
@@ -2354,10 +2355,10 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
                ELSEIF ::oINI:lISFor     .AND. cWord == "for"
                   hbide_appendFor( qCursor, hbide_getFrontSpacesAndWord( qCursor:block():text() ), qCursor:position() )
 
-               ELSEIF ::oINI:lISSwitch  .AND. cWord == "switch"                               /* CASE indentation: CONFIGURABLE */
+               ELSEIF ::oINI:lISSwitch  .AND. cWord == "switch"
                   hbide_appendSwitch( qCursor, hbide_getFrontSpacesAndWord( qCursor:block():text() ), qCursor:position(), ::nTabSpaces, ::oINI:nISSwitchCases, ::oINI:lISSwitchOWise, ::oINI:lISExitSameLine )
 
-               ELSEIF ::oINI:lISDoCase  .AND. Lower( cPPWord ) == "do" .AND. cWord == "case"  /* CASE indentation: CONFIGURABLE */
+               ELSEIF ::oINI:lISDoCase  .AND. Lower( cPPWord ) == "do" .AND. cWord == "case"
                   hbide_appendCase( qCursor, hbide_getFrontSpacesAndWord( qCursor:block():text() ), qCursor:position(), ::oINI:nISCaseCases, ::oINI:lISCaseOWise  )
 
                ELSEIF ::oINI:lISDoWhile .AND. Lower( cPPWord ) == "do" .AND. cWord == "while"
@@ -2373,9 +2374,10 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
             ENDIF
          ENDIF
 
-         qCursor:endEditBlock()
          ::qEdit:setTextCursor( qCursor )
       ENDIF
+
+      qCursor:endEditBlock()
       HB_SYMBOL_UNUSED( nCPrevPrev )
    ENDIF
 
@@ -2514,28 +2516,31 @@ STATIC FUNCTION hbide_appendFor( qCursor, nIndent, nCurPos )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION hbide_appendIf( qCursor, nIndent, nCurPos, nTabSpaces, lElse, lEmbrace )
+   LOCAL nCol, cLine
+   LOCAL lAligned := .F.
 
    IF lEmbrace
       qCursor:movePosition( QTextCursor_StartOfBlock )
       IF qCursor:movePosition( QTextCursor_NextBlock )
          /* First line after IF must be starting on same indent where IF starts ; TO qualify FOR embracing */
-         IF hbide_getFrontSpacesAndWord( qCursor:block():text() ) == nIndent
-            /* We can confirm from developer IF TO embrace ? - Later... */
+         cLine := qCursor:block():text()
+         nCol := hbide_getFrontSpacesAndWord( cLine )
+         IF ! Empty( cLine ) .AND. nCol == nIndent
+            lAligned := .T.
             qCursor:insertText( Space( nTabSpaces ) )
             DO WHILE qCursor:movePosition( QTextCursor_NextBlock )
-               IF ! Empty( qCursor:block():text() )
-                  IF hbide_getFrontSpacesAndWord( qCursor:block():text() ) < nIndent
-                     qCursor:movePosition( QTextCursor_PreviousBlock )
-                     EXIT
-                  ENDIF
-                  qCursor:insertText( Space( nTabSpaces ) )
+               nCol := hbide_getFrontSpacesAndWord( qCursor:block():text() )
+               IF nCol < nIndent
+                  qCursor:movePosition( QTextCursor_PreviousBlock )
+                  EXIT
                ENDIF
+               qCursor:insertText( Space( nTabSpaces ) )
             ENDDO
          ENDIF
-      ELSE
-         qCursor:setPosition( nCurPos )
       ENDIF
-   ELSE
+   ENDIF
+   IF ! lAligned
+      qCursor:movePosition( QTextCursor_PreviousBlock )
       qCursor:setPosition( nCurPos )
    ENDIF
 
@@ -2552,6 +2557,13 @@ STATIC FUNCTION hbide_appendIf( qCursor, nIndent, nCurPos, nTabSpaces, lElse, lE
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
+   HB_SYMBOL_UNUSED( lUpdatePrevWord )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+#if 0
 METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
    LOCAL qCursor, qTextBlock, cText, cWord, nB, nL, qEdit, lPrevOnly, nCol, nSpace, nSpaces, nOff
 
@@ -2634,7 +2646,7 @@ METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
    ENDIF
 
    RETURN .t.
-
+#endif
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:findLastIndent()
@@ -2887,6 +2899,21 @@ FUNCTION hbide_getFrontSpacesAndWord( cText, cWord )
    n--
 
    cWord := hbide_getFirstWord( cText )
+
+   RETURN n
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_getFrontSpacesAndWordByCursor( qCursor, cWord )
+   LOCAL n, nPostn := qCursor:position()
+
+   qCursor:movePosition( QTextCursor_StartOfBlock )
+   qCursor:movePosition( QTextCursor_NextWord )
+   n := qCursor:position() - qCursor:block():position() + 1
+   qCursor:select( QTextCursor_WordUnderCursor )
+   cWord := qCursor:selectedText()
+   qCursor:clearSelection()
+   qCursor:setPosition( nPostn )
 
    RETURN n
 
