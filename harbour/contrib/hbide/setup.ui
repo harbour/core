@@ -22,6 +22,9 @@
      <height>397</height>
     </rect>
    </property>
+   <property name="indentation">
+    <number>10</number>
+   </property>
    <attribute name="headerVisible">
     <bool>false</bool>
    </attribute>
@@ -41,7 +44,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="pageGeneral">
     <widget class="QGroupBox" name="groupBox">
@@ -444,6 +447,326 @@
          <width>37</width>
          <height>21</height>
         </rect>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
+   <widget class="QWidget" name="pageIntelli">
+    <widget class="QGroupBox" name="groupBox_27">
+     <property name="geometry">
+      <rect>
+       <x>0</x>
+       <y>0</y>
+       <width>351</width>
+       <height>365</height>
+      </rect>
+     </property>
+     <property name="title">
+      <string/>
+     </property>
+     <widget class="QGroupBox" name="grpISClosing">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>8</y>
+        <width>333</width>
+        <height>125</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Closing Statements</string>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <widget class="QCheckBox" name="chkISIf">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>20</y>
+         <width>72</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>IF</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkISFor">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>40</y>
+         <width>72</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>FOR</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkISDoWhile">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>60</y>
+         <width>72</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>DO WHILE</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkISDoCase">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>80</y>
+         <width>72</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>DO CASE</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="ChkISSwitch">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>101</y>
+         <width>72</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>SWITCH</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_40">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>80</y>
+         <width>37</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>CASEs</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinISCaseCases">
+       <property name="geometry">
+        <rect>
+         <x>116</x>
+         <y>77</y>
+         <width>33</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkISCaseOWise">
+       <property name="geometry">
+        <rect>
+         <x>156</x>
+         <y>80</y>
+         <width>85</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>OTHERWISE</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkISElse">
+       <property name="geometry">
+        <rect>
+         <x>156</x>
+         <y>24</y>
+         <width>49</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>ELSE</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkISSwitchOWise">
+       <property name="geometry">
+        <rect>
+         <x>156</x>
+         <y>101</y>
+         <width>85</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>OTHERWISE</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_56">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>101</y>
+         <width>37</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>CASEs</string>
+       </property>
+      </widget>
+      <widget class="QSpinBox" name="spinISSwitchCases">
+       <property name="geometry">
+        <rect>
+         <x>116</x>
+         <y>100</y>
+         <width>29</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="minimum">
+        <number>1</number>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkISExitSameLine">
+       <property name="geometry">
+        <rect>
+         <x>240</x>
+         <y>101</y>
+         <width>89</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>EXIT Same Line</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkISEmbrace">
+       <property name="geometry">
+        <rect>
+         <x>236</x>
+         <y>24</y>
+         <width>93</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Embrace Lower</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="grpISFuncCall">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>136</y>
+        <width>333</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Function Calls</string>
+      </property>
+      <property name="checkable">
+       <bool>false</bool>
+      </property>
+      <widget class="QCheckBox" name="chkISClosingP">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>20</y>
+         <width>149</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Add Clsong Parenthesis ?</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkISSpaceP">
+       <property name="geometry">
+        <rect>
+         <x>156</x>
+         <y>20</y>
+         <width>169</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Add Spaces After/Before ()</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="groupBox_38">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>180</y>
+        <width>329</width>
+        <height>177</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>General</string>
+      </property>
+      <widget class="QCheckBox" name="chkISCodeBlock">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>16</y>
+         <width>185</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Add Closing Body of CodeBlock ?</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkISOperator">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>36</y>
+         <width>177</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Add Space After := Operator ?</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkISFmtLine">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>152</y>
+         <width>205</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Format Line after ENTER is pressed ?</string>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="chkISAlignAssign">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>56</y>
+         <width>205</width>
+         <height>18</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Align Operator := to Previous Lines ?</string>
        </property>
       </widget>
      </widget>
@@ -1889,7 +2212,7 @@
      </widget>
     </widget>
    </widget>
-   <widget class="QWidget" name="page">
+   <widget class="QWidget" name="pageThemes">
     <widget class="QGroupBox" name="groupBox_21">
      <property name="geometry">
       <rect>

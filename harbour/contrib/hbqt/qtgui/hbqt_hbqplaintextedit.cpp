@@ -218,11 +218,6 @@ void HBQPlainTextEdit::hbShowPrototype( const QString & tip, int rows, int cols 
    Q_UNUSED( rows );
    Q_UNUSED( cols );
 
-   if( ! isCompletionTipsActive )
-   {
-      QToolTip::hideText();
-      return;
-   }
    if( tip == ( QString ) "" )
    {
       QToolTip::hideText();
@@ -1447,27 +1442,10 @@ bool HBQPlainTextEdit::hbHandlePopup( QKeyEvent * event )
          case Qt::Key_Escape  :
          case Qt::Key_Tab     :
          case Qt::Key_Backtab :
+         {
             event->ignore();
-            return true;                                    /* let the completer do default behavior */
-         case Qt::Key_Space:
-            if( block )
-            {
-               PHB_ITEM p1 = hb_itemPutNI( NULL, 21001 );
-               hb_vmEvalBlockV( block, 1, p1 );
-               hb_itemRelease( p1 );
-               hbRefreshCompleter();                   /* Watch closely */
-            }
-            break;
-         case Qt::Key_ParenLeft:
-            if( block )
-            {
-               PHB_ITEM p1 = hb_itemPutNI( NULL, 21002 );
-               hb_vmEvalBlockV( block, 1, p1 );
-               hb_itemRelease( p1 );
-            }
-            break;
-         default:
-            break;
+            return true;
+         }
       }
    }
    return false;
