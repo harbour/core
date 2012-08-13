@@ -93,7 +93,7 @@
 CLASS IdeThemes INHERIT IdeObject
 
    VAR    lDefault                                INIT .t.
-   VAR    cThemesFile                                INIT ""
+   VAR    cThemesFile                             INIT ""
 
    VAR    aIni                                    INIT {}
    VAR    aThemes                                 INIT {}
@@ -527,6 +527,7 @@ METHOD IdeThemes:mergeUserDictionaries( qHiliter, cTheme )
          //qRegExp:setCaseSensitivity( oDict:lCaseSensitive )
          qRegExp:setPattern( s )
 
+         /* Must be blended WITH dictionary definition attributes */
          aAttr := ::getThemeAttribute( "UserDictionary", cTheme )  // cName after slots are implemented
 
          qFormat := QTextCharFormat()

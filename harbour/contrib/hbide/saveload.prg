@@ -259,6 +259,10 @@ CLASS IdeINI INHERIT IdeObject
    DATA   lISAlignAssign                          INIT .F.
    DATA   lISFmtLine                              INIT .F.
    DATA   lISEmbrace                              INIT .F.
+   DATA   lISLocal                                INIT .T.
+   DATA   lISReturn                               INIT .T.
+   DATA   lISSeparator                            INIT .T.
+   DATA   lISDocs                                 INIT .F.
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -515,6 +519,10 @@ METHOD IdeINI:save( cHbideIni )
    aadd( txt_, "ISAlignAssign"             + "=" +   iif( ::lISAlignAssign         , "YES", "NO" )      )
    AAdd( txt_, "ISFmtLine"                 + "=" +   iif( ::lISFmtLine             , "YES", "NO" )      )
    AAdd( txt_, "ISEmbrace"                 + "=" +   iif( ::lISEmbrace             , "YES", "NO" )      )
+   AAdd( txt_, "ISLocal"                   + "=" +   iif( ::lISLocal               , "YES", "NO" )      )
+   AAdd( txt_, "ISReturn"                  + "=" +   iif( ::lISReturn              , "YES", "NO" )      )
+   AAdd( txt_, "ISSeparator"               + "=" +   iif( ::lISSeparator           , "YES", "NO" )      )
+   AAdd( txt_, "ISDocs"                    + "=" +   iif( ::lISDocs                , "YES", "NO" )      )
 
    aadd( txt_, "" )
    aadd( txt_, "[PROJECTS]" )
@@ -868,6 +876,10 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "ISAlignAssign"               ; ::lISAlignAssign                    := !( cVal == "NO" ) ; EXIT
                      CASE "ISFmtLine"                   ; ::lISFmtLine                        := !( cVal == "NO" ) ; EXIT
                      CASE "ISEmbrace"                   ; ::lISEmbrace                        := !( cVal == "NO" ) ; EXIT
+                     CASE "ISLocal"                     ; ::lISLocal                          := !( cVal == "NO" ) ; EXIT
+                     CASE "ISReturn"                    ; ::lISReturn                         := !( cVal == "NO" ) ; EXIT
+                     CASE "ISSeparator"                 ; ::lISSeparator                      := !( cVal == "NO" ) ; EXIT
+                     CASE "ISDocs"                      ; ::lISDocs                           := !( cVal == "NO" ) ; EXIT
 
                      ENDSWITCH
                   ENDIF
@@ -1197,7 +1209,6 @@ CLASS IdeSetup INHERIT IdeObject
    DATA   aStyles                                 INIT { "cleanlooks", "windows", "windowsxp", ;
                                                          "windowsvista", "cde", "motif", "plastique", "macintosh" }
    DATA   aKeyItems                               INIT {}
-   DATA   aDictionaries                           INIT {}
 
    DATA   nCurThemeSlot                           INIT 0
    DATA   aHilighters                             INIT {}
@@ -1251,16 +1262,6 @@ METHOD IdeSetup:destroy()
       ::disConnectSlots()
       ::oUI:destroy()
    ENDIF
-
-   ::oINI             := NIL
-   ::qOrgPalette      := NIL
-   ::aItems           := NIL
-   ::aTree            := NIL
-   ::aStyles          := NIL
-   ::aKeyItems        := NIL
-   ::aDictionaries    := NIL
-   ::nCurThemeSlot    := NIL
-   ::aHilighters      := NIL
 
    RETURN Self
 
@@ -1533,6 +1534,10 @@ METHOD IdeSetup:retrieve()
    ::oINI:lISAlignAssign           := ::oUI:chkISAlignAssign   : isChecked()
    ::oINI:lISFmtLine               := ::oUI:chkISFmtLine       : isChecked()
    ::oINI:lISEmbrace               := ::oUI:ChkISEmbrace       : isChecked()
+   ::oINI:lISLocal                 := ::oUI:ChkISLocal         : isChecked()
+   ::oINI:lISReturn                := ::oUI:ChkISReturn        : isChecked()
+   ::oINI:lISSeparator             := ::oUI:ChkISSeparator     : isChecked()
+   ::oINI:lISDocs                  := ::oUI:ChkISDocs          : isChecked()
 
    RETURN Self
 
@@ -1653,6 +1658,10 @@ METHOD IdeSetup:populate()
    ::oUI:chkISAlignAssign   : setChecked( ::oINI:lISAlignAssign  )
    ::oUI:chkISFmtLine       : setChecked( ::oINI:lISFmtLine      )
    ::oUI:chkISEmbrace       : setChecked( ::oINI:lISEmbrace      )
+   ::oUI:chkISLocal         : setChecked( ::oINI:lISLocal        )
+   ::oUI:chkISReturn        : setChecked( ::oINI:lISReturn       )
+   ::oUI:chkISSeparator     : setChecked( ::oINI:lISSeparator    )
+   ::oUI:chkISDocs          : setChecked( ::oINI:lISDocs         )
 
    ::connectSlots()
 

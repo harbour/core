@@ -106,42 +106,48 @@ CLASS IdeDictionary INHERIT IdeObject
 
    DATA   cDictInfo                               INIT ""
    DATA   cFilename                               INIT ""
-   DATA   lCaseSensitive                          INIT .f.
+   DATA   lActive                                 INIT .T.
+   DATA   lToPrg                                  INIT .T.
+   DATA   lToC                                    INIT .F.
+   DATA   lToCPP                                  INIT .F.
+   DATA   lToCH                                   INIT .F.
+   DATA   lToH                                    INIT .F.
+   DATA   lToIni                                  INIT .F.
+   DATA   lToTxt                                  INIT .F.
+   DATA   lToHbp                                  INIT .F.
    DATA   cConvMode                               INIT "ASIS"
-   DATA   lAutoComplete                           INIT .t.
-   DATA   cBgColor                                INIT "NONE"
-   DATA   qBgColor
+   DATA   lCaseSensitive                          INIT .F.
+   DATA   lBold                                   INIT .F.
+   DATA   lItalic                                 INIT .F.
+   DATA   lULine                                  INIT .F.
+   DATA   lTxtColor                               INIT .F.
+   DATA   lBgBColor                               INIT .F.
+   DATA   cTxtColor                               INIT ""
+   DATA   cBgColor                                INIT ""
+
+   DATA   qBGColor
+   DATA   lAutoComplete                           INIT .T.
    DATA   aItems                                  INIT {}
 
    METHOD new( oIde )
    METHOD create( oIde )
-   METHOD destroy()
+   METHOD destroy()                               VIRTUAL
    METHOD load( cDict )
+   METHOD toString()
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDictionary:new( oIde )
-
    ::oIde := oIde
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDictionary:create( oIde )
-
    DEFAULT oIde TO ::oIde
-
    ::oIde := oIde
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDictionary:destroy()
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -203,5 +209,12 @@ METHOD IdeDictionary:load( cDict )
    ENDIF
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDictionary:toString()
+   LOCAL cDict := ""
+
+   RETURN cDict
 
 /*----------------------------------------------------------------------*/

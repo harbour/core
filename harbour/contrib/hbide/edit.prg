@@ -2266,9 +2266,7 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
          qCursor:clearSelection()
          qCursor:setPosition( nPostn )
 
-         //HB_TRACE( HB_TR_ALWAYS, "PP<", cPPWord, "> P<", cPWord, "> C<", cCWord, "> R<", cRest, ">" )
-
-         // Group I operations
+         /* Group I operations */
          IF cPWord == "." .AND. cPPWord $ ::hLogicals     /* ALWAYS */
             IF ! ::oINI:lSupressHbKWordsToUpper
                qCursor:movePosition( QTextCursor_PreviousWord, QTextCursor_MoveAnchor, 2 )
@@ -2313,7 +2311,7 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
 
          ENDIF
 
-         // Group II operations
+         /* Group II operations */
          IF empty( cPPWord ) .AND. cCWord == " "
             IF hbide_isStartingKeyword( cPWord, ::oIde )                                        /* FUNCTION PROCEDURE CLASS */
                qCursor:movePosition( QTextCursor_StartOfBlock )
@@ -2345,10 +2343,11 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
             ENDIF
          ENDIF
 
-         // Group III operations
+         /* Group III operations */
          IF cCWord == " " .AND. nAdded == 1 .AND. Empty( cRest )   /* Only first time having only word on a line */
+            cWord := Lower( cPWord )
+
             IF ::oINI:lISClosing
-               cWord := Lower( cPWord )
                IF     ::oINI:lISIf      .AND. cWord == "if"
                   hbide_appendIf( qCursor, hbide_getFrontSpacesAndWord( qCursor:block():text() ), qCursor:position(), ::nTabSpaces, ::oINI:lISElse, ::oINI:lISEmbrace )
 
@@ -2371,6 +2370,19 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
 
             ELSEIF cWord == "next"
                hbide_alignToPrevWord( qCursor, "for", "next", Len( cWord ), nPostn )
+
+            ENDIF
+
+            IF Lower( cPPWord ) == "static" .AND. ( cPWord == "function" .OR. cPWord == "procedure" )
+               hbide_removeStartingSpaces( qCursor, nCPrevPrev )
+               hbide_appendFunction( qCursor, ::nTabSpaces, ::oINI:lISLocal, ::oINI:lISReturn, ::oINI:lISSeparator, ::oINI:lReturnAsBeginKeyword, ::cSeparator )
+
+            ELSEIF Empty( cPPWord ) .AND. ( cPWord == "function" .OR. cPWord == "procedure" )
+               hbide_appendFunction( qCursor, ::nTabSpaces, ::oINI:lISLocal, ::oINI:lISReturn, ::oINI:lISSeparator, ::oINI:lReturnAsBeginKeyword, ::cSeparator )
+
+            ELSEIF Lower( cPPWord ) == "create" .AND. cPWord == "class"
+               hbide_removeStartingSpaces( qCursor, nCPrevPrev )
+
             ENDIF
          ENDIF
 
@@ -2378,7 +2390,6 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
       ENDIF
 
       qCursor:endEditBlock()
-      HB_SYMBOL_UNUSED( nCPrevPrev )
    ENDIF
 
    ::handleCurrentIndent()
@@ -2398,6 +2409,18 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
    HB_SYMBOL_UNUSED( nDeleted )
 
    RETURN cRest
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_removeStartingSpaces( qCursor, nCPrevPrev )
+   LOCAL nPostn := qCursor:position()
+
+   qCursor:movePosition( QTextCursor_StartOfBlock )
+   qCursor:movePosition( QTextCursor_NextWord, QTextCursor_KeepAnchor )
+   qCursor:removeSelectedText()
+   qCursor:setPosition( nPostn - nCPrevPrev )
+
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -2439,6 +2462,32 @@ STATIC FUNCTION hbide_replaceWord( qCursor, nWord, cWord, nPostn )
    qCursor:select( QTextCursor_WordUnderCursor )
    qCursor:removeSelectedText()
    qCursor:insertText( cWord )
+   qCursor:setPosition( nPostn )
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_appendFunction( qCursor, nTabSpaces, lLocal, lReturn, lSeparator, lReturnAsBeginKeyword, cSeparator  )
+   LOCAL nPostn := qCursor:position()
+
+   qCursor:movePosition( QTextCursor_EndOfBlock )
+   IF lLocal
+      qCursor:insertBlock()
+      qCursor:insertText( Space( nTabSpaces ) + "LOCAL " )
+      qCursor:insertBlock()
+   ENDIF
+   IF lReturn
+      qCursor:insertBlock()
+      qCursor:insertText( Space( iif( lReturnAsBeginKeyword, 0, nTabSpaces ) ) + "RETURN " )
+      qCursor:insertBlock()
+      IF lSeparator
+         qCursor:insertBlock()
+         qCursor:insertText( cSeparator )
+         qCursor:insertBlock()
+      ENDIF
+   ENDIF
+   qCursor:insertBlock()
    qCursor:setPosition( nPostn )
 
    RETURN NIL
@@ -3039,19 +3088,21 @@ FUNCTION hbide_isMinimumIndentableKeyword( cWord, oIde )
    IF empty( s_b_ )
       IF ! oIde:oINI:lReturnAsBeginKeyword
          s_b_ := { ;
-                    'local'   => NIL,;
-                    'private' => NIL,;
-                    'public'  => NIL,;
-                    'static'  => NIL,;
-                    'default' => NIL,;
-                    'return'  => NIL }
+                    'local'    => NIL,;
+                    'private'  => NIL,;
+                    'public'   => NIL,;
+                    'static'   => NIL,;
+                    'endclass' => NIL,;
+                    'default'  => NIL,;
+                    'return'   => NIL }
       ELSE
          s_b_ := { ;
-                    'local'   => NIL,;
-                    'private' => NIL,;
-                    'public'  => NIL,;
-                    'static'  => NIL,;
-                    'default' => NIL }
+                    'local'    => NIL,;
+                    'private'  => NIL,;
+                    'public'   => NIL,;
+                    'static'   => NIL,;
+                    'endclass' => NIL,;
+                    'default'  => NIL }
       ENDIF
    ENDIF
 
@@ -3071,7 +3122,6 @@ FUNCTION hbide_isIndentableKeyword( cWord, oIde )
                     'while'     => NIL,;
                     'switch'    => NIL,;
                     'for'       => NIL,;
-                    'next'      => NIL,;
                     'begin'     => NIL,;
                     'sequence'  => NIL,;
                     'try'       => NIL,;
