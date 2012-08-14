@@ -40,11 +40,11 @@ HB_FUNC( QT_QTEXTCURSOR )
       if( hbqt_par_isDerivedFrom( 1, "QTEXTCURSOR" ) )
          __HB_RETPTRGC__( new QTextCursor( *hbqt_par_QTextCursor( 1 ) ) );
       else if( hbqt_par_isDerivedFrom( 1, "QTEXTDOCUMENT" ) )
-         __HB_RETPTRGC__( new QTextCursor( hbqt_par_QTextDocument( 2 ) ) );
+         __HB_RETPTRGC__( new QTextCursor( hbqt_par_QTextDocument( 1 ) ) );
       else if( hbqt_par_isDerivedFrom( 1, "QTEXTBLOCK" ) )
-         __HB_RETPTRGC__( new QTextCursor( *hbqt_par_QTextBlock( 2 ) ) );
+         __HB_RETPTRGC__( new QTextCursor( *hbqt_par_QTextBlock( 1 ) ) );
       else if( hbqt_par_isDerivedFrom( 1, "QTEXTFRAME" ) )
-         __HB_RETPTRGC__( new QTextCursor( hbqt_par_QTextFrame( 2 ) ) );
+         __HB_RETPTRGC__( new QTextCursor( hbqt_par_QTextFrame( 1 ) ) );
       else
          __HB_RETPTRGC__( new QTextCursor() );
    }
