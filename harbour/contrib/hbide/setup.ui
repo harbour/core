@@ -475,7 +475,10 @@
        </rect>
       </property>
       <property name="title">
-       <string>CLOSING STATEMENTS</string>
+       <string>Closing Statements</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
       <property name="checkable">
        <bool>true</bool>
@@ -667,13 +670,16 @@
       <property name="geometry">
        <rect>
         <x>8</x>
-        <y>188</y>
+        <y>236</y>
         <width>333</width>
-        <height>41</height>
+        <height>37</height>
        </rect>
       </property>
       <property name="title">
-       <string>FUNCTION CALL</string>
+       <string>Function Call</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
       <property name="checkable">
        <bool>false</bool>
@@ -682,8 +688,8 @@
        <property name="geometry">
         <rect>
          <x>8</x>
-         <y>20</y>
-         <width>149</width>
+         <y>16</y>
+         <width>145</width>
          <height>18</height>
         </rect>
        </property>
@@ -695,13 +701,13 @@
        <property name="geometry">
         <rect>
          <x>156</x>
-         <y>20</y>
+         <y>16</y>
          <width>169</width>
          <height>18</height>
         </rect>
        </property>
        <property name="text">
-        <string>Add Spaces After/Before ()</string>
+        <string>Add Spaces After/ Before ()</string>
        </property>
       </widget>
      </widget>
@@ -709,19 +715,22 @@
       <property name="geometry">
        <rect>
         <x>8</x>
-        <y>232</y>
+        <y>272</y>
         <width>333</width>
-        <height>125</height>
+        <height>85</height>
        </rect>
       </property>
       <property name="title">
-       <string>GENERAL</string>
+       <string>General</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
       <widget class="QCheckBox" name="chkISCodeBlock">
        <property name="geometry">
         <rect>
          <x>8</x>
-         <y>20</y>
+         <y>16</y>
          <width>205</width>
          <height>16</height>
         </rect>
@@ -734,7 +743,7 @@
        <property name="geometry">
         <rect>
          <x>8</x>
-         <y>40</y>
+         <y>32</y>
          <width>205</width>
          <height>18</height>
         </rect>
@@ -747,7 +756,7 @@
        <property name="geometry">
         <rect>
          <x>8</x>
-         <y>100</y>
+         <y>64</y>
          <width>205</width>
          <height>18</height>
         </rect>
@@ -760,7 +769,7 @@
        <property name="geometry">
         <rect>
          <x>8</x>
-         <y>60</y>
+         <y>48</y>
          <width>205</width>
          <height>18</height>
         </rect>
@@ -770,23 +779,29 @@
        </property>
       </widget>
      </widget>
-     <widget class="QGroupBox" name="groupBox_28">
+     <widget class="QGroupBox" name="grpISFunction">
       <property name="geometry">
        <rect>
         <x>8</x>
-        <y>136</y>
+        <y>140</y>
         <width>333</width>
-        <height>49</height>
+        <height>37</height>
        </rect>
       </property>
       <property name="title">
-       <string>FUNCTION / PROCEDURE DECLARATION</string>
+       <string>Function Declaration</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
       </property>
       <widget class="QCheckBox" name="chkISLocal">
        <property name="geometry">
         <rect>
          <x>8</x>
-         <y>20</y>
+         <y>16</y>
          <width>61</width>
          <height>17</height>
         </rect>
@@ -799,7 +814,7 @@
        <property name="geometry">
         <rect>
          <x>80</x>
-         <y>20</y>
+         <y>16</y>
          <width>70</width>
          <height>17</height>
         </rect>
@@ -812,8 +827,8 @@
        <property name="geometry">
         <rect>
          <x>156</x>
-         <y>20</y>
-         <width>89</width>
+         <y>16</y>
+         <width>81</width>
          <height>17</height>
         </rect>
        </property>
@@ -825,13 +840,107 @@
        <property name="geometry">
         <rect>
          <x>240</x>
-         <y>20</y>
+         <y>16</y>
          <width>89</width>
          <height>17</height>
         </rect>
        </property>
        <property name="text">
         <string>Documentation</string>
+       </property>
+      </widget>
+     </widget>
+     <widget class="QGroupBox" name="grpISClass">
+      <property name="geometry">
+       <rect>
+        <x>8</x>
+        <y>180</y>
+        <width>333</width>
+        <height>53</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Class Declaration</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="checkable">
+       <bool>true</bool>
+      </property>
+      <widget class="QComboBox" name="comboISData">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>28</y>
+         <width>61</width>
+         <height>19</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboISMethods">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>28</y>
+         <width>133</width>
+         <height>19</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_37">
+       <property name="geometry">
+        <rect>
+         <x>8</x>
+         <y>12</y>
+         <width>61</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Data Mem As</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_38">
+       <property name="geometry">
+        <rect>
+         <x>80</x>
+         <y>12</y>
+         <width>133</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Initial Methods</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboISFormat">
+       <property name="geometry">
+        <rect>
+         <x>224</x>
+         <y>28</y>
+         <width>101</width>
+         <height>19</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_39">
+       <property name="geometry">
+        <rect>
+         <x>224</x>
+         <y>12</y>
+         <width>101</width>
+         <height>16</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Method Format</string>
+       </property>
+       <property name="alignment">
+        <set>Qt::AlignCenter</set>
        </property>
       </widget>
      </widget>

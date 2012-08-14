@@ -263,6 +263,11 @@ CLASS IdeINI INHERIT IdeObject
    DATA   lISReturn                               INIT .T.
    DATA   lISSeparator                            INIT .T.
    DATA   lISDocs                                 INIT .F.
+   DATA   lISFunction                             INIT .T.
+   DATA   lISClass                                INIT .T.
+   DATA   cISData                                 INIT "VAR"
+   DATA   cISMethods                              INIT "new"
+   DATA   cISFormat                               INIT "class:method"
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -523,6 +528,11 @@ METHOD IdeINI:save( cHbideIni )
    AAdd( txt_, "ISReturn"                  + "=" +   iif( ::lISReturn              , "YES", "NO" )      )
    AAdd( txt_, "ISSeparator"               + "=" +   iif( ::lISSeparator           , "YES", "NO" )      )
    AAdd( txt_, "ISDocs"                    + "=" +   iif( ::lISDocs                , "YES", "NO" )      )
+   AAdd( txt_, "ISFunction"                + "=" +   iif( ::lISFunction            , "YES", "NO" )      )
+   AAdd( txt_, "ISClass"                   + "=" +   iif( ::lISClass               , "YES", "NO" )      )
+   AAdd( txt_, "ISData"                    + "=" +   ::cISData     )
+   AAdd( txt_, "ISMethods"                 + "=" +   ::cISMethods  )
+   AAdd( txt_, "ISFormat"                  + "=" +   ::cISFormat   )
 
    aadd( txt_, "" )
    aadd( txt_, "[PROJECTS]" )
@@ -880,6 +890,11 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "ISReturn"                    ; ::lISReturn                         := !( cVal == "NO" ) ; EXIT
                      CASE "ISSeparator"                 ; ::lISSeparator                      := !( cVal == "NO" ) ; EXIT
                      CASE "ISDocs"                      ; ::lISDocs                           := !( cVal == "NO" ) ; EXIT
+                     CASE "ISFunction"                  ; ::lISFunction                       := !( cVal == "NO" ) ; EXIT
+                     CASE "ISClass"                     ; ::lISClass                          := !( cVal == "NO" ) ; EXIT
+                     CASE "ISData"                      ; ::cISData                           := cVal              ; EXIT
+                     CASE "ISMethods"                   ; ::cISMethods                        := cVal              ; EXIT
+                     CASE "ISFormat"                    ; ::cISFormat                         := cVal              ; EXIT
 
                      ENDSWITCH
                   ENDIF
@@ -1534,10 +1549,15 @@ METHOD IdeSetup:retrieve()
    ::oINI:lISAlignAssign           := ::oUI:chkISAlignAssign   : isChecked()
    ::oINI:lISFmtLine               := ::oUI:chkISFmtLine       : isChecked()
    ::oINI:lISEmbrace               := ::oUI:ChkISEmbrace       : isChecked()
-   ::oINI:lISLocal                 := ::oUI:ChkISLocal         : isChecked()
-   ::oINI:lISReturn                := ::oUI:ChkISReturn        : isChecked()
-   ::oINI:lISSeparator             := ::oUI:ChkISSeparator     : isChecked()
-   ::oINI:lISDocs                  := ::oUI:ChkISDocs          : isChecked()
+   ::oINI:lISLocal                 := ::oUI:chkISLocal         : isChecked()
+   ::oINI:lISReturn                := ::oUI:chkISReturn        : isChecked()
+   ::oINI:lISSeparator             := ::oUI:chkISSeparator     : isChecked()
+   ::oINI:lISDocs                  := ::oUI:chkISDocs          : isChecked()
+   ::oINI:lISFunction              := ::oUI:grpISFunction      : isChecked()
+   ::oINI:lISClass                 := ::oUI:grpISClass         : isChecked()
+   ::oINI:cISData                  := ::oUI:comboISData        : currentText()
+   ::oINI:cISMethods               := ::oUI:comboISMethods     : currentText()
+   ::oINI:cISFormat                := ::oUI:comboISFormat      : currentText()
 
    RETURN Self
 
@@ -1662,6 +1682,11 @@ METHOD IdeSetup:populate()
    ::oUI:chkISReturn        : setChecked( ::oINI:lISReturn       )
    ::oUI:chkISSeparator     : setChecked( ::oINI:lISSeparator    )
    ::oUI:chkISDocs          : setChecked( ::oINI:lISDocs         )
+   ::oUI:grpISFunction      : setChecked( ::oINI:lISFunction     )
+   ::oUI:grpISClass         : setChecked( ::oINI:lISClass        )
+   ::oUI:comboISData        : setCurrentIndex( iif( ::oINI:cISData == "VAR", 0, 1 ) )
+   ::oUI:comboISMethods     : setCurrentIndex( AScan( { "new", "new;create", "new;create;destroy" }, {|e| e == ::oINI:cISMethods } ) - 1 )
+   ::oUI:comboISFormat      : setCurrentIndex( iif( ::oINI:cISFormat == "class:method", 0, 1 ) )
 
    ::connectSlots()
 
@@ -1722,6 +1747,17 @@ METHOD IdeSetup:show()
 
       aeval( ::aTBSize, {|e| ::oUI:comboTBSize:addItem( e ) } )
       ::oUI:comboTBSize:setCurrentIndex( ascan( ::aTBSize, {|e| e == ::oINI:cToolbarSize } ) - 1 )
+
+      /* Intelli-sense */
+      ::oUI:comboISData    : addItem( "VAR" )
+      ::oUI:comboISData    : addItem( "DATA" )
+
+      ::oUI:comboISMethods : addItem( "new" )
+      ::oUI:comboISMethods : addItem( "new;create" )
+      ::oUI:comboISMethods : addItem( "new;create;destroy" )
+
+      ::oUI:comboISFormat  : addItem( "class:method" )
+      ::oUI:comboISFormat  : addItem( "method CLASS class" )
 
       ::setIcons()
       ::connectSlots()

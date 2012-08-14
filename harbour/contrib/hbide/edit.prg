@@ -173,7 +173,6 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD reLayMarkButtons()
    METHOD presentSkeletons()
    METHOD handleCurrentIndent()
-   METHOD handlePreviousWord( lUpdatePrevWord )
    METHOD loadFuncHelp()
    METHOD clickFuncHelp()
    METHOD goto( nLine )
@@ -532,7 +531,6 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
    #if 0
    CASE __textChanged__
       ::oEditor:setTabImage( ::qEdit )
-      ::handlePreviousWord( ::lUpdatePrevWord )
       EXIT
    CASE __modificationChanged__
       ::oEditor:setTabImage( ::qEdit )
@@ -597,13 +595,13 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
          ENDIF
          EXIT
       CASE Qt_Key_Space
-         IF !lAlt .AND. !lShift .AND. !lCtrl
+         IF ! lAlt .AND. ! lShift .AND. ! lCtrl
             ::lUpdatePrevWord := .t.
          ENDIF
          EXIT
       CASE Qt_Key_Return
       CASE Qt_Key_Enter
-         ::handlePreviousWord( .t. )
+         ::reformatLine( -1, 0, 1 )
          ::lIndentIt := .t.
          EXIT
       CASE Qt_Key_ParenLeft
@@ -2234,8 +2232,12 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
       nPostn := qCursor:position()
       nLine  := qCursor:blockNumber()
 
-      IF ( nCol := nPostn - qCursor:block():position() ) > 0
-         cCWord := SubStr( qCursor:block():text(), nCol, 1 )
+      IF nPos == -1
+         cCWord := " "
+      ELSE
+         IF ( nCol := nPostn - qCursor:block():position() ) > 0
+            cCWord := SubStr( qCursor:block():text(), nCol, 1 )
+         ENDIF
       ENDIF
 
       IF qCursor:movePosition( QTextCursor_EndOfLine, QTextCursor_KeepAnchor ) .AND. qCursor:position() > nPostn
@@ -2371,17 +2373,27 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
             ELSEIF cWord == "next"
                hbide_alignToPrevWord( qCursor, "for", "next", Len( cWord ), nPostn )
 
-            ENDIF
-
-            IF Lower( cPPWord ) == "static" .AND. ( cPWord == "function" .OR. cPWord == "procedure" )
+            ELSEIF Lower( cPPWord ) == "static" .AND. ( cPWord == "function" .OR. cPWord == "procedure" )
                hbide_removeStartingSpaces( qCursor, nCPrevPrev )
-               hbide_appendFunction( qCursor, ::nTabSpaces, ::oINI:lISLocal, ::oINI:lISReturn, ::oINI:lISSeparator, ::oINI:lReturnAsBeginKeyword, ::cSeparator )
+               IF ::oINI:lISFunction
+                  hbide_appendFunction( qCursor, ::nTabSpaces, ::oINI:lISLocal, ::oINI:lISReturn, ::oINI:lISSeparator, ::oINI:lReturnAsBeginKeyword, ::cSeparator )
+               ENDIF
 
             ELSEIF Empty( cPPWord ) .AND. ( cPWord == "function" .OR. cPWord == "procedure" )
-               hbide_appendFunction( qCursor, ::nTabSpaces, ::oINI:lISLocal, ::oINI:lISReturn, ::oINI:lISSeparator, ::oINI:lReturnAsBeginKeyword, ::cSeparator )
+               IF ::oINI:lISFunction
+                  hbide_appendFunction( qCursor, ::nTabSpaces, ::oINI:lISLocal, ::oINI:lISReturn, ::oINI:lISSeparator, ::oINI:lReturnAsBeginKeyword, ::cSeparator )
+               ENDIF
 
             ELSEIF Lower( cPPWord ) == "create" .AND. cPWord == "class"
                hbide_removeStartingSpaces( qCursor, nCPrevPrev )
+               IF ::oINI:lISClass
+                  hbide_appendClass( qCursor, ::nTabSpaces, ::oINI )
+               ENDIF
+
+            ELSEIF Empty( cPPWord ) .AND. cPWord == "class"
+               IF ::oINI:lISClass
+                  hbide_appendClass( qCursor, ::nTabSpaces, ::oINI )
+               ENDIF
 
             ENDIF
          ENDIF
@@ -2392,7 +2404,9 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
       qCursor:endEditBlock()
    ENDIF
 
-   ::handleCurrentIndent()
+   IF nPos != -1
+      ::handleCurrentIndent()
+   ENDIF
 
    IF ::nProtoLine != -1
       IF ::getLineNo() == ::nProtoLine .AND. ::getColumnNo() >= ::nProtoCol + 1
@@ -2405,20 +2419,21 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
       ENDIF
    ENDIF
 
-   HB_SYMBOL_UNUSED( nPos )
    HB_SYMBOL_UNUSED( nDeleted )
-
    RETURN cRest
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION hbide_removeStartingSpaces( qCursor, nCPrevPrev )
-   LOCAL nPostn := qCursor:position()
+   LOCAL nPostn
 
-   qCursor:movePosition( QTextCursor_StartOfBlock )
-   qCursor:movePosition( QTextCursor_NextWord, QTextCursor_KeepAnchor )
-   qCursor:removeSelectedText()
-   qCursor:setPosition( nPostn - nCPrevPrev )
+   IF nCPrevPrev > 0
+      nPostn := qCursor:position()
+      qCursor:movePosition( QTextCursor_StartOfBlock )
+      qCursor:movePosition( QTextCursor_NextWord, QTextCursor_KeepAnchor )
+      qCursor:removeSelectedText()
+      qCursor:setPosition( nPostn - nCPrevPrev )
+   ENDIF
 
    RETURN NIL
 
@@ -2462,6 +2477,44 @@ STATIC FUNCTION hbide_replaceWord( qCursor, nWord, cWord, nPostn )
    qCursor:select( QTextCursor_WordUnderCursor )
    qCursor:removeSelectedText()
    qCursor:insertText( cWord )
+   qCursor:setPosition( nPostn )
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_appendClass( qCursor, nTabSpaces, oINI )
+   LOCAL cMethod
+   LOCAL aMethods := hb_ATokens( oINI:cISMethods, ";" )
+   LOCAL nPostn := qCursor:position()
+   LOCAL nClosingIndent := iif( oINI:lReturnAsBeginKeyword, 0, nTabSpaces )
+
+   qCursor:movePosition( QTextCursor_EndOfBlock )
+   qCursor:insertBlock()
+   qCursor:insertText( Space( nTabSpaces ) + PadR( oINI:cISData, 7 ) + "xDummy" + Space( 34 ) + "INIT NIL" )
+   qCursor:insertBlock()
+   FOR EACH cMethod IN aMethods
+      qCursor:insertBlock()
+      qCursor:insertText( Space( nTabSpaces ) + "METHOD " + cMethod + "()" )
+   NEXT
+   qCursor:insertBlock()
+   qCursor:insertBlock()
+   qCursor:insertText( Space( nClosingIndent ) + "ENDCLASS " )
+   qCursor:insertBlock()
+   qCursor:insertBlock()
+   FOR EACH cMethod IN aMethods
+      qCursor:insertBlock()
+      IF oINI:cISFormat == "class:method"
+         qCursor:insertText( "METHOD " + ":" + cMethod + "()" )
+      ELSE
+         qCursor:insertText( "METHOD " + cMethod + "() CLASS " )
+      ENDIF
+      qCursor:insertBlock()
+      qCursor:insertBlock()
+      qCursor:insertText( Space( nClosingIndent ) + "RETURN Self " )
+      qCursor:insertBlock()
+   NEXT
+   qCursor:insertBlock()
    qCursor:setPosition( nPostn )
 
    RETURN NIL
@@ -2604,98 +2657,6 @@ STATIC FUNCTION hbide_appendIf( qCursor, nIndent, nCurPos, nTabSpaces, lElse, lE
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
-   HB_SYMBOL_UNUSED( lUpdatePrevWord )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-#if 0
-METHOD IdeEdit:handlePreviousWord( lUpdatePrevWord )
-   LOCAL qCursor, qTextBlock, cText, cWord, nB, nL, qEdit, lPrevOnly, nCol, nSpace, nSpaces, nOff
-
-   IF ! lUpdatePrevWord
-      RETURN Self
-   ENDIF
-   ::lUpdatePrevWord := .f.
-
-   qEdit := ::qEdit
-
-   qCursor    := qEdit:textCursor()
-   qTextBlock := qCursor:block()
-   cText      := qTextBlock:text()
-   nCol       := qCursor:columnNumber()
-   IF ( substr( cText, nCol - 1, 1 ) == " " )
-      RETURN NIL
-   ENDIF
-   nSpace := iif( substr( cText, nCol, 1 ) == " ", 1, 0 )
-   cWord  := hbide_getPreviousWord( cText, nCol + 1 )
-
-   IF !empty( cWord ) .AND. hbide_isHarbourKeyword( cWord, ::oIde )
-      lPrevOnly := left( lower( ltrim( cText ) ), Len( cWord ) ) == lower( cWord )
-
-      nL := Len( cWord ) + nSpace
-      nB := qCursor:position() - nL
-
-      IF lower( ::oEditor:cExt ) $ ".prg,.hb" .AND. ! ::oINI:lSupressHbKWordsToUpper
-         qCursor:beginEditBlock()
-         qCursor:setPosition( nB )
-         qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nL )
-         qCursor:removeSelectedText()
-         qCursor:insertText( upper( cWord ) + space( nSpace ) )
-         qCursor:endEditBlock()
-         qEdit:setTextCursor( qCursor )
-      ENDIF
-
-      IF hbide_isStartingKeyword( cWord, ::oIde )
-         IF lPrevOnly
-            qCursor:setPosition( nB )
-            IF ( nCol := qCursor:columnNumber() ) > 0
-               qCursor:beginEditBlock()
-               qCursor:movePosition( QTextCursor_StartOfBlock )
-               qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nCol )
-               qCursor:removeSelectedText()
-               qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_MoveAnchor, nL )
-               qCursor:endEditBlock()
-               qEdit:setTextCursor( qCursor )
-            ENDIF
-         ENDIF
-
-      ELSEIF hbide_isMinimumIndentableKeyword( cWord, ::oIde ) .AND. ::oINI:lAutoIndent
-         IF lPrevOnly
-            qCursor:setPosition( nB )
-            IF ( nCol := qCursor:columnNumber() ) >= 0
-               qCursor:beginEditBlock()
-               qCursor:movePosition( QTextCursor_StartOfBlock )
-               qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_KeepAnchor, nCol )
-               qCursor:removeSelectedText()
-               qCursor:insertText( space( ::nTabSpaces ) )
-               qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_MoveAnchor, nL )
-               qEdit:setTextCursor( qCursor )
-               qCursor:endEditBlock()
-            ENDIF
-         ENDIF
-
-      ELSEIF hbide_isIndentableKeyword( cWord, ::oIde ) .AND. ::oINI:lAutoIndent
-         IF lPrevOnly
-            nSpaces := hbide_getFrontSpacesAndWord( cText )
-            IF nSpaces > 0 .AND. ( nOff := nSpaces % ::nTabSpaces ) > 0
-               qCursor:setPosition( nB )
-               qCursor:beginEditBlock()
-               qCursor:movePosition( QTextCursor_PreviousCharacter, QTextCursor_KeepAnchor, nOff )
-               qCursor:removeSelectedText()
-               qCursor:movePosition( QTextCursor_NextCharacter, QTextCursor_MoveAnchor, nL )
-               qEdit:setTextCursor( qCursor )
-               qCursor:endEditBlock()
-            ENDIF
-         ENDIF
-      ENDIF
-   ENDIF
-
-   RETURN .t.
-#endif
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:findLastIndent()
