@@ -145,6 +145,17 @@ static const char * hb_memoDefaultFileExt( int iType, HB_USHORT uiRdd )
    return NULL;
 }
 
+static int hb_memoDefaultType( LPRDDNODE pRDD, HB_ULONG ulConnect )
+{
+   int iType = DB_MEMO_FPT;
+   PHB_ITEM pItem = hb_stackAllocItem();
+   if( SELF_RDDINFO( pRDD, RDDI_MEMOTYPE, ulConnect, pItem ) == HB_SUCCESS )
+      iType = hb_itemGetNI( pItem );
+   hb_stackPop();
+
+   return iType;
+}
+
 /*
  * Exclusive lock memo file.
  */
@@ -4862,7 +4873,8 @@ static HB_ERRCODE hb_fptInfo( FPTAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem 
             {
                szExt = hb_memoDefaultFileExt( pArea->bMemoType, pArea->area.rddID );
                if( !szExt )
-                  szExt = hb_memoDefaultFileExt( pData->bMemoType, pArea->area.rddID );
+                  szExt = hb_memoDefaultFileExt( hb_memoDefaultType( SELF_RDDNODE( &pArea->area ), 0 ),
+                                                 pArea->area.rddID );
                hb_itemPutC( pItem, szExt );
             }
          }
@@ -5181,12 +5193,17 @@ static HB_ERRCODE hb_fptRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
 
          if( pData->szMemoExt[ 0 ] )
             hb_itemPutC( pItem, pData->szMemoExt );
-         else if( pData->bMemoType == DB_MEMO_FPT && pRDD->rddID != s_uiRddIdBLOB &&
-                  ( szExt = hb_setGetMFileExt() ) != NULL && *szExt )
-            hb_itemPutC( pItem, szExt );
          else
-            hb_itemPutC( pItem, hb_memoDefaultFileExt( pData->bMemoType ?
-                                pData->bMemoType : DB_MEMO_FPT, pRDD->rddID ) );
+         {
+            int iType = hb_memoDefaultType( pRDD, ulConnect );
+
+            if( iType == DB_MEMO_FPT && pRDD->rddID != s_uiRddIdBLOB &&
+                ( szExt = hb_setGetMFileExt() ) != NULL && *szExt )
+               hb_itemPutC( pItem, szExt );
+            else
+               hb_itemPutC( pItem, hb_memoDefaultFileExt( iType ?
+                                   iType : DB_MEMO_FPT, pRDD->rddID ) );
+         }
          if( szNewVal )
          {
             hb_strncpy( pData->szMemoExt, szNewVal, sizeof( pData->szMemoExt ) - 1 );
@@ -5203,13 +5220,18 @@ static HB_ERRCODE hb_fptRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
          else if( ( iOldSize = hb_setGetMBlockSize() ) > 0 &&
                   ( ( iOldSize <= 0x10000 ) || ( iOldSize & 0xFFFF ) == 0 ) )
             hb_itemPutNI( pItem, iOldSize );
-         else if( pData->bMemoType == DB_MEMO_DBT )
-            hb_itemPutNI( pItem, DBT_DEFBLOCKSIZE );
-         else if( pData->bMemoType == DB_MEMO_SMT )
-            hb_itemPutNI( pItem, SMT_DEFBLOCKSIZE );
-         else
-            hb_itemPutNI( pItem, FPT_DEFBLOCKSIZE );
-
+         else switch( hb_memoDefaultType( pRDD, ulConnect ) )
+         {
+            case DB_MEMO_DBT:
+               hb_itemPutNI( pItem, DBT_DEFBLOCKSIZE );
+               break;
+            case DB_MEMO_SMT:
+               hb_itemPutNI( pItem, SMT_DEFBLOCKSIZE );
+               break;
+            default:
+               hb_itemPutNI( pItem, FPT_DEFBLOCKSIZE );
+               break;
+         }
          if( iSize > 0 && ( iSize <= 0x10000 || ( iSize & 0xFFFF ) == 0 ) )
             pData->ulMemoBlockSize = iSize;
          break;

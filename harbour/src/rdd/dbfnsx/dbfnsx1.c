@@ -8009,6 +8009,11 @@ static HB_ERRCODE hb_nsxRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
 
    pData = DBFNODE_DATA( pRDD );
 
+   if( pData->bMemoType == 0 )
+   {
+      pData->bMemoType = DB_MEMO_SMT;
+   }
+
    switch( uiIndex )
    {
       case RDDI_ORDBAGEXT:
@@ -8057,22 +8062,6 @@ static HB_ERRCODE hb_nsxRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
    }
 
    return HB_SUCCESS;
-}
-
-static HB_ERRCODE hb_nsxInit( LPRDDNODE pRDD )
-{
-   HB_ERRCODE errCode;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_nsxInit(%p)", pRDD));
-
-   errCode = SUPER_INIT( pRDD );
-   if( errCode == HB_SUCCESS )
-   {
-      PHB_ITEM pItem = hb_itemPutNI( NULL, DB_MEMO_SMT );
-      SELF_RDDINFO( pRDD, RDDI_MEMOTYPE, 0, pItem );
-      hb_itemRelease( pItem );
-   }
-   return errCode;
 }
 
 static const RDDFUNCS nsxTable = {
@@ -8169,7 +8158,7 @@ static const RDDFUNCS nsxTable = {
                              NULL,
                              NULL,
                              NULL,
-                             hb_nsxInit,
+                             NULL,
                              NULL,
                              NULL,
                              NULL,

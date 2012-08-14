@@ -1552,7 +1552,7 @@ static HB_ISIZ hb_clsSenderOffset( void )
 #endif
 
 #if 0
-static HB_USHORT hb_clsSenderClasss( void )
+static HB_USHORT hb_clsSenderClass( void )
 {
    HB_ISIZ nOffset = hb_clsSenderOffset();
 
@@ -1563,7 +1563,7 @@ static HB_USHORT hb_clsSenderClasss( void )
 }
 #endif
 
-static HB_USHORT hb_clsSenderMethodClasss( void )
+static HB_USHORT hb_clsSenderMethodClass( void )
 {
    HB_ISIZ nOffset = hb_clsSenderOffset();
 
@@ -1601,7 +1601,7 @@ static PHB_SYMB hb_clsSenderSymbol( void )
    return hb_vmGetRealFuncSym( pSym );
 }
 
-static HB_USHORT hb_clsSenderObjectClasss( void )
+static HB_USHORT hb_clsSenderObjectClass( void )
 {
    HB_ISIZ nOffset = hb_clsSenderOffset();
 
@@ -1621,7 +1621,7 @@ static PHB_SYMB hb_clsValidScope( PMETHOD pMethod, PHB_STACK_STATE pStack )
    if( pMethod->uiScope & ( HB_OO_CLSTP_HIDDEN | HB_OO_CLSTP_PROTECTED |
                             HB_OO_CLSTP_OVERLOADED ) )
    {
-      HB_USHORT uiSenderClass = hb_clsSenderMethodClasss();
+      HB_USHORT uiSenderClass = hb_clsSenderMethodClass();
 
       if( uiSenderClass )
       {
@@ -4642,11 +4642,11 @@ HB_FUNC_STATIC( msgRealClass )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pObject = hb_stackSelfItem();
-   HB_USHORT uiClass = hb_clsSenderMethodClasss();
+   HB_USHORT uiClass = hb_clsSenderMethodClass();
    HB_USHORT uiCurClass = hb_objGetClassH( pObject );
 
    if( uiClass && uiClass != uiCurClass &&
-       hb_clsSenderObjectClasss() == uiCurClass )
+       hb_clsSenderObjectClass() == uiCurClass )
    {
       hb_clsMakeSuperObject( hb_stackReturnItem(), pObject, uiClass );
    }

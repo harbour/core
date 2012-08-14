@@ -102,7 +102,11 @@
 #command ?? <xx,...> => spd_out(<xx>)
 
 #ifdef __HARBOUR__
-   #define EOL hb_eol()
+   #ifdef __XHARBOUR__
+      #define EOL hb_osNewLine()
+   #else
+      #define EOL hb_eol()
+   #endif
 #else
    #ifndef EOL
       #define EOL chr(10)

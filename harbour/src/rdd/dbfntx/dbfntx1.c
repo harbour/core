@@ -7642,25 +7642,7 @@ static HB_ERRCODE hb_ntxCountScope( NTXAREAP pArea, void * pPtr, HB_LONG * plRec
 #define hb_ntxReadDBHeader          NULL
 #define hb_ntxWriteDBHeader         NULL
 
-static HB_ERRCODE hb_ntxInit( LPRDDNODE pRDD )
-{
-   HB_ERRCODE errCode;
-
-   HB_TRACE(HB_TR_DEBUG, ("hb_ntxInit(%p)", pRDD));
-
-   errCode = SUPER_INIT( pRDD );
-   if( errCode == HB_SUCCESS )
-   {
-      PHB_ITEM pItem = hb_itemPutNI( NULL, DB_MEMO_DBT );
-      SELF_RDDINFO( pRDD, RDDI_MEMOTYPE, 0, pItem );
-      hb_itemRelease( pItem );
-#if !defined( HB_NTX_NOMULTITAG )
-      DBFNODE_DATA( pRDD )->fMultiTag = HB_TRUE;
-#endif
-   }
-   return errCode;
-}
-
+#define hb_ntxInit                  NULL
 #define hb_ntxExit                  NULL
 #define hb_ntxDrop                  NULL
 #define hb_ntxExists                NULL
@@ -7673,6 +7655,14 @@ static HB_ERRCODE hb_ntxRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
    HB_TRACE(HB_TR_DEBUG, ("hb_ntxRddInfo(%p, %hu, %lu, %p)", pRDD, uiIndex, ulConnect, pItem));
 
    pData = DBFNODE_DATA( pRDD );
+
+   if( pData->bMemoType == 0 )
+   {
+      pData->bMemoType = DB_MEMO_DBT;
+#if !defined( HB_NTX_NOMULTITAG )
+      pData->fMultiTag = HB_TRUE;
+#endif
+   }
 
    switch( uiIndex )
    {

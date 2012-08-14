@@ -2781,7 +2781,7 @@ static void hb_pp_pragmaNew( PHB_PP_STATE pState, PHB_PP_TOKEN pToken )
       if( pState->fWriteTrace )
       {
          if( fwrite( hb_membufPtr( pState->pBuffer ), sizeof( char ),
-                     hb_membufLen( pState->pBuffer ), pState->file_out ) !=
+                     hb_membufLen( pState->pBuffer ), pState->file_trace ) !=
              hb_membufLen( pState->pBuffer ) )
          {
             hb_pp_error( pState, 'F', HB_PP_ERR_WRITE_FILE, pState->szTraceFileName );

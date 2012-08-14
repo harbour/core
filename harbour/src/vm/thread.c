@@ -881,6 +881,16 @@ HB_BOOL hb_threadDetach( HB_THREAD_HANDLE th_h )
 #endif
 }
 
+HB_THREAD_NO hb_threadNO( void )
+{
+#if defined( HB_MT_VM )
+   PHB_THREADSTATE pThread = ( PHB_THREADSTATE ) hb_vmThreadState();
+   if( pThread )
+      return pThread->th_no;
+#endif
+   return 0;
+}
+
 /*
  * .PRG level functions
  */

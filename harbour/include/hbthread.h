@@ -390,6 +390,7 @@ extern HB_EXPORT HB_BOOL  hb_threadCondTimedWait( HB_COND_T * cond, HB_CRITICAL_
 extern HB_EXPORT HB_THREAD_HANDLE hb_threadCreate( HB_THREAD_ID * th_id, PHB_THREAD_STARTFUNC start_func, void * Cargo );
 extern HB_EXPORT HB_BOOL  hb_threadJoin( HB_THREAD_HANDLE th_h );
 extern HB_EXPORT HB_BOOL  hb_threadDetach( HB_THREAD_HANDLE th_h );
+extern HB_EXPORT HB_THREAD_NO hb_threadNO( void );
 
 /* used by .prg code */
 extern HB_EXPORT PHB_ITEM hb_threadMutexCreate( void );
