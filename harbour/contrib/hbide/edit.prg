@@ -601,7 +601,7 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
          EXIT
       CASE Qt_Key_Return
       CASE Qt_Key_Enter
-         ::reformatLine( -1, 0, 1 )
+      // ::reformatLine( -1, 0, 1 )
          ::lIndentIt := .t.
          EXIT
       CASE Qt_Key_ParenLeft
@@ -2350,7 +2350,7 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
             cWord := Lower( cPWord )
 
             IF ::oINI:lISClosing
-               IF     ::oINI:lISIf      .AND. cWord == "if"
+               IF     ::oINI:lISIf      .AND. cWord == "if" .AND. Empty( cPPWord ) /* Protected for #if */
                   hbide_appendIf( qCursor, hbide_getFrontSpacesAndWord( qCursor:block():text() ), qCursor:position(), ::nTabSpaces, ::oINI:lISElse, ::oINI:lISEmbrace )
 
                ELSEIF ::oINI:lISFor     .AND. cWord == "for"
@@ -2386,13 +2386,10 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
 
             ELSEIF Lower( cPPWord ) == "create" .AND. cPWord == "class"
                hbide_removeStartingSpaces( qCursor, nCPrevPrev )
-               IF ::oINI:lISClass
-                  hbide_appendClass( qCursor, ::nTabSpaces, ::oINI )
-               ENDIF
 
-            ELSEIF Empty( cPPWord ) .AND. cPWord == "class"
+            ELSEIF cPPWord == "CLASS" .AND. ! Empty( cPWord )
                IF ::oINI:lISClass
-                  hbide_appendClass( qCursor, ::nTabSpaces, ::oINI )
+                  hbide_appendClass( qCursor, ::nTabSpaces, ::oINI, cPWord )
                ENDIF
 
             ENDIF
@@ -2483,7 +2480,7 @@ STATIC FUNCTION hbide_replaceWord( qCursor, nWord, cWord, nPostn )
 
 /*----------------------------------------------------------------------*/
 
-STATIC FUNCTION hbide_appendClass( qCursor, nTabSpaces, oINI )
+STATIC FUNCTION hbide_appendClass( qCursor, nTabSpaces, oINI, cClassName )
    LOCAL cMethod
    LOCAL aMethods := hb_ATokens( oINI:cISMethods, ";" )
    LOCAL nPostn := qCursor:position()
@@ -2501,13 +2498,12 @@ STATIC FUNCTION hbide_appendClass( qCursor, nTabSpaces, oINI )
    qCursor:insertBlock()
    qCursor:insertText( Space( nClosingIndent ) + "ENDCLASS " )
    qCursor:insertBlock()
-   qCursor:insertBlock()
    FOR EACH cMethod IN aMethods
       qCursor:insertBlock()
       IF oINI:cISFormat == "class:method"
-         qCursor:insertText( "METHOD " + ":" + cMethod + "()" )
+         qCursor:insertText( "METHOD " + cClassName + ":" + cMethod + "()" )
       ELSE
-         qCursor:insertText( "METHOD " + cMethod + "() CLASS " )
+         qCursor:insertText( "METHOD " + cMethod + "() CLASS " + cClassName )
       ENDIF
       qCursor:insertBlock()
       qCursor:insertBlock()
