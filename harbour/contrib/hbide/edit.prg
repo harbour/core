@@ -1827,17 +1827,15 @@ STATIC FUNCTION hbide_matchBackward( qCursor, cStartingW, cEndingW, qPairFormat 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:unmatchPair()
-   LOCAL lModified, qCursor
+   LOCAL lModified
 
    IF ::isMatchingPair
-      qCursor := ::qEdit:cursorForPosition( QPoint( ::qEdit:cursorRect():x(), ::qEdit:cursorRect():y() ) )
       ::isMatchingPair := .F.
       lModified := ::qEdit:document():isModified()
       ::qEdit:undo()
       IF ! lModified
          ::qEdit:document():setModified( .F. )
       ENDIF
-      ::qEdit:setTextCursor( qCursor )
    ENDIF
 
    RETURN NIL
@@ -1851,19 +1849,19 @@ METHOD IdeEdit:matchPair( x, y )
 
    qCursor := ::qEdit:cursorForPosition( ::qEdit:viewport():mapFromGlobal( QPoint( x,y ) ) )
    IF ! qCursor:isNull()
-      qCursor:beginEditBlock()
-      nPostn := qCursor:position()
-
-      qFormat := QTextCharFormat()
-      qFormat:setBackground( QBrush( QColor( Qt_yellow ) ) )
-
       qCursor:select( QTextCursor_WordUnderCursor )
       cWord := Lower( qCursor:selectedText() )
 
       IF AScan( { "if","endif","for","next","switch","endswitch","do","enddo","endcase","return","function","procedure","method","class","endclass" }, {|e| e == cWord } ) > 0
          ::isMatchingPair := .T.
 
+         qFormat := QTextCharFormat()
+         qFormat:setBackground( QBrush( QColor( Qt_yellow ) ) )
+
          lModified := ::qEdit:document():isModified()
+
+         qCursor:beginEditBlock()
+         nPostn := qCursor:position()
 
          SWITCH cWord
          CASE "if"    /* Forward search */
