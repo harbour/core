@@ -1766,7 +1766,6 @@ METHOD IdeEdit:findEx( cText, nFlags, nStart )
 STATIC FUNCTION hbide_matchForward( qCursor, cStartingW, cEndingW, qPairFormat )
    LOCAL cFWord, cSWord, nCol, cOpnWord
    LOCAL nInner := 0
-   LOCAL nPostn := qCursor:position()
 
    DO WHILE qCursor:movePosition( QTextCursor_Down )
       nCol := hbide_getFrontSpacesAndWord( qCursor:block():text(), @cFWord, @cSWord )
@@ -1789,16 +1788,15 @@ STATIC FUNCTION hbide_matchForward( qCursor, cStartingW, cEndingW, qPairFormat )
          nInner++
       ENDIF
    ENDDO
-   qCursor:setPosition( nPostn )
 
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION hbide_matchBackward( qCursor, cStartingW, cEndingW, qPairFormat )
-   LOCAL cFWord, cSWord, nCol, cOpnWord
+   LOCAL cFWord, cSWord, nCol, cOpnWord, n
    LOCAL nInner := 0
-   LOCAL nPostn := qCursor:position()
+   LOCAL aStartingW := hb_ATokens( cStartingW, "|" )
 
    DO WHILE qCursor:movePosition( QTextCursor_Up )
       nCol := hbide_getFrontSpacesAndWord( qCursor:block():text(), @cFWord, @cSWord )
@@ -1809,33 +1807,37 @@ STATIC FUNCTION hbide_matchBackward( qCursor, cStartingW, cEndingW, qPairFormat 
       ELSE
          cOpnWord := cFWord
       ENDIF
-      IF cOpnWord == cStartingW .AND. nInner == 0
+
+      n := AScan( aStartingW, {|e| e == cOpnWord .OR. e == cSWord } )
+      IF n > 0 .AND. nInner == 0
          qCursor:movePosition( QTextCursor_StartOfBlock )
          qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, nCol )
-         qCursor:movePosition( QTextCursor_Right, QTextCursor_KeepAnchor, Len( cStartingW ) )
+         qCursor:movePosition( QTextCursor_Right, QTextCursor_KeepAnchor, Len( aStartingW[ n ] ) )
          qCursor:mergeCharFormat( qPairFormat )
          EXIT
-      ELSEIF cOpnWord == cStartingW .AND. nInner > 0
+      ELSEIF n > 0 .AND. nInner > 0
          nInner--
       ELSEIF cFWord == cEndingW
          nInner++
       ENDIF
    ENDDO
-   qCursor:setPosition( nPostn )
 
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:unmatchPair()
-   LOCAL lModified := ::qEdit:document():isModified()
+   LOCAL lModified, qCursor
 
    IF ::isMatchingPair
+      qCursor := ::qEdit:cursorForPosition( QPoint( ::qEdit:cursorRect():x(), ::qEdit:cursorRect():y() ) )
+      ::isMatchingPair := .F.
+      lModified := ::qEdit:document():isModified()
       ::qEdit:undo()
       IF ! lModified
          ::qEdit:document():setModified( .F. )
       ENDIF
-      ::isMatchingPair := .F.
+      ::qEdit:setTextCursor( qCursor )
    ENDIF
 
    RETURN NIL
@@ -1843,71 +1845,99 @@ METHOD IdeEdit:unmatchPair()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:matchPair( x, y )
-   LOCAL qCursor, cWord, qFormat, lModified
+   LOCAL qCursor, cWord, qFormat, lModified, nPostn
 
    ::unmatchPair()
 
-   qCursor := ::qEdit:cursorForPosition( ::qEdit:mapFromGlobal( QPoint( x,y ) ) )
+   qCursor := ::qEdit:cursorForPosition( ::qEdit:viewport():mapFromGlobal( QPoint( x,y ) ) )
    IF ! qCursor:isNull()
+      qCursor:beginEditBlock()
+      nPostn := qCursor:position()
+
       qFormat := QTextCharFormat()
       qFormat:setBackground( QBrush( QColor( Qt_yellow ) ) )
 
       qCursor:select( QTextCursor_WordUnderCursor )
       cWord := Lower( qCursor:selectedText() )
 
-      IF AScan( { "if","endif","for","next","switch","endswitch","do","enddo","endcase" }, {|e| e == cWord } ) > 0
+      IF AScan( { "if","endif","for","next","switch","endswitch","do","enddo","endcase","return","function","procedure","method","class","endclass" }, {|e| e == cWord } ) > 0
          ::isMatchingPair := .T.
+
          lModified := ::qEdit:document():isModified()
-         qCursor:beginEditBlock()
-      ENDIF
 
-      SWITCH cWord
-      CASE "if"    /* Forward search */
-         qCursor:mergeCharFormat( qFormat )
-         hbide_matchForward( qCursor, "if", "endif", qFormat )
-         EXIT
-      CASE "endif"
-         qCursor:mergeCharFormat( qFormat )
-         hbide_matchBackward( qCursor, "if", "endif", qFormat )
-         EXIT
-      CASE "for"
-         qCursor:mergeCharFormat( qFormat )
-         hbide_matchForward( qCursor, "for", "next", qFormat )
-         EXIT
-      CASE "next"
-         qCursor:mergeCharFormat( qFormat )
-         hbide_matchBackward( qCursor, "for", "next", qFormat )
-         EXIT
-      CASE "switch"
-         qCursor:mergeCharFormat( qFormat )
-         hbide_matchForward( qCursor, "switch", "endswitch", qFormat )
-         EXIT
-      CASE "endswitch"
-         qCursor:mergeCharFormat( qFormat )
-         hbide_matchBackward( qCursor, "switch", "endswitch", qFormat )
-         EXIT
-      CASE "do"
-         qCursor:mergeCharFormat( qFormat )
-         qCursor:movePosition( QTextCursor_NextWord, QTextCursor_MoveAnchor )
-         qCursor:select( QTextCursor_WordUnderCursor )
-         cWord := Lower( qCursor:selectedText() )
-         IF cWord == "case"
-            hbide_matchForward( qCursor, "do case", "endcase", qFormat )
-         ELSEIF cWord == "while"
-            hbide_matchForward( qCursor, "do while", "enddo", qFormat )
-         ENDIF
-         EXIT
-      CASE "endcase"
-         qCursor:mergeCharFormat( qFormat )
-         hbide_matchBackward( qCursor, "do case", "endcase", qFormat )
-         EXIT
-      CASE "enddo"
-         qCursor:mergeCharFormat( qFormat )
-         hbide_matchBackward( qCursor, "do while", "enddo", qFormat )
-         EXIT
-      ENDSWITCH
+         SWITCH cWord
+         CASE "if"    /* Forward search */
+            qCursor:mergeCharFormat( qFormat )
+            hbide_matchForward( qCursor, "if", "endif", qFormat )
+            EXIT
+         CASE "endif"
+            qCursor:mergeCharFormat( qFormat )
+            hbide_matchBackward( qCursor, "if", "endif", qFormat )
+            EXIT
+         CASE "for"
+            qCursor:mergeCharFormat( qFormat )
+            hbide_matchForward( qCursor, "for", "next", qFormat )
+            EXIT
+         CASE "next"
+            qCursor:mergeCharFormat( qFormat )
+            hbide_matchBackward( qCursor, "for", "next", qFormat )
+            EXIT
+         CASE "switch"
+            qCursor:mergeCharFormat( qFormat )
+            hbide_matchForward( qCursor, "switch", "endswitch", qFormat )
+            EXIT
+         CASE "endswitch"
+            qCursor:mergeCharFormat( qFormat )
+            hbide_matchBackward( qCursor, "switch", "endswitch", qFormat )
+            EXIT
+         CASE "do"
+            qCursor:mergeCharFormat( qFormat )
+            qCursor:movePosition( QTextCursor_NextWord, QTextCursor_MoveAnchor )
+            qCursor:select( QTextCursor_WordUnderCursor )
+            cWord := Lower( qCursor:selectedText() )
+            qCursor:clearSelection()
+            IF cWord == "case"
+               hbide_matchForward( qCursor, "do case", "endcase", qFormat )
+            ELSEIF cWord == "while"
+               hbide_matchForward( qCursor, "do while", "enddo", qFormat )
+            ENDIF
+            EXIT
+         CASE "endcase"
+            qCursor:mergeCharFormat( qFormat )
+            hbide_matchBackward( qCursor, "do case", "endcase", qFormat )
+            EXIT
+         CASE "enddo"
+            qCursor:mergeCharFormat( qFormat )
+            hbide_matchBackward( qCursor, "do while", "enddo", qFormat )
+            EXIT
+         CASE "return"
+            qCursor:mergeCharFormat( qFormat )
+            hbide_matchBackward( qCursor, "function|procedure|method", "return", qFormat )
+            EXIT
+         CASE "endclass"
+            qCursor:mergeCharFormat( qFormat )
+            hbide_matchBackward( qCursor, "class", "endclass", qFormat )
+            EXIT
+         CASE "function"
+            qCursor:mergeCharFormat( qFormat )
+            hbide_matchForward( qCursor, "function", "return", qFormat )
+            EXIT
+         CASE "procedure"
+            qCursor:mergeCharFormat( qFormat )
+            hbide_matchForward( qCursor, "procedure", "return", qFormat )
+            EXIT
+         CASE "method"
+            qCursor:mergeCharFormat( qFormat )
+            hbide_matchForward( qCursor, "method", "return", qFormat )
+            EXIT
+         CASE "class"
+            qCursor:mergeCharFormat( qFormat )
+            hbide_matchForward( qCursor, "class", "endclass", qFormat )
+            EXIT
+         ENDSWITCH
 
-      IF HB_ISLOGICAL( lModified )
+         qCursor:setPosition( nPostn )
+         ::qEdit:setTextCursor( qCursor )
          qCursor:endEditBlock()
          IF ! lModified
             ::qEdit:document():setModified( .f. )
