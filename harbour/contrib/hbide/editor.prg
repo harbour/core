@@ -95,6 +95,8 @@ CLASS IdeEditsManager INHERIT IdeObject
    DATA   qFldsStrList
    DATA   qFldsModel
 
+   DATA   hEditingWords                           INIT {=>}
+
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
@@ -194,6 +196,8 @@ CLASS IdeEditsManager INHERIT IdeObject
 METHOD IdeEditsManager:new( oIde )
 
    ::oIde := oIde
+
+   hb_hCaseMatch( ::hEditingWords, .F. )
 
    RETURN Self
 
@@ -339,6 +343,10 @@ METHOD IdeEditsManager:updateCompleter()
    aeval( aHrb, {|e| aadd( ::aProtos, e ) } )
    aeval( aFun, {|e| aadd( ::aProtos, e ) } )
    aeval( aUsr, {|e| aadd( ::aProtos, e ) } )
+   // Current session words
+   FOR EACH s IN ::hEditingWords
+      AAdd( ::aProtos, s )
+   NEXT
 
    k_:= {}
    FOR EACH s IN ::aProtos
@@ -365,10 +373,11 @@ METHOD IdeEditsManager:updateCompleter()
 
    aeval( k_, {|e| ::qProtoList:append( e ) } )
 
+   ::qCompModel:setStringList( ::qProtoList )
+   //
    ::qCompleter:setWrapAround( .t. )
    ::qCompleter:setCaseSensitivity( Qt_CaseInsensitive )
    ::qCompleter:setModelSorting( QCompleter_CaseInsensitivelySortedModel )
-   ::qCompModel:setStringList( ::qProtoList )
    ::qCompleter:setModel( ::qCompModel )
    ::qCompleter:setCompletionMode( QCompleter_PopupCompletion )
    ::qCompleter:popup():setAlternatingRowColors( .t. )

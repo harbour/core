@@ -2311,6 +2311,11 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
                qCursor:setPosition( nPostn )
             ENDIF
 
+         ELSEIF cCWord == " " .AND. ! Empty( cPWord ) .AND. ! ( Left( cPWord, 1 ) $ ":=,;<>/?'[]{}()-\|~`!@#$%^&*" )
+            IF ! cPWord $ ::oEM:hEditingWords
+               ::oEM:hEditingWords[ cPWord ] := cPWord
+               ::oEM:updateCompleter()
+            ENDIF
          ENDIF
 
          /* Group II operations */
