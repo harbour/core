@@ -138,6 +138,7 @@ CLASS IdeEdit INHERIT IdeObject
    DATA   isHighLighted                           INIT .f.
    DATA   cLastWord, cCurWord
    DATA   hLogicals
+   DATA   isMatchingPair                          INIT .F.
 
    METHOD new( oIde, oEditor, nMode )
    METHOD create( oIde, oEditor, nMode )
@@ -252,6 +253,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD reformatLine( nPos, nDeleted, nAdded )
    METHOD handleTab( key )
    METHOD matchPair( x, y )
+   METHOD unmatchPair()
 
    ENDCLASS
 
@@ -557,6 +559,8 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1, p2 )
 
    SWITCH nEvent
    CASE QEvent_KeyPress     /* The key is sent here prior TO applying TO editor */
+      ::unmatchPair()
+
       key    := p:key()
       kbm    := p:modifiers()
 
@@ -1759,6 +1763,162 @@ METHOD IdeEdit:findEx( cText, nFlags, nStart )
 
 /*----------------------------------------------------------------------*/
 
+STATIC FUNCTION hbide_matchForward( qCursor, cStartingW, cEndingW, qPairFormat )
+   LOCAL cFWord, cSWord, nCol, cOpnWord
+   LOCAL nInner := 0
+   LOCAL nPostn := qCursor:position()
+
+   DO WHILE qCursor:movePosition( QTextCursor_Down )
+      nCol := hbide_getFrontSpacesAndWord( qCursor:block():text(), @cFWord, @cSWord )
+      cFWord := Lower( cFWord )
+      cSWord := Lower( AllTrim( cSWord ) )
+      IF " " $ cStartingW
+         cOpnWord := cFWord + " " + cSWord
+      ELSE
+         cOpnWord := cFWord
+      ENDIF
+      IF cFWord == cEndingW .AND. nInner == 0
+         qCursor:movePosition( QTextCursor_StartOfBlock )
+         qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, nCol )
+         qCursor:movePosition( QTextCursor_Right, QTextCursor_KeepAnchor, Len( cEndingW ) )
+         qCursor:mergeCharFormat( qPairFormat )
+         EXIT
+      ELSEIF cFWord == cEndingW .AND. nInner > 0
+         nInner--
+      ELSEIF cOpnWord == cStartingW
+         nInner++
+      ENDIF
+   ENDDO
+   qCursor:setPosition( nPostn )
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_matchBackward( qCursor, cStartingW, cEndingW, qPairFormat )
+   LOCAL cFWord, cSWord, nCol, cOpnWord
+   LOCAL nInner := 0
+   LOCAL nPostn := qCursor:position()
+
+   DO WHILE qCursor:movePosition( QTextCursor_Up )
+      nCol := hbide_getFrontSpacesAndWord( qCursor:block():text(), @cFWord, @cSWord )
+      cFWord := Lower( cFWord )
+      cSWord := Lower( AllTrim( cSWord ) )
+      IF " " $ cStartingW
+         cOpnWord := cFWord + " " + cSWord
+      ELSE
+         cOpnWord := cFWord
+      ENDIF
+      IF cOpnWord == cStartingW .AND. nInner == 0
+         qCursor:movePosition( QTextCursor_StartOfBlock )
+         qCursor:movePosition( QTextCursor_Right, QTextCursor_MoveAnchor, nCol )
+         qCursor:movePosition( QTextCursor_Right, QTextCursor_KeepAnchor, Len( cStartingW ) )
+         qCursor:mergeCharFormat( qPairFormat )
+         EXIT
+      ELSEIF cOpnWord == cStartingW .AND. nInner > 0
+         nInner--
+      ELSEIF cFWord == cEndingW
+         nInner++
+      ENDIF
+   ENDDO
+   qCursor:setPosition( nPostn )
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:unmatchPair()
+   LOCAL lModified := ::qEdit:document():isModified()
+
+   IF ::isMatchingPair
+      ::qEdit:undo()
+      IF ! lModified
+         ::qEdit:document():setModified( .F. )
+      ENDIF
+      ::isMatchingPair := .F.
+   ENDIF
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:matchPair( x, y )
+   LOCAL qCursor, cWord, qFormat, lModified
+
+   ::unmatchPair()
+
+   qCursor := ::qEdit:cursorForPosition( ::qEdit:mapFromGlobal( QPoint( x,y ) ) )
+   IF ! qCursor:isNull()
+      qFormat := QTextCharFormat()
+      qFormat:setBackground( QBrush( QColor( Qt_yellow ) ) )
+
+      qCursor:select( QTextCursor_WordUnderCursor )
+      cWord := Lower( qCursor:selectedText() )
+
+      IF AScan( { "if","endif","for","next","switch","endswitch","do","enddo","endcase" }, {|e| e == cWord } ) > 0
+         ::isMatchingPair := .T.
+         lModified := ::qEdit:document():isModified()
+         qCursor:beginEditBlock()
+      ENDIF
+
+      SWITCH cWord
+      CASE "if"    /* Forward search */
+         qCursor:mergeCharFormat( qFormat )
+         hbide_matchForward( qCursor, "if", "endif", qFormat )
+         EXIT
+      CASE "endif"
+         qCursor:mergeCharFormat( qFormat )
+         hbide_matchBackward( qCursor, "if", "endif", qFormat )
+         EXIT
+      CASE "for"
+         qCursor:mergeCharFormat( qFormat )
+         hbide_matchForward( qCursor, "for", "next", qFormat )
+         EXIT
+      CASE "next"
+         qCursor:mergeCharFormat( qFormat )
+         hbide_matchBackward( qCursor, "for", "next", qFormat )
+         EXIT
+      CASE "switch"
+         qCursor:mergeCharFormat( qFormat )
+         hbide_matchForward( qCursor, "switch", "endswitch", qFormat )
+         EXIT
+      CASE "endswitch"
+         qCursor:mergeCharFormat( qFormat )
+         hbide_matchBackward( qCursor, "switch", "endswitch", qFormat )
+         EXIT
+      CASE "do"
+         qCursor:mergeCharFormat( qFormat )
+         qCursor:movePosition( QTextCursor_NextWord, QTextCursor_MoveAnchor )
+         qCursor:select( QTextCursor_WordUnderCursor )
+         cWord := Lower( qCursor:selectedText() )
+         IF cWord == "case"
+            hbide_matchForward( qCursor, "do case", "endcase", qFormat )
+         ELSEIF cWord == "while"
+            hbide_matchForward( qCursor, "do while", "enddo", qFormat )
+         ENDIF
+         EXIT
+      CASE "endcase"
+         qCursor:mergeCharFormat( qFormat )
+         hbide_matchBackward( qCursor, "do case", "endcase", qFormat )
+         EXIT
+      CASE "enddo"
+         qCursor:mergeCharFormat( qFormat )
+         hbide_matchBackward( qCursor, "do while", "enddo", qFormat )
+         EXIT
+      ENDSWITCH
+
+      IF HB_ISLOGICAL( lModified )
+         qCursor:endEditBlock()
+         IF ! lModified
+            ::qEdit:document():setModified( .f. )
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:unHighlight()
    LOCAL qCursor, nPos, lModified
 
@@ -1778,27 +1938,6 @@ METHOD IdeEdit:unHighlight()
    ENDIF
 
    RETURN .f.
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeEdit:matchPair( x, y )
-   LOCAL qCursor, cWord
-
-   qCursor := ::qEdit:cursorForPosition( ::qEdit:mapFromGlobal( QPoint( x,y ) ) )
-   IF ! qCursor:isNull()
-      qCursor:select( QTextCursor_WordUnderCursor )
-      cWord := qCursor:selectedText()
-      SWITCH cWord
-      CASE "IF"
-         EXIT
-      CASE "ENDIF"
-         EXIT
-      CASE "ENDDO"
-         EXIT
-      ENDSWITCH
-   ENDIF
-
-   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
@@ -2407,6 +2546,7 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
 
                ELSEIF ::oINI:lISDoWhile .AND. Lower( cPPWord ) == "do" .AND. cWord == "while"
                   hbide_appendWhile( qCursor, hbide_getFrontSpacesAndWord( qCursor:block():text() ), qCursor:position() )
+
                ENDIF
             ENDIF
 
@@ -2937,7 +3077,19 @@ FUNCTION hbide_getFirstWord( cText )
 
 /*----------------------------------------------------------------------*/
 
-FUNCTION hbide_getFrontSpacesAndWord( cText, cWord )
+FUNCTION hbide_getSecondWord( cText )
+   LOCAL cWord := "", a_
+
+   a_:= hb_ATokens( AllTrim( cText ), " " )
+   IF Len( a_ ) >= 2
+      cWord := a_[ 2 ]
+   ENDIF
+
+   RETURN cWord
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_getFrontSpacesAndWord( cText, cWord, cSWord )
    LOCAL n := 0
 
    DO WHILE .t.
@@ -2948,6 +3100,7 @@ FUNCTION hbide_getFrontSpacesAndWord( cText, cWord )
    n--
 
    cWord := hbide_getFirstWord( cText )
+   cSWord := hbide_getSecondWord( cText )
 
    RETURN n
 

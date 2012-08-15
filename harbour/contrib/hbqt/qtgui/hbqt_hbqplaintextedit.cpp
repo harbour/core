@@ -910,6 +910,17 @@ void HBQPlainTextEdit::mousePressEvent( QMouseEvent *event )
          else
          {
             QPlainTextEdit::mousePressEvent( event );
+            if( block )
+            {
+               PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::MouseButtonPress );
+               PHB_ITEM p2 = hb_itemPutNI( NULL, event->globalX() );
+               PHB_ITEM p3 = hb_itemPutNI( NULL, event->globalY() );
+               hb_vmEvalBlockV( block, 3, p1, p2, p3 );
+               hb_itemRelease( p1 );
+               hb_itemRelease( p2 );
+               hb_itemRelease( p3 );
+            }
+
             dragStartPosition = event->pos();
             if( mouseMode == mouseMode_select && isCursorInSelection() )
             {

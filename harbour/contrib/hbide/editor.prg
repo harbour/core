@@ -381,7 +381,7 @@ METHOD IdeEditsManager:updateCompleter()
    ::qCompleter:popup():setAlternatingRowColors( .t. )
    ::qCompleter:popup():setFont( QFont( "Courier New", 8 ) )
    ::qCompleter:popup():setMaximumWidth( 400 )
-   ::qCompleter:popup():setHorizontalScrollBarPolicy ( Qt_ScrollBarAsNeeded )
+// ::qCompleter:popup():setHorizontalScrollBarPolicy ( Qt_ScrollBarAsNeeded )
 
    ::qCompleter:connect( "activated(QString)", {|p| ::execEvent( __qcompleter_activated__, p ) } )
 
