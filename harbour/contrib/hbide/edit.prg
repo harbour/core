@@ -143,7 +143,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD create( oIde, oEditor, nMode )
    METHOD destroy()
    METHOD execEvent( nMode, p, p1 )
-   METHOD execKeyEvent( nMode, nEvent, p, p1 )
+   METHOD execKeyEvent( nMode, nEvent, p, p1, p2 )
    METHOD connectEditSignals()
    METHOD disconnectEditSignals()
 
@@ -251,6 +251,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD highlightPage()
    METHOD reformatLine( nPos, nDeleted, nAdded )
    METHOD handleTab( key )
+   METHOD matchPair( x, y )
 
    ENDCLASS
 
@@ -323,9 +324,8 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
    ::qEdit:connect( QEvent_FocusIn            , {| | ::execKeyEvent( 104, QEvent_FocusIn                ) } )
    ::qEdit:connect( QEvent_Resize             , {| | ::execKeyEvent( 106, QEvent_Resize                 ) } )
    ::qEdit:connect( QEvent_FocusOut           , {| | ::execKeyEvent( 105, QEvent_FocusOut               ) } )
-   ::qEdit:connect( QEvent_MouseButtonDblClick, {|p| ::execKeyEvent( 103, QEvent_MouseButtonDblClick, p ) } )
 
-   ::qEdit:hbSetEventBlock( {|p,p1| ::execKeyEvent( 115, 1001, p, p1 ) } )
+   ::qEdit:hbSetEventBlock( {|p,p1,p2| ::execKeyEvent( 115, 1001, p, p1, p2 ) } )
 
    ::qTimer := QTimer()
    ::qTimer:setInterval( 2000 )
@@ -355,6 +355,7 @@ METHOD IdeEdit:destroy()
    ::qEdit:disconnect( QEvent_FocusOut            )
    ::qEdit:disconnect( QEvent_Resize              )
    ::qEdit:disconnect( QEvent_MouseButtonDblClick )
+   ::qEdit:disconnect( QEvent_MouseMove           )
 
    ::disconnectEditSignals()
 
@@ -548,7 +549,7 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
+METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1, p2 )
    LOCAL key, kbm, lAlt, lCtrl, lShift
 
    HB_SYMBOL_UNUSED( nMode )
@@ -641,12 +642,15 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1 )
       EXIT
    CASE QEvent_Wheel
       EXIT
-   CASE QEvent_MouseButtonDblClick
+   CASE QEvent_MouseButtonDblClick   /* Not being received: tobe investigated */
       ::lCopyWhenDblClicked := .t.
       ::clickFuncHelp()
       EXIT
    CASE 1001                                /* Fired from hbqt_hbqplaintextedit.cpp */
       SWITCH p
+      CASE QEvent_MouseButtonPress
+         ::matchPair( p1, p2 )
+         EXIT
       CASE 21000                            /* Sends Block Info { t,l,b,r,mode,state } hbGetBlockInfo() */
          ::aSelectionInfo := p1
          ::oDK:setButtonState( "SelectionMode", ::aSelectionInfo[ 5 ] > 1 )
@@ -1777,6 +1781,27 @@ METHOD IdeEdit:unHighlight()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:matchPair( x, y )
+   LOCAL qCursor, cWord
+
+   qCursor := ::qEdit:cursorForPosition( ::qEdit:mapFromGlobal( QPoint( x,y ) ) )
+   IF ! qCursor:isNull()
+      qCursor:select( QTextCursor_WordUnderCursor )
+      cWord := qCursor:selectedText()
+      SWITCH cWord
+      CASE "IF"
+         EXIT
+      CASE "ENDIF"
+         EXIT
+      CASE "ENDDO"
+         EXIT
+      ENDSWITCH
+   ENDIF
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:highlightAll( cText )
    LOCAL qDoc, qFormat, qCursor, qFormatHL, qCur, lModified
 
@@ -1792,7 +1817,7 @@ METHOD IdeEdit:highlightAll( cText )
    qCur := ::getCursor()
    qCur:beginEditBlock()
 
-   qCursor   := QTextCursor( "QTextDocument", qDoc )
+   qCursor   := QTextCursor( qDoc )
    qFormat   := qCursor:charFormat()
    qFormatHL := qFormat
    qFormatHL:setBackground( QBrush( QColor( Qt_yellow ) ) )
@@ -2311,11 +2336,24 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
                qCursor:setPosition( nPostn )
             ENDIF
 
-         ELSEIF cCWord == " " .AND. ! Empty( cPWord ) .AND. ! ( Left( cPWord, 1 ) $ ":=,;<>/?'[]{}()-\|~`!@#$%^&*" )
-            IF ! cPWord $ ::oEM:hEditingWords
-               ::oEM:hEditingWords[ cPWord ] := cPWord
-               ::oEM:updateCompleter()
+         ENDIF
+
+         IF cCWord == " " .AND. ! Empty( cPWord ) .AND. ! ( Left( cPWord, 1 ) $ "`~!@#$%^&*()+1234567890-=+[]{}|\':;?/>.<," )
+            IF Len( cPWord ) > 3
+               IF ! cPWord $ ::oEM:hEditingWords
+                  ::oEM:hEditingWords[ cPWord ] := cPWord
+                  ::oEM:updateCompleter()
+               ENDIF
             ENDIF
+
+         ELSEIF cCWord $ ",:" .AND. ! Empty( cPPWord ) .AND. ! ( Left( cPPWord, 1 ) $ "`~!@#$%^&*()+1234567890-=+[]{}|\':;?/>.<," )
+            IF Len( cPPWord ) > 3
+               IF ! cPPWord $ ::oEM:hEditingWords
+                  ::oEM:hEditingWords[ cPPWord ] := cPPWord
+                  ::oEM:updateCompleter()
+               ENDIF
+            ENDIF
+
          ENDIF
 
          /* Group II operations */

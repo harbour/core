@@ -350,21 +350,19 @@ METHOD IdeEditsManager:updateCompleter()
 
    k_:= {}
    FOR EACH s IN ::aProtos
-      s := alltrim( s )
-      IF ::oINI:lCompletionWithArgs
-         IF ascan( k_, s ) == 0
-            aadd( k_, s )
-         ENDIF
-      ELSE
+      // s := alltrim( s )
+      IF ! ::oINI:lCompletionWithArgs
          IF ( n := at( "(", s ) ) == 0
             IF ( n := at( " ", s ) ) > 0
-               aadd( k_, substr( s, 1, n - 1 ) )
-            ELSE
-               aadd( k_, s )
+               s := substr( s, 1, n - 1 )
             ENDIF
          ELSE
-            aadd( k_, trim( substr( s, 1, n - 1 ) ) )
+            s := substr( s, 1, n - 1 )
          ENDIF
+      ENDIF
+      s := alltrim( s )
+      IF ascan( k_, s ) == 0
+         aadd( k_, s )
       ENDIF
    NEXT
    asort( k_, , , {|e,f| lower( e ) < lower( f ) } )
@@ -382,6 +380,8 @@ METHOD IdeEditsManager:updateCompleter()
    ::qCompleter:setCompletionMode( QCompleter_PopupCompletion )
    ::qCompleter:popup():setAlternatingRowColors( .t. )
    ::qCompleter:popup():setFont( QFont( "Courier New", 8 ) )
+   ::qCompleter:popup():setMaximumWidth( 400 )
+   ::qCompleter:popup():setHorizontalScrollBarPolicy ( Qt_ScrollBarAsNeeded )
 
    ::qCompleter:connect( "activated(QString)", {|p| ::execEvent( __qcompleter_activated__, p ) } )
 
