@@ -24,14 +24,10 @@ STATIC oColorD
 STATIC oColorLY
 STATIC oColorLN
 
-#define _method_local_
-
 PROCEDURE Main()
    LOCAL tb1, mo1, lay1, lay2, bt1, bt2, bt3, hd1, i
    LOCAL oWnd, oDA, aStruct
-#ifdef _method_local_
    LOCAL oID, oSM
-#endif
 
    hbqt_errorsys()
 
@@ -64,18 +60,15 @@ PROCEDURE Main()
    nCX := 0
    nCY := 0
    tb1 := QTableView()
+
    mo1 := HBQAbstractItemModel( {| t, r, x, y| my_browse( aStruct, t, r, x, y ) } )
    tb1:setModel( mo1 )
 
-#ifdef _method_local_
    oID := tb1:itemDelegate()
    oID:connect( "commitData(QWidget*)", {| w | my_save( w, aStruct, @nCX, @nCY ) } )
 
    oSM := tb1:selectionModel()
    oSM:connect( "currentChanged(QModelIndex,QModelIndex)", {| n | my_select( n, @nCX, @nCY ) } )
-#else
-   connect( tb1, aStruct, @nCX, @nCY )
-#endif
 
    hd1 := tb1:horizontalHeader()
    FOR i := 1 To Len( aStruct )
@@ -91,15 +84,15 @@ PROCEDURE Main()
    lay1:addlayout( lay2 )
 
    ( bt1 := QPushButton() ):SetText( "Add Row" )
-   bt1:connect( "clicked()", {|| my_addRow( mo1 ) } )
-
-   ( bt2 := QPushButton() ):SetText( "Dummy 2" )
-   ( bt3 := QPushButton() ):SetText( "Dummy 3" )
-
+   bt1:connect( "clicked()", {|| my_addRow( mo1, tb1 ) } )
+   ( bt2 := QPushButton() ):SetText( "Ins Row" )
+   bt2:connect( "clicked()", {|| my_insRow( mo1, tb1 ) } )
+   ( bt3 := QPushButton() ):SetText( "Del Row" )
+   bt3:connect( "clicked()", {|| my_delRow( mo1, tb1 ) } )
 
    lay2:addWidget( bt1 )
-   lay2:addStretch()
    lay2:addWidget( bt2 )
+   lay2:addStretch()
    lay2:addWidget( bt3 )
 
    oWnd:Show()
@@ -238,16 +231,36 @@ STATIC FUNCTION connect( tb1, aStruct, nCX1, nCY1 )
 
    RETURN NIL
 
-STATIC FUNCTION my_addRow( oHBQAbsModel )
-
+STATIC FUNCTION my_addRow( oHBQAbsModel, oTableView )
    STATIC nPay := 400
+
    nPay += 30
 
    AAdd( aData, { "Kitty", SToD( "20120625" ), nPay, .T. } )
 
    oHBQAbsModel:reset()   /* Re-populate the model */
+   oTableView:selectRow( nCY )
 
    RETURN .T.
 
-/*----------------------------------------------------------------------*/
+STATIC FUNCTION my_insRow( oHBQAbsModel, oTableView )
+   STATIC nPay := 500
 
+   nPay += 150
+   aData := hb_AIns( aData, nCY + 1, { "Lovely", SToD( "20010513" ), nPay, .T. }, .T. )
+
+   oHBQAbsModel:reset()
+   oTableView:selectRow( nCY )
+
+   RETURN .T.
+
+STATIC FUNCTION my_delRow( oHBQAbsModel, oTableView )
+
+   IF Len( aData ) > 1
+      aData := hb_ADel( aData, nCY + 1, .T. )
+
+      oHBQAbsModel:reset()
+      oTableView:selectRow( Min( nCY, Len( aData ) - 1 ) )
+   ENDIF
+
+   RETURN .T.
