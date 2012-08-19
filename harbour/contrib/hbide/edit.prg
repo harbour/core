@@ -300,6 +300,7 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
    ::qEdit:setTabChangesFocus( .f. )
    ::qEdit:setFocusPolicy( Qt_StrongFocus )
    ::qEdit:setObjectName( hbide_getNextIDasString( "HBQPlainTextEdit" ) )
+   ::qEdit:setMouseTracking( .T. )
 
    oPalette := ::qEdit:palette()
    oPalette:setColor( QPalette_Inactive, QPalette_Highlight, QColor( Qt_yellow ) )
@@ -326,6 +327,7 @@ METHOD IdeEdit:create( oIde, oEditor, nMode )
    ::qEdit:connect( QEvent_FocusIn            , {| | ::execKeyEvent( 104, QEvent_FocusIn                ) } )
    ::qEdit:connect( QEvent_Resize             , {| | ::execKeyEvent( 106, QEvent_Resize                 ) } )
    ::qEdit:connect( QEvent_FocusOut           , {| | ::execKeyEvent( 105, QEvent_FocusOut               ) } )
+   ::qEdit:connect( QEvent_MouseButtonPress   , {| | ::execKeyEvent( 106, QEvent_MouseButtonPress       ) } )
 
    ::qEdit:hbSetEventBlock( {|p,p1,p2| ::execKeyEvent( 115, 1001, p, p1, p2 ) } )
 
@@ -558,6 +560,7 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1, p2 )
    HB_SYMBOL_UNUSED( p1 )
 
    SWITCH nEvent
+
    CASE QEvent_KeyPress     /* The key is sent here prior TO applying TO editor */
       ::unmatchPair()
 
@@ -568,7 +571,7 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1, p2 )
       lCtrl  := hb_bitAnd( kbm, Qt_ControlModifier ) == Qt_ControlModifier
       lShift := hb_bitAnd( kbm, Qt_ShiftModifier   ) == Qt_ShiftModifier
 
-      SWITCH key            /* On top of any user defined action be executed - QPlainTextEdit's default keys */
+      SWITCH key                            /* On top of any user defined action be executed - QPlainTextEdit's default keys */
       CASE Qt_Key_Tab
       CASE Qt_Key_Backtab
          p:accept()
@@ -606,12 +609,11 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1, p2 )
          EXIT
       CASE Qt_Key_Return
       CASE Qt_Key_Enter
-      // ::reformatLine( -1, 0, 1 )
          ::lIndentIt := .t.
          EXIT
       CASE Qt_Key_ParenLeft
          IF ! lCtrl .AND. ! lAlt
-            ::loadFuncHelp()     // Also invokes prototype display
+            ::loadFuncHelp()                /* Also invokes prototype display */
          ENDIF
          EXIT
       CASE Qt_Key_Escape
@@ -646,12 +648,12 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1, p2 )
       EXIT
    CASE QEvent_Wheel
       EXIT
-   CASE QEvent_MouseButtonDblClick   /* Not being received: tobe investigated */
-      ::lCopyWhenDblClicked := .t.
-      ::clickFuncHelp()
-      EXIT
    CASE 1001                                /* Fired from hbqt_hbqplaintextedit.cpp */
       SWITCH p
+      CASE QEvent_MouseButtonDblClick
+         ::lCopyWhenDblClicked := .t.
+         ::clickFuncHelp()
+         EXIT
       CASE QEvent_MouseButtonPress
          ::matchPair( p1, p2 )
          EXIT
@@ -668,10 +670,10 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1, p2 )
       CASE 21013
          ::insertBlockContents( p1 )
          EXIT
-      CASE 21014  /* ->hbCut() */
+      CASE 21014                            /* ->hbCut() */
          ::cutBlockContents( p1 )
          EXIT
-      CASE 21017                     /* Sends Block Info { t,l,b,r,mode,state } hbGetBlockInfo() */
+      CASE 21017                            /* Sends Block Info { t,l,b,r,mode,state } hbGetBlockInfo() */
          ::aViewportInfo := p1
          EXIT
       CASE 21041
@@ -2470,8 +2472,14 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
                qCursor:setPosition( nPostn )
             ENDIF
 
-         ELSEIF ::oINI:lISOperator .AND. cPWord == ":=" .AND. cCWord == "=" .AND. nAdded == 1
-            qCursor:insertText( " " )
+         ELSEIF cPWord == ":=" .AND. cCWord == "=" .AND. nAdded == 1
+            IF ::oINI:lISOperator
+               qCursor:insertText( " " )
+            ENDIF
+            IF ::oINI:lISAlignAssign
+               // look for previous lines and IF 2nd keyword is assignment operator then align both TO same offset
+               hbide_alignAssignments( qCursor )
+            ENDIF
 
          ELSEIF ::oINI:lISCodeBlock .AND. Right( cPWord, 2 ) == "{|" .AND. cCWord == "|" .AND. nAdded == 1 .AND. Empty( cRest )
             qCursor:insertText( "|  }" )
@@ -2629,6 +2637,37 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
 
    HB_SYMBOL_UNUSED( nDeleted )
    RETURN cRest
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION hbide_getFrontSpacesAndWordsByCursor( qCursor, /*@*/aWords )
+   LOCAL cLine
+   LOCAL nPostn := qCursor:position()
+   LOCAL nBlock := qCursor:blockNumber()
+   LOCAL nStart := 0
+
+   aWords := {}
+   IF Empty( cLine := qCursor:block():text() )
+      RETURN 0
+   ELSE
+      DO WHILE SubStr( cLine, ++nStart, 1 ) == " " ; ENDDO
+
+      qCursor:movePosition( QTextCursor_StartOfBlock )
+      IF nStart == 1
+         qCursor:select( QTextCursor_WordUnderCursor )
+         AAdd( aWords, qCursor:selectedText() )
+         qCursor:clearSelection()
+      ENDIF
+
+      DO WHILE qCursor:movePosition( QTextCursor_NextWord ) .AND. qCursor:blockNumber() == nBlock
+         qCursor:select( QTextCursor_WordUnderCursor )
+         AAdd( aWords, qCursor:selectedText() )
+         qCursor:clearSelection()
+      ENDDO
+   ENDIF
+   qCursor:setPosition( nPostn )
+
+   RETURN nStart
 
 /*----------------------------------------------------------------------*/
 
@@ -2861,6 +2900,59 @@ STATIC FUNCTION hbide_appendIf( qCursor, nIndent, nCurPos, nTabSpaces, lElse, lE
    qCursor:insertBlock()
    qCursor:insertText( Space( nIndent ) + "ENDIF" )
    qCursor:setPosition( nCurPos )
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+STATIC FUNCTION hbide_alignAssignments( qCursor )
+   LOCAL aWords, cLine, nIndent, nPostn, cCLine, nCBlock, nAssgnAt, nCol
+   LOCAL lAssign := .F.
+
+   nIndent := hbide_getFrontSpacesAndWordsByCursor( qCursor, @aWords )
+   IF Len( aWords ) != 2 .AND. aWords[ 2 ] != ":="
+      RETURN NIL
+   ENDIF
+   cCLine   := qCursor:block():text()
+   nPostn   := qCursor:position()
+   nAssgnAt := At( ":=", cCLine )
+   nCBlock  := qCursor:blockNumber()
+
+   DO WHILE .T.
+      IF qCursor:movePosition( QTextCursor_PreviousBlock, QTextCursor_MoveAnchor )
+         IF ! Empty( cLine := qCursor:block():text() )
+            nCol := hbide_getFrontSpacesAndWordsByCursor( qCursor, @aWords )
+            IF nCol == nIndent .AND. Len( aWords ) >= 2 .AND. aWords[ 2 ] == ":="
+               nAssgnAt := Max( nAssgnAt, At( ":=", cLine ) )
+               lAssign  := .T.
+            ELSE
+               EXIT
+            ENDIF
+         ENDIF
+      ELSE
+         EXIT
+      ENDIF
+   ENDDO
+   /* Anyway we are TO move TO NEXT block */
+   qCursor:movePosition( QTextCursor_NextBlock, QTextCursor_MoveAnchor )
+   IF lAssign
+      DO WHILE .T.
+         cLine := qCursor:block():text()
+         nCol  := At( ":=", cLine )
+         cLine := Pad( Trim( SubStr( cLine, 1, nCol - 1 ) ), nAssgnAt - 1 ) + ":=" + Trim( SubStr( cLine, nCol + 2 ) )
+         qCursor:movePosition( QTextCursor_EndOfLine, QTextCursor_KeepAnchor )
+         qCursor:removeSelectedText()
+         qCursor:insertText( cLine )
+         IF qCursor:blockNumber() == nCBlock
+            EXIT
+         ENDIF
+         qCursor:movePosition( QTextCursor_NextBlock, QTextCursor_MoveAnchor )
+      ENDDO
+      /* We have reached on current line */
+      qCursor:movePosition( QTextCursor_EndOfBlock, QTextCursor_MoveAnchor )
+   ELSE
+      qCursor:setPosition( nPostn )
+   ENDIF
 
    RETURN NIL
 
@@ -3129,21 +3221,6 @@ FUNCTION hbide_getFrontSpacesAndWord( cText, cWord, cSWord )
 
    cWord := hbide_getFirstWord( cText )
    cSWord := hbide_getSecondWord( cText )
-
-   RETURN n
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION hbide_getFrontSpacesAndWordByCursor( qCursor, cWord )
-   LOCAL n, nPostn := qCursor:position()
-
-   qCursor:movePosition( QTextCursor_StartOfBlock )
-   qCursor:movePosition( QTextCursor_NextWord )
-   n := qCursor:position() - qCursor:block():position() + 1
-   qCursor:select( QTextCursor_WordUnderCursor )
-   cWord := qCursor:selectedText()
-   qCursor:clearSelection()
-   qCursor:setPosition( nPostn )
 
    RETURN n
 

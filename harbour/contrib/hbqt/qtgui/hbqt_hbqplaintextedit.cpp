@@ -806,14 +806,17 @@ void HBQPlainTextEdit::mouseDoubleClickEvent( QMouseEvent *event )
       iClicks = 2;
       repaint();
    }
-#if 0
+
    if( block )
    {
       PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::MouseButtonDblClick );
-      hb_vmEvalBlockV( block, 1, p1 );
+      PHB_ITEM p2 = hb_itemPutNI( NULL, event->globalX() );
+      PHB_ITEM p3 = hb_itemPutNI( NULL, event->globalY() );
+      hb_vmEvalBlockV( block, 3, p1, p2, p3 );
       hb_itemRelease( p1 );
+      hb_itemRelease( p2 );
+      hb_itemRelease( p3 );
    }
-#endif
 }
 
 /*----------------------------------------------------------------------*/
@@ -845,6 +848,17 @@ void HBQPlainTextEdit::mouseReleaseEvent( QMouseEvent *event )
    else
    {
       QPlainTextEdit::mouseReleaseEvent( event );
+   }
+
+   if( block )
+   {
+      PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::MouseButtonRelease );
+      PHB_ITEM p2 = hb_itemPutNI( NULL, event->globalX() );
+      PHB_ITEM p3 = hb_itemPutNI( NULL, event->globalY() );
+      hb_vmEvalBlockV( block, 3, p1, p2, p3 );
+      hb_itemRelease( p1 );
+      hb_itemRelease( p2 );
+      hb_itemRelease( p3 );
    }
 }
 
@@ -910,6 +924,7 @@ void HBQPlainTextEdit::mousePressEvent( QMouseEvent *event )
          else
          {
             QPlainTextEdit::mousePressEvent( event );
+
             if( block )
             {
                PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::MouseButtonPress );
@@ -1010,6 +1025,16 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
          setTextCursor( c );
       }
       hbPostSelectionInfo();
+   }
+   if( block )
+   {
+      PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::MouseMove );
+      PHB_ITEM p2 = hb_itemPutNI( NULL, event->globalX() );
+      PHB_ITEM p3 = hb_itemPutNI( NULL, event->globalY() );
+      hb_vmEvalBlockV( block, 3, p1, p2, p3 );
+      hb_itemRelease( p1 );
+      hb_itemRelease( p2 );
+      hb_itemRelease( p3 );
    }
 }
 
