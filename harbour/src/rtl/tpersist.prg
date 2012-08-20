@@ -57,19 +57,20 @@ REQUEST ARRAY
 CREATE CLASS HBPersistent
 
    METHOD CreateNew() INLINE Self
-   METHOD LoadFromFile( cFileName ) INLINE ::LoadFromText( hb_MemoRead( cFileName ) )
-   METHOD LoadFromText( cObjectText )
+   METHOD LoadFromFile( cFileName, lIgnoreErrors ) INLINE ::LoadFromText( hb_MemoRead( cFileName ), lIgnoreErrors )
+   METHOD LoadFromText( cObjectText, lIgnoreErrors )
    METHOD SaveToText( cObjectName, nIndent )
    METHOD SaveToFile( cFileName ) INLINE hb_MemoWrit( cFileName, ::SaveToText() )
 
 ENDCLASS
 
-METHOD LoadFromText( cObjectText ) CLASS HBPersistent
+METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
 
    LOCAL nPos
    LOCAL cLine
    LOCAL lStart := .t.
    LOCAL aObjects := { Self }
+   LOCAL bError
 
    PRIVATE oSelf
 
@@ -77,51 +78,59 @@ METHOD LoadFromText( cObjectText ) CLASS HBPersistent
       RETURN .F.
    ENDIF
 
+   bError := iif( HB_ISLOGICAL( lIgnoreErrors ) .AND. lIgnoreErrors, ;
+                  { |e| break( e ) }, errorBlock() )
+
    FOR EACH cLine IN hb_ATokens( StrTran( cObjectText, Chr( 13 ) ), Chr( 10 ) )
 
       cLine := AllTrim( cLine )
 
-      DO CASE
-      CASE Empty( cLine ) .OR. Left( cLine, 2 ) == "//"
-         /* ignore comments and empty lines */
+      BEGIN SEQUENCE WITH bError
 
-      CASE hb_asciiUpper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "OBJECT"
-         IF lStart
-            lStart := .F.
-         ELSE
+         DO CASE
+         CASE Empty( cLine ) .OR. Left( cLine, 2 ) == "//"
+            /* ignore comments and empty lines */
+
+         CASE hb_asciiUpper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "OBJECT"
+            IF lStart
+               lStart := .F.
+            ELSE
+               cLine := SubStr( cLine, At( "::", cLine ) )
+               MEMVAR->oSelf := ATail( aObjects )
+               cLine := StrTran( cLine, "::", "oSelf:",, 1 )
+               cLine := StrTran( cLine, " AS ", " := " ) + "():CreateNew()"
+               AAdd( aObjects, &( cLine ) )
+            ENDIF
+
+            CASE hb_asciiUpper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "ENDOBJECT"
+            ASize( aObjects, Len( aObjects ) - 1 )
+
+         CASE hb_asciiUpper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "ARRAY"
             cLine := SubStr( cLine, At( "::", cLine ) )
             MEMVAR->oSelf := ATail( aObjects )
             cLine := StrTran( cLine, "::", "oSelf:",, 1 )
-            cLine := StrTran( cLine, " AS ", " := " ) + "():CreateNew()"
-            AAdd( aObjects, &( cLine ) )
-         ENDIF
+            cLine := StrTran( cLine, " LEN ", " := Array( " ) + " )"
+            &( cLine )
 
-      CASE hb_asciiUpper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "ENDOBJECT"
-         ASize( aObjects, Len( aObjects ) - 1 )
-         IF Empty( aObjects )
-            EXIT
-         ENDIF
-
-      CASE hb_asciiUpper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "ARRAY"
-         cLine := SubStr( cLine, At( "::", cLine ) )
-         MEMVAR->oSelf := ATail( aObjects )
-         cLine := StrTran( cLine, "::", "oSelf:",, 1 )
-         cLine := StrTran( cLine, " LEN ", " := Array( " ) + " )"
-         &( cLine )
-
-      CASE Left( cLine, 2 ) == "::"
-         /* fix for older versions */
-         nPos := At( "=", cLine )
-         IF nPos > 0
-            IF !( SubStr( cLine, nPos - 1, 1 ) == ":" )
-               cLine := Stuff( cLine, nPos, 0, ":" )
+         CASE Left( cLine, 2 ) == "::"
+            /* fix for older versions */
+            nPos := At( "=", cLine )
+            IF nPos > 0
+               IF !( SubStr( cLine, nPos - 1, 1 ) == ":" )
+                  cLine := Stuff( cLine, nPos, 0, ":" )
+               ENDIF
             ENDIF
-         ENDIF
-         MEMVAR->oSelf := ATail( aObjects )
-         cLine := StrTran( cLine, "::", "oSelf:",, 1 )
-         &( cLine )
+            MEMVAR->oSelf := ATail( aObjects )
+            cLine := StrTran( cLine, "::", "oSelf:",, 1 )
+            &( cLine )
 
-      ENDCASE
+         ENDCASE
+
+      END SEQUENCE
+
+      IF Empty( aObjects )
+         EXIT
+      ENDIF
 
    NEXT
 

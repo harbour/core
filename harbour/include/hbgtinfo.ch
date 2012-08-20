@@ -151,6 +151,8 @@
 
 #define HB_GTI_FONTATTRIBUTE    67  /* Get/set font attribute */
 
+#define HB_GTI_UNITRANS         68  /* set translation table for UNICODE characters */
+
 /* Font weights */
 #define HB_GTI_FONTW_THIN       1
 #define HB_GTI_FONTW_NORMAL     2

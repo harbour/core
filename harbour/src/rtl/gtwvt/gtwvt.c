@@ -257,6 +257,9 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 #if !defined( UNICODE )
    if( pWVT->hFontBox && pWVT->hFontBox != pWVT->hFont )
       DeleteObject( pWVT->hFontBox );
+#else
+   if( pWVT->wcTrans )
+      hb_itemFreeC( ( char * ) pWVT->wcTrans );
 #endif
    if( pWVT->hFont )
       DeleteObject( pWVT->hFont );
@@ -342,6 +345,9 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->CodePage          = OEM_CHARSET;     /* GetACP(); - set code page to default system */
 #if !defined( UNICODE )
    pWVT->boxCodePage       = OEM_CHARSET;     /* GetACP(); - set code page to default system */
+#else
+   pWVT->wcTrans           = NULL;
+   pWVT->wcTransLen        = 0;
 #endif
 
    pWVT->Win9X             = hb_iswin9x();
@@ -1716,6 +1722,14 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
          if( ( pWVT->fontAttribute & HB_GTI_FONTA_CTRLCHARS ) == 0 )
             usChar = hb_cdpGetU16Ctrl( usChar );
 
+         if( pWVT->wcTrans )
+         {
+            if( pWVT->wcTransLen == 0x100 && ( usChar >> 8 ) == 0xFF )
+               usChar &= 0x00FF;
+            if( usChar < pWVT->wcTransLen && pWVT->wcTrans[ usChar ] )
+               usChar = pWVT->wcTrans[ usChar ];
+         }
+
          /* as long as GTWVT uses only 16 colors we can ignore other bits
           * and not divide output when it does not change anythings
           */
@@ -2667,8 +2681,21 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             }
          }
          break;
+#else
+      case HB_GTI_UNITRANS:
+         if( pWVT->wcTrans )
+            pInfo->pResult = hb_itemPutCL( pInfo->pResult, ( char * ) pWVT->wcTrans,
+                                           pWVT->wcTransLen * sizeof( HB_WCHAR ) );
+         if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
+         {
+            if( pWVT->wcTrans )
+               hb_itemFreeC( ( char * ) pWVT->wcTrans );
+            pWVT->wcTransLen = hb_itemGetCLen( pInfo->pNewVal ) / sizeof( HB_WCHAR );
+            pWVT->wcTrans = pWVT->wcTransLen == 0 ? NULL :
+                                 ( HB_WCHAR * ) hb_itemGetC( pInfo->pNewVal );
+         }
+         break;
 #endif
-
       case HB_GTI_ICONFILE:
       {
          if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING ) )

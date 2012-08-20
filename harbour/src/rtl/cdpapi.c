@@ -2402,7 +2402,6 @@ HB_WCHAR hb_cdpUpperWC( PHB_CODEPAGE cdp, HB_WCHAR wc )
          wc = cdp->uniTable->uniCodes[ cdp->upper[ cdp->uniTable->uniTrans[ wc ] ] ];
       }
       return wc;
-
    }
    else
       return HB_CDPCHAR_UPPER( cdp, wc );

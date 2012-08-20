@@ -163,6 +163,9 @@ typedef struct
    int      CodePage;                     /* Code page to use for display characters */
 #if ! defined( UNICODE )
    int      boxCodePage;                  /* Code page to use for display draw line characters */
+#else
+   HB_WCHAR * wcTrans;                    /* unicode character translation table */
+   HB_SIZE  wcTransLen;                   /* size of unicode character translation table */
 #endif
    HB_BOOL  Win9X;                        /* Flag to say if running on Win9X not NT/2000/XP */
    HB_BOOL  AltF4Close;                   /* Can use Alt+F4 to close application */
