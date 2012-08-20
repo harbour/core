@@ -985,7 +985,7 @@ STATIC FUNCTION hbqtui_pullTranslate( cCmd )
          cArgs := AllTrim( Left( cArgs, n4 - 1 ) )
          // cArgs := HB_STRDECODESCAPE( SubStr( cArgs, 2, Len( cArgs ) - 2 ) )
 
-         IF "DOCTYPE HTML PUBLIC" $ cArgs
+         IF "DOCTYPE HTML PUBLIC" $ cArgs .OR. "<html>" $ cArgs
             cArgs := StrTran( cArgs, '\"', '"' )
             cArgs := StrTran( cArgs, '\n', " " )
             cArgs := StrTran( cArgs, '""' )
@@ -1206,6 +1206,11 @@ STATIC FUNCTION hbqtui_pullSetToolTip( aLines, nFrom )
          aLines[ nFrom ] := ""
          nFrom++
       ENDDO
+      IF ! Empty( cString )
+         cString := StrTran( cString, "QString::fromUtf8" )
+         cString := StrTran( cString, '\"' )
+         cString := StrTran( cString, "\n", " " )
+      ENDIF
    ENDIF
 
    RETURN cString
