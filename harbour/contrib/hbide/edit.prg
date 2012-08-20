@@ -2641,31 +2641,78 @@ METHOD IdeEdit:reformatLine( nPos, nDeleted, nAdded )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_getFrontSpacesAndWordsByCursor( qCursor, /*@*/aWords )
-   LOCAL cLine
-   LOCAL nPostn := qCursor:position()
+   LOCAL cLine, cWord
+   LOCAL nPos   := qCursor:position()
    LOCAL nBlock := qCursor:blockNumber()
    LOCAL nStart := 0
 
    aWords := {}
    IF Empty( cLine := qCursor:block():text() )
       RETURN 0
+
    ELSE
       DO WHILE SubStr( cLine, ++nStart, 1 ) == " " ; ENDDO
+      nStart--
 
       qCursor:movePosition( QTextCursor_StartOfBlock )
-      IF nStart == 1
-         qCursor:select( QTextCursor_WordUnderCursor )
-         AAdd( aWords, qCursor:selectedText() )
+      qCursor:movePosition( QTextCursor_StartOfWord )
+      DO WHILE .T.
+         IF ! qCursor:movePosition( QTextCursor_EndOfWord, QTextCursor_KeepAnchor )
+            qCursor:movePosition( QTextCursor_NextWord )
+         ENDIF
+         IF qCursor:blockNumber() != nBlock
+            EXIT
+         ENDIF
+         IF ! Empty( cWord := qCursor:selectedText() )
+            AAdd( aWords, cWord )
+         ENDIF
          qCursor:clearSelection()
+      ENDDO
+
+   ENDIF
+   qCursor:clearSelection()
+   qCursor:setPosition( nPos )
+
+   RETURN nStart
+
+/*----------------------------------------------------------------------*/
+
+FUNCTION Xhbide_getFrontSpacesAndWordsByCursor( qCursor, /*@*/aWords )
+   LOCAL cLine, nPostn, cWord
+   LOCAL nPos   := qCursor:position()
+   LOCAL nBlock := qCursor:blockNumber()
+   LOCAL nStart := 0
+
+   aWords := {}
+   IF Empty( cLine := qCursor:block():text() )
+      RETURN 0
+
+   ELSE
+      DO WHILE SubStr( cLine, ++nStart, 1 ) == " " ; ENDDO
+      nStart--
+
+      qCursor:movePosition( QTextCursor_StartOfBlock )
+      nPostn := qCursor:position()
+      IF nStart == 0
+         qCursor:select( QTextCursor_WordUnderCursor )
+         IF ! Empty( cWord := qCursor:selectedText() )
+            AAdd( aWords, cWord )
+         ENDIF
+         qCursor:clearSelection()
+         qCursor:setPosition( nPostn )
       ENDIF
 
       DO WHILE qCursor:movePosition( QTextCursor_NextWord ) .AND. qCursor:blockNumber() == nBlock
+         nPostn := qCursor:position()
          qCursor:select( QTextCursor_WordUnderCursor )
-         AAdd( aWords, qCursor:selectedText() )
+         IF ! Empty( cWord := qCursor:selectedText() )
+            AAdd( aWords, cWord )
+         ENDIF
          qCursor:clearSelection()
+         qCursor:setPosition( nPostn )
       ENDDO
    ENDIF
-   qCursor:setPosition( nPostn )
+   qCursor:setPosition( nPos )
 
    RETURN nStart
 
@@ -2910,9 +2957,16 @@ STATIC FUNCTION hbide_alignAssignments( qCursor )
    LOCAL lAssign := .F.
 
    nIndent := hbide_getFrontSpacesAndWordsByCursor( qCursor, @aWords )
-   IF Len( aWords ) != 2 .AND. aWords[ 2 ] != ":="
+   IF Len( aWords ) < 2
       RETURN NIL
    ENDIF
+   IF Len( aWords ) == 2 .AND. aWords[ 2 ] != ":="
+      RETURN NIL
+   ENDIF
+   IF Len( aWords ) >= 4 .AND. aWords[ 4 ] != ":="
+      RETURN NIL
+   ENDIF
+
    cCLine   := qCursor:block():text()
    nPostn   := qCursor:position()
    nAssgnAt := At( ":=", cCLine )
@@ -2923,6 +2977,9 @@ STATIC FUNCTION hbide_alignAssignments( qCursor )
          IF ! Empty( cLine := qCursor:block():text() )
             nCol := hbide_getFrontSpacesAndWordsByCursor( qCursor, @aWords )
             IF nCol == nIndent .AND. Len( aWords ) >= 2 .AND. aWords[ 2 ] == ":="
+               nAssgnAt := Max( nAssgnAt, At( ":=", cLine ) )
+               lAssign  := .T.
+            ELSEIF nCol == nIndent .AND. Len( aWords ) >= 4 .AND. aWords[ 2 ] == ":" .AND. aWords[ 4 ] == ":="
                nAssgnAt := Max( nAssgnAt, At( ":=", cLine ) )
                lAssign  := .T.
             ELSE
@@ -2938,11 +2995,13 @@ STATIC FUNCTION hbide_alignAssignments( qCursor )
    IF lAssign
       DO WHILE .T.
          cLine := qCursor:block():text()
-         nCol  := At( ":=", cLine )
-         cLine := Pad( Trim( SubStr( cLine, 1, nCol - 1 ) ), nAssgnAt - 1 ) + ":=" + Trim( SubStr( cLine, nCol + 2 ) )
-         qCursor:movePosition( QTextCursor_EndOfLine, QTextCursor_KeepAnchor )
-         qCursor:removeSelectedText()
-         qCursor:insertText( cLine )
+         IF ! Empty( cLine )
+            nCol  := At( ":=", cLine )
+            cLine := Pad( Trim( SubStr( cLine, 1, nCol - 1 ) ), nAssgnAt - 1 ) + ":=" + Trim( SubStr( cLine, nCol + 2 ) )
+            qCursor:movePosition( QTextCursor_EndOfLine, QTextCursor_KeepAnchor )
+            qCursor:removeSelectedText()
+            qCursor:insertText( cLine )
+         ENDIF
          IF qCursor:blockNumber() == nCBlock
             EXIT
          ENDIF
