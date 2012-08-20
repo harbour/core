@@ -2957,60 +2957,60 @@ STATIC FUNCTION hbide_alignAssignments( qCursor )
    LOCAL lAssign := .F.
 
    nIndent := hbide_getFrontSpacesAndWordsByCursor( qCursor, @aWords )
-   IF Len( aWords ) < 2
-      RETURN NIL
-   ENDIF
-   IF Len( aWords ) == 2 .AND. aWords[ 2 ] != ":="
-      RETURN NIL
-   ENDIF
-   IF Len( aWords ) >= 4 .AND. aWords[ 4 ] != ":="
-      RETURN NIL
-   ENDIF
+   IF Len( aWords ) >= 2
+      IF Len( aWords ) == 2 .AND. aWords[ 2 ] == ":=" .OR. ;
+         Len( aWords ) == 4 .AND. aWords[ 4 ] == ":=" .OR. ;
+         Len( aWords ) == 5 .AND. aWords[ 5 ] == ":=" .AND. aWords[ 1 ] == "::"
 
-   cCLine   := qCursor:block():text()
-   nPostn   := qCursor:position()
-   nAssgnAt := At( ":=", cCLine )
-   nCBlock  := qCursor:blockNumber()
+         cCLine   := qCursor:block():text()
+         nPostn   := qCursor:position()
+         nAssgnAt := At( ":=", cCLine )
+         nCBlock  := qCursor:blockNumber()
 
-   DO WHILE .T.
-      IF qCursor:movePosition( QTextCursor_PreviousBlock, QTextCursor_MoveAnchor )
-         IF ! Empty( cLine := qCursor:block():text() )
-            nCol := hbide_getFrontSpacesAndWordsByCursor( qCursor, @aWords )
-            IF nCol == nIndent .AND. Len( aWords ) >= 2 .AND. aWords[ 2 ] == ":="
-               nAssgnAt := Max( nAssgnAt, At( ":=", cLine ) )
-               lAssign  := .T.
-            ELSEIF nCol == nIndent .AND. Len( aWords ) >= 4 .AND. aWords[ 2 ] == ":" .AND. aWords[ 4 ] == ":="
-               nAssgnAt := Max( nAssgnAt, At( ":=", cLine ) )
-               lAssign  := .T.
+         DO WHILE .T.
+            IF qCursor:movePosition( QTextCursor_PreviousBlock, QTextCursor_MoveAnchor )
+               IF ! Empty( cLine := qCursor:block():text() )
+                  nCol := hbide_getFrontSpacesAndWordsByCursor( qCursor, @aWords )
+                  IF nCol == nIndent .AND. Len( aWords ) >= 2 .AND. aWords[ 2 ] == ":="
+                     nAssgnAt := Max( nAssgnAt, At( ":=", cLine ) )
+                     lAssign  := .T.
+                  ELSEIF nCol == nIndent .AND. Len( aWords ) >= 4 .AND. aWords[ 2 ] == ":" .AND. aWords[ 4 ] == ":="
+                     nAssgnAt := Max( nAssgnAt, At( ":=", cLine ) )
+                     lAssign  := .T.
+                  ELSEIF nCol == nIndent .AND. Len( aWords ) >= 5 .AND. aWords[ 1 ] == "::" .AND. aWords[ 3 ] == ":" .AND. aWords[ 5 ] == ":="
+                     nAssgnAt := Max( nAssgnAt, At( ":=", cLine ) )
+                     lAssign  := .T.
+                  ELSE
+                     EXIT
+                  ENDIF
+               ENDIF
             ELSE
                EXIT
             ENDIF
-         ENDIF
-      ELSE
-         EXIT
-      ENDIF
-   ENDDO
-   /* Anyway we are TO move TO NEXT block */
-   qCursor:movePosition( QTextCursor_NextBlock, QTextCursor_MoveAnchor )
-   IF lAssign
-      DO WHILE .T.
-         cLine := qCursor:block():text()
-         IF ! Empty( cLine )
-            nCol  := At( ":=", cLine )
-            cLine := Pad( Trim( SubStr( cLine, 1, nCol - 1 ) ), nAssgnAt - 1 ) + ":=" + Trim( SubStr( cLine, nCol + 2 ) )
-            qCursor:movePosition( QTextCursor_EndOfLine, QTextCursor_KeepAnchor )
-            qCursor:removeSelectedText()
-            qCursor:insertText( cLine )
-         ENDIF
-         IF qCursor:blockNumber() == nCBlock
-            EXIT
-         ENDIF
+         ENDDO
+         /* Anyway we are TO move TO NEXT block */
          qCursor:movePosition( QTextCursor_NextBlock, QTextCursor_MoveAnchor )
-      ENDDO
-      /* We have reached on current line */
-      qCursor:movePosition( QTextCursor_EndOfBlock, QTextCursor_MoveAnchor )
-   ELSE
-      qCursor:setPosition( nPostn )
+         IF lAssign
+            DO WHILE .T.
+               cLine := qCursor:block():text()
+               IF ! Empty( cLine )
+                  nCol  := At( ":=", cLine )
+                  cLine := Pad( Trim( SubStr( cLine, 1, nCol - 1 ) ), nAssgnAt - 1 ) + ":=" + Trim( SubStr( cLine, nCol + 2 ) )
+                  qCursor:movePosition( QTextCursor_EndOfLine, QTextCursor_KeepAnchor )
+                  qCursor:removeSelectedText()
+                  qCursor:insertText( cLine )
+               ENDIF
+               IF qCursor:blockNumber() == nCBlock
+                  EXIT
+               ENDIF
+               qCursor:movePosition( QTextCursor_NextBlock, QTextCursor_MoveAnchor )
+            ENDDO
+            /* We have reached on current line */
+            qCursor:movePosition( QTextCursor_EndOfBlock, QTextCursor_MoveAnchor )
+         ELSE
+            qCursor:setPosition( nPostn )
+         ENDIF
+      ENDIF
    ENDIF
 
    RETURN NIL
