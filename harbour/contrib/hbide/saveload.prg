@@ -128,6 +128,7 @@
 #define __buttonEditorSave_clicked__              2049
 #define __buttonEditorClose_clicked__             2050
 #define __tableVar_keyPress__                     2051
+#define __listDictNames_currentRowChanged__       2052
 
 /*----------------------------------------------------------------------*/
 //
@@ -1252,6 +1253,7 @@ CLASS IdeSetup INHERIT IdeObject
    METHOD pushThemesData()
    METHOD getThemeData( nTheme )
    METHOD viewIt( cFileName, lSaveAs, lSave, lReadOnly, lApplyHiliter )
+   METHOD uiDictionaries()
 
    ENDCLASS
 
@@ -1473,7 +1475,9 @@ METHOD IdeSetup:connectSlots()
    ::oUI:buttonVSSExe        :connect( "clicked()"               , {| | ::execEvent( __buttonVSSExe_clicked__                           ) } )
    ::oUI:buttonVSSDatabase   :connect( "clicked()"               , {| | ::execEvent( __buttonVSSDatabase_clicked__                      ) } )
 
-   ::oUI:tableVar            :connect( "itemActivated(QTableWidgetItem*)", {|p| ::execEvent( __tableVar_keyPress__, p                  ) } )
+   ::oUI:tableVar            :connect( "itemActivated(QTableWidgetItem*)", {|p| ::execEvent( __tableVar_keyPress__, p                   ) } )
+
+   ::oUI:listDictNames       :connect( "currentRowChanged(int)"  , {|i| ::execEvent( __listDictNames_currentRowChanged__      , i       ) } )
 
    RETURN Self
 
@@ -1762,6 +1766,7 @@ METHOD IdeSetup:show()
       ::setIcons()
       ::connectSlots()
 
+      ::oUI:stackedWidget:setCurrentIndex( 8 )
       ::oUI:stackedWidget:setCurrentIndex( 0 )
       ::oUI:hide()
    ENDIF
@@ -1841,6 +1846,9 @@ METHOD IdeSetup:execEvent( nEvent, p, p1 )
       qItem  := ::oUI:treeWidget:currentItem()
       IF ( nIndex := ascan( ::aTree, qItem:text( 0 ) ) ) > 0
          ::oUI:stackedWidget:setCurrentIndex( nIndex - 1 )
+         IF nIndex == 7 /* Dictionaries */
+            ::uiDictionaries()
+         ENDIF
       ENDIF
       EXIT
 
@@ -2141,9 +2149,29 @@ METHOD IdeSetup:execEvent( nEvent, p, p1 )
       ::oINI:cToolbarSize := ::oUI:comboTBSize:currentText()
       ::oDK:setToolbarSize( val( ::oINI:cToolbarSize ) )
       EXIT
+
+   CASE __listDictNames_currentRowChanged__
+      IF p >= 0 .AND. p < Len( ::oIde:aUserDict )
+         ::oIde:aUserDict[ p + 1 ]:populateUI( ::oUI )
+      ENDIF
+      EXIT
+
    ENDSWITCH
 
    RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeSetup:uiDictionaries()
+   LOCAL oDict
+
+   ::oUI:listDictNames:clear()
+   ::oUI:listDictNames:setCurrentRow( -1 )
+   FOR EACH oDict IN ::oIde:aUserDict
+      ::oUI:listDictNames:addItem( oDict:cFilename )
+   NEXT
+
+   RETURN NIL
 
 /*----------------------------------------------------------------------*/
 

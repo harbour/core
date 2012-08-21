@@ -652,7 +652,7 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1, p2 )
    CASE 1001                                /* Fired from hbqt_hbqplaintextedit.cpp */
       SWITCH p
       CASE QEvent_MouseButtonDblClick
-         ::lCopyWhenDblClicked := .t.
+      // ::lCopyWhenDblClicked := .t.
          ::clickFuncHelp()
          EXIT
       CASE QEvent_MouseButtonPress
@@ -1663,7 +1663,7 @@ METHOD IdeEdit:setTooltipMark( nIndex )
    IF Len( ::aBookMarks ) >= nIndex
       oBlock := ::qEdit:document():findBlockByNumber( ::aBookMarks[ nIndex ] - 1 )
       IF oBlock:isValid()
-         ::aMarkTBtns[ nIndex ]:setTooltip( oBlock:text() )
+         ::aMarkTBtns[ nIndex ]:setTooltip( hb_ntos( ::aBookMarks[ nIndex ] ) + " : " + oBlock:text() )
       ENDIF
    ENDIF
 

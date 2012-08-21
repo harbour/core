@@ -73,19 +73,24 @@
 /*----------------------------------------------------------------------*/
 
 #define DIC_FILENAME                              1
-#define DIC_CASESENSTITIVE                        2
-#define DIC_CONVMODE                              3
-#define DIC_AUTOCOMPLETE                          4
-#define DIC_BGCOLOR                               5
+#define DIC_ACTIVE                                2
+#define DIC_APPLYTO                               3
+#define DIC_CONVMODE                              4
+#define DIC_CASESENSTITIVE                        5
+#define DIC_BOLD                                  6
+#define DIC_ITALIC                                7
+#define DIC_UNDERLINE                             8
+#define DIC_TXTCOLOR                              9
+#define DIC_BGCOLOR                               10
 
-#define DIC_NUM_VRBLS                             5
+#define DIC_NUM_VRBLS                             10
 
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_loadUserDictionaries( oIde )
-   //                File  , CaseSensitive , ConvMode=asis, upper, lower , include in autocomplete, bgColor
+   //                File  , Active, Applyto, ConvMode=asis upper lower, CaseSensitive,  bold, italic, uline, txtcolor, bgColor
    #if 1
-   LOCAL aDict := { "E:\harbour\contrib\hbide\projects\my.dic;NO;ASIS;YES;{122,133,233}" }
+   LOCAL aDict := { "E:\harbour\contrib\hbide\projects\my.dic;YES;PRG.C.CPP;ASIS;NO;NO;NO;NO;{0,0,0};{122,133,233}" }
    #else
    LOCAL aDict := {}
    #endif
@@ -107,6 +112,7 @@ CLASS IdeDictionary INHERIT IdeObject
    DATA   cDictInfo                               INIT ""
    DATA   cFilename                               INIT ""
    DATA   lActive                                 INIT .T.
+   DATA   cApplyTo                                INIT ""
    DATA   lToPrg                                  INIT .T.
    DATA   lToC                                    INIT .F.
    DATA   lToCPP                                  INIT .F.
@@ -120,13 +126,12 @@ CLASS IdeDictionary INHERIT IdeObject
    DATA   lBold                                   INIT .F.
    DATA   lItalic                                 INIT .F.
    DATA   lULine                                  INIT .F.
-   DATA   lTxtColor                               INIT .F.
-   DATA   lBgBColor                               INIT .F.
    DATA   cTxtColor                               INIT ""
    DATA   cBgColor                                INIT ""
 
-   DATA   qBGColor
-   DATA   lAutoComplete                           INIT .T.
+   DATA   qTxtColor
+   DATA   qBgColor
+
    DATA   aItems                                  INIT {}
 
    METHOD new( oIde )
@@ -134,6 +139,7 @@ CLASS IdeDictionary INHERIT IdeObject
    METHOD destroy()                               VIRTUAL
    METHOD load( cDict )
    METHOD toString()
+   METHOD populateUI( oUI )
 
    ENDCLASS
 
@@ -160,19 +166,36 @@ METHOD IdeDictionary:load( cDict )
       asize( a_, DIC_NUM_VRBLS )
 
       DEFAULT a_[ DIC_FILENAME       ] TO ""
-      DEFAULT a_[ DIC_CASESENSTITIVE ] TO "NO"
+      DEFAULT a_[ DIC_ACTIVE         ] TO "YES"
+      DEFAULT a_[ DIC_APPLYTO        ] TO ".PRG.C.CPP"
       DEFAULT a_[ DIC_CONVMODE       ] TO "ASIS"
-      DEFAULT a_[ DIC_AUTOCOMPLETE   ] TO "YES"
-      DEFAULT a_[ DIC_BGCOLOR        ] TO "NONE"
+      DEFAULT a_[ DIC_CASESENSTITIVE ] TO "NO"
+      DEFAULT a_[ DIC_BOLD           ] TO "NO"
+      DEFAULT a_[ DIC_ITALIC         ] TO "NO"
+      DEFAULT a_[ DIC_UNDERLINE      ] TO "NO"
+      DEFAULT a_[ DIC_TXTCOLOR       ] TO ""
+      DEFAULT a_[ DIC_BGCOLOR        ] TO ""
+
 
       ::cDictInfo       := cDict
-      ::cFilename       := a_[ 1 ]
-      ::lCaseSensitive  := a_[ 2 ] == "YES"
-      ::cConvMode       := a_[ 3 ]
-      ::lAutoComplete   := iif( a_[ 4 ] == "NO", .f., .t. )
-      ::cBgColor        := a_[ 5 ]
+      ::cFilename       := a_[ DIC_FILENAME ]
+      ::lActive         := a_[ DIC_ACTIVE ] == "YES"
+      ::cApplyTo        := a_[ DIC_APPLYTO ]
+      ::cConvMode       := a_[ DIC_CONVMODE ]
+      ::lCaseSensitive  := a_[ DIC_CASESENSTITIVE ] == "YES"
+      ::lBold           := a_[ DIC_BOLD ] == "YES"
+      ::lItalic         := a_[ DIC_ITALIC ] == "YES"
+      ::lULine          := a_[ DIC_UNDERLINE ] == "YES"
+      ::cTxtColor       := a_[ DIC_TXTCOLOR ]
+      ::cBgColor        := a_[ DIC_BGCOLOR ]
 
-      IF !( ::cBgColor == "NONE" )
+      IF ! Empty( ::cTxtColor )
+         c_:= hbide_evalAsIs( ::cBgColor )
+         IF HB_ISARRAY( c_ ) .AND. Len( c_ ) == 3
+            ::qTxtColor := QColor( c_[ 1 ], c_[ 2 ], c_[ 3 ] )
+         ENDIF
+      ENDIF
+      IF ! Empty( ::cBgColor )
          c_:= hbide_evalAsIs( ::cBgColor )
          IF HB_ISARRAY( c_ ) .AND. Len( c_ ) == 3
             ::qBgColor := QColor( c_[ 1 ], c_[ 2 ], c_[ 3 ] )
@@ -218,3 +241,27 @@ METHOD IdeDictionary:toString()
    RETURN cDict
 
 /*----------------------------------------------------------------------*/
+
+METHOD IdeDictionary:populateUI( oUI )
+
+   oUI:checkDictToPrg  : setChecked( ".PRG" $ ::cApplyTo )
+   oUI:checkDictToC    : setChecked( ".C"   $ ::cApplyTo )
+   oUI:checkDictToCpp  : setChecked( ".CPP" $ ::cApplyTo )
+   oUI:checkDictToCh   : setChecked( ".CH"  $ ::cApplyTo )
+   oUI:checkDictToh    : setChecked( ".H"   $ ::cApplyTo )
+   oUI:checkDictToIni  : setChecked( ".INI" $ ::cApplyTo )
+   oUI:checkDictToTxt  : setChecked( ".TXT" $ ::cApplyTo )
+   oUI:checkDictToHbp  : setChecked( ".HBP" $ ::cApplyTo )
+
+   oUI:checkDictActive    : setChecked( ::lActive )
+   oUI:checkDictCaseSens  : setChecked( ::lCaseSensitive )
+   oUI:checkDictBold      : setChecked( ::lBold )
+   oUI:checkDictItalic    : setChecked( ::lItalic )
+   oUI:checkDictULine     : setChecked( ::lULine )
+   oUI:checkDictColorText : setChecked( ! Empty( ::cTxtColor ) )
+   oUI:checkDictColorBack : setChecked( ! Empty( ::cBgColor ) )
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
