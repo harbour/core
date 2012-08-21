@@ -158,6 +158,7 @@ CLASS IdeEdit INHERIT IdeObject
 
    METHOD setReadOnly( lReadOnly )
    METHOD setNewMark()
+   METHOD setTooltipMark( nIndex )
    METHOD gotoMark( nIndex )
    METHOD duplicateLine()
    METHOD deleteLine()
@@ -1656,6 +1657,20 @@ METHOD IdeEdit:relayMarkButtons()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeEdit:setTooltipMark( nIndex )
+   LOCAL oBlock
+
+   IF Len( ::aBookMarks ) >= nIndex
+      oBlock := ::qEdit:document():findBlockByNumber( ::aBookMarks[ nIndex ] - 1 )
+      IF oBlock:isValid()
+         ::aMarkTBtns[ nIndex ]:setTooltip( oBlock:text() )
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeEdit:gotoMark( nIndex )
 
    IF Len( ::aBookMarks ) >= nIndex
@@ -2671,47 +2686,6 @@ FUNCTION hbide_getFrontSpacesAndWordsByCursor( qCursor, /*@*/aWords )
 
    ENDIF
    qCursor:clearSelection()
-   qCursor:setPosition( nPos )
-
-   RETURN nStart
-
-/*----------------------------------------------------------------------*/
-
-FUNCTION Xhbide_getFrontSpacesAndWordsByCursor( qCursor, /*@*/aWords )
-   LOCAL cLine, nPostn, cWord
-   LOCAL nPos   := qCursor:position()
-   LOCAL nBlock := qCursor:blockNumber()
-   LOCAL nStart := 0
-
-   aWords := {}
-   IF Empty( cLine := qCursor:block():text() )
-      RETURN 0
-
-   ELSE
-      DO WHILE SubStr( cLine, ++nStart, 1 ) == " " ; ENDDO
-      nStart--
-
-      qCursor:movePosition( QTextCursor_StartOfBlock )
-      nPostn := qCursor:position()
-      IF nStart == 0
-         qCursor:select( QTextCursor_WordUnderCursor )
-         IF ! Empty( cWord := qCursor:selectedText() )
-            AAdd( aWords, cWord )
-         ENDIF
-         qCursor:clearSelection()
-         qCursor:setPosition( nPostn )
-      ENDIF
-
-      DO WHILE qCursor:movePosition( QTextCursor_NextWord ) .AND. qCursor:blockNumber() == nBlock
-         nPostn := qCursor:position()
-         qCursor:select( QTextCursor_WordUnderCursor )
-         IF ! Empty( cWord := qCursor:selectedText() )
-            AAdd( aWords, cWord )
-         ENDIF
-         qCursor:clearSelection()
-         qCursor:setPosition( nPostn )
-      ENDDO
-   ENDIF
    qCursor:setPosition( nPos )
 
    RETURN nStart

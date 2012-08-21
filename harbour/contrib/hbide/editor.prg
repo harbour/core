@@ -132,6 +132,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD printPreview()
    METHOD paintRequested( qPrinter )
    METHOD setMark()
+   METHOD setTooltipMark( nIndex )
    METHOD gotoMark( nIndex )
    METHOD goto( nLine )
    METHOD formatBraces()
@@ -1088,6 +1089,15 @@ METHOD IdeEditsManager:setMark()
    LOCAL oEdit
    IF !empty( oEdit := ::getEditObjectCurrent() )
       oEdit:setNewMark()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:setTooltipMark( nIndex )
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:setTooltipMark( nIndex )
    ENDIF
    RETURN Self
 

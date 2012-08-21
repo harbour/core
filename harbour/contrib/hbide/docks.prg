@@ -1813,7 +1813,8 @@ METHOD IdeDocks:getMarkWidget( nIndex )
    ::oIde:aMarkTBtns[ nIndex ]:setMaximumWidth( 12 )
    ::oIde:aMarkTBtns[ nIndex ]:setStyleSheet( "background-color: " + aColors[ nIndex ] + ";" )
    ::oIde:aMarkTBtns[ nIndex ]:hide()
-   ::oIde:aMarkTBtns[ nIndex ]:connect( "clicked()", {|| ::oEM:gotoMark( nIndex ) } )
+   ::oIde:aMarkTBtns[ nIndex ]:connect( "clicked()" , {|| ::oEM:gotoMark( nIndex ) } )
+   ::oIde:aMarkTBtns[ nIndex ]:connect( QEvent_Enter, {|| ::oEM:setTooltipMark( nIndex ) } )
 
    RETURN ::oIde:aMarkTBtns[ nIndex ]
 
