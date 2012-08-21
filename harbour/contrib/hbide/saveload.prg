@@ -129,6 +129,27 @@
 #define __buttonEditorClose_clicked__             2050
 #define __tableVar_keyPress__                     2051
 #define __listDictNames_currentRowChanged__       2052
+#define __btnDictColorText_clicked__              2053
+#define __btnDictColorBack_clicked__              2054
+#define __checkDictToPrg_stateChanged__           2056
+#define __checkDictToC_stateChanged__             2057
+#define __checkDictToCpp_stateChanged__           2058
+#define __checkDictToCh_stateChanged__            2059
+#define __checkDictToH_stateChanged__             2060
+#define __checkDictToIni_stateChanged__           2061
+#define __checkDictToTxt_stateChanged__           2062
+#define __checkDictToHbp_stateChanged__           2063
+#define __checkDictActive_stateChanged__          2064
+#define __checkDictCaseSens_stateChanged__        2065
+#define __checkDictBold_stateChanged__            2066
+#define __checkDictItalic_stateChanged__          2067
+#define __checkDictULine_stateChanged__           2068
+#define __checkDictColorText_stateChanged__       2069
+#define __checkDictColorBack_stateChanged__       2070
+#define __radioDictConvNone_clicked__             2071
+#define __radioDictToLower_clicked__              2072
+#define __radioDictToUpper_clicked__              2073
+#define __radioDictAsIn_clicked__                 2074
 
 /*----------------------------------------------------------------------*/
 //
@@ -1477,7 +1498,32 @@ METHOD IdeSetup:connectSlots()
 
    ::oUI:tableVar            :connect( "itemActivated(QTableWidgetItem*)", {|p| ::execEvent( __tableVar_keyPress__, p                   ) } )
 
+   /* User Dictionaries */
    ::oUI:listDictNames       :connect( "currentRowChanged(int)"  , {|i| ::execEvent( __listDictNames_currentRowChanged__      , i       ) } )
+// ::oUI:listDictNames       :connect( "currentItemChanged(QListWidgetItem*,QListWidgetItem*)"  , {|p,p1| ::execEvent( __listDictNames_currentRowChanged__ , p,p1       ) } )
+   ::oUI:btnDictColorText    :connect( "clicked()"               , {| | ::execEvent( __btnDictColorText_clicked__                       ) } )
+   ::oUI:btnDictColorBack    :connect( "clicked()"               , {| | ::execEvent( __btnDictColorBack_clicked__                       ) } )
+
+   ::oUI:checkDictActive     :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictActive_stateChanged__   , i             ) } )
+   ::oUI:checkDictToPrg      :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictToPrg_stateChanged__    , i             ) } )
+   ::oUI:checkDictToC        :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictToC_stateChanged__      , i             ) } )
+   ::oUI:checkDictToCpp      :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictToCpp_stateChanged__    , i             ) } )
+   ::oUI:checkDictToCh       :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictToCh_stateChanged__     , i             ) } )
+   ::oUI:checkDictToH        :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictToH_stateChanged__      , i             ) } )
+   ::oUI:checkDictToIni      :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictToIni_stateChanged__    , i             ) } )
+   ::oUI:checkDictToTxt      :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictToTxt_stateChanged__    , i             ) } )
+   ::oUI:checkDictToHbp      :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictToHbp_stateChanged__    , i             ) } )
+   ::oUI:checkDictActive     :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictActive_stateChanged__   , i             ) } )
+   ::oUI:checkDictCaseSens   :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictCaseSens_stateChanged__ , i             ) } )
+   ::oUI:checkDictBold       :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictBold_stateChanged__     , i             ) } )
+   ::oUI:checkDictItalic     :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictItalic_stateChanged__   , i             ) } )
+   ::oUI:checkDictULine      :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictULine_stateChanged__    , i             ) } )
+   ::oUI:checkDictColorText  :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictColorText_stateChanged__, i             ) } )
+   ::oUI:checkDictColorBack  :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictColorBack_stateChanged__, i             ) } )
+   ::oUI:radioDictConvNone   :connect( "clicked()"               , {| | ::execEvent( __radioDictConvNone_clicked__                      ) } )
+   ::oUI:radioDictToLower    :connect( "clicked()"               , {| | ::execEvent( __radioDictToLower_clicked__                       ) } )
+   ::oUI:radioDictToUpper    :connect( "clicked()"               , {| | ::execEvent( __radioDictToUpper_clicked__                       ) } )
+   ::oUI:radioDictAsIn       :connect( "clicked()"               , {| | ::execEvent( __radioDictAsIn_clicked__                          ) } )
 
    RETURN Self
 
@@ -2150,12 +2196,53 @@ METHOD IdeSetup:execEvent( nEvent, p, p1 )
       ::oDK:setToolbarSize( val( ::oINI:cToolbarSize ) )
       EXIT
 
+   CASE __btnDictColorBack_clicked__
+      p := ::oUI:listDictNames:currentRow()
+      IF p >= 0 .AND. p < Len( ::oIde:aUserDict )
+         ::oIde:aUserDict[ p + 1 ]:execColorDialog( ::oUI, "back" )
+      ENDIF
+      EXIT
+   CASE __btnDictColorText_clicked__
+      p := ::oUI:listDictNames:currentRow()
+      IF p >= 0 .AND. p < Len( ::oIde:aUserDict )
+         ::oIde:aUserDict[ p + 1 ]:execColorDialog( ::oUI, "text" )
+      ENDIF
+      EXIT
    CASE __listDictNames_currentRowChanged__
       IF p >= 0 .AND. p < Len( ::oIde:aUserDict )
          ::oIde:aUserDict[ p + 1 ]:populateUI( ::oUI )
       ENDIF
       EXIT
-
+   CASE __checkDictActive_stateChanged__
+   CASE __checkDictToPrg_stateChanged__
+   CASE __checkDictToC_stateChanged__
+   CASE __checkDictToCpp_stateChanged__
+   CASE __checkDictToCh_stateChanged__
+   CASE __checkDictToH_stateChanged__
+   CASE __checkDictToIni_stateChanged__
+   CASE __checkDictToTxt_stateChanged__
+   CASE __checkDictToHbp_stateChanged__
+   CASE __checkDictActive_stateChanged__
+   CASE __checkDictCaseSens_stateChanged__
+   CASE __checkDictBold_stateChanged__
+   CASE __checkDictItalic_stateChanged__
+   CASE __checkDictULine_stateChanged__
+   CASE __checkDictColorText_stateChanged__
+   CASE __checkDictColorBack_stateChanged__
+      nRow := ::oUI:listDictNames:currentRow()
+      IF nRow >= 0 .AND. nRow < Len( ::oIde:aUserDict )
+         ::oIde:aUserDict[ nRow + 1 ]:checkStateChanged( ::oUI, p, p1 )
+      ENDIF
+      EXIT
+   CASE __radioDictConvNone_clicked__
+   CASE __radioDictToLower_clicked__
+   CASE __radioDictToUpper_clicked__
+   CASE __radioDictAsIn_clicked__
+      p := ::oUI:listDictNames:currentRow()
+      IF p >= 0 .AND. p < Len( ::oIde:aUserDict )
+         ::oIde:aUserDict[ p + 1 ]:radioButtonClicked( ::oUI, p )
+      ENDIF
+      EXIT
    ENDSWITCH
 
    RETURN Self

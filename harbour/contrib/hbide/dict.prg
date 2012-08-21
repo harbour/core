@@ -1,4 +1,4 @@
-/*
+         /*
  * $Id$
  */
 
@@ -72,6 +72,26 @@
 
 /*----------------------------------------------------------------------*/
 
+#define __checkDictToPrg_stateChanged__           2056
+#define __checkDictToC_stateChanged__             2057
+#define __checkDictToCpp_stateChanged__           2058
+#define __checkDictToCh_stateChanged__            2059
+#define __checkDictToH_stateChanged__             2060
+#define __checkDictToIni_stateChanged__           2061
+#define __checkDictToTxt_stateChanged__           2062
+#define __checkDictToHbp_stateChanged__           2063
+#define __checkDictActive_stateChanged__          2064
+#define __checkDictCaseSens_stateChanged__        2065
+#define __checkDictBold_stateChanged__            2066
+#define __checkDictItalic_stateChanged__          2067
+#define __checkDictULine_stateChanged__           2068
+#define __checkDictColorText_stateChanged__       2069
+#define __checkDictColorBack_stateChanged__       2070
+#define __radioDictConvNone_clicked__             2071
+#define __radioDictToLower_clicked__              2072
+#define __radioDictToUpper_clicked__              2073
+#define __radioDictAsIn_clicked__                 2074
+
 #define DIC_FILENAME                              1
 #define DIC_ACTIVE                                2
 #define DIC_APPLYTO                               3
@@ -90,7 +110,7 @@
 FUNCTION hbide_loadUserDictionaries( oIde )
    //                File  , Active, Applyto, ConvMode=asis upper lower, CaseSensitive,  bold, italic, uline, txtcolor, bgColor
    #if 1
-   LOCAL aDict := { "E:\harbour\contrib\hbide\projects\my.dic;YES;PRG.C.CPP;ASIS;NO;NO;NO;NO;{0,0,0};{122,133,233}" }
+   LOCAL aDict := { "C:\harbour\contrib\hbide\projects\my.dic;YES;.PRG.C.CPP;ASIS;NO;NO;NO;NO;{0,0,0};{122,133,233}" }
    #else
    LOCAL aDict := {}
    #endif
@@ -122,17 +142,19 @@ CLASS IdeDictionary INHERIT IdeObject
    DATA   lToTxt                                  INIT .F.
    DATA   lToHbp                                  INIT .F.
    DATA   cConvMode                               INIT "ASIS"
-   DATA   lCaseSensitive                          INIT .F.
+   DATA   lCaseSens                               INIT .F.
    DATA   lBold                                   INIT .F.
    DATA   lItalic                                 INIT .F.
    DATA   lULine                                  INIT .F.
+   DATA   lTxtColor                               INIT .F.
+   DATA   lBgColor                                INIT .F.
    DATA   cTxtColor                               INIT ""
    DATA   cBgColor                                INIT ""
 
-   DATA   qTxtColor
-   DATA   qBgColor
-
    DATA   aItems                                  INIT {}
+
+   DATA   aTxtRGB                                 INIT {}
+   DATA   aBgRGB                                  INIT {}
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -140,6 +162,10 @@ CLASS IdeDictionary INHERIT IdeObject
    METHOD load( cDict )
    METHOD toString()
    METHOD populateUI( oUI )
+   METHOD execColorDialog( oUI, cMode )
+   METHOD setButtonColors( oUI )
+   METHOD checkStateChanged( oUI, p, p1 )
+   METHOD radioButtonClicked( oUI, p )
 
    ENDCLASS
 
@@ -181,24 +207,34 @@ METHOD IdeDictionary:load( cDict )
       ::cFilename       := a_[ DIC_FILENAME ]
       ::lActive         := a_[ DIC_ACTIVE ] == "YES"
       ::cApplyTo        := a_[ DIC_APPLYTO ]
+      ::lToPRG          := ".PRG" $ a_[ DIC_APPLYTO ]
+      ::lToC            := ".C"   $ a_[ DIC_APPLYTO ]
+      ::lToCPP          := ".CPP" $ a_[ DIC_APPLYTO ]
+      ::lToCH           := ".CH"  $ a_[ DIC_APPLYTO ]
+      ::lToH            := ".H"   $ a_[ DIC_APPLYTO ]
+      ::lToIni          := ".INI" $ a_[ DIC_APPLYTO ]
+      ::lToTxt          := ".TXT" $ a_[ DIC_APPLYTO ]
+      ::lToHbp          := ".HBP" $ a_[ DIC_APPLYTO ]
       ::cConvMode       := a_[ DIC_CONVMODE ]
-      ::lCaseSensitive  := a_[ DIC_CASESENSTITIVE ] == "YES"
+      ::lCaseSens       := a_[ DIC_CASESENSTITIVE ] == "YES"
       ::lBold           := a_[ DIC_BOLD ] == "YES"
       ::lItalic         := a_[ DIC_ITALIC ] == "YES"
       ::lULine          := a_[ DIC_UNDERLINE ] == "YES"
+      ::lTxtColor       := ! Empty( a_[ DIC_TXTCOLOR ] )
+      ::lBgColor        := ! Empty( a_[ DIC_BGCOLOR ] )
       ::cTxtColor       := a_[ DIC_TXTCOLOR ]
       ::cBgColor        := a_[ DIC_BGCOLOR ]
 
       IF ! Empty( ::cTxtColor )
-         c_:= hbide_evalAsIs( ::cBgColor )
+         c_:= hbide_evalAsIs( ::cTxtColor )
          IF HB_ISARRAY( c_ ) .AND. Len( c_ ) == 3
-            ::qTxtColor := QColor( c_[ 1 ], c_[ 2 ], c_[ 3 ] )
+            ::aTxtRGB := AClone( c_ )
          ENDIF
       ENDIF
       IF ! Empty( ::cBgColor )
          c_:= hbide_evalAsIs( ::cBgColor )
          IF HB_ISARRAY( c_ ) .AND. Len( c_ ) == 3
-            ::qBgColor := QColor( c_[ 1 ], c_[ 2 ], c_[ 3 ] )
+            ::aBgRGB := AClone( c_ )
          ENDIF
       ENDIF
 
@@ -236,32 +272,160 @@ METHOD IdeDictionary:load( cDict )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDictionary:toString()
-   LOCAL cDict := ""
+// LOCAL aDict := { "C:\harbour\contrib\hbide\projects\my.dic;YES;.PRG.C.CPP;ASIS;NO;NO;NO;NO;{0,0,0};{122,133,233}" }
 
-   RETURN cDict
+   ::cDictInfo := ::cFilename + ";" + ;
+                  iif( ::lActive  , "YES", "NO" ) + ";" + ;
+                  iif( ::lToPRG   , ".PRG", ""  ) + ;
+                  iif( ::lToC     , ".C"  , ""  ) + ;
+                  iif( ::lToCPP   , ".CPP", ""  ) + ;
+                  iif( ::lToCH    , ".CPP", ""  ) + ;
+                  iif( ::lToH     , ".H"  , ""  ) + ;
+                  iif( ::lToIni   , ".INI", ""  ) + ;
+                  iif( ::lToTxt   , ".TXT", ""  ) + ;
+                  iif( ::lToHbp   , ".HBP", ""  ) + ";" + ;
+                  ::cConvMode                     + ";" + ;
+                  iif( ::lCaseSens, "YES", "NO" ) + ";" + ;
+                  iif( ::lBold    , "YES", "NO" ) + ";" + ;
+                  iif( ::lItalic  , "YES", "NO" ) + ";" + ;
+                  iif( ::lULine   , "YES", "NO" ) + ";" + ;
+                  ::cTxtColor                     + ";" + ;
+                  ::cBgColor
+HB_TRACE( HB_TR_ALWAYS, ::cDictInfo )
+   RETURN ::cDictInfo
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDictionary:populateUI( oUI )
 
-   oUI:checkDictToPrg  : setChecked( ".PRG" $ ::cApplyTo )
-   oUI:checkDictToC    : setChecked( ".C"   $ ::cApplyTo )
-   oUI:checkDictToCpp  : setChecked( ".CPP" $ ::cApplyTo )
-   oUI:checkDictToCh   : setChecked( ".CH"  $ ::cApplyTo )
-   oUI:checkDictToh    : setChecked( ".H"   $ ::cApplyTo )
-   oUI:checkDictToIni  : setChecked( ".INI" $ ::cApplyTo )
-   oUI:checkDictToTxt  : setChecked( ".TXT" $ ::cApplyTo )
-   oUI:checkDictToHbp  : setChecked( ".HBP" $ ::cApplyTo )
+   oUI:checkDictToPrg     : setChecked( ".PRG" $ ::cApplyTo )
+   oUI:checkDictToC       : setChecked( ".C"   $ ::cApplyTo )
+   oUI:checkDictToCpp     : setChecked( ".CPP" $ ::cApplyTo )
+   oUI:checkDictToCh      : setChecked( ".CH"  $ ::cApplyTo )
+   oUI:checkDictToh       : setChecked( ".H"   $ ::cApplyTo )
+   oUI:checkDictToIni     : setChecked( ".INI" $ ::cApplyTo )
+   oUI:checkDictToTxt     : setChecked( ".TXT" $ ::cApplyTo )
+   oUI:checkDictToHbp     : setChecked( ".HBP" $ ::cApplyTo )
 
    oUI:checkDictActive    : setChecked( ::lActive )
-   oUI:checkDictCaseSens  : setChecked( ::lCaseSensitive )
-   oUI:checkDictBold      : setChecked( ::lBold )
+   oUI:checkDictCaseSens  : setChecked( ::lCaseSens )
+   oUI:checkDictBold      : setChecked( ::lBold   )
    oUI:checkDictItalic    : setChecked( ::lItalic )
-   oUI:checkDictULine     : setChecked( ::lULine )
+   oUI:checkDictULine     : setChecked( ::lULine  )
    oUI:checkDictColorText : setChecked( ! Empty( ::cTxtColor ) )
-   oUI:checkDictColorBack : setChecked( ! Empty( ::cBgColor ) )
+   oUI:checkDictColorBack : setChecked( ! Empty( ::cBgColor  ) )
+
+   oUI:radioDictConvNone  : setChecked( ::cConvMode == "NONE"  )
+   oUI:radioDictToLower   : setChecked( ::cConvMode == "LOWER" )
+   oUI:radioDictToUpper   : setChecked( ::cConvMode == "UPPER" )
+   oUI:radioDictAsIn      : setChecked( ::cConvMode == "ASIS"  )
+
+   oUI:plainKeywords      : clear()
+   oUI:plainKeywords      : setPlainText( hb_MemoRead( ::cFileName ) )
+
+   ::setButtonColors( oUI )
 
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeDictionary:setButtonColors( oUI )
+
+   oUI:btnDictColorText:setStyleSheet( "" )
+   oUI:btnDictColorBack:setStyleSheet( "" )
+   IF ! Empty( ::aTxtRGB )
+      oUI:btnDictColorText: setStyleSheet( "background-color: rgb(" + hb_ntos( ::aTxtRGB[ 1 ] ) + "," + hb_ntos( ::aTxtRGB[ 2 ] ) + "," + hb_ntos( ::aTxtRGB[ 3 ] ) + ");" )
+   ENDIF
+   IF ! Empty( ::aBgRGB )
+      oUI:btnDictColorBack: setStyleSheet( "background-color: rgb(" + hb_ntos( ::aBgRGB[ 1 ] ) + "," + hb_ntos( ::aBgRGB[ 2 ] ) + "," + hb_ntos( ::aBgRGB[ 3 ] ) + ");" )
+   ENDIF
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDictionary:execColorDialog( oUI, cMode )
+   LOCAL qColorDlg := QColorDialog( oUI:oWidget )
+   LOCAL nRet, qColor
+
+   IF cMode == "back" .AND. ! Empty( ::aBgRGB )
+      qColorDlg:SetCurrentColor( QColor( ::aBgRGB[ 1 ], ::aBgRGB[ 2 ], ::aBgRGB[ 3 ] ) )
+   ELSEIF cMode == "text" .AND. ! Empty( ::aTxtRGB )
+      qColorDlg:SetCurrentColor( QColor( ::aTxtRGB[ 1 ], ::aTxtRGB[ 2 ], ::aTxtRGB[ 3 ] ) )
+   ENDIF
+
+   nRet := qColorDlg:exec()
+
+   IF nRet ==  QDialog_Accepted
+      qColor := qColorDlg:selectedColor()
+      IF cMode == "back"
+         ::aBgRGB[ 1 ] := qColor:red()
+         ::aBgRGB[ 2 ] := qColor:green()
+         ::aBgRGB[ 3 ] := qColor:blue()
+         ::cBgColor := "{" + hb_ntos( ::aBgRGB[ 1 ] ) + "," + hb_ntos( ::aBgRGB[ 2 ] ) + hb_ntos( ::aBgRGB[ 3 ] ) + "}"
+      ELSE
+         ::aTxtRGB[ 1 ] := qColor:red()
+         ::aTxtRGB[ 2 ] := qColor:green()
+         ::aTxtRGB[ 3 ] := qColor:blue()
+         ::cTxtColor := "{" + hb_ntos( ::aTxtRGB[ 1 ] ) + "," + hb_ntos( ::aTxtRGB[ 2 ] ) + hb_ntos( ::aTxtRGB[ 3 ] ) + "}"
+      ENDIF
+      ::setButtonColors( oUI )
+   ENDIF
+   qColorDlg:setParent( QWidget() )
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDictionary:checkStateChanged( oUI, p, p1 )
+   LOCAL lChecked := p1 != 0
+
+   SWITCH p
+   CASE __checkDictActive_stateChanged__     ; ::lActive   := lChecked ; EXIT
+   CASE __checkDictToPrg_stateChanged__      ; ::lToPrg    := lChecked ; EXIT
+   CASE __checkDictToC_stateChanged__        ; ::lToC      := lChecked ; EXIT
+   CASE __checkDictToCpp_stateChanged__      ; ::lToCPP    := lChecked ; EXIT
+   CASE __checkDictToCh_stateChanged__       ; ::lToCH     := lChecked ; EXIT
+   CASE __checkDictToH_stateChanged__        ; ::lToH      := lChecked ; EXIT
+   CASE __checkDictToIni_stateChanged__      ; ::lToIni    := lChecked ; EXIT
+   CASE __checkDictToTxt_stateChanged__      ; ::lToTxt    := lChecked ; EXIT
+   CASE __checkDictToHbp_stateChanged__      ; ::lToHbp    := lChecked ; EXIT
+   CASE __checkDictActive_stateChanged__     ; ::lActive   := lChecked ; EXIT
+   CASE __checkDictCaseSens_stateChanged__   ; ::lCaseSens := lChecked ; EXIT
+   CASE __checkDictBold_stateChanged__       ; ::lBold     := lChecked ; EXIT
+   CASE __checkDictItalic_stateChanged__     ; ::lItalic   := lChecked ; EXIT
+   CASE __checkDictULine_stateChanged__      ; ::lULine    := lChecked ; EXIT
+   CASE __checkDictColorText_stateChanged__  ; ::lTxtColor := lChecked ; EXIT
+   CASE __checkDictColorBack_stateChanged__  ; ::lBgColor  := lChecked ; EXIT
+   ENDSWITCH
+
+   IF ! ::lTxtColor
+      ::aTxtRGB := {}
+      ::cTxtColor := ""
+   ENDIF
+   IF ! ::lBgColor
+      ::aBgRGB := {}
+      ::cBgColor := ""
+   ENDIF
+   ::setButtonColors( oUI )
+
+   ::toString()
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDictionary:radioButtonClicked( oUI, p )
+
+   SWITCH p
+   CASE __radioDictConvNone_clicked__  ; ::cConvMode := "NONE"  ; EXIT
+   CASE __radioDictToLower_clicked__   ; ::cConvMode := "LOWER" ; EXIT
+   CASE __radioDictToUpper_clicked__   ; ::cConvMode := "UPPER" ; EXIT
+   CASE __radioDictAsIn_clicked__      ; ::cConvMode := "ASIS"  ; EXIT
+   ENDSWITCH
+
+   ::toString( oUI )
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/

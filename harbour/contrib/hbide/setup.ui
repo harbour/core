@@ -44,7 +44,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>1</number>
+    <number>6</number>
    </property>
    <widget class="QWidget" name="pageGeneral">
     <widget class="QGroupBox" name="groupBox">
@@ -2044,7 +2044,7 @@
        <rect>
         <x>44</x>
         <y>104</y>
-        <width>237</width>
+        <width>261</width>
         <height>20</height>
        </rect>
       </property>
@@ -2152,6 +2152,9 @@
         <width>193</width>
         <height>143</height>
        </rect>
+      </property>
+      <property name="lineWrapMode">
+       <enum>QPlainTextEdit::NoWrap</enum>
       </property>
      </widget>
      <widget class="QGroupBox" name="groupBox_17">
@@ -2370,8 +2373,11 @@
          <height>20</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>Click to define text color for keywords in this dictionary.</string>
+       </property>
        <property name="text">
-        <string>...</string>
+        <string/>
        </property>
       </widget>
       <widget class="QToolButton" name="btnDictColorBack">
@@ -2383,8 +2389,11 @@
          <height>20</height>
         </rect>
        </property>
+       <property name="toolTip">
+        <string>Click to define background color for keywords in this dictionary.</string>
+       </property>
        <property name="text">
-        <string>...</string>
+        <string/>
        </property>
       </widget>
      </widget>

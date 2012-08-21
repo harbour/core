@@ -510,11 +510,10 @@ METHOD IdeThemes:setSyntaxHilighting( qEdit, cTheme, lNew, lSetEditor )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeThemes:mergeUserDictionaries( qHiliter, cTheme )
-   LOCAL oDict, s, aAttr, qFormat, qRegExp, cName, a_, aDict
+   LOCAL oDict, s, aAttr, qFormat, qRegExp, cName, a_
 
-   aDict := ::oIde:aUserDict
-   FOR EACH oDict IN aDict
-      IF !empty( oDict:aItems )
+   FOR EACH oDict IN ::oIde:aUserDict
+      IF oDict:lActive .AND. ! empty( oDict:aItems )
          cName := "UserDictionary" + hb_ntos( oDict:__enumIndex() )
 
          s := ""
@@ -531,14 +530,19 @@ METHOD IdeThemes:mergeUserDictionaries( qHiliter, cTheme )
          aAttr := ::getThemeAttribute( "UserDictionary", cTheme )  // cName after slots are implemented
 
          qFormat := QTextCharFormat()
-         qFormat:setFontItalic( aAttr[ THM_ATR_ITALIC ] )
-         IF aAttr[ THM_ATR_BOLD ]
+         qFormat:setFontItalic( oDict:lItalic )
+         IF oDict:lBold
             qFormat:setFontWeight( 1000 )
          ENDIF
-         qFormat:setFontUnderline( aAttr[ THM_ATR_ULINE ] )
-         qFormat:setForeground( QBrush( QColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) ) )
-         IF !empty( oDict:qBgColor )
-            qFormat:setBackground( QBrush( oDict:qBgColor ) )
+         qFormat:setFontUnderline( oDict:lULine )
+
+         IF ! empty( oDict:aTxtRGB )
+            qFormat:setForeground( QBrush( QColor( oDict:aTxtRGB[ 1 ], oDict:aTxtRGB[ 2 ], oDict:aTxtRGB[ 3 ] ) ) )
+         ELSE
+            qFormat:setForeground( QBrush( QColor( aAttr[ THM_ATR_R ], aAttr[ THM_ATR_G ], aAttr[ THM_ATR_B ] ) ) )
+         ENDIF
+         IF ! empty( oDict:aBgRGB )
+            qFormat:setBackground( QBrush( QColor( oDict:aBgRGB[ 1 ], oDict:aBgRGB[ 2 ], oDict:aBgRGB[ 3 ] ) ) )
          ENDIF
 
          qHiliter:hbSetRuleWithRegExp( cName, qRegExp, qFormat )

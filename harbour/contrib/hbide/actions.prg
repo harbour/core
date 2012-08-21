@@ -579,11 +579,13 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu := XbpMenu():new( oMenuBar, , .t. ):create()
    oSubMenu:title := "~Project"
    oSubMenu:addItem( { ::getAction( "Properties"          ), {|| oIde:execAction( "Properties"     ) } } )
+#if 0
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "ProjAddSource"       ), {|| oIde:execAction( "ProjAddSource"  ) } } )
    oSubMenu:addItem( { ::getAction( "ProjRemSource"       ), {|| oIde:execAction( "ProjRemSource"  ) } } )
    oSubMenu:addItem( { ::getAction( "ProjMainModule"      ), {|| oIde:execAction( "ProjMainModule" ) } } )
    oSubMenu:disableItem( oSubMenu:numItems )
+#endif
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "SelectProject"       ), {|| oIde:execAction( "SelectProject"  ) } } )
    oSubMenu:addItem( { ::getAction( "CloseProject"        ), {|| oIde:execAction( "CloseProject"   ) } } )
