@@ -2026,3 +2026,20 @@ FUNCTION hbide_setAdsAvailable( lYes )
    RETURN yes
 
 /*----------------------------------------------------------------------*/
+
+FUNCTION hbide_getHbxFunctions( cBuffer )
+   LOCAL pRegex
+   LOCAL tmp
+   LOCAL aDynamic := {}
+
+   IF ! Empty( cBuffer ) .AND. ;
+      ! Empty( pRegex := hb_regexComp( "^DYNAMIC ([a-zA-Z0-9_]*)$", .T., .T. ) )
+      FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cBuffer, Chr( 13 ) ),,,,, .T. )
+         AAdd( aDynamic, tmp[ 2 ] )
+      NEXT
+   ENDIF
+
+   RETURN aDynamic
+
+/*----------------------------------------------------------------------*/
+

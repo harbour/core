@@ -108,18 +108,16 @@
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_loadUserDictionaries( oIde )
-   //                File  , Active, Applyto, ConvMode=asis upper lower, CaseSensitive,  bold, italic, uline, txtcolor, bgColor
-   #if 1
-   LOCAL aDict := { "C:\harbour\contrib\hbide\projects\my.dic;YES;.PRG.C.CPP;ASIS;NO;NO;NO;NO;{0,0,0};{122,133,233}" }
-   #else
-   LOCAL aDict := {}
-   #endif
+   LOCAL aDict := oIde:oINI:aDictionaries
    LOCAL oDict, i
+
+   IF Empty( aDict )
+      AAdd( aDict, "C:\harbour\contrib\hbide\projects\my.dic;YES;.PRG.C.CPP;ASIS;NO;NO;NO;NO;{0,0,0};{122,133,233};" ) /* Testing */
+   ENDIF
 
    FOR i := 1 TO Len( aDict )
       oDict := IdeDictionary():new( oIde ):create()
       oDict:load( aDict[ i ] )
-
       aadd( oIde:aUserDict, oDict )
    NEXT
 
@@ -193,7 +191,7 @@ METHOD IdeDictionary:load( cDict )
 
       DEFAULT a_[ DIC_FILENAME       ] TO ""
       DEFAULT a_[ DIC_ACTIVE         ] TO "YES"
-      DEFAULT a_[ DIC_APPLYTO        ] TO ".PRG.C.CPP"
+      DEFAULT a_[ DIC_APPLYTO        ] TO ".PRG"
       DEFAULT a_[ DIC_CONVMODE       ] TO "ASIS"
       DEFAULT a_[ DIC_CASESENSTITIVE ] TO "NO"
       DEFAULT a_[ DIC_BOLD           ] TO "NO"
@@ -238,9 +236,12 @@ METHOD IdeDictionary:load( cDict )
          ENDIF
       ENDIF
 
-      IF !empty( a_[ DIC_FILENAME ] ) .AND. hb_fileExists( a_[ DIC_FILENAME ] )
-         b_:= hbide_readSource( a_[ DIC_FILENAME ] )
-
+      IF !empty( ::cFilename ) .AND. hb_fileExists( ::cFilename )
+         IF Lower( hb_FNameExt( ::cFilename ) ) == ".hbx"
+            b_:= hbide_getHbxFunctions( hb_MemoRead( ::cFilename ) )
+         ELSE
+            b_:= hbide_readSource( ::cFilename )
+         ENDIF
          FOR EACH s IN b_
             s := alltrim( s )
             IF empty( s )
@@ -272,7 +273,6 @@ METHOD IdeDictionary:load( cDict )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDictionary:toString()
-// LOCAL aDict := { "C:\harbour\contrib\hbide\projects\my.dic;YES;.PRG.C.CPP;ASIS;NO;NO;NO;NO;{0,0,0};{122,133,233}" }
 
    ::cDictInfo := ::cFilename + ";" + ;
                   iif( ::lActive  , "YES", "NO" ) + ";" + ;
@@ -290,8 +290,8 @@ METHOD IdeDictionary:toString()
                   iif( ::lItalic  , "YES", "NO" ) + ";" + ;
                   iif( ::lULine   , "YES", "NO" ) + ";" + ;
                   ::cTxtColor                     + ";" + ;
-                  ::cBgColor
-HB_TRACE( HB_TR_ALWAYS, ::cDictInfo )
+                  ::cBgColor                      + ";"
+
    RETURN ::cDictInfo
 
 /*----------------------------------------------------------------------*/
@@ -359,15 +359,21 @@ METHOD IdeDictionary:execColorDialog( oUI, cMode )
    IF nRet ==  QDialog_Accepted
       qColor := qColorDlg:selectedColor()
       IF cMode == "back"
+         ::aBgRGB := Array( 3 )
          ::aBgRGB[ 1 ] := qColor:red()
          ::aBgRGB[ 2 ] := qColor:green()
          ::aBgRGB[ 3 ] := qColor:blue()
-         ::cBgColor := "{" + hb_ntos( ::aBgRGB[ 1 ] ) + "," + hb_ntos( ::aBgRGB[ 2 ] ) + hb_ntos( ::aBgRGB[ 3 ] ) + "}"
+         ::cBgColor := "{" + hb_ntos( ::aBgRGB[ 1 ] ) + "," + hb_ntos( ::aBgRGB[ 2 ] ) + "," + hb_ntos( ::aBgRGB[ 3 ] ) + "}"
+         ::lBgColor := .T.
+         oUI:checkDictColorBack : setChecked( ! Empty( ::cBgColor  ) )
       ELSE
+         ::aTxtRGB := Array( 3 )
          ::aTxtRGB[ 1 ] := qColor:red()
          ::aTxtRGB[ 2 ] := qColor:green()
          ::aTxtRGB[ 3 ] := qColor:blue()
-         ::cTxtColor := "{" + hb_ntos( ::aTxtRGB[ 1 ] ) + "," + hb_ntos( ::aTxtRGB[ 2 ] ) + hb_ntos( ::aTxtRGB[ 3 ] ) + "}"
+         ::cTxtColor := "{" + hb_ntos( ::aTxtRGB[ 1 ] ) + "," + hb_ntos( ::aTxtRGB[ 2 ] ) + "," + hb_ntos( ::aTxtRGB[ 3 ] ) + "}"
+         ::lTxtColor := .T.
+         oUI:checkDictColorText : setChecked( ! Empty( ::cTxtColor ) )
       ENDIF
       ::setButtonColors( oUI )
    ENDIF

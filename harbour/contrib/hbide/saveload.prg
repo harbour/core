@@ -150,6 +150,8 @@
 #define __radioDictToLower_clicked__              2072
 #define __radioDictToUpper_clicked__              2073
 #define __radioDictAsIn_clicked__                 2074
+#define __buttonDictAdd_clicked__                 2075
+#define __buttonDictDelete_clicked__              2076
 
 /*----------------------------------------------------------------------*/
 //
@@ -696,8 +698,8 @@ METHOD IdeINI:save( cHbideIni )
 
    aadd( txt_, "[DICTIONARIES]" )
    aadd( txt_, " " )
-   FOR EACH s IN ::aDictionaries
-      aadd( txt_, "dictionary_" + hb_ntos( s:__enumIndex() ) + "=" + s )
+   FOR EACH s IN ::oIde:aUserDict  // aDictionaries
+      aadd( txt_, "dictionary_" + hb_ntos( s:__enumIndex() ) + "=" + s:toString() )
    NEXT
    aadd( txt_, " " )
 
@@ -1011,7 +1013,7 @@ METHOD IdeINI:load( cHbideIni )
 
                CASE nPart == "INI_DICTIONARIES"
                   IF hbide_parseKeyValPair( s, @cKey, @cVal )
-                     aadd( ::aDictioaries, cVal )
+                     aadd( ::aDictionaries, cVal )
                   ENDIF
 
                CASE nPart == "INI_LOGTITLE"
@@ -1342,9 +1344,6 @@ METHOD IdeSetup:setIcons()
    ::oUI:buttonThmApp        : setIcon( QIcon( hbide_image( "copy"      ) ) )
    ::oUI:buttonThmSav        : setIcon( QIcon( hbide_image( "save"      ) ) )
 
-   /* Dictionaries */
-   ::oUI:buttonDictPath      : setIcon( QIcon( hbide_image( "open"      ) ) )
-
    /* VSS */
    ::oUI:buttonVSSExe        : setIcon( QIcon( hbide_image( "open"      ) ) )
    ::oUI:buttonVSSDatabase   : setIcon( QIcon( hbide_image( "open"      ) ) )
@@ -1410,9 +1409,6 @@ METHOD IdeSetup:disConnectSlots()
    ::oUI:buttonViewEnv       :disconnect( "clicked()"                )
    ::oUI:buttonViewSnippets  :disconnect( "clicked()"                )
    ::oUI:buttonViewThemes    :disconnect( "clicked()"                )
-
-   /* Dictionaries */
-   ::oUI:buttonDictPath      :disconnect( "clicked()"                )
 
    ::oUI:comboTabsShape      :disconnect( "currentIndexChanged(int)" )
    ::oUI:comboLeftTabPos     :disconnect( "currentIndexChanged(int)" )
@@ -1484,8 +1480,6 @@ METHOD IdeSetup:connectSlots()
    ::oUI:buttonViewSnippets  :connect( "clicked()"               , {| | ::execEvent( __buttonViewSnippets_clicked__                     ) } )
    ::oUI:buttonViewThemes    :connect( "clicked()"               , {| | ::execEvent( __buttonViewThemes_clicked__                       ) } )
 
-   ::oUI:buttonDictPath      :connect( "clicked()"               , {| | ::execEvent( __buttonDictPath_clicked__                         ) } )
-
    ::oUI:comboTabsShape      :connect( "currentIndexChanged(int)", {|i| ::execEvent( __comboTabsShape_currentIndexChanged__   , i       ) } )
    ::oUI:comboLeftTabPos     :connect( "currentIndexChanged(int)", {|i| ::execEvent( __comboLeftTabPos_currentIndexChanged__  , i       ) } )
    ::oUI:comboTopTabPos      :connect( "currentIndexChanged(int)", {|i| ::execEvent( __comboTopTabPos_currentIndexChanged__   , i       ) } )
@@ -1503,6 +1497,8 @@ METHOD IdeSetup:connectSlots()
 // ::oUI:listDictNames       :connect( "currentItemChanged(QListWidgetItem*,QListWidgetItem*)"  , {|p,p1| ::execEvent( __listDictNames_currentRowChanged__ , p,p1       ) } )
    ::oUI:btnDictColorText    :connect( "clicked()"               , {| | ::execEvent( __btnDictColorText_clicked__                       ) } )
    ::oUI:btnDictColorBack    :connect( "clicked()"               , {| | ::execEvent( __btnDictColorBack_clicked__                       ) } )
+   ::oUI:buttonDictAdd       :connect( "clicked()"               , {| | ::execEvent( __buttonDictAdd_clicked__                          ) } )
+   ::oUI:buttonDictDelete    :connect( "clicked()"               , {| | ::execEvent( __buttonDictDelete_clicked__                       ) } )
 
    ::oUI:checkDictActive     :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictActive_stateChanged__   , i             ) } )
    ::oUI:checkDictToPrg      :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkDictToPrg_stateChanged__    , i             ) } )
@@ -1827,7 +1823,7 @@ METHOD IdeSetup:show()
 
 METHOD IdeSetup:execEvent( nEvent, p, p1 )
    LOCAL qItem, nIndex, qFontDlg, qFont, nOK, nRow, b_, q0, q1, nCol, w0, w1
-   LOCAL aRGB, nSlot, qFrame, aGrad, n, cCSS, cTheme, cPath, cBuffer
+   LOCAL aRGB, nSlot, qFrame, aGrad, n, cCSS, cTheme, cPath, cBuffer, cFile, oDict
 
    HB_SYMBOL_UNUSED( p1 )
 
@@ -2190,12 +2186,12 @@ METHOD IdeSetup:execEvent( nEvent, p, p1 )
       ::oINI:nDocksBottomTabPos := p
       ::oDlg:setTabPosition( Qt_BottomDockWidgetArea, ::oINI:nDocksBottomTabPos )
       EXIT
-
    CASE __comboTBSize_currentIndexChanged__
       ::oINI:cToolbarSize := ::oUI:comboTBSize:currentText()
       ::oDK:setToolbarSize( val( ::oINI:cToolbarSize ) )
       EXIT
 
+   /* Dictionaries */
    CASE __btnDictColorBack_clicked__
       p := ::oUI:listDictNames:currentRow()
       IF p >= 0 .AND. p < Len( ::oIde:aUserDict )
@@ -2231,7 +2227,7 @@ METHOD IdeSetup:execEvent( nEvent, p, p1 )
    CASE __checkDictColorBack_stateChanged__
       nRow := ::oUI:listDictNames:currentRow()
       IF nRow >= 0 .AND. nRow < Len( ::oIde:aUserDict )
-         ::oIde:aUserDict[ nRow + 1 ]:checkStateChanged( ::oUI, p, p1 )
+         ::oIde:aUserDict[ nRow + 1 ]:checkStateChanged( ::oUI, nEvent, p )
       ENDIF
       EXIT
    CASE __radioDictConvNone_clicked__
@@ -2240,7 +2236,26 @@ METHOD IdeSetup:execEvent( nEvent, p, p1 )
    CASE __radioDictAsIn_clicked__
       p := ::oUI:listDictNames:currentRow()
       IF p >= 0 .AND. p < Len( ::oIde:aUserDict )
-         ::oIde:aUserDict[ p + 1 ]:radioButtonClicked( ::oUI, p )
+         ::oIde:aUserDict[ p + 1 ]:radioButtonClicked( ::oUI, nEvent )
+      ENDIF
+      EXIT
+   CASE __buttonDictDelete_clicked__
+      p := ::oUI:listDictNames:currentRow()
+      IF p >= 0 .AND. p < Len( ::oIde:aUserDict )
+         hb_ADel( ::oIde:aUserDict, p, .T. )
+         ::uiDictionaries()
+         ::oUI:listDictNames:setCurrentRow( Min( Len( ::oIde:aUserDict ) - 1, p ) )
+      ENDIF
+      EXIT
+   CASE __buttonDictAdd_clicked__
+      cFile := hbide_fetchAFile( ::oDlg, "Open a Dictionary", ;
+                                 { {"HBX Files", "*.hbx"}, {"Text Files", "*.txt"}, {"Dictionary Files", "*.dic"}, {"All Files", "*" } } /*, cDftDir, cDftSuffix, lAllowMulti*/ )
+      IF ! Empty( cFile )
+         oDict := IdeDictionary():new( ::oIde ):create()
+         oDict:load( cFile )
+         aadd( ::oIde:aUserDict, oDict )
+         ::uiDictionaries()
+         ::oUI:listDictNames:setCurrentRow( Len( ::oIde:aUserDict ) - 1 )
       ENDIF
       EXIT
    ENDSWITCH

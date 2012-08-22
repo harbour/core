@@ -1996,7 +1996,7 @@
         <x>10</x>
         <y>16</y>
         <width>243</width>
-        <height>79</height>
+        <height>109</height>
        </rect>
       </property>
      </widget>
@@ -2012,6 +2012,9 @@
       <property name="text">
        <string>Add</string>
       </property>
+      <property name="autoDefault">
+       <bool>false</bool>
+      </property>
      </widget>
      <widget class="QPushButton" name="buttonDictDelete">
       <property name="geometry">
@@ -2025,53 +2028,16 @@
       <property name="text">
        <string>Delete</string>
       </property>
-     </widget>
-     <widget class="QLabel" name="label_16">
-      <property name="geometry">
-       <rect>
-        <x>10</x>
-        <y>104</y>
-        <width>33</width>
-        <height>16</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>Path:</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="editDictPath">
-      <property name="geometry">
-       <rect>
-        <x>44</x>
-        <y>104</y>
-        <width>261</width>
-        <height>20</height>
-       </rect>
-      </property>
-     </widget>
-     <widget class="QToolButton" name="buttonDictPath">
-      <property name="geometry">
-       <rect>
-        <x>316</x>
-        <y>104</y>
-        <width>25</width>
-        <height>20</height>
-       </rect>
-      </property>
-      <property name="text">
-       <string>...</string>
-      </property>
-      <property name="icon">
-       <iconset resource="hbide.qrc">
-        <normaloff>:/resources/projectadd.png</normaloff>:/resources/projectadd.png</iconset>
+      <property name="autoDefault">
+       <bool>false</bool>
       </property>
      </widget>
      <widget class="QCheckBox" name="checkDictActive">
       <property name="geometry">
        <rect>
-        <x>268</x>
-        <y>78</y>
-        <width>71</width>
+        <x>288</x>
+        <y>108</y>
+        <width>53</width>
         <height>19</height>
        </rect>
       </property>
