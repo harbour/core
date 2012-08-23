@@ -513,17 +513,17 @@ METHOD IdeThemes:mergeUserDictionaries( qHiliter, cTheme )
    LOCAL oDict, s, aAttr, qFormat, qRegExp, cName, a_
 
    FOR EACH oDict IN ::oIde:aUserDict
-      IF oDict:lActive .AND. ! empty( oDict:aItems )
+      IF oDict:lActive .AND. ! empty( oDict:hItems )
          cName := "UserDictionary" + hb_ntos( oDict:__enumIndex() )
 
          s := ""
-         FOR EACH a_ IN oDict:aItems
+         FOR EACH a_ IN oDict:hItems
             s += "\b" + a_[ 1 ] + "\b|"
          NEXT
          s := substr( s, 1, Len( s ) - 1 )
 
          qRegExp := QRegExp()
-         //qRegExp:setCaseSensitivity( oDict:lCaseSensitive )
+         qRegExp:setCaseSensitivity( iif( oDict:lCaseSens, Qt_CaseSensitive, Qt_CaseInsensitive ) )
          qRegExp:setPattern( s )
 
          /* Must be blended WITH dictionary definition attributes */

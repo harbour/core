@@ -3549,28 +3549,21 @@ STATIC FUNCTION hbide_isQtFunction( cWord, cCased )
 /*----------------------------------------------------------------------*/
 
 STATIC FUNCTION hbide_isUserFunction( cWord, cCased )
-   LOCAL s, a_, aDict, oDict
+   LOCAL oDict
 
-   STATIC s_b_
-   IF empty( s_b_ )
-      s_b_:= {=>}
-      hb_hCaseMatch( s_b_, .f. )
-      aDict := hbide_setIDE():aUserDict
-      FOR EACH oDict IN aDict
-         IF !Empty( oDict:aItems )
-            FOR EACH a_ IN oDict:aItems
-               s := AllTrim( a_[ 1 ] )
-               IF ! Empty( s )
-                  s_b_[ s ] := s
-               ENDIF
-            NEXT
+   FOR EACH oDict IN hbide_setIDE():aUserDict
+      IF oDict:lActive
+         IF hb_HHasKey( oDict:hItems, cWord )
+            SWITCH oDict:cConvMode
+            CASE "ASIS"  ; cCased := oDict:hItems[ cWord ][ 1 ]          ; EXIT
+            CASE "LOWER" ; cCased := Lower( oDict:hItems[ cWord ][ 1 ] ) ; EXIT
+            CASE "UPPER" ; cCased := Upper( oDict:hItems[ cWord ][ 1 ] ) ; EXIT
+            CASE "NONE"  ; cCased := cWord ; EXIT
+            ENDSWITCH
+            RETURN .T.
          ENDIF
-      NEXT
-   ENDIF
-   IF cWord $ s_b_
-      cCased := s_b_[ cWord ]
-      RETURN .T.
-   ENDIF
+      ENDIF
+   NEXT
 
    RETURN .F.
 

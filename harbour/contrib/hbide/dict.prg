@@ -149,7 +149,7 @@ CLASS IdeDictionary INHERIT IdeObject
    DATA   cTxtColor                               INIT ""
    DATA   cBgColor                                INIT ""
 
-   DATA   aItems                                  INIT {}
+   DATA   hItems                                  INIT {=>}
 
    DATA   aTxtRGB                                 INIT {}
    DATA   aBgRGB                                  INIT {}
@@ -170,7 +170,10 @@ CLASS IdeDictionary INHERIT IdeObject
 /*----------------------------------------------------------------------*/
 
 METHOD IdeDictionary:new( oIde )
+
    ::oIde := oIde
+   hb_HCaseMatch( ::hItems, .F. )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -261,7 +264,7 @@ METHOD IdeDictionary:load( cDict )
             ENDIF
 
             IF !empty( cKeyword )
-               aadd( ::aItems, { cKeyword, cSyntax, cDesc } )
+               ::hItems[ cKeyword ] := { cKeyword, cSyntax, cDesc }
             ENDIF
          NEXT
       ENDIF
