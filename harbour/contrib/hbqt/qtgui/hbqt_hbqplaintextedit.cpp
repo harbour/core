@@ -1933,22 +1933,20 @@ void HBQPlainTextEdit::lineNumberAreaPaintEvent( QPaintEvent *event )
    int blockNumber  = block.blockNumber();
    int top          = ( int ) blockBoundingGeometry( block ).translated( contentOffset() ).top();
    int bottom       = top +( int ) blockBoundingRect( block ).height();
-   int off          = fontMetrics().height() / 4;
+   int fontHeight   = fontMetrics().height();
 
    while( block.isValid() && top <= event->rect().bottom() )
    {
       if( block.isVisible() && bottom >= event->rect().top() )
       {
-         QString number = QString::number( blockNumber + 1 );
-         painter.setPen( (  blockNumber + 1 ) % 10 == 0 ? Qt::red : Qt::black );
-         painter.drawText( 0, top, lineNumberArea->width()-2, fontMetrics().height(), Qt::AlignRight, number );
-
-         int index = bookMarksGoto.indexOf( number.toInt() );
+         int iNumber = blockNumber + 1;
+         int index = bookMarksGoto.indexOf( iNumber );
          if( index != -1 )
          {
-            painter.setBrush( brushForBookmark( index ) );
-            painter.drawRect( 5, top + off, off * 2, off * 2 );
+            painter.fillRect( 0, top, lineNumberArea->width()-2, fontHeight, brushForBookmark( index ) );
          }
+         painter.setPen( iNumber % 10 == 0 ? Qt::red : Qt::black );
+         painter.drawText( 0, top, lineNumberArea->width()-2, fontHeight, Qt::AlignRight, QString::number( iNumber ) );
       }
       block  = block.next();
       top    = bottom;
@@ -2012,10 +2010,6 @@ void HBQPlainTextEdit::hbBookmarks( int block )
    {
       bookMarksGoto.append( block );
    }
-
-   hbUpdateLineNumberAreaWidth( 0 );
-//   lineNumberArea->repaint();
-//   update();
 }
 
 /*----------------------------------------------------------------------*/
@@ -2117,9 +2111,7 @@ int HBQPlainTextEdit::hbLineNumberAreaWidth()
       ++digits;
    }
    int width  = lineNumberArea->fontMetrics().width( QLatin1Char( '9' ) );
-   int iM     = fontMetrics().height() / 2;
-   int iMark  = bookMarksGoto.size() > 0 ? ( 5 + iM + 2 ) : 0;
-   int space  = iMark + ( width * digits ) + 2;
+   int space  = ( width * digits ) + 2;
 
    return space;
 }
