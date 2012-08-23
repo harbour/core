@@ -97,6 +97,8 @@ public:
    long           m_matchingBegin;
    long           m_matchingEnd;
    bool           m_matchBracesAll;
+   int            m_currentBlockNumber;
+   QColor         m_braceHiliteColor;
 
    void           paintEvent( QPaintEvent * event );
    void           lineNumberAreaPaintEvent( QPaintEvent * event );
@@ -135,12 +137,6 @@ private:
    QList<int>     bookMarksGoto;
    QWidget      * lineNumberArea;
    QFrame       * horzRuler;
-#if 0
-   QFrame       * ttFrame;
-   QVBoxLayout  * ttLayout;
-   QLabel       * ttLabel;
-   QTextEdit    * ttTextEdit;
-#endif
    int            spaces;
    bool           numberBlock;
    bool           highlightCurLine;
@@ -245,6 +241,7 @@ public slots:
    void           hbRefreshCompleter( const QString & alias = "" );
    void           hbToggleCodeCompetion() { isCodeCompletionActive = ! isCodeCompletionActive; };
    void           hbToggleCompetionTips() { isCompletionTipsActive = ! isCompletionTipsActive; };
+   void           matchPair( QTextCursor cursor, QString brace, QString openBrace, QString closeBrace, bool bBraceAll, QTextDocument::FindFlags flags );
 
 private slots:
    void           hbSlotCursorPositionChanged();

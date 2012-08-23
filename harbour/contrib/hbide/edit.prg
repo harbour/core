@@ -1231,9 +1231,11 @@ METHOD IdeEdit:handleTab( key )
       FOR i := nT TO nB
          cLine := ::getLine( i + 1 )
          IF key == Qt_Key_Tab
-            cLine := substr( cLine, 1, nCol ) + cComment + substr( cLine, nCol + 1 )
+            //cLine := substr( cLine, 1, nCol ) + cComment + substr( cLine, nCol + 1 )
+            cLine := substr( cLine, 1, nL ) + cComment + substr( cLine, nL + 1 )
          ELSE
-            cLine := substr( cLine, 1, nCol - 3 ) + substr( cLine, nCol + 1 )
+            //cLine := substr( cLine, 1, nCol - 3 ) + substr( cLine, nCol + 1 )
+            cLine := substr( cLine, 1, nL - 3 ) + substr( cLine, nL + 1 )
          ENDIF
          hbide_qReplaceLine( qCursor, i, cLine )
       NEXT

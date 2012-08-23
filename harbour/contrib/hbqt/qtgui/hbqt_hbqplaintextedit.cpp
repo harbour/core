@@ -133,6 +133,8 @@ HBQPlainTextEdit::HBQPlainTextEdit( QWidget * parent ) : QPlainTextEdit( parent 
    clickPos                 = QPoint();
    iClicks                  = 0;
    mouseMode                = mouseMode_none;
+   m_currentBlockNumber     = -1;
+   m_braceHiliteColor       = QColor( Qt::yellow ).lighter( 160 );
 
    connect( this, SIGNAL( blockCountChanged( int ) )           , this, SLOT( hbUpdateLineNumberAreaWidth( int ) ) );
    connect( this, SIGNAL( updateRequest( const QRect &, int ) ), this, SLOT( hbUpdateLineNumberArea( const QRect &, int ) ) );
@@ -2278,8 +2280,14 @@ int HBQPlainTextEdit::hbGetLine( const QTextCursor &crQTextCursor )
 
 void HBQPlainTextEdit::hbSlotCursorPositionChanged()
 {
-   if( m_currentLineColor.isValid() )
-      viewport()->update();
+   if( m_currentBlockNumber != textCursor().blockNumber() )
+   {
+      m_currentBlockNumber = textCursor().blockNumber();
+      if( m_currentLineColor.isValid() )
+      {
+         viewport()->update();
+      }
+   }
 
    if( styleHightlighter != "none" )
       hbBraceHighlight();
@@ -2705,51 +2713,72 @@ void HBQPlainTextEdit::hbDuplicateLine()
 
 void HBQPlainTextEdit::hbBraceHighlight()
 {
-   QColor lineColor = QColor( Qt::yellow ).lighter( 160 );
-
-   QTextDocument *doc = document();
-
    extraSelections.clear();
    setExtraSelections( extraSelections );
-   selection.format.setBackground( lineColor );
+   selection.format.setBackground( m_braceHiliteColor );
 
    QTextCursor cursor = textCursor();
 
    cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::KeepAnchor );
    QString brace = cursor.selectedText();
 
-   if(    ( brace != "{" ) && ( brace != "}" )
-       && ( brace != "[" ) && ( brace != "]" )
-       && ( brace != "(" ) && ( brace != ")" )
-       && ( brace != "<" ) && ( brace != ">" ) )
+   if(    ( brace == "{" ) || ( brace == "}" )
+       || ( brace == "[" ) || ( brace == "]" )
+       || ( brace == "(" ) || ( brace == ")" )
+       || ( brace == "<" ) || ( brace == ">" ) )
    {
-      return;
-   }
+      QString openBrace;
+      QString closeBrace;
 
-   QString openBrace;
-   QString closeBrace;
+      if( ( brace == "{" ) || ( brace == "}" ) )
+      {
+         openBrace = "{";
+         closeBrace = "}";
+      }
+      if( ( brace == "[" ) || ( brace == "]" ) )
+      {
+         openBrace = "[";
+         closeBrace = "]";
+      }
+      if( ( brace == "(" ) || ( brace == ")" ) )
+      {
+         openBrace = "(";
+         closeBrace = ")";
+      }
+      if( ( brace == "<" ) || ( brace == ">" ) )
+      {
+         openBrace = "<";
+         closeBrace = ">";
+      }
+      matchPair( cursor, brace, openBrace, closeBrace, m_matchBracesAll, 0 );
+   }
+   else
+   {
+      cursor = textCursor();
+      cursor.select( QTextCursor::WordUnderCursor );
+      QString brace = cursor.selectedText();
+      //cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::MoveAnchor );
 
-   if( ( brace == "{" ) || ( brace == "}" ) )
-   {
-      openBrace = "{";
-      closeBrace = "}";
-   }
-   if( ( brace == "[" ) || ( brace == "]" ) )
-   {
-      openBrace = "[";
-      closeBrace = "]";
-   }
-   if( ( brace == "(" ) || ( brace == ")" ) )
-   {
-      openBrace = "(";
-      closeBrace = ")";
-   }
-   if( ( brace == "<" ) || ( brace == ">" ) )
-   {
-      openBrace = "<";
-      closeBrace = ">";
-   }
+      if( brace == "IF" || brace == "ENDIF" )
+      {
+         QString openBrace;
+         QString closeBrace;
 
+         if( ( brace == "IF" ) || ( brace == "ENDIF" ) )
+         {
+            openBrace = "IF";
+            closeBrace = "ENDIF";
+         }
+         matchPair( cursor, brace, openBrace, closeBrace, true, QTextDocument::FindWholeWords );
+      }
+   }
+}
+
+/*----------------------------------------------------------------------*/
+
+void HBQPlainTextEdit::matchPair( QTextCursor cursor, QString brace, QString openBrace, QString closeBrace, bool bBraceAll, QTextDocument::FindFlags flags )
+{
+   QTextDocument *doc = document();
    QTextCursor cursor1;
    QTextCursor cursor2;
    QTextCursor matches;
@@ -2766,8 +2795,8 @@ void HBQPlainTextEdit::hbBraceHighlight()
       {
          while( cursor1.position() > cursor2.position() )
          {
-            cursor1 = doc->find( closeBrace, cursor1 );
-            cursor2 = doc->find( openBrace, cursor2 );
+            cursor1 = doc->find( closeBrace, cursor1, flags );
+            cursor2 = doc->find( openBrace, cursor2, flags );
             if( cursor2.isNull() )
                 break;
          }
@@ -2778,8 +2807,8 @@ void HBQPlainTextEdit::hbBraceHighlight()
    {
       if( brace == closeBrace )
       {
-         cursor1 = doc->find( openBrace, cursor, QTextDocument::FindBackward );
-         cursor2 = doc->find( closeBrace, cursor, QTextDocument::FindBackward );
+         cursor1 = doc->find( openBrace, cursor, QTextDocument::FindBackward | flags );
+         cursor2 = doc->find( closeBrace, cursor, QTextDocument::FindBackward | flags );
          if( cursor2.isNull() )
          {
             matches = cursor1;
@@ -2788,8 +2817,8 @@ void HBQPlainTextEdit::hbBraceHighlight()
          {
             while( cursor1.position() < cursor2.position() )
             {
-               cursor1 = doc->find( openBrace, cursor1, QTextDocument::FindBackward );
-               cursor2 = doc->find( closeBrace, cursor2, QTextDocument::FindBackward );
+               cursor1 = doc->find( openBrace, cursor1, QTextDocument::FindBackward | flags );
+               cursor2 = doc->find( closeBrace, cursor2, QTextDocument::FindBackward | flags );
                if( cursor2.isNull() )
                    break;
             }
@@ -2799,7 +2828,7 @@ void HBQPlainTextEdit::hbBraceHighlight()
    }
    if( ! matches.isNull() )
    {
-      if( m_matchBracesAll )
+      if( bBraceAll )
       {
          selection.cursor = cursor;
          extraSelections.append( selection );
@@ -2809,6 +2838,4 @@ void HBQPlainTextEdit::hbBraceHighlight()
       setExtraSelections( extraSelections );
    }
 }
-
-/*----------------------------------------------------------------------*/
 #endif
