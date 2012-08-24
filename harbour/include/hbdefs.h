@@ -720,7 +720,7 @@ typedef HB_U32 HB_FATTR;
 #endif
 
 #ifndef HB_PF64
-#  defien HB_PF64 PFLL
+#  define HB_PF64 PFLL
 #endif
 
 #if defined( HB_OS_WIN_64 )
