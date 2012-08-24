@@ -367,6 +367,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
 
    LOCAL cOptions
    LOCAL lInstall
+   LOCAL cMakeFlags
 
    LOCAL cProject
    LOCAL cProjectPath
@@ -426,6 +427,14 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
    ELSEIF nAction == _ACT_INC_REBUILD .OR. ;
           nAction == _ACT_INC_REBUILD_INST
       cOptions += " -rebuildall"
+   ENDIF
+
+   cMakeFlags := getenv( "MAKEFLAGS" )
+   IF " -j " $ " " + cMakeFlags + " "
+      /* GNU Make uses job server to limit number of concurrent operations
+       * We cannot read it from MAKEFLAGS so I set it to arbitrary value: 8
+       */
+      cOptions += " -jobs=8"
    ENDIF
 
    lInstall := nAction == _ACT_INC_INST .OR. ;
