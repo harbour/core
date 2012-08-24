@@ -765,6 +765,7 @@ METHOD HbIde:create( aParams )
 
    /* Fill auto completion lists - it must be the last action and be present here always */
    ::oEM:updateCompleter()
+   ::oDK:qSelToolbar:hide()
 
    DO WHILE .t.
       nEvent := AppEvent( @mp1, @mp2, @oXbp )

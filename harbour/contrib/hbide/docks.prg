@@ -128,6 +128,7 @@ CLASS IdeDocks INHERIT IdeObject
    DATA   aBtnDocks                               INIT   {}
    DATA   oBtnTabClose
 
+   DATA   qSelToolbar
    DATA   qMdiToolBar
    DATA   qMdiToolBarL
    DATA   aViewsInfo                              INIT   {}
@@ -205,6 +206,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD setToolbarSize( nSize )
    METHOD buildCuiEdWidget()
    METHOD buildUISrcDock()
+   METHOD buildSelectedTextToolbar()
 
    ENDCLASS
 
@@ -533,6 +535,8 @@ METHOD IdeDocks:buildDialog()
    ::oDlg:oWidget:connect( QEvent_Hide             , {|e| ::execEvent( __QEvent_Hide__             , e ) } )
 
    ::buildSystemTray()
+
+   ::buildSelectedTextToolbar()
 
    RETURN Self
 
@@ -2039,6 +2043,48 @@ METHOD IdeDocks:buildUISrcDock()
    ::oIde:oUISrcDock := ::getADockWidget( nAreas, "dockUISrc", "UI Source Manager", QDockWidget_DockWidgetFloatable )
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oUISrcDock:oWidget, Qt_Horizontal )
    ::oUISrcDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __dockUISrc_visibilityChanged__, p, ::oUISrcDock:oWidget ) } )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildSelectedTextToolbar()
+   LOCAL qTBar
+
+   ::qSelToolbar := HbqToolbar():new( "ToolbarSelectedText", ::oDlg:oWidget )
+   ::qSelToolbar:orientation := Qt_Horizontal
+   //::qSelToolbar:size := QSize(  val( ::oINI:cToolbarSize ), val( ::oINI:cToolbarSize ) )
+   ::qSelToolbar:create( "SelectedText_Toolbar" )
+   ::qSelToolbar:setObjectName( "ToolbarSelectedText" )
+   ::qSelToolbar:setWindowTitle( "Toolbar: Selected Text" )
+   ::qSelToolbar:setWindowFlags( hb_bitOr( Qt_Tool, Qt_FramelessWindowHint ) )
+   ::qSelToolbar:setMovable( .T. )
+   ::qSelToolbar:setFloatable( .T. )
+   ::oDlg:oWidget:addToolBar( Qt_TopToolBarArea, ::qSelToolbar:oWidget )
+   ::qSelToolbar:hide()
+   ::qSelToolbar:setStyleSheet( "" )
+   ::qSelToolbar:setStyleSheet( "background-color: yellow;" )
+
+   qTBar := ::qSelToolbar
+
+   qTBar:addToolButton( "Undo"      , "Undo"                       , hbide_image( "undo"          ), {|| ::oEM:undo()                        }, .f. )
+   qTBar:addToolButton( "Redo"      , "Redo"                       , hbide_image( "redo"          ), {|| ::oEM:redo()                        }, .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "Cut"       , "Cut"                        , hbide_image( "cut"           ), {|| ::oEM:cut()                         }, .f. )
+   qTBar:addToolButton( "Copy"      , "Copy"                       , hbide_image( "copy"          ), {|| ::oEM:copy()                        }, .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "ToUpper"   , "To Upper"                   , hbide_image( "toupper"       ), {|| ::oEM:convertSelection( "ToUpper" ) }, .f. )
+   qTBar:addToolButton( "ToLower"   , "To Lower"                   , hbide_image( "tolower"       ), {|| ::oEM:convertSelection( "ToLower" ) }, .f. )
+   qTBar:addToolButton( "InvertCase", "Invert Case"                , hbide_image( "invertcase"    ), {|| ::oEM:convertSelection( "Invert"  ) }, .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "BlockCmnt" , "Block Comment"              , hbide_image( "blockcomment"  ), {|| ::oEM:blockComment()                }, .f. )
+   qTBar:addToolButton( "StreamCmnt", "Stream Comment"             , hbide_image( "streamcomment" ), {|| ::oEM:streamComment()               }, .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "IndentR"   , "Indent Right"               , hbide_image( "blockindentr"  ), {|| ::oEM:indent(  1 )                  }, .f. )
+   qTBar:addToolButton( "IndentL"   , "Indent Left"                , hbide_image( "blockindentl"  ), {|| ::oEM:indent( -1 )                  }, .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "Sgl2Dbl"   , "Single to Double Quotes"    , hbide_image( "sgl2dblquote"  ), {|| ::oEM:convertDQuotes()              }, .f. )
+   qTBar:addToolButton( "Dbl2Sgl"   , "Double to Single Quotes"    , hbide_image( "dbl2sglquote"  ), {|| ::oEM:convertQuotes()               }, .f. )
 
    RETURN Self
 

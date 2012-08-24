@@ -411,7 +411,7 @@ METHOD IdeEdit:connectEditSignals()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:execEvent( nMode, p, p1 )
-   LOCAL qAct, n, qCursor, cAct, lOtherEdit
+   LOCAL qAct, n, qCursor, cAct, lOtherEdit, qRect
 
    HB_SYMBOL_UNUSED( p1 )
 
@@ -451,6 +451,15 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
          ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, Len( ::getSelectedText() ) )
       ELSE
          ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, 0 )
+      ENDIF
+
+      IF ::aSelectionInfo[ 1 ] > -1
+         qRect := ::qEdit:cursorRect()
+         ::oDK:qSelToolbar:move( ::qEdit:viewport():mapToGlobal( QPoint( qRect:x() - 100, qRect:y() + qRect:height() ) ) )
+         ::oDK:qSelToolbar:adjustSize()
+         ::oDK:qSelToolbar:show()
+      ELSE
+         ::oDK:qSelToolbar:hide()
       ENDIF
 
       ::unHighlight()
