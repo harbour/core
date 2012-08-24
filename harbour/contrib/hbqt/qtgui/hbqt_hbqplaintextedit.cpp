@@ -851,7 +851,7 @@ void HBQPlainTextEdit::mouseReleaseEvent( QMouseEvent *event )
    {
       QPlainTextEdit::mouseReleaseEvent( event );
    }
-
+#if 0
    if( block )
    {
       PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::MouseButtonRelease );
@@ -862,6 +862,7 @@ void HBQPlainTextEdit::mouseReleaseEvent( QMouseEvent *event )
       hb_itemRelease( p2 );
       hb_itemRelease( p3 );
    }
+#endif
 }
 
 /*----------------------------------------------------------------------*/
@@ -926,7 +927,7 @@ void HBQPlainTextEdit::mousePressEvent( QMouseEvent *event )
          else
          {
             QPlainTextEdit::mousePressEvent( event );
-
+#if 0
             if( block )
             {
                PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::MouseButtonPress );
@@ -937,7 +938,7 @@ void HBQPlainTextEdit::mousePressEvent( QMouseEvent *event )
                hb_itemRelease( p2 );
                hb_itemRelease( p3 );
             }
-
+#endif
             dragStartPosition = event->pos();
             if( mouseMode == mouseMode_select && isCursorInSelection() )
             {
@@ -2280,6 +2281,11 @@ int HBQPlainTextEdit::hbGetLine( const QTextCursor &crQTextCursor )
 
 void HBQPlainTextEdit::hbSlotCursorPositionChanged()
 {
+   if( columnBegins >= 0 ) /* Under selection mode; do nothing */
+   {
+      return;
+   }
+
    if( m_currentBlockNumber != textCursor().blockNumber() )
    {
       m_currentBlockNumber = textCursor().blockNumber();
@@ -2290,7 +2296,9 @@ void HBQPlainTextEdit::hbSlotCursorPositionChanged()
    }
 
    if( styleHightlighter != "none" )
+   {
       hbBraceHighlight();
+   }
 }
 
 /*----------------------------------------------------------------------*/
@@ -2735,17 +2743,17 @@ void HBQPlainTextEdit::hbBraceHighlight()
          openBrace = "{";
          closeBrace = "}";
       }
-      if( ( brace == "[" ) || ( brace == "]" ) )
+      else if( ( brace == "[" ) || ( brace == "]" ) )
       {
          openBrace = "[";
          closeBrace = "]";
       }
-      if( ( brace == "(" ) || ( brace == ")" ) )
+      else if( ( brace == "(" ) || ( brace == ")" ) )
       {
          openBrace = "(";
          closeBrace = ")";
       }
-      if( ( brace == "<" ) || ( brace == ">" ) )
+      else if( ( brace == "<" ) || ( brace == ">" ) )
       {
          openBrace = "<";
          closeBrace = ">";
@@ -2757,17 +2765,46 @@ void HBQPlainTextEdit::hbBraceHighlight()
       cursor = textCursor();
       cursor.select( QTextCursor::WordUnderCursor );
       QString brace = cursor.selectedText();
-      //cursor.movePosition( QTextCursor::NextCharacter, QTextCursor::MoveAnchor );
 
-      if( brace == "IF" || brace == "ENDIF" )
+      if( brace == "IF"       || brace == "ENDIF"     ||
+          brace == "FOR"      || brace == "NEXT"      ||
+          brace == "SWITCH"   || brace == "ENDSWITCH" ||
+          brace == "DO"       || brace == "ENDCASE"   ||
+          brace == "CLASS"    || brace == "ENDCLASS"  ||
+          brace == "FUNCTION" || brace == "RETURN"     )
       {
          QString openBrace;
          QString closeBrace;
 
          if( ( brace == "IF" ) || ( brace == "ENDIF" ) )
          {
-            openBrace = "IF";
+            openBrace  = "IF";
             closeBrace = "ENDIF";
+         }
+         else if( ( brace == "FOR" ) || ( brace == "NEXT" ) )
+         {
+            openBrace  = "FOR";
+            closeBrace = "NEXT";
+         }
+         else if( ( brace == "SWITCH" ) || ( brace == "ENDSWITCH" ) )
+         {
+            openBrace  = "SWITCH";
+            closeBrace = "ENDSWITCH";
+         }
+         else if( ( brace == "DO" ) || ( brace == "ENDCASE" ) )
+         {
+            openBrace  = "DO";
+            closeBrace = "ENDCASE";
+         }
+         else if( ( brace == "FUNCTION" ) || ( brace == "RETURN" ) )
+         {
+            openBrace  = "FUNCTION";
+            closeBrace = "RETURN";
+         }
+         else if( ( brace == "CLASS" ) || ( brace == "ENDCLASS" ) )
+         {
+            openBrace  = "CLASS";
+            closeBrace = "ENDCLASS";
          }
          matchPair( cursor, brace, openBrace, closeBrace, true, QTextDocument::FindWholeWords );
       }
@@ -2779,51 +2816,48 @@ void HBQPlainTextEdit::hbBraceHighlight()
 void HBQPlainTextEdit::matchPair( QTextCursor cursor, QString brace, QString openBrace, QString closeBrace, bool bBraceAll, QTextDocument::FindFlags flags )
 {
    QTextDocument *doc = document();
-   QTextCursor cursor1;
-   QTextCursor cursor2;
+   QTextCursor cursorC;
+   QTextCursor cursorO;
    QTextCursor matches;
 
    if( brace == openBrace )
    {
-      cursor1 = doc->find( closeBrace, cursor );
-      cursor2 = doc->find( openBrace, cursor );
-      if( cursor2.isNull() )
+      cursorC = doc->find( closeBrace, cursor, flags );
+      cursorO = doc->find( openBrace, cursor, flags );
+      if( cursorO.isNull() )
       {
-         matches = cursor1;
+         matches = cursorC;
       }
       else
       {
-         while( cursor1.position() > cursor2.position() )
+         while( cursorC.position() > cursorO.position() )
          {
-            cursor1 = doc->find( closeBrace, cursor1, flags );
-            cursor2 = doc->find( openBrace, cursor2, flags );
-            if( cursor2.isNull() )
+            cursorC = doc->find( closeBrace, cursorC, flags );
+            cursorO = doc->find( openBrace, cursorO, flags );
+            if( cursorO.isNull() )
                 break;
          }
-         matches = cursor1;
+         matches = cursorC;
       }
    }
-   else
+   else if( brace == closeBrace )
    {
-      if( brace == closeBrace )
+      cursorO = doc->find( openBrace, cursor, QTextDocument::FindBackward | flags );
+      cursorC = doc->find( closeBrace, cursor, QTextDocument::FindBackward | flags );
+      if( cursorC.isNull() )
       {
-         cursor1 = doc->find( openBrace, cursor, QTextDocument::FindBackward | flags );
-         cursor2 = doc->find( closeBrace, cursor, QTextDocument::FindBackward | flags );
-         if( cursor2.isNull() )
+         matches = cursorO;
+      }
+      else
+      {
+         while( cursorO.position() < cursorC.position() )
          {
-            matches = cursor1;
+            cursorO = doc->find( openBrace, cursorO, QTextDocument::FindBackward | flags );
+            cursorC = doc->find( closeBrace, cursorC, QTextDocument::FindBackward | flags );
+            if( cursorC.isNull() )
+                break;
          }
-         else
-         {
-            while( cursor1.position() < cursor2.position() )
-            {
-               cursor1 = doc->find( openBrace, cursor1, QTextDocument::FindBackward | flags );
-               cursor2 = doc->find( closeBrace, cursor2, QTextDocument::FindBackward | flags );
-               if( cursor2.isNull() )
-                   break;
-            }
-            matches = cursor1;
-         }
+         matches = cursorO;
       }
    }
    if( ! matches.isNull() )
@@ -2833,7 +2867,7 @@ void HBQPlainTextEdit::matchPair( QTextCursor cursor, QString brace, QString ope
          selection.cursor = cursor;
          extraSelections.append( selection );
       }
-      selection.cursor = cursor1;
+      selection.cursor = matches;
       extraSelections.append( selection );
       setExtraSelections( extraSelections );
    }
