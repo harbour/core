@@ -155,8 +155,6 @@ static void hb_wvt_gtRestGuiState( PHB_GTWVT pWVT, LPRECT rect );
 static void hb_wvt_gtLoadGuiData( void );
 static void hb_wvt_gtReleaseGuiData( void );
 static HB_BOOL hb_gt_wvt_FullScreen( PHB_GT pGT );
-static HB_BOOL hb_gt_wvt_FitSizeRows( PHB_GTWVT pWVT );
-static HB_BOOL hb_gt_wvt_FitRows( PHB_GTWVT pWVT );
 
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 
@@ -707,18 +705,6 @@ static HB_BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
 static void hb_gt_wvt_TranslateKey( PHB_GTWVT pWVT, int key, int shiftkey, int altkey, int controlkey )
 {
    int nVirtKey;
-HB_TRACE( HB_TR_ALWAYS, ( "VKKEYS......." ) );      
-   if( key == K_LEFT || key == K_RIGHT || key == K_UP || key == K_DOWN )
-   {
-      nVirtKey = GetKeyState( VK_LWIN );
-      if( nVirtKey & 0x8000 )
-      {
-HB_TRACE( HB_TR_ALWAYS, ( "VKKEYS" ) );   
-         pWVT->bResizing = TRUE;
-         hb_gt_wvt_FitSizeRows( pWVT );
-         return;
-      }
-   }   
       
    nVirtKey = GetKeyState( VK_MENU );
    if( nVirtKey & 0x8000 ) /* alt + key */
