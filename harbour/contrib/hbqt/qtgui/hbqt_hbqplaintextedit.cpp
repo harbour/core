@@ -2281,11 +2281,6 @@ int HBQPlainTextEdit::hbGetLine( const QTextCursor &crQTextCursor )
 
 void HBQPlainTextEdit::hbSlotCursorPositionChanged()
 {
-   if( columnBegins >= 0 ) /* Under selection mode; do nothing */
-   {
-      return;
-   }
-
    if( m_currentBlockNumber != textCursor().blockNumber() )
    {
       m_currentBlockNumber = textCursor().blockNumber();
@@ -2295,7 +2290,7 @@ void HBQPlainTextEdit::hbSlotCursorPositionChanged()
       }
    }
 
-   if( styleHightlighter != "none" )
+   if( styleHightlighter != "none" && columnBegins == -1 )
    {
       hbBraceHighlight();
    }
