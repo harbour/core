@@ -1,4 +1,4 @@
-               /*
+                     /*
  * $Id$
  */
 
@@ -1212,7 +1212,6 @@ METHOD IdeEdit:handleTab( key )
    LOCAL nLen := ::nTabSpaces
    LOCAL nOff := iif( key == Qt_Key_Tab, nLen, -nLen )
 
-   HB_SYMBOL_UNUSED( key )
    IF ::lReadOnly
       RETURN Self
    ENDIF
@@ -1245,15 +1244,26 @@ METHOD IdeEdit:handleTab( key )
    CASE __selectionMode_stream__
    CASE __selectionMode_line__
       IF nL >= 0    /* Selection is marked */
-         ::cutBlockContents( Qt_Key_Delete )
-      ENDIF
-      IF key == Qt_Key_Tab
-         qCursor:insertText( Space( ::nTabSpaces ) )
-      ELSE
-         cLine := ::getLine( nRow + 1 )
-         cLine := substr( cLine, 1, nCol - nLen ) + substr( cLine, nCol + 1 )
-         hbide_qReplaceLine( qCursor, nRow, cLine )
+      // ::cutBlockContents( Qt_Key_Delete )  /* Other editors DO it like but FOR source code it must be different */
+         FOR i := nT TO nB
+            cLine := ::getLine( i + 1 )
+            IF key == Qt_Key_Tab
+               cLine := cComment + cLine
+            ELSE
+               cLine := substr( cLine, nLen + 1 )
+            ENDIF
+            hbide_qReplaceLine( qCursor, i, cLine )
+         NEXT
          hbide_qPositionCursor( qCursor, nRow, max( 0, nCol + nOff ) )
+      ELSE
+         IF key == Qt_Key_Tab
+            qCursor:insertText( Space( ::nTabSpaces ) )
+         ELSE
+            cLine := ::getLine( nRow + 1 )
+            cLine := substr( cLine, 1, nCol - nLen ) + substr( cLine, nCol + 1 )
+            hbide_qReplaceLine( qCursor, nRow, cLine )
+            hbide_qPositionCursor( qCursor, nRow, max( 0, nCol + nOff ) )
+         ENDIF
       ENDIF
       EXIT
    ENDSWITCH
@@ -1265,54 +1275,11 @@ METHOD IdeEdit:handleTab( key )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:blockIndent( nDirctn )
-   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, a_, nMode, cLineSel
-
-   IF ::lReadOnly
-      RETURN Self
+   IF nDirctn == 1
+      ::handleTab( Qt_Key_Tab )
+   ELSE
+      ::handleTab( Qt_Key_Backtab )
    ENDIF
-
-   aCord := ::aSelectionInfo
-   hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
-   nW := nR - nL
-
-   IF nW >= 0
-      nMode := aCord[ 5 ]
-      a_:= hbide_setQCursor( ::qEdit )
-      qCursor := a_[ 1 ]
-
-      FOR i := nT TO nB
-         cLine := ::getLine( i + 1 )
-
-         SWITCH nMode
-         CASE __selectionMode_column__
-            cLineSel := pad( substr( cLine, nL + 1, nW ), nW )
-            IF nDirctn == -1
-               IF left( cLineSel, 1 ) == " "
-                  cLineSel := substr( cLineSel, 2 )
-               ENDIF
-            ELSE
-               cLineSel := " " + cLineSel
-            ENDIF
-            cLine := pad( substr( cLine, 1, nL ), nL ) + cLineSel + substr( cLine, nR + 1 )
-            EXIT
-         CASE __selectionMode_stream__
-         CASE __selectionMode_line__
-            IF nDirctn == -1
-               IF left( cLine, 1 ) == " "
-                  cLine := substr( cLine, 2 )
-               ENDIF
-            ELSE
-               cLine := " " + cLine
-            ENDIF
-            EXIT
-         ENDSWITCH
-
-         hbide_qReplaceLine( qCursor, i, cLine )
-      NEXT
-
-      hbide_setQCursor( ::qEdit, a_ )
-   ENDIF
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
