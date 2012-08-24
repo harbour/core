@@ -26,6 +26,15 @@
 #include "hbdefs.h"
 #include "hb_io.h"
 
+#include "hbapi.h"
+#define HAVE_SNPRINTF 1
+#undef snprintf
+#define snprintf hb_snprintf
+
+#define HAVE_VSNPRINTF 1
+#undef vsnprintf
+#define vsnprintf hb_vsnprintf
+
 #if defined ( _MSC_VER )
 #define close      _close
 #define open       _open

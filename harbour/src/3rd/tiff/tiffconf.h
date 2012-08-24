@@ -47,13 +47,16 @@
 #define TIFF_UINT32_FORMAT "%u"
 
 /* Signed 64-bit type formatter */
-#define TIFF_INT64_FORMAT "%" PFLL "d"
+#define TIFF_INT64_FORMAT "%" HB_PF64 "d"
 
 /* Unsigned 64-bit type formatter */
-#define TIFF_UINT64_FORMAT "%" PFLL "u"
+#define TIFF_UINT64_FORMAT "%" HB_PF64 "u"
 
 /* Signed size type formatter */
 #define TIFF_SSIZE_FORMAT "%" HB_PFS "d"
+
+/* file handler */
+#define TIFF_FILE_HANDLE HB_FHANDLE
 
 /* Define to 1 if the system has the type `int16'. */
 #define HAVE_INT16

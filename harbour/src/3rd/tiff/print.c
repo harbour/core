@@ -101,7 +101,7 @@ _TIFFPrintField(FILE* fd, const TIFFField *fip,
 		else if(fip->field_type == TIFF_SLONG8)
 			fprintf(fd, TIFF_INT64_FORMAT, (TIFF_INT64_T)((int64 *) raw_data)[j]);
 		else if(fip->field_type == TIFF_IFD8)
-			fprintf(fd, "0x%" PFLL "x",
+			fprintf(fd, "0x%" HB_PF64 "x",
 				(TIFF_UINT64_T)((uint64 *) raw_data)[j]);
 		else if(fip->field_type == TIFF_FLOAT)
 			fprintf(fd, "%f", ((float *)raw_data)[j]);
@@ -224,7 +224,7 @@ TIFFPrintDirectory(TIFF* tif, FILE* fd, long flags)
 	uint16 i;
 	long l, n;
 
-	fprintf(fd, "TIFF Directory at offset 0x%" PFLL "x (%" PFLL "u)\n",
+	fprintf(fd, "TIFF Directory at offset 0x%" HB_PF64 "x (%" HB_PF64 "u)\n",
 		(TIFF_UINT64_T) tif->tif_diroff,
 		(TIFF_UINT64_T) tif->tif_diroff);
 	if (TIFFFieldSet(tif,FIELD_SUBFILETYPE)) {
@@ -530,7 +530,7 @@ TIFFPrintDirectory(TIFF* tif, FILE* fd, long flags)
 	if (TIFFFieldSet(tif, FIELD_SUBIFD) && (td->td_subifd)) {
 		fprintf(fd, "  SubIFD Offsets:");
 		for (i = 0; i < td->td_nsubifd; i++)
-			fprintf(fd, " %5" PFLL "u",
+			fprintf(fd, " %5" HB_PF64 "u",
 				(TIFF_UINT64_T) td->td_subifd[i]);
 		fputc('\n', fd);
 	}
@@ -631,7 +631,7 @@ TIFFPrintDirectory(TIFF* tif, FILE* fd, long flags)
 		    (long) td->td_nstrips,
 		    isTiled(tif) ? "Tiles" : "Strips");
 		for (s = 0; s < td->td_nstrips; s++)
-			fprintf(fd, "    %3lu: [%8" PFLL "u, %8" PFLL "u]\n",
+			fprintf(fd, "    %3lu: [%8" HB_PF64 "u, %8" HB_PF64 "u]\n",
 			    (unsigned long) s,
 			    (TIFF_UINT64_T) td->td_stripoffset[s],
 			    (TIFF_UINT64_T) td->td_stripbytecount[s]);

@@ -102,6 +102,8 @@ DECLARE_HANDLE(thandle_t);     /* Win32 file handle */
 # else
 typedef HFILE thandle_t;       /* client data handle */
 # endif /* __WIN32__ */
+#elif defined(TIFF_FILE_HANDLE)
+typedef TIFF_FILE_HANDLE thandle_t; /* client data handle */
 #else
 typedef void* thandle_t;       /* client data handle */
 #endif /* USE_WIN32_FILEIO */

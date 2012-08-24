@@ -60,6 +60,7 @@ ifeq ($(HB_PLATFORM),win)
 #  HB_CFLAGS += -DUSE_WIN32_FILEIO
 else ifeq ($(HB_PLATFORM_UNIX),yes)
    C_SOURCES += unix.c
+   HB_CFLAGS += -DHAVE_FCNTL_H
 endif
 
 ifeq ($(filter $(HB_COMPILER),<>),)

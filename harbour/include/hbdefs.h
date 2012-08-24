@@ -317,6 +317,7 @@ typedef HB_UCHAR            HB_U8;
    #define HB_I64_MIN          LONG_MIN
    #define HB_I64_MAX          LONG_MAX
    #define HB_U64_MAX          ULONG_MAX
+   #define HB_PF64             "l"
 #  if !defined( UINT64_MAX )
 #     define UINT64_MAX    ULONG_MAX
 #  endif
@@ -716,6 +717,10 @@ typedef HB_U32 HB_FATTR;
 #endif
 #ifndef PFHL
 #  define PFHL    PFLL
+#endif
+
+#ifndef HB_PF64
+#  defien HB_PF64 PFLL
 #endif
 
 #if defined( HB_OS_WIN_64 )

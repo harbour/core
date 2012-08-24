@@ -84,13 +84,6 @@ static HB_UINT SCItm( char * cBuffer, HB_UINT ulMaxBuf, char * cParFrm, int iCOu
 {
    HB_UINT s;
 
-   /* NOTE: In DJGPP (4.2.3) hb_snprintf() will be preprocessed to sprintf(), which
-            makes ulMaxBuf unused, and this in turn causes a warning, so we're
-            manually suppressing it. [vszakats] */
-   #if defined( __DJGPP__ )
-   HB_SYMBOL_UNUSED( ulMaxBuf );
-   #endif
-
    if( IsIndW && IsIndP )
    {
       switch( iCOut )
@@ -106,9 +99,8 @@ static HB_UINT SCItm( char * cBuffer, HB_UINT ulMaxBuf, char * cParFrm, int iCOu
          break;
       /* case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X': */
       default:
-         s =
-            hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec,
-                         ( HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar ) ) );
+         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec,
+                          HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar ) );
       }
    }
    else if( IsIndW || IsIndP )
@@ -128,9 +120,8 @@ static HB_UINT SCItm( char * cBuffer, HB_UINT ulMaxBuf, char * cParFrm, int iCOu
          break;
       /* case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X': */
       default:
-         s =
-            hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iInd,
-                         ( HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar ) ) );
+         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iInd,
+                          HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar ) );
       }
    }
    else
@@ -148,9 +139,8 @@ static HB_UINT SCItm( char * cBuffer, HB_UINT ulMaxBuf, char * cParFrm, int iCOu
          break;
       /* case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X': */
       default:
-         s =
-            hb_snprintf( cBuffer, ulMaxBuf, cParFrm,
-                         ( HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar ) ) );
+         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm,
+                          HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar ) );
       }
    }
    return s;

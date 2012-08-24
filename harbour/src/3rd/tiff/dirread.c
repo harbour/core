@@ -3194,7 +3194,7 @@ static enum TIFFReadDirEntryErr TIFFReadDirEntryCheckRangeLongSlong(int32 value)
 /*
  * Largest 32-bit unsigned integer value.
  */
-#define TIFF_UINT32_MAX UINT64_MAX
+#define TIFF_UINT32_MAX UINT32_MAX
 
 static enum TIFFReadDirEntryErr
 TIFFReadDirEntryCheckRangeLongLong8(uint64 value)

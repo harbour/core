@@ -401,21 +401,21 @@ STATIC PROCEDURE AddInline( cMethod, bCode, nScope )
 
    RETURN
 
-STATIC PROCEDURE AddMethod( cMethod, nFuncPtr, nScope )
+STATIC PROCEDURE AddMethod( cMethod, sFuncSym, nScope )
 
    hb_default( @nScope, HB_OO_CLSTP_EXPORTED )
 
-   AAdd( QSelf():aMethods, { cMethod, nFuncPtr, nScope } )
+   AAdd( QSelf():aMethods, { cMethod, sFuncSym, nScope } )
 
    RETURN
 
-STATIC PROCEDURE AddClsMethod( cMethod, nFuncPtr, nScope )
+STATIC PROCEDURE AddClsMethod( cMethod, sFuncSym, nScope )
 
    hb_default( @nScope, HB_OO_CLSTP_EXPORTED )
 
    nScope := hb_bitOr( nScope, HB_OO_CLSTP_CLASS )
 
-   AAdd( QSelf():aClsMethods, { cMethod, nFuncPtr, nScope } )
+   AAdd( QSelf():aClsMethods, { cMethod, sFuncSym, nScope } )
 
    RETURN
 

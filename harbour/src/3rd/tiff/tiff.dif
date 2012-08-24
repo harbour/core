@@ -19,7 +19,7 @@ diff -urN tiff.orig\dirread.c tiff\dirread.c
 -#else
 -# define TIFF_UINT32_MAX 0xFFFFFFFFLL
 -#endif
-+#define TIFF_UINT32_MAX UINT64_MAX
++#define TIFF_UINT32_MAX UINT32_MAX
  
  static enum TIFFReadDirEntryErr
  TIFFReadDirEntryCheckRangeLongLong8(uint64 value)
@@ -216,7 +216,7 @@ diff -urN tiff.orig\print.c tiff\print.c
 -			fprintf(fd, "0x%llx",
 -				(unsigned long long)((uint64 *) raw_data)[j]);
 -#endif
-+			fprintf(fd, "0x%" PFLL "x",
++			fprintf(fd, "0x%" HB_PF64 "x",
 +				(TIFF_UINT64_T)((uint64 *) raw_data)[j]);
  		else if(fip->field_type == TIFF_FLOAT)
  			fprintf(fd, "%f", ((float *)raw_data)[j]);
@@ -234,7 +234,7 @@ diff -urN tiff.orig\print.c tiff\print.c
 -		(unsigned long long) tif->tif_diroff,
 -		(unsigned long long) tif->tif_diroff);
 -#endif
-+	fprintf(fd, "TIFF Directory at offset 0x%" PFLL "x (%" PFLL "u)\n",
++	fprintf(fd, "TIFF Directory at offset 0x%" HB_PF64 "x (%" HB_PF64 "u)\n",
 +		(TIFF_UINT64_T) tif->tif_diroff,
 +		(TIFF_UINT64_T) tif->tif_diroff);
  	if (TIFFFieldSet(tif,FIELD_SUBFILETYPE)) {
@@ -251,7 +251,7 @@ diff -urN tiff.orig\print.c tiff\print.c
 -			fprintf(fd, " %5llu",
 -				(unsigned long long) td->td_subifd[i]);
 -#endif
-+			fprintf(fd, " %5" PFLL "u",
++			fprintf(fd, " %5" HB_PF64 "u",
 +				(TIFF_UINT64_T) td->td_subifd[i]);
  		fputc('\n', fd);
  	}
@@ -262,7 +262,7 @@ diff -urN tiff.orig\print.c tiff\print.c
  		for (s = 0; s < td->td_nstrips; s++)
 -#if defined(__WIN32__) && (defined(_MSC_VER) || defined(__MINGW32__))
 -			fprintf(fd, "    %3lu: [%8I64u, %8I64u]\n",
-+			fprintf(fd, "    %3lu: [%8" PFLL "u, %8" PFLL "u]\n",
++			fprintf(fd, "    %3lu: [%8" HB_PF64 "u, %8" HB_PF64 "u]\n",
  			    (unsigned long) s,
 -			    (unsigned __int64) td->td_stripoffset[s],
 -			    (unsigned __int64) td->td_stripbytecount[s]);
@@ -598,10 +598,10 @@ diff -urN tiff.orig\tiffconf.h tiff\tiffconf.h
 +#define TIFF_UINT32_FORMAT "%u"
 +
 +/* Signed 64-bit type formatter */
-+#define TIFF_INT64_FORMAT "%" PFLL "d"
++#define TIFF_INT64_FORMAT "%" HB_PF64 "d"
 +
 +/* Unsigned 64-bit type formatter */
-+#define TIFF_UINT64_FORMAT "%" PFLL "u"
++#define TIFF_UINT64_FORMAT "%" HB_PF64 "u"
 +
 +/* Signed size type formatter */
 +#define TIFF_SSIZE_FORMAT "%" HB_PFS "d"
