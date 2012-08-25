@@ -1752,6 +1752,7 @@ METHOD IdeEditor:updateComponents()
    qCoEdit:toggleCurrentLineHighlightMode()
    qCoEdit:dispStatusInfo()
    ::oUpDn:show()
+   ::oDK:showSelectedTextToolbar()
    ::changeThumbnail()
 
    RETURN Self

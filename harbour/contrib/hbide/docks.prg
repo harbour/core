@@ -207,6 +207,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD buildCuiEdWidget()
    METHOD buildUISrcDock()
    METHOD buildSelectedTextToolbar()
+   METHOD showSelectedTextToolbar( oEdit )
 
    ENDCLASS
 
@@ -855,6 +856,7 @@ METHOD IdeDocks:execEvent( nEvent, p, p1 )
                oEdit:qCoEdit:toggleCurrentLineHighlightMode()
                oEdit:qCoEdit:dispStatusInfo()
                ::oUpDn:show()
+               ::oDK:showSelectedTextToolbar()
                oEdit:changeThumbnail()
             ENDIF
 
@@ -919,6 +921,7 @@ METHOD IdeDocks:execEvent( nEvent, p, p1 )
                oEdit:qCoEdit:toggleCurrentLineHighlightMode()
                oEdit:qCoEdit:dispStatusInfo()
                ::oUpDn:show()
+               ::oDK:showSelectedTextToolbar()
                oEdit:changeThumbnail()
             ENDIF
          ENDIF
@@ -2048,6 +2051,29 @@ METHOD IdeDocks:buildUISrcDock()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeDocks:showSelectedTextToolbar( oEdit )
+   LOCAL qRect
+
+   DEFAULT oEdit TO ::oEM:getEditObjectCurrent()
+
+   IF ! empty( oEdit )
+      IF oEdit:aSelectionInfo[ 1 ] > -1
+         ::qSelToolbar:adjustSize()
+         qRect := oEdit:qEdit:cursorRect()
+         ::qSelToolbar:move( oEdit:qEdit:viewport():mapToGlobal( QPoint( ( oEdit:qEdit:viewport():width() / 2 ) - ;
+                                            ( ::qSelToolbar:width() / 2 ), qRect:y() + ( qRect:height() * 2 ) ) ) )
+         //::oDK:qSelToolbar:setOrientation( Qt_Vertical )
+         ::qSelToolbar:show()
+         ::qSelToolbar:raise()
+      ELSE
+         ::qSelToolbar:hide()
+      ENDIF
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeDocks:buildSelectedTextToolbar()
    LOCAL qTBar
 
@@ -2056,33 +2082,30 @@ METHOD IdeDocks:buildSelectedTextToolbar()
    //::qSelToolbar:size := QSize(  val( ::oINI:cToolbarSize ), val( ::oINI:cToolbarSize ) )
    ::qSelToolbar:create( "SelectedText_Toolbar" )
    ::qSelToolbar:setObjectName( "ToolbarSelectedText" )
-   ::qSelToolbar:setWindowTitle( "Toolbar: Selected Text" )
-   ::qSelToolbar:setWindowFlags( hb_bitOr( Qt_Tool, Qt_FramelessWindowHint ) )
+   ::qSelToolbar:setWindowTitle( "Actions on Selected Text" )
+   ::qSelToolbar:setWindowFlags( hb_bitOr( Qt_Tool, Qt_CustomizeWindowHint, Qt_WindowTitleHint, Qt_WindowCloseButtonHint ) )
    ::qSelToolbar:setMovable( .T. )
    ::qSelToolbar:setFloatable( .T. )
-   ::oDlg:oWidget:addToolBar( Qt_TopToolBarArea, ::qSelToolbar:oWidget )
    ::qSelToolbar:hide()
-   ::qSelToolbar:setStyleSheet( "" )
-   ::qSelToolbar:setStyleSheet( "background-color: yellow;" )
 
    qTBar := ::qSelToolbar
 
    qTBar:addToolButton( "Undo"      , "Undo"                       , hbide_image( "undo"          ), {|| ::oEM:undo()                        }, .f. )
    qTBar:addToolButton( "Redo"      , "Redo"                       , hbide_image( "redo"          ), {|| ::oEM:redo()                        }, .f. )
-   qTBar:addSeparator()
+   //qTBar:addSeparator()
    qTBar:addToolButton( "Cut"       , "Cut"                        , hbide_image( "cut"           ), {|| ::oEM:cut()                         }, .f. )
    qTBar:addToolButton( "Copy"      , "Copy"                       , hbide_image( "copy"          ), {|| ::oEM:copy()                        }, .f. )
-   qTBar:addSeparator()
+   //qTBar:addSeparator()
    qTBar:addToolButton( "ToUpper"   , "To Upper"                   , hbide_image( "toupper"       ), {|| ::oEM:convertSelection( "ToUpper" ) }, .f. )
    qTBar:addToolButton( "ToLower"   , "To Lower"                   , hbide_image( "tolower"       ), {|| ::oEM:convertSelection( "ToLower" ) }, .f. )
    qTBar:addToolButton( "InvertCase", "Invert Case"                , hbide_image( "invertcase"    ), {|| ::oEM:convertSelection( "Invert"  ) }, .f. )
-   qTBar:addSeparator()
+   //qTBar:addSeparator()
    qTBar:addToolButton( "BlockCmnt" , "Block Comment"              , hbide_image( "blockcomment"  ), {|| ::oEM:blockComment()                }, .f. )
    qTBar:addToolButton( "StreamCmnt", "Stream Comment"             , hbide_image( "streamcomment" ), {|| ::oEM:streamComment()               }, .f. )
-   qTBar:addSeparator()
+   //qTBar:addSeparator()
    qTBar:addToolButton( "IndentR"   , "Indent Right"               , hbide_image( "blockindentr"  ), {|| ::oEM:indent(  1 )                  }, .f. )
    qTBar:addToolButton( "IndentL"   , "Indent Left"                , hbide_image( "blockindentl"  ), {|| ::oEM:indent( -1 )                  }, .f. )
-   qTBar:addSeparator()
+   //qTBar:addSeparator()
    qTBar:addToolButton( "Sgl2Dbl"   , "Single to Double Quotes"    , hbide_image( "sgl2dblquote"  ), {|| ::oEM:convertDQuotes()              }, .f. )
    qTBar:addToolButton( "Dbl2Sgl"   , "Double to Single Quotes"    , hbide_image( "dbl2sglquote"  ), {|| ::oEM:convertQuotes()               }, .f. )
 

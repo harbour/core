@@ -411,7 +411,7 @@ METHOD IdeEdit:connectEditSignals()
 /*----------------------------------------------------------------------*/
 
 METHOD IdeEdit:execEvent( nMode, p, p1 )
-   LOCAL qAct, n, qCursor, cAct, lOtherEdit, qRect
+   LOCAL qAct, n, qCursor, cAct, lOtherEdit
 
    HB_SYMBOL_UNUSED( p1 )
 
@@ -453,15 +453,7 @@ METHOD IdeEdit:execEvent( nMode, p, p1 )
          ::oDK:setStatusText( SB_PNL_SELECTEDCHARS, 0 )
       ENDIF
 
-      IF ::aSelectionInfo[ 1 ] > -1
-         qRect := ::qEdit:cursorRect()
-         ::oDK:qSelToolbar:move( ::qEdit:viewport():mapToGlobal( QPoint( qRect:x() - 100, qRect:y() + qRect:height() ) ) )
-         ::oDK:qSelToolbar:adjustSize()
-         ::oDK:qSelToolbar:show()
-      ELSE
-         ::oDK:qSelToolbar:hide()
-      ENDIF
-
+      ::oDK:showSelectedTextToolbar( Self )
       ::unHighlight()
       ::oUpDn:show( Self )
       EXIT
@@ -648,10 +640,12 @@ METHOD IdeEdit:execKeyEvent( nMode, nEvent, p, p1, p2 )
    CASE QEvent_FocusIn
       IF key == QEvent_FocusIn
          ::oUpDn:show()
+         ::oDK:showSelectedTextToolbar()
       ENDIF
       EXIT
    CASE QEvent_Resize
       ::oUpDn:show()
+      ::oDK:showSelectedTextToolbar()
       EXIT
    CASE QEvent_Leave
    CASE QEvent_FocusOut
