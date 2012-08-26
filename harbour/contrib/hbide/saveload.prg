@@ -152,6 +152,7 @@
 #define __radioDictAsIn_clicked__                 2074
 #define __buttonDictAdd_clicked__                 2075
 #define __buttonDictDelete_clicked__              2076
+#define __checkShowSelToolbar_stateChanged__      2077
 
 /*----------------------------------------------------------------------*/
 //
@@ -234,6 +235,7 @@ CLASS IdeINI INHERIT IdeObject
    DATA   lTabToSpcInEdits                        INIT  .t.
  //DATA   nTabSpaces                              INIT  ::oIde:nTabSpaces
    DATA   nIndentSpaces                           INIT  3
+   DATA   lSelToolbar                             INIT  .T.
 
    DATA   nTmpBkpPrd                              INIT  60
    DATA   cBkpPath                                INIT  ""
@@ -557,6 +559,8 @@ METHOD IdeINI:save( cHbideIni )
    AAdd( txt_, "ISData"                    + "=" +   ::cISData     )
    AAdd( txt_, "ISMethods"                 + "=" +   ::cISMethods  )
    AAdd( txt_, "ISFormat"                  + "=" +   ::cISFormat   )
+   //
+   AAdd( txt_, "SelToolbar"                + "=" +   iif( ::lSelToolbar            , "YES", "NO" )      )
 
    aadd( txt_, "" )
    aadd( txt_, "[PROJECTS]" )
@@ -919,6 +923,8 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "ISData"                      ; ::cISData                           := cVal              ; EXIT
                      CASE "ISMethods"                   ; ::cISMethods                        := cVal              ; EXIT
                      CASE "ISFormat"                    ; ::cISFormat                         := cVal              ; EXIT
+                     //
+                     CASE "SelToolbar"                  ; ::lSelToolbar                       := !( cVal == "NO" ) ; EXIT
 
                      ENDSWITCH
                   ENDIF
@@ -1448,6 +1454,7 @@ METHOD IdeSetup:connectSlots()
    ::oUI:checkLineNumbers    :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkLineNumbers_stateChanged__        , i       ) } )
    ::oUI:checkShowLeftToolbar:connect( "stateChanged(int)"       , {|i| ::execEvent( __checkShowLeftToolbar_stateChanged__    , i       ) } )
    ::oUI:checkShowTopToolbar :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkShowTopToolbar_stateChanged__     , i       ) } )
+   ::oUI:checkShowSelToolbar :connect( "stateChanged(int)"       , {|i| ::execEvent( __checkShowSelToolbar_stateChanged__     , i       ) } )
 
    ::oUI:sliderRed           :connect( "valueChanged(int)"       , {|i| ::execEvent( __sliderValue_changed__                  , i, "R"  ) } )
    ::oUI:sliderGreen         :connect( "valueChanged(int)"       , {|i| ::execEvent( __sliderValue_changed__                  , i, "G"  ) } )
@@ -1545,6 +1552,7 @@ METHOD IdeSetup:retrieve()
    ::oIde:nTabSpaces               := val( ::oUI:editTabSpaces           : text() )
    ::oINI:nIndentSpaces            := val( ::oUI:editIndentSpaces        : text() )
    ::oINI:lEditsMdi                := ::oUI:checkEditsMdi                : isChecked()
+   ::oINI:lSelToolbar              := ::oUI:checkShowSelToolbar          : isChecked()
 
    ::oINI:aKeywords := {}
    FOR EACH a_ IN ::aKeyItems
@@ -1642,6 +1650,7 @@ METHOD IdeSetup:populate()
    ::oUI:editTabSpaces                : setText( hb_ntos( ::oIde:nTabSpaces    )        )
    ::oUI:editIndentSpaces             : setText( hb_ntos( ::oINI:nIndentSpaces )        )
    ::oUI:checkEditsMdi                : setChecked( ::oINI:lEditsMdi                    )
+   ::oUI:checkShowSelToolbar          : setChecked( ::oINI:lSelToolbar                  )
 
    /* Paths */
    ::oUI:editPathIni                  : setText( ::oIde:cProjIni                        )
@@ -1864,6 +1873,10 @@ METHOD IdeSetup:execEvent( nEvent, p, p1 )
 
    CASE __checkLineNumbers_stateChanged__
       ::oEM:toggleLineNumbers()
+      EXIT
+
+   CASE __checkShowSelToolbar_stateChanged__
+      ::oINI:lSelToolbar := ( p != 0 )
       EXIT
 
    CASE __checkShowTopToolbar_stateChanged__

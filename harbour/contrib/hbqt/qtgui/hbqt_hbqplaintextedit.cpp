@@ -2764,7 +2764,7 @@ void HBQPlainTextEdit::hbBraceHighlight()
       if( brace == "IF"       || brace == "ENDIF"     ||
           brace == "FOR"      || brace == "NEXT"      ||
           brace == "SWITCH"   || brace == "ENDSWITCH" ||
-          brace == "DO"       || brace == "ENDCASE"   ||
+          brace == "DO"       || brace == "ENDCASE"   || brace == "ENDDO" ||
           brace == "CLASS"    || brace == "ENDCLASS"  ||
           brace == "FUNCTION" || brace == "RETURN"     )
       {
@@ -2786,10 +2786,34 @@ void HBQPlainTextEdit::hbBraceHighlight()
             openBrace  = "SWITCH";
             closeBrace = "ENDSWITCH";
          }
-         else if( ( brace == "DO" ) || ( brace == "ENDCASE" ) )
+         else if( ( brace == "DO" ) || ( brace == "ENDCASE" ) || ( brace == "ENDDO" ) )
          {
-            openBrace  = "DO";
-            closeBrace = "ENDCASE";
+            if( brace == "DO" )
+            {
+               cursor.movePosition( QTextCursor::NextWord, QTextCursor::KeepAnchor );
+               cursor.movePosition( QTextCursor::EndOfWord, QTextCursor::KeepAnchor );
+               brace = cursor.selectedText();
+               if( brace == "DO CASE" )
+               {
+                  openBrace = "DO CASE";
+                  closeBrace = "ENDCASE";
+               }
+               else if( brace == "DO WHILE" )
+               {
+                  openBrace = "DO WHILE";
+                  closeBrace = "ENDDO";
+               }
+            }
+            else if( brace == "ENDCASE" )
+            {
+               openBrace  = "DO CASE";
+               closeBrace = "ENDCASE";
+            }
+            else
+            {
+               openBrace  = "DO WHILE";
+               closeBrace = "ENDDO";
+            }
          }
          else if( ( brace == "FUNCTION" ) || ( brace == "RETURN" ) )
          {

@@ -134,7 +134,7 @@ METHOD HbqToolbar:create( cName, oParent )
 
    DEFAULT ::size TO QSize( 16,16 )
 
-   ::oWidget := QToolbar()
+   ::oWidget := QToolbar( ::oParent )
    ::oWidget:setObjectName( ::cName )
    ::oWidget:setAllowedAreas( ::allowedAreas )
    ::oWidget:setOrientation( ::orientation )

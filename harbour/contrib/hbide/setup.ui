@@ -44,7 +44,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>6</number>
+    <number>0</number>
    </property>
    <widget class="QWidget" name="pageGeneral">
     <widget class="QGroupBox" name="groupBox">
@@ -381,7 +381,7 @@
        <property name="geometry">
         <rect>
          <x>182</x>
-         <y>28</y>
+         <y>48</y>
          <width>135</width>
          <height>22</height>
         </rect>
@@ -391,7 +391,7 @@
        <property name="geometry">
         <rect>
          <x>184</x>
-         <y>12</y>
+         <y>32</y>
          <width>46</width>
          <height>14</height>
         </rect>
@@ -447,6 +447,19 @@
          <width>37</width>
          <height>21</height>
         </rect>
+       </property>
+      </widget>
+      <widget class="QCheckBox" name="checkShowSelToolbar">
+       <property name="geometry">
+        <rect>
+         <x>180</x>
+         <y>12</y>
+         <width>133</width>
+         <height>17</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Show Selection Toolbar</string>
        </property>
       </widget>
      </widget>
