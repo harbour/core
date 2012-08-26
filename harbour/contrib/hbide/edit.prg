@@ -255,6 +255,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD handleTab( key )
    METHOD matchPair( x, y )
    METHOD unmatchPair()
+   METHOD alignAt( cAt )
 
    ENDCLASS
 
@@ -1283,6 +1284,44 @@ METHOD IdeEdit:blockIndent( nDirctn )
    ELSE
       ::handleTab( Qt_Key_Backtab )
    ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:alignAt( cAt )
+   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, a_, nMax, n, c1st, c2nd
+
+   IF ::lReadOnly
+      RETURN Self
+   ENDIF
+
+   nMax := 0
+   aCord := ::aSelectionInfo
+   hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
+   nW := nR - nL
+   a_:= hbide_setQCursor( ::qEdit ) ; qCursor := a_[ 1 ]
+   IF nW >= 0
+      FOR i := nT TO nB
+         cLine := ::getLine( i + 1 )
+         IF ( n := At( cAt, SubStr( cLine, nL, nR - nL + 1 ) ) ) > 0
+            nMax := Max( nMax, n )
+         ENDIF
+      NEXT
+   ENDIF
+   IF nMax > 0
+      nMax += nL - 2
+      FOR i := nT TO nB
+         cLine := ::getLine( i + 1 )
+         IF ( n := At( cAt, cLine ) ) > 0
+            c1st := SubStr( cLine, 1, n - 1 )
+            c2nd := SubStr( cLine, n )
+            cLine := PadR( c1st, nMax ) + c2nd
+         ENDIF
+         hbide_qReplaceLine( qCursor, i, cLine )
+      NEXT
+   ENDIF
+   hbide_setQCursor( ::qEdit, a_ )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

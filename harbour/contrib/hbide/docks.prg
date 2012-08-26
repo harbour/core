@@ -1276,6 +1276,8 @@ METHOD IdeDocks:buildMdiToolbar()
    qTBar:addSeparator()
    qTBar:addToolButton( "Sgl2Dbl"   , "Single to Double Quotes"    , hbide_image( "sgl2dblquote"  ), {|| ::oEM:convertDQuotes()              }, .f. )
    qTBar:addToolButton( "Dbl2Sgl"   , "Double to Single Quotes"    , hbide_image( "dbl2sglquote"  ), {|| ::oEM:convertQuotes()               }, .f. )
+   qTBar:addSeparator()
+   qTBar:addToolButton( "AlignAt"   , "Align At..."                , hbide_image( "align_at"      ), {|| ::oEM:alignAt()                     }, .f. )
 
    IF ! ::oINI:lShowEditsTopToolbar
       ::qMdiToolbar:hide()
@@ -1820,8 +1822,8 @@ METHOD IdeDocks:getMarkWidget( nIndex )
    ::oIde:aMarkTBtns[ nIndex ]:setMaximumWidth( 12 )
    ::oIde:aMarkTBtns[ nIndex ]:setStyleSheet( "background-color: " + aColors[ nIndex ] + ";" )
    ::oIde:aMarkTBtns[ nIndex ]:hide()
-   ::oIde:aMarkTBtns[ nIndex ]:connect( "clicked()" , {|| ::oEM:gotoMark( nIndex ) } )
-   ::oIde:aMarkTBtns[ nIndex ]:connect( QEvent_Enter, {|| ::oEM:setTooltipMark( nIndex ) } )
+   ::oIde:aMarkTBtns[ nIndex ]:connect( "clicked()" , {|| ::oEM:gotoMark( nIndex )        } )
+   ::oIde:aMarkTBtns[ nIndex ]:connect( QEvent_Enter, {|| ::oEM:setTooltipMark( nIndex )  } )
 
    RETURN ::oIde:aMarkTBtns[ nIndex ]
 
@@ -2118,6 +2120,7 @@ METHOD IdeDocks:buildSelectedTextToolbar()
    qTBar:addToolButton( "Redo"      , "Redo"                       , hbide_image( "redo"          ), {|| ::oEM:redo()                        }, .f. )
    qTBar:addToolButton( "Cut"       , "Cut"                        , hbide_image( "cut"           ), {|| ::oEM:cut()                         }, .f. )
    qTBar:addToolButton( "Copy"      , "Copy"                       , hbide_image( "copy"          ), {|| ::oEM:copy()                        }, .f. )
+   qTBar:addToolButton( "SelMode"   , "Selection Mode"             , hbide_image( "stream"        ), {|| ::oEM:toggleSelectionMode(), ::oIDE:manageFocusInEditor() }, .t. )
    qTBar:addToolButton( "ToUpper"   , "To Upper"                   , hbide_image( "toupper"       ), {|| ::oEM:convertSelection( "ToUpper" ) }, .f. )
    qTBar:addToolButton( "ToLower"   , "To Lower"                   , hbide_image( "tolower"       ), {|| ::oEM:convertSelection( "ToLower" ) }, .f. )
    qTBar:addToolButton( "InvertCase", "Invert Case"                , hbide_image( "invertcase"    ), {|| ::oEM:convertSelection( "Invert"  ) }, .f. )
@@ -2127,6 +2130,7 @@ METHOD IdeDocks:buildSelectedTextToolbar()
    qTBar:addToolButton( "IndentL"   , "Indent Left"                , hbide_image( "blockindentl"  ), {|| ::oEM:indent( -1 )                  }, .f. )
    qTBar:addToolButton( "Sgl2Dbl"   , "Single to Double Quotes"    , hbide_image( "sgl2dblquote"  ), {|| ::oEM:convertDQuotes()              }, .f. )
    qTBar:addToolButton( "Dbl2Sgl"   , "Double to Single Quotes"    , hbide_image( "dbl2sglquote"  ), {|| ::oEM:convertQuotes()               }, .f. )
+   qTBar:addToolButton( "AlignAt"   , "Align At..."                , hbide_image( "align_at"      ), {|| ::oEM:alignAt()                     }, .f. )
 
    RETURN Self
 

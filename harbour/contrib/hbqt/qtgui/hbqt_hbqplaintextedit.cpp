@@ -808,7 +808,7 @@ void HBQPlainTextEdit::mouseDoubleClickEvent( QMouseEvent *event )
       iClicks = 2;
       repaint();
    }
-
+   /* Required because few actions are bound by it */
    if( block )
    {
       PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::MouseButtonDblClick );
@@ -1011,6 +1011,9 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
       }
       else if( mouseMode == mouseMode_select )
       {
+         extraSelections.clear();
+         setExtraSelections( extraSelections );
+
          if( selectionMode == selectionMode_column )
          {
             QTextCursor c( cursorForPosition( QPoint( 1,1 ) ) );
@@ -1029,6 +1032,7 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
       }
       hbPostSelectionInfo();
    }
+#if 0
    if( block )
    {
       PHB_ITEM p1 = hb_itemPutNI( NULL, QEvent::MouseMove );
@@ -1039,6 +1043,7 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
       hb_itemRelease( p2 );
       hb_itemRelease( p3 );
    }
+#endif
 }
 
 /*----------------------------------------------------------------------*/
@@ -1299,6 +1304,9 @@ bool HBQPlainTextEdit::hbKeyPressSelection( QKeyEvent * event )
 
 void HBQPlainTextEdit::keyPressEvent( QKeyEvent * event )
 {
+   extraSelections.clear();
+   setExtraSelections( extraSelections );
+
    if( hbHandlePopup( event ) )
    {
       return;

@@ -82,6 +82,11 @@
 #define __qTimeSave_timeout__                     2005
 #define __qTab_contextMenu__                      2006
 
+
+#define __selectionMode_stream__                  1
+#define __selectionMode_column__                  2
+#define __selectionMode_line__                    3
+
 /*----------------------------------------------------------------------*/
 
 CLASS IdeEditsManager INHERIT IdeObject
@@ -189,6 +194,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD updateCompleter()
    METHOD updateFieldsList( cAlias )
    METHOD getProto( cWord )
+   METHOD alignAt()
 
    ENDCLASS
 
@@ -877,6 +883,19 @@ METHOD IdeEditsManager:convertDQuotes()
    LOCAL oEdit
    IF !empty( oEdit := ::getEditObjectCurrent() )
       oEdit:convertDQuotes()
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:alignAt()
+   LOCAL oEdit, cWord
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      IF oEdit:aSelectionInfo[ 5 ] == __selectionMode_column__
+         IF ! Empty( cWord := hbide_fetchAString( ::oDlg:oWidget, "", "Align At ?", "Selected-Text Alignment Proto" ) )
+            oEdit:alignAt( cWord )
+         ENDIF
+      ENDIF
    ENDIF
    RETURN Self
 
