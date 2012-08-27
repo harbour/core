@@ -78,11 +78,14 @@
 
 #if ( defined( HB_OS_LINUX ) && ( !defined( __WATCOMC__ ) || __WATCOMC__ >= 1280 ) ) || \
     defined( HB_OS_BSD ) || defined( HB_OS_DARWIN ) || defined( HB_OS_SUNOS )
-   #define HB_HAS_MKSTEMP
-   #if ( defined( HB_OS_BSD ) && !defined( __NetBSD__ ) ) || \
-       defined( HB_OS_DARWIN )
-      #define HB_HAS_MKSTEMPS
-   #endif
+#  define HB_HAS_MKSTEMP
+#  if ( defined( HB_OS_BSD ) && !defined( __NetBSD__ ) ) || \
+      defined( HB_OS_DARWIN ) || \
+      ( defined( HB_OS_LINUX ) && \
+        ( defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
+        ( defined( __GLIBC_PREREQ ) && __GLIBC_PREREQ( 2, 12 ) ) )
+#     define HB_HAS_MKSTEMPS
+#  endif
 #endif
 
 #if !defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
@@ -162,11 +165,12 @@ HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * 
 
       if( pszName[ 0 ] != '\0' )
       {
-         int len = ( int ) strlen( pszName );
-         if( pszName[ len - 1 ] != HB_OS_PATH_DELIM_CHR )
+         iLen = ( int ) strlen( pszName );
+         if( pszName[ iLen - 1 ] != HB_OS_PATH_DELIM_CHR &&
+             iLen < HB_PATH_MAX - 1 )
          {
-            pszName[ len ] = HB_OS_PATH_DELIM_CHR;
-            pszName[ len + 1 ] = '\0';
+            pszName[ iLen ] = HB_OS_PATH_DELIM_CHR;
+            pszName[ iLen + 1 ] = '\0';
          }
       }
 
@@ -174,7 +178,8 @@ HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * 
          hb_strncat( pszName, pszPrefix, HB_PATH_MAX - 1 );
 
       iLen = ( int ) strlen( pszName );
-      if( iLen > ( HB_PATH_MAX - 1 ) - 6 )
+      if( iLen > ( HB_PATH_MAX - 1 ) - 6 -
+                 ( pszExt ? ( int ) strlen( pszExt ) : 0 ) )
       {
          fd = FS_ERROR;
          break;

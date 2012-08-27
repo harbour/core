@@ -1073,7 +1073,7 @@ CodeBlock   : BlockHead
 ExpList     : Expression               { $$ = hb_compExprNewList( $1, HB_COMP_PARAM ); }
             | ExpList ',' Expression   { $$ = hb_compExprAddListExpr( $1, $3 ); }
 
-PareExpList : '(' ExpList ')'          { $$ = $2 }
+PareExpList : '(' ExpList ')'          { $$ = $2; }
             ;
 
 PareExpListAlias : PareExpList ALIASOP
