@@ -2935,12 +2935,15 @@ void hb_compGenPushDouble( double dNumber, HB_BYTE bWidth, HB_BYTE bDec, HB_COMP
 
 void hb_compGenPushFunCall( const char * szFunName, int iFlags, HB_COMP_DECL )
 {
+   PCOMSYMBOL pSym;
    HB_USHORT wSym;
 
    HB_SYMBOL_UNUSED( iFlags );
 
-   if( !hb_compSymbolFind( HB_COMP_PARAM, szFunName, &wSym, HB_SYM_FUNCNAME ) )
-      hb_compSymbolAdd( HB_COMP_PARAM, szFunName, &wSym, HB_SYM_FUNCNAME );
+   if( !( pSym = hb_compSymbolFind( HB_COMP_PARAM, szFunName, &wSym, HB_SYM_FUNCNAME ) ) )
+      pSym = hb_compSymbolAdd( HB_COMP_PARAM, szFunName, &wSym, HB_SYM_FUNCNAME );
+
+   pSym->cScope |= HB_FS_USED;
 
    hb_compGenPCode3( HB_P_PUSHFUNCSYM, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ), HB_COMP_PARAM );
 }
@@ -2959,10 +2962,14 @@ void hb_compGenPushFunRef( const char * szFunName, HB_COMP_DECL )
 /* generates the pcode to push a symbol on the virtual machine stack */
 void hb_compGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COMP_DECL )
 {
+   PCOMSYMBOL pSym;
    HB_USHORT wSym;
 
-   if( !hb_compSymbolFind( HB_COMP_PARAM, szSymbolName, &wSym, bFunction ) )
-      hb_compSymbolAdd( HB_COMP_PARAM, szSymbolName, &wSym, bFunction );
+   if( !( pSym = hb_compSymbolFind( HB_COMP_PARAM, szSymbolName, &wSym, bFunction ) ) )
+      pSym = hb_compSymbolAdd( HB_COMP_PARAM, szSymbolName, &wSym, bFunction );
+
+   if( bFunction )
+      pSym->cScope |= HB_FS_USED;
 
    if( wSym > 255 )
       hb_compGenPCode3( HB_P_PUSHSYM, HB_LOBYTE( wSym ), HB_HIBYTE( wSym ), HB_COMP_PARAM );

@@ -719,6 +719,9 @@ PROCEDURE _APPMAIN( ... )
 
 #endif /* _HBMK_EMBEDDED_ */
 
+#if defined( __PLATFORM__WINDOWS ) || ;
+    defined( __PLATFORM__DOS ) || ;
+    defined( __PLATFORM__OS2 )
 STATIC PROCEDURE hbmk_COMP_Setup( cARCH, cCOMP, cBasePath )
 
    /* TODO: Use HB_CCPREFIX instead of PATH modification, where possible. */
@@ -786,6 +789,7 @@ STATIC PROCEDURE hbmk_COMP_Setup( cARCH, cCOMP, cBasePath )
    ENDCASE
 
    RETURN
+#endif
 
 STATIC FUNCTION hbmk_new()
    LOCAL hbmk[ _HBMK_MAX_ ]
@@ -8620,6 +8624,7 @@ STATIC FUNCTION LibExists( hbmk, cDir, cLib, cLibPrefix, cLibExt )
 
    RETURN NIL
 
+#if ! defined( __PLATFORM__UNIX )
 STATIC FUNCTION FindInSamePath( cFileName, cFileName2, cPath )
    LOCAL cDir, cName, cExt
 
@@ -8646,6 +8651,7 @@ STATIC FUNCTION FindInSamePath( cFileName, cFileName2, cPath )
    ENDIF
 
    RETURN NIL
+#endif
 
 STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
    LOCAL cFile
@@ -9027,12 +9033,14 @@ STATIC FUNCTION FindInPath( cFileName, xPath, aExtDef )
 
    RETURN NIL
 
+/*
 STATIC FUNCTION ArrayJoinNoClone( arraySrc1, arraySrc2 )
    LOCAL nLen1 := Len( arraySrc1 )
 
    ASize( arraySrc1, nLen1 + Len( arraySrc2 ) )
 
    RETURN ACopy( arraySrc2, arraySrc1, , , nLen1 + 1 )
+*/
 
 STATIC FUNCTION ArrayJoin( arraySrc1, arraySrc2 )
    LOCAL arrayNew := AClone( arraySrc1 )
@@ -9098,6 +9106,7 @@ STATIC FUNCTION AAddNewNotEmpty( array, xItem )
 
    RETURN array
 
+/*
 STATIC FUNCTION AAddNewAtTop( array, xItem )
 
    IF AScan( array, {| tmp | tmp == xItem } ) == 0
@@ -9105,6 +9114,7 @@ STATIC FUNCTION AAddNewAtTop( array, xItem )
    ENDIF
 
    RETURN array
+*/
 
 STATIC FUNCTION AAddNew( array, xItem )
 
@@ -9134,12 +9144,14 @@ STATIC FUNCTION AAddNotEmpty( array, xItem )
 
    RETURN array
 
+/*
 STATIC FUNCTION DepTreeToList( aTree )
    LOCAL aList := {}
 
    DepTreeWorker( aList, aTree )
 
    RETURN aList
+*/
 
 STATIC PROCEDURE DepTreeWorker( aList, aTree )
    LOCAL xItem
@@ -10783,6 +10795,7 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
 #define RTLNK_MODE_SKIP         6
 #define RTLNK_MODE_SKIPNEXT     7
 
+/*
 STATIC PROCEDURE rtlnk_libtrans( aLibList )
    STATIC s_hTrans := { ;
       "CT"        => "hbct"   , ;
@@ -10864,6 +10877,7 @@ STATIC PROCEDURE rtlnk_filetrans( aFileList )
    NEXT
 
    RETURN
+*/
 
 STATIC FUNCTION rtlnk_read( cFileName, aPrevFiles )
    LOCAL cFileBody

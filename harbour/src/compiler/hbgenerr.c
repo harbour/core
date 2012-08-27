@@ -146,7 +146,8 @@ const char * const hb_comp_szWarnings[] =
    "0Duplicate variable '%s' in nested FOR loop",
    "0Invalid variable '%s' for enumerator message",
    "3Variable '%s' is assigned but not used in function '%s'",
-   "3Variable '%s' is never assigned in function '%s'"
+   "3Variable '%s' is never assigned in function '%s'",
+   "2STATIC Function '%s' defined but never used"
 };
 
 static void hb_compDispMessage( HB_COMP_DECL, char cPrefix, int iValue,

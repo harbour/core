@@ -2055,6 +2055,7 @@ METHOD IdeEditor:qscintilla()
 
 /*----------------------------------------------------------------------*/
 
+#if 0
 STATIC FUNCTION hbide_qtDesigner()
 
    #ifdef __DESIGNER__
@@ -2087,6 +2088,7 @@ STATIC FUNCTION hbide_qtDesigner()
 
    #endif
    RETURN NIL
+#endif
 
 /*----------------------------------------------------------------------*/
 

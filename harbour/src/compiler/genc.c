@@ -155,6 +155,12 @@ static void hb_compGenCStdHeaders( HB_COMP_DECL, FILE * yyc, HB_BOOL fHbInLine )
    }
 }
 
+static void hb_compFuncUsed( HB_COMP_DECL, PCOMSYMBOL pSym )
+{
+   if( ( pSym->cScope & HB_FS_USED ) == 0 )
+      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_STATIC_FUNC_UNUSED, pSym->szName, NULL );
+}
+
 void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the C language output */
 {
    char szFileName[ HB_PATH_MAX ];
@@ -243,7 +249,10 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
                else if( pSym->cScope & HB_FS_EXIT )
                   hb_compGenCFunc( yyc, "HB_FUNC_EXIT( %s );\n", pSym->szName, HB_TRUE, iFuncSuffix );
                else if( pSym->cScope & HB_FS_STATIC )
+               {
                   hb_compGenCFunc( yyc, "HB_FUNC_STATIC( %s );\n", pSym->szName, HB_FALSE, iFuncSuffix );
+                  hb_compFuncUsed( HB_COMP_PARAM, pSym );
+               }
                else
                   hb_compGenCFunc( yyc, "HB_FUNC( %s );\n", pSym->szName, HB_FALSE, iFuncSuffix );
             }

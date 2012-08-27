@@ -1422,6 +1422,7 @@ METHOD HbqReportsManager:execMenuShapes()
 
 /*----------------------------------------------------------------------*/
 
+/*
 STATIC FUNCTION rmgr_xtos( x )
    SWITCH valtype( x )
    CASE "C" ; RETURN x
@@ -1443,6 +1444,7 @@ STATIC FUNCTION rmgr_array2String( aArray )
    NEXT
 
    RETURN s
+*/
 
 STATIC FUNCTION rmgr_a2arrayStr( aArray )
    LOCAL s, x

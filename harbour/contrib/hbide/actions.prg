@@ -870,6 +870,7 @@ FUNCTION hbide_getCDPforID( cCodec )
 
 /*----------------------------------------------------------------------*/
 
+/*
 STATIC FUNCTION hbide_buildCodecMenu( oIde, oMenu )
    LOCAL oSubMenu, oSub1
 
@@ -955,5 +956,6 @@ STATIC FUNCTION hbide_buildCodecMenu( oIde, oMenu )
    oSubMenu:addItem( { "WINSAMI2    "         , {|| oIde:setCodec( "WINSAMI2"            ) } } )
 
    RETURN oSubMenu
+*/
 
 /*----------------------------------------------------------------------*/

@@ -3205,25 +3205,6 @@ STATIC PROCEDURE SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cCaption, bEdit )
    RETURN
 
 
-STATIC PROCEDURE StripUntil( pcLine, i, cChar )
-
-   LOCAL j
-   LOCAL n
-   LOCAL nLen := Len( pcLine )
-
-   n := Len( cChar )
-   j := i + n
-   DO WHILE j <= nLen .AND. SubStr( pcLine, j, n ) != cChar
-      j++
-   ENDDO
-
-   IF j <= nLen
-      pcLine := Left( pcLine, i - 1 ) + SubStr( pcLine, j + n )
-   ENDIF
-
-   RETURN
-
-
 FUNCTION __DbgColors()
    RETURN s_oDebugger:GetColors()
 

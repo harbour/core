@@ -253,8 +253,10 @@ FUNCTION smsctx_PIN( smsctx, cPIN )
 
    RETURN cOldValue
 
+/*
 STATIC FUNCTION StripCR( cString )
    RETURN StrTran( cString, Chr( 13 ) )
+*/
 
 STATIC FUNCTION StripCRLF( cString )
    RETURN StrTran( cString, Chr( 13 ) + Chr( 10 ) )

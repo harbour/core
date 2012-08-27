@@ -64,7 +64,7 @@ STATIC s_cErrFooter  := " "
 * DefError()
 */
 
-
+/*
 STATIC FUNC xhb_cgi_DefError( e )
 
 
@@ -179,7 +179,7 @@ STATIC FUNC xhb_cgi_DefError( e )
    QUIT
 
 RETURN .F.
-
+*/
 
 FUNCTION SetCorruptFunc( bFunc )
 
@@ -197,6 +197,7 @@ RETURN s_cErrFooter
 * ErrorMessage()
 */
 
+/*
 STATIC FUNC ErrorMessage( e )
 
 
@@ -235,3 +236,4 @@ STATIC FUNC ErrorMessage( e )
    cMessage += CRLF()
 
 RETURN cMessage
+*/

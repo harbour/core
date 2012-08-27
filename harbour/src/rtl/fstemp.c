@@ -163,17 +163,6 @@ HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * 
       else
          hb_fsTempDir( pszName );
 
-      if( pszName[ 0 ] != '\0' )
-      {
-         iLen = ( int ) strlen( pszName );
-         if( pszName[ iLen - 1 ] != HB_OS_PATH_DELIM_CHR &&
-             iLen < HB_PATH_MAX - 1 )
-         {
-            pszName[ iLen ] = HB_OS_PATH_DELIM_CHR;
-            pszName[ iLen + 1 ] = '\0';
-         }
-      }
-
       if( pszPrefix )
          hb_strncat( pszName, pszPrefix, HB_PATH_MAX - 1 );
 
@@ -375,40 +364,17 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
    {
       char * pszTempDirEnv = hb_getenv( "TMPDIR" );
 
-      if( ! fsGetTempDirByCase( pszTempDir, pszTempDirEnv, HB_FALSE ) )
-      {
+      if( fsGetTempDirByCase( pszTempDir, pszTempDirEnv, HB_FALSE ) )
+         nResult = 0;
 #ifdef P_tmpdir
-         if( ! fsGetTempDirByCase( pszTempDir, P_tmpdir, HB_TRUE ) )
+      else if( fsGetTempDirByCase( pszTempDir, P_tmpdir, HB_TRUE ) )
+         nResult = 0;
 #endif
-         {
-            pszTempDir[ 0 ] = '.';
-            pszTempDir[ 1 ] = HB_OS_PATH_DELIM_CHR;
-            pszTempDir[ 2 ] = '\0';
-         }
-         else
-            nResult = 0;
-      }
-      else
+      else if( fsGetTempDirByCase( pszTempDir, "/tmp", HB_TRUE ) )
          nResult = 0;
 
       if( pszTempDirEnv )
          hb_xfree( pszTempDirEnv );
-
-      if( nResult == 0 && pszTempDir[ 0 ] != '\0' )
-      {
-         int len = ( int ) strlen( pszTempDir );
-         if( pszTempDir[ len - 1 ] != HB_OS_PATH_DELIM_CHR )
-         {
-            pszTempDir[ len ] = HB_OS_PATH_DELIM_CHR;
-            pszTempDir[ len + 1 ] = '\0';
-         }
-      }
-      else
-      {
-         pszTempDir[ 0 ] = '.';
-         pszTempDir[ 1 ] = HB_OS_PATH_DELIM_CHR;
-         pszTempDir[ 2 ] = '\0';
-      }
    }
 #elif defined( HB_OS_WIN )
    {
@@ -451,24 +417,26 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
                hb_xfree( pszTempDirEnv );
             }
          }
-         if( nResult == 0 && pszTempDir[ 0 ] != '\0' )
-         {
-            int len = ( int ) strlen( pszTempDir );
-            if( pszTempDir[ len - 1 ] != HB_OS_PATH_DELIM_CHR )
-            {
-               pszTempDir[ len ] = HB_OS_PATH_DELIM_CHR;
-               pszTempDir[ len + 1 ] = '\0';
-            }
-         }
-         else
-         {
-            pszTempDir[ 0 ] = '.';
-            pszTempDir[ 1 ] = HB_OS_PATH_DELIM_CHR;
-            pszTempDir[ 2 ] = '\0';
-         }
       }
    }
 #endif
+
+   if( nResult == 0 && pszTempDir[ 0 ] != '\0' )
+   {
+      int len = ( int ) strlen( pszTempDir );
+      if( pszTempDir[ len - 1 ] != HB_OS_PATH_DELIM_CHR &&
+          len < HB_PATH_MAX - 1 )
+      {
+         pszTempDir[ len ] = HB_OS_PATH_DELIM_CHR;
+         pszTempDir[ len + 1 ] = '\0';
+      }
+   }
+   else
+   {
+      pszTempDir[ 0 ] = '.';
+      pszTempDir[ 1 ] = HB_OS_PATH_DELIM_CHR;
+      pszTempDir[ 2 ] = '\0';
+   }
 
    return nResult;
 }

@@ -1025,6 +1025,7 @@ STATIC FUNCTION GetSource()
 
 /*----------------------------------------------------------------------*/
 
+/*
 STATIC FUNCTION hbide_setSyntaxAttrbs( qHiliter, cPattern, cName, nR, nG, nB, lItalic, lBold, lUnderline )
    LOCAL qFormat
 
@@ -1044,6 +1045,7 @@ STATIC FUNCTION hbide_setSyntaxAttrbs( qHiliter, cPattern, cName, nR, nG, nB, lI
    qHiliter:hbSetRule( cName, cPattern, qFormat )
 
    RETURN nil
+*/
 
 /*----------------------------------------------------------------------*/
 

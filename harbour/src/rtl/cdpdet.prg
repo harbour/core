@@ -112,6 +112,43 @@ FUNCTION hb_cdpOS()
 
    RETURN NIL
 
+#if defined( __PLATFORM__WINDOWS )
+STATIC FUNCTION __CPWinToCPStd( nCPWin )
+
+   IF HB_ISNUMERIC( nCPWin )
+      SWITCH nCPWin
+      CASE 437   ; RETURN "cp437"
+      CASE 737   ; RETURN "cp737"
+      CASE 775   ; RETURN "cp775"
+      CASE 850   ; RETURN "cp850"
+      CASE 852   ; RETURN "cp852"
+      CASE 857   ; RETURN "cp857"
+      CASE 860   ; RETURN "cp860"
+      CASE 861   ; RETURN "cp861"
+      CASE 865   ; RETURN "cp865"
+      CASE 866   ; RETURN "cp866"
+      CASE 1200  ; RETURN "utf16"
+      CASE 1250  ; RETURN "cp1250"
+      CASE 1251  ; RETURN "cp1251"
+      CASE 1252  ; RETURN "cp1252"
+      CASE 1253  ; RETURN "cp1253"
+      CASE 1254  ; RETURN "cp1254"
+      CASE 1257  ; RETURN "cp1257"
+      CASE 20866 ; RETURN "koi-8"
+      CASE 21866 ; RETURN "koi-8u"
+      CASE 28591 ; RETURN "iso8859-1"
+      CASE 28592 ; RETURN "iso8859-2"
+      CASE 28595 ; RETURN "iso8859-5"
+      CASE 28597 ; RETURN "iso8859-7"
+      CASE 28599 ; RETURN "iso8859-9"
+      CASE 65001 ; RETURN "utf8"
+      ENDSWITCH
+   ENDIF
+
+   RETURN ""
+
+#elif defined( __PLATFORM__UNIX )
+
 /* language[_territory][.codeset] */
 /* [language[_territory][.codeset][@modifier]] */
 /* TODO: handle "C"/"POSIX" values and values starting with "/" */
@@ -178,40 +215,7 @@ STATIC FUNCTION __CPUnixToCPStd( cCPUnix )
    ENDIF
 
    RETURN ""
-
-STATIC FUNCTION __CPWinToCPStd( nCPWin )
-
-   IF HB_ISNUMERIC( nCPWin )
-      SWITCH nCPWin
-      CASE 437   ; RETURN "cp437"
-      CASE 737   ; RETURN "cp737"
-      CASE 775   ; RETURN "cp775"
-      CASE 850   ; RETURN "cp850"
-      CASE 852   ; RETURN "cp852"
-      CASE 857   ; RETURN "cp857"
-      CASE 860   ; RETURN "cp860"
-      CASE 861   ; RETURN "cp861"
-      CASE 865   ; RETURN "cp865"
-      CASE 866   ; RETURN "cp866"
-      CASE 1200  ; RETURN "utf16"
-      CASE 1250  ; RETURN "cp1250"
-      CASE 1251  ; RETURN "cp1251"
-      CASE 1252  ; RETURN "cp1252"
-      CASE 1253  ; RETURN "cp1253"
-      CASE 1254  ; RETURN "cp1254"
-      CASE 1257  ; RETURN "cp1257"
-      CASE 20866 ; RETURN "koi-8"
-      CASE 21866 ; RETURN "koi-8u"
-      CASE 28591 ; RETURN "iso8859-1"
-      CASE 28592 ; RETURN "iso8859-2"
-      CASE 28595 ; RETURN "iso8859-5"
-      CASE 28597 ; RETURN "iso8859-7"
-      CASE 28599 ; RETURN "iso8859-9"
-      CASE 65001 ; RETURN "utf8"
-      ENDSWITCH
-   ENDIF
-
-   RETURN ""
+#endif
 
 STATIC FUNCTION __CPStdToHarbour( cCPStd, cCtryStd )
    LOCAL cCP

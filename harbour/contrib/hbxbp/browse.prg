@@ -2872,17 +2872,6 @@ STATIC FUNCTION _NEXTCOLUMN( aColData, nCol )
 
    RETURN 0
 
-
-//STATIC PROCEDURE _DISP_FHSEP( nRow, nType, cColor, aColData )
-STATIC PROCEDURE _DISP_FHSEP()
-   /* GUI does not implements it */
-   RETURN
-
-//STATIC PROCEDURE _DISP_FHNAME( nRow, nHeight, nLeft, nRight, nType, nColor, aColors, aColData )
-STATIC PROCEDURE _DISP_FHNAME()
-   /* GUI does not implements it */
-   RETURN
-
 METHOD XbpBrowse:dispFrames()
    /* GUI do not implements it */
    ::lFrames := .F.
@@ -2899,6 +2888,7 @@ METHOD XbpBrowse:colorRect( aRect, aColors )
    HB_SYMBOL_UNUSED( aColors )
    RETURN Self
 
+/*
 STATIC FUNCTION _PREVCOLUMN( aColData, nCol )
    LOCAL aCol
 
@@ -2911,7 +2901,6 @@ STATIC FUNCTION _PREVCOLUMN( aColData, nCol )
    ENDDO
 
    RETURN 0
-
 
 STATIC FUNCTION _SETCOLUMNS( nFrom, nTo, nStep, aColData, nFirst, nWidth, lFirst )
    LOCAL aCol
@@ -2948,6 +2937,7 @@ STATIC FUNCTION _SETCOLUMNS( nFrom, nTo, nStep, aColData, nFirst, nWidth, lFirst
       NEXT
    ENDIF
    RETURN iif( nLast == 0, nFrom - nStep, nLast )
+*/
 
 METHOD XbpBrowse:colorValue( nColorIndex )
    IF ::nConfigure != 0
