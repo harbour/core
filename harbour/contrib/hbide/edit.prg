@@ -1312,9 +1312,9 @@ METHOD IdeEdit:alignAt( cAt )
       nMax += nL - 2
       FOR i := nT TO nB
          cLine := ::getLine( i + 1 )
-         IF ( n := At( cAt, cLine ) ) > 0
-            c1st := SubStr( cLine, 1, n - 1 )
-            c2nd := SubStr( cLine, n )
+         IF ( n := At( cAt, SubStr( cLine, nL, nR - nL + 1 ) ) ) > 0
+            c1st := SubStr( cLine, 1, nL + n - 2 )
+            c2nd := SubStr( cLine, nL + n - 1 )
             cLine := PadR( c1st, nMax ) + c2nd
          ENDIF
          hbide_qReplaceLine( qCursor, i, cLine )
