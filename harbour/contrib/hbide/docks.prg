@@ -379,16 +379,16 @@ METHOD IdeDocks:destroy()
       ::qMdiToolBarL:destroy()
       ::qMdiToolBarL := NIL
    ENDIF
-   ::nPass                       := NIL
-   ::aPanels                     := NIL
-   ::aMdiBtns                    := NIL
-   ::aBtnLines                   := NIL
-   ::aBtnDocks                   := NIL
-   ::oBtnTabClose                := NIL
-   ::aViewsInfo                  := NIL
-   ::qTBtnClose                  := NIL
-   ::qTimer                      := NIL
-   ::nPrevWindowState            := NIL
+   ::nPass             := NIL
+   ::aPanels           := NIL
+   ::aMdiBtns          := NIL
+   ::aBtnLines         := NIL
+   ::aBtnDocks         := NIL
+   ::oBtnTabClose      := NIL
+   ::aViewsInfo        := NIL
+   ::qTBtnClose        := NIL
+   ::qTimer            := NIL
+   ::nPrevWindowState  := NIL
 
    RETURN Self
 

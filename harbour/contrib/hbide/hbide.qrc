@@ -321,6 +321,9 @@
     <file>resources/split_h.png</file>
     <file>resources/split_v.png</file>
     <file>resources/align_at.png</file>
+    <file>resources/dc_method.png</file>
+    <file>resources/dc_class.png</file>
+    <file>resources/dc_procedure.png</file>
     <file>docs/faq.htm</file>
   </qresource>
 </RCC>

@@ -2043,3 +2043,13 @@ FUNCTION hbide_getHbxFunctions( cBuffer )
 
 /*----------------------------------------------------------------------*/
 
+FUNCTION hbide_identifierImage( cIdentifier )
+   LOCAL cImage
+
+   cIdentifier := Upper( cIdentifier )
+   cImage := iif( "CLAS" $ cIdentifier, "dc_class", iif( "METH" $ cIdentifier, "dc_method", iif( "PROC" $ cIdentifier, "dc_procedure", "dc_function" ) ) )
+
+   RETURN hbide_image( cImage )
+
+/*----------------------------------------------------------------------*/
+

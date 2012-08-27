@@ -262,7 +262,7 @@ METHOD IdeEditsManager:create( oIde )
    aadd( ::aActions, { "TB_Compile"   , ::qContextMenu:addAction( ::oAC:getAction( "TB_Compile"    ) ) } )
    aadd( ::aActions, { "TB_CompilePPO", ::qContextMenu:addAction( ::oAC:getAction( "TB_CompilePPO" ) ) } )
    aadd( ::aActions, { ""             , ::qContextMenu:addSeparator() } )
-   aadd( ::aActions, { "Apply Theme"  , ::qContextMenu:addAction( "Apply Theme"                      ) } )
+   aadd( ::aActions, { "Apply Theme"  , ::qContextMenu:addAction( QIcon( hbide_image( "syntaxhiliter" ) ), "Apply Theme"                      ) } )
    aadd( ::aActions, { "Save as Skltn", ::qContextMenu:addAction( "Save as Skeleton..."              ) } )
    ::qContextSub := ::qContextMenu:addMenu( QIcon( hbide_image( "split" ) ), "Split" )
    //
@@ -1442,8 +1442,8 @@ METHOD IdeEditor:create( oIde, cSourceFile, nPos, nHPos, nVPos, cTheme, cView, a
       ::qEdit:setTextInteractionFlags( Qt_TextSelectableByMouse + Qt_TextSelectableByKeyboard )
    ENDIF
 
-   ::qDocument:connect( "modificationChanged(bool)"  , {|p| ::execEvent( __qDocModificationChanged__, p ) } )
-   ::qDocument:connect( "contentsChange(int,int,int)", {|p,p1,p2| ::execEvent( __qDocContentsChange__, p, p1, p2 ) } )
+   ::qDocument:connect( "modificationChanged(bool)"  , {|p      | ::execEvent( __qDocModificationChanged__, p         ) } )
+   ::qDocument:connect( "contentsChange(int,int,int)", {|p,p1,p2| ::execEvent( __qDocContentsChange__     , p, p1, p2 ) } )
 
    ::qDocument:setModified( .f. )
 

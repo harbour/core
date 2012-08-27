@@ -104,7 +104,7 @@ CLASS XbpListBox  INHERIT  XbpWindow, DataRef
    METHOD   setTopItem( nIndex )                  VIRTUAL
 
    METHOD   numItems()                            INLINE  len( ::aItems )
-   METHOD   addItem( cItem )
+   METHOD   addItem( cItem, qIcon )
    METHOD   clear( lConnect )
    METHOD   delItem( nIndex )
    METHOD   getItem( nIndex )
@@ -364,10 +364,13 @@ METHOD XbpListBox:clear( lConnect )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpListBox:addItem( cItem )
+METHOD XbpListBox:addItem( cItem, qIcon )
    LOCAL qItm := QListWidgetItem()
 
    qItm:setText( cItem )
+   IF HB_ISOBJECT( qIcon )
+      qItm:setIcon( qIcon )
+   ENDIF
    ::oWidget:addItem( qItm )
    aadd( ::aItems, qItm )
 

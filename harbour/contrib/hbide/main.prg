@@ -1488,7 +1488,7 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
 /*----------------------------------------------------------------------*/
 
 METHOD HbIde:updateFuncList( lSorted )
-   LOCAL a_:={}
+   LOCAL aFunc :={}, a_
 
    DEFAULT lSorted TO ::lSortedFuncList
 
@@ -1497,11 +1497,15 @@ METHOD HbIde:updateFuncList( lSorted )
    ::oFuncList:clear()
    IF !empty( ::aTags )
       IF lSorted
-         aeval( ::aTags, {|e_| aadd( a_, e_[ 7 ] ) } )
-         asort( a_, , , {|e,f| lower( e ) < lower( f ) } )
-         aeval( a_, {|e| ::oFuncList:addItem( e ) } )
+         aeval( ::aTags, {|e_| aadd( aFunc, { e_[ 6 ], e_[ 7 ] } ) } )
+         asort( aFunc, , , {|e,f| lower( e[ 2 ] ) < lower( f[ 2 ] ) } )
+         FOR EACH a_ IN aFunc
+            ::oFuncList:addItem( a_[ 2 ], QIcon( hbide_identifierImage( a_[ 1 ] ) ) )
+         NEXT
       ELSE
-         aeval( ::aTags, {|e_| ::oFuncList:addItem( e_[ 7 ] ) } )
+         FOR EACH a_ IN ::aTags
+            ::oFuncList:addItem( a_[ 7 ], QIcon( hbide_identifierImage( a_[ 6 ] ) ) )
+         NEXT
       ENDIF
    ENDIF
 
