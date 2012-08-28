@@ -627,29 +627,29 @@ void _hbqtgui_force_link_for_event( void )
 
 static void hbqt_registerCallbacks( void )
 {
-   hbqt_slots_register_callback( "QColor"                              , hbqt_SlotsExecQColor           );
-   hbqt_slots_register_callback( "QFont"                               , hbqt_SlotsExecQFont            );
-   hbqt_slots_register_callback( "QItemSelection$QItemSelection"       , hbqt_SlotsExecItemSelItemSel   );
-   hbqt_slots_register_callback( "QTextBlock"                          , hbqt_SlotsExecQTextBlock       );
-   hbqt_slots_register_callback( "QTextCharFormat"                     , hbqt_SlotsExecQTextCharFormat  );
-   hbqt_slots_register_callback( "QTextCursor"                         , hbqt_SlotsExecQTextCursor      );
+   hbqt_slots_register_callback( "QColor"                                    , hbqt_SlotsExecQColor                           );
+   hbqt_slots_register_callback( "QFont"                                     , hbqt_SlotsExecQFont                            );
+   hbqt_slots_register_callback( "QItemSelection$QItemSelection"             , hbqt_SlotsExecItemSelItemSel                   );
+   hbqt_slots_register_callback( "QTextBlock"                                , hbqt_SlotsExecQTextBlock                       );
+   hbqt_slots_register_callback( "QTextCharFormat"                           , hbqt_SlotsExecQTextCharFormat                  );
+   hbqt_slots_register_callback( "QTextCursor"                               , hbqt_SlotsExecQTextCursor                      );
 
-   hbqt_slots_register_callback( "QAbstractButton*"                    , hbqt_SlotsExecQAbstractButton  );
-   hbqt_slots_register_callback( "QAction*"                            , hbqt_SlotsExecQAction          );
-   hbqt_slots_register_callback( "QListWidgetItem*$QListWidgetItem*"   , hbqt_SlotsExecQListWidgetItemQListWidgetItem );
-   hbqt_slots_register_callback( "QMdiSubWindow*"                      , hbqt_SlotsExecQMdiSubWindow    );
-   hbqt_slots_register_callback( "QPrinter*"                           , hbqt_SlotsExecQPrinter         );
-   hbqt_slots_register_callback( "QStandardItem*"                      , hbqt_SlotsExecQStandardItem    );
-   hbqt_slots_register_callback( "QTableWidgetItem"                    , hbqt_SlotsExecQTableWidgetItem );
-   hbqt_slots_register_callback( "QTableWidgetItem*$QTableWidgetItem*" , hbqt_SlotsExecQTableWidgetItemQTableWidgetItem );
-   hbqt_slots_register_callback( "QTreeWidgetItem*$int"                , hbqt_SlotsExecQTreeWidgetItemInt );
-   hbqt_slots_register_callback( "QTreeWidgetItem*$QTreeWidgetItem*"   , hbqt_SlotsExecQTreeWidgetItemQTreeWidgetItem );
-   hbqt_slots_register_callback( "QWidget*$int"                        , hbqt_SlotsExecQWidgetInt       );
-   hbqt_slots_register_callback( "QWidget*$QWidget*"                   , hbqt_SlotsExecQWidgetQWidget   );
-   hbqt_slots_register_callback( "QTreeWidgetItem*"                    , hbqt_SlotsExecQTreeWidgetItem  );
-   hbqt_slots_register_callback( "QListWidgetItem*"                    , hbqt_SlotsExecQListWidgetItem  );
-   hbqt_slots_register_callback( "QWidget*"                            , hbqt_SlotsExecQWidget          );
-   hbqt_slots_register_callback( "QRect$int"                           , hbqt_SlotsExecQRectInt         );
+   hbqt_slots_register_callback( "QAbstractButton*"                          , hbqt_SlotsExecQAbstractButton                  );
+   hbqt_slots_register_callback( "QAction*"                                  , hbqt_SlotsExecQAction                          );
+   hbqt_slots_register_callback( "QListWidgetItem*$QListWidgetItem*"         , hbqt_SlotsExecQListWidgetItemQListWidgetItem   );
+   hbqt_slots_register_callback( "QMdiSubWindow*"                            , hbqt_SlotsExecQMdiSubWindow                    );
+   hbqt_slots_register_callback( "QPrinter*"                                 , hbqt_SlotsExecQPrinter                         );
+   hbqt_slots_register_callback( "QStandardItem*"                            , hbqt_SlotsExecQStandardItem                    );
+   hbqt_slots_register_callback( "QTableWidgetItem*"                         , hbqt_SlotsExecQTableWidgetItem                 );
+   hbqt_slots_register_callback( "QTableWidgetItem*$QTableWidgetItem*"       , hbqt_SlotsExecQTableWidgetItemQTableWidgetItem );
+   hbqt_slots_register_callback( "QTreeWidgetItem*$int"                      , hbqt_SlotsExecQTreeWidgetItemInt               );
+   hbqt_slots_register_callback( "QTreeWidgetItem*$QTreeWidgetItem*"         , hbqt_SlotsExecQTreeWidgetItemQTreeWidgetItem   );
+   hbqt_slots_register_callback( "QWidget*$int"                              , hbqt_SlotsExecQWidgetInt                       );
+   hbqt_slots_register_callback( "QWidget*$QWidget*"                         , hbqt_SlotsExecQWidgetQWidget                   );
+   hbqt_slots_register_callback( "QTreeWidgetItem*"                          , hbqt_SlotsExecQTreeWidgetItem                  );
+   hbqt_slots_register_callback( "QListWidgetItem*"                          , hbqt_SlotsExecQListWidgetItem                  );
+   hbqt_slots_register_callback( "QWidget*"                                  , hbqt_SlotsExecQWidget                          );
+   hbqt_slots_register_callback( "QRect$int"                                 , hbqt_SlotsExecQRectInt                         );
 
    hbqt_events_register_createobj( QEvent::MouseButtonPress                  , "hb_QMouseEvent"                    );
    hbqt_events_register_createobj( QEvent::MouseButtonRelease                , "hb_QMouseEvent"                    );
