@@ -146,13 +146,13 @@ METHOD IdeFunctions:create( oIde )
 
    ::buildHeader()
 
-   ::oUI:editFunction :connect( "textChanged(QString)"        , {|p| ::execEvent( __editFunc_textChanged__  , p          ) } )
-   ::oUI:editFunction :connect( "returnPressed()"             , {| | ::execEvent( __editFunc_returnPressed__             ) } )
-   ::oUI:buttonMark   :connect( "clicked()"                   , {| | ::execEvent( __buttonMark_clicked__                 ) } )
-   ::oUI:buttonLoad   :connect( "clicked()"                   , {| | ::execEvent( __buttonLoad_clicked__                 ) } )
-   ::oUI:buttonTag    :connect( "clicked()"                   , {| | ::execEvent( __buttonTag_clicked__                  ) } )
-   ::oUI:buttonClose  :connect( "clicked()"                   , {| | ::execEvent( __buttonClose_clicked__                ) } )
-   ::oUI:tableFuncList:connect( "itemSelectionChanged()"      , {| | ::execEvent( __tableFuncList_itemSelectionChanged__ ) } )
+   ::oUI:editFunction :connect( "textChanged(QString)"                , {|p| ::execEvent( __editFunc_textChanged__           , p ) } )
+   ::oUI:editFunction :connect( "returnPressed()"                     , {| | ::execEvent( __editFunc_returnPressed__             ) } )
+   ::oUI:buttonMark   :connect( "clicked()"                           , {| | ::execEvent( __buttonMark_clicked__                 ) } )
+   ::oUI:buttonLoad   :connect( "clicked()"                           , {| | ::execEvent( __buttonLoad_clicked__                 ) } )
+   ::oUI:buttonTag    :connect( "clicked()"                           , {| | ::execEvent( __buttonTag_clicked__                  ) } )
+   ::oUI:buttonClose  :connect( "clicked()"                           , {| | ::execEvent( __buttonClose_clicked__                ) } )
+   ::oUI:tableFuncList:connect( "itemSelectionChanged()"              , {| | ::execEvent( __tableFuncList_itemSelectionChanged__ ) } )
    ::oUI:tableFuncList:connect( "itemDoubleClicked(QTableWidgetItem*)", {|p| ::execEvent( __tableFuncList_itemDoubleClicked__, p ) } )
 
    RETURN Self

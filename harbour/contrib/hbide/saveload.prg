@@ -2262,7 +2262,11 @@ METHOD IdeSetup:execEvent( nEvent, p, p1 )
       EXIT
    CASE __buttonDictAdd_clicked__
       cFile := hbide_fetchAFile( ::oDlg, "Open a Dictionary", ;
-                                 { {"HBX Files", "*.hbx"}, {"Text Files", "*.txt"}, {"Dictionary Files", "*.dic"}, {"All Files", "*" } } /*, cDftDir, cDftSuffix, lAllowMulti*/ )
+                                 { { "HBX Files"       , "*.hbx" }, ;
+                                   { "HbIDE .tag Files", "*.tag" }, ;
+                                   { "Text Files"      , "*.txt" }, ;
+                                   { "Dictionary Files", "*.dic" }, ;
+                                   { "All Files"       , "*"     } }      /*, cDftDir, cDftSuffix, lAllowMulti*/ )
       IF ! Empty( cFile )
          oDict := IdeDictionary():new( ::oIde ):create()
          oDict:load( cFile )

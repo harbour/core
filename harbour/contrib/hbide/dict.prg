@@ -111,10 +111,6 @@ FUNCTION hbide_loadUserDictionaries( oIde )
    LOCAL aDict := oIde:oINI:aDictionaries
    LOCAL oDict, i
 
-   IF Empty( aDict )
-      AAdd( aDict, "C:\harbour\contrib\hbide\projects\my.dic;YES;.PRG.C.CPP;ASIS;NO;NO;NO;NO;{0,0,0};{122,133,233};" ) /* Testing */
-   ENDIF
-
    FOR i := 1 TO Len( aDict )
       oDict := IdeDictionary():new( oIde ):create()
       oDict:load( aDict[ i ] )
@@ -148,6 +144,7 @@ CLASS IdeDictionary INHERIT IdeObject
    DATA   lBgColor                                INIT .F.
    DATA   cTxtColor                               INIT ""
    DATA   cBgColor                                INIT ""
+   DATA   aRawLines                               INIT {}
 
    DATA   hItems                                  INIT {=>}
 
@@ -242,9 +239,19 @@ METHOD IdeDictionary:load( cDict )
       IF !empty( ::cFilename ) .AND. hb_fileExists( ::cFilename )
          IF Lower( hb_FNameExt( ::cFilename ) ) == ".hbx"
             b_:= hbide_getHbxFunctions( hb_MemoRead( ::cFilename ) )
+         ELSEIF Lower( hb_FNameExt( ::cFilename ) ) == ".tag"
+            c_:= hb_deserialize( hb_memoRead( ::cFilename ) )
+            IF Empty( c_ ) .OR. ! HB_ISARRAY( c_ )
+               c_:= {}
+            ENDIF
+            b_:= {}
+            FOR EACH s IN c_
+               AAdd( b_, s[ 5 ] )
+            NEXT
          ELSE
             b_:= hbide_readSource( ::cFilename )
          ENDIF
+         ::aRawLines := b_
          FOR EACH s IN b_
             s := alltrim( s )
             IF empty( s )
@@ -324,7 +331,7 @@ METHOD IdeDictionary:populateUI( oUI )
    oUI:radioDictAsIn      : setChecked( ::cConvMode == "ASIS"  )
 
    oUI:plainKeywords      : clear()
-   oUI:plainKeywords      : setPlainText( hb_MemoRead( ::cFileName ) )
+   oUI:plainKeywords      : setPlainText( hbide_arrayToMemo( ::aRawLines ) )
 
    ::setButtonColors( oUI )
 
