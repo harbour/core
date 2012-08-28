@@ -256,6 +256,7 @@ CLASS IdeEdit INHERIT IdeObject
    METHOD matchPair( x, y )
    METHOD unmatchPair()
    METHOD alignAt( cAt )
+   METHOD stringify()
 
    ENDCLASS
 
@@ -1284,6 +1285,40 @@ METHOD IdeEdit:blockIndent( nDirctn )
    ELSE
       ::handleTab( Qt_Key_Backtab )
    ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEdit:stringify()
+   LOCAL nT, nL, nB, nR, nW, i, cLine, qCursor, aCord, a_, cTkn, cT1
+
+   IF ::lReadOnly
+      RETURN Self
+   ENDIF
+   aCord := ::aSelectionInfo
+   hbide_normalizeRect( aCord, @nT, @nL, @nB, @nR )
+   nW := nR - nL
+   IF nW > 0
+      a_:= hbide_setQCursor( ::qEdit ) ; qCursor := a_[ 1 ]
+      IF aCord[ 5 ] == __selectionMode_column__
+         FOR i := nT TO nB
+            cLine := ::getLine( i + 1 )
+            cTkn  := SubStr( cLine, nL + 1, nR - nL )
+            cT1   := Trim( cTkn )
+            cTkn  := '"' + cT1 + '"' + Space( Len( cTkn ) - Len( cT1 ) )
+            cLine := SubStr( cLine, 1, nL ) + cTkn + SubStr( cLine, nR + 1 )
+            hbide_qReplaceLine( qCursor, i, cLine )
+         NEXT
+      ELSEIF aCord[ 1 ] == aCord[ 3 ]  /* same line selection */
+         cLine := qCursor:block():text()
+         cTkn  := SubStr( cLine, nL + 1, nR - nL )
+         cTkn  := '"' + cTkn + '"'
+         cLine := SubStr( cLine, 1, nL ) + cTkn + SubStr( cLine, nR + 1 )
+         hbide_qReplaceLine( qCursor, qCursor:blockNumber(), cLine )
+      ENDIF
+      hbide_setQCursor( ::qEdit, a_ )
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/

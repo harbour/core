@@ -1276,6 +1276,7 @@ METHOD IdeDocks:buildMdiToolbar()
    qTBar:addSeparator()
    qTBar:addToolButton( "Sgl2Dbl"   , "Single to Double Quotes"    , hbide_image( "sgl2dblquote"  ), {|| ::oEM:convertDQuotes()              }, .f. )
    qTBar:addToolButton( "Dbl2Sgl"   , "Double to Single Quotes"    , hbide_image( "dbl2sglquote"  ), {|| ::oEM:convertQuotes()               }, .f. )
+   qTBar:addToolButton( "Stringify" , "Stringify Selection"        , hbide_image( "stringify"     ), {|| ::oEM:stringify()                   }, .f. )
    qTBar:addSeparator()
    qTBar:addToolButton( "AlignAt"   , "Align At..."                , hbide_image( "align_at"      ), {|| ::oEM:alignAt()                     }, .f. )
 
@@ -2130,6 +2131,7 @@ METHOD IdeDocks:buildSelectedTextToolbar()
    qTBar:addToolButton( "IndentL"   , "Indent Left"                , hbide_image( "blockindentl"  ), {|| ::oEM:indent( -1 )                  }, .f. )
    qTBar:addToolButton( "Sgl2Dbl"   , "Single to Double Quotes"    , hbide_image( "sgl2dblquote"  ), {|| ::oEM:convertDQuotes()              }, .f. )
    qTBar:addToolButton( "Dbl2Sgl"   , "Double to Single Quotes"    , hbide_image( "dbl2sglquote"  ), {|| ::oEM:convertQuotes()               }, .f. )
+   qTBar:addToolButton( "Stringify" , "Stringify Selection"        , hbide_image( "stringify"     ), {|| ::oEM:stringify()                   }, .f. )
    qTBar:addToolButton( "AlignAt"   , "Align At..."                , hbide_image( "align_at"      ), {|| ::oEM:alignAt()                     }, .f. )
 
    RETURN Self

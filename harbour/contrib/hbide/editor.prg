@@ -195,6 +195,7 @@ CLASS IdeEditsManager INHERIT IdeObject
    METHOD updateFieldsList( cAlias )
    METHOD getProto( cWord )
    METHOD alignAt()
+   METHOD stringify()
 
    ENDCLASS
 
@@ -896,6 +897,15 @@ METHOD IdeEditsManager:alignAt()
             oEdit:alignAt( cWord )
          ENDIF
       ENDIF
+   ENDIF
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeEditsManager:stringify()
+   LOCAL oEdit
+   IF !empty( oEdit := ::getEditObjectCurrent() )
+      oEdit:stringify()
    ENDIF
    RETURN Self
 

@@ -324,6 +324,7 @@
     <file>resources/dc_method.png</file>
     <file>resources/dc_class.png</file>
     <file>resources/dc_procedure.png</file>
+    <file>resources/stringify.png</file>
     <file>docs/faq.htm</file>
   </qresource>
 </RCC>
