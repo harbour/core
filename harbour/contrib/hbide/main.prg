@@ -273,6 +273,7 @@ CLASS HbIde
 
    DATA   qAnimateAction
    DATA   qStatusBarAction
+   DATA   qFuncFragmentWindowGeometry
 
    DATA   lProjTreeVisible                        INIT   .t.
    DATA   lDockRVisible                           INIT   .f.
@@ -349,7 +350,7 @@ CLASS HbIde
    METHOD manageProjectContext( mp1, mp2, oXbpTreeItem )
    METHOD updateFuncList( lSorted )
    METHOD gotoFunction( mp1, mp2, oListBox )
-   METHOD manageFuncContext( mp1 )
+   METHOD manageFuncContext( mp1, mp2, oXbp )
    METHOD createTags()
    METHOD updateProjectMenu()
    METHOD updateTitleBar()
@@ -364,6 +365,7 @@ CLASS HbIde
    METHOD testPainter( qPainter )
 
    METHOD parseParams()
+   METHOD showCodeFregment( oXbp )
 
    ENDCLASS
 
@@ -1513,6 +1515,70 @@ METHOD HbIde:updateFuncList( lSorted )
 
 /*----------------------------------------------------------------------*/
 
+METHOD HbIde:showCodeFregment( oXbp )
+   LOCAL xTmp2, n, i, cAnchor, oEdit, lFound, qCursor, nLine, cCode, qWidget, nVPos, qH
+
+   xTmp2 := oXbp:text()
+
+   IF ( n := ascan( ::aTags, {|e_| xTmp2 == e_[ 7 ] } ) ) > 0
+      nLine := ::aTags[ n,3 ]
+      cAnchor := trim( ::aText[ nLine ] )
+      IF !empty( oEdit := ::oEM:getEditCurrent() )
+         qCursor := oEdit:textCursor()
+         nVPos := oEdit:verticalScrollBar():value()
+
+         IF ! ( lFound := oEdit:find( cAnchor, QTextDocument_FindCaseSensitively ) )
+            lFound := oEdit:find( cAnchor, QTextDocument_FindBackward + QTextDocument_FindCaseSensitively )
+         ENDIF
+         IF lFound
+            oEdit:setTextCursor( QCursor )
+            oEdit:verticalScrollBar():setValue( nVPos )
+
+            cCode := ""
+            qCursor:movePosition( QTextCursor_Start )
+            IF Len( ::aTags ) == n
+               IF qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine - 1 )
+                  cCode += qCursor:block():text() + hb_eol()
+                  DO WHILE qCursor:movePosition( QTextCursor_Down )
+                     cCode += qCursor:block():text() + hb_eol()
+                  ENDDO
+               ENDIF
+            ELSE
+               IF qCursor:movePosition( QTextCursor_Down, QTextCursor_MoveAnchor, nLine - 1 )
+                  cCode += qCursor:block():text() + hb_eol()
+                  FOR i := ::aTags[ n, 3 ] TO ::aTags[ n+1, 3 ] - 2
+                     IF qCursor:movePosition( QTextCursor_Down )
+                        cCode += qCursor:block():text() + hb_eol()
+                     ENDIF
+                  NEXT
+               ENDIF
+            ENDIF
+         ENDIF
+         IF ! Empty( cCode )
+            qWidget := QPlainTextEdit( ::oDlg:oWidget )
+            qWidget:setWindowFlags( hb_bitOr( Qt_Sheet, Qt_CustomizeWindowHint, Qt_WindowTitleHint, Qt_WindowCloseButtonHint ) )
+            qWidget:setWindowTitle( oEdit:document():metaInformation( QTextDocument_DocumentTitle ) + " : " + cAnchor )
+            qWidget:setWindowIcon( QIcon( hbide_identifierImage( ::aTags[ n, 6 ] ) ) )
+            qWidget:setGeometry( iif( Empty( ::qFuncFragmentWindowGeometry ), QRect( 500, 200, 300, 300 ), ::qFuncFragmentWindowGeometry:translated( 10,20 ) ) )
+            qWidget:setPlainText( cCode )
+            qWidget:setWordWrapMode( QTextOption_NoWrap )
+            qWidget:setFont( QFont( "Courier New", 8 ) )
+            qH := ::oTH:setSyntaxHilighting( qWidget )
+            qH:hbSetInitialized( .T. )
+            qWidget:connect( QEvent_Close , {|| ::qFuncFragmentWindowGeometry := qWidget:geometry(), qWidget:setParent( QWidget() ) } )
+            qWidget:connect( QEvent_Move  , {|| ::qFuncFragmentWindowGeometry := qWidget:geometry() } )
+            qWidget:connect( QEvent_Resize, {|| ::qFuncFragmentWindowGeometry := qWidget:geometry() } )
+
+            qWidget:show()
+         ENDIF
+      ENDIF
+   ENDIF
+   ::manageFocusInEditor()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD HbIde:gotoFunction( mp1, mp2, oListBox )
    LOCAL n, cAnchor, oEdit, lFound
 
@@ -1536,12 +1602,16 @@ METHOD HbIde:gotoFunction( mp1, mp2, oListBox )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbIde:manageFuncContext( mp1 )
+METHOD HbIde:manageFuncContext( mp1, mp2, oXbp )
    LOCAL aPops := {}
+
+   HB_SYMBOL_UNUSED( mp2 )
 
    IF ::oFuncList:numItems() > 0
       aadd( aPops, { 'Show Sorted'           , {|| ::updateFuncList( .t. ) } } )
       aadd( aPops, { 'Show in Natural Order' , {|| ::updateFuncList( .f. ) } } )
+      aadd( aPops, { "" } )
+      aadd( aPops, { "Show Code Fregment"    , {|| ::showCodeFregment( oXbp ) } } )
       aadd( aPops, { "" } )
       aadd( aPops, { 'Comment out'           , {|| NIL } } )
       aadd( aPops, { 'Reformat'              , {|| NIL } } )

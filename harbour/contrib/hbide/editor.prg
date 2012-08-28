@@ -1694,6 +1694,8 @@ METHOD IdeEditor:setDocumentProperties()
       ::qEdit:verticalScrollBar():setValue( ::nVPos )
 
       ::qEdit:document():setModified( .f. )
+//    ::qEdit:document():setMetaInformation( QTextDocument_DocumentTitle, hbide_pathNormalized( ::sourceFile ) )
+      ::qEdit:document():setMetaInformation( QTextDocument_DocumentTitle, hb_FNameName( ::sourceFile ) )
 
       ::lLoaded := .T.
 
