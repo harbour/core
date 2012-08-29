@@ -2059,7 +2059,7 @@ METHOD IdeDocks:buildUISrcDock()
 #define __selectionMode_line__                    3
 
 METHOD IdeDocks:showSelectedTextToolbar( oEdit )
-   LOCAL qRect, nVPH, nTBH, nY, nX
+   LOCAL qRect, nVPH, nVPW, nTBH, nTBW, nY, nX
 
    DEFAULT oEdit TO ::oEM:getEditObjectCurrent()
 
@@ -2086,8 +2086,20 @@ METHOD IdeDocks:showSelectedTextToolbar( oEdit )
          ELSE
             ::oDK:qSelToolbar:setOrientation( Qt_Horizontal )
             ::qSelToolbar:adjustSize()
-            ::qSelToolbar:move( oEdit:qEdit:viewport():mapToGlobal( QPoint( ( oEdit:qEdit:viewport():width() / 2 ) - ;
-                                               ( ::qSelToolbar:width() / 2 ), qRect:y() + ( qRect:height() * 2 ) ) ) )
+            nVPW := oEdit:qEdit:viewport():width()
+            nTBW := ::qSelToolbar:width()
+            nX   := ( nVPW / 2 ) - ( nTBW / 2 )
+            IF nX < 0
+               nX := 0
+            ELSEIF nX + nTBW > nVPW
+               nX := nVPW - nTBW
+            ENDIF
+            IF oEdit:aSelectionInfo[ 1 ] <= oEdit:aSelectionInfo[ 3 ]  /* Downward selection */
+               nY := qRect:y() + ( qRect:height() * 2 )
+            ELSE
+               nY := qRect:y() - ( qRect:height() * 3 )
+            ENDIF
+            ::qSelToolbar:move( oEdit:qEdit:viewport():mapToGlobal( QPoint( nX, nY ) ) )
          ENDIF
          ::qSelToolbar:show()
          ::qSelToolbar:raise()
