@@ -440,7 +440,7 @@ METHOD XbpWindow:connectWindowEvents()
 
    ::oWidget:connect( QEvent_Move               , {|e| ::grabEvent( QEvent_Move               , e ) } )
 *  ::oWidget:connect( QEvent_Paint              , {|e| ::grabEvent( QEvent_Paint              , e ) } )
-*  ::oWidget:connect( QEvent_Resize             , {|e| ::grabEvent( QEvent_Resize             , e ) } )
+   ::oWidget:connect( QEvent_Resize             , {|e| ::grabEvent( QEvent_Resize             , e ) } )
 
       RETURN Self
 

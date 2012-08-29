@@ -149,12 +149,9 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    /* Thread specific event buffer */
    hbxbp_InitializeEventBuffer()
 
-   IF !empty( ::qtObject )
-      IF HB_ISOBJECT( ::qtObject )
-         ::isViaQtObject := .t.
-         ::oWidget       := ::qtObject:oWidget
-         ::qtObject      := NIL
-      ENDIF
+   IF !empty( ::qtObject ) .AND. HB_ISOBJECT( ::qtObject ) .AND. __objGetClsName( ::qtObject:oWidget ) == "QMAINWINDOW"
+      ::isViaQtObject := .t.
+      ::oWidget       := ::qtObject:oWidget
       ::oWidget:setMouseTracking( .t. )
    ELSE
       IF ::taskList
@@ -173,6 +170,8 @@ METHOD XbpDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::drawingArea:create()
       ::oWidget:setCentralWidget( ::drawingArea:oWidget )
    ENDIF
+
+   ::qtObject := NIL
 
    nnFlags := ::oWidget:windowFlags()
    nFlags  := Qt_Window
@@ -463,7 +462,7 @@ METHOD XbpDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
    ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, .T. )
 
    IF ! empty( ::qtObject )
-      ::oWidget := ::qtObject:oWidget
+      ::oWidget := ::qtObject
    ELSE
       ::oWidget := QMdiArea()
       ::oWidget:setBackground( QApplication():palette():button() )
