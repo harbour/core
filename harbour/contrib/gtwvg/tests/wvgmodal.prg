@@ -162,7 +162,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
       next
    ENDIF
 
-   setcursor( 0 )
+   SetCursor( 0 )
    SetColor( 'N/W' )
    CLS
 

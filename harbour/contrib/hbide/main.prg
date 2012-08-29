@@ -1444,14 +1444,14 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
       IF !( Alltrim( Upper( ::cWrkProject ) ) == Alltrim( Upper( oXbpTreeItem:caption ) ) )
          aadd( aPops, { "Set as Current"                 , {|| ::oPM:setCurrentProject( oXbpTreeItem:caption ) } } )
       End
-      aadd( aPops, { "Properties"                        , {|| ::oPM:loadProperties( cHbp, .f., .t., .t. ) } } )
+      aadd( aPops, { ::oAC:getAction( "Properties"      ), {|| ::oPM:loadProperties( cHbp, .f., .t., .t. ) } } )
       aadd( aPops, { "" } )
       aadd( aPops, { ::oAC:getAction( "BuildQt"         ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .F.,    , , .T. ) } } )
       aadd( aPops, { ::oAC:getAction( "BuildLaunchQt"   ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .T.,    , , .T. ) } } )
       aadd( aPops, { ::oAC:getAction( "ReBuildQt"       ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .F., .T., , .T. ) } } )
       aadd( aPops, { ::oAC:getAction( "ReBuildLaunchQt" ), {|| ::oPM:buildProject( oXbpTreeItem:caption, .T., .T., , .T. ) } } )
       aadd( aPops, { "" } )
-      aadd( aPops, { "Launch"                            , {|| ::oPM:launchProject( oXbpTreeItem:caption ) } } )
+      aadd( aPops, { ::oAC:getAction( "LaunchProject"   ), {|| ::oPM:launchProject( oXbpTreeItem:caption ) } } )
       aadd( aPops, { "" } )
       aadd( aPops, { "Remove Project"                    , {|| ::oPM:removeProject( oXbpTreeItem:caption ) } } )
       IF !empty( ::oEV:getNames() )
@@ -1461,6 +1461,9 @@ METHOD HbIde:manageProjectContext( mp1, mp2, oXbpTreeItem )
          NEXT
          aadd( aPops, { aSub, "Select an environment" } )
       ENDIF
+      aadd( aPops, { "" } )
+      aadd( aPops, { ::oAC:getAction( "Dictionary"      ), {|v| v := ::oFN:tagProject( ::aProjData[ n, TRE_ORIGINAL ], .F. ), ;
+                                                                          MsgBox( iif( Empty( v ), "Not Succeeded", v ), "Dictionary Creation" ) } } )
 
       hbide_ExecPopup( aPops, mp1, ::oProjTree:oWidget )
 

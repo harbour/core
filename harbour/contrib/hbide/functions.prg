@@ -111,7 +111,7 @@ CLASS IdeFunctions INHERIT IdeObject
    METHOD destroy()
    METHOD clear( lHdrAlso )
    METHOD show()
-   METHOD tagProject( cProjectTitle )
+   METHOD tagProject( cProjectTitle, lGUI )
    METHOD populateTable()
    METHOD consolidateList()
    METHOD buildHeader()
@@ -517,14 +517,18 @@ METHOD IdeFunctions:buildTags()
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeFunctions:tagProject( cProjectTitle )
+METHOD IdeFunctions:tagProject( cProjectTitle, lGUI )
    LOCAL aSumData := ""
    LOCAL cComments, aSummary, cPath, cSource, cExt, aTags, aText, aFuncList, aLines
    LOCAL cProjFile, cRoot, aCTags, aSources, cSrc, a_, n
    LOCAL qApp := QApplication()
 
+   hb_default( lGUI, .T. )
+
    IF !( ::inAction )
-      ::enableControls( .f. )
+      IF lGUI
+         ::enableControls( .f. )
+      ENDIF
 
       cProjFile := ::oPM:getProjectFileNameFromTitle( cProjectTitle )
       aSources  := ::oPM:getSourcesByProjectTitle( cProjectTitle )
@@ -573,10 +577,12 @@ METHOD IdeFunctions:tagProject( cProjectTitle )
 
       hb_memowrit( hb_FNameExtSet( cProjFile, ".tag" ), hb_serialize( aCTags ) )
 
-      ::consolidateList()
-      ::populateTable()
+      IF lGUI
+         ::consolidateList()
+         ::populateTable()
 
-      ::enableControls( .t. )
+         ::enableControls( .t. )
+      ENDIF
    ENDIF
 
    RETURN cProjFile
