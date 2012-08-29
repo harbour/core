@@ -244,6 +244,7 @@ METHOD IdeConsole:show()
       ENDIF
 
       ::oUI := XbpCrt():new( , , { 10,10 }, { 600,480 }, , .t. )
+
       ::oUI:title       := "My First CRT"
       ::oUI:toolTiptext := "Really My First XbpCRT()"
       ::oUI:lModal      := .f.
@@ -267,12 +268,9 @@ METHOD IdeConsole:show()
       ::oMdi:show()
       ::resizeByRowCols( 28, 80 )
 
-      // ::oCuiEdDock:oWidget:setMinimumWidth( 80 * hb_gtInfo( HB_GTI_FONTWIDTH ) + ::nOffX )
-
       BuildScreen()
 
       ::oMdiArea:removeSubWindow( ::oMDI )
-      ::oMDI := NIL
 
       ::oUI:destroy()
       ::oUI := NIL
@@ -285,8 +283,14 @@ METHOD IdeConsole:show()
 /*------------------------------------------------------------------------*/
 
 METHOD IdeConsole:resizeByRowCols( nRows, nCols )
+   LOCAL nW := nCols * hb_gtInfo( HB_GTI_FONTWIDTH ) + ::nOffX
+   LOCAL nH := nRows * hb_gtInfo( HB_GTI_FONTSIZE ) + ::nOffY
 
-   RETURN ::oMdi:resize( nCols * hb_gtInfo( HB_GTI_FONTWIDTH ) + ::nOffX, nRows * hb_gtInfo( HB_GTI_FONTSIZE ) + ::nOffY )
+   ::oCuiEdDock:oWidget:resize( nW, nH )
+
+   ::oMdi:resize( nW, nH )
+
+   RETURN Self
 
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
@@ -1027,7 +1031,7 @@ METHOD hbCUIEditor:scrUndo()
 //----------------------------------------------------------------------//
 
 METHOD hbCUIEditor:operate()
-   LOCAL nObj, nToCol, i, nOff
+   LOCAL nObj, nToCol, i, nOff, qApp
    LOCAL grf_:= { 43,45,46,48,49,50,51,52,53,54,55,56,57 }
 
    readinsert( .t. )
@@ -1038,6 +1042,7 @@ METHOD hbCUIEditor:operate()
 
    keyboard( chr( K_UP ) )
 
+   qApp := QApplication()
    DO WHILE .t.
       ::nRowPrev := ::nRowCur
       ::nColPrev := ::nColCur
@@ -1048,6 +1053,7 @@ METHOD hbCUIEditor:operate()
 
       DO WHILE .t.
          ::nLastKey := inkey( 0, INKEY_ALL + HB_INKEY_GTEVENT )
+         qApp:processEvents()
          IF ::nLastKey != 0 .OR. ::nLastKey != K_MOUSEMOVE
             EXIT
          ENDIF
