@@ -523,7 +523,7 @@ METHOD IdeFunctions:tagProject( cProjectTitle, lGUI )
    LOCAL cProjFile, cRoot, aCTags, aSources, cSrc, a_, n
    LOCAL qApp := QApplication()
 
-   hb_default( lGUI, .T. )
+   DEFAULT lGUI TO .T.
 
    IF !( ::inAction )
       IF lGUI
