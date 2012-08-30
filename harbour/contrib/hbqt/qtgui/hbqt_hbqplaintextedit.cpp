@@ -2799,8 +2799,10 @@ void HBQPlainTextEdit::hbBraceHighlight()
                else
                {
                   QRegExp openBrace( "(#IFDEF|#IF)" );
+                  openBrace.setCaseSensitivity( Qt::CaseInsensitive );
                   QRegExp closeBrace( "#ENDIF" );
-                  matchPair( cursor, QRegExp(), openBrace, closeBrace, true, QTextDocument::FindWholeWords, false );
+                  closeBrace.setCaseSensitivity( Qt::CaseInsensitive );
+                  matchPair( cursor, QRegExp(), openBrace, closeBrace, true, 0, false );
                   return;
                }
             }
@@ -2882,8 +2884,10 @@ void HBQPlainTextEdit::hbBraceHighlight()
          }
          else if( ( brace == "RETURN" ) )
          {
-            QRegExp openBrace( "(FUNCTION|METHOD|PROCEDURE)" );
-            QRegExp closeBrace( "\bRETURN\b" );
+            QRegExp openBrace( "\\b(FUNCTION|METHOD|PROCEDURE)\\b" );
+            openBrace.setCaseSensitivity( Qt::CaseInsensitive );
+            QRegExp closeBrace( "\\bRETURN\\b" );
+            closeBrace.setCaseSensitivity( Qt::CaseInsensitive );
             matchPair( cursor, QRegExp(), openBrace, closeBrace, true, QTextDocument::FindWholeWords, false );
             return;
          }
