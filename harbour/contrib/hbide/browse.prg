@@ -298,8 +298,6 @@ METHOD IdeBrowseManager:create( oIde )
    ::qTimer:setInterval( 2000 )
    ::qTimer:connect( "timeout()", {|| ::dispStatusInfo() } )
 
-   qDock:setWidget( ::qDbu )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -323,6 +321,7 @@ METHOD IdeBrowseManager:showInIdeDBU()
 METHOD IdeBrowseManager:show()
 
    ::qToolbar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
+   ::oQScintillaDock:oWidget:setWidget( ::qDbu )
    ::oQScintillaDock:oWidget:raise()
    ::qTimer:start()
 
