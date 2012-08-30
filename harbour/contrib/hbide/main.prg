@@ -193,6 +193,11 @@ CLASS HbIde
    DATA   aDbfOnCmdLine                           INIT   {}
 
    /* HBQT Objects */
+   DATA   oIdeStacks
+   DATA   oDALayout
+   DATA   oStackEditor
+   DATA   oStackDbu
+   DATA   oStackDbuLayout
    DATA   qLayout
 
    DATA   qTabWidget
@@ -997,6 +1002,12 @@ METHOD HbIde:execAction( cKey )
       EXIT
    CASE "Help"
       ::oHelpDock:show()
+      EXIT
+   CASE "DBU"
+      ::oIdeStacks:setCurrentIndex( 1 )
+      EXIT
+   CASE "EDITOR"
+      ::oIdeStacks:setCurrentIndex( 0 )
       EXIT
    ENDSWITCH
 

@@ -186,6 +186,8 @@ CLASS IdeBrowseManager INHERIT IdeObject
    DATA   qComboAction
    DATA   sp0,sp1,sp2,sp3
 
+   DATA   nPrevMode                               INIT  0
+
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD show()
@@ -222,6 +224,7 @@ CLASS IdeBrowseManager INHERIT IdeObject
    METHOD showTablesTree()
    METHOD fetchFldsList( cAlias )
    METHOD getBrowserByAlias( cAlias )
+   METHOD showInIdeDBU()
 
    ENDCLASS
 
@@ -248,13 +251,11 @@ METHOD IdeBrowseManager:create( oIde )
 
    qDock := ::oIde:oEM:oQScintillaDock:oWidget
 
-   ::qDbu := QWidget()
-
-   qDock:setWidget( ::qDbu )
-
    qDock:setAcceptDrops( .t. )
    qDock:connect( QEvent_DragEnter, {|p| ::execEvent( __dockDbu_dragEnterEvent__, p ) } )
    qDock:connect( QEvent_Drop     , {|p| ::execEvent( __dockDbu_dropEvent__     , p ) } )
+
+   ::qDbu := QWidget()
 
    /* Layout applied to dbu widget */
    ::qLayout := QGridLayout()
@@ -296,82 +297,24 @@ METHOD IdeBrowseManager:create( oIde )
    ::qTimer := QTimer()
    ::qTimer:setInterval( 2000 )
    ::qTimer:connect( "timeout()", {|| ::dispStatusInfo() } )
-   ::qTimer:start()
+
+   qDock:setWidget( ::qDbu )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:destroy()
-   LOCAL oPanel, qDock, qAct
+   RETURN Self
 
-   ::qRddCombo:disconnect( "currentIndexChanged(QString)" )
-   ::qTablesButton:disconnect( "clicked()" )
-   ::qIndexButton:disconnect( "clicked()" )
-   ::qPanelsButton:disconnect( "clicked()" )
+/*----------------------------------------------------------------------*/
 
-   IF !empty( ::qTimer )
-      ::qTimer:disconnect( "timeout()" )
-      ::qTimer:stop()
-      ::qTimer := nil
-   ENDIF
+METHOD IdeBrowseManager:showInIdeDBU()
 
-   qDock := ::oIde:oEM:oQScintillaDock:oWidget
-   qDock:setWidget( QWidget() )
-   qDock:disconnect( QEvent_DragEnter )
-   qDock:disconnect( QEvent_Drop )
-
-   IF !empty( ::qStruct )
-      ::qStruct:disconnect( QEvent_Close )
-
-      ::qStruct:tableFields:disconnect( "itemSelectionChanged()" )
-      ::qStruct:buttonCopyStruct:disconnect( "clicked()" )
-
-      ::qStruct:tableFields:clearContents()
-
-      ::qStruct:destroy()
-      ::qStruct := NIL
-   ENDIF
-
-   FOR EACH qAct IN ::aIndexAct
-      qAct:disconnect( "triggered(bool)" )
-      qAct := NIL
-   NEXT
-   FOR EACH qAct IN ::aPanelsAct
-      qAct:disconnect( "triggered(bool)" )
-      qAct := NIL
-   NEXT
-
-   FOR EACH oPanel IN ::aPanels
-      oPanel:destroy()
-   NEXT
-   ::aPanels             := NIL
-
-   ::qDbu                := NIL
-   ::qStack              := NIL
-   ::qLayout             := NIL
-   ::qVSplitter          := NIL
-   ::qToolBar            := NIL
-   ::qToolBarL           := NIL
-   ::qStruct             := NIL
-   ::qRddCombo           := NIL
-   ::qConxnCombo         := NIL
-   ::qStatus             := NIL
-   ::qTimer              := NIL
-   ::aStatusPnls         := NIL
-   ::aPanels             := NIL
-   ::aIndexAct           := NIL
-   ::aRdds               := NIL
-   ::aConxns             := NIL
-   ::oCurBrw             := NIL
-   ::oCurPanel           := NIL
-   ::qPanelsMenu         := NIL
-   ::qIndexMenu          := NIL
-   ::qTablesMenu         := NIL
-   ::qPanelsButton       := NIL
-   ::qIndexButton        := NIL
-   ::qTablesButton       := NIL
-   ::aPanelsAct          := NIL
+   ::oQScintillaDock:oWidget:hide()
+   ::oIde:oStackDbuLayout:addWidget( ::qDbu, 0, 0, 1, 1 )
+   ::qDbu:show()
+   ::qTimer:start()
 
    RETURN Self
 
@@ -381,6 +324,7 @@ METHOD IdeBrowseManager:show()
 
    ::qToolbar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
    ::oQScintillaDock:oWidget:raise()
+   ::qTimer:start()
 
    RETURN Self
 

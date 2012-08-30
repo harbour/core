@@ -145,6 +145,7 @@ CLASS IdeDocks INHERIT IdeObject
    DATA   qAct2
    DATA   cOldView                                INIT   ""
 
+   DATA   nCurStacksIndex                         INIT   0
 
    METHOD new( oIde )
    METHOD create( oIde )
@@ -208,6 +209,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD buildUISrcDock()
    METHOD buildSelectedTextToolbar()
    METHOD showSelectedTextToolbar( oEdit )
+   METHOD execIdeStackChanged( nIndex )
 
    ENDCLASS
 
@@ -436,11 +438,39 @@ METHOD IdeDocks:buildDialog()
    ::oDlg:setTabPosition( Qt_LeftDockWidgetArea  , ::oINI:nDocksLeftTabPos   )
    ::oDlg:setTabPosition( Qt_TopDockWidgetArea   , ::oINI:nDocksTopTabPos    )
 
-   ::oDlg:setCorner( Qt_BottomLeftCorner, Qt_LeftDockWidgetArea )
+   ::oDlg:setCorner( Qt_BottomLeftCorner , Qt_LeftDockWidgetArea  )
    ::oDlg:setCorner( Qt_BottomRightCorner, Qt_RightDockWidgetArea )
    ::oDlg:oWidget:resize( 1000,570 )
 
    ::oIde:oDa := ::oDlg:drawingArea
+
+   /* Stackifying HbIDE : Important to carry this Ide to next levels */
+   //
+   ::oIde:oDALayout := QGridLayout()
+   ::oIde:oDALayout:setContentsMargins( 0,0,0,0 )
+   ::oIde:oDALayout:setHorizontalSpacing( 0 )
+   ::oIde:oDALayout:setVerticalSpacing( 0 )
+   ::oIde:oDa:setLayout( ::oIde:oDALayout )
+
+   ::oIde:oIdeStacks := QStackedWidget( ::oIde:oDa:oWidget )
+   ::oIde:oDALayout:addWidget( ::oIde:oIdeStacks, 0, 0, 1, 1 )
+
+   ::oIde:oStackEditor := QWidget( ::oIde:oIdeStacks )
+   ::oIde:oIdeStacks:addWidget( ::oIde:oStackEditor )
+
+   ::oIde:oStackDbu := QWidget( ::oIde:oIdeStacks )
+   ::oIde:oIdeStacks:addWidget( ::oIde:oStackDbu )
+   ::oIde:oStackDbuLayout := QGridLayout()
+   ::oIde:oStackDbuLayout:setContentsMargins( 0,0,0,0 )
+   ::oIde:oStackDbuLayout:setHorizontalSpacing( 0 )
+   ::oIde:oStackDbuLayout:setVerticalSpacing( 0 )
+   ::oIde:oStackDbu:setLayout( ::oIde:oStackDbuLayout )
+
+   ::oIde:oIdeStacks:setCurrentIndex( 0 )       /* By default Editor */
+
+   ::oIde:oIdeStacks:connect( "currentChanged(int)", {|i| ::execIdeStackChanged( i ) } )
+   //
+   /*----------------------------------------------------------------*/
 
    SetAppWindow( ::oDlg )
 
@@ -459,7 +489,7 @@ METHOD IdeDocks:buildDialog()
    ::oIde:qLayout:setHorizontalSpacing( 0 )
    ::oIde:qLayout:setVerticalSpacing( 0 )
    //
-   ::oDa:setLayout( ::qLayout )
+   ::oIde:oStackEditor:setLayout( ::qLayout )
    ::buildMdiToolbar()
    ::qLayout:addWidget( ::qMdiToolbar:oWidget   , 0, 0, 1, 2 )
    ::buildMdiToolbarLeft()
@@ -538,6 +568,27 @@ METHOD IdeDocks:buildDialog()
    ::buildSystemTray()
 
    ::buildSelectedTextToolbar()
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+#define  IDE_STACK_EDITOR                         0
+#define  IDE_STACK_DBU                            1
+
+METHOD IdeDocks:execIdeStackChanged( nIndex )
+
+   SWITCH nIndex
+   CASE IDE_STACK_EDITOR
+      ::oIde:oSBar:show()
+      EXIT
+   CASE IDE_STACK_DBU
+      ::oIde:oSBar:hide()
+      ::oBM:showInIdeDBU()
+      EXIT
+   ENDSWITCH
+
+   ::nCurStacksIndex := nIndex
 
    RETURN Self
 
@@ -2133,6 +2184,7 @@ METHOD IdeDocks:buildSelectedTextToolbar()
    qTBar:addToolButton( "Redo"      , "Redo"                       , hbide_image( "redo"          ), {|| ::oEM:redo()                        }, .f. )
    qTBar:addToolButton( "Cut"       , "Cut"                        , hbide_image( "cut"           ), {|| ::oEM:cut()                         }, .f. )
    qTBar:addToolButton( "Copy"      , "Copy"                       , hbide_image( "copy"          ), {|| ::oEM:copy()                        }, .f. )
+   qTBar:addToolButton( "Paste"     , "Paste"                      , hbide_image( "paste"         ), {|| ::oEM:paste()                       }, .f. )
    qTBar:addToolButton( "SelMode"   , "Selection Mode"             , hbide_image( "stream"        ), {|| ::oEM:toggleSelectionMode(), ::oIDE:manageFocusInEditor() }, .t. )
    qTBar:addToolButton( "ToUpper"   , "To Upper"                   , hbide_image( "toupper"       ), {|| ::oEM:convertSelection( "ToUpper" ) }, .f. )
    qTBar:addToolButton( "ToLower"   , "To Lower"                   , hbide_image( "tolower"       ), {|| ::oEM:convertSelection( "ToLower" ) }, .f. )

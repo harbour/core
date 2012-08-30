@@ -246,7 +246,7 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "ZoomIn"               , "ZoomIn"                       , "zoomin"         , ""     , "No", "Yes" } )
    aadd( aAct, { "ZoomOut"              , "ZoomOut"                      , "zoomout"        , ""     , "No", "Yes" } )
    //
-   aadd( aAct, { "NewProject"           , "~Project"                     , "project"        , ""     , "No", "Yes" } )
+   aadd( aAct, { "NewProject"           , "new Project Wizard"           , "project"        , ""     , "No", "Yes" } )
    aadd( aAct, { "LoadProject"          , "Open Projec~t..."             , ""               , ""     , "No", "Yes" } )
    aadd( aAct, { "SaveAs"               , "Save ~as..."                  , "saveas"         , ""     , "No", "Yes" } )
    aadd( aAct, { "SaveAll"              , "Save A~ll"                    , "saveall"        , "Sh+^s", "No", "Yes" } )
@@ -264,7 +264,7 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "ProjRemSource"        , "Remove Source"                , "projectdel"     , ""     , "No", "Yes" } )
    aadd( aAct, { "ProjMainModule"       , "Select Main Module"           , "setmain"        , ""     , "No", "Yes" } )
    aadd( aAct, { "SelectProject"        , "Select Current Project"       , ""               , ""     , "No", "Yes" } )
-   aadd( aAct, { "CloseProject"         , "Close Current Project"        , ""               , ""     , "No", "Yes" } )
+   aadd( aAct, { "CloseProject"         , "Close Current Project"        , "projectdel"     , ""     , "No", "Yes" } )
    aadd( aAct, { "Build"                , "Build Project"                , "build"          , "^F9"  , "No", "Yes" } )
    aadd( aAct, { "BuildLaunch"          , "Build and Launch Project"     , "buildlaunch"    , "F9"   , "No", "Yes" } )
    aadd( aAct, { "ReBuild"              , "Rebuild Project"              , "rebuild"        , ""     , "No", "Yes" } )
@@ -326,6 +326,9 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "SplitH"              , "Split Horizontally"            , "split_h"        , ""     , "No", "Yes" } )
    aadd( aAct, { "SplitV"              , "Split Vertically"              , "split_v"        , ""     , "No", "Yes" } )
    aadd( aAct, { "Dictionary"          , "Create .tag Dictionary"        , "dictionary"     , ""     , "No", "Yes" } )
+   //
+   aadd( aAct, { "DBU"                 , "ideDBU"                        , "browser"        , ""     , "No", "Yes" } )
+   aadd( aAct, { "EDITOR"              , "ideEDITOR"                     , "editor"         , ""     , "No", "Yes" } )
 
    RETURN aAct
 
@@ -368,6 +371,8 @@ METHOD IdeActions:buildToolBar()
    oTBar:addItem( , , , , , nSep )
    ::oActToolsBtn := oTBar:oWidget:addWidget( ::oIde:oTM:buildViewsButton() )
    oTBar:addItem( , , , , , nSep )
+   oTBar:addItem( ::getAction( "DBU"                  ), , , , , , "DBU"               )
+   oTBar:addItem( ::getAction( "EDITOR"               ), , , , , , "EDITOR"            )
 
    ::oIde:oMainToolbar := oTBar
 
@@ -592,7 +597,7 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:addItem( { ::getAction( "CloseProject"        ), {|| oIde:execAction( "CloseProject"   ) } } )
    hbide_menuAddSep( oSubMenu )
 // oSubMenu:addItem( { ::getAction( "Environments"        ), {|| oIde:execAction( "Environments"   ) } } )
-   oSubMenu:addItem( { "New Project Wizard"                , {|| oIde:oPWZ:show() } } )
+   oSubMenu:addItem( { ::getAction( "NewProject"          ), {|| oIde:oPWZ:show() } } )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    /*----------------------------------------------------------------------------*/
