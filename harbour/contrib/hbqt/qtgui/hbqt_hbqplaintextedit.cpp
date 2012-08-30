@@ -2767,22 +2767,64 @@ void HBQPlainTextEdit::hbBraceHighlight()
    {
       cursor = textCursor();
       cursor.select( QTextCursor::WordUnderCursor );
-      QString brace = cursor.selectedText();
+      QString brace = cursor.selectedText().toUpper();
 
-      if( brace == "IF"       || brace == "ENDIF"     ||
+      if( brace == "IF"       || brace == "ENDIF"     || brace == "IFDEF"  ||
           brace == "FOR"      || brace == "NEXT"      ||
           brace == "SWITCH"   || brace == "ENDSWITCH" ||
-          brace == "DO"       || brace == "ENDCASE"   || brace == "ENDDO" ||
+          brace == "DO"       || brace == "ENDCASE"   || brace == "ENDDO"  ||
           brace == "CLASS"    || brace == "ENDCLASS"  ||
-          brace == "FUNCTION" || brace == "RETURN"     )
+          brace == "FUNCTION" || brace == "RETURN"    || brace == "METHOD" || brace == "PROCEDURE" )
       {
          QString openBrace;
          QString closeBrace;
 
          if( ( brace == "IF" ) || ( brace == "ENDIF" ) )
          {
-            openBrace  = "IF";
-            closeBrace = "ENDIF";
+            QTextCursor c( cursor );
+            c.movePosition( QTextCursor::PreviousWord, QTextCursor::MoveAnchor );
+            c.movePosition( QTextCursor::PreviousWord, QTextCursor::MoveAnchor );
+            c.movePosition( QTextCursor::EndOfWord, QTextCursor::KeepAnchor );
+            QString brc = c.selectedText();
+            if( brc == "#" )
+            {
+               c.movePosition( QTextCursor::EndOfWord, QTextCursor::KeepAnchor );
+               cursor = c;
+               brace = "#" + brace;
+               if( brace == "#IF" )
+               {
+                  openBrace  = "#IF";
+                  closeBrace = "#ENDIF";
+               }
+               else
+               {
+                  QRegExp openBrace( "(#IFDEF|#IF)" );
+                  QRegExp closeBrace( "#ENDIF" );
+                  matchPair( cursor, QRegExp(), openBrace, closeBrace, true, QTextDocument::FindWholeWords, false );
+                  return;
+               }
+            }
+            else
+            {
+               openBrace  = "IF";
+               closeBrace = "ENDIF";
+            }
+         }
+         else if( ( brace == "IFDEF" ) )
+         {
+            QTextCursor c( cursor );
+            c.movePosition( QTextCursor::PreviousWord, QTextCursor::MoveAnchor );
+            c.movePosition( QTextCursor::PreviousWord, QTextCursor::MoveAnchor );
+            c.movePosition( QTextCursor::EndOfWord, QTextCursor::KeepAnchor );
+            QString brc = c.selectedText();
+            if( brc == "#" )
+            {
+               c.movePosition( QTextCursor::EndOfWord, QTextCursor::KeepAnchor );
+               cursor = c;
+               brace = "#" + brace;
+               openBrace  = "#IFDEF";
+               closeBrace = "#ENDIF";
+            }
          }
          else if( ( brace == "FOR" ) || ( brace == "NEXT" ) )
          {
@@ -2823,10 +2865,27 @@ void HBQPlainTextEdit::hbBraceHighlight()
                closeBrace = "ENDDO";
             }
          }
-         else if( ( brace == "FUNCTION" ) || ( brace == "RETURN" ) )
+         else if( ( brace == "FUNCTION" ) )
          {
             openBrace  = "FUNCTION";
             closeBrace = "RETURN";
+         }
+         else if( ( brace == "METHOD" ) )
+         {
+            openBrace  = "METHOD";
+            closeBrace = "RETURN";
+         }
+         else if( ( brace == "PROCEDURE" ) )
+         {
+            openBrace  = "PROCEDURE";
+            closeBrace = "RETURN";
+         }
+         else if( ( brace == "RETURN" ) )
+         {
+            QRegExp openBrace( "(FUNCTION|METHOD|PROCEDURE)" );
+            QRegExp closeBrace( "\bRETURN\b" );
+            matchPair( cursor, QRegExp(), openBrace, closeBrace, true, QTextDocument::FindWholeWords, false );
+            return;
          }
          else if( ( brace == "CLASS" ) || ( brace == "ENDCLASS" ) )
          {
@@ -2868,6 +2927,69 @@ void HBQPlainTextEdit::matchPair( QTextCursor cursor, QString brace, QString ope
       }
    }
    else if( brace == closeBrace )
+   {
+      cursorO = doc->find( openBrace, cursor, QTextDocument::FindBackward | flags );
+      cursorC = doc->find( closeBrace, cursor, QTextDocument::FindBackward | flags );
+      if( cursorC.isNull() )
+      {
+         matches = cursorO;
+      }
+      else
+      {
+         while( cursorO.position() < cursorC.position() )
+         {
+            cursorO = doc->find( openBrace, cursorO, QTextDocument::FindBackward | flags );
+            cursorC = doc->find( closeBrace, cursorC, QTextDocument::FindBackward | flags );
+            if( cursorC.isNull() )
+                break;
+         }
+         matches = cursorO;
+      }
+   }
+   if( ! matches.isNull() )
+   {
+      if( bBraceAll )
+      {
+         selection.cursor = cursor;
+         extraSelections.append( selection );
+      }
+      selection.cursor = matches;
+      extraSelections.append( selection );
+      setExtraSelections( extraSelections );
+   }
+}
+
+/*----------------------------------------------------------------------*/
+
+void HBQPlainTextEdit::matchPair( QTextCursor cursor, QRegExp brace, QRegExp openBrace, QRegExp closeBrace, bool bBraceAll, QTextDocument::FindFlags flags, bool bForward )
+{
+   QTextDocument *doc = document();
+   QTextCursor cursorC;
+   QTextCursor cursorO;
+   QTextCursor matches;
+   Q_UNUSED( brace );
+
+   if( bForward )
+   {
+      cursorC = doc->find( closeBrace, cursor, flags );
+      cursorO = doc->find( openBrace, cursor, flags );
+      if( cursorO.isNull() )
+      {
+         matches = cursorC;
+      }
+      else
+      {
+         while( cursorC.position() > cursorO.position() )
+         {
+            cursorC = doc->find( closeBrace, cursorC, flags );
+            cursorO = doc->find( openBrace, cursorO, flags );
+            if( cursorO.isNull() )
+                break;
+         }
+         matches = cursorC;
+      }
+   }
+   else
    {
       cursorO = doc->find( openBrace, cursor, QTextDocument::FindBackward | flags );
       cursorC = doc->find( closeBrace, cursor, QTextDocument::FindBackward | flags );

@@ -242,6 +242,7 @@ public slots:
    void           hbToggleCodeCompetion() { isCodeCompletionActive = ! isCodeCompletionActive; };
    void           hbToggleCompetionTips() { isCompletionTipsActive = ! isCompletionTipsActive; };
    void           matchPair( QTextCursor cursor, QString brace, QString openBrace, QString closeBrace, bool bBraceAll, QTextDocument::FindFlags flags );
+   void           matchPair( QTextCursor cursor, QRegExp brace, QRegExp openBrace, QRegExp closeBrace, bool bBraceAll, QTextDocument::FindFlags flags, bool bForward );
 
 private slots:
    void           hbSlotCursorPositionChanged();
