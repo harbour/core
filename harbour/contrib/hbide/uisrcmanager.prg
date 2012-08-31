@@ -719,7 +719,7 @@ METHOD IdeUISrcManager:buildWidget( cBuffer, cPath, cName, cExt, aPrg )
                      cObj := substr( s, n+2 )
                      oObj := ::qU:&cObj
                      cCls := __objGetClsName( oObj )
-                     IF ! ( cCls $ "QPIXMAP,QIMAGE,QICON,QSIZEPOLICY,QFONT,QGRIDLAYOUT,QHBOXLAYOUT,QVBOXLAYOUT,QSPACERITEM,QLAYOUT,QSPLITTER,QSCROLLAREA,QTREEWIDGETITEM,QLISTWIDGETITEM" )
+                     IF ! ( cCls $ "QPALETTE,QPIXMAP,QIMAGE,QICON,QSIZEPOLICY,QFONT,QGRIDLAYOUT,QHBOXLAYOUT,QVBOXLAYOUT,QSPACERITEM,QLAYOUT,QSPLITTER,QSCROLLAREA,QTREEWIDGETITEM,QLISTWIDGETITEM" )
                         aadd( ::aObjByName, cObj )
                         oObj:setObjectName( cObj )
 
