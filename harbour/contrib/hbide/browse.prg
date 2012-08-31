@@ -73,8 +73,8 @@
 
 /*----------------------------------------------------------------------*/
 
-#define __dockDbu_dragEnterEvent__                2011
-#define __dockDbu_dropEvent__                     2012
+#define __dbu_dragEnterEvent__                    2011
+#define __dbu_dropEvent__                         2012
 #define __dbStruct_closeEvent__                   2013
 #define __fieldsTable_itemSelectionChanged__      2014
 #define __buttonCopyStruct_clicked__              2015
@@ -192,7 +192,7 @@ CLASS IdeBrowseManager INHERIT IdeObject
    METHOD create( oIde )
    METHOD show()
    METHOD open( aDbfs )
-   METHOD destroy()
+   METHOD destroy()                               VIRTUAL
    METHOD buildToolbar()
    METHOD execEvent( nEvent, p, p1 )
    METHOD addArray( aData, aAttr )
@@ -242,20 +242,16 @@ METHOD IdeBrowseManager:new( oIde )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeBrowseManager:create( oIde )
-   LOCAL qDock
 
    SET DELETED ( ::lDeletedOn )
 
    DEFAULT oIde TO ::oIde
    ::oIde := oIde
 
-   qDock := ::oIde:oEM:oQScintillaDock:oWidget
-
-   qDock:setAcceptDrops( .t. )
-   qDock:connect( QEvent_DragEnter, {|p| ::execEvent( __dockDbu_dragEnterEvent__, p ) } )
-   qDock:connect( QEvent_Drop     , {|p| ::execEvent( __dockDbu_dropEvent__     , p ) } )
-
    ::qDbu := QWidget()
+   ::qDbu:setAcceptDrops( .t. )
+   ::qDbu:connect( QEvent_DragEnter, {|p| ::execEvent( __dbu_dragEnterEvent__, p ) } )
+   ::qDbu:connect( QEvent_Drop     , {|p| ::execEvent( __dbu_dropEvent__     , p ) } )
 
    /* Layout applied to dbu widget */
    ::qLayout := QGridLayout()
@@ -302,15 +298,10 @@ METHOD IdeBrowseManager:create( oIde )
 
 /*----------------------------------------------------------------------*/
 
-METHOD IdeBrowseManager:destroy()
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD IdeBrowseManager:showInIdeDBU()
 
    ::oQScintillaDock:oWidget:hide()
-   ::oIde:oStackDbuLayout:addWidget( ::qDbu, 0, 0, 1, 1 )
+   ::oParts:addWidget( IDE_PART_DBU, ::qDbu, 0, 0, 1, 1 )
    ::qDbu:show()
    ::qTimer:start()
 
@@ -552,11 +543,11 @@ METHOD IdeBrowseManager:execEvent( nEvent, p, p1 )
    ENDIF
 
    SWITCH nEvent
-   CASE __dockDbu_dragEnterEvent__
+   CASE __dbu_dragEnterEvent__
       p:acceptProposedAction()
       EXIT
 
-   CASE __dockDbu_dropEvent__
+   CASE __dbu_dropEvent__
       qMime := p:mimeData()
       IF qMime:hasUrls()
          qList := qMime:urls()

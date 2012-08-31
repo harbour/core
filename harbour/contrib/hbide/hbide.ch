@@ -144,4 +144,9 @@
 #define ACT_CHECKABLE                             5
 #define ACT_VISINMENU                             6
 
+#define IDE_PART_EDITOR                           0
+#define IDE_PART_DBU                              1
+#define IDE_PART_REPORTSDESIGNER                  2
+#define IDE_PART_CUISCREENDESIGNER                3
+
 #endif

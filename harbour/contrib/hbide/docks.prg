@@ -145,8 +145,6 @@ CLASS IdeDocks INHERIT IdeObject
    DATA   qAct2
    DATA   cOldView                                INIT   ""
 
-   DATA   nCurStacksIndex                         INIT   0
-
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
@@ -209,7 +207,6 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD buildUISrcDock()
    METHOD buildSelectedTextToolbar()
    METHOD showSelectedTextToolbar( oEdit )
-   METHOD execIdeStackChanged( nIndex )
 
    ENDCLASS
 
@@ -444,33 +441,7 @@ METHOD IdeDocks:buildDialog()
 
    ::oIde:oDa := ::oDlg:drawingArea
 
-   /* Stackifying HbIDE : Important to carry this Ide to next levels */
-   //
-   ::oIde:oDALayout := QGridLayout()
-   ::oIde:oDALayout:setContentsMargins( 0,0,0,0 )
-   ::oIde:oDALayout:setHorizontalSpacing( 0 )
-   ::oIde:oDALayout:setVerticalSpacing( 0 )
-   ::oIde:oDa:setLayout( ::oIde:oDALayout )
-
-   ::oIde:oIdeStacks := QStackedWidget( ::oIde:oDa:oWidget )
-   ::oIde:oDALayout:addWidget( ::oIde:oIdeStacks, 0, 0, 1, 1 )
-
-   ::oIde:oStackEditor := QWidget( ::oIde:oIdeStacks )
-   ::oIde:oIdeStacks:addWidget( ::oIde:oStackEditor )
-
-   ::oIde:oStackDbu := QWidget( ::oIde:oIdeStacks )
-   ::oIde:oIdeStacks:addWidget( ::oIde:oStackDbu )
-   ::oIde:oStackDbuLayout := QGridLayout()
-   ::oIde:oStackDbuLayout:setContentsMargins( 0,0,0,0 )
-   ::oIde:oStackDbuLayout:setHorizontalSpacing( 0 )
-   ::oIde:oStackDbuLayout:setVerticalSpacing( 0 )
-   ::oIde:oStackDbu:setLayout( ::oIde:oStackDbuLayout )
-
-   ::oIde:oIdeStacks:setCurrentIndex( 0 )       /* By default Editor */
-
-   ::oIde:oIdeStacks:connect( "currentChanged(int)", {|i| ::execIdeStackChanged( i ) } )
-   //
-   /*----------------------------------------------------------------*/
+   ::oParts:buildParts()
 
    SetAppWindow( ::oDlg )
 
@@ -483,21 +454,14 @@ METHOD IdeDocks:buildDialog()
    /* StatusBar */
    ::buildStatusBar()
 
-   /* Attach GRID Layout to Editor Area - Futuristic */
-   ::oIde:qLayout := QGridLayout()
-   ::oIde:qLayout:setContentsMargins( 0,0,0,0 )
-   ::oIde:qLayout:setHorizontalSpacing( 0 )
-   ::oIde:qLayout:setVerticalSpacing( 0 )
-   //
-   ::oIde:oStackEditor:setLayout( ::qLayout )
    ::buildMdiToolbar()
-   ::qLayout:addWidget( ::qMdiToolbar:oWidget   , 0, 0, 1, 2 )
+   ::oParts:addWidget( IDE_PART_EDITOR, ::qMdiToolbar:oWidget       , 0, 0, 1, 2 )
    ::buildMdiToolbarLeft()
-   ::qLayout:addWidget( ::qMdiToolbarL:oWidget  , 1, 0, 1, 1 )
+   ::oParts:addWidget( IDE_PART_EDITOR, ::qMdiToolbarL:oWidget      , 1, 0, 1, 1 )
    ::buildStackedWidget()
-   ::qLayout:addWidget( ::oStackedWidget:oWidget, 1, 1, 1, 1 )
+   ::oParts:addWidget( IDE_PART_EDITOR, ::oStackedWidget:oWidget    , 1, 1, 1, 1 )
    ::buildSearchReplaceWidget()
-   ::qLayout:addWidget( ::oSearchReplace:oUI:oWidget    , 2, 0, 1, 2 ) // Changed
+   ::oParts:addWidget( IDE_PART_EDITOR, ::oSearchReplace:oUI:oWidget, 2, 0, 1, 2 )
 
    /* Normalize Views */
    FOR EACH s IN ::oINI:aViews
@@ -568,27 +532,6 @@ METHOD IdeDocks:buildDialog()
    ::buildSystemTray()
 
    ::buildSelectedTextToolbar()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-#define  IDE_STACK_EDITOR                         0
-#define  IDE_STACK_DBU                            1
-
-METHOD IdeDocks:execIdeStackChanged( nIndex )
-
-   SWITCH nIndex
-   CASE IDE_STACK_EDITOR
-      ::oIde:oSBar:show()
-      EXIT
-   CASE IDE_STACK_DBU
-      ::oIde:oSBar:hide()
-      ::oBM:showInIdeDBU()
-      EXIT
-   ENDSWITCH
-
-   ::nCurStacksIndex := nIndex
 
    RETURN Self
 

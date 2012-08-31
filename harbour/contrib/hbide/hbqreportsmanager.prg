@@ -244,7 +244,7 @@ CLASS HbqReportsManager
 
    METHOD new( qParent )
    METHOD create( qParent )
-   METHOD destroy()
+   METHOD destroy()                               VIRTUAL
    METHOD execEvent( nEvent, p, p1, p2 )
    METHOD buildToolbar()
    METHOD buildToolbarAlign()
@@ -328,61 +328,6 @@ METHOD HbqReportsManager:create( qParent )
    ::buildDesignReport()
 
    ::qTabBar:setCurrentIndex( 2 )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbqReportsManager:destroy()
-
-   ::qTreeObjects:disconnect( "itemClicked(QTreeWidgetItem*,int)" )
-
-   ::qParent       := NIL
-
-   ::aSources      := NIL
-   ::aPages        := NIL
-   ::qToolbar      := NIL
-   ::qToolbarAlign := NIL
-   ::qToolbarL     := NIL
-
-   ::qLayoutD      := NIL
-   ::qSpliter      := NIL
-   ::qFrameL       := NIL
-
-   ::qScene        := NIL
-
-   ::qView         := NIL
-   ::qFrameR       := NIL
-
-   ::qLayL         := NIL
-   ::qSplL         := NIL
-
-   ::qLayR         := NIL
-
-   ::qTabL0        := NIL
-   ::qTabL1        := NIL
-   ::qTabR1        := NIL
-
-   ::qPageL01      := NIL
-   ::qPageL02      := NIL
-   ::qPageL11      := NIL
-
-   ::qTreeObjects  := NIL
-
-   ::qPageL12      := NIL
-
-   ::qTreeProp     := NIL
-   ::qEditDesc     := NIL
-
-   ::qSplR         := NIL
-   ::qPageR11      := NIL
-   ::qPageR12      := NIL
-   ::qPageR13      := NIL
-
-   ::qPageR11Lay   := NIL
-
-   ::qTreeData     := NIL
-   ::qPageR11Lay   := NIL
 
    RETURN Self
 
@@ -931,7 +876,7 @@ METHOD HbqReportsManager:loadReport( xData )
          cBuffer  := hb_utf8tostr( hb_memoread( xData ) )
 
          IF !empty( ::qParent )
-            ::qParent:setWindowTitle( "HBReportsManager : " + ::cSaved )
+            ::qParent:setWindowTitle( "HbReportsManager : " + ::cSaved )
          ENDIF
       ELSE
          ::cSaved := ""

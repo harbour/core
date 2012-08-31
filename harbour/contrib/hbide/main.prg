@@ -172,6 +172,7 @@ CLASS HbIde
    DATA   oCUI                                           /* CUI Screen Designer Console    */
    DATA   oUiS                                           /* UI Source Writer               */
    DATA   oPWZ                                           /* Project Wizard                 */
+   DATA   oParts                                         /* HbIDE Parts Manager            */
 
    DATA   nRunMode                                INIT   HBIDE_RUN_MODE_INI
    DATA   nAnimantionMode                         INIT   HBIDE_ANIMATION_NONE
@@ -192,13 +193,7 @@ CLASS HbIde
    DATA   aHbpOnCmdLine                           INIT   {}
    DATA   aDbfOnCmdLine                           INIT   {}
 
-   /* HBQT Objects */
-   DATA   oIdeStacks
-   DATA   oDALayout
-   DATA   oStackEditor
-   DATA   oStackDbu
-   DATA   oStackDbuLayout
-   DATA   qLayout
+//   DATA   qLayout
 
    DATA   qTabWidget
    DATA   oTabParent
@@ -619,6 +614,9 @@ METHOD HbIde:create( aParams )
    /* Set Codec at the Begining - no interface display */
    hb_cdpSelect( ::cWrkCodec )
 
+   /* Parts Manager */
+   ::oParts := IdeParts():new( Self ):create()
+
    /* Load IDE|User defined Themes */
    ::oTH := IdeThemes():new( Self, ::oINI:getThemesFile() ):create()
 
@@ -1004,10 +1002,10 @@ METHOD HbIde:execAction( cKey )
       ::oHelpDock:show()
       EXIT
    CASE "DBU"
-      ::oIdeStacks:setCurrentIndex( 1 )
+      ::oParts:setStack( 1 )
       EXIT
    CASE "EDITOR"
-      ::oIdeStacks:setCurrentIndex( 0 )
+      ::oParts:setStack( 0 )
       EXIT
    ENDSWITCH
 

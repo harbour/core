@@ -105,6 +105,7 @@ CLASS IdeObject
    ACCESS oCUI                                    INLINE ::oIde:oCUI
    ACCESS oUiS                                    INLINE ::oIde:oUiS
    ACCESS oPWZ                                    INLINE ::oIde:oPWZ
+   ACCESS oParts                                  INLINE ::oIde:oParts
 
    ACCESS aMeta                                   INLINE ::oIde:aMeta
    ACCESS aTags                                   INLINE ::oIde:aTags

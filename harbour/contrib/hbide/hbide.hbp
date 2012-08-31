@@ -27,6 +27,7 @@ hbformat.hbc
 rddads.hbc
 
 main.prg
+parts.prg
 object.prg
 stylesheets.prg
 tags.prg
