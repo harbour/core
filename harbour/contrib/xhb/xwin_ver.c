@@ -66,6 +66,7 @@ HB_FUNC_EXTERN( WIN_OSIS2003         ) ; HB_FUNC( OS_ISWIN2003           ) { HB_
 HB_FUNC_EXTERN( WIN_OSISVISTA        ) ; HB_FUNC( OS_ISWINVISTA          ) { HB_FUNC_EXEC( WIN_OSISVISTA        ); }
 HB_FUNC_EXTERN( WIN_OSISVISTAORUPPER ) ; HB_FUNC( OS_ISWINVISTA_OR_LATER ) { HB_FUNC_EXEC( WIN_OSISVISTAORUPPER ); }
 HB_FUNC_EXTERN( WIN_OSIS7            ) ; HB_FUNC( OS_ISWIN7              ) { HB_FUNC_EXEC( WIN_OSIS7            ); }
+HB_FUNC_EXTERN( WIN_OSIS8            ) ; HB_FUNC( OS_ISWIN8              ) { HB_FUNC_EXEC( WIN_OSIS8            ); }
 HB_FUNC_EXTERN( WIN_OSIS9X           ) ; HB_FUNC( OS_ISWIN9X             ) { HB_FUNC_EXEC( WIN_OSIS9X           ); }
 HB_FUNC_EXTERN( WIN_OSIS95           ) ; HB_FUNC( OS_ISWIN95             ) { HB_FUNC_EXEC( WIN_OSIS95           ); }
 HB_FUNC_EXTERN( WIN_OSIS98           ) ; HB_FUNC( OS_ISWIN98             ) { HB_FUNC_EXEC( WIN_OSIS98           ); }
@@ -88,6 +89,7 @@ HB_FUNC( OS_ISWIN2003           ) { hb_retl( HB_FALSE ); }
 HB_FUNC( OS_ISWINVISTA          ) { hb_retl( HB_FALSE ); }
 HB_FUNC( OS_ISWINVISTA_OR_LATER ) { hb_retl( HB_FALSE ); }
 HB_FUNC( OS_ISWIN7              ) { hb_retl( HB_FALSE ); }
+HB_FUNC( OS_ISWIN8              ) { hb_retl( HB_FALSE ); }
 HB_FUNC( OS_ISWIN9X             ) { hb_retl( HB_FALSE ); }
 HB_FUNC( OS_ISWIN95             ) { hb_retl( HB_FALSE ); }
 HB_FUNC( OS_ISWIN98             ) { hb_retl( HB_FALSE ); }
