@@ -429,7 +429,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
       cOptions += " -rebuildall"
    ENDIF
 
-   cMakeFlags := getenv( "MAKEFLAGS" )
+   cMakeFlags := GetEnv( "MAKEFLAGS" )
    IF " -j " $ " " + cMakeFlags + " "
       /* GNU Make uses job server to limit number of concurrent operations
        * We cannot read it from MAKEFLAGS so I set it to arbitrary value: 8
