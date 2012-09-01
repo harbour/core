@@ -153,7 +153,7 @@ METHOD XbpToolbar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::oWidget := QToolBar( ::oParent:oWidget )
    ::oWidget:setObjectName( "XBPTOOLBARMAIN" )
-   ::oWidget:setWindowTitle( "Toolbar: Main" )
+   ::oWidget:setWindowTitle( "Main" )
    ::oParent:oWidget:addToolBar( ::oWidget )
 
    IF ::imageWidth > 0 .and. ::imageHeight > 0

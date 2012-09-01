@@ -378,16 +378,16 @@ METHOD IdeDocks:destroy()
       ::qMdiToolBarL:destroy()
       ::qMdiToolBarL := NIL
    ENDIF
-   ::nPass             := NIL
-   ::aPanels           := NIL
-   ::aMdiBtns          := NIL
-   ::aBtnLines         := NIL
-   ::aBtnDocks         := NIL
-   ::oBtnTabClose      := NIL
-   ::aViewsInfo        := NIL
-   ::qTBtnClose        := NIL
-   ::qTimer            := NIL
-   ::nPrevWindowState  := NIL
+   ::nPass                       := NIL
+   ::aPanels                     := NIL
+   ::aMdiBtns                    := NIL
+   ::aBtnLines                   := NIL
+   ::aBtnDocks                   := NIL
+   ::oBtnTabClose                := NIL
+   ::aViewsInfo                  := NIL
+   ::qTBtnClose                  := NIL
+   ::qTimer                      := NIL
+   ::nPrevWindowState            := NIL
 
    RETURN Self
 
@@ -1180,7 +1180,7 @@ METHOD IdeDocks:buildMdiToolbarLeft()
    ::qMdiToolbarL:orientation := Qt_Vertical
    ::qMdiToolbarL:size := QSize(  val( ::oINI:cToolbarSize ), val( ::oINI:cToolbarSize ) )
    ::qMdiToolbarL:create( "EditsManager_Left_Toolbar" )
-   ::qMdiToolbarL:setWindowTitle( "Toolbar: Editing Area's Left" )
+   ::qMdiToolbarL:setWindowTitle( "Editing Area's Left" )
    ::qMdiToolbarL:setObjectName( "ToolbarEditingAreaLeft" )
    ::qMdiToolbarL:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
 
@@ -1233,7 +1233,7 @@ METHOD IdeDocks:buildMdiToolbar()
    ::qMdiToolbar:create( "EditsManager_Top_Toolbar" )
    ::qMdiToolbar:setStyleSheet( GetStyleSheet( "QToolBar", ::nAnimantionMode ) )
    ::qMdiToolbar:setObjectName( "ToolbarEditingAreaTop" )
-   ::qMdiToolbar:setWindowTitle( "Toolbar: Editing Area's Top" )
+   ::qMdiToolbar:setWindowTitle( "Editing Area's Top" )
 
    qTBar := ::qMdiToolbar
 
@@ -1277,6 +1277,66 @@ METHOD IdeDocks:buildMdiToolbar()
    IF ! ::oINI:lShowEditsTopToolbar
       ::qMdiToolbar:hide()
    ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD IdeDocks:buildToolBarPanels()
+   LOCAL a_, qAct
+   LOCAL qSize := QSize( 20,20 )
+   LOCAL aBtns := {}
+
+   /* Right-hand docks toolbar */
+
+   aadd( aBtns, { ::oDockPT             , "projtree"      } )
+   aadd( aBtns, { ::oDockED             , "editstree"     } )
+   aadd( aBtns, { ::oSkltnsTreeDock     , "projtree"      } )
+   aadd( aBtns, {} )
+   aadd( aBtns, { ::oHelpDock           , "help"          } )
+   aadd( aBtns, { ::oDocViewDock        , "harbourhelp"   } )
+   aadd( aBtns, { ::oDocWriteDock       , "docwriter"     } )
+   aadd( aBtns, { ::oFuncDock           , "dc_function"   } )
+   aadd( aBtns, { ::oFunctionsDock      , "ffn"           } )
+   aadd( aBtns, { ::oPropertiesDock     , "properties"    } )
+   aadd( aBtns, { ::oEnvironDock        , "envconfig"     } )
+   aadd( aBtns, { ::oSkeltnDock         , "codeskeletons" } )
+   aadd( aBtns, { ::oThemesDock         , "syntaxhiliter" } )
+   aadd( aBtns, { ::oFindDock           , "search"        } )
+   aadd( aBtns, { ::oSourceThumbnailDock, "thumbnail"     } )
+   aadd( aBtns, { ::oQScintillaDock     , "browser"       } )
+   aadd( aBtns, { ::oReportsManagerDock , "designer"      } )
+   aadd( aBtns, { ::oCuiEdDock          , "cuied"         } )
+   aadd( aBtns, { ::oUiSrcDock          , "fileprg"       } )
+   aadd( aBtns, {} )
+   aadd( aBtns, { ::oDockB2             , "builderror"    } )
+
+   ::oIde:qTBarDocks := HBQToolBar():new( "ToolBar_Docks" )
+
+   ::qTBarDocks:cName := "ToolBar_Docks"
+   ::qTBarDocks:allowedAreas := Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea
+   ::qTBarDocks:size := qSize
+
+   ::qTBarDocks:create()
+
+   ::qTBarDocks:setStyleSheet( GetStyleSheet( "QToolBarLR5", ::nAnimantionMode ) )
+   ::qTBarDocks:setWindowTitle( "Dockable Widgets" )
+   ::qTBarDocks:setToolButtonStyle( Qt_ToolButtonIconOnly )
+
+   FOR EACH a_ IN aBtns
+      IF empty( a_ )
+         ::qTBarDocks:addSeparator()
+      ELSE
+         qAct := a_[ 1 ]:oWidget:toggleViewAction()
+         qAct:setIcon( QIcon( hbide_image( a_[ 2 ] ) ) )
+         ::qTBarDocks:addAction( a_[ 2 ], qAct )
+      ENDIF
+   NEXT
+
+   ::oDlg:oWidget:addToolBar( Qt_TopToolBarArea, ::qTBarDocks:oWidget )
+
+   /* User defined toolbars via Tools & Utilities */
+   ::oTM:buildUserToolbars()
 
    RETURN Self
 
@@ -1393,66 +1453,6 @@ METHOD IdeDocks:buildUpDownWidget()
    ::oUpDn:oUI:show()
    ::qMdiToolbarL:addWidget( "UpDown", ::oUpDn:oUI:oWidget )
    ::oUpDn:oUI:hide()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:buildToolBarPanels()
-   LOCAL a_, qAct
-   LOCAL qSize := QSize( 20,20 )
-   LOCAL aBtns := {}
-
-   /* Right-hand docks toolbar */
-
-   aadd( aBtns, { ::oDockPT             , "projtree"      } )
-   aadd( aBtns, { ::oDockED             , "editstree"     } )
-   aadd( aBtns, { ::oSkltnsTreeDock     , "projtree"      } )
-   aadd( aBtns, {} )
-   aadd( aBtns, { ::oHelpDock           , "help"          } )
-   aadd( aBtns, { ::oDocViewDock        , "harbourhelp"   } )
-   aadd( aBtns, { ::oDocWriteDock       , "docwriter"     } )
-   aadd( aBtns, { ::oFuncDock           , "dc_function"   } )
-   aadd( aBtns, { ::oFunctionsDock      , "ffn"           } )
-   aadd( aBtns, { ::oPropertiesDock     , "properties"    } )
-   aadd( aBtns, { ::oEnvironDock        , "envconfig"     } )
-   aadd( aBtns, { ::oSkeltnDock         , "codeskeletons" } )
-   aadd( aBtns, { ::oThemesDock         , "syntaxhiliter" } )
-   aadd( aBtns, { ::oFindDock           , "search"        } )
-   aadd( aBtns, { ::oSourceThumbnailDock, "thumbnail"     } )
-   aadd( aBtns, { ::oQScintillaDock     , "browser"       } )
-   aadd( aBtns, { ::oReportsManagerDock , "designer"      } )
-   aadd( aBtns, { ::oCuiEdDock          , "cuied"         } )
-   aadd( aBtns, { ::oUiSrcDock          , "fileprg"       } )
-   aadd( aBtns, {} )
-   aadd( aBtns, { ::oDockB2             , "builderror"    } )
-
-   ::oIde:qTBarDocks := HBQToolBar():new( "ToolBar_Docks" )
-
-   ::qTBarDocks:cName := "ToolBar_Docks"
-   ::qTBarDocks:allowedAreas := Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea
-   ::qTBarDocks:size := qSize
-
-   ::qTBarDocks:create()
-
-   ::qTBarDocks:setStyleSheet( GetStyleSheet( "QToolBarLR5", ::nAnimantionMode ) )
-   ::qTBarDocks:setWindowTitle( "ToolBar: Dockable Widgets" )
-   ::qTBarDocks:setToolButtonStyle( Qt_ToolButtonIconOnly )
-
-   FOR EACH a_ IN aBtns
-      IF empty( a_ )
-         ::qTBarDocks:addSeparator()
-      ELSE
-         qAct := a_[ 1 ]:oWidget:toggleViewAction()
-         qAct:setIcon( QIcon( hbide_image( a_[ 2 ] ) ) )
-         ::qTBarDocks:addAction( a_[ 2 ], qAct )
-      ENDIF
-   NEXT
-
-   ::oDlg:oWidget:addToolBar( Qt_TopToolBarArea, ::qTBarDocks:oWidget )
-
-   /* User defined toolbars via Tools & Utilities */
-   ::oTM:buildUserToolbars()
 
    RETURN Self
 

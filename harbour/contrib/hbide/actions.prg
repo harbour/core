@@ -326,6 +326,7 @@ METHOD IdeActions:loadActions()
    aadd( aAct, { "SplitH"              , "Split Horizontally"            , "split_h"        , ""     , "No", "Yes" } )
    aadd( aAct, { "SplitV"              , "Split Vertically"              , "split_v"        , ""     , "No", "Yes" } )
    aadd( aAct, { "Dictionary"          , "Create .tag Dictionary"        , "dictionary"     , ""     , "No", "Yes" } )
+   aadd( aAct, { "ConfigToolbars"      , "Configure Toolbars"            , "configtoolbars" , ""     , "No", "Yes" } )
    //
    aadd( aAct, { "DBU"                 , "ideDBU"                        , "browser"        , ""     , "No", "Yes" } )
    aadd( aAct, { "EDITOR"              , "ideEDITOR"                     , "editor"         , ""     , "No", "Yes" } )
@@ -383,21 +384,17 @@ METHOD IdeActions:buildToolBar()
 METHOD IdeActions:buildMainMenu()
    LOCAL oMenuBar, oSubMenu, oSubMenu2, n, f
    LOCAL oIde := ::oIde
-   // LOCAL cTheme := "QMenuPop"
 
    oMenuBar := ::oDlg:MenuBar()
-   //oMenuBar:oWidget:setStyleSheet( GetStyleSheet( "QMenuBar", ::nAnimantionMode ) )
 
    /*----------------------------------------------------------------------------*/
    /*                                   File                                     */
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar, , .t. ):create()
-   //oSubMenu:oWidget:setStyleSheet( GetStyleSheet( cTheme ) )
-
    oSubMenu:title := "~File"
+   oMenuBar:addItem( { oSubMenu, NIL } )
 
    oSubMenu2 := XbpMenu():new( oSubMenu, , .t. ):create()
-
    oSubMenu2:addItem( { ::getAction( "New"        ), {|| oIde:execAction( "New"            ) } } )
    oSubMenu2:addItem( { ::getAction( "NewProject" ), {|| oIde:execAction( "NewProject"     ) } } )
    oMenuBar:addItem( { oSubMenu2,  _T( "~New" ) } )
@@ -458,13 +455,14 @@ METHOD IdeActions:buildMainMenu()
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "SaveExit"            ), {|| oIde:execAction( "SaveExit"       ) } } )
    oSubMenu:addItem( { ::getAction( "Exit"                ), {|| oIde:execAction( "Exit"           ) } } )
-   oMenuBar:addItem( { oSubMenu, NIL } )
 
    /*----------------------------------------------------------------------------*/
    /*                                   Edit                                     */
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar, , .t. ):create()
    oSubMenu:title := "~Edit"
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
    oSubMenu:addItem( { ::getAction( "Undo"                ), {|| oIde:execAction( "Undo"           ) } } )
    oSubMenu:addItem( { ::getAction( "Redo"                ), {|| oIde:execAction( "Redo"           ) } } )
    hbide_menuAddSep( oSubMenu )
@@ -484,7 +482,7 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu2:addItem( { ::getAction( "DeleteLine"         ), {|| oIde:execAction( "DeleteLine"     ) } } )
    oSubMenu2:addItem( { ::getAction( "MoveLineUp"         ), {|| oIde:execAction( "MoveLineUp"     ) } } )
    oSubMenu2:addItem( { ::getAction( "MoveLineDown"       ), {|| oIde:execAction( "MoveLineDown"   ) } } )
-   oMenuBar:addItem( { oSubMenu2,  _T( "~Line" ) } )
+   oSubMenu:addItem( { oSubMenu2,  _T( "~Line" ) } )
    //
    oSubMenu2 := XbpMenu():new( oSubMenu, , .t. ):create()
    oSubMenu2:addItem( { ::getAction( "ToUpper"            ), {|| oIde:execAction( "ToUpper"        ) } } )
@@ -499,7 +497,7 @@ METHOD IdeActions:buildMainMenu()
    hbide_menuAddSep( oSubMenu2 )
    oSubMenu2:addItem( { ::getAction( "BlockSgl2Dbl"       ), {|| oIde:execAction( "BlockSgl2Dbl"   ) } } )
    oSubMenu2:addItem( { ::getAction( "BlockDbl2Sgl"       ), {|| oIde:execAction( "BlockDbl2Sgl"   ) } } )
-   oMenuBar:addItem( { oSubMenu2,  _T( "~Block" ) } )
+   oSubMenu:addItem( { oSubMenu2,  _T( "~Block" ) } )
 
    hbide_menuAddSep( oSubMenu )
    oSubMenu2 := XbpMenu():new( oSubMenu, , .t. ):create()
@@ -508,7 +506,7 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu2:addItem( { ::getAction( "InsertDateTime"     ), {|| oIde:execAction( "InsertDateTime"     ) } } )
 // oSubMenu2:addItem( { ::getAction( "InsertRandomName"   ), {|| oIde:execAction( "InsertRandomName"   ) } } )
    oSubMenu2:addItem( { ::getAction( "InsertExternalFile" ), {|| oIde:execAction( "InsertExternalFile" ) } } )
-   oMenuBar:addItem( { oSubMenu2,  _T( "~Insert" ) } )
+   oSubMenu:addItem( { oSubMenu2,  _T( "~Insert" ) } )
 
    oSubMenu2 := XbpMenu():new( oSubMenu, , .t. ):create()
    oSubMenu2:oWidget:addAction( ::oFormatDock:oWidget:toggleViewAction() )
@@ -518,11 +516,10 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu2:addItem( { ::getAction( "RemoveTrailingSpaces"), {|| oIde:execAction( "RemoveTrailingSpaces" ) } } )
    oSubMenu2:addItem( { ::getAction( "FormatBraces"       ), {|| oIde:execAction( "FormatBraces"       ) } } )
    oSubMenu2:addItem( { ::getAction( "UpperCaseKeywords"  ), {|| oIde:execAction( "UpperCaseKeywords"  ) } } )
-   oMenuBar:addItem( { oSubMenu2,  _T( "~Format" ) } )
+   oSubMenu:addItem( { oSubMenu2,  _T( "~Format" ) } )
 
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "switchReadOnly"      ), {|| oIde:execAction( "switchReadOnly"     ) } } )
-   oMenuBar:addItem( { oSubMenu, NIL } )
 
    /*----------------------------------------------------------------------------*/
    /*                                   View                                     */
@@ -534,56 +531,69 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:addItem( { ::getAction( "TB_Hide" ), {|| oIde:execAction( "Hide" ) } }    )
 
    ::oIde:qAnimateAction := QAction( oSubMenu:oWidget )
-   ::qAnimateAction:setText( "Toggle Animation" )
+   ::qAnimateAction:setText( "Animation" )
    ::qAnimateAction:setCheckable( .t. )
    oSubMenu:addItem( { ::qAnimateAction, {|| oIde:execAction( "Animate" ) } }         )
 
    hbide_menuAddSep( oSubMenu )
-   oSubMenu:oWidget:addAction( ::oIde:oMainToolbar:oWidget:toggleViewAction()         )
-   oSubMenu:oWidget:addAction( ::qTBarDocks:toggleViewAction()                        )
+
+   oSubMenu2 := XbpMenu():new( oSubMenu, , .t. ):create()
+   oSubMenu:addItem( { oSubMenu2, "Toolbars" } )
+
+   oSubMenu2:oWidget:addAction( ::oIde:oMainToolbar:oWidget:toggleViewAction()         )
+   oSubMenu2:oWidget:addAction( ::qTBarDocks:toggleViewAction()                        )
+   hbide_menuAddSep( oSubMenu2 )
+   oSubMenu2:oWidget:addAction( ::oDK:qMdiToolbarL:oWidget:toggleViewAction()          )
+   oSubMenu2:oWidget:addAction( ::oDK:qMdiToolbar:oWidget:toggleViewAction()           )
+   hbide_menuAddSep( oSubMenu2 )
+   oSubMenu2:addItem( { ::getAction( "ConfigToolbars" ), {|| NIL } }                   )
+
+   hbide_menuAddSep( oSubMenu )
+
+   oSubMenu2 := XbpMenu():new( oSubMenu, , .t. ):create()
+   oSubMenu:addItem( { oSubMenu2, "Docking Widgets" } )
+
+   oSubMenu2:oWidget:addAction( ::oDockPT:oWidget:toggleViewAction()                   )
+   oSubMenu2:oWidget:addAction( ::oDockED:oWidget:toggleViewAction()                   )
+   oSubMenu2:oWidget:addAction( ::oSkltnsTreeDock:oWidget:toggleViewAction()           )
+   hbide_menuAddSep( oSubMenu2 )
+   oSubMenu2:oWidget:addAction( ::oHelpDock:oWidget:toggleViewAction()                 )
+   oSubMenu2:oWidget:addAction( ::oDocViewDock:oWidget:toggleViewAction()              )
+   oSubMenu2:oWidget:addAction( ::oDocWriteDock:oWidget:toggleViewAction()             )
+   oSubMenu2:oWidget:addAction( ::oFuncDock:oWidget:toggleViewAction()                 )
+   oSubMenu2:oWidget:addAction( ::oFunctionsDock:oWidget:toggleViewAction()            )
+   oSubMenu2:oWidget:addAction( ::oPropertiesDock:oWidget:toggleViewAction()           )
+   oSubMenu2:oWidget:addAction( ::oEnvironDock:oWidget:toggleViewAction()              )
+   oSubMenu2:oWidget:addAction( ::oSkeltnDock:oWidget:toggleViewAction()               )
+   oSubMenu2:oWidget:addAction( ::oThemesDock:oWidget:toggleViewAction()               )
+   oSubMenu2:oWidget:addAction( ::oFindDock:oWidget:toggleViewAction()                 )
+   oSubMenu2:oWidget:addAction( ::oSourceThumbnailDock:oWidget:toggleViewAction()      )
+   oSubMenu2:oWidget:addAction( ::oQScintillaDock:oWidget:toggleViewAction()           )
+
+   oSubMenu2:oWidget:addAction( ::oReportsManagerDock:toggleViewAction()               )
+   oSubMenu2:oWidget:addAction( ::oCuiEdDock:toggleViewAction()                        )
+   oSubMenu2:oWidget:addAction( ::oIde:oUISrcDock:toggleViewAction()                   )
+
+   hbide_menuAddSep( oSubMenu2 )
+   oSubMenu2:oWidget:addAction( ::oDockB2:oWidget:toggleViewAction()                   )
+ * oSubMenu:oWidget:addAction( ::oDockB1:oWidget:toggleViewAction()                   )
+ * oSubMenu:oWidget:addAction( ::oDockB:oWidget:toggleViewAction()                    )
+
+    hbide_menuAddSep( oSubMenu )
 
    ::oIde:qStatusBarAction := QAction( oSubMenu:oWidget )
-   ::qStatusBarAction:setText( "Toggle Statusbar" )
+   ::qStatusBarAction:setText( "Statusbar" )
    ::qStatusBarAction:setCheckable( .t. )
    oSubMenu:addItem( { ::qStatusBarAction, {|| oIde:execAction( "ToggleStatusBar" ) } } )
    ::qStatusBarAction:setChecked( ::lStatusBarVisible )
-
-   hbide_menuAddSep( oSubMenu )
-   oSubMenu:oWidget:addAction( ::oDockPT:oWidget:toggleViewAction()                   )
-   oSubMenu:oWidget:addAction( ::oDockED:oWidget:toggleViewAction()                   )
-   oSubMenu:oWidget:addAction( ::oSkltnsTreeDock:oWidget:toggleViewAction()           )
-   hbide_menuAddSep( oSubMenu )
-   oSubMenu:oWidget:addAction( ::oHelpDock:oWidget:toggleViewAction()                 )
-   oSubMenu:oWidget:addAction( ::oDocViewDock:oWidget:toggleViewAction()              )
-   oSubMenu:oWidget:addAction( ::oDocWriteDock:oWidget:toggleViewAction()             )
-   oSubMenu:oWidget:addAction( ::oFuncDock:oWidget:toggleViewAction()                 )
-   oSubMenu:oWidget:addAction( ::oFunctionsDock:oWidget:toggleViewAction()            )
-   oSubMenu:oWidget:addAction( ::oPropertiesDock:oWidget:toggleViewAction()           )
-   oSubMenu:oWidget:addAction( ::oEnvironDock:oWidget:toggleViewAction()              )
-   oSubMenu:oWidget:addAction( ::oSkeltnDock:oWidget:toggleViewAction()               )
-   oSubMenu:oWidget:addAction( ::oThemesDock:oWidget:toggleViewAction()               )
-   oSubMenu:oWidget:addAction( ::oFindDock:oWidget:toggleViewAction()                 )
-   oSubMenu:oWidget:addAction( ::oSourceThumbnailDock:oWidget:toggleViewAction()      )
-   oSubMenu:oWidget:addAction( ::oQScintillaDock:oWidget:toggleViewAction()           )
-
-   oSubMenu:oWidget:addAction( ::oReportsManagerDock:toggleViewAction()               )
-   oSubMenu:oWidget:addAction( ::oCuiEdDock:toggleViewAction()                        )
-   oSubMenu:oWidget:addAction( ::oIde:oUISrcDock:toggleViewAction()                   )
-
-   hbide_menuAddSep( oSubMenu )
-   oSubMenu:oWidget:addAction( ::oDockB2:oWidget:toggleViewAction()                   )
- * oSubMenu:oWidget:addAction( ::oDockB1:oWidget:toggleViewAction()                   )
- * oSubMenu:oWidget:addAction( ::oDockB:oWidget:toggleViewAction()                    )
-   hbide_menuAddSep( oSubMenu )
-   oSubMenu:oWidget:addAction( ::oDK:qMdiToolbarL:oWidget:toggleViewAction()          )
-   oSubMenu:oWidget:addAction( ::oDK:qMdiToolbar:oWidget:toggleViewAction()           )
-
 
    /*----------------------------------------------------------------------------*/
    /*                                   Project                                  */
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar, , .t. ):create()
    oSubMenu:title := "~Project"
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
    oSubMenu:addItem( { ::getAction( "Properties"          ), {|| oIde:execAction( "Properties"     ) } } )
 #if 0
    hbide_menuAddSep( oSubMenu )
@@ -598,13 +608,14 @@ METHOD IdeActions:buildMainMenu()
    hbide_menuAddSep( oSubMenu )
 // oSubMenu:addItem( { ::getAction( "Environments"        ), {|| oIde:execAction( "Environments"   ) } } )
    oSubMenu:addItem( { ::getAction( "NewProject"          ), {|| oIde:oPWZ:show() } } )
-   oMenuBar:addItem( { oSubMenu, NIL } )
 
    /*----------------------------------------------------------------------------*/
    /*                                   Build                                    */
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar, , .t. ):create()
    oSubMenu:title := "~Build"
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
    oSubMenu:addItem( { ::getAction( "Compile"             ), {|| oIde:execAction( "Compile"            ) } } )
    oSubMenu:addItem( { ::getAction( "CompilePPO"          ), {|| oIde:execAction( "CompilePPO"         ) } } )
    oSubMenu:addItem( { ::getAction( "BuildSource"         ), {|| oIde:execAction( "BuildSource"        ) } } )
@@ -615,13 +626,14 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:addItem( { ::getAction( "RebuildLaunch"       ), {|| oIde:execAction( "RebuildLaunch"      ) } } )
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "LaunchProject"       ), {|| oIde:execAction( "LaunchProject"      ) } } )
-   oMenuBar:addItem( { oSubMenu, NIL } )
 
    /*----------------------------------------------------------------------------*/
    /*                                   Setup                                    */
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar, , .t. ):create()
    oSubMenu:title := "~Setup"
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
    oSubMenu:addItem( { ::getAction( "Setup"               ), {|| oIde:execAction( "Setup"              ) } } )
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "Shortcuts"           ), {|| oIde:execAction( "Shortcuts"          ) } } )
@@ -634,25 +646,23 @@ METHOD IdeActions:buildMainMenu()
 //   oSubMenu2:title := "~CodePage"
    oSubMenu:addItem( { oSubMenu2, _T( "~CodePage" ) } )
 
-   oMenuBar:addItem( { oSubMenu, NIL } )
-
    /*----------------------------------------------------------------------------*/
    /*                                   Help                                     */
    /*----------------------------------------------------------------------------*/
    oSubMenu := XbpMenu():new( oMenuBar, , .t. ):create()
    oSubMenu:title := "~Help"
+   oMenuBar:addItem( { oSubMenu, NIL } )
+
    oSubMenu:addItem( { ::getAction( "AboutIDE"            ), {|| hbide_help( 1 ) } } )
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "AboutHarbour"        ), {|| hbide_help( 4 ) } } )
    hbide_menuAddSep( oSubMenu )
    oSubMenu:addItem( { ::getAction( "HarbourUsersList"    ), {|| hbide_help( 3 ) } } )
    oSubMenu:addItem( { ::getAction( "HarbourDevList"      ), {|| hbide_help( 2 ) } } )
-   oMenuBar:addItem( { oSubMenu, NIL } )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
-
 /*
  * Normalizes a caption for an menu item with shortcut (or not).
  * TODO: add support for translation of menu items AND support changing shortcuts

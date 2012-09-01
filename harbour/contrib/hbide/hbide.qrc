@@ -328,6 +328,7 @@
     <file>resources/dictionary.png</file>
     <file>resources/launch_r.png</file>
     <file>resources/editor.png</file>
+    <file>resources/configtoolbars.png</file>
     <file>docs/faq.htm</file>
   </qresource>
 </RCC>
