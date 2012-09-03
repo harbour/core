@@ -1278,7 +1278,7 @@ CLASS IdeEditor INHERIT IdeObject
    DATA   cExt                                    INIT   ""
    DATA   cType                                   INIT   ""
    DATA   cTheme                                  INIT   ""
-   DATA   cView
+   DATA   cView                                   INIT   "Main"
    DATA   qDocument
    DATA   qDocLayout
    DATA   qHiliter

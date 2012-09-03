@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2010 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2010-2012 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

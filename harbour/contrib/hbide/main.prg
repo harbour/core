@@ -294,7 +294,7 @@ CLASS HbIde
    DATA   cWrkFind                                INIT   ""
    DATA   cWrkFolderFind                          INIT   ""
    DATA   cWrkReplace                             INIT   ""
-   DATA   cWrkView                                INIT   ""
+   DATA   cWrkView                                INIT   "Main"
    DATA   cWrkHarbour                             INIT   ""
    DATA   cPathShortcuts                          INIT   ""
    DATA   cTextExtensions                         INIT   ""
