@@ -104,12 +104,13 @@ CLASS XbpListBox  INHERIT  XbpWindow, DataRef
    METHOD   setTopItem( nIndex )                  VIRTUAL
 
    METHOD   numItems()                            INLINE  len( ::aItems )
-   METHOD   addItem( cItem, qIcon )
+   METHOD   addItem( cItem )
    METHOD   clear( lConnect )
    METHOD   delItem( nIndex )
    METHOD   getItem( nIndex )
    METHOD   insItem( nIndex, cItem )
    METHOD   setItem( nIndex, cItem )
+   METHOD   setIcon( nIndex, oIcon )                               /* Harbour Extension */
    METHOD   setVisible( cItem )
 
    METHOD   getTabstops()                         VIRTUAL
@@ -364,13 +365,10 @@ METHOD XbpListBox:clear( lConnect )
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpListBox:addItem( cItem, qIcon )
+METHOD XbpListBox:addItem( cItem )
    LOCAL qItm := QListWidgetItem()
 
    qItm:setText( cItem )
-   IF HB_ISOBJECT( qIcon )
-      qItm:setIcon( qIcon )
-   ENDIF
    ::oWidget:addItem( qItm )
    aadd( ::aItems, qItm )
 
@@ -425,6 +423,15 @@ METHOD XbpListBox:setItem( nIndex, cItem )
    ENDIF
 
    RETURN cText
+
+/*----------------------------------------------------------------------*/
+/* Harbour Extention - Xbase++ does not have such implementation FOR list boxes */
+METHOD XbpListBox:setIcon( nIndex, oIcon )
+   IF HB_ISNUMERIC( nIndex ) .AND. nIndex > 0 .AND. nIndex <= len( ::aItems ) .AND. HB_ISOBJECT( oIcon )
+      ::aItems[ nIndex ]:setIcon( oIcon )
+      RETURN .T.
+   ENDIF
+   RETURN .F.
 
 /*----------------------------------------------------------------------*/
 
