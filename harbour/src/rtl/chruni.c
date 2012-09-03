@@ -456,3 +456,110 @@ HB_FUNC( HB_BRIGHT )
    else
       hb_retc_null();
 }
+
+
+/* HB_UAT( <cSubString>, <cString>, [<nFrom>], [<nTo>] ) -> <nAt>
+ */
+HB_FUNC( HB_UAT )
+{
+   PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
+
+   if( pText && pSub )
+   {
+      PHB_CODEPAGE cdp = hb_vmCDP();
+      const char * pszText = hb_itemGetCPtr( pText );
+      HB_SIZE nTextLength = hb_itemGetCLen( pText );
+      HB_SIZE nStart = hb_parns( 3 );
+      HB_SIZE nFrom, nTo, nPos = 0;
+
+      if( nStart <= 1 )
+         nStart = nFrom = 0;
+      else
+         nFrom = hb_cdpTextPos( cdp, pszText, nTextLength, --nStart );
+
+      if( nFrom < nTextLength )
+      {
+         pszText += nFrom;
+         nTextLength -= nFrom;
+         if( HB_ISNUM( 4 ) )
+         {
+            nTo = hb_parns( 4 );
+            if( nTo <= nStart )
+               nTo = 0;
+            else
+            {
+               nTo -= nStart;
+               nTo = hb_cdpTextPos( cdp, pszText, nTextLength, nTo );
+               if( nTo > nTextLength )
+                  nTo = nTextLength;
+            }
+         }
+         else
+            nTo = nTextLength;
+
+         if( nTo > 0 )
+         {
+            nPos = hb_strAt( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                             pszText, nTo );
+            if( nPos > 0 )
+               nPos = hb_cdpTextLen( cdp, pszText, nPos - 1 ) + 1 + nStart;
+         }
+      }
+      hb_retns( nPos );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
+/* HB_BAT( <cSubString>, <cString>, [<nFrom>], [<nTo>] ) -> <nAt>
+ */
+HB_FUNC( HB_BAT )
+{
+   PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
+
+   if( pText && pSub )
+   {
+      const char * pszText = hb_itemGetCPtr( pText );
+      HB_SIZE nTextLength = hb_itemGetCLen( pText );
+      HB_SIZE nStart = hb_parns( 3 );
+      HB_SIZE nFrom, nTo, nPos = 0;
+
+      if( nStart <= 1 )
+         nStart = nFrom = 0;
+      else
+         nFrom = --nStart;
+
+      if( nFrom < nTextLength )
+      {
+         pszText += nFrom;
+         nTextLength -= nFrom;
+         if( HB_ISNUM( 4 ) )
+         {
+            nTo = hb_parns( 4 );
+            if( nTo <= nStart )
+               nTo = 0;
+            else
+            {
+               nTo -= nStart;
+               if( nTo > nTextLength )
+                  nTo = nTextLength;
+            }
+         }
+         else
+            nTo = nTextLength;
+
+         if( nTo > 0 )
+         {
+            nPos = hb_strAt( hb_itemGetCPtr( pSub ), hb_itemGetCLen( pSub ),
+                             pszText, nTo );
+            if( nPos > 0 )
+               nPos += nFrom;
+         }
+      }
+      hb_retns( nPos );
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 1108, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}

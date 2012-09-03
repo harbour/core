@@ -310,6 +310,7 @@ DYNAMIC hb_ATokens
 DYNAMIC hb_AtX
 DYNAMIC hb_base64Decode
 DYNAMIC hb_base64Encode
+DYNAMIC hb_BAt
 DYNAMIC hb_BChar
 DYNAMIC hb_BCode
 DYNAMIC hb_bitAnd
@@ -838,6 +839,7 @@ DYNAMIC hb_TToC
 DYNAMIC hb_TToD
 DYNAMIC hb_TToN
 DYNAMIC hb_TToS
+DYNAMIC hb_UAt
 DYNAMIC hb_UChar
 DYNAMIC hb_UCode
 DYNAMIC hb_ULeft
