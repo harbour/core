@@ -295,6 +295,9 @@ CLASS IdeINI INHERIT IdeObject
    DATA   cISMethods                              INIT "new"
    DATA   cISFormat                               INIT "class:method"
 
+   DATA   lTabRemoveExt                           INIT .F.
+   DATA   lTabAddClose                            INIT .F.
+
    METHOD new( oIde )
    METHOD create( oIde )
    METHOD destroy()
@@ -561,6 +564,8 @@ METHOD IdeINI:save( cHbideIni )
    AAdd( txt_, "ISFormat"                  + "=" +   ::cISFormat   )
    //
    AAdd( txt_, "SelToolbar"                + "=" +   iif( ::lSelToolbar            , "YES", "NO" )      )
+   AAdd( txt_, "TabRemoveExt"              + "=" +   iif( ::lTabRemoveExt          , "YES", "NO" )      )
+   AAdd( txt_, "TabAddClose"               + "=" +   iif( ::lTabAddClose           , "YES", "NO" )      )
 
    aadd( txt_, "" )
    aadd( txt_, "[PROJECTS]" )
@@ -925,6 +930,8 @@ METHOD IdeINI:load( cHbideIni )
                      CASE "ISFormat"                    ; ::cISFormat                         := cVal              ; EXIT
                      //
                      CASE "SelToolbar"                  ; ::lSelToolbar                       := !( cVal == "NO" ) ; EXIT
+                     CASE "TabRemoveExt"                ; ::lTabRemoveExt                     := !( cVal == "NO" ) ; EXIT
+                     CASE "TabAddClose"                 ; ::lTabAddClose                      := !( cVal == "NO" ) ; EXIT
 
                      ENDSWITCH
                   ENDIF
@@ -1250,7 +1257,7 @@ CLASS IdeSetup INHERIT IdeObject
    DATA   oINI
    DATA   qOrgPalette
    DATA   aItems                                  INIT {}
-   DATA   aTree                                   INIT { "General", "Intelli-sense", "Selections", "Font", "Paths", "Variables", "Dictionaries", "Themes", "Formatting", "VSS" }
+   DATA   aTree                                   INIT { "General", "Intelli-sense", "Selections", "Miscellaneous", "Paths", "Variables", "Dictionaries", "Themes", "Formatting", "VSS" }
    DATA   aStyles                                 INIT { "cleanlooks", "windows", "windowsxp", ;
                                                          "windowsvista", "cde", "motif", "plastique", "macintosh" }
    DATA   aKeyItems                               INIT {}
@@ -1612,6 +1619,8 @@ METHOD IdeSetup:retrieve()
    ::oINI:cISData                  := ::oUI:comboISData        : currentText()
    ::oINI:cISMethods               := ::oUI:comboISMethods     : currentText()
    ::oINI:cISFormat                := ::oUI:comboISFormat      : currentText()
+   ::oINI:lTabRemoveExt            := ::oUI:chkTabRemoveExt    : isChecked()
+   ::oINI:lTabAddClose             := ::oUI:chkTabAddClose     : isChecked()
 
    RETURN Self
 
@@ -1742,6 +1751,9 @@ METHOD IdeSetup:populate()
    ::oUI:comboISData        : setCurrentIndex( iif( ::oINI:cISData == "VAR", 0, 1 ) )
    ::oUI:comboISMethods     : setCurrentIndex( AScan( { "new", "new;create", "new;create;destroy" }, {|e| e == ::oINI:cISMethods } ) - 1 )
    ::oUI:comboISFormat      : setCurrentIndex( iif( ::oINI:cISFormat == "class:method", 0, 1 ) )
+
+   ::oUI:chkTabRemoveExt    : setChecked( ::oINI:lTabRemoveExt   )
+   ::oUI:chkTabAddClose     : setChecked( ::oINI:lTabAddClose    )
 
    ::connectSlots()
 

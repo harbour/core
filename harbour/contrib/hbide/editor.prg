@@ -81,6 +81,7 @@
 #define __qDocContentsChange__                    2004
 #define __qTimeSave_timeout__                     2005
 #define __qTab_contextMenu__                      2006
+#define __qTabWidget_tabCloseRequested__          2007
 
 
 #define __selectionMode_stream__                  1
@@ -1749,6 +1750,10 @@ METHOD IdeEditor:execEvent( nEvent, p, p1, p2 )
 
    SWITCH nEvent
 
+   CASE __qTabWidget_tabCloseRequested__
+      ::oSM:closeSource( p + 1 )
+      EXIT
+
    CASE __qDocModificationChanged__
       ::setTabImage()
       EXIT
@@ -1811,12 +1816,16 @@ METHOD IdeEditor:buildTabPage( cSource )
    IF Empty( cSource )
       ::oTab:caption := "Untitled " + hb_ntos( hbide_getNextUntitled() )
    ELSE
-      ::oTab:caption := ::cFile // + ::cExt  /* to reduce the tab width which eventually leads to good visibility of tabs */
+      ::oTab:caption := ::cFile + iif( ::oINI:lTabRemoveExt, "", ::cExt )
    ENDIF
    ::oTab:minimized := .F.
 
    ::oTab:create()
 
+   IF ::oINI:lTabAddClose
+      ::qTabWidget:setTabsClosable( .T. )
+      ::qTabWidget:connect( "tabCloseRequested(int)", {|i|  ::execEvent( __qTabWidget_tabCloseRequested__, i ) } )
+   ENDIF
    ::qTabWidget:setTabTooltip( ::qTabWidget:indexOf( ::oTab:oWidget ), cSource )
    ::oTab:tabActivate := {|mp1,mp2,oXbp| ::activateTab( mp1, mp2, oXbp ) }
 
