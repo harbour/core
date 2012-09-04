@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2009-2010 Pritpal Bedi <bedipritpal@hotmail.com>
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -626,17 +626,18 @@ METHOD HbIde:create( aParams )
    /* Tools Manager */
    ::oTM := IdeToolsManager():new( Self ):create()
 
-   /* IDE's Main Window */
-   ::oDK:buildDialog()
    /* Actions */
    ::oAC := IdeActions():new( Self ):create()
 
+   /* IDE's Main Window */
+   ::oDK:buildDialog()
+
    /* Docking Widgets */
    ::oDK:buildDockWidgets()
-   /* Toolbar */
-   ::oAC:buildToolBar()
-   /* Build additional Toolbars */
-   ::oDK:buildToolBarPanels()
+
+   /* Toolbars */
+   ::oAC:buildToolBars()
+
    /* Main Menu */
    ::oAC:buildMainMenu()
 
@@ -770,7 +771,7 @@ METHOD HbIde:create( aParams )
 
    /* Fill auto completion lists - it must be the last action and be present here always */
    ::oEM:updateCompleter()
-   ::oDK:qSelToolbar:hide()
+   ::oAC:qSelToolbar:hide()
 
    DO WHILE .t.
       nEvent := AppEvent( @mp1, @mp2, @oXbp )

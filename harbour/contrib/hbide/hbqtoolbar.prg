@@ -102,7 +102,7 @@ CLASS HbqToolbar
    METHOD setItemChecked( cName, lState )
    METHOD setItemEnabled( cName, lEnabled )
    METHOD addWidget( cName, qWidget )
-   METHOD addAction( cName, qAction )
+   METHOD addAction( cName, qAction, bBlock )
    METHOD addSeparator()
    METHOD contains( cName )                       INLINE hb_hHasKey( ::hItems, cName )
    METHOD getItem( cName )                        INLINE iif( hb_hHasKey( ::hItems, cName ), ::hItems[ cName ], NIL )
@@ -274,7 +274,7 @@ METHOD HbqToolbar:addSeparator()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqToolbar:addAction( cName, qAction )
+METHOD HbqToolbar:addAction( cName, qAction, bBlock )
 
    DEFAULT cName TO hbide_getNextIDasString( "IdeToolButtonAction" )
 
@@ -282,6 +282,9 @@ METHOD HbqToolbar:addAction( cName, qAction )
 
    ::hItems[ cName ] := cName
    ::hActions[ cName ] := qAction
+   IF HB_ISBLOCK( bBlock )
+      qAction:connect( "triggered()", bBlock )
+   ENDIF
 
    RETURN NIL
 

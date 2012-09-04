@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2009-2010 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2012 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -129,7 +129,6 @@ CLASS IdeObject
 
    ACCESS qTBarLines                              INLINE ::oIde:qTBarLines
    ACCESS qTBarPanels                             INLINE ::oIde:qTBarPanels
-   ACCESS qTBarDocks                              INLINE ::oIde:qTBarDocks
    ACCESS qCompleter                              INLINE ::oIde:qCompleter
    ACCESS qCompModel                              INLINE ::oIde:qCompModel
    ACCESS qProtoList                              INLINE ::oIde:qProtoList

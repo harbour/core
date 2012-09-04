@@ -1892,21 +1892,21 @@ METHOD IdeSetup:execEvent( nEvent, p, p1 )
       EXIT
 
    CASE __checkShowTopToolbar_stateChanged__
-      IF ::oDK:qMdiToolbar:oWidget:isVisible()
-         ::oDK:qMdiToolbar:hide()
+      IF ::oAC:qMdiToolbar:oWidget:isVisible()
+         ::oAC:qMdiToolbar:hide()
       ELSE
-         ::oDK:qMdiToolbar:show()
+         ::oAC:qMdiToolbar:show()
       ENDIF
-      ::oINI:lShowEditsTopToolbar := ::oDK:qMdiToolbar:oWidget:isVisible()
+      ::oINI:lShowEditsTopToolbar := ::oAC:qMdiToolbar:oWidget:isVisible()
       EXIT
 
    CASE __checkShowLeftToolbar_stateChanged__
-      IF ::oDK:qMdiToolbarL:oWidget:isVisible()
-         ::oDK:qMdiToolbarL:hide()
+      IF ::oAC:qMdiToolbarL:oWidget:isVisible()
+         ::oAC:qMdiToolbarL:hide()
       ELSE
-         ::oDK:qMdiToolbarL:show()
+         ::oAC:qMdiToolbarL:show()
       ENDIF
-      ::oINI:lShowEditsLeftToolbar := ::oDK:qMdiToolbarL:oWidget:isVisible()
+      ::oINI:lShowEditsLeftToolbar := ::oAC:qMdiToolbarL:oWidget:isVisible()
       EXIT
 
    CASE __treeWidget_itemSelectionChanged__
