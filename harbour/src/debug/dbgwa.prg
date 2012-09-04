@@ -88,7 +88,7 @@ PROCEDURE __dbgShowWorkAreas()
    NEXT
 
    IF Len( aAlias ) == 0
-      __dbgAlert( "No workareas in use")
+      __dbgAlert( "No workareas in use" )
       RETURN
    ENDIF
 
@@ -357,7 +357,7 @@ STATIC FUNCTION DbfInfo( aInfo )
             EXIT
       ENDSWITCH
 
-      AAdd( aInfo, Space( 8 ) + PadR( FieldName( nFor ), 10) + " = " + PadR( cValue, 17 ) )
+      AAdd( aInfo, Space( 8 ) + PadR( FieldName( nFor ), 10 ) + " = " + PadR( cValue, 17 ) )
 
    NEXT
 

@@ -1439,12 +1439,12 @@ METHOD HideCallStack() CLASS HBDebugger
       ::RemoveWindow( ::oWndStack )
       ::oWndStack := NIL
 
-      ::oWndCode:Resize(,,, ::oWndCode:nRight + 16 )
+      ::oWndCode:Resize( ,,, ::oWndCode:nRight + 16 )
       IF ::oWndVars != NIL
-         ::oWndVars:Resize(,,, ::oWndVars:nRight + 16 )
+         ::oWndVars:Resize( ,,, ::oWndVars:nRight + 16 )
       ENDIF
       IF ::oWndPnt != NIL
-         ::oWndPnt:Resize(,,, ::oWndPnt:nRight + 16 )
+         ::oWndPnt:Resize( ,,, ::oWndPnt:nRight + 16 )
       ENDIF
       DispEnd()
    ENDIF
@@ -2071,7 +2071,7 @@ METHOD RedisplayBreakPoints() CLASS HBDebugger
 
    FOR n := 1 TO Len( ::aBreakpoints )
       IF hb_FileMatch( ::aBreakpoints[ n ][ 2 ], strip_path( ::cPrgName ) )
-         ::oBrwText:ToggleBreakPoint( ::aBreakpoints[ n ][ 1 ], .T.)
+         ::oBrwText:ToggleBreakPoint( ::aBreakpoints[ n ][ 1 ], .T. )
       ENDIF
    NEXT
 
@@ -2105,8 +2105,7 @@ METHOD RemoveWindow( oWnd ) CLASS HBDebugger
    LOCAL n := AScan( ::aWindows, {| o | o == oWnd } )
 
    IF n != 0
-      ::aWindows := ADel( ::aWindows, n )
-      ::aWindows := ASize( ::aWindows, Len( ::aWindows ) - 1 )
+      ::aWindows := hb_ADel( ::aWindows, n, .t. )
    ENDIF
 
    ::nCurrentWindow := 1
@@ -2406,14 +2405,14 @@ METHOD ShowCallStack() CLASS HBDebugger
 
       DispBegin()
       // Resize code window
-      ::oWndCode:Resize(,,, ::oWndCode:nRight - 16 )
+      ::oWndCode:Resize( ,,, ::oWndCode:nRight - 16 )
       // Resize vars window
       IF ::oWndVars != NIL
-         ::oWndVars:Resize(,,, ::oWndVars:nRight - 16 )
+         ::oWndVars:Resize( ,,, ::oWndVars:nRight - 16 )
       ENDIF
       // Resize watchpoints window
       IF ::oWndPnt != NIL
-         ::oWndPnt:Resize(,,, ::oWndPnt:nRight - 16)
+         ::oWndPnt:Resize( ,,, ::oWndPnt:nRight - 16 )
       ENDIF
       DispEnd()
 
@@ -2504,7 +2503,7 @@ METHOD ShowCodeLine( nProc ) CLASS HBDebugger
                ::oWndCode:Browser := ::oBrwText
 
             ELSE
-               ::oBrwText:LoadFile(cPrgName)
+               ::oBrwText:LoadFile( cPrgName )
             ENDIF
 
             ::oWndCode:bPainted := {|| iif( ::oBrwText != NIL, ::oBrwText:RefreshAll():ForceStable(), ::oWndCode:Clear() ) }
@@ -2555,7 +2554,7 @@ METHOD ShowVars() CLASS HBDebugger
 
    IF ::oWndVars == NIL
 
-      nTop := iif( ::oWndPnt != NIL .AND. ::oWndPnt:lVisible, ::oWndPnt:nBottom + 1,1)
+      nTop := iif( ::oWndPnt != NIL .AND. ::oWndPnt:lVisible, ::oWndPnt:nBottom + 1, 1 )
       nBottom := nTop + Min( MAX_VARS_HEIGHT, Len( ::aVars ) + 1 )
 
       ::oWndVars := HBDbWindow():New( nTop, 0, nBottom,;
@@ -2567,7 +2566,7 @@ METHOD ShowVars() CLASS HBDebugger
 
       ::oWndVars:bLButtonDown := {| nMRow, nMCol | ::WndVarsLButtonDown( nMRow, nMCol ) }
       ::oWndVars:bLDblClick   := {|| ::EditVar( ::oBrwVars:Cargo[ 1 ] ) }
-      ::oWndVars:bPainted     := {|| iif(Len( ::aVars ) > 0, ( ::oBrwVars:RefreshAll():ForceStable(),RefreshVarsS(::oBrwVars) ),) }
+      ::oWndVars:bPainted     := {|| iif( Len( ::aVars ) > 0, ( ::oBrwVars:RefreshAll():ForceStable(),RefreshVarsS( ::oBrwVars ) ), ) }
 
       ::oWndVars:bKeyPressed := {| nKey | iif( Len( ::aVars ) == 0, NIL, ( ;
       iif( nKey == K_DOWN, ::oBrwVars:Down(), NIL ) ;
@@ -2577,7 +2576,7 @@ METHOD ShowVars() CLASS HBDebugger
       , iif( nKey == K_HOME, ::oBrwVars:GoTop(), NIL ) ;
       , iif( nKey == K_END, ::oBrwVars:GoBottom(), NIL ) ;
       , iif( nKey == K_ENTER, ::EditVar( ::oBrwVars:Cargo[ 1 ] ), NIL ), ;
-      iif(Len(::aVars)>0, ::oBrwVars:ForceStable(), NIL) ) ) }
+      iif( Len( ::aVars ) > 0, ::oBrwVars:ForceStable(), NIL ) ) ) }
 
       AAdd( ::aWindows, ::oWndVars )
       lWindowCreated := .T.
@@ -2752,8 +2751,7 @@ METHOD ToggleBreakPoint( nLine, cFileName ) CLASS HBDebugger
          ::oBrwText:ToggleBreakPoint( nLine, .T. )
       ENDIF
    ELSE
-      ADel( ::aBreakPoints, nAt )
-      ASize( ::aBreakPoints, Len( ::aBreakPoints ) - 1 )
+      hb_ADel( ::aBreakPoints, nAt, .t. )
       __dbgDelBreak( ::pInfo, nAt - 1 )
       IF hb_FileMatch( cFileName, strip_path( ::cPrgName ) )
          ::oBrwText:ToggleBreakPoint( nLine, .F. )
@@ -2964,8 +2962,7 @@ METHOD WatchpointDel( nPos ) CLASS HBDebugger
          IF nPos >=0 .AND. nPos < Len( ::aWatch )
             ::oBrwPnt:gotop()
             __dbgDelWatch( ::pInfo, nPos )
-            ADel( ::aWatch, nPos + 1 )
-            ASize( ::aWatch, Len( ::aWatch ) - 1 )
+            hb_ADel( ::aWatch, nPos + 1, .t. )
             IF Len( ::aWatch ) == 0
                ::WatchpointsHide()
             ELSE
@@ -3074,13 +3071,13 @@ METHOD WatchpointsShow() CLASS HBDebugger
       ::oBrwPnt:Cargo := { 1, {} } // Actual highlighted row
       aColors := __DbgColors()
       ::oBrwPnt:ColorSpec := aColors[ 2 ] + "," + aColors[ 5 ] + "," + aColors[ 3 ] + "," + aColors[ 6 ]
-      ::oBrwPnt:goTopBlock := {|| ::oBrwPnt:cargo[ 1 ] := Min( 1, Len(::aWatch ) ) }
+      ::oBrwPnt:goTopBlock := {|| ::oBrwPnt:cargo[ 1 ] := Min( 1, Len( ::aWatch ) ) }
       ::oBrwPnt:goBottomBlock := {|| ::oBrwPnt:cargo[ 1 ] := Len( ::aWatch ) }
       ::oBrwPnt:skipBlock := {| nSkip, nOld | nOld := ::oBrwPnt:Cargo[ 1 ],;
                               ::oBrwPnt:Cargo[ 1 ] += nSkip,;
                               ::oBrwPnt:Cargo[ 1 ] := Min( Max( ::oBrwPnt:Cargo[ 1 ], 1 ),;
                                                              Len( ::aWatch ) ),;
-                              iif( Len(::aWatch) > 0, ::oBrwPnt:Cargo[ 1 ] - nOld, 0 ) }
+                              iif( Len( ::aWatch ) > 0, ::oBrwPnt:Cargo[ 1 ] - nOld, 0 ) }
 
       oCol := HBDbColumnNew( "", ;
          {|| PadR( iif( Len( ::aWatch ) > 0, ;
@@ -3089,7 +3086,7 @@ METHOD WatchpointsShow() CLASS HBDebugger
                       " " ), ;
                   ::oWndPnt:nWidth() - 2 ) } )
       ::oBrwPnt:AddColumn( oCol )
-      AAdd( ::oBrwPnt:Cargo[ 2 ], ::aWatch)
+      AAdd( ::oBrwPnt:Cargo[ 2 ], ::aWatch )
       oCol:DefColor := { 1, 2 }
 
       ::oWndPnt:bPainted := {|| iif( Len( ::aWatch ) > 0, ( ::oBrwPnt:RefreshAll():ForceStable(), RefreshVarsS( ::oBrwPnt ) /*, ::RefreshVars()*/ ) , ) }

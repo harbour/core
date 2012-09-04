@@ -145,7 +145,7 @@ METHOD addWindows( hHash, nRow ) CLASS HBDbHash
 
    oBrwSets:goTopBlock := {|| oBrwSets:cargo[ 1 ] := 1 }
    oBrwSets:goBottomBlock := {|| oBrwSets:cargo[ 1 ] := Len( oBrwSets:cargo[ 2 ][ 1 ] ) }
-   oBrwSets:skipBlock := {| nPos | ( nPos := HashBrowseSkip(nPos, oBrwSets), oBrwSets:cargo[ 1 ] := ;
+   oBrwSets:skipBlock := {| nPos | ( nPos := HashBrowseSkip( nPos, oBrwSets ), oBrwSets:cargo[ 1 ] := ;
                                     oBrwSets:cargo[ 1 ] + nPos, nPos ) }
 
    ::aWindows[ ::nCurWindow ]:bPainted    := {|| ( oBrwSets:forcestable(), RefreshVarsS( oBrwSets ) ) }
@@ -220,8 +220,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
             ::AddWindows( HB_HValueAt( hHash, nSet ), oBrwSets:RowPos + oBrwSets:nTop )
             ::hashName := cOldName
 
-            ADel( ::aWindows, ::nCurWindow )
-            ASize( ::awindows, Len( ::awindows ) - 1 )
+            hb_ADel( ::aWindows, ::nCurWindow, .t. )
             IF ::nCurwindow == 0
                ::nCurwindow := 1
             ELSE

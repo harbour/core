@@ -174,19 +174,18 @@ METHOD GetLine() CLASS HBBrwText
                 MemoLine( ::aRows[ ::nRow ], ::nWidth + ::nLineOffset, 1, ::nTabWidth, .f. ),;
                 ::nLineOffset ), ::nWidth )
 
-METHOD ToggleBreakPoint( nRow, lSet) CLASS HBBrwText
+METHOD ToggleBreakPoint( nRow, lSet ) CLASS HBBrwText
 
    LOCAL nAt := AScan( ::aBreakPoints, nRow )
 
    IF lSet
       // add it only if not present
       IF nAt == 0
-         AAdd( ::aBreakPoints, nRow)
+         AAdd( ::aBreakPoints, nRow )
       ENDIF
    ELSE
       IF nAt != 0
-         ADel( ::aBreakPoints, nAt )
-         ASize( ::aBreakPoints, Len( ::aBreakPoints ) - 1 )
+         hb_ADel( ::aBreakPoints, nAt, .T. )
       ENDIF
    ENDIF
 
@@ -202,7 +201,6 @@ METHOD LoadFile( cFileName ) CLASS HBBrwText
    ::nRows := Len( ::aRows )
 
    FOR EACH cLine in ::aRows
-      MemoLine( cLine, ::nWidth, 1, ::nTabWidth, .f. )
       nMaxLineLen := Max( nMaxLineLen, ;
          Len( RTrim( MemoLine( cLine, Len( cLine ) + 256, 1, ::nTabWidth, .f. ) ) ) )
    NEXT
@@ -307,13 +305,15 @@ METHOD Skip( n ) CLASS HBBrwText
    LOCAL nSkipped := 0
 
    IF n > 0
-      DO WHILE nSkipped != n .AND. ::GoNext()
-         nSkipped++
-      ENDDO
-   ELSE
-      DO WHILE nSkipped != n .AND. ::GoPrev()
-         nSkipped--
-      ENDDO
+      IF ::nRow < ::nRows
+         nSkipped := MIN( ::nRows - ::nRow, n )
+         ::nRow += nSkipped
+      ENDIF
+   ELSEIF n < 0
+      IF ::nRow > 1
+         nSkipped := MAX( 1 - ::nRow, n )
+         ::nRow += nSkipped
+      ENDIF
    ENDIF
 
    RETURN nSkipped

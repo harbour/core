@@ -210,8 +210,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
             ::AddWindows( aArray[ nSet ], oBrwSets:RowPos + oBrwSets:nTop )
             ::arrayname := cOldName
 
-            ADel( ::aWindows, ::nCurWindow )
-            ASize( ::aWindows, Len( ::aWindows ) - 1 )
+            hb_ADel( ::aWindows, ::nCurWindow, .t. )
             IF ::nCurWindow == 0
                ::nCurWindow := 1
             ELSE
