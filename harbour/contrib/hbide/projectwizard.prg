@@ -241,7 +241,7 @@ METHOD IdeProjectWizard:show()
 
       oBrush := QBrush( QColor( 248, 248, 248 ) )
 
-      aadd( ::aItmProps, { NIL, "Hbc Files"                     , QBrush( QColor( 136, 136, 136 ) ),  oBrush, NIL, NIL, "background-color: rgb(136,136,136);" } )
+      aadd( ::aItmProps, { NIL, ".hbc Files"                    , QBrush( QColor( 136, 136, 136 ) ),  oBrush, NIL, NIL, "background-color: rgb(136,136,136);" } )
       aadd( ::aItmProps, { NIL, "Libraries"                     , QBrush( QColor( 144, 144, 144 ) ),  oBrush, NIL, NIL, "background-color: rgb(144,144,144);" } )
       aadd( ::aItmProps, { NIL, "Library Paths"                 , QBrush( QColor( 152, 152, 152 ) ),  oBrush, NIL, NIL, "background-color: rgb(152,152,152);" } )
       aadd( ::aItmProps, { NIL, "Include Paths"                 , QBrush( QColor( 160, 160, 160 ) ),  oBrush, NIL, NIL, "background-color: rgb(160,160,160);" } )
@@ -1101,7 +1101,7 @@ METHOD IdeExProject:retrieveProps( oWizard )
          FOR n := 1 TO a_[ PROPS_TREENODE ]:childCount()
             cText := alltrim( a_[ PROPS_TREENODE ]:child( n - 1 ):text( 0 ) )
             SWITCH cNode
-            CASE "Hbc Files"                      ; AAdd( ::aPrpHbcs      , cText ) ; EXIT
+            CASE ".hbc Files"                     ; AAdd( ::aPrpHbcs      , cText ) ; EXIT
             CASE "Libraries"                      ; AAdd( ::aPrpLibs      , cText ) ; EXIT
             CASE "Library Paths"                  ; AAdd( ::aPrpLPaths    , cText ) ; EXIT
             CASE "Include Paths"                  ; AAdd( ::aPrpIPaths    , cText ) ; EXIT
@@ -1161,7 +1161,7 @@ METHOD IdeExProject:loadProps( oWizard )
    FOR EACH a_ IN oWizard:aItmProps
       IF hb_isObject( a_[ PROPS_TREENODE ] )
          SWITCH alltrim( a_[ PROPS_TREENODE ]:text( 0 ) )
-         CASE "Hbc Files"                      ; aValues := ::aPrpHbcs      ; EXIT
+         CASE ".hbc Files"                     ; aValues := ::aPrpHbcs      ; EXIT
          CASE "Libraries"                      ; aValues := ::aPrpLibs      ; EXIT
          CASE "Library Paths"                  ; aValues := ::aPrpLPaths    ; EXIT
          CASE "Include Paths"                  ; aValues := ::aPrpIPaths    ; EXIT
