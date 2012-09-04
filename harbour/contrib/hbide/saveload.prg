@@ -2294,13 +2294,15 @@ METHOD IdeSetup:execEvent( nEvent, p, p1 )
 /*----------------------------------------------------------------------*/
 
 METHOD IdeSetup:uiDictionaries()
-   LOCAL oDict
+   LOCAL oDict, nRow
 
+   nRow := ::oUI:listDictNames:currentRow()
    ::oUI:listDictNames:clear()
    ::oUI:listDictNames:setCurrentRow( -1 )
    FOR EACH oDict IN ::oIde:aUserDict
       ::oUI:listDictNames:addItem( oDict:cFilename )
    NEXT
+   ::oUI:listDictNames:setCurrentRow( Max( nRow, 0 ) )
 
    RETURN NIL
 

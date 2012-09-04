@@ -1011,6 +1011,11 @@ void HBQPlainTextEdit::mouseMoveEvent( QMouseEvent *event )
       }
       else if( mouseMode == mouseMode_select )
       {
+         if( event->modifiers() & Qt::AltModifier )
+         {
+            selectionMode = selectionMode_column;
+         }
+
          extraSelections.clear();
          setExtraSelections( extraSelections );
 
