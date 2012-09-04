@@ -72,8 +72,10 @@
 #include "ace.h"
 
 /* Autodetect ACE version. */
-#if   defined( ADS_GET_UTF8 )
-   #define _ADS_LIB_VERSION 1010 /* or upper */
+#if   defined( ADS_GET_FORMAT_WEB )
+   #define _ADS_LIB_VERSION 1100 /* or upper */
+#elif defined( ADS_GET_UTF8 )
+   #define _ADS_LIB_VERSION 1010
 #elif defined( ADS_DEFAULT_SQL_TIMEOUT )
    #define _ADS_LIB_VERSION 1000
 #elif defined( DANISH_ADS_CS_AS_1252 )
