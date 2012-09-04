@@ -79,12 +79,14 @@
 #if ( defined( HB_OS_LINUX ) && ( !defined( __WATCOMC__ ) || __WATCOMC__ >= 1280 ) ) || \
     defined( HB_OS_BSD ) || defined( HB_OS_DARWIN ) || defined( HB_OS_SUNOS )
 #  define HB_HAS_MKSTEMP
-#  if ( defined( HB_OS_BSD ) && !defined( __NetBSD__ ) ) || \
-      defined( HB_OS_DARWIN ) || \
-      ( defined( HB_OS_LINUX ) && \
-        ( defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
-        ( defined( __GLIBC_PREREQ ) && __GLIBC_PREREQ( 2, 12 ) ) )
+#  if ( defined( HB_OS_BSD ) && !defined( __NetBSD__ ) ) || defined( HB_OS_DARWIN )
 #     define HB_HAS_MKSTEMPS
+#  elif defined( HB_OS_LINUX ) && \
+        ( defined( _BSD_SOURCE ) || defined( _SVID_SOURCE ) ) && \
+        defined( __GLIBC_PREREQ )
+#     if __GLIBC_PREREQ( 2, 12 )
+#        define HB_HAS_MKSTEMPS
+#     endif
 #  endif
 #endif
 
