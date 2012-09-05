@@ -608,7 +608,7 @@ static PMIXUPDATE mixUpdateCreate( ADSXAREAP pArea )
       PMIXKEY  pKey = mixKeyEval( pTag, pArea );
       HB_ULONG ulKeyPos;
 
-      pUpdate[ iTag ] = mixFindKey( pTag, pKey, &ulKeyPos ) ? ulKeyPos : ( HB_LONG ) -1;
+      pUpdate[ iTag ] = mixFindKey( pTag, pKey, &ulKeyPos ) ? ulKeyPos : ( HB_ULONG ) -1;
       mixKeyFree( pKey );
 
       pTag = pTag->pNext;
