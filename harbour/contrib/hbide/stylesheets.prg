@@ -66,6 +66,7 @@
 
 #include "common.ch"
 #include "hbide.ch"
+#include "hbqtgui.ch"
 
 /*----------------------------------------------------------------------*/
 
@@ -81,16 +82,37 @@ FUNCTION hbide_setAppTheme( aTheme )
 /*----------------------------------------------------------------------*/
 
 FUNCTION GetStyleSheet( cWidget, nMode )
-   LOCAL txt_
+   LOCAL txt_:= {}
    LOCAL s
 
    DEFAULT nMode TO HBIDE_ANIMATION_NONE
 
    IF nMode == HBIDE_ANIMATION_NONE
-      RETURN ""
-   ENDIF
+      DO CASE
+      CASE cWidget == "QMainWindow"
 
-   txt_:= {}
+         aadd( txt_, 'QMainWindow::separator:hover {          ' )
+         aadd( txt_, '    background: rgb(200,200,200);       ' )
+         aadd( txt_, '}                                       ' )
+
+      CASE cWidget == "QDockWidget"
+
+         aadd( txt_, 'QDockWidget {                           ' )
+         aadd( txt_, ' }                                      ' )
+         aadd( txt_, 'QDockWidget::title {                    ' )
+         aadd( txt_,      hbide_cssColorString( "bg-darker" )   )
+         aadd( txt_, '    padding-left: 10px;                 ' )
+         aadd( txt_, '    padding-top: 2px;                   ' )
+         aadd( txt_, '    border: 1px solid darkgray;         ' )
+         aadd( txt_, '    border-top-left-radius: 5px;        ' )
+         aadd( txt_, '    border-top-right-radius: 5px;       ' )
+         aadd( txt_, ' }                                      ' )
+
+      OTHERWISE
+         RETURN ""
+
+      ENDCASE
+   ENDIF
 
    DO CASE
    CASE cWidget == "QMenuPop"
@@ -350,13 +372,11 @@ FUNCTION GetStyleSheet( cWidget, nMode )
    CASE cWidget == "QMainWindow"
 
       aadd( txt_, 'QMainWindow::separator {                                                     ' )
-      aadd( txt_, '    background: qlineargradient(x1: 0, y1: 0, x2: 1, y2: 0,                  ' )
-      aadd( txt_, '       stop: 0 rgba(123, 123, 123, 255), stop:1 rgba(255, 255, 255, 255));   ' )
       aadd( txt_, '    width: 6px; /* when vertical */                                          ' )
       aadd( txt_, '    height: 6px; /* when horizontal */                                       ' )
       aadd( txt_, '}                                                                            ' )
       aadd( txt_, 'QMainWindow::separator:hover {                                               ' )
-      aadd( txt_, '    background: rgb(100,100,100);                                            ' )
+      aadd( txt_, '    background: rgb(200,200,200);                                            ' )
       aadd( txt_, '}                                                                            ' )
 
    CASE cWidget == "QStatusBar"
@@ -453,10 +473,10 @@ FUNCTION GetStyleSheet( cWidget, nMode )
       IF nMode == HBIDE_ANIMATION_GRADIENT
       aadd( txt_,      hbide_ideThemeColorCSS( "DockWidget", 1 ) )
       ELSE
-      aadd( txt_,      hbide_cssColorString( "bg-std" ) )
+      aadd( txt_,      hbide_cssColorString( "bg-darker" ) )
       ENDIF
       aadd( txt_, '    padding-left: 10px;                                                      ' )
-      aadd( txt_, '    padding-top: 4px;                                                        ' )
+      aadd( txt_, '    padding-top: 2px;                                                        ' )
       aadd( txt_, ' }                                                                           ' )
 
    CASE cWidget == "PathIsWrong"
@@ -473,19 +493,21 @@ FUNCTION GetStyleSheet( cWidget, nMode )
 /*----------------------------------------------------------------------*/
 
 FUNCTION hbide_cssColorString( cPart )
-   LOCAL cStr := ""
+   LOCAL qColor
 
    SWITCH lower( cPart )
+
+   CASE "bg-darker"
+      qColor := QPalette():color( QPalette_Button ):darker( 105 )
+      RETURN ' background-color: ' + hbide_rgbString( qColor:red(), qColor:green(), qColor:blue() ) + ';'
+
    CASE "bg-std"
-      RETURN ' background-color: ' + hbide_rgbString( 212,208,200 ) + ';'              // Gray - original wondows
-   #if 0
-   // RETURN ' background-color: ' + hbide_rgbString( 199,212,231 ) + ';'
-      RETURN  '    background-color: qlineargradient(x1:0, y1:1, x2:0, y2:0, ' + ;
-                 hbide_buildGradientString( hbide_loadIdeTheme( 2 ) ) + "); "
-   #endif
+      qColor := QPalette():color( QPalette_Button )
+      RETURN ' background-color: ' + hbide_rgbString( qColor:red(), qColor:green(), qColor:blue() ) + ';'
+
    ENDSWITCH
 
-   RETURN cStr
+   RETURN ""
 
 /*----------------------------------------------------------------------*/
 

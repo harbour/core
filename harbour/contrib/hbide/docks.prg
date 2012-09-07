@@ -1654,12 +1654,12 @@ METHOD IdeDocks:animateComponents( nMode )
    NEXT
 
    /* Toolbars */
-   ::oMainToolbar:oWidget:setStyleSheet( GetStyleSheet( "QToolBar", nMode ) )
-   ::oAC:qTBarDocks  :setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
-
-   ::oAC:qMdiToolbar:setStyleSheet( GetStyleSheet( "QToolBar", nMode ) )
-   ::oAC:qMdiToolbarL:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
-
+   ::oMainToolbar:oWidget:setStyleSheet( GetStyleSheet( iif( ::oMainToolbar       : oWidget:orientation() == Qt_Horizontal, "QToolBar", "QToolBarLR5" ), nMode ) )
+   ::oAC:qTBarDocks      :setStyleSheet( GetStyleSheet( iif( ::oAC:qTBarDocks     : oWidget:orientation() == Qt_Horizontal, "QToolBar", "QToolBarLR5" ), nMode ) )
+   ::oAC:qPartsToolbar   :setStyleSheet( GetStyleSheet( iif( ::oAC:qPartsToolbar  : oWidget:orientation() == Qt_Horizontal, "QToolBar", "QToolBarLR5" ), nMode ) )
+   ::oAC:qProjectToolbar :setStyleSheet( GetStyleSheet( iif( ::oAC:qProjectToolbar: oWidget:orientation() == Qt_Horizontal, "QToolBar", "QToolBarLR5" ), nMode ) )
+   ::oAC:qMdiToolbar     :setStyleSheet( GetStyleSheet( iif( ::oAC:qMdiToolbar    : oWidget:orientation() == Qt_Horizontal, "QToolBar", "QToolBarLR5" ), nMode ) )
+   ::oAC:qMdiToolbarL    :setStyleSheet( GetStyleSheet( iif( ::oAC:qMdiToolbarL   : oWidget:orientation() == Qt_Horizontal, "QToolBar", "QToolBarLR5" ), nMode ) )
    /* User defined toolbars */
    ::oTM:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
 
