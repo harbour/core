@@ -94,6 +94,7 @@ CLASS IdeActions INHERIT IdeObject
    DATA   oActToolsBtn
 
    DATA   qMainToolbar
+   DATA   qFilesToolbar
    DATA   qPartsToolbar
    DATA   qProjectToolbar
    DATA   qTBarDocks
@@ -113,6 +114,7 @@ CLASS IdeActions INHERIT IdeObject
 
    METHOD buildToolBars()
    METHOD buildToolbarMain()
+   METHOD buildToolbarFiles()
    METHOD buildToolbarParts()
    METHOD buildToolbarProject()
    METHOD buildToolbarDocks()
@@ -526,6 +528,7 @@ METHOD IdeActions:buildMainMenu()
    oSubMenu:addItem( { oSubMenu2, "Toolbars" } )
 
    oSubMenu2:oWidget:addAction( ::oIde:oMainToolbar:oWidget:toggleViewAction()         )
+   oSubMenu2:oWidget:addAction( ::qFilesToolbar:toggleViewAction()                     )
    oSubMenu2:oWidget:addAction( ::qPartsToolbar:toggleViewAction()                     )
    oSubMenu2:oWidget:addAction( ::qProjectToolbar:toggleViewAction()                   )
    oSubMenu2:oWidget:addAction( ::qTBarDocks:toggleViewAction()                        )
@@ -966,6 +969,7 @@ STATIC FUNCTION hbide_buildCodecMenu( oIde, oMenu )
 METHOD IdeActions:buildToolBars()
 
    ::buildToolbarMain()
+   ::buildToolbarFiles()
    ::buildToolbarParts()
    ::buildToolbarProject()
    ::buildToolBarDocks()
@@ -1000,13 +1004,6 @@ METHOD IdeActions:buildToolbarMain()
    ::oActToolsBtn := oTBar:oWidget:addWidget( ::oIde:oTM:buildToolsButton() )
    oTBar:addItem( , , , , , nSep )
    ::oActToolsBtn := oTBar:oWidget:addWidget( ::oIde:oTM:buildViewsButton() )
-   oTBar:addItem( , , , , , nSep )
-
-   oTBar:addItem( ::getAction( "TB_New"               ), , , , , , "New"               )
-   oTBar:addItem( ::getAction( "TB_Open"              ), , , , , , "Open"              )
-   oTBar:addItem( ::getAction( "TB_Save"              ), , , , , , "Save"              )
-   oTBar:addItem( ::getAction( "TB_Close"             ), , , , , , "Close"             )
-   oTBar:addItem( ::getAction( "TB_Print"             ), , , , , , "Print"             )
 
    ::oIde:oMainToolbar := oTBar
 
@@ -1014,9 +1011,35 @@ METHOD IdeActions:buildToolbarMain()
 
 /*----------------------------------------------------------------------*/
 
+METHOD IdeActions:buildToolbarFiles()
+
+   ::qFilesToolbar := HBQToolBar():new( "ToolBar_Files" )
+
+   ::qFilesToolbar:cName := "ToolBar_Files"
+   ::qFilesToolbar:allowedAreas := Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea
+   ::qFilesToolbar:size := QSize( 12, 12 )
+
+   ::qFilesToolbar:create()
+
+   ::qFilesToolbar:setStyleSheet( GetStyleSheet( "QToolBarLR5", ::nAnimantionMode ) )
+   ::qFilesToolbar:setWindowTitle( "Ide Files" )
+   ::qFilesToolbar:setToolButtonStyle( Qt_ToolButtonIconOnly )
+
+   ::qFilesToolbar:addAction( "IdeNew" , ::getAction( "TB_New"   ), {|| ::oIde:execAction( "new"   ) } )
+   ::qFilesToolbar:addAction( "IdeOpen", ::getAction( "TB_Open"  ), {|| ::oIde:execAction( "Open"  ) } )
+   ::qFilesToolbar:addAction( "IdeOpen", ::getAction( "TB_Save"  ), {|| ::oIde:execAction( "Save"  ) } )
+   ::qFilesToolbar:addAction( "IdeOpen", ::getAction( "TB_Close" ), {|| ::oIde:execAction( "Close" ) } )
+   ::qFilesToolbar:addAction( "IdeOpen", ::getAction( "TB_Print" ), {|| ::oIde:execAction( "Print" ) } )
+
+   ::oDlg:oWidget:addToolBar( Qt_TopToolBarArea, ::qFilesToolbar:oWidget )
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
 METHOD IdeActions:buildToolbarParts()
 
-   ::qPartsToolbar := HBQToolBar():new( "ToolBar_Docks" )
+   ::qPartsToolbar := HBQToolBar():new( "ToolBar_Parts" )
 
    ::qPartsToolbar:cName := "ToolBar_Parts"
    ::qPartsToolbar:allowedAreas := Qt_LeftToolBarArea + Qt_RightToolBarArea + Qt_TopToolBarArea + Qt_BottomToolBarArea

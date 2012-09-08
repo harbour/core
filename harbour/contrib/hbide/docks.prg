@@ -1655,6 +1655,7 @@ METHOD IdeDocks:animateComponents( nMode )
 
    /* Toolbars */
    ::oMainToolbar:oWidget:setStyleSheet( GetStyleSheet( iif( ::oMainToolbar       : oWidget:orientation() == Qt_Horizontal, "QToolBar", "QToolBarLR5" ), nMode ) )
+   ::oAC:qFilesToolbar   :setStyleSheet( GetStyleSheet( iif( ::oAC:qFilesToolbar  : oWidget:orientation() == Qt_Horizontal, "QToolBar", "QToolBarLR5" ), nMode ) )
    ::oAC:qTBarDocks      :setStyleSheet( GetStyleSheet( iif( ::oAC:qTBarDocks     : oWidget:orientation() == Qt_Horizontal, "QToolBar", "QToolBarLR5" ), nMode ) )
    ::oAC:qPartsToolbar   :setStyleSheet( GetStyleSheet( iif( ::oAC:qPartsToolbar  : oWidget:orientation() == Qt_Horizontal, "QToolBar", "QToolBarLR5" ), nMode ) )
    ::oAC:qProjectToolbar :setStyleSheet( GetStyleSheet( iif( ::oAC:qProjectToolbar: oWidget:orientation() == Qt_Horizontal, "QToolBar", "QToolBarLR5" ), nMode ) )

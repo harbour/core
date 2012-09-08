@@ -391,6 +391,7 @@ METHOD WvgCrt:destroy()
 
    IF Len( ::aChildren ) > 0
       aeval( ::aChildren, {|o| o:destroy() } )
+      ::aChildren := {}
    ENDIF
 
    IF ! ::isGT
@@ -402,6 +403,8 @@ METHOD WvgCrt:destroy()
       ::pGT  := NIL
       ::pGTp := NIL
    ENDIF
+
+   ::WvgWindow:destroy()
 
    RETURN Self
 
