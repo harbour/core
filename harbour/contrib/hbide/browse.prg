@@ -595,7 +595,7 @@ METHOD IdeBrowseManager:execEvent( nEvent, p, p1 )
       EXIT
 
    CASE __qPanelsButton_clicked__
-      cPanel := hbide_fetchAString( ::qToolbar, "New...", "Name the Panel", "New Panel" )
+      cPanel := hbide_fetchAString( ::qToolbar:oWidget, "New...", "Name the Panel", "New Panel" )
       IF !( cPanel == "New..." ) .AND. !( cPanel == "Main" )
          IF ::isPanel( cPanel )
             MsgBox( "Panel: " + cPanel + ", already exists" )
