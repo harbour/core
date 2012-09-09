@@ -1,6 +1,6 @@
-diff -urN zlib.orig\crc32.c zlib\crc32.c
---- zlib.orig\crc32.c	Mon Jun 04 15:11:07 2012
-+++ zlib\crc32.c	Mon Jun 04 15:11:07 2012
+diff -urN zlib.orig/crc32.c zlib/crc32.c
+--- zlib.orig/crc32.c	2012-09-09 18:31:49.628000777 +0200
++++ zlib/crc32.c	2012-09-09 18:31:49.628000777 +0200
 @@ -21,6 +21,8 @@
    DYNAMIC_CRC_TABLE and MAKECRCH can be #defined to write out crc32.h.
   */
@@ -10,9 +10,9 @@ diff -urN zlib.orig\crc32.c zlib\crc32.c
  #ifdef MAKECRCH
  #  include <stdio.h>
  #  ifndef DYNAMIC_CRC_TABLE
-diff -urN zlib.orig\deflate.c zlib\deflate.c
---- zlib.orig\deflate.c	Mon Jun 04 15:11:07 2012
-+++ zlib\deflate.c	Mon Jun 04 15:11:07 2012
+diff -urN zlib.orig/deflate.c zlib/deflate.c
+--- zlib.orig/deflate.c	2012-09-09 18:31:49.636000776 +0200
++++ zlib/deflate.c	2012-09-09 18:31:49.636000776 +0200
 @@ -51,6 +51,10 @@
  
  #include "deflate.h"
@@ -49,9 +49,9 @@ diff -urN zlib.orig\deflate.c zlib\deflate.c
      Bytef *scan, *strend;   /* scan goes up to strend for length of run */
  
      for (;;) {
-diff -urN zlib.orig\gzguts.h zlib\gzguts.h
---- zlib.orig\gzguts.h	Mon Jun 04 15:11:07 2012
-+++ zlib\gzguts.h	Mon Jun 04 15:11:07 2012
+diff -urN zlib.orig/gzguts.h zlib/gzguts.h
+--- zlib.orig/gzguts.h	2012-09-09 18:31:49.636000776 +0200
++++ zlib/gzguts.h	2012-09-09 18:31:49.636000776 +0200
 @@ -31,7 +31,8 @@
  #  include <stddef.h>
  #endif
@@ -72,9 +72,9 @@ diff -urN zlib.orig\gzguts.h zlib\gzguts.h
  #  ifndef HAVE_VSNPRINTF
  #    define HAVE_VSNPRINTF
  #  endif
-diff -urN zlib.orig\gzlib.c zlib\gzlib.c
---- zlib.orig\gzlib.c	Mon Jun 04 15:11:07 2012
-+++ zlib\gzlib.c	Mon Jun 04 15:11:07 2012
+diff -urN zlib.orig/gzlib.c zlib/gzlib.c
+--- zlib.orig/gzlib.c	2012-09-09 18:31:49.640000776 +0200
++++ zlib/gzlib.c	2012-09-09 18:31:49.640000776 +0200
 @@ -5,7 +5,11 @@
  
  #include "gzguts.h"
@@ -88,9 +88,9 @@ diff -urN zlib.orig\gzlib.c zlib\gzlib.c
  #  define LSEEK _lseeki64
  #else
  #if defined(_LARGEFILE64_SOURCE) && _LFS64_LARGEFILE-0
-diff -urN zlib.orig\inflate.c zlib\inflate.c
---- zlib.orig\inflate.c	Mon Jun 04 15:11:07 2012
-+++ zlib\inflate.c	Mon Jun 04 15:11:07 2012
+diff -urN zlib.orig/inflate.c zlib/inflate.c
+--- zlib.orig/inflate.c	2012-09-09 18:31:49.648000777 +0200
++++ zlib/inflate.c	2012-09-09 18:31:49.648000777 +0200
 @@ -428,6 +428,7 @@
  /* Macros for inflate(): */
  
@@ -99,9 +99,9 @@ diff -urN zlib.orig\inflate.c zlib\inflate.c
  #ifdef GUNZIP
  #  define UPDATE(check, buf, len) \
      (state->flags ? crc32(check, buf, len) : adler32(check, buf, len))
-diff -urN zlib.orig\zconf.h zlib\zconf.h
---- zlib.orig\zconf.h	Mon Jun 04 15:11:07 2012
-+++ zlib\zconf.h	Mon Jun 04 15:11:07 2012
+diff -urN zlib.orig/zconf.h zlib/zconf.h
+--- zlib.orig/zconf.h	2012-09-09 18:31:49.656000777 +0200
++++ zlib/zconf.h	2012-09-09 18:31:49.656000777 +0200
 @@ -158,7 +158,18 @@
  #if defined(_WINDOWS) && !defined(WINDOWS)
  #  define WINDOWS
@@ -122,9 +122,26 @@ diff -urN zlib.orig\zconf.h zlib\zconf.h
  #  ifndef WIN32
  #    define WIN32
  #  endif
-diff -urN zlib.orig\zlib.h zlib\zlib.h
---- zlib.orig\zlib.h	Mon Jun 04 15:11:07 2012
-+++ zlib\zlib.h	Mon Jun 04 15:11:07 2012
+@@ -346,6 +357,16 @@
+ #    endif
+ #  endif
+ #endif
++
++#if defined(OS2) && defined(__WATCOMC__)
++#  ifdef ZLIB_DLL
++#    ifdef ZLIB_INTERNAL
++#      define ZEXTERN   extern __declspec(dllexport)
++#    else
++#      define ZEXPORT   extern __declspec(dllimport)
++#    endif
++#  endif
++#endif
+ 
+ #ifndef ZEXTERN
+ #  define ZEXTERN extern
+diff -urN zlib.orig/zlib.h zlib/zlib.h
+--- zlib.orig/zlib.h	2012-09-09 18:31:49.660000777 +0200
++++ zlib/zlib.h	2012-09-09 18:31:49.660000777 +0200
 @@ -1711,6 +1711,8 @@
     ZEXTERN z_off_t ZEXPORT gzoffset OF((gzFile));
     ZEXTERN uLong ZEXPORT adler32_combine OF((uLong, uLong, z_off_t));
@@ -134,9 +151,9 @@ diff -urN zlib.orig\zlib.h zlib\zlib.h
  #endif
  
  #else /* Z_SOLO */
-diff -urN zlib.orig\zutil.c zlib\zutil.c
---- zlib.orig\zutil.c	Mon Jun 04 15:11:07 2012
-+++ zlib\zutil.c	Mon Jun 04 15:11:07 2012
+diff -urN zlib.orig/zutil.c zlib/zutil.c
+--- zlib.orig/zutil.c	2012-09-09 18:31:49.660000777 +0200
++++ zlib/zutil.c	2012-09-09 18:31:49.660000777 +0200
 @@ -139,7 +139,7 @@
      return ERR_MSG(err);
  }
@@ -146,9 +163,9 @@ diff -urN zlib.orig\zutil.c zlib\zutil.c
      /* The Microsoft C Run-Time Library for Windows CE doesn't have
       * errno.  We define it as a global variable to simplify porting.
       * Its value is always 0 and should not be used.
-diff -urN zlib.orig\zutil.h zlib\zutil.h
---- zlib.orig\zutil.h	Mon Jun 04 15:11:07 2012
-+++ zlib\zutil.h	Mon Jun 04 15:11:07 2012
+diff -urN zlib.orig/zutil.h zlib/zutil.h
+--- zlib.orig/zutil.h	2012-09-09 18:31:49.664000777 +0200
++++ zlib/zutil.h	2012-09-09 18:31:49.664000777 +0200
 @@ -22,7 +22,7 @@
  #include "zlib.h"
  

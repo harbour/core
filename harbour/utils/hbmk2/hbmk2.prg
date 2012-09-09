@@ -4308,6 +4308,8 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ELSE
             IF hbmk[ _HBMK_cPLAT ] == "win"
                cOpt_CompC += " -3s"
+            ELSEIF HBMK_ISPLAT( "dos|os2|linux" )
+               cOpt_CompC += " -3r"
             ENDIF
          ENDIF
          SWITCH hbmk[ _HBMK_nWARN ]

@@ -2940,7 +2940,8 @@ void hb_compGenPushFunCall( const char * szFunName, int iFlags, HB_COMP_DECL )
 
    HB_SYMBOL_UNUSED( iFlags );
 
-   if( !( pSym = hb_compSymbolFind( HB_COMP_PARAM, szFunName, &wSym, HB_SYM_FUNCNAME ) ) )
+   pSym = hb_compSymbolFind( HB_COMP_PARAM, szFunName, &wSym, HB_SYM_FUNCNAME );
+   if( !pSym )
       pSym = hb_compSymbolAdd( HB_COMP_PARAM, szFunName, &wSym, HB_SYM_FUNCNAME );
 
    pSym->cScope |= HB_FS_USED;
@@ -2965,7 +2966,8 @@ void hb_compGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COMP
    PCOMSYMBOL pSym;
    HB_USHORT wSym;
 
-   if( !( pSym = hb_compSymbolFind( HB_COMP_PARAM, szSymbolName, &wSym, bFunction ) ) )
+   pSym = hb_compSymbolFind( HB_COMP_PARAM, szSymbolName, &wSym, bFunction );
+   if( !pSym )
       pSym = hb_compSymbolAdd( HB_COMP_PARAM, szSymbolName, &wSym, bFunction );
 
    if( bFunction )

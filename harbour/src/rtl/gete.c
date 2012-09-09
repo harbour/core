@@ -67,6 +67,7 @@
 /* NOTE: Convert the envvar name to uppercase. This is required for
          DOS and OS/2 systems. [vszakats] */
 #if defined( HB_OS_DOS ) || defined( HB_OS_OS2 )
+#  include "hbapicdp.h"
 #  define _HB_GETENV_REQUIRES_UPPERCASE
 #endif
 

@@ -43,6 +43,8 @@ ifneq ($(HB_BUILD_OPTIM),no)
    else
       CFLAGS += -oi
    endif
+else
+   CFLAGS += -3r
 endif
 
 CFLAGS += -i. -i$(HB_HOST_INC)
