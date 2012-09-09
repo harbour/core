@@ -1432,6 +1432,12 @@ static HB_ERRCODE hb_waRelEval( AREAP pArea, LPDBRELINFO pRelInfo )
                    */
                   /* errCode = SELF_GOTOID( pArea, pResult ); */
                   errCode = SELF_GOTO( pArea, hb_itemGetNL( pResult ) );
+                  if( errCode == HB_SUCCESS )
+                  {
+                     errCode = SELF_EOF( pArea, &fEof );
+                     if( errCode == HB_SUCCESS )
+                        pArea->fFound = !fEof;
+                  }
                }
             }
             hb_itemRelease( pInfo.itmResult );
