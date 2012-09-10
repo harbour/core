@@ -735,7 +735,7 @@ METHOD HbIde:create( aParams )
    IF ::nRunMode == HBIDE_RUN_MODE_PRG
       ::oDockPT:hide()
       ::oDockED:hide()
-      ::qTBarDocks:hide()
+      ::oAC:qTBarDocks:hide()
       ::oMainToolbar:hide()
       ::oDK:setView( "Main" )
    ELSEIF ::nRunMode == HBIDE_RUN_MODE_HBP
