@@ -1939,7 +1939,7 @@ METHOD IdeSetup:execEvent( nEvent, p, p1 )
       EXIT
 
    CASE __buttonAddTextext_clicked__
-      q0 := hbide_fetchAString( ::oUI, "", "Text File Extension" )
+      q0 := hbide_fetchAString( ::oUI:oWidget, "", "Text File Extension" )
       IF !empty( q0 )
          ::oUI:listTextExt:addItem( lower( strtran( q0, "." ) ) )
       ENDIF
