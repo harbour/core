@@ -76,6 +76,8 @@
 #define HB_GTE_VSCROLL                   16
 #define HB_GTE_ANY                       17
 #define HB_GTE_KEYTOITEM                 18
+#define HB_GTE_CREATED                   19
+#define HB_GTE_CLOSED                    20
 
 #define HB_GTI_SETFONT                   71
 #define HB_GTI_PRESPARAMS                72

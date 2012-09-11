@@ -105,6 +105,10 @@ CLASS WvgPartHandler
    DATA     oOwner
    DATA     nStatus                               INIT    0
 
+   /* Application Level Notifier */
+   DATA     sb_notifier
+   METHOD   notifierBlock( ... )                  SETGET
+
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
@@ -254,6 +258,22 @@ METHOD WvgPartHandler:setParent( oWvg )
    RETURN oOldXbp
 
 /*----------------------------------------------------------------------*/
+
+METHOD WvgPartHandler:notifierBlock( ... )
+   LOCAL a_:= hb_AParams()
+
+   IF ! Empty( a_ ) .AND. HB_ISBLOCK( a_[ 1 ] )
+      ::sb_notifier := a_[ 1 ]
+
+   ELSEIF ! Empty( a_ ) .AND. HB_ISBLOCK( ::sb_notifier ) .AND. HB_ISNUMERIC( a_[ 1 ] ) .AND. HB_ISARRAY( a_[ 2 ] )
+      Eval( ::sb_notifier, a_[ 1 ], a_[ 2 ], Self )
+
+   ENDIF
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
 /*
    This will be called by the WvgCRT() console FOR various events TO be propogated TO child controls
 */

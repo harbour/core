@@ -468,6 +468,8 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
 
    pWVT->pNotifierGUI      = NULL;
 
+   pWVT->threadNO          = hb_threadNO();
+
    return pWVT;
 }
 
@@ -705,7 +707,7 @@ static HB_BOOL hb_gt_wvt_GetCharFromInputQueue( PHB_GTWVT pWVT, int * iKey )
 static void hb_gt_wvt_TranslateKey( PHB_GTWVT pWVT, int key, int shiftkey, int altkey, int controlkey )
 {
    int nVirtKey;
-      
+
    nVirtKey = GetKeyState( VK_MENU );
    if( nVirtKey & 0x8000 ) /* alt + key */
    {
@@ -2814,6 +2816,15 @@ static void hb_gt_wvt_Exit( PHB_GT pGT )
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_wvt_Exit(%p)", pGT));
 
    pWVT = HB_GTWVT_GET( pGT );
+   if( pWVT && pWVT->hWnd )
+   {
+      PHB_ITEM pEvParams = hb_itemNew( NULL );
+      hb_arrayNew( pEvParams, 2 );
+      hb_arraySetNInt( pEvParams, 1, ( HB_MAXINT ) ( HB_PTRDIFF ) pWVT->hWnd );
+      hb_arraySetNI( pEvParams, 2, pWVT->threadNO );
+      hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSED, pEvParams );
+   }
+
    HB_GTSUPER_EXIT( pGT );
 
    if( pWVT )
@@ -4196,7 +4207,17 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
    {
       #if 1
       if( !pWVT->hWnd && pWVT->fInit )
+      {
          hb_gt_wvt_CreateConsoleWindow( pWVT );
+         if( pWVT->hWnd )
+         {
+            PHB_ITEM pEvParams = hb_itemNew( NULL );
+            hb_arrayNew( pEvParams, 2 );
+            hb_arraySetNInt( pEvParams, 1, ( HB_MAXINT ) ( HB_PTRDIFF ) pWVT->hWnd );
+            hb_arraySetNI( pEvParams, 2, pWVT->threadNO );
+            hb_gt_wvt_FireEvent( pWVT, HB_GTE_CREATED, pEvParams );
+         }
+      }
 
       if( pWVT->hWnd )
       {

@@ -316,6 +316,9 @@ METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::pGT := hb_gtSelect()
    ENDIF
 
+   HB_GtInfo( HB_GTI_NOTIFIERBLOCKGUI, {|nEvent, ...| ::notifier( nEvent, ... )      } )
+   HB_GtInfo( HB_GTI_NOTIFIERBLOCK   , {|nEvent, ...| ::notifierBlock( nEvent, ... ) } )
+
    IF ::lModal
       ::style := WS_POPUP + WS_CAPTION + WS_SYSMENU
       IF ::resizable
@@ -347,7 +350,6 @@ METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    hb_gtInfo( HB_GTI_WINTITLE  , ::title     )
    hb_gtInfo( HB_GTI_RESIZEMODE, iif( ::resizeMode == HB_GTI_RESIZEMODE_ROWS, HB_GTI_RESIZEMODE_ROWS, HB_GTI_RESIZEMODE_FONT ) )
 
-
    IF ::lModal
       hb_gtInfo( HB_GTI_DISABLE, ::pGTp )
    ENDIF
@@ -357,7 +359,7 @@ METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::lHasInputFocus := .t.
    ENDIF
 
-   HB_GtInfo( HB_GTI_NOTIFIERBLOCKGUI, {|nEvent, ...| ::notifier( nEvent, ... ) } )
+// HB_GtInfo( HB_GTI_NOTIFIERBLOCKGUI, {|nEvent, ...| ::notifier( nEvent, ... )      } )
 
    RETURN Self
 
