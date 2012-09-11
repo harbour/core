@@ -138,11 +138,11 @@
 #define HB_GTS_NIT_RESOURCEBYID           2
 
 /* ShowWindow modes | HB_GTS_SHOWWINDOW */
+#define HB_GTS_SW_HIDE                    0
 #define HB_GTS_SW_NORMAL                  1
-#define HB_GTS_SW_RESTORE                 2
-#define HB_GTS_SW_HIDE                    3
-#define HB_GTS_SW_MINIMIZED               4
-#define HB_GTS_SW_MAXIMIZED               5
+#define HB_GTS_SW_MINIMIZED               2
+#define HB_GTS_SW_MAXIMIZED               3
+#define HB_GTS_SW_RESTORE                 9
 
 #define HB_GTI_GUI                     1001
 

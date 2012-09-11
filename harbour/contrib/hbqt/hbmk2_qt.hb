@@ -1117,6 +1117,13 @@ STATIC PROCEDURE hbqtui_replaceConstants( /* @ */ cString )
       ENDIF
       cString := SubStr( cString, 1, n - 1 ) + substr( cString, n + len( "QString::fromUtf8(" ), n1 - ( n + len( "QString::fromUtf8(" ) ) ) + SubStr( cString, n1 + 1 )
 
+   ELSEIF ( n := At( "static_cast<Qt::DockWidgetArea>(", cString ) ) > 0
+      cString := SubStr( cString, 1, n-1 ) + SubStr( cString, n + Len( "static_cast<Qt::DockWidgetArea>(" ) )
+      n := At( "),", cString )
+      IF n > 0
+         cString := SubStr( cString, 1, n-1 ) + SubStr( cString, n + 1 )
+      ENDIF
+
    ENDIF
 
    IF hbqtui_occurs( cString, "|" ) > 0
