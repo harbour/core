@@ -208,7 +208,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
    ENDIF
    LI_COLPOS := 1
    LI_NLEFT  := LI_FREEZE + 1
-   // DO MSFNEXT WITH mslist,LI_NLEFT
+// DO MSFNEXT WITH mslist,LI_NLEFT
    LI_LEFTVISIBLE := LI_NLEFT
    STORE .T. TO rez
    LI_NCOLUMNS := FLDCOUNT( mslist, LI_X1 + 2, LI_X2 - 2, LI_NLEFT )
@@ -483,7 +483,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
             ELSEIF predit > 1
                predit := 1
             ENDIF
-            OTHERWISE
+         OTHERWISE
             IF maskey != Nil
                IF AScan( maskey, xkey ) != 0
                   rez     := .F.
@@ -722,7 +722,7 @@ FUNCTION FLDSTR( mslist, numf )
          ENDIF
       ENDIF
    ENDIF
-   // fldtype := FIELDTYPE( numf )
+// fldtype := FIELDTYPE( numf )
    fldtype := LI_MSTYP[ numf ]
    DO CASE
    CASE fldtype == "C"
@@ -782,8 +782,8 @@ FUNCTION InitList
    LI_BSKIP   := {| a, x | HB_SYMBOL_UNUSED( a ), dbSkip( x ) }
    LI_BGTOP   := {|| dbGoTop() }
    LI_BGBOT   := {|| dbGoBottom() }
-   LI_BEOF    := {|| Eof() }
-   LI_BBOF    := {|| Bof() }
+   LI_BEOF    := {|| EOF() }
+   LI_BBOF    := {|| BOF() }
    LI_B1      := {| a | HB_SYMBOL_UNUSED( a ), DevPos( LI_Y2, LI_X1 + 2 ), DevOut( Str( RecNo(), 6 ) + "/" + Str( LI_KOLZ, 6 ) ) }
    LI_FREEZE  := 0
    LI_RCOU    := {|| RecCount() }
@@ -807,7 +807,7 @@ FUNCTION InitList
 
 FUNCTION Defpict( mslist, i, maxlen )
 
-   // LOCAL spict, fldd, fldtype := FIELDTYPE( i ), fldlen := FIELDSIZE( i )
+// LOCAL spict, fldd, fldtype := FIELDTYPE( i ), fldlen := FIELDSIZE( i )
    LOCAL spict, fldd, fldtype := LI_MSTYP[ i ], fldlen := LI_MSLEN[ i ]
    DO CASE
    CASE fldtype == "C"

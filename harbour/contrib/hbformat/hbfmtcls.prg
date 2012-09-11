@@ -108,13 +108,13 @@ CREATE CLASS HBFORMATCODE
    VAR cCommands      INIT  ","
    VAR cClauses       INIT  ","
    VAR cFunctions     INIT  ","
-   VAR aContr         INIT { { "if"    , ""        , "elseif" , "endif"     },;
-                             { "do"    , "while"   , ""       , "enddo"     },;
-                             { "while" , ""        , ""       , "enddo"     },;
-                             { "for"   , ""        , ""       , "next"      },;
-                             { "do"    , "case"    , "case"   , "endcase"   },;
-                             { "begin" , "sequence", "recover", "end"       },;
-                             { "switch", ""        , "case"   , "endswitch" } }
+   VAR aContr         INIT { { "if"    , ""        , "|else|elseif|"   , "endif"     },;
+                             { "do"    , "while"   , ""                , "enddo"     },;
+                             { "while" , ""        , ""                , "enddo"     },;
+                             { "for"   , ""        , ""                , "next"      },;
+                             { "do"    , "case"    , "|case|otherwise|", "endcase"   },;
+                             { "begin" , "sequence", "|recover|"       , "end"       },;
+                             { "switch", ""        , "|case|otherwise|", "endswitch" } }
 
    VAR bCallback
 
@@ -161,8 +161,8 @@ METHOD New( aParams, cIniName ) CLASS HBFORMATCODE
    ::cCommands += "IF,ELSEIF,ELSE,ENDIF,END,DO,WHILE,ENDDO,WITH,CASE,OTHERWISE,ENDCASE,BEGIN," +;
                   "FUNCTION,PROCEDURE,RETURN,CLASS,ENDCLASS,METHOD,DATA,LOCAL,PRIVATE,PUBLIC,STATIC,FIELD,MEMVAR,PARAMETERS,DECLARE," +;
                   "ACCEPT,APPEND,AVERAGE,CLEAR,CLOSE,COMMIT,CONTINUE,COPY,COUNT,CREATE,DEFAULT," +;
-                  "DELETE,DISPLAY,EJECT,ERASE,EXIT,GO,GOTO,INDEX,INPUT,JOIN,KEYBOARD,LABEL,LIST,LOCATE," +;
-                  "LOOP,MENU,PACK,PRINT,QUIT,READ,RECALL,REINDEX,RELEASE,RENAME,REQUEST,REPLACE,RESTORE," +;
+                  "DELETE,DISPLAY,EJECT,ERASE,EXIT,FOR,GO,GOTO,INDEX,INPUT,JOIN,KEYBOARD,LABEL,LIST,LOCATE," +;
+                  "LOOP,MENU,NEXT,PACK,PRINT,QUIT,READ,RECALL,REINDEX,RELEASE,RENAME,REQUEST,REPLACE,RESTORE," +;
                   "RUN,SAVE,SEEK,SELECT,SET,SKIP,SORT,STORE,SUM,TEXT,TOTAL,UNLOCK,USE,WAIT,ZAP,"
 
    IF Right( ::cClauses, 1 ) != ","
@@ -316,10 +316,11 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
                         ( LEFTEQUAL( "function", cToken2 ) .OR. LEFTEQUAL( "procedure", cToken2 ) ) ) .OR. ;
                         LEFTEQUAL( "function", cToken1 ) .OR. LEFTEQUAL( "procedure", cToken1 ) ;
                         .OR. ( "method" == cToken1 .AND. ! lClass ) .OR. ;
-                        ( "class" == cToken1 .AND. ! lClass ) )
+                        ( "class" == cToken1 .AND. ! lClass ) .OR. ;
+                        ( "create" == cToken1 .AND. "class" == cToken2 .AND. ! lClass ) )
                      IF nDeep == 0
                         nState := RF_STATE_FUNC
-                        IF "class" == cToken1
+                        IF "class" == cToken1 .or. ( "create" == cToken1 .AND. "class" == cToken2 )
                            lClass := .T.
                         ENDIF
                      ELSE
@@ -355,7 +356,7 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
                            AAdd( aDeep, NIL )
                         ENDIF
                         aDeep[ nDeep ] := nContrState
-                     ELSEIF Len( cToken1 ) < 4 .OR. ( nContrState := Ascan( ::aContr, {| a | a[ 3 ] = cToken1 } ) ) == 0
+                     ELSEIF Len( cToken1 ) < 4 .OR. ( nContrState := Ascan( ::aContr, {| a | "|" + cToken1 + "|" $ a[ 3 ] } ) ) == 0
                         IF ( nPos := Ascan( ::aContr, {| a | a[ 4 ] == cToken1 } ) ) > 0 .OR. ;
                               cToken1 == "end"
                            IF nPos != 0 .AND. nDeep > 0 .AND. aDeep[ nDeep ] != nPos
@@ -387,6 +388,9 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
                         nIndent := ::nIndLeft + ::nIndNext * iif( nContrState == 0, nDeep, nDeep - 1 )
                      ENDIF
                      IF Left( cLine, 1 ) == "#" .AND. ! ::lIndDrt
+                        nIndent := 0
+                     ENDIF
+                     IF Left( cLine, 2 ) == "//" .AND. nDeep == 0
                         nIndent := 0
                      ENDIF
                      cLineAll := Space( nIndent ) + ::FormatLine( cLine )
@@ -548,7 +552,7 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFORMATCODE
                   ENDIF
                ENDIF
                IF ::lSpaces .AND. aBrackets[ iif( c == "(", 1, 2 ) ] <= ::nBr4Brac .AND. ;
-                     i < nLen .AND. !( SubStr( cLine, i + 1, 1 ) $ " )}" )
+                     i < nLen .AND. !( SubStr( cLine, i + 1, 1 ) $ iif( c == "(", " )", " |} " ) )
                   nA := i
                ENDIF
                nState := FL_STATE_ANY
@@ -605,15 +609,17 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFORMATCODE
             IF lFirst .AND. nState != FL_STATE_STRING
                lFirst := .F.
             ENDIF
-            IF nA != 0 .AND. ::lSpaces .AND. nA < nLen .AND. SubStr( cLine, nA + 1, 1 ) != " "
-               cLine := Left( cLine, nA ) + " " + SubStr( cLine, nA + 1 )
-               nLen++
-               i++
-            ENDIF
-            IF nB != 0 .AND. ::lSpaces .AND. nB > 1 .AND. SubStr( cLine, nB - 1, 1 ) != " "
-               cLine := Left( cLine, nB - 1 ) + " " + SubStr( cLine, nB )
-               nLen++
-               i++
+            IF !( "|" + SubStr( cLine, nB, 2 ) + "|" $ "|--|++|->|" )
+               IF nA != 0 .AND. ::lSpaces .AND. nA < nLen .AND. SubStr( cLine, nA + 1, 1 ) != " "
+                  cLine := Left( cLine, nA ) + " " + SubStr( cLine, nA + 1 )
+                  nLen++
+                  i++
+               ENDIF
+               IF nB != 0 .AND. ::lSpaces .AND. nB > 1 .AND. SubStr( cLine, nB - 1, 1 ) != " "
+                  cLine := Left( cLine, nB - 1 ) + " " + SubStr( cLine, nB )
+                  nLen++
+                  i++
+               ENDIF
             ENDIF
             nA := nB := 0
          ELSEIF ( nState == FL_STATE_QUOTED .AND. c == cSymb ) .OR. ;
