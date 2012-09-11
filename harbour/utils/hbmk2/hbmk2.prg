@@ -2008,6 +2008,13 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             IF hb_DirExists( tmp )
                AAdd( hbmk[ _HBMK_aINCPATH ], tmp )
             ENDIF
+            /* NOTE: BCC 6.5 (and upper ?) thing */
+            FOR EACH tmp IN { "crtl", "rtl", "sdk" }
+               tmp := hb_PathNormalize( hb_FNameDir( cPath_CompC ) + ".." + hb_ps() + "Include" + hb_ps() + "windows" + hb_ps() + tmp )
+               IF hb_DirExists( tmp )
+                  AAdd( hbmk[ _HBMK_aINCPATH ], tmp )
+               ENDIF
+            NEXT
          ENDIF
          AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_FNameDir( cPath_CompC ) + ".." + hb_ps() + "Lib" + hb_ps() + "PSDK" ) )
       ENDIF
