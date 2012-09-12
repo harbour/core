@@ -1131,7 +1131,7 @@ HB_FUNC( XML_STOPPARSER )
 #if HB_EXPAT_VERS( 1, 95, 8 )
       PHB_EXPAT hb_expat = PHB_EXPAT_par( 1 );
 
-      hb_retni( ( int ) XML_StopParser( hb_expat->parser, hb_parl( 2 ) ) );
+      hb_retni( ( int ) XML_StopParser( hb_expat->parser, ( XML_Bool ) hb_parl( 2 ) ) );
 #else
       hb_retni( HB_XML_ERROR_NOT_IMPLEMENTED_ );
 #endif
