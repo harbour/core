@@ -138,15 +138,21 @@ static int hb_macroParse( HB_MACRO_PTR pMacro )
  *    the 'pMacro' pointer is not released - it can be a pointer
  *    to a memory allocated on the stack.
  */
-void hb_macroDelete( HB_MACRO_PTR pMacro )
+static void hb_macroClear( HB_MACRO_PTR pMacro )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroDelete(%p)", pMacro));
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroClear(%p)", pMacro));
 
    hb_xfree( pMacro->pCodeInfo->pCode );
    if( pMacro->pError )
       hb_errRelease( pMacro->pError );
-   if( pMacro->Flags & HB_MACRO_DEALLOCATE )
-      hb_xfree( pMacro );
+}
+
+void hb_macroDelete( HB_MACRO_PTR pMacro )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_macroDelete(%p)", pMacro));
+
+   hb_macroClear( pMacro );
+   hb_xfree( pMacro );
 }
 
 /* checks if a correct ITEM was passed from the virtual machine eval stack
@@ -488,7 +494,7 @@ void hb_macroGetValue( PHB_ITEM pItem, int iContext, int flags )
       if( pszFree )
          hb_xfree( pszFree );
 
-      hb_macroDelete( &struMacro );
+      hb_macroClear( &struMacro );
    }
    else if( iContext == HB_P_MACROPUSHLIST && hb_vmRequestQuery() == 0 )
    {
@@ -531,7 +537,7 @@ void hb_macroSetValue( PHB_ITEM pItem, int flags )
       else
          hb_macroSyntaxError( &struMacro );
 
-      hb_macroDelete( &struMacro );
+      hb_macroClear( &struMacro );
    }
    else if( hb_vmRequestQuery() == 0 )
    {
@@ -574,7 +580,7 @@ void hb_macroPushReference( PHB_ITEM pItem )
       else
          hb_macroSyntaxError( &struMacro );
 
-      hb_macroDelete( &struMacro );
+      hb_macroClear( &struMacro );
    }
 }
 
@@ -636,7 +642,7 @@ static void hb_macroUseAliased( PHB_ITEM pAlias, PHB_ITEM pVar, int iFlag, int i
       }
 
       hb_xfree( szString );
-      hb_macroDelete( &struMacro );
+      hb_macroClear( &struMacro );
    }
    else if( hb_macroCheckParam( pVar ) )
    {
@@ -665,7 +671,7 @@ static void hb_macroUseAliased( PHB_ITEM pAlias, PHB_ITEM pVar, int iFlag, int i
       else
          hb_macroSyntaxError( &struMacro );
 
-      hb_macroDelete( &struMacro );
+      hb_macroClear( &struMacro );
    }
 }
 
@@ -797,8 +803,7 @@ HB_MACRO_PTR hb_macroCompile( const char * szString )
    pMacro = ( HB_MACRO_PTR ) hb_xgrab( sizeof( HB_MACRO ) );
    pMacro->mode      = HB_MODE_MACRO;
    pMacro->supported = hb_macroFlags() | HB_SM_ISUSERCP();
-   pMacro->Flags     = HB_MACRO_DEALLOCATE | HB_MACRO_GEN_PUSH |
-                       HB_MACRO_GEN_LIST | HB_MACRO_GEN_PARE;
+   pMacro->Flags     = HB_MACRO_GEN_PUSH | HB_MACRO_GEN_LIST | HB_MACRO_GEN_PARE;
    pMacro->uiNameLen = HB_SYMBOL_NAME_LEN;
    pMacro->status    = HB_MACRO_CONT;
    pMacro->string    = szString;
@@ -1018,7 +1023,7 @@ const char * hb_macroGetType( PHB_ITEM pItem )
       else
          szType = "UE";  /* syntax error during compilation */
 
-      hb_macroDelete( &struMacro );
+      hb_macroClear( &struMacro );
    }
    else
       szType = "U";

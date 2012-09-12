@@ -1262,9 +1262,7 @@ static LPHSXINFO hb_hsxNew( void )
 
 static void hb_hsxExpDestroy( PHB_ITEM pItem )
 {
-   if( hb_itemType( pItem ) == HB_IT_POINTER )
-      hb_macroDelete( ( HB_MACRO_PTR ) hb_itemGetPtr( pItem ) );
-   hb_itemRelease( pItem );
+   hb_vmDestroyBlockOrMacro( pItem );
 }
 
 static int hb_hsxVerify( int iHandle, const char * szText, HB_SIZE nLen,

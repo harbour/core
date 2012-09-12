@@ -1726,7 +1726,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
          {
             if( pWVT->wcTransLen == 0x100 && ( usChar >> 8 ) == 0xFF )
                usChar &= 0x00FF;
-            if( usChar < pWVT->wcTransLen && pWVT->wcTrans[ usChar ] )
+            if( ( HB_SIZE ) usChar < pWVT->wcTransLen && pWVT->wcTrans[ usChar ] )
                usChar = pWVT->wcTrans[ usChar ];
          }
 

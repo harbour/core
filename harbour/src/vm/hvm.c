@@ -637,7 +637,7 @@ void * hb_vmThreadState( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmThreadState()"));
 
-   return hb_stackList();
+   return hb_stackId() ? hb_stackList() : NULL;
 }
 
 static void hb_vmStackAdd( PHB_THREADSTATE pState )
