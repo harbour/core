@@ -10,7 +10,7 @@
 #include "winconfi.h"
 #elif defined(MACOS_CLASSIC)
 #include "macconfi.h"
-#elif defined(__amigaos4__)
+#elif defined(__amigaos__)
 #include "amigacon.h"
 #elif defined(__WATCOMC__)
 #include "watcomconfig.h"
@@ -1358,7 +1358,7 @@ unknown_toUtf16(const ENCODING *enc,
 ENCODING *
 XmlInitUnknownEncoding(void *mem,
                        int *table,
-                       CONVERTER convert, 
+                       CONVERTER convert,
                        void *userData)
 {
   int i;
@@ -1652,7 +1652,7 @@ initScan(const ENCODING * const *encodingTable,
 ENCODING *
 XmlInitUnknownEncodingNS(void *mem,
                          int *table,
-                         CONVERTER convert, 
+                         CONVERTER convert,
                          void *userData)
 {
   ENCODING *enc = XmlInitUnknownEncoding(mem, table, convert, userData);

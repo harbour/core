@@ -1,7 +1,7 @@
 diff -urN expat.orig\xmlparse.c expat\xmlparse.c
---- expat.orig\xmlparse.c	Tue Nov 09 01:33:28 2010
-+++ expat\xmlparse.c	Tue Nov 09 01:33:28 2010
-@@ -8,7 +8,9 @@
+--- expat.orig\xmlparse.c	Wed Sep 12 12:57:25 2012
++++ expat\xmlparse.c	Wed Sep 12 12:57:25 2012
+@@ -10,7 +10,9 @@
  
  #define XML_BUILDING_EXPAT 1
  
@@ -13,8 +13,8 @@ diff -urN expat.orig\xmlparse.c expat\xmlparse.c
  #elif defined(MACOS_CLASSIC)
  #include "macconfi.h"
 diff -urN expat.orig\xmlrole.c expat\xmlrole.c
---- expat.orig\xmlrole.c	Tue Nov 09 01:33:28 2010
-+++ expat\xmlrole.c	Tue Nov 09 01:33:28 2010
+--- expat.orig\xmlrole.c	Wed Sep 12 12:57:25 2012
++++ expat\xmlrole.c	Wed Sep 12 12:57:25 2012
 @@ -4,7 +4,9 @@
  
  #include <stddef.h>
@@ -27,8 +27,8 @@ diff -urN expat.orig\xmlrole.c expat\xmlrole.c
  #elif defined(MACOS_CLASSIC)
  #include "macconfi.h"
 diff -urN expat.orig\xmltok.c expat\xmltok.c
---- expat.orig\xmltok.c	Tue Nov 09 01:33:28 2010
-+++ expat\xmltok.c	Tue Nov 09 01:33:28 2010
+--- expat.orig\xmltok.c	Wed Sep 12 12:57:25 2012
++++ expat\xmltok.c	Wed Sep 12 12:57:25 2012
 @@ -4,7 +4,9 @@
  
  #include <stddef.h>

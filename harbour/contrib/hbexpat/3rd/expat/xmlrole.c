@@ -10,7 +10,7 @@
 #include "winconfi.h"
 #elif defined(MACOS_CLASSIC)
 #include "macconfi.h"
-#elif defined(__amigaos4__)
+#elif defined(__amigaos__)
 #include "amigacon.h"
 #elif defined(__WATCOMC__)
 #include "watcomconfig.h"

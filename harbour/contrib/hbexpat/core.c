@@ -1177,6 +1177,22 @@ HB_FUNC( XML_GETPARSINGSTATUS )
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
+HB_FUNC( XML_SETHASHSALT )
+{
+   if( PHB_EXPAT_is( 1 ) )
+   {
+#if HB_EXPAT_VERS( 2, 1, 0 )
+      PHB_EXPAT hb_expat = PHB_EXPAT_par( 1 );
+
+      hb_retni( XML_SetHashSalt( hb_expat->parser, ( unsigned long ) hb_parnint( 2 ) ) );
+#else
+      hb_retni( 0 );
+#endif
+   }
+   else
+      hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
+
 HB_FUNC( XML_EXPATVERSION )
 {
    hb_retc( XML_ExpatVersion() );
