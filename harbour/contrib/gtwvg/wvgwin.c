@@ -1188,6 +1188,13 @@ HB_FUNC( WVG_SETWINDOWPOSANDSIZE )
 }
 
 /*----------------------------------------------------------------------*/
+
+HB_FUNC( WVG_POSTMESSAGE )
+{
+   hb_retl( PostMessage( wvg_parhwnd( 1 ), hb_parni( 2 ), ( WPARAM ) hb_parni( 3 ), ( LPARAM ) hb_parni( 4 ) ) );
+}
+
+/*----------------------------------------------------------------------*/
 /*
  * Win_SetLayeredWindowAttributes( hWnd, nRGB, nOpacityFactor [0-255] )
  */
