@@ -359,8 +359,6 @@ METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::lHasInputFocus := .t.
    ENDIF
 
-// HB_GtInfo( HB_GTI_NOTIFIERBLOCKGUI, {|nEvent, ...| ::notifier( nEvent, ... )      } )
-
    RETURN Self
 
 /*----------------------------------------------------------------------*/

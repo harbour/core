@@ -468,7 +468,7 @@ typedef struct
 
    PHB_ITEM  pNotifierGUI;                  /* Notifier to Wvg*Parts if embedded into a GT Window        */
 
-   int       threadNO;                      /* Will hold the current THREAD No                           */
+   HB_THREAD_NO threadNO;                   /* Will hold the current THREAD No                           */
 
 } HB_GTWVT, * PHB_GTWVT;
 

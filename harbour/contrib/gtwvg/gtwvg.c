@@ -2821,7 +2821,7 @@ static void hb_gt_wvt_Exit( PHB_GT pGT )
       PHB_ITEM pEvParams = hb_itemNew( NULL );
       hb_arrayNew( pEvParams, 2 );
       hb_arraySetNInt( pEvParams, 1, ( HB_MAXINT ) ( HB_PTRDIFF ) pWVT->hWnd );
-      hb_arraySetNI( pEvParams, 2, pWVT->threadNO );
+      hb_arraySetNI( pEvParams, 2, ( int ) pWVT->threadNO );
       hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSED, pEvParams );
    }
 
@@ -4214,7 +4214,7 @@ static void hb_gt_wvt_Refresh( PHB_GT pGT )
             PHB_ITEM pEvParams = hb_itemNew( NULL );
             hb_arrayNew( pEvParams, 2 );
             hb_arraySetNInt( pEvParams, 1, ( HB_MAXINT ) ( HB_PTRDIFF ) pWVT->hWnd );
-            hb_arraySetNI( pEvParams, 2, pWVT->threadNO );
+            hb_arraySetNI( pEvParams, 2, ( int ) pWVT->threadNO );
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_CREATED, pEvParams );
          }
       }
