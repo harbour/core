@@ -97,6 +97,7 @@ C_SOURCES := \
    hblpp.c \
    hblpphb.c \
    hbmd5.c \
+   hbmd5enc.c \
    hbntos.c \
    hbproces.c \
    hbprocfn.c \

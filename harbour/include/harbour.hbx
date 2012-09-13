@@ -324,7 +324,9 @@ DYNAMIC hb_bitXor
 DYNAMIC hb_BLeft
 DYNAMIC hb_BLen
 DYNAMIC hb_blowfishDecrypt
+DYNAMIC hb_blowfishDecrypt_CFB
 DYNAMIC hb_blowfishEncrypt
+DYNAMIC hb_blowfishEncrypt_CFB
 DYNAMIC hb_blowfishKey
 DYNAMIC hb_BPeek
 DYNAMIC hb_BPoke
@@ -664,6 +666,8 @@ DYNAMIC hb_macroBlock
 DYNAMIC hb_matherBlock
 DYNAMIC hb_matherMode
 DYNAMIC hb_MD5
+DYNAMIC hb_MD5Decrypt
+DYNAMIC hb_MD5Encrypt
 DYNAMIC hb_MD5File
 DYNAMIC hb_MemoRead
 DYNAMIC hb_MemoWrit

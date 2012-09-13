@@ -55,6 +55,16 @@
 #include "hbapiitm.h"
 #include "hbbfish.h"
 
+static const HB_BLOWFISH * hb_bf_keyparam( void )
+{
+   if( hb_parclen( 1 ) == sizeof( HB_BLOWFISH ) )
+      return ( const HB_BLOWFISH * ) hb_parc( 1 );
+   else
+      return NULL;
+}
+
+/* hb_blowfishKey( <cPasswd> ) -> <cBfKey>
+ */
 HB_FUNC( HB_BLOWFISHKEY )
 {
    int iLen = ( int ) hb_parclen( 1 );
@@ -68,89 +78,197 @@ HB_FUNC( HB_BLOWFISHKEY )
    }
 }
 
+/* hb_blowfishEncrypt( <cBfKey>, <cText> [, <lRaw>=.F. ] ) -> <cCipher> | NIL
+ * return string encrypted using ECB (electronic codebook) mode or
+ * NIL on error (wrong parameters),
+ * in raw mode passed string is padded to 8 bytes with '\0'
+ * otherwise ANSI X.923 padding is used
+ */
 HB_FUNC( HB_BLOWFISHENCRYPT )
 {
-   if( hb_parclen( 1 ) == sizeof( HB_BLOWFISH ) )
+   const HB_BLOWFISH * bf = hb_bf_keyparam();
+   PHB_ITEM pData = hb_param( 2, HB_IT_STRING );
+
+   if( bf && pData )
    {
-      PHB_ITEM pData = hb_param( 2, HB_IT_STRING );
+      HB_SIZE nLen = hb_itemGetCLen( pData ), nSize;
 
-      if( pData )
+      if( nLen )
       {
-         HB_SIZE nLen = hb_itemGetCLen( pData ), nSize;
+         char * pszData;
+         const HB_BLOWFISH * bf = ( const HB_BLOWFISH * ) hb_parc( 1 );
+         HB_BOOL fRaw = hb_parl( 3 );
 
-         if( nLen )
+         /* In raw mode passed string is padded to 8 bytes with '\0'
+          * otherwise ANSI X.923 padding is used
+          */
+         nSize = ( fRaw ? ( ( nLen + 7 ) >> 3 ) :
+                          ( ( nLen >> 3 ) + 1 ) ) << 3;
+         pszData = ( char * ) hb_xgrab( nSize + 1 );
+         memcpy( pszData, hb_itemGetCPtr( pData ), nLen );
+         memset( pszData + nLen, '\0', nSize - nLen );
+         if( !fRaw )
+            pszData[ nSize - 1 ] = ( char ) ( nSize - nLen );
+         for( nLen = 0; nLen < nSize; nLen += 8 )
          {
-            char * pszData;
-            const HB_BLOWFISH * bf = ( const HB_BLOWFISH * ) hb_parc( 1 );
-            HB_BOOL fRaw = hb_parl( 3 );
-
-            /* In raw mode passed string is padded to 8 bytes with '\0'
-             * otherwise ANSI X.923 padding is using
-             */
-            nSize = ( fRaw ? ( ( nLen + 7 ) >> 3 ) :
-                             ( ( nLen >> 3 ) + 1 ) ) << 3;
-            pszData = ( char * ) hb_xgrab( nSize + 1 );
-            memcpy( pszData, hb_itemGetCPtr( pData ), nLen );
-            memset( pszData + nLen, '\0', nSize - nLen );
-            if( !fRaw )
-               pszData[ nSize - 1 ] = ( char ) ( nSize - nLen );
-            for( nLen = 0; nLen < nSize; nLen += 8 )
-            {
-               HB_U32 xl, xr;
-               xl = HB_GET_BE_UINT32( &pszData[ nLen ] );
-               xr = HB_GET_BE_UINT32( &pszData[ nLen + 4 ] );
-               hb_blowfishEncrypt( bf, &xl, &xr );
-               HB_PUT_BE_UINT32( &pszData[ nLen ], xl );
-               HB_PUT_BE_UINT32( &pszData[ nLen + 4 ], xr );
-            }
-            hb_retclen_buffer( pszData, nSize );
+            HB_U32 xl, xr;
+            xl = HB_GET_BE_UINT32( &pszData[ nLen ] );
+            xr = HB_GET_BE_UINT32( &pszData[ nLen + 4 ] );
+            hb_blowfishEncrypt( bf, &xl, &xr );
+            HB_PUT_BE_UINT32( &pszData[ nLen ], xl );
+            HB_PUT_BE_UINT32( &pszData[ nLen + 4 ], xr );
          }
-         else
-            hb_retc_null();
+         hb_retclen_buffer( pszData, nSize );
       }
+      else
+         hb_retc_null();
    }
 }
 
+/* hb_blowfishDecrypt( <cBfKey>, <cCipher> [, <lRaw>=.F. ] ) -> <cText> | NIL
+ * return string decrypted using ECB (electronic codebook) mode or
+ * NIL on error (wrong parameters),
+ * in raw mode whole passed string is decoded as is
+ * otherwise it's decoded ANSI X.923 padded data
+ */
 HB_FUNC( HB_BLOWFISHDECRYPT )
 {
-   if( hb_parclen( 1 ) == sizeof( HB_BLOWFISH ) )
+   const HB_BLOWFISH * bf = hb_bf_keyparam();
+   PHB_ITEM pData = hb_param( 2, HB_IT_STRING );
+
+   if( bf && pData )
    {
-      PHB_ITEM pData = hb_param( 2, HB_IT_STRING );
+      HB_SIZE nSize = hb_itemGetCLen( pData ), nLen;
 
-      if( pData )
+      if( nSize >= 8 && ( nSize & 0x07 ) == 0 )
       {
-         HB_SIZE nSize = hb_itemGetCLen( pData ), nLen;
+         const char * pszSource;
+         char * pszData;
+         const HB_BLOWFISH * bf = ( const HB_BLOWFISH * ) hb_parc( 1 );
+         HB_BOOL fRaw = hb_parl( 3 );
 
-         if( nSize >= 8 && ( nSize & 0x07 ) == 0 )
+         pszData = ( char * ) hb_xgrab( nSize + ( fRaw ? 1 : 0 ) );
+         pszSource = hb_itemGetCPtr( pData );
+         for( nLen = 0; nLen < nSize; nLen += 8 )
          {
-            const char * pszSource;
-            char * pszData;
-            const HB_BLOWFISH * bf = ( const HB_BLOWFISH * ) hb_parc( 1 );
-            HB_BOOL fRaw = hb_parl( 3 );
-
-            pszData = ( char * ) hb_xgrab( nSize + ( fRaw ? 1 : 0 ) );
-            pszSource = hb_itemGetCPtr( pData );
-            for( nLen = 0; nLen < nSize; nLen += 8 )
-            {
-               HB_U32 xl, xr;
-               xl = HB_GET_BE_UINT32( &pszSource[ nLen ] );
-               xr = HB_GET_BE_UINT32( &pszSource[ nLen + 4 ] );
-               hb_blowfishDecrypt( bf, &xl, &xr );
-               HB_PUT_BE_UINT32( &pszData[ nLen ], xl );
-               HB_PUT_BE_UINT32( &pszData[ nLen + 4 ], xr );
-            }
-            if( !fRaw )
-            {
-               nSize = ( unsigned char ) pszData[ nSize - 1 ];
-               nLen -= ( ( nSize - 1 ) & ~0x07 ) == 0 ? nSize : nLen;
-            }
-            if( nLen )
-               hb_retclen_buffer( pszData, nLen );
-            else
-               hb_xfree( pszData );
+            HB_U32 xl, xr;
+            xl = HB_GET_BE_UINT32( &pszSource[ nLen ] );
+            xr = HB_GET_BE_UINT32( &pszSource[ nLen + 4 ] );
+            hb_blowfishDecrypt( bf, &xl, &xr );
+            HB_PUT_BE_UINT32( &pszData[ nLen ], xl );
+            HB_PUT_BE_UINT32( &pszData[ nLen + 4 ], xr );
          }
-         else if( nSize == 0 )
-            hb_retc_null();
+         if( !fRaw )
+         {
+            nSize = ( unsigned char ) pszData[ nSize - 1 ];
+            nLen -= ( ( nSize - 1 ) & ~0x07 ) == 0 ? nSize : nLen;
+         }
+         if( nLen )
+            hb_retclen_buffer( pszData, nLen );
+         else
+            hb_xfree( pszData );
       }
+      else if( nSize == 0 )
+         hb_retc_null();
+   }
+}
+
+/* BlowFish encryption using CFB (cipher feedback) mode instead
+ * of ECB (electronic codebook) mode with ANSI X.923 padding
+ */
+static void hb_bf_initvect( HB_BYTE * vect )
+{
+   const char * pszVect = hb_parc( 3 );
+   int iLen = ( int ) hb_parclen( 3 );
+   int i;
+
+   for( i = 0; i < 8; ++i )
+   {
+      vect[ i ] = ( HB_BYTE ) i;
+      if( iLen > 0 )
+         vect[ i ] ^= ( HB_BYTE ) pszVect[ i % iLen ];
+   }
+}
+
+static void hb_bf_encode( const HB_BLOWFISH * bf, HB_BYTE * vect )
+{
+   HB_U32 xl, xr;
+   xl = HB_GET_BE_UINT32( &vect[ 0 ] );
+   xr = HB_GET_BE_UINT32( &vect[ 4 ] );
+   hb_blowfishEncrypt( bf, &xl, &xr );
+   HB_PUT_BE_UINT32( &vect[ 0 ], xl );
+   HB_PUT_BE_UINT32( &vect[ 4 ], xr );
+}
+
+/* hb_blowfishEncrypt_CFB( <cBfKey>, <cText> [, <cInitSeed> ] )
+ *          -> <cCipher> | NIL
+ * return string encrypted using CFB (cipher feedback) mode or
+ * NIL on error (wrong parameters)
+ */
+HB_FUNC( HB_BLOWFISHENCRYPT_CFB )
+{
+   const HB_BLOWFISH * bf = hb_bf_keyparam();
+   PHB_ITEM pData = hb_param( 2, HB_IT_STRING );
+
+   if( bf && pData )
+   {
+      HB_SIZE nLen = hb_itemGetCLen( pData ), n;
+
+      if( nLen )
+      {
+         const char * pszSource = hb_itemGetCPtr( pData );
+         char * pszData = ( char * ) hb_xgrab( nLen + 1 );
+         HB_BYTE vect[ 8 ];
+
+         hb_bf_initvect( vect );
+
+         for( n = 0; n < nLen; ++n )
+         {
+            int i = ( int ) ( n & 0x07 );
+            if( i == 0 )
+               hb_bf_encode( bf, vect );
+            pszData[ n ] = ( vect[ i ] ^= pszSource[ n ] );
+         }
+         hb_retclen_buffer( pszData, nLen );
+      }
+      else
+         hb_retc_null();
+   }
+}
+
+/* hb_blowfishDecrypt_CFB( <cBfKey>, <cCipher> [, <cInitSeed> ] )
+ *          -> <cText> | NIL
+ * return string decrypted using CFB (cipher feedback) mode or
+ * NIL on error (wrong parameters),
+ */
+HB_FUNC( HB_BLOWFISHDECRYPT_CFB )
+{
+   const HB_BLOWFISH * bf = hb_bf_keyparam();
+   PHB_ITEM pData = hb_param( 2, HB_IT_STRING );
+
+   if( bf && pData )
+   {
+      HB_SIZE nLen = hb_itemGetCLen( pData ), n;
+
+      if( nLen )
+      {
+         const char * pszSource = hb_itemGetCPtr( pData );
+         char * pszData = ( char * ) hb_xgrab( nLen + 1 );
+         HB_BYTE vect[ 8 ];
+
+         hb_bf_initvect( vect );
+
+         for( n = 0; n < nLen; ++n )
+         {
+            int i = ( int ) ( n & 0x07 );
+            if( i == 0 )
+               hb_bf_encode( bf, vect );
+            pszData[ n ] = ( vect[ i ] ^ pszSource[ n ] );
+            vect[ i ] = pszSource[ n ];
+         }
+         hb_retclen_buffer( pszData, nLen );
+      }
+      else
+         hb_retc_null();
    }
 }
