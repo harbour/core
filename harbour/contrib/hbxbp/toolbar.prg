@@ -257,8 +257,10 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
          oBtn:oAction := QAction( ::oWidget )
          oBtn:oAction:setText( cCaption )
 
-         IF valtype( xImage ) == "C"
+         IF HB_ISCHAR( xImage )
             oBtn:oAction:setIcon( QIcon( xImage ) )
+         ELSEIF HB_ISOBJECT( xImage )
+            oBtn:oAction:setIcon( xImage )
          ENDIF
 
       ENDIF

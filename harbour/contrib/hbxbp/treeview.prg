@@ -373,7 +373,7 @@ CLASS XbpTreeViewItem  INHERIT  DataRef
    METHOD   expand( lExpand )                     INLINE   ::oWidget:setExpanded( lExpand )
    METHOD   isExpanded()                          INLINE   ::oWidget:isExpanded()
 
-   METHOD   setCaption( cCaption )                INLINE   ::oWidget:setText( 0, cCaption )
+   METHOD   setCaption( cCaption )                INLINE   ::caption := cCaption, ::oWidget:setText( 0, cCaption )
    METHOD   setImage( xIcon )
    METHOD   setExpandedImage( nResIdoBitmap )
    METHOD   setMarkedImage( nResIdoBitmap )
