@@ -68,7 +68,7 @@
  */
 typedef enum
 {
-   HB_P_AND,                   /*   0 performs the logical AND of two latest stack values, removes them and places result */
+   HB_P_AND = 0,               /*   0 performs the logical AND of two latest stack values, removes them and places result */
    HB_P_ARRAYPUSH,             /*   1 places on the virtual machine stack an array element */
    HB_P_ARRAYPOP,              /*   2 pops a value from the eval stack into an array element */
    HB_P_ARRAYDIM,              /*   3 instructs the virtual machine to build an array with some specific dimensions */

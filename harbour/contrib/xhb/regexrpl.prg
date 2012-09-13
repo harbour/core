@@ -65,17 +65,17 @@ FUNCTION hb_RegexReplace( cRegex, cString, cReplace, lCaseSensitive, lNewLine, n
 
    IF ! Empty( aMatches )
       FOR EACH aMatch IN aMatches
-         IF HB_ISARRAY( aMatch ) .AND. Len( aMatch ) == 1 .AND. ;
+         IF HB_ISARRAY( aMatch ) .AND. Len( aMatch ) >= 1 .AND. ;
             HB_ISARRAY( aMatch[ 1 ] )
             aMatch := aMatch[ 1 ]
-         ENDIF
-         IF Len( aMatch ) == 3 // if regex matches I must have an array of 3 elements
-            cSearch := aMatch[ MATCH_STRING ]
-            nStart  := aMatch[ MATCH_START ]
-            nLenSearch  := Len( cSearch )
-            nLenReplace := Len( cReplace )
-            cReturn := Stuff( cReturn, nStart - nOffSet, nLenSearch, cReplace )
-            nOffSet += nLenSearch - nLenReplace
+            IF Len( aMatch ) == 3 // if regex matches I must have an array of 3 elements
+               cSearch := aMatch[ MATCH_STRING ]
+               nStart  := aMatch[ MATCH_START ]
+               nLenSearch  := Len( cSearch )
+               nLenReplace := Len( cReplace )
+               cReturn := Stuff( cReturn, nStart - nOffSet, nLenSearch, cReplace )
+               nOffSet += nLenSearch - nLenReplace
+            ENDIF
          ENDIF
       NEXT
 
