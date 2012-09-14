@@ -18,7 +18,6 @@
    #endif
 #endif
 
-
 #ifdef __HARBOUR__
    #include      "hbclass.ch"
 #endif
@@ -32,6 +31,8 @@
 #ifdef __CLP__             //  Clipper
    #include     "class(y).ch"
 #endif
+
+#define LEFTEQUAL( l, r )  ( Left( l, Len( r ) ) == r )
 
 //-------------------------\\
 
@@ -822,7 +823,7 @@ local nSize, aSize := { { "LETTER",    8.50, 11.00 }, ;
                         { "DL",        4.33,  8.66 }, ;
                         { "B5",        6.93,  9.84 } }
 
-DEFAULT _cPageSize TO "LETTER"
+   DEFAULT _cPageSize TO "LETTER"
 
    nSize := ascan( aSize, { |arr| LEFTEQUAL( arr[ 1 ], _cPageSize ) } )
 
@@ -850,7 +851,7 @@ METHOD tPdf:PageOrient( _cPageOrient )
 METHOD PageOrient( _cPageOrient )
 #endif
 
-DEFAULT _cPageOrient TO "P"
+   DEFAULT _cPageOrient TO "P"
 
    ::aReport[ PAGEORIENT ] := _cPageOrient
    ::PageSize( ::aReport[ PAGESIZE ] )
