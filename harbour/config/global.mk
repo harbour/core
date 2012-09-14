@@ -674,6 +674,10 @@ ifeq ($(HB_COMPILER),)
                                                 else
                                                 ifneq ($(findstring 10.0,$(HB_COMP_PATH)),)
                                                    HB_COMPILER_VER := 1600
+                                                else
+                                                ifneq ($(findstring 11.0,$(HB_COMP_PATH)),)
+                                                   HB_COMPILER_VER := 1700
+                                                endif
                                                 endif
                                                 endif
                                                 endif
@@ -690,6 +694,10 @@ ifeq ($(HB_COMPILER),)
                                                    else
                                                    ifneq ($(findstring 10.0,$(HB_COMP_PATH)),)
                                                       HB_COMPILER_VER := 1600
+                                                   else
+                                                   ifneq ($(findstring 11.0,$(HB_COMP_PATH)),)
+                                                      HB_COMPILER_VER := 1700
+                                                   endif
                                                    endif
                                                    endif
                                                    endif
@@ -711,6 +719,10 @@ ifeq ($(HB_COMPILER),)
                                                       else
                                                       ifneq ($(findstring 10.0,$(HB_COMP_PATH)),)
                                                          HB_COMPILER_VER := 1600
+                                                      else
+                                                      ifneq ($(findstring 11.0,$(HB_COMP_PATH)),)
+                                                         HB_COMPILER_VER := 1700
+                                                      endif
                                                       endif
                                                       endif
                                                       endif

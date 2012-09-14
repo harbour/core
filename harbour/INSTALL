@@ -240,9 +240,9 @@ HARBOUR
       cd contrib/<name>
       ../../bin/<plat>/<comp>/hbmk2 ../make.hb [clean] [custom hbmk2 options]
 
-      NOTE: 'install' doesn't work when doing a partial [re]build 
-            at this time. To work this around, simply avoid 'install' 
-            completely, do a complete rebuild or copy the created 
+      NOTE: 'install' doesn't work when doing a partial [re]build
+            at this time. To work this around, simply avoid 'install'
+            completely, do a complete rebuild or copy the created
             lib(s) manually.
 
 
@@ -871,6 +871,16 @@ HARBOUR
              - To redirect all output to a log file, append this after the make
                command: '> log.txt 2>&1' (without quotes)
 
+      --- MSVC 2012
+      call "%ProgramFiles%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
+      win-make
+      ---
+
+      --- MSVC 2012 for Windows x86-64 (requires preceding build for native target)
+      call "%ProgramFiles%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" x86_amd64
+      win-make
+      ---
+
       --- MSVC 2010 and Windows SDK 7.1
       call "%ProgramFiles%\Microsoft Visual Studio 10.0\VC\vcvarsall.bat"
       win-make
@@ -1097,6 +1107,16 @@ HARBOUR
 
       --- MinGW GCC for Windows x86-64
       set PATH=C:\mingw64\bin;%PATH%
+      win-make
+      ---
+
+      --- MSVC 2012 for Windows x86
+      call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat"
+      win-make
+      ---
+
+      --- MSVC 2012 for Windows x86-64 (requires preceding build for native target)
+      call "%ProgramFiles(x86)%\Microsoft Visual Studio 11.0\VC\vcvarsall.bat" amd64
       win-make
       ---
 

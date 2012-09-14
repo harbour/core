@@ -2101,6 +2101,8 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                hbmk[ _HBMK_nCOMPVer ] := 1500
             CASE "10.0" $ cPath_CompC /* Visual Studio 2010 or Windows SDK 7.1 */
                hbmk[ _HBMK_nCOMPVer ] := 1600
+            CASE "11.0" $ cPath_CompC /* Visual Studio 2012 */
+               hbmk[ _HBMK_nCOMPVer ] := 1700
             OTHERWISE
                hbmk[ _HBMK_nCOMPVer ] := 1400
             ENDCASE
