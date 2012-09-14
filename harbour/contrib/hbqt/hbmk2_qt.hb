@@ -207,14 +207,14 @@ FUNCTION hbmk_plugin_qt( hbmk )
                      IF ! hbmk[ "lQUIET" ]
                         hbmk_OutStd( hbmk, I_( "'rcc' command:" ) )
                      ENDIF
-                     hbmk_OutStdRaw( cCommand )
+                     hbmk_OutStdRaw( hbmk, cCommand )
                   ENDIF
 
                   IF ! hbmk[ "lDONTEXEC" ]
                      IF ( nError := hb_processRun( cCommand ) ) != 0
                         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running 'rcc' executable. %1$d" ), nError ) )
                         IF ! hbmk[ "lQUIET" ]
-                           hbmk_OutErrRaw( cCommand )
+                           hbmk_OutErrRaw( hbmk, cCommand )
                         ENDIF
                         IF ! hbmk[ "lIGNOREERROR" ]
                            cRetVal := "error"
@@ -272,14 +272,14 @@ FUNCTION hbmk_plugin_qt( hbmk )
                      IF ! hbmk[ "lQUIET" ]
                         hbmk_OutStd( hbmk, I_( "'uic' command:" ) )
                      ENDIF
-                     hbmk_OutStdRaw( cCommand )
+                     hbmk_OutStdRaw( hbmk, cCommand )
                   ENDIF
 
                   IF ! hbmk[ "lDONTEXEC" ]
                      IF ( nError := hb_processRun( cCommand ) ) != 0
                         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running 'uic' executable. %1$d" ), nError ) )
                         IF ! hbmk[ "lQUIET" ]
-                           hbmk_OutErrRaw( cCommand )
+                           hbmk_OutErrRaw( hbmk, cCommand )
                         ENDIF
                         IF ! hbmk[ "lIGNOREERROR" ]
                            FErase( cTmp )
@@ -366,13 +366,13 @@ FUNCTION hbmk_plugin_qt( hbmk )
                      IF ! hbmk[ "lQUIET" ]
                         hbmk_OutStd( hbmk, I_( "'moc' command:" ) )
                      ENDIF
-                     hbmk_OutStdRaw( cCommand )
+                     hbmk_OutStdRaw( hbmk, cCommand )
                   ENDIF
 
                   IF ! hbmk[ "lDONTEXEC" ] .AND. ( nError := hb_processRun( cCommand ) ) != 0
                      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running 'moc' executable. %1$d" ), nError ) )
                      IF ! hbmk[ "lQUIET" ]
-                        hbmk_OutErrRaw( cCommand )
+                        hbmk_OutErrRaw( hbmk, cCommand )
                      ENDIF
                      IF ! hbmk[ "lIGNOREERROR" ]
                         cRetVal := "error"

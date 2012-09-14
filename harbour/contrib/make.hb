@@ -1,4 +1,4 @@
-#!/usr/bin/hbmk2
+#!/usr/bin/hbrun --hb:gtcgi
 /*
  * $Id$
  */
@@ -261,8 +261,8 @@ PROCEDURE GNUMake( aParams, hProjectList )
          AScanL( aGNUMakeParams, "install" ) > AScanL( aGNUMakeParams, "clean" )
          /* Use rebuild mode. This is needed because the clean phase
             might not have been called previously by GNU Make, f.e.
-            because hbmk2 wasn't available. -rebuildall is costless,
-            so we do it to make sure to build cleanly.
+            because hbrun or hbmk2 wasn't available. -rebuildall is
+            costless, so we do it to make sure to build cleanly.
             [vszakats] */
          nAction := _ACT_INC_REBUILD_INST
       ELSE

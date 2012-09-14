@@ -125,13 +125,13 @@ FUNCTION hbmk_plugin_bison( hbmk )
                      IF ! hbmk[ "lQUIET" ]
                         hbmk_OutStd( hbmk, I_( "'bison' command:" ) )
                      ENDIF
-                     hbmk_OutStdRaw( cCommand )
+                     hbmk_OutStdRaw( hbmk, cCommand )
                   ENDIF
 
                   IF ! hbmk[ "lDONTEXEC" ] .AND. ( nError := hb_processRun( cCommand ) ) != 0
                      hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running 'bison' executable. %1$s" ), hb_ntos( nError ) ) )
                      IF ! hbmk[ "lQUIET" ]
-                        hbmk_OutErrRaw( cCommand )
+                        hbmk_OutErrRaw( hbmk, cCommand )
                      ENDIF
                      IF ! hbmk[ "lIGNOREERROR" ]
                         cRetVal := "error"

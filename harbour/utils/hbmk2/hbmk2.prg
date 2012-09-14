@@ -8744,24 +8744,6 @@ FUNCTION hbmk_FNameEscape( ... )      ; RETURN FNameEscape( ... )
 FUNCTION hbmk_FNameToSymbol( ... )    ; RETURN FuncNameEncode( ... )
 FUNCTION hbmk_StrStripQuote( ... )    ; RETURN StrStripQuote( ... )
 
-FUNCTION hbmk_OutStdRaw( ... )
-#if 0
-   LOCAL hbmk := ctx_to_hbmk( ctx )
-   IF hbmk == NIL .OR. hbmk[ _HBMK_lDumpInfo ]
-      RETURN NIL
-   ENDIF
-#endif
-   RETURN ( OutStd( ... ), OutStd( _OUT_EOL ) )
-
-FUNCTION hbmk_OutErrRaw( ... )
-#if 0
-   LOCAL hbmk := ctx_to_hbmk( ctx )
-   IF hbmk == NIL .OR. hbmk[ _HBMK_lDumpInfo ]
-      RETURN NIL
-   ENDIF
-#endif
-   RETURN ( OutErr( ... ), OutErr( _OUT_EOL ) )
-
 FUNCTION hbmk_ArrayToList( array, cSeparator )
    LOCAL cString := ""
    LOCAL tmp
@@ -8788,6 +8770,20 @@ STATIC FUNCTION ctx_to_hbmk( ctx )
       ENDIF
    ENDIF
    RETURN NIL
+
+FUNCTION hbmk_OutStdRaw( ctx, ... )
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+   IF hbmk == NIL .OR. hbmk[ _HBMK_lDumpInfo ]
+      RETURN NIL
+   ENDIF
+   RETURN ( OutStd( ... ), OutStd( _OUT_EOL ) )
+
+FUNCTION hbmk_OutErrRaw( ctx, ... )
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+   IF hbmk == NIL .OR. hbmk[ _HBMK_lDumpInfo ]
+      RETURN NIL
+   ENDIF
+   RETURN ( OutErr( ... ), OutErr( _OUT_EOL ) )
 
 FUNCTION hbmk_PathFromWorkdirToCWD( ctx )
    LOCAL hbmk := ctx_to_hbmk( ctx )
