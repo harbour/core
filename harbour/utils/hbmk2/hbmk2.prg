@@ -474,7 +474,9 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_aGT               147
 #define _HBMK_cCPPRG            148
 
-#define _HBMK_MAX_              148
+#define _HBMK_lDumpInfo         149
+
+#define _HBMK_MAX_              149
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -891,6 +893,8 @@ STATIC FUNCTION hbmk_new()
    hbmk[ _HBMK_aINCPATH ] := {}
    hbmk[ _HBMK_aLIBPATH ] := {}
 
+   hbmk[ _HBMK_lDumpInfo ] := .F.
+
    RETURN hbmk
 
 STATIC PROCEDURE hbmk_init_stage2( hbmk )
@@ -1253,7 +1257,6 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL lAcceptLDClipper := .F.
    LOCAL lAcceptIFlag := .F.
    LOCAL lHarbourInfo := .F.
-   LOCAL lDumpInfo := .F.
    LOCAL lDumpInfoNested := .F.
 
    LOCAL nHarbourPPO := 0
@@ -1351,7 +1354,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            cParamL == "--hbdirinc" .OR. ;
            Left( cParamL, Len( "--hbinfo" ) ) == "--hbinfo"
 
-         hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
+         hbmk[ _HBMK_lQuiet ] := .T.
+         hbmk[ _HBMK_lInfo ] := .F.
+         hbmk[ _HBMK_lTRACE ] := .F.
 
       CASE cParamL             == "-quiet-"    ; hbmk[ _HBMK_lQuiet ] := .F.
       CASE Left( cParamL, 6 )  == "-comp="     ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 7 ), _TARG_COMP )
@@ -2273,13 +2278,13 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE cParamL == "-quiet"           ; hbmk[ _HBMK_lQuiet ] := .T. ; hbmk[ _HBMK_lInfo ] := .F.
       CASE cParamL == "-quiet-"
 
-         IF ! lDumpInfo
+         IF ! hbmk[ _HBMK_lDumpInfo ]
             hbmk[ _HBMK_lQuiet ] := .F.
          ENDIF
 
       CASE cParamL == "-info"
 
-         IF ! lDumpInfo
+         IF ! hbmk[ _HBMK_lDumpInfo ]
             hbmk[ _HBMK_lInfo ] := .T.
          ENDIF
 
@@ -2502,7 +2507,13 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       CASE cParamL == "-run-" .OR. ;
            cParamL == "-norun"           ; hbmk[ _HBMK_lRUN ]       := .F.
-      CASE cParamL == "-trace"           ; hbmk[ _HBMK_lTRACE ]     := .T.
+
+      CASE cParamL == "-trace"
+
+         IF ! hbmk[ _HBMK_lDumpInfo ]
+            hbmk[ _HBMK_lTRACE ]     := .T.
+         ENDIF
+
       CASE cParamL == "-trace-" .OR. ;
            cParamL == "-notrace"         ; hbmk[ _HBMK_lTRACE ]     := .F.
       CASE cParamL == "-traceonly"       ; hbmk[ _HBMK_lTRACE ]     := .T. ; hbmk[ _HBMK_lDONTEXEC ] := .T.
@@ -2525,11 +2536,12 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       CASE Left( cParamL, Len( "--hbinfo" ) ) == "--hbinfo"
 
-         lDumpInfo := .T.
+         hbmk[ _HBMK_lDumpInfo ] := .T.
          lDumpInfoNested := ( SubStr( cParamL, Len( "--hbinfo" ) + 1 ) == "=nested" )
 
          hbmk[ _HBMK_lQuiet ] := .T.
          hbmk[ _HBMK_lInfo ] := .F.
+         hbmk[ _HBMK_lTRACE ] := .F.
 
       CASE Left( cParamL, Len( "-jobs=" ) ) == "-jobs="
 
@@ -3359,7 +3371,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    ENDIF
 
    /* Decide about working dir */
-   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ] .AND. ! lDumpInfo
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ] .AND. ! hbmk[ _HBMK_lDumpInfo ]
       IF hbmk[ _HBMK_lINC ]
          hb_default( @hbmk[ _HBMK_cWorkDir ], hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ) + _WORKDIR_DEF_ + hbmk[ _HBMK_cWorkDirDynSub ] )
          IF ! Empty( hbmk[ _HBMK_cWorkDir ] )
@@ -5136,7 +5148,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* ; */
 
-   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. hbmk[ _HBMK_lCreateImpLib ] .AND. ! lDumpInfo
+   IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. hbmk[ _HBMK_lCreateImpLib ] .AND. ! hbmk[ _HBMK_lDumpInfo ]
       /* OBSOLETE functionality */
       IF DoIMPLIB( hbmk, bBlk_ImpLib, cLibLibPrefix, cLibLibExt, hbmk[ _HBMK_aIMPLIBSRC ], hbmk[ _HBMK_cPROGNAME ], "" )
          DoInstCopy( hbmk )
@@ -5200,7 +5212,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Generate header with repository ID information */
 
-   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! lDumpInfo
+   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! hbmk[ _HBMK_lDumpInfo ]
       IF ! Empty( l_cVCSHEAD )
          tmp1 := VCSID( hbmk, l_cVCSDIR, l_cVCSHEAD, @tmp2 )
          /* Use the same EOL for all platforms to avoid unnecessary rebuilds. */
@@ -5241,7 +5253,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Do header detection and create incremental file list for .c files */
 
-   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! lDumpInfo
+   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! hbmk[ _HBMK_lDumpInfo ]
 
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ] .AND. ! hbmk[ _HBMK_lCLEAN ]
          l_aC_TO_DO := {}
@@ -5264,7 +5276,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Do header detection and create incremental file list for .cpp files */
 
-   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! lDumpInfo
+   IF ! lSkipBuild .AND. ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lStopAfterHarbour ] .AND. ! hbmk[ _HBMK_lDumpInfo ]
 
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ] .AND. ! hbmk[ _HBMK_lCLEAN ]
          l_aCPP_TO_DO := {}
@@ -5291,14 +5303,14 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ( hbmk[ _HBMK_lCreateHRB ] .AND. hbmk[ _HBMK_lStopAfterHarbour ] ) .OR. ; /* or in HRB mode */
       ( hbmk[ _HBMK_lCreatePPO ] .AND. hbmk[ _HBMK_lStopAfterHarbour ] )        /* or in preprocessor mode */
 
-      IF ! lDumpInfo
+      IF ! hbmk[ _HBMK_lDumpInfo ]
          PlugIn_Execute_All( hbmk, "pre_prg" )
       ENDIF
 
       /* Incremental */
 
       IF hbmk[ _HBMK_lINC ] .AND. ! hbmk[ _HBMK_lREBUILD ] .AND. ;
-         ! hbmk[ _HBMK_lCLEAN ] .AND. ! lDumpInfo
+         ! hbmk[ _HBMK_lCLEAN ] .AND. ! hbmk[ _HBMK_lDumpInfo ]
          IF hbmk[ _HBMK_lCreateHRB ] .AND. hbmk[ _HBMK_lStopAfterHarbour ]
             cHarbourOutputExt := ".hrb"
             cHarbourOutputDir := hbmk[ _HBMK_cWorkDir ]
@@ -5369,7 +5381,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Dump build information */
 
-   IF lDumpInfo
+   IF hbmk[ _HBMK_lDumpInfo ]
 
       IF ! lDumpInfoNested .AND. nLevel > 1
          RETURN _ERRLEV_OK
@@ -8731,8 +8743,24 @@ FUNCTION hbmk_FNameDirExtSet( ... )   ; RETURN FNameDirExtSet( ... )
 FUNCTION hbmk_FNameEscape( ... )      ; RETURN FNameEscape( ... )
 FUNCTION hbmk_FNameToSymbol( ... )    ; RETURN FuncNameEncode( ... )
 FUNCTION hbmk_StrStripQuote( ... )    ; RETURN StrStripQuote( ... )
-FUNCTION hbmk_OutStdRaw( ... )        ; RETURN ( OutStd( ... ), OutStd( _OUT_EOL ) )
-FUNCTION hbmk_OutErrRaw( ... )        ; RETURN ( OutErr( ... ), OutErr( _OUT_EOL ) )
+
+FUNCTION hbmk_OutStdRaw( ... )
+#if 0
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+   IF hbmk == NIL .OR. hbmk[ _HBMK_lDumpInfo ]
+      RETURN NIL
+   ENDIF
+#endif
+   RETURN ( OutStd( ... ), OutStd( _OUT_EOL ) )
+
+FUNCTION hbmk_OutErrRaw( ... )
+#if 0
+   LOCAL hbmk := ctx_to_hbmk( ctx )
+   IF hbmk == NIL .OR. hbmk[ _HBMK_lDumpInfo ]
+      RETURN NIL
+   ENDIF
+#endif
+   RETURN ( OutErr( ... ), OutErr( _OUT_EOL ) )
 
 FUNCTION hbmk_ArrayToList( array, cSeparator )
    LOCAL cString := ""
@@ -13891,6 +13919,10 @@ STATIC PROCEDURE _hbmk_OutStd( hbmk, cText )
    LOCAL cPrefix
    LOCAL tmp
 
+   IF hbmk[ _HBMK_lDumpInfo ]
+      RETURN
+   ENDIF
+
    IF hbmk[ _HBMK_lShowLevel ]
       nWidth := Len( _SELF_NAME_ ) + 5
       cPrefix := hb_StrFormat( _SELF_NAME_ + " #%1$d:", hbmk[ _HBMK_nLevel ] )
@@ -13915,6 +13947,10 @@ STATIC PROCEDURE _hbmk_OutErr( hbmk, cText )
    LOCAL nWidth
    LOCAL cPrefix
    LOCAL tmp
+
+   IF hbmk[ _HBMK_lDumpInfo ]
+      RETURN
+   ENDIF
 
    IF hbmk[ _HBMK_lShowLevel ]
       nWidth := Len( _SELF_NAME_ ) + 5
