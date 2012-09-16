@@ -3440,6 +3440,19 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       }
       case HB_GTI_SETPOSANDSIZE:
       {
+         if( pWVT->hWnd )
+         {
+            RECT rect = { 0,0,0,0 };
+            GetWindowRect( pWVT->hWnd, &rect );
+
+            pInfo->pResult = hb_itemNew( NULL );
+            hb_arrayNew( pInfo->pResult, 4 );
+            hb_arraySetNI( pInfo->pResult, 1, rect.left );
+            hb_arraySetNI( pInfo->pResult, 2, rect.top );
+            hb_arraySetNI( pInfo->pResult, 3, rect.right - rect.left );
+            hb_arraySetNI( pInfo->pResult, 4, rect.bottom - rect.top );
+         }
+
          if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) && hb_arrayLen( pInfo->pNewVal ) == 2 &&
              ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_ARRAY ) && hb_arrayLen( pInfo->pNewVal2 ) == 2 )
          {

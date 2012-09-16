@@ -670,7 +670,7 @@ STATIC FUNCTION hbqtui_gen_prg( cFile, cFuncName )
             n := At( "->", cText )
             cNam := AllTrim( SubStr( cText, 1, n - 1 ) )
             cCmd := hbqtui_formatCommand( SubStr( cText, n + 2 ), .T., aWidgets )
-            AAdd( aCommands, { cNam, cCmd } )
+            AAdd( aCommands, { cNam, hbqtui_pullTranslate( cCmd ) } )
 
          ELSEIF hbqtui_isValidCmdLine( s ) .AND. !( "->" $ s ) .AND. ( ( n := At( ".", s ) ) > 0  )  /* Assignment to objects on stack */
             cNam := SubStr( s, 1, n - 1 )
@@ -1182,7 +1182,7 @@ STATIC FUNCTION hbqtui_setObjects( cCmd, aWidgets )
 STATIC FUNCTION hbqtui_pullText( aLines, nFrom )
    LOCAL cString := ""
    LOCAL nLen := Len( aLines )
-   LOCAL aKeyword := { "setText(", "setPlainText(", "setStyleSheet(", "setWhatsThis(" }
+   LOCAL aKeyword := { "setText(", "setPlainText(", "setStyleSheet(", "setWhatsThis(", "setHtml(" }
 
    IF AScan( aKeyword, {| tmp | tmp $ aLines[ nFrom ] } ) > 0
       cString := aLines[ nFrom ]
