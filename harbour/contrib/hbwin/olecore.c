@@ -438,7 +438,7 @@ VARIANT * hb_oleItemGetVariant( PHB_ITEM pItem )
 
 PHB_ITEM hb_oleItemPutVariant( PHB_ITEM pItem, VARIANT * pVariant, HB_BOOL fMove )
 {
-   VARIANT * pDestVariant = ( VARIANT * ) hb_gcAllocate( sizeof( VARIANT ), &s_gcOleFuncs );
+   VARIANT * pDestVariant = ( VARIANT * ) hb_gcAllocate( sizeof( VARIANT ), &s_gcVariantFuncs );
 
    if( fMove )
    {
@@ -2075,8 +2075,8 @@ HB_FUNC( __OLEINVOKEPUT )
 }
 
 
-/* __oleVariantValue( <pVariant> ) -> <xValue> */
-HB_FUNC( __OLEVARIANTVALUE )
+/* __oleVariantGetValue( <pVariant> ) -> <xValue> */
+HB_FUNC( __OLEVARIANTGETVALUE )
 {
    VARIANT * pVariant = hb_oleVariantParam( 1 );
 
@@ -2084,8 +2084,8 @@ HB_FUNC( __OLEVARIANTVALUE )
       hb_oleVariantToItemEx( hb_stackReturnItem(), pVariant, 0 );
 }
 
-/* __oleVariantType( <pVariant> ) -> <nVariantType> */
-HB_FUNC( __OLEVARIANTTYPE )
+/* __oleVariantGetType( <pVariant> ) -> <nVariantType> */
+HB_FUNC( __OLEVARIANTGETTYPE )
 {
    VARIANT * pVariant = hb_oleVariantParam( 1 );
 
@@ -2093,8 +2093,8 @@ HB_FUNC( __OLEVARIANTTYPE )
       hb_retni( V_VT( pVariant ) );
 }
 
-/* __oleVariant( <nVariantType> [, <xInitValue>] ) -> <pVariant> */
-HB_FUNC( __OLEVARIANT )
+/* __oleVariantNew( <nVariantType> [, <xInitValue>] ) -> <pVariant> */
+HB_FUNC( __OLEVARIANTNEW )
 {
    int iType = hb_parni( 1 );
    PHB_ITEM pInit = hb_param( 2, HB_IT_ANY );
@@ -2244,7 +2244,7 @@ HB_FUNC( __OLEVARIANT )
          if( pInit == NULL || HB_IS_NUMERIC( pInit ) )
          {
             V_VT( &variant ) = VT_DECIMAL;
-            VarDecFromR8( hb_itemGetND( pInit ), &V_DECIMAL( &variant ) );
+            VarDecFromR8( hb_itemGetND( pInit ), &HB_WIN_U1( &variant, decVal ) /*&V_DECIMAL( &variant )*/ );
          }
          break;
 
