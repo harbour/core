@@ -54,6 +54,8 @@
 #include "inkey.ch"
 #include "fileio.ch"
 
+#include "hbextcdp.ch"
+
 PROCEDURE Main( ... )
 
    LOCAL cTok
@@ -129,6 +131,9 @@ PROCEDURE Main( ... )
 
       CASE cTok == "-e"
          cPath := hb_PValue( i++ )
+
+      CASE cTok == "-cp"
+         hb_cdpSelect( hb_PValue( i++ ) )
 
       OTHERWISE
          help()
@@ -250,7 +255,7 @@ PROCEDURE Main( ... )
 
             IF cValue != NIL
                IF oRecord:Fieldtype( i ) == "C" .OR. oRecord:Fieldtype( i ) == "M"
-                  oRecord:FieldPut( i, hb_oemtoansi( cValue ) )
+                  oRecord:FieldPut( i, hb_StrToUTF8( cValue ) )
                ELSE
                   oRecord:FieldPut( i, cValue )
                ENDIF
@@ -264,7 +269,7 @@ PROCEDURE Main( ... )
          ?
          ? "Error Record: ", RecNo(), Left( oTable:ErrorMsg(), 70 )
          ?
-         FWrite( nHandle, "Error at record: " + Str( RecNo() ) + " Description: " + oTable:ErrorMsg() + hb_eol() )
+         FWrite( nHandle, "Error at record: " + hb_ntos( RecNo() ) + " Description: " + oTable:ErrorMsg() + hb_eol() )
       ELSE
          nCount++
       ENDIF
