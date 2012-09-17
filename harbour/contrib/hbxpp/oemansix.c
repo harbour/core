@@ -51,16 +51,72 @@
  */
 
 #include "hbapi.h"
+#include "hbapiitm.h"
 
-HB_FUNC_EXTERN( HB_ANSITOOEM );
-HB_FUNC_EXTERN( HB_OEMTOANSI );
+#if defined( HB_OS_WIN )
+   #include <windows.h>
+#endif
 
 HB_FUNC( CONVTOOEMCP )
 {
-   HB_FUNC_EXEC( HB_ANSITOOEM );
+   PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
+
+   if( pString )
+#if defined( HB_OS_WIN )
+   {
+      int nLen = ( int ) hb_itemGetCLen( pString );
+      const char * pszSrc = hb_itemGetCPtr( pString );
+
+      int nWideLen = MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, pszSrc, nLen, NULL, 0 );
+      LPWSTR pszWide = ( LPWSTR ) hb_xgrab( ( nWideLen + 1 ) * sizeof( wchar_t ) );
+
+      char * pszDst;
+
+      MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, pszSrc, nLen, pszWide, nWideLen );
+
+      nLen = WideCharToMultiByte( CP_OEMCP, 0, pszWide, nWideLen, NULL, 0, NULL, NULL );
+      pszDst = ( char * ) hb_xgrab( nLen + 1 );
+
+      WideCharToMultiByte( CP_OEMCP, 0, pszWide, nWideLen, pszDst, nLen, NULL, NULL );
+
+      hb_xfree( pszWide );
+      hb_retclen_buffer( pszDst, nLen );
+   }
+#else
+      hb_itemReturn( pString );
+#endif
+   else
+      hb_retc_null();
 }
 
 HB_FUNC( CONVTOANSICP )
 {
-   HB_FUNC_EXEC( HB_OEMTOANSI );
+   PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
+
+   if( pString )
+#if defined( HB_OS_WIN )
+   {
+      int nLen = ( int ) hb_itemGetCLen( pString );
+      const char * pszSrc = hb_itemGetCPtr( pString );
+
+      int nWideLen = MultiByteToWideChar( CP_OEMCP, MB_PRECOMPOSED, pszSrc, nLen, NULL, 0 );
+      LPWSTR pszWide = ( LPWSTR ) hb_xgrab( ( nWideLen + 1 ) * sizeof( wchar_t ) );
+
+      char * pszDst;
+
+      MultiByteToWideChar( CP_OEMCP, MB_PRECOMPOSED, pszSrc, nLen, pszWide, nWideLen );
+
+      nLen = WideCharToMultiByte( CP_ACP, 0, pszWide, nWideLen, NULL, 0, NULL, NULL );
+      pszDst = ( char * ) hb_xgrab( nLen + 1 );
+
+      WideCharToMultiByte( CP_ACP, 0, pszWide, nWideLen, pszDst, nLen, NULL, NULL );
+
+      hb_xfree( pszWide );
+      hb_retclen_buffer( pszDst, nLen );
+   }
+#else
+      hb_itemReturn( pString );
+#endif
+   else
+      hb_retc_null();
 }

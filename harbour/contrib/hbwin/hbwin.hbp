@@ -32,6 +32,7 @@ hbwin.hbx
 
 axcore.c
 mapi.c
+oemansi.c
 olecore.c
 oleuuid.c{watcom}
 hbolesrv.c

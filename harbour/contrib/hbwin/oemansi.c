@@ -50,24 +50,16 @@
  *
  */
 
-/* NOTE: These are Windows specific, for other platforms it will return the
-         passed parameter unchanged. */
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-#ifdef HB_LEGACY_LEVEL4
+#include <windows.h>
 
-#if defined( HB_OS_WIN )
-   #include <windows.h>
-#endif
-
-HB_FUNC( HB_ANSITOOEM )
+HB_FUNC( WIN_ANSITOOEM )
 {
    PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
 
    if( pString )
-#if defined( HB_OS_WIN )
    {
       int nLen = ( int ) hb_itemGetCLen( pString );
       const char * pszSrc = hb_itemGetCPtr( pString );
@@ -87,19 +79,15 @@ HB_FUNC( HB_ANSITOOEM )
       hb_xfree( pszWide );
       hb_retclen_buffer( pszDst, nLen );
    }
-#else
-      hb_itemReturn( pString );
-#endif
    else
       hb_retc_null();
 }
 
-HB_FUNC( HB_OEMTOANSI )
+HB_FUNC( WIN_OEMTOANSI )
 {
    PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
 
    if( pString )
-#if defined( HB_OS_WIN )
    {
       int nLen = ( int ) hb_itemGetCLen( pString );
       const char * pszSrc = hb_itemGetCPtr( pString );
@@ -119,11 +107,6 @@ HB_FUNC( HB_OEMTOANSI )
       hb_xfree( pszWide );
       hb_retclen_buffer( pszDst, nLen );
    }
-#else
-      hb_itemReturn( pString );
-#endif
    else
       hb_retc_null();
 }
-
-#endif

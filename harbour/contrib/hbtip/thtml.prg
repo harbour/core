@@ -93,6 +93,8 @@
 
 THREAD STATIC t_aHtmlAttr                  // data for HTML attributes
 THREAD STATIC t_hTagTypes                  // data for HTML tags
+THREAD STATIC t_cHtmlCP := ""
+THREAD STATIC t_aHtmlEntities              // HTML character entities
 THREAD STATIC t_aHtmlAnsiEntities          // HTML character entities (ANSI character set)
 THREAD STATIC t_lInit      := .F.          // initilization flag for HTML data
 
@@ -4515,6 +4517,8 @@ STATIC FUNCTION THtmlAttr_XMP()
       t_aHtmlAttr[ HTML_ATTR_UNKNOWN          ]  ;
       }
 
+#ifdef HB_LEGACY_LEVEL4
+
 // Converts an HTML formatted text string to the ANSI character set
 
 FUNCTION HtmlToAnsi( cHtmlText )
@@ -4615,7 +4619,7 @@ FUNCTION OemToHtml( cOemText )
 
 // This function returs the HTML character entities that are exchangeable between ANSI and OEM character sets
 
-STATIC PROCEDURE _Init_Html_AnsiCharacterEntities
+STATIC PROCEDURE _Init_Html_AnsiCharacterEntities()
 
    t_aHtmlAnsiEntities := ;
       { ;
@@ -4698,3 +4702,175 @@ STATIC PROCEDURE _Init_Html_AnsiCharacterEntities
       }
 
    RETURN
+
+#endif
+
+// Converts an HTML formatted text string to the ANSI character set
+
+FUNCTION tip_HtmlToStr( cHtmlText )
+
+   LOCAL aEntity
+
+   _Init_Html_CharacterEntities()
+
+   FOR EACH aEntity IN t_aHtmlEntities
+      IF aEntity[ 2 ] $ cHtmlText
+         cHtmlText := StrTran( cHtmlText, aEntity[ 2 ], aEntity[ 1 ] )
+      ENDIF
+   NEXT
+   IF "&nbsp;" $ cHtmlText
+      cHtmlText := StrTran( cHtmlText, "&nbsp;", " " )
+   ENDIF
+
+   RETURN cHtmlText
+
+// Inserts HTML character entities into an ANSI text string
+
+FUNCTION tip_StrToHtml( cAnsiText )
+
+   LOCAL cHtmlText := ""
+   LOCAL parser    := P_PARSER( cAnsiText )
+   LOCAL nStart    := 1
+   LOCAL aEntity, cEntity, cText, cChr, nEnd
+
+   _Init_Html_CharacterEntities()
+
+   // Convert to Html but ignore all html character entities
+   DO WHILE P_SEEK( parser, "&" ) > 0
+      nEnd  := parser:p_pos
+      cText := SubStr( parser:p_str, nStart, nEnd - nStart )
+
+      DO WHILE ! ( ( cChr := P_NEXT( parser ) ) $ "; " ) .AND. ! Empty( cChr ) .AND. parser:p_pos != 0
+      ENDDO
+
+      SWITCH cChr
+      CASE ";"
+         // HTML character entity found
+         nStart  := nEnd
+         nEnd    := parser:p_pos + 1
+         cEntity := SubStr( parser:p_str, nStart, nEnd - nStart )
+         parser:p_end := parser:p_pos
+         parser:p_pos ++
+         EXIT
+      CASE " "
+         // "&" character found
+         cHtmlText += cText
+         nStart    := nEnd
+         nEnd      := parser:p_pos + 1
+         cText     := SubStr( parser:p_str, nStart, nEnd - nStart )
+         nStart    := nEnd
+         cHtmlText += "&amp;" + SubStr( cText, 2 )
+         LOOP
+         OTHERWISE
+         cEntity := NIL
+      ENDSWITCH
+
+      IF cEntity != NIL
+         nStart := parser:p_pos
+         FOR EACH aEntity IN t_aHtmlEntities
+            IF aEntity[ 1 ] $ cText
+               cText := StrTran( cText, aEntity[ 1 ], aEntity[ 2 ] )
+            ENDIF
+         NEXT
+
+         cHtmlText += cText + cEntity
+      ENDIF
+   ENDDO
+
+   cText := SubStr( parser:p_str, nStart )
+   FOR EACH aEntity IN t_aHtmlEntities
+      IF aEntity[ 1 ] $ cText
+         cText := StrTran( cText, aEntity[ 1 ], aEntity[ 2 ] )
+      ENDIF
+   NEXT
+   cHtmlText += cText
+
+   RETURN cHtmlText
+
+STATIC PROCEDURE _Init_Html_CharacterEntities()
+
+   IF t_aHtmlEntities == NIL .OR. !( t_cHtmlCP == hb_cdpSelect() )
+      t_cHtmlCP := hb_cdpSelect()
+      t_aHtmlEntities := ;
+         { ;
+         { hb_UTF8ToStr( "&" ), "&amp;"    }, ;      //  ampersand
+         { hb_UTF8ToStr( "<" ), "&lt;"     }, ;      //  less-than sign
+         { hb_UTF8ToStr( ">" ), "&gt;"     }, ;      //  greater-than sign
+         { hb_UTF8ToStr( "¢" ), "&cent;"   }, ;      //  cent sign
+         { hb_UTF8ToStr( "£" ), "&pound;"  }, ;      //  pound sign
+         { hb_UTF8ToStr( "¥" ), "&yen;"    }, ;      //  yen sign
+         { hb_UTF8ToStr( "¦" ), "&brvbar;" }, ;      //  broken bar
+         { hb_UTF8ToStr( "§" ), "&sect;"   }, ;      //  section sign
+         { hb_UTF8ToStr( "©" ), "&copy;"   }, ;      //  copyright sign
+         { hb_UTF8ToStr( "®" ), "&reg;"    }, ;      //  registered sign
+         { hb_UTF8ToStr( "°" ), "&deg;"    }, ;      //  degree sign
+         { hb_UTF8ToStr( "¿" ), "&iquest;" }, ;      //  inverted question mark
+         { hb_UTF8ToStr( "À" ), "&Agrave;" }, ;      //  Latin capital letter a with grave
+         { hb_UTF8ToStr( "Á" ), "&Aacute;" }, ;      //  Latin capital letter a with acute
+         { hb_UTF8ToStr( "Â" ), "&Acirc;"  }, ;      //  Latin capital letter a with circumflex
+         { hb_UTF8ToStr( "Ã" ), "&Atilde;" }, ;      //  Latin capital letter a with tilde
+         { hb_UTF8ToStr( "Ä" ), "&Auml;"   }, ;      //  Latin capital letter a with diaeresis
+         { hb_UTF8ToStr( "Å" ), "&Aring;"  }, ;      //  Latin capital letter a with ring above
+         { hb_UTF8ToStr( "Æ" ), "&AElig;"  }, ;      //  Latin capital letter ae
+         { hb_UTF8ToStr( "Ç" ), "&Ccedil;" }, ;      //  Latin capital letter c with cedilla
+         { hb_UTF8ToStr( "È" ), "&Egrave;" }, ;      //  Latin capital letter e with grave
+         { hb_UTF8ToStr( "É" ), "&Eacute;" }, ;      //  Latin capital letter e with acute
+         { hb_UTF8ToStr( "Ê" ), "&Ecirc;"  }, ;      //  Latin capital letter e with circumflex
+         { hb_UTF8ToStr( "Ë" ), "&Euml;"   }, ;      //  Latin capital letter e with diaeresis
+         { hb_UTF8ToStr( "Ì" ), "&Igrave;" }, ;      //  Latin capital letter i with grave
+         { hb_UTF8ToStr( "Í" ), "&Iacute;" }, ;      //  Latin capital letter i with acute
+         { hb_UTF8ToStr( "Î" ), "&Icirc;"  }, ;      //  Latin capital letter i with circumflex
+         { hb_UTF8ToStr( "Ï" ), "&Iuml;"   }, ;      //  Latin capital letter i with diaeresis
+         { hb_UTF8ToStr( "Ð" ), "&ETH;"    }, ;      //  Latin capital letter eth
+         { hb_UTF8ToStr( "Ñ" ), "&Ntilde;" }, ;      //  Latin capital letter n with tilde
+         { hb_UTF8ToStr( "Ò" ), "&Ograve;" }, ;      //  Latin capital letter o with grave
+         { hb_UTF8ToStr( "Ó" ), "&Oacute;" }, ;      //  Latin capital letter o with acute
+         { hb_UTF8ToStr( "Ô" ), "&Ocirc;"  }, ;      //  Latin capital letter o with circumflex
+         { hb_UTF8ToStr( "Õ" ), "&Otilde;" }, ;      //  Latin capital letter o with tilde
+         { hb_UTF8ToStr( "Ö" ), "&Ouml;"   }, ;      //  Latin capital letter o with diaeresis
+         { hb_UTF8ToStr( "Ø" ), "&Oslash;" }, ;      //  Latin capital letter o with stroke
+         { hb_UTF8ToStr( "Ù" ), "&Ugrave;" }, ;      //  Latin capital letter u with grave
+         { hb_UTF8ToStr( "Ú" ), "&Uacute;" }, ;      //  Latin capital letter u with acute
+         { hb_UTF8ToStr( "Û" ), "&Ucirc;"  }, ;      //  Latin capital letter u with circumflex
+         { hb_UTF8ToStr( "Ü" ), "&Uuml;"   }, ;      //  Latin capital letter u with diaeresis
+         { hb_UTF8ToStr( "Ý" ), "&Yacute;" }, ;      //  Latin capital letter y with acute
+         { hb_UTF8ToStr( "Þ" ), "&THORN;"  }, ;      //  Latin capital letter thorn
+         { hb_UTF8ToStr( "ß" ), "&szlig;"  }, ;      //  Latin small letter sharp s (German Eszett)
+         { hb_UTF8ToStr( "à" ), "&agrave;" }, ;      //  Latin small letter a with grave
+         { hb_UTF8ToStr( "á" ), "&aacute;" }, ;      //  Latin small letter a with acute
+         { hb_UTF8ToStr( "â" ), "&acirc;"  }, ;      //  Latin small letter a with circumflex
+         { hb_UTF8ToStr( "ã" ), "&atilde;" }, ;      //  Latin small letter a with tilde
+         { hb_UTF8ToStr( "ä" ), "&auml;"   }, ;      //  Latin small letter a with diaeresis
+         { hb_UTF8ToStr( "å" ), "&aring;"  }, ;      //  Latin small letter a with ring above
+         { hb_UTF8ToStr( "æ" ), "&aelig;"  }, ;      //  Latin lowercase ligature ae
+         { hb_UTF8ToStr( "ç" ), "&ccedil;" }, ;      //  Latin small letter c with cedilla
+         { hb_UTF8ToStr( "è" ), "&egrave;" }, ;      //  Latin small letter e with grave
+         { hb_UTF8ToStr( "é" ), "&eacute;" }, ;      //  Latin small letter e with acute
+         { hb_UTF8ToStr( "ê" ), "&ecirc;"  }, ;      //  Latin small letter e with circumflex
+         { hb_UTF8ToStr( "ë" ), "&euml;"   }, ;      //  Latin small letter e with diaeresis
+         { hb_UTF8ToStr( "ì" ), "&igrave;" }, ;      //  Latin small letter i with grave
+         { hb_UTF8ToStr( "í" ), "&iacute;" }, ;      //  Latin small letter i with acute
+         { hb_UTF8ToStr( "î" ), "&icirc;"  }, ;      //  Latin small letter i with circumflex
+         { hb_UTF8ToStr( "ï" ), "&iuml;"   }, ;      //  Latin small letter i with diaeresis
+         { hb_UTF8ToStr( "ð" ), "&eth;"    }, ;      //  Latin small letter eth
+         { hb_UTF8ToStr( "ñ" ), "&ntilde;" }, ;      //  Latin small letter n with tilde
+         { hb_UTF8ToStr( "ò" ), "&ograve;" }, ;      //  Latin small letter o with grave
+         { hb_UTF8ToStr( "ó" ), "&oacute;" }, ;      //  Latin small letter o with acute
+         { hb_UTF8ToStr( "ô" ), "&ocirc;"  }, ;      //  Latin small letter o with circumflex
+         { hb_UTF8ToStr( "õ" ), "&otilde;" }, ;      //  Latin small letter o with tilde
+         { hb_UTF8ToStr( "ö" ), "&ouml;"   }, ;      //  Latin small letter o with diaeresis
+         { hb_UTF8ToStr( "ø" ), "&oslash;" }, ;      //  Latin small letter o with stroke
+         { hb_UTF8ToStr( "ù" ), "&ugrave;" }, ;      //  Latin small letter u with grave
+         { hb_UTF8ToStr( "ú" ), "&uacute;" }, ;      //  Latin small letter u with acute
+         { hb_UTF8ToStr( "û" ), "&ucirc;"  }, ;      //  Latin small letter u with circumflex
+         { hb_UTF8ToStr( "ü" ), "&uuml;"   }, ;      //  Latin small letter u with diaeresis
+         { hb_UTF8ToStr( "ý" ), "&yacute;" }, ;      //  Latin small letter y with acute
+         { hb_UTF8ToStr( "þ" ), "&thorn;"  }, ;      //  Latin small letter thorn
+         { hb_UTF8ToStr( "ÿ" ), "&yuml;"   }, ;      //  Latin small letter y with diaeresis
+         { hb_UTF8ToStr( "^" ), "&circ;"   }, ;      //  modifier letter circumflex accent
+         { hb_UTF8ToStr( "~" ), "&tilde;"  }  ;      //  small tilde
+         }
+   ENDIF
+
+   RETURN
+
