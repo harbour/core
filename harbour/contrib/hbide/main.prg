@@ -79,7 +79,10 @@
 #include "hbclass.ch"
 #include "hbver.ch"
 
-#include "rddads.hbx"
+#if defined( __PLATFORM__WINDOWS ) .OR. ;
+    defined( __PLATFORM__LINUX )
+   #include "rddads.hbx"
+#endif
 
 /* Link all Harbour Functions : needed to run external scripts */
 /* NOTE: Please only add what's actually requested by plugin developers */
