@@ -750,6 +750,11 @@ PVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piPos, int
                *piPos = - hb_compVariableGetPos( pOutBlock->pDetached, szVarName );
                if( *piPos == 0 )
                {
+                  /* szVarName may point to dynamic buffer,
+                   * make sure it's static one.
+                   */
+                  szVarName = pVar->szName;
+
                   /* this variable was not referenced yet - add it to the list */
                   pVar = ( PVAR ) hb_xgrab( sizeof( VAR ) );
 
@@ -930,10 +935,7 @@ void hb_compPushMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen, HB_B
 
          if( iSize )
          {
-            const char * pszVarName;
-
             szSymName[ iSize ] = '\0';
-            pszVarName = hb_compIdentifierNew( HB_COMP_PARAM, szSymName, HB_IDENT_COPY );
 
             /* NOTE: All variables are assumed memvars in macro compiler -
              * there is no need to check for a valid name but to be Clipper
@@ -942,49 +944,47 @@ void hb_compPushMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen, HB_B
              * Only MEMVAR or undeclared (memvar will be assumed)
              * variables can be used in macro text.
              */
-            iScope = hb_compVariableScope( HB_COMP_PARAM, pszVarName );
+            iScope = hb_compVariableScope( HB_COMP_PARAM, szSymName );
             if( iScope == HB_VS_UNDECLARED || ( iScope & HB_VS_LOCAL_MEMVAR ) )
             {
                fFound = HB_TRUE;
-               if( fMacro && iScope == HB_VS_UNDECLARED )
-                  hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_AMBIGUOUS_VAR, pszVarName, NULL );
+               if( fMacro && iScope == HB_VS_UNDECLARED /* && HB_SUPPORT_MACRODECL */ )
+                  hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_AMBIGUOUS_VAR, szSymName, NULL );
+            }
+            else if( HB_SUPPORT_MACRODECL )
+            {
+               HB_SIZE nPrefix = n - iSize - 1;
+               if( nPrefix > 0 )
+               {
+                  char * pszPrefix = ( char * ) hb_xgrab( nPrefix + 1 );
+                  memcpy( pszPrefix, szText, nPrefix );
+                  pszPrefix[ nPrefix ] = '\0';
+                  hb_compGenPushString( pszPrefix, nPrefix + 1, HB_COMP_PARAM );
+                  hb_xfree( pszPrefix );
+                  if( iParts++ > 0 )
+                     hb_compGenPCode1( HB_P_PLUS, HB_COMP_PARAM );
+               }
+               hb_compGenPushVar( szSymName, HB_COMP_PARAM );
+               if( iParts++ > 0 )
+                  hb_compGenPCode1( HB_P_PLUS, HB_COMP_PARAM );
+               if( n < nLen && szText[ n ] == '.' )
+                  ++n;
+               szText += n;
+               nLen -= n;
+               n = 0;
             }
             else
             {
-               if( HB_SUPPORT_MACRODECL )
-               {
-                  HB_SIZE nPrefix = n - iSize - 1;
-                  if( nPrefix > 0 )
-                  {
-                     char * pszPrefix = ( char * ) hb_xgrab( nPrefix + 1 );
-                     memcpy( pszPrefix, szText, nPrefix );
-                     pszPrefix[ nPrefix ] = '\0';
-                     hb_compGenPushString( pszPrefix, nPrefix + 1, HB_COMP_PARAM );
-                     hb_xfree( pszPrefix );
-                     if( iParts++ > 0 )
-                        hb_compGenPCode1( HB_P_PLUS, HB_COMP_PARAM );
-                  }
-                  hb_compGenPushVar( pszVarName, HB_COMP_PARAM );
-                  if( iParts++ > 0 )
-                     hb_compGenPCode1( HB_P_PLUS, HB_COMP_PARAM );
-                  if( n < nLen && szText[ n ] == '.' )
-                     ++n;
-                  szText += n;
-                  nLen -= n;
-                  n = 0;
-               }
-               else
-               {
-                  hb_compErrorMacro( HB_COMP_PARAM, szText );
-                  break;
-               }
+               hb_compErrorMacro( HB_COMP_PARAM, szText );
+               break;
             }
          }
          else if( ! HB_SUPPORT_HARBOUR )
             fFound = HB_TRUE;    /* always macro substitution in Clipper */
       }
    }
-   if( nLen > 0 )
+
+   if( nLen > 0 || iParts == 0 )
    {
       hb_compGenPushString( szText, nLen + 1, HB_COMP_PARAM );
       if( iParts > 0 )
