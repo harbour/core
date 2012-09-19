@@ -1038,7 +1038,7 @@ CodeBlock   : BlockHead
                HB_CBVAR_PTR pVar;
                $<sNumber>$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
                $<sNumber>2 = HB_COMP_PARAM->lastLine;
-               hb_compCodeBlockStart( HB_COMP_PARAM, HB_TRUE );
+               hb_compCodeBlockStart( HB_COMP_PARAM, 0 );
                HB_COMP_PARAM->functions.pLast->funFlags |= FUN_EXTBLOCK;
                HB_COMP_PARAM->functions.pLast->fVParams =
                   ( $1->value.asCodeblock.flags & HB_BLOCK_VPARAMS ) != 0;

@@ -291,6 +291,10 @@ static HB_BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
                iFlag = HB_COMPFLAG_MACROTEXT;
                iValue = !iValue;
                break;
+            case 'd':
+            case 'D':
+               iFlag = HB_COMPFLAG_MACRODECL;
+               break;
             case 's':
             case 'S':
                iFlag = HB_COMPFLAG_ARRSTR;

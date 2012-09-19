@@ -6110,7 +6110,7 @@ yyreduce:
                HB_CBVAR_PTR pVar;
                (yyval.sNumber) = HB_COMP_PARAM->functions.pLast->nPCodePos;
                (yyvsp[(2) - (2)].sNumber) = HB_COMP_PARAM->lastLine;
-               hb_compCodeBlockStart( HB_COMP_PARAM, HB_TRUE );
+               hb_compCodeBlockStart( HB_COMP_PARAM, 0 );
                HB_COMP_PARAM->functions.pLast->funFlags |= FUN_EXTBLOCK;
                HB_COMP_PARAM->functions.pLast->fVParams =
                   ( (yyvsp[(1) - (2)].asExpr)->value.asCodeblock.flags & HB_BLOCK_VPARAMS ) != 0;

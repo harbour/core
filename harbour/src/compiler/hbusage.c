@@ -140,8 +140,9 @@ void hb_compPrintModes( HB_COMP_DECL )
            "\n          s[-]            allow indexed assignment on all types",
            "\n          x[-]            extended Xbase++ mode",
            "\n          u[-]            strings in user encoding",
-           "\n          j[+]            turn off jump optimization in pcode",
+           "\n          d[-]            accept macros with declared symbols",
            "\n          m[+]            turn off macrotext substitution",
+           "\n          j[+]            turn off jump optimization in pcode",
            "\n          ?               this info",
            "\n"
    };
@@ -154,8 +155,10 @@ void hb_compPrintModes( HB_COMP_DECL )
       HB_COMPFLAG_RT_MACRO,
       HB_COMPFLAG_ARRSTR,
       HB_COMPFLAG_XBASE,
-      ~HB_COMPFLAG_OPTJUMP,
+      HB_COMPFLAG_USERCP,
+      HB_COMPFLAG_MACRODECL,
       ~HB_COMPFLAG_MACROTEXT,
+      ~HB_COMPFLAG_OPTJUMP,
    };
    int iLine;
 

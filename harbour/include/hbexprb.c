@@ -130,7 +130,7 @@ static HB_EXPR_FUNC( hb_compExprUseNegate );
 #if defined( HB_MACRO_SUPPORT )
    static void hb_compExprCodeblockPush( HB_EXPR_PTR, HB_COMP_DECL );
 #else
-   static void hb_compExprCodeblockPush( HB_EXPR_PTR, HB_BOOL, HB_COMP_DECL );
+   static HB_BOOL hb_compExprCodeblockPush( HB_EXPR_PTR, int, HB_COMP_DECL );
    static void hb_compExprCodeblockEarly( HB_EXPR_PTR, HB_COMP_DECL );
    static void hb_compExprCodeblockExtPush( HB_EXPR_PTR pSelf, HB_COMP_DECL );
 #endif
@@ -394,20 +394,23 @@ static HB_EXPR_FUNC( hb_compExprUseString )
          break;
       case HB_EA_PUSH_PCODE:
       {
+#if ! defined( HB_MACRO_SUPPORT )
+         if( !HB_SUPPORT_MACROTEXT )
+            HB_GEN_FUNC2( PushString, pSelf->value.asString.string,
+                          pSelf->nLength + 1 );
+         else
+            hb_compPushMacroText( HB_COMP_PARAM,
+                                  pSelf->value.asString.string,
+                                  pSelf->nLength, HB_FALSE );
+#else
          HB_GEN_FUNC2( PushString, pSelf->value.asString.string,
                        pSelf->nLength + 1 );
-#if ! defined( HB_MACRO_SUPPORT )
-         if( HB_SUPPORT_MACROTEXT &&
-             hb_compIsValidMacroText( HB_COMP_PARAM,
-                                      pSelf->value.asString.string,
-                                      pSelf->nLength ) )
-#else
          if( hb_macroIsValidMacroText( pSelf->value.asString.string,
                                        pSelf->nLength ) )
-#endif
          {
             HB_GEN_FUNC1( PCode1, HB_P_MACROTEXT );
          }
+#endif
          break;
       }
       case HB_EA_POP_PCODE:
@@ -456,7 +459,7 @@ static HB_EXPR_FUNC( hb_compExprUseCodeblock )
             /* early evaluation of a macro */
             hb_compExprCodeblockEarly( pSelf, HB_COMP_PARAM );
          else
-            hb_compExprCodeblockPush( pSelf, HB_TRUE, HB_COMP_PARAM );
+            hb_compExprCodeblockPush( pSelf, 0, HB_COMP_PARAM );
 #endif
          break;
       }
@@ -1591,7 +1594,13 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                /* simple macro variable expansion: &variable
                 * 'szMacro' is a variable name
                 */
+#if ! defined( HB_MACRO_SUPPORT )
+               int iEarlyEvalPass = HB_COMP_PARAM->functions.pLast->iEarlyEvalPass;
                HB_GEN_FUNC1( PushVar, pSelf->value.asMacro.szMacro );
+               HB_COMP_PARAM->functions.pLast->iEarlyEvalPass = iEarlyEvalPass;
+#else
+               HB_GEN_FUNC1( PushVar, pSelf->value.asMacro.szMacro );
+#endif
             }
             else
             {
@@ -1604,11 +1613,12 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                 * local, static or field.
                 */
 #if ! defined( HB_MACRO_SUPPORT )
-               hb_compIsValidMacroText( HB_COMP_PARAM,
-                                        pSelf->value.asMacro.szMacro,
-                                        strlen( pSelf->value.asMacro.szMacro ) );
-#endif
+               hb_compPushMacroText( HB_COMP_PARAM,
+                                     pSelf->value.asMacro.szMacro,
+                                     strlen( pSelf->value.asMacro.szMacro ), HB_TRUE );
+#else
                HB_GEN_FUNC2( PushString, pSelf->value.asMacro.szMacro, strlen( pSelf->value.asMacro.szMacro ) + 1 );
+#endif
             }
          }
 
@@ -1676,7 +1686,13 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                /* simple macro variable expansion: &variable
                 * 'szMacro' is a variable name
                 */
+#if ! defined( HB_MACRO_SUPPORT )
+               int iEarlyEvalPass = HB_COMP_PARAM->functions.pLast->iEarlyEvalPass;
                HB_GEN_FUNC1( PushVar, pSelf->value.asMacro.szMacro );
+               HB_COMP_PARAM->functions.pLast->iEarlyEvalPass = iEarlyEvalPass;
+#else
+               HB_GEN_FUNC1( PushVar, pSelf->value.asMacro.szMacro );
+#endif
             }
             else
             {
@@ -1689,11 +1705,12 @@ static HB_EXPR_FUNC( hb_compExprUseMacro )
                 * local, static or field.
                 */
 #if ! defined( HB_MACRO_SUPPORT )
-               hb_compIsValidMacroText( HB_COMP_PARAM,
-                                        pSelf->value.asMacro.szMacro,
-                                        strlen( pSelf->value.asMacro.szMacro ) );
-#endif
+               hb_compPushMacroText( HB_COMP_PARAM,
+                                     pSelf->value.asMacro.szMacro,
+                                     strlen( pSelf->value.asMacro.szMacro ), HB_TRUE );
+#else
                HB_GEN_FUNC2( PushString, pSelf->value.asMacro.szMacro, strlen( pSelf->value.asMacro.szMacro ) + 1 );
+#endif
             }
          }
          /* compile & run - macro compiler will generate pcode to pop a value
@@ -4472,7 +4489,7 @@ static HB_EXPR_FUNC( hb_compExprUsePreDec )
 #if defined( HB_MACRO_SUPPORT )
 static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 #else
-static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, HB_BOOL bLateEval, HB_COMP_DECL )
+static HB_BOOL hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, int iEarlyEvalPass, HB_COMP_DECL )
 #endif
 {
    HB_EXPR_PTR pExpr, pNext;
@@ -4486,7 +4503,7 @@ static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, HB_BOOL bLateEval, HB_C
    HB_PCODE_DATA->fVParams =
                   ( pSelf->value.asCodeblock.flags & HB_BLOCK_VPARAMS ) != 0;
 #else
-   hb_compCodeBlockStart( HB_COMP_PARAM, bLateEval );
+   hb_compCodeBlockStart( HB_COMP_PARAM, iEarlyEvalPass );
    HB_COMP_PARAM->functions.pLast->fVParams =
                   ( pSelf->value.asCodeblock.flags & HB_BLOCK_VPARAMS ) != 0;
 
@@ -4548,7 +4565,7 @@ static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, HB_BOOL bLateEval, HB_C
       else
          HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
 #else
-      if( pNext && bLateEval )
+      if( pNext && ( iEarlyEvalPass == 0 || HB_SUPPORT_MACRODECL ) )
          HB_EXPR_USE( pExpr, HB_EA_PUSH_POP );
       else
          HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
@@ -4559,10 +4576,16 @@ static void hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, HB_BOOL bLateEval, HB_C
 #if defined( HB_MACRO_SUPPORT )
    hb_macroCodeBlockEnd( HB_COMP_PARAM );
 #else
-   if( bLateEval )
+   if( HB_COMP_PARAM->functions.pLast->iEarlyEvalPass == 0 )
+   {
       hb_compCodeBlockEnd( HB_COMP_PARAM );
+      return HB_TRUE;
+   }
    else
+   {
       hb_compCodeBlockRewind( HB_COMP_PARAM );
+      return HB_FALSE;
+   }
 #endif
 }
 
@@ -4603,11 +4626,18 @@ static void hb_compExprCodeblockEarly( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       /* everything else is macro compiled at runtime
        * {|| &variable+1} => &( '{|| &variable+1}' )
        */
-      hb_compExprCodeblockPush( pSelf, HB_FALSE, HB_COMP_PARAM );
-      pExpr = hb_compExprNewMacro( hb_compExprNewString( pSelf->value.asCodeblock.string, pSelf->nLength, HB_FALSE, HB_COMP_PARAM ), 0, NULL, HB_COMP_PARAM );
-      HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
-      HB_COMP_EXPR_FREE( pExpr );
-      hb_compCodeBlockStop( HB_COMP_PARAM );
+      if( !hb_compExprCodeblockPush( pSelf, 1, HB_COMP_PARAM ) )
+      {
+         HB_BOOL fMacroText = ( HB_COMP_PARAM->supported & HB_COMPFLAG_MACROTEXT ) != 0;
+         HB_COMP_PARAM->supported |= HB_COMPFLAG_MACROTEXT;
+         HB_COMP_PARAM->functions.pLast->iEarlyEvalPass = 2;
+         pExpr = hb_compExprNewMacro( hb_compExprNewString( pSelf->value.asCodeblock.string, pSelf->nLength, HB_FALSE, HB_COMP_PARAM ), 0, NULL, HB_COMP_PARAM );
+         HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
+         HB_COMP_EXPR_FREE( pExpr );
+         hb_compCodeBlockStop( HB_COMP_PARAM );
+         if( !fMacroText )
+            HB_COMP_PARAM->supported &= ~HB_COMPFLAG_MACROTEXT;
+      }
    }
 }
 #endif      /*HB_MACRO_SUPPORT*/

@@ -199,6 +199,25 @@ declarations. This code illustrates it:
 This behavior is not replicated in Harbour even if -kc switch is used
 and Harbour optimize expressions in all declarations.
 
+Harbour supports macro expansion for expressions with declared symbols.
+This functionality can be enabled by -kd compiler switch:
+   -kd => accept macros with declared symbols
+It only allows to write code like:
+   cbVar := {|| &cLocal + cPrivate }
+or:
+   cbVar := {|| &cLocalPref.func&cPriv1( cPriv2 ) }
+or:
+   ? &cLocalPref.func&cPriv1( cPriv2, &cStatic )
+etc.
+If possible then for macrocodeblocks Harbour compiler tries to
+generate early eval code in which macros are expanded when codeblock
+is created. Otherwise macros are expanded each time codeblock is
+evaluated.
+This feature can be useful also in porting some other xbase compatible
+code to Harbour because some compilers just like xHarbour accepted
+in some limited way officially unsupported syntax with macros using
+declared symbols.
+
 Harbour has additional optimization phase which operates on generated PCODE.
 It can also reduce expressions, joins jumps, removes death or meaningless
 code which can appear after all other optimizations and were not optimized

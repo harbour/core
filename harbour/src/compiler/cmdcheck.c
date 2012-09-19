@@ -411,6 +411,17 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                            HB_COMP_PARAM->supported &= ~HB_COMPFLAG_MACROTEXT;
                         break;
 
+                     case 'd':
+                     case 'D':
+                        if( s[i] == '-' )
+                        {
+                           i++;
+                           HB_COMP_PARAM->supported &= ~HB_COMPFLAG_MACRODECL;
+                        }
+                        else
+                           HB_COMP_PARAM->supported |= HB_COMPFLAG_MACRODECL;
+                        break;
+
                      case 'r':
                      case 'R':
                         if( s[i] == '-' )

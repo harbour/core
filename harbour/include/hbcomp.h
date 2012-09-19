@@ -289,13 +289,13 @@ extern void        hb_compErrorVParams( HB_COMP_DECL, const char * szFuncOrBlock
 extern HB_EXPR_PTR hb_compErrorStatic( HB_COMP_DECL, const char *, HB_EXPR_PTR );
 extern void        hb_compErrorCodeblock( HB_COMP_DECL, const char * szBlock );
 
-extern HB_BOOL     hb_compIsValidMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen );
+extern void        hb_compPushMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen, HB_BOOL fMacro );
 
 /* Codeblocks */
-extern void hb_compCodeBlockStart( HB_COMP_DECL, HB_BOOL bLateEval ); /* starts a codeblock creation */
-extern void hb_compCodeBlockEnd( HB_COMP_DECL );                      /* end of codeblock creation */
-extern void hb_compCodeBlockStop( HB_COMP_DECL );                     /* end of fake codeblock */
-extern void hb_compCodeBlockRewind( HB_COMP_DECL );                   /* restart of fake codeblock */
+extern void hb_compCodeBlockStart( HB_COMP_DECL, int iEarlyEvalPass );  /* starts a codeblock creation */
+extern void hb_compCodeBlockEnd( HB_COMP_DECL );                        /* end of codeblock creation */
+extern void hb_compCodeBlockStop( HB_COMP_DECL );                       /* end of fake codeblock */
+extern void hb_compCodeBlockRewind( HB_COMP_DECL );                     /* restart of fake codeblock */
 
 #endif    /* HB_MACRO_SUPPORT */
 
@@ -383,7 +383,8 @@ extern const HB_BYTE hb_comp_pcode_len[];
 #define HB_COMPFLAG_OPTJUMP      0x0100            /* -kj turn off jump optimalization */
 #define HB_COMPFLAG_HB_INLINE    0x0200            /* -ki hb_inLine(...) { ... } support */
 #define HB_COMPFLAG_MACROTEXT    0x0400            /* -kM turn off macrotext substitution */
-#define HB_COMPFLAG_USERCP       0x0800            /* -kU strings in user encoding */
+#define HB_COMPFLAG_USERCP       0x0800            /* -ku strings in user encoding */
+#define HB_COMPFLAG_MACRODECL    0x1000            /* -kd accept macros with declared symbols */
 
 #define HB_COMP_ISSUPPORTED(flag)   ( HB_COMP_PARAM->supported & (flag) )
 
@@ -393,6 +394,7 @@ extern const HB_BYTE hb_comp_pcode_len[];
 #define HB_SUPPORT_EXTOPT           ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_EXTOPT) )
 #define HB_SUPPORT_MACROTEXT        ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_MACROTEXT) )
 #define HB_SUPPORT_USERCP           ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_USERCP) )
+#define HB_SUPPORT_MACRODECL        ( HB_COMP_ISSUPPORTED(HB_COMPFLAG_MACRODECL) )
 
 #if defined( HB_MACRO_SUPPORT )
 #  define HB_MACRO_GENFLAGS   HB_COMPFLAG_RT_MACRO

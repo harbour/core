@@ -511,13 +511,13 @@ typedef struct __FUNC
    HB_BYTE *    pCode;                    /* pointer to a memory block where pcode is stored */
    HB_SIZE      nPCodeSize;               /* total memory size for pcode */
    HB_SIZE      nPCodePos;                /* actual pcode offset */
-   int          iStaticsBase;             /* base for this function statics */
-   int          iFuncSuffix;              /* function suffix for multiple static functions with the same name */
    HB_SIZE *    pNOOPs;                   /* pointer to the NOOP array */
    HB_SIZE *    pJumps;                   /* pointer to the Jumps array */
    HB_SIZE      nNOOPs;                   /* NOOPs Counter */
    HB_SIZE      nJumps;                   /* Jumps Counter */
-   HB_BOOL      bLateEval;                /* HB_TRUE if accessing of declared (compile time) variables is allowed */
+   int          iStaticsBase;             /* base for this function statics */
+   int          iFuncSuffix;              /* function suffix for multiple static functions with the same name */
+   int          iEarlyEvalPass;           /* !=0 if early evaluaded block is compiled - accessing of declared (compile time) variables is limited */
    HB_BOOL      fVParams;                 /* HB_TRUE if variable number of parameters is used */
    HB_BOOL      bError;                   /* error during function compilation */
    HB_BOOL      bBlock;                   /* HB_TRUE if simple codeblock body is compiled */

@@ -627,6 +627,69 @@ hb_arrayToParams() or similar function.
 
 
 
+###    MACROS WITH DECLARED SYMBOLS    ###
+==========================================
+Harbour supports macro expansion for expressions with declared symbols.
+This functionality can be enabled by -kd compiler switch:
+   -kd => accept macros with declared symbols
+It allows to write code like:
+   cbVar := {|| &cLocal + cPrivate }
+or:
+   cbVar := {|| &cLocalPref.func&cPriv1( cPriv2 ) }
+or:
+   ? &cLocalPref.func&cPriv1( cPriv2, &cStatic )
+etc.
+If it's possible then for macrocodeblocks Harbour compiler tries to
+generate early eval code in which macros are expanded when codeblock
+is created. Otherwise macros are expanded each time codeblock is
+evaluated.
+xHarbour has also similar extension but limited to only to macro
+variables and it works only if other macros are not used in the
+same expression. When more complicated examples are create xHarbour
+compiler generates broken code which generate RTE or GPF during
+execution. It also does not support codeblocks which contain mixed
+macros and refuse to compile such code.
+
+This example illustrates macros with declared symbols.
+
+      #ifndef __XHARBOUR__
+         #pragma -kd+
+      #endif
+      proc main()
+         memvar nPrivate
+         memvar cPriv1, cPriv2
+         local cbVar1, cbVar2
+         local cLocal := "10", cLocalPref := "hb_"
+         static cStatic := "'123xyz'"
+         private nPrivate := 10000
+         private cPriv1 := "test1", cPriv2 := "abc"
+      #ifndef __XHARBOUR__
+         cbVar1 := {|| &cLocal + nPrivate + val( &cStatic ) }
+         cbVar2 := {|| &cLocalPref.func&cPriv1( cPriv2, &cStatic ) }
+         ? eval( cbVar1 )
+         ? eval( cbVar2 )
+      #endif
+         ? &cLocal + nPrivate + val( &cStatic )
+         cLocal := "upp"
+         ? &cLocal.er( &cStatic )
+         ? hb_funcTest1( cPriv2, &cStatic )
+         ? &cLocalPref.func&cPriv1( cPriv2, &cStatic )
+         ? &cLocalPref.func&cPriv1( cPriv2, &cStatic )
+      return
+
+      func hb_funcTest1( s1, s2 )
+      return s1 + ":" + s2
+
+Above code can be compiled by xHarbour but it will not work exploiting
+some problems in this compiler and generated code.
+
+This feature can be useful also in porting some other xbase compatible
+code to Harbour because some compilers just like xHarbour accepted
+in some limited way officially unsupported syntax with macros using
+declared symbols.
+
+
+
 ###    MACRO MESSAGES    ###
 ============================
 Both compilers Harbour and xHarbour supports macros as messages.

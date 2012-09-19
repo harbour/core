@@ -733,7 +733,7 @@ PVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piPos, int
                 */
                hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_ILLEGAL_INIT, "(b)", szVarName );
             }
-            else if( fBlock )
+            else if( fBlock && HB_COMP_PARAM->functions.pLast->iEarlyEvalPass < 2 )
             {
                /* We want to access a local variable defined in a function
                 * that owns this codeblock. We cannot access this variable in
@@ -892,10 +892,12 @@ int hb_compVariableScope( HB_COMP_DECL, const char * szVarName )
    return iScope;
 }
 
-HB_BOOL hb_compIsValidMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen )
+void hb_compPushMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen, HB_BOOL fMacro )
 {
+   int iEarlyEvalPass = HB_COMP_PARAM->functions.pLast->iEarlyEvalPass;
    HB_BOOL fFound = HB_FALSE;
    HB_SIZE n = 0;
+   int iParts = 0;
 
    while( n < nLen )
    {
@@ -919,7 +921,7 @@ HB_BOOL hb_compIsValidMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen
             if( ch >= 'a' && ch <= 'z' )
                szSymName[ iSize++ ] = ch - ( 'a' - 'A' );
             else if( ch == '_' || ( ch >= 'A' && ch <= 'Z' ) ||
-                                  ( ch >= '0' && ch <= '9' ) )
+                     ( iSize > 0 && ch >= '0' && ch <= '9' ) )
                szSymName[ iSize++ ] = ch;
             else
                break;
@@ -928,7 +930,10 @@ HB_BOOL hb_compIsValidMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen
 
          if( iSize )
          {
+            const char * pszVarName;
+
             szSymName[ iSize ] = '\0';
+            pszVarName = hb_compIdentifierNew( HB_COMP_PARAM, szSymName, HB_IDENT_COPY );
 
             /* NOTE: All variables are assumed memvars in macro compiler -
              * there is no need to check for a valid name but to be Clipper
@@ -937,20 +942,59 @@ HB_BOOL hb_compIsValidMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen
              * Only MEMVAR or undeclared (memvar will be assumed)
              * variables can be used in macro text.
              */
-            fFound = HB_TRUE;
-            iScope = hb_compVariableScope( HB_COMP_PARAM, szSymName );
-            if( iScope != HB_VS_UNDECLARED && !( iScope & HB_VS_LOCAL_MEMVAR ) )
+            iScope = hb_compVariableScope( HB_COMP_PARAM, pszVarName );
+            if( iScope == HB_VS_UNDECLARED || ( iScope & HB_VS_LOCAL_MEMVAR ) )
             {
-               hb_compErrorMacro( HB_COMP_PARAM, szText );
-               break;
+               fFound = HB_TRUE;
+               if( fMacro && iScope == HB_VS_UNDECLARED )
+                  hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_AMBIGUOUS_VAR, pszVarName, NULL );
+            }
+            else
+            {
+               if( HB_SUPPORT_MACRODECL )
+               {
+                  HB_SIZE nPrefix = n - iSize - 1;
+                  if( nPrefix > 0 )
+                  {
+                     char * pszPrefix = ( char * ) hb_xgrab( nPrefix + 1 );
+                     memcpy( pszPrefix, szText, nPrefix );
+                     pszPrefix[ nPrefix ] = '\0';
+                     hb_compGenPushString( pszPrefix, nPrefix + 1, HB_COMP_PARAM );
+                     hb_xfree( pszPrefix );
+                     if( iParts++ > 0 )
+                        hb_compGenPCode1( HB_P_PLUS, HB_COMP_PARAM );
+                  }
+                  hb_compGenPushVar( pszVarName, HB_COMP_PARAM );
+                  if( iParts++ > 0 )
+                     hb_compGenPCode1( HB_P_PLUS, HB_COMP_PARAM );
+                  if( n < nLen && szText[ n ] == '.' )
+                     ++n;
+                  szText += n;
+                  nLen -= n;
+                  n = 0;
+               }
+               else
+               {
+                  hb_compErrorMacro( HB_COMP_PARAM, szText );
+                  break;
+               }
             }
          }
          else if( ! HB_SUPPORT_HARBOUR )
             fFound = HB_TRUE;    /* always macro substitution in Clipper */
       }
    }
+   if( nLen > 0 )
+   {
+      hb_compGenPushString( szText, nLen + 1, HB_COMP_PARAM );
+      if( iParts > 0 )
+         hb_compGenPCode1( HB_P_PLUS, HB_COMP_PARAM );
+   }
 
-   return fFound;
+   if( fFound )
+      hb_compGenPCode1( HB_P_MACROTEXT, HB_COMP_PARAM );
+
+   HB_COMP_PARAM->functions.pLast->iEarlyEvalPass = iEarlyEvalPass;
 }
 
 
@@ -1844,7 +1888,7 @@ static PFUNCTION hb_compFunctionNew( HB_COMP_DECL, const char * szName, HB_SYMBO
    pFunc->szName          = szName;
    pFunc->cScope          = cScope;
    pFunc->iStaticsBase    = HB_COMP_PARAM->iStaticCnt;
-   pFunc->bLateEval       = HB_TRUE;
+   pFunc->iEarlyEvalPass  = 0;
    pFunc->fVParams        = HB_FALSE;
    pFunc->bError          = HB_FALSE;
 
@@ -2498,7 +2542,7 @@ static void hb_compGenVariablePCode( HB_COMP_DECL, HB_BYTE bPCode, const char * 
     * Clipper always assumes a memvar variable if undeclared variable
     * is popped (a value is asssigned to a variable).
     */
-   if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_HARBOUR ) )
+   if( HB_SUPPORT_HARBOUR )
       bGenCode = HB_COMP_PARAM->fForceMemvars;    /* harbour compatibility */
    else
       bGenCode = ( HB_COMP_PARAM->fForceMemvars || bPCode == HB_P_POPVARIABLE );
@@ -2507,7 +2551,8 @@ static void hb_compGenVariablePCode( HB_COMP_DECL, HB_BYTE bPCode, const char * 
    {
       /* -v switch was used -> assume it is a memvar variable
        */
-      hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_MEMVAR_ASSUMED, szVarName, NULL );
+      if( HB_COMP_PARAM->functions.pLast->iEarlyEvalPass == 0 || HB_SUPPORT_MACRODECL )
+         hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_MEMVAR_ASSUMED, szVarName, NULL );
 
       if( bPCode == HB_P_POPVARIABLE )
          bPCode = HB_P_POPMEMVAR;
@@ -2516,7 +2561,7 @@ static void hb_compGenVariablePCode( HB_COMP_DECL, HB_BYTE bPCode, const char * 
       else
          bPCode = HB_P_PUSHMEMVARREF;
    }
-   else
+   else if( HB_COMP_PARAM->functions.pLast->iEarlyEvalPass == 0 || HB_SUPPORT_MACRODECL )
       hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_AMBIGUOUS_VAR, szVarName, NULL );
 
    hb_compGenVarPCode( bPCode, szVarName, HB_COMP_PARAM );
@@ -2582,18 +2627,24 @@ void hb_compGenMessageData( const char * szMsg, HB_BOOL bIsObject, HB_COMP_DECL 
    hb_compGenMessage( hb_compIdentifierNew( HB_COMP_PARAM, szResult, HB_IDENT_COPY ), bIsObject, HB_COMP_PARAM );
 }
 
-static void hb_compCheckEarlyMacroEval( HB_COMP_DECL, const char *szVarName )
+static void hb_compCheckEarlyMacroEval( HB_COMP_DECL, const char *szVarName, int iScope )
 {
-   int iScope = hb_compVariableScope( HB_COMP_PARAM, szVarName );
-
    if( iScope == HB_VS_CBLOCAL_VAR ||
-       /* iScope == HB_VS_LOCAL_VAR || */
+       /* iScope == HB_VS_LOCAL_VAR || */ /* codeblock parameters */
        iScope == HB_VS_STATIC_VAR ||
        iScope == HB_VS_GLOBAL_STATIC ||
        iScope == HB_VS_LOCAL_FIELD ||
        iScope == HB_VS_GLOBAL_FIELD )
    {
-      hb_compErrorCodeblock( HB_COMP_PARAM, szVarName );
+      /* Disable early evaluation if codeblock contains macros and
+       * declared variables, i.e. {|x| cLocal + &cPriv }
+       * and support for macros with declared symbols is enabled.
+       */
+      if( HB_COMP_PARAM->functions.pLast->iEarlyEvalPass == 1 &&
+          HB_SUPPORT_MACRODECL )
+         HB_COMP_PARAM->functions.pLast->iEarlyEvalPass = 0;
+      else
+         hb_compErrorCodeblock( HB_COMP_PARAM, szVarName );
    }
 }
 
@@ -2612,16 +2663,12 @@ void hb_compGenPopVar( const char * szVarName, HB_COMP_DECL ) /* generates the p
    int iVar, iScope;
    PVAR pVar;
 
-   if( ! HB_COMP_PARAM->functions.pLast->bLateEval )
-   {
-      /* pseudo-generation of pcode for a codeblock with macro symbol */
-      hb_compCheckEarlyMacroEval( HB_COMP_PARAM, szVarName );
-      return;
-   }
-
    pVar = hb_compVariableFind( HB_COMP_PARAM, szVarName, &iVar, &iScope );
    if( pVar )
    {
+      if( HB_COMP_PARAM->functions.pLast->iEarlyEvalPass == 1 )
+         hb_compCheckEarlyMacroEval( HB_COMP_PARAM, szVarName, iScope );
+
       switch( iScope )
       {
          case HB_VS_LOCAL_VAR:
@@ -2668,12 +2715,12 @@ void hb_compGenPopVar( const char * szVarName, HB_COMP_DECL ) /* generates the p
             break;
 
          default:
-            /* undeclared variable */
-            hb_compGenVariablePCode( HB_COMP_PARAM, HB_P_POPVARIABLE, szVarName );
+            pVar = NULL;
             break;
       }
    }
-   else
+
+   if( !pVar )
    {  /* undeclared variable */
       hb_compGenVariablePCode( HB_COMP_PARAM, HB_P_POPVARIABLE, szVarName );
    }
@@ -2696,16 +2743,12 @@ void hb_compGenPushVar( const char * szVarName, HB_COMP_DECL )
    int iVar, iScope;
    PVAR pVar;
 
-   if( ! HB_COMP_PARAM->functions.pLast->bLateEval )
-   {
-      /* pseudo-generation of pcode for a codeblock with macro symbol */
-      hb_compCheckEarlyMacroEval( HB_COMP_PARAM, szVarName );
-      return;
-   }
-
    pVar = hb_compVariableFind( HB_COMP_PARAM, szVarName, &iVar, &iScope );
    if( pVar )
    {
+      if( HB_COMP_PARAM->functions.pLast->iEarlyEvalPass == 1 )
+         hb_compCheckEarlyMacroEval( HB_COMP_PARAM, szVarName, iScope );
+
       switch( iScope )
       {
          case HB_VS_LOCAL_VAR:
@@ -2742,12 +2785,12 @@ void hb_compGenPushVar( const char * szVarName, HB_COMP_DECL )
             break;
 
          default:
-            /* undeclared variable */
-            hb_compGenVariablePCode( HB_COMP_PARAM, HB_P_PUSHVARIABLE, szVarName );
+            pVar = NULL;
             break;
       }
    }
-   else
+
+   if( !pVar )
    {  /* undeclared variable */
       hb_compGenVariablePCode( HB_COMP_PARAM, HB_P_PUSHVARIABLE, szVarName );
    }
@@ -2758,16 +2801,12 @@ void hb_compGenPushVarRef( const char * szVarName, HB_COMP_DECL ) /* generates t
    int iVar, iScope;
    PVAR pVar;
 
-   if( ! HB_COMP_PARAM->functions.pLast->bLateEval )
-   {
-      /* pseudo-generation of pcode for a codeblock with macro symbol */
-      hb_compCheckEarlyMacroEval( HB_COMP_PARAM, szVarName );
-      return;
-   }
-
    pVar = hb_compVariableFind( HB_COMP_PARAM, szVarName, &iVar, &iScope );
    if( pVar )
    {
+      if( HB_COMP_PARAM->functions.pLast->iEarlyEvalPass == 1 )
+         hb_compCheckEarlyMacroEval( HB_COMP_PARAM, szVarName, iScope );
+
       switch( iScope )
       {
          case HB_VS_LOCAL_VAR:
@@ -2796,13 +2835,11 @@ void hb_compGenPushVarRef( const char * szVarName, HB_COMP_DECL ) /* generates t
             break;
 
          default:
-            /* undeclared variable */
-            /* field cannot be passed by the reference - assume the memvar */
-            hb_compGenVariablePCode( HB_COMP_PARAM, HB_P_PUSHMEMVARREF, szVarName );
-            break;
+            pVar = NULL;
       }
    }
-   else
+
+   if( !pVar )
    {  /* undeclared variable */
       /* field cannot be passed by the reference - assume the memvar */
       hb_compGenVariablePCode( HB_COMP_PARAM, HB_P_PUSHMEMVARREF, szVarName );
@@ -3470,13 +3507,13 @@ static void hb_compLineNumberDefEnd( HB_COMP_DECL )
 /*
  * Start a new fake-function that will hold pcodes for a codeblock
 */
-void hb_compCodeBlockStart( HB_COMP_DECL, HB_BOOL bLateEval )
+void hb_compCodeBlockStart( HB_COMP_DECL, int iEarlyEvalPass )
 {
    PFUNCTION pBlock;
 
-   pBlock               = hb_compFunctionNew( HB_COMP_PARAM, NULL, HB_FS_STATIC | HB_FS_LOCAL );
-   pBlock->pOwner       = HB_COMP_PARAM->functions.pLast;
-   pBlock->bLateEval    = bLateEval;
+   pBlock                  = hb_compFunctionNew( HB_COMP_PARAM, NULL, HB_FS_STATIC | HB_FS_LOCAL );
+   pBlock->pOwner          = HB_COMP_PARAM->functions.pLast;
+   pBlock->iEarlyEvalPass  = iEarlyEvalPass;
 
    HB_COMP_PARAM->functions.pLast = pBlock;
 }
@@ -3706,6 +3743,18 @@ void hb_compCodeBlockRewind( HB_COMP_DECL )
       hb_xfree( pCodeblock->pJumps );
       pCodeblock->pJumps = NULL;
       pCodeblock->nJumps = 0;
+   }
+   while( pCodeblock->pDetached )
+   {
+      PVAR pVar = pCodeblock->pDetached;
+      pCodeblock->pDetached = pVar->pNext;
+      hb_xfree( pVar );
+   }
+   while( pCodeblock->pLocals )
+   {
+      PVAR pVar = pCodeblock->pLocals;
+      pCodeblock->pLocals = pVar->pNext;
+      hb_xfree( pVar );
    }
 }
 
