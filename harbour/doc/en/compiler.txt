@@ -119,9 +119,11 @@
  *
  *          /ku          strings in user encoding
  *
- *          /kj          turn off jump optimization in pcode
+ *          /kd          accept macros with declared symbols
  *
  *          /km          turn off macrotext substitution
+ *
+ *          /kj          turn off jump optimization in pcode
  *
  *          /k?          this info
  *
