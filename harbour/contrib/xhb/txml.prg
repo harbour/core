@@ -340,7 +340,7 @@ CLASS TXmlDocument
    METHOD New( xElem, nStyle )        CONSTRUCTOR
    METHOD Read( xData, nStyle )       INLINE HBXML_DATAREAD( Self, xData, nStyle )
    METHOD ToString( nStyle )          INLINE ::oRoot:ToString( nStyle )
-   METHOD Write( fHandle, nStyle )    INLINE ::oRoot:Write( fHandle, nStyle )
+   METHOD Write( fHandle, nStyle )
 
    METHOD FindFirst( cName, cAttrib, cValue, cData )
    METHOD FindFirstRegex( cName, cAttrib, cValue, cData )
@@ -349,6 +349,7 @@ CLASS TXmlDocument
    METHOD GetContext()
 HIDDEN:
    DATA oIterator
+   DATA cHeader
 
 ENDCLASS
 
@@ -369,13 +370,42 @@ METHOD New( xElem, nStyle ) CLASS TXmlDocument
       CASE "N"
       CASE "C"
          ::oRoot := TXmlNode():New( HBXML_TYPE_DOCUMENT )
-         ::Read( xElem, nStyle )
+         IF hb_fileExists( xElem )
+            ::Read( hb_MemoRead( xElem ), nStyle )
+         ELSE
+            ::Read( xElem, nStyle )
+         ENDIF
+         IF !Empty( ::oRoot:oChild ) .AND. ::oRoot:oChild:cName == "xml"
+            ::cHeader := "<=xml " + ::oRoot:oChild:cData + "?>"
+         ENDIF
          EXIT
 
       ENDSWITCH
    ENDIF
 
 RETURN Self
+
+METHOD Write( fHandle, nStyle ) CLASS TXmlDocument
+
+   LOCAL nResult := HBXML_STATUS_ERROR
+
+   IF ValType( fHandle ) == "C"  // It's a filename!
+      fHandle := FCreate( fHandle )
+      IF fHandle != -1
+         IF Empty( ::oRoot:oChild ) .OR. !( ::oRoot:oChild:cName == "xml" )
+            IF Empty( ::cHeader )
+               FWrite( fHandle, '<?xml version="1.0"?>' + hb_eol() )
+            ELSE
+               FWrite( fHandle, ::cHeader + hb_eol() )
+            ENDIF
+         ENDIF
+         nResult := ::oRoot:Write( fHandle, nStyle )
+         FClose( fHandle )
+      ENDIF
+      RETURN nResult
+   ENDIF
+
+RETURN ::oRoot:Write( fHandle, nStyle )
 
 METHOD FindFirst( cName, cAttrib, cValue, cData ) CLASS TXmlDocument
    ::oIterator := TXmlIteratorScan():New( ::oRoot )
