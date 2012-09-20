@@ -99,17 +99,20 @@ CLASS XbpToolBar  INHERIT  XbpWindow
    DATA     sl_buttonMenuClick
    DATA     sl_buttonDropDown
 
+   DATA     qByte, qMime, qDrag, qPix, qdropAction, qPos
+   DATA     orientation                           INIT Qt_Horizontal
+
    METHOD   numItems()                            INLINE Len( ::aItems )
 
    METHOD   init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   destroy()
-   METHOD   execSlot( cSlot, p )
+   METHOD   execSlot( cSlot, p, p1 )
 
-   METHOD   addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB )
-   METHOD   delItem()
-   METHOD   getItem()
+   METHOD   addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, xKey )
+   METHOD   delItem( nItem_cKey )
+   METHOD   getItem( nItem_cKey )
    METHOD   clear()
    METHOD   customize()
    METHOD   loadImageSet()
@@ -125,6 +128,10 @@ CLASS XbpToolBar  INHERIT  XbpWindow
 
    METHOD   sendToolbarMessage()
    METHOD   setStyle()
+
+   METHOD   setItemChecked( nItem_cKey, lChecked )
+   METHOD   setItemEnabled( nItem_cKey, lEnabled )
+   METHOD   itemToggle( nItem_cKey )
 
    ENDCLASS
 /*----------------------------------------------------------------------*/
@@ -147,28 +154,31 @@ METHOD XbpToolbar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ELSEIF upper( ::oParent:className ) == "XBPDRAWINGAREA"
       oPar := ::oParent:oParent
    ELSE
-      RETURN Self
+      oPar := ::oParent
    ENDIF
    ::oParent := oPar
 
-   ::oWidget := QToolBar( ::oParent:oWidget )
-   ::oWidget:setObjectName( "XBPTOOLBARMAIN" )
-   ::oWidget:setWindowTitle( "Main" )
-   ::oParent:oWidget:addToolBar( ::oWidget )
+   ::oWidget := QToolBar( iif( Empty( ::oParent ), NIL, ::oParent:oWidget ) )
+   IF ! Empty( ::oParent )
+      ::oWidget:setObjectName( iif( Empty( ::oParent ), "XBPTOOLBAR", "XBPTOOLBARMAIN" ) )
+      ::oWidget:setWindowTitle( "Main" )
+      ::oParent:oWidget:addToolBar( ::oWidget )
+   ENDIF
 
    IF ::imageWidth > 0 .and. ::imageHeight > 0
       ::oWidget:setIconSize( QSize( ::imageWidth, ::imageHeight ) )
    ENDIF
 
-   #if 0
+   ::oWidget:setFocusPolicy( Qt_NoFocus )
+
    /* Assign attributes */
    IF ::style == XBPTOOLBAR_STYLE_FLAT
       //::style := TBSTYLE_FLAT
-   ELSEIF ::style == XBPTOOLBAR_STYLE_VERTICAL
-      //::style := CCS_VERT
-   ELSE
-      ::style := 0
    ENDIF
+   IF ::orientation == Qt_Vertical
+      ::oWidget:setOrientation( Qt_Vertical )
+   ENDIF
+   //
    IF ::wrappable
       //::style += TBSTYLE_WRAPABLE
    ENDIF
@@ -178,17 +188,17 @@ METHOD XbpToolbar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF ::borderStyle == XBPFRAME_RECT
       //::style += WS_BORDER
    ENDIF
-
+   //
    IF ::appearance == XBP_APPEARANCE_3D
    ENDIF
-   #endif
 
    IF ::visible
       ::show()
    ENDIF
-   ::oParent:AddChild( SELF )
-   ::postCreate()
-
+   IF ! Empty( ::oParent )
+      ::oParent:AddChild( SELF )
+      ::postCreate()
+   ENDIF
    RETURN Self
 
 /*----------------------------------------------------------------------*/
@@ -229,18 +239,32 @@ METHOD XbpToolbar:sendToolbarMessage()
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB )
+METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, xKey )
    LOCAL oBtn
-   LOCAL isAction := HB_ISOBJECT( cCaption ) .AND. __ObjGetClsName( cCaption ) == "QACTION"
+   LOCAL isAction     := HB_ISOBJECT( cCaption ) .AND. __ObjGetClsName( cCaption ) == "QACTION"
+   LOCAL isToolButton := HB_ISARRAY( cCaption )
+   LOCAL isObject     := HB_ISOBJECT( cCaption )
 
    HB_SYMBOL_UNUSED( xDisabledImage )
    HB_SYMBOL_UNUSED( xHotImage )
    HB_SYMBOL_UNUSED( cDLL )
-   HB_SYMBOL_UNUSED( nMapRGB )
+   HB_SYMBOL_UNUSED( isToolButton )
 
    DEFAULT nStyle TO XBPTOOLBAR_BUTTON_DEFAULT
 
-   oBtn := XbpToolbarButton():new( iif( isAction, cCaption:text(), cCaption ), nStyle, cKey )
+   IF isToolButton
+      //addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDragEnabled )
+      ASize( cCaption, 6 )
+
+      DEFAULT cCaption[ 1 ] TO Xbp_getNextIdAsString( "XbpToolButton" )
+      DEFAULT cCaption[ 2 ] TO ""
+      DEFAULT cCaption[ 5 ] TO .F.
+      DEFAULT cCaption[ 6 ] TO .F.
+
+      oBtn := XbpToolbarButton():new( cCaption[ 1 ], nStyle, iif( HB_ISBLOCK( cCaption[ 4 ] ), cCaption[ 4 ], xKey ) )
+   ELSE
+      oBtn := XbpToolbarButton():new( iif( isAction, cCaption:text(), cCaption ), nStyle, xKey )
+   ENDIF
 
    oBtn:index   := ::numItems + 1
    oBtn:command := 100 + oBtn:index
@@ -251,6 +275,24 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
    ELSE
       IF isAction
          oBtn:oAction := cCaption
+
+      ELSEIF isToolButton
+         oBtn:oAction := QAction( ::oWidget )
+
+         oBtn:oAction:setObjectName( cCaption[ 1 ] )
+         oBtn:oAction:setTooltip( cCaption[ 2 ] )
+         oBtn:oAction:setIcon( cCaption[ 3 ] )
+         oBtn:oAction:setCheckable( cCaption[ 5 ] )
+         IF cCaption[ 6 ]
+            oBtn:oAction:connect( QEvent_MouseButtonPress  , {|p| ::execSlot( "QEvent_MousePress"  , p, cCaption[ 1 ] ) } )
+            oBtn:oAction:connect( QEvent_MouseButtonRelease, {|p| ::execSlot( "QEvent_MouseRelease", p, cCaption[ 1 ] ) } )
+            oBtn:oAction:connect( QEvent_MouseMove         , {|p| ::execSlot( "QEvent_MouseMove"   , p, cCaption[ 1 ] ) } )
+            oBtn:oAction:connect( QEvent_Enter             , {|p| ::execSlot( "QEvent_MouseEnter"  , p, cCaption[ 1 ] ) } )
+         ENDIF
+
+      ELSEIF isObject
+         oBtn:oAction := QWidgetAction( ::oWidget )
+         oBtn:oAction:setDefaultWidget( cCaption )
 
       ELSE
          /* Create an action */
@@ -279,29 +321,156 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpToolbar:execSlot( cSlot, p )
+METHOD XbpToolbar:execSlot( cSlot, p, p1 )
+   LOCAL qEvent, qRC
 
-   IF cSlot == "triggered(bool)"
+   qEvent := p
+
+   SWITCH cSlot
+
+   CASE "triggered(bool)"
       ::buttonClick( p )
+      EXIT
+
+   CASE "QEvent_MouseLeave"
+      EXIT
+
+   CASE "QEvent_MouseMove"
+      qRC := QRect( ::qPos:x() - 5, ::qPos:y() - 5, 10, 10 ):normalized()
+      IF qRC:contains( qEvent:pos() )
+         ::qByte := QByteArray( ::hItems[ p1 ]:objectName() )
+
+         ::qMime := QMimeData()
+         ::qMime:setData( "application/x-toolbaricon", ::qByte )
+         ::qMime:setHtml( ::hItems[ p1 ]:objectName() )
+
+         ::qPix  := QIcon( ::hItems[ p1 ]:icon ):pixmap( 16,16 )
+
+         ::qDrag := QDrag( SetAppWindow():oWidget )
+         ::qDrag:setMimeData( ::qMime )
+         ::qDrag:setPixmap( ::qPix )
+         ::qDrag:setHotSpot( QPoint( 15,15 ) )
+         ::qDrag:setDragCursor( ::qPix, Qt_CopyAction + Qt_IgnoreAction )
+         ::qDropAction := ::qDrag:exec( Qt_CopyAction + Qt_IgnoreAction )  /* Why this is not terminated GPF's */
+
+         ::qDrag := NIL
+         ::qPos  := NIL
+         ::hItems[ p1 ]:setChecked( .f. )
+         ::hItems[ p1 ]:setWindowState( 0 )
+      ENDIF
+      EXIT
+
+   CASE "QEvent_MouseRelease"
+      ::qDrag := NIL
+      EXIT
+
+   CASE "QEvent_MousePress"
+      ::qPos := qEvent:pos()
+      EXIT
+
+   ENDSWITCH
+
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpToolbar:setItemChecked( nItem_cKey, lChecked )
+   LOCAL oBtn, lOldState
+
+   IF ! Empty( oBtn := ::getItem( nItem_cKey ) )
+      IF oBtn:oAction:isCheckable()
+         lOldState := oBtn:oAction:isChecked()
+         IF HB_ISLOGICAL( lChecked )
+            oBtn:oAction:setChecked( lChecked )
+         ENDIF
+      ENDIF
+   ENDIF
+
+   RETURN lOldState
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpToolbar:setItemEnabled( nItem_cKey, lEnabled )
+   LOCAL oBtn, lOldState
+
+   IF ! Empty( oBtn := ::getItem( nItem_cKey ) )
+      lOldState := oBtn:oAction:isEnabled()
+      IF HB_ISLOGICAL( lEnabled )
+         oBtn:oAction:setEnabled( lEnabled )
+      ENDIF
+   ENDIF
+
+   RETURN lOldState
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpToolbar:itemToggle( nItem_cKey )
+   LOCAL oBtn, lOldState
+
+   IF ! Empty( oBtn := ::getItem( nItem_cKey ) )
+      IF oBtn:oAction:isCheckable()
+         lOldState := oBtn:oAction:isChecked()
+         oBtn:oAction:setChecked( ! lOldState )
+      ENDIF
+   ENDIF
+
+   RETURN lOldState
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpToolbar:delItem( nItem_cKey )
+   LOCAL a_
+
+   IF HB_ISNUMERIC( nItem_cKey )
+      IF Len( ::aItems ) <= nItem_cKey
+         ::oWidget:removeAction( ::aItems[ nItem_cKey, 2 ]:oAction )
+         hb_ADel( ::aItems, nItem_cKey, .T. )
+      ENDIF
+
+   ELSEIF HB_ISCHAR( nItem_cKey )
+      FOR EACH a_ IN ::aItems
+         IF HB_ISCHAR( a_[ 2 ]:key )
+            IF a_[ 2 ]:key == nItem_cKey
+               ::oWidget:removeAction( a_[ 2 ]:oAction )
+               hb_ADel( ::aItems, a_:__enumIndex(), .T. )
+               EXIT
+            ENDIF
+         ENDIF
+      NEXT
+
+   ENDIF
+
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD XbpToolbar:getItem( nItem_cKey )
+   LOCAL a_
+
+   IF HB_ISNUMERIC( nItem_cKey )
+      IF Len( ::aItems ) <= nItem_cKey
+         RETURN ::aItems[ nItem_cKey, 2 ]
+      ENDIF
+
+   ELSEIF HB_ISCHAR( nItem_cKey )
+      FOR EACH a_ IN ::aItems
+         IF HB_ISCHAR( a_[ 2 ]:key )
+            IF a_[ 2 ]:key == nItem_cKey
+               RETURN a_[ 2 ]
+            ENDIF
+         ENDIF
+      NEXT
+
    ENDIF
 
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpToolbar:delItem()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD XbpToolbar:getItem()
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
 METHOD XbpToolbar:clear()
+
+   ::oWidget:clear()
+   ::aItems := {}
 
    RETURN Self
 
@@ -438,22 +607,23 @@ CLASS XbpToolbarButton
    DATA     tooltipText                           INIT ""
    DATA     command                               INIT 0
    DATA     oAction
+   DATA     cargo
 
-   METHOD   init( cCaption, nStyle, cKey )
+   METHOD   init( cCaption, nStyle, xKey )
 
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD XbpToolbarButton:init( cCaption, nStyle, cKey )
+METHOD XbpToolbarButton:init( cCaption, nStyle, xKey )
 
    DEFAULT cCaption       TO ::caption
    DEFAULT nStyle         TO ::style
-   DEFAULT cKey           TO ::key
+   DEFAULT xKey           TO ::key
 
    ::caption        := cCaption
    ::style          := nStyle
-   ::key            := cKey
+   ::key            := xKey
 
    RETURN Self
 

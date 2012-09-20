@@ -339,6 +339,8 @@ CLASS HbIde
    DATA   lSortedFuncList                         INIT   .t.
    DATA   lQuitting                               INIT   .f.
 
+   DATA   oBMM /* Testing */
+
    METHOD new( aParams )
    METHOD create( aParams )
    METHOD destroy()
@@ -670,7 +672,10 @@ METHOD HbIde:create( aParams )
    ::oHM := IdeHome():new():create( Self )
 
    /* Browser Manager */
-   ::oBM := IdeBrowseManager():new():create( Self )
+   ::oBMM := HbpDBU():new()
+   ::oBMM:qtObject := ::oParts:oStackDbu
+   ::oBMM:create()
+   ::oBM := ::oBMM:oIdeMgr
 
    /* Reports Manager */
    ::oRM := HbqReportsManager():new():create( ::oReportsManagerDock:oWidget )

@@ -185,7 +185,6 @@ METHOD IdeParts:execStackIndexChanged( nIndex )
    CASE IDE_PART_DBU
       ::oIde:oSBar:hide()
       ::oDK:hideAllDocks()
-      ::oBM:showInIdeDBU()
       EXIT
 
    ENDSWITCH

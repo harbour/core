@@ -418,7 +418,7 @@ METHOD IdeDocks:buildDialog()
 
    ::oDlg:oWidget:setStyleSheet( GetStyleSheet( "QMainWindow", ::nAnimantionMode ) )
 
-   ::oDlg:close := {|| hbide_setClose( hbide_getYesNo( "hbIDE is about to be closed!", "Are you sure?" ) ), ;
+   ::oDlg:close := {|| hbide_setClose( hbide_getYesNo( "HbIDE is about to be closed!", "Are you sure?" ) ), ;
                                                                       PostAppEvent( xbeP_Close, , , ::oDlg ) }
    ::oDlg:setDockOptions( QMainWindow_AllowTabbedDocks + QMainWindow_AllowNestedDocks + QMainWindow_AnimatedDocks )
    ::oDlg:setTabShape( ::oINI:nDocksTabShape )
@@ -625,6 +625,7 @@ METHOD IdeDocks:execEvent( nEvent, p, p1 )
          ENDIF
       ENDIF
       EXIT
+#if 0  /* Deprecated */
    CASE __dockQScintilla_visibilityChanged__
       IF p; ::oBM:show() ; ENDIF
       IF !empty( p1 )
@@ -633,6 +634,7 @@ METHOD IdeDocks:execEvent( nEvent, p, p1 )
          ENDIF
       ENDIF
       EXIT
+#endif
    CASE __dockSourceThumbnail_visibilityChanged__
       IF p; ::oEM:showThumbnail(); ENDIF
       IF !empty( p1 )
@@ -1665,7 +1667,6 @@ METHOD IdeDocks:animateComponents( nMode )
    ::oTM:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
 
    ::oEM:setStyleSheet( nMode )
-   ::oBM:setStyleSheet( nMode )
 
    /* Statusbar */
    ::oSBar:oWidget:setStyleSheet( GetStyleSheet( "QStatusBar", nMode ) )

@@ -135,7 +135,7 @@ METHOD XbpDialog:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::resizeMode  := 0
    ::mouseMode   := 0
 
-   ::drawingArea := XbpDrawingArea():new( self, , {0,0}, ::aSize, , .t. )
+   ::drawingArea := XbpDrawingArea():new( self, , {0,0}, ::aSize, , .F. )
 
    RETURN Self
 

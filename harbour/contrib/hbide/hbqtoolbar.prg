@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2010 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2010-2012 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -104,8 +104,9 @@ CLASS HbqToolbar
    METHOD addWidget( cName, qWidget )
    METHOD addAction( cName, qAction, bBlock )
    METHOD addSeparator()
-   METHOD contains( cName )                       INLINE hb_hHasKey( ::hItems, cName )
-   METHOD getItem( cName )                        INLINE iif( hb_hHasKey( ::hItems, cName ), ::hItems[ cName ], NIL )
+   METHOD contains( cName )                       INLINE hb_hHasKey( ::hActions, cName )
+   METHOD getItem( cName )                        INLINE iif( hb_hHasKey( ::hActions, cName ), ::hActions[ cName ], NIL )
+   METHOD itemToggle( cName )
 
    ERROR HANDLER onError( ... )
    ENDCLASS
@@ -276,7 +277,7 @@ METHOD HbqToolbar:addSeparator()
 
 METHOD HbqToolbar:addAction( cName, qAction, bBlock )
 
-   DEFAULT cName TO hbide_getNextIDasString( "IdeToolButtonAction" )
+   DEFAULT cName TO hbide_getNextIdAsString( "IdeToolButtonAction" )
 
    ::oWidget:addAction( qAction )
 
@@ -298,7 +299,7 @@ METHOD HbqToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDra
    DEFAULT lCheckable   TO .f.
    DEFAULT lDragEnabled TO .f.
 
-   oButton := QToolButton() // ::oWidget )
+   oButton := QToolButton()
    oButton:setObjectName( cName )
    oButton:setTooltip( cDesc )
    oButton:setIcon( QIcon( cImage ) )
@@ -327,11 +328,11 @@ METHOD HbqToolbar:addToolButton( cName, cDesc, cImage, bAction, lCheckable, lDra
 METHOD HbqToolbar:setItemChecked( cName, lState )
    LOCAL lOldState
 
-   IF hb_hHasKey( ::hItems, cName )
-      IF ::hItems[ cName ]:isCheckable()
-         lOldState := ::hItems[ cName ]:isChecked()
+   IF hb_hHasKey( ::hActions, cName )
+      IF ::hActions[ cName ]:isCheckable()
+         lOldState := ::hActions[ cName ]:isChecked()
          IF HB_ISLOGICAL( lState )
-            ::hItems[ cName ]:setChecked( lState )
+            ::hActions[ cName ]:setChecked( lState )
          ENDIF
       ENDIF
    ENDIF
@@ -343,13 +344,28 @@ METHOD HbqToolbar:setItemChecked( cName, lState )
 METHOD HbqToolbar:setItemEnabled( cName, lEnabled )
    LOCAL lOldEnabled
 
-   IF hb_hHasKey( ::hItems, cName )
-      lOldEnabled := ::hItems[ cName ]:isEnabled()
+   IF hb_hHasKey( ::hActions, cName )
+      lOldEnabled := ::hActions[ cName ]:isEnabled()
       IF HB_ISLOGICAL( lEnabled )
-         ::hItems[ cName ]:setEnabled( lEnabled )
+         ::hActions[ cName ]:setEnabled( lEnabled )
       ENDIF
    ENDIF
 
    RETURN lOldEnabled
 
 /*----------------------------------------------------------------------*/
+
+METHOD HbqToolbar:itemToggle( cName )
+   LOCAL lOldState
+
+   IF hb_hHasKey( ::hActions, cName )
+      IF ::hActions[ cName ]:isCheckable()
+         lOldState := ::hActions[ cName ]:isChecked()
+         ::hActions[ cName ]:setChecked( ! lOldState )
+      ENDIF
+   ENDIF
+
+   RETURN lOldState
+
+/*----------------------------------------------------------------------*/
+

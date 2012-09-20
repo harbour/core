@@ -321,6 +321,9 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
    CASE cType == "N"
       pBitmap := Wvg_PrepareBitmapFromResourceID( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
 
+   CASE cType == "P"
+      pBitmap := xImage
+
    ENDCASE
 
    IF ! empty( pBitmap )
@@ -331,7 +334,9 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       ELSE
          nBtn := WAPI_ImageList_Add( ::hImageList, pBitmap )
       ENDIF
-      WVG_DeleteObject( pBitmap )
+      IF cType <> "P"
+         WVG_DeleteObject( pBitmap )
+      ENDIF
 
       WVG_AddToolbarButton( ::pWnd, nBtn, oBtn:caption, oBtn:command, 1, ::showToolTips )
 
