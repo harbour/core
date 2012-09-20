@@ -150,9 +150,7 @@
 
 CLASS HbpDBU INHERIT XbpWindow
 
-   DATA   oIdeMgr
-
-   CLASSDATA lRegistered                         INIT .F.
+   CLASSDATA lRegistered                          INIT .F.
 
    METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -165,90 +163,6 @@ CLASS HbpDBU INHERIT XbpWindow
    DATA   sl_brush
    METHOD background( oBrush )                    SETGET
 
-   ENDCLASS
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbpDBU:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   IF ! ::lRegistered
-      ::lRegistered := .T.
-      QResource():registerResource_1( hbqtres_xbp() )
-   ENDIF
-
-   ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbpDBU:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::oIdeMgr := HbpBrowseManager():new():create( ::qtObject )
-   ::oWidget := ::oIdeMgr:qDbu
-
-   IF ::visible
-      ::show()
-   ENDIF
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbpDBU:execSlot( nSlot, p )
-
-   HB_SYMBOL_UNUSED( nSlot )
-   HB_SYMBOL_UNUSED( p )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbpDBU:handleEvent( nEvent, mp1, mp2 )
-
-   HB_SYMBOL_UNUSED( nEvent )
-   HB_SYMBOL_UNUSED( mp1    )
-   HB_SYMBOL_UNUSED( mp2    )
-
-   RETURN HBXBP_EVENT_UNHANDLED
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbpDBU:background( oBrush )
-   LOCAL oOldBrush := ::sl_brush
-
-   IF HB_ISOBJECT( oBrush )
-      ::sl_brush := oBrush
-   ENDIF
-   IF HB_ISOBJECT( ::sl_brush )
-      ::oIdeMgr:background := ::sl_brush
-   ENDIF
-
-   RETURN oOldBrush
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbpDBU:destroy()
-
-   ::oWidget:setParent( QWidget() )
-
-   RETURN NIL
-
-/*----------------------------------------------------------------------*/
-
-METHOD HbpDBU:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   ::initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-CLASS HbpBrowseManager
-
-   DATA   qDbu
    DATA   qStack
    DATA   qLayout
    DATA   qVSplitter
@@ -287,11 +201,7 @@ CLASS HbpBrowseManager
 
    DATA   nPrevMode                               INIT  0
 
-   METHOD new()
-   METHOD create( qtObject )
-
    METHOD open( aDbfs )
-   METHOD destroy()                               VIRTUAL
    METHOD buildToolbar()
    METHOD execEvent( nEvent, p, p1 )
    METHOD addArray( aData, aAttr )
@@ -305,7 +215,6 @@ CLASS HbpBrowseManager
    METHOD buildPanelsButton()
    METHOD buildIndexButton()
    METHOD addPanelsMenu( cPanel )
-   METHOD setStyleSheet( nMode )
    METHOD showStruct()
    METHOD buildUiStruct()
    METHOD populateUiStruct()
@@ -324,51 +233,55 @@ CLASS HbpBrowseManager
    METHOD fetchFldsList( cAlias )
    METHOD getBrowserByAlias( cAlias )
 
-   DATA   sl_brush
-   METHOD background                              SETGET
-
    ENDCLASS
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:new()
+METHOD HbpDBU:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   SET DELETED ( ::lDeletedOn )
+   IF ! ::lRegistered
+      ::lRegistered := .T.
+      QResource():registerResource_1( hbqtres_xbp() )
+   ENDIF
+
+   ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:create( qtObject )
+METHOD HbpDBU:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    LOCAL oLayout
 
-   IF HB_ISOBJECT( qtObject )
-      ::qDbu := QWidget( qtObject )
-      oLayout := qtObject:layout()
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   IF HB_ISOBJECT( ::qtObject )
+      ::oWidget := QWidget( ::qtObject )
+      oLayout := ::qtObject:layout()
       SWITCH __objGetClsName( oLayout )
       CASE "QVBOXLAYOUT"
       CASE "QHBOXLAYOUT"
-         oLayout:addWidget( ::qDbu )
+         oLayout:addWidget( ::oWidget )
          EXIT
       CASE "QGRIDLAYOUT"
-         oLayout:addWidget( ::qDbu, 0, 0, 1, 1 )
+         oLayout:addWidget( ::oWidget, 0, 0, 1, 1 )
          EXIT
       ENDSWITCH
    ELSE
-      ::qDbu := QWidget()
+      ::oWidget := QWidget()
    ENDIF
 
-   ::qDbu:setAcceptDrops( .t. )
-   ::qDbu:connect( QEvent_DragEnter, {|p| ::execEvent( __dbu_dragEnterEvent__, p ) } )
-   ::qDbu:connect( QEvent_Drop     , {|p| ::execEvent( __dbu_dropEvent__     , p ) } )
-   ::qDbu:hide()
+   ::oWidget:setAcceptDrops( .t. )
+   ::oWidget:connect( QEvent_DragEnter, {|p| ::execEvent( __dbu_dragEnterEvent__, p ) } )
+   ::oWidget:connect( QEvent_Drop     , {|p| ::execEvent( __dbu_dropEvent__     , p ) } )
+   ::oWidget:hide()
 
    /* Layout applied to dbu widget */
    ::qLayout := QGridLayout()
    ::qLayout:setContentsMargins( 0,0,0,0 )
    ::qLayout:setSpacing( 0 )
 
-   ::qDbu:setLayout( ::qLayout )
+   ::oWidget:setLayout( ::qLayout )
 
    /* Toolbar */
    ::buildToolbar()
@@ -404,11 +317,47 @@ METHOD HbpBrowseManager:create( qtObject )
    ::qTimer:connect( "timeout()", {|| ::dispStatusInfo() } )
    ::qTimer:start()
 
+   IF ::visible
+      ::show()
+   ENDIF
+
+   IF HB_ISOBJECT( oParent )
+      ::oParent:AddChild( SELF )
+      ::postCreate()
+   ENDIF
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:background( oBrush )
+METHOD HbpDBU:execSlot( nSlot, p )
+   HB_SYMBOL_UNUSED( nSlot )
+   HB_SYMBOL_UNUSED( p )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbpDBU:handleEvent( nEvent, mp1, mp2 )
+   HB_SYMBOL_UNUSED( nEvent )
+   HB_SYMBOL_UNUSED( mp1    )
+   HB_SYMBOL_UNUSED( mp2    )
+   RETURN HBXBP_EVENT_UNHANDLED
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbpDBU:destroy()
+   ::oWidget:setParent( QWidget() )
+   RETURN NIL
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbpDBU:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   ::initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   RETURN Self
+
+/*----------------------------------------------------------------------*/
+
+METHOD HbpDBU:background( oBrush )
    LOCAL oOldBrush := ::sl_brush
    LOCAL oPanel
 
@@ -423,7 +372,7 @@ METHOD HbpBrowseManager:background( oBrush )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:getPanelNames()
+METHOD HbpDBU:getPanelNames()
    LOCAL oPanel, aNames := {}, aAttr
 
    FOR EACH oPanel IN ::aPanels
@@ -439,7 +388,7 @@ METHOD HbpBrowseManager:getPanelNames()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:getPanelsInfo()
+METHOD HbpDBU:getPanelsInfo()
    LOCAL oBrw, oPanel, aSub
    LOCAL aInfo := {}, aAttr
 
@@ -480,21 +429,7 @@ METHOD HbpBrowseManager:getPanelsInfo()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:setStyleSheet( nMode )
-
-   ::qToolbar:setStyleSheet( GetStyleSheet( "QToolBar", nMode ) )
-   ::qToolbarL:setStyleSheet( GetStyleSheet( "QToolBarLR5", nMode ) )
-   ::qStatus:setStyleSheet( GetStyleSheet( "QStatusBar", nMode ) )
-#if 0
-   ::qPanelsMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
-   ::qIndexMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
-   ::qTablesMenu:setStyleSheet( GetStyleSheet( "QMenuPop", nMode ) )
-#endif
-   RETURN Self
-
-/*------------------------------------------------------------------------*/
-
-METHOD HbpBrowseManager:fetchFldsList( cAlias )
+METHOD HbpDBU:fetchFldsList( cAlias )
    LOCAL aFlds := {}, cA, oBrw, a_, oPanel, aBrw
 
    cA := upper( cAlias )
@@ -523,7 +458,7 @@ METHOD HbpBrowseManager:fetchFldsList( cAlias )
 
 /*------------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:getBrowserByAlias( cAlias )
+METHOD HbpDBU:getBrowserByAlias( cAlias )
    LOCAL oPanel, aBrw
 
    FOR EACH oPanel IN ::aPanels
@@ -537,7 +472,7 @@ METHOD HbpBrowseManager:getBrowserByAlias( cAlias )
 
 /*------------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:dispStatusInfo()
+METHOD HbpDBU:dispStatusInfo()
 
    ::aStatusPnls[ PNL_PANELS ]:setText( "Panels: " + hb_ntos( Len( ::aPanels ) ) + ":" + ::oCurPanel:cPanel )
    ::aStatusPnls[ PNL_TABLES ]:setText( "Tables: " + hb_ntos( Len( ::oCurPanel:aBrowsers ) ) )
@@ -549,7 +484,7 @@ METHOD HbpBrowseManager:dispStatusInfo()
 
 /*------------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:buildStatusPanels()
+METHOD HbpDBU:buildStatusPanels()
    LOCAL qLabel
 
    qLabel := QLabel(); qLabel:setMinimumWidth( 40 )
@@ -572,7 +507,7 @@ METHOD HbpBrowseManager:buildStatusPanels()
 
 /*------------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:addPanels()
+METHOD HbpDBU:addPanels()
    //LOCAL cPanel, aPnl
 
    ::addPanel( "Main", .T. )           /* The default one */
@@ -592,7 +527,7 @@ METHOD HbpBrowseManager:addPanels()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:addPanel( cPanel )
+METHOD HbpDBU:addPanel( cPanel )
    LOCAL qPanel
 
    qPanel := HbpBrowsePanel():new( cPanel, self )
@@ -604,7 +539,7 @@ METHOD HbpBrowseManager:addPanel( cPanel )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:addPanelsMenu( cPanel )
+METHOD HbpDBU:addPanelsMenu( cPanel )
    LOCAL qAct
 IF HB_ISOBJECT( ::qPanelsMenu )
    qAct := ::qPanelsMenu:addAction( cPanel )
@@ -616,12 +551,12 @@ ENDIF
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:isPanel( cPanel )
+METHOD HbpDBU:isPanel( cPanel )
    RETURN ascan( ::aPanels, {|o| o:qWidget:objectName() == cPanel } ) > 0
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:setPanel( cPanel )
+METHOD HbpDBU:setPanel( cPanel )
    LOCAL n
 
    IF ( n := ascan( ::aPanels, {|o| o:qWidget:objectName() == cPanel } ) ) > 0
@@ -635,7 +570,7 @@ METHOD HbpBrowseManager:setPanel( cPanel )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:execEvent( nEvent, p, p1 )
+METHOD HbpDBU:execEvent( nEvent, p, p1 )
    LOCAL cTable, cPath, cPanel, qMime, qList, i, cExt, qUrl, aStruct, cTmp
 
    HB_SYMBOL_UNUSED( p )
@@ -841,7 +776,7 @@ METHOD HbpBrowseManager:execEvent( nEvent, p, p1 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:showTablesTree()
+METHOD HbpDBU:showTablesTree()
    LOCAL oUI, qTree, qParent, oPanel, qItm, aBrowser, q, aFld, qFont, nMax, nSz, oBrw
    LOCAL a_:={}
 
@@ -892,7 +827,7 @@ METHOD HbpBrowseManager:showTablesTree()
 
 /*------------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:showStruct()
+METHOD HbpDBU:showStruct()
 
    IF empty( ::qStruct )
       ::buildUiStruct()
@@ -909,7 +844,7 @@ METHOD HbpBrowseManager:showStruct()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:populateFieldData()
+METHOD HbpDBU:populateFieldData()
    LOCAL nRow, qItm
 
    IF ( nRow := ::qStruct:tableFields:currentRow() ) >= 0
@@ -927,7 +862,7 @@ METHOD HbpBrowseManager:populateFieldData()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:populateUiStruct()
+METHOD HbpDBU:populateUiStruct()
    LOCAL qItm, fld_, n
    LOCAL oTbl := ::qStruct:tableFields
    LOCAL aStruct := ::oCurBrw:dbStruct()
@@ -973,11 +908,11 @@ METHOD HbpBrowseManager:populateUiStruct()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:buildUiStruct()
+METHOD HbpDBU:buildUiStruct()
    LOCAL oTbl, n, qItm
    LOCAL hdr_:= { { "", 50 }, { "Field Name",200 }, { "Type", 100 }, { "Len", 50 }, { "Dec", 70 } }
 
-   ::qStruct := hbqtui_xbpDbStruct( ::qDbu )
+   ::qStruct := hbqtui_xbpDbStruct( ::oWidget )
 
    ::qStruct:setWindowFlags( Qt_Dialog )
    ::qStruct:setMaximumHeight( ::qStruct:height() )
@@ -1015,7 +950,7 @@ METHOD HbpBrowseManager:buildUiStruct()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:open( aDbfs )
+METHOD HbpDBU:open( aDbfs )
    LOCAL aInfo, cTable
    LOCAL nX := 0, nY := 0
 
@@ -1034,7 +969,7 @@ METHOD HbpBrowseManager:open( aDbfs )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:loadTables()
+METHOD HbpDBU:loadTables()
    //LOCAL cInfo, aInfo, oCurPanel
    LOCAL oCurPanel
 
@@ -1055,7 +990,7 @@ METHOD HbpBrowseManager:loadTables()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:addArray( aData, aAttr )
+METHOD HbpDBU:addArray( aData, aAttr )
 
    HB_SYMBOL_UNUSED( aData )
    HB_SYMBOL_UNUSED( aAttr )
@@ -1064,7 +999,7 @@ METHOD HbpBrowseManager:addArray( aData, aAttr )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:buildToolbar()
+METHOD HbpDBU:buildToolbar()
    LOCAL nW := 25
    LOCAL qTBar
 
@@ -1104,7 +1039,7 @@ METHOD HbpBrowseManager:buildToolbar()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:buildLeftToolbar()
+METHOD HbpDBU:buildLeftToolbar()
    LOCAL qTBar
 
    qTBar := XbpToolbar():new()
@@ -1146,7 +1081,7 @@ METHOD HbpBrowseManager:buildLeftToolbar()
 
 /*------------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:buildPanelsButton()
+METHOD HbpDBU:buildPanelsButton()
 
    ::qPanelsMenu := QMenu()
 
@@ -1164,7 +1099,7 @@ METHOD HbpBrowseManager:buildPanelsButton()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:buildConxnCombo()
+METHOD HbpDBU:buildConxnCombo()
 
    ::qConxnCombo := QComboBox()
    ::qConxnCombo:setToolTip( "Connection to open next table" )
@@ -1174,7 +1109,7 @@ METHOD HbpBrowseManager:buildConxnCombo()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:buildRddsCombo()
+METHOD HbpDBU:buildRddsCombo()
    LOCAL cRdd
    #if 0
    IF !empty( aRdds := hbide_execScriptFunction( "rdds" ) )
@@ -1194,7 +1129,7 @@ METHOD HbpBrowseManager:buildRddsCombo()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:buildTablesButton()
+METHOD HbpDBU:buildTablesButton()
 
    ::qTablesMenu := QMenu()
 
@@ -1212,7 +1147,7 @@ METHOD HbpBrowseManager:buildTablesButton()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:buildIndexButton()
+METHOD HbpDBU:buildIndexButton()
 
    ::qIndexMenu := QMenu()
 
@@ -1230,7 +1165,7 @@ METHOD HbpBrowseManager:buildIndexButton()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:loadConxnCombo( cDriver )
+METHOD HbpDBU:loadConxnCombo( cDriver )
    LOCAL cConxn, a_
 
    DEFAULT cDriver TO ::currentDriver()
@@ -1256,7 +1191,7 @@ STATIC FUNCTION hbide_getMenuBlock( oPanel, oBrw, cIndex )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbpBrowseManager:updateIndexMenu( oBrw )
+METHOD HbpDBU:updateIndexMenu( oBrw )
    LOCAL qAct, aIndex, cIndex
 
    FOR EACH qAct IN ::aIndexAct

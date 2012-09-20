@@ -672,10 +672,9 @@ METHOD HbIde:create( aParams )
    ::oHM := IdeHome():new():create( Self )
 
    /* Browser Manager */
-   ::oBMM := HbpDBU():new()
-   ::oBMM:qtObject := ::oParts:oStackDbu
-   ::oBMM:create()
-   ::oBM := ::oBMM:oIdeMgr
+   ::oBM := HbpDBU():new()
+   ::oBM:qtObject := ::oParts:oStackDbu
+   ::oBM:create( ::oDlg, , {0,0}, {640,400}, , .T. )
 
    /* Reports Manager */
    ::oRM := HbqReportsManager():new():create( ::oReportsManagerDock:oWidget )
