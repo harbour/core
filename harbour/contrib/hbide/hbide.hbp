@@ -25,6 +25,7 @@ hbformat.hbc
 
 idedbu/idedbu.hbp
 idedbu/idedbu.hbc
+-Lidedbu
 
 -env:HB_DYNLOAD_RDDADS=yes
 rddads.hbc

@@ -56,8 +56,3 @@ toolbar.prg
 treeview.prg
 window.prg
 
-xbp.qrc
-
-xbptables.ui
-xbpdbstruct.ui
-xbpfetchdate.ui
