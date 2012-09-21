@@ -2523,6 +2523,11 @@ METHOD HbQtSource:parseProto( cProto, fBody_ )
             oArg:cDoc    := "n" + oMtd:cDocNM
             oArg:cTypeHB := "N"
 
+         CASE oArg:cCast == "WId"
+            oArg:cBody := "( " + oArg:cCast + " ) hb_parnint( " + cHBIdx + " )"
+            oArg:cDoc    := "n" + oMtd:cDocNM
+            oArg:cTypeHB := "N"
+
          CASE oArg:cCast $ "qlonglong,qulonglong"
             IF ! Empty( oArg:cDefault ) .AND. !( oArg:cDefault == "0" )
                oArg:cBody := "( " + oArg:cCast + " ) hb_parnintdef( " + cHBIdx + ", " + oArg:cDefault + " )"
@@ -2775,6 +2780,10 @@ METHOD HbQtSource:buildCppCode( oMtd )
    CASE oRet:cCast == "void"
       oMtd:cCmd := oMtd:cCmn
       oMtd:cPrgRet := "NIL"
+
+   CASE oRet:cCast == "WId"
+      oMtd:cCmd := "hb_retnint( ( HB_PTRDIFF ) " + oMtd:cCmn + " )"
+      oMtd:cPrgRet := "n" + oMtd:cDocNMRet
 
    CASE oRet:cCast $ ::cInt
       oMtd:cCmd := "hb_retni( " + oMtd:cCmn + " )"
