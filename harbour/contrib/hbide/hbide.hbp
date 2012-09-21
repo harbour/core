@@ -23,6 +23,9 @@ hbxbp.hbc
 hbqt.hbc
 hbformat.hbc
 
+idedbu/idedbu.hbp
+idedbu/idedbu.hbc
+
 -env:HB_DYNLOAD_RDDADS=yes
 rddads.hbc
 

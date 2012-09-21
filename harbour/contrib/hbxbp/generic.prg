@@ -624,10 +624,3 @@ FUNCTION Xbp_getNextIdAsString( cString )
    RETURN cString + "_" + hb_ntos( ++hIDs[ cString ] )
 
 /*----------------------------------------------------------------------*/
-
-FUNCTION Xbp_Image( cName )
-
-   RETURN ":/xbp/resources" + "/" + cName + ".png"
-
-/*----------------------------------------------------------------------*/
-

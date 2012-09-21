@@ -1,0 +1,18 @@
+#
+# $Id$
+#
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+hbxbp.hbc
+
+dbu.prg
+dbu.qrc
+dbstruct.ui
+fetchdate.ui
+tables.ui
