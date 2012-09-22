@@ -62,7 +62,6 @@ console.prg
 uisrcmanager.prg
 projectwizard.prg
 
-hbqreportsmanager.prg
 hbqtoolbar.prg
 
 parseexpr.c

@@ -677,7 +677,9 @@ METHOD HbIde:create( aParams )
    ::oBM:create( ::oDlg, , {0,0}, {640,400}, , .T. )
 
    /* Reports Manager */
-   ::oRM := HbqReportsManager():new():create( ::oReportsManagerDock:oWidget )
+   ::oRM := HbpReports():new()
+   ::oRM:qtObject := ::oReportsManagerDock:oWidget
+   ::oRM:create( , , , , , .T. )
    ::oReportsManagerDock:oWidget:setWidget( ::oRM:oWidget )
 
    /* Code Formatter Manager */

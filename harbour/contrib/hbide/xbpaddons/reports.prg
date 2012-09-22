@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2010 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2010-2012 Pritpal Bedi <pritpal@vouchcac.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -64,10 +64,10 @@
 /*----------------------------------------------------------------------*/
 /*----------------------------------------------------------------------*/
 
-#include "hbide.ch"
 #include "common.ch"
 #include "hbclass.ch"
 #include "hbqtgui.ch"
+#include "hbtrace.ch"
 
 #define  UNIT  0.1
 
@@ -146,9 +146,9 @@ STATIC hIDs := {=>}
 
 /*----------------------------------------------------------------------*/
 
-CLASS HbqReportsManager
+CLASS HbpReports INHERIT XbpWindow
 
-   DATA   qParent
+   DATA   lRegistered                             INIT .F.
 
    DATA   oWidget
    DATA   qLayout
@@ -242,10 +242,16 @@ CLASS HbqReportsManager
    DATA   qShapesMenu
    DATA   aShapesAct                              INIT array( NUM_SHAPES )
 
-   METHOD new( qParent )
-   METHOD create( qParent )
+   METHOD init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )  VIRTUAL
    METHOD destroy()                               VIRTUAL
+   METHOD execSlot( nSlot, p )                    VIRTUAL
+   METHOD handleEvent( nEvent, mp1, mp2 )         VIRTUAL
+   METHOD setStyleSheet( ... )                    VIRTUAL
+
    METHOD execEvent( nEvent, p, p1, p2 )
+
    METHOD buildToolbar()
    METHOD buildToolbarAlign()
    METHOD buildToolbarLeft()
@@ -282,18 +288,39 @@ CLASS HbqReportsManager
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:new( qParent )
-   ::qParent := qParent
+METHOD HbpReports:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
+   IF ! ::lRegistered
+      ::lRegistered := .T.
+      QResource():registerResource_1( hbqtres_xbp() )
+   ENDIF
+
+   ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:create( qParent )
+METHOD HbpReports:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   LOCAL oLayout
 
-   DEFAULT qParent TO ::qParent
-   ::qParent := qParent
+   ::xbpWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   ::oWidget := QWidget( ::qParent )
+   IF HB_ISOBJECT( ::qtObject )
+      ::oWidget := QWidget( ::qtObject )
+      oLayout := ::qtObject:layout()
+      SWITCH __objGetClsName( oLayout )
+      CASE "QVBOXLAYOUT"
+      CASE "QHBOXLAYOUT"
+         oLayout:addWidget( ::oWidget )
+         EXIT
+      CASE "QGRIDLAYOUT"
+         oLayout:addWidget( ::oWidget, 0, 0, 1, 1 )
+         EXIT
+      ENDSWITCH
+   ELSE
+      ::oWidget := QWidget()
+   ENDIF
 
    /* Layout applied to RM widget */
    ::qLayout := QGridLayout()
@@ -333,7 +360,7 @@ METHOD HbqReportsManager:create( qParent )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:buildDesignReport()
+METHOD HbpReports:buildDesignReport()
 
    ::qLayoutD := QHBoxLayout()
    ::qLayoutD:setContentsMargins( 0,0,0,0 )
@@ -459,7 +486,7 @@ METHOD HbqReportsManager:buildDesignReport()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:execEvent( nEvent, p, p1, p2 )
+METHOD HbpReports:execEvent( nEvent, p, p1, p2 )
    LOCAL qMime, i, qList, cFile, nArea, aStruct, cAlias, cPath, qRC, qIcon, cType
 
    SWITCH nEvent
@@ -661,7 +688,7 @@ HB_TRACE( HB_TR_DEBUG, "QEvent_GraphicsSceneDrop", 1000, p1:dropAction() )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:objectSelected( hqrObject )
+METHOD HbpReports:objectSelected( hqrObject )
    LOCAL cName := hqrObject:cName
 
    IF hb_hHasKey( ::hObjTree, cName )
@@ -675,7 +702,7 @@ METHOD HbqReportsManager:objectSelected( hqrObject )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:presentBlankPage()
+METHOD HbpReports:presentBlankPage()
 
    aadd( ::aPages, { "Page_1" } )
 
@@ -692,7 +719,7 @@ METHOD HbqReportsManager:presentBlankPage()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:openReport()
+METHOD HbpReports:openReport()
    LOCAL qFileDlg, qList, cFile
 
    qFileDlg := QFileDialog( ::oWidget )
@@ -714,7 +741,7 @@ METHOD HbqReportsManager:openReport()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:saveReport( lSaveAs )
+METHOD HbpReports:saveReport( lSaveAs )
    LOCAL cFile, cBuffer, qFileDlg, qList, cExt
    LOCAL lSave := .t.
 
@@ -753,17 +780,17 @@ METHOD HbqReportsManager:saveReport( lSaveAs )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:prepareReport()
+METHOD HbpReports:prepareReport()
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:toString()
+METHOD HbpReports:toString()
    RETURN ::buildReportStream()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:buildReportStream()
+METHOD HbpReports:buildReportStream()
    LOCAL txt_:= {}, n, a_, s, oWidget, qPos, qTran
 
    aadd( txt_, "[GENERAL]" )
@@ -816,7 +843,7 @@ METHOD HbqReportsManager:buildReportStream()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:parseBuffer( cBuffer )
+METHOD HbpReports:parseBuffer( cBuffer )
    LOCAL aTxt, s, nPart, cKey, cVal
 
    aTxt := hb_ATokens( StrTran( cBuffer, Chr( 13 ) ), Chr( 10 ) )
@@ -857,7 +884,7 @@ METHOD HbqReportsManager:parseBuffer( cBuffer )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:loadReport( xData )
+METHOD HbpReports:loadReport( xData )
    LOCAL cBuffer, a_, d_, n, cName, cAlias, cField, oWidget
    LOCAL aGeo, aPt, aTran
    LOCAL qGeo, qPt, qTran
@@ -922,7 +949,7 @@ METHOD HbqReportsManager:loadReport( xData )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:addObject( cType, qPos, qGeo )
+METHOD HbpReports:addObject( cType, qPos, qGeo )
    LOCAL cName, qGrad, oHqrObject, aGeo, aPos
 
    aPos := iif( empty( qPos ), NIL, { qPos:x(), qPos:y() } )
@@ -964,7 +991,7 @@ METHOD HbqReportsManager:addObject( cType, qPos, qGeo )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:addField( cAlias, cField, qPos, qGeo )
+METHOD HbpReports:addField( cAlias, cField, qPos, qGeo )
    LOCAL cName, oHqrObject, aGeo, aPos
 
    aPos := iif( empty( qPos ), NIL, { qPos:x(), qPos:y() } )
@@ -985,7 +1012,7 @@ METHOD HbqReportsManager:addField( cAlias, cField, qPos, qGeo )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:addSource( cAlias, aStruct )
+METHOD HbpReports:addSource( cAlias, aStruct )
    LOCAL qItem, qItmC, b_
 
    qItem := QTreeWidgetItem()
@@ -1005,7 +1032,7 @@ METHOD HbqReportsManager:addSource( cAlias, aStruct )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:clear()
+METHOD HbpReports:clear()
    LOCAL oHrqObject, qObj
 
    FOR EACH oHrqObject IN ::hItems
@@ -1034,7 +1061,7 @@ METHOD HbqReportsManager:clear()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:updateObjectsTree( cType, cParent, cName, cSubType )
+METHOD HbpReports:updateObjectsTree( cType, cParent, cName, cSubType )
    LOCAL qParent, qItem
 
    DO CASE
@@ -1073,7 +1100,7 @@ METHOD HbqReportsManager:updateObjectsTree( cType, cParent, cName, cSubType )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:zoom( nMode )
+METHOD HbpReports:zoom( nMode )
 
    SWITCH nMode
    CASE HBQT_GRAPHICSVIEW_ZOOM_IN
@@ -1097,7 +1124,7 @@ METHOD HbqReportsManager:zoom( nMode )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:contextMenuScene( p1 )
+METHOD HbpReports:contextMenuScene( p1 )
    LOCAL qMenu, qAct, aAct := {}
 
    qMenu := QMenu( ::qView )
@@ -1117,7 +1144,7 @@ METHOD HbqReportsManager:contextMenuScene( p1 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:contextMenuItem( p1, p2 )
+METHOD HbpReports:contextMenuItem( p1, p2 )
    LOCAL qMenu, qAct, aAct := {}
 
    HB_SYMBOL_UNUSED( p2 )
@@ -1139,7 +1166,7 @@ METHOD HbqReportsManager:contextMenuItem( p1, p2 )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:buildTabBar()
+METHOD HbpReports:buildTabBar()
 
    ::qTabBar := QTabBar()
    ::qTabBar:setShape( QTabBar_TriangularNorth )
@@ -1154,7 +1181,7 @@ METHOD HbqReportsManager:buildTabBar()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:buildStacks()
+METHOD HbpReports:buildStacks()
 
    ::qStack := QStackedWidget()
 
@@ -1171,7 +1198,7 @@ METHOD HbqReportsManager:buildStacks()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:buildStatusBar()
+METHOD HbpReports:buildStatusBar()
    LOCAL qLabel
 
    ::qStatus := QStatusBar()
@@ -1198,7 +1225,7 @@ METHOD HbqReportsManager:buildStatusBar()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:getImageOfType( cType )
+METHOD HbpReports:getImageOfType( cType )
    LOCAL cImage
 
    DO CASE
@@ -1225,7 +1252,7 @@ METHOD HbqReportsManager:getImageOfType( cType )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:getNextID( cType )
+METHOD HbpReports:getNextID( cType )
 
    IF ! hb_hHasKey( hIDs, cType )
       hIDs[ cType ] := 0
@@ -1235,7 +1262,7 @@ METHOD HbqReportsManager:getNextID( cType )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:buildToolbar()
+METHOD HbpReports:buildToolbar()
    LOCAL qTBar
 
    qTBar := HbqToolbar():new()
@@ -1264,7 +1291,7 @@ METHOD HbqReportsManager:buildToolbar()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:buildToolbarAlign()
+METHOD HbpReports:buildToolbarAlign()
    LOCAL qTBar
 
    qTBar := HbqToolbar():new()
@@ -1310,7 +1337,7 @@ METHOD HbqReportsManager:buildToolbarAlign()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:buildToolbarLeft()
+METHOD HbpReports:buildToolbarLeft()
    LOCAL qTBar
 
    qTBar := HbqToolbar():new()
@@ -1331,7 +1358,7 @@ METHOD HbqReportsManager:buildToolbarLeft()
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:execMenuShapes()
+METHOD HbpReports:execMenuShapes()
    LOCAL qPos, qBtn
 
    IF empty( ::qShapesMenu )
@@ -1534,7 +1561,7 @@ STATIC FUNCTION fetchBarString( cCode, lCheck, nType )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:printPreview( qPrinter )
+METHOD HbpReports:printPreview( qPrinter )
    LOCAL qDlg //, qInfo //, qList, i, qStr
 
    qPrinter := QPrinter()
@@ -1564,13 +1591,13 @@ METHOD HbqReportsManager:printPreview( qPrinter )
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:paintRequested( qPrinter )
+METHOD HbpReports:paintRequested( qPrinter )
    ::printReport( qPrinter )
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
-METHOD HbqReportsManager:printReport( qPrinter )
+METHOD HbpReports:printReport( qPrinter )
    LOCAL qPainter, a_, qRectF, oHqrObject, qT
 
    qPainter := QPainter()
