@@ -25,7 +25,6 @@ hbformat.hbc
 
 xbpaddons/xbpaddons.hbp
 xbpaddons/xbpaddons.hbc
--Lxbpaddons
 
 -env:HB_DYNLOAD_RDDADS=yes
 rddads.hbc

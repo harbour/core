@@ -569,6 +569,7 @@ STATIC s_nCol := 0
 STATIC s_aHistory := {}
 STATIC s_lPreserveHistory := .T.
 STATIC s_lWasLoad := .F.
+STATIC s_lInteractive := .T.
 
 PROCEDURE _APPMAIN( ... )
    LOCAL aArgsProc
@@ -12328,6 +12329,8 @@ STATIC PROCEDURE __hbshell( cFile, ... )
       SWITCH cExt
       CASE ".hb"
 
+         s_lInteractive := .F.
+
          /* NOTE: Assumptions:
                   - one dynamic lib belongs to one .hbc file (true for dynamic builds in contrib)
                   - dynamic libs will reference and automatically load all their dependencies
@@ -12370,13 +12373,14 @@ STATIC PROCEDURE __hbshell( cFile, ... )
          ENDIF
 
       CASE ".hrb"
+         s_lInteractive := .F.
          __hbshell_ext_init( aExtension )
          hb_argShift( .T. )
          hb_hrbRun( cFile, ... )
          EXIT
       CASE ".dbf"
          __hbshell_ext_init( aExtension )
-         __hbshell_prompt( hb_AParams(), "USE " + cFile + " SHARED" )
+         __hbshell_prompt( hb_AParams(), { "USE " + cFile + " SHARED" } )
          EXIT
       ENDSWITCH
    ELSE
@@ -12757,7 +12761,7 @@ STATIC PROCEDURE __hbshell_plugins_unload( plugins )
 #include "setcurs.ch"
 
 /* TODO: rewrite the full-screen shell to be a simple stdout/stdin shell */
-STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
+STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
    LOCAL GetList
    LOCAL cLine
    LOCAL nMaxRow, nMaxCol
@@ -12765,6 +12769,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
    LOCAL bKeyUP, bKeyDown, bKeyIns, bKeyResize
    LOCAL lResize := .F.
    LOCAL plugins
+   LOCAL cCommand
 
    LOCAL cDomain := ""
    LOCAL cPrompt
@@ -12798,10 +12803,14 @@ STATIC PROCEDURE __hbshell_prompt( aParams, cCommand )
 
    __hbshell_Exec( "?? hb_Version()" )
 
-   IF HB_ISSTRING( cCommand )
-      AAdd( s_aHistory, PadR( cCommand, HB_LINE_LEN ) )
-      __hbshell_Info( cCommand )
-      __hbshell_Exec( cCommand )
+   IF HB_ISARRAY( aCommand )
+      FOR EACH cCommand IN aCommand
+         IF HB_ISSTRING( cCommand )
+            AAdd( s_aHistory, PadR( cCommand, HB_LINE_LEN ) )
+            __hbshell_Info( cCommand )
+            __hbshell_Exec( cCommand )
+         ENDIF
+      NEXT
    ELSE
       cCommand := ""
    ENDIF
@@ -13150,7 +13159,9 @@ FUNCTION hbshell_ProgName()
    RETURN s_cProgName_hbshell
 
 FUNCTION hbshell_gtInteractive()
-   hb_gtSelect( hb_gtCreate( __hbshell_gtDefault() ) )
+   IF !( "GT" + hb_gtVersion( 0 ) == __hbshell_gtDefault() )
+      hb_gtSelect( hb_gtCreate( __hbshell_gtDefault() ) )
+   ENDIF
    RETURN NIL
 
 STATIC FUNCTION __hbshell_gtDefault()

@@ -16,6 +16,6 @@ reports.prg
 
 xbp.qrc
 
-xbpdbstruct.ui
-xbpfetchdate.ui
-xbptables.ui
+dbstruct.ui
+fetchdate.ui
+tables.ui
