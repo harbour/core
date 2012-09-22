@@ -756,6 +756,7 @@ METHOD HbIde:create( aParams )
 
    IF ! empty( ::aDbfOnCmdLine )      /* Will take priority and allot more width to browser than editor : logical */
       ::oBM:open( ::aDbfOnCmdLine )
+      ::oParts:setStack( IDE_PART_DBU )
    ENDIF
 
    ::qTabWidget:setCurrentIndex( -1 )
@@ -1011,13 +1012,13 @@ METHOD HbIde:execAction( cKey )
       ::oHelpDock:show()
       EXIT
    CASE "EDITOR"
-      ::oParts:setStack( 0 )
+      ::oParts:setStack( IDE_PART_EDITOR )
       EXIT
    CASE "DBU"
-      ::oParts:setStack( 1 )
+            ::oParts:setStack( IDE_PART_DBU )
       EXIT
    CASE "REPORTS"
-      ::oParts:setStack( 2 )
+      ::oParts:setStack( IDE_PART_REPORTSDESIGNER )
       EXIT
    ENDSWITCH
 
