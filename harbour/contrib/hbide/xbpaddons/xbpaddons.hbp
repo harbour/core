@@ -12,7 +12,9 @@
 hbxbp.hbc
 
 dbu.prg
-dbu.qrc
-dbstruct.ui
-fetchdate.ui
-tables.ui
+
+xbp.qrc
+
+xbpdbstruct.ui
+xbpfetchdate.ui
+xbptables.ui

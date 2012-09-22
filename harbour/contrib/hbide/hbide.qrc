@@ -31,29 +31,8 @@
     <file>resources/curlinehilight.png</file>
     <file>resources/cut.png</file>
     <file>resources/cutb16.png</file>
-    <file>resources/database.png</file>
-    <file>resources/database_accept.png</file>
-    <file>resources/database_add.png</file>
-    <file>resources/database_remove.png</file>
-    <file>resources/database_lock.png</file>
-    <file>resources/database_process.png</file>
-    <file>resources/database_up.png</file>
-    <file>resources/database_down.png</file>
-    <file>resources/database_previous.png</file>
-    <file>resources/database_next.png</file>
-    <file>resources/database_search.png</file>
     <file>resources/dbl2sglquote.png</file>
     <file>resources/dbstruct.png</file>
-    <file>resources/dbf_p1.png</file>
-    <file>resources/dbf_p2.png</file>
-    <file>resources/dbf_p3.png</file>
-    <file>resources/dbf_p4.png</file>
-    <file>resources/dbf_p5.png</file>
-    <file>resources/dbf_p6.png</file>
-    <file>resources/dbf_p7.png</file>
-    <file>resources/dbf_p8.png</file>
-    <file>resources/dbf_p9.png</file>
-    <file>resources/dbf_p10.png</file>
     <file>resources/dc_delete.png</file>
     <file>resources/dc_down.png</file>
     <file>resources/dc_folder.png</file>
@@ -233,15 +212,6 @@
     <file>resources/unload_1.png</file>
     <file>resources/up.png</file>
     <file>resources/up16.png</file>
-    <file>resources/view_cascaded.png</file>
-    <file>resources/view_organized.png</file>
-    <file>resources/view_tabbed.png</file>
-    <file>resources/view_tiled.png</file>
-    <file>resources/view_vertstacked.png</file>
-    <file>resources/view_horzstacked.png</file>
-    <file>resources/view_zoomin.png</file>
-    <file>resources/view_zoomout.png</file>
-    <file>resources/view_refresh.png</file>
     <file>resources/vr-16x16.png</file>
     <file>resources/vr.png</file>
     <file>resources/xmate.png</file>
@@ -329,6 +299,15 @@
     <file>resources/launch_r.png</file>
     <file>resources/editor.png</file>
     <file>resources/configtoolbars.png</file>
+    <file>resources/view_cascaded.png</file>
+    <file>resources/view_organized.png</file>
+    <file>resources/view_tabbed.png</file>
+    <file>resources/view_tiled.png</file>
+    <file>resources/view_vertstacked.png</file>
+    <file>resources/view_horzstacked.png</file>
+    <file>resources/view_zoomin.png</file>
+    <file>resources/view_zoomout.png</file>
+    <file>resources/view_refresh.png</file>
     <file>docs/faq.htm</file>
   </qresource>
 </RCC>

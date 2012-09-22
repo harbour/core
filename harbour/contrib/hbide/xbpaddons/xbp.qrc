@@ -1,5 +1,5 @@
 <RCC>
-  <qresource prefix="dbu">
+  <qresource prefix="xbp">
     <file>resources/view_cascaded.png</file>
     <file>resources/view_organized.png</file>
     <file>resources/view_tabbed.png</file>

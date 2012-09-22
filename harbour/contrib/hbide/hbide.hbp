@@ -23,9 +23,9 @@ hbxbp.hbc
 hbqt.hbc
 hbformat.hbc
 
-idedbu/idedbu.hbp
-idedbu/idedbu.hbc
--Lidedbu
+xbpaddons/xbpaddons.hbp
+xbpaddons/xbpaddons.hbc
+-Lxbpaddons
 
 -env:HB_DYNLOAD_RDDADS=yes
 rddads.hbc

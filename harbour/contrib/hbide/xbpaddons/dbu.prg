@@ -241,7 +241,7 @@ METHOD HbpDBU:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF ! ::lRegistered
       ::lRegistered := .T.
-      QResource():registerResource_1( hbqtres_dbu() )
+      QResource():registerResource_1( hbqtres_xbp() )
    ENDIF
 
    ::xbpWindow:init( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -780,7 +780,7 @@ METHOD HbpDBU:showTablesTree()
    LOCAL oUI, qTree, qParent, oPanel, qItm, aBrowser, q, aFld, qFont, nMax, nSz, oBrw
    LOCAL a_:={}
 
-   oUI := hbqtui_Tables( ::oCurPanel:qWidget )
+   oUI := hbqtui_xbpTables( ::oCurPanel:qWidget )
 
    qFont := QFont( "Courier New", 8 )
    qTree := oUI:treeTables
@@ -912,7 +912,7 @@ METHOD HbpDBU:buildUiStruct()
    LOCAL oTbl, n, qItm
    LOCAL hdr_:= { { "", 50 }, { "Field Name",200 }, { "Type", 100 }, { "Len", 50 }, { "Dec", 70 } }
 
-   ::qStruct := hbqtui_DbStruct( ::oWidget )
+   ::qStruct := hbqtui_xbpDbStruct( ::oWidget )
 
    ::qStruct:setWindowFlags( Qt_Dialog )
    ::qStruct:setMaximumHeight( ::qStruct:height() )
@@ -2823,7 +2823,7 @@ STATIC FUNCTION hbide_fetchADate( qParent, cTitle, cPrompt, dDefault )
    DEFAULT cTitle  TO "A Date Value"
    DEFAULT cPrompt TO "What"
 
-   oUI := hbqtui_FetchDate( qParent )
+   oUI := hbqtui_xbpFetchDate( qParent )
 
    oUI:setWindowTitle( cTitle )
    oUI:labelPrompt:setText( cPrompt )
@@ -2898,6 +2898,6 @@ STATIC FUNCTION hbide_fldType2Desc( cType )
 
 FUNCTION dbu_Image( cName )
 
-   RETURN ":/dbu/resources" + "/" + cName + ".png"
+   RETURN ":/xbp/resources" + "/" + cName + ".png"
 
 /*----------------------------------------------------------------------*/
