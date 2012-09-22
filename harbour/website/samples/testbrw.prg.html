@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>testbrw.prg</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
+<STYLE type=text/css>
+<!--
+body { color: #000000; background-color: #FFFFFF; }
+.any1-activedot { color: #800080; }
+.any1-comment { color: #008080; }
+.any1-constant { color: #800080; }
+.any1-escapeampersand { color: #00FF00; font-weight: bold; }
+.any1-function { color: #808000; }
+.any1-identifier { color: #000000; }
+.any1-number { color: #FF0000; }
+.any1-preprocessor { }
+.any1-reservedword { color: #800000; }
+.any1-space { }
+.any1-string { color: #0000FF; }
+.any1-symbol { }
+.any1-variable { color: #808000; }
+-->
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-comment>// Harbour Class TBrowse and TBColumn sample
+
+</SPAN><SPAN class=any1-constant>#include</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"inkey.ch"
+
+</SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Main</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> oBrowse := </SPAN><SPAN class=any1-variable>TBrowseNew</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>5</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>5</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>16</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>30</SPAN><SPAN class=any1-space> )
+   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> aTest0  := { </SPAN><SPAN class=any1-string>"This"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"is"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"a"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"browse"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"on"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"an"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"array"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"test"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"with"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"a"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"long"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"data"</SPAN><SPAN class=any1-space> }
+   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> aTest1  := { </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>5</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>6</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>7</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>8</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>10000</SPAN><SPAN class=any1-symbol>, -</SPAN><SPAN class=any1-number>1000</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>54</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>456342</SPAN><SPAN class=any1-space> }
+   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> aTest2  := { </SPAN><SPAN class=any1-function>date</SPAN><SPAN class=any1-symbol>(), </SPAN><SPAN class=any1-function>date</SPAN><SPAN class=any1-symbol>()+</SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>date</SPAN><SPAN class=any1-symbol>()+</SPAN><SPAN class=any1-number>56</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>date</SPAN><SPAN class=any1-symbol>()+</SPAN><SPAN class=any1-number>14</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>date</SPAN><SPAN class=any1-symbol>()+</SPAN><SPAN class=any1-number>5</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>date</SPAN><SPAN class=any1-symbol>()+</SPAN><SPAN class=any1-number>6</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>date</SPAN><SPAN class=any1-symbol>()+</SPAN><SPAN class=any1-number>7</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>date</SPAN><SPAN class=any1-symbol>()+</SPAN><SPAN class=any1-number>8</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>date</SPAN><SPAN class=any1-symbol>()+</SPAN><SPAN class=any1-number>10000</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>date</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>1000</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>date</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>54</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>date</SPAN><SPAN class=any1-symbol>()+</SPAN><SPAN class=any1-number>456342</SPAN><SPAN class=any1-space> }
+   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> aTest3  := { </SPAN><SPAN class=any1-activedot>.t.</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-activedot>.f.</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-activedot>.t.</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-activedot>.t.</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-activedot>.f.</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-activedot>.f.</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-activedot>.t.</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-activedot>.f.</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-activedot>.t.</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-activedot>.t.</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-activedot>.f.</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-activedot>.f.</SPAN><SPAN class=any1-space> }
+   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> n       := </SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> nKey
+   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> lEnd    := </SPAN><SPAN class=any1-activedot>.f.
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> nCursor
+   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> cColor
+   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> nRow, nCol
+   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> nTmpRow, nTmpCol
+
+   oBrowse:colorSpec     = </SPAN><SPAN class=any1-string>"W+/B, N/BG"
+</SPAN><SPAN class=any1-space>   oBrowse:ColSep        = </SPAN><SPAN class=any1-string>"¦"
+</SPAN><SPAN class=any1-space>   oBrowse:HeadSep        = </SPAN><SPAN class=any1-string>"Ð-"
+</SPAN><SPAN class=any1-space>   oBrowse:FootSep        = </SPAN><SPAN class=any1-string>"¤-"
+</SPAN><SPAN class=any1-space>   oBrowse:GoTopBlock    = { || n := </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> }
+   oBrowse:GoBottomBlock = { || n := </SPAN><SPAN class=any1-function>Len</SPAN><SPAN class=any1-symbol>( aTest0 ) }
+   oBrowse:SkipBlock     = { | nSkip, nPos | nPos := n,;
+                             n := </SPAN><SPAN class=any1-reservedword>If</SPAN><SPAN class=any1-symbol>( nSkip &gt; </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>Min</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>Len</SPAN><SPAN class=any1-symbol>( aTest0 ), n + nSkip ),;
+                             </SPAN><SPAN class=any1-function>Max</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>, n + nSkip )), n - nPos }
+
+   oBrowse:</SPAN><SPAN class=any1-variable>AddColumn</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>TBColumnNew</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"First"</SPAN><SPAN class=any1-symbol>,  { || n } ) )
+   oBrowse:</SPAN><SPAN class=any1-variable>AddColumn</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>TBColumnNew</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Second"</SPAN><SPAN class=any1-symbol>, { || aTest0[ n ] } ) )
+   oBrowse:</SPAN><SPAN class=any1-variable>AddColumn</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>TBColumnNew</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Third"</SPAN><SPAN class=any1-symbol>,  { || aTest1[ n ] } ) )
+   oBrowse:</SPAN><SPAN class=any1-variable>AddColumn</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>TBColumnNew</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Forth"</SPAN><SPAN class=any1-symbol>,  { || aTest2[ n ] } ) )
+   oBrowse:</SPAN><SPAN class=any1-variable>AddColumn</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>TBColumnNew</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Fifth"</SPAN><SPAN class=any1-symbol>,  { || aTest3[ n ] } ) )
+   oBrowse:</SPAN><SPAN class=any1-variable>GetColumn</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>):Footing = </SPAN><SPAN class=any1-string>'Number'
+</SPAN><SPAN class=any1-space>   oBrowse:</SPAN><SPAN class=any1-variable>GetColumn</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>):Footing = </SPAN><SPAN class=any1-string>'Strins'
+
+</SPAN><SPAN class=any1-space>   oBrowse:</SPAN><SPAN class=any1-variable>GetColumn</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>):Picture := </SPAN><SPAN class=any1-string>'@!'
+
+</SPAN><SPAN class=any1-space>   oBrowse:</SPAN><SPAN class=any1-variable>GetColumn</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>):Footing = </SPAN><SPAN class=any1-string>'Number'
+</SPAN><SPAN class=any1-space>   oBrowse:</SPAN><SPAN class=any1-variable>GetColumn</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>):Picture := </SPAN><SPAN class=any1-string>'999,999.99'
+</SPAN><SPAN class=any1-space>   oBrowse:</SPAN><SPAN class=any1-variable>GetColumn</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>):Footing = </SPAN><SPAN class=any1-string>'Dates'
+</SPAN><SPAN class=any1-space>   oBrowse:</SPAN><SPAN class=any1-variable>GetColumn</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>5</SPAN><SPAN class=any1-symbol>):Footing = </SPAN><SPAN class=any1-string>'Logical'
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-comment>// needed since I've changed some columns _after_ I've added them to TBrowse object
+</SPAN><SPAN class=any1-space>   oBrowse:</SPAN><SPAN class=any1-variable>Configure</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-function>Alert</SPAN><SPAN class=any1-symbol>( oBrowse:</SPAN><SPAN class=any1-variable>ClassName</SPAN><SPAN class=any1-symbol>() )
+   </SPAN><SPAN class=any1-function>Alert</SPAN><SPAN class=any1-symbol>( oBrowse:</SPAN><SPAN class=any1-variable>GetColumn</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ):</SPAN><SPAN class=any1-variable>ClassName</SPAN><SPAN class=any1-symbol>() )
+
+   oBrowse:Freeze = </SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>   nCursor := </SPAN><SPAN class=any1-function>SetCursor</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-space> )
+   cColor := </SPAN><SPAN class=any1-function>SetColor</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"W+/B"</SPAN><SPAN class=any1-space> )
+   nRow := </SPAN><SPAN class=any1-function>Row</SPAN><SPAN class=any1-symbol>()
+   nCol := </SPAN><SPAN class=any1-function>Col</SPAN><SPAN class=any1-symbol>()
+   @ </SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>17</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>31</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>BOX</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"+-+¦+-+¦ "
+</SPAN><SPAN class=any1-constant>#ifdef</SPAN><SPAN class=any1-space> HB_COMPAT_C53
+ oBrowse:</SPAN><SPAN class=any1-function>Setkey</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>,{|ob,nkey| </SPAN><SPAN class=any1-variable>Defproc</SPAN><SPAN class=any1-symbol>(ob,nKey)})
+</SPAN><SPAN class=any1-reservedword>while</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-activedot>.t.
+</SPAN><SPAN class=any1-space>    oBrowse:</SPAN><SPAN class=any1-variable>ForceStable</SPAN><SPAN class=any1-symbol>()
+ </SPAN><SPAN class=any1-reservedword>if</SPAN><SPAN class=any1-space> (oBrowse:</SPAN><SPAN class=any1-variable>applykey</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-function>inkey</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>))== -</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>)
+   </SPAN><SPAN class=any1-reservedword>exit
+endif
+enddo
+</SPAN><SPAN class=any1-constant>#else
+</SPAN><SPAN class=any1-reservedword>While</SPAN><SPAN class=any1-space> !lEnd
+      oBrowse:</SPAN><SPAN class=any1-variable>ForceStable</SPAN><SPAN class=any1-symbol>()
+
+      nKey = </SPAN><SPAN class=any1-function>InKey</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-space> )
+
+      </SPAN><SPAN class=any1-reservedword>do</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>case
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>case</SPAN><SPAN class=any1-space> nKey == K_ESC
+              </SPAN><SPAN class=any1-function>SetPos</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>17</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-space> )
+              lEnd = </SPAN><SPAN class=any1-activedot>.t.
+
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>case</SPAN><SPAN class=any1-space> nKey == K_DOWN
+              oBrowse:</SPAN><SPAN class=any1-variable>Down</SPAN><SPAN class=any1-symbol>()
+
+         </SPAN><SPAN class=any1-reservedword>case</SPAN><SPAN class=any1-space> nKey == K_UP
+              oBrowse:</SPAN><SPAN class=any1-variable>Up</SPAN><SPAN class=any1-symbol>()
+
+         </SPAN><SPAN class=any1-reservedword>case</SPAN><SPAN class=any1-space> nKey == K_LEFT
+              oBrowse:</SPAN><SPAN class=any1-function>Left</SPAN><SPAN class=any1-symbol>()
+
+         </SPAN><SPAN class=any1-reservedword>case</SPAN><SPAN class=any1-space> nKey == K_RIGHT
+              oBrowse:</SPAN><SPAN class=any1-function>Right</SPAN><SPAN class=any1-symbol>()
+
+         </SPAN><SPAN class=any1-reservedword>case</SPAN><SPAN class=any1-space> nKey = K_PGDN
+              oBrowse:</SPAN><SPAN class=any1-variable>pageDown</SPAN><SPAN class=any1-symbol>()
+
+         </SPAN><SPAN class=any1-reservedword>case</SPAN><SPAN class=any1-space> nKey = K_PGUP
+              oBrowse:</SPAN><SPAN class=any1-variable>pageUp</SPAN><SPAN class=any1-symbol>()
+
+         </SPAN><SPAN class=any1-reservedword>case</SPAN><SPAN class=any1-space> nKey = K_CTRL_PGUP
+              oBrowse:</SPAN><SPAN class=any1-variable>goTop</SPAN><SPAN class=any1-symbol>()
+
+         </SPAN><SPAN class=any1-reservedword>case</SPAN><SPAN class=any1-space> nKey = K_CTRL_PGDN
+              oBrowse:</SPAN><SPAN class=any1-variable>goBottom</SPAN><SPAN class=any1-symbol>()
+
+         </SPAN><SPAN class=any1-reservedword>case</SPAN><SPAN class=any1-space> nKey = K_HOME
+              oBrowse:</SPAN><SPAN class=any1-variable>home</SPAN><SPAN class=any1-symbol>()
+
+         </SPAN><SPAN class=any1-reservedword>case</SPAN><SPAN class=any1-space> nKey = K_END
+              oBrowse:</SPAN><SPAN class=any1-reservedword>end</SPAN><SPAN class=any1-symbol>()
+
+         </SPAN><SPAN class=any1-reservedword>case</SPAN><SPAN class=any1-space> nKey = K_CTRL_LEFT
+              oBrowse:</SPAN><SPAN class=any1-variable>panLeft</SPAN><SPAN class=any1-symbol>()
+
+         </SPAN><SPAN class=any1-reservedword>case</SPAN><SPAN class=any1-space> nKey = K_CTRL_RIGHT
+              oBrowse:</SPAN><SPAN class=any1-variable>panRight</SPAN><SPAN class=any1-symbol>()
+
+         </SPAN><SPAN class=any1-reservedword>case</SPAN><SPAN class=any1-space> nKey = K_CTRL_HOME
+              oBrowse:</SPAN><SPAN class=any1-variable>panHome</SPAN><SPAN class=any1-symbol>()
+
+         </SPAN><SPAN class=any1-reservedword>case</SPAN><SPAN class=any1-space> nKey = K_CTRL_END
+              oBrowse:</SPAN><SPAN class=any1-variable>panEnd</SPAN><SPAN class=any1-symbol>()
+
+         </SPAN><SPAN class=any1-reservedword>case</SPAN><SPAN class=any1-space> nKey = K_TAB
+              nTmpRow := </SPAN><SPAN class=any1-function>ROW</SPAN><SPAN class=any1-symbol>()
+              nTmpCol := </SPAN><SPAN class=any1-function>COL</SPAN><SPAN class=any1-symbol>()
+              @ </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>TIME</SPAN><SPAN class=any1-symbol>()
+              </SPAN><SPAN class=any1-function>DevPos</SPAN><SPAN class=any1-symbol>( nTmpRow, nTmpCol )
+
+      </SPAN><SPAN class=any1-reservedword>endcase
+</SPAN><SPAN class=any1-space>      
+   </SPAN><SPAN class=any1-reservedword>end
+</SPAN><SPAN class=any1-constant>#endif
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>DevPos</SPAN><SPAN class=any1-symbol>( nRow, nCol )
+   </SPAN><SPAN class=any1-function>SetColor</SPAN><SPAN class=any1-symbol>( cColor )
+   </SPAN><SPAN class=any1-function>SetCursor</SPAN><SPAN class=any1-symbol>( nCursor )
+
+</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+</SPAN><SPAN class=any1-constant>#ifdef</SPAN><SPAN class=any1-space> HB_COMPAT_C53
+</SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-variable>defproc</SPAN><SPAN class=any1-symbol>(ob,nkey)
+</SPAN><SPAN class=any1-reservedword>Local</SPAN><SPAN class=any1-space> nTmpRow,nTmpCol
+        </SPAN><SPAN class=any1-reservedword>if</SPAN><SPAN class=any1-space> nKey = K_TAB
+              nTmpRow := </SPAN><SPAN class=any1-function>ROW</SPAN><SPAN class=any1-symbol>()
+              nTmpCol := </SPAN><SPAN class=any1-function>COL</SPAN><SPAN class=any1-symbol>()
+              @ </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>TIME</SPAN><SPAN class=any1-symbol>()
+              </SPAN><SPAN class=any1-function>DevPos</SPAN><SPAN class=any1-symbol>( nTmpRow, nTmpCol )
+            ob:</SPAN><SPAN class=any1-variable>Refreshall</SPAN><SPAN class=any1-symbol>()
+        </SPAN><SPAN class=any1-reservedword>endif
+</SPAN><SPAN class=any1-space>        </SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-constant>#endif
+</SPAN></SPAN>
+</CODE></PRE></BODY></HTML>

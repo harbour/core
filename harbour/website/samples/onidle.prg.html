@@ -1,0 +1,98 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>onidle.prg</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
+<STYLE type=text/css>
+<!--
+body { color: #000000; background-color: #FFFFFF; }
+.any1-activedot { color: #800080; }
+.any1-comment { color: #008080; }
+.any1-constant { color: #800080; }
+.any1-escapeampersand { color: #00FF00; font-weight: bold; }
+.any1-function { color: #808000; }
+.any1-identifier { color: #000000; }
+.any1-number { color: #FF0000; }
+.any1-preprocessor { }
+.any1-reservedword { color: #800000; }
+.any1-space { }
+.any1-string { color: #0000FF; }
+.any1-symbol { }
+.any1-variable { color: #808000; }
+-->
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-constant>#include</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"hbmemory.ch"
+
+</SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> MAIN
+</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> nH1, nH2, nH3, nH4
+</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> n:=</SPAN><SPAN class=any1-number>0
+</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> aSign:={</SPAN><SPAN class=any1-string>"|"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"/"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"-"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"\"</SPAN><SPAN class=any1-space> }
+</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> nPrev:=</SPAN><SPAN class=any1-function>SECONDS</SPAN><SPAN class=any1-symbol>()
+
+  CLS
+  ? </SPAN><SPAN class=any1-string>"   Time:        Memory used:                          Miliseconds elapsed"
+</SPAN><SPAN class=any1-space>  ?
+  ? </SPAN><SPAN class=any1-string>"Can you see it ??? :) Press any key or wait 30 seconds"
+</SPAN><SPAN class=any1-space>  ?
+  ?
+  @ </SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Memory before TEST() call"</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-function>STR</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>MEMORY</SPAN><SPAN class=any1-symbol>(HB_MEM_USED) )
+  </SPAN><SPAN class=any1-variable>TEST</SPAN><SPAN class=any1-symbol>()
+  @ </SPAN><SPAN class=any1-number>11</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Memory after TEST() and before collecting"</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-function>STR</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>MEMORY</SPAN><SPAN class=any1-symbol>(HB_MEM_USED) )
+  </SPAN><SPAN class=any1-variable>HB_GCALL</SPAN><SPAN class=any1-symbol>()
+  @ </SPAN><SPAN class=any1-number>12</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Memory after collecting"</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-function>STR</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>MEMORY</SPAN><SPAN class=any1-symbol>(HB_MEM_USED) )
+  nH1 := </SPAN><SPAN class=any1-variable>HB_IDLEADD</SPAN><SPAN class=any1-symbol>( {|| </SPAN><SPAN class=any1-function>DEVPOS</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>01</SPAN><SPAN class=any1-symbol>), </SPAN><SPAN class=any1-function>DEVOUT</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>TIME</SPAN><SPAN class=any1-symbol>() ) } )
+  nH2 := </SPAN><SPAN class=any1-variable>HB_IDLEADD</SPAN><SPAN class=any1-symbol>( {|| </SPAN><SPAN class=any1-function>DEVPOS</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>21</SPAN><SPAN class=any1-symbol>), </SPAN><SPAN class=any1-variable>TEST</SPAN><SPAN class=any1-symbol>(), </SPAN><SPAN class=any1-function>DEVOUT</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>MEMORY</SPAN><SPAN class=any1-symbol>(HB_MEM_USED) ) } )
+  nH3 := </SPAN><SPAN class=any1-variable>HB_IDLEADD</SPAN><SPAN class=any1-symbol>( {|| </SPAN><SPAN class=any1-function>DEVPOS</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>41</SPAN><SPAN class=any1-symbol>), </SPAN><SPAN class=any1-variable>IIF</SPAN><SPAN class=any1-symbol>(n==</SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>,n:=</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>,n++),</SPAN><SPAN class=any1-function>DEVOUT</SPAN><SPAN class=any1-symbol>(aSign[n]) } )
+  nH4 := </SPAN><SPAN class=any1-variable>HB_IDLEADD</SPAN><SPAN class=any1-symbol>( {|| </SPAN><SPAN class=any1-function>DEVPOS</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>61</SPAN><SPAN class=any1-symbol>), </SPAN><SPAN class=any1-function>DEVOUT</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>1000</SPAN><SPAN class=any1-symbol>*(</SPAN><SPAN class=any1-function>SECONDS</SPAN><SPAN class=any1-symbol>()-nPrev) ), nPrev:=</SPAN><SPAN class=any1-function>SECONDS</SPAN><SPAN class=any1-symbol>() } )
+
+  ? </SPAN><SPAN class=any1-function>VALTYPE</SPAN><SPAN class=any1-symbol>(nH1), nH1, </SPAN><SPAN class=any1-function>VALTYPE</SPAN><SPAN class=any1-symbol>(nH2), nH2, </SPAN><SPAN class=any1-function>VALTYPE</SPAN><SPAN class=any1-symbol>(nH3), nH3, </SPAN><SPAN class=any1-function>VALTYPE</SPAN><SPAN class=any1-symbol>(nH4), nH4
+  
+  </SPAN><SPAN class=any1-function>INKEY</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>30</SPAN><SPAN class=any1-space> )
+  </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> !</SPAN><SPAN class=any1-function>EMPTY</SPAN><SPAN class=any1-symbol>(nH3)
+     @ </SPAN><SPAN class=any1-number>14</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Delete task 3: "</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-variable>HB_VALTOSTR</SPAN><SPAN class=any1-symbol>(nH3)
+     </SPAN><SPAN class=any1-variable>HB_IDLEDEL</SPAN><SPAN class=any1-symbol>( nH3 )
+  </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> !</SPAN><SPAN class=any1-function>EMPTY</SPAN><SPAN class=any1-symbol>(nH2)
+     @ </SPAN><SPAN class=any1-number>15</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Delete task 2: "</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-variable>HB_VALTOSTR</SPAN><SPAN class=any1-symbol>(nH2)
+     </SPAN><SPAN class=any1-variable>HB_IDLEDEL</SPAN><SPAN class=any1-symbol>( nH2 )
+  </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> !</SPAN><SPAN class=any1-function>EMPTY</SPAN><SPAN class=any1-symbol>(nH1)
+     @ </SPAN><SPAN class=any1-number>16</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Delete task 1: "</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-variable>HB_VALTOSTR</SPAN><SPAN class=any1-symbol>(nH1)
+     </SPAN><SPAN class=any1-variable>HB_IDLEDEL</SPAN><SPAN class=any1-symbol>( nH1 )
+  </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> !</SPAN><SPAN class=any1-function>EMPTY</SPAN><SPAN class=any1-symbol>(nH4)
+     @ </SPAN><SPAN class=any1-number>17</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Delete task 4: "</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-variable>HB_VALTOSTR</SPAN><SPAN class=any1-symbol>(nH4)
+     </SPAN><SPAN class=any1-variable>HB_IDLEDEL</SPAN><SPAN class=any1-symbol>( nH4 )
+  </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>  @ </SPAN><SPAN class=any1-number>18</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Memory after idle states"</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-function>STR</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>MEMORY</SPAN><SPAN class=any1-symbol>(HB_MEM_USED) )
+  </SPAN><SPAN class=any1-variable>HB_GCALL</SPAN><SPAN class=any1-symbol>()
+  @ </SPAN><SPAN class=any1-number>19</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Memory after collecting"</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-function>STR</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>MEMORY</SPAN><SPAN class=any1-symbol>(HB_MEM_USED) )
+
+</SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1
+
+</SPAN><SPAN class=any1-reservedword>PROC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>TEST</SPAN><SPAN class=any1-symbol>()
+</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> a, b, c
+</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> cb
+
+  a := </SPAN><SPAN class=any1-function>ARRAY</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-space> )
+  b := </SPAN><SPAN class=any1-function>ARRAY</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-space> )
+  c := </SPAN><SPAN class=any1-function>ARRAY</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-space> )
+  a[</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>] :=a
+  a[</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>] :=b
+  a[</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>] :=c
+  b[</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>] :=a
+  b[</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>] :=b
+  b[</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>] :=c
+  c[</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>] :=a
+  c[</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>] :=b
+  c[</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>] :=c
+
+  cb := {|x| x:=cb}
+  </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cb )
+
+</SPAN><SPAN class=any1-reservedword>RETURN
+</SPAN></SPAN>
+</CODE></PRE>
+</BODY></HTML>

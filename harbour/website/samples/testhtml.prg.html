@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>testhtml.prg</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
+<STYLE type=text/css>
+<!--
+body { color: #000000; background-color: #FFFFFF; }
+.any1-activedot { color: #800080; }
+.any1-comment { color: #008080; }
+.any1-constant { color: #800080; }
+.any1-escapeampersand { color: #00FF00; font-weight: bold; }
+.any1-function { color: #808000; }
+.any1-identifier { color: #000000; }
+.any1-number { color: #FF0000; }
+.any1-preprocessor { }
+.any1-reservedword { color: #800000; }
+.any1-space { }
+.any1-string { color: #0000FF; }
+.any1-symbol { }
+.any1-variable { color: #808000; }
+-->
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-comment>/*
+*
+*  TestHTML.PRG
+*  Harbour Test of a HTML-Generator class.
+*
+*  1999/05/30  First implementation.
+*
+*              Tips: - Use ShowResults to make dynamic html (to test dynamic
+*                      results, put the exe file on CGI-BIN dir or equivalent);
+*                    - Use SaveToFile to make static html page
+*
+**/
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> s_cNewLine
+
+</SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Main</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> oHTML := </SPAN><SPAN class=any1-variable>THTML</SPAN><SPAN class=any1-symbol>():</SPAN><SPAN class=any1-variable>New</SPAN><SPAN class=any1-symbol>()
+
+   s_cNewLine := </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>()
+
+   oHTML:</SPAN><SPAN class=any1-variable>SetTitle</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Harbour Power Demonstration"</SPAN><SPAN class=any1-space> )
+   oHTML:</SPAN><SPAN class=any1-variable>AddHead</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Harbour Project"</SPAN><SPAN class=any1-space> )
+   oHTML:</SPAN><SPAN class=any1-variable>AddPara</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"&lt;B&gt;Harbour&lt;/B&gt; is xBase at its best. Have a taste today!"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"LEFT"</SPAN><SPAN class=any1-space> )
+   oHTML:</SPAN><SPAN class=any1-variable>AddPara</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"&lt;B&gt;L i n k s&lt;/B&gt;"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"CENTER"</SPAN><SPAN class=any1-space> )
+   oHTML:</SPAN><SPAN class=any1-variable>AddLink</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"http://harbour-project.org"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"Meet the harbour power!"</SPAN><SPAN class=any1-space> )
+   oHTML:</SPAN><SPAN class=any1-variable>Generate</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-comment>// Uncomment the following if you don't have a Web Server to test
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-comment>// this sample
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-comment>// oHTML:SaveToFile( "test.htm" )
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-comment>// If the above is uncommented, you may comment this line:
+
+</SPAN><SPAN class=any1-space>   oHTML:</SPAN><SPAN class=any1-variable>ShowResult</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( NIL )
+
+</SPAN><SPAN class=any1-comment>/*---------------------------------------------------------------------------*/
+
+</SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> THTML
+
+   </SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> oClass
+
+   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> oClass == NIL
+      oClass = </SPAN><SPAN class=any1-variable>HBClass</SPAN><SPAN class=any1-symbol>():</SPAN><SPAN class=any1-variable>New</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"THTML"</SPAN><SPAN class=any1-space> )
+
+      oClass:</SPAN><SPAN class=any1-variable>AddData</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"cTitle"</SPAN><SPAN class=any1-space> )                       </SPAN><SPAN class=any1-comment>// Page Title
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddData</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"cBody"</SPAN><SPAN class=any1-space> )                        </SPAN><SPAN class=any1-comment>// HTML Body Handler
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddData</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"cBGColor"</SPAN><SPAN class=any1-space> )                     </SPAN><SPAN class=any1-comment>// Background Color
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddData</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"cLinkColor"</SPAN><SPAN class=any1-space> )                   </SPAN><SPAN class=any1-comment>// Link Color
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddData</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"cvLinkColor"</SPAN><SPAN class=any1-space> )                  </SPAN><SPAN class=any1-comment>// Visited Link Color
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddData</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"cContent"</SPAN><SPAN class=any1-space> )                     </SPAN><SPAN class=any1-comment>// Page Content Handler
+
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"New"</SPAN><SPAN class=any1-symbol>,        @</SPAN><SPAN class=any1-variable>New</SPAN><SPAN class=any1-symbol>() )         </SPAN><SPAN class=any1-comment>// New Method
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"SetTitle"</SPAN><SPAN class=any1-symbol>,   @</SPAN><SPAN class=any1-variable>SetTitle</SPAN><SPAN class=any1-symbol>() )    </SPAN><SPAN class=any1-comment>// Set Page Title
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"AddHead"</SPAN><SPAN class=any1-symbol>,    @</SPAN><SPAN class=any1-variable>AddHead</SPAN><SPAN class=any1-symbol>() )     </SPAN><SPAN class=any1-comment>// Add &lt;H1&gt; Header
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"AddLink"</SPAN><SPAN class=any1-symbol>,    @</SPAN><SPAN class=any1-variable>AddLink</SPAN><SPAN class=any1-symbol>() )     </SPAN><SPAN class=any1-comment>// Add Hyperlink
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"AddPara"</SPAN><SPAN class=any1-symbol>,    @</SPAN><SPAN class=any1-variable>AddPara</SPAN><SPAN class=any1-symbol>() )     </SPAN><SPAN class=any1-comment>// Add Paragraph
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Generate"</SPAN><SPAN class=any1-symbol>,   @</SPAN><SPAN class=any1-variable>Generate</SPAN><SPAN class=any1-symbol>() )    </SPAN><SPAN class=any1-comment>// Generate HTML
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"SaveToFile"</SPAN><SPAN class=any1-symbol>, @</SPAN><SPAN class=any1-variable>SaveToFile</SPAN><SPAN class=any1-symbol>() )  </SPAN><SPAN class=any1-comment>// Saves Content to File
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"ShowResult"</SPAN><SPAN class=any1-symbol>, @</SPAN><SPAN class=any1-variable>ShowResult</SPAN><SPAN class=any1-symbol>() )  </SPAN><SPAN class=any1-comment>// Show Result - SEE Fcn
+
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-function>Create</SPAN><SPAN class=any1-symbol>()
+   </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( oClass:</SPAN><SPAN class=any1-variable>Instance</SPAN><SPAN class=any1-symbol>() )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>New</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+
+   ::cTitle      := </SPAN><SPAN class=any1-string>"Untitled"
+</SPAN><SPAN class=any1-space>   ::cBGColor    := </SPAN><SPAN class=any1-string>"#FFFFFF"
+</SPAN><SPAN class=any1-space>   ::cLinkColor  := </SPAN><SPAN class=any1-string>"#0000FF"
+</SPAN><SPAN class=any1-space>   ::cvLinkColor := </SPAN><SPAN class=any1-string>"#FF0000"
+</SPAN><SPAN class=any1-space>   ::cContent    := </SPAN><SPAN class=any1-string>""
+</SPAN><SPAN class=any1-space>   ::cBody       := </SPAN><SPAN class=any1-string>""
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>SetTitle</SPAN><SPAN class=any1-symbol>( cTitle )
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+
+   ::cTitle := cTitle
+
+   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>AddLink</SPAN><SPAN class=any1-symbol>( cLinkTo, cLinkName )
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+
+   ::cBody := ::cBody + ;
+      </SPAN><SPAN class=any1-string>"&lt;A HREF='"</SPAN><SPAN class=any1-space> + cLinkTo + </SPAN><SPAN class=any1-string>"'&gt;"</SPAN><SPAN class=any1-space> + cLinkName + </SPAN><SPAN class=any1-string>"&lt;/A&gt;"
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>AddHead</SPAN><SPAN class=any1-symbol>( cDescr )
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-comment>// Why this doesn't work?
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-comment>// ::cBody += ...
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-comment>// ???
+
+</SPAN><SPAN class=any1-space>   ::cBody := ::cBody + ;
+      </SPAN><SPAN class=any1-string>"&lt;H1&gt;"</SPAN><SPAN class=any1-space> + cDescr + </SPAN><SPAN class=any1-string>"&lt;/H1&gt;"
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( NIL )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>AddPara</SPAN><SPAN class=any1-symbol>( cPara, cAlign )
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-comment>//Default( cAlign, "Left" ) // removed Patrick Mast 2000-06-07
+</SPAN><SPAN class=any1-space>   cAlign:=</SPAN><SPAN class=any1-reservedword>If</SPAN><SPAN class=any1-symbol>(cAlign==NIL,</SPAN><SPAN class=any1-string>"Left"</SPAN><SPAN class=any1-symbol>,cAlign) </SPAN><SPAN class=any1-comment>//Added Patrick Mast 2000-06-17
+
+</SPAN><SPAN class=any1-space>   ::cBody := ::cBody + ;
+      </SPAN><SPAN class=any1-string>"&lt;P ALIGN='"</SPAN><SPAN class=any1-space> + cAlign + </SPAN><SPAN class=any1-string>"'&gt;"</SPAN><SPAN class=any1-space> + s_cNewLine + ;
+      cPara + s_cNewLine + ;
+      </SPAN><SPAN class=any1-string>"&lt;/P&gt;"
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Generate</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+
+   ::cContent :=                                                           ;
+      </SPAN><SPAN class=any1-string>"&lt;HTML&gt;&lt;HEAD&gt;"</SPAN><SPAN class=any1-space>                                           + s_cNewLine + ;
+      </SPAN><SPAN class=any1-string>"&lt;TITLE&gt;"</SPAN><SPAN class=any1-space> + ::cTitle + </SPAN><SPAN class=any1-string>"&lt;/TITLE&gt;"</SPAN><SPAN class=any1-space>                        + s_cNewLine + ;
+      </SPAN><SPAN class=any1-string>"&lt;BODY link='"</SPAN><SPAN class=any1-space> + ::cLinkColor + </SPAN><SPAN class=any1-string>"' "</SPAN><SPAN class=any1-space> +                               ;
+      </SPAN><SPAN class=any1-string>"vlink='"</SPAN><SPAN class=any1-space> + ::cvLinkColor + </SPAN><SPAN class=any1-string>"'&gt;"</SPAN><SPAN class=any1-space> +                       + s_cNewLine + ;
+      ::cBody                                                  + s_cNewLine + ;
+      </SPAN><SPAN class=any1-string>"&lt;/BODY&gt;&lt;/HTML&gt;"
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>ShowResult</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>(                                                                  ;
+;</SPAN><SPAN class=any1-comment>//      "HTTP/1.0 200 OK"                                        + s_cNewLine + ;
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-string>"CONTENT-TYPE: TEXT/HTML"</SPAN><SPAN class=any1-space>                      + s_cNewLine + s_cNewLine + ;
+      ::cContent )
+
+   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>SaveToFile</SPAN><SPAN class=any1-symbol>( cFile )
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self  := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> hFile := </SPAN><SPAN class=any1-function>fCreate</SPAN><SPAN class=any1-symbol>( cFile )
+
+   </SPAN><SPAN class=any1-function>fWrite</SPAN><SPAN class=any1-symbol>( hFile, ::cContent )
+   </SPAN><SPAN class=any1-function>fClose</SPAN><SPAN class=any1-symbol>( hFile )
+
+   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
+</SPAN></SPAN>
+</CODE></PRE>
+</BODY></HTML>

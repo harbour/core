@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>parseini.ini</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
+<STYLE type=text/css>
+<!--
+body { color: #000000; background-color: #FFFFFF; }
+.any1-activedot { color: #800080; }
+.any1-comment { color: #008080; }
+.any1-constant { color: #800080; }
+.any1-escapeampersand { color: #00FF00; font-weight: bold; }
+.any1-function { color: #808000; }
+.any1-identifier { color: #000000; }
+.any1-number { color: #FF0000; }
+.any1-preprocessor { }
+.any1-reservedword { color: #800000; }
+.any1-space { }
+.any1-string { color: #0000FF; }
+.any1-symbol { }
+.any1-variable { color: #808000; }
+-->
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff><PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-constant></SPAN><SPAN class=any1-constant></SPAN><SPAN class=any1-symbol>; Demo INI </SPAN><SPAN class=any1-function>file
+</SPAN><SPAN class=any1-symbol>;
+</SPAN><SPAN class=any1-symbol>; (showing another style of comment here )
+
+</SPAN><SPAN class=any1-constant>#</SPAN><SPAN class=any1-space> This is the MAIN section
+
+</SPAN><SPAN class=any1-reservedword>Procedure</SPAN><SPAN class=any1-space> = Demo ini </SPAN><SPAN class=any1-function>file
+</SPAN><SPAN class=any1-identifier>Name = Parseini.ini
+
+</SPAN><SPAN class=any1-constant>#including</SPAN><SPAN class=any1-space> a subfile
+</SPAN><SPAN class=any1-constant>include</SPAN><SPAN class=any1-space> parseins.ini
+
+[Files]  </SPAN><SPAN class=any1-constant>#Declaring</SPAN><SPAN class=any1-space> files section
+</SPAN><SPAN class=any1-function>Path</SPAN><SPAN class=any1-symbol>=/home/pub
+Filename: foobar.pdf    </SPAN><SPAN class=any1-constant>#</SPAN><SPAN class=any1-space> variable declared </SPAN><SPAN class=any1-function>with</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>':'
+
+</SPAN><SPAN class=any1-identifier>Long= A Data ||
+   Spreading ||
+   On varius lines ||
+   here.
+   
+[Printers]
+LPT1 = \\HEAD\Lexmark
+
+</SPAN><SPAN class=any1-constant>#including</SPAN><SPAN class=any1-space> a subfile
+</SPAN><SPAN class=any1-constant>include</SPAN><SPAN class=any1-space> parseins.ini
+
+</SPAN><SPAN class=any1-constant>#invalid</SPAN><SPAN class=any1-space> line
+An invalid line
+
+</SPAN><SPAN class=any1-constant>#
+#</SPAN><SPAN class=any1-space> End!
+</SPAN><SPAN class=any1-constant>#
+</SPAN></SPAN>
+</CODE></PRE>
+</BODY></HTML>

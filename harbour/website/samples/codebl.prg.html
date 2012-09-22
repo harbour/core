@@ -1,0 +1,193 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>codebl.prg</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
+<STYLE type=text/css>
+<!--
+body { color: #000000; background-color: #FFFFFF; }
+.any1-activedot { color: #800080; }
+.any1-comment { color: #008080; }
+.any1-constant { color: #800080; }
+.any1-escapeampersand { color: #00FF00; font-weight: bold; }
+.any1-function { color: #808000; }
+.any1-identifier { color: #000000; }
+.any1-number { color: #FF0000; }
+.any1-preprocessor { }
+.any1-reservedword { color: #800000; }
+.any1-space { }
+.any1-string { color: #0000FF; }
+.any1-symbol { }
+.any1-variable { color: #808000; }
+-->
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> cbStatic
+
+</SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Main</SPAN><SPAN class=any1-symbol>()
+</SPAN><SPAN class=any1-reservedword>Local</SPAN><SPAN class=any1-space> a := </SPAN><SPAN class=any1-variable>TestBlocks</SPAN><SPAN class=any1-symbol>()
+</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> cb
+
+   </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] ) )      </SPAN><SPAN class=any1-comment>// 23
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ], </SPAN><SPAN class=any1-number>42</SPAN><SPAN class=any1-space> ) )  </SPAN><SPAN class=any1-comment>// 42
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] ) )      </SPAN><SPAN class=any1-comment>// 42
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ], </SPAN><SPAN class=any1-number>15</SPAN><SPAN class=any1-space> ) )  </SPAN><SPAN class=any1-comment>// 15
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>15</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] ) )      </SPAN><SPAN class=any1-comment>// 15 15
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>14</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] ) )      </SPAN><SPAN class=any1-comment>// 14 15
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>42</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ], </SPAN><SPAN class=any1-number>42</SPAN><SPAN class=any1-space> ) )  </SPAN><SPAN class=any1-comment>// 42 42
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>14</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ], </SPAN><SPAN class=any1-number>42</SPAN><SPAN class=any1-space> ) )  </SPAN><SPAN class=any1-comment>// 14 42
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>42</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] ) )      </SPAN><SPAN class=any1-comment>// 42 42
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>14</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] ) )      </SPAN><SPAN class=any1-comment>// 14 42
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>GetArray</SPAN><SPAN class=any1-symbol>( @a )
+   </SPAN><SPAN class=any1-variable>PrintArray</SPAN><SPAN class=any1-symbol>( @a )
+
+   </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Test for variables passed by reference in a codeblock"</SPAN><SPAN class=any1-space> )
+   </SPAN><SPAN class=any1-variable>DetachWithRefer</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Test for indirect detaching of local variables"</SPAN><SPAN class=any1-space> )
+   </SPAN><SPAN class=any1-variable>DetachToStatic</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> )
+   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cbStatic, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ) )
+   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cbStatic, </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ) )
+   cb :=cbStatic
+   </SPAN><SPAN class=any1-variable>DetachToStatic</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>100</SPAN><SPAN class=any1-space> )
+   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>200</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cbStatic, </SPAN><SPAN class=any1-number>100</SPAN><SPAN class=any1-space> ) )
+   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>300</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cbStatic, </SPAN><SPAN class=any1-number>200</SPAN><SPAN class=any1-space> ) )
+   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cb, </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-space> ) )
+
+   </SPAN><SPAN class=any1-variable>ReferParam</SPAN><SPAN class=any1-symbol>()
+
+</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-symbol>( NIL )
+
+</SPAN><SPAN class=any1-reservedword>Static</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>TestBlocks</SPAN><SPAN class=any1-symbol>()
+</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> nFoo := </SPAN><SPAN class=any1-number>23
+</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-symbol>( { {|| nFoo }, {|n| nFoo := n } } )
+
+</SPAN><SPAN class=any1-reservedword>Static</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( nExpected, nGot )
+
+   </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( nExpected, nGot )
+
+</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-symbol>( NIL )
+
+</SPAN><SPAN class=any1-comment>/////////////////////////////////////////////////////////////////
+</SPAN><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>GetArray</SPAN><SPAN class=any1-symbol>( a )
+</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> i
+
+   a :=</SPAN><SPAN class=any1-function>ARRAY</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>100</SPAN><SPAN class=any1-space> )
+   </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> i:=</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>TO</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>100
+</SPAN><SPAN class=any1-space>     </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-symbol>( (i % </SPAN><SPAN class=any1-number>6</SPAN><SPAN class=any1-symbol>) == </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-space> )
+         a[ i-2 ] =NIL
+         a[ i-4 ] =NIL
+     </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>     a[ i ] := </SPAN><SPAN class=any1-variable>TestBlocks</SPAN><SPAN class=any1-symbol>()
+   </SPAN><SPAN class=any1-reservedword>NEXT
+
+RETURN
+
+PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>PrintArray</SPAN><SPAN class=any1-symbol>( a )
+</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> i
+
+   </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> i:=</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>TO</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>100
+</SPAN><SPAN class=any1-space>     </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-symbol>( a[i] != NIL )
+       </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( a[ i ][ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ], i )
+       </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( i, </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( a[ i ][ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] ) )
+     </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>NEXT
+
+RETURN
+
+</SPAN><SPAN class=any1-comment>//////////////////////////////////////////////////////////////////
+</SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>DetachWithRefer</SPAN><SPAN class=any1-symbol>()
+</SPAN><SPAN class=any1-reservedword>Local</SPAN><SPAN class=any1-space> nTest
+</SPAN><SPAN class=any1-reservedword>Local</SPAN><SPAN class=any1-space> bBlock1 := </SPAN><SPAN class=any1-variable>MakeBlock</SPAN><SPAN class=any1-symbol>()
+</SPAN><SPAN class=any1-reservedword>Local</SPAN><SPAN class=any1-space> bBlock2 := {|| </SPAN><SPAN class=any1-variable>DoThing</SPAN><SPAN class=any1-symbol>( @nTest ), </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( nTest ) }
+
+   </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( bBlock1 )
+   </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( bBlock2 )
+
+</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-symbol>( NIL )
+
+</SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>MakeBlock</SPAN><SPAN class=any1-symbol>()
+</SPAN><SPAN class=any1-reservedword>Local</SPAN><SPAN class=any1-space> nTest
+</SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( {|| </SPAN><SPAN class=any1-variable>DoThing</SPAN><SPAN class=any1-symbol>( @nTest ), </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( nTest ) } )
+
+</SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>DoThing</SPAN><SPAN class=any1-symbol>( n )
+
+   n := </SPAN><SPAN class=any1-number>42
+
+</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-symbol>( NIL )
+
+</SPAN><SPAN class=any1-comment>//////////////////////////////////////////////////////////////////////
+</SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>DetachToStatic</SPAN><SPAN class=any1-symbol>( n )
+
+  cbStatic ={|x| n+x}
+
+</SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-space> NIL
+
+</SPAN><SPAN class=any1-comment>// ------------------------------------------------------------
+</SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>ReferParam</SPAN><SPAN class=any1-symbol>()
+</SPAN><SPAN class=any1-reservedword>Local</SPAN><SPAN class=any1-space> bResult
+
+? </SPAN><SPAN class=any1-string>"Test for codeblock parameter passed by reference"
+
+</SPAN><SPAN class=any1-variable>PassByValue</SPAN><SPAN class=any1-symbol>( {|lEnd| ;
+   bResult := </SPAN><SPAN class=any1-variable>GetBlock</SPAN><SPAN class=any1-symbol>( @lEnd ), ;  
+   </SPAN><SPAN class=any1-variable>SetByRef</SPAN><SPAN class=any1-symbol>( @lEnd ) } )
+</SPAN><SPAN class=any1-comment>// Clipper &amp; xHarbour it's .T.
+//In Harbour it is .F. 
+</SPAN><SPAN class=any1-symbol>? </SPAN><SPAN class=any1-string>"Printed value in Clipper  .T. ="</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>Eval</SPAN><SPAN class=any1-symbol>( bResult )           
+?
+</SPAN><SPAN class=any1-comment>// Notice the Clipper bug: GetBlock is receiving the reference to
+// the codeblock parameter than the value of EVAL(bResult) shouldn't
+// depend on the order of block creation/value changing (GetBlock/SetRef).
+
+</SPAN><SPAN class=any1-variable>PassByRef</SPAN><SPAN class=any1-symbol>( {|lEnd| ;
+   bResult := </SPAN><SPAN class=any1-variable>GetBlock</SPAN><SPAN class=any1-symbol>( @lEnd ), ;  
+   </SPAN><SPAN class=any1-variable>SetByRef</SPAN><SPAN class=any1-symbol>( @lEnd ) } )
+</SPAN><SPAN class=any1-comment>// Clipper &amp; xHarbour it's .T.
+//In Harbour it is .F. 
+</SPAN><SPAN class=any1-symbol>? </SPAN><SPAN class=any1-string>"Printed value in Clipper  .T. ="</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>Eval</SPAN><SPAN class=any1-symbol>( bResult )           
+?
+
+? </SPAN><SPAN class=any1-string>"2nd test for codeblock parameter passed by reference"
+
+</SPAN><SPAN class=any1-variable>PassByValue</SPAN><SPAN class=any1-symbol>( {|lEnd| ;
+   </SPAN><SPAN class=any1-variable>SetByRef</SPAN><SPAN class=any1-symbol>( @lEnd ), ;
+   bResult := </SPAN><SPAN class=any1-variable>GetBlock</SPAN><SPAN class=any1-symbol>( @lEnd ) } )
+</SPAN><SPAN class=any1-comment>// Clipper &amp; xHarbour it's .T.
+//In Harbour it is .F. 
+</SPAN><SPAN class=any1-symbol>? </SPAN><SPAN class=any1-string>"Printed value in Clipper  .F. ="</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>Eval</SPAN><SPAN class=any1-symbol>( bResult )           
+?
+
+</SPAN><SPAN class=any1-variable>PassByRef</SPAN><SPAN class=any1-symbol>( {|lEnd| ;
+   </SPAN><SPAN class=any1-variable>SetByRef</SPAN><SPAN class=any1-symbol>( @lEnd ), ;
+   bResult := </SPAN><SPAN class=any1-variable>GetBlock</SPAN><SPAN class=any1-symbol>( @lEnd ) } )
+</SPAN><SPAN class=any1-comment>// Clipper &amp; xHarbour it's .T.
+//In Harbour it is .F. 
+</SPAN><SPAN class=any1-symbol>? </SPAN><SPAN class=any1-string>"Printed value in Clipper  .F. ="</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>Eval</SPAN><SPAN class=any1-symbol>( bResult )           
+?
+
+</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-space> Nil
+
+</SPAN><SPAN class=any1-reservedword>Static</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>PassByValue</SPAN><SPAN class=any1-symbol>( bBlock )
+</SPAN><SPAN class=any1-reservedword>Local</SPAN><SPAN class=any1-space> lSomeVar := </SPAN><SPAN class=any1-activedot>.T.
+</SPAN><SPAN class=any1-function>Eval</SPAN><SPAN class=any1-symbol>( bBlock, lSomeVar )
+? </SPAN><SPAN class=any1-string>"lSomeVar value in Clipper .T. ="</SPAN><SPAN class=any1-symbol>, lSomeVar
+</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-activedot>.T.
+
+</SPAN><SPAN class=any1-reservedword>Static</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>PassByRef</SPAN><SPAN class=any1-symbol>( bBlock )
+</SPAN><SPAN class=any1-reservedword>Local</SPAN><SPAN class=any1-space> lSomeVar := </SPAN><SPAN class=any1-activedot>.T.
+</SPAN><SPAN class=any1-function>Eval</SPAN><SPAN class=any1-symbol>( bBlock, @lSomeVar )
+? </SPAN><SPAN class=any1-string>"lSomeVar value in Clipper .F. ="</SPAN><SPAN class=any1-symbol>, lSomeVar
+</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-activedot>.T.
+
+</SPAN><SPAN class=any1-reservedword>Static</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>SetByRef</SPAN><SPAN class=any1-symbol>( lVar )
+lVar := </SPAN><SPAN class=any1-activedot>.F.
+</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-space> Nil
+
+</SPAN><SPAN class=any1-reservedword>Static</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>GetBlock</SPAN><SPAN class=any1-symbol>( lVar )
+</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-space> {|| lVar }
+</SPAN><SPAN class=any1-comment>// ------------------------------------------------------------
+</SPAN></SPAN>
+</CODE></PRE></BODY></HTML>

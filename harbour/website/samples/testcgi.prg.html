@@ -1,0 +1,495 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>testcgi.prg</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
+<STYLE type=text/css>
+<!--
+body { color: #000000; background-color: #FFFFFF; }
+.any1-activedot { color: #800080; }
+.any1-comment { color: #008080; }
+.any1-constant { color: #800080; }
+.any1-escapeampersand { color: #00FF00; font-weight: bold; }
+.any1-function { color: #808000; }
+.any1-identifier { color: #000000; }
+.any1-number { color: #FF0000; }
+.any1-preprocessor { }
+.any1-reservedword { color: #800000; }
+.any1-space { }
+.any1-string { color: #0000FF; }
+.any1-symbol { }
+.any1-variable { color: #808000; }
+-->
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-comment>/*
+ *
+ * TestCGI.PRG
+ * Harbour Test of a CGI/HTML-Generator class.
+ *
+ * 1999/05/30  First implementation.
+ *
+ *             Tips: - Use ShowResults to make dynamic html (to test dynamic
+ *                     results, put the exe file on CGI-BIN dir or equivalent);
+ *                   - Use SaveToFile to make static html page
+ *
+ * 1999/05/31  Initial CGI functionality.
+ * 1999/06/01  Translated %nn to correct chars.
+ * 1999/06/02  Dynamic TAG matching routines (inspired on Delphi).
+ *             First attempt to convert Delphi's ISAPI dll of WebSites'
+ *             Function List
+ *             (See http://www.flexsys-ci.com/harbour-project/functions.htm)
+ * 1999/06/11  List can be viewed online at
+ *             http://www.flexsys-ci.com/cgi-bin/testcgi.exe
+ * 1999/07/29  Changed qOut() calls to OutStd() calls.
+ *
+ */
+
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_SERVER_SOFTWARE     </SPAN><SPAN class=any1-number>01
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_SERVER_NAME         </SPAN><SPAN class=any1-number>02
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_GATEWAY_INTERFACE   </SPAN><SPAN class=any1-number>03
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_SERVER_PROTOCOL     </SPAN><SPAN class=any1-number>04
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_SERVER_PORT         </SPAN><SPAN class=any1-number>05
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_REQUEST_METHOD      </SPAN><SPAN class=any1-number>06
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_HTTP_ACCEPT         </SPAN><SPAN class=any1-number>07
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_HTTP_USER_AGENT     </SPAN><SPAN class=any1-number>08
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_HTTP_REFERER        </SPAN><SPAN class=any1-number>09
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_PATH_INFO           </SPAN><SPAN class=any1-number>10
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_PATH_TRANSLATED     </SPAN><SPAN class=any1-number>11
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_SCRIPT_NAME         </SPAN><SPAN class=any1-number>12
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_QUERY_STRING        </SPAN><SPAN class=any1-number>13
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_REMOTE_HOST         </SPAN><SPAN class=any1-number>14
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_REMOTE_ADDR         </SPAN><SPAN class=any1-number>15
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_REMOTE_USER         </SPAN><SPAN class=any1-number>16
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_AUTH_TYPE           </SPAN><SPAN class=any1-number>17
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_CONTENT_TYPE        </SPAN><SPAN class=any1-number>18
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_CONTENT_LENGTH      </SPAN><SPAN class=any1-number>19
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> CGI_ANNOTATION_SERVER   </SPAN><SPAN class=any1-number>20
+
+</SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> IF_BUFFER </SPAN><SPAN class=any1-number>65535
+
+</SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Main</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> oHTML := </SPAN><SPAN class=any1-variable>THTML</SPAN><SPAN class=any1-symbol>():</SPAN><SPAN class=any1-variable>New</SPAN><SPAN class=any1-symbol>()
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> hFile, nPos, cString, cBuf, i, cTable, cLine
+
+   oHTML:</SPAN><SPAN class=any1-variable>SetHTMLFile</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"function.cfm"</SPAN><SPAN class=any1-space> )
+
+   hFile := </SPAN><SPAN class=any1-function>fOpen</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"list.txt"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-space> )
+
+   cString := </SPAN><SPAN class=any1-function>space</SPAN><SPAN class=any1-symbol>( IF_BUFFER )
+   cBuf    := </SPAN><SPAN class=any1-string>""
+</SPAN><SPAN class=any1-space>   cTable  := </SPAN><SPAN class=any1-string>""
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-comment>// Builds dynamic table replacement
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>WHILE</SPAN><SPAN class=any1-space> hFile != -</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> .AND. (nPos := </SPAN><SPAN class=any1-function>fRead</SPAN><SPAN class=any1-symbol>( hFile, @cString, IF_BUFFER )) &gt; </SPAN><SPAN class=any1-number>0
+</SPAN><SPAN class=any1-space>      i := </SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>DO</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>WHILE</SPAN><SPAN class=any1-space> i &lt;= nPos
+
+         </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>substr</SPAN><SPAN class=any1-symbol>( cString, i, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ) = </SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>13</SPAN><SPAN class=any1-space> )
+            i := i + </SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>            cLine := cBuf
+            cBuf  := </SPAN><SPAN class=any1-string>""
+
+</SPAN><SPAN class=any1-space>            </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>left</SPAN><SPAN class=any1-symbol>( cLine, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ) &lt;&gt; </SPAN><SPAN class=any1-string>';'
+</SPAN><SPAN class=any1-space>               cTable += </SPAN><SPAN class=any1-string>'&lt;TR&gt;'</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-symbol>)+</SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>13</SPAN><SPAN class=any1-symbol>) + ;
+                 </SPAN><SPAN class=any1-string>'&lt;TD WIDTH="50%"&gt;&lt;FONT SIZE="2" FACE="Tahoma"&gt;'</SPAN><SPAN class=any1-space> +                 ;
+                 </SPAN><SPAN class=any1-variable>ParseString</SPAN><SPAN class=any1-symbol>( cLine, </SPAN><SPAN class=any1-string>';'</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ) + </SPAN><SPAN class=any1-string>'&lt;/FONT&gt;&lt;/TD&gt;'</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-symbol>)+</SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>13</SPAN><SPAN class=any1-symbol>) + ;
+                 </SPAN><SPAN class=any1-string>'&lt;TD WIDTH="16%"&gt;'</SPAN><SPAN class=any1-space> +                                              ;
+                 </SPAN><SPAN class=any1-reservedword>if</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>ParseString</SPAN><SPAN class=any1-symbol>( cLine, </SPAN><SPAN class=any1-string>';'</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ) = </SPAN><SPAN class=any1-string>'R'</SPAN><SPAN class=any1-symbol>,                           ;
+                    </SPAN><SPAN class=any1-string>'&lt;CENTER&gt;&lt;IMG SRC="images/purple-m.gif"&gt;'</SPAN><SPAN class=any1-symbol>,                     ;
+                    </SPAN><SPAN class=any1-string>'&amp;nbsp'</SPAN><SPAN class=any1-space> ) +                                                    ;
+                 </SPAN><SPAN class=any1-string>'&lt;/TD&gt;'</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-symbol>)+</SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>13</SPAN><SPAN class=any1-symbol>) +                                       ;
+                 </SPAN><SPAN class=any1-string>'&lt;TD WIDTH="16%"&gt;'</SPAN><SPAN class=any1-space> +                                              ;
+                 </SPAN><SPAN class=any1-reservedword>if</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>ParseString</SPAN><SPAN class=any1-symbol>( cLine, </SPAN><SPAN class=any1-string>';'</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ) = </SPAN><SPAN class=any1-string>'S'</SPAN><SPAN class=any1-symbol>,                           ;
+                    </SPAN><SPAN class=any1-string>'&lt;CENTER&gt;&lt;IMG SRC="images/purple-m.gif"&gt;'</SPAN><SPAN class=any1-symbol>,                     ;
+                    </SPAN><SPAN class=any1-string>'&amp;nbsp'</SPAN><SPAN class=any1-space> ) +                                                    ;
+                 </SPAN><SPAN class=any1-string>'&lt;/TD&gt;'</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-symbol>)+</SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>13</SPAN><SPAN class=any1-symbol>) +                                       ;
+                 </SPAN><SPAN class=any1-string>'&lt;TD WIDTH="16%"&gt;'</SPAN><SPAN class=any1-space> +                                              ;
+                 </SPAN><SPAN class=any1-reservedword>if</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>ParseString</SPAN><SPAN class=any1-symbol>( cLine, </SPAN><SPAN class=any1-string>';'</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ) = </SPAN><SPAN class=any1-string>'N'</SPAN><SPAN class=any1-symbol>,                           ;
+                    </SPAN><SPAN class=any1-string>'&lt;CENTER&gt;&lt;IMG SRC="images/purple-m.gif"&gt;'</SPAN><SPAN class=any1-symbol>,                     ;
+                    </SPAN><SPAN class=any1-string>'&amp;nbsp'</SPAN><SPAN class=any1-space> ) +                                                    ;
+                 </SPAN><SPAN class=any1-string>'&lt;/TD&gt;'</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-symbol>)+</SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>13</SPAN><SPAN class=any1-symbol>) +                                       ;
+                 </SPAN><SPAN class=any1-string>'&lt;/TR&gt;'
+</SPAN><SPAN class=any1-space>            </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>ELSE
+</SPAN><SPAN class=any1-space>            cBuf := cBuf + </SPAN><SPAN class=any1-function>substr</SPAN><SPAN class=any1-symbol>( cString, i, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> )
+         </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>         i++
+      </SPAN><SPAN class=any1-reservedword>ENDDO
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ENDDO
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>fClose</SPAN><SPAN class=any1-symbol>( hFile )
+
+   oHTML:</SPAN><SPAN class=any1-variable>AddReplaceTag</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Functions"</SPAN><SPAN class=any1-symbol>, cTable )
+   oHTML:</SPAN><SPAN class=any1-variable>Generate</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-comment>// Uncomment the following if you don't have a Web Server to test
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-comment>// this sample
+
+//   oHTML:SaveToFile( "test.htm" )
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-comment>// If the above is uncommented, you may comment this line:
+
+</SPAN><SPAN class=any1-space>   oHTML:</SPAN><SPAN class=any1-variable>ShowResult</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( NIL )
+
+</SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>ParseString</SPAN><SPAN class=any1-symbol>( cString, cDelim, nRet )
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> cBuf, aElem, nPosFim, nSize, i
+
+   nSize := </SPAN><SPAN class=any1-function>len</SPAN><SPAN class=any1-symbol>( cString ) - </SPAN><SPAN class=any1-function>len</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>StrTran</SPAN><SPAN class=any1-symbol>( cString, cDelim, </SPAN><SPAN class=any1-string>''</SPAN><SPAN class=any1-space> ) ) + </SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>   aElem := </SPAN><SPAN class=any1-function>array</SPAN><SPAN class=any1-symbol>( nSize )
+
+   cBuf := cString
+   i := </SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> i := </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>TO</SPAN><SPAN class=any1-space> nSize
+      nPosFim := </SPAN><SPAN class=any1-function>at</SPAN><SPAN class=any1-symbol>( cDelim, cBuf )
+
+      </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> nPosFim &gt; </SPAN><SPAN class=any1-number>0
+</SPAN><SPAN class=any1-space>         aElem[i] := </SPAN><SPAN class=any1-function>substr</SPAN><SPAN class=any1-symbol>( cBuf, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>, nPosFim - </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> )
+      </SPAN><SPAN class=any1-reservedword>ELSE
+</SPAN><SPAN class=any1-space>         aElem[i] := cBuf
+      </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>      cBuf := </SPAN><SPAN class=any1-function>substr</SPAN><SPAN class=any1-symbol>( cBuf, nPosFim + </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>len</SPAN><SPAN class=any1-symbol>( cBuf ) )
+
+   </SPAN><SPAN class=any1-reservedword>NEXT</SPAN><SPAN class=any1-space> i
+
+   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( aElem[ nRet ] )
+
+</SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Hex2Dec</SPAN><SPAN class=any1-symbol>( cHex )
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> aHex := { { </SPAN><SPAN class=any1-string>"0"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>00</SPAN><SPAN class=any1-space> }, ;
+                   { </SPAN><SPAN class=any1-string>"1"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>01</SPAN><SPAN class=any1-space> }, ;
+                   { </SPAN><SPAN class=any1-string>"2"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>02</SPAN><SPAN class=any1-space> }, ;
+                   { </SPAN><SPAN class=any1-string>"3"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>03</SPAN><SPAN class=any1-space> }, ;
+                   { </SPAN><SPAN class=any1-string>"4"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>04</SPAN><SPAN class=any1-space> }, ;
+                   { </SPAN><SPAN class=any1-string>"5"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>05</SPAN><SPAN class=any1-space> }, ;
+                   { </SPAN><SPAN class=any1-string>"6"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>06</SPAN><SPAN class=any1-space> }, ;
+                   { </SPAN><SPAN class=any1-string>"7"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>07</SPAN><SPAN class=any1-space> }, ;
+                   { </SPAN><SPAN class=any1-string>"8"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>08</SPAN><SPAN class=any1-space> }, ;
+                   { </SPAN><SPAN class=any1-string>"9"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>09</SPAN><SPAN class=any1-space> }, ;
+                   { </SPAN><SPAN class=any1-string>"A"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-space> }, ;
+                   { </SPAN><SPAN class=any1-string>"B"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>11</SPAN><SPAN class=any1-space> }, ;
+                   { </SPAN><SPAN class=any1-string>"C"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>12</SPAN><SPAN class=any1-space> }, ;
+                   { </SPAN><SPAN class=any1-string>"D"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>13</SPAN><SPAN class=any1-space> }, ;
+                   { </SPAN><SPAN class=any1-string>"E"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>14</SPAN><SPAN class=any1-space> }, ;
+                   { </SPAN><SPAN class=any1-string>"F"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>15</SPAN><SPAN class=any1-space> } }
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> nRet
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> nRes
+
+   nRet := </SPAN><SPAN class=any1-function>ascan</SPAN><SPAN class=any1-symbol>( aHex, { |x| </SPAN><SPAN class=any1-function>upper</SPAN><SPAN class=any1-symbol>( x[</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>] ) = </SPAN><SPAN class=any1-function>upper</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>left</SPAN><SPAN class=any1-symbol>( cHex, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ) ) } )
+   nRes := aHex[nRet, </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>] * </SPAN><SPAN class=any1-number>16
+</SPAN><SPAN class=any1-space>   nRet := </SPAN><SPAN class=any1-function>ascan</SPAN><SPAN class=any1-symbol>( aHex, { |x| </SPAN><SPAN class=any1-function>upper</SPAN><SPAN class=any1-symbol>( x[</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>] ) = </SPAN><SPAN class=any1-function>upper</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>right</SPAN><SPAN class=any1-symbol>( cHex, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ) ) } )
+   nRes += aHex[nRet, </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>]
+
+   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( nRes )
+
+</SPAN><SPAN class=any1-comment>/*-------------------------------------------------------------------------*/
+
+</SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> THTML
+
+   </SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> oClass
+
+   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> oClass == NIL
+      oClass = </SPAN><SPAN class=any1-variable>HBClass</SPAN><SPAN class=any1-symbol>():</SPAN><SPAN class=any1-variable>New</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"THTML"</SPAN><SPAN class=any1-space> )
+
+      oClass:</SPAN><SPAN class=any1-variable>AddData</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"cTitle"</SPAN><SPAN class=any1-space> )                       </SPAN><SPAN class=any1-comment>// Page Title
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddData</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"cBody"</SPAN><SPAN class=any1-space> )                        </SPAN><SPAN class=any1-comment>// HTML Body Handler
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddData</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"cBGColor"</SPAN><SPAN class=any1-space> )                     </SPAN><SPAN class=any1-comment>// Background Color
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddData</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"cLinkColor"</SPAN><SPAN class=any1-space> )                   </SPAN><SPAN class=any1-comment>// Link Color
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddData</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"cvLinkColor"</SPAN><SPAN class=any1-space> )                  </SPAN><SPAN class=any1-comment>// Visited Link Color
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddData</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"cContent"</SPAN><SPAN class=any1-space> )                     </SPAN><SPAN class=any1-comment>// Page Content Handler
+
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddData</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"aCGIContents"</SPAN><SPAN class=any1-space> )
+      oClass:</SPAN><SPAN class=any1-variable>AddData</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"aQueryFields"</SPAN><SPAN class=any1-space> )
+      oClass:</SPAN><SPAN class=any1-variable>AddData</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"cHTMLFile"</SPAN><SPAN class=any1-space> )
+      oClass:</SPAN><SPAN class=any1-variable>AddData</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"aReplaceTags"</SPAN><SPAN class=any1-space> )
+
+      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"New"</SPAN><SPAN class=any1-symbol>,        @</SPAN><SPAN class=any1-variable>New</SPAN><SPAN class=any1-symbol>() )         </SPAN><SPAN class=any1-comment>// New Method
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"SetTitle"</SPAN><SPAN class=any1-symbol>,   @</SPAN><SPAN class=any1-variable>SetTitle</SPAN><SPAN class=any1-symbol>() )    </SPAN><SPAN class=any1-comment>// Set Page Title
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"AddHead"</SPAN><SPAN class=any1-symbol>,    @</SPAN><SPAN class=any1-variable>AddHead</SPAN><SPAN class=any1-symbol>() )     </SPAN><SPAN class=any1-comment>// Add &lt;H1&gt; Header
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"AddLink"</SPAN><SPAN class=any1-symbol>,    @</SPAN><SPAN class=any1-variable>AddLink</SPAN><SPAN class=any1-symbol>() )     </SPAN><SPAN class=any1-comment>// Add Hyperlink
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"AddPara"</SPAN><SPAN class=any1-symbol>,    @</SPAN><SPAN class=any1-variable>AddPara</SPAN><SPAN class=any1-symbol>() )     </SPAN><SPAN class=any1-comment>// Add Paragraph
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"SaveToFile"</SPAN><SPAN class=any1-symbol>, @</SPAN><SPAN class=any1-variable>SaveToFile</SPAN><SPAN class=any1-symbol>() )  </SPAN><SPAN class=any1-comment>// Saves Content to File
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"ShowResult"</SPAN><SPAN class=any1-symbol>, @</SPAN><SPAN class=any1-variable>ShowResult</SPAN><SPAN class=any1-symbol>() )  </SPAN><SPAN class=any1-comment>// Show Result - SEE Fcn
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Generate"</SPAN><SPAN class=any1-symbol>,   @</SPAN><SPAN class=any1-variable>Generate</SPAN><SPAN class=any1-symbol>() )    </SPAN><SPAN class=any1-comment>// Generate HTML
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"SetHTMLFile"</SPAN><SPAN class=any1-symbol>,@</SPAN><SPAN class=any1-variable>SetHTMLFile</SPAN><SPAN class=any1-symbol>() ) </SPAN><SPAN class=any1-comment>// Sets source HTML file
+
+</SPAN><SPAN class=any1-space>      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"ProcessCGI"</SPAN><SPAN class=any1-symbol>,    @</SPAN><SPAN class=any1-variable>ProcessCGI</SPAN><SPAN class=any1-symbol>() )
+      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"GetCGIParam"</SPAN><SPAN class=any1-symbol>,   @</SPAN><SPAN class=any1-variable>GetCGIParam</SPAN><SPAN class=any1-symbol>() )
+      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"QueryFields"</SPAN><SPAN class=any1-symbol>,   @</SPAN><SPAN class=any1-variable>QueryFields</SPAN><SPAN class=any1-symbol>() )
+      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"AddReplaceTag"</SPAN><SPAN class=any1-symbol>, @</SPAN><SPAN class=any1-variable>AddReplaceTag</SPAN><SPAN class=any1-symbol>() )
+
+      oClass:</SPAN><SPAN class=any1-function>Create</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( oClass:</SPAN><SPAN class=any1-variable>Instance</SPAN><SPAN class=any1-symbol>() )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>New</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+
+   ::cTitle       := </SPAN><SPAN class=any1-string>"Untitled"
+</SPAN><SPAN class=any1-space>   ::cBGColor     := </SPAN><SPAN class=any1-string>"#FFFFFF"
+</SPAN><SPAN class=any1-space>   ::cLinkColor   := </SPAN><SPAN class=any1-string>"#0000FF"
+</SPAN><SPAN class=any1-space>   ::cvLinkColor  := </SPAN><SPAN class=any1-string>"#FF0000"
+</SPAN><SPAN class=any1-space>   ::cContent     := </SPAN><SPAN class=any1-string>""
+</SPAN><SPAN class=any1-space>   ::cBody        := </SPAN><SPAN class=any1-string>""
+</SPAN><SPAN class=any1-space>   ::aCGIContents := {}
+   ::aQueryFields := {}
+   ::aReplaceTags := {}
+   ::cHTMLFile    := </SPAN><SPAN class=any1-string>""
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>SetTitle</SPAN><SPAN class=any1-symbol>( cTitle )
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+
+   ::cTitle := cTitle
+
+   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>AddLink</SPAN><SPAN class=any1-symbol>( cLinkTo, cLinkName )
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+
+   ::cBody := ::cBody + ;
+      </SPAN><SPAN class=any1-string>"&lt;A HREF='"</SPAN><SPAN class=any1-space> + cLinkTo + </SPAN><SPAN class=any1-string>"'&gt;"</SPAN><SPAN class=any1-space> + cLinkName + </SPAN><SPAN class=any1-string>"&lt;/A&gt;"
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>AddHead</SPAN><SPAN class=any1-symbol>( cDescr )
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-comment>// Why this doesn't work?
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-comment>// ::cBody += ...
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-comment>// ???
+
+</SPAN><SPAN class=any1-space>   ::cBody := ::cBody + ;
+      </SPAN><SPAN class=any1-string>"&lt;H1&gt;"</SPAN><SPAN class=any1-space> + cDescr + </SPAN><SPAN class=any1-string>"&lt;/H1&gt;"
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( NIL )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>AddPara</SPAN><SPAN class=any1-symbol>( cPara, cAlign )
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+
+   ::cBody := ::cBody + ;
+      </SPAN><SPAN class=any1-string>"&lt;P ALIGN='"</SPAN><SPAN class=any1-space> + cAlign + </SPAN><SPAN class=any1-string>"'&gt;"</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + ;
+      cPara + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + ;
+      </SPAN><SPAN class=any1-string>"&lt;/P&gt;"
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Generate</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> cFile, i, hFile, nPos, cRes := </SPAN><SPAN class=any1-string>""
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> lFlag := </SPAN><SPAN class=any1-activedot>.f.
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-comment>// Is this a meta file or hand generated script?
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>empty</SPAN><SPAN class=any1-symbol>( ::cHTMLFile )
+      ::cContent :=                                                        ;
+         </SPAN><SPAN class=any1-string>"&lt;HTML&gt;&lt;HEAD&gt;"</SPAN><SPAN class=any1-space>                                        + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + ;
+         </SPAN><SPAN class=any1-string>"&lt;TITLE&gt;"</SPAN><SPAN class=any1-space> + ::cTitle + </SPAN><SPAN class=any1-string>"&lt;/TITLE&gt;"</SPAN><SPAN class=any1-space>                     + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + ;
+         </SPAN><SPAN class=any1-string>"&lt;BODY link='"</SPAN><SPAN class=any1-space> + ::cLinkColor + </SPAN><SPAN class=any1-string>"' "</SPAN><SPAN class=any1-space> +                            ;
+         </SPAN><SPAN class=any1-string>"vlink='"</SPAN><SPAN class=any1-space> + ::cvLinkColor + </SPAN><SPAN class=any1-string>"'&gt;"</SPAN><SPAN class=any1-space> +                    + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + ;
+         ::cBody                                               + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + ;
+         </SPAN><SPAN class=any1-string>"&lt;/BODY&gt;&lt;/HTML&gt;"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ELSE
+</SPAN><SPAN class=any1-space>      ::cContent := </SPAN><SPAN class=any1-string>""
+
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-comment>// Does cHTMLFile exists?
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> !</SPAN><SPAN class=any1-function>File</SPAN><SPAN class=any1-symbol>( ::cHTMLFile )
+         ::cContent := </SPAN><SPAN class=any1-string>"&lt;H1&gt;Server Error&lt;/H1&gt;&lt;P&gt;&lt;I&gt;No such file: "</SPAN><SPAN class=any1-space> + ;
+           ::cHTMLFile
+      </SPAN><SPAN class=any1-reservedword>ELSE
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-comment>// Read from file
+</SPAN><SPAN class=any1-space>         hFile := </SPAN><SPAN class=any1-function>fOpen</SPAN><SPAN class=any1-symbol>( ::cHTMLFile, </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-space> )
+         cFile := </SPAN><SPAN class=any1-function>space</SPAN><SPAN class=any1-symbol>( IF_BUFFER )
+         </SPAN><SPAN class=any1-reservedword>DO</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>WHILE</SPAN><SPAN class=any1-space> (nPos := </SPAN><SPAN class=any1-function>fRead</SPAN><SPAN class=any1-symbol>( hFile, @cFile, IF_BUFFER )) &gt; </SPAN><SPAN class=any1-number>0
+
+</SPAN><SPAN class=any1-space>            cFile := </SPAN><SPAN class=any1-function>left</SPAN><SPAN class=any1-symbol>( cFile, nPos )
+            cRes += cFile
+            cFile := </SPAN><SPAN class=any1-function>space</SPAN><SPAN class=any1-symbol>( IF_BUFFER )
+
+         </SPAN><SPAN class=any1-reservedword>ENDDO
+
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-function>fClose</SPAN><SPAN class=any1-symbol>( hFile )
+
+         </SPAN><SPAN class=any1-comment>// Replace matched tags
+</SPAN><SPAN class=any1-space>         i := </SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>         ::cContent := cRes
+         </SPAN><SPAN class=any1-comment>/* TODO: Replace this DO WHILE with FOR..NEXT */
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>DO</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>WHILE</SPAN><SPAN class=any1-space> i &lt;= </SPAN><SPAN class=any1-function>len</SPAN><SPAN class=any1-symbol>( ::aReplaceTags )
+            ::cContent := </SPAN><SPAN class=any1-function>strtran</SPAN><SPAN class=any1-symbol>( ::cContent, ;
+               </SPAN><SPAN class=any1-string>"&lt;#"</SPAN><SPAN class=any1-space> + ::aReplaceTags[i, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>] + </SPAN><SPAN class=any1-string>"&gt;"</SPAN><SPAN class=any1-symbol>, ::aReplaceTags[i, </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>] )
+            i++
+         </SPAN><SPAN class=any1-reservedword>ENDDO
+
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-comment>/* TODO: Clear remaining (not matched) tags */
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-comment>/*
+         cRes := ""
+         FOR i := 1 TO len( ::cContent )
+            IF substr( ::cContent, i, 1 ) == "&lt;" .AND. ;
+               substr( ::cContent, i + 1, 1 ) == "#"
+               lFlag := .t.
+            ELSEIF substr( ::cContent, i, 1 ) == "&gt;" .AND. lFlag
+               lFlag := .f.
+            ELSEIF !lFlag
+               cRes += substr( ::cContent, i, 1 )
+            ENDIF
+         NEXT i
+
+         ::cContent := cRes
+         */
+
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>ShowResult</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>(                                                                 ;
+      </SPAN><SPAN class=any1-string>"HTTP/1.0 200 OK"</SPAN><SPAN class=any1-space>                                        + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + ;
+      </SPAN><SPAN class=any1-string>"CONTENT-TYPE: TEXT/HTML"</SPAN><SPAN class=any1-space>                      + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + ;
+      ::cContent )
+
+   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>SaveToFile</SPAN><SPAN class=any1-symbol>( cFile )
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self  := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> hFile := </SPAN><SPAN class=any1-function>fCreate</SPAN><SPAN class=any1-symbol>( cFile )
+
+   </SPAN><SPAN class=any1-function>fWrite</SPAN><SPAN class=any1-symbol>( hFile, ::cContent )
+   </SPAN><SPAN class=any1-function>fClose</SPAN><SPAN class=any1-symbol>( hFile )
+
+   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>ProcessCGI</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self   := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> cQuery := </SPAN><SPAN class=any1-string>""
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> cBuff  := </SPAN><SPAN class=any1-string>""
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> nBuff  := </SPAN><SPAN class=any1-number>0
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> i
+
+   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>empty</SPAN><SPAN class=any1-symbol>( ::aCGIContents )
+      ::aCGIContents := {               ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"SERVER_SOFTWARE"</SPAN><SPAN class=any1-space>   ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"SERVER_NAME"</SPAN><SPAN class=any1-space>       ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"GATEWAY_INTERFACE"</SPAN><SPAN class=any1-space> ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"SERVER_PROTOCOL"</SPAN><SPAN class=any1-space>   ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"SERVER_PORT"</SPAN><SPAN class=any1-space>       ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"REQUEST_METHOD"</SPAN><SPAN class=any1-space>    ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"HTTP_ACCEPT"</SPAN><SPAN class=any1-space>       ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"HTTP_USER_AGENT"</SPAN><SPAN class=any1-space>   ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"HTTP_REFERER"</SPAN><SPAN class=any1-space>      ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"PATH_INFO"</SPAN><SPAN class=any1-space>         ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"PATH_TRANSLATED"</SPAN><SPAN class=any1-space>   ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"SCRIPT_NAME"</SPAN><SPAN class=any1-space>       ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"QUERY_STRING"</SPAN><SPAN class=any1-space>      ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"REMOTE_HOST"</SPAN><SPAN class=any1-space>       ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"REMOTE_ADDR"</SPAN><SPAN class=any1-space>       ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"REMOTE_USER"</SPAN><SPAN class=any1-space>       ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"AUTH_TYPE"</SPAN><SPAN class=any1-space>         ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"CONTENT_TYPE"</SPAN><SPAN class=any1-space>      ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"CONTENT_LENGTH"</SPAN><SPAN class=any1-space>    ), ;
+         </SPAN><SPAN class=any1-function>GetEnv</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"ANNOTATION_SERVER"</SPAN><SPAN class=any1-space> )  ;
+          }
+
+      cQuery := ::</SPAN><SPAN class=any1-variable>GetCGIParam</SPAN><SPAN class=any1-symbol>( CGI_QUERY_STRING )
+
+      </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> !</SPAN><SPAN class=any1-function>empty</SPAN><SPAN class=any1-symbol>( cQuery )
+
+        ::aQueryFields := {}
+
+        </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> i := </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>TO</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>len</SPAN><SPAN class=any1-symbol>( cQuery ) + </SPAN><SPAN class=any1-number>1
+
+</SPAN><SPAN class=any1-space>          </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> i &gt; </SPAN><SPAN class=any1-function>len</SPAN><SPAN class=any1-symbol>( cQuery ) .OR. </SPAN><SPAN class=any1-function>substr</SPAN><SPAN class=any1-symbol>( cQuery, i, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ) == </SPAN><SPAN class=any1-string>"&amp;"
+
+</SPAN><SPAN class=any1-space>             </SPAN><SPAN class=any1-function>aadd</SPAN><SPAN class=any1-symbol>( ::aQueryFields,                          ;
+                { </SPAN><SPAN class=any1-function>substr</SPAN><SPAN class=any1-symbol>( cBuff, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>at</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"="</SPAN><SPAN class=any1-symbol>, cBuff ) - </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ), ;
+                  </SPAN><SPAN class=any1-function>strtran</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>substr</SPAN><SPAN class=any1-symbol>( cBuff, </SPAN><SPAN class=any1-function>at</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"="</SPAN><SPAN class=any1-symbol>, cBuff ) + </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>,      ;
+                     </SPAN><SPAN class=any1-function>len</SPAN><SPAN class=any1-symbol>( cBuff ) - </SPAN><SPAN class=any1-function>at</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"="</SPAN><SPAN class=any1-symbol>, cBuff ) + </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ), </SPAN><SPAN class=any1-string>"+"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>" "</SPAN><SPAN class=any1-space> ) } )
+             cBuff := </SPAN><SPAN class=any1-string>""
+</SPAN><SPAN class=any1-space>          </SPAN><SPAN class=any1-reservedword>ELSE
+</SPAN><SPAN class=any1-space>             </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>substr</SPAN><SPAN class=any1-symbol>( cQuery, i, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ) = </SPAN><SPAN class=any1-string>"%"
+</SPAN><SPAN class=any1-space>                cBuff += </SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>Hex2Dec</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>substr</SPAN><SPAN class=any1-symbol>( cQuery, i + </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ) ) )
+                nBuff := </SPAN><SPAN class=any1-number>3
+</SPAN><SPAN class=any1-space>             </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>             </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> nBuff = </SPAN><SPAN class=any1-number>0
+</SPAN><SPAN class=any1-space>                cBuff += </SPAN><SPAN class=any1-function>substr</SPAN><SPAN class=any1-symbol>( cQuery, i, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> )
+             </SPAN><SPAN class=any1-reservedword>ELSE
+</SPAN><SPAN class=any1-space>                nBuff--
+             </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>          </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>        </SPAN><SPAN class=any1-reservedword>NEXT
+
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>GetCGIParam</SPAN><SPAN class=any1-symbol>( nParam )
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+
+   ::</SPAN><SPAN class=any1-variable>ProcessCGI</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> nParam &gt; </SPAN><SPAN class=any1-number>20</SPAN><SPAN class=any1-space> .OR. nParam &lt; </SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-function>outerr</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Invalid CGI parameter"</SPAN><SPAN class=any1-space> )
+      </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( NIL )
+   </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( ::aCGIContents[nParam] )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>QueryFields</SPAN><SPAN class=any1-symbol>( cQueryName )
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> cRet := </SPAN><SPAN class=any1-string>""
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> nRet
+
+   ::</SPAN><SPAN class=any1-variable>ProcessCGI</SPAN><SPAN class=any1-symbol>()
+
+   nRet := </SPAN><SPAN class=any1-function>aScan</SPAN><SPAN class=any1-symbol>( ::aQueryFields, ;
+      { |x| </SPAN><SPAN class=any1-function>upper</SPAN><SPAN class=any1-symbol>( x[</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>] ) = </SPAN><SPAN class=any1-function>upper</SPAN><SPAN class=any1-symbol>( cQueryName ) } )
+
+   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> nRet &gt; </SPAN><SPAN class=any1-number>0
+</SPAN><SPAN class=any1-space>      cRet := ::aQueryFields[nRet, </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>]
+   </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( cRet )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>SetHTMLFile</SPAN><SPAN class=any1-symbol>( cFile )
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+
+   ::cHTMLFile := cFile
+
+   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>AddReplaceTag</SPAN><SPAN class=any1-symbol>( cTag, cReplaceText )
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-function>aAdd</SPAN><SPAN class=any1-symbol>( ::aReplaceTags, { cTag, cReplaceText } )
+
+   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
+</SPAN></SPAN>
+</CODE></PRE>
+</BODY></HTML>

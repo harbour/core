@@ -1,0 +1,289 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>mousetst.prg</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
+<STYLE type=text/css>
+<!--
+body { color: #000000; background-color: #FFFFFF; }
+.any1-activedot { color: #800080; }
+.any1-comment { color: #008080; }
+.any1-constant { color: #800080; }
+.any1-escapeampersand { color: #00FF00; font-weight: bold; }
+.any1-function { color: #808000; }
+.any1-identifier { color: #000000; }
+.any1-number { color: #FF0000; }
+.any1-preprocessor { }
+.any1-reservedword { color: #800000; }
+.any1-space { }
+.any1-string { color: #0000FF; }
+.any1-symbol { }
+.any1-variable { color: #808000; }
+-->
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-comment>/*
+ * Test mouse for Harbour Project
+*/
+
+</SPAN><SPAN class=any1-constant>#include</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"inkey.ch"
+
+</SPAN><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>main</SPAN><SPAN class=any1-symbol>()
+</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> nR := </SPAN><SPAN class=any1-number>5</SPAN><SPAN class=any1-symbol>, nC := </SPAN><SPAN class=any1-number>38
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>SET</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>CURSOR</SPAN><SPAN class=any1-space> OFF
+   ? </SPAN><SPAN class=any1-string>"."</SPAN><SPAN class=any1-symbol>; CLS
+   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> ! </SPAN><SPAN class=any1-variable>MPRESENT</SPAN><SPAN class=any1-symbol>()
+      ? </SPAN><SPAN class=any1-string>" No mouse present !"
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-function>QUIT
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>   @  </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>TO</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>(),</SPAN><SPAN class=any1-function>MAXCOL</SPAN><SPAN class=any1-symbol>() DOUBLE
+   @ </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>TO</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>(), </SPAN><SPAN class=any1-number>18</SPAN><SPAN class=any1-space> DOUBLE
+   @ </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>02</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Y:"
+</SPAN><SPAN class=any1-space>   @ </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"X:"
+
+</SPAN><SPAN class=any1-space>   @ nR  , </SPAN><SPAN class=any1-number>02</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Mouse Type    : "
+</SPAN><SPAN class=any1-space>   @ nR+</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>02</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Buttons number: "
+</SPAN><SPAN class=any1-space>   @ nR+</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>18</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>NUMBUTTONS</SPAN><SPAN class=any1-symbol>() PICT </SPAN><SPAN class=any1-string>"9"
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>NUMBUTTONS</SPAN><SPAN class=any1-symbol>() == </SPAN><SPAN class=any1-number>2
+</SPAN><SPAN class=any1-space>      @ nR, </SPAN><SPAN class=any1-number>18</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Micros*ft mouse"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ELSE
+</SPAN><SPAN class=any1-space>      @ nR, </SPAN><SPAN class=any1-number>18</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Mouse System"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>   @ </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>68</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>TO</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>(),</SPAN><SPAN class=any1-function>MAXCOL</SPAN><SPAN class=any1-symbol>() DOUBLE
+   @ </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>70</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Exit"
+
+</SPAN><SPAN class=any1-space>   @ </SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>02</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>" -- Checkings --  "
+</SPAN><SPAN class=any1-space>   @ </SPAN><SPAN class=any1-number>11</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>02</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Window Boundaries :"
+</SPAN><SPAN class=any1-space>   @ </SPAN><SPAN class=any1-number>12</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>02</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Press/Release But.:"
+</SPAN><SPAN class=any1-space>   @ </SPAN><SPAN class=any1-number>13</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>02</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Double Click Left :"
+</SPAN><SPAN class=any1-space>   @ </SPAN><SPAN class=any1-number>14</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>02</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Double Click Right:"
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>TEST1</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-variable>TEST2</SPAN><SPAN class=any1-symbol>( nR, nC )
+
+@ </SPAN><SPAN class=any1-number>24</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>""
+
+</SPAN><SPAN class=any1-function>SET</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>CURSOR</SPAN><SPAN class=any1-space> ON
+?
+</SPAN><SPAN class=any1-reservedword>RETURN
+
+
+</SPAN><SPAN class=any1-comment>******************
+</SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>MUPDATE</SPAN><SPAN class=any1-symbol>()
+@ </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>04</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>MROW</SPAN><SPAN class=any1-symbol>() PICT </SPAN><SPAN class=any1-string>"9999"
+</SPAN><SPAN class=any1-symbol>@ </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>12</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>MCOL</SPAN><SPAN class=any1-symbol>() PICT </SPAN><SPAN class=any1-string>"9999"
+</SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>0
+
+
+</SPAN><SPAN class=any1-comment>*********************************************
+</SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>MINRECT</SPAN><SPAN class=any1-symbol>( nTop, nLeft, nBott, nRight)
+</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> lInside := </SPAN><SPAN class=any1-activedot>.F.
+</SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>MROW</SPAN><SPAN class=any1-symbol>() &gt;= nTop .AND. </SPAN><SPAN class=any1-variable>MROW</SPAN><SPAN class=any1-symbol>() &lt;= nBott
+   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>MCOL</SPAN><SPAN class=any1-symbol>() &gt;= nLeft .AND. </SPAN><SPAN class=any1-variable>MCOL</SPAN><SPAN class=any1-symbol>() &lt;= nRight
+      lInside := </SPAN><SPAN class=any1-activedot>.T.
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ENDIF
+ENDIF
+
+RETURN</SPAN><SPAN class=any1-symbol>( lInside )
+
+
+
+</SPAN><SPAN class=any1-comment>***************
+</SPAN><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> TEST1
+</SPAN><SPAN class=any1-comment>* First test: Check the boundaries of the main window
+</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> nKey
+
+   @ </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>25</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Move the cursor until the UPPER side "
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>MUPDATE</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-reservedword>WHILE</SPAN><SPAN class=any1-space> (nKey := </SPAN><SPAN class=any1-function>INKEY</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>, INKEY_ALL )) != K_TAB
+      </SPAN><SPAN class=any1-variable>MUPDATE</SPAN><SPAN class=any1-symbol>()
+      </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> nKey == K_MOUSEMOVE
+         </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>MROW</SPAN><SPAN class=any1-symbol>() &lt; </SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>            </SPAN><SPAN class=any1-reservedword>EXIT
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-variable>CHECKEXIT</SPAN><SPAN class=any1-symbol>()
+      </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>WHILE
+
+</SPAN><SPAN class=any1-space>   @ </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>25</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Move the cursor until the BOTTOM side  "
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>WHILE</SPAN><SPAN class=any1-space> (nKey := </SPAN><SPAN class=any1-function>INKEY</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>, INKEY_ALL )) != K_TAB
+      </SPAN><SPAN class=any1-variable>MUPDATE</SPAN><SPAN class=any1-symbol>()
+      </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> nKey == K_MOUSEMOVE
+         </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>MROW</SPAN><SPAN class=any1-symbol>() &gt; </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>            </SPAN><SPAN class=any1-reservedword>EXIT
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-variable>CHECKEXIT</SPAN><SPAN class=any1-symbol>()
+      </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>WHILE
+
+
+</SPAN><SPAN class=any1-space>   @ </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>25</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Move the cursor until the LEFT side  "
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>WHILE</SPAN><SPAN class=any1-space> (nKey := </SPAN><SPAN class=any1-function>INKEY</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>, INKEY_ALL )) != K_TAB
+      </SPAN><SPAN class=any1-variable>MUPDATE</SPAN><SPAN class=any1-symbol>()
+      </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> nKey == K_MOUSEMOVE
+         </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>MCOL</SPAN><SPAN class=any1-symbol>() &lt; </SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>            </SPAN><SPAN class=any1-reservedword>EXIT
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-variable>CHECKEXIT</SPAN><SPAN class=any1-symbol>()
+      </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>WHILE
+
+
+</SPAN><SPAN class=any1-space>   @ </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>25</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Move the cursor until the RIGHT side "
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>WHILE</SPAN><SPAN class=any1-space> (nKey := </SPAN><SPAN class=any1-function>INKEY</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>, INKEY_ALL )) != K_TAB
+      </SPAN><SPAN class=any1-variable>MUPDATE</SPAN><SPAN class=any1-symbol>()
+      </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> nKey == K_MOUSEMOVE
+         </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>MCOL</SPAN><SPAN class=any1-symbol>() &gt; </SPAN><SPAN class=any1-function>MAXCOL</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>            </SPAN><SPAN class=any1-reservedword>EXIT
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-variable>CHECKEXIT</SPAN><SPAN class=any1-symbol>()
+      </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>WHILE
+
+</SPAN><SPAN class=any1-space>  @ </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>20</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SPACE</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>50</SPAN><SPAN class=any1-symbol>)
+  @ </SPAN><SPAN class=any1-number>11</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>22</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Pass"
+</SPAN><SPAN class=any1-reservedword>RETURN
+
+
+
+</SPAN><SPAN class=any1-comment>************************
+</SPAN><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>TEST2 </SPAN><SPAN class=any1-symbol>(nR, nC)
+</SPAN><SPAN class=any1-comment>* Second test: check the button pressing
+
+</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> cSkip := </SPAN><SPAN class=any1-string>""</SPAN><SPAN class=any1-symbol>, nKey, nPress := </SPAN><SPAN class=any1-number>0
+
+</SPAN><SPAN class=any1-space>   @ nR   ,nC </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-string>"+-------------------+"
+</SPAN><SPAN class=any1-space>   @ nR+ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>,nC </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-string>"¦ +---+       +---+ ¦"
+</SPAN><SPAN class=any1-space>   @ nR+ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>,nC </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-string>"¦ ¦   ¦       ¦   ¦ ¦"
+</SPAN><SPAN class=any1-space>   @ nR+ </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>,nC </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-string>"¦ ¦   ¦       ¦   ¦ ¦"
+</SPAN><SPAN class=any1-space>   @ nR+ </SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>,nC </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-string>"¦ +---+       +---+ ¦"
+</SPAN><SPAN class=any1-space>   @ nR+ </SPAN><SPAN class=any1-number>5</SPAN><SPAN class=any1-symbol>,nC </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-string>"+-------------------¦"
+</SPAN><SPAN class=any1-space>   @ nR+ </SPAN><SPAN class=any1-number>6</SPAN><SPAN class=any1-symbol>,nC </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-string>"¦  Up          Up   ¦"
+</SPAN><SPAN class=any1-space>   @ nR+ </SPAN><SPAN class=any1-number>7</SPAN><SPAN class=any1-symbol>,nC </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-string>"¦                   ¦"
+</SPAN><SPAN class=any1-space>   @ nR+ </SPAN><SPAN class=any1-number>8</SPAN><SPAN class=any1-symbol>,nC </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-string>"¦                   ¦"
+</SPAN><SPAN class=any1-space>   @ nR+ </SPAN><SPAN class=any1-number>9</SPAN><SPAN class=any1-symbol>,nC </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-string>"¦           Harbour ¦"
+</SPAN><SPAN class=any1-space>   @ nR+</SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-symbol>,nC </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-string>"¦            mouse  ¦"
+</SPAN><SPAN class=any1-space>   @ nR+</SPAN><SPAN class=any1-number>11</SPAN><SPAN class=any1-symbol>,nC </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-string>"+-------------------+"
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>NUMBUTTONS</SPAN><SPAN class=any1-symbol>() == </SPAN><SPAN class=any1-number>3
+</SPAN><SPAN class=any1-space>      @ nR+ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>,nC </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-string>"¦ +---+ +---+ +---+ ¦"
+</SPAN><SPAN class=any1-space>      @ nR+ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>,nC </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-string>"¦ ¦   ¦ ¦   ¦ ¦   ¦ ¦"
+</SPAN><SPAN class=any1-space>      @ nR+ </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>,nC </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-string>"¦ ¦   ¦ ¦   ¦ ¦   ¦ ¦"
+</SPAN><SPAN class=any1-space>      @ nR+ </SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>,nC </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-string>"¦ +---+ +---+ +---+ ¦"
+</SPAN><SPAN class=any1-space>      @ nR+ </SPAN><SPAN class=any1-number>6</SPAN><SPAN class=any1-symbol>,nC </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-string>"¦  Up    Up    Up   ¦"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>SET</SPAN><SPAN class=any1-symbol>(_SET_EVENTMASK, INKEY_ALL)
+
+   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> ! </SPAN><SPAN class=any1-function>EMPTY</SPAN><SPAN class=any1-symbol>( cSkip )
+      </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>UPPER</SPAN><SPAN class=any1-symbol>( cSkip ) == </SPAN><SPAN class=any1-string>"BREAK"
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-function>SETCANCEL</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-activedot>.T.</SPAN><SPAN class=any1-space> )
+      </SPAN><SPAN class=any1-reservedword>ELSE
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-function>SETCANCEL</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-activedot>.F.</SPAN><SPAN class=any1-space> )
+      </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>IF
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>IF
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>MUPDATE</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-reservedword>WHILE</SPAN><SPAN class=any1-space> (nKey := </SPAN><SPAN class=any1-function>INKEY</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>, INKEY_ALL )) != K_TAB
+
+      </SPAN><SPAN class=any1-reservedword>DO</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>CASE
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> nKey == K_MOUSEMOVE
+            </SPAN><SPAN class=any1-comment>* mouse has been moved
+</SPAN><SPAN class=any1-space>            </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>MINRECT</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>19</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>40</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>22</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>60</SPAN><SPAN class=any1-symbol>)
+               </SPAN><SPAN class=any1-variable>MHIDE</SPAN><SPAN class=any1-symbol>()
+            </SPAN><SPAN class=any1-reservedword>ELSE
+</SPAN><SPAN class=any1-space>               </SPAN><SPAN class=any1-variable>MSHOW</SPAN><SPAN class=any1-symbol>()
+            </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>            </SPAN><SPAN class=any1-variable>CHECKEXIT</SPAN><SPAN class=any1-symbol>()
+            </SPAN><SPAN class=any1-variable>MUPDATE</SPAN><SPAN class=any1-symbol>()
+
+         </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> nKey == K_LBUTTONDOWN
+            </SPAN><SPAN class=any1-comment>* Left mouse button was pushed
+</SPAN><SPAN class=any1-space>            @ nR+</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>,nC+</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"¦¦¦"
+</SPAN><SPAN class=any1-space>            @ nR+</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>,nC+</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"¦¦¦"
+</SPAN><SPAN class=any1-space>            @ nR+</SPAN><SPAN class=any1-number>6</SPAN><SPAN class=any1-symbol>,nC+</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Down"
+</SPAN><SPAN class=any1-space>            nPress ++
+
+         </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> nKey == K_LBUTTONUP
+            </SPAN><SPAN class=any1-comment>* Left mouse button was released
+</SPAN><SPAN class=any1-space>            @ nR+</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>,nC+</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"   "
+</SPAN><SPAN class=any1-space>            @ nR+</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>,nC+</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"   "
+</SPAN><SPAN class=any1-space>            @ nR+</SPAN><SPAN class=any1-number>6</SPAN><SPAN class=any1-symbol>,nC+</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Up  "
+
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> nKey == K_MBUTTONDOWN
+            </SPAN><SPAN class=any1-comment>* Middle mouse button was pushed
+</SPAN><SPAN class=any1-space>            @ nR+</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>,nC+</SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"¦¦¦"
+</SPAN><SPAN class=any1-space>            @ nR+</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>,nC+</SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"¦¦¦"
+</SPAN><SPAN class=any1-space>            @ nR+</SPAN><SPAN class=any1-number>6</SPAN><SPAN class=any1-symbol>,nC+</SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Down"
+</SPAN><SPAN class=any1-space>            nPress ++
+
+         </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> nKey == K_MBUTTONUP
+            </SPAN><SPAN class=any1-comment>* Middle mouse button was released
+</SPAN><SPAN class=any1-space>            @ nR+</SPAN><SPAN class=any1-number>6</SPAN><SPAN class=any1-symbol>,nC+</SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Up  "
+
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> nKey == K_RBUTTONDOWN
+            </SPAN><SPAN class=any1-comment>* Right mouse button was pushed
+</SPAN><SPAN class=any1-space>            @ nR+</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>,nC+</SPAN><SPAN class=any1-number>15</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"¦¦¦"
+</SPAN><SPAN class=any1-space>            @ nR+</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>,nC+</SPAN><SPAN class=any1-number>15</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"¦¦¦"
+</SPAN><SPAN class=any1-space>            @ nR+</SPAN><SPAN class=any1-number>6</SPAN><SPAN class=any1-symbol>,nC+</SPAN><SPAN class=any1-number>15</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Down"
+</SPAN><SPAN class=any1-space>            nPress ++
+
+         </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> nKey == K_RBUTTONUP
+            </SPAN><SPAN class=any1-comment>* Right mouse button was released
+</SPAN><SPAN class=any1-space>            @ nR+</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>,nC+</SPAN><SPAN class=any1-number>15</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"   "
+</SPAN><SPAN class=any1-space>            @ nR+</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>,nC+</SPAN><SPAN class=any1-number>15</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"   "
+</SPAN><SPAN class=any1-space>            @ nR+</SPAN><SPAN class=any1-number>6</SPAN><SPAN class=any1-symbol>,nC+</SPAN><SPAN class=any1-number>15</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Up  "
+
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> nKey == K_LDBLCLK
+            </SPAN><SPAN class=any1-comment>* "The left mouse button was double-clicked."
+</SPAN><SPAN class=any1-space>            @ </SPAN><SPAN class=any1-number>13</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>22</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Pass"
+
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> nKey == K_RDBLCLK
+            </SPAN><SPAN class=any1-comment>* "The right mouse button was double-clicked."
+</SPAN><SPAN class=any1-space>            @ </SPAN><SPAN class=any1-number>14</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>22</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Pass"
+
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>OTHERWISE
+</SPAN><SPAN class=any1-space>            @ </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>(),</SPAN><SPAN class=any1-number>20</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"A keyboard key was pressed: "
+</SPAN><SPAN class=any1-space>            @ </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>(),</SPAN><SPAN class=any1-number>48</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> nKey
+            @ </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>(),</SPAN><SPAN class=any1-number>58</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>iif</SPAN><SPAN class=any1-symbol>( nKey &gt;= </SPAN><SPAN class=any1-number>32</SPAN><SPAN class=any1-space> .AND. nKey &lt;= </SPAN><SPAN class=any1-number>255</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>CHR</SPAN><SPAN class=any1-symbol>( nKey ), </SPAN><SPAN class=any1-string>""</SPAN><SPAN class=any1-space> )
+      </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>CASE
+
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> nPress &gt; </SPAN><SPAN class=any1-number>6
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>EXIT
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>WHILE
+
+</SPAN><SPAN class=any1-space>   @ </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>20</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SPACE</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>50</SPAN><SPAN class=any1-symbol>)
+   @ </SPAN><SPAN class=any1-number>12</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>22</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Pass"
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>SET</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>CURSOR</SPAN><SPAN class=any1-space> ON
+
+   @ </SPAN><SPAN class=any1-number>20</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>01</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"MOUSE TEST FINISH!"
+</SPAN><SPAN class=any1-space>   ?
+</SPAN><SPAN class=any1-reservedword>RETURN
+
+
+
+
+PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>CHECKEXIT</SPAN><SPAN class=any1-symbol>()
+</SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> ! </SPAN><SPAN class=any1-variable>MINRECT</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>MAXCOL</SPAN><SPAN class=any1-symbol>()-</SPAN><SPAN class=any1-number>11</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>MAXROW</SPAN><SPAN class=any1-symbol>(), </SPAN><SPAN class=any1-function>MAXCOL</SPAN><SPAN class=any1-symbol>() )
+    </SPAN><SPAN class=any1-reservedword>RETURN
+ENDIF
+</SPAN><SPAN class=any1-function>SET</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>CURSOR</SPAN><SPAN class=any1-space> ON
+CLS
+? </SPAN><SPAN class=any1-string>"MOUSE TEST FINISH!"
+</SPAN><SPAN class=any1-symbol>?
+</SPAN><SPAN class=any1-function>QUIT
+</SPAN></SPAN>
+</CODE></PRE></BODY></HTML>

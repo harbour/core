@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>initexit.prg</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
+<STYLE type=text/css>
+<!--
+body { color: #000000; background-color: #FFFFFF; }
+.any1-activedot { color: #800080; }
+.any1-comment { color: #008080; }
+.any1-constant { color: #800080; }
+.any1-escapeampersand { color: #00FF00; font-weight: bold; }
+.any1-function { color: #808000; }
+.any1-identifier { color: #000000; }
+.any1-number { color: #FF0000; }
+.any1-preprocessor { }
+.any1-reservedword { color: #800000; }
+.any1-space { }
+.any1-string { color: #0000FF; }
+.any1-symbol { }
+.any1-variable { color: #808000; }
+-->
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-comment>// Testing Harbour INIT and EXIT functions and initialization 
+// of static variables
+<br>
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> static_var_accessed_in_INIT_function:=</SPAN><SPAN class=any1-number>10000.15
+</SPAN><SPAN class=any1-reservedword>MEMVAR</SPAN><SPAN class=any1-space> _initStatics
+
+</SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Main</SPAN><SPAN class=any1-symbol>()
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> static_var:=</SPAN><SPAN class=any1-string>"MAIN()"
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Hello from:"</SPAN><SPAN class=any1-symbol>, static_var )
+   static_var_accessed_in_INIT_function++
+   </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"global static="</SPAN><SPAN class=any1-symbol>, static_var_accessed_in_INIT_function )
+
+   </SPAN><SPAN class=any1-comment>// Use PUBLIC variable created in INIT procedure
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"PUBLIC variable created in INIT procedure="</SPAN><SPAN class=any1-symbol>, _initStatics )
+
+</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+
+</SPAN><SPAN class=any1-reservedword>init</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>SecondOne</SPAN><SPAN class=any1-symbol>()
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> static_var:=</SPAN><SPAN class=any1-string>"SECOND()"
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Hello from:"</SPAN><SPAN class=any1-symbol>, static_var )
+   static_var_accessed_in_INIT_function++
+   </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"global static="</SPAN><SPAN class=any1-symbol>, static_var_accessed_in_INIT_function )
+
+</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+
+</SPAN><SPAN class=any1-reservedword>init</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Third</SPAN><SPAN class=any1-symbol>()
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> static_var:=</SPAN><SPAN class=any1-string>"THIRD()"
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Hello from:"</SPAN><SPAN class=any1-symbol>, static_var )
+   static_var_accessed_in_INIT_function++
+   </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"global static="</SPAN><SPAN class=any1-symbol>, static_var_accessed_in_INIT_function )
+
+</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+
+</SPAN><SPAN class=any1-reservedword>exit</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Fifth</SPAN><SPAN class=any1-symbol>()
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> static_var:=</SPAN><SPAN class=any1-string>"FIFTH()"
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Hello from:"</SPAN><SPAN class=any1-symbol>, static_var )
+   static_var_accessed_in_INIT_function--
+   </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"global static="</SPAN><SPAN class=any1-symbol>, static_var_accessed_in_INIT_function )
+
+</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+
+</SPAN><SPAN class=any1-reservedword>exit</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Sixth</SPAN><SPAN class=any1-symbol>()
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> static_var:=</SPAN><SPAN class=any1-string>"SIXTH()"
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Hello from:"</SPAN><SPAN class=any1-symbol>, static_var )
+   static_var_accessed_in_INIT_function--
+   </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"global static="</SPAN><SPAN class=any1-symbol>, static_var_accessed_in_INIT_function )
+
+</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+
+</SPAN><SPAN class=any1-reservedword>INIT</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>_INITSTATICS</SPAN><SPAN class=any1-symbol>()
+</SPAN><SPAN class=any1-reservedword>PUBLIC</SPAN><SPAN class=any1-space> _initStatics:=</SPAN><SPAN class=any1-string>"_INITSTATICS"
+</SPAN><SPAN class=any1-reservedword>RETURN
+</SPAN></SPAN>
+</CODE></PRE>
+</BODY></HTML>

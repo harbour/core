@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>longdev.prg</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
+<STYLE type=text/css>
+<!--
+body { color: #000000; background-color: #FFFFFF; }
+.any1-activedot { color: #800080; }
+.any1-comment { color: #008080; }
+.any1-constant { color: #800080; }
+.any1-escapeampersand { color: #00FF00; font-weight: bold; }
+.any1-function { color: #808000; }
+.any1-identifier { color: #000000; }
+.any1-number { color: #FF0000; }
+.any1-preprocessor { }
+.any1-reservedword { color: #800000; }
+.any1-space { }
+.any1-string { color: #0000FF; }
+.any1-symbol { }
+.any1-variable { color: #808000; }
+-->
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-comment>// Testing Harbour long string handling with device output.
+/* Harbour Project source code
+   http://harbour-project.org/
+   Donated to the public domain on 2001-03-08 by David G. Holm &lt;dholm@jsd-llc.com&gt;
+*/
+
+</SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Main</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> cShort := </SPAN><SPAN class=any1-string>"1234567890"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> i, j, cLong, cBuffer, nHandle
+
+   </SPAN><SPAN class=any1-comment>// Create an 80 KB string (Clipper is limited to 64 KB).
+</SPAN><SPAN class=any1-space>   cLong := cShort
+   </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> i := </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>TO</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>13
+</SPAN><SPAN class=any1-space>      cLong += cLong
+   </SPAN><SPAN class=any1-reservedword>NEXT
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-comment>// Write the long string to file long_str.prn
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>SET</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>PRINTER</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>TO</SPAN><SPAN class=any1-space> long_str
+   </SPAN><SPAN class=any1-function>SET</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>DEVICE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>TO</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>PRINTER
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>DEVOUT</SPAN><SPAN class=any1-symbol>( cLong )
+   </SPAN><SPAN class=any1-function>SET</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>PRINTER</SPAN><SPAN class=any1-space> OFF
+   </SPAN><SPAN class=any1-function>SET</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>DEVICE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>TO</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SCREEN
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-comment>// Confirm the string length and that a copy is exactly identical.
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"The length of the long string is"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-variable>iif</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>LEN</SPAN><SPAN class=any1-symbol>( cLong ) == </SPAN><SPAN class=any1-number>80</SPAN><SPAN class=any1-space> * </SPAN><SPAN class=any1-number>1024</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"correct"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"wrong"</SPAN><SPAN class=any1-space> )
+   cBuffer := cLong
+   ? </SPAN><SPAN class=any1-string>"The length of a copy of the long string is"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-variable>iif</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>LEN</SPAN><SPAN class=any1-symbol>( cLong ) == </SPAN><SPAN class=any1-number>80</SPAN><SPAN class=any1-space> * </SPAN><SPAN class=any1-number>1024</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"correct"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"wrong"</SPAN><SPAN class=any1-space> )
+   ? </SPAN><SPAN class=any1-string>"The copy of the long string is"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-variable>iif</SPAN><SPAN class=any1-symbol>( cLong == cBuffer, </SPAN><SPAN class=any1-string>"equal"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"not equal"</SPAN><SPAN class=any1-space> ), </SPAN><SPAN class=any1-string>"to the long string"
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-comment>// Read the string back in and compare it to the original.
+</SPAN><SPAN class=any1-space>   nHandle := </SPAN><SPAN class=any1-function>FOPEN</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"long_str.prn"</SPAN><SPAN class=any1-space> )
+   cBuffer := </SPAN><SPAN class=any1-function>FREADSTR</SPAN><SPAN class=any1-symbol>( nHandle, </SPAN><SPAN class=any1-number>90000</SPAN><SPAN class=any1-space> )
+   ? </SPAN><SPAN class=any1-string>"Original:"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>LEN</SPAN><SPAN class=any1-symbol>( cLong )
+   ? </SPAN><SPAN class=any1-string>"From file:"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>LEN</SPAN><SPAN class=any1-symbol>( cBuffer )
+   ? </SPAN><SPAN class=any1-string>"The strings are"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-variable>iif</SPAN><SPAN class=any1-symbol>( cLong == cBuffer, </SPAN><SPAN class=any1-string>"equal"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"not equal"</SPAN><SPAN class=any1-space> )
+
+</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+</SPAN></SPAN>
+</CODE></PRE></BODY></HTML>

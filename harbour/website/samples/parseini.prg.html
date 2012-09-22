@@ -1,0 +1,130 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>parseini.prg</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
+<STYLE type=text/css>
+<!--
+body { color: #000000; background-color: #FFFFFF; }
+.any1-activedot { color: #800080; }
+.any1-comment { color: #008080; }
+.any1-constant { color: #800080; }
+.any1-escapeampersand { color: #00FF00; font-weight: bold; }
+.any1-function { color: #808000; }
+.any1-identifier { color: #000000; }
+.any1-number { color: #FF0000; }
+.any1-preprocessor { }
+.any1-reservedword { color: #800000; }
+.any1-space { }
+.any1-string { color: #0000FF; }
+.any1-symbol { }
+.any1-variable { color: #808000; }
+-->
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-comment>******************************************************************
+* Test for Ini file reading/writing
+*
+
+</SPAN><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Main</SPAN><SPAN class=any1-symbol>( cName )
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> aIni, aSect
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> cSection
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> cKey
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> nRow := </SPAN><SPAN class=any1-number>1
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>set</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>color</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>to</SPAN><SPAN class=any1-space> w+/b
+   </SPAN><SPAN class=any1-function>CLEAR</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SCREEN
+</SPAN><SPAN class=any1-space>   @nRow++,</SPAN><SPAN class=any1-number>20</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"H A R B O U R - .ini file parser test"
+</SPAN><SPAN class=any1-space>   @nRow++,</SPAN><SPAN class=any1-number>5</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Call from command line using a .ini filename as the only parameter"
+</SPAN><SPAN class=any1-space>   nRow++
+
+   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>Empty</SPAN><SPAN class=any1-symbol>( cName )
+      cName := </SPAN><SPAN class=any1-string>"parseini.ini"
+</SPAN><SPAN class=any1-space>      @nRow++, </SPAN><SPAN class=any1-number>5</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Using default parseini.ini file"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>   aIni := </SPAN><SPAN class=any1-variable>hb_IniRead</SPAN><SPAN class=any1-symbol>( cName )
+
+   @nRow, </SPAN><SPAN class=any1-number>0
+
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Content of "</SPAN><SPAN class=any1-space> + cName
+
+   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>Empty</SPAN><SPAN class=any1-symbol>( aIni )
+      ? </SPAN><SPAN class=any1-string>"Not a valid .ini file!"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ELSE
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> EACH cSection IN aIni:Keys
+         ?
+         ? </SPAN><SPAN class=any1-string>"Section ["</SPAN><SPAN class=any1-space> + cSection + </SPAN><SPAN class=any1-string>"]"
+</SPAN><SPAN class=any1-space>         aSect := aIni[ cSection ]
+
+         </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> EACH cKey IN aSect:Keys
+            ? cKey + </SPAN><SPAN class=any1-string>" = "</SPAN><SPAN class=any1-space> + aSect[ cKey ]
+         </SPAN><SPAN class=any1-reservedword>NEXT
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>NEXT
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>   ?
+   ? </SPAN><SPAN class=any1-string>"Adding section 'Added', with key NEW = new"
+</SPAN><SPAN class=any1-space>   aIni[ </SPAN><SPAN class=any1-string>"Added"</SPAN><SPAN class=any1-space> ] := </SPAN><SPAN class=any1-variable>hb_Hash</SPAN><SPAN class=any1-symbol>()
+   aIni[ </SPAN><SPAN class=any1-string>"Added"</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-string>"NEW"</SPAN><SPAN class=any1-space> ] := </SPAN><SPAN class=any1-string>"new"
+
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Writing output to parseini_out.ini"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>hb_IniWrite</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"parseini_out.ini"</SPAN><SPAN class=any1-symbol>, aIni, </SPAN><SPAN class=any1-string>"#Generated file; don't touch"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"#End of file"</SPAN><SPAN class=any1-symbol>)
+      ? </SPAN><SPAN class=any1-string>"File written"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ELSE
+</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"Can't write file"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>   ?
+   ? </SPAN><SPAN class=any1-string>"Press any key to next text."
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>Inkey</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>)
+   ?
+   ? </SPAN><SPAN class=any1-string>"REPEATING TESTS WITHOUT AUTOMATIC MAIN SECTION"
+
+</SPAN><SPAN class=any1-space>   aIni := </SPAN><SPAN class=any1-variable>hb_IniRead</SPAN><SPAN class=any1-symbol>( cName, </SPAN><SPAN class=any1-comment>/*default case*/</SPAN><SPAN class=any1-space> , </SPAN><SPAN class=any1-comment>/*Default key indicators */</SPAN><SPAN class=any1-space> , </SPAN><SPAN class=any1-activedot>.F.</SPAN><SPAN class=any1-space> )
+
+   @nRow, </SPAN><SPAN class=any1-number>0
+
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Content of "</SPAN><SPAN class=any1-space> + cName
+
+   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>Empty</SPAN><SPAN class=any1-symbol>( aIni )
+      ? </SPAN><SPAN class=any1-string>"Not a valid .ini file!"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ELSE
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> EACH cSection IN aIni:Keys
+         </SPAN><SPAN class=any1-comment>/* Now (without automatic main), toplevel options may be in the root hash */
+</SPAN><SPAN class=any1-space>         aSect := aIni[ cSection ]
+
+         </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>HB_IsHash</SPAN><SPAN class=any1-symbol>( aSect )
+            </SPAN><SPAN class=any1-comment>/* It's a section */
+</SPAN><SPAN class=any1-space>            ?
+            ? </SPAN><SPAN class=any1-string>"Section ["</SPAN><SPAN class=any1-space> + cSection + </SPAN><SPAN class=any1-string>"]"
+
+</SPAN><SPAN class=any1-space>            </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> EACH cKey IN aSect:Keys
+               ? cKey + </SPAN><SPAN class=any1-string>" = "</SPAN><SPAN class=any1-space> + aSect[ cKey ]
+            </SPAN><SPAN class=any1-reservedword>NEXT
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>ELSE
+</SPAN><SPAN class=any1-space>            </SPAN><SPAN class=any1-comment>/* It's a toplevel option */
+</SPAN><SPAN class=any1-space>            ? </SPAN><SPAN class=any1-string>"TOPLEVEL option:"</SPAN><SPAN class=any1-symbol>, cSection + </SPAN><SPAN class=any1-string>" = "</SPAN><SPAN class=any1-space> + aSect
+         </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>NEXT
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ENDIF
+
+</SPAN><SPAN class=any1-space>   ?
+   ? </SPAN><SPAN class=any1-string>"Adding section 'Added', with key NEW = new"
+</SPAN><SPAN class=any1-space>   aIni[ </SPAN><SPAN class=any1-string>"Added"</SPAN><SPAN class=any1-space> ] := </SPAN><SPAN class=any1-variable>hb_Hash</SPAN><SPAN class=any1-symbol>()
+   aIni[ </SPAN><SPAN class=any1-string>"Added"</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-string>"NEW"</SPAN><SPAN class=any1-space> ] := </SPAN><SPAN class=any1-string>"new"
+
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Writing output to parseini_out1.ini"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>hb_IniWrite</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"parseini_out1.ini"</SPAN><SPAN class=any1-symbol>, aIni,;
+         </SPAN><SPAN class=any1-string>"#Generated file without main auto section; don't touch"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"#End of file"</SPAN><SPAN class=any1-symbol>,;
+         </SPAN><SPAN class=any1-activedot>.F.</SPAN><SPAN class=any1-space> )
+      ? </SPAN><SPAN class=any1-string>"File written"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ELSE
+</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"Can't write file"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ENDIF
+</SPAN><SPAN class=any1-space>   ?
+   ? </SPAN><SPAN class=any1-string>"Press any key to next text."
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>Inkey</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>)
+
+</SPAN><SPAN class=any1-reservedword>RETURN
+</SPAN></SPAN>
+</CODE></PRE></BODY></HTML>

@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>foreach.prg</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
+<STYLE type=text/css>
+<!--
+body { color: #000000; background-color: #FFFFFF; }
+.any1-activedot { color: #800080; }
+.any1-comment { color: #008080; }
+.any1-constant { color: #800080; }
+.any1-escapeampersand { color: #00FF00; font-weight: bold; }
+.any1-function { color: #808000; }
+.any1-identifier { color: #000000; }
+.any1-number { color: #FF0000; }
+.any1-preprocessor { }
+.any1-reservedword { color: #800000; }
+.any1-space { }
+.any1-string { color: #0000FF; }
+.any1-symbol { }
+.any1-variable { color: #808000; }
+-->
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-comment>// #include "set.ch" - Preset in pptable.c
+
+</SPAN><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>MAIN</SPAN><SPAN class=any1-symbol>()
+
+   CLS
+
+   ? </SPAN><SPAN class=any1-string>"DEFAULT IDLEREPEAT ="</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>SET</SPAN><SPAN class=any1-symbol>( _SET_IDLEREPEAT )
+   ?
+   ? </SPAN><SPAN class=any1-string>"Idle Block should be displayed multiple times until key or 10 seconds elapsed!"
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Press any key to begin..."
+</SPAN><SPAN class=any1-space>   ?
+   </SPAN><SPAN class=any1-function>Inkey</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>)
+
+   </SPAN><SPAN class=any1-variable>HB_IDLEADD</SPAN><SPAN class=any1-symbol>( {|| </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Idle Block"</SPAN><SPAN class=any1-space> ) } )
+   </SPAN><SPAN class=any1-function>Inkey</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> )
+
+   </SPAN><SPAN class=any1-function>SET</SPAN><SPAN class=any1-symbol>( _SET_IDLEREPEAT, </SPAN><SPAN class=any1-activedot>.F.</SPAN><SPAN class=any1-space> )
+
+   </SPAN><SPAN class=any1-variable>HB_IDLEADD</SPAN><SPAN class=any1-symbol>( {|| </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Idle Block2"</SPAN><SPAN class=any1-space> ) } )
+
+   CLS
+   ? </SPAN><SPAN class=any1-string>"Idle Block &amp; Block-2 should display ONCE! while waitning for key or 10 seconds elapsed!"
+</SPAN><SPAN class=any1-space>   ?
+   </SPAN><SPAN class=any1-function>Inkey</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> )
+
+   ?
+   ? </SPAN><SPAN class=any1-string>"Again - Idle Block &amp; Block-2 should display ONCE! while waitning for key or 10 seconds elapsed!"
+</SPAN><SPAN class=any1-space>   ?
+   </SPAN><SPAN class=any1-function>Inkey</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> )
+   ?
+
+</SPAN><SPAN class=any1-reservedword>RETURN
+</SPAN></SPAN>
+</CODE></PRE>
+</BODY></HTML>

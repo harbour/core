@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>switch.prg</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
+<STYLE type=text/css>
+<!--
+body { color: #000000; background-color: #FFFFFF; }
+.any1-activedot { color: #800080; }
+.any1-comment { color: #008080; }
+.any1-constant { color: #800080; }
+.any1-escapeampersand { color: #00FF00; font-weight: bold; }
+.any1-function { color: #808000; }
+.any1-identifier { color: #000000; }
+.any1-number { color: #FF0000; }
+.any1-preprocessor { }
+.any1-reservedword { color: #800000; }
+.any1-space { }
+.any1-string { color: #0000FF; }
+.any1-symbol { }
+.any1-variable { color: #808000; }
+-->
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-constant>#ifdef</SPAN><SPAN class=any1-space> __XHARBOUR__  
+   </SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>OTHERWISE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>DEFAULT
+</SPAN><SPAN class=any1-constant>#endif</SPAN><SPAN class=any1-space>   
+
+</SPAN><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> MAIN
+</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> a:=</SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-reservedword>PRIVATE</SPAN><SPAN class=any1-space> b:=</SPAN><SPAN class=any1-string>"b"
+
+</SPAN><SPAN class=any1-constant>#ifndef</SPAN><SPAN class=any1-space> __XHARBOUR__  
+   SWITCH a
+   </SPAN><SPAN class=any1-reservedword>END
+</SPAN><SPAN class=any1-constant>#endif
+
+</SPAN><SPAN class=any1-space>   ?
+   ? </SPAN><SPAN class=any1-string>"1111111111111111111111111111111"
+</SPAN><SPAN class=any1-space>   SWITCH a
+   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"FOUND: 1"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>END
+
+</SPAN><SPAN class=any1-space>   ?
+   ? </SPAN><SPAN class=any1-string>"2222222222222222222222222222222"
+</SPAN><SPAN class=any1-space>   SWITCH a
+   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"FOUND: 1"
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>EXIT
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"2"
+</SPAN><SPAN class=any1-space>      ? a
+   </SPAN><SPAN class=any1-reservedword>END
+
+</SPAN><SPAN class=any1-space>   ?
+   ? </SPAN><SPAN class=any1-string>"3333333333333333333333333333333"
+</SPAN><SPAN class=any1-space>   SWITCH a
+   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"FOUND: 1"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"2"
+</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"FOUND: 2"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>OTHERWISE
+</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"other"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>END
+
+</SPAN><SPAN class=any1-constant>#ifndef</SPAN><SPAN class=any1-space> __XHARBOUR__  
+   ?
+   ? </SPAN><SPAN class=any1-string>"44444444444444444444444444444444444"
+</SPAN><SPAN class=any1-space>   SWITCH a
+   </SPAN><SPAN class=any1-reservedword>OTHERWISE</SPAN><SPAN class=any1-space> 
+      ? </SPAN><SPAN class=any1-string>"OTHERWISE"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>END
+</SPAN><SPAN class=any1-constant>#endif
+
+</SPAN><SPAN class=any1-space>   ?
+   ? </SPAN><SPAN class=any1-string>"55555555555555555555555555555555555"
+</SPAN><SPAN class=any1-space>   a := </SPAN><SPAN class=any1-string>'EE'
+</SPAN><SPAN class=any1-constant>#ifndef</SPAN><SPAN class=any1-space> __XHARBOUR__  
+   SWITCH a
+   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>11
+</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"11"
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>exit
+</SPAN><SPAN class=any1-space>      
+   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>'CCCC'</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-string>'DDDD'
+</SPAN><SPAN class=any1-space>      ? a+a
+      </SPAN><SPAN class=any1-reservedword>EXIT
+
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"a&amp;b"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> {</SPAN><SPAN class=any1-number>11111111</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>22222222222</SPAN><SPAN class=any1-symbol>}[</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>]
+   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"3"
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>EXIT
+</SPAN><SPAN class=any1-space>      
+   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>*</SPAN><SPAN class=any1-number>3
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>123</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-number>12</SPAN><SPAN class=any1-symbol>*</SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>-</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>*</SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-number>2
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>-</SPAN><SPAN class=any1-number>4
+</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"4"
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>EXIT
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>123456789
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>0
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>EXIT
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>'AAAA'
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>'BBBBB'
+</SPAN><SPAN class=any1-space>      ? a
+      </SPAN><SPAN class=any1-reservedword>EXIT
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>CHR</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>12</SPAN><SPAN class=any1-symbol>)+</SPAN><SPAN class=any1-function>CHR</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>15</SPAN><SPAN class=any1-symbol>)
+      ? </SPAN><SPAN class=any1-string>"CHR()"
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>EXIT
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>OTHERWISE
+</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"NOT FOUND: running OTHER"
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>END
+</SPAN><SPAN class=any1-constant>#endif
+
+</SPAN><SPAN class=any1-space>   ?
+   ? </SPAN><SPAN class=any1-string>"666666666666666666666666666666666666666666"
+</SPAN><SPAN class=any1-space>   a := </SPAN><SPAN class=any1-string>"2"
+</SPAN><SPAN class=any1-space>   SWITCH a
+   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"FOUND: 1"
+</SPAN><SPAN class=any1-space>      ? a
+      </SPAN><SPAN class=any1-reservedword>EXIT
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"2"
+</SPAN><SPAN class=any1-space>      SWITCH a+a
+      </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1
+</SPAN><SPAN class=any1-space>         ? </SPAN><SPAN class=any1-string>"Nested FOUND 1"
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>EXIT
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"22"
+</SPAN><SPAN class=any1-space>         ? </SPAN><SPAN class=any1-string>"Nested FOUND: 22"
+</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>EXIT
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>OTHERWISE
+</SPAN><SPAN class=any1-space>         ? </SPAN><SPAN class=any1-string>"Nested OTHERWISE"
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>END
+</SPAN><SPAN class=any1-space>      ?? </SPAN><SPAN class=any1-string>"In CASE 1"
+</SPAN><SPAN class=any1-space>      ? a
+   </SPAN><SPAN class=any1-reservedword>END
+
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"========================================="
+
+</SPAN><SPAN class=any1-reservedword>RETURN
+</SPAN></SPAN>
+</CODE></PRE></BODY></HTML>

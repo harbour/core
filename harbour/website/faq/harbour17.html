@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2 Final//EN">
+<HTML>
+<HEAD>
+ <LINK REV="made" HREF="mailto:harbour-faq@netfang.net">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso-8859-1">
+<TITLE>What is the Harbour exception?</TITLE>
+</HEAD>
+<BODY text="#000000" bgcolor="#ffffff">
+
+<A HREF="harbour.html"><EM>Frequently Asked Questions about Harbour</EM></A>
+ <b>:</b> <A HREF="harbour6.html"><EM>About Harbour</EM></A>
+ <b>:</b> <EM>What is the Harbour exception?</EM><BR>
+<b>Previous:</b> <A HREF="harbour16.html"><EM>Why was the GPL chosen as the licence for Harbour?</EM></A><BR>
+<b>Next:</b> <A HREF="harbour18.html"><EM>So why don't you use the LGPL?</EM></A>
+
+
+<HR NOSHADE>
+  <H2><A NAME="17"></A>2.11. What is the Harbour exception?<A NAME="HarbourException"></A></H2>
+<p>There is one small wrinkle regarding the use of the GPL as the licence for
+Harbour. Harbour comes in a number of parts, these can best be described as
+the compiler (including pre-processor), the virtual machine and the run-time
+library. The GPL dictates that anyone distributing binary versions of GPLd
+code must make an offer of providing the source and that the code linked
+against the GPLd code must also fall under the GPL. Failure to do so is a
+breach of licence.</p>
+<p>In Harbour terms this means different things depending on which portion of
+Harbour you are considering. The compiler itself can live under the GPL, it
+isn't part of the run-time and so poses no problem. This isn't true for the
+<A href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/harbour-project/harbour/source/vm/">HVM</A> and 
+<A href="http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/harbour-project/harbour/source/rtl/">RTL</A> because they get linked into your application and so would
+require that your code be distributed under a compatible licence. While the
+Harbour developers would like to see you develop 
+<A HREF="harbour13.html#FreeSoftware">free software</A> they have decided to let you make this choice.</p>
+<p>To solve this problem the developers have employed the &quot;Harbour
+Exception&quot;. This idea comes from the GPL exception used by <A href="http://www.gnu.org/software/guile/guile.html">guile</A>. In effect,
+the exception states that you must observe the GPL except when the code in
+question is being used as the HVM and RTL of an application compiled with
+Harbour.</p>
+<p>The wording of the exception currently reads:
+<blockquote>
+The exception is that, if you link the Harbour libraries with other
+files to produce an executable, this does not by itself cause the
+resulting executable to be covered by the GNU General Public License.
+Your use of that executable is in no way restricted on account of
+linking the Harbour library code into it.
+</blockquote>
+<blockquote>
+This exception does not however invalidate any other reasons why
+the executable file might be covered by the GNU General Public License.
+</blockquote>
+<blockquote>
+This exception applies only to the code released by the Harbour
+Project under the name Harbour.  If you copy code from other
+Harbour Project or Free Software Foundation releases into a copy of
+Harbour, as the General Public License permits, the exception does
+not apply to the code that you add in this way.  To avoid misleading
+anyone as to the status of such modified files, you must delete
+this exception notice from them.
+</blockquote>
+<blockquote>
+If you write modifications of your own for Harbour, it is your choice
+whether to permit this exception to apply to your modifications.
+If you do not wish that, delete this exception notice.
+</blockquote>
+
+Please note that the original wording of the exception was based on an
+earlier version of the guile exception. That version of the exception was
+less verbose and less clear. The wording of that version read:
+<blockquote>
+The exception is that if you link the Harbour Runtime Library (HRL) and/or
+the Harbour Virtual Machine (HVM) with other files to produce an executable,
+this does not by itself cause the resulting executable to be covered by the
+GNU General Public License. Your use of that executable is in no way
+restricted on account of linking the RTL and/or HVM code into it.
+</blockquote>
+
+The Harbour sources are being converted over to the new exception as each
+copyright holder makes the change. The intention is that every item of
+source that uses the Harbour exception will clearly use the more verbose
+version.</p>
+
+ <HR NOSHADE>
+<A HREF="harbour.html"><EM>Frequently Asked Questions about Harbour</EM></A>
+ <b>:</b> <A HREF="harbour6.html"><EM>About Harbour</EM></A>
+ <b>:</b> <EM>What is the Harbour exception?</EM><BR>
+<b>Previous:</b> <A HREF="harbour16.html"><EM>Why was the GPL chosen as the licence for Harbour?</EM></A><BR>
+<b>Next:</b> <A HREF="harbour18.html"><EM>So why don't you use the LGPL?</EM></A>
+
+
+
+</BODY>
+</HTML>

@@ -1,0 +1,59 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>dates4.prg</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
+<STYLE type=text/css>
+<!--
+body { color: #000000; background-color: #FFFFFF; }
+.any1-activedot { color: #800080; }
+.any1-comment { color: #008080; }
+.any1-constant { color: #800080; }
+.any1-escapeampersand { color: #00FF00; font-weight: bold; }
+.any1-function { color: #808000; }
+.any1-identifier { color: #000000; }
+.any1-number { color: #FF0000; }
+.any1-preprocessor { }
+.any1-reservedword { color: #800000; }
+.any1-space { }
+.any1-string { color: #0000FF; }
+.any1-symbol { }
+.any1-variable { color: #808000; }
+-->
+</STYLE>
+</HEAD>
+<BODY bgColor=#ffffff>
+<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-comment>// Testing Harbour dates management.
+</SPAN><SPAN class=any1-constant>#include</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"set.ch"
+
+</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> s_cNewLine
+
+</SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>main</SPAN><SPAN class=any1-symbol>()
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> i
+   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> dDate := </SPAN><SPAN class=any1-function>date</SPAN><SPAN class=any1-symbol>()
+
+   s_cNewLine := </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>()
+
+   </SPAN><SPAN class=any1-function>set</SPAN><SPAN class=any1-symbol>( _SET_DATEFORMAT, </SPAN><SPAN class=any1-string>"dd/mm/yyyy"</SPAN><SPAN class=any1-space> )
+
+   </SPAN><SPAN class=any1-reservedword>for</SPAN><SPAN class=any1-space> i := </SPAN><SPAN class=any1-number>7</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>to</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>49</SPAN><SPAN class=any1-space> step </SPAN><SPAN class=any1-number>7
+</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-variable>CheckDate</SPAN><SPAN class=any1-symbol>( dDate )
+      dDate += i
+   </SPAN><SPAN class=any1-reservedword>next
+
+return</SPAN><SPAN class=any1-space> nil
+
+</SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>CheckDate</SPAN><SPAN class=any1-symbol>( dDate )
+   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Testing date:"</SPAN><SPAN class=any1-symbol>, dDate , s_cNewLine )
+   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Days in month..:"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-variable>daysinmonth</SPAN><SPAN class=any1-symbol>( dDate ), s_cNewLine )
+   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Day of year....:"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-variable>doy</SPAN><SPAN class=any1-symbol>( dDate ), s_cNewLine )
+   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Begin of month.:"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-variable>bom</SPAN><SPAN class=any1-symbol>( dDate ), s_cNewLine )
+   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"End of month...:"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-variable>eom</SPAN><SPAN class=any1-symbol>( dDate ), s_cNewLine )
+   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Week of month..:"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-variable>wom</SPAN><SPAN class=any1-symbol>( dDate ), s_cNewLine )
+   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Week of year...:"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-variable>woy</SPAN><SPAN class=any1-symbol>( dDate ), s_cNewLine )
+   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Begin of year..:"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-variable>boy</SPAN><SPAN class=any1-symbol>( dDate ), s_cNewLine )
+   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"End of year....:"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-variable>eoy</SPAN><SPAN class=any1-symbol>( dDate ), s_cNewLine )
+   </SPAN><SPAN class=any1-variable>__Accept</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Press ENTER to continue..."</SPAN><SPAN class=any1-space> )
+   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-space> ), </SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-space> ) )
+
+</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil</SPAN></SPAN></CODE></PRE>
+</BODY></HTML>
