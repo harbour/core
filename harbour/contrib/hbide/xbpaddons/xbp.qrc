@@ -20,8 +20,18 @@
     <file>resources/database_previous.png</file>
     <file>resources/database_next.png</file>
     <file>resources/database_search.png</file>
+    <file>resources/new.png</file>
     <file>resources/open3.png</file>
     <file>resources/save3.png</file>
+    <file>resources/close3.png</file>
+    <file>resources/print.png</file>
+    <file>resources/load_1.png</file>
+    <file>resources/unload_1.png</file>
+    <file>resources/zoomin3.png</file>
+    <file>resources/zoomout3.png</file>
+    <file>resources/zoomout.png</file>
+    <file>resources/zoomin.png</file>
+    <file>resources/grid.png</file>
     <file>resources/fullscreen.png</file>
     <file>resources/formview.png</file>
     <file>resources/dbstruct.png</file>
@@ -44,5 +54,48 @@
     <file>resources/dbf_p10.png</file>
     <file>resources/form.png</file>
     <file>resources/table.png</file>
+    <file>resources/f_align_left.png</file>
+    <file>resources/f_align_right.png</file>
+    <file>resources/f_align_center.png</file>
+    <file>resources/f_align_justify.png</file>
+    <file>resources/f_align_top.png</file>
+    <file>resources/f_align_middle.png</file>
+    <file>resources/f_align_bottom.png</file>
+    <file>resources/f_box_top.png</file>
+    <file>resources/f_box_left.png</file>
+    <file>resources/f_box_bottom.png</file>
+    <file>resources/f_box_right.png</file>
+    <file>resources/f_box_all.png</file>
+    <file>resources/f_box_plain.png</file>
+    <file>resources/f_box_shadow.png</file>
+    <file>resources/f-generic.png</file>
+    <file>resources/f-image.png</file>
+    <file>resources/f_chart.png</file>
+    <file>resources/f_gradient.png</file>
+    <file>resources/f_barcode.png</file>
+    <file>resources/f-bold-1.png</file>
+    <file>resources/f-italic-1.png</file>
+    <file>resources/f-underline-1.png</file>
+    <file>resources/f-strike-1.png</file>
+    <file>resources/toback.png</file>
+    <file>resources/tofront.png</file>
+    <file>resources/r-page.png</file>
+    <file>resources/r-report.png</file>
+    <file>resources/r-landscape.png</file>
+    <file>resources/r-portrait.png</file>
+    <file>resources/rp_arc.png</file>
+    <file>resources/rp_chord.png</file>
+    <file>resources/rp_diamond.png</file>
+    <file>resources/rp_triangle.png</file>
+    <file>resources/rp_rectangle.png</file>
+    <file>resources/rp_roundrectangle.png</file>
+    <file>resources/rp_linevert.png</file>
+    <file>resources/rp_linehorz.png</file>
+    <file>resources/rp_linediagright.png</file>
+    <file>resources/rp_linediagleft.png</file>
+    <file>resources/rp_ellipse.png</file>
+    <file>resources/rp_shapes.png</file>
+    <file>resources/harbour.png</file>
+    <file>resources/text.png</file>
   </qresource>
 </RCC>

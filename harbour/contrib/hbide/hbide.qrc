@@ -219,47 +219,6 @@
     <file>resources/zoomout.png</file>
     <file>resources/zoomin3.png</file>
     <file>resources/zoomout3.png</file>
-    <file>resources/f_align_left.png</file>
-    <file>resources/f_align_right.png</file>
-    <file>resources/f_align_center.png</file>
-    <file>resources/f_align_justify.png</file>
-    <file>resources/f_align_top.png</file>
-    <file>resources/f_align_middle.png</file>
-    <file>resources/f_align_bottom.png</file>
-    <file>resources/f_box_top.png</file>
-    <file>resources/f_box_left.png</file>
-    <file>resources/f_box_bottom.png</file>
-    <file>resources/f_box_right.png</file>
-    <file>resources/f_box_all.png</file>
-    <file>resources/f_box_plain.png</file>
-    <file>resources/f_box_shadow.png</file>
-    <file>resources/f-generic.png</file>
-    <file>resources/f-image.png</file>
-    <file>resources/f_chart.png</file>
-    <file>resources/f_gradient.png</file>
-    <file>resources/f_barcode.png</file>
-    <file>resources/f-bold-1.png</file>
-    <file>resources/f-italic-1.png</file>
-    <file>resources/f-underline-1.png</file>
-    <file>resources/f-strike-1.png</file>
-    <file>resources/toback.png</file>
-    <file>resources/tofront.png</file>
-    <file>resources/r-page.png</file>
-    <file>resources/r-report.png</file>
-    <file>resources/r-landscape.png</file>
-    <file>resources/r-portrait.png</file>
-    <file>resources/rp_arc.png</file>
-    <file>resources/rp_chord.png</file>
-    <file>resources/rp_diamond.png</file>
-    <file>resources/rp_triangle.png</file>
-    <file>resources/rp_rectangle.png</file>
-    <file>resources/rp_roundrectangle.png</file>
-    <file>resources/rp_linevert.png</file>
-    <file>resources/rp_linehorz.png</file>
-    <file>resources/rp_linediagright.png</file>
-    <file>resources/rp_linediagleft.png</file>
-    <file>resources/rp_ellipse.png</file>
-    <file>resources/rp_shapes.png</file>
     <file>resources/memo.png</file>
     <file>resources/hideshow.png</file>
     <file>resources/cuied.png</file>

@@ -678,9 +678,8 @@ METHOD HbIde:create( aParams )
 
    /* Reports Manager */
    ::oRM := HbpReports():new()
-   ::oRM:qtObject := ::oReportsManagerDock:oWidget
-   ::oRM:create( , , , , , .T. )
-   ::oReportsManagerDock:oWidget:setWidget( ::oRM:oWidget )
+   ::oRM:qtObject := ::oParts:oStackReports
+   ::oRM:create( ::oDlg, , {0,0}, {640,400}, , .T. )
 
    /* Code Formatter Manager */
    ::oFmt := IdeFormat():new():create( Self )
@@ -1011,11 +1010,14 @@ METHOD HbIde:execAction( cKey )
    CASE "Help"
       ::oHelpDock:show()
       EXIT
+   CASE "EDITOR"
+      ::oParts:setStack( 0 )
+      EXIT
    CASE "DBU"
       ::oParts:setStack( 1 )
       EXIT
-   CASE "EDITOR"
-      ::oParts:setStack( 0 )
+   CASE "REPORTS"
+      ::oParts:setStack( 2 )
       EXIT
    ENDSWITCH
 

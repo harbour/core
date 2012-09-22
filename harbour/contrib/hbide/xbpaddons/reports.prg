@@ -68,6 +68,9 @@
 #include "hbclass.ch"
 #include "hbqtgui.ch"
 #include "hbtrace.ch"
+#include "xbp.ch"
+
+/*----------------------------------------------------------------------*/
 
 #define  UNIT  0.1
 
@@ -355,6 +358,15 @@ METHOD HbpReports:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::buildDesignReport()
 
    ::qTabBar:setCurrentIndex( 2 )
+
+
+   IF ::visible
+      ::show()
+   ENDIF
+   IF HB_ISOBJECT( oParent )
+      ::oParent:AddChild( SELF )
+      ::postCreate()
+   ENDIF
 
    RETURN Self
 
@@ -961,7 +973,7 @@ METHOD HbpReports:addObject( cType, qPos, qGeo )
 
    SWITCH cType
    CASE "Image"
-      oHqrObject:setPixmap( QPixmap( app_image( "hbide" ) ) )
+      oHqrObject:setPixmap( QPixmap( Hbp_image( "harbour" ) ) )
       oHqrObject:setBorderWidth( 2 )
       EXIT
    CASE "Chart"
@@ -1067,7 +1079,7 @@ METHOD HbpReports:updateObjectsTree( cType, cParent, cName, cSubType )
    DO CASE
    CASE cType == "ReportName"
       qItem := QTreeWidgetItem() ; qItem:setText( 0, cName )
-      qItem:setIcon( 0, QIcon( app_image( "r-report" ) ) )
+      qItem:setIcon( 0, QIcon( Hbp_Image( "r-report" ) ) )
       ::qTreeObjects:addTopLevelItem( qItem )
       ::hObjTree[ cName ] := qItem
       qItem:setExpanded( .t. )
@@ -1085,7 +1097,7 @@ METHOD HbpReports:updateObjectsTree( cType, cParent, cName, cSubType )
          ::hObjTree[ cName ] := qItem
 
          IF cType == "Page"
-            qItem:setIcon( 0, QIcon( app_image( "r-page" ) ) )
+            qItem:setIcon( 0, QIcon( Hbp_Image( "r-page" ) ) )
          ELSEIF cType == "Object"
             qItem:setIcon( 0, QIcon( ::getImageOfType( cSubType ) ) )
          ELSEIF cType == "Field"
@@ -1248,7 +1260,7 @@ METHOD HbpReports:getImageOfType( cType )
    CASE cType == "Triangle"  ;   cImage := "rp_triangle"
    ENDCASE
 
-   RETURN app_image( cImage )
+   RETURN Hbp_Image( cImage )
 
 /*----------------------------------------------------------------------*/
 
@@ -1265,25 +1277,28 @@ METHOD HbpReports:getNextID( cType )
 METHOD HbpReports:buildToolbar()
    LOCAL qTBar
 
-   qTBar := HbqToolbar():new()
+   qTBar := XbpToolbar():new()
    qTBar:orientation := Qt_Horizontal
-   qTBar:create( "ReportManager_Top_Toolbar" )
+   qTBar:imageWidth  := 16
+   qTBar:imageHeight := 16
+   qTBar:create()
+   qTBar:buttonClick := {|oButton| iif( HB_ISBLOCK( oButton:key ), Eval( oButton:key ), NIL ) }
 
-   qTBar:addToolButton( "New"      , "New Report"            , app_image( "new"         ), {|| ::execEvent( __buttonNew_clicked__       ) } )
-   qTBar:addToolButton( "Open"     , "Open Report"           , app_image( "open3"       ), {|| ::execEvent( __buttonOpen_clicked__      ) } )
-   qTBar:addToolButton( "Save"     , "Save Report"           , app_image( "save3"       ), {|| ::execEvent( __buttonSave_clicked__      ) } )
-   qTBar:addToolButton( "Close"    , "Close Report"          , app_image( "close3"      ), {|| ::execEvent( __buttonClose_clicked__     ) } )
-   qTBar:addToolButton( "Print"    , "Print Report"          , app_image( "print"       ), {|| ::execEvent( __buttonPrint_clicked__     ) } )
-   qTBar:addSeparator()
-   qTBar:addToolButton( "ToBack"   , "Push to back"          , app_image( "toback"      ), {|| ::execEvent( __buttonToBack_clicked__    ) }, .f., .f. )
-   qTBar:addToolButton( "ToFront"  , "Bring to front"        , app_image( "tofront"     ), {|| ::execEvent( __buttonToFront_clicked__   ) }, .f., .f. )
-   qTBar:addSeparator()
-   qTBar:addToolButton( "RotateL"  , "Rotate anti-clock wise", app_image( "unload_1"    ), {|| ::execEvent( __buttonRotateL_clicked__   ) }, .f., .f. )
-   qTBar:addToolButton( "RotateR"  , "Rotate clock wise"     , app_image( "load_1"      ), {|| ::execEvent( __buttonRotateR_clicked__   ) }, .f., .f. )
-   qTBar:addSeparator()
-   qTBar:addToolButton( "Portrait" , "Portrait orientation"  , app_image( "r-portrait"  ), {|| ::execEvent( __buttonPortrait_clicked__  ) }, .f., .f. )
-   qTBar:addToolButton( "Landscape", "Landscape orientation" , app_image( "r-landscape" ), {|| ::execEvent( __buttonLandscape_clicked__ ) }, .f., .f. )
-   qTBar:addSeparator()
+   qTBar:addItem( { "New"      , "New Report"            , QIcon( Hbp_Image( "new"         ) ), {|| ::execEvent( __buttonNew_clicked__       ) } } )
+   qTBar:addItem( { "Open"     , "Open Report"           , QIcon( Hbp_Image( "open3"       ) ), {|| ::execEvent( __buttonOpen_clicked__      ) } } )
+   qTBar:addItem( { "Save"     , "Save Report"           , QIcon( Hbp_Image( "save3"       ) ), {|| ::execEvent( __buttonSave_clicked__      ) } } )
+   qTBar:addItem( { "Close"    , "Close Report"          , QIcon( Hbp_Image( "close3"      ) ), {|| ::execEvent( __buttonClose_clicked__     ) } } )
+   qTBar:addItem( { "Print"    , "Print Report"          , QIcon( Hbp_Image( "print"       ) ), {|| ::execEvent( __buttonPrint_clicked__     ) } } )
+   qTBar:addItem( , , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   qTBar:addItem( { "ToBack"   , "Push to back"          , QIcon( Hbp_Image( "toback"      ) ), {|| ::execEvent( __buttonToBack_clicked__    ) }, .f., .f. } )
+   qTBar:addItem( { "ToFront"  , "Bring to front"        , QIcon( Hbp_Image( "tofront"     ) ), {|| ::execEvent( __buttonToFront_clicked__   ) }, .f., .f. } )
+   qTBar:addItem( , , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   qTBar:addItem( { "RotateL"  , "Rotate anti-clock wise", QIcon( Hbp_Image( "unload_1"    ) ), {|| ::execEvent( __buttonRotateL_clicked__   ) }, .f., .f. } )
+   qTBar:addItem( { "RotateR"  , "Rotate clock wise"     , QIcon( Hbp_Image( "load_1"      ) ), {|| ::execEvent( __buttonRotateR_clicked__   ) }, .f., .f. } )
+   qTBar:addItem( , , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   qTBar:addItem( { "Portrait" , "Portrait orientation"  , QIcon( Hbp_Image( "r-portrait"  ) ), {|| ::execEvent( __buttonPortrait_clicked__  ) }, .f., .f. } )
+   qTBar:addItem( { "Landscape", "Landscape orientation" , QIcon( Hbp_Image( "r-landscape" ) ), {|| ::execEvent( __buttonLandscape_clicked__ ) }, .f., .f. } )
+   qTBar:addItem( , , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
 
    ::qToolbar := qTBar
 
@@ -1294,42 +1309,45 @@ METHOD HbpReports:buildToolbar()
 METHOD HbpReports:buildToolbarAlign()
    LOCAL qTBar
 
-   qTBar := HbqToolbar():new()
+   qTBar := XbpToolbar():new()
    qTBar:orientation := Qt_Horizontal
-   qTBar:create( "ReportManager_Top_Toolbar_Align" )
+   qTBar:imageWidth  := 16
+   qTBar:imageHeight := 16
+   qTBar:create()
+   qTBar:buttonClick := {|oButton| iif( HB_ISBLOCK( oButton:key ), Eval( oButton:key ), NIL ) }
 
-   qTBar:addToolButton( "FontG"  , "Font"              , app_image( "f-generic"       ), {|| ::execEvent( __buttonFontG_clicked__ ) }, .f., .f. )
-   qTBar:addSeparator()
-   qTBar:addToolButton( "FontB"  , "Text Bold"         , app_image( "f-bold-1"        ), {|| ::execEvent( __buttonFontB_clicked__ ) } )
-   qTBar:addToolButton( "FontI"  , "Text Italic"       , app_image( "f-italic-1"      ), {|| ::execEvent( __buttonFontI_clicked__ ) } )
-   qTBar:addToolButton( "FontU"  , "Text Underlined"   , app_image( "f-underline-1"   ), {|| ::execEvent( __buttonFontU_clicked__ ) } )
-   qTBar:addToolButton( "FontS"  , "Text Strikethrough", app_image( "f-strike-1"      ), {|| ::execEvent( __buttonFontS_clicked__ ) } )
-   qTBar:addSeparator()
-   qTBar:addToolButton( "JustL"  , "Align left"        , app_image( "f_align_left"    ), {|| ::execEvent( __buttonJustL_clicked__ ) } )
-   qTBar:addToolButton( "JustC"  , "Align center"      , app_image( "f_align_center"  ), {|| ::execEvent( __buttonJustC_clicked__ ) } )
-   qTBar:addToolButton( "JustR"  , "Align right"       , app_image( "f_align_right"   ), {|| ::execEvent( __buttonJustR_clicked__ ) } )
-   qTBar:addToolButton( "JustJ"  , "Align justify"     , app_image( "f_align_justify" ), {|| ::execEvent( __buttonJustJ_clicked__ ) } )
-   qTBar:addSeparator()
-   qTBar:addToolButton( "JustT"  , "Align top"         , app_image( "f_align_top"     ), {|| ::execEvent( __buttonJustT_clicked__ ) } )
-   qTBar:addToolButton( "JustM"  , "Align middle"      , app_image( "f_align_middle"  ), {|| ::execEvent( __buttonJustM_clicked__ ) } )
-   qTBar:addToolButton( "JustB"  , "Align bottom"      , app_image( "f_align_bottom"  ), {|| ::execEvent( __buttonJustB_clicked__ ) } )
-   qTBar:addSeparator()
-   qTBar:addToolButton( "BoxT"   , "Box-frame top"     , app_image( "f_box_top"       ), {|| ::execEvent( __buttonBoxT_clicked__  ) }, .t., .f. )
-   qTBar:addToolButton( "BoxL"   , "Box-frame left"    , app_image( "f_box_left"      ), {|| ::execEvent( __buttonBoxL_clicked__  ) }, .t., .f. )
-   qTBar:addToolButton( "BoxB"   , "Box-frame bottom"  , app_image( "f_box_bottom"    ), {|| ::execEvent( __buttonBoxB_clicked__  ) }, .t., .f. )
-   qTBar:addToolButton( "BoxR"   , "Box-frame right"   , app_image( "f_box_right"     ), {|| ::execEvent( __buttonBoxR_clicked__  ) }, .t., .f. )
-   qTBar:addSeparator()
-   qTBar:addToolButton( "BoxA"   , "Box-frame all"     , app_image( "f_box_all"       ), {|| ::execEvent( __buttonBoxA_clicked__  ) } )
-   qTBar:addToolButton( "BoxP"   , "No box-frame"      , app_image( "f_box_plain"     ), {|| ::execEvent( __buttonBoxP_clicked__  ) } )
-   qTBar:addToolButton( "BoxS"   , "Box shadowed"      , app_image( "f_box_shadow"    ), {|| ::execEvent( __buttonBoxS_clicked__  ) } )
-   qTBar:addSeparator()
-   qTBar:addToolButton( "ZoomIn" , "Zoom In"           , app_image( "zoomin3"         ), {|| ::execEvent( __buttonZoom_clicked__, 1 ) } )
-   qTBar:addToolButton( "ZoomOut", "Zoom Out"          , app_image( "zoomout3"        ), {|| ::execEvent( __buttonZoom_clicked__, 2 ) } )
-   qTBar:addToolButton( "ZoomWYS", "Zoom WYSIWYG"      , app_image( "zoomin"          ), {|| ::execEvent( __buttonZoom_clicked__, 3 ) } )
-   qTBar:addToolButton( "ZoomOrg", "Zoom Original"     , app_image( "zoomout"         ), {|| ::execEvent( __buttonZoom_clicked__, 4 ) } )
-   qTBar:addSeparator()
-   qTBar:addToolButton( "Grid"   , "Show Grid"         , app_image( "grid"            ), {|| ::execEvent( __buttonGrid_clicked__    ) }, .t., .f. )
-   qTBar:addSeparator()
+   qTBar:addItem( { "FontG"  , "Font"              , QIcon( Hbp_Image( "f-generic"       ) ), {|| ::execEvent( __buttonFontG_clicked__ ) }, .f., .f. } )
+   qTBar:addItem( , , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   qTBar:addItem( { "FontB"  , "Text Bold"         , QIcon( Hbp_Image( "f-bold-1"        ) ), {|| ::execEvent( __buttonFontB_clicked__ ) } } )
+   qTBar:addItem( { "FontI"  , "Text Italic"       , QIcon( Hbp_Image( "f-italic-1"      ) ), {|| ::execEvent( __buttonFontI_clicked__ ) } } )
+   qTBar:addItem( { "FontU"  , "Text Underlined"   , QIcon( Hbp_Image( "f-underline-1"   ) ), {|| ::execEvent( __buttonFontU_clicked__ ) } } )
+   qTBar:addItem( { "FontS"  , "Text Strikethrough", QIcon( Hbp_Image( "f-strike-1"      ) ), {|| ::execEvent( __buttonFontS_clicked__ ) } } )
+   qTBar:addItem( , , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   qTBar:addItem( { "JustL"  , "Align left"        , QIcon( Hbp_Image( "f_align_left"    ) ), {|| ::execEvent( __buttonJustL_clicked__ ) } } )
+   qTBar:addItem( { "JustC"  , "Align center"      , QIcon( Hbp_Image( "f_align_center"  ) ), {|| ::execEvent( __buttonJustC_clicked__ ) } } )
+   qTBar:addItem( { "JustR"  , "Align right"       , QIcon( Hbp_Image( "f_align_right"   ) ), {|| ::execEvent( __buttonJustR_clicked__ ) } } )
+   qTBar:addItem( { "JustJ"  , "Align justify"     , QIcon( Hbp_Image( "f_align_justify" ) ), {|| ::execEvent( __buttonJustJ_clicked__ ) } } )
+   qTBar:addItem( , , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   qTBar:addItem( { "JustT"  , "Align top"         , QIcon( Hbp_Image( "f_align_top"     ) ), {|| ::execEvent( __buttonJustT_clicked__ ) } } )
+   qTBar:addItem( { "JustM"  , "Align middle"      , QIcon( Hbp_Image( "f_align_middle"  ) ), {|| ::execEvent( __buttonJustM_clicked__ ) } } )
+   qTBar:addItem( { "JustB"  , "Align bottom"      , QIcon( Hbp_Image( "f_align_bottom"  ) ), {|| ::execEvent( __buttonJustB_clicked__ ) } } )
+   qTBar:addItem( , , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   qTBar:addItem( { "BoxT"   , "Box-frame top"     , QIcon( Hbp_Image( "f_box_top"       ) ), {|| ::execEvent( __buttonBoxT_clicked__  ) }, .t., .F. } )
+   qTBar:addItem( { "BoxL"   , "Box-frame left"    , QIcon( Hbp_Image( "f_box_left"      ) ), {|| ::execEvent( __buttonBoxL_clicked__  ) }, .t., .f. } )
+   qTBar:addItem( { "BoxB"   , "Box-frame bottom"  , QIcon( Hbp_Image( "f_box_bottom"    ) ), {|| ::execEvent( __buttonBoxB_clicked__  ) }, .t., .f. } )
+   qTBar:addItem( { "BoxR"   , "Box-frame right"   , QIcon( Hbp_Image( "f_box_right"     ) ), {|| ::execEvent( __buttonBoxR_clicked__  ) }, .t., .f. } )
+   qTBar:addItem( , , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   qTBar:addItem( { "BoxA"   , "Box-frame all"     , QIcon( Hbp_Image( "f_box_all"       ) ), {|| ::execEvent( __buttonBoxA_clicked__  ) } } )
+   qTBar:addItem( { "BoxP"   , "No box-frame"      , QIcon( Hbp_Image( "f_box_plain"     ) ), {|| ::execEvent( __buttonBoxP_clicked__  ) } } )
+   qTBar:addItem( { "BoxS"   , "Box shadowed"      , QIcon( Hbp_Image( "f_box_shadow"    ) ), {|| ::execEvent( __buttonBoxS_clicked__  ) } } )
+   qTBar:addItem( , , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   qTBar:addItem( { "ZoomIn" , "Zoom In"           , QIcon( Hbp_Image( "zoomin3"         ) ), {|| ::execEvent( __buttonZoom_clicked__, 1 ) } } )
+   qTBar:addItem( { "ZoomOut", "Zoom Out"          , QIcon( Hbp_Image( "zoomout3"        ) ), {|| ::execEvent( __buttonZoom_clicked__, 2 ) } } )
+   qTBar:addItem( { "ZoomWYS", "Zoom WYSIWYG"      , QIcon( Hbp_Image( "zoomin"          ) ), {|| ::execEvent( __buttonZoom_clicked__, 3 ) } } )
+   qTBar:addItem( { "ZoomOrg", "Zoom Original"     , QIcon( Hbp_Image( "zoomout"         ) ), {|| ::execEvent( __buttonZoom_clicked__, 4 ) } } )
+   qTBar:addItem( , , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   qTBar:addItem( { "Grid"   , "Show Grid"         , QIcon( Hbp_Image( "grid"            ) ), {|| ::execEvent( __buttonGrid_clicked__    ) }, .t., .f. } )
+   qTBar:addItem( , , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
 
    ::qToolbarAlign := qTBar
 
@@ -1340,56 +1358,53 @@ METHOD HbpReports:buildToolbarAlign()
 METHOD HbpReports:buildToolbarLeft()
    LOCAL qTBar
 
-   qTBar := HbqToolbar():new()
+   qTBar := XbpToolbar():new()
    qTBar:orientation := Qt_Vertical
-   qTBar:create( "ReportManager_Left_Toolbar" )
-
-   qTBar:addToolButton( "Image"   , "Image"   , app_image( "f-image"    ), {|| ::execEvent( __buttonNew_clicked__    ) }, .t., .t. )
-   qTBar:addToolButton( "Chart"   , "Chart"   , app_image( "f_chart"    ), {|| ::execEvent( __buttonNew_clicked__    ) }, .t., .t. )
-   qTBar:addToolButton( "Gradient", "Gradient", app_image( "f_gradient" ), {|| ::execEvent( __buttonNew_clicked__    ) }, .t., .t. )
-   qTBar:addToolButton( "Barcode" , "Barcode" , app_image( "f_barcode"  ), {|| ::execEvent( __buttonNew_clicked__    ) }, .t., .t. )
-   qTBar:addToolButton( "Text"    , "Text"    , app_image( "text"       ), {|| ::execEvent( __buttonNew_clicked__    ) }, .t., .t. )
-   qTBar:addSeparator()
-   qTBar:addToolButton( "Shapes"  , "Shapes"  , app_image( "rp_shapes"  ), {|| ::execEvent( __buttonShapes_clicked__ ) }, .t., .f. )
+   qTBar:imageWidth  := 16
+   qTBar:imageHeight := 16
+   qTBar:create()
+   qTBar:buttonClick := {|oButton| iif( HB_ISBLOCK( oButton:key ), Eval( oButton:key ), NIL ) }
 
    ::qToolbarL := qTBar
+
+   qTBar:addItem( { "Image"   , "Image"   , QIcon( Hbp_Image( "f-image"    ) ), {|| ::execEvent( __buttonNew_clicked__    ) }, .t., .t. } )
+   qTBar:addItem( { "Chart"   , "Chart"   , QIcon( Hbp_Image( "f_chart"    ) ), {|| ::execEvent( __buttonNew_clicked__    ) }, .t., .t. } )
+   qTBar:addItem( { "Gradient", "Gradient", QIcon( Hbp_Image( "f_gradient" ) ), {|| ::execEvent( __buttonNew_clicked__    ) }, .t., .t. } )
+   qTBar:addItem( { "Barcode" , "Barcode" , QIcon( Hbp_Image( "f_barcode"  ) ), {|| ::execEvent( __buttonNew_clicked__    ) }, .t., .t. } )
+   qTBar:addItem( { "Text"    , "Text"    , QIcon( Hbp_Image( "text"       ) ), {|| ::execEvent( __buttonNew_clicked__    ) }, .t., .t. } )
+   qTBar:addItem( , , , , , XBPTOOLBAR_BUTTON_SEPARATOR )
+   qTBar:addItem( { "Shapes"  , "Shapes"  , QIcon( Hbp_Image( "rp_shapes"  ) ), {|| ::execEvent( __buttonShapes_clicked__ ) }, .t., .f. } )
 
    RETURN Self
 
 /*----------------------------------------------------------------------*/
 
 METHOD HbpReports:execMenuShapes()
-   LOCAL qPos, qBtn
 
    IF empty( ::qShapesMenu )
       ::qShapesMenu := QMenu()
 
-      ::aShapesAct[ SHP_ACT_RECTANGLE     ] := ::qShapesMenu:addAction( QIcon( app_image( "rp_rectangle"     ) ), "Rectangle"           )
-      ::aShapesAct[ SHP_ACT_ROUNDRECT     ] := ::qShapesMenu:addAction( QIcon( app_image( "rp_roundrectangle") ), "Rounded Rectangle"   )
-      ::aShapesAct[ SHP_ACT_ELLIPSE       ] := ::qShapesMenu:addAction( QIcon( app_image( "rp_ellipse"       ) ), "Ellipse"             )
-      ::aShapesAct[ SHP_ACT_LINEHORZ      ] := ::qShapesMenu:addAction( QIcon( app_image( "rp_linehorz"      ) ), "Horizontal Line"     )
-      ::aShapesAct[ SHP_ACT_LINEVERT      ] := ::qShapesMenu:addAction( QIcon( app_image( "rp_linevert"      ) ), "Vertical Line"       )
-      ::aShapesAct[ SHP_ACT_LINEDIAGRIGHT ] := ::qShapesMenu:addAction( QIcon( app_image( "rp_linediagright" ) ), "Diagonal Line Right" )
-      ::aShapesAct[ SHP_ACT_LINEDIAGLEFT  ] := ::qShapesMenu:addAction( QIcon( app_image( "rp_linediagleft"  ) ), "Diagonal Line Left"  )
-      ::aShapesAct[ SHP_ACT_ARC           ] := ::qShapesMenu:addAction( QIcon( app_image( "rp_arc"           ) ), "Arc"                 )
-      ::aShapesAct[ SHP_ACT_CHORD         ] := ::qShapesMenu:addAction( QIcon( app_image( "rp_chord"         ) ), "Chord"               )
-      ::aShapesAct[ SHP_ACT_DIAMOND       ] := ::qShapesMenu:addAction( QIcon( app_image( "rp_diamond"       ) ), "Diamond"             )
-      ::aShapesAct[ SHP_ACT_TRIANGLE      ] := ::qShapesMenu:addAction( QIcon( app_image( "rp_triangle"      ) ), "Triangle"            )
+      ::aShapesAct[ SHP_ACT_RECTANGLE     ] := ::qShapesMenu:addAction( QIcon( Hbp_Image( "rp_rectangle"     ) ), "Rectangle"           )
+      ::aShapesAct[ SHP_ACT_ROUNDRECT     ] := ::qShapesMenu:addAction( QIcon( Hbp_Image( "rp_roundrectangle") ), "Rounded Rectangle"   )
+      ::aShapesAct[ SHP_ACT_ELLIPSE       ] := ::qShapesMenu:addAction( QIcon( Hbp_Image( "rp_ellipse"       ) ), "Ellipse"             )
+      ::aShapesAct[ SHP_ACT_LINEHORZ      ] := ::qShapesMenu:addAction( QIcon( Hbp_Image( "rp_linehorz"      ) ), "Horizontal Line"     )
+      ::aShapesAct[ SHP_ACT_LINEVERT      ] := ::qShapesMenu:addAction( QIcon( Hbp_Image( "rp_linevert"      ) ), "Vertical Line"       )
+      ::aShapesAct[ SHP_ACT_LINEDIAGRIGHT ] := ::qShapesMenu:addAction( QIcon( Hbp_Image( "rp_linediagright" ) ), "Diagonal Line Right" )
+      ::aShapesAct[ SHP_ACT_LINEDIAGLEFT  ] := ::qShapesMenu:addAction( QIcon( Hbp_Image( "rp_linediagleft"  ) ), "Diagonal Line Left"  )
+      ::aShapesAct[ SHP_ACT_ARC           ] := ::qShapesMenu:addAction( QIcon( Hbp_Image( "rp_arc"           ) ), "Arc"                 )
+      ::aShapesAct[ SHP_ACT_CHORD         ] := ::qShapesMenu:addAction( QIcon( Hbp_Image( "rp_chord"         ) ), "Chord"               )
+      ::aShapesAct[ SHP_ACT_DIAMOND       ] := ::qShapesMenu:addAction( QIcon( Hbp_Image( "rp_diamond"       ) ), "Diamond"             )
+      ::aShapesAct[ SHP_ACT_TRIANGLE      ] := ::qShapesMenu:addAction( QIcon( Hbp_Image( "rp_triangle"      ) ), "Triangle"            )
 
       ::qShapesMenu:connect( QEvent_MouseButtonPress  , {|p| ::execEvent( __QEvent_MousePressMenu__  , p ) } )
       ::qShapesMenu:connect( QEvent_MouseMove         , {|p| ::execEvent( __QEvent_MouseMoveMenu__   , p ) } )
       ::qShapesMenu:connect( QEvent_MouseButtonRelease, {|p| ::execEvent( __QEvent_MouseReleaseMenu__, p ) } )
    ENDIF
 
-   qBtn := ::qToolbarL:getItem( "Shapes" )
-   //
-   qPos := ::qToolbarL:mapToGlobal( qBtn:pos() )
-   qPos:setX( qPos:x() + qBtn:width()  / 2 )
-   qPos:setY( qPos:y() + qBtn:height() / 2 )
+   ::qShapesMenu:exec( QCursor():pos() )
 
-   ::qShapesMenu:exec( qPos )
+   ::qToolbarL:setItemChecked( "Shapes", .f. )
 
-   qBtn:setChecked( .f. )
    RETURN Self
 
 /*----------------------------------------------------------------------*/

@@ -79,11 +79,13 @@ CLASS IdeParts INHERIT IdeObject
    DATA   oLayoutDA
    DATA   oLayoutEditor
    DATA   oLayoutDbu
+   DATA   oLayoutReports
 
    DATA   oStackWidget
 
    DATA   oStackEditor
    DATA   oStackDbu
+   DATA   oStackReports
 
    DATA   oSettings
 
@@ -143,22 +145,26 @@ METHOD IdeParts:buildLayout( nLayout )
 
 METHOD IdeParts:buildParts()
 
-   ::oLayoutDA     := ::buildLayout( 0 )
-   ::oLayoutDbu    := ::buildLayout( 0 )
-   ::oLayoutEditor := ::buildLayout( 0 )
+   ::oLayoutDA      := ::buildLayout( 0 )
+   ::oLayoutDbu     := ::buildLayout( 0 )
+   ::oLayoutEditor  := ::buildLayout( 0 )
+   ::oLayoutReports := ::buildLayout( 0 )
 
    ::oDa:setLayout( ::oLayoutDA )
 
    ::oStackWidget  := QStackedWidget( ::oDa:oWidget )
    //
-   ::oStackEditor := QWidget( ::oStackWidget )
-   ::oStackDbu    := QWidget( ::oStackWidget )
+   ::oStackEditor  := QWidget( ::oStackWidget )
+   ::oStackDbu     := QWidget( ::oStackWidget )
+   ::oStackReports := QWidget( ::oStackWidget )
    //
-   ::oStackWidget:addWidget( ::oStackEditor )
-   ::oStackWidget:addWidget( ::oStackDbu    )
+   ::oStackWidget:addWidget( ::oStackEditor  )
+   ::oStackWidget:addWidget( ::oStackDbu     )
+   ::oStackWidget:addWidget( ::oStackReports )
 
-   ::oStackEditor:setLayout( ::oLayoutEditor )
-   ::oStackDbu   :setLayout( ::oLayoutDbu    )
+   ::oStackEditor :setLayout( ::oLayoutEditor  )
+   ::oStackDbu    :setLayout( ::oLayoutDbu     )
+   ::oStackReports:setLayout( ::oLayoutReports )
 
    ::oLayoutDA:addWidget( ::oStackWidget, 0, 0, 1, 1 )
 
@@ -187,6 +193,11 @@ METHOD IdeParts:execStackIndexChanged( nIndex )
       ::oDK:hideAllDocks()
       EXIT
 
+   CASE IDE_PART_REPORTSDESIGNER
+      ::oIde:oSBar:hide()
+      ::oDK:hideAllDocks()
+      EXIT
+
    ENDSWITCH
 
    ::nCurStacksIndex := nIndex
@@ -208,6 +219,7 @@ METHOD IdeParts:addWidget( nPart, oWidget, nFromRow, nFromColumn, nRowSpan, nCol
       EXIT
 
    CASE IDE_PART_REPORTSDESIGNER
+      ::oLayoutReports:addWidget( oWidget, nFromRow, nFromColumn, nRowSpan, nColumnSpan )
       EXIT
 
    ENDSWITCH

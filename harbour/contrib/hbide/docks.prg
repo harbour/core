@@ -111,8 +111,6 @@
 #define __docEnvironments_visibilityChanged__     2036
 #define __docSkeletons_visibilityChanged__        2037
 #define __dockSourceThumbnail_visibilityChanged__ 2038
-#define __dockQScintilla_visibilityChanged__      2039
-#define __dockReportsManager_visibilityChanged__  2040
 #define __dockFormat_visibilityChanged__          2041
 #define __dockCuiEd_visibilityChanged__           2042
 #define __dockUISrc_visibilityChanged__           2043
@@ -179,9 +177,7 @@ CLASS IdeDocks INHERIT IdeObject
    METHOD getPanelIcon( cView )
    METHOD animateComponents( nMode )
    METHOD buildSourceThumbnail()
-   METHOD buildQScintilla()
    METHOD buildUpDownWidget()
-   METHOD buildReportsDesignerWidget()
    METHOD buildSystemTray()
    METHOD showDlgBySystemTrayIconCommand()
    METHOD setViewInitials()
@@ -237,8 +233,6 @@ METHOD IdeDocks:hideAllDocks()
    ::oHelpDock                : hide()
    ::oFuncDock                : hide()
    ::oSourceThumbnailDock     : hide()
-   ::oQScintillaDock          : hide()
-   ::oReportsManagerDock      : hide()
    ::oFormatDock              : hide()
    ::oCuiEdDock               : hide()
    ::oUiSrcDock               : hide()
@@ -280,8 +274,6 @@ METHOD IdeDocks:destroy()
    ::oFuncDock:oWidget           : disconnect( "visibilityChanged(bool)" )
 
    ::oSourceThumbnailDock:oWidget: disconnect( "visibilityChanged(bool)" )
-   ::oQScintillaDock:oWidget     : disconnect( "visibilityChanged(bool)" )
-   ::oReportsManagerDock:oWidget : disconnect( "visibilityChanged(bool)" )
    ::oFormatDock:oWidget         : disconnect( "visibilityChanged(bool)" )
    ::oCuiEdDock:oWidget          : disconnect( "visibilityChanged(bool)" )
    ::oUiSrcDock:oWidget          : disconnect( "visibilityChanged(bool)" )
@@ -310,39 +302,6 @@ METHOD IdeDocks:destroy()
       ::qTimer := NIL
    ENDIF
 
-   ::oIde:oOutputResult          := NIL
-   ::oIde:oEnvironDock           := NIL
-   ::oIde:oPropertiesDock        := NIL
-   ::oIde:oThemesDock            := NIL
-   ::oIde:oDocViewDock           := NIL
-   ::oIde:oDocWriteDock          := NIL
-   ::oIde:oFindDock              := NIL
-   ::oIde:oFunctionsDock         := NIL
-   ::oIde:oSkeltnDock            := NIL
-   ::oIde:oHelpDock              := NIL
-   ::oIde:oFuncDock              := NIL
-
-   ::oIde:oSourceThumbnailDock   := NIL
-   ::oIde:oQScintillaDock        := NIL
-   ::oIde:oReportsManagerDock    := NIL
-   ::oIde:oFormatDock            := NIL
-   ::oIde:oCuiEdDock             := NIL
-   ::oIde:oUiSrcDock             := NIL
-
-   ::oIde:oDockPT                := NIL
-   ::oIde:oDockED                := NIL
-   ::oIde:oDockB2                := NIL
-
-   ::oIde:oDockB1                := NIL
-   ::oIde:oLinkResult            := NIL
-
-   ::oIde:oSys                   := NIL
-   ::qAct1                       := NIL
-   ::qAct2                       := NIL
-
-   ::oIde:oDockB                 := NIL
-   ::oIde:oCompileResult         := NIL
-
    FOR EACH qTmp IN ::aPanels
       qTmp:disconnect( "clicked()" )
       qTmp := NIL
@@ -370,16 +329,6 @@ METHOD IdeDocks:destroy()
       ::qMdiToolBarL:destroy()
       ::qMdiToolBarL := NIL
    ENDIF
-   ::nPass                       := NIL
-   ::aPanels                     := NIL
-   ::aMdiBtns                    := NIL
-   ::aBtnLines                   := NIL
-   ::aBtnDocks                   := NIL
-   ::oBtnTabClose                := NIL
-   ::aViewsInfo                  := NIL
-   ::qTBtnClose                  := NIL
-   ::qTimer                      := NIL
-   ::nPrevWindowState            := NIL
 
    RETURN Self
 
@@ -549,9 +498,7 @@ METHOD IdeDocks:buildDockWidgets()
    ::buildDocWriter()
    ::buildFunctionsDock()
    ::buildSourceThumbnail()
-   ::buildQScintilla()
    ::buildUpDownWidget()
-   ::buildReportsDesignerWidget()
    ::buildFormatWidget()
    ::buildCuiEdWidget()
    ::buildUiSrcDock()
@@ -618,23 +565,6 @@ METHOD IdeDocks:execEvent( nEvent, p, p1 )
          p1:raise()
       ENDIF
       EXIT
-   CASE __dockReportsManager_visibilityChanged__
-      IF !empty( p1 )
-         IF ! p .AND. ! p1:isVisible()
-            p1:raise()
-         ENDIF
-      ENDIF
-      EXIT
-#if 0  /* Deprecated */
-   CASE __dockQScintilla_visibilityChanged__
-      IF p; ::oBM:show() ; ENDIF
-      IF !empty( p1 )
-         IF ! p .AND. ! p1:isVisible()
-            p1:raise()
-         ENDIF
-      ENDIF
-      EXIT
-#endif
    CASE __dockSourceThumbnail_visibilityChanged__
       IF p; ::oEM:showThumbnail(); ENDIF
       IF !empty( p1 )
@@ -1688,7 +1618,6 @@ METHOD IdeDocks:animateComponents( nMode )
    ::oThemesDock:oWidget          : setStyleSheet( cStyle )
    ::oFindDock:oWidget            : setStyleSheet( cStyle )
    ::oDockB2:oWidget              : setStyleSheet( cStyle )
-   ::oQScintillaDock:oWidget      : setStyleSheet( cStyle )
    ::oSourceThumbnailDock:oWidget : setStyleSheet( cStyle )
 
    ::oProjTree:oWidget:setStyleSheet( GetStyleSheet( "QTreeWidgetHB", ::nAnimantionMode ) )
@@ -1798,28 +1727,6 @@ METHOD IdeDocks:buildSourceThumbnail()
    ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, oDock:oWidget, Qt_Horizontal )
    oDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __dockSourceThumbnail_visibilityChanged__, p, oDock:oWidget ) } )
    ::oIde:oSourceThumbnailDock := oDock
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:buildQScintilla()
-   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
-
-   ::oIde:oQScintillaDock := ::getADockWidget( nAreas, "dockQScintilla", "ideDBU", QDockWidget_DockWidgetFloatable )
-   ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oQScintillaDock:oWidget, Qt_Horizontal )
-   ::oQScintillaDock:oWidget:connect( "visibilityChanged(bool)"  , {|p| ::execEvent( __dockQScintilla_visibilityChanged__, p, ::oQScintillaDock:oWidget ) } )
-
-   RETURN Self
-
-/*----------------------------------------------------------------------*/
-
-METHOD IdeDocks:buildReportsDesignerWidget()
-   LOCAL nAreas := Qt_LeftDockWidgetArea + Qt_RightDockWidgetArea + Qt_TopDockWidgetArea + Qt_BottomDockWidgetArea
-
-   ::oIde:oReportsManagerDock := ::getADockWidget( nAreas, "dockReportDesigner", "HBReportsManager", QDockWidget_DockWidgetFloatable )
-   ::oDlg:oWidget:addDockWidget( Qt_RightDockWidgetArea, ::oReportsManagerDock:oWidget, Qt_Horizontal )
-   ::oReportsManagerDock:oWidget:connect( "visibilityChanged(bool)", {|p| ::execEvent( __dockReportsManager_visibilityChanged__, p, ::oReportsManagerDock:oWidget ) } )
 
    RETURN Self
 

@@ -240,7 +240,7 @@ METHOD XbpToolbar:sendToolbarMessage()
 /*----------------------------------------------------------------------*/
 
 METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, xKey )
-   LOCAL oBtn
+   LOCAL oBtn, oButton
    LOCAL isAction     := HB_ISOBJECT( cCaption ) .AND. __ObjGetClsName( cCaption ) == "QACTION"
    LOCAL isToolButton := HB_ISARRAY( cCaption )
    LOCAL isObject     := HB_ISOBJECT( cCaption )
@@ -277,17 +277,20 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
          oBtn:oAction := cCaption
 
       ELSEIF isToolButton
-         oBtn:oAction := QAction( ::oWidget )
+         oButton := QToolButton()
+         oBtn:oAction := QWidgetAction( ::oWidget )
+         oBtn:oAction:setDefaultWidget( oButton )
+         oBtn:cargo := oButton
 
-         oBtn:oAction:setObjectName( cCaption[ 1 ] )
-         oBtn:oAction:setTooltip( cCaption[ 2 ] )
-         oBtn:oAction:setIcon( cCaption[ 3 ] )
-         oBtn:oAction:setCheckable( cCaption[ 5 ] )
+         oButton:setObjectName( cCaption[ 1 ] )
+         oButton:setTooltip( cCaption[ 2 ] )
+         oButton:setIcon( cCaption[ 3 ] )
+         oButton:setCheckable( cCaption[ 5 ] )
          IF cCaption[ 6 ]
-            oBtn:oAction:connect( QEvent_MouseButtonPress  , {|p| ::execSlot( "QEvent_MousePress"  , p, cCaption[ 1 ] ) } )
-            oBtn:oAction:connect( QEvent_MouseButtonRelease, {|p| ::execSlot( "QEvent_MouseRelease", p, cCaption[ 1 ] ) } )
-            oBtn:oAction:connect( QEvent_MouseMove         , {|p| ::execSlot( "QEvent_MouseMove"   , p, cCaption[ 1 ] ) } )
-            oBtn:oAction:connect( QEvent_Enter             , {|p| ::execSlot( "QEvent_MouseEnter"  , p, cCaption[ 1 ] ) } )
+            oButton:connect( QEvent_MouseButtonPress  , {|p| ::execSlot( "QEvent_MousePress"  , p, oButton ) } )
+            oButton:connect( QEvent_MouseButtonRelease, {|p| ::execSlot( "QEvent_MouseRelease", p, oButton ) } )
+            oButton:connect( QEvent_MouseMove         , {|p| ::execSlot( "QEvent_MouseMove"   , p, oButton ) } )
+            oButton:connect( QEvent_Enter             , {|p| ::execSlot( "QEvent_MouseEnter"  , p, oButton ) } )
          ENDIF
 
       ELSEIF isObject
@@ -308,7 +311,11 @@ METHOD XbpToolbar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       ENDIF
 
       /* Attach codeblock to be triggered */
-      oBtn:oAction:connect( "triggered(bool)", {|| ::execSlot( "triggered(bool)", oBtn ) } )
+      IF ! isToolButton
+         oBtn:oAction:connect( "triggered(bool)", {|| ::execSlot( "triggered(bool)", oBtn ) } )
+      ELSE
+         oButton:connect( "clicked()", {|| ::execSlot( "triggered(bool)", oBtn ) } )
+      ENDIF
 
       /* Attach Action with Toolbar */
       ::oWidget:addAction( oBtn:oAction )
@@ -338,13 +345,13 @@ METHOD XbpToolbar:execSlot( cSlot, p, p1 )
    CASE "QEvent_MouseMove"
       qRC := QRect( ::qPos:x() - 5, ::qPos:y() - 5, 10, 10 ):normalized()
       IF qRC:contains( qEvent:pos() )
-         ::qByte := QByteArray( ::hItems[ p1 ]:objectName() )
+         ::qByte := QByteArray( p1:objectName() )
 
          ::qMime := QMimeData()
          ::qMime:setData( "application/x-toolbaricon", ::qByte )
-         ::qMime:setHtml( ::hItems[ p1 ]:objectName() )
+         ::qMime:setHtml( p1:objectName() )
 
-         ::qPix  := QIcon( ::hItems[ p1 ]:icon ):pixmap( 16,16 )
+         ::qPix  := p1:icon():pixmap( 16,16 )
 
          ::qDrag := QDrag( SetAppWindow():oWidget )
          ::qDrag:setMimeData( ::qMime )
@@ -355,8 +362,8 @@ METHOD XbpToolbar:execSlot( cSlot, p, p1 )
 
          ::qDrag := NIL
          ::qPos  := NIL
-         ::hItems[ p1 ]:setChecked( .f. )
-         ::hItems[ p1 ]:setWindowState( 0 )
+         p1:setChecked( .f. )
+         p1:setWindowState( 0 )
       ENDIF
       EXIT
 
@@ -456,6 +463,10 @@ METHOD XbpToolbar:getItem( nItem_cKey )
       FOR EACH a_ IN ::aItems
          IF HB_ISCHAR( a_[ 2 ]:key )
             IF a_[ 2 ]:key == nItem_cKey
+               RETURN a_[ 2 ]
+            ENDIF
+         ELSEIF HB_ISBLOCK( a_[ 2 ]:key )
+            IF HB_ISOBJECT( a_[ 2 ]:cargo ) .AND. a_[ 2 ]:cargo:text() == nItem_cKey
                RETURN a_[ 2 ]
             ENDIF
          ENDIF
