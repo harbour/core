@@ -9549,23 +9549,22 @@ STATIC FUNCTION HBC_Find( hbmk, cFile, nNesting )
 
    RETURN lFound
 
+STATIC FUNCTION AutoConfPathList()
+#if defined( __PLATFORM__UNIX )
+   RETURN { hb_DirSepAdd( GetEnv( "HOME" ) ) + ".harbour",;
+            "/etc/harbour",;
+            hb_DirSepAdd( hb_DirBase() ) + "../etc/harbour",;
+            hb_DirSepAdd( hb_DirBase() ) + "../etc",;
+            hb_DirBase() }
+#else
+   RETURN { hb_DirBase() }
+#endif
+
 STATIC PROCEDURE HBC_ProcessAuto( hbmk )
    LOCAL cDir
    LOCAL cFileName
 
-   LOCAL aCFGDirs
-
-   #if defined( __PLATFORM__UNIX )
-      aCFGDirs := { hb_DirSepAdd( GetEnv( "HOME" ) ) + ".harbour",;
-                    "/etc/harbour",;
-                    hb_DirSepAdd( hb_DirBase() ) + "../etc/harbour",;
-                    hb_DirSepAdd( hb_DirBase() ) + "../etc",;
-                    hb_DirBase() }
-   #else
-      aCFGDirs := { hb_DirBase() }
-   #endif
-
-   FOR EACH cDir IN aCFGDirs
+   FOR EACH cDir IN AutoConfPathList()
       IF hb_FileExists( cFileName := ( hb_PathNormalize( hb_DirSepAdd( cDir ) ) + _HBMK_AUTOHBC_NAME ) )
          IF ! hbmk[ _HBMK_lQuiet ]
             _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing configuration: %1$s" ), cFileName ) )
@@ -12760,7 +12759,20 @@ STATIC PROCEDURE __hbshell_plugins_unload( plugins )
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#define _SCRIPT_INIT "hbstart.hb"
+#define _HBMK_AUTOSHELL_NAME "hbstart.hb"
+
+STATIC PROCEDURE __hbshell_ProcessStart()
+   LOCAL cDir
+   LOCAL cFileName
+
+   FOR EACH cDir IN ArrayJoin( { "." + hb_ps() }, AutoConfPathList() )
+      IF hb_FileExists( cFileName := ( hb_PathNormalize( hb_DirSepAdd( cDir ) ) + _HBMK_AUTOSHELL_NAME ) )
+         __hbshell_Exec( hb_MemoRead( cFileName ) )
+         EXIT
+      ENDIF
+   NEXT
+
+   RETURN
 
 /* TODO: rewrite the full-screen shell to be a simple stdout/stdin shell */
 STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
@@ -12772,7 +12784,6 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
    LOCAL lResize := .F.
    LOCAL plugins
    LOCAL cCommand
-   LOCAL cFileName
 
    LOCAL cDomain := ""
    LOCAL cPrompt
@@ -12806,12 +12817,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
 
    __hbshell_Exec( "?? hb_Version()" )
 
-   IF hb_FileExists( cFileName := _SCRIPT_INIT ) .OR. ;
-      hb_FileExists( cFileName := ( hb_DirBase() + _SCRIPT_INIT ) )
-      FOR EACH cCommand IN hb_ATokens( StrTran( hb_MemoRead( cFileName ), Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
-         __hbshell_Exec( cCommand )
-      NEXT
-   ENDIF
+   __hbshell_ProcessStart()
 
    IF HB_ISARRAY( aCommand )
       FOR EACH cCommand IN aCommand
