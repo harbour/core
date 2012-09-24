@@ -1,0 +1,20 @@
+#
+# $Id$
+#
+
+-3rd=hbide_version=1.0
+-3rd=hbide_title=ActiveX
+-3rd=hbide_output=activex
+
+-inc
+-w3
+-es2
+
+hbqt.hbc
+gtwvg.hbc
+
+activex.prg
+
+activex.ui
+
+ 
