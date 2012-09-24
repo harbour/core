@@ -71,7 +71,7 @@ Qt::ContextMenuPolicy contextMenuPolicy () const
 QCursor cursor () const
 #
 # non-portable
-WId effectiveWinId () const
+// WId effectiveWinId () const
 void ensurePolished () const
 Qt::FocusPolicy focusPolicy () const
 QWidget * focusProxy () const
@@ -275,7 +275,7 @@ bool updatesEnabled () const
 QRegion visibleRegion () const
 QString whatsThis () const
 int width () const
-WId winId () const
+// WId winId () const
 QWidget * window () const
 QString windowFilePath () const
 Qt::WindowFlags windowFlags () const
@@ -292,7 +292,7 @@ int x () const
 //Qt::HANDLE x11PictureHandle () const
 int y () const
 
-QWidget * find ( WId id )
+// QWidget * find ( WId id )
 QWidget * keyboardGrabber ()
 QWidget * mouseGrabber ()
 void setTabOrder ( QWidget * first, QWidget * second )

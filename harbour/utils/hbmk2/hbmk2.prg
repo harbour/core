@@ -7004,9 +7004,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       #if defined( __PLATFORM__WINDOWS )
          IF hbmk[ _HBMK_lGUI ]
             IF hb_osIsWinNT()
-               cCommand := 'start "" ' + FNameEscape( cCommand, _ESC_DBLQUOTE )
+               cCommand := GetEnv( "COMSPEC" ) + " /C " + 'start "" ' + FNameEscape( cCommand, _ESC_DBLQUOTE )
             ELSE
-               cCommand := "start " + cCommand
+               cCommand := GetEnv( "COMSPEC" ) + " /C " + "start " + cCommand
             ENDIF
          ENDIF
       #elif defined( __PLATFORM__OS2 )
@@ -12760,6 +12760,8 @@ STATIC PROCEDURE __hbshell_plugins_unload( plugins )
 #include "inkey.ch"
 #include "setcurs.ch"
 
+#define _SCRIPT_INIT "hbstart.hb"
+
 /* TODO: rewrite the full-screen shell to be a simple stdout/stdin shell */
 STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
    LOCAL GetList
@@ -12770,6 +12772,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
    LOCAL lResize := .F.
    LOCAL plugins
    LOCAL cCommand
+   LOCAL cFileName
 
    LOCAL cDomain := ""
    LOCAL cPrompt
@@ -12802,6 +12805,13 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
    s_nRow := 3
 
    __hbshell_Exec( "?? hb_Version()" )
+
+   IF hb_FileExists( cFileName := _SCRIPT_INIT ) .OR. ;
+      hb_FileExists( cFileName := ( hb_DirBase() + _SCRIPT_INIT ) )
+      FOR EACH cCommand IN hb_ATokens( StrTran( hb_MemoRead( cFileName ), Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
+         __hbshell_Exec( cCommand )
+      NEXT
+   ENDIF
 
    IF HB_ISARRAY( aCommand )
       FOR EACH cCommand IN aCommand
