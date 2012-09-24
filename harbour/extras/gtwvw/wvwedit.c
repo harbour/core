@@ -265,8 +265,8 @@ HB_FUNC( WVW_EBCREATE)
 
      AddControlHandle(usWinNum, WVW_CONTROL_EDITBOX, hWndEB, uiEBid, (PHB_ITEM) hb_param( 7, HB_IT_BLOCK ), rXB, rOffXB, (byte) bEBType);
 
-     OldProc = (WNDPROC) SetWindowLong (hWndEB,
-                                        GWL_WNDPROC, (LONG) hb_gt_wvwEBProc) ;
+     OldProc = (WNDPROC) SetWindowLongPtr (hWndEB,
+                                        GWLP_WNDPROC, (LONG_PTR) hb_gt_wvwEBProc) ;
 
      StoreControlProc(usWinNum, WVW_CONTROL_EDITBOX, hWndEB, OldProc);
 

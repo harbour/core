@@ -160,8 +160,8 @@ HB_FUNC( WVW_TBCREATE)
       hb_retnl(0);
    }
 
-   pWindowData->tbOldProc = (WNDPROC) SetWindowLong (hWndTB,
-                                      GWL_WNDPROC, (LONG) hb_gt_wvwTBProc) ;
+   pWindowData->tbOldProc = (WNDPROC) SetWindowLongPtr (hWndTB,
+                                      GWLP_WNDPROC, (LONG_PTR) hb_gt_wvwTBProc) ;
 
    if (iSystemBitmap > 0)
    {

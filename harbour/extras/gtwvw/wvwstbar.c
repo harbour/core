@@ -577,8 +577,8 @@ HB_FUNC( WVW_XBCREATE)
 
      AddControlHandle(usWinNum, WVW_CONTROL_SCROLLBAR, hWndXB, uiXBid, (PHB_ITEM) hb_param( 6, HB_IT_BLOCK ), rXB, rOffXB, (byte) iStyle);
 
-     OldProc = (WNDPROC) SetWindowLong (hWndXB,
-                                        GWL_WNDPROC, (LONG) hb_gt_wvwXBProc) ;
+     OldProc = (WNDPROC) SetWindowLongPtr (hWndXB,
+                                        GWLP_WNDPROC, (LONG_PTR) hb_gt_wvwXBProc) ;
 
      StoreControlProc(usWinNum, WVW_CONTROL_SCROLLBAR, hWndXB, OldProc);
 

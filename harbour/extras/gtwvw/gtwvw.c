@@ -93,12 +93,6 @@
 
 #include "hbgtwvw.h"
 
-#if (defined(__MSC6__) || defined(__DMC__))
-   #define LONG_PTR LONG
-   #define SetWindowLongPtr SetWindowLong
-   #define GetWindowLongPtr GetWindowLong
-#endif
-
 #if defined(__WATCOMC__)
    #include <conio.h>
 #endif
@@ -10949,8 +10943,8 @@ UINT ButtonCreate( UINT usWinNum, USHORT usTop, USHORT usLeft, USHORT usBottom, 
 
      AddControlHandle(usWinNum, WVW_CONTROL_PUSHBUTTON, hWndButton, uiPBid, (PHB_ITEM) phbiCodeBlock, rXB, rOffXB, (byte) iStyle);
 
-     //OldProc = SetWindowLong (hWndButton,
-                                        //GWLP_WNDPROC, (LONG)hb_gt_wvwBtnProc) ;
+     //OldProc = SetWindowLongPtr (hWndButton,
+                                        //GWLP_WNDPROC, (LONG_PTR)hb_gt_wvwBtnProc) ;
      OldProc = SubclassWindow( hWndButton, hb_gt_wvwBtnProc) ;
 
      StoreControlProc(usWinNum, WVW_CONTROL_PUSHBUTTON, hWndButton, OldProc);

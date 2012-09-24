@@ -635,8 +635,8 @@ HB_FUNC( WVW_CBCREATE)
 
      AddControlHandle(usWinNum, WVW_CONTROL_COMBOBOX, hWndCB, uiCBid, (PHB_ITEM) hb_param( 6, HB_IT_BLOCK ), rXB, rOffXB, (byte) bKbdType);
 
-     OldProc = (WNDPROC) SetWindowLong (hWndCB,
-                                        GWL_WNDPROC, (LONG) hb_gt_wvwCBProc) ;
+     OldProc = (WNDPROC) SetWindowLongPtr (hWndCB,
+                                        GWLP_WNDPROC, (LONG_PTR) hb_gt_wvwCBProc) ;
 
      StoreControlProc(usWinNum, WVW_CONTROL_COMBOBOX, hWndCB, OldProc);
 

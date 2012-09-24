@@ -11,7 +11,7 @@
 # TODO: Disabled UNICODE until this code gets support for it.
 -winuni-
 
-"-stop={!allwin|!x86}Skipped: '${hb_name}' only supported on win x86 platform."
+"-stop={!allwin}Skipped: '${hb_name}' only supported on win platform."
 
 gtwvw.c
 wvwcheck.c

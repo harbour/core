@@ -1602,7 +1602,7 @@ HB_FUNC( WVW_SETPOINTER )
       break;
    }
 
-   SetClassLong( pWindowData->hWnd, GCL_HCURSOR, ( DWORD ) hCursor );
+   SetClassLongPtr( pWindowData->hWnd, GCLP_HCURSOR, ( LONG_PTR ) hCursor );
 }
 
 /*-------------------------------------------------------------------*/
