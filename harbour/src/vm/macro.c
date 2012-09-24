@@ -887,6 +887,7 @@ HB_FUNC( FIELDBLOCK )
          PHB_DYNS pFieldSym = hb_dynsymFind( szFieldName );
          if( pFieldSym )
          {
+            HB_STACK_TLS_PRELOAD
             HB_BYTE byBuf[ 13 + sizeof( PHB_DYNS ) + sizeof( PHB_DYNS ) ];
             PHB_ITEM pItem = hb_stackReturnItem();
 
@@ -939,6 +940,7 @@ HB_FUNC( FIELDWBLOCK )
          PHB_DYNS pFieldSym = hb_dynsymFind( szFieldName );
          if( pFieldSym )
          {
+            HB_STACK_TLS_PRELOAD
             HB_BYTE byBuf[ 23 + sizeof( PHB_DYNS ) + sizeof( PHB_DYNS ) ];
             PHB_ITEM pItem = hb_stackReturnItem();
 
