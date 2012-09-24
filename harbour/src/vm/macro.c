@@ -853,6 +853,131 @@ HB_FUNC( HB_MACROBLOCK )
    }
 }
 
+HB_FUNC( FIELDBLOCK )
+{
+   const char * szName = hb_parc( 1 );
+
+   if( szName )
+   {
+      char szFieldName[ HB_SYMBOL_NAME_LEN + 1 ];
+
+      /* Make the same conversion for field name as in default
+       * ADDFIELD() workarea method so exactly the same set of
+       * symbols is accepted. [druzus]
+       */
+      while( HB_ISSPACE( *szName ) )
+         ++szName;
+      hb_strncpyUpperTrim( szFieldName, szName, sizeof( szFieldName ) - 1 );
+
+      if( * szFieldName )
+      {
+         /* Cl*pper does not create new symbol in this function
+          * so only registered symbols are accepted. When table
+          * is open then all field symbols are registered in HVM.
+          * It means that this function may not create field block
+          * if table is not open yet and field name was never used
+          * explicitly in compiled application. It's possible to
+          * change hb_dynsymFind() to hb_dynsymGetCase() below
+          * to automatically register new symbol if we decide it's
+          * real limitation and we should drop strict Cl*pper
+          * compatibility. Anyhow it may cause that some code
+          * will register big number of completely unnecessary
+          * symbols. [druzus]
+          */
+         PHB_DYNS pFieldSym = hb_dynsymFind( szFieldName );
+         if( pFieldSym )
+         {
+            HB_BYTE byBuf[ 13 + sizeof( PHB_DYNS ) + sizeof( PHB_DYNS ) ];
+            PHB_ITEM pItem = hb_stackReturnItem();
+
+            byBuf[ 0 ] = HB_P_PUSHLOCALNEAR;
+            byBuf[ 1 ] = 1;
+            byBuf[ 2 ] = HB_P_PUSHNIL;
+            byBuf[ 3 ] = HB_P_EXACTLYEQUAL;
+            byBuf[ 4 ] = HB_P_JUMPFALSENEAR;
+            byBuf[ 5 ] = ( HB_BYTE ) ( sizeof( PHB_DYNS ) + 4 );
+
+            byBuf[ 6 ] = HB_P_MPUSHFIELD;
+            HB_PUT_PTR( &byBuf[ 7 ], pFieldSym );
+            byBuf[ 7 + sizeof( PHB_DYNS ) ] = HB_P_ENDBLOCK;
+
+            byBuf[ 8 + sizeof( PHB_DYNS ) ] = HB_P_PUSHLOCALNEAR;
+            byBuf[ 9 + sizeof( PHB_DYNS ) ] = 1;
+            byBuf[ 10 + sizeof( PHB_DYNS ) ] = HB_P_PUSHUNREF;
+            byBuf[ 11 + sizeof( PHB_DYNS ) ] = HB_P_MPOPFIELD;
+            HB_PUT_PTR( &byBuf[ 12 + sizeof( PHB_DYNS ) ], pFieldSym );
+            byBuf[ 12 + sizeof( PHB_DYNS ) + sizeof( PHB_DYNS ) ] = HB_P_ENDBLOCK;
+
+            if( HB_IS_COMPLEX( pItem ) )
+               hb_itemClear( pItem );
+            pItem->item.asBlock.value = hb_codeblockMacroNew( byBuf, sizeof( byBuf ) );
+            pItem->type = HB_IT_BLOCK;
+            pItem->item.asBlock.paramcnt = 1;
+            pItem->item.asBlock.lineno = 0;
+            pItem->item.asBlock.hclass = 0;
+            pItem->item.asBlock.method = 0;
+         }
+      }
+   }
+}
+
+HB_FUNC( FIELDWBLOCK )
+{
+   const char * szName = hb_parc( 1 );
+   int iWorkArea = hb_parni( 2 );
+
+   if( szName && iWorkArea != 0 )
+   {
+      char szFieldName[ HB_SYMBOL_NAME_LEN + 1 ];
+
+      while( HB_ISSPACE( *szName ) )
+         ++szName;
+      hb_strncpyUpperTrim( szFieldName, szName, sizeof( szFieldName ) - 1 );
+
+      if( * szFieldName )
+      {
+         PHB_DYNS pFieldSym = hb_dynsymFind( szFieldName );
+         if( pFieldSym )
+         {
+            HB_BYTE byBuf[ 23 + sizeof( PHB_DYNS ) + sizeof( PHB_DYNS ) ];
+            PHB_ITEM pItem = hb_stackReturnItem();
+
+            byBuf[ 0 ] = HB_P_PUSHLOCALNEAR;
+            byBuf[ 1 ] = 1;
+            byBuf[ 2 ] = HB_P_PUSHNIL;
+            byBuf[ 3 ] = HB_P_EXACTLYEQUAL;
+            byBuf[ 4 ] = HB_P_JUMPFALSENEAR;
+            byBuf[ 5 ] = ( HB_BYTE ) ( sizeof( PHB_DYNS ) + 9 );
+
+            byBuf[ 6 ] = HB_P_PUSHLONG;
+            HB_PUT_LE_UINT32( &byBuf[ 7 ], iWorkArea );
+            byBuf[ 11 ] = HB_P_MPUSHALIASEDFIELD;
+            HB_PUT_PTR( &byBuf[ 12 ], pFieldSym );
+            byBuf[ 12 + sizeof( PHB_DYNS ) ] = HB_P_ENDBLOCK;
+
+            byBuf[ 13 + sizeof( PHB_DYNS ) ] = HB_P_PUSHLOCALNEAR;
+            byBuf[ 14 + sizeof( PHB_DYNS ) ] = 1;
+            byBuf[ 15 + sizeof( PHB_DYNS ) ] = HB_P_PUSHUNREF;
+            byBuf[ 16 + sizeof( PHB_DYNS ) ] = HB_P_PUSHLONG;
+            HB_PUT_LE_UINT32( &byBuf[ 17 + sizeof( PHB_DYNS ) ], iWorkArea );
+
+            byBuf[ 21 + sizeof( PHB_DYNS ) ] = HB_P_MPOPALIASEDFIELD;
+            HB_PUT_PTR( &byBuf[ 22 + sizeof( PHB_DYNS ) ], pFieldSym );
+            byBuf[ 22 + sizeof( PHB_DYNS ) + sizeof( PHB_DYNS ) ] = HB_P_ENDBLOCK;
+
+            if( HB_IS_COMPLEX( pItem ) )
+               hb_itemClear( pItem );
+            pItem->item.asBlock.value = hb_codeblockMacroNew( byBuf, sizeof( byBuf ) );
+            pItem->type = HB_IT_BLOCK;
+            pItem->item.asBlock.paramcnt = 1;
+            pItem->item.asBlock.lineno = 0;
+            pItem->item.asBlock.hclass = 0;
+            pItem->item.asBlock.method = 0;
+         }
+      }
+   }
+}
+
 /* This function handles a macro function calls, e.g. var :=&macro()
  * and creating memvar variables using PUBLIC/PRIVATE command
  * PUBLIC &macro

@@ -2856,7 +2856,7 @@ static int hb_gt_def_InkeyGet( PHB_GT pGT, HB_BOOL fWait, double dSeconds, int i
    else
       end_timer = 0;
 
-   do
+   for( ;; )
    {
       hb_gt_def_InkeyPollDo( pGT );
       fPop = hb_gt_def_InkeyNextCheck( pGT, iEventMask, &pGT->inkeyLast );
@@ -2875,14 +2875,14 @@ static int hb_gt_def_InkeyGet( PHB_GT pGT, HB_BOOL fWait, double dSeconds, int i
       }
 
       /* immediately break if a VM request is pending. */
-      if( !fWait || hb_vmRequestQuery() != 0 )
+      if( !fWait || hb_vmRequestQuery() != 0 ||
+                    ( end_timer != 0 && end_timer <= hb_dateMilliSeconds() ) )
          break;
 
       HB_GTSELF_UNLOCK( pGT );
       hb_idleState();
       HB_GTSELF_LOCK( pGT );
    }
-   while( end_timer == 0 || end_timer > hb_dateMilliSeconds() );
 
    if( pKey )
       hb_itemRelease( pKey );

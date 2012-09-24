@@ -229,7 +229,6 @@ PRG_SOURCES := \
    einstvar.prg \
    einstvau.prg \
    errsys.prg \
-   fieldbl.prg \
    getlist.prg \
    getsys.prg \
    getsys53.prg \
