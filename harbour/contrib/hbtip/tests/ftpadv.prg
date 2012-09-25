@@ -7,7 +7,7 @@
  * FTP Advanced operations Test
  ******************************************/
 
-PROCEDURE MAIN( cUrl )
+PROCEDURE Main( cUrl )
 
    LOCAL oCon, oUrl
 

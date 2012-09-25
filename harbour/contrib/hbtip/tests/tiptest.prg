@@ -49,13 +49,13 @@
 #include "hbclass.ch"
 #include "tip.ch"
 
-PROCEDURE MAIN( cUrl, cFile )
+PROCEDURE Main( cUrl, cFile )
 
    LOCAL bWrite := .F.
    LOCAL oUrl, oClient
    LOCAL cData
 
-   SET COLOR TO w +/ b
+   SET COLOR TO w+/b
    CLS
    @ 1, 6 SAY "X H A R B O U R - TIP (class based internet client protocol) test"
 
@@ -165,7 +165,7 @@ PROCEDURE Terminate()
 
 PROCEDURE ShowGauge( nSent, nSize )
 
-   @6, 5 SAY "Sending: " + Replicate( Chr( 176 ), 60 )
+   @ 6, 5 SAY "Sending: " + Replicate( Chr( 176 ), 60 )
    /* nSent may be zero */
    IF nSent > 0
       @ 6, 14 SAY Replicate( Chr( 219 ), 60 * nSent / nSize )

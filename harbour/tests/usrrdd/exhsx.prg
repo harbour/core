@@ -4,21 +4,21 @@
 
 #include "dbinfo.ch"
 
-PROCEDURE MAIN()
+PROCEDURE Main()
    FIELD FIRST, LAST, STREET, CITY
    LOCAL n, hs
 
-   dbCreate("_tst", {{"FIRST",       "C", 20,  0},;
-                     {"LAST",        "C", 20,  0},;
-                     {"STREET",      "C", 30,  0},;
-                     {"CITY",        "C", 30,  0},;
-                     {"STATE",       "C",  2,  0},;
-                     {"ZIP",         "C", 10,  0},;
-                     {"HIREDATE",    "D",  8,  0},;
-                     {"MARRIED",     "L",  1,  0},;
-                     {"AGE",         "N",  2,  0},;
-                     {"SALARY",      "N",  6,  0},;
-                     {"NOTES",       "C", 70,  0}})
+   dbCreate("_tst", { { "FIRST",       "C", 20,  0 },;
+                      { "LAST",        "C", 20,  0 },;
+                      { "STREET",      "C", 30,  0 },;
+                      { "CITY",        "C", 30,  0 },;
+                      { "STATE",       "C",  2,  0 },;
+                      { "ZIP",         "C", 10,  0 },;
+                      { "HIREDATE",    "D",  8,  0 },;
+                      { "MARRIED",     "L",  1,  0 },;
+                      { "AGE",         "N",  2,  0 },;
+                      { "SALARY",      "N",  6,  0 },;
+                      { "NOTES",       "C", 70,  0 } } )
    USE _tst
    HSX_CREATE( "_tst", "FIRST+LAST+STREET+CITY", 2, 0, .T., 3 )
    APPEND FROM test

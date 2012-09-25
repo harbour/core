@@ -13,7 +13,7 @@
  ******************************************/
 
 
-PROCEDURE MAIN( cFileName )
+PROCEDURE Main( cFileName )
 
    IF Empty( cFileName )
       ?
@@ -21,15 +21,15 @@ PROCEDURE MAIN( cFileName )
       ?
       QUIT
    ENDIF
-   
+
    IF ( ! File( cFileName ) )
       ?
       ? "File", cFileName, "is not valid"
       ?
       QUIT
    ENDIF
-   
+
    ? cFileName + ":", Tip_FileMimeType( cFileName )
    ?
-   
+
    RETURN

@@ -54,7 +54,7 @@ REQUEST ARRAYRDD
 
 #define USE_DBCREATE_EXTENSIONS
 
-PROCEDURE MAIN()
+PROCEDURE Main()
    LOCAL aStruct
 
    SET DATE ANSI
@@ -63,12 +63,10 @@ PROCEDURE MAIN()
    CLS
 
    ? "Create a new dbf in memory using dbCreate() command"
-   aStruct := { ;
-                { "NAME"     , "C", 40, 0 } ,;
+   aStruct := { { "NAME"     , "C", 40, 0 } ,;
                 { "ADDRESS"  , "C", 40, 0 } ,;
                 { "BIRTHDAY" , "D",  8, 0 } ,;
-                { "AGE"      , "N",  3, 0 }  ;
-              }
+                { "AGE"      , "N",  3, 0 } }
 
 #ifndef USE_DBCREATE_EXTENSIONS
    ? "Create it"
@@ -113,8 +111,8 @@ PROCEDURE MAIN()
 
    WHILE !EOF()
       ? RECNO(), '"' + FIELD->NAME + '"'
-      IF RECNO()==20
-         INKEY(0)
+      IF RECNO() == 20
+         INKEY( 0 )
       ENDIF
       DBSKIP()
    ENDDO
@@ -127,10 +125,10 @@ PROCEDURE MAIN()
    WAIT
    WHILE !BOF()
       ? RECNO(), '[' + FIELD->NAME + ']'
-      IF RECNO()==LASTREC()-20
-         INKEY(0)
+      IF RECNO() == LASTREC() - 20
+         INKEY( 0 )
       ENDIF
-      DBSKIP(-1)
+      DBSKIP( -1 )
    ENDDO
    ? "ALIAS", ALIAS(), "RECNO", RECNO(), ;
      "BOF", BOF(), "EOF", EOF(), "LASTREC", LASTREC()

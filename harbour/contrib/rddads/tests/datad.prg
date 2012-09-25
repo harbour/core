@@ -15,7 +15,7 @@ REQUEST ADS
 #  include "rddads.hbx"
 #endif
 
-PROCEDURE MAIN()
+PROCEDURE Main()
 
    LOCAL n
    LOCAL cErr, cStr

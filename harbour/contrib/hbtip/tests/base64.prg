@@ -20,7 +20,7 @@
 #define hSTDIN 0
 #define hSTDOUT 1
 
-PROCEDURE MAIN( ... )
+PROCEDURE Main( ... )
 
    LOCAL oEncoder
    LOCAL cData

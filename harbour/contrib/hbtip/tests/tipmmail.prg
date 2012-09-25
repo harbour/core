@@ -25,7 +25,7 @@
  * compiled only under GTCGI;
  ******************************************/
 
-PROCEDURE MAIN( ... )
+PROCEDURE Main( ... )
 
    LOCAL oMail, cData, i, oAttach
    LOCAL cFname, cFExt

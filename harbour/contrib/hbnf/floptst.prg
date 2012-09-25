@@ -40,31 +40,29 @@
 
 #include "ftint86.ch"
 
-#DEFINE ERR_WRONG_PARAMETERS  -1
-#DEFINE ERR_NO_ERROR          0
-#DEFINE ERR_DRIVE_NOT_READY   1
-#DEFINE ERR_UNFORMATTED       2
-#DEFINE ERR_WRITE_PROTECTED   3
-#DEFINE ERR_UNKNOWN           4
+#define ERR_WRONG_PARAMETERS  -1
+#define ERR_NO_ERROR          0
+#define ERR_DRIVE_NOT_READY   1
+#define ERR_UNFORMATTED       2
+#define ERR_WRITE_PROTECTED   3
+#define ERR_UNKNOWN           4
 
-#IFDEF FT_TEST
-#define CR_LF chr(13)+chr(10)
+#ifdef FT_TEST
+#define CR_LF hb_eol()
 
-PROCEDURE MAIN(         ;
-                cArg1   ;
-              )
+PROCEDURE Main( cArg1 )
    LOCAL nErrCode
 
    IF ValType( cArg1 ) == "C"
-      nErrCode := FT_FLOPTST( Asc( Upper(cArg1) ) - Asc( "A" ) )
-      OutStd( "Return Code is "+LTrim(Str(nErrCode)) +CR_LF )
+      nErrCode := FT_FLOPTST( Asc( Upper( cArg1 ) ) - Asc( "A" ) )
+      OutStd( "Return Code is " + LTrim( Str( nErrCode ) ) + CR_LF )
    ELSE
-      OutStd( "Usage: floptst cDrive"+CR_LF+" where cDrive is 'A' or 'B' etc..."+CR_LF )
+      OutStd( "Usage: floptst cDrive" + CR_LF + " where cDrive is 'A' or 'B' etc..." + CR_LF )
    ENDIF
 
-RETURN
+   RETURN
 
-#ENDIF
+#endif
 
 FUNCTION FT_FLOPTST(                ;     // error code defined by ERR_*
                         nDriveNum_i ;     // letter of floppy drive.

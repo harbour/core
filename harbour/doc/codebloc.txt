@@ -52,19 +52,19 @@ to it. This is caused by the fact that a inner codeblock can be created during
 evaluation of outer codeblock when local variables don't exist like in this
 example:
 
-PROCEDUE MAIN()
-PRIVATE foo, bar
+PROCEDUE Main()
+   PRIVATE foo, bar
 
-  Test()
-  EVAL( foo )
-  EVAL( bar )
+   Test()
+   EVAL( foo )
+   EVAL( bar )
 
 PROCEDURE Test()
-LOCAL a := "FOO", b := "BAR"
+   LOCAL a := "FOO", b := "BAR"
 
-  foo := {|| a + ( bar := EVAL( {|| b } ) ) }
+   foo := {|| a + ( bar := Eval( {|| b } ) ) }
 
-RETURN
+   RETURN
 
 
 Evaluation of a codeblock.
@@ -84,25 +84,25 @@ Incompatbility with the Clipper.
 the reference in a codeblock.
 The following code explains it (thanks to David G. Holm)
 
-Function Main()
-Local nTest
-Local bBlock1 := MakeBlock()
-Local bBlock2 := {|| DoThing( @nTest ), qout("From Main: ", nTest ) }
+FUNCTION Main()
+   LOCAL nTest
+   LOCAL bBlock1 := MakeBlock()
+   LOCAL bBlock2 := {|| DoThing( @nTest ), QOut( "From Main: ", nTest ) }
 
-   eval( bBlock1 )
-   eval( bBlock2 )
+   Eval( bBlock1 )
+   Eval( bBlock2 )
 
-Return( NIL )
+   RETURN NIL
 
-Function MakeBlock()
-Local nTest
-Return( {|| DoThing( @nTest ), qout("From MakeBlock: ", nTest ) } )
+FUNCTION MakeBlock()
+   LOCAL nTest
+   RETURN {|| DoThing( @nTest ), QOut( "From MakeBlock: ", nTest ) }
 
-Function DoThing( n )
+FUNCTION DoThing( n )
 
    n := 42
 
-Return( NIL )
+   RETURN NIL
 
 
   In Clipper it produces:
@@ -116,17 +116,16 @@ From Main: 42
 2) Scope of undeclared variables
  Consider the following code:
 
-PROCEDURE MAIN()
-LOCAL cb
-  cb :=Detach()
-  ? EVAL( cb, 10 )
-
-RETURN
+PROCEDURE Main()
+   LOCAL cb
+   cb := Detach()
+   ? Eval( cb, 10 )
+   RETURN
 
 FUNCTION Detach()
-LOCAL b:={|x| x+a}
-LOCAL a:=0
-RETURN b
+   LOCAL b := {| x | x + a }
+   LOCAL a := 0
+   RETURN b
 
   In Clipper the 'a' variable in a codeblock has the *local* scope however in
 Harbour the 'a' variable has the *private* scope. As a result, in Clipper
@@ -134,12 +133,12 @@ this code will print 10 and in Harbour it will raise 'argument error' in
 '+' operation.
   This will be true also when the 'a' variable will be declared as PRIVATE
 
-PROCEDURE MAIN()
-LOCAL cb
-PRIVATE a
-  cb :=Detach()
-  ? EVAL( cb, 10)
-RETURN
+PROCEDURE Main()
+   LOCAL cb
+   PRIVATE a
+   cb := Detach()
+   ? EVAL( cb, 10 )
+   RETURN
 
 The above code also prints 10 in Clipper (even if compiled with -a or -v
 switches)

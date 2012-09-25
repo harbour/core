@@ -14,7 +14,7 @@
  * compiled only under GTCGI;
  ******************************************/
 
-PROCEDURE MAIN( cFileName )
+PROCEDURE Main( cFileName )
 
    LOCAL oMail, cData, i
 

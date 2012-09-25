@@ -7,7 +7,7 @@ REQUEST HB_CODEPAGE_UTF8EX
 #uncommand ? [<explist,...>] =>
 #command ? [<explist,...>]  => A( <explist> )
 
-PROCEDURE MAIN()
+PROCEDURE Main()
 
    hb_cdpSelect( "UTF8EX" )
 

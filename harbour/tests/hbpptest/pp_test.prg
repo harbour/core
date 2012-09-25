@@ -2,7 +2,7 @@
  * $Id$
  */
 
-/* Test file to check the preprocessor. 
+/* Test file to check the preprocessor.
  *
  * Usage:
  * 1) Run compare.bat for a comparison between Harbour and CA-Cl*pper.
@@ -10,12 +10,12 @@
  *
  * Notes:
  * - clipper.exe and diff.exe needs to be in the path.
- *    
+ *
  * Ignore most of errors reported during compilation.
  *
 */
 
-PROCEDURE MAIN()
+PROCEDURE Main()
 
 #ifdef __HARBOUR__
 #xtranslate CCC <v> => QOUT( <v>[2] [, <v>[<v>]\[3\]] )
@@ -40,7 +40,7 @@ CCCC c
    SM( TTH (<"form">), 1, RGB(<color>\[1\], ;
    <color>\[2\], ;
    <color>[, <color>[ 3 ] ]), 0)
-   
+
    SET COOLTIP TO RED OF form1
 #endif
 
@@ -48,7 +48,7 @@ CCCC c
    SM( TTH (<"form">), 1, RGB(<color>\[1\], ;
    <color>\[2\], ;
    <color>\[ 3 \]), 0)
-   
+
    SET TOOLTIP TO RED OF form1
 
 /* ---------------------------------------------------------------------*/
@@ -60,7 +60,7 @@ CCCC c
    ZZZ 1
    ZZZ 'z'
    ZZZ "z"
-   
+
 #translate TZZZ [<v>] => QOUT( [ <v>\[1\] ] )
    TZZZ a
    TZZZ
@@ -68,7 +68,7 @@ CCCC c
    TZZZ 1
    TZZZ 'z'
    TZZZ "z"
-   
+
 /* ---------------------------------------------------------------------*/
 #xtranslate _HMG_a  =>  _HMG\[137\]
    ? _bro[ a( _HMG_a [i] ) ]
@@ -180,7 +180,7 @@ _DUMB_L(a,"a",'a',["'a'"],"['a']",'["a"]',&a.1,&a,&a.,&a.  ,&(a),&a[1],&a.[1],&a
 
 /* ---------------------------------------------------------------------*/
 /* test of preserving spaces in expressions */
-/* Notice that Clipper and Harbour doesn't remove spaces from 
+/* Notice that Clipper and Harbour doesn't remove spaces from
  * expressions passed for stingify
 */
  index on LEFT(   f1  ,  10   )      to _tst
@@ -225,7 +225,7 @@ endif
   MYCOMMAND2 MYCLAUSE 321 "HELLO"
   MYCOMMAND2 MYCLAUSE 321 "HELLO" ALL
   MYCOMMAND2 ALL MYCLAUSE 321 "HELLO"
-  MYCOMMAND2 MYCLAUSE 321 "HELLO" ALL 
+  MYCOMMAND2 MYCLAUSE 321 "HELLO" ALL
   MYCOMMAND2 MYCLAUSE 321 ALL "HELLO"
 
 #xcommand MYCOMMAND3 [<myList,...>] ;
@@ -275,10 +275,10 @@ endif
   MZCALL &cVar ++cVar
   MYCALL &cVar+1 &cVar
   MZCALL &cVar+1 &cVar
-  MXCALL &cVar 
-  MXCALL &cVar. 
-  MXCALL &cVar.1 
-  MXCALL &cVar + 1 
+  MXCALL &cVar
+  MXCALL &cVar.
+  MXCALL &cVar.1
+  MXCALL &cVar + 1
   MYCALL &cVar &cVar
   MYCALL &cVar. &cVar.
   MYCALL &cVar.1 &cVar.1
@@ -293,20 +293,20 @@ endif
   MYCALL &cVar.1 +1 &cVar.1
   MYCALL &cVar +1
   MYCALL &cVar. +1
-  MYCALL &cVar.1 +1 
+  MYCALL &cVar.1 +1
   FOO &cVar FOO &var.
   BAR &cVar BAR &var.
   FOO &cVar FOO &var.+1
   BAR &cVar BAR &var.+1
-  MXCALL &cVar() 
-  MXCALL &cVar++ 
-  (MXCALL &cVar)++ 
-  MXCALL &cVar.() 
-  MXCALL &cVar.++ 
-  (MXCALL &cVar.)++ 
-  MXCALL &cVar.1 () 
-  MXCALL &cVar.1 ++ 
-  (MXCALL &cVar.1) ++ 
+  MXCALL &cVar()
+  MXCALL &cVar++
+  (MXCALL &cVar)++
+  MXCALL &cVar.()
+  MXCALL &cVar.++
+  (MXCALL &cVar.)++
+  MXCALL &cVar.1 ()
+  MXCALL &cVar.1 ++
+  (MXCALL &cVar.1) ++
 
 /* ---------------------------------------------------------------------*/
 #translate MTRANSLATE <x> => normal_t(<"x">)
@@ -322,14 +322,14 @@ endif
   MTRANSLATE &cVar.+1
   MTRANSLATE &cVar. .AND.  .T.
   MTRANSLATE &cVar++
-  MTRANSLATE &cVar.++ 
+  MTRANSLATE &cVar.++
   MTRANSLATE &cVar+=1
-  MTRANSLATE &cVar.-=2 
+  MTRANSLATE &cVar.-=2
   MTRANSLATE &cVar*=1
   MTRANSLATE &cVar/=2
   MTRANSLATE &cVar%=1
   MTRANSLATE &cVar^=2
-  MTRANSLATE &cVar:=1 
+  MTRANSLATE &cVar:=1
   MTRANSLATE &cVar. .AND.  .T.
   MTRANSLATE &cVar .AND.  .T.
   MTRANSLATE &(cVar) +1
@@ -348,11 +348,11 @@ endif
   MCOMMAND &cVar.+1
   MCOMMAND &cVar. .AND.  .T.
   MCOMMAND &cVar++
-  MCOMMAND &cVar.++ 
+  MCOMMAND &cVar.++
   MCOMMAND &cVar+=1
-  MCOMMAND &cVar.-=2 
+  MCOMMAND &cVar.-=2
   MCOMMAND &cVar*=1
-  MCOMMAND &cVar/=2 
+  MCOMMAND &cVar/=2
   MCOMMAND &cVar%=12
   MCOMMAND &cVar^=2
   MCOMMAND &cVar:=1
@@ -410,17 +410,17 @@ endif
   @ 0,6 GET a PICTURE "X" VALID .T. WHEN .T. CAPTION "myget" MESSAGE "mymess"
   @ 0,7 GET a PICTURE "X" VALID .T. WHEN .T. CAPTION "myget" MESSAGE "mymess" SEND send()
 /* ---------------------------------------------------------------------*/
-  @ 1,1 GET a RANGE 0,100   
+  @ 1,1 GET a RANGE 0,100
   @ 1,2 GET a PICTURE "X" RANGE 0,100
    /* NOTE: Clipper fails here */
   @ 1,3 GET a PICTURE "X" VALID .T. RANGE 0,100
-  @ 1,4 GET a PICTURE "X" WHEN .T. RANGE 0,100   
+  @ 1,4 GET a PICTURE "X" WHEN .T. RANGE 0,100
   @ 1,5 GET a PICTURE "X" WHEN .T. CAPTION "myget" RANGE 0,100
   @ 1,6 GET a PICTURE "X" WHEN .T. CAPTION "myget" MESSAGE "mymess" RANGE 0,100
   @ 1,7 GET a PICTURE "X" WHEN .T. CAPTION "myget" MESSAGE "mymess" SEND send() RANGE 0,100
   @ 2,1 GET a
   @ 2,2 GET a RANGE 0,100 PICTURE "X"
-  @ 2,3 GET a PICTURE "X" RANGE 0,100 
+  @ 2,3 GET a PICTURE "X" RANGE 0,100
   @ 2,4 GET a PICTURE "X" RANGE 0,100 WHEN .T.
   @ 2,5 GET a PICTURE "X" RANGE 0,100 WHEN .T. CAPTION "myget"
   @ 2,6 GET a PICTURE "X" RANGE 0,100 WHEN .T. CAPTION "myget" MESSAGE "mymess"
@@ -458,8 +458,8 @@ endif
       [; ATail(GetList):Control:<guimsg>]                                   ;
        ; ATail(GetList):Control:Display()
 #endif
-  @ 4,1 GET a PUSHBUTTON  
-  @ 4,1 GET a PUSHBUTTON VALID valid() 
+  @ 4,1 GET a PUSHBUTTON
+  @ 4,1 GET a PUSHBUTTON VALID valid()
   @ 4,1 GET a PUSHBUTTON VALID valid() WHEN when()
   @ 4,1 GET a PUSHBUTTON VALID valid() WHEN when() CAPTION "cap"
   @ 4,1 GET a PUSHBUTTON VALID valid() WHEN when() CAPTION "cap" MESSAGE "mes"
@@ -539,7 +539,7 @@ LIST REST TO PRINTER
 LIST REST TO FILE a
 LIST REST OFF
 LIST OFF REST
- 
+
 LIST REST ALL
 LIST ALL
 LIST ALL REST

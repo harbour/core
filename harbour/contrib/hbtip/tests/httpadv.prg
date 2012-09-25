@@ -7,7 +7,7 @@
  * HTTP Advanced operations Test
  ******************************************/
 
-PROCEDURE MAIN( cUrl )
+PROCEDURE Main( cUrl )
 
    LOCAL oCon, oUrl, i
 
@@ -57,4 +57,3 @@ PROCEDURE MAIN( cUrl )
    ?
 
    RETURN
-

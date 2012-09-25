@@ -4,7 +4,7 @@
 
 REQUEST FCOMMA
 
-PROCEDURE MAIN()
+PROCEDURE Main()
 
    USE test.csv VIA "FCOMMA"
    ? "ALIAS", ALIAS(), "RECNO", RECNO(), ;
@@ -17,8 +17,8 @@ PROCEDURE MAIN()
    WAIT
    DO WHILE !EOF()
       ? RECNO(), '"' + FIELD->LINE + '"'
-      IF RECNO()==20
-         INKEY(0)
+      IF RECNO() == 20
+         INKEY( 0 )
       ENDIF
       DBSKIP()
    ENDDO
@@ -31,10 +31,10 @@ PROCEDURE MAIN()
    WAIT
    DO WHILE !BOF()
       ? RECNO(), '[' + FIELD->LINE + ']'
-      IF RECNO()==LASTREC()-20
-         INKEY(0)
+      IF RECNO() == LASTREC() - 20
+         INKEY( 0 )
       ENDIF
-      DBSKIP(-1)
+      DBSKIP( -1 )
    ENDDO
    ? "ALIAS", ALIAS(), "RECNO", RECNO(), ;
      "BOF", BOF(), "EOF", EOF(), "LASTREC", LASTREC()
