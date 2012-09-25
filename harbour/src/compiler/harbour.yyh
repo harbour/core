@@ -155,8 +155,8 @@
 typedef union YYSTYPE
 {
 
-/* Line 2072 of yacc.c  */
-#line 117 "harbour.y"
+/* Line 2068 of yacc.c  */
+#line 125 "harbour.y"
 
    const char * string; /* to hold a string returned by lex */
    int     iNumber;     /* to hold a temporary integer number */
@@ -197,7 +197,7 @@ typedef union YYSTYPE
 
 
 
-/* Line 2072 of yacc.c  */
+/* Line 2068 of yacc.c  */
 #line 202 "harboury.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1

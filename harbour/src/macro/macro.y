@@ -72,9 +72,17 @@
 
 /* Compile using: bison -d -p hb_comp macro.y */
 
-/* to pacify some warnings in BCC */
-#if defined( __BORLANDC__ ) && !defined( __STDC__ )
-#  define __STDC__
+/* to pacify some meaningless warnings */
+#if defined( __BORLANDC__ )
+#  if !defined( __STDC__ )
+#     define __STDC__
+#  endif
+#  pragma warn -aus
+#  pragma warn -ccc
+#  pragma warn -rch
+#elif defined( __WATCOMC__ )
+#  pragma warning 13 9
+#  pragma warning 368 9
 #endif
 
 #undef alloca
