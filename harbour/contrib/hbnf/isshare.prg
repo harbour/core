@@ -31,21 +31,21 @@
 #include "ftint86.ch"
 
 #ifdef FT_TEST
-  function main()
+  PROCEDURE Main()
      local nLoaded := ft_isshare()
 
      do case
-        case nLoaded == 0
-           Qout("Share not loaded, but ok to load")
-        case nLoaded == 1
-           Qout("Share not loaded, but NOT ok to load!")
-        case nLoaded == 255
-           Qout("Share is loaded!")
+     case nLoaded == 0
+        Qout("Share not loaded, but ok to load")
+     case nLoaded == 1
+        Qout("Share not loaded, but NOT ok to load!")
+     case nLoaded == 255
+        Qout("Share is loaded!")
      endcase
 
      Qout("Retcode: " + str( nLoaded ) )
 
-  return nil
+     return
 #endif
 
 FUNCTION ft_isshare()

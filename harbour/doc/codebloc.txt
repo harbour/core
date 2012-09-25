@@ -137,7 +137,7 @@ PROCEDURE Main()
    LOCAL cb
    PRIVATE a
    cb := Detach()
-   ? EVAL( cb, 10 )
+   ? Eval( cb, 10 )
    RETURN
 
 The above code also prints 10 in Clipper (even if compiled with -a or -v

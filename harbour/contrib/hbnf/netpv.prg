@@ -25,9 +25,9 @@
  */
 
 #ifdef FT_TEST
-  FUNCTION MAIN()
+  PROCEDURE Main()
      ? FT_NETPV( 10000, 10, { 10000,15000,16000,17000 } )
-  RETURN ( nil )
+  RETURN
 #endif
 
 FUNCTION FT_NETPV(nInitialInvestment, nInterestRate, aCashFlow, nNoOfCashFlows)

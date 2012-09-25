@@ -26,12 +26,12 @@
 
 #ifdef FT_TEST
 
-FUNCTION MAIN
+PROCEDURE Main()
 LOCAL X
 FOR X := 1 TO 255
    QOUT( FT_DEC2BIN( x ))
 next
-return nil
+return
 
 #endif
 

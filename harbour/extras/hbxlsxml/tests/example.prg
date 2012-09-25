@@ -53,7 +53,7 @@
  */
 /*----------------------------------------------------------------------*/
 
-FUNCTION main()
+FUNCTION Main()
    LOCAL oXml, oSheet, xarquivo := "example.xml"
    LOCAL i, xqtddoc, xttotnot, xtbascal, xtvlricm, xtbasipi, xtvlripi, aDoc, nLinha
    LOCAL xEmpresa

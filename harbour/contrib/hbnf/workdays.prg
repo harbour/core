@@ -28,8 +28,9 @@
  */
 
 #ifdef FT_TEST
-  function main( cStart, cStop )
-     return qout( ft_workdays( ctod( cStart ), ctod( cStop ) ) )
+  PROCEDURE Main( cStart, cStop )
+     qout( ft_workdays( ctod( cStart ), ctod( cStop ) ) )
+     RETURN
 #endif
 
 FUNCTION FT_WorkDays( dStart, dStop )

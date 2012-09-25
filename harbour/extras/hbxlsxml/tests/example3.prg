@@ -53,7 +53,7 @@
  */
 /*----------------------------------------------------------------------*/
 
-FUNCTION main()
+FUNCTION Main()
    LOCAL xml, sheet1, format4
 
    xml:= ExcelWriterXML():New('my file.xml')
@@ -82,4 +82,3 @@ FUNCTION main()
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-

@@ -34,14 +34,14 @@
 #define SETDATE    43
 
 #ifdef FT_TEST
-  FUNCTION MAIN( cDate )
+  PROCEDURE Main( cDate )
 
      cDate := iif( cDate == nil, dtoc( date() ), cDate )
      QOut( "Setting date to: " + cDate  + "... " )
      FT_SETDATE( ctod( cDate ) )
-     Qout( "Today is now: " + dtoc( date() ) )
+     QOut( "Today is now: " + dtoc( date() ) )
 
-  RETURN NIL
+  RETURN
 #endif
 
 function FT_SETDATE( dDate )

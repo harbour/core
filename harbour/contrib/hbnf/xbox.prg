@@ -28,7 +28,7 @@
  */
 
 #ifdef FT_TEST
-   FUNCTION MAIN()
+   PROCEDURE Main()
       local i
       setcolor('W/B')
       * clear screen
@@ -45,7 +45,7 @@
                      'of calculating the box size!',;
                      'Even though this line is way too long, and is in fact more than 80 characters long, if you care to check!')
 
-   RETURN NIL
+   RETURN
 #endif
 
 /* NOTE: In original NF, flag parameters were also accepted when

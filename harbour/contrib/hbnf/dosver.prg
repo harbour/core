@@ -31,9 +31,9 @@
 #define DOSVER     48
 
 #ifdef FT_TEST
-  FUNCTION MAIN()
+  PROCEDURE Main()
   QOut( "Dos version: " + FT_DOSVER() )
-  RETURN NIL
+  RETURN
 #endif
 
 FUNCTION FT_DOSVER()

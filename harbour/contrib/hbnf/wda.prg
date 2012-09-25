@@ -22,11 +22,11 @@
  */
 
 #ifdef FT_TEST
-  function main( cDate, cDays )
+  PROCEDURE Main( cDate, cDays )
      local nDays := ft_addWkDy( ctod(cDate), val(cDays) )
      qout( "Num days to add: " + str( nDays ) )
      qout( "New date:        " + dtoc( ctod( cDate ) + nDays ) )
-     return nil
+     return
 #endif
 
 FUNCTION ft_addWkDy( dStart, nDys )

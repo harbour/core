@@ -31,7 +31,7 @@ THREAD static nHandle := 0
 
 #ifdef FT_TEST
 
-    FUNCTION MAIN()
+    PROCEDURE Main()
 
     @ 0,0 CLEAR
 
@@ -77,7 +77,7 @@ THREAD static nHandle := 0
 
     @ 20,0 SAY "Key pressed was: " + '[' + cKey + ']'
 
-    return (NIL)
+    return
 
 #endif
 

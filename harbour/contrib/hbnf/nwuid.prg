@@ -38,7 +38,7 @@
 #define NW_LOG     227
 
 #ifdef FT_TEST
-  FUNCTION MAIN()
+  PROCEDURE Main()
      local x, cUid
      QOut( "I am: [" + FT_NWUID() + "]" )
      QOut( "---------------------" )
@@ -50,7 +50,7 @@
         endif
       next
 
-  RETURN NIL
+  RETURN
 #endif
 
 FUNCTION FT_NWUID( nConn )

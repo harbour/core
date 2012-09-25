@@ -43,7 +43,7 @@
 #define TRUE                         (.t.)
 #define FALSE                        (.f.)
 
-#Define XTOC(x)           CASE_AT(VALTYPE(x), "CNDLM", ;
+#define XTOC(x)           CASE_AT(VALTYPE(x), "CNDLM", ;
                              { NULL, ;
                                x, ;
                                iif(IS_NUMERIC(x),;

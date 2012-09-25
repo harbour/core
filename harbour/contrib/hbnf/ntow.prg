@@ -37,8 +37,9 @@ static sc_tens  :=  { "", "", " Twenty", " Thirty", " Forty", " Fifty", ;
 static sc_qualifiers := { "", " Thousand", " Million", " Billion", " Trillion" }
 
 #ifdef FT_TEST
-  function main( cNum )
-     return qout( ft_ntow( val( cNum ) ) )
+  PROCEDURE Main( cNum )
+     qout( ft_ntow( val( cNum ) ) )
+     RETURN
 #endif
 
 function ft_ntow(nAmount)

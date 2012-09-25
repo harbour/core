@@ -31,14 +31,14 @@
  *  The following program takes a date from the command line and sets
  *  the DOS system date:
  *
- *   FUNCTION main( cDate )
+ *   PROCEDURE Main( cDate )
  *
- *      cDate := iif( cDate == nil, dtoc( date() ), cDate )
+ *      cDate := iif( cDate == NIL, DToC( Date() ), cDate )
  *      QOut( "Setting date to: " + cDate  + "... " )
- *      FT_SETDATE( ctod( cDate ) )
- *      Qout( "Today is now: " + dtoc( date() ) )
+ *      FT_SETDATE( CToD( cDate ) )
+ *      QOut( "Today is now: " + DToC( Date() ) )
  *
- *   RETURN NIL
+ *      RETURN
  *
  *  $END$
  */

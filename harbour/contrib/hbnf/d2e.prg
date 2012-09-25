@@ -29,9 +29,10 @@
 #command DEFAULT <p> TO <val> => <p> := iif( <p> == NIL, <val>, <p> )
 
 #ifdef FT_TEST
-  function main( cNum, cPrec )
+  PROCEDURE Main( cNum, cPrec )
      DEFAULT cPrec TO str( DEFAULT_PRECISION )
-     return qout( ft_d2e( val(cNum), val(cPrec) ) )
+     qout( ft_d2e( val(cNum), val(cPrec) ) )
+     RETURN
 #endif
 
 function ft_d2e( nDec, nPrecision )

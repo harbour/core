@@ -25,9 +25,9 @@
  */
 
 #ifdef FT_TEST
-  FUNCTION MAIN()
+  PROCEDURE Main()
      FT_BLINK( "WAIT", 5, 10 )
-     RETURN NIL
+     RETURN
 #endif
 
 FUNCTION FT_BLINK( cMsg, nRow, nCol )

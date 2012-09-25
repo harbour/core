@@ -56,7 +56,7 @@
   #define INITIAL_SEMAPHORE_VALUE     2
   #define WAIT_SECONDS                1
 
-  function main()
+  PROCEDURE Main()
      local nInitVal, nRc, nHandle, nValue, nOpenCnt
 
      cls
@@ -91,12 +91,12 @@
 
         tone( nHandle,.5 )
         ft_nwSemEx( nHandle, @nValue, @nOpenCnt )
-     end
+     enddo
 
      qout( "Signal returns: " + str( ft_nwsemSig( nHandle ) ) )
      qout( "Close returns:  " + str( ft_nwsemClose( nHandle ) ) )
 
-  return nil
+  return
 
 #endif
 

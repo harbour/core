@@ -29,7 +29,7 @@
 #define NULL                            ""
 
 #ifdef FT_TEST
-  FUNCTION MAIN( cCk, cStr, nOcc, xCase )
+  PROCEDURE Main( cCk, cStr, nOcc, xCase )
      LOCAL nFind
      if pcount() != 4
         QOut( "usage: findith cCk cStr nOcc xCase")
@@ -43,7 +43,7 @@
      QOut( cStr )
      nFind := FT_FINDITH( cCk, cStr, nOcc, xCase )
      QOut( iif( nFind > 0, space( nFind - 1) + "^" , "Not found" ) )
-  RETURN nil
+  RETURN
 #endif
 
 FUNCTION FT_FINDITH(cCheckFor,cCheckIn,nWhichOccurrence,lIgnoreCase)

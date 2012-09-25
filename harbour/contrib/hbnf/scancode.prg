@@ -33,9 +33,9 @@
 
 #ifdef FT_TEST
 
-  #DEFINE SCANCODE_ESCAPE   (chr(27) + chr(1))
+  #define SCANCODE_ESCAPE   (chr(27) + chr(1))
 
-  FUNCTION main()
+  PROCEDURE Main()
      LOCAL getlist, cKey
      CLEAR
      QOut("Press any key, ESCape to exit:")
@@ -46,8 +46,8 @@
         if cKey == SCANCODE_ESCAPE
            exit
         endif
-     end
-  RETURN nil
+     enddo
+  RETURN
 
 #endif
 

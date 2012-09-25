@@ -24,7 +24,7 @@
 
 #ifdef FT_TEST
 
-FUNCTION MAIN()
+PROCEDURE Main()
    LOCAL aList1,aList2,var0,nstart,nstop,nelapsed,nCtr
    CLS
    ? "TEST TO DEMONSTRATE EXAMPLES OF FT_AADDITION"
@@ -57,7 +57,7 @@ FUNCTION MAIN()
    ? PADR("FT_AADDITION( aList1, aList2, .F., .F. ) ->",44)
    AEVAL( var0, { |x| QQOUT(x + ",") } )
    ?
-   RETURN NIL
+   RETURN
 
 #endif
 

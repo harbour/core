@@ -115,7 +115,7 @@
 #endif /* FT_TEMPFILE_ORIGINAL */
 
 #ifdef FT_TEST
-  FUNCTION MAIN( cPath, cHide )
+  PROCEDURE Main( cPath, cHide )
      LOCAL cFile, nHandle
      cFile := FT_TEMPFIL( cPath, (cHide == "Y") )
 
@@ -127,5 +127,5 @@
      else
         Qout( "An error occurred" )
      endif
-  RETURN nil
+  RETURN
 #endif

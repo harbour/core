@@ -24,7 +24,7 @@
 
 #ifdef FT_TEST
 
-FUNCTION MAIN()
+PROCEDURE Main()
    LOCAL var0, myarray1 := DIRECTORY()
    CLS
    ? "TEST TO DEMONSTRATE EXAMPLES OF FT_AEMINLEN"
@@ -50,7 +50,7 @@ FUNCTION MAIN()
    ? PADR('FT_AEMINLEN( myarray1,3 ) ->',30)
    ?? var0
    ?
-   RETURN NIL
+   RETURN
 
 #endif
 

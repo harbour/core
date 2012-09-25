@@ -34,10 +34,10 @@
 #define FT_SET_BLINK     _SET_COUNT + 2
 
 #ifdef FT_TEST
-  FUNCTION MAIN
+  PROCEDURE Main()
      LOCAL ASETS := FT_SAVESETS()
      INKEY(0)
-     RETURN Nil
+     RETURN
 #endif
 
 FUNCTION FT_SAVESETS()

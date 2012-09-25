@@ -53,7 +53,7 @@
  */
 /*----------------------------------------------------------------------*/
 
-FUNCTION main()
+FUNCTION Main()
    LOCAL xml, format1, format2, format3, format4
    LOCAL sheet1, sheet2, sheet4
 
@@ -149,4 +149,3 @@ FUNCTION main()
    RETURN NIL
 
 /*----------------------------------------------------------------------*/
-

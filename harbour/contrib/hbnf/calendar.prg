@@ -24,7 +24,7 @@
 #include "setcurs.ch"
 
 #ifdef FT_TEST
-  FUNCTION MAIN()
+  PROCEDURE Main()
    local aRet[8], i
    setcolor ('w+/b')
    cls
@@ -33,15 +33,15 @@
    endif
    keyboard chr (28)
    aRet := ft_calendar (10,40,'w+/rb',.t.,.t.) //display calendar, return all.
-   @1,0 say 'Date        :'+dtoc(aRet[1])
-   @2,0 say 'Month Number:'+str(aRet[2],2,0)
-   @3,0 say 'Day Number  :'+str(aRet[3],2,0)
-   @4,0 say 'Year Number :'+str(aRet[4],4,0)
-   @5,0 say 'Month       :'+aRet[5]
-   @6,0 say 'Day         :'+aRet[6]
-   @7,0 say 'Julian Day  :'+str(aRet[7],3,0)
-   @8,0 say 'Current Time:'+aRet[8]
-   RETURN NIL
+   @ 1,0 say 'Date        :'+dtoc(aRet[1])
+   @ 2,0 say 'Month Number:'+str(aRet[2],2,0)
+   @ 3,0 say 'Day Number  :'+str(aRet[3],2,0)
+   @ 4,0 say 'Year Number :'+str(aRet[4],4,0)
+   @ 5,0 say 'Month       :'+aRet[5]
+   @ 6,0 say 'Day         :'+aRet[6]
+   @ 7,0 say 'Julian Day  :'+str(aRet[7],3,0)
+   @ 8,0 say 'Current Time:'+aRet[8]
+   RETURN
 #endif
 
 #include "inkey.ch"

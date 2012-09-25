@@ -35,9 +35,9 @@
 #define MEMSIZE    18
 
 #ifdef FT_TEST
-  FUNCTION MAIN()
+  PROCEDURE Main()
   QOut( "Conventional memory: " + str( FT_SYSMEM() ) + "K installed" )
-  RETURN NIL
+  RETURN
 #endif
 
 FUNCTION FT_SYSMEM()

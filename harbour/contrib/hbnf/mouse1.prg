@@ -7,7 +7,7 @@ THREAD static s_lMinit:=.F.
 
 #ifdef FT_TEST
 
-  FUNCTION MAIN(nRow,nCol)
+  PROCEDURE Main(nRow,nCol)
 
 * Pass valid row and column values for different video modes to change modes
 
@@ -192,7 +192,7 @@ THREAD static s_lMinit:=.F.
 
      FT_MSETSENS(nHoriz, nVert, nDouble)
 
-  RETURN nil
+  RETURN
 
 #endif
 

@@ -26,7 +26,7 @@
 
 #ifdef FT_TEST
 
-  function main()
+  PROCEDURE Main()
 
      cls
      ? "am-pm"
@@ -58,7 +58,7 @@
      ? "sys to mil"
      ? time()
      ? ft_sys2mil()
-  return nil
+  return
 
 #endif
 

@@ -27,13 +27,13 @@
   * Invoke by running SLEEP 1.0 to sleep 1.0 seconds
   *
 
-  FUNCTION MAIN(nSleep)
+  PROCEDURE Main(nSleep)
 
        ? "Time is now: " + time()
        FT_SLEEP(VAL(nSleep))
        ? "Time is now: " + time()
 
-  RETURN NIL
+  RETURN
 
 #endif
 

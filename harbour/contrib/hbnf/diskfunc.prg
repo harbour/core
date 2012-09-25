@@ -31,12 +31,12 @@
 #define DRVTABLE "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 #ifdef FT_TEST
-  FUNCTION MAIN( cDrv )
+  PROCEDURE Main( cDrv )
 
      QOut("Disk size:   " + str( FT_DSKSIZE() ) )
      QOut("Free bytes:  " + str( FT_DSKFREE() ) )
 
-  RETURN NIL
+  RETURN
 #endif
 
 FUNCTION FT_DSKSIZE( cDrive )

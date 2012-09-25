@@ -30,9 +30,9 @@
 #define HEXTABLE "0123456789ABCDEF"
 
 #ifdef FT_TEST
-  FUNCTION MAIN( cHexNum )
+  PROCEDURE Main( cHexNum )
      QOut( FT_HEX2DEC( cHexNum ) )
-     RETURN NIL
+     RETURN
 #endif
 
 FUNCTION FT_HEX2DEC( cHexNum )

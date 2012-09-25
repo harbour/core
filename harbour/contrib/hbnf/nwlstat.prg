@@ -31,9 +31,9 @@
 #define STATNUM    220
 
 #ifdef FT_TEST
-  FUNCTION MAIN()
+  PROCEDURE Main()
   QOut( "Logical station: " + str( FT_NWLSTAT() ) )
-  RETURN NIL
+  RETURN
 #endif
 
 FUNCTION FT_NWLSTAT()

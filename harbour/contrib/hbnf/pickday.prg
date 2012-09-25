@@ -29,13 +29,13 @@
 // test code
 #ifdef FT_TEST
 
-FUNCTION MAIN
-QOUT("You selected " + FT_PICKDAY())
-return nil
+PROCEDURE Main()
+   QOUT("You selected " + FT_PICKDAY())
+   RETURN
 
 #endif
 
-function FT_PICKDAY
+function FT_PICKDAY()
 LOCAL DAYS := { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", ;
                 "FRIDAY", "SATURDAY" }, SEL := 0
 LOCAL OLDSCRN := SAVESCREEN(8, 35, 16, 45), oldcolor := setcolor('+w/r')

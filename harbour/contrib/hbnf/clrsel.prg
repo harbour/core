@@ -96,9 +96,9 @@
  *
  */
 
-#IFDEF FT_TEST
+#ifdef FT_TEST
 
-  FUNCTION Main( cVidMode )
+PROCEDURE Main( cVidMode )
 
   LOCAL nRowDos := ROW()
   LOCAL nColDos := COL()
@@ -145,9 +145,9 @@
   SETPOS( nRowDos, nColDos )
   SETBLINK( .F. )  // doesn't appear to be reset from FT_RestSets
 
-  RETURN Nil
+  RETURN
 
-#ENDIF
+#endif
 
 *------------------------------------------------
 FUNCTION FT_ClrSel( aClrs, lColour, cChr )

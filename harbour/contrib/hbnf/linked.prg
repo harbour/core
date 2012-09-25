@@ -26,7 +26,7 @@
 
 #ifdef FT_TEST
 
-  FUNCTION Main
+  PROCEDURE Main()
   LOCAL cString
   LOCAL aString := { "TRIM('abc ')",                                     ;
                      "NotARealFunc()",                                   ;
@@ -41,11 +41,11 @@
                      "EOF(>> Note: Syntax IS NOT checked! <<)"           ;
                    }
   CLS
-  @1,0 SAY "String Tested                               Result"
-  @2,0 TO 2,MAXCOL()
+  @ 1,0 SAY "String Tested                               Result"
+  @ 2,0 TO 2,MAXCOL()
   AEVAL(aString, {|ele,num| QOUT(ele, SPACE(45-LEN(ele)), FT_Linked(ele)) } )
-  @MAXROW()-2,0
-  RETURN NIL
+  @ MAXROW()-2,0
+  RETURN
 
 #endif
 

@@ -28,8 +28,9 @@
  *
  *
  *  $EXAMPLES$
- *      FUNCTION main()
- *      RETURN QOut( "Dos version: " + FT_DOSVER() )
+ *      PROCEDURE Main()
+ *         QOut( "Dos version: " + FT_DOSVER() )
+ *         RETURN
  *
  *  $END$
  */

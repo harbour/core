@@ -29,14 +29,14 @@
  *  The following program takes a time string from the command line and sets
  *  the DOS system time:
  *
- *   FUNCTION main( cTime )
+ *   PROCEDURE Main( cTime )
  *
- *      cTime := iif( cTime == nil, time(), cTime )
+ *      cTime := iif( cTime == NIL, Time(), cTime )
  *      QOut( "Setting time to: " + cTime  + "... " )
  *      FT_SETTIME( cTime )
- *      Qout( "Time is now: " + time() )
+ *      QOut( "Time is now: " + Time() )
  *
- *   RETURN NIL
+ *      RETURN
  *
  *  $END$
  */

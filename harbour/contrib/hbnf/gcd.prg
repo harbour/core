@@ -33,8 +33,9 @@
             IF <Condition> ; EXIT ; END ; END
 
 #ifdef FT_TEST
-  FUNCTION MAIN( cNum1, cNum2 )
-     RETURN OUTSTD( STR(FT_GCD( val(cNum1), val(cNum2) )) + CHR(13) + CHR(10) )
+  PROCEDURE Main( cNum1, cNum2 )
+     OUTSTD( STR(FT_GCD( val(cNum1), val(cNum2) )) + hb_eol() )
+     RETURN
 #endif
 
 FUNCTION FT_GCD(nNumber1, nNumber2)

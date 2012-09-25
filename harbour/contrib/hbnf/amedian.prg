@@ -28,7 +28,7 @@
 
 #include "directry.ch"
 
-FUNCTION MAIN()
+PROCEDURE Main()
    LOCAL var0, myarray0 := DIRECTORY(), myarray1 := {}
    CLS
    ? "TEST TO DEMONSTRATE EXAMPLES OF FT_AMEDIAN"
@@ -50,7 +50,7 @@ FUNCTION MAIN()
    ? PADR('FT_AMEDIAN( myarray1, 8, 40 ) ->',35)
    ?? var0
    ?
-   RETURN NIL
+   RETURN
 
 #endif
 

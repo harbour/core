@@ -26,7 +26,7 @@
 // test code
 #ifdef FT_TEST
 
-FUNCTION MAIN
+PROCEDURE Main()
 LOCAL MAINMENU := ;
     { { "DATA ENTRY", "ENTER DATA",         { || FT_MENU2(datamenu)  } }, ;
       { "Reports",    "Hard copy",          { || FT_MENU2(repmenu)   } }, ;
@@ -51,7 +51,7 @@ local maintmenu := { { "Reindex",  "Rebuild index files", { || re_ntx() } } , ;
                      { "Exit", "Return to Main Menu" } }
 
 FT_MENU2(mainmenu)
-return nil
+return
 
 /* stub functions to avoid missing symbols */
 static function cust

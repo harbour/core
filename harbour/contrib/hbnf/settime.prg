@@ -38,12 +38,12 @@
 #define MINS( ts )  ( val( substr( ts, 4, 2 ) ) )
 
 #ifdef FT_TEST
-  FUNCTION MAIN( cTime )
+  PROCEDURE Main( cTime )
     cTime := iif( cTime == nil, time(), cTime )
     QOut( "Setting time to: " + cTime  + "... " )
     FT_SETTIME( cTime )
-    Qout( "Time is now: " + time() )
-  RETURN NIL
+    QOut( "Time is now: " + time() )
+  RETURN
 #endif
 
 function FT_SETTIME( cTime )

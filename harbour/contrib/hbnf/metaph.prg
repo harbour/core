@@ -97,8 +97,8 @@
 
 //  #define FT_TEST .T.
 
-#IFDEF FT_TEST
-  FUNCTION MAIN()
+#ifdef FT_TEST
+PROCEDURE Main()
   LOCAL cJunk  := SPACE( 8000 )
   LOCAL aNames := {}
   LOCAL cName, nElem

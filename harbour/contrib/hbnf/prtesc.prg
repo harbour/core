@@ -25,7 +25,7 @@
  */
 
 #ifdef FT_TEST
-  FUNCTION MAIN( cParm1 )
+  PROCEDURE Main( cParm1 )
      *-------------------------------------------------------
      * Sample routine to test function from command line
      *-------------------------------------------------------
@@ -37,7 +37,7 @@
       ? "            outputs converted code to  standard output"
       ?
     ENDIF
-  RETURN (nil)
+  RETURN
 #endif
 
 FUNCTION FT_ESCCODE( cInput )

@@ -42,20 +42,20 @@ body { color: #000000; background-color: #FFFFFF; }
    </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> nTmpRow, nTmpCol
 
    oBrowse:colorSpec     = </SPAN><SPAN class=any1-string>"W+/B, N/BG"
-</SPAN><SPAN class=any1-space>   oBrowse:ColSep        = </SPAN><SPAN class=any1-string>"¦"
-</SPAN><SPAN class=any1-space>   oBrowse:HeadSep        = </SPAN><SPAN class=any1-string>"Ð-"
+</SPAN><SPAN class=any1-space>   oBrowse:ColSep        = </SPAN><SPAN class=any1-string>"|"
+</SPAN><SPAN class=any1-space>   oBrowse:HeadSep        = </SPAN><SPAN class=any1-string>"?-"
 </SPAN><SPAN class=any1-space>   oBrowse:FootSep        = </SPAN><SPAN class=any1-string>"¤-"
-</SPAN><SPAN class=any1-space>   oBrowse:GoTopBlock    = { || n := </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> }
-   oBrowse:GoBottomBlock = { || n := </SPAN><SPAN class=any1-function>Len</SPAN><SPAN class=any1-symbol>( aTest0 ) }
-   oBrowse:SkipBlock     = { | nSkip, nPos | nPos := n,;
+</SPAN><SPAN class=any1-space>   oBrowse:GoTopBlock    = {|| n := </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> }
+   oBrowse:GoBottomBlock = {|| n := </SPAN><SPAN class=any1-function>Len</SPAN><SPAN class=any1-symbol>( aTest0 ) }
+   oBrowse:SkipBlock     = {| nSkip, nPos | nPos := n,;
                              n := </SPAN><SPAN class=any1-reservedword>If</SPAN><SPAN class=any1-symbol>( nSkip &gt; </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>Min</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>Len</SPAN><SPAN class=any1-symbol>( aTest0 ), n + nSkip ),;
                              </SPAN><SPAN class=any1-function>Max</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>, n + nSkip )), n - nPos }
 
-   oBrowse:</SPAN><SPAN class=any1-variable>AddColumn</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>TBColumnNew</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"First"</SPAN><SPAN class=any1-symbol>,  { || n } ) )
-   oBrowse:</SPAN><SPAN class=any1-variable>AddColumn</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>TBColumnNew</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Second"</SPAN><SPAN class=any1-symbol>, { || aTest0[ n ] } ) )
-   oBrowse:</SPAN><SPAN class=any1-variable>AddColumn</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>TBColumnNew</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Third"</SPAN><SPAN class=any1-symbol>,  { || aTest1[ n ] } ) )
-   oBrowse:</SPAN><SPAN class=any1-variable>AddColumn</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>TBColumnNew</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Forth"</SPAN><SPAN class=any1-symbol>,  { || aTest2[ n ] } ) )
-   oBrowse:</SPAN><SPAN class=any1-variable>AddColumn</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>TBColumnNew</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Fifth"</SPAN><SPAN class=any1-symbol>,  { || aTest3[ n ] } ) )
+   oBrowse:</SPAN><SPAN class=any1-variable>AddColumn</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>TBColumnNew</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"First"</SPAN><SPAN class=any1-symbol>,  {|| n } ) )
+   oBrowse:</SPAN><SPAN class=any1-variable>AddColumn</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>TBColumnNew</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Second"</SPAN><SPAN class=any1-symbol>, {|| aTest0[ n ] } ) )
+   oBrowse:</SPAN><SPAN class=any1-variable>AddColumn</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>TBColumnNew</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Third"</SPAN><SPAN class=any1-symbol>,  {|| aTest1[ n ] } ) )
+   oBrowse:</SPAN><SPAN class=any1-variable>AddColumn</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>TBColumnNew</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Forth"</SPAN><SPAN class=any1-symbol>,  {|| aTest2[ n ] } ) )
+   oBrowse:</SPAN><SPAN class=any1-variable>AddColumn</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>TBColumnNew</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Fifth"</SPAN><SPAN class=any1-symbol>,  {|| aTest3[ n ] } ) )
    oBrowse:</SPAN><SPAN class=any1-variable>GetColumn</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>):Footing = </SPAN><SPAN class=any1-string>'Number'
 </SPAN><SPAN class=any1-space>   oBrowse:</SPAN><SPAN class=any1-variable>GetColumn</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>):Footing = </SPAN><SPAN class=any1-string>'Strins'
 
@@ -76,7 +76,7 @@ body { color: #000000; background-color: #FFFFFF; }
    cColor := </SPAN><SPAN class=any1-function>SetColor</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"W+/B"</SPAN><SPAN class=any1-space> )
    nRow := </SPAN><SPAN class=any1-function>Row</SPAN><SPAN class=any1-symbol>()
    nCol := </SPAN><SPAN class=any1-function>Col</SPAN><SPAN class=any1-symbol>()
-   @ </SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>17</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>31</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>BOX</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"+-+¦+-+¦ "
+   @ </SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>17</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>31</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>BOX</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"+-+|+-+| "
 </SPAN><SPAN class=any1-constant>#ifdef</SPAN><SPAN class=any1-space> HB_COMPAT_C53
  oBrowse:</SPAN><SPAN class=any1-function>Setkey</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>,{|ob,nkey| </SPAN><SPAN class=any1-variable>Defproc</SPAN><SPAN class=any1-symbol>(ob,nKey)})
 </SPAN><SPAN class=any1-reservedword>while</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-activedot>.t.
@@ -145,7 +145,7 @@ enddo
               </SPAN><SPAN class=any1-function>DevPos</SPAN><SPAN class=any1-symbol>( nTmpRow, nTmpCol )
 
       </SPAN><SPAN class=any1-reservedword>endcase
-</SPAN><SPAN class=any1-space>      
+</SPAN><SPAN class=any1-space>
    </SPAN><SPAN class=any1-reservedword>end
 </SPAN><SPAN class=any1-constant>#endif
 </SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>DevPos</SPAN><SPAN class=any1-symbol>( nRow, nCol )

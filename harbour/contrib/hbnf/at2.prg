@@ -29,7 +29,7 @@
 
 #ifdef FT_TEST
 
-FUNCTION MAIN()
+PROCEDURE Main()
    LOCAL cSearch,cTarget,var0
    CLS
    ? "TEST TO DEMONSTRATE EXAMPLES OF FT_AT2"
@@ -51,7 +51,7 @@ FUNCTION MAIN()
    ? PADR("FT_AT2( cSearch, cTarget, 2, .F. ) -> ",40)
    ??var0
    ?
-   RETURN NIL
+   RETURN
 
 #endif
 

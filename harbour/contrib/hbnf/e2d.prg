@@ -25,8 +25,9 @@
  */
 
 #ifdef FT_TEST
-  function main( sNumE )
-     return qout( FT_E2D( sNumE ) )
+  PROCEDURE Main( sNumE )
+     qout( FT_E2D( sNumE ) )
+     RETURN
 #endif
 
 function ft_e2d( sNumE )

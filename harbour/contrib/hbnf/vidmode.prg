@@ -34,11 +34,11 @@
 #define GETMODE    15
 
 #ifdef FT_TEST
-  FUNCTION MAIN( cMode )
+  PROCEDURE Main( cMode )
 
      FT_SETMODE( val( cMode ) )
      QOut( "Video mode is: " + str( FT_GETMODE() ) )
-     RETURN NIL
+     RETURN
 
 #endif
 

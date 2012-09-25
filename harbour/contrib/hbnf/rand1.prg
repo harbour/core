@@ -30,14 +30,14 @@
   // Run it multiple times and redirect output to a file
   // to check it
 
-  function main()
+  PROCEDURE Main()
      local x
 
      for x := 1 to 100
         outstd( int( ft_rand1(100) ) )
-        outstd( chr(13) + chr(10) )
+        outstd( hb_eol() )
      next
-     return nil
+     return
 
 #endif
 

@@ -32,8 +32,8 @@
  *     and Mark Zechiel; it was re-written in C (and thus, optimized
  *     and enhanced) by Robert DiFalco.
  *  $EXAMPLES$
- *       FUNCTION main( cStr )
- *         OutStd( FT_PROPER( cStr ) + chr(13) + chr(10) )
- *       RETURN ( nil )
+ *       PROCEDURE Main( cStr )
+ *          OutStd( FT_PROPER( cStr ) + hb_eol() )
+ *          RETURN
  *  $END$
  */

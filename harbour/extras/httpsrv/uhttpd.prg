@@ -207,7 +207,7 @@ ANNOUNCE ERRORSYS
 //
 // ----------------------------------------
 
-FUNCTION MAIN( ... )
+FUNCTION Main( ... )
    LOCAL nPort, hListen, hSocket, aRemote, cI, xVal
    LOCAL aThreads, nStartThreads, nMaxThreads, nStartServiceThreads
    LOCAL i, cPar, lStop

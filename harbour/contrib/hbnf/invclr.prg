@@ -24,7 +24,7 @@
  *
  */
 
-#Command    DEFAULT <Param1> TO <Def1> [, <ParamN> TO <DefN> ] ;
+#command    DEFAULT <Param1> TO <Def1> [, <ParamN> TO <DefN> ] ;
             => ;
             <Param1> := iif(<Param1> == NIL,<Def1>,<Param1>) ;
          [; <ParamN> := iif(<ParamN> == NIL,<DefN>,<ParamN>)]

@@ -26,7 +26,7 @@ body { color: #000000; background-color: #FFFFFF; }
 
 </SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Main</SPAN><SPAN class=any1-symbol>()
    </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> B := </SPAN><SPAN class=any1-string>"this will never print"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> a := { |b,c| </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"I am a codeblock"</SPAN><SPAN class=any1-space> + b + c ) }
+</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> a := {| b, c | </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"I am a codeblock"</SPAN><SPAN class=any1-space> + b + c ) }
    </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> d
    </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> de
    </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> ar := { </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> }
@@ -42,7 +42,7 @@ body { color: #000000; background-color: #FFFFFF; }
 
    d =</SPAN><SPAN class=any1-string>"with access to local variables"
 
-</SPAN><SPAN class=any1-space>   a ={ |b,c| </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"I am a second codeblock "</SPAN><SPAN class=any1-space> +d +b +;
+</SPAN><SPAN class=any1-space>   a ={| b, c | </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"I am a second codeblock "</SPAN><SPAN class=any1-space> +d +b +;
         </SPAN><SPAN class=any1-variable>IIF</SPAN><SPAN class=any1-symbol>(c==NIL, </SPAN><SPAN class=any1-string>' empty second parameter '</SPAN><SPAN class=any1-symbol>, c)), </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>(crlf), </SPAN><SPAN class=any1-string>"WITH return value"</SPAN><SPAN class=any1-space> }
    </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( a, </SPAN><SPAN class=any1-string>", codeblock parameters"</SPAN><SPAN class=any1-space> )
    </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( crlf )
@@ -59,7 +59,7 @@ body { color: #000000; background-color: #FFFFFF; }
    </SPAN><SPAN class=any1-variable>AnotherTest</SPAN><SPAN class=any1-symbol>( a, </SPAN><SPAN class=any1-string>"==&gt; Another "</SPAN><SPAN class=any1-space> )
    </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( crlf )
 
-   a ={|c| </SPAN><SPAN class=any1-variable>IIF</SPAN><SPAN class=any1-symbol>( c=NIL, {|a| </SPAN><SPAN class=any1-string>"First "</SPAN><SPAN class=any1-symbol>+a}, {|a| </SPAN><SPAN class=any1-string>"Second "</SPAN><SPAN class=any1-symbol>+a}) }
+   a ={| c | </SPAN><SPAN class=any1-variable>IIF</SPAN><SPAN class=any1-symbol>( c=NIL, {| a | </SPAN><SPAN class=any1-string>"First "</SPAN><SPAN class=any1-symbol>+a}, {| a | </SPAN><SPAN class=any1-string>"Second "</SPAN><SPAN class=any1-symbol>+a}) }
    a =</SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( a )
    </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( crlf )
    </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( a, </SPAN><SPAN class=any1-string>"codeblock created in a codeblock"</SPAN><SPAN class=any1-space> ) )
@@ -107,7 +107,7 @@ body { color: #000000; background-color: #FFFFFF; }
 </SPAN><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>OtherTest</SPAN><SPAN class=any1-symbol>( cblock )
 </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> cb
 
-  cb :={|a,b| </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cblock,a,b ) }
+  cb :={| a, b | </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cblock,a,b ) }
 
   </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cb, </SPAN><SPAN class=any1-string>"--&gt; with nested "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"EVAL"</SPAN><SPAN class=any1-space> )
 
