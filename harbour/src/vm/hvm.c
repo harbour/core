@@ -7961,7 +7961,11 @@ PHB_SYMBOLS hb_vmRegisterSymbols( PHB_SYMB pModuleSymbols, HB_USHORT uiSymbols,
             if( pDynSym )
             {
                pSymbol->pDynSym = pDynSym;
-               if( pDynSym->pSymbol != pSymbol && HB_VM_ISFUNC( pDynSym->pSymbol ) )
+               if( pDynSym->pSymbol != pSymbol && HB_VM_ISFUNC( pDynSym->pSymbol ) &&
+                   ( pDynSym->pSymbol->value.pFunPtr != pSymbol->value.pFunPtr ||
+                     ( pDynSym->pSymbol->scope.value & HB_FS_LOCAL ) != 0 ||
+                     ( ( pSymbol->scope.value & ( HB_FS_LOCAL | HB_FS_DYNCODE ) ) !=
+                       ( HB_FS_LOCAL | HB_FS_DYNCODE ) ) ) )
                {
                   pSymbol->scope.value =
                      ( pSymbol->scope.value & ~( HB_FS_PCODEFUNC | HB_FS_LOCAL ) ) |

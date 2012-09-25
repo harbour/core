@@ -2287,7 +2287,17 @@ HB_FUNC( __DBSKIPPER )
             SELF_SKIP( pArea, 0 );
          else if( lRecs > 0 )
          {
-            if( SELF_EOF( pArea, &fBEof ) == HB_SUCCESS )
+            /* the condition below is exact Clipper behavior anyhow
+             * we cannot replicate it without introducing serious problem:
+             * some RDDs use non continuous record numbers (i.e. ADT) and
+             * the condition: ulRecNo != ulRecords + 1 can be true also for
+             * normal records not only for the phantom EOF record. [druzus]
+             */
+#if 0
+            HB_ULONG ulRecNo = 0;
+            if( SELF_RECNO( pArea, &ulRecNo ) == HB_SUCCESS &&
+                ulRecNo != ulRecords + 1 )
+#endif
             {
                while( lSkipped < lRecs )
                {
