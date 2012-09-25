@@ -36,7 +36,7 @@
 #
 #    $ export HB_SFNET_FRS_PRIVATE_KEY=~/.ssh/id_dsa
 #    $ export HB_SFNET_USER=myuser
-#    $ ./mpkg_nightly.sh
+#    $ ./mpkg_src_nightly.sh
 #
 # Official link with more detailed procedures:
 #    http://sourceforge.net/apps/trac/sourceforge/wiki/SSH%20keys
