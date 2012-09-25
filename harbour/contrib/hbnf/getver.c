@@ -49,7 +49,7 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
-*/
+ */
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -63,11 +63,11 @@ HB_FUNC( _GET_DOSVER )
 {
 #if defined( HB_OS_DOS )
    {
-      char * pszPlatform;
-      union REGS regs;
+      char *      pszPlatform;
+      union REGS  regs;
       pszPlatform = ( char * ) hb_xgrab( 256 );
 
-      regs.h.ah = 0x30;
+      regs.h.ah   = 0x30;
       HB_DOS_INT86( 0x21, &regs, &regs );
 
       hb_snprintf( pszPlatform, 256, "%d.%02d", regs.h.al, regs.h.ah );
@@ -80,13 +80,14 @@ HB_FUNC( _GET_DOSVER )
 HB_FUNC( _FT_ISSHARE )
 {
    int iShare;
+
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 0x1000;
-      regs.HB_XREGS.cx = 0;
+      regs.HB_XREGS.ax  = 0x1000;
+      regs.HB_XREGS.cx  = 0;
       HB_DOS_INT86( 0x2F, &regs, &regs );
-      iShare = regs.h.al;
+      iShare            = regs.h.al;
    }
 #else
    {
@@ -99,12 +100,13 @@ HB_FUNC( _FT_ISSHARE )
 HB_FUNC( _FT_NWKSTAT )
 {
    int iConnect;
+
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 0xDC;
+      regs.HB_XREGS.ax  = 0xDC;
       HB_DOS_INT86( 0x2F, &regs, &regs );
-      iConnect = regs.h.al;
+      iConnect          = regs.h.al;
    }
 #else
    {
@@ -119,8 +121,8 @@ HB_FUNC( _FT_SETMODE )
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.h.ah = 0;
-      regs.h.al = hb_parni( 1 );
+      regs.h.ah   = 0;
+      regs.h.al   = hb_parni( 1 );
       HB_DOS_INT86( 0x10, &regs, &regs );
    }
 #endif
@@ -129,12 +131,13 @@ HB_FUNC( _FT_SETMODE )
 HB_FUNC( _FT_GETMODE )
 {
    int iMode;
+
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.h.ah = 0x0F;
+      regs.h.ah   = 0x0F;
       HB_DOS_INT86( 0x10, &regs, &regs );
-      iMode = regs.h.al;
+      iMode       = regs.h.al;
    }
 #else
    {
@@ -146,30 +149,30 @@ HB_FUNC( _FT_GETMODE )
 
 HB_FUNC( _FT_TEMPFIL )
 {
-   int nax;
-   int iflags;
-   const char * cPath;
+   int            nax;
+   int            iflags;
+   const char *   cPath;
 
-#if defined( HB_OS_DOS ) && !defined( HB_OS_DOS_32 )
+#if defined( HB_OS_DOS ) && ! defined( HB_OS_DOS_32 )
    {
-      int iMode = hb_parni( 2 );
-      union REGS regs;
-      struct SREGS sregs;
+      int            iMode = hb_parni( 2 );
+      union REGS     regs;
+      struct SREGS   sregs;
       segread( &sregs );
-      cPath = hb_parcx( 1 );
-      regs.h.ah = 0x5A;
-      regs.HB_XREGS.cx = iMode;
-      sregs.ds = FP_SEG( cPath );
-      regs.HB_XREGS.dx = FP_OFF( cPath );
+      cPath             = hb_parcx( 1 );
+      regs.h.ah         = 0x5A;
+      regs.HB_XREGS.cx  = iMode;
+      sregs.ds          = FP_SEG( cPath );
+      regs.HB_XREGS.dx  = FP_OFF( cPath );
       HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
-      nax = regs.HB_XREGS.ax;
-      iflags = regs.HB_XREGS.flags;
+      nax               = regs.HB_XREGS.ax;
+      iflags            = regs.HB_XREGS.flags;
    }
 #else
    {
-      nax = 0;
-      iflags = 0;
-      cPath = hb_parcx( 1 );
+      nax      = 0;
+      iflags   = 0;
+      cPath    = hb_parcx( 1 );
    }
 #endif
    {

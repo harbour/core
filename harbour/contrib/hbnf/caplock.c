@@ -37,22 +37,22 @@
 
 HB_FUNC( FT_CAPLOCK )
 {
-   int iState = 0, iNewState;
-   HB_GT_INFO gtInfo;
+   int         iState = 0, iNewState;
+   HB_GT_INFO  gtInfo;
 
    memset( &gtInfo, 0, sizeof( gtInfo ) );
    hb_gtInfo( HB_GTI_KBDSHIFTS, &gtInfo );
    if( gtInfo.pResult )
    {
-      iState = hb_itemGetNI( gtInfo.pResult );
+      iState         = hb_itemGetNI( gtInfo.pResult );
       gtInfo.pNewVal = gtInfo.pResult;
       gtInfo.pResult = NULL;
    }
 
    if( HB_ISLOG( 1 ) )
    {
-      iNewState = hb_parl( 1 ) ? ( iState | HB_GTI_KBD_CAPSLOCK ) :
-                                 ( iState & ~HB_GTI_KBD_CAPSLOCK );
+      iNewState      = hb_parl( 1 ) ? ( iState | HB_GTI_KBD_CAPSLOCK ) :
+                       ( iState & ~HB_GTI_KBD_CAPSLOCK );
       gtInfo.pNewVal = hb_itemPutNI( gtInfo.pNewVal, iNewState );
       hb_gtInfo( HB_GTI_KBDSHIFTS, &gtInfo );
    }

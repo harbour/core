@@ -49,7 +49,7 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
-*/
+ */
 
 #include "hbapi.h"
 #if defined( HB_OS_DOS )
@@ -61,12 +61,13 @@
 HB_FUNC( _MGET_PAGE )
 {
    int iPage;
+
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 0x1E;
+      regs.HB_XREGS.ax  = 0x1E;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      iPage = regs.HB_XREGS.bx;
+      iPage             = regs.HB_XREGS.bx;
    }
 #else
    {
@@ -81,8 +82,8 @@ HB_FUNC( _MSET_PAGE )
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 0x1D;
-      regs.HB_XREGS.bx = hb_parni( 1 );
+      regs.HB_XREGS.ax  = 0x1D;
+      regs.HB_XREGS.bx  = hb_parni( 1 );
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
 #endif
@@ -90,29 +91,29 @@ HB_FUNC( _MSET_PAGE )
 
 HB_FUNC( _MGET_MVERSION )
 {
-   int iMinor;
-   int iType;
-   int iIRQ;
-   int iMajor;
+   int   iMinor;
+   int   iType;
+   int   iIRQ;
+   int   iMajor;
 
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
 
-      regs.HB_XREGS.ax = 0x24;
+      regs.HB_XREGS.ax  = 0x24;
       HB_DOS_INT86( 0x33, &regs, &regs );
 
-      iMinor = regs.h.bl;
-      iType = regs.h.ch;
-      iIRQ = regs.h.cl;
-      iMajor = regs.h.bh;
+      iMinor            = regs.h.bl;
+      iType             = regs.h.ch;
+      iIRQ              = regs.h.cl;
+      iMajor            = regs.h.bh;
    }
 #else
    {
-      iMinor = 0;
-      iType = 0;
-      iIRQ = 0;
-      iMajor = 0;
+      iMinor   = 0;
+      iType    = 0;
+      iIRQ     = 0;
+      iMajor   = 0;
    }
 #endif
 
@@ -135,9 +136,9 @@ HB_FUNC( _MGET_HORISPEED )
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 0x1B;
+      regs.HB_XREGS.ax  = 0x1B;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      iSpeed = regs.HB_XREGS.bx;
+      iSpeed            = regs.HB_XREGS.bx;
    }
 #else
    {
@@ -150,12 +151,13 @@ HB_FUNC( _MGET_HORISPEED )
 HB_FUNC( _MGET_VERSPEED )
 {
    int iSpeed;
+
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 0x1B;
+      regs.HB_XREGS.ax  = 0x1B;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      iSpeed = regs.HB_XREGS.cx;
+      iSpeed            = regs.HB_XREGS.cx;
    }
 #else
    {
@@ -168,12 +170,13 @@ HB_FUNC( _MGET_VERSPEED )
 HB_FUNC( _MGET_DOUBLESPEED )
 {
    int iSpeed;
+
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 0x1B;
+      regs.HB_XREGS.ax  = 0x1B;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      iSpeed = regs.HB_XREGS.dx;
+      iSpeed            = regs.HB_XREGS.dx;
    }
 #else
    {
@@ -188,10 +191,10 @@ HB_FUNC( _MSET_SENSITIVE ) /* nHoriz,nVert,nDouble) */
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 0x1A;
-      regs.HB_XREGS.bx = hb_parni( 1 );
-      regs.HB_XREGS.cx = hb_parni( 2 );
-      regs.HB_XREGS.dx = hb_parni( 3 );
+      regs.HB_XREGS.ax  = 0x1A;
+      regs.HB_XREGS.bx  = hb_parni( 1 );
+      regs.HB_XREGS.cx  = hb_parni( 2 );
+      regs.HB_XREGS.dx  = hb_parni( 3 );
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
 #endif
@@ -202,11 +205,11 @@ HB_FUNC( _MSE_CONOFF ) /* nTop*8,nLeft*8,nBotton*8,nRight*8) */
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 0x1A;
-      regs.HB_XREGS.cx = hb_parni( 2 );
-      regs.HB_XREGS.dx = hb_parni( 1 );
-      regs.HB_XREGS.si = hb_parni( 4 );
-      regs.HB_XREGS.di = hb_parni( 3 );
+      regs.HB_XREGS.ax  = 0x1A;
+      regs.HB_XREGS.cx  = hb_parni( 2 );
+      regs.HB_XREGS.dx  = hb_parni( 1 );
+      regs.HB_XREGS.si  = hb_parni( 4 );
+      regs.HB_XREGS.di  = hb_parni( 3 );
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
 #endif
@@ -214,15 +217,16 @@ HB_FUNC( _MSE_CONOFF ) /* nTop*8,nLeft*8,nBotton*8,nRight*8) */
 
 HB_FUNC( _MGET_MICS )
 {
-   int iHori;
-   int iVert;
+   int   iHori;
+   int   iVert;
+
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 0x0B;
+      regs.HB_XREGS.ax  = 0x0B;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      iHori = regs.HB_XREGS.cx;
-      iVert = regs.HB_XREGS.dx;
+      iHori             = regs.HB_XREGS.cx;
+      iVert             = regs.HB_XREGS.dx;
    }
 #else
    {
@@ -243,12 +247,13 @@ HB_FUNC( _MGET_MICS )
 HB_FUNC( _M_RESET )
 {
    int iMouse;
+
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 0;
+      regs.HB_XREGS.ax  = 0;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      iMouse = regs.HB_XREGS.ax;
+      iMouse            = regs.HB_XREGS.ax;
    }
 #else
    {
@@ -284,15 +289,16 @@ HB_FUNC( _MSE_MHIDECRS )
 
 HB_FUNC( _MSE_GETPOS )
 {
-   int iHori;
-   int iVert;
+   int   iHori;
+   int   iVert;
+
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 3;
+      regs.HB_XREGS.ax  = 3;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      iHori = regs.HB_XREGS.cx;
-      iVert = regs.HB_XREGS.dx;
+      iHori             = regs.HB_XREGS.cx;
+      iVert             = regs.HB_XREGS.dx;
    }
 #else
    {
@@ -313,12 +319,13 @@ HB_FUNC( _MSE_GETPOS )
 HB_FUNC( _M_GETX )
 {
    int iRow;
+
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 3;
+      regs.HB_XREGS.ax  = 3;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      iRow = regs.HB_XREGS.dx;
+      iRow              = regs.HB_XREGS.dx;
    }
 #else
    {
@@ -331,12 +338,13 @@ HB_FUNC( _M_GETX )
 HB_FUNC( _M_GETY )
 {
    int iCol;
+
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 3;
+      regs.HB_XREGS.ax  = 3;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      iCol = regs.HB_XREGS.cx;
+      iCol              = regs.HB_XREGS.cx;
    }
 #else
    {
@@ -351,9 +359,9 @@ HB_FUNC( _M_MSETPOS )
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 4;
-      regs.HB_XREGS.cx = hb_parni( 1 );
-      regs.HB_XREGS.dx = hb_parni( 2 );
+      regs.HB_XREGS.ax  = 4;
+      regs.HB_XREGS.cx  = hb_parni( 1 );
+      regs.HB_XREGS.dx  = hb_parni( 2 );
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
 #endif
@@ -364,9 +372,9 @@ HB_FUNC( _M_MSETCOORD )
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 4;
-      regs.HB_XREGS.cx = hb_parni( 1 );
-      regs.HB_XREGS.dx = hb_parni( 2 );
+      regs.HB_XREGS.ax  = 4;
+      regs.HB_XREGS.cx  = hb_parni( 1 );
+      regs.HB_XREGS.dx  = hb_parni( 2 );
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
 #endif
@@ -376,13 +384,13 @@ HB_FUNC( _M_MXLIMIT )
 {
 #if defined( HB_OS_DOS )
    {
-      union REGS regs;
-      int iMaxRow = hb_parni( 2 );
-      int iMinRow = hb_parni( 1 );
+      union REGS  regs;
+      int         iMaxRow  = hb_parni( 2 );
+      int         iMinRow  = hb_parni( 1 );
 
-      regs.HB_XREGS.ax = 7;
-      regs.HB_XREGS.cx = iMinRow;
-      regs.HB_XREGS.dx = iMaxRow;
+      regs.HB_XREGS.ax  = 7;
+      regs.HB_XREGS.cx  = iMinRow;
+      regs.HB_XREGS.dx  = iMaxRow;
 
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
@@ -393,13 +401,13 @@ HB_FUNC( _M_MYLIMIT )
 {
 #if defined( HB_OS_DOS )
    {
-      union REGS regs;
-      int iMaxCol = hb_parni( 2 );
-      int iMinCol = hb_parni( 1 );
-      regs.HB_XREGS.ax = 8;
+      union REGS  regs;
+      int         iMaxCol  = hb_parni( 2 );
+      int         iMinCol  = hb_parni( 1 );
+      regs.HB_XREGS.ax  = 8;
 
-      regs.HB_XREGS.cx = iMinCol;
-      regs.HB_XREGS.dx = iMaxCol;
+      regs.HB_XREGS.cx  = iMinCol;
+      regs.HB_XREGS.dx  = iMaxCol;
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
 #endif
@@ -407,28 +415,29 @@ HB_FUNC( _M_MYLIMIT )
 
 HB_FUNC( _M_MBUTPRS )
 {
-   int inX;
-   int inY;
-   int inButton;
-   int lStatus;
+   int   inX;
+   int   inY;
+   int   inButton;
+   int   lStatus;
+
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 6;
-      regs.HB_XREGS.bx = hb_parni( 1 );
+      regs.HB_XREGS.ax  = 6;
+      regs.HB_XREGS.bx  = hb_parni( 1 );
       HB_DOS_INT86( 0x33, &regs, &regs );
 
-      inY = regs.HB_XREGS.cx;
-      inX = regs.HB_XREGS.dx;
-      inButton = regs.HB_XREGS.bx;
-      lStatus = regs.HB_XREGS.ax;
+      inY               = regs.HB_XREGS.cx;
+      inX               = regs.HB_XREGS.dx;
+      inButton          = regs.HB_XREGS.bx;
+      lStatus           = regs.HB_XREGS.ax;
    }
 #else
    {
-      inY = 0;
-      inX = 0;
+      inY      = 0;
+      inX      = 0;
       inButton = 0;
-      lStatus = 0;
+      lStatus  = 0;
    }
 #endif
    {
@@ -447,8 +456,8 @@ HB_FUNC( _M_MBUTREL )
 {
 #if defined( HB_OS_DOS )
    union REGS regs;
-   regs.HB_XREGS.ax = 0x0A;
-   regs.HB_XREGS.bx = hb_parni( 1 );
+   regs.HB_XREGS.ax  = 0x0A;
+   regs.HB_XREGS.bx  = hb_parni( 1 );
 
    HB_DOS_INT86( 0x33, &regs, &regs );
 
@@ -471,10 +480,10 @@ HB_FUNC( _M_MDEFCRS )
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 0x0A;
-      regs.HB_XREGS.bx = hb_parni( 1 );
-      regs.HB_XREGS.cx = hb_parni( 2 );
-      regs.HB_XREGS.dx = hb_parni( 3 );
+      regs.HB_XREGS.ax  = 0x0A;
+      regs.HB_XREGS.bx  = hb_parni( 1 );
+      regs.HB_XREGS.cx  = hb_parni( 2 );
+      regs.HB_XREGS.dx  = hb_parni( 3 );
 
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
@@ -483,24 +492,24 @@ HB_FUNC( _M_MDEFCRS )
 
 HB_FUNC( _M_MGETCOORD )
 {
-   int inX;
-   int inY;
-   int inButton;
+   int   inX;
+   int   inY;
+   int   inButton;
 
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax = 3;
+      regs.HB_XREGS.ax  = 3;
       HB_DOS_INT86( 0x33, &regs, &regs );
 
-      inButton = regs.HB_XREGS.bx;
-      inY = regs.HB_XREGS.cx;
-      inX = regs.HB_XREGS.dx;
+      inButton          = regs.HB_XREGS.bx;
+      inY               = regs.HB_XREGS.cx;
+      inX               = regs.HB_XREGS.dx;
    }
 #else
    {
-      inX = 0;
-      inY = 0;
+      inX      = 0;
+      inY      = 0;
       inButton = 0;
    }
 #endif

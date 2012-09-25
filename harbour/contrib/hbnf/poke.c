@@ -62,5 +62,5 @@ HB_FUNC( FT_POKE )
       hb_retl( HB_TRUE );
    }
    else
-      Bogus: hb_retl( HB_FALSE );
+ Bogus: hb_retl( HB_FALSE );
 }

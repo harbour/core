@@ -48,23 +48,23 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
-*/
+ */
 
 /*
-* File......: setlastk.asm
-* Author....: Ted Means
-* CIS ID....: 73067,3332
-*
-* This is an original work by Ted Means and is placed in the
-* public domain.
-*
-* Modification history:
-* ---------------------
-*
-*     Rev 1.0   01 Jul 1992 01:23:06   GLENN
-*  Initial revision.
-*
-*/
+ * File......: setlastk.asm
+ * Author....: Ted Means
+ * CIS ID....: 73067,3332
+ *
+ * This is an original work by Ted Means and is placed in the
+ * public domain.
+ *
+ * Modification history:
+ * ---------------------
+ *
+ *     Rev 1.0   01 Jul 1992 01:23:06   GLENN
+ *  Initial revision.
+ *
+ */
 
 #include "hbapi.h"
 

@@ -773,8 +773,8 @@ HB_FUNC( FT_DISPFILE )
 
    if( keytype == K_STRING )
    {
-      rval[ 0 ] = ( char ) ch;
-      rval[ 1 ] = '\0';
+      rval[ 0 ]   = ( char ) ch;
+      rval[ 1 ]   = '\0';
       hb_retc( rval );
    }
    else

@@ -49,7 +49,7 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
-*/
+ */
 
 #include "hbapi.h"
 #if defined( HB_OS_DOS )
@@ -65,7 +65,7 @@ HB_FUNC( _FT_GETVPG )
       union REGS registers;
       registers.h.ah = 0x0F;
       HB_DOS_INT86( 0x10, &registers, &registers );
-      iPage = registers.h.bh;
+      iPage          = registers.h.bh;
    }
 #else
    {
@@ -80,9 +80,9 @@ HB_FUNC( _V_SETVPG )
 {
 #if defined( HB_OS_DOS )
    {
-      int iPage;
-      union REGS registers;
-      iPage = hb_parni( 1 );
+      int         iPage;
+      union REGS  registers;
+      iPage          = hb_parni( 1 );
       registers.h.ah = 0x05;
       registers.h.al = iPage;
       HB_DOS_INT86( 0x10, &registers, &registers );

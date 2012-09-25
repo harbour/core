@@ -54,11 +54,11 @@ HB_FUNC( FT_PEEK )
             goto Bogus;
       }
 
-      _retni( ( int ) *bytePtr );
+      hb_retni( ( int ) *bytePtr );
 
       if( ProtMode )
          hb_cpmiFreeSelector( FP_SEG( bytePtr ) );
    }
    else
-      Bogus: hb_retni( -1 );
+ Bogus: hb_retni( -1 );
 }
