@@ -21,6 +21,7 @@
  *
  */
 
+#include "inkey.ch"
 #include "setcurs.ch"
 
 #ifdef FT_TEST
@@ -30,11 +31,11 @@ PROCEDURE Main()
    LOCAL aRet[ 8 ], i
 
    SetColor( "w+/b" )
-   cls
+   CLS
    IF ft_numlock()
       ft_numlock( .F. )
    ENDIF
-   KEYBOARD Chr( 28 )
+   hb_keyPut( K_F1 )
    aRet := ft_calendar( 10, 40, "w+/rb", .T. , .T. ) //display calendar, return all.
    @ 1, 0 SAY "Date        :" + DToC( aRet[ 1 ] )
    @ 2, 0 SAY "Month Number:" + Str( aRet[ 2 ], 2, 0 )
@@ -49,12 +50,10 @@ PROCEDURE Main()
 
 #endif
 
-#include "inkey.ch"
-
 FUNCTION FT_CALENDAR( nRow, nCol, cColor, lShadow, lShowHelp )
 
    LOCAL  nJump := 0, nKey := 0, cSavColor, cSaveScreen, cSaveCursor
-   LOCAL  aRetVal[8]
+   LOCAL  aRetVal[ 8 ]
    LOCAL  nHelpRow, cSaveHelp, lHelpIsDisplayed := .F.
 
    nRow    := iif( nRow != NIL, nRow, 1 )           //check display row

@@ -67,23 +67,23 @@
 
 #define nTotTran Len( aTrans )
 
-#command DISPMESSAGE <mess>,<t>,<l>,<b>,<r> =>                        ;
-      _ftPushKeys(); KEYBOARD Chr( K_CTRL_PGDN ) + Chr( K_CTRL_W )      ;;
+#command DISPMESSAGE <mess>,<t>,<l>,<b>,<r> =>                    ;
+      _ftPushKeys(); hb_keyPut( { K_CTRL_PGDN, K_CTRL_W } )      ;;
       MemoEdit( < mess > , < t > , < l > , < b > , < r > , .F. , NIL, ( < r > ) - ( < l > ) + 1 )   ;;
       _ftPopKeys()
 
 #define ASHRINK( ar ) ASize( ar, Len( ar ) - 1 )
 
 /* This INKEY UDC was posted by Don Caton on NanForum... Thanks Don <g> */
-#command FT_INKEY [ <secs> ] TO <var>                                    ;
-      =>                                                              ;
-      WHILE .T.                                                      ;;
-      < var > := Inkey( [ <secs> ] )                                  ;;
-      IF SetKey( < var > ) != NIL                                     ;;
-      Eval( SetKey( < var > ), ProcName(), ProcLine(), #< var > )    ;;
-      ELSE                                                        ;;
-      EXIT                                                     ;;
-      END                                                         ;;
+#command FT_INKEY [ <secs> ] TO <var>                                     ;
+      =>                                                                  ;
+      WHILE .T.                                                          ;;
+         < var > := Inkey( [ <secs> ] )                                  ;;
+         IF SetKey( < var > ) != NIL                                     ;;
+            Eval( SetKey( < var > ), ProcName(), ProcLine(), #< var > )  ;;
+         ELSE                                                            ;;
+            EXIT                                                         ;;
+         END                                                             ;;
       END
 
 // Instead of using STATIC variables for these I'm using a LOCAL array
@@ -341,7 +341,7 @@ FUNCTION FT_Adder()
                " a TOTAL before you can return it to the program." )
          ENDIF
       ENDCASE
-   ENDDO  ( WHILE .T.  DATA entry FROM keyboard )
+   ENDDO
 
 // Reset the STATICS to NIL
    aKeys := aWindow := aWinColor := aStdColor := NIL
@@ -1044,7 +1044,7 @@ STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
 STATIC FUNCTION _ftSetLastKey( nLastKey )
 
    _ftPushKeys()
-   KEYBOARD Chr( nLastKey )
+   hb_keyPut( nLastKey )
    Inkey()
    _ftPopKeys()
 
@@ -1088,12 +1088,9 @@ STATIC FUNCTION _ftPushKeys
 
 STATIC FUNCTION _ftPopKeys
 
-   LOCAL cKeys := ""
-
-   IF Len( aKeys ) != 0
-      AEval( aKeys, {| elem | cKeys += Chr( elem ) } )
+   IF ! Empty( aKeys )
+      hb_keyPut( aKeys )
    ENDIF
-   KEYBOARD cKeys
    aKeys := {}
 
    RETURN NIL
@@ -1318,7 +1315,7 @@ FUNCTION _ftAdderTapeUDF( mode, cur_elem, rel_pos )
       CASE nKey == 30
          nRtnVal := AC_CONT
       CASE nKey == K_ESC
-         KEYBOARD Chr( K_CTRL_PGDN ) + Chr( K_RETURN )  // Go to last item
+         hb_keyPut( { K_CTRL_PGDN, K_RETURN } )  // Go to last item
          ac_exit_ok := .T.
          nRtnVal := AC_CONT
       CASE ac_exit_ok

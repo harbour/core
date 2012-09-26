@@ -36,29 +36,12 @@
      PASS "VGA" OR "VGA" AS A COMMAND LINE PARAMETER FOR 50-LINE MODE.
  */
 
-#define LEFTARROW  19
-#define RIGHTARROW  4
-#define ENTER      13
-#define CTRLEND    23
-#define CTRLHOME   29
-#define HOME        1
-#define END         6
-#define TAB         9
-#define SHIFTTAB  271
-#define PGUP       18
-#define PGDN        3
-#define ESCAPE     27
-#define HITTOP      1
-#define HITBOTTOM   2
-#define KEYEXCEPT   3
-#define NEXTITEM    3
-#define RESUME      2
-#define MAKESELECT  1
-#define ABORT       0
+#include "achoice.ch"
+#include "inkey.ch"
+#include "setcurs.ch"
+
 #define DISABLE     0
 #define ENABLE      1
-#define SCNONE      0
-#define SCNORMAL    1
 
 THREAD STATIC aChoices := {}
 THREAD STATIC aValidKeys := {}
@@ -178,7 +161,7 @@ PROCEDURE CALLMENU( cCmdLine )
    FT_MENU1( aBar, aOptions, aColors )
 
    SetColor( "W/N" )
-   SetCursor( SCNORMAL )
+   SetCursor( SC_NORMAL )
    SetBlink( .T. )
    IF "VGA" $ Upper( cCmdLine )
       SetMode( 25, 80 )
@@ -296,17 +279,17 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
       SetColor( cBox + "," + cCurrent + ",,," + cUnselec )
       nVpos := AChoice( nTopRow + 2, aBoxLoc[ nHpos ] + 2, Len( aChoices[ nHpos, 1 ] ) + nTopRow + 2, aBarWidth[ nHpos ] + 1 + aBoxLoc[ nHpos ], aChoices[ nHpos, 1 ], aChoices[ nHpos, 3 ], "__ftAcUdf", aLastSel[ nHpos ] )
       DO CASE
-      CASE LastKey() == RIGHTARROW .OR. LastKey() == TAB
+      CASE LastKey() == K_RIGHT .OR. LastKey() == K_TAB
          nHpos := iif( nHpos == Len( aChoices ), 1, nHpos + 1 )
-      CASE LastKey() == LEFTARROW .OR. LastKey() == SHIFTTAB
+      CASE LastKey() == K_LEFT .OR. LastKey() == K_SH_TAB
          nHpos := iif( nHpos == 1, Len( aChoices ), nHpos - 1 )
-      CASE LastKey() == ESCAPE
+      CASE LastKey() == K_ESC
          lLooping := _ftBailOut( cBorder, cBox )
-      CASE LastKey() == HOME
+      CASE LastKey() == K_HOME
          nHpos := 1
-      CASE LastKey() == END
+      CASE LastKey() == K_END
          nHpos := Len( aChoices )
-      CASE LastKey() == ENTER
+      CASE LastKey() == K_ENTER
          aLastSel[ nHpos ] := nVpos
          IF aChoices[ nHpos, 2, nVpos ] != NIL
             SetCancel( lCancMode )
@@ -328,20 +311,20 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
 // ACHOICE() user function
 FUNCTION __ftAcUdf( nMode )
 
-   LOCAL nRtnVal := RESUME
+   LOCAL nRtnVal := AC_CONT
    DO CASE
-   CASE nMode == HITTOP
-      KEYBOARD Chr( CTRLEND )
-   CASE nMode == HITBOTTOM
-      KEYBOARD Chr( CTRLHOME )
-   CASE nMode == KEYEXCEPT
+   CASE nMode == AC_HITTOP
+      hb_keyPut( K_CTRL_END )
+   CASE nMode == AC_HITBOTTOM
+      hb_keyPut( K_CTRL_HOME )
+   CASE nMode == AC_EXCEPT
       IF Upper( Chr( LastKey() ) ) $ aValidKeys[ nHpos ]
          IF aChoices[ nHpos, 3, At( Upper( Chr( LastKey() ) ), aValidKeys[ nHpos ] ) ]
-            KEYBOARD Chr( ENTER )
-            nRtnVal := NEXTITEM
+            hb_keyPut( K_ENTER )
+            nRtnVal := AC_GOTO
          ENDIF
       ELSE
-         nRtnVal := MAKESELECT
+         nRtnVal := AC_SELECT
       ENDIF
    ENDCASE
 
@@ -365,7 +348,7 @@ STATIC FUNCTION _ftBailOut( cBorder, cBox )
 
    LOCAL cOldColor, sOldScreen, nKeyPress, nOldCursor
 
-   nOldCursor := SetCursor( SCNONE )
+   nOldCursor := SetCursor( SC_NONE )
    sOldScreen := SaveScreen( nMaxRow / 2 - 1, 24, nMaxRow / 2 + 2, 55 )
    cOldColor := SetColor( cBorder )
    FT_SHADOW( nMaxRow / 2 - 1, 24, nMaxRow / 2 + 2, 55 )
@@ -378,7 +361,7 @@ STATIC FUNCTION _ftBailOut( cBorder, cBox )
    RestScreen( nMaxRow / 2 - 1, 24, nMaxRow / 2 + 2, 55, sOldScreen )
    SetCursor( nOldCursor )
 
-   RETURN !( nKeyPress == ESCAPE )
+   RETURN !( nKeyPress == K_ESC )
 
 STATIC FUNCTION _ftValKeys( nNum, aChoices, aValidkeys )
 

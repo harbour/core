@@ -217,12 +217,11 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
          CASE HB_ISBLOCK( bGetFunc )
             IF nKey != K_ENTER
                // want last key to be part of GET edit so KEYBOARD it
-               KEYBOARD Chr( LastKey() )
+               hb_keyPut( LastKey() )
             ENDIF
             Eval( bGetFunc, b, ar, b:colPos, nElem )
             // after get move to next field
-            KEYBOARD iif( b:colPos < b:colCount, ;
-               Chr( K_RIGHT ), Chr( K_HOME ) + Chr( K_DOWN ) )
+            hb_keyPut( iif( b:colPos < b:colCount, K_RIGHT, { K_HOME, K_DOWN } ) )
 
             // Placing K_ENTER here below Edit Block (i.e. bGetFunc)
             // defaults K_ENTER to Edit when bGetFunc Is Present
