@@ -33,20 +33,20 @@ PROCEDURE Main()
 
    LOCAL i
 
-   SetColor( 'W/B' )
+   SetColor( "W/B" )
 // clear screen
    FOR i := 1 TO 24
-      @ i, 0 SAY Replicate( '@', 80 )
+      @ i, 0 SAY Replicate( "@", 80 )
    NEXT
 
-   FT_XBOX( , , , , , , , 'This is a test', 'of the XBOX() function' )
-   FT_XBOX( 'L', 'W', 'D', 'GR+/R', 'W/B', 1, 10, 'It is so nice', ;
-      'to not have to do the messy chore', ;
-      'of calculating the box size!' )
-   FT_XBOX( , 'W', 'D', 'GR+/R', 'W/B', 16, 10, 'It is so nice', ;
-      'to not have to do the messy chore', ;
-      'of calculating the box size!', ;
-      'Even though this line is way too long, and is in fact more than 80 characters long, if you care to check!' )
+   FT_XBOX( , , , , , , , "This is a test", "of the XBOX() function" )
+   FT_XBOX( "L", "W", "D", "GR+/R", "W/B", 1, 10, "It is so nice", ;
+      "to not have to do the messy chore", ;
+      "of calculating the box size!" )
+   FT_XBOX( , "W", "D", "GR+/R", "W/B", 16, 10, "It is so nice", ;
+      "to not have to do the messy chore", ;
+      "of calculating the box size!", ;
+      "Even though this line is way too long, and is in fact more than 80 characters long, if you care to check!" )
 
    RETURN
 
@@ -88,45 +88,45 @@ FUNCTION FT_XBOX( cJustType, ; // "L" -> left, otherwise centered
       cBorType := ""
    ENDIF
 
-// validate parameters
-   cJustType := iif( ValType( cJustType ) == 'C', Upper( cJustType ), '' )
-   cRetWait  := iif( ValType( cRetWait ) == 'C', Upper( cRetWait ), '' )
-   cBorType  := iif( ValType( cBorType ) == 'C', Upper( cBorType ), '' )
-   cBorColor := iif( ValType( cBoxColor ) == 'C', cBorColor, 'N/W' )
-   cBoxColor := iif( ValType( cBoxColor ) == 'C', cBoxColor, 'W/N' )
-   nStartRow := iif( ValType( nStartRow ) == 'N', nStartRow, 99 )
-   nStartCol := iif( ValType( nStartCol ) == 'N', nStartCol, 99 )
+   // validate parameters
+   cJustType := iif( HB_ISSTRING( cJustType ), Upper( cJustType ), "" )
+   cRetWait  := iif( HB_ISSTRING( cRetWait ) , Upper( cRetWait ), "" )
+   cBorType  := iif( HB_ISSTRING( cBorType ) , Upper( cBorType ), "" )
+   cBorColor := iif( HB_ISSTRING( cBoxColor ), cBorColor, "N/W" )
+   cBoxColor := iif( HB_ISSTRING( cBoxColor ), cBoxColor, "W/N" )
+   nStartRow := iif( HB_ISNUMERIC( nStartRow ), nStartRow, 99 )
+   nStartCol := iif( HB_ISNUMERIC( nStartCol ), nStartCol, 99 )
 
    nNumRows := Min( PCount() - 7, 8 )
 
-//establish array of strings to be displayed
-   aLines_[1] := iif( ValType( cLine1 ) == 'C', AllTrim( SubStr(cLine1, 1, 74 ) ), '' )
-   aLines_[2] := iif( ValType( cLine2 ) == 'C', AllTrim( SubStr(cLine2, 1, 74 ) ), '' )
-   aLines_[3] := iif( ValType( cLine3 ) == 'C', AllTrim( SubStr(cLine3, 1, 74 ) ), '' )
-   aLines_[4] := iif( ValType( cLine4 ) == 'C', AllTrim( SubStr(cLine4, 1, 74 ) ), '' )
-   aLines_[5] := iif( ValType( cLine5 ) == 'C', AllTrim( SubStr(cLine5, 1, 74 ) ), '' )
-   aLines_[6] := iif( ValType( cLine6 ) == 'C', AllTrim( SubStr(cLine6, 1, 74 ) ), '' )
-   aLines_[7] := iif( ValType( cLine7 ) == 'C', AllTrim( SubStr(cLine7, 1, 74 ) ), '' )
-   aLines_[8] := iif( ValType( cLine8 ) == 'C', AllTrim( SubStr(cLine8, 1, 74 ) ), '' )
+   // establish array of strings to be displayed
+   aLines_[ 1 ] := iif( HB_ISSTRING( cLine1 ), AllTrim( SubStr( cLine1, 1, 74 ) ), "" )
+   aLines_[ 2 ] := iif( HB_ISSTRING( cLine2 ), AllTrim( SubStr( cLine2, 1, 74 ) ), "" )
+   aLines_[ 3 ] := iif( HB_ISSTRING( cLine3 ), AllTrim( SubStr( cLine3, 1, 74 ) ), "" )
+   aLines_[ 4 ] := iif( HB_ISSTRING( cLine4 ), AllTrim( SubStr( cLine4, 1, 74 ) ), "" )
+   aLines_[ 5 ] := iif( HB_ISSTRING( cLine5 ), AllTrim( SubStr( cLine5, 1, 74 ) ), "" )
+   aLines_[ 6 ] := iif( HB_ISSTRING( cLine6 ), AllTrim( SubStr( cLine6, 1, 74 ) ), "" )
+   aLines_[ 7 ] := iif( HB_ISSTRING( cLine7 ), AllTrim( SubStr( cLine7, 1, 74 ) ), "" )
+   aLines_[ 8 ] := iif( HB_ISSTRING( cLine8 ), AllTrim( SubStr( cLine8, 1, 74 ) ), "" )
    ASize( aLines_, Min( nNumRows, 8 ) )
 
-// determine longest line
+   // determine longest line
    nLoop := 1
    AEval( aLines_, {|| nLLen := Max( nLLen, Len( aLines_[ nLoop ] ) ), nLoop++ } )
 
-// calculate corners
+   // calculate corners
    nLCol := iif( nStartCol == 99, Int( ( 76 - nLLen ) / 2 ), Min( nStartCol, 74 - nLLen ) )
    nRCol := nLCol + nLLen + 3
    nTRow := iif( nStartRow == 99, Int( ( 24 - nNumRows ) / 2 ), Min( nStartRow, 22 - nNumRows ) )
    nBRow := nTRow + nNumRows + 1
 
-// form box and border
+   // form box and border
 
-// save screen color and set new color
+   // save screen color and set new color
 // cOldColor := SetColor( cBoxColor )
    @ nTRow, nLCol CLEAR TO nBRow, nRCol
 
-// draw border
+   // draw border
    SetColor( cBorColor )
    IF Left( cBorType, 1 ) == "D"
       @ nTRow, nLCol TO nBRow, nRCol double
@@ -134,23 +134,23 @@ FUNCTION FT_XBOX( cJustType, ; // "L" -> left, otherwise centered
       @ nTRow, nLCol TO nBRow, nRCol
    ENDIF
 
-// write shadow
+   // write shadow
    FT_SHADOW( nTRow, nLCol, nBRow, nRCol )
 
-// print text in box
+   // print text in box
    SetColor( cBoxColor )
    nLoop := 1
    AEval( aLines_, {| cSayStr |;
       nSayRow := nTRow + nLoop, ;
-      nSayCol := iif( Left( cJustType, 1 ) == 'L', ;
+      nSayCol := iif( Left( cJustType, 1 ) == "L", ;
       nLCol + 2, ;
       nLCol + 2 + ( nLLen - Int( Len( aLines_[ nLoop ] ) ) ) / 2 ), ;
       nLoop++, ;
       _FTSAY( nSayRow, nSayCol, cSayStr );
       } )
 
-// wait for keypress if desired
-   IF Left( cRetWait, 1 ) == 'W'
+   // wait for keypress if desired
+   IF Left( cRetWait, 1 ) == "W"
       Inkey( 0 )
    ENDIF
 

@@ -35,14 +35,14 @@ FUNCTION FT_ACCTADJ( dGivenDate, lIsEnd )
 
    LOCAL nTemp
 
-   IF !( ValType( dGivenDate ) == "D" )
+   IF ! HB_ISDATE( dGivenDate )
       dGivenDate := Date()
    ENDIF
 
-   lIsEnd := ValType( lIsEnd ) == "L"
+   lIsEnd := HB_ISLOGICAL( lIsEnd ) // TOFIX: Is this intended?
    nTemp  := FT_DAYTOBOW( dGivenDate )
 
-   IF nTemp > ( 2 + iif( ! lIsEnd, 1, 0 ) )
+   IF nTemp > ( 2 + iif( lIsEnd, 0, 1 ) )
       dGivenDate += ( 7 - nTemp )      // Next Week Start (This Week End + 1)
    ELSE
       dGivenDate -= nTemp              // This Week Start (Prior Week End + 1)

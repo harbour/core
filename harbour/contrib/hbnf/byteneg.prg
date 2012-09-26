@@ -25,4 +25,4 @@
  */
 
 FUNCTION FT_BYTENEG( cByte )
-   RETURN iif( ValType( cByte ) != "C", NIL, Chr( ( 256 - Asc( cByte ) ) % 256 ) )
+   RETURN iif( HB_ISSTRING( cByte ), Chr( ( 256 - Asc( cByte ) ) % 256 ), NIL )

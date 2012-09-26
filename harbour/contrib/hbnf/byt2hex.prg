@@ -29,12 +29,12 @@ FUNCTION FT_BYT2HEX( cByte )
    LOCAL cHexTable := "0123456789ABCDEF"
    LOCAL xHexString
 
-   IF ValType( cByte ) != "C"
-      xHexString := NIL
+   IF HB_ISSTRING( cByte )
+      xHexString := SubStr( cHexTable, Int( Asc( cByte ) / 16 ) + 1, 1 ) + ;
+                    SubStr( cHexTable, Int( Asc( cByte ) % 16 ) + 1, 1 ) + ;
+                    "h"
    ELSE
-      xHexString := SubStr( cHexTable, Int( Asc( cByte ) / 16 ) + 1, 1 ) ;
-         + SubStr( cHexTable, Int( Asc( cByte ) % 16 ) + 1, 1 ) ;
-         + "h"
+      xHexString := NIL
    ENDIF
 
    RETURN xHexString

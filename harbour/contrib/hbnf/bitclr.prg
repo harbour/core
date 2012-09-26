@@ -28,15 +28,15 @@ FUNCTION FT_BITCLR( cInbyte, nBitpos )
 
    LOCAL cByte
 
-   IF ValType( cInbyte ) != "C" .OR. ValType( nBitpos ) != "N"  // parameter check
-      cByte := NIL
-   ELSE
+   IF HB_ISSTRING( cInbyte ) .AND. HB_ISNUMERIC( nBitpos )
       IF nBitPos > 7 .OR. nBitPos < 0 .OR. nBitPos != Int( nBitPos )
          cByte := NIL
       ELSE
          cByte := iif( ! FT_ISBIT( cInByte, nBitpos ), cInByte, ;
             Chr( Asc( cInByte ) - ( 2 ^ nBitpos ) ) )
       ENDIF
+   ELSE
+      cByte := NIL
    ENDIF
 
    RETURN cByte

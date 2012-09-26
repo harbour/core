@@ -31,9 +31,9 @@ FUNCTION FT_MADD( dGivenDate, nAddMonths, lMakeEOM )
 
    LOCAL nAdjDay, dTemp, i
 
-   IF ValType( dGivenDate ) != 'D' ; dGivenDate := Date() ; ENDIF
-   IF ValType( nAddMonths ) != 'N' ; nAddMonths := 0 ; ENDIF
-   IF ValType( lMakeEOM )   != 'L' ; lMakeEom := .F. ; ENDIF
+   IF ! HB_ISDATE( dGivenDate ); dGivenDate := Date() ; ENDIF
+   IF ! HB_ISNUMERIC( nAddMonths ); nAddMonths := 0 ; ENDIF
+   IF ! HB_ISLOGICAL( lMakeEOM ); lMakeEom := .F. ; ENDIF
 
    nAdjDay := Day( dGivenDate ) - 1
 

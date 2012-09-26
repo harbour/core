@@ -33,14 +33,14 @@ FUNCTION FT_ACCTWEEK( dGivenDate, nWeekNum )
 
    IF ! ValType( dGivenDate ) $ 'ND'
       dGivenDate := Date()
-   ELSEIF ValType( dGivenDate ) == 'N'
+   ELSEIF HB_ISNUMERIC( dGivenDate )
       nWeekNum := dGivenDate
       dGivenDate := Date()
    ENDIF
 
    aRetVal := FT_ACCTYEAR( dGivenDate )
 
-   lIsWeek := ( ValType( nWeekNum ) == 'N' )
+   lIsWeek := HB_ISNUMERIC( nWeekNum )
    IF lIsWeek
       nTemp := Int( ( aRetVal[ 3 ] - aRetVal[ 2 ] ) / 7 ) + 1
       IF nWeekNum < 1 .OR. nWeekNum > nTemp

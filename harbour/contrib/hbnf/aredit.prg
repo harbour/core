@@ -53,22 +53,22 @@
 
 #ifdef FT_TEST
 
-PROCEDURE Test
+PROCEDURE Main()
 
 // Thanks to Jim Gale for helping me understand the basics
-   LOCAL i, ar[3, 26], aBlocks[3], aHeadings[3], nElem := 1, bGetFunc, cRet
+   LOCAL i, ar[ 3, 26 ], aBlocks[ 3 ], aHeadings[ 3 ], nElem := 1, bGetFunc, cRet
 // set up 2 dimensional array ar[]
    FOR i := 1 TO 26
-      ar[1, i] := i          //  1  ->  26  Numeric
-      ar[2, i] := Chr( i + 64 )  // "A" -> "Z"  Character
-      ar[3, i] := Chr( 91 - i )  // "Z" -> "A"  Character
+      ar[ 1, i ] := i              //  1  ->  26  Numeric
+      ar[ 2, i ] := Chr( i + 64 )  // "A" -> "Z"  Character
+      ar[ 3, i ] := Chr( 91 - i )  // "Z" -> "A"  Character
    NEXT i
 // Set Up aHeadings[] for column headings
    aHeadings  := { "Numbers", "Letters", "Reverse" }
 // Set Up Blocks Describing Individual Elements in Array ar[]
-   aBlocks[1] := {|| Str( ar[1, nElem], 2 ) }  // to prevent default 10 spaces
-   aBlocks[2] := {|| ar[2, nElem] }
-   aBlocks[3] := {|| ar[3, nElem] }
+   aBlocks[ 1 ] := {|| Str( ar[ 1, nElem ], 2 ) }  // to prevent default 10 spaces
+   aBlocks[ 2 ] := {|| ar[ 2, nElem ] }
+   aBlocks[ 3 ] := {|| ar[ 3, nElem ] }
 // Set up TestGet() as bGetFunc
    bGetFunc   := {| b, ar, nDim, nElem | TestGet( b, ar, nDim, nElem ) }
 
@@ -99,15 +99,15 @@ FUNCTION TestGet( b, ar, nDim, nElem )
    SetColor( cOldColor )
    DO CASE
    CASE nDim == 1
-      @ nRow, nCol GET ar[1, nElem] PICTURE "99"
+      @ nRow, nCol GET ar[ 1, nElem ] PICTURE "99"
       READ
       b:refreshAll()
    CASE nDim == 2
-      @ nRow, nCol GET ar[2, nElem] PICTURE "!"
+      @ nRow, nCol GET ar[ 2, nElem ] PICTURE "!"
       READ
       b:refreshAll()
    CASE nDim == 3
-      @ nRow, nCol GET ar[3, nElem] PICTURE "!"
+      @ nRow, nCol GET ar[ 3, nElem ] PICTURE "!"
       READ
       b:refreshAll()
    ENDCASE
@@ -159,53 +159,53 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
    b:footsep := DEF_FSEP
 
    b:gotopblock    := {|| nElem := 1 }
-   b:gobottomblock := {|| nElem := Len( ar[1] ) }
+   b:gobottomblock := {|| nElem := Len( ar[ 1 ] ) }
 
 // skipblock originally coded by Robert DiFalco
    b:SkipBlock     := {| nSkip, nStart | nStart := nElem, ;
-      nElem := Max( 1, Min( Len(ar[1] ), nElem + nSkip ) ), ;
+      nElem := Max( 1, Min( Len( ar[ 1 ] ), nElem + nSkip ) ), ;
       nElem - nStart }
 
    FOR i := 1 TO Len( aBlocks )
-      column := TBColumnNew( aHeadings[i], aBlocks[i] )
+      column := TBColumnNew( aHeadings[ i ], aBlocks[ i ] )
       b:addcolumn( column )
    NEXT
 
    exit_requested := .F.
-   DO WHILE !exit_requested
+   DO WHILE ! exit_requested
 
       DO WHILE NextKey() == 0 .AND. !b:stabilize()
       ENDDO
 
       nKey := Inkey( 0 )
 
-      meth_no := AScan( tb_methods, {| elem | nKey == elem[KEY_ELEM] } )
+      meth_no := AScan( tb_methods, {| elem | nKey == elem[ KEY_ELEM ] } )
       IF meth_no != 0
-         Eval( tb_methods[meth_no, BLK_ELEM], b )
+         Eval( tb_methods[ meth_no, BLK_ELEM ], b )
       ELSE
          DO CASE
          CASE nKey == K_F7
             FOR nDim := 1 TO Len( ar )
-               ADel( ar[nDim], nElem )
-               ASize( ar[nDim], Len( ar[nDim] ) - 1 )
+               ADel( ar[ nDim ], nElem )
+               ASize( ar[ nDim ], Len( ar[ nDim ] ) - 1 )
             NEXT
             b:refreshAll()
 
          CASE nKey == K_F8
             FOR nDim := 1 TO Len( ar )
                // check valtype of current element before AINS()
-               cType := ValType( ar[nDim, nElem] )
-               cVal  := ar[nDim, nElem]
-               ASize( ar[nDim], Len( ar[nDim] ) + 1 )
-               AIns( ar[nDim], nElem )
+               cType := ValType( ar[ nDim, nElem ] )
+               cVal  := ar[ nDim, nElem ]
+               ASize( ar[ nDim ], Len( ar[ nDim ] ) + 1 )
+               AIns( ar[ nDim ], nElem )
                IF cType == "C"
-                  ar[nDim, nElem] := Space( Len( cVal ) )
+                  ar[ nDim, nElem ] := Space( Len( cVal ) )
                ELSEIF cType == "N"
-                  ar[nDim, nElem] := 0
+                  ar[ nDim, nElem ] := 0
                ELSEIF cType == "L"
-                  ar[nDim, nElem] := .F.
+                  ar[ nDim, nElem ] := .F.
                ELSEIF cType == "D"
-                  ar[nDim, nElem] := CToD( "  /  /  " )
+                  ar[ nDim, nElem ] := SToD()
                ENDIF
             NEXT
             b:refreshAll()
@@ -214,7 +214,7 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
             exit_requested := .T.
 
             // Other exception handling ...
-         CASE ValType( bGetFunc ) == "B"
+         CASE HB_ISBLOCK( bGetFunc )
             IF nKey != K_ENTER
                // want last key to be part of GET edit so KEYBOARD it
                KEYBOARD Chr( LastKey() )
@@ -231,10 +231,11 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
             exit_requested := .T.
 
          ENDCASE
-      ENDIF // meth_no != 0
-   ENDDO // WHILE !exit_requested
+      ENDIF
+   ENDDO
    RestScreen( nTop, nLeft, nBot, nRight, cSaveWin )
-// if no bGetFunc then ESC returns 0, otherwise return value of last element
 
+// if no bGetFunc then ESC returns 0, otherwise return value of last element
+   // TOFIX: ValType() never returns NIL
    RETURN iif( ValType( bGetFunc ) == NIL .AND. nKey == K_ESC, ;
-      0, ar[b:colPos, nElem] )
+      0, ar[ b:colPos, nElem ] )

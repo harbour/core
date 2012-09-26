@@ -28,13 +28,13 @@ FUNCTION FT_BYT2BIT( cByte )
 
    LOCAL nCounter, xBitstring
 
-   IF ValType( cByte ) != "C"
-      xBitString := NIL
-   ELSE
+   IF HB_ISSTRING( cByte )
       xBitString := ""
       FOR nCounter := 7 TO 0 step - 1
          xBitString += iif( FT_ISBIT( cByte, nCounter ), "1", "0" )
       NEXT
+   ELSE
+      xBitString := NIL
    ENDIF
 
    RETURN xBitString

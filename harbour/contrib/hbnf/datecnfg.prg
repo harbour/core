@@ -180,14 +180,14 @@ FUNCTION FT_CAL( dGivenDate, nType )
    aTemp     := FT_DATECNFG()
    cFY_Start := aTemp[ 1 ]
 
-   IF dGivenDate == NIL .OR. !ValType( dGivenDate ) $ 'ND'
+   IF dGivenDate == NIL .OR. !( ValType( dGivenDate ) $ 'ND' )
       dGivenDate := Date()
    ELSEIF ValType( dGivenDate ) == 'N'
       nType := dGivenDate
       dGivenDate := Date()
    ENDIF
 
-   nType := iif( nType == NIL .OR. ValType( nType ) != 'N', 0, nType )
+   nType := iif( HB_ISNUMERIC( nType ), nType, 0 )
 
    IF nType == 0
       IF SubStr( cFY_Start, 6, 5 ) == "01.01"

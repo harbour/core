@@ -31,7 +31,7 @@ FUNCTION FT_ACCTYEAR( dGivenDate )
 
    LOCAL nYTemp, aRetVal
 
-   IF !( ValType( dGivenDate ) == "D" )
+   IF ! HB_ISDATE( dGivenDate )
       dGivenDate := Date()
    ENDIF
 

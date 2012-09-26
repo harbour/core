@@ -33,7 +33,7 @@ FUNCTION FT_DAYTOBOW( dGivenDate )
 
    nDOW_Start := FT_DATECNFG()[ 2 ]
 
-   IF ValType( dGivenDate ) != 'D'
+   IF ! HB_ISDATE( dGivenDate )
       dGivenDate := Date()
    ENDIF
 

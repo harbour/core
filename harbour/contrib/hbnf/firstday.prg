@@ -26,7 +26,7 @@
 
 FUNCTION FT_FDAY( dDateToChk )
 
-   IF ValType( dDatetoChk ) != "D"
+   IF ! HB_ISDATE( dDatetoChk )
       dDatetoChk := Date()
    ENDIF
 

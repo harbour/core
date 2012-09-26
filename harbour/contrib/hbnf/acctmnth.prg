@@ -33,7 +33,7 @@ FUNCTION FT_ACCTMONTH( dGivenDate, nMonthNum )
 
    IF ! ( ValType( dGivenDate ) $ 'ND' )
       dGivenDate := Date()
-   ELSEIF ValType( dGivenDate ) == 'N'
+   ELSEIF HB_ISNUMERIC( dGivenDate )
       nMonthNum := dGivenDate
       dGivenDate := Date()
    ENDIF
@@ -69,7 +69,7 @@ FUNCTION FT_ACCTMONTH( dGivenDate, nMonthNum )
 
    ENDIF
 
-   lIsMonth := ( ValType( nMonthNum ) == 'N' )
+   lIsMonth := HB_ISNUMERIC( nMonthNum )
    IF lIsMonth
       IF nMonthNum < 1 .OR. nMonthNum > 12
          nMonthNum := 12

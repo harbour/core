@@ -28,15 +28,15 @@ FUNCTION FT_BYTEAND( cByte1, cByte2 )
 
    LOCAL nCounter, cNewByte
 
-   IF ValType( cByte1 ) != "C" .OR. ValType( cByte2 ) != "C" // parameter check
-      cNewByte := NIL
-   ELSE
+   IF HB_ISSTRING( cByte1 ) .AND. HB_ISSTRING( cByte2 )
       cNewByte := Chr( 0 )
       FOR nCounter := 0 TO 7           // test each bit position
          IF FT_ISBIT( cByte1, nCounter ) .AND. FT_ISBIT( cByte2, nCounter )
             cNewByte := FT_BITSET( cNewByte, nCounter )
          ENDIF
       NEXT
+   ELSE
+      cNewByte := NIL
    ENDIF
 
    RETURN cNewByte
