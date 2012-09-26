@@ -59,8 +59,8 @@ FUNCTION ft_d2e( nDec, nPrecision )
    IF Round( Abs( nDec ), nPrecision ) >= 10
       nDec /= 10
       nExp++
-   ENDIF // another kludge FOR stuff LIKE '999999999'
+   ENDIF // another kludge FOR stuff LIKE "999999999"
 
    sScn := LTrim( Str( nDec, nPrecision + 3, nPrecision ) )
 
-   RETURN sScn + 'E' + AllTrim( Str( nExp, 5, 0 ) )
+   RETURN sScn + "E" + AllTrim( Str( nExp, 5, 0 ) )

@@ -33,8 +33,8 @@ FUNCTION DEMO()
 
    LOCAL dStart, dEnd, cTimeStart, cTimeEnd, n, aDataTest := {}
 
-   dStart := SToD( '19901128' )
-   dEnd   := SToD( '19901130' )
+   dStart := SToD( "19901128" )
+   dEnd   := SToD( "19901130" )
    cTimeStart := "08:00:00"
    cTimeEnd   := "12:10:30"
 
@@ -42,7 +42,7 @@ FUNCTION DEMO()
    FOR n := 1 TO 4
       ? aDataTest[n,1], Str( aDataTest[n,2], 12, 4 )
       ?? " "
-      ?? iif( n == 1, 'Days', iif( n == 2, 'Hours', iif( n == 3, 'Mins.', 'Secs.' ) ) )
+      ?? iif( n == 1, "Days", iif( n == 2, "Hours", iif( n == 3, "Mins.", "Secs." ) ) )
    NEXT
 
    RETURN NIL
@@ -53,32 +53,32 @@ FUNCTION FT_ELAPSED( dStart, dEnd, cTimeStart, cTimeEnd )
 
    LOCAL nTotalSec, nCtr, nConstant, nTemp, aRetVal[4,2]
 
-   IF ! ( ValType( dStart ) $ 'DC' )
+   IF ! ( ValType( dStart ) $ "DC" )
       dStart := Date()
    ELSEIF HB_ISSTRING( dStart )
       cTimeStart := dStart
       dStart     := Date()
    ENDIF
 
-   IF ! ( ValType( dEnd ) $ 'DC' )
+   IF ! ( ValType( dEnd ) $ "DC" )
       dEnd := Date()
    ELSEIF HB_ISSTRING( dEnd )
       cTimeEnd := dEnd
       dEnd     := Date()
    ENDIF
 
-   IF ! HB_ISSTRING( cTimeStart ); cTimeStart := '00:00:00' ; ENDIF
-   IF ! HB_ISSTRING( cTimeEnd )  ; cTimeEnd   := '00:00:00' ; ENDIF
+   IF ! HB_ISSTRING( cTimeStart ); cTimeStart := "00:00:00" ; ENDIF
+   IF ! HB_ISSTRING( cTimeEnd )  ; cTimeEnd   := "00:00:00" ; ENDIF
 
-   nTotalSec  := ( dEnd - dStart ) * 86400                              + ;
-      Val( cTimeEnd )   *  3600                              + ;
-      Val( SubStr( cTimeEnd,At(':', cTimeEnd ) + 1,2 ) ) * 60     + ;
-      iif( RAt( ':', cTimeEnd ) == At( ':', cTimeEnd ), 0,        ;
-      Val( SubStr( cTimeEnd,RAt(':', cTimeEnd ) + 1 ) ) )          - ;
-      Val( cTimeStart ) * 3600                               - ;
-      Val( SubStr( cTimeStart,At(':', cTimeStart ) + 1,2 ) ) * 60 - ;
-      iif( RAt( ':', cTimeStart ) == At( ':', cTimeStart ), 0,    ;
-      Val( SubStr( cTimeStart,RAt(':', cTimeStart ) + 1 ) ) )
+   nTotalSec  := ( dEnd - dStart ) * 86400 + ;
+      Val( cTimeEnd ) *  3600 + ;
+      Val( SubStr( cTimeEnd, At( ":", cTimeEnd ) + 1,2 ) ) * 60 + ;
+      iif( RAt( ":", cTimeEnd ) == At( ":", cTimeEnd ), 0, ;
+      Val( SubStr( cTimeEnd, RAt( ":", cTimeEnd ) + 1 ) ) ) - ;
+      Val( cTimeStart ) * 3600 - ;
+      Val( SubStr( cTimeStart, At( ":", cTimeStart ) + 1, 2 ) ) * 60 - ;
+      iif( RAt( ":", cTimeStart ) == At( ":", cTimeStart ), 0, ;
+      Val( SubStr( cTimeStart, RAt( ":", cTimeStart ) + 1 ) ) )
 
    nTemp := nTotalSec
 

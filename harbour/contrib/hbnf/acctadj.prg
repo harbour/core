@@ -39,7 +39,7 @@ FUNCTION FT_ACCTADJ( dGivenDate, lIsEnd )
       dGivenDate := Date()
    ENDIF
 
-   lIsEnd := HB_ISLOGICAL( lIsEnd ) // TOFIX: Is this intended?
+   lIsEnd := iif( HB_ISLOGICAL( lIsEnd ), lIsEnd, .F. )
    nTemp  := FT_DAYTOBOW( dGivenDate )
 
    IF nTemp > ( 2 + iif( lIsEnd, 0, 1 ) )

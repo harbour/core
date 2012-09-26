@@ -99,7 +99,7 @@ FUNCTION FT_TEMPFIL( cPath, lHide, nHandle )
 
    LOCAL cFile
 
-   hb_default( @cPath, ".\" )
+   hb_default( @cPath, "." + hb_ps() )
    hb_default( @lHide, .F. )
 
    cPath := AllTrim( cPath )

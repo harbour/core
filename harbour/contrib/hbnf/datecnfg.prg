@@ -79,13 +79,13 @@ FUNCTION DEMO()
 
    LOCAL nNum, dDate, aTestData := {}, aTemp, cFY_Start, nDOW_Start
 
-// SET DATE ANSI                               // User's normal date format
-   aTemp      := FT_DATECNFG()                 // Get/Set cFY_Start & nDOW_Start.
-// aTemp      := FT_DATECNFG("1980.01.03", 1)  // Date string in user's format.
-   cFY_Start  := aTemp[ 1 ]                    // See FT_DATECNFG() in ft_date0.prg
-   nDOW_Start := ATEMP[ 2 ]                    // FOR PARAMETERS.
+// SET DATE ANSI                                 // User's normal date format
+   aTemp      := FT_DATECNFG()                   // Get/Set cFY_Start & nDOW_Start.
+// aTemp      := FT_DATECNFG( "1980.01.03", 1 )  // Date string in user's format.
+   cFY_Start  := aTemp[ 1 ]                      // See FT_DATECNFG() in ft_date0.prg
+   nDOW_Start := ATEMP[ 2 ]                      // FOR PARAMETERS.
    dDate      := Date()
-// dDate      := SToD( "19880229" )            // Test date, in user's normal date format
+// dDate      := SToD( "19880229" )              // Test date, in user's normal date format
 
    CLS
    ?    "Given       Date:  "
@@ -180,7 +180,7 @@ FUNCTION FT_CAL( dGivenDate, nType )
    aTemp     := FT_DATECNFG()
    cFY_Start := aTemp[ 1 ]
 
-   IF dGivenDate == NIL .OR. !( ValType( dGivenDate ) $ 'ND' )
+   IF dGivenDate == NIL .OR. !( ValType( dGivenDate ) $ "ND" )
       dGivenDate := Date()
    ELSEIF HB_ISNUMERIC( dGivenDate )
       nType := dGivenDate

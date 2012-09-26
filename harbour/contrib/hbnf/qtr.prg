@@ -31,7 +31,7 @@ FUNCTION FT_QTR( dGivenDate, nQtrNum )
 
    LOCAL lIsQtr, nTemp, aRetVal
 
-   IF !( ValType( dGivenDate ) $ 'ND' )
+   IF !( ValType( dGivenDate ) $ "ND" )
       dGivenDate := Date()
    ELSEIF HB_ISNUMERIC( dGivenDate )
       nQtrNum    := dGivenDate
@@ -52,7 +52,7 @@ FUNCTION FT_QTR( dGivenDate, nQtrNum )
    nTemp += iif( nTemp >= 0, 1, 13 )
    nTemp := Int( ( nTemp - 1 ) / 3 )
 
-   aRetVal[ 1 ] += PadL( LTrim( Str( nTemp + 1, 2 ) ), 2, '0' )
+   aRetVal[ 1 ] += PadL( LTrim( Str( nTemp + 1, 2 ) ), 2, "0" )
    aRetVal[ 2 ] := FT_MADD( aRetVal[ 2 ], nTemp * 3 )
    aRetVal[ 3 ] := FT_MADD( aRetVal[ 2 ], 3 ) - 1
 

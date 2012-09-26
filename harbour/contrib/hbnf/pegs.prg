@@ -35,7 +35,7 @@
 #translate SINGLEBOX(<top>, <left>, <bottom>, <right>) => ;
       @ < top > , < left > , < bottom > , < right > BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
 #translate DOUBLEBOX(<top>, <left>, <bottom>, <right>) => ;
-      @ < top > , < left > , < bottom > , < right > BOX hb_UTF8ToStr( '╔═╗║╝═╚║ ' )
+      @ < top > , < left > , < bottom > , < right > BOX hb_UTF8ToStr( "╔═╗║╝═╚║ " )
 MEMVAR getlist
 
 /*
@@ -83,7 +83,7 @@ THREAD STATIC board_ := { { { 0, 29, 2, 34 }, { 2, 4 }, { 3, 9 }, .T. } , ;
 FUNCTION FT_PEGS()
 
    LOCAL XX, MOVE, MPOS, POSSIBLE_, BUFFER, TOPROW, OLDSCORE, MOVE2
-   LOCAL SCANBLOCK, OLDCOLOR := SetColor( 'w/n' )
+   LOCAL SCANBLOCK, OLDCOLOR := SetColor( "w/n" )
    LOCAL oldscrn := SaveScreen( 0, 0, MaxRow(), MaxCol() )
 /*
    the following code block is used in conjunction with ASCAN()
@@ -92,14 +92,14 @@ FUNCTION FT_PEGS()
 
    scanblock := {| a | a[ 2 ] == move2 }
    cls
-   SetColor( 'w/r' )
+   SetColor( "w/r" )
    SINGLEBOX( 22, 31, 24, 48 )
    @ 23, 33 SAY "Your move:"
    AEval( board_, {| a, x | HB_SYMBOL_UNUSED( a ), drawbox( x ) } )
    DO WHILE LastKey() != K_ESC .AND. moremoves()
       move := 1
-      SetColor( 'w/n' )
-      @ 23, 44 GET move PICTURE '##' RANGE 1, 33
+      SetColor( "w/n" )
+      @ 23, 44 GET move PICTURE "##" RANGE 1, 33
       READ
       IF move > 0
          DO CASE
@@ -123,19 +123,19 @@ FUNCTION FT_PEGS()
                drawbox( possible_[ 1, 1 ] )
                drawbox( possible_[ 1, 2 ] )
             CASE Len( possible_ ) == 0
-               err_msg( 'Illegal move!' )
+               err_msg( "Illegal move!" )
             OTHERWISE
                move2 := possible_[ 1, 2 ]
                toprow := 21 - Len( possible_ )
-               SetColor( '+w/b' )
+               SetColor( "+w/b" )
                buffer := SaveScreen( toprow, 55, 22, 74 )
                DOUBLEBOX( toprow, 55, 22, 74 )
-               @ toprow, 58 SAY 'Possible Moves'
+               @ toprow, 58 SAY "Possible Moves"
                DevPos( toprow, 65 )
                AEval( possible_, {| a | DevPos( Row() + 1, 65 ), ;
-                  DevOutPict( a[ 2 ], '##' ) } )
+                  DevOutPict( a[ 2 ], "##" ) } )
                oldscore := Set( _SET_SCOREBOARD, .F. )
-               @23, 44 GET move2 PICTURE '##' ;
+               @23, 44 GET move2 PICTURE "##" ;
                   VALID AScan( possible_, scanblock ) > 0
                READ
                RestScreen( toprow, 55, 22, 74, buffer )
@@ -162,7 +162,7 @@ FUNCTION FT_PEGS()
 
 STATIC FUNCTION DrawBox( nelement )
 
-   SetColor( iif( board_[ nelement ][ 4 ], '+w/rb', 'w/n' ) )
+   SetColor( iif( board_[ nelement ][ 4 ], "+w/rb", "w/n" ) )
    @ board_[ nelement ][ 1, 1 ], board_[ nelement ][1,2], board_[ nelement ][ 1, 3 ], ;
       board_[ nelement ][ 1, 4 ] BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
    DevPos( board_[ nelement ][ 1, 1 ] + 1, board_[ nelement ][ 1, 2 ] + 2 )
@@ -177,7 +177,7 @@ STATIC FUNCTION err_msg( msg )
    LOCAL buffer := SaveScreen( 23, 33, 23, 47 )
 
    SetCursor( SC_NONE )
-   SetColor( '+w/r' )
+   SetColor( "+w/r" )
    @ 23, 33 SAY msg
    Inkey( 2 )
    SetCursor( SC_NORMAL )
@@ -206,7 +206,7 @@ STATIC FUNCTION moremoves()
       ENDIF
    NEXT
    IF ! canmove
-      SetColor( '+w/b' )
+      SetColor( "+w/b" )
       buffer := SaveScreen( 18, 55, 21, 74 )
       DOUBLEBOX( 18, 55, 21, 74 )
       @ 19, 58 SAY "No more moves!"

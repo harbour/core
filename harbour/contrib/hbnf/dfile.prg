@@ -75,7 +75,7 @@ PROCEDURE Main()
 
    FT_DFCLOSE()
 
-   @ 20, 0 SAY "Key pressed was: " + '[' + cKey + ']'
+   @ 20, 0 SAY "Key pressed was: " + "[" + cKey + "]"
 
    RETURN
 

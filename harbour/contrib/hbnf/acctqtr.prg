@@ -31,19 +31,19 @@ FUNCTION FT_ACCTQTR( dGivenDate, nQtrNum )
 
    LOCAL nYTemp, nQTemp, lIsQtr, aRetVal
 
-   IF ! ( ValType( dGivenDate ) $ 'ND' )
+   IF ! ( ValType( dGivenDate ) $ "ND" )
       dGivenDate := Date()
    ELSEIF HB_ISNUMERIC( dGivenDate )
       nQtrNum    := dGivenDate
       dGivenDate := Date()
    ENDIF
-   aRetVal    := FT_QTR( dGivenDate )
-   nYTemp     := Val( SubStr( aRetVal[1],1,4 ) )
-   nQTemp     := Val( SubStr( aRetVal[1],5,2 ) )
-   aRetVal[2] := FT_ACCTADJ( aRetVal[2] )
-   aRetVal[3] := FT_ACCTADJ( aRetVal[3], .T. )
+   aRetVal      := FT_QTR( dGivenDate )
+   nYTemp       := Val( SubStr( aRetVal[ 1 ], 1, 4 ) )
+   nQTemp       := Val( SubStr( aRetVal[ 1 ], 5, 2 ) )
+   aRetVal[ 2 ] := FT_ACCTADJ( aRetVal[ 2 ] )
+   aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
 
-   IF dGivenDate < aRetVal[2]
+   IF dGivenDate < aRetVal[ 2 ]
       dGivenDate := FT_MADD( dGivenDate, - 1 )
       aRetVal    := FT_QTR( dGivenDate )
       nQTemp     -= 1
@@ -51,8 +51,8 @@ FUNCTION FT_ACCTQTR( dGivenDate, nQtrNum )
          nYTemp  -= 1
          nQTemp  := 4
       ENDIF
-      aRetVal[2] := FT_ACCTADJ( aRetVal[2] )
-      aRetVal[3] := FT_ACCTADJ( aRetVal[3], .T. )
+      aRetVal[ 2 ] := FT_ACCTADJ( aRetVal[ 2 ] )
+      aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
 
    ELSEIF dGivenDate > aRetVal[3]
 
@@ -63,8 +63,8 @@ FUNCTION FT_ACCTQTR( dGivenDate, nQtrNum )
          nYTemp  += 1
          nQTemp  := 1
       ENDIF
-      aRetVal[2] := FT_ACCTADJ( aRetVal[2] )
-      aRetVal[3] := FT_ACCTADJ( aRetVal[3], .T. )
+      aRetVal[2] := FT_ACCTADJ( aRetVal[ 2 ] )
+      aRetVal[3] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
 
    ENDIF
 
@@ -73,13 +73,13 @@ FUNCTION FT_ACCTQTR( dGivenDate, nQtrNum )
       IF nQtrNum < 1 .OR. nQtrNum > 4
          nQtrNum := 4
       ENDIF
-      aRetVal    := FT_QTR( dGivenDate, nQtrNum )
-      nYTemp     := Val( SubStr( aRetVal[1],1,4 ) )
-      nQTemp     := Val( SubStr( aRetVal[1],5,2 ) )
-      aRetVal[2] := FT_ACCTADJ( aRetVal[2] )
-      aRetVal[3] := FT_ACCTADJ( aRetVal[3], .T. )
+      aRetVal      := FT_QTR( dGivenDate, nQtrNum )
+      nYTemp       := Val( SubStr( aRetVal[ 1 ], 1, 4 ) )
+      nQTemp       := Val( SubStr( aRetVal[ 1 ], 5, 2 ) )
+      aRetVal[ 2 ] := FT_ACCTADJ( aRetVal[ 2 ] )
+      aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
    ENDIF
 
-   aRetVal[1] := Str( nYTemp, 4 ) + PadL( LTrim( Str( nQTemp, 2 ) ), 2, '0' )
+   aRetVal[ 1 ] := Str( nYTemp, 4 ) + PadL( LTrim( Str( nQTemp, 2 ) ), 2, "0" )
 
    RETURN aRetVal

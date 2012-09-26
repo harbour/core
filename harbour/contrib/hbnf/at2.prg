@@ -36,7 +36,7 @@ PROCEDURE Main()
    CLS
    ? "TEST TO DEMONSTRATE EXAMPLES OF FT_AT2"
    ?
-   cSearch := 't'
+   cSearch := "t"
    ? "Find occurrences of 't' in: "
    cTarget := "This is the day that the Lord has made."
    ?? cTarget

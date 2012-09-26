@@ -54,7 +54,6 @@
 //------------------------------------------------
 // Pre-processor stuff
 
-#include "box.ch"
 #include "common.ch"
 #include "setcurs.ch"
 #include "inkey.ch"
@@ -65,10 +64,11 @@
 #define C_CHAR   4
 
 #translate Single( <t>, <l>, <b>, <r> ) =>;
-      @ < t > , < l > , < b > , < r > BOX B_SINGLE
+      @ < t > , < l > , < b > , < r > BOX hb_UTF8ToStr( "┌─┐│┘─└│" )
+
 
 #translate Double( <t>, <l>, <b>, <r> ) =>;
-      @ < t > , < l > , < b > , < r > BOX B_DOUBLE
+      @ < t > , < l > , < b > , < r > BOX hb_UTF8ToStr( "╔═╗║╝═╚║" )
 
 #translate ClearS( <t>, <l>, <b>, <r> ) =>;
       @ < t > , < l > CLEAR TO < b > , < r >

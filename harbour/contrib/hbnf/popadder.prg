@@ -46,7 +46,7 @@
 #define W_CURR   NIL
 
 // Set up manifest constants to access the Standard screen colors in the array
-//   aStdColor
+// aStdColor
 #define STD_ACCENT   1
 #define STD_ERROR    2
 #define STD_PROMPT   3
@@ -65,15 +65,14 @@
 #define B_DOUBLE   hb_UTF8ToStr( "╔═╗║╝═╚║ " )
 #define B_SINGLE                 "+-+|+-+| "
 
-#define CRLF Chr( 13 ) + Chr( 10 )
-#define nTotTran LEN( aTrans )
+#define nTotTran Len( aTrans )
 
 #command DISPMESSAGE <mess>,<t>,<l>,<b>,<r> =>                        ;
       _ftPushKeys(); KEYBOARD Chr( K_CTRL_PGDN ) + Chr( K_CTRL_W )      ;;
       MemoEdit( < mess > , < t > , < l > , < b > , < r > , .F. , NIL, ( < r > ) - ( < l > ) + 1 )   ;;
       _ftPopKeys()
 
-#define ASHRINK( ar ) ASIZE( ar, LEN( ar ) - 1 )
+#define ASHRINK( ar ) ASize( ar, Len( ar ) - 1 )
 
 /* This INKEY UDC was posted by Don Caton on NanForum... Thanks Don <g> */
 #command FT_INKEY [ <secs> ] TO <var>                                    ;
@@ -369,21 +368,21 @@ STATIC FUNCTION _ftAddScreen( aAdder )
    _ftPushWin( 2 + nTopOS, 2 + nAddSpace, 22 + nTopOS, 30 + nAddSpace, "   Adder   ",      ;
       "<F-1> for Help", , B_DOUBLE )
    nCol := 5 + nAddSpace
-   @  7 + nTopOS, nCol SAY hb_UTF8ToStr( '      ┌───┐ ┌───┐ ┌───┐' )
-   @  8 + nTopOS, nCol SAY hb_UTF8ToStr( '      │   │ │   │ │   │' )
-   @  9 + nTopOS, nCol SAY hb_UTF8ToStr( '      └───┘ └───┘ └───┘' )
-   @ 10 + nTopOS, nCol SAY hb_UTF8ToStr( '┌───┐ ┌───┐ ┌───┐ ┌───┐' )
-   @ 11 + nTopOS, nCol SAY hb_UTF8ToStr( '│   │ │   │ │   │ │   │' )
-   @ 12 + nTopOS, nCol SAY hb_UTF8ToStr( '└───┘ └───┘ └───┘ │   │' )
-   @ 13 + nTopOS, nCol SAY hb_UTF8ToStr( '┌───┐ ┌───┐ ┌───┐ │   │' )
-   @ 14 + nTopOS, nCol SAY hb_UTF8ToStr( '│   │ │   │ │   │ │   │' )
-   @ 15 + nTopOS, nCol SAY hb_UTF8ToStr( '└───┘ └───┘ └───┘ └───┘' )
-   @ 16 + nTopOS, nCol SAY hb_UTF8ToStr( '┌───┐ ┌───┐ ┌───┐ ┌───┐' )
-   @ 17 + nTopOS, nCol SAY hb_UTF8ToStr( '│   │ │   │ │   │ │   │' )
-   @ 18 + nTopOS, nCol SAY hb_UTF8ToStr( '└───┘ └───┘ └───┘ │   │' )
-   @ 19 + nTopOS, nCol SAY hb_UTF8ToStr( '┌─────────┐ ┌───┐ │   │' )
-   @ 20 + nTopOS, nCol SAY hb_UTF8ToStr( '│         │ │   │ │   │' )
-   @ 21 + nTopOS, nCol SAY hb_UTF8ToStr( '└─────────┘ └───┘ └───┘' )
+   @  7 + nTopOS, nCol SAY hb_UTF8ToStr( "      ┌───┐ ┌───┐ ┌───┐" )
+   @  8 + nTopOS, nCol SAY hb_UTF8ToStr( "      │   │ │   │ │   │" )
+   @  9 + nTopOS, nCol SAY hb_UTF8ToStr( "      └───┘ └───┘ └───┘" )
+   @ 10 + nTopOS, nCol SAY hb_UTF8ToStr( "┌───┐ ┌───┐ ┌───┐ ┌───┐" )
+   @ 11 + nTopOS, nCol SAY hb_UTF8ToStr( "│   │ │   │ │   │ │   │" )
+   @ 12 + nTopOS, nCol SAY hb_UTF8ToStr( "└───┘ └───┘ └───┘ │   │" )
+   @ 13 + nTopOS, nCol SAY hb_UTF8ToStr( "┌───┐ ┌───┐ ┌───┐ │   │" )
+   @ 14 + nTopOS, nCol SAY hb_UTF8ToStr( "│   │ │   │ │   │ │   │" )
+   @ 15 + nTopOS, nCol SAY hb_UTF8ToStr( "└───┘ └───┘ └───┘ └───┘" )
+   @ 16 + nTopOS, nCol SAY hb_UTF8ToStr( "┌───┐ ┌───┐ ┌───┐ ┌───┐" )
+   @ 17 + nTopOS, nCol SAY hb_UTF8ToStr( "│   │ │   │ │   │ │   │" )
+   @ 18 + nTopOS, nCol SAY hb_UTF8ToStr( "└───┘ └───┘ └───┘ │   │" )
+   @ 19 + nTopOS, nCol SAY hb_UTF8ToStr( "┌─────────┐ ┌───┐ │   │" )
+   @ 20 + nTopOS, nCol SAY hb_UTF8ToStr( "│         │ │   │ │   │" )
+   @ 21 + nTopOS, nCol SAY hb_UTF8ToStr( "└─────────┘ └───┘ └───┘" )
    _ftSetWinColor( W_CURR, W_TITLE )
    nCol := 7 + nAddSpace
    @ 11 + nTopOS, nCol SAY "7"
@@ -780,21 +779,21 @@ STATIC FUNCTION _ftMultDiv( aAdder, nKey )
 STATIC FUNCTION _ftAddHelp
 
    LOCAL cMess := "This Adder works like a desk top calculator. You may add," + ;
-      " subtract, multiply, or divide. "           + CRLF + CRLF + ;
+      " subtract, multiply, or divide. "           + hb_eol() + hb_eol() + ;
       "When adding or subtracting, the first entry is entered "  + ;
       "into the accumulator and each sucessive entry is "        + ;
       "subtotaled. When you press <ENTER> the SubTotal is also " + ;
       "shown on the tape. The second time you press <ENTER> the " + ;
       "adder is Totaled. When multiplying or dividing the "      + ;
-      "<ENTER> is a Total the first time pressed." + CRLF + CRLF + ;
-      "Hot Keys:"                                           + CRLF + ;
-      "         <D>ecimals - change # of decimals"          + CRLF + ;
-      "         <M>ove     - the Adder from right to left"  + CRLF + ;
-      "         <T>ape     - turn Tape Display On or Off"   + CRLF + ;
-      "         <S>croll   - the tape display"       + CRLF + CRLF + ;
-      "         <DEL> ---+-- 1st Clear entry"               + CRLF + ;
-      "                  +-- 2nd Clear ADDER"               + CRLF + ;
-      "         <ESC>      - Quit"                          + CRLF + ;
+      "<ENTER> is a Total the first time pressed." + hb_eol() + hb_eol() + ;
+      "Hot Keys:"                                           + hb_eol() + ;
+      "         <D>ecimals - change # of decimals"          + hb_eol() + ;
+      "         <M>ove     - the Adder from right to left"  + hb_eol() + ;
+      "         <T>ape     - turn Tape Display On or Off"   + hb_eol() + ;
+      "         <S>croll   - the tape display"              + hb_eol() + hb_eol() + ;
+      "         <DEL> ---+-- 1st Clear entry"               + hb_eol() + ;
+      "                  +-- 2nd Clear ADDER"               + hb_eol() + ;
+      "         <ESC>      - Quit"                          + hb_eol() + ;
       "         <F10>      - return a <TOTAL> to the active get"
 
    _ftPushMessage( cMess, .T. , "ADDER HELP", "press any key to continue...",  ;

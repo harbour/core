@@ -29,7 +29,8 @@
 PROCEDURE Main()
 
    LOCAL cString
-   LOCAL aString := { "TRIM('abc ')",                     ;
+   LOCAL aString := { ;
+      "TRIM('abc ')",                                     ;
       "NotARealFunc()",                                   ;
       "FT_DispMsg()",                                     ;
       'TRIM(cVar+"abc"+LEFT(cString)), FOUND()',          ;

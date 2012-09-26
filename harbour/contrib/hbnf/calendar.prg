@@ -29,21 +29,21 @@ PROCEDURE Main()
 
    LOCAL aRet[ 8 ], i
 
-   SetColor( 'w+/b' )
+   SetColor( "w+/b" )
    cls
    IF ft_numlock()
       ft_numlock( .F. )
    ENDIF
    KEYBOARD Chr( 28 )
-   aRet := ft_calendar( 10, 40, 'w+/rb', .T. , .T. ) //display calendar, return all.
-   @ 1, 0 SAY 'Date        :' + DToC( aRet[ 1 ] )
-   @ 2, 0 SAY 'Month Number:' + Str( aRet[ 2 ], 2, 0 )
-   @ 3, 0 SAY 'Day Number  :' + Str( aRet[ 3 ], 2, 0 )
-   @ 4, 0 SAY 'Year Number :' + Str( aRet[ 4 ], 4, 0 )
-   @ 5, 0 SAY 'Month       :' + aRet[ 5 ]
-   @ 6, 0 SAY 'Day         :' + aRet[ 6 ]
-   @ 7, 0 SAY 'Julian Day  :' + Str( aRet[ 7 ], 3, 0 )
-   @ 8, 0 SAY 'Current Time:' + aRet[ 8 ]
+   aRet := ft_calendar( 10, 40, "w+/rb", .T. , .T. ) //display calendar, return all.
+   @ 1, 0 SAY "Date        :" + DToC( aRet[ 1 ] )
+   @ 2, 0 SAY "Month Number:" + Str( aRet[ 2 ], 2, 0 )
+   @ 3, 0 SAY "Day Number  :" + Str( aRet[ 3 ], 2, 0 )
+   @ 4, 0 SAY "Year Number :" + Str( aRet[ 4 ], 4, 0 )
+   @ 5, 0 SAY "Month       :" + aRet[ 5 ]
+   @ 6, 0 SAY "Day         :" + aRet[ 6 ]
+   @ 7, 0 SAY "Julian Day  :" + Str( aRet[ 7 ], 3, 0 )
+   @ 8, 0 SAY "Current Time:" + aRet[ 8 ]
 
    RETURN
 
@@ -59,7 +59,7 @@ FUNCTION FT_CALENDAR( nRow, nCol, cColor, lShadow, lShowHelp )
 
    nRow    := iif( nRow != NIL, nRow, 1 )           //check display row
    nCol    := iif( nCol != NIL, nCol, 63 )           //check display col
-   cColor  := iif( cColor != NIL, cColor, 'W+/G' )  //check display color
+   cColor  := iif( cColor != NIL, cColor, "W+/G" )  //check display color
    lShadow := iif( lShadow == NIL , .F. , lShadow )  //check shadow switch
    lShowHelp := iif( lShowHelp == NIL , .F. , lShowHelp )//check help switch
 
@@ -113,7 +113,7 @@ FUNCTION FT_CALENDAR( nRow, nCol, cColor, lShadow, lShowHelp )
          IF lShowHelp .AND. ! lHelpIsDisplayed
             lHelpIsDisplayed := .T.
             cSaveHelp := SaveScreen ( nHelpRow - 1, 1, nHelpRow + 7, 80 )
-            FT_XBOX( 'L', , , cColor, cColor, nHelpRow, 1, ;
+            FT_XBOX( "L", , , cColor, cColor, nHelpRow, 1, ;
                "Home, Up_Arrow or PgUp keys page by day, month or year to a past date.", ;
                "End, Dn_Arrow or PgDn keys page by day, month or year to a future date.", ;
                "Left_Arrow or Right_Arrow keys page by week to a past or future date.", ;
@@ -131,15 +131,15 @@ FUNCTION FT_CALENDAR( nRow, nCol, cColor, lShadow, lShowHelp )
       aRetVal[ 6 ] :=   CDOW( Date() + nJump )
       aRetVal[ 7 ] :=   JDOY( aRetVal[ 4 ], aRetVal[ 2 ], aRetVal[ 3 ] )
 
-      @ nRow, nCol SAY SubStr( aRetval[ 6 ], 1, 3 ) + ' ' + ;
-         Str( aRetVal[ 3 ], 2, 0 ) + ' ' + ;
-         SubStr( aRetVal[ 5 ], 1, 3 ) + ' ' + ;
+      @ nRow, nCol SAY SubStr( aRetval[ 6 ], 1, 3 ) + " " + ;
+         Str( aRetVal[ 3 ], 2, 0 ) + " " + ;
+         SubStr( aRetVal[ 5 ], 1, 3 ) + " " + ;
          Str( aRetVal[ 4 ], 4, 0 )
       @ nRow + 1, nCol SAY Str( aRetVal[ 7 ], 3, 0 )
 
       nKey := 0
       DO WHILE nKey == 0
-         @ nRow + 1, nCol + 3 SAY '    ' + Time()
+         @ nRow + 1, nCol + 3 SAY "    " + Time()
          nKey := Inkey( 1 )
       ENDDO
       aRetVal[ 8 ] := Time()
@@ -156,7 +156,7 @@ FUNCTION FT_CALENDAR( nRow, nCol, cColor, lShadow, lShowHelp )
 
 STATIC FUNCTION JDOY( nYear, nMonth, nDay )
 
-   LOCAL cString := '000031059090120151181212243273304334'
+   LOCAL cString := "000031059090120151181212243273304334"
 
    RETURN VALS( cString, ( nMonth - 1 ) * 3 + 1, 3 ) + nDay + ;
       iif( nYear % 4 == 0 .AND. nMonth > 2, 1, 0 )

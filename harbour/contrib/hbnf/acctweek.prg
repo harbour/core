@@ -31,7 +31,7 @@ FUNCTION FT_ACCTWEEK( dGivenDate, nWeekNum )
 
    LOCAL nTemp, lIsWeek, aRetVal
 
-   IF ! ValType( dGivenDate ) $ 'ND'
+   IF ! ValType( dGivenDate ) $ "ND"
       dGivenDate := Date()
    ELSEIF HB_ISNUMERIC( dGivenDate )
       nWeekNum := dGivenDate
@@ -50,7 +50,7 @@ FUNCTION FT_ACCTWEEK( dGivenDate, nWeekNum )
    ENDIF
 
    aRetVal[ 1 ] += PadL( LTrim( Str( Int( ( dGivenDate - ;
-      aRetVal[ 2 ] ) / 7 ) + 1, 2 ) ), 2, '0' )
+      aRetVal[ 2 ] ) / 7 ) + 1, 2 ) ), 2, "0" )
    dGivenDate += ( 6 - FT_DAYTOBOW( dGivenDate ) )  // end of week
    aRetVal[ 2 ] := dGivenDate - 6
    aRetVal[ 3 ] := dGivenDate

@@ -248,8 +248,8 @@ FUNCTION FT_BRWSWHL( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
    cColorSave := SetColor()
 
    /* Background Color Is Based On First Color In Passed cColorList */
-   cColorBack := iif( ',' $ cColorList, ;
-      SubStr( cColorList, 1, At( ',', cColorList ) - 1 ), cColorList )
+   cColorBack := iif( "," $ cColorList, ;
+      SubStr( cColorList, 1, At( ",", cColorList ) - 1 ), cColorList )
 
    IF ! lKeepScrn
       SetColor( cColorBack )

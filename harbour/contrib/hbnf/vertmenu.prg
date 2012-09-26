@@ -21,8 +21,6 @@
  *
  */
 
-#include "box.ch"
-
 // test code
 #ifdef FT_TEST
 
@@ -112,7 +110,7 @@ FUNCTION ft_menu2( aMenuInfo, cColors )
 
       cOldscreen := SaveScreen( nTop, nLeft - 1, nTop + nOptions + 1, nLeft + nMaxwidth )
 
-      @ nTop, nLeft - 1, nTop + nOptions + 1, nLeft + nMaxwidth BOX B_SINGLE + ' '
+      @ nTop, nLeft - 1, nTop + nOptions + 1, nLeft + nMaxwidth BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
       DevPos( nTop, nLeft )
       FOR x := 1 TO Len( aMenuInfo )
          IF Len( aMenuInfo[ x ] ) > 1 .AND. aMenuInfo[ x, 2 ] != NIL

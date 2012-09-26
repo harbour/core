@@ -36,23 +36,23 @@ MEMVAR lRet
 #ifdef FT_TEST              // test program to demonstrate functions
 
 LOCAL  aArray := {;
-      { 'Invoice 1', SToD( "19910415" ), 1234.32, .T. }, ;
-      { 'Invoice 2', Date(), 234.98, .F. }, ;
-      { 'Invoice 3', Date() + 1, 0, .T. }  }, aSave
+      { "Invoice 1", SToD( "19910415" ), 1234.32, .T. }, ;
+      { "Invoice 2", Date(), 234.98, .F. }, ;
+      { "Invoice 3", Date() + 1, 0, .T. }  }, aSave
 LOCAL nErrorCode := 0
 
-   FT_SAVEARR( aArray, 'invoice.dat', @nErrorCode )
+   FT_SAVEARR( aArray, "invoice.dat", @nErrorCode )
    IF nErrorCode == 0
       CLS
       DispArray( aArray )
-      aSave := FT_RESTARR( 'invoice.dat', @nErrorCode )
+      aSave := FT_RESTARR( "invoice.dat", @nErrorCode )
       IF nErrorCode == 0
          DispArray( aSave )
       ELSE
-         ? 'Error restoring array'
+         ? "Error restoring array"
       ENDIF
    ELSE
-      ? 'Error writing array'
+      ? "Error writing array"
    ENDIF
 
    RETURN
@@ -63,12 +63,12 @@ FUNCTION DispArray( aTest )
 
    FOR nk := 1 TO Len( aTest )
       ? aTest[ nk, 1 ]
-      ?? '  '
+      ?? "  "
       ?? DToC( aTest[ nk, 2 ] )
-      ?? '  '
+      ?? "  "
       ?? Str( aTest[ nk, 3 ] )
-      ?? '  '
-      ?? iif( aTest[ nk, 4 ], 'true', 'false' )
+      ?? "  "
+      ?? iif( aTest[ nk, 4 ], "true", "false" )
    NEXT
 
    RETURN NIL
@@ -158,7 +158,7 @@ STATIC FUNCTION _ftrestsub( nHandle, nErrorCode )
 
    LOCAL cValType, nLen, cLenStr, xMemVar, cMemVar, nk
 
-   cValType := ' '
+   cValType := " "
    FRead( nHandle, @cValType, 1 )
    cLenStr := Space( 4 )
    FRead( nHandle, @cLenStr, 4 )
@@ -179,7 +179,7 @@ STATIC FUNCTION _ftrestsub( nHandle, nErrorCode )
          FRead( nHandle, @cMemVar, 8 )
          xMemVar := CToD( cMemVar )
       CASE cValType == "L"
-         cMemVar := ' '
+         cMemVar := " "
          FRead( nHandle, @cMemVar, 1 )
          xMemVar := ( cMemVar == "T" )
       CASE cValType == "N"

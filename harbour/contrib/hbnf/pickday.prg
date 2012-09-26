@@ -24,8 +24,6 @@
  *
  */
 
-#include "box.ch"
-
 // test code
 #ifdef FT_TEST
 
@@ -40,10 +38,11 @@ PROCEDURE Main()
 FUNCTION FT_PICKDAY()
 
    LOCAL DAYS := { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", ;
-      "FRIDAY", "SATURDAY" }, SEL := 0
-   LOCAL OLDSCRN := SaveScreen( 8, 35, 16, 45 ), oldcolor := SetColor( '+w/r' )
+      "FRIDAY", "SATURDAY" }
+   LOCAL SEL := 0
+   LOCAL OLDSCRN := SaveScreen( 8, 35, 16, 45 ), oldcolor := SetColor( "+w/r" )
 
-   @ 8, 35, 16, 45 BOX B_SINGLE + " "
+   @ 8, 35, 16, 45 BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
    /* do not allow user to Esc out, which would cause array access error */
    DO WHILE sel == 0
       sel := AChoice( 9, 36, 15, 44, days )
@@ -52,4 +51,4 @@ FUNCTION FT_PICKDAY()
    RestScreen( 8, 35, 16, 45, oldscrn )
    SetColor( oldcolor )
 
-   RETURN days[sel]
+   RETURN days[ sel ]

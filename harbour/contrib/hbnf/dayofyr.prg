@@ -31,7 +31,7 @@ FUNCTION FT_DAYOFYR( dGivenDate, nDayNum, lIsAcct )
 
    LOCAL lIsDay, nTemp, aRetVal
 
-   IF !( ValType( dGivenDate ) $ 'NDL' )
+   IF !( ValType( dGivenDate ) $ "NDL" )
       dGivenDate := Date()
    ELSEIF HB_ISNUMERIC( dGivenDate )
       nDayNum    := dGivenDate
@@ -57,7 +57,7 @@ FUNCTION FT_DAYOFYR( dGivenDate, nDayNum, lIsAcct )
       ENDIF
       aRetVal[ 1 ] := aRetVal[ 2 ] + nDayNum - 1
    ELSE
-      aRetVal[ 1 ] += PadL( LTrim( Str( dGivenDate - aRetVal[ 2 ] + 1, 3 ) ), 3, '0' )
+      aRetVal[ 1 ] += PadL( LTrim( Str( dGivenDate - aRetVal[ 2 ] + 1, 3 ) ), 3, "0" )
    ENDIF
 
    RETURN aRetVal

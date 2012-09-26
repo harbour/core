@@ -33,11 +33,6 @@
 // beginning of demo program
 #ifdef FT_TEST
 
-// color variables
-STATIC cNormH, cNormN, cNormE
-STATIC cWindH, cWindN, cWindE
-STATIC cErrH, cErrN, cErrE
-
 PROCEDURE Main( cCmdLine )
 
    LOCAL cDosScrn
@@ -47,7 +42,12 @@ PROCEDURE Main( cCmdLine )
    LOCAL nMaxRow
    LOCAL nType
 
-// main routine starts here
+   // color variables
+   LOCAL cNormH, cNormN, cNormE
+   LOCAL cWindH, cWindN, cWindE
+   LOCAL cErrH, cErrN, cErrE
+
+   // main routine starts here
    SET SCOREBOARD OFF
 
    lColor := .T.
