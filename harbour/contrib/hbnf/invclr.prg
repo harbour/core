@@ -24,30 +24,27 @@
  *
  */
 
-#command    DEFAULT <Param1> TO <Def1> [, <ParamN> TO <DefN> ] ;
-            => ;
-            <Param1> := iif(<Param1> == NIL,<Def1>,<Param1>) ;
-         [; <ParamN> := iif(<ParamN> == NIL,<DefN>,<ParamN>)]
+#include "common.ch"
 
-#define     NULL    ""
+#define NULL ""
 
-FUNCTION FT_INVCLR(cDsrdColor)
+FUNCTION FT_INVCLR( cDsrdColor )
 
-   LOCAL cBackground, ;                 // The Background Color, New Foreground
-         cForeground, ;                 // The Foreground Color, New Background
-         cModifiers                     // Any Color Modifiers (+*)
+   LOCAL cBackground                    // The Background Color, New Foreground
+   LOCAL cForeground                    // The Foreground Color, New Background
+   LOCAL cModifiers                     // Any Color Modifiers (+*)
 
-   DEFAULT cDsrdColor TO SETCOLOR()
-                                        // Remove Anything Past 1st Color
-   cDsrdColor := LEFT(cDsrdColor, AT(",", cDsrdColor+",")-1)
+   DEFAULT cDsrdColor TO SetColor()
+// Remove Anything Past 1st Color
+   cDsrdColor := Left( cDsrdColor, At( ",", cDsrdColor + "," ) - 1 )
 
-                                        // Get Any Modifiers
-   cModifiers := iif("*" $ cDsrdColor, "*", NULL) + ;
-                 iif("+" $ cDsrdColor, "+", NULL)
+// Get Any Modifiers
+   cModifiers := iif( "*" $ cDsrdColor, "*", NULL ) + ;
+      iif( "+" $ cDsrdColor, "+", NULL )
 
-                                        // Separate the Fore/Background Colors
-   cForeground := ALLTRIM(LEFT(cDsrdColor,   AT("/", cDsrdColor) - 1))
-   cBackground := ALLTRIM(SUBSTR(cDsrdColor, AT("/", cDsrdColor) + 1))
+// Separate the Fore/Background Colors
+   cForeground := AllTrim( Left( cDsrdColor,   At( "/", cDsrdColor ) - 1 ) )
+   cBackground := AllTrim( SubStr( cDsrdColor, At( "/", cDsrdColor ) + 1 ) )
 
-   RETURN STRTRAN(STRTRAN(cBackground, "+"), "*") + cModifiers + "/" + ;
-          STRTRAN(STRTRAN(cForeground, "+"), "*")
+   RETURN StrTran( StrTran( cBackground, "+" ), "*" ) + cModifiers + "/" + ;
+      StrTran( StrTran( cForeground, "+" ), "*" )

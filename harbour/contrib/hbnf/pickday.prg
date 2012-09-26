@@ -30,21 +30,26 @@
 #ifdef FT_TEST
 
 PROCEDURE Main()
-   QOUT("You selected " + FT_PICKDAY())
+
+   QOut( "You selected " + FT_PICKDAY() )
+
    RETURN
 
 #endif
 
-function FT_PICKDAY()
-LOCAL DAYS := { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", ;
-                "FRIDAY", "SATURDAY" }, SEL := 0
-LOCAL OLDSCRN := SAVESCREEN(8, 35, 16, 45), oldcolor := setcolor('+w/r')
-@ 8, 35, 16, 45 box B_SINGLE + " "
-/* do not allow user to Esc out, which would cause array access error */
-do while sel == 0
-   sel := achoice(9, 36, 15, 44, days)
-enddo
-/* restore previous screen contents and color */
-restscreen(8, 35, 16, 45, oldscrn)
-setcolor(oldcolor)
-return days[sel]
+FUNCTION FT_PICKDAY()
+
+   LOCAL DAYS := { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", ;
+      "FRIDAY", "SATURDAY" }, SEL := 0
+   LOCAL OLDSCRN := SaveScreen( 8, 35, 16, 45 ), oldcolor := SetColor( '+w/r' )
+
+   @ 8, 35, 16, 45 BOX B_SINGLE + " "
+   /* do not allow user to Esc out, which would cause array access error */
+   DO WHILE sel == 0
+      sel := AChoice( 9, 36, 15, 44, days )
+   ENDDO
+   /* restore previous screen contents and color */
+   RestScreen( 8, 35, 16, 45, oldscrn )
+   SetColor( oldcolor )
+
+   RETURN days[sel]

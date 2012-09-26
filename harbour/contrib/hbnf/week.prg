@@ -28,33 +28,34 @@
  */
 
 FUNCTION FT_WEEK( dGivenDate, nWeekNum )
-LOCAL lIsWeek, nTemp, aRetVal, dTemp
 
-  IF ! (VALTYPE(dGivenDate) $ 'ND')
-     dGivenDate := DATE()
-  ELSEIF VALTYPE(dGivenDate) == 'N'
-     nWeekNum   := dGivenDate
-     dGivenDate := DATE()
-  ENDIF
+   LOCAL lIsWeek, nTemp, aRetVal, dTemp
 
-  aRetVal    := FT_YEAR(dGivenDate)
-  dTemp      := aRetVal[2]
-  aRetVal[2] -= FT_DAYTOBOW( aRetVal[2] )
+   IF ! ( ValType( dGivenDate ) $ 'ND' )
+      dGivenDate := Date()
+   ELSEIF ValType( dGivenDate ) == 'N'
+      nWeekNum   := dGivenDate
+      dGivenDate := Date()
+   ENDIF
 
-  lIsWeek := ( VALTYPE(nWeekNum) == 'N' )
-  IF lIsWeek
-     nTemp := INT( (aRetVal[3] - aRetVal[2]) / 7 ) + 1
-     IF nWeekNum < 1 .OR. nWeekNum > nTemp
-        nWeekNum := nTemp
-     ENDIF
-     dGivenDate := aRetVal[2] + (nWeekNum - 1) * 7
-  ENDIF
+   aRetVal      := FT_YEAR( dGivenDate )
+   dTemp        := aRetVal[ 2 ]
+   aRetVal[ 2 ] -= FT_DAYTOBOW( aRetVal[ 2 ] )
 
-  dGivenDate += ( 6 - FT_DAYTOBOW(dGivenDate) )       // end of week
+   lIsWeek := ( ValType( nWeekNum ) == 'N' )
+   IF lIsWeek
+      nTemp := Int( ( aRetVal[ 3 ] - aRetVal[ 2 ] ) / 7 ) + 1
+      IF nWeekNum < 1 .OR. nWeekNum > nTemp
+         nWeekNum := nTemp
+      ENDIF
+      dGivenDate := aRetVal[ 2 ] + ( nWeekNum - 1 ) * 7
+   ENDIF
 
-  aRetVal[1] += PADL(LTRIM(STR(INT( (dGivenDate - ;
-                aRetVal[2]) / 7 ) + 1, 2)), 2, '0')
-  aRetVal[2] := MAX( dGivenDate - 6, dTemp )
-  aRetVal[3] := MIN( dGivenDate, aRetVal[3] )
+   dGivenDate += ( 6 - FT_DAYTOBOW( dGivenDate ) )       // end of week
 
-RETURN aRetVal
+   aRetVal[ 1 ] += PadL( LTrim( Str( Int( ( dGivenDate - ;
+      aRetVal[ 2 ] ) / 7 ) + 1, 2 ) ), 2, '0' )
+   aRetVal[ 2 ] := Max( dGivenDate - 6, dTemp )
+   aRetVal[ 3 ] := Min( dGivenDate, aRetVal[ 3 ] )
+
+   RETURN aRetVal

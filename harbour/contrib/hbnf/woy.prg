@@ -27,109 +27,110 @@
 
 #ifdef FT_TEST
 
-  // ADD PARAMETER "CENTURY" ON COMMAND LINES TO TEST 4-DIGIT YEARS
+// ADD PARAMETER "CENTURY" ON COMMAND LINES TO TEST 4-DIGIT YEARS
 
-  PROCEDURE Main( cCent )
-     LOCAL  lCentOn := .F., cDate
-     MEMVAR getlist
+PROCEDURE Main( cCent )
 
-     IF VALTYPE( cCent) == "C" .AND. "CENT" $ UPPER( cCent)
-       SET CENTURY ON
-       lCentOn := .T.
-     ENDIF
+   LOCAL  lCentOn := .F. , cDate
+   MEMVAR getlist
 
-     DO WHILE .T.
-       CLEAR
-       @ 2,10 SAY "Date to Test"
+   IF ValType( cCent ) == "C" .AND. "CENT" $ Upper( cCent )
+      SET CENTURY ON
+      lCentOn := .T.
+   ENDIF
 
-       IF lCentOn
-          cDate := SPACE(10)
-          @ 2,24 GET cDate PICTURE "##/##/####"
-       ELSE
-          cDate := SPACE(8)
-          @ 2,24 GET cDate PICTURE "##/##/##"
-       ENDIF
-       READ
+   DO WHILE .T.
+      CLEAR
+      @ 2, 10 SAY "Date to Test"
 
-       IF EMPTY(cDate)
-          EXIT
-       ENDIF
+      IF lCentOn
+         cDate := Space( 10 )
+         @ 2, 24 GET cDate PICTURE "##/##/####"
+      ELSE
+         cDate := Space( 8 )
+         @ 2, 24 GET cDate PICTURE "##/##/##"
+      ENDIF
+      READ
 
-       IF Left( DTOC( CTOD( cDate) ), 1 ) == " "
-          QQOUT( CHR( 7) )
-          @ 4,24 SAY "INVALID DATE"
-          INKEY(2)
-          LOOP
-       ENDIF
+      IF Empty( cDate )
+         EXIT
+      ENDIF
 
-       @ 4,10 SAY "Is Day Number " + STR( FT_DOY( CTOD( cDate)) ,3)
+      IF Left( DToC( CToD( cDate ) ), 1 ) == " "
+         QQOut( Chr( 7 ) )
+         @ 4, 24 SAY "INVALID DATE"
+         Inkey( 2 )
+         LOOP
+      ENDIF
 
-       @ 6,10 SAY "Is in Week Number " + STR( FT_WOY( CTOD( cDate)) ,2)
-       @ 7,0
-       WAIT
-     ENDDO
+      @ 4, 10 SAY "Is Day Number " + Str( FT_DOY( CToD( cDate ) ), 3 )
 
-     CLEAR
-  RETURN
+      @ 6, 10 SAY "Is in Week Number " + Str( FT_WOY( CToD( cDate ) ), 2 )
+      @ 7, 0
+      WAIT
+   ENDDO
+
+   CLEAR
+
+   RETURN
 
 #endif
 
-FUNCTION FT_WOY(dInDate)
+FUNCTION FT_WOY( dInDate )
 
-  LOCAL nFirstDays, nDayOffset, nWkNumber, cCentury
+   LOCAL nFirstDays, nDayOffset, nWkNumber, cCentury
 
-  IF VALTYPE( dInDate) != "D"
-     nWkNumber := NIL
+   IF !( ValType( dInDate ) == "D" )
+      nWkNumber := NIL
+   ELSE
 
-  ELSE
+      // resolve century issue
+      IF Len( DToC( dInDate ) ) > 8                  // CENTURY is on
+         cCentury := SubStr( DToC( dInDate ), 7, 4 )
+      ELSE
+         cCentury := SubStr( DToC( dInDate ), 7, 2 )
+      ENDIF
 
-     // resolve century issue
-     IF LEN( DTOC( dInDate) ) > 8                  // CENTURY is on
-     cCentury := SUBSTR( DTOC( dInDate) ,7 ,4)
-     ELSE
-     cCentury := SUBSTR( DTOC( dInDate) ,7 ,2)
-     END
+      // find number of days in first week of year
 
-     // find number of days in first week of year
+      nFirstDays := 8 - ( DOW( CToD( "01/01/" + cCentury ) ) )
 
-     nFirstDays := 8 - (DOW (CTOD ("01/01/" + cCentury) ) )
+      nWkNumber  := 1
 
-     nWkNumber  := 1
+      // find how many days after first week till dInDate
 
-     // find how many days after first week till dInDate
+      nDayOffset := ( dInDate - ;
+         CToD( "01/01/" + cCentury ) ) - nFirstDays + 1
 
-     nDayOffset := (dInDate - ;
-                 CTOD ("01/01/" + cCentury) ) - nFirstDays + 1
+      // count weeks in offset period
 
-     // count weeks in offset period
+      DO WHILE nDayOffset > 0
+         ++nWkNumber
+         nDayOffset -= 7
+      ENDDO
 
-     DO WHILE nDayOffset > 0
-     ++nWkNumber
-     nDayOffset -= 7
-     END
+   ENDIF
 
-  END
+   RETURN nWkNumber
 
-RETURN (nWkNumber)
+FUNCTION FT_DOY( dInDate )
 
-FUNCTION FT_DOY(dInDate)
+   LOCAL nDayNum, cCentury
 
-  LOCAL nDayNum, cCentury
+   IF !( ValType( dInDate ) == "D" )
+      nDayNum := NIL
+   ELSE
 
-  IF VALTYPE(dInDate) != "D"
-     nDayNum := NIL
-  ELSE
+      // resolve century issue
+      IF Len( DToC( dInDate ) ) > 8                  // CENTURY is on
+         cCentury := SubStr( DToC( dInDate ), 7, 4 )
+      ELSE
+         cCentury := SubStr( DToC( dInDate ), 7, 2 )
+      ENDIF
 
-     // resolve century issue
-     IF LEN( DTOC( dInDate) ) > 8                  // CENTURY is on
-     cCentury := SUBSTR( DTOC( dInDate) ,7 ,4)
-     ELSE
-     cCentury := SUBSTR( DTOC( dInDate) ,7 ,2)
-     END
+      // calculate
+      nDayNum := ( dInDate - CToD( "01/01/" + cCentury ) ) + 1
 
-     // calculate
-     nDayNum := (dInDate - CTOD ("01/01/" + cCentury)) + 1
+   ENDIF
 
-  END
-
-RETURN (nDayNum)
+   RETURN nDayNum

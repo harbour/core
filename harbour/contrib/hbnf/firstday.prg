@@ -24,10 +24,10 @@
  *
  */
 
-FUNCTION FT_FDAY(dDateToChk)
+FUNCTION FT_FDAY( dDateToChk )
 
-   IF Valtype(dDatetoChk) # "D"
+   IF ValType( dDatetoChk ) != "D"
       dDatetoChk := Date()
    ENDIF
 
-   RETURN dDateToChk - (DAY(dDateToChk)-1)
+   RETURN dDateToChk - ( Day( dDateToChk ) - 1 )

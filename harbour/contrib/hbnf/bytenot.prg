@@ -25,19 +25,19 @@
  *
  */
 
-FUNCTION FT_BYTENOT(cByte)
+FUNCTION FT_BYTENOT( cByte )
 
-  LOCAL nCounter, cNewByte
+   LOCAL nCounter, cNewByte
 
-  IF valtype(cByte) != "C"
-     cNewByte := NIL
-  ELSE
-     cNewByte := chr(0)
-     FOR nCounter := 0 to 7           // test each bit position
-        IF .not. FT_ISBIT(cByte, nCounter)
-           cNewByte := FT_BITSET(cNewByte, nCounter)
-        ENDIF
-     NEXT
-  ENDIF
+   IF ValType( cByte ) != "C"
+      cNewByte := NIL
+   ELSE
+      cNewByte := Chr( 0 )
+      FOR nCounter := 0 TO 7           // test each bit position
+         IF ! FT_ISBIT( cByte, nCounter )
+            cNewByte := FT_BITSET( cNewByte, nCounter )
+         ENDIF
+      NEXT
+   ENDIF
 
-RETURN cNewByte
+   RETURN cNewByte

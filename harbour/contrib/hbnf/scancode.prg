@@ -33,27 +33,32 @@
 
 #ifdef FT_TEST
 
-  #define SCANCODE_ESCAPE   (chr(27) + chr(1))
+#define SCANCODE_ESCAPE   ( chr( 27 ) + chr( 1 ) )
 
-  PROCEDURE Main()
-     LOCAL getlist, cKey
-     CLEAR
-     QOut("Press any key, ESCape to exit:")
+PROCEDURE Main()
 
-     while .t.
-        cKey := FT_SCANCODE()
-        QOUT( "chr(" + str(asc(substr(cKey,1,1)),3) + ")+chr(" + str(asc(substr(cKey,2,1)),3) + ")" )
-        if cKey == SCANCODE_ESCAPE
-           exit
-        endif
-     enddo
-  RETURN
+   LOCAL getlist, cKey
+
+   CLEAR
+   QOut( "Press any key, ESCape to exit:" )
+
+   DO WHILE .T.
+      cKey := FT_SCANCODE()
+      QOut( "chr(" + Str( Asc( SubStr( cKey, 1, 1 ) ), 3 ) + ")+chr(" + Str( Asc( SubStr( cKey, 2, 1 ) ), 3 ) + ")" )
+      IF cKey == SCANCODE_ESCAPE
+         EXIT
+      ENDIF
+   ENDDO
+
+   RETURN
 
 #endif
 
 FUNCTION FT_SCANCODE()
-  LOCAL aRegs[ INT86_MAX_REGS ]
 
-  aRegs[ AX ] := MAKEHI( 0 )
-  FT_INT86( KEYB, aRegs )
-  RETURN chr(LOWBYTE( aRegs[AX] )) + chr(HIGHBYTE( aRegs[AX] ))
+   LOCAL aRegs[ INT86_MAX_REGS ]
+
+   aRegs[ AX ] := MAKEHI( 0 )
+   FT_INT86( KEYB, aRegs )
+
+   RETURN Chr( LOWBYTE( aRegs[ AX ] ) ) + Chr( HIGHBYTE( aRegs[ AX ] ) )

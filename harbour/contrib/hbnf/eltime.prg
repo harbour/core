@@ -24,20 +24,21 @@
  *
  */
 
-function FT_ELTIME(cTIME1,cTIME2)
-  local  nDELSECS, nHRS, nMINS, nSECS, nSECS1, nSECS2
+FUNCTION FT_ELTIME( cTIME1, cTIME2 )
 
-  nSECS1   := (val(substr(cTIME1,1,2)) * 3600) +;
-              (val(substr(cTIME1,4,2)) * 60) + (val(substr(cTIME1,7)))
-  nSECS2   := (val(substr(cTIME2,1,2)) * 3600) +;
-              (val(substr(cTIME2,4,2)) * 60) + (val(substr(cTIME2,7)))
-  nDELSECS := abs(nSECS2 - nSECS1)
-  nHRS     := int(nDELSECS / 3600)
-  nMINS    := int((nDELSECS - nHRS * 3600) / 60)
-  nSECS    := nDELSECS - (nHRS * 3600) - (nMINS * 60)
+   LOCAL  nDELSECS, nHRS, nMINS, nSECS, nSECS1, nSECS2
 
-  return right("00" + ltrim(str(nHRS)),2) + ;
-     ":" + ;
-     right("00" + ltrim(str(nMINS)),2) + ;
-     ":" + ;
-     right("00" + ltrim(str(nSECS)),2)
+   nSECS1   := ( Val( SubStr( cTIME1, 1, 2 ) ) * 3600 ) + ;
+      ( Val( SubStr( cTIME1, 4, 2 ) ) * 60 ) + ( Val( SubStr( cTIME1, 7 ) ) )
+   nSECS2   := ( Val( SubStr( cTIME2, 1, 2 ) ) * 3600 ) + ;
+      ( Val( SubStr( cTIME2, 4, 2 ) ) * 60 ) + ( Val( SubStr( cTIME2, 7 ) ) )
+   nDELSECS := Abs( nSECS2 - nSECS1 )
+   nHRS     := Int( nDELSECS / 3600 )
+   nMINS    := Int( ( nDELSECS - nHRS * 3600 ) / 60 )
+   nSECS    := nDELSECS - ( nHRS * 3600 ) - ( nMINS * 60 )
+
+   RETURN Right( "00" + LTrim( Str( nHRS ) ), 2 ) + ;
+      ":" + ;
+      Right( "00" + LTrim( Str( nMINS ) ), 2 ) + ;
+      ":" + ;
+      Right( "00" + LTrim( Str( nSECS ) ), 2 )

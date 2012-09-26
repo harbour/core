@@ -24,5 +24,5 @@
  *
  */
 
-FUNCTION FT_BYTENEG(cByte)
-RETURN   iif(valtype(cByte) != "C", NIL, chr((256 - asc(cByte)) % 256))
+FUNCTION FT_BYTENEG( cByte )
+   RETURN iif( ValType( cByte ) != "C", NIL, Chr( ( 256 - Asc( cByte ) ) % 256 ) )

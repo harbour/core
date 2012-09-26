@@ -31,21 +31,26 @@
 #define STATNUM    220
 
 #ifdef FT_TEST
-  PROCEDURE Main()
-  QOut( "Logical station: " + str( FT_NWLSTAT() ) )
-  RETURN
+
+PROCEDURE Main()
+
+   QOut( "Logical station: " + Str( FT_NWLSTAT() ) )
+
+   RETURN
+
 #endif
 
 FUNCTION FT_NWLSTAT()
-/*  LOCAL aRegs[ INT86_MAX_REGS ] */
-  LOCAL nStation
-/*
-  aRegs[ AX ] := MAKEHI( STATNUM )
-  FT_INT86( DOS, aRegs )
-  */
-  nStation := _ft_nwkstat() /* LOWBYTE( aRegs[ AX ] ) */
-  if nStation < 0
-    nStation += 256
-  endif
 
-  RETURN nStation
+   /*  LOCAL aRegs[ INT86_MAX_REGS ] */
+   LOCAL nStation
+/*
+   aRegs[ AX ] := MAKEHI( STATNUM )
+   FT_INT86( DOS, aRegs )
+  */
+   nStation := _ft_nwkstat() /* LOWBYTE( aRegs[ AX ] ) */
+   IF nStation < 0
+      nStation += 256
+   ENDIF
+
+   RETURN nStation

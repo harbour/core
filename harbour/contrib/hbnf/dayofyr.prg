@@ -27,36 +27,37 @@
  *
  */
 
-FUNCTION FT_DAYOFYR( dGivenDate, nDayNum, lIsAcct)
-  LOCAL lIsDay, nTemp, aRetVal
+FUNCTION FT_DAYOFYR( dGivenDate, nDayNum, lIsAcct )
 
-  IF !(VALTYPE(dGivenDate) $ 'NDL')
-     dGivenDate := DATE()
-  ELSEIF VALTYPE(dGivenDate) == 'N'
-     nDayNum    := dGivenDate
-     dGivenDate := DATE()
-  ELSEIF VALTYPE(dGivenDate) == 'L'
-     lIsAcct    := dGivenDate
-     dGivenDate := DATE()
-  ENDIF
+   LOCAL lIsDay, nTemp, aRetVal
 
-  lIsDay  := VALTYPE(nDayNum) == 'N'
-  lIsAcct := VALTYPE(lIsAcct) == 'L'
+   IF !( ValType( dGivenDate ) $ 'NDL' )
+      dGivenDate := Date()
+   ELSEIF ValType( dGivenDate ) == 'N'
+      nDayNum    := dGivenDate
+      dGivenDate := Date()
+   ELSEIF ValType( dGivenDate ) == 'L'
+      lIsAcct    := dGivenDate
+      dGivenDate := Date()
+   ENDIF
 
-  IF lIsAcct
-     aRetVal := FT_ACCTYEAR(dGivenDate)
-  ELSE
-     aRetVal := FT_YEAR(dGivenDate)
-  ENDIF
+   lIsDay  := ValType( nDayNum ) == 'N'
+   lIsAcct := ValType( lIsAcct ) == 'L'
 
-  IF lIsDay
-     nTemp := aRetVal[3] - aRetVal[2] + 1
-     IF nDayNum < 1 .OR. nDayNum > nTemp
-        nDayNum := nTemp
-     ENDIF
-     aRetVal[1] := aRetVal[2] + nDayNum - 1
-  ELSE
-     aRetVal[1] += PADL(LTRIM(STR( dGivenDate - aRetVal[2] + 1, 3)), 3, '0')
-  ENDIF
+   IF lIsAcct
+      aRetVal := FT_ACCTYEAR( dGivenDate )
+   ELSE
+      aRetVal := FT_YEAR( dGivenDate )
+   ENDIF
 
-RETURN aRetVal
+   IF lIsDay
+      nTemp := aRetVal[ 3 ] - aRetVal[ 2 ] + 1
+      IF nDayNum < 1 .OR. nDayNum > nTemp
+         nDayNum := nTemp
+      ENDIF
+      aRetVal[ 1 ] := aRetVal[ 2 ] + nDayNum - 1
+   ELSE
+      aRetVal[ 1 ] += PadL( LTrim( Str( dGivenDate - aRetVal[ 2 ] + 1, 3 ) ), 3, '0' )
+   ENDIF
+
+   RETURN aRetVal

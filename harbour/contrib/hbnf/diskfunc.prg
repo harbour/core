@@ -26,27 +26,23 @@
  *
  */
 
-#include "ftint86.ch"
+#include "fileio.ch"
 
 #define DRVTABLE "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
 #ifdef FT_TEST
-  PROCEDURE Main( cDrv )
 
-     QOut("Disk size:   " + str( FT_DSKSIZE() ) )
-     QOut("Free bytes:  " + str( FT_DSKFREE() ) )
+PROCEDURE Main( cDrv )
 
-  RETURN
+   QOut( "Disk size:   " + Str( FT_DSKSIZE() ) )
+   QOut( "Free bytes:  " + Str( FT_DSKFREE() ) )
+
+   RETURN
+
 #endif
 
 FUNCTION FT_DSKSIZE( cDrive )
-   local nDrive
-   nDrive := iif( cDrive == NIL, 0, at( upper(cDrive), DRVTABLE ) )
-
-Return DISKSPACE(nDrive,3)
+   RETURN DiskSpace( iif( cDrive == NIL, 0, At( Upper( cDrive ), DRVTABLE ) ), HB_DISK_TOTAL )
 
 FUNCTION FT_DSKFREE( cDrive )
-   local nDrive
-   nDrive := iif( cDrive == NIL, 0, at( upper(cDrive), DRVTABLE ) )
-
-RETURN    DISKSPACE(nDrive,1)
+   RETURN DiskSpace( iif( cDrive == NIL, 0, At( Upper( cDrive ), DRVTABLE ) ), HB_DISK_FREE )

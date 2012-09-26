@@ -27,11 +27,12 @@
  *
  */
 
-function FT_MIN2DHM(nMINS)
-  local aDHM_[3]
+FUNCTION FT_MIN2DHM( nMINS )
 
-  aDHM_[1] := ltrim((str(int(nMINS/1440))))
-  aDHM_[2] := ltrim(str(int((nMINS%1440)/60)))
-  aDHM_[3] := ltrim(str(int((nMINS%1440)%60)))
+   LOCAL aDHM_[ 3 ]
 
-  return aDHM_
+   aDHM_[ 1 ] := LTrim( ( Str( Int( nMINS / 1440 ) ) ) )
+   aDHM_[ 2 ] := LTrim( Str( Int( ( nMINS % 1440 ) / 60 ) ) )
+   aDHM_[ 3 ] := LTrim( Str( Int( ( nMINS % 1440 ) % 60 ) ) )
+
+   RETURN aDHM_

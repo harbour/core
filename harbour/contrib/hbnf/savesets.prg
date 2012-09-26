@@ -34,21 +34,26 @@
 #define FT_SET_BLINK     _SET_COUNT + 2
 
 #ifdef FT_TEST
-  PROCEDURE Main()
-     LOCAL ASETS := FT_SAVESETS()
-     INKEY(0)
-     RETURN
+
+PROCEDURE Main()
+
+   LOCAL ASETS := FT_SAVESETS()
+
+   Inkey( 0 )
+
+   RETURN
+
 #endif
 
 FUNCTION FT_SAVESETS()
 
-   LOCAL aOldSets := ARRAY(_SET_COUNT + FT_EXTRA_SETS)
+   LOCAL aOldSets := Array( _SET_COUNT + FT_EXTRA_SETS )
 
-   AEVAL(aOldSets, ;
-         { | xElement, nElementNo | HB_SYMBOL_UNUSED( xElement ), ;
-           aOldSets[nElementNo] := SET(nElementNo) } )
+   AEval( aOldSets, ;
+      {| xElement, nElementNo | HB_SYMBOL_UNUSED( xElement ), ;
+      aOldSets[ nElementNo ] := Set( nElementNo ) } )
 
-   aOldSets[FT_SET_CENTURY] := FT_SETCENTURY()
-   aOldSets[FT_SET_BLINK]   := SETBLINK()
+   aOldSets[ FT_SET_CENTURY ] := FT_SETCENTURY()
+   aOldSets[ FT_SET_BLINK ]   := SetBlink()
 
    RETURN aOldSets                    // FT_SaveSets

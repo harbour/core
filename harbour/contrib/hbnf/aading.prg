@@ -25,38 +25,41 @@
 #ifdef FT_TEST
 
 PROCEDURE Main()
-   LOCAL aList1,aList2,var0,nstart,nstop,nelapsed,nCtr
+
+   LOCAL aList1, aList2, var0, nstart, nstop, nelapsed, nCtr
+
    CLS
    ? "TEST TO DEMONSTRATE EXAMPLES OF FT_AADDITION"
    ?
-   aList1 := {"apple", "orange", "pear"}
-   aList2 := {"apple ", "banana", "PEAR"}
+   aList1 := { "apple", "orange", "pear" }
+   aList2 := { "apple ", "banana", "PEAR" }
    ? "aList1 : "
-   AEVAL( aList1, { |x| QQOUT(x + ",") } )
+   AEval( aList1, {| x | QQOut( x + "," ) } )
    ?
    ? "aList2 : "
-   AEVAL( aList2, { |x| QQOUT(x + ",") } )
+   AEval( aList2, {| x | QQOut( x + "," ) } )
    ?
 
-   nstart := SECONDS()
-   FOR nCtr := 1 to 100
+   nstart := Seconds()
+   FOR nCtr := 1 TO 100
       var0 := FT_AADDITION( aList1, aList2 )
    NEXT
-   nstop := SECONDS()
+   nstop := Seconds()
    nelapsed := nstop - nstart
    ? "time for 100 merges:", nelapsed
 
-   ? PADR("FT_AADDITION( aList1, aList2 ) ->",44)
-   AEVAL( var0, { |x| QQOUT(x + ",") } )
+   ? PadR( "FT_AADDITION( aList1, aList2 ) ->", 44 )
+   AEval( var0, {| x | QQOut( x + "," ) } )
    ?
    var0 := FT_AADDITION( aList1, aList2, , .F. )
-   ? PADR("FT_AADDITION( aList1, aList2, , .F. ) ->",44)
-   AEVAL( var0, { |x| QQOUT(x + ",") } )
+   ? PadR( "FT_AADDITION( aList1, aList2, , .F. ) ->", 44 )
+   AEval( var0, {| x | QQOut( x + "," ) } )
    ?
-   var0 := FT_AADDITION( aList1, aList2, .F., .F. )
-   ? PADR("FT_AADDITION( aList1, aList2, .F., .F. ) ->",44)
-   AEVAL( var0, { |x| QQOUT(x + ",") } )
+   var0 := FT_AADDITION( aList1, aList2, .F. , .F. )
+   ? PadR( "FT_AADDITION( aList1, aList2, .F., .F. ) ->", 44 )
+   AEval( var0, {| x | QQOut( x + "," ) } )
    ?
+
    RETURN
 
 #endif
@@ -64,9 +67,9 @@ PROCEDURE Main()
 FUNCTION FT_AADDITION( aList1, aList2, lTrimmer, lCaseSens )
 
    LOCAL nElement, nPos, bScanCode
-   LOCAL aNewArray := ACLONE( aList1 )
+   LOCAL aNewArray := AClone( aList1 )
 
-   // Set default parameters as necessary.
+// Set default parameters as necessary.
    IF lCaseSens == NIL
       lCaseSens := .T.
    ENDIF
@@ -75,38 +78,38 @@ FUNCTION FT_AADDITION( aList1, aList2, lTrimmer, lCaseSens )
       lTrimmer := .T.
    ENDIF
 
-   // Assign code blocks according to case sensitivity and trim.
+// Assign code blocks according to case sensitivity and trim.
    IF lCaseSens
 
       IF lTrimmer                         // Ignore spaces.
-         bScanCode := { |x| ;
-                        ALLTRIM( x ) == ;
-                        ALLTRIM( aList2[ nElement ]) }
+         bScanCode := {| x | ;
+            AllTrim( x ) == ;
+            AllTrim( aList2[ nElement ] ) }
       ELSE
-         bScanCode := { |x| x == ( aList2[ nElement ]) }
+         bScanCode := {| x | x == ( aList2[ nElement ] ) }
       ENDIF
 
    ELSE                                   // Ignore case.
 
       IF lTrimmer                         // Ignore spaces.
-         bScanCode := { |x| ;
-                        UPPER( ALLTRIM( x )) == ;
-                        UPPER( ALLTRIM( aList2[ nElement ] )) }
+         bScanCode := {| x | ;
+            Upper( AllTrim( x ) ) == ;
+            Upper( AllTrim( aList2[ nElement ] ) ) }
       ELSE
-         bScanCode := { |x| ;
-                        UPPER( x ) == ;
-                        UPPER( aList2[ nElement ] ) }
+         bScanCode := {| x | ;
+            Upper( x ) == ;
+            Upper( aList2[ nElement ] ) }
       ENDIF
    ENDIF
 
-   // Add the unique elements of aList2 to aList1.
-   FOR nElement := 1 TO LEN( aList2 )
+// Add the unique elements of aList2 to aList1.
+   FOR nElement := 1 TO Len( aList2 )
 
-      nPos := ASCAN( aList1, bScanCode )
+      nPos := AScan( aList1, bScanCode )
 
       // If unique, then add element to new array.
       IF nPos == 0
-         AADD( aNewArray, aList2[ nElement ] )
+         AAdd( aNewArray, aList2[ nElement ] )
       ENDIF
 
    NEXT

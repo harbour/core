@@ -26,71 +26,72 @@
  *
  */
 
-FUNCTION FT_EASTER (nYear)
-  local nGold, nCent, nCorx, nCorz, nSunday, nEpact, nMoon,;
-        nMonth := 0, nDay := 0
+FUNCTION FT_EASTER( nYear )
 
-  IF VALTYPE (nYear) == "C"
-     nYear := VAL(nYear)
-  ENDIF
+   LOCAL nGold, nCent, nCorx, nCorz, nSunday, nEpact, nMoon
+   LOCAL nMonth := 0, nDay := 0
 
-  IF VALTYPE (nYear) == "D"
-     nYear := YEAR(nYear)
-  ENDIF
+   IF ValType( nYear ) == "C"
+      nYear := Val( nYear )
+   ENDIF
 
-  IF VALTYPE (nYear) == "N"
-     IF nYear > 1582
+   IF ValType( nYear ) == "D"
+      nYear := Year( nYear )
+   ENDIF
 
-        * <<nGold>> is Golden number of the year in the 19 year Metonic cycle
-        nGold := nYear % 19 + 1
+   IF ValType( nYear ) == "N"
+      IF nYear > 1582
 
-        * <<nCent>> is Century
-        nCent := INT (nYear / 100) + 1
+         // <<nGold>> is Golden number of the year in the 19 year Metonic cycle
+         nGold := nYear % 19 + 1
 
-        * Corrections:
-        * <<nCorx>> is the no. of years in which leap-year was dropped in order
-        * to keep step with the sun
-        nCorx := INT ((3 * nCent) / 4 - 12)
+         // <<nCent>> is Century
+         nCent := Int( nYear / 100 ) + 1
 
-        * <<nCorz>> is a special correction to synchronize Easter with the moon's
-        * orbit.
-        nCorz := INT ((8 * nCent + 5) / 25 - 5)
+         // Corrections:
+         // <<nCorx>> is the no. of years in which leap-year was dropped in order
+         // to keep step with the sun
+         nCorx := Int( ( 3 * nCent ) / 4 - 12 )
 
-        * <<nSunday>> Find Sunday
-        nSunday := INT ((5 * nYear) / 4 - nCorx - 10)
+         // <<nCorz>> is a special correction to synchronize Easter with the moon's
+         // orbit.
+         nCorz := Int( ( 8 * nCent + 5 ) / 25 - 5 )
 
-        * Set Epact <<nEpact>> (specifies occurance of a full moon)
-        nEpact := INT ((11 * nGold + 20 + nCorz - nCorx) % 30)
+         // <<nSunday>> Find Sunday
+         nSunday := Int( ( 5 * nYear ) / 4 - nCorx - 10 )
 
-        IF nEpact < 0
-           nEpact += 30
-        ENDIF
+         // Set Epact <<nEpact>> (specifies occurance of a full moon)
+         nEpact := Int( ( 11 * nGold + 20 + nCorz - nCorx ) % 30 )
 
-        IF ((nEpact == 25) .AND. (nGold > 11)) .OR. (nEpact == 24)
-           ++nEpact
-        ENDIF
+         IF nEpact < 0
+            nEpact += 30
+         ENDIF
 
-        * Find full moon - the <<nMoon>>th of MARCH is a "calendar" full moon
-        nMoon := 44 - nEpact
+         IF ( nEpact == 25 .AND. nGold > 11 ) .OR. nEpact == 24
+            ++nEpact
+         ENDIF
 
-        IF nMoon < 21
-           nMoon += 30
-        ENDIF
+         // Find full moon - the <<nMoon>>th of MARCH is a "calendar" full moon
+         nMoon := 44 - nEpact
 
-        * Advance to Sunday
-        nMoon := INT (nMoon + 7 - ((nSunday + nMoon) % 7))
+         IF nMoon < 21
+            nMoon += 30
+         ENDIF
 
-        * Get Month and Day
-        IF nMoon > 31
-           nMonth := 4
-           nDay := nMoon - 31
-        ELSE
-           nMonth := 3
-           nDay := nMoon
-        ENDIF
-     ENDIF
-  ELSE
-     nYear := 0
-  ENDIF
+         // Advance to Sunday
+         nMoon := Int ( nMoon + 7 - ( ( nSunday + nMoon ) % 7 ) )
 
-RETURN StoD( Str( nYear,4) + PadL( nMonth, 2, "0" ) + PadL( Int( nDay ), 2, "0" ) )
+         // Get Month and Day
+         IF nMoon > 31
+            nMonth := 4
+            nDay := nMoon - 31
+         ELSE
+            nMonth := 3
+            nDay := nMoon
+         ENDIF
+      ENDIF
+   ELSE
+      nYear := 0
+   ENDIF
+
+   RETURN SToD( Str( nYear,4 ) + PadL( nMonth, 2, "0" ) + PadL( Int( nDay ), 2, "0" ) )

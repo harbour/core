@@ -27,22 +27,23 @@
  *
  */
 
-FUNCTION FT_YEAR(dGivenDate)
+FUNCTION FT_YEAR( dGivenDate )
 
-  LOCAL aRetVal[3], cFY_Start, cDateFormat
+   LOCAL aRetVal[ 3 ], cFY_Start, cDateFormat
 
-  cFY_Start   := FT_DATECNFG()[1]
-  cDateFormat := SET(_SET_DATEFORMAT, "yyyy.mm.dd")
-  IF !( VALTYPE(dGivenDate) == 'D' )
-    dGivenDate := DATE()
-  ENDIF
+   cFY_Start   := FT_DATECNFG()[ 1 ]
+   cDateFormat := Set( _SET_DATEFORMAT, "yyyy.mm.dd" )
 
-  aRetVal[2]  := CTOD(STR( YEAR(dGivenDate) - iif(MONTH(dGivenDate) < ;
-                    MONTH(CTOD(cFY_Start)), 1, 0), 4) + ;
-                    SUBSTR(cFY_Start, 5, 6) )
-  aRetval[3]  := FT_MADD(aRetVal[2], 12) - 1
-  aRetVal[1]  := STR(YEAR(aRetVal[3]),4)      // End of Year
+   IF ! HB_ISDATE( dGivenDate )
+      dGivenDate := Date()
+   ENDIF
 
-  SET(_SET_DATEFORMAT, cDateFormat)
+   aRetVal[ 2 ] := CToD( Str( Year( dGivenDate ) - iif( Month( dGivenDate ) < ;
+      Month( CToD( cFY_Start ) ), 1, 0 ), 4 ) + ;
+      SubStr( cFY_Start, 5, 6 ) )
+   aRetval[ 3 ] := FT_MADD( aRetVal[ 2 ], 12 ) - 1
+   aRetVal[ 1 ] := Str( Year( aRetVal[ 3 ] ), 4 )      // End of Year
 
-RETURN aRetVal
+   Set( _SET_DATEFORMAT, cDateFormat )
+
+   RETURN aRetVal

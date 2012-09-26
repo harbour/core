@@ -34,31 +34,36 @@
 #define GETMODE    15
 
 #ifdef FT_TEST
-  PROCEDURE Main( cMode )
 
-     FT_SETMODE( val( cMode ) )
-     QOut( "Video mode is: " + str( FT_GETMODE() ) )
-     RETURN
+PROCEDURE Main( cMode )
+
+   FT_SETMODE( Val( cMode ) )
+   QOut( "Video mode is: " + Str( FT_GETMODE() ) )
+
+   RETURN
 
 #endif
 
 FUNCTION FT_SETMODE( nMode )
 /*
-  LOCAL aRegs[ INT86_MAX_REGS ]
+   LOCAL aRegs[ INT86_MAX_REGS ]
 
-  aRegs[ AX ] := nMode
-  FT_INT86( VIDEO, aRegs )
+   aRegs[ AX ] := nMode
+   FT_INT86( VIDEO, aRegs )
 */
-_ft_setmode(nMode)
-  RETURN NIL
+
+   _ft_setmode( nMode )
+
+   RETURN NIL
 
 FUNCTION FT_GETMODE()
 /*
-  LOCAL aRegs[INT86_MAX_REGS]
+   LOCAL aRegs[ INT86_MAX_REGS ]
 
-  aRegs[ AX ] := MAKEHI( GETMODE )
-  FT_INT86( VIDEO, aRegs )
+   aRegs[ AX ] := MAKEHI( GETMODE )
+   FT_INT86( VIDEO, aRegs )
 
-  RETURN LOWBYTE( aRegs[ AX ] )
+   RETURN LOWBYTE( aRegs[ AX ] )
 */
- RETURN _ft_getmode()
+
+   RETURN _ft_getmode()

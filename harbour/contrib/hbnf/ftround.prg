@@ -24,7 +24,7 @@
  *
  */
 
-#define IS_NEGATIVE(x)       ((x) < 0)
+#include "common.ch"
 
 #define NEAREST_DECIMAL      "D"
 #define NEAREST_FRACTION     "F"
@@ -33,90 +33,80 @@
 #define ROUND_NORMAL         "N"
 #define ROUND_UP             "U"
 
-#command    DEFAULT <Param1> TO <Def1> [, <ParamN> TO <DefN> ] ;
-            => ;
-            <Param1> := iif(<Param1> == NIL,<Def1>,<Param1>) ;
-         [; <ParamN> := iif(<ParamN> == NIL,<DefN>,<ParamN>)]
+FUNCTION FT_ROUND( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
+      nAcceptableError )
 
-#command    DEFAULT <Param1> TO <Def1> IF NOT <Type1> ;
-                 [, <ParamN> TO <DefN> IF NOT <TypeN> ] ;
-            => ;
-            <Param1> := iif(VALTYPE(<Param1>) == <Type1>,<Param1>,<Def1>) ;
-         [; <ParamN> := iif(VALTYPE(<ParamN>) == <TypeN>,<ParamN>,<DefN>)]
+   LOCAL nResult := Abs( nNumber )        // The Result of the Rounding
 
-FUNCTION FT_ROUND(nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
-                  nAcceptableError)
+   DEFAULT nRoundToAmount   TO 2
+   DEFAULT cRoundType       TO NEAREST_DECIMAL
+   DEFAULT cRoundDirection  TO ROUND_NORMAL
+   DEFAULT nAcceptableError TO 1 / ( nRoundToAmount ** 2 )
 
-   LOCAL nResult := ABS(nNumber)        // The Result of the Rounding
+   // Are We Rounding to the Nearest Whole
+   // Number or to Zero Decimal Places??
+   IF ( Left( cRoundType, 1 ) != NEAREST_WHOLE_NUMBER .AND. ;
+         ( nRoundToAmount := Int( nRoundToAmount ) ) != 0 )
 
-   DEFAULT nRoundToAmount   TO 2, ;
-           cRoundType       TO NEAREST_DECIMAL, ;
-           cRoundDirection  TO ROUND_NORMAL, ;
-           nAcceptableError TO 1 / (nRoundToAmount ** 2)
+      // No, Are We Rounding to the Nearest
+      // Decimal Place??
+      IF ( Left( cRoundType, 1 ) == NEAREST_DECIMAL )
 
-                                        // Are We Rounding to the Nearest Whole
-                                        // Number or to Zero Decimal Places??
-   IF (LEFT(cRoundType,1) != NEAREST_WHOLE_NUMBER .AND. ;
-       (nRoundToAmount := INT(nRoundToAmount)) != 0)
-
-                                        // No, Are We Rounding to the Nearest
-                                        // Decimal Place??
-      IF (LEFT(cRoundType,1) == NEAREST_DECIMAL)
-
-                                        // Yes, Convert to Nearest Fraction
+         // Yes, Convert to Nearest Fraction
          nRoundToAmount := 10 ** nRoundToAmount
 
-      ENDIF                             // LEFT(cRoundType,1) == NEAREST_DECIMAL
+      ENDIF                             // LEFT( cRoundType, 1 ) == NEAREST_DECIMAL
 
-                                        // Are We Already Within the Acceptable
-                                        // Error Factor??
-      IF (ABS(INT(nResult * nRoundToAmount) - (nResult * nRoundToAmount)) > ;
-          nAcceptableError)
-                                        // No, Are We Rounding Down??
-         nResult -= iif(LEFT(cRoundDirection,1) == ROUND_DOWN, ;
-                                      ; // Yes, Make Downward Adjustment
-                        1 / nRoundToAmount / 2, ;
-                                      ; // Are We Rounding Up??
-                        iif(LEFT(cRoundDirection,1) == ROUND_UP , ;
-                                      ; // Yes, Make Upward Adjustment
-                            -1 / (nRoundToAmount) / 2, ;
-                                      ; // No, Rounding Normal, No Adjustment
-                            0))
-                                        //Do the Actual Rounding
-         nResult := INT((nRoundToAmount * nResult) + .5 + nAcceptableError) / ;
-                    nRoundToAmount
+      // Are We Already Within the Acceptable
+      // Error Factor??
+      IF ( Abs( Int(nResult * nRoundToAmount ) - ( nResult * nRoundToAmount ) ) > ;
+            nAcceptableError )
+         // No, Are We Rounding Down??
+         nResult -= iif( Left( cRoundDirection, 1 ) == ROUND_DOWN, ;
+            ; // Yes, Make Downward Adjustment
+         1 / nRoundToAmount / 2, ;
+            ; // Are We Rounding Up??
+         iif( Left( cRoundDirection, 1 ) == ROUND_UP , ;
+            ; // Yes, Make Upward Adjustment
+         - 1 / ( nRoundToAmount ) / 2, ;
+            ; // No, Rounding Normal, No Adjustment
+         0 ) )
+         //Do the Actual Rounding
+         nResult := Int( ( nRoundToAmount * nResult ) + .5 + nAcceptableError ) / ;
+            nRoundToAmount
 
       ENDIF                             // ABS(INT(nResult * nRoundToAmount) -
-                                        //     (mResult * nRoundAmount)) >
-                                        // nAcceptableError
+      //     (mResult * nRoundAmount)) >
+      // nAcceptableError
 
    ELSE                                 // Yes, Round to Nearest Whole Number
-                                        // or to Zero Places
+      // or to Zero Places
 
-      nRoundToAmount := MAX(nRoundToAmount, 1)
+      nRoundToAmount := Max( nRoundToAmount, 1 )
 
       DO CASE                           // Do "Whole" Rounding
 
-         CASE LEFT(cRoundDirection,1) == ROUND_UP
+      CASE Left( cRoundDirection, 1 ) == ROUND_UP
 
-            nResult := (INT(nResult / nRoundToAmount) * nRoundToAmount) + ;
-                       nRoundToAmount
+         nResult := ( Int( nResult / nRoundToAmount ) * nRoundToAmount ) + ;
+            nRoundToAmount
 
-         CASE LEFT(cRoundDirection,1) == ROUND_DOWN
+      CASE Left( cRoundDirection, 1 ) == ROUND_DOWN
 
-            nResult := INT(nResult / nRoundToAmount) * nRoundToAmount
+         nResult := Int( nResult / nRoundToAmount ) * nRoundToAmount
 
-         OTHERWISE                      // Round Normally
+      OTHERWISE                      // Round Normally
 
-            nResult := INT((nResult + nRoundToAmount / 2) / nRoundToAmount) * ;
-                       nRoundToAmount
+         nResult := Int( ( nResult + nRoundToAmount / 2 ) / nRoundToAmount ) * ;
+            nRoundToAmount
 
       ENDCASE
 
    ENDIF                                // LEFT(cRoundType,1)!=NEAREST_WHOLE or
                                         // nRoundToAmount == 0
-   IF IS_NEGATIVE(nNumber)              // Was the Number Negative??
+
+   IF nNumber < 0                       // Was the Number Negative??
       nResult := -nResult               // Yes, Make the Result Negative Also
-   ENDIF                                // IS_NEGATIVE(nNumber)
+   ENDIF
 
    RETURN nResult                       // FT_Round

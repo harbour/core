@@ -25,29 +25,35 @@
  */
 
 #ifdef FT_TEST
-  PROCEDURE Main()
-     FT_BLINK( "WAIT", 5, 10 )
-     RETURN
+
+PROCEDURE Main()
+
+   FT_BLINK( "WAIT", 5, 10 )
+
+   RETURN
+
 #endif
 
 FUNCTION FT_BLINK( cMsg, nRow, nCol )
 
-  * Declare color restore var.
-  LOCAL cSavColor
+// Declare color restore var.
+   LOCAL cSavColor
 
-  * Return if no msg.
-  IF (cMsg == NIL) ; RETURN NIL; ENDIF
+// Return if no msg.
+   IF cMsg == NIL
+      RETURN NIL
+   ENDIF
 
-  * Set default row and col to current.
-  nRow := iif( nRow == NIL, ROW(), nRow )
-  nCol := iif( nCol == NIL, COL(), nCol )
+// Set default row and col to current.
+   nRow := iif( nRow == NIL, Row(), nRow )
+   nCol := iif( nCol == NIL, Col(), nCol )
 
-  cSavColor := SETCOLOR()                // Save colors to restore on exit.
+   cSavColor := SetColor()                // Save colors to restore on exit.
 
-  * IF blink colors not already set, add blink to current foreground color.
-  SETCOLOR( iif( ("*" $ LEFT(cSavColor,4)), cSavColor, "*" + cSavColor ) )
+// IF blink colors not already set, add blink to current foreground color.
+   SetColor( iif( ( "*" $ Left( cSavColor, 4 ) ), cSavColor, "*" + cSavColor ) )
 
-  @ nRow, nCol SAY cMsg                  // Say the dreaded blinking msg.
-  SETCOLOR( cSavColor )                  // It's a wrap, restore colors & exit.
+   @ nRow, nCol SAY cMsg                  // Say the dreaded blinking msg.
+   SetColor( cSavColor )                  // It's a wrap, restore colors & exit.
 
-RETURN NIL
+   RETURN NIL

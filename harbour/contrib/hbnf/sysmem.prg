@@ -35,15 +35,20 @@
 #define MEMSIZE    18
 
 #ifdef FT_TEST
-  PROCEDURE Main()
-  QOut( "Conventional memory: " + str( FT_SYSMEM() ) + "K installed" )
-  RETURN
+
+PROCEDURE Main()
+
+   QOut( "Conventional memory: " + Str( FT_SYSMEM() ) + "K installed" )
+
+   RETURN
+
 #endif
 
 FUNCTION FT_SYSMEM()
-  LOCAL aRegs[ INT86_MAX_REGS ]
 
-  aRegs[ AX ] := 0
-  FT_INT86( MEMSIZE, aRegs )
+   LOCAL aRegs[ INT86_MAX_REGS ]
 
-RETURN ( aRegs[ AX ] )
+   aRegs[ AX ] := 0
+   FT_INT86( MEMSIZE, aRegs )
+
+   RETURN aRegs[ AX ]

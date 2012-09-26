@@ -26,25 +26,28 @@
 
 #ifdef FT_TEST
 
-  // Write 100 random numbers from 1 to 100 to stdout.
-  // Run it multiple times and redirect output to a file
-  // to check it
+// Write 100 random numbers from 1 to 100 to stdout.
+// Run it multiple times and redirect output to a file
+// to check it
 
-  PROCEDURE Main()
-     local x
+PROCEDURE Main()
 
-     for x := 1 to 100
-        outstd( int( ft_rand1(100) ) )
-        outstd( hb_eol() )
-     next
-     return
+   LOCAL x
+
+   FOR x := 1 TO 100
+      OutStd( Int( ft_rand1(100 ) ) )
+      OutStd( hb_eol() )
+   NEXT
+
+   RETURN
 
 #endif
 
-function ft_rand1(nMax)
-  THREAD static nSeed
-  local m := 100000000, b := 31415621
+FUNCTION ft_rand1( nMax )
 
-  nSeed := iif( nSeed == NIL, seconds(), nSeed )   // init_seed()
+   THREAD STATIC t_nSeed
+   LOCAL m := 100000000, b := 31415621
 
-  return nMax * ( ( nSeed := mod( nSeed*b+1, m ) ) / m )
+   t_nSeed := iif( t_nSeed == NIL, Seconds(), t_nSeed )   // init_seed()
+
+   RETURN nMax * ( ( t_nSeed := Mod( t_nSeed * b + 1, m ) ) / m )

@@ -29,8 +29,11 @@
   */
 
 FUNCTION ft_lday( dDate )
-   LOCAL d:= dDate
+
+   LOCAL d := dDate
+
    IF dDate == NIL
-      d:= Date()
+      d := Date()
    ENDIF
-   RETURN ( d+= 45 - Day( d ) ) - Day( d )
+
+   RETURN ( d += 45 - Day( d ) ) - Day( d )

@@ -31,20 +31,26 @@
 #define DOSVER     48
 
 #ifdef FT_TEST
-  PROCEDURE Main()
-  QOut( "Dos version: " + FT_DOSVER() )
-  RETURN
+
+PROCEDURE Main()
+
+   QOut( "Dos version: " + FT_DOSVER() )
+
+   RETURN
+
 #endif
 
 FUNCTION FT_DOSVER()
-/*  local aRegs[ INT86_MAX_REGS ] */
-  local cResult
 
-/*  aRegs[ AX ] := MAKEHI( DOSVER )
-  if FT_INT86( DOS, aRegs )
-     cResult := alltrim( str( LOWBYTE( aRegs[ AX ] ) ) ) + "." + ;
-                alltrim( str( HIGHBYTE( aRegs[ AX ] ) ) )
-  endif
+   /*  LOCAL aRegs[ INT86_MAX_REGS ] */
+   LOCAL cResult
+
+/* aRegs[ AX ] := MAKEHI( DOSVER )
+   IF FT_INT86( DOS, aRegs )
+      cResult := AllTrim( Str( LOWBYTE( aRegs[ AX ] ) ) ) + "." + ;
+                 AllTrim( Str( HIGHBYTE( aRegs[ AX ] ) ) )
+   ENDIF
 */
-cResult:= _get_dosver()
-RETURN ( cResult )
+   cResult := _get_dosver()
+
+   RETURN cResult

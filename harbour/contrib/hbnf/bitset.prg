@@ -24,19 +24,19 @@
  *
  */
 
-FUNCTION FT_BITSET(cInByte, nBitpos)
+FUNCTION FT_BITSET( cInByte, nBitpos )
 
-  LOCAL cByte
+   LOCAL cByte
 
-  IF valtype(cInbyte) != "C" .or. valtype(nBitpos) != "N"  // parameter check
-     cByte := NIL
-  ELSE
-     IF (nBitPos > 7) .or. (nBitPos < 0) .or. (nBitPos != int(nBitPos))
-        cByte := NIL
-     ELSE
-        cByte := iif( FT_ISBIT(cInByte, nBitpos), cInByte, ;
-                       chr(asc(cInByte) + (2 ^ nBitpos)))
-     ENDIF
-  ENDIF
+   IF ValType( cInbyte ) != "C" .OR. ValType( nBitpos ) != "N"  // parameter check
+      cByte := NIL
+   ELSE
+      IF nBitPos > 7 .OR. nBitPos < 0 .OR. nBitPos != Int( nBitPos )
+         cByte := NIL
+      ELSE
+         cByte := iif( FT_ISBIT( cInByte, nBitpos ), cInByte, ;
+            Chr( Asc( cInByte ) + ( 2 ^ nBitpos ) ) )
+      ENDIF
+   ENDIF
 
-RETURN cByte
+   RETURN cByte

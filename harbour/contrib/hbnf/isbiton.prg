@@ -27,11 +27,11 @@
  *
  */
 
-function FT_ISBITON( nWord, nBit )
+FUNCTION FT_ISBITON( nWord, nBit )
 
-  nWord := iif(nWord < 0, nWord + 65536, nWord)
-  nWord := int(nWord * (2 ^ (15 - nBit)))
-  nWord := int(nWord % 65536)
-  nWord := int(nWord / 32768)
+   nWord := iif( nWord < 0, nWord + 65536, nWord )
+   nWord := Int( nWord * ( 2 ^ ( 15 - nBit ) ) )
+   nWord := Int( nWord % 65536 )
+   nWord := Int( nWord / 32768 )
 
-  return (nWord == 1)
+   RETURN ( nWord == 1 )

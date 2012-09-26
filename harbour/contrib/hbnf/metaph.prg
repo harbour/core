@@ -92,267 +92,278 @@
  *
  */
 
-*------------------------------------------------
+//------------------------------------------------
 //  Demo of FT_METAPH()
 
 //  #define FT_TEST .T.
 
 #ifdef FT_TEST
+
 PROCEDURE Main()
-  LOCAL cJunk  := SPACE( 8000 )
-  LOCAL aNames := {}
-  LOCAL cName, nElem
 
-  SET( _SET_SCOREBOARD, .F.   )
-  SET( _SET_COLOR,      "W/B" )
-  CLS
+   LOCAL cJunk  := Space( 8000 )
+   LOCAL aNames := {}
+   LOCAL cName, nElem
 
-  //  Demo will create an array of names and display in 3 columns
-  //  _ftRow() and _ftCol() will calculate the screen co-ordinates
-  //  by evaluating the element number
+   SET( _SET_SCOREBOARD, .F.   )
+   SET( _SET_COLOR,      "W/B" )
+   CLS
 
-  AADD( aNames, "Adams"        )
-  AADD( aNames, "Addams"       )
-  AADD( aNames, "Atoms"        )
-  AADD( aNames, "Adamson"      )
-  AADD( aNames, "Cajun"        )
-  AADD( aNames, "Cagen"        )
-  AADD( aNames, "Cochy"        )
-  AADD( aNames, "Cocci"        )
-  AADD( aNames, "Smith"        )
-  AADD( aNames, "Smythe"       )
-  AADD( aNames, "Naylor"       )
-  AADD( aNames, "Nailer"       )
-  AADD( aNames, "Holberry"     )
-  AADD( aNames, "Wholebary"    )
-  AADD( aNames, "Jackson"      )
-  AADD( aNames, "Jekksen"      )
-  AADD( aNames, "The Source"   )
-  AADD( aNames, "The Sores"    )
-  AADD( aNames, "Jones"        )
-  AADD( aNames, "Johns"        )
-  AADD( aNames, "Lennon"       )
-  AADD( aNames, "Lenin"        )
-  AADD( aNames, "Fischer"      )
-  AADD( aNames, "Fisher"       )
-  AADD( aNames, "O'Donnell"    )
-  AADD( aNames, "O Donald"     )
-  AADD( aNames, "Pugh"         )
-  AADD( aNames, "Pew"          )
-  AADD( aNames, "Heimendinger" )
-  AADD( aNames, "Hymendinker"  )
-  AADD( aNames, "Knight"       )
-  AADD( aNames, "Nite"         )
-  AADD( aNames, "Lamb"         )
-  AADD( aNames, "Lamb Chops"   )
-  AADD( aNames, "Stephens"     )
-  AADD( aNames, "Stevens"      )
-  AADD( aNames, "Neilson"      )
-  AADD( aNames, "Nelson"       )
-  AADD( aNames, "Tchaikovski"  )
-  AADD( aNames, "Chikofski"    )
-  AADD( aNames, "Caton"        )
-  AADD( aNames, "Wright"       )
-  AADD( aNames, "Write"        )
-  AADD( aNames, "Right"        )
-  AADD( aNames, "Manual"       )
-  AADD( aNames, "Now"          )
-  AADD( aNames, "Wheatabix"    )
-  AADD( aNames, "Science"      )
-  AADD( aNames, "Cinzano"      )
-  AADD( aNames, "Lucy"         )
-  AADD( aNames, "Reece"        )
-  AADD( aNames, "Righetti"     )
-  AADD( aNames, "Oppermann"    )
-  AADD( aNames, "Bookkeeper"   )
-  AADD( aNames, "McGill"       )
-  AADD( aNames, "Magic"        )
-  AADD( aNames, "McLean"       )
-  AADD( aNames, "McLane"       )
-  AADD( aNames, "Maclean"      )
-  AADD( aNames, "Exxon"        )
+//  Demo will create an array of names and display in 3 columns
+//  _ftRow() and _ftCol() will calculate the screen co-ordinates
+//  by evaluating the element number
 
-  // display names and metaphones in 3 columns on screen
-  AEVAL( aNames, ;
-         { | cName, nElem | ;
-             SETPOS( _ftRow( nElem ), _ftCol( nElem ) ), ;
-             QQOUT( PadR( cName, 18, "." ) + FT_METAPH( cName ) ) ;
-         } )
+   AAdd( aNames, "Adams"        )
+   AAdd( aNames, "Addams"       )
+   AAdd( aNames, "Atoms"        )
+   AAdd( aNames, "Adamson"      )
+   AAdd( aNames, "Cajun"        )
+   AAdd( aNames, "Cagen"        )
+   AAdd( aNames, "Cochy"        )
+   AAdd( aNames, "Cocci"        )
+   AAdd( aNames, "Smith"        )
+   AAdd( aNames, "Smythe"       )
+   AAdd( aNames, "Naylor"       )
+   AAdd( aNames, "Nailer"       )
+   AAdd( aNames, "Holberry"     )
+   AAdd( aNames, "Wholebary"    )
+   AAdd( aNames, "Jackson"      )
+   AAdd( aNames, "Jekksen"      )
+   AAdd( aNames, "The Source"   )
+   AAdd( aNames, "The Sores"    )
+   AAdd( aNames, "Jones"        )
+   AAdd( aNames, "Johns"        )
+   AAdd( aNames, "Lennon"       )
+   AAdd( aNames, "Lenin"        )
+   AAdd( aNames, "Fischer"      )
+   AAdd( aNames, "Fisher"       )
+   AAdd( aNames, "O'Donnell"    )
+   AAdd( aNames, "O Donald"     )
+   AAdd( aNames, "Pugh"         )
+   AAdd( aNames, "Pew"          )
+   AAdd( aNames, "Heimendinger" )
+   AAdd( aNames, "Hymendinker"  )
+   AAdd( aNames, "Knight"       )
+   AAdd( aNames, "Nite"         )
+   AAdd( aNames, "Lamb"         )
+   AAdd( aNames, "Lamb Chops"   )
+   AAdd( aNames, "Stephens"     )
+   AAdd( aNames, "Stevens"      )
+   AAdd( aNames, "Neilson"      )
+   AAdd( aNames, "Nelson"       )
+   AAdd( aNames, "Tchaikovski"  )
+   AAdd( aNames, "Chikofski"    )
+   AAdd( aNames, "Caton"        )
+   AAdd( aNames, "Wright"       )
+   AAdd( aNames, "Write"        )
+   AAdd( aNames, "Right"        )
+   AAdd( aNames, "Manual"       )
+   AAdd( aNames, "Now"          )
+   AAdd( aNames, "Wheatabix"    )
+   AAdd( aNames, "Science"      )
+   AAdd( aNames, "Cinzano"      )
+   AAdd( aNames, "Lucy"         )
+   AAdd( aNames, "Reece"        )
+   AAdd( aNames, "Righetti"     )
+   AAdd( aNames, "Oppermann"    )
+   AAdd( aNames, "Bookkeeper"   )
+   AAdd( aNames, "McGill"       )
+   AAdd( aNames, "Magic"        )
+   AAdd( aNames, "McLean"       )
+   AAdd( aNames, "McLane"       )
+   AAdd( aNames, "Maclean"      )
+   AAdd( aNames, "Exxon"        )
 
-  SETPOS( 21, 00 )
-  QUIT
+// display names and metaphones in 3 columns on screen
+   AEval( aNames, ;
+      {| cName, nElem | ;
+      SetPos( _ftRow( nElem ), _ftCol( nElem ) ), ;
+      QQOut( PadR( cName, 18, "." ) + FT_METAPH( cName ) ) ;
+      } )
 
-  *------------------------------------------------
-  STATIC FUNCTION _ftRow( nElem )  //  Determine which row to print on
-  RETURN iif( nElem > 40, nElem - 40, iif( nElem > 20, nElem - 20, nElem ) )
-  *------------------------------------------------
-  STATIC FUNCTION _ftCol( nElem )  //  Determine which column to start print
-  RETURN iif( nElem > 40,  55, iif( nElem > 20, 28, 1 ) )
-  *------------------------------------------------
+   SetPos( 21, 00 )
+   QUIT
+
+//------------------------------------------------
+
+STATIC FUNCTION _ftRow( nElem )  //  Determine which row to print on
+
+   RETURN iif( nElem > 40, nElem - 40, iif( nElem > 20, nElem - 20, nElem ) )
+
+//------------------------------------------------
+
+STATIC FUNCTION _ftCol( nElem )  //  Determine which column to start print
+
+   RETURN iif( nElem > 40,  55, iif( nElem > 20, 28, 1 ) )
+
+//------------------------------------------------
 
 #endif
 // End of Test program
 
-*------------------------------------------------
-FUNCTION FT_METAPH ( cName, nSize )
+//------------------------------------------------
+
+FUNCTION FT_METAPH( cName, nSize )
+
 //  Calculates the metaphone of a character string
 
-LOCAL cMeta
+   LOCAL cMeta
 
-cName := iif( cName == NIL, "", cName )  //  catch-all
-nSize := iif( nSize == NIL, 4,  nSize )  //  default size: 4-bytes
+   cName := iif( cName == NIL, "", cName )  //  catch-all
+   nSize := iif( nSize == NIL, 4,  nSize )  //  default size: 4-bytes
 
 //  Remove non-alpha characters and make upper case.
 //  The string is padded with 1 space at the beginning & end.
 //  Spaces, if present inside the string, are not removed until all
 //  the prefix/suffix checking has been completed.
-cMeta := " " + _ftMakeAlpha( UPPER( ALLTRIM( cName ) ) ) + " "
+   cMeta := " " + _ftMakeAlpha( Upper( AllTrim( cName ) ) ) + " "
 
 //  prefixes which need special consideration
-IF " KN"   $ cMeta ;  cMeta := STRTRAN( cMeta, " KN" , " N"  ) ;  ENDIF
-IF " GN"   $ cMeta ;  cMeta := STRTRAN( cMeta, " GN" , " N"  ) ;  ENDIF
-IF " PN"   $ cMeta ;  cMeta := STRTRAN( cMeta, " PN" , " N"  ) ;  ENDIF
-IF " AE"   $ cMeta ;  cMeta := STRTRAN( cMeta, " AE" , " E"  ) ;  ENDIF
-IF " X"    $ cMeta ;  cMeta := STRTRAN( cMeta, " X"  , " S"  ) ;  ENDIF
-IF " WR"   $ cMeta ;  cMeta := STRTRAN( cMeta, " WR" , " R"  ) ;  ENDIF
-IF " WHO"  $ cMeta ;  cMeta := STRTRAN( cMeta, " WHO", " H"  ) ;  ENDIF
-IF " WH"   $ cMeta ;  cMeta := STRTRAN( cMeta, " WH" , " W"  ) ;  ENDIF
-IF " MCG"  $ cMeta ;  cMeta := STRTRAN( cMeta, " MCG", " MK" ) ;  ENDIF
-IF " MC"   $ cMeta ;  cMeta := STRTRAN( cMeta, " MC" , " MK" ) ;  ENDIF
-IF " MACG" $ cMeta ;  cMeta := STRTRAN( cMeta, " MACG"," MK" ) ;  ENDIF
-IF " MAC"  $ cMeta ;  cMeta := STRTRAN( cMeta, " MAC", " MK" ) ;  ENDIF
-IF " GI"   $ cMeta ;  cMeta := STRTRAN( cMeta, " GI",  " K"  ) ;  ENDIF
+   IF " KN"   $ cMeta ;  cMeta := StrTran( cMeta, " KN" , " N"  ) ;  ENDIF
+   IF " GN"   $ cMeta ;  cMeta := StrTran( cMeta, " GN" , " N"  ) ;  ENDIF
+   IF " PN"   $ cMeta ;  cMeta := StrTran( cMeta, " PN" , " N"  ) ;  ENDIF
+   IF " AE"   $ cMeta ;  cMeta := StrTran( cMeta, " AE" , " E"  ) ;  ENDIF
+   IF " X"    $ cMeta ;  cMeta := StrTran( cMeta, " X"  , " S"  ) ;  ENDIF
+   IF " WR"   $ cMeta ;  cMeta := StrTran( cMeta, " WR" , " R"  ) ;  ENDIF
+   IF " WHO"  $ cMeta ;  cMeta := StrTran( cMeta, " WHO", " H"  ) ;  ENDIF
+   IF " WH"   $ cMeta ;  cMeta := StrTran( cMeta, " WH" , " W"  ) ;  ENDIF
+   IF " MCG"  $ cMeta ;  cMeta := StrTran( cMeta, " MCG", " MK" ) ;  ENDIF
+   IF " MC"   $ cMeta ;  cMeta := StrTran( cMeta, " MC" , " MK" ) ;  ENDIF
+   IF " MACG" $ cMeta ;  cMeta := StrTran( cMeta, " MACG", " MK" ) ;  ENDIF
+   IF " MAC"  $ cMeta ;  cMeta := StrTran( cMeta, " MAC", " MK" ) ;  ENDIF
+   IF " GI"   $ cMeta ;  cMeta := StrTran( cMeta, " GI",  " K"  ) ;  ENDIF
 
 //  Suffixes which need special consideration
-IF "MB " $ cMeta ;  cMeta := STRTRAN( cMeta, "MB " , "M " ) ;  ENDIF
-IF "NG " $ cMeta ;  cMeta := STRTRAN( cMeta, "NG " , "N " ) ;  ENDIF
+   IF "MB " $ cMeta ;  cMeta := StrTran( cMeta, "MB " , "M " ) ;  ENDIF
+   IF "NG " $ cMeta ;  cMeta := StrTran( cMeta, "NG " , "N " ) ;  ENDIF
 
 //  Remove inner spaces (1st and last byte are spaces)
-IF " " $ SUBSTR( cMeta, 2, LEN( cMeta ) - 2 )
-  cMeta := " " + STRTRAN( cMeta, " " , "" ) + " "
-ENDIF
+   IF " " $ SubStr( cMeta, 2, Len( cMeta ) - 2 )
+      cMeta := " " + StrTran( cMeta, " " , "" ) + " "
+   ENDIF
 
 //  Double consonants sound much the same as singles
-IF "BB"  $ cMeta ;  cMeta := STRTRAN( cMeta, "BB"  , "B"  ) ;  ENDIF
-IF "CC"  $ cMeta ;  cMeta := STRTRAN( cMeta, "CC"  , "CH" ) ;  ENDIF
-IF "DD"  $ cMeta ;  cMeta := STRTRAN( cMeta, "DD"  , "T"  ) ;  ENDIF
-IF "FF"  $ cMeta ;  cMeta := STRTRAN( cMeta, "FF"  , "F"  ) ;  ENDIF
-IF "GG"  $ cMeta ;  cMeta := STRTRAN( cMeta, "GG"  , "K"  ) ;  ENDIF
-IF "KK"  $ cMeta ;  cMeta := STRTRAN( cMeta, "KK"  , "K"  ) ;  ENDIF
-IF "LL"  $ cMeta ;  cMeta := STRTRAN( cMeta, "LL"  , "L"  ) ;  ENDIF
-IF "MM"  $ cMeta ;  cMeta := STRTRAN( cMeta, "MM"  , "M"  ) ;  ENDIF
-IF "NN"  $ cMeta ;  cMeta := STRTRAN( cMeta, "NN"  , "N"  ) ;  ENDIF
-IF "PP"  $ cMeta ;  cMeta := STRTRAN( cMeta, "PP"  , "P"  ) ;  ENDIF
-IF "RR"  $ cMeta ;  cMeta := STRTRAN( cMeta, "RR"  , "R"  ) ;  ENDIF
-IF "SS"  $ cMeta ;  cMeta := STRTRAN( cMeta, "SS"  , "S"  ) ;  ENDIF
-IF "TT"  $ cMeta ;  cMeta := STRTRAN( cMeta, "TT"  , "T"  ) ;  ENDIF
-IF "XX"  $ cMeta ;  cMeta := STRTRAN( cMeta, "XX"  , "KS" ) ;  ENDIF
-IF "ZZ"  $ cMeta ;  cMeta := STRTRAN( cMeta, "ZZ"  , "S"  ) ;  ENDIF
+   IF "BB"  $ cMeta ;  cMeta := StrTran( cMeta, "BB"  , "B"  ) ;  ENDIF
+   IF "CC"  $ cMeta ;  cMeta := StrTran( cMeta, "CC"  , "CH" ) ;  ENDIF
+   IF "DD"  $ cMeta ;  cMeta := StrTran( cMeta, "DD"  , "T"  ) ;  ENDIF
+   IF "FF"  $ cMeta ;  cMeta := StrTran( cMeta, "FF"  , "F"  ) ;  ENDIF
+   IF "GG"  $ cMeta ;  cMeta := StrTran( cMeta, "GG"  , "K"  ) ;  ENDIF
+   IF "KK"  $ cMeta ;  cMeta := StrTran( cMeta, "KK"  , "K"  ) ;  ENDIF
+   IF "LL"  $ cMeta ;  cMeta := StrTran( cMeta, "LL"  , "L"  ) ;  ENDIF
+   IF "MM"  $ cMeta ;  cMeta := StrTran( cMeta, "MM"  , "M"  ) ;  ENDIF
+   IF "NN"  $ cMeta ;  cMeta := StrTran( cMeta, "NN"  , "N"  ) ;  ENDIF
+   IF "PP"  $ cMeta ;  cMeta := StrTran( cMeta, "PP"  , "P"  ) ;  ENDIF
+   IF "RR"  $ cMeta ;  cMeta := StrTran( cMeta, "RR"  , "R"  ) ;  ENDIF
+   IF "SS"  $ cMeta ;  cMeta := StrTran( cMeta, "SS"  , "S"  ) ;  ENDIF
+   IF "TT"  $ cMeta ;  cMeta := StrTran( cMeta, "TT"  , "T"  ) ;  ENDIF
+   IF "XX"  $ cMeta ;  cMeta := StrTran( cMeta, "XX"  , "KS" ) ;  ENDIF
+   IF "ZZ"  $ cMeta ;  cMeta := StrTran( cMeta, "ZZ"  , "S"  ) ;  ENDIF
 
 //  J sounds
-IF "DGE" $ cMeta ;  cMeta := STRTRAN( cMeta, "DGE" , "J"  ) ;  ENDIF
-IF "DGY" $ cMeta ;  cMeta := STRTRAN( cMeta, "DGY" , "J"  ) ;  ENDIF
-IF "DGI" $ cMeta ;  cMeta := STRTRAN( cMeta, "DGI" , "J"  ) ;  ENDIF
-IF "GI"  $ cMeta ;  cMeta := STRTRAN( cMeta, "GI"  , "J"  ) ;  ENDIF
-IF "GE"  $ cMeta ;  cMeta := STRTRAN( cMeta, "GE"  , "J"  ) ;  ENDIF
-IF "GY"  $ cMeta ;  cMeta := STRTRAN( cMeta, "GY"  , "J"  ) ;  ENDIF
+   IF "DGE" $ cMeta ;  cMeta := StrTran( cMeta, "DGE" , "J"  ) ;  ENDIF
+   IF "DGY" $ cMeta ;  cMeta := StrTran( cMeta, "DGY" , "J"  ) ;  ENDIF
+   IF "DGI" $ cMeta ;  cMeta := StrTran( cMeta, "DGI" , "J"  ) ;  ENDIF
+   IF "GI"  $ cMeta ;  cMeta := StrTran( cMeta, "GI"  , "J"  ) ;  ENDIF
+   IF "GE"  $ cMeta ;  cMeta := StrTran( cMeta, "GE"  , "J"  ) ;  ENDIF
+   IF "GY"  $ cMeta ;  cMeta := StrTran( cMeta, "GY"  , "J"  ) ;  ENDIF
 
 //  X sounds (KS)
-IF "X"   $ cMeta ;  cMeta := STRTRAN( cMeta, "X"   , "KS" ) ;  ENDIF
+   IF "X"   $ cMeta ;  cMeta := StrTran( cMeta, "X"   , "KS" ) ;  ENDIF
 
 // special consideration for SCH
-IF "ISCH" $ cMeta;  cMeta := STRTRAN( cMeta, "ISCH", "IX" ) ;  ENDIF
-IF "SCH" $ cMeta ;  cMeta := STRTRAN( cMeta, "SCH" , "SK" ) ;  ENDIF
+   IF "ISCH" $ cMeta;  cMeta := StrTran( cMeta, "ISCH", "IX" ) ;  ENDIF
+   IF "SCH" $ cMeta ;  cMeta := StrTran( cMeta, "SCH" , "SK" ) ;  ENDIF
 
 //  sh sounds (X)
-IF "CIA" $ cMeta ;  cMeta := STRTRAN( cMeta, "CIA" , "X"  ) ;  ENDIF
-IF "SIO" $ cMeta ;  cMeta := STRTRAN( cMeta, "SIO" , "X"  ) ;  ENDIF
-IF "C"   $ cMeta ;  cMeta := STRTRAN( cMeta, "SIA" , "X"  ) ;  ENDIF
-IF "SH"  $ cMeta ;  cMeta := STRTRAN( cMeta, "SH"  , "X"  ) ;  ENDIF
-IF "TIA" $ cMeta ;  cMeta := STRTRAN( cMeta, "TIA" , "X"  ) ;  ENDIF
-IF "TIO" $ cMeta ;  cMeta := STRTRAN( cMeta, "TIO" , "X"  ) ;  ENDIF
-IF "TCH" $ cMeta ;  cMeta := STRTRAN( cMeta, "TCH" , "X"  ) ;  ENDIF
-IF "CH"  $ cMeta ;  cMeta := STRTRAN( cMeta, "CH"  , "X"  ) ;  ENDIF
+   IF "CIA" $ cMeta ;  cMeta := StrTran( cMeta, "CIA" , "X"  ) ;  ENDIF
+   IF "SIO" $ cMeta ;  cMeta := StrTran( cMeta, "SIO" , "X"  ) ;  ENDIF
+   IF "C"   $ cMeta ;  cMeta := StrTran( cMeta, "SIA" , "X"  ) ;  ENDIF
+   IF "SH"  $ cMeta ;  cMeta := StrTran( cMeta, "SH"  , "X"  ) ;  ENDIF
+   IF "TIA" $ cMeta ;  cMeta := StrTran( cMeta, "TIA" , "X"  ) ;  ENDIF
+   IF "TIO" $ cMeta ;  cMeta := StrTran( cMeta, "TIO" , "X"  ) ;  ENDIF
+   IF "TCH" $ cMeta ;  cMeta := StrTran( cMeta, "TCH" , "X"  ) ;  ENDIF
+   IF "CH"  $ cMeta ;  cMeta := StrTran( cMeta, "CH"  , "X"  ) ;  ENDIF
 
 //  hissing sounds (S)
-IF "SCI" $ cMeta ;  cMeta := STRTRAN( cMeta, "SCI" , "S"  ) ;  ENDIF
-IF "SCE" $ cMeta ;  cMeta := STRTRAN( cMeta, "SCE" , "S"  ) ;  ENDIF
-IF "SCY" $ cMeta ;  cMeta := STRTRAN( cMeta, "SCY" , "S"  ) ;  ENDIF
-IF "CI"  $ cMeta ;  cMeta := STRTRAN( cMeta, "CI"  , "S"  ) ;  ENDIF
-IF "CE"  $ cMeta ;  cMeta := STRTRAN( cMeta, "CE"  , "S"  ) ;  ENDIF
-IF "CY"  $ cMeta ;  cMeta := STRTRAN( cMeta, "CY"  , "S"  ) ;  ENDIF
-IF "Z"   $ cMeta ;  cMeta := STRTRAN( cMeta, "Z"   , "S"  ) ;  ENDIF
+   IF "SCI" $ cMeta ;  cMeta := StrTran( cMeta, "SCI" , "S"  ) ;  ENDIF
+   IF "SCE" $ cMeta ;  cMeta := StrTran( cMeta, "SCE" , "S"  ) ;  ENDIF
+   IF "SCY" $ cMeta ;  cMeta := StrTran( cMeta, "SCY" , "S"  ) ;  ENDIF
+   IF "CI"  $ cMeta ;  cMeta := StrTran( cMeta, "CI"  , "S"  ) ;  ENDIF
+   IF "CE"  $ cMeta ;  cMeta := StrTran( cMeta, "CE"  , "S"  ) ;  ENDIF
+   IF "CY"  $ cMeta ;  cMeta := StrTran( cMeta, "CY"  , "S"  ) ;  ENDIF
+   IF "Z"   $ cMeta ;  cMeta := StrTran( cMeta, "Z"   , "S"  ) ;  ENDIF
 
 //  th sound (0)
-IF "TH"  $ cMeta ;  cMeta := STRTRAN( cMeta, "TH"  , "0"  ) ;  ENDIF
+   IF "TH"  $ cMeta ;  cMeta := StrTran( cMeta, "TH"  , "0"  ) ;  ENDIF
 
 //  Convert all vowels to 'v' from 3rd byte on
-cMeta := LEFT( cMeta, 2 ) + _ftConvVowel( SUBSTR( cMeta, 3 ) )
+   cMeta := Left( cMeta, 2 ) + _ftConvVowel( SubStr( cMeta, 3 ) )
 
 // Make Y's silent if not followed by vowel
-IF "Y"   $ cMeta
-  cMeta := STRTRAN( cMeta, "Yv"  , "#"  )  // Y followed by vowel
-  cMeta := STRTRAN( cMeta, "Y"   , ""   )  // not followed by vowel
-  cMeta := STRTRAN( cMeta, "#"   , "Yv" )  // restore Y and vowel
-ENDIF
+   IF "Y"   $ cMeta
+      cMeta := StrTran( cMeta, "Yv"  , "#"  )  // Y followed by vowel
+      cMeta := StrTran( cMeta, "Y"   , ""   )  // not followed by vowel
+      cMeta := StrTran( cMeta, "#"   , "Yv" )  // restore Y and vowel
+   ENDIF
 
 //  More G sounds, looking at surrounding vowels
-IF "GHv" $ cMeta ;  cMeta := STRTRAN( cMeta, "GHv" , "G"  ) ;  ENDIF
-IF "vGHT" $ cMeta;  cMeta := STRTRAN( cMeta, "vGHT", "T"  ) ;  ENDIF
-IF "vGH" $ cMeta ;  cMeta := STRTRAN( cMeta, "vGH" , "W"  ) ;  ENDIF
-IF "GN"  $ cMeta ;  cMeta := STRTRAN( cMeta, "GN"  , "N"  ) ;  ENDIF
-IF "G"   $ cMeta ;  cMeta := STRTRAN( cMeta, "G"   , "K"  ) ;  ENDIF
+   IF "GHv" $ cMeta ;  cMeta := StrTran( cMeta, "GHv" , "G"  ) ;  ENDIF
+   IF "vGHT" $ cMeta;  cMeta := StrTran( cMeta, "vGHT", "T"  ) ;  ENDIF
+   IF "vGH" $ cMeta ;  cMeta := StrTran( cMeta, "vGH" , "W"  ) ;  ENDIF
+   IF "GN"  $ cMeta ;  cMeta := StrTran( cMeta, "GN"  , "N"  ) ;  ENDIF
+   IF "G"   $ cMeta ;  cMeta := StrTran( cMeta, "G"   , "K"  ) ;  ENDIF
 
 //  H sounds, looking at surrounding vowels
-IF "vHv" $ cMeta ;  cMeta := STRTRAN( cMeta, "vHv" , "H"  ) ;  ENDIF
-IF "vH"  $ cMeta ;  cMeta := STRTRAN( cMeta, "vH"  , ""   ) ;  ENDIF
+   IF "vHv" $ cMeta ;  cMeta := StrTran( cMeta, "vHv" , "H"  ) ;  ENDIF
+   IF "vH"  $ cMeta ;  cMeta := StrTran( cMeta, "vH"  , ""   ) ;  ENDIF
 
 //  F sounds
-IF "PH"  $ cMeta ;  cMeta := STRTRAN( cMeta, "PH"  , "F"  ) ;  ENDIF
-IF "V"   $ cMeta ;  cMeta := STRTRAN( cMeta, "V"   , "F"  ) ;  ENDIF
+   IF "PH"  $ cMeta ;  cMeta := StrTran( cMeta, "PH"  , "F"  ) ;  ENDIF
+   IF "V"   $ cMeta ;  cMeta := StrTran( cMeta, "V"   , "F"  ) ;  ENDIF
 
 //  D sounds a bit like T
-IF "D"   $ cMeta ;  cMeta := STRTRAN( cMeta, "D"   , "T"  ) ;  ENDIF
+   IF "D"   $ cMeta ;  cMeta := StrTran( cMeta, "D"   , "T"  ) ;  ENDIF
 
 //  K sounds
-IF "CK"  $ cMeta ;  cMeta := STRTRAN( cMeta, "CK"  , "K"  ) ;  ENDIF
-IF "Q"   $ cMeta ;  cMeta := STRTRAN( cMeta, "Q"   , "K"  ) ;  ENDIF
-IF "C"   $ cMeta ;  cMeta := STRTRAN( cMeta, "C"   , "K"  ) ;  ENDIF
+   IF "CK"  $ cMeta ;  cMeta := StrTran( cMeta, "CK"  , "K"  ) ;  ENDIF
+   IF "Q"   $ cMeta ;  cMeta := StrTran( cMeta, "Q"   , "K"  ) ;  ENDIF
+   IF "C"   $ cMeta ;  cMeta := StrTran( cMeta, "C"   , "K"  ) ;  ENDIF
 
 //  Remove vowels
-cMeta := STRTRAN( cMeta, "v", "" )
+   cMeta := StrTran( cMeta, "v", "" )
 
-RETURN PadR( ALLTRIM( cMeta ), nSize )
+   RETURN PadR( AllTrim( cMeta ), nSize )
 
-*------------------------------------------------
-STATIC FUNCTION _ftMakeAlpha ( cStr )
+//------------------------------------------------
+
+STATIC FUNCTION _ftMakeAlpha( cStr )
+
 //  Strips non-alpha characters from a string, leaving spaces
 
-LOCAL x, cAlpha := ""
+   LOCAL x, cAlpha := ""
 
-FOR x := 1 to LEN( cStr )
-  IF SUBSTR( cStr, x, 1 ) == " " .OR. IsAlpha( SUBSTR( cStr, x, 1 ) )
-    cAlpha := cAlpha + SUBSTR( cStr, x, 1 )
-  ENDIF
-NEXT
+   FOR x := 1 TO Len( cStr )
+      IF SubStr( cStr, x, 1 ) == " " .OR. IsAlpha( SubStr( cStr, x, 1 ) )
+         cAlpha := cAlpha + SubStr( cStr, x, 1 )
+      ENDIF
+   NEXT
 
-RETURN cAlpha
+   RETURN cAlpha
 
-*------------------------------------------------
-STATIC FUNCTION _ftConvVowel ( cStr )
+//------------------------------------------------
+
+STATIC FUNCTION _ftConvVowel( cStr )
+
 //  Converts all vowels to letter 'v'
 
-LOCAL x, cConverted := ""
+   LOCAL x, cConverted := ""
 
-FOR x := 1 to LEN( cStr )
-  IF SUBSTR( cStr, x, 1 ) $ "AEIOU"
-    cConverted := cConverted + "v"
-  ELSE
-    cConverted := cConverted + SUBSTR( cStr, x, 1 )
-  ENDIF
-NEXT
+   FOR x := 1 TO Len( cStr )
+      IF SubStr( cStr, x, 1 ) $ "AEIOU"
+         cConverted := cConverted + "v"
+      ELSE
+         cConverted := cConverted + SubStr( cStr, x, 1 )
+      ENDIF
+   NEXT
 
-RETURN cConverted
-
-*------------------------------------------------
-// eof metaph.prg
+   RETURN cConverted

@@ -24,17 +24,17 @@
  *
  */
 
-FUNCTION FT_BYT2BIT(cByte)
+FUNCTION FT_BYT2BIT( cByte )
 
-  local nCounter, xBitstring
+   LOCAL nCounter, xBitstring
 
-  IF valtype(cByte) != "C"
-     xBitString := NIL
-  ELSE
-     xBitString := ""
-     FOR nCounter := 7 TO 0 step -1
-        xBitString += iif(FT_ISBIT(cByte, nCounter), "1", "0")
-     NEXT
-  ENDIF
+   IF ValType( cByte ) != "C"
+      xBitString := NIL
+   ELSE
+      xBitString := ""
+      FOR nCounter := 7 TO 0 step - 1
+         xBitString += iif( FT_ISBIT( cByte, nCounter ), "1", "0" )
+      NEXT
+   ENDIF
 
-RETURN xBitString
+   RETURN xBitString

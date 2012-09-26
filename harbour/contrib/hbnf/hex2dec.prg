@@ -30,17 +30,22 @@
 #define HEXTABLE "0123456789ABCDEF"
 
 #ifdef FT_TEST
-  PROCEDURE Main( cHexNum )
-     QOut( FT_HEX2DEC( cHexNum ) )
-     RETURN
+
+PROCEDURE Main( cHexNum )
+
+   QOut( FT_HEX2DEC( cHexNum ) )
+
+   RETURN
+
 #endif
 
 FUNCTION FT_HEX2DEC( cHexNum )
-   local n, nDec := 0, nHexPower := 1
 
-   for n := len( cHexNum ) to 1 step -1
-      nDec += ( at( subs( upper(cHexNum), n, 1 ), HEXTABLE ) - 1 ) * nHexPower
+   LOCAL n, nDec := 0, nHexPower := 1
+
+   FOR n := Len( cHexNum ) TO 1 step - 1
+      nDec += ( At( subs( Upper(cHexNum ), n, 1 ), HEXTABLE ) - 1 ) * nHexPower
       nHexPower *= 16
-   next
+   NEXT
 
-RETURN nDec
+   RETURN nDec

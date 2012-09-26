@@ -24,22 +24,22 @@
  *
  */
 
-THREAD STATIC aRgnStack := {}
+THREAD STATIC t_aRgnStack := {}
 
-FUNCTION FT_SAVRGN(nTop, nLeft, nBottom, nRight)
+FUNCTION FT_SAVRGN( nTop, nLeft, nBottom, nRight )
 
-   RETURN CHR(nTop) + CHR(nLeft) + CHR(nBottom) + CHR(nRight) + ;
-      SAVESCREEN(nTop, nLeft, nBottom, nRight)
+   RETURN Chr( nTop ) + Chr( nLeft ) + Chr( nBottom ) + Chr( nRight ) + ;
+      SaveScreen( nTop, nLeft, nBottom, nRight )
 
-FUNCTION FT_RSTRGN(cScreen, nTop, nLeft)
+FUNCTION FT_RSTRGN( cScreen, nTop, nLeft )
 
-   IF PCOUNT() == 3
-      RESTSCREEN(nTop, nLeft, (nTop - ASC(cScreen)) + ASC(SUBSTR(cScreen, 3)), ;
-         (nLeft - ASC(SUBSTR(cScreen, 2))) + ASC(SUBSTR(cScreen, 4)), ;
-         SUBSTR(cScreen, 5))
+   IF PCount() == 3
+      RestScreen( nTop, nLeft, ( nTop - Asc(cScreen ) ) + Asc( SubStr(cScreen, 3 ) ), ;
+         ( nLeft - Asc( SubStr(cScreen, 2 ) ) ) + Asc( SubStr( cScreen, 4 ) ), ;
+         SubStr( cScreen, 5 ) )
    ELSE
-      RESTSCREEN(ASC(cScreen), ASC(SUBSTR(cScreen, 2)), ASC(SUBSTR(cScreen, 3)), ;
-         ASC(SUBSTR(cScreen, 4)), SUBSTR(cScreen, 5))
+      RestScreen( Asc( cScreen ), Asc( SubStr(cScreen, 2 ) ), Asc( SubStr(cScreen, 3 ) ), ;
+         Asc( SubStr( cScreen, 4 ) ), SubStr( cScreen, 5 ) )
    ENDIF
 
    RETURN NIL
@@ -48,25 +48,25 @@ FUNCTION FT_RSTRGN(cScreen, nTop, nLeft)
          extra character and _SET_EXACT was set to .F.
          Harbour version accepts "pop all" only. [vszakats] */
 
-FUNCTION FT_RGNSTACK(cAction, nTop, nLeft, nBottom, nRight)
+FUNCTION FT_RGNSTACK( cAction, nTop, nLeft, nBottom, nRight )
 
-   THREAD STATIC nStackPtr := 0
+   THREAD STATIC t_nStackPtr := 0
    LOCAL nPopTop
 
    IF cAction == "push"
 
-      ASIZE(aRgnStack, ++nStackPtr)[nStackPtr] := ;
-         FT_SAVRGN(nTop, nLeft, nBottom, nRight)
+      ASize( t_aRgnStack, ++t_nStackPtr )[ t_nStackPtr ] := ;
+         FT_SAVRGN( nTop, nLeft, nBottom, nRight )
 
    ELSEIF cAction == "pop" .OR. cAction == "pop all"
 
-      nPopTop := iif("all" $ cAction, 0, nStackPtr-1)
+      nPopTop := iif( "all" $ cAction, 0, t_nStackPtr - 1 )
 
-      DO WHILE nStackPtr > nPopTop
-         FT_RSTRGN(aRgnStack[nStackPtr--])
+      DO WHILE t_nStackPtr > nPopTop
+         FT_RSTRGN( t_aRgnStack[ t_nStackPtr-- ] )
       ENDDO
 
-      ASIZE(aRgnStack, nStackPtr)
+      ASize( t_aRgnStack, t_nStackPtr )
 
    ENDIF
 

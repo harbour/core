@@ -41,91 +41,97 @@
  *
  */
 
+#include "fileio.ch"
+
 #ifdef HB_OS_DOS
-  #define FT_TEMPFILE_ORIGINAL
+#define FT_TEMPFILE_ORIGINAL
 #endif
 
 #ifdef HB_OS_DOS_32
-  #undef FT_TEMPFILE_ORIGINAL
+#undef FT_TEMPFILE_ORIGINAL
 #endif
 
 #ifdef FT_TEMPFILE_ORIGINAL
 
-  #include "ftint86.ch"
+#include "ftint86.ch"
 
-  #define DOS         33
-  #define TEMPNAME    90
+#define DOS         33
+#define TEMPNAME    90
 
-  FUNCTION FT_TEMPFIL( cPath, lHide, nHandle )
-    LOCAL  cRet,aRegs[3]
+FUNCTION FT_TEMPFIL( cPath, lHide, nHandle )
 
-    cPath := iif( valType(cPath) != "C",           ;
-                     replicate( chr(0),13) ,            ;
-                     cPath += replicate( chr(0), 13 )   ;
-                )
+   LOCAL  cRet, aRegs[3]
 
-    lHide := iif( valType(lHide) != "L", .f., lHide )
+   cPath := iif( ValType( cPath ) != "C",           ;
+      Replicate( Chr( 0 ), 13 ) ,            ;
+      cPath += Replicate( Chr( 0 ), 13 )   ;
+      )
+
+   lHide := iif( ValType( lHide ) != "L", .F. , lHide )
     /*
-    aRegs[AX]        := MAKEHI( TEMPNAME )
-    aRegs[CX]        := iif( lHide, 2, 0 )
-    aRegs[DS]        := cPath
-    aRegs[DX]        := REG_DS
+    aRegs[ AX ]        := MAKEHI( TEMPNAME )
+    aRegs[ CX ]        := iif( lHide, 2, 0 )
+    aRegs[ DS ]        := cPath
+    aRegs[ DX ]        := REG_DS
 
     FT_INT86( DOS, aRegs )
     */
-    aRegs:=_ft_tempfil(cPath,lHide)
+   aRegs := _ft_tempfil( cPath, lHide )
     /*  If carry flag is clear, then call succeeded and a file handle is
      *  sitting in AX that needs to be closed.
      */
 
-    if !ft_isBitOn( aRegs[3], FLAG_CARRY )
-       if pcount() >= 3
-          nHandle := aRegs[1]
-       else
-          fclose( aRegs[1] )
-       endif
-       cRet := alltrim( strtran( aRegs[2], chr(0) ) )
-    else
-       cRet := ""
-    endif
+   IF ! ft_isBitOn( aRegs[ 3 ], FLAG_CARRY )
+      IF PCount() >= 3
+         nHandle := aRegs[ 1 ]
+      ELSE
+         FClose( aRegs[ 1 ] )
+      ENDIF
+      cRet := AllTrim( StrTran( aRegs[ 2 ], Chr( 0 ) ) )
+   ELSE
+      cRet := ""
+   ENDIF
 
-  RETURN cRet
+   RETURN cRet
 
 #else
 
-  #include "fileio.ch"
+FUNCTION FT_TEMPFIL( cPath, lHide, nHandle )
 
-  FUNCTION FT_TEMPFIL( cPath, lHide, nHandle )
+   LOCAL cFile
 
-  LOCAL cFile
+   hb_default( @cPath, ".\" )
+   hb_default( @lHide, .F. )
 
-  hb_default( @cPath, ".\" )
-  hb_default( @lHide, .F. )
+   cPath := AllTrim( cPath )
 
-  cPath := alltrim( cPath )
+   nHandle := hb_FTempCreate( cPath, NIL, iif( lHide, FC_HIDDEN, FC_NORMAL ), @cFile )
 
-  nHandle := HB_FTempCreate( cPath, nil, iif( lHide, FC_HIDDEN, FC_NORMAL ), @cFile )
+   IF PCount() <= 2
+      FClose( nHandle )
+   ENDIF
 
-  if pcount() <= 2
-     fclose( nHandle )
-  endif
-
-  RETURN cFile
+   RETURN cFile
 
 #endif /* FT_TEMPFILE_ORIGINAL */
 
 #ifdef FT_TEST
-  PROCEDURE Main( cPath, cHide )
-     LOCAL cFile, nHandle
-     cFile := FT_TEMPFIL( cPath, (cHide == "Y") )
 
-     if !empty( cFile )
-        QOut( cFile )
-        nHandle := fopen( cFile, 1 )
-        fwrite( nHandle, "This is a test!" )
-        fclose( nHandle )
-     else
-        Qout( "An error occurred" )
-     endif
-  RETURN
+PROCEDURE Main( cPath, cHide )
+
+   LOCAL cFile, nHandle
+
+   cFile := FT_TEMPFIL( cPath, ( cHide == "Y" ) )
+
+   IF ! Empty( cFile )
+      QOut( cFile )
+      nHandle := FOpen( cFile, FO_WRITE )
+      FWrite( nHandle, "This is a test!" )
+      FClose( nHandle )
+   ELSE
+      QOut( "An error occurred" )
+   ENDIF
+
+   RETURN
+
 #endif

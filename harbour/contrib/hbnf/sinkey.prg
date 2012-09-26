@@ -24,36 +24,37 @@
  *
  */
 
-FUNCTION FT_SINKEY(waittime)
-  LOCAL key, cblock
+FUNCTION FT_SINKEY( waittime )
 
-  DO CASE
+   LOCAL key, cblock
 
-     /* if no WAITTIME passed, go straight through */
-     CASE pcount() == 0
-        key := inkey()
+   DO CASE
+
+      /* if no WAITTIME passed, go straight through */
+   CASE PCount() == 0
+      key := Inkey()
 
      /* dig this... if you pass inkey(NIL), it is identical to INKEY(0)!
         therefore, I allow you to pass FT_SINKEY(NIL) -- hence this mild bit
         of convolution */
 
-     CASE waittime == NIL .AND. Pcount() == 1
-        key := inkey(0)
+   CASE waittime == NIL .AND. PCount() == 1
+      key := Inkey( 0 )
 
-     OTHERWISE
-        key := inkey(waittime)
+   OTHERWISE
+      key := Inkey( waittime )
 
-  ENDCASE
+   ENDCASE
 
-  cblock := Setkey(key)
+   cblock := SetKey( key )
 
-  IF cblock != NIL
+   IF cblock != NIL
 
-     // run the code block associated with this key and pass it the
-     // name of the previous procedure and the previous line number
+      // run the code block associated with this key and pass it the
+      // name of the previous procedure and the previous line number
 
-     Eval(cblock, Procname(1), Procline(1), NIL)
+      Eval( cblock, ProcName( 1 ), ProcLine( 1 ), NIL )
 
-  ENDIF
+   ENDIF
 
-RETURN key
+   RETURN KEY

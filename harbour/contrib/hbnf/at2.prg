@@ -30,7 +30,9 @@
 #ifdef FT_TEST
 
 PROCEDURE Main()
-   LOCAL cSearch,cTarget,var0
+
+   LOCAL cSearch, cTarget, var0
+
    CLS
    ? "TEST TO DEMONSTRATE EXAMPLES OF FT_AT2"
    ?
@@ -40,17 +42,18 @@ PROCEDURE Main()
    ?? cTarget
    ?
    var0 := ft_at2( cSearch, cTarget )
-   ? PADR("FT_AT2( cSearch, cTarget ) -> ",40)
+   ? PadR( "FT_AT2( cSearch, cTarget ) -> ", 40 )
    ?? var0
    ?
    var0 := ft_at2( cSearch, cTarget, 2 )
-   ? PADR("FT_AT2( cSearch, cTarget, 2 ) -> ",40)
+   ? PadR( "FT_AT2( cSearch, cTarget, 2 ) -> ", 40 )
    ??var0
    ?
    var0 := ft_at2( cSearch, cTarget, 2, .F. )
-   ? PADR("FT_AT2( cSearch, cTarget, 2, .F. ) -> ",40)
+   ? PadR( "FT_AT2( cSearch, cTarget, 2, .F. ) -> ", 40 )
    ??var0
    ?
+
    RETURN
 
 #endif
@@ -60,7 +63,7 @@ FUNCTION FT_AT2( cSearch, cTarget, nOccurs, lCaseSens )
    LOCAL nCount, nPos, nPos2 := 0
    LOCAL cSubstr := cTarget
 
-   // Set default parameters as necessary.
+// Set default parameters as necessary.
    IF lCaseSens == NIL
       lCaseSens := .T.
    ENDIF
@@ -73,10 +76,10 @@ FUNCTION FT_AT2( cSearch, cTarget, nOccurs, lCaseSens )
 
       // Store position of next occurrence of cSearch.
       IF lCaseSens
-         nPos := AT( cSearch, cSubstr )
+         nPos := At( cSearch, cSubstr )
 
       ELSE
-         nPos := AT( UPPER( cSearch ), UPPER( cSubstr ) )
+         nPos := At( Upper( cSearch ), Upper( cSubstr ) )
 
       ENDIF
 
@@ -84,12 +87,12 @@ FUNCTION FT_AT2( cSearch, cTarget, nOccurs, lCaseSens )
       nPos2 += nPos
 
       // Resize cSubstr
-      cSubstr := SUBSTR( cSubstr, AT( cSearch, cSubstr ) +1 )
+      cSubstr := SubStr( cSubstr, At( cSearch, cSubstr ) + 1 )
 
       // Breakout if there are no occurences here
 
       IF nPos == 0
-           EXIT
+         EXIT
       ENDIF
 
    NEXT
@@ -97,9 +100,11 @@ FUNCTION FT_AT2( cSearch, cTarget, nOccurs, lCaseSens )
    RETURN nPos2
 
 FUNCTION FT_RAT2( cSearch, cTarget, nOccurs, lCaseSens )
+
    LOCAL nCount, nPos, nPos2 := 0
    LOCAL cSubstr := cTarget
-   // Set default parameters as necessary.
+
+// Set default parameters as necessary.
    IF lCaseSens == NIL
       lCaseSens := .T.
    ENDIF
@@ -109,17 +114,18 @@ FUNCTION FT_RAT2( cSearch, cTarget, nOccurs, lCaseSens )
    FOR nCount := 1 TO nOccurs
       // Store position of next occurrence of cSearch.
       IF lCaseSens
-         nPos := RAT( cSearch, cSubstr )
+         nPos := RAt( cSearch, cSubstr )
       ELSE
-         nPos := RAT( UPPER( cSearch ), UPPER( cSubstr ) )
+         nPos := RAt( Upper( cSearch ), Upper( cSubstr ) )
       ENDIF
       // Store position of cSearch relative to original string.
       nPos2 := nPos
       // Resize cSubstr
-      cSubstr := SUBSTR( cSubstr, 1, RAT( cSearch, cSubstr ) - 1 )
+      cSubstr := SubStr( cSubstr, 1, RAt( cSearch, cSubstr ) - 1 )
       // Breakout if there are no occurences here
       IF nPos == 0
-           EXIT
+         EXIT
       ENDIF
    NEXT
+
    RETURN nPos2

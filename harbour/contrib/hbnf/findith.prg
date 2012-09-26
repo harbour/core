@@ -24,47 +24,51 @@
  *
  */
 
-#define IS_NOT_LOGICAL(x)               (VALTYPE(x) != "L")
 #define MAKE_UPPER(cString)             (cString := UPPER(cString))
 #define NULL                            ""
 
 #ifdef FT_TEST
-  PROCEDURE Main( cCk, cStr, nOcc, xCase )
-     LOCAL nFind
-     if pcount() != 4
-        QOut( "usage: findith cCk cStr nOcc xCase")
-        quit
-     endif
 
-     xCase := iif( xCase == "Y", .t., .f. )
-     nOcc  := val(nOcc)
-     QOut( iif( xCase, "Ignoring ", "Observing ") + "case:" )
+PROCEDURE Main( cCk, cStr, nOcc, xCase )
 
-     QOut( cStr )
-     nFind := FT_FINDITH( cCk, cStr, nOcc, xCase )
-     QOut( iif( nFind > 0, space( nFind - 1) + "^" , "Not found" ) )
-  RETURN
+   LOCAL nFind
+
+   IF PCount() != 4
+      QOut( "usage: findith cCk cStr nOcc xCase" )
+      QUIT
+   ENDIF
+
+   xCase := iif( xCase == "Y", .T. , .F. )
+   nOcc  := Val( nOcc )
+   QOut( iif( xCase, "Ignoring ", "Observing " ) + "case:" )
+
+   QOut( cStr )
+   nFind := FT_FINDITH( cCk, cStr, nOcc, xCase )
+   QOut( iif( nFind > 0, Space( nFind - 1 ) + "^" , "Not found" ) )
+
+   RETURN
+
 #endif
 
-FUNCTION FT_FINDITH(cCheckFor,cCheckIn,nWhichOccurrence,lIgnoreCase)
+FUNCTION FT_FINDITH( cCheckFor, cCheckIn, nWhichOccurrence, lIgnoreCase )
 
    LOCAL nIthOccurrence
 
-                                        // Is Case Sensitivity Important??
-   IF IS_NOT_LOGICAL(lIgnoreCase) .OR. ;
-      lIgnoreCase
+// Is Case Sensitivity Important??
+   IF ! HB_ISLOGICAL( lIgnoreCase ) .OR. ;
+         lIgnoreCase
 
-      MAKE_UPPER(cCheckFor)             // No, Force Everything to Uppercase
-      MAKE_UPPER(cCheckIn)
+      MAKE_UPPER( cCheckFor )             // No, Force Everything to Uppercase
+      MAKE_UPPER( cCheckIn )
 
    ENDIF                                // IS_NOT_LOGICAL(lIgnoreCase) or
-                                        // lIgnoreCase
+// lIgnoreCase
 
-   RETURN iif(nWhichOccurrence == 1, ;
-             AT(cCheckFor, cCheckIn), ;
-             iif((nIthOccurrence := AT(cCheckFor, ;
-                                     STRTRAN(cCheckIn, cCheckFor, ;
-                                             NULL, 1, ;
-                                             nWhichOccurrence-1))) == 0, ;
-                0, ;
-                nIthOccurrence + ((nWhichOccurrence - 1) * LEN(cCheckFor))))
+   RETURN iif( nWhichOccurrence == 1, ;
+      At( cCheckFor, cCheckIn ), ;
+      iif( ( nIthOccurrence := At(cCheckFor, ;
+      StrTran( cCheckIn, cCheckFor, ;
+      NULL, 1, ;
+      nWhichOccurrence - 1 ) ) ) == 0, ;
+      0, ;
+      nIthOccurrence + ( ( nWhichOccurrence - 1 ) * Len( cCheckFor ) ) ) )

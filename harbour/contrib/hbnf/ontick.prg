@@ -73,13 +73,13 @@ PROCEDURE FT_ONTICK( bOnTick, nTickInterval )
       ENDIF
       t_nLastCheck := hb_milliSeconds()
       IF Empty( t_hIdle )
-         t_hIdle := hb_IdleAdd( {|| __FT_ONTICK() } )
+         t_hIdle := hb_idleAdd( {|| __FT_ONTICK() } )
       ENDIF
    ELSE
       t_bOnTick := NIL
       t_nTickInterval := 0
       IF ! Empty( t_hIdle )
-         hb_IdleDel( t_hIdle )
+         hb_idleDel( t_hIdle )
          t_hIdle := NIL
       ENDIF
    ENDIF

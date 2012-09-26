@@ -25,18 +25,24 @@
  */
 
 #ifdef FT_TEST
-  PROCEDURE Main( sNumE )
-     qout( FT_E2D( sNumE ) )
-     RETURN
+
+PROCEDURE Main( sNumE )
+
+   QOut( FT_E2D( sNumE ) )
+
+   RETURN
+
 #endif
 
-function ft_e2d( sNumE )
-  local nMant, nExp
+FUNCTION ft_e2d( sNumE )
 
-  nMant := val( left( sNumE, at( 'E', sNumE ) - 1 ) )
-  nExp  := val(substr( sNumE,                    ;
-                 at( 'E', sNumE ) + 1,           ;
-                 len( sNumE ) - at( 'E', sNumE ) ;
-                     )                           ;
-              )
-  return nMant * 10 ^ nExp
+   LOCAL nMant, nExp
+
+   nMant := Val( Left( sNumE, At( 'E', sNumE ) - 1 ) )
+   nExp  := Val( SubStr( sNumE,                    ;
+      At( 'E', sNumE ) + 1,           ;
+      Len( sNumE ) - At( 'E', sNumE ) ;
+      )                           ;
+      )
+
+   RETURN nMant * 10 ^ nExp

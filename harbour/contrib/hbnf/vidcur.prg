@@ -33,26 +33,28 @@
 #define VIDEO      16
 
 FUNCTION FT_SETVCUR( nPage, nRow, nCol )
-  LOCAL aRegs[ INT86_MAX_REGS ]
 
-  nPage := iif( nPage == nil, FT_GETVPG()  , nPage )
-  nRow  := iif( nRow  == nil, 0            , nRow  )
-  nCol  := iif( nCol  == nil, 0            , nCol  )
+   LOCAL aRegs[ INT86_MAX_REGS ]
 
-  aRegs[ AX ] := MAKEHI(  2    )
-  aRegs[ BX ] := MAKEHI( nPage )
-  aRegs[ DX ] := MAKEHI( nRow  ) + nCol
+   nPage := iif( nPage == NIL, FT_GETVPG()  , nPage )
+   nRow  := iif( nRow  == NIL, 0            , nRow  )
+   nCol  := iif( nCol  == NIL, 0            , nCol  )
 
-  FT_INT86( VIDEO, aRegs )
+   aRegs[ AX ] := MAKEHI(  2    )
+   aRegs[ BX ] := MAKEHI( nPage )
+   aRegs[ DX ] := MAKEHI( nRow  ) + nCol
 
-RETURN NIL
+   FT_INT86( VIDEO, aRegs )
+
+   RETURN NIL
 
 FUNCTION FT_GETVCUR( nPage )
-  LOCAL aRegs[ INT86_MAX_REGS ]
 
-  nPage := iif( nPage == nil, FT_GETVPG(), nPage )
-  aRegs[ AX ] := MAKEHI( 3     )
-  aRegs[ BX ] := MAKEHI( nPage )
-  FT_INT86( VIDEO, aRegs )
+   LOCAL aRegs[ INT86_MAX_REGS ]
 
-RETURN ( { HIGHBYTE( aRegs[CX] ), LOWBYTE( aRegs[CX] ), HIGHBYTE( aRegs[DX] ), LOWBYTE( aRegs[DX] ) } )
+   nPage := iif( nPage == NIL, FT_GETVPG(), nPage )
+   aRegs[ AX ] := MAKEHI( 3     )
+   aRegs[ BX ] := MAKEHI( nPage )
+   FT_INT86( VIDEO, aRegs )
+
+   RETURN { HIGHBYTE( aRegs[ CX ] ), LOWBYTE( aRegs[ CX ] ), HIGHBYTE( aRegs[ DX ] ), LOWBYTE( aRegs[ DX ] ) }

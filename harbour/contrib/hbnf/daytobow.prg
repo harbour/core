@@ -29,17 +29,17 @@
 
 FUNCTION FT_DAYTOBOW( dGivenDate )
 
-  LOCAL nRetVal, nDOW_Start
+   LOCAL nRetVal, nDOW_Start
 
-  nDOW_Start := FT_DATECNFG()[2]
+   nDOW_Start := FT_DATECNFG()[ 2 ]
 
-  IF VALTYPE(dGivenDate) != 'D'
-    dGivenDate := DATE()
-  ENDIF
+   IF ValType( dGivenDate ) != 'D'
+      dGivenDate := Date()
+   ENDIF
 
-  nRetVal := DOW( dGivenDate ) - nDOW_Start
-  IF nRetVal < 0
-    nRetVal += 7
-  ENDIF
+   nRetVal := DOW( dGivenDate ) - nDOW_Start
+   IF nRetVal < 0
+      nRetVal += 7
+   ENDIF
 
-RETURN nRetVal
+   RETURN nRetVal

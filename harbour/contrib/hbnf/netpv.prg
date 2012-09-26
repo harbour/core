@@ -25,21 +25,25 @@
  */
 
 #ifdef FT_TEST
-  PROCEDURE Main()
-     ? FT_NETPV( 10000, 10, { 10000,15000,16000,17000 } )
-  RETURN
+
+PROCEDURE Main()
+
+   ? FT_NETPV( 10000, 10, { 10000, 15000, 16000, 17000 } )
+
+   RETURN
+
 #endif
 
-FUNCTION FT_NETPV(nInitialInvestment, nInterestRate, aCashFlow, nNoOfCashFlows)
+FUNCTION FT_NETPV( nInitialInvestment, nInterestRate, aCashFlow, nNoOfCashFlows )
 
    LOCAL nNetPresentValue := 0
 
-   nNoOfCashFlows := iif( nNoOfCashFlows == nil, len( aCashFlow ), nNoOfCashFlows )
+   nNoOfCashFlows := iif( nNoOfCashFlows == nil, Len( aCashFlow ), nNoOfCashFlows )
 
-   AEVAL(aCashFlow, ;
-         { | nElement, nElementNo | ;
-           nNetPresentValue += nElement / ;
-                               ((1 + (nInterestRate / 100)) ** nElementNo) }, ;
-         1, nNoOfCashFlows)
+   AEval( aCashFlow, ;
+      {| nElement, nElementNo | ;
+      nNetPresentValue += nElement / ;
+      ( ( 1 + (nInterestRate / 100 ) ) ** nElementNo ) }, ;
+      1, nNoOfCashFlows )
 
-   RETURN (nNetPresentValue -= nInitialInvestment)
+   RETURN nNetPresentValue -= nInitialInvestment

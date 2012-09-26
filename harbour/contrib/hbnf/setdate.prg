@@ -34,23 +34,26 @@
 #define SETDATE    43
 
 #ifdef FT_TEST
-  PROCEDURE Main( cDate )
 
-     cDate := iif( cDate == nil, dtoc( date() ), cDate )
-     QOut( "Setting date to: " + cDate  + "... " )
-     FT_SETDATE( ctod( cDate ) )
-     QOut( "Today is now: " + dtoc( date() ) )
+PROCEDURE Main( cDate )
 
-  RETURN
+   cDate := iif( cDate == nil, DToC( Date() ), cDate )
+   QOut( "Setting date to: " + cDate  + "... " )
+   FT_SETDATE( CToD( cDate ) )
+   QOut( "Today is now: " + DToC( Date() ) )
+
+   RETURN
+
 #endif
 
-function FT_SETDATE( dDate )
-  local aRegs[ INT86_MAX_REGS ]
+FUNCTION FT_SETDATE( dDate )
 
-  dDate := iif( valtype(dDate) != "D", date(), dDate )
+   LOCAL aRegs[ INT86_MAX_REGS ]
 
-  aRegs[ AX ] := SETDATE * ( 2 ^ 8 )
-  aregs[ CX ] := year( dDate )
-  aregs[ DX ] := ( month( dDate ) * ( 2 ^ 8 ) )  + day( dDate )
+   dDate := iif( ValType( dDate ) != "D", Date(), dDate )
 
-return( FT_INT86( DOS, aRegs ) )
+   aRegs[ AX ] := SETDATE * ( 2 ^ 8 )
+   aregs[ CX ] := Year( dDate )
+   aregs[ DX ] := ( Month( dDate ) * ( 2 ^ 8 ) )  + Day( dDate )
+
+   RETURN FT_INT86( DOS, aRegs )

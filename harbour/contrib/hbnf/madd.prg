@@ -27,32 +27,33 @@
  *
  */
 
-FUNCTION FT_MADD( dGivenDate, nAddMonths, lMakeEOM)
-  LOCAL nAdjDay, dTemp, i
+FUNCTION FT_MADD( dGivenDate, nAddMonths, lMakeEOM )
 
-  IF VALTYPE(dGivenDate) != 'D' ; dGivenDate := DATE() ; ENDIF
-  IF VALTYPE(nAddMonths) != 'N' ; nAddMonths := 0 ; ENDIF
-  IF VALTYPE(lMakeEOM)   != 'L' ; lMakeEom := .F. ; ENDIF
+   LOCAL nAdjDay, dTemp, i
 
-  nAdjDay := DAY( dGivenDate ) - 1
+   IF ValType( dGivenDate ) != 'D' ; dGivenDate := Date() ; ENDIF
+   IF ValType( nAddMonths ) != 'N' ; nAddMonths := 0 ; ENDIF
+   IF ValType( lMakeEOM )   != 'L' ; lMakeEom := .F. ; ENDIF
 
-  /* If givendate is end of month and lMakeEom, then force EOM.*/
+   nAdjDay := Day( dGivenDate ) - 1
 
-  lMakeEom := ( lMakeEom .AND. dGivenDate ==  dGivenDate - nAdjDay + 31 - ;
-                DAY( dGivenDate - nAdjDay + 31 ) )
+   /* If givendate is end of month and lMakeEom, then force EOM.*/
 
-  dTemp := dGivenDate - nAdjDay     // first of month
+   lMakeEom := ( lMakeEom .AND. dGivenDate ==  dGivenDate - nAdjDay + 31 - ;
+      Day( dGivenDate - nAdjDay + 31 ) )
 
-  /* Work with 1st of months.*/
-  FOR i := 1 TO ABS(nAddMonths)
-      dTemp += iif( nAddMonths > 0, 31, -1 )
-      dTemp += 1 - DAY( dTemp )
-  NEXT
+   dTemp := dGivenDate - nAdjDay     // first of month
 
-  IF lMakeEom
-     dTemp += 31 - DAY( dTemp + 31 )
-  ELSE
-     dTemp := MIN( (dTemp + nAdjday), (dTemp += 31 - DAY( dTemp + 31 )))
-  ENDIF
+   /* Work with 1st of months.*/
+   FOR i := 1 TO Abs( nAddMonths )
+      dTemp += iif( nAddMonths > 0, 31, - 1 )
+      dTemp += 1 - Day( dTemp )
+   NEXT
 
-RETURN dTemp
+   IF lMakeEom
+      dTemp += 31 - Day( dTemp + 31 )
+   ELSE
+      dTemp := Min( ( dTemp + nAdjday ), ( dTemp += 31 - Day( dTemp + 31 ) ) )
+   ENDIF
+
+   RETURN dTemp

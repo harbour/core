@@ -21,41 +21,44 @@
  *
  */
 
-function ft_sqzn(nValue,nSize,nDecimals)
-  local tmpstr,cCompressed,k
+FUNCTION ft_sqzn( nValue, nSize, nDecimals )
 
-  nSize       := iif(nSize    ==NIL,10,nSize )
-  nDecimals   := iif(nDecimals==NIL, 0,nDecimals )
-  nValue      := nValue * (10**nDecimals)
-  nSize       := iif(nSize/2!=int(nSize/2),nSize+1,nSize)
-  tmpstr      := str( abs(nValue),nSize )
-  tmpstr      := strtran(tmpstr," ","0")
-  cCompressed := chr( val(substr(tmpstr,1,2))+iif(nValue<0,128,0) )
+   LOCAL tmpstr, cCompressed, k
 
-  for k := 3 to len(tmpstr) step 2
-     cCompressed += chr(val(substr(tmpstr,k,2)))
-  next
-  return cCompressed
+   nSize       := iif( nSize    == NIL, 10, nSize )
+   nDecimals   := iif( nDecimals == NIL, 0, nDecimals )
+   nValue      := nValue * ( 10 ** nDecimals )
+   nSize       := iif( nSize / 2 != Int( nSize / 2 ), nSize + 1, nSize )
+   tmpstr      := Str( Abs( nValue ), nSize )
+   tmpstr      := StrTran( tmpstr, " ", "0" )
+   cCompressed := Chr( Val( SubStr( tmpstr, 1, 2 ) ) + iif( nValue < 0, 128, 0 ) )
 
-function ft_unsqzn(cCompressed,nSize,nDecimals)
-  local tmp:="",k,cValue,multi:=1
+   FOR k := 3 TO Len( tmpstr ) STEP 2
+      cCompressed += Chr( Val( SubStr(tmpstr, k, 2 ) ) )
+   NEXT
 
-  nSize       := iif(nSize    ==NIL,10,nSize )
-  nDecimals   := iif(nDecimals==NIL, 0,nDecimals)
-  cCompressed := iif(multi    ==-1,substr(cCompressed,2),cCompressed)
-  nSize       := iif(nSize/2!=int(nSize/2),nSize+1,nSize)
-  if asc(cCompressed) > 127
-     tmp         := str(asc(cCompressed)-128,2)
-     multi       := -1
-  else
-     tmp         := str(asc(cCompressed),2)
-  endif
+   RETURN cCompressed
 
-  for k := 2 to len(cCompressed)
-     tmp += str(asc(substr(cCompressed,k,1)),2)
-  next
+FUNCTION ft_unsqzn( cCompressed, nSize, nDecimals )
 
-  tmp    := strtran(tmp," ","0")
-  cValue := substr(tmp,1,nSize-nDecimals)+"."+substr(tmp,nSize-nDecimals+1)
+   LOCAL tmp := "", k, cValue, multi := 1
 
-  return val(cValue) * multi
+   nSize       := iif( nSize     == NIL, 10, nSize )
+   nDecimals   := iif( nDecimals == NIL, 0, nDecimals )
+   cCompressed := iif( multi    == - 1, SubStr( cCompressed, 2 ), cCompressed )
+   nSize       := iif( nSize / 2 != Int( nSize / 2 ), nSize + 1, nSize )
+   IF Asc( cCompressed ) > 127
+      tmp         := Str( Asc( cCompressed ) - 128, 2 )
+      multi       := - 1
+   ELSE
+      tmp         := Str( Asc( cCompressed ), 2 )
+   ENDIF
+
+   FOR k := 2 TO Len( cCompressed )
+      tmp += Str( Asc( SubStr( cCompressed, k, 1 ) ), 2 )
+   NEXT
+
+   tmp    := StrTran( tmp, " ", "0" )
+   cValue := SubStr( tmp, 1, nSize - nDecimals ) + "." + SubStr( tmp, nSize - nDecimals + 1 )
+
+   RETURN Val( cValue ) * multi

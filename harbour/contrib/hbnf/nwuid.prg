@@ -38,45 +38,51 @@
 #define NW_LOG     227
 
 #ifdef FT_TEST
-  PROCEDURE Main()
-     local x, cUid
-     QOut( "I am: [" + FT_NWUID() + "]" )
-     QOut( "---------------------" )
 
-      for x:= 1 to 100
-        cUid := FT_NWUID( x )
-        if .not. empty( cUid )
-          QOut( str( x, 3 ) + space(3) + cUid )
-        endif
-      next
+PROCEDURE Main()
 
-  RETURN
+   LOCAL x, cUid
+
+   QOut( "I am: [" + FT_NWUID() + "]" )
+   QOut( "---------------------" )
+
+   FOR x := 1 TO 100
+      cUid := FT_NWUID( x )
+      IF ! Empty( cUid )
+         QOut( Str( x, 3 ) + Space( 3 ) + cUid )
+      ENDIF
+   NEXT
+
+   RETURN
+
 #endif
 
 FUNCTION FT_NWUID( nConn )
-  LOCAL aRegs[ INT86_MAX_REGS ], ;
-        cReqPkt,                 ;
-        cRepPkt
 
-  nConn := iif( nConn == nil, FT_NWLSTAT(), nConn )
+   LOCAL aRegs[ INT86_MAX_REGS ]
+   LOCAL cReqPkt
+   LOCAL cRepPkt
 
-  // Set up request packet
+   nConn := iif( nConn == nil, FT_NWLSTAT(), nConn )
 
-  cReqPkt  :=  chr( 22    )          // Function 22: Get Connection Information
-  cReqPkt  +=  chr( nConn )
-  cReqPkt  :=  i2bin( len( cReqPkt ) ) + cReqPkt
+// Set up request packet
 
-  // Set up reply packet
+   cReqPkt  :=  Chr( 22    )          // Function 22: Get Connection Information
+   cReqPkt  +=  Chr( nConn )
+   cReqPkt  :=  I2Bin( Len( cReqPkt ) ) + cReqPkt
 
-  cRepPkt  :=  space(63)
+// Set up reply packet
 
-  // Assign registers
+   cRepPkt  :=  Space( 63 )
 
-  aRegs[ AX ]        :=  MAKEHI( NW_LOG )
-  aRegs[ DS ]        :=  cReqPkt
-  aRegs[ SI ]        :=  REG_DS
-  aRegs[ ES ]        :=  cRepPkt
-  aRegs[ DI ]        :=  REG_ES
+// Assign registers
 
-  FT_INT86( DOS, aRegs )
-  RETURN alltrim( strtran( substr( aRegs[ ES ], 9, 48 ), chr(0) )  )
+   aRegs[ AX ]        :=  MAKEHI( NW_LOG )
+   aRegs[ DS ]        :=  cReqPkt
+   aRegs[ SI ]        :=  REG_DS
+   aRegs[ ES ]        :=  cRepPkt
+   aRegs[ DI ]        :=  REG_ES
+
+   FT_INT86( DOS, aRegs )
+
+   RETURN AllTrim( StrTran( SubStr( aRegs[ ES ], 9, 48 ), Chr( 0 ) ) )

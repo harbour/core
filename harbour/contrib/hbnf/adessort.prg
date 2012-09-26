@@ -24,27 +24,18 @@
  *
  */
 
-#command    DEFAULT <Param1> TO <Def1> [, <ParamN> TO <DefN> ] ;
-            => ;
-            <Param1> := iif(<Param1> == NIL,<Def1>,<Param1>) ;
-         [; <ParamN> := iif(<ParamN> == NIL,<DefN>,<ParamN>)]
-
-#command    DEFAULT <Param1> TO <Def1> IF NOT <Type1> ;
-                 [, <ParamN> TO <DefN> IF NOT <TypeN> ] ;
-            => ;
-            <Param1> := iif(VALTYPE(<Param1>) == <Type1>,<Param1>,<Def1>) ;
-         [; <ParamN> := iif(VALTYPE(<ParamN>) == <TypeN>,<ParamN>,<DefN>)]
+#include "common.ch"
 
 #define FORCE_BETWEEN(x,y,z)         (y := MAX(MIN(y,z),x))
 
-FUNCTION FT_ADESSORT(aArray, nStartIndex, nEndIndex)
+FUNCTION FT_ADESSORT( aArray, nStartIndex, nEndIndex )
 
-   DEFAULT nStartIndex TO 1, ;
-           nEndIndex   TO LEN(aArray)
+   DEFAULT nStartIndex TO 1
+   DEFAULT nEndIndex   TO Len( aArray )
 
-                                        // Make Sure Bounds are in Range
-   FORCE_BETWEEN(1, nEndIndex,   LEN(aArray))
-   FORCE_BETWEEN(1, nStartIndex, nEndIndex)
+// Make Sure Bounds are in Range
+   FORCE_BETWEEN( 1, nEndIndex,   Len( aArray ) )
+   FORCE_BETWEEN( 1, nStartIndex, nEndIndex )
 
-   RETURN (ASORT(aArray, nStartIndex, nEndIndex, ;
-                 { | xElement1, xElement2 | xElement1 > xElement2 } ))
+   RETURN ASort( aArray, nStartIndex, nEndIndex, ;
+      {| xElement1, xElement2 | xElement1 > xElement2 } )

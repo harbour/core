@@ -25,28 +25,31 @@
 #ifdef FT_TEST
 
 PROCEDURE Main()
-   LOCAL var0, myarray1 := DIRECTORY()
+
+   LOCAL var0, myarray1 := Directory()
+
    CLS
    ? "TEST TO DEMONSTRATE EXAMPLES OF FT_AEMAXLEN"
    ?
    ? "myarray1 := DIRECTORY()"
    ?
    var0 := FT_AEMAXLEN( myarray1 )
-   ? PADR('FT_AEMAXLEN( myarray1 ) ->',30)
+   ? PadR( 'FT_AEMAXLEN( myarray1 ) ->', 30 )
    ?? var0
    ?
-   var0 := FT_AEMAXLEN( myarray1,2 )
-   ? PADR('FT_AEMAXLEN( myarray1,2 ) ->',30)
+   var0 := FT_AEMAXLEN( myarray1, 2 )
+   ? PadR( 'FT_AEMAXLEN( myarray1,2 ) ->', 30 )
    ?? var0
    ?
-   var0 := FT_AEMAXLEN( myarray1,3 )
-   ? PADR('FT_AEMAXLEN( myarray1,3 ) ->',30)
+   var0 := FT_AEMAXLEN( myarray1, 3 )
+   ? PadR( 'FT_AEMAXLEN( myarray1,3 ) ->', 30 )
    ?? var0
    ?
-   var0 := FT_AEMAXLEN( aTail( myarray1 ) )
-   ? PADR('FT_AEMAXLEN( aTail( myarray1 ) ) ->',30)
+   var0 := FT_AEMAXLEN( ATail( myarray1 ) )
+   ? PadR( 'FT_AEMAXLEN( aTail( myarray1 ) ) ->', 30 )
    ?? var0
    ?
+
    RETURN
 
 #endif
@@ -55,7 +58,7 @@ FUNCTION FT_AEmaxlen( aArray, nDimension, nStart, nCount )
 
    LOCAL i, nLast, cType, nMaxlen := 0
 
-   // Set default parameters as necessary.
+// Set default parameters as necessary.
    IF nDimension == NIL
       nDimension := 1
    ENDIF
@@ -65,24 +68,24 @@ FUNCTION FT_AEmaxlen( aArray, nDimension, nStart, nCount )
    ENDIF
 
    IF nCount == NIL
-      nCount := LEN( aArray ) - nStart + 1
+      nCount := Len( aArray ) - nStart + 1
    ENDIF
 
-   nLast := MIN( nStart +nCount -1, LEN( aArray ))
+   nLast := Min( nStart + nCount - 1, Len( aArray ) )
 
    FOR i := nStart TO nLast
-      cType := VALTYPE( aArray[i] )
+      cType := ValType( aArray[ i ] )
       DO CASE
-         CASE ( cType == "C" )
-            nMaxlen := MAX( nMaxlen, LEN( aArray[i] ))
+      CASE cType == "C"
+         nMaxlen := Max( nMaxlen, Len( aArray[ i ] ) )
 
-         CASE ( cType == "A" )
-            nMaxlen := MAX( nMaxlen, ;
-               LEN( LTRIM( TRANSFORM( aArray[i] [nDimension], "@X"))))
+      CASE cType == "A"
+         nMaxlen := Max( nMaxlen, ;
+            Len( LTrim( Transform( aArray[ i ][ nDimension ], "@X" ) ) ) )
 
-         OTHERWISE
-            nMaxlen := MAX( nMaxlen, ;
-               LEN( LTRIM( TRANSFORM( aArray[i], "@X" ))))
+      OTHERWISE
+         nMaxlen := Max( nMaxlen, ;
+            Len( LTrim( Transform( aArray[ i ], "@X" ) ) ) )
       ENDCASE
    NEXT
 

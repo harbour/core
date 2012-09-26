@@ -24,15 +24,16 @@
  *
  */
 
-#define IS_LOGICAL(x)                (VALTYPE(x) == "L")
+FUNCTION FT_SETCENTURY( lNewSetState )
 
-FUNCTION FT_SETCENTURY(lNewSetState)
-                                        // Note that if CENTURY is ON then
-                                        // DTOC() Will Return a String of Length
-                                        // 10, Otherwise it Will be of Length 8
-   LOCAL lOldSetState := (LEN(DTOC(DATE())) == 10)
+   // Note that if CENTURY is ON then
+   // DTOC() Will Return a String of Length
+   // 10, Otherwise it Will be of Length 8
 
-   IF (IS_LOGICAL(lNewSetState))        // Did They Want it Set??
-      SET CENTURY (lNewSetState)        // Yes, Set it
-   ENDIF                                // IS_LOGICAL(lNewSetState)
-   RETURN lOldSetState                  // FT_SetCentury
+   LOCAL lOldSetState := ( Len( DToC( Date() ) ) == 10 )
+
+   IF HB_ISLOGICAL( lNewSetState )        // Did They Want it Set??
+      SET CENTURY ( lNewSetState )        // Yes, Set it
+   ENDIF
+
+   RETURN lOldSetState

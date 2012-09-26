@@ -31,32 +31,36 @@
 #include "ftint86.ch"
 
 #ifdef FT_TEST
-  PROCEDURE Main()
-     local nLoaded := ft_isshare()
 
-     do case
-     case nLoaded == 0
-        Qout("Share not loaded, but ok to load")
-     case nLoaded == 1
-        Qout("Share not loaded, but NOT ok to load!")
-     case nLoaded == 255
-        Qout("Share is loaded!")
-     endcase
+PROCEDURE Main()
 
-     Qout("Retcode: " + str( nLoaded ) )
+   LOCAL nLoaded := ft_isshare()
 
-     return
+   DO CASE
+   CASE nLoaded == 0
+      QOut( "Share not loaded, but ok to load" )
+   CASE nLoaded == 1
+      QOut( "Share not loaded, but NOT ok to load!" )
+   CASE nLoaded == 255
+      QOut( "Share is loaded!" )
+   ENDCASE
+
+   QOut( "Retcode: " + Str( nLoaded ) )
+
+   RETURN
+
 #endif
 
 FUNCTION ft_isshare()
    /*
-  local aRegs[ INT86_MAX_REGS ]          // Declare the register array
+   LOCAL aRegs[ INT86_MAX_REGS ]          // Declare the register array
 
-  aRegs[ AX ] := makehi(16)              // share service
-  aRegs[ CX ] := 0                       // Specify file attribute
+   aRegs[ AX ] := makehi( 16 )            // share service
+   aRegs[ CX ] := 0                       // Specify file attribute
 
-  FT_Int86( 47, aRegs)                   // multiplex interrupt
+   FT_Int86( 47, aRegs)                   // multiplex interrupt
 
-RETURN lowbyte( aRegs[AX] )
-  */
-RETURN   _ft_isshare()
+   RETURN lowbyte( aRegs[ AX ] )
+   */
+
+   RETURN _ft_isshare()

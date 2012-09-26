@@ -28,230 +28,233 @@
  */
 
 #ifdef FT_TEST
-  ********************************************************************
-  *
-  * NOTES: 1) The date functions are 'international'; i.e., the
-  *           system date format is maintained, although ANSI is
-  *           temporarily used within certain functions.
-  *
-  *        2) The date functions fall into two categories:
-  *
-  *           a) Calendar or fiscal periods.
-  *              A calendar or fiscal year is identified by the year()
-  *              of the last date in the year.
-  *
-  *           b) Accounting Periods. An accounting period has the
-  *              following characteristics:
-  *              If the first week of the period contains 4 or
-  *              more 'work' days, it is included in the period;
-  *              otherwise, the first week was included in the
-  *              prior period.
-  *
-  *              If the last week of the period contains 4 or more
-  *              'work' days it is included in the period; otherwise,
-  *              the last week is included in the next period.
-  *              This results in 13 week 'quarters' and 4 or 5 week
-  *              'months'. Every 5 or 6 years, a 'quarter' will contain
-  *              14 weeks and the year will contain 53 weeks.
-  *
-  *        3) The date functions require the presence of two variables:
-  *
-  *           a) cFY_Start is a character string used to define the
-  *              first day of a calendar or fiscal year. It's format
-  *              is ANSI; e.g., "1980.01.01" defines a calendar year,
-  *              "1980.10.01" defines a fiscal year, starting October 1.
-  *
-  *              The year may be any valid year. It's value has no
-  *              effect on the date functions. The day is assumed to be
-  *              less than 29. See function: FT_DATECNFG().
-  *
-  *           B) nDow_Start is a number from 1 to 7 which defines the
-  *              starting day, DOW(), of a work week; e.g., 1 == Sunday.
-  *
-  *              See function: FT_DATECNFG()
-  *
-  * COMPILE ALL PROGRAMS WITH /N /W /A
-  *
-  ********************************************************************
 
-  FUNCTION DEMO()
-     LOCAL nNum, dDate, aTestData := {}, aTemp, cFY_Start, nDOW_Start
+//*******************************************************************
+//
+// NOTES: 1) The date functions are 'international'; i.e., the
+//           system date format is maintained, although ANSI is
+//           temporarily used within certain functions.
+//
+//        2) The date functions fall into two categories:
+//
+//           a) Calendar or fiscal periods.
+//              A calendar or fiscal year is identified by the year()
+//              of the last date in the year.
+//
+//           b) Accounting Periods. An accounting period has the
+//              following characteristics:
+//              If the first week of the period contains 4 or
+//              more 'work' days, it is included in the period;
+//              otherwise, the first week was included in the
+//              prior period.
+//
+//              If the last week of the period contains 4 or more
+//              'work' days it is included in the period; otherwise,
+//              the last week is included in the next period.
+//              This results in 13 week 'quarters' and 4 or 5 week
+//              'months'. Every 5 or 6 years, a 'quarter' will contain
+//              14 weeks and the year will contain 53 weeks.
+//
+//        3) The date functions require the presence of two variables:
+//
+//           a) cFY_Start is a character string used to define the
+//              first day of a calendar or fiscal year. It's format
+//              is ANSI; e.g., "1980.01.01" defines a calendar year,
+//              "1980.10.01" defines a fiscal year, starting October 1.
+//
+//              The year may be any valid year. It's value has no
+//              effect on the date functions. The day is assumed to be
+//              less than 29. See function: FT_DATECNFG().
+//
+//           B) nDow_Start is a number from 1 to 7 which defines the
+//              starting day, DOW(), of a work week; e.g., 1 == Sunday.
+//
+//              See function: FT_DATECNFG()
+//
+// COMPILE ALL PROGRAMS WITH /N /W /A
+//
+//*******************************************************************
 
-*    SET DATE ANSI                             // User's normal date format
-     aTemp      := FT_DATECNFG()               // Get/Set cFY_Start & nDOW_Start.
-*    aTemp      := FT_DATECNFG("1980.01.03", 1)  // Date string in user's format.
-     cFY_Start  := aTemp[1]                    // See FT_DATECNFG() in ft_date0.prg
-     NDOW_START := ATEMP[2]                    // FOR PARAMETERS.
-     DDATE      := DATE()
-*    dDate      := STOD("19880229")            // Test date, in user's normal date format
+FUNCTION DEMO()
 
-     cls
-     ?    "Given       Date:  "
-     ??   dDate
-     ??   " cFY_Start: "+ cFY_Start
-     ??   " nDOW_Start:" + STR(nDOW_Start,2)
-     ?    "---- Fiscal Year Data -----------"
+   LOCAL nNum, dDate, aTestData := {}, aTemp, cFY_Start, nDOW_Start
 
-     aTestData := FT_YEAR(dDate)
-     ? "FYYear     ", aTestData[1]+"  ", aTestData[2], aTestData[3]
+//    SET DATE ANSI                             // User's normal date format
+   aTemp      := FT_DATECNFG()               // Get/Set cFY_Start & nDOW_Start.
+//    aTemp      := FT_DATECNFG("1980.01.03", 1)  // Date string in user's format.
+   cFY_Start  := aTemp[ 1 ]                    // See FT_DATECNFG() in ft_date0.prg
+   NDOW_START := ATEMP[ 2 ]                    // FOR PARAMETERS.
+   DDATE      := Date()
+//    dDate      := STOD("19880229")            // Test date, in user's normal date format
 
-     aTestData := FT_QTR(dDate)
-     ? "FYQtr      ", aTestData[1], aTestData[2], aTestData[3]
+   cls
+   ?    "Given       Date:  "
+   ??   dDate
+   ??   " cFY_Start: " + cFY_Start
+   ??   " nDOW_Start:" + Str( nDOW_Start, 2 )
+   ?    "---- Fiscal Year Data -----------"
 
-     nNum      := VAL(SUBSTR(aTestData[1],5,2))
-     aTestData := FT_QTR(dDate,nNum)
-     ? "FYQtr    "+STR(nNum,2), aTestData[1], aTestData[2], aTestData[3]
+   aTestData := FT_YEAR( dDate )
+   ? "FYYear     ", aTestData[ 1 ] + "  ", aTestData[ 2 ], aTestData[ 3 ]
 
-     aTestData := FT_MONTH(dDate)
-     ? "FYMonth    ", aTestData[1], aTestData[2], aTestData[3]
+   aTestData := FT_QTR( dDate )
+   ? "FYQtr      ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-     nNum := VAL(SUBSTR(aTestData[1],5,2))
-     aTestData := FT_MONTH(dDate,nNum)
-     ? "FYMonth  "+STR(nNum,2), aTestData[1], aTestData[2], aTestData[3]
+   nNum      := Val( SubStr( aTestData[ 1 ],5,2 ) )
+   aTestData := FT_QTR( dDate, nNum )
+   ? "FYQtr    " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-     aTestData := FT_WEEK(dDate)
-     ? "FYWeek     ", aTestData[1], aTestData[2], aTestData[3]
+   aTestData := FT_MONTH( dDate )
+   ? "FYMonth    ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-     nNum      := VAL(SUBSTR(aTestData[1],5,2))
-     aTestData := FT_WEEK(dDate,nNum)
-     ? "FYWeek   "+STR(nNum,2), aTestData[1], aTestData[2], aTestData[3]
+   nNum := Val( SubStr( aTestData[ 1 ],5,2 ) )
+   aTestData := FT_MONTH( dDate, nNum )
+   ? "FYMonth  " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-     aTestData := FT_DAYOFYR(dDate)
-     ? "FYDay     ", aTestData[1], aTestData[2], aTestData[3]
+   aTestData := FT_WEEK( dDate )
+   ? "FYWeek     ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-     nNum      := VAL(SUBSTR(aTestData[1],5,3))
-     aTestData := FT_DAYOFYR(dDate,nNum)
-     ? "FYDAY   "+STR(nNum,3), aTestData[1], aTestData[2], aTestData[3]
+   nNum      := Val( SubStr( aTestData[ 1 ],5,2 ) )
+   aTestData := FT_WEEK( dDate, nNum )
+   ? "FYWeek   " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-     ?
-     ? "---- Accounting Year Data -------"
+   aTestData := FT_DAYOFYR( dDate )
+   ? "FYDay     ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-     aTestData := FT_ACCTYEAR(dDate)
-     ? "ACCTYear   ", aTestData[1]+"  ", aTestData[2], aTestData[3],;
-           STR( (aTestData[3] - aTestData[2] + 1) /7, 3 ) + " Weeks"
+   nNum      := Val( SubStr( aTestData[ 1 ],5,3 ) )
+   aTestData := FT_DAYOFYR( dDate, nNum )
+   ? "FYDAY   " + Str( nNum, 3 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-     aTestData := FT_ACCTQTR(dDate)
-     ? "ACCTQtr    ", aTestData[1], aTestData[2], aTestData[3],;
-        STR( (aTestData[3] - aTestData[2] + 1) /7, 3 ) + " Weeks"
+   ?
+   ? "---- Accounting Year Data -------"
 
-     nNum      := VAL(SUBSTR(aTestData[1],5,2))
-     aTestData := FT_ACCTQTR(dDate,nNum)
-     ? "ACCTQtr  "+STR(nNum,2), aTestData[1], aTestData[2], aTestData[3]
+   aTestData := FT_ACCTYEAR( dDate )
+   ? "ACCTYear   ", aTestData[ 1 ] + "  ", aTestData[ 2 ], aTestData[ 3 ], ;
+      Str( ( aTestData[ 3 ] - aTestData[ 2 ] + 1 ) /7, 3 ) + " Weeks"
 
-     aTestData := FT_ACCTMONTH(dDate)
-     ? "ACCTMonth  ", aTestData[1], aTestData[2], aTestData[3],;
-        STR( (aTestData[3] - aTestData[2] + 1) /7, 3 ) + " Weeks"
+   aTestData := FT_ACCTQTR( dDate )
+   ? "ACCTQtr    ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ], ;
+      Str( ( aTestData[ 3 ] - aTestData[ 2 ] + 1 ) /7, 3 ) + " Weeks"
 
-     nNum      := VAL(SUBSTR(aTestData[1],5,2))
-     aTestData := FT_ACCTMONTH(dDate,nNum)
-     ? "ACCTMonth"+STR(nNum,2), aTestData[1], aTestData[2], aTestData[3]
+   nNum      := Val( SubStr( aTestData[ 1 ],5,2 ) )
+   aTestData := FT_ACCTQTR( dDate, nNum )
+   ? "ACCTQtr  " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-     aTestData := FT_ACCTWEEK(dDate)
-     ? "ACCTWeek   ", aTestData[1], aTestData[2], aTestData[3]
+   aTestData := FT_ACCTMONTH( dDate )
+   ? "ACCTMonth  ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ], ;
+      Str( ( aTestData[ 3 ] - aTestData[ 2 ] + 1 ) /7, 3 ) + " Weeks"
 
-     nNum      := VAL(SUBSTR(aTestData[1],5,2))
-     aTestData := FT_ACCTWEEK(dDate,nNum)
-     ? "ACCTWeek "+STR(nNum,2), aTestData[1], aTestData[2], aTestData[3]
+   nNum      := Val( SubStr( aTestData[ 1 ],5,2 ) )
+   aTestData := FT_ACCTMONTH( dDate, nNum )
+   ? "ACCTMonth" + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-     aTestData := FT_DAYOFYR(dDate,,.T.)
-     ? "ACCTDay   ", aTestData[1], aTestData[2], aTestData[3]
+   aTestData := FT_ACCTWEEK( dDate )
+   ? "ACCTWeek   ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-     nNum      := VAL(SUBSTR(aTestData[1],5,3))
-     aTestData := FT_DAYOFYR(dDate,nNum,.T.)
-     ? "ACCTDay "+STR(nNum,3), aTestData[1], aTestData[2], aTestData[3]
+   nNum      := Val( SubStr( aTestData[ 1 ],5,2 ) )
+   aTestData := FT_ACCTWEEK( dDate, nNum )
+   ? "ACCTWeek " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-     WAIT
+   aTestData := FT_DAYOFYR( dDate, , .T. )
+   ? "ACCTDay   ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-     FT_CAL(dDate)
-     FT_CAL(dDate,1)
+   nNum      := Val( SubStr( aTestData[ 1 ],5,3 ) )
+   aTestData := FT_DAYOFYR( dDate, nNum, .T. )
+   ? "ACCTDay " + Str( nNum, 3 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-  RETURN NIL
+   WAIT
 
-  * DEMO Monthly Calendar function.
-  * nType : 0 -> FT_MONTH, 1 -> FT_ACCTMONTH
-  *
+   FT_CAL( dDate )
+   FT_CAL( dDate, 1 )
 
-  FUNCTION FT_CAL(dGivenDate,nType)
-     LOCAL nTemp, dTemp, aTemp, cFY_Start, dStart, dEnd
+   RETURN NIL
 
-     aTemp     := FT_DATECNFG()
-     cFY_Start := aTemp[1]
+// DEMO Monthly Calendar function.
+// nType : 0 -> FT_MONTH, 1 -> FT_ACCTMONTH
+//
 
-     IF dGivenDate == NIL .OR. !VALTYPE(dGivenDate) $ 'ND'
-        dGivenDate := DATE()
-     ELSEIF VALTYPE(dGivenDate) == 'N'
-        nType := dGivenDate
-        dGivenDate := DATE()
-     ENDIF
+FUNCTION FT_CAL( dGivenDate, nType )
 
-     nType := iif(nType == NIL .OR. VALTYPE(nType) != 'N', 0, nType)
+   LOCAL nTemp, dTemp, aTemp, cFY_Start, dStart, dEnd
 
-     IF nType == 0
-        IF SUBSTR(cFY_Start,6,5) == "01.01"
-           ? "          Calendar Month Calendar containing " + DTOC(dGivenDate)
-        ELSE
-           ? "            Fiscal Month Calendar containing " + DTOC(dGivenDate)
-        ENDIF
+   aTemp     := FT_DATECNFG()
+   cFY_Start := aTemp[ 1 ]
 
-        aTemp    := FT_MONTH(dGivenDate)
-        dStart   := aTemp[2]
-        dEnd     := aTemp[3]
-        aTemp[2] -= FT_DAYTOBOW(aTemp[2])
-        aTemp[3] += 6 - FT_DAYTOBOW(aTemp[3])
-     ELSE
-        ? "            Accounting Month Calendar containing " + DTOC(dGivenDate)
-        aTemp := FT_ACCTMONTH(dGivenDate)
-     ENDIF
+   IF dGivenDate == NIL .OR. !ValType( dGivenDate ) $ 'ND'
+      dGivenDate := Date()
+   ELSEIF ValType( dGivenDate ) == 'N'
+      nType := dGivenDate
+      dGivenDate := Date()
+   ENDIF
 
-  ?
-  dTemp := aTemp[2]
+   nType := iif( nType == NIL .OR. ValType( nType ) != 'N', 0, nType )
 
-  FOR nTemp := 0 to 6
-     ?? PADC( CDOW(dTemp + nTemp),10)
-  NEXT
+   IF nType == 0
+      IF SubStr( cFY_Start, 6, 5 ) == "01.01"
+         ? "          Calendar Month Calendar containing " + DToC( dGivenDate )
+      ELSE
+         ? "            Fiscal Month Calendar containing " + DToC( dGivenDate )
+      ENDIF
 
-  ?
-  WHILE dTemp <= aTemp[3]
-     FOR nTemp := 1 TO 7
-        ?? " "
-        IF nType == 0 .AND. (dTemp < dStart .or. dTemp > dEnd)
-           ?? SPACE(8)
-        ELSE
-           ?? dTemp
-        ENDIF
-        ?? " "
-        dTemp ++
-     NEXT
-     ?
-  END
+      aTemp    := FT_MONTH( dGivenDate )
+      dStart   := aTemp[ 2 ]
+      dEnd     := aTemp[ 3 ]
+      aTemp[ 2 ] -= FT_DAYTOBOW( aTemp[ 2 ] )
+      aTemp[ 3 ] += 6 - FT_DAYTOBOW( aTemp[ 3 ] )
+   ELSE
+      ? "            Accounting Month Calendar containing " + DToC( dGivenDate )
+      aTemp := FT_ACCTMONTH( dGivenDate )
+   ENDIF
 
-  RETURN NIL
+   ?
+   dTemp := aTemp[ 2 ]
+
+   FOR nTemp := 0 TO 6
+      ?? PadC( CDOW( dTemp + nTemp ), 10 )
+   NEXT
+
+   ?
+   WHILE dTemp <= aTemp[ 3 ]
+      FOR nTemp := 1 TO 7
+         ?? " "
+         IF nType == 0 .AND. ( dTemp < dStart .OR. dTemp > dEnd )
+            ?? Space( 8 )
+         ELSE
+            ?? dTemp
+         ENDIF
+         ?? " "
+         dTemp++
+      NEXT
+      ?
+   END
+
+   RETURN NIL
 
 #endif
 
-FUNCTION FT_DATECNFG( cFYStart ,nDow )
+FUNCTION FT_DATECNFG( cFYStart , nDow )
 
-  THREAD STATIC aDatePar := { "1980.01.01", 1 }
+   THREAD STATIC aDatePar := { "1980.01.01", 1 }
 
-  LOCAL dCheck, cDateFormat := SET(_SET_DATEFORMAT)
+   LOCAL dCheck, cDateFormat := Set( _SET_DATEFORMAT )
 
-  IF VALTYPE( cFYStart ) == 'C'
-     dCheck := CTOD( cFYStart )
-     IF DTOC( dCheck ) != " "
+   IF ValType( cFYStart ) == 'C'
+      dCheck := CToD( cFYStart )
+      IF DToC( dCheck ) != " " // TOFIX
 
-        /* No one starts a Fiscal Year on 2/29 */
-        IF MONTH(dCheck) == 2 .and. DAY(dcheck) == 29
-           dCheck --
-        ENDIF
+         /* No one starts a Fiscal Year on 2/29 */
+         IF Month( dCheck ) == 2 .AND. Day( dcheck ) == 29
+            dCheck --
+         ENDIF
 
-        SET(_SET_DATEFORMAT, "yyyy.mm.dd")
-        aDatePar[1] := DTOC(dCheck)
-        SET(_SET_DATEFORMAT, cDateFormat)
-     ENDIF
-  ENDIF
+         SET( _SET_DATEFORMAT, "yyyy.mm.dd" )
+         aDatePar[ 1 ] := DToC( dCheck )
+         SET( _SET_DATEFORMAT, cDateFormat )
+      ENDIF
+   ENDIF
 
-  IF VALTYPE( nDow ) == 'N' .AND. nDow > 0 .AND. nDow < 8
-     aDatePar[2] := nDow
-  ENDIF
+   IF ValType( nDow ) == 'N' .AND. nDow > 0 .AND. nDow < 8
+      aDatePar[ 2 ] := nDow
+   ENDIF
 
-RETURN ACLONE( aDatePar )
+   RETURN AClone( aDatePar )

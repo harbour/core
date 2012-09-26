@@ -24,21 +24,20 @@
  *
  */
 
-#define IS_NOT_LOGICAL(x)            (VALTYPE(x) != "L")
-#define MAKE_UPPER(x)                (x := UPPER(x))
+#define MAKE_UPPER(x)                ( x := UPPER( x ) )
 
-FUNCTION FT_NOOCCUR(cCheckFor, cCheckIn, lIgnoreCase)
+FUNCTION FT_NOOCCUR( cCheckFor, cCheckIn, lIgnoreCase )
 
-                                        // Is Case Important??
-   IF (IS_NOT_LOGICAL(lIgnoreCase) .OR. lIgnoreCase)
+// Is Case Important??
+   IF ! HB_ISLOGICAL( lIgnoreCase ) .OR. lIgnoreCase
 
-      MAKE_UPPER(cCheckFor)             //  No, Force Everything to Uppercase
-      MAKE_UPPER(cCheckIn)
+      MAKE_UPPER( cCheckFor )             //  No, Force Everything to Uppercase
+      MAKE_UPPER( cCheckIn )
 
    ENDIF                                // IS_NOT_LOGICAL(lIgnoreCase) or ;
-                                        // lIgnoreCase
+// lIgnoreCase
 
-   RETURN iif(LEN(cCheckFor) == 0 .OR. LEN(cCheckIn) == 0, ;
-             0, ;
-             INT((LEN(cCheckIn) - LEN(STRTRAN(cCheckIn, cCheckFor))) / ;
-                  LEN(cCheckFor)))
+   RETURN iif( Len( cCheckFor ) == 0 .OR. Len( cCheckIn ) == 0, ;
+      0, ;
+      Int( ( Len( cCheckIn ) - Len( StrTran( cCheckIn, cCheckFor ) ) ) / ;
+      Len( cCheckFor ) ) )

@@ -28,30 +28,31 @@
  */
 
 FUNCTION FT_MONTH( dGivenDate, nMonthNum )
-LOCAL lIsMonth, nTemp, aRetVal
 
-  IF !( VALTYPE(dGivenDate) $ 'ND')
-     dGivenDate := DATE()
-  ELSEIF VALTYPE(dGivenDate) == 'N'
-     nMonthNum  := dGivenDate
-     dGivenDate := DATE()
-  ENDIF
+   LOCAL lIsMonth, nTemp, aRetVal
 
-  aRetVal   := FT_YEAR(dGivenDate)
+   IF !( ValType( dGivenDate ) $ 'ND' )
+      dGivenDate := Date()
+   ELSEIF ValType( dGivenDate ) == 'N'
+      nMonthNum  := dGivenDate
+      dGivenDate := Date()
+   ENDIF
 
-  lIsMonth  := ( VALTYPE(nMonthNum) == 'N' )
-  IF lISMonth
-     IF nMonthNum < 1 .OR. nMonthNum > 12
-        nMonthNum := 12
-     ENDIF
-     dGivenDate := FT_MADD(aRetVal[2], nMonthNum - 1)
-  ENDIF
+   aRetVal   := FT_YEAR( dGivenDate )
 
-  nTemp := MONTH( dGivenDate ) - MONTH( aRetVal[2] )
-  nTemp += iif(nTemp >= 0, 1, 13)
+   lIsMonth  := ( ValType( nMonthNum ) == 'N' )
+   IF lISMonth
+      IF nMonthNum < 1 .OR. nMonthNum > 12
+         nMonthNum := 12
+      ENDIF
+      dGivenDate := FT_MADD( aRetVal[ 2 ], nMonthNum - 1 )
+   ENDIF
 
-  aRetVal[1] += PADL(LTRIM(STR(nTemp, 2)), 2, '0')
-  aRetVal[2] := FT_MADD( aRetVal[2], nTemp - 1 )
-  aRetVal[3] := FT_MADD( aRetVal[2], 1 ) - 1
+   nTemp := Month( dGivenDate ) - Month( aRetVal[ 2 ] )
+   nTemp += iif( nTemp >= 0, 1, 13 )
 
-RETURN aRetVal
+   aRetVal[ 1 ] += PadL( LTrim( Str( nTemp, 2 ) ), 2, '0' )
+   aRetVal[ 2 ] := FT_MADD( aRetVal[ 2 ], nTemp - 1 )
+   aRetVal[ 3 ] := FT_MADD( aRetVal[ 2 ], 1 ) - 1
+
+   RETURN aRetVal

@@ -34,25 +34,26 @@
 #ifdef FT_TEST
 
 // color variables
-STATIC cNormH, cNormN, cNormE, ;
-       cWindH, cWindN, cWindE, ;
-       cErrH, cErrN, cErrE
+STATIC cNormH, cNormN, cNormE
+STATIC cWindH, cWindN, cWindE
+STATIC cErrH, cErrN, cErrE
 
 PROCEDURE Main( cCmdLine )
-   LOCAL cDosScrn,   ;
-         nDosRow,    ;
-         nDosCol,    ;
-         lColor,     ;
-         nMaxRow,    ;
-         nType
 
-   // main routine starts here
+   LOCAL cDosScrn
+   LOCAL nDosRow
+   LOCAL nDosCol
+   LOCAL lColor
+   LOCAL nMaxRow
+   LOCAL nType
+
+// main routine starts here
    SET SCOREBOARD OFF
 
    lColor := .T.
 
-   cNormH := iif( lColor, "W+/BG","W+/N" )
-   cNormN := iif( lColor, "N/BG" ,"W/N"  )
+   cNormH := iif( lColor, "W+/BG", "W+/N" )
+   cNormN := iif( lColor, "N/BG" , "W/N"  )
    cNormE := iif( lColor, "N/W" , "N/W"  )
    cWindH := iif( lColor, "W+/B", "W+/N" )
    cWindN := iif( lColor, "W/B" , "W/N"  )
@@ -61,35 +62,35 @@ PROCEDURE Main( cCmdLine )
    cErrN  := iif( lColor, "W/R" , "W/N"  )
    cErrE  := iif( lColor, "N/W" , "N/W"  )
 
-   cDosScrn := SAVESCREEN()
-   nDosRow := ROW()
-   nDosCol := COL()
-   SETCOLOR( "W/N" )
+   cDosScrn := SaveScreen()
+   nDosRow := Row()
+   nDosCol := Col()
+   SetColor( "W/N" )
    CLS
-   nMaxRow := MAXROW()
-   SETBLINK(.F.)
-   SETCOLOR( cWindN + "*" )
+   nMaxRow := MaxRow()
+   SetBlink( .F. )
+   SetColor( cWindN + "*" )
    CLS
-   SETCOLOR( cNormN )
+   SetColor( cNormN )
 
    FT_DispMsg( { { "[Esc] To Abort Changes   [PgDn] To Continue" }, { cNormN, , cNormH } }, , nMaxRow - 5 )
 
    FT_DispMsg( { { "[E]dit     [P]rint    [D]elete",     ;
-                   "[Esc]ape       [Alt-Q]" },           ;
-                 { cErrN, cErrN, cErrH } },, 2 )
+      "[Esc]ape       [Alt-Q]" },           ;
+      { cErrN, cErrN, cErrH } }, , 2 )
 
-      nType := FT_DispMsg( { { "Create Or Edit [I]nvoice",    ;
-                               "Create Or Edit [O]rder",      ;
-                               "Create Or Edit [B]ack Order", ;
-                               "Create Or Edit [Q]uote",      ;
-                               "[Esc] To Exit" },             ;
-                             { cWindN,,,,, cWindH } }, "BIOQ" + CHR(27) )
+   nType := FT_DispMsg( { { "Create Or Edit [I]nvoice",    ;
+      "Create Or Edit [O]rder",      ;
+      "Create Or Edit [B]ack Order", ;
+      "Create Or Edit [Q]uote",      ;
+      "[Esc] To Exit" },             ;
+      { cWindN, , , , , cWindH } }, "BIOQ" + Chr( 27 ) )
 
-   SETCOLOR( "W/N" )
-   SETCURSOR( SC_NORMAL )
-   SETBLINK( .T.)
-   RESTSCREEN(,,,, cDosScrn )
-   SETPOS(nDosRow, nDosCol)
+   SetColor( "W/N" )
+   SetCursor( SC_NORMAL )
+   SetBlink( .T. )
+   RestScreen( , , , , cDosScrn )
+   SetPos( nDosRow, nDosCol )
    QUIT
 
 #endif
@@ -97,50 +98,50 @@ PROCEDURE Main( cCmdLine )
 
 FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
 
-   LOCAL xRtnVal := .F.,   ;
-         nWidest := 0,     ;
-         nBoxRight,        ;
-         nBoxBottom,       ;
-         cOldScreen,       ;
-         cOldCursor,       ;
-         cOldColor,        ;
-         i,                ;
-         j,                ;
-         nOption,          ;
-         x,                ;
-         y,                ;
-         aPos := {},       ;
-         nLeft,            ;
-         aLeft
+   LOCAL xRtnVal := .F.
+   LOCAL nWidest := 0
+   LOCAL nBoxRight
+   LOCAL nBoxBottom
+   LOCAL cOldScreen
+   LOCAL cOldCursor
+   LOCAL cOldColor
+   LOCAL i
+   LOCAL j
+   LOCAL nOption
+   LOCAL x
+   LOCAL y
+   LOCAL aPos := {}
+   LOCAL nLeft
+   LOCAL aLeft
 
-   FOR i := 1 TO LEN( aInfo[1] )
-      AADD( aPos, {} )
+   FOR i := 1 TO Len( aInfo[ 1 ] )
+      AAdd( aPos, {} )
    NEXT
 
-   FOR i := 1 TO LEN( aInfo[1] )
+   FOR i := 1 TO Len( aInfo[1] )
 
-      DO WHILE AT( "[", aInfo[1,i] ) > 0
-         x := AT( "[", aInfo[1,i] )
-         y := AT( "]", aInfo[1,i] ) - 2
-         AADD( aPos[i], { x, y } )
-         aInfo[1,i] := STRTRAN( aInfo[1,i], "[", "", 1, 1 )
-         aInfo[1,i] := STRTRAN( aInfo[1,i], "]", "", 1, 1 )
+      DO WHILE At( "[", aInfo[ 1, i ] ) > 0
+         x := At( "[", aInfo[ 1, i ] )
+         y := At( "]", aInfo[ 1, i ] ) - 2
+         AAdd( aPos[ i ], { x, y } )
+         aInfo[ 1, i ] := StrTran( aInfo[ 1, i ], "[", "", 1, 1 )
+         aInfo[ 1, i ] := StrTran( aInfo[ 1, i ], "]", "", 1, 1 )
       ENDDO
 
    NEXT
 
-   AEVAL( aInfo[1], {|x| nWidest := MAX( nWidest, LEN( x ) ) } )
+   AEval( aInfo[1], {|x| nWidest := Max( nWidest, Len( x ) ) } )
 
    /* calculate location of data */
    IF nBoxLeft == NIL
-      nLeft := ROUND( ( MAXCOL() - nWidest ) / 2, 0 )
+      nLeft := Round( ( MaxCol() - nWidest ) / 2, 0 )
    ELSE
       nLeft := nBoxLeft + 2
    ENDIF
 
 /*
    IF nBoxTop == NIL
-      nTop := ( MAXROW() - LEN( aInfo[1] ) - 2 ) / 2 + 2
+      nTop := ( MAXROW() - LEN( aInfo[ 1 ] ) - 2 ) / 2 + 2
    ENDIF
 */
 
@@ -151,12 +152,12 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    nBoxRight := nBoxLeft + nWidest + 3
 
    IF nBoxTop == NIL
-      nBoxTop := (MAXROW() - LEN( aInfo[1] ) - 2) / 2 + 1
+      nBoxTop := ( MaxRow() - Len( aInfo[ 1 ] ) - 2 ) / 2 + 1
    ENDIF
-   nBoxBottom := nBoxTop + LEN( aInfo[1] ) + 1
+   nBoxBottom := nBoxTop + Len( aInfo[ 1 ] ) + 1
 
-   // following is to keep from breaking old code and to be
-   // consistent with DISPBOX()
+// following is to keep from breaking old code and to be
+// consistent with DISPBOX()
 
    IF cnBoxString == NIL .OR. cnBoxString == 2
       cnBoxString := hb_UTF8ToStr( "╔═╗║╝═╚║ " )
@@ -164,71 +165,72 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
       cnBoxString := hb_UTF8ToStr( "┌─┐│┘─└│ " )
    ENDIF
 
-   lShadow := iif( lShadow == NIL, .T., lShadow )
+   lShadow := iif( lShadow == NIL, .T. , lShadow )
 
-   cOldScreen := SAVESCREEN( nBoxTop, nBoxLeft, nBoxBottom+1, nBoxRight+2 )
+   cOldScreen := SaveScreen( nBoxTop, nBoxLeft, nBoxBottom + 1, nBoxRight + 2 )
 
-   cOldCursor := SETCURSOR( SC_NONE )
+   cOldCursor := SetCursor( SC_NONE )
 
-   // draw box
-   cOldColor := SETCOLOR( aInfo[ 2, LEN( aInfo[2] ) ] )
+// draw box
+   cOldColor := SetColor( aInfo[ 2, LEN( aInfo[ 2 ] ) ] )
 
-   DISPBOX( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight, cnBoxString, ;
-            aInfo[ 2, LEN( aInfo[2] ) ] )
+   DispBox( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight, cnBoxString, ;
+      aInfo[ 2, LEN( aInfo[ 2 ] ) ] )
    IF lShadow
       FT_Shadow( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight )
    ENDIF
 
    /* fill array with left positions for each row */
-   aLeft := ARRAY( LEN( aInfo[1] ) )
-   FOR i := 1 TO LEN( aInfo[1] )
-      IF LEN( aInfo[1,i] ) == nWidest
-         aLeft[i] := nLeft
+   aLeft := Array( Len( aInfo[ 1 ] ) )
+   FOR i := 1 TO Len( aInfo[ 1 ] )
+      IF Len( aInfo[ 1, i ] ) == nWidest
+         aLeft[ i ] := nLeft
       ELSE
-         aLeft[i] := nLeft + ROUND( ( nWidest - LEN( aInfo[1,i] ) ) / 2, 0 )
+         aLeft[ i ] := nLeft + Round( ( nWidest - Len( aInfo[ 1, i ] ) ) / 2, 0 )
       ENDIF
    NEXT
 
    /* fill array of colors */
-   FOR i := 2 TO LEN( aInfo[2] )
-      IF aInfo[2,i] == NIL
-         aInfo[2,i] := aInfo[2,i-1]
+   FOR i := 2 TO Len( aInfo[ 2 ] )
+      IF aInfo[ 2, i ] == NIL
+         aInfo[ 2, i ] := aInfo[ 2, i - 1 ]
       ENDIF
    NEXT
 
    /* display messages */
-   FOR i := 1 TO LEN( aInfo[1] )
-      @ nBoxTop+i, aLeft[i] SAY aInfo[1,i] COLOR aInfo[2,i]
+   FOR i := 1 TO Len( aInfo[ 1 ] )
+      @ nBoxTop + i, aLeft[ i ] SAY aInfo[ 1, i ] COLOR aInfo[ 2, i ]
    NEXT
 
    /* highlight characters */
-   FOR i := 1 TO LEN( aPos )
-      FOR j := 1 TO LEN( aPos[i] )
+   FOR i := 1 TO Len( aPos )
+      FOR j := 1 TO Len( aPos[ i ] )
 
-         FT_SetAttr( nBoxTop + i,                              ;
-                     aPos[i,j,1] + aLeft[i] - 1,               ;
-                     nBoxTop + i,                              ;
-                     aPos[i,j,2] + aLeft[i] - 1,               ;
-                     FT_Color2N( aInfo[ 2, LEN( aInfo[2] ) ] ) )
+         FT_SetAttr( nBoxTop + i,                           ;
+            aPos[ i, j, 1 ] + aLeft[ i ] - 1,               ;
+            nBoxTop + i,                                    ;
+            aPos[ i, j, 2 ] + aLeft[ i ] - 1,               ;
+            FT_Color2N( aInfo[ 2, LEN( aInfo[ 2 ] ) ] ) )
       NEXT
    NEXT
 
    IF cKey != NIL
-      IF LEN( cKey ) == 1
-         nOption := FT_SInkey(0)
-         IF UPPER( CHR( nOption) ) == cKey
-            xRtnVal := .t.
+      IF Len( cKey ) == 1
+         nOption := FT_SInkey( 0 )
+         IF Upper( Chr( nOption ) ) == cKey
+            xRtnVal := .T.
          ENDIF
       ELSE
          nOption := 0
-         DO WHILE AT( UPPER( CHR( nOption ) ), UPPER( cKey ) ) == 0
-            nOption := FT_SInkey(0)
+         DO WHILE At( Upper( Chr( nOption ) ), Upper( cKey ) ) == 0
+            nOption := FT_SInkey( 0 )
          ENDDO
          xRtnVal := nOption
       ENDIF
-      RESTSCREEN( nBoxTop, nBoxLeft, nBoxBottom+1, nBoxRight+2, cOldScreen )
+      RestScreen( nBoxTop, nBoxLeft, nBoxBottom + 1, nBoxRight + 2, cOldScreen )
    ENDIF
 
-   SETCOLOR( cOldColor )
-   SETCURSOR( cOldCursor )
+   SetColor( cOldColor )
+   SetCursor( cOldCursor )
+
    RETURN xRtnVal

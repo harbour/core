@@ -24,35 +24,43 @@
  *
  */
 
+#include "common.ch"
+
 #define log10( num )    log( num ) / log( 10 )
 #define DEFAULT_PRECISION     6
-#command DEFAULT <p> TO <val> => <p> := iif( <p> == NIL, <val>, <p> )
 
 #ifdef FT_TEST
-  PROCEDURE Main( cNum, cPrec )
-     DEFAULT cPrec TO str( DEFAULT_PRECISION )
-     qout( ft_d2e( val(cNum), val(cPrec) ) )
-     RETURN
+
+PROCEDURE Main( cNum, cPrec )
+
+   DEFAULT cPrec TO Str( DEFAULT_PRECISION )
+   QOut( ft_d2e( Val(cNum ), Val(cPrec ) ) )
+
+   RETURN
+
 #endif
 
-function ft_d2e( nDec, nPrecision )
-  local nExp, sScn
-  DEFAULT nPrecision TO DEFAULT_PRECISION
+FUNCTION ft_d2e( nDec, nPrecision )
 
-  if nDec == 0
-     nExp := 0
-  elseif abs( nDec ) < 1
-     nExp := int( log10( nDec ) ) - 1
-  else
-     nExp := int( log10( abs(nDec)+0.00001 ) )   /* 0.00001 == kludge */
-  endif           /* for imprecise logs */
+   LOCAL nExp, sScn
 
-  nDec /= 10 ^ nExp
+   DEFAULT nPrecision TO DEFAULT_PRECISION
 
-  if round( abs(nDec), nPrecision ) >= 10
-     nDec /= 10
-     nExp++
-  endif another kludge for stuff like '999999999'
+   IF nDec == 0
+      nExp := 0
+   ELSEIF Abs( nDec ) < 1
+      nExp := Int( log10( nDec ) ) - 1
+   ELSE
+      nExp := Int( log10( Abs(nDec ) + 0.00001 ) )   /* 0.00001 == kludge */
+   ENDIF           /* for imprecise logs */
 
-  sScn := ltrim( str( nDec, nPrecision + 3, nPrecision ) )
-  return sScn + 'E' + alltrim( str( nExp, 5, 0 ) )
+   nDec /= 10 ^ nExp
+
+   IF Round( Abs( nDec ), nPrecision ) >= 10
+      nDec /= 10
+      nExp++
+   ENDIF // another kludge FOR stuff LIKE '999999999'
+
+   sScn := LTrim( Str( nDec, nPrecision + 3, nPrecision ) )
+
+   RETURN sScn + 'E' + AllTrim( Str( nExp, 5, 0 ) )

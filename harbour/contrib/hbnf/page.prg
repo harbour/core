@@ -33,21 +33,23 @@
 
 FUNCTION FT_SETVPG( nPage )
 /*
-  LOCAL aRegs[ INT86_MAX_REGS ]
+   LOCAL aRegs[ INT86_MAX_REGS ]
 
-  aRegs[ AX ] := MAKEHI( 5 ) + nPage
-  FT_INT86( VIDEO, aRegs )
+   aRegs[ AX ] := MAKEHI( 5 ) + nPage
+   FT_INT86( VIDEO, aRegs )
   */
-  _ft_setvpg(nPage)
 
-  RETURN NIL
+   _ft_setvpg( nPage )
+
+   RETURN NIL
 
 FUNCTION FT_GETVPG()
 /*
-  LOCAL aRegs[ INT86_MAX_REGS ]
+   LOCAL aRegs[ INT86_MAX_REGS ]
 
-  aRegs[ AX ] := MAKEHI( 15 )
-  FT_INT86( VIDEO, aRegs )
+   aRegs[ AX ] := MAKEHI( 15 )
+   FT_INT86( VIDEO, aRegs )
 
-  RETURN ( HIGHBYTE( aRegs[ BX ] ) ) */
- Return _ft_getvpg()
+   RETURN HIGHBYTE( aRegs[ BX ] ) */
+
+   RETURN _ft_getvpg()

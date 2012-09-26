@@ -25,51 +25,55 @@
  */
 
 #ifdef FT_TEST
-  PROCEDURE Main( cParm1 )
-     *-------------------------------------------------------
-     * Sample routine to test function from command line
-     *-------------------------------------------------------
 
-    IF PCount() > 0
+PROCEDURE Main( cParm1 )
+
+   //-------------------------------------------------------
+   // Sample routine to test function from command line
+   //-------------------------------------------------------
+
+   IF PCount() > 0
       ? FT_ESCCODE( cParm1 )
-    ELSE
+   ELSE
       ? "Usage: PRT_ESC  'escape code sequence' "
       ? "            outputs converted code to  standard output"
       ?
-    ENDIF
-  RETURN
+   ENDIF
+
+   RETURN
+
 #endif
 
 FUNCTION FT_ESCCODE( cInput )
 
-LOCAL cOutput  := ""             ,;
-      cCurrent                   ,;
-      nPointer := 1              ,;
-      nLen     := Len( cInput )
+   LOCAL cOutput  := ""
+   LOCAL cCurrent
+   LOCAL nPointer := 1
+   LOCAL nLen     := Len( cInput )
 
-  DO WHILE nPointer <= nLen
+   DO WHILE nPointer <= nLen
 
-    cCurrent := Substr( cInput, nPointer, 1 )
+      cCurrent := SubStr( cInput, nPointer, 1 )
 
-    DO CASE
+      DO CASE
 
-       CASE cCurrent == "\" .AND. ;
-            IsDigit(Substr(cInput, nPointer+1, 1) ) .AND. ;
-            IsDigit(Substr(cInput, nPointer+2, 1) ) .AND. ;
-            IsDigit(Substr(cInput, nPointer+3, 1) )
-         cOutput  += Chr(Val(Substr(cInput, nPointer+1,3)))
+      CASE cCurrent == "\" .AND. ;
+            IsDigit( SubStr( cInput, nPointer + 1, 1 ) ) .AND. ;
+            IsDigit( SubStr( cInput, nPointer + 2, 1 ) ) .AND. ;
+            IsDigit( SubStr( cInput, nPointer + 3, 1 ) )
+         cOutput  += Chr( Val( SubStr(cInput, nPointer + 1, 3 ) ) )
          nPointer += 4
 
-       CASE cCurrent == "\" .AND. ;
-            Substr(cInput, nPointer+1, 1) == "\"
+      CASE cCurrent == "\" .AND. ;
+            SubStr( cInput, nPointer + 1, 1 ) == "\"
          cOutput += "\"
          nPointer += 2
 
-       OTHERWISE
+      OTHERWISE
          cOutput += cCurrent
          nPointer++
 
-    ENDCASE
-  ENDDO
+      ENDCASE
+   ENDDO
 
-RETURN cOutput
+   RETURN cOutput
