@@ -24,7 +24,7 @@
  *
  */
 
-#define MAKE_UPPER(x)                ( x := UPPER( x ) )
+#define MAKE_UPPER( x )                ( x := UPPER( x ) )
 
 FUNCTION FT_NOOCCUR( cCheckFor, cCheckIn, lIgnoreCase )
 
@@ -34,7 +34,7 @@ FUNCTION FT_NOOCCUR( cCheckFor, cCheckIn, lIgnoreCase )
       MAKE_UPPER( cCheckFor )             //  No, Force Everything to Uppercase
       MAKE_UPPER( cCheckIn )
 
-   ENDIF                                // IS_NOT_LOGICAL(lIgnoreCase) or ;
+   ENDIF
 // lIgnoreCase
 
    RETURN iif( Len( cCheckFor ) == 0 .OR. Len( cCheckIn ) == 0, ;

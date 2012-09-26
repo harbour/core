@@ -43,8 +43,8 @@ FUNCTION FT_HEX2DEC( cHexNum )
 
    LOCAL n, nDec := 0, nHexPower := 1
 
-   FOR n := Len( cHexNum ) TO 1 step - 1
-      nDec += ( At( subs( Upper(cHexNum ), n, 1 ), HEXTABLE ) - 1 ) * nHexPower
+   FOR n := Len( cHexNum ) TO 1 STEP -1
+      nDec += ( At( subs( Upper( cHexNum ), n, 1 ), HEXTABLE ) - 1 ) * nHexPower
       nHexPower *= 16
    NEXT
 

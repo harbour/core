@@ -34,7 +34,7 @@
 PROCEDURE Main( cNum, cPrec )
 
    DEFAULT cPrec TO Str( DEFAULT_PRECISION )
-   QOut( ft_d2e( Val(cNum ), Val(cPrec ) ) )
+   QOut( ft_d2e( Val( cNum ), Val( cPrec ) ) )
 
    RETURN
 
@@ -51,7 +51,7 @@ FUNCTION ft_d2e( nDec, nPrecision )
    ELSEIF Abs( nDec ) < 1
       nExp := Int( log10( nDec ) ) - 1
    ELSE
-      nExp := Int( log10( Abs(nDec ) + 0.00001 ) )   /* 0.00001 == kludge */
+      nExp := Int( log10( Abs( nDec ) + 0.00001 ) )   /* 0.00001 == kludge */
    ENDIF           /* for imprecise logs */
 
    nDec /= 10 ^ nExp

@@ -39,7 +39,7 @@ FUNCTION FT_PCHR( c_nums )
    ENDIF
 
    c_nums := Trim( c_nums ) + ",~,"
-   c_part := SubStr( c_nums, c_st + 1, At( ",",SubStr(c_nums,c_st + 2 ) ) )
+   c_part := SubStr( c_nums, c_st + 1, At( ",", SubStr( c_nums, c_st + 2 ) ) )
 
    DO WHILE ! ( c_part == "~" .OR. c_part == "" )
 
@@ -51,9 +51,9 @@ FUNCTION FT_PCHR( c_nums )
       ELSEIF SubStr( c_part, 1, 1 ) == "&"
 
          c_upper := Upper( c_part )
-         c_t1 := At( SubStr( c_upper,2,1 ), c_hex ) - 1
+         c_t1 := At( SubStr( c_upper, 2, 1 ), c_hex ) - 1
          IF c_t1 >- 1
-            c_t2 := At( SubStr( c_upper,3,1 ), c_hex ) - 1
+            c_t2 := At( SubStr( c_upper, 3, 1 ), c_hex ) - 1
             IF c_t2 >- 1
                c_t1 := c_t1 * 16 + c_t2
             ENDIF
@@ -137,7 +137,7 @@ FUNCTION FT_PCHR( c_nums )
 
       ENDIF
 
-      c_st := At( ",", SubStr( c_nums,c_st + 1 ) ) + c_st
+      c_st := At( ",", SubStr( c_nums, c_st + 1 ) ) + c_st
       c_part := SubStr( c_nums, c_st + 1, At( ",", SubStr( c_nums, c_st + 2 ) ) )
 
    ENDDO

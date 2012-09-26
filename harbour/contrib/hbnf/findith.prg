@@ -24,7 +24,7 @@
  *
  */
 
-#define MAKE_UPPER(cString)             (cString := UPPER(cString))
+#define MAKE_UPPER( cString )           ( cString := UPPER( cString ) )
 #define NULL                            ""
 
 #ifdef FT_TEST
@@ -66,7 +66,7 @@ FUNCTION FT_FINDITH( cCheckFor, cCheckIn, nWhichOccurrence, lIgnoreCase )
 
    RETURN iif( nWhichOccurrence == 1, ;
       At( cCheckFor, cCheckIn ), ;
-      iif( ( nIthOccurrence := At(cCheckFor, ;
+      iif( ( nIthOccurrence := At( cCheckFor, ;
       StrTran( cCheckIn, cCheckFor, ;
       NULL, 1, ;
       nWhichOccurrence - 1 ) ) ) == 0, ;

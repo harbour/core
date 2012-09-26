@@ -34,11 +34,11 @@ FUNCTION FT_SAVRGN( nTop, nLeft, nBottom, nRight )
 FUNCTION FT_RSTRGN( cScreen, nTop, nLeft )
 
    IF PCount() == 3
-      RestScreen( nTop, nLeft, ( nTop - Asc(cScreen ) ) + Asc( SubStr(cScreen, 3 ) ), ;
-         ( nLeft - Asc( SubStr(cScreen, 2 ) ) ) + Asc( SubStr( cScreen, 4 ) ), ;
+      RestScreen( nTop, nLeft, ( nTop - Asc(cScreen ) ) + Asc( SubStr( cScreen, 3 ) ), ;
+         ( nLeft - Asc( SubStr( cScreen, 2 ) ) ) + Asc( SubStr( cScreen, 4 ) ), ;
          SubStr( cScreen, 5 ) )
    ELSE
-      RestScreen( Asc( cScreen ), Asc( SubStr(cScreen, 2 ) ), Asc( SubStr(cScreen, 3 ) ), ;
+      RestScreen( Asc( cScreen ), Asc( SubStr( cScreen, 2 ) ), Asc( SubStr( cScreen, 3 ) ), ;
          Asc( SubStr( cScreen, 4 ) ), SubStr( cScreen, 5 ) )
    ENDIF
 

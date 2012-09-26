@@ -247,9 +247,9 @@ FUNCTION FT_DATECNFG( cFYStart , nDow )
             dCheck --
          ENDIF
 
-         SET( _SET_DATEFORMAT, "yyyy.mm.dd" )
+         Set( _SET_DATEFORMAT, "yyyy.mm.dd" )
          t_aDatePar[ 1 ] := DToC( dCheck )
-         SET( _SET_DATEFORMAT, cDateFormat )
+         Set( _SET_DATEFORMAT, cDateFormat )
       ENDIF
    ENDIF
 

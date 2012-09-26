@@ -46,7 +46,7 @@ MEMVAR getlist
    board_[xx, 4] - is the location occupied or not? .T. -> Yes, .F. -> No
 */
 
-THREAD STATIC board_ := { { {0, 29, 2, 34}, {2, 4}, {3, 9}, .T. } , ;
+THREAD STATIC board_ := { { { 0, 29, 2, 34 }, { 2, 4 }, { 3, 9 }, .T. } , ;
    { { 0, 37, 2, 42 }, { 5 }, { 10 }, .T. }      , ;
    { { 0, 45, 2, 50 }, { 2, 6 }, { 1, 11 }, .T. } , ;
    { { 3, 29, 5, 34 }, { 5, 9 }, { 6, 16 }, .T. } , ;
@@ -90,12 +90,12 @@ FUNCTION FT_PEGS()
    to validate entry when there is more than one possible move
 */
 
-   scanblock := { | a | a[2] == move2 }
+   scanblock := {| a | a[ 2 ] == move2 }
    cls
    SetColor( 'w/r' )
    SINGLEBOX( 22, 31, 24, 48 )
    @ 23, 33 SAY "Your move:"
-   AEval( board_, { | a, x | HB_SYMBOL_UNUSED( a ), drawbox( x ) } )
+   AEval( board_, {| a, x | HB_SYMBOL_UNUSED( a ), drawbox( x ) } )
    DO WHILE LastKey() != K_ESC .AND. moremoves()
       move := 1
       SetColor( 'w/n' )
@@ -103,49 +103,49 @@ FUNCTION FT_PEGS()
       READ
       IF move > 0
          DO CASE
-         CASE ! board_[move][4]
+         CASE ! board_[ move ][ 4 ]
             err_msg( "No piece there!" )
          OTHERWISE
             possible_ := {}
-            FOR xx := 1 TO Len( board_[move][2] )
-               IF board_[board_[move][2,xx] ][4] .AND. ;
-                     ! board_[board_[move][3,xx] ][4]
-                  AAdd( possible_, { board_[move][2,xx], board_[move][3,xx] } )
+            FOR xx := 1 TO Len( board_[ move ][ 2 ] )
+               IF board_[ board_[ move ][ 2, xx ] ][ 4 ] .AND. ;
+                     ! board_[ board_[ move ][ 3, xx ] ][ 4 ]
+                  AAdd( possible_, { board_[ move ][ 2, xx ], board_[ move ][ 3, xx ] } )
                ENDIF
             NEXT
             // only one available move -- do it
             DO CASE
             CASE Len( possible_ ) == 1
                // clear out original position and the position you jumped over
-               board_[move][4] := board_[possible_[1, 1] ][4] := .F.
-               board_[possible_[1, 2] ][4] := .T.
+               board_[ move ][ 4 ] := board_[ possible_[ 1, 1 ] ][ 4 ] := .F.
+               board_[ possible_[ 1, 2 ] ][ 4 ] := .T.
                drawbox( move, board_[move] )
-               drawbox( possible_[1,1] )
-               drawbox( possible_[1,2] )
+               drawbox( possible_[ 1, 1 ] )
+               drawbox( possible_[ 1, 2 ] )
             CASE Len( possible_ ) == 0
                err_msg( 'Illegal move!' )
             OTHERWISE
-               move2 := possible_[1, 2]
+               move2 := possible_[ 1, 2 ]
                toprow := 21 - Len( possible_ )
                SetColor( '+w/b' )
                buffer := SaveScreen( toprow, 55, 22, 74 )
                DOUBLEBOX( toprow, 55, 22, 74 )
                @ toprow, 58 SAY 'Possible Moves'
                DevPos( toprow, 65 )
-               AEval( possible_, { | a | DevPos( Row() + 1, 65 ), ;
-                  DevOutPict( a[2], '##' ) } )
+               AEval( possible_, {| a | DevPos( Row() + 1, 65 ), ;
+                  DevOutPict( a[ 2 ], '##' ) } )
                oldscore := Set( _SET_SCOREBOARD, .F. )
                @23, 44 GET move2 PICTURE '##' ;
                   VALID AScan( possible_, scanblock ) > 0
                READ
                RestScreen( toprow, 55, 22, 74, buffer )
-               SET( _SET_SCOREBOARD, oldscore )
-               mpos := AScan( possible_, { | a | move2 == a[2] } )
+               Set( _SET_SCOREBOARD, oldscore )
+               mpos := AScan( possible_, {| a | move2 == a[ 2 ] } )
                // clear out original position and the position you jumped over
-               board_[move][4] := board_[possible_[mpos, 1] ][4] := .F.
-               board_[move2][4] := .T.
+               board_[ move ][ 4 ] := board_[ possible_[ mpos, 1 ] ][ 4 ] := .F.
+               board_[ move2 ][ 4 ] := .T.
                drawbox( move )
-               drawbox( possible_[mpos,1] )
+               drawbox( possible_[ mpos, 1 ] )
                drawbox( move2 )
 
             ENDCASE
@@ -158,7 +158,6 @@ FUNCTION FT_PEGS()
 
    RETURN NIL
 
-// end function FT_PEGS()
 //--------------------------------------------------------------------*
 
 STATIC FUNCTION DrawBox( nelement )
@@ -171,7 +170,6 @@ STATIC FUNCTION DrawBox( nelement )
 
    RETURN NIL
 
-// end static function DrawBox()
 //--------------------------------------------------------------------*
 
 STATIC FUNCTION err_msg( msg )
@@ -187,7 +185,6 @@ STATIC FUNCTION err_msg( msg )
 
    RETURN nil
 
-// end static function Err_Msg()
 //--------------------------------------------------------------------*
 
 STATIC FUNCTION moremoves()
@@ -220,5 +217,4 @@ STATIC FUNCTION moremoves()
 
    RETURN canmove
 
-// end static function MoreMoves()
 //--------------------------------------------------------------------*

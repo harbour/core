@@ -26,13 +26,13 @@
 
 #include "common.ch"
 
-#define BLOCKIFY(x)                  { || x }
-#define CASE_AT(x,y,z)               z[AT(x,y)+1]
+#define BLOCKIFY( x )                {|| x }
+#define CASE_AT( x, y, z )           z[ AT( x, y ) + 1 ]
 #define NULL                         ""
-#define EARLIEST_DATE                STOD("01000101")
+#define EARLIEST_DATE                STOD( "01000101" )
 #define BLANK_DATE                   STOD()
 
-#define XTOC(x)           CASE_AT(VALTYPE(x), "CNDLM", ;
+#define XTOC( x )           CASE_AT( VALTYPE( x ), "CNDLM", ;
       { NULL, ;
       x, ;
       iif( HB_ISNUMERIC( x ), ;
@@ -112,4 +112,4 @@ FUNCTION FT_XTOY( xValueToConvert, cTypeToConvertTo, lWantYesNo )
 
    ENDCASE
 
-   RETURN xValueToConvert             // XToY
+   RETURN xValueToConvert

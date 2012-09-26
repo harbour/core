@@ -130,7 +130,7 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
 
    NEXT
 
-   AEval( aInfo[1], {|x| nWidest := Max( nWidest, Len( x ) ) } )
+   AEval( aInfo[ 1 ], {| x | nWidest := Max( nWidest, Len( x ) ) } )
 
    /* calculate location of data */
    IF nBoxLeft == NIL

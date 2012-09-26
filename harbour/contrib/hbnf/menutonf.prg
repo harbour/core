@@ -104,7 +104,7 @@ FUNCTION FT_Prompt( nRow,    nCol,    cPrompt,  cColor,      ;
       // If message column not supplied, use the default
 
       IF nMsgCol == NIL
-         IF SET( _SET_MCENTER )
+         IF Set( _SET_MCENTER )
             nMsgCol := Int( ( MaxCol() + 1 - Len( cPrompt ) ) / 2 )
          ELSE
             nMsgCol := 0
@@ -426,7 +426,7 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
    aRight[ nLevel ] := {}
    aExecute[ nLevel ] := {}
 
-   SET( _SET_CURSOR, nCursor )
+   Set( _SET_CURSOR, nCursor )
 
    Eval( bGetSet, nActive )
 

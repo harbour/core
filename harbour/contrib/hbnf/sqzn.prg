@@ -34,7 +34,7 @@ FUNCTION ft_sqzn( nValue, nSize, nDecimals )
    cCompressed := Chr( Val( SubStr( tmpstr, 1, 2 ) ) + iif( nValue < 0, 128, 0 ) )
 
    FOR k := 3 TO Len( tmpstr ) STEP 2
-      cCompressed += Chr( Val( SubStr(tmpstr, k, 2 ) ) )
+      cCompressed += Chr( Val( SubStr( tmpstr, k, 2 ) ) )
    NEXT
 
    RETURN cCompressed
@@ -45,7 +45,7 @@ FUNCTION ft_unsqzn( cCompressed, nSize, nDecimals )
 
    nSize       := iif( nSize     == NIL, 10, nSize )
    nDecimals   := iif( nDecimals == NIL, 0, nDecimals )
-   cCompressed := iif( multi    == - 1, SubStr( cCompressed, 2 ), cCompressed )
+   cCompressed := iif( multi     == - 1, SubStr( cCompressed, 2 ), cCompressed )
    nSize       := iif( nSize / 2 != Int( nSize / 2 ), nSize + 1, nSize )
    IF Asc( cCompressed ) > 127
       tmp         := Str( Asc( cCompressed ) - 128, 2 )

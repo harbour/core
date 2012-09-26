@@ -49,7 +49,7 @@ PROCEDURE Main( cNum )
 FUNCTION ft_ntow( nAmount )
 
    LOCAL nTemp, sResult := " ", nQualNo
-   LOCAL nDiv := 10 ^ ( Int( sol10(nAmount ) / 3 ) * 3 )
+   LOCAL nDiv := 10 ^ ( Int( sol10( nAmount ) / 3 ) * 3 )
 
    nTemp   := Int( nAmount % nDiv )
    nAmount := Int( nAmount / nDiv )

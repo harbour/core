@@ -105,8 +105,8 @@ PROCEDURE Main()
    LOCAL aNames := {}
    LOCAL cName, nElem
 
-   SET( _SET_SCOREBOARD, .F.   )
-   SET( _SET_COLOR,      "W/B" )
+   Set( _SET_SCOREBOARD, .F.   )
+   Set( _SET_COLOR,      "W/B" )
    CLS
 
 //  Demo will create an array of names and display in 3 columns

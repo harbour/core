@@ -61,7 +61,7 @@ FUNCTION FT_ESCCODE( cInput )
             IsDigit( SubStr( cInput, nPointer + 1, 1 ) ) .AND. ;
             IsDigit( SubStr( cInput, nPointer + 2, 1 ) ) .AND. ;
             IsDigit( SubStr( cInput, nPointer + 3, 1 ) )
-         cOutput  += Chr( Val( SubStr(cInput, nPointer + 1, 3 ) ) )
+         cOutput  += Chr( Val( SubStr( cInput, nPointer + 1, 3 ) ) )
          nPointer += 4
 
       CASE cCurrent == "\" .AND. ;

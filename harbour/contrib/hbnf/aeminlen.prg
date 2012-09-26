@@ -33,7 +33,7 @@ PROCEDURE Main()
    ?
    ? "myarray1 := DIRECTORY()"
    ?
-   AEval( myarray1, {|v| QOut( PadR(v[1],12 ), v[2], v[3], v[4], v[5] ) } )
+   AEval( myarray1, {| v | QOut( PadR( v[ 1 ], 12 ), v[ 2 ], v[ 3 ], v[ 4 ], v[ 5 ] ) } )
    var0 := FT_AEMINLEN( myarray1 )
    ? PadR( 'FT_AEMINLEN( myarray1 ) ->', 30 )
    ?? var0

@@ -57,7 +57,7 @@ FUNCTION FT_PopVid()
 
    IF nNewSize >= 0
       SetMode( aBottom[ PV_MAXROW ], aBottom[ PV_MAXCOL ] )
-      SET( _SET_CURSOR, aBottom[ PV_CURSOR ] )
+      Set( _SET_CURSOR, aBottom[ PV_CURSOR ] )
       NoSnow( aBottom[ PV_NOSNOW ] )
       SetBlink( aBottom[ PV_BLINK ] )
       RestScreen( 0, 0, MaxRow(), MaxCol(), aBottom[ PV_IMAGE ] )

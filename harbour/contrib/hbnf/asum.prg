@@ -26,8 +26,8 @@
 
 #include "common.ch"
 
-#define CASE_AT(x,y,z)               z[AT(x,y)+1]
-#define FORCE_BETWEEN(x,y,z)         (y := MAX(MIN(y,z),x))
+#define CASE_AT( x, y, z )               z[ AT( x, y ) + 1 ]
+#define FORCE_BETWEEN( x, y, z )         ( y := MAX( MIN( y, z ), x ) )
 
 FUNCTION FT_ASUM( aArray, nStartIndex, nEndIndex )
 

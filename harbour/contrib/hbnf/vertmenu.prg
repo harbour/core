@@ -28,28 +28,31 @@
 
 PROCEDURE Main()
 
-   LOCAL MAINMENU := ;
-      { { "DATA ENTRY", "ENTER DATA",         { || FT_MENU2( datamenu)  } }, ;
-      { "Reports",    "Hard copy",          { || FT_MENU2( repmenu )   } }, ;
-      { "Maintenance", "Reindex files, etc.", { || FT_MENU2( maintmenu ) } }, ;
-      { "Quit", "See ya later" } }
+   LOCAL MAINMENU := { ;
+      { "DATA ENTRY",  "ENTER DATA",          {|| FT_MENU2( datamenu )  } }, ;
+      { "Reports",     "Hard copy",           {|| FT_MENU2( repmenu )   } }, ;
+      { "Maintenance", "Reindex files, etc.", {|| FT_MENU2( maintmenu ) } }, ;
+      { "Quit",        "See ya later" } }
 
-   LOCAL datamenu := { { "Customers", , { || cust() } }   , ;
-      { "Invoices",  , { || inv() } }    , ;
-      { "Vendors",   , { || vendors() } }, ;
+   LOCAL datamenu := { ;
+      { "Customers", , {|| cust() } }   , ;
+      { "Invoices",  , {|| inv() } }    , ;
+      { "Vendors",   , {|| vendors() } }, ;
       { "Exit", "Return to Main Menu" } }
 
-   LOCAL repmenu :=  { { "Customer List", , { || custrep() } }  , ;
-      { "Past Due",      , { || pastdue() } }  , ;
-      { "Weekly Sales",  , { || weeksales() } }, ;
-      { "Monthly P&L",   , { || monthpl() } }  , ;
-      { "Vendor List",   , { || vendorrep() } }, ;
+   LOCAL repmenu :=  { ;
+      { "Customer List", , {|| custrep() } }  , ;
+      { "Past Due",      , {|| pastdue() } }  , ;
+      { "Weekly Sales",  , {|| weeksales() } }, ;
+      { "Monthly P&L",   , {|| monthpl() } }  , ;
+      { "Vendor List",   , {|| vendorrep() } }, ;
       { "Exit", "Return to Main Menu" } }
 
-   LOCAL maintmenu := { { "Reindex",  "Rebuild index files", { || re_ntx() } } , ;
-      { "Backup",   "Backup data files"  , { || backup() } } , ;
-      { "Compress", "Compress data files", { || compress() } }, ;
-      { "Exit", "Return to Main Menu" } }
+   LOCAL maintmenu := { ;
+      { "Reindex",  "Rebuild index files", {|| re_ntx() } } , ;
+      { "Backup",   "Backup data files"  , {|| backup() } } , ;
+      { "Compress", "Compress data files", {|| compress() } }, ;
+      { "Exit",     "Return to Main Menu" } }
 
    FT_MENU2( mainmenu )
 
@@ -99,7 +102,7 @@ FUNCTION ft_menu2( aMenuInfo, cColors )
    ENDIF
 
    /* determine longest menu option */
-   AEval( aMenuInfo, { | ele | nMaxwidth := Max( nMaxwidth, Len( ele[1] ) ) } )
+   AEval( aMenuInfo, {| ele | nMaxwidth := Max( nMaxwidth, Len( ele[ 1 ] ) ) } )
 
    /* establish top and left box coordinates */
    nLeft := ( ( MaxCol() + 1 ) - nMaxwidth ) / 2

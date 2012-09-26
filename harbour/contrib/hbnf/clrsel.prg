@@ -101,7 +101,7 @@ PROCEDURE Main( cVidMode )
    LOCAL nColDos := Col()
    LOCAL lBlink  := SetBlink( .F. )  // make sure it starts out .F.
    LOCAL aEnvDos := FT_SaveSets()
-   LOCAL cScrDos := SaveScreen( 00, 00, MaxRow(), MaxCol() )
+   LOCAL cScrDos := SaveScreen( 0, 0, MaxRow(), MaxCol() )
    LOCAL lColour := .F.
    LOCAL aClrs   := {}
 
@@ -138,7 +138,7 @@ PROCEDURE Main( cVidMode )
 
 //.... restore the DOS environment
    FT_RestSets( aEnvDos )
-   RestScreen( 00, 00, MaxRow(), MaxCol(), cScrDos )
+   RestScreen( 0, 0, MaxRow(), MaxCol(), cScrDos )
    SetPos( nRowDos, nColDos )
    SetBlink( .F. )  // doesn't appear to be reset from FT_RestSets
 
@@ -165,7 +165,7 @@ FUNCTION FT_ClrSel( aClrs, lColour, cChr )
    LOCAL nRowSav := Row()
    LOCAL nColSav := Col()
    LOCAL aEnvSav := FT_SaveSets()
-   LOCAL cScrSav := SaveScreen( 00, 00, MaxRow(), MaxCol() )
+   LOCAL cScrSav := SaveScreen( 0, 0, MaxRow(), MaxCol() )
 
    DEFAULT lColour TO IsColor()
    DEFAULT cChr TO Chr( 254 ) + Chr( 254 )
@@ -182,19 +182,19 @@ FUNCTION FT_ClrSel( aClrs, lColour, cChr )
    _ftShowPal( aClrPal, cChr )
 
 //.... Determine length of longest name and make sure not greater than 20
-   AEval( aClrs, { |aOpt| nLen := Max( nLen, Len( aOpt[C_NAME] ) ) } )
+   AEval( aClrs, {| aOpt | nLen := Max( nLen, Len( aOpt[ C_NAME ] ) ) } )
    nLen := Min( Max( nLen, 1 ), 20 ) + 2
 
 //.... prepare an array for use with aChoice(); truncate names at 20 chrs.
    aPrompt := Array( Len( aClrs ) )
    AEval( aClrs, ;
-      { |aOpt, nE| aPrompt[nE] := " " + SUBS( aOpt[C_NAME], 1, nLen - 2 ) + " " };
+      {| aOpt, nE | aPrompt[ nE ] := " " + SubStr( aOpt[ C_NAME ], 1, nLen - 2 ) + " " };
       )
 
 //.... determine co-ordinates for the achoice window
-   nT := Max( Int( (18 - Len(aPrompt ) ) /2 ) - 1, 1 )
+   nT := Max( Int( ( 18 - Len( aPrompt ) ) /2 ) - 1, 1 )
    nB := Min( nT + Len( aPrompt ) + 1, 17 )
-   nL := Max( Int( (27 - nLen ) /2 ) - 2, 1 )
+   nL := Max( Int( ( 27 - nLen ) /2 ) - 2, 1 )
    nR := Min( nL + nLen + 3, 26 )
 
 //.... set up the window for aChoice
@@ -220,7 +220,7 @@ FUNCTION FT_ClrSel( aClrs, lColour, cChr )
    ENDIF
 
    FT_RestSets( aEnvSav )
-   RestScreen( 00, 00, MaxRow(), MaxCol(), cScrSav )
+   RestScreen( 0, 0, MaxRow(), MaxCol(), cScrSav )
    SetPos( nRowSav, nColSav )
 
    RETURN iif( nChoice == 1, aClrs, aClrOld )
@@ -230,7 +230,7 @@ FUNCTION FT_ClrSel( aClrs, lColour, cChr )
 STATIC FUNCTION _ftHiLite( nRow, nCol, cStr, nLen )
 
 // Highlight the current selected aChoice element
-// Return -> Nil
+// Return -> NIL
 
    LOCAL cClr := SetColor()
    LOCAL aClr := _ftChr2Arr( cClr )
@@ -239,7 +239,7 @@ STATIC FUNCTION _ftHiLite( nRow, nCol, cStr, nLen )
    @ nRow, nCol SAY PadR( cStr, nLen )
    SetColor( cClr )
 
-   RETURN Nil
+   RETURN NIL
 
 //------------------------------------------------
 
@@ -256,7 +256,7 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
    LOCAL aPrompt
    LOCAL nLen    := 0
    LOCAL cColour := SetColor()
-   LOCAL cScrSav := SaveScreen( 18, 00, MaxRow(), MaxCol() )
+   LOCAL cScrSav := SaveScreen( 18, 0, MaxRow(), MaxCol() )
 
    ASize( aOpt, 4 )                            // check incoming parameters
    DEFAULT aOpt[ C_CHAR ] TO ""
@@ -282,11 +282,11 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
 
    IF !( aOpt[ C_TYPE ] == "T" )  // no prompt for titles
       //.... we need to know top,left,bottom,right for the prompt window
-      AEval( aPrompt, { |cPrompt| nLen := Max( nLen, Len( cPrompt ) ) } )
+      AEval( aPrompt, {| cPrompt | nLen := Max( nLen, Len( cPrompt ) ) } )
       nLen := Max( nLen, Len( aOpt[ C_NAME ] ) + 2 )
       nT := iif( aOpt[ C_TYPE ] == "M", 18, 19 )
       nB := nT + Len( aPrompt ) + 1
-      nL := Max( Int( (27 - nLen ) /2 ) - 2, 1 )
+      nL := Max( Int( ( 27 - nLen ) /2 ) - 2, 1 )
       nR := Min( nL + nLen + 3, 26 )
 
       //.... set up the window for prompt
@@ -302,9 +302,9 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
       IF !( aOpt[ C_TYPE ] == "T" )  // no prompt for titles
          SetColor( iif( lColour, "N/W,W+/R,,,N/W", "N/W,W+/N,,,N/W" ) )
          Double( nT, nL + 1, nB, nR - 1 )
-         @ nT, nL + 2 SAY PadC( " " + aOpt[C_NAME] + " ", nR - nL - 3, hb_UTF8ToStr( "═" ) )
+         @ nT, nL + 2 SAY PadC( " " + aOpt[ C_NAME ] + " ", nR - nL - 3, hb_UTF8ToStr( "═" ) )
          FOR nX := 1 TO Len( aPrompt )
-            @ nX + nT, nL + 2 PROMPT PadR( aPrompt[nX], nR - nL - 3 )
+            @ nX + nT, nL + 2 PROMPT PadR( aPrompt[ nX ], nR - nL - 3 )
          NEXT
          MENU TO nChoice
 
@@ -323,13 +323,13 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
       //.... get the specific colour combination
       aClrs := _ftChr2Arr( aOpt[ C_CLR ] )   // place color string in an array
       ASize( aClrs, 5 )                      // make sure there are 5 settings
-      //.... empty elements are made Nil so they can be defaulted
-      AEval( aClrs, { |v, e| aClrs[e] := iif( Empty(v ), Nil, AllTrim(v ) ) } )
-      DEFAULT aClrs[1] TO "W/N"
-      DEFAULT aClrs[2] TO "N/W"   // place default colours into
-      DEFAULT aClrs[3] TO "N/N"   // elements which are empty
-      DEFAULT aClrs[4] TO "N/N"
-      DEFAULT aClrs[5] TO "N/W"
+      //.... empty elements are made NIL so they can be defaulted
+      AEval( aClrs, {| v, e | aClrs[ e ] := iif( Empty( v ), NIL, AllTrim( v ) ) } )
+      DEFAULT aClrs[ 1 ] TO "W/N"
+      DEFAULT aClrs[ 2 ] TO "N/W"   // place default colours into
+      DEFAULT aClrs[ 3 ] TO "N/N"   // elements which are empty
+      DEFAULT aClrs[ 4 ] TO "N/N"
+      DEFAULT aClrs[ 5 ] TO "N/W"
       cClr := aClrs[ nChoice ]    // selected colour
 
       //.... allow change to specific part of colour string
@@ -358,7 +358,7 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
 STATIC FUNCTION _ftShowIt( aOpt )
 
 // Show an example of the colour setting
-// Return -> Nil
+// Return -> NIL
 
    LOCAL aClr := _ftChr2Arr( aOpt[ C_CLR ] )
 
@@ -370,61 +370,61 @@ STATIC FUNCTION _ftShowIt( aOpt )
    DO CASE
 
    CASE aOpt[ C_TYPE ] == "D"    // Desktop Background
-      SetColor( aClr[1] )
+      SetColor( aClr[ 1 ] )
       BkGrnd( 19, 43, 22, 64, aOpt[ C_CHAR ] )
 
    CASE aOpt[ C_TYPE ] == "T"    // Title
-      SetColor( aClr[1] )
+      SetColor( aClr[ 1 ] )
       @ 20, 08 SAY PadC( "This is an example of how the text shall look", 63 )
 
    CASE aOpt[ C_TYPE ] == "M"    // Menus
       SetColor( "W/N" )
       BkGrnd( 19, 41, 23, 66, Chr( 177 ) )
-      SetColor( aClr[1] )
+      SetColor( aClr[ 1 ] )
       Single( 19, 43, 22, 60 )
       @ 18, 41 SAY "   Report  Inquiry  Quit  "
       @ 21, 44 SAY    " eXit           "
-      SetColor( aClr[4] )
+      SetColor( aClr[ 4 ] )
       @ 18, 43 SAY    " Report "
       @ 20, 44 SAY    " Product List   "
-      SetColor( aClr[3] )
+      SetColor( aClr[ 3 ] )
       @ 18, 52 SAY            "I"
       @ 18, 61 SAY                     "Q"
       @ 21, 46 SAY      "X"
-      SetColor( aClr[5] )
+      SetColor( aClr[ 5 ] )
       @ 18, 44 SAY     "R"
       @ 20, 45 SAY     "P"
-      SetColor( aClr[2] )
+      SetColor( aClr[ 2 ] )
       @ 24, 41 SAY PadC( "Inventory Report", 26 )
 
    CASE aOpt[ C_TYPE ] == "G"    // Get windows
-      SetColor( aClr[1] )
+      SetColor( aClr[ 1 ] )
       ClearS( 19, 41, 24, 66 )
       Single( 19, 42, 24, 65 )
       @ 20, 43 SAY  "    Invoice Entry    "
       @ 21, 42 SAY hb_UTF8ToStr( "├──────────────────────┤" )
       @ 22, 43 SAY  "   Amount            "
       @ 23, 43 SAY  "   Date              "
-      SetColor( aClr[2] )
+      SetColor( aClr[ 2 ] )
       @ 22, 53 SAY             "  199.95"
-      SetColor( aClr[5] )
+      SetColor( aClr[ 5 ] )
       @ 23, 53 SAY             "09/15/91"
 
    CASE aOpt[ C_TYPE ] == "W"    // Alert windows
-      SetColor( aClr[1] )
+      SetColor( aClr[ 1 ] )
       ClearS( 18, 40, 24, 66 )
       Single( 18, 41, 24, 65 )
       @ 19, 42 SAY  "                       "
       @ 20, 42 SAY  "     Test Message      "
       @ 21, 42 SAY  "                       "
       @ 22, 41 SAY hb_UTF8ToStr( "├───────────────────────┤" )
-      SetColor( aClr[2] )
+      SetColor( aClr[ 2 ] )
       @ 23, 44 SAY  " Accept "
-      SetColor( aClr[5] )
+      SetColor( aClr[ 5 ] )
       @ 23, 55 SAY             " Reject "
 
    CASE aOpt[ C_TYPE ] == "B"    // browse windows
-      SetColor( aClr[1] )
+      SetColor( aClr[ 1 ] )
       ClearS( 18, 37, 24, 70 )
       Single( 18, 38, 24, 69 )
       @ 19, 39 SAY  " Cust   Name           Amount "
@@ -432,29 +432,29 @@ STATIC FUNCTION _ftShowIt( aOpt )
       @ 21, 39 SAY hb_UTF8ToStr(  "  312 │ Rick Shaw    │ 143.25 "  )
       @ 23, 39 SAY hb_UTF8ToStr(  "      │              │        "  )
       @ 24, 38 SAY hb_UTF8ToStr( "╘══════╧══════════════╧════════╛" )
-      SetColor( aClr[2] )
+      SetColor( aClr[ 2 ] )
       @ 22, 39 SAY hb_UTF8ToStr(  " 1005 │ Harry Pitts  │  78.95 "  )
-      SetColor( aClr[5] )
+      SetColor( aClr[ 5 ] )
       @ 23, 39 SAY  " 3162 "
       @ 23, 46 SAY         " Barb Wire    "
       @ 23, 61 SAY                        " 345.06 "
 
    CASE aOpt[ C_TYPE ] == "A"    // achoice type window
-      SetColor( aClr[1] )
+      SetColor( aClr[ 1 ] )
       ClearS( 18, 42, 24, 64 )
       Single( 18, 43, 24, 63 )
       @ 19, 44 SAY  " Daily Reports     "
       @ 21, 44 SAY  " Quarterly Reports "
       @ 23, 44 SAY  " Exit ...   <Esc>  "
-      SetColor( aClr[2] )
+      SetColor( aClr[ 2 ] )
       @ 20, 44 SAY  " Monthend Reports  "
-      SetColor( aClr[5] )
+      SetColor( aClr[ 5 ] )
       @ 22, 44 SAY  " Yearend Reports   "
 
    ENDCASE
    DispEnd()
 
-   RETURN Nil
+   RETURN NIL
 
 //------------------------------------------------
 
@@ -565,16 +565,16 @@ STATIC FUNCTION _ftDeskChar( aOpt )
 //.... draw the choices on the screen
    SetColor( cClr )
    FOR n := 1 TO Len( aChar )
-      @ n + 18, 29 SAY REPL( aChar[n], 10 )
+      @ n + 18, 29 SAY REPLICATE( aChar[ n ], 10 )
    NEXT
 
    n := nElem + 18
    DO WHILE .T.
       //.... make sure boundary not exeeded
-      n := iif( n > Len( aChar ) + 18, 19, iif( n < 19, Len(aChar ) + 18, n ) )
+      n := iif( n > Len( aChar ) + 18, 19, iif( n < 19, Len( aChar ) + 18, n ) )
 
       //.... show sample window
-      aOpt[ C_CHAR ] := aChar[ n-18 ] // place in array
+      aOpt[ C_CHAR ] := aChar[ n - 18 ] // place in array
       _ftShowIt( aOpt )
 
       SetColor( "W+/N" )
@@ -613,10 +613,12 @@ STATIC FUNCTION _ftChr2Arr( cString, cDelim )
    cString += cDelim
 
    DO WHILE .T.
-      IF Empty( cString ) ;  EXIT ;  ENDIF
+      IF Empty( cString )
+         EXIT
+      ENDIF
       n := At( cDelim, cString )
       AAdd( aArray, iif( n == 1, "", Left( cString, n - 1 ) ) )
-      cString := SUBS( cString, n + 1 )
+      cString := SubStr( cString, n + 1 )
    ENDDO
 
    RETURN aArray
@@ -633,7 +635,7 @@ STATIC FUNCTION _ftArr2Chr( aArray, cDelim )
    DEFAULT aArray TO {}
    DEFAULT cDelim TO ","
 
-   AEval( aArray, { |v, e| cString += iif( e == 1, v, cDelim + v ) } )
+   AEval( aArray, {| v, e | cString += iif( e == 1, v, cDelim + v ) } )
 
    RETURN cString
 
@@ -642,7 +644,7 @@ STATIC FUNCTION _ftArr2Chr( aArray, cDelim )
 STATIC FUNCTION _ftShowPal( aClrPal, cChr )
 
 // Paint the palette on the screen
-// Return -> Nil
+// Return -> NIL
 
    LOCAL nF, nB
    LOCAL nTop    := 0
@@ -661,7 +663,7 @@ STATIC FUNCTION _ftShowPal( aClrPal, cChr )
    NEXT
    DispEnd()
 
-   RETURN Nil
+   RETURN NIL
 
 //------------------------------------------------
 
@@ -678,8 +680,8 @@ STATIC FUNCTION _ftInitPal( aClrTab )
    FOR nF := 1 TO nDim * 2
       FOR nB := 1 TO nDim * 2
          aClrPal[ nF, nB ] := ;
-            iif( nF <= nDim, aClrTab[ nF ], aClrTab[ nF-nDim ] + "+" ) + "/" + ;
-            iif( nB <= nDim, aClrTab[ nB ], aClrTab[ nB-nDim ] + "*" )
+            iif( nF <= nDim, aClrTab[ nF ], aClrTab[ nF - nDim ] + "+" ) + "/" + ;
+            iif( nB <= nDim, aClrTab[ nB ], aClrTab[ nB - nDim ] + "*" )
       NEXT
    NEXT
 

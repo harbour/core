@@ -45,7 +45,7 @@ PROCEDURE Main()
    CLS
    @ 1, 0 SAY "String Tested                               Result"
    @ 2, 0 TO 2, MaxCol()
-   AEval( aString, {|ele, num| QOut( ele, Space(45 - Len(ele ) ), FT_Linked(ele ) ) } )
+   AEval( aString, {| ele, num | QOut( ele, Space( 45 - Len( ele ) ), FT_Linked( ele ) ) } )
    @ MaxRow() - 2, 0
 
    RETURN
@@ -68,12 +68,13 @@ FUNCTION FT_Linked( cFuncs )
       // No functions in string
       Alert( "Warning: Expected function(s) in FT_Linked(), but none were found" )
    ELSE
-      DO WHILE ( nFEnd := At( "(",cFuncs ) ) > 0
+      DO WHILE ( nFEnd := At( "(", cFuncs ) ) > 0
          // Add the current function to the array of functions
-         AAdd( aFuncArray, Left( cFuncs,nFEnd ) + ")" )
+         AAdd( aFuncArray, Left( cFuncs, nFEnd ) + ")" )
          // Remove the current function from the string
          cFuncs := SubStr( cFuncs, nFEnd + 1 )
-         nSpace := At( " ", cFuncs ) ; nComma := At( ",", cFuncs )
+         nSpace := At( " ", cFuncs )
+         nComma := At( ",", cFuncs )
          DO WHILE ( nComma > 0 .AND. nComma < nFEnd ) .OR. ;
                ( nSpace > 0 .AND. nSpace < nFEnd )
             // We have extra parameters or spaces prior to the start
@@ -89,7 +90,7 @@ FUNCTION FT_Linked( cFuncs )
       ENDDO
       // Scan through the array of functions, stop after the first occurence
       // of a function which returns a TYPE() of "U" (hence is not linked in)
-      lRetVal := AScan( aFuncArray, {|element| Type( element ) == "U" } ) = 0
+      lRetVal := AScan( aFuncArray, {| element | Type( element ) == "U" } ) = 0
    ENDIF
 
    RETURN lRetVal

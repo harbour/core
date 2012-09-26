@@ -38,12 +38,12 @@ FUNCTION FT_NETPV( nInitialInvestment, nInterestRate, aCashFlow, nNoOfCashFlows 
 
    LOCAL nNetPresentValue := 0
 
-   nNoOfCashFlows := iif( nNoOfCashFlows == nil, Len( aCashFlow ), nNoOfCashFlows )
+   nNoOfCashFlows := iif( nNoOfCashFlows == NIL, Len( aCashFlow ), nNoOfCashFlows )
 
    AEval( aCashFlow, ;
       {| nElement, nElementNo | ;
       nNetPresentValue += nElement / ;
-      ( ( 1 + (nInterestRate / 100 ) ) ** nElementNo ) }, ;
+      ( ( 1 + ( nInterestRate / 100 ) ) ** nElementNo ) }, ;
       1, nNoOfCashFlows )
 
    RETURN nNetPresentValue -= nInitialInvestment

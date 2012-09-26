@@ -62,20 +62,20 @@
 #define K_MULTIPLY 42
 #define K_DIVIDE   47
 #define K_ZERO     48
-#define B_DOUBLE "╔═╗║╝═╚║ "
-#define B_SINGLE "+-+|+-+| "
+#define B_DOUBLE   hb_UTF8ToStr( "╔═╗║╝═╚║ " )
+#define B_SINGLE                 "+-+|+-+| "
 
-#define CRLF CHR(13)+CHR(10)
-#define nTotTran LEN(aTrans)
+#define CRLF Chr( 13 ) + Chr( 10 )
+#define nTotTran LEN( aTrans )
 
 #command DISPMESSAGE <mess>,<t>,<l>,<b>,<r> =>                        ;
       _ftPushKeys(); KEYBOARD Chr( K_CTRL_PGDN ) + Chr( K_CTRL_W )      ;;
       MemoEdit( < mess > , < t > , < l > , < b > , < r > , .F. , NIL, ( < r > ) - ( < l > ) + 1 )   ;;
       _ftPopKeys()
 
-#define ASHRINK(ar) ASIZE(ar,LEN(ar)-1)
+#define ASHRINK( ar ) ASIZE( ar, LEN( ar ) - 1 )
 
-   /* This INKEY UDC was posted by Don Caton on NanForum... Thanks Don <g> */
+/* This INKEY UDC was posted by Don Caton on NanForum... Thanks Don <g> */
 #command FT_INKEY [ <secs> ] TO <var>                                    ;
       =>                                                              ;
       WHILE .T.                                                      ;;
@@ -91,29 +91,29 @@
 //   and passing aAdder[] all over the place.... Don't let this confuse
 //   you. I wrote the Adder using the variable names & now let the
 //   PreProcessor do all the work.
-#define nTotal     aAdder[1]
-#define nNumTotal  aAdder[2]
-#define nSavTotal  aAdder[3]
-#define cTotPict   aAdder[4]
-#define lClAdder   aAdder[5]
-#define lDecSet    aAdder[6]
-#define nDecDigit  aAdder[7]
-#define nMaxDeci   aAdder[8]
-#define lMultDiv   aAdder[9]
-#define nAddMode   aAdder[10]
-#define lSubRtn    aAdder[11]
-#define lTotalOk   aAdder[12]
-#define lAddError  aAdder[13]
-#define lTape      aAdder[14]
-#define lNewNum    aAdder[15]
-#define nSavSubTot aAdder[16]
-#define lDivError  aAdder[17]
-#define aTrans     aAdder[18]
-#define nTopOS     aAdder[19]
-#define nLeftOS    aAdder[20]
-#define nAddSpace  aAdder[21]
-#define nTapeSpace aAdder[22]
-#define cTapeScr   aAdder[23]
+#define nTotal     aAdder[ 1 ]
+#define nNumTotal  aAdder[ 2 ]
+#define nSavTotal  aAdder[ 3 ]
+#define cTotPict   aAdder[ 4 ]
+#define lClAdder   aAdder[ 5 ]
+#define lDecSet    aAdder[ 6 ]
+#define nDecDigit  aAdder[ 7 ]
+#define nMaxDeci   aAdder[ 8 ]
+#define lMultDiv   aAdder[ 9 ]
+#define nAddMode   aAdder[ 10 ]
+#define lSubRtn    aAdder[ 11 ]
+#define lTotalOk   aAdder[ 12 ]
+#define lAddError  aAdder[ 13 ]
+#define lTape      aAdder[ 14 ]
+#define lNewNum    aAdder[ 15 ]
+#define nSavSubTot aAdder[ 16 ]
+#define lDivError  aAdder[ 17 ]
+#define aTrans     aAdder[ 18 ]
+#define nTopOS     aAdder[ 19 ]
+#define nLeftOS    aAdder[ 20 ]
+#define nAddSpace  aAdder[ 21 ]
+#define nTapeSpace aAdder[ 22 ]
+#define cTapeScr   aAdder[ 23 ]
 
 // I still use a few of STATICS, but most are set to NIL when quiting...
 THREAD STATIC lAdderOpen := .F.
@@ -247,7 +247,7 @@ FUNCTION FT_Adder()
       CASE nKey == K_RETURN             // <RTN> Total or Subtotal
          _ftAddTotal( aAdder )
       CASE nKey == K_ESC                // <ESC> Quit
-         SET( _SET_DECIMALS, nOldDecim )
+         Set( _SET_DECIMALS, nOldDecim )
          SetCursor( nOldCurs )
          IF lTape
             RestScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace, cTapeScr )
@@ -320,7 +320,7 @@ FUNCTION FT_Adder()
       CASE nKey == K_F10                // <F10> Quit - Return total
          IF lTotalOk                     // Did they finish the calculation
             IF oGet != NIL .AND. oGet:TYPE == "N"
-               SET( _SET_DECIMALS, nOldDecim )
+               Set( _SET_DECIMALS, nOldDecim )
                SetCursor( nOldCurs )
                IF lTape
                   RestScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace, cTapeScr )
@@ -433,7 +433,7 @@ STATIC FUNCTION _ftChangeDec( aAdder, nNumDec )
       nNumDec := 0
 
       nNumDec := _ftQuest( "How many decimals do you want to display?",         ;
-         nNumDec, "9", {|oGet| _ftValDeci( oGet ) } )
+         nNumDec, "9", {| oGet | _ftValDeci( oGet ) } )
 
       cTotPict := _ftPosRepl( cDefTotPict, ".", 19 - Abs( nNumDec ) )
 
@@ -469,8 +469,8 @@ STATIC FUNCTION _ftDispTotal( aAdder )
 
    LOCAL cTotStr
 
-   IF nTotal > Val( _ftCharRem( ",",cTotPict ) )
-      cTotStr   := _ftStuffComma( LTrim( Str(nTotal ) ) )
+   IF nTotal > Val( _ftCharRem( ",", cTotPict ) )
+      cTotStr   := _ftStuffComma( LTrim( Str( nTotal ) ) )
       @ 4 + nTopOS, 8 + nAddSpace SAY "****  ERROR  **** "
       _ftError( "that number is to big to display! I believe the answer was " + ;
          cTotStr + "." )
@@ -503,8 +503,8 @@ STATIC FUNCTION _ftDispSubTot( aAdder )
 
    LOCAL cStotStr
 
-   IF nNumTotal > Val( _ftCharRem( ",",cTotPict ) )
-      cStotStr  := _ftStuffComma( LTrim( Str(nNumTotal ) ) )
+   IF nNumTotal > Val( _ftCharRem( ",", cTotPict ) )
+      cStotStr  := _ftStuffComma( LTrim( Str( nNumTotal ) ) )
       @ 4 + nTopOS, 8 + nAddSpace SAY "****  ERROR  **** "
       _ftError( "that number is to big to display! I believe the answer was " + ;
          cStotStr + "." )
@@ -598,11 +598,11 @@ STATIC FUNCTION _ftAddTotal( aAdder )
          lTotalOk  := .T.
       ENDIF
    ELSE                                  // This was the first time they pressed
-      IF !lMultDiv .AND. LastKey() == K_RETURN // total key
+      IF ! lMultDiv .AND. LastKey() == K_RETURN // total key
          lSubRtn := .T.
       ENDIF
       IF _ftRoundIt( nTotal, nMaxDeci ) != 0 .OR. _ftRoundIt( nNumTotal, nMaxDeci ) != 0
-         IF !lMultDiv
+         IF ! lMultDiv
             _ftSetWinColor( W_CURR, W_SCREEN )
             @ 6 + nTopOS, 18 + nAddSpace SAY "<SUBTOTAL>"
             _ftSetWinColor( W_CURR, W_PROMPT )
@@ -634,7 +634,7 @@ STATIC FUNCTION _ftAddTotal( aAdder )
          @ 6 + nTopOS, 18 + nAddSpace SAY "   <TOTAL>"
          _ftSetWinColor( W_CURR, W_PROMPT )
          lSubRtn := .F.                    // pressed total so key reset everything
-         IF !lTotalOk                      // If you haven't printed total DO-IT
+         IF ! lTotalOk                     // If you haven't printed total DO-IT
             lTotalOk := .T.
             _ftUpdateTrans( aAdder, .F. , NIL )
          ENDIF
@@ -642,7 +642,7 @@ STATIC FUNCTION _ftAddTotal( aAdder )
          nSavTotal := nTotal
          nTotal    := 0
       ELSE
-         IF !lTotalOk                      // If you haven't printed total DO-IT
+         IF ! lTotalOk                     // If you haven't printed total DO-IT
             _ftUpdateTrans( aAdder, .F. , NIL )
             nNumTotal := 0
          ENDIF
@@ -792,7 +792,7 @@ STATIC FUNCTION _ftAddHelp
       "         <M>ove     - the Adder from right to left"  + CRLF + ;
       "         <T>ape     - turn Tape Display On or Off"   + CRLF + ;
       "         <S>croll   - the tape display"       + CRLF + CRLF + ;
-      "         <DEL> ---┬-- 1st Clear entry"               + CRLF + ;
+      "         <DEL> ---+-- 1st Clear entry"               + CRLF + ;
       "                  +-- 2nd Clear ADDER"               + CRLF + ;
       "         <ESC>      - Quit"                          + CRLF + ;
       "         <F10>      - return a <TOTAL> to the active get"
@@ -855,24 +855,24 @@ STATIC FUNCTION _ftUpdateTrans( aAdder, lTypeTotal, nAmount )
 
    nAmount := iif( nAmount == NIL, 0, nAmount )
    IF lClAdder                     // Clear the adder (they pressed <DEL> twice
-      AAdd( aTrans, Str( 0,22,nMaxDeci ) + " C" )
+      AAdd( aTrans, Str( 0, 22, nMaxDeci ) + " C" )
       IF lTape                            // If there is a tape Show Clear
          _ftDisplayTape( aAdder )
       ENDIF
       RETU NIL
    ENDIF
 
-   IF lTypeTotal                         // If lTypeTotal=.T. Update from total
-      AAdd( aTrans, Str( iif(lUseTotal,nTotal,nAmount ),22,nMaxDeci ) )
-      aTrans[nTotTran] := _ftStuffComma( aTrans[nTotTran], .T. ) + " *" +         ;
+   IF lTypeTotal                         // If lTypeTotal == .T. Update from total
+      AAdd( aTrans, Str( iif( lUseTotal, nTotal, nAmount ), 22, nMaxDeci ) )
+      aTrans[ nTotTran ] := _ftStuffComma( aTrans[ nTotTran ], .T. ) + " *" + ;
          iif( lAddError, "ER", "" )
 
    ELSE                            // If lTypeTotal=.F. Update from nNumTotal
-      AAdd( aTrans, Str( iif(lUseTotal,nTotal,nAmount ),22,nMaxDeci ) )
+      AAdd( aTrans, Str( iif( lUseTotal, nTotal, nAmount ), 22, nMaxDeci ) )
 
-      aTrans[nTotTran] := _ftStuffComma( aTrans[nTotTran], .T. ) +               ;
-         iif( lSubRtn, " S", iif( nAddMode == 1," +",iif(nAddMode == 2," -",IF             ;
-         ( lTotalOk, " =", iif( nAddMode == 3," X"," /" ) ) ) ) ) + iif( lAddError, "ER", "" )
+      aTrans[ nTotTran ] := _ftStuffComma( aTrans[ nTotTran ], .T. ) + ;
+         iif( lSubRtn, " S", iif( nAddMode == 1, " +", iif( nAddMode == 2, " -", ;
+         iif( lTotalOk, " =", iif( nAddMode == 3, " X", " /" ) ) ) ) ) + iif( lAddError, "ER", "" )
 
    ENDIF
 
@@ -996,13 +996,13 @@ STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
    IF ( nKey == 84 .OR. nKey == 116 ) .AND. lTape  // Stop displaying tape
       lTape := .F.
       RestScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace, cTapeScr )
-      RETU NIL
+      RETURN NIL
    ENDIF
    IF lTape                              // Are we in the display mode
       SetColor( "N/W" )
       Scroll( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, 1 )
       IF nTotTran > 0                       // Any transactions been entered yet?
-         @ 20 + nTopOS, 7 + nTapeSpace SAY aTrans[nTotTran]
+         @ 20 + nTopOS, 7 + nTapeSpace SAY aTrans[ nTotTran ]
       ENDIF
       _ftSetWinColor( W_CURR, W_PROMPT )
    ELSE                                  // Start displaying tape
@@ -1020,7 +1020,7 @@ STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
          nTopTape := nTotTran - 15
       ENDIF
       FOR nDispTape := nTotTran TO nTopTape STEP - 1
-         @ 20 + nDispTape - nTotTran + nTopOS, 7 + nTapeSpace SAY aTrans[nDispTape]
+         @ 20 + nDispTape - nTotTran + nTopOS, 7 + nTapeSpace SAY aTrans[ nDispTape ]
       NEXT
    ENDIF
    _ftSetWinColor( W_CURR, W_PROMPT )
@@ -1092,7 +1092,7 @@ STATIC FUNCTION _ftPopKeys
    LOCAL cKeys := ""
 
    IF Len( aKeys ) != 0
-      AEval( aKeys, {|elem| cKeys += Chr( elem ) } )
+      AEval( aKeys, {| elem | cKeys += Chr( elem ) } )
    ENDIF
    KEYBOARD cKeys
    aKeys := {}
@@ -1132,7 +1132,7 @@ STATIC FUNCTION _ftPushMessage( cMessage, lWait, cTitle, cBotTitle, xQuiet, nTop
    cOldDevic := Set( _SET_DEVICE, "SCREEN" )
    lOldPrint := Set( _SET_PRINTER, .F. )
    nMessLen  := Len( cMessage )
-   nWide     := iif( nMessLen > 72, 72, iif( nMessLen < 12,12,nMessLen ) )
+   nWide     := iif( nMessLen > 72, 72, iif( nMessLen < 12, 12, nMessLen ) )
    nNumRows  := MLCount( cMessage, nWide )
 
 // If they didn't say what the top row is, Center it on the screen
@@ -1157,8 +1157,8 @@ STATIC FUNCTION _ftPushMessage( cMessage, lWait, cTitle, cBotTitle, xQuiet, nTop
    SetCursor( nOldCurs )
    SetColor( cOldColor )
    SetPos( nOldRow, nOldCol )
-   SET( _SET_DEVICE, cOldDevic )
-   SET( _SET_PRINTER, lOldPrint )
+   Set( _SET_DEVICE, cOldDevic )
+   Set( _SET_PRINTER, lOldPrint )
    _ftSetLastKey( nOldLastKey )
 
    RETURN NIL
@@ -1209,7 +1209,7 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
    LOCAL nRight, oNewGet, nNumMessRow, nLenLastRow, lGetOnNextLine, nOldCurs
    LOCAL cVarType := ValType( xVarVal )
    LOCAL nVarLen  := iif( cVarType == "C", Len( xVarVal ), iif( cVarType == "D", 8, ;
-      iif( cVarType == "L", 1, iif( cVarType == "N", iif(cPict == NIL, 9, ;
+      iif( cVarType == "L", 1, iif( cVarType == "N", iif( cPict == NIL, 9, ;
       Len( cPict ) ), 0 ) ) ) )
    LOCAL nOldLastKey := LastKey()
    LOCAL cOldDevice  := Set( _SET_DEVICE, "SCREEN" )
@@ -1219,13 +1219,13 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
    nOldCol   := Col()
    nOldCurs  := SetCursor( SC_NONE )
    cOldColor := SetColor()
-   lNoESC    := iif( lNoESC == NIL, .F. , lNoESC )
+   lNoESC    := iif( lNoESC == NIL, .F., lNoESC )
 
    nMessLen  := Len( cMessage ) + nVarLen + 1
-   nWide     := iif( nMessLen > 66, 66, iif( nMessLen < 12,12,nMessLen ) )
+   nWide     := iif( nMessLen > 66, 66, iif( nMessLen < 12, 12, nMessLen ) )
 
    nNumMessRow    := MLCount( cMessage, nWide )
-   nLenLastRow    := Len( Trim( MemoLine(cMessage,nWide,nNumMessRow ) ) )
+   nLenLastRow    := Len( Trim( MemoLine( cMessage, nWide, nNumMessRow ) ) )
    lGetOnNextLine := ( nLenLastRow + nVarLen ) > nWide
    nNumRows       := nNumMessRow + iif( lGetOnNextLine, 1, 0 )
 
@@ -1246,7 +1246,7 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
 
 // If the input line is character & wider than window SCROLL
    IF lGetOnNextLine .AND. HB_ISSTRING( xVarVal ) .AND. nVarLen > nWide
-      oNewGet:Picture   := "@S" + LTrim( Str( nWide,4,0 ) ) + iif( cPict == NIL, "", " " + cPict )
+      oNewGet:Picture   := "@S" + LTrim( Str( nWide, 4, 0 ) ) + iif( cPict == NIL, "", " " + cPict )
    ENDIF
 
    IF cPict != NIL                       // Use the picture they passed
@@ -1282,8 +1282,8 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
    SetCursor( nOldCurs )
    SetColor( cOldColor )
    SetPos( nOldRow, nOldCol )
-   SET( _SET_DEVICE,  cOldDevice )
-   SET( _SET_PRINTER, lOldPrint )
+   Set( _SET_DEVICE,  cOldDevice )
+   Set( _SET_PRINTER, lOldPrint )
    _ftSetLastKey( nOldLastKey )
 
    RETURN xVarVal
@@ -1389,8 +1389,8 @@ STATIC FUNCTION _ftError( cMessage, xDontReset )
       _ftSetLastKey( nOldLastKey )
    ENDIF
 
-   SET( _SET_DEVICE, cOldDevic )
-   SET( _SET_PRINTER, lOldPrint )
+   Set( _SET_DEVICE, cOldDevic )
+   Set( _SET_PRINTER, lOldPrint )
 
    RETURN NIL
 
@@ -1720,22 +1720,23 @@ STATIC FUNCTION _ftWinTitle( cTheTitle, cTopOrBot )
 
 STATIC FUNCTION _ftInitColors
 
-   aWinColor := { { "GR+/BG","GR+/G", "B+/RB", "G+/R" } ,                       ;
-      { "R+/N",   "W+/RB", "W+/BG", "GR+/B" } ,                       ;
-      { "GR+/N", "GR+/N", "GR+/N", "GR+/N" } ,                       ;
-      {  "B/BG", "BG+/G", "W+/RB", "BG+/R" } ,                       ;
+   aWinColor := { ;
+      { "GR+/BG","GR+/G", "B+/RB", "G+/R" } ,                       ;
+      { "R+/N",   "W+/RB", "W+/BG", "GR+/B" } ,                     ;
+      { "GR+/N", "GR+/N", "GR+/N", "GR+/N" } ,                      ;
+      {  "B/BG", "BG+/G", "W+/RB", "BG+/R" } ,                      ;
       { "W+/BG", "W+/G", "GR+/RB", "W+/R" } ,                       ;
       { "GR+/B", "GR+/R", "R+/B",  "W+/BG" },                       ;
       {  "N/N",   "N/N",  "N/N",   "N/N" }   }
 
-   aStdColor := { "BG+*/RB" ,                                                 ;
-      "GR+/R"  ,                                                 ;
-      "GR+/N"  ,                                                 ;
-      "W/B"  ,                                                 ;
-      "GR+/N"  ,                                                 ;
-      "GR+/GR" ,                                                 ;
+   aStdColor := { "BG+*/RB" ,                                       ;
+      "GR+/R"  ,                                                    ;
+      "GR+/N"  ,                                                    ;
+      "W/B"  ,                                                      ;
+      "GR+/N"  ,                                                    ;
+      "GR+/GR" ,                                                    ;
       { "W+/B",  "W/B", "G+/B", "R+/B",                             ;
-      "GR+/B", "BG+/B", "B+/B", "G+/B" },                            ;
+      "GR+/B", "BG+/B", "B+/B", "G+/B" },                           ;
       "N/N"    }
 
    RETURN NIL

@@ -26,7 +26,7 @@
 
 #include "common.ch"
 
-#define FORCE_BETWEEN(x,y,z)         (y := MAX(MIN(y,z),x))
+#define FORCE_BETWEEN( x, y, z )         ( y := MAX( MIN( y, z ), x ) )
 
 FUNCTION FT_ADESSORT( aArray, nStartIndex, nEndIndex )
 
