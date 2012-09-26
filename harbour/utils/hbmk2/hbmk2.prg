@@ -4004,6 +4004,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                AAdd( hbmk[ _HBMK_aOPTL ], "-mconsole" )
             ENDIF
          ENDIF
+         IF hbmk[ _HBMK_lSTATICFULL ]
+            AAdd( hbmk[ _HBMK_aOPTL ], "-static" )
+         ENDIF
          IF hbmk[ _HBMK_lMAP ]
             AAdd( hbmk[ _HBMK_aOPTL ], "-Wl,-Map,{OM}" )
             AAdd( hbmk[ _HBMK_aOPTD ], "-Wl,-Map,{OM}" )
