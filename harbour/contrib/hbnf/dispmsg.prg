@@ -79,7 +79,8 @@ PROCEDURE Main( cCmdLine )
       "[Esc]ape       [Alt-Q]" },           ;
       { cErrN, cErrN, cErrH } }, , 2 )
 
-   nType := FT_DispMsg( { { "Create Or Edit [I]nvoice",    ;
+   nType := FT_DispMsg( { { ;
+      "Create Or Edit [I]nvoice",    ;
       "Create Or Edit [O]rder",      ;
       "Create Or Edit [B]ack Order", ;
       "Create Or Edit [Q]uote",      ;
@@ -94,7 +95,6 @@ PROCEDURE Main( cCmdLine )
    QUIT
 
 #endif
-// end of demo program
 
 FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
 
@@ -118,7 +118,7 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
       AAdd( aPos, {} )
    NEXT
 
-   FOR i := 1 TO Len( aInfo[1] )
+   FOR i := 1 TO Len( aInfo[ 1 ] )
 
       DO WHILE At( "[", aInfo[ 1, i ] ) > 0
          x := At( "[", aInfo[ 1, i ] )
@@ -141,7 +141,7 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
 
 /*
    IF nBoxTop == NIL
-      nTop := ( MAXROW() - LEN( aInfo[ 1 ] ) - 2 ) / 2 + 2
+      nTop := ( MaxRow() - Len( aInfo[ 1 ] ) - 2 ) / 2 + 2
    ENDIF
 */
 
@@ -172,10 +172,10 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    cOldCursor := SetCursor( SC_NONE )
 
 // draw box
-   cOldColor := SetColor( aInfo[ 2, LEN( aInfo[ 2 ] ) ] )
+   cOldColor := SetColor( aInfo[ 2, Len( aInfo[ 2 ] ) ] )
 
    DispBox( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight, cnBoxString, ;
-      aInfo[ 2, LEN( aInfo[ 2 ] ) ] )
+      aInfo[ 2, Len( aInfo[ 2 ] ) ] )
    IF lShadow
       FT_Shadow( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight )
    ENDIF
@@ -210,19 +210,19 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
             aPos[ i, j, 1 ] + aLeft[ i ] - 1,               ;
             nBoxTop + i,                                    ;
             aPos[ i, j, 2 ] + aLeft[ i ] - 1,               ;
-            FT_Color2N( aInfo[ 2, LEN( aInfo[ 2 ] ) ] ) )
+            FT_Color2N( aInfo[ 2, Len( aInfo[ 2 ] ) ] ) )
       NEXT
    NEXT
 
    IF cKey != NIL
       IF Len( cKey ) == 1
          nOption := FT_SInkey( 0 )
-         IF Upper( Chr( nOption ) ) == cKey
+         IF Upper( hb_keyChar( nOption ) ) == cKey
             xRtnVal := .T.
          ENDIF
       ELSE
          nOption := 0
-         DO WHILE At( Upper( Chr( nOption ) ), Upper( cKey ) ) == 0
+         DO WHILE At( Upper( hb_keyChar( nOption ) ), Upper( cKey ) ) == 0
             nOption := FT_SInkey( 0 )
          ENDDO
          xRtnVal := nOption

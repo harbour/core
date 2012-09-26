@@ -108,8 +108,8 @@ FUNCTION ft_nwSemOpen( cName, nInitVal, nHandle, nOpenCnt )
    DEFAULT nHandle  TO 0
    DEFAULT nOpenCnt TO 0
 
-   cName    := iif( Len( cName ) > 127, SubStr( cName, 1, 127 ), cName )
-   cRequest := Chr( Len( cName ) ) + cName
+   cName    := iif( hb_BLen( cName ) > 127, hb_BSubStr( cName, 1, 127 ), cName )
+   cRequest := hb_BChar( Len( cName ) ) + cName
 
    aRegs[ AX ]      := makehi( 197 )                       // C5h
    aRegs[ DS ]      := cRequest
@@ -118,10 +118,10 @@ FUNCTION ft_nwSemOpen( cName, nInitVal, nHandle, nOpenCnt )
 
    ft_int86( INT21, aRegs )
 
-   nHandle  := Bin2L( I2Bin( aRegs[CX] ) + I2Bin( aRegs[DX] ) )
+   nHandle  := Bin2L( I2Bin( aRegs[ CX ] ) + I2Bin( aRegs[ DX ] ) )
    nOpenCnt := lowbyte( aRegs[ BX ] )
 
-   nRet := lowbyte( aRegs[AX] )
+   nRet := lowbyte( aRegs[ AX ] )
 
    RETURN iif( nRet < 0, nRet + 256, nRet )
 
@@ -134,15 +134,15 @@ FUNCTION ft_nwSemEx( nHandle, nValue, nOpenCnt )
    DEFAULT nOpenCnt TO 0
 
    aRegs[ AX ] :=  makehi( 197 ) + 1                         // C5h, 01h
-   aRegs[ CX ] :=  Bin2I( SubStr( L2Bin( nHandle ), 1, 2 ) )
-   aRegs[ DX ] :=  Bin2I( SubStr( L2Bin( nHandle ), 3, 2 ) )
+   aRegs[ CX ] :=  Bin2I( hb_BSubStr( L2Bin( nHandle ), 1, 2 ) )
+   aRegs[ DX ] :=  Bin2I( hb_BSubStr( L2Bin( nHandle ), 3, 2 ) )
 
    ft_int86( INT21, aRegs )
 
 #ifdef FT_TEST
 
-   @ 5, 1 SAY highbyte( aregs[CX] )
-   @ 6, 1 SAY lowbyte( aregs[CX ] )
+   @ 5, 1 SAY highbyte( aregs[ CX ] )
+   @ 6, 1 SAY lowbyte( aregs[ CX ] )
 
 #endif
 
@@ -177,8 +177,8 @@ STATIC FUNCTION _ftnwsem( nOp, nHandle, nTimeout )
    DEFAULT nTimeout TO 0
 
    aRegs[ AX ] :=  makehi( 197 ) + nOp
-   aRegs[ CX ] :=  Bin2I( SubStr( L2Bin( nHandle ), 1, 2 ) )
-   aRegs[ DX ] :=  Bin2I( SubStr( L2Bin( nHandle ), 3, 2 ) )
+   aRegs[ CX ] :=  Bin2I( hb_BSubStr( L2Bin( nHandle ), 1, 2 ) )
+   aRegs[ DX ] :=  Bin2I( hb_BSubStr( L2Bin( nHandle ), 3, 2 ) )
    aRegs[ BP ] :=  nTimeout
 
    ft_int86( INT21, aRegs )

@@ -61,14 +61,14 @@ PROCEDURE Main()
      * REMEMBER A WINDOW WILL BE ONE SIZE LESS AND GREATER THAN THE PASSED COORD.'S
      *
      * THE 9TH PARAMETER CONTAINS THE KEYS THAT THE ROUTINE WILL TERMINATE ON
-     * AND THE CHR(143) represents the F3 key.
+     * AND THE hb_BChar(143) represents the F3 key.
      *
      */
 
    @ 4, 9 TO 11, 71
 
    FT_DFSETUP( cInFile, 5, 10, 10, 70, nStart, ;
-      nNColor, nHColor, cExitKeys + Chr( 143 ), ;
+      nNColor, nHColor, cExitKeys + hb_BChar( 143 ), ;
       lBrowse, nColSkip, nRMargin, nBuffSize )
 
    cKey := FT_DISPFILE()

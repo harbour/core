@@ -256,7 +256,7 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
 
 // store inkey code for each item on menu bar to aBarKeys
    AEval( aBarKeys, {| x, i | HB_SYMBOL_UNUSED( x ), aBarKeys[ i ] := ;
-      aKeyCodes[ Asc( Upper( LTrim( aBar[ i ] ) ) ) - 64 ] } )
+      aKeyCodes[ Asc( Upper( LTrim( aBar[ i ] ) ) ) - Asc( "@" ) ] } )
 
 // disable Alt-C and Alt-D
    lCancMode := SetCancel( .F. )
@@ -318,8 +318,8 @@ FUNCTION __ftAcUdf( nMode )
    CASE nMode == AC_HITBOTTOM
       hb_keyPut( K_CTRL_HOME )
    CASE nMode == AC_EXCEPT
-      IF Upper( Chr( LastKey() ) ) $ aValidKeys[ nHpos ]
-         IF aChoices[ nHpos, 3, At( Upper( Chr( LastKey() ) ), aValidKeys[ nHpos ] ) ]
+      IF Upper( hb_keyChar( LastKey() ) ) $ aValidKeys[ nHpos ]
+         IF aChoices[ nHpos, 3, At( Upper( hb_keyChar( LastKey() ) ), aValidKeys[ nHpos ] ) ]
             hb_keyPut( K_ENTER )
             nRtnVal := AC_GOTO
          ENDIF

@@ -49,8 +49,8 @@
 #xtranslate isBetween( <val>, <lower>, <upper> ) => ;
       ( < val > \ >= < lower > .AND. < val > \ <= < upper > )
 
-#define nTriggerInkey asc( upper( substr( cPrompt, nTrigger, 1 ) ) )
-#define cTrigger substr( cPrompt, nTrigger, 1 )
+#define nTriggerInkey hb_keyCode( Upper( SubStr( cPrompt, nTrigger, 1 ) ) )
+#define cTrigger SubStr( cPrompt, nTrigger, 1 )
 #define nCurrent nMenu,nActive
 #define nLast nMenu,nPrev
 

@@ -134,31 +134,31 @@ FUNCTION DEMO()
 
    aTestData := FT_ACCTQTR( dDate )
    ? "ACCTQtr    ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ], ;
-      Str( ( aTestData[ 3 ] - aTestData[ 2 ] + 1 ) /7, 3 ) + " Weeks"
+      Str( ( aTestData[ 3 ] - aTestData[ 2 ] + 1 ) / 7, 3 ) + " Weeks"
 
-   nNum      := Val( SubStr( aTestData[ 1 ],5,2 ) )
+   nNum      := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
    aTestData := FT_ACCTQTR( dDate, nNum )
    ? "ACCTQtr  " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    aTestData := FT_ACCTMONTH( dDate )
    ? "ACCTMonth  ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ], ;
-      Str( ( aTestData[ 3 ] - aTestData[ 2 ] + 1 ) /7, 3 ) + " Weeks"
+      Str( ( aTestData[ 3 ] - aTestData[ 2 ] + 1 ) / 7, 3 ) + " Weeks"
 
-   nNum      := Val( SubStr( aTestData[ 1 ],5,2 ) )
+   nNum      := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
    aTestData := FT_ACCTMONTH( dDate, nNum )
    ? "ACCTMonth" + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    aTestData := FT_ACCTWEEK( dDate )
    ? "ACCTWeek   ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-   nNum      := Val( SubStr( aTestData[ 1 ],5,2 ) )
+   nNum      := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
    aTestData := FT_ACCTWEEK( dDate, nNum )
    ? "ACCTWeek " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    aTestData := FT_DAYOFYR( dDate, , .T. )
    ? "ACCTDay   ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-   nNum      := Val( SubStr( aTestData[ 1 ],5,3 ) )
+   nNum      := Val( SubStr( aTestData[ 1 ], 5, 3 ) )
    aTestData := FT_DAYOFYR( dDate, nNum, .T. )
    ? "ACCTDay " + Str( nNum, 3 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 

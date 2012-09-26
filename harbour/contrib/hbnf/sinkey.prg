@@ -57,4 +57,4 @@ FUNCTION FT_SINKEY( waittime )
 
    ENDIF
 
-   RETURN KEY
+   RETURN key

@@ -63,18 +63,18 @@ FUNCTION FT_TEMPFIL( cPath, lHide, nHandle )
    LOCAL cRet, aRegs[ 3 ]
 
    cPath := iif( ! HB_ISSTRING( cPath ), ;
-      Replicate( Chr( 0 ), 13 ) , ;
-      cPath += Replicate( Chr( 0 ), 13 ) )
+      Replicate( hb_BChar( 0 ), 13 ) , ;
+      cPath += Replicate( hb_BChar( 0 ), 13 ) )
 
    lHide := iif( HB_ISLOGICAL( lHide ), lHide, .F. )
-    /*
-    aRegs[ AX ]        := MAKEHI( TEMPNAME )
-    aRegs[ CX ]        := iif( lHide, 2, 0 )
-    aRegs[ DS ]        := cPath
-    aRegs[ DX ]        := REG_DS
+   /*
+   aRegs[ AX ] := MAKEHI( TEMPNAME )
+   aRegs[ CX ] := iif( lHide, 2, 0 )
+   aRegs[ DS ] := cPath
+   aRegs[ DX ] := REG_DS
 
-    FT_INT86( DOS, aRegs )
-    */
+   FT_INT86( DOS, aRegs )
+   */
    aRegs := _ft_tempfil( cPath, lHide )
     /*  If carry flag is clear, then call succeeded and a file handle is
      *  sitting in AX that needs to be closed.
@@ -86,7 +86,7 @@ FUNCTION FT_TEMPFIL( cPath, lHide, nHandle )
       ELSE
          FClose( aRegs[ 1 ] )
       ENDIF
-      cRet := AllTrim( StrTran( aRegs[ 2 ], Chr( 0 ) ) )
+      cRet := AllTrim( StrTran( aRegs[ 2 ], hb_BChar( 0 ) ) )
    ELSE
       cRet := ""
    ENDIF

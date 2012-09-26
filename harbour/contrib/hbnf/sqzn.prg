@@ -25,16 +25,16 @@ FUNCTION ft_sqzn( nValue, nSize, nDecimals )
 
    LOCAL tmpstr, cCompressed, k
 
-   nSize       := iif( nSize    == NIL, 10, nSize )
+   nSize       := iif( nSize     == NIL, 10, nSize )
    nDecimals   := iif( nDecimals == NIL, 0, nDecimals )
    nValue      := nValue * ( 10 ** nDecimals )
    nSize       := iif( nSize / 2 != Int( nSize / 2 ), nSize + 1, nSize )
    tmpstr      := Str( Abs( nValue ), nSize )
    tmpstr      := StrTran( tmpstr, " ", "0" )
-   cCompressed := Chr( Val( SubStr( tmpstr, 1, 2 ) ) + iif( nValue < 0, 128, 0 ) )
+   cCompressed := hb_BChar( Val( hb_BSubStr( tmpstr, 1, 2 ) ) + iif( nValue < 0, 128, 0 ) )
 
-   FOR k := 3 TO Len( tmpstr ) STEP 2
-      cCompressed += Chr( Val( SubStr( tmpstr, k, 2 ) ) )
+   FOR k := 3 TO hb_BLen( tmpstr ) STEP 2
+      cCompressed += hb_BChar( Val( hb_BSubStr( tmpstr, k, 2 ) ) )
    NEXT
 
    RETURN cCompressed
@@ -45,20 +45,20 @@ FUNCTION ft_unsqzn( cCompressed, nSize, nDecimals )
 
    nSize       := iif( nSize     == NIL, 10, nSize )
    nDecimals   := iif( nDecimals == NIL, 0, nDecimals )
-   cCompressed := iif( multi     == - 1, SubStr( cCompressed, 2 ), cCompressed )
+   cCompressed := iif( multi     == - 1, hb_BSubStr( cCompressed, 2 ), cCompressed )
    nSize       := iif( nSize / 2 != Int( nSize / 2 ), nSize + 1, nSize )
-   IF Asc( cCompressed ) > 127
-      tmp         := Str( Asc( cCompressed ) - 128, 2 )
-      multi       := - 1
+   IF hb_BCode( cCompressed ) > 127
+      tmp         := Str( hb_BCode( cCompressed ) - 128, 2 )
+      multi       := -1
    ELSE
-      tmp         := Str( Asc( cCompressed ), 2 )
+      tmp         := Str( hb_BCode( cCompressed ), 2 )
    ENDIF
 
-   FOR k := 2 TO Len( cCompressed )
-      tmp += Str( Asc( SubStr( cCompressed, k, 1 ) ), 2 )
+   FOR k := 2 TO hb_BLen( cCompressed )
+      tmp += Str( hb_BCode( hb_BSubStr( cCompressed, k, 1 ) ), 2 )
    NEXT
 
    tmp    := StrTran( tmp, " ", "0" )
-   cValue := SubStr( tmp, 1, nSize - nDecimals ) + "." + SubStr( tmp, nSize - nDecimals + 1 )
+   cValue := hb_BSubStr( tmp, 1, nSize - nDecimals ) + "." + hb_BSubStr( tmp, nSize - nDecimals + 1 )
 
    RETURN Val( cValue ) * multi

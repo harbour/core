@@ -28,18 +28,22 @@ THREAD STATIC t_aRgnStack := {}
 
 FUNCTION FT_SAVRGN( nTop, nLeft, nBottom, nRight )
 
-   RETURN Chr( nTop ) + Chr( nLeft ) + Chr( nBottom ) + Chr( nRight ) + ;
+   RETURN hb_BChar( nTop ) + hb_BChar( nLeft ) + hb_BChar( nBottom ) + hb_BChar( nRight ) + ;
       SaveScreen( nTop, nLeft, nBottom, nRight )
 
 FUNCTION FT_RSTRGN( cScreen, nTop, nLeft )
 
    IF PCount() == 3
-      RestScreen( nTop, nLeft, ( nTop - Asc(cScreen ) ) + Asc( SubStr( cScreen, 3 ) ), ;
-         ( nLeft - Asc( SubStr( cScreen, 2 ) ) ) + Asc( SubStr( cScreen, 4 ) ), ;
-         SubStr( cScreen, 5 ) )
+      RestScreen( nTop, nLeft,;
+         ( nTop  - hb_BCode( hb_BSubStr( cScreen, 1, 1 ) ) ) + hb_BCode( hb_BSubStr( cScreen, 3, 1 ) ), ;
+         ( nLeft - hb_BCode( hb_BSubStr( cScreen, 2, 1 ) ) ) + hb_BCode( hb_BSubStr( cScreen, 4, 1 ) ), ;
+         hb_BSubStr( cScreen, 5 ) )
    ELSE
-      RestScreen( Asc( cScreen ), Asc( SubStr( cScreen, 2 ) ), Asc( SubStr( cScreen, 3 ) ), ;
-         Asc( SubStr( cScreen, 4 ) ), SubStr( cScreen, 5 ) )
+      RestScreen( hb_BCode( hb_BSubStr( cScreen, 1, 1 ) ),;
+                  hb_BCode( hb_BSubStr( cScreen, 2, 1 ) ),;
+                  hb_BCode( hb_BSubStr( cScreen, 3, 1 ) ),;
+                  hb_BCode( hb_BSubStr( cScreen, 4, 1 ) ),;
+                  hb_BSubStr( cScreen, 5 ) )
    ENDIF
 
    RETURN NIL

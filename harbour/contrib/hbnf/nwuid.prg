@@ -63,26 +63,26 @@ FUNCTION FT_NWUID( nConn )
    LOCAL cReqPkt
    LOCAL cRepPkt
 
-   nConn := iif( nConn == nil, FT_NWLSTAT(), nConn )
+   nConn := iif( nConn == NIL, FT_NWLSTAT(), nConn )
 
-// Set up request packet
+   // Set up request packet
 
-   cReqPkt  :=  Chr( 22    )          // Function 22: Get Connection Information
-   cReqPkt  +=  Chr( nConn )
-   cReqPkt  :=  I2Bin( Len( cReqPkt ) ) + cReqPkt
+   cReqPkt  :=  hb_BChar( 22 )          // Function 22: Get Connection Information
+   cReqPkt  +=  hb_BChar( nConn )
+   cReqPkt  :=  I2Bin( hb_BLen( cReqPkt ) ) + cReqPkt
 
-// Set up reply packet
+   // Set up reply packet
 
    cRepPkt  :=  Space( 63 )
 
-// Assign registers
+   // Assign registers
 
-   aRegs[ AX ]        :=  MAKEHI( NW_LOG )
-   aRegs[ DS ]        :=  cReqPkt
-   aRegs[ SI ]        :=  REG_DS
-   aRegs[ ES ]        :=  cRepPkt
-   aRegs[ DI ]        :=  REG_ES
+   aRegs[ AX ] :=  MAKEHI( NW_LOG )
+   aRegs[ DS ] :=  cReqPkt
+   aRegs[ SI ] :=  REG_DS
+   aRegs[ ES ] :=  cRepPkt
+   aRegs[ DI ] :=  REG_ES
 
    FT_INT86( DOS, aRegs )
 
-   RETURN AllTrim( StrTran( SubStr( aRegs[ ES ], 9, 48 ), Chr( 0 ) ) )
+   RETURN AllTrim( StrTran( hb_BSubStr( aRegs[ ES ], 9, 48 ), hb_BChar( 0 ) ) )

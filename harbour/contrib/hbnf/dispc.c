@@ -73,31 +73,31 @@
 
 #define TABSET       8
 
-HB_FOFFSET  buffoffset;       /* offset into buffer of current line  */
-HB_FOFFSET  fsize;            /* file size in bytes                  */
-HB_ISIZ     bufftop, buffbot; /* first and last character in buffer  */
-int         wintop, winbot;   /* first and last character in window  */
-int         winrow, wincol;   /* row and column of window highlight  */
-int         sline, eline;     /* start and end line of window        */
-int         scol, ecol;       /* start and end col of window         */
-int         height, width;    /* height and width of window          */
-HB_FHANDLE  infile;           /* input file handle                   */
-int         maxlin;           /* line size                           */
-HB_ISIZ     buffsize;         /* buffer size                         */
-int         hlight;           /* highlight attribute                 */
-int         norm;             /* normal attribute                    */
-HB_ISIZ     kcount;           /* number of keys in terminate key list*/
-int         colinc;           /* col increment amount                */
-HB_BOOL     bBrowse;          /* browse flag                         */
-HB_BOOL     bRefresh;         /* HB_TRUE means refresh screen        */
-char        kstr[ 25 ];       /* terminate key string                */
-int         keylist[ 24 ];    /* terminate key list                  */
-int         keytype;          /* K_STRING or K_LIST                  */
+static HB_FOFFSET  buffoffset;       /* offset into buffer of current line  */
+static HB_FOFFSET  fsize;            /* file size in bytes                  */
+static HB_ISIZ     bufftop, buffbot; /* first and last character in buffer  */
+static int         wintop, winbot;   /* first and last character in window  */
+static int         winrow, wincol;   /* row and column of window highlight  */
+static int         sline, eline;     /* start and end line of window        */
+static int         scol, ecol;       /* start and end col of window         */
+static int         height, width;    /* height and width of window          */
+static HB_FHANDLE  infile;           /* input file handle                   */
+static int         maxlin;           /* line size                           */
+static HB_ISIZ     buffsize;         /* buffer size                         */
+static int         hlight;           /* highlight attribute                 */
+static int         norm;             /* normal attribute                    */
+static HB_ISIZ     kcount;           /* number of keys in terminate key list*/
+static int         colinc;           /* col increment amount                */
+static HB_BOOL     bBrowse;          /* browse flag                         */
+static HB_BOOL     bRefresh;         /* HB_TRUE means refresh screen        */
+static char        kstr[ 25 ];       /* terminate key string                */
+static int         keylist[ 24 ];    /* terminate key list                  */
+static int         keytype;          /* K_STRING or K_LIST                  */
 
-HB_BOOL     bIsAllocated;     /* if buffers were allocated           */
-char *      buffer;           /* file buffer pointer                 */
-char *      lbuff;            /* line buffer pointer                 */
-char *      vseg;             /* video segment variable              */
+static HB_BOOL     bIsAllocated;     /* if buffers were allocated           */
+static char *      buffer;           /* file buffer pointer                 */
+static char *      lbuff;            /* line buffer pointer                 */
+static char *      vseg;             /* video segment variable              */
 
 /* prototypes */
 
