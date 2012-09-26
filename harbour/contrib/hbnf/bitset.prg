@@ -33,7 +33,7 @@ FUNCTION FT_BITSET( cInByte, nBitpos )
          cByte := NIL
       ELSE
          cByte := iif( FT_ISBIT( cInByte, nBitpos ), cInByte, ;
-            Chr( Asc( cInByte ) + ( 2 ^ nBitpos ) ) )
+            hb_BChar( hb_BCode( cInByte ) + ( 2 ^ nBitpos ) ) )
       ENDIF
    ELSE
       cByte := NIL

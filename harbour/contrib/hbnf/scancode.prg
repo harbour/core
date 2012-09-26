@@ -33,7 +33,7 @@
 
 #ifdef FT_TEST
 
-#define SCANCODE_ESCAPE   ( chr( 27 ) + chr( 1 ) )
+#define SCANCODE_ESCAPE   ( hb_BChar( 27 ) + hb_BChar( 1 ) )
 
 PROCEDURE Main()
 
@@ -61,4 +61,4 @@ FUNCTION FT_SCANCODE()
    aRegs[ AX ] := MAKEHI( 0 )
    FT_INT86( KEYB, aRegs )
 
-   RETURN Chr( LOWBYTE( aRegs[ AX ] ) ) + Chr( HIGHBYTE( aRegs[ AX ] ) )
+   RETURN hb_BChar( LOWBYTE( aRegs[ AX ] ) ) + hb_BChar( HIGHBYTE( aRegs[ AX ] ) )

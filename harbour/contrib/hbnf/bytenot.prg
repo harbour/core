@@ -30,7 +30,7 @@ FUNCTION FT_BYTENOT( cByte )
    LOCAL nCounter, cNewByte
 
    IF HB_ISSTRING( cByte )
-      cNewByte := Chr( 0 )
+      cNewByte := hb_BChar( 0 )
       FOR nCounter := 0 TO 7           // test each bit position
          IF ! FT_ISBIT( cByte, nCounter )
             cNewByte := FT_BITSET( cNewByte, nCounter )

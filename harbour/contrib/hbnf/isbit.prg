@@ -32,7 +32,7 @@ FUNCTION FT_ISBIT( cInbyte, nBitPos )
       IF nBitPos > 7 .OR. nBitPos < 0 .OR. nBitPos != Int( nBitPos )
          lBitStat := NIL
       ELSE
-         lBitStat := Int( ( ( Asc( cInByte ) * ( 2 ^ ( 7 - nBitPos ) ) ) % 256 ) / 128 ) == 1
+         lBitStat := Int( ( ( hb_BCode( cInByte ) * ( 2 ^ ( 7 - nBitPos ) ) ) % 256 ) / 128 ) == 1
       ENDIF
    ELSE
       lBitStat := NIL

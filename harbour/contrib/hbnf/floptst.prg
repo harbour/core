@@ -105,9 +105,9 @@ FUNCTION FT_FLOPTST(                ;     // error code defined by ERR_*
 
 #define BITS_6AND7      192   // value of byte when bits 6&7 are high
 
-STATIC FUNCTION _GetDisketteNum(          ; // returns false if no floppy drive installed or nDrive_i is invalid
-      nDrive_i    ; // drive number to query status
-   )
+// returns false if no floppy drive installed or nDrive_i is invalid
+STATIC FUNCTION _GetDisketteNum( nDrive_i ) // drive number to query status
+
    LOCAL aRegs[ INT86_MAX_REGS ]
    LOCAL lRetCode
    LOCAL nByte
@@ -121,7 +121,7 @@ STATIC FUNCTION _GetDisketteNum(          ; // returns false if no floppy drive 
       // bit 0 indicates floppy drive installed
       IF Int( nByte / 2 ) * 2 != nByte // is it odd i.e. is bit 0 set??
          // bits 6 & 7 indicate number of floppies installed upto 4.
-         nDriveCount := Asc( FT_BYTEAND( Chr( nByte ), Chr( BITS_6AND7 ) ) )
+         nDriveCount := hb_BCode( FT_BYTEAND( hb_BChar( nByte ), hb_BChar( BITS_6AND7 ) ) )
          IF nDriveCount >= nDrive_i
             lRetCode := .T.
          ENDIF

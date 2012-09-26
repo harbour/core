@@ -55,13 +55,6 @@
 #define STD_VARIABLE 6
 #define STD_BORDER   7
 
-#define K_DECIM    46
-#define K_EQUAL    13
-#define K_PLUS     43
-#define K_MINUS    45
-#define K_MULTIPLY 42
-#define K_DIVIDE   47
-#define K_ZERO     48
 #define B_DOUBLE   hb_UTF8ToStr( "╔═╗║╝═╚║ " )
 #define B_SINGLE                 "+-+|+-+| "
 
@@ -120,7 +113,7 @@ THREAD STATIC aKeys, aWindow, nWinColor, aWinColor, aStdColor
 
 #ifdef FT_TEST
 
-FUNCTION TEST
+PROCEDURE Main()
 
    LOCAL nSickHrs := 0
    LOCAL nPersHrs := 0
@@ -158,7 +151,7 @@ FUNCTION TEST
 
    SET KEY K_ALT_A                     // Reset <ALT-A>
 
-   RETURN NIL
+   RETURN
 
 #endif
 
@@ -233,15 +226,15 @@ FUNCTION FT_Adder()
    DO WHILE ! lDone                      // Input key & test loop
       FT_INKEY 0 TO nKey
       DO CASE
-      CASE Upper( Chr( nKey ) ) $ "1234567890."
+      CASE hb_keyChar( nKey ) $ "1234567890."
          _ftProcessNumb( aAdder, nKey )
-      CASE nKey == K_PLUS               // <+> sign
+      CASE nKey == hb_keyCode( "+" )    // <+> sign
          _ftAddSub( aAdder, nKey )
-      CASE nKey == K_MINUS              // <-> sign
+      CASE nKey == hb_keyCode( "-" )    // <-> sign
          _ftAddSub( aAdder, nKey )
-      CASE nKey == K_MULTIPLY           // <*> sign
+      CASE nKey == hb_keyCode( "*" )    // <*> sign
          _ftMultDiv( aAdder, nKey )
-      CASE nKey == K_DIVIDE             // </> sign
+      CASE nKey == hb_keyCode( "/" )    // </> sign
          _ftMultDiv( aAdder, nKey )
       CASE nKey == K_RETURN             // <RTN> Total or Subtotal
          _ftAddTotal( aAdder )
@@ -542,8 +535,8 @@ STATIC FUNCTION _ftProcessNumb( aAdder, nKey )
    lClAdder  := .F.                      // Reset the Clear flag
    lAddError := .F.                      // Reset adder error flag
 
-   IF nKey == Asc( "." )                 // Period (.) decimal point
-      IF lDecSet                          // Has decimal already been set
+   IF nKey == hb_keyCode( "." )          // Period (.) decimal point
+      IF lDecSet                         // Has decimal already been set
          Tone( 800, 1 )
       ELSE
          lDecSet := .T.
@@ -551,10 +544,10 @@ STATIC FUNCTION _ftProcessNumb( aAdder, nKey )
    ELSE                                  // It must be a number input
       lNewNum := .T.
       nNum := nKey - 48
-      IF lDecSet                          // Decimal set
-         IF nDecDigit < nMaxDeci             // Check how many decimals are allowed
+      IF lDecSet                         // Decimal set
+         IF nDecDigit < nMaxDeci         // Check how many decimals are allowed
             nDecDigit := ++nDecDigit
-            nNumTotal := nNumTotal + nNum/ ( 10 ** nDecDigit )
+            nNumTotal := nNumTotal + nNum / ( 10 ** nDecDigit )
          ENDIF
       ELSE
          nNumTotal := nNumTotal * 10 + nNum
@@ -677,7 +670,7 @@ STATIC FUNCTION _ftAddSub( aAdder, nKey )
       nNumTotal := nSavTotal
       lNewNum   := .T.
    ENDIF
-   IF nKey == K_PLUS                     // Add
+   IF nKey == hb_keyCode( "+" )                 // Add
       nAddMode := 1
       IF !lNewNum                         // They pressed + again to add the same
          nNumTotal := nSavSubTot           // number without re-entering
@@ -687,7 +680,7 @@ STATIC FUNCTION _ftAddSub( aAdder, nKey )
       lNewNum    := .F.
       nSavSubTot := nNumTotal   // Save this number in case they just press + or -
       nNumTotal  := 0
-   ELSEIF nKey == K_MINUS                // Subtract
+   ELSEIF nKey == hb_keyCode( "-" )          // Subtract
       nAddMode := 2
       IF !lNewNum                         // They pressed + again to add the same
          nNumTotal := nSavSubTot           // number without re-entering
@@ -726,28 +719,28 @@ STATIC FUNCTION _ftMultDiv( aAdder, nKey )
    lDecSet   := .F.
    nDecDigit := 0
    lSubRtn   := .F.
-// They pressed the + or - key to process the previous total
+   // They pressed the + or - key to process the previous total
    IF _ftRoundIt( nNumTotal, nMaxDeci ) == 0 .AND. _ftRoundIt( nTotal, nMaxDeci ) == 0
       nNumTotal := nSavTotal
    ENDIF
-// Get the first number of the product or division
+   // Get the first number of the product or division
    IF _ftRoundIt( nTotal, nMaxDeci ) == 0
-      IF nKey == K_MULTIPLY               // Setup mode
+      IF nKey == hb_keyCode( "*" )            // Setup mode
          nAddMode := 3
          _ftUpdateTrans( aAdder, .F. , nNumTotal )
-      ELSEIF nKey == K_DIVIDE
+      ELSEIF nKey == hb_keyCode( "/" )
          nAddMode := 4
          _ftUpdateTrans( aAdder, .F. , nNumTotal )
       ENDIF
       nTotal    := nNumTotal
       nNumTotal := 0
    ELSE
-      IF nKey == K_MULTIPLY               // Multiply
+      IF nKey == hb_keyCode( "*" )           // Multiply
          nAddMode  := 3
          _ftUpdateTrans( aAdder, .F. , nNumTotal )
          nTotal    := nTotal * nNumTotal
          nNumTotal := 0
-      ELSEIF nKey == K_MULTIPLY           // Divide
+      ELSEIF nKey == hb_keyCode( "/" )       // Divide
          nAddMode := 4
          _ftUpdateTrans( aAdder, .F. , nNumTotal )
          nTotal := _ftDivide( aAdder, nTotal, nNumTotal )
@@ -1416,7 +1409,7 @@ STATIC FUNCTION _ftStuffComma( cStrToStuff, lTrimStuffedStr )
          "" $ cStrToStuff .OR. "/" $ cStrToStuff .OR. "=" $ cStrToStuff, ;
          Len( cStrToStuff ) - 1, Len( cStrToStuff ) + 1 ) )
 
-      IF Asc( cStrToStuff ) == K_SPACE .OR. Asc( cStrToStuff ) == K_ZERO
+      IF cStrToStuff == " " .OR. cStrToStuff == "0"
          cStrToStuff := SubStr( cStrToStuff, 2 )
       ENDIF
 
