@@ -47,8 +47,8 @@ FUNCTION FT_DOSVER()
 
 /* aRegs[ AX ] := MAKEHI( DOSVER )
    IF FT_INT86( DOS, aRegs )
-      cResult := AllTrim( Str( LOWBYTE( aRegs[ AX ] ) ) ) + "." + ;
-                 AllTrim( Str( HIGHBYTE( aRegs[ AX ] ) ) )
+      cResult := hb_ntos( LOWBYTE( aRegs[ AX ] ) ) + "." + ;
+                 hb_ntos( HIGHBYTE( aRegs[ AX ] ) )
    ENDIF
 */
    cResult := _get_dosver()

@@ -80,9 +80,9 @@ PROCEDURE Main()
    ft_nwSemEx( nHandle, @nValue, @nOpenCnt )
    WHILE .T.
       @ 23, 0 SAY "Semaphore test -> Open at [" + ;
-         AllTrim( Str( nOpenCnt ) )        + ;
+         hb_ntos( nOpenCnt )           + ;
          "] stations, value is ["      + ;
-         AllTrim( Str( nValue ) ) + "]"
+         hb_ntos( nValue ) + "]"
 
       IF Inkey( WAIT_SECONDS ) != 0
          EXIT

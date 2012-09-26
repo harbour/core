@@ -28,11 +28,7 @@
  */
 
 FUNCTION FT_MIN2DHM( nMINS )
-
-   LOCAL aDHM_[ 3 ]
-
-   aDHM_[ 1 ] := LTrim( ( Str( Int( nMINS / 1440 ) ) ) )
-   aDHM_[ 2 ] := LTrim( Str( Int( ( nMINS % 1440 ) / 60 ) ) )
-   aDHM_[ 3 ] := LTrim( Str( Int( ( nMINS % 1440 ) % 60 ) ) )
-
-   RETURN aDHM_
+   RETURN {;
+      hb_ntos( Int(   nMINS / 1440        ) ) ,;
+      hb_ntos( Int( ( nMINS % 1440 ) / 60 ) ) ,;
+      hb_ntos( Int( ( nMINS % 1440 ) % 60 ) ) }

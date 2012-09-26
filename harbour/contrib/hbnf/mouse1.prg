@@ -53,12 +53,12 @@ PROCEDURE Main( nRow, nCol )
 
    SetColor( "GR+/RB" )
 
-// ..... Start the demo
+   // ..... Start the demo
 
    @MaxRow(), 0 SAY "Driver version: " + ;
-      AllTrim( Str( FT_MVERSION(@nMinor,@nType,@nIRQ ),2,0 ) ) + "." + ;
-      AllTrim( Str( nMinor,2,0 ) )
-   @ Row(), Col() SAY " " + aType[nType] + " mouse using IRQ " + Str( nIRQ, 1, 0 )
+      AllTrim( Str( FT_MVERSION( @nMinor, @nType, @nIRQ ), 2, 0 ) ) + "." + ;
+      AllTrim( Str( nMinor, 2, 0 ) )
+   @ Row(), Col() SAY " " + aType[ nType ] + " mouse using IRQ " + Str( nIRQ, 1, 0 )
 
    FT_MGETSENS( @nHoriz, @nVert, @nDouble )  // Get the current sensitivities
    FT_MSETSENS( 70, 70, 60 )    // Bump up the sensitivity of the mouse
@@ -66,7 +66,7 @@ PROCEDURE Main( nRow, nCol )
    FT_MSHOWCRS()
    FT_MSETCOORD( 10, 20 )  // just an arbitrary place for demo
 
-// put the unchanging stuff
+   // put the unchanging stuff
 
    DevPos( 9, 10 )
    DevOut( "FT_MMICKEYS :" )

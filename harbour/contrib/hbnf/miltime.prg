@@ -71,8 +71,8 @@ FUNCTION FT_MIN2MIL( nMIN )
 
    nMIN := nMIN % 1440
 
-   RETURN Right( "00" + LTrim( Str( Int( nMIN / 60 ) ) ), 2 ) + ;
-      Right( "00" + LTrim( Str( Int( nMIN % 60 ) ) ), 2 )
+   RETURN Right( "00" + hb_ntos( Int( nMIN / 60 ) ), 2 ) + ;
+          Right( "00" + hb_ntos( Int( nMIN % 60 ) ), 2 )
 
 FUNCTION FT_MIL2CIV( cMILTIME )
 
@@ -94,12 +94,12 @@ FUNCTION FT_MIL2CIV( cMILTIME )
       IF nHRS == 0
          cHRS := "12"
       ELSE
-         cHRS := Right( "  " + LTrim( Str( Int( nHRS ) ) ), 2 )
+         cHRS := Right( "  " + hb_ntos( Int( nHRS ) ), 2 )
       ENDIF
       cCIVTIME := cHRS + ":" + cMINS + " am"
 
    OTHERWISE                                           // PM
-      cCIVTIME := Right( "  " + LTrim( Str( Int( nHRS - 12 ) ) ), 2 ) + ;
+      cCIVTIME := Right( "  " + hb_ntos( Int( nHRS - 12 ) ), 2 ) + ;
          ":" + cMINS + " pm"
    ENDCASE
 
@@ -134,10 +134,10 @@ FUNCTION FT_CIV2MIL( cTIME )
          cMILTIME := "    "
       ENDIF
    CASE Upper( cKEY ) == "A"                           // am
-      cMILTIME := Right( "00" + LTrim( Str( Val( Left( cTIME, 2 ) ) ) ), 2 ) + ;
+      cMILTIME := Right( "00" + hb_ntos( Val( Left( cTIME, 2 ) ) ), 2 ) + ;
          SubStr( cTIME, 4, 2 )
    CASE Upper( cKEY ) == "P"                           // pm
-      cMILTIME := Right( "00" + LTrim( Str( Val( Left( cTIME, 2 ) ) + 12 ) ), 2 ) + ;
+      cMILTIME := Right( "00" + hb_ntos( Val( Left( cTIME, 2 ) ) + 12 ), 2 ) + ;
          SubStr( cTIME, 4, 2 )
    OTHERWISE
       cMILTIME := "    "                              // error

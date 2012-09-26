@@ -469,7 +469,7 @@ STATIC FUNCTION _ftDispTotal( aAdder )
    LOCAL cTotStr
 
    IF nTotal > Val( _ftCharRem( ",", cTotPict ) )
-      cTotStr   := _ftStuffComma( LTrim( Str( nTotal ) ) )
+      cTotStr   := _ftStuffComma( hb_ntos( nTotal ) )
       @ 4 + nTopOS, 8 + nAddSpace SAY "****  ERROR  **** "
       _ftError( "that number is to big to display! I believe the answer was " + ;
          cTotStr + "." )
@@ -503,7 +503,7 @@ STATIC FUNCTION _ftDispSubTot( aAdder )
    LOCAL cStotStr
 
    IF nNumTotal > Val( _ftCharRem( ",", cTotPict ) )
-      cStotStr  := _ftStuffComma( LTrim( Str( nNumTotal ) ) )
+      cStotStr  := _ftStuffComma( hb_ntos( nNumTotal ) )
       @ 4 + nTopOS, 8 + nAddSpace SAY "****  ERROR  **** "
       _ftError( "that number is to big to display! I believe the answer was " + ;
          cStotStr + "." )

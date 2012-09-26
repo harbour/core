@@ -127,9 +127,9 @@ PROCEDURE Main( nRow, nCol )
 // ..... Start the demo
 
    @MaxRow(), 0 SAY "Driver version: " + ;
-      AllTrim( Str( FT_MVERSION(@nMinor,@nType,@nIRQ ),2,0 ) ) + "." + ;
-      AllTrim( Str( nMinor,2,0 ) )
-   @ Row(), Col() SAY " " + aType[nType] + " mouse using IRQ " + Str( nIRQ, 1, 0 )
+      AllTrim( Str( FT_MVERSION( @nMinor, @nType, @nIRQ ), 2, 0 ) ) + "." + ;
+      AllTrim( Str( nMinor, 2, 0 ) )
+   @ Row(), Col() SAY " " + aType[ nType ] + " mouse using IRQ " + Str( nIRQ, 1, 0 )
 
    FT_MGETSENS( @nHoriz, @nVert, @nDouble )  // Get the current sensitivities
    FT_MSETSENS( 70, 70, 60 )    // Bump up the sensitivity of the mouse
