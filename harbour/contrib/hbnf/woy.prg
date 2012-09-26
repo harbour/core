@@ -34,7 +34,7 @@ PROCEDURE Main( cCent )
    LOCAL  lCentOn := .F. , cDate
    MEMVAR getlist
 
-   IF ValType( cCent ) == "C" .AND. "CENT" $ Upper( cCent )
+   IF HB_ISSTRING( cCent ) .AND. "CENT" $ Upper( cCent )
       SET CENTURY ON
       lCentOn := .T.
    ENDIF
@@ -80,7 +80,7 @@ FUNCTION FT_WOY( dInDate )
 
    LOCAL nFirstDays, nDayOffset, nWkNumber, cCentury
 
-   IF !( ValType( dInDate ) == "D" )
+   IF ! HB_ISDATE( dInDate )
       nWkNumber := NIL
    ELSE
 
@@ -117,7 +117,7 @@ FUNCTION FT_DOY( dInDate )
 
    LOCAL nDayNum, cCentury
 
-   IF !( ValType( dInDate ) == "D" )
+   IF ! HB_ISDATE( dInDate )
       nDayNum := NIL
    ELSE
 

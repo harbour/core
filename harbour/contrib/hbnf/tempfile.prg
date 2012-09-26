@@ -62,12 +62,11 @@ FUNCTION FT_TEMPFIL( cPath, lHide, nHandle )
 
    LOCAL  cRet, aRegs[3]
 
-   cPath := iif( ValType( cPath ) != "C",           ;
-      Replicate( Chr( 0 ), 13 ) ,            ;
-      cPath += Replicate( Chr( 0 ), 13 )   ;
-      )
+   cPath := iif( ! HB_ISSTRING( cPath ), ;
+      Replicate( Chr( 0 ), 13 ) , ;
+      cPath += Replicate( Chr( 0 ), 13 ) )
 
-   lHide := iif( ValType( lHide ) != "L", .F. , lHide )
+   lHide := iif( HB_ISLOGICAL( lHide ), lHide, .F. )
     /*
     aRegs[ AX ]        := MAKEHI( TEMPNAME )
     aRegs[ CX ]        := iif( lHide, 2, 0 )

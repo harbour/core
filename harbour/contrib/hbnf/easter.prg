@@ -31,15 +31,15 @@ FUNCTION FT_EASTER( nYear )
    LOCAL nGold, nCent, nCorx, nCorz, nSunday, nEpact, nMoon
    LOCAL nMonth := 0, nDay := 0
 
-   IF ValType( nYear ) == "C"
+   IF HB_ISSTRING( nYear )
       nYear := Val( nYear )
    ENDIF
 
-   IF ValType( nYear ) == "D"
+   IF HB_ISDATE( nYear )
       nYear := Year( nYear )
    ENDIF
 
-   IF ValType( nYear ) == "N"
+   IF HB_ISNUMERIC( nYear )
       IF nYear > 1582
 
          // <<nGold>> is Golden number of the year in the 19 year Metonic cycle

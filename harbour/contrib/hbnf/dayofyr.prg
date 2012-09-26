@@ -33,16 +33,16 @@ FUNCTION FT_DAYOFYR( dGivenDate, nDayNum, lIsAcct )
 
    IF !( ValType( dGivenDate ) $ 'NDL' )
       dGivenDate := Date()
-   ELSEIF ValType( dGivenDate ) == 'N'
+   ELSEIF HB_ISNUMERIC( dGivenDate )
       nDayNum    := dGivenDate
       dGivenDate := Date()
-   ELSEIF ValType( dGivenDate ) == 'L'
+   ELSEIF HB_ISLOGICAL( dGivenDate )
       lIsAcct    := dGivenDate
       dGivenDate := Date()
    ENDIF
 
-   lIsDay  := ValType( nDayNum ) == 'N'
-   lIsAcct := ValType( lIsAcct ) == 'L'
+   lIsDay  := HB_ISNUMERIC( nDayNum )
+   lIsAcct := HB_ISLOGICAL( lIsAcct )
 
    IF lIsAcct
       aRetVal := FT_ACCTYEAR( dGivenDate )

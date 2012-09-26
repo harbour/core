@@ -88,22 +88,22 @@ FUNCTION FT_DFSETUP( cInFile, nTop, nLeft, nBottom, nRight, ;
    LOCAL rval
 
    IF File( cInFile )
-      nTop    := iif( ValType( nTop )    == "N", nTop,           0 )
-      nLeft   := iif( ValType( nLeft )   == "N", nLeft,          0 )
-      nBottom := iif( ValType( nBottom ) == "N", nBottom, MaxRow() )
-      nRight  := iif( ValType( nRight )  == "N", nRight,  MaxCol() )
+      nTop    := iif( HB_ISNUMERIC( nTop )   , nTop,           0 )
+      nLeft   := iif( HB_ISNUMERIC( nLeft )  , nLeft,          0 )
+      nBottom := iif( HB_ISNUMERIC( nBottom ), nBottom, MaxRow() )
+      nRight  := iif( HB_ISNUMERIC( nRight ) , nRight,  MaxCol() )
 
-      nCNormal    := iif( ValType( nCNormal )    == "N", nCNormal,     7 )
-      nCHighlight := iif( ValType( nCHighlight ) == "N", nCHighlight, 15 )
+      nCNormal    := iif( HB_ISNUMERIC( nCNormal )   , nCNormal,     7 )
+      nCHighlight := iif( HB_ISNUMERIC( nCHighlight ), nCHighlight, 15 )
 
-      nStart    := iif( ValType( nStart )    == "N", nStart,      1 )
-      nColSkip  := iif( ValType( nColSkip )  == "N", nColSkip,    1 )
-      lBrowse   := iif( ValType( lBrowse )   == "L", lBrowse,   .F. )
+      nStart    := iif( HB_ISNUMERIC( nStart )   , nStart,      1 )
+      nColSkip  := iif( HB_ISNUMERIC( nColSkip ) , nColSkip,    1 )
+      lBrowse   := iif( HB_ISLOGICAL( lBrowse )  , lBrowse,   .F. )
 
-      nRMargin  := iif( ValType( nRMargin )  == "N", nRMargin,   255 )
-      nBuffSize := iif( ValType( nBuffSize ) == "N", nBuffSize, 4096 )
+      nRMargin  := iif( HB_ISNUMERIC( nRMargin ) , nRMargin,   255 )
+      nBuffSize := iif( HB_ISNUMERIC( nBuffSize ), nBuffSize, 4096 )
 
-      cExitKeys := iif( ValType( cExitKeys ) == "C", cExitKeys,  "" )
+      cExitKeys := iif( HB_ISSTRING( cExitKeys ) , cExitKeys,  "" )
 
       cExitKeys := iif( Len( cExitKeys ) > 25, SubStr( cExitKeys, 1, 25 ), cExitKeys )
 

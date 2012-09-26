@@ -37,7 +37,7 @@
 
 PROCEDURE Main( cDate )
 
-   cDate := iif( cDate == nil, DToC( Date() ), cDate )
+   cDate := iif( cDate == NIL, DToC( Date() ), cDate )
    QOut( "Setting date to: " + cDate  + "... " )
    FT_SETDATE( CToD( cDate ) )
    QOut( "Today is now: " + DToC( Date() ) )
@@ -50,7 +50,7 @@ FUNCTION FT_SETDATE( dDate )
 
    LOCAL aRegs[ INT86_MAX_REGS ]
 
-   dDate := iif( ValType( dDate ) != "D", Date(), dDate )
+   dDate := iif( HB_ISDATE( dDate ), dDate, Date() )
 
    aRegs[ AX ] := SETDATE * ( 2 ^ 8 )
    aregs[ CX ] := Year( dDate )

@@ -55,20 +55,20 @@ FUNCTION FT_ELAPSED( dStart, dEnd, cTimeStart, cTimeEnd )
 
    IF ! ( ValType( dStart ) $ 'DC' )
       dStart := Date()
-   ELSEIF ValType( dStart ) == 'C'
+   ELSEIF HB_ISSTRING( dStart )
       cTimeStart := dStart
       dStart     := Date()
    ENDIF
 
    IF ! ( ValType( dEnd ) $ 'DC' )
       dEnd := Date()
-   ELSEIF ValType( dEnd ) == 'C'
+   ELSEIF HB_ISSTRING( dEnd )
       cTimeEnd := dEnd
       dEnd     := Date()
    ENDIF
 
-   IF ValType( cTimeStart ) != 'C' ; cTimeStart := '00:00:00' ; ENDIF
-   IF ValType( cTimeEnd )   != 'C' ; cTimeEnd   := '00:00:00' ; ENDIF
+   IF ! HB_ISSTRING( cTimeStart ); cTimeStart := '00:00:00' ; ENDIF
+   IF ! HB_ISSTRING( cTimeEnd )  ; cTimeEnd   := '00:00:00' ; ENDIF
 
    nTotalSec  := ( dEnd - dStart ) * 86400                              + ;
       Val( cTimeEnd )   *  3600                              + ;

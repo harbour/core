@@ -79,15 +79,15 @@ FUNCTION DEMO()
 
    LOCAL nNum, dDate, aTestData := {}, aTemp, cFY_Start, nDOW_Start
 
-//    SET DATE ANSI                             // User's normal date format
-   aTemp      := FT_DATECNFG()               // Get/Set cFY_Start & nDOW_Start.
-//    aTemp      := FT_DATECNFG("1980.01.03", 1)  // Date string in user's format.
+// SET DATE ANSI                               // User's normal date format
+   aTemp      := FT_DATECNFG()                 // Get/Set cFY_Start & nDOW_Start.
+// aTemp      := FT_DATECNFG("1980.01.03", 1)  // Date string in user's format.
    cFY_Start  := aTemp[ 1 ]                    // See FT_DATECNFG() in ft_date0.prg
-   NDOW_START := ATEMP[ 2 ]                    // FOR PARAMETERS.
-   DDATE      := Date()
-//    dDate      := STOD("19880229")            // Test date, in user's normal date format
+   nDOW_Start := ATEMP[ 2 ]                    // FOR PARAMETERS.
+   dDate      := Date()
+// dDate      := SToD( "19880229" )            // Test date, in user's normal date format
 
-   cls
+   CLS
    ?    "Given       Date:  "
    ??   dDate
    ??   " cFY_Start: " + cFY_Start
@@ -100,28 +100,28 @@ FUNCTION DEMO()
    aTestData := FT_QTR( dDate )
    ? "FYQtr      ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-   nNum      := Val( SubStr( aTestData[ 1 ],5,2 ) )
+   nNum      := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
    aTestData := FT_QTR( dDate, nNum )
    ? "FYQtr    " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    aTestData := FT_MONTH( dDate )
    ? "FYMonth    ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-   nNum := Val( SubStr( aTestData[ 1 ],5,2 ) )
+   nNum := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
    aTestData := FT_MONTH( dDate, nNum )
    ? "FYMonth  " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    aTestData := FT_WEEK( dDate )
    ? "FYWeek     ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-   nNum      := Val( SubStr( aTestData[ 1 ],5,2 ) )
+   nNum      := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
    aTestData := FT_WEEK( dDate, nNum )
    ? "FYWeek   " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    aTestData := FT_DAYOFYR( dDate )
    ? "FYDay     ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-   nNum      := Val( SubStr( aTestData[ 1 ],5,3 ) )
+   nNum      := Val( SubStr( aTestData[ 1 ], 5, 3 ) )
    aTestData := FT_DAYOFYR( dDate, nNum )
    ? "FYDAY   " + Str( nNum, 3 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
@@ -130,7 +130,7 @@ FUNCTION DEMO()
 
    aTestData := FT_ACCTYEAR( dDate )
    ? "ACCTYear   ", aTestData[ 1 ] + "  ", aTestData[ 2 ], aTestData[ 3 ], ;
-      Str( ( aTestData[ 3 ] - aTestData[ 2 ] + 1 ) /7, 3 ) + " Weeks"
+      Str( ( aTestData[ 3 ] - aTestData[ 2 ] + 1 ) / 7, 3 ) + " Weeks"
 
    aTestData := FT_ACCTQTR( dDate )
    ? "ACCTQtr    ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ], ;
@@ -182,7 +182,7 @@ FUNCTION FT_CAL( dGivenDate, nType )
 
    IF dGivenDate == NIL .OR. !( ValType( dGivenDate ) $ 'ND' )
       dGivenDate := Date()
-   ELSEIF ValType( dGivenDate ) == 'N'
+   ELSEIF HB_ISNUMERIC( dGivenDate )
       nType := dGivenDate
       dGivenDate := Date()
    ENDIF
@@ -234,11 +234,11 @@ FUNCTION FT_CAL( dGivenDate, nType )
 
 FUNCTION FT_DATECNFG( cFYStart , nDow )
 
-   THREAD STATIC aDatePar := { "1980.01.01", 1 }
+   THREAD STATIC t_aDatePar := { "1980.01.01", 1 }
 
    LOCAL dCheck, cDateFormat := Set( _SET_DATEFORMAT )
 
-   IF ValType( cFYStart ) == 'C'
+   IF HB_ISSTRING( cFYStart )
       dCheck := CToD( cFYStart )
       IF DToC( dCheck ) != " " // TOFIX
 
@@ -248,13 +248,13 @@ FUNCTION FT_DATECNFG( cFYStart , nDow )
          ENDIF
 
          SET( _SET_DATEFORMAT, "yyyy.mm.dd" )
-         aDatePar[ 1 ] := DToC( dCheck )
+         t_aDatePar[ 1 ] := DToC( dCheck )
          SET( _SET_DATEFORMAT, cDateFormat )
       ENDIF
    ENDIF
 
-   IF ValType( nDow ) == 'N' .AND. nDow > 0 .AND. nDow < 8
-      aDatePar[ 2 ] := nDow
+   IF HB_ISNUMERIC( nDow ) .AND. nDow > 0 .AND. nDow < 8
+      t_aDatePar[ 2 ] := nDow
    ENDIF
 
-   RETURN AClone( aDatePar )
+   RETURN AClone( t_aDatePar )

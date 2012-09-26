@@ -328,15 +328,15 @@ FUNCTION FT_MSETSENS( nHoriz, nVert, nDouble )
 
 // Set defaults if necessary
 
-   IF !( ValType( nHoriz ) == "N" )
+   IF ! HB_ISNUMERIC( nHoriz )
       nHoriz := nCurHoriz
    ENDIF
 
-   IF !( ValType( nVert ) == "N" )
+   IF ! HB_ISNUMERIC( nVert )
       nVert := nCurVert
    ENDIF
 
-   IF !( ValType( nDouble ) == "N" )
+   IF ! HB_ISNUMERIC( nDouble )
       nDouble := nCurDouble
    ENDIF
 
@@ -452,7 +452,7 @@ FUNCTION FT_MCURSOR( lState )
 
    LOCAL lSavState := t_lCrsState
 
-   IF ValType( lState ) == "L"
+   IF HB_ISLOGICAL( lState )
       IF ( t_lCrsState := lState )
          FT_MSHOWCRS()
       ELSE

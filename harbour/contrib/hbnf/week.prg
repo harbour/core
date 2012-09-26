@@ -33,7 +33,7 @@ FUNCTION FT_WEEK( dGivenDate, nWeekNum )
 
    IF ! ( ValType( dGivenDate ) $ 'ND' )
       dGivenDate := Date()
-   ELSEIF ValType( dGivenDate ) == 'N'
+   ELSEIF HB_ISNUMERIC( dGivenDate )
       nWeekNum   := dGivenDate
       dGivenDate := Date()
    ENDIF
@@ -42,7 +42,7 @@ FUNCTION FT_WEEK( dGivenDate, nWeekNum )
    dTemp        := aRetVal[ 2 ]
    aRetVal[ 2 ] -= FT_DAYTOBOW( aRetVal[ 2 ] )
 
-   lIsWeek := ( ValType( nWeekNum ) == 'N' )
+   lIsWeek := HB_ISNUMERIC( nWeekNum )
    IF lIsWeek
       nTemp := Int( ( aRetVal[ 3 ] - aRetVal[ 2 ] ) / 7 ) + 1
       IF nWeekNum < 1 .OR. nWeekNum > nTemp

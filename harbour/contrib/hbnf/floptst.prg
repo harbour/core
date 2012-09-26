@@ -54,7 +54,7 @@ PROCEDURE Main( cArg1 )
 
    LOCAL nErrCode
 
-   IF ValType( cArg1 ) == "C"
+   IF HB_ISSTRING( cArg1 )
       nErrCode := FT_FLOPTST( Asc( Upper( cArg1 ) ) - Asc( "A" ) )
       OutStd( "Return Code is " + LTrim( Str( nErrCode ) ) + CR_LF )
    ELSE
@@ -73,7 +73,7 @@ FUNCTION FT_FLOPTST(                ;     // error code defined by ERR_*
    LOCAL nRetCode
 
    nRetCode := ERR_WRONG_PARAMETERS
-   IF ValType( nDriveNum_i ) == "N"
+   IF HB_ISNUMERIC( nDriveNum_i )
 
       IF _GetDisketteNum( nDriveNum_i )
          _ResetDisketteSystem()

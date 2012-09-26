@@ -33,14 +33,14 @@ FUNCTION FT_QTR( dGivenDate, nQtrNum )
 
    IF !( ValType( dGivenDate ) $ 'ND' )
       dGivenDate := Date()
-   ELSEIF ValType( dGivenDate ) == 'N'
+   ELSEIF HB_ISNUMERIC( dGivenDate )
       nQtrNum    := dGivenDate
       dGivenDate := Date()
    ENDIF
 
    aRetval := FT_YEAR( dGivenDate )
 
-   lIsQtr  := ( ValType( nQtrNum ) == 'N' )
+   lIsQtr  := HB_ISNUMERIC( nQtrNum )
    IF lIsQtr
       IF nQtrNum < 1 .OR. nQtrNum > 4
          nQtrNum := 4

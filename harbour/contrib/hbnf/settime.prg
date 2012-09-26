@@ -41,7 +41,7 @@
 
 PROCEDURE Main( cTime )
 
-   cTime := iif( cTime == nil, Time(), cTime )
+   cTime := iif( cTime == NIL, Time(), cTime )
    QOut( "Setting time to: " + cTime  + "... " )
    FT_SETTIME( cTime )
    QOut( "Time is now: " + Time() )
@@ -54,7 +54,7 @@ FUNCTION FT_SETTIME( cTime )
 
    LOCAL aRegs[ INT86_MAX_REGS ]
 
-   cTime := iif( cTime == nil, Time(), cTime )
+   cTime := iif( cTime == NIL, Time(), cTime )
 
 //            -------- High Byte ------      ----- Low Byte -------
 

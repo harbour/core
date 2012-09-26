@@ -84,7 +84,7 @@ FUNCTION FT_SAVEARR( aArray, cFileName, nErrorCode )
    IF nErrorCode == 0
       lRet := _ftsavesub( aArray, nHandle, @nErrorCode )
       FClose( nHandle )
-      IF ( lRet ) .AND. ( FError() != 0 )
+      IF lRet .AND. FError() != 0
          nErrorCode := FError()
          lRet := .F.
       ENDIF

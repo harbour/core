@@ -1208,8 +1208,8 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
    LOCAL nOldRow, nOldCol, cOldColor, nMessLen, nWide, nNumRows, nBottom, nLeft
    LOCAL nRight, oNewGet, nNumMessRow, nLenLastRow, lGetOnNextLine, nOldCurs
    LOCAL cVarType := ValType( xVarVal )
-   LOCAL nVarLen  := iif( cVarType == "C", Len( xVarVal ), iif( cVarType == "D",8,          ;
-      iif( cVarType == "L", 1, iif( cVarType == "N",iif(cPict == NIL,9,     ;
+   LOCAL nVarLen  := iif( cVarType == "C", Len( xVarVal ), iif( cVarType == "D", 8, ;
+      iif( cVarType == "L", 1, iif( cVarType == "N", iif(cPict == NIL, 9, ;
       Len( cPict ) ), 0 ) ) ) )
    LOCAL nOldLastKey := LastKey()
    LOCAL cOldDevice  := Set( _SET_DEVICE, "SCREEN" )
@@ -1235,7 +1235,7 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
    nLeft       := Int( ( MaxCol() - nWide ) / 2 ) - 4
    nRight      := nLeft + nWide + 4
 
-   _ftPushWin( nTop, nLeft, nBottom, nRight, "QUESTION ?", iif( ValType(xVarVal ) == "C"  ;
+   _ftPushWin( nTop, nLeft, nBottom, nRight, "QUESTION ?", iif( HB_ISSTRING( xVarVal )  ;
       .AND. nVarLen > nWide, Chr( 27 ) + " scroll " + Chr( 26 ), NIL ), nWinColor )
    DISPMESSAGE cMessage, nTop + 1, nLeft + 2, nBottom - 1, nRight - 2
 
@@ -1245,18 +1245,18 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
       "xVarVal" )
 
 // If the input line is character & wider than window SCROLL
-   IF lGetOnNextLine .AND. ValType( xVarVal ) == "C" .AND. nVarLen > nWide
+   IF lGetOnNextLine .AND. HB_ISSTRING( xVarVal ) .AND. nVarLen > nWide
       oNewGet:Picture   := "@S" + LTrim( Str( nWide,4,0 ) ) + iif( cPict == NIL, "", " " + cPict )
    ENDIF
 
    IF cPict != NIL                       // Use the picture they passed
       oNewGet:Picture   := cPict
    ELSE                                  // Else setup default pictures
-      IF ValType( xVarVal ) == "D"
+      IF HB_ISDATE( xVarVal )
          oNewGet:Picture   := "99/99/99"
-      ELSEIF ValType( xVarVal ) == "L"
+      ELSEIF HB_ISLOGICAL( xVarVal )
          oNewGet:Picture   := "Y"
-      ELSEIF ValType( xVarVal ) == "N"
+      ELSEIF HB_ISNUMERIC( xVarVal )
          oNewGet:Picture   := "999999.99"  // Guess that they are inputting dollars
       ENDIF
    ENDIF

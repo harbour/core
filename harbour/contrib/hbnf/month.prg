@@ -33,14 +33,14 @@ FUNCTION FT_MONTH( dGivenDate, nMonthNum )
 
    IF !( ValType( dGivenDate ) $ 'ND' )
       dGivenDate := Date()
-   ELSEIF ValType( dGivenDate ) == 'N'
+   ELSEIF HB_ISNUMERIC( dGivenDate )
       nMonthNum  := dGivenDate
       dGivenDate := Date()
    ENDIF
 
    aRetVal   := FT_YEAR( dGivenDate )
 
-   lIsMonth  := ( ValType( nMonthNum ) == 'N' )
+   lIsMonth  := HB_ISNUMERIC( nMonthNum )
    IF lISMonth
       IF nMonthNum < 1 .OR. nMonthNum > 12
          nMonthNum := 12

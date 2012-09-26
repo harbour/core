@@ -39,7 +39,7 @@ PROCEDURE Main( nSleep )
 
 FUNCTION FT_SLEEP( nSeconds, nInitial )
 
-   IF nInitial == NIL .OR. ValType( nInitial ) != "N"
+   IF ! HB_ISNUMERIC( nInitial )
       nInitial := Seconds()
    ENDIF
 

@@ -28,7 +28,7 @@
  *        - Added refreshCurrent and another stabilize around line 349
  *        - TbSkipWhile was redone
  *             Note: Leo's line was changed to:
- *                 ELSEIF ( n > 0 .AND. RECNO() != LASTREC() + 1)
+ *                 ELSEIF n > 0 .AND. RECNO() != LASTREC() + 1
  *
  *  3.  Added DispBegin() and DispEnd() around both Stabilize sections
  *
@@ -108,12 +108,12 @@ PROCEDURE TBWHILE()
 // you can make it as complicated as you want, but you would then
 // have to modify TBWhileSet() to find first and last records
 // matching your key.
-   nRecSel := FT_BRWSWHL( aFields, {||TBNames->Last = cKey }, cKey, nFreeze, ;
+   nRecSel := FT_BRWSWHL( aFields, {|| TBNames->Last = cKey }, cKey, nFreeze, ;
       lSaveScrn, cColorList, cColorShad, 3, 6, MaxRow() - 2, MaxCol() - 6 )
 // Note you can use Compound Condition
 // such as cLast =: "Pierce            " and cFirst =: "Hawkeye  "
 // by changing above block to:
-//    {||TBNames->Last = cLast .AND. TBNames->First = cFirst}
+//    {|| TBNames->Last = cLast .AND. TBNames->First = cFirst }
 // and setting cKey := cLast + cFirst
 
    ?
