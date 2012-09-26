@@ -2128,7 +2128,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                   nLen = ulMsg - ulLast;
                   if( nLen > ulWidth )
                      nLen = ulWidth;
-                  HB_GTSELF_PUTTEXTW( pGT, i, iLeft + ( ( ulWidth - nLen + 1 ) >> 1 ) + 2,
+                  HB_GTSELF_PUTTEXTW( pGT, i, iLeft + ( int ) ( ( ulWidth - nLen + 1 ) >> 1 ) + 2,
                                       iClrNorm, szMsgDsp + ulLast, nLen );
                }
                ulLast = ulMsg + 1;
@@ -2141,7 +2141,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
             nLen = ulMsg - ulLast;
             if( nLen > ulWidth )
                nLen = ulWidth;
-            HB_GTSELF_PUTTEXTW( pGT, i, iLeft + ( ( ulWidth - nLen + 1 ) >> 1 ) + 2,
+            HB_GTSELF_PUTTEXTW( pGT, i, iLeft + ( int ) ( ( ulWidth - nLen + 1 ) >> 1 ) + 2,
                                 iClrNorm, szMsgDsp + ulLast, nLen );
          }
          hb_xfree( szMsgDsp );
@@ -2157,9 +2157,9 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                szOptW = hb_arrayGetStrU16( pOptions, i, HB_CDP_ENDIAN_NATIVE, &hOpt, &nLen );
                HB_GTSELF_PUTTEXTW( pGT, iBottom - 1, iMnuCol, iClr, s_szSpaceW, 1 );
                HB_GTSELF_PUTTEXTW( pGT, iBottom - 1, iMnuCol + 1, iClr, szOptW, nLen );
-               HB_GTSELF_PUTTEXTW( pGT, iBottom - 1, iMnuCol + 1 + nLen, iClr, s_szSpaceW, 1 );
+               HB_GTSELF_PUTTEXTW( pGT, iBottom - 1, iMnuCol + 1 + ( int ) nLen, iClr, s_szSpaceW, 1 );
                hb_strfree( hOpt );
-               iMnuCol += nLen + 4;
+               iMnuCol += ( int ) nLen + 4;
             }
             while( HB_GTSELF_DISPCOUNT( pGT ) )
                HB_GTSELF_DISPEND( pGT );
@@ -2201,7 +2201,7 @@ static int hb_gt_def_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                         iRet = i;
                         break;
                      }
-                     iMnuCol += nLen + 4;
+                     iMnuCol += ( int ) nLen + 4;
                   }
                }
             }

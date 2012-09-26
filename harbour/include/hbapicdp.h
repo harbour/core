@@ -94,10 +94,10 @@ typedef HB_CDP_PUT_FUNC( ( * PHB_CDP_PUT_FUNC ) );
 #define HB_CDP_LEN_FUNC( func ) int func( HB_CODEPAGE_PTR cdp, HB_WCHAR wc )
 typedef HB_CDP_LEN_FUNC( ( * PHB_CDP_LEN_FUNC ) );
 
-#define HB_CDP_UPPER_FUNC( func ) int func( HB_CODEPAGE_PTR cdp, HB_WCHAR wc )
+#define HB_CDP_UPPER_FUNC( func ) HB_WCHAR func( HB_CODEPAGE_PTR cdp, HB_WCHAR wc )
 typedef HB_CDP_UPPER_FUNC( ( * PHB_CDP_UPPER_FUNC ) );
 
-#define HB_CDP_LOWER_FUNC( func ) int func( HB_CODEPAGE_PTR cdp, HB_WCHAR wc )
+#define HB_CDP_LOWER_FUNC( func ) HB_WCHAR func( HB_CODEPAGE_PTR cdp, HB_WCHAR wc )
 typedef HB_CDP_LOWER_FUNC( ( * PHB_CDP_LOWER_FUNC ) );
 
 #define HB_CDP_FLAGS_FUNC( func ) int func( HB_CODEPAGE_PTR cdp, HB_WCHAR wc )

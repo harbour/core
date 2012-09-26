@@ -2177,7 +2177,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
                szOptW = hb_arrayGetStrU16( pOptions, i, HB_CDP_ENDIAN_NATIVE, &hOpt, &nLen );
                HB_GTSELF_PUTTEXTW( pGT, iLines + 1, iMnuCol, iClr, szOptW, nLen );
                hb_strfree( hOpt );
-               iMnuCol += nLen + 3;
+               iMnuCol += ( int ) nLen + 3;
             }
             while( HB_GTSELF_DISPCOUNT( pGT ) )
                HB_GTSELF_DISPEND( pGT );

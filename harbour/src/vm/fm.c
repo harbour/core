@@ -193,8 +193,9 @@
 #        define ABORT TerminateProcess( GetCurrentProcess(), 0 )
 #        define LACKS_FCNTL_H
 #     endif
+#     pragma warning( push )
+#     pragma warning( disable : 4702 )
 #     if defined( HB_OS_WIN_64 )
-#        pragma warning( push )
 #        pragma warning( disable : 4267 )
 #     endif
 #  elif defined( __MINGW32__ )
@@ -222,9 +223,7 @@
 #     pragma warning 887 2
 #     pragma enable_message ( 201 )
 #  elif defined( _MSC_VER )
-#     if defined( HB_OS_WIN_64 )
-#        pragma warning( pop )
-#     endif
+#     pragma warning( pop )
 #  endif
 #  if defined( HB_FM_DLMT_ALLOC )
 #     define malloc( n )         mspace_malloc( hb_mspace(), ( n ) )

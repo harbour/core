@@ -5118,7 +5118,7 @@ static void hb_compExprPushPreOp( HB_EXPR_PTR pSelf, HB_BYTE bOper, HB_COMP_DECL
          hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
          HB_GEN_FUNC1( PCode1, HB_P_PUSHOVARREF );
          /* increase/decrease operation, leave unreferenced value on stack */
-         HB_GEN_FUNC1( PCode1, ( bOper == HB_P_INC ) ? HB_P_INCEQ : HB_P_DECEQ );
+         HB_GEN_FUNC1( PCode1, ( HB_BYTE ) ( ( bOper == HB_P_INC ) ? HB_P_INCEQ : HB_P_DECEQ ) );
       }
       else
 #endif
@@ -5225,7 +5225,7 @@ static void hb_compExprPushPostOp( HB_EXPR_PTR pSelf, HB_BYTE bOper, HB_COMP_DEC
           */
          HB_GEN_FUNC1( PCode1, HB_P_DUPLUNREF );
          /* increment/decrement the value */
-         HB_GEN_FUNC1( PCode1, ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP );
+         HB_GEN_FUNC1( PCode1, ( HB_BYTE ) ( ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP ) );
       }
       else
 #endif
@@ -5332,7 +5332,7 @@ static void hb_compExprUsePreOp( HB_EXPR_PTR pSelf, HB_BYTE bOper, HB_COMP_DECL 
          hb_compExprPushSendPop( pSelf->value.asOperator.pLeft, HB_COMP_PARAM );
          HB_GEN_FUNC1( PCode1, HB_P_PUSHOVARREF );
          /* increment/decrement the value */
-         HB_GEN_FUNC1( PCode1, ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP );
+         HB_GEN_FUNC1( PCode1, ( HB_BYTE ) ( ( bOper == HB_P_INC ) ? HB_P_INCEQPOP : HB_P_DECEQPOP ) );
       }
       else
 #endif

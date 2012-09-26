@@ -708,5 +708,5 @@ HB_FUNC( HB_SOCKETGETIFACES )
 
 HB_FUNC( HB_SOCKETGETFD )
 {
-   hb_retni( hb_socketParam( 1 ) );
+   hb_retnint( hb_socketParam( 1 ) );
 }
