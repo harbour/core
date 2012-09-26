@@ -283,7 +283,6 @@ HARBOUR
          --with mysql       - build components dependent on mysql (hbmysql, sddmy)
          --with odbc        - build components dependent on odbc (hbodbc, sddodbc)
          --with pgsql       - build components dependent on pgsql (hbpgsql, sddpg)
-         --with qt          - build components dependent on qt (hbqt, hbxbp)
          --with localzlib   - build local copy of zlib library
          --with localpcre   - build local copy of pcre library
          --without x11      - do not build components dependent on x11 (gtxwc)
@@ -386,7 +385,6 @@ HARBOUR
    HB_WITH_PCRE=C:\pcre (defaults to locally hosted version if not found)
    HB_WITH_PGSQL=C:\pgsql\include
    HB_WITH_PNG=C:\libpng (defaults to locally hosted version if not found)
-   HB_WITH_QT=C:\Qt\include (version 4.5.0 or upper is required)
    HB_WITH_SLANG= (on *nix systems)
    HB_WITH_SQLITE3=C:\sqlite3 (defaults to locally hosted version if not found)
    HB_WITH_TIFF=C:\libtiff (defaults to locally hosted version if not found)
@@ -403,23 +401,12 @@ HARBOUR
    where applicable. 'nolocal' will explicitly disable using locally hosted
    copy.
 
-   To enable building libs that link against static version of 3rd party
-   components:
-      HB_QT_BUILD_STATIC=yes (only meaningful on Windows platform)
-
-   You can override autodetection of QT 'moc', 'rcc' and 'uic' tools
-   by using HB_QTPATH and optionally HB_QTPOSTFIX envvars. This may
-   only be necessary on some *nix systems. F.e.:
-      HB_QTPATH=/opt/qt45/bin/
-      HB_QTPOSTFIX=
-
    Certain contribs can be instructed (when using .hbc files) to link
    against static build of their 3rd party lib dependencies (for
    advanced users only):
       HB_STATIC_ALLEGRO=yes
       HB_STATIC_CURL=yes
       HB_STATIC_OPENSSL=yes
-      HB_STATIC_QT=yes
 
    NOTES: - You need to use native path format to your shell/OS.
           - Spaces in directory names aren't currently supported.
@@ -476,7 +463,6 @@ HARBOUR
       for contrib/hbmysql lib:   $ sudo apt-get install libmysqlclient15-dev
       for contrib/hbodbc lib:    $ sudo apt-get install unixodbc-dev
       for contrib/hbpgsql lib:   $ sudo apt-get install libpq-dev
-      for contrib/hbqt lib:      $ sudo apt-get install libqt4-dev
 
       Optional, to override locally hosted sources:
 
@@ -514,7 +500,6 @@ HARBOUR
       for contrib/hbodbc lib:    unixodbc-devel OR
                                  unixODBC-devel
       for contrib/hbpgsql lib:   postgresql-devel
-      for contrib/hbqt lib:      qt45-devel
 
       NOTES: - You can use following commands on different distros to install packages:
                    openSUSE:       $ sudo zypper install <pkg>
@@ -1093,7 +1078,6 @@ HARBOUR
       set HB_WITH_OCILIB=C:\ocilib\include
       set HB_WITH_OPENSSL=C:\openssl\inc32
       set HB_WITH_PGSQL=C:\pgsql\include
-      set HB_WITH_QT=C:\Qt\include
       -->8--
 
    for Windows x64 (x86-64) hosts
@@ -1694,20 +1678,6 @@ HARBOUR
          http://www.postgresql.org/
       HB_WITH_PNG - libpng [multiplatform, free, open-source]
          http://www.libpng.org/pub/png/libpng.html
-      HB_WITH_QT - Nokia QT (GUI) [win, wce, os2, darwin, linux, free, open-source]
-         http://qt.nokia.com/products/
-         http://get.qt.nokia.com/qt/source/
-         OS X binary package (or use Homebrew):
-            qt-mac-opensource-*.dmg in http://get.qt.nokia.com/qt/source/
-         Supported Windows binary package:
-            qt-win-opensource-*-mingw.exe in http://get.qt.nokia.com/qt/source/
-         How to create Windows static and MSVC builds:
-            http://developer.qt.nokia.com/doc/qt-4.8/deployment-windows.html
-         NOTES:
-            - QT 4.5.x for Windows requires MinGW builds with SJLJ stack frame unwinding.
-              (mingw official 3.4.x, or mingw tdm)
-            - QT 4.6.x (and upper) for Windows requires MinGW builds with DWARF-2 stack frame unwinding.
-              (mingw official 4.4.0 or upper, or mingw tdm with dwarf2)
       HB_WITH_SQLITE3 - sqlite3 [multiplatform, free, open-source]
          http://www.sqlite.org/
       HB_WITH_TIFF - libtiff [multiplatform, free, open-source]

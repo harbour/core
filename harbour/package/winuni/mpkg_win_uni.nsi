@@ -105,18 +105,6 @@ Section "Main components" hb_main
   File /nonfatal "$%HB_ABSROOT%bin\hbmk.hbc"
   File "$%HB_ABSROOT%bin\upx*.*"
 
-  ; QT
-; File "$%HB_ABSROOT%bin\libgcc_s_dw2-1.dll"
-; File "$%HB_ABSROOT%bin\mingwm10.dll"
-; File "$%HB_ABSROOT%bin\QtCore4.dll"
-; File "$%HB_ABSROOT%bin\QtGui4.dll"
-; File "$%HB_ABSROOT%bin\QtNetwork4.dll"
-; File "$%HB_ABSROOT%bin\QtSql4.dll"
-; File "$%HB_ABSROOT%bin\uic.exe"
-; File "$%HB_ABSROOT%bin\rcc.exe"
-; File "$%HB_ABSROOT%bin\Qt_LICENSE_LGPL.txt"
-; File "$%HB_ABSROOT%bin\Qt_LICENSE_LGPL_EXCEPTION.txt"
-
   SetOutPath $INSTDIR\include
   File "$%HB_ABSROOT%include\*.*"
 
@@ -148,13 +136,6 @@ Section /o "x64 tools" hb_main_x64
   File "$%HB_ABSROOT%bin\hbtest-x64.exe"
 SectionEnd
 !endif
-
-; !ifndef PKG_NO_IDE
-; Section /o "IDE" hb_ide
-;   SetOutPath $INSTDIR\bin
-;   File "$%HB_ABSROOT%bin\hbide.exe"
-; SectionEnd
-; !endif
 
 !ifndef PKG_NO_CC_MINGW
 Section "MinGW compiler" hb_mingw
@@ -348,10 +329,6 @@ Section "Start Menu and Desktop icons" hb_shortcuts
   CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Harbour (Command line).lnk" "cmd.exe" "/k cd $INSTDIR\bin" "cmd.exe" 0
   CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Harbour.lnk" "$INSTDIR" "" "$INSTDIR" 0
   CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\Harbour (Interactive shell).lnk" "$INSTDIR\bin\hbrun.exe" "" "$INSTDIR\bin\hbrun.exe" 0
-; ; TOFIX: Only create this shortcut, if 'hb_ide' component was enabled at install time (or when the target filename exists)
-;!ifndef PKG_NO_IDE
-;  CreateShortCut  "$SMPROGRAMS\Harbour $%HB_VM%\hbide.lnk" "$INSTDIR\bin\hbide.exe" "" "$INSTDIR\bin\hbide.exe" 0
-;!endif
   CreateDirectory "$SMPROGRAMS\Harbour $%HB_VM%\Links"
   WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Homepage.url"                   "InternetShortcut" "URL" "http://harbour-project.org/"
   WriteINIStr     "$SMPROGRAMS\Harbour $%HB_VM%\Links\Sourceforge Page.url"           "InternetShortcut" "URL" "http://sourceforge.net/projects/harbour-project/"
@@ -372,9 +349,6 @@ SectionEnd
   LangString DESC_hb_main_x64     ${LANG_ENGLISH} "Harbour x64 tools"
   LangString DESC_hb_dlls_x64     ${LANG_ENGLISH} "Harbour dlls for x64"
 !endif
-; !ifndef PKG_NO_IDE
-;   LangString DESC_hb_ide          ${LANG_ENGLISH} "Harbour IDE"
-; !endif
 !ifndef PKG_NO_COMP_MINGWARM
   LangString DESC_hb_dlls_arm     ${LANG_ENGLISH} "Harbour dlls for WinCE/ARM"
 !endif
@@ -445,9 +419,6 @@ SectionEnd
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_main_x64}     $(DESC_hb_main_x64)
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_dlls_x64}     $(DESC_hb_dlls_x64)
 !endif
-; !ifndef PKG_NO_IDE
-;     !insertmacro MUI_DESCRIPTION_TEXT ${hb_ide}          $(DESC_hb_ide)
-; !endif
 !ifndef PKG_NO_COMP_MINGWARM
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_dlls_arm}     $(DESC_hb_dlls_arm)
 !endif

@@ -76,7 +76,6 @@ set HB_WITH_MYSQL=%_HB_DIR_3RD%mysql\include
 set HB_WITH_OCILIB=%_HB_DIR_3RD%ocilib\include
 set HB_WITH_OPENSSL=%_HB_DIR_3RD%openssl\include
 set HB_WITH_PGSQL=%_HB_DIR_3RD%pgsql\include
-rem set HB_WITH_QT=%_HB_DIR_3RD%qt\include
 
 echo ! Building Harbour...
 

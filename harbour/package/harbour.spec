@@ -78,7 +78,7 @@
 %define hb_blds   export HB_BUILD_STRIP=all
 %define hb_bldsh  export HB_BUILD_SHARED=%{!?_with_static:yes}
 %define hb_cmrc   export HB_BUILD_NOGPLLIB=%{?_without_gpllib:yes}
-%define hb_ctrb   export HB_BUILD_CONTRIBS="hbblink hbct hbgt hbmisc hbmzip hbbz2 hbnetio hbtip hbtpathy hbcomm hbhpdf hbziparc hbfoxpro hbsms hbfship hbxpp xhb rddbm rddsql hbsqlit3 sddsqlt3 hbnf hbhttpd hbformat hbunix hbzebra hblzf hbmemio hbmlzo hbmxml hbexpat %{?_with_allegro:gtalleg} %{?_with_cairo:hbcairo} %{?_with_cups:hbcups} %{?_with_curl:hbcurl} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_firebird:hbfbird sddfb} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_qt:hbqt hbxbp} %{?_with_ads:rddads} hbrun"
+%define hb_ctrb   export HB_BUILD_CONTRIBS="hbblink hbct hbgt hbmisc hbmzip hbbz2 hbnetio hbtip hbtpathy hbcomm hbhpdf hbziparc hbfoxpro hbsms hbfship hbxpp xhb rddbm rddsql hbsqlit3 sddsqlt3 hbnf hbhttpd hbformat hbunix hbzebra hblzf hbmemio hbmlzo hbmxml hbexpat %{?_with_allegro:gtalleg} %{?_with_cairo:hbcairo} %{?_with_cups:hbcups} %{?_with_curl:hbcurl} %{?_with_freeimage:hbfimage} %{?_with_gd:hbgd} %{?_with_firebird:hbfbird sddfb} %{?_with_mysql:hbmysql sddmy} %{?_with_odbc:hbodbc sddodbc} %{?_with_pgsql:hbpgsql sddpg} %{?_with_ads:rddads} hbrun"
 %define hb_env    %{hb_plat} ; %{hb_cc} ; %{hb_cflag} ; %{hb_lflag} ; %{hb_dflag} ; %{shl_path} ; %{hb_gpm} ; %{hb_crs} ; %{hb_sln} ; %{hb_x11} ; %{hb_local} ; %{hb_proot} ; %{hb_bdir} ; %{hb_idir} ; %{hb_ldir} ; %{hb_ddir} ; %{hb_edir} ; %{hb_mdir} ; %{hb_tdir} ; %{hb_ctrb} ; %{hb_cmrc} ; %{hb_blds} ; %{hb_bldsh}
 ######################################################################
 ## Preamble.
@@ -369,16 +369,6 @@ statikus szerkesztéshez.
 %{?_with_pgsql:%{dname} to kompatybilny z językiem CA-Cl*pper kompilator.}
 %{?_with_pgsql:Ten pakiet udostępnia statyczn+ biliotekę PGSQL dla kompilatora %{dname}.}
 
-## qt library
-%{?_with_qt:%package qt}
-%{?_with_qt:Summary:        QT library bindings for %{dname} compiler}
-%{?_with_qt:Group:          Development/Languages}
-%{?_with_qt:Requires:       libqt4-devel %{name} = %{?epoch:%{epoch}:}%{version}-%{release}}
-
-%{?_with_qt:%description qt}
-%{?_with_qt:%{dname} is a Clipper compatible compiler.}
-%{?_with_qt:This package provides %{dname} QT libraries for program linking.}
-
 
 ######################################################################
 ## Preperation.
@@ -597,12 +587,6 @@ rm -rf $RPM_BUILD_ROOT
 %{?_with_pgsql:%dir %{_libdir}/%{name}}
 %{?_with_pgsql:%{_libdir}/%{name}/libhbpgsql.a}
 %{?_with_pgsql:%{_libdir}/%{name}/libsddpg.a}
-
-%{?_with_qt:%files qt}
-%{?_with_qt:%defattr(644,root,root,755)}
-%{?_with_qt:%dir %{_libdir}/%{name}}
-%{?_with_qt:%{_libdir}/%{name}/libhbqt*.a}
-%{?_with_qt:%{_libdir}/%{name}/libhbxbp.a}
 
 ######################################################################
 ## Spec file Changelog.

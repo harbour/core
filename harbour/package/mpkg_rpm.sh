@@ -35,7 +35,6 @@ do
          [ "$1" = "firebird" ] && NEED_RPM="${NEED_RPM} firebird-devel"
          [ "$1" = "freeimage" ] && NEED_RPM="${NEED_RPM} freeimage-devel"
          [ "$1" = "allegro" ] && NEED_RPM="${NEED_RPM} allegro-devel"
-         [ "$1" = "qt" ] && NEED_RPM="${NEED_RPM} libqt4-devel"
       fi
    fi
    LAST="$1"
@@ -86,11 +85,6 @@ fi
 if test_reqrpm "postgresql-devel"
 then
    INST_PARAM="${INST_PARAM} --with pgsql"
-fi
-if test_reqrpm "libqt4-devel"
-then
-   v=` rpm -q --whatprovides libqt4-devel --qf "%{VERSION}"|sed -e "s/[^0-9]*[0-9]*.\([0-9]*\).*/\1/g"`
-   [ "$v" -ge 5 ] && INST_PARAM="${INST_PARAM} --with qt"
 fi
 
 if [ "${HB_BUILD_NOGPLLIB}" = "yes" ]

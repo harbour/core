@@ -7,7 +7,7 @@ Build-Depends: debhelper (>= 5.0.0), libjpeg62-dev, libpcre3-dev,
  libcairo2-dev, libcups2-dev, libexpat1-dev, libfreeimage-dev,
  libcurl4-openssl-dev | libcurl4-gnutls-dev, firebird2.0-dev | firebird2.1-dev,
  libgd2-noxpm-dev | libgd2-xpm-dev, libmagic-dev, libmysqlclient-dev,
- unixodbc-dev, libpq-dev, libqt4-dev, qt4-dev-tools, libssl-dev,
+ unixodbc-dev, libpq-dev, libssl-dev,
  libslang2-dev, libncurses5-dev | libncursesw5-dev, libslang2-dev, libx11-dev
 Standards-Version: 3.6.2
 

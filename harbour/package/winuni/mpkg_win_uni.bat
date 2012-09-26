@@ -86,19 +86,6 @@ rem del %HB_ABSROOT%comp\mingw\tdm-mingw-1.908.0-4.4.1-2.exe
 xcopy /y       "%HB_DIR_MINGW%\bin\libgcc_s_dw2-1.dll"                                    %HB_ABSROOT%bin\
 xcopy /y       "%HB_DIR_MINGW%\bin\mingwm10.dll"                                          %HB_ABSROOT%bin\
 
-rem xcopy /y       "%HB_WITH_QT%\..\bin\QtCore4.dll"                                          %HB_ABSROOT%bin\
-rem xcopy /y       "%HB_WITH_QT%\..\bin\QtGui4.dll"                                           %HB_ABSROOT%bin\
-rem xcopy /y       "%HB_WITH_QT%\..\bin\QtNetwork4.dll"                                       %HB_ABSROOT%bin\
-rem xcopy /y       "%HB_WITH_QT%\..\bin\QtSql4.dll"                                           %HB_ABSROOT%bin\
-rem xcopy /y       "%HB_WITH_QT%\..\bin\uic.exe"                                              %HB_ABSROOT%bin\
-rem xcopy /y       "%HB_WITH_QT%\..\bin\rcc.exe"                                              %HB_ABSROOT%bin\
-rem xcopy /y       "%HB_WITH_QT%\..\lib\libQtCore4.a"                                         %HB_ABSROOT%lib\win\mingw\
-rem xcopy /y       "%HB_WITH_QT%\..\lib\libQtGui4.a"                                          %HB_ABSROOT%lib\win\mingw\
-rem xcopy /y       "%HB_WITH_QT%\..\lib\libQtNetwork4.a"                                      %HB_ABSROOT%lib\win\mingw\
-rem xcopy /y       "%HB_WITH_QT%\..\lib\libQtSql4.a"                                          %HB_ABSROOT%lib\win\mingw\
-rem  copy /y       "%HB_WITH_QT%\..\LICENSE.LGPL"                                             %HB_ABSROOT%bin\Qt_LICENSE_LGPL.txt
-rem  copy /y       "%HB_WITH_QT%\..\LGPL_EXCEPTION.txt"                                       %HB_ABSROOT%bin\Qt_LICENSE_LGPL_EXCEPTION.txt
-
 rem ; Create unified installer
 
 pushd
@@ -129,17 +116,6 @@ echo "%HB_DR%bin\hbnetio.exe"                       >> _hbfiles
 echo "%HB_DR%bin\hbpp.exe"                          >> _hbfiles
 echo "%HB_DR%bin\hbrun.exe"                         >> _hbfiles
 echo "%HB_DR%bin\hbtest.exe"                        >> _hbfiles
-rem if exist "%HB_DR%bin\hbide.exe"                     echo "%HB_DR%bin\hbide.exe"                     >> _hbfiles
-rem if exist "%HB_DR%bin\libgcc_s_dw2-1.dll"            echo "%HB_DR%bin\libgcc_s_dw2-1.dll"            >> _hbfiles
-rem if exist "%HB_DR%bin\mingwm10.dll"                  echo "%HB_DR%bin\mingwm10.dll"                  >> _hbfiles
-rem if exist "%HB_DR%bin\QtCore4.dll"                   echo "%HB_DR%bin\QtCore4.dll"                   >> _hbfiles
-rem if exist "%HB_DR%bin\QtGui4.dll"                    echo "%HB_DR%bin\QtGui4.dll"                    >> _hbfiles
-rem if exist "%HB_DR%bin\QtNetwork4.dll"                echo "%HB_DR%bin\QtNetwork4.dll"                >> _hbfiles
-rem if exist "%HB_DR%bin\QtSql4.dll"                    echo "%HB_DR%bin\QtSql4.dll"                    >> _hbfiles
-rem if exist "%HB_DR%bin\uic.exe"                       echo "%HB_DR%bin\uic.exe"                       >> _hbfiles
-rem if exist "%HB_DR%bin\rcc.exe"                       echo "%HB_DR%bin\rcc.exe"                       >> _hbfiles
-rem if exist "%HB_DR%bin\Qt_LICENSE_LGPL.txt"           echo "%HB_DR%bin\Qt_LICENSE_LGPL.txt"           >> _hbfiles
-rem if exist "%HB_DR%bin\Qt_LICENSE_LGPL_EXCEPTION.txt" echo "%HB_DR%bin\Qt_LICENSE_LGPL_EXCEPTION.txt" >> _hbfiles
 if exist "%HB_DR%bin\hbmk.hbc"                      echo "%HB_DR%bin\hbmk.hbc"                      >> _hbfiles
 echo "%HB_DR%bin\upx*.*"                            >> _hbfiles
 echo "%HB_DR%include\*.*"                           >> _hbfiles
