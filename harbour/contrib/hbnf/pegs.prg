@@ -45,7 +45,8 @@ MEMVAR getlist
    board_[xx, 4] - is the location occupied or not? .T. -> Yes, .F. -> No
 */
 
-THREAD STATIC board_ := { { { 0, 29, 2, 34 }, { 2, 4 }, { 3, 9 }, .T. } , ;
+THREAD STATIC t_board_ := {;
+   { { 0, 29, 2, 34 }, { 2, 4 }, { 3, 9 }, .T. } , ;
    { { 0, 37, 2, 42 }, { 5 }, { 10 }, .T. }      , ;
    { { 0, 45, 2, 50 }, { 2, 6 }, { 1, 11 }, .T. } , ;
    { { 3, 29, 5, 34 }, { 5, 9 }, { 6, 16 }, .T. } , ;
@@ -94,7 +95,7 @@ FUNCTION FT_PEGS()
    SetColor( "w/r" )
    SINGLEBOX( 22, 31, 24, 48 )
    @ 23, 33 SAY "Your move:"
-   AEval( board_, {| a, x | HB_SYMBOL_UNUSED( a ), drawbox( x ) } )
+   AEval( t_board_, {| a, x | HB_SYMBOL_UNUSED( a ), drawbox( x ) } )
    DO WHILE LastKey() != K_ESC .AND. moremoves()
       move := 1
       SetColor( "w/n" )
@@ -102,23 +103,23 @@ FUNCTION FT_PEGS()
       READ
       IF move > 0
          DO CASE
-         CASE ! board_[ move ][ 4 ]
+         CASE ! t_board_[ move ][ 4 ]
             err_msg( "No piece there!" )
          OTHERWISE
             possible_ := {}
-            FOR xx := 1 TO Len( board_[ move ][ 2 ] )
-               IF board_[ board_[ move ][ 2, xx ] ][ 4 ] .AND. ;
-                     ! board_[ board_[ move ][ 3, xx ] ][ 4 ]
-                  AAdd( possible_, { board_[ move ][ 2, xx ], board_[ move ][ 3, xx ] } )
+            FOR xx := 1 TO Len( t_board_[ move ][ 2 ] )
+               IF t_board_[ t_board_[ move ][ 2, xx ] ][ 4 ] .AND. ;
+                     ! t_board_[ t_board_[ move ][ 3, xx ] ][ 4 ]
+                  AAdd( possible_, { t_board_[ move ][ 2, xx ], t_board_[ move ][ 3, xx ] } )
                ENDIF
             NEXT
             // only one available move -- do it
             DO CASE
             CASE Len( possible_ ) == 1
                // clear out original position and the position you jumped over
-               board_[ move ][ 4 ] := board_[ possible_[ 1, 1 ] ][ 4 ] := .F.
-               board_[ possible_[ 1, 2 ] ][ 4 ] := .T.
-               drawbox( move, board_[move] )
+               t_board_[ move ][ 4 ] := t_board_[ possible_[ 1, 1 ] ][ 4 ] := .F.
+               t_board_[ possible_[ 1, 2 ] ][ 4 ] := .T.
+               drawbox( move, t_board_[move] )
                drawbox( possible_[ 1, 1 ] )
                drawbox( possible_[ 1, 2 ] )
             CASE Len( possible_ ) == 0
@@ -141,8 +142,8 @@ FUNCTION FT_PEGS()
                Set( _SET_SCOREBOARD, oldscore )
                mpos := AScan( possible_, {| a | move2 == a[ 2 ] } )
                // clear out original position and the position you jumped over
-               board_[ move ][ 4 ] := board_[ possible_[ mpos, 1 ] ][ 4 ] := .F.
-               board_[ move2 ][ 4 ] := .T.
+               t_board_[ move ][ 4 ] := t_board_[ possible_[ mpos, 1 ] ][ 4 ] := .F.
+               t_board_[ move2 ][ 4 ] := .T.
                drawbox( move )
                drawbox( possible_[ mpos, 1 ] )
                drawbox( move2 )
@@ -161,10 +162,10 @@ FUNCTION FT_PEGS()
 
 STATIC FUNCTION DrawBox( nelement )
 
-   SetColor( iif( board_[ nelement ][ 4 ], "+w/rb", "w/n" ) )
-   @ board_[ nelement ][ 1, 1 ], board_[ nelement ][1,2], board_[ nelement ][ 1, 3 ], ;
-      board_[ nelement ][ 1, 4 ] BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
-   DevPos( board_[ nelement ][ 1, 1 ] + 1, board_[ nelement ][ 1, 2 ] + 2 )
+   SetColor( iif( t_board_[ nelement ][ 4 ], "+w/rb", "w/n" ) )
+   @ t_board_[ nelement ][ 1, 1 ], t_board_[ nelement ][1,2], t_board_[ nelement ][ 1, 3 ], ;
+      t_board_[ nelement ][ 1, 4 ] BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
+   DevPos( t_board_[ nelement ][ 1, 1 ] + 1, t_board_[ nelement ][ 1, 2 ] + 2 )
    DevOut( hb_ntos( nelement ) )
 
    RETURN NIL
@@ -191,16 +192,16 @@ STATIC FUNCTION moremoves()
    LOCAL xx, yy, canmove := .F. , piecesleft := 0, buffer
 
    FOR xx := 1 TO 33
-      FOR yy := 1 TO Len( board_[ xx ][ 2 ] )
-         IF board_[ xx ][ 4 ] .AND.  ;            // if current location is filled
-               board_[ board_[ xx ][ 2, yy ] ][ 4 ] .AND. ;  // adjacent must be filled
-            ! board_[ board_[ xx ][ 3, yy ] ][ 4 ]           // target must be empty
+      FOR yy := 1 TO Len( t_board_[ xx ][ 2 ] )
+         IF t_board_[ xx ][ 4 ] .AND.  ;            // if current location is filled
+               t_board_[ t_board_[ xx ][ 2, yy ] ][ 4 ] .AND. ;  // adjacent must be filled
+            ! t_board_[ t_board_[ xx ][ 3, yy ] ][ 4 ]           // target must be empty
             canmove := .T.
             EXIT
          ENDIF
       NEXT
       // increment number of pieces left
-      IF board_[ xx ][ 4 ]
+      IF t_board_[ xx ][ 4 ]
          piecesleft++
       ENDIF
    NEXT

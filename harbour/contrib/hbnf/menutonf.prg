@@ -55,25 +55,25 @@
 
 // These arrays hold information about each menu item
 
-THREAD STATIC aRow          := { {} }
-THREAD STATIC aCol          := { {} }
-THREAD STATIC aPrompt       := { {} }
-THREAD STATIC aColor        := { {} }
-THREAD STATIC aMsgRow       := { {} }
-THREAD STATIC aMsgCol       := { {} }
-THREAD STATIC aMessage      := { {} }
-THREAD STATIC aMsgColor     := { {} }
-THREAD STATIC aTrigger      := { {} }
-THREAD STATIC aTriggerInkey := { {} }
-THREAD STATIC aTriggerColor := { {} }
-THREAD STATIC aHome         := { {} }
-THREAD STATIC aEnd          := { {} }
-THREAD STATIC aUp           := { {} }
-THREAD STATIC aDown         := { {} }
-THREAD STATIC aLeft         := { {} }
-THREAD STATIC aRight        := { {} }
-THREAD STATIC aExecute      := { {} }
-THREAD STATIC nLevel        := 1
+THREAD STATIC t_aRow          := { {} }
+THREAD STATIC t_aCol          := { {} }
+THREAD STATIC t_aPrompt       := { {} }
+THREAD STATIC t_aColor        := { {} }
+THREAD STATIC t_aMsgRow       := { {} }
+THREAD STATIC t_aMsgCol       := { {} }
+THREAD STATIC t_aMessage      := { {} }
+THREAD STATIC t_aMsgColor     := { {} }
+THREAD STATIC t_aTrigger      := { {} }
+THREAD STATIC t_aTriggerInkey := { {} }
+THREAD STATIC t_aTriggerColor := { {} }
+THREAD STATIC t_aHome         := { {} }
+THREAD STATIC t_aEnd          := { {} }
+THREAD STATIC t_aUp           := { {} }
+THREAD STATIC t_aDown         := { {} }
+THREAD STATIC t_aLeft         := { {} }
+THREAD STATIC t_aRight        := { {} }
+THREAD STATIC t_aExecute      := { {} }
+THREAD STATIC t_nLevel        := 1
 
 FUNCTION FT_Prompt( nRow,    nCol,    cPrompt,  cColor,      ;
       nMsgRow, nMsgCol, cMessage, cMsgColor,   ;
@@ -126,27 +126,27 @@ FUNCTION FT_Prompt( nRow,    nCol,    cPrompt,  cColor,      ;
       cTriggerColor := cColor
    ENDIF
 
-// Now add elements to the static arrays -- nLevel indicates the recursion
+// Now add elements to the static arrays -- t_nLevel indicates the recursion
 // level, which allows for nested menus.
 
-   AAdd(          aRow[ nLevel ], nRow          )
-   AAdd(          aCol[ nLevel ], nCol          )
-   AAdd(       aPrompt[ nLevel ], cPrompt       )
-   AAdd(        aColor[ nLevel ], cColor        )
-   AAdd(       aMsgRow[ nLevel ], nMsgRow       )
-   AAdd(       aMsgCol[ nLevel ], nMsgCol       )
-   AAdd(      aMessage[ nLevel ], cMessage      )
-   AAdd(     aMsgColor[ nLevel ], cMsgColor     )
-   AAdd(      aTrigger[ nLevel ], nTrigger      )
-   AAdd( aTriggerInkey[ nLevel ], nTriggerInkey )
-   AAdd( aTriggerColor[ nLevel ], cTriggerColor )
-   AAdd(         aHome[ nLevel ], nHome         )
-   AAdd(          aEnd[ nLevel ], nEnd          )
-   AAdd(           aUp[ nLevel ], nUp           )
-   AAdd(         aDown[ nLevel ], nDown         )
-   AAdd(         aLeft[ nLevel ], nLeft         )
-   AAdd(        aRight[ nLevel ], nRight        )
-   AAdd(      aExecute[ nLevel ], bExecute      )
+   AAdd(          t_aRow[ t_nLevel ], nRow          )
+   AAdd(          t_aCol[ t_nLevel ], nCol          )
+   AAdd(       t_aPrompt[ t_nLevel ], cPrompt       )
+   AAdd(        t_aColor[ t_nLevel ], cColor        )
+   AAdd(       t_aMsgRow[ t_nLevel ], nMsgRow       )
+   AAdd(       t_aMsgCol[ t_nLevel ], nMsgCol       )
+   AAdd(      t_aMessage[ t_nLevel ], cMessage      )
+   AAdd(     t_aMsgColor[ t_nLevel ], cMsgColor     )
+   AAdd(      t_aTrigger[ t_nLevel ], nTrigger      )
+   AAdd( t_aTriggerInkey[ t_nLevel ], nTriggerInkey )
+   AAdd( t_aTriggerColor[ t_nLevel ], cTriggerColor )
+   AAdd(         t_aHome[ t_nLevel ], nHome         )
+   AAdd(          t_aEnd[ t_nLevel ], nEnd          )
+   AAdd(           t_aUp[ t_nLevel ], nUp           )
+   AAdd(         t_aDown[ t_nLevel ], nDown         )
+   AAdd(         t_aLeft[ t_nLevel ], nLeft         )
+   AAdd(        t_aRight[ t_nLevel ], nRight        )
+   AAdd(      t_aExecute[ t_nLevel ], bExecute      )
 
 // Now display the prompt for the sake of compatibility
 
@@ -159,9 +159,9 @@ FUNCTION FT_Prompt( nRow,    nCol,    cPrompt,  cColor,      ;
 
 FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
 
-   LOCAL nMenu   := nLevel++
+   LOCAL nMenu   := t_nLevel++
    LOCAL nActive
-   LOCAL nCount  := Len( aRow[ nMenu ] )
+   LOCAL nCount  := Len( t_aRow[ nMenu ] )
    LOCAL lChoice := .F.
    LOCAL nCursor := Set( _SET_CURSOR, SC_NONE )
    LOCAL nKey, bKey, nScan, lWrap, cScreen, nPrev
@@ -193,22 +193,22 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
 // calls FT_Prompt().  This will cause a new set of prompts
 // to be created without disturbing the current set.
 
-   AAdd(          aRow, {} )
-   AAdd(          aCol, {} )
-   AAdd(       aPrompt, {} )
-   AAdd(        aColor, {} )
-   AAdd(       aMsgRow, {} )
-   AAdd(       aMsgCol, {} )
-   AAdd(      aMessage, {} )
-   AAdd(     aMsgColor, {} )
-   AAdd(      aTrigger, {} )
-   AAdd( aTriggerInkey, {} )
-   AAdd( aTriggerColor, {} )
-   AAdd(           aUp, {} )
-   AAdd(         aDown, {} )
-   AAdd(         aLeft, {} )
-   AAdd(        aRight, {} )
-   AAdd(      aExecute, {} )
+   AAdd(          t_aRow, {} )
+   AAdd(          t_aCol, {} )
+   AAdd(       t_aPrompt, {} )
+   AAdd(        t_aColor, {} )
+   AAdd(       t_aMsgRow, {} )
+   AAdd(       t_aMsgCol, {} )
+   AAdd(      t_aMessage, {} )
+   AAdd(     t_aMsgColor, {} )
+   AAdd(      t_aTrigger, {} )
+   AAdd( t_aTriggerInkey, {} )
+   AAdd( t_aTriggerColor, {} )
+   AAdd(           t_aUp, {} )
+   AAdd(         t_aDown, {} )
+   AAdd(         t_aLeft, {} )
+   AAdd(        t_aRight, {} )
+   AAdd(      t_aExecute, {} )
 
 // Loop until Enter or Esc is pressed
 
@@ -229,13 +229,13 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
 
       DispBegin()
 
-      IF aMessage[ nCurrent ] != NIL
-         cScreen := SaveScreen( aMsgRow[ nCurrent ], aMsgCol[ nCurrent ],  ;
-            aMsgRow[ nCurrent ], aMsgCol[ nCurrent ] + ;
-            Len( aMessage[ nCurrent ] ) - 1 )
+      IF t_aMessage[ nCurrent ] != NIL
+         cScreen := SaveScreen( t_aMsgRow[ nCurrent ], t_aMsgCol[ nCurrent ],  ;
+            t_aMsgRow[ nCurrent ], t_aMsgCol[ nCurrent ] + ;
+            Len( t_aMessage[ nCurrent ] ) - 1 )
 
-         DISPLAY( aMsgRow[ nCurrent ],   aMsgCol[ nCurrent ], ;
-            aMessage[ nCurrent ], aMsgColor[ nCurrent ]  )
+         DISPLAY( t_aMsgRow[ nCurrent ], t_aMsgCol[ nCurrent ], ;
+            t_aMessage[ nCurrent ], t_aMsgColor[ nCurrent ]  )
 
       ELSE
          cScreen := NIL
@@ -244,13 +244,13 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
       // Display the prompt using the designated colors for the prompt and
       // the trigger character.
 
-      DISPLAY( aRow[ nCurrent ], aCol[ nCurrent ], ;
-         aPrompt[ nCurrent ], EnhColor( aColor[ nCurrent ] ) )
+      DISPLAY( t_aRow[ nCurrent ], t_aCol[ nCurrent ], ;
+         t_aPrompt[ nCurrent ], EnhColor( t_aColor[ nCurrent ] ) )
 
-      DISPLAY( aRow[ nCurrent ], ;
-         aCol[ nCurrent ] - 1 + aTrigger[ nCurrent ], ;
-         SubStr( aPrompt[ nCurrent ], aTrigger[ nCurrent ], 1 ), ;
-         EnhColor( aTriggerColor[ nCurrent ] ) )
+      DISPLAY( t_aRow[ nCurrent ], ;
+         t_aCol[ nCurrent ] - 1 + t_aTrigger[ nCurrent ], ;
+         SubStr( t_aPrompt[ nCurrent ], t_aTrigger[ nCurrent ], 1 ), ;
+         EnhColor( t_aTriggerColor[ nCurrent ] ) )
 
       DispEnd()
 
@@ -279,8 +279,8 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
          // associated code block.
 
       CASE nKey == K_ENTER
-         IF aExecute[ nCurrent ] != NIL
-            Eval( aExecute[ nCurrent ] )
+         IF t_aExecute[ nCurrent ] != NIL
+            Eval( t_aExecute[ nCurrent ] )
          ELSE
             lChoice := .T.
          ENDIF
@@ -294,69 +294,69 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
          // If Home was pressed, go to the designated menu item.
 
       CASE nKey == K_HOME
-         nActive := iif( aHome[ nCurrent ] == NIL, 1, aHome[ nCurrent ] )
+         nActive := iif( t_aHome[ nCurrent ] == NIL, 1, t_aHome[ nCurrent ] )
 
          // If End was pressed, go to the designated menu item.
 
       CASE nKey == K_END
-         nActive := iif( aEnd[ nCurrent ] == NIL, nCount, aEnd[ nCurrent ] )
+         nActive := iif( t_aEnd[ nCurrent ] == NIL, nCount, t_aEnd[ nCurrent ] )
 
          // If Up Arrow was pressed, go to the designated menu item.
 
       CASE nKey == K_UP
-         IF aUp[ nCurrent ] == NIL
+         IF t_aUp[ nCurrent ] == NIL
             if --nActive < 1
                nActive := iif( lWrap, nCount, 1 )
             ENDIF
          ELSE
-            IF isOkay( aUp[ nCurrent ] )
-               nActive := aUp[ nCurrent ]
+            IF isOkay( t_aUp[ nCurrent ] )
+               nActive := t_aUp[ nCurrent ]
             ENDIF
          ENDIF
 
          // If Down Arrow was pressed, go to the designated menu item.
 
       CASE nKey == K_DOWN
-         IF aDown[ nCurrent ] == NIL
+         IF t_aDown[ nCurrent ] == NIL
             if ++nActive > nCount
                nActive := iif( lWrap, 1, nCount )
             ENDIF
          ELSE
-            IF isOkay( aDown[ nCurrent ] )
-               nActive := aDown[ nCurrent ]
+            IF isOkay( t_aDown[ nCurrent ] )
+               nActive := t_aDown[ nCurrent ]
             ENDIF
          ENDIF
 
          // If Left Arrow was pressed, go to the designated menu item.
 
       CASE nKey == K_LEFT
-         IF aLeft[ nCurrent ] == NIL
+         IF t_aLeft[ nCurrent ] == NIL
             if --nActive < 1
                nActive := iif( lWrap, nCount, 1 )
             ENDIF
          ELSE
-            IF isOkay( aLeft[ nCurrent ] )
-               nActive := aLeft[ nCurrent ]
+            IF isOkay( t_aLeft[ nCurrent ] )
+               nActive := t_aLeft[ nCurrent ]
             ENDIF
          ENDIF
 
          // If Right Arrow was pressed, go to the designated menu item.
 
       CASE nKey == K_RIGHT
-         IF aRight[ nCurrent ] == NIL
+         IF t_aRight[ nCurrent ] == NIL
             if ++nActive > nCount
                nActive := iif( lWrap, 1, nCount )
             ENDIF
          ELSE
-            IF isOkay( aRight[ nCurrent ] )
-               nActive := aRight[ nCurrent ]
+            IF isOkay( t_aRight[ nCurrent ] )
+               nActive := t_aRight[ nCurrent ]
             ENDIF
          ENDIF
 
          // If a trigger letter was pressed, handle it based on the COLD
          // parameter.
 
-      CASE ( nScan := AScan( aTriggerInkey[ nMenu ], nKey ) ) > 0
+      CASE ( nScan := AScan( t_aTriggerInkey[ nMenu ], nKey ) ) > 0
          nActive := nScan
          IF ! lCold
             FT_PutKey( K_ENTER )
@@ -367,19 +367,19 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
 
       IF ! lChoice
          DispBegin()
-         DISPLAY( aRow[ nLast ], aCol[ nLast ], ;
-            aPrompt[ nLast ], aColor[ nLast ] )
+         DISPLAY( t_aRow[ nLast ], t_aCol[ nLast ], ;
+            t_aPrompt[ nLast ], t_aColor[ nLast ] )
 
-         DISPLAY( aRow[ nLast ], aCol[ nLast ] - 1 + aTrigger[ nLast ], ;
-            SubStr( aPrompt[ nLast ], aTrigger[ nLast ], 1 ), ;
-            aTriggerColor[ nLast ] )
+         DISPLAY( t_aRow[ nLast ], t_aCol[ nLast ] - 1 + t_aTrigger[ nLast ], ;
+            SubStr( t_aPrompt[ nLast ], t_aTrigger[ nLast ], 1 ), ;
+            t_aTriggerColor[ nLast ] )
 
          IF cScreen != NIL
-            RestScreen( aMsgRow[ nLast ], ;
-               aMsgCol[ nLast ], ;
-               aMsgRow[ nLast ], ;
-               aMsgCol[ nLast ]  ;
-               + Len( aMessage[ nLast ] ) - 1, ;
+            RestScreen( t_aMsgRow[ nLast ], ;
+               t_aMsgCol[ nLast ], ;
+               t_aMsgRow[ nLast ], ;
+               t_aMsgCol[ nLast ]  ;
+               + Len( t_aMessage[ nLast ] ) - 1, ;
                cScreen )
          ENDIF
          DispEnd()
@@ -389,41 +389,41 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
 // Now that we're exiting, decrement the recursion level and erase all
 // the prompt information for the current invocation.
 
-   nLevel--
+   t_nLevel--
 
-   ASize(          aRow, nLevel )
-   ASize(          aCol, nLevel )
-   ASize(       aPrompt, nLevel )
-   ASize(        aColor, nLevel )
-   ASize(       aMsgRow, nLevel )
-   ASize(       aMsgCol, nLevel )
-   ASize(      aMessage, nLevel )
-   ASize(     aMsgColor, nLevel )
-   ASize(      aTrigger, nLevel )
-   ASize( aTriggerInkey, nLevel )
-   ASize( aTriggerColor, nLevel )
-   ASize(           aUp, nLevel )
-   ASize(         aDown, nLevel )
-   ASize(         aLeft, nLevel )
-   ASize(        aRight, nLevel )
-   ASize(      aExecute, nLevel )
+   ASize(          t_aRow, t_nLevel )
+   ASize(          t_aCol, t_nLevel )
+   ASize(       t_aPrompt, t_nLevel )
+   ASize(        t_aColor, t_nLevel )
+   ASize(       t_aMsgRow, t_nLevel )
+   ASize(       t_aMsgCol, t_nLevel )
+   ASize(      t_aMessage, t_nLevel )
+   ASize(     t_aMsgColor, t_nLevel )
+   ASize(      t_aTrigger, t_nLevel )
+   ASize( t_aTriggerInkey, t_nLevel )
+   ASize( t_aTriggerColor, t_nLevel )
+   ASize(           t_aUp, t_nLevel )
+   ASize(         t_aDown, t_nLevel )
+   ASize(         t_aLeft, t_nLevel )
+   ASize(        t_aRight, t_nLevel )
+   ASize(      t_aExecute, t_nLevel )
 
-   aRow[ nLevel ] := {}
-   aCol[ nLevel ] := {}
-   aPrompt[ nLevel ] := {}
-   aColor[ nLevel ] := {}
-   aMsgRow[ nLevel ] := {}
-   aMsgCol[ nLevel ] := {}
-   aMessage[ nLevel ] := {}
-   aMsgColor[ nLevel ] := {}
-   aTrigger[ nLevel ] := {}
-   aTriggerInkey[ nLevel ] := {}
-   aTriggerColor[ nLevel ] := {}
-   aUp[ nLevel ] := {}
-   aDown[ nLevel ] := {}
-   aLeft[ nLevel ] := {}
-   aRight[ nLevel ] := {}
-   aExecute[ nLevel ] := {}
+   t_aRow[ t_nLevel ] := {}
+   t_aCol[ t_nLevel ] := {}
+   t_aPrompt[ t_nLevel ] := {}
+   t_aColor[ t_nLevel ] := {}
+   t_aMsgRow[ t_nLevel ] := {}
+   t_aMsgCol[ t_nLevel ] := {}
+   t_aMessage[ t_nLevel ] := {}
+   t_aMsgColor[ t_nLevel ] := {}
+   t_aTrigger[ t_nLevel ] := {}
+   t_aTriggerInkey[ t_nLevel ] := {}
+   t_aTriggerColor[ t_nLevel ] := {}
+   t_aUp[ t_nLevel ] := {}
+   t_aDown[ t_nLevel ] := {}
+   t_aLeft[ t_nLevel ] := {}
+   t_aRight[ t_nLevel ] := {}
+   t_aExecute[ t_nLevel ] := {}
 
    Set( _SET_CURSOR, nCursor )
 

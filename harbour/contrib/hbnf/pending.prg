@@ -38,8 +38,12 @@ PROCEDURE Main()
 
 FUNCTION FT_PENDING( cMsg, nRow, nCol, nWait, cColor )
 
-   THREAD STATIC nLast_Time := 0, nRow1 := 24, nCol1 := 0
-   THREAD STATIC nWait1 := 5, cColor1 := "W+/R,X"
+   THREAD STATIC t_nLast_Time := 0
+   THREAD STATIC t_nRow1 := 24
+   THREAD STATIC t_nCol1 := 0
+   THREAD STATIC t_nWait1 := 5
+   THREAD STATIC t_cColor1 := "W+/R,X"
+
    LOCAL  nThis_Time, nTiny := 0.1, cSavColor
 
    //
@@ -50,35 +54,35 @@ FUNCTION FT_PENDING( cMsg, nRow, nCol, nWait, cColor )
    // cColor      Color of displayed message
    //
 
-   IF cMsg == NIL                            //if no message, no work
+   IF cMsg == NIL                                // if no message, no work
       RETURN NIL
    ENDIF
 
-   nRow1 := iif( nRow != NIL, nRow, nRow1 )  //reset display row
-   nCol1 := iif( nCol != NIL, nCol, nCol1 )  //reset display col
+   t_nRow1 := iif( nRow != NIL, nRow, t_nRow1 )  // reset display row
+   t_nCol1 := iif( nCol != NIL, nCol, t_nCol1 )  // reset display col
 
-   nWait1 := iif( nWait != NIL, nWait, nWait1 )      //reset display wait
-   cColor1 := iif( cColor != NIL, cColor, cColor1 )  //reset display color
+   t_nWait1 := iif( nWait != NIL, nWait, t_nWait1 )      // reset display wait
+   t_cColor1 := iif( cColor != NIL, cColor, t_cColor1 )  // reset display color
 
-   nThis_Time := Seconds()                  //time of current message
+   nThis_Time := Seconds()                       // time of current message
 
-   IF nLast_Time == 0
-      nLast_Time := nThis_Time - nWait1     //for first time round.
+   IF t_nLast_Time == 0
+      t_nLast_Time := nThis_Time - t_nWait1      // for first time round.
    ENDIF
 
-   IF ( nThis_Time - nLast_Time ) < nTiny   //if messages are coming too fast,
-      nLast_Time := nThis_Time + nWait1     //set time counter and then
-      Inkey ( nWait1 )                      //wait a few seconds.
+   IF ( nThis_Time - t_nLast_Time ) < nTiny      // if messages are coming too fast,
+      t_nLast_Time := nThis_Time + t_nWait1      // set time counter and then
+      Inkey( t_nWait1 )                          // wait a few seconds.
    ELSE
-      nLast_Time := nThis_Time              //set time counter for next message.
+      t_nLast_Time := nThis_Time                 // set time counter for next message.
    ENDIF
 
-   @ nRow1, 0 CLEAR TO nRow1, 80            //clear the display line
+   @ t_nRow1, 0 CLEAR TO t_nRow1, 80             // clear the display line
 
-   cSavColor := SetColor( cColor1 )         //save current and set display color
+   cSavColor := SetColor( t_cColor1 )            // save current and set display color
 
-   @ nRow1, nCol1 SAY cMsg                  //display message
+   @ t_nRow1, t_nCol1 SAY cMsg                   // display message
 
-   SetColor( cSavColor )                    //restore colors.
+   SetColor( cSavColor )                         // restore colors.
 
    RETURN NIL

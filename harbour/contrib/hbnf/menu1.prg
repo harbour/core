@@ -42,12 +42,12 @@
 #define DISABLE     0
 #define ENABLE      1
 
-THREAD STATIC aChoices := {}
-THREAD STATIC aValidKeys := {}
-THREAD STATIC nHPos
-THREAD STATIC nVPos
-THREAD STATIC nMaxRow
-THREAD STATIC nMaxCol
+THREAD STATIC t_aChoices := {}
+THREAD STATIC t_aValidKeys := {}
+THREAD STATIC t_nHPos
+THREAD STATIC t_nVPos
+THREAD STATIC t_nMaxRow
+THREAD STATIC t_nMaxCol
 
 // BEGINNING OF DEMO PROGRAM
 #ifdef FT_TEST
@@ -135,26 +135,26 @@ PROCEDURE CALLMENU( cCmdLine )
    IF "VGA" $ Upper( cCmdLine )
       SetMode( 50, 80 )
    ENDIF
-   nMaxRow := MaxRow()
+   t_nMaxRow := MaxRow()
    SetBlink( .F. )
    SetColor( cWindN + "*" )
    CLS
    SetColor( cNormN )
-   @ nMaxRow, 0
-   @ nMaxRow, 0 SAY hb_UTF8ToStr( " FT_MENU1 1.0 │ " )
-   @ NMAXROW, 16 SAY "WRITTEN BY PAUL FERRARA [76702,556] FOR NANFORUM.LIB"
-   @ NMAXROW, 69 SAY hb_UTF8ToStr( "│ " ) + DToC( Date() )
+   @ t_nMaxRow, 0
+   @ t_nMaxRow, 0 SAY hb_UTF8ToStr( " FT_MENU1 1.0 │ " )
+   @ t_nMaxRow, 16 SAY "WRITTEN BY PAUL FERRARA [76702,556] FOR NANFORUM.LIB"
+   @ t_nMaxRow, 69 SAY hb_UTF8ToStr( "│ " ) + DToC( Date() )
 
    SetColor( cErrH )
-   @ nMaxRow - 11, 23, nMaxRow - 3, 56 BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
-   @ nMaxRow - 9, 23 SAY hb_UTF8ToStr( "├────────────────────────────────┤" )
+   @ t_nMaxRow - 11, 23, t_nMaxRow - 3, 56 BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
+   @ t_nMaxRow - 9, 23 SAY hb_UTF8ToStr( "├────────────────────────────────┤" )
    SetColor( cErrN )
-   @ nMaxRow - 10, 33 SAY "Navigation Keys"
-   @ nMaxRow - 8, 25 SAY "LeftArrow   RightArrow   Alt-E"
-   @ nMaxRow - 7, 25 SAY "Home        End          Alt-R"
-   @ nMaxRow - 6, 25 SAY "Tab         Shift-Tab    Alt-D"
-   @ nMaxRow - 5, 25 SAY "PgUp        PgDn         Alt-M"
-   @ nMaxRow - 4, 25 SAY "Enter       ESCape       Alt-Q"
+   @ t_nMaxRow - 10, 33 SAY "Navigation Keys"
+   @ t_nMaxRow - 8, 25 SAY "LeftArrow   RightArrow   Alt-E"
+   @ t_nMaxRow - 7, 25 SAY "Home        End          Alt-R"
+   @ t_nMaxRow - 6, 25 SAY "Tab         Shift-Tab    Alt-D"
+   @ t_nMaxRow - 5, 25 SAY "PgUp        PgDn         Alt-M"
+   @ t_nMaxRow - 4, 25 SAY "Enter       ESCape       Alt-Q"
    SetColor( cNormN )
 
    FT_MENU1( aBar, aOptions, aColors )
@@ -216,14 +216,14 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
    LOCAL cCurrent := aColors[ 4 ]
    LOCAL cUnSelec := aColors[ 5 ]
 
-   nMaxRow := MaxRow()
-   nMaxCol := MaxCol()
+   t_nMaxRow := MaxRow()
+   t_nMaxCol := MaxCol()
 
 // row for menu bar
    nTopRow := iif( nTopRow == NIL, 0, nTopRow )
 
    AFill( aLastSel, 1 )
-   aChoices := aOptions
+   t_aChoices := aOptions
 
 // this is the routine that calculates the position of each item
 // on the menu bar.
@@ -237,16 +237,16 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
 // calculates widest element for each pulldown menu
 // see below for _ftWidest()
    AFill( aBarWidth, 1 )
-   AEval( aChoices, {| x, i | HB_SYMBOL_UNUSED( x ), _ftWidest( @i, aChoices, @aBarWidth ) } )
+   AEval( t_aChoices, {| x, i | HB_SYMBOL_UNUSED( x ), _ftWidest( @i, t_aChoices, @aBarWidth ) } )
 
 // box location for each pulldown menu
 // see below for _ftLocat()
-   AEval( aChoices, {| x, i | HB_SYMBOL_UNUSED( x ), _ftLocat( i, aBarCol, aBarWidth, @aBoxLoc, nMaxCol ) } )
+   AEval( t_aChoices, {| x, i | HB_SYMBOL_UNUSED( x ), _ftLocat( i, aBarCol, aBarWidth, @aBoxLoc, t_nMaxCol ) } )
 
 // valid keys for each pulldown menu
 // see below for _ftValKeys()
-   AEval( aChoices, {| x, i | HB_SYMBOL_UNUSED( x ), AAdd( aValidkeys, "" ), ;
-      _ftValKeys( i, aChoices, @aValidKeys ) } )
+   AEval( t_aChoices, {| x, i | HB_SYMBOL_UNUSED( x ), AAdd( t_aValidKeys, "" ), ;
+      _ftValKeys( i, t_aChoices, @t_aValidKeys ) } )
 
 // display the menu bar
    SetColor( cBar )
@@ -264,41 +264,41 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
 // main menu loop
    SAVE SCREEN TO sMainScrn
 // which menu and which menu item
-   nHpos := 1
-   nVpos := 1
+   t_nHPos := 1
+   t_nVPos := 1
    DO WHILE lLooping
       RESTORE SCREEN FROM sMainScrn
       SetColor( cCurrent )
-      @ nTopRow, aBarCol[ nHpos ] SAY aBar[ nHpos ]
+      @ nTopRow, aBarCol[ t_nHPos ] SAY aBar[ t_nHPos ]
       IF lShadow == NIL .OR. lShadow
-         FT_SHADOW( nTopRow + 1, aBoxLoc[ nHpos ], Len( aChoices[ nHpos, 1 ] ) + nTopRow + 2, aBarWidth[ nHpos ] + 3 + aBoxLoc[ nHpos ] )
+         FT_SHADOW( nTopRow + 1, aBoxLoc[ t_nHPos ], Len( t_aChoices[ t_nHPos, 1 ] ) + nTopRow + 2, aBarWidth[ t_nHPos ] + 3 + aBoxLoc[ t_nHPos ] )
       ENDIF
       SetColor( cBorder )
-      @ nTopRow + 1, aBoxLoc[ nHpos ], Len( aChoices[ nHpos, 1 ] ) + nTopRow + 2, aBarWidth[ nHpos ] + 3 + aBoxLoc[ nHpos ] BOX hb_UTF8ToStr( "╔═╗║╝═╚║ " )
+      @ nTopRow + 1, aBoxLoc[ t_nHPos ], Len( t_aChoices[ t_nHPos, 1 ] ) + nTopRow + 2, aBarWidth[ t_nHPos ] + 3 + aBoxLoc[ t_nHPos ] BOX hb_UTF8ToStr( "╔═╗║╝═╚║ " )
       SetColor( cBox + "," + cCurrent + ",,," + cUnselec )
-      nVpos := AChoice( nTopRow + 2, aBoxLoc[ nHpos ] + 2, Len( aChoices[ nHpos, 1 ] ) + nTopRow + 2, aBarWidth[ nHpos ] + 1 + aBoxLoc[ nHpos ], aChoices[ nHpos, 1 ], aChoices[ nHpos, 3 ], "__ftAcUdf", aLastSel[ nHpos ] )
+      t_nVPos := AChoice( nTopRow + 2, aBoxLoc[ t_nHPos ] + 2, Len( t_aChoices[ t_nHPos, 1 ] ) + nTopRow + 2, aBarWidth[ t_nHPos ] + 1 + aBoxLoc[ t_nHPos ], t_aChoices[ t_nHPos, 1 ], t_aChoices[ t_nHPos, 3 ], "__ftAcUdf", aLastSel[ t_nHPos ] )
       DO CASE
       CASE LastKey() == K_RIGHT .OR. LastKey() == K_TAB
-         nHpos := iif( nHpos == Len( aChoices ), 1, nHpos + 1 )
+         t_nHPos := iif( t_nHPos == Len( t_aChoices ), 1, t_nHPos + 1 )
       CASE LastKey() == K_LEFT .OR. LastKey() == K_SH_TAB
-         nHpos := iif( nHpos == 1, Len( aChoices ), nHpos - 1 )
+         t_nHPos := iif( t_nHPos == 1, Len( t_aChoices ), t_nHPos - 1 )
       CASE LastKey() == K_ESC
          lLooping := _ftBailOut( cBorder, cBox )
       CASE LastKey() == K_HOME
-         nHpos := 1
+         t_nHPos := 1
       CASE LastKey() == K_END
-         nHpos := Len( aChoices )
+         t_nHPos := Len( t_aChoices )
       CASE LastKey() == K_ENTER
-         aLastSel[ nHpos ] := nVpos
-         IF aChoices[ nHpos, 2, nVpos ] != NIL
+         aLastSel[ t_nHPos ] := t_nVPos
+         IF t_aChoices[ t_nHPos, 2, t_nVPos ] != NIL
             SetCancel( lCancMode )
             AltD( ENABLE )
-            lLooping := Eval( aChoices[ nHpos, 2, nVpos ] )
+            lLooping := Eval( t_aChoices[ t_nHPos, 2, t_nVPos ] )
             AltD( DISABLE )
             SetCancel( .F. )
          ENDIF
       CASE AScan( aBarKeys, LastKey() ) > 0
-         nHpos := AScan( aBarKeys, LastKey() )
+         t_nHPos := AScan( aBarKeys, LastKey() )
       ENDCASE
    ENDDO
    SetCancel( lCancMode )
@@ -317,8 +317,8 @@ FUNCTION __ftAcUdf( nMode )
    CASE nMode == AC_HITBOTTOM
       hb_keyPut( K_CTRL_HOME )
    CASE nMode == AC_EXCEPT
-      IF Upper( hb_keyChar( LastKey() ) ) $ aValidKeys[ nHpos ]
-         IF aChoices[ nHpos, 3, At( Upper( hb_keyChar( LastKey() ) ), aValidKeys[ nHpos ] ) ]
+      IF Upper( hb_keyChar( LastKey() ) ) $ t_aValidKeys[ t_nHPos ]
+         IF t_aChoices[ t_nHPos, 3, At( Upper( hb_keyChar( LastKey() ) ), t_aValidKeys[ t_nHPos ] ) ]
             hb_keyPut( K_ENTER )
             nRtnVal := AC_GOTO
          ENDIF
@@ -329,17 +329,17 @@ FUNCTION __ftAcUdf( nMode )
 
    RETURN nRtnVal
 
-STATIC FUNCTION _ftWidest( i, aChoices, aBarWidth )
+STATIC FUNCTION _ftWidest( i, t_aChoices, aBarWidth )
 
-   AEval( aChoices[ i, 1 ], {| a, b | HB_SYMBOL_UNUSED( a ), aBarWidth[ i ] := ;
-      Max( aBarWidth[ i ], Len( aChoices[ i, 1, b ] ) ) } )
+   AEval( t_aChoices[ i, 1 ], {| a, b | HB_SYMBOL_UNUSED( a ), aBarWidth[ i ] := ;
+      Max( aBarWidth[ i ], Len( t_aChoices[ i, 1, b ] ) ) } )
 
    RETURN NIL
 
-STATIC FUNCTION _ftLocat( i, aBarCol, aBarWidth, aBoxLoc, nMaxCol )
+STATIC FUNCTION _ftLocat( i, aBarCol, aBarWidth, aBoxLoc, t_nMaxCol )
 
-   aBoxLoc[ i ] := iif( aBarCol[ i ] + aBarWidth[ i ] + 4 > nMaxCol + 1, ;
-      nMaxCol - 3 - aBarWidth[ i ], aBarCol[ i ] )
+   aBoxLoc[ i ] := iif( aBarCol[ i ] + aBarWidth[ i ] + 4 > t_nMaxCol + 1, ;
+      t_nMaxCol - 3 - aBarWidth[ i ], aBarCol[ i ] )
 
    RETURN NIL
 
@@ -348,23 +348,23 @@ STATIC FUNCTION _ftBailOut( cBorder, cBox )
    LOCAL cOldColor, sOldScreen, nKeyPress, nOldCursor
 
    nOldCursor := SetCursor( SC_NONE )
-   sOldScreen := SaveScreen( nMaxRow / 2 - 1, 24, nMaxRow / 2 + 2, 55 )
+   sOldScreen := SaveScreen( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55 )
    cOldColor := SetColor( cBorder )
-   FT_SHADOW( nMaxRow / 2 - 1, 24, nMaxRow / 2 + 2, 55 )
-   @ nMaxRow / 2 - 1, 24, nMaxRow/2 + 2, 55 BOX hb_UTF8ToStr( "╔═╗║╝═╚║ " )
+   FT_SHADOW( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55 )
+   @ t_nMaxRow / 2 - 1, 24, t_nMaxRow/2 + 2, 55 BOX hb_UTF8ToStr( "╔═╗║╝═╚║ " )
    SetColor( cBox )
-   @ nMaxRow / 2,  26 SAY "Press ESCape To Confirm Exit"
-   @ nMaxRow / 2 + 1, 27 SAY "Or Any Other Key To Resume"
+   @ t_nMaxRow / 2,  26 SAY "Press ESCape To Confirm Exit"
+   @ t_nMaxRow / 2 + 1, 27 SAY "Or Any Other Key To Resume"
    nKeyPress := Inkey( 0 )
    SetColor( cOldColor )
-   RestScreen( nMaxRow / 2 - 1, 24, nMaxRow / 2 + 2, 55, sOldScreen )
+   RestScreen( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55, sOldScreen )
    SetCursor( nOldCursor )
 
    RETURN !( nKeyPress == K_ESC )
 
-STATIC FUNCTION _ftValKeys( nNum, aChoices, aValidkeys )
+STATIC FUNCTION _ftValKeys( nNum, t_aChoices, t_aValidKeys )
 
-   AEval( aChoices[ nNum, 1 ], {| x | aValidKeys[ nNum ] += Left( x, 1 ) } )
+   AEval( t_aChoices[ nNum, 1 ], {| x | t_aValidKeys[ nNum ] += Left( x, 1 ) } )
 
    RETURN NIL
 

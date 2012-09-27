@@ -35,7 +35,7 @@
 #include "setcurs.ch"
 #include "achoice.ch"
 
-// Set up manifest constants to access the window colors in the array aWinColor
+// Set up manifest constants to access the window colors in the array t_aWinColor
 #define W_BORDER 1
 #define W_ACCENT 2
 #define W_PROMPT 3
@@ -45,7 +45,7 @@
 #define W_CURR   NIL
 
 // Set up manifest constants to access the Standard screen colors in the array
-// aStdColor
+// t_aStdColor
 #define STD_ACCENT   1
 #define STD_ERROR    2
 #define STD_PROMPT   3
@@ -107,8 +107,12 @@
 #define cTapeScr   aAdder[ 23 ]
 
 // I still use a few of STATICS, but most are set to NIL when quiting...
-THREAD STATIC lAdderOpen := .F.
-THREAD STATIC aKeys, aWindow, nWinColor, aWinColor, aStdColor
+THREAD STATIC t_lAdderOpen := .F.
+THREAD STATIC t_aKeys
+THREAD STATIC t_aWindow
+THREAD STATIC t_nWinColor
+THREAD STATIC t_aWinColor
+THREAD STATIC t_aStdColor
 
 #ifdef FT_TEST
 
@@ -184,10 +188,10 @@ FUNCTION FT_Adder()
    LOCAL aAdder      := Array( 23 )
 
 // Must prevent recursive calls
-   IF lAdderOpen
+   IF t_lAdderOpen
       RETURN NIL
    ELSE
-      lAdderOpen := .T.
+      t_lAdderOpen := .T.
    ENDIF
 
    aTrans       := { "                  0.00 C " }
@@ -212,9 +216,9 @@ FUNCTION FT_Adder()
    nTapeSpace   := iif( lShowRight, 0, 40 ) + nLeftOS
 
 // Set Up the STATIC variables
-   aKeys      := {}
-   aWindow    := {}
-   nWinColor  := 0
+   t_aKeys      := {}
+   t_aWindow    := {}
+   t_nWinColor  := 0
 
    _ftAddScreen( aAdder )
 
@@ -247,7 +251,7 @@ FUNCTION FT_Adder()
          SetPos( nOldRow, nOldCol )
          _ftSetLastKey( nOldLastKey )
          SetKey( K_F10, bOldF10 )
-         lAdderOpen := .F.               // Reset the recursive flag
+         t_lAdderOpen := .F.               // Reset the recursive flag
          lDone      := .T.
       CASE nKey == 68 .OR. nKey == 100  // <D> Change number of decimal places
          _ftChangeDec( aAdder )
@@ -321,8 +325,8 @@ FUNCTION FT_Adder()
                _ftSetLastKey( nOldLastKey )
                SetKey( K_F10, bOldF10 )
                oGet:VARPUT( nSavTotal )
-               lAdderOpen := .F.           // Reset the recursive flag
-               lDone      := .T.
+               t_lAdderOpen := .F.           // Reset the recursive flag
+               lDone        := .T.
             ELSE
                _ftError( "but I can not return the total from the " +             ;
                   "adder to this variable. You must quit the adder using" + ;
@@ -336,7 +340,7 @@ FUNCTION FT_Adder()
    ENDDO
 
 // Reset the STATICS to NIL
-   aKeys := aWindow := aWinColor := aStdColor := NIL
+   t_aKeys := t_aWindow := t_aWinColor := t_aStdColor := NIL
 
    RETURN NIL
 
@@ -1044,7 +1048,7 @@ STATIC FUNCTION _ftSetLastKey( nLastKey )
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftPushKeys           Docs: Keith A. Wire                  |
-  |  Description: Push any keys in the Keyboard buffer on the array aKeys[]  |
+  |  Description: Push any keys in the Keyboard buffer on the array t_aKeys[]|
   |       Author: Keith A. Wire                                              |
   | Date created: 10-03-93              Date updated:  10-03-93              |
   | Time created: 12:16:09pm            Time updated:  12:16:09pm            |
@@ -1059,7 +1063,7 @@ STATIC FUNCTION _ftSetLastKey( nLastKey )
 STATIC FUNCTION _ftPushKeys
 
    DO WHILE NextKey() != 0
-      AAdd( aKeys, Inkey() )
+      AAdd( t_aKeys, Inkey() )
    ENDDO
 
    RETURN NIL
@@ -1080,10 +1084,10 @@ STATIC FUNCTION _ftPushKeys
 
 STATIC FUNCTION _ftPopKeys
 
-   IF ! Empty( aKeys )
-      hb_keyPut( aKeys )
+   IF ! Empty( t_aKeys )
+      hb_keyPut( t_aKeys )
    ENDIF
-   aKeys := {}
+   t_aKeys := {}
 
    RETURN NIL
 
@@ -1443,27 +1447,29 @@ STATIC FUNCTION _ftStuffComma( cStrToStuff, lTrimStuffedStr )
   |             : nBord                                                      |
   |             : nBack                                                      |
   |             : nUnsel                                                     |
-  | Return Value: SETCOLOR(aStdColor[nStd] + "," + aStdColor[nEnh] + "," + ; |
-  |             :   aStdColor[nBord] + "," + aStdColor[nBack] + "," +      ; |
-  |             :   aStdColor[nUnsel])                                       |
+  | Return Value: see code                                                   |
   |     See Also: _ftSetWinColor()                                           |
   +--------------------------------------------------------------------------+
 */
 
 STATIC FUNCTION _ftSetSCRColor( nStd, nEnh, nBord, nBack, nUnsel )
 
-   IF Empty( aWinColor )
+   IF Empty( t_aWinColor )
       _ftInitColors()
    ENDIF
 
-   nStd  := iif( nStd   == NIL, 8,    nStd )
-   nEnh  := iif( nEnh   == NIL, 8,    nEnh )
-   nBord := iif( nBord  == NIL, 8,    nBord )
-   nBack := iif( nBack  == NIL, 8,    nBack )
+   nStd  := iif( nStd   == NIL, 8, nStd )
+   nEnh  := iif( nEnh   == NIL, 8, nEnh )
+   nBord := iif( nBord  == NIL, 8, nBord )
+   nBack := iif( nBack  == NIL, 8, nBack )
    nUnsel := iif( nUnsel == NIL, nEnh, nUnsel )
 
-   RETURN SetColor( aStdColor[nStd] + "," + aStdColor[nEnh] + "," + aStdColor[nBord] + "," + ;
-      aStdColor[nBack] + "," + aStdColor[nUnsel] )
+   RETURN SetColor( ;
+      t_aStdColor[ nStd ] + "," + ;
+      t_aStdColor[ nEnh ] + "," + ;
+      t_aStdColor[ nBord ] + "," + ;
+      t_aStdColor[ nBack ] + "," + ;
+      t_aStdColor[ nUnsel ] )
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftPushWin()          Docs: Keith A. Wire                  |
@@ -1504,7 +1510,7 @@ STATIC FUNCTION _ftPushWin( t, l, b, r, cTitle, cBotTitle, nWinColor )
    LOCAL lAutoWindow := nWinColor == NIL
 
    nWinColor := iif( nWinColor == NIL, _ftNextWinColor(), nWinColor )
-   AAdd( aWindow, { t, l, b, r, nWinColor, SaveScreen( t,l,b + 1,r + 2 ), lAutoWindow } )
+   AAdd( t_aWindow, { t, l, b, r, nWinColor, SaveScreen( t,l,b + 1,r + 2 ), lAutoWindow } )
    _ftShadow( b + 1, l + 2, b + 1, r + 2 )
    _ftShadow( t + 1, r + 1, b, r + 2 )
    _ftSetWinColor( nWinColor, W_BORDER )
@@ -1536,7 +1542,7 @@ STATIC FUNCTION _ftPushWin( t, l, b, r, cTitle, cBotTitle, nWinColor )
   |    Arguments: None                                                       |
   | Return Value: NIL                                                        |
   |        Notes: Pop the currently active window off the screen by restoring|
-  |             :   it from the aWindow Array and if they pushed a new window|
+  |             :   it from the t_aWindow Array and if they pushed a new window|
   |             :   automatically selecting the color we will roll back the  |
   |             :   current window setting using _ftLastWinColor() and reset |
   |             :   the color to the color setting when window was pushed.   |
@@ -1545,19 +1551,19 @@ STATIC FUNCTION _ftPushWin( t, l, b, r, cTitle, cBotTitle, nWinColor )
 
 STATIC FUNCTION _ftPopWin
 
-   LOCAL nNumWindow := Len( aWindow )
+   LOCAL nNumWindow := Len( t_aWindow )
 
-   RestScreen( aWindow[nNumWindow,1], aWindow[nNumWindow,2],                    ;
-      aWindow[nNumWindow,3] + 1, aWindow[nNumWindow,4] + 2,                ;
-      aWindow[nNumWindow,6] )
+   RestScreen( t_aWindow[ nNumWindow, 1 ], t_aWindow[ nNumWindow, 2 ], ;
+      t_aWindow[ nNumWindow, 3 ] + 1, t_aWindow[ nNumWindow, 4 ] + 2, ;
+      t_aWindow[ nNumWindow, 6 ] )
 
-   IF aWindow[nNumWindow,7]
+   IF t_aWindow[ nNumWindow, 7 ]
       _ftLastWinColor()
    ENDIF
 
-   ASHRINK( aWindow )
+   ASHRINK( t_aWindow )
 
-   IF !Empty( aWindow )
+   IF ! Empty( t_aWindow )
       _ftSetWinColor( W_CURR, W_SCREEN, W_VARIAB )
    ELSE
       _ftSetSCRColor( STD_SCREEN, STD_VARIABLE )
@@ -1579,9 +1585,7 @@ STATIC FUNCTION _ftPopWin
   |             : nBord                                                      |
   |             : nBack                                                      |
   |             : nUnsel                                                     |
-  | Return Value:SETCOLOR(aWinColor[nStd,nWin]+","+aWinColor[nEnh,nWin]+","+;|
-  |             :  aWinColor[nBord,nWin]+","+aWinColor[nBack,nWin]+","+     ;|
-  |             :  aWinColor[nUnsel,nWin])                                   |
+  | Return Value: see code                                                   |
   |     See Also: _ftSetSCRColor()                                           |
   |        Notes: If the window number is not passed use the currently active|
   |             :   window number nWinColor.                                 |
@@ -1590,15 +1594,19 @@ STATIC FUNCTION _ftPopWin
 
 STATIC FUNCTION _ftSetWinColor( nWin, nStd, nEnh, nBord, nBack, nUnsel )
 
-   nWin  := iif( nWin   == NIL, nWinColor, nWin )
-   nStd  := iif( nStd   == NIL, 7,         nStd )
-   nEnh  := iif( nEnh   == NIL, 7,         nEnh )
-   nBord := iif( nBord  == NIL, 7,         nBord )
-   nBack := iif( nBack  == NIL, 7,         nBack )
-   nUnsel := iif( nUnsel == NIL, nEnh,      nUnsel )
+   nWin  := iif( nWin   == NIL, t_nWinColor, nWin )
+   nStd  := iif( nStd   == NIL, 7, nStd )
+   nEnh  := iif( nEnh   == NIL, 7, nEnh )
+   nBord := iif( nBord  == NIL, 7, nBord )
+   nBack := iif( nBack  == NIL, 7, nBack )
+   nUnsel := iif( nUnsel == NIL, nEnh, nUnsel )
 
-   RETURN SetColor( aWinColor[nStd,nWin] + "," + aWinColor[nEnh,nWin] + "," +           ;
-      aWinColor[nBord,nWin] + "," + aWinColor[nBack,nWin] + "," + aWinColor[nUnsel,nWin] )
+   RETURN SetColor( ;
+      t_aWinColor[ nStd, nWin ] + "," + ;
+      t_aWinColor[ nEnh, nWin ] + "," + ;
+      t_aWinColor[ nBord, nWin ] + "," + ;
+      t_aWinColor[ nBack, nWin ] + "," + ;
+      t_aWinColor[ nUnsel, nWin ] )
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftShadow()           Docs: Keith A. Wire                  |
@@ -1636,14 +1644,14 @@ STATIC FUNCTION _ftShadow( nTop, nLeft, nBottom, nRight )
   |    Copyright: None - Public Domain                                       |
   +--------------------------------------------------------------------------+
   |    Arguments: None                                                       |
-  | Return Value: nWinColor := iif(nWinColor==1,4,nWinColor-1)               |
+  | Return Value: t_nWinColor := iif(t_nWinColor==1,4,t_nWinColor-1)         |
   |        Notes: If we are already on window #1 restart count by using # 4. |
   +--------------------------------------------------------------------------+
 */
 
-STATIC FUNCTION _ftLastWinColor
+STATIC FUNCTION _ftLastWinColor()
 
-   RETURN nWinColor := iif( nWinColor == 1, 4, nWinColor - 1 )
+   RETURN t_nWinColor := iif( t_nWinColor == 1, 4, t_nWinColor - 1 )
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftNextWinColor       Docs: Keith A. Wire                  |
@@ -1655,18 +1663,18 @@ STATIC FUNCTION _ftLastWinColor
   |    Copyright: None - Public Domain                                       |
   +--------------------------------------------------------------------------+
   |    Arguments: None                                                       |
-  | Return Value: nWinColor := (iif(nWinColor<4,nWinColor+1,1))              |
+  | Return Value: t_nWinColor := (iif(t_nWinColor<4,t_nWinColor+1,1))        |
   |        Notes: If we are already on window #4 restart count by using # 1. |
   +--------------------------------------------------------------------------+
 */
 
-STATIC FUNCTION _ftNextWinColor
+STATIC FUNCTION _ftNextWinColor()
 
-   IF Empty( aWinColor )
+   IF Empty( t_aWinColor )
       _ftInitColors()
    ENDIF
 
-   RETURN nWinColor := ( iif( nWinColor < 4,nWinColor + 1,1 ) )
+   RETURN t_nWinColor := ( iif( t_nWinColor < 4, t_nWinColor + 1, 1 ) )
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftWinTitle()         Docs: Keith A. Wire                  |
@@ -1685,11 +1693,11 @@ STATIC FUNCTION _ftNextWinColor
 
 STATIC FUNCTION _ftWinTitle( cTheTitle, cTopOrBot )
 
-   LOCAL nCurWin  := Len( aWindow )
+   LOCAL nCurWin  := Len( t_aWindow )
    LOCAL nLenTitle := Len( cTheTitle )
 
-   @ aWindow[ nCurWin, iif( cTopOrBot == NIL, 1 , 3 ) ], ( aWindow[ nCurWin, 4 ] -            ;
-      aWindow[ nCurWin, 2 ] - nLenTitle ) / 2 + aWindow[ nCurWin, 2 ] SAY " " + cTheTitle + " "
+   @ t_aWindow[ nCurWin, iif( cTopOrBot == NIL, 1, 3 ) ], ( t_aWindow[ nCurWin, 4 ] - ;
+      t_aWindow[ nCurWin, 2 ] - nLenTitle ) / 2 + t_aWindow[ nCurWin, 2 ] SAY " " + cTheTitle + " "
 
    RETURN NIL
 
@@ -1708,7 +1716,7 @@ STATIC FUNCTION _ftWinTitle( cTheTitle, cTopOrBot )
 
 STATIC FUNCTION _ftInitColors
 
-   aWinColor := { ;
+   t_aWinColor := { ;
       { "GR+/BG","GR+/G", "B+/RB", "G+/R" } ,                       ;
       { "R+/N",   "W+/RB", "W+/BG", "GR+/B" } ,                     ;
       { "GR+/N", "GR+/N", "GR+/N", "GR+/N" } ,                      ;
@@ -1717,7 +1725,8 @@ STATIC FUNCTION _ftInitColors
       { "GR+/B", "GR+/R", "R+/B",  "W+/BG" },                       ;
       {  "N/N",   "N/N",  "N/N",   "N/N" }   }
 
-   aStdColor := { "BG+*/RB" ,                                       ;
+   t_aStdColor := { ;
+      "BG+*/RB" ,                                                   ;
       "GR+/R"  ,                                                    ;
       "GR+/N"  ,                                                    ;
       "W/B"  ,                                                      ;
