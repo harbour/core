@@ -42,18 +42,18 @@ FUNCTION FT_PCHR( c_nums )
 
    DO WHILE ! ( c_part == "~" .OR. c_part == "" )
 
-      IF SubStr( c_part, 1, 1 ) == Chr( 34 )
+      IF SubStr( c_part, 1, 1 ) == '"'
 
-         c_st2 := At( Chr( 34 ), SubStr( c_part,2 ) ) + 1
+         c_st2 := At( '"', SubStr( c_part,2 ) ) + 1
          c_ret := c_ret + SubStr( c_part, 2, c_st2 - 2 )
 
       ELSEIF SubStr( c_part, 1, 1 ) == "&"
 
          c_upper := Upper( c_part )
          c_t1 := At( SubStr( c_upper, 2, 1 ), c_hex ) - 1
-         IF c_t1 >- 1
+         IF c_t1 > -1
             c_t2 := At( SubStr( c_upper, 3, 1 ), c_hex ) - 1
-            IF c_t2 >- 1
+            IF c_t2 > -1
                c_t1 := c_t1 * 16 + c_t2
             ENDIF
             c_ret := c_ret + Chr( c_t1 )

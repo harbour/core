@@ -56,7 +56,7 @@ PROCEDURE Main( cCent )
       ENDIF
 
       IF Left( DToC( CToD( cDate ) ), 1 ) == " "
-         QQOut( Chr( 7 ) )
+         Tone( 800, 1 )
          @ 4, 24 SAY "INVALID DATE"
          Inkey( 2 )
          LOOP

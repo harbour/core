@@ -54,21 +54,21 @@
 
 PROCEDURE Main()
 
-// Thanks to Jim Gale for helping me understand the basics
+   // Thanks to Jim Gale for helping me understand the basics
    LOCAL i, ar[ 3, 26 ], aBlocks[ 3 ], aHeadings[ 3 ], nElem := 1, bGetFunc, cRet
-// set up 2 dimensional array ar[]
+   // set up 2 dimensional array ar[]
    FOR i := 1 TO 26
-      ar[ 1, i ] := i              //  1  ->  26  Numeric
-      ar[ 2, i ] := Chr( i + 64 )  // "A" -> "Z"  Character
-      ar[ 3, i ] := Chr( 91 - i )  // "Z" -> "A"  Character
+      ar[ 1, i ] := i                          //  1  ->  26  Numeric
+      ar[ 2, i ] := Chr( Asc( "A" ) + i - 1 )  // "A" -> "Z"  Character
+      ar[ 3, i ] := Chr( Asc( "Z" ) - i + 1 )  // "Z" -> "A"  Character
    NEXT i
-// Set Up aHeadings[] for column headings
+   // Set Up aHeadings[] for column headings
    aHeadings  := { "Numbers", "Letters", "Reverse" }
-// Set Up Blocks Describing Individual Elements in Array ar[]
+   // Set Up Blocks Describing Individual Elements in Array ar[]
    aBlocks[ 1 ] := {|| Str( ar[ 1, nElem ], 2 ) }  // to prevent default 10 spaces
    aBlocks[ 2 ] := {|| ar[ 2, nElem ] }
    aBlocks[ 3 ] := {|| ar[ 3, nElem ] }
-// Set up TestGet() as bGetFunc
+   // Set up TestGet() as bGetFunc
    bGetFunc   := {| b, ar, nDim, nElem | TestGet( b, ar, nDim, nElem ) }
 
    SET SCOREBOARD OFF
@@ -120,13 +120,13 @@ FUNCTION TestGet( b, ar, nDim, nElem )
 FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
       ar, nElem, aHeadings, aBlocks, bGetFunc )
 
-// ANYTYPE[]   ar        - Array to browse
-// NUMERIC     nElem     - Element In Array
-// CHARACTER[] aHeadings - Array of Headings for each column
-// BLOCK[]     aBlocks   - Array containing code block for each column.
-// CODE BLOCK  bGetFunc  - Code Block For Special Get Processing
-//  NOTE: When evaluated a code block is passed the array element to
-//          be edited
+   // ANYTYPE[]   ar        - Array to browse
+   // NUMERIC     nElem     - Element In Array
+   // CHARACTER[] aHeadings - Array of Headings for each column
+   // BLOCK[]     aBlocks   - Array containing code block for each column.
+   // CODE BLOCK  bGetFunc  - Code Block For Special Get Processing
+   //  NOTE: When evaluated a code block is passed the array element to
+   //          be edited
 
    LOCAL exit_requested, nKey, meth_no
    LOCAL cSaveWin, i, b, column
@@ -160,7 +160,7 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
    b:gotopblock    := {|| nElem := 1 }
    b:gobottomblock := {|| nElem := Len( ar[ 1 ] ) }
 
-// skipblock originally coded by Robert DiFalco
+   // skipblock originally coded by Robert DiFalco
    b:SkipBlock     := {| nSkip, nStart | nStart := nElem, ;
       nElem := Max( 1, Min( Len( ar[ 1 ] ), nElem + nSkip ) ), ;
       nElem - nStart }
@@ -233,7 +233,7 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
    ENDDO
    RestScreen( nTop, nLeft, nBot, nRight, cSaveWin )
 
-// if no bGetFunc then ESC returns 0, otherwise return value of last element
+   // if no bGetFunc then ESC returns 0, otherwise return value of last element
    // TOFIX: ValType() never returns NIL
    RETURN iif( ValType( bGetFunc ) == NIL .AND. nKey == K_ESC, ;
       0, ar[ b:colPos, nElem ] )

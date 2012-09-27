@@ -32,7 +32,7 @@
 // beginning of demo program
 #ifdef FT_TEST
 
-PROCEDURE Main( cCmdLine )
+PROCEDURE Main()
 
    LOCAL cDosScrn
    LOCAL nDosRow
@@ -42,9 +42,9 @@ PROCEDURE Main( cCmdLine )
    LOCAL nType
 
    // color variables
-   LOCAL cNormH, cNormN, cNormE
-   LOCAL cWindH, cWindN, cWindE
-   LOCAL cErrH, cErrN, cErrE
+   LOCAL cNormH, cNormN
+   LOCAL cWindH, cWindN
+   LOCAL cErrH, cErrN
 
    // main routine starts here
    SET SCOREBOARD OFF
@@ -53,13 +53,10 @@ PROCEDURE Main( cCmdLine )
 
    cNormH := iif( lColor, "W+/BG", "W+/N" )
    cNormN := iif( lColor, "N/BG" , "W/N"  )
-   cNormE := iif( lColor, "N/W" , "N/W"  )
    cWindH := iif( lColor, "W+/B", "W+/N" )
    cWindN := iif( lColor, "W/B" , "W/N"  )
-   cWindE := iif( lColor, "N/W" , "N/W"  )
    cErrH  := iif( lColor, "W+/R", "W+/N" )
    cErrN  := iif( lColor, "W/R" , "W/N"  )
-   cErrE  := iif( lColor, "N/W" , "N/W"  )
 
    cDosScrn := SaveScreen()
    nDosRow := Row()
@@ -84,7 +81,7 @@ PROCEDURE Main( cCmdLine )
       "Create Or Edit [B]ack Order", ;
       "Create Or Edit [Q]uote",      ;
       "[Esc] To Exit" },             ;
-      { cWindN, , , , , cWindH } }, "BIOQ" + Chr( 27 ) )
+      { cWindN, , , , , cWindH } }, "BIOQ" + Chr( K_ESC ) )
 
    SetColor( "W/N" )
    SetCursor( SC_NORMAL )
@@ -216,12 +213,12 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    IF cKey != NIL
       IF Len( cKey ) == 1
          nOption := FT_SInkey( 0 )
-         IF Upper( hb_keyChar( nOption ) ) == cKey
+         IF Upper( Chr( nOption ) ) == cKey
             xRtnVal := .T.
          ENDIF
       ELSE
          nOption := 0
-         DO WHILE At( Upper( hb_keyChar( nOption ) ), Upper( cKey ) ) == 0
+         DO WHILE hb_BAt( Upper( Chr( nOption ) ), Upper( cKey ) ) == 0
             nOption := FT_SInkey( 0 )
          ENDDO
          xRtnVal := nOption

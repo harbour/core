@@ -24,7 +24,7 @@
  * Forest Belt proofread/edited/cleaned up doc
  *
  *    Rev 1.4   17 Jul 1991 22:11:18   GLENN
- * Stripped off chr(0)s in the return value (aRegs[DS])
+ * Stripped off hb_bchar(0)s in the return value (aRegs[DS])
  *
  *    Rev 1.3   03 Jul 1991 01:08:08   GLENN
  * Changed one line in FT_TEST driver ( cHide == "Y" )

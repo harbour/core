@@ -13180,6 +13180,8 @@ FUNCTION hbshell_ProgName()
 FUNCTION hbshell_gtInteractive()
    IF !( "GT" + hb_gtVersion( 0 ) == __hbshell_gtDefault() )
       hb_gtSelect( hb_gtCreate( __hbshell_gtDefault() ) )
+      hb_SetTermCP( hb_cdpTerm() )
+      hb_gtInfo( HB_GTI_BOXCP, hb_cdpSelect() )
    ENDIF
    RETURN NIL
 
@@ -13623,6 +13625,7 @@ STATIC PROCEDURE SetUILang( cUILNG )
 
    /* Setup input CP of the translation */
    hb_cdpSelect( "UTF8EX" )
+   hb_gtInfo( HB_GTI_BOXCP, hb_cdpSelect() )
 
    /* Configure terminal and OS codepage */
    hb_SetTermCP( hb_cdpTerm() )
