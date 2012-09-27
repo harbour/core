@@ -9,7 +9,7 @@
 hbcs=hbblink hbclipsm hbcomm hbct hbfoxpro hbfship hbgt hbmisc hbmzip hbnf hbsms hbtpathy hbxpp hbziparc rddbm rddsql xhb
 
 # contribs portable, with external dependencies:
-hbcs=hbcurl hbfbird hbgd hbhpdf hbmysql hbpgsql hbqt hbtip sddfb sddmy sddpg
+hbcs=hbcurl hbfbird hbgd hbhpdf hbmysql hbpgsql hbtip sddfb sddmy sddpg
 
 # contribs with limited availability (some with external dependencies):
 {!pocc&!xcc&!dmc&!watcom}hbcs=gtalleg

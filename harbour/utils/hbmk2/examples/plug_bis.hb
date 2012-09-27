@@ -82,7 +82,7 @@ FUNCTION hbmk_plugin_bison( hbmk )
 
       IF ! hbmk[ "lCLEAN" ]
          IF ! Empty( hbmk[ "vars" ][ "aBIS_Src" ] )
-            hbmk[ "vars" ][ "cBIS_BIN" ] := tool_detect( hbmk, "bison", "BISON_BIN" )
+            hbmk[ "vars" ][ "cBIS_BIN" ] := tool_detect( hbmk, "bison" )
             IF Empty( hbmk[ "vars" ][ "cBIS_BIN" ] )
                cRetVal := I_( "Required 'bison' tool not found" )
             ENDIF
@@ -158,11 +158,11 @@ FUNCTION hbmk_plugin_bison( hbmk )
 
    RETURN cRetVal
 
-STATIC FUNCTION tool_detect( hbmk, cName, cEnvQT )
+STATIC FUNCTION tool_detect( hbmk, cName )
    LOCAL cBIN
    LOCAL aEnvList := { "HB_BISONPATH" }
 
-   IF Empty( cBIN := GetEnv( cEnvQT ) )
+   IF Empty( cBIN := GetEnv( "BISON_BIN" ) )
 
       cName += hbmk[ "cCCEXT" ]
 
