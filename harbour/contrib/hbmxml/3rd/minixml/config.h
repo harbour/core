@@ -39,9 +39,9 @@
 #define close      _close
 #define open       _open
 #define read       _read
-#define snprintf   _snprintf
+/* #define snprintf   _snprintf */
 #define strdup     _strdup
-#define vsnprintf  _vsnprintf
+/* #define vsnprintf  _vsnprintf */
 #define write      _write
 #endif
 
@@ -94,6 +94,10 @@
  * Define prototypes for string functions as needed...
  */
 
+#  ifdef __cplusplus
+extern "C" {
+#  endif /* __cplusplus */
+
 #  ifndef HAVE_STRDUP
 extern char	*_mxml_strdup(const char *);
 #    if defined( strdup )
@@ -120,3 +124,7 @@ extern int	_mxml_vsnprintf(char *, size_t, const char *, va_list);
 #    endif
 #    define vsnprintf _mxml_vsnprintf
 #  endif /* !HAVE_VSNPRINTF */
+
+#  ifdef __cplusplus
+}
+#  endif /* __cplusplus */
