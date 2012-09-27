@@ -237,7 +237,7 @@
    #xtranslate hb_INETDGRAMSEND([<x,...>])           => INETDGRAMSEND(<x>)
    #xtranslate hb_INETDGRAMRECV([<x,...>])           => INETDGRAMRECV(<x>)
    #xtranslate hb_INETCRLF([<x,...>])                => INETCRLF(<x>)
-   #xtranslate hb_INETISSOCKET([<x,...>])            => ISINETSOCKET(<x>)
+   #xtranslate hb_INETISSOCKET([<x,...>])            => INETISSOCKET(<x>)
    #xtranslate hb_INETCLOSE([<x,...>])               => INETDESTROY(<x>)
 
    /* Some statement endings */
@@ -554,7 +554,7 @@
    #xtranslate INETDGRAMSEND([<x,...>])           => hb_INETDGRAMSEND(<x>)
    #xtranslate INETDGRAMRECV([<x,...>])           => hb_INETDGRAMRECV(<x>)
    #xtranslate INETCRLF([<x,...>])                => hb_INETCRLF(<x>)
-   #xtranslate ISINETSOCKET([<x,...>])            => hb_INETISSOCKET(<x>)
+   #xtranslate INETISSOCKET([<x,...>])            => hb_INETISSOCKET(<x>)
    #xtranslate INETDESTROY([<x,...>])             => iif( HB_INETISSOCKET( <x> ), hb_INETCLOSE( <x> ), )
 
    /* THROW => generate error */

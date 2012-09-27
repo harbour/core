@@ -274,6 +274,13 @@ HB_FUNC( HB_ARRAYID )  /* for debugging: returns the array's "address" so dual r
    hb_retptr( pArray ? hb_arrayId( pArray ) : NULL );
 }
 
+HB_FUNC( HB_HASHID )  /* for debugging: returns the array's "address" so dual references to same array can be seen */
+{
+   PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
+
+   hb_retptr( pHash ? hb_hashId( pHash ) : NULL );
+}
+
 HB_FUNC( __SENDRAWMSG )
 {
    hb_dbg_objSendMessage( 0, hb_param( 1, HB_IT_ANY ),
@@ -342,6 +349,8 @@ HB_FUNC( HB_ISBYREF )
 HB_FUNC_EXTERN( HB_METHODNAME         ) ; HB_FUNC( METHODNAME               ) { HB_FUNC_EXEC( HB_METHODNAME         ); }
 HB_FUNC_EXTERN( HB_LIBLOAD            ) ; HB_FUNC( LIBLOAD                  ) { HB_FUNC_EXEC( HB_LIBLOAD            ); }
 HB_FUNC_EXTERN( HB_LIBFREE            ) ; HB_FUNC( LIBFREE                  ) { HB_FUNC_EXEC( HB_LIBFREE            ); }
+HB_FUNC_EXTERN( DO                    ) ; HB_FUNC( HB_LIBDO                 ) { HB_FUNC_EXEC( DO                    ); }
+HB_FUNC_EXTERN( HB_BITISSET           ) ; HB_FUNC( HB_BITTEST               ) { HB_FUNC_EXEC( HB_BITTEST            ); }
 HB_FUNC_EXTERN( HB_IDLESLEEP          ) ; HB_FUNC( SECONDSSLEEP             ) { HB_FUNC_EXEC( HB_IDLESLEEP          ); }
 HB_FUNC_EXTERN( __DYNSN2SYM           ) ; HB_FUNC( HB_FUNCPTR               ) { HB_FUNC_EXEC( __DYNSN2SYM           ); }
 HB_FUNC_EXTERN( HB_VALTOEXP           ) ; HB_FUNC( VALTOPRGEXP              ) { HB_FUNC_EXEC( HB_VALTOEXP           ); }
@@ -351,3 +360,4 @@ HB_FUNC_EXTERN( HB_HEXTOSTR           ) ; HB_FUNC( HEXTOSTR                 ) { 
 HB_FUNC_EXTERN( HB_STRTOHEX           ) ; HB_FUNC( STRTOHEX                 ) { HB_FUNC_EXEC( HB_STRTOHEX           ); }
 HB_FUNC_EXTERN( HB_ISPOINTER          ) ; HB_FUNC( ISPOINTER                ) { HB_FUNC_EXEC( HB_ISPOINTER          ); }
 HB_FUNC_EXTERN( HB_CDPSELECT          ) ; HB_FUNC( HB_SETCODEPAGE           ) { HB_FUNC_EXEC( HB_CDPSELECT          ); }
+HB_FUNC_EXTERN( __DEFAULTNIL          ) ; HB_FUNC( DEFAULT                  ) { HB_FUNC_EXEC( __DEFAULTNIL          ); }
