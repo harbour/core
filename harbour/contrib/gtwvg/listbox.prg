@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                               26Nov2008
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,7 +74,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 CLASS WvgListBox  INHERIT  WvgWindow, WvgDataRef
 
@@ -139,7 +139,7 @@ CLASS WvgListBox  INHERIT  WvgWindow, WvgDataRef
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgListBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -152,7 +152,7 @@ METHOD WvgListBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -182,7 +182,7 @@ METHOD WvgListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgListBox:handleEvent( nMessage, aNM )
 
@@ -304,7 +304,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgListBox:clear()
 
@@ -312,13 +312,13 @@ METHOD WvgListBox:clear()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgListBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgListBox:destroy()
    ::WvgWindow:destroy()

@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                               07Dec2008
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,13 +74,13 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #ifndef __DBG_PARTS__
 #xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 CLASS WvgMLE INHERIT WvgWindow, WvgDataRef
 
@@ -133,7 +133,7 @@ CLASS WvgMLE INHERIT WvgWindow, WvgDataRef
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgMLE:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -146,7 +146,7 @@ METHOD WvgMLE:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgMLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -187,7 +187,7 @@ METHOD WvgMLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgMLE:handleEvent( nMessage, aNM )
 
@@ -271,7 +271,7 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgMLE:destroy()
 
@@ -281,7 +281,7 @@ METHOD WvgMLE:destroy()
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgMLE:changed( lChanged )
    LOCAL lChg := ::sendMessage( EM_GETMODIFY, 0, 0 )
@@ -292,7 +292,7 @@ METHOD WvgMLE:changed( lChanged )
 
    RETURN lChg
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgMLE:clear()
    LOCAL cText := ::getData()
@@ -301,7 +301,7 @@ METHOD WvgMLE:clear()
 
    RETURN len( cText )
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgMLE:copyMarked()
    LOCAL n, nB, nE
@@ -316,7 +316,7 @@ METHOD WvgMLE:copyMarked()
 
    RETURN n
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgMLE:cutMarked()
    LOCAL n, nB, nE, cText
@@ -332,6 +332,6 @@ METHOD WvgMLE:cutMarked()
 
    RETURN n
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 

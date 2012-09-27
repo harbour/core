@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 /*
  *                               EkOnkar
  *                         ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                 Pritpal Bedi  <pritpal@vouchcac.com>
  *                              08Nov2008
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,7 +74,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+/*-*/
  * To Switch Over from ASCALLBACK() to SET/GET_Prop() calls
  *
 #if 0
@@ -83,7 +83,7 @@
    #define __BYSETPROP__
 #endif
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 CLASS WvgWindow  INHERIT  WvgPartHandler
 
@@ -271,7 +271,7 @@ PROTECTED:
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -293,7 +293,7 @@ METHOD WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -321,7 +321,7 @@ METHOD WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -334,7 +334,7 @@ METHOD WvgWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:destroy()
 
@@ -424,18 +424,18 @@ METHOD WvgWindow:destroy()
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:SetWindowProcCallback()
    ::nOldProc := WVG_SetWindowProcBlock( ::pWnd, {|h,m,w,l| ::ControlWndProc( h,m,w,l ) } )
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:captureMouse()
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:disable()
 
@@ -446,7 +446,7 @@ METHOD WvgWindow:disable()
 
    RETURN .f.
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:enable()
 
@@ -457,7 +457,7 @@ METHOD WvgWindow:enable()
 
    RETURN .f.
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:hide()
 
@@ -468,25 +468,25 @@ METHOD WvgWindow:hide()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:invalidateRect( aRect )
 
    RETURN WVG_InvalidateRect( ::hWnd, aRect )
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:lockPS()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:lockUpdate()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:setColorBG( nRGB )
    LOCAL hBrush
@@ -508,25 +508,25 @@ METHOD WvgWindow:setColorBG( nRGB )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:setModalState()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:setPointer()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:setTrackPointer()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:setPos( aPos, lPaint )
    LOCAL aPosSz
@@ -550,14 +550,14 @@ METHOD WvgWindow:setPos( aPos, lPaint )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /* This will always be called from HB_GTE_RESIZED message of WVG engine */
 
 METHOD WvgWindow:rePosition()
 
    RETURN ::setPosAndSize( ::aPos, ::aSize )
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:setPosAndSize( aPos, aSize, lPaint )
    LOCAL aPosSz
@@ -583,7 +583,7 @@ METHOD WvgWindow:setPosAndSize( aPos, aSize, lPaint )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:setSize( aSize, lPaint )
    LOCAL aPosSz
@@ -605,7 +605,7 @@ METHOD WvgWindow:setSize( aSize, lPaint )
    ENDIF
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:isDerivedFrom( cClassORoObject )
    LOCAL lTrue := .f.
@@ -626,7 +626,7 @@ METHOD WvgWindow:isDerivedFrom( cClassORoObject )
 
    RETURN lTrue
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:show()
 
@@ -636,38 +636,38 @@ METHOD WvgWindow:show()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:toBack()
 
    RETURN WVG_SetWindowPosToBack( ::hWnd )
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:toFront()
 
    /*RETURN WVG_SetForeGroundWindow( ::hWnd ) */
    RETURN WVG_SetWindowPosToTop( ::hWnd )
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:unlockPS()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:winDevice()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:setFont()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:setFontCompoundName( xFont )
    LOCAL cOldFont, s, n, nPoint, cFont, cAttr, cFace
@@ -707,20 +707,20 @@ METHOD WvgWindow:setFontCompoundName( xFont )
 
    RETURN cOldFont
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:setPresParam()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:currentPos()
    LOCAL aRect := WVG_GetWindowRect( ::hWnd )
 
    RETURN { aRect[ 1 ], aRect[ 2 ] }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:currentSize()
    LOCAL aRect
@@ -729,27 +729,27 @@ METHOD WvgWindow:currentSize()
 
    RETURN { aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ] }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:getHWND()
 
    RETURN ::hWnd
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:getModalState()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:hasInputFocus()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
  *                           Callback Methods
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:enter( xParam )
 
@@ -765,7 +765,7 @@ METHOD WvgWindow:enter( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:leave( xParam )
 
@@ -781,7 +781,7 @@ METHOD WvgWindow:leave( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:lbClick( xParam )
 
@@ -797,7 +797,7 @@ METHOD WvgWindow:lbClick( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:lbDblClick( xParam )
 
@@ -813,7 +813,7 @@ METHOD WvgWindow:lbDblClick( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:lbDown( xParam )
 
@@ -829,7 +829,7 @@ METHOD WvgWindow:lbDown( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:lbUp( xParam )
 
@@ -845,7 +845,7 @@ METHOD WvgWindow:lbUp( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:mbClick( xParam )
 
@@ -861,7 +861,7 @@ METHOD WvgWindow:mbClick( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:mbDblClick( xParam )
 
@@ -877,7 +877,7 @@ METHOD WvgWindow:mbDblClick( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:mbDown( xParam )
 
@@ -893,7 +893,7 @@ METHOD WvgWindow:mbDown( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:mbUp( xParam )
 
@@ -909,7 +909,7 @@ METHOD WvgWindow:mbUp( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:motion( xParam )
 
@@ -925,7 +925,7 @@ METHOD WvgWindow:motion( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:rbClick( xParam )
 
@@ -941,7 +941,7 @@ METHOD WvgWindow:rbClick( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:rbDblClick( xParam )
 
@@ -957,7 +957,7 @@ METHOD WvgWindow:rbDblClick( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:rbDown( xParam )
 
@@ -973,7 +973,7 @@ METHOD WvgWindow:rbDown( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:rbUp( xParam )
 
@@ -989,7 +989,7 @@ METHOD WvgWindow:rbUp( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:wheel( xParam )
 
@@ -1005,9 +1005,9 @@ METHOD WvgWindow:wheel( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
  *                           Other Messages
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:close( xParam )
    if ::objType == objTypeCrt
@@ -1023,7 +1023,7 @@ METHOD WvgWindow:close( xParam )
    endif
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:helpRequest( xParam )
 
@@ -1039,7 +1039,7 @@ METHOD WvgWindow:helpRequest( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:keyboard( xParam )
 
@@ -1055,7 +1055,7 @@ METHOD WvgWindow:keyboard( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:killDisplayFocus( xParam )
    if ::objType == objTypeCrt
@@ -1071,7 +1071,7 @@ METHOD WvgWindow:killDisplayFocus( xParam )
    endif
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:killInputFocus( xParam )
 
@@ -1087,7 +1087,7 @@ METHOD WvgWindow:killInputFocus( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:move( xParam )
 
@@ -1103,7 +1103,7 @@ METHOD WvgWindow:move( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:paint( xParam )
 
@@ -1119,7 +1119,7 @@ METHOD WvgWindow:paint( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:quit( xParam, xParam1 )
 
@@ -1135,7 +1135,7 @@ METHOD WvgWindow:quit( xParam, xParam1 )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:resize( xParam, xParam1 )
 
@@ -1151,7 +1151,7 @@ METHOD WvgWindow:resize( xParam, xParam1 )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:setDisplayFocus( xParam )
 
@@ -1168,7 +1168,7 @@ METHOD WvgWindow:setDisplayFocus( xParam )
    endif
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:setInputFocus( xParam )
 
@@ -1184,7 +1184,7 @@ METHOD WvgWindow:setInputFocus( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:dragEnter( xParam, xParam1 )
 
@@ -1200,7 +1200,7 @@ METHOD WvgWindow:dragEnter( xParam, xParam1 )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:dragMotion( xParam )
 
@@ -1216,7 +1216,7 @@ METHOD WvgWindow:dragMotion( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:dragLeave( xParam )
 
@@ -1232,7 +1232,7 @@ METHOD WvgWindow:dragLeave( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:dragDrop( xParam, xParam1 )
 
@@ -1248,7 +1248,7 @@ METHOD WvgWindow:dragDrop( xParam, xParam1 )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -1268,18 +1268,18 @@ METHOD WvgWindow:Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:setFocus()
    WVG_SetFocus( ::hWnd )
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:sendMessage( nMessage, nlParam, nwParam )
    RETURN WVG_SendMessage( ::hWnd, nMessage, nlParam, nwParam )
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:findObjectByHandle( hWnd )
    LOCAL nObj
@@ -1292,7 +1292,7 @@ METHOD WvgWindow:findObjectByHandle( hWnd )
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:getPosAndSize( aPs, aSz )
    LOCAL nX, nY, nW, nH, aXY
@@ -1345,7 +1345,7 @@ METHOD WvgWindow:getPosAndSize( aPs, aSz )
 
    RETURN { aPos[ 1 ], aPos[ 2 ], aSize[ 1 ], aSize[ 2 ] }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:toolTipText( cText )
 
@@ -1358,7 +1358,7 @@ METHOD WvgWindow:toolTipText( cText )
 
    RETURN ::s_toolTipText
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgWindow:createControl()
    LOCAL hWnd, aPosSz
@@ -1386,4 +1386,4 @@ METHOD WvgWindow:createControl()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/

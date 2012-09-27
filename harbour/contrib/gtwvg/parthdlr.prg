@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 /*
  *                               EkOnkar
  *                         ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                               08Nov2008
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,7 +74,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 CLASS WvgPartHandler
 
@@ -111,7 +111,7 @@ CLASS WvgPartHandler
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgPartHandler:new( oParent, oOwner )
 
@@ -120,7 +120,7 @@ METHOD WvgPartHandler:new( oParent, oOwner )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgPartHandler:create( oParent, oOwner )
 
@@ -132,7 +132,7 @@ METHOD WvgPartHandler:create( oParent, oOwner )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgPartHandler:configure( oParent, oOwner )
 
@@ -144,7 +144,7 @@ METHOD WvgPartHandler:configure( oParent, oOwner )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgPartHandler:destroy()
 
@@ -155,7 +155,7 @@ METHOD WvgPartHandler:destroy()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgPartHandler:handleEvent( hEvent, mp1, mp2 )
 
@@ -165,13 +165,13 @@ METHOD WvgPartHandler:handleEvent( hEvent, mp1, mp2 )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgPartHandler:status()
 
    RETURN ::nStatus
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgPartHandler:addChild( oWvg )
 
@@ -180,7 +180,7 @@ METHOD WvgPartHandler:addChild( oWvg )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgPartHandler:childFromName( nNameId )
    LOCAL i, oWvg
@@ -193,13 +193,13 @@ METHOD WvgPartHandler:childFromName( nNameId )
 
    RETURN oWvg
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgPartHandler:childList()
 
    RETURN ::aChildren
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgPartHandler:removeChild( oChild )
    LOCAL n
@@ -210,7 +210,7 @@ METHOD WvgPartHandler:removeChild( oChild )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgPartHandler:delChild( oWvg )
    LOCAL n
@@ -224,7 +224,7 @@ METHOD WvgPartHandler:delChild( oWvg )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgPartHandler:setName( nNameId )
    LOCAL nOldNameId := ::nNameId
@@ -235,7 +235,7 @@ METHOD WvgPartHandler:setName( nNameId )
 
    RETURN nOldNameId
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgPartHandler:setOwner( oWvg )
    LOCAL oOldXbp := ::oOwner
@@ -246,7 +246,7 @@ METHOD WvgPartHandler:setOwner( oWvg )
 
    RETURN oOldXbp
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgPartHandler:setParent( oWvg )
    LOCAL oOldXbp := ::oParent
@@ -257,7 +257,7 @@ METHOD WvgPartHandler:setParent( oWvg )
 
    RETURN oOldXbp
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgPartHandler:notifierBlock( ... )
    LOCAL a_:= hb_AParams()
@@ -272,7 +272,7 @@ METHOD WvgPartHandler:notifierBlock( ... )
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 /*
    This will be called by the WvgCRT() console FOR various events TO be propogated TO child controls
@@ -486,7 +486,7 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
 
    RETURN nReturn
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
   This will be called if a control is assigned its own WndProc via ::SetWindowProcCallback()
 */
@@ -613,4 +613,4 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    RETURN WVG_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
 
-/*----------------------------------------------------------------------*/
+/*-*/

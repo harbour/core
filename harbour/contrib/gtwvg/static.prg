@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                               26Nov2008
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,7 +74,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 CLASS WvgStatic  INHERIT  WvgWindow
 
@@ -97,7 +97,7 @@ CLASS WvgStatic  INHERIT  WvgWindow
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgStatic:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -111,7 +111,7 @@ METHOD WvgStatic:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -237,7 +237,7 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgStatic:handleEvent( nMessage, aNM )
 
@@ -274,7 +274,7 @@ METHOD WvgStatic:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgStatic:destroy()
 
@@ -285,13 +285,13 @@ METHOD WvgStatic:destroy()
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgStatic:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgStatic:setCaption( xCaption, cDll )
 

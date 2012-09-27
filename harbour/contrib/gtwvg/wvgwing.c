@@ -63,16 +63,16 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
+/*-*/
 /*
  *             Direct WinApi Functions - Prefixed WIN_*()
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 
 #if defined( __BORLANDC__ )
 #  if ! defined( NONAMELESSUNION )
@@ -116,7 +116,7 @@
 
 #define WIN_STATUSBAR_MAX_PARTS  256
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define wvg_parwparam( n )    ( ( WPARAM )   ( HB_PTRDIFF ) hb_parnint( n ) )
 #define wvg_parlparam( n )    ( ( LPARAM )   ( HB_PTRDIFF ) hb_parnint( n ) )
@@ -129,7 +129,7 @@
 
 #define wvg_rethandle( n )    ( hb_retnint( ( HB_PTRDIFF ) n ) )
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #if defined( __BORLANDC__ ) && ! defined( HB_ARCH_64BIT )
     #undef MAKELONG
@@ -137,7 +137,7 @@
                                            ( ( ( DWORD ) ( ( WORD ) ( ( DWORD_PTR ) ( b ) & 0xffff ) ) ) << 16 ) ) )
 #endif
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 static HINSTANCE wvg_hInstance( void )
 {
@@ -148,18 +148,18 @@ static HINSTANCE wvg_hInstance( void )
    return ( HINSTANCE ) hInstance;
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 HB_FUNC( WVG_HINSTANCE )
 {
    hbwapi_ret_raw_HANDLE( wvg_hInstance() );
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  *              Bitmap Management Function . Coutesy GTWVW
  */
-/*----------------------------------------------------------------------*/
+/*-*/
 
 static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
 {
@@ -438,7 +438,7 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
 
    return hBitmap;
 }
-/*----------------------------------------------------------------------*/
+/*-*/
 
 HB_FUNC( WVG_PREPAREBITMAPFROMFILE )
 {
@@ -451,7 +451,7 @@ HB_FUNC( WVG_PREPAREBITMAPFROMFILE )
    hb_retptr( ( void * ) hBitmap );
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCEID )
 {
@@ -463,7 +463,7 @@ HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCEID )
    hb_retptr( ( void * ) hBitmap );
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCENAME )
 {
@@ -475,7 +475,7 @@ HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCENAME )
    hb_strfree( hText );
    hb_retptr( ( void * ) hBitmap );
 }
-/*----------------------------------------------------------------------*/
+/*-*/
 
 HB_FUNC( WVG_STATUSBARCREATEPANEL )
 {
@@ -533,7 +533,7 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
    hb_retl( HB_FALSE );
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 HB_FUNC( WVG_STATUSBARSETTEXT )
 {
@@ -556,7 +556,7 @@ HB_FUNC( WVG_STATUSBARSETTEXT )
    }
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 HB_FUNC( WVG_STATUSBARREFRESH )
 {
@@ -582,7 +582,7 @@ HB_FUNC( WVG_STATUSBARREFRESH )
    #endif
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Wvg_GetNMHInfo( nlParam )
  */
@@ -599,7 +599,7 @@ HB_FUNC( WVG_GETNMHDRINFO )
 
    hb_itemReturnRelease( pEvParams );
 }
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Wvg_GetNMMouseInfo( nlParam )
  */
@@ -618,7 +618,7 @@ HB_FUNC( WVG_GETNMMOUSEINFO )
 
    hb_itemReturnRelease( pEvParams );
 }
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  *  Wvg_GetNMTreeViewInfo( nlParam )
  */
@@ -638,7 +638,7 @@ HB_FUNC( WVG_GETNMTREEVIEWINFO )
 
    hb_itemReturnRelease( pEvParams );
 }
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  *  Wvg_TreeView_GetSelectionInfo( ::hWnd, nlParam, @cParent, @cText, @hParentOfSelected, @hItemSelected )
  */
@@ -677,7 +677,7 @@ HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
    }
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  *   hItem := Wvg_TreeView_AddItem( oItem:hTree, hParent, oItem:Caption )
  */
@@ -702,7 +702,7 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
    hb_strfree( hText );
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 HB_FUNC( WVG_TREEVIEW_SHOWEXPANDED )
 {
@@ -754,9 +754,9 @@ HB_FUNC( WVG_TREEVIEW_SHOWEXPANDED )
    }
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*                            WvgFontDialog()                           */
-/*----------------------------------------------------------------------*/
+/*-*/
 
 PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, HB_BOOL bEmpty )
 {
@@ -803,9 +803,9 @@ PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, HB_BOOL bEmpty )
    return aFont;
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*                   An Alternative to WndProc Callbacks                */
-/*----------------------------------------------------------------------*/
+/*-*/
 
 BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
@@ -846,7 +846,7 @@ BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARA
    return bret;
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Wvg_ChooseFont( hWnd, nWndProc, familyName, nominalPointSize,;
  *                 viewScreenFonts, viewPrinterFonts )
@@ -935,7 +935,7 @@ HB_FUNC( WVG_CHOOSEFONT )
 #endif
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 HB_FUNC( WVG_CHOOSEFONT_GETLOGFONT )
 {
@@ -953,7 +953,7 @@ HB_FUNC( WVG_CHOOSEFONT_GETLOGFONT )
 #endif
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 HB_FUNC( WVG_FONTCREATE )
 {
@@ -998,7 +998,7 @@ HB_FUNC( WVG_FONTCREATE )
    hb_itemReturnRelease( aFont );
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Wvg_PointSizeToHeight( hdc, nPointSize )
  */
@@ -1012,7 +1012,7 @@ HB_FUNC( WVG_POINTSIZETOHEIGHT )
       ReleaseDC( GetDesktopWindow(), hdc );
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Wvg_HeightToPointSize( hdc, nHeight )
  */
@@ -1026,7 +1026,7 @@ HB_FUNC( WVG_HEIGHTTOPOINTSIZE )
       ReleaseDC( GetDesktopWindow(), hdc );
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 HB_FUNC( WVG_SETCURRENTBRUSH )
 {
 #if ! defined( HB_OS_WIN_CE )
@@ -1037,7 +1037,7 @@ HB_FUNC( WVG_SETCURRENTBRUSH )
 #endif
 #endif
 }
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  *                                IL  | DL
  *  Wvg_AddToolbarButton( hWndTB, nBtn|hBitmap, cCaption, nButtonID, nMode, lIsTooltip )
@@ -1100,7 +1100,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
    }
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Wvg_RegisterClass( cClassName,
  */
@@ -1126,7 +1126,7 @@ HB_FUNC( WVG_REGISTERCLASS_BYNAME )
    hb_strfree( hClass );
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  *  Function with Win_FillRect() exists in hbwin:win_parn1.c with different approach.
  */
@@ -1142,7 +1142,7 @@ HB_FUNC( WVG_FILLRECT )
    FillRect( wvg_parhdc( 1 ), &rc, wvg_parhbrush( 3 ) );
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 HB_FUNC( WVG_BEGINMOUSETRACKING )
 {
@@ -1159,7 +1159,7 @@ HB_FUNC( WVG_BEGINMOUSETRACKING )
 #endif
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 LRESULT CALLBACK ControlWindowProcedure( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
@@ -1189,7 +1189,7 @@ LRESULT CALLBACK ControlWindowProcedure( HWND hwnd, UINT msg, WPARAM wParam, LPA
    return DefWindowProc( hwnd, msg, wParam, lParam );
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 HB_FUNC( WVG_SETWINDOWPROCBLOCK )
 {
@@ -1208,7 +1208,7 @@ HB_FUNC( WVG_SETWINDOWPROCBLOCK )
    hb_retnint( ( HB_PTRDIFF ) oldProc );
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )
 {
@@ -1219,7 +1219,7 @@ HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )
       hb_itemRelease( pBlock );
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
    WVG_CreateTooltipWindow( hControl ) -> hWndTT
 */
@@ -1252,7 +1252,7 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
       wvg_rethandle( NULL );
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 HB_FUNC( WVG_SETTOOLTIPTEXT )
 {
@@ -1271,4 +1271,4 @@ HB_FUNC( WVG_SETTOOLTIPTEXT )
    hb_strfree( hText );
 }
 
-/*----------------------------------------------------------------------*/
+/*-*/

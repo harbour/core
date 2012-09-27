@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 /*
  *                               EkOnkar
  *                         ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                              23Nov2008
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,7 +74,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 CLASS WvgToolBar  INHERIT  WvgWindow /*WvgActiveXControl*/
 
@@ -127,7 +127,7 @@ CLASS WvgToolBar  INHERIT  WvgWindow /*WvgActiveXControl*/
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -144,7 +144,7 @@ METHOD WvgToolBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -200,7 +200,7 @@ METHOD WvgToolBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:handleEvent( nMessage, aNM )
    LOCAL nObj, aNMMouse
@@ -244,7 +244,7 @@ METHOD WvgToolBar:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:destroy()
    LOCAL i, nItems
@@ -271,7 +271,7 @@ METHOD WvgToolBar:destroy()
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -279,13 +279,13 @@ METHOD WvgToolBar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:sendToolbarMessage( nMsg, p1, p2 )
 
    RETURN WVG_SendToolbarMessage( ::pWnd, nMsg, p1, p2 )
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB )
    LOCAL oBtn, pBitmap, cType, nBtn
@@ -357,55 +357,55 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
 
    RETURN oBtn
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:delItem()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:getItem()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:clear()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:customize()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:loadImageSet()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:saveToolbar()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:restToolbar()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:setPosAndSize()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:setSize()
 
@@ -413,7 +413,7 @@ METHOD WvgToolBar:setSize()
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:buttonClick( xParam )
 
@@ -423,7 +423,7 @@ METHOD WvgToolBar:buttonClick( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:change( xParam )
 
@@ -433,7 +433,7 @@ METHOD WvgToolBar:change( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:buttonMenuClick( xParam )
 
@@ -443,7 +443,7 @@ METHOD WvgToolBar:buttonMenuClick( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBar:buttonDropDown( xParam )
 
@@ -453,15 +453,15 @@ METHOD WvgToolBar:buttonDropDown( xParam )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 /*
  *       WvgToolbarButton() Class compatible with XbpToolbarButton()
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 
 CLASS WvgToolBarButton
 
@@ -489,7 +489,7 @@ CLASS WvgToolBarButton
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgToolBarButton:new( cCaption, nStyle, cKey )
 

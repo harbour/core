@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                               05Dec2008
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,7 +74,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 CLASS WvgCheckBox  INHERIT  WvgWindow, WvgDataRef
 
@@ -100,7 +100,7 @@ CLASS WvgCheckBox  INHERIT  WvgWindow, WvgDataRef
    ASSIGN   selected( bBlock )                    INLINE ::sl_lbClick := bBlock
 
    ENDCLASS
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgCheckBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -112,7 +112,7 @@ METHOD WvgCheckBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgCheckBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -139,7 +139,7 @@ METHOD WvgCheckBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgCheckBox:handleEvent( nMessage, aNM )
 
@@ -194,19 +194,19 @@ METHOD WvgCheckBox:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgCheckBox:destroy()
    ::wvgWindow:destroy()
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgCheckBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgCheckBox:setCaption( xCaption )
 
@@ -217,4 +217,4 @@ METHOD WvgCheckBox:setCaption( xCaption )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/

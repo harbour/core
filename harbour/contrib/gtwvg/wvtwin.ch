@@ -49,19 +49,19 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
+/*-*/
 #ifndef _WVGWIN_CH
 #define _WVGWIN_CH
-/*----------------------------------------------------------------------*/
+/*-*/
 //
 //                         GTWVT Specific
 //
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #xtranslate MAKELONG(<nLow>, <nHigh>)  => ((<nLow>) + (<nHigh>) * 65536)
 #xtranslate MAKELPARAM(<nLow>, <nHigh>) => ((<nLow>) + (<nHigh>) * 65536)
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  *   Wvt_DrawButton() constants
  */
@@ -75,7 +75,7 @@
 #define WVT_BTN_IMAGE_BOTTOM                      2
 #define WVT_BTN_IMAGE_RIGHT                       3
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  *   Wvt_DrawLine( nTop, nLeft, nBottom, nRight, nOrient, nFormat,;
  *                 nAlign, nStyle, nThick, nColor )
@@ -103,7 +103,7 @@
 #define WVT_LINE_DASHDOT                          3
 #define WVT_LINE_DASHDOTDOT                       4
 
-/*----------------------------------------------------------------------*/
+/*-*/
 //
 //              Standard Mouse Pointer Shape Constants
 //
@@ -124,7 +124,7 @@
 #define WVT_IDC_APPSTARTING                       15
 #define WVT_IDC_HELP                              16
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define WVT_BLOCK_IMAGE                           1
 #define WVT_BLOCK_BOX                             2
@@ -138,7 +138,7 @@
 #define WVT_BLOCK_TOOLBAR                         10
 #define WVT_BLOCK_STATIC                          11
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define DLG_OBJ_BROWSE                            1
 #define DLG_OBJ_PICTURE                           2
@@ -159,13 +159,13 @@
 #define DLG_OBJ_TEXTBOX                           17
 #define DLG_OBJ_PROGRESSBAR                       18
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define TLB_BUTTON_TYPE_IMAGE                     0
 #define TLB_BUTTON_TYPE_SEPARATOR                 1
 #define TLB_BUTTON_TYPE_TEXT                      2
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define WVT_STATIC_LINE                           1
 #define WVT_STATIC_BOXRAISED                      2
@@ -188,7 +188,7 @@
 #define WVT_SCROLLBUTTON_RIGHT                    4
 #define WVT_SCROLL_THUMB                          5
 
-/*----------------------------------------------------------------------*/
+/*-*/
 //
 // wvtmenu defines  .  Peter Rees
 //
@@ -198,15 +198,15 @@
 #define WVT_MENU_ACTION                           4
 #define WVT_MENU_MENUOBJ                          4
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define RGB( nR,nG,nB )   ( nR + ( nG * 256 ) + ( nB * 256 * 256 ) )
 
-/*----------------------------------------------------------------------*/
+/*-*/
 //
 //                          Windows Specific
 //
-/*----------------------------------------------------------------------*/
+/*-*/
 #define LVM_FIRST                                 0x1000      // ListView messages
 #define TV_FIRST                                  0x1100      // TreeView messages
 #define TVN_FIRST                                 (0-400)
@@ -228,9 +228,9 @@
 #define CCM_SETWINDOWTHEME                        0x200b
 #define CCM_DPISCALE                              0x200c
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
-/*----------------------------------------------------------------------*/
+/*-*/
 //
 //                   Menu Manipulation Constants
 //
@@ -264,7 +264,7 @@
 #define MF_UNHILITE                               0
 #define MF_HILITE                                 128
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define TPM_LEFTBUTTON                            0x0000
 #define TPM_RIGHTBUTTON                           0x0002
@@ -282,7 +282,7 @@
 #define TPM_NONOTIFY                              0x0080              /* Don't send any notification msgs */
 #define TPM_RETURNCMD                             0x0100
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * ShowWindow() Commands
  */
@@ -302,7 +302,7 @@
 #define SW_FORCEMINIMIZE                          11
 #define SW_MAX                                    11
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  *  Window Messages
  */
@@ -490,7 +490,7 @@
 #define WM_PALETTECHANGED                         785
 #define WM_HOTKEY                                 786
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Window Styles
  */
@@ -528,7 +528,7 @@
                                                   WS_MINIMIZEBOX + ;
                                                   WS_MAXIMIZEBOX )
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Extended Window Styles
  */
@@ -562,7 +562,7 @@
 #define WS_EX_LAYOUTRTL                           4194304             // 0x00400000L // Right to left mirroring
 #define WS_EX_NOACTIVATE                          134217728           // 0x08000000L
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define SC_SIZE                                   61440               // 0xF000
 #define SC_MOVE                                   61456               // 0xF010
@@ -585,7 +585,7 @@
 #define SC_CONTEXTHELP                            61824               // 0xF180
 #define SC_SEPARATOR                              61455               // 0xF00F
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Dialog styles
  */
@@ -603,7 +603,7 @@
 #define DS_CENTERMOUSE                            4096                // 0x1000
 #define DS_CONTEXTHELP                            8192                // 0x2000
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Dialog Box Command IDs
  */
@@ -617,8 +617,8 @@
 #define IDTRYAGAIN                                10                  // (WINVER >= 0x0500)
 #define IDCONTINUE                                11                  // (WINVER >= 0x0500)
 
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
 /*
  * Button Control Styles
  */
@@ -650,7 +650,7 @@
 #define BS_FLAT                                   32768               // 0x00008000L
 #define BS_RIGHTBUTTON                            BS_LEFTTEXT
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * User Button Notification Codes
  */
@@ -666,7 +666,7 @@
 #define BN_SETFOCUS                               6
 #define BN_KILLFOCUS                              7
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Button Control Messages
  */
@@ -685,8 +685,8 @@
 #define BST_PUSHED                                4
 #define BST_FOCUS                                 8
 
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
 /*
  * Edit Control Styles
  */
@@ -705,7 +705,7 @@
 #define ES_WANTRETURN                             4096
 #define ES_NUMBER                                 8192
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Edit Control Notification Codes
  */
@@ -718,7 +718,7 @@
 #define EN_HSCROLL                                1537                // 0x0601
 #define EN_VSCROLL                                1538                // 0x0602
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Edit Control Messages
  */
@@ -760,8 +760,8 @@
 #define EM_POSFROMCHAR                            214
 #define EM_CHARFROMPOS                            215
 
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
 /*
  * Combo Box styles
  */
@@ -779,7 +779,7 @@
 #define CBS_UPPERCASE                             8192                // 0x2000L
 #define CBS_LOWERCASE                             16384               // 0x4000L
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Combo Box Notification Codes
  */
@@ -795,7 +795,7 @@
 #define CBN_SELENDOK                              9
 #define CBN_SELENDCANCEL                          10
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Combo Box messages
  */
@@ -838,7 +838,7 @@
 #define CB_MSGMAX                                 0x0165
 
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Combo Box return Values
  */
@@ -846,8 +846,8 @@
 #define CB_ERR                                    (-1)
 #define CB_ERRSPACE                               (-2)
 
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
 /*
  * Static Control Constants
  */
@@ -883,7 +883,7 @@
 #define SS_WORDELLIPSIS                           49152
 #define SS_ELLIPSISMASK                           49152
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Static Control Mesages
  */
@@ -897,7 +897,7 @@
 #define STN_ENABLE                                2
 #define STN_DISABLE                               3
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Listbox messages
  */
@@ -942,7 +942,7 @@
 #define LB_INITSTORAGE                            424
 #define LB_ITEMFROMPOINT                          425
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Listbox Styles
  */
@@ -963,7 +963,7 @@
 #define LBS_NOSEL                                 16384
 #define LBS_STANDARD                              ( LBS_NOTIFY + LBS_SORT + WS_VSCROLL + WS_BORDER )
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Listbox Notification Codes
  */
@@ -974,7 +974,7 @@
 #define LBN_SETFOCUS                              4
 #define LBN_KILLFOCUS                             5
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * MessageBox() Flags
  */
@@ -1022,7 +1022,7 @@
 #define MB_MODEMASK                               12288
 #define MB_MISCMASK                               49152
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Stock Logical Objects
  */
@@ -1047,21 +1047,21 @@
 #define SYSTEM_FIXED_FONT                         16
 #define DEFAULT_GUI_FONT                          17
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * WM_SETICON / WM_GETICON Type Codes
  */
 #define ICON_SMALL                                0
 #define ICON_BIG                                  1
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define IMAGE_BITMAP                              0
 #define IMAGE_ICON                                1
 #define IMAGE_CURSOR                              2
 #define IMAGE_ENHMETAFILE                         3
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * DrawText() Format Flags
  */
@@ -1090,7 +1090,7 @@
 #define DT_HIDEPREFIX                             1048576
 #define DT_PREFIXONLY                             2097152
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Brush Styles
  */
@@ -1140,7 +1140,7 @@
 #define PS_GEOMETRIC                              65536
 #define PS_TYPE_MASK                              983040
 
-/*----------------------------------------------------------------------*/
+/*-*/
 // font weight values
 #define FW_DONTCARE                               0
 #define FW_THIN                                   100
@@ -1158,7 +1158,7 @@
 #define FW_HEAVY                                  900
 #define FW_BLACK                                  900
 
-/*----------------------------------------------------------------------*/
+/*-*/
 // font quality values
 #define DEFAULT_QUALITY                           0
 #define DRAFT_QUALITY                             1
@@ -1194,7 +1194,7 @@
 #define PRINTER_FONTTYPE                          16384               // 0x4000
 #define SIMULATED_FONTTYPE                        32768               // 0x8000
 
-/*----------------------------------------------------------------------*/
+/*-*/
 // flags (CHOOSECOLOR structure)
 #define CC_RGBINIT                                1                   // 0x00000001
 #define CC_FULLOPEN                               2                   // 0x00000002
@@ -1206,7 +1206,7 @@
 #define CC_SOLIDCOLOR                             128                 // 0x00000080 // WINVER >= 0x0400
 #define CC_ANYCOLOR                               256                 // 0x00000100 // WINVER >= 0x0400
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  * Window field offsets for GetWindowLong()
  */
@@ -1299,7 +1299,7 @@
 #define VK_NUMLOCK                                144
 #define VK_SCROLL                                 145
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /*
  *  File Open/Save Dialog Constants
  */
@@ -1330,7 +1330,7 @@
 #define OFN_DONTADDTORECENT                       33554432
 #define OFN_FORCESHOWHIDDEN                       268435456           // Show All files including System and hidden files
 
-/*----------------------------------------------------------------------*/
+/*-*/
 /* Common Control Constants */
 #define CCS_TOP                                   1
 #define CCS_NOMOVEY                               2
@@ -1550,15 +1550,15 @@
 #define SBARS_SIZEGRIP                            256
 #define SBARS_TOOLTIPS                            2048
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define WM_CHOOSEFONT_GETLOGFONT                  (WM_USER + 1)
 #define WM_CHOOSEFONT_SETLOGFONT                  (WM_USER + 101)
 #define WM_CHOOSEFONT_SETFLAGS                    (WM_USER + 102)
 
-/*----------------------------------------------------------------------*/
+/*-*/
 //                              SCROLLBARS
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define SB_HORZ                                   0
 #define SB_VERT                                   1
@@ -1636,7 +1636,7 @@
 
 #define SB_SIMPLEID                               0x00ff
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define ILC_COLOR                                 0
 #define ILC_COLOR4                                4
@@ -1648,9 +1648,9 @@
 #define ILC_MASK                                  1
 #define ILC_PALETTE                               2048
 
-/*----------------------------------------------------------------------*/
+/*-*/
 //                               Tab Pages
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define TCS_SCROLLOPPOSITE                        0x0001   // assumes multiline tab
 #define TCS_BOTTOM                                0x0002
@@ -1673,9 +1673,9 @@
 #define TCS_TOOLTIPS                              0x4000
 #define TCS_FOCUSNEVER                            0x8000
 
-/*----------------------------------------------------------------------*/
+/*-*/
 //                         Tree View Constants
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define WC_TREEVIEWA                              "SysTreeView32"
 #define WC_TREEVIEWW                              L"SysTreeView32"
@@ -1923,7 +1923,7 @@
 
 #define TVCDRF_NOIMAGES                           65536
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define R2_BLACK                                  1   /*  0       */
 #define R2_NOTMERGEPEN                            2   /* DPon     */
@@ -1943,7 +1943,7 @@
 #define R2_WHITE                                  16  /*  1       */
 #define R2_LAST                                   16
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define TOOLTIPS_CLASS                            "tooltips_class32"
 
@@ -2031,7 +2031,7 @@
 #define TTM_GETCURRENTTOOL                        TTM_GETCURRENTTOOLW
 #define TTM_SETTITLE                              TTM_SETTITLEW
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define CW_USEDEFAULT                             (0x80000000)
 
@@ -2052,7 +2052,7 @@
 #define SWP_NOOWNERZORDER                         0x0200  /* Don't do owner Z ordering */
 #define SWP_NOSENDCHANGING                        0x0400  /* Don't send WM_WINDOWPOSCHANGING */
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #define PBM_SETRANGE                             (WM_USER+1)
 #define PBM_SETPOS                               (WM_USER+2)
@@ -2068,6 +2068,6 @@
 #define PBS_SMOOTH                               1
 #define PBS_VERTICAL                             4
 
-/*----------------------------------------------------------------------*/
+/*-*/
 #endif
-/*----------------------------------------------------------------------*/
+/*-*/

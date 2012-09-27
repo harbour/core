@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                               26Nov2008
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,7 +74,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 CLASS WvgComboBox  INHERIT  WvgWindow, WvgDataRef
 
@@ -118,7 +118,7 @@ CLASS WvgComboBox  INHERIT  WvgWindow, WvgDataRef
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgComboBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -132,7 +132,7 @@ METHOD WvgComboBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -174,13 +174,13 @@ METHOD WvgComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgComboBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgComboBox:destroy()
 #if 0
@@ -194,7 +194,7 @@ METHOD WvgComboBox:destroy()
    ::wvgWindow:destroy()
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgComboBox:handleEvent( nMessage, aNM )
 
@@ -267,7 +267,7 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgComboBox:addItem( cItem )
 
@@ -277,7 +277,7 @@ METHOD WvgComboBox:addItem( cItem )
 
    RETURN -1
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgComboBox:listBoxFocus( lFocus )
    LOCAL lOldFocus := ::sendCBMessage( CB_GETDROPPEDSTATE )
@@ -288,7 +288,7 @@ METHOD WvgComboBox:listBoxFocus( lFocus )
 
    RETURN lOldFocus
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgComboBox:sleSize()
 
@@ -298,7 +298,7 @@ METHOD WvgComboBox:sleSize()
 
    RETURN {0,0}
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgComboBox:listBoxSize()
 
@@ -308,14 +308,14 @@ METHOD WvgComboBox:listBoxSize()
 
    RETURN {0,0}
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgComboBox:setIcon( nItem, cIcon )
    HB_SYMBOL_UNUSED( nItem )
    HB_SYMBOL_UNUSED( cIcon )
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgComboBox:itemMarked( ... )
    LOCAL a_:= hb_aParams()
@@ -326,7 +326,7 @@ METHOD WvgComboBox:itemMarked( ... )
    ENDIF
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgComboBox:itemSelected( ... )
    LOCAL a_:= hb_aParams()
@@ -337,7 +337,7 @@ METHOD WvgComboBox:itemSelected( ... )
    ENDIF
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgComboBox:drawItem( ... )
    LOCAL a_:= hb_aParams()

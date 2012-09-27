@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                               07Dec2008
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,7 +74,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 CLASS WvgSLE INHERIT WvgWindow, WvgDataRef
 
@@ -121,7 +121,7 @@ CLASS WvgSLE INHERIT WvgWindow, WvgDataRef
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
 
@@ -133,7 +133,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
    LOCAL es_:= { ES_LEFT, ES_RIGHT, ES_CENTER }
@@ -178,7 +178,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSL
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
 
@@ -256,7 +256,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
 
    RETURN EVENT_UNHANDELLED
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD destroy() CLASS WvgSLE
 
@@ -266,7 +266,7 @@ METHOD destroy() CLASS WvgSLE
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgSLE:changed( lChanged )
    LOCAL lChg := ::sendMessage( EM_GETMODIFY, 0, 0 )
@@ -277,7 +277,7 @@ METHOD WvgSLE:changed( lChanged )
 
    RETURN lChg
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgSLE:clear()
    LOCAL cText := ::getData()
@@ -286,7 +286,7 @@ METHOD WvgSLE:clear()
 
    RETURN len( cText )
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgSLE:copyMarked()
    LOCAL n, nB, nE
@@ -301,7 +301,7 @@ METHOD WvgSLE:copyMarked()
 
    RETURN n
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgSLE:cutMarked()
    LOCAL n, nB, nE, cText
@@ -317,7 +317,7 @@ METHOD WvgSLE:cutMarked()
 
    RETURN n
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgSLE:returnPressed( ... )
    LOCAL a_:= hb_aParams()
@@ -328,5 +328,4 @@ METHOD WvgSLE:returnPressed( ... )
    ENDIF
    RETURN Self
 
-/*----------------------------------------------------------------------*/
-
+/*-*/

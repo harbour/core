@@ -50,9 +50,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 /*
  *                               EkOnkar
  *                         ( The LORD is ONE )
@@ -62,9 +62,9 @@
  *                 Pritpal Bedi  <pritpal@vouchcac.com>
  *                              08Nov2008
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -75,13 +75,13 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #ifndef __DBG_PARTS__
 #xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 CLASS WvgActiveXControl FROM WvgWindow
 
@@ -127,7 +127,7 @@ CLASS WvgActiveXControl FROM WvgWindow
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -140,7 +140,7 @@ METHOD WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLicense )
    LOCAL hObj, hWnd
@@ -200,7 +200,7 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 PROCEDURE execEvent( nEvent, ... ) CLASS WvgActiveXControl
 #if 0
@@ -217,7 +217,7 @@ PROCEDURE execEvent( nEvent, ... ) CLASS WvgActiveXControl
 
    RETURN
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:handleEvent( nEvent, aNM )
    LOCAL nHandled := 0
@@ -242,7 +242,7 @@ METHOD WvgActiveXControl:handleEvent( nEvent, aNM )
 
    RETURN nHandled
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:OnError()
 #if 0
@@ -250,7 +250,7 @@ METHOD WvgActiveXControl:OnError()
 #endif
    RETURN HB_ExecFromArray( ::oOLE, __GetMessage(), HB_AParams() )
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:Destroy()
 
@@ -264,7 +264,7 @@ METHOD WvgActiveXControl:Destroy()
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:mapEvent( nEvent, bBlock )
 
@@ -274,66 +274,66 @@ METHOD WvgActiveXControl:mapEvent( nEvent, bBlock )
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:inheritPresParams()
    Local lSuccess := .t.
 
    RETURN lSuccess
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:presParamsChanged()
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:setInputFocus()
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:subscribeStdEvents()
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:unsubscribeStdEvents()
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:keyDown()
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:click()
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:dblClick()
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:mouseDown()
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:mouseUp()
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:mouseMove()
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD WvgActiveXControl:activate()
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/

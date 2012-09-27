@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                               01Mar2009
  */
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
-/*----------------------------------------------------------------------*/
+/*-*/
+/*-*/
+/*-*/
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,13 +74,13 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 #ifndef __DBG_PARTS__
 #xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 CLASS WvgTabPage  INHERIT  WvgWindow
 
@@ -106,7 +106,7 @@ CLASS WvgTabPage  INHERIT  WvgWindow
 
    ENDCLASS
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPage
 
@@ -118,7 +118,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPa
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPage
 
@@ -154,7 +154,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTa
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
    LOCAL aHdr
@@ -191,7 +191,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
 
    RETURN EVENT_UNHANDELLED
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD tabActivate( xParam ) CLASS WvgTabPage
 
@@ -201,7 +201,7 @@ METHOD tabActivate( xParam ) CLASS WvgTabPage
 
    RETURN self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD minimize() CLASS WvgTabPage
 
@@ -209,7 +209,7 @@ METHOD minimize() CLASS WvgTabPage
 
    RETURN .f.
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD maximize() CLASS WvgTabPage
 
@@ -217,7 +217,7 @@ METHOD maximize() CLASS WvgTabPage
 
    RETURN .t.
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPage
 
@@ -225,7 +225,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
    RETURN Self
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 METHOD destroy() CLASS WvgTabPage
 

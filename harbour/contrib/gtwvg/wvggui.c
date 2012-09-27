@@ -111,7 +111,7 @@ static const int K_Ctrl[] =
 
 static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 
-/*----------------------------------------------------------------------*/
+/*-*/
 
 static void hb_gt_wvt_RegisterClass( HINSTANCE hInstance )
 {
