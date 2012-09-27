@@ -35,7 +35,7 @@ PROCEDURE Main( cFileName )
    hb_cdpSelect( "UTF8EX" )
 
    IF cFileName == NIL
-      cFileName := ".." + hb_ps() + ".." + hb_ps() + "hbide" + hb_ps() + "setup.ui"
+      cFileName := hb_DirBase() + "test.xml"
    ENDIF
 
    OutStd( XML_ExpatVersion() + hb_eol() )
