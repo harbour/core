@@ -2,23 +2,13 @@
 # $Id$
 #
 
--3rd=hbide_version=1.0
--3rd=hbide_type=Lib
--3rd=hbide_title=XmlExcel
--3rd=hbide_output=xlsxml
-
--inc
 -hblib
--es2
--w3
+-inc
+
+-olib/${hb_plat}/${hb_comp}/${hb_name}
+
+-w3 -es2
 
 xlsxml.prg
 xlsxml_s.prg
 xlsxml_y.prg
-
--ohbxlsxml
-
-
-
-
- 

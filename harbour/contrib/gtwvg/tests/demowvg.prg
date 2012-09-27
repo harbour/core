@@ -531,12 +531,6 @@ FUNCTION BuildMainMenu()
    oMenu:AddItem( "ActiveX - Image Viewer"      , {|| Hb_ThreadStart( {|| ExecuteActiveX(  5 ) } ) } )
    g_oMenuBar:addItem( { oMenu, "~XbpDialog()s" } )
 
-   #ifdef __QT__
-   oMenu := WvgMenu():new( g_oMenuBar, , .t. ):create()
-   oMenu:Caption:= "~QT"
-   oMenu:AddItem( "All Widgets"                 , {|| Hb_ThreadStart( {|| ExeQTWidgets() } ) } )
-   #endif
-
    RETURN oMenu  /* The last submenu item */
 
 //-------------------------------------------------------------------//
