@@ -294,7 +294,7 @@ FUNCTION FT_Adder()
       CASE ( nKey == 83 .OR. nKey == 115 ) .AND. lTape  // <S> Scroll tape display
          IF nTotTran > 16                  // We need to scroll
             SetColor( "GR+/W" )
-            @ 21 + nTopOS, 8 + nTapeSpace SAY " " + Chr( 24 ) + Chr( 25 ) + "-SCROLL  <ESC>-QUIT "
+            @ 21 + nTopOS, 8 + nTapeSpace SAY hb_UTF8ToStr( " ↑↓-SCROLL  <ESC>-QUIT " )
             SetColor( "N/W,W+/N" )
             AChoice( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, aTrans, .T. ,  ;
                "_ftAdderTapeUDF", nTotTran, 20 )
@@ -1228,7 +1228,7 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
    nRight      := nLeft + nWide + 4
 
    _ftPushWin( nTop, nLeft, nBottom, nRight, "QUESTION ?", iif( HB_ISSTRING( xVarVal )  ;
-      .AND. nVarLen > nWide, Chr( 27 ) + " scroll " + Chr( 26 ), NIL ), nWinColor )
+      .AND. nVarLen > nWide, hb_UTF8ToStr( "← scroll →" ), NIL ), nWinColor )
    DISPMESSAGE cMessage, nTop + 1, nLeft + 2, nBottom - 1, nRight - 2
 
    oNewGet := GetNew( iif( lGetOnNextLine,Row() + 1,Row() ),                       ;
