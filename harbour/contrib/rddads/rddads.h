@@ -92,8 +92,10 @@
    #define _ADS_LIB_VERSION 700
 #elif defined( ADS_COMPRESS_ALWAYS )
    #define _ADS_LIB_VERSION 620
+#elif defined( ADS_READ_ALL_COLUMNS )
+   #define _ADS_LIB_VERSION 610
 #elif defined( ADS_USER_DEFINED )
-   #define _ADS_LIB_VERSION 611
+   #define _ADS_LIB_VERSION 600
 #else
    #define _ADS_LIB_VERSION 500
 #endif

@@ -1986,10 +1986,12 @@ HB_FUNC( ADSDDSETDATABASEPROPERTY )
       }
 #endif
       /* Boolean properties */
+#if ADS_LIB_VERSION >= 600
       case ADS_DD_LOG_IN_REQUIRED:
       case ADS_DD_VERIFY_ACCESS_RIGHTS:
       case ADS_DD_ENCRYPT_NEW_TABLE:
       case ADS_DD_ENABLE_INTERNET:
+#endif
 #if ADS_LIB_VERSION >= 710
       case ADS_DD_LOGINS_DISABLED:
 #endif

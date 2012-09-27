@@ -2113,7 +2113,7 @@ static HB_ERRCODE adsFlush( ADSAREAP pArea )
    if( !pArea->fReadonly )
    {
       AdsWriteRecord( pArea->hTable );
-#if ADS_LIB_VERSION >= 600
+#if ADS_LIB_VERSION >= 610
       if( hb_setGetL( HB_SET_HARDCOMMIT ) )
          AdsFlushFileBuffers( pArea->hTable );
 #endif
@@ -3966,7 +3966,7 @@ static HB_ERRCODE adsOrderListClear( ADSAREAP pArea )
 {
    HB_TRACE(HB_TR_DEBUG, ("adsOrderListClear(%p)", pArea));
 
-#if ADS_LIB_VERSION >= 600
+#if ADS_LIB_VERSION >= 610
    if( !pArea->fReadonly )
       AdsFlushFileBuffers( pArea->hTable );  /* meaningful with local server; ignored by remote server */
 #endif
