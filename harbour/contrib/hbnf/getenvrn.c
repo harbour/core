@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: getenvrn.c
  * Author....: Rick Whitt
  * CIS ID....: 70672,605
  *

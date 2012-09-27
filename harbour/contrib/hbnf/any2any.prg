@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: any2any.prg
  * Author....: David Husnian
  * CIS ID....: ?
  *

@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: stod.c
  * Author....: Clayton Neff
  * CIS ID....:
  *
@@ -21,7 +20,6 @@
  *
  *    Rev 1.0   01 Apr 1991 01:03:00   GLENN
  * Nanforum Toolkit
- *
  *
  */
 

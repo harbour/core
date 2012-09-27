@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: rmdir.asm
  * Author....: Ted Means
  * CIS ID....: 73067,3332
  *
@@ -23,30 +22,6 @@
  *  Nanforum Toolkit
  *
  */
-
-/*This  is the Original FT_RMDIR() code
-   IDEAL
-
-   Public   FT_RMDIR
-
-   Extrn    __ftdir:Far
-
-   Segment  _NanFor   Word      Public    "CODE"
-         Assume    CS:_NanFor
-
-   Proc     FT_RMDIR  Far
-
-         Mov       AH,3Ah                    * DOS service--remove directory
-         Push      AX                        * Save on stack
-         Call      __ftdir                   * Call generic directory routine
-         Add       SP,2                      * Realign stack
-         Ret
-   Endp     FT_RMDIR
-   Ends     _NanFor
-   End
- */
-
-/* This is the New one Rewriten in C*/
 
 #include "hbapi.h"
 #include "hbapifs.h"

@@ -50,7 +50,7 @@
  *
  */
 
-/* File......: isprint.asm
+/*
  * Author....: Ted Means
  * CIS ID....: 73067,3332
  *

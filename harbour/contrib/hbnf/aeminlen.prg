@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: aeminlen.prg
  * Author....: Ralph Oliver,  TRANSCOM SYSTEMS
  * CIS ID....: 74030,703
  *

@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: round.prg
  * Author....: David Husnian
  * CIS ID....: ?
  *

@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: savesets.prg
  * Author....: David Husnian
  * CIS ID....: ?
  *

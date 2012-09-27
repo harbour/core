@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: isshare.prg
  * Author....: Glenn Scott (from Tom Leylan C source)
  * CIS ID....: ?
  *

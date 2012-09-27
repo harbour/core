@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: aavg.prg
  * Author....: David Husnian
  * CIS ID....: ?
  *

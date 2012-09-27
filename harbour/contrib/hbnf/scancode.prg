@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: scancode.prg
  * Author....: Glenn Scott (from John Kaster)
  * CIS ID....: 71620,1521
  *

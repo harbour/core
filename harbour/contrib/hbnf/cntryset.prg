@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: cntryset.prg
  * Author....: David Husnian
  * CIS ID....: ?
  *

@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: byteor.prg
  * Author....: Forest Belt, Computer Diagnostic Services, Inc.
  * CIS ID....: ?
  *

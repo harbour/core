@@ -5,7 +5,7 @@
 This library has been ported to Harbour by Luiz Rafael Culik
 
 //TODO
-The follow functions must be rewrite in C
+The following functions must be rewritten in C:
 asm\adapter.asm               ;     FT_ADAPTER()
 asm\default.asm               ;     FT_DEFAULT()
 asm\inp.asm                   ;     FT_INP()
@@ -14,7 +14,7 @@ asm\reboot.asm                ;     FT_REBOOT()
 asm\restatt.asm               ;     FT_RESTATT()
 asm\saveatt.asm               ;     FT_SAVEATT()
 
-The follow functions need to be fixed.
+The following functions need to be fixed:
 cint86.c                      ;     FT_INT86()
 
 The following functions need FT_INT86() or to be rewritten in C:

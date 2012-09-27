@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: d2e.prg
  * Author....: Gary Baren
  * CIS ID....: 75470,1027
  *

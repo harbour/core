@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: dosver.prg
  * Author....: Glenn Scott
  * CIS ID....: ?
  *

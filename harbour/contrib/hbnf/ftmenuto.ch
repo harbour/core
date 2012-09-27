@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: ftmenuto.ch
  * Author....: Ted Means
  * CIS ID....: 73067,3332
  *
@@ -25,7 +24,6 @@
  *
  *    Rev 1.0   01 Apr 1991 01:02:40   GLENN
  * Nanforum Toolkit
- *
  *
  */
 
@@ -70,4 +68,4 @@
                     <Block>                                 )
 
 #xcommand MENU TO <v> [<l : COLD>] => ;
-   <v> := FT_MenuTo( {|_1| iif( _1 == NIL, <v>, <v> := _1 ) }, #<v>, <.l.> )
+   <v> := FT_MenuTo( {| _1 | iif( _1 == NIL, <v>, <v> := _1 ) }, #<v>, <.l.> )

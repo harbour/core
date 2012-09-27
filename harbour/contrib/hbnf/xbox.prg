@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: xbox.prg
  * Author....: Don Opperthauser
  * CIS ID....: ?
  *

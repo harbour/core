@@ -43,7 +43,7 @@ PROCEDURE Main( nRow, nCol )
    @ 0, 0, MaxRow(), MaxCol() BOX hb_UTF8ToStr( "░░░░░░░░░" )
 
    SetColor( "GR+/RB" )
-//     scroll( 7,2,19,63,0 )
+// Scroll( 7, 2, 19, 63, 0 )
    @ 7, 2 TO 20, 63
 
    @ 17, 10 TO 19, 40 double
@@ -55,7 +55,7 @@ PROCEDURE Main( nRow, nCol )
 
    // ..... Start the demo
 
-   @MaxRow(), 0 SAY "Driver version: " + ;
+   @ MaxRow(), 0 SAY "Driver version: " + ;
       AllTrim( Str( FT_MVERSION( @nMinor, @nType, @nIRQ ), 2, 0 ) ) + "." + ;
       AllTrim( Str( nMinor, 2, 0 ) )
    @ Row(), Col() SAY " " + aType[ nType ] + " mouse using IRQ " + Str( nIRQ, 1, 0 )

@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: easter.prg
  * Author....: Paul Tucker
  * Email.....: <ptucker@sympatico.ca>
  *

@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: workdays.prg
  * Author....: John F. Kaster
  * CIS_ID....: 71510,3321
  *

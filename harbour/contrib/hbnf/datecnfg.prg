@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: datecnfg.prg
  * Author....: Jo W. French dba Practical Computing
  * CIS ID....: 74730,1751
  *

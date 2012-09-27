@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: popadder.prg
  * Author....: Keith A. Wire
  * CIS ID....: 73760,2427
  *

@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: diskfunc.prg
  * Author....: Robert A. DiFalco
  * CIS ID....: ?
  *

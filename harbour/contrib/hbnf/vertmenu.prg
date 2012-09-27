@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: vertmenu.prg
  * Author....: Greg Lief
  * CIS ID....: 72460,1760
  *

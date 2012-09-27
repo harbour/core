@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: asum.prg
  * Author....: David Husnian
  * CIS ID....: ?
  *

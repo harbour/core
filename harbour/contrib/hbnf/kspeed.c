@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: kspeed.asm
  * Author....: James R. Zack
  * CIS ID....: 75410,1567
  *
@@ -23,61 +22,6 @@
  *  Nanforum Toolkit
  *
  */
-
-/*This  is the Original FT_SETRATE() code
-   PUBLIC     FT_SETRATE                   * MAKE ROUTINE VISIBLE
-
-   EXTRN      __PARNI:FAR                  * DECLARE EXTERNALS
-   EXTRN      __RET:FAR
-   EXTRN      __PARINFO:FAR
-
-   _NANFOR   SEGMENT       'CODE'
-           ASSUME        CS:_NANFOR     * POINT CS TO MY CODE
-   FT_SETRATE PROC          FAR
-           PUSH          BP             * SAVE BASE POINTER
-           MOV           BP,SP          * POINT TO TOP OF STACK
-           PUSH          DS             * SAVE REGISTERS
-           PUSH          ES
-           PUSH          SI
-           PUSH          DI
-           MOV           AX,0           * LOOK AT NUMBER OF PARAMS PASSED
-           PUSH          AX             * SET UP FOR __PARINFO
-           CALL          __PARINFO      * GET NUMBER OF PARAMS PASSED
-           ADD           SP,2           * ADJUST STACK
-           CMP           AX,2           * WERE BOTH PARMS PASSED?
-           JL            DEFAULTS       * NO, USE DEFAULTS
-           JMP           GETPARMS       * OTHERWISE, LETS GET SOME PARAMS.
-   DEFAULTS:  MOV           BX,010CH       * SET UP DEFAULTS (for AT)
-           jmp           goodparm       * and make the int call.
-   getparms:  mov           ax,01h         * First param is repeat rate
-           push          ax             * Set up for __PARNI
-           call          __PARNI        * Get first param
-           add           sp,2           * Adjust stack
-           mov           bl,al          * Put repeat rate into BL
-           cmp           bl,20h         * Is BL > 20h? (max value)
-           jg            defaults       * Yes, then use defaults
-           mov           ax,02h         * Second parm is typeamatic delay
-           push          ax             * Set up for __PARNI
-           call          __PARNI        * Get second param
-           add           sp,2           * Adjust stack
-           mov           bh,al          * Put delay into BH
-           cmp           bh,04h         * Is BH > 04h (max value)
-           jg            defaults       * Yes, then use defaults
-   goodparm:  mov           ax,0305h       * BIOS Function 03 Subfunction 05
-           int           16h            * Set Typematic Rate and Delay
-   exit:      pop           di             * Retore registers
-           pop           si
-           pop           es
-           pop           ds
-           pop           bp
-           call          __RET          * Clean up for Clipper
-           ret                          * Pass control back to Clipper
-   FT_SETRATE ENDP
-   _NanFor    ENDS
-           END
- */
-
-/* This is the New one Rewriten in C*/
 
 #include "hbapi.h"
 #if defined( HB_OS_DOS )

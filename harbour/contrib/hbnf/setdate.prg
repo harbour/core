@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: setdate.prg
  * Author....: Glenn Scott
  * CIS ID....: 71620,1521
  *

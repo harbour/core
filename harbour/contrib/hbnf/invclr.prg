@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: invclr.prg
  * Author....: David Husnian
  * CIS ID....: ?
  *

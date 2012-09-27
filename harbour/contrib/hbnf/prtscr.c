@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: prtscr.c
  * Author....: Ted Means
  * CIS ID....: 73067,3332
  *
@@ -24,7 +23,6 @@
  *
  *    Rev 1.0   01 Apr 1991 01:02:58   GLENN
  * Nanforum Toolkit
- *
  *
  */
 

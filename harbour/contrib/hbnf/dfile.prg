@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: dfile.prg
  * Author....: Mike Taylor
  * CIS ID....: ?
  *
@@ -35,7 +34,7 @@ PROCEDURE Main()
 
    @ 0, 0 CLEAR
 
-   cInFile   := "ft_dfile.prg"
+   cInFile   := "dfile.prg"
    CKEY      := ""
    NNCOLOR   := 7
    NHCOLOR   := 15
@@ -57,13 +56,13 @@ PROCEDURE Main()
 
    READ
 
-    /*
-     * REMEMBER A WINDOW WILL BE ONE SIZE LESS AND GREATER THAN THE PASSED COORD.'S
-     *
-     * THE 9TH PARAMETER CONTAINS THE KEYS THAT THE ROUTINE WILL TERMINATE ON
-     * AND THE hb_BChar(143) represents the F3 key.
-     *
-     */
+   /*
+    * REMEMBER A WINDOW WILL BE ONE SIZE LESS AND GREATER THAN THE PASSED COORD.'S
+    *
+    * THE 9TH PARAMETER CONTAINS THE KEYS THAT THE ROUTINE WILL TERMINATE ON
+    * AND THE hb_BChar(143) represents the F3 key.
+    *
+    */
 
    @ 4, 9 TO 11, 71
 

@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: findith.prg
  * Author....: David Husnian
  * CIS ID....: ?
  *

@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: adessort.prg
  * Author....: David Husnian
  * CIS ID....: ?
  *

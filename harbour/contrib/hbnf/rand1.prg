@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: rand1.prg
  * Author....: Gary Baren
  * CIS ID....: 75470,1027
  *

@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: tbwhile.prg
  * Author....: Jim Orlowski
  * CIS ID....: ?
  *

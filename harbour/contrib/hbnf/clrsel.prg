@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: clrsel.prg
  * Author....: Dave Adams
  * CIS ID....: 72037,2654
  *

@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: anomatch.prg
  * Author....: David Husnian
  * CIS ID....: ?
  *

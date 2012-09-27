@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: mouse1.prg
  * Author....: Leo Letendre
  * CIS ID....: 73607,233
  *

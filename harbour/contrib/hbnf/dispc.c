@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: dispc.c
  * Author....: Mike Taylor
  * CIS ID....: ?
  *
@@ -63,10 +62,6 @@
 #define CR           ( ( char ) 13 )
 #define LF           ( ( char ) 10 )
 #define FEOF         ( ( char ) 26 )
-
-#define READONLY     0          /* open file modes */
-#define WRITEONLY    1
-#define READWRITE    2
 
 #define BUFFERSIZE   4096        /* maximum size of the file buffer */
 #define MAXLINE      255         /* default maximum size of a line  */

@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: origin.c
  * Author....: Steve Larsen
  * CIS ID....: 76370,1532
  *

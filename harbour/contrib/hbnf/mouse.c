@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code
  *
- * mouse.c Support functions for Nanfor Library
+ * Mouse support functions for Nanfor Library
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
  * www - http://harbour-project.org

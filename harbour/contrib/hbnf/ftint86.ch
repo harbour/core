@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: ftint86.ch - Header file for users of FT_INT86() function
+ * File......: Header file for users of FT_INT86() function
  * Author....: Ted Means
  * CIS ID....: 73067,3332
  *
@@ -38,40 +38,39 @@
  *    Rev 1.0   01 Apr 1991 01:02:38   GLENN
  * Nanforum Toolkit
  *
- *
  */
 
 #ifndef __FTINT86_CH__
 #define __FTINT86_CH__
 
-#define INT86_MAX_REGS       10
+#define INT86_MAX_REGS      10
 
-#define AX         1
-#define BX         2
-#define CX         3
-#define DX         4
-#define SI         5
-#define DI         6
-#define BP         7
-#define DS         8
-#define ES         9
-#define FLAGS     10
+#define AX                  1
+#define BX                  2
+#define CX                  3
+#define DX                  4
+#define SI                  5
+#define DI                  6
+#define BP                  7
+#define DS                  8
+#define ES                  9
+#define FLAGS               10
 
-#define FLAG_CARRY     0     // Carry flag
-#define FLAG_PARITY    2     // Parity flag
-#define FLAG_AUX       4     // Auxillary flag
-#define FLAG_ZERO      6     // Zero flag
-#define FLAG_SIGN      7     // Sign flag
-#define FLAG_TRAP      8     // Trap flag
-#define FLAG_INT       9     // Interrupt flag
-#define FLAG_DIR      10     // Direction flag
-#define FLAG_OFLOW    11     // Overflow flag
+#define FLAG_CARRY          0     // Carry flag
+#define FLAG_PARITY         2     // Parity flag
+#define FLAG_AUX            4     // Auxillary flag
+#define FLAG_ZERO           6     // Zero flag
+#define FLAG_SIGN           7     // Sign flag
+#define FLAG_TRAP           8     // Trap flag
+#define FLAG_INT            9     // Interrupt flag
+#define FLAG_DIR            10    // Direction flag
+#define FLAG_OFLOW          11    // Overflow flag
 
-#translate makehi( <X> )        => ((<X>) * 256)
+#translate makehi( <X> )        => ( ( <X> ) * 256 )
 #translate REG_DS               => .T.
 #translate REG_ES               => .F.
 #translate highbyte( <X> )      => ( int( iif( (<X>) \< 0, 65536 + (<X>), (<X>) ) / 256 ) )
 #translate lowbyte( <X> )       => (      iif( (<X>) \< 0, 65536 + (<X>), (<X>) ) % 256   )
-#translate carrySet( <XFLAGS> ) => (ft_isbiton((<XFLAGS>), FLAG_CARRY))
+#translate carrySet( <XFLAGS> ) => ( ft_isbiton( ( <XFLAGS> ), FLAG_CARRY ) )
 
 #endif // __FTINT86_CH__

@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: byt2hex.prg
  * Author....: Forest Belt, Computer Diagnostic Services, Inc.
  * CIS ID....: ?
  *
