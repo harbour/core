@@ -71,18 +71,16 @@ THREAD STATIC t_lMinit := .F.
 
 #ifdef FT_TEST
 
-PROCEDURE Main( nRow, nCol )
-
 // Pass valid row and column values for different video modes to change modes
+
+PROCEDURE Main( nRow, nCol )
 
    LOCAL nX, nY, cSavClr
    LOCAL cSavScr := SaveScreen( 0, 0, MaxRow(), MaxCol() )
-   LOCAL nXm, nYm
    LOCAL nSaveRow := MaxRow() + 1, nSaveCol := MaxCol() + 1
    LOCAL nMinor, nType, nIRQ
    LOCAL aType := { "Bus", "Serial", "InPort", "PS/2", "HP" }
    LOCAL nHoriz, nVert, nDouble
-   LOCAL nTime
 
    IF nRow == NIL
       nRow := MaxRow() + 1
@@ -97,18 +95,18 @@ PROCEDURE Main( nRow, nCol )
    ENDIF
 
    IF ! SetMode( nRow, nCol )
-      @MaxRow(), 0 SAY "Mode Change unsuccessful:" + Str( nRow, 2, 0 ) + " by";
+      @ MaxRow(), 0 SAY "Mode Change unsuccessful:" + Str( nRow, 2, 0 ) + " by";
          + Str( nCol, 3, 0 )
-      RETURN NIL
+      RETURN
    ENDIF
 
    IF Empty( FT_MINIT() )
       @ MaxRow(), 0 SAY "Mouse driver is not installed!"
       SetMode( nSaveRow, nSaveCol )
-      RETURN ""
+      RETURN
    ENDIF
 
-// ..... Set up the screen
+   // ..... Set up the screen
    cSavClr := SetColor( "w/n" )
    @ 0, 0, MaxRow(), MaxCol() BOX hb_UTF8ToStr( "░░░░░░░░░" )
 
@@ -123,9 +121,9 @@ PROCEDURE Main( nRow, nCol )
 
    SetColor( "GR+/RB" )
 
-// ..... Start the demo
+   // ..... Start the demo
 
-   @MaxRow(), 0 SAY "Driver version: " + ;
+   @ MaxRow(), 0 SAY "Driver version: " + ;
       AllTrim( Str( FT_MVERSION( @nMinor, @nType, @nIRQ ), 2, 0 ) ) + "." + ;
       AllTrim( Str( nMinor, 2, 0 ) )
    @ Row(), Col() SAY " " + aType[ nType ] + " mouse using IRQ " + Str( nIRQ, 1, 0 )
@@ -136,7 +134,7 @@ PROCEDURE Main( nRow, nCol )
    FT_MSHOWCRS()
    FT_MSETCOORD( 10, 20 )  // just an arbitrary place for demo
 
-// put the unchanging stuff
+   // put the unchanging stuff
 
    DevPos( 9, 10 )
    DevOut( "FT_MMICKEYS :" )
@@ -174,7 +172,6 @@ PROCEDURE Main( nRow, nCol )
       // the cursor when necessary.
 
       FT_MCONOFF( 9, 23, 16, 53 )
-      nTime := - 1
 
       DevPos( 9, 23 )
       DevOut( nX )
@@ -258,7 +255,7 @@ PROCEDURE Main( nRow, nCol )
    RestScreen( 0, 0, MaxRow(), MaxCol(), cSavScr )
    DevPos( MaxRow(), 0 )
 
-// Reset sensitivity
+   // Reset sensitivity
 
    FT_MSETSENS( nHoriz, nVert, nDouble )
 
@@ -268,9 +265,9 @@ PROCEDURE Main( nRow, nCol )
 
 FUNCTION FT_MINIT()
 
-// If not previously initialized then try
+   // If not previously initialized then try
 
-   IF !t_lMinit
+   IF ! t_lMinit
       t_lMinit := ( FT_MRESET() != 0 )
    ELSE
       // Reset maximum x and y limits
@@ -283,11 +280,11 @@ FUNCTION FT_MINIT()
 
 FUNCTION FT_MRESET()
 
-   t_aReg[ AX ] := 0        // set mouse function call 0
-   FT_INT86( 51, t_aReg ) // execute mouse interrupt
-   t_lCrsState := .F.     // Cursor is off after reset
+   t_aReg[ AX ] := 0       // set mouse function call 0
+   FT_INT86( 51, t_aReg )  // execute mouse interrupt
+   t_lCrsState := .F.      // Cursor is off after reset
 
-// Reset maximum x and y limits
+   // Reset maximum x and y limits
 
    FT_MYLIMIT( 0, 8 * MaxRow() )
    FT_MXLIMIT( 0, 8 * MaxCol() )
@@ -311,15 +308,15 @@ FUNCTION FT_MCURSOR( lState )
 FUNCTION FT_MSHOWCRS()
 
    t_aReg[ AX ] := 1         // set mouse function call 1
-   FT_INT86( 51, t_aReg ) // execute mouse interrupt
+   FT_INT86( 51, t_aReg )    // execute mouse interrupt
    t_lCrsState := .T.
 
-   RETURN NIL              // no output from function
+   RETURN NIL                // no output from function
 
-FUNCTION FT_MHIDECRS()  // decrement internal cursor flag and hide cursor
+FUNCTION FT_MHIDECRS()       // decrement internal cursor flag and hide cursor
 
-   t_aReg[ AX ] := 2        // set mouse function call 2
-   FT_INT86( 51, t_aReg ) // execute mouse interrupt
+   t_aReg[ AX ] := 2         // set mouse function call 2
+   FT_INT86( 51, t_aReg )    // execute mouse interrupt
    t_lCrsState := .F.
 
    RETURN NIL              // no output from function
@@ -330,84 +327,84 @@ FUNCTION FT_MGETPOS( nX, nY )
    nY := iif( nY == NIL, 0, nY )
 
    t_aReg[ AX ] := 3                // set mouse function call 3
-   FT_INT86( 51, t_aReg )        // execute mouse interrupt
+   FT_INT86( 51, t_aReg )           // execute mouse interrupt
    nX := t_aReg[ DX ]               // store new x-coordinate
    nY := t_aReg[ CX ]               // store new y-coordinate
 
-   RETURN t_aReg[ BX ]                 // return button status
+   RETURN t_aReg[ BX ]              // return button status
 
 FUNCTION FT_MGETCOORD( nX, nY )
 
-// Duplicated code from FT_MGETPOS() for speed reasons
+   // Duplicated code from FT_MGETPOS() for speed reasons
 
    nX := iif( nX == NIL, 0, nX )
    nY := iif( nY == NIL, 0, nY )
 
-   t_aReg[ AX ] := 3                // set mouse function call 3
-   FT_INT86( 51, t_aReg )         // execute mouse interrupt
-   nX := Int( t_aReg[ DX ] / 8 )        // store new x-coordinate
-   nY := Int( t_aReg[ CX ] / 8 )        // store new y-coordinate
+   t_aReg[ AX ] := 3               // set mouse function call 3
+   FT_INT86( 51, t_aReg )          // execute mouse interrupt
+   nX := Int( t_aReg[ DX ] / 8 )   // store new x-coordinate
+   nY := Int( t_aReg[ CX ] / 8 )   // store new y-coordinate
 
-   RETURN t_aReg[ BX ]                 // return button status
+   RETURN t_aReg[ BX ]             // return button status
 
 FUNCTION FT_MGETX()
 
-// Duplicated code from FT_MGETPOS() for speed reasons
+   // Duplicated code from FT_MGETPOS() for speed reasons
 
-   t_aReg[ AX ] := 3                // set mouse function call 3
-   FT_INT86( 51, t_aReg )        // execute mouse interrupt
+   t_aReg[ AX ] := 3              // set mouse function call 3
+   FT_INT86( 51, t_aReg )         // execute mouse interrupt
 
-   RETURN Int( t_aReg[ DX ] / 8 )       // return x-coordinate
+   RETURN Int( t_aReg[ DX ] / 8 ) // return x-coordinate
 
 FUNCTION FT_MGETY()
 
-// Duplicated code from FT_MGETPOS() for speed reasons
+   // Duplicated code from FT_MGETPOS() for speed reasons
 
-   t_aReg[ AX ] := 3                // set mouse function call 3
-   FT_INT86( 51, t_aReg )        // execute mouse interrupt
+   t_aReg[ AX ] := 3              // set mouse function call 3
+   FT_INT86( 51, t_aReg )         // execute mouse interrupt
 
-   RETURN Int( t_aReg[ CX ] / 8 )       // return y-coordinate
+   RETURN Int( t_aReg[ CX ] / 8 ) // return y-coordinate
 
 FUNCTION FT_MSETPOS( nX, nY )  // set mouse cursor location
 
-   t_aReg[ AX ] := 4                // set mouse function call 4
-   t_aReg[ CX ] := nY               // assign new x-coordinate
-   t_aReg[ DX ] := nX               // assign new y-coordinate
+   t_aReg[ AX ] := 4             // set mouse function call 4
+   t_aReg[ CX ] := nY            // assign new x-coordinate
+   t_aReg[ DX ] := nX            // assign new y-coordinate
    FT_INT86( 51, t_aReg )        // execute mouse interrupt
 
-   RETURN NIL                     // no function output
+   RETURN NIL                    // no function output
 
 FUNCTION FT_MSETCOORD( nX, nY )  // set mouse cursor location
 
-   t_aReg[ AX ] := 4                // set mouse function call 4
-   t_aReg[ CX ] := nY * 8             // assign new x-coordinate
-   t_aReg[ DX ] := nX * 8             // assign new y-coordinate
+   t_aReg[ AX ] := 4             // set mouse function call 4
+   t_aReg[ CX ] := nY * 8        // assign new x-coordinate
+   t_aReg[ DX ] := nX * 8        // assign new y-coordinate
    FT_INT86( 51, t_aReg )        // execute mouse interrupt
 
    RETURN NIL                     // no function output
 
 FUNCTION FT_MXLIMIT( nXMin, nXMax )   // set vertical minimum and maximum coordinates
 
-   t_aReg[ AX ] := 7                        // set mouse function call 7
-   t_aReg[ CX ] := nXMin                    // load vertical minimum parameter
-   t_aReg[ DX ] := nXMax                    // load vertical maximum parameter
+   t_aReg[ AX ] := 7                    // set mouse function call 7
+   t_aReg[ CX ] := nXMin                // load vertical minimum parameter
+   t_aReg[ DX ] := nXMax                // load vertical maximum parameter
    FT_INT86( 51, t_aReg )               // execute mouse interrupt
 
    RETURN NIL
 
 FUNCTION FT_MYLIMIT( nYMin, nYMax )  // set horizontal minimum and maximum coordinates
 
-   t_aReg[ AX ] := 8                       // set mouse function call 8
-   t_aReg[ CX ] := nYMin                   // load horz minimum parameter
-   t_aReg[ DX ] := nYMax                   // load horz maximum parameter
+   t_aReg[ AX ] := 8                   // set mouse function call 8
+   t_aReg[ CX ] := nYMin               // load horz minimum parameter
+   t_aReg[ DX ] := nYMax               // load horz maximum parameter
    FT_INT86( 51, t_aReg )              // execute mouse interrupt
 
-   RETURN NIL                           // no function output
+   RETURN NIL                          // no function output
 
 FUNCTION FT_MBUTPRS( nButton, nButPrs, nX, nY ) // get button press information
 
-   t_aReg[ AX ] := 5              // set mouse function call 5
-   t_aReg[ BX ] := nButton        // pass parameter for left or right button
+   t_aReg[ AX ] := 5            // set mouse function call 5
+   t_aReg[ BX ] := nButton      // pass parameter for left or right button
    FT_INT86( 51, t_aReg )       // execute mouse interrupt
    nButPrs := t_aReg[ BX ] // store updated press count
    nX := t_aReg[ DX ]      // x-coordinate at last press
@@ -417,24 +414,23 @@ FUNCTION FT_MBUTPRS( nButton, nButPrs, nX, nY ) // get button press information
 
 FUNCTION FT_MBUTREL( nButton, nButRel, nX, nY ) // get button release information
 
-   t_aReg[ AX ] := 6                // set mouse function call 6
-   t_aReg[ BX ] := nButton          // pass parameter for left or right button
+   t_aReg[ AX ] := 6             // set mouse function call 6
+   t_aReg[ BX ] := nButton       // pass parameter for left or right button
    FT_INT86( 51, t_aReg )        // execute mouse interrupt
-   nButRel := t_aReg[ BX ]  // store updated release count
-   nX := t_aReg[ DX ]      // x-coordinate at last release
-   nY := t_aReg[ CX ]      // y-coordinate at last release
+   nButRel := t_aReg[ BX ]       // store updated release count
+   nX := t_aReg[ DX ]            // x-coordinate at last release
+   nY := t_aReg[ CX ]            // y-coordinate at last release
 
-   RETURN t_aReg[ AX ]                 // return button status
+   RETURN t_aReg[ AX ]           // return button status
 
-  /*
+/*
 FUNCTION FT_MDEFCRS( nCurType, nScrMask, nCurMask )   // define text cursor type and masks
 
    t_aReg[ AX ] := 10        // set mouse function call 10
    t_aReg[ BX ] := nCurType  // load cursor type parameter
    t_aReg[ CX ] := nScrMask  // load screen mask value
    t_aReg[ DX ] := nCurMask  // load cursor mask value
-   FT_INT86( 51, t_aReg ) // execute mouse interrupt
+   FT_INT86( 51, t_aReg )    // execute mouse interrupt
 
-RETURN NIL              // no function output
-
+   RETURN NIL                // no function output
 */

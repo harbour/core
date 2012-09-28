@@ -36,7 +36,9 @@
 
 PROCEDURE Main()
 
-   LOCAL ASETS := FT_SAVESETS()
+   LOCAL aSets := FT_SAVESETS()
+
+   HB_SYMBOL_UNUSED( aSets )
 
    Inkey( 0 )
 

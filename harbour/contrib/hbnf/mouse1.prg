@@ -9,16 +9,14 @@ THREAD STATIC t_lMinit := .F.
 
 PROCEDURE Main( nRow, nCol )
 
-// Pass valid row and column values for different video modes to change modes
+   // Pass valid row and column values for different video modes to change modes
 
    LOCAL nX, nY, cSavClr
    LOCAL cSavScr := SaveScreen( 0, 0, MaxRow(), MaxCol() )
-   LOCAL nXm, nYm
    LOCAL nSaveRow := MaxRow() + 1, nSaveCol := MaxCol() + 1
    LOCAL nMinor, nType, nIRQ
    LOCAL aType := { "Bus", "Serial", "InPort", "PS/2", "HP" }
    LOCAL nHoriz, nVert, nDouble
-   LOCAL nTime
 
    IF nRow == NIL
       nRow := MaxRow() + 1
@@ -35,10 +33,10 @@ PROCEDURE Main( nRow, nCol )
    IF  !FT_MINIT()
       @ MaxRow(), 0 SAY "Mouse driver is not installed!"
 
-      RETURN ""
+      RETURN
    ENDIF
 
-// ..... Set up the screen
+   // ..... Set up the screen
    cSavClr := SetColor( "w/n" )
    @ 0, 0, MaxRow(), MaxCol() BOX hb_UTF8ToStr( "░░░░░░░░░" )
 
@@ -104,7 +102,6 @@ PROCEDURE Main( nRow, nCol )
       // the cursor when necessary.
 
       FT_MCONOFF( 9, 23, 16, 53 )
-      nTime := - 1
 
       DevPos( 9, 23 )
       DevOut( nX )
@@ -205,8 +202,8 @@ FUNCTION FT_MMICKEYS( nX, nY ) // read mouse motion counters
    LOCAL areturn
 
    areturn := _mget_mics()
-   nX := areturn[1]               // store horizontal motion units
-   nY := areturn[2]               // store vertical motion units
+   nX := areturn[ 1 ]             // store horizontal motion units
+   nY := areturn[ 2 ]             // store vertical motion units
 
    RETURN NIL                     // no function output
 
@@ -214,10 +211,10 @@ FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
 
    LOCAL nVert, nHorz  // local row and col coordinates
    LOCAL lDouble       // double click actually occurred
-   LOCAL lDone          // loop flag
-   LOCAL nPrs           // number of presses which occurred
+   LOCAL lDone         // loop flag
+   LOCAL nPrs          // number of presses which occurred
 
-// Initialize any empty arguments
+   // Initialize any empty arguments
 
    IF nClick == NIL
       nClick := 1
@@ -247,7 +244,7 @@ FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
    nHorz := nCol
    lDouble := lDone := nClick == 0
 
-// Wait for first press if requested
+   // Wait for first press if requested
 
    DO WHILE !lDone
 
@@ -260,19 +257,19 @@ FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
 
    ENDDO
 
-// if we have not moved then keep the preliminary double click setting
+   // if we have not moved then keep the preliminary double click setting
 
    lDouble := lDouble .AND. ( nVert == nRow .AND. nHorz == nCol )
 
-// change start time if we waited for first click. nInterval is the
-// maximum time between clicks not the total time for two clicks if
-// requested.
+   // change start time if we waited for first click. nInterval is the
+   // maximum time between clicks not the total time for two clicks if
+   // requested.
 
    IF nClick > 0
       nStart := Seconds()
    ENDIF
 
-// If we have fulfilled all of the requirements then wait for second click
+   // If we have fulfilled all of the requirements then wait for second click
 
    IF lDouble
 
@@ -281,8 +278,8 @@ FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
       DO WHILE !lDone
 
          FT_MBUTPRS( nButton, @nPrs, @nVert, @nHorz )
-         nVert := Int( nVert/8 )
-         nHorz := Int( nHorz/8 )
+         nVert := Int( nVert / 8 )
+         nHorz := Int( nHorz / 8 )
 
          lDouble := ( nPrs > 0 )
          lDone := Seconds() - nStart >= nInterval .OR. lDouble
@@ -299,7 +296,7 @@ FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
 
 FUNCTION FT_MCONOFF( nTop, nLeft, nBottom, nRight )
 
-// Fill the registers
+   // Fill the registers
 
 /*
    aReg[ AX ]:=16
@@ -308,7 +305,7 @@ FUNCTION FT_MCONOFF( nTop, nLeft, nBottom, nRight )
    aReg[DI]:=nBottom*8
    aReg[SI]:=nRight*8
    FT_INT86( 51, aReg )        // execute mouse interrupt
-   */
+*/
    _mse_conoff( nTop * 8, nLeft * 8, nBottom * 8, nRight * 8 )
 
    RETURN NIL
@@ -322,11 +319,11 @@ FUNCTION FT_MSETSENS( nHoriz, nVert, nDouble )
 
    LOCAL nCurHoriz, nCurVert, nCurDouble
 
-// Get current values
+   // Get current values
 
    FT_MGETSENS( @nCurHoriz, @nCurVert, @nCurDouble )
 
-// Set defaults if necessary
+   // Set defaults if necessary
 
    IF ! HB_ISNUMERIC( nHoriz )
       nHoriz := nCurHoriz
@@ -340,27 +337,27 @@ FUNCTION FT_MSETSENS( nHoriz, nVert, nDouble )
       nDouble := nCurDouble
    ENDIF
 
-// Fill the registers
+   // Fill the registers
    _mset_sensitive( nHoriz, nVert, nDouble )
 
    RETURN nil
 
 FUNCTION FT_MGETSENS( nHoriz, nVert, nDouble )
 /*
-* Fill the register
+   // Fill the register
 
-aReg[ AX ] := 27
+   aReg[ AX ] := 27
 
-* Execute interupt
+   // Execute interupt
 
-FT_INT86( 51, aReg )        // execute mouse interrupt
+   FT_INT86( 51, aReg )        // execute mouse interrupt
 
 */
 
-// Set the return values
+   // Set the return values
 
-   nHoriz := _mget_horispeed()
-   nVert  := _mget_verspeed()
+   nHoriz  := _mget_horispeed()
+   nVert   := _mget_verspeed()
    nDouble := _mget_doublespeed()
 
    RETURN NIL
@@ -369,35 +366,35 @@ FUNCTION FT_MVERSION( nMinor, nType, nIRQ )
 
    LOCAL aReturn
 
-// Set up register
+   // Set up register
 /*
-aReg[ AX ] := 36
+   aReg[ AX ] := 36
 
-// Call interupt
+   // Call interupt
 
-FT_INT86( 51, aReg)
+   FT_INT86( 51, aReg)
 */
-// decode out of half registers
+   // decode out of half registers
    areturn := _mget_mversion()
 
    nMinor := areturn[ 1 ]
    nType  := areturn[ 2 ]
    nIRQ   := areturn[ 3 ]
 
-// Return
+   // Return
 
    RETURN areturn[ 4 ]
 
 FUNCTION FT_MSETPAGE( nPage )
 
-// Set up register
+   // Set up register
 /*
-aReg[ AX ] := 29
-aReg[ BX ] := nPage
+   aReg[ AX ] := 29
+   aReg[ BX ] := nPage
 
-// Call interupt
+   // Call interupt
 
-FT_INT86( 51, aReg)
+   FT_INT86( 51, aReg)
 */
    _mset_page( nPage )
 
@@ -405,22 +402,22 @@ FT_INT86( 51, aReg)
 
 FUNCTION FT_MGETPAGE()
 
-// Set up register
+   // Set up register
 /*
-aReg[ AX ] := 30
+   aReg[ AX ] := 30
 
-// Call interupt
+   // Call interupt
 
-FT_INT86( 51, aReg)
+   FT_INT86( 51, aReg)
 */
 
    RETURN _mget_page()
 
 FUNCTION FT_MINIT()
 
-// If not previously initialized then try
+   // If not previously initialized then try
 
-   IF !t_lMinit
+   IF ! t_lMinit
       t_lMinit := ( FT_MRESET() != 0 )
    ELSE
       // Reset maximum x and y limits
@@ -463,10 +460,10 @@ FUNCTION FT_MCURSOR( lState )
    RETURN lSavState
 
 FUNCTION FT_MSHOWCRS()
-   /*
+/*
    aReg[ AX ] := 1         // set mouse function call 1
    FT_INT86( 51, aReg ) // execute mouse interrupt
-   */
+*/
 
    _mse_showcurs()
    t_lCrsState := .T.
@@ -477,7 +474,7 @@ FUNCTION FT_MHIDECRS()   // decrement internal cursor flag and hide cursor
 /*
    aReg[ AX ] := 2         // set mouse function call 2
    FT_INT86( 51, aReg )  // execute mouse interrupt
-   */
+*/
 
    _mse_mhidecrs()
    t_lCrsState := .F.
@@ -493,7 +490,7 @@ FUNCTION FT_MGETPOS( nX, nY )
 /*
    aReg[ AX ] := 3                // set mouse function call 3
    FT_INT86( 51, aReg )        // execute mouse interrupt
-   */
+*/
    amse := _mse_getpos()
 
    nX := amse[1]               // store new x-coordinate
@@ -503,7 +500,7 @@ FUNCTION FT_MGETPOS( nX, nY )
 
 FUNCTION FT_MGETX()
 
-// Duplicated code from FT_MGETPOS() for speed reasons
+   // Duplicated code from FT_MGETPOS() for speed reasons
 /*
    aReg[ AX ] := 3                // set mouse function call 3
    FT_INT86( 51, aReg )        // execute mouse interrupt
@@ -527,7 +524,7 @@ FUNCTION FT_MSETPOS( nX, nY )  // set mouse cursor location
    aReg[ CX ] := nY               // assign new x-coordinate
    aReg[ DX ] := nX               // assign new y-coordinate
    FT_INT86( 51, aReg )        // execute mouse interrupt
-  */
+*/
 
    _m_msetpos( nY, nX )
 
@@ -539,7 +536,7 @@ FUNCTION FT_MSETCOORD( nX, nY )  // set mouse cursor location
    aReg[ CX ] := nY*8             // assign new x-coordinate
    aReg[ DX ] := nX*8             // assign new y-coordinate
    FT_INT86( 51, aReg )        // execute mouse interrupt
-   */
+*/
 
    _m_MSETCOORD( nY * 8, nX * 8 )
 
@@ -551,7 +548,7 @@ FUNCTION FT_MXLIMIT( nXMin, nXMax )   // set vertical minimum and maximum coordi
    aReg[ CX ] := nXMin                    // load vertical minimum parameter
    aReg[ DX ] := nXMax                    // load vertical maximum parameter
    FT_INT86( 51, aReg )               // execute mouse interrupt
-   */
+*/
 
    _m_mxlimit( nXMin, nXMAX )
 
@@ -563,7 +560,7 @@ FUNCTION FT_MYLIMIT( nYMin, nYMax )  // set horizontal minimum and maximum coord
    aReg[ CX ] := nYMin                   // load horz minimum parameter
    aReg[ DX ] := nYMax                   // load horz maximum parameter
    FT_INT86( 51, aReg )              // execute mouse interrupt
-   */
+*/
 
    _m_mYlimit( nYMin, nYMAX )
 
@@ -576,7 +573,7 @@ FUNCTION FT_MBUTPRS( nButton, nButPrs, nX, nY ) // get button press information
    aReg[ AX ] := 5               // set mouse function call 5
    aReg[ BX ] := nButton         // pass parameter for left or right button
    FT_INT86( 51, aReg )        // execute mouse interrupt
-   */
+*/
 
    nButPrs := aReg[ 1 ] // store updated press count
    nX := aReg[ 2 ]      // x-coordinate at last press
@@ -593,9 +590,9 @@ FUNCTION FT_MBUTREL( nButton, nButRel, nX, nY ) // get button release informatio
 
    areg := _m_MBUTREL( nButton )
    nButRel := aReg[ 1 ]  // store updated release count
-   nX := aReg[ 2 ]      // x-coordinate at last release
-   nY := aReg[ 3 ]      // y-coordinate at last release
-   iButton :=   aReg[ 4 ]                 // return button status
+   nX := aReg[ 2 ]       // x-coordinate at last release
+   nY := aReg[ 3 ]       // y-coordinate at last release
+   iButton := aReg[ 4 ]                 // return button status
 
    RETURN iButton
 
@@ -606,7 +603,7 @@ FUNCTION FT_MDEFCRS( nCurType, nScrMask, nCurMask )   // define text cursor type
    aReg[ CX ] := nScrMask   // load screen mask value
    aReg[ DX ] := nCurMask   // load cursor mask value
    FT_INT86( 51, aReg )  // execute mouse interrupt
-   */
+*/
 
    _m_mdefcrs( nCurType, nScrMask, nCurMask )
 
@@ -614,15 +611,15 @@ FUNCTION FT_MDEFCRS( nCurType, nScrMask, nCurMask )   // define text cursor type
 
 FUNCTION FT_MGETCOORD( nX, nY )
 
-// Duplicated code from FT_MGETPOS() for speed reasons
+   // Duplicated code from FT_MGETPOS() for speed reasons
    LOCAL aReg
    LOCAL iButton
    nX := iif( nX == NIL, 0, nX )
    nY := iif( nY == NIL, 0, nY )
-      /*
+/*
    aReg[ AX ] := 3                // set mouse function call 3
    FT_INT86( 51, aReg )           // execute mouse interrupt
-   */
+*/
    areg := _m_mgetcoord()
    nX := Int( aReg[ 1 ] / 8 )        // store new x-coordinate
    nY := Int( aReg[ 2 ] / 8 )        // store new y-coordinate

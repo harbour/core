@@ -91,26 +91,19 @@
  *
  */
 
-//------------------------------------------------
-//  Demo of FT_METAPH()
-
-//  #define FT_TEST .T.
-
 #ifdef FT_TEST
 
 PROCEDURE Main()
 
-   LOCAL cJunk  := Space( 8000 )
    LOCAL aNames := {}
-   LOCAL cName, nElem
 
-   Set( _SET_SCOREBOARD, .F.   )
-   Set( _SET_COLOR,      "W/B" )
+   Set( _SET_SCOREBOARD, .F. )
+   Set( _SET_COLOR, "W/B" )
    CLS
 
-//  Demo will create an array of names and display in 3 columns
-//  _ftRow() and _ftCol() will calculate the screen co-ordinates
-//  by evaluating the element number
+   // Demo will create an array of names and display in 3 columns
+   // _ftRow() and _ftCol() will calculate the screen co-ordinates
+   // by evaluating the element number
 
    AAdd( aNames, "Adams"        )
    AAdd( aNames, "Addams"       )
@@ -173,11 +166,11 @@ PROCEDURE Main()
    AAdd( aNames, "Maclean"      )
    AAdd( aNames, "Exxon"        )
 
-// display names and metaphones in 3 columns on screen
+   // display names and metaphones in 3 columns on screen
    AEval( aNames, ;
       {| cName, nElem | ;
-      SetPos( _ftRow( nElem ), _ftCol( nElem ) ), ;
-      QQOut( PadR( cName, 18, "." ) + FT_METAPH( cName ) ) ;
+         SetPos( _ftRow( nElem ), _ftCol( nElem ) ), ;
+         QQOut( PadR( cName, 18, "." ) + FT_METAPH( cName ) ) ;
       } )
 
    SetPos( 21, 00 )

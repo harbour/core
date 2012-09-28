@@ -83,6 +83,8 @@ PROCEDURE Main()
       "[Esc] To Exit" },             ;
       { cWindN, , , , , cWindH } }, "BIOQ" + Chr( K_ESC ) )
 
+   HB_SYMBOL_UNUSED( nType )
+
    SetColor( "W/N" )
    SetCursor( SC_NORMAL )
    SetBlink( .T. )

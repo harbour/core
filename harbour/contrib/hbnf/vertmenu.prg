@@ -20,16 +20,9 @@
  *
  */
 
-// test code
 #ifdef FT_TEST
 
 PROCEDURE Main()
-
-   LOCAL MAINMENU := { ;
-      { "DATA ENTRY",  "ENTER DATA",          {|| FT_MENU2( datamenu )  } }, ;
-      { "Reports",     "Hard copy",           {|| FT_MENU2( repmenu )   } }, ;
-      { "Maintenance", "Reindex files, etc.", {|| FT_MENU2( maintmenu ) } }, ;
-      { "Quit",        "See ya later" } }
 
    LOCAL datamenu := { ;
       { "Customers", , {|| cust() } }   , ;
@@ -51,23 +44,29 @@ PROCEDURE Main()
       { "Compress", "Compress data files", {|| compress() } }, ;
       { "Exit",     "Return to Main Menu" } }
 
+   LOCAL MAINMENU := { ;
+      { "DATA ENTRY",  "ENTER DATA",          {|| FT_MENU2( datamenu )  } }, ;
+      { "Reports",     "Hard copy",           {|| FT_MENU2( repmenu )   } }, ;
+      { "Maintenance", "Reindex files, etc.", {|| FT_MENU2( maintmenu ) } }, ;
+      { "Quit",        "See ya later" } }
+
    FT_MENU2( mainmenu )
 
    RETURN
 
 /* stub functions to avoid missing symbols */
 
-STATIC FUNCTION cust()
-STATIC FUNCTION inv()
-STATIC FUNCTION vendors()
-STATIC FUNCTION custrep()
-STATIC FUNCTION pastdue()
-STATIC FUNCTION weeksales()
-STATIC FUNCTION monthpl()
-STATIC FUNCTION vendorrep()
-STATIC FUNCTION re_ntx()
-STATIC FUNCTION backup()
-STATIC FUNCTION compress()
+STATIC PROCEDURE cust() ; RETURN
+STATIC PROCEDURE inv() ; RETURN
+STATIC PROCEDURE vendors() ; RETURN
+STATIC PROCEDURE custrep() ; RETURN
+STATIC PROCEDURE pastdue() ; RETURN
+STATIC PROCEDURE weeksales() ; RETURN
+STATIC PROCEDURE monthpl() ; RETURN
+STATIC PROCEDURE vendorrep() ; RETURN
+STATIC PROCEDURE re_ntx() ; RETURN
+STATIC PROCEDURE backup() ; RETURN
+STATIC PROCEDURE compress() ; RETURN
 
 #endif
 

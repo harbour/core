@@ -28,9 +28,9 @@
 
 #ifdef FT_TEST
 
-FUNCTION DEMO()
+PROCEDURE Main()
 
-   LOCAL dStart, dEnd, cTimeStart, cTimeEnd, n, aDataTest := {}
+   LOCAL dStart, dEnd, cTimeStart, cTimeEnd, n, aDataTest
 
    dStart := SToD( "19901128" )
    dEnd   := SToD( "19901130" )
@@ -44,7 +44,7 @@ FUNCTION DEMO()
       ?? iif( n == 1, "Days", iif( n == 2, "Hours", iif( n == 3, "Mins.", "Secs." ) ) )
    NEXT
 
-   RETURN NIL
+   RETURN
 
 #endif
 

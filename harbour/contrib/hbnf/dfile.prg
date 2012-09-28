@@ -32,18 +32,19 @@ THREAD STATIC t_nHandle := 0
 
 PROCEDURE Main()
 
-   @ 0, 0 CLEAR
+   LOCAL cInFile   := "dfile.prg"
+   LOCAL CKEY
+   LOCAL NNCOLOR   := 7
+   LOCAL NHCOLOR   := 15
+   LOCAL NCOLSKIP  := 5
+   LOCAL NRMARGIN  := 132
+   LOCAL CEXITKEYS := "AABBC       "
+   LOCAL LBROWSE   := .F.
+   LOCAL NSTART    := 1
+   LOCAL NBUFFSIZE := 4096
+   LOCAL GetList := {}
 
-   cInFile   := "dfile.prg"
-   CKEY      := ""
-   NNCOLOR   := 7
-   NHCOLOR   := 15
-   NCOLSKIP  := 5
-   NRMARGIN  := 132
-   CEXITKEYS := "AABBC       "
-   LBROWSE   := .F.
-   NSTART    := 1
-   NBUFFSIZE := 4096
+   @ 0, 0 CLEAR
 
    @ 0, 0  SAY "ENTER FILENAME: "   GET CINFILE
    @ 1, 0  SAY "    FOREGROUND: "   GET NNCOLOR   PICTURE "999"

@@ -55,7 +55,7 @@
 PROCEDURE Main()
 
    // Thanks to Jim Gale for helping me understand the basics
-   LOCAL i, ar[ 3, 26 ], aBlocks[ 3 ], aHeadings[ 3 ], nElem := 1, bGetFunc, cRet
+   LOCAL i, ar[ 3, 26 ], aBlocks[ 3 ], aHeadings, nElem := 1, bGetFunc, cRet
    // set up 2 dimensional array ar[]
    FOR i := 1 TO 26
       ar[ 1, i ] := i                          //  1  ->  26  Numeric

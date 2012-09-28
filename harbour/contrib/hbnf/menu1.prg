@@ -53,27 +53,28 @@ THREAD STATIC t_nMaxCol
 #ifdef FT_TEST
 // DUMMY PROCEDURE NAME SO "CCMDLINE" WILL BE LOCAL
 
-PROCEDURE CALLMENU( cCmdLine )
+PROCEDURE Main( cCmdLine )
 
    LOCAL sDosScrn, nDosRow, nDosCol, lColor
 
-// my approach to color variables
-// see colorchg.arc on NANFORUM
-   STATIC cNormH, cNormN, cNormE, ;
-      cWindH, cWindN, cWindE, ;
-      cErrH, cErrN, cErrE
+   // my approach to color variables
+   // see colorchg.arc on NANFORUM
+   LOCAL cNormN
+   LOCAL cWindN
+   LOCAL cErrH
+   LOCAL cErrN
 
-// options on menu bar
-   LOCAL aColors  := {}
+   // options on menu bar
+   LOCAL aColors
    LOCAL aBar     := { " ENTER/EDIT ", " REPORTS ", " DISPLAY ", " MAINTENANCE ", " QUIT " }
-   LOCAL aOptions[ LEN( aBar ) ]
-   AEval( aBar, {| x, i | aOptions[ i ] := { {}, {}, {} } } )
+   LOCAL aOptions[ Len( aBar ) ]
+   AEval( aBar, {| x, i | HB_SYMBOL_UNUSED( x ), aOptions[ i ] := { {}, {}, {} } } )
 
    cCmdLine := iif( cCmdLine == NIL, "", cCmdLine )
 
    lColor := iif( "MONO" $ Upper( cCmdLine ), .F. , IsColor() )
 
-// Border, Box, Bar, Current, Unselected
+   // Border, Box, Bar, Current, Unselected
    aColors := iif( lColor, { "W+/G", "N/G", "N/G", "N/W", "N+/G" }, ;
       { "W+/N", "W+/N", "W/N", "N/W", "W/N" } )
 
@@ -113,18 +114,13 @@ PROCEDURE CALLMENU( cCmdLine )
    FT_FILL( aOptions[ 5 ], "A. Does Nothing"                     , {|| .T. }, .T. )
    FT_FILL( aOptions[ 5 ], "B. Exit To DOS"                      , {|| .F. }, .T. )
 
-// main routine starts here
+   // main routine starts here
    SET SCOREBOARD OFF
 
-   cNormH := iif( lColor, "W+/G", "W+/N" )
    cNormN := iif( lColor, "N/G" , "W/N"  )
-   cNormE := iif( lColor, "N/W" , "N/W"  )
-   cWindH := iif( lColor, "W+/B", "W+/N" )
    cWindN := iif( lColor, "W/B" , "W/N"  )
-   cWindE := iif( lColor, "N/W" , "N/W"  )
    cErrH  := iif( lColor, "W+/R", "W+/N" )
    cErrN  := iif( lColor, "W/R" , "W/N"  )
-   cErrE  := iif( lColor, "N/W" , "N/W"  )
 
    SAVE SCREEN TO sDosScrn
    nDosRow := Row()
@@ -189,27 +185,27 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
    LOCAL nTtlUsed
    LOCAL sMainScrn, lCancMode, lLooping := .T.
 
-// column position for each item on the menu bar
+   // column position for each item on the menu bar
    LOCAL aBarCol[ Len( aBar ) ]
 
-// inkey code for each item on menu bar
+   // inkey code for each item on menu bar
    LOCAL aBarKeys[ Len( aBar ) ]
 
-// inkey codes for A - Z
+   // inkey codes for A - Z
    LOCAL aKeyCodes := { 286, 304, 302, 288, 274, 289, 290, 291, 279, ;
       292, 293, 294, 306, 305, 280, 281, 272, 275, ;
       287, 276, 278, 303, 273, 301, 277, 300 }
 
-// LEN() of widest array element for for each pulldown menu
+   // Len() of widest array element for for each pulldown menu
    LOCAL aBarWidth[ Len( aBar ) ]
 
-// starting column for each box
+   // starting column for each box
    LOCAL aBoxLoc[ Len( aBar ) ]
 
-// last selection for each element
+   // last selection for each element
    LOCAL aLastSel[ Len( aBar ) ]
 
-// color memvars
+   // color memvars
    LOCAL cBorder  := aColors[ 1 ]
    LOCAL cBox     := aColors[ 2 ]
    LOCAL cBar     := aColors[ 3 ]
@@ -219,14 +215,14 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
    t_nMaxRow := MaxRow()
    t_nMaxCol := MaxCol()
 
-// row for menu bar
+   // row for menu bar
    nTopRow := iif( nTopRow == NIL, 0, nTopRow )
 
    AFill( aLastSel, 1 )
    t_aChoices := aOptions
 
-// this is the routine that calculates the position of each item
-// on the menu bar.
+   // this is the routine that calculates the position of each item
+   // on the menu bar.
 
    aBarCol[1] := 0
    nTtlUsed := Len( aBar[ 1 ] ) + 1
@@ -234,36 +230,36 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
       {| x, i | HB_SYMBOL_UNUSED( x ), aBarcol[ i ] := nTtlUsed, nTtlUsed += ( Len( aBar[ i ] ) + 1 ) }, ;
       2, Len( aBar ) - 1 )
 
-// calculates widest element for each pulldown menu
-// see below for _ftWidest()
+   // calculates widest element for each pulldown menu
+   // see below for _ftWidest()
    AFill( aBarWidth, 1 )
    AEval( t_aChoices, {| x, i | HB_SYMBOL_UNUSED( x ), _ftWidest( @i, t_aChoices, @aBarWidth ) } )
 
-// box location for each pulldown menu
-// see below for _ftLocat()
+   // box location for each pulldown menu
+   // see below for _ftLocat()
    AEval( t_aChoices, {| x, i | HB_SYMBOL_UNUSED( x ), _ftLocat( i, aBarCol, aBarWidth, @aBoxLoc, t_nMaxCol ) } )
 
-// valid keys for each pulldown menu
-// see below for _ftValKeys()
+   // valid keys for each pulldown menu
+   // see below for _ftValKeys()
    AEval( t_aChoices, {| x, i | HB_SYMBOL_UNUSED( x ), AAdd( t_aValidKeys, "" ), ;
       _ftValKeys( i, t_aChoices, @t_aValidKeys ) } )
 
-// display the menu bar
+   // display the menu bar
    SetColor( cBar )
    @ nTopRow, 0
    AEval( aBar, {| x, i | HB_SYMBOL_UNUSED( x ), DevPos( nTopRow, aBarCol[ i ] ), DevOut( aBar[ i ] ) } )
 
-// store inkey code for each item on menu bar to aBarKeys
+   // store inkey code for each item on menu bar to aBarKeys
    AEval( aBarKeys, {| x, i | HB_SYMBOL_UNUSED( x ), aBarKeys[ i ] := ;
       aKeyCodes[ Asc( Upper( LTrim( aBar[ i ] ) ) ) - Asc( "@" ) ] } )
 
-// disable Alt-C and Alt-D
+   // disable Alt-C and Alt-D
    lCancMode := SetCancel( .F. )
    AltD( DISABLE )
 
-// main menu loop
+   // main menu loop
    SAVE SCREEN TO sMainScrn
-// which menu and which menu item
+   // which menu and which menu item
    t_nHPos := 1
    t_nVPos := 1
    DO WHILE lLooping

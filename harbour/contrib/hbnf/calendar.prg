@@ -27,7 +27,7 @@
 
 PROCEDURE Main()
 
-   LOCAL aRet[ 8 ], i
+   LOCAL aRet
 
    SetColor( "w+/b" )
    CLS

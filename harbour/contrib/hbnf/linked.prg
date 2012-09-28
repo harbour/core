@@ -27,7 +27,6 @@
 
 PROCEDURE Main()
 
-   LOCAL cString
    LOCAL aString := { ;
       "TRIM('abc ')",                                     ;
       "NotARealFunc()",                                   ;
@@ -45,7 +44,7 @@ PROCEDURE Main()
    CLS
    @ 1, 0 SAY "String Tested                               Result"
    @ 2, 0 TO 2, MaxCol()
-   AEval( aString, {| ele, num | QOut( ele, Space( 45 - Len( ele ) ), FT_Linked( ele ) ) } )
+   AEval( aString, {| ele | QOut( ele, Space( 45 - Len( ele ) ), FT_Linked( ele ) ) } )
    @ MaxRow() - 2, 0
 
    RETURN
