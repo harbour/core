@@ -81,12 +81,12 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
    cOldScreen := SaveScreen( nTop, nLeft, nBottom, nRight )
 
    hb_dispBox( nTop, nLeft, nBottom, nRight, B_DOUBLE_SINGLE )
-   hb_dispBox( nTop + 3, nLeft, nTop + 3, nLeft, chr( 198 ) )
-   hb_dispBox( nTop + 3, nRight, nTop + 3, nRight, chr( 181 ) )
+   hb_dispBox( nTop + 3, nLeft, nTop + 3, nLeft, Chr( 198 ) ) /* "╞" */
+   hb_dispBox( nTop + 3, nRight, nTop + 3, nRight, Chr( 181 ) ) /* "╡" */
    hb_dispOutAt( nTop + 1, nLeft + 1, Space( nRight - nLeft - 1 ) )
 
    oBrw := TBrowseDB( nTop + 2, nLeft + 1, nBottom - 1, nRight - 1 )
-   oBrw:HeadSep   := " " + Chr( 205 )
+   oBrw:HeadSep   := " " + Chr( 205 ) /* "═" */
    oBrw:SkipBlock := {| nRecs | Skipped( nRecs, lAppend ) }
 
    FOR n := 1 to FCount()

@@ -108,7 +108,7 @@ CREATE CLASS CHECKBOX FUNCTION HBCheckBox
    VAR cMessage   INIT ""
    VAR nRow
    VAR bSBlock
-   VAR cStyle     INIT "[" + Chr( 251 ) + " ]"
+   VAR cStyle     INIT "[" + Chr( 251 ) + " ]" /* "[√]" */
 
    VAR nCursor
 

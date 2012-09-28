@@ -148,7 +148,7 @@ CREATE CLASS LISTBOX FUNCTION HBListBox
    VAR cMessage   INIT ""
    VAR nRight
    VAR bSBlock
-   VAR cStyle     INIT Chr( 31 )
+   VAR cStyle     INIT Chr( 31 ) /* "▼" */
    VAR cTextValue INIT ""
    VAR nTop
    VAR nTopItem   INIT 0

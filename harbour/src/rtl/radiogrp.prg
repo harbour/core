@@ -52,6 +52,7 @@
 
 #include "hbclass.ch"
 
+#include "box.ch"
 #include "button.ch"
 #include "color.ch"
 #include "setcurs.ch"
@@ -114,11 +115,11 @@ CREATE CLASS RADIOGROUP FUNCTION HBRadioGroup
    VAR nCapCol
    VAR nCapRow
    VAR cCaption   INIT ""
-   VAR cColdBox   INIT Chr( 218 ) + Chr( 196 ) + Chr( 191 ) + Chr( 179 ) + Chr( 217 ) + Chr( 196 ) + Chr( 192 ) + Chr( 179 )
+   VAR cColdBox   INIT B_SINGLE
    VAR cColorSpec
    VAR bFBlock
    VAR lHasFocus  INIT .F.
-   VAR cHotBox    INIT Chr( 201 ) + Chr( 205 ) + Chr( 187 ) + Chr( 186 ) + Chr( 188 ) + Chr( 205 ) + Chr( 200 ) + Chr( 186 )
+   VAR cHotBox    INIT B_DOUBLE
    VAR nItemCount INIT 0
    VAR nLeft
    VAR cMessage   INIT ""
