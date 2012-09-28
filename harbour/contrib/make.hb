@@ -27,12 +27,6 @@
  *
  */
 
-/* NOTE:
-     - 'install' is ignored in stdalone mode. It would be needed to
-       replicate the install dir defaulting logic found in global.mk
-       to implement it.
- */
-
 #pragma warninglevel=3
 #pragma -km+
 #pragma -ko+
@@ -147,12 +141,6 @@ PROCEDURE Standalone( aParams, hProjectList )
       nAction := _ACT_INC
    ENDCASE
 
-   /* Strip install action */
-   DO CASE
-   CASE nAction == _ACT_INC_REBUILD_INST ; nAction := _ACT_INC_REBUILD
-   CASE nAction == _ACT_INC_INST         ; nAction := _ACT_INC
-   ENDCASE
-
    /* Processing user options */
 
    cOptionsUser := ""
@@ -203,7 +191,7 @@ PROCEDURE Standalone( aParams, hProjectList )
 
    /* Start building */
 
-   build_projects( nAction, hProjectList, hProjectReqList, cOptionsUser )
+   build_projects( nAction, hProjectList, hProjectReqList, cOptionsUser, .T. )
 
    RETURN
 
@@ -355,13 +343,13 @@ PROCEDURE GNUMake( aParams, hProjectList )
 
    OutStd( hb_StrFormat( "! Started package %1$s...", hActions[ nAction ] ) + hb_eol() )
 
-   build_projects( nAction, hProjectList, hProjectReqList, "" )
+   build_projects( nAction, hProjectList, hProjectReqList, "", .F. )
 
    OutStd( hb_StrFormat( "! Finished package %1$s...", hActions[ nAction ] ) + hb_eol() )
 
    RETURN
 
-STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOptionsUser )
+STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOptionsUser, lStdAlone )
    LOCAL aPairList
    LOCAL aSortedList
 
@@ -440,7 +428,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
    lInstall := nAction == _ACT_INC_INST .OR. ;
                nAction == _ACT_INC_REBUILD_INST
 
-   hb_setenv( "_HB_BUILD_INSTALL", iif( lInstall, "yes", NIL ) )
+   hb_setenv( iif( lStdAlone, "_HB_BUILD_INSTALL_STDALONE", "_HB_BUILD_INSTALL" ), iif( lInstall, "yes", NIL ) )
 
    /* Build the dependencies and primary targets in sorted order */
 

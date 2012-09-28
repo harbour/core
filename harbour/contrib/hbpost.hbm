@@ -86,7 +86,7 @@
 -instfile=contrib:${_HB_CONTRIB_SUBDIR}*.txt
 -instfile=contrib_tests:${_HB_CONTRIB_SUBDIR}tests/*.*
 
-# install
+# install (GNU Make)
 {_HB_BUILD_INSTALL&_HB_INSTALL_LIB&hblib}-instpath=${_HB_INSTALL_LIB}/
 {_HB_BUILD_INSTALL&_HB_INSTALL_BIN&hbexe}-instpath=${_HB_INSTALL_BIN}/
 {_HB_BUILD_INSTALL&_HB_INSTALL_DYN&hbdyn}-instpath=${_HB_INSTALL_DYN}/
@@ -99,3 +99,15 @@
 {_HB_BUILD_INSTALL&_HB_INSTALL_CONTRIB&hblib}-instpath=contrib:${_HB_INSTALL_CONTRIB}/${_HB_CONTRIB_SUBDIR}
 {_HB_BUILD_INSTALL&_HB_INSTALL_CONTRIB&hblib}-instpath=contrib_tests:${_HB_INSTALL_CONTRIB}/${_HB_CONTRIB_SUBDIR}/tests/
 {_HB_BUILD_INSTALL}-instforce
+
+# install (standalone)
+{_HB_BUILD_INSTALL_STDALONE&hblib}-instpath=${HB_LIB}/
+{_HB_BUILD_INSTALL_STDALONE&hbexe}-instpath=${HB_BIN}/
+{_HB_BUILD_INSTALL_STDALONE&hbdyn}-instpath=${HB_DYN}/
+{_HB_BUILD_INSTALL_STDALONE&hbdyn&(win|os2)&HB_INSTALL_3RDDYN='yes'}-instpath=depimplibsrc:${HB_DYN}/
+{_HB_BUILD_INSTALL_STDALONE&hblib}-instpath=inc:${HB_INC}/
+{_HB_BUILD_INSTALL_STDALONE}-instpath=implib:${HB_LIB}/
+{_HB_BUILD_INSTALL_STDALONE}-instpath=etc:${HB_ETC}/
+{_HB_BUILD_INSTALL_STDALONE}-instpath=man:${HB_MAN}/
+{_HB_BUILD_INSTALL_STDALONE&!(HB_INSTALL_IMPLIB='no')}-instpath=depimplib:${HB_LIB}/
+{_HB_BUILD_INSTALL_STDALONE}-instforce
