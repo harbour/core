@@ -2011,8 +2011,10 @@ HB_FUNC( ADSDDSETDATABASEPROPERTY )
          break;
       }
       /* Integer properties */
+#if ADS_LIB_VERSION >= 610
       case ADS_DD_MAX_FAILED_ATTEMPTS:
       case ADS_DD_INTERNET_SECURITY_LEVEL:
+#endif
 #if ADS_LIB_VERSION >= 620
       case ADS_DD_VERSION_MAJOR:
       case ADS_DD_VERSION_MINOR:
