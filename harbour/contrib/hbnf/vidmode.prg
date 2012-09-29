@@ -32,17 +32,6 @@
 #define VIDEO      16
 #define GETMODE    15
 
-#ifdef FT_TEST
-
-PROCEDURE Main( cMode )
-
-   FT_SETMODE( Val( cMode ) )
-   QOut( "Video mode is: " + Str( FT_GETMODE() ) )
-
-   RETURN
-
-#endif
-
 FUNCTION FT_SETMODE( nMode )
 /*
    LOCAL aRegs[ INT86_MAX_REGS ]

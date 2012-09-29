@@ -33,16 +33,6 @@
 
 #define MEMSIZE    18
 
-#ifdef FT_TEST
-
-PROCEDURE Main()
-
-   QOut( "Conventional memory: " + Str( FT_SYSMEM() ) + "K installed" )
-
-   RETURN
-
-#endif
-
 FUNCTION FT_SYSMEM()
 
    LOCAL aRegs[ INT86_MAX_REGS ]

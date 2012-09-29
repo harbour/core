@@ -23,16 +23,6 @@
  *
  */
 
-#ifdef FT_TEST
-
-PROCEDURE Main( sNumE )
-
-   QOut( FT_E2D( sNumE ) )
-
-   RETURN
-
-#endif
-
 FUNCTION ft_e2d( sNumE )
 
    LOCAL nMant, nExp

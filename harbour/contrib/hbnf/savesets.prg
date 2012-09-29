@@ -32,20 +32,6 @@
 #define FT_SET_CENTURY   _SET_COUNT + 1
 #define FT_SET_BLINK     _SET_COUNT + 2
 
-#ifdef FT_TEST
-
-PROCEDURE Main()
-
-   LOCAL aSets := FT_SAVESETS()
-
-   HB_SYMBOL_UNUSED( aSets )
-
-   Inkey( 0 )
-
-   RETURN
-
-#endif
-
 FUNCTION FT_SAVESETS()
 
    LOCAL aOldSets := Array( _SET_COUNT + FT_EXTRA_SETS )

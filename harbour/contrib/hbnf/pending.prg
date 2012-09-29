@@ -20,22 +20,6 @@
  *
  */
 
-#ifdef FT_TEST
-
-PROCEDURE Main()
-
-   @ 0, 0 CLEAR
-   FT_PENDING( "Message one", 20, 0, 3, "W+/G" ) // Displays "Message one."
-   // sets row to 20, col to 0.
-   // wait to 3 and color to
-   // bright white over green.
-   FT_PENDING( "Message two" )   // Displays "Message two", after 5 sec.
-   FT_PENDING( "Message three" ) // Displays "Message three", after 5 sec.
-
-   RETURN
-
-#endif
-
 FUNCTION FT_PENDING( cMsg, nRow, nCol, nWait, cColor )
 
    THREAD STATIC t_nLast_Time := 0

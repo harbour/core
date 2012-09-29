@@ -32,19 +32,6 @@
 #define DOS        33
 #define SETDATE    43
 
-#ifdef FT_TEST
-
-PROCEDURE Main( cDate )
-
-   cDate := iif( cDate == NIL, DToC( Date() ), cDate )
-   QOut( "Setting date to: " + cDate  + "... " )
-   FT_SETDATE( CToD( cDate ) )
-   QOut( "Today is now: " + DToC( Date() ) )
-
-   RETURN
-
-#endif
-
 FUNCTION FT_SETDATE( dDate )
 
    LOCAL aRegs[ INT86_MAX_REGS ]

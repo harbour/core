@@ -23,16 +23,6 @@
  *
  */
 
-#ifdef FT_TEST
-
-PROCEDURE Main()
-
-   FT_BLINK( "WAIT", 5, 10 )
-
-   RETURN
-
-#endif
-
 FUNCTION FT_BLINK( cMsg, nRow, nCol )
 
    // Declare color restore var.

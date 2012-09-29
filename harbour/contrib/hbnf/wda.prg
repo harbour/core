@@ -20,19 +20,6 @@
  *
  */
 
-#ifdef FT_TEST
-
-PROCEDURE Main( cDate, cDays )
-
-   LOCAL nDays := ft_addWkDy( CToD( cDate ), Val( cDays ) )
-
-   QOut( "Num days to add: " + Str( nDays ) )
-   QOut( "New date:        " + DToC( CToD( cDate ) + nDays ) )
-
-   RETURN
-
-#endif
-
 FUNCTION ft_addWkDy( dStart, nDys )
 
    LOCAL nDc  := DOW( dStart )

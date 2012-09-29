@@ -29,16 +29,6 @@
 #define DOS         33
 #define STATNUM    220
 
-#ifdef FT_TEST
-
-PROCEDURE Main()
-
-   QOut( "Logical station: " + Str( FT_NWLSTAT() ) )
-
-   RETURN
-
-#endif
-
 FUNCTION FT_NWLSTAT()
 
 // LOCAL aRegs[ INT86_MAX_REGS ]

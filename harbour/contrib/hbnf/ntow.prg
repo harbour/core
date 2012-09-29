@@ -35,16 +35,6 @@ STATIC sc_tens  :=  { "", "", " Twenty", " Thirty", " Forty", " Fifty", ;
 
 STATIC sc_qualifiers := { "", " Thousand", " Million", " Billion", " Trillion" }
 
-#ifdef FT_TEST
-
-PROCEDURE Main( cNum )
-
-   QOut( ft_ntow( Val( cNum ) ) )
-
-   RETURN
-
-#endif
-
 FUNCTION ft_ntow( nAmount )
 
    LOCAL nTemp, sResult := " ", nQualNo

@@ -24,16 +24,6 @@
  */
 
 // test code
-#ifdef FT_TEST
-
-PROCEDURE Main()
-
-   QOut( "You selected " + FT_PICKDAY() )
-
-   RETURN
-
-#endif
-
 FUNCTION FT_PICKDAY()
 
    LOCAL days := { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", ;

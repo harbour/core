@@ -29,16 +29,6 @@
 #define DOS        33
 #define DOSVER     48
 
-#ifdef FT_TEST
-
-PROCEDURE Main()
-
-   QOut( "Dos version: " + FT_DOSVER() )
-
-   RETURN
-
-#endif
-
 FUNCTION FT_DOSVER()
 
 // LOCAL aRegs[ INT86_MAX_REGS ]

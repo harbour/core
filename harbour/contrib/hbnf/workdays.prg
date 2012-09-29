@@ -26,16 +26,6 @@
  *
  */
 
-#ifdef FT_TEST
-
-PROCEDURE Main( cStart, cStop )
-
-   QOut( ft_workdays( CToD( cStart ), CToD( cStop ) ) )
-
-   RETURN
-
-#endif
-
 FUNCTION FT_WorkDays( dStart, dStop )
 
    LOCAL nWorkDays := 0, nDays, nAdjust

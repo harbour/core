@@ -23,20 +23,6 @@
  *
  */
 
-#ifdef FT_TEST
-
-PROCEDURE Main()
-
-   LOCAL X
-
-   FOR X := 1 TO 255
-      QOut( FT_DEC2BIN( x ) )
-   NEXT
-
-   RETURN
-
-#endif
-
 FUNCTION FT_DEC2BIN( x )
 
    LOCAL i, buffer := { "0", "0", "0", "0", "0", "0", "0", "0" }

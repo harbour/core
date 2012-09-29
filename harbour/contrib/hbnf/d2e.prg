@@ -28,17 +28,6 @@
 #define log10( num )    log( num ) / log( 10 )
 #define DEFAULT_PRECISION     6
 
-#ifdef FT_TEST
-
-PROCEDURE Main( cNum, cPrec )
-
-   DEFAULT cPrec TO Str( DEFAULT_PRECISION )
-   QOut( ft_d2e( Val( cNum ), Val( cPrec ) ) )
-
-   RETURN
-
-#endif
-
 FUNCTION ft_d2e( nDec, nPrecision )
 
    LOCAL nExp, sScn

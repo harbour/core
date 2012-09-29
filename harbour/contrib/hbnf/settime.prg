@@ -32,22 +32,9 @@
 #define DOS        33
 #define SETTIME    45
 
-#define SECS( ts )  ( val( substr( ts, 7    ) ) )
-#define HRS( ts )   ( val( substr( ts, 1, 2 ) ) )
-#define MINS( ts )  ( val( substr( ts, 4, 2 ) ) )
-
-#ifdef FT_TEST
-
-PROCEDURE Main( cTime )
-
-   cTime := iif( cTime == NIL, Time(), cTime )
-   QOut( "Setting time to: " + cTime  + "... " )
-   FT_SETTIME( cTime )
-   QOut( "Time is now: " + Time() )
-
-   RETURN
-
-#endif
+#define SECS( ts )  ( Val( SubStr( ts, 7    ) ) )
+#define HRS( ts )   ( Val( SubStr( ts, 1, 2 ) ) )
+#define MINS( ts )  ( Val( SubStr( ts, 4, 2 ) ) )
 
 FUNCTION FT_SETTIME( cTime )
 

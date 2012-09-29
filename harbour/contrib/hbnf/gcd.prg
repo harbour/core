@@ -23,16 +23,6 @@
  *
  */
 
-#ifdef FT_TEST
-
-PROCEDURE Main( cNum1, cNum2 )
-
-   OutStd( Str( FT_GCD( Val( cNum1 ), Val( cNum2 ) ) ) + hb_eol() )
-
-   RETURN
-
-#endif
-
 FUNCTION FT_GCD( nNumber1, nNumber2 )
 
    LOCAL nHold1                      // Temporarily Hold the Maximum Number

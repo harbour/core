@@ -114,50 +114,6 @@ THREAD STATIC t_nWinColor
 THREAD STATIC t_aWinColor
 THREAD STATIC t_aStdColor
 
-#ifdef FT_TEST
-
-PROCEDURE Main()
-
-   LOCAL nSickHrs := 0
-   LOCAL nPersHrs := 0
-   LOCAL nVacaHrs := 0
-   LOCAL GetList  := {}
-
-   SET SCOREBOARD OFF
-   _ftSetScrColor( STD_SCREEN, STD_VARIABLE )
-   CLS
-
-   SET KEY K_ALT_A  TO FT_Adder        // Make <ALT-A> call FT_Adder
-
-   // SIMPLE Sample of program data entry!
-
-   @ 12, 5 SAY "Please enter the total Sick, Personal, and Vacation hours."
-   @ 15, 22 SAY "Sick hrs."
-   @ 15, 40 SAY "Pers. hrs."
-   @ 15, 60 SAY "Vaca. hrs."
-   @ 23, 20 SAY "Press <ALT-A> to Pop - Up the Adder."
-   @ 24, 20 SAY "Press <ESC> to Quit the adder Demo."
-   DO WHILE .T.                               // Get the sick, personal, & vaca
-      @ 16, 24 GET nSickHrs PICTURE "9999.999"  // Normally I have a VALID()
-      @ 16, 43 GET nPersHrs PICTURE "9999.999"  // to make sure the value is
-      @ 16, 63 GET nVacaHrs PICTURE "9999.999"  // within the allowable range.
-      SET CURSOR ON                            // But, like I said it is a
-      CLEAR TYPEAHEAD                          // SIMPLE example <g>.
-      READ
-      SET CURSOR OFF
-      IF LastKey() == K_ESC                    // <ESC> - ABORT
-         CLEAR TYPEAHEAD
-         EXIT
-      ENDIF
-   ENDDO
-   SET CURSOR ON
-
-   SET KEY K_ALT_A                     // Reset <ALT-A>
-
-   RETURN
-
-#endif
-
 /*+- Function ---------------------------------------------------------------+
   |         Name: FT_Adder()            Docs: Keith A. Wire                  |
   |  Description: Pop Up Adder / Calculator with Tape Display                |

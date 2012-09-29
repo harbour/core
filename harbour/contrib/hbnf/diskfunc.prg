@@ -29,17 +29,6 @@
 
 #define DRVTABLE "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 
-#ifdef FT_TEST
-
-PROCEDURE Main( cDrv )
-
-   QOut( "Disk size:   " + Str( FT_DSKSIZE( cDrv ) ) )
-   QOut( "Free bytes:  " + Str( FT_DSKFREE( cDrv ) ) )
-
-   RETURN
-
-#endif
-
 FUNCTION FT_DSKSIZE( cDrive )
    RETURN DiskSpace( iif( cDrive == NIL, 0, At( Upper( cDrive ), DRVTABLE ) ), HB_DISK_TOTAL )
 

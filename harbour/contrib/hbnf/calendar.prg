@@ -23,32 +23,6 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#ifdef FT_TEST
-
-PROCEDURE Main()
-
-   LOCAL aRet
-
-   SetColor( "w+/b" )
-   CLS
-   IF ft_numlock()
-      ft_numlock( .F. )
-   ENDIF
-   hb_keyPut( K_F1 )
-   aRet := ft_calendar( 10, 40, "w+/rb", .T. , .T. ) //display calendar, return all.
-   @ 1, 0 SAY "Date        :" + DToC( aRet[ 1 ] )
-   @ 2, 0 SAY "Month Number:" + Str( aRet[ 2 ], 2, 0 )
-   @ 3, 0 SAY "Day Number  :" + Str( aRet[ 3 ], 2, 0 )
-   @ 4, 0 SAY "Year Number :" + Str( aRet[ 4 ], 4, 0 )
-   @ 5, 0 SAY "Month       :" + aRet[ 5 ]
-   @ 6, 0 SAY "Day         :" + aRet[ 6 ]
-   @ 7, 0 SAY "Julian Day  :" + Str( aRet[ 7 ], 3, 0 )
-   @ 8, 0 SAY "Current Time:" + aRet[ 8 ]
-
-   RETURN
-
-#endif
-
 FUNCTION FT_CALENDAR( nRow, nCol, cColor, lShadow, lShowHelp )
 
    LOCAL  nJump := 0, nKey := 0, cSavColor, cSaveScreen, cSaveCursor

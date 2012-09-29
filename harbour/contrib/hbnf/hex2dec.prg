@@ -28,16 +28,6 @@
 
 #define HEXTABLE "0123456789ABCDEF"
 
-#ifdef FT_TEST
-
-PROCEDURE Main( cHexNum )
-
-   QOut( FT_HEX2DEC( cHexNum ) )
-
-   RETURN
-
-#endif
-
 FUNCTION FT_HEX2DEC( cHexNum )
 
    LOCAL n, nDec := 0, nHexPower := 1
