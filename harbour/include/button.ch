@@ -59,10 +59,10 @@
 #define SCROLL_HORIZONTAL        2
 
 /* menu separators strings */
-#define MENU_SEPARATOR           Chr( 196 )
-#define SEPARATOR_DOUBLE         ( Chr( 204 ) + Chr( 205 ) + Chr( 185 ) )      /* double line left and right and double separator for popup menu */
-#define SEPARATOR_SINGLE         ( Chr( 195 ) + MENU_SEPARATOR + Chr( 180 ) )  /* single separator for popup menu */
-#define SEPARATOR_DOUBLE_SINGLE  ( Chr( 199 ) + MENU_SEPARATOR + Chr( 182 ) )  /* double line left and right and single separator for popup menu */
+#define MENU_SEPARATOR           Chr( 196 ) /* "─" */
+#define SEPARATOR_DOUBLE         ( Chr( 204 ) + Chr( 205 ) + Chr( 185 ) )      /* "╠═╣" double line left and right and double separator for popup menu */
+#define SEPARATOR_SINGLE         ( Chr( 195 ) + MENU_SEPARATOR + Chr( 180 ) )  /* "├" "┤" single separator for popup menu */
+#define SEPARATOR_DOUBLE_SINGLE  ( Chr( 199 ) + MENU_SEPARATOR + Chr( 182 ) )  /* "╟" "╢" double line left and right and single separator for popup menu */
 
 /* return values for HitTest methods */
 #define HTNOWHERE                0
