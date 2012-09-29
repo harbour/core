@@ -5,6 +5,7 @@
 # These may be overridden by local project options.
 
 -q0
+-autohbm-
 
 {HB_BUILD_VERBOSE}-quiet-
 {HB_BUILD_VERBOSE}-info

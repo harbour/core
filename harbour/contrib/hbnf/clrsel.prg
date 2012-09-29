@@ -63,17 +63,17 @@
 #define C_CHAR   4
 
 #translate Single( <t>, <l>, <b>, <r> ) =>;
-      @ < t > , < l > , < b > , < r > BOX hb_UTF8ToStr( "┌─┐│┘─└│" )
+      @ <t>, <l>, <b>, <r> BOX hb_UTF8ToStr( "┌─┐│┘─└│" )
 
 
 #translate Double( <t>, <l>, <b>, <r> ) =>;
-      @ < t > , < l > , < b > , < r > BOX hb_UTF8ToStr( "╔═╗║╝═╚║" )
+      @ <t>, <l>, <b>, <r> BOX hb_UTF8ToStr( "╔═╗║╝═╚║" )
 
 #translate ClearS( <t>, <l>, <b>, <r> ) =>;
-      @ < t > , < l > CLEAR TO < b > , < r >
+      @ <t>, <l> CLEAR TO <b>, <r>
 
 #translate BkGrnd( <t>, <l>, <b>, <r>, <c> ) =>;
-      DispBox( < t > , < l > , < b > , < r > , Replicate( < c > ,9 ) )
+      DispBox( <t>, <l>, <b>, <r>, Replicate( <c>, 9 ) )
 
 //------------------------------------------------
 //  Demo of FT_ClrSel()

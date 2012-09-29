@@ -35,8 +35,6 @@
  *  File header changed to conform to Toolkit standard.
  */
 
-///
-
 #include "ftint86.ch"
 
 #define ERR_WRONG_PARAMETERS  -1
@@ -63,9 +61,8 @@ PROCEDURE Main( cArg1 )
 
 #endif
 
-FUNCTION FT_FLOPTST(                ;     // error code defined by ERR_*
-      nDriveNum_i ;     // letter of floppy drive.
-   )
+// error code defined by ERR_*
+FUNCTION FT_FLOPTST( nDriveNum_i /* letter of floppy drive */ )
    LOCAL cBuffer
    LOCAL nErrorCode
    LOCAL nRetCode
@@ -112,7 +109,7 @@ STATIC FUNCTION _GetDisketteNum( nDrive_i ) // drive number to query status
    LOCAL nByte
    LOCAL nDriveCount
 
-// ASSERT 0 <= nDrive_i
+   // ASSERT 0 <= nDrive_i
 
    lRetCode := .F.
    IF FT_INT86( 1 * 16 + 1, aRegs )  // INT for equipment determination
@@ -141,13 +138,13 @@ STATIC PROCEDURE _ResetDisketteSystem()
 
 #define BUFFER_SIZEOF_SECTOR  512+1
 
-STATIC FUNCTION _ReadBootSector(          ;
-      nDriveNum,  ;
-      cBuffer_o,  ;
-      nErrCode_o  ;
+STATIC FUNCTION _ReadBootSector( ;
+      nDriveNum, ;
+      cBuffer_o, ;
+      nErrCode_o ;
       )
 
-// call BIOS INT 13 for sector read
+   // call BIOS INT 13 for sector read
    LOCAL aRegs[ INT86_MAX_REGS ]
    LOCAL cBuffer := Space( BUFFER_SIZEOF_SECTOR )
    LOCAL lSuccess
@@ -167,13 +164,13 @@ STATIC FUNCTION _ReadBootSector(          ;
 
    RETURN lSuccess
 
-STATIC FUNCTION _WriteBootSector(         ;
-      nDriveNum,  ;
-      cBuffer_i,  ;
-      nErrCode_o  ;
+STATIC FUNCTION _WriteBootSector( ;
+      nDriveNum, ;
+      cBuffer_i, ;
+      nErrCode_o ;
       )
 
-// call BIOS INT 13 for sector write
+   // call BIOS INT 13 for sector write
    LOCAL aRegs[INT86_MAX_REGS]
    LOCAL lSuccess
    LOCAL nErrorCode
@@ -191,10 +188,10 @@ STATIC FUNCTION _WriteBootSector(         ;
 
    RETURN lSuccess
 
-STATIC FUNCTION _CallInt13hRetry(         ;     // logical: did the interrupt succeed?
-      aRegs_io,   ;     // registers values for INT 13h
-   lCarrySet_o,      ; // status of carry flag if return code is true.
-   nDriveStatus_o    ;     // status of drive ( error code )
+STATIC FUNCTION _CallInt13hRetry( ;     // logical: did the interrupt succeed?
+      aRegs_io, ;      // registers values for INT 13h
+   lCarrySet_o, ;      // status of carry flag if return code is true.
+   nDriveStatus_o ;    // status of drive ( error code )
       )
    LOCAL lCarrySet
    LOCAL aRegisters

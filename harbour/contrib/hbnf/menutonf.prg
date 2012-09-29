@@ -37,13 +37,13 @@
 #include "inkey.ch"
 
 #xtranslate display( <row>, <col>, <stuff>, <color> ) => ;
-      SetPos( < row > , < col > ) ; DispOut( < stuff > , < color > )
+      SetPos( <row>, <col> ); DispOut( <stuff>, <color> )
 
 #xtranslate EnhColor( <colorspec> ) => ;
-      SubStr( < colorspec > , At( ",", < colorspec > ) + 1 )
+      SubStr( <colorspec>, At( ",", <colorspec> ) + 1 )
 
 #xtranslate isOkay( <exp> ) => ;
-      ( < exp > \ > 0 .AND. < exp > \ <= nCount )
+      ( <exp> \ > 0 .AND. <exp> \ <= nCount )
 
 #xtranslate isBetween( <val>, <lower>, <upper> ) => ;
       ( < val > \ >= < lower > .AND. < val > \ <= < upper > )
@@ -75,18 +75,18 @@ THREAD STATIC t_aRight        := { {} }
 THREAD STATIC t_aExecute      := { {} }
 THREAD STATIC t_nLevel        := 1
 
-FUNCTION FT_Prompt( nRow,    nCol,    cPrompt,  cColor,      ;
-      nMsgRow, nMsgCol, cMessage, cMsgColor,   ;
-      nTrigger, cTriggerColor, nHome, nEnd,    ;
-      nUp, nDown, nLeft, nRight, bExecute      )
+FUNCTION FT_Prompt( nRow, nCol, cPrompt, cColor, ;
+      nMsgRow, nMsgCol, cMessage, cMsgColor, ;
+      nTrigger, cTriggerColor, nHome, nEnd, ;
+      nUp, nDown, nLeft, nRight, bExecute )
 
-// If the prompt color setting is not specified, use default
+   // If the prompt color setting is not specified, use default
 
    IF cColor  == NIL
       cColor  := SetColor()
    ENDIF
 
-// If no message is supplied, set message values to NIL
+   // If no message is supplied, set message values to NIL
 
    IF cMessage == NIL
 
@@ -117,7 +117,7 @@ FUNCTION FT_Prompt( nRow,    nCol,    cPrompt,  cColor,      ;
       ENDIF
    ENDIF
 
-// If trigger values not specifed, set the defaults
+   // If trigger values not specifed, set the defaults
 
    IF nTrigger       == NIL
       nTrigger      := 1
@@ -126,8 +126,8 @@ FUNCTION FT_Prompt( nRow,    nCol,    cPrompt,  cColor,      ;
       cTriggerColor := cColor
    ENDIF
 
-// Now add elements to the static arrays -- t_nLevel indicates the recursion
-// level, which allows for nested menus.
+   // Now add elements to the static arrays -- t_nLevel indicates the recursion
+   // level, which allows for nested menus.
 
    AAdd(          t_aRow[ t_nLevel ], nRow          )
    AAdd(          t_aCol[ t_nLevel ], nCol          )
@@ -148,7 +148,7 @@ FUNCTION FT_Prompt( nRow,    nCol,    cPrompt,  cColor,      ;
    AAdd(        t_aRight[ t_nLevel ], nRight        )
    AAdd(      t_aExecute[ t_nLevel ], bExecute      )
 
-// Now display the prompt for the sake of compatibility
+   // Now display the prompt for the sake of compatibility
 
    DispBegin()
    DISPLAY( nRow, nCol, cPrompt, cColor )
@@ -170,8 +170,8 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
       lCold := .F.
    ENDIF
 
-// Validate the incoming parameters and assign some reasonable defaults
-// to prevent a crash later.
+   // Validate the incoming parameters and assign some reasonable defaults
+   // to prevent a crash later.
 
    cReadVar := iif( cReadVar == NIL, "", Upper( cReadVar ) )
 
@@ -179,9 +179,9 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
       bGetSet := {|| 1 }
    ENDIF
 
-// Eval the incoming getset block to initialize nActive, which indicates
-// the menu prompt which is to be active when the menu is first displayed.
-// If nActive is outside the appropriate limits, a value of 1 is assigned.
+   // Eval the incoming getset block to initialize nActive, which indicates
+   // the menu prompt which is to be active when the menu is first displayed.
+   // If nActive is outside the appropriate limits, a value of 1 is assigned.
 
    nActive := Eval( bGetSet )
 
@@ -189,9 +189,9 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
       nActive := 1
    ENDIF
 
-// Increment the recursion level in case a hotkey procedure
-// calls FT_Prompt().  This will cause a new set of prompts
-// to be created without disturbing the current set.
+   // Increment the recursion level in case a hotkey procedure
+   // calls FT_Prompt().  This will cause a new set of prompts
+   // to be created without disturbing the current set.
 
    AAdd(          t_aRow, {} )
    AAdd(          t_aCol, {} )
@@ -210,7 +210,7 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
    AAdd(        t_aRight, {} )
    AAdd(      t_aExecute, {} )
 
-// Loop until Enter or Esc is pressed
+   // Loop until Enter or Esc is pressed
 
    WHILE ! lChoice
 
@@ -386,8 +386,8 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
       ENDIF
    ENDDO
 
-// Now that we're exiting, decrement the recursion level and erase all
-// the prompt information for the current invocation.
+   // Now that we're exiting, decrement the recursion level and erase all
+   // the prompt information for the current invocation.
 
    t_nLevel--
 

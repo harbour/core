@@ -132,7 +132,7 @@ PROCEDURE TBWHILE()
 
 STATIC FUNCTION make_dbf()
 
-   LOCAL x, aData := {                                                               ;
+   LOCAL x, aData := { ;
       { "SHAEFER", "KATHRYN", "415 WEST CITRUS ROAD #150", "LOS ANGELES", "CA", "90030" }, ;
       { "OLSON", "JAMES", "225 NORTH RANCH ROAD", "LOS ANGELES", "CA", "90023"          }, ;
       { "KAYBEE", "JOHN", "123 SANDS ROAD", "CAMARILLO", "CA", "93010"                  }, ;

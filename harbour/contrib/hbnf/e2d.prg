@@ -38,10 +38,10 @@ FUNCTION ft_e2d( sNumE )
    LOCAL nMant, nExp
 
    nMant := Val( Left( sNumE, At( "E", sNumE ) - 1 ) )
-   nExp  := Val( SubStr( sNumE,                    ;
-      At( "E", sNumE ) + 1,           ;
+   nExp  := Val( SubStr( sNumE, ;
+      At( "E", sNumE ) + 1, ;
       Len( sNumE ) - At( "E", sNumE ) ;
-      )                           ;
+      ) ;
       )
 
    RETURN nMant * 10 ^ nExp

@@ -37,7 +37,7 @@ FUNCTION ft_addWkDy( dStart, nDys )
 
    LOCAL nDc  := DOW( dStart )
 
-   RETURN iif( nDc == 7,                                                        ;
-      ( nDys - 1 )        % 5 + 7 * Int( ( nDys - 1 )        / 5 ) + 2,         ;
-      ( nDys + nDc - 2 )  % 5 + 7 * Int( ( nDys + nDc - 2 )  / 5 ) + 2  - nDc   ;
+   RETURN iif( nDc == 7,;
+      ( nDys - 1 )        % 5 + 7 * Int( ( nDys - 1 )        / 5 ) + 2,;
+      ( nDys + nDc - 2 )  % 5 + 7 * Int( ( nDys + nDc - 2 )  / 5 ) + 2  - nDc ;
       )

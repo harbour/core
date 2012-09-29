@@ -493,7 +493,7 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
    hProject[ "aDept" ] := {}
    hProject[ "lChecked" ] := NIL
 
-   IF ( nErrorLevel := call_hbmk2( cProjectPath, " --hbinfo", NIL,, @cStdOut ) ) == 0
+   IF ( nErrorLevel := call_hbmk2( cProjectPath, " --hbinfo -autohbm-", NIL,, @cStdOut ) ) == 0
 
       hb_jsonDecode( cStdOut, @hInfo )
 

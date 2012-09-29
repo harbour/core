@@ -28,23 +28,25 @@
          but only if _SET_EXACT was set to .F., Harbour accepts them
          that way regardless of _SET_EXACT setting. [vszakats] */
 
+#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
+
 FUNCTION FT_PCHR( c_nums )
 
    LOCAL c_ret := "", c_st := 0, c_part, c_st2, c_hex := "0123456789ABCDEF"
    LOCAL c_upper, c_t1, c_t2
 
-   IF SubStr( c_nums, 1, 1 ) == "," .OR. Trim( c_nums ) == ""
+   IF SubStr( c_nums, 1, 1 ) == "," .OR. RTrim( c_nums ) == ""
       RETURN ""
    ENDIF
 
-   c_nums := Trim( c_nums ) + ",~,"
+   c_nums := RTrim( c_nums ) + ",~,"
    c_part := SubStr( c_nums, c_st + 1, At( ",", SubStr( c_nums, c_st + 2 ) ) )
 
    DO WHILE ! ( c_part == "~" .OR. c_part == "" )
 
       IF SubStr( c_part, 1, 1 ) == '"'
 
-         c_st2 := At( '"', SubStr( c_part,2 ) ) + 1
+         c_st2 := At( '"', SubStr( c_part, 2 ) ) + 1
          c_ret := c_ret + SubStr( c_part, 2, c_st2 - 2 )
 
       ELSEIF SubStr( c_part, 1, 1 ) == "&"
@@ -68,8 +70,6 @@ FUNCTION FT_PCHR( c_nums )
          IF SubStr( c_part, 1, 1 ) == "/"
 
             c_upper := Upper( c_part )
-
-#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
 
             DO CASE
             CASE LEFTEQUAL( c_upper, "/GRAPHIC" )

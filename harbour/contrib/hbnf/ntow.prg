@@ -20,14 +20,14 @@
  *
  */
 
-STATIC sc_ones  := { "",     " One",   " Two",   " Three", " Four", " Five",  ;
-      " Six", " Seven", " Eight", " Nine"                      ;
+STATIC sc_ones  := { "",     " One",   " Two",   " Three", " Four", " Five", ;
+      " Six", " Seven", " Eight", " Nine" ;
       }
 
-STATIC sc_teens := { " Ten",      " Eleven",    " Twelve",   ;
-      " Thirteen", " Fourteen",  " Fifteen",  ;
+STATIC sc_teens := { " Ten",      " Eleven",    " Twelve", ;
+      " Thirteen", " Fourteen",  " Fifteen", ;
       " Sixteen",  " Seventeen", " Eighteen", ;
-      " Nineteen"                             ;
+      " Nineteen" ;
       }
 
 STATIC sc_tens  :=  { "", "", " Twenty", " Thirty", " Forty", " Fifty", ;

@@ -71,16 +71,16 @@ PROCEDURE Main()
 
    FT_DispMsg( { { "[Esc] To Abort Changes   [PgDn] To Continue" }, { cNormN, , cNormH } }, , nMaxRow - 5 )
 
-   FT_DispMsg( { { "[E]dit     [P]rint    [D]elete",     ;
-      "[Esc]ape       [Alt-Q]" },           ;
+   FT_DispMsg( { { "[E]dit     [P]rint    [D]elete", ;
+      "[Esc]ape       [Alt-Q]" }, ;
       { cErrN, cErrN, cErrH } }, , 2 )
 
    nType := FT_DispMsg( { { ;
-      "Create Or Edit [I]nvoice",    ;
-      "Create Or Edit [O]rder",      ;
-      "Create Or Edit [B]ack Order", ;
-      "Create Or Edit [Q]uote",      ;
-      "[Esc] To Exit" },             ;
+      "Create Or Edit [I]nvoice"    ,;
+      "Create Or Edit [O]rder"      ,;
+      "Create Or Edit [B]ack Order" ,;
+      "Create Or Edit [Q]uote"      ,;
+      "[Esc] To Exit" }             ,;
       { cWindN, , , , , cWindH } }, "BIOQ" + Chr( K_ESC ) )
 
    HB_SYMBOL_UNUSED( nType )
@@ -154,8 +154,8 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    ENDIF
    nBoxBottom := nBoxTop + Len( aInfo[ 1 ] ) + 1
 
-// following is to keep from breaking old code and to be
-// consistent with DISPBOX()
+   // following is to keep from breaking old code and to be
+   // consistent with DISPBOX()
 
    IF cnBoxString == NIL .OR. cnBoxString == 2
       cnBoxString := hb_UTF8ToStr( "╔═╗║╝═╚║ " )
@@ -169,7 +169,7 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
 
    cOldCursor := SetCursor( SC_NONE )
 
-// draw box
+   // draw box
    cOldColor := SetColor( aInfo[ 2, Len( aInfo[ 2 ] ) ] )
 
    DispBox( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight, cnBoxString, ;
@@ -204,10 +204,10 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    FOR i := 1 TO Len( aPos )
       FOR j := 1 TO Len( aPos[ i ] )
 
-         FT_SetAttr( nBoxTop + i,                           ;
-            aPos[ i, j, 1 ] + aLeft[ i ] - 1,               ;
-            nBoxTop + i,                                    ;
-            aPos[ i, j, 2 ] + aLeft[ i ] - 1,               ;
+         FT_SetAttr( nBoxTop + i, ;
+            aPos[ i, j, 1 ] + aLeft[ i ] - 1, ;
+            nBoxTop + i, ;
+            aPos[ i, j, 2 ] + aLeft[ i ] - 1, ;
             FT_Color2N( aInfo[ 2, Len( aInfo[ 2 ] ) ] ) )
       NEXT
    NEXT

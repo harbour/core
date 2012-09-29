@@ -59,9 +59,9 @@
 
 #define nTotTran Len( aTrans )
 
-#command DISPMESSAGE <mess>,<t>,<l>,<b>,<r> =>                    ;
-      _ftPushKeys(); hb_keyPut( { K_CTRL_PGDN, K_CTRL_W } )      ;;
-      MemoEdit( < mess > , < t > , < l > , < b > , < r > , .F. , NIL, ( < r > ) - ( < l > ) + 1 )   ;;
+#command DISPMESSAGE <mess>,<t>,<l>,<b>,<r> => ;
+      _ftPushKeys(); hb_keyPut( { K_CTRL_PGDN, K_CTRL_W } ) ;;
+      MemoEdit( <mess>, <t>, <l>, <b>, <r>, .F., NIL, ( <r> ) - ( <l> ) + 1 ) ;;
       _ftPopKeys()
 
 #define ASHRINK( ar ) ASize( ar, Len( ar ) - 1 )
@@ -70,9 +70,9 @@
 #command FT_INKEY [ <secs> ] TO <var>                                     ;
       =>                                                                  ;
       WHILE .T.                                                          ;;
-         < var > := Inkey( [ <secs> ] )                                  ;;
-         IF SetKey( < var > ) != NIL                                     ;;
-            Eval( SetKey( < var > ), ProcName(), ProcLine(), #< var > )  ;;
+         <var> := Inkey( [ <secs> ] )                                    ;;
+         IF SetKey( <var> ) != NIL                                       ;;
+            Eval( SetKey( <var> ), ProcName(), ProcLine(), #<var> )      ;;
          ELSE                                                            ;;
             EXIT                                                         ;;
          END                                                             ;;
@@ -129,7 +129,7 @@ PROCEDURE Main()
 
    SET KEY K_ALT_A  TO FT_Adder        // Make <ALT-A> call FT_Adder
 
-// SIMPLE Sample of program data entry!
+   // SIMPLE Sample of program data entry!
 
    @ 12, 5 SAY "Please enter the total Sick, Personal, and Vacation hours."
    @ 15, 22 SAY "Sick hrs."
@@ -187,7 +187,7 @@ FUNCTION FT_Adder()
    LOCAL lShowRight  := .T.
    LOCAL aAdder      := Array( 23 )
 
-// Must prevent recursive calls
+   // Must prevent recursive calls
    IF t_lAdderOpen
       RETURN NIL
    ELSE
@@ -215,14 +215,14 @@ FUNCTION FT_Adder()
    nAddSpace    := iif( lShowRight, 40, 0 ) + nLeftOS
    nTapeSpace   := iif( lShowRight, 0, 40 ) + nLeftOS
 
-// Set Up the STATIC variables
+   // Set Up the STATIC variables
    t_aKeys      := {}
    t_aWindow    := {}
    t_nWinColor  := 0
 
    _ftAddScreen( aAdder )
 
-// Set the decimals to 2 & display a cleared adder
+   // Set the decimals to 2 & display a cleared adder
    _ftChangeDec( aAdder, 2 )
    @ 4 + nTopOS, 7 + nAddSpace SAY nTotal PICTURE cTotPict
 
@@ -261,9 +261,9 @@ FUNCTION FT_Adder()
          IF lTape
             RestScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace, cTapeScr )
          ENDIF
-         IF Left( SaveScreen( 6 + nTopOS,26 + nAddSpace,6 + nTopOS,27 + nAddSpace ), 1 )   ;
+         IF Left( SaveScreen( 6 + nTopOS, 26 + nAddSpace, 6 + nTopOS, 27 + nAddSpace ), 1 )   ;
                != " "
-            IF Left( SaveScreen( 6 + nTopOS,19 + nAddSpace,6 + nTopOS,20 + nAddSpace ), 1 ) ;
+            IF Left( SaveScreen( 6 + nTopOS, 19 + nAddSpace, 6 + nTopOS, 20 + nAddSpace ), 1 ) ;
                   == "S"
                cMoveTotSubTot := "S"
             ELSE
@@ -272,7 +272,7 @@ FUNCTION FT_Adder()
          ELSE
             cMoveTotSubTot := " "
          ENDIF
-         cTotal := _ftCharOdd( SaveScreen( 4 + nTopOS, 8 + nAddSpace, 4 +      ;
+         cTotal := _ftCharOdd( SaveScreen( 4 + nTopOS, 8 + nAddSpace, 4 + ;
             nTopOS, 25 + nAddSpace ) )
          _ftPopWin()                     // Remove Adder
          lShowRight := !lShowRight
@@ -303,9 +303,9 @@ FUNCTION FT_Adder()
             _ftSetWinColor( W_CURR, W_PROMPT )
             CLEAR TYPEAHEAD
          ELSE
-            _ftError( "there are " + iif( nTotTran > 0, "only " +                 ;
-               LTrim( Str( nTotTran, 3, 0 ) ), "no" ) +                       ;
-               " transactions entered so far."   +                       ;
+            _ftError( "there are " + iif( nTotTran > 0, "only " + ;
+               LTrim( Str( nTotTran, 3, 0 ) ), "no" ) + ;
+               " transactions entered so far." + ;
                " No need to scroll!" )
          ENDIF
       CASE nKey == 7                    // Delete - Clear adder
@@ -328,18 +328,18 @@ FUNCTION FT_Adder()
                t_lAdderOpen := .F.           // Reset the recursive flag
                lDone        := .T.
             ELSE
-               _ftError( "but I can not return the total from the " +             ;
+               _ftError( "but I can not return the total from the " + ;
                   "adder to this variable. You must quit the adder using" + ;
                   " the <ESC> key and then enter the total manually." )
             ENDIF
          ELSE
-            _ftError( "the calculation is not finished yet! You must have" +     ;
+            _ftError( "the calculation is not finished yet! You must have" + ;
                " a TOTAL before you can return it to the program." )
          ENDIF
       ENDCASE
    ENDDO
 
-// Reset the STATICS to NIL
+   // Reset the STATICS to NIL
    t_aKeys := t_aWindow := t_aWinColor := t_aStdColor := NIL
 
    RETURN NIL
@@ -361,7 +361,7 @@ STATIC FUNCTION _ftAddScreen( aAdder )
 
    LOCAL nCol
 
-   _ftPushWin( 2 + nTopOS, 2 + nAddSpace, 22 + nTopOS, 30 + nAddSpace, "   Adder   ",      ;
+   _ftPushWin( 2 + nTopOS, 2 + nAddSpace, 22 + nTopOS, 30 + nAddSpace, "   Adder   ", ;
       "<F-1> for Help", , B_DOUBLE )
    nCol := 5 + nAddSpace
    @  7 + nTopOS, nCol SAY hb_UTF8ToStr( "      ┌───┐ ┌───┐ ┌───┐" )
@@ -427,13 +427,13 @@ STATIC FUNCTION _ftChangeDec( aAdder, nNumDec )
    IF nNumDec == NIL
       nNumDec := 0
 
-      nNumDec := _ftQuest( "How many decimals do you want to display?",         ;
+      nNumDec := _ftQuest( "How many decimals do you want to display?", ;
          nNumDec, "9", {| oGet | _ftValDeci( oGet ) } )
 
       cTotPict := _ftPosRepl( cDefTotPict, ".", 19 - Abs( nNumDec ) )
 
       cTotPict := Right( _ftStuffComma( cTotPict ), 19 )
-      cTotPict := iif( nNumDec == 2 .OR. nNumDec == 6, " " + Right( cTotPict,18 ), cTotPict )
+      cTotPict := iif( nNumDec == 2 .OR. nNumDec == 6, " " + Right( cTotPict, 18 ), cTotPict )
 
       nMaxDeci := nNumDec
 
@@ -668,7 +668,7 @@ STATIC FUNCTION _ftAddSub( aAdder, nKey )
    lDecSet   := .F.
    nDecDigit := 0
    lSubRtn   := .F.
-// They pressed the + or - key to process the previous total
+   // They pressed the + or - key to process the previous total
    IF _ftRoundIt( nNumTotal, nMaxDeci ) == 0 .AND. _ftRoundIt( nTotal, nMaxDeci ) == 0
       nNumTotal := nSavTotal
       lNewNum   := .T.
@@ -908,8 +908,6 @@ STATIC FUNCTION _ftEraseTotSubTot( aAdder )
   +--------------------------------------------------------------------------+
   |    Arguments: nNumber                                                    |
   |             : nPlaces                                                    |
-  | Return Value: INT@( ABS@(nNumber@) @* 10 @^ nPlaces @+ 0@.50 @+ 10 @^ - ;|
-  |             :    12 @) / 10 @^ nPlaces                                   |
   +--------------------------------------------------------------------------+
 */
 
@@ -917,7 +915,7 @@ STATIC FUNCTION _ftRoundIt( nNumber, nPlaces )
 
    nPlaces := iif( nPlaces == NIL, 0, nPlaces )
 
-   RETURN iif( nNumber < 0.0, - 1.0, 1.0 ) *                                        ;
+   RETURN iif( nNumber < 0.0, - 1.0, 1.0 ) * ;
       Int( Abs( nNumber ) * 10 ^ nPlaces + 0.50 + 10 ^ - 12 ) / 10 ^ nPlaces
 
 /*+- Function ---------------------------------------------------------------+
@@ -931,7 +929,6 @@ STATIC FUNCTION _ftRoundIt( nNumber, nPlaces )
   |    Arguments: aAdder                                                     |
   |             : nNumerator                                                 |
   |             : nDenominator                                               |
-  | Return Value: @(nNumerator/nDenominator@)                                |
   +--------------------------------------------------------------------------+
 */
 
@@ -955,7 +952,6 @@ STATIC FUNCTION _ftDivide( aAdder, nNumerator, nDenominator )
   |    Copyright: None - Public Domain                                       |
   +--------------------------------------------------------------------------+
   |    Arguments: oGet                                                       |
-  | Return Value: lRtnValue                                                  |
   +--------------------------------------------------------------------------+
 */
 
@@ -1127,7 +1123,7 @@ STATIC FUNCTION _ftPushMessage( cMessage, lWait, cTitle, cBotTitle, xQuiet, nTop
    nWide     := iif( nMessLen > 72, 72, iif( nMessLen < 12, 12, nMessLen ) )
    nNumRows  := MLCount( cMessage, nWide )
 
-// If they didn't say what the top row is, Center it on the screen
+   // If they didn't say what the top row is, Center it on the screen
    DEFAULT nTop TO Int( ( MaxRow() - nNumRows ) / 2 )
 
    nBottom   := nTop + nNumRows + 2
@@ -1217,11 +1213,11 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
    nWide     := iif( nMessLen > 66, 66, iif( nMessLen < 12, 12, nMessLen ) )
 
    nNumMessRow    := MLCount( cMessage, nWide )
-   nLenLastRow    := Len( Trim( MemoLine( cMessage, nWide, nNumMessRow ) ) )
+   nLenLastRow    := Len( RTrim( MemoLine( cMessage, nWide, nNumMessRow ) ) )
    lGetOnNextLine := ( nLenLastRow + nVarLen ) > nWide
    nNumRows       := nNumMessRow + iif( lGetOnNextLine, 1, 0 )
 
-// Center it in the screen
+   // Center it in the screen
    nTop        := iif( nTop == NIL, Int( ( MaxRow() - nNumRows ) / 2 ), nTop )
    nBottom     := nTop + nNumRows + 1
    nLeft       := Int( ( MaxCol() - nWide ) / 2 ) - 4
@@ -1231,12 +1227,12 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
       .AND. nVarLen > nWide, hb_UTF8ToStr( "← scroll →" ), NIL ), nWinColor )
    DISPMESSAGE cMessage, nTop + 1, nLeft + 2, nBottom - 1, nRight - 2
 
-   oNewGet := GetNew( iif( lGetOnNextLine,Row() + 1,Row() ),                       ;
-      iif( lGetOnNextLine, nLeft + 2, Col() + 1 ),                     ;
-      {| x | iif( PCount() > 0, xVarVal := x, xVarVal ) },          ;
+   oNewGet := GetNew( iif( lGetOnNextLine,Row() + 1,Row() ), ;
+      iif( lGetOnNextLine, nLeft + 2, Col() + 1 ), ;
+      {| x | iif( PCount() > 0, xVarVal := x, xVarVal ) }, ;
       "xVarVal" )
 
-// If the input line is character & wider than window SCROLL
+   // If the input line is character & wider than window SCROLL
    IF lGetOnNextLine .AND. HB_ISSTRING( xVarVal ) .AND. nVarLen > nWide
       oNewGet:Picture   := "@S" + LTrim( Str( nWide, 4, 0 ) ) + iif( cPict == NIL, "", " " + cPict )
    ENDIF
@@ -1356,7 +1352,7 @@ STATIC FUNCTION _ftError( cMessage, xDontReset )
    lOldPrint := Set( _SET_PRINTER, .F. )
    cMessage := "I'm sorry but, " + cMessage
    nMessLen := Len( cMessage )
-   nWide    := iif( nMessLen > 66, 66, iif( nMessLen < 12,12,nMessLen ) )
+   nWide    := iif( nMessLen > 66, 66, iif( nMessLen < 12, 12, nMessLen ) )
    nNumRows := MLCount( cMessage, nWide )
    nTop     := Int( ( MaxRow() - nNumRows ) / 2 )  // Center it in the screen
    nBot     := nTop + 3 + nNumRows
@@ -1406,9 +1402,9 @@ STATIC FUNCTION _ftStuffComma( cStrToStuff, lTrimStuffedStr )
 
    lTrimStuffedStr := iif( lTrimStuffedStr == NIL, .F. , lTrimStuffedStr )
    IF !( "." $ cStrToStuff )
-      cStrToStuff := _ftPosIns( cStrToStuff, ".", iif( "C" $ cStrToStuff .OR.         ;
+      cStrToStuff := _ftPosIns( cStrToStuff, ".", iif( "C" $ cStrToStuff .OR. ;
          "E" $ cStrToStuff .OR. "+" $ cStrToStuff .OR. "-" $ cStrToStuff ;
-         .OR. "X" $ cStrToStuff .OR. "*" $ cStrToStuff .OR.            ;
+         .OR. "X" $ cStrToStuff .OR. "*" $ cStrToStuff .OR. ;
          "" $ cStrToStuff .OR. "/" $ cStrToStuff .OR. "=" $ cStrToStuff, ;
          Len( cStrToStuff ) - 1, Len( cStrToStuff ) + 1 ) )
 
@@ -1419,7 +1415,7 @@ STATIC FUNCTION _ftStuffComma( cStrToStuff, lTrimStuffedStr )
    ENDIF
    nDecPosit := At( ".", cStrToStuff )
 
-   IF Len( Left( LTrim(_ftCharRem("-",cStrToStuff ) ),                            ;
+   IF Len( Left( LTrim(_ftCharRem("-",cStrToStuff ) ), ;
          At( ".", LTrim( _ftCharRem("-",cStrToStuff ) ) ) - 1 ) ) > 3
       IF lTrimStuffedStr    // Do we trim the number each time we insert a comma
          FOR x := nDecPosit - 3 TO 2 + _ftCountLeft( cStrToStuff, " " ) STEP - 4
@@ -1447,7 +1443,6 @@ STATIC FUNCTION _ftStuffComma( cStrToStuff, lTrimStuffedStr )
   |             : nBord                                                      |
   |             : nBack                                                      |
   |             : nUnsel                                                     |
-  | Return Value: see code                                                   |
   |     See Also: _ftSetWinColor()                                           |
   +--------------------------------------------------------------------------+
 */
@@ -1510,7 +1505,7 @@ STATIC FUNCTION _ftPushWin( t, l, b, r, cTitle, cBotTitle, nWinColor )
    LOCAL lAutoWindow := nWinColor == NIL
 
    nWinColor := iif( nWinColor == NIL, _ftNextWinColor(), nWinColor )
-   AAdd( t_aWindow, { t, l, b, r, nWinColor, SaveScreen( t,l,b + 1,r + 2 ), lAutoWindow } )
+   AAdd( t_aWindow, { t, l, b, r, nWinColor, SaveScreen( t, l, b + 1, r + 2 ), lAutoWindow } )
    _ftShadow( b + 1, l + 2, b + 1, r + 2 )
    _ftShadow( t + 1, r + 1, b, r + 2 )
    _ftSetWinColor( nWinColor, W_BORDER )
@@ -1585,7 +1580,6 @@ STATIC FUNCTION _ftPopWin
   |             : nBord                                                      |
   |             : nBack                                                      |
   |             : nUnsel                                                     |
-  | Return Value: see code                                                   |
   |     See Also: _ftSetSCRColor()                                           |
   |        Notes: If the window number is not passed use the currently active|
   |             :   window number nWinColor.                                 |
@@ -1629,7 +1623,7 @@ STATIC FUNCTION _ftShadow( nTop, nLeft, nBottom, nRight )
 
    LOCAL theShadow := SaveScreen( nTop, nLeft, nBottom, nRight )
 
-   RestScreen( nTop, nLeft, nBottom, nRight,                                  ;
+   RestScreen( nTop, nLeft, nBottom, nRight, ;
       Transform( theShadow, Replicate( "X", Len( theShadow ) / 2 ) ) )
 
    RETURN NIL
@@ -1644,7 +1638,6 @@ STATIC FUNCTION _ftShadow( nTop, nLeft, nBottom, nRight )
   |    Copyright: None - Public Domain                                       |
   +--------------------------------------------------------------------------+
   |    Arguments: None                                                       |
-  | Return Value: t_nWinColor := iif(t_nWinColor==1,4,t_nWinColor-1)         |
   |        Notes: If we are already on window #1 restart count by using # 4. |
   +--------------------------------------------------------------------------+
 */
@@ -1663,7 +1656,6 @@ STATIC FUNCTION _ftLastWinColor()
   |    Copyright: None - Public Domain                                       |
   +--------------------------------------------------------------------------+
   |    Arguments: None                                                       |
-  | Return Value: t_nWinColor := (iif(t_nWinColor<4,t_nWinColor+1,1))        |
   |        Notes: If we are already on window #4 restart count by using # 1. |
   +--------------------------------------------------------------------------+
 */
@@ -1717,24 +1709,24 @@ STATIC FUNCTION _ftWinTitle( cTheTitle, cTopOrBot )
 STATIC FUNCTION _ftInitColors
 
    t_aWinColor := { ;
-      { "GR+/BG","GR+/G", "B+/RB", "G+/R" } ,                       ;
-      { "R+/N",   "W+/RB", "W+/BG", "GR+/B" } ,                     ;
-      { "GR+/N", "GR+/N", "GR+/N", "GR+/N" } ,                      ;
-      {  "B/BG", "BG+/G", "W+/RB", "BG+/R" } ,                      ;
-      { "W+/BG", "W+/G", "GR+/RB", "W+/R" } ,                       ;
-      { "GR+/B", "GR+/R", "R+/B",  "W+/BG" },                       ;
+      { "GR+/BG","GR+/G", "B+/RB", "G+/R" }                        ,;
+      { "R+/N",   "W+/RB", "W+/BG", "GR+/B" }                      ,;
+      { "GR+/N", "GR+/N", "GR+/N", "GR+/N" }                       ,;
+      {  "B/BG", "BG+/G", "W+/RB", "BG+/R" }                       ,;
+      { "W+/BG", "W+/G", "GR+/RB", "W+/R" }                        ,;
+      { "GR+/B", "GR+/R", "R+/B",  "W+/BG" }                       ,;
       {  "N/N",   "N/N",  "N/N",   "N/N" }   }
 
    t_aStdColor := { ;
-      "BG+*/RB" ,                                                   ;
-      "GR+/R"  ,                                                    ;
-      "GR+/N"  ,                                                    ;
-      "W/B"  ,                                                      ;
-      "GR+/N"  ,                                                    ;
-      "GR+/GR" ,                                                    ;
-      { "W+/B",  "W/B", "G+/B", "R+/B",                             ;
-      "GR+/B", "BG+/B", "B+/B", "G+/B" },                           ;
-      "N/N"    }
+      "BG+*/RB"                                                    ,;
+      "GR+/R"                                                      ,;
+      "GR+/N"                                                      ,;
+      "W/B"                                                        ,;
+      "GR+/N"                                                      ,;
+      "GR+/GR"                                                     ,;
+      { "W+/B",  "W/B", "G+/B", "R+/B"                             ,;
+      "GR+/B", "BG+/B", "B+/B", "G+/B" }                           ,;
+      "N/N" }
 
    RETURN NIL
 
@@ -1747,7 +1739,6 @@ STATIC FUNCTION _ftInitColors
   |    Copyright: None - Public Domain                                       |
   +--------------------------------------------------------------------------+
   |    Arguments: cString                                                    |
-  | Return Value: STRTRAN(cString,"")                                       |
   |        Notes: Used for example to strip all the attribute characters     |
   |             : from a screen save.                                        |
   +--------------------------------------------------------------------------+
@@ -1770,7 +1761,6 @@ STATIC FUNCTION _ftCharOdd( cString )
   |    Arguments: cString                                                    |
   |             : cChar                                                      |
   |             : nPosit                                                     |
-  | Return Value: STRTRAN(cString,"9",cChar,nPosit,1)+""                     |
   +--------------------------------------------------------------------------+
 */
 
@@ -1788,7 +1778,6 @@ STATIC FUNCTION _ftPosRepl( cString, cChar, nPosit )
   +--------------------------------------------------------------------------+
   |    Arguments: cChar                                                      |
   |             : cString                                                    |
-  | Return Value: STRTRAN(cString,cChar)                                     |
   +--------------------------------------------------------------------------+
 */
 
@@ -1805,7 +1794,6 @@ STATIC FUNCTION _ftCharRem( cChar, cString )
   |    Copyright: None - Public Domain                                       |
   +--------------------------------------------------------------------------+
   |    Arguments: cString                                                    |
-  | Return Value: LEN(cString)-LEN(LTRIM(cString))                           |
   +--------------------------------------------------------------------------+
 */
 
@@ -1824,7 +1812,6 @@ STATIC FUNCTION _ftCountLeft( cString )
   |    Arguments: cString                                                    |
   |             : cChar                                                      |
   |             : nPosit                                                     |
-  | Return Value: LEFT(cString,nPosit-1)+cChar+SUBSTR(cString,nPosit)        |
   +--------------------------------------------------------------------------+
 */
 

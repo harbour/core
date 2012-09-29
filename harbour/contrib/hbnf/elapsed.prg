@@ -39,7 +39,7 @@ PROCEDURE Main()
 
    aDataTest := FT_ELAPSED( dStart, dEnd, cTimeStart, cTimeEnd )
    FOR n := 1 TO 4
-      ? aDataTest[n,1], Str( aDataTest[n,2], 12, 4 )
+      ? aDataTest[ n, 1 ], Str( aDataTest[ n, 2 ], 12, 4 )
       ?? " "
       ?? iif( n == 1, "Days", iif( n == 2, "Hours", iif( n == 3, "Mins.", "Secs." ) ) )
    NEXT
@@ -50,16 +50,16 @@ PROCEDURE Main()
 
 FUNCTION FT_ELAPSED( dStart, dEnd, cTimeStart, cTimeEnd )
 
-   LOCAL nTotalSec, nCtr, nConstant, nTemp, aRetVal[4,2]
+   LOCAL nTotalSec, nCtr, nConstant, nTemp, aRetVal[ 4, 2 ]
 
-   IF ! ( ValType( dStart ) $ "DC" )
+   IF !( ValType( dStart ) $ "DC" )
       dStart := Date()
    ELSEIF HB_ISSTRING( dStart )
       cTimeStart := dStart
       dStart     := Date()
    ENDIF
 
-   IF ! ( ValType( dEnd ) $ "DC" )
+   IF !( ValType( dEnd ) $ "DC" )
       dEnd := Date()
    ELSEIF HB_ISSTRING( dEnd )
       cTimeEnd := dEnd
@@ -71,7 +71,7 @@ FUNCTION FT_ELAPSED( dStart, dEnd, cTimeStart, cTimeEnd )
 
    nTotalSec  := ( dEnd - dStart ) * 86400 + ;
       Val( cTimeEnd ) *  3600 + ;
-      Val( SubStr( cTimeEnd, At( ":", cTimeEnd ) + 1,2 ) ) * 60 + ;
+      Val( SubStr( cTimeEnd, At( ":", cTimeEnd ) + 1, 2 ) ) * 60 + ;
       iif( RAt( ":", cTimeEnd ) == At( ":", cTimeEnd ), 0, ;
       Val( SubStr( cTimeEnd, RAt( ":", cTimeEnd ) + 1 ) ) ) - ;
       Val( cTimeStart ) * 3600 - ;

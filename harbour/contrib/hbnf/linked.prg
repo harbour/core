@@ -28,18 +28,17 @@
 PROCEDURE Main()
 
    LOCAL aString := { ;
-      "TRIM('abc ')",                                     ;
-      "NotARealFunc()",                                   ;
-      "FT_DispMsg()",                                     ;
-      'TRIM(cVar+"abc"+LEFT(cString)), FOUND()',          ;
-      "IsItLinked()",                                     ;
-      "lRetVal := FOUND()",                               ;
-      "!EOF() .AND. MONTH(DATE())=12 .AND. YeeHa()",      ;
-      "!EOF() .AND. MONTH(DATE())=12",                    ;
-      "!EOF() .AND. MONTH(DATE(YeeHa()))=12",             ;
-      "LEFT(SUBSTR(nNum,4,VAL(cChar+ASC(c))))",           ;
-      "EOF(>> Note: Syntax IS NOT checked! <<)"           ;
-      }
+      "RTrim('abc ')"                                     ,;
+      "NotARealFunc()"                                    ,;
+      "FT_DispMsg()"                                      ,;
+      'RTrim(cVar+"abc"+Left(cString)), Found()'          ,;
+      "IsItLinked()"                                      ,;
+      "lRetVal := Found()"                                ,;
+      "!EOF() .AND. Month(Date())=12 .AND. YeeHa()"       ,;
+      "!EOF() .AND. Month(Date())=12"                     ,;
+      "!EOF() .AND. Month(Date(YeeHa()))=12"              ,;
+      "Left(SubStr(nNum,4,Val(cChar+Asc(c))))"            ,;
+      "EOF(>> Note: Syntax IS NOT checked! <<)"           }
 
    CLS
    @ 1, 0 SAY "String Tested                               Result"
@@ -51,15 +50,12 @@ PROCEDURE Main()
 
 #endif
 
-//------------------------------------------------
-
-FUNCTION FT_Linked( cFuncs )
-
 // A function is detected by the left parenthesis, "(", and it begins
 // at the space, comma or start-of-string preceeding the "("
 
 // Returns: .T. if all functions are available,
 //          .F. if not
+FUNCTION FT_Linked( cFuncs )
 
    LOCAL aFuncArray := {}, nSpace, nComma, nFEnd, lRetVal := .F.
 

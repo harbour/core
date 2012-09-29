@@ -163,7 +163,7 @@ FUNCTION FT_PEGS()
 STATIC FUNCTION DrawBox( nelement )
 
    SetColor( iif( t_board_[ nelement ][ 4 ], "+w/rb", "w/n" ) )
-   @ t_board_[ nelement ][ 1, 1 ], t_board_[ nelement ][1,2], t_board_[ nelement ][ 1, 3 ], ;
+   @ t_board_[ nelement ][ 1, 1 ], t_board_[ nelement ][ 1, 2 ], t_board_[ nelement ][ 1, 3 ], ;
       t_board_[ nelement ][ 1, 4 ] BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
    DevPos( t_board_[ nelement ][ 1, 1 ] + 1, t_board_[ nelement ][ 1, 2 ] + 2 )
    DevOut( hb_ntos( nelement ) )
@@ -216,5 +216,3 @@ STATIC FUNCTION moremoves()
    ENDIF
 
    RETURN canmove
-
-//--------------------------------------------------------------------*

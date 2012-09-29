@@ -77,19 +77,19 @@ FUNCTION FT_MIL2CIV( cMILTIME )
 
    LOCAL cHRS, cMINS, nHRS, cCIVTIME
 
-   nHRS  := Val( Left( cMILTIME,2 ) )
+   nHRS  := Val( Left( cMILTIME, 2 ) )
    cMINS := Right( cMILTIME, 2 )
 
    DO CASE
-   CASE ( nHRS == 24 .OR. nHRS == 0 ) .AND. ( cMINS == "00" )  // Midnight
+   CASE ( nHRS == 24 .OR. nHRS == 0 ) .AND. cMINS == "00"  // Midnight
       cCIVTIME := "12:00 m"
-   CASE ( nHRS == 12 )                                       // Noon to 12:59pm
+   CASE nHRS == 12                                     // Noon to 12:59pm
       IF cMINS == "00"
          cCIVTIME := "12:00 n"
       ELSE
          cCIVTIME := "12:" + cMINS + " pm"
       ENDIF
-   CASE ( nHRS < 12 )                                    // AM
+   CASE nHRS < 12                                      // AM
       IF nHRS == 0
          cHRS := "12"
       ELSE
@@ -108,15 +108,15 @@ FUNCTION FT_CIV2MIL( cTIME )
 
    LOCAL cKEY, cMILTIME
 
-//** Insure leading 0's
+   //** Insure leading 0's
    cTIME := Replicate( "0", 3 - At( ":", LTrim( cTIME ) ) ) + LTrim( cTIME )
 
-//** Adjust for popular use of '12' for first hour after noon and midnight
+   //** Adjust for popular use of '12' for first hour after noon and midnight
    IF Left( LTrim( cTIME ), 2 ) == "12"
       cTIME := Stuff( cTIME, 1, 2, "00" )
    ENDIF
 
-//** am, pm, noon or midnight
+   //** am, pm, noon or midnight
    cKEY := SubStr( LTrim( cTIME ), 7, 1 )
 
    DO CASE
@@ -139,7 +139,7 @@ FUNCTION FT_CIV2MIL( cTIME )
       cMILTIME := Right( "00" + hb_ntos( Val( Left( cTIME, 2 ) ) + 12 ), 2 ) + ;
          SubStr( cTIME, 4, 2 )
    OTHERWISE
-      cMILTIME := "    "                              // error
+      cMILTIME := "    "                               // error
    ENDCASE
 
    RETURN cMILTIME
