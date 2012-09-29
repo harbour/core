@@ -46,7 +46,7 @@
       ( <exp> \ > 0 .AND. <exp> \ <= nCount )
 
 #xtranslate isBetween( <val>, <lower>, <upper> ) => ;
-      ( < val > \ >= < lower > .AND. < val > \ <= < upper > )
+      ( <val> \ >= <lower> .AND. <val> \ <= <upper> )
 
 #define nTriggerInkey hb_keyCode( Upper( SubStr( cPrompt, nTrigger, 1 ) ) )
 #define cTrigger SubStr( cPrompt, nTrigger, 1 )
@@ -230,7 +230,7 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
       DispBegin()
 
       IF t_aMessage[ nCurrent ] != NIL
-         cScreen := SaveScreen( t_aMsgRow[ nCurrent ], t_aMsgCol[ nCurrent ],  ;
+         cScreen := SaveScreen( t_aMsgRow[ nCurrent ], t_aMsgCol[ nCurrent ], ;
             t_aMsgRow[ nCurrent ], t_aMsgCol[ nCurrent ] + ;
             Len( t_aMessage[ nCurrent ] ) - 1 )
 

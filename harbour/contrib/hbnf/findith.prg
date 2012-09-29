@@ -53,7 +53,7 @@ FUNCTION FT_FINDITH( cCheckFor, cCheckIn, nWhichOccurrence, lIgnoreCase )
 
    LOCAL nIthOccurrence
 
-// Is Case Sensitivity Important??
+   // Is Case Sensitivity Important??
    IF ! HB_ISLOGICAL( lIgnoreCase ) .OR. ;
          lIgnoreCase
 
@@ -61,7 +61,7 @@ FUNCTION FT_FINDITH( cCheckFor, cCheckIn, nWhichOccurrence, lIgnoreCase )
       MAKE_UPPER( cCheckIn )
 
    ENDIF                                // IS_NOT_LOGICAL(lIgnoreCase) or
-// lIgnoreCase
+   // lIgnoreCase
 
    RETURN iif( nWhichOccurrence == 1, ;
       At( cCheckFor, cCheckIn ), ;

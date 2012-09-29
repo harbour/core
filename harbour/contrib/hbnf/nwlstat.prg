@@ -41,12 +41,12 @@ PROCEDURE Main()
 
 FUNCTION FT_NWLSTAT()
 
-   /*  LOCAL aRegs[ INT86_MAX_REGS ] */
+// LOCAL aRegs[ INT86_MAX_REGS ]
    LOCAL nStation
 /*
    aRegs[ AX ] := MAKEHI( STATNUM )
    FT_INT86( DOS, aRegs )
-  */
+ */
    nStation := _ft_nwkstat() /* LOWBYTE( aRegs[ AX ] ) */
    IF nStation < 0
       nStation += 256

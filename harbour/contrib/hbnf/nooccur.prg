@@ -27,14 +27,14 @@
 
 FUNCTION FT_NOOCCUR( cCheckFor, cCheckIn, lIgnoreCase )
 
-// Is Case Important??
+   // Is Case Important??
    IF ! HB_ISLOGICAL( lIgnoreCase ) .OR. lIgnoreCase
 
       MAKE_UPPER( cCheckFor )             //  No, Force Everything to Uppercase
       MAKE_UPPER( cCheckIn )
 
    ENDIF
-// lIgnoreCase
+   // lIgnoreCase
 
    RETURN iif( Len( cCheckFor ) == 0 .OR. Len( cCheckIn ) == 0, ;
       0, ;

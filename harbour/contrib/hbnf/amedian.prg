@@ -67,20 +67,20 @@ FUNCTION FT_AMEDIAN( aArray, nStart, nEnd )
    DEFAULT nStart TO 1
    DEFAULT nEnd   TO Len( aArray )
 
-// Make Sure Bounds are in Range
+   // Make Sure Bounds are in Range
    FORCE_BETWEEN( 1, nEnd,   Len( aArray ) )
    FORCE_BETWEEN( 1, nStart, nEnd )
 
-// Length of aTemparray
+   // Length of aTemparray
    nTemplen := ( nEnd - nStart ) + 1
 
-// Initialize aTemparray
+   // Initialize aTemparray
    aTemparray := ACopy( aArray, Array( nTemplen ), nStart, nTemplen )
 
-// Sort aTemparray
+   // Sort aTemparray
    aTemparray := ASort( aTemparray )
 
-// Determine middle value(s)
+   // Determine middle value(s)
    IF ( nTemplen % 2 ) == 0
       nMiddle1 := aTemparray[ ( nTemplen / 2 ) ]
       nMiddle2 := aTemparray[ Int( nTemplen / 2 ) + 1 ]

@@ -493,7 +493,7 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
    hProject[ "aDept" ] := {}
    hProject[ "lChecked" ] := NIL
 
-   IF ( nErrorLevel := call_hbmk2( cProjectPath, " --hbinfo -autohbm-", NIL,, @cStdOut ) ) == 0
+   IF ( nErrorLevel := call_hbmk2( cProjectPath, " --hbinfo", NIL,, @cStdOut ) ) == 0
 
       hb_jsonDecode( cStdOut, @hInfo )
 
@@ -549,7 +549,7 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
    hb_setenv( "_HB_CONTRIB_SUBDIR", hb_FNameDir( PathSepToSelf( cProjectPath ) ) )
 
    cCommand := s_cBinDir + "hbmk2" +;
-               " -quiet -width=0" +;
+               " -quiet -width=0 -autohbm-" +;
                " @" + StrTran( s_cHome + "hbpre", "\", "/" ) +;
                cOptionsPre +;
                " " + StrTran( cProjectPath, "\", "/" ) +;

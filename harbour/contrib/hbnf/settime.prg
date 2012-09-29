@@ -55,10 +55,10 @@ FUNCTION FT_SETTIME( cTime )
 
    cTime := iif( cTime == NIL, Time(), cTime )
 
-//            -------- High Byte ------      ----- Low Byte -------
+   //             -------- High Byte ------   ----- Low Byte -------
 
    aRegs[ AX ] := SETTIME       * ( 2 ^ 8 )
-   aRegs[ CX ] := HRS( cTime  ) * ( 2 ^ 8 )   +    MINS( cTime )
+   aRegs[ CX ] := HRS( cTime  ) * ( 2 ^ 8 ) + MINS( cTime )
    aRegs[ DX ] := Secs( cTime ) * ( 2 ^ 8 )
 
    RETURN FT_INT86( DOS, aRegs )

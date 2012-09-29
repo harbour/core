@@ -261,8 +261,10 @@ FUNCTION FT_Adder()
          IF lTape
             RestScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace, cTapeScr )
          ENDIF
-         IF Left( SaveScreen( 6 + nTopOS, 26 + nAddSpace, 6 + nTopOS, 27 + nAddSpace ), 1 )   ;
+         // TOFIX: manipulating savescreen buffers
+         IF Left( SaveScreen( 6 + nTopOS, 26 + nAddSpace, 6 + nTopOS, 27 + nAddSpace ), 1 ) ;
                != " "
+            // TOFIX: manipulating savescreen buffers
             IF Left( SaveScreen( 6 + nTopOS, 19 + nAddSpace, 6 + nTopOS, 20 + nAddSpace ), 1 ) ;
                   == "S"
                cMoveTotSubTot := "S"
@@ -272,10 +274,11 @@ FUNCTION FT_Adder()
          ELSE
             cMoveTotSubTot := " "
          ENDIF
+         // TOFIX: manipulating savescreen buffers
          cTotal := _ftCharOdd( SaveScreen( 4 + nTopOS, 8 + nAddSpace, 4 + ;
             nTopOS, 25 + nAddSpace ) )
          _ftPopWin()                     // Remove Adder
-         lShowRight := !lShowRight
+         lShowRight := ! lShowRight
          nAddSpace  := iif( lShowRight, 40, 0 ) + nLeftOS
          nTapeSpace := iif( lShowRight, 0, 40 ) + nLeftOS
          _ftAddScreen( aAdder )
@@ -287,7 +290,7 @@ FUNCTION FT_Adder()
          @ 4 + nTopOS, 8 + nAddSpace SAY cTotal
          IF !Empty( cMoveTotSubTot )
             _ftSetWinColor( W_CURR, W_SCREEN )
-            @ 6 + nTopOS, 18 + nAddSpace SAY iif( cMoveTotSubTot == "T", "   <TOTAL>",  ;
+            @ 6 + nTopOS, 18 + nAddSpace SAY iif( cMoveTotSubTot == "T", "   <TOTAL>", ;
                "<SUBTOTAL>" )
             _ftSetWinColor( W_CURR, W_PROMPT )
          ENDIF
@@ -296,7 +299,7 @@ FUNCTION FT_Adder()
             SetColor( "GR+/W" )
             @ 21 + nTopOS, 8 + nTapeSpace SAY hb_UTF8ToStr( " ↑↓-SCROLL  <ESC>-QUIT " )
             SetColor( "N/W,W+/N" )
-            AChoice( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, aTrans, .T. ,  ;
+            AChoice( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, aTrans, .T. , ;
                "_ftAdderTapeUDF", nTotTran, 20 )
             SetColor( "R+/W" )
             @ 21 + nTopOS, 8 + nTapeSpace TO 21 + nTopOS, 30 + nTapeSpace
@@ -792,7 +795,7 @@ STATIC FUNCTION _ftAddHelp
       "         <ESC>      - Quit"                          + hb_eol() + ;
       "         <F10>      - return a <TOTAL> to the active get"
 
-   _ftPushMessage( cMess, .T. , "ADDER HELP", "press any key to continue...",  ;
+   _ftPushMessage( cMess, .T. , "ADDER HELP", "press any key to continue...", ;
       "QUIET" )
 
    RETURN NIL
@@ -1010,7 +1013,7 @@ STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
       IF nTotTran > 15
          nTopTape := nTotTran - 15
       ENDIF
-      FOR nDispTape := nTotTran TO nTopTape STEP - 1
+      FOR nDispTape := nTotTran TO nTopTape STEP -1
          @ 20 + nDispTape - nTotTran + nTopOS, 7 + nTapeSpace SAY aTrans[ nDispTape ]
       NEXT
    ENDIF
@@ -1223,7 +1226,7 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
    nLeft       := Int( ( MaxCol() - nWide ) / 2 ) - 4
    nRight      := nLeft + nWide + 4
 
-   _ftPushWin( nTop, nLeft, nBottom, nRight, "QUESTION ?", iif( HB_ISSTRING( xVarVal )  ;
+   _ftPushWin( nTop, nLeft, nBottom, nRight, "QUESTION ?", iif( HB_ISSTRING( xVarVal ) ;
       .AND. nVarLen > nWide, hb_UTF8ToStr( "← scroll →" ), NIL ), nWinColor )
    DISPMESSAGE cMessage, nTop + 1, nLeft + 2, nBottom - 1, nRight - 2
 
@@ -1361,7 +1364,7 @@ STATIC FUNCTION _ftError( cMessage, xDontReset )
 
    cErrorScr := SaveScreen( nTop, nLeft, nBot + 1, nRight + 2 )
    _ftShadow( nBot + 1, nLeft + 2, nBot + 1, nRight + 2, 8 )
-   _ftShadow( nTop + 1, nRight + 1, nBot  , nRight + 2, 8 )
+   _ftShadow( nTop + 1, nRight + 1, nBot, nRight + 2, 8 )
    @ nTop, nLeft, nBot, nRight BOX B_SINGLE
    @ nTop, nLeft + Int( nWide / 2 ) - 1 SAY " ERROR "
    @ nBot - 1, nLeft + Int( nWide - 28 ) / 2 + 3 SAY "Press any key to continue..."
@@ -1621,6 +1624,7 @@ STATIC FUNCTION _ftSetWinColor( nWin, nStd, nEnh, nBord, nBack, nUnsel )
 
 STATIC FUNCTION _ftShadow( nTop, nLeft, nBottom, nRight )
 
+   // TOFIX: manipulating savescreen buffers
    LOCAL theShadow := SaveScreen( nTop, nLeft, nBottom, nRight )
 
    RestScreen( nTop, nLeft, nBottom, nRight, ;

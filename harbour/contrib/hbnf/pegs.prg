@@ -31,11 +31,11 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#translate SINGLEBOX(<top>, <left>, <bottom>, <right>) => ;
-      @ < top > , < left > , < bottom > , < right > BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
-#translate DOUBLEBOX(<top>, <left>, <bottom>, <right>) => ;
-      @ < top > , < left > , < bottom > , < right > BOX hb_UTF8ToStr( "╔═╗║╝═╚║ " )
-MEMVAR getlist
+#translate SINGLEBOX( <top>, <left>, <bottom>, <right> ) => ;
+      @ <top>, <left>, <bottom>, <right> BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
+#translate DOUBLEBOX( <top>, <left>, <bottom>, <right> ) => ;
+      @ <top>, <left>, <bottom>, <right> BOX hb_UTF8ToStr( "╔═╗║╝═╚║ " )
+MEMVAR GetList
 
 /*
    here's the board array -- structure of which is:
@@ -91,7 +91,7 @@ FUNCTION FT_PEGS()
 */
 
    scanblock := {| a | a[ 2 ] == move2 }
-   cls
+   CLS
    SetColor( "w/r" )
    SINGLEBOX( 22, 31, 24, 48 )
    @ 23, 33 SAY "Your move:"
@@ -183,7 +183,7 @@ STATIC FUNCTION err_msg( msg )
    SetCursor( SC_NORMAL )
    RestScreen( 23, 33, 23, 47, buffer )
 
-   RETURN nil
+   RETURN NIL
 
 //--------------------------------------------------------------------*
 

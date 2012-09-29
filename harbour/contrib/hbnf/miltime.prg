@@ -27,7 +27,7 @@
 
 PROCEDURE Main()
 
-   cls
+   CLS
    ? "am-pm"
    ? ft_civ2mil( " 5:40 pm" )
    ? ft_civ2mil( "05:40 pm" )
@@ -37,7 +37,7 @@ PROCEDURE Main()
    ? ft_civ2mil( " 5:40 AM" )
    ?
    Inkey( 0 )
-   cls
+   CLS
    ? "noon-midnight"
    ? ft_civ2mil( "12:00 m" )
    ? ft_civ2mil( "12:00 M" )
@@ -47,7 +47,7 @@ PROCEDURE Main()
    ? ft_civ2mil( "12:00 n" )
    ?
    Inkey( 0 )
-   cls
+   CLS
    ? "errors in noon-midnight"
    ? ft_civ2mil( "12:01 n" )
    ? ft_civ2mil( "22:00 n" )

@@ -35,7 +35,7 @@ FUNCTION FT_ASUM( aArray, nStartIndex, nEndIndex )
    DEFAULT nStartIndex TO 1
    DEFAULT nEndIndex   TO Len( aArray )
 
-// Make Sure Bounds are in Range
+   // Make Sure Bounds are in Range
    FORCE_BETWEEN( 1, nEndIndex,   Len( aArray ) )
    FORCE_BETWEEN( 1, nStartIndex, nEndIndex )
 

@@ -34,14 +34,14 @@ FUNCTION FT_INVCLR( cDsrdColor )
    LOCAL cModifiers                     // Any Color Modifiers (+*)
 
    DEFAULT cDsrdColor TO SetColor()
-// Remove Anything Past 1st Color
+   // Remove Anything Past 1st Color
    cDsrdColor := Left( cDsrdColor, At( ",", cDsrdColor + "," ) - 1 )
 
-// Get Any Modifiers
+   // Get Any Modifiers
    cModifiers := iif( "*" $ cDsrdColor, "*", NULL ) + ;
       iif( "+" $ cDsrdColor, "+", NULL )
 
-// Separate the Fore/Background Colors
+   // Separate the Fore/Background Colors
    cForeground := AllTrim( Left( cDsrdColor,   At( "/", cDsrdColor ) - 1 ) )
    cBackground := AllTrim( SubStr( cDsrdColor, At( "/", cDsrdColor ) + 1 ) )
 

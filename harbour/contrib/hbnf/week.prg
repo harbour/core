@@ -30,7 +30,7 @@ FUNCTION FT_WEEK( dGivenDate, nWeekNum )
 
    LOCAL lIsWeek, nTemp, aRetVal, dTemp
 
-   IF ! ( ValType( dGivenDate ) $ "ND" )
+   IF !( ValType( dGivenDate ) $ "ND" )
       dGivenDate := Date()
    ELSEIF HB_ISNUMERIC( dGivenDate )
       nWeekNum   := dGivenDate

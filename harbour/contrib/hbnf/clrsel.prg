@@ -129,8 +129,7 @@ PROCEDURE Main( cVidMode )
       { "Help",           "N/G,  W+/N,,, W/N",             "W" }, ;
       { "Error Messages", "W+/R*,N/GR*,,,N/R*",            "W" }, ;
       { "Database Query", "N/BG, N/GR*,,,N+/BG",           "B" }, ;
-      { "Pick List",      "N/GR*,W+/B,,, BG/GR*",          "A" }  ;
-      }
+      { "Pick List",      "N/GR*,W+/B,,, BG/GR*",          "A" } }
 
    aClrs := FT_ClrSel( aClrs, lColour )
 
@@ -516,12 +515,12 @@ STATIC FUNCTION _ftClrSel( aClrPal, cClr, nElem, aOpt )
 
       //.... check key movement and modify co-ordinates
       DO CASE
-      CASE nKey == K_ESC   ;  EXIT
-      CASE nKey == K_ENTER ;  cClr := aClrPal[ nR, nC ] ;  EXIT
-      CASE nKey == K_UP    ;  --nR
-      CASE nKey == K_DOWN  ;  ++nR
-      CASE nKey == K_LEFT  ;  --nC
-      CASE nKey == K_RIGHT ;  ++nC
+      CASE nKey == K_ESC   ; EXIT
+      CASE nKey == K_ENTER ; cClr := aClrPal[ nR, nC ] ; EXIT
+      CASE nKey == K_UP    ; --nR
+      CASE nKey == K_DOWN  ; ++nR
+      CASE nKey == K_LEFT  ; --nC
+      CASE nKey == K_RIGHT ; ++nC
       ENDCASE
 
    ENDDO

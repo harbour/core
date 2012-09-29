@@ -41,7 +41,7 @@ PROCEDURE Main()
 
 FUNCTION FT_DOSVER()
 
-   /*  LOCAL aRegs[ INT86_MAX_REGS ] */
+// LOCAL aRegs[ INT86_MAX_REGS ]
    LOCAL cResult
 
 /* aRegs[ AX ] := MAKEHI( DOSVER )

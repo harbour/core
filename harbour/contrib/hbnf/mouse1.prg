@@ -185,7 +185,7 @@ PROCEDURE Main( nRow, nCol )
    RestScreen( 0, 0, MaxRow(), MaxCol(), cSavScr )
    DevPos( MaxRow(), 0 )
 
-// Reset sensitivity
+   // Reset sensitivity
 
    FT_MSETSENS( nHoriz, nVert, nDouble )
 
@@ -340,7 +340,7 @@ FUNCTION FT_MSETSENS( nHoriz, nVert, nDouble )
    // Fill the registers
    _mset_sensitive( nHoriz, nVert, nDouble )
 
-   RETURN nil
+   RETURN NIL
 
 FUNCTION FT_MGETSENS( nHoriz, nVert, nDouble )
 /*
@@ -434,11 +434,11 @@ FUNCTION FT_MRESET()
 /*
    aReg[ AX ] := 0          // set mouse function call 0
    FT_INT86( 51, aReg )  // execute mouse interrupt
-   */
+*/
 
    t_lCrsState := .F.         // Cursor is off after reset
    lStatus := _m_reset()
-// Reset maximum x and y limits
+   // Reset maximum x and y limits
 
    FT_MYLIMIT( 0, 8 * MaxRow() )
    FT_MXLIMIT( 0, 8 * MaxCol() )

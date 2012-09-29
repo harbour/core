@@ -191,26 +191,25 @@ STATIC FUNCTION _ftCol( nElem )  //  Determine which column to start print
 //------------------------------------------------
 
 #endif
-// End of Test program
 
 //------------------------------------------------
 
 FUNCTION FT_METAPH( cName, nSize )
 
-//  Calculates the metaphone of a character string
+   //  Calculates the metaphone of a character string
 
    LOCAL cMeta
 
    cName := iif( cName == NIL, "", cName )  //  catch-all
    nSize := iif( nSize == NIL, 4,  nSize )  //  default size: 4-bytes
 
-//  Remove non-alpha characters and make upper case.
-//  The string is padded with 1 space at the beginning & end.
-//  Spaces, if present inside the string, are not removed until all
-//  the prefix/suffix checking has been completed.
+   //  Remove non-alpha characters and make upper case.
+   //  The string is padded with 1 space at the beginning & end.
+   //  Spaces, if present inside the string, are not removed until all
+   //  the prefix/suffix checking has been completed.
    cMeta := " " + _ftMakeAlpha( Upper( AllTrim( cName ) ) ) + " "
 
-//  prefixes which need special consideration
+   //  prefixes which need special consideration
    IF " KN"   $ cMeta ;  cMeta := StrTran( cMeta, " KN" , " N"  ) ;  ENDIF
    IF " GN"   $ cMeta ;  cMeta := StrTran( cMeta, " GN" , " N"  ) ;  ENDIF
    IF " PN"   $ cMeta ;  cMeta := StrTran( cMeta, " PN" , " N"  ) ;  ENDIF
@@ -225,16 +224,16 @@ FUNCTION FT_METAPH( cName, nSize )
    IF " MAC"  $ cMeta ;  cMeta := StrTran( cMeta, " MAC", " MK" ) ;  ENDIF
    IF " GI"   $ cMeta ;  cMeta := StrTran( cMeta, " GI",  " K"  ) ;  ENDIF
 
-//  Suffixes which need special consideration
+   //  Suffixes which need special consideration
    IF "MB " $ cMeta ;  cMeta := StrTran( cMeta, "MB " , "M " ) ;  ENDIF
    IF "NG " $ cMeta ;  cMeta := StrTran( cMeta, "NG " , "N " ) ;  ENDIF
 
-//  Remove inner spaces (1st and last byte are spaces)
+   //  Remove inner spaces (1st and last byte are spaces)
    IF " " $ SubStr( cMeta, 2, Len( cMeta ) - 2 )
       cMeta := " " + StrTran( cMeta, " " , "" ) + " "
    ENDIF
 
-//  Double consonants sound much the same as singles
+   //  Double consonants sound much the same as singles
    IF "BB"  $ cMeta ;  cMeta := StrTran( cMeta, "BB"  , "B"  ) ;  ENDIF
    IF "CC"  $ cMeta ;  cMeta := StrTran( cMeta, "CC"  , "CH" ) ;  ENDIF
    IF "DD"  $ cMeta ;  cMeta := StrTran( cMeta, "DD"  , "T"  ) ;  ENDIF
@@ -251,7 +250,7 @@ FUNCTION FT_METAPH( cName, nSize )
    IF "XX"  $ cMeta ;  cMeta := StrTran( cMeta, "XX"  , "KS" ) ;  ENDIF
    IF "ZZ"  $ cMeta ;  cMeta := StrTran( cMeta, "ZZ"  , "S"  ) ;  ENDIF
 
-//  J sounds
+   //  J sounds
    IF "DGE" $ cMeta ;  cMeta := StrTran( cMeta, "DGE" , "J"  ) ;  ENDIF
    IF "DGY" $ cMeta ;  cMeta := StrTran( cMeta, "DGY" , "J"  ) ;  ENDIF
    IF "DGI" $ cMeta ;  cMeta := StrTran( cMeta, "DGI" , "J"  ) ;  ENDIF
@@ -259,14 +258,14 @@ FUNCTION FT_METAPH( cName, nSize )
    IF "GE"  $ cMeta ;  cMeta := StrTran( cMeta, "GE"  , "J"  ) ;  ENDIF
    IF "GY"  $ cMeta ;  cMeta := StrTran( cMeta, "GY"  , "J"  ) ;  ENDIF
 
-//  X sounds (KS)
+   //  X sounds (KS)
    IF "X"   $ cMeta ;  cMeta := StrTran( cMeta, "X"   , "KS" ) ;  ENDIF
 
-// special consideration for SCH
+   // special consideration for SCH
    IF "ISCH" $ cMeta;  cMeta := StrTran( cMeta, "ISCH", "IX" ) ;  ENDIF
    IF "SCH" $ cMeta ;  cMeta := StrTran( cMeta, "SCH" , "SK" ) ;  ENDIF
 
-//  sh sounds (X)
+   //  sh sounds (X)
    IF "CIA" $ cMeta ;  cMeta := StrTran( cMeta, "CIA" , "X"  ) ;  ENDIF
    IF "SIO" $ cMeta ;  cMeta := StrTran( cMeta, "SIO" , "X"  ) ;  ENDIF
    IF "C"   $ cMeta ;  cMeta := StrTran( cMeta, "SIA" , "X"  ) ;  ENDIF
@@ -276,7 +275,7 @@ FUNCTION FT_METAPH( cName, nSize )
    IF "TCH" $ cMeta ;  cMeta := StrTran( cMeta, "TCH" , "X"  ) ;  ENDIF
    IF "CH"  $ cMeta ;  cMeta := StrTran( cMeta, "CH"  , "X"  ) ;  ENDIF
 
-//  hissing sounds (S)
+   //  hissing sounds (S)
    IF "SCI" $ cMeta ;  cMeta := StrTran( cMeta, "SCI" , "S"  ) ;  ENDIF
    IF "SCE" $ cMeta ;  cMeta := StrTran( cMeta, "SCE" , "S"  ) ;  ENDIF
    IF "SCY" $ cMeta ;  cMeta := StrTran( cMeta, "SCY" , "S"  ) ;  ENDIF
@@ -285,43 +284,43 @@ FUNCTION FT_METAPH( cName, nSize )
    IF "CY"  $ cMeta ;  cMeta := StrTran( cMeta, "CY"  , "S"  ) ;  ENDIF
    IF "Z"   $ cMeta ;  cMeta := StrTran( cMeta, "Z"   , "S"  ) ;  ENDIF
 
-//  th sound (0)
+   //  th sound (0)
    IF "TH"  $ cMeta ;  cMeta := StrTran( cMeta, "TH"  , "0"  ) ;  ENDIF
 
-//  Convert all vowels to 'v' from 3rd byte on
+   //  Convert all vowels to 'v' from 3rd byte on
    cMeta := Left( cMeta, 2 ) + _ftConvVowel( SubStr( cMeta, 3 ) )
 
-// Make Y's silent if not followed by vowel
+   // Make Y's silent if not followed by vowel
    IF "Y"   $ cMeta
       cMeta := StrTran( cMeta, "Yv"  , "#"  )  // Y followed by vowel
       cMeta := StrTran( cMeta, "Y"   , ""   )  // not followed by vowel
       cMeta := StrTran( cMeta, "#"   , "Yv" )  // restore Y and vowel
    ENDIF
 
-//  More G sounds, looking at surrounding vowels
+   //  More G sounds, looking at surrounding vowels
    IF "GHv" $ cMeta ;  cMeta := StrTran( cMeta, "GHv" , "G"  ) ;  ENDIF
    IF "vGHT" $ cMeta;  cMeta := StrTran( cMeta, "vGHT", "T"  ) ;  ENDIF
    IF "vGH" $ cMeta ;  cMeta := StrTran( cMeta, "vGH" , "W"  ) ;  ENDIF
    IF "GN"  $ cMeta ;  cMeta := StrTran( cMeta, "GN"  , "N"  ) ;  ENDIF
    IF "G"   $ cMeta ;  cMeta := StrTran( cMeta, "G"   , "K"  ) ;  ENDIF
 
-//  H sounds, looking at surrounding vowels
+   //  H sounds, looking at surrounding vowels
    IF "vHv" $ cMeta ;  cMeta := StrTran( cMeta, "vHv" , "H"  ) ;  ENDIF
    IF "vH"  $ cMeta ;  cMeta := StrTran( cMeta, "vH"  , ""   ) ;  ENDIF
 
-//  F sounds
+   //  F sounds
    IF "PH"  $ cMeta ;  cMeta := StrTran( cMeta, "PH"  , "F"  ) ;  ENDIF
    IF "V"   $ cMeta ;  cMeta := StrTran( cMeta, "V"   , "F"  ) ;  ENDIF
 
-//  D sounds a bit like T
+   //  D sounds a bit like T
    IF "D"   $ cMeta ;  cMeta := StrTran( cMeta, "D"   , "T"  ) ;  ENDIF
 
-//  K sounds
+   //  K sounds
    IF "CK"  $ cMeta ;  cMeta := StrTran( cMeta, "CK"  , "K"  ) ;  ENDIF
    IF "Q"   $ cMeta ;  cMeta := StrTran( cMeta, "Q"   , "K"  ) ;  ENDIF
    IF "C"   $ cMeta ;  cMeta := StrTran( cMeta, "C"   , "K"  ) ;  ENDIF
 
-//  Remove vowels
+   //  Remove vowels
    cMeta := StrTran( cMeta, "v", "" )
 
    RETURN PadR( AllTrim( cMeta ), nSize )
@@ -330,7 +329,7 @@ FUNCTION FT_METAPH( cName, nSize )
 
 STATIC FUNCTION _ftMakeAlpha( cStr )
 
-//  Strips non-alpha characters from a string, leaving spaces
+   //  Strips non-alpha characters from a string, leaving spaces
 
    LOCAL x, cAlpha := ""
 
@@ -346,7 +345,7 @@ STATIC FUNCTION _ftMakeAlpha( cStr )
 
 STATIC FUNCTION _ftConvVowel( cStr )
 
-//  Converts all vowels to letter 'v'
+   //  Converts all vowels to letter 'v'
 
    LOCAL x, cConverted := ""
 

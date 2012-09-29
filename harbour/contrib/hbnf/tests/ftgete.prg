@@ -4,7 +4,7 @@
 
 #include "simpleio.ch"
 
-PROCEDURE main()
+PROCEDURE Main()
 
    LOCAL a
    LOCAL c

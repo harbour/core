@@ -35,21 +35,21 @@ PROCEDURE Main()
 
 FUNCTION FT_BLINK( cMsg, nRow, nCol )
 
-// Declare color restore var.
+   // Declare color restore var.
    LOCAL cSavColor
 
-// Return if no msg.
+   // Return if no msg.
    IF cMsg == NIL
       RETURN NIL
    ENDIF
 
-// Set default row and col to current.
+   // Set default row and col to current.
    nRow := iif( nRow == NIL, Row(), nRow )
    nCol := iif( nCol == NIL, Col(), nCol )
 
    cSavColor := SetColor()                // Save colors to restore on exit.
 
-// IF blink colors not already set, add blink to current foreground color.
+   // IF blink colors not already set, add blink to current foreground color.
    SetColor( iif( ( "*" $ Left( cSavColor, 4 ) ), cSavColor, "*" + cSavColor ) )
 
    @ nRow, nCol SAY cMsg                  // Say the dreaded blinking msg.

@@ -21,11 +21,11 @@
  *
  */
 
- /* Librarian's note:  The toolkit's original ft_lday() function was
-    submitted by Jeff Bryant.  Mike saw it and optimized it.  Thanks
-    to you both for your great code!
+/* Librarian's note:  The toolkit's original ft_lday() function was
+   submitted by Jeff Bryant.  Mike saw it and optimized it.  Thanks
+   to you both for your great code!
 
-  */
+ */
 
 FUNCTION ft_lday( dDate )
 

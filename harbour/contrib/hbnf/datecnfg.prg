@@ -170,9 +170,8 @@ PROCEDURE Main()
 
 // DEMO Monthly Calendar function.
 // nType : 0 -> FT_MONTH, 1 -> FT_ACCTMONTH
-//
 
-FUNCTION FT_CAL( dGivenDate, nType )
+STATIC FUNCTION FT_CAL( dGivenDate, nType )
 
    LOCAL nTemp, dTemp, aTemp, cFY_Start, dStart, dEnd
 

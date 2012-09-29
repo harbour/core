@@ -57,7 +57,7 @@ FUNCTION FT_AEmaxlen( aArray, nDimension, nStart, nCount )
 
    LOCAL i, nLast, cType, nMaxlen := 0
 
-// Set default parameters as necessary.
+   // Set default parameters as necessary.
    IF nDimension == NIL
       nDimension := 1
    ENDIF

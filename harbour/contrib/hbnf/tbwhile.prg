@@ -70,7 +70,7 @@
  *   tbnames.dbf/.ntx ARE AUTOMATICALLY CREATED BY THIS TEST PROGRAM
  */
 
-PROCEDURE TBWHILE()
+PROCEDURE Main()
 
    LOCAL aFields := {}, cKey := "O", cOldColor
    LOCAL nFreeze := 1, lSaveScrn := .T. , nRecSel
@@ -91,8 +91,8 @@ PROCEDURE TBWHILE()
 
    SET INDEX TO TBNAMES
 
-// Pass Heading as character and Field as Block including Alias
-// To eliminate the need to use FIELDWBLOCK() function in FT_BRWSWHL()
+   // Pass Heading as character and Field as Block including Alias
+   // To eliminate the need to use FIELDWBLOCK() function in FT_BRWSWHL()
 
    AAdd( aFields, { "Last Name" , {|| TBNames->Last }  } )
    AAdd( aFields, { "First Name", {|| TBNames->First } } )
@@ -103,17 +103,17 @@ PROCEDURE TBWHILE()
    @ 5, 10 SAY "Enter First Letter Of Last Name:" GET cKey PICTURE "!"
    READ
 
-// TBNames->Last = cKey is the Conditional Block passed to this function
-// you can make it as complicated as you want, but you would then
-// have to modify TBWhileSet() to find first and last records
-// matching your key.
+   // TBNames->Last = cKey is the Conditional Block passed to this function
+   // you can make it as complicated as you want, but you would then
+   // have to modify TBWhileSet() to find first and last records
+   // matching your key.
    nRecSel := FT_BRWSWHL( aFields, {|| TBNames->Last = cKey }, cKey, nFreeze, ;
       lSaveScrn, cColorList, cColorShad, 3, 6, MaxRow() - 2, MaxCol() - 6 )
-// Note you can use Compound Condition
-// such as cLast =: "Pierce            " and cFirst =: "Hawkeye  "
-// by changing above block to:
-//    {|| TBNames->Last = cLast .AND. TBNames->First = cFirst }
-// and setting cKey := cLast + cFirst
+   // Note you can use Compound Condition
+   // such as cLast =: "Pierce            " and cFirst =: "Hawkeye  "
+   // by changing above block to:
+   //    {|| TBNames->Last = cLast .AND. TBNames->First = cFirst }
+   // and setting cKey := cLast + cFirst
 
    ?
    IF nRecSel == 0

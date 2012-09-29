@@ -62,7 +62,7 @@ FUNCTION FT_AT2( cSearch, cTarget, nOccurs, lCaseSens )
    LOCAL nCount, nPos, nPos2 := 0
    LOCAL cSubstr := cTarget
 
-// Set default parameters as necessary.
+   // Set default parameters as necessary.
    IF lCaseSens == NIL
       lCaseSens := .T.
    ENDIF
@@ -103,7 +103,7 @@ FUNCTION FT_RAT2( cSearch, cTarget, nOccurs, lCaseSens )
    LOCAL nCount, nPos, nPos2 := 0
    LOCAL cSubstr := cTarget
 
-// Set default parameters as necessary.
+   // Set default parameters as necessary.
    IF lCaseSens == NIL
       lCaseSens := .T.
    ENDIF
