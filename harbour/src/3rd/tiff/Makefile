@@ -107,9 +107,9 @@ else
    include $(TOP)$(ROOT)config/none.mk
 endif
 
-# ORIGIN http://www.libtiff.org/
-# VER    4.0.2
-# URL    http://download.osgeo.org/libtiff/tiff-4.0.2.zip
+# ORIGIN http://www.remotesensing.org/libtiff/
+# VER    4.0.3
+# URL    http://download.osgeo.org/libtiff/tiff-4.0.3.zip
 # DIFF   tiff.dif
 #
 # MAP    COPYRIGHT                LICENSE

@@ -1,6 +1,6 @@
-diff -urN tiff.orig/dirread.c tiff/dirread.c
---- tiff.orig/dirread.c	2012-08-24 14:22:17.600008843 +0200
-+++ tiff/dirread.c	2012-08-24 14:22:17.600008843 +0200
+diff -urN tiff.orig\dirread.c tiff\dirread.c
+--- tiff.orig\dirread.c	Sat Sep 29 22:03:17 2012
++++ tiff\dirread.c	Sat Sep 29 22:03:18 2012
 @@ -2216,7 +2216,7 @@
  		case TIFF_FLOAT:
  			if (tif->tif_flags&TIFF_SWAB)
@@ -36,9 +36,9 @@ diff -urN tiff.orig/dirread.c tiff/dirread.c
  
  static enum TIFFReadDirEntryErr
  TIFFReadDirEntryCheckRangeSlong8Long8(uint64 value)
-diff -urN tiff.orig/dirwrite.c tiff/dirwrite.c
---- tiff.orig/dirwrite.c	2012-08-24 14:22:17.612008843 +0200
-+++ tiff/dirwrite.c	2012-08-24 14:22:17.612008843 +0200
+diff -urN tiff.orig\dirwrite.c tiff\dirwrite.c
+--- tiff.orig\dirwrite.c	Sat Sep 29 22:03:17 2012
++++ tiff\dirwrite.c	Sat Sep 29 22:03:18 2012
 @@ -2238,7 +2238,7 @@
  {
  	assert(count<0x40000000);
@@ -57,9 +57,9 @@ diff -urN tiff.orig/dirwrite.c tiff/dirwrite.c
  	if (tif->tif_flags&TIFF_SWAB)
  		TIFFSwabArrayOfDouble(value,count);
  	return(TIFFWriteDirectoryTagData(tif,ndir,dir,tag,TIFF_DOUBLE,count,count*8,value));
-diff -urN tiff.orig/dumpmode.c tiff/dumpmode.c
---- tiff.orig/dumpmode.c	2012-08-24 14:22:17.612008843 +0200
-+++ tiff/dumpmode.c	2012-08-24 14:22:17.612008843 +0200
+diff -urN tiff.orig\dumpmode.c tiff\dumpmode.c
+--- tiff.orig\dumpmode.c	Sat Sep 29 22:03:17 2012
++++ tiff\dumpmode.c	Sat Sep 29 22:03:18 2012
 @@ -80,19 +80,11 @@
  	static const char module[] = "DumpModeDecode";
  	(void) s;
@@ -83,9 +83,9 @@ diff -urN tiff.orig/dumpmode.c tiff/dumpmode.c
  		return (0);
  	}
  	/*
-diff -urN tiff.orig/luv.c tiff/luv.c
---- tiff.orig/luv.c	2012-08-24 14:22:17.656008844 +0200
-+++ tiff/luv.c	2012-08-24 14:22:17.656008844 +0200
+diff -urN tiff.orig\luv.c tiff\luv.c
+--- tiff.orig\luv.c	Sat Sep 29 22:03:18 2012
++++ tiff\luv.c	Sat Sep 29 22:03:18 2012
 @@ -224,17 +224,10 @@
  					tp[i++] |= (int16)*bp++ << shft;
  			}
@@ -146,9 +146,9 @@ diff -urN tiff.orig/luv.c tiff/luv.c
  			tif->tif_rawcp = (uint8*) bp;
  			tif->tif_rawcc = cc;
  			return (0);
-diff -urN tiff.orig/lzw.c tiff/lzw.c
---- tiff.orig/lzw.c	2012-08-24 14:22:17.660008844 +0200
-+++ tiff/lzw.c	2012-08-24 14:22:17.660008844 +0200
+diff -urN tiff.orig\lzw.c tiff\lzw.c
+--- tiff.orig\lzw.c	Sat Sep 29 22:03:18 2012
++++ tiff\lzw.c	Sat Sep 29 22:03:18 2012
 @@ -549,15 +549,9 @@
  	sp->dec_maxcodep = maxcodep;
  
@@ -185,10 +185,10 @@ diff -urN tiff.orig/lzw.c tiff/lzw.c
  		return (0);
  	}
  	return (1);
-diff -urN tiff.orig/print.c tiff/print.c
---- tiff.orig/print.c	2012-08-24 14:22:17.684008845 +0200
-+++ tiff/print.c	2012-08-24 14:22:17.684008845 +0200
-@@ -96,27 +96,13 @@
+diff -urN tiff.orig\print.c tiff\print.c
+--- tiff.orig\print.c	Sat Sep 29 22:03:18 2012
++++ tiff\print.c	Sat Sep 29 22:03:18 2012
+@@ -98,27 +98,13 @@
  			|| fip->field_type == TIFF_FLOAT)
  			fprintf(fd, "%f", ((float *) raw_data)[j]);
  		else if(fip->field_type == TIFF_LONG8)
@@ -221,7 +221,7 @@ diff -urN tiff.orig/print.c tiff/print.c
  		else if(fip->field_type == TIFF_FLOAT)
  			fprintf(fd, "%f", ((float *)raw_data)[j]);
  		else if(fip->field_type == TIFF_DOUBLE)
-@@ -238,15 +224,9 @@
+@@ -240,15 +226,9 @@
  	uint16 i;
  	long l, n;
  
@@ -240,7 +240,7 @@ diff -urN tiff.orig/print.c tiff/print.c
  	if (TIFFFieldSet(tif,FIELD_SUBFILETYPE)) {
  		fprintf(fd, "  Subfile Type:");
  		sep = " ";
-@@ -550,13 +530,8 @@
+@@ -552,13 +532,8 @@
  	if (TIFFFieldSet(tif, FIELD_SUBIFD) && (td->td_subifd)) {
  		fprintf(fd, "  SubIFD Offsets:");
  		for (i = 0; i < td->td_nsubifd; i++)
@@ -256,7 +256,7 @@ diff -urN tiff.orig/print.c tiff/print.c
  		fputc('\n', fd);
  	}
  
-@@ -656,17 +631,10 @@
+@@ -658,17 +633,10 @@
  		    (long) td->td_nstrips,
  		    isTiled(tif) ? "Tiles" : "Strips");
  		for (s = 0; s < td->td_nstrips; s++)
@@ -277,9 +277,9 @@ diff -urN tiff.orig/print.c tiff/print.c
  	}
  }
  
-diff -urN tiff.orig/read.c tiff/read.c
---- tiff.orig/read.c	2012-08-24 14:22:17.688008845 +0200
-+++ tiff/read.c	2012-08-24 14:22:17.688008845 +0200
+diff -urN tiff.orig\read.c tiff\read.c
+--- tiff.orig\read.c	Sat Sep 29 22:03:18 2012
++++ tiff\read.c	Sat Sep 29 22:03:18 2012
 @@ -125,19 +125,11 @@
          cc = TIFFReadFile(tif, tif->tif_rawdata + unused_data, to_read);
  
@@ -490,9 +490,9 @@ diff -urN tiff.orig/read.c tiff/read.c
  			return (0);
  		}
  		if (isMapped(tif) &&
-diff -urN tiff.orig/strip.c tiff/strip.c
---- tiff.orig/strip.c	2012-08-24 14:22:17.692008845 +0200
-+++ tiff/strip.c	2012-08-24 14:22:17.692008845 +0200
+diff -urN tiff.orig\strip.c tiff\strip.c
+--- tiff.orig\strip.c	Sat Sep 29 22:03:18 2012
++++ tiff\strip.c	Sat Sep 29 22:03:18 2012
 @@ -154,17 +154,10 @@
  
  	if (bytecount == 0)
@@ -513,9 +513,9 @@ diff -urN tiff.orig/strip.c tiff/strip.c
  		bytecount = (uint64) -1;
  	}
  
-diff -urN tiff.orig/thunder.c tiff/thunder.c
---- tiff.orig/thunder.c	2012-08-24 14:22:17.692008845 +0200
-+++ tiff/thunder.c	2012-08-24 14:22:17.692008845 +0200
+diff -urN tiff.orig\thunder.c tiff\thunder.c
+--- tiff.orig\thunder.c	Sat Sep 29 22:03:18 2012
++++ tiff\thunder.c	Sat Sep 29 22:03:18 2012
 @@ -143,21 +143,12 @@
  	tif->tif_rawcp = (uint8*) bp;
  	tif->tif_rawcc = cc;
@@ -541,9 +541,9 @@ diff -urN tiff.orig/thunder.c tiff/thunder.c
  		return (0);
  	}
  
-diff -urN tiff.orig/tiffconf.h tiff/tiffconf.h
---- tiff.orig/tiffconf.h	2012-08-24 14:22:17.720008845 +0200
-+++ tiff/tiffconf.h	2012-08-24 14:22:17.720008845 +0200
+diff -urN tiff.orig\tiffconf.h tiff\tiffconf.h
+--- tiff.orig\tiffconf.h	Sat Sep 29 22:03:18 2012
++++ tiff\tiffconf.h	Sat Sep 29 22:03:18 2012
 @@ -7,44 +7,65 @@
  #ifndef _TIFFCONF_
  #define _TIFFCONF_
@@ -682,10 +682,11 @@ diff -urN tiff.orig/tiffconf.h tiff/tiffconf.h
  
  /* Support strip chopping (whether or not to convert single-strip uncompressed
     images to mutiple strips of ~8Kb to reduce memory usage) */
-@@ -124,4 +163,20 @@
+@@ -123,5 +162,21 @@
+ #define ICC_SUPPORT
  #define PHOTOSHOP_SUPPORT
  #define IPTC_SUPPORT
- 
++
 +#ifndef O_RDONLY
 +#define O_RDONLY 0
 +#endif
@@ -701,11 +702,11 @@ diff -urN tiff.orig/tiffconf.h tiff/tiffconf.h
 +#ifndef O_TRUNC
 +#define O_TRUNC 001000
 +#endif
-+
+ 
  #endif /* _TIFFCONF_ */
-diff -urN tiff.orig/tiffio.h tiff/tiffio.h
---- tiff.orig/tiffio.h	2012-08-24 14:22:17.712008845 +0200
-+++ tiff/tiffio.h	2012-08-24 14:22:17.712008845 +0200
+diff -urN tiff.orig\tiffio.h tiff\tiffio.h
+--- tiff.orig\tiffio.h	Sat Sep 29 22:03:18 2012
++++ tiff\tiffio.h	Sat Sep 29 22:03:18 2012
 @@ -102,6 +102,8 @@
  # else
  typedef HFILE thandle_t;       /* client data handle */
@@ -715,9 +716,9 @@ diff -urN tiff.orig/tiffio.h tiff/tiffio.h
  #else
  typedef void* thandle_t;       /* client data handle */
  #endif /* USE_WIN32_FILEIO */
-diff -urN tiff.orig/tiffiop.h tiff/tiffiop.h
---- tiff.orig/tiffiop.h	2012-08-24 14:22:17.712008845 +0200
-+++ tiff/tiffiop.h	2012-08-24 14:22:17.712008845 +0200
+diff -urN tiff.orig\tiffiop.h tiff\tiffiop.h
+--- tiff.orig\tiffiop.h	Sat Sep 29 22:03:18 2012
++++ tiff\tiffiop.h	Sat Sep 29 22:03:18 2012
 @@ -30,7 +30,7 @@
   * ``Library-private'' definitions.
   */
@@ -727,9 +728,9 @@ diff -urN tiff.orig/tiffiop.h tiff/tiffiop.h
  
  #ifdef HAVE_FCNTL_H
  # include <fcntl.h>
-diff -urN tiff.orig/unix.c tiff/unix.c
---- tiff.orig/unix.c	2012-08-24 14:22:17.696008845 +0200
-+++ tiff/unix.c	2012-08-24 14:22:17.696008845 +0200
+diff -urN tiff.orig\unix.c tiff\unix.c
+--- tiff.orig\unix.c	Sat Sep 29 22:03:18 2012
++++ tiff\unix.c	Sat Sep 29 22:03:18 2012
 @@ -29,7 +29,7 @@
   * Windows Common RunTime Library.
   */
