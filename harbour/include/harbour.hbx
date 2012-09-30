@@ -1488,6 +1488,9 @@ DYNAMIC __wapi_GetOEMCP
 DYNAMIC __XHelp
 DYNAMIC __XRestScreen
 DYNAMIC __XSaveScreen
+DYNAMIC __XSaveGetChar
+DYNAMIC __XSaveGetColor
+DYNAMIC __XSaveGetAttr
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HARBOUR__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

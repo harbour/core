@@ -142,6 +142,7 @@ FUNCTION FT_Adder()
    LOCAL nOldLastKey := LastKey()
    LOCAL lShowRight  := .T.
    LOCAL aAdder      := Array( 23 )
+   LOCAL tmp, tmp1
 
    // Must prevent recursive calls
    IF t_lAdderOpen
@@ -217,12 +218,8 @@ FUNCTION FT_Adder()
          IF lTape
             RestScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace, cTapeScr )
          ENDIF
-         // TOFIX: manipulating savescreen buffers
-         IF Left( SaveScreen( 6 + nTopOS, 26 + nAddSpace, 6 + nTopOS, 27 + nAddSpace ), 1 ) ;
-               != " "
-            // TOFIX: manipulating savescreen buffers
-            IF Left( SaveScreen( 6 + nTopOS, 19 + nAddSpace, 6 + nTopOS, 20 + nAddSpace ), 1 ) ;
-                  == "S"
+         IF !( __XSaveGetChar( SaveScreen( 6 + nTopOS, 26 + nAddSpace, 6 + nTopOS, 27 + nAddSpace ), 0 ) == " " )
+            IF __XSaveGetChar( SaveScreen( 6 + nTopOS, 19 + nAddSpace, 6 + nTopOS, 20 + nAddSpace ), 0 ) == "S"
                cMoveTotSubTot := "S"
             ELSE
                cMoveTotSubTot := "T"
@@ -230,9 +227,11 @@ FUNCTION FT_Adder()
          ELSE
             cMoveTotSubTot := " "
          ENDIF
-         // TOFIX: manipulating savescreen buffers
-         cTotal := _ftCharOdd( SaveScreen( 4 + nTopOS, 8 + nAddSpace, 4 + ;
-            nTopOS, 25 + nAddSpace ) )
+         tmp := SaveScreen( 4 + nTopOS, 8 + nAddSpace, 4 + nTopOS, 25 + nAddSpace )
+         cTotal := ""
+         FOR tmp1 := 0 TO 16
+            cTotal += __XSaveGetChar( tmp, tmp1 )
+         NEXT
          _ftPopWin()                     // Remove Adder
          lShowRight := ! lShowRight
          nAddSpace  := iif( lShowRight, 40, 0 ) + nLeftOS
@@ -959,8 +958,7 @@ STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
       lTape := .T.
       SetColor( "N/W" )
       cTapeScr := SaveScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace )
-      _ftShadow( 22 + nTopOS, 8 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace )
-      _ftShadow( 5 + nTopOS, 33 + nTapeSpace, 21 + nTopOS, 35 + nTapeSpace )
+      hb_Shadow( 4 + nTopOS, 6 + nTapeSpace, 21 + nTopOS, 33 + nTapeSpace )
       SetColor( "R+/W" )
       @ 4 + nTopOS, 6 + nTapeSpace, 21 + nTopOS, 33 + nTapeSpace BOX B_SINGLE
       SetColor( "GR+/W" )
@@ -1319,8 +1317,7 @@ STATIC FUNCTION _ftError( cMessage, xDontReset )
    nRight   := nLeft + nWide + 4
 
    cErrorScr := SaveScreen( nTop, nLeft, nBot + 1, nRight + 2 )
-   _ftShadow( nBot + 1, nLeft + 2, nBot + 1, nRight + 2, 8 )
-   _ftShadow( nTop + 1, nRight + 1, nBot, nRight + 2, 8 )
+   hb_Shadow( nTop, nLeft, nBot, nRight )
    @ nTop, nLeft, nBot, nRight BOX B_SINGLE
    @ nTop, nLeft + Int( nWide / 2 ) - 1 SAY " ERROR "
    @ nBot - 1, nLeft + Int( nWide - 28 ) / 2 + 3 SAY "Press any key to continue..."
@@ -1465,8 +1462,7 @@ STATIC FUNCTION _ftPushWin( t, l, b, r, cTitle, cBotTitle, nWinColor )
 
    nWinColor := iif( nWinColor == NIL, _ftNextWinColor(), nWinColor )
    AAdd( t_aWindow, { t, l, b, r, nWinColor, SaveScreen( t, l, b + 1, r + 2 ), lAutoWindow } )
-   _ftShadow( b + 1, l + 2, b + 1, r + 2 )
-   _ftShadow( t + 1, r + 1, b, r + 2 )
+   hb_Shadow( t, l, b, r )
    _ftSetWinColor( nWinColor, W_BORDER )
    @ t, l, b, r BOX B_SINGLE
 
@@ -1560,33 +1556,6 @@ STATIC FUNCTION _ftSetWinColor( nWin, nStd, nEnh, nBord, nBack, nUnsel )
       t_aWinColor[ nBord, nWin ] + "," + ;
       t_aWinColor[ nBack, nWin ] + "," + ;
       t_aWinColor[ nUnsel, nWin ] )
-
-/*+- Function ---------------------------------------------------------------+
-  |         Name: _ftShadow()           Docs: Keith A. Wire                  |
-  |  Description: Create a shadow on the screen in the coordinates given     |
-  |       Author: Keith A. Wire                                              |
-  | Date created: 10-03-93              Date updated:  10-03-93              |
-  | Time created: 01:40:56pm            Time updated:  01:40:56pm            |
-  |    Copyright: None - Public Domain                                       |
-  +--------------------------------------------------------------------------+
-  |    Arguments: nTop                                                       |
-  |             : nLeft                                                      |
-  |             : nBottom                                                    |
-  |             : nRight                                                     |
-  | Return Value: NIL                                                        |
-  |     See Also: _ftPushWin()                                               |
-  +--------------------------------------------------------------------------+
-*/
-
-STATIC FUNCTION _ftShadow( nTop, nLeft, nBottom, nRight )
-
-   // TOFIX: manipulating savescreen buffers
-   LOCAL theShadow := SaveScreen( nTop, nLeft, nBottom, nRight )
-
-   RestScreen( nTop, nLeft, nBottom, nRight, ;
-      Transform( theShadow, Replicate( "X", Len( theShadow ) / 2 ) ) )
-
-   RETURN NIL
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftLastWinColor       Docs: Keith A. Wire                  |
@@ -1689,26 +1658,6 @@ STATIC FUNCTION _ftInitColors
       "N/N" }
 
    RETURN NIL
-
-/*+- Function ---------------------------------------------------------------+
-  |         Name: _ftCharOdd()          Docs: Keith A. Wire                  |
-  |  Description: Remove all the even numbered characters in a string.       |
-  |       Author: Keith A. Wire                                              |
-  | Date created: 10-03-93              Date updated:  10-03-93              |
-  | Time created: 01:41:50pm            Time updated:  01:41:50pm            |
-  |    Copyright: None - Public Domain                                       |
-  +--------------------------------------------------------------------------+
-  |    Arguments: cString                                                    |
-  |        Notes: Used for example to strip all the attribute characters     |
-  |             : from a screen save.                                        |
-  +--------------------------------------------------------------------------+
-*/
-
-STATIC FUNCTION _ftCharOdd( cString )
-
-   cString := Transform( cString, Replicate( "X", Len( cString ) / 2 ) )
-
-   RETURN StrTran( cString, "" )
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftPosRepl()          Docs: Keith A. Wire                  |

@@ -54,7 +54,7 @@ FUNCTION FT_ROUND( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
          // Yes, Convert to Nearest Fraction
          nRoundToAmount := 10 ** nRoundToAmount
 
-      ENDIF                             // LEFT( cRoundType, 1 ) == NEAREST_DECIMAL
+      ENDIF
 
       // Are We Already Within the Acceptable
       // Error Factor??
@@ -74,12 +74,10 @@ FUNCTION FT_ROUND( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
          nResult := Int( ( nRoundToAmount * nResult ) + .5 + nAcceptableError ) / ;
             nRoundToAmount
 
-      ENDIF                             // ABS( INT( nResult * nRoundToAmount ) -
-      //     ( mResult * nRoundAmount ) ) >
-      // nAcceptableError
+      ENDIF
 
    ELSE                                 // Yes, Round to Nearest Whole Number
-      // or to Zero Places
+                                        // or to Zero Places
 
       nRoundToAmount := Max( nRoundToAmount, 1 )
 
@@ -101,11 +99,10 @@ FUNCTION FT_ROUND( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
 
       ENDCASE
 
-   ENDIF                                // LEFT(cRoundType,1)!=NEAREST_WHOLE or
-                                        // nRoundToAmount == 0
+   ENDIF
 
    IF nNumber < 0                       // Was the Number Negative??
       nResult := -nResult               // Yes, Make the Result Negative Also
    ENDIF
 
-   RETURN nResult                       // FT_Round
+   RETURN nResult

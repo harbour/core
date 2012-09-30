@@ -1,6 +1,9 @@
 /*
- * $Id$ 
+ * $Id$
  */
+
+#include "inkey.ch"
+#include "setcurs.ch"
 
 PROCEDURE Main()
 
@@ -61,4 +64,3 @@ PROCEDURE Main()
    RestScreen( , , , , cDosScrn )
    SetPos( nDosRow, nDosCol )
    QUIT
-

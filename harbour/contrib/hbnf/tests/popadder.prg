@@ -1,6 +1,8 @@
 /*
- * $Id$ 
+ * $Id$
  */
+
+#include "inkey.ch"
 
 PROCEDURE Main()
 
@@ -10,7 +12,6 @@ PROCEDURE Main()
    LOCAL GetList  := {}
 
    SET SCOREBOARD OFF
-   _ftSetScrColor( STD_SCREEN, STD_VARIABLE )
    CLS
 
    SET KEY K_ALT_A  TO FT_Adder        // Make <ALT-A> call FT_Adder
@@ -41,4 +42,3 @@ PROCEDURE Main()
    SET KEY K_ALT_A                     // Reset <ALT-A>
 
    RETURN
-

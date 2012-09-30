@@ -26,7 +26,6 @@
  *
  */
 
-#include "inkey.ch"
 #include "setcurs.ch"
 
 // beginning of demo program

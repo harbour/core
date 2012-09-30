@@ -26,22 +26,23 @@
  *
  */
 
-FUNCTION FT_DATECNFG( cFYStart , nDow )
+FUNCTION FT_DATECNFG( cFYStart, nDow )
 
    THREAD STATIC t_aDatePar := { "1980.01.01", 1 }
 
-   LOCAL dCheck, cDateFormat := Set( _SET_DATEFORMAT )
+   LOCAL dCheck
+   LOCAL cDateFormat
 
    IF HB_ISSTRING( cFYStart )
       dCheck := CToD( cFYStart )
-      IF DToC( dCheck ) != " " // TOFIX
+      IF ! Empty( dCheck )
 
          /* No one starts a Fiscal Year on 2/29 */
          IF Month( dCheck ) == 2 .AND. Day( dcheck ) == 29
-            dCheck --
+            dCheck--
          ENDIF
 
-         Set( _SET_DATEFORMAT, "yyyy.mm.dd" )
+         cDateFormat := Set( _SET_DATEFORMAT, "yyyy.mm.dd" )
          t_aDatePar[ 1 ] := DToC( dCheck )
          Set( _SET_DATEFORMAT, cDateFormat )
       ENDIF

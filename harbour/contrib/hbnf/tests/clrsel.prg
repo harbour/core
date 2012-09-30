@@ -1,6 +1,9 @@
 /*
- * $Id$ 
+ * $Id$
  */
+
+#include "common.ch"
+#include "setcurs.ch"
 
 PROCEDURE Main( cVidMode )
 
@@ -50,4 +53,3 @@ PROCEDURE Main( cVidMode )
    SetBlink( .F. )  // doesn't appear to be reset from FT_RestSets
 
    RETURN
-

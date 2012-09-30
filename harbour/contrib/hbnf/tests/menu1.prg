@@ -2,7 +2,7 @@
  * $Id$
  */
 
-// DUMMY PROCEDURE NAME SO "CCMDLINE" WILL BE LOCAL
+#include "setcurs.ch"
 
 PROCEDURE Main( cCmdLine )
 

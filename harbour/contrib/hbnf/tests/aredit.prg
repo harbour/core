@@ -1,6 +1,8 @@
 /*
- * $Id$ 
+ * $Id$
  */
+
+#include "inkey.ch"
 
 PROCEDURE Main()
 
@@ -64,4 +66,3 @@ FUNCTION TestGet( b, ar, nDim, nElem )
    @ nRow, nCol SAY ""
 
    RETURN .T.
-

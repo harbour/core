@@ -1,6 +1,8 @@
 /*
- * $Id$ 
+ * $Id$
  */
+
+#include "common.ch"
 
 PROCEDURE Main( cNum, cPrec )
 
@@ -8,4 +10,3 @@ PROCEDURE Main( cNum, cPrec )
    QOut( ft_d2e( Val( cNum ), Val( cPrec ) ) )
 
    RETURN
-
