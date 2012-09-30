@@ -2,11 +2,13 @@
  * $Id$
  */
 
+#include "fileio.ch"
+
 PROCEDURE Main( cPath, cHide )
 
    LOCAL cFile, nHandle
 
-   cFile := FT_TEMPFIL( cPath, ( cHide == "Y" ) )
+   cFile := FT_TEMPFIL( cPath, cHide == "Y" )
 
    IF ! Empty( cFile )
       QOut( cFile )

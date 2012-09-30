@@ -6,7 +6,8 @@
 
 PROCEDURE Main( cNum, cPrec )
 
-   DEFAULT cPrec TO Str( DEFAULT_PRECISION )
+   DEFAULT cPrec TO 6
+
    QOut( ft_d2e( Val( cNum ), Val( cPrec ) ) )
 
    RETURN

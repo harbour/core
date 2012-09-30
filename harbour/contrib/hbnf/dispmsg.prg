@@ -110,7 +110,7 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    DispBox( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight, cnBoxString, ;
       aInfo[ 2, Len( aInfo[ 2 ] ) ] )
    IF lShadow
-      FT_Shadow( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight )
+      hb_Shadow( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight )
    ENDIF
 
    /* fill array with left positions for each row */

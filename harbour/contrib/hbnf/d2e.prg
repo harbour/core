@@ -25,7 +25,7 @@
 
 #include "common.ch"
 
-#define log10( num )    log( num ) / log( 10 )
+#define log10( num )    Log( num ) / Log( 10 )
 #define DEFAULT_PRECISION     6
 
 FUNCTION ft_d2e( nDec, nPrecision )

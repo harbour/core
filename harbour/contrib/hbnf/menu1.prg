@@ -136,7 +136,7 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
       SetColor( cCurrent )
       @ nTopRow, aBarCol[ t_nHPos ] SAY aBar[ t_nHPos ]
       IF lShadow == NIL .OR. lShadow
-         FT_SHADOW( nTopRow + 1, aBoxLoc[ t_nHPos ], Len( t_aChoices[ t_nHPos, 1 ] ) + nTopRow + 2, aBarWidth[ t_nHPos ] + 3 + aBoxLoc[ t_nHPos ] )
+         hb_Shadow( nTopRow + 1, aBoxLoc[ t_nHPos ], Len( t_aChoices[ t_nHPos, 1 ] ) + nTopRow + 2, aBarWidth[ t_nHPos ] + 3 + aBoxLoc[ t_nHPos ] )
       ENDIF
       SetColor( cBorder )
       @ nTopRow + 1, aBoxLoc[ t_nHPos ], Len( t_aChoices[ t_nHPos, 1 ] ) + nTopRow + 2, aBarWidth[ t_nHPos ] + 3 + aBoxLoc[ t_nHPos ] BOX hb_UTF8ToStr( "╔═╗║╝═╚║ " )
@@ -215,7 +215,7 @@ STATIC FUNCTION _ftBailOut( cBorder, cBox )
    nOldCursor := SetCursor( SC_NONE )
    sOldScreen := SaveScreen( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55 )
    cOldColor := SetColor( cBorder )
-   FT_SHADOW( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55 )
+   hb_Shadow( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55 )
    @ t_nMaxRow / 2 - 1, 24, t_nMaxRow/2 + 2, 55 BOX hb_UTF8ToStr( "╔═╗║╝═╚║ " )
    SetColor( cBox )
    @ t_nMaxRow / 2,  26 SAY "Press ESCape To Confirm Exit"

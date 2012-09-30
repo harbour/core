@@ -109,7 +109,7 @@ FUNCTION FT_XBOX( cJustType, ; // "L" -> left, otherwise centered
    ENDIF
 
    // write shadow
-   FT_SHADOW( nTRow, nLCol, nBRow, nRCol )
+   hb_Shadow( nTRow, nLCol, nBRow, nRCol )
 
    // print text in box
    SetColor( cBoxColor )

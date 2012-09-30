@@ -19,6 +19,9 @@ PROCEDURE Main( cCmdLine )
    LOCAL aColors
    LOCAL aBar     := { " ENTER/EDIT ", " REPORTS ", " DISPLAY ", " MAINTENANCE ", " QUIT " }
    LOCAL aOptions[ Len( aBar ) ]
+
+   LOCAL nMaxRow
+
    AEval( aBar, {| x, i | HB_SYMBOL_UNUSED( x ), aOptions[ i ] := { {}, {}, {} } } )
 
    cCmdLine := iif( cCmdLine == NIL, "", cCmdLine )
@@ -82,26 +85,26 @@ PROCEDURE Main( cCmdLine )
    IF "VGA" $ Upper( cCmdLine )
       SetMode( 50, 80 )
    ENDIF
-   t_nMaxRow := MaxRow()
+   nMaxRow := MaxRow()
    SetBlink( .F. )
    SetColor( cWindN + "*" )
    CLS
    SetColor( cNormN )
-   @ t_nMaxRow, 0
-   @ t_nMaxRow, 0 SAY hb_UTF8ToStr( " FT_MENU1 1.0 │ " )
-   @ t_nMaxRow, 16 SAY "WRITTEN BY PAUL FERRARA [76702,556] FOR NANFORUM.LIB"
-   @ t_nMaxRow, 69 SAY hb_UTF8ToStr( "│ " ) + DToC( Date() )
+   @ nMaxRow, 0
+   @ nMaxRow, 0 SAY hb_UTF8ToStr( " FT_MENU1 1.0 │ " )
+   @ nMaxRow, 16 SAY "WRITTEN BY PAUL FERRARA [76702,556] FOR NANFORUM.LIB"
+   @ nMaxRow, 69 SAY hb_UTF8ToStr( "│ " ) + DToC( Date() )
 
    SetColor( cErrH )
-   @ t_nMaxRow - 11, 23, t_nMaxRow - 3, 56 BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
-   @ t_nMaxRow - 9, 23 SAY hb_UTF8ToStr( "├────────────────────────────────┤" )
+   @ nMaxRow - 11, 23, nMaxRow - 3, 56 BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
+   @ nMaxRow - 9, 23 SAY hb_UTF8ToStr( "├────────────────────────────────┤" )
    SetColor( cErrN )
-   @ t_nMaxRow - 10, 33 SAY "Navigation Keys"
-   @ t_nMaxRow - 8, 25 SAY "LeftArrow   RightArrow   Alt-E"
-   @ t_nMaxRow - 7, 25 SAY "Home        End          Alt-R"
-   @ t_nMaxRow - 6, 25 SAY "Tab         Shift-Tab    Alt-D"
-   @ t_nMaxRow - 5, 25 SAY "PgUp        PgDn         Alt-M"
-   @ t_nMaxRow - 4, 25 SAY "Enter       ESCape       Alt-Q"
+   @ nMaxRow - 10, 33 SAY "Navigation Keys"
+   @ nMaxRow - 8, 25 SAY "LeftArrow   RightArrow   Alt-E"
+   @ nMaxRow - 7, 25 SAY "Home        End          Alt-R"
+   @ nMaxRow - 6, 25 SAY "Tab         Shift-Tab    Alt-D"
+   @ nMaxRow - 5, 25 SAY "PgUp        PgDn         Alt-M"
+   @ nMaxRow - 4, 25 SAY "Enter       ESCape       Alt-Q"
    SetColor( cNormN )
 
    FT_MENU1( aBar, aOptions, aColors )
