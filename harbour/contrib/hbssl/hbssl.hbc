@@ -2,6 +2,8 @@
 # $Id$
 #
 
+description=OpenSSL wrapper (encryption)
+
 incpaths=.
 
 skip={dos}

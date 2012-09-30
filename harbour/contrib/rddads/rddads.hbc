@@ -5,6 +5,8 @@
 # Enable dynamic loading with:
 #    -env:HB_DYNLOAD_RDDADS=yes
 
+description=Advantage Database Server RDD
+
 skip={!(linux|win)}
 
 incpaths=.

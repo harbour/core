@@ -2,6 +2,8 @@
 # $Id$
 #
 
+description=Blat wrapper (e-mailing, win-only)
+
 skip={!win}
 
 incpaths=.

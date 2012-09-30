@@ -2,6 +2,8 @@
 # $Id$
 #
 
+description=RDDSQL OCILib (Oracle SQL) backend
+
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 {HB_WITH_OCILIB_WIDE}libs=ocilibw
 {HB_WITH_OCILIB_MIXED}libs=ocilibm

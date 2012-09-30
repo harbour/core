@@ -2,4 +2,6 @@
 # $Id$
 #
 
+description=Harbour source code formatter
+
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}

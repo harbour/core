@@ -2,6 +2,8 @@
 # $Id$
 #
 
+description=Windows specific functions (win-only)
+
 skip={!allwin}
 
 incpaths=.

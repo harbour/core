@@ -2,6 +2,8 @@
 # $Id$
 #
 
+description=Barcode creating functions
+
 incpaths=.
 
 libs=${hb_name}

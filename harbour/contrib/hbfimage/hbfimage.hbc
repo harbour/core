@@ -2,6 +2,8 @@
 # $Id$
 #
 
+description=FreeImage wrapper (imaging)
+
 skip={dos}
 
 incpaths=.

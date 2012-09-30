@@ -21,91 +21,21 @@ track of all files (read the FAQ if you don't know what SVN is).
 |   |
 |   +---<platform>      - Configuration files specific to <platform>.
 |
-+---contrib             - Miscellaneous contribution projects.
++---extras              - Sample files and small applications.
 |   |
-|   |---gtalleg         - GT subsystem based on Allegro with graphic extensions.
+|   +---dbu             - Make files (without source) for CA-Cl*pper DBU.
 |   |
-|   +---gtwvg           - GT subsystem for Windows GUI using GDI functions.
+|   +---guestbk         - Harbour Guests Book.
 |   |
-|   +---rddbm           - DBFCDX RDD with bitmap filters.
+|   +---hbdoc           - Documentation generation tool.
 |   |
-|   +---hbct            - CA-T**ls Compatible Library for Harbour.
+|   +---misc            - A few humble demonstration.
 |   |
-|   +---hbcurl          - libcurl 'easy' API - Harbour interface.
+|   +---rddado          - ADORDD - RDD to automatically manage Microsoft ADO.
 |   |
-|   +---hbfbird         - Harbour Low Level api for Firebird and Interbase
+|   +---rl              - Make files (without source) for CA-Cl*pper RL.
 |   |
-|   +---hbfimage        - Wrapper for FreeImage.
-|   |
-|   +---hbformat        - Harbour Source Formatter utility.
-|   |
-|   +---hbgd            - HBGD wrapper for gdLibrary.
-|   |
-|   +---hbgt            - GT library port to Harbour.
-|   |
-|   +---hbhpdf          - libHaru PDF library wrappers.
-|   |
-|   +---hbmisc          - Miscellaneous contribution.
-|   |
-|   +---hbmysql         - Harbour MySQL access classes.
-|   |   |
-|   |   +---utils       - Converts a .dbf file into a MySQL table.
-|   |
-|   +---hbmzip          - Wrapper functions for minizip library.
-|   |
-|   +---hbnf            - Nanforum library port for Harbour.
-|   |
-|   +---hbodbc          - ODBS Access Class Demonstration.
-|   |
-|   +---hbpgsql         - Harbour Low Level API for Postgres RDBMS.
-|   |
-|   +---hbrun           - Standalone Harbour Portable Object file runner,
-|   |                     and a "dot prompt" console for the Harbour language.
-|   |
-|   +---hbsqlit3        - Interface for SQLite 3.x library.
-|   |
-|   +---3rd/sqlite3     - An amalgamation of SQLite core library.
-|   |
-|   +---hbssl           - Harbour inteface for OpenSSL API.
-|   |
-|   +---hbtip           - TIP Class oriented Internet Protocol library.
-|   |
-|   +---hbtpathy        - Telepathy serial communication port for Harbour.
-|   |
-|   +---hbwin           - Collection of Windows specific utility functions.
-|   |
-|   +---hbziparc        - Compatibility interface with ZipArchive general
-|   |                     purpose compression library to work with ZIP files.
-|   |
-|   +---rddads          - RDD for Advantage Database Server.
-|   |
-|   +---rddsql          - RDD for general SQL database with plugins.
-|   |
-|   +---sddfb           - RDDSQL Firebird SQL database driver.
-|   |
-|   +---sddmy           - RDDSQL MySQL database driver.
-|   |
-|   +---sddpg           - RDDSQL Postgre SQL database driver.
-|   |
-|   +---xhb             - xHarbour compatibility library. To allow programs
-|                         which where written using some xHarcour extensions,
-|                         to be complied by Harbour.
-|
-+---extras          - Sample files and small applications.
-|   |
-|   +---dbu         - Make files (without source) for CA-Cl*pper DBU.
-|   |
-|   +---guestbk     - Harbour Guests Book.
-|   |
-|   +---hbdoc       - Documentation generation tool.
-|   |
-|   +---misc        - A few humble demonstration.
-|   |
-|   +---rddado      - ADORDD - RDD to automatically manage Microsoft ADO.
-|   |
-|   +---rl          - Make files (without source) for CA-Cl*pper RL.
-|   |
-|   +---httpsrv     - uHTTPD micro web server.
+|   +---httpsrv         - uHTTPD micro web server.
 |
 +---debian              - Packaging information for Debian GNU/Linux.
 |

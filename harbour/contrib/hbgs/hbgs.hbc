@@ -2,6 +2,8 @@
 # $Id$
 #
 
+description=Ghostscript wrapper (imaging)
+
 skip={dos|wce}
 
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
