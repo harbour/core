@@ -33,8 +33,8 @@
 -cflag=-DSQLITE_OS_OTHER{dos}
 # Watcom Linux builds cannot use system header files
 -cflag=-DSQLITE_OS_OTHER{linux&watcom}
-# Watcom OS2 builds do not support pthreads and some other system headers
--cflag=-DSQLITE_OS_OTHER{os2&watcom}
+# OS/2 builds do not support pthreads and some other system headers
+-cflag=-DSQLITE_OS_OTHER{os2}
 
 -cflag=-DSQLITE_THREADSAFE=0{minix}
 -cflag=-DSQLITE_OMIT_LOAD_EXTENSION=1{minix}
