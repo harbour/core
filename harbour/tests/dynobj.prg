@@ -16,7 +16,6 @@
 PROCEDURE Main()
 
    LOCAL oForm := TForm():New()
-   LOCAL nSeq
 
    QOut( "What methods are in the class :" )
    Debug( __objGetMethodList( oForm ) )
@@ -110,7 +109,7 @@ FUNCTION TForm()
 
    STATIC oClass
 
-   IF oClass == nil
+   IF oClass == NIL
       oClass := HBClass():New( "TFORM" )    // starts a new class definition
 
       oClass:AddData( "cText" )           // define this class objects datas
@@ -142,7 +141,7 @@ STATIC FUNCTION Smile()
 
    LOCAL self := QSelf()
 
-   if ::CalcArea() == 300
+   IF ::CalcArea() == 300
       QOut( ":-)" )
    ELSE
       QOut( ":-(" )
@@ -162,4 +161,4 @@ FUNCTION Pause()
 
    __Accept( "Pause :" )
 
-   RETURN nil
+   RETURN NIL

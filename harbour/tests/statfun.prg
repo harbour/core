@@ -18,4 +18,4 @@ STATIC FUNCTION SecondOne()
 
    QOut( "From Second()" )
 
-   RETURN nil
+   RETURN NIL

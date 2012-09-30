@@ -92,4 +92,4 @@ FUNCTION dspboxch( cStr )
       SetPos( r, c + 1 )
    NEXT
 
-   RETURN nil
+   RETURN NIL

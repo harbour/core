@@ -7,7 +7,7 @@ PROCEDURE Main()
    LOCAL Program := { , }, Condition := 1, body := 2, Counter := 1, TheEnd := 1000000, stop, start
 
    Program[ condition ] := {|| Counter == TheEnd }
-   Program[      body ] := {|| Counter ++ }
+   Program[      body ] := {|| Counter++ }
    ? start := Second()
 
    // in Clipper :

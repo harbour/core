@@ -17,6 +17,8 @@
  * Placed in the public domain
  */
 
+#pragma warninglevel=1
+
 PROCEDURE Main()
 
    LOCAL oForm   := TForm():New()
@@ -101,7 +103,7 @@ FUNCTION FuncSecond( nParam, cParam, uParam )
 
    Pause()
 
-   RETURN nil
+   RETURN NIL
 
 
 /* $Doc$
@@ -113,7 +115,7 @@ FUNCTION TForm()
 
    STATIC oClass
 
-   IF oClass == nil
+   IF oClass == NIL
       oClass := HBClass():New( "TFORM" )    // starts a new class definition
 
       oClass:AddData( "cName" )           // define this class objects datas
@@ -162,67 +164,67 @@ STATIC FUNCTION Show()
 
    QOut( "lets show a form from here :-)" )
 
-   RETURN nil
+   RETURN NIL
 
-   //
-   // <xRet> TForm:Transfer( [<xArg,..>] )
-   //
-   // Generic object import and export function
-   //
-   // <xArg> is present.
-   //
-   // Maximum number of arguments passed is limited to 10 !
-   //
-   // An argument can be one of the following :
-   //
-   // { <cSymbol>, <xValue> }              Set DATA <cSymbol> to <xValue>
-   // { { <cSym1>, <xVal1> }, { <cSym2>, <xVal2> }, ... }
-   //                                      Set a whole list symbols to value
-   //                                      Normal way of set objects from external
-   //                                      sources, like memo files.
-   // <oObject>                            Set self according to the DATA
-   //                                      contained in <oObject>
-   //                                      Can be used to transfer info from
-   //                                      one class to another
-   //
-   // If <xArg> is not present, the current object will be returned as an array
-   // for description see __objSetValueList / __objGetValueList.
-   //
-   // The method aExcept() is called to determine the DATA which should not
-   // be returned. Eg. hWnd ( do not copy this DATA from external source )
-   //
-   // Say we want to copy oSource into oTarget we say :
-   //
-   // oTarget:Transfer( oSource )
-   //
-   // If we do not want 'cName' duplicated we have to use __objGetValueList :
-   //
-   // aNewExcept := aClone( oSource:aExcept() )
-   // aAdd( aNewExcept, "cName" )  /* Add cName to exception list               */
-   // oTarget:Transfer( __objGetValueList( oSource, aNewExcept ) )
-   //                              /* Get DATA from oSource with new exceptions */
-   //                              /* Transfer DATA to oTarget                  */
-   //
-   // To set two DATA of oTarget :
-   //
-   // oTarget:Transfer( { "nLeft", 10 }, { "nRight", 5 } )
-   //
-   // or :
-   //
-   // aCollect := {}
-   // aAdd( aCollect, { "nLeft" , 10 } )
-   // aAdd( aCollect, { "nRight", 5  } )
-   // oTarget:Transfer( aCollect )
-   //
-   // Copy oSource to a memo field :
-   //
-   // DbObject->Memo := oSource:Transfer()
-   //
-   // (Re)create oTarget from the memo field :
-   //
-   // oTarget := TTarget():New()
-   // oTarget:Transfer( DbObject->Memo )
-   //
+//
+// <xRet> TForm:Transfer( [<xArg,..>] )
+//
+// Generic object import and export function
+//
+// <xArg> is present.
+//
+// Maximum number of arguments passed is limited to 10 !
+//
+// An argument can be one of the following :
+//
+// { <cSymbol>, <xValue> }              Set DATA <cSymbol> to <xValue>
+// { { <cSym1>, <xVal1> }, { <cSym2>, <xVal2> }, ... }
+//                                      Set a whole list symbols to value
+//                                      Normal way of set objects from external
+//                                      sources, like memo files.
+// <oObject>                            Set self according to the DATA
+//                                      contained in <oObject>
+//                                      Can be used to transfer info from
+//                                      one class to another
+//
+// If <xArg> is not present, the current object will be returned as an array
+// for description see __objSetValueList / __objGetValueList.
+//
+// The method aExcept() is called to determine the DATA which should not
+// be returned. Eg. hWnd ( do not copy this DATA from external source )
+//
+// Say we want to copy oSource into oTarget we say :
+//
+// oTarget:Transfer( oSource )
+//
+// If we do not want 'cName' duplicated we have to use __objGetValueList :
+//
+// aNewExcept := aClone( oSource:aExcept() )
+// aAdd( aNewExcept, "cName" )  /* Add cName to exception list               */
+// oTarget:Transfer( __objGetValueList( oSource, aNewExcept ) )
+//                              /* Get DATA from oSource with new exceptions */
+//                              /* Transfer DATA to oTarget                  */
+//
+// To set two DATA of oTarget :
+//
+// oTarget:Transfer( { "nLeft", 10 }, { "nRight", 5 } )
+//
+// or :
+//
+// aCollect := {}
+// aAdd( aCollect, { "nLeft" , 10 } )
+// aAdd( aCollect, { "nRight", 5  } )
+// oTarget:Transfer( aCollect )
+//
+// Copy oSource to a memo field :
+//
+// DbObject->Memo := oSource:Transfer()
+//
+// (Re)create oTarget from the memo field :
+//
+// oTarget := TTarget():New()
+// oTarget:Transfer( DbObject->Memo )
+//
 
 STATIC FUNCTION Transfer( x1, x2, x3, x4, x5, x6, x7, x8, x9, x10 ) /* etc */
 
@@ -236,7 +238,7 @@ STATIC FUNCTION Transfer( x1, x2, x3, x4, x5, x6, x7, x8, x9, x10 ) /* etc */
    IF nLen == 0
       xRet := __objGetValueLIST( self, ::aExcept() )
    ELSE
-      for n := 1 TO nLen
+      FOR n := 1 TO nLen
 
          xData := aParam[ n ]
          IF ValType( xData ) == "A"
@@ -253,7 +255,7 @@ STATIC FUNCTION Transfer( x1, x2, x3, x4, x5, x6, x7, x8, x9, x10 ) /* etc */
             QOut( "TRANSFER: Incorrect argument(", n, ") ", xData )
          ENDIF
 
-      next n
+      NEXT
    ENDIF
 
    RETURN xRet

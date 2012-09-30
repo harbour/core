@@ -4,7 +4,7 @@
 
 PROCEDURE Main()
 
-   LOCAL i := 0, block
+   LOCAL i := 0
    FIELD Last, First
 
    USE test

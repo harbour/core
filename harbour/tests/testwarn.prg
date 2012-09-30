@@ -57,52 +57,52 @@ STATIC lGlobal AS LOGICAL
 
 PROCEDURE Main( optional )
 
-  STATIC lStatic := 0, oMyObj As Class WrongClass
+   STATIC lStatic := 0, oMyObj As Class WrongClass
 
-  LOCAL cVar AS STRING := [declare function]
+   LOCAL cVar AS STRING := [declare function]
 
-  LOCAL a As STRING, oB AS Class MyClass, c AS STRING, oD AS Class OtherClass
+   LOCAL a As STRING, oB AS Class MyClass, c AS STRING, oD AS Class OtherClass
 
-  FIELD b AS NUMERIC
+   FIELD b AS NUMERIC
 
-  MEMVAR Var1 AS NUMERIC
+   MEMVAR Var1 AS NUMERIC
 
-  PRIVATE TEST AS STRING
+   PRIVATE TEST AS STRING
 
-  USE TEMP
+   USE TEMP
 
-  oMyObj:MyMethod( 2, 3, 4 )
+   oMyObj:MyMethod( 2, 3, 4 )
 
-  a := b:nMyFunc(2,3)
-  a := b:nMyFunc(2)
+   a := b:nMyFunc(2,3)
+   a := b:nMyFunc(2)
 
-  a := oB:oNext( 1 ):cMyData
-  a := oB:oNext( c ):cMyData2
-  a := oB:oNext( d ):cMyData
-  a := oB:oNext( oD ):cMyData
+   a := oB:oNext( 1 ):cMyData
+   a := oB:oNext( c ):cMyData2
+   a := oB:oNext( d ):cMyData
+   a := oB:oNext( oD ):cMyData
 
-  a := oB:aInstances[1]:oNext:cMyData2
-  a := oB:aInstances[1]:oNext:cMyData
+   a := oB:aInstances[1]:oNext:cMyData2
+   a := oB:aInstances[1]:oNext:cMyData
 
-  x := cOtherFunc( "A" )
-  x := cOtherFunc( @Test )
-  x := cOtherFunc( "A", "A", "A" )
+   x := cOtherFunc( "A" )
+   x := cOtherFunc( @Test )
+   x := cOtherFunc( "A", "A", "A" )
 
-  M->TEST := "TEST"
+   M->TEST := "TEST"
 
-  a := "A"
+   a := "A"
 
-  oB := "a"
+   oB := "a"
 
-  if lStatic
-     Var1 := .F.
-  endif
+   IF lStatic
+      Var1 := .F.
+   ENDIF
 
-  IF lGlobal
-     Var1 := .T.
-  ENDIF
+   IF lGlobal
+      Var1 := .T.
+   ENDIF
 
-RETURN
+   RETURN
 
 PROCEDURE SOMEPROC()
 

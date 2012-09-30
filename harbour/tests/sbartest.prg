@@ -27,7 +27,7 @@ PROCEDURE Main()
 
 FUNCTION InitScrlBar()
 
-   LOCAL tmpFileList := {}, i
+   LOCAL tmpFileList, i
    MEMVAR aFileList, filesScroll
    PRIVATE aFileList := {}, filesScroll
 

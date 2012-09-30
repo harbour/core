@@ -8,8 +8,8 @@
 
 PROCEDURE Main( filespec, attribs, cshort )
 
-   LOCAL aDir := {}
-   LOCAL x := 0, lShort := .F.
+   LOCAL aDir
+   LOCAL x, lShort := .F.
 
    IF ! cshort == NIL .AND. ( Upper( cShort ) == "TRUE" .OR. Upper( cShort ) == ".T." )
       lShort := .T.

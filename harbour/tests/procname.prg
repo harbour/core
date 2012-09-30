@@ -14,19 +14,19 @@ FUNCTION Two()
 
    Three()
 
-   RETURN nil
+   RETURN NIL
 
 FUNCTION Three()
 
    Four()
 
-   RETURN nil
+   RETURN NIL
 
 FUNCTION Four()
 
    Five()
 
-   RETURN nil
+   RETURN NIL
 
 FUNCTION Five()
 
@@ -36,4 +36,4 @@ FUNCTION Five()
       QQOut( "Called from: ", ProcName( n ), ProcLine( n++ ), hb_eol() )
    ENDDO
 
-   RETURN nil
+   RETURN NIL

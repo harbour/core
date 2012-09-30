@@ -584,19 +584,6 @@ PROCEDURE LogTBCVars( o, desc, xResult )
 
    RETURN
 
-STATIC FUNCTION ObjToList( o )
-   LOCAL cString := ""
-   LOCAL tmp
-
-   FOR tmp := 1 TO Len( o )
-       cString += XToStr( o[ tmp ] )
-       IF tmp < Len( o )
-          cString += ", "
-       ENDIF
-   NEXT
-
-   RETURN cString
-
 FUNCTION XToStr( xValue )
    LOCAL cType := ValType( xValue )
 

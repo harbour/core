@@ -62,10 +62,12 @@ FUNCTION Test( n )
 
    QOut( n )
 
-   RETURN nil
+   RETURN NIL
 
 FUNCTION ReleaseTest()
 
    LOCAL a := { 1, 2, 3 }
 
-   RETURN nil
+   HB_SYMBOL_UNUSED( a )
+
+   RETURN NIL

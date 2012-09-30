@@ -39,7 +39,7 @@ FUNCTION FibI( n )
          nFib      := nFibMin1 + nFibMinN1
          nFibMinN1 := nFibMin1
          nFibMin1  := nFib
-         ++ i
+         ++i
       ENDDO
    ENDIF
 

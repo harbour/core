@@ -60,6 +60,6 @@ STATIC FUNCTION xToStr( xValue )
       RETURN "A" + hb_ntos( Len( xValue ) )
    CASE "U"
       RETURN "NIL"
-   ENDCASE
+   ENDSWITCH
 
    RETURN ""

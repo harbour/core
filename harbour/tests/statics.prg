@@ -53,6 +53,8 @@ PROCEDURE NumStat( a )
 // STATIC m := s_n    // uncomment it to see an error
 // STATIC m := Time() // uncomment it to see an error
 
+   HB_SYMBOL_UNUSED( a )
+
    cb := {| x | s_z + Str( x ) }
    QOut( ++s_n )
    QOut( Eval( cb, s_n ) )

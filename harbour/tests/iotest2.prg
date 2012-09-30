@@ -7,9 +7,8 @@
 
 PROCEDURE Main()
 
-   LOCAL h    := 0
+   LOCAL h
    LOCAL cstr := " "
-   LOCAL ntmp := 0
 
    h := FCreate( "test.txt" )
    QOut( "create handle", h )

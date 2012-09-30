@@ -33,6 +33,8 @@ PROCEDURE Main()
 
    LOCAL main := 0
 
+   HB_SYMBOL_UNUSED( main )
+
    Test1()
    __Accept( "press Enter..." )
    Test2()

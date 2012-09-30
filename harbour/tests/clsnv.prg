@@ -18,7 +18,7 @@
 
 PROCEDURE Main()
 
-   LOCAL o := myclass3():new(), i, cbErr
+   LOCAL o := myclass3():new()
 
    ? Date(), Time(), Version(), OS()
    ?

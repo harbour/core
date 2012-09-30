@@ -11,6 +11,9 @@ PROCEDURE Main()
    oObject := TAnyClass():New()
    oBase := TClassBase():New()
 
+   HB_SYMBOL_UNUSED( oObject )
+   HB_SYMBOL_UNUSED( oBase )
+
    RETURN
 
 CREATE CLASS TClassBase

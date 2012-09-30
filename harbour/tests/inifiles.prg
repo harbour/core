@@ -101,9 +101,8 @@ STATIC FUNCTION New( cFileName )
                         cLine := SubStr( cLine, 2 )
                      ENDIF
 
-                     AAdd( ::Contents, { cLine, { /* this will be CurrArray */
-                     } } )
-                     CurrArray := ::Contents[Len(::Contents)][ 2 ]
+                     AAdd( ::Contents, { cLine, { /* this will be CurrArray */ } } )
+                     CurrArray := ::Contents[ Len( ::Contents ) ][ 2 ]
 
                   ELSEIF Left( cLine, 1 ) == ";" // preserve comments
                      AAdd( CurrArray, { NIL, cLine } )
@@ -145,7 +144,7 @@ STATIC FUNCTION ReadString( cSection, cIdent, cDefault )
       j := AScan( ::Contents, {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cFind .AND. ValType( x[ 2 ] ) == "C" } )
 
       IF j > 0
-         cResult := ::Contents[j][ 2 ]
+         cResult := ::Contents[ j ][ 2 ]
       ENDIF
 
    ELSE
@@ -157,7 +156,7 @@ STATIC FUNCTION ReadString( cSection, cIdent, cDefault )
          j := AScan( ::Contents[ i ][ 2 ], {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cFind } )
 
          IF j > 0
-            cResult := ::Contents[ i ][ 2 ][j][ 2 ]
+            cResult := ::Contents[ i ][ 2 ][ j ][ 2 ]
          ENDIF
       ENDIF
    ENDIF
@@ -177,7 +176,7 @@ STATIC PROCEDURE WriteString( cSection, cIdent, cString )
       j := AScan( ::Contents, {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cFind .AND. ValType( x[ 2 ] ) == "C" } )
 
       IF j > 0
-         ::Contents[j][ 2 ] := cString
+         ::Contents[ j ][ 2 ] := cString
 
       ELSE
          AAdd( ::Contents, NIL )
@@ -187,19 +186,19 @@ STATIC PROCEDURE WriteString( cSection, cIdent, cString )
 
    ELSE
       cFind := Lower( cSection )
-      IF ( i := AScan( ::Contents, {| x | ValType(x[ 1 ] ) == "C" .AND. Lower(x[ 1 ] ) == cFind .AND. ValType(x[ 2 ] ) == "A" } ) ) > 0
+      IF ( i := AScan( ::Contents, {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cFind .AND. ValType( x[ 2 ] ) == "A" } ) ) > 0
          cFind := Lower( cIdent )
          j := AScan( ::Contents[ i ][ 2 ], {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cFind } )
 
          IF j > 0
-            ::Contents[ i ][ 2 ][j][ 2 ] := cString
+            ::Contents[ i ][ 2 ][ j ][ 2 ] := cString
 
          ELSE
             AAdd( ::Contents[ i ][ 2 ], { cIdent, cString } )
          ENDIF
 
       ELSE
-         AAdd( ::Contents, { cSection, { {cIdent, cString} } } )
+         AAdd( ::Contents, { cSection, { { cIdent, cString } } } )
       ENDIF
    ENDIF
 
@@ -272,14 +271,14 @@ STATIC PROCEDURE EraseSection( cSection )
    LOCAL i
 
    IF Empty( cSection )
-      DO WHILE ( i := AScan( ::Contents, {| x | ValType(x[ 1 ] ) == "C" .AND. ValType(x[ 2 ] ) == "C" } ) ) > 0
+      DO WHILE ( i := AScan( ::Contents, {| x | ValType( x[ 1 ] ) == "C" .AND. ValType( x[ 2 ] ) == "C" } ) ) > 0
          ADel( ::Contents, i )
          ASize( ::Contents, Len( ::Contents ) - 1 )
       ENDDO
 
    ELSE
       cSection := Lower( cSection )
-      IF ( i := AScan( ::Contents, {| x | ValType(x[ 1 ] ) == "C" .AND. Lower(x[ 1 ] ) == cSection .AND. ValType(x[ 2 ] ) == "A" } ) ) > 0
+      IF ( i := AScan( ::Contents, {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cSection .AND. ValType( x[ 2 ] ) == "A" } ) ) > 0
          ADel( ::Contents, i )
          ASize( ::Contents, Len( ::Contents ) - 1 )
       ENDIF
@@ -301,12 +300,12 @@ STATIC FUNCTION ReadSection( cSection )
 
    ELSE
       cSection := Lower( cSection )
-      IF ( i := AScan( ::Contents, {| x | ValType(x[ 1 ] ) == "C" .AND. x[ 1 ] == cSection .AND. ValType(x[ 2 ] ) == "A" } ) ) > 0
+      IF ( i := AScan( ::Contents, {| x | ValType(x[ 1 ] ) == "C" .AND. x[ 1 ] == cSection .AND. ValType( x[ 2 ] ) == "A" } ) ) > 0
 
          FOR j := 1 TO Len( ::Contents[ i ][ 2 ] )
 
-            IF ::Contents[ i ][ 2 ][j][ 1 ] != NIL
-               AAdd( aSection, ::Contents[ i ][ 2 ][j][ 1 ] )
+            IF ::Contents[ i ][ 2 ][ j ][ 1 ] != NIL
+               AAdd( aSection, ::Contents[ i ][ 2 ][ j ][ 1 ] )
             ENDIF
          NEXT
       ENDIF
@@ -343,12 +342,12 @@ STATIC PROCEDURE UpdateFile()
          FWrite( hFile, "[" + ::Contents[ i ][ 1 ] + "]" + Chr( 13 ) + Chr( 10 ) )
          FOR j := 1 TO Len( ::Contents[ i ][ 2 ] )
 
-            if ::Contents[ i ][ 2 ][j][ 1 ] == NIL
-               FWrite( hFile, ::Contents[ i ][ 2 ][j][ 2 ] + Chr( 13 ) + Chr( 10 ) )
+            IF ::Contents[ i ][ 2 ][ j ][ 1 ] == NIL
+               FWrite( hFile, ::Contents[ i ][ 2 ][ j ][ 2 ] + Chr( 13 ) + Chr( 10 ) )
             ELSE
-               FWrite( hFile, ::Contents[ i ][ 2 ][j][ 1 ] + "=" + ::Contents[ i ][ 2 ][j][ 2 ] + Chr( 13 ) + Chr( 10 ) )
+               FWrite( hFile, ::Contents[ i ][ 2 ][ j ][ 1 ] + "=" + ::Contents[ i ][ 2 ][ j ][ 2 ] + Chr( 13 ) + Chr( 10 ) )
             ENDIF
-         next
+         NEXT
          FWrite( hFile, Chr( 13 ) + Chr( 10 ) )
 
       ELSEIF ValType( ::Contents[ i ][ 2 ] ) == "C"

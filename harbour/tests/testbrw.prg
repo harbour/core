@@ -16,12 +16,14 @@ PROCEDURE Main()
    LOCAL aTest2  := { Date(), Date() + 4, Date() + 56, Date() + 14, Date() + 5, Date() + 6, Date() + 7, Date() + 8, Date() + 10000, Date() - 1000, Date() - 54, Date() + 456342 }
    LOCAL aTest3  := { .T. , .F. , .T. , .T. , .F. , .F. , .T. , .F. , .T. , .T. , .F. , .F. }
    LOCAL n       := 1
-   LOCAL nKey
-   LOCAL lEnd    := .F.
    LOCAL nCursor
    LOCAL cColor
    LOCAL nRow, nCol
+#ifndef HB_COMPAT_C53
+   LOCAL nKey
    LOCAL nTmpRow, nTmpCol
+   LOCAL lEnd    := .F.
+#endif
 
    oBrowse:colorSpec     := "W+/B, N/BG"
    oBrowse:ColSep        := hb_UTF8ToStr( "│" )
@@ -60,10 +62,10 @@ PROCEDURE Main()
    nCol := Col()
    @ 4, 4, 17, 31 BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
 #ifdef HB_COMPAT_C53
-   oBrowse:SetKey( 0, {| ob, nkey | Defproc( ob,nKey ) } )
+   oBrowse:SetKey( 0, {| ob, nkey | Defproc( ob, nKey ) } )
    WHILE .T.
       oBrowse:ForceStable()
-      IF ( oBrowse:applykey( Inkey(0 ) ) == - 1 )
+      IF oBrowse:applykey( Inkey( 0 ) ) == -1
          EXIT
       ENDIF
    ENDDO

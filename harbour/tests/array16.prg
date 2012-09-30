@@ -41,19 +41,19 @@ PROCEDURE Main()
    QOut( Len( b ) )
 
    b[ 100 ] := 10
-   Test( b[ 100 ] ++ )
+   Test( b[ 100 ]++ )
    QOut( b[ 100 ] )
 
    b[ 100 ] := 10
-   Test( ++ b[ 100 ] )
+   Test( ++b[ 100 ] )
    QOut( b[ 100 ] )
 
    b := { 1, { 2, { 4, 5 } } }
-   Test( b[ 2 ][ 2 ][ 1 ] ++ )
+   Test( b[ 2 ][ 2 ][ 1 ]++ )
    QOut( b[ 2 ][ 2 ][ 1 ] )
 
    b[ 2 ][ 2 ][ 1 ] := 2
-   Test( ++ b[ 2 ][ 2 ][ 1 ] )
+   Test( ++b[ 2 ][ 2 ][ 1 ] )
    QOut( b[ 2 ][ 2 ][ 1 ] )
 
    ReleaseTest()
@@ -64,10 +64,12 @@ FUNCTION Test( n )
 
    QOut( n )
 
-   RETURN nil
+   RETURN NIL
 
 FUNCTION ReleaseTest()
 
    LOCAL a := { 1, 2, 3 }
 
-   RETURN nil
+   HB_SYMBOL_UNUSED( a )
+
+   RETURN NIL

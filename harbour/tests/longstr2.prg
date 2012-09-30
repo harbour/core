@@ -6,7 +6,7 @@
 PROCEDURE Main()
 
    LOCAL short := "1234567890"
-   LOCAL i, long, very_long, cNewLine
+   LOCAL i, long, very_long
 
    long := short
    FOR i := 1 TO 12

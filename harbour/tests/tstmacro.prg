@@ -13,6 +13,10 @@ PROCEDURE Main()
 
    PRIVATE cVar_1, cMainPrivate := "cVar_1", GlobalPrivate := "BornInRunTimeVar"
 
+   // to avoid unused STATIC FUNCTION warnings
+   UDF_STATIC()
+   UDF2_STATIC()
+
    &cStr_1 := "Simple "
    ? M->cVar_1
 

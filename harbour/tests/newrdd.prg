@@ -315,7 +315,7 @@ PROCEDURE Main()
    CLS
 
    nI := 1
-   NEWRDD->( __dbPack( {|| QOut( nI ), nI ++ } ) )
+   NEWRDD->( __dbPack( {|| QOut( nI ), nI++ } ) )
    ? "RecCount:", NEWRDD->( RecCount() )
 
    ? "Press any key to continue..."

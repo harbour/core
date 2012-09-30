@@ -149,7 +149,7 @@ STATIC FUNCTION WindowBounce()
          IF y[ i ] <= 0 .OR. y[ i ] + 12 >= MaxCol()
             dy[ i ] := - dy[ i ]
          ENDIF
-      next i
+      NEXT
 
       ++nFrames
    ENDDO

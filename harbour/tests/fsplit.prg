@@ -14,13 +14,12 @@ FUNCTION fsplit( csource, csplit, nbyte )
 
    LOCAL i                           // general counter
    LOCAL ccommand      := ""         // dos command for joining files
-   LOCAL cexist        := ""         // batch file error checker
-   LOCAL nbufsize      := 8          // default buffer Read/Write size
-   LOCAL hsource       := 0          // file handle for source file
-   LOCAL hdestination  := 0          // file handle for destination file
+   LOCAL nbufsize                    // default buffer Read/Write size
+   LOCAL hsource                     // file handle for source file
+   LOCAL hdestination                // file handle for destination file
    LOCAL cbuffer       := ""         // buffer for read/write
    LOCAL lsplit        := .F.        // return value
-   LOCAL nblock        := 0          // bytes read
+   LOCAL nblock                      // bytes read
    LOCAL ncurrent      := 0          // total bytes copied
    LOCAL nsplit        := 1          // destination file name extension
    LOCAL cbat          := "join.bat" // for joining split files
@@ -28,8 +27,8 @@ FUNCTION fsplit( csource, csplit, nbyte )
    LOCAL hbat                        // file handle for join.bat
    LOCAL afile         := {}         // for information upon completion
    LOCAL nseconds      := Seconds()  // time elapsed
-   LOCAL nfilesize     := 0          // file size to be split
-   LOCAL hfile         := 0          // split file sizes
+   LOCAL nfilesize                   // file size to be split
+   LOCAL hfile                       // split file sizes
    LOCAL cret          := Chr( 13 ) + Chr( 10 )  // carriage return
    LOCAL ctmp          := "@echo off" + cret // 1st line in join.bat
    LOCAL nfile
@@ -45,7 +44,7 @@ FUNCTION fsplit( csource, csplit, nbyte )
    ENDIF
 
    // default destination name
-   csplit := iif( csplit == nil, "split.", csplit + "." )
+   csplit := iif( csplit == NIL, "split.", csplit + "." )
 
    // default size of each split file 360 x 1024 bytes
    nbufsize := iif( Empty( nbyte ), 360, nbyte )
@@ -65,7 +64,7 @@ FUNCTION fsplit( csource, csplit, nbyte )
          hbat         := FCreate( cbat )            // join.bat
          IF hbat != F_ERROR
          ELSE
-            break
+            BREAK
          ENDIF
          ctmp         += "rem source file " + csource + " size " + hb_ntos( nfilesize ) + cret
          ctmp         += "rem split on " + DToC( Date() ) + " " + Time() + cret

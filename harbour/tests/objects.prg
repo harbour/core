@@ -30,7 +30,7 @@ FUNCTION TAny()         /* builds a class */
 
    STATIC hClass
 
-   IF hClass == nil
+   IF hClass == NIL
       hClass := __clsNew( "TANY", 3 )                 // cClassName, nDatas
       __clsAddMsg( hClass, "cName",      1, HB_OO_MSG_DATA )  // retrieve data
       __clsAddMsg( hClass, "_cName",     1, HB_OO_MSG_DATA )  // assign data. Note the '_'
@@ -62,4 +62,4 @@ STATIC FUNCTION Test()
 
    QOut( ::ClassName() )    // :: means Self:  It is a Harbour built-in operator
 
-   RETURN nil
+   RETURN NIL

@@ -70,7 +70,7 @@ PROCEDURE Main()
    oCol1:footing := "position"
    oCol1:colorBlock := {| val | { val % 5 + 1, val % 3 + 2 } }
 
-   oCol2 := TBColumnNew( "COL;2",  {|| s_nCount ++ } )
+   oCol2 := TBColumnNew( "COL;2",  {|| s_nCount++ } )
    oCol2:defColor := { 3, 4, 5, 6 }
    oCol2:footing := "counter"
    oCol2:headSep := hb_UTF8ToStr( "┐ ┌─┤HIDE├─" )

@@ -2,7 +2,7 @@
  * $Id$
  */
 
-PROCEDURE Main( cParam )
+PROCEDURE Main()
 
    OutStd( hb_eol() )
    OutStd( "Running with SET FIXED OFF (the default setting): " )

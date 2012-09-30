@@ -9,7 +9,7 @@ PROCEDURE Main()
    LOCAL x := 0
 
    DO WHILE x < 10
-      ++ x
+      ++x
       IF x == 5
          EXIT
       ENDIF

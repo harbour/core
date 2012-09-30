@@ -18,7 +18,7 @@ FUNCTION TForm()
 
    STATIC oClass
 
-   IF oClass == nil
+   IF oClass == NIL
       oClass := HBClass():New( "TFORM" )    // starts a new class definition
 
       oClass:AddData( "cName" )           // define this class objects datas
@@ -52,4 +52,4 @@ STATIC FUNCTION Show()
 
    QOut( "lets show a form from here :-)" )
 
-   RETURN nil
+   RETURN NIL

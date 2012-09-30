@@ -15,6 +15,8 @@
  * Placed in the public domain
  */
 
+#xtranslate Default( <Var>, <xVal> ) => iif( <Var> == NIL, <xVal>, <Var> )
+
 PROCEDURE Main()
 
    LOCAL oFrom
@@ -149,16 +151,16 @@ FUNCTION New( cFileName, cMode, nBlock )
    ::cFileName := cFileName
    ::cMode     := Default( cMode, "R" )
 
-   if ::cMode == "R"
+   IF ::cMode == "R"
       ::hFile := FOpen( cFileName )
-   elseif ::cMode == "W"
+   ELSEIF ::cMode == "W"
       ::hFile := FCreate( cFileName )
    ELSE
       QOut( "DosFile Init: Unknown file mode:", ::cMode )
    ENDIF
 
    ::nError := FError()
-   if ::nError != 0
+   IF ::nError != 0
       ::lEoF := .T.
       QOut( "Error ", ::nError )
    ENDIF
@@ -171,7 +173,7 @@ FUNCTION RUN( xTxt, lCRLF )
    LOCAL self := QSelf()
    LOCAL xRet
 
-   if ::cMode == "R"
+   IF ::cMode == "R"
       xRet := ::Read()
    ELSE
       xRet := ::WriteLn( xTxt, lCRLF )
@@ -188,11 +190,11 @@ FUNCTION Dispose()
    LOCAL self := QSelf()
 
    ::cBlock := NIL
-   if ::hFile != - 1
-      if ::cMode == "W" .AND. ::nError != 0
+   IF ::hFile != - 1
+      IF ::cMode == "W" .AND. ::nError != 0
          ::Write( Chr( 26 ) )                     // Do not forget EOF marker
       ENDIF
-      IF !FClose( ::hFile )
+      IF ! FClose( ::hFile )
          ::nError := FError()
          QOut( "Dos Error closing ", ::cFileName, " Code ", ::nError )
       ENDIF
@@ -211,11 +213,10 @@ FUNCTION READ()
    LOCAL cBlock
    LOCAL nCrPos
    LOCAL nEoFPos
-   LOCAL nRead
 
-   if ::hFile == - 1
+   IF ::hFile == - 1
       QOut( "DosFile:Read : No file open" )
-   elseif ::cMode != "R"
+   ELSEIF ::cMode != "R"
       QOut( "File ", ::cFileName, " not open for reading" )
    ELSEIF !::lEoF
 
@@ -230,7 +231,7 @@ FUNCTION READ()
       ENDIF
 
       IF !::lEoF
-         ::nLine ++
+         ::nLine++
          nCRPos := At( Chr( 10 ), ::cBlock )
          IF nCRPos != 0                         // More than one line read
             cRet     := SubStr( ::cBlock, 1, nCRPos - 1 )
@@ -267,13 +268,13 @@ FUNCTION WriteLn( xTxt, lCRLF )
    LOCAL self := QSelf()
    LOCAL cBlock
 
-   if ::hFile == - 1
+   IF ::hFile == -1
       QOut( "DosFile:Write : No file open" )
-   elseif ::cMode != 'W'
+   ELSEIF !( ::cMode == "W" )
       QOut( "File ", ::cFileName, " not opened for writing" )
    ELSE
       cBlock := ToChar( xTxt )                  // Convert to string
-      IF DEFAULT( lCRLF, .T. )
+      IF Default( lCRLF, .T. )
          cBlock += Chr( 10 ) + Chr( 13 )
       ENDIF
       FWrite( ::hFile, cBlock, Len( cBlock ) )
@@ -289,11 +290,11 @@ FUNCTION Write( xTxt )
 
    LOCAL self := QSelf()
 
-   return ::WriteLn( xTxt, .F. )
+   RETURN ::WriteLn( xTxt, .F. )
 
-   //
-   // Go to a specified line number
-   //
+//
+// Go to a specified line number
+//
 
 STATIC FUNCTION GOTO( nLine )
 
@@ -302,7 +303,7 @@ STATIC FUNCTION GOTO( nLine )
 
    IF Empty( ::hFile )
       QOut( "DosFile:Goto : No file open" )
-   elseif  ::cMode != "R"
+   ELSEIF !( ::cMode == "R" )
       QOut( "File ", ::cFileName, " not open for reading" )
    ELSE
       ::lEoF   := .F.                           // Clear (old) End of file
@@ -310,7 +311,7 @@ STATIC FUNCTION GOTO( nLine )
       ::cBlock := ""
       FSeek( ::hFile, 0 )                         // Go top
       DO WHILE !::lEoF .AND. nWhere < nLine
-         nWhere ++
+         nWhere++
          ::Read()
       ENDDO
    ENDIF

@@ -12,7 +12,7 @@
 
 PROCEDURE Main()
 
-   LOCAL n := 1
+   LOCAL n
 
    QOut( "Testing Harbour For Next loops. Going up quick" )
 
@@ -22,7 +22,7 @@ PROCEDURE Main()
 
    QOut( "Going down" )
 
-   FOR n := 10 TO 1 step - 1
+   FOR n := 10 TO 1 STEP -1
       QOut( n )
    NEXT n
 
@@ -34,7 +34,7 @@ PROCEDURE Main()
 
    QOut( "No production" )
 
-   FOR n := 1 TO 10 step - 1
+   FOR n := 1 TO 10 STEP -1
       QOut( n )
    NEXT n
 

@@ -23,13 +23,13 @@ FUNCTION Two( n )
    DO CASE
    CASE n == 1
       QOut( "n == 1" )
-      RETURN nil
+      RETURN NIL
 
    CASE n == 2
       QOut( "n == 2" )
-      RETURN nil
+      RETURN NIL
    ENDCASE
 
    QOut( "This message should not been seen" )
 
-   RETURN nil
+   RETURN NIL

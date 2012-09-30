@@ -56,7 +56,7 @@ STATIC PROCEDURE SIMPLETEST( type )
    ? "=> o := NIL"
    BEGIN SEQUENCE
       o := NIL
-   end
+   END
 
    RETURN
 
@@ -68,8 +68,8 @@ STATIC PROCEDURE GCFREETEST( type )
    ? "=> o := myClass():new( " + hb_ntos( type ) + " )"
    o := myClass():new( type )
    ? "=> o:className() ->", o:className()
-   ? "=> create corss reference: a := { o, nil }; a[ 2 ] := a; a := NIL"
-   a := { o, nil }; a[ 2 ] := a; a := NIL
+   ? "=> create corss reference: a := { o, NIL }; a[ 2 ] := a; a := NIL"
+   a := { o, NIL }; a[ 2 ] := a; a := NIL
    ? "=> o := NIL"
    BEGIN SEQUENCE
       o := NIL

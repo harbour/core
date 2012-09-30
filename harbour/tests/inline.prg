@@ -21,7 +21,7 @@ FUNCTION TForm()
 
    STATIC oClass
 
-   IF oClass == nil
+   IF oClass == NIL
       oClass := HBClass():New( "TFORM" )    // starts a new class definition
 
       oClass:AddData( "cText" )           // define this class objects datas

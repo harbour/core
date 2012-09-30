@@ -35,4 +35,4 @@ FUNCTION TestValue( x )
 
    QOut( "Ok!" )
 
-   RETURN nil
+   RETURN NIL

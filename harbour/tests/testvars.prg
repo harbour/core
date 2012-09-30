@@ -15,6 +15,10 @@ PROCEDURE Main( Param1 )
 
    QOut( j )
 
+   HB_SYMBOL_UNUSED( Param1 )
+   HB_SYMBOL_UNUSED( k )
+   HB_SYMBOL_UNUSED( i )
+
    RETURN
 
 FUNCTION Sub( j )

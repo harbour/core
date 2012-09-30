@@ -6,7 +6,7 @@
 
 MEMVAR iLoop
 
-PROCEDURE Main( p1, p2 )
+PROCEDURE Main()
 
    LOCAL l1 := 11, l2 := 22, l3 := 33, l4 := 44, l5 := 55, l6 := 66
    PRIVATE iLoop

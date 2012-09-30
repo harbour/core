@@ -10,18 +10,18 @@ PROCEDURE Main()
    LOCAL i
    LOCAL dDate := Date()
 
-   SET( _SET_DATEFORMAT, "dd/mm/yyyy" )
+   SET DATE ANSI
 
-   for i := 7 TO 49 STEP 7
+   FOR i := 7 TO 49 STEP 7
       CheckDate( dDate )
       dDate += i
-   next
+   NEXT
 
    RETURN
 
 FUNCTION CheckDate( dDate )
 
-   OutStd( "Testing date:", dDate , hb_eol() )
+   OutStd( "Testing date:", dDate, hb_eol() )
    OutStd( "Days in month..:", daysinmonth( dDate ), hb_eol() )
    OutStd( "Day of year....:", doy( dDate ), hb_eol() )
    OutStd( "Begin of month.:", bom( dDate ), hb_eol() )
@@ -33,4 +33,4 @@ FUNCTION CheckDate( dDate )
    __Accept( "Press ENTER to continue..." )
    OutStd( Chr( 10 ), Chr( 10 ) )
 
-   RETURN nil
+   RETURN NIL

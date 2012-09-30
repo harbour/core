@@ -90,4 +90,4 @@ FUNCTION aDump( aShow )
    NEXT
    QQOut( hb_eol() )
 
-   RETURN nil
+   RETURN NIL

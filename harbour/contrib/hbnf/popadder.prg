@@ -1374,11 +1374,11 @@ STATIC FUNCTION _ftStuffComma( cStrToStuff, lTrimStuffedStr )
    IF Len( Left( LTrim(_ftCharRem("-",cStrToStuff ) ), ;
          At( ".", LTrim( _ftCharRem("-",cStrToStuff ) ) ) - 1 ) ) > 3
       IF lTrimStuffedStr    // Do we trim the number each time we insert a comma
-         FOR x := nDecPosit - 3 TO 2 + _ftCountLeft( cStrToStuff, " " ) STEP - 4
+         FOR x := nDecPosit - 3 TO 2 + _ftCountLeft( cStrToStuff, " " ) STEP -4
             cStrToStuff := SubStr( _ftPosIns( cStrToStuff,",",x ), 2 )
          NEXT
       ELSE
-         FOR x := nDecPosit - 3 TO 2 + _ftCountLeft( cStrToStuff, " " ) STEP - 3
+         FOR x := nDecPosit - 3 TO 2 + _ftCountLeft( cStrToStuff, " " ) STEP -3
             cStrToStuff := _ftPosIns( cStrToStuff, ",", x )
          NEXT
       ENDIF

@@ -28,7 +28,7 @@ INIT FUNCTION SecondOne()
    static_var_accessed_in_INIT_function ++
    QOut( "global static=", static_var_accessed_in_INIT_function )
 
-   RETURN nil
+   RETURN NIL
 
 INIT FUNCTION Third()
    STATIC static_var := "THIRD()"
@@ -37,7 +37,7 @@ INIT FUNCTION Third()
    static_var_accessed_in_INIT_function ++
    QOut( "global static=", static_var_accessed_in_INIT_function )
 
-   RETURN nil
+   RETURN NIL
 
 EXIT FUNCTION Fifth()
    STATIC static_var := "FIFTH()"
@@ -46,7 +46,7 @@ EXIT FUNCTION Fifth()
    static_var_accessed_in_INIT_function --
    QOut( "global static=", static_var_accessed_in_INIT_function )
 
-   RETURN nil
+   RETURN NIL
 
 EXIT FUNCTION Sixth()
    STATIC static_var := "SIXTH()"
@@ -55,7 +55,7 @@ EXIT FUNCTION Sixth()
    static_var_accessed_in_INIT_function --
    QOut( "global static=", static_var_accessed_in_INIT_function )
 
-   RETURN nil
+   RETURN NIL
 
 INIT PROCEDURE _INITSTATICS()
    PUBLIC _initStatics := "_INITSTATICS"

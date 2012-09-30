@@ -30,7 +30,7 @@ FUNCTION ref1( x )
    Ref2( @x )
    QOut( " In ref1 after ref2 =", x )
 
-   RETURN nil
+   RETURN NIL
 
 FUNCTION ref2( x )
 
@@ -39,7 +39,7 @@ FUNCTION ref2( x )
    Ref3( @x )
    QOut( "  In ref2 after ref3 =", x )
 
-   RETURN nil
+   RETURN NIL
 
 FUNCTION ref3( x )
 
@@ -51,11 +51,11 @@ FUNCTION ref3( x )
    Ref4( @a )
    QOut( "   In ref3 after ref4 =", x )
 
-   RETURN nil
+   RETURN NIL
 
 FUNCTION ref4( a )
 
    a[ 1 ]++
    QOut( "    In ref4 =", a[ 1 ] )
 
-   RETURN nil
+   RETURN NIL

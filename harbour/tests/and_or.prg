@@ -39,4 +39,4 @@ FUNCTION AndOr( lValue1, lValue2 )
       QOut( "None of them are true" )
    ENDIF
 
-   RETURN nil
+   RETURN NIL

@@ -39,7 +39,7 @@ PROCEDURE Main()
    QOut( "Array index[3] := 'X' :", oString[ 3 ] := 'X' )
    QOut( oString:cValue )
 
-   RETURN nil
+   RETURN
 
 CREATE CLASS tString
 
@@ -69,7 +69,7 @@ FUNCTION TString()
 
    STATIC oClass
 
-   IF oClass == nil
+   IF oClass == NIL
       oClass = HBClass():New( "TSTRING" )  // starts a new class definition
 
       oClass:AddData( "cValue" )          // define this class objects datas

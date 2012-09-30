@@ -23,9 +23,9 @@ PROCEDURE Main()
    o:x := 4
    QOut( "Assign 4         : ", o:x )
 
-   QOut( "Post increment   : ", o:x ++ )
+   QOut( "Post increment   : ", o:x++ )
    QOut( "After            : ", o:x   )
-   QOut( "Pre decrement    : ", -- o:x )
+   QOut( "Pre decrement    : ", --o:x )
    QOut( "After            : ", o:x   )
 
    o:x += 2

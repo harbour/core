@@ -17,7 +17,7 @@
 
 PROCEDURE Main( cOption, cCmd )
 
-   LOCAL aDir, f, n, o, p, cRead
+   LOCAL aDir, f, n, o, p
 
    SET DATE ANSI
    SET CENTURY ON

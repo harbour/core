@@ -9,21 +9,20 @@ PROCEDURE Main()
    LOCAL a := { 3, 2, 1 }
    LOCAL b := { 10 }
    LOCAL c := { 2, .T. , "B", NIL, { 1 }, {|| b }, oError, Date(), 1, .F. , "A", NIL, Date() - 1, { 0 }, {|| a }, oError }
-   LOCAL t
 
    ?
    ?
-   ? "Original.....:", aDump( t := a )
-   ? "Asort.c......:", aDump( ASort( t := AClone( a ) ) )
-   ? "Asort.c.block:", aDump( ASort( t := AClone( a ), , , {| x, y | x < y } ) )
+   ? "Original.....:", aDump( a )
+   ? "Asort.c......:", aDump( ASort( AClone( a ) ) )
+   ? "Asort.c.block:", aDump( ASort( AClone( a ), , , {| x, y | x < y } ) )
    ?
-   ? "Original.....:", aDump( t := b )
-   ? "Asort.c......:", aDump( ASort( t := AClone( b ) ) )
-   ? "Asort.c.block:", aDump( ASort( t := AClone( b ), , , {| x, y | x < y } ) )
+   ? "Original.....:", aDump( b )
+   ? "Asort.c......:", aDump( ASort( AClone( b ) ) )
+   ? "Asort.c.block:", aDump( ASort( AClone( b ), , , {| x, y | x < y } ) )
    ?
-   ? "Original.....:", aDump( t := c )
-   ? "Asort.c......:", aDump( ASort( t := AClone( c ) ) )
-   ? "Asort.c.block:", aDump( ASort( t := AClone( c ), , , {| x, y | xToStr( x ) < xToStr( y ) } ) )
+   ? "Original.....:", aDump( c )
+   ? "Asort.c......:", aDump( ASort( AClone( c ) ) )
+   ? "Asort.c.block:", aDump( ASort( AClone( c ), , , {| x, y | xToStr( x ) < xToStr( y ) } ) )
 
    RETURN
 

@@ -58,7 +58,7 @@
 PROCEDURE Main()
 
    LOCAL GetList := {}
-   LOCAL alpha, bravo, charlie, k, l
+   LOCAL alpha, bravo, charlie, k
    LOCAL F8Active := .T.
 
    CLS

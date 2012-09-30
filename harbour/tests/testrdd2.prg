@@ -4,11 +4,11 @@
 
 #include "ord.ch"
 
-#define  MAX_TEST_RECS   100
-#define  INDEX_KEY_CHAR  CHAR + Str( NUM ) + DTOS( DATE )
-#define  INDEX_KEY_NUM   NUM
-#define  INDEX_KEY_DATE  DATE
-#define  INDEX_KEY_LOG   LOG
+#define MAX_TEST_RECS   100
+#define INDEX_KEY_CHAR  CHAR + Str( NUM ) + DToS( DATE )
+#define INDEX_KEY_NUM   NUM
+#define INDEX_KEY_DATE  DATE
+#define INDEX_KEY_LOG   LOG
 
 EXTERNAL _ADS
 EXTERNAL DBFNTX
@@ -351,7 +351,7 @@ PROCEDURE ErrorSys()
 
 STATIC PROCEDURE MyError( e )
 
-   LOCAL cTrace := "", i := 1 /* Start are "real" error */, cErr
+   LOCAL i := 1 /* Start are "real" error */, cErr
 
    cErr := "Runtime error" + hb_eol() + ;
       hb_eol() + ;
@@ -362,7 +362,7 @@ STATIC PROCEDURE MyError( e )
       "Call trace:" + hb_eol() + ;
       hb_eol()
 
-   DO WHILE ! Empty( ProcName( ++ i ) )
+   DO WHILE ! Empty( ProcName( ++i ) )
       cErr += RTrim( ProcName( i ) ) + "(" + LTrim( Str( ProcLine( i ) ) ) + ")" + hb_eol()
    ENDDO
 
@@ -393,6 +393,8 @@ STATIC FUNCTION CompareArray( a1, a2 )
    RETURN .T.
 
 STATIC PROCEDURE NotifyUser( cErr, lNotError )
+
+   HB_SYMBOL_UNUSED( lNotError )
 
    ? cErr
 

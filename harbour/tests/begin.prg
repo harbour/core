@@ -85,8 +85,6 @@ PROCEDURE Break1()
 
    BREAK M->mPrivate
 
-   RETURN
-
 PROCEDURE Break2()
 
    BEGIN SEQUENCE
@@ -130,5 +128,3 @@ PROCEDURE Break4( cValue )
    LOCAL oLocal := " detached Break4 "
 
    Break( {| x | oLocal + x + cValue } )
-
-   RETURN

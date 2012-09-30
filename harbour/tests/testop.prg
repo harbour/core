@@ -62,9 +62,11 @@
 PROCEDURE Main()
 
    LOCAL oCar := TCar():New( "red", 2 )
-   LOCAL oPetrol
+   LOCAL oPetrol := NIL
 
    oCar := oCar + oPetrol
+
+   HB_SYMBOL_UNUSED( oCar )
 
    RETURN
 
@@ -101,6 +103,8 @@ METHOD New( cColor, nDoors ) CLASS TCar
 //----------------------------------------------------------------------------//
 
 METHOD SUM( oObject ) CLASS TCar
+
+   HB_SYMBOL_UNUSED( oObject )
 
    Alert( "+ has a special meaning and " + ;
       "functionality for TCar Class objects!!!" )

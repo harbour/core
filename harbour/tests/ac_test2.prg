@@ -21,6 +21,8 @@
 #include "inkey.ch"
 #include "achoice.ch"
 
+MEMVAR lHiLiTest
+
 PROCEDURE Main()
 
    // NIL, empty, numeric, and "not handled" - items
@@ -83,10 +85,12 @@ FUNCTION cUF( nMode, nCurElement, nRowPos )
    LOCAL nRetVal := AC_CONT
    LOCAL nKey := LastKey()
 
+   HB_SYMBOL_UNUSED( nCurElement )
+   HB_SYMBOL_UNUSED( nRowPos )
+
    IF lHiLiTest
       DispBox( 0, 0, MaxRow(), MaxCol(), Replicate( "#", 9 ), "GR+/G" )
    ENDIF
-
 
    IF nMode == AC_NOITEM
       nRetVal := AC_ABORT
@@ -108,6 +112,9 @@ FUNCTION cUF2( nMode, nCurElement, nRowPos )
 
    LOCAL nRetVal := AC_CONT
    LOCAL nKey := LastKey()
+
+   HB_SYMBOL_UNUSED( nCurElement )
+   HB_SYMBOL_UNUSED( nRowPos )
 
    DispBox( 0, 0, MaxRow(), MaxCol(), Replicate( "!", 9 ), "GR+/G" )
 

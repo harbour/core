@@ -27,7 +27,7 @@ FUNCTION FT_DEC2BIN( x )
 
    LOCAL i, buffer := { "0", "0", "0", "0", "0", "0", "0", "0" }
 
-   FOR i := 8 TO 1 step - 1
+   FOR i := 8 TO 1 STEP -1
       IF x >= 2 ^ ( i - 1 )
          x -= 2 ^ ( i - 1 )
          buffer[ 9 - i ] := "1"

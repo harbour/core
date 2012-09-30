@@ -12,4 +12,6 @@ PROCEDURE Main()
 
    n++      // an error should raise here
 
+   HB_SYMBOL_UNUSED( n )
+
    RETURN

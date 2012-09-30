@@ -6,7 +6,7 @@
 
 PROCEDURE Main()
 
-   LOCAL h    := 0
+   LOCAL h
    LOCAL cstr := " "
    LOCAL ntmp := 1
 

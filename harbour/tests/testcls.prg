@@ -32,4 +32,4 @@ METHOD MyErrorManager( uParam1 ) CLASS Test
 
    Alert( __GetMessage() )  // Shows the message that was sent to the object
 
-   RETURN nil
+   RETURN NIL

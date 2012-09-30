@@ -11,21 +11,21 @@
 
 // use only *one* at a time
 // dejar solo una de las dos lineas siguientes:
-#define CON_DBFCDX
-//#define CON_ADS
+#define WITH_DBFCDX
+//#define WITH_ADS
 
-#ifdef CON_ADS
+#ifdef WITH_ADS
 #include "ads.ch"
 REQUEST _ADS
 #endif
 
-STATIC aCampos := { {"Codigo", "C", 6, 0}, {"Nombre", "C", 35, 0} }
+PROCEDURE Main()
 
-PROCEDURE FILES()
+   LOCAL aCampos := { { "Codigo", "C", 6, 0 }, { "Nombre", "C", 35, 0 } }
 
-   Local n := 0, h:=Array(NFILES)
+   LOCAL n := 0, h := Array( NFILES )
 
-#ifdef CON_ADS
+#ifdef WITH_ADS
 
    rddRegister( "ADS", 1 )
    rddsetdefault( "ADS" )
@@ -33,7 +33,7 @@ PROCEDURE FILES()
    SET FILETYPE TO CDX
    SET CHARTYPE TO OEM
    SET AXS LOCKING ON
-   AdsRightsCheck(.F.)
+   AdsRightsCheck( .F. )
 
 #endif
 
@@ -41,12 +41,12 @@ PROCEDURE FILES()
    AFill( h, 0 )
    DO WHILE n < NFILES
       n++
-      @10,0 SAY "Building files.... "+Str( n )
-      DbCreate( "File" + LTrim( Str( n ) ), aCampos )
-      USE ( "File" + LTrim( Str( n ) ) ) NEW
+      @ 10, 0 SAY "Building files.... " + Str( n )
+      dbCreate( "file" + LTrim( Str( n ) ), aCampos )
+      USE ( "file" + LTrim( Str( n ) ) ) NEW
 
-#ifdef CON_ADS
-      INDEX ON CODIGO TAG CODIGO TO ( "File" + LTrim( Str( n ) ) )
+#ifdef WITH_ADS
+      INDEX ON CODIGO TAG CODIGO TO ( "file" + LTrim( Str( n ) ) )
 #endif
 
       CLOSE DATA
@@ -56,10 +56,10 @@ PROCEDURE FILES()
 
    DO WHILE n < NFILES
       n++
-      @12,0 SAY "Opening files.... "+Str( n )
-      USE ( "File" + LTrim( Str( n ) ) ) NEW
+      @ 12, 0 SAY "Opening files.... " + Str( n )
+      USE ( "file" + LTrim( Str( n ) ) ) NEW
 
-   #ifdef CON_ADS
+   #ifdef WITH_ADS
       SET ORDER TO TAG CODIGO
    #endif
 
@@ -71,8 +71,8 @@ PROCEDURE FILES()
 
    DO WHILE n < NFILES
       n++
-      @14,0 SAY "Deleting files.... "+Str( n )
-      FErase ( "File" + LTrim( Str( n ) ) + ".dbf" )
+      @ 14, 0 SAY "Deleting files.... " + Str( n )
+      FErase( "file" + LTrim( Str( n ) ) + ".dbf" )
    ENDDO
 
-RETURN NIL
+   RETURN

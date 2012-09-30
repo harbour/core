@@ -5,8 +5,9 @@
 // Tests for stringify match markers
 // Preproces  and compile only
 PROC MAIN()
-LOCAL b
+LOCAL b := ""
 MEMVAR a
+MEMVAR c
 PRIVATE a
 
 #command _REGULAR_(<z>) => ? <z>    //REGULAR

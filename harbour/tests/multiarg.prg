@@ -22,6 +22,17 @@ PROCEDURE Main()
 
 FUNCTION ShoutArg( nArg, x1, x2, x3, x4, x5, x6, x7, x8, x9, x10 )
 
+   HB_SYMBOL_UNUSED( x1 )
+   HB_SYMBOL_UNUSED( x2 )
+   HB_SYMBOL_UNUSED( x3 )
+   HB_SYMBOL_UNUSED( x4 )
+   HB_SYMBOL_UNUSED( x5 )
+   HB_SYMBOL_UNUSED( x6 )
+   HB_SYMBOL_UNUSED( x7 )
+   HB_SYMBOL_UNUSED( x8 )
+   HB_SYMBOL_UNUSED( x9 )
+   HB_SYMBOL_UNUSED( x10 )
+
    QOut( nArg, "==", hb_PValue( nArg ) )
 
-   RETURN nil
+   RETURN NIL

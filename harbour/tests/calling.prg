@@ -20,16 +20,16 @@ FUNCTION SecondOne()
 
    Third()
 
-   RETURN nil
+   RETURN NIL
 
 FUNCTION Third()
 
    QOut( "Ok, this is from Third() function call" )
 
-   RETURN nil
+   RETURN NIL
 
 FUNCTION Fourth( cText )
 
    QOut( cText )
 
-   RETURN nil
+   RETURN NIL

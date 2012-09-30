@@ -9,6 +9,7 @@
 PROCEDURE Main()
 
    LOCAL a := 1
+   MEMVAR b
    PRIVATE b := "b"
 
 #ifndef __XHARBOUR__

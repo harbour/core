@@ -25,4 +25,4 @@ FUNCTION testfun( b, c )
    QOut( 'a pointer+10 =', b )
    QOut( 'b pointer := "A" =', c )
 
-   RETURN nil
+   RETURN NIL

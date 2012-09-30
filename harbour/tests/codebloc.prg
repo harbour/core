@@ -14,6 +14,8 @@ PROCEDURE Main()
    LOCAL YY, X
    LOCAL x1, x2
 
+   HB_SYMBOL_UNUSED( b )
+
    OutStd( "this should print first" )
    OutStd( hb_eol() )
 
@@ -47,7 +49,7 @@ PROCEDURE Main()
 
    OutStd( ar[ 1 ] )
    OutStd( hb_eol() )
-   a := {|| ar[ 1 ] ++ }
+   a := {|| ar[ 1 ]++ }
    Eval( a )
    OutStd( ar[ 1 ] )
    OutStd( hb_eol() )

@@ -15,18 +15,18 @@ PROCEDURE Main()
    TestCentury()
 
    OutStd( hb_eol(), "" )
-   OutStd( hb_eol(),  "dDate := CToD( '02/04/1999' ) =>", dDate := CToD( "02/04/1999" ) )
+   OutStd( hb_eol(), "dDate := CToD( '02/04/1999' ) =>", dDate := CToD( "02/04/1999" ) )
 
-   OutStd( hb_eol(),  "ValType( dDate ) =", ValType( dDate ) )
+   OutStd( hb_eol(), "ValType( dDate ) =", ValType( dDate ) )
 
-   OutStd( hb_eol(),  "Day( dDate ) =", Day( dDate ) )
-   OutStd( hb_eol(),  "Month( dDate ) =", Month( dDate ) )
-   OutStd( hb_eol(),  "Year( dDate ) =", Year( dDate ), hb_eol() )
+   OutStd( hb_eol(), "Day( dDate ) =", Day( dDate ) )
+   OutStd( hb_eol(), "Month( dDate ) =", Month( dDate ) )
+   OutStd( hb_eol(), "Year( dDate ) =", Year( dDate ), hb_eol() )
 
-   OutStd( hb_eol(),  "dDate + 5 =", dDate2 := dDate + 5 )
-   OutStd( hb_eol(),  "dDate - 5 =", dDate - 5, hb_eol() )
+   OutStd( hb_eol(), "dDate + 5 =", dDate2 := dDate + 5 )
+   OutStd( hb_eol(), "dDate - 5 =", dDate - 5, hb_eol() )
 
-   OutStd( hb_eol(),  "dDate2 - dDate =", dDate2 - dDate )
+   OutStd( hb_eol(), "dDate2 - dDate =", dDate2 - dDate )
 
    OutStd( hb_eol(), "" )
    OutStd( hb_eol(), dDate, DToS( dDate ) )

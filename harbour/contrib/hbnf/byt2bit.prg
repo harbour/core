@@ -29,7 +29,7 @@ FUNCTION FT_BYT2BIT( cByte )
 
    IF HB_ISSTRING( cByte )
       xBitString := ""
-      FOR nCounter := 7 TO 0 step - 1
+      FOR nCounter := 7 TO 0 STEP -1
          xBitString += iif( FT_ISBIT( cByte, nCounter ), "1", "0" )
       NEXT
    ELSE

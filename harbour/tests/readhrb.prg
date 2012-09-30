@@ -50,12 +50,11 @@ STATIC s_aScopes := { ;
 PROCEDURE Main( cFrom )
 
    LOCAL hFile
-   LOCAL cBlock := " "
+   LOCAL cBlock
    LOCAL n, m
    LOCAL nVal
    LOCAL nSymbols
    LOCAL nFuncs
-   LOCAL cMode := "SYMBOL"
    LOCAL cScope
    LOCAL nLenCount
    LOCAL nIdx

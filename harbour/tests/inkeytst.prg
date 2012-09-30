@@ -200,7 +200,7 @@ PROCEDURE TEST6
 
 PROCEDURE TEST7( cSkip, cRaw )
 
-   LOCAL nKey, nMask, cText
+   LOCAL nKey, nMask
 
    CLS
    ? "For the last test, a loop is started and all keyboard and mouse"
