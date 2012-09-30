@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main( nRow, nCol )
@@ -185,4 +185,3 @@ PROCEDURE Main( nRow, nCol )
    FT_MSETSENS( nHoriz, nVert, nDouble )
 
    RETURN
-

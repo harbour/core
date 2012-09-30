@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main()
@@ -32,4 +32,3 @@ PROCEDURE Main()
    ?
 
    RETURN
-

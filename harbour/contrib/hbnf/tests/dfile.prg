@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main()
@@ -50,4 +50,3 @@ PROCEDURE Main()
    @ 20, 0 SAY "Key pressed was: " + "[" + cKey + "]"
 
    RETURN
-

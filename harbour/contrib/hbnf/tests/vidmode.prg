@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main( cMode )
@@ -8,4 +8,3 @@ PROCEDURE Main( cMode )
    QOut( "Video mode is: " + Str( FT_GETMODE() ) )
 
    RETURN
-

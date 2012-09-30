@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main()
@@ -98,4 +98,3 @@ STATIC FUNCTION _ftCol( nElem )  //  Determine which column to start print
    RETURN iif( nElem > 40,  55, iif( nElem > 20, 28, 1 ) )
 
 //------------------------------------------------
-

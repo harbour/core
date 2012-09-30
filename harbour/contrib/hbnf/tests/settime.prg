@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main( cTime )
@@ -10,4 +10,3 @@ PROCEDURE Main( cTime )
    QOut( "Time is now: " + Time() )
 
    RETURN
-

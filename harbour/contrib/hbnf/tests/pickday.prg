@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main()
@@ -7,4 +7,3 @@ PROCEDURE Main()
    QOut( "You selected " + FT_PICKDAY() )
 
    RETURN
-

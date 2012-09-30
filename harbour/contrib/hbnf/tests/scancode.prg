@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 #define SCANCODE_ESCAPE   ( hb_BChar( 27 ) + hb_BChar( 1 ) )
@@ -20,4 +20,3 @@ PROCEDURE Main()
    ENDDO
 
    RETURN
-

@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main( cDrv )
@@ -8,4 +8,3 @@ PROCEDURE Main( cDrv )
    QOut( "Free bytes:  " + Str( FT_DSKFREE( cDrv ) ) )
 
    RETURN
-

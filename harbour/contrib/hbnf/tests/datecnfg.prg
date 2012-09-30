@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 //*******************************************************************
@@ -201,4 +201,3 @@ STATIC FUNCTION FT_CAL( dGivenDate, nType )
    END
 
    RETURN NIL
-

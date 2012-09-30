@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 /*
@@ -104,4 +104,3 @@ STATIC FUNCTION make_dbf()
    USE
 
    RETURN NIL
-

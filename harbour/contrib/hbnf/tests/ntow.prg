@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main( cNum )
@@ -7,4 +7,3 @@ PROCEDURE Main( cNum )
    QOut( ft_ntow( Val( cNum ) ) )
 
    RETURN
-

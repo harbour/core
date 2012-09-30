@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main()
@@ -18,4 +18,3 @@ PROCEDURE Main()
    QOut( "Retcode: " + Str( nLoaded ) )
 
    RETURN
-

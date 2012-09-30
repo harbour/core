@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main()
@@ -7,4 +7,3 @@ PROCEDURE Main()
    QOut( "Conventional memory: " + Str( FT_SYSMEM() ) + "K installed" )
 
    RETURN
-

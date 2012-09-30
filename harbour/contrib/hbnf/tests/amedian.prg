@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 #include "directry.ch"
@@ -30,4 +30,3 @@ PROCEDURE Main()
    ?
 
    RETURN
-

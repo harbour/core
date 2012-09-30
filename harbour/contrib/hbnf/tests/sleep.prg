@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 // Test routine
@@ -12,4 +12,3 @@ PROCEDURE Main( nSleep )
    ? "Time is now: " + Time()
 
    RETURN
-

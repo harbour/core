@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main( cCk, cStr, nOcc, xCase )
@@ -20,4 +20,3 @@ PROCEDURE Main( cCk, cStr, nOcc, xCase )
    QOut( iif( nFind > 0, Space( nFind - 1 ) + "^" , "Not found" ) )
 
    RETURN
-

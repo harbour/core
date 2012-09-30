@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main()
@@ -24,4 +24,3 @@ PROCEDURE Main()
    @ MaxRow() - 2, 0
 
    RETURN
-

@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main()
@@ -41,4 +41,3 @@ FUNCTION DispArray( aTest )
    NEXT
 
    RETURN NIL
-

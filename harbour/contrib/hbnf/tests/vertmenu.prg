@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main()
@@ -47,4 +47,3 @@ STATIC PROCEDURE vendorrep() ; RETURN
 STATIC PROCEDURE re_ntx() ; RETURN
 STATIC PROCEDURE backup() ; RETURN
 STATIC PROCEDURE compress() ; RETURN
-

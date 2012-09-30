@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 // Write 100 random numbers from 1 to 100 to stdout.
@@ -16,4 +16,3 @@ PROCEDURE Main()
    NEXT
 
    RETURN
-

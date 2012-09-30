@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 // ADD PARAMETER "CENTURY" ON COMMAND LINES TO TEST 4-DIGIT YEARS
@@ -48,4 +48,3 @@ PROCEDURE Main( cCent )
    CLEAR
 
    RETURN
-

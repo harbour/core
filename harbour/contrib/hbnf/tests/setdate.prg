@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main( cDate )
@@ -10,4 +10,3 @@ PROCEDURE Main( cDate )
    QOut( "Today is now: " + DToC( Date() ) )
 
    RETURN
-

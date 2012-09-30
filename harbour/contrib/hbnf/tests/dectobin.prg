@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main()
@@ -11,4 +11,3 @@ PROCEDURE Main()
    NEXT
 
    RETURN
-

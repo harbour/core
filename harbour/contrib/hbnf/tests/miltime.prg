@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main()
@@ -36,4 +36,3 @@ PROCEDURE Main()
    ? ft_sys2mil()
 
    RETURN
-

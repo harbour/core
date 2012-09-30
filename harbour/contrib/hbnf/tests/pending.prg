@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main()
@@ -13,4 +13,3 @@ PROCEDURE Main()
    FT_PENDING( "Message three" ) // Displays "Message three", after 5 sec.
 
    RETURN
-

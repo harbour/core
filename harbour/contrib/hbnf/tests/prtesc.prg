@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main( cParm1 )
@@ -17,4 +17,3 @@ PROCEDURE Main( cParm1 )
    ENDIF
 
    RETURN
-

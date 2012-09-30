@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 #define INITIAL_SEMAPHORE_VALUE     2
@@ -47,4 +47,3 @@ PROCEDURE Main()
    QOut( "Close returns:  " + Str( ft_nwsemClose( nHandle ) ) )
 
    RETURN
-

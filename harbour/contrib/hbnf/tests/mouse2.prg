@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 // Pass valid row and column values for different video modes to change modes
@@ -191,4 +191,3 @@ PROCEDURE Main( nRow, nCol )
    FT_MSETSENS( nHoriz, nVert, nDouble )
 
    RETURN
-

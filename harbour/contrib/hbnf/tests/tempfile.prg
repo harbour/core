@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main( cPath, cHide )
@@ -18,4 +18,3 @@ PROCEDURE Main( cPath, cHide )
    ENDIF
 
    RETURN
-

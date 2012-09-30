@@ -1,5 +1,5 @@
 /*
- * $Id$ 
+ * $Id$
  */
 
 PROCEDURE Main( cDate, cDays )
@@ -10,4 +10,3 @@ PROCEDURE Main( cDate, cDays )
    QOut( "New date:        " + DToC( CToD( cDate ) + nDays ) )
 
    RETURN
-
