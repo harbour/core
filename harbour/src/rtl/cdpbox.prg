@@ -53,4 +53,4 @@
 #include "hbgtinfo.ch"
 
 FUNCTION hb_UTF8ToStrBox( cString )
-   RETURN hb_Translate( cString, "UTF8", hb_gtInfo( HB_GTI_BOXCP ) )
+   RETURN hb_UTF8ToStr( cString, hb_gtInfo( HB_GTI_BOXCP ) )
