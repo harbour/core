@@ -3664,8 +3664,8 @@ static HB_BOOL hb_pp_tokenSkipExp( PHB_PP_TOKEN * pTokenPtr, PHB_PP_TOKEN pStop,
             pToken = pPrev;
       }
 
-      if( HB_PP_TOKEN_ISEOC( pToken ) &&
-          ( mode != HB_PP_CMP_ADDR || pToken == pStop ) )
+      if( mode == HB_PP_CMP_ADDR ? pToken == pStop :
+                                   HB_PP_TOKEN_ISEOC( pToken ) )
       {
          if( pfStop )
             * pfStop = HB_TRUE;
@@ -3678,12 +3678,6 @@ static HB_BOOL hb_pp_tokenSkipExp( PHB_PP_TOKEN * pTokenPtr, PHB_PP_TOKEN pStop,
             ++iBraces;
          else if( curtype == rbrtype )
             --iBraces;
-      }
-      else if( mode == HB_PP_CMP_ADDR && pToken == pStop )
-      {
-         if( pfStop )
-            * pfStop = HB_TRUE;
-         break;
       }
       else if( curtype == HB_PP_TOKEN_COMMA )
       {

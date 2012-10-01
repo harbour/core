@@ -63,6 +63,22 @@ static HB_SIZE hb_cdpItemLen( PHB_CODEPAGE cdp, PHB_ITEM pItem )
           hb_cdpTextLen( cdp, hb_itemGetCPtr( pItem ), nLen ) : nLen;
 }
 
+static const char * s_hb_padGet( PHB_CODEPAGE cdp, HB_SIZE * pnPad )
+{
+   const char * szPad = hb_parc( 3 );
+
+   *pnPad = 1;
+   if( szPad == NULL )
+      szPad = " ";
+   else if( HB_CDP_ISCHARIDX( cdp ) )
+   {
+      *pnPad = hb_cdpTextPos( cdp, szPad, hb_parclen( 3 ), 1 );
+      if( *pnPad == 0 )
+         szPad = "";
+   }
+   return szPad;
+}
+
 /* centre-pads a date, number, or string with spaces or supplied character */
 HB_FUNC( PADC )
 {
@@ -95,15 +111,37 @@ HB_FUNC( PADC )
 
             if( ( HB_SIZE ) nLen > nSize )
             {
-               char * szResult = ( char * ) hb_xgrab( nLen + 1 );
-               char cPad;
-               HB_ISIZ nPad = ( ( HB_SIZE ) nLen - nSize ) >> 1;
+               HB_SIZE nPad = 0;
+               const char * szPad = s_hb_padGet( cdp, &nPad );
+               char * szResult;
 
-               cPad = ( HB_ISCHAR( 3 ) ? *( hb_parc( 3 ) ) : ' ' );
-               hb_xmemset( szResult, cPad, nPad );
-               hb_xmemcpy( szResult + nPad, szText, nSize );
-               hb_xmemset( szResult + nPad + nSize, cPad,
-                           ( HB_SIZE ) nLen - nSize - nPad );
+               if( nPad > 1 )
+               {
+                  HB_SIZE nRep = ( ( HB_SIZE ) nLen - nSize ) >> 1, nPos = 0;
+                  nLen += ( nLen - nSize ) * ( nPad - 1 );
+                  szResult = ( char * ) hb_xgrab( nLen + 1 );
+                  while( nRep-- )
+                  {
+                     hb_xmemcpy( szResult + nPos, szPad, nPad );
+                     nPos += nPad;
+                  }
+                  hb_xmemcpy( szResult + nPos, szText, nSize );
+                  nSize += nPos;
+                  while( nSize < ( HB_SIZE ) nLen )
+                  {
+                     hb_xmemcpy( szResult + nSize, szPad, nPad );
+                     nSize += nPad;
+                  }
+               }
+               else
+               {
+                  szResult = ( char * ) hb_xgrab( nLen + 1 );
+                  nPad = ( ( HB_SIZE ) nLen - nSize ) >> 1;
+                  hb_xmemset( szResult, szPad[ 0 ], nPad );
+                  hb_xmemcpy( szResult + nPad, szText, nSize );
+                  hb_xmemset( szResult + nPad + nSize, szPad[ 0 ],
+                              ( HB_SIZE ) nLen - nSize - nPad );
+               }
 
                hb_retclen_buffer( szResult, ( HB_SIZE ) nLen );
                if( bFreeReq )
