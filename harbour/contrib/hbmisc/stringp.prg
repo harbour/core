@@ -56,8 +56,9 @@
  * $FuncName$     <xRet> Default( <xArg>, <xDefault> )
  * $Description$  If argument is not set, return default
  * $End$ */
-function Default( xArg, xDef )
-return iif( ValType(xArg) != ValType(xDef), xDef, xArg )
+
+STATIC FUNCTION DEFAULT( xArg, xDef )
+   RETURN iif( !( ValType( xArg ) == ValType( xDef ) ), xDef, xArg )
 
 
 /* $Doc$
@@ -82,82 +83,83 @@ return iif( ValType(xArg) != ValType(xDef), xDef, xArg )
  *
  *
  * $End$ */
-function ToChar( xTxt, cSeparator, lDebug )
 
-   local cValTxt
-   local cOut
-   local n
-   local nLen
-   local aData
+FUNCTION ToChar( xTxt, cSeparator, lDebug )
+
+   LOCAL cValTxt
+   LOCAL cOut
+   LOCAL n
+   LOCAL nLen
+   LOCAL aData
 
    cSeparator := Default( cSeparator, " " )
    lDebug     := Default( lDebug,     .F. )
    cValTxt    := ValType( xTxt )
 
-   do case
-      case cValTxt=="C" .or. cValTxt=="M"       // Character
-         cOut := iif( lDebug, '"'+xTxt+'"', xTxt )
+   DO CASE
+   CASE cValTxt == "C" .OR. cValTxt == "M"       // Character
+      cOut := iif( lDebug, '"' + xTxt + '"', xTxt )
 
-      case cValTxt=="N"                         // Numeric
-         cOut := hb_NToS(xTxt)
+   CASE cValTxt == "N"                         // Numeric
+      cOut := hb_ntos( xTxt )
 
-      case cValTxt=="U"                         // Nothing to write
-         cOut := iif( lDebug, "NIL", "" )
+   CASE cValTxt == "U"                         // Nothing to write
+      cOut := iif( lDebug, "NIL", "" )
 
-      case cValTxt=="D"                         // Date
-         cOut := TransForm(xTxt, "")
+   CASE cValTxt == "D"                         // Date
+      cOut := Transform( xTxt, "" )
 
-      case cValTxt=="L"                         // Logical
-         if lDebug
-            cOut := iif( xTxt, ".T.", ".F." )
-         else
-            cOut := iif( xTxt, "True", "False" )
-         endif
+   CASE cValTxt == "L"                         // Logical
+      IF lDebug
+         cOut := iif( xTxt, ".T.", ".F." )
+      ELSE
+         cOut := iif( xTxt, "True", "False" )
+      ENDIF
 
-      case cValTxt=="A"                         // Array
-         if lDebug
-            cOut := "{"
-         else
-            cOut := ""
-         endif
-         nLen := Len( xTxt )
-         for n := 1 to nLen                     // For each item : Recurse !
-            cOut += ToChar( xTxt[n], cSeparator, lDebug )
-            if n != nLen
+   CASE cValTxt == "A"                         // Array
+      IF lDebug
+         cOut := "{"
+      ELSE
+         cOut := ""
+      ENDIF
+      nLen := Len( xTxt )
+      FOR n := 1 TO nLen                     // For each item : Recurse !
+         cOut += ToChar( xTxt[ n ], cSeparator, lDebug )
+         IF n != nLen
+            cOut += cSeparator
+         ENDIF
+      NEXT n
+      IF lDebug
+         cOut += "}"
+      ENDIF
+
+   CASE cValTxt == "B"                         // Codeblock
+      IF lDebug
+         cOut := "Block"
+      ELSE
+         cOut := Eval( xTxt )
+      ENDIF
+
+   CASE cValTxt == "O"                         // Object
+      IF lDebug
+         cOut  := xTxt:ClassName() + "(#" + ToChar( xTxt:ClassH() ) + "):{"
+         aData := __objGetValueLIST( xTxt )
+         nLen  := Len( aData )
+         FOR n := 1 TO nLen                     // For each item : Recurse !
+            cOut += aData[ n ][ HB_OO_DATA_SYMBOL ] + ":" + ;
+               ToChar( aData[ n ] [HB_OO_DATA_VALUE ], cSeparator, lDebug )
+            IF n != nLen
                cOut += cSeparator
-            endif
-         next n
-         if lDebug
-            cOut += "}"
-         endif
+            ENDIF
+         NEXT n
+         cOut += "}"
+      ELSE
+         cOut := ToChar( xTxt:Run(), cSeparator, lDebug )
+      ENDIF
 
-      case cValTxt=="B"                         // Codeblock
-         if lDebug
-            cOut := "Block"
-         else
-            cOut := Eval( xTxt )
-         endif
+   ENDCASE
 
-      case cValTxt=="O"                         // Object
-         if lDebug
-            cOut  := xTxt:ClassName() + "(#" + ToChar( xTxt:ClassH() ) + "):{"
-            aData := __objGetValueList( xTxt )
-            nLen  := Len( aData )
-            for n := 1 to nLen                     // For each item : Recurse !
-               cOut += aData[n][HB_OO_DATA_SYMBOL] + ":" + ;
-                       ToChar( aData[n][HB_OO_DATA_VALUE], cSeparator, lDebug )
-               if n != nLen
-                  cOut += cSeparator
-               endif
-            next n
-            cOut += "}"
-         else
-            cOut := ToChar( xTxt:Run(), cSeparator, lDebug )
-         endif
-
-   endcase
-
-return cOut
+   RETURN cOut
 
 //
 // <xItem> Debug ( <xItem> )
@@ -165,8 +167,9 @@ return cOut
 // Non-volatile debugging function showing contents of xItem and returing
 // passed argument.
 //
-function Debug( xItem )
+
+FUNCTION Debug( xItem )
 
    QOut( ToChar( xItem, ", ", .T. ) )
 
-return xItem
+   RETURN xItem

@@ -64,6 +64,11 @@
 #define SEPARATOR_SINGLE         ( Chr( 195 ) + MENU_SEPARATOR + Chr( 180 ) )  /* "├" "┤" single separator for popup menu */
 #define SEPARATOR_DOUBLE_SINGLE  ( Chr( 199 ) + MENU_SEPARATOR + Chr( 182 ) )  /* "╟" "╢" double line left and right and single separator for popup menu */
 
+#define HB_MENU_SEPARATOR_UNI          hb_UTF8ToStrBox( "─" )
+#define HB_SEPARATOR_DOUBLE_UNI        hb_UTF8ToStrBox( "╠═╣" )
+#define HB_SEPARATOR_SINGLE_UNI        hb_UTF8ToStrBox( "├─┤" )
+#define HB_SEPARATOR_DOUBLE_SINGLE_UNI hb_UTF8ToStrBox( "╟─╢" )
+
 /* return values for HitTest methods */
 #define HTNOWHERE                0
 

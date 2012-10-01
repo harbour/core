@@ -71,4 +71,9 @@
 #define B_DOUBLE_SINGLE ( Chr( 213 ) + Chr( 205 ) + Chr( 184 ) + Chr( 179 ) + ; /* "╒═╕│╛═╘│" */
                           Chr( 190 ) + Chr( 205 ) + Chr( 212 ) + Chr( 179 ) )
 
+#define HB_B_SINGLE_UNI        hb_UTF8ToStrBox( "┌─┐│┘─└│" )
+#define HB_B_DOUBLE_UNI        hb_UTF8ToStrBox( "╔═╗║╝═╚║" )
+#define HB_B_SINGLE_DOUBLE_UNI hb_UTF8ToStrBox( "╓─╖║╜─╙║" )
+#define HB_B_DOUBLE_SINGLE_UNI hb_UTF8ToStrBox( "╒═╕│╛═╘│" )
+
 #endif /* _BOX_CH */

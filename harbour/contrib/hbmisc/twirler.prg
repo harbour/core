@@ -1,6 +1,6 @@
-//
-// $Id$
-//
+/*
+ * $Id$
+ */
 
 // New libmisc twirler class
 /* Harbour Project source code
@@ -10,54 +10,65 @@
 
 #include "hbclass.ch"
 
-class Twirler
-   var n_Row
-   var n_Col
-   var n_Index
-   var n_Seconds
-   var n_Smooth
-   var c_Chars
-   var c_Title
-   method new( nRow, nCol, cTitle, cChars, nSmooth )
-   method twirl()
-   method show()
-   method hide()
-end class
+CREATE CLASS Twirler
 
-method new( nRow, nCol, cTitle, cChars, nSmooth ) class Twirler
+   VAR n_Row
+   VAR n_Col
+   VAR n_Index
+   VAR n_Seconds
+   VAR n_Smooth
+   VAR c_Chars
+   VAR c_Title
+   METHOD new( nRow, nCol, cTitle, cChars, nSmooth )
+   METHOD twirl()
+   METHOD show()
+   METHOD hide()
+
+END CLASS
+
+METHOD new( nRow, nCol, cTitle, cChars, nSmooth ) CLASS Twirler
+
    ::n_Row := nRow
    ::n_Col := nCol
    ::n_Smooth := nSmooth
-   ::c_Chars := iif( EMPTY( cChars ), "|/-\", cChars )
+   ::c_Chars := iif( Empty( cChars ), "|/-\", cChars )
    ::c_Title := cTitle
-   IF EMPTY( ::c_Title )
+   IF Empty( ::c_Title )
       ::c_Title := ""
-   END IF
-   ::n_Col += LEN( ::c_Title )
-return Self
+   ENDIF
+   ::n_Col += Len( ::c_Title )
 
-method twirl() class Twirler
-local nSeconds := SECONDS()
-   IF EMPTY( ::n_Seconds ) .OR. nSeconds - ::n_Seconds >= ::n_Smooth .OR. nSeconds < ::n_Seconds
-      @ ::n_Row, ::n_Col SAY SUBSTR( ::c_Chars, ::n_Index, 1 )
+   RETURN Self
+
+METHOD twirl() CLASS Twirler
+
+   LOCAL nSeconds := Seconds()
+
+   IF Empty( ::n_Seconds ) .OR. nSeconds - ::n_Seconds >= ::n_Smooth .OR. nSeconds < ::n_Seconds
+      @ ::n_Row, ::n_Col SAY SubStr( ::c_Chars, ::n_Index, 1 )
       ::n_Index++
-      if ::n_Index > LEN( ::c_Chars )
+      if ::n_Index > Len( ::c_Chars )
          ::n_Index := 1
-      end if
-      IF !EMPTY( ::n_Seconds )
+      ENDIF
+      IF !Empty( ::n_Seconds )
          ::n_Seconds := nSeconds
-      END IF
-   END IF
-return Self
+      ENDIF
+   ENDIF
 
-method show() class Twirler
+   RETURN Self
+
+METHOD show() CLASS Twirler
+
    ::n_Index := 1
-   IF ! EMPTY( ::n_Smooth )
-      ::n_Seconds := -::n_Smooth
-   END IF
-   @ ::n_Row, ::n_Col - LEN( ::c_Title ) SAY ::c_Title
-return Self
+   IF ! Empty( ::n_Smooth )
+      ::n_Seconds := - ::n_Smooth
+   ENDIF
+   @ ::n_Row, ::n_Col - Len( ::c_Title ) SAY ::c_Title
 
-method hide() class Twirler
-   @ ::n_Row, ::n_Col - LEN( ::c_Title ) SAY SPACE( LEN( ::c_Title ) + 1 )
-return Self
+   RETURN Self
+
+METHOD hide() CLASS Twirler
+
+   @ ::n_Row, ::n_Col - Len( ::c_Title ) SAY Space( Len( ::c_Title ) + 1 )
+
+   RETURN Self
