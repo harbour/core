@@ -135,7 +135,7 @@ FUNCTION FT_PEGS()
                AEval( possible_, {| a | DevPos( Row() + 1, 65 ), ;
                   DevOutPict( a[ 2 ], "##" ) } )
                oldscore := Set( _SET_SCOREBOARD, .F. )
-               @23, 44 GET move2 PICTURE "##" ;
+               @ 23, 44 GET move2 PICTURE "##" ;
                   VALID AScan( possible_, scanblock ) > 0
                READ
                RestScreen( toprow, 55, 22, 74, buffer )

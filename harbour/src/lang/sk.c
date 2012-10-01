@@ -7,7 +7,7 @@
  * Language Support Module (sk)
  *
  * Copyright 2008, 2012 Gyula Bartal <gybartal@gmail.com> (from CSWIN)
- * Update December 25, 2011 Jaroslav Janik <Jaroslav.Janik@siemens.com>
+ * Update October 1, 2012 Jaroslav Janík <jarojanik@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -92,7 +92,7 @@ static HB_LANG s_lang =
 
       /* CA-Cl*pper compatible natmsg items */
 
-      "Dátabáze          #  Vety      Aktualizácia Veľkosť",
+      "Databáza          # Záznamy    Aktualizácia Veľkosť",
       "Chcete viac príkladov?",
       "Strana",
       "** Medzisúčet **",
@@ -108,7 +108,7 @@ static HB_LANG s_lang =
 
       /* Error description names */
 
-      "Neznámá chyba",
+      "Neznáma chyba",
       "Chyba argumentu",
       "Chyba medzí",
       "Preplnenie reťazca",
@@ -147,13 +147,13 @@ static HB_LANG s_lang =
       "Nezoradená pracovná oblasť",
       "Nutný výhradný prístup",
       "Uzamknutie nutné",
-      "Zlyhanie uzamkutia pri pridávaní",
+      "Zapis nebol povolený",
+      "Zlyhanie uzamknutia pri pridávaní",
       "Zlyhanie uzamknutia",
-      "Lock Failure",
       "",
       "",
       "",
-      "",
+      "Chyba object deštruktora",
       "prístup k poľu",
       "priradenie k poľu",
       "zmena dimenze poľa",
@@ -162,32 +162,32 @@ static HB_LANG s_lang =
 
        /* Internal error names */
 
-      "Unrecoverable error %d: ",
-      "Error recovery failure",
-      "No ERRORBLOCK() for error",
-      "Too many recursive error handler calls",
-      "RDD invalid or failed to load",
-      "Invalid method type from %s",
-      "hb_xgrab can't allocate memory",
-      "hb_xrealloc called with a NULL pointer",
-      "hb_xrealloc called with an invalid pointer",
-      "hb_xrealloc can't reallocate memory",
-      "hb_xfree called with an invalid pointer",
-      "hb_xfree called with a NULL pointer",
-      "Can\'t locate the starting procedure: \'%s\'",
-      "No starting procedure",
-      "Unsupported VM opcode",
-      "Symbol item expected from %s",
-      "Invalid symbol type for self from %s",
-      "Codeblock expected from %s",
-      "Incorrect item type on the stack trying to pop from %s",
-      "Stack underflow",
-      "An item was going to be copied to itself from %s",
-      "Invalid symbol item passed as memvar %s",
-      "Memory buffer overflow",
-      "hb_xgrab requested to allocate zero bytes",
-      "hb_xrealloc requested to resize to zero bytes",
-      "hb_xalloc requested to allocate zero bytes",
+      "Neidentifikovateľná chyba %d: ",
+      "Zlyhanie identifikácie chyby",
+      "Žiadny ERRORBLOCK() pre túto chybu",
+      "Príliš veľa rekurzívnych error handler volaní",
+      "RDD je neplatný alebo zlyhalo jeho otvorenie",
+      "Neplatný typ metódy od %s",
+      "hb_xgrab nemôže alkovať pamäť",
+      "hb_xrealloc volaný s NULL pointrom",
+      "hb_xrealloc volaný s neplatným pointrom",
+      "hb_xrealloc nemôže realokovať pamäť",
+      "hb_xfree volaný s neplatným pointrom",
+      "hb_xfree volaný s NULL pointrom",
+      "Nenájdená štartovacia procedúra : \'%s\'",
+      "Štartovacia procedúra neurčená",
+      "Nepodporovaný VM opcode",
+      "Symbolová položka očakávaná pre %s",
+      "Neplatný typ symbolu pre self pre %s",
+      "Codeblock očakávaný od %s",
+      "Nesprávny typ položky v zásobníku čítaného z %s",
+      "Podtečenie zásobníka",
+      "Pokus o prekopírovanie položky na samú seba v %s",
+      "Neplatná symbolová položka vyhodnotená ako memvar %s",
+      "Pretečenie pamäťového bufra",
+      "hb_xgrab požiadal o alokáciu nula bytov",
+      "hb_xrealloc požiadal zmenšenie na nula bytov",
+      "hb_xalloc požiadal o alokáciu nula bytov",
 
       /* Texts */
 

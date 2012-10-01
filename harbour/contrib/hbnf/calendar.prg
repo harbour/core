@@ -43,7 +43,7 @@ FUNCTION FT_CALENDAR( nRow, nCol, cColor, lShadow, lShowHelp )
    cSaveCursor := SetCursor( SC_NONE )     // save current and turn off cursor
 
    IF lShadow
-      @nRow - 1, nCol - 1 TO nRow + 2, nCol + 15
+      @ nRow - 1, nCol - 1 TO nRow + 2, nCol + 15
       hb_Shadow( nRow - 1, nCol - 1, nRow + 2, nCol + 15 )
    ENDIF
 

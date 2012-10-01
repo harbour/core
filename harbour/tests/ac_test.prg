@@ -25,7 +25,6 @@
 //+    Procedure test()
 //+
 //+--------------------------------------------------------------------
-//+
 
 PROCEDURE Main()
 
@@ -181,7 +180,7 @@ PROCEDURE Main()
    nChoice := AChoice( 5, 10, 20, 70, aPrompts, aPermits, "cUserFunction" )
 
    SetPos( 0, 0 )
-   // CLS
+// CLS
    ? nChoice
 
    IF nChoice > 0
@@ -196,7 +195,6 @@ PROCEDURE Main()
 //+    Function cUserFunction()
 //+
 //+--------------------------------------------------------------------
-//+
 
 FUNCTION cUserFunction( nMode, nCurElement, nRowPos )
 
@@ -217,10 +215,10 @@ FUNCTION cUserFunction( nMode, nCurElement, nRowPos )
       nRetVal := AC_CONT                   // Continue ACHOICE()
    CASE nMode == AC_HITTOP                 // Attempt to go past Top
       @  0,  0 SAY "Hit Top   "
-      // tone( 100, 3 )
+      // Tone( 100, 3 )
    CASE nMode == AC_HITBOTTOM              // Attempt to go past Bottom
       @  0,  0 SAY "Hit Bottom"
-      // tone( 100, 3 )
+      // Tone( 100, 3 )
    CASE nMode == AC_EXCEPT                 // Key Exception
       @  0,  0 SAY "Exception "
       DO CASE
