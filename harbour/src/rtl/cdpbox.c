@@ -4,8 +4,9 @@
 
 /*
  * Harbour Project source code:
- *    Internal support for CP agnostic box drawing chars
+ *    HB_UTF8TOSTRBOX()
  *
+ * Copyright 2009-2012 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * Copyright 2012 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
@@ -50,7 +51,47 @@
  *
  */
 
-#include "hbgtinfo.ch"
+#include "hbapi.h"
+#include "hbapiitm.h"
+#include "hbapierr.h"
+#include "hbapicdp.h"
+#include "hbapigt.h"
 
-FUNCTION hb_UTF8ToStrBox( cString )
-   RETURN hb_UTF8ToStr( cString, hb_gtInfo( HB_GTI_BOXCP ) )
+HB_FUNC( HB_UTF8TOSTRBOX )
+{
+   const char * szString = hb_parc( 1 );
+
+   if( szString )
+   {
+      HB_SIZE nLen = hb_parclen( 1 ), nDest = 0;
+      char * szDest = NULL;
+
+      if( nLen )
+      {
+         PHB_CODEPAGE cdp = hb_gtBoxCP();
+
+         if( cdp )
+         {
+            if( hb_cdpIsUTF8( cdp ) )
+            {
+               hb_itemReturn( hb_param( 1, HB_IT_STRING ) );
+               return;
+            }
+            else
+            {
+               szString = hb_parc( 1 );
+               nDest = hb_cdpUTF8AsStrLen( cdp, szString, nLen, 0 );
+               szDest = ( char * ) hb_xgrab( nDest + 1 );
+               hb_cdpUTF8ToStr( cdp, szString, nLen, szDest, nDest + 1 );
+            }
+         }
+      }
+
+      if( szDest )
+         hb_retclen_buffer( szDest, nDest );
+      else
+         hb_retc_null();
+   }
+   else
+      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+}
