@@ -65,11 +65,11 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
       ?
    NEXT
    Inkey( 0 )
-   ?; dspboxch( hb_UTF8ToStr( "┌─┬─┐  ╔═╦═╗  ╒═╤═╕  ╓─╥─╖  ▄▄▄ ░▒▓█  ░ ▒ ▓ █" ) )
-   ?; dspboxch( hb_UTF8ToStr( "│ │ │  ║ ║ ║  ├─┼─┤  ╟─╫─╢  ▌■▐" ) )
-   ?; dspboxch( hb_UTF8ToStr( "├─┼─┤  ╠═╬═╣  │ │ │  ║ ║ ║  ▌█▐ █■█" ) )
-   ?; dspboxch( hb_UTF8ToStr( "│ │ │  ║ ║ ║  ╞═╪═╡  ╠═╬═╣  ▌■▐" ) )
-   ?; dspboxch( hb_UTF8ToStr( "└─┴─┘  ╚═╩═╝  ╘═╧═╛  ╙─╨─╜  ▀▀▀ √ « »" ) )
+   ?; dspboxch( hb_UTF8ToStrBox( "┌─┬─┐  ╔═╦═╗  ╒═╤═╕  ╓─╥─╖  ▄▄▄ ░▒▓█  ░ ▒ ▓ █" ) )
+   ?; dspboxch( hb_UTF8ToStrBox( "│ │ │  ║ ║ ║  ├─┼─┤  ╟─╫─╢  ▌■▐" ) )
+   ?; dspboxch( hb_UTF8ToStrBox( "├─┼─┤  ╠═╬═╣  │ │ │  ║ ║ ║  ▌█▐ █■█" ) )
+   ?; dspboxch( hb_UTF8ToStrBox( "│ │ │  ║ ║ ║  ╞═╪═╡  ╠═╬═╣  ▌■▐" ) )
+   ?; dspboxch( hb_UTF8ToStrBox( "└─┴─┘  ╚═╩═╝  ╘═╧═╛  ╙─╨─╜  ▀▀▀ √ « »" ) )
    ?
    ? "ISO-8859-2: say[ " + POL_ISO + " ]"; dspboxch( ", box[ " + POL_ISO + " ]" )
    ? "   Mazovia: say[ " + POL_MAZ + " ]"; dspboxch( ", box[ " + POL_MAZ + " ]" )

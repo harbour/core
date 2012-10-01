@@ -868,6 +868,7 @@ DYNAMIC hb_utf8StrTran
 DYNAMIC hb_utf8Stuff
 DYNAMIC hb_utf8SubStr
 DYNAMIC hb_UTF8ToStr
+DYNAMIC hb_UTF8ToStrBox
 DYNAMIC hb_ValToExp
 DYNAMIC hb_ValToStr
 DYNAMIC hb_Version

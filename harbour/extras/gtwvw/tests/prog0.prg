@@ -64,7 +64,7 @@ local lDone := .f.
 local getlist := {}
 local oldCurs := setcursor(SC_NORMAL)
 
-   nWin := znewwindow( hb_UTF8ToStr( "┌─┐│┘─└│" ),10,20,22,59,"Some Window")
+   nWin := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ),10,20,22,59,"Some Window")
 
    //@ 21,21 say "Inside the window" color "R/W"
    //@ 23,0  say "Outside the window" color "R/W"
@@ -107,8 +107,8 @@ FUNCTION xBrowse1()
    SetColor( 'N/W*,N/GR*,,,N/W* ' )
    oBrowse := TBrowseNew( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 )
 
-   oBrowse:ColSep        := hb_UTF8ToStr( "│" )
-   oBrowse:HeadSep       := hb_UTF8ToStr( "─" )
+   oBrowse:ColSep        := hb_UTF8ToStrBox( "│" )
+   oBrowse:HeadSep       := hb_UTF8ToStrBox( "─" )
    oBrowse:GoTopBlock    := { || dbGoTop() }
    oBrowse:GoBottomBlock := { || dbGoBottom() }
    oBrowse:SkipBlock     := { | nSkip | dbSkipBlock( nSkip,oBrowse ) }
@@ -120,7 +120,7 @@ FUNCTION xBrowse1()
 
    oBrowse:configure()
 
-   nWin := znewwindow( hb_UTF8ToStr( "┌─┐│┘─└│" ),nTop,nLeft,nBottom,nRight, "test.dbf")
+   nWin := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ),nTop,nLeft,nBottom,nRight, "test.dbf")
 
    While !lEnd
       oBrowse:ForceStable()
@@ -246,7 +246,7 @@ local oldColor := setcolor(s_cStdColor)
    nRight := nLeft + nWidth + 1
 
    * open window
-   nWinNum := znewwindow( hb_UTF8ToStr( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cMsg)
+   nWinNum := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cMsg)
 
    @ nTopLine+1, nLeft+1 PROMPT padr("Yes", nWidth)
    @ nTopLine+2, nLeft+1 PROMPT padr("No", nWidth)
@@ -288,7 +288,7 @@ local oldColor := setcolor(s_cStdColor)
    nRight := nLeft + nMaxWidth + 1
 
    * open window
-   nWinNum := znewwindow( hb_UTF8ToStr( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cTitle)
+   nWinNum := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cTitle)
    DISPBEGIN()
    for i := 1 to nNumLines
      cAline := MEMOLINE(cMsg, nWidth, i)

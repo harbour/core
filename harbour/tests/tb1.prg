@@ -18,6 +18,28 @@
 #include "setcurs.ch"
 #include "box.ch"
 
+#ifdef __HARBOUR__
+   #define _DRAW_1 hb_UTF8ToStr( "├" )
+   #define _DRAW_2 hb_UTF8ToStr( "┤" )
+   #define _DRAW_3 hb_UTF8ToStr( "┐ ┌─" )
+   #define _DRAW_4 hb_UTF8ToStr( "┘ └─" )
+   #define _DRAW_5 hb_UTF8ToStr( "│ │" )
+   #define _DRAW_6 hb_UTF8ToStr( "┐ ┌─┤HIDE├─" )
+   #define _DRAW_7 hb_UTF8ToStr( "╖ ╓─┤HIDE├─" )
+   #define _DRAW_8 hb_UTF8ToStr( "╜ ╙─" )
+   #define _DRAW_9 hb_UTF8ToStr( "║ ║" )
+#else
+   #define _DRAW_1 Chr( 195 )
+   #define _DRAW_2 Chr( 180 )
+   #define _DRAW_3 Chr( 191 ) + " " + Chr( 218 ) + Chr( 196 )
+   #define _DRAW_4 Chr( 217 ) + " " + Chr( 192 ) + Chr( 196 )
+   #define _DRAW_5 Chr( 179 ) + " " + Chr( 179 )
+   #define _DRAW_6 Chr( 191 ) + " " + Chr( 218 ) + Chr( 196 ) + "HIDE" + Chr( 195 ) + Chr( 196 )
+   #define _DRAW_7 Chr( 183 ) + " " + Chr( 214 ) + Chr( 196 ) + "HIDE" + Chr( 195 ) + Chr( 196 )
+   #define _DRAW_8 Chr( 189 ) + " " + Chr( 211 ) + Chr( 196 )
+   #define _DRAW_9 Chr( 186 ) + " " + Chr( 186 )
+#endif
+
 PROCEDURE Main()
 
    STATIC s_nCount := 0
@@ -48,15 +70,15 @@ PROCEDURE Main()
    CLS
    DispBox( nTop, nLeft, nBottom, nRight, B_DOUBLE_SINGLE, cColor )
    oBrw := TBRowseNew( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 )
-   DispOutAt( nTop + 3,    nLeft,  hb_UTF8ToStr( "├" ), cColor )
-   DispOutAt( nTop + 3,    nRight, hb_UTF8ToStr( "┤" ), cColor )
-   DispOutAt( nBottom - 2, nLeft,  hb_UTF8ToStr( "├" ), cColor )
-   DispOutAt( nBottom - 2, nRight, hb_UTF8ToStr( "┤" ), cColor )
+   DispOutAt( nTop + 3,    nLeft,  _DRAW_1, cColor )
+   DispOutAt( nTop + 3,    nRight, _DRAW_2, cColor )
+   DispOutAt( nBottom - 2, nLeft,  _DRAW_1, cColor )
+   DispOutAt( nBottom - 2, nRight, _DRAW_2, cColor )
 
    oBrw:colorSpec( cColor )
-   oBrw:headSep := hb_UTF8ToStr( "┐ ┌─" )
-   oBrw:footSep := hb_UTF8ToStr( "┘ └─" )
-   oBrw:colSep  := hb_UTF8ToStr( "│ │" )
+   oBrw:headSep := _DRAW_3
+   oBrw:footSep := _DRAW_4
+   oBrw:colSep  := _DRAW_5
 
    oBrw:SkipBlock     := {| n | hb_idleSleep( 0.2 ), ;
       n := iif( n < 0, Max( n, 1 - s_nPos ), ;
@@ -73,15 +95,15 @@ PROCEDURE Main()
    oCol2 := TBColumnNew( "COL;2",  {|| s_nCount++ } )
    oCol2:defColor := { 3, 4, 5, 6 }
    oCol2:footing := "counter"
-   oCol2:headSep := hb_UTF8ToStr( "┐ ┌─┤HIDE├─" )
+   oCol2:headSep := _DRAW_6
 
    oCol3 := TBColumnNew( "COL 3",  {|| s_nPos % 3 == 0 } )
    oCol3:defColor := { 5, 6, 2, 3 }
    oCol3:footing := "logical"
    oCol3:picture := "@YR [Y]"  // Clipper wrongly calculate the size here
-   oCol3:headSep := hb_UTF8ToStr( "╖ ╓─┤HIDE├─" )
-   oCol3:footSep := hb_UTF8ToStr( "╜ ╙─" )
-   oCol3:colSep  := hb_UTF8ToStr( "║ ║" )
+   oCol3:headSep := _DRAW_7
+   oCol3:footSep := _DRAW_8
+   oCol3:colSep  := _DRAW_9
 
    oCol4 := TBColumnNew( "   SHOW;   ALL",  {|| Date() - s_nPos } )
    oCol4:defColor := { 6, 3, 4, 2 }

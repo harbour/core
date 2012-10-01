@@ -26,9 +26,9 @@ PROCEDURE Main()
 #endif
 
    oBrowse:colorSpec     := "W+/B, N/BG"
-   oBrowse:ColSep        := hb_UTF8ToStr( "│" )
-   oBrowse:HeadSep       := hb_UTF8ToStr( "╤═" )
-   oBrowse:FootSep       := hb_UTF8ToStr( "╧═" )
+   oBrowse:ColSep        := hb_UTF8ToStrBox( "│" )
+   oBrowse:HeadSep       := hb_UTF8ToStrBox( "╤═" )
+   oBrowse:FootSep       := hb_UTF8ToStrBox( "╧═" )
    oBrowse:GoTopBlock    := {|| n := 1 }
    oBrowse:GoBottomBlock := {|| n := Len( aTest0 ) }
    oBrowse:SkipBlock     := {| nSkip, nPos | nPos := n, ;
@@ -60,7 +60,7 @@ PROCEDURE Main()
    cColor := SetColor( "W+/B" )
    nRow := Row()
    nCol := Col()
-   @ 4, 4, 17, 31 BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
+   @ 4, 4, 17, 31 BOX hb_UTF8ToStrBox( "┌─┐│┘─└│ " )
 #ifdef HB_COMPAT_C53
    oBrowse:SetKey( 0, {| ob, nkey | Defproc( ob, nKey ) } )
    WHILE .T.

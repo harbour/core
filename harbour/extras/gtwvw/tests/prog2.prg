@@ -92,7 +92,7 @@ local oldCurs := setcursor(SC_NORMAL)
 MEMVAR __temp__
 #ENDIF
 
-   nWin := znewwindow( hb_UTF8ToStr( "┌─┐│┘─└│" ),10,20,22,59,"Some Window")
+   nWin := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ),10,20,22,59,"Some Window")
 
  #IFDEF __GTWVW__
    AddMiscObjects( nWin, {|nWindow| __temp__:= nWindow, aEval( GetList, {|oGet| WVW_DrawBoxGet( __temp__, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
@@ -161,7 +161,7 @@ FUNCTION xBrowse1()
 
    oBrowse:configure()
 
-   nWin := znewwindow( hb_UTF8ToStr( "┌─┐│┘─└│" ),nTop,nLeft,nBottom,nRight, "test.dbf")
+   nWin := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ),nTop,nLeft,nBottom,nRight, "test.dbf")
 
  #IFDEF __GTWVW__
    Wvw_SetPen( 0, 0, rgb( 210,1210,210 ) )
@@ -311,7 +311,7 @@ local oldColor := setcolor(s_cStdColor)
    nRight := nLeft + nWidth + 1
 
    * open window
-   nWinNum := znewwindow( hb_UTF8ToStr( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cMsg)
+   nWinNum := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cMsg)
 
    @ nTopLine+1, nLeft+1 PROMPT padr("Yes", nWidth)
    @ nTopLine+2, nLeft+1 PROMPT padr("No", nWidth)
@@ -353,7 +353,7 @@ local oldColor := setcolor(s_cStdColor)
    nRight := nLeft + nMaxWidth + 1
 
    * open window
-   nWinNum := znewwindow( hb_UTF8ToStr( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cTitle)
+   nWinNum := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cTitle)
    DISPBEGIN()
    for i := 1 to nNumLines
      cAline := MEMOLINE(cMsg, nWidth, i)

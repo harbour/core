@@ -42,24 +42,24 @@
 #include "inkey.ch"
 
 // Default heading, column, footer separators
-#define DEF_HSEP    hb_UTF8ToStr( "═╤═" )
-#define DEF_CSEP    hb_UTF8ToStr( " │ " )
-#define DEF_FSEP    hb_UTF8ToStr( "═╧═" )
+#define DEF_HSEP    hb_UTF8ToStrBox( "═╤═" )
+#define DEF_CSEP    hb_UTF8ToStrBox( " │ " )
+#define DEF_FSEP    hb_UTF8ToStrBox( "═╧═" )
 
 // Default info for tb_methods section
 #define KEY_ELEM 1
 #define BLK_ELEM 2
 
+// ANYTYPE[]   ar        - Array to browse
+// NUMERIC     nElem     - Element In Array
+// CHARACTER[] aHeadings - Array of Headings for each column
+// BLOCK[]     aBlocks   - Array containing code block for each column.
+// CODE BLOCK  bGetFunc  - Code Block For Special Get Processing
+//  NOTE: When evaluated a code block is passed the array element to
+//          be edited
+
 FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
       ar, nElem, aHeadings, aBlocks, bGetFunc )
-
-   // ANYTYPE[]   ar        - Array to browse
-   // NUMERIC     nElem     - Element In Array
-   // CHARACTER[] aHeadings - Array of Headings for each column
-   // BLOCK[]     aBlocks   - Array containing code block for each column.
-   // CODE BLOCK  bGetFunc  - Code Block For Special Get Processing
-   //  NOTE: When evaluated a code block is passed the array element to
-   //          be edited
 
    LOCAL exit_requested, nKey, meth_no
    LOCAL cSaveWin, i, b, column

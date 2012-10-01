@@ -63,11 +63,11 @@
 #define C_CHAR   4
 
 #translate Single( <t>, <l>, <b>, <r> ) =>;
-      @ <t>, <l>, <b>, <r> BOX hb_UTF8ToStr( "┌─┐│┘─└│" )
+      @ <t>, <l>, <b>, <r> BOX hb_UTF8ToStrBox( "┌─┐│┘─└│" )
 
 
 #translate Double( <t>, <l>, <b>, <r> ) =>;
-      @ <t>, <l>, <b>, <r> BOX hb_UTF8ToStr( "╔═╗║╝═╚║" )
+      @ <t>, <l>, <b>, <r> BOX hb_UTF8ToStrBox( "╔═╗║╝═╚║" )
 
 #translate ClearS( <t>, <l>, <b>, <r> ) =>;
       @ <t>, <l> CLEAR TO <b>, <r>
@@ -281,7 +281,7 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
       //.... allow change to specific part of colour string
       IF !( aOpt[ C_TYPE ] == "T" )
          Single( nT, nL + 1, nB, nR - 1 )
-         @ nT, nL + 2 SAY PadC( " " + aOpt[C_NAME] + " ", nR - nL - 3, hb_UTF8ToStr( "─" ) )
+         @ nT, nL + 2 SAY PadC( " " + aOpt[ C_NAME ] + " ", nR - nL - 3, hb_UTF8ToStr( "─" ) )
       ENDIF
       cClr := _ftClrSel( aClrPal, cClr, nChoice, aOpt )  //  selection routine
       aClrs[ nChoice ] := cClr               // put colour back in array
@@ -317,7 +317,7 @@ STATIC FUNCTION _ftShowIt( aOpt )
 
    CASE aOpt[ C_TYPE ] == "D"    // Desktop Background
       SetColor( aClr[ 1 ] )
-      BkGrnd( 19, 43, 22, 64, aOpt[ C_CHAR ] )
+      BkGrnd( 19, 43, 22, 64, hb_UTF8ToStrBox( aOpt[ C_CHAR ] ) )
 
    CASE aOpt[ C_TYPE ] == "T"    // Title
       SetColor( aClr[ 1 ] )
@@ -325,7 +325,7 @@ STATIC FUNCTION _ftShowIt( aOpt )
 
    CASE aOpt[ C_TYPE ] == "M"    // Menus
       SetColor( "W/N" )
-      BkGrnd( 19, 41, 23, 66, hb_UTF8ToStr( "▒" ) )
+      BkGrnd( 19, 41, 23, 66, hb_UTF8ToStrBox( "▒" ) )
       SetColor( aClr[ 1 ] )
       Single( 19, 43, 22, 60 )
       @ 18, 41 SAY "   Report  Inquiry  Quit  "
@@ -429,10 +429,13 @@ STATIC FUNCTION _ftClrSel( aClrPal, cClr, nElem, aOpt )
    FOR nR := 1 TO nDim
       FOR nC := 1 TO nDim
          IF aClrPal[ nR, nC ] == AllTrim( cClr )
-            lFound := .T. ;  EXIT
+            lFound := .T.
+            EXIT
          ENDIF
       NEXT
-      IF lFound ;  EXIT ;  ENDIF
+      IF lFound
+         EXIT
+      ENDIF
    NEXT
 
    IF ! lFound
@@ -497,7 +500,7 @@ STATIC FUNCTION _ftClrPut( cClrStr, nElem, cClr )
 
 STATIC FUNCTION _ftDeskChar( aOpt )
 
-   LOCAL aChar := { " ", hb_UTF8ToStr( "░" ), hb_UTF8ToStr( "▒" ), hb_UTF8ToStr( "▓" ) }
+   LOCAL aChar := { " ", "░", "▒", "▓" }
    LOCAL cChar := aOpt[ C_CHAR ]
    LOCAL cClr  := aOpt[ C_CLR ]
    LOCAL nElem := AScan( aChar, cChar )
@@ -511,7 +514,7 @@ STATIC FUNCTION _ftDeskChar( aOpt )
    //.... draw the choices on the screen
    SetColor( cClr )
    FOR n := 1 TO Len( aChar )
-      @ n + 18, 29 SAY REPLICATE( aChar[ n ], 10 )
+      @ n + 18, 29 SAY Replicate( hb_UTF8ToStr( aChar[ n ] ), 10 )
    NEXT
 
    n := nElem + 18

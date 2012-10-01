@@ -89,9 +89,9 @@ FUNCTION FT_BRWSWHL( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
    b := TBRowseDb( nTop, nLeft, nBottom, nRight )
 
    /* default heading and column separators */
-   b:headSep := hb_UTF8ToStr( "═╤═" )
-   b:colSep  := hb_UTF8ToStr( " │ " )
-   b:footSep := hb_UTF8ToStr( "═╧═" )
+   b:headSep := hb_UTF8ToStrBox( "═╤═" )
+   b:colSep  := hb_UTF8ToStrBox( " │ " )
+   b:footSep := hb_UTF8ToStrBox( "═╧═" )
 
    /* add custom 'TbSkipWhil' (to handle passed condition) */
    b:skipBlock := {| x | TbSkipWhil( x, bWhileCond ) }

@@ -54,8 +54,8 @@
 #define STD_VARIABLE 6
 #define STD_BORDER   7
 
-#define B_DOUBLE   hb_UTF8ToStr( "╔═╗║╝═╚║ " )
-#define B_SINGLE                 "+-+|+-+| "
+#define B_DOUBLE   hb_UTF8ToStrBox( "╔═╗║╝═╚║ " )
+#define B_SINGLE                    "+-+|+-+| "
 
 #define nTotTran Len( aTrans )
 
@@ -358,7 +358,7 @@ STATIC FUNCTION _ftAddScreen( aAdder )
    @  8 + nTopOS, nCol SAY "-"
    @ 13 + nTopOS, nCol SAY "+"
    @ 18 + nTopOS, nCol SAY "="
-   @ 19 + nTopOS, nCol SAY ""
+   @ 19 + nTopOS, nCol SAY hb_UTF8ToStr( "♦" )
    _ftSetWinColor( W_CURR, W_PROMPT )
    @ 3 + nTopOS, 6 + nAddSpace, 5 + nTopOS, 27 + nAddSpace BOX B_DOUBLE
 

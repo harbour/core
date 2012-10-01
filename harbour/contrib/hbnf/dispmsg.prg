@@ -93,9 +93,9 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    // consistent with DISPBOX()
 
    IF cnBoxString == NIL .OR. cnBoxString == 2
-      cnBoxString := hb_UTF8ToStr( "╔═╗║╝═╚║ " )
+      cnBoxString := hb_UTF8ToStrBox( "╔═╗║╝═╚║ " )
    ELSEIF cnBoxString == 1
-      cnBoxString := hb_UTF8ToStr( "┌─┐│┘─└│ " )
+      cnBoxString := hb_UTF8ToStrBox( "┌─┐│┘─└│ " )
    ENDIF
 
    lShadow := iif( lShadow == NIL, .T. , lShadow )

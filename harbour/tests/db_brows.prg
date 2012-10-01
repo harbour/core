@@ -144,7 +144,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
       mslist := InitList()
    ENDIF
    IF !( Type( "str_bar" ) == "C" )
-      PRIVATE str_bar := hb_UTF8ToStr( "-■" )
+      PRIVATE str_bar := "-v^o"
    ENDIF
    LI_Y1 := y1
    LI_X1 := x1
@@ -195,7 +195,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
    ENDIF
    oldcolors := SetColor()
    SetColor( LI_CLR )
-   @ LI_Y1, LI_X1, LI_Y2, LI_X2 BOX hb_UTF8ToStr( "┌─┐│┘─└│ " )
+   @ LI_Y1, LI_X1, LI_Y2, LI_X2 BOX hb_UTF8ToStrBox( "┌─┐│┘─└│ " )
    IF title != Nil
       @ LI_Y1, ( LI_X2 - LI_X1 - 1 - Len( title ) ) / 2 + LI_X1 SAY " " + title + " "
    ENDIF
@@ -242,8 +242,8 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
       //
 #ifdef RDD_AX
       @ LI_Y1 + 2, LI_X2, LI_Y2 - 2, LI_X2 BOX Left( str_bar, 1 )
-      @ LI_Y1 + 1, LI_X2                                                                                                                  SAY SubStr( str_bar, 2, 1 )
-      @ LI_Y2 - 1, LI_X2                                                                                                                  SAY SubStr( str_bar, 2, 1 )
+      @ LI_Y1 + 1, LI_X2 SAY SubStr( str_bar, 2, 1 )
+      @ LI_Y2 - 1, LI_X2 SAY SubStr( str_bar, 2, 1 )
       @ LI_Y1 + 2 + Int( iif( LI_PRFLT, LI_TEKZP, Ax_Keyno() ) * ( LI_Y2 - LI_Y1 - 4 ) / iif( LI_PRFLT, LI_KOLZ, Ax_KeyCount() ) ), LI_X2 SAY Right( str_bar, 1 )
 #else
       IF ! ( Type( "Sx_Keyno()" ) == "U" )

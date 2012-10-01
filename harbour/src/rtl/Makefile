@@ -218,6 +218,7 @@ PRG_SOURCES := \
    altd.prg \
    browdb.prg \
    browse.prg \
+   cdpbox.prg \
    cdpdet.prg \
    checkbox.prg \
    color53.prg \
