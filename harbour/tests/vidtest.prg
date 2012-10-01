@@ -13,6 +13,8 @@
  *
  */
 
+/* UTF-8 */
+
 #include "box.ch"
 
 #ifndef __CLIP__
@@ -62,7 +64,11 @@ PROCEDURE Main()
 STATIC FUNCTION Initialise()
 
    SET COLOUR TO "W+/BG"
-   DispBox( 0, 0, MaxRow(), MaxCol(), Replicate( Chr(176 ),9 ), "BG/B" )
+#ifdef __HARBOUR__
+   DispBox( 0, 0, MaxRow(), MaxCol(), Replicate( hb_UTF8ToStrBox( "░" ), 9 ), "BG/B" )
+#else
+   DispBox( 0, 0, MaxRow(), MaxCol(), Replicate( Chr( 176 ), 9 ), "BG/B" )
+#endif
 
    RETURN NIL
 
@@ -130,7 +136,11 @@ STATIC FUNCTION WindowBounce()
 
       FOR i := 1 TO nBoxes
          scr[ i ] := SaveScreen( x[ i ], y[ i ], x[ i ] + 6, y[ i ] + 12 )
+#ifdef HB_B_SINGLE_UNI
+         @ x[ i ], y[ i ], x[ i ] + 6, y[ i ] + 12 BOX HB_B_SINGLE_UNI + " " COLOR clr[ i ]
+#else
          @ x[ i ], y[ i ], x[ i ] + 6, y[ i ] + 12 BOX B_SINGLE + " " COLOR clr[ i ]
+#endif
       NEXT
 
       DispEnd()

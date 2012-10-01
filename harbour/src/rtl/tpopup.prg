@@ -103,7 +103,7 @@ CREATE CLASS POPUPMENU FUNCTION HBPopUpMenu
 
    PROTECTED:
 
-   VAR cBorder    INIT B_SINGLE + SEPARATOR_SINGLE
+   VAR cBorder    INIT HB_B_SINGLE_UNI + HB_SEPARATOR_SINGLE_UNI
    VAR nBottom
    VAR cColorSpec
    VAR nCurrent   INIT 0
@@ -223,7 +223,9 @@ METHOD display() CLASS POPUPMENU
 
          nTop++
 
-         IF aItems[ nPos ]:caption == MENU_SEPARATOR
+         // ; TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
+         //          to use it for flag purposes.
+         IF aItems[ nPos ]:caption == HB_MENU_SEPARATOR_UNI
 
             hb_dispOutAtBox( nTop, nLeft - 1, SubStr( ::cBorder, 9, 1 ) + Replicate( SubStr( ::cBorder, 10, 1 ), nWidth ) + SubStr( ::cBorder, 11, 1 ), hb_ColorIndex( ::cColorSpec, 5 ) )
 
@@ -417,7 +419,9 @@ METHOD hitTest( nMRow, nMCol ) CLASS POPUPMENU
 
       nPos := nMRow - ::nTop
       DO CASE
-      CASE ::aItems[ nPos ]:caption == MENU_SEPARATOR
+      // ; TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
+      //          to use it for flag purposes.
+      CASE ::aItems[ nPos ]:caption == HB_MENU_SEPARATOR_UNI
          RETURN HTSEPARATOR
       OTHERWISE
          RETURN nPos

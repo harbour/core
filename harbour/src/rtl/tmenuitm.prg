@@ -90,7 +90,7 @@ CREATE CLASS MENUITEM FUNCTION HBMenuItem
    VAR nID
    VAR cMessage
    VAR nShortcut
-   VAR cStyle     INIT Chr( 251 ) + Chr( 16 ) /* "√►" */
+   VAR cStyle     INIT hb_UTF8ToStr( "√►" )
 
 ENDCLASS
 
@@ -100,7 +100,9 @@ METHOD caption( cCaption ) CLASS MENUITEM
 
       ::cCaption := __eInstVar53( Self, "CAPTION", cCaption, "C", 1001 )
 
-      IF ::cCaption == MENU_SEPARATOR
+      // ; TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
+      //          to use it for flag purposes.
+      IF ::cCaption == HB_MENU_SEPARATOR_UNI
          ::boData   := NIL
          ::lChecked := .F.
          ::lEnabled := .F.
@@ -111,7 +113,9 @@ METHOD caption( cCaption ) CLASS MENUITEM
 
 METHOD checked( lChecked ) CLASS MENUITEM
 
-   IF lChecked != NIL .AND. !( ::cCaption == MENU_SEPARATOR )
+   // ; TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
+   //          to use it for flag purposes.
+   IF lChecked != NIL .AND. !( ::cCaption == HB_MENU_SEPARATOR_UNI )
       ::lChecked := __eInstVar53( Self, "CHECKED", lChecked, "L", 1001 )
    ENDIF
 
@@ -131,7 +135,9 @@ METHOD data( boData ) CLASS MENUITEM
 
 METHOD enabled( lEnabled ) CLASS MENUITEM
 
-   IF lEnabled != NIL .AND. !( ::cCaption == MENU_SEPARATOR )
+   // ; TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
+   //          to use it for flag purposes.
+   IF lEnabled != NIL .AND. !( ::cCaption == HB_MENU_SEPARATOR_UNI )
       ::lEnabled := __eInstVar53( Self, "ENABLED", lEnabled, "L", 1001 )
    ENDIF
 

@@ -197,7 +197,7 @@ METHOD Refresh() CLASS HBDbWindow
 
    DispBegin()
 
-   hb_dispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, iif( ::lFocused, B_DOUBLE, B_SINGLE ), ::cColor )
+   hb_dispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, iif( ::lFocused, HB_B_DOUBLE_UNI, HB_B_SINGLE_UNI ), ::cColor )
    hb_dispOutAt( ::nTop, ::nLeft + 1, "[" + Chr( 254 ) + "]", ::cColor )
 
    ::ShowCaption( ::cCaption )

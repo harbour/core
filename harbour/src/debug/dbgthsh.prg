@@ -220,7 +220,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, hHash ) CLASS HBDbHash
             ::AddWindows( HB_HValueAt( hHash, nSet ), oBrwSets:RowPos + oBrwSets:nTop )
             ::hashName := cOldName
 
-            hb_ADel( ::aWindows, ::nCurWindow, .t. )
+            hb_ADel( ::aWindows, ::nCurWindow, .T. )
             IF ::nCurwindow == 0
                ::nCurwindow := 1
             ELSE

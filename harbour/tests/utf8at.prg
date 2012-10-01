@@ -2,8 +2,8 @@
  * $Id$
  */
 
-/* hb_utf8at / hb_utf8rat test
-   UTF8 Aware hb_at()/hb_rat() */
+/* hb_utf8at() / hb_utf8rat() test
+   UTF8-aware hb_at()/hb_rat() */
 
 #include "simpleio.ch"
 
@@ -12,8 +12,8 @@ REQUEST HB_CODEPAGE_FRISO
 
 PROCEDURE Main()
 
-   #define _UTF8_E_ACUTE       Chr( 0xC3 ) + Chr( 0xA9 )
-   #define _UTF8_E_CIRCUMFLEX  Chr( 0xC3 ) + Chr( 0xAA )
+   #define _UTF8_E_ACUTE       hb_BChar( 0xC3 ) + hb_BChar( 0xA9 )
+   #define _UTF8_E_CIRCUMFLEX  hb_BChar( 0xC3 ) + hb_BChar( 0xAA )
 
    LOCAL u := "Une r" + _UTF8_E_CIRCUMFLEX + "ve est la moiti" + _UTF8_E_ACUTE + " d'une r" + _UTF8_E_ACUTE + "alit" + _UTF8_E_ACUTE + "."
    LOCAL i := hb_translate( u, "UTF8", "FRISO" )

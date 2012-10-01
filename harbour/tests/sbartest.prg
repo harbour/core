@@ -12,12 +12,18 @@
  * modified by Alejandro de Garate
  */
 
+/* UTF-8 */
+
 #include "directry.ch"
 #include "achoice.ch"
 #include "inkey.ch"
 
-#define B_THIN  ( Chr( 219 ) + Chr( 223 ) + Chr( 219 ) + Chr( 219 ) + ;
-                  Chr( 219 ) + Chr( 220 ) + Chr( 219 ) + Chr( 219 ) )
+#ifdef __HARBOUR__
+   #define B_THIN  hb_UTF8ToStrBox( "█▀███▄██" )
+#else
+   #define B_THIN  ( Chr( 219 ) + Chr( 223 ) + Chr( 219 ) + Chr( 219 ) + ;
+                     Chr( 219 ) + Chr( 220 ) + Chr( 219 ) + Chr( 219 ) )
+#endif
 
 PROCEDURE Main()
 
@@ -33,7 +39,11 @@ FUNCTION InitScrlBar()
 
    CLS
    SetBlink( .F. )
-   @  0,  0, 24, 79 BOX REPLIC( Chr( 178 ), 9 ) COLOR "GR+/W*"
+#ifdef __HARBOUR__
+   @  0,  0, 24, 79 BOX Replicate( hb_UTF8ToStrBox( "▓" ), 9 ) COLOR "GR+/W*"
+#else
+   @  0,  0, 24, 79 BOX Replicate( Chr( 178 ), 9 ) COLOR "GR+/W*"
+#endif
    @  4, 28 SAY "            Directory            " COLOR "W+/B"
    @  5, 28, 15, 60 BOX B_THIN + " " COLOR "W/W*"
 
@@ -48,7 +58,7 @@ FUNCTION InitScrlBar()
 
    filesScroll:total := Len( aFileList )
 
-   filesScroll:SetColor( "W+/W, W+/W" )   // New method!
+   filesScroll:colorSpec( "W+/W, W+/W" )   // New method!
    SET COLOR TO "N/W*, W+/B,,,W/N"
 
    filesScroll:display()

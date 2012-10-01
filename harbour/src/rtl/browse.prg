@@ -80,13 +80,13 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
    nOldCursor := SetCursor( SC_NONE )
    cOldScreen := SaveScreen( nTop, nLeft, nBottom, nRight )
 
-   hb_dispBox( nTop, nLeft, nBottom, nRight, B_DOUBLE_SINGLE )
-   hb_dispBox( nTop + 3, nLeft, nTop + 3, nLeft, Chr( 198 ) ) /* "╞" */
-   hb_dispBox( nTop + 3, nRight, nTop + 3, nRight, Chr( 181 ) ) /* "╡" */
+   hb_dispBox( nTop, nLeft, nBottom, nRight, HB_B_DOUBLE_SINGLE_UNI )
+   hb_dispBox( nTop + 3, nLeft, nTop + 3, nLeft, hb_UTF8ToStrBox( "╞" ) )
+   hb_dispBox( nTop + 3, nRight, nTop + 3, nRight, hb_UTF8ToStrBox( "╡" ) )
    hb_dispOutAt( nTop + 1, nLeft + 1, Space( nRight - nLeft - 1 ) )
 
    oBrw := TBrowseDB( nTop + 2, nLeft + 1, nBottom - 1, nRight - 1 )
-   oBrw:HeadSep   := " " + Chr( 205 ) /* "═" */
+   oBrw:HeadSep := " " + hb_UTF8ToStrBox( "═" )
    oBrw:SkipBlock := {| nRecs | Skipped( nRecs, lAppend ) }
 
    FOR n := 1 to FCount()
@@ -145,134 +145,134 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
       SWITCH nKey
 
 #ifdef HB_COMPAT_C53
-         CASE K_LBUTTONDOWN
-         CASE K_LDBLCLK
-            TBMOUSE( oBrw, MRow(), MCol() )
-            EXIT
+      CASE K_LBUTTONDOWN
+      CASE K_LDBLCLK
+         TBMOUSE( oBrw, MRow(), MCol() )
+         EXIT
 #endif
 #ifndef HB_CLP_STRICT
-         CASE K_MWFORWARD
+      CASE K_MWFORWARD
 #endif
-         CASE K_UP
-            IF lAppend
-               lRefresh := .T.
-            ELSE
-               oBrw:Up()
-            ENDIF
-            EXIT
+      CASE K_UP
+         IF lAppend
+            lRefresh := .T.
+         ELSE
+            oBrw:Up()
+         ENDIF
+         EXIT
 
 #ifndef HB_CLP_STRICT
-         CASE K_MWBACKWARD
+      CASE K_MWBACKWARD
 #endif
-         CASE K_DOWN
-            IF lAppend
-               oBrw:HitBottom( .T. )
+      CASE K_DOWN
+         IF lAppend
+            oBrw:HitBottom( .T. )
+         ELSE
+            oBrw:Down()
+         ENDIF
+         EXIT
+
+      CASE K_PGUP
+         IF lAppend
+            lRefresh := .T.
+         ELSE
+            oBrw:PageUp()
+         ENDIF
+         EXIT
+
+      CASE K_PGDN
+         IF lAppend
+            oBrw:HitBottom( .T. )
+         ELSE
+            oBrw:PageDown()
+         ENDIF
+         EXIT
+
+      CASE K_CTRL_PGUP
+         IF lAppend
+            lRefresh := .T.
+         ELSE
+            oBrw:GoTop()
+         ENDIF
+         EXIT
+
+      CASE K_CTRL_PGDN
+         IF lAppend
+            lRefresh := .T.
+         ELSE
+            oBrw:GoBottom()
+         ENDIF
+         EXIT
+
+      CASE K_LEFT
+         oBrw:Left()
+         EXIT
+
+      CASE K_RIGHT
+         oBrw:Right()
+         EXIT
+
+      CASE K_HOME
+         oBrw:Home()
+         EXIT
+
+      CASE K_END
+         oBrw:End()
+         EXIT
+
+      CASE K_CTRL_LEFT
+         oBrw:panLeft()
+         EXIT
+
+      CASE K_CTRL_RIGHT
+         oBrw:panRight()
+         EXIT
+
+      CASE K_CTRL_HOME
+         oBrw:panHome()
+         EXIT
+
+      CASE K_CTRL_END
+         oBrw:panEnd()
+         EXIT
+
+      CASE K_INS
+         IF lAppend
+            SetCursor( iif( ReadInsert( ! ReadInsert() ), ;
+                            SC_NORMAL, SC_INSERT ) )
+         ENDIF
+         EXIT
+
+      CASE K_DEL
+         IF RecNo() != LastRec() + 1
+            IF Deleted()
+               DbRecall()
             ELSE
-               oBrw:Down()
+               DbDelete()
             ENDIF
-            EXIT
+         ENDIF
+         EXIT
 
-         CASE K_PGUP
-            IF lAppend
-               lRefresh := .T.
-            ELSE
-               oBrw:PageUp()
-            ENDIF
-            EXIT
+      CASE K_ENTER
+         IF lAppend .OR. RecNo() != LastRec() + 1
+            lKeyPressed := ( nKey := DoGet( oBrw, lAppend ) ) != 0
+         ELSE
+            nKey := K_DOWN
+            lKeyPressed := .T.
+         ENDIF
+         EXIT
 
-         CASE K_PGDN
-            IF lAppend
-               oBrw:HitBottom( .T. )
-            ELSE
-               oBrw:PageDown()
-            ENDIF
-            EXIT
+      CASE K_ESC
+         lExit := .T.
+         EXIT
 
-         CASE K_CTRL_PGUP
-            IF lAppend
-               lRefresh := .T.
-            ELSE
-               oBrw:GoTop()
-            ENDIF
-            EXIT
-
-         CASE K_CTRL_PGDN
-            IF lAppend
-               lRefresh := .T.
-            ELSE
-               oBrw:GoBottom()
-            ENDIF
-            EXIT
-
-         CASE K_LEFT
-            oBrw:Left()
-            EXIT
-
-         CASE K_RIGHT
-            oBrw:Right()
-            EXIT
-
-         CASE K_HOME
-            oBrw:Home()
-            EXIT
-
-         CASE K_END
-            oBrw:End()
-            EXIT
-
-         CASE K_CTRL_LEFT
-            oBrw:panLeft()
-            EXIT
-
-         CASE K_CTRL_RIGHT
-            oBrw:panRight()
-            EXIT
-
-         CASE K_CTRL_HOME
-            oBrw:panHome()
-            EXIT
-
-         CASE K_CTRL_END
-            oBrw:panEnd()
-            EXIT
-
-         CASE K_INS
-            IF lAppend
-               SetCursor( iif( ReadInsert( ! ReadInsert() ), ;
-                               SC_NORMAL, SC_INSERT ) )
-            ENDIF
-            EXIT
-
-         CASE K_DEL
-            IF RecNo() != LastRec() + 1
-               IF Deleted()
-                  DbRecall()
-               ELSE
-                  DbDelete()
-               ENDIF
-            ENDIF
-            EXIT
-
-         CASE K_ENTER
-            IF lAppend .OR. RecNo() != LastRec() + 1
-               lKeyPressed := ( nKey := DoGet( oBrw, lAppend ) ) != 0
-            ELSE
-               nKey := K_DOWN
-               lKeyPressed := .T.
-            ENDIF
-            EXIT
-
-         CASE K_ESC
-            lExit := .t.
-            EXIT
-
-         OTHERWISE
-            IF ! hb_keyChar( nKey ) == ""
-               hb_keyIns( nKey )
-               nKey := K_ENTER
-               lKeyPressed := .T.
-            ENDIF
-            EXIT
+      OTHERWISE
+         IF ! hb_keyChar( nKey ) == ""
+            hb_keyIns( nKey )
+            nKey := K_ENTER
+            lKeyPressed := .T.
+         ENDIF
+         EXIT
       ENDSWITCH
 
       IF lRefresh
@@ -379,21 +379,21 @@ STATIC FUNCTION ExitKey( lAppend )
    LOCAL nKey := LastKey()
 
    SWITCH nKey
-      CASE K_PGDN
-         nKey := iif( lAppend, 0, K_DOWN )
-         EXIT
+   CASE K_PGDN
+      nKey := iif( lAppend, 0, K_DOWN )
+      EXIT
 
-      CASE K_PGUP
-         nKey := iif( lAppend, 0, K_UP )
+   CASE K_PGUP
+      nKey := iif( lAppend, 0, K_UP )
 
-      CASE K_DOWN
-      CASE K_UP
-         EXIT
+   CASE K_DOWN
+   CASE K_UP
+      EXIT
 
-      OTHERWISE
-         nKey := iif( nKey == 13 .OR. ;
-                      ( nKey >= 32 .AND. nKey <= 255 ), K_RIGHT, 0 )
-         EXIT
+   OTHERWISE
+      nKey := iif( nKey == 13 .OR. ;
+                   !( hb_keyChar( nKey ) == "" ), K_RIGHT, 0 )
+      EXIT
    ENDSWITCH
 
    RETURN nKey

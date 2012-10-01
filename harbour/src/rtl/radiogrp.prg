@@ -115,11 +115,11 @@ CREATE CLASS RADIOGROUP FUNCTION HBRadioGroup
    VAR nCapCol
    VAR nCapRow
    VAR cCaption   INIT ""
-   VAR cColdBox   INIT B_SINGLE
+   VAR cColdBox   INIT HB_B_SINGLE_UNI
    VAR cColorSpec
    VAR bFBlock
    VAR lHasFocus  INIT .F.
-   VAR cHotBox    INIT B_DOUBLE
+   VAR cHotBox    INIT HB_B_DOUBLE_UNI
    VAR nItemCount INIT 0
    VAR nLeft
    VAR cMessage   INIT ""

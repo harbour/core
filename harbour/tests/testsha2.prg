@@ -66,8 +66,8 @@ STATIC PROCEDURE Test_SHA2_HMAC()
    LOCAL aMsg := {;
       "Hi There",;
       "what do ya want for nothing?",;
-      Replicate( Chr( 0xdd ), 50 ),;
-      Replicate( Chr( 0xcd ), 50 ),;
+      Replicate( hb_BChar( 0xdd ), 50 ),;
+      Replicate( hb_BChar( 0xcd ), 50 ),;
       "Test With Truncation",;
       "Test Using Larger Than Block-Size Key - Hash Key First",;
       "This is a test using a larger than block-size key and a larger than block-size data. The key needs to be hashed before being used by the HMAC algorithm." }
@@ -103,18 +103,18 @@ STATIC PROCEDURE Test_SHA2_HMAC()
       "e37b6a775dc87dbaa4dfa9f96e5e3ffddebd71f8867289865df5a32d20cdc944b6022cac3c4982b10d5eeb55c3e4de15134676fb6de0446065c97440fa8c6a58"}
 
    LOCAL keys := {;
-      Replicate( Chr( 0x0b ),  20 ),;
+      Replicate( hb_BChar( 0x0b ),  20 ),;
       "Jefe",;
-      Replicate( Chr( 0xaa ),  20 ),;
+      Replicate( hb_BChar( 0xaa ),  20 ),;
       "",;
-      Replicate( Chr( 0x0c ),  20 ),;
-      Replicate( Chr( 0xaa ), 131 ),;
-      Replicate( Chr( 0xaa ), 131 ) }
+      Replicate( hb_BChar( 0x0c ),  20 ),;
+      Replicate( hb_BChar( 0xaa ), 131 ),;
+      Replicate( hb_BChar( 0xaa ), 131 ) }
 
    LOCAL tmp
 
    FOR tmp := 1 TO 25
-      keys[ 4 ] += Chr( tmp )
+      keys[ 4 ] += hb_BChar( tmp )
    NEXT
 
    FOR tmp := 1 TO 7

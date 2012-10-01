@@ -68,7 +68,7 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
 
    LOCAL nPos
    LOCAL cLine
-   LOCAL lStart := .t.
+   LOCAL lStart := .T.
    LOCAL aObjects := { Self }
    LOCAL bError
 

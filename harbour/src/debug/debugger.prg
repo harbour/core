@@ -2105,7 +2105,7 @@ METHOD RemoveWindow( oWnd ) CLASS HBDebugger
    LOCAL n := AScan( ::aWindows, {| o | o == oWnd } )
 
    IF n != 0
-      ::aWindows := hb_ADel( ::aWindows, n, .t. )
+      ::aWindows := hb_ADel( ::aWindows, n, .T. )
    ENDIF
 
    ::nCurrentWindow := 1
@@ -2751,7 +2751,7 @@ METHOD ToggleBreakPoint( nLine, cFileName ) CLASS HBDebugger
          ::oBrwText:ToggleBreakPoint( nLine, .T. )
       ENDIF
    ELSE
-      hb_ADel( ::aBreakPoints, nAt, .t. )
+      hb_ADel( ::aBreakPoints, nAt, .T. )
       __dbgDelBreak( ::pInfo, nAt - 1 )
       IF hb_FileMatch( cFileName, strip_path( ::cPrgName ) )
          ::oBrwText:ToggleBreakPoint( nLine, .F. )
@@ -2962,7 +2962,7 @@ METHOD WatchpointDel( nPos ) CLASS HBDebugger
          IF nPos >=0 .AND. nPos < Len( ::aWatch )
             ::oBrwPnt:gotop()
             __dbgDelWatch( ::pInfo, nPos )
-            hb_ADel( ::aWatch, nPos + 1, .t. )
+            hb_ADel( ::aWatch, nPos + 1, .T. )
             IF Len( ::aWatch ) == 0
                ::WatchpointsHide()
             ELSE

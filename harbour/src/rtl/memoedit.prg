@@ -269,7 +269,7 @@ METHOD MoveCursor( nKey ) CLASS HBMemoEditor
       RETURN ::Super:MoveCursor( nKey )
    ENDIF
 
-   RETURN .f.
+   RETURN .F.
 
 /*----------------------------------------------------------------------------------------*/
 

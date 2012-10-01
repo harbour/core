@@ -68,7 +68,11 @@ PROCEDURE Main()
 
 
    CLS
+#ifdef HB_B_DOUBLE_SINGLE_UNI
+   DispBox( nTop, nLeft, nBottom, nRight, HB_B_DOUBLE_SINGLE_UNI, cColor )
+#else
    DispBox( nTop, nLeft, nBottom, nRight, B_DOUBLE_SINGLE, cColor )
+#endif
    oBrw := TBRowseNew( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 )
    DispOutAt( nTop + 3,    nLeft,  _DRAW_1, cColor )
    DispOutAt( nTop + 3,    nRight, _DRAW_2, cColor )

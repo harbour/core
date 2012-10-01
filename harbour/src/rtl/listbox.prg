@@ -136,19 +136,19 @@ CREATE CLASS LISTBOX FUNCTION HBListBox
    VAR nCapCol
    VAR nCapRow
    VAR cCaption   INIT ""
-   VAR cColdBox   INIT B_SINGLE
+   VAR cColdBox   INIT HB_B_SINGLE_UNI
    VAR cColorSpec
    VAR lDropDown
    VAR bFBlock
    VAR lHasFocus  INIT .F.
-   VAR cHotBox    INIT B_DOUBLE
+   VAR cHotBox    INIT HB_B_DOUBLE_UNI
    VAR lIsOpen
    VAR nItemCount INIT 0
    VAR nLeft
    VAR cMessage   INIT ""
    VAR nRight
    VAR bSBlock
-   VAR cStyle     INIT Chr( 31 ) /* "▼" */
+   VAR cStyle     INIT hb_UTF8ToStr( "▼" )
    VAR cTextValue INIT ""
    VAR nTop
    VAR nTopItem   INIT 0

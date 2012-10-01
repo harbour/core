@@ -171,7 +171,7 @@ METHOD SetActiveLine( n ) CLASS HBBrwText
 METHOD GetLine() CLASS HBBrwText
 
    RETURN PadR( hb_NToS( ::nRow ) + ": " + SubStr( ;
-                MemoLine( ::aRows[ ::nRow ], ::nWidth + ::nLineOffset, 1, ::nTabWidth, .f. ),;
+                MemoLine( ::aRows[ ::nRow ], ::nWidth + ::nLineOffset, 1, ::nTabWidth, .F. ),;
                 ::nLineOffset ), ::nWidth )
 
 METHOD ToggleBreakPoint( nRow, lSet ) CLASS HBBrwText
@@ -202,7 +202,7 @@ METHOD LoadFile( cFileName ) CLASS HBBrwText
 
    FOR EACH cLine in ::aRows
       nMaxLineLen := Max( nMaxLineLen, ;
-         Len( RTrim( MemoLine( cLine, Len( cLine ) + 256, 1, ::nTabWidth, .f. ) ) ) )
+         Len( RTrim( MemoLine( cLine, Len( cLine ) + 256, 1, ::nTabWidth, .F. ) ) ) )
    NEXT
    ::nMaxLineLen := nMaxLineLen
    ::nLineOffset := 1

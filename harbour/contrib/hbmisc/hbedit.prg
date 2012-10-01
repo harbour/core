@@ -73,7 +73,7 @@ FUNCTION EditorNew( nTop, nLeft, nBottom, nRight, nLength, ;
       oEdit[ E_BOTTOM ]  := nBottom
       oEdit[ E_RIGHT ]   := nRight
       oEdit[ E_LINELEN ] := nLength
-      oEdit[ E_FRAME ]   := IIFNIL( B_DOUBLE, cFrame )
+      oEdit[ E_FRAME ]   := IIFNIL( HB_B_DOUBLE_UNI, cFrame )
       oEdit[ E_TITLE ]   := cTitle
       oEdit[ E_COLOR ]   := IIFNIL( "W/N,W+/N,W+/R,GR+/N,G+/N", cColor )
       oEdit[ E_MODE ]    := EDIT_VIEW
