@@ -249,10 +249,14 @@ PROCEDURE TEST7( cSkip, cRaw )
          ? "The left mouse button was double-clicked."
       CASE nKey == K_RDBLCLK
          ? "The right mouse button was double-clicked."
-         OTHERWISE
+      OTHERWISE
+#ifdef __HARBOUR__
+         ? "A keyboard key was pressed: ", nKey, hb_keyChar( nKey )
+#else
          ? "A keyboard key was pressed: ", nKey, ;
             iif( nKey >= 32 .AND. nKey <= 255, Chr( nKey ), "" )
-      END CASE
+#endif
+      ENDCASE
 
    ENDDO
    ? "The TAB key (" + LTrim( Str( nKey ) ) + ") was pressed. Exiting..."

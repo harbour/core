@@ -53,7 +53,7 @@ STATIC FUNCTION mqout( nExpected, nGot )
 
    RETURN NIL
 
-/////////////////////////////////////////////////////////////////
+//
 
 PROCEDURE GetArray( a )
 
@@ -83,7 +83,7 @@ PROCEDURE PrintArray( a )
 
    RETURN
 
-//////////////////////////////////////////////////////////////////
+//
 
 FUNCTION DetachWithRefer()
 
@@ -108,7 +108,7 @@ FUNCTION DoThing( n )
 
    RETURN NIL
 
-//////////////////////////////////////////////////////////////////////
+//
 
 FUNCTION DetachToStatic( n )
 
@@ -116,7 +116,7 @@ FUNCTION DetachToStatic( n )
 
    RETURN NIL
 
-   // ------------------------------------------------------------
+//
 
 FUNCTION ReferParam()
 

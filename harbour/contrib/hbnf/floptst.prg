@@ -75,7 +75,7 @@ FUNCTION FT_FLOPTST( nDriveNum_i /* letter of floppy drive */ )
                nRetCode := ERR_UNFORMATTED
             OTHERWISE
                nRetCode := ERR_UNKNOWN
-            END CASE
+            ENDCASE
          ENDIF
       ENDIF
    ENDIF

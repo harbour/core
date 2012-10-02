@@ -131,7 +131,7 @@ PROCEDURE TEST1()
 
    RETURN
 
-   // Second test: check the button pressing
+// Second test: check the button pressing
 
 PROCEDURE TEST2( nR, nC )
 
@@ -222,7 +222,11 @@ PROCEDURE TEST2( nR, nC )
       OTHERWISE
          @ MaxRow(), 20 SAY "A keyboard key was pressed: "
          @ MaxRow(), 48 SAY nKey
+#ifdef __HARBOUR__
+         @ MaxRow(), 58 SAY hb_keyChar( nKey )
+#else
          @ MaxRow(), 58 SAY iif( nKey >= 32 .AND. nKey <= 255, Chr( nKey ), "" )
+#endif
       ENDCASE
 
       IF nPress > 6

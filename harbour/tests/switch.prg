@@ -42,7 +42,7 @@ PROCEDURE Main()
       ? "FOUND: 1"
    CASE "2"
       ? "FOUND: 2"
-      OTHERWISE
+   OTHERWISE
       ? "other"
    END
 
@@ -50,7 +50,7 @@ PROCEDURE Main()
    ?
    ? "44444444444444444444444444444444444"
    SWITCH a
-      OTHERWISE
+   OTHERWISE
       ? "OTHERWISE"
    END
 #endif
@@ -90,7 +90,7 @@ PROCEDURE Main()
    CASE Chr( 12 ) + Chr( 15 )
       ? "CHR()"
       EXIT
-      OTHERWISE
+   OTHERWISE
       ? "NOT FOUND: running OTHER"
    END
 #endif
@@ -111,7 +111,7 @@ PROCEDURE Main()
       CASE "22"
          ? "Nested FOUND: 22"
          EXIT
-         OTHERWISE
+      OTHERWISE
          ? "Nested OTHERWISE"
       END
       ?? "In CASE 1"
