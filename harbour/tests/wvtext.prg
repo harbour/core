@@ -2,17 +2,8 @@
  * $Id$
  */
 
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//                   Harbour Extended Features Demo
-//                                    .
-//                 Pritpal Bedi <pritpal@vouchcac.com>
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+// Harbour Extended Features Demo
+// Pritpal Bedi <pritpal@vouchcac.com>
 
 #include "hbgtinfo.ch"
 #include "inkey.ch"
@@ -20,13 +11,13 @@
 
 #define RGB( r, g, b ) ( r + ( g * 256 ) + ( b * 256 * 256 ) )
 
-//----------------------------------------------------------------------//
+//
 
 STATIC s_nRows := 20
 STATIC s_nCols := 60
 STATIC s_nColorIndex := 1
 
-//----------------------------------------------------------------------//
+//
 
 PROCEDURE Main()
 
@@ -290,7 +281,7 @@ PROCEDURE Main()
 
    RETURN
 
-//-------------------------------------------------------------------//
+//
 
 STATIC PROCEDURE DispScreen()
 
@@ -337,7 +328,7 @@ STATIC PROCEDURE DispScreen()
 
    RETURN
 
-//-------------------------------------------------------------------//
+//
 
 PROCEDURE HB_GTSYS()
 
@@ -346,7 +337,7 @@ PROCEDURE HB_GTSYS()
 
    RETURN
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION SetPalette( nMode )
 
@@ -369,7 +360,7 @@ FUNCTION SetPalette( nMode )
 
    RETURN NIL
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION SetPaletteIndex()
 
@@ -378,7 +369,7 @@ FUNCTION SetPaletteIndex()
 
    RETURN NIL
 
-//-------------------------------------------------------------------//
+//
 
 PROCEDURE thFunc()
 
@@ -471,7 +462,7 @@ PROCEDURE thFunc()
 
    RETURN
 
-//-------------------------------------------------------------------//
+//
 
 STATIC FUNCTION DbSkipBlock( n, oTbr )
 
@@ -492,7 +483,7 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
 
    RETURN nSkipped
 
-//-------------------------------------------------------------------//
+//
 
 STATIC FUNCTION TBNext( oTbr )
 
@@ -513,7 +504,7 @@ STATIC FUNCTION TBNext( oTbr )
 
    RETURN lMoved
 
-//-------------------------------------------------------------------//
+//
 
 STATIC FUNCTION TBPrev( oTbr )
 
@@ -531,13 +522,13 @@ STATIC FUNCTION TBPrev( oTbr )
 
    RETURN lMoved
 
-//-------------------------------------------------------------------//
+//
 
 STATIC FUNCTION BlockField( i )
 
    RETURN {|| FieldGet( i ) }
 
-//-------------------------------------------------------------------//
+//
 
 STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 
@@ -567,7 +558,7 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 
    RETURN lRet
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION ChgPalette( lFocus )
 

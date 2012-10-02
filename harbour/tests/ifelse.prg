@@ -2,37 +2,37 @@
  * $Id$
  */
 
-// Testing Harbour If elseif else endif
+// Testing Harbour IF ELSEIF ELSE ENDIF
 
 PROCEDURE Main()
 
    LOCAL i
 
-   QOut( "Testing Harbour If elseif else endif" )
+   ? "Testing Harbour IF ELSEIF ELSE ENDIF"
    FOR i := 1 TO 5
       TestValue( i )
    NEXT
 
    RETURN
 
-FUNCTION TestValue( x )
+PROCEDURE TestValue( x )
 
-   IF x = 1
-      QOut( "x is 1" )
+   IF x == 1
+      ? "x is 1"
 
-   ELSEIF x = 2
-      QOut( "x is 2" )
+   ELSEIF x == 2
+      ? "x is 2"
 
-   ELSEIF x = 3
-      QOut( "x is 3" )
+   ELSEIF x == 3
+      ? "x is 3"
 
-   ELSEIF x = 4
-      QOut( "x is 4" )
+   ELSEIF x == 4
+      ? "x is 4"
 
    ELSE
-      QOut( "x is not 1 or 2 or 3 or 4" )
+      ? "x is not 1 or 2 or 3 or 4"
    ENDIF
 
-   QOut( "Ok!" )
+   ? "Ok!"
 
-   RETURN NIL
+   RETURN

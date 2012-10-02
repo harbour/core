@@ -8,7 +8,7 @@ PROCEDURE Main()
 
    LOCAL n
 
-   QOut( "We are running and now an error will raise" )
+   ? "We are running and now an error will raise"
 
    n++      // an error should raise here
 

@@ -29,25 +29,26 @@ PROCEDURE Main()
 
    // Try to copy 10 records, starting 5 records from EOF, using WHILE
    GO BOTTOM
-   skip -4
+   SKIP -4
    COPY WHILE ncount++ < 9 TO test4a SDF
 
    // Copy the last 10 records.
    GO BOTTOM
-   skip -9
+   SKIP -9
    COPY REST TO test5 SDF
 
    // Copy the last 10 records again.
    GO BOTTOM
-   skip -9
+   SKIP -9
    COPY TO test6 SDF WHILE !EOF()
 
    // Copy only some of the last 10 records.
    GO BOTTOM
-   skip -9
+   SKIP -9
    COPY REST TO test7 SDF for _field->married
 
    // Try to append from a file that we know does not exist.
    DELETE file test8.txt
    APPEND FROM test8 SDF
-   QUIT
+
+   RETURN

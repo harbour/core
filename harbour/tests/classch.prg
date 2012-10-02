@@ -6,7 +6,7 @@
 
 #include "hbclass.ch"
 
-//--------------------------------------------------------------------//
+// ;
 
 PROCEDURE Main()
 
@@ -20,7 +20,7 @@ PROCEDURE Main()
 
    RETURN
 
-//--------------------------------------------------------------------//
+// ;
 
 CREATE CLASS TTest INHERIT TParent
 
@@ -32,7 +32,7 @@ CREATE CLASS TTest INHERIT TParent
 
 ENDCLASS
 
-//--------------------------------------------------------------------//
+// ;
 
 METHOD New( One, Two ) CLASS TTest
 
@@ -43,7 +43,7 @@ METHOD New( One, Two ) CLASS TTest
 
    RETURN Self
 
-//--------------------------------------------------------------------//
+// ;
 
 CREATE CLASS TParent
 
@@ -53,7 +53,7 @@ CREATE CLASS TParent
 
 ENDCLASS
 
-//--------------------------------------------------------------------//
+// ;
 
 METHOD New() CLASS TParent
 
@@ -61,4 +61,4 @@ METHOD New() CLASS TParent
 
    RETURN Self
 
-//--------------------------------------------------------------------//
+// ;

@@ -6,6 +6,6 @@
 
 PROCEDURE Main()
 
-   QOut( OS() )
+   ? OS()
 
    RETURN

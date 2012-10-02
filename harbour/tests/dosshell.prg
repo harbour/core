@@ -8,8 +8,6 @@
 //
 // This program shell to DOS
 //
-// Warning : DOS only
-//
 // Written by Eddie Runia <eddie@runia.com>
 // www - http://harbour-project.org
 //
@@ -18,16 +16,16 @@
 
 PROCEDURE Main()
 
-   LOCAL cOs    := Upper( OS() )
-   LOCAL cShell := GetEnv( "COMSPEC" )
+   LOCAL cShell
 
-   IF At( "WINDOWS", cOs ) != 0 .OR. At( "DOS", cOs ) != 0 ;
-         .OR. At( "OS/2", cOs ) != 0
-      ? "About to shell to DOS.."
-      ! ( cShell )
-      ? "Hey, I am back !"
-   ELSE
-      ? "Sorry this program is for Windows, DOS, and OS/2 only"
-   ENDIF
+   #if defined( __PLATFORM__UNIX )
+      cShell := GetEnv( "SHELL" )
+   #else
+      cShell := GetEnv( "COMSPEC" )
+   #endif
+
+   ? "About to shell to OS.."
+   ! ( cShell )
+   ? "Hey, I am back !"
 
    RETURN

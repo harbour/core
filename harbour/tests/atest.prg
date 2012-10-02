@@ -11,6 +11,6 @@ PROCEDURE Main()
    a[ 1 ] := a
    a[ 1 ] := NIL
 
-   QOut( "The array will try to be released now..." )
+   ? "The array will try to be released now..."
 
    RETURN

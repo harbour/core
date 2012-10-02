@@ -10,39 +10,39 @@ PROCEDURE Main()
 
    LOCAL dDate, i
 
-   SET( _SET_DATEFORMAT, "dd/mm/yyyy" )
+   Set( _SET_DATEFORMAT, "dd/mm/yyyy" )
    dDate := hb_SToD( "19990525" )
 
-   OutStd( dDate, DOW( dDate ), hb_eol() )
+   ? dDate, DOW( dDate )
 
-   OutStd( LastMonday( dDate ), hb_eol() )
+   ? LastMonday( dDate )
 
    dDate += 3
-   OutStd( dDate, DOW( dDate ), hb_eol() )
+   ? dDate, DOW( dDate )
 
    dDate += 4
-   OutStd( dDate, DOW( dDate ), hb_eol() )
+   ? dDate, DOW( dDate )
 
-   SET( _SET_DATEFORMAT, "mm/dd/yyyy" )
+   Set( _SET_DATEFORMAT, "mm/dd/yyyy" )
    dDate := hb_SToD( "19990525" )
 
-   OutStd( dDate, DOW( dDate ), hb_eol() )
+   ? dDate, DOW( dDate )
 
-   OutStd( LastMonday( dDate ), hb_eol() )
+   ? LastMonday( dDate )
 
    dDate += 3
-   OutStd( dDate, DOW( dDate ), hb_eol() )
+   ? dDate, DOW( dDate )
 
    dDate += 4
-   OutStd( dDate, DOW( dDate ), hb_eol() )
+   ? dDate, DOW( dDate )
 
-   OutStd( hb_eol() )
+   ?
    dDate := Date ()
    FOR i := 1 TO 7
-      OutStd( dDate, DOW( dDate ), hb_eol() )
+      ? dDate, DOW( dDate )
       dDate++
    NEXT
-   OutStd( CToD( "" ), DOW( CToD( "" ) ), hb_eol() )
+   ? CToD( "" ), DOW( CToD( "" ) )
 
    RETURN
 

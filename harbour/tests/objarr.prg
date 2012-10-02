@@ -15,48 +15,48 @@ PROCEDURE Main()
 
    LOCAL o := TNumber():New()
 
-   QOut( "Direct reference : ", ToChar( o:x ) )
+   ? "Direct reference : ", hb_ValToStr( o:x )
 
    o:x[ 1 ]     := "I am a data"
    o:Get()[ 2 ] := "I am a method"
-   QOut( "Assign text      : ", ToChar( o:x ) )
+   ? "Assign text      : ", hb_ValToStr( o:x )
 
    o:x[ 1 ]     := 4
    o:Get()[ 2 ] := 4
-   QOut( "Assign 4         : ", ToChar( o:x ) )
+   ? "Assign 4         : ", hb_ValToStr( o:x )
 
-   QOut( "Post increment   : ", o:x[ 1 ]++ , o:Get()[ 2 ]++ )
-   QOut( "After            : ", o:x[ 1 ]   , o:Get()[ 2 ]   )
-   QOut( "Pre decrement    : ", --o:x[ 1 ] , --o:Get()[ 2 ] )
-   QOut( "After            : ", o:x[ 1 ]   , o:Get()[ 2 ]   )
+   ? "Post increment   : ", o:x[ 1 ]++ , o:Get()[ 2 ]++
+   ? "After            : ", o:x[ 1 ]   , o:Get()[ 2 ]
+   ? "Pre decrement    : ", --o:x[ 1 ] , --o:Get()[ 2 ]
+   ? "After            : ", o:x[ 1 ]   , o:Get()[ 2 ]
 
    o:x[ 1 ]     += 2
    o:Get()[ 2 ] += 2
-   QOut( "Plus 2           : ", ToChar( o:x ) )
+   ? "Plus 2           : ", hb_ValToStr( o:x )
 
    o:x[ 1 ]     -= 3
    o:Get()[ 2 ] -= 3
-   QOut( "Minus 3          : ", ToChar( o:x ) )
+   ? "Minus 3          : ", hb_ValToStr( o:x )
 
    o:x[ 1 ]     *= 3
    o:Get()[ 2 ] *= 3
-   QOut( "Times 3          : ", ToChar( o:x ) )
+   ? "Times 3          : ", hb_ValToStr( o:x )
 
    o:x[ 1 ]     /= 1.5
    o:Get()[ 2 ] /= 1.5
-   QOut( "Divide by 1.5    : ", ToChar( o:x ) )
+   ? "Divide by 1.5    : ", hb_ValToStr( o:x )
 
    o:x[ 1 ]     %= 4
    o:Get()[ 2 ] %= 4
-   QOut( "Modulus 4        : ", ToChar( o:x ) )
+   ? "Modulus 4        : ", hb_ValToStr( o:x )
 
    o:x[ 1 ]     ^= 3
    o:Get()[ 2 ] ^= 3
-   QOut( "To the power 3   : ", ToChar( o:x ) )
+   ? "To the power 3   : ", hb_ValToStr( o:x )
 
-   QOut( "Global stack" )
+   ? "Global stack"
    Debug( __dbgVMStkGList() )
-   QOut( "Statics" )
+   ? "Statics"
    Debug( __dbgVMVarSList() )
 
    RETURN
@@ -88,4 +88,7 @@ STATIC FUNCTION Get()
 
    LOCAL self := QSelf()
 
-   return ::x
+   RETURN ::x
+
+STATIC PROCEDURE Debug()
+   RETURN

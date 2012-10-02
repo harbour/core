@@ -9,18 +9,18 @@ PROCEDURE Main()
    LOCAL oForm := TForm():New()
    LOCAL oSecond
 
-   QOut( "What's the default oForm and calculate area" )
+   ? "What's the default oForm and calculate area"
    Debug( oForm )
-   QOut( oForm:CalcArea()  )
-   QOut( "Set nTop to 5 and recalculate" )
+   ? oForm:CalcArea()
+   ? "Set nTop to 5 and recalculate"
    oForm:nTop := 5
    Debug( oForm )
-   QOut( oForm:CalcArea()  )
+   ? oForm:CalcArea()
 
-   QOut( "Create a new instance and calculate area" )
+   ? "Create a new instance and calculate area"
    oSecond := TForm():New()
    Debug( oSecond )
-   QOut( oSecond:CalcArea()  )
+   ? oSecond:CalcArea()
 
    RETURN
 
@@ -57,6 +57,9 @@ STATIC FUNCTION Show()
 
    LOCAL Self := QSelf()
 
-   QOut( "lets show a form from here :-)" )
+   ? "lets show a form from here :-)"
 
    RETURN NIL
+
+STATIC PROCEDURE Debug()
+   RETURN

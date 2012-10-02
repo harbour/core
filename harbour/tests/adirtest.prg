@@ -20,12 +20,12 @@ STATIC FUNCTION TestIt( cSpec )
    LOCAL a4
    LOCAL a5
 
-   // In order to account for documented behavour, this call will ensure
-   // that Adir() returns the same length array in both cases.
-   // ie: adir( cSpec ) could return a different length array than
-   // ADIR( cSpec,,,,,{} )
+// In order to account for documented behavour, this call will ensure
+// that Adir() returns the same length array in both cases.
+// ie: adir( cSpec ) could return a different length array than
+// ADir( cSpec,,,,,{} )
 
-   a := ADIR( cSpec,,,,,{} )
+   a := ADir( cSpec, , , , , {} )
 
    SET DATE ANSI
    SET CENTURY ON
@@ -39,14 +39,14 @@ STATIC FUNCTION TestIt( cSpec )
    OutStd( "--------------------------------------------------------" )
    OutStd( hb_eol() )
 
-   ADIR( cSpec , a1, a2, a3, a4, a5 )
+   ADir( cSpec , a1, a2, a3, a4, a5 )
 
-   aEval(a1, {|tmp| OutStd( tmp ), OutStd( hb_eol() ) } )
-   aEval(a2, {|tmp| OutStd( tmp ), OutStd( hb_eol() ) } )
-   aEval(a3, {|tmp| OutStd( tmp ), OutStd( hb_eol() ) } )
-   aEval(a4, {|tmp| OutStd( tmp ), OutStd( hb_eol() ) } )
-   aEval(a5, {|tmp| OutStd( tmp ), OutStd( hb_eol() ) } )
+   AEval( a1, {| tmp | OutStd( tmp ), OutStd( hb_eol() ) } )
+   AEval( a2, {| tmp | OutStd( tmp ), OutStd( hb_eol() ) } )
+   AEval( a3, {| tmp | OutStd( tmp ), OutStd( hb_eol() ) } )
+   AEval( a4, {| tmp | OutStd( tmp ), OutStd( hb_eol() ) } )
+   AEval( a5, {| tmp | OutStd( tmp ), OutStd( hb_eol() ) } )
 
-   ADIR( cSpec, 10, "A", NIL, NIL, NIL )
+   ADir( cSpec, 10, "A", NIL, NIL, NIL )
 
    RETURN NIL

@@ -10,7 +10,7 @@ PROCEDURE Main()
    LOCAL cb := {|| QOut( "test" ) }
 
    WHILE i < 1000
-      QOut( i )
+      ? i
       Eval( cb )
       i++
    END

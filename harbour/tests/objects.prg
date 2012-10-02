@@ -11,15 +11,15 @@ PROCEDURE Main()
 
    LOCAL oObject := TAny():New()
 
-   QOut( ValType( oObject ) )
-   QOut( Len( oObject ) )      // 3 datas !
-   QOut( oObject:ClassH() )    // retrieves the handle of its class
+   ? ValType( oObject )
+   ? Len( oObject )       // 3 datas !
+   ? oObject:ClassH()     // retrieves the handle of its class
 
-   QOut( oObject:ClassName() ) // retrieves its class name
+   ? oObject:ClassName()  // retrieves its class name
 
    oObject:Test()         // This invokes the below defined Test function
    // See QSelf() and :: use
-   QOut( oObject:cName )
+   ? oObject:cName
 
    oObject:DoNothing()    // a virtual method does nothing,
    // but it is very usefull for Classes building logic
@@ -47,8 +47,8 @@ STATIC FUNCTION New()
 
    LOCAL Self := QSelf()
 
-   QOut( ValType( Self ) )
-   QOut( "Inside New()" )
+   ? ValType( Self )
+   ? "Inside New()"
 
    ::cName := "Harbour OOP"
 
@@ -58,8 +58,8 @@ STATIC FUNCTION Test()
 
    LOCAL Self := QSelf()        // We access Self for this method
 
-   QOut( "Test method invoked!" )
+   ? "Test method invoked!"
 
-   QOut( ::ClassName() )    // :: means Self:  It is a Harbour built-in operator
+   ? ::ClassName()     // :: means Self:  It is a Harbour built-in operator
 
    RETURN NIL

@@ -53,8 +53,6 @@ PROCEDURE Main()
 
    ENDDO
 
-   QUIT
-
    RETURN
 
 //*************************

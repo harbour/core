@@ -9,10 +9,10 @@ PROCEDURE Main()
    LOCAL a := TestBlocks()
    LOCAL cb
 
-   QOut( Eval( a[ 1 ] ) )      // 23
-   QOut( Eval( a[ 2 ], 42 ) )  // 42
-   QOut( Eval( a[ 1 ] ) )      // 42
-   QOut( Eval( a[ 2 ], 15 ) )  // 15
+   ? Eval( a[ 1 ] )       // 23
+   ? Eval( a[ 2 ], 42 )   // 42
+   ? Eval( a[ 1 ] )       // 42
+   ? Eval( a[ 2 ], 15 )   // 15
 
    mqout( 15, Eval( a[ 1 ] ) )      // 15 15
    mqout( 14, Eval( a[ 1 ] ) )      // 14 15
@@ -24,10 +24,10 @@ PROCEDURE Main()
    GetArray( @a )
    PrintArray( @a )
 
-   QOut( "Test for variables passed by reference in a codeblock" )
+   ? "Test for variables passed by reference in a codeblock"
    DetachWithRefer()
 
-   QOut( "Test for indirect detaching of local variables" )
+   ? "Test for indirect detaching of local variables"
    DetachToStatic( 1 )
    mqout( 2, Eval( s_cbStatic, 1 ) )
    mqout( 3, Eval( s_cbStatic, 2 ) )
@@ -49,7 +49,7 @@ STATIC FUNCTION TestBlocks()
 
 STATIC FUNCTION mqout( nExpected, nGot )
 
-   QOut( nExpected, nGot )
+   ? nExpected, nGot
 
    RETURN NIL
 

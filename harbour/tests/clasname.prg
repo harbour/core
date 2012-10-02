@@ -21,36 +21,36 @@ PROCEDURE Main()
 
    ?
 
-   QOut( NIL:className )
-   QOut( {}:className )
-   QOut( "":className )
-   QOut( 0:className )
-   QOut( CToD( "" ):className )
-   QOut( .F. :className )
-   QOut( {|| NIL }:className )
-   QOut( ErrorNew():className )
+   ? NIL:className
+   ? {}:className
+   ? "":className
+   ? 0:className
+   ? CToD( "" ):className
+   ? .F. :className
+   ? {|| NIL }:className
+   ? ErrorNew():className
 
    // For fun, do it again while ensuring the parser doesn't care about
    // whitespace.
 
    ?
 
-   QOut( NIL         :  className )
-   QOut( {}          :  className )
-   QOut( ""          :  className )
-   QOut( 0           :  className )
-   QOut( CToD( "" )  :  className )
-   QOut( .F.         :  className )
-   QOut( {|| NIL }   :  className )
-   QOut( ErrorNew()  :  className )
+   ? NIL         :  className
+   ? {}          :  className
+   ? ""          :  className
+   ? 0           :  className
+   ? CToD( "" )  :  className
+   ? .F.         :  className
+   ? {|| NIL }   :  className
+   ? ErrorNew()  :  className
 
    // Now for some sillier ones. If the above work the following should
    // work too.
 
    ?
-   QOut( ( NIL:className ):className )
+   ? ( NIL:className ):className
 
    ?
-   QOut( ( ( NIL:className ):className ):className )
+   ? ( ( NIL:className ):className ):className
 
    RETURN

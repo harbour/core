@@ -6,11 +6,12 @@
 
 PROCEDURE Main()
 
-   QOut( "Testing recursive calls" + hb_eol() )
+   ? "Testing recursive calls"
+   ?
 
-   QOut( f( 10 ) )
+   ? f( 10 )
 
-   QOut( 10 * 9 * 8 * 7 * 6 * 5 * 4 * 3 * 2 * 1 )
+   ? 10 * 9 * 8 * 7 * 6 * 5 * 4 * 3 * 2 * 1
 
    RETURN
 

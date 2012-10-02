@@ -11,8 +11,7 @@ PROCEDURE Main()
    LOCAL n
 
    FOR n := 1 TO _SET_COUNT
-      OutStd( hb_eol() )
-      OutStd( Set( n ) )
+      ? Set( n )
    NEXT
 
    RETURN

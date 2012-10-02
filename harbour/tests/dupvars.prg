@@ -9,6 +9,6 @@ PROCEDURE Main()
 
    LOCAL a, a
 
-   QOut( "ok" )
+   ? "ok"
 
    RETURN

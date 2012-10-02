@@ -7,19 +7,19 @@ PROCEDURE Main( cFilename, cSection )
    LOCAL oIni := TIniFile():New( Default( cFilename, "harbour.ini" ) )
    LOCAL s, n := Val( Default( cSection, "1" ) )
 
-   QOut( "" )
-   QOut( "Sections:" )
+   ?
+   ? "Sections:"
    s := oIni:ReadSections()
    AEval( s, {| x | QOut( "[" + x + "]" ) } )
 
-   QOut( "" )
-   QOut( "[" + s[ n ] + "]" )
+   ?
+   ? "[" + s[ n ] + "]"
    s := oIni:ReadSection( s[ n ] )
    AEval( s, {| x | QOut( x ) } )
 
    oIni:WriteDate( "Date Test", "Today", Date() )
    oIni:WriteBool( "Bool Test", "True", .T. )
-   QOut( oIni:ReadBool( "Bool Test", "True", .F. ) )
+   ? oIni:ReadBool( "Bool Test", "True", .F. )
 
    oIni:UpdateFile()
 

@@ -8,7 +8,7 @@
 
 #define ADDRESS                     "127.0.0.1"
 #define PORT                        10000
-#define EOT                         ( Chr( 4 ) )
+#define EOT                         hb_BChar( 4 )
 
 PROCEDURE Main()
 
@@ -21,10 +21,10 @@ PROCEDURE Main()
       ? "socket connect error " + hb_ntos( hb_socketGetError() )
    ENDIF
 
-   ? hb_socketSend( hSocket, "hi" + EOT  )
-   ? hb_socketSend( hSocket, "how" + EOT  )
-   ? hb_socketSend( hSocket, "you doing?" + EOT  )
-   ? hb_socketSend( hSocket, "quit" + EOT  )
+   ? hb_socketSend( hSocket, "hi" + EOT )
+   ? hb_socketSend( hSocket, "how" + EOT )
+   ? hb_socketSend( hSocket, "you doing?" + EOT )
+   ? hb_socketSend( hSocket, "quit" + EOT )
 
    hb_socketShutdown( hSocket )
    hb_socketClose( hSocket )

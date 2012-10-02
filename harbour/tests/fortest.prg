@@ -9,10 +9,6 @@
 
 // TODO: add test for "step 0"
 
-#ifndef __HARBOUR__
-   #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
-#endif
-
 STATIC snFrom
 STATIC snTo
 STATIC snStep
@@ -22,7 +18,7 @@ PROCEDURE Main()
    LOCAL array
    LOCAL tmp, n
 
-   QOut( "Testing Harbour For Next loops." )
+   ? "Testing Harbour For Next loops."
 
    array := { ;
       {  1, 10,  1 }, ;
@@ -40,14 +36,13 @@ PROCEDURE Main()
       snTo   := array[ tmp ][ 2 ]
       snStep := array[ tmp ][ 3 ]
 
-      OutStd( " From: " ) ; OutStd( snFrom )
-      OutStd( "   To: " ) ; OutStd( snTo )
-      OutStd( " Step: " ) ; OutStd( snStep )
-      OutStd( hb_eol() )
+      ? " From:", snFrom,;
+        "   To:", snTo,;
+        " Step:", snStep
 
       FOR n := Eval( {|| ValFrom() } ) TO Eval( {|| ValTo() } ) STEP Eval( {|| ValStep() } )
-         OutStd( "Exec " ) ; OutStd( n ) ; OutStd( hb_eol() )
-      NEXT n
+         ? "Exec", n
+      NEXT
 
    NEXT
 
@@ -55,18 +50,18 @@ PROCEDURE Main()
 
 STATIC FUNCTION ValFrom()
 
-   OutStd( "From" ) ; OutStd( hb_eol() )
+   ? "From"
 
    RETURN snFrom
 
 STATIC FUNCTION ValTo()
 
-   OutStd( "To" ) ; OutStd( hb_eol() )
+   ? "To"
 
    RETURN snTo
 
 STATIC FUNCTION ValStep()
 
-   OutStd( "Step" ) ; OutStd( hb_eol() )
+   ? "Step"
 
    RETURN snStep

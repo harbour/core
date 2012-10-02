@@ -10,22 +10,22 @@ STATIC uOne, uTwo
 
 PROCEDURE Main()
 
-   QOut( "Statics overlapped!" )
-   QOut( "===================" )
-   QOut( "" )
-   QOut( "INSIDE statics1.prg" )
-   QOut( "   static uOne, uTwo" )
-   QOut( "" )
-   QOut( "   uOne, uTwo =>", uOne, ",", uTwo )
+   ? "Statics overlapped!"
+   ? "==================="
+   ?
+   ? "INSIDE statics1.prg"
+   ? "   static uOne, uTwo"
+   ?
+   ? "   uOne, uTwo =>", uOne, ",", uTwo
    uOne := 1
    uTwo := 2
-   QOut( "   uOne := 1" )
-   QOut( "   uOne := 2" )
-   QOut( "   uOne, uTwo =>", uOne, ",", uTwo )
-   QOut( "" )
+   ? "   uOne := 1"
+   ? "   uOne := 2"
+   ? "   uOne, uTwo =>", uOne, ",", uTwo
+   ?
    Test()
-   QOut( "INSIDE statics1.prg" )
-   QOut( "   uOne, uTwo =>", uOne, ",", uTwo )
-   QOut( "" )
+   ? "INSIDE statics1.prg"
+   ? "   uOne, uTwo =>", uOne, ",", uTwo
+   ?
 
    RETURN

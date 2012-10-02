@@ -17,31 +17,31 @@ PROCEDURE Main()
 
    LOCAL oString := TString():New( "Hello" )
 
-   QOut( "Testing TString with Operator Overloading" )
-   QOut( oString:cValue )
-   QOut( "---" )
+   ? "Testing TString with Operator Overloading"
+   ? oString:cValue
+   ? "---"
 
    ? ValType( oString )
 
-   QOut( "Equal........:", oString = "Hello" )
-   QOut( "Exactly Equal:", oString == "Hello" )
-   QOut( "Not Equal != :", oString != "Hello" )
-   QOut( "Not Equal <> :", oString <> "Hello" )
-   QOut( "Not Equal #  :", oString # "Hello" )
-   QOut( "Substring $  :", oString $ "Hello" )
-   QOut( "Less than    :", oString < "Hello" )
-   QOut( "Less than or Equal:", oString <= "Hello" )
-   QOut( "Greater than :", oString > "Hello" )
-   QOut( "Greater than or Equal:", oString >= "Hello" )
-   QOut( "Concatenation + :", oString + "Hello" )
-   QOut( "Concatenation - :", oString - "Hello" )
-   QOut( "Array index[2] :", oString[ 2 ] )
-   QOut( "Array index[3] := 'X' :", oString[ 3 ] := 'X' )
-   QOut( oString:cValue )
+   ? "Equal........:", oString = "Hello"
+   ? "Exactly Equal:", oString == "Hello"
+   ? "Not Equal != :", oString != "Hello"
+   ? "Not Equal <> :", oString <> "Hello"
+   ? "Not Equal #  :", oString # "Hello"
+   ? "Substring $  :", oString $ "Hello"
+   ? "Less than    :", oString < "Hello"
+   ? "Less than or Equal:", oString <= "Hello"
+   ? "Greater than :", oString > "Hello"
+   ? "Greater than or Equal:", oString >= "Hello"
+   ? "Concatenation + :", oString + "Hello"
+   ? "Concatenation - :", oString - "Hello"
+   ? "Array index[2] :", oString[ 2 ]
+   ? "Array index[3] := 'X' :", oString[ 3 ] := 'X'
+   ? oString:cValue
 
    RETURN
 
-CREATE CLASS tString
+CREATE CLASS TString
 
    VAR cValue
 
@@ -62,43 +62,3 @@ CREATE CLASS tString
       SubStr( ::cValue, nIndex, 1 ) )
 
 ENDCLASS
-
-/*
-
-FUNCTION TString()
-
-   STATIC oClass
-
-   IF oClass == NIL
-      oClass = HBClass():New( "TSTRING" )  // starts a new class definition
-
-      oClass:AddData( "cValue" )          // define this class objects datas
-
-      oClass:AddMethod( "New", @New() )
-
-      oClass:AddInline( "==", {| self, cTest | ::cValue == cTest } )
-      oClass:AddInline( "!=", {| self, cTest | ::cValue != cTest } )
-      oClass:AddInline( "<" , {| self, cTest | ::cValue <  cTest } )
-      oClass:AddInline( "<=", {| self, cTest | ::cValue <= cTest } )
-      oClass:AddInline( ">" , {| self, cTest | ::cValue >  cTest } )
-      oClass:AddInline( ">=", {| self, cTest | ::cValue >= cTest } )
-      oClass:AddInline( "+" , {| self, cTest | ::cValue +  cTest } )
-      oClass:AddInline( "-" , {| self, cTest | ::cValue -  cTest } )
-      oClass:AddInline( "$" , {| self, cTest | ::cValue $  cTest } )
-
-      oClass:AddInline( "HasMsg", {| self, cMsg | __objHasMsg( QSelf(), cMsg ) } )
-
-      oClass:Create()                     // builds this class
-   ENDIF
-
-   RETURN oClass:Instance()                  // builds an object of this class
-
-STATIC FUNCTION New( cText )
-
-   LOCAL Self := QSelf()
-
-   ::cValue := cText
-
-   RETURN Self
-
-*/

@@ -6,9 +6,6 @@
  * $Doc$
  * $Description$  Debug function tests.
  *                Based on classes.prg
- * $Requirement$  source\tools\stringp.prg
- *                source\rtl\objfunc.prg
- *                source\rtl\asort.prg
  * $End$
  *
  * Written by Eddie Runia <eddie@runia.com>
@@ -24,43 +21,43 @@ PROCEDURE Main()
    LOCAL oForm   := TForm():New()
    LOCAL nNumber := 15
 
-   QOut( oForm:ClassName() )
+   ? oForm:ClassName()
    oForm:Show()
-   QOut()
+   ?
 
-   QOut( "-OBJECT additions-" )
-   QOut( "What is in oForm ? " )
+   ? "-OBJECT additions-"
+   ? "What is in oForm ? "
    Debug( oForm:Transfer() )
 
-   QOut( "Does transfer exists ? ", __objHasMsg   ( oForm, "Transfer" ) )
-   QOut( "Is   transfer DATA   ? ", __objHasData  ( oForm, "Transfer" ) )
-   QOut( "Is   transfer METHOD ? ", __objHasMethod( oForm, "Transfer" ) )
-   QOut( "Does nLeft    exists ? ", __objHasMsg   ( oForm, "nLeft"    ) )
-   QOut( "Is   nLeft    DATA   ? ", __objHasData  ( oForm, "nLeft"    ) )
-   QOut( "Is   nLeft    METHOD ? ", __objHasMethod( oForm, "nLeft"    ) )
-   QOut( "Does unknown  exists ? ", __objHasMsg   ( oForm, "Unknown"  ) )
-   QOut( "Is   unknown  DATA   ? ", __objHasData  ( oForm, "Unknown"  ) )
-   QOut( "Is   unknown  METHOD ? ", __objHasMethod( oForm, "Unknown"  ) )
+   ? "Does transfer exists ? ", __objHasMsg   ( oForm, "Transfer" )
+   ? "Is   transfer DATA   ? ", __objHasData  ( oForm, "Transfer" )
+   ? "Is   transfer METHOD ? ", __objHasMethod( oForm, "Transfer" )
+   ? "Does nLeft    exists ? ", __objHasMsg   ( oForm, "nLeft"    )
+   ? "Is   nLeft    DATA   ? ", __objHasData  ( oForm, "nLeft"    )
+   ? "Is   nLeft    METHOD ? ", __objHasMethod( oForm, "nLeft"    )
+   ? "Does unknown  exists ? ", __objHasMsg   ( oForm, "Unknown"  )
+   ? "Is   unknown  DATA   ? ", __objHasData  ( oForm, "Unknown"  )
+   ? "Is   unknown  METHOD ? ", __objHasMethod( oForm, "Unknown"  )
 
-   QOut( "Set nLeft to 50 and nRight to 100" )
+   ? "Set nLeft to 50 and nRight to 100"
    oForm:Transfer( { "nLeft", 50 }, { "nRight", 100 } )
    Debug( oForm:Transfer() )
 
    Pause()
 
 
-   QOut( "-DEBUG Functions-" )
-   QOut( "-Statics-" )
+   ? "-DEBUG Functions-"
+   ? "-Statics-"
    Debug( __dbgVMVarSList() )
 
-   QOut( "-Global Stack-" )
-   Debug ( __dbgVMStkGList() )
+   ? "-Global Stack-"
+   Debug( __dbgVMStkGList() )
 
-   QOut( "-Local Stack-" )
-   Debug ( __dbgVMStkLList() )
+   ? "-Local Stack-"
+   Debug( __dbgVMStkLList() )
 
-   QOut( "-Parameters-" )
-   Debug ( __dbgVMParLList() )
+   ? "-Parameters-"
+   Debug( __dbgVMParLList() )
 
    Pause()
 
@@ -79,26 +76,26 @@ FUNCTION FuncSecond( nParam, cParam, uParam )
    LOCAL xParam
    LOCAL xStack
 
-   QOut()
-   QOut( "-Second procedure-" )
-   QOut()
+   ?
+   ? "-Second procedure-"
+   ?
 
-   QOut( "-Statics-" )
-   Debug ( __dbgVMVarSList() )
-   QOut()
+   ? "-Statics-"
+   Debug( __dbgVMVarSList() )
+   ?
 
-   QOut( "-Global Stack- Len=", __dbgVMStkGCount() )
-   Debug ( __dbgVMStkGList() )
-   QOut()
+   ? "-Global Stack- Len=", __dbgVMStkGCount()
+   Debug( __dbgVMStkGList() )
+   ?
 
-   QOut( "-Local Stack- Len=", __dbgVMStkLCount() )
-   xStack := Debug ( __dbgVMStkLList() )
-   QOut()
+   ? "-Local Stack- Len=", __dbgVMStkLCount()
+   xStack := Debug( __dbgVMStkLList() )
+   ?
 
-   QOut( "-Parameters-" )
+   ? "-Parameters-"
    xParam := Debug( __dbgVMParLList() )
    IF xParam[ xStack[ 7 ] ] == "Hello"
-      QOut( ":-)" )
+      ? ":-)"
    ENDIF
 
    Pause()
@@ -162,7 +159,7 @@ STATIC FUNCTION Show()
 
    LOCAL Self := QSelf()
 
-   QOut( "lets show a form from here :-)" )
+   ? "lets show a form from here :-)"
 
    RETURN NIL
 
@@ -252,10 +249,13 @@ STATIC FUNCTION Transfer( x1, x2, x3, x4, x5, x6, x7, x8, x9, x10 ) /* etc */
          ELSEIF ValType( xData ) == "O"         // Object passed
             xRet := ::Transfer( xData:Transfer() )
          ELSEIF !( ValType( xData ) == "U" )
-            QOut( "TRANSFER: Incorrect argument(", n, ") ", xData )
+            ? "TRANSFER: Incorrect argument(", n, ") ", xData
          ENDIF
 
       NEXT
    ENDIF
 
    RETURN xRet
+
+STATIC PROCEDURE Debug()
+   RETURN

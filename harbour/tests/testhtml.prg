@@ -35,8 +35,6 @@ PROCEDURE Main()
 
    RETURN
 
-/*---------------------------------------------------------------------------*/
-
 FUNCTION THTML()
 
    STATIC oClass

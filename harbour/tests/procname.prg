@@ -33,7 +33,7 @@ FUNCTION Five()
    LOCAL n := 0
 
    WHILE ! Empty( ProcName( n ) )
-      QQOut( "Called from: ", ProcName( n ), ProcLine( n++ ), hb_eol() )
+      ?? "Called from: ", ProcName( n ), ProcLine( n++ ), hb_eol()
    ENDDO
 
    RETURN NIL

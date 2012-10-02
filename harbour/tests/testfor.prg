@@ -8,13 +8,13 @@ PROCEDURE Main()
 
    FOR i := 1 TO 10
 
-      QOut( i )
+      ? i
 
       IF i == 4 .AND. .T.
          __Accept( "" )
-         QOut( i )
+         ? i
          i := 9
-         QOut( i )
+         ? i
          __Accept( "" )
       ENDIF
 

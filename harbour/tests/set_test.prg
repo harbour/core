@@ -86,10 +86,8 @@ PROCEDURE Main()
 
 PROCEDURE testline( c, n )
 
-   OutStd( hb_eol() )
-   OutStd( Str( n, 3 ) )
-   OutStd( " " )
-   OutStd( PadR( c, 20 ) )
-   OutStd( Set( n ) )
+   ? Str( n, 3 ) ,;
+     PadR( c, 20 ) ,;
+     Set( n )
 
    RETURN

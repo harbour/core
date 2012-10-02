@@ -13,7 +13,7 @@ PROCEDURE Main()
 
    a := strtoarray( "this is a great big test of strtoken" )
    FOR i := 1 TO Len( a )
-      QOut( a[ i ] )
+      ? a[ i ] )
    NEXT
 
    RETURN
@@ -28,7 +28,7 @@ FUNCTION strtoarray( s )
       AAdd( aResult, t )
       s := SubStr( s, l + 2 ) /* skip the delimiter */
 
-      QOut( t, Str( l ), s )
+      ? t, Str( l ), s )
    ENDDO
 
    RETURN aResult

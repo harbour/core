@@ -6,15 +6,15 @@
 
 PROCEDURE Main()
 
-   QOut( "From Main()" )
+   ? "From Main()"
 
    Two( 1 )
 
-   QOut( "back to Main()" )
+   ? "back to Main()"
 
    Two( 2 )
 
-   QOut( "back to Main()" )
+   ? "back to Main()"
 
    RETURN
 
@@ -22,14 +22,14 @@ FUNCTION Two( n )
 
    DO CASE
    CASE n == 1
-      QOut( "n == 1" )
+      ? "n == 1"
       RETURN NIL
 
    CASE n == 2
-      QOut( "n == 2" )
+      ? "n == 2"
       RETURN NIL
    ENDCASE
 
-   QOut( "This message should not been seen" )
+   ? "This message should not been seen"
 
    RETURN NIL

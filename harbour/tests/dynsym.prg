@@ -7,7 +7,7 @@ PROCEDURE Main()
    LOCAL nPos
 
    FOR nPos := 1 TO nCount
-      OutStd( __dynsGetName( nPos ), Chr(13) + Chr(10) )
+      ? __dynsGetName( nPos )
    NEXT
 
    nPos := __dynsGetIndex( "MAIN" )

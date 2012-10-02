@@ -7,8 +7,8 @@ PROCEDURE Main()
    LOCAL n
 
    FOR n := 1 TO 20
-      QOut( FibR( n ) )
-      QOut( FibI( n ) )
+      ? FibR( n )
+      ? FibI( n )
    NEXT
 
    RETURN

@@ -10,16 +10,16 @@ STATIC uA, uB
 
 PROCEDURE Test()
 
-   QOut( "INSIDE statics2.prg" )
-   QOut( "   static uA, uB" )
-   QOut( "" )
-   QOut( "   ValType( uA ), ValType( uB ) =>", ValType( uA ), ",", ValType( uB ) )
-   QOut( "   uA, uB =>", uA, ",", uB )
+   ? "INSIDE statics2.prg"
+   ? "   static uA, uB"
+   ?
+   ? "   ValType( uA ), ValType( uB ) =>", ValType( uA ), ",", ValType( uB )
+   ? "   uA, uB =>", uA, ",", uB
    uA := "a"
    uB := "b"
-   QOut( '   uA := "a"' )
-   QOut( '   uB := "b"' )
-   QOut( "   uA, uB =>", uA, ",", uB )
-   QOut( "" )
+   ? '   uA := "a"'
+   ? '   uB := "b"'
+   ? "   uA, uB =>", uA, ",", uB
+   ?
 
    RETURN

@@ -42,7 +42,8 @@ PROCEDURE Main( cSkip, cRaw )
 
    TEST7( cSkip, cRaw )
    ?
-   QUIT
+
+   RETURN
 
 PROCEDURE Results()
 

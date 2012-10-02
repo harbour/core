@@ -6,10 +6,10 @@ PROCEDURE Main()
 
    LOCAL o := HBObject():New()
 
-   QOut( "o:Data1 => ", o:Data1 )
-   QOut( "o:ClassData1 => ", o:ClassData1 )
-   QOut( "o:Data2 => ", o:Data2 )
-   QOut( "o:ClassData2 => ", o:ClassData2 )
+   ? "o:Data1 => ", o:Data1
+   ? "o:ClassData1 => ", o:ClassData1
+   ? "o:Data2 => ", o:Data2
+   ? "o:ClassData2 => ", o:ClassData2
    o:Test()
 
    RETURN
@@ -44,8 +44,8 @@ STATIC FUNCTION Test()
 
    LOCAL self := QSelf()
 
-   QOut( "Inside ::Test() " )
-   QOut( "calling ::Method1() " )
+   ? "Inside ::Test()"
+   ? "calling ::Method1()"
    ::Method1()
 
    RETURN self
@@ -54,7 +54,7 @@ STATIC FUNCTION Method1Base()
 
    LOCAL self := QSelf()
 
-   QOut( "I am Method1 from TBaseObject" )
+   ? "I am Method1 from TBaseObject"
    ::Method2()
 
    RETURN self
@@ -63,7 +63,7 @@ STATIC FUNCTION Method2Base()
 
    LOCAL self := QSelf()
 
-   QOut( "I am Method2 from TBaseObject" )
+   ? "I am Method2 from TBaseObject"
 
    RETURN self
 
@@ -100,7 +100,7 @@ STATIC FUNCTION Method1()
 
    LOCAL self := QSelf()
 
-   QOut( "I am Method1 from HBObject" )
+   ? "I am Method1 from HBObject"
    ::TBaseObject:Method1()
 
    RETURN self
@@ -109,6 +109,6 @@ STATIC FUNCTION Method2()
 
    LOCAL self := QSelf()
 
-   QOut( "I am Method2 from HBObject" )
+   ? "I am Method2 from HBObject"
 
    RETURN self

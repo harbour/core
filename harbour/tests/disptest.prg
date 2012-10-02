@@ -16,7 +16,7 @@ PROCEDURE Main()
 
    LOCAL a, b, c, d, e, f, g, h, i, j, k, l
 
-   SetPos( - 2, 76 )
+   SetPos( -2, 76 )
    DispOut( "You won't see this!" )
    Tone( 440, 1 )
    Inkey( 0 )
@@ -61,7 +61,7 @@ PROCEDURE Main()
    SetPos( 6, 74 )
    DispOut( "Partly off screen!" )
    ? Row(), Col()
-   SetPos( 8, - 12 )
+   SetPos( 8, -12 )
    a := Row()
    b := Col()
    ?? "PA"
@@ -73,7 +73,7 @@ PROCEDURE Main()
    ? a, b
    ? c, d
    ? e, f
-   SetPos( 13, - 12 )
+   SetPos( 13, -12 )
    a := Row()
    b := Col()
    DispOut( "All off screen!" )
@@ -91,4 +91,5 @@ PROCEDURE Main()
    Inkey( 0 )
    SetPos( 50, 20 )
    ?? "On screen??"
-   QUIT
+
+   RETURN

@@ -4,9 +4,9 @@
 
 PROCEDURE Main()
 
-   QOut( C_FUNC() )
+   ? C_FUNC()
 
-   QOut( EndDumpTest() )
+   ? EndDumpTest()
 
    RETURN
 

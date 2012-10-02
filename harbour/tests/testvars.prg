@@ -13,7 +13,7 @@ PROCEDURE Main( Param1 )
 
    Sub( @j )
 
-   QOut( j )
+   ? j
 
    HB_SYMBOL_UNUSED( Param1 )
    HB_SYMBOL_UNUSED( k )

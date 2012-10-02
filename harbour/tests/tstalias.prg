@@ -9,11 +9,11 @@ PROCEDURE Main()
    REPLACE Age WITH 1
    ? FIELD->Age
 
-   //REPLACE 1->Age WITH 2 // Todo: complete support in harbour.y - AliasAddInt()
-   //? FIELD->Age
+// REPLACE 1->Age WITH 2 // Todo: complete support in harbour.y - AliasAddInt()
+// ? FIELD->Age
 
-   //REPLACE 1.5->Age WITH 3 // Will produce "Invalid alias expression"
-   //? FIELD->Age
+// REPLACE 1.5->Age WITH 3 // Will produce "Invalid alias expression"
+// ? FIELD->Age
 
    REPLACE TEST->Age WITH 4
    ? FIELD->Age
@@ -30,7 +30,7 @@ PROCEDURE Main()
 
    USE test
 
-   // ? ("0")->FIRST
+// ? ( "0" )->FIRST
    ? ( "B" )->FIRST
    ? ( "2" )->FIRST
    ? 2->FIRST
@@ -38,7 +38,7 @@ PROCEDURE Main()
 
    Inkey( 0 )
 
-   // ? ("0")->FIRST
+// ? ( "0" )->FIRST
    ? Select()
    ? Select( 1 )
    ? Select( 2 )

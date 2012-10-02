@@ -6,16 +6,16 @@
 
 PROCEDURE Main()
 
-   QOut( "From Main()" )
+   ? "From Main()"
 
    SecondOne()
 
-   QOut( "From Main() again" )
+   ? "From Main() again"
 
    RETURN
 
 STATIC FUNCTION SecondOne()
 
-   QOut( "From Second()" )
+   ? "From Second()"
 
    RETURN NIL

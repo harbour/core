@@ -8,26 +8,26 @@ PROCEDURE Main()
 
    LOCAL n := 2
 
-   QOut( "testing Harbour Do case" )
+   ? "testing Harbour DO CASE"
 
    DO CASE
    CASE n == 1
-      QOut( "n is 1" )
-      QOut( "first case" )
+      ? "n is 1"
+      ? "first case"
 
    CASE n == 2
-      QOut( "n is 2" )
-      QOut( "second case" )
+      ? "n is 2"
+      ? "second case"
 
    CASE n == 3
-      QOut( "n is 3" )
-      QOut( "third case" )
+      ? "n is 3"
+      ? "third case"
 
-      OTHERWISE
-      QOut( "Sorry, I don't know what n is :-)" )
-      QOut( "otherwise" )
+   OTHERWISE
+      ? "Sorry, I don't know what n is :-)"
+      ? "otherwise"
    ENDCASE
 
-   QOut( "Ok!" )
+   ? "Ok!"
 
    RETURN

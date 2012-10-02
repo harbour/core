@@ -14,8 +14,8 @@
 #endif
 
 PROCEDURE Main()
-   Local x
-   Local y
+   LOCAL x
+   LOCAL y
 
    // Simple one to start with.
    x := ( 1 )
@@ -47,23 +47,23 @@ PROCEDURE Main()
    // Now mix with statements and functions
    ? ( 1, 2, 3 )
 
-   If ( y := .t. )
+   IF ( y := .t. )
       ? "Working"
-   Else
+   ELSE
       ? "Borken"
-   EndIf
+   ENDIF
 
-   If ( x := 10, y := ( x == 10 ) )
+   IF ( x := 10, y := ( x == 10 ) )
       ? "Working"
-   Else
+   ELSE
       ? "Broken"
-   EndIf
+   ENDIF
 
-   If ( Something( 1, 2, 3 ), .T. )
+   IF ( Something( 1, 2, 3 ), .T. )
       ? "Working"
-   Else
+   ELSE
       ? "Broken"
-   EndIf
+   ENDIF
 
    ?
 
@@ -79,15 +79,15 @@ PROCEDURE Main()
     * because IF token followed by any three expressions is interpreted
     * as IIF inline
     */
-//   IF( .T., .F., .T. )
-//       ? "Working"
-//   ELSE
-//       ? "Broken"
-//   ENDIF
+// IF( .T., .F., .T. )
+//    ? "Working"
+// ELSE
+//    ? "Broken"
+// ENDIF
 
-   Return
+   RETURN
 
-Static Function Something( x, y, z )
+STATIC FUNCTION Something( x, y, z )
 
    // This does something and it does it well/
 

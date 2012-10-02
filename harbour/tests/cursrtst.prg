@@ -2,7 +2,7 @@
  * $Id$
  */
 
-PROCEDURE main()
+PROCEDURE Main()
 
    LOCAL x
 

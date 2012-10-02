@@ -11,8 +11,8 @@
 
 PROCEDURE Main()
 
-   OutStd( Chr( 34 ) + Version() + Chr( 34 ) + hb_eol() )
-   OutStd( Chr( 34 ) + hb_compiler() + Chr( 34 ) + hb_eol() )
-   OutStd( Chr( 34 ) + OS() + Chr( 34 ) + hb_eol() )
+   ? Chr( 34 ) + Version() + Chr( 34 )
+   ? Chr( 34 ) + hb_compiler() + Chr( 34 )
+   ? Chr( 34 ) + OS() + Chr( 34 )
 
    RETURN

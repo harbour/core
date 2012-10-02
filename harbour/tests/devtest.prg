@@ -14,13 +14,12 @@
 PROCEDURE Main()
 
 #ifdef __HARBOUR__
-
    SET PRINTER TO devtesth
 #else
    SET PRINTER TO devtestc
 #endif
    SET DEVICE TO PRINTER
-   DevPos( - 2, 76 )
+   DevPos( -2, 76 )
    ? PRow(), PCol()
    DevOut( "First text written!" )
    ? PRow(), PCol()
@@ -30,9 +29,9 @@ PROCEDURE Main()
    ? PRow(), PCol()
    DevOut( "Off to the side!!" )
    ? PRow(), PCol()
-   DevPos( 8, - 12 )
+   DevPos( 8, -12 )
    ? PRow(), PCol()
-   DevPos( 13, - 12 )
+   DevPos( 13, -12 )
    ? PRow(), PCol()
    DevOut( "More test text!" )
    ? PRow(), PCol()
@@ -44,4 +43,5 @@ PROCEDURE Main()
    ? PRow(), PCol()
    DevOut( "!" )
    ? PRow(), PCol()
-   QUIT
+
+   RETURN

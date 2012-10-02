@@ -4,10 +4,10 @@
 
 PROCEDURE Main()
 
-   OutStd( CurDir()       + hb_eol() )
-   OutStd( CurDir( "C" )  + hb_eol() )
-   OutStd( CurDir( "C:" ) + hb_eol() )
-   OutStd( CurDir( "D:" ) + hb_eol() )
-   OutStd( CurDir( "A" )  + hb_eol() )
+   ? CurDir()
+   ? CurDir( "C" )
+   ? CurDir( "C:" )
+   ? CurDir( "D:" )
+   ? CurDir( "A" )
 
    RETURN

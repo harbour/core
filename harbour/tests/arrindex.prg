@@ -14,6 +14,6 @@ PROCEDURE Main()
 
    b := a[ c[ 1 ] ][ val( [ 2 ] ) ]
 
-   QOut( b )
+   ? b
 
    RETURN

@@ -34,10 +34,10 @@ PROCEDURE Main( cFrom, cTo )
    cTo   := Default( cTo,   "strip.out" )
 
    oFrom := TTextFile()
-   //   Debug( __objGetMethodList( oFrom ) )
+// Debug( __objGetMethodList( oFrom ) )
    oFrom:New( cFrom, "R" )
    oTo   := TTextFile()
-   //   Debug( __objGetMethodList( oTo ) )
+// Debug( __objGetMethodList( oTo ) )
    oTo:New( cTo  , "W" )
 
    DO WHILE !oFrom:EOF()
@@ -46,7 +46,7 @@ PROCEDURE Main( cFrom, cTo )
          oTo:Run( cOut )
       ENDIF
    ENDDO
-   QOut( "Number of lines", oTo:nLine )
+   ? "Number of lines", oTo:nLine
    oFrom:Dispose()
    oTo:Dispose()
 
@@ -113,13 +113,13 @@ FUNCTION New( cFileName, cMode, nBlock )
    ELSEIF ::cMode == "W"
       ::hFile := FCreate( cFileName )
    ELSE
-      QOut( "DosFile Init: Unknown file mode:", ::cMode )
+      ? "DosFile Init: Unknown file mode:", ::cMode
    ENDIF
 
    ::nError := FError()
    IF ::nError != 0
       ::lEoF := .T.
-      QOut( "Error ", ::nError )
+      ? "Error ", ::nError
    ENDIF
    ::nBlockSize := Default( nBlock, 4096 )
 
@@ -140,7 +140,7 @@ FUNCTION Dispose()
       ENDIF
       IF !FClose( ::hFile )
          ::nError := FError()
-         QOut( "Dos Error closing ", ::cFileName, " Code ", ::nError )
+         ? "Dos Error closing ", ::cFileName, " Code ", ::nError
       ENDIF
    ENDIF
 
@@ -159,9 +159,9 @@ FUNCTION READ()
    LOCAL nEoFPos
 
    IF ::hFile == - 1
-      QOut( "DosFile:Read : No file open" )
+      ? "DosFile:Read : No file open"
    ELSEIF ::cMode != "R"
-      QOut( "File ", ::cFileName, " not open for reading" )
+      ? "File ", ::cFileName, " not open for reading"
    ELSEIF !::lEoF
 
       IF Len( ::cBlock ) == 0                     // Read new block
@@ -213,9 +213,9 @@ FUNCTION WriteLn( xTxt, lCRLF )
    LOCAL cBlock
 
    IF ::hFile == - 1
-      QOut( "DosFile:Write : No file open" )
+      ? "DosFile:Write : No file open"
    ELSEIF !( ::cMode == "W" )
-      QOut( "File ", ::cFileName, " not opened for writing" )
+      ? "File ", ::cFileName, " not opened for writing"
    ELSE
       cBlock := ToChar( xTxt )                  // Convert to string
       IF DEFAULT( lCRLF, .T. )
@@ -240,9 +240,9 @@ FUNCTION GOTO( nLine )
    LOCAL nWhere := 1
 
    IF Empty( ::hFile )
-      QOut( "DosFile:Goto : No file open" )
+      ? "DosFile:Goto : No file open"
    ELSEIF !( ::cMode == "R" )
-      QOut( "File ", ::cFileName, " not open for reading" )
+      ? "File ", ::cFileName, " not open for reading"
    ELSE
       ::lEoF   := .F.                           // Clear (old) End of file
       ::nLine  := 0                             // Start at beginning

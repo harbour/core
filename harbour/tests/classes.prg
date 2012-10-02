@@ -8,7 +8,7 @@ PROCEDURE Main()
 
    LOCAL oForm := TForm():New()
 
-   QOut( oForm:ClassName() )
+   ? oForm:ClassName()
 
    oForm:Show()
 
@@ -50,6 +50,6 @@ STATIC FUNCTION Show()
 
    LOCAL Self := QSelf()
 
-   QOut( "lets show a form from here :-)" )
+   ? "lets show a form from here :-)"
 
    RETURN NIL

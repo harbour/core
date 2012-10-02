@@ -9,7 +9,7 @@ PROCEDURE Main()
    LOCAL x := 0
 
    DO WHILE x++ < 1000
-      QOut( x )
+      ? x
    ENDDO
 
    RETURN

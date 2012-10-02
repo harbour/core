@@ -12,19 +12,18 @@ PROCEDURE Main( cParam )
 
    LOCAL n, limit := 10
 
+   CLS
+
    IF ! Empty( cParam )
       limit := Val( cParam )
    ENDIF
-   OutStd( hb_eol() )
-   OutStd( Seconds() )
+   ? Seconds()
    FOR n := 1 TO limit
       IF Empty( cParam )
-         OutStd( hb_eol() )
-         OutStd( "Pause: " )
+         ? "Pause:"
          Inkey( 0 )
       ENDIF
-      OutStd( hb_eol() )
-      OutStd( Seconds() )
+      ? Seconds()
    NEXT
 
    RETURN

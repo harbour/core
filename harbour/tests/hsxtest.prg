@@ -16,33 +16,35 @@
 //REQUEST RMDBFCDX
 
 PROCEDURE Main()
+
    FIELD FIRST, LAST, STREET, CITY
    LOCAL n, hs
 
-   if ascan( rddList(1), "RMDBFCDX" ) != 0
+   IF AScan( rddList( 1 ), "RMDBFCDX" ) != 0
       rddSetDefault( "RMDBFCDX" )
-   endif
+   ENDIF
 
-   use test shared
-   hs := HS_INDEX( "test", "FIRST+LAST+STREET+CITY", 2, 0, , .T., 3 )
+   USE test shared
+   hs := hs_Index( "test", "FIRST+LAST+STREET+CITY", 2, 0, , .T., 3 )
 
    /* Look for all records which have 'SHERMAN' string inside */
-   HS_SET( hs, "SHERMAN" )
-   while ( n := HS_NEXT( hs ) ) > 0
-      dbgoto( n )
-      if HS_VERIFY( hs ) > 0
-         ? rtrim( FIRST+LAST+STREET+CITY )
-      endif
-   enddo
-   wait
+   hs_Set( hs, "SHERMAN" )
+   WHILE ( n := hs_Next( hs ) ) > 0
+      dbGoto( n )
+      IF hs_Verify( hs ) > 0
+         ? RTrim( FIRST + LAST + STREET + CITY )
+      ENDIF
+   ENDDO
+   WAIT
 
    /* Does RDD support Record Map Filters? */
-   if dbinfo( DBI_RM_SUPPORTED )
+   IF dbInfo( DBI_RM_SUPPORTED )
       /* if yest then let set filter for all records with 'SHERMAN'
          word and look at them in browser */
-      HS_FILTER( hs, "SHERMAN" )
-      dbgotop()
-      browse()
-   endif
-   HS_CLOSE( hs )
-RETURN
+      hs_Filter( hs, "SHERMAN" )
+      dbGoTop()
+      Browse()
+   ENDIF
+   hs_Close( hs )
+
+   RETURN

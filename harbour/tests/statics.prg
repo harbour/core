@@ -12,12 +12,12 @@ PROCEDURE Main()
 
    STATIC a := "Hello", b := { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 }
 
-   QOut( a )
-   QOut( b[ 2 ] )
+   ? a
+   ? b[ 2 ]
 
    Two()
 
-   QOut( "Ok!" )
+   ? "Ok!"
 
    FOR i := 1 TO 10
       NumStat()
@@ -25,7 +25,7 @@ PROCEDURE Main()
 
    cb := DetachVar( 10 )
    FOR i := 1 TO 10
-      QOut( Eval( cb, b[ i ] ) )
+      ? Eval( cb, b[ i ] )
    NEXT
 
    RETURN
@@ -34,13 +34,13 @@ FUNCTION Two()
 
    STATIC a := "Test"
 
-   QOut( a )
+   ? a
 
    RETURN NIL
 
 FUNCTION THREE( p )
 
-   QOut( p )
+   ? p
 
    RETURN p
 
@@ -56,8 +56,8 @@ PROCEDURE NumStat( a )
    HB_SYMBOL_UNUSED( a )
 
    cb := {| x | s_z + Str( x ) }
-   QOut( ++s_n )
-   QOut( Eval( cb, s_n ) )
+   ? ++s_n
+   ? Eval( cb, s_n )
 
    RETURN
 

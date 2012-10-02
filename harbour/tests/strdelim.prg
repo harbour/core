@@ -8,12 +8,12 @@ PROCEDURE Main()
 
    aArray[ 1 /*first*/ ][ 1 /* second */ ] := [Hello]
 
-   QOut( aArray[ 1 ][ 1 ] )
+   ? aArray[ 1 ][ 1 ]
 
-   QOut( 'World "Peace[!]"' )
+   ? 'World "Peace[!]"'
 
-   QOut( "Harbour 'Power[!]'" )
+   ? "Harbour 'Power[!]'"
 
-   QOut( [King 'Clipper "!"'] )
+   ? [King 'Clipper "!"']
 
    RETURN

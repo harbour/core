@@ -10,7 +10,7 @@ PROCEDURE Main()
 
    LOCAL oForm := TForm():New()
 
-   QOut( oForm:ClassName() )
+   ? oForm:ClassName()
    oForm:cText := "Let's show a form here :-)"
 
    oForm:Show()

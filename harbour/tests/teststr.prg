@@ -4,14 +4,12 @@
 
 PROCEDURE Main()
 
-   OutStd( hb_eol() )
-   OutStd( "Running with SET FIXED OFF (the default setting): " )
-   OutStd( hb_eol() )
+   ? "Running with SET FIXED OFF (the default setting):"
+   ?
    test()
    __ACCEPT( "Pause before running again with SET FIXED ON: " )
-   OutStd( hb_eol() )
-   OutStd( "Running with SET FIXED ON: " )
-   OutStd( hb_eol() )
+   ? "Running with SET FIXED ON:"
+   ?
    Set( _SET_FIXED, "ON" )
    test()
 
@@ -23,96 +21,100 @@ PROCEDURE test()
    LOCAL b := 10.0002575
    LOCAL nI, c, d
 
-   OutStd( "1: " )
-   OutStd( 10 )
-   OutStd( a )
-   OutStd( - a )
-   OutStd( b )
-   OutStd( - b )
-   OutStd( hb_eol() )
-   OutStd( "2: " )
-   OutStd( a + b )
-   OutStd( a - b )
-   OutStd( a * b )
-   OutStd( a / b )
-   OutStd( hb_eol() )
-   OutStd( "3: " )
-   OutStd( a % b )
-   OutStd( a ** b )
-   OutStd( hb_eol() )
+   ?? "1: "
+   ?? 10
+   ?? a
+   ?? -a
+   ?? b
+   ?? -b
+   ?
+
+   ?? "2: "
+   ?? a + b
+   ?? a - b
+   ?? a * b
+   ?? a / b
+   ?
+
+   ?? "3: "
+   ?? a % b
+   ?? a ** b
+   ?
 
    c := a * b
    d := b * a
-   OutStd( hb_eol() )
-   OutStd( "4: " )
-   OutStd( Str( c ) )
-   OutStd( Str( d ) )
-   OutStd( hb_eol() )
-   OutStd( "5: " )
-   OutStd( Str( c + d ) )
-   OutStd( Str( c - d ) )
-   OutStd( Str( c * d ) )
-   OutStd( Str( c / d ) )
-   OutStd( hb_eol() )
+   ?
 
-   OutStd( hb_eol() )
-   OutStd( "6: " )
-   OutStd( a + b + c )
-   OutStd( c - b - a )
-   OutStd( b * a * c )
-   OutStd( b * a * c * d )
+   ?? "4: "
+   ?? Str( c )
+   ?? Str( d )
+   ?
+
+   ?? "5: "
+   ?? Str( c + d )
+   ?? Str( c - d )
+   ?? Str( c * d )
+   ?? Str( c / d )
+   ?
+
+   ?
+   ?? "6: "
+   ?? a + b + c
+   ?? c - b - a
+   ?? b * a * c
+   ?? b * a * c * d
    b := 1.000213
-   OutStd( b * b * b * b * b * b * b )
-   OutStd( hb_eol() )
+   ?? b * b * b * b * b * b * b
+   ?
 
    FOR nI := 1 TO 20
-      OutStd( hb_eol() )
-      OutStd( LTrim( Str( 6 + nI ) ) + ": " )
-      OutStd( 10 ** nI + ( 1.02 * 1.02 ) )
+      ?
+      ?? LTrim( Str( 6 + nI ) ) + ": "
+      ?? 10 ** nI + ( 1.02 * 1.02 )
    NEXT
-   OutStd( hb_eol() )
+   ?
 
-   OutStd( hb_eol() )
-   OutStd( "27: " )
-   OutStd( Str( a ), a )
-   OutStd( hb_eol() )
+   ?
+   ?? "27: "
+   ?? Str( a ), a
+   ?
 
-   OutStd( "28: " )
-   OutStd( Str( b ), b )
-   OutStd( hb_eol() )
+   ?? "28: "
+   ?? Str( b ), b
+   ?
 
-   OutStd( "29: " )
-   OutStd( Str( b, 15 ) )
-   OutStd( hb_eol() )
+   ?? "29: "
+   ?? Str( b, 15 )
+   ?
 
-   OutStd( "30: " )
-   OutStd( Str( b, 20, 5 ) )
-   OutStd( hb_eol() )
+   ?? "30: "
+   ?? Str( b, 20, 5 )
+   ?
 
-   OutStd( "31: " )
-   OutStd( Str( b, 20, 10 ) )
-   OutStd( hb_eol() )
+   ?? "31: "
+   ?? Str( b, 20, 10 )
+   ?
 
-   OutStd( "32: " )
-   OutStd( Str( b, 5, 10 ) )
-   OutStd( hb_eol() )
+   ?? "32: "
+   ?? Str( b, 5, 10 )
+   ?
 
-   OutStd( "33: " )
-   OutStd( Str( b, 20, - 10 ) )
-   OutStd( hb_eol() )
+   ?? "33: "
+   ?? Str( b, 20, - 10 )
+   ?
 
-   OutStd( "34: " )
-   OutStd( Str( b, - 12, 7 ) )
-   OutStd( hb_eol() )
+   ?? "34: "
+   ?? Str( b, - 12, 7 )
+   ?
 
-   OutStd( "35: " )
-   OutStd( Str( b, 0 ) )
-   OutStd( hb_eol() )
+   ?? "35: "
+   ?? Str( b, 0 )
+   ?
 
-   OutStd( hb_eol() )
+   ?
    a := 15.1004
-   OutStd( "36: " )
-   OutStd( Str( a ), a )
-   OutStd( hb_eol() )
+   ?? "36: "
+   ?? Str( a ), a
+   ?
 
    RETURN

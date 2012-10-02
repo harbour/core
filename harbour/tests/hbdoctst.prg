@@ -11,6 +11,7 @@
  */
 
 #include "directry.ch"
+#include "simpleio.ch"
 
 PROCEDURE Main( cRoot )
    LOCAL aEntry
@@ -39,7 +40,7 @@ PROCEDURE Main( cRoot )
       cDir := hb_DirSepAdd( cDir )
    ENDIF
 
-   OutStd( "Root: " + cRoot + hb_eol() )
+   ? "Root: " + cRoot
 
    aDir := { cRoot }
 
@@ -69,11 +70,11 @@ PROCEDURE Main( cRoot )
                or .pdf */
 
       FOR EACH tmp IN aErrMsg
-         OutStd( tmp + hb_eol() )
+         ? tmp
       NEXT
 
       IF ! Empty( aEntry )
-         OutStd( __hbdoc_savehbd( cName, aEntry ), cName, Len( aEntry ), hb_eol() )
+         ? __hbdoc_savehbd( cName, aEntry ), cName, Len( aEntry )
       ENDIF
    NEXT
 

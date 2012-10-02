@@ -13,11 +13,11 @@ PROCEDURE Main()
    LOCAL e := 0xABAB    // Automatic support for hexadecimal numbers
    LOCAL f := .12
 
-   QOut( a )
-   QOut( b )
-   QOut( c )
-   QOut( d )
-   QOut( e )
-   QOut( f )
+   ? a
+   ? b
+   ? c
+   ? d
+   ? e
+   ? f
 
    RETURN

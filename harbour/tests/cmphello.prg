@@ -15,16 +15,9 @@
 
 PROCEDURE Main()
 
-   LOCAL cOs := Upper( OS() )
-
-   QOut( "About to compile Hello.prg" )
-   QOut()
-   IF At( "WINDOWS", cOs ) != 0 .OR. At( "DOS", cOs ) != 0 .OR. ;
-         At( "OS/2", cOs ) != 0                    // OS/2, DOS, Windows version
-      __Run( "..\bin\harbour.exe hello.prg /gHRB" )
-   ELSE                                            // Unix / Linux version
-      __Run( "../bin/harbour hello.prg /gHRB" )
-   ENDIF
-   QOut( "Finished compiling" )
+   ? "About to compile hello.prg"
+   ?
+   hb_run( ".." + hb_ps() + "bin" + hb_ps() + "harbour hello.prg -gh" )
+   ? "Finished compiling"
 
    RETURN

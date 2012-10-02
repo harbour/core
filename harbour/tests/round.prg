@@ -13,12 +13,11 @@ PROCEDURE Main()
    LOCAL n, value := - 5
 
    FOR n := 1 TO 100
-      OutStd( hb_eol() )
-      OutStd( value )
-      OutStd( Round( value, 3 ) )
-      OutStd( Round( value, 2 ) )
-      OutStd( Round( value, 1 ) )
-      OutStd( Round( value, 0 ) )
+      ? value,;
+        Round( value, 3 ) ,;
+        Round( value, 2 ) ,;
+        Round( value, 1 ) ,;
+        Round( value, 0 )
       value += 0.001
    NEXT
 

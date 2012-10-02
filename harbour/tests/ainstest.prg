@@ -15,44 +15,44 @@ PROCEDURE Main()
    aFirst := AClone( { 1, 2, 4 } )
    AIns( aFirst, 3 )
    aFirst[ 3 ] := "3"
-   QQOut( "Testing aIns .. " )
+   ?? "Testing aIns .. "
    aDump( aFirst )
 
    aSecond := { 1, 2, 4 }
    ASize( aSecond, 4 )
-   QQOut( "Testing aSize .. " )
+   ?? "Testing aSize .. "
    aDump( aSecond )
 
    aSecond := { 1, 2, 4 }
    ASize( aSecond, 4 )
    AIns( aSecond, 3 )
    aSecond[ 3 ] := "3"
-   QQOut( "Testing aSize + aIns .. " )
+   ?? "Testing aSize + aIns .. "
    aDump( aSecond )
 
    aSecond := { 1, 2, 3, 3, 4, 5 }
    ADel( aSecond, 3 )
-   QQOut( "Testing aDel .. " )
+   ?? "Testing aDel .. "
    aDump( aSecond )
 
    aSecond := { 1, 2, 3, 3, 4, 5 }
    ADel( aSecond, 3 )
    ASize( aSecond, Len( aSecond ) - 1 )
-   QQOut( "Testing aSize + aDel .. " )
+   ?? "Testing aSize + aDel .. "
    aDump( aSecond )
 
    AFill( aSecond, "!" )
-   QQOut( "Testing aFill .. " )
+   ?? "Testing aFill .. "
    aDump( aSecond )
 
    aMore := { 1, 2, 3, 4, 5, 6 }
    AFill( aMore, "X", 3 )
-   QQOut( "Testing aFill with start .. " )
+   ?? "Testing aFill with start .. "
    aDump( aMore )
 
    aMore := { 1, 2, 3, 4, 5, 6 }
    AFill( aMore, "X", 3, 2 )
-   QQOut( "Testing aFill with start and count .. " )
+   ?? "Testing aFill with start and count .. "
    aDump( aMore )
 
    aMore := { { 1, 2 }, { 3, 4 } }
@@ -65,29 +65,29 @@ FUNCTION aDump( aShow )
 
    LOCAL n
 
-   QQOut( "Len=", hb_ntos( Len( aShow ) ) )
-   QQOut( ": " )
+   ?? "Len=", hb_ntos( Len( aShow ) )
+   ?? ": "
    FOR n := 1 TO Len( aShow )
 
-      QQOut( "[" )
-      QQOut( hb_ntos( n ) )
-      QQOut( "]= " )
-      QQOut( ValType( aShow[ n ] ) )
-      QQOut( ":" )
+      ?? "["
+      ?? hb_ntos( n )
+      ?? "]= "
+      ?? ValType( aShow[ n ] )
+      ?? ":"
       IF ValType( aShow[ n ] ) == "A"             /* Iterate array         */
-         QQOut( hb_eol() )
-         QQOut( "[" )
+         ?? hb_eol()
+         ?? "["
          aDump( aShow[ n ] )
-         QQOut( "]" )
+         ?? "]"
       ELSE
-         QQOut( aShow[ n ] )
+         ?? aShow[ n ]
       ENDIF
 
       IF n != Len( aShow )
-         QQOut( ", " )
+         ?? ", "
       ENDIF
 
    NEXT
-   QQOut( hb_eol() )
+   ?? hb_eol()
 
    RETURN NIL

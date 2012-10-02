@@ -15,40 +15,40 @@ PROCEDURE Main()
 
    LOCAL o := TNumber():New()
 
-   QOut( "Direct reference : ", o:x )
+   ? "Direct reference : ", o:x
 
    o:x := "I am a data"
-   QOut( "Assign text      : ", o:x )
+   ? "Assign text      : ", o:x
 
    o:x := 4
-   QOut( "Assign 4         : ", o:x )
+   ? "Assign 4         : ", o:x
 
-   QOut( "Post increment   : ", o:x++ )
-   QOut( "After            : ", o:x   )
-   QOut( "Pre decrement    : ", --o:x )
-   QOut( "After            : ", o:x   )
+   ? "Post increment   : ", o:x++
+   ? "After            : ", o:x
+   ? "Pre decrement    : ", --o:x
+   ? "After            : ", o:x
 
    o:x += 2
-   QOut( "Plus 2           : ", o:x )
+   ? "Plus 2           : ", o:x
 
    o:x -= 3
-   QOut( "Minus 3          : ", o:x )
+   ? "Minus 3          : ", o:x
 
    o:x *= 3
-   QOut( "Times 3          : ", o:x )
+   ? "Times 3          : ", o:x
 
    o:x /= 1.5
-   QOut( "Divide by 1.5    : ", o:x )
+   ? "Divide by 1.5    : ", o:x
 
    o:x %= 4
-   QOut( "Modulus 4        : ", o:x )
+   ? "Modulus 4        : ", o:x
 
    o:x ^= 3
-   QOut( "To the power 3   : ", o:x )
+   ? "To the power 3   : ", o:x
 
-   QOut( "Global stack" )
+   ? "Global stack"
    Debug( __dbgVMStkGList() )
-   QOut( "Statics" )
+   ? "Statics"
    Debug( __dbgVMVarSList() )
 
    RETURN
@@ -74,3 +74,6 @@ STATIC FUNCTION New()
    ::x := 1
 
    RETURN self
+
+STATIC PROCEDURE Debug()
+   RETURN

@@ -4,9 +4,6 @@
 
 /* RFC4648 test vectors for base64 */
 
-#pragma warninglevel=3
-#pragma exitseverity=2
-
 REQUEST HB_GT_CGI_DEFAULT
 
 PROCEDURE Main()
@@ -26,21 +23,19 @@ PROCEDURE Main()
 
       cStr := hb_base64encode( aVector:__enumKey )
       IF cStr != aVector
-         OutStd( hb_strFormat( "hb_base64encode(): expected '%s' got '%s' while encoding '%s'" + hb_eol(), ;
-                 aVector:__enumKey(), cStr, aVector ) )
+         ? hb_strFormat( "hb_base64encode(): expected '%s' got '%s' while encoding '%s'", ;
+                 aVector:__enumKey(), cStr, aVector )
       ELSE
-         OutStd( hb_strFormat( "hb_base64encode(): passed '%s'" + hb_eol(), aVector:__enumKey ) )
+         ? hb_strFormat( "hb_base64encode(): passed '%s'", aVector:__enumKey )
       ENDIF
 
       cStr := hb_base64decode( aVector )
       IF cStr != aVector:__enumKey()
-         OutStd( hb_strFormat( "hb_base64decode(): expected '%s' got '%s' while decoding '%s'" + hb_eol(), ;
-                 aVector, cStr, aVector:__enumKey() ) )
+         ? hb_strFormat( "hb_base64decode(): expected '%s' got '%s' while decoding '%s'", ;
+                 aVector, cStr, aVector:__enumKey() )
       ELSE
-         OutStd( hb_strFormat( "hb_base64decode(): passed '%s'" + hb_eol(), aVector ) )
-      ENDIF 
+         ? hb_strFormat( "hb_base64decode(): passed '%s'", aVector )
+      ENDIF
    NEXT
 
    RETURN
-
-

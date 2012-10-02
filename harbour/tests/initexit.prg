@@ -12,48 +12,48 @@ PROCEDURE Main()
 
    STATIC static_var := "MAIN()"
 
-   QOut( "Hello from:", static_var )
-   static_var_accessed_in_INIT_function ++
-   QOut( "global static=", static_var_accessed_in_INIT_function )
+   ? "Hello from:", static_var
+   static_var_accessed_in_INIT_function++
+   ? "global static=", static_var_accessed_in_INIT_function
 
    // Use PUBLIC variable created in INIT PROCEDURE
-   QOut( "PUBLIC variable created in INIT PROCEDURE=", _initStatics )
+   ? "PUBLIC variable created in INIT PROCEDURE=", _initStatics
 
    RETURN
 
 INIT FUNCTION SecondOne()
    STATIC static_var := "SECOND()"
 
-   QOut( "Hello from:", static_var )
-   static_var_accessed_in_INIT_function ++
-   QOut( "global static=", static_var_accessed_in_INIT_function )
+   ? "Hello from:", static_var
+   static_var_accessed_in_INIT_function++
+   ? "global static=", static_var_accessed_in_INIT_function
 
    RETURN NIL
 
 INIT FUNCTION Third()
    STATIC static_var := "THIRD()"
 
-   QOut( "Hello from:", static_var )
-   static_var_accessed_in_INIT_function ++
-   QOut( "global static=", static_var_accessed_in_INIT_function )
+   ? "Hello from:", static_var
+   static_var_accessed_in_INIT_function++
+   ? "global static=", static_var_accessed_in_INIT_function
 
    RETURN NIL
 
 EXIT FUNCTION Fifth()
    STATIC static_var := "FIFTH()"
 
-   QOut( "Hello from:", static_var )
-   static_var_accessed_in_INIT_function --
-   QOut( "global static=", static_var_accessed_in_INIT_function )
+   ? "Hello from:", static_var
+   static_var_accessed_in_INIT_function--
+   ? "global static=", static_var_accessed_in_INIT_function
 
    RETURN NIL
 
 EXIT FUNCTION Sixth()
    STATIC static_var := "SIXTH()"
 
-   QOut( "Hello from:", static_var )
-   static_var_accessed_in_INIT_function --
-   QOut( "global static=", static_var_accessed_in_INIT_function )
+   ? "Hello from:", static_var
+   static_var_accessed_in_INIT_function--
+   ? "global static=", static_var_accessed_in_INIT_function
 
    RETURN NIL
 
