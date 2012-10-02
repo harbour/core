@@ -149,7 +149,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
       PRIVATE str_barbox := hb_UTF8ToStrBox( "│" )
    ENDIF
    IF !( Type( "str_bar" ) == "C" )
-      PRIVATE str_bar := hb_UTF8ToStr( "■" )
+      PRIVATE str_bar := /* LOW-ASCII "▼▲" */ Chr( 31 ) + Chr( 30 ) + hb_UTF8ToStr( "■" )
    ENDIF
    LI_Y1 := y1
    LI_X1 := x1

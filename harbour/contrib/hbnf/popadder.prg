@@ -252,7 +252,7 @@ FUNCTION FT_Adder()
       CASE ( nKey == 83 .OR. nKey == 115 ) .AND. lTape  // <S> Scroll tape display
          IF nTotTran > 16                  // We need to scroll
             SetColor( "GR+/W" )
-            @ 21 + nTopOS, 8 + nTapeSpace SAY hb_UTF8ToStr( " ↑↓-SCROLL  <ESC>-QUIT " )
+            @ 21 + nTopOS, 8 + nTapeSpace SAY " " + /* LOW-ASCII "↑↓" */ Chr( 24 ) + Chr( 25 ) + "-SCROLL  <ESC>-QUIT "
             SetColor( "N/W,W+/N" )
             AChoice( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, aTrans, .T. , ;
                "_ftAdderTapeUDF", nTotTran, 20 )
@@ -358,7 +358,7 @@ STATIC FUNCTION _ftAddScreen( aAdder )
    @  8 + nTopOS, nCol SAY "-"
    @ 13 + nTopOS, nCol SAY "+"
    @ 18 + nTopOS, nCol SAY "="
-   @ 19 + nTopOS, nCol SAY hb_UTF8ToStr( "♦" )
+   @ 19 + nTopOS, nCol SAY Chr( 4 ) /* LOW-ASCII "♦" */
    _ftSetWinColor( W_CURR, W_PROMPT )
    @ 3 + nTopOS, 6 + nAddSpace, 5 + nTopOS, 27 + nAddSpace BOX B_DOUBLE
 
@@ -1181,7 +1181,7 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
    nRight      := nLeft + nWide + 4
 
    _ftPushWin( nTop, nLeft, nBottom, nRight, "QUESTION ?", iif( HB_ISSTRING( xVarVal ) ;
-      .AND. nVarLen > nWide, hb_UTF8ToStr( "← scroll →" ), NIL ), nWinColor )
+      .AND. nVarLen > nWide, /* LOW-ASCII "←" */ Chr( 27 ) + " scroll " + Chr( 26 ) /* LOW-ASCII "→" */, NIL ), nWinColor )
    DISPMESSAGE cMessage, nTop + 1, nLeft + 2, nBottom - 1, nRight - 2
 
    oNewGet := GetNew( iif( lGetOnNextLine,Row() + 1,Row() ), ;

@@ -90,7 +90,7 @@ CREATE CLASS MENUITEM FUNCTION HBMenuItem
    VAR nID
    VAR cMessage
    VAR nShortcut
-   VAR cStyle     INIT hb_UTF8ToStr( "√►" )
+   VAR cStyle     INIT hb_UTF8ToStr( "√" ) + Chr( 16 ) /* LOW-ASCII "►" */
 
 ENDCLASS
 

@@ -391,10 +391,10 @@ METHOD CalcThumbPos() CLASS SCROLLBAR
 
 /* New definitions for better coding. These are screen codepage dependent,
    but can be changed with the setStyle method. */
-#define SB_UPARROW      hb_UTF8ToStr( "↑" )
-#define SB_DNARROW      hb_UTF8ToStr( "↓" )
-#define SB_RIGHTARROW   hb_UTF8ToStr( "→" )
-#define SB_LEFTARROW    hb_UTF8ToStr( "←" )
+#define SB_UPARROW      Chr( 24 ) /* LOW-ASCII "↑" */
+#define SB_DNARROW      Chr( 25 ) /* LOW-ASCII "↓" */
+#define SB_RIGHTARROW   Chr( 27 ) /* LOW-ASCII "→" */
+#define SB_LEFTARROW    Chr( 26 ) /* LOW-ASCII "←" */
 
 #define SB_THUMB        hb_UTF8ToStr( "░" )
 #define SB_TRACK        hb_UTF8ToStr( "▓" )
