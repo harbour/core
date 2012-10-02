@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 PROCEDURE Main( cDate, cDays )
 
    LOCAL nDays := ft_addWkDy( CToD( cDate ), Val( cDays ) )

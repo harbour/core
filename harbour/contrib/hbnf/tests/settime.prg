@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 PROCEDURE Main( cTime )
 
    cTime := iif( cTime == NIL, Time(), cTime )

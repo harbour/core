@@ -50,6 +50,8 @@
  *
  */
 
+/* TOFIX: for unicode savescreen buffers */
+
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapigt.h"

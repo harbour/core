@@ -11,6 +11,8 @@
  *   tbnames.dbf/.ntx ARE AUTOMATICALLY CREATED BY THIS TEST PROGRAM
  */
 
+#require "hbnf"
+
 PROCEDURE Main()
 
    LOCAL aFields := {}, cKey := "O", cOldColor

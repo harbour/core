@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 PROCEDURE Main( cArg1 )
 
    LOCAL nErrCode

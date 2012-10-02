@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 // ADD PARAMETER "CENTURY" ON COMMAND LINES TO TEST 4-DIGIT YEARS
 
 PROCEDURE Main( cCent )

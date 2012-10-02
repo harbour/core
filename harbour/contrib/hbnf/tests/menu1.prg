@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 #include "setcurs.ch"
 
 PROCEDURE Main( cCmdLine )

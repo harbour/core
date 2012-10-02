@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 PROCEDURE Main()
 
    LOCAL datamenu := { ;
@@ -29,6 +31,8 @@ PROCEDURE Main()
       { "Reports",     "Hard copy",           {|| FT_MENU2( repmenu )   } }, ;
       { "Maintenance", "Reindex files, etc.", {|| FT_MENU2( maintmenu ) } }, ;
       { "Quit",        "See ya later" } }
+
+   CLS
 
    FT_MENU2( mainmenu )
 

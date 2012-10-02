@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 PROCEDURE Main()
 
    LOCAL nver, nmar, ntype, nir, ppp
@@ -9,7 +11,7 @@ PROCEDURE Main()
    nmar := FT_MVERSION( @nver, @ntype, @nir )
    ppp := nmar + nver
    ? Str( nmar, 2, 0 ), '.', Str( nver, 2, 0 )
-   ? ppp/100
+   ? ppp / 100
    Inkey( 0 )
    ? 'is mouse on', ft_mreset()
    Inkey( 0 )

@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 #define INITIAL_SEMAPHORE_VALUE     2
 #define WAIT_SECONDS                1
 

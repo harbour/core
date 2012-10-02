@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 PROCEDURE Main( cCk, cStr, nOcc, xCase )
 
    LOCAL nFind

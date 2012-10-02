@@ -1,13 +1,15 @@
 /*
- * $Id$ 
+ * $Id$
  */
+
+#require "hbnf"
 
 PROCEDURE Main()
 
    LOCAL i
 
    SetColor( "W/B" )
-// CLS
+   CLS
    FOR i := 1 TO 24
       @ i, 0 SAY Replicate( "@", 80 )
    NEXT
@@ -22,4 +24,3 @@ PROCEDURE Main()
       "Even though this line is way too long, and is in fact more than 80 characters long, if you care to check!" )
 
    RETURN
-

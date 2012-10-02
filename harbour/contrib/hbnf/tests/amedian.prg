@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 #include "directry.ch"
 
 PROCEDURE Main()

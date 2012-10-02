@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 PROCEDURE Main()
 
    LOCAL aList1, aList2, var0, nstart, nstop, nelapsed, nCtr

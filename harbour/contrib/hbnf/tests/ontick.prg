@@ -10,7 +10,11 @@
  *
  */
 
+#require "hbnf"
+
 PROCEDURE Main()
+
+   CLS
 
    FT_ONTICK( {|| OutStd( hb_milliSeconds(), hb_eol() ) } )
 

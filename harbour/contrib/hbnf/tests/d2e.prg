@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 #include "common.ch"
 
 PROCEDURE Main( cNum, cPrec )

@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 // Write 100 random numbers from 1 to 100 to stdout.
 // Run it multiple times and redirect output to a file
 // to check it

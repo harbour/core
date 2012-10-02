@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 // Pass valid row and column values for different video modes to change modes
 
 PROCEDURE Main( nRow, nCol )

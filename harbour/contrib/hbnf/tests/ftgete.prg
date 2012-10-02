@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 #include "simpleio.ch"
 
 PROCEDURE Main()

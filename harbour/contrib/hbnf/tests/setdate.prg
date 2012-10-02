@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 PROCEDURE Main( cDate )
 
    cDate := iif( cDate == NIL, DToC( Date() ), cDate )

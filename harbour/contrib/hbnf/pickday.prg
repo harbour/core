@@ -23,7 +23,6 @@
  *
  */
 
-// test code
 FUNCTION FT_PICKDAY()
 
    LOCAL days := { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", ;

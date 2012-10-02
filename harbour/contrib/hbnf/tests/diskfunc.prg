@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 PROCEDURE Main( cDrv )
 
    QOut( "Disk size:   " + Str( FT_DSKSIZE( cDrv ) ) )

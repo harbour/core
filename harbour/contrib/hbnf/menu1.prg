@@ -61,9 +61,33 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
    LOCAL aBarKeys[ Len( aBar ) ]
 
    // inkey codes for A - Z
-   LOCAL aKeyCodes := { 286, 304, 302, 288, 274, 289, 290, 291, 279, ;
-      292, 293, 294, 306, 305, 280, 281, 272, 275, ;
-      287, 276, 278, 303, 273, 301, 277, 300 }
+   LOCAL aKeyCodes := { ;
+      K_ALT_A ,;
+      K_ALT_B ,;
+      K_ALT_C ,;
+      K_ALT_D ,;
+      K_ALT_E ,;
+      K_ALT_F ,;
+      K_ALT_G ,;
+      K_ALT_H ,;
+      K_ALT_I ,;
+      K_ALT_J ,;
+      K_ALT_K ,;
+      K_ALT_L ,;
+      K_ALT_M ,;
+      K_ALT_N ,;
+      K_ALT_O ,;
+      K_ALT_P ,;
+      K_ALT_Q ,;
+      K_ALT_R ,;
+      K_ALT_S ,;
+      K_ALT_T ,;
+      K_ALT_U ,;
+      K_ALT_V ,;
+      K_ALT_W ,;
+      K_ALT_X ,;
+      K_ALT_Y ,;
+      K_ALT_Z }
 
    // Len() of widest array element for for each pulldown menu
    LOCAL aBarWidth[ Len( aBar ) ]

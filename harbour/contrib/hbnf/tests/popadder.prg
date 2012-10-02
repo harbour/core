@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 #include "inkey.ch"
 
 PROCEDURE Main()

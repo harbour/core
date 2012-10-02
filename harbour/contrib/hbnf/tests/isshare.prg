@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 PROCEDURE Main()
 
    LOCAL nLoaded := ft_isshare()

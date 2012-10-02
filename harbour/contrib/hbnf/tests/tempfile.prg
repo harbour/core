@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbnf"
+
 #include "fileio.ch"
 
 PROCEDURE Main( cPath, cHide )

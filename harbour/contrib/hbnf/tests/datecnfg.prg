@@ -44,9 +44,9 @@
 //
 //              See function: FT_DATECNFG()
 //
-// COMPILE ALL PROGRAMS WITH /N /W /A
-//
 //*******************************************************************
+
+#require "hbnf"
 
 PROCEDURE Main()
 
