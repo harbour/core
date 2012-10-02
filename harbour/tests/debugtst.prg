@@ -27,7 +27,7 @@ PROCEDURE Main()
 
    ? "-OBJECT additions-"
    ? "What is in oForm ? "
-   Debug( oForm:Transfer() )
+   ? hb_ValToExp(  oForm:Transfer() )
 
    ? "Does transfer exists ? ", __objHasMsg   ( oForm, "Transfer" )
    ? "Is   transfer DATA   ? ", __objHasData  ( oForm, "Transfer" )
@@ -41,23 +41,23 @@ PROCEDURE Main()
 
    ? "Set nLeft to 50 and nRight to 100"
    oForm:Transfer( { "nLeft", 50 }, { "nRight", 100 } )
-   Debug( oForm:Transfer() )
+   ? hb_ValToExp(  oForm:Transfer() )
 
    Pause()
 
 
    ? "-DEBUG Functions-"
    ? "-Statics-"
-   Debug( __dbgVMVarSList() )
+   ? hb_ValToExp(  __dbgVMVarSList() )
 
    ? "-Global Stack-"
-   Debug( __dbgVMStkGList() )
+   ? hb_ValToExp(  __dbgVMStkGList() )
 
    ? "-Local Stack-"
-   Debug( __dbgVMStkLList() )
+   ? hb_ValToExp(  __dbgVMStkLList() )
 
    ? "-Parameters-"
-   Debug( __dbgVMParLList() )
+   ? hb_ValToExp(  __dbgVMParLList() )
 
    Pause()
 
@@ -81,19 +81,19 @@ FUNCTION FuncSecond( nParam, cParam, uParam )
    ?
 
    ? "-Statics-"
-   Debug( __dbgVMVarSList() )
+   ? hb_ValToExp(  __dbgVMVarSList() )
    ?
 
    ? "-Global Stack- Len=", __dbgVMStkGCount()
-   Debug( __dbgVMStkGList() )
+   ? hb_ValToExp(  __dbgVMStkGList() )
    ?
 
    ? "-Local Stack- Len=", __dbgVMStkLCount()
-   xStack := Debug( __dbgVMStkLList() )
+   ? hb_ValToExp(  xStack := __dbgVMStkLList() )
    ?
 
    ? "-Parameters-"
-   xParam := Debug( __dbgVMParLList() )
+   ? hb_ValToExp(  xParam := __dbgVMParLList() )
    IF xParam[ xStack[ 7 ] ] == "Hello"
       ? ":-)"
    ENDIF
@@ -256,6 +256,3 @@ STATIC FUNCTION Transfer( x1, x2, x3, x4, x5, x6, x7, x8, x9, x10 ) /* etc */
    ENDIF
 
    RETURN xRet
-
-STATIC PROCEDURE Debug()
-   RETURN

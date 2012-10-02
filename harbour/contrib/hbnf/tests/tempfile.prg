@@ -13,12 +13,12 @@ PROCEDURE Main( cPath, cHide )
    cFile := FT_TEMPFIL( cPath, cHide == "Y" )
 
    IF ! Empty( cFile )
-      QOut( cFile )
+      ? cFile
       nHandle := FOpen( cFile, FO_WRITE )
       FWrite( nHandle, "This is a test!" )
       FClose( nHandle )
    ELSE
-      QOut( "An error occurred" )
+      ? "An error occurred"
    ENDIF
 
    RETURN

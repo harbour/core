@@ -29,7 +29,7 @@
  *     FT_SINKEY() differs from the standard INKEY() in that it will
  *     respond to any keys set with SET KEY TO or SetKey().
  *  $EXAMPLES$
- *     SetKey( K_F1, {|n,l,r| Help(n,l,r) } )
- *     nKey := FT_SINKEY(0)       // Help() will be called if F1 pressed
+ *     SetKey( K_F1, {| n, l, r | Help( n, l, r ) } )
+ *     nKey := FT_SINKEY( 0 )       // Help() will be called if F1 pressed
  *  $END$
  */

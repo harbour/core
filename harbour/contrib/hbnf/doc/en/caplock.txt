@@ -24,7 +24,7 @@
  *     CapLock key for some reason.
  *  $EXAMPLES$
  *     IF FT_CAPLOCK()
- *        Qout( "CapLock is active" )
+ *        ? "CapLock is active"
  *     ENDIF
  *  $SEEALSO$
  *     FT_ALT() FT_CTRL() FT_NUMLOCK() FT_PRTSCR() FT_SHIFT()

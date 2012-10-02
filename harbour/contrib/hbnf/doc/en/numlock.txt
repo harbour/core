@@ -24,20 +24,21 @@
  *     NumLock key for some reason.
  *  $EXAMPLES$
  *     IF FT_NUMLOCK()
- *        Qout( "NumLock is active" )
+ *        ? "NumLock is active"
  *     ENDIF
  *
  *     Another one, slightly strange, courtesy of Glenn Scott:
  *
+ *     #include "inkey.ch"
  *
- *       function numBlink()
- *          local lOldNum := ft_numlock()
+ *     FUNCTION numBlink()
+ *        LOCAL lOldNum := ft_numlock()
  *
- *          while inkey( .5 ) != 27
- *             ft_numlock( !ft_numlock() )
- *          end
+ *        DO WHILE Inkey( 0.5 ) != K_ESC
+ *           ft_numlock( ! ft_numlock() )
+ *        ENDDO
  *
- *          return ft_numlock( lOldNum )
+ *        RETURN ft_numlock( lOldNum )
  *  $SEEALSO$
  *     FT_CAPLOCK() FT_CTRL() FT_PRTSCR() FT_SHIFT() FT_ALT()
  *  $END$

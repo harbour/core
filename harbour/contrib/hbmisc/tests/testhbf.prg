@@ -23,23 +23,23 @@ PROCEDURE Main()
    IF hb_fuse( "testhbf.prg", 0 ) > 1
 
       DO WHILE ! hb_feof()
-         qout( "line " + str( hb_frecno(), 2 ) + " " + hb_freadln() )
+         ? "line " + str( hb_frecno(), 2 ) + " " + hb_freadln()
          hb_fskip( 1 )
       ENDDO
-      qout( "" )
+      ?
       my_goto( 18 )
       my_goto( 2 )
 
       hb_fgobottom()
-      qout( "" )
-      qout( "after hb_fgobottom() now in line # " + hb_ntos( hb_frecno() ) )
+      ?
+      ? "after hb_fgobottom() now in line # " + hb_ntos( hb_frecno() )
 
       hb_fgotop()
-      qout( "" )
-      qout( "after hb_fgotop() now in line # " + hb_ntos( hb_frecno() ) )
+      ?
+      ? "after hb_fgotop() now in line # " + hb_ntos( hb_frecno() )
 
-      qout( "" )
-      qout( "hb_flastrec() = " + hb_ntos( hb_flastrec() ) )
+      ?
+      ? "hb_flastrec() = " + hb_ntos( hb_flastrec() )
 
       // close the file
       hb_fuse()
@@ -50,8 +50,8 @@ PROCEDURE Main()
 STATIC PROCEDURE my_goto( n_go )
 
    hb_fgoto( n_go )
-   qout( "" )
-   qout( "after hb_fgoto("+ hb_ntos( n_go ) + ")" )
-   qout( "line "+ hb_ntos( hb_frecno() ) + " is " + ltrim( hb_freadln() ) )
+   ?
+   ? "after hb_fgoto("+ hb_ntos( n_go ) + ")"
+   ? "line "+ hb_ntos( hb_frecno() ) + " is " + ltrim( hb_freadln() )
 
    RETURN

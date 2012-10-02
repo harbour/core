@@ -10,16 +10,16 @@ PROCEDURE Main()
    LOCAL oSecond
 
    ? "What's the default oForm and calculate area"
-   Debug( oForm )
+   ? hb_ValToExp(  oForm )
    ? oForm:CalcArea()
    ? "Set nTop to 5 and recalculate"
    oForm:nTop := 5
-   Debug( oForm )
+   ? hb_ValToExp(  oForm )
    ? oForm:CalcArea()
 
    ? "Create a new instance and calculate area"
    oSecond := TForm():New()
-   Debug( oSecond )
+   ? hb_ValToExp(  oSecond )
    ? oSecond:CalcArea()
 
    RETURN
@@ -60,6 +60,3 @@ STATIC FUNCTION Show()
    ? "lets show a form from here :-)"
 
    RETURN NIL
-
-STATIC PROCEDURE Debug()
-   RETURN

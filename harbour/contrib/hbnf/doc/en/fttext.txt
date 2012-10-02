@@ -181,11 +181,11 @@
  *     among others.
  *
  *  $EXAMPLES$
- *     if ft_fUse( "text.c" ) < 0     // open text file
- *        err := ft_fError();
- *        QOUT( 'Error opening file "Text.c", error code (' + ;
- *                  LTRIM( STR( err ) ) + ')' )
- *     endif
+ *     IF ft_fUse( "text.c" ) < 0     // open text file
+ *        err := ft_fError()
+ *        ? 'Error opening file "Text.c", error code (' + ;
+ *                  LTrim( Str( err ) ) + ')'
+ *     ENDIF
  *
  *  $SEEALSO$
  *
@@ -217,7 +217,7 @@
  *  $EXAMPLES$
  *     FT_FUSE( "text.c" )      // open text file
  *
- *     DO WHILE !FT_FEOF()
+ *     DO WHILE ! FT_FEOF()
  *
  *        ? FT_FREADLN()        // read thru file
  *

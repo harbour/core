@@ -95,11 +95,10 @@
  *      PROCEDURE Main()
  *
  *         USE test
- *
  *         SELECT 0
- *         QOut( iif( DBF() == "", "No Name", DBF() ) )
- *         test->( QOut( DBF() ) )
- *         QOut( Alias( 1 ) )
+ *         ? iif( DBF() == "", "No Name", DBF() )
+ *         ? test->( DBF() )
+ *         ? Alias( 1 )
  *
  *         RETURN
  *  $STATUS$

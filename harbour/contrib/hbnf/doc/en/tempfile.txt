@@ -40,10 +40,10 @@
  *
  *     Create a unique file in the current directory and hide it:
  *
- *            myFile := FT_TEMPFIL(".\", .t.)
+ *            myFile := FT_TEMPFIL( "." + hb_ps(), .T. )
  *
  *     Create a unique file on another drive, but do not hide it:
  *
- *            myFile := FT_TEMPFIL("E:\nanfor\src\")
+ *            myFile := FT_TEMPFIL( "E:\nanfor\src\" )
  *  $END$
  */

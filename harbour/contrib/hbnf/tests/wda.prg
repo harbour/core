@@ -8,7 +8,7 @@ PROCEDURE Main( cDate, cDays )
 
    LOCAL nDays := ft_addWkDy( CToD( cDate ), Val( cDays ) )
 
-   QOut( "Num days to add: " + Str( nDays ) )
-   QOut( "New date:        " + DToC( CToD( cDate ) + nDays ) )
+   ? "Num days to add: " + Str( nDays )
+   ? "New date:        " + DToC( CToD( cDate ) + nDays )
 
    RETURN

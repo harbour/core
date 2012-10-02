@@ -18,7 +18,7 @@ PROCEDURE Main()
    LOCAL oForm := TForm():New()
 
    ? "What methods are in the class :"
-   Debug( __objGetMethodList( oForm ) )
+   ? hb_ValToExp(  __objGetMethodList( oForm ) )
 
 /* Let's add an inline at run-time. Should already be possible */
 
@@ -28,7 +28,7 @@ PROCEDURE Main()
       {| self | ( ::nRight  - ::nLeft ) * ( ::nBottom - ::nTop ) } )
 
    ? "What methods are in the class :"
-   Debug( __objGetMethodList( oForm ) )
+   ? hb_ValToExp(  __objGetMethodList( oForm ) )
 
    ? "What is the Form area ?"
    ? oForm:CalcArea()
@@ -38,7 +38,7 @@ PROCEDURE Main()
    __objAddMethod( oForm, "Smile", @Smile() )
 
    ? "What methods are in the class :"
-   Debug( __objGetMethodList( oForm ) )
+   ? hb_ValToExp(  __objGetMethodList( oForm ) )
 
    ? "Smile please "
    oForm:Smile()
@@ -46,7 +46,7 @@ PROCEDURE Main()
    Pause()
 
    ? "Data items before"
-   Debug( oForm )
+   ? hb_ValToExp(  oForm )
 
    ? "Let's add an additional data item"
 
@@ -55,7 +55,7 @@ PROCEDURE Main()
    oForm:cHelp := "This is a real tricky test"
 
    ? "Data items after"
-   Debug( oForm )
+   ? hb_ValToExp(  oForm )
 
    Pause()
 
@@ -75,31 +75,31 @@ PROCEDURE Main()
    ? oForm:CalcArea()
 
    ? "What methods are in the class :"
-   Debug( __objGetMethodList( oForm ) )
+   ? hb_ValToExp(  __objGetMethodList( oForm ) )
 
    ? "Delete CalcArea"
    __objDelInline( oForm, "CalcArea" )
 
    ? "What methods are in the class :"
-   Debug( __objGetMethodList( oForm ) )
+   ? hb_ValToExp(  __objGetMethodList( oForm ) )
 
    ? "Delete Smile"
    __objDelMethod( oForm, "Smile" )
 
    ? "What methods are in the class :"
-   Debug( __objGetMethodList( oForm ) )
+   ? hb_ValToExp(  __objGetMethodList( oForm ) )
 
    Pause()
 
    ? "Data items before"
-   Debug( oForm )
+   ? hb_ValToExp(  oForm )
 
    ? "Let's delete cHelp"
 
    __objDelData( oForm, "cHelp" )
 
    ? "Data items after"
-   Debug( oForm )
+   ? hb_ValToExp(  oForm )
 
 /* oForm:cHelp := "Please crash" */
 
@@ -162,6 +162,3 @@ FUNCTION Pause()
    __Accept( "Pause :" )
 
    RETURN NIL
-
-STATIC PROCEDURE Debug()
-   RETURN

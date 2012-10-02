@@ -41,14 +41,14 @@
  *  $EXAMPLES$
  *      iStatus := FT_FLOPTST( 0 )
  *      DO CASE
- *         CASE iStatus == 1
- *            Qout( "The door to drive A is open." )
- *         CASE iStatus == 2
- *            Qout( "The diskette in drive A is not formatted." )
- *         CASE iStatus == 3
- *            Qout( "The diskette in drive A is write-protected." )
- *         CASE iStatus == 4
- *            Qout( "Something is wrong with drive A, but I don't know what." )
+ *      CASE iStatus == 1
+ *         ? "The door to drive A is open."
+ *      CASE iStatus == 2
+ *         ? "The diskette in drive A is not formatted."
+ *      CASE iStatus == 3
+ *         ? "The diskette in drive A is write-protected."
+ *      CASE iStatus == 4
+ *         ? "Something is wrong with drive A, but I don't know what."
  *      ENDCASE
  *  $END$
  */

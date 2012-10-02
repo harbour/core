@@ -781,7 +781,7 @@
  *      ENDCLASS
  *
  *      CREATE CLASS THappy FROM TMood
- *         METHOD Smile() INLINE qout( "*smile*" )
+ *         METHOD Smile() INLINE QOut( "*smile*" )
  *      ENDCLASS
  *
  *      CREATE CLASS TShirt

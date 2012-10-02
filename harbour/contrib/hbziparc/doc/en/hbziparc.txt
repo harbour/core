@@ -242,24 +242,24 @@
  * $EXAMPLES$
  *     PROCEDURE Main()
  *
- *     IF hb_ZipFileByTDSpan( "test.zip", "test.prg" )
- *        QOut( "File was successfully created" )
- *     ENDIF
+ *        IF hb_ZipFileByTDSpan( "test.zip", "test.prg" )
+ *           ? "File was successfully created"
+ *        ENDIF
  *
- *     IF hb_ZipFileByTDSpan( "test1.zip", { "test.prg", "C:\windows\win.ini" } )
- *        QOut( "File was successfully created" )
- *     ENDIF
+ *        IF hb_ZipFileByTDSpan( "test1.zip", { "test.prg", "test.hbp" } )
+ *           ? "File was successfully created"
+ *        ENDIF
  *
- *     IF hb_ZipFileByTDSpan( "test2.zip", { "test.prg", "C:\windows\win.ini" }, 9, {| nPos, cFile | QOut( cFile ) }, "hello",, 521421 )
- *        QOut( "File was successfully created" )
- *     ENDIF
+ *        IF hb_ZipFileByTDSpan( "test2.zip", { "test.prg", "test.hbp" }, 9, {| nPos, cFile | QOut( cFile ) }, "hello",, 521421 )
+ *           ? "File was successfully created"
+ *        ENDIF
  *
- *     aFiles := { "test.prg", "C:\windows\win.ini" }
- *     nLen   := Len( aFiles )
- *     aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "." )
- *     GaugeDisplay( aGauge )
- *     hb_ZipFileByTDSpan( "test33.zip", aFiles, 9, {|cFile,nPos| GaugeUpdate( aGauge, nPos / nLen) },, "hello",, 6585452 )
- *     RETURN
+ *        aFiles := { "test.prg", "test.hbp" }
+ *        nLen   := Len( aFiles )
+ *        aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "." )
+ *        GaugeDisplay( aGauge )
+ *        hb_ZipFileByTDSpan( "test33.zip", aFiles, 9, {| cFile, nPos | GaugeUpdate( aGauge, nPos / nLen) },, "hello",, 6585452 )
+ *        RETURN
  * $STATUS$
  *     R
  * $COMPLIANCE$
@@ -343,27 +343,27 @@
  * $EXAMPLES$
  *     PROCEDURE Main()
  *
- *     hb_SetDiskZip( {| nDisk | Alert( "Please insert disk no " + Str( nDisk, 3 ) ) } )
+ *        hb_SetDiskZip( {| nDisk | Alert( "Please insert disk no " + Str( nDisk, 3 ) ) } )
  *
- *     IF hb_ZipFileByPKSpan( "A:\test.zip", "test.prg" )
- *        QOut( "File was successfully created" )
- *     ENDIF
+ *        IF hb_ZipFileByPKSpan( "A:\test.zip", "test.prg" )
+ *           ? "File was successfully created"
+ *        ENDIF
  *
- *     IF hb_ZipFileByPKSpan( "A:\test1.zip", { "test.prg", "C:\windows\win.ini" } )
- *        QOut( "File was successfully created" )
- *     ENDIF
+ *        IF hb_ZipFileByPKSpan( "A:\test1.zip", { "test.prg", "test.hbp" } )
+ *           ? "File was successfully created"
+ *        ENDIF
  *
- *     IF hb_ZipFileByPKSpan( "test2.zip", { "test.prg", "C:\windows\win.ini" }, 9, {| nPos, cFile | QOut( cFile ) } )
- *        QOut( "File was successfully created" )
- *     ENDIF
+ *        IF hb_ZipFileByPKSpan( "test2.zip", { "test.prg", "test.hbp" }, 9, {| nPos, cFile | QOut( cFile ) } )
+ *           ? "File was successfully created"
+ *        ENDIF
  *
- *     aFiles := { "test.prg", "C:\windows\win.ini" }
- *     nLen   := Len( aFiles )
- *     aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "." )
- *     GaugeDisplay( aGauge )
- *     // assuming F: is a Zip Drive
- *     hb_ZipFileByPKSpan( "F:\test33.zip", aFiles, 9, {| cFile, nPos | GaugeUpdate( aGauge, nPos / nLen ) },, "hello" )
- *     RETURN
+ *        aFiles := { "test.prg", "test.hbp" }
+ *        nLen   := Len( aFiles )
+ *        aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "." )
+ *        GaugeDisplay( aGauge )
+ *        // assuming F: is a Zip Drive
+ *        hb_ZipFileByPKSpan( "F:\test33.zip", aFiles, 9, {| cFile, nPos | GaugeUpdate( aGauge, nPos / nLen ) },, "hello" )
+ *        RETURN
  * $STATUS$
  *     R
  * $COMPLIANCE$
@@ -444,24 +444,24 @@
  * $EXAMPLES$
  *     PROCEDURE Main()
  *
- *     IF hb_ZipFile( "test.zip", "test.prg" )
- *        QOut( "File was successfully created" )
- *     ENDIF
+ *        IF hb_ZipFile( "test.zip", "test.prg" )
+ *           ? "File was successfully created"
+ *        ENDIF
  *
- *     IF hb_ZipFile( "test1.zip", { "test.prg", "C:\windows\win.ini" } )
- *        QOut( "File was successfully created" )
- *     ENDIF
+ *        IF hb_ZipFile( "test1.zip", { "test.prg", "test.hbp" } )
+ *           ? "File was successfully created"
+ *        ENDIF
  *
- *     IF hb_ZipFile( "test2.zip", { "test.prg", "C:\windows\win.ini" }, 9, {| cFile, nPos | QOut( cFile ) } )
- *        QOut( "File was successfully created" )
- *     ENDIF
+ *        IF hb_ZipFile( "test2.zip", { "test.prg", "test.hbp" }, 9, {| cFile, nPos | QOut( cFile ) } )
+ *           ? "File was successfully created"
+ *        ENDIF
  *
- *     aFiles := { "test.prg", "C:\windows\win.ini" }
- *     nLen   := Len( aFiles )
- *     aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B" , "." )
- *     GaugeDisplay( aGauge )
- *     hb_ZipFile( "test33.zip", aFiles, 9, {| cFile, nPos | GaugeUpdate( aGauge, nPos / nLen ) },, "hello" )
- *     RETURN
+ *        aFiles := { "test.prg", "test.hbp" }
+ *        nLen   := Len( aFiles )
+ *        aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B" , "." )
+ *        GaugeDisplay( aGauge )
+ *        hb_ZipFile( "test33.zip", aFiles, 9, {| cFile, nPos | GaugeUpdate( aGauge, nPos / nLen ) },, "hello" )
+ *        RETURN
  * $STATUS$
  *     R
  * $COMPLIANCE$
@@ -520,16 +520,17 @@
  * $EXAMPLES$
  *     PROCEDURE Main()
  *
- *     aExtract := hb_GetFilesInZip( "test.zip" )  // extract all files in zip
- *     IF hb_UnzipFile( "test.zip",,,, ".\", aExtract )
- *        QOut( "File was successfully extracted" )
- *     ENDIF
+ *        LOCAL aExtract := hb_GetFilesInZip( "test.zip" )  // extract all files in zip
  *
- *     aExtract := hb_GetFilesInZip( "test2.zip" )  // extract all files in zip
- *     IF hb_UnzipFile( "test2.zip", {| cFile | QOut( cFile ) },,, ".\", aExtract )
- *        QOut( "File was successfully extracted" )
- *     ENDIF
- *     RETURN
+ *        IF hb_UnzipFile( "test.zip",,,, ".\", aExtract )
+ *           ? "File was successfully extracted"
+ *        ENDIF
+ *
+ *        aExtract := hb_GetFilesInZip( "test2.zip" )  // extract all files in zip
+ *        IF hb_UnzipFile( "test2.zip", {| cFile | QOut( cFile ) },,, ".\", aExtract )
+ *           ? "File was successfully extracted"
+ *        ENDIF
+ *        RETURN
  * $STATUS$
  *     R
  * $COMPLIANCE$

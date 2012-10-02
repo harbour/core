@@ -47,9 +47,9 @@ PROCEDURE Main()
    ? "To the power 3   : ", o:x
 
    ? "Global stack"
-   Debug( __dbgVMStkGList() )
+   ? hb_ValToExp(  __dbgVMStkGList() )
    ? "Statics"
-   Debug( __dbgVMVarSList() )
+   ? hb_ValToExp(  __dbgVMVarSList() )
 
    RETURN
 
@@ -74,6 +74,3 @@ STATIC FUNCTION New()
    ::x := 1
 
    RETURN self
-
-STATIC PROCEDURE Debug()
-   RETURN

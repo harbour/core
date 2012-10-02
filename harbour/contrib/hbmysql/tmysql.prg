@@ -567,7 +567,7 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
             OTHERWISE
 
                //DAVID: Alert( "Unknown type from SQL Server Field: " + hb_NToS( i ) + " is type " + hb_NToS( ::aFieldStruct[ i ][ MYSQL_FS_TYPE ] ) )
-               // QOUT( "Unknown type from SQL Server Field: " + hb_NToS( i ) + " is type " + hb_NToS( ::aFieldStruct[ i ][ MYSQL_FS_TYPE ] ) )
+               // ? "Unknown type from SQL Server Field: " + hb_NToS( i ) + " is type " + hb_NToS( ::aFieldStruct[ i ][ MYSQL_FS_TYPE ] )
 
             ENDSWITCH
 

@@ -86,7 +86,7 @@
  *                                @nHandle, @nOpenCnt )
  *
  *      IF nRc != 0
- *        QOUT =: "Error: " + STR( nRc ) )
+ *        ? "Error: " + Str( nRc ) )
  *        QUIT
  *      ENDIF
  *  $SEEALSO$
@@ -133,15 +133,15 @@
  *
  *    nRc := FT_NWSEMWAIT( nHandle )
  *    IF nRc == 254
- *       QOUT( "All slots for this resource are currently in use" )
+ *       ? "All slots for this resource are currently in use"
  *       QUIT
  *    ENDIF
  *
  *    FT_NWSEMEX( nHandle, @nValue, @nOpenCnt )
- *    QOUT( "Semaphore test -> Open at [" + ;
- *          ALLTRIM(STR(nOpenCnt))        + ;
- *          "] stations, value is ["      + ;
- *          ALLTRIM(STR(nValue)) + "]" )
+ *    ? "Semaphore test -> Open at [" + ;
+ *      AllTrim( Str( nOpenCnt ) ) + ;
+ *      "] stations, value is [" + ;
+ *      AllTrim( Str( nValue ) ) + "]"
  *  $SEEALSO$
  *      FT_NWSEMOPEN() FT_NWSEMWAIT() FT_NWSEMSIG() FT_NWSEMCLOSE() FT_NWSEMLOCK()
  *  $END$
@@ -177,7 +177,7 @@
  *
  *    nRc := FT_NWSEMWAIT( nHandle )
  *    IF nRc == 254
- *       QOUT( "All slots for this resource are currently in use" )
+ *       ? "All slots for this resource are currently in use"
  *       QUIT
  *    ENDIF
  *  $SEEALSO$
@@ -210,7 +210,7 @@
  *
  *      For more information, see the description under FT_NWSEMOPEN().
  *  $EXAMPLES$
- *      QOUT( "Signal returns: " + STR( FT_NWSEMSIG( nHandle ) ) )
+ *      ? "Signal returns: " + Str( FT_NWSEMSIG( nHandle ) )
  *  $SEEALSO$
  *      FT_NWSEMOPEN() FT_NWSEMEX() FT_NWSEMWAIT() FT_NWSEMCLOSE() FT_NWSEMLOCK()
  *  $END$
@@ -238,7 +238,7 @@
  *     the open count for the semaphore.  If the open count hits zero,
  *     the semaphore is deleted by NetWare.
  *  $EXAMPLES$
- *     QOUT( "Close returns:  " + STR( FT_NWSEMCLOSE( nHandle ) ) )
+ *     ? "Close returns:  " + Str( FT_NWSEMCLOSE( nHandle ) )
  *  $SEEALSO$
  *     FT_NWSEMOPEN() FT_NWSEMEX() FT_NWSEMWAIT() FT_NWSEMSIG() FT_NWSEMLOCK()
  *  $END$
@@ -258,7 +258,7 @@
  *     <nHandle> is the semaphore's handle, if you get the lock.
  *     THIS MUST BE PASSED BY REFERENCE!
  *  $RETURNS$
- *     lRet == .t. if you get the lock, .f. if you don't.
+ *     lRet == .T. if you get the lock, .T. if you don't.
  *     If the lock succeeds, <nHandle> will contain the semaphore
  *     handle.  If it fails, the value of <nHandle> is undefined.
  *
@@ -291,17 +291,17 @@
  *     etc.
  *  $EXAMPLES$
  *     LOCAL nHandle := 0
- *     IF FT_NWSEMLOCK( "k:\apps\error.log", @nHandle )
- *         // Note, you aren't actually LOCKING this file, you are
- *         // just locking a semaphore by the same name.  As long as
- *         // all apps that might be using this file are cooperating
- *         // with the same kind of semaphore lock, you can effectively
- *         // control access to the file.
- *       ELSE
- *         QOUT("Couldn't lock file.")
- *       ENDIF
- *       * Processing, then:
- *       FT_NWSEMUNLOCK( nHandle )
+ *     IF FT_NWSEMLOCK( "error.log", @nHandle )
+ *        // Note, you aren't actually LOCKING this file, you are
+ *        // just locking a semaphore by the same name.  As long as
+ *        // all apps that might be using this file are cooperating
+ *        // with the same kind of semaphore lock, you can effectively
+ *        // control access to the file.
+ *     ELSE
+ *        ? "Couldn't lock file."
+ *     ENDIF
+ *     // Processing, then:
+ *     FT_NWSEMUNLOCK( nHandle )
  *
  *  $SEEALSO$
  *     FT_NWSEMOPEN() FT_NWSEMEX() FT_NWSEMWAIT() FT_NWSEMSIG() FT_NWSEMUNLOCK()
@@ -320,7 +320,7 @@
  *  $ARGUMENTS$
  *     <nHandle> is the semaphore handle returned from FT_NWSEMLOCK()
  *  $RETURNS$
- *     lRet == .t. if you successfully unlock the semaphore, .f. if
+ *     lRet == .T. if you successfully unlock the semaphore, .F. if
  *     you don't.  If this call fails, it could be that you're passing
  *     an invalid semaphore handle.
  *  $DESCRIPTION$
@@ -331,17 +331,17 @@
  *     BY REFERENCE.
  *  $EXAMPLES$
  *     LOCAL nHandle := 0
- *     IF FT_NWSEMLOCK( "k:\apps\error.log", @nHandle )
- *         // Note, you aren't actually LOCKING this file, you are
- *         // just locking a semaphore by the same name.  As long as
- *         // all apps that might be using this file are cooperating
- *         // with the same kind of semaphore lock, you can effectively
- *         // control access to the file.
- *       ELSE
- *         QOUT("Couldn't lock file.")
- *       ENDIF
- *       * Processing, then:
- *       FT_NWSEMUNLOCK( nHandle )
+ *     IF FT_NWSEMLOCK( "error.log", @nHandle )
+ *        // Note, you aren't actually LOCKING this file, you are
+ *        // just locking a semaphore by the same name.  As long as
+ *        // all apps that might be using this file are cooperating
+ *        // with the same kind of semaphore lock, you can effectively
+ *        // control access to the file.
+ *     ELSE
+ *        ? "Couldn't lock file."
+ *     ENDIF
+ *     // Processing, then:
+ *     FT_NWSEMUNLOCK( nHandle )
  *
  *  $SEEALSO$
  *     FT_NWSEMOPEN() FT_NWSEMEX() FT_NWSEMWAIT() FT_NWSEMSIG() FT_NWSEMLOCK()

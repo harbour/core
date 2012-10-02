@@ -7,6 +7,6 @@
 PROCEDURE Main()
 
    CLS
-   QOut( "You selected " + FT_PICKDAY() )
+   ? "You selected " + FT_PICKDAY()
 
    RETURN

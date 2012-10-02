@@ -85,7 +85,7 @@ PROCEDURE main()
    pDbDest := sqlite3_open_v2( cFileDest, nDbFlags )
 
    IF Empty( pDbDest )
-      QOut( "Can't open database : ", cFileDest )
+      ? "Can't open database : ", cFileDest
       ErrorLevel( 1 )
       RETURN
    ENDIF
@@ -95,15 +95,15 @@ PROCEDURE main()
    //
    pBackup := sqlite3_backup_init( pDbDest, "main", pDbSource, "main" )
    IF Empty( pBackup )
-      QOut( "Can't initialize backup" )
+      ? "Can't initialize backup"
       ErrorLevel( 1 )
       RETURN
    ELSE
-      QOut( "Start backup.." )
+      ? "Start backup.."
    ENDIF
 
-   IF sqlite3_backup_step(pBackup, -1) == SQLITE_DONE
-      QOut( "Backup successful." )
+   IF sqlite3_backup_step( pBackup, -1 ) == SQLITE_DONE
+      ? "Backup successful."
    ENDIF
 
    sqlite3_backup_finish( pBackup ) /* !!! */
@@ -111,10 +111,10 @@ PROCEDURE main()
    pDbSource := Nil /* close :memory: database */
 
    /* Little test for sqlite3_exec with callback  */
-   QOut( "" )
-   QOut( cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40" )
+   ?
+   ? cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40"
    cb := @CallBack() // "CallBack"
-   QOut( cErrorMsg(sqlite3_exec(pDbDest, cSQLTEXT, cb)) )
+   ? cErrorMsg(sqlite3_exec(pDbDest, cSQLTEXT, cb))
 
    pDbDest := NIL   // close database
 
@@ -129,7 +129,7 @@ FUNCTION CallBack( nColCount, aValue, aColName )
    LOCAL oldColor := SetColor( "G/N" )
 
    FOR nI := 1 TO nColCount
-      Qout( Padr(aColName[nI], 5) , " == ", aValue[nI] )
+      ? Padr( aColName[ nI ], 5 ) , " == ", aValue[ nI ]
    NEXT
 
    SetColor( oldColor )
@@ -198,7 +198,7 @@ STATIC FUNCTION PrepareDB( cFile )
 
    pDb := sqlite3_open( cFile, .T. )
    IF Empty( pDb )
-      QOut( "Can't open/create database : ", cFile )
+      ? "Can't open/create database : ", cFile
 
       RETURN NIL
    ENDIF
@@ -209,7 +209,7 @@ STATIC FUNCTION PrepareDB( cFile )
    cMsg := cErrorMsg( sqlite3_exec(pDb, cSQLTEXT) )
 
    IF !( cMsg == "SQLITE_OK" )
-      QOut( "Can't create table : person" )
+      ? "Can't create table : person"
       pDb := NIL // close database
 
       RETURN NIL
@@ -218,7 +218,7 @@ STATIC FUNCTION PrepareDB( cFile )
    cSQLTEXT := "INSERT INTO person( name, age ) VALUES( :name, :age )"
    pStmt := sqlite3_prepare( pDb, cSQLTEXT )
    IF Empty( pStmt )
-      QOut( "Can't prepare statement : ", cSQLTEXT )
+      ? "Can't prepare statement : ", cSQLTEXT
       pDb := NIL
 
       RETURN NIL

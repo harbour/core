@@ -81,7 +81,7 @@ PROCEDURE Main( cArg )
       Alert( oServer:Error() )
    ENDIF
 
-   oQuery:=oServer:Query( "SELECT C111, C116, C134 from maga limit 10" )
+   oQuery := oServer:Query( "SELECT C111, C116, C134 from maga limit 10" )
 // oRow := oQuery:GetRow()
 
    oServer:Destroy()
@@ -120,10 +120,10 @@ PROCEDURE Main( cArg )
          ENDIF
       ENDIF
 
-      wn->(dbSkip())
+      wn->( dbSkip() )
 
    ENDDO
 
-   wn->(dbCloseArea())
+   wn->( dbCloseArea() )
 
    RETURN

@@ -6,6 +6,6 @@
 
 PROCEDURE Main()
 
-   QOut( "Logical station: " + Str( FT_NWLSTAT() ) )
+   ? "Logical station: " + Str( FT_NWLSTAT() )
 
    RETURN

@@ -90,23 +90,23 @@ PROCEDURE main()
    // Authorizer1
    sqlite3_set_authorizer( pDb, @Authorizer() /*"Authorizer"*/ )
 
-   QOut( cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40" )
+   ? cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40"
    cb := @CallBack() // "CallBack"
-   QOut( cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) ) )
+   ? cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    sqlite3_sleep( 3000 )
    // Authorizer2
-   QOut( cErrorMsg( sqlite3_set_authorizer( pDb, @Authorizer2() /*"Authorizer2"*/ ) ) )
+   ? cErrorMsg( sqlite3_set_authorizer( pDb, @Authorizer2() /*"Authorizer2"*/ ) )
 
-   QOut( cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40" )
-   QOut( cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) ) )
+   ? cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40"
+   ? cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ) )
 
    sqlite3_sleep( 3000 )
    // Authorizer3
-   QOut( cErrorMsg( sqlite3_set_authorizer( pDb, @Authorizer3() /*"Authorizer3"*/ ) ) )
+   ? cErrorMsg( sqlite3_set_authorizer( pDb, @Authorizer3() /*"Authorizer3"*/ ) )
 
-   QOut( cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40" )
-   QOut( cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ), .F. ) )
+   ? cSQLTEXT := "SELECT * FROM main.person WHERE age BETWEEN 20 AND 40"
+   ? cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ), .F. )
 
    sqlite3_sleep( 3000 )
    //
@@ -119,7 +119,7 @@ PROCEDURE main()
 FUNCTION Authorizer( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
    LOCAL oldColor := SetColor( "R/N" )
 
-   QOut( "=>", StrZero( nAction, 2 ), cName1, cName2, cDatabaseName, cTriggerOrViewName )
+   ? "=>", StrZero( nAction, 2 ), cName1, cName2, cDatabaseName, cTriggerOrViewName
 
    SetColor( oldColor )
 
@@ -130,7 +130,7 @@ FUNCTION Authorizer( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName 
 FUNCTION Authorizer2( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
    LOCAL oldColor := SetColor( "R/N" )
 
-   QOut( "=>", StrZero( nAction, 2 ), cName1, cName2, cDatabaseName, cTriggerOrViewName )
+   ? "=>", StrZero( nAction, 2 ), cName1, cName2, cDatabaseName, cTriggerOrViewName
 
    SetColor( oldColor )
 
@@ -154,7 +154,7 @@ FUNCTION CallBack( nColCount, aValue, aColName )
    LOCAL oldColor := SetColor( "G/N" )
 
    FOR nI := 1 TO nColCount
-      QOut( Padr( aColName[ nI ], 5 ) , " == ", aValue[ nI ] )
+      ? Padr( aColName[ nI ], 5 ) , " == ", aValue[ nI ]
    NEXT
 
    SetColor( oldColor )
@@ -223,7 +223,7 @@ STATIC FUNCTION PrepareDB( cFile )
 
    pDb := sqlite3_open( cFile, .T. )
    IF Empty( pDb )
-      QOut( "Can't open/create database : ", cFile )
+      ? "Can't open/create database : ", cFile
 
       RETURN NIL
    ENDIF
@@ -232,7 +232,7 @@ STATIC FUNCTION PrepareDB( cFile )
    cMsg := cErrorMsg( sqlite3_exec( pDb, cSQLTEXT ) )
 
    IF !( cMsg == "SQLITE_OK" )
-      QOut( "Can't create table : person" )
+      ? "Can't create table : person"
       pDb := NIL // close database
 
       RETURN NIL
@@ -241,7 +241,7 @@ STATIC FUNCTION PrepareDB( cFile )
    cSQLTEXT := "INSERT INTO person( name, age, pasw ) VALUES( :name, :age, :pasw )"
    pStmt := sqlite3_prepare( pDb, cSQLTEXT )
    IF Empty( pStmt )
-      QOut( "Can't prepare statement : ", cSQLTEXT )
+      ? "Can't prepare statement : ", cSQLTEXT
       pDb := NIL
 
       RETURN NIL

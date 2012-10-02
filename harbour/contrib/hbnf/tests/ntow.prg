@@ -6,6 +6,6 @@
 
 PROCEDURE Main( cNum )
 
-   QOut( ft_ntow( Val( cNum ) ) )
+   ? ft_ntow( Val( cNum ) )
 
    RETURN

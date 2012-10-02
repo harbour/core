@@ -34,10 +34,10 @@ PROCEDURE Main( cFrom, cTo )
    cTo   := Default( cTo,   "strip.out" )
 
    oFrom := TTextFile()
-// Debug( __objGetMethodList( oFrom ) )
+// ? hb_ValToExp(  __objGetMethodList( oFrom ) )
    oFrom:New( cFrom, "R" )
    oTo   := TTextFile()
-// Debug( __objGetMethodList( oTo ) )
+// ? hb_ValToExp(  __objGetMethodList( oTo ) )
    oTo:New( cTo  , "W" )
 
    DO WHILE !oFrom:EOF()

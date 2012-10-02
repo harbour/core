@@ -65,4 +65,5 @@ PROCEDURE Main()
    SetBlink( .T. )
    RestScreen( , , , , cDosScrn )
    SetPos( nDosRow, nDosCol )
-   QUIT
+
+   RETURN

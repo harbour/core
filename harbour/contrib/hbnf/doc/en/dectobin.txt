@@ -19,7 +19,7 @@
  *     This function can be used in conjunction with any bit-wise
  *     operations.
  *  $EXAMPLES$
- *     QOut( FT_DEC2BIN(255) )        // "11111111"
- *     QOut( FT_DEC2BIN(2) )          // "00000010"
+ *     ? FT_DEC2BIN( 255 )         // "11111111"
+ *     ? FT_DEC2BIN( 2 )           // "00000010"
  *  $END$
  */

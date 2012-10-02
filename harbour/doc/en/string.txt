@@ -42,8 +42,8 @@
  *      in <cString> is an alphabetic character. If not, the function will
  *      return a logical false (.F.).
  *  $EXAMPLES$
- *      QOUT( "isalpha( 'hello' ) = ", isalpha( 'hello' ) )
- *      QOUT( "isalpha( '12345' ) = ", isalpha( '12345' ) )
+ *      ? 'isalpha( "hello" ) = ', isalpha( "hello" )
+ *      ? 'isalpha( "12345" ) = ', isalpha( "12345" )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -236,8 +236,8 @@
  *      the second expression, the function will return 0. The third and fourth
  *      parameters lets you indicate a starting and end offset to search in.
  *  $EXAMPLES$
- *      QOUT( "At( 'cde', 'abcdefgfedcba' ) = '" +;
- *             At( 'cde', 'abcsefgfedcba' ) + "'" )
+ *      ? 'At( "cde", "abcdefgfedcba" ) = ' +;
+ *         At( "cde", "abcsefgfedcba" )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -280,8 +280,8 @@
  *      of <cString> to the left. If the function is unable to find any
  *      occurrence of <cSearch> in <cString>, the return value is 0.
  *  $EXAMPLES$
- *      QOUT( "RAt( 'cde', 'abcdefgfedcba' ) = '" +;
- *             RAt( 'cde', 'abcsefgfedcba' ) + "'" )
+ *      ? 'RAt( "cde", "abcdefgfedcba" ) = ' +;
+ *         RAt( "cde", "abcsefgfedcba" )
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

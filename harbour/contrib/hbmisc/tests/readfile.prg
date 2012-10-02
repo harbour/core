@@ -13,15 +13,13 @@
 
 PROCEDURE Main( cFile )
    LOCAL oFile := TFileRead():New( cFile )
-   LOCAL cNewLine := hb_eol()
 
    oFile:Open()
    IF oFile:Error()
-      QOUT( oFile:ErrorMsg( "FileRead: " ) )
+      ? oFile:ErrorMsg( "FileRead: " )
    ELSE
       DO WHILE oFile:MoreToRead()
-         OUTSTD( oFile:ReadLine() )
-         OUTSTD( cNewLine )
+         ? oFile:ReadLine() )
       ENDDO
       oFile:Close()
    ENDIF

@@ -32,15 +32,15 @@
  *     to the supplied code block, cause that code block to return a .T. value.
  *  $EXAMPLES$
  *     // Search the Entire Array
- *     FT_ANOMATCHES(aTries, { | x | x <= 100 } )
+ *     FT_ANOMATCHES( aTries, {| x | x <= 100 } )
  *
  *     // Search from the 5th Element On
- *     FT_ANOMATCHES(aCodes, { | x | UPPER(x) == cCurrentCode }, 5)
+ *     FT_ANOMATCHES( aCodes, {| x | Upper( x ) == cCurrentCode }, 5 )
  *
  *     // Search the 1st 10 Elements
- *     FT_ANOMATCHES(aDates, { | x | IS_BETWEEN(DATE()-7,x,DATE() + 7) }, 10)
+ *     FT_ANOMATCHES( aDates, {| x | IS_BETWEEN( Date() - 7, x, Date() + 7 ) }, 10 )
  *
  *     // Search Elements 5-10
- *     FT_ANOMATCHES(aNames, { | x | x <= cLastGoodName }, 5, 10)
+ *     FT_ANOMATCHES( aNames, {| x | x <= cLastGoodName }, 5, 10 )
  *  $END$
  */

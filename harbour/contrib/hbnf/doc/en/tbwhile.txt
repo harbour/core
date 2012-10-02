@@ -18,12 +18,12 @@
  *     <aFields> is array of field blocks of fields you want to display.
  *        Example to set up last name and first name in array:
  *        aFields := {}
- *        AADD(aFields, {"Last Name" , {||Names->Last}  } )
- *        AADD(aFields, {"First Name", {||Names->First} } )
+ *        AAdd( aFields, { "Last Name" , {|| Names->Last }  } )
+ *        AAdd( aFields, { "First Name", {|| Names->First } } )
  *
  *     <bWhileCond> is the limiting WHILE condition as a block.
- *        Example 1: { ||Names->Last == "JONES" }
- *        Example 2: { ||Names->Last == "JONES" .AND. Names->First == "A"  }
+ *        Example 1: {|| Names->Last == "JONES" }
+ *        Example 2: {|| Names->Last == "JONES" .AND. Names->First == "A"  }
  *
  *     <cKey> is the key to find top condition of WHILE.
  *        cLast  := "JONES     "
@@ -64,10 +64,10 @@
  *     * Last, First, City AND is indexed on Last + First.
  *     LOCAL nRecSel    := 0
  *     LOCAL aFields    := {}
- *     LOCAL bWhile     := {||TBNames->Last = "JONES"}
+ *     LOCAL bWhile     := {|| TBNames->Last = "JONES" }
  *     LOCAL cKey       := "JONES"
  *     LOCAL nFreeze    := 1
- *     LOCAL lSaveScrn  := .t.
+ *     LOCAL lSaveScrn  := .T.
  *     LOCAL cColorList := "N/W, N/BG, B/W, B/BG, B/W, B/BG, R/W, B/R"
  *     LOCAL cColorShad := "N/N"
  *
@@ -75,16 +75,16 @@
  *
  *     * Pass Heading as character and Field as Block including Alias
  *     * To eliminate the need to use FIELDWBLOCK() function in FT_BRWSWHL()
- *     AADD(aFields, {"Last Name" , {||TBNames->Last}  } )
- *     AADD(aFields, {"First Name", {||TBNames->First} } )
- *     AADD(aFields, {"City"      , {||TBNames->City}  } )
+ *     AAdd( aFields, { "Last Name" , {|| TBNames->Last }  } )
+ *     AAdd( aFields, { "First Name", {|| TBNames->First } } )
+ *     AAdd( aFields, { "City"      , {|| TBNames->City }  } )
  *
  *     IF FT_BRWSWHL( aFields, bWhile, cKey, nFreeze, lSaveScrn, ;
- *        cColorList, cColorShad, 3, 6, MaxRow() - 2, MaxCol() - 6) == 0
+ *        cColorList, cColorShad, 3, 6, MaxRow() - 2, MaxCol() - 6 ) == 0
  *        ? "Sorry, NO Records Were Selected"
  *     ELSE
- *        ? "You Selected: " + TBNames->Last +" "+ ;
- *           TBNames->First +" "+ TBNames->City
+ *        ? "You Selected: " + TBNames->Last + " " + ;
+ *          TBNames->First + " " + TBNames->City
  *     ENDIF
  *  $END$
  */

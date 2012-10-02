@@ -29,11 +29,11 @@ PROCEDURE Main()
    oTo   := TTextFile():New( "hello.out", "W" )
 
    QOut( "What's in oFrom" )
-   Debug( { oFrom, __objGetMethodList( oFrom ) } )
+   ? hb_ValToExp(  { oFrom, __objGetMethodList( oFrom ) } )
 
    QOut()
    QOut( "What's in oFrom:TEmpty" )
-   Debug( { oFrom:TEmpty, __objGetMethodList( oFrom:TEmpty ) } )
+   ? hb_ValToExp(  { oFrom:TEmpty, __objGetMethodList( oFrom:TEmpty ) } )
 
    QOut()
    QOut( "Let's call Run() from TEmpty : " )
@@ -54,7 +54,7 @@ PROCEDURE Main()
    oFrom:Dispose()
    oTo:Dispose()
 
-   //   Debug( __dbgvmStkGList() )  // Stack is OK!
+// ? hb_ValToExp(  __dbgvmStkGList() )  // Stack is OK!
 
    RETURN
 

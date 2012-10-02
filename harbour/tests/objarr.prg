@@ -55,9 +55,9 @@ PROCEDURE Main()
    ? "To the power 3   : ", hb_ValToStr( o:x )
 
    ? "Global stack"
-   Debug( __dbgVMStkGList() )
+   ? hb_ValToExp(  __dbgVMStkGList() )
    ? "Statics"
-   Debug( __dbgVMVarSList() )
+   ? hb_ValToExp(  __dbgVMVarSList() )
 
    RETURN
 
@@ -89,6 +89,3 @@ STATIC FUNCTION Get()
    LOCAL self := QSelf()
 
    RETURN ::x
-
-STATIC PROCEDURE Debug()
-   RETURN

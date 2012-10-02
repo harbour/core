@@ -23,12 +23,12 @@
  *     CPU flags are returned as a series of bits.  Using this function, you
  *     can determine the state of each CPU flag.
  *  $EXAMPLES$
- *     if FT_ISBITON( nCPUFlags, 0 )
- *        Qout( "The carry flag was set." )
- *     endif
+ *     IF FT_ISBITON( nCPUFlags, 0 )
+ *        ? "The carry flag was set."
+ *     ENDIF
  *
- *     if FT_ISBITON( nCPUFlags, 7 )
- *        Qout( "The sign flag was set." )
- *     endif
+ *     IF FT_ISBITON( nCPUFlags, 7 )
+ *        ? "The sign flag was set."
+ *     ENDIF
  *  $END$
  */

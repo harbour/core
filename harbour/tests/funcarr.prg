@@ -50,9 +50,9 @@ PROCEDURE Main()
    ? "To the power 3   : ", aFunc()[ 1 ]
 
    ? "Global stack"
-   Debug( __dbgVMStkGList() )        // Please note a is a reference to aArray !
+   ? hb_ValToExp(  __dbgVMStkGList() )        // Please note a is a reference to aArray !
    ? "Statics"
-   Debug( __dbgVMVarSList() )
+   ? hb_ValToExp(  __dbgVMVarSList() )
 
    RETURN
 
@@ -61,6 +61,3 @@ FUNCTION aFunc()
    STATIC aArray := { [Test] }
 
    RETURN aArray
-
-STATIC PROCEDURE Debug()
-   RETURN

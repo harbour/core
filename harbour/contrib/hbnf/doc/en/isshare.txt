@@ -24,7 +24,7 @@
  *      to determine if DOS SHARE.COM is loaded.
  *  $EXAMPLES$
  *     IF FT_ISSHARE() != 255
- *        Qout("SHARE must be loaded!")
+ *        ? "SHARE must be loaded!"
  *     ENDIF
  *  $SEEALSO$
  *     FT_INT86()

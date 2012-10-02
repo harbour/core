@@ -170,6 +170,6 @@ FUNCTION ToChar( xTxt, cSeparator, lDebug )
 
 FUNCTION Debug( xItem )
 
-   QOut( ToChar( xItem, ", ", .T. ) )
+   ? ToChar( xItem, ", ", .T. )
 
    RETURN xItem

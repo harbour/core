@@ -22,11 +22,10 @@
  *     as Wilton's "Programmer's Guide to PC & PS/2 Video Systems"
  *     (Microsoft Press)
  *  $EXAMPLES$
- *        FUNCTION Main( cMode )
- *
- *          FT_SETMODE( VAL( cMode ) )
- *          QOUT( "Video mode is: " + STR( FT_GETMODE() ) )
- *          RETURN NIL
+ *     PROCEDURE Main( cMode )
+ *        FT_SETMODE( VAL( cMode ) )
+ *        ? "Video mode is: " + Str( FT_GETMODE() )
+ *        RETURN
  *  $SEEALSO$
  *     FT_ADAPTER()
  *  $END$
@@ -52,11 +51,9 @@
  *     as Wilton's "Programmer's Guide to PC & PS/2 Video Systems"
  *     (Microsoft Press)
  *  $EXAMPLES$
- *        function main( cMode )
- *
- *          FT_SETMODE( val( cMode ) )
- *          QOut( "Video mode is: " + str( FT_GETMODE() ) )
- *          RETURN NIL
- *
+ *     PROCEDURE Main( cMode )
+ *       FT_SETMODE( Val( cMode ) )
+ *       ? "Video mode is: " + Str( FT_GETMODE() )
+ *       RETURN
  *  $END$
  */

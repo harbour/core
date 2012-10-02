@@ -24,6 +24,6 @@
  *     to the IBM PC_ (Brady).
  *
  *  $EXAMPLES$
- *     QOut( "Conventional memory installed: " + Str( FT_SYSMEM() ) + "K" )
+ *     ? "Conventional memory installed: " + Str( FT_SYSMEM() ) + "K"
  *  $END$
  */

@@ -23,13 +23,13 @@ PROCEDURE Main()
 
    bioe := BIO_new_fd( 1, HB_BIO_NOCLOSE )
 
-   ? PEM_READ_BIO_RSAPRIVATEKEY( "privkey.pem", {| lWrite | QOut( "Callback (block)", lWrite, hb_eol() ), "test" } )
+   ? PEM_READ_BIO_RSAPRIVATEKEY( "privkey.pem", {| lWrite | Output(  "Callback (block)", lWrite, hb_eol() ), "test" } )
    ? ; ERR_print_errors( bioe )
    ? PEM_READ_BIO_RSAPRIVATEKEY( "privkey.pem", @cb_function() )
    ? ; ERR_print_errors( bioe )
    ? PEM_READ_BIO_RSAPRIVATEKEY( "privkey.pem", "test" )
    ? ; ERR_print_errors( bioe )
-   ? PEM_READ_BIO_RSAPUBLICKEY( "privkey.pem", {| lWrite | QOut( "Callback (block)", lWrite, hb_eol() ), "test" } )
+   ? PEM_READ_BIO_RSAPUBLICKEY( "privkey.pem", {| lWrite | Output(  "Callback (block)", lWrite, hb_eol() ), "test" } )
    ? ; ERR_print_errors( bioe )
    ? PEM_READ_BIO_RSAPUBLICKEY( "privkey.pem", "test" )
    ? ; ERR_print_errors( bioe )
@@ -70,5 +70,10 @@ ENDTEXT
    RETURN
 
 STATIC FUNCTION cb_function( lWrite )
-   QOut( "Callback (func)", lWrite, hb_eol() )
+   ? "Callback (func)", lWrite
    RETURN "test"
+
+STATIC FUNCTION Output( ... )
+   ? ...
+   RETURN NIL
+

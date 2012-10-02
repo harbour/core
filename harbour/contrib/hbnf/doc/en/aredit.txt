@@ -42,34 +42,34 @@
  *      * This second example shows how to edit a 2 dimensional array
  *      * as might be done to edit an invoice
  *
- *            LOCAL i, ar[3, 26], aBlocks[3], aHeadings[3]
- *            LOCAL nElem := 1, bGetFunc
+ *        LOCAL i, ar[ 3, 26 ], aBlocks[ 3 ], aHeadings[ 3 ]
+ *        LOCAL nElem := 1, bGetFunc
  *
  *      * Set up two dimensional array "ar"
  *
- *            FOR i = 1 TO 26
- *               ar[1, i] := i          //  1  ->  26  Numeric
- *               ar[2, i] := CHR(i+64)  // "A" -> "Z"  Character
- *               ar[3, i] := CHR(91-i)  // "Z" -> "A"  Character
- *             NEXT i
+ *        FOR i := 1 TO 26
+ *           ar[ 1, i ] := i                         //  1  ->  26  Numeric
+ *           ar[ 2, i ] := Chr( Asc( "A" ) + i - 1 ) // "A" -> "Z"  Character
+ *           ar[ 3, i ] := Chr( Asc( "Z" ) - i + 1 ) // "Z" -> "A"  Character
+ *        NEXT
  *
  *      * SET UP aHeadings Array for column headings
  *
- *            aHeadings  := { "Numbers", "Letters", "Reverse" }
+ *        aHeadings  := { "Numbers", "Letters", "Reverse" }
  *
  *      * Need to set up individual array blocks for each TBrowse column
  *
- *        aBlocks[1] := {|| STR(ar[1, nElem], 2) } // prevent default 10 spaces
- *        aBlocks[2] := {|| ar[2, nElem] }
- *        aBlocks[3] := {|| ar[3, nElem] }
+ *        aBlocks[ 1 ] := {|| Str( ar[ 1, nElem ], 2 ) } // prevent default 10 spaces
+ *        aBlocks[ 2 ] := {|| ar[ 2, nElem ] }
+ *        aBlocks[ 3 ] := {|| ar[ 3, nElem ] }
  *
  *      * set up TestGet() as the passed Get Function so FT_ArEdit knows how
  *      * to edit the individual gets.
  *
- *        bGetFunc   := { | b, ar, nDim, nElem | TestGet(b, ar, nDim, nElem) }
+ *        bGetFunc   := {| b, ar, nDim, nElem | TestGet( b, ar, nDim, nElem ) }
  *        SetColor( "N/W, W/N, , , W/N" )
  *        CLS
- *        FT_AREDIT(3, 5, 18, 75, ar, @nElem, aHeadings, aBlocks, bGetFunc)
+ *        FT_AREDIT( 3, 5, 18, 75, ar, @nElem, aHeadings, aBlocks, bGetFunc )
  *
  *  $END$
  */

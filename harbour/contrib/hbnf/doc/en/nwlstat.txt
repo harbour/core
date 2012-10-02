@@ -29,6 +29,6 @@
  *     This function does NOT test for the existence of the NetWare shell.
  *     The behavior is undefined if no shell is loaded.
  *  $EXAMPLES$
- *     QOut( "Logical station: " + str( FT_NWLSTAT() ) )
+ *     ? "Logical station: " + Str( FT_NWLSTAT() )
  *  $END$
  */

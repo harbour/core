@@ -16,12 +16,12 @@ PROCEDURE Main()
    nInitVal := INITIAL_SEMAPHORE_VALUE
    FT_NWSEMOPEN( "TEST", nInitVal, @nHandle, @nOpenCnt )
 
-   QOut( "Waiting ten seconds..." )
+   ? "Waiting ten seconds..."
    nRc := ft_nwSemWait( nHandle, 180 )
-   QOut( "Final nRc value = " + Str( nRc ) )
+   ? "Final nRc value = " + Str( nRc )
    Inkey( 0 )
    IF nRc == 254
-      QOut( "Couldn't get the semaphore.  Try again." )
+      ? "Couldn't get the semaphore.  Try again."
       QUIT
    ENDIF
 
@@ -45,7 +45,7 @@ PROCEDURE Main()
       ft_nwSemEx( nHandle, @nValue, @nOpenCnt )
    ENDDO
 
-   QOut( "Signal returns: " + Str( ft_nwsemSig( nHandle ) ) )
-   QOut( "Close returns:  " + Str( ft_nwsemClose( nHandle ) ) )
+   ? "Signal returns: " + Str( ft_nwsemSig( nHandle ) )
+   ? "Close returns:  " + Str( ft_nwsemClose( nHandle ) )
 
    RETURN

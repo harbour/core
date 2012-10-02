@@ -51,15 +51,15 @@
  *     minor task).
  *  $EXAMPLES$
  *     IF ! FT_ISPRINT()
- *        Qout( "PRN is not ready!" )
+ *        ? "PRN is not ready!"
  *     ENDIF
  *
  *     IF ! FT_ISPRINT( "COM2" )
- *        Qout( "Check the device on COM2.  Something is wrong." )
+ *        ? "Check the device on COM2.  Something is wrong."
  *     ENDIF
  *
  *     IF ! FT_ISPRINT( "A:\nul" )
- *        Qout( "Oops, better check drive A!" )
+ *        ? "Oops, better check drive A!"
  *     ENDIF
  *  $END$
  */

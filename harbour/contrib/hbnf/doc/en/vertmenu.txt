@@ -17,9 +17,9 @@
  *
  *     Each element in this array is a nested array with the structure:
  *
- *        element[x, 1] = menu option
- *        element[x, 2] = message to be displayed when option is highlighted
- *        element[x, 3] = code block to be executed when option is selected
+ *        element[ x, 1 ] = menu option
+ *        element[ x, 2 ] = message to be displayed when option is highlighted
+ *        element[ x, 3 ] = code block to be executed when option is selected
  *
  *     <cColors> is a string containing colors for the prompts, in the same
  *     format as that returned by Set( _SET_COLOR ).  If not supplied,
@@ -38,10 +38,10 @@
  *     main program.  See the test code for a succinct demonstration.
  *  $EXAMPLES$
  *      LOCAL mainmenu := ;
- *          { { "Data Entry", "Enter data",   { || FT_MENU2(datamenu)  } }, ;
- *            { "Reports",    "Hard copy",    { || FT_MENU2(repmenu)   } }, ;
- *            { "Maintenance","Reindex files",{ || FT_MENU2(maintmenu) } }, ;
+ *          { { "Data Entry",  "Enter data",    {|| FT_MENU2( datamenu )  } }, ;
+ *            { "Reports",     "Hard copy",     {|| FT_MENU2( repmenu )   } }, ;
+ *            { "Maintenance", "Reindex files", {|| FT_MENU2( maintmenu ) } }, ;
  *            { "Quit", "See ya later" } }
- *      FT_MENU2(mainmenu)
+ *      FT_MENU2( mainmenu )
  *  $END$
  */

@@ -119,11 +119,11 @@
  *  $EXAMPLES$
  *      PROCEDURE Main()
  *
- *         USE Test
+ *         USE test
  *         SELECT 0
- *         QOut( iif( Alias() == "", "No Name", Alias() ) )
- *         Test->( QOut( Alias() ) )
- *         QOut( Alias( 1 ) )
+ *         ? iif( Alias() == "", "No Name", Alias() )
+ *         ? test->( Alias() )
+ *         ? Alias( 1 )
  *
  *         RETURN
  *  $STATUS$
