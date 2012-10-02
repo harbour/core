@@ -12277,6 +12277,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    LOCAL tmp
    LOCAL l_cHB_INSTALL_PREFIX
    LOCAL aINCPATH
+   LOCAL hHRB
 
    s_cDirBase_hbshell := hb_DirBase()
    s_cProgName_hbshell := hb_ProgName()
@@ -12377,8 +12378,12 @@ STATIC PROCEDURE __hbshell( cFile, ... )
       CASE ".hrb"
          s_lInteractive := .F.
          __hbshell_ext_init( aExtension )
+         hHRB := hb_hrbLoad( cFile )
+         IF __hbshell_detect_CUI( hHRB )
+            hbshell_gtInteractive()
+         ENDIF
          hb_argShift( .T. )
-         hb_hrbRun( cFile, ... )
+         hb_hrbDo( hHRB, ... )
          EXIT
       CASE ".dbf"
          __hbshell_ext_init( aExtension )
@@ -13162,6 +13167,81 @@ STATIC FUNCTION __hbshell_win_reg_app( lRegister, lAllUser, cAppPath )
    RETURN lSuccess
 
 #endif
+
+/* List of Harbour RTL function typically used in
+   a full-screen CUI ("interactive") app */
+STATIC FUNCTION __hbshell_detect_CUI_extern_positive()
+   RETURN {;
+      "COL"               => NIL ,;
+      "DISPBEGIN"         => NIL ,;
+      "DISPBOX"           => NIL ,;
+      "DISPCOUNT"         => NIL ,;
+      "DISPEND"           => NIL ,;
+      "DISPOUT"           => NIL ,;
+      "DISPOUTAT"         => NIL ,;
+      "HB_CLRAREA"        => NIL ,;
+      "HB_DISPBOX"        => NIL ,;
+      "HB_DISPOUTAT"      => NIL ,;
+      "HB_DISPOUTATBOX"   => NIL ,;
+      "HB_SCRMAXCOL"      => NIL ,;
+      "HB_SCRMAXROW"      => NIL ,;
+      "HB_SCROLL"         => NIL ,;
+      "HB_SHADOW"         => NIL ,;
+      "MAXCOL"            => NIL ,;
+      "MAXROW"            => NIL ,;
+      "HB_MMIDDLEDOWN"    => NIL ,;
+      "MCOL"              => NIL ,;
+      "MDBLCLK"           => NIL ,;
+      "MHIDE"             => NIL ,;
+      "MLEFTDOWN"         => NIL ,;
+      "MMIDDLEDOWN"       => NIL ,;
+      "MPRESENT"          => NIL ,;
+      "MRESTSTATE"        => NIL ,;
+      "MRIGHTDOWN"        => NIL ,;
+      "MROW"              => NIL ,;
+      "MSAVESTATE"        => NIL ,;
+      "MSETBOUNDS"        => NIL ,;
+      "MSETCURSOR"        => NIL ,;
+      "MSETPOS"           => NIL ,;
+      "MSHOW"             => NIL ,;
+      "RESTSCREEN"        => NIL ,;
+      "ROW"               => NIL ,;
+      "SAVESCREEN"        => NIL ,;
+      "SCROLL"            => NIL ,;
+      "SETMODE"           => NIL ,;
+      "SETPOS"            => NIL ,;
+      "SETPOSBS"          => NIL }
+
+STATIC FUNCTION __hbshell_detect_CUI_extern_negative()
+   RETURN {;
+      "HB_GT_CGI_DEFAULT" => NIL }
+
+STATIC FUNCTION __hbshell_detect_CUI( hHRB )
+   LOCAL aFunction
+   LOCAL cFunction
+   LOCAL hFilter
+
+   /* Detect based on function usage */
+
+   aFunction := hb_hrbGetFunList( hHRB, HB_HRB_FUNC_EXTERN )
+
+   hFilter := __hbshell_detect_CUI_extern_negative()
+
+   FOR EACH cFunction IN aFunction
+      IF cFunction $ hFilter
+         RETURN .F.
+      ENDIF
+   NEXT
+
+   hFilter := __hbshell_detect_CUI_extern_positive()
+
+   FOR EACH cFunction IN aFunction
+      IF cFunction $ hFilter
+         RETURN .T.
+      ENDIF
+   NEXT
+
+   RETURN .F.
 
 /* ------------------------------------------------------------- */
 

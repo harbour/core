@@ -58,7 +58,7 @@ FUNCTION InitScrlBar()
 
    filesScroll:total := Len( aFileList )
 
-   filesScroll:colorSpec( "W+/W, W+/W" )   // New method!
+   filesScroll:colorSpec( "W+/W, W+/W" )
    SET COLOR TO "N/W*, W+/B,,,W/N"
 
    filesScroll:display()
