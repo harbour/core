@@ -58,17 +58,17 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARSWAP()" )
-   QOut( "" )
+   ? "Begin test of CHARSWAP()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  charswap("0123456789")  == "1032547698"  ? --> "] + charswap( "0123456789" ) + ["] )
-   QOut( [  charswap("ABCDEFGHIJK") == "BADCFEHGJIK" ? --> "] + charswap( "ABCDEFGHIJK" ) + ["] )
-   QOut( "" )
+   ? "Simple tests:"
+   ? [  charswap("0123456789")  == "1032547698"  ? --> "] + charswap( "0123456789" ) + ["]
+   ? [  charswap("ABCDEFGHIJK") == "BADCFEHGJIK" ? --> "] + charswap( "ABCDEFGHIJK" ) + ["]
+   ?
 
-   QOut( "End test of CHARSWAP()" )
-   QOut( "" )
+   ? "End test of CHARSWAP()"
+   ?
 
    ctexit()
 

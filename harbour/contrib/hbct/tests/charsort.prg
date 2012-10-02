@@ -58,24 +58,24 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARSORT()" )
-   QOut( "" )
+   ? "Begin test of CHARSORT()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  charsort("qwert")                     == "eqrtw"      ? --> "] + charsort( "qwert" )                   + ["] )
-   QOut( [  charsort("qwert", 2)                  == "erqwt"      ? --> "] + charsort( "qwert", 2 )                + ["] )
-   QOut( [  charsort("b1a4a3a2a1", 2, 1)          == "a2a1a3a4b1" ? --> "] + charsort( "b1a4a3a2a1", 2, 1 )        + ["] )
-   QOut( [  NOTE : The order of equal elements(here the one beginning with the same char) is NOT determined !] )
-   QOut( [  charsort("XXXqwert", 1, 1, 3)         == "XXXeqrtw"   ? --> "] + charsort( "XXXqwert", 1, 1, 3 )       + ["] )
-   QOut( [  charsort("b1a4a3a2a1", 2, 1, 0, 1)    == "a1b1a2a3a4" ? --> "] + charsort( "b1a4a3a2a1", 2, 1, 0, 1 )  + ["] )
-   QOut( [  NOTE : The order of equal elements(here the one ending with the same number) is NOT determined !] )
-   QOut( [  charsort("384172852", 1, 1, 0, 0, 4)  == "134872852"  ? --> "] + charsort( "384172852", 1, 1, 0, 0, 4 ) + ["] )
-   QOut( [  charsort("qwert",,,,,,.T.)            == "wtrqe"      ? --> "] + charsort( "qwert",,,,,, .T. )          + ["] )
-   QOut( "" )
+   ? "Simple tests:"
+   ? [  charsort("qwert")                     == "eqrtw"      ? --> "] + charsort( "qwert" )                   + ["]
+   ? [  charsort("qwert", 2)                  == "erqwt"      ? --> "] + charsort( "qwert", 2 )                + ["]
+   ? [  charsort("b1a4a3a2a1", 2, 1)          == "a2a1a3a4b1" ? --> "] + charsort( "b1a4a3a2a1", 2, 1 )        + ["]
+   ? [  NOTE : The order of equal elements(here the one beginning with the same char) is NOT determined !]
+   ? [  charsort("XXXqwert", 1, 1, 3)         == "XXXeqrtw"   ? --> "] + charsort( "XXXqwert", 1, 1, 3 )       + ["]
+   ? [  charsort("b1a4a3a2a1", 2, 1, 0, 1)    == "a1b1a2a3a4" ? --> "] + charsort( "b1a4a3a2a1", 2, 1, 0, 1 )  + ["]
+   ? [  NOTE : The order of equal elements(here the one ending with the same number) is NOT determined !]
+   ? [  charsort("384172852", 1, 1, 0, 0, 4)  == "134872852"  ? --> "] + charsort( "384172852", 1, 1, 0, 0, 4 ) + ["]
+   ? [  charsort("qwert",,,,,,.T.)            == "wtrqe"      ? --> "] + charsort( "qwert",,,,,, .T. )          + ["]
+   ?
 
-   QOut( "End test of CHARSORT()" )
-   QOut( "" )
+   ? "End test of CHARSORT()"
+   ?
 
    ctexit()
 

@@ -58,18 +58,18 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARADD()" )
-   QOut( "" )
+   ? "Begin test of CHARADD()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  charadd("012345678", chr(1)) == "123456789" ? -> "] + charadd( "012345678", Chr(1 ) ) + ["] )
-   QOut( [  charadd("012345678", chr(1)+chr(2)) == "133557799" ? -> "] + charadd( "012345678", Chr(1 ) + Chr(2 ) ) + ["] )
-   QOut( [  charadd("123456789", chr(255)) == "012345678" ? -> "] + charadd( "123456789", Chr(255 ) ) + ["] )
-   QOut( [  charadd("123456789", chr(255)+chr(254)) == "002244668" ? -> "] + charadd( "123456789", Chr(255 ) + Chr(254 ) ) + ["] )
+   ? "Simple tests:"
+   ? [  charadd("012345678", chr(1)) == "123456789" ? -> "] + charadd( "012345678", Chr(1 ) ) + ["]
+   ? [  charadd("012345678", chr(1)+chr(2)) == "133557799" ? -> "] + charadd( "012345678", Chr(1 ) + Chr(2 ) ) + ["]
+   ? [  charadd("123456789", chr(255)) == "012345678" ? -> "] + charadd( "123456789", Chr(255 ) ) + ["]
+   ? [  charadd("123456789", chr(255)+chr(254)) == "002244668" ? -> "] + charadd( "123456789", Chr(255 ) + Chr(254 ) ) + ["]
 
-   QOut( "End test of CHARADD()" )
-   QOut( "" )
+   ? "End test of CHARADD()"
+   ?
 
    ctexit()
 

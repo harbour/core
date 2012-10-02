@@ -60,31 +60,31 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARNOT()" )
-   QOut( "" )
+   ? "Begin test of CHARNOT()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
+   ? "Simple tests:"
 
-   QOut( [  charnot(chr(85)+chr(128)+chr(170)+chr(1)) == ] )
-   QOut( [  chr(170)+chr(127)+chr(85)+chr(254) ? -->] )
+   ? [  charnot(chr(85)+chr(128)+chr(170)+chr(1)) == ]
+   ? [  chr(170)+chr(127)+chr(85)+chr(254) ? -->]
 
-   QOut( [  ] )
+   ? [  ]
    cStr :=  charnot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) )
    for ni := 1 TO Len( cStr )
-      QQOut( "chr(" + AllTrim( Str(Asc(SubStr(cStr, ni, 1 ) ) ) ) + ")" )
+      Q? "chr(" + AllTrim( Str(Asc(SubStr(cStr, ni, 1 ) ) ) ) + ")"
       IF ni < Len( cStr )
-         QQOut( "+" )
+         Q? "+"
       ENDIF
    next ni
-   QOut( "" )
+   ?
 
-   QOut( [  charnot(charnot("This is a test!")) == "This is a test!" ?] )
-   QOut( [  --> "] + charnot( charnot("This is a test!" ) ) + ["] )
-   QOut( "" )
+   ? [  charnot(charnot("This is a test!")) == "This is a test!" ?]
+   ? [  --> "] + charnot( charnot("This is a test!" ) ) + ["]
+   ?
 
-   QOut( "End test of CHARNOT()" )
-   QOut( "" )
+   ? "End test of CHARNOT()"
+   ?
 
    ctexit()
 

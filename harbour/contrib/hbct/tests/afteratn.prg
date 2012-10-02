@@ -60,49 +60,49 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of AFTERATNUM()" )
-   QOut( "" )
-   QOut( "  Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 ) )
-   QOut( "" )
+   ? "Begin test of AFTERATNUM()"
+   ?
+   ? "  Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 )
+   ?
 
    // Some simple tests
-   QOut( "  Simple tests:" )
-   QOut( [  afteratnum("..",cStr)     should be "test!",] )
-   QOut( [                                and is "] + afteratnum( "..", cStr ) + ["] )
-   QOut( [  afteratnum("..",cStr,2)   should be ".is...a...test!",] )
-   QOut( [                                and is "] + afteratnum( "..", cStr, 2 ) + ["] )
-   QOut( [  afteratnum("..",cStr,2,2) should be ".a...test!",] )
-   QOut( [                                and is "] + afteratnum( "..", cStr, 2, 2 ) + ["] )
-   QOut()
+   ? "  Simple tests:"
+   ? [  afteratnum("..",cStr)     should be "test!",]
+   ? [                                and is "] + afteratnum( "..", cStr ) + ["]
+   ? [  afteratnum("..",cStr,2)   should be ".is...a...test!",]
+   ? [                                and is "] + afteratnum( "..", cStr, 2 ) + ["]
+   ? [  afteratnum("..",cStr,2,2) should be ".a...test!",]
+   ? [                                and is "] + afteratnum( "..", cStr, 2, 2 ) + ["]
+   ?
 
    // Tests with CSetAtMuPa(.T.)
-   QOut( "  Multi-Pass tests" )
-   QOut( "  Setting csetatmupa() to .T." )
+   ? "  Multi-Pass tests"
+   ? "  Setting csetatmupa() to .T."
    csetatmupa( .T. )
-   QOut( [  afteratnum("..",cStr)     should be "test!",] )
-   QOut( [                                and is "] + afteratnum( "..", cStr ) + ["] )
-   QOut( [  afteratnum("..",cStr,2)   should be "This...is...a...test!",] )
-   QOut( [                                and is "] + afteratnum( "..", cStr, 2 ) + ["] )
-   QOut( [  afteratnum("..",cStr,2,2) should be "is...a...test!",] )
-   QOut( [                                and is "] + afteratnum( "..", cStr, 2, 2 ) + ["] )
-   QOut( "  Setting csetatmupa() to .F." )
+   ? [  afteratnum("..",cStr)     should be "test!",]
+   ? [                                and is "] + afteratnum( "..", cStr ) + ["]
+   ? [  afteratnum("..",cStr,2)   should be "This...is...a...test!",]
+   ? [                                and is "] + afteratnum( "..", cStr, 2 ) + ["]
+   ? [  afteratnum("..",cStr,2,2) should be "is...a...test!",]
+   ? [                                and is "] + afteratnum( "..", cStr, 2, 2 ) + ["]
+   ? "  Setting csetatmupa() to .F."
    csetatmupa( .F. )
-   QOut()
+   ?
 
    // Tests mit SetAtlike(1)
-   QOut( "  SetAtLike tests" )
-   QOut( [  Setting setatlike(CT_SETATLIKE_WILDCARD, ".")] )
+   ? "  SetAtLike tests"
+   ? [  Setting setatlike(CT_SETATLIKE_WILDCARD, ".")]
    setatlike( CT_SETATLIKE_WILDCARD, "." )
-   QOut( [  afteratnum("..",cStr) should be "",] )
-   QOut( [                            and is "] + afteratnum( "..", cStr ) + ["] )
-   QOut( [  afteratnum("..",cStr,2,2) should be "s...is...a...test!",] )
-   QOut( [                                and is "] + afteratnum( "..", cStr, 2, 2 ) + ["] )
-   QOut( [  afteratnum("..",cStr,2,10) should be ".a...test!",] )
-   QOut( [                                 and is "] + afteratnum( "..", cStr, 2, 10 ) + ["] )
-   QOut()
+   ? [  afteratnum("..",cStr) should be "",]
+   ? [                            and is "] + afteratnum( "..", cStr ) + ["]
+   ? [  afteratnum("..",cStr,2,2) should be "s...is...a...test!",]
+   ? [                                and is "] + afteratnum( "..", cStr, 2, 2 ) + ["]
+   ? [  afteratnum("..",cStr,2,10) should be ".a...test!",]
+   ? [                                 and is "] + afteratnum( "..", cStr, 2, 10 ) + ["]
+   ?
 
-   QOut( "End test of AFTERATNUM()" )
-   QOut()
+   ? "End test of AFTERATNUM()"
+   ?
 
    ctexit()
 

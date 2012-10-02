@@ -58,21 +58,21 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of ATREPL()" )
-   QOut( "" )
+   ? "Begin test of ATREPL()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
+   ? "Simple tests:"
 
-   QOut( [  atrepl("ABC", "ABCDABCDABC", "xx") == "xxDxxDxx" ? --> "] + atrepl( "ABC", "ABCDABCDABC", "xx" ) + ["] )
-   QOut( [  atrepl("ABC", "ABCDABC", "ZYXW") == "ZYXWDZYXW" ? --> "] + atrepl( "ABC", "ABCDABC", "ZYXW" ) + ["] )
-   QOut( [  atrepl("ABC", "ABCDABCDABC", "xx", 2) == "xxDxxDABC" ? --> "] + atrepl( "ABC", "ABCDABCDABC", "xx", 2 ) + ["] )
-   QOut( [  atrepl("ABC", "ABCDABCDABC", "xx", 2, .T.) == "ABCDxxDABC" ? --> "] + atrepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) + ["] )
-   QOut( [  atrepl("ABC", "ABCDABCDABC", "xx", 2, .T., 1) == "ABCDABCDxx" ? ] )
-   QOut( [          --> "] + atrepl( "ABC", "ABCDABCDABC", "xx", 2, .T. , 1 ) + ["] )
+   ? [  atrepl("ABC", "ABCDABCDABC", "xx") == "xxDxxDxx" ? --> "] + atrepl( "ABC", "ABCDABCDABC", "xx" ) + ["]
+   ? [  atrepl("ABC", "ABCDABC", "ZYXW") == "ZYXWDZYXW" ? --> "] + atrepl( "ABC", "ABCDABC", "ZYXW" ) + ["]
+   ? [  atrepl("ABC", "ABCDABCDABC", "xx", 2) == "xxDxxDABC" ? --> "] + atrepl( "ABC", "ABCDABCDABC", "xx", 2 ) + ["]
+   ? [  atrepl("ABC", "ABCDABCDABC", "xx", 2, .T.) == "ABCDxxDABC" ? --> "] + atrepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) + ["]
+   ? [  atrepl("ABC", "ABCDABCDABC", "xx", 2, .T., 1) == "ABCDABCDxx" ? ]
+   ? [          --> "] + atrepl( "ABC", "ABCDABCDABC", "xx", 2, .T. , 1 ) + ["]
 
-   QOut( "End test of ATREPL()" )
-   QOut( "" )
+   ? "End test of ATREPL()"
+   ?
 
    ctexit()
 

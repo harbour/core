@@ -58,20 +58,20 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARMIX()" )
-   QOut( "" )
+   ? "Begin test of CHARMIX()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  charmix("ABC", "123")  == "A1B2C3"     ? --> "] + charmix( "ABC", "123" )  + ["] )
-   QOut( [  charmix("ABCDE", "12") == "A1B2C1D2E1" ? --> "] + charmix( "ABCDE", "12" ) + ["] )
-   QOut( [  charmix("AB", "12345") == "A1B2"       ? --> "] + charmix( "AB", "12345" ) + ["] )
-   QOut( [  charmix("HELLO", " ")  == "H E L L O " ? --> "] + charmix( "HELLO", " " )  + ["] )
-   QOut( [  charmix("HELLO", "")   == "HELLO"      ? --> "] + charmix( "HELLO", "" )   + ["] )
-   QOut( "" )
+   ? "Simple tests:"
+   ? [  charmix("ABC", "123")  == "A1B2C3"     ? --> "] + charmix( "ABC", "123" )  + ["]
+   ? [  charmix("ABCDE", "12") == "A1B2C1D2E1" ? --> "] + charmix( "ABCDE", "12" ) + ["]
+   ? [  charmix("AB", "12345") == "A1B2"       ? --> "] + charmix( "AB", "12345" ) + ["]
+   ? [  charmix("HELLO", " ")  == "H E L L O " ? --> "] + charmix( "HELLO", " " )  + ["]
+   ? [  charmix("HELLO", "")   == "HELLO"      ? --> "] + charmix( "HELLO", "" )   + ["]
+   ?
 
-   QOut( "End test of CHARMIX()" )
-   QOut( "" )
+   ? "End test of CHARMIX()"
+   ?
 
    ctexit()
 

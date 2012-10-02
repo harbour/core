@@ -58,17 +58,17 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHAREVEN()" )
-   QOut( "" )
+   ? "Begin test of CHAREVEN()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  chareven(" 1 2 3 4 5") == "12345" ? --> "] + chareven( " 1 2 3 4 5" ) + ["] )
-   QOut( [  chareven(" 1 2 3 4 ")  == "1234"  ? --> "] + chareven( " 1 2 3 4 " )  + ["] )
-   QOut( [  chareven(" ")          == ""      ? --> "] + chareven( " " )          + ["] )
+   ? "Simple tests:"
+   ? [  chareven(" 1 2 3 4 5") == "12345" ? --> "] + chareven( " 1 2 3 4 5" ) + ["]
+   ? [  chareven(" 1 2 3 4 ")  == "1234"  ? --> "] + chareven( " 1 2 3 4 " )  + ["]
+   ? [  chareven(" ")          == ""      ? --> "] + chareven( " " )          + ["]
 
-   QOut( "End test of CHAREVEN()" )
-   QOut( "" )
+   ? "End test of CHAREVEN()"
+   ?
 
    ctexit()
 

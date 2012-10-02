@@ -60,27 +60,27 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARRLR()" )
-   QOut( "" )
+   ? "Begin test of CHARRLR()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  charrlr(chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+] )
-   QOut( [           chr(64)+chr(128), 3) == ] )
-   QOut( [  chr(32)+chr(64)+chr(128)+chr(1)+chr(2)+chr(4)+chr(8)+chr(16) ? -->] )
+   ? "Simple tests:"
+   ? [  charrlr(chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+]
+   ? [           chr(64)+chr(128), 3) == ]
+   ? [  chr(32)+chr(64)+chr(128)+chr(1)+chr(2)+chr(4)+chr(8)+chr(16) ? -->]
 
-   QOut( [  ] )
+   ? [  ]
    cStr :=  charrlr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
    for ni := 1 TO Len( cStr )
-      QQOut( "chr(" + AllTrim( Str(Asc(SubStr(cStr, ni, 1 ) ) ) ) + ")" )
+      Q? "chr(" + AllTrim( Str(Asc(SubStr(cStr, ni, 1 ) ) ) ) + ")"
       IF ni < Len( cStr )
-         QQOut( "+" )
+         Q? "+"
       ENDIF
    next ni
-   QOut( "" )
+   ?
 
-   QOut( "End test of CHARRLR()" )
-   QOut( "" )
+   ? "End test of CHARRLR()"
+   ?
 
    ctexit()
 

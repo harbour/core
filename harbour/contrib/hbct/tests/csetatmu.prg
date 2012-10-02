@@ -58,13 +58,13 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CSETATMUPA()" )
-   QOut( "  Default switch should be .F., is..................................", csetatmupa() )
-   QOut( "  Setting switch to .T., return value should be .F., is.............", csetatmupa( .T. ) )
-   QOut( "  Switch setting should now be .T., is..............................", csetatmupa() )
-   QOut( "  Setting switch to .F. again, return value should still be .T., is ", csetatmupa( .F. ) )
-   QOut( "End test of CSETATMUPA()" )
-   QOut( "" )
+   ? "Begin test of CSETATMUPA()"
+   ? "  Default switch should be .F., is..................................", csetatmupa()
+   ? "  Setting switch to .T., return value should be .F., is.............", csetatmupa( .T. )
+   ? "  Switch setting should now be .T., is..............................", csetatmupa()
+   ? "  Setting switch to .F. again, return value should still be .T., is ", csetatmupa( .F. )
+   ? "End test of CSETATMUPA()"
+   ?
 
    ctexit()
 

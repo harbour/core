@@ -66,37 +66,37 @@ PROCEDURE Main()
    ctinit()
 
    // Some simple tests
-   QOut( "Begin test of ATADJUST()" )
-   QOut( "" )
+   ? "Begin test of ATADJUST()"
+   ?
 
-   QOut( "  Original strings:" )
+   ? "  Original strings:"
    for ni := 1 TO Len( aStr )
-      QOut( Space( 4 ) + aStr[ni] )
+      ? Space( 4 ) + aStr[ni]
    next
-   QOut( "" )
+   ?
 
-   QOut( '  ATADJUST(":", aStr[ni], 21,,, ".") yields' )
+   ? '  ATADJUST(":", aStr[ni], 21,,, ".") yields'
    for ni := 1 TO Len( aStr )
-      QOut( Space( 4 ) + atadjust( ":", aStr[ni], 21, 1,,"." ) )
+      ? Space( 4 ) + atadjust( ":", aStr[ni], 21, 1,,"." )
    next
-   QOut( "" )
+   ?
 
-   QOut( '  ATADJUST(":", aStr[ni], 10, 1,, ".") yields' )
+   ? '  ATADJUST(":", aStr[ni], 10, 1,, ".") yields'
    for ni := 1 TO Len( aStr )
-      QOut( Space( 4 ) + atadjust( ":", aStr[ni], 10, 1,,"." ) )
+      ? Space( 4 ) + atadjust( ":", aStr[ni], 10, 1,,"." )
    next
-   QOut( "" )
+   ?
 
-   QOut( '  SETATLIKE(CT_SETATLIKE_WILDCARD, ":")' )
-   QOut( '  ATADJUST(":", aStr[ni], 10, 1,, ".") yields now' )
+   ? '  SETATLIKE(CT_SETATLIKE_WILDCARD, ":")'
+   ? '  ATADJUST(":", aStr[ni], 10, 1,, ".") yields now'
    setatlike( CT_SETATLIKE_WILDCARD, ":" )
    for ni := 1 TO Len( aStr )
-      QOut( Space( 4 ) + atadjust( ":", aStr[ni], 10, 1,,"." ) )
+      ? Space( 4 ) + atadjust( ":", aStr[ni], 10, 1,,"." )
    next
-   QOut( "" )
+   ?
 
-   QOut( "End test of ATADJUST()" )
-   QOut( "" )
+   ? "End test of ATADJUST()"
+   ?
 
    ctexit()
 

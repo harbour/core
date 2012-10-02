@@ -58,19 +58,19 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of RANGEREPL()" )
-   QOut( "" )
+   ? "Begin test of RANGEREPL()"
+   ?
 
-   QOut( [  rangerepl("0","9","year2002.dbf","?") == "year????.dbf" ? --> "] + ;
+   ? [  rangerepl("0","9","year2002.dbf","?") == "year????.dbf" ? --> "] + ;
       rangerepl( "0", "9", "year2002.dbf", "?" ) + ["] )
-   QOut( [  rangerepl("9","0","year2002.dbf","?") == "????2??2????" ? --> "] + ;
+   ? [  rangerepl("9","0","year2002.dbf","?") == "????2??2????" ? --> "] + ;
       rangerepl( "9", "0", "year2002.dbf", "?" ) + ["] )
-   QOut( [  rangerepl("0","9","yearcurr.dbf","?") == "yearcurr.dbf" ? --> "] + ;
+   ? [  rangerepl("0","9","yearcurr.dbf","?") == "yearcurr.dbf" ? --> "] + ;
       rangerepl( "0", "9", "yearcurr.dbf", "?" ) + ["] )
 
-   QOut( "" )
-   QOut( "End test of RANGEREPL()" )
-   QOut( "" )
+   ?
+   ? "End test of RANGEREPL()"
+   ?
 
    ctexit()
 

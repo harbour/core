@@ -58,17 +58,17 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARNOLIST()" )
-   QOut( "" )
+   ? "Begin test of CHARNOLIST()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
+   ? "Simple tests:"
 
-   QOut( [  charnolist(charnolist("Hello World !")) == " !HWdelor" ? -> "] + charnolist( charnolist("Hello World !" ) ) + ["] )
-   QOut( [  charnolist(charnolist(nil)) == ""? -> "] + charnolist( charnolist(nil ) ) + ["] )
+   ? [  charnolist(charnolist("Hello World !")) == " !HWdelor" ? -> "] + charnolist( charnolist("Hello World !" ) ) + ["]
+   ? [  charnolist(charnolist(nil)) == ""? -> "] + charnolist( charnolist(nil ) ) + ["]
 
-   QOut( "End test of CHARNOLIST()" )
-   QOut( "" )
+   ? "End test of CHARNOLIST()"
+   ?
 
    ctexit()
 

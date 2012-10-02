@@ -58,17 +58,17 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARREM()" )
-   QOut( "" )
+   ? "Begin test of CHARREM()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  charrem(" ", " 1  2  ") == "12"   ? ---> "] + charrem( " ", " 1  2  " ) + ["] )
-   QOut( [  charrem("3y", "xyz123") == "xz12" ? ---> "] + charrem( "3y", "xyz123" ) + ["] )
-   QOut( "" )
+   ? "Simple tests:"
+   ? [  charrem(" ", " 1  2  ") == "12"   ? ---> "] + charrem( " ", " 1  2  " ) + ["]
+   ? [  charrem("3y", "xyz123") == "xz12" ? ---> "] + charrem( "3y", "xyz123" ) + ["]
+   ?
 
-   QOut( "End test of CHARREM()" )
-   QOut( "" )
+   ? "End test of CHARREM()"
+   ?
 
    ctexit()
 

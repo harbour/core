@@ -60,49 +60,49 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of ATNUM()" )
-   QOut( "" )
-   QOut( "  Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 ) )
-   QOut( "" )
+   ? "Begin test of ATNUM()"
+   ?
+   ? "  Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 )
+   ?
 
    // Some simple tests
-   QOut( "  Simple tests:" )
-   QOut( [  atnum("..",cStr)     should be 18,] )
-   QOut( [                           and is ], atnum( "..", cStr ) )
-   QOut( [  atnum("..",cStr,2)   should be 8,] )
-   QOut( [                           and is ], atnum( "..", cStr, 2 ) )
-   QOut( [  atnum("..",cStr,2,2) should be 13,] )
-   QOut( [                           and is ], atnum( "..", cStr, 2, 2 ) )
-   QOut()
+   ? "  Simple tests:"
+   ? [  atnum("..",cStr)     should be 18,]
+   ? [                           and is ], atnum( "..", cStr )
+   ? [  atnum("..",cStr,2)   should be 8,]
+   ? [                           and is ], atnum( "..", cStr, 2 )
+   ? [  atnum("..",cStr,2,2) should be 13,]
+   ? [                           and is ], atnum( "..", cStr, 2, 2 )
+   ?
 
    // Tests with CSetAtMuPa(.T.)
-   QOut( "  Multi-Pass tests" )
-   QOut( "  Setting csetatmupa() to .T." )
+   ? "  Multi-Pass tests"
+   ? "  Setting csetatmupa() to .T."
    csetatmupa( .T. )
-   QOut( [  atnum("..",cStr)     should be 18,] )
-   QOut( [                           and is ], atnum( "..", cStr ) )
-   QOut( [  atnum("..",cStr,2)   should be 2,] )
-   QOut( [                           and is ], atnum( "..", cStr, 2 ) )
-   QOut( [  atnum("..",cStr,2,2) should be 9,] )
-   QOut( [                           and is ], atnum( "..", cStr, 2, 2 ) )
-   QOut( "  Setting csetatmupa() to .F." )
+   ? [  atnum("..",cStr)     should be 18,]
+   ? [                           and is ], atnum( "..", cStr )
+   ? [  atnum("..",cStr,2)   should be 2,]
+   ? [                           and is ], atnum( "..", cStr, 2 )
+   ? [  atnum("..",cStr,2,2) should be 9,]
+   ? [                           and is ], atnum( "..", cStr, 2, 2 )
+   ? "  Setting csetatmupa() to .F."
    csetatmupa( .F. )
-   QOut()
+   ?
 
    // Tests mit SetAtlike(1)
-   QOut( "  SetAtLike tests" )
-   QOut( [  Setting setatlike(CT_SETATLIKE_WILDCARD, ".")] )
+   ? "  SetAtLike tests"
+   ? [  Setting setatlike(CT_SETATLIKE_WILDCARD, ".")]
    setatlike( CT_SETATLIKE_WILDCARD, "." )
-   QOut( [  atnum("..",cStr) should be 23,] )
-   QOut( [                       and is ], atnum( "..", cStr ) )
-   QOut( [  atnum("..",cStr,2,2) should be 5,] )
-   QOut( [                           and is ], atnum( "..", cStr, 2, 2 ) )
-   QOut( [  atnum("..",cStr,2,10) should be 13,] )
-   QOut( [                            and is ], atnum( "..", cStr, 2, 10 ) )
-   QOut()
+   ? [  atnum("..",cStr) should be 23,]
+   ? [                       and is ], atnum( "..", cStr )
+   ? [  atnum("..",cStr,2,2) should be 5,]
+   ? [                           and is ], atnum( "..", cStr, 2, 2 )
+   ? [  atnum("..",cStr,2,10) should be 13,]
+   ? [                            and is ], atnum( "..", cStr, 2, 10 )
+   ?
 
-   QOut( "End test of ATNUM()" )
-   QOut()
+   ? "End test of ATNUM()"
+   ?
 
    ctexit()
 

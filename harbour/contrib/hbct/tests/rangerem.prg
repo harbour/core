@@ -58,19 +58,19 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of RANGEREM()" )
-   QOut( "" )
+   ? "Begin test of RANGEREM()"
+   ?
 
-   QOut( [  rangerem("0","9","year2002.dbf") == "year.dbf"     ? --> "] + ;
+   ? [  rangerem("0","9","year2002.dbf") == "year.dbf"     ? --> "] + ;
       rangerem( "0", "9", "year2002.dbf" ) + ["] )
-   QOut( [  rangerem("9","0","year2002.dbf") == "22"           ? --> "] + ;
+   ? [  rangerem("9","0","year2002.dbf") == "22"           ? --> "] + ;
       rangerem( "9", "0", "year2002.dbf" ) + ["] )
-   QOut( [  rangerem("0","9","yearcurr.dbf") == "yearcurr.dbf" ? --> "] + ;
+   ? [  rangerem("0","9","yearcurr.dbf") == "yearcurr.dbf" ? --> "] + ;
       rangerem( "0", "9", "yearcurr.dbf" ) + ["] )
 
-   QOut( "" )
-   QOut( "End test of RANGEREM()" )
-   QOut( "" )
+   ?
+   ? "End test of RANGEREM()"
+   ?
 
    ctexit()
 

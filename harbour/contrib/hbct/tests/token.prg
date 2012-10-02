@@ -63,37 +63,37 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of TOKEN()" )
-   QOut( "" )
+   ? "Begin test of TOKEN()"
+   ?
 
    // Some simple tests
-   QOut( "  Simple tests:" )
-   QOut( [    token("Hello, World!") == "World" ? -----------> "] + token( "Hello, World!" ) + ["] )
-   QOut( [    token("Hello, World!",,2,1) == "" ? -----------> "] + token( "Hello, World!",,2,1 ) + ["] )
-   QOut( [    token("Hello, World!",",",2,1) == " World!" ? -> "] + token( "Hello, World!",",",2,1 ) + ["] )
-   QOut( [    token("Hello, World!"," ",2,1) == "World!" ? --> "] + token( "Hello, World!"," ",2,1 ) + ["] )
-   QOut( "" )
+   ? "  Simple tests:"
+   ? [    token("Hello, World!") == "World" ? -----------> "] + token( "Hello, World!" ) + ["]
+   ? [    token("Hello, World!",,2,1) == "" ? -----------> "] + token( "Hello, World!",,2,1 ) + ["]
+   ? [    token("Hello, World!",",",2,1) == " World!" ? -> "] + token( "Hello, World!",",",2,1 ) + ["]
+   ? [    token("Hello, World!"," ",2,1) == "World!" ? --> "] + token( "Hello, World!"," ",2,1 ) + ["]
+   ?
 
-   QOut( [  Tokenizing the string "] + cStr + ["] )
-   QOut( [    with skip width == 1 and ".,!" as tokenizer list:] )
-   QOut( "" )
+   ? [  Tokenizing the string "] + cStr + ["]
+   ? [    with skip width == 1 and ".,!" as tokenizer list:]
+   ?
    for ni := 1 TO numtoken( cStr, ".,!", 1 )
-      QOut( [    Token #] + AllTrim( Str(ni ) ) + [("] + token( cStr, ".,!", ni, 1, @cPre, @cPost ) + ;
+      ? [    Token #] + AllTrim( Str(ni ) ) + [("] + token( cStr, ".,!", ni, 1, @cPre, @cPost ) + ;
          [") @ pos ] + Str( npos := attoken( cStr, ".,!", ni, 1 ), 3 ) + [, tokenized by "] + cPre + [" and "] + cPost + [" is ] + iif( SubStr( cStr,npos,1 ) $ ".,!", "", "not " ) + "empty" )
    next ni
 
-   QOut( "" )
-   QOut( [  Tokenizing the string "] + cStr + ["] )
-   QOut( [    with skip width == 3 and ".,!" as tokenizer list:] )
-   QOut( "" )
+   ?
+   ? [  Tokenizing the string "] + cStr + ["]
+   ? [    with skip width == 3 and ".,!" as tokenizer list:]
+   ?
    for ni := 1 TO numtoken( cStr, ".,!", 3 )
-      QOut( [    Token #] + AllTrim( Str(ni ) ) + [("] + token( cStr, ".,!", ni, 3, @cPre, @cPost ) + ;
+      ? [    Token #] + AllTrim( Str(ni ) ) + [("] + token( cStr, ".,!", ni, 3, @cPre, @cPost ) + ;
          [") @ pos ] + Str( npos := attoken( cStr, ".,!", ni, 3 ), 3 ) + [, tokenized by "] + cPre + [" and "] + cPost + [" is ] + iif( SubStr( cStr,npos,1 ) $ ".,!", "", "not " ) + "empty." )
    next ni
 
-   QOut( "" )
-   QOut( "End test of TOKEN()" )
-   QOut()
+   ?
+   ? "End test of TOKEN()"
+   ?
 
    ctexit()
 

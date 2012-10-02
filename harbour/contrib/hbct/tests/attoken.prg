@@ -61,29 +61,29 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of ATTOKEN()" )
-   QOut( "" )
+   ? "Begin test of ATTOKEN()"
+   ?
 
    // Some simple tests
-   QOut( "  Simple tests:" )
-   QOut( [    attoken("Hello, World!") == 8 ? ---------> ] + Str( attoken("Hello, World!" ) ) )
-   QOut( [    attoken("Hello, World!",,2) == 8 ? ------> ] + Str( attoken("Hello, World!",,2 ) ) )
-   QOut( [    attoken("Hello, World!",,2,1) == 7 ? ----> ] + Str( attoken("Hello, World!",,2,1 ) ) )
-   QOut( [    attoken("Hello, World!"," ",2,1) == 8 ? -> ] + Str( attoken("Hello, World!"," ",2,1 ) ) )
-   QOut( "" )
+   ? "  Simple tests:"
+   ? [    attoken("Hello, World!") == 8 ? ---------> ] + Str( attoken("Hello, World!" ) )
+   ? [    attoken("Hello, World!",,2) == 8 ? ------> ] + Str( attoken("Hello, World!",,2 ) )
+   ? [    attoken("Hello, World!",,2,1) == 7 ? ----> ] + Str( attoken("Hello, World!",,2,1 ) )
+   ? [    attoken("Hello, World!"," ",2,1) == 8 ? -> ] + Str( attoken("Hello, World!"," ",2,1 ) )
+   ?
 
-   QOut( [  Tokenizing a string with skip width == 1 and ".!" as tokenizer list:] )
-   QOut( "    Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 ) )
-   QOut( "" )
+   ? [  Tokenizing a string with skip width == 1 and ".!" as tokenizer list:]
+   ? "    Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 )
+   ?
    for ni := 1 TO numtoken( cStr, ".!", 1 )
-      QOut( [    Token #] + AllTrim( Str(ni ) ) + [("] + token( cStr, ".!", ni, 1 ) + [")] )
-      QOut( "          starts at pos " + Str( npos := attoken(cStr, ".!", ni, 1 ),3 ) + ;
+      ? [    Token #] + AllTrim( Str(ni ) ) + [("] + token( cStr, ".!", ni, 1 ) + [")]
+      ? "          starts at pos " + Str( npos := attoken(cStr, ".!", ni, 1 ),3 ) + ;
          " and is " + iif( SubStr( cStr,npos,1 ) $ ".!", "", "not " ) + "an empty token." )
    next ni
 
-   QOut( "" )
-   QOut( "End test of ATTOKEN()" )
-   QOut()
+   ?
+   ? "End test of ATTOKEN()"
+   ?
 
    ctexit()
 

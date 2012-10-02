@@ -60,49 +60,49 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of BEFORATNUM()" )
-   QOut( "" )
-   QOut( "  Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 ) )
-   QOut( "" )
+   ? "Begin test of BEFORATNUM()"
+   ?
+   ? "  Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 )
+   ?
 
    // Some simple tests
-   QOut( "  Simple tests:" )
-   QOut( [  beforatnum("..",cStr)     should be "...This...is...a.",] )
-   QOut( [                                and is "] + beforatnum( "..", cStr ) + ["] )
-   QOut( [  beforatnum("..",cStr,2)   should be "...This",] )
-   QOut( [                                and is "] + beforatnum( "..", cStr, 2 ) + ["] )
-   QOut( [  beforatnum("..",cStr,2,2) should be "...This...is",] )
-   QOut( [                                and is "] + beforatnum( "..", cStr, 2, 2 ) + ["] )
-   QOut()
+   ? "  Simple tests:"
+   ? [  beforatnum("..",cStr)     should be "...This...is...a.",]
+   ? [                                and is "] + beforatnum( "..", cStr ) + ["]
+   ? [  beforatnum("..",cStr,2)   should be "...This",]
+   ? [                                and is "] + beforatnum( "..", cStr, 2 ) + ["]
+   ? [  beforatnum("..",cStr,2,2) should be "...This...is",]
+   ? [                                and is "] + beforatnum( "..", cStr, 2, 2 ) + ["]
+   ?
 
    // Tests with CSetAtMuPa(.T.)
-   QOut( "  Multi-Pass tests" )
-   QOut( "  Setting csetatmupa() to .T." )
+   ? "  Multi-Pass tests"
+   ? "  Setting csetatmupa() to .T."
    csetatmupa( .T. )
-   QOut( [  beforatnum("..",cStr)     should be "...This...is...a.",] )
-   QOut( [                                and is "] + beforatnum( "..", cStr ) + ["] )
-   QOut( [  beforatnum("..",cStr,2)   should be ".",] )
-   QOut( [                                and is "] + beforatnum( "..", cStr, 2 ) + ["] )
-   QOut( [  beforatnum("..",cStr,2,2) should be "...This.",] )
-   QOut( [                                and is "] + beforatnum( "..", cStr, 2, 2 ) + ["] )
-   QOut( "  Setting csetatmupa() to .F." )
+   ? [  beforatnum("..",cStr)     should be "...This...is...a.",]
+   ? [                                and is "] + beforatnum( "..", cStr ) + ["]
+   ? [  beforatnum("..",cStr,2)   should be ".",]
+   ? [                                and is "] + beforatnum( "..", cStr, 2 ) + ["]
+   ? [  beforatnum("..",cStr,2,2) should be "...This.",]
+   ? [                                and is "] + beforatnum( "..", cStr, 2, 2 ) + ["]
+   ? "  Setting csetatmupa() to .F."
    csetatmupa( .F. )
-   QOut()
+   ?
 
    // Tests mit SetAtlike(1)
-   QOut( "  SetAtLike tests" )
-   QOut( [  Setting setatlike(CT_SETATLIKE_WILDCARD, ".")] )
+   ? "  SetAtLike tests"
+   ? [  Setting setatlike(CT_SETATLIKE_WILDCARD, ".")]
    setatlike( CT_SETATLIKE_WILDCARD, "." )
-   QOut( [  beforatnum("..",cStr) should be "...This...is...a...tes",] )
-   QOut( [                            and is "] + beforatnum( "..", cStr ) + ["] )
-   QOut( [  beforatnum("..",cStr,2,2) should be "...T",] )
-   QOut( [                                and is "] + beforatnum( "..", cStr, 2, 2 ) + ["] )
-   QOut( [  beforatnum("..",cStr,2,10) should be "...This...is",] )
-   QOut( [                                 and is "] + beforatnum( "..", cStr, 2, 10 ) + ["] )
-   QOut()
+   ? [  beforatnum("..",cStr) should be "...This...is...a...tes",]
+   ? [                            and is "] + beforatnum( "..", cStr ) + ["]
+   ? [  beforatnum("..",cStr,2,2) should be "...T",]
+   ? [                                and is "] + beforatnum( "..", cStr, 2, 2 ) + ["]
+   ? [  beforatnum("..",cStr,2,10) should be "...This...is",]
+   ? [                                 and is "] + beforatnum( "..", cStr, 2, 10 ) + ["]
+   ?
 
-   QOut( "End test of BEFORATNUM()" )
-   QOut()
+   ? "End test of BEFORATNUM()"
+   ?
 
    ctexit()
 

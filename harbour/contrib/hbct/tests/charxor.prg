@@ -58,17 +58,17 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARXOR()" )
-   QOut( "" )
+   ? "Begin test of CHARXOR()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  charxor(charxor("This is top secret !", "My Password"),] )
-   QOut( [           "My Password") == "This is top secret !" ? ->] )
-   QOut( [  ] + charxor( charxor("This is top secret !", "My Password" ),"My Password" ) )
+   ? "Simple tests:"
+   ? [  charxor(charxor("This is top secret !", "My Password"),]
+   ? [           "My Password") == "This is top secret !" ? ->]
+   ? [  ] + charxor( charxor("This is top secret !", "My Password" ),"My Password" )
 
-   QOut( "End test of CHARXOR()" )
-   QOut( "" )
+   ? "End test of CHARXOR()"
+   ?
 
    ctexit()
 

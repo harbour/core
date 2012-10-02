@@ -58,16 +58,16 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARODD()" )
-   QOut( "" )
+   ? "Begin test of CHARODD()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  charodd("1A2B3C4D5E") == "12345" ? --> "] + charodd( "1A2B3C4D5E" ) + ["] )
-   QOut( [  charodd("1A2B3C4D5")  == "12345" ? --> "] + charodd( "1A2B3C4D5" ) + ["] )
+   ? "Simple tests:"
+   ? [  charodd("1A2B3C4D5E") == "12345" ? --> "] + charodd( "1A2B3C4D5E" ) + ["]
+   ? [  charodd("1A2B3C4D5")  == "12345" ? --> "] + charodd( "1A2B3C4D5" ) + ["]
 
-   QOut( "End test of CHARODD()" )
-   QOut( "" )
+   ? "End test of CHARODD()"
+   ?
 
    ctexit()
 

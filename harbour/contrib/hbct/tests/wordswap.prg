@@ -58,17 +58,17 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of WORDSWAP()" )
-   QOut( "" )
+   ? "Begin test of WORDSWAP()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  wordswap("1234567890")      == "3412785690" ? --> "] + wordswap( "1234567890" )     + ["] )
-   QOut( [  wordswap("1234567890", .t.) == "4321876590" ? --> "] + wordswap( "1234567890", .T. ) + ["] )
-   QOut( "" )
+   ? "Simple tests:"
+   ? [  wordswap("1234567890")      == "3412785690" ? --> "] + wordswap( "1234567890" )     + ["]
+   ? [  wordswap("1234567890", .t.) == "4321876590" ? --> "] + wordswap( "1234567890", .T. ) + ["]
+   ?
 
-   QOut( "End test of WORDSWAP()" )
-   QOut( "" )
+   ? "End test of WORDSWAP()"
+   ?
 
    ctexit()
 

@@ -60,31 +60,31 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of TOKENLOWER()" )
-   QOut( "" )
+   ? "Begin test of TOKENLOWER()"
+   ?
 
    // Some simple tests
-   QOut( "  Simple tests:" )
-   QOut( [   tokenlower("Hello, World, here I am!")       == "hello, world, here i am!" ?] )
-   QOut( [                                                -> "] + tokenlower( "Hello, World, here I am!" ) + ["] )
-   QOut( [   tokenlower("Hello, World, here I am!",,3)    == "hello, world, here I am!" ?] )
-   QOut( [                                                -> "] + tokenlower( "Hello, World, here I am!",,3 ) + ["] )
-   QOut( [   tokenlower("Hello, World, here I am!",",",3) == "hello, World, here I am!" ?] )
-   QOut( [                                                -> "] + tokenlower( "Hello, World, here I am!",",",3 ) + ["] )
-   QOut( [   tokenlower("Hello, World, here I am!"," W")  == "hello, World, here i am!" ?] )
-   QOut( [                                                -> "] + tokenlower( "Hello, World, here I am!"," W" ) + ["] )
-   QOut( "" )
+   ? "  Simple tests:"
+   ? [   tokenlower("Hello, World, here I am!")       == "hello, world, here i am!" ?]
+   ? [                                                -> "] + tokenlower( "Hello, World, here I am!" ) + ["]
+   ? [   tokenlower("Hello, World, here I am!",,3)    == "hello, world, here I am!" ?]
+   ? [                                                -> "] + tokenlower( "Hello, World, here I am!",,3 ) + ["]
+   ? [   tokenlower("Hello, World, here I am!",",",3) == "hello, World, here I am!" ?]
+   ? [                                                -> "] + tokenlower( "Hello, World, here I am!",",",3 ) + ["]
+   ? [   tokenlower("Hello, World, here I am!"," W")  == "hello, World, here i am!" ?]
+   ? [                                                -> "] + tokenlower( "Hello, World, here I am!"," W" ) + ["]
+   ?
 
-   QOut( [  Lowercase the tokens in the string "] + cStr + ["] )
-   QOut( [            with csetref(.T.) and "@"] )
+   ? [  Lowercase the tokens in the string "] + cStr + ["]
+   ? [            with csetref(.T.) and "@"]
    csetref( .T. )
-   QOut( "" )
-   QOut( [    --> return value of tokenlower(@cStr): ], tokenlower( @cStr ) )
-   QOut( [    --> cStr is now: "] + cStr + ["] )
+   ?
+   ? [    --> return value of tokenlower(@cStr): ], tokenlower( @cStr )
+   ? [    --> cStr is now: "] + cStr + ["]
 
-   QOut( "" )
-   QOut( "End test of TOKENLOWER()" )
-   QOut()
+   ?
+   ? "End test of TOKENLOWER()"
+   ?
 
    ctexit()
 

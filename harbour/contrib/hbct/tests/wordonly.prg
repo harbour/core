@@ -58,17 +58,17 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of WORDONLY()" )
-   QOut( "" )
+   ? "Begin test of WORDONLY()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  wordonly("AABBCCDD", "XXAAYYBBZZ") == "AABB" ? --> "] + wordonly( "AABBCCDD", "XXAAYYBBZZ" ) + ["] )
-   QOut( [  wordonly("AABBCCDD", "XAAYYYBBZZ") == "BB" ? ----> "] + wordonly( "AABBCCDD", "XAAYYYBBZZ" ) + ["] )
-   QOut( "" )
+   ? "Simple tests:"
+   ? [  wordonly("AABBCCDD", "XXAAYYBBZZ") == "AABB" ? --> "] + wordonly( "AABBCCDD", "XXAAYYBBZZ" ) + ["]
+   ? [  wordonly("AABBCCDD", "XAAYYYBBZZ") == "BB" ? ----> "] + wordonly( "AABBCCDD", "XAAYYYBBZZ" ) + ["]
+   ?
 
-   QOut( "End test of WORDONLY()" )
-   QOut( "" )
+   ? "End test of WORDONLY()"
+   ?
 
    ctexit()
 

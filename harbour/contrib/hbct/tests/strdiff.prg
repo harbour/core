@@ -58,21 +58,21 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of STRDIFF()" )
-   QOut( "" )
+   ? "Begin test of STRDIFF()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
+   ? "Simple tests:"
 
-   QOut( [  strdiff("ABC", "ADC") == 3 ?  -> ], strdiff( "ABC", "ADC" ) )
-   QOut( [  strdiff("ABC", "AEC") == 3 ?  -> ], strdiff( "ABC", "AEC" ) )
-   QOut( [  strdiff("CBA", "ABC") == 6 ?  -> ], strdiff( "CBA", "ABC" ) )
-   QOut( [  strdiff("ABC", "AXBC") == 1 ? -> ], strdiff( "ABC", "AXBC" ) )
-   QOut( [  strdiff("AXBC", "ABC") == 6 ? -> ], strdiff( "AXBC", "ABC" ) )
-   QOut( [  strdiff("AXBC", "ADC") == 9 ? -> ], strdiff( "AXBC", "ADC" ) )
+   ? [  strdiff("ABC", "ADC") == 3 ?  -> ], strdiff( "ABC", "ADC" )
+   ? [  strdiff("ABC", "AEC") == 3 ?  -> ], strdiff( "ABC", "AEC" )
+   ? [  strdiff("CBA", "ABC") == 6 ?  -> ], strdiff( "CBA", "ABC" )
+   ? [  strdiff("ABC", "AXBC") == 1 ? -> ], strdiff( "ABC", "AXBC" )
+   ? [  strdiff("AXBC", "ABC") == 6 ? -> ], strdiff( "AXBC", "ABC" )
+   ? [  strdiff("AXBC", "ADC") == 9 ? -> ], strdiff( "AXBC", "ADC" )
 
-   QOut( "End test of STRDIFF()" )
-   QOut( "" )
+   ? "End test of STRDIFF()"
+   ?
 
    ctexit()
 

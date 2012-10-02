@@ -58,20 +58,20 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARONE()" )
-   QOut( "" )
+   ? "Begin test of CHARONE()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  charone("112333a123")      == "123a123"? --> "] + charone( "112333a123" )      + ["] )
-   QOut( [  charone("122333a123")      == "123a123"? --> "] + charone( "122333a123" )      + ["] )
-   QOut( [  charone("A  B  CCCD")      == "A B CD"? ---> "] + charone( "A  B  CCCD" )      + ["] )
-   QOut( [  charone(" ", "A  B  A  B") == "A B A B"? --> "] + charone( " ", "A  B  A  B" ) + ["] )
-   QOut( [  charone("o", "122oooB12o") == "122oB12o"? -> "] + charone( "o", "122oooB12o" ) + ["] )
-   QOut( "" )
+   ? "Simple tests:"
+   ? [  charone("112333a123")      == "123a123"? --> "] + charone( "112333a123" )      + ["]
+   ? [  charone("122333a123")      == "123a123"? --> "] + charone( "122333a123" )      + ["]
+   ? [  charone("A  B  CCCD")      == "A B CD"? ---> "] + charone( "A  B  CCCD" )      + ["]
+   ? [  charone(" ", "A  B  A  B") == "A B A B"? --> "] + charone( " ", "A  B  A  B" ) + ["]
+   ? [  charone("o", "122oooB12o") == "122oB12o"? -> "] + charone( "o", "122oooB12o" ) + ["]
+   ?
 
-   QOut( "End test of CHARONE()" )
-   QOut( "" )
+   ? "End test of CHARONE()"
+   ?
 
    ctexit()
 

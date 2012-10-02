@@ -58,16 +58,16 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of ASCPOS()" )
-   QOut( "" )
+   ? "Begin test of ASCPOS()"
+   ?
 
-   QOut( [  ascpos("0123456789") == 57   ? --> ] + Str( ascpos("0123456789" ) ) )
-   QOut( [  ascpos("0123456789",1) == 48 ? --> ] + Str( ascpos("0123456789",1 ) ) )
-   QOut( [  ascpos("0123456789",11) == 0 ? --> ] + Str( ascpos("0123456789",11 ) ) )
+   ? [  ascpos("0123456789") == 57   ? --> ] + Str( ascpos("0123456789" ) )
+   ? [  ascpos("0123456789",1) == 48 ? --> ] + Str( ascpos("0123456789",1 ) )
+   ? [  ascpos("0123456789",11) == 0 ? --> ] + Str( ascpos("0123456789",11 ) )
 
-   QOut( "" )
-   QOut( "End test of ASCPOS()" )
-   QOut( "" )
+   ?
+   ? "End test of ASCPOS()"
+   ?
 
    ctexit()
 

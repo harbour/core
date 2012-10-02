@@ -58,16 +58,16 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of ASCIISUM()" )
-   QOut( "" )
+   ? "Begin test of ASCIISUM()"
+   ?
 
-   QOut( [  asciisum(replicate("A", 10000)) == 650000 ? --> ] + Str( asciisum(Replicate("A",10000 ) ) ) )
-   QOut( [  asciisum("0123456789") == 525              ? --> ] + Str( asciisum("0123456789" ) ) )
-   QOut( [  asciisum(nil) == 0                         ? --> ] + Str( asciisum(nil ) ) )
+   ? [  asciisum(replicate("A", 10000)) == 650000 ? --> ] + Str( asciisum(Replicate("A",10000 ) ) )
+   ? [  asciisum("0123456789") == 525              ? --> ] + Str( asciisum("0123456789" ) )
+   ? [  asciisum(nil) == 0                         ? --> ] + Str( asciisum(nil ) )
 
-   QOut( "" )
-   QOut( "End test of ASCIISUM()" )
-   QOut( "" )
+   ?
+   ? "End test of ASCIISUM()"
+   ?
 
    ctexit()
 

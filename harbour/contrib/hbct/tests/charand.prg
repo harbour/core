@@ -58,17 +58,17 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARAND()" )
-   QOut( "" )
+   ? "Begin test of CHARAND()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
+   ? "Simple tests:"
 
-   QOut( [  charand("012345678", chr(254)) == "002244668" ? --> "] + charand( "012345678", Chr(254 ) ) + ["] )
-   QOut( [  charand("012345678", chr(254)+chr(252)) == "002044648" ? --> "] + charand( "012345678", Chr(254 ) + Chr(252 ) ) + ["] )
+   ? [  charand("012345678", chr(254)) == "002244668" ? --> "] + charand( "012345678", Chr(254 ) ) + ["]
+   ? [  charand("012345678", chr(254)+chr(252)) == "002044648" ? --> "] + charand( "012345678", Chr(254 ) + Chr(252 ) ) + ["]
 
-   QOut( "End test of CHARAND()" )
-   QOut( "" )
+   ? "End test of CHARAND()"
+   ?
 
    ctexit()
 

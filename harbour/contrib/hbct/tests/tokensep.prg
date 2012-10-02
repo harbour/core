@@ -61,30 +61,30 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of TOKENSEP()" )
-   QOut( "" )
+   ? "Begin test of TOKENSEP()"
+   ?
 
    // Some simple tests
-   QOut( [  Tokenizing the string "] + cStr + ["] )
-   QOut( [    with skip width == 1 and ".,!" as tokenizer list:] )
-   QOut( "" )
+   ? [  Tokenizing the string "] + cStr + ["]
+   ? [    with skip width == 1 and ".,!" as tokenizer list:]
+   ?
    for ni := 1 TO numtoken( cStr, ".,!", 1 )
-      QOut( [    Token #] + AllTrim( Str(ni ) ) + [("] + token( cStr, ".,!", ni, 1 ) + ;
+      ? [    Token #] + AllTrim( Str(ni ) ) + [("] + token( cStr, ".,!", ni, 1 ) + ;
          [") is tokenized by "] + tokensep( .F. ) + [" and "] + tokensep( .T. ) + ["] )
    next ni
 
-   QOut( "" )
-   QOut( [  Tokenizing the string "] + cStr + ["] )
-   QOut( [    with skip width == 3 and ".,!" as tokenizer list:] )
-   QOut( "" )
+   ?
+   ? [  Tokenizing the string "] + cStr + ["]
+   ? [    with skip width == 3 and ".,!" as tokenizer list:]
+   ?
    for ni := 1 TO numtoken( cStr, ".,!", 3 )
-      QOut( [    Token #] + AllTrim( Str(ni ) ) + [("] + token( cStr, ".,!", ni, 3 ) + ;
+      ? [    Token #] + AllTrim( Str(ni ) ) + [("] + token( cStr, ".,!", ni, 3 ) + ;
          [") is tokenized by "] + tokensep( .F. ) + [" and "] + tokensep( .T. ) + ["] )
    next ni
 
-   QOut( "" )
-   QOut( "End test of TOKENSEP()" )
-   QOut()
+   ?
+   ? "End test of TOKENSEP()"
+   ?
 
    ctexit()
 

@@ -58,16 +58,16 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARLIST()" )
-   QOut( "" )
+   ? "Begin test of CHARLIST()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  charlist("Hello World !") == "Helo Wrd!" ? -> "] + charlist( "Hello World !" ) + ["] )
-   QOut( [  charlist(nil) == "" ? -> "] + charlist( nil ) + ["] )
+   ? "Simple tests:"
+   ? [  charlist("Hello World !") == "Helo Wrd!" ? -> "] + charlist( "Hello World !" ) + ["]
+   ? [  charlist(nil) == "" ? -> "] + charlist( nil ) + ["]
 
-   QOut( "End test of CHARLIST()" )
-   QOut( "" )
+   ? "End test of CHARLIST()"
+   ?
 
    ctexit()
 

@@ -60,31 +60,31 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of TOKENUPPER()" )
-   QOut( "" )
+   ? "Begin test of TOKENUPPER()"
+   ?
 
    // Some simple tests
-   QOut( "  Simple tests:" )
-   QOut( [   tokenupper("Hello, world, here I am!")       == "Hello, World, Here I Am!" ?] )
-   QOut( [                                                -> "] + tokenupper( "Hello, world, here I am!" ) + ["] )
-   QOut( [   tokenupper("Hello, world, here I am!",,3)    == "Hello, World, Here I am!" ?] )
-   QOut( [                                                -> "] + tokenupper( "Hello, world, here I am!",,3 ) + ["] )
-   QOut( [   tokenupper("Hello, world, here I am!",",",3) == "Hello, world, here I am!" ?] )
-   QOut( [                                                -> "] + tokenupper( "Hello, world, here I am!",",",3 ) + ["] )
-   QOut( [   tokenupper("Hello, world, here I am!"," w")  == "Hello, wOrld, Here I Am!" ?] )
-   QOut( [                                                -> "] + tokenupper( "Hello, world, here I am!"," w" ) + ["] )
-   QOut( "" )
+   ? "  Simple tests:"
+   ? [   tokenupper("Hello, world, here I am!")       == "Hello, World, Here I Am!" ?]
+   ? [                                                -> "] + tokenupper( "Hello, world, here I am!" ) + ["]
+   ? [   tokenupper("Hello, world, here I am!",,3)    == "Hello, World, Here I am!" ?]
+   ? [                                                -> "] + tokenupper( "Hello, world, here I am!",,3 ) + ["]
+   ? [   tokenupper("Hello, world, here I am!",",",3) == "Hello, world, here I am!" ?]
+   ? [                                                -> "] + tokenupper( "Hello, world, here I am!",",",3 ) + ["]
+   ? [   tokenupper("Hello, world, here I am!"," w")  == "Hello, wOrld, Here I Am!" ?]
+   ? [                                                -> "] + tokenupper( "Hello, world, here I am!"," w" ) + ["]
+   ?
 
-   QOut( [  Uppercase the tokens in the string "] + cStr + ["] )
-   QOut( [            with csetref(.T.) and "@"] )
+   ? [  Uppercase the tokens in the string "] + cStr + ["]
+   ? [            with csetref(.T.) and "@"]
    csetref( .T. )
-   QOut( "" )
-   QOut( [    --> return value of tokenupper(@cStr): ], tokenupper( @cStr ) )
-   QOut( [    --> cStr is now: "] + cStr + ["] )
+   ?
+   ? [    --> return value of tokenupper(@cStr): ], tokenupper( @cStr )
+   ? [    --> cStr is now: "] + cStr + ["]
 
-   QOut( "" )
-   QOut( "End test of TOKENUPPER()" )
-   QOut()
+   ?
+   ? "End test of TOKENUPPER()"
+   ?
 
    ctexit()
 

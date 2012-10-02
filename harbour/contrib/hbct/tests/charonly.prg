@@ -58,17 +58,17 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARONLY()" )
-   QOut( "" )
+   ? "Begin test of CHARONLY()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  charonly("0123456789", "0211 - 38 99 77") == "0211389977" ? --> "] + charonly( "0123456789", "0211 - 38 99 77" ) + ["] )
-   QOut( [  charonly("0123456789", "0211/ 389 977")   == "0211389977" ? --> "] + charonly( "0123456789", "0211/ 389 977" )  + ["] )
-   QOut( "" )
+   ? "Simple tests:"
+   ? [  charonly("0123456789", "0211 - 38 99 77") == "0211389977" ? --> "] + charonly( "0123456789", "0211 - 38 99 77" ) + ["]
+   ? [  charonly("0123456789", "0211/ 389 977")   == "0211389977" ? --> "] + charonly( "0123456789", "0211/ 389 977" )  + ["]
+   ?
 
-   QOut( "End test of CHARONLY()" )
-   QOut( "" )
+   ? "End test of CHARONLY()"
+   ?
 
    ctexit()
 

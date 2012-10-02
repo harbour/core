@@ -58,17 +58,17 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of WORDREM()" )
-   QOut( "" )
+   ? "Begin test of WORDREM()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  wordrem("abcd", "0ab1cd") == "0ab1" ? ----> "] + wordrem( "abcd", "0ab1cd" ) + ["] )
-   QOut( [  wordrem("abcd", "ab0cd1") == "0cd1" ? ----> "] + wordrem( "abcd", "ab0cd1" ) + ["] )
-   QOut( "" )
+   ? "Simple tests:"
+   ? [  wordrem("abcd", "0ab1cd") == "0ab1" ? ----> "] + wordrem( "abcd", "0ab1cd" ) + ["]
+   ? [  wordrem("abcd", "ab0cd1") == "0cd1" ? ----> "] + wordrem( "abcd", "ab0cd1" ) + ["]
+   ?
 
-   QOut( "End test of WORDREM()" )
-   QOut( "" )
+   ? "End test of WORDREM()"
+   ?
 
    ctexit()
 

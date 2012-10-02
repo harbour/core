@@ -60,18 +60,18 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARHIST()" )
-   QOut( "" )
+   ? "Begin test of CHARHIST()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  charhist("Hello World !")] + "[109] == 3 ? --> ", charhist( "Hello World !" )[ 109 ] )
-   QOut( [  aeval(charhist("Hello World !"), {| x | nTotal += x } ) ] )
+   ? "Simple tests:"
+   ? [  charhist("Hello World !")] + "[109] == 3 ? --> ", charhist( "Hello World !" )[ 109 ]
+   ? [  aeval(charhist("Hello World !"), {| x | nTotal += x } ) ]
    AEval( charhist( "Hello World !" ), {| x | nTotal += x } )
-   QOut( [    ==> nTotal == len("Hello World !") ? --> ], nTotal == Len( "Hello World !" ) )
+   ? [    ==> nTotal == len("Hello World !") ? --> ], nTotal == Len( "Hello World !" )
 
-   QOut( "End test of CHARHIST()" )
-   QOut( "" )
+   ? "End test of CHARHIST()"
+   ?
 
    ctexit()
 

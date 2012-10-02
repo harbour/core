@@ -60,27 +60,27 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of NUMTOKEN()" )
-   QOut( "" )
+   ? "Begin test of NUMTOKEN()"
+   ?
 
    // Some simple tests
-   QOut( "  Simple tests:" )
-   QOut( [    numtoken("Hello, World!") ==  2 ? ------------------------------> ] + Str( numtoken("Hello, World!" ),2 ) )
-   QOut( [    numtoken("This is good. See you! How do you do?",".!?") == 3 ? -> ] + Str( numtoken("This is good. See you! How do you do?",".!?" ),2 ) )
-   QOut( [    numtoken("one,,three,four,,six",",",1) ==  6 ? -----------------> ] + Str( numtoken("one,,three,four,,six",",",1 ),2 ) )
-   QOut( "" )
+   ? "  Simple tests:"
+   ? [    numtoken("Hello, World!") ==  2 ? ------------------------------> ] + Str( numtoken("Hello, World!" ),2 )
+   ? [    numtoken("This is good. See you! How do you do?",".!?") == 3 ? -> ] + Str( numtoken("This is good. See you! How do you do?",".!?" ),2 )
+   ? [    numtoken("one,,three,four,,six",",",1) ==  6 ? -----------------> ] + Str( numtoken("one,,three,four,,six",",",1 ),2 )
+   ?
 
-   QOut( [  # of tokens in the string "] + cStr + ["] )
-   QOut( [      separator list = ".,!" and skip width = 1: ] + Str( numtoken(cStr, ".,!", 1 ) ) )
-   QOut( [                                 skip width = 3: ] + Str( numtoken(cStr, ".,!", 3 ) ) )
-   QOut( [      separator list = ",!"  and skip width = 1: ] + Str( numtoken(cStr, ",!", 1 ) ) )
-   QOut( [                                 skip width = 3: ] + Str( numtoken(cStr, ",!", 3 ) ) )
-   QOut( [      separator list = "!"   and skip width = 1: ] + Str( numtoken(cStr, "!", 1 ) ) )
-   QOut( [                                 skip width = 3: ] + Str( numtoken(cStr, "!", 3 ) ) )
+   ? [  # of tokens in the string "] + cStr + ["]
+   ? [      separator list = ".,!" and skip width = 1: ] + Str( numtoken(cStr, ".,!", 1 ) )
+   ? [                                 skip width = 3: ] + Str( numtoken(cStr, ".,!", 3 ) )
+   ? [      separator list = ",!"  and skip width = 1: ] + Str( numtoken(cStr, ",!", 1 ) )
+   ? [                                 skip width = 3: ] + Str( numtoken(cStr, ",!", 3 ) )
+   ? [      separator list = "!"   and skip width = 1: ] + Str( numtoken(cStr, "!", 1 ) )
+   ? [                                 skip width = 3: ] + Str( numtoken(cStr, "!", 3 ) )
 
-   QOut( "" )
-   QOut( "End test of NUMTOKEN()" )
-   QOut()
+   ?
+   ? "End test of NUMTOKEN()"
+   ?
 
    ctexit()
 

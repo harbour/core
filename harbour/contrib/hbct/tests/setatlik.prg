@@ -60,20 +60,20 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of SETATLIKE()" )
-   QOut( "  Default mode should be 0, is................................", setatlike() )
-   QOut( "  Setting mode to 1, return value should be 0, is.............", setatlike( 1 ) )
-   QOut( "  Mode setting should now be 1, is............................", setatlike() )
-   QOut( "  Setting mode to 0 again, return value should still be 1, is ", setatlike( 0 ) )
-   QOut( "" )
+   ? "Begin test of SETATLIKE()"
+   ? "  Default mode should be 0, is................................", setatlike()
+   ? "  Setting mode to 1, return value should be 0, is.............", setatlike( 1 )
+   ? "  Mode setting should now be 1, is............................", setatlike()
+   ? "  Setting mode to 0 again, return value should still be 1, is ", setatlike( 0 )
+   ?
    setatlike( , @cWildcard )
-   QOut( "  Default wildcard character should be '?', is................", cWildcard )
+   ? "  Default wildcard character should be '?', is................", cWildcard
    setatlike( , "#" )
    setatlike( , @cWildcard )
-   QOut( "  Setting wildcard to '#' and calling SETATLIKE(,@cWildcard)" )
-   QOut( "    should yield '#' for cWildcard, does......................", cWildcard )
-   QOut( "End test of SETATLIKE()" )
-   QOut( "" )
+   ? "  Setting wildcard to '#' and calling SETATLIKE(,@cWildcard)"
+   ? "    should yield '#' for cWildcard, does......................", cWildcard
+   ? "End test of SETATLIKE()"
+   ?
 
    ctexit()
 

@@ -58,20 +58,20 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARREPL()" )
-   QOut( "" )
+   ? "Begin test of CHARREPL()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  charrepl("1234", "1x2y3z", "abcd") ==            "axbycz" ? --> "] + charrepl( "1234", "1x2y3z", "abcd" )           + ["] )
-   QOut( [  charrepl("abcdefghij", "jhfdb", "1234567890") == "08642"  ? --> "] + charrepl( "abcdefghij", "jhfdb", "1234567890" ) + ["] )
-   QOut( [  charrepl("abcdefghij", "jhfdb", "12345") ==      "55542"  ? --> "] + charrepl( "abcdefghij", "jhfdb", "12345" )     + ["] )
-   QOut( [  charrepl("1234", "1234", "234A") ==              "AAAA"   ? --> "] + charrepl( "1234", "1234", "234A" )             + ["] )
-   QOut( [  charrepl("1234", "1234", "234A", .T.) ==         "234A"   ? --> "] + charrepl( "1234", "1234", "234A", .T. )        + ["] )
-   QOut( "" )
+   ? "Simple tests:"
+   ? [  charrepl("1234", "1x2y3z", "abcd") ==            "axbycz" ? --> "] + charrepl( "1234", "1x2y3z", "abcd" )           + ["]
+   ? [  charrepl("abcdefghij", "jhfdb", "1234567890") == "08642"  ? --> "] + charrepl( "abcdefghij", "jhfdb", "1234567890" ) + ["]
+   ? [  charrepl("abcdefghij", "jhfdb", "12345") ==      "55542"  ? --> "] + charrepl( "abcdefghij", "jhfdb", "12345" )     + ["]
+   ? [  charrepl("1234", "1234", "234A") ==              "AAAA"   ? --> "] + charrepl( "1234", "1234", "234A" )             + ["]
+   ? [  charrepl("1234", "1234", "234A", .T.) ==         "234A"   ? --> "] + charrepl( "1234", "1234", "234A", .T. )        + ["]
+   ?
 
-   QOut( "End test of CHARREPL()" )
-   QOut( "" )
+   ? "End test of CHARREPL()"
+   ?
 
    ctexit()
 

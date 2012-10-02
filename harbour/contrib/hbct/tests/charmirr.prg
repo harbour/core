@@ -58,17 +58,17 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARMIRR()" )
-   QOut( "" )
+   ? "Begin test of CHARMIRR()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  charmirr("racecar") == "racecar" ? ----------> "] + charmirr( "racecar" ) + ["] )
-   QOut( [  charmirr("racecar  ", .T.) == "racecar  " ? -> "] + charmirr( "racecar  ", .T. ) + ["] )
-   QOut( [  charmirr("racecar  ", .F.) == "  racecar" ? -> "] + charmirr( "racecar  ", .F. ) + ["] )
+   ? "Simple tests:"
+   ? [  charmirr("racecar") == "racecar" ? ----------> "] + charmirr( "racecar" ) + ["]
+   ? [  charmirr("racecar  ", .T.) == "racecar  " ? -> "] + charmirr( "racecar  ", .T. ) + ["]
+   ? [  charmirr("racecar  ", .F.) == "  racecar" ? -> "] + charmirr( "racecar  ", .F. ) + ["]
 
-   QOut( "End test of CHARMIRR()" )
-   QOut( "" )
+   ? "End test of CHARMIRR()"
+   ?
 
    ctexit()
 

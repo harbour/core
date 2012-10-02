@@ -58,24 +58,24 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of WORDREPL()" )
-   QOut( "" )
+   ? "Begin test of WORDREPL()"
+   ?
 
    // simple tests
-   QOut( "  Simple tests:" )
-   QOut( [    wordrepl("CC", "AABBCCDDEE", "XX") == "AABBXXDDEE"? --> "] + wordrepl( "CC", "AABBCCDDEE", "XX" ) + ["] )
-   QOut( [    wordrepl("aa", "1aaaa", "ba")      == "1abaa" ? ------> "] + wordrepl( "aa", "1aaaa", "ba" )     + ["] )
-   QOut( [    wordrepl("aa", "1aaaa", "ba", .T.) == "1baba" ? ------> "] + wordrepl( "aa", "1aaaa", "ba", .T. ) + ["] )
-   QOut( "" )
+   ? "  Simple tests:"
+   ? [    wordrepl("CC", "AABBCCDDEE", "XX") == "AABBXXDDEE"? --> "] + wordrepl( "CC", "AABBCCDDEE", "XX" ) + ["]
+   ? [    wordrepl("aa", "1aaaa", "ba")      == "1abaa" ? ------> "] + wordrepl( "aa", "1aaaa", "ba" )     + ["]
+   ? [    wordrepl("aa", "1aaaa", "ba", .T.) == "1baba" ? ------> "] + wordrepl( "aa", "1aaaa", "ba", .T. ) + ["]
+   ?
 
-   QOut( "  Testing CSETATMUPA(.T.) with lMode==.T.:" )
+   ? "  Testing CSETATMUPA(.T.) with lMode==.T.:"
    csetatmupa( .T. )
-   QOut( [    wordrepl("aa", "1aaaa", "ba")      == "1abaa" ? --> "] + wordrepl( "aa", "1aaaa", "ba" )     + ["] )
-   QOut( [    wordrepl("aa", "1aaaa", "ba", .T.) == "1bbba" ? --> "] + wordrepl( "aa", "1aaaa", "ba", .T. ) + ["] )
-   QOut( "" )
+   ? [    wordrepl("aa", "1aaaa", "ba")      == "1abaa" ? --> "] + wordrepl( "aa", "1aaaa", "ba" )     + ["]
+   ? [    wordrepl("aa", "1aaaa", "ba", .T.) == "1bbba" ? --> "] + wordrepl( "aa", "1aaaa", "ba", .T. ) + ["]
+   ?
 
-   QOut( "End test of WORDREPL()" )
-   QOut( "" )
+   ? "End test of WORDREPL()"
+   ?
 
    ctexit()
 

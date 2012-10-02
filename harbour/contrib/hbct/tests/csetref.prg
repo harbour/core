@@ -58,13 +58,13 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CSETREF()" )
-   QOut( "  Default switch should be .F., is..................................", csetref() )
-   QOut( "  Setting switch to .T., return value should be .F., is.............", csetref( .T. ) )
-   QOut( "  Switch setting should now be .T., is..............................", csetref() )
-   QOut( "  Setting switch to .F. again, return value should still be .T., is ", csetref( .F. ) )
-   QOut( "End test of CSETREF()" )
-   QOut( "" )
+   ? "Begin test of CSETREF()"
+   ? "  Default switch should be .F., is..................................", csetref()
+   ? "  Setting switch to .T., return value should be .F., is.............", csetref( .T. )
+   ? "  Switch setting should now be .T., is..............................", csetref()
+   ? "  Setting switch to .F. again, return value should still be .T., is ", csetref( .F. )
+   ? "End test of CSETREF()"
+   ?
 
    ctexit()
 

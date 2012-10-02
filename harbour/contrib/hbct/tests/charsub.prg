@@ -58,18 +58,18 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of CHARSUB()" )
-   QOut( "" )
+   ? "Begin test of CHARSUB()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  charadd("123456789", chr(1)) == "012345678" ? -> "] + charsub( "123456789", Chr(1 ) ) + ["] )
-   QOut( [  charadd("123456789", chr(1)+chr(2)) == "002244668" ? -> "] + charsub( "123456789", Chr(1 ) + Chr(2 ) ) + ["] )
-   QOut( [  charadd("012345678", chr(255)) == "123456789" ? -> "] + charsub( "012345678", Chr(255 ) ) + ["] )
-   QOut( [  charadd("012345678", chr(255)+chr(254)) == "133557799" ? -> "] + charsub( "012345678", Chr(255 ) + Chr(254 ) ) + ["] )
+   ? "Simple tests:"
+   ? [  charadd("123456789", chr(1)) == "012345678" ? -> "] + charsub( "123456789", Chr(1 ) ) + ["]
+   ? [  charadd("123456789", chr(1)+chr(2)) == "002244668" ? -> "] + charsub( "123456789", Chr(1 ) + Chr(2 ) ) + ["]
+   ? [  charadd("012345678", chr(255)) == "123456789" ? -> "] + charsub( "012345678", Chr(255 ) ) + ["]
+   ? [  charadd("012345678", chr(255)+chr(254)) == "133557799" ? -> "] + charsub( "012345678", Chr(255 ) + Chr(254 ) ) + ["]
 
-   QOut( "End test of CHARSUB()" )
-   QOut( "" )
+   ? "End test of CHARSUB()"
+   ?
 
    ctexit()
 

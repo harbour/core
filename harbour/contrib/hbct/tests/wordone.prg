@@ -58,18 +58,18 @@ PROCEDURE Main()
 
    ctinit()
 
-   QOut( "Begin test of WORDONE()" )
-   QOut( "" )
+   ? "Begin test of WORDONE()"
+   ?
 
    // simple tests
-   QOut( "Simple tests:" )
-   QOut( [  wordone("12ABAB12")       == "12AB12" ? --> "] + wordone( "12ABAB12" )       + ["] )
-   QOut( [  wordone("1AAAA2")         == "1AAAA2" ? --> "] + wordone( "1AAAA2" )         + ["] )
-   QOut( [  wordone("12", "1212ABAB") == "12ABAB" ? --> "] + wordone( "12", "1212ABAB" ) + ["] )
-   QOut( "" )
+   ? "Simple tests:"
+   ? [  wordone("12ABAB12")       == "12AB12" ? --> "] + wordone( "12ABAB12" )       + ["]
+   ? [  wordone("1AAAA2")         == "1AAAA2" ? --> "] + wordone( "1AAAA2" )         + ["]
+   ? [  wordone("12", "1212ABAB") == "12ABAB" ? --> "] + wordone( "12", "1212ABAB" ) + ["]
+   ?
 
-   QOut( "End test of WORDONE()" )
-   QOut( "" )
+   ? "End test of WORDONE()"
+   ?
 
    ctexit()
 
