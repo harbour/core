@@ -250,6 +250,9 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_AUTOHBC_NAME      "hbmk.hbc"
 #define _HBMK_AUTOHBM_NAME      "hbmk.hbm"
 
+#define _HBMK_SPECDIR_CONTRIB   "contrib"
+#define _HBMK_SPECDIR_ADDONS    "addons"
+
 #define _HBMK_WITH_TPL          "HBMK_WITH_%1$s"
 #define _HBMK_HAS_TPL           "HBMK_HAS_%1$s"
 #define _HBMK_HAS_TPL_LOCAL     "HBMK_HAS_%1$s_LOCAL"
@@ -1090,20 +1093,20 @@ STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk, l_cHB_INSTALL_PREFIX )
       NEXT
    ENDIF
    /* Add default search paths for .hbc files */
-   AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "contrib" + hb_ps() + "%{hb_name}" )
-   AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "addons" + hb_ps() + "%{hb_name}" )
+   AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + _HBMK_SPECDIR_CONTRIB + hb_ps() + "%{hb_name}" )
+   AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + _HBMK_SPECDIR_ADDONS + hb_ps() + "%{hb_name}" )
 #if defined( __PLATFORM__UNIX )
    IF hb_DirExists( "/opt/harbour" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/contrib/%{hb_name}" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/addons/%{hb_name}" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/" + _HBMK_SPECDIR_CONTRIB + "/%{hb_name}" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/" + _HBMK_SPECDIR_ADDONS + "/%{hb_name}" )
    ENDIF
    IF hb_DirExists( "/usr/local/share/harbour" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/share/harbour/contrib/%{hb_name}" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/share/harbour/addons/%{hb_name}" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/share/harbour/" + _HBMK_SPECDIR_CONTRIB + "/%{hb_name}" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/share/harbour/" + _HBMK_SPECDIR_ADDONS + "/%{hb_name}" )
    ENDIF
    IF hb_DirExists( "/usr/share/harbour" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/share/harbour/contrib/%{hb_name}" )
-      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/share/harbour/addons/%{hb_name}" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/share/harbour/" + _HBMK_SPECDIR_CONTRIB + "/%{hb_name}" )
+      AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/share/harbour/" + _HBMK_SPECDIR_ADDONS + "/%{hb_name}" )
    ENDIF
 #endif
 
