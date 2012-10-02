@@ -23,7 +23,7 @@ PROCEDURE Main()
    wsetshadow( 7 )
    setclearA( 10 * 16 + 14 )
    setclearB( 35 )
-   DispBox( 0, 0, MaxRow(), MaxCol(), repl( "#",9 ), ntocolor( 10 * 16 + 14 ) )
+   DispBox( 0, 0, MaxRow(), MaxCol(), replicate( "#", 9 ), ntocolor( 10 * 16 + 14 ) )
    SetPos( 0, 0 )
    ? "GT driver: " + hb_gtVersion()
    ? hb_gtVersion( 1 )
@@ -40,25 +40,25 @@ PROCEDURE Main()
    ? "arrows - window move "
 
    setclearB( 61 )
-   for i := 1 TO Len( aWin )
+   FOR i := 1 TO Len( aWin )
       y := i + 2
       x := i * 4 + 10
       SetColor( ntocolor( i * 16 + 15 ) + ",W+/B*" )
       wsetshadow( i % 8 )
-      aWin[i] := wopen( y, x, y + 10, x + 20 )
+      aWin[ i ] := wopen( y, x, y + 10, x + 20 )
       wbox()
 
-      @ - 1, 0 SAY "TITLE " + hb_ntos( aWin[i] )
+      @ - 1, 0 SAY "TITLE " + hb_ntos( aWin[ i ] )
       ? hb_ntos( Row() ) + ":" + hb_ntos( Col() ), "/", hb_ntos( MaxRow() ) + ":" + hb_ntos( MaxCol() ), ""
       ? hb_ntos( wrow() ) + ":" + hb_ntos( wcol() ), "/", hb_ntos( MaxRow( .T. ) ) + ":" + hb_ntos( MaxCol( .T. ) ), ""
       ? hb_ntos( wfrow() ) + ":" + hb_ntos( wfcol() ), "/", ;
          hb_ntos( wflastrow() ) + ":" + hb_ntos( wflastcol() ), ""
       ? hb_ntos( wfrow( .T. ) ) + ":" + hb_ntos( wfcol( .T. ) ), "/", ;
          hb_ntos( wflastrow( .T. ) ) + ":" + hb_ntos( wflastcol( .T. ) ), ""
-      ? "window:", hb_ntos( aWin[i] ), ""
+      ? "window:", hb_ntos( aWin[ i ] ), ""
       SetCursor( Int( i % 5 ) )
 
-   next
+   NEXT
 
    dspcord()
    WHILE .T.
@@ -66,7 +66,7 @@ PROCEDURE Main()
       IF k == K_ESC
          EXIT
       ELSEIF k >= Asc( "1" ) .AND. k <= Asc( "9" )
-         wselect( aWin[k-asc("0")] )
+         wselect( aWin[ k - Asc( "0" ) ] )
       ELSEIF k == Asc( "0" )
          wselect( 0 )
       ELSEIF k == Asc( "C" ) .OR. k == Asc( "c" )
@@ -89,7 +89,7 @@ PROCEDURE Main()
          wselect( i )
       ELSEIF k == K_INS
          lFlag := !lFlag
-         SetCursor( iif( lFlag,3,1 ) )
+         SetCursor( iif( lFlag, 3, 1 ) )
       ELSEIF k == K_DEL
          SetCursor( SC_NONE )
       ELSEIF k == K_LEFT
@@ -111,8 +111,8 @@ STATIC PROC dspcord()
    LOCAL mr := MRow(), mc := MCol(), r := wrow(), c := wcol(), w := wselect()
 
    wselect( 0 )
-   @ MaxRow(), 0 SAY PadR( "WPOS(" + LTrim( Str(r ) ) + "," + LTrim( Str(c ) ) + ")" + ;
-      iif( MPresent(), "MPOS(" + LTrim( Str(mr ) ) + "," + LTrim( Str(mc ) ) + ")", "" ), MaxCol() + 1 )
+   @ MaxRow(), 0 SAY PadR( "WPOS(" + LTrim( Str( r ) ) + "," + LTrim( Str( c ) ) + ")" + ;
+      iif( MPresent(), "MPOS(" + LTrim( Str( mr ) ) + "," + LTrim( Str( mc ) ) + ")", "" ), MaxCol() + 1 )
    wselect( w )
 
    RETURN

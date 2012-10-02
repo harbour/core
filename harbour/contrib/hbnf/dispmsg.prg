@@ -107,7 +107,7 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    // draw box
    cOldColor := SetColor( aInfo[ 2, Len( aInfo[ 2 ] ) ] )
 
-   DispBox( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight, cnBoxString, ;
+   hb_DispBox( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight, cnBoxString, ;
       aInfo[ 2, Len( aInfo[ 2 ] ) ] )
    IF lShadow
       hb_Shadow( nBoxTop, nBoxLeft, nBoxBottom, nBoxRight )

@@ -73,7 +73,7 @@
       @ <t>, <l> CLEAR TO <b>, <r>
 
 #translate BkGrnd( <t>, <l>, <b>, <r>, <c> ) =>;
-      DispBox( <t>, <l>, <b>, <r>, Replicate( <c>, 9 ) )
+      hb_DispBox( <t>, <l>, <b>, <r>, Replicate( <c>, 9 ) )
 
 //------------------------------------------------
 //  Demo of FT_ClrSel()

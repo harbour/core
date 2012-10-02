@@ -356,7 +356,7 @@ FUNCTION ZNEWWINDOW(wtype,r1,c1,r2,c2,ctitle, ccolor)
 
 #IFNDEF __GTWVW__
   * GTWVW doesn't need box or textual title
-  DISPBOX(r1,c1,r2,c2,wtype)
+  hb_DISPBOX(r1,c1,r2,c2,wtype)
   if !empty(ctitle)
      cTitle := " " + alltrim(ctitle) + " "
      DevPos( r1, nCeiling( (c2+c1-len(cTitle))/2 ) )

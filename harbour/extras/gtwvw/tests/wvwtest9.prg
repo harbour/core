@@ -572,7 +572,7 @@ FUNCTION DEMO_Browse()
    nHScrollBar := wvw_xbCreate( nCurWindow, 0, oBrowse:nBottom+1, oBrowse:nLeft, oBrowse:nRight-oBrowse:nLeft+1, /*aBlock*/ {|nWinNum, nXBid, nXBmsg, nXBpos| HXBscroller(oBrowse, nWinNum, nXBid, nXBmsg)}, /*aOffset*/ NIL)
    nVScrollBar := wvw_xbCreate( nCurWindow, 1, oBrowse:nTop, oBrowse:nRight+1, oBrowse:nBottom-oBrowse:nTop+1, /*aBlock*/ {|nWinNum, nXBid, nXBmsg, nXBpos| VXBscroller(oBrowse, nWinNum, nXBid, nXBmsg)}, /*aOffset*/ NIL)
 
-   DispOutAt( nTop + 1-nTop, nleft-nleft, padc( hb_CurDrive()+':\'+CurDir()+'\'+'test.dbf', nRight - nLeft + 1 ), 'W+/W' )
+   hb_DispOutAt( nTop + 1-nTop, nleft-nleft, padc( hb_CurDrive()+':\'+CurDir()+'\'+'test.dbf', nRight - nLeft + 1 ), 'W+/W' )
 
    oBrowse:ForceStable()
    RefreshHXB(oBrowse, nCurWindow, nHScrollBar) //20040704

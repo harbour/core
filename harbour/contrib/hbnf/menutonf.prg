@@ -36,9 +36,6 @@
 #include "setcurs.ch"
 #include "inkey.ch"
 
-#xtranslate display( <row>, <col>, <stuff>, <color> ) => ;
-      SetPos( <row>, <col> ); DispOut( <stuff>, <color> )
-
 #xtranslate EnhColor( <colorspec> ) => ;
       SubStr( <colorspec>, At( ",", <colorspec> ) + 1 )
 
@@ -151,8 +148,8 @@ FUNCTION FT_Prompt( nRow, nCol, cPrompt, cColor, ;
    // Now display the prompt for the sake of compatibility
 
    DispBegin()
-   DISPLAY( nRow, nCol, cPrompt, cColor )
-   DISPLAY( nRow, nCol - 1 + nTrigger, cTrigger, cTriggerColor )
+   hb_DispOutAt( nRow, nCol, cPrompt, cColor )
+   hb_DispOutAt( nRow, nCol - 1 + nTrigger, cTrigger, cTriggerColor )
    DispEnd()
 
    RETURN NIL
@@ -234,7 +231,7 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
             t_aMsgRow[ nCurrent ], t_aMsgCol[ nCurrent ] + ;
             Len( t_aMessage[ nCurrent ] ) - 1 )
 
-         DISPLAY( t_aMsgRow[ nCurrent ], t_aMsgCol[ nCurrent ], ;
+         hb_DispOutAt( t_aMsgRow[ nCurrent ], t_aMsgCol[ nCurrent ], ;
             t_aMessage[ nCurrent ], t_aMsgColor[ nCurrent ]  )
 
       ELSE
@@ -244,10 +241,10 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
       // Display the prompt using the designated colors for the prompt and
       // the trigger character.
 
-      DISPLAY( t_aRow[ nCurrent ], t_aCol[ nCurrent ], ;
+      hb_DispOutAt( t_aRow[ nCurrent ], t_aCol[ nCurrent ], ;
          t_aPrompt[ nCurrent ], EnhColor( t_aColor[ nCurrent ] ) )
 
-      DISPLAY( t_aRow[ nCurrent ], ;
+      hb_DispOutAt( t_aRow[ nCurrent ], ;
          t_aCol[ nCurrent ] - 1 + t_aTrigger[ nCurrent ], ;
          SubStr( t_aPrompt[ nCurrent ], t_aTrigger[ nCurrent ], 1 ), ;
          EnhColor( t_aTriggerColor[ nCurrent ] ) )
@@ -367,10 +364,10 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
 
       IF ! lChoice
          DispBegin()
-         DISPLAY( t_aRow[ nLast ], t_aCol[ nLast ], ;
+         hb_DispOutAt( t_aRow[ nLast ], t_aCol[ nLast ], ;
             t_aPrompt[ nLast ], t_aColor[ nLast ] )
 
-         DISPLAY( t_aRow[ nLast ], t_aCol[ nLast ] - 1 + t_aTrigger[ nLast ], ;
+         hb_DispOutAt( t_aRow[ nLast ], t_aCol[ nLast ] - 1 + t_aTrigger[ nLast ], ;
             SubStr( t_aPrompt[ nLast ], t_aTrigger[ nLast ], 1 ), ;
             t_aTriggerColor[ nLast ] )
 

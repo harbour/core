@@ -1207,7 +1207,7 @@ endif
 if lTalk
 
    cSave := SaveScreen(8,30,11,48)
-   DispBox(8,30,11,48,,"W+/R")
+   hb_DispBox(8,30,11,48,,"W+/R")
    @  8,33 say " Creating DIC "     color "W+/R"
    @  9,31 say " Indexing words  "  color "W/R"
    @ 10,31 say "                 "  color "W/R"
@@ -1374,7 +1374,7 @@ use (cDbf) alias DICT new
 
 if lTalk
    cSave := SaveScreen(8,30,12,48)
-   DispBox(8,30,12,48,,"W+/R")
+   hb_DispBox(8,30,12,48,,"W+/R")
    @  8,34 say " Creating DBF "     color "W+/R"
    @  9,31 say "Percent          "  color "W/R"
    @ 10,31 say "Complete:        "  color "W/R"
