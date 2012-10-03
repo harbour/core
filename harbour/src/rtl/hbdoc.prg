@@ -67,6 +67,41 @@ FUNCTION __hbdoc_FromSource( cFile, aErrMsg )
 
    RETURN aEntry
 
+FUNCTION __hbdoc_DirLastModified( cDir )
+   LOCAL aFile
+
+   LOCAL cDocDir
+   LOCAL aDocFile
+   LOCAL tDoc
+
+   LOCAL tLast := 0d0
+
+   IF HB_ISSTRING( cDir )
+
+      cDir := hb_DirSepAdd( cDir )
+
+      IF hb_DirExists( cDir + _HBDOC_SRC_SUBDIR )
+
+         FOR EACH aFile IN Directory( cDir + _HBDOC_SRC_SUBDIR + hb_ps() + hb_osFileMask(), "D" )
+            IF "D" $ aFile[ F_ATTR ] .AND. ;
+               !( aFile[ F_NAME ] == "." ) .AND. ;
+               !( aFile[ F_NAME ] == ".." )
+
+               cDocDir := cDir + _HBDOC_SRC_SUBDIR + hb_ps() + aFile[ F_NAME ]
+
+               FOR EACH aDocFile IN Directory( cDocDir + hb_ps() + "*" + _HBDOC_SRC_EXT )
+                  IF hb_FGetDateTime( cDocDir + hb_ps() + aDocFile[ F_NAME ], @tDoc ) .AND. ;
+                     tLast < tDoc
+                     tLast := tDoc
+                  ENDIF
+               NEXT
+            ENDIF
+         NEXT
+      ENDIF
+   ENDIF
+
+   RETURN tLast
+
 FUNCTION __hbdoc_LoadDir( cDir, cName, aErrMsg )
    LOCAL hMeta
    LOCAL nCount

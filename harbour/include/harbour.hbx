@@ -1384,6 +1384,7 @@ DYNAMIC __HBDate
 DYNAMIC __defaultNIL
 DYNAMIC __hbdoc_FilterOut
 DYNAMIC __hbdoc_FromSource
+DYNAMIC __hbdoc_DirLastModified
 DYNAMIC __hbdoc_LoadDir
 DYNAMIC __hbdoc_LoadHBD
 DYNAMIC __hbdoc_SaveHBD

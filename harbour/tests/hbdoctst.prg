@@ -22,6 +22,7 @@ PROCEDURE Main( cRoot )
 
    LOCAL aFile
 
+   LOCAL tModified
    LOCAL aErrMsg
    LOCAL tmp
 
@@ -54,27 +55,30 @@ PROCEDURE Main( cRoot )
 
    FOR EACH cDir IN aDir
 
-      cName := DirGetName( cDir )
-      IF Empty( cName )
-         cName := "harbour"
-      ENDIF
+      IF ! Empty( tModified := __hbdoc_DirLastModified( cDir ) )
 
-      aErrMsg := {}
+         cName := DirGetName( cDir )
+         IF Empty( cName )
+            cName := "harbour"
+         ENDIF
 
-      aEntry := __hbdoc_LoadDir( cDir, cName, aErrMsg )
+         aErrMsg := {}
 
-      /* TODO: apply code formatting, HBDOC section and content validation here.
-               It's also possible to create output generators at this point.
-               These generators should simply parse the list of entry hashes
-               and spit out output in selected end-user format, like .html
-               or .pdf */
+         aEntry := __hbdoc_LoadDir( cDir, cName, aErrMsg )
 
-      FOR EACH tmp IN aErrMsg
-         ? tmp
-      NEXT
+         /* TODO: apply code formatting, HBDOC section and content validation here.
+                  It's also possible to create output generators at this point.
+                  These generators should simply parse the list of entry hashes
+                  and spit out output in selected end-user format, like .html
+                  or .pdf */
 
-      IF ! Empty( aEntry )
-         ? __hbdoc_savehbd( cName, aEntry ), cName, Len( aEntry )
+         FOR EACH tmp IN aErrMsg
+            ? tmp
+         NEXT
+
+         IF ! Empty( aEntry )
+            ? __hbdoc_savehbd( cName, aEntry ), cName, Len( aEntry ), tModified
+         ENDIF
       ENDIF
    NEXT
 
