@@ -46,7 +46,7 @@ FUNCTION WvtMyBrowse()
                             oCrt:resizeMode := HB_GTI_RESIZEMODE_ROWS,;
                             oCrt:icon := GetResource( "dia_excl.ico" ),;
                             oCrt:create(),;
-                            Wvt_SetGui( .t. ),;
+                            Wvt_SetGui( .T. ),;
                             ExecBrowser( oCrt ),;
                             oCrt:destroy();
                   } )
@@ -62,7 +62,7 @@ FUNCTION WvtMyBrowse()
 FUNCTION ExecBrowser( oCrt )
    LOCAL nKey, bBlock, oBrowse , aLastPaint, i, pGT
    LOCAL cFileIndex, cFileDbf, cRDD, nIndex, oTBar, cScr, info_ //, oLB
-   LOCAL lEnd       := .f.
+   LOCAL lEnd       := .F.
    LOCAL aBlocks    := {}
    LOCAL nTop       :=  4
    LOCAL nLeft      :=  3
@@ -78,7 +78,7 @@ FUNCTION ExecBrowser( oCrt )
 
    STATIC nStyle := 0
    THREAD STATIC nFactor := 200
-   THREAD STATIC lActiveX := .f.
+   THREAD STATIC lActiveX := .F.
 
    IF oCrt == NIL
       cScr := SaveScreen( 0,0,maxrow(),maxcol() )
@@ -182,10 +182,10 @@ FUNCTION ExecBrowser( oCrt )
          hb_gtInfo( HB_GTI_SPEC, HB_GTS_FACTOR, nFactor )
 
       CASE nKey == K_F6
-         hb_gtInfo( HB_GTI_RESIZABLE, .f. )
+         hb_gtInfo( HB_GTI_RESIZABLE, .F. )
 
       CASE nKey == K_F7
-         hb_gtInfo( HB_GTI_RESIZABLE, .t. )
+         hb_gtInfo( HB_GTI_RESIZABLE, .T. )
 
       CASE nKey == K_F2
          nIndex := IndexOrd()
@@ -272,7 +272,7 @@ STATIC FUNCTION BrwHandleResize( oCrt, oBrw, oVBar, oHBar, oCom, oSLE, oLBx, oTr
    oCrt:hide()
    oCrt:show()
 
-   RETURN .t.
+   RETURN .T.
 
 //
 
@@ -324,7 +324,7 @@ STATIC FUNCTION BrwBuildTree( oCrt /*, oBrw*/ )
    oItem2:addItem( "Third level y" )
    oItem2:addItem( "Third level z" )
 
-   oTree:showExpanded( .t., 2 )
+   oTree:showExpanded( .T., 2 )
    oTree:setData( oItem2 )
 
    oTree:tooltipText := "Treeview embedded onto CUI window"
@@ -338,7 +338,7 @@ STATIC FUNCTION BrwBuildActiveX( oCrt, oBrw )
 
    HB_SYMBOL_UNUSED( oBrw )
 
-   oCom := WvgActiveXControl():new( oCrt, , { -24, -13 }, { {|| -( maxrow()-1-24 ) }, {|| -( maxcol()-1-13 ) } }, , .f. )
+   oCom := WvgActiveXControl():new( oCrt, , { -24, -13 }, { {|| -( maxrow()-1-24 ) }, {|| -( maxcol()-1-13 ) } }, , .F. )
    oCom:CLSID := 'Shell.Explorer.2'
    //oCom:mapEvent( 269, {|| uiDebug( ' E X P L O R E R - 2 6 9' ) } )
    oCom:create()
@@ -352,7 +352,7 @@ STATIC FUNCTION BrwBuildListBox( oCrt, oBrw )
    LOCAL oXbp, i
 
    oXbp := WvgListBox():new( oCrt )
-   oXbp:create( , , { -4,-1 }, { -10, -10 }, , .t. )
+   oXbp:create( , , { -4,-1 }, { -10, -10 }, , .T. )
    oXbp:setColorFG( "W+" )
    oXbp:setColorBG( "B*" )
    oXbp:itemMarked := {| m1, m2, o | m1 := m1, m2 := m2, BrwShowColumn( oBrw, o:getCurItem() ) }
@@ -386,7 +386,7 @@ STATIC FUNCTION BrwBuildListBoxIdx( oCrt, oBrw )
 
    oXbp := WvgComboBox():new( oCrt )
    oXbp:type := WVGCOMBO_DROPDOWN
-   oXbp:create( , , { -18,-1 }, { -5, -10 }, , .t. )
+   oXbp:create( , , { -18,-1 }, { -5, -10 }, , .T. )
    oXbp:setColorFG( "W+" )
    oXbp:setColorBG( "B*" )
    oXbp:itemMarked := {| m1, m2, o | m1 := m2, BrwSetThisOrder( oBrw, o:XbpListBox:getData()-1 ) }
@@ -431,13 +431,13 @@ STATIC FUNCTION BrwBuildNvg( oCrt, oBrw, oCom )
    oLbl:type    := WVGSTATIC_TYPE_TEXT
    oLbl:options := WVGSTATIC_TEXT_LEFT
    oLbl:caption := "Navigate"
-   oLbl:create( , , { -23, -13 }, { -1, -6 }, , .f. )
+   oLbl:create( , , { -23, -13 }, { -1, -6 }, , .F. )
    oLbl:setColorFG( "W+" )
    oLbl:setColorBG( "BG" )
 
    oXbp := WvgSLE():new( oCrt )
    oXbp:bufferLength := 300
-   oXbp:create( , , { -23, -19 }, { -1, {|| -( maxcol()-1-19 ) } }, , .f. )
+   oXbp:create( , , { -23, -19 }, { -1, {|| -( maxcol()-1-19 ) } }, , .F. )
    oXbp:setColorFG( "N"  )
    oXbp:setColorBG( "BG+"  )
    oXbp:returnPressed := {| m1, m2, o | m1:=m2, oCom:navigate( trim( o:getData() ) ) }
@@ -454,10 +454,10 @@ STATIC FUNCTION BrwBuildCheckBox( oCrt, oBrw, lActiveX )
    HB_SYMBOL_UNUSED( oBrw )
 
    oXbp := WvgCheckBox():new( oCrt )
-   oXbp:pointerFocus := .f.
+   oXbp:pointerFocus := .F.
    oXbp:caption      := "ActiveX"
    oXbp:selected     := {| x, y, o | x := y, lActiveX := o:getData(), Wvt_Keyboard( HB_K_RESIZE ) }
-   oXbp:selection    := .f.
+   oXbp:selection    := .F.
    oXbp:create( , , { -23,-1 }, { -1,-10 } )
    oXbp:setColorFG( "R+" )
    oXbp:setColorBG( "W" )
@@ -510,7 +510,7 @@ STATIC FUNCTION BrwBuildButtons( oCrt, oBrw )
    FOR i := 1 TO len( aPmt )
       oPB := WvgPushButton():new( oCrt )
       IF i == 3  /* We do not want this button to gain focus anytime */
-         oPB:pointerFocus := .f.
+         oPB:pointerFocus := .F.
       ENDIF
       IF i == len( aPmt )
          oPB:caption := hb_dirBase() + "\" + "v_lock.bmp"
@@ -595,7 +595,7 @@ STATIC FUNCTION BrwBuildToolBar( oCrt )
    oTBar:imageWidth   := 26
    oTBar:imageHeight  := 24
 
-   oTBar:showToolTips := .t.
+   oTBar:showToolTips := .T.
 
    // After setting properties, create toolbar.
    oTBar:create()
@@ -615,85 +615,85 @@ STATIC FUNCTION BrwBuildToolBar( oCrt )
 //
 
 STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
-   LOCAL lVMove := .f.
-   LOCAL lHMove := .f.
-   LOCAL lRet   := .t.
+   LOCAL lVMove := .F.
+   LOCAL lHMove := .F.
+   LOCAL lRet   := .T.
 
    DO CASE
    CASE nKey == K_ESC
-      lEnd := .t.
+      lEnd := .T.
 
    CASE nKey == K_ENTER
-      lEnd := .t.
+      lEnd := .T.
 
    CASE nKey == K_DOWN
-      lVMove := .t.
+      lVMove := .T.
       oBrowse:Down()
 
    CASE nKey == K_UP
-      lVMove := .t.
+      lVMove := .T.
       oBrowse:Up()
 
    CASE nKey == K_PGDN
-      lVMove := .t.
+      lVMove := .T.
       oBrowse:pageDown()
 
    CASE nKey == K_PGUP
-      lVMove := .t.
+      lVMove := .T.
       oBrowse:pageUp()
 
    CASE nKey == K_CTRL_PGUP
-      lVMove := .t.
+      lVMove := .T.
       oBrowse:goTop()
 
    CASE nKey == K_CTRL_PGDN
-      lVMove := .t.
+      lVMove := .T.
       oBrowse:goBottom()
 
    CASE nKey == K_LEFT
-      lHMove := .t.
+      lHMove := .T.
       oBrowse:Left()
 
    CASE nKey == K_RIGHT
-      lHMove := .t.
+      lHMove := .T.
       oBrowse:Right()
 
    CASE nKey == K_HOME
-      lHMove := .t.
+      lHMove := .T.
       oBrowse:home()
 
    CASE nKey == K_END
-      lHMove := .t.
+      lHMove := .T.
       oBrowse:end()
 
    CASE nKey == K_CTRL_LEFT
-      lHMove := .t.
+      lHMove := .T.
       oBrowse:panLeft()
 
    CASE nKey == K_CTRL_RIGHT
-      lHMove := .t.
+      lHMove := .T.
       oBrowse:panRight()
 
    CASE nKey == K_CTRL_HOME
-      lHMove := .t.
+      lHMove := .T.
       oBrowse:panHome()
 
    CASE nKey == K_CTRL_END
-      lHMove := .t.
+      lHMove := .T.
       oBrowse:panEnd()
 
    CASE nKey == K_MWBACKWARD
-      lVMove := .t.
+      lVMove := .T.
       oBrowse:down()
 
    CASE nKey == K_MWFORWARD
-      lVMove := .t.
+      lVMove := .T.
       oBrowse:up()
 
    CASE Vou_NavigateToCell( oBrowse, nKey )
 
    OTHERWISE
-      lRet := .f.
+      lRet := .F.
 
    ENDCASE
 
@@ -741,11 +741,11 @@ FUNCTION Vou_NavigateToCell( oBrowse )
          DispEnd()
          oBrowse:hilite()
 
-         RETURN .t.
+         RETURN .T.
       ENDIF
    ENDIF
 
-   RETURN .f.
+   RETURN .F.
 
 //
 
@@ -877,7 +877,7 @@ FUNCTION Vou_BrwSetVScroll( mp1, oBrowse )
 //
 
 STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
-   LOCAL lRet := .t., lRefAll := .f.
+   LOCAL lRet := .T., lRefAll := .F.
 
    HB_SYMBOL_UNUSED( cPaintID )
 
@@ -896,19 +896,19 @@ STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
 
    CASE nKey == K_PGDN
       oBrowse:pageDown()
-      lRefAll := .t.
+      lRefAll := .T.
 
    CASE nKey == K_PGUP
       oBrowse:pageUp()
-      lRefAll := .t.
+      lRefAll := .T.
 
    CASE nKey == K_CTRL_PGUP
       oBrowse:goTop()
-      lRefAll := .t.
+      lRefAll := .T.
 
    CASE nKey == K_CTRL_PGDN
       oBrowse:goBottom()
-      lRefAll := .t.
+      lRefAll := .T.
 
    CASE nKey == K_HOME
       oBrowse:home()
@@ -936,7 +936,7 @@ STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
 
    CASE nKey == K_SBTHUMBTRACKVERT
       OrdKeyGoTo( oWvtBrw:oVBar:GetPos() )
-      lRefAll := .t.
+      lRefAll := .T.
 
    CASE nKey == K_SBTHUMBTRACKHORZ
       oBrowse:ColPos := oWvtBrw:oHBar:GetPos()
@@ -966,7 +966,7 @@ STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
       oBrowse:right()
 
    OTHERWISE
-      lRet := .f.
+      lRet := .F.
 
    ENDCASE
 

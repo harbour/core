@@ -128,7 +128,7 @@ FUNCTION ToChar( xTxt, cSeparator, lDebug )
          IF n != nLen
             cOut += cSeparator
          ENDIF
-      NEXT n
+      NEXT
       IF lDebug
          cOut += "}"
       ENDIF
@@ -151,7 +151,7 @@ FUNCTION ToChar( xTxt, cSeparator, lDebug )
             IF n != nLen
                cOut += cSeparator
             ENDIF
-         NEXT n
+         NEXT
          cOut += "}"
       ELSE
          cOut := ToChar( xTxt:Run(), cSeparator, lDebug )

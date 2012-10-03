@@ -35,7 +35,7 @@ proc main()
    aFill( s_aCounters, 0 )
    aThreads := {}
    s_hMutex := hb_mutexCreate()
-   lEnd := .f.
+   lEnd := .F.
    ? "Starting threads: "
    for i := 1 to N_THREADS
       aadd( aThreads, hb_threadStart( @thFunc(), i, @lEnd ) )
@@ -43,7 +43,7 @@ proc main()
    next
    ? "Wait 5 seconds or hit any key..."
    inkey( 5 )
-   lEnd := .t.
+   lEnd := .T.
    ? "Waiting for threads..."
    aEval( aThreads, {| x | hb_threadJoin( x ) } )
    ? "Threads joined"

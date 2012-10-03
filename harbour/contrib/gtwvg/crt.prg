@@ -155,11 +155,11 @@ CLASS WvgCrt  INHERIT  WvgWindow, WvgPartHandler
    DATA     sl_dragDrop
 
    /*  HARBOUR implementation */
-   DATA     resizable                             INIT  .t.
+   DATA     resizable                             INIT  .T.
    DATA     resizeMode                            INIT  HB_GTI_RESIZEMODE_FONT
    DATA     style                                 INIT  (WS_OVERLAPPED + WS_CAPTION + WS_SYSMENU + WS_SIZEBOX + WS_MINIMIZEBOX + WS_MAXIMIZEBOX)
    DATA     exStyle                               INIT  0
-   DATA     lModal                                INIT  .f.
+   DATA     lModal                                INIT  .F.
    DATA     pGTp
    DATA     pGT
    DATA     objType                               INIT  objTypeCrt
@@ -356,7 +356,7 @@ METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF ::visible
       Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )
-      ::lHasInputFocus := .t.
+      ::lHasInputFocus := .T.
    ENDIF
 
    RETURN Self
@@ -557,7 +557,7 @@ METHOD WvgCrt:setFontCompoundName()
 //
 
 METHOD WvgCrt:setFrameState( nState )
-   Local lSuccess := .f.
+   Local lSuccess := .F.
 
    DO CASE
 
@@ -627,7 +627,7 @@ METHOD WvgCrt:setSize( aSize, lPaint )
 METHOD WvgCrt:show()
 
    Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )
-   ::lHasInputFocus := .t.
+   ::lHasInputFocus := .T.
 
    RETURN Self
 

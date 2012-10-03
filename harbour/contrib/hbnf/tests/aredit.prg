@@ -15,7 +15,7 @@ PROCEDURE Main()
       ar[ 1, i ] := i                          //  1  ->  26  Numeric
       ar[ 2, i ] := Chr( Asc( "A" ) + i - 1 )  // "A" -> "Z"  Character
       ar[ 3, i ] := Chr( Asc( "Z" ) - i + 1 )  // "Z" -> "A"  Character
-   NEXT i
+   NEXT
    // Set Up aHeadings[] for column headings
    aHeadings  := { "Numbers", "Letters", "Reverse" }
    // Set Up Blocks Describing Individual Elements in Array ar[]

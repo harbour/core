@@ -222,12 +222,12 @@ STATIC FUNCTION Generate()
          /* TODO: Clear remaining (not matched) tags */
          /*
          cRes := ""
-         FOR i := 1 TO len( ::cContent )
+         FOR i := 1 TO Len( ::cContent )
             IF SubStr( ::cContent, i, 1 ) == "<" .AND. ;
                SubStr( ::cContent, i + 1, 1 ) == "#"
-               lFlag := .t.
+               lFlag := .T.
             ELSEIF SubStr( ::cContent, i, 1 ) == ">" .AND. lFlag
-               lFlag := .f.
+               lFlag := .F.
             ELSEIF ! lFlag
                cRes += SubStr( ::cContent, i, 1 )
             ENDIF
@@ -304,9 +304,9 @@ STATIC FUNCTION ProcessCGI()
 
             IF i > Len( cQuery ) .OR. SubStr( cQuery, i, 1 ) == "&"
 
-               AAdd( ::aQueryFields,                          ;
+               AAdd( ::aQueryFields, ;
                   { SubStr( cBuff, 1, At( "=", cBuff ) - 1 ), ;
-                  StrTran( SubStr( cBuff, At( "=", cBuff ) + 1,      ;
+                  StrTran( SubStr( cBuff, At( "=", cBuff ) + 1, ;
                   Len( cBuff ) - At( "=", cBuff ) + 1 ), "+", " " ) } )
                cBuff := ""
             ELSE

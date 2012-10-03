@@ -20,11 +20,11 @@
 FUNCTION MyAlert( cMsg, aOpt )
    LOCAL nSel, oCrt
 
-   oCrt := WvgCrt():New( , , { -1,-1 }, { 9, MaxCol()-6 }, , .t. )
-   oCrt:lModal := .t.
+   oCrt := WvgCrt():New( , , { -1,-1 }, { 9, MaxCol()-6 }, , .T. )
+   oCrt:lModal := .T.
    oCrt:icon   := "dia_excl.ico"
    oCrt:create()
-   oCrt:resizable := .t.
+   oCrt:resizable := .T.
 
    SetColor( 'N/W' )
    CLS
@@ -199,7 +199,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
 
    dispend()
 
-   lGo := .t.
+   lGo := .T.
    do while lGo
       IF ( nKey := Inkey() ) == 0
          LOOP
@@ -215,33 +215,33 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
       do case
       case nKey == K_RIGHT_DOWN
          sel := 0
-         lGo := .f.
+         lGo := .F.
       case nKey == K_LEFT_DOWN
          if nMRow == nTop
             if nMCol >= nLeft .and. nMCol <= nLeft+3
                sel := 0
-               lGo := .f.
+               lGo := .F.
             endif
          elseif nMRow == nBtnRow
             for i := 1 to len( nBtnCol_ )
                if nMCol >= nBtnCol_[ i ] .and. nMCol <= nBtnCol_[ i ] + len( aButtons_[ i ] )+4
                   sel := i
-                  lGo := .f.
+                  lGo := .F.
                endif
             next
          endif
       case nKey == K_ESC
          sel := 0
-         lGo := .f.
+         lGo := .F.
       case nKey == K_ENTER
-         lGo := .f.
+         lGo := .F.
       case nKey == K_LEFT  .or. nKey == K_DOWN
          sel--
       case nKey == K_RIGHT .or. nKey == K_UP
          sel++
       case ( nTrg := ascan( aTrg_, upper( chr( nKey ) ) ) ) > 0
          sel := nTrg
-         lGo := .f.
+         lGo := .F.
       otherwise
          if setkey( nKey ) != nil
             eval( setKey( nKey ) )
@@ -329,9 +329,9 @@ FUNCTION DoModalWindow()
     */
    oCrt := WvgCrt():New( , , { 4,8 }, { 12,49 }, , .T. )
 
-   oCrt:lModal      := .t.
-   oCrt:resizable   := .f.
-   oCrt:closable    := .f.
+   oCrt:lModal      := .T.
+   oCrt:resizable   := .F.
+   oCrt:closable    := .F.
    oCrt:title       := 'Information! [R:4 C:8]'
 
    oCrt:rbUp        := {|| DispOutAt( maxrow(), 0, padc( 'rbUp', maxcol()+1 ),'W+/R*' ) }
@@ -348,7 +348,7 @@ FUNCTION DoModalWindow()
    //
    SetColor( 'N/W' )
    CLS
-   do while .t.
+   do while .T.
       nSel := Just_Alert( 'I am in modal window !;< Try: MMove LBUp RBUp >;Click Parent Window', { 'OK' } )
 
       if nSel == 0  .or. nSel == 1

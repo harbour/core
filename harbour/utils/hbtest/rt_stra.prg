@@ -254,7 +254,7 @@ PROCEDURE Main_STRA()
    RETURN
 
 PROCEDURE Comp_Str()
-   LOCAL old_exact := SET( _SET_EXACT, .F. )
+   LOCAL old_exact := Set( _SET_EXACT, .F. )
 
    TEST_LINE( "ABC" == "", .F. )
    TEST_LINE( "ABC" = "", .T. )
@@ -362,11 +362,11 @@ PROCEDURE Comp_Str()
    TEST_LINE( "DEF" > "ABCD", .T. )
    TEST_LINE( "DEF" >= "ABCD", .T. )
 
-   SET( _SET_EXACT, old_exact )
+   Set( _SET_EXACT, old_exact )
    RETURN
 
 PROCEDURE Exact_Str()
-   LOCAL old_exact := SET( _SET_EXACT, .T. )
+   LOCAL old_exact := Set( _SET_EXACT, .T. )
 
    TEST_LINE( "ABC" == "", .F. )
    TEST_LINE( "ABC" = "", .F. )
@@ -474,7 +474,7 @@ PROCEDURE Exact_Str()
    TEST_LINE( "DEF" > "ABCD", .T. )
    TEST_LINE( "DEF" >= "ABCD", .T. )
 
-   SET( _SET_EXACT, old_exact )
+   Set( _SET_EXACT, old_exact )
 
    RETURN
 

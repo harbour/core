@@ -180,7 +180,7 @@ local ch
    SET DATE ANSI
    SET SCOREBOARD OFF
    //wvw_SetPaintRefresh(0)
-   wvw_SetVertCaret(.t.)
+   wvw_SetVertCaret(.T.)
    wvw_pbSetFont(, "Tahoma", 14)
    nCursor := setcursor(0)
 
@@ -199,7 +199,7 @@ local ch
    s_afontinfo := WVW_getfontinfo()
 
    hb_gtInfo( HB_GTI_INKEYFILTER, {| nkey | nAfterInkey(nkey) } )
-   WVW_SETMOUSEMOVE(,.t.)                           //required by wvwmouse
+   WVW_SETMOUSEMOVE(,.T.)                           //required by wvwmouse
    kF1 := SetKey( K_F1, {|| xHelp() } )
    kF2 := SetKey( K_F2, {|| xDebugInfo() } )
    kF3 := SetKey( K_F3, {|| Demo_Console() } )
@@ -251,7 +251,7 @@ local ch
    CreateToolbar(nCurWindow)
 
    ResetMiscObjects( nCurWindow )
-     AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,40, cLabel,6,, rgb(255,255,255), rgb(198,198,198), 'Arial', s_afontinfo[2], , , , , .t., .t. ) } )
+     AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,40, cLabel,6,, rgb(255,255,255), rgb(198,198,198), 'Arial', s_afontinfo[2], , , , , .T., .T. ) } )
 
    wvwm_ResetMouseObjects( nCurWindow )
      wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info!",   maxrow()-2,67, , , {|| xDebugInfo() } ))
@@ -262,16 +262,16 @@ local ch
      wvwm_AddMouseObjects( nCurWindow, oMouse )
 
      oMouse := WVWMouseButton():New("None",   maxrow()-2,67-11-11, , , {|| lboxmessage("none") }, 2, NIL )
-     oMouse:Enable(.t.)
+     oMouse:Enable(.T.)
      wvwm_AddMouseObjects( nCurWindow, oMouse )
 
      wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Hard",   maxrow()-2,67-11-11-11, , , {|| lboxmessage("hard") }, 3, NIL ))
      oMouse := WVWMouseButton():New("Disabled",   maxrow()-2,67-11-11-11-11, , , {|| xDebugInfo() } )
-     oMouse:Enable(.f.)
+     oMouse:Enable(.F.)
      wvwm_AddMouseObjects( nCurWindow, oMouse )
 
      oMouse := WVWMouseButton():New("Tight",   maxrow()-2,67-11-11-11-11-11, , , {|| lboxmessage("tight") } )
-     oMouse:lTight := .t.
+     oMouse:lTight := .T.
      wvwm_AddMouseObjects( nCurWindow, oMouse )
 
    * 20070525 the real pushbutton, easier and better looking. Nothing to do with wvwmouse.prg.
@@ -350,7 +350,7 @@ local nCursor
 local cColor
 local ch
 local lMouseMove
-local lEchoing := .f.
+local lEchoing := .F.
    default nTop to 2
    default nLeft to 2
    default nBottom to nTop+10
@@ -367,7 +367,7 @@ local lEchoing := .f.
 
    nCursor := setcursor(SC_NORMAL)
    cColor := setcolor("W+/N")
-   lMouseMove := WVW_SETMOUSEMOVE(,.f.)
+   lMouseMove := WVW_SETMOUSEMOVE(,.F.)
    nMaxrow := maxrow(); nMaxcol := maxcol()
 
    ResetMiscObjects( nCurWindow )
@@ -449,7 +449,7 @@ memvar x
    WVW_SetIcon(, 'vr_1.ico' )
 
    ResetMiscObjects( nCurWindow )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,nRight-nLeft, cLabel,2,, rgb(255,255,255), rgb(198,198,198), 'Arial', s_afontinfo[2], , , , , .t., .t. ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,nRight-nLeft, cLabel,2,, rgb(255,255,255), rgb(198,198,198), 'Arial', s_afontinfo[2], , , , , .T., .T. ) } )
    AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, 7-nTop, 61-nLeft, 13-nTop, 70-nLeft ) } )
    AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxGroup( nWindow, 15-nTop, 59-nLeft, 18-nTop, 72-nLeft ) } )
    AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxGroup( nWindow, 5-nTop, 6-nLeft, 19-nTop, 44-nLeft ) } )
@@ -496,7 +496,7 @@ RETURN  //Demo_Get()
 FUNCTION DEMO_Browse()
 
    LOCAL nKey, bBlock, oBrowse , i
-   LOCAL lEnd    := .f.
+   LOCAL lEnd    := .F.
    LOCAL info_   := {}             //WVW_nOpenWindow() has not been performed, so...
    LOCAL nTop    :=  3             //pls notice that this is relative to PARENT window!
    LOCAL nLeft   :=  3             //pls notice that this is relative to PARENT window!
@@ -583,7 +583,7 @@ FUNCTION DEMO_Browse()
 
       do case
       case nKey == K_ESC .or. nKey == K_ENTER
-         lEnd := .t.
+         lEnd := .T.
          loop
 
       case nKey == K_DOWN
@@ -677,8 +677,8 @@ local lNeedStabilize
 
    nOldWin := wvw_nSetCurWindow(nWinNum)
 
-   lNeedStabilize := .f.
-   do while .t.  //dummy loop
+   lNeedStabilize := .F.
+   do while .T.  //dummy loop
       do case
       case XBmsg == 0 //SB_LINEUP
          if ordKeyNo() == 1; exit; endif
@@ -694,10 +694,10 @@ local lNeedStabilize
          oBrowse:pagedown()
       otherwise
          * ignore
-         lNeedStabilize := .f.
+         lNeedStabilize := .F.
          exit
       endcase
-      lNeedStabilize := .t.
+      lNeedStabilize := .T.
       exit
    enddo //dummy loop
 
@@ -720,8 +720,8 @@ local lNeedStabilize
 
    nOldWin := wvw_nSetCurWindow(nWinNum)
 
-   lNeedStabilize := .f.
-   do while .t.  //dummy loop
+   lNeedStabilize := .F.
+   do while .T.  //dummy loop
       do case
       case XBmsg == 0 //SB_LINELEFT
          if oBrowse:colPos== 1; exit; endif
@@ -737,10 +737,10 @@ local lNeedStabilize
          oBrowse:panright()
       otherwise
          * ignore
-         lNeedStabilize := .f.
+         lNeedStabilize := .F.
          exit
       endcase
-      lNeedStabilize := .t.
+      lNeedStabilize := .T.
       exit
    enddo //dummy loop
    if lNeedStabilize
@@ -910,7 +910,7 @@ return NIL
 function CreateToolbar(nWinNum)
 //for toolbar:
 local nSysBitmap := 1     //0:none 1:small 2:large
-local lDisplayText := .f. //text will be displayed as tooltip instead
+local lDisplayText := .F. //text will be displayed as tooltip instead
 local hWndTB
 local ldefault
 
@@ -960,14 +960,14 @@ return NIL
 function xDisableToolbar(nWinNum)
 local i
   for i := 0 to wvw_tbButtonCount(nWinNum)-1
-     WVW_TBEnableButton(nWinNum, i, .f.)
+     WVW_TBEnableButton(nWinNum, i, .F.)
   next
 return NIL
 
 function xEnableToolbar(nWinNum)
 local i
   for i := 0 to wvw_tbButtonCount(nWinNum)-1
-     WVW_TBEnableButton(nWinNum, i, .t.)
+     WVW_TBEnableButton(nWinNum, i, .T.)
   next
 return NIL
 
@@ -978,11 +978,11 @@ function ResetMiscObjects( nWinNum )
       aadd( s_amiscobjlist, {} )
    enddo
    s_amiscobjlist[ nWinNum+1 ] := {}
-return .t.
+return .T.
 
 function AddMiscObjects( nWinNum, bAction )
    aadd( s_amiscobjlist[ nWinNum+1 ], bAction )
-return .t.
+return .T.
 
 
 // inkey() handler **************************************
@@ -1065,7 +1065,7 @@ return nkey //nMenuChecker()
 function lBoxMessage(cMsg, cTitle)
    default cTitle to "Info"
    win_messagebox(WVW_GETWINDOWHANDLE(), cMsg, cTitle, MB_OK + MB_ICONINFORMATION + MB_SYSTEMMODAL)
-return .t.
+return .T.
 
 function lYesNo(cMsg, cTitle)
    default cTitle to "Konfirmasi"
@@ -1079,7 +1079,7 @@ function xDebugInfo()
 static s_nfh := 0
    MSETPOS(maxrow(), maxcol())
 
-   //SETMOUSE(.t., maxrow(), maxcol())
+   //SETMOUSE(.T., maxrow(), maxcol())
 
    //WVW_SETMOUSEPOS(WVW_nNumWindows()-1, maxrow(), maxcol())
 
@@ -1160,7 +1160,7 @@ return nNumber
 /* Note: width < 0 appears better, but mouse caption will look bad */
 FUNCTION SetDefaultWindowSize()
   //x was: LOCAL Result:= SetMode(32,98), ScreenWidth
-  LOCAL Result:= .t., ScreenWidth
+  LOCAL Result:= .T., ScreenWidth
   SetMode(25,80)
   IF Result
      screenWidth := Wvw_GetScreenWidth()

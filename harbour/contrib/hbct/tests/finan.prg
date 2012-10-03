@@ -56,7 +56,7 @@
 
 PROCEDURE Main()
 
-   CTINIT()
+   ctinit()
 
    SET DECIMAL TO 3
    CLS

@@ -207,7 +207,7 @@ METHOD minimize() CLASS WvgTabPage
 
    ::hide()
 
-   RETURN .f.
+   RETURN .F.
 
 //
 
@@ -215,7 +215,7 @@ METHOD maximize() CLASS WvgTabPage
 
    ::show()
 
-   RETURN .t.
+   RETURN .T.
 
 //
 

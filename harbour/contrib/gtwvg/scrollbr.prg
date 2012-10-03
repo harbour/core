@@ -118,15 +118,15 @@ typedef struct tagRECT { ;
 
 CLASS WvgScrollBar  INHERIT  WvgWindow, WvgDataRef
 
-   DATA     autoTrack                             INIT .t.
+   DATA     autoTrack                             INIT .T.
    DATA     range                                 INIT {0,1}
    DATA     scrollBoxSize                         INIT -1
    DATA     type                                  INIT WVGSCROLL_HORIZONTAL
-   DATA     excludeScrollBox                      INIT .f.
+   DATA     excludeScrollBox                      INIT .F.
 
    DATA     sl_xbeSB_Scroll
 
-   DATA     lTracking                             INIT .f.
+   DATA     lTracking                             INIT .F.
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -229,50 +229,50 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
       CASE nScrMsg == SB_LEFT
          nCommand := WVGSB_PREVPOS
          IF nScrPos > ::range[ 1 ]
-            WAPI_SetScrollPos( ::pWnd, SB_CTL, --nScrPos, .t. )
+            WAPI_SetScrollPos( ::pWnd, SB_CTL, --nScrPos, .T. )
          ENDIF
 
       CASE nScrMsg == SB_RIGHT
          nCommand := WVGSB_NEXTPOS
          IF nScrPos < ::range[ 2 ]
-            WAPI_SetScrollPos( ::pWnd, SB_CTL, ++nScrPos, .t. )
+            WAPI_SetScrollPos( ::pWnd, SB_CTL, ++nScrPos, .T. )
          ENDIF
 
       CASE nScrMsg == SB_LINELEFT
          nCommand := WVGSB_PREVPAGE
          IF nScrPos > ::range[ 1 ]
-            WAPI_SetScrollPos( ::pWnd, SB_CTL, --nScrPos, .t. )
+            WAPI_SetScrollPos( ::pWnd, SB_CTL, --nScrPos, .T. )
          ENDIF
 
       CASE nScrMsg == SB_LINERIGHT
          nCommand := WVGSB_NEXTPAGE
          IF nScrPos < ::range[ 2 ]
-            WAPI_SetScrollPos( ::pWnd, SB_CTL, ++nScrPos, .t. )
+            WAPI_SetScrollPos( ::pWnd, SB_CTL, ++nScrPos, .T. )
          ENDIF
 
       CASE nScrMsg == SB_PAGELEFT
          nCommand := WVGSB_PREVPAGE
          IF nScrPos > ::range[ 1 ]
-            WAPI_SetScrollPos( ::pWnd, SB_CTL, --nScrPos, .t. )
+            WAPI_SetScrollPos( ::pWnd, SB_CTL, --nScrPos, .T. )
          ENDIF
 
       CASE nScrMsg == SB_PAGERIGHT
          nCommand := WVGSB_NEXTPAGE
          IF nScrPos < ::range[ 2 ]
-            WAPI_SetScrollPos( ::pWnd, SB_CTL, ++nScrPos, .t. )
+            WAPI_SetScrollPos( ::pWnd, SB_CTL, ++nScrPos, .T. )
          ENDIF
 
       CASE nScrMsg == SB_THUMBPOSITION
          nCommand := WVGSB_SLIDERTRACK
-         WAPI_SetScrollPos( ::pWnd, SB_CTL, nScrPos, .t. )
+         WAPI_SetScrollPos( ::pWnd, SB_CTL, nScrPos, .T. )
 
       CASE nScrMsg == SB_THUMBTRACK
          nCommand := WVGSB_ENDTRACK
-         WAPI_SetScrollPos( ::pWnd, SB_CTL, nScrPos, .t. )
+         WAPI_SetScrollPos( ::pWnd, SB_CTL, nScrPos, .T. )
 
       CASE nScrMsg == SB_ENDSCROLL
          nCommand := WVGSB_ENDSCROLL
-         WAPI_SetScrollPos( ::pWnd, SB_CTL, nScrPos, .t. )
+         WAPI_SetScrollPos( ::pWnd, SB_CTL, nScrPos, .T. )
 
       ENDCASE
 
@@ -301,50 +301,50 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
       CASE nScrMsg == SB_TOP
          nCommand := WVGSB_TOP
          IF nScrPos > ::range[ 1 ]
-            WAPI_SetScrollPos( ::pWnd, SB_CTL, --nScrPos, .t. )
+            WAPI_SetScrollPos( ::pWnd, SB_CTL, --nScrPos, .T. )
          ENDIF
 
       CASE nScrMsg == SB_BOTTOM
          nCommand := WVGSB_BOTTOM
          IF nScrPos < ::range[ 2 ]
-            WAPI_SetScrollPos( ::pWnd, SB_CTL, ++nScrPos, .t. )
+            WAPI_SetScrollPos( ::pWnd, SB_CTL, ++nScrPos, .T. )
          ENDIF
 
       CASE nScrMsg == SB_LINEUP
          nCommand := WVGSB_PREVPOS
          IF nScrPos > ::range[ 1 ]
-            WAPI_SetScrollPos( ::pWnd, SB_CTL, --nScrPos, .t. )
+            WAPI_SetScrollPos( ::pWnd, SB_CTL, --nScrPos, .T. )
          ENDIF
 
       CASE nScrMsg == SB_LINEDOWN
          nCommand := WVGSB_NEXTPOS
          IF nScrPos < ::range[ 2 ]
-            WAPI_SetScrollPos( ::pWnd, SB_CTL, ++nScrPos, .t. )
+            WAPI_SetScrollPos( ::pWnd, SB_CTL, ++nScrPos, .T. )
          ENDIF
 
       CASE nScrMsg == SB_PAGEUP
          nCommand := WVGSB_PREVPAGE
          IF nScrPos > ::range[ 1 ]
-            WAPI_SetScrollPos( ::pWnd, SB_CTL, --nScrPos, .t. )
+            WAPI_SetScrollPos( ::pWnd, SB_CTL, --nScrPos, .T. )
          ENDIF
 
       CASE nScrMsg == SB_PAGEDOWN
          nCommand := WVGSB_NEXTPAGE
          IF nScrPos < ::range[ 2 ]
-            WAPI_SetScrollPos( ::pWnd, SB_CTL, ++nScrPos, .t. )
+            WAPI_SetScrollPos( ::pWnd, SB_CTL, ++nScrPos, .T. )
          ENDIF
 
       CASE nScrMsg == SB_THUMBPOSITION
          nCommand := WVGSB_SLIDERTRACK
-         WAPI_SetScrollPos( ::pWnd, SB_CTL, nScrPos, .t. )
+         WAPI_SetScrollPos( ::pWnd, SB_CTL, nScrPos, .T. )
 
       CASE nScrMsg == SB_THUMBTRACK
          nCommand := WVGSB_ENDTRACK
-         WAPI_SetScrollPos( ::pWnd, SB_CTL, nScrPos, .t. )
+         WAPI_SetScrollPos( ::pWnd, SB_CTL, nScrPos, .T. )
 
       CASE nScrMsg == SB_ENDSCROLL
          nCommand := WVGSB_ENDSCROLL
-         WAPI_SetScrollPos( ::pWnd, SB_CTL, nScrPos, .t. )
+         WAPI_SetScrollPos( ::pWnd, SB_CTL, nScrPos, .T. )
 
       ENDCASE
 
@@ -387,7 +387,7 @@ METHOD setRange( aRange ) CLASS WvgScrollBar
       aOldRange := ::range
    ENDIF
 
-   IF WAPI_SetScrollRange( ::pWnd, SB_CTL, aRange[ 1 ], aRange[ 2 ], .t. )
+   IF WAPI_SetScrollRange( ::pWnd, SB_CTL, aRange[ 1 ], aRange[ 2 ], .T. )
       ::range := aRange
    ENDIF
 

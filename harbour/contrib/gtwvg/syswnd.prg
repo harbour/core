@@ -186,7 +186,7 @@ METHOD WvgSysWindow:show()
 
 METHOD WvgSysWindow:setPos( aPos )
 
-   WVG_SetWindowPosition( ::hWnd, aPos[ 1 ], aPos[ 2 ], .f. )
+   WVG_SetWindowPosition( ::hWnd, aPos[ 1 ], aPos[ 2 ], .F. )
 
    RETURN Self
 
@@ -284,7 +284,7 @@ CLASS WvgFontDialog INHERIT WvgSysWindow
    DATA     oScreenPS
    DATA     oPrinterPS
    DATA     aPos                                  INIT   { 0, 0 }
-   DATA     ok                                    INIT   .f.
+   DATA     ok                                    INIT   .F.
 
    METHOD   wndProc( hWnd, nMessage, nwParam, nlParam )
    METHOD   GetWvgFont( aFont )                   PROTECTED
@@ -328,10 +328,10 @@ METHOD create( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialo
    ::aPos       := aPos
 
    IF ::viewPrinterFonts .and. ::oPrinterPS == NIL
-      ::viewPrinterFonts := .f.
+      ::viewPrinterFonts := .F.
    ENDIF
    IF ( ! ::viewScreenFonts .and. ! ::viewPrinterFonts )
-      ::viewScreenFonts := .t.
+      ::viewScreenFonts := .T.
    ENDIF
 
    ::WvgSysWindow:create( oParent, oOwner )
@@ -356,33 +356,33 @@ METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
          WVG_SetWindowText( ::hWnd, ::title )
       ENDIF
       IF !( ::buttonCancel )
-         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,IDCANCEL ), .f. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,IDCANCEL ), .F. )
       ENDIF
       IF !( ::buttonApply )
-         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1026 ), .f. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1026 ), .F. )
       ENDIF
       IF !( ::buttonHelp )
-         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1038 ), .f. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1038 ), .F. )
       ENDIF
       IF !( ::strikeOut )
-         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1040 ), .f. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1040 ), .F. )
       ENDIF
       IF !( ::underscore )
-         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1041 ), .f. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1041 ), .F. )
       ENDIF
       IF !( ::name )
-         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1136 ), .f. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1136 ), .F. )
       ENDIF
       IF !( ::style )
-         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1137 ), .f. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1137 ), .F. )
       ENDIF
       IF !( ::size )
-         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1138 ), .f. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1138 ), .F. )
       ENDIF
 
       IF ::aPos[ 1 ] > 0 .OR. ::aPos[ 2 ] > 0
          aRect := WVG_GetWindowRect( ::hWnd )
-         WVG_MoveWindow( ::hWnd, ::aPos[ 1 ], ::aPos[ 2 ], aRect[3]-aRect[1], aRect[4]-aRect[2], .f. )
+         WVG_MoveWindow( ::hWnd, ::aPos[ 1 ], ::aPos[ 2 ], aRect[3]-aRect[1], aRect[4]-aRect[2], .F. )
       ENDIF
 
       RETURN 1
@@ -396,7 +396,7 @@ METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
       DO CASE
 
       CASE nL == IDOK
-         ::ok := .t.
+         ::ok := .T.
          IF HB_ISBLOCK( ::sl_activateOk )
             eval( ::sl_activateOk, ::GetWvgFont(), NIL, Self )
          ENDIF
@@ -430,7 +430,7 @@ METHOD display( nMode ) CLASS WvgFontDialog
       hWnd := WVG_GetDesktopWindow()
    ENDIF
 
-   ::ok := .f.
+   ::ok := .F.
    aInfo := Wvg_ChooseFont( hWnd, {| h, m, w, l | ::wndProc( h, m, w, l ) }, ::familyName, ;
                             ::nominalPointSize, ::viewScreenFonts, ::viewPrinterFonts )
    IF !( ::ok )

@@ -36,7 +36,7 @@ local ch,ncursor
    setcolor("N/W")
    WVW_SetTitle(NIL,"Quick Survey")
    WVW_NoClose(NIL)
-   WVW_SetAltF4Close(.f.)
+   WVW_SetAltF4Close(.F.)
    WVW_SetLineSpacing(NIL,4)
    //WVW_SetLSpaceColor(NIL,7)
    WVW_cbSetFont(NIL, "Arial", 16)
@@ -89,8 +89,8 @@ local ch,ncursor
       endcase
    enddo
 
-   wvw_cbEnable(NIL, nCBid, .f.)
-   wvw_pbEnable(NIL, nPBid, .f.)
+   wvw_cbEnable(NIL, nCBid, .F.)
+   wvw_pbEnable(NIL, nPBid, .F.)
    @ 6,1 say "Your response is:"
    @ 7,1 say wvw_cbGetCurText(NIL, nCBid)
    @ 9,1 say s_cThankYou
@@ -105,17 +105,17 @@ static function CBhandler(nWinNum,nId,nEvent,nIndex, nPBid)
    case nEvent==4 //CBN_KILLFOCUS
       * none
       if nIndex==0
-         wvw_pbEnable(nWinNum, nPBid, .t.)
+         wvw_pbEnable(nWinNum, nPBid, .T.)
       else
-         wvw_pbEnable(nWinNum, nPBid, .f.)
+         wvw_pbEnable(nWinNum, nPBid, .F.)
       endif
    case nEvent==1 //CBN_SELCHANGE
       if !wvw_cbIsDropped(nWinNum, nId)
          * nIndex is 0-based
          if nIndex==0
-            wvw_pbEnable(nWinNum, nPBid, .t.)
+            wvw_pbEnable(nWinNum, nPBid, .T.)
          else
-            wvw_pbEnable(nWinNum, nPBid, .f.)
+            wvw_pbEnable(nWinNum, nPBid, .F.)
          endif
          wvw_cbSetFocus(nWinNum, nId)
       endif

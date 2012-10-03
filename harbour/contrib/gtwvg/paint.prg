@@ -89,7 +89,7 @@ function WvtPaintObjects()
       tlbr_:= Wvt_GetPaintRect()
 
       for i := 1 to nBlocks
-         lExe := .t.
+         lExe := .T.
 
          if aBlocks[ i,3 ] != nil .and. !empty( aBlocks[ i,3 ] )
             /*  Check parameters against tlbr_ depending upon the
@@ -99,7 +99,7 @@ function WvtPaintObjects()
             case aBlocks[ i,3,1 ] == WVT_BLOCK_GRID_V
                b := aBlocks[ i,3,6 ]
                if len( b:aColumnsSep ) == 0
-                  lExe := .f.
+                  lExe := .F.
                else
                   nLeft  := b:aColumnsSep[ 1 ]
                   nRight := b:aColumnsSep[ len( b:aColumnsSep ) ]
@@ -107,7 +107,7 @@ function WvtPaintObjects()
                         tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; /* bootm > top    */
                         tlbr_[ 2 ] <= nRight + 1       .and. ; /* left  < right  */
                         tlbr_[ 4 ] >= nLeft  - 2             ) /* right > left   */
-                     lExe := .f.
+                     lExe := .F.
                   endif
                endif
 
@@ -116,7 +116,7 @@ function WvtPaintObjects()
                      tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; /* bootm > top   */
                      tlbr_[ 2 ] <= aBlocks[ i,3,5 ] .and. ; /* left  < righ  */
                      tlbr_[ 4 ] >= aBlocks[ i,3,3 ]       ) /* right > left  */
-                  lExe := .f.
+                  lExe := .F.
                endif
 
             otherwise
@@ -127,7 +127,7 @@ function WvtPaintObjects()
                      tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; /* bootm >= top     */
                      tlbr_[ 2 ] <= aBlocks[ i,3,5 ] .and. ; /* left  < right    */
                      tlbr_[ 4 ] >= aBlocks[ i,3,3 ]       ) /* right > left     */
-                  lExe := .f.
+                  lExe := .F.
                endif
             endcase
          endif
@@ -200,7 +200,7 @@ function wvg_DelPaint( cID, nAction )
    if ( n := ascan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
       if ( n1 := ascan( t_paint_[ n, 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
          xData := t_paint_[ n,2,n1,2 ]
-         t_paint_[ n,2,n1,2 ] := {|| .t. }
+         t_paint_[ n,2,n1,2 ] := {|| .T. }
       endif
    endif
 
@@ -211,7 +211,7 @@ function wvg_DelPaint( cID, nAction )
 function wvg_PurgePaint( cID,lDummy )
    local n, aPaint
 
-   DEFAULT lDummy TO .f.
+   DEFAULT lDummy TO .F.
 
    if ( n := ascan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
       aPaint := t_paint_[ n ]
@@ -230,7 +230,7 @@ function wvg_PurgePaint( cID,lDummy )
 function wvg_InsertPaint( cID, aPaint, lSet )
    local n
 
-   DEFAULT lSet TO .f.
+   DEFAULT lSet TO .F.
 
    if ( n := ascan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
       t_paint_[ n ] := aPaint
@@ -476,7 +476,7 @@ Function Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
       xTemplate := acnDlg
    endif
 
-   nResult := Wvt_CreateDialogModal( xTemplate, .f., cbDlgProc, nDlgMode, hWndParent )
+   nResult := Wvt_CreateDialogModal( xTemplate, .F., cbDlgProc, nDlgMode, hWndParent )
 
    Wvg_SetFocus( hWndParent )
 
@@ -727,8 +727,8 @@ FUNCTION Wvt_GetWindowHandle()
 
 FUNCTION Wvt_CenterWindow( lCenter, lRePaint )
 
-   DEFAULT lCenter  TO .t.
-   DEFAULT lRePaint TO .f.
+   DEFAULT lCenter  TO .T.
+   DEFAULT lRePaint TO .F.
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
 
@@ -736,8 +736,8 @@ FUNCTION Wvt_CenterWindow( lCenter, lRePaint )
 
 FUNCTION Wvt_WindowCentre( lCenter, lRePaint )
 
-   DEFAULT lCenter  TO .t.
-   DEFAULT lRePaint TO .f.
+   DEFAULT lCenter  TO .T.
+   DEFAULT lRePaint TO .F.
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
 
@@ -747,7 +747,7 @@ FUNCTION Wvt_ProcessMessages()
 
    Hb_GtInfo( HB_GTI_SPEC, HB_GTS_PROCESSMESSAGES )
 
-   RETURN .t.
+   RETURN .T.
 
 //
 

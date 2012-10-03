@@ -40,7 +40,7 @@ static s_amiscobjlist := {}      //x misc object list (actually: list of codeblo
 proc main
 local i,j
 #ifdef __GTWVW__
-local lMainCoord := WVW_SetMainCoord( .t. )
+local lMainCoord := WVW_SetMainCoord( .T. )
 local nMaxRow := maxrow(), nMaxCol := maxcol()
    WVW_SetFont(,"Lucida Console",16,-8)
    WVW_SetCodePage(,255)
@@ -85,7 +85,7 @@ local cName := padr("Name",20)
 local cAddr := padr("Address",25)
 local cPhone:= padr("Phone",15)
 local cFax  := padr("Fax",15)
-local lDone := .f.
+local lDone := .F.
 local getlist := {}
 local oldCurs := setcursor(SC_NORMAL)
 #ifdef __GTWVW__
@@ -121,7 +121,7 @@ return //xGet1()
    for illustration purposes only */
 FUNCTION xBrowse1()
    LOCAL nKey, bBlock, oBrowse , i
-   LOCAL lEnd    := .f.
+   LOCAL lEnd    := .F.
    LOCAL info_   := {}
    LOCAL nTop    :=  6
    LOCAL nLeft   :=  3
@@ -277,22 +277,22 @@ function lMessage(cMsg)
 
 #ifndef __GTWVW__
 
-* displays a message on maxrow() and returns .t.
+* displays a message on maxrow() and returns .T.
 local cOldColor := setcolor(s_cStdColor)
   @ maxrow(), 0 say padc(cMsg, maxcol()+1)
   setcolor(cOldColor)
 
 #ELSE
 
-* displays a message on status bar of Main Window and returns .t.
+* displays a message on status bar of Main Window and returns .T.
 wvw_SBsettext(0, 0, cMsg)
 
 #endif
 
-return .t.
+return .T.
 
 function lYesNo(cMsg)
-* display cmsg with Yes/No option, returns .t. if Yes selected
+* display cmsg with Yes/No option, returns .T. if Yes selected
 local nTopLine, ;
       nLeft := 5, ;
       nBotLine := maxrow()-2,;
@@ -369,7 +369,7 @@ local oldColor := setcolor(s_cStdColor)
 
    setcursor(oldCurs)
    setcolor(oldColor)
-return .t.
+return .T.
 
 FUNCTION ZNEWWINDOW(wtype,r1,c1,r2,c2,ctitle, ccolor)
 * Draw a new window on screen and register it in window list
@@ -463,11 +463,11 @@ function ResetMiscObjects( nWinNum )
       aadd( s_amiscobjlist, {} )
    enddo
    s_amiscobjlist[ nWinNum+1 ] := {}
-return .t.
+return .T.
 
 function AddMiscObjects( nWinNum, bAction )
    aadd( s_amiscobjlist[ nWinNum+1 ], bAction )
-return .t.
+return .T.
 
 
 #endif

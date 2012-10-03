@@ -319,7 +319,7 @@ METHOD SampleLabels() CLASS HBLabelForm
          // Add the spaces between the label lines
          FOR nField := 1 TO ::aLabelData[ LBL_LINES ]
             PrintIt()
-         NEXT nField
+         NEXT
       ENDIF
 
       // Prompt for more
@@ -382,7 +382,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
 
          ENDIF
 
-      NEXT nPathIndex
+      NEXT
 
    ENDIF
 

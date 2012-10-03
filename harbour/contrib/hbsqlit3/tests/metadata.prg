@@ -55,7 +55,7 @@
 //#define SQLITE_ENABLE_COLUMN_METADATA
 
 PROCEDURE main()
-   LOCAL lCreateIfNotExist := .f.
+   LOCAL lCreateIfNotExist := .F.
    LOCAL db := sqlite3_open( "new.s3db", lCreateIfNotExist )
 
    IF ! Empty( db )

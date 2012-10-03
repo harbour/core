@@ -56,21 +56,21 @@ PROCEDURE Main()
 
    LOCAL n
 
-   CTINIT()
+   ctinit()
 
    SET DECIMALS TO 15
 
-   for n := 1 TO 1000
-      OutStd( Str( n,20,15 ) + ": " + Str( mantissa(n ),20,15 ) + " " + Str( exponent(n ),4 ) + hb_eol() )
-      OutStd( Str( Sqrt(n ),20,15 ) + ": " + Str( mantissa(Sqrt(n ) ),20,15 ) + " " + Str( exponent(Sqrt(n ) ),4 ) + hb_eol() )
-   next n
+   FOR n := 1 TO 1000
+      OutStd( Str( n, 20, 15 ) + ": " + Str( mantissa( n ), 20, 15 ) + " " + Str( exponent( n ), 4 ) + hb_eol() )
+      OutStd( Str( Sqrt( n ), 20, 15 ) + ": " + Str( mantissa( Sqrt( n ) ), 20, 15 ) + " " + Str( exponent( Sqrt( n ) ), 4 ) + hb_eol() )
+   NEXT n
 
-   // The call to str( infinity(.t.) ), generate a GPF.
-   // outstd(str(infinity(.t.))+str(mantissa( infinity(.t.) ))+str(exponent( infinity(.t.) )))
-   // outstd(str(infinity(.t.)) )
+   // The call to str( infinity(.T.) ), generate a GPF.
+// OutStd( Str( infinity( .T. ) ) + Str( mantissa( infinity( .T. ) ) ) + Str( exponent( infinity( .T. ) ) ) )
+// OutStd( Str( infinity( .T. ) ) )
 
-   OutStd( "       infinity(.t.): " + Str( mantissa(infinity( .T. ) ),20,15 ) + " " )
-   OutStd( Str( exponent(infinity( .T. ) ),4 ) + hb_eol() )
+   OutStd( "       infinity(.T.): " + Str( mantissa( infinity( .T. ) ), 20, 15 ) + " " )
+   OutStd( Str( exponent( infinity( .T. ) ), 4 ) + hb_eol() )
 
    CTEXIT()
 

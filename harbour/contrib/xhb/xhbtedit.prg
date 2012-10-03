@@ -134,7 +134,7 @@
    DATA  nTabWidth      INIT 5      // Size of Tab chars
    DATA  lEditAllow     INIT .T.    // Are changes to text allowed?
    DATA  lSaved         INIT .F.    // True if user exited editor with K_CTRL_W
-   DATA  lWordWrap      INIT .T.    // .f. earlier, True if word wrapping is active
+   DATA  lWordWrap      INIT .T.    // .F. earlier, True if word wrapping is active
    DATA  nWordWrapCol   INIT 0      // At which column word wrapping occurs
    DATA  lChanged       INIT .F.    // .T. if there are changes not saved
    DATA  lExitEdit      INIT .F.    // .T. if user requested to end Edit() method
@@ -361,7 +361,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 
    // Load text to internal array.
    // TODO: if at ME_INIT mode (when udf is called), the ::lWordWrap is toggled
-   //       to .F. (default is .t.), the <cString> should not be splitted, but
+   //       to .F. (default is .T.), the <cString> should not be splitted, but
    //       in the Text2Array function  the <cString> will be splitted in
    //       accordance with nLineLength.
    //

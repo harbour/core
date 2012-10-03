@@ -151,11 +151,11 @@ CLASS WvgWindow  INHERIT  WvgPartHandler
    DATA     title                                 INIT   " "
    DATA     icon                                  INIT   0
    DATA     closable                              INIT   .T.
-   DATA     resizable                             INIT   .t.
+   DATA     resizable                             INIT   .T.
    DATA     resizeMode                            INIT   0
    DATA     style                                 INIT   WS_OVERLAPPEDWINDOW
    DATA     exStyle                               INIT   0
-   DATA     lModal                                INIT   .f.
+   DATA     lModal                                INIT   .F.
    DATA     pGTp
    DATA     pGT
    DATA     objType                               INIT   objTypeNone
@@ -439,23 +439,23 @@ METHOD WvgWindow:captureMouse()
 
 METHOD WvgWindow:disable()
 
-   IF WVG_EnableWindow( ::hWnd, .f. )
-      ::is_enabled := .f.
-      RETURN .t.
+   IF WVG_EnableWindow( ::hWnd, .F. )
+      ::is_enabled := .F.
+      RETURN .T.
    ENDIF
 
-   RETURN .f.
+   RETURN .F.
 
 //
 
 METHOD WvgWindow:enable()
 
-   IF WVG_EnableWindow( ::hWnd, .t. )
-      ::is_enabled := .t.
-      RETURN .t.
+   IF WVG_EnableWindow( ::hWnd, .T. )
+      ::is_enabled := .T.
+      RETURN .T.
    ENDIF
 
-   RETURN .f.
+   RETURN .F.
 
 //
 
@@ -463,7 +463,7 @@ METHOD WvgWindow:hide()
 
    IF WVG_IsWindow( ::hWnd )
       WVG_ShowWindow( ::hWnd, SW_HIDE )
-      ::is_hidden := .t.
+      ::is_hidden := .T.
    ENDIF
 
    RETURN Self
@@ -608,19 +608,19 @@ METHOD WvgWindow:setSize( aSize, lPaint )
 //
 
 METHOD WvgWindow:isDerivedFrom( cClassORoObject )
-   LOCAL lTrue := .f.
+   LOCAL lTrue := .F.
    LOCAL cCls := __ObjGetClsName( self )
 
    /* Compares without Xbp or Wvg prefixes  */
 
    IF HB_ISSTRING( cClassORoObject )
       IF upper( substr( cClassORoObject,4 ) ) == upper( substr( cCls,4 ) )
-         lTrue := .t.
+         lTrue := .T.
       ENDIF
 
    ELSEIF HB_ISOBJECT( cClassORoObject )
       IF upper( substr( cClassORoObject:className,4 ) ) == upper( substr( cCls,4 ) )
-         lTrue := .t.
+         lTrue := .T.
       ENDIF
    ENDIF
 
@@ -631,8 +631,8 @@ METHOD WvgWindow:isDerivedFrom( cClassORoObject )
 METHOD WvgWindow:show()
 
    WVG_ShowWindow( ::hWnd, SW_NORMAL )
-   ::is_hidden      := .f.
-   ::lHasInputFocus := .t.
+   ::is_hidden      := .F.
+   ::lHasInputFocus := .T.
 
    RETURN Self
 

@@ -65,7 +65,7 @@ PROCEDURE Main()
 
    LOCAL X, Y
 
-   CTINIT()
+   ctinit()
 
    SET DECIMAL TO 14
    CLS

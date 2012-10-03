@@ -165,7 +165,7 @@ CLASS wvtDialog
    DATA   nKey
    DATA   hFonts                                  INIT {}
    DATA   lEventHandled
-   DATA   lTabStops                               INIT .f.
+   DATA   lTabStops                               INIT .F.
    DATA   bOnCreate
 
    ACCESS nObjects                                INLINE len( ::aObjects )
@@ -242,7 +242,7 @@ METHOD wvtDialog:New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth,nFont
    ::nKey                := 0
    ::cColor              := "N/W"
    ::nUseObj             := 0
-   ::lGui                := Wvt_SetGui( .f. )
+   ::lGui                := Wvt_SetGui( .F. )
 
    RETURN Self
 
@@ -251,7 +251,7 @@ METHOD wvtDialog:New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth,nFont
 METHOD wvtDialog:Create()
    LOCAL aPalette, i, j
 
-   ::oldToolTipActive := Wvt_SetToolTipActive( .t. )
+   ::oldToolTipActive := Wvt_SetToolTipActive( .T. )
    IF ::nTooltipWidth != nil
       Wvt_setTooltipWidth( ::nTooltipWidth )
    ENDIF
@@ -271,7 +271,7 @@ METHOD wvtDialog:Create()
    ::aOldPnt     := WvtSetPaint( {} )
 
    SetMode( ::nRows, ::nCols )
-   do while .t.
+   do while .T.
       IF Wvt_SetFont( ::cFont, ::nFontHeight, ::nFontWidth, ::nFontBold, ::nFontQuality )
          EXIT
       ENDIF
@@ -303,7 +303,7 @@ METHOD wvtDialog:Create()
    WvtSetPaint( wvg_GetPaint( ::cPaintBlockID ) )
 
    IF ascan( ::aObjects, {| o | o:lTabStop } ) > 0
-      ::lTabStops := .t.
+      ::lTabStops := .T.
    ENDIF
 
    ::Update()
@@ -374,7 +374,7 @@ METHOD wvtDialog:Event()
 METHOD wvtDialog:Execute()
 
    IF ::nObjects == 0
-      DO WHILE .t.
+      DO WHILE .T.
          IF inkey( 0.1, INKEY_ALL + HB_INKEY_GTEVENT ) == K_ESC
             EXIT
          ENDIF
@@ -391,7 +391,7 @@ METHOD wvtDialog:Execute()
 METHOD wvtDialog:Inkey()
    LOCAL  n, oObj, nID, i
 
-   ::lEventHandled := .f.
+   ::lEventHandled := .F.
    ::nUseObj       := 0
 
    ::nKey := ::Event()
@@ -406,7 +406,7 @@ METHOD wvtDialog:Inkey()
 
       CASE ::nKey == K_TAB
          IF ::lTabStops
-            DO WHILE .t.
+            DO WHILE .T.
                ::nCurObj++
                IF ::nCurObj > ::nObjects
                   ::nCurObj := 1
@@ -417,11 +417,11 @@ METHOD wvtDialog:Inkey()
             ENDDO
          ENDIF
 
-         ::lEventHandled := .t.
+         ::lEventHandled := .T.
 
       CASE ::nKey == K_SH_TAB
          IF ::lTabStops
-            DO WHILE .t.
+            DO WHILE .T.
                ::nCurObj--
                IF ::nCurObj < 1
                   ::nCurObj := ::nObjects
@@ -432,7 +432,7 @@ METHOD wvtDialog:Inkey()
             ENDDO
          ENDIF
 
-         ::lEventHandled := .t.
+         ::lEventHandled := .T.
 
       CASE ::nKey == K_MOUSEMOVE .or. ::nKey == K_MMLEFTDOWN
          ::MouseOver()
@@ -443,7 +443,7 @@ METHOD wvtDialog:Inkey()
          ELSE
             Wvt_SetPointer( WVT_IDC_ARROW )
          ENDIF
-         ::lEventHandled := .t.
+         ::lEventHandled := .T.
 
       ENDCASE
 
@@ -475,7 +475,7 @@ METHOD wvtDialog:Inkey()
             ::nUseObj := ::nObjOver
 
          ELSE
-            ::lEventHandled := .t.
+            ::lEventHandled := .T.
 
          ENDIF
       ENDIF
@@ -530,7 +530,7 @@ METHOD wvtDialog:Inkey()
             IF !( ::lEventHandled := ::aObjects[ ::nUseObj ]:LeftDown() )
                ::lEventHandled := ::Eval( ::aObjects[ ::nUseObj ]:bOnLeftDown )
                IF ::aObjects[ ::nUseObj ]:className == "WVTBROWSE"
-                  ::lEventHandled := .f.
+                  ::lEventHandled := .F.
                ENDIF
             ENDIF
          ENDIF
@@ -758,9 +758,9 @@ CLASS WvtObject
    DATA   xSettings
    DATA   cText
    DATA   cToolTip
-   DATA   lActive                                 INIT .t.
-   DATA   lAnimate                                INIT .f.
-   DATA   lTabStop                                INIT .t.
+   DATA   lActive                                 INIT .T.
+   DATA   lAnimate                                INIT .F.
+   DATA   lTabStop                                INIT .T.
    DATA   hFont
 
    DATA   aPopup                                  INIT {}
@@ -801,7 +801,7 @@ CLASS WvtObject
    DATA   bOnFocus                                INIT   {|| NIL }
    DATA   bOnRefresh                              INIT   {|| NIL }
    DATA   bOnLeftUp                               INIT   {|| NIL }
-   DATA   bOnLeftDown                             INIT   {|| .f. }
+   DATA   bOnLeftDown                             INIT   {|| .F. }
    DATA   bOnMMLeftDown                           INIT   {|| NIL }
    DATA   bOnLeftPressed                          INIT   {|| NIL }
    DATA   bTooltip                                INIT   {|| NIL }
@@ -828,11 +828,11 @@ CLASS WvtObject
    METHOD PaintBlock()                            INLINE nil
    METHOD Hilite()                                INLINE nil
    METHOD DeHilite()                              INLINE nil
-   METHOD HandleEvent()                           INLINE .f.
-   METHOD LeftDown()                              INLINE .f.
-   METHOD LeftUp()                                INLINE .f.
-   METHOD MMLeftDown()                            INLINE .f.
-   METHOD LeftPressed()                           INLINE .f.
+   METHOD HandleEvent()                           INLINE .F.
+   METHOD LeftDown()                              INLINE .F.
+   METHOD LeftUp()                                INLINE .F.
+   METHOD MMLeftDown()                            INLINE .F.
+   METHOD LeftPressed()                           INLINE .F.
    METHOD HoverOn()                               INLINE nil
    METHOD HoverOff()                              INLINE nil
    METHOD OnTimer()                               INLINE nil
@@ -866,7 +866,7 @@ METHOD WvtObject:New( oParent, nType, nID, nTop, nLeft, nBottom, nRight )
 
    CASE DLG_OBJ_STATIC
       ::ClassName := "WVTSTATIC"
-      ::lTabStop  := .f.
+      ::lTabStop  := .F.
       EXIT
 
    CASE DLG_OBJ_GETS
@@ -875,7 +875,7 @@ METHOD WvtObject:New( oParent, nType, nID, nTop, nLeft, nBottom, nRight )
 
    CASE DLG_OBJ_IMAGE
       ::ClassName := "WVTIMAGE"
-      ::lTabStop  := .f.
+      ::lTabStop  := .F.
       EXIT
 
    CASE DLG_OBJ_PUSHBUTTON
@@ -884,42 +884,42 @@ METHOD WvtObject:New( oParent, nType, nID, nTop, nLeft, nBottom, nRight )
 
    CASE DLG_OBJ_BUTTON
       ::ClassName := "WVTBUTTON"
-      ::lTabStop  := .f.
+      ::lTabStop  := .F.
       EXIT
 
    CASE DLG_OBJ_TOOLBAR
       ::ClassName := "WVTTOOLBAR"
-      ::lTabStop  := .f.
+      ::lTabStop  := .F.
       EXIT
 
    CASE DLG_OBJ_LABEL
       ::ClassName := "WVTLABEL"
-      ::lTabStop  := .f.
+      ::lTabStop  := .F.
       EXIT
 
    CASE DLG_OBJ_SCROLLBAR
       ::ClassName := "WVTSCROLLBAR"
-      ::lTabStop  := .f.
+      ::lTabStop  := .F.
       EXIT
 
    CASE DLG_OBJ_STATUSBAR
       ::ClassName := "WVTSTATUSBAR"
-      ::lTabStop  := .f.
+      ::lTabStop  := .F.
       EXIT
 
    CASE DLG_OBJ_BANNER
       ::ClassName := "WVTBANNER"
-      ::lTabStop  := .f.
+      ::lTabStop  := .F.
       EXIT
 
    CASE DLG_OBJ_TEXTBOX
       ::ClassName := "WVTTEXTBOX"
-      ::lTabStop  := .f.
+      ::lTabStop  := .F.
       EXIT
 
    CASE DLG_OBJ_PROGRESSBAR
       ::ClassName := "WVTPROGRESSBAR"
-      ::lTabStop  := .f.
+      ::lTabStop  := .F.
       EXIT
 
    end
@@ -974,7 +974,7 @@ METHOD WvtObject:CreatePopup()
 //
 
 METHOD WvtObject:ShowPopup()
-   LOCAL lRet := .f., nRet, n, aPos
+   LOCAL lRet := .F., nRet, n, aPos
 
    IF ::hPopup != nil
       aPos := Wvt_GetCursorPos()
@@ -983,7 +983,7 @@ METHOD WvtObject:ShowPopup()
                              aPos[ 1 ], aPos[ 2 ], 0, Wvt_GetWindowHandle() )
       IF nRet > 0
          IF ( n := ascan( ::aPopup, {| e_ | e_[ 3 ] == nRet } ) ) > 0
-            lRet := .t.
+            lRet := .T.
 
             IF HB_ISBLOCK( ::aPopup[ n,2 ] )
                Eval( ::aPopup[ n,2 ] )
@@ -1008,8 +1008,8 @@ CLASS WvtBrowse FROM WvtObject
 
    DATA   cAlias
    DATA   oBrw
-   DATA   lHSBar                                  INIT .t.
-   DATA   lVSBar                                  INIT .t.
+   DATA   lHSBar                                  INIT .T.
+   DATA   lVSBar                                  INIT .T.
    DATA   oHBar
    DATA   oVBar
    DATA   bTotalRecords
@@ -1163,7 +1163,7 @@ METHOD WvtBrowse:Refresh()
 //
 
 METHOD WvtBrowse:HandleEvent( nKey )
-   LOCAL lRet := .f.
+   LOCAL lRet := .F.
 
    IF valtype( ::bHandleEvent ) == "B"
       lRet := eval( ::bHandleEvent, self, ::oParent:cPaintBlockID, ::oBrw, nKey )
@@ -1531,7 +1531,7 @@ METHOD WvtLabel:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
 METHOD WvtLabel:Create( lConfg )
 
-   DEFAULT lConfg       TO .f.
+   DEFAULT lConfg       TO .F.
 
    DEFAULT ::nBottom    TO ::nTop
    DEFAULT ::nRight     TO ::nLeft + len( ::Text )
@@ -1616,14 +1616,14 @@ METHOD WvtLabel:Configure()
 //
 
 METHOD WvtLabel:HoverOn()
-   LOCAL lOn := .f.
+   LOCAL lOn := .F.
 
    IF ::nTextColorHoverOn != nil
-      lOn := .t.
+      lOn := .T.
       ::nTextColor := ::nTextColorHoverOn
    ENDIF
    IF ::nBackColorHoverOn != nil
-      lOn := .t.
+      lOn := .T.
       ::nBackColor := ::nBackColorHoverOn
    ENDIF
 
@@ -1636,14 +1636,14 @@ METHOD WvtLabel:HoverOn()
 //
 
 METHOD WvtLabel:HoverOff()
-   LOCAL lOn := .f.
+   LOCAL lOn := .F.
 
    IF ::nTextColorHoverOn != nil
-      lOn := .t.
+      lOn := .T.
       ::nTextColor := ::nTextColorHoverOff
    ENDIF
    IF ::nBackColorHoverOn != nil
-      lOn := .t.
+      lOn := .T.
       ::nBackColor := ::nBackColorHoverOff
    ENDIF
 
@@ -1667,7 +1667,7 @@ CLASS WvtToolBar FROM WvtObject
 
    DATA   nPaintID
    DATA   aObjects                                INIT {}
-   DATA   lHidden                                 INIT .f.
+   DATA   lHidden                                 INIT .F.
    DATA   nCurButton                              INIT 0
    DATA   lActive
    DATA   lFloating
@@ -1699,7 +1699,7 @@ METHOD WvtToolBar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    ::Super:New( oParent, DLG_OBJ_TOOLBAR, nID, nTop, nLeft, nBottom, nRight )
 
-   ::lActive   := .t.
+   ::lActive   := .T.
    ::lFloating := .F.
    ::nPaintID  := ::oParent:nPaintID++
 
@@ -1710,8 +1710,8 @@ METHOD WvtToolBar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 METHOD WvtToolBar:Create()
 
    IF ::lFloating
-      ::lActive := .f.
-      ::lHidden := .t.
+      ::lActive := .F.
+      ::lHidden := .T.
    ENDIF
 
    aeval( ::aObjects, {| o | o:lActive := ::lActive } )
@@ -1785,8 +1785,8 @@ METHOD WvtToolBar:AddButton( cFileImage, bBlock, cTooltip )
 METHOD WvtToolBar:HoverOn()
 
    IF ::lFloating .and. ::lHidden
-      ::lHidden   := .f.
-      ::lActive   := .t.
+      ::lHidden   := .F.
+      ::lActive   := .T.
       #IF 0
       ::cScreen   := SaveScreen( ::nTop, ::nLeft, ::nBottom, ::nRight )
       ::wScreen   := Wvt_SaveScreen( ::nTop, ::nLeft, ::nBottom, ::nRight )
@@ -1803,12 +1803,12 @@ METHOD WvtToolBar:HoverOn()
 METHOD WvtToolBar:HoverOff()
 
    IF ::lFloating .and. !( ::lHidden )
-      ::lHidden := .t.
-      ::lActive := .f.
+      ::lHidden := .T.
+      ::lActive := .F.
       aeval( ::aObjects, {| o | o:lActive := ::lActive } )
       #IF 0
       RestScreen( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cScreen )
-      Wvt_RestScreen( ::nTop, ::nLeft, ::nBottom, ::nRight, ::wScreen, .f. )
+      Wvt_RestScreen( ::nTop, ::nLeft, ::nBottom, ::nRight, ::wScreen, .F. )
       #ENDIF
       ::Refresh()
    ENDIF
@@ -1890,11 +1890,11 @@ METHOD WvtToolButton:PaintButton()
 //
 
 METHOD WvtToolButton:LeftDown()
-   LOCAL lRet := .f.
+   LOCAL lRet := .F.
 
    IF ::lActive .and. ::nBtnType == TLB_BUTTON_TYPE_IMAGE
       Wvt_DrawToolButtonState( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet, 2 )
-      lRet := .t.
+      lRet := .T.
    ENDIF
 
    RETURN lRet
@@ -1902,12 +1902,12 @@ METHOD WvtToolButton:LeftDown()
 //
 
 METHOD WvtToolButton:LeftUp()
-   LOCAL lRet := .f.
+   LOCAL lRet := .F.
 
    IF ::lActive .and. ::nBtnType == TLB_BUTTON_TYPE_IMAGE
       Wvt_DrawToolButtonState( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet, 1 )
       Eval( ::bOnLeftUp )
-      lRet := .t.
+      lRet := .T.
    ENDIF
 
    RETURN lRet
@@ -2042,12 +2042,12 @@ METHOD WvtStatic:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 //
 
 METHOD WvtStatic:Create()
-   LOCAL lInside := .f.
+   LOCAL lInside := .F.
 
    SWITCH ::nStatic
 
    CASE WVT_STATIC_LINE
-      lInside := .t.
+      lInside := .T.
       ::bPaint  := {|| Wvt_DrawLine( ::nTop, ::nLeft, ::nBottom, ::nRight, ;
                ::nOrient, ::nFormat, ::nAlign, ::nStyle, ::nThick, ::nColor ) }
       EXIT
@@ -2073,27 +2073,27 @@ METHOD WvtStatic:Create()
       EXIT
 
    CASE WVT_STATIC_RECTANGLE
-      lInside := .t.
+      lInside := .T.
       ::bPaint := {|| Wvt_DrawRectangle( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet ) }
       EXIT
 
    CASE WVT_STATIC_ROUNDRECT
-      lInside := .t.
+      lInside := .T.
       ::bPaint := {|| Wvt_DrawRoundRect( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet ) }
       EXIT
 
    CASE WVT_STATIC_FOCUSRECT
-      lInside := .t.
+      lInside := .T.
       ::bPaint := {|| Wvt_DrawFocusRect( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet ) }
       EXIT
 
    CASE WVT_STATIC_ELLIPSE
-      lInside := .t.
+      lInside := .T.
       ::bPaint := {|| Wvt_DrawEllipse( ::nTop, ::nLeft, ::nBottom, ::nRight, ::aPxlOffSet ) }
       EXIT
 
    CASE WVT_STATIC_SHADEDRECT
-      lInside := .t.
+      lInside := .T.
       ::bPaint := {|| Wvt_DrawShadedRect( ::nTop, ::nLeft, ::nBottom, ::nRight, ;
                                 ::aPxlOffSet, ::nHorzVert, ::aRGBb, ::aRGBe ) }
       EXIT
@@ -2205,7 +2205,7 @@ METHOD WvtPushButton:LeftDown()
 
    Wvt_DrawToolButtonState( ::nTop, ::nLeft, ::nBottom, ::nRight,{0,0,0,0} , 2 )
 
-   RETURN .t.
+   RETURN .T.
 
 //
 
@@ -2214,7 +2214,7 @@ METHOD WvtPushButton:LeftUp()
    Wvt_DrawToolButtonState( ::nTop, ::nLeft, ::nBottom, ::nRight, {0,0,0,0}, 1 )
    ::Eval( ::bOnLeftUp )
 
-   RETURN .t.
+   RETURN .T.
 
 //
 //
@@ -2323,12 +2323,12 @@ METHOD WvtGets:AddGets( nRow, nCol, xVar, cPic, cColor, bValid, bWhen )
 //
 
 METHOD WvtGets:HandleEvent( nKey )
-   LOCAL lRet := .f.
+   LOCAL lRet := .F.
 
    DO CASE
    CASE nKey == K_LDBLCLK
       ::Read()
-      lRet := .t.
+      lRet := .T.
    ENDCASE
 
    RETURN lRet
@@ -2410,7 +2410,7 @@ CLASS WvtScrollBar FROM WvtObject
    DATA   bBtnScroll
    DATA   bTotal
    DATA   bCurrent
-   DATA   lHidden                                 INIT .t.
+   DATA   lHidden                                 INIT .T.
 
    DATA   aPxlBtnTop                              INIT {0,0,0,0}
    DATA   aPxlBtnLft                              INIT {0,0,0,0}
@@ -2418,10 +2418,10 @@ CLASS WvtScrollBar FROM WvtObject
    DATA   aPxlBtnRgt                              INIT {0,0,0,0}
    DATA   aPxlScroll                              INIT {0,0,0,0}
 
-   DATA   lLeftDown                               INIT .f.
-   DATA   lOnThumb                                INIT .f.
-   DATA   lAnchored                               INIT .f.
-   DATA   lOnLeftDown                             INIT .f.
+   DATA   lLeftDown                               INIT .F.
+   DATA   lOnThumb                                INIT .F.
+   DATA   lAnchored                               INIT .F.
+   DATA   lOnLeftDown                             INIT .F.
 
    DATA   nScrollUnits                            INIT 0
 
@@ -2489,9 +2489,9 @@ METHOD wvtScrollbar:Create()
            {|| Wvt_DrawScrollThumbVert( ::nSTop ,::nSLeft  ,::nSBottom,::nSRight,::aPxlScroll,;
                                                   ::nThumbPos ) }
       ::bBtnLeftTopDep := ;
-           {|| Wvt_DrawScrollButton( ::nBtn1Top,::nBtn1Left,::nBtn1Bottom,::nBtn1Right,::aPxlBtnTop,1,.t. ) }
+           {|| Wvt_DrawScrollButton( ::nBtn1Top,::nBtn1Left,::nBtn1Bottom,::nBtn1Right,::aPxlBtnTop,1,.T. ) }
       ::bBtnRightBottomDep := ;
-           {|| Wvt_DrawScrollButton( ::nBtn2Top,::nBtn2Left,::nBtn2Bottom,::nBtn2Right,::aPxlBtnBtm,3,.t. ) }
+           {|| Wvt_DrawScrollButton( ::nBtn2Top,::nBtn2Left,::nBtn2Bottom,::nBtn2Right,::aPxlBtnBtm,3,.T. ) }
 
    ELSE
       DEFAULT ::nBottom TO ::nTop
@@ -2529,14 +2529,14 @@ METHOD wvtScrollbar:Create()
       ::bBtnScroll := ;
            {|| Wvt_DrawScrollThumbHorz( ::nSTop,::nSLeft,::nSBottom,::nSRight, ::aPxlScroll,::nThumbPos ) }
       ::bBtnLeftTopDep := ;
-           {|| Wvt_DrawScrollButton( ::nBtn1Top,::nBtn1Left,::nBtn1Bottom,::nBtn1Right,::aPxlBtnLft,2,.t. ) }
+           {|| Wvt_DrawScrollButton( ::nBtn1Top,::nBtn1Left,::nBtn1Bottom,::nBtn1Right,::aPxlBtnLft,2,.T. ) }
       ::bBtnRightBottomDep := ;
-           {|| Wvt_DrawScrollButton( ::nBtn2Top,::nBtn2Left,::nBtn2Bottom,::nBtn2Right,::aPxlBtnRgt,4,.t. ) }
+           {|| Wvt_DrawScrollButton( ::nBtn2Top,::nBtn2Left,::nBtn2Bottom,::nBtn2Right,::aPxlBtnRgt,4,.T. ) }
 
    ENDIF
 
    ::bOnLeftUp      := {|| ::HandleEvent( K_LBUTTONUP      ) }
-   ::bOnLeftDown    := {|| ::HandleEvent( K_LBUTTONDOWN    ), .f. }
+   ::bOnLeftDown    := {|| ::HandleEvent( K_LBUTTONDOWN    ), .F. }
    ::bOnMMLeftDown  := {|| ::HandleEvent( K_MMLEFTDOWN     ) }
    ::bOnLeftPressed := {|| ::HandleEvent( K_LBUTTONPRESSED ) }
 
@@ -2709,7 +2709,7 @@ METHOD wvtScrollbar:HandleEvent( nKey )
    LOCAL mKeys_:={ K_LBUTTONDOWN, K_LBUTTONUP, K_MMLEFTDOWN, K_LBUTTONPRESSED }
 
    IF ascan( mKeys_, nKey ) == 0
-      RETURN .f.
+      RETURN .F.
    ENDIF
 
    nmRow := MRow()
@@ -2717,7 +2717,7 @@ METHOD wvtScrollbar:HandleEvent( nKey )
 
    DO CASE
    CASE ::nBarType == WVT_SCROLLBAR_VERT
-      lHit := .t.
+      lHit := .T.
 
       DO CASE
       CASE ::lAnchored .and. nKey == K_MMLEFTDOWN
@@ -2742,21 +2742,21 @@ METHOD wvtScrollbar:HandleEvent( nKey )
             ::SetTooltip()
             Wvt_Keyboard( K_SBTHUMBTRACKVERT )
          ELSE
-            lHit := .f.
+            lHit := .F.
          ENDIF
 
       CASE ::lAnchored .and. nKey == K_LBUTTONUP
-         ::lAnchored := .f.
+         ::lAnchored := .F.
 
       OTHERWISE
-         lHit := .f.
+         lHit := .F.
 
          IF nmCol >= ::nLeft .and. nmCol <= ::nRight
-            lHit := .t.
+            lHit := .T.
 
             DO CASE
             CASE nmRow == ::nThumbPos .and. nKey == K_LBUTTONDOWN
-               ::lAnchored := .t.
+               ::lAnchored := .T.
 
             CASE nKey == K_LBUTTONUP
                IF ( lHit := ::lOnLeftDown )
@@ -2768,10 +2768,10 @@ METHOD wvtScrollbar:HandleEvent( nKey )
                   CASE nmRow < ::nThumbPos .and. nmRow > ::nTop
                   CASE nmRow > ::nThumbPos .and. nmRow < ::nBottom
                   OTHERWISE
-                     lHit := .f.
+                     lHit := .F.
                   ENDCASE
                   IF lHit
-                     ::lOnLeftDown := .f.
+                     ::lOnLeftDown := .F.
                   ENDIF
                ENDIF
 
@@ -2787,7 +2787,7 @@ METHOD wvtScrollbar:HandleEvent( nKey )
                   CASE nmRow > ::nThumbPos .and. nmRow < ::nBottom
                      Wvt_Keyboard( K_SBPAGEDOWN )
                   OTHERWISE
-                     lHit := .f.
+                     lHit := .F.
                   ENDCASE
                ENDIF
 
@@ -2804,10 +2804,10 @@ METHOD wvtScrollbar:HandleEvent( nKey )
                CASE nmRow > ::nThumbPos .and. nmRow < ::nBottom
                   Wvt_Keyboard( K_SBPAGEDOWN )
                OTHERWISE
-                  lHit := .f.
+                  lHit := .F.
                ENDCASE
                IF lHit
-                  ::lOnLeftDown := .t.
+                  ::lOnLeftDown := .T.
                ENDIF
             ENDCASE
          ENDIF
@@ -2841,8 +2841,8 @@ METHOD wvtScrollbar:HandleEvent( nKey )
          ENDIF
 
       CASE ::lAnchored .and. nKey == K_LBUTTONUP
-         ::lAnchored := .f.
-         lHit := .t.
+         ::lAnchored := .F.
+         lHit := .T.
 
       OTHERWISE
 
@@ -2850,7 +2850,7 @@ METHOD wvtScrollbar:HandleEvent( nKey )
 
             DO CASE
             CASE nKey == K_LBUTTONDOWN .and. nmCol >= ::nThumbPos .and. nmCol <= ::nThumbPos+1
-               ::lAnchored := .t.
+               ::lAnchored := .T.
 
             CASE nKey == K_LBUTTONUP
 
@@ -2863,10 +2863,10 @@ METHOD wvtScrollbar:HandleEvent( nKey )
                   CASE nmCol <  ::nThumbPos
                   CASE nmCol >  ::nThumbPos+1
                   OTHERWISE
-                     lHit := .f.
+                     lHit := .F.
                   ENDCASE
                   IF lHit
-                     ::lOnLeftDown := .f.
+                     ::lOnLeftDown := .F.
                   ENDIF
                ENDIF
 
@@ -2882,7 +2882,7 @@ METHOD wvtScrollbar:HandleEvent( nKey )
                   CASE nmCol > ::nThumbPos+1
                      Wvt_Keyboard( K_SBPAGERIGHT )
                   OTHERWISE
-                     lHit := .f.
+                     lHit := .F.
                   ENDCASE
                ENDIF
 
@@ -2899,10 +2899,10 @@ METHOD wvtScrollbar:HandleEvent( nKey )
                CASE nmCol > ::nThumbPos+1
                   Wvt_Keyboard( K_SBPAGERIGHT )
                OTHERWISE
-                  lHit := .f.
+                  lHit := .F.
                ENDCASE
                IF lHit
-                  ::lOnLeftDown := .t.
+                  ::lOnLeftDown := .T.
                ENDIF
             ENDCASE
          ENDIF
@@ -3198,8 +3198,8 @@ CLASS WvtProgressBar FROM WvtObject
    DATA   cImage
    DATA   nDirection                              INIT 0      /* 0-Left-Right,Top-Bottom  1-Right-Left,Bottom-Top */
    DATA   nStyle                                  INIT 0
-   DATA   lVertical                               INIT .f.
-   DATA   lActive                                 INIT .f.
+   DATA   lVertical                               INIT .F.
+   DATA   lActive                                 INIT .F.
 
    DATA   nBarColor                               INIT RGB( 0,0,128 )
    DATA   nCurrent                                INIT 0
@@ -3273,7 +3273,7 @@ METHOD WvtProgressBar:Activate()
 
    ::cScreen := SaveScreen( ::nTop, ::nLeft, ::nBottom, ::nRight )
    DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, "         ", ::cBackColor )
-   ::lActive := .t.
+   ::lActive := .T.
 
    RETURN Self
 
@@ -3281,7 +3281,7 @@ METHOD WvtProgressBar:Activate()
 
 METHOD WvtProgressBar:DeActivate()
 
-   ::lActive  := .f.
+   ::lActive  := .F.
    ::nCurrent := 0
    ::nTotal   := 1
    RestScreen( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cScreen )

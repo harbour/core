@@ -13,10 +13,10 @@
 proc main
   setcolor("N/W")
 
-  WVW_SetMainCoord(.f.)    //Standard Mode
+  WVW_SetMainCoord(.F.)    //Standard Mode
   fillscreen()
 
-  WVW_SetMainCoord(.t.)    //MainCoord Mode
+  WVW_SetMainCoord(.T.)    //MainCoord Mode
   fillscreen()
 return
 

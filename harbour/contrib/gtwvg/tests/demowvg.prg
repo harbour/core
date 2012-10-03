@@ -109,10 +109,10 @@ PROCEDURE Main()
 
    SET( _SET_EVENTMASK, INKEY_ALL + HB_INKEY_GTEVENT )
 
-   Wvt_SetGui( .t. )
-   WvtSetKeys( .t. )
+   Wvt_SetGui( .T. )
+   WvtSetKeys( .T. )
    Popups( 1 )
-   Wvt_SetMouseMove( .t. )
+   Wvt_SetMouseMove( .T. )
    Wvt_SetFont( "Courier New", 18, 0, 0 )
 
    CLS
@@ -143,7 +143,7 @@ PROCEDURE Main()
 
    aAdd( aBlocks, {|| Wvt_SetIcon( GetResource( "vr_1.ico" ) ) } )
    aAdd( aBlocks, {|| Wvt_SetTitle( "Vouch" ) } )
-   aAdd( aBlocks, {|| Wvt_DrawLabel( 1,40, cLabel,6,, rgb(255,255,255), rgb(198,198,198), "Arial", 26, , , , , .t., .t. ) } )
+   aAdd( aBlocks, {|| Wvt_DrawLabel( 1,40, cLabel,6,, rgb(255,255,255), rgb(198,198,198), "Arial", 26, , , , , .T., .T. ) } )
    aAdd( aBlocks, {|| Wvt_DrawBoxRaised( nTop, nLft, nBtm, nRgt ) } )
    aAdd( aBlocks, {|| Wvt_DrawBoxRecessed( 7, 61, 13, 70 ) } )
    aAdd( aBlocks, {|| Wvt_DrawBoxGroup( 15, 59, 18, 72 ) } )
@@ -190,10 +190,10 @@ PROCEDURE Main()
    WvtSetObjects( aObjects )
    SetColor( clr )
    RestScreen( 0,0,maxrow(),maxcol(), scr )
-   WvtSetKeys( .f. )
+   WvtSetKeys( .F. )
    Wvt_SetPopupMenu( hPopup )
 
-   Popups( 1, .t. )
+   Popups( 1, .T. )
    SetGT( 1, pGT )
 
    ErrorBlock( oError )
@@ -461,7 +461,7 @@ FUNCTION BuildMainMenu()
    LOCAL oMenu
    LOCAL g_oMenuBar := WvgSetAppWindow():menuBar()
 
-   oMenu := WvgMenu():new( g_oMenuBar, , .t. ):create()
+   oMenu := WvgMenu():new( g_oMenuBar, , .T. ):create()
    oMenu:Caption:= "Wvt*Classes"
    oMenu:AddItem( "Dialog One . New Window . Threaded"       , {|| DialogWvgClassesOne( 1 ) } )
    oMenu:AddItem( "Dialog One . Main Window . Primary Thread", {|| DialogWvgClassesOne( 2 ) } )
@@ -471,7 +471,7 @@ FUNCTION BuildMainMenu()
    oMenu:AddItem( "Exit"                        , {|| __keyboard( K_ESC ) } )
    g_oMenuBar:addItem( { oMenu, "Wvt*Classes" } )
 
-   oMenu := WvgMenu():new( g_oMenuBar, , .t. ):create()
+   oMenu := WvgMenu():new( g_oMenuBar, , .T. ):create()
    oMenu:caption := "Traditional"
    oMenu:AddItem( "Gets . GTWVG . Threaded"     , {|| WvtNextGets()       } )
    oMenu:AddItem( "-")
@@ -490,14 +490,14 @@ FUNCTION BuildMainMenu()
    oMenu:AddItem( "Modal Window"                , {|| DoModalWindow()     } )
    g_oMenuBar:addItem( { oMenu, "Traditional" } )
 
-   oMenu := WvgMenu():new( g_oMenuBar, , .t. ):create()
+   oMenu := WvgMenu():new( g_oMenuBar, , .T. ):create()
    oMenu:Caption:= "Common Dialogs"
    oMenu:AddItem( "Fonts"                       , {|| Wvt_ChooseFont()  } )
    oMenu:AddItem( "-")
    oMenu:AddItem( "Colors"                      , {|| Wvt_ChooseColor() } )
    g_oMenuBar:addItem( { oMenu, "Common Dialogs" } )
 
-   oMenu := WvgMenu():new( g_oMenuBar, , .t. ):create()
+   oMenu := WvgMenu():new( g_oMenuBar, , .T. ):create()
    oMenu:Caption:= "Functionality"
    oMenu:AddItem( "Expand"                      , {|| WvtWindowExpand(  1 ) } )
    oMenu:AddItem( "Shrink"                      , {|| WvtWindowExpand( -1 ) } )
@@ -506,7 +506,7 @@ FUNCTION BuildMainMenu()
    oMenu:AddItem( "Maximize"                    , {|| hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED ) } )
    g_oMenuBar:addItem( { oMenu, "Functionality" } )
 
-   oMenu := WvgMenu():new( g_oMenuBar, , .t. ):create()
+   oMenu := WvgMenu():new( g_oMenuBar, , .T. ):create()
    oMenu:Caption:= "Modeless Dialogs"
    oMenu:AddItem( "Dynamic Dialog . Modeless"   , {|| DynWinDialog( 1 ) } )
    oMenu:AddItem( "Dynamic Dialog . Modal "     , {|| DynWinDialog( 2 ) } )
@@ -514,7 +514,7 @@ FUNCTION BuildMainMenu()
    oMenu:AddItem( "Slide Show . Modeless"       , {|| DlgSlideShow()   } )
    g_oMenuBar:addItem( { oMenu, "Modeless Dialogs" } )
 
-   oMenu := WvgMenu():new( g_oMenuBar, , .t. ):create()
+   oMenu := WvgMenu():new( g_oMenuBar, , .T. ):create()
    oMenu:Caption := "~XbpDialog()s"
    oMenu:AddItem( "Pure Xbase++"                , {|| Hb_ThreadStart( {|| demoXbp() } ) } )
    oMenu:AddItem( "-")
@@ -580,48 +580,48 @@ FUNCTION BuildButtons()
    LOCAL oXbp
 
    oXbp := WvgPushButton():new()
-   oXbp:pointerFocus := .f.
+   oXbp:pointerFocus := .F.
    oXbp:caption := "Hi"
    oXbp:create( , , { {|| -( maxrow()-1 ) }, -1 }, { -2, -4 } )
    oXbp:activate := {|| Wvg_MessageBox( , "Harbour!" ) }
    oXbp:toolTipText := "Harbour CUI/GUI Console"
 
    oXbp := WvgPushButton():new()
-   oXbp:pointerFocus := .f.
+   oXbp:pointerFocus := .F.
    oXbp:caption := IMAGE_VOUCH
    oXbp:create( , , { {|| -( maxrow()-1 ) }, -6 }, { -2, -4 } )
    oXbp:activate := {|| Wvt_Keyboard( K_F2 ) }
    oXbp:toolTipText := "Open Another GET Screen"
 
    oXbp := WvgPushButton():new()
-   oXbp:pointerFocus := .f.
+   oXbp:pointerFocus := .F.
    oXbp:caption := IMAGE_BROWSE
    oXbp:create( , , { {|| -( maxrow()-1 ) }, -11 }, { -2, -4 } )
    oXbp:activate := {|| Wvt_Keyboard( K_F5 ) }
    oXbp:toolTipText := "TBrowse + GUI Controls"
 
    oXbp := WvgPushButton():new()
-   oXbp:pointerFocus := .f.
+   oXbp:pointerFocus := .F.
    oXbp:caption := IMAGE_NOTES
    oXbp:create( , , { {|| -( maxrow()-1 ) }, -16 }, { -2, -4 } )
    oXbp:activate := {|| Wvt_Keyboard( K_F3 ) }
 
    oXbp := WvgPushButton():new()
-   oXbp:pointerFocus := .f.
+   oXbp:pointerFocus := .F.
    oXbp:caption := IMAGE_TOOLS
    oXbp:create( , , { {|| -( maxrow()-1 ) }, -21 }, { -2, -4 } )
    oXbp:activate := {|| Wvt_Keyboard( K_F6 ) }
 
    oXbp := WvgPushButton():new()
-   oXbp:pointerFocus := .f.
+   oXbp:pointerFocus := .F.
    oXbp:caption := IMAGE_HELP
    oXbp:create( , , { {|| -( maxrow()-1 ) }, -26 }, { -2, -4 } )
    oXbp:activate := {|| Wvt_Keyboard( K_F7 ) }
 
    oXbp := WvgPushButton():new()
-   oXbp:pointerFocus := .f.
+   oXbp:pointerFocus := .F.
    oXbp:caption := IMAGE_VR
-   oXbp:border  := .f.
+   oXbp:border  := .F.
    oXbp:create( , , { {|| -( maxrow()-1 ) }, -31 }, { -2, -4 } )
    oXbp:activate := {|| Hb_ThreadStart( {|| demoXbp() } ) } // {|| Wvt_Keyboard( K_F8 ) }
    oXbp:toolTipText := "Flat Button . Lines: press ESC when finished."

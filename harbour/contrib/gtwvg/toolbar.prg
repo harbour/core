@@ -299,7 +299,7 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       #if 0
       ::SendToolbarMessage( TB_SETBUTTONWIDTH, ::buttonWidth, ::buttonWidth )
       #endif
-      ::lSized := .t.
+      ::lSized := .T.
    ENDIF
 
    oBtn := WvgToolbarButton():new( cCaption, nStyle, cKey )
@@ -313,13 +313,13 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
 
    CASE cType == "C"
       IF ( "." $ xImage ) .or. ( "/" $ xImage ) .or. ( "\" $ xImage ) .or. ( ":" $ xImage ) .or. file( xImage )
-         pBitmap := Wvg_PrepareBitmapFromFile( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
+         pBitmap := Wvg_PrepareBitmapFromFile( xImage, ::imageWidth, ::imageHeight, .T., ::hWnd )
       ELSE
-         pBitmap := Wvg_PrepareBitmapFromResourceName( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
+         pBitmap := Wvg_PrepareBitmapFromResourceName( xImage, ::imageWidth, ::imageHeight, .T., ::hWnd )
       ENDIF
 
    CASE cType == "N"
-      pBitmap := Wvg_PrepareBitmapFromResourceID( xImage, ::imageWidth, ::imageHeight, .t., ::hWnd )
+      pBitmap := Wvg_PrepareBitmapFromResourceID( xImage, ::imageWidth, ::imageHeight, .T., ::hWnd )
 
    CASE cType == "P"
       pBitmap := xImage
@@ -349,7 +349,7 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       #endif
       ::sendToolbarMessage( TB_AUTOSIZE )
    ELSE
-      Wvg_AddToolbarButton( ::pWnd, , , oBtn:command, 3, .f. )
+      Wvg_AddToolbarButton( ::pWnd, , , oBtn:command, 3, .F. )
 
    ENDIF
 

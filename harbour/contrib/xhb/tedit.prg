@@ -94,7 +94,7 @@ CLASS THtmlControl
    DATA MaxChars    // length on screen
 
    DATA Checked INIT .F.                // checkboxes...
-   DATA lLabel INIT .f.
+   DATA lLabel INIT .F.
 
    DATA Source, Align                   // images...
    DATA Wrap        // textarea

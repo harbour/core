@@ -96,7 +96,7 @@ CLASS WvgActiveXControl FROM WvgWindow
    DATA   interface
    DATA   interfaceName
 
-   DATA   lSubStdEvents                      INIT .f.
+   DATA   lSubStdEvents                      INIT .F.
 
    DATA   hEvents                            INIT { => }
    DATA   hContainer
@@ -277,7 +277,7 @@ METHOD WvgActiveXControl:mapEvent( nEvent, bBlock )
 //
 
 METHOD WvgActiveXControl:inheritPresParams()
-   Local lSuccess := .t.
+   Local lSuccess := .T.
 
    RETURN lSuccess
 

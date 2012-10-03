@@ -240,7 +240,7 @@ FUNCTION ParseString( cString, cDelim, nRet )
 
       cBuf := Substr( cBuf, nPosFim + 1, Len( cBuf ) )
 
-   NEXT i
+   NEXT
 
    RETURN aElem[ nRet ]
 

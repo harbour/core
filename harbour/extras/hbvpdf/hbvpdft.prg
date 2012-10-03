@@ -133,7 +133,7 @@ METHOD Init( cFile, nLen, lOptimize )
 local cTemp, nI, nJ, n1, n2 := 896, n12
 
 DEFAULT nLen      TO 200
-DEFAULT lOptimize TO .f.
+DEFAULT lOptimize TO .F.
 
 ::aReport := array( PARAMLEN )
 
@@ -155,8 +155,8 @@ DEFAULT lOptimize TO .f.
 ::aReport[ TYPE1        ] := { "Times-Roman", "Times-Bold", "Times-Italic", "Times-BoldItalic", ;
                                "Helvetica", "Helvetica-Bold", "Helvetica-Oblique", "Helvetica-BoldOblique", ;
                                "Courier", "Courier-Bold", "Courier-Oblique", "Courier-BoldOblique" }
-::aReport[ MARGINS      ] := .t.
-::aReport[ HEADEREDIT   ] := .f.
+::aReport[ MARGINS      ] := .T.
+::aReport[ HEADEREDIT   ] := .F.
 ::aReport[ NEXTOBJ      ] := 0
 ::aReport[ PDFTOP       ] := 1      // top
 ::aReport[ PDFLEFT      ] := 10     // left & right
@@ -205,7 +205,7 @@ local _nFont, lReverse, nAt
 
 DEFAULT nRow   TO ::aReport[ REPORTLINE ]
 DEFAULT cUnits TO "R"
-DEFAULT lExact TO .f.
+DEFAULT lExact TO .F.
 DEFAULT cId    TO ""
 
    IF ::aReport[ HEADEREDIT ]
@@ -216,7 +216,7 @@ DEFAULT cId    TO ""
       cString := left( cString, nAt - 1 ) + ltrim(str( ::PageNumber())) + substr( cString, nAt + 12 )
    ENDIF
 
-   lReverse := .f.
+   lReverse := .F.
    IF cUnits == "M"
       nRow := ::M2Y( nRow )
       nCol := ::M2X( nCol )
@@ -236,7 +236,7 @@ DEFAULT cId    TO ""
          cString := left( cString, len( cString ) - 1 )
          ::Box( ::aReport[ PAGEY ] - nRow - ::aReport[ FONTSIZE ] + 2.0 , nCol, ::aReport[ PAGEY ] - nRow + 2.0, nCol + ::M2X( ::length( cString )) + 1,,100, "D")
          ::aReport[ PAGEBUFFER ] += " 1 g "
-         lReverse := .t.
+         lReverse := .T.
       ELSEIF right( cString, 1 ) == chr(254) //underline
          cString := left( cString, len( cString ) - 1 )
          ::Box( ::aReport[ PAGEY ] - nRow + 0.5,  nCol, ::aReport[ PAGEY ] - nRow + 1, nCol + ::M2X( ::length( cString )) + 1,,100, "D")
@@ -503,7 +503,7 @@ METHOD Center( cString, nRow, nCol, cUnits, lExact, cId )
 local nLen, nAt
 DEFAULT nRow TO ::aReport[ REPORTLINE ]
 DEFAULT cUnits TO "R"
-DEFAULT lExact TO .f.
+DEFAULT lExact TO .F.
 DEFAULT nCol TO iif( cUnits == "R", ::aReport[ REPORTWIDTH ] / 2, ::aReport[ PAGEX ] / 72 * 25.4 / 2 )
 
    IF ::aReport[ HEADEREDIT ]
@@ -893,7 +893,7 @@ local nLen, nAdj := 1.0, nAt
 
 DEFAULT nRow TO ::aReport[ REPORTLINE ]
 DEFAULT cUnits TO "R"
-DEFAULT lExact TO .f.
+DEFAULT lExact TO .F.
 
    IF ::aReport[ HEADEREDIT ]
       return ::Header( "PDFRJUST", cId, { cString, nRow, nCol, cUnits, lExact } )
@@ -986,7 +986,7 @@ METHOD tPdf:TextCount( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits )
 METHOD TextCount( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits )
 #endif
 
-RETURN ::Text( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, .f. )
+RETURN ::Text( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, .F. )
 
 //-------------------------\\
 
@@ -1003,7 +1003,7 @@ local lParagraph, nSpace, nNew, nTokenLen, nCRLF, nTokens, nLen
 DEFAULT nTab     TO -1
 DEFAULT cUnits   TO "R"
 DEFAULT nJustify TO 4
-DEFAULT lPrint   TO .t.
+DEFAULT lPrint   TO .T.
 DEFAULT cColor   TO ""
 
    IF cUnits == "M"
@@ -1037,7 +1037,7 @@ DEFAULT cColor   TO ""
    nL += nNew * nSpace
    nLineLen := nSpace * nNew - nSpace
 
-   lParagraph := .t.
+   lParagraph := .T.
    nI := 1
 
    while nI <= nTokens
@@ -1057,7 +1057,7 @@ DEFAULT cColor   TO ""
                   IF nJustify != 2
                      nL += nSpace * nNew
                   ENDIF
-                  lParagraph := .f.
+                  lParagraph := .F.
                ENDIF
                IF nJustify == 2
                   nL := nLeft + ( nLength - ::length( cTemp ) ) / 2
@@ -1146,7 +1146,7 @@ DEFAULT cFile TO ""
    ELSE
       ::aReport[ HEADER ] := {}
    ENDIF
-   ::aReport[ MARGINS ] := .t.
+   ::aReport[ MARGINS ] := .T.
 
 RETURN self
 
@@ -1158,8 +1158,8 @@ METHOD tPdf:EditOnHeader()
 METHOD EditOnHeader()
 #endif
 
-::aReport[ HEADEREDIT ] := .t.
-::aReport[ MARGINS ] := .t.
+::aReport[ HEADEREDIT ] := .T.
+::aReport[ MARGINS ] := .T.
 
 RETURN self
 
@@ -1171,8 +1171,8 @@ METHOD tPdf:EditOffHeader()
 METHOD EditOffHeader()
 #endif
 
-::aReport[ HEADEREDIT ] := .f.
-::aReport[ MARGINS    ] := .t.
+::aReport[ HEADEREDIT ] := .F.
+::aReport[ MARGINS    ] := .T.
 
 RETURN self
 
@@ -1185,7 +1185,7 @@ METHOD CloseHeader()
 #endif
 
    ::aReport[ HEADER ] := {}
-   ::aReport[ MARGINS ] := .f.
+   ::aReport[ MARGINS ] := .F.
 RETURN self
 
 //-------------------------\\
@@ -1203,7 +1203,7 @@ local nRet := -1, nId
       nRet := len( ::aReport[ HEADER ] ) - 1
       aDel( ::aReport[ HEADER ], nId )
       aSize( ::aReport[ HEADER ], nRet )
-      ::aReport[ MARGINS ] := .t.
+      ::aReport[ MARGINS ] := .T.
    ENDIF
 RETURN nRet
 
@@ -1219,8 +1219,8 @@ local nId
    cId := upper( cId )
    nId := ascan( ::aReport[ HEADER ], {| arr | arr[ 3 ] == cId })
    IF nId > 0
-      ::aReport[ HEADER ][ nId ][ 1 ] := .t.
-      ::aReport[ MARGINS ] := .t.
+      ::aReport[ HEADER ][ nId ][ 1 ] := .T.
+      ::aReport[ MARGINS ] := .T.
    ENDIF
 RETURN self
 
@@ -1236,8 +1236,8 @@ local nId
    cId := upper( cId )
    nId := ascan( ::aReport[ HEADER ], {| arr | arr[ 3 ] == cId })
    IF nId > 0
-      ::aReport[ HEADER ][ nId ][ 1 ] := .f.
-      ::aReport[ MARGINS ] := .t.
+      ::aReport[ HEADER ][ nId ][ 1 ] := .F.
+      ::aReport[ MARGINS ] := .T.
    ENDIF
 RETURN self
 
@@ -1287,7 +1287,7 @@ local nId, nI, nLen, nIdLen
          ++nId
          cId += ltrim(str(nId))
       ENDIF
-      aadd( ::aReport[ HEADER ], { .t., cFunction, cId } )
+      aadd( ::aReport[ HEADER ], { .T., cFunction, cId } )
       ++nLen
       for nI := 1 to len( arr )
          aadd( ::aReport[ HEADER ][ nLen ], arr[ nI ] )
@@ -1353,7 +1353,7 @@ local nI, _nFont, _nSize, nLen := len( ::aReport[ HEADER ] )
          ::aReport[ PDFLEFT ] := 10 // left & right
          ::aReport[ PDFBOTTOM ] := ::aReport[ PAGEY ] / 72 * ::aReport[ LPI ] - 1 // bottom, default "LETTER", "P", 6
 
-         ::aReport[ MARGINS ] := .f.
+         ::aReport[ MARGINS ] := .F.
       ENDIF
    ENDIF
 RETURN self
@@ -1532,7 +1532,7 @@ local nI, nLen := len( ::aReport[ HEADER ] ), nTemp, aTemp, nHeight
       ::aReport[ PDFBOTTOM ] := nBottom
    ENDIF
 
-   ::aReport[ MARGINS ] := .f.
+   ::aReport[ MARGINS ] := .F.
 
 RETURN self
 
@@ -1615,22 +1615,22 @@ DEFAULT _width TO 200
    ENDIF
 
    ::SetFont("Arial", BOLD, 10)
-   ::AtSay( "Test Line 1", aReportStyle[ nStyle ][ 1 ], 1, "R", .t. )
+   ::AtSay( "Test Line 1", aReportStyle[ nStyle ][ 1 ], 1, "R", .T. )
 
    ::SetFont("Times", BOLD, 18)
-   ::Center( "Test Line 2", aReportStyle[ nStyle ][ 2 ],,"R", .t. )
+   ::Center( "Test Line 2", aReportStyle[ nStyle ][ 2 ],,"R", .T. )
 
    ::SetFont("Times", BOLD, 12)
-   ::Center( "Test Line 3", aReportStyle[ nStyle ][ 3 ],,"R", .t. )
+   ::Center( "Test Line 3", aReportStyle[ nStyle ][ 3 ],,"R", .T. )
 
    ::SetFont("Arial", BOLD, 10)
-   ::AtSay( "Test Line 4", aReportStyle[ nStyle ][ 4 ], 1, "R", .t. )
+   ::AtSay( "Test Line 4", aReportStyle[ nStyle ][ 4 ], 1, "R", .T. )
 
    ::SetFont("Arial", BOLD, 10)
-   ::AtSay( "Test Line 5", aReportStyle[ nStyle ][ 5 ], 1, "R", .t. )
+   ::AtSay( "Test Line 5", aReportStyle[ nStyle ][ 5 ], 1, "R", .T. )
 
-   ::AtSay( dtoc( date()) + " " + TimeAsAMPM( time() ), aReportStyle[ nStyle ][ 6 ], 1, "R", .t. )
-   ::RJust( "Page: #pagenumber#", aReportStyle[ nStyle ][ 6 ], ::aReport[ REPORTWIDTH ], "R", .t. )
+   ::AtSay( dtoc( date()) + " " + TimeAsAMPM( time() ), aReportStyle[ nStyle ][ 6 ], 1, "R", .T. )
+   ::RJust( "Page: #pagenumber#", aReportStyle[ nStyle ][ 6 ], ::aReport[ REPORTWIDTH ], "R", .T. )
 
    ::EditOffHeader()
    ::SaveHeader( _file )
@@ -2140,7 +2140,7 @@ local nFinish, nL, nB, nJ, cToken, nRow
 
    nStart := nFinish + 1
 
-   lParagraph := .f.
+   lParagraph := .F.
 
    nLineLen := 0.00
    nLineLen += nSpace * nNew
@@ -2621,7 +2621,7 @@ RETURN n
 //-------------------------\\
 
 static function RunExternal( cCmd, cVerb, cFile )
-local lRet := .t.
+local lRet := .T.
 
 #ifdef __CLP__
    lRet := SwpRunCmd( cCmd, 0, "", "" )
@@ -2639,7 +2639,7 @@ local lRet := .t.
 #endif
 
 #ifdef __XPP__
-   RunShell( cCmd, , .t., .t. )
+   RunShell( cCmd, , .T., .T. )
 #endif
 
 return lRet

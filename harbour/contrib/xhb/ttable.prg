@@ -71,77 +71,78 @@
 #include "dbinfo.ch"
 #include "error.ch"
 
-STATIC saTables := {}
+STATIC s_aTables := {}
+
 /* NetWork Functions */
-STATIC snNetDelay    := 30
-STATIC slNetOk       := .F.
-STATIC scNetMsgColor := "GR+/R"
+STATIC s_nNetDelay    := 30
+STATIC s_lNetOk       := .F.
+STATIC s_cNetMsgColor := "GR+/R"
 
 FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, ;
-                      lNew, lOpenMode, lReadOnly )
+      lNew, lOpenMode, lReadOnly )
+
    LOCAL nKey
    LOCAL lForever
-   LOCAL cOldScreen := SAVESCREEN( MAXROW(), 0, MAXROW(), MAXCOL() + 1 )
+   LOCAL cOldScreen := SaveScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1 )
    LOCAL lFirstPass := .T.
 
    DEFAULT cDriver TO "DBFCDX"
    DEFAULT lNew TO .T.
    DEFAULT lOpenMode TO NET_OPEN_MODE
    DEFAULT lReadOnly TO .F.
-   DEFAULT nSeconds TO snNetDelay
+   DEFAULT nSeconds TO s_nNetDelay
 
-   slNetOk  := .F.
+   s_lNetOk  := .F.
    nSeconds *= 1.00
    lforever := ( nSeconds == 0 )
 
    hb_keyIns( 255 )
-   INKEY()
+   Inkey()
 
-   DO WHILE ( lforever .or. nSeconds > 0 ) .and. LASTKEY() != K_ESC
+   DO WHILE ( lforever .OR. nSeconds > 0 ) .AND. LastKey() != K_ESC
       IF !lfirstPass
-         DISPOUTAT( MAXROW(), 0, ;
-                    PADC( "Network retry | " + ;
-                    LTRIM( STR( nSeconds, 4, 1 ) ) + " | ESCape = Exit ", ;
-                    MAXCOL() + 1 ), ;
-                    scNetMsgColor )
+         DispOutAt( MaxRow(), 0, ;
+            PadC( "Network retry | " + ;
+            LTrim( Str( nSeconds, 4, 1 ) ) + " | ESCape = Exit ", ;
+            MaxCol() + 1 ), ;
+            s_cNetMsgColor )
          lFirstPass := .F.
       ENDIF
 
-      DBUSEAREA( lNew, ;
-                 ( cDriver ), ( cDatabase ), ( cAlias ), ;
-                 lOpenMode, ;
-                 .F. )
+      dbUseArea( lNew, ;
+         ( cDriver ), ( cDatabase ), ( cAlias ), ;
+         lOpenMode, ;
+         .F. )
 
-      IF !NETERR()  // USE SUCCEEDS
-         RESTSCREEN( MAXROW(), 0, MAXROW(), MAXCOL() + 1, cOldScreen )
-         slNetOk := .T.
+      IF !NetErr()  // USE SUCCEEDS
+         RestScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1, cOldScreen )
+         s_lNetOk := .T.
       ELSE
          lFirstPass := .F.
       ENDIF
 
-      IF !slNetOK
-         nKey     := INKEY( .5 )        // WAIT 1 SECOND
+      IF !s_lNetOk
+         nKey     := Inkey( .5 )        // WAIT 1 SECOND
          nSeconds -= .5
       ELSE
-         RESTSCREEN( MAXROW(), 0, MAXROW(), MAXCOL() + 1, cOldScreen )
+         RestScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1, cOldScreen )
          EXIT
       ENDIF
 
       IF nKey == K_ESC
-         RESTSCREEN( MAXROW(), 0, MAXROW(), MAXCOL() + 1, cOldScreen )
+         RestScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1, cOldScreen )
          EXIT
       ENDIF
 
    ENDDO
 
-   RESTSCREEN( MAXROW(), 0, MAXROW(), MAXCOL() + 1, cOldScreen )
+   RestScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1, cOldScreen )
 
-RETURN slNetOk
-
+   RETURN s_lNetOk
 
 FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
 
-   LOCAL cSave       := SAVESCREEN( MAXROW(), 0, MAXROW(), MAXCOL() + 1 )
+   LOCAL cSave       := SaveScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1 )
    LOCAL lContinue   := .T.
    LOCAL lSuccess    := .F.
    LOCAL nWaitTime
@@ -151,34 +152,34 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
    LOCAL nCh
    LOCAL cWord
 
-   IF ! HB_ISNUMERIC( nType ) .or. ;
-        ( ( nType != 1 ) .and. ;
-          ( nType != 2 ) .and. ;
-          ( nType != 3 ) )
-      ALERT( "Invalid Argument passed to NETLOCK()" )
+   IF ! HB_ISNUMERIC( nType ) .OR. ;
+         ( ( nType != 1 ) .AND. ;
+         ( nType != 2 ) .AND. ;
+         ( nType != 3 ) )
+      Alert( "Invalid Argument passed to NETLOCK()" )
       RETURN lSuccess
    ENDIF
 
    DEFAULT lReleaseLocks TO .F.
-   DEFAULT nSeconds TO snNetDelay
+   DEFAULT nSeconds TO s_nNetDelay
 
    nWaitTime := nSeconds
 
    SWITCH nType
    CASE NET_RECLOCK                        // 1 = Record Lock...
-      xIdentifier := iif( lReleaseLocks, NIL, RECNO() )
-      bOperation  := {| x | DBRLOCK( x ) }
-      exit
+      xIdentifier := iif( lReleaseLocks, NIL, RecNo() )
+      bOperation  := {| x | dbRLock( x ) }
+      EXIT
    CASE NET_FILELOCK                       // 2 = File Lock...
-      bOperation := {|| FLOCK() }
-      exit
+      bOperation := {|| FLock() }
+      EXIT
    CASE NET_APPEND                         // 3 = Append Blank...
       xIdentifier := lReleaseLocks
-      bOperation  := {| x | DBAPPEND( x ), !NETERR() }
-      exit
+      bOperation  := {| x | dbAppend( x ), !NetErr() }
+      EXIT
    ENDSWITCH
 
-   slNetOk := .F.
+   s_lNetOk := .F.
 
    WHILE lContinue == .T.
 
@@ -189,45 +190,45 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
    ENDIF
    */
 
-      WHILE nSeconds > 0 .and. lContinue == .T.
-         IF EVAL( bOperation, xIdentifier )
+      WHILE nSeconds > 0 .AND. lContinue == .T.
+         IF Eval( bOperation, xIdentifier )
             nSeconds  := 0
             lSuccess  := .T.
             lContinue := .F.
-            slNetOK   := .T.
+            s_lNetOk   := .T.
             EXIT
          ELSE
             IF nType == 1
-               cWord := "( " + DBINFO( 33 ) + " - Record Lock )"
+               cWord := "( " + dbInfo( 33 ) + " - Record Lock )"
             ELSEIF nType == 2
-               cWord := "( " + DBINFO( 33 ) + " - File Lock )"
+               cWord := "( " + dbInfo( 33 ) + " - File Lock )"
             ELSEIF nType == 3
-               cWord := "( " + DBINFO( 33 ) + " - File Append )"
+               cWord := "( " + dbInfo( 33 ) + " - File Append )"
             ELSE
-               cWord := "( " + DBINFO( 33 ) + " -  ??? "
+               cWord := "( " + dbInfo( 33 ) + " -  ??? "
             ENDIF
 
-            DISPOUTAT( MAXROW(), 0, ;
-                       PADC( "Network Retry " + cWord + " | " + STR( nSeconds, 3 ) + " | ESC Exit", MAXCOL() + 1 ), ;
-                       scNetMsgColor )
+            DispOutAt( MaxRow(), 0, ;
+               PadC( "Network Retry " + cWord + " | " + Str( nSeconds, 3 ) + " | ESC Exit", MaxCol() + 1 ), ;
+               s_cNetMsgColor )
 
-            nKey := INKEY( 1 )          //TONE( 1,1 )
+            nKey := Inkey( 1 )          //TONE( 1,1 )
             nSeconds --                 //.5
             IF nKey == K_ESC
-               RESTSCREEN( MAXROW(), 0, MAXROW(), MAXCOL() + 1, cSave )
+               RestScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1, cSave )
                EXIT
             ENDIF
          ENDIF
       ENDDO
 
-      IF LASTKEY() == K_ESC
-         RESTSCREEN( MAXROW(), 0, MAXROW(), MAXCOL() + 1, cSave )
+      IF LastKey() == K_ESC
+         RestScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1, cSave )
          EXIT
       ENDIF
 
       IF !lSuccess
          nSeconds := nWaitTime
-         nCh      := ALERT( RETRY_MSG, { "  YES  ", "  NO  " } )
+         nCh      := Alert( RETRY_MSG, { "  YES  ", "  NO  " } )
 
          IF nCh == 1
             lContinue := .T.
@@ -237,38 +238,36 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
 
          IF lContinue == .F.
             //EXIT
-            RESTSCREEN( MAXROW(), 0, MAXROW(), MAXCOL() + 1, cSave )
+            RestScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1, cSave )
             RETURN lSuccess
          ENDIF
 
       ENDIF
    ENDDO
 
-   RESTSCREEN( MAXROW(), 0, MAXROW(), MAXCOL() + 1, cSave )
+   RestScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1, cSave )
 
-RETURN lSuccess
-
+   RETURN lSuccess
 
 FUNCTION NetFunc( bBlock, nSeconds )
 
    LOCAL lForever      // Retry forever?
 
-   DEFAULT nSeconds TO snNetDelay
+   DEFAULT nSeconds TO s_nNetDelay
    lForever := ( nSeconds == 0 )
 
-   // Keep trying as long as specified or default
-   DO WHILE ( lForever .or. ( nSeconds > 0 ) )
+// Keep trying as long as specified or default
+   DO WHILE ( lForever .OR. ( nSeconds > 0 ) )
 
-      IF EVAL( bBlock )
+      IF Eval( bBlock )
          RETURN .T.                 // NOTE
       ENDIF
 
-      INKEY( 1 )    // Wait 0.5 seconds
+      Inkey( 1 )    // Wait 0.5 seconds
       nSeconds -= 0.5
    ENDDO
 
-RETURN .F.      // Not locked
-
+   RETURN .F.      // Not locked
 
 // { DBFName, Alias, { idx Names } }
 // Returns:   0   All Ok
@@ -288,11 +287,11 @@ FUNCTION NetOpenFiles( aFiles )
          EXIT
       ENDIF
 
-      IF NetDbUse( xFile[ 1 ], xFile[ 2 ], snNetDelay, "DBFCDX" )
+      IF NetDbUse( xFile[ 1 ], xFile[ 2 ], s_nNetDelay, "DBFCDX" )
          IF HB_ISARRAY( xFile[ 3 ] )
             FOR EACH cIndex IN xFile[ 3 ]
                IF hb_FileExists( cIndex )
-                  ORDLISTADD( cIndex )
+                  ordListAdd( cIndex )
                ELSE
                   nRet := - 3
                   EXIT
@@ -307,138 +306,136 @@ FUNCTION NetOpenFiles( aFiles )
 
    RETURN nRet
 
-
-/* NETWORK METHODS */
+   /* NETWORK METHODS */
 
 FUNCTION NetDelete()
 
-   slNetOK := .F.
+   s_lNetOk := .F.
 
    IF NetLock( NET_RECLOCK ) == .T.
-      DBDELETE()
-      slNetOK := .T.
+      dbDelete()
+      s_lNetOk := .T.
    ENDIF
 
-   IF !NETERR()
-      DBSKIP( 0 )
-      DBCOMMIT()
+   IF !NetErr()
+      dbSkip( 0 )
+      dbCommit()
    ELSE
-      slNetOK := .T.
-      ALERT( " Failed to DELETE Record -> " + STR( RECNO() ) )
+      s_lNetOk := .T.
+      Alert( " Failed to DELETE Record -> " + Str( RecNo() ) )
    ENDIF
-RETURN slNetOk
 
+   RETURN s_lNetOk
 
 FUNCTION NetReCall()
 
-   slNetOk := .F.
+   s_lNetOk := .F.
 
    IF NetLock( NET_RECLOCK ) == .T.
-      DBRECALL()
-      slNetOk := .T.
+      dbRecall()
+      s_lNetOk := .T.
    ENDIF
 
-   IF !NETERR()
-      DBSKIP( 0 )
-      DBCOMMIT()
+   IF !NetErr()
+      dbSkip( 0 )
+      dbCommit()
    ELSE
-      slNetOK := .T.
-      ALERT( " Failed to RECALL Record -> " + STR( RECNO() ) )
+      s_lNetOk := .T.
+      Alert( " Failed to RECALL Record -> " + Str( RecNo() ) )
    ENDIF
 
-RETURN slNetOk
-
+   RETURN s_lNetOk
 
 FUNCTION NetRecLock( nSeconds )
 
-   DEFAULT nSeconds TO snNetDelay
+   DEFAULT nSeconds TO s_nNetDelay
 
-   slNetOK := .F.
+   s_lNetOk := .F.
 
-   IF NetLock( NET_RECLOCK,, nSeconds )                     // 1
-      slNetOK := .T.
+   IF NetLock( NET_RECLOCK, , nSeconds )                     // 1
+      s_lNetOk := .T.
    ENDIF
 
-RETURN slNetOK
-
+   RETURN s_lNetOk
 
 FUNCTION NetFileLock( nSeconds )
 
-   slNetOK := .F.
-   DEFAULT nSeconds TO snNetDelay
+   s_lNetOk := .F.
+   DEFAULT nSeconds TO s_nNetDelay
 
-   IF NetLock( NET_FILELOCK,, nSeconds )
-      slNetOK := .T.
+   IF NetLock( NET_FILELOCK, , nSeconds )
+      s_lNetOk := .T.
    ENDIF
 
-RETURN slNetOK
-
+   RETURN s_lNetOk
 
 FUNCTION NetAppend( nSeconds, lReleaseLocks )
 
    LOCAL nOrd
-   DEFAULT lReleaseLocks TO .T.
-   DEFAULT nSeconds TO snNetDelay
-   slNetOK := .F.
-   nOrd    := ORDSETFOCUS( 0 )          // --> set order to 0 to append ???
 
-   IF NetLock( NET_APPEND,, nSeconds )
+   DEFAULT lReleaseLocks TO .T.
+   DEFAULT nSeconds TO s_nNetDelay
+   s_lNetOk := .F.
+   nOrd    := ordSetFocus( 0 )          // --> set order to 0 to append ???
+
+   IF NetLock( NET_APPEND, , nSeconds )
       //DbGoBottom()
-      slNetOK := .T.
+      s_lNetOk := .T.
    ENDIF
 
-   ORDSETFOCUS( nOrd )
+   ordSetFocus( nOrd )
 
-RETURN slNetOK
-
+   RETURN s_lNetOk
 
 PROCEDURE NetFlush()
 
-   DBCOMMITALL()
-   DBUNLOCKALL()
-   DBSKIP( 0 )
-RETURN
+   dbCommitAll()
+   dbUnlockAll()
+   dbSkip( 0 )
 
+   RETURN
 
 FUNCTION NetCommitAll()
 
    LOCAL n
 
    FOR n := 1 TO MAX_TABLE_AREAS
-      IF !EMPTY( ALIAS( n ) )
-         ( ALIAS( n ) )->( DBCOMMIT(), DBUNLOCK() )
+      IF !Empty( Alias( n ) )
+         ( Alias( n ) )->( dbCommit(), dbUnlock() )
       ENDIF
    NEXT
 
-RETURN n
-
+   RETURN n
 
 FUNCTION IsLocked( nRecId )
-DEFAULT nRecID TO recno()
 
-RETURN ASCAN( DBRLOCKLIST(), {| n | n == nRecID } ) > 0
+   DEFAULT nRecID TO RecNo()
 
+   RETURN AScan( dbRLockList(), {| n | n == nRecID } ) > 0
 
 FUNCTION NetError()
-RETURN !slNetOK
 
+   RETURN !s_lNetOk
 
 FUNCTION SetNetDelay( nSecs )
 
-   LOCAL nTemp := snNetDelay
-   IF nSecs != NIL
-      snNetDelay := nSecs
-   ENDIF
-RETURN nTemp
+   LOCAL nTemp := s_nNetDelay
 
+   IF nSecs != NIL
+      s_nNetDelay := nSecs
+   ENDIF
+
+   RETURN nTemp
 
 FUNCTION SetNetMsgColor( cColor )
 
-   LOCAL cTemp := scNetMsgColor
+   LOCAL cTemp := s_cNetMsgColor
+
    IF cColor != NIL
-      scNetmsgColor := cColor
+      s_cNetMsgColor := cColor
    ENDIF
-RETURN cTemp
+
+   RETURN cTemp
 
 
 /****
@@ -450,11 +447,13 @@ RETURN cTemp
 */
 
 FUNCTION TableNew( cDBF, cALIAS, cOrderBag, cDRIVER, ;
-                      lNET, cPATH, lNEW, lREADONLY )
+      lNET, cPATH, lNEW, lREADONLY )
+
    LOCAL nPos
    LOCAL lAuto
    LOCAL oDB
    LOCAL o
+
    DEFAULT lNET TO .T.
    DEFAULT lNEW TO .T.
    DEFAULT lREADONLY TO .F.
@@ -463,36 +462,37 @@ FUNCTION TableNew( cDBF, cALIAS, cOrderBag, cDRIVER, ;
    DEFAULT cAlias TO FixExt( cDbf )
    DEFAULT cOrderBag TO FixExt( cDbf )  //+".CDX"
 
-   lAuto := SET( _SET_AUTOPEN, .F. )
+   lAuto := Set( _SET_AUTOPEN, .F. )
 
-   IF ( nPos := ASCAN( saTables, {| e | e[ 1 ] == UPPER( cALIAS ) } ) ) > 0
+   IF ( nPos := AScan( s_aTables, {| e | e[ 1 ] == Upper( cALIAS ) } ) ) > 0
 
-      oDB := saTables[ nPos, 2 ]
+      oDB := s_aTables[ nPos, 2 ]
 
    ELSE
       o := HBTable():New( cDBF, cALIAS, cOrderBag, cDRIVER, ;
-                          lNET, cPATH, lNEW, lREADONLY )
+         lNET, cPATH, lNEW, lREADONLY )
       IF o:Open()
          oDB := o:FldInit()
       ENDIF
 
-      AADD( saTables, { UPPER( cAlias ), oDB } )
+      AAdd( s_aTables, { Upper( cAlias ), oDB } )
 
    ENDIF
 
    SET( _SET_AUTOPEN, lAuto )
 
-RETURN oDB
-
+   RETURN oDB
 
 FUNCTION GetTable( cAlias )
 
    LOCAL nPos
    LOCAL oDB
-   IF ( nPos := ASCAN( saTables, {| e | e[ 1 ] == UPPER( cALIAS ) } ) ) > 0
-      oDB := saTables[ nPos, 2 ]
+
+   IF ( nPos := AScan( s_aTables, {| e | e[ 1 ] == Upper( cALIAS ) } ) ) > 0
+      oDB := s_aTables[ nPos, 2 ]
    ENDIF
-RETURN oDB
+
+   RETURN oDB
 
 
 /****
@@ -505,17 +505,17 @@ RETURN oDB
 
 CLASS HBField
 
-   DATA Alias INIT ALIAS()
+   DATA ALIAS INIT Alias()
    DATA Name INIT ""
-   DATA Type INIT "C"
+   DATA TYPE INIT "C"
    DATA Len INIT 0
    DATA Dec INIT 0
-   DATA order INIT 0
+   DATA ORDER INIT 0
    DATA Value
 
-   METHOD GET() INLINE ::value := ( ::alias )->( FIELDGET( ::order ) )
-   METHOD Put( x ) INLINE ::value := x ,;
-          ( ::alias )->( FIELDPUT( ::order, x ) )
+   METHOD Get() INLINE ::value := ( ::alias )->( FieldGet( ::order ) )
+   METHOD Put( x ) INLINE ::value := x , ;
+      ( ::alias )->( FieldPut( ::order, x ) )
 
 ENDCLASS
 
@@ -530,16 +530,15 @@ ENDCLASS
 CLASS HBRecord
 
    DATA Buffer INIT {}
-   DATA Alias INIT ALIAS()
+   DATA ALIAS INIT Alias()
    DATA Number INIT 0
    DATA aFields INIT {}
 
    METHOD New( cAlias )
-   METHOD GET()
+   METHOD Get()
    METHOD Put()
 
 ENDCLASS
-
 
 METHOD NEW( cAlias ) CLASS HBRecord
 
@@ -548,19 +547,19 @@ METHOD NEW( cAlias ) CLASS HBRecord
    LOCAL aStruc
    LOCAL aItem
 
-   DEFAULT cAlias TO ALIAS()
+   DEFAULT cAlias TO Alias()
 
    ::Alias   := cAlias
    ::Buffer  := {}
-   ::aFields := ARRAY( ( ::alias )->( FCOUNT() ) )
+   ::aFields := Array( ( ::alias )->( FCount() ) )
 
-   aStruc := ( ::alias )->( DBSTRUCT() )
+   aStruc := ( ::alias )->( dbStruct() )
 
    FOR EACH aItem in ::aFields
       i          := aItem:__EnumIndex()
       oFld       := HBField()
       oFld:order := i
-      oFld:Name  := ( ::alias )->( FIELDNAME( i ) )
+      oFld:Name  := ( ::alias )->( FieldName( i ) )
       oFld:Type  := aStruc[ i, 2 ]
       oFld:LEN   := aStruc[ i, 3 ]
       oFld:Dec   := aStruc[ i, 4 ]
@@ -568,20 +567,18 @@ METHOD NEW( cAlias ) CLASS HBRecord
       aItem      := oFld
    NEXT
 
-RETURN Self
+   RETURN Self
 
-
-METHOD PROCEDURE GET() CLASS HBRecord
+METHOD PROCEDURE Get() CLASS HBRecord
 
    LOCAL xField
 
    FOR EACH xField IN ::aFields
-      xField:GET()
+      xField:Get()
       ::buffer[ xField:__EnumIndex() ] := xField:value
    NEXT
 
-RETURN
-
+   RETURN
 
 METHOD PROCEDURE Put() CLASS HBRecord
 
@@ -594,7 +591,7 @@ METHOD PROCEDURE Put() CLASS HBRecord
       ENDIF
    NEXT
 
-RETURN
+   RETURN
 
 /****
 *
@@ -604,27 +601,28 @@ RETURN
 *
 */
 
-   //METHOD SetFocus()    INLINE (::Alias)->(Select( ::Area ))
-   //
-   //
-   //encapsulated methods
-   //
-   //
-   //Methods
-   //
-   //
-   //table movement
-   //
-   //
-   //RELATION
-   //
-   //
-   //ORDER Management
-   //
+//METHOD SetFocus()    INLINE ( ::Alias )->( Select( ::Area ) )
+//
+//
+//encapsulated methods
+//
+//
+//Methods
+//
+//
+//table movement
+//
+//
+//RELATION
+//
+//
+//ORDER Management
+//
+
 CLASS HBTable
 
    DATA Buffer INIT {}                  // 1
-   DATA Alias INIT ALIAS()              // 2
+   DATA ALIAS INIT Alias()              // 2
    DATA Area INIT 0 // 3
 
    DATA oRec
@@ -651,87 +649,88 @@ CLASS HBTable
 
    METHOD EOF() INLINE ( ::Alias )->( EOF() )
    METHOD BOF() INLINE ( ::Alias )->( BOF() )
-   METHOD RECNO() INLINE ( ::Alias )->( RECNO() )
-   METHOD LASTREC() INLINE ( ::Alias )->( LASTREC() )
-   METHOD SKIP( n ) INLINE ( ::Alias )->( DBSKIP( n ) ),;
-   ::nRecno := ( ::Alias )->( RECNO() )
+   METHOD RecNo() INLINE ( ::Alias )->( RecNo() )
+   METHOD LastRec() INLINE ( ::Alias )->( LastRec() )
+   METHOD SKIP( n ) INLINE ( ::Alias )->( dbSkip( n ) ), ;
+      ::nRecno := ( ::Alias )->( RecNo() )
 
-   METHOD GOTO( n ) INLINE ( ::Alias )->( DBGOTO( n ) )
-   METHOD goTop() INLINE ( ::Alias )->( DBGOTOP() )
-   METHOD goBottom() INLINE ( ::Alias )->( DBGOBOTTOM() )
-   METHOD SetFocus() INLINE ( ::Alias )->( SELECT( ::ALias ) )
-   METHOD Append( l ) INLINE iif( ::isNet, ( ::Alias )->( NetAppend( l ) ), ;
-   ( ::alias )->( DBAPPEND() ) )
+   METHOD GOTO( n ) INLINE ( ::Alias )->( dbGoto( n ) )
+   METHOD goTop() INLINE ( ::Alias )->( dbGoTop() )
+   METHOD goBottom() INLINE ( ::Alias )->( dbGoBottom() )
+   METHOD SetFocus() INLINE ( ::Alias )->( Select( ::ALias ) )
+   METHOD APPEND( l ) INLINE iif( ::isNet, ( ::Alias )->( NetAppend( l ) ), ;
+      ( ::alias )->( dbAppend() ) )
    METHOD RECALL(  ) INLINE ( ::Alias )->( NetRecall(  ) )
 
    METHOD LOCATE( bFor, bWhile, nNext, nRec, lRest ) INLINE ;
-   ( ::Alias )->( __dbLocate( bFor, bWhile, ;
-   nNext, nRec, lRest ) )
+      ( ::Alias )->( __dbLocate( bFor, bWhile, ;
+      nNext, nRec, lRest ) )
    METHOD CONTINUE() INLINE ( ::Alias )->( __dbContinue() )
-   METHOD FOUND() INLINE ( ::Alias )->( FOUND() )
-   METHOD Kill() INLINE ( ::Alias )->( DBCOMMIT() ),;
-          ( ::Alias )->( DBUNLOCK() ) ,;
-          ( ::Alias )->( DBCLOSEAREA() ),;
-          ::ClearBuffers()
-   METHOD ClearBuffers() INLINE ::ReadBuffers := {},;
-         ::WriteBuffers := {},;
-         ::DeleteBuffers := {}
+   METHOD Found() INLINE ( ::Alias )->( Found() )
+   METHOD Kill() INLINE ( ::Alias )->( dbCommit() ), ;
+      ( ::Alias )->( dbUnlock() ) , ;
+      ( ::Alias )->( dbCloseArea() ), ;
+      ::ClearBuffers()
+   METHOD ClearBuffers() INLINE ::ReadBuffers := {}, ;
+      ::WriteBuffers := {}, ;
+      ::DeleteBuffers := {}
 
-   METHOD dbIsShared() INLINE ( ::Alias )->( DBINFO( DBI_SHARED ) )
+   METHOD dbIsShared() INLINE ( ::Alias )->( dbInfo( DBI_SHARED ) )
 
-   METHOD dbIsFLocked(  ) INLINE ( ::Alias )->( DBINFO( DBI_ISFLOCK ) )
+   METHOD dbIsFLocked(  ) INLINE ( ::Alias )->( dbInfo( DBI_ISFLOCK ) )
 
-   METHOD dbLockCount() INLINE ( ::Alias )->( DBINFO( DBI_LOCKCOUNT ) )
+   METHOD dbLockCount() INLINE ( ::Alias )->( dbInfo( DBI_LOCKCOUNT ) )
 
-   METHOD DBINFO( n, x ) INLINE ( ::Alias )->( DBINFO( n, x ) )
+   METHOD dbInfo( n, x ) INLINE ( ::Alias )->( dbInfo( n, x ) )
 
    METHOD dbGetAlias() INLINE ( ::Alias )
 
-   METHOD dbFullPath() INLINE ( ::Alias )->( DBINFO( DBI_FULLPATH ) )
+   METHOD dbFullPath() INLINE ( ::Alias )->( dbInfo( DBI_FULLPATH ) )
 
-   METHOD IsRLocked( n ) INLINE ( ::Alias )->( DBRECORDINFO( DBRI_LOCKED, n ) )
+   METHOD IsRLocked( n ) INLINE ( ::Alias )->( dbRecordInfo( DBRI_LOCKED, n ) )
 
-   METHOD IsRUpdated( n ) INLINE ( ::Alias )->( DBRECORDINFO( DBRI_UPDATED, n ) )
+   METHOD IsRUpdated( n ) INLINE ( ::Alias )->( dbRecordInfo( DBRI_UPDATED, n ) )
 
-   METHOD DBRECORDINFO( n, x ) INLINE ( ::Alias )->( DBRECORDINFO( n,, x ) )
+   METHOD dbRecordInfo( n, x ) INLINE ( ::Alias )->( dbRecordInfo( n,, x ) )
 
-   METHOD DBORDERINFO( n, x, u ) INLINE ( ::Alias )->( DBORDERINFO( n, ::cOrderFile, x, u ) )
+   METHOD dbOrderInfo( n, x, u ) INLINE ( ::Alias )->( dbOrderInfo( n, ::cOrderFile, x, u ) )
 
    METHOD OrderCount() INLINE ;
-   ( ::Alias )->( DBORDERINFO( DBOI_ORDERCOUNT, ::cOrderFile ) )
+      ( ::Alias )->( dbOrderInfo( DBOI_ORDERCOUNT, ::cOrderFile ) )
 
    METHOD AutoOpen( l ) INLINE ;
-   ( ::Alias )->( DBORDERINFO( DBOI_AUTOOPEN, ::cOrderFile,, l ) )
+      ( ::Alias )->( dbOrderInfo( DBOI_AUTOOPEN, ::cOrderFile,, l ) )
 
    METHOD AutoShare( l ) INLINE ;
-   ( ::Alias )->( DBORDERINFO( DBOI_AUTOSHARE, ::cOrderFile,, l ) )
+      ( ::Alias )->( dbOrderInfo( DBOI_AUTOSHARE, ::cOrderFile,, l ) )
 
-   METHOD USED() INLINE SELECT( ::Alias ) > 0
+   METHOD Used() INLINE Select( ::Alias ) > 0
 
-   METHOD ORDSETFOCUS( ncTag ) INLINE ( ::Alias )->( ORDSETFOCUS( ncTag ) )
-   METHOD ORDNAME( nOrder ) INLINE ;
-   ( ::Alias )->( ORDNAME( nOrder, ::cOrderBag ) ) ;
+   METHOD ordSetFocus( ncTag ) INLINE ( ::Alias )->( ordSetFocus( ncTag ) )
 
-   METHOD ORDNUMBER( cOrder ) INLINE ;
-   ( ::Alias )->( ORDNUMBER( cOrder, ::cOrderBag ) ) ;
+   METHOD ordName( nOrder ) INLINE ;
+      ( ::Alias )->( ordName( nOrder, ::cOrderBag ) ) ;
 
-   METHOD ORDSCOPE( n, u ) INLINE ( ::Alias )->( ORDSCOPE( n, u ) )
+   METHOD ordNumber( cOrder ) INLINE ;
+   ( ::Alias )->( ordNumber( cOrder, ::cOrderBag ) ) ;
 
-   METHOD ORDISUNIQUE( nc ) INLINE ( ::Alias )->( ORDISUNIQUE( nc, ;
-   ::cOrderBag ) ) ;
+   METHOD ordScope( n, u ) INLINE ( ::Alias )->( ordScope( n, u ) )
 
-   METHOD ORDSKIPUNIQUE( n ) INLINE ( ::Alias )->( ORDSKIPUNIQUE( n ) )
-   METHOD ORDSETRELATION( n, b, c ) INLINE ( ::Alias )->( ORDSETRELATION( n, b, c ) )
+   METHOD ordIsUnique( nc ) INLINE ( ::Alias )->( ordIsUnique( nc, ;
+      ::cOrderBag ) ) ;
+
+   METHOD ordSkipUnique( n ) INLINE ( ::Alias )->( ordSkipUnique( n ) )
+   METHOD ordSetRelation( n, b, c ) INLINE ( ::Alias )->( ordSetRelation( n, b, c ) )
 
    METHOD SetTopScope( xScope ) INLINE ;
-   ( ::alias )->( ORDSCOPE( TOPSCOPE, xScope ) )
+      ( ::alias )->( ordScope( TOPSCOPE, xScope ) )
    METHOD SetBottomScope( xScope ) INLINE ;
-   ( ::alias )->( ORDSCOPE( BOTTOMSCOPE, xScope ) )
-   METHOD KillScope() INLINE ( ::alias )->( ORDSCOPE( TOPSCOPE, NIL ) )  ,;
-          ( ::alias )->( ORDSCOPE( BOTTOMSCOPE, NIL ) )
+      ( ::alias )->( ordScope( BOTTOMSCOPE, xScope ) )
+   METHOD KillScope() INLINE ( ::alias )->( ordScope( TOPSCOPE, NIL ) )  , ;
+      ( ::alias )->( ordScope( BOTTOMSCOPE, NIL ) )
 
    METHOD New( cDBF, cALIAS, cOrderBag, cDRIVER, ;
-   lNET, cPATH, lNEW, lREADONLY )
+      lNET, cPATH, lNEW, lREADONLY )
 
    METHOD OPEN()
 
@@ -745,28 +744,28 @@ CLASS HBTable
    METHOD SetMonitor( l )
    METHOD Undo( nBuffer, nLevel )
 
-   METHOD DBSKIP( n ) INLINE ( ::Alias )->( DBSKIP( n ) ),;
-          ::nRecno := ( ::alias )->( RECNO() )
+   METHOD dbSkip( n ) INLINE ( ::Alias )->( dbSkip( n ) ), ;
+      ::nRecno := ( ::alias )->( RecNo() )
 
-   METHOD DBGOTO( n ) INLINE ( ::Alias )->( DBGOTO( n ) )
+   METHOD dbGoto( n ) INLINE ( ::Alias )->( dbGoto( n ) )
 
-   METHOD DBEVAL( a, b, c, d, e, f ) INLINE ( ::Alias )->( DBEVAL( a, b, c, d, e, f ) )
-   METHOD DBSEEK( a, b, c ) INLINE ( ::Alias )->( DBSEEK( a, b, c ) )
-
-
+   METHOD dbEval( a, b, c, d, e, f ) INLINE ( ::Alias )->( dbEval( a, b, c, d, e, f ) )
+   METHOD dbSeek( a, b, c ) INLINE ( ::Alias )->( dbSeek( a, b, c ) )
 
 
-   METHOD DBFILTER() INLINE ( ::Alias )->( DBFILTER() )
+
+
+   METHOD dbFilter() INLINE ( ::Alias )->( dbFilter() )
    METHOD SetFilter( c ) INLINE ;
-   iif( c != NIL, ( ::Alias )->( DBSETFILTER( hb_macroBlock( c ), c ) ), ;
-   ( ::Alias )->( DBCLEARFILTER() ) )
+      iif( c != NIL, ( ::Alias )->( dbSetFilter( hb_macroBlock( c ), c ) ), ;
+      ( ::Alias )->( dbClearFilter() ) )
 
    METHOD AddChild( oChild, cKey )
 
    METHOD AddOrder( cTag, cKey, cLabel, ;
-   cFor, cWhile, ;
-   lUnique, ;
-   bEval, nInterval, cOrderFile )
+      cFor, cWhile, ;
+      lUnique, ;
+      bEval, nInterval, cOrderFile )
    METHOD GetOrderLabels()
    METHOD SetOrder( xTag )
    METHOD GetOrder( xOrder )
@@ -780,14 +779,15 @@ CLASS HBTable
 
 ENDCLASS
 
-
-   //---------------------
-   //  Constructor...
-   //---------------------
+//---------------------
+//  Constructor...
+//---------------------
 
 METHOD New( cDBF, cALIAS, cOrderBag, cDRIVER, ;
-               lNET, cPATH, lNEW, lREADONLY ) CLASS HBTable
-   Local cOldRdd
+      lNET, cPATH, lNEW, lREADONLY ) CLASS HBTable
+
+   LOCAL cOldRdd
+
    DEFAULT lNET TO .F.
    DEFAULT lNEW TO .T.
    DEFAULT lREADONLY TO .F.
@@ -803,49 +803,47 @@ METHOD New( cDBF, cALIAS, cOrderBag, cDRIVER, ;
    ::cDBF       := cDBF
    ::cPath      := cPATH
    ::cOrderBag  := FixExt( cOrderBag )
-   cOldRdd      := rddsetdefault( ::driver )
+   cOldRdd      := rddSetDefault( ::driver )
 
-   ::cOrderFile := ::cOrderBag + ORDBAGEXT()                //".CDX"
-   rddsetdefault( cOldRdd )
+   ::cOrderFile := ::cOrderBag + ordBagExt()                //".CDX"
+   rddSetDefault( cOldRdd )
    ::Driver      := cDRIVER
    ::aOrders     := {}
    ::Area        := 0
    ::Alias       := cALIAS
-   ::nDataOffset := LEN( self )         //66
+   ::nDataOffset := Len( self )         //66
 
-RETURN Self
-
+   RETURN Self
 
 METHOD OPEN() CLASS HBTable
 
    LOCAL lSuccess := .T.
 
-   DBUSEAREA( ::IsNew, ::Driver, ::cDBF, ::Alias, ::IsNET, ::IsREADONLY )
+   dbUseArea( ::IsNew, ::Driver, ::cDBF, ::Alias, ::IsNET, ::IsREADONLY )
 
    IF ::IsNET == .T.
-      IF NETERR()
-         ALERT( _NET_USE_FAIL_MSG )
+      IF NetErr()
+         Alert( _NET_USE_FAIL_MSG )
          lSuccess := .F.
          RETURN lSuccess
       ENDIF
    ENDIF
 
    SELECT( ::Alias )
-   ::Area := SELECT()
-   IF ::cOrderBag != NIL .and. hb_FileExists( ::cPath + ::cOrderFile )
+   ::Area := Select()
+   IF ::cOrderBag != NIL .AND. hb_FileExists( ::cPath + ::cOrderFile )
 
       SET INDEX TO ( ::cPath + ::cOrderBag )
-      ( ::Alias )->( ORDSETFOCUS( 1 ) )
+      ( ::Alias )->( ordSetFocus( 1 ) )
 
    ENDIF
 
-   ::Buffer := ARRAY( ( ::Alias )->( FCOUNT() ) )
-   ::aStruc := ( ::Alias )->( DBSTRUCT() )
+   ::Buffer := Array( ( ::Alias )->( FCount() ) )
+   ::aStruc := ( ::Alias )->( dbStruct() )
 
    ::dbMove( _DB_TOP )
 
-RETURN lSuccess
-
+   RETURN lSuccess
 
 METHOD PROCEDURE DBMove( nDirection ) CLASS HBTable
 
@@ -853,22 +851,22 @@ METHOD PROCEDURE DBMove( nDirection ) CLASS HBTable
 
    DO CASE
    CASE nDirection == 0
-      ( ::Alias )->( DBSKIP( 0 ) )
+      ( ::Alias )->( dbSkip( 0 ) )
    CASE nDirection == _DB_TOP
-      ( ::Alias )->( DBGOTOP() )
+      ( ::Alias )->( dbGoTop() )
    CASE nDirection == _DB_BOTTOM
-      ( ::Alias )->( DBGOBOTTOM() )
+      ( ::Alias )->( dbGoBottom() )
    CASE nDirection == _DB_BOF
-      ( ::Alias )->( DBGOTOP() )
-      ( ::Alias )->( DBSKIP( - 1 ) )
+      ( ::Alias )->( dbGoTop() )
+      ( ::Alias )->( dbSkip( - 1 ) )
    CASE nDirection == _DB_EOF
-      ( ::Alias )->( DBGOBOTTOM() )
-      ( ::Alias )->( DBSKIP( 1 ) )
+      ( ::Alias )->( dbGoBottom() )
+      ( ::Alias )->( dbSkip( 1 ) )
    OTHERWISE
-      ( ::Alias )->( DBGOTO( nDirection ) )
+      ( ::Alias )->( dbGoto( nDirection ) )
    ENDCASE
 
-RETURN
+   RETURN
 
 // -->
 // -->
@@ -883,19 +881,19 @@ METHOD FldInit() CLASS HBTable
    LOCAL oNew
    LOCAL nScope    := 1
 
-   ::nDataOffset := LEN( self ) - 1
+   ::nDataOffset := Len( self ) - 1
 
-   ::Buffer := ARRAY( ( ::Alias )->( FCOUNT() ) )
-   IF EMPTY( ::Buffer )
+   ::Buffer := Array( ( ::Alias )->( FCount() ) )
+   IF Empty( ::Buffer )
       ::Read()
    ENDIF
 
-   // --> create new oObject class from this one...
+// --> create new oObject class from this one...
 
-   adb := hbclass():new( ::alias, { "hbtable" } )
+   adb := HBClass():new( ::alias, { "hbtable" } )
 
-   FOR i := 1 TO FCOUNT()
-      adb:AddData( ( ::Alias )->( FIELDNAME( i ) ),,, nScope )
+   FOR i := 1 TO FCount()
+      adb:AddData( ( ::Alias )->( FieldName( i ) ), , , nScope )
    NEXT
 
    aDB:create()
@@ -920,108 +918,107 @@ METHOD FldInit() CLASS HBTable
 
    SELECT( oNew:Alias )
 
-   oNew:Area := SELECT()
+   oNew:Area := Select()
 
    oNew:Read()
 
-   IF oNew:cOrderBag != NIL .and. hb_FileExists( oNew:cPath + oNew:cOrderFile )
+   IF oNew:cOrderBag != NIL .AND. hb_FileExists( oNew:cPath + oNew:cOrderFile )
       SET INDEX TO ( oNew:cPath + oNew:cOrderBag )
-      ( oNew:Alias )->( ORDSETFOCUS( 1 ) )
+      ( oNew:Alias )->( ordSetFocus( 1 ) )
    ENDIF
 
-   oNew:buffer := ARRAY( ( oNew:alias )->( FCOUNT() ) )
-   oNew:aStruc := ( oNew:alias )->( DBSTRUCT() )
+   oNew:buffer := Array( ( oNew:alias )->( FCount() ) )
+   oNew:aStruc := ( oNew:alias )->( dbStruct() )
 
    IF oNew:Used()
       oNew:dbMove( _DB_TOP )
       oNew:Read()
    ENDIF
 
-RETURN oNew
-
+   RETURN oNew
 
 METHOD PROCEDURE READ( lKeepBuffer ) CLASS HBTable
 
    LOCAL i
-   LOCAL nSel   := SELECT( ::Alias )
-   LOCAL adata  := ARRAY( 1, 2 )
+   LOCAL nSel   := Select( ::Alias )
+   LOCAL adata  := Array( 1, 2 )
    LOCAL Buffer
+
    DEFAULT lKeepBuffer TO .F.
 
-   //? len( ::Buffer )
+//? len( ::Buffer )
 
-   FOR Each Buffer in ::Buffer
+   FOR EACH Buffer in ::Buffer
 
       i      := Buffer:__EnumIndex()
-      Buffer := ( ::Alias )->( FIELDGET( i ) )
+      Buffer := ( ::Alias )->( FieldGet( i ) )
 
-      adata[ 1, 1 ] := ( ::Alias )->( FIELDNAME( i ) )
-      adata[ 1, 2 ] := ( ::Alias )->( FIELDGET( i ) )
-      __ObjSetValueList( Self, aData )
+      adata[ 1, 1 ] := ( ::Alias )->( FieldName( i ) )
+      adata[ 1, 2 ] := ( ::Alias )->( FieldGet( i ) )
+      __objSetValueList( Self, aData )
 
    NEXT
 
-   IF ( lKeepBuffer == .T. ) .or. ( ::lMonitor == .T. )
-      AADD( ::ReadBuffers, { ( ::Alias )->( RECNO() ), ::Buffer } )
+   IF ( lKeepBuffer == .T. ) .OR. ( ::lMonitor == .T. )
+      AAdd( ::ReadBuffers, { ( ::Alias )->( RecNo() ), ::Buffer } )
    ENDIF
 
    SELECT( nSel )
 
-RETURN
-
+   RETURN
 
 METHOD PROCEDURE ReadBlank( lKeepBuffer ) CLASS HBTable
 
    LOCAL i
-   LOCAL nSel   := SELECT( ::Alias )
-   LOCAL nRec   := ( ::Alias )->( RECNO() )
-   LOCAL adata  := ARRAY( 1, 2 )
+   LOCAL nSel   := Select( ::Alias )
+   LOCAL nRec   := ( ::Alias )->( RecNo() )
+   LOCAL adata  := Array( 1, 2 )
    LOCAL Buffer
+
    DEFAULT lKeepBuffer TO .F.
 
-   ( ::Alias )->( DBGOBOTTOM() )
-   ( ::Alias )->( DBSKIP( 1 ) )         // go EOF
+   ( ::Alias )->( dbGoBottom() )
+   ( ::Alias )->( dbSkip( 1 ) )         // go EOF
 
-   FOR each Buffer in ::Buffer
+   FOR EACH Buffer in ::Buffer
       i      := Buffer:__EnumIndex()
-      Buffer := ( ::Alias )->( FIELDGET( i ) )
+      Buffer := ( ::Alias )->( FieldGet( i ) )
 
-      adata[ 1, 1 ] := ( ::Alias )->( FIELDNAME( i ) )
-      adata[ 1, 2 ] := ( ::Alias )->( FIELDGET( i ) )
-      __ObjSetValueList( Self, aData )
+      adata[ 1, 1 ] := ( ::Alias )->( FieldName( i ) )
+      adata[ 1, 2 ] := ( ::Alias )->( FieldGet( i ) )
+      __objSetValueList( Self, aData )
 
    NEXT
 
-   IF ( lKeepBuffer == .T. ) .or. ( ::lMonitor == .T. )
-      AADD( ::ReadBuffers, { ( ::Alias )->( RECNO() ), ::Buffer } )
+   IF ( lKeepBuffer == .T. ) .OR. ( ::lMonitor == .T. )
+      AAdd( ::ReadBuffers, { ( ::Alias )->( RecNo() ), ::Buffer } )
    ENDIF
 
-   ( ::Alias )->( DBGOTO( nRec ) )
+   ( ::Alias )->( dbGoto( nRec ) )
    SELECT( nSel )
 
-RETURN
-
+   RETURN
 
 METHOD Write( lKeepBuffer ) CLASS HBTable
 
    LOCAL i
-   LOCAL aOldBuffer := ARRAY( ( ::Alias )->( FCOUNT() ) )
-   LOCAL nSel       := SELECT( ::Alias )
-   LOCAL nOrd       := ( ::Alias )->( ORDSETFOCUS() )
-   LOCAL aData      := __objGetValueList( Self )
+   LOCAL aOldBuffer := Array( ( ::Alias )->( FCount() ) )
+   LOCAL nSel       := Select( ::Alias )
+   LOCAL nOrd       := ( ::Alias )->( ordSetFocus() )
+   LOCAL aData      := __objGetValueLIST( Self )
    LOCAL xBuffer
    LOCAL n
 
    DEFAULT lKeepBuffer TO .F.
 
-   IF ( lKeepBuffer == .T. ) .or. ( ::lMonitor == .T. )
+   IF ( lKeepBuffer == .T. ) .OR. ( ::lMonitor == .T. )
 
       // --> save old record in temp buffer
       FOR EACH xBuffer IN aOldBuffer
-         xBuffer := ( ::Alias )->( FIELDGET( xBuffer:__EnumIndex() ) )
+         xBuffer := ( ::Alias )->( FieldGet( xBuffer:__EnumIndex() ) )
       NEXT
 
-      AADD( ::WriteBuffers, { ( ::Alias )->( RECNO() ), aOldBuffer } )
+      AAdd( ::WriteBuffers, { ( ::Alias )->( RecNo() ), aOldBuffer } )
 
    ENDIF
 
@@ -1031,28 +1028,28 @@ METHOD Write( lKeepBuffer ) CLASS HBTable
       ENDIF
    ENDIF
 
-   ( ::Alias )->( ORDSETFOCUS( 0 ) )
+   ( ::Alias )->( ordSetFocus( 0 ) )
 
-   FOR i := 1 TO ( ::Alias )->( FCOUNT() )
-      n := ASCAN( adata, {| a | a[ 1 ] == ( ::Alias )->( FIELDNAME( i ) ) } )
-      ( ::Alias )->( FIELDPUT( i, adata[ n, 2 ] ) )
+   FOR i := 1 TO ( ::Alias )->( FCount() )
+      n := AScan( adata, {| a | a[ 1 ] == ( ::Alias )->( FieldName( i ) ) } )
+      ( ::Alias )->( FieldPut( i, adata[ n, 2 ] ) )
    NEXT
 
-   ( ::Alias )->( DBSKIP( 0 ) )         // same as commit
+   ( ::Alias )->( dbSkip( 0 ) )         // same as commit
    IF ::isNet
-      ( ::Alias )->( DBRUNLOCK() )
+      ( ::Alias )->( dbRUnlock() )
    ENDIF
-   ( ::Alias )->( ORDSETFOCUS( nOrd ) )
+   ( ::Alias )->( ordSetFocus( nOrd ) )
    SELECT( nSel )
 
-RETURN .T.
-
+   RETURN .T.
 
 METHOD BUFWrite( aBuffer ) CLASS HBTable
 
-   LOCAL nSel       := SELECT( ::Alias )
-   LOCAL nOrd       := ( ::Alias )->( ORDSETFOCUS() )
+   LOCAL nSel       := Select( ::Alias )
+   LOCAL nOrd       := ( ::Alias )->( ordSetFocus() )
    LOCAL Buffer
+
    DEFAULT aBuffer TO ::Buffer
 
    IF ::isNet
@@ -1061,56 +1058,57 @@ METHOD BUFWrite( aBuffer ) CLASS HBTable
       ENDIF
    ENDIF
 
-   ( ::Alias )->( ORDSETFOCUS( 0 ) )
+   ( ::Alias )->( ordSetFocus( 0 ) )
 
-   FOR each Buffer in aBuffer
-      ( ::Alias )->( FIELDPUT( Buffer:__EnumIndex(), Buffer ) )
+   FOR EACH Buffer in aBuffer
+      ( ::Alias )->( FieldPut( Buffer:__EnumIndex(), Buffer ) )
    NEXT
 
-   ( ::Alias )->( DBSKIP( 0 ) )
+   ( ::Alias )->( dbSkip( 0 ) )
    IF ::isNet
-      ( ::Alias )->( DBRUNLOCK() )
+      ( ::Alias )->( dbRUnlock() )
    ENDIF
-   ( ::Alias )->( ORDSETFOCUS( nOrd ) )
+   ( ::Alias )->( ordSetFocus( nOrd ) )
    SELECT( nSel )
 
-RETURN .T.
-
+   RETURN .T.
 
 METHOD __oTDelete( lKeepBuffer )        // ::Delete()
 
    LOCAL lRet
-   LOCAL lDeleted := SET( _SET_DELETED, .F. )                  // make deleted records visible
-   // temporarily...
+   LOCAL lDeleted := Set( _SET_DELETED, .F. )                  // make deleted records visible
+
+// temporarily...
    DEFAULT lKeepBuffer TO .F.
 
    ::Read()
 
    IF ::isNet
-      lRet := iif( ( ::Alias )->( NetDelete() ), .T., .F. )
+      lRet := iif( ( ::Alias )->( NetDelete() ), .T. , .F. )
    ELSE
-      ( ::alias )->( DBDELETE() ) ; lRet := .T.
+      ( ::alias )->( dbDelete() ) ; lRet := .T.
    ENDIF
 
-   IF ( ( lKeepBuffer == .T. ) .or. ( ::lMonitor == .T. ) ) .and. ;
-          ( lRet == .T. )
-      AADD( ::DeleteBuffers, { ( ::Alias )->( RECNO() ), ::Buffer } )
+   IF ( ( lKeepBuffer == .T. ) .OR. ( ::lMonitor == .T. ) ) .AND. ;
+         ( lRet == .T. )
+      AAdd( ::DeleteBuffers, { ( ::Alias )->( RecNo() ), ::Buffer } )
    ENDIF
 
    IF ::isNet
-      ( ::Alias )->( DBUNLOCK() )
+      ( ::Alias )->( dbUnlock() )
    ENDIF
 
    SET( _SET_DELETED, lDeleted )
 
-RETURN lRet
-
+   RETURN lRet
 
 METHOD SetMonitor( l ) CLASS HBTable
 
    LOCAL lTemp := ::lMonitor
+
    ::lMonitor := !(  l )
-RETURN lTemp
+
+   RETURN lTemp
 
 //
 //   Transaction control subsystem...
@@ -1118,11 +1116,10 @@ RETURN lTemp
 
 METHOD Undo( nBuffer, nLevel ) CLASS HBTable
 
-
    LOCAL nLen
    LOCAL lRet      := .F.
-   LOCAL lDelState := SET( _SET_DELETED )
-   LOCAL nRec      :=::RECNO()
+   LOCAL lDelState := Set( _SET_DELETED )
+   LOCAL nRec      := ::RecNo()
    LOCAL aBuffers
 
    DEFAULT nBuffer TO _WRITE_BUFFER
@@ -1135,18 +1132,18 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
 
    CASE _DELETE_BUFFER
 
-      IF !EMPTY( ::DeleteBuffers )
+      IF !Empty( ::DeleteBuffers )
 
          SET( _SET_DELETED, .F. )       // make deleted records visible temporarily...
 
-         nLen := LEN( ::deleteBuffers )
+         nLen := Len( ::deleteBuffers )
 
          DEFAULT nLevel TO nLen
 
          IF nLevel == 0 .OR. nLevel == nLen     // DO ALL...
             FOR EACH aBuffers IN ::deleteBuffers
 
-               ( ::Alias )->( DBGOTO( aBuffers[ 1 ] ) )
+               ( ::Alias )->( dbGoto( aBuffers[ 1 ] ) )
 
                IF ( ::Alias )->( NetRecall() )
                   lRet := .T.
@@ -1165,7 +1162,7 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
             FOR EACH aBuffers IN ::deleteBuffers
                IF aBuffers:__EnumIndex() > ( nLen - nLevel )
 
-                  ( ::Alias )->( DBGOTO( aBuffers[ 1 ] ) )
+                  ( ::Alias )->( dbGoto( aBuffers[ 1 ] ) )
 
                   IF ( ::Alias )->( NetRecall() )
                      lRet := .T.
@@ -1176,7 +1173,7 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
             NEXT
 
             IF lRet
-               ASIZE( ::deleteBuffers, ( nLen - nLevel ) )
+               ASize( ::deleteBuffers, ( nLen - nLevel ) )
             ENDIF
 
          ENDIF
@@ -1187,21 +1184,21 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
       EXIT
 
    CASE _WRITE_BUFFER
-      IF !EMPTY( ::WriteBuffers )
+      IF !Empty( ::WriteBuffers )
 
-         nLen := LEN( ::WriteBuffers )
+         nLen := Len( ::WriteBuffers )
          DEFAULT nLevel TO nLen
 
          IF nLevel == 0 .OR. nLen == nLevel   // Do All...
 
             FOR EACH aBuffers IN ::writeBuffers
 
-               ( ::Alias )->( DBGOTO( aBuffers[ 1 ] ) )
+               ( ::Alias )->( dbGoto( aBuffers[ 1 ] ) )
 
                IF ::BufWrite( aBuffers[ 2 ] )
                   lRet := .T.
                ELSE
-                  ALERT( "Rollback Failed..." )
+                  Alert( "Rollback Failed..." )
                   lRet := .F.
                ENDIF
             NEXT
@@ -1216,20 +1213,20 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
             FOR EACH aBuffers IN ::writeBuffers
                IF aBuffers:__EnumIndex() > ( nLen - nLevel )
 
-                  ( ::Alias )->( DBGOTO( aBuffers[ 1 ] ) )
+                  ( ::Alias )->( dbGoto( aBuffers[ 1 ] ) )
 
                   IF ::BufWrite( aBuffers[ 2 ] )
                      lRet := .T.
                   ELSE
-                     ALERT( "Rollback Failed..." )
+                     Alert( "Rollback Failed..." )
                      lRet := .F.
                   ENDIF
                ENDIF
             NEXT
 
             // erase entries
-            IF lRet == .t.
-               ASIZE( ::WriteBuffers, ( nLen - nLevel ) )
+            IF lRet
+               ASize( ::WriteBuffers, ( nLen - nLevel ) )
             ENDIF
 
          ENDIF
@@ -1241,53 +1238,52 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
 
    ENDSWITCH
 
-   ( ::Alias )->( DBUNLOCK() )
-   ( ::Alias )->( DBGOTO( nRec ) )
+   ( ::Alias )->( dbUnlock() )
+   ( ::Alias )->( dbGoto( nRec ) )
    ::Read()
 
-RETURN lRet
-
+   RETURN lRet
 
 //
 //   ORDER MANAGEMENT
 //
 
 METHOD AddOrder( cTag, cKey, cLabel, ;
-                    cFor, cWhile, ;
-                    lUnique, ;
-                    bEval, nInterval, cOrderFile ) CLASS HBTable
+      cFor, cWhile, ;
+      lUnique, ;
+      bEval, nInterval, cOrderFile ) CLASS HBTable
+
    LOCAL oOrd
+
    DEFAULT cOrderFile TO ::cOrderBag
 
    oOrd := HBOrder():New( cTag, cKey, cLabel, ;
-                          cFor, cWhile, ;
-                          lUnique, ;
-                          bEval, nInterval )
+      cFor, cWhile, ;
+      lUnique, ;
+      bEval, nInterval )
 
    oOrd:oTable    := Self
    oOrd:cOrderBag := ::cOrderBag
 
-   AADD( ::aOrders, oOrd )
+   AAdd( ::aOrders, oOrd )
 
-RETURN oOrd
+   RETURN oOrd
 
+METHOD REINDEX() CLASS HBTable
 
-METHOD Reindex() CLASS HBTable
+   LOCAL nSel := Select( ::Alias )
+   LOCAL nOrd := ( ::Alias )->( ordSetFocus( 0 ) )
 
+   IF Len( ::aOrders ) > 0
 
-   LOCAL nSel := SELECT( ::Alias )
-   LOCAL nOrd := ( ::Alias )->( ORDSETFOCUS( 0 ) )
-
-   IF LEN( ::aOrders ) > 0
-
-      IF ::USED()
+      IF ::Used()
          ::Kill()
       ENDIF
 
       ::Isnet := .F.
 
       IF hb_FileExists( ::cPath + ::cOrderFile )
-         IF FERASE( ::cPath + ::cOrderFile ) != 0
+         IF FErase( ::cPath + ::cOrderFile ) != 0
             // --> ALERT(".CDX *NOT* Deleted !!!" )
          ENDIF
       ENDIF
@@ -1296,7 +1292,7 @@ METHOD Reindex() CLASS HBTable
          RETURN .F.
       ENDIF
 
-      AEVAL( ::aOrders, {| o | o:Create() } )
+      AEval( ::aOrders, {| o | o:Create() } )
 
       ::Kill()
       ::IsNet := .T.
@@ -1307,28 +1303,26 @@ METHOD Reindex() CLASS HBTable
 
    ENDIF
 
-   ( ::Alias )->( DBSETINDEX( ::cOrderBag ) )
-   ( ::Alias )->( ORDSETFOCUS( nOrd ) )
-   ( ::Alias )->( DBGOTOP() )
-   ( ::Alias )->( DBUNLOCK() )
+   ( ::Alias )->( dbSetIndex( ::cOrderBag ) )
+   ( ::Alias )->( ordSetFocus( nOrd ) )
+   ( ::Alias )->( dbGoTop() )
+   ( ::Alias )->( dbUnlock() )
    SELECT( nSel )
 
-RETURN .T.
-
+   RETURN .T.
 
 METHOD FastReindex() CLASS HBTable
 
+   LOCAL nSel := Select( ::Alias )
+   LOCAL nOrd := ( ::Alias )->( ordSetFocus( 0 ) )
 
-   LOCAL nSel := SELECT( ::Alias )
-   LOCAL nOrd := ( ::Alias )->( ORDSETFOCUS( 0 ) )
-
-   IF LEN( ::aOrders ) > 0
+   IF Len( ::aOrders ) > 0
 
       ::Kill()
 
       ::Isnet := .F.
       IF hb_FileExists( ::cPath + ::cOrderFile )
-         IF FERASE( ::cPath + ::cOrderFile ) != 0
+         IF FErase( ::cPath + ::cOrderFile ) != 0
             // --> ALERT(".CDX *NOT* Deleted !!!" )
          ENDIF
       ENDIF
@@ -1337,7 +1331,7 @@ METHOD FastReindex() CLASS HBTable
          RETURN .F.
       ENDIF
 
-      ( ::Alias )->( ORDLISTREBUILD() )
+      ( ::Alias )->( ordListRebuild() )
 
       ::Kill()
       ::IsNet := .T.
@@ -1348,23 +1342,22 @@ METHOD FastReindex() CLASS HBTable
 
    ENDIF
 
-   ( ::Alias )->( DBSETINDEX( ::cOrderBag ) )
-   ( ::Alias )->( ORDSETFOCUS( nOrd ) )
-   ( ::Alias )->( DBGOTOP() )
-   ( ::Alias )->( DBUNLOCK() )
+   ( ::Alias )->( dbSetIndex( ::cOrderBag ) )
+   ( ::Alias )->( ordSetFocus( nOrd ) )
+   ( ::Alias )->( dbGoTop() )
+   ( ::Alias )->( dbUnlock() )
    SELECT( nSel )
 
-RETURN .T.
-
+   RETURN .T.
 
 METHOD GetOrder( xOrder ) CLASS HBTable
 
    LOCAL nPos
-   LOCAL xType := VALTYPE( xOrder )
+   LOCAL xType := ValType( xOrder )
 
    IF xType == "C"
-      nPos := ASCAN( ::aOrders, {| e | e:Tag == xOrder } )
-   ELSEIF xType == "N" .and. xOrder > 0
+      nPos := AScan( ::aOrders, {| e | e:Tag == xOrder } )
+   ELSEIF xType == "N" .AND. xOrder > 0
       nPos := xOrder
    ELSE
       nPos := 0
@@ -1374,20 +1367,19 @@ METHOD GetOrder( xOrder ) CLASS HBTable
       nPos := 1
    ENDIF
 
-RETURN ::aOrders[ nPos ]                // returns oOrder
-
+   RETURN ::aOrders[ nPos ]                // returns oOrder
 
 METHOD SetOrder( xTag ) CLASS HBTable
 
-   LOCAL nOldOrd := ( ::Alias )->( ORDSETFOCUS() )
+   LOCAL nOldOrd := ( ::Alias )->( ordSetFocus() )
 
-   SWITCH VALTYPE( xTag )
+   SWITCH ValType( xTag )
    CASE "C"                    // we have an Order-TAG
-      ( ::Alias )->( ORDSETFOCUS( xTag ) )
+      ( ::Alias )->( ordSetFocus( xTag ) )
       EXIT
    CASE "N"                    // we have an Order-Number
       IF xTag <= 0
-         ( ::Alias )->( ORDSETFOCUS( 0 ) )
+         ( ::Alias )->( ordSetFocus( 0 ) )
       ELSE
          ::Getorder( xTag ):SetFocus()
       ENDIF
@@ -1396,18 +1388,20 @@ METHOD SetOrder( xTag ) CLASS HBTable
       xTag:SetFocus()
       EXIT
    OTHERWISE
-      ( ::Alias )->( ORDSETFOCUS( 0 ) )
+      ( ::Alias )->( ordSetFocus( 0 ) )
    ENDSWITCH
-RETURN nOldOrd
 
+   RETURN nOldOrd
 
 METHOD GetOrderLabels() CLASS HBTable
 
    LOCAL aRet := {}
-   IF !EMPTY( ::aOrders )
-      AEVAL( ::aOrders, {| e | AADD( aRet, e:Label ) } )
+
+   IF !Empty( ::aOrders )
+      AEval( ::aOrders, {| e | AAdd( aRet, e:Label ) } )
    ENDIF
-RETURN aRet
+
+   RETURN aRet
 
 //
 // Relation Methods
@@ -1415,10 +1409,11 @@ RETURN aRet
 
 PROCEDURE AddChild( oChild, cKey ) CLASS HBTable                 // ::addChild()
 
-   AADD( ::aChildren, { oChild, cKey } )
+   AAdd( ::aChildren, { oChild, cKey } )
    oChild:oParent := Self
-   ( ::Alias )->( ORDSETRELATION( oChild:Alias, hb_macroBlock( cKey ), cKey ) )
-RETURN
+   ( ::Alias )->( ordSetRelation( oChild:Alias, hb_macroBlock( cKey ), cKey ) )
+
+   RETURN
 
 /****
 *     FixExt( cFileName )
@@ -1427,33 +1422,33 @@ RETURN
 
 STATIC FUNCTION FixExt( cFileName )
 
-   LOCAL nLeft := AT( ".", cFilename )
-RETURN LEFT( cFileName, iif( nLeft == 0, ;
-       LEN( cFilename ), ;
-       nLeft - 1 ) )
+   LOCAL nLeft := At( ".", cFilename )
 
+   RETURN Left( cFileName, iif( nLeft == 0, ;
+      Len( cFilename ), ;
+      nLeft - 1 ) )
 
 METHOD CreateTable( cFile ) CLASS HBTable
 
    ::cDbf := cFile
-   IF LEN( ::aStruc ) > 0
+   IF Len( ::aStruc ) > 0
       ::aStruc  := {}
       ::aOrders := {}
    ENDIF
-RETURN Self
 
+   RETURN Self
 
 METHOD PROCEDURE AddField( f, t, l, d ) CLASS HBTable
 
-   AADD( ::aStruc, { f, t, l, d } )
-RETURN
+   AAdd( ::aStruc, { f, t, l, d } )
 
+   RETURN
 
 METHOD PROCEDURE Gentable() CLASS HBTable
 
-   DBCREATE( ::cDbf, ::aStruc, ::Driver )
-RETURN
+   dbCreate( ::cDbf, ::aStruc, ::Driver )
 
+   RETURN
 
 METHOD OnError( uParam ) CLASS HBTable
 
@@ -1461,14 +1456,14 @@ METHOD OnError( uParam ) CLASS HBTable
    LOCAL nPos
    LOCAL uRet, oErr
 
-   if uParam != nil .and. LEFT( cMsg, 1 ) == '_'
+   IF uParam != nil .AND. Left( cMsg, 1 ) == '_'
       cMsg := SubStr( cMsg, 2 )
-   endif
-   nPos := (::Alias)->( FieldPos(cMsg) )
+   ENDIF
+   nPos := ( ::Alias )->( FieldPos( cMsg ) )
 
-   if nPos != 0
-      uRet := (::Alias)->( iif( uParam == nil, FieldGet(nPos), FieldPut(nPos, uParam)) )
-   else
+   IF nPos != 0
+      uRet := ( ::Alias )->( iif( uParam == nil, FieldGet(nPos ), FieldPut(nPos, uParam ) ) )
+   ELSE
 
       oErr := ErrorNew()
       oErr:Args          := { Self, cMsg, uParam }
@@ -1479,14 +1474,13 @@ METHOD OnError( uParam ) CLASS HBTable
       oErr:GenCode       := EG_NOVARMETHOD
       oErr:Operation     := "HBTable:" + cMsg
       oErr:Severity      := ES_ERROR
-      oErr:SubCode       := -1
+      oErr:SubCode       := - 1
       oErr:SubSystem     := "HBTable"
       uRet := Eval( ErrorBlock(), oErr )
 
-   endif
+   ENDIF
 
    RETURN uRet
-
 
 CLASS HBOrder
 
@@ -1496,24 +1490,24 @@ CLASS HBOrder
    DATA cKey, bKey
    DATA cFor, bFor
    DATA cWhile, bWhile
-   DATA Unique INIT .F.
+   DATA UNIQUE INIT .F.
    DATA bEval
    DATA nInterval
-   METHOD ALIAS() INLINE ::oTable:Alias
+   METHOD Alias() INLINE ::oTable:Alias
 
    METHOD New( cTag, cKey, cLabel, cFor, cWhile, lUnique, bEval, nInterval, cOrderBag )
-   METHOD Create()
+   METHOD CREATE()
 
-   METHOD SetFocus() INLINE ( ::alias )->( ORDSETFOCUS( ::Tag, ::cOrderBag ) )
-   METHOD Destroy() INLINE ( ::alias )->( ORDDESTROY( ::Tag, ::cOrderBag ) )
-   METHOD ORDDESTROY() INLINE ( ::alias )->( ORDDESTROY( ::Tag, ::cOrderBag ) )
-   METHOD ORDBAGEXT() INLINE ( ::alias )->( ORDBAGEXT() )
-   METHOD ORDKEYCOUNT() INLINE ( ::alias )->( ORDKEYCOUNT( ::Tag, ::cOrderBag ) )
-   METHOD ORDFOR() INLINE ( ::alias )->( ORDFOR( ::Tag, ::cOrderBag ) )
-   METHOD ORDISUNIQUE() INLINE ( ::alias )->( ORDISUNIQUE( ::Tag, ::cOrderBag ) )
-   METHOD ORDKEY() INLINE ( ::alias )->( ORDKEY( ::Tag, ::cOrderBag ) )
-   METHOD ORDKEYNO() INLINE ( ::alias )->( ORDKEYNO( ::Tag, ::cOrderBag ) )
-   METHOD ORDKEYVAL() INLINE ( ::alias )->( ORDKEYVAL( ::Tag, ::cOrderBag ) )
+   METHOD SetFocus() INLINE ( ::alias )->( ordSetFocus( ::Tag, ::cOrderBag ) )
+   METHOD Destroy() INLINE ( ::alias )->( ordDestroy( ::Tag, ::cOrderBag ) )
+   METHOD ordDestroy() INLINE ( ::alias )->( ordDestroy( ::Tag, ::cOrderBag ) )
+   METHOD ordBagExt() INLINE ( ::alias )->( ordBagExt() )
+   METHOD ordKeyCount() INLINE ( ::alias )->( ordKeyCount( ::Tag, ::cOrderBag ) )
+   METHOD ordFor() INLINE ( ::alias )->( ordFor( ::Tag, ::cOrderBag ) )
+   METHOD ordIsUnique() INLINE ( ::alias )->( ordIsUnique( ::Tag, ::cOrderBag ) )
+   METHOD ordKey() INLINE ( ::alias )->( ordKey( ::Tag, ::cOrderBag ) )
+   METHOD ordKeyNo() INLINE ( ::alias )->( ordKeyNo( ::Tag, ::cOrderBag ) )
+   METHOD ordKeyVal() INLINE ( ::alias )->( ordKeyVal( ::Tag, ::cOrderBag ) )
 
 ENDCLASS
 
@@ -1537,18 +1531,21 @@ METHOD New( cTag, cKey, cLabel, cFor, cWhile, lUnique, bEval, nInterval, cOrderB
    ::bEval     := bEval
    ::nInterval := nInterval
    ::Label     := cLabel
-RETURN Self
 
+   RETURN Self
 
-METHOD PROCEDURE Create() CLASS HBOrder
+METHOD PROCEDURE CREATE() CLASS HBOrder
 
    DEFAULT ::cOrderBag TO ::oTable:cOrderBag
-   //? "<<<",::alias, ::cOrderBag
-   ( ::alias )->( ORDCONDSET( ::cFor, ::bFor, ;
-     .T., ;
-     ::bWhile, ;
-     ::bEval, ::nInterval ) )
 
-   ( ::alias )->( ORDCREATE( ::cOrderBag, ::Tag, ::cKey, ;
-     ::bKey, ::Unique ) )
-RETURN
+// ? "<<<", ::alias, ::cOrderBag
+
+   ( ::alias )->( ordCondSet( ::cFor, ::bFor, ;
+      .T. , ;
+      ::bWhile, ;
+      ::bEval, ::nInterval ) )
+
+   ( ::alias )->( ordCreate( ::cOrderBag, ::Tag, ::cKey, ;
+      ::bKey, ::Unique ) )
+
+   RETURN

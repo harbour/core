@@ -11,13 +11,13 @@ PROCEDURE Main()
    IF .F. .AND. DispAndReturnNIL() // and it should not break!
    ENDIF
 
-   ? "Testing .t. .t."
+   ? "Testing .T. .T."
    AndOr( .T. , .T. )
 
-   ? "Testing .t. .f."
+   ? "Testing .T. .F."
    AndOr( .T. , .F. )
 
-   ? "Testing .f. .f."
+   ? "Testing .F. .F."
    AndOr( .F. , .F. )
 
    ? "Testing errors..."

@@ -146,7 +146,7 @@ METHOD OpenDigest( cUrl ) CLASS tIPClientPOP
 METHOD Close( lAutoQuit ) CLASS tIPClientPOP
 
    IF ! HB_ISLOGICAL( lAutoQuit )
-      lAutoQuit := .t.
+      lAutoQuit := .T.
    ENDIF
 
    ::InetTimeOut( ::SocketCon )

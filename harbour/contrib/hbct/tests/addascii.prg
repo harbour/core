@@ -72,7 +72,7 @@ PROCEDURE Main()
    // csetref() tests
    ?
    ? "CSETREF tests:"
-   ? "  current csetref setting(should be .f.)................: ", csetref()
+   ? "  current csetref setting(should be .F.)................: ", csetref()
    ? "  return value of addascii([A],1,1) call(should be 'B'): ", addascii( "A",1,1 )
    ? "  value of cStr..........................................: ", cStr
    ? "  return value of addascii(cStr,1,1) call...............: ", addascii( cStr,1,1 )
@@ -81,7 +81,7 @@ PROCEDURE Main()
    ? "  value of cStr is now...................................: ", cStr
    ? "  return value of addascii(@cStr,-1,1) call.............: ", addascii( @cStr, - 1,1 )
    ? "  value of cStr is now...................................: ", cStr
-   ? "  return value of csetref(.t.)..........................: ", csetref( .T. )
+   ? "  return value of csetref(.T.)..........................: ", csetref( .T. )
    ? "  return value of addascii([A],1,1) call................: ", addascii( "A",1,1 )
    ? "  return value of addascii(cStr,1,1) call...............: ", addascii( cStr,1,1 )
    ? "  value of cStr is now...................................: ", cStr
@@ -89,7 +89,7 @@ PROCEDURE Main()
    ? "  value of cStr is now...................................: ", cStr
    ? "  return value of addascii(@cStr,-1,1) call.............: ", addascii( @cStr, - 1,1 )
    ? "  value of cStr is now...................................: ", cStr
-   ? "  return value of csetref(.f.)..........................: ", csetref( .F. )
+   ? "  return value of csetref(.F.)..........................: ", csetref( .F. )
 
    // tests for the new 4th parameter
    ?

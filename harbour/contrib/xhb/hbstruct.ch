@@ -59,24 +59,24 @@
              #undef _TSTRUCT_                    ;;
           #endif                                 ;;
           #define _TSTRUCT_ <hStruct>            ;;
-          <hStruct> := HB_Hash()                 ;;
-          HB_HCaseMatch( <hStruct>, .f. )
+          <hStruct> := hb_Hash()                 ;;
+          hb_HCaseMatch( <hStruct>, .F. )
 
 #xcommand MEMBER <cName, ...>                                           ;
              [ AS <type:STRING,NUMERIC,LOGICAL,DATE,CODEBLOCK,OBJECT> ] ;
              [ INIT <uValue> ]                                          ;
           =>                                                            ;
-          HB_HashAddMember( {<(cName)>}, <(type)>, <uValue>, _TSTRUCT_ )
+          hb_HashAddMember( {<(cName)>}, <(type)>, <uValue>, _TSTRUCT_ )
 
 #xcommand MEMBER <cName>                                                ;
              [ AS <type:ARRAY> ]                                        ;
              [ INIT <uValue> ]                                          ;
           =>                                                            ;
-          HB_HashAddMember( {<(cName)>}, <(type)>, <uValue>, _TSTRUCT_ )
+          hb_HashAddMember( {<(cName)>}, <(type)>, <uValue>, _TSTRUCT_ )
 
-#xcommand ENDSTRUCTURE => HB_HAutoAdd( _TSTRUCT_, .f. )
+#xcommand ENDSTRUCTURE => hb_HAutoAdd( _TSTRUCT_, .F. )
 
 
-#translate DESTROY STRUCTURE <hStruct> => <hStruct> := nil
+#translate DESTROY STRUCTURE <hStruct> => <hStruct> := NIL
 
 #endif

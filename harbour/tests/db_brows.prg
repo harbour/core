@@ -92,7 +92,7 @@ PROCEDURE Main( filename )
 
    LOCAL vybkey := 1
 
-   IF filename == Nil
+   IF filename == NIL
       ? "Dbf browse demo"
       ? "Syntax:"
       ? "", "db_brows filename"
@@ -142,11 +142,11 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
    MEMVAR str_barbox
    MEMVAR str_bar
 
-   IF mslist == Nil
+   IF mslist == NIL
       mslist := InitList()
    ENDIF
    IF !( Type( "str_barbox" ) == "C" )
-      PRIVATE str_barbox := hb_UTF8ToStrBox( "│" )
+      PRIVATE str_barbox := hb_UTF8ToStrBox( "░" )
    ENDIF
    IF !( Type( "str_bar" ) == "C" )
       PRIVATE str_bar := /* LOW-ASCII "▼▲" */ Chr( 31 ) + Chr( 30 ) + hb_UTF8ToStr( "■" )
@@ -155,7 +155,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
    LI_X1 := x1
    LI_Y2 := y2
    LI_X2 := x2
-   IF LI_MSF == Nil
+   IF LI_MSF == NIL
       LI_COLCOUNT := FCount()
       LI_MSTYP := Array( LI_COLCOUNT )
       LI_MSLEN := Array( LI_COLCOUNT )
@@ -163,7 +163,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
       AFields( , LI_MSTYP, LI_MSLEN, LI_MSDEC )
    ELSE
       LI_COLCOUNT := Len( LI_MSF )
-      IF LI_MSTYP == Nil
+      IF LI_MSTYP == NIL
          LI_MSTYP := Array( LI_COLCOUNT )
          LI_MSLEN := Array( LI_COLCOUNT )
          LI_MSDEC := Array( LI_COLCOUNT )
@@ -201,10 +201,10 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
    oldcolors := SetColor()
    SetColor( LI_CLR )
    @ LI_Y1, LI_X1, LI_Y2, LI_X2 BOX hb_UTF8ToStrBox( "┌─┐│┘─└│ " )
-   IF title != Nil
+   IF title != NIL
       @ LI_Y1, ( LI_X2 - LI_X1 - 1 - Len( title ) ) / 2 + LI_X1 SAY " " + title + " "
    ENDIF
-   IF title != Nil .AND. LI_NAMES != Nil
+   IF title != NIL .AND. LI_NAMES != NIL
       LI_Y1 ++
    ENDIF
    razmer := LI_Y2 - LI_Y1 - 1
@@ -282,7 +282,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
                   KEYBOARD Chr( iif( ym == LI_Y1, 5, 24 ) )
                   M_HIDE()
                   LOOP
-               ELSEIF ctrl_ar != Nil
+               ELSEIF ctrl_ar != NIL
                   FOR i := 1 TO Len( ctrl_ar )
                      IF ValType( ctrl_ar[ i ] ) == "C"
                         SetColor( ctrl_ar[ i ] )
@@ -423,7 +423,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
          CASE ( xkey == 13 .OR. ( xkey > 47 .AND. xkey < 58 ) .OR. ( xkey > 64 .AND. xkey < 91 ) ;
                .OR. ( xkey > 96 .AND. xkey < 123 ) .OR. ( xkey > 127 .AND. xkey < 176 ) .OR. ( xkey > 223 .AND. xkey < 240 ) ) .AND. predit > 1             // Enter
             fipos := LI_COLPOS + LI_NLEFT - 1 - LI_FREEZE
-            IF LI_WHEN == Nil .OR. Len( LI_WHEN ) < fipos .OR. LI_WHEN[ fipos ] == Nil .OR. Eval( LI_WHEN[ fipos ] )
+            IF LI_WHEN == NIL .OR. Len( LI_WHEN ) < fipos .OR. LI_WHEN[ fipos ] == NIL .OR. Eval( LI_WHEN[ fipos ] )
                IF ValType( LI_MSED ) != "N"
                   vartmp := iif( Len( LI_MSED ) < fipos, 1, LI_MSED[ fipos ] )
                   IF ValType( vartmp ) == "N"
@@ -442,7 +442,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
                vartmp := ReadExit( .T. )
                varbuf := FieldGet( fipos )
                @ LI_NSTR + LI_Y1, LI_XPOS GET varbuf PICTURE Defpict( mslist, fipos, LI_X2 - LI_X1 - 3 )
-               IF LI_VALID != Nil .AND. Len( LI_VALID ) >= fipos .AND. LI_VALID[ fipos ] != Nil
+               IF LI_VALID != NIL .AND. Len( LI_VALID ) >= fipos .AND. LI_VALID[ fipos ] != NIL
                   Getlist[ 1 ] :postBlock := LI_VALID[ fipos ]
                ENDIF
                READ
@@ -458,7 +458,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
                         ENDIF
                      ENDIF
                   ENDIF
-                  IF LI_BDESHOUT != Nil .AND. ValType( varbuf ) == "C"
+                  IF LI_BDESHOUT != NIL .AND. ValType( varbuf ) == "C"
                      varbuf := Eval( LI_BDESHOUT, mslist, varbuf )
                   ENDIF
                   FieldPut( fipos, varbuf )
@@ -482,14 +482,14 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
          CASE xkey == 27                 // Esc
             rez     := .F.
             rezproc := 0
-         CASE xkey == - 1 .AND. ( maskey == Nil .OR. AScan( maskey, xkey ) == 0 )  // F2
+         CASE xkey == - 1 .AND. ( maskey == NIL .OR. AScan( maskey, xkey ) == 0 )  // F2
             IF predit == 1
                predit := predxx
             ELSEIF predit > 1
                predit := 1
             ENDIF
          OTHERWISE
-            IF maskey != Nil
+            IF maskey != NIL
                IF AScan( maskey, xkey ) != 0
                   rez     := .F.
                   rezproc := xkey
@@ -532,7 +532,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
    ENDDO
 
    IF LI_LSOHR
-      RestScreen( iif( title != Nil .AND. LI_NAMES != Nil, LI_Y1 - 1, LI_Y1 ), LI_X1, LI_Y2, LI_X2, wndbuf )
+      RestScreen( iif( title != NIL .AND. LI_NAMES != NIL, LI_Y1 - 1, LI_Y1 ), LI_X1, LI_Y2, LI_X2, wndbuf )
    ELSE
       SetColor( LI_CLRV )
       VIVSTR( mslist, LI_NSTR + LI_Y1, iif( predit > 1, LI_COLPOS, 0 ) )
@@ -556,7 +556,7 @@ FUNCTION FLDCOUNT( mslist, xstrt, xend, fld1 )
    LOCAL klf := 0, i := iif( LI_FREEZE > 0, 1, fld1 )
 
    DO WHILE .T.
-      xstrt += Max( Len( FLDSTR( mslist, i ) ), iif( LI_NAMES != Nil .AND. Len( LI_NAMES ) >= i, Len( LI_NAMES[ i ] ), 0 ) ) - 1
+      xstrt += Max( Len( FLDSTR( mslist, i ) ), iif( LI_NAMES != NIL .AND. Len( LI_NAMES ) >= i, Len( LI_NAMES[ i ] ), 0 ) ) - 1
       IF xstrt > xend
          EXIT
       ENDIF
@@ -583,16 +583,16 @@ FUNCTION VIVNAMES( mslist )
 
    LOCAL i := 1, x, oldc, fif
 
-   IF LI_NAMES != Nil
+   IF LI_NAMES != NIL
       x := LI_X1 + 2
-      IF LI_NMCLR != Nil
+      IF LI_NMCLR != NIL
          oldc := SetColor( LI_NMCLR )
       ENDIF
       @ LI_Y1, x - 1 CLEAR TO LI_Y1, LI_X2 - 1
       fif := iif( LI_FREEZE > 0, 1, LI_NLEFT )
       // DO MSFNEXT WITH mslist,fif
       DO WHILE i <= LI_NCOLUMNS .AND. fif <= Len( LI_NAMES )
-         IF LI_NAMES[ fif ] != Nil
+         IF LI_NAMES[ fif ] != NIL
             @ LI_Y1, x SAY LI_NAMES[ fif ]
          ENDIF
          x   := x + Max( Len( FLDSTR( mslist, fif ) ), Len( LI_NAMES[ fif ] ) ) + 1
@@ -600,12 +600,12 @@ FUNCTION VIVNAMES( mslist )
          // DO MSFNEXT WITH mslist,fif
          i ++
       ENDDO
-      IF LI_NMCLR != Nil
+      IF LI_NMCLR != NIL
          SetColor( oldc )
       ENDIF
    ENDIF
 
-   RETURN Nil
+   RETURN NIL
 
 //+--------------------------------------------------------------------
 //+
@@ -677,7 +677,7 @@ STATIC PROCEDURE VIVSTR( mslist, nstroka, vybfld )
             sviv := FLDSTR( mslist, fif )
             sviv := iif( Len( sviv ) < LI_X2 - 1 - x, sviv, SubStr( sviv, 1, LI_X2 - 1 - x ) )
          ENDIF
-         x   := x + Max( Len( sviv ), iif( LI_NAMES != Nil .AND. Len( LI_NAMES ) >= fif, Len( LI_NAMES[ fif ] ), 0 ) ) + 1
+         x   := x + Max( Len( sviv ), iif( LI_NAMES != NIL .AND. Len( LI_NAMES ) >= fif, Len( LI_NAMES[ fif ] ), 0 ) ) + 1
          fif := iif( fif == LI_FREEZE, LI_NLEFT, fif + 1 )
       NEXT
       // DO MSFNEXT WITH mslist,fif
@@ -708,7 +708,7 @@ FUNCTION FLDSTR( mslist, numf )
 
    LOCAL fldtype, rez, vartmp
 
-   IF LI_MSF != Nil
+   IF LI_MSF != NIL
       IF numf <= Len( LI_MSF )
          vartmp := LI_MSF[ numf ]
          IF ( fldtype := ValType( vartmp ) ) == "B"
@@ -742,7 +742,7 @@ FUNCTION FLDSTR( mslist, numf )
    CASE fldtype == "M"
       rez := "  <Memo>  "
    ENDCASE
-   IF LI_BDESHIN != Nil
+   IF LI_BDESHIN != NIL
       rez := Eval( LI_BDESHIN, mslist, rez )
    ENDIF
 
@@ -796,7 +796,7 @@ FUNCTION InitList
    LI_BGOTO   := {| a, n | HB_SYMBOL_UNUSED( a ), dbGoto( n ) }
    LI_PRFLT   := LI_LVIEW := .F.
    LI_LSOHR   := .T.
-   LI_BDESHIN := LI_BDESHOUT := LI_MSF := LI_MSTYP := LI_NAMES := Nil
+   LI_BDESHIN := LI_BDESHOUT := LI_MSF := LI_MSTYP := LI_NAMES := NIL
    LI_TEKZP   := 1
 
    RETURN mslist
@@ -816,7 +816,7 @@ FUNCTION Defpict( mslist, i, maxlen )
    LOCAL spict, fldd, fldtype := LI_MSTYP[ i ], fldlen := LI_MSLEN[ i ]
    DO CASE
    CASE fldtype == "C"
-      spict := iif( maxlen == Nil, Replicate( "X", fldlen ), "@S" + NUM_STR( maxlen, 2 ) )
+      spict := iif( maxlen == NIL, Replicate( "X", fldlen ), "@S" + NUM_STR( maxlen, 2 ) )
    CASE fldtype == "N"
       fldd  := LI_MSDEC[ i ]
       spict := iif( fldd == 0, Replicate( "9", fldlen ), Replicate( "9", fldlen - 1 - fldd ) + "." + Replicate( "9", fldd ) )

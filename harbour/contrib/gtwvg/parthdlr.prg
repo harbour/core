@@ -205,7 +205,7 @@ METHOD WvgPartHandler:removeChild( oChild )
    LOCAL n
 
    IF ( n := ascan( ::aChildren, {| o | o == oChild } ) ) > 0
-      hb_aDel( ::aChildren, n, .t. )
+      hb_aDel( ::aChildren, n, .T. )
    ENDIF
 
    RETURN Self
@@ -374,13 +374,13 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
       IF HB_ISBLOCK( ::sl_setInputFocus )
          eval( ::sl_setInputFocus, NIL, NIL, Self )
       ENDIF
-      ::lHasInputFocus := .t.
+      ::lHasInputFocus := .T.
 
    CASE nEvent == HB_GTE_KILLFOCUS
       IF HB_ISBLOCK( ::sl_killInputFocus )
          eval( ::sl_killInputFocus, NIL, NIL, Self )
       ENDIF
-      ::lHasInputFocus := .f.
+      ::lHasInputFocus := .F.
 
    CASE nEvent == HB_GTE_PAINT
       /* aeval( ::aChildren, {| o | WVG_InvalidateRect( o:hWnd ) } ) */
@@ -464,7 +464,7 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
    CASE nEvent == HB_GTE_RESIZED
       IF ::objType == objTypeDialog
          IF ::drawingArea:objType == objTypeDA
-            ::drawingArea:setPosAndSize( {0,0}, ::currentSize(), .f. )
+            ::drawingArea:setPosAndSize( {0,0}, ::currentSize(), .F. )
          ENDIF
       ENDIF
       IF HB_ISBLOCK( ::sl_resize )
@@ -590,7 +590,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    CASE WM_MOUSELEAVE
       IF ::objType == objTypeScrollBar
-         ::lTracking := .f.
+         ::lTracking := .F.
          IF ::oParent:objType == objTypeCrt
             WAPI_SetFocus( ::oParent:pWnd )
          ENDIF

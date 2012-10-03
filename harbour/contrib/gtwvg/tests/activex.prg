@@ -31,15 +31,15 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
 
    //--------------------------- Dialog -------------------------------\\
    #if 1
-   oCrt := WvgDialog():new( , , { 30,30 }, { 800,600 }, , .t. )
-   oCrt:closable := .t.
+   oCrt := WvgDialog():new( , , { 30,30 }, { 800,600 }, , .T. )
+   oCrt:closable := .T.
    oCrt:create()
    #else
-   oCrt := WvgCrt():new( , , { 5,5 }, { 30,60 }, , .t. )
+   oCrt := WvgCrt():new( , , { 5,5 }, { 30,60 }, , .T. )
    oCrt:resizeMode := HB_GTI_RESIZEMODE_ROWS
-   oCrt:closable := .t.
+   oCrt:closable := .T.
    oCrt:create()
-   SetCursor( .f. )
+   SetCursor( .F. )
    #endif
 
    oDA := oCrt:drawingArea
@@ -51,7 +51,7 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    oTBar := BuildWvgToolBar( oDA, nActiveX )
 
    //--------------------------- StatusBar ---------------------------\\
-   oSBar   := WvgStatusBar():new( oDA ):create( , , , , , .t. )
+   oSBar   := WvgStatusBar():new( oDA ):create( , , , , , .T. )
    oSBar:panelClick := {| oPanel | WVG_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
    oPanel:caption := 'My Root Panel'
@@ -66,12 +66,12 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    oStatic:options := WVGSTATIC_TEXT_CENTER
    oStatic:caption := chr(13)+'Implemented   Xbase++ Parts'
    oStatic:create( , , { 0, oTBar:currentSize()[2]+3 }, { 120, oCrt:currentSize()[2]-;
-                               oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .t. )
+                               oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .T. )
    oStatic:setColorBG( RGB( 198,198,198 ) )
 
 #if 0  // panel
    //--------------------------- Static + Radio + Checkbox ----------\\
-   oStatic2:= WvgStatic():New( oCrt, , { 150, 150 }, { 500,310 }, , .f. )
+   oStatic2:= WvgStatic():New( oCrt, , { 150, 150 }, { 500,310 }, , .F. )
    //oStatic2:type    := WVGSTATIC_TYPE_RAISEDBOX //BGNDFRAME
    oStatic2:exStyle += WS_EX_WINDOWEDGE
    //oStatic2:options := WVGSTATIC_FRAMETHICK
@@ -93,7 +93,7 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    oRadio:caption   := "Com 2"
    oRadio:create()
 
-   oCheck              := WvgCheckBox():New( oStatic2, , { 10,70 }, { 100,15 }, , .t. )
+   oCheck              := WvgCheckBox():New( oStatic2, , { 10,70 }, { 100,15 }, , .T. )
    oCheck:caption   := 'Checkbox A'
    oCheck:create()
    oCheck:selected  := {| m1, m2, o | m1:=m1,m2:=m2, WVG_MessageBox( , iif( o:getData(), 'I am selected','I am not selected' ) ) }
@@ -139,7 +139,7 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    // assign data code block accessing LOCAL variable
    oMLE    := WvgMLE():new( oStatic2 )
    oMLE:wordWrap := .F.
-   oMLE:border   := .t.
+   oMLE:border   := .T.
    oMLE:dataLink := {| x | iif( x == NIL, cText, cText := x ) }
    oMLE:create( oStatic2, , { 180,10 }, { 310,250 } )
    // Copy text from LOCAL variable into edit buffer via :dataLink
@@ -181,7 +181,7 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    //--------------------------- TreeView ---------------------------\\
    oTree := WvgTreeView():new( oDA, , { oCrt:currentSize()[1]-160,oTBar:currentSize()[2]+3 }, ;
                                        { 160, oCrt:currentSize()[2]-;
-                               oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .t. )
+                               oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .T. )
    oTree:hasLines   := .T.
    oTree:hasButtons := .T.
    oTree:alwaysShowSelection := .T.
@@ -202,9 +202,9 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    oItem2:addItem( "Third level C" )
 
    #if 0
-   oItem1:expand( .t. )
+   oItem1:expand( .T. )
    #else
-   oTree:showExpanded( .t., 2 )
+   oTree:showExpanded( .T., 2 )
    #endif
 
    oTree:setData( oItem2 )
@@ -227,7 +227,7 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    ENDIF
    #else
    oCrt:show()
-   DO WHILE .t.
+   DO WHILE .T.
       IF inkey() == K_ESC
          EXIT
       ENDIF
@@ -255,12 +255,12 @@ STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree )
    nH := aCrt[2]-aTBar[2]-aSBar[2]
 
    IF oStatic:isVisible
-      oStatic:setPosAndSize( { 0, nT+3 }, { 120, nH-4 }, .t. )
-      oCom:setPosAndSize( { 120, nT }, { aCrt[1]-120-150, nH }, .t. )
-      oTree:setPosAndSize( { aCrt[1]-150, nT }, { 150, nH }, .t. )
+      oStatic:setPosAndSize( { 0, nT+3 }, { 120, nH-4 }, .T. )
+      oCom:setPosAndSize( { 120, nT }, { aCrt[1]-120-150, nH }, .T. )
+      oTree:setPosAndSize( { aCrt[1]-150, nT }, { 150, nH }, .T. )
    ELSE
-      oCom:setPosAndSize( { 0, nT }, { aCrt[1]-150, nH }, .t. )
-      oTree:setPosAndSize( { aCrt[1]-150, nT }, { 150, nH }, .t. )
+      oCom:setPosAndSize( { 0, nT }, { aCrt[1]-150, nH }, .T. )
+      oTree:setPosAndSize( { aCrt[1]-150, nT }, { 150, nH }, .T. )
    ENDIF
 
    RETURN 1
@@ -310,7 +310,7 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
 
    DEFAULT nActiveX TO 2
 
-   oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .t. )
+   oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .T. )
 
    do case
    case nActiveX == 1
@@ -338,8 +338,8 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
       oCom:mapEvent( evDblClk, {|| oCom:Value     := seconds()/86400 ,;
                                    oCom:BackColor := RGB( 0,140,210 ),;
                                    oCom:Refresh()                    ,;
-                                   oCom:ShowSecondsHand := .t.       ,;
-                                   oCom:Hands3D   := .t.             ,;
+                                   oCom:ShowSecondsHand := .T.       ,;
+                                   oCom:Hands3D   := .T.             ,;
                                    oCom:Refresh()                    ,;
                                    oCom:showAboutBox()                ;
                                 } )
@@ -380,12 +380,12 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
    //
    if nActiveX == 1
       hb_gtInfo( HB_GTI_WINTITLE, iif( empty( xParam ), 'http://hbide.vouch.info', xParam ) )
-      oCom:AddressBar := .t.
+      oCom:AddressBar := .T.
       oCom:Navigate( iif( empty( xParam ), 'http://hbide.vouch.info', xParam ) )
 
    elseif nActiveX == 4
       ConfigureRMChart( oCom )
-      oCom:Draw( .t. )
+      oCom:Draw( .T. )
       oCom:Draw2Clipboard()
 
    elseif nActiveX == 5
@@ -400,7 +400,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
 
    endif
 
-   do while .t.
+   do while .T.
       nKey := inkey()
 
       IF nActiveX == 2
@@ -421,7 +421,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
 
             oCom:Region(1):SetProperties( 5.0,5.0,-5.0,-5.0 )
 
-            oCom:Draw( .t. )
+            oCom:Draw( .T. )
          endif
 
       elseif nKey == K_F11
@@ -574,7 +574,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
 
             oCom:Reset()
             oCom:RMCFile := sData
-            oCom:Draw( .t. )
+            oCom:Draw( .T. )
          endif
 
       endif

@@ -771,7 +771,7 @@ static void hb_gt_sln_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
     * outstd( <cBlinkSequence> )
     * The only one thing I can make in portable way which will always
     * work is disabling sending BLINK attribute to remote terminal. So
-    * in GTSLN like in GTCRS the function SetBlink( .f. ) does it, [Druzus]
+    * in GTSLN like in GTCRS the function SetBlink( .F. ) does it, [Druzus]
     */
 
    SLtt_Blink_Mode = fBlink ? 1 : 0;

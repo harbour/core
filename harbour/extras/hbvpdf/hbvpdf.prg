@@ -35,7 +35,7 @@ local _nFont, lReverse, nAt
 
 DEFAULT nRow to t_aReport[ REPORTLINE ]
 DEFAULT cUnits to "R"
-DEFAULT lExact to .f.
+DEFAULT lExact to .F.
 DEFAULT cId to ""
 
    IF t_aReport[ HEADEREDIT ]
@@ -46,7 +46,7 @@ DEFAULT cId to ""
       cString := left( cString, nAt - 1 ) + ltrim(str( pdfPageNumber())) + substr( cString, nAt + 12 )
    ENDIF
 
-   lReverse := .f.
+   lReverse := .F.
    IF cUnits == "M"
       nRow := pdfM2Y( nRow )
       nCol := pdfM2X( nCol )
@@ -66,7 +66,7 @@ DEFAULT cId to ""
          cString := left( cString, len( cString ) - 1 )
          pdfBox( t_aReport[ PAGEY ] - nRow - t_aReport[ FONTSIZE ] + 2.0 , nCol, t_aReport[ PAGEY ] - nRow + 2.0, nCol + pdfM2X( pdfLen( cString )) + 1,,100, "D")
          t_aReport[ PAGEBUFFER ] += " 1 g "
-         lReverse := .t.
+         lReverse := .T.
       ELSEIF right( cString, 1 ) == chr(254) //underline
          cString := left( cString, len( cString ) - 1 )
          pdfBox( t_aReport[ PAGEY ] - nRow + 0.5,  nCol, t_aReport[ PAGEY ] - nRow + 1, nCol + pdfM2X( pdfLen( cString )) + 1,,100, "D")
@@ -347,7 +347,7 @@ function pdfCenter( cString, nRow, nCol, cUnits, lExact, cId )                /*
 local nLen, nAt
 DEFAULT nRow to t_aReport[ REPORTLINE ]
 DEFAULT cUnits to "R"
-DEFAULT lExact to .f.
+DEFAULT lExact to .F.
 DEFAULT nCol to iif( cUnits == "R", t_aReport[ REPORTWIDTH ] / 2, t_aReport[ PAGEX ] / 72 * 25.4 / 2 )
 
    IF t_aReport[ HEADEREDIT ]
@@ -883,7 +883,7 @@ function pdfOpen( cFile, nLen, lOptimize )                                    /*
 ==========================================                                    */
 local cTemp, nI, nJ, n1, n2 := 896, n12
 DEFAULT nLen to 200
-DEFAULT lOptimize to .f.
+DEFAULT lOptimize to .F.
 
    t_aReport[ FONTNAME     ] := 1
    t_aReport[ FONTSIZE     ] := 10
@@ -901,8 +901,8 @@ DEFAULT lOptimize to .f.
    t_aReport[ REPORTOBJ    ] := 1//2
    t_aReport[ DOCLEN       ] := 0
    t_aReport[ TYPE1        ] := { "Times-Roman", "Times-Bold", "Times-Italic", "Times-BoldItalic", "Helvetica", "Helvetica-Bold", "Helvetica-Oblique", "Helvetica-BoldOblique", "Courier", "Courier-Bold", "Courier-Oblique", "Courier-BoldOblique"  } // 0.04
-   t_aReport[ MARGINS      ] := .t.
-   t_aReport[ HEADEREDIT   ] := .f.
+   t_aReport[ MARGINS      ] := .T.
+   t_aReport[ HEADEREDIT   ] := .F.
    t_aReport[ NEXTOBJ      ] := 0
    t_aReport[ PDFTOP       ] := 1 // top
    t_aReport[ PDFLEFT      ] := 10 // left & right
@@ -1050,7 +1050,7 @@ function pdfRJust( cString, nRow, nCol, cUnits, lExact, cId )                 /*
 local nLen, nAdj := 1.0, nAt
 DEFAULT nRow to t_aReport[ REPORTLINE ]
 DEFAULT cUnits to "R"
-DEFAULT lExact to .f.
+DEFAULT lExact to .F.
 
    IF t_aReport[ HEADEREDIT ]
       return pdfHeader( "PDFRJUST", cId, { cString, nRow, nCol, cUnits, lExact } )
@@ -1123,7 +1123,7 @@ return cString
 ==============================================================================*/
 function pdfTextCount( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits )/*
 ==============================================================================*/
-return pdfText( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, .f. )
+return pdfText( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, .F. )
                                                                                  /*
 =================================================================================*/
 function pdfText( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, cColor, lPrint )/*
@@ -1134,7 +1134,7 @@ local lParagraph, nSpace, nNew, nTokenLen, nCRLF, nTokens, nLen
 DEFAULT nTab to -1
 DEFAULT cUnits to 'R'
 DEFAULT nJustify to 4 // justify
-DEFAULT lPrint to .t.
+DEFAULT lPrint to .T.
 DEFAULT cColor to ""
 
    IF cUnits == "M"
@@ -1169,7 +1169,7 @@ DEFAULT cColor to ""
    nL += nNew * nSpace // first always paragraph
    nLineLen := nSpace * nNew - nSpace
 
-   lParagraph := .t.
+   lParagraph := .T.
    nI := 1
 
    while nI <= nTokens
@@ -1189,7 +1189,7 @@ DEFAULT cColor to ""
                   IF nJustify != 2
                      nL += nSpace * nNew
                   ENDIF
-                  lParagraph := .f.
+                  lParagraph := .F.
                ENDIF
                IF nJustify == 2
                   nL := nLeft + ( nLength - pdfLen( cTemp ) ) / 2
@@ -1278,7 +1278,7 @@ local nFinish, nL, nB, nJ, cToken, nRow
 
    nStart := nFinish + 1
 
-   lParagraph := .f.
+   lParagraph := .F.
 
    nLineLen := 0.00
    nLineLen += nSpace * nNew
@@ -1340,22 +1340,22 @@ DEFAULT cFile to ""
    ELSE
       t_aReport[ HEADER ] := {}
    ENDIF
-   t_aReport[ MARGINS ] := .t.
+   t_aReport[ MARGINS ] := .T.
 return nil
 
 function pdfEditOnHeader()
-   t_aReport[ HEADEREDIT ] := .t.
-   t_aReport[ MARGINS ] := .t.
+   t_aReport[ HEADEREDIT ] := .T.
+   t_aReport[ MARGINS ] := .T.
 return nil
 
 function pdfEditOffHeader()
-   t_aReport[ HEADEREDIT ] := .f.
-   t_aReport[ MARGINS ] := .t.
+   t_aReport[ HEADEREDIT ] := .F.
+   t_aReport[ MARGINS ] := .T.
 return nil
 
 function pdfCloseHeader()
    t_aReport[ HEADER ] := {}
-   t_aReport[ MARGINS ] := .f.
+   t_aReport[ MARGINS ] := .F.
 return nil
 
 function pdfDeleteHeader( cId )
@@ -1366,7 +1366,7 @@ local nRet := -1, nId
       nRet := len( t_aReport[ HEADER ] ) - 1
       aDel( t_aReport[ HEADER ], nId )
       aSize( t_aReport[ HEADER ], nRet )
-      t_aReport[ MARGINS ] := .t.
+      t_aReport[ MARGINS ] := .T.
    ENDIF
 return nRet
 
@@ -1375,8 +1375,8 @@ local nId
    cId := upper( cId )
    nId := ascan( t_aReport[ HEADER ], {| arr | arr[ 3 ] == cId })
    IF nId > 0
-      t_aReport[ HEADER ][ nId ][ 1 ] := .t.
-      t_aReport[ MARGINS ] := .t.
+      t_aReport[ HEADER ][ nId ][ 1 ] := .T.
+      t_aReport[ MARGINS ] := .T.
    ENDIF
 return nil
 
@@ -1385,8 +1385,8 @@ local nId
    cId := upper( cId )
    nId := ascan( t_aReport[ HEADER ], {| arr | arr[ 3 ] == cId })
    IF nId > 0
-      t_aReport[ HEADER ][ nId ][ 1 ] := .f.
-      t_aReport[ MARGINS ] := .t.
+      t_aReport[ HEADER ][ nId ][ 1 ] := .F.
+      t_aReport[ MARGINS ] := .T.
    ENDIF
 return nil
 
@@ -1417,7 +1417,7 @@ local nId, nI, nLen, nIdLen
          ++nId
          cId += ltrim(str(nId))
       ENDIF
-      aadd( t_aReport[ HEADER ], { .t., cFunction, cId } )
+      aadd( t_aReport[ HEADER ], { .T., cFunction, cId } )
       ++nLen
       for nI := 1 to len( arr )
          aadd( t_aReport[ HEADER ][ nLen ], arr[ nI ] )
@@ -1476,7 +1476,7 @@ local nI, _nFont, _nSize, nLen := len( t_aReport[ HEADER ] )
          t_aReport[ PDFLEFT ] := 10 // left & right
          t_aReport[ PDFBOTTOM ] := t_aReport[ PAGEY ] / 72 * t_aReport[ LPI ] - 1 // bottom, default "LETTER", "P", 6
 
-         t_aReport[ MARGINS ] := .f.
+         t_aReport[ MARGINS ] := .F.
       ENDIF
    ENDIF
 return nil
@@ -1650,7 +1650,7 @@ local nI, nLen := len( t_aReport[ HEADER ] ), nTemp, aTemp, nHeight
       ENDIF
    next
 
-   t_aReport[ MARGINS ] := .f.
+   t_aReport[ MARGINS ] := .F.
 
 return nil
 
@@ -1726,22 +1726,22 @@ DEFAULT _width to 200
    ENDIF
 
    pdfSetFont("Helvetica", BOLD, 10) // 0.04
-   pdfAtSay( "Test Line 1", t_aReportStyle[ nStyle ][ 1 ], 1, "R", .t. )
+   pdfAtSay( "Test Line 1", t_aReportStyle[ nStyle ][ 1 ], 1, "R", .T. )
 
    pdfSetFont("Times", BOLD, 18)
-   pdfCenter( "Test Line 2", t_aReportStyle[ nStyle ][ 2 ],,"R", .t. )
+   pdfCenter( "Test Line 2", t_aReportStyle[ nStyle ][ 2 ],,"R", .T. )
 
    pdfSetFont("Times", BOLD, 12)
-   pdfCenter( "Test Line 3", t_aReportStyle[ nStyle ][ 3 ],,"R", .t. )
+   pdfCenter( "Test Line 3", t_aReportStyle[ nStyle ][ 3 ],,"R", .T. )
 
    pdfSetFont("Helvetica", BOLD, 10) // 0.04
-   pdfAtSay( "Test Line 4", t_aReportStyle[ nStyle ][ 4 ], 1, "R", .t. )
+   pdfAtSay( "Test Line 4", t_aReportStyle[ nStyle ][ 4 ], 1, "R", .T. )
 
    pdfSetFont("Helvetica", BOLD, 10) // 0.04
-   pdfAtSay( "Test Line 5", t_aReportStyle[ nStyle ][ 5 ], 1, "R", .t. )
+   pdfAtSay( "Test Line 5", t_aReportStyle[ nStyle ][ 5 ], 1, "R", .T. )
 
-   pdfAtSay( dtoc( date()) + " " + TimeAsAMPM( time() ), t_aReportStyle[ nStyle ][ 6 ], 1, "R", .t. )
-   pdfRJust( "Page: #pagenumber#", t_aReportStyle[ nStyle ][ 6 ], t_aReport[ REPORTWIDTH ], "R", .t. )
+   pdfAtSay( dtoc( date()) + " " + TimeAsAMPM( time() ), t_aReportStyle[ nStyle ][ 6 ], 1, "R", .T. )
+   pdfRJust( "Page: #pagenumber#", t_aReportStyle[ nStyle ][ 6 ], t_aReport[ REPORTWIDTH ], "R", .T. )
 
    pdfEditOffHeader()
    pdfSaveHeader( _file )

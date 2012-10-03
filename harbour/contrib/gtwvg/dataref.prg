@@ -180,7 +180,7 @@ METHOD WvgDataRef:setData( xValue, mp2 )
 
    CASE ::className == "SCROLLBAR"
       IF ::sl_editBuffer != NIL
-         WAPI_SetScrollPos( ::pWnd, SB_CTL, ::sl_editBuffer, .t. )
+         WAPI_SetScrollPos( ::pWnd, SB_CTL, ::sl_editBuffer, .T. )
       ENDIF
 
    CASE ::className == "COMBOBOX"
@@ -200,7 +200,7 @@ METHOD WvgDataRef:setData( xValue, mp2 )
 
 METHOD WvgDataRef:undo()
 
-   RETURN .f.
+   RETURN .F.
 
 //
 
@@ -212,6 +212,6 @@ METHOD WvgDataRef:validate( xParam )
       ::sl_validate := xParam
    ENDIF
 
-   RETURN .t.
+   RETURN .T.
 
 //

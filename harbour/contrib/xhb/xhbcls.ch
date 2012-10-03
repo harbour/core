@@ -64,10 +64,10 @@
 
    #include "hboo.ch"
 
-   #xtranslate __xhb_cls_scope( <scope>, .t. ) => <scope> + HB_OO_CLSTP_PERSIST
-   #xtranslate __xhb_cls_scope( <scope>, .f. ) => <scope>
-   #xtranslate __xhb_cls_scope( , .t. ) => HB_OO_CLSTP_PERSIST
-   #xtranslate __xhb_cls_scope( , .f. ) =>
+   #xtranslate __xhb_cls_scope( <scope>, .T. ) => <scope> + HB_OO_CLSTP_PERSIST
+   #xtranslate __xhb_cls_scope( <scope>, .F. ) => <scope>
+   #xtranslate __xhb_cls_scope( , .T. ) => HB_OO_CLSTP_PERSIST
+   #xtranslate __xhb_cls_scope( , .F. ) =>
 
    #xcommand OVERRIDE METHOD <!Message!> [IN] CLASS <!Class!> ;
                              WITH [METHOD] <!Method!> [SCOPE <Scope>] => ;

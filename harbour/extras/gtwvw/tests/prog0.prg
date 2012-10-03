@@ -60,7 +60,7 @@ local cName := padr("Name",20)
 local cAddr := padr("Address",25)
 local cPhone:= padr("Phone",15)
 local cFax  := padr("Fax",15)
-local lDone := .f.
+local lDone := .F.
 local getlist := {}
 local oldCurs := setcursor(SC_NORMAL)
 
@@ -89,7 +89,7 @@ return //xGet1()
    for illustration purposes only */
 FUNCTION xBrowse1()
    LOCAL nKey, bBlock, oBrowse , i
-   LOCAL lEnd    := .f.
+   LOCAL lEnd    := .F.
    LOCAL info_   := {}
    LOCAL nTop    :=  6
    LOCAL nLeft   :=  3
@@ -220,14 +220,14 @@ RETURN  {|| fieldget( i ) }
 // supporting functions ***************************
 
 function lMessage(cMsg)
-* displays a message on maxrow() and returns .t.
+* displays a message on maxrow() and returns .T.
 local cOldColor := setcolor(s_cStdColor)
   @ maxrow(), 0 say padc(cMsg, maxcol()+1)
   setcolor(cOldColor)
-return .t.
+return .T.
 
 function lYesNo(cMsg)
-* display cmsg with Yes/No option, returns .t. if Yes selected
+* display cmsg with Yes/No option, returns .T. if Yes selected
 local nTopLine, ;
       nLeft := 5, ;
       nBotLine := maxrow()-2,;
@@ -304,7 +304,7 @@ local oldColor := setcolor(s_cStdColor)
 
    setcursor(oldCurs)
    setcolor(oldColor)
-return .t.
+return .T.
 
 FUNCTION ZNEWWINDOW(wtype,r1,c1,r2,c2,ctitle, ccolor)
 * Draw a new window on screen and register it in window list

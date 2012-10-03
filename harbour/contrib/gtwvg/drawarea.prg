@@ -98,7 +98,7 @@ METHOD WvgDrawingArea:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::exStyle     := 0
    ::className   := "DrawingArea"
    ::objType     := objTypeDA
-   ::visible     := .t.
+   ::visible     := .T.
 
    RETURN Self
 
@@ -108,7 +108,7 @@ METHOD WvgDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    HB_SYMBOL_UNUSED( lVisible )
 
-   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, .t. )
+   ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, .T. )
 
    ::oParent:addChild( Self )
 

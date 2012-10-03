@@ -13,7 +13,7 @@
 #include "fileio.ch"
 
 #define IMAGES_IN  ""
-#define IMAGES_OUT "imgs_out/"
+#define IMAGES_OUT "imgs_out" + hb_ps()
 
 PROCEDURE Main()
 
@@ -27,15 +27,13 @@ PROCEDURE Main()
    LOCAL nH, nLen, cStr
 // LOCAL appo
 
-   //? "Press Alt-D + Enter to activate debug"
-   //AltD( .T. )
-   //Inkey(0)
+// ? "Press Alt-D + Enter to activate debug"
+// AltD( .T. )
+// Inkey( 0 )
    AltD()
    // Check output directory
-   IF !hb_DirExists( IMAGES_OUT )
-#ifdef HB_COMPAT_C53
+   IF ! hb_DirExists( IMAGES_OUT )
       hb_DirCreate( IMAGES_OUT )
-#endif
    ENDIF
 
    ? "Initialise"
@@ -153,42 +151,42 @@ PROCEDURE Main()
    //bmpinfoheader:Buffer( fi_GetInfoHeader( im ), .T. )
    //bmpinfoheader:Pointer( fi_GetInfoHeader( im ) )
    //? "Header           :", ValToPrg( bmpinfoheader )
-   //? bmpinfoheader:SayMembers(" ", .t., .t.)
+   //? bmpinfoheader:SayMembers(" ", .T., .T. )
 
    //bmpinfo:Pointer( fi_GetInfo( im ) )
    bmpinfo := NIL // To fix warning
    ? "Info           :", ValToPrg( bmpinfo )
-   //? bmpinfo:SayMembers(" ", .t., .t.)
+   //? bmpinfo:SayMembers(" ", .T., .T. )
    ? "-----------------------------------------------------"
    //? ValType( bmpinfo:Devalue() )
    //Tracelog( "bmpinfoheader", ValToPrg( bmpinfoheader ), ;
-   //          bmpinfoheader:SayMembers(, .t.), bmpinfoheader:Value(), bmpinfoheader:DeValue(), hb_dumpvar( bmpinfoheader:Array() ), hb_dumpvar( bmpinfoheader:acMembers ) )
+   //          bmpinfoheader:SayMembers(, .T.), bmpinfoheader:Value(), bmpinfoheader:DeValue(), hb_dumpvar( bmpinfoheader:Array() ), hb_dumpvar( bmpinfoheader:acMembers ) )
 
    //appo := bkcolor:Value()
    //? bkcolor:Pointer( fi_GetBackgroundColor( im ) )
    //? fi_GetBackgroundColor( im, @bkcolor:Value() )
    //bkcolor:Buffer( appo )
-   //? bkcolor:SayMembers(" ", .t., .t.)
+   //? bkcolor:SayMembers( " ", .T., .T. )
 
    //bkcolor:rgbBlue := 205
    //? fi_SetBackgroundColor( im, hb_String2Pointer( bkcolor:Value() ) )
    Tracelog( "linha 168" )
    //? fi_SetBackgroundColor( im, bkcolor:Value() )
    Tracelog( "linha 170" )
-   //? bkcolor:SayMembers(" ", .t., .t.)
+   //? bkcolor:SayMembers( " ", .T., .T. )
    Tracelog( "linha 162" )
    //? bkcolor:Pointer( fi_GetBackgroundColor( im ) )
    //? fi_GetBackgroundColor( im, @bkcolor:Value() )
    //bkcolor:Buffer( appo )
    Tracelog( "linha 176" )
-   //? bkcolor:SayMembers(" ", .t., .t.)
+   //? bkcolor:SayMembers( " ", .T., .T. )
 
    Tracelog( "linha 179" )
    //iccprofile:Pointer( fi_GetICCProfile( im ) )
    Tracelog( "linha 181" )
    //? "Header           :", ValToPrg( iccprofile )
    Tracelog( "linha 183" )
-   //? iccprofile:SayMembers(" ", .T., .T. )
+   //? iccprofile:SayMembers( " ", .T., .T. )
 
    //bmpinfoheader:Reset()
    //appo := NIL

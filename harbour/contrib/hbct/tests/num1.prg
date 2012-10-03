@@ -54,7 +54,7 @@
 
 PROCEDURE Main()
 
-   CTINIT()
+   ctinit()
 
    SET DECIMAL TO 14
    CLS

@@ -41,7 +41,7 @@ RETURN infoCls():new()
 METHOD ref( p1, p2, p3, p4, p5, p6, p7 ) CLASS OleObjServer
    p1 := date()
    p2 := hb_datetime()
-   p3 := .t.
+   p3 := .T.
    p4 := { "A", "B", "C" }
    p5 := timerCls():new()
    p6 := 123.456

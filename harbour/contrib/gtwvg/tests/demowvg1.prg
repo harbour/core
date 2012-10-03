@@ -38,9 +38,9 @@ FUNCTION Main()
    SET DATE ANSI
    SET( _SET_EVENTMASK, INKEY_ALL + HB_INKEY_GTEVENT )
 
-   Wvt_SetGui( .t. )
+   Wvt_SetGui( .T. )
    Wvt_SetFont( "Courier New", 18, 0, 0 )
-   Wvt_SetMouseMove( .t. )
+   Wvt_SetMouseMove( .T. )
 
    SetColor( "N/W" )
    CLS
@@ -52,7 +52,7 @@ FUNCTION Main()
 
    aPaint := {}
 
-   aAdd( aPaint, { "Label" , {|| Wvt_DrawLabel( 1, 40, "Harbour Console GUI Demo", 6, , rgb( 255,255,255 ), rgb( 198,198,198 ), "Arial", 26, , , , , .t., .t. ) }    , { WVT_BLOCK_LABEL,  1, 10,  3, 50 } } )
+   aAdd( aPaint, { "Label" , {|| Wvt_DrawLabel( 1, 40, "Harbour Console GUI Demo", 6, , rgb( 255,255,255 ), rgb( 198,198,198 ), "Arial", 26, , , , , .T., .T. ) }    , { WVT_BLOCK_LABEL,  1, 10,  3, 50 } } )
    aAdd( aPaint, { "Box_1" , {|| Wvt_DrawBoxRaised( 4, 4, 20, 75 ) }                                                                                , { WVT_BLOCK_BOX  ,  4,  4, 20, 75 } } )
    aAdd( aPaint, { "Box_2" , {|| Wvt_DrawBoxRecessed( 7, 61, 13, 70 ) }                                                                             , { WVT_BLOCK_BOX  ,  7, 61, 13, 70 } } )
    aAdd( aPaint, { "Box_3" , {|| Wvt_DrawBoxGroup( 15, 59, 18, 72 ) }                                                                               , { WVT_BLOCK_BOX  , 15, 59, 18, 72 } } )
@@ -164,7 +164,7 @@ FUNCTION DispStatusMsg( cMsg )
    //
    Wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, rgb( 198, 198, 198 ), "Arial", 18, , 900 )
 
-   RETURN .t.
+   RETURN .T.
 
 //
 
@@ -175,7 +175,7 @@ FUNCTION ClearStatusMsg()
    DispOutAt( MaxRow(), 42, space( 37 ), "W/W" )
    SetPos( nRow, nCol )
 
-   RETURN .t.
+   RETURN .T.
 
 //
 
@@ -186,9 +186,9 @@ FUNCTION DoModalDialog()
 
    oCrt := WvgCrt():New( , , { 4,8 }, { 12,49 }, , .T. )
 
-   oCrt:lModal      := .t.
-   oCrt:resizable   := .f.
-   oCrt:closable    := .f.
+   oCrt:lModal      := .T.
+   oCrt:resizable   := .F.
+   oCrt:closable    := .F.
    oCrt:title       := 'Modal Dialog!'
    oCrt:icon        := hb_dirBase() + "vr_1.ico"
 
@@ -200,7 +200,7 @@ FUNCTION DoModalDialog()
 
    SetColor( 'N/W' )
    CLS
-   DO WHILE .t.
+   DO WHILE .T.
       nSel := Alert( 'A modal window !;Click on parent window;Move this window', { 'OK' } )
       IF nSel == 0 .OR. nSel == 1
          EXIT

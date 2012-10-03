@@ -130,7 +130,7 @@ METHOD New(cCaption, nRow1, nCol1, nRow2, nCol2, bClickBlock, nType, lDraw, nWin
    default nRow2 to nRow1
    default nCol2 to nCol1 + max(10, len(cCaption) + 2) -1
    default nType to _BUTTON_NORMAL         //20040303
-   default lDraw to .t.
+   default lDraw to .T.
    default nWinId to wvw_nNumWindows()-1   //20040303
 
    //TODO: ::nId := iif(empty(s_amouseobjlist), 1, s_amouseobjlist[len(s_amouseobjlist)]:nGetId()+1)
@@ -145,10 +145,10 @@ METHOD New(cCaption, nRow1, nCol1, nRow2, nCol2, bClickBlock, nType, lDraw, nWin
    ::bClickBlock   := iif(valtype(bClickBlock)=="B", bClickBlock, NIL)
    ::bPressBlock   := NIL
 
-   ::lRepeatPress  := .f.
+   ::lRepeatPress  := .F.
 
-   ::lPressed  := .f.
-   ::lHover    := .f.  //20040303
+   ::lPressed  := .F.
+   ::lHover    := .F.  //20040303
    ::cCaption := cCaption
    ::cCaptionFont := _DEFAULT_CAPTION_FONT
    ::nCaptionHeight := _DEFAULT_CAPTION_HEIGHT
@@ -159,9 +159,9 @@ METHOD New(cCaption, nRow1, nCol1, nRow2, nCol2, bClickBlock, nType, lDraw, nWin
    ::cNormalColor := "W"
    ::cPressedColor := "W"
 
-   ::lVisible := .t.
-   ::lEnable  := .t.
-   ::lTight   := .f.
+   ::lVisible := .T.
+   ::lEnable  := .T.
+   ::lTight   := .F.
    ::nType := nType
 
    if lDraw  //20040304
@@ -199,14 +199,14 @@ local lWasPressed
   endif
 
   lWasPressed := ::lPressed
-  ::lPressed := .t.
+  ::lPressed := .T.
   ::Draw()
 
   if ::lRepeatPress //.and. ::lPressed
      if !lWasPressed
-        xKeyRepeater(.t.) //init it
+        xKeyRepeater(.T.) //init it
      endif
-     wvwm_SetKeyRepeater( .t. )   //activate key repeater
+     wvwm_SetKeyRepeater( .T. )   //activate key repeater
   endif
 
   if valtype(::bPressBlock) == "B"
@@ -232,11 +232,11 @@ local lWasPressed := ::lPressed
      return Self
   endif
 
-  ::lPressed := .f.
+  ::lPressed := .F.
   ::Draw()
 
   if ::lRepeatPress //.and. ::lPressed
-     wvwm_SetKeyRepeater( .f. )   //deactivate key repeater
+     wvwm_SetKeyRepeater( .F. )   //deactivate key repeater
   endif
 
   if lWasPressed
@@ -250,10 +250,10 @@ METHOD OnReleaseOut() CLASS WVWMouseButton
      return Self
   endif
 
-  ::lPressed := .f.
+  ::lPressed := .F.
   ::Draw()
 
-  //NOTE: no need to do SetKeyRepeater( .f. ),
+  //NOTE: no need to do SetKeyRepeater( .F. ),
   //      because it was already handled by onMouseOut
 return Self
 
@@ -265,10 +265,10 @@ METHOD OnMouseOut() CLASS WVWMouseButton
   endif
 
   if ::lRepeatPress .and. ::lPressed
-     wvwm_SetKeyRepeater( .f. )   //stop key repeater
+     wvwm_SetKeyRepeater( .F. )   //stop key repeater
   endif
 
-  ::lHover := .f.
+  ::lHover := .F.
   ::Draw()
 return Self
 
@@ -280,10 +280,10 @@ METHOD OnMouseOver() CLASS WVWMouseButton
   endif
 
   if ::lRepeatPress .and. ::lPressed
-     wvwm_SetKeyRepeater( .t. )   //activate key repeater
+     wvwm_SetKeyRepeater( .T. )   //activate key repeater
   endif
 
-  ::lHover := .t.
+  ::lHover := .T.
   ::Draw()
 return Self
 
@@ -324,7 +324,7 @@ local lUseImage := (valtype(::cImage)=="C") //20040325
      endif
 
      if !empty(::cCaption)
-        Wvw_DrawLabel(nWinNum, ::nRow1, nCeiling((::nCol2+::nCol1)/2), ::cCaption, 6,, nLabelColor, rgb(198,198,198), ::cCaptionFont, iif(valtype(afontinfo)=="A",afontinfo[2],::nCaptionHeight), 0, , , , .f., .f. )
+        Wvw_DrawLabel(nWinNum, ::nRow1, nCeiling((::nCol2+::nCol1)/2), ::cCaption, 6,, nLabelColor, rgb(198,198,198), ::cCaptionFont, iif(valtype(afontinfo)=="A",afontinfo[2],::nCaptionHeight), 0, , , , .F., .F. )
      endif
   else
      if lMouseOver .or. (::nType==_BUTTON_NORMAL) .or. (::nType==_BUTTON_HARD)
@@ -348,7 +348,7 @@ local lUseImage := (valtype(::cImage)=="C") //20040325
      endif
 
      if !empty(::cCaption)
-        Wvw_DrawLabel(nWinNum, ::nRow1, nCeiling((::nCol2+::nCol1)/2), ::cCaption, 6,, nLabelColor, rgb(198,198,198), ::cCaptionFont, iif(valtype(afontinfo)=="A",afontinfo[2],::nCaptionHeight), 0, , , , .f., .f. )
+        Wvw_DrawLabel(nWinNum, ::nRow1, nCeiling((::nCol2+::nCol1)/2), ::cCaption, 6,, nLabelColor, rgb(198,198,198), ::cCaptionFont, iif(valtype(afontinfo)=="A",afontinfo[2],::nCaptionHeight), 0, , , , .F., .F. )
      endif
   endif
   setcursor(nOldCursor)
@@ -371,13 +371,13 @@ function wvwm_ResetMouseObjects( nWinNum )
       aadd( s_amouseobjlist, {} )
    enddo
    s_amouseobjlist[ nWinNum+1 ] := {}
-return .t.
+return .T.
 
 function wvwm_AddMouseObjects( nWinNum, oMouse, nObjType )
 * adds a mouse object oMouse into window nWinNum
    default nObjType to _MOBJECT_BUTTON
    aadd( s_amouseobjlist[ nWinNum+1 ], {nObjType, oMouse} )
-return .t.
+return .T.
 
 function wvwm_nNumMouseObjects( nWinNum )
 * returns number of mouse objects in window nWinNum
@@ -388,7 +388,7 @@ function wvwm_nObjectType( nWinNum, nObjNum )
 return s_amouseobjlist[ nWinNum+1 ][nObjNum][1]
 
 function wvwm_SetKeyRepeater( lSet )
-* returns .t. if KeyRepeater is active
+* returns .T. if KeyRepeater is active
 * if lSet is supplied, KeyRepeater is enable/disable accordingly
 local lWasSet := (s_nkeyrepeater != NIL)
    if !(lSet==NIL)
@@ -501,14 +501,14 @@ return nKey //wvwm_nMouseChecker(nkey)
 
 static procedure xKeyRepeater(lInit)
 static nLastValidCheck := 0
-static lFirstRepeat := .t.
+static lFirstRepeat := .T.
 local nNow
 local nRepeatInterval
 
-  default lInit to .f.
+  default lInit to .F.
   if lInit
      * simply init the locally static var
-     lFirstRepeat := .t.
+     lFirstRepeat := .T.
      nLastValidCheck := seconds()
      return
   endif
@@ -534,7 +534,7 @@ local nRepeatInterval
   nLastValidCheck := seconds()   //nNow
 
   * next repeat will be quicker
-  lFirstRepeat := .f.
+  lFirstRepeat := .F.
 
 return //xKeyRepeater()
 

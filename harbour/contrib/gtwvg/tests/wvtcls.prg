@@ -34,7 +34,7 @@ FUNCTION DialogWvgClassesOne( nMode )
          MyDialogOne()
       else
          bBlock := {| oCrt | ;
-                        oCrt := WvgCrt():New( , , { -1,-1 }, { 54,184 }, , .f. ), ;
+                        oCrt := WvgCrt():New( , , { -1,-1 }, { 54,184 }, , .F. ), ;
                         oCrt:fontName   := 'Courier',;
                         oCrt:fontHeight := 13       ,;
                         oCrt:fontWidth  := 0        ,;
@@ -64,8 +64,8 @@ STATIC FUNCTION MyDialogOne( oCrt )
 
    HB_SYMBOL_UNUSED( oCrt )
 
-   WvtSetKeys( .f. )
-   lChkMouse := SetMouseCheck( .f. )
+   WvtSetKeys( .F. )
+   lChkMouse := SetMouseCheck( .F. )
 
    hPopup := Wvt_SetPopupMenu()
    Popups()
@@ -121,9 +121,9 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oText:nBackColor        := RGB(   0,   0, 255 )
    oText:nTextColorHoverOn := RGB( 255, 255,   0 )
    oText:nBackColorHoverOn := RGB( 255, 100,  12 )
-   oText:lItalic           := .t.
+   oText:lItalic           := .T.
    oText:ToolTip           := "Software that GROWS with you"
-   oText:bOnSelect         := {|| .t. }
+   oText:bOnSelect         := {|| .T. }
    oDlg:AddObject( oText )
 
    oImg := WvtImage():New( oDlg,102,20,oDlg:MaxCol()-40,37,oDlg:MaxCol()-2 )
@@ -132,7 +132,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oDlg:AddObject( oImg )
 
    oTBar := WvtToolbar():New( oDlg,103, 0,0,2 )
-   oTBar:lFloating := .f.
+   oTBar:lFloating := .F.
    oTBar:Tooltip   := "Toolbar"
    oTBar:AddButton( aImg_[ 1 ], {|| oImg:SetImage( aImg_[ 1 ] ) } , "Lock" )
    oTBar:AddButton( aImg_[ 2 ], {|| oImg:SetImage( aImg_[ 2 ] ), oText:SetText( "Harbour" ) } , "New" )
@@ -168,7 +168,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oPBar2 := WvtProgressBar():New( oDlg, , 14, 129, 25, 137 )
    oPBar2:nBarColor  := RGB( 240,240,0 )
    oPBar2:cBackColor := "W/N*"
-   oPBar2:lVertical  := .t.
+   oPBar2:lVertical  := .T.
    oPBar2:nDirection := 0
    oPBar2:cImage     := GetResource( "vouch1.bmp" )
    oDlg:AddObject( oPBar2 )
@@ -176,7 +176,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oPBar3 := WvtProgressBar():New( oDlg, , 26, 129, 36, 137 )
    oPBar3:nBarColor  := RGB( 240,240,0 )
    oPBar3:cBackColor := "W/N*"
-   oPBar3:lVertical  := .t.
+   oPBar3:lVertical  := .T.
    oPBar3:nDirection := 1
    oPBar3:cImage     := GetResource( "vouch1.bmp" )
    oDlg:AddObject( oPBar3 )
@@ -230,14 +230,14 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oTBx:cText       := cTxt
    oTBx:Tooltip     := "WvtTextBox():New()"
    oTBx:nFontHeight := 16
-   oTBx:lItalic     := .t.
-   oTBx:lUnderline  := .t.
+   oTBx:lItalic     := .T.
+   oTBx:lUnderline  := .T.
    oTBx:nAlignHorz  := 2
    oTBx:nTextColor  := RGB( 255,255,255 )
    oTBx:nTextColorHoverOn := RGB( 0,0,255 )
    oTBx:aPopup      := {}
-   aadd( oTBx:aPopup, { "Getsome" , {|| .t. } } )
-   aadd( oTBx:aPopup, { "Getsome2", {|| .t. } } )
+   aadd( oTBx:aPopup, { "Getsome" , {|| .T. } } )
+   aadd( oTBx:aPopup, { "Getsome2", {|| .T. } } )
    oDlg:AddObject( oTBx )
 
    oGetArea := WvtStatic():New( oDlg, , 4, 2, 37, 62 )
@@ -262,7 +262,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
 
    aGets_:= { pad("Pritpal",20 ), pad( "Bedi",20 ), pad( "60, New Professor Colony",30 ), ;
               pad( "Ludhiana, INDIA",30 ),;
-              "PB", pad( "141004",10 ), stod( "20040622" ), .t., 48, 17000, ;
+              "PB", pad( "141004",10 ), stod( "20040622" ), .T., 48, 17000, ;
               pad( "Wvtgui is a classical example of Harbour capabilities...",65 ) }
 
    oGet1 := WvtGets():New( oDlg, , 4, 2, 37, 62 )
@@ -292,20 +292,20 @@ STATIC FUNCTION MyDialogOne( oCrt )
 
    oDlg:oMenu := g_oMenuBar
 
-   lOpen := .f.
+   lOpen := .F.
    cUseAlias := "TEST"
    USE ( hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + "test.dbf" ) NEW ALIAS ( cUseAlias ) SHARED
    if !NetErr()
-      lOpen := .t.
+      lOpen := .T.
       oWvtBrw := ConfigBrowser( { 1,7,9,10,8 }, cUseAlias, { 6,67,36,120 }, "test.dbf - 1,7,9,10,8", oDlg, "N/W*,N/GR*",1001 )
       oDlg:AddObject( oWvtBrw )
    endif
 
-   lOpen1 := .f.
+   lOpen1 := .F.
    cUseAlias1 := "TEST1"
    USE ( hb_DirBase() + ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + "test.dbf" ) NEW ALIAS ( cUseAlias1 ) SHARED
    if !NetErr()
-      lOpen1 := .t.
+      lOpen1 := .T.
       oWvtBrw1 := ConfigBrowser( { 1,2,3,4,5,6 }, cUseAlias1, { 43,4,51,120 }, "test.dbf - 1,2,3,4,5,6",oDlg, "N/BG*,N/W*",1002 )
       oDlg:AddObject( oWvtBrw1 )
    endif
@@ -326,7 +326,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    endif
 
    WvtSetBlocks( aObjects )
-   WvtSetKeys( .t. )
+   WvtSetKeys( .T. )
    Wvt_SetPopupMenu( hPopup )
    SetMouseCheck( lChkMouse )
 
@@ -366,7 +366,7 @@ FUNCTION DialogWvgClassesTwo()
    oPBar2 := WvtProgressBar():New( oDlg, , 11, 10, 28, 19 )
    oPBar2:nBarColor  := RGB( 240,240,0 )
    oPBar2:cBackColor := "W/N*"
-   oPBar2:lVertical  := .t.
+   oPBar2:lVertical  := .T.
    oPBar2:nDirection := 0
    oPBar2:cImage     := "v_notes.ico"
    oDlg:AddObject( oPBar2 )
@@ -374,14 +374,14 @@ FUNCTION DialogWvgClassesTwo()
    oPBar3 := WvtProgressBar():New( oDlg, , 11, 77, 28, 80 )
    oPBar3:nBarColor  := RGB( 0,0,255 )
    oPBar3:cBackColor := "W/N*"
-   oPBar3:lVertical  := .t.
+   oPBar3:lVertical  := .T.
    oPBar3:nDirection := 1
    oDlg:AddObject( oPBar3 )
 
    oPBar4 := WvtProgressBar():New( oDlg, , 22, 22, 28, 74 )
    oPBar4:nBarColor  := RGB( 255,255,0 )
    oPBar4:cBackColor := "W/N*"
-   oPBar4:lVertical  := .t.
+   oPBar4:lVertical  := .T.
    oPBar4:nDirection := 0
    oDlg:AddObject( oPBar4 )
 

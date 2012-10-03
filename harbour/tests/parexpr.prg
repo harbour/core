@@ -47,7 +47,7 @@ PROCEDURE Main()
    // Now mix with statements and functions
    ? ( 1, 2, 3 )
 
-   IF ( y := .t. )
+   IF ( y := .T. )
       ? "Working"
    ELSE
       ? "Borken"

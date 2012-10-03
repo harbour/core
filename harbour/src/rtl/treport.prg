@@ -274,7 +274,7 @@ METHOD New( cFrmName AS STRING,;
 
       ::nLinesLeft  := ::aReportData[ RPT_LINES ]
 
-      QOUT()       // output additional line on first page (S87 compatibility)
+      QOut()       // output additional line on first page (S87 compatibility)
       ::nLinesLeft--
 
       // Check to see if a "before report" eject, or TO FILE has been specified
@@ -305,7 +305,7 @@ METHOD New( cFrmName AS STRING,;
       ::aGroupTotals := Array( Len( ::aReportData[ RPT_GROUPS ] ) )
 
       // Execute the actual report based on matching records
-      DBEval( {|| ::ExecuteReport() }, bFor, bWhile, nNext, nRecord, lRest )
+      dbEval( {|| ::ExecuteReport() }, bFor, bWhile, nNext, nRecord, lRest )
 
       // Generate any totals that may have been identified
       // Make a pass through all the groups
@@ -367,7 +367,7 @@ METHOD New( cFrmName AS STRING,;
             lAnyTotals := .T.
             EXIT
          ENDIF
-      NEXT nCol
+      NEXT
 
 
       IF lAnyTotals
@@ -397,7 +397,7 @@ METHOD New( cFrmName AS STRING,;
             ELSE
                QQOut( Space( ::aReportData[ RPT_COLUMNS, nCol, RCT_WIDTH ] ) )
             ENDIF
-         NEXT nCol
+         NEXT
 
          // Send a cr/lf for the last line
          QOut()
@@ -489,8 +489,8 @@ METHOD ReportHeader() CLASS HBReportForm
                   PadC( RTrim( XMEMOLINE( LTrim( aTempPgHeader[ nLine ] ),;
                   nHeadingLength, nHeadLine ) ), nHeadingLength ) )
 
-            NEXT nHeadLine
-         NEXT nLine
+            NEXT
+         NEXT
          aPageHeader[ 1 ] := Stuff(aPageHeader[ 1 ], 1, 14, ;
                                    __NatMsg( _RFRM_PAGENO ) + Str( ::nPageNumber, 6 ) )
 
@@ -509,9 +509,9 @@ METHOD ReportHeader() CLASS HBReportForm
          AAdd( aPageHeader, Space( ( nRPageSize - ::aReportData[ RPT_LMARGIN ] -;
              Len( cHeader ) ) / 2 ) + cHeader )
 
-      NEXT nHeadLine
+      NEXT
 
-   NEXT nLine
+   NEXT
 
    AADD( aPageHeader, "" ) // S87 compat.
 
@@ -939,7 +939,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
             EXIT
          ENDIF
 
-      NEXT nPathIndex
+      NEXT
 
    ENDIF
 
@@ -1126,7 +1126,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
 
          AAdd( aReport[ RPT_COLUMNS ], ::GetColumn( cFieldsBuff, @nFieldOffset ) )
 
-      NEXT nCount
+      NEXT
 
    ENDIF
 

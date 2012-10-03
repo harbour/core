@@ -139,7 +139,7 @@ PROCEDURE Main()
       NEXT
 
 
-      // AdsUseDictionary(.t.)  this function no longer is needed; the system knows if it's using a Data Dictionary connection
+      // AdsUseDictionary( .T. )  this function no longer is needed; the system knows if it's using a Data Dictionary connection
 
       // Open the "long table name" for Table2
       dbUseArea( .T. , , "Customer Data", "custom", .T. , .F. )

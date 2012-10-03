@@ -168,8 +168,8 @@
  *
  *              _SET_DEBUG       <lStatus>
  *
- *                   When set to .t., pressing Alt+D activates the debugger.
- *                   When set to .f., which is the default, Alt+D can be read
+ *                   When set to .T., pressing Alt+D activates the debugger.
+ *                   When set to .F., which is the default, Alt+D can be read
  *                   by INKEY(). (Also affected by AltD(1) and AltD(0))
  *
  *              _SET_DECIMALS    <nNumberOfDecimals>

@@ -1,4 +1,3 @@
-//NOTEST
 /*
  * $Id$
  */
@@ -8,7 +7,7 @@
 
 PROCEDURE Main()
 
-   QOut( ["'/* bumbulda */45]="k" )
+   ? ["'/* bumbulda */45]="k"
 
    TEXT
          any text is allowed here

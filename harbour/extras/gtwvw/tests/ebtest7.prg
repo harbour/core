@@ -55,7 +55,7 @@
 
 proc main
 local nOpen, nClose
-local lClosepermitted := .f.
+local lClosepermitted := .F.
 local bSetKey := SETKEY(K_F8, {|| MyHelp()})
    SET CENTURY ON
    SET DATE ANSI
@@ -66,9 +66,9 @@ local bSetKey := SETKEY(K_F8, {|| MyHelp()})
    WVW_PBSetFont(0, "Arial")  //font for pushbuttons
 
    Wvw_SetCodePage(0, 255)
-   wvw_allownontopEvent(.t.)   //this will make pushbuttons to work
+   wvw_allownontopEvent(.T.)   //this will make pushbuttons to work
                                //even on non-topmost window
-   wvw_recurseCblock(.t.) //this will allow recursed execution
+   wvw_recurseCblock(.T.) //this will allow recursed execution
                           //of control's codeblocks
                           //eg. multiple executions of pushbutton's codeblock
                           //    invoking "GetSession()"
@@ -174,7 +174,7 @@ return NIL
 * 20070525
 function AddEBGet(aEBGets, mnrow, mncol, mxValue, mcVarName, mbAssign, mcLabel, mlMultiline, mcPict)
 * adding one EBGet variable into aEBGets array
-* returns .t. if successful
+* returns .T. if successful
 local mcVarType, mbText
    mcVarType := valtype(mxValue)
    do case
@@ -189,7 +189,7 @@ local mcVarType, mbText
       mbText := {|| dtoc(mxValue)}
    otherwise
       * unsupported valtype
-      return .f.
+      return .F.
    endcase
 
    if !(valtype(aEBGets)=="A")
@@ -198,7 +198,7 @@ local mcVarType, mbText
 
    if !(valtype(mlMultiline)=="L") .or.;
       !(valtype(mxValue)=="C")
-      mlMultiline := .f.
+      mlMultiline := .F.
    endif
    if !(valtype(mcLabel)=="C")
       mcLabel := mcVarName + ":"
@@ -214,17 +214,17 @@ local mcVarType, mbText
                    mbText,;         //__GET_BTEXT
                    mbAssign,;       //__GET_BASSIGN
                    NIL,;            //__GET_NEBID
-                   .f. })           //__GET_LFOCUSED
+                   .F. })           //__GET_LFOCUSED
 
-return .t.
+return .T.
 
 procedure EBReadGets(nwinnum, aEBGets)
 * generic procedure to run aEBGets, array of editboxes
 local nmaxrow, nmincol
 local i, nlen, lmultiline, clabel, ;
       nrow1,ncol1,nrow2,ncol2
-local creport, nOKbutton, nCancelbutton, nClosebutton, ldone := .f.
-local lclosePermitted := .f.
+local creport, nOKbutton, nCancelbutton, nClosebutton, ldone := .F.
+local lclosePermitted := .F.
 local nNumGets := len(aEBGets)
 local ch
 local nfocus, lchangefocus
@@ -278,7 +278,7 @@ local nfocus, lchangefocus
    ncol1 := ncol1+10+1
    nClosebutton := wvw_pbcreate(nwinnum, nrow1, ncol1, nrow1, ncol1+10-1, "Close", NIL, ;
                              {|| ToCloseWindow(nwinnum, @lClosepermitted)})
-   wvw_pbenable(nwinnum, nclosebutton, .f.)
+   wvw_pbenable(nwinnum, nclosebutton, .F.)
 
    * register a keyhandler for WVW_INPFOCUS
    inp_handler(nwinnum, {| n, ch | InpKeyHandler(n, ch, aEBGets, nOKbutton, nCancelbutton)})
@@ -291,7 +291,7 @@ local nfocus, lchangefocus
       if valtype(setkey(ch))=="B"
          eval(setkey(ch))
       elseif ch!=0
-         lchangefocus := .t.
+         lchangefocus := .T.
          do case
          case ch==K_TAB .or. ch==K_DOWN .or. ch==K_ENTER
             if nFocus<(nNumGets+2)  //incl buttons
@@ -306,7 +306,7 @@ local nfocus, lchangefocus
                nFocus := nNumGets+2
             endif
          otherwise
-            lchangefocus := .f. //!wvw_ebisfocused(nwinnum, aEBGets[nFocus][__GET_NEBID])
+            lchangefocus := .F. //!wvw_ebisfocused(nwinnum, aEBGets[nFocus][__GET_NEBID])
          endcase
          if lchangefocus
             if nFocus<=nNumGets
@@ -354,7 +354,7 @@ local nFocus, lchangefocus
    else
       nFocus := nFocused(aEBGets)
    endif
-   lchangefocus := .t.
+   lchangefocus := .T.
    do case
    case ch==K_TAB .and. !lShiftPressed()
       if nFocus<(nNumGets+2)  //incl buttons
@@ -369,7 +369,7 @@ local nFocus, lchangefocus
          nFocus := nNumGets+2
       endif
    otherwise
-      lchangefocus := .f.
+      lchangefocus := .F.
    endcase
    if lchangefocus
       if nFocus<=nNumGets
@@ -386,16 +386,16 @@ static procedure EndGets(nwinnum, aEBGets, nOKbutton, nCancelbutton, nCloseButto
 local i
    * session ended
    for i := 1 to len(aEBGets)
-      wvw_ebenable(nwinnum, aEBGets[i][__GET_NEBID], .f.)
+      wvw_ebenable(nwinnum, aEBGets[i][__GET_NEBID], .F.)
    next
-   wvw_pbenable(nwinnum, nOKbutton, .f.)
-   wvw_pbenable(nwinnum, nCancelbutton, .f.)
+   wvw_pbenable(nwinnum, nOKbutton, .F.)
+   wvw_pbenable(nwinnum, nCancelbutton, .F.)
 
    * clear the getlist
    asize(aEBGets,0)
 
    * wait until user click the close button
-   wvw_pbenable(nwinnum, nclosebutton, .t.)
+   wvw_pbenable(nwinnum, nclosebutton, .T.)
 return
 
 static procedure SaveVar(nwinnum, aEBGets, lDone)
@@ -406,7 +406,7 @@ local i, cdebugreport
       eval(aEBGets[i][__GET_BASSIGN], ;
            GetValFromText(wvw_ebgettext(nwinnum, aEBGets[i][__GET_NEBID]), aEBGets[i][__GET_CVALTYPE]))
    next
-   lDone := .t.
+   lDone := .T.
 
    * debugging text
    cdebugreport := "Get session in window "+alltrim(str(nwinnum))+" is ended with confirmation"+ chr(13)+chr(10)+;
@@ -421,7 +421,7 @@ local i, cdebugreport
       eval(aEBGets[i][__GET_BASSIGN], ;
            aEBGets[i][__GET_XINIT])
    next
-   lDone := .t.
+   lDone := .T.
 
    * debugging text
    cdebugreport := "Get session in window "+alltrim(str(nwinnum))+" is ended with cancellation"+ chr(13)+chr(10)+;
@@ -444,7 +444,7 @@ return ascan(aEBGets, {| x | x[__GET_NEBID]==nEBId})
 
 static function nFocused(aEBGets)
 * returns index to aEBGets array containing editbox that is/was in focus
-return ascan(aEBGets, {| x | x[__GET_LFOCUSED]==.t.})
+return ascan(aEBGets, {| x | x[__GET_LFOCUSED]==.T.})
 
 
 
@@ -482,7 +482,7 @@ return ascan(aEBGets, {| x | x[__GET_LFOCUSED]==.t.})
 
 static function MaskEditBox(nWinNum,nId,nEvent,aEBGets)
 * callback function called by GTWVW during some events on editbox
-static bBusy := .f.
+static bBusy := .F.
 local ctext
 local nIndex := nGetIndex(aEBGets, nId)
 local mcvaltype, mcpict, mlmultiline
@@ -493,7 +493,7 @@ local nwasfocus
   if nIndex==0
      return NIL
   endif
-  bBusy := .t.
+  bBusy := .T.
   mcvaltype := aEBGets[nIndex][__GET_CVALTYPE]
   mcpict := aEBGets[nIndex][__GET_CPICT]
   mlmultiline := aEBGets[nIndex][__GET_LMULTILINE]
@@ -517,15 +517,15 @@ local nwasfocus
      wvw_ebsetsel(nwinnum, nid, 0, -1)
      nwasFocus := nFocused(aEBGets)
      if nwasFocus!=0
-        aEBGets[nwasFocus][__GET_LFOCUSED] := .f.
+        aEBGets[nwasFocus][__GET_LFOCUSED] := .F.
      endif
-     aEBGets[nIndex][__GET_LFOCUSED] := .t.
+     aEBGets[nIndex][__GET_LFOCUSED] := .T.
   case nEvent==EN_CHANGE
      if !mlmultiline
         ProcessCharMask(nwinnum, nId, mcvaltype, mcpict)
      endif
   endcase
-  bBusy := .f.
+  bBusy := .F.
 return NIL
 
 /************* borrowed and modified from minigui *************/
@@ -557,7 +557,7 @@ Local ol := 0
    InBuffer := wvw_ebgettext(mnwinnum, mnebid)
 
    pc := 0 //x for clarity
-   pFlag := .f. //x for clarity
+   pFlag := .F. //x for clarity
    if mcvaltype=="N"
       // RL 104
       If Left ( AllTrim(InBuffer) , 1 ) == '-' .And. Val(InBuffer) == 0
@@ -731,7 +731,7 @@ RETURN
 
 //from h_textbox.prg
 static Function CharMaskTekstOK( cString, cvaltype, cMask )
-Local lPassed:=.t.,CB,CM,x
+Local lPassed:=.T.,CB,CM,x
    //x BEGIN
    if cvaltype=="D"
       For x := 1 To min(Len(cString),Len(cMask))
@@ -740,15 +740,15 @@ Local lPassed:=.t.,CB,CM,x
          Do Case
          Case CM == '9'
             If IsDigit ( CB ) .Or. CB == ' '
-               * lPassed:=.t.
+               * lPassed:=.T.
             Else
-               Return .f.
+               Return .F.
             EndIf
          OtherWise
-            * lPassed:=.t.
+            * lPassed:=.T.
          EndCase
       next i
-      return .t.
+      return .T.
    endif
    //x END
 
@@ -759,27 +759,27 @@ Local lPassed:=.t.,CB,CM,x
       // JK
       Case (CM) == 'A' .or. (CM) == '!'
          If IsAlpha ( CB ) .Or. CB == ' '
-            * lPassed:=.t.
+            * lPassed:=.T.
          Else
-            Return .f.
+            Return .F.
          EndIf
       Case CM == '9'
          If IsDigit ( CB ) .Or. CB == ' '
-            * lPassed:=.t.
+            * lPassed:=.T.
          Else
-            Return .f.
+            Return .F.
          EndIf
       Case CM == ' '
          If CB == ' '
-            * lPassed:=.t.
+            * lPassed:=.T.
          Else
-            Return .f.
+            Return .F.
          EndIf
       OtherWise
-         * lPassed:=.t.
+         * lPassed:=.T.
       EndCase
    next i
-Return .t. //lPassed
+Return .T. //lPassed
 
 //from h_textbox.prg
 static Function GetValFromText ( Text , mcvaltype )
@@ -878,7 +878,7 @@ local bhandler
 
    * did user perform a menu/toolbar action on Main Window?
    //if message==WM_COMMAND .and. nWinNum==0  //menu,toolbar,pushbutton
-   //   return .f.
+   //   return .F.
    //endif
 
    * now we handle input on other non-topmost windows
@@ -889,16 +889,16 @@ local bhandler
       bhandler := inp_handler(nWinNum)
       if valtype(bhandler)=="B"
          eval( bhandler, nWinNum, ch )
-         return .t.
+         return .T.
       else
-         return .f.
+         return .F.
       endif
    otherwise
       * ignore
-      return .t.
+      return .T.
    endcase
 
-return .f.//WVW_INPUTFOCUS()
+return .F.//WVW_INPUTFOCUS()
 
 function inp_handler(nwinnum, bhandler)
 static sbhandlers := {}

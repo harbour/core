@@ -187,7 +187,7 @@ elseif valtype( itm ) == "C"
 elseif valtype( itm ) == "N"
   cStr += ltrim( str( itm ) )
 elseif valtype( itm ) == "L"
-  cStr += iif( itm, ".t.", ".f." )
+  cStr += iif( itm, ".T.", ".F." )
 elseif valtype( itm ) == "D"
   cStr += "CTOD(" + DTOC( itm ) + ")"
 elseif valtype( itm ) == "B"
@@ -223,7 +223,7 @@ return cStr
 #else
   //rddtst_tst( #<x>, <s>, <x>, <r> )
   static function rddtst_tst( cAction, aExState, xRet, xExRet )
-  local aState, lOK := ( .t. ), s1, s2, i
+  local aState, lOK := ( .T. ), s1, s2, i
 
   aState := rdd_state()
   if pcount() >= 4
@@ -232,7 +232,7 @@ return cStr
     endif
     if ! valtype( xRet ) == valtype( xExRet ) .or.;
        ! iif( valtype( xRet ) == "B", eval( xRet ) == eval( xExRet ), xRet == xExRet )
-      lOK:= ( .f. )
+      lOK := ( .F. )
     endif
     s1 := itm2str( xRet )
     s2 := itm2str( xExRet )
@@ -244,7 +244,7 @@ return cStr
   if !empty( aExState ) .and. lOK
     for i := 1 to len( aExState )
       if ! valtype( aState[ i ] ) == valtype( aExState[ i ] ) .or. ! aState[ i ] == aExState[ i ]
-        lOK := ( .f. )
+        lOK := ( .F. )
         exit
       endif
     next

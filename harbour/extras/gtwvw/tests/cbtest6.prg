@@ -62,7 +62,7 @@ local __nCBid__,__temp__  //these two are temporary var required by CB get creat
    WVW_cbSetFont(NIL, "Arial", 14)  //std: 20-2
    //set(_SET_TRACESTACK, 0)
 
-   //wvw_setmousemove(,.t.)
+   //wvw_setmousemove(,.T.)
 
    CLS
 
@@ -78,7 +78,7 @@ local __nCBid__,__temp__  //these two are temporary var required by CB get creat
    read
 
    * disable all comboboxes:
-   aeval(s_aComboList, {| x | wvw_cbenable(NIL, x[1], .f.)})
+   aeval(s_aComboList, {| x | wvw_cbenable(NIL, x[1], .F.)})
 
    devpos(5,0)
    ? "name: '" + mname + "'"
@@ -271,14 +271,14 @@ local oGet
             oGet:updatebuffer()
          else
             //oGet:undo()
-            return .f.
+            return .F.
          endif
       endif
       oGet:exitstate := GE_MOUSEHIT
       oGetList:nNextGet := nPos
-      oGetList:settle(,.f.)
+      oGetList:settle(,.F.)
    endif
-return .t.
+return .T.
 */
 
 /* miscellaneous **********************************/

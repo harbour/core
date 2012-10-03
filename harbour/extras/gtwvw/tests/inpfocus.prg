@@ -75,7 +75,7 @@ return //main
 static function CreateToolbar(nWinNum)
 //for toolbar:
 local nSysBitmap := 1     //0:none 1:small 2:large
-local lDisplayText := .f. //text will be displayed as tooltip instead
+local lDisplayText := .F. //text will be displayed as tooltip instead
 local hWndTB
 local ldefault
 
@@ -85,14 +85,14 @@ local ldefault
 
    if hWndTB==0
       wvw_messagebox(nWinNum, "FAILED to create toolbar", "Error", MB_OK+MB_ICONEXCLAMATION)
-      return .f.
+      return .F.
    endif
 
    /* using system std & view bitmaps */
    wvw_tbAddButton(nWinNum, IDM_OPENWIN,  STD_FILENEW, "Open a new typewriter window", 1 /*system std bitmap*/)
    wvw_tbAddButton(nWinNum, IDM_CLOSEWIN, STD_DELETE, "Close last window", 1 /*system std bitmap*/)
    wvw_tbAddButton(nWinNum, IDM_ARRANGEWIN, VIEW_PARENTFOLDER, "Reposition all windows", 2 /*system view bitmap*/)
-return .t.  //CreateToolbar()
+return .T.  //CreateToolbar()
 
 static function CreateStatusbar(nWinNum)
 local hWndSB
@@ -102,9 +102,9 @@ local ldefault
    hWndSB := wvw_sbcreate(nWinNum)
    if hWndSB==0
       wvw_messagebox(nWinNum, "FAILED to create statusbar", "Error", MB_OK+MB_ICONEXCLAMATION)
-      return .f.
+      return .F.
    endif
-return .t. //CreateStatusbar()
+return .T. //CreateStatusbar()
 
 static function MenuAction(nWinNum, nCommand)
 * Handle Menu/Toolbar actions
@@ -131,7 +131,7 @@ local ch
    if nWinNum > _MAX_WINNUM
       wvw_messagebox(nWinNum-1, "Sorry, I don't think you can handle that many of windows :-)",;
                                 "Sorry", MB_OK+MB_ICONASTERISK)
-      return .f.
+      return .F.
    endif
 
    * prepare titles and coordinates
@@ -173,7 +173,7 @@ local ch
    elseif nWinNum==1
       setcursor(SC_NONE)
    endif
-return .t.//OpenNewWindow()
+return .T.//OpenNewWindow()
 
 static function CloseLastWindow()
 * closes the last window. If no window left, Main Window will be closed too.
@@ -215,8 +215,8 @@ return NIL
  * Parameter passed to this function is somewhat 'raw', so their handling
  * is a bit tricky.
  *
- * This function should return .t. if it has handled the event,
- * otherwise return .f. to sign GTWVW that the input is considered invalid.
+ * This function should return .T. if it has handled the event,
+ * otherwise return .F. to sign GTWVW that the input is considered invalid.
  *
  */
 
@@ -230,12 +230,12 @@ local nCommand, ch
    if message==WM_COMMAND .and. nWinNum==0  //menu,toolbar,pushbutton
       nCommand := wParamLow
       MenuAction(0, nCommand)
-      return .t.
+      return .T.
    endif
 
    * other types of input on main window is not handled here
    if nWinNum==0
-      return .f.
+      return .F.
    endif
 
    * now we handle input on other non-topmost windows
@@ -247,10 +247,10 @@ local nCommand, ch
    case message==WM_CHAR
       ch := wParam
       eval( s_akeyhandlers[nWinNum], nWinNum, ch )
-      return .t.
+      return .T.
    otherwise
       * let it be ignored
-      return .t.
+      return .T.
    endcase
 
    /*
@@ -264,7 +264,7 @@ local nCommand, ch
    wvw_messagebox(0, cdebug, "Debug", MB_OK)
    */
 
-return .f.//WVW_INPUTFOCUS()
+return .F.//WVW_INPUTFOCUS()
 
 //********************************************************************
 // SUPPORTING FUNCTIONS

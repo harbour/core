@@ -267,7 +267,7 @@ PROCEDURE SQLFetchAll()
 
 FUNCTION SQLOpen( cAlias, cQuery, xFetch, cOrder )
    LOCAL cFile
-   LOCAL Result := .t.
+   LOCAL Result := .T.
    LOCAL x
    LOCAL s_oServer
    LOCAL oQuery
@@ -348,7 +348,7 @@ FUNCTION SQLOpen( cAlias, cQuery, xFetch, cOrder )
 
 
 FUNCTION SQLConnect( cServer, cDatabase, cUser, cPassword, cSchema )
-   LOCAL lRetval := .t.
+   LOCAL lRetval := .T.
 
    s_oServer := TPQServer():New( cServer, cDatabase, cUser, cPassWord, 5432, cSchema )
    IF s_oServer:NetErr()

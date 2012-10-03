@@ -118,7 +118,7 @@ CLASS WvgTreeView  INHERIT  WvgWindow, WvgDataRef
    METHOD   setColorBG( nRGB )                    INLINE WVG_TreeView_SetBkColor( ::hWnd, iif( HB_ISSTRING( nRGB ), Wvt_GetRGBColorByString( nRGB, 1 ), nRGB ) )
    METHOD   setColorLines( nRGB )                 INLINE WVG_TreeView_SetLineColor( ::hWnd, nRGB )
    METHOD   showExpanded( lExpanded, nLevels )    INLINE Wvg_TreeView_ShowExpanded( ::hWnd, ;
-                                                         iif( HB_ISNIL( lExpanded ), .f., lExpanded ), nLevels )
+                                                         iif( HB_ISNIL( lExpanded ), .F., lExpanded ), nLevels )
 
    ENDCLASS
 
@@ -210,7 +210,7 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
          ELSE
             ::setFocus()
          ENDIF
-         RETURN .f.
+         RETURN .F.
 
       CASE aHdr[ NMH_code ] == TVN_SELCHANGED
          ::getSelectionInfo( aNM[ 2 ] )
@@ -227,10 +227,10 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
          ELSE
             ::setFocus()
          ENDIF
-         RETURN .t.
+         RETURN .T.
 
       OTHERWISE
-         RETURN .f.
+         RETURN .F.
 
       ENDCASE
       EXIT
@@ -262,7 +262,7 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
                ::setFocus()
             ENDIF
          ENDIF
-         RETURN .f.
+         RETURN .F.
 
       ENDIF
       EXIT
@@ -375,7 +375,7 @@ CLASS WvgTreeViewItem
    METHOD   destroy()
 
    METHOD   expand( lExpand )                      INLINE WVG_TreeView_Expand( ::hTree, ::hItem, ;
-                                                            iif( HB_ISLOGICAL( lExpand ), lExpand, .t. ) )
+                                                            iif( HB_ISLOGICAL( lExpand ), lExpand, .T. ) )
    METHOD   isExpanded()
    METHOD   setCaption( cCaption )
    METHOD   setExpandedImage( nResIdoBitmap )

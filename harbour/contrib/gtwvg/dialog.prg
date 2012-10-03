@@ -81,7 +81,7 @@ CLASS WvgDialog FROM WvgWindow
    DATA     oMenu
    DATA     aRect
    DATA     drawingArea
-   DATA     tasklist                              INIT  .t.
+   DATA     tasklist                              INIT  .T.
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -161,10 +161,10 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    endif
 
    if ::visible
-      ::lHasInputFocus := .t.
+      ::lHasInputFocus := .T.
    ENDIF
 
-   oW := WvgDrawingArea():new( Self ):create( , , {0,0}, Self:currentSize(), , .f. )
+   oW := WvgDrawingArea():new( Self ):create( , , {0,0}, Self:currentSize(), , .F. )
    IF ! empty( oW:hWnd )
       ::drawingArea := oW
    ELSE
@@ -207,7 +207,7 @@ METHOD WvgDialog:destroy()
 //
 
 METHOD WvgDialog:setFrameState( nState )
-   LOCAL lSuccess := .f.
+   LOCAL lSuccess := .F.
 
    DO CASE
 

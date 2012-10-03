@@ -84,7 +84,7 @@ PROCEDURE Main_MISC()
    TEST_LINE( Len( oError )                   , 12                        )
 #endif
 
-   /* SET()s */
+   /* Set()s */
 
    TEST_LINE( Set( _SET_MARGIN     )       , 0 )
    TEST_LINE( Set( _SET_MARGIN    , -1 )   , "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:25;N:-1 " )

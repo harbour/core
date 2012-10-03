@@ -407,7 +407,7 @@ HB_FUNC( TOKENINIT )
       }
       else
       {
-         /* nothing to rewind -> return .f. */
+         /* nothing to rewind -> return .F. */
          PHB_ITEM pSubst = NULL;
          int iArgErrorMode = ct_getargerrormode();
 

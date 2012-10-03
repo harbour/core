@@ -93,7 +93,7 @@ CLASS WvgBitmap
 
    DATA     hBitmap
    DATA     hDCcompat
-   DATA     lDCToDestroy                          INIT .f.
+   DATA     lDCToDestroy                          INIT .F.
 
    METHOD   new()
    METHOD   create( oPScompat )
@@ -126,7 +126,7 @@ METHOD create( oPScompat ) CLASS WvgBitmap
 
    IF oPScompat == NIL
       ::hDCComp := WVG_GetDC()
-      ::lDCToDestroy := .t.
+      ::lDCToDestroy := .T.
    ELSE
       ::hDCComp := oPScompat:hDC
    ENDIF

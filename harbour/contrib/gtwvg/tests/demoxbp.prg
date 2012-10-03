@@ -36,8 +36,8 @@ FUNCTION Main()
    LOCAL aParts := {}
 
    //--------------------------- Dialog -------------------------------\\
-   oCrt := WvgDialog():new( , , { 30,30 }, { 900,600 }, , .t. )
-   oCrt:closable := .t.
+   oCrt := WvgDialog():new( , , { 30,30 }, { 900,600 }, , .T. )
+   oCrt:closable := .T.
    oCrt:icon := "vr_1.ico"
    oCrt:create()
 
@@ -52,7 +52,7 @@ FUNCTION Main()
    oTBar := ActiveXBuildToolBarXbp( oDA )
 
    //--------------------------- StatusBar ---------------------------\\
-   oSBar   := WvgStatusBar():new( oCrt ):create( , , , , , .t. )
+   oSBar   := WvgStatusBar():new( oCrt ):create( , , , , , .T. )
    oSBar:panelClick := {| oPanel | WVG_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
    oPanel:caption := 'My Root Panel'
@@ -68,7 +68,7 @@ FUNCTION Main()
    oStatic:caption := chr(13)+'Implemented   Xbase++ Parts'
 
    oStatic:create( , , { 0, oTBar:currentSize()[2]+3 }, { 120, oCrt:currentSize()[2]-;
-                               oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .t. )
+                               oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .T. )
    oStatic:setColorBG( RGB( 200,200,200 ) )
 
    //--------------------------- ListBox -----------------------------\\
@@ -115,7 +115,7 @@ FUNCTION Main()
 
    oTree := WvgTreeView():new( oDA, , { oCrt:currentSize()[1]-160,oTBar:currentSize()[2]+3 }, ;
                                        { 160, oCrt:currentSize()[2]-;
-                               oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .t. )
+                               oTBar:currentSize()[2]-oSBar:currentSize()[2]-4 }, , .T. )
    oTree:hasLines   := .T.
    oTree:hasButtons := .T.
    oTree:alwaysShowSelection := .T.
@@ -136,9 +136,9 @@ FUNCTION Main()
    oItem2:addItem( "Third level C" )
 
    #if 0
-   oItem1:expand( .t. )
+   oItem1:expand( .T. )
    #else
-   oTree:showExpanded( .t., 2 )
+   oTree:showExpanded( .T., 2 )
    #endif
 
    oTree:setData( oItem2 )
@@ -146,11 +146,11 @@ FUNCTION Main()
    //--------------------------- Active-X ---------------------------\\
    hb_gtInfo( HB_GTI_WINTITLE, 'http://www.harbour.vouch.info' )
    #if 0
-   oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .t. )
+   oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .T. )
    oCom:CLSID := 'Shell.Explorer.2'
    oCom:mapEvent( 269, {|| QOut( ' E X P L O R E R - 2 6 9' ) } )
    #else
-   oCom := WvgHTMLViewer():New( oDA, , { 0, 0 }, { 100, 100 }, , .t. )
+   oCom := WvgHTMLViewer():New( oDA, , { 0, 0 }, { 100, 100 }, , .T. )
    oCom:beforeNavigate := {| cURL, x, oHTML | x := x, oHTML := oHTML, oPanel:caption := cURL }
    oCom:statusTextChange := {| cText | oPanel:caption := cText }
    #endif
@@ -159,17 +159,17 @@ FUNCTION Main()
 
    oAddr := WvgSLE():new()
    oAddr:bufferLength := 500
-   oAddr:border       := .t.
+   oAddr:border       := .T.
    cNavigate          := 'http://www.harbour.vouch.info'
    oAddr:dataLink     := {| x | iif( x == NIL, cNavigate, cNavigate := x ) }
    oAddr:setColorFG( RGB( 0,0,255   ) )
    oAddr:setColorBG( RGB( 0,255,255 ) )
-   oAddr:create( oDA, , { 120, oTBar:currentSize()[2] }, { 500,20 }, , .t. )
+   oAddr:create( oDA, , { 120, oTBar:currentSize()[2] }, { 500,20 }, , .T. )
    oAddr:setData()
    oAddr:killInputFocus := {| m1, m2, oS | m1:=m1, m2:=m2, oS:getData(), oCom:navigate( cNavigate ) }
 
    //----------------- Panel : Static + Radio + Checkbox ----------\\
-   oStatic2:= WvgStatic():New( oDA, , { 150, 150 }, { 500,310 }, , .f. )
+   oStatic2:= WvgStatic():New( oDA, , { 150, 150 }, { 500,310 }, , .F. )
    //oStatic2:type    := WVGSTATIC_TYPE_RAISEDBOX //BGNDFRAME
    oStatic2:exStyle += WS_EX_WINDOWEDGE
    //oStatic2:options := WVGSTATIC_FRAMETHICK
@@ -192,7 +192,7 @@ FUNCTION Main()
    oRadio:caption   := "Com 2"
    oRadio:create()
 
-   oCheck  := WvgCheckBox():New( oStatic2, , { 10,70 }, { 100,15 }, , .t. )
+   oCheck  := WvgCheckBox():New( oStatic2, , { 10,70 }, { 100,15 }, , .T. )
    oCheck:caption   := 'Checkbox A'
    oCheck:create()
    oCheck:selected  := {| m1, m2, o | m1:=m1,m2:=m2, WVG_MessageBox( , iif( o:getData(), 'I am selected','I am not selected' ) ) }
@@ -238,7 +238,7 @@ FUNCTION Main()
    // assign data code block accessing LOCAL variable
    oMLE    := WvgMLE():new()
    oMLE:wordWrap := .F.
-   oMLE:border   := .t.
+   oMLE:border   := .T.
    oMLE:dataLink := {| x | iif( x == NIL, cText, cText := x ) }
    oMLE:create( oStatic2, , { 180,10 }, { 310,250 } )
    // Copy text from LOCAL variable into edit buffer via :dataLink
@@ -257,7 +257,7 @@ FUNCTION Main()
    oCrt:sendMessage( WM_SIZE, 0, 0 )
    oCrt:show()
 
-   DO WHILE .t.
+   DO WHILE .T.
       IF inkey() == 27
          EXIT
       ENDIF
@@ -280,15 +280,15 @@ STATIC FUNCTION ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr
    nH := aCrt[2] - aTBar[2] - aSBar[2]
 
    IF oStatic:isVisible
-      oStatic:setPosAndSize( { 0, nT+3 }, { 120, nH-4 }, .t. )
-      oAddr:setPosAndSize( { 120, nT+2 }, { aCrt[1]-120-150, 20 }, .t. )
-      oCom:setPosAndSize( { 120, nT+2+20 }, { aCrt[1]-120-150, nH-20 }, .t. )
-      oTree:setPosAndSize( { aCrt[1]-150, nT }, { 150, nH }, .t. )
+      oStatic:setPosAndSize( { 0, nT+3 }, { 120, nH-4 }, .T. )
+      oAddr:setPosAndSize( { 120, nT+2 }, { aCrt[1]-120-150, 20 }, .T. )
+      oCom:setPosAndSize( { 120, nT+2+20 }, { aCrt[1]-120-150, nH-20 }, .T. )
+      oTree:setPosAndSize( { aCrt[1]-150, nT }, { 150, nH }, .T. )
 
    ELSE
-      oAddr:setPosAndSize( { 0, nT+2 }, { aCrt[1]-150, 20 }, .t. )
-      oCom:setPosAndSize( { 0, nT+2+20 }, { aCrt[1]-150, nH-20 }, .t. )
-      oTree:setPosAndSize( { aCrt[1]-150, nT }, { 150, nH }, .t. )
+      oAddr:setPosAndSize( { 0, nT+2 }, { aCrt[1]-150, 20 }, .T. )
+      oCom:setPosAndSize( { 0, nT+2+20 }, { aCrt[1]-150, nH-20 }, .T. )
+      oTree:setPosAndSize( { aCrt[1]-150, nT }, { 150, nH }, .T. )
 
    ENDIF
 
@@ -351,7 +351,7 @@ STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
    oTBar:imageWidth   := 26
    oTBar:imageHeight  := 24
 
-   oTBar:showToolTips := .t.
+   oTBar:showToolTips := .T.
 
    oTBar:create()
 
@@ -410,16 +410,16 @@ STATIC FUNCTION ExeFontDialog( oCrt )
 
    oFontDlg:title            := 'Select a Screen Font'
    oFontDlg:aPos             := { 150,150 }
-   oFontDlg:buttonApply      := .t.
+   oFontDlg:buttonApply      := .T.
    oFontDlg:activateApply    := {|| NIL }
    oFontDlg:familyName       := "Courier New"
    oFontDlg:strikeout        := .T.
-   oFontDlg:underscore       := .f.
+   oFontDlg:underscore       := .F.
    //oFontDlg:activateOk       := {|| WVG_MessageBox( , 'activateOK Event Handelled in Windows!' ) }
    oFontDlg:nominalPointSize := 12
 
-   //oFontDlg:size             := .f.
-   //oFontDlg:style            := .f.
+   //oFontDlg:size             := .F.
+   //oFontDlg:style            := .F.
 
    oFontDlg:create()
 

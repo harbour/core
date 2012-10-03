@@ -18,14 +18,14 @@ STATIC s_lSizeReady := .F.
 procedure main
 local ch
    * activate WVW_SIZE()
-   s_lSizeReady := .t.
+   s_lSizeReady := .T.
 
    * the biggest possible window
    setcolor("N/W")
    setmode(wvw_maxmaxrow()+1, wvw_maxmaxcol()+1)
 
    * enable MAXIMIZE button
-   wvw_enablemaximize(0, .t.)
+   wvw_enablemaximize(0, .T.)
 
    * set the window to MAXIMIZED state
    wvw_maximize(0)
@@ -69,7 +69,7 @@ function WVW_SIZE(nWinNum, hWnd, message, wParam, lParam)
 * this function is called by gtwvw AFTER the size is changed
 * WARNING: screen repainting is not performed completely by gtwvw at this point of call
 local cScreen
-local lNeedReset := .f., ;
+local lNeedReset := .F., ;
       maxsavedscrrow, maxsavedscrcol
    if !s_lSizeReady
       * program is not ready to handle window resizing
@@ -82,7 +82,7 @@ local lNeedReset := .f., ;
    endif
 
    * avoid reentrance
-   s_lSizeReady := .f.
+   s_lSizeReady := .F.
 
    do case
    case wParam == 2 //SIZE_MAXIMIZED
@@ -118,5 +118,5 @@ local lNeedReset := .f., ;
    endcase
 
    * allow next call
-   s_lSizeReady := .t.
+   s_lSizeReady := .T.
 return NIL

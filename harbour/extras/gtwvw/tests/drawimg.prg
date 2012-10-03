@@ -80,14 +80,14 @@ local ntop := 7,;
       nmidver:=INT((ntop+nbot)/2),;
       nmidhor:=INT((nleft+nrig)/2)
 local cpict := "vouch1.gif",;
-      ltransp := .f.,;
+      ltransp := .F.,;
       nMaxCache := wvw_SetMaxBMcache()
 local i,j,oWPaint
 local getlist := {}
    setcolor("N/W,N/GR*,,,N/W*")
    wvw_setcodepage(,255)
    wg_ResetWPaintObj( 0 )
-   do while .t.
+   do while .T.
       CLS
       setcursor(1)
       cpict := padr(cpict,40)
@@ -147,7 +147,7 @@ local getlist := {}
 
       * delete all image objects
       wg_DelWPaintObj(0, WPAINTOBJ_IMAGE, NIL)
-   enddo //while .t.
+   enddo //while .T.
    setcursor(1)
 return
 
@@ -182,10 +182,10 @@ ENDCLASS //wPaintOBJ
 
 METHOD New(nWinNum, nType, cId, nRow1, nCol1, nRow2, nCol2, aOffTLBR, lTransp) CLASS wPaintObj
    default aOffTLBR to {0,0,0,0}
-   default lTransp to .f.
+   default lTransp to .F.
 
    ::nWinNum := nWinNum
-   ::lVisible := .t.
+   ::lVisible := .T.
 
    ::nType := nType
    ::cId := cId
@@ -223,7 +223,7 @@ RETURN NIL  //DRAW()
 
 METHOD Undraw() CLASS wPaintObj
 * undraw the object
-* normally this is called with ::lVisible == .f.,
+* normally this is called with ::lVisible == .F.,
 * otherwise the object will be redrawn by WVW_PAINT
 local cScreen
 local nRow1, nCol1, nRow2, nCol2, nMaxRow, nMaxCol
@@ -252,13 +252,13 @@ RETURN NIL //undraw()
 
 METHOD Hide() CLASS wPaintObj
 * temporarily hides the object
-   ::lVisible := .f.
+   ::lVisible := .F.
    ::Undraw()
 RETURN NIL
 
 METHOD Show() CLASS wPaintObj
 * show the object
-   ::lVisible := .t.
+   ::lVisible := .T.
    ::draw()
 RETURN NIL
 
@@ -269,7 +269,7 @@ function wg_ResetWPaintObj( nWinNum, nObjNum, lStrict )
 * if nObjNum specified, clears object >= nObjNum
 local i
    default nObjNum to 0
-   default lStrict to .f.
+   default lStrict to .F.
 
    do while len(s_aPObjList) < nWinNum+1
       aadd( s_aPObjList, {} )
@@ -277,14 +277,14 @@ local i
 
       asize(s_aPObjList[ nWinNum+1 ], nObjNum)
 
-return .t.
+return .T.
 
 function wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
 * adds a WPaint object oWPaint into window nWinNum
 * returns ::cId if successful. "" if failed.
 local i
 local nLen, aRect //20050720
-   default lStrict to .f.
+   default lStrict to .F.
    default nOperation to WOBJ_ADD_OVERWRITE
 
    * simplified:
@@ -303,7 +303,7 @@ local nLen, aRect //20050720
       if lStrict
          s_aPObjList[ nWinNum+1 ][i]:Hide()
       else
-         s_aPObjList[ nWinNum+1 ][i]:lVisible := .f.
+         s_aPObjList[ nWinNum+1 ][i]:lVisible := .F.
       endif
       s_aPObjList[ nWinNum+1 ][i] := oWPaint
 
@@ -315,7 +315,7 @@ local nLen, aRect //20050720
    if oWPaint:lVisible
       oWPaint:draw()
    endif
-return oWPaint:cId //20040811 was .t.
+return oWPaint:cId //20040811 was .T.
 
 function wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
 * deletes a WPaint object oWPaint from window nWinNum
@@ -327,7 +327,7 @@ local lDelAll := (cId == NIL)
 local nDeleted := 0
 local nLen
 local cCurId
-   default lStrict to .f.
+   default lStrict to .F.
 
    * is nType set?
    if nType < 1
@@ -343,7 +343,7 @@ local cCurId
          if lStrict
             s_aPObjList[ nWinNum+1 ][i]:Hide()
          else
-            s_aPObjList[ nWinNum+1 ][i]:lVisible := .f.
+            s_aPObjList[ nWinNum+1 ][i]:lVisible := .F.
          endif
          cCurId := s_aPObjList[ nWinNum+1 ][i]:cId
          adel(s_aPObjList[ nWinNum+1 ], i)

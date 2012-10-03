@@ -258,7 +258,7 @@ FUNCTION WvtSetObjects( aObject )
 
 FUNCTION SetMouseCheck( lYes )
    LOCAL lOYes
-   STATIC lSYes := .t.
+   STATIC lSYes := .T.
    lOYes := lSYes
    IF lYes != NIL
       lSYes := lYes
@@ -275,7 +275,7 @@ FUNCTION WvtWindowExpand( nUnits )
 
    Wvt_setFont( "Courier New", sUnits )
 
-   RETURN .t.
+   RETURN .T.
 
 //
 
@@ -303,7 +303,7 @@ FUNCTION VouChoice( aChoices )
 
 FUNCTION Hb_Clear()
    CLS
-   RETURN .f.
+   RETURN .F.
 
 //
 
@@ -314,7 +314,7 @@ FUNCTION MyMenuProcedure( nID )
    CASE nID == 102
       alert( 'Procedure 102' )
    ENDCASE
-   RETURN .t.
+   RETURN .T.
 
 //
 
@@ -334,7 +334,7 @@ FUNCTION BuildWvgToolBar( oDA, nActiveX )
    oTBar:imageWidth   := 26
    oTBar:imageHeight  := 24
 
-   oTBar:showToolTips := .t.
+   oTBar:showToolTips := .T.
 
    // After setting properties, create toolbar.
    oTBar:create()
@@ -458,7 +458,7 @@ FUNCTION DispStatusMsg( cMsg )
 
    Wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, rgb(198,198,198), "Arial", 18, , 900 )
 
-   RETURN .t.
+   RETURN .T.
 
 //
 
@@ -470,7 +470,7 @@ FUNCTION ClearStatusMsg()
 
    SetPos( nRow, nCol )
 
-   RETURN .t.
+   RETURN .T.
 
 //
 

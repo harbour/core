@@ -281,7 +281,7 @@ METHOD WvgMenuBar:addItem( aItem, p2, p3, p4 )
       nAttrib  := p4
    ENDIF
 
-   RETURN ::putItem( { xCaption, bAction, nStyle, nAttrib }, -1, .t. )
+   RETURN ::putItem( { xCaption, bAction, nStyle, nAttrib }, -1, .T. )
 
 //
 
@@ -289,7 +289,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
    LOCAL nItemIndex, cCaption
    LOCAL xCaption, bAction, nStyle, nAttrib
 
-   DEFAULT lInsert TO .t.
+   DEFAULT lInsert TO .T.
 
    ASize( aItem, 4 )
 
@@ -333,7 +333,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
    ELSE
       nItemIndex := nPos
       IF lInsert
-         ::aMenuItems := hb_AIns( ::aMenuItems, nPos, aItem, .t. )
+         ::aMenuItems := hb_AIns( ::aMenuItems, nPos, aItem, .T. )
          WVG_InsertMenu( ::hMenu, ;
                          nItemIndex - 1, ;
                          aItem[ 1 ] + MF_BYPOSITION, ;
@@ -424,7 +424,7 @@ METHOD WvgMenuBar:checkItem( nItemNum, lCheck )
 //
 
 METHOD WvgMenuBar:enableItem( nItemNum )
-   LOCAL lSuccess := .f.
+   LOCAL lSuccess := .F.
 
    IF !empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum )
       lSuccess := WVG_EnableMenuItem( ::hMenu, nItemNum-1, MF_BYPOSITION + MF_ENABLED )
@@ -435,7 +435,7 @@ METHOD WvgMenuBar:enableItem( nItemNum )
 //
 
 METHOD WvgMenuBar:disableItem( nItemNum )
-   LOCAL lSuccess := .f.
+   LOCAL lSuccess := .F.
 
    IF !empty( ::hMenu ) .AND. !empty( nItemNum )
       lSuccess := WVG_EnableMenuItem( ::hMenu, nItemNum-1, MF_BYPOSITION + MF_GRAYED )
@@ -457,7 +457,7 @@ METHOD WvgMenuBar:getItem( nItemNum )
 
 METHOD WvgMenuBar:insItem( nItemNum, aItem )
 
-   ::putItem( aItem, nItemNum, .t. )
+   ::putItem( aItem, nItemNum, .T. )
 
    RETURN Self
 
@@ -478,16 +478,16 @@ METHOD WvgMenuBar:isItemEnabled( nItemNum )
 METHOD WvgMenuBar:selectItem( nItemNum )
 
    IF HB_ISNUMERIC( nItemNum )
-      RETURN .f.
+      RETURN .F.
    ENDIF
 
-   RETURN .t.
+   RETURN .T.
 
 //
 
 METHOD WvgMenuBar:setItem( nItemNum, aItem )
 
-   RETURN ::putItem( aItem, nItemNum, .f. )
+   RETURN ::putItem( aItem, nItemNum, .F. )
 
 //
 /*                         Callback Methods                             */

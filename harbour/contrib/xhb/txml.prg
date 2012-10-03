@@ -303,17 +303,17 @@ RETURN Self
 METHOD MatchCriteria( oFound ) CLASS TXmlIteratorRegex
 
    IF ::cName != NIL .and. ;
-         ( oFound:cName == NIL .or. ! HB_REGEXLIKE( ::cName, oFound:cName, .t. ) )
+         ( oFound:cName == NIL .or. ! HB_REGEXLIKE( ::cName, oFound:cName, .T. ) )
       RETURN .F.
    ENDIF
 
    IF ::cAttribute != NIL .and. ;
-         hb_hScan( oFound:aAttributes, {| cKey | HB_REGEXLIKE( ::cAttribute, cKey, .t. ) } ) == 0
+         hb_hScan( oFound:aAttributes, {| cKey | HB_REGEXLIKE( ::cAttribute, cKey, .T. ) } ) == 0
       RETURN .F.
    ENDIF
 
    IF ::cValue != NIL .and. ;
-         hb_hScan( oFound:aAttributes, {| xKey, cValue | HB_SYMBOL_UNUSED( xKey ), HB_REGEXLIKE( ::cValue, cValue, .t. ) } ) == 0
+         hb_hScan( oFound:aAttributes, {| xKey, cValue | HB_SYMBOL_UNUSED( xKey ), HB_REGEXLIKE( ::cValue, cValue, .T. ) } ) == 0
       RETURN .F.
    ENDIF
 

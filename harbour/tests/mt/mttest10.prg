@@ -39,7 +39,7 @@ proc main()
 
    ? "Waiting for threads"
    while inkey() != K_ESC
-      if hb_threadWait( aThreads, 0.1, .t. ) == len( aThreads )
+      if hb_threadWait( aThreads, 0.1, .T. ) == len( aThreads )
          wait
          exit
       endif
