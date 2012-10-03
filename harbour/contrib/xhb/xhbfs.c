@@ -57,7 +57,7 @@ HB_FUNC( ISDIRECTORY )
 {
    HB_BOOL bRetVal;
 
-#if defined( __PLATFORM__WINDOWS ) && 0 /* Document, but don't replicate xhb bug. */
+#if defined( HB_OS_WIN ) && 0 /* Document, but don't replicate xhb bug. */
    bRetVal = hb_fsDirExists( hb_parcx( 1 ) );
 #else
    {

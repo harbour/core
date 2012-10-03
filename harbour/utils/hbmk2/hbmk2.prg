@@ -725,9 +725,10 @@ PROCEDURE _APPMAIN( ... )
 
 #endif /* _HBMK_EMBEDDED_ */
 
-#if defined( __PLATFORM__WINDOWS ) || ;
-    defined( __PLATFORM__DOS ) || ;
+#if defined( __PLATFORM__WINDOWS ) .OR. ;
+    defined( __PLATFORM__DOS ) .OR. ;
     defined( __PLATFORM__OS2 )
+
 STATIC PROCEDURE hbmk_COMP_Setup( cARCH, cCOMP, cBasePath )
 
    /* TODO: Use HB_CCPREFIX instead of PATH modification, where possible. */
@@ -795,6 +796,7 @@ STATIC PROCEDURE hbmk_COMP_Setup( cARCH, cCOMP, cBasePath )
    ENDCASE
 
    RETURN
+
 #endif
 
 STATIC FUNCTION hbmk_new()

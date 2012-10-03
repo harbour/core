@@ -8,12 +8,10 @@
            - using hb_f*() - some compilers are not friendly with this :(
            - rtf is assumed to have association
  * initial release : 23 June 1999 Andi Jahja
- * tested under Windows 98 only with RTF associated to Winword
+ * tested under Windows 98 only with RTF associated to WinWord
  * works with printable ascii only
  * placed in the public domain
 */
-
-#define CRLF CHR(13) + CHR(10)
 
 PROCEDURE Main()
 
@@ -22,13 +20,13 @@ PROCEDURE Main()
    LOCAL ctest := ""
 
    // create a plain text file
-   ctest += "This is +bHarbour (C) RTF Class-b" + CRLF
-   ctest += "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG" + CRLF
-   ctest += "+bTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG-b" + CRLF
-   ctest += "+iTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG-i" + CRLF
-   ctest += "+buTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG-bu" + CRLF
-   ctest += "+buiTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG-bui" + CRLF
-   ctest += "THE +bQUICK-b +buBROWN-bu +buiFOX-bui +iJUMPS-i +uOVER-u +ilTHE-il +uLAZY-u +buDOG-bu" + CRLF
+   ctest += "This is +bHarbour (C) RTF Class-b" + hb_eol()
+   ctest += "THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG" + hb_eol()
+   ctest += "+bTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG-b" + hb_eol()
+   ctest += "+iTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG-i" + hb_eol()
+   ctest += "+buTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG-bu" + hb_eol()
+   ctest += "+buiTHE QUICK BROWN FOX JUMPS OVER THE LAZY DOG-bui" + hb_eol()
+   ctest += "THE +bQUICK-b +buBROWN-bu +buiFOX-bui +iJUMPS-i +uOVER-u +ilTHE-il +uLAZY-u +buDOG-bu" + hb_eol()
 
    FWrite( htest, ctest )
    FClose( htest )
@@ -36,12 +34,6 @@ PROCEDURE Main()
    // convert text file to rtf
    ortf:write( "rtf_test.txt" )
    ortf:close()
-
-   // execute file association ( windows only )
-   #if defined( __PLATFORM__WINDOWS )
-      // assuming start.exe is exist
-      __Run( "start test.rtf" )
-   #endif
 
    RETURN
 
@@ -67,7 +59,7 @@ STATIC FUNCTION new( cfilename )
    ::nhandle   := FCreate( cfilename )
    FWrite( ::nhandle, ;
       "{\rtf1\ansi\deff0{\fonttbl {\f0\fnil\fcharset0 Courier New;}{\f1\fnil\fcharset0 Arial;}}" + ;
-      "\uc1\pard\lang1033\ulnone\f0\fs20" + CRLF )
+      "\uc1\pard\lang1033\ulnone\f0\fs20" + hb_eol() )
 
    RETURN self
 
@@ -136,7 +128,7 @@ STATIC FUNCTION write( csource )
             FWrite( ::nhandle, cchar )
          ENDIF
       next
-      FWrite( ::nhandle, CRLF )
+      FWrite( ::nhandle, hb_eol() )
       hb_fskip() // read next line
    ENDDO
    hb_fuse()
@@ -147,7 +139,7 @@ STATIC FUNCTION CLOSE()
 
    LOCAL self := qself()
 
-   FWrite( ::nhandle, "\f1\fs16\par" + CRLF + "}" )
+   FWrite( ::nhandle, "\f1\fs16\par" + hb_eol() + "}" )
    FClose( ::nhandle )
 
    RETURN self
