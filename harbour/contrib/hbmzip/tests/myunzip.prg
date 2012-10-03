@@ -51,56 +51,57 @@
  */
 
 PROCEDURE Main( ... )
+
    LOCAL hUnzip, aWild, cFileName, cExt, cPath, cFile, ;
-         dDate, cTime, nSize, nCompSize, nErr, ;
-         lCrypted, cPassword, cComment, tmp
+      dDate, cTime, nSize, nCompSize, nErr, ;
+      lCrypted, cPassword, cComment, tmp
 
    aWild := { ... }
-   IF LEN( aWild ) < 1
+   IF Len( aWild ) < 1
       ? "Usage: myunzip <ZipName> [ --pass <password> ] [ <FilePattern1> ... ]"
       RETURN
    ENDIF
 
-   HB_FNameSplit( aWild[ 1 ], @cPath, @cFileName, @cExt )
-   IF EMPTY( cExt )
+   hb_FNameSplit( aWild[ 1 ], @cPath, @cFileName, @cExt )
+   IF Empty( cExt )
       cExt := ".zip"
    ENDIF
-   cFileName := HB_FNameMerge( cPath, cFileName, cExt )
+   cFileName := hb_FNameMerge( cPath, cFileName, cExt )
 
-   ADEL( aWild, 1 )
-   ASIZE( aWild, LEN( aWild ) - 1 )
+   ADel( aWild, 1 )
+   ASize( aWild, Len( aWild ) - 1 )
 
-   FOR tmp := 1 TO LEN( aWild ) - 1
-      IF LOWER( aWild[ tmp ] ) == "--pass"
+   FOR tmp := 1 TO Len( aWild ) - 1
+      IF Lower( aWild[ tmp ] ) == "--pass"
          cPassword := aWild[ tmp + 1 ]
          aWild[ tmp ] := ""
          aWild[ tmp + 1 ] := ""
       ENDIF
    NEXT
 
-   AEVAL( aWild, {|cPattern, nPos| aWild[ nPos ] := STRTRAN( cPattern, "\", "/" ) } )
+   AEval( aWild, {| cPattern, nPos | aWild[ nPos ] := StrTran( cPattern, "\", "/" ) } )
 
    hUnzip := HB_UNZIPOPEN( cFileName )
 
-   IF ! EMPTY( hUnzip )
+   IF ! Empty( hUnzip )
       ? "Archive file:", cFileName
       HB_UnzipGlobalInfo( hUnzip, @nSize, @cComment )
       ? "Number of entires:", nSize
-      IF !EMPTY( cComment )
-        ? "global comment:", cComment
+      IF !Empty( cComment )
+         ? "global comment:", cComment
       ENDIF
       ? ""
       ? "Filename                         Date     Time         Size Compressed  Action"
       ? "---------------------------------------------------------------------------------"
       nErr := HB_UNZIPFILEFIRST( hUnzip )
       DO WHILE nErr == 0
-         HB_UnzipFileInfo( hUnzip, @cFile, @dDate, @cTime,,,, @nSize, @nCompSize, @lCrypted, @cComment )
-         ? PADR( cFile + iif( lCrypted, "*", ""), 30 ), DTOC( dDate ), cTime, nSize, nCompSize
-         IF !empty( cComment )
+         HB_UnzipFileInfo( hUnzip, @cFile, @dDate, @cTime, , , , @nSize, @nCompSize, @lCrypted, @cComment )
+         ? PadR( cFile + iif( lCrypted, "*", "" ), 30 ), DToC( dDate ), cTime, nSize, nCompSize
+         IF !Empty( cComment )
             ? "comment:", cComment
          ENDIF
 
-         IF ASCAN( aWild, {|cPattern| HB_WILDMATCH( cPattern, cFile, .T. ) } ) > 0
+         IF AScan( aWild, {| cPattern | hb_WildMatch( cPattern, cFile, .T. ) } ) > 0
             ?? " Extracting"
             HB_UnzipExtractCurrentFile( hUnzip, NIL, cPassword )
          ELSE

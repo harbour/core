@@ -159,8 +159,8 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
          aObjs := {}
          cRet  := cName + " := "
       ELSE
-         IF ( nObj := aScan( aObjs, {|a| HB_ArrayID( a[1] ) == HB_ArrayID( xVal ) } ) ) > 0
-             RETURN aObjs[ nObj ][2] + " /* Cyclic */"
+         IF ( nObj := aScan( aObjs, {| a | HB_ArrayID( a[ 1 ] ) == HB_ArrayID( xVal ) } ) ) > 0
+             RETURN aObjs[ nObj ][ 2 ] + " /* Cyclic */"
          ENDIF
 
          cRet := ""
@@ -216,8 +216,8 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
          aObjs := {}
          cRet  := cName + " := "
       ELSE
-         IF ( nObj := aScan( aObjs, {|a| HB_ArrayID( a[1] ) == HB_ArrayID( xVal ) } ) ) > 0
-             RETURN aObjs[ nObj ][2] + " /* Cyclic */"
+         IF ( nObj := aScan( aObjs, {| a | HB_ArrayID( a[ 1 ] ) == HB_ArrayID( xVal ) } ) ) > 0
+             RETURN aObjs[ nObj ][ 2 ] + " /* Cyclic */"
          ENDIF
 
          cRet := ""

@@ -5,7 +5,7 @@
 /*
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
-/*----------------------------------------------------------------------*/
+//
 
 #include "inkey.ch"
 #include "common.ch"
@@ -14,7 +14,7 @@
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+//
 // The function has to be called via hb_threadStart( {|| ExecuteActiveX( nActiveX ) } )
 //
 FUNCTION ExecuteActiveX( nActiveX, xParam )
@@ -52,7 +52,7 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
 
    //--------------------------- StatusBar ---------------------------\\
    oSBar   := WvgStatusBar():new( oDA ):create( , , , , , .t. )
-   oSBar:panelClick := {|oPanel| WVG_MessageBox( , oPanel:caption ) }
+   oSBar:panelClick := {| oPanel | WVG_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
    oPanel:caption := 'My Root Panel'
    oPanel1 := oSBar:addItem()
@@ -86,7 +86,7 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    oRadio  := WvgRadioButton():new( oStatic2,, { 10,10 }, { 100,15 } )
    oRadio:caption   := "Com 1"
    oRadio:selection := .T.
-   oRadio:selected  := {|m1,m2,obj| m1:=m1, m2:=m2, WVG_MessageBox( , obj:caption + iif( obj:selection, '< S >', '< N >' ) ) }
+   oRadio:selected  := {| m1, m2, obj | m1:=m1, m2:=m2, WVG_MessageBox( , obj:caption + iif( obj:selection, '< S >', '< N >' ) ) }
    oRadio:create()
 
    oRadio              := WvgRadioButton():new( oStatic2,, { 10,35 }, { 100,15 } )
@@ -96,21 +96,21 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    oCheck              := WvgCheckBox():New( oStatic2, , { 10,70 }, { 100,15 }, , .t. )
    oCheck:caption   := 'Checkbox A'
    oCheck:create()
-   oCheck:selected  := {|m1,m2,o| m1:=m1,m2:=m2, WVG_MessageBox( , iif( o:getData(), 'I am selected','I am not selected' ) ) }
+   oCheck:selected  := {| m1, m2, o | m1:=m1,m2:=m2, WVG_MessageBox( , iif( o:getData(), 'I am selected','I am not selected' ) ) }
 
    // Create first 3State button, passing the position to :create()
    oXbp                := Wvg3State():new( oStatic2 )
    oXbp:caption := "3 State A"
    oXbp:create( , , { 10,100 }, { 100,15 } )
    // Determine current state using mp1
-   oXbp:selected := {| m1,m2,oBtn | m2:=m2, oBtn:=oBtn, oPanel1:caption := "3State A ["+aState[ m1+1 ]+"]" }
+   oXbp:selected := {| m1, m2, oBtn | m2:=m2, oBtn:=oBtn, oPanel1:caption := "3State A ["+aState[ m1+1 ]+"]" }
 
    // Create second 3State Button, passing the position to :new()
    oXbp                := Wvg3State():new( oStatic2, , { 10,125 }, { 100,15 } )
    oXbp:caption := "3 State B"
    oXbp:create( oStatic2 )
    // Determine current state using :getData()
-   oXbp:selected := {| m1,m2,oBtn | m1:=m1,m2:=m2, WVG_MessageBox( , "3State B", aState[ oBtn:getData()+1 ] ) }
+   oXbp:selected := {| m1, m2, oBtn | m1:=m1,m2:=m2, WVG_MessageBox( , "3State B", aState[ oBtn:getData()+1 ] ) }
 
    // Create first SLE, specify position using :create()
    // On :typeOut set the focus to the second SLE
@@ -118,20 +118,20 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    oXbp:autoTab        := .T.
    oXbp:bufferLength   := 20
    // Data code block containing assignment to LOCAL variable
-   oXbp:dataLink       := {|x| iif( x == NIL, cVarA, cVarA := x ) }
+   oXbp:dataLink       := {| x | iif( x == NIL, cVarA, cVarA := x ) }
    oXbp:create( , , { 10,170 }, { 150,20 } )
    oXbp:setData()
    // Assign the value of the edit buffer to a LOCAL variable when the input focus is lost
-   oXbp:killInputFocus := { |x,y,oSLE| x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarA =" + cVarA }
+   oXbp:killInputFocus := {| x, y, oSLE | x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarA =" + cVarA }
 
    // Create second SLE, specify position using :new()
    oXbp                := WvgSLE():new( oStatic2, , { 10,200 }, { 150,20 } )
    oXbp:tabStop        := .T.
    oXbp:bufferLength   := 15
-   oXbp:dataLink       := {|x| iif( x == NIL, cVarB, cVarB := x ) }
+   oXbp:dataLink       := {| x | iif( x == NIL, cVarB, cVarB := x ) }
    oXbp:create(  )
    oXbp:setData()
-   oXbp:killInputFocus := { |x,y,oSLE| x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
+   oXbp:killInputFocus := {| x, y, oSLE | x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
 
    // Read file into LOCAL variable
    cText   := MemoRead( "hbmk.hbm" )
@@ -140,7 +140,7 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    oMLE    := WvgMLE():new( oStatic2 )
    oMLE:wordWrap := .F.
    oMLE:border   := .t.
-   oMLE:dataLink := {|x| iif( x==NIL, cText, cText := x ) }
+   oMLE:dataLink := {| x | iif( x == NIL, cText, cText := x ) }
    oMLE:create( oStatic2, , { 180,10 }, { 310,250 } )
    // Copy text from LOCAL variable into edit buffer via :dataLink
    oMLE:setData()
@@ -168,7 +168,7 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    aadd( aParts, 'XbpMLE'        )
    aadd( aParts, 'DataRef'       )
 
-   aeval( aParts, {|e| oListBox:addItem( e ) } )
+   aeval( aParts, {| e | oListBox:addItem( e ) } )
    oListBox:itemSelected := {|| WVG_MessageBox( , oListBox:getCurItem() ) }
    oListBox:setData( 3 )
 
@@ -188,7 +188,7 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    oTree:create()
    oTree:setColorBG( RGB( 120,15,240 ) )
    oTree:setColorFG( RGB( 15,240,120 ) )
-   oTree:itemSelected := {|oItem| iif( oItem != NIL, WVG_MessageBox( , oItem:caption ), NIL ) }
+   oTree:itemSelected := {| oItem | iif( oItem != NIL, WVG_MessageBox( , oItem:caption ), NIL ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
 
@@ -210,11 +210,11 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    oTree:setData( oItem2 )
 
    //--------------------------- Misc Config ------------------------\\
-   oTBar:buttonClick := {|oBtn| iif( oBtn:caption == 'Hide' , oStatic:hide(), nil ),;
-                                iif( oBtn:caption == 'Show' , oStatic:show(), nil ),;
-                                iif( oBtn:caption == 'Tools', oStatic2:show():toFront(), nil ),;
-                                iif( oBtn:caption $ 'Hide,Show', oCrt:sendMessage( WM_SIZE, 0, 0 ), NIL ),;
-                                 oPanel2:caption := "Button [ " + oBtn:caption + " ] clicked!" }
+   oTBar:buttonClick := {| oBtn | iif( oBtn:caption == 'Hide' , oStatic:hide(), nil ),;
+                                  iif( oBtn:caption == 'Show' , oStatic:show(), nil ),;
+                                  iif( oBtn:caption == 'Tools', oStatic2:show():toFront(), nil ),;
+                                  iif( oBtn:caption $ 'Hide,Show', oCrt:sendMessage( WM_SIZE, 0, 0 ), NIL ),;
+                                   oPanel2:caption := "Button [ " + oBtn:caption + " ] clicked!" }
    oDA:resize := {|| ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree ) }
 
    #if 1
@@ -237,7 +237,7 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    oCrt:Destroy()
    Return NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree )
    LOCAL aCrt, aTBar, aSBar
@@ -265,7 +265,7 @@ STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree )
 
    RETURN 1
 
-//----------------------------------------------------------------------//
+//
 
 Static Function ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
    Local oMenuBar, oSubMenu
@@ -280,7 +280,7 @@ Static Function ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
    oSubMenu:title := "~Procedural"
    oSubMenu:addItem( { "Play Charge ~1", } )
    oSubMenu:addItem( { "Play Nannyboo ~2", } )
-   oSubMenu:itemSelected := {|mp1| MyFunction( 100+mp1 ) }
+   oSubMenu:itemSelected := {| mp1 | MyFunction( 100+mp1 ) }
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    // Define submenu in the functional style:
@@ -303,7 +303,7 @@ Static Function ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
 
    Return NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
    LOCAL oCom
@@ -344,7 +344,7 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
                                    oCom:showAboutBox()                ;
                                 } )
 
-      oCom:mapEvent( evBtnUp, {|nBtn| iif( nBtn == 2, oCom:oParent:sendMessage( WM_CLOSE,0,0 ), NIL ) } )
+      oCom:mapEvent( evBtnUp, {| nBtn | iif( nBtn == 2, oCom:oParent:sendMessage( WM_CLOSE,0,0 ), NIL ) } )
 
    case nActiveX == 3
       hb_gtInfo( HB_GTI_WINTITLE, 'file://' + hb_DirBase() + 'myharu.pdf' )
@@ -369,7 +369,7 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
 
    RETURN oCom
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
    Local nKey, sData
@@ -586,7 +586,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION ConfigureRMChart( RMChart )
    LOCAL oRegion
@@ -630,7 +630,7 @@ STATIC FUNCTION ConfigureRMChart( RMChart )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION MyFunction( nMode )
 
@@ -652,7 +652,7 @@ STATIC FUNCTION MyFunction( nMode )
       Eval( {|| tone(523,2),tone(698,2),tone(880,2),tone(1046,4),tone(880,2),tone(1046,8) } )
 
    case nMode == 102  // NannyBoo
-      AEval( {{196,2},{196,2},{164,2},{220,2},{196,4},{164,4}}, {|a| tone(a[1],a[2]) } )
+      AEval( {{196,2},{196,2},{164,2},{220,2},{196,4},{164,4}}, {| a | tone( a[ 1 ], a[ 2 ] ) } )
 
    case nMode == 103  // BADKEY
       tone( 480,0.25 )
@@ -662,4 +662,4 @@ STATIC FUNCTION MyFunction( nMode )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//

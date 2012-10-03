@@ -252,7 +252,7 @@ DEFAULT cId    TO ""
       ENDIF
       // version 0.01
 
-      _nFont := ascan( ::aReport[ FONTS ], {|arr| arr[1] == ::aReport[ FONTNAME ]} )
+      _nFont := ascan( ::aReport[ FONTS ], {| arr | arr[ 1 ] == ::aReport[ FONTNAME ]} )
       IF !( ::aReport[ FONTNAME ] == ::aReport[ FONTNAMEPREV ] )
          ::aReport[ FONTNAMEPREV ] := ::aReport[ FONTNAME ]
          ::aReport[ PAGEBUFFER ] += CRLF + "BT /Fo" + ltrim(str( _nFont )) + " " + ltrim(transform( ::aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET"
@@ -286,7 +286,7 @@ local cName := ::GetFontInfo( "NAME" )
       ::aReport[ FONTNAME ] := 9
    ENDIF
    aadd( ::aReport[ PAGEFONTS ], ::aReport[ FONTNAME ] )
-   IF ascan( ::aReport[ FONTS ], { |arr| arr[1] == ::aReport[ FONTNAME ] } ) == 0
+   IF ascan( ::aReport[ FONTS ], {| arr | arr[ 1 ] == ::aReport[ FONTNAME ] } ) == 0
       aadd( ::aReport[ FONTS ], { ::aReport[ FONTNAME ], ++::aReport[ NEXTOBJ ] } )
    ENDIF
 RETURN self
@@ -308,7 +308,7 @@ local cName := ::GetFontInfo( "NAME" )
       ::aReport[ FONTNAME ] := 11
    ENDIF
    aadd( ::aReport[ PAGEFONTS ], ::aReport[ FONTNAME ] )
-   IF ascan( ::aReport[ FONTS ], { |arr| arr[1] == ::aReport[ FONTNAME ] } ) == 0
+   IF ascan( ::aReport[ FONTS ], {| arr | arr[ 1 ] == ::aReport[ FONTNAME ] } ) == 0
       aadd( ::aReport[ FONTS ], { ::aReport[ FONTNAME ], ++::aReport[ NEXTOBJ ] } )
    ENDIF
 RETURN self
@@ -331,7 +331,7 @@ local cName := ::GetFontInfo( "NAME" )
    ENDIF
 
    aadd( ::aReport[ PAGEFONTS ], ::aReport[ FONTNAME ] )
-   IF ascan( ::aReport[ FONTS ], { |arr| arr[1] == ::aReport[ FONTNAME ] } ) == 0
+   IF ascan( ::aReport[ FONTS ], {| arr | arr[ 1 ] == ::aReport[ FONTNAME ] } ) == 0
       aadd( ::aReport[ FONTS ], { ::aReport[ FONTNAME ], ++::aReport[ NEXTOBJ ] } )
    ENDIF
 
@@ -355,7 +355,7 @@ ELSEIF cName == "Courier"
 ENDIF
 
 aadd( ::aReport[ PAGEFONTS ], ::aReport[ FONTNAME ] )
-IF ascan( ::aReport[ FONTS ], { |arr| arr[1] == ::aReport[ FONTNAME ] } ) == 0
+IF ascan( ::aReport[ FONTS ], {| arr | arr[ 1 ] == ::aReport[ FONTNAME ] } ) == 0
    aadd( ::aReport[ FONTS ], { ::aReport[ FONTNAME ], ++::aReport[ NEXTOBJ ] } )
 ENDIF
 
@@ -825,7 +825,7 @@ local nSize, aSize := { { "LETTER",    8.50, 11.00 }, ;
 
    DEFAULT _cPageSize TO "LETTER"
 
-   nSize := ascan( aSize, { |arr| LEFTEQUAL( arr[ 1 ], _cPageSize ) } )
+   nSize := ascan( aSize, {| arr | LEFTEQUAL( arr[ 1 ], _cPageSize ) } )
 
    IF nSize == 0 .or. nSize > 2
       nSize := 1
@@ -943,7 +943,7 @@ DEFAULT _nSize TO 10
 
    aadd( ::aReport[ PAGEFONTS ], ::aReport[ FONTNAME ] )
 
-   IF ascan( ::aReport[ FONTS ], { |arr| arr[1] == ::aReport[ FONTNAME ] } ) == 0
+   IF ascan( ::aReport[ FONTS ], {| arr | arr[ 1 ] == ::aReport[ FONTNAME ] } ) == 0
       aadd( ::aReport[ FONTS ], { ::aReport[ FONTNAME ], ++::aReport[ NEXTOBJ ] } )
    ENDIF
 RETURN self
@@ -2209,7 +2209,7 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
       "<<"
 
       for nI := 1 to len( ::aReport[ PAGEFONTS ] )
-         nFont := ascan( ::aReport[ FONTS ], { |arr| arr[1] == ::aReport[ PAGEFONTS ][ nI ] } )
+         nFont := ascan( ::aReport[ FONTS ], {| arr | arr[ 1 ] == ::aReport[ PAGEFONTS ][ nI ] } )
          cTemp += CRLF + "/Fo" + ltrim(str( nFont )) + " " + ltrim(str( ::aReport[ FONTS ][ nFont ][ 2 ])) + " 0 R"
       next
 
@@ -2219,7 +2219,7 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
    IF len( ::aReport[ PAGEIMAGES ] ) > 0
       cTemp += CRLF + "/XObject" + CRLF + "<<"
       for nI := 1 to len( ::aReport[ PAGEIMAGES ] )
-         nImage := ascan( ::aReport[ IMAGES ], { |arr| arr[1] == ::aReport[ PAGEIMAGES ][ nI ][ 1 ] } )
+         nImage := ascan( ::aReport[ IMAGES ], {| arr | arr[ 1 ] == ::aReport[ PAGEIMAGES ][ nI ][ 1 ] } )
          IF nImage == 0
             aadd( ::aReport[ IMAGES ], { ::aReport[ PAGEIMAGES ][ nI ][ 1 ], ++::aReport[ NEXTOBJ ], ::ImageInfo( ::aReport[ PAGEIMAGES ][ nI ][ 1 ] ) } )
             nImage := len( ::aReport[ IMAGES ] )
@@ -2246,7 +2246,7 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
       cTemp := ""
       for nI := 1 to len( ::aReport[ PAGEIMAGES ] )
          cTemp += CRLF + "q"
-         nImage := ascan( ::aReport[ IMAGES ], { |arr| arr[1] == ::aReport[ PAGEIMAGES ][ nI ][ 1 ] } )
+         nImage := ascan( ::aReport[ IMAGES ], {| arr | arr[ 1 ] == ::aReport[ PAGEIMAGES ][ nI ][ 1 ] } )
          cTemp += CRLF + ltrim(str( iif( ::aReport[ PAGEIMAGES ][ nI ][ 5 ] == 0, ::M2X( ::aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_WIDTH ] / ::aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_XRES ] * 25.4 ), ::aReport[ PAGEIMAGES ][ nI ][ 5 ]))) + ;
          " 0 0 " + ;
          ltrim(str( iif( ::aReport[ PAGEIMAGES ][ nI ][ 4 ] == 0, ::M2X( ::aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_HEIGHT ] / ::aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_YRES ] * 25.4 ), ::aReport[ PAGEIMAGES ][ nI ][ 4 ]))) + ;

@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                               EkOnkar
  *                         ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                              22Nov2008
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,7 +74,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*-*/
+//
 
 CLASS wvgMenuBar INHERIT wvgWindow
 
@@ -137,7 +137,7 @@ CLASS wvgMenuBar INHERIT wvgWindow
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvgMenuBar:new( oParent, aPresParams, lVisible )
 
@@ -153,7 +153,7 @@ METHOD WvgMenuBar:new( oParent, aPresParams, lVisible )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgMenuBar:create( oParent, aPresParams, lVisible )
 
@@ -194,7 +194,7 @@ METHOD WvgMenuBar:create( oParent, aPresParams, lVisible )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgMenuBar:configure( oParent, aPresParams, lVisible )
 
@@ -208,7 +208,7 @@ METHOD WvgMenuBar:configure( oParent, aPresParams, lVisible )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgMenuBar:destroy()
 
@@ -226,7 +226,7 @@ METHOD WvgMenuBar:destroy()
 
    RETURN .T.
 
-/*-*/
+//
 
 METHOD WvgMenuBar:delAllItems()
    LOCAL lResult:= .T.,  nItems
@@ -239,7 +239,7 @@ METHOD WvgMenuBar:delAllItems()
 
    RETURN lResult
 
-/*-*/
+//
 
 METHOD WvgMenuBar:delItem( nItemNum )
    LOCAL lResult:= .F.
@@ -261,7 +261,7 @@ METHOD WvgMenuBar:delItem( nItemNum )
 
    RETURN lResult
 
-/*-*/
+//
 /*
  * { xCaption, bAction, nStyle, nAttrb }
  */
@@ -283,7 +283,7 @@ METHOD WvgMenuBar:addItem( aItem, p2, p3, p4 )
 
    RETURN ::putItem( { xCaption, bAction, nStyle, nAttrib }, -1, .t. )
 
-/*-*/
+//
 
 METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
    LOCAL nItemIndex, cCaption
@@ -364,7 +364,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
 
    RETURN nItemIndex
 
-/*-*/
+//
 
 METHOD WvgMenuBar:findMenuItemById( nId )
    LOCAL x, aResult :={}
@@ -386,7 +386,7 @@ METHOD WvgMenuBar:findMenuItemById( nId )
 
    RETURN aResult
 
-/*-*/
+//
 
 METHOD WvgMenuBar:findMenuPosById( nId )
    LOCAL x, nPos
@@ -408,7 +408,7 @@ METHOD WvgMenuBar:findMenuPosById( nId )
 
    RETURN nPos
 
-/*-*/
+//
 
 METHOD WvgMenuBar:checkItem( nItemNum, lCheck )
    LOCAL nRet := -1
@@ -421,7 +421,7 @@ METHOD WvgMenuBar:checkItem( nItemNum, lCheck )
 
    RETURN iif( nRet == -1, .F., .T. )
 
-/*-*/
+//
 
 METHOD WvgMenuBar:enableItem( nItemNum )
    LOCAL lSuccess := .f.
@@ -432,7 +432,7 @@ METHOD WvgMenuBar:enableItem( nItemNum )
 
    RETURN lSuccess
 
-/*-*/
+//
 
 METHOD WvgMenuBar:disableItem( nItemNum )
    LOCAL lSuccess := .f.
@@ -443,7 +443,7 @@ METHOD WvgMenuBar:disableItem( nItemNum )
 
    RETURN lSuccess
 
-/*-*/
+//
 
 METHOD WvgMenuBar:getItem( nItemNum )
 
@@ -453,7 +453,7 @@ METHOD WvgMenuBar:getItem( nItemNum )
 
    RETURN NIL
 
-/*-*/
+//
 
 METHOD WvgMenuBar:insItem( nItemNum, aItem )
 
@@ -461,19 +461,19 @@ METHOD WvgMenuBar:insItem( nItemNum, aItem )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgMenuBar:isItemChecked( nItemNum )
 
    RETURN WVG_IsMenuItemChecked( ::hMenu, nItemNum-1 )
 
-/*-*/
+//
 
 METHOD WvgMenuBar:isItemEnabled( nItemNum )
 
    RETURN WVG_IsMenuItemEnabled( ::hMenu, nItemNum-1 )
 
-/*-*/
+//
 
 METHOD WvgMenuBar:selectItem( nItemNum )
 
@@ -483,15 +483,15 @@ METHOD WvgMenuBar:selectItem( nItemNum )
 
    RETURN .t.
 
-/*-*/
+//
 
 METHOD WvgMenuBar:setItem( nItemNum, aItem )
 
    RETURN ::putItem( aItem, nItemNum, .f. )
 
-/*-*/
+//
 /*                         Callback Methods                             */
-/*-*/
+//
 
 METHOD WvgMenuBar:beginMenu( xParam )
 
@@ -502,7 +502,7 @@ METHOD WvgMenuBar:beginMenu( xParam )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgMenuBar:endMenu( xParam )
 
@@ -513,7 +513,7 @@ METHOD WvgMenuBar:endMenu( xParam )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgMenuBar:itemMarked( xParam )
 
@@ -524,7 +524,7 @@ METHOD WvgMenuBar:itemMarked( xParam )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgMenuBar:itemSelected( xParam )
 
@@ -535,7 +535,7 @@ METHOD WvgMenuBar:itemSelected( xParam )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgMenuBar:drawItem( xParam )
 
@@ -546,7 +546,7 @@ METHOD WvgMenuBar:drawItem( xParam )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgMenuBar:measureItem( xParam )
 
@@ -557,7 +557,7 @@ METHOD WvgMenuBar:measureItem( xParam )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgMenuBar:onMenuKey( xParam )
 
@@ -568,15 +568,15 @@ METHOD WvgMenuBar:onMenuKey( xParam )
 
    RETURN Self
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                   Xbase++ compatible xbpMenu class
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS wvgMenu INHERIT wvgMenuBar
 
@@ -591,7 +591,7 @@ CLASS wvgMenu INHERIT wvgMenuBar
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvgMenu:new( oParent, aPresParams, lVisible )
 
@@ -605,7 +605,7 @@ METHOD WvgMenu:new( oParent, aPresParams, lVisible )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgMenu:create( oParent, aPresParams, lVisible )
 
@@ -623,19 +623,19 @@ METHOD WvgMenu:create( oParent, aPresParams, lVisible )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgMenu:getTitle()
 
    RETURN ::title
 
-/*-*/
+//
 
 METHOD WvgMenu:setTitle( cTitle )
 
    RETURN ::title := cTitle
 
-/*-*/
+//
 
 METHOD WvgMenu:popUp( oXbp, aPos, nDefaultItem, nControl )
    LOCAL nCmd, aMenuItem
@@ -652,4 +652,4 @@ METHOD WvgMenu:popUp( oXbp, aPos, nDefaultItem, nControl )
 
    RETURN 0
 
-/*-*/
+//

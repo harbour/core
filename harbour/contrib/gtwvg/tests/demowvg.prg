@@ -2,9 +2,9 @@
  * $Id$
  */
 
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
+//
+//
+//
 //
 //                   GTWVT Console GUI Interface
 //
@@ -22,8 +22,8 @@
 //
 //           Thanks Peter Rees! You have laid the foundation!
 //
-//-------------------------------------------------------------------//
-//-------------------------------------------------------------------//
+//
+//
 
 #include "inkey.ch"
 #include "common.ch"
@@ -32,12 +32,12 @@
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+//
 
 REQUEST DbfCdx
 REQUEST DbfNtx
 
-//-------------------------------------------------------------------//
+//
 
 #define IMAGE_VOUCH                hb_dirBase() + "vouch1.bmp"
 #define IMAGE_BROWSE               hb_dirBase() + "v_browse.ico"
@@ -48,17 +48,17 @@ REQUEST DbfNtx
 
 #define OBJ_TYPE_BUTTON            1
 
-//-------------------------------------------------------------------//
+//
 
 #ifndef __SQL__
 ANNOUNCE Hb_NoStartUpWindow
 #endif
 
-//-------------------------------------------------------------------//
+//
 
 MEMVAR cCdxExp, First, Last, City
 
-//-------------------------------------------------------------------//
+//
 
    THREAD STATIC t_wvtScreen := {}
 
@@ -66,7 +66,7 @@ MEMVAR cCdxExp, First, Last, City
    STATIC s_paint_:= { { "", {} } }
 #endif
 
-/*----------------------------------------------------------------------*/
+//
 
 EXIT PROCEDURE CleanHandles()
    LOCAL obj
@@ -82,7 +82,7 @@ EXIT PROCEDURE CleanHandles()
 
    RETURN
 
-//-------------------------------------------------------------------//
+//
 
 PROCEDURE Main()
    LOCAL aLastPaint, clr, scr, pGT
@@ -103,7 +103,7 @@ PROCEDURE Main()
    LOCAL cLabel    := "Harbour simulated GUI."
    LOCAL aObjects  := WvtSetObjects( {} )
    LOCAL oLastMenu
-   LOCAL oError := ErrorBlock( {|o| MyError( o ) } )
+   LOCAL oError := ErrorBlock( {| o | MyError( o ) } )
 
    SET DATE ANSI
 
@@ -152,7 +152,7 @@ PROCEDURE Main()
    aAdd( aBlocks, {|| Wvt_DrawBoxRecessed( 7, 48, 13, 55 ) } )
    aAdd( aBlocks, {|| Wvt_DrawLine( maxrow()-2,0,maxrow()-2,maxcol(),WVT_LINE_HORZ,WVT_LINE_RECESSED,WVT_LINE_BOTTOM ) } )
    aAdd( aBlocks, {|| Wvt_DrawLine( maxrow()-1,41,maxrow(),41,WVT_LINE_VERT,WVT_LINE_RECESSED,WVT_LINE_CENTER ) } )
-   aAdd( aBlocks, {|| aEval( GetList, {|oGet| Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
+   aAdd( aBlocks, {|| aEval( GetList, {| oGet | Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
    aAdd( aBlocks, {|| Wvt_Mouse( -1000001 ) } )
 
@@ -200,7 +200,7 @@ PROCEDURE Main()
 
    RETURN
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION HB_GTSYS()
    REQUEST HB_GT_WVG_DEFAULT
@@ -208,22 +208,22 @@ FUNCTION HB_GTSYS()
    REQUEST HB_GT_WGU
    RETURN NIL
 
-//------------------------------------------------------------------//
+//
 
 PROCEDURE WvtConsoleGets( nMode )
 
    DEFAULT nMode TO 0
 
    IF hb_mtvm()
-      Hb_ThreadStart( {|oCrt|  hb_gtReload( 'WVT' ) , ;
-                               oCrt := hb_gtSelect(), ;
-                               iif( nMode == 0, WvtNextGetsConsole(), GoogleMap() ) , ;
-                               oCrt := NIL        } )
+      Hb_ThreadStart( {| oCrt | hb_gtReload( 'WVT' ) , ;
+                                oCrt := hb_gtSelect(), ;
+                                iif( nMode == 0, WvtNextGetsConsole(), GoogleMap() ) , ;
+                                oCrt := NIL } )
    ENDIF
 
    RETURN
 
-//----------------------------------------------------------------------//
+//
 
 PROCEDURE WvtNextGetsConsole()
    LOCAL dDate      := stod()
@@ -258,20 +258,20 @@ PROCEDURE WvtNextGetsConsole()
 
    RETURN
 
-//-------------------------------------------------------------------//
+//
 
 PROCEDURE WvtNextGets()
 
    IF hb_mtvm()
-      Hb_ThreadStart( {||  Hb_gtReload( 'WVG' ), Wvt_setFont( 'Terminal',20 ), ;
-                           hb_clear(), Wvt_ShowWindow( SW_RESTORE ), WvtNextGets_X() } )
+      Hb_ThreadStart( {|| Hb_gtReload( 'WVG' ), Wvt_setFont( 'Terminal',20 ), ;
+                          hb_clear(), Wvt_ShowWindow( SW_RESTORE ), WvtNextGets_X() } )
    ELSE
       WvtNextGets_X()
    ENDIF
 
    RETURN
 
-//----------------------------------------------------------------------//
+//
 
 PROCEDURE WvtNextGets_X()
    LOCAL aLastPaint, clr
@@ -308,7 +308,7 @@ PROCEDURE WvtNextGets_X()
    aAdd( aBlocks, {|| Wvt_SetBrush( 2, rgb( 255,255,100 ),1 ) } )
    aAdd( aBlocks, {|| Wvt_DrawRectangle( 11, 50, 13, 58 )     } )
    aAdd( aBlocks, {|| Wvt_DrawBoxGroupRaised( 5, 6, 19, 72 )  } )
-   aAdd( aBlocks, {|| aEval( GetList, {|oGet| Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
+   aAdd( aBlocks, {|| aEval( GetList, {| oGet | Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
    aAdd( aBlocks, {|| Wvt_DrawButton( 21, 6,22, 9,"New"   ,"vouch1.bmp" )                             } )
    aAdd( aBlocks, {|| Wvt_DrawButton( 21,11,22,14,"Browse","vouch1.bmp", 1, rgb( 255,255,255 ) )      } )
@@ -351,7 +351,7 @@ PROCEDURE WvtNextGets_X()
    SetPos( nRow, nCol )
    RETURN
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION WvtPartialScreen()
    LOCAL scr        := SaveScreen( 7,20,15,60 )
@@ -394,7 +394,7 @@ FUNCTION WvtPartialScreen()
 
    RETURN NIL
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION WvtLines()
    LOCAL scr        := SaveScreen( 0,0,maxrow(),maxcol() )
@@ -455,7 +455,7 @@ FUNCTION WvtLines()
 
    RETURN NIL
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION BuildMainMenu()
    LOCAL oMenu
@@ -533,7 +533,7 @@ FUNCTION BuildMainMenu()
 
    RETURN oMenu  /* The last submenu item */
 
-//-------------------------------------------------------------------//
+//
 
 STATIC FUNCTION GoogleMap()
    LOCAL mfrom1, mto1, mfrom2, mto2, mfrom3, mto3, mweb
@@ -574,7 +574,7 @@ STATIC FUNCTION GoogleMap()
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 FUNCTION BuildButtons()
    LOCAL oXbp
@@ -628,4 +628,4 @@ FUNCTION BuildButtons()
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+//

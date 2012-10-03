@@ -78,7 +78,7 @@ FUNCTION dbModifyStructure( cFile )
    LOCAL nSourceArea
    LOCAL cDateTime   := SubStr( dtos( Date() ), 3 ) + "." + StrTran( Left( Time(), 5 ), ":", "." )
 
-   BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
 
       // Open exclusively, get name info, and create the structure db.
       //-------------------------------------------------------------//
@@ -219,7 +219,7 @@ FUNCTION dbMerge( xSource, lAppend )
       nSourcePos := (nSource)->( FieldPos( cField ) )
 
       IF nSourcePos > 0
-         BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+         BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
             // Save
             xField := FieldGet( cField:__EnumIndex() )
 
@@ -230,11 +230,11 @@ FUNCTION dbMerge( xSource, lAppend )
             FieldPut( cField:__EnumIndex(), xField )
 
             // Ok to process
-            aAdd( aTranslate, { cField:__EnumIndex(), nSourcePos, {|xSource| xSource } } )
+            aAdd( aTranslate, { cField:__EnumIndex(), nSourcePos, {| xSource | xSource } } )
          RECOVER // USING oErr
             cTargetType := ValType( FieldGet( cField:__EnumIndex() ) )
 
-            BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+            BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
                // Test type compatability
                FieldPut( cField:__EnumIndex(), ValToType( (nSource)->( FieldGet( nSourcePos ) ), cTargetType ) )
 
@@ -242,7 +242,7 @@ FUNCTION dbMerge( xSource, lAppend )
                FieldPut( cField:__EnumIndex(), xField )
 
                // Ok to process
-               aAdd( aTranslate, { cField:__EnumIndex(), nSourcePos, {|xSource| ValToType( xSource, cTargetType ) } } )
+               aAdd( aTranslate, { cField:__EnumIndex(), nSourcePos, {| xSource | ValToType( xSource, cTargetType ) } } )
             RECOVER // USING oErr
                //TraceLog( oErr:Description, oErr:Operation )
             END SEQUENCE

@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                               26Nov2008
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,7 +74,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*-*/
+//
 
 CLASS WvgPushButton  INHERIT  WvgWindow
 
@@ -102,7 +102,7 @@ CLASS WvgPushButton  INHERIT  WvgWindow
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvgPushButton:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -114,7 +114,7 @@ METHOD WvgPushButton:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -149,7 +149,7 @@ METHOD WvgPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgPushButton:handleEvent( nMessage, aNM )
 
@@ -204,19 +204,19 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-/*-*/
+//
 
 METHOD WvgPushButton:destroy()
    ::wvgWindow:destroy()
    RETURN NIL
 
-/*-*/
+//
 
 METHOD WvgPushButton:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgPushButton:setCaption( xCaption, cDll )
 
@@ -241,7 +241,7 @@ METHOD WvgPushButton:setCaption( xCaption, cDll )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgPushButton:activate( xParam )
 
@@ -251,7 +251,7 @@ METHOD WvgPushButton:activate( xParam )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgPushButton:draw( xParam )
 

@@ -28,38 +28,38 @@ static s_nkeyrepeater := NIL
 static s_nrepeatrate  := 0.1
 static s_nrepeatdelay := 0.5
 
-#DEFINE _DEFAULT_CAPTION_FONT   "Tahoma"
-#DEFINE _DEFAULT_CAPTION_HEIGHT 16
+#define _DEFAULT_CAPTION_FONT   "Tahoma"
+#define _DEFAULT_CAPTION_HEIGHT 16
 
 * CLIPPER COLOR CONSTANTS
-#DEFINE _IDX_BLACK               0
-#DEFINE _IDX_BLUE                1
-#DEFINE _IDX_GREEN               2
-#DEFINE _IDX_CYAN                3
-#DEFINE _IDX_RED                 4
-#DEFINE _IDX_MAGENTA             5
-#DEFINE _IDX_BROWN               6
-#DEFINE _IDX_WHITE               7
-#DEFINE _IDX_LIGHT_GRAY          8
-#DEFINE _IDX_BRIGHT_BLUE         9
-#DEFINE _IDX_BRIGHT_GREEN       10
-#DEFINE _IDX_BRIGHT_CYAN        11
-#DEFINE _IDX_BRIGHT_RED         12
-#DEFINE _IDX_BRIGHT_MAGENTA     13
-#DEFINE _IDX_YELLOW             14
-#DEFINE _IDX_BRIGHT_WHITE       15
+#define _IDX_BLACK               0
+#define _IDX_BLUE                1
+#define _IDX_GREEN               2
+#define _IDX_CYAN                3
+#define _IDX_RED                 4
+#define _IDX_MAGENTA             5
+#define _IDX_BROWN               6
+#define _IDX_WHITE               7
+#define _IDX_LIGHT_GRAY          8
+#define _IDX_BRIGHT_BLUE         9
+#define _IDX_BRIGHT_GREEN       10
+#define _IDX_BRIGHT_CYAN        11
+#define _IDX_BRIGHT_RED         12
+#define _IDX_BRIGHT_MAGENTA     13
+#define _IDX_YELLOW             14
+#define _IDX_BRIGHT_WHITE       15
 
 
 * mouse object types
-#DEFINE _MOBJECT_BUTTON  0      //mouse button
-#DEFINE _MOBJECT_HSCROLL 1      //horiz scrollbar: OBSOLETE, NOT USED HERE
-#DEFINE _MOBJECT_VSCROLL 2      //horiz scrollbar: OBSOLETE, NOT USED HERE
+#define _MOBJECT_BUTTON  0      //mouse button
+#define _MOBJECT_HSCROLL 1      //horiz scrollbar: OBSOLETE, NOT USED HERE
+#define _MOBJECT_VSCROLL 2      //horiz scrollbar: OBSOLETE, NOT USED HERE
 
 * for Button Types:
-#DEFINE _BUTTON_NORMAL 0        //normal button
-#DEFINE _BUTTON_FLAT   1        //'transparent', raised when mouseover
-#DEFINE _BUTTON_NONE   2        //no sign even when mouseover or clicked
-#DEFINE _BUTTON_HARD   3        //no recessed when pressed
+#define _BUTTON_NORMAL 0        //normal button
+#define _BUTTON_FLAT   1        //'transparent', raised when mouseover
+#define _BUTTON_NONE   2        //no sign even when mouseover or clicked
+#define _BUTTON_HARD   3        //no recessed when pressed
 
 ***************************************************************
 * WVWMouseButton
@@ -361,7 +361,7 @@ function wvwm_paint( nWinNum )
 * normally called by WVW_Paint()
 * redraw every mouse object in window nWinNum
    if len(s_amouseobjlist) >= nWinNum+1
-      aeval( s_amouseobjlist[nWinNum+1], {|o| o[2]:draw(nWinNum)} )
+      aeval( s_amouseobjlist[nWinNum+1], {| o | o[2]:draw(nWinNum)} )
    endif
 return NIL
 

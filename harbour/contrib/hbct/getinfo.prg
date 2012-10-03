@@ -68,7 +68,7 @@ FUNCTION COUNTGETS()
 
 FUNCTION CURRENTGET()
    LOCAL oActive := GetActive()
-   RETURN ASCAN( GetList, {|oGet| oGet == oActive } )
+   RETURN ASCAN( GetList, {| oGet | oGet == oActive } )
 
 FUNCTION GETFLDROW( nField )
    LOCAL oGet

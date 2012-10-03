@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                               15Feb2009
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,7 +74,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*-*/
+//
 
 CLASS WvgDrawingArea  INHERIT  WvgWindow
 
@@ -88,7 +88,7 @@ CLASS WvgDrawingArea  INHERIT  WvgWindow
    METHOD   handleEvent( nMessage, aNM )
 
    ENDCLASS
-/*-*/
+//
 
 METHOD WvgDrawingArea:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -102,7 +102,7 @@ METHOD WvgDrawingArea:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -121,7 +121,7 @@ METHOD WvgDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
 
@@ -130,7 +130,7 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
       IF HB_ISBLOCK( ::sl_resize )
          eval( ::sl_resize, NIL, NIL, self )
       ENDIF
-      aeval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
+      aeval( ::aChildren, {| o | o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
       RETURN EVENT_HANDELLED
 
    CASE nMessage == HB_GTE_CTLCOLOR
@@ -147,7 +147,7 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-/*-*/
+//
 
 METHOD destroy() CLASS WvgDrawingArea
 
@@ -157,4 +157,4 @@ METHOD destroy() CLASS WvgDrawingArea
 
    RETURN NIL
 
-/*-*/
+//

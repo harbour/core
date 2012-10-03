@@ -579,7 +579,7 @@ static HB_BOOL hb_ntxEvalCond( NTXAREAP pArea, PHB_ITEM pCondItem, HB_BOOL fSetW
 }
 
 /*
- * evaluate seek/skip block: {|key, rec| ... }
+ * evaluate seek/skip block: {| key, rec | ... }
  */
 static HB_BOOL hb_ntxEvalSeekCond( LPTAGINFO pTag, PHB_ITEM pCondItem )
 {

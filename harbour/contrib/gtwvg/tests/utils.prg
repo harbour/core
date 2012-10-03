@@ -5,7 +5,7 @@
 /*
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
-/*----------------------------------------------------------------------*/
+//
 
 #include "inkey.ch"
 #include "common.ch"
@@ -14,7 +14,7 @@
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+//
 //
 //   WvtSetObjects() array structure
 //
@@ -46,12 +46,12 @@
 #define OBJ_STATE_BUTTONDOWN       3
 #define OBJ_STATE_BUTTONUP         4
 
-/*----------------------------------------------------------------------*/
+//
 
 THREAD STATIC t_keys_:= { , , , , , , , , , , , , , , , , , , , }
 THREAD STATIC t_pic_ := { , , , , , , , , , , , , , , , , , , , }
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION WvtSetKeys( lSet )
 
@@ -78,23 +78,23 @@ FUNCTION WvtSetKeys( lSet )
    ENDIF
 
    RETURN Nil
-//-------------------------------------------------------------------//
+//
 //      Wvt_Paint() must be a FUNCTION in your application
 //      as it is called when Window gets WM_PAINT message.
-//-------------------------------------------------------------------//
+//
 FUNCTION Wvt_Paint()
    LOCAL aBlocks := WvtSetBlocks()
 
-   aEval( aBlocks, {|e| eval( e ) } )
+   aEval( aBlocks, {| e | eval( e ) } )
 
    WvtPaintObjects()
 
    RETURN 0
-//-------------------------------------------------------------------//
+//
 //      Wvt_SetFocus() must be a FUNCTION in your application
 //      needs to process messages sent through WM_SETFOCUS message
 //      received by the window.
-//-------------------------------------------------------------------//
+//
 #if 0
 FUNCTION Wvt_SetFocus()
 
@@ -107,11 +107,11 @@ FUNCTION Wvt_SetFocus()
 
    RETURN nil
 #endif
-//-------------------------------------------------------------------//
+//
 //      Wvt_KillFocus() must be a FUNCTION in your application
 //      needs to process messages sent through WM_KILLFOCUS message
 //      received by the window.
-//-------------------------------------------------------------------//
+//
 #if 0
 FUNCTION Wvt_KillFocus()
    LOCAL nRow := row()
@@ -124,12 +124,12 @@ FUNCTION Wvt_KillFocus()
    RETURN NIL
 #endif
 
-//-------------------------------------------------------------------//
+//
 //
 //      Wvt_Mouse() must be present if you want to catch and fire
 //      mouse call back outside of the inkey() loop.
 //
-//-------------------------------------------------------------------//
+//
 
 FUNCTION Wvt_Mouse( nKey, nRow, nCol )
    LOCAL nLen, aObjects := WvtSetObjects()
@@ -164,10 +164,10 @@ FUNCTION Wvt_Mouse( nKey, nRow, nCol )
       RETURN NIL
    ENDIF
 
-   nObj := ascan( aObjects, {|e_| e_[ WVT_OBJ_ROW   ] <= nRow .AND. ;
-                                  e_[ WVT_OBJ_ROWTO ] >= nRow .AND. ;
-                                  e_[ WVT_OBJ_COL   ] <= nCol .AND. ;
-                                  e_[ WVT_OBJ_COLTO ] >= nCol     } )
+   nObj := ascan( aObjects, {| e_ | e_[ WVT_OBJ_ROW   ] <= nRow .AND. ;
+                                    e_[ WVT_OBJ_ROWTO ] >= nRow .AND. ;
+                                    e_[ WVT_OBJ_COL   ] <= nCol .AND. ;
+                                    e_[ WVT_OBJ_COLTO ] >= nCol     } )
    IF nObj == 0
       IF nLastObj > 0
          aObjects[ nLastObj, WVT_OBJ_STATE ] := OBJ_STATE_DISP
@@ -209,9 +209,9 @@ FUNCTION Wvt_Mouse( nKey, nRow, nCol )
 
    RETURN NIL
 
-//-------------------------------------------------------------------//
+//
 //  WvtSetBlocks() is a get/set FUNCTION to be used by Wvt_Paint()
-//-------------------------------------------------------------------//
+//
 
 FUNCTION WvtSetBlocks( a_ )
    LOCAL o
@@ -225,9 +225,9 @@ FUNCTION WvtSetBlocks( a_ )
 
    RETURN o
 
-//-------------------------------------------------------------------//
+//
 //  WvtSetObjects() is a get/set FUNCTION to be used by Wvt_Mouse()
-//-------------------------------------------------------------------//
+//
 
 FUNCTION WvtSetObjects( aObject )
    LOCAL oObjects
@@ -241,7 +241,7 @@ FUNCTION WvtSetObjects( aObject )
          aObjects := {}
       ELSE
          IF valtype( aObject[ 1 ] ) == "A"
-            aeval( aObject, {|e_| aadd( aObjects, e_ ) } )
+            aeval( aObject, {| e_ | aadd( aObjects, e_ ) } )
          ELSE
             aSize( aObject, WVT_OBJ_VRBLS )
 
@@ -254,7 +254,7 @@ FUNCTION WvtSetObjects( aObject )
 
    RETURN oObjects
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION SetMouseCheck( lYes )
    LOCAL lOYes
@@ -265,7 +265,7 @@ FUNCTION SetMouseCheck( lYes )
    ENDIF
    RETURN lOYes
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION WvtWindowExpand( nUnits )
 
@@ -277,12 +277,12 @@ FUNCTION WvtWindowExpand( nUnits )
 
    RETURN .t.
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION rgb( r,g,b )
    RETURN r + ( g * 256 ) + ( b * 256 * 256 )
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION VouChoice( aChoices )
    LOCAL scr, clr, nChoice
@@ -299,13 +299,13 @@ FUNCTION VouChoice( aChoices )
 
    RETURN nChoice
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION Hb_Clear()
    CLS
    RETURN .f.
 
-//----------------------------------------------------------------------//
+//
 
 FUNCTION MyMenuProcedure( nID )
    DO CASE
@@ -316,7 +316,7 @@ FUNCTION MyMenuProcedure( nID )
    ENDCASE
    RETURN .t.
 
-//----------------------------------------------------------------------//
+//
 
 FUNCTION BuildWvgToolBar( oDA, nActiveX )
    LOCAL oTBar
@@ -349,7 +349,7 @@ FUNCTION BuildWvgToolBar( oDA, nActiveX )
 
    RETURN oTBar
 
-//----------------------------------------------------------------------//
+//
 
 FUNCTION SetGT( nIndex, pGT )
    LOCAL oldGT
@@ -360,7 +360,7 @@ FUNCTION SetGT( nIndex, pGT )
    ENDIF
    RETURN oldGT
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION SetFonts( hFont )
    LOCAL oldFont
@@ -371,7 +371,7 @@ FUNCTION SetFonts( hFont )
    ENDIF
    RETURN oldFont
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION SetIcons( hIcon )
    LOCAL oldIcon
@@ -382,7 +382,7 @@ FUNCTION SetIcons( hIcon )
    ENDIF
    RETURN oldIcon
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION Popups( nID, lDestroy )
    LOCAL hPop, hPop1
@@ -452,7 +452,7 @@ FUNCTION Popups( nID, lDestroy )
 
    RETURN Wvt_SetPopupMenu( hPop_[ nID ] )
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION DispStatusMsg( cMsg )
 
@@ -460,7 +460,7 @@ FUNCTION DispStatusMsg( cMsg )
 
    RETURN .t.
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION ClearStatusMsg()
    LOCAL nRow := Row()
@@ -472,7 +472,7 @@ FUNCTION ClearStatusMsg()
 
    RETURN .t.
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION WvtPictures( nSlot,cFilePic )
 
@@ -486,7 +486,7 @@ FUNCTION WvtPictures( nSlot,cFilePic )
 
    RETURN NIL
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
 
@@ -496,24 +496,24 @@ FUNCTION WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION GetResource( cName )
    RETURN hb_dirBase() + cName
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION uiDebug( ... )
    LOCAL aP := hb_aParams()
    LOCAL s := ""
 
-   aeval( aP, {|e| s += hb_valTOstr( e ) + "   " } )
+   aeval( aP, {| e | s += hb_valTOstr( e ) + "   " } )
 
    WAPI_OutputDebugString( s )
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION MyError( oError )
 
@@ -528,5 +528,4 @@ FUNCTION MyError( oError )
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
-
+//

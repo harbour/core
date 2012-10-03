@@ -48,12 +48,12 @@
  *  $TESTS$
  *      This test will show the functions and procedures in stack.
  *      before executing it.
- *      function Test()
+ *      PROCEDURE Main()
  *         LOCAL n := 1
- *         while !Empty( ProcName( n ) )
+ *         DO WHILE ! Empty( ProcName( n ) )
  *            ? ProcName( n++ )
- *         end do
- *      return nil
+ *         ENDDO
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -90,10 +90,10 @@
  *  $EXAMPLES$
  *      See Test
  *  $TESTS$
- *      function Test()
+ *      PROCEDURE Main()
  *         ? ProcLine( 0 )
  *         ? ProcName( 2 )
- *      return nil
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -128,11 +128,11 @@
  *  $EXAMPLES$
  *      ? ProcFile()
  *  $TESTS$
- *      function Test()
+ *      PROCEDURE Main()
  *         ? ProcFile()
  *         ? ProcFile( NIL )
  *         ? ProcFile( 2 )
- *      return nil
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -166,12 +166,12 @@
  *  $EXAMPLES$
  *      See Test
  *  $TESTS$
- *      function Test( nValue, cString )
- *         if PCount() == 2
+ *      PROCEDURE Test( nValue, cString )
+ *         IF PCount() == 2
  *            ? hb_PValue( 1 ), nValue
  *            ? hb_PValue( 2 ), cString
- *         endif
- *      return nil
+ *         ENDIF
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -207,13 +207,13 @@
  *  $EXAMPLES$
  *      See Test
  *  $TESTS$
- *      function Test( xExp )
- *         if PCount() == 0
+ *      PROCEDURE Test( xExp )
+ *         IF PCount() == 0
  *            ? "This function needs a parameter"
- *         else
+ *         ELS
  *            ? xExp
- *         endif
- *      return nil
+ *         ENDIF
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -246,11 +246,11 @@
  *  $EXAMPLES$
  *      See Test
  *  $TESTS$
- *      function EndApp( lYesNo )
- *         if lYesNo
+ *      PROCEDURE EndApp( lYesNo )
+ *         IF lYesNo
  *            __Quit()
- *         endif
- *      return nil
+ *         ENDIF
+ *         RETURN
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -391,11 +391,11 @@
  *      It is also used internally to implement DO <proc> WITH <args...>
  *      In this case <xFuncProc> is of type HB_SYMB.
  *  $EXAMPLES$
- *      cbCode ={|x| MyFunc( x )}
- *      DO( cbCode, 1 )
+ *      cbCode := {| x | MyFunc( x ) }
+ *      Do( cbCode, 1 )
  *
  *      cFunction := "MyFunc"
- *      xRetVal := DO( cFunction, 2 )
+ *      xRetVal := Do( cFunction, 2 )
  *
  *      // Old style (slower):
  *      DO &cFunction WITH 3

@@ -73,16 +73,16 @@ PROCEDURE Main( optional )
 
    oMyObj:MyMethod( 2, 3, 4 )
 
-   a := b:nMyFunc(2,3)
-   a := b:nMyFunc(2)
+   a := b:nMyFunc( 2, 3 )
+   a := b:nMyFunc( 2 )
 
    a := oB:oNext( 1 ):cMyData
    a := oB:oNext( c ):cMyData2
    a := oB:oNext( d ):cMyData
    a := oB:oNext( oD ):cMyData
 
-   a := oB:aInstances[1]:oNext:cMyData2
-   a := oB:aInstances[1]:oNext:cMyData
+   a := oB:aInstances[ 1 ]:oNext:cMyData2
+   a := oB:aInstances[ 1 ]:oNext:cMyData
 
    x := cOtherFunc( "A" )
    x := cOtherFunc( @Test )
@@ -122,7 +122,7 @@ PROCEDURE SOMEPROC()
 
    Var1 := 1
 
-   IF lGlobal = 0
+   IF lGlobal == 0
       ? "lGlobal is NOT Numeric"
    ENDIF
 
@@ -181,15 +181,15 @@ FUNCTION Main3()
 
    n := V&SomeVar.1
 
-   n[2] := 4
+   n[ 2 ] := 4
 
-   cVar := {|nb AS NUMERIC , cb AS STRING, db AS DATE| n := .F., nb := "A", cb := 1, db := 0, n := "wrong type", 0 }
+   cVar := {| nb AS NUMERIC, cb AS STRING, db AS DATE | n := .F., nb := "A", cb := 1, db := 0, n := "wrong type", 0 }
 
    ? "This is a compiler test."
 
    n := "C is Wrong Type for n"
 
-   n := {1,2,3}
+   n := { 1, 2, 3 }
 
    n := a
 
@@ -202,33 +202,33 @@ FUNCTION SomeTest( lVar AS LOGICAL )
    LOCAL nVar AS NUMERIC, cVar AS STRING, lVar2 AS LOGICAL, nNoType := 3
    PRIVATE cMemVar1 AS STRING
 
-        nVar := .T.
+   nVar := .T.
 
    nVar := 1
 
-        nVar := "A"
+   nVar := "A"
 
-        cVar := 2
+   cVar := 2
 
    cVar := "B"
 
-        cVar := 2
+   cVar := 2
 
    lVar := .T.
 
-     lVar := nNoType
+   lVar := nNoType
 
-        cVar := nVar
+   cVar := nVar
 
    M->cMemVar1 := 2
 
    NondDeclared := 2
 
-   cVar := {|n AS NUMERIC , c AS STRING, d AS DATE| n := nMyFunc( n,c,d ), c := 2  }
+   cVar := {| n AS NUMERIC, c AS STRING, d AS DATE | n := nMyFunc( n, c, d ), c := 2  }
 
-        nVar := 8 + cVar
+   nVar := 8 + cVar
 
-        IF 1
+   IF 1
 
    ENDIF
 
@@ -236,7 +236,7 @@ FUNCTION SomeTest( lVar AS LOGICAL )
 
 FUNCTION nMyFunc( cVar AS STRING, nVar AS NUMERIC )
 
-   nVar := Val(cVar)
+   nVar := Val( cVar )
 
    RETURN nVar + 1
 

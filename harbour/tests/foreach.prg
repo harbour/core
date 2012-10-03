@@ -12,9 +12,9 @@ PROCEDURE Main()
    LOCAL i
 
 /*
-   test(@a,b)
-   test(a,@b)
-   test(@a,@b)
+   test( @a, b )
+   test( a, @b )
+   test( @a, @b )
 */
 
    ? "========================================================"

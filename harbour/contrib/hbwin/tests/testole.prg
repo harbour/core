@@ -17,6 +17,7 @@
  */
 
 PROCEDURE Main()
+
    LOCAL nOption
 
    DO WHILE .T.
@@ -77,8 +78,8 @@ PROCEDURE Main()
 
    RETURN
 
-
 STATIC PROCEDURE Exm_MSExcel()
+
    LOCAL oExcel, oWorkBook, oWorkSheet, oAS
    LOCAL nI, nCount
 
@@ -102,7 +103,7 @@ STATIC PROCEDURE Exm_MSExcel()
       // OLE also allows to access collection elements by passing
       // indices to :Worksheets property
       FOR nI := 1 TO nCount
-         ? oWorkBook:WorkSheets(nI):Name
+         ? oWorkBook:WorkSheets( nI ):Name
       NEXT
 
       oAS := oExcel:ActiveSheet()
@@ -131,14 +132,14 @@ STATIC PROCEDURE Exm_MSExcel()
       oAS:Cells( 5, 2 ):Value := .T.
 
       oAS:Cells( 6, 1 ):Value := "Date:"
-      oAS:Cells( 6, 2 ):Value := DATE()
+      oAS:Cells( 6, 2 ):Value := Date()
 
       oAS:Cells( 7, 1 ):Value := "Timestamp:"
-      oAS:Cells( 7, 2 ):Value := HB_DATETIME()
+      oAS:Cells( 7, 2 ):Value := hb_DateTime()
 
       // Some formatting
       oAS:Columns( 1 ):Font:Bold := .T.
-      oAS:Columns( 2 ):HorizontalAlignment := -4152  // xlRight
+      oAS:Columns( 2 ):HorizontalAlignment := - 4152  // xlRight
 
       oAS:Columns( 1 ):AutoFit()
       oAS:Columns( 2 ):AutoFit()
@@ -154,13 +155,13 @@ STATIC PROCEDURE Exm_MSExcel()
 
       oExcel:Quit()
    ELSE
-      ? "Error: MS Excel not available. [" + win_oleErrorText()+ "]"
+      ? "Error: MS Excel not available. [" + win_oleErrorText() + "]"
    ENDIF
 
    RETURN
 
-
 STATIC PROCEDURE Exm_MSWord()
+
    LOCAL oWord, oText
 
    IF ( oWord := win_oleCreateObject( "Word.Application" ) ) != NIL
@@ -182,8 +183,8 @@ STATIC PROCEDURE Exm_MSWord()
 
    RETURN
 
-
 STATIC PROCEDURE Exm_MSOutlook()
+
    LOCAL oOL, oList
 
    IF ( oOL := win_oleCreateObject( "Outlook.Application" ) ) != NIL
@@ -196,8 +197,8 @@ STATIC PROCEDURE Exm_MSOutlook()
 
    RETURN
 
-
 STATIC PROCEDURE Exm_MSOutlook2()
+
    LOCAL oOL, oLista, oMail
    LOCAL i
 
@@ -206,8 +207,8 @@ STATIC PROCEDURE Exm_MSOutlook2()
       oMail := oOL:CreateItem( 0 /* olMailItem */ )
 
       FOR i := 1 TO 10
-         oMail:Recipients:Add( "Contact" + LTRIM( STR( i, 2 ) ) + ;
-               "<contact" + LTRIM( STR( i, 2 ) ) + "@server.com>" )
+         oMail:Recipients:Add( "Contact" + hb_ntos( i ) + ;
+            "<contact" + hb_ntos( i ) + "@server.com>" )
       NEXT
 
       oLista := oOL:CreateItem( 7 /* olDistributionListItem */ )
@@ -222,8 +223,8 @@ STATIC PROCEDURE Exm_MSOutlook2()
 
    RETURN
 
-
 STATIC PROCEDURE Exm_IExplorer()
+
    LOCAL oIE
 
    IF ( oIE := win_oleCreateObject( "InternetExplorer.Application" ) ) != NIL
@@ -235,16 +236,16 @@ STATIC PROCEDURE Exm_IExplorer()
 
    RETURN
 
-
 STATIC PROCEDURE Exm_IExplorer2()
+
    LOCAL oIE
 
    IF ( oIE := win_oleCreateObject( "InternetExplorer.Application" ) ) != NIL
-      oIE:__hSink := __AxRegisterHandler( oIE:__hObj, {|...| QOUT(...)})
+      oIE:__hSink := __AxRegisterHandler( oIE:__hObj, {| ... | QOut( ... ) } )
       oIE:Visible := .T.
       oIE:Navigate( "http://harbour-project.org" )
       WHILE oIE:ReadyState != 4
-         HB_IDLESLEEP( 0 )
+         hb_idleSleep( 0 )
       ENDDO
    ELSE
       ? "Error. IExplorer not available.", win_oleErrorText()
@@ -252,15 +253,15 @@ STATIC PROCEDURE Exm_IExplorer2()
 
    RETURN
 
-
 STATIC PROCEDURE Exm_OOCalc()
+
    LOCAL oServiceManager, oDesktop, oDoc, oSheet
 
    IF ( oServiceManager := win_oleCreateObject( "com.sun.star.ServiceManager" ) ) != NIL
       oDesktop := oServiceManager:createInstance( "com.sun.star.frame.Desktop" )
       oDoc := oDesktop:loadComponentFromURL( "private:factory/scalc", "_blank", 0, {} )
 
-      oSheet := oDoc:getSheets:getByIndex(0)
+      oSheet := oDoc:getSheets:getByIndex( 0 )
 
       oSheet:getCellRangeByName( "A1" ):setString( "OLE from Harbour" )
 
@@ -275,11 +276,11 @@ STATIC PROCEDURE Exm_OOCalc()
       oSheet:getCellRangeByName( "B5" ):setPropertyValue( "NumberFormat", 99 ) // BOOLEAN
 
       oSheet:getCellRangeByName( "A6" ):setString( "Date:" )
-      oSheet:getCellRangeByName( "B6" ):setValue( DATE() )
+      oSheet:getCellRangeByName( "B6" ):setValue( Date() )
       oSheet:getCellRangeByName( "B6" ):setPropertyValue( "NumberFormat", 36 ) // YYYY-MM-DD
 
       oSheet:getCellRangeByName( "A7" ):setString( "Timestamp:" )
-      oSheet:getCellRangeByName( "B7" ):setValue( HB_DATETIME() )
+      oSheet:getCellRangeByName( "B7" ):setValue( hb_DateTime() )
       oSheet:getCellRangeByName( "B7" ):setPropertyValue( "NumberFormat", 51 ) // YYYY-MM-DD HH:MM:SS
 
       oSheet:getCellRangeByName( "A3" ):setPropertyValue( "IsCellBackgroundTransparent", .F. )
@@ -291,8 +292,8 @@ STATIC PROCEDURE Exm_OOCalc()
 
    RETURN
 
-
 STATIC PROCEDURE Exm_OOWriter()
+
    LOCAL oServiceManager, oDesktop, oDoc, oText, oCursor, oTable, oRow, oCell, oRows
 
    IF ( oServiceManager := win_oleCreateObject( "com.sun.star.ServiceManager" ) ) != NIL
@@ -302,9 +303,9 @@ STATIC PROCEDURE Exm_OOWriter()
       oText := oDoc:getText
       oCursor := oText:createTextCursor
 
-      oText:insertString( oCursor, "OpenOffice Writer scripting from Harbour." + CHR(10), .F. )
+      oText:insertString( oCursor, "OpenOffice Writer scripting from Harbour." + Chr( 10 ), .F. )
 
-      oText:insertString( oCursor, "This is the second line" + CHR(10), .F. )
+      oText:insertString( oCursor, "This is the second line" + Chr( 10 ), .F. )
 
       oTable := oDoc:createInstance( "com.sun.star.text.TextTable" )
       oTable:initialize( 2, 4 )
@@ -320,19 +321,19 @@ STATIC PROCEDURE Exm_OOWriter()
       oRow:setPropertyValue( "BackColor", ( 192 * 256 + 192 ) * 256 + 128 )
 
       oCell := oTable:getCellByName( "A1" )
-      oCell:insertString( oCell:createTextCursor, "Jan", .F.)
+      oCell:insertString( oCell:createTextCursor, "Jan", .F. )
       oCell := oTable:getCellByName( "B1" )
-      oCell:insertString( oCell:createTextCursor, "Feb", .F.)
+      oCell:insertString( oCell:createTextCursor, "Feb", .F. )
       oCell := oTable:getCellByName( "C1" )
-      oCell:insertString( oCell:createTextCursor, "Mar", .F.)
+      oCell:insertString( oCell:createTextCursor, "Mar", .F. )
 
       // I guess we can set text without cursor creation
-      oTable:getCellByName( "D1" ):setString("SUM")
+      oTable:getCellByName( "D1" ):setString( "SUM" )
 
-      oTable:getCellByName( "A2" ):setValue(123.12)
-      oTable:getCellByName( "B2" ):setValue(97.07)
-      oTable:getCellByName( "C2" ):setValue(106.38)
-      oTable:getCellByName( "D2" ):setFormula("sum <A2:C2>")
+      oTable:getCellByName( "A2" ):setValue( 123.12 )
+      oTable:getCellByName( "B2" ):setValue( 97.07 )
+      oTable:getCellByName( "C2" ):setValue( 106.38 )
+      oTable:getCellByName( "D2" ):setFormula( "sum <A2:C2>" )
 
       oText:insertControlCharacter( oCursor, 0 , .F. )  // PARAGRAPH_BREAK
 
@@ -355,7 +356,7 @@ STATIC PROCEDURE Exm_OOOpen()
 
    IF ( oOO_ServiceManager := win_oleCreateObject( "com.sun.star.ServiceManager" ) ) != NIL
 
-      hb_FNameSplit( hb_ArgV( 0 ), @cDir )
+      hb_FNameSplit( hb_argv( 0 ), @cDir )
 
       oOO_Desktop := oOO_ServiceManager:createInstance( "com.sun.star.frame.Desktop" )
       oOO_PropVal01 := oOO_ServiceManager:Bridge_GetStruct( "com.sun.star.beans.PropertyValue" )
@@ -398,10 +399,10 @@ STATIC PROCEDURE Exm_CDO()
 
       oCDOConf := win_oleCreateObject( "CDO.Configuration" )
 
-      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/sendusing"):Value := 2 // ; cdoSendUsingPort
-      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpserver"):Value := "localhost"
-      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpserverport"):Value := 25
-      oCDOConf:Fields("http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout"):Value := 120
+      oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/sendusing" ):Value := 2 // ; cdoSendUsingPort
+      oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpserver" ):Value := "localhost"
+      oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpserverport" ):Value := 25
+      oCDOConf:Fields( "http://schemas.microsoft.com/cdo/configuration/smtpconnectiontimeout" ):Value := 120
       oCDOConf:Fields:Update()
 
       oCDOMsg:Configuration := oCDOConf
@@ -411,7 +412,7 @@ STATIC PROCEDURE Exm_CDO()
       oCDOMsg:Subject := "Test message"
       oCDOMsg:TextBody := "Test message body"
 
-      BEGIN SEQUENCE WITH {|oErr| Break( oErr )}
+      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          oCDOMsg:Send()
       RECOVER
          ? "Error: CDO send error.", win_oleErrorText()
@@ -443,13 +444,13 @@ STATIC PROCEDURE Exm_ADODB()
    IF ( oRs := win_oleCreateObject( "ADODB.Recordset" ) ) != NIL
 
       oRs:Open( "SELECT * FROM test ORDER BY First", ;
-         "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + hb_DirBase() + "\..\..\hbodbc\tests\test.mdb",;
-         adOpenForwardOnly,;
+         "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" + hb_DirBase() + "\..\..\hbodbc\tests\test.mdb", ;
+         adOpenForwardOnly, ;
          adLockReadOnly )
 
       DO WHILE ! oRs:EOF
-          ? oRs:Fields( "First" ):Value
-          oRs:MoveNext()
+         ? oRs:Fields( "First" ):Value
+         oRs:MoveNext()
       ENDDO
 
       oRs:Close()
@@ -457,8 +458,8 @@ STATIC PROCEDURE Exm_ADODB()
 
    RETURN
 
-
 STATIC PROCEDURE Exm_SOAP()
+
    LOCAL oSoapClient
 
    IF ! Empty( oSoapClient := win_oleCreateObject( "MSSOAP.SoapClient30" ) )
@@ -472,8 +473,8 @@ STATIC PROCEDURE Exm_SOAP()
 
    RETURN
 
-
 STATIC PROCEDURE Exm_PocketSOAP()
+
    LOCAL oHttp := win_oleCreateObject( "PocketSOAP.HTTPTransport.2" )
    LOCAL oEnvelope := win_oleCreateObject( "PocketSOAP.Envelope.2" )
 
@@ -492,18 +493,18 @@ STATIC PROCEDURE Exm_PocketSOAP()
 
    RETURN
 
-
 STATIC PROCEDURE Exm_CreateShortcut()
+
    LOCAL oShell, oSC
 
    IF ( oShell := win_oleCreateObject( "WScript.Shell" ) ) != NIL
-      oSC := oShell:CreateShortcut( hb_dirBase() + hb_ps() + "testole.lnk" )
+      oSC := oShell:CreateShortcut( hb_DirBase() + hb_ps() + "testole.lnk" )
       oSC:TargetPath := hb_ProgName()
       oSC:WorkingDirectory := hb_DirBase()
       oSC:IconLocation := hb_ProgName() + ",0"
       oSC:Save()
    ELSE
-      ? "Error: Shell not available. [" + win_oleErrorText()+ "]"
+      ? "Error: Shell not available. [" + win_oleErrorText() + "]"
    ENDIF
 
    RETURN

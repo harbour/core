@@ -6,7 +6,7 @@
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
-/*----------------------------------------------------------------------*/
+//
 
 #include "inkey.ch"
 #include "common.ch"
@@ -15,7 +15,7 @@
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+//
 
 #define ID_BTN_OK                  1
 #define ID_MLE                     10
@@ -37,15 +37,15 @@
 #define ID_MNU_FILE                201
 #define ID_MNU_CONTROL             202
 
-/*----------------------------------------------------------------------*/
+//
 
 #define CRLF   chr( 13 )+chr( 10 )
 
-/*----------------------------------------------------------------------*/
+//
 
 thread static t_aSlides := {}
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION DynWinDialog( nInfo )
    Local hDlg, aDlg, nStyle, cDlgIcon, cDlgProc, lOnTop, hMenu
@@ -119,7 +119,7 @@ FUNCTION DynWinDialog( nInfo )
 
    lOnTop      := .f.
    cDlgProc    := "DynDlgProc"
-// bDlgProc    := {|a,b,c,d| DYNDLGPROC(a,b,c,d) }
+// bDlgProc    := {| a, b, c, d | DYNDLGPROC( a, b, c, d ) }
    cDlgIcon    := "v_notes.ico"
 // nTimerTicks := 1000  // 1 second
 
@@ -139,7 +139,7 @@ FUNCTION DynWinDialog( nInfo )
 
    RETURN hDlg
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
    Local lClicked, cPrompt, nIndex, hFont, aHFonts
@@ -274,7 +274,7 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
 
    RETURN 0
 
-//-------------------------------------------------------------------//
+//
 
 STATIC FUNCTION GetEditText()
    LOCAL cText := ""
@@ -306,7 +306,7 @@ STATIC FUNCTION GetEditText()
 
    RETURN cText
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION DlgSlideShow()
    LOCAL hDlg, aDlg, nStyle
@@ -321,7 +321,7 @@ FUNCTION DlgSlideShow()
 
    RETURN hDlg
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
 
@@ -352,7 +352,7 @@ FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
 
    RETURN 0
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION DrawSlide( hDlg, nSlide )
    LOCAL hDC, aRect
@@ -368,4 +368,4 @@ FUNCTION DrawSlide( hDlg, nSlide )
 
    Return NIL
 
-//----------------------------------------------------------------------//
+//

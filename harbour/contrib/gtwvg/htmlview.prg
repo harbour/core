@@ -50,9 +50,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                               EkOnkar
  *                         ( The LORD is ONE )
@@ -62,9 +62,9 @@
  *                 Pritpal Bedi  <pritpal@vouchcac.com>
  *                              08Dec2008
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -75,7 +75,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*-*/
+//
 
 #define evBeforeNavigate     100
 #define evNavigateComplete   101
@@ -92,7 +92,7 @@
 #define evDocumentComplete   259
 #define evNavigateError      271
 
-/*-*/
+//
 
 CLASS WvgHTMLViewer INHERIT WvgActiveXControl
 
@@ -141,7 +141,7 @@ CLASS WvgHTMLViewer INHERIT WvgActiveXControl
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvgHTMLViewer:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -151,7 +151,7 @@ METHOD WvgHTMLViewer:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -175,7 +175,7 @@ METHOD WvgHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgHTMLViewer:xBeforeNavigate( cURL, Flags, TFName, PData, Headers )
 
@@ -191,7 +191,7 @@ METHOD WvgHTMLViewer:xBeforeNavigate( cURL, Flags, TFName, PData, Headers )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgHTMLViewer:xStatusTextChange( cText )
 
@@ -201,7 +201,7 @@ METHOD WvgHTMLViewer:xStatusTextChange( cText )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgHTMLViewer:xNavigateComplete( cURL )
 
@@ -211,7 +211,7 @@ METHOD WvgHTMLViewer:xNavigateComplete( cURL )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgHTMLViewer:xProgressChange( nProgress, nProgMax )
 
@@ -221,7 +221,7 @@ METHOD WvgHTMLViewer:xProgressChange( nProgress, nProgMax )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgHTMLViewer:xTitleChange( cTitle )
 
@@ -231,7 +231,7 @@ METHOD WvgHTMLViewer:xTitleChange( cTitle )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgHTMLViewer:xDocumentComplete( cURI )
 
@@ -241,7 +241,7 @@ METHOD WvgHTMLViewer:xDocumentComplete( cURI )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgHTMLViewer:setHTML( cHTML )
 
@@ -250,4 +250,4 @@ METHOD WvgHTMLViewer:setHTML( cHTML )
 
    RETURN self
 
-/*-*/
+//

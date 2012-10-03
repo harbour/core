@@ -133,12 +133,12 @@ CLASS uhttpd_Session
    DATA lUse_Trans_SID          INIT .F.       // .F. = no SID appended to URL
 
    // Session Storage code blocks
-   DATA bOpen                   //INIT {|cPath, cName| ::SessionOpen( cPath, cName ) }
+   DATA bOpen                   //INIT {| cPath, cName | ::SessionOpen( cPath, cName ) }
    DATA bClose                  //INIT {|| ::SessionClose() }
-   DATA bRead                   //INIT {|cID| ::SessionRead( cID ) }
-   DATA bWrite                  //INIT {|cID, cData| ::SessionWrite( cID, cData ) }
-   DATA bDestroy                //INIT {|cID| ::SessionDestroy( cID ) }
-   DATA bGC                     //INIT {|nMaxLifeTime| ::SessionGC( nMaxLifeTime ) }
+   DATA bRead                   //INIT {| cID | ::SessionRead( cID ) }
+   DATA bWrite                  //INIT {| cID, cData | ::SessionWrite( cID, cData ) }
+   DATA bDestroy                //INIT {| cID | ::SessionDestroy( cID ) }
+   DATA bGC                     //INIT {| nMaxLifeTime | ::SessionGC( nMaxLifeTime ) }
    DATA nFileRetry              INIT 10        // How many time try to open / write / delete file in case of error
    DATA nFileWait               INIT 500       // How many milliseconds have to wait before retry
 
@@ -171,21 +171,21 @@ METHOD New( cSessionName, cSessionPath ) CLASS uhttpd_Session
   //::cSID := ::GenerateSID()
 
   // As default we will use FILES - this is FILE version
-  ::bOpen     := {|cPath, cName| ::SessionOpen( cPath, cName ) }
-  ::bClose    := {||    ::SessionClose() }
-  ::bRead     := {|cID| ::SessionRead( cID ) }
-  ::bWrite    := {|cID, cData| ::SessionWrite( cID, cData ) }
-  ::bDestroy  := {|cID| ::SessionDestroy( cID ) }
-  ::bGC       := {|nMaxLifeTime| ::SessionGC( nMaxLifeTime ) }
+  ::bOpen     := {| cPath, cName | ::SessionOpen( cPath, cName ) }
+  ::bClose    := {|| ::SessionClose() }
+  ::bRead     := {| cID | ::SessionRead( cID ) }
+  ::bWrite    := {| cID, cData | ::SessionWrite( cID, cData ) }
+  ::bDestroy  := {| cID | ::SessionDestroy( cID ) }
+  ::bGC       := {| nMaxLifeTime | ::SessionGC( nMaxLifeTime ) }
 
   /*
   // DBF version - we will store in a DBF - this only an example
-  ::bOpen     := {|cPath, cName| DBF_Session_Open( cPath, cName ) }
-  ::bClose    := {||    DBF_Session_Close() }
-  ::bRead     := {|cID| DBF_Session_Read( cID ) }
-  ::bWrite    := {|cID, cData| DBF_Session_Write( cID, cData ) }
-  ::bDestroy  := {|cID| DBF_Session_Destroy( cID ) }
-  ::bGC       := {|nMaxLifeTime| DBF_Session_GC( nMaxLifeTime ) }
+  ::bOpen     := {| cPath, cName | DBF_Session_Open( cPath, cName ) }
+  ::bClose    := {|| DBF_Session_Close() }
+  ::bRead     := {| cID | DBF_Session_Read( cID ) }
+  ::bWrite    := {| cID, cData | DBF_Session_Write( cID, cData ) }
+  ::bDestroy  := {| cID | DBF_Session_Destroy( cID ) }
+  ::bGC       := {| nMaxLifeTime | DBF_Session_GC( nMaxLifeTime ) }
   */
 
   ::cName     := cSessionName + "ID"

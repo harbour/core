@@ -30,7 +30,7 @@ proc main()
    begin sequence
       for i := 1 to 10
          ?? "M"
-         hb_idleSleep(0.050)
+         hb_idleSleep( 0.050 )
          if i == 5
             ? "Main QUIT"
             quit
@@ -48,12 +48,12 @@ proc thFunc( ... )
    local i
    ? "Thread begin"
    ? "Parameters:"
-   aeval( hb_aParams(), {|x|qqout("",x)})
+   aeval( hb_aParams(), {| x | qqout( "", x ) } )
    ?
    begin sequence
-      for i:=1 to 10
+      for i := 1 to 10
          ?? "t"
-         hb_idleSleep(0.030)
+         hb_idleSleep( 0.030 )
       next
    always
       ? "Thread ALWAYS section"

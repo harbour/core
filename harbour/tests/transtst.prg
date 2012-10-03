@@ -33,7 +33,7 @@ FUNCTION transtest( xVal, cPict, cExpect )
 PROC stop()
 
    IF s_stop
-      ? repl( "*", 50 )
+      ? replicate( "*", 50 )
       Inkey( 0 )
       s_stop := .F.
    ENDIF

@@ -1155,7 +1155,7 @@ METHOD EditVar( nVar ) CLASS HBDebugger
          __DbgObject( uVarValue, cVarName )
 
       OTHERWISE
-         BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
+         BEGIN SEQUENCE WITH {| oErr | break( oErr ) }
             ::VarSetValue( ::aVars[ nVar ], &cVarStr )
          RECOVER USING oErr
             __dbgAlert( oErr:description )

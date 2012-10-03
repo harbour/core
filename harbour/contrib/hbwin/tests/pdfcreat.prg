@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code
- * Demonstration code for generating .pdf documents using PDFCreator 
+ * Demonstration code for generating .pdf documents using PDFCreator
  *   COM interface.
  *
  * You should install PDFCreator to be able to run this test
@@ -20,23 +20,24 @@
  *
  */
 
-PROC main()
-LOCAL oPC, nTime, cDefaultPrinter, cFilename, oPrinter, nEvent := 0
+PROCEDURE Main()
 
-   IF EMPTY( oPC := WIN_OLECreateObject( "PDFCreator.clsPDFCreator" ) )
+   LOCAL oPC, nTime, cDefaultPrinter, cFilename, oPrinter, nEvent := 0
+
+   IF Empty( oPC := WIN_OLECreateObject( "PDFCreator.clsPDFCreator" ) )
       ? "Unable to create PDFCreator COM object"
       RETURN
    ENDIF
 
-   cFilename := HB_PROGNAME()
+   cFilename := hb_ProgName()
 
    /* Setup event notification */
-   oPC:__hSink := __AxRegisterHandler( oPC:__hObj, {|X| nEvent := X} )
+   oPC:__hSink := __AxRegisterHandler( oPC:__hObj, {| X | nEvent := X } )
 
    oPC:cStart( "/NoProcessingAtStartup" )
    oPC:_cOption( "UseAutosave", 1 )
    oPC:_cOption( "UseAutosaveDirectory", 1 )
-   oPC:_cOption( "AutosaveDirectory", LEFT( cFileName, RAT( HB_PS(), cFilename ) - 1 ) )
+   oPC:_cOption( "AutosaveDirectory", Left( cFileName, RAt( hb_ps(), cFilename ) - 1 ) )
    oPC:_cOption( "AutosaveFilename", "pdfcreat.pdf" )
    oPC:_cOption( "AutosaveFormat", 0 )
 
@@ -44,7 +45,7 @@ LOCAL oPC, nTime, cDefaultPrinter, cFilename, oPrinter, nEvent := 0
    oPC:cDefaultPrinter := "PDFCreator"
    oPC:cClearCache()
 
-   /* You can do any printing here using WinAPI or 
+   /* You can do any printing here using WinAPI or
       call a 3rd party application to do printing */
 #if 1
    oPrinter := Win_Prn():New( "PDFCreator" )
@@ -58,16 +59,16 @@ LOCAL oPC, nTime, cDefaultPrinter, cFilename, oPrinter, nEvent := 0
 #else
    oPrinter := NIL
    ? "Do some printing to PDFCreator printer and press any key..."
-   INKEY(0)
+   Inkey( 0 )
 #endif
 
    oPC:cPrinterStop := .F.
 
-   nTime := hb_milliseconds()
-   DO WHILE nEvent == 0 .AND. hb_milliseconds() - nTime < 10000
+   nTime := hb_milliSeconds()
+   DO WHILE nEvent == 0 .AND. hb_milliSeconds() - nTime < 10000
       hb_idleSleep( 0.5 )
       /* The following dummy line is required to allow COM server to send event [Mindaugas] */
-      oPC:cOption("UseAutosave") 
+      oPC:cOption( "UseAutosave" )
    ENDDO
 
    IF nEvent == 0
@@ -83,4 +84,5 @@ LOCAL oPC, nTime, cDefaultPrinter, cFilename, oPrinter, nEvent := 0
    oPC:cDefaultPrinter := cDefaultPrinter
    oPC:cClose()
    oPC := NIL
-RETURN
+
+   RETURN

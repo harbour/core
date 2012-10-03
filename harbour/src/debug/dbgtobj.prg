@@ -87,7 +87,7 @@ METHOD New( oObject, cVarName, lEditable ) CLASS HBDbObject
 
    /* create list of object messages */
    aMessages := oObject:classSel()
-   ASort( aMessages,,, {|x,y| PAdR( x, 64 ) <= PAdR( y, 64 ) } )
+   ASort( aMessages,,, {| x, y | PadR( x, 64 ) <= PadR( y, 64 ) } )
    aMethods := {}
    FOR EACH cMsg IN aMessages
       IF Left( cMsg, 1 ) == "_" .AND. ;
@@ -197,7 +197,7 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
 
    IF __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1,, @cValue, ;
                   {| cValue | iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
-      BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
+      BEGIN SEQUENCE WITH {| oErr | break( oErr ) }
          __dbgObjSetValue( ::TheObj, pitem[ nSet, 1 ], &cValue )
       RECOVER USING oErr
          __dbgAlert( oErr:description )
@@ -321,7 +321,7 @@ STATIC FUNCTION __dbgObjGetValue( oObject, cVar, lCanAcc )
       xResult := __dbgSENDMSG( nProcLevel, oObject, cVar )
       lCanAcc := .T.
    RECOVER
-      BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
+      BEGIN SEQUENCE WITH {| oErr | break( oErr ) }
          /* Try to access variables using class code level */
          xResult := __dbgSENDMSG( 0, oObject, cVar )
          lCanAcc := .T.
@@ -341,7 +341,7 @@ STATIC FUNCTION __dbgObjSetValue( oObject, cVar, xValue )
    BEGIN SEQUENCE WITH {|| break() }
       __dbgSENDMSG( nProcLevel, oObject, "_" + cVar, xValue )
    RECOVER
-      BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
+      BEGIN SEQUENCE WITH {| oErr | break( oErr ) }
          /* Try to access variables using class code level */
          __dbgSENDMSG( 0, oObject, "_" + cVar, xValue )
       RECOVER USING oErr

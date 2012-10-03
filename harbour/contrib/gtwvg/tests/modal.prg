@@ -4,7 +4,7 @@
 /*
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
-/*----------------------------------------------------------------------*/
+//
 
 #include "inkey.ch"
 #include "common.ch"
@@ -13,7 +13,7 @@
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+//
 
 #xUntranslate alert( =>
 
@@ -38,19 +38,19 @@ FUNCTION MyAlert( cMsg, aOpt )
 
 #xTranslate Alert( => MyAlert(
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION My_Alert( cMessage, aOptions, cCaption, nInit, nTime )
    RETURN DialogAlert( cCaption, cMessage, aOptions, nInit, , ,nTime )
 
-/*----------------------------------------------------------------------*/
+//
 
 #xUntranslate alert( =>
 FUNCTION Just_Alert( cMsg, aOpt )
    RETURN Alert( cMsg, aOpt )
 #xTranslate Alert( => MyAlert(
 
-/*----------------------------------------------------------------------*/
+//
 
 #define DLG_CLR_MOUSE              1
 #define DLG_CLR_CAPT               2
@@ -84,7 +84,7 @@ FUNCTION Just_Alert( cMsg, aOpt )
                          <.lModal.>, <.lRowCols.>, <.lHidden.>, <.lCenter.>, ;
                          <nRow>, <nCol>, <.lNoTitleBar.> )
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
    LOCAL nLinesRqd, nColRqd, nLeft, nBottom, nRight, oCrt
@@ -125,15 +125,15 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
    nColCap   := len( cCaption )+ 7  // " - "+"  "+caption+"  "
    nColTxt   := 0
    if !empty(aText_)
-      aeval(aText_, {|e| nColTxt := max( nColTxt, len( e ) ) } )
+      aeval(aText_, {| e | nColTxt := max( nColTxt, len( e ) ) } )
    endif
    nColTxt   += 6                   // for two spaces at both sides
    nColBut   := 0
-   aeval( aButtons_, {|e| nColBut += len( e ) + 7 } )
+   aeval( aButtons_, {| e | nColBut += len( e ) + 7 } )
    nColBut   += 3
 
    nColRqd   := 0
-   aeval( { nColCap, nColTxt, nColBut }, {|e| nColRqd := max( nColRqd, e ) } )
+   aeval( { nColCap, nColTxt, nColBut }, {| e | nColRqd := max( nColRqd, e ) } )
 
    nLeft     := iif( maxCol > nColRqd, int( ( maxCol - nColRqd ) / 2 ), 0 )
    nRight    := nLeft+nColRqd
@@ -195,7 +195,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
    setColor( pal_[ DLG_CLR_HISEL ] )
    @ nBtnRow, nBtnCol_[ sel ]+2 SAY substr( aButtons_[ sel ],1,1 )
 
-   aeval( x_, {|e_| Wvg_BoxRaised( e_[ 1 ], e_[ 2 ], e_[ 3 ], e_[ 4 ] ) } )
+   aeval( x_, {| e_ | Wvg_BoxRaised( e_[ 1 ], e_[ 2 ], e_[ 3 ], e_[ 4 ] ) } )
 
    dispend()
 
@@ -275,7 +275,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
 
    return sel
 
-//----------------------------------------------------------------------//
+//
 
 FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
                                                   lCenter, nRow, nCol, lNoTitleBar )
@@ -318,7 +318,7 @@ FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
 
    RETURN oCrt
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION DoModalWindow()
    LOCAL oCrt, nSel, pGT
@@ -363,4 +363,4 @@ FUNCTION DoModalWindow()
    WvtSetBlocks( aLastPaint )
    Return NIL
 
-//----------------------------------------------------------------------//
+//

@@ -11,7 +11,7 @@
  *
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
-/*----------------------------------------------------------------------*/
+//
 
 #include "inkey.ch"
 #include "common.ch"
@@ -20,7 +20,7 @@
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+//
 
 #define K_MOVING                1001
 
@@ -37,12 +37,12 @@
 #define K_SBTHUMBTRACKVERT      1059
 #define K_SBTHUMBTRACKHORZ      1060
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION WvtMyBrowse()
 
    IF hb_mtvm()
-      Hb_ThreadStart( {|oCrt|  oCrt := WvgCrt():new( , , { -1,-2 }, { 34,69 }, , .T. ), ;
+      Hb_ThreadStart( {| oCrt | oCrt := WvgCrt():new( , , { -1,-2 }, { 34,69 }, , .T. ), ;
                             oCrt:resizeMode := HB_GTI_RESIZEMODE_ROWS,;
                             oCrt:icon := GetResource( "dia_excl.ico" ),;
                             oCrt:create(),;
@@ -57,7 +57,7 @@ FUNCTION WvtMyBrowse()
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 FUNCTION ExecBrowser( oCrt )
    LOCAL nKey, bBlock, oBrowse , aLastPaint, i, pGT
@@ -86,7 +86,7 @@ FUNCTION ExecBrowser( oCrt )
 
    BrwBuildMenu( oCrt )
    oTBar := BrwBuildToolBar( oCrt )
-   oTBar:buttonClick := {|oBtn| Vou_ExecTBarAction( oBtn ) }
+   oTBar:buttonClick := {| oBtn | Vou_ExecTBarAction( oBtn ) }
 
    SetMode( maxrow()+1, maxCol()+1 )  /* Neccessary because adding menu has reduced the overall size of window */
 
@@ -119,9 +119,9 @@ FUNCTION ExecBrowser( oCrt )
 
    oBrowse:ColSep        := "  "
    oBrowse:HeadSep       := "__"
-   oBrowse:GoTopBlock    := { || dbGoTop() }
-   oBrowse:GoBottomBlock := { || dbGoBottom() }
-   oBrowse:SkipBlock     := { | nSkip | dbSkipBlock( nSkip,oBrowse ) }
+   oBrowse:GoTopBlock    := {|| dbGoTop() }
+   oBrowse:GoBottomBlock := {|| dbGoBottom() }
+   oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip,oBrowse ) }
 
    for i := 1 to len( info_ )
       bBlock := VouBlockField( i )
@@ -228,7 +228,7 @@ FUNCTION ExecBrowser( oCrt )
 
    RETURN NIL
 
-//-------------------------------------------------------------------//
+//
 
 STATIC FUNCTION BrwHandleResize( oCrt, oBrw, oVBar, oHBar, oCom, oSLE, oLBx, oTre, oChk, aNvg, oIdx, lActiveX, cFileDbf )
 
@@ -274,7 +274,7 @@ STATIC FUNCTION BrwHandleResize( oCrt, oBrw, oVBar, oHBar, oCom, oSLE, oLBx, oTr
 
    RETURN .t.
 
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION BrwShowColumn( oBrw, cHeading )
    LOCAL i, j, nCur
@@ -299,7 +299,7 @@ STATIC FUNCTION BrwShowColumn( oBrw, cHeading )
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION BrwBuildTree( oCrt /*, oBrw*/ )
    LOCAL oTree, oItem1, oItem2
@@ -311,7 +311,7 @@ STATIC FUNCTION BrwBuildTree( oCrt /*, oBrw*/ )
    oTree:create( , , { -24, -1 }, { {|| -( maxrow()-1-24 ) }, -10 } )
    oTree:setColorFG( "W+" )
    oTree:setColorBG( "R*" )
-   oTree:itemSelected := {|oItem| WVG_MessageBox( , iif( oItem != NIL, oItem:caption, "Some Problem" ) ) }
+   oTree:itemSelected := {| oItem | WVG_MessageBox( , iif( oItem != NIL, oItem:caption, "Some Problem" ) ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
 
@@ -331,7 +331,7 @@ STATIC FUNCTION BrwBuildTree( oCrt /*, oBrw*/ )
 
    RETURN oTree
 
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION BrwBuildActiveX( oCrt, oBrw )
    LOCAL oCom
@@ -346,7 +346,7 @@ STATIC FUNCTION BrwBuildActiveX( oCrt, oBrw )
 
    RETURN oCom
 
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION BrwBuildListBox( oCrt, oBrw )
    LOCAL oXbp, i
@@ -355,7 +355,7 @@ STATIC FUNCTION BrwBuildListBox( oCrt, oBrw )
    oXbp:create( , , { -4,-1 }, { -10, -10 }, , .t. )
    oXbp:setColorFG( "W+" )
    oXbp:setColorBG( "B*" )
-   oXbp:itemMarked := {|m1,m2,o| m1 := m1, m2 := m2, BrwShowColumn( oBrw, o:getCurItem() ) }
+   oXbp:itemMarked := {| m1, m2, o | m1 := m1, m2 := m2, BrwShowColumn( oBrw, o:getCurItem() ) }
    FOR i := 1 TO oBrw:colCount
       oXbp:addItem( oBrw:getColumn( i ):heading )
    NEXT
@@ -364,7 +364,7 @@ STATIC FUNCTION BrwBuildListBox( oCrt, oBrw )
 
    RETURN oXbp
 
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION BrwSetThisOrder( oBrw, nOrd )
    DbSetOrder( nOrd )
@@ -372,7 +372,7 @@ STATIC FUNCTION BrwSetThisOrder( oBrw, nOrd )
    oBrw:forceStable()
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION BrwBuildListBoxIdx( oCrt, oBrw )
    LOCAL oXbp, i, cKey, aIdx := {}
@@ -389,7 +389,7 @@ STATIC FUNCTION BrwBuildListBoxIdx( oCrt, oBrw )
    oXbp:create( , , { -18,-1 }, { -5, -10 }, , .t. )
    oXbp:setColorFG( "W+" )
    oXbp:setColorBG( "B*" )
-   oXbp:itemMarked := {|m1,m2,o| m1 := m2, BrwSetThisOrder( oBrw, o:XbpListBox:getData()-1 ) }
+   oXbp:itemMarked := {| m1, m2, o | m1 := m2, BrwSetThisOrder( oBrw, o:XbpListBox:getData()-1 ) }
    oXbp:addItem( "Natural Order" )
    FOR i := 1 TO len( aIdx )
       oXbp:addItem( aIdx[ i ] )
@@ -398,7 +398,7 @@ STATIC FUNCTION BrwBuildListBoxIdx( oCrt, oBrw )
 
    RETURN oXbp
 
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION BrwBuildSLE( oCrt, oBrw )
    LOCAL oXbp
@@ -415,12 +415,12 @@ STATIC FUNCTION BrwBuildSLE( oCrt, oBrw )
    oXbp:create( , , { -16, -1 }, { -1, -10 } )
    oXbp:setColorFG( "N"  )
    oXbp:setColorBG( "BG+"  )
-   oXbp:returnPressed := {|m1,m2,o| m1:=m1, m2:=m2, BrwShowColumn( oBrw, upper( trim( o:getData() ) ) ) }
+   oXbp:returnPressed := {| m1, m2, o | m1:=m1, m2:=m2, BrwShowColumn( oBrw, upper( trim( o:getData() ) ) ) }
    oXbp:tooltipText := "Type in a field name and press ENTER"
 
    RETURN oXbp
 
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION BrwBuildNvg( oCrt, oBrw, oCom )
    LOCAL oLbl, oXbp
@@ -440,13 +440,13 @@ STATIC FUNCTION BrwBuildNvg( oCrt, oBrw, oCom )
    oXbp:create( , , { -23, -19 }, { -1, {|| -( maxcol()-1-19 ) } }, , .f. )
    oXbp:setColorFG( "N"  )
    oXbp:setColorBG( "BG+"  )
-   oXbp:returnPressed := {|m1,m2,o| m1:=m2, oCom:navigate( trim( o:getData() ) ) }
+   oXbp:returnPressed := {| m1, m2, o | m1:=m2, oCom:navigate( trim( o:getData() ) ) }
    oXbp:tooltipText := "Type-in a http:// address and press ENTER"
    oXbp:setData( "http://hbide.vouch.info/" )
 
    RETURN { oLbl, oXbp }
 
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION BrwBuildCheckBox( oCrt, oBrw, lActiveX )
    LOCAL oXbp
@@ -456,7 +456,7 @@ STATIC FUNCTION BrwBuildCheckBox( oCrt, oBrw, lActiveX )
    oXbp := WvgCheckBox():new( oCrt )
    oXbp:pointerFocus := .f.
    oXbp:caption      := "ActiveX"
-   oXbp:selected     := {|x,y,o| x := y, lActiveX := o:getData(), Wvt_Keyboard( HB_K_RESIZE ) }
+   oXbp:selected     := {| x, y, o | x := y, lActiveX := o:getData(), Wvt_Keyboard( HB_K_RESIZE ) }
    oXbp:selection    := .f.
    oXbp:create( , , { -23,-1 }, { -1,-10 } )
    oXbp:setColorFG( "R+" )
@@ -465,7 +465,7 @@ STATIC FUNCTION BrwBuildCheckBox( oCrt, oBrw, lActiveX )
 
    RETURN oXbp
 
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION BrwReposButtons( oCrt )
    LOCAL oXbp, nOff, nTtl, nG, i
@@ -473,7 +473,7 @@ STATIC FUNCTION BrwReposButtons( oCrt )
 
    nG   := 2
    nTtl := 0
-   aeval( aW, {|e| nTtl += e } )
+   aeval( aW, {| e | nTtl += e } )
    nTtl += ( len( aW ) - 1 ) * nG
 
    nOff := ( ( maxcol()+1 ) - nTtl ) / 2
@@ -488,7 +488,7 @@ STATIC FUNCTION BrwReposButtons( oCrt )
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION BrwBuildButtons( oCrt, oBrw )
    LOCAL oPB, nOff, nTtl, nG, i
@@ -502,7 +502,7 @@ STATIC FUNCTION BrwBuildButtons( oCrt, oBrw )
 
    nG := 2
    nTtl := 0
-   aeval( aW, {|e| nTtl += e } )
+   aeval( aW, {| e | nTtl += e } )
    nTtl += ( len( aW ) - 1 ) * nG
 
    nOff := ( ( maxcol()+1 ) - nTtl ) / 2
@@ -528,7 +528,7 @@ STATIC FUNCTION BrwBuildButtons( oCrt, oBrw )
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION Vou_BrwAddScrollBars( oCrt, oBrw, oVBar, oHBar )
 
@@ -537,18 +537,18 @@ FUNCTION Vou_BrwAddScrollBars( oCrt, oBrw, oVBar, oHBar )
    oHBar:range := { 1, oBrw:colCount }
    oHBar:type  := WVGSCROLL_HORIZONTAL
    oHBar:create()
-   oHBar:scroll := {|mp1| oBrw:colPos := mp1[ 1 ], oBrw:refreshCurrent(), oBrw:forceStable() }
+   oHBar:scroll := {| mp1 | oBrw:colPos := mp1[ 1 ], oBrw:refreshCurrent(), oBrw:forceStable() }
 
    oVBar := WvgScrollBar():new( oCrt, , { {|| -( oBrw:nTop ) }, {|| -( oBrw:nRight+1 ) } }, ;
                                         { {|| -( oBrw:nBottom-oBrw:nTop+1 ) }, {|| -( 2 ) } } )
    oVBar:range := { 1, LastRec() }
    oVBar:type  := WVGSCROLL_VERTICAL
    oVBar:create()
-   oVBar:scroll := {|mp1| Vou_BrwSetVScroll( mp1, oBrw ) }
+   oVBar:scroll := {| mp1 | Vou_BrwSetVScroll( mp1, oBrw ) }
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION BrwBuildMenu( oCrt )
    LOCAL oMenu, oSMenu
@@ -573,13 +573,13 @@ STATIC FUNCTION BrwBuildMenu( oCrt )
    oSMenu:title := "~Procedural"
    oSMenu:addItem( { "Procedure ~1", } )
    oSMenu:addItem( { "Procedure ~2", } )
-   oSMenu:itemSelected := {|mp1| MyMenuProcedure( 100+mp1 ) }
+   oSMenu:itemSelected := {| mp1 | MyMenuProcedure( 100+mp1 ) }
    oSMenu:checkItem( 2 )
    oMenu:addItem( { oSMenu, NIL } )
 
    RETURN oMenu
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION BrwBuildToolBar( oCrt )
    LOCAL oTBar, nRGB := RGB( 172,172,172 )
@@ -610,9 +610,9 @@ STATIC FUNCTION BrwBuildToolBar( oCrt )
 
    RETURN oTBar
 
-//----------------------------------------------------------------------//
+//
 //                         Key Handelling
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
    LOCAL lVMove := .f.
@@ -703,7 +703,7 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 
    RETURN lRet
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION Vou_NavigateToCell( oBrowse )
    LOCAL nCount
@@ -747,7 +747,7 @@ FUNCTION Vou_NavigateToCell( oBrowse )
 
    RETURN .f.
 
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION DbSkipBlock( n )
    LOCAL nSkipped := 0
@@ -767,7 +767,7 @@ STATIC FUNCTION DbSkipBlock( n )
 
    RETURN  nSkipped
 
-//-------------------------------------------------------------------//
+//
 
 STATIC FUNCTION TBNext()
    LOCAL nSaveRecNum := recno()
@@ -785,7 +785,7 @@ STATIC FUNCTION TBNext()
 
    RETURN lMoved
 
-//-------------------------------------------------------------------//
+//
 
 STATIC FUNCTION TBPrev()
    LOCAL nSaveRecNum := Recno()
@@ -800,12 +800,12 @@ STATIC FUNCTION TBPrev()
 
    RETURN lMoved
 
-//-------------------------------------------------------------------//
+//
 
 STATIC FUNCTION VouBlockField( i )
    RETURN  {|| fieldget( i ) }
 
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION Vou_ExecTBarAction( oBtn )
 
@@ -828,7 +828,7 @@ STATIC FUNCTION Vou_ExecTBarAction( oBtn )
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION Vou_BrwSetVScroll( mp1, oBrowse )
 
@@ -872,9 +872,9 @@ FUNCTION Vou_BrwSetVScroll( mp1, oBrowse )
    RETURN NIL
 
 
-/*----------------------------------------------------------------------*/
+//
 /*                   For brosers inside WvtDialog()                     */
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
    LOCAL lRet := .t., lRefAll := .f.
@@ -982,7 +982,7 @@ STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
 
    RETURN lRet
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION ConfigBrowser( aFields, cUseAlias, aTLBR, cDesc, oParent, cColorSpec, nID )
    LOCAL info_, oWvtBrw, oBrowse, i, bBlock
@@ -1003,9 +1003,9 @@ FUNCTION ConfigBrowser( aFields, cUseAlias, aTLBR, cDesc, oParent, cColorSpec, n
    oBrowse:ColSep        := "  "
    oBrowse:HeadSep       := "__"
    oBrowse:ColorSpec     := cColorSpec
-   oBrowse:GoTopBlock    := { || dbGoTop() }
-   oBrowse:GoBottomBlock := { || dbGoBottom() }
-   oBrowse:SkipBlock     := { | nSkip | dbSkipBlock( nSkip,oBrowse ) }
+   oBrowse:GoTopBlock    := {|| dbGoTop() }
+   oBrowse:GoBottomBlock := {|| dbGoBottom() }
+   oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip,oBrowse ) }
 
    FOR i := 1 TO len( aFields )
       bBlock := VouBlockField( aFields[ i ] )
@@ -1028,8 +1028,8 @@ FUNCTION ConfigBrowser( aFields, cUseAlias, aTLBR, cDesc, oParent, cColorSpec, n
    oWvtBrw:Tooltip      := cDesc
    oWvtBrw:aPopup       := aPopup
 
-   oWvtBrw:bHandleEvent := {|oWvtBrw,cPaintID,oBrowse,nKey| BrwOnEvent( oWvtBrw,cPaintID,oBrowse,nKey ) }
+   oWvtBrw:bHandleEvent := {| oWvtBrw, cPaintID, oBrowse, nKey | BrwOnEvent( oWvtBrw,cPaintID,oBrowse,nKey ) }
 
    RETURN oWvtBrw
 
-//-------------------------------------------------------------------//
+//

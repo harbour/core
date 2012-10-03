@@ -26,7 +26,7 @@ local o:=myclass4():new(), i, cbErr
 ? "myclass1 shared class vars:", str( __CLS_CNTSHRDATA(o:myclass1:classH), 3), "  => should be:   3"
 ? "myclass2 shared class vars:", str( __CLS_CNTSHRDATA(o:myclass2:classH), 3), "  => should be:   3"
 ? "myclass3 shared class vars:", str( __CLS_CNTSHRDATA(o:myclass3:classH), 3), "  => should be:   3"
-cbErr:=errorBlock({|oErr|break(oErr)})
+cbErr := errorBlock( {| oErr | break( oErr ) } )
 begin sequence
    ? "myclass4 shared class vars:", str( __CLS_CNTSHRDATA(o:myclass4:classH), 3), "  => should be:   3"
 recover
@@ -47,7 +47,7 @@ for i:=1 to len(o); ?? "",o[i]; next
 ? "[3] MYCLASS1 VARS:", o:myclass3:x1, o:myclass3:y1, o:myclass3:z1, "  => should be: (x1) (y1) (z1)"
 ? "[3] MYCLASS2 VARS:", o:myclass3:x2, o:myclass3:y2, o:myclass3:z2, "  => should be: (x2) (y2) (z2)"
 ? "[3] MYCLASS3 VARS:", o:myclass3:x3, o:myclass3:y3, o:myclass3:z3, "  => should be: (x3) (y3) (z3)"
-cbErr:=errorBlock({|oErr|break(oErr)})
+cbErr := errorBlock( {| oErr | break( oErr ) } )
 begin sequence
    ? "[4] MYCLASS1 VARS:", o:myclass4:x1, o:myclass4:y1, o:myclass4:z1, "  => should be: (x1) (y1) (z1)"
    ? "[4] MYCLASS2 VARS:", o:myclass4:x2, o:myclass4:y2, o:myclass4:z2, "  => should be: (x2) (y2) (z2)"
@@ -74,7 +74,7 @@ o:x4:=" X4 "; o:y4:=" Y4 "; o:z4:=" Z4 "
 ? "[3] MYCLASS1 VARS:", o:myclass3:x1, o:myclass3:y1, o:myclass3:z1, "  => should be:  X1   Y1   Z1"
 ? "[3] MYCLASS2 VARS:", o:myclass3:x2, o:myclass3:y2, o:myclass3:z2, "  => should be:  X2   Y2   Z2"
 ? "[3] MYCLASS3 VARS:", o:myclass3:x3, o:myclass3:y3, o:myclass3:z3, "  => should be:  X3   Y3   Z3"
-cbErr:=errorBlock({|oErr|break(oErr)})
+cbErr := errorBlock( {| oErr | break( oErr ) } )
 begin sequence
    ? "[4] MYCLASS1 VARS:", o:myclass4:x1, o:myclass4:y1, o:myclass4:z1, "  => should be:  X1   Y1   Z1"
    ? "[4] MYCLASS2 VARS:", o:myclass4:x2, o:myclass4:y2, o:myclass4:z2, "  => should be:  X2   Y2   Z2"
@@ -105,7 +105,7 @@ o:myclass1:z1:="[Z1]"
 ? "[3] MYCLASS1 VARS:", o:myclass3:x1, o:myclass3:y1, o:myclass3:z1, "  => should be: [X1] [Y1] [Z1]"
 ? "[3] MYCLASS2 VARS:", o:myclass3:x2, o:myclass3:y2, o:myclass3:z2, "  => should be:  X2   Y2   Z2"
 ? "[3] MYCLASS3 VARS:", o:myclass3:x3, o:myclass3:y3, o:myclass3:z3, "  => should be:  X3   Y3   Z3"
-cbErr:=errorBlock({|oErr|break(oErr)})
+cbErr := errorBlock( {| oErr | break( oErr ) } )
 begin sequence
    ? "[4] MYCLASS1 VARS:", o:myclass4:x1, o:myclass4:y1, o:myclass4:z1, "  => should be: [X1] [Y1] [Z1]"
    ? "[4] MYCLASS2 VARS:", o:myclass4:x2, o:myclass4:y2, o:myclass4:z2, "  => should be:  X2   Y2   Z2"
@@ -134,7 +134,7 @@ o:myclass2:z2:="{Z2}"
 ? "[3] MYCLASS1 VARS:", o:myclass3:x1, o:myclass3:y1, o:myclass3:z1, "  => should be: {X1} {Y1} {Z1}"
 ? "[3] MYCLASS2 VARS:", o:myclass3:x2, o:myclass3:y2, o:myclass3:z2, "  => should be: {X2} {Y2} {Z2}"
 ? "[3] MYCLASS3 VARS:", o:myclass3:x3, o:myclass3:y3, o:myclass3:z3, "  => should be:  X3   Y3   Z3"
-cbErr:=errorBlock({|oErr|break(oErr)})
+cbErr := errorBlock( {| oErr | break( oErr ) } )
 begin sequence
    ? "[4] MYCLASS1 VARS:", o:myclass4:x1, o:myclass4:y1, o:myclass4:z1, "  => should be: {X1} {Y1} {Z1}"
    ? "[4] MYCLASS2 VARS:", o:myclass4:x2, o:myclass4:y2, o:myclass4:z2, "  => should be: {X2} {Y2} {Z2}"
@@ -166,7 +166,7 @@ o:myclass3:z3:="<Z3>"
 ? "[3] MYCLASS1 VARS:", o:myclass3:x1, o:myclass3:y1, o:myclass3:z1, "  => should be: <X1> <Y1> <Z1>"
 ? "[3] MYCLASS2 VARS:", o:myclass3:x2, o:myclass3:y2, o:myclass3:z2, "  => should be: <X2> <Y2> <Z2>"
 ? "[3] MYCLASS3 VARS:", o:myclass3:x3, o:myclass3:y3, o:myclass3:z3, "  => should be: <X3> <Y3> <Z3>"
-cbErr:=errorBlock({|oErr|break(oErr)})
+cbErr := errorBlock( {| oErr | break( oErr ) } )
 begin sequence
    ? "[4] MYCLASS1 VARS:", o:myclass4:x1, o:myclass4:y1, o:myclass4:z1, "  => should be: <X1> <Y1> <Z1>"
    ? "[4] MYCLASS2 VARS:", o:myclass4:x2, o:myclass4:y2, o:myclass4:z2, "  => should be: <X2> <Y2> <Z2>"
@@ -186,7 +186,7 @@ errorBlock(cbErr)
 
 
 ? "Setting MYCLASS4 class variables..."
-cbErr:=errorBlock({|oErr|break(oErr)})
+cbErr := errorBlock( {| oErr | break( oErr ) } )
 begin sequence
    o:myclass4:x1:="|X1|"
    o:myclass4:y1:="|Y1|"
@@ -210,7 +210,7 @@ errorBlock(cbErr)
 ? "[3] MYCLASS1 VARS:", o:myclass3:x1, o:myclass3:y1, o:myclass3:z1, "  => should be: |X1| |Y1| |Z1|"
 ? "[3] MYCLASS2 VARS:", o:myclass3:x2, o:myclass3:y2, o:myclass3:z2, "  => should be: |X2| |Y2| |Z2|"
 ? "[3] MYCLASS3 VARS:", o:myclass3:x3, o:myclass3:y3, o:myclass3:z3, "  => should be: |X3| |Y3| |Z3|"
-cbErr:=errorBlock({|oErr|break(oErr)})
+cbErr := errorBlock( {| oErr | break( oErr ) } )
 begin sequence
    ? "[4] MYCLASS1 VARS:", o:myclass4:x1, o:myclass4:y1, o:myclass4:z1, "  => should be: |X1| |Y1| |Z1|"
    ? "[4] MYCLASS2 VARS:", o:myclass4:x2, o:myclass4:y2, o:myclass4:z2, "  => should be: |X2| |Y2| |Z2|"
@@ -237,7 +237,7 @@ o:myclass3:myclass1:z1:="^Z1^"
 ? "[3] MYCLASS1 VARS:", o:myclass3:x1, o:myclass3:y1, o:myclass3:z1, "  => should be: ^X1^ ^Y1^ ^Z1^"
 ? "[3] MYCLASS2 VARS:", o:myclass3:x2, o:myclass3:y2, o:myclass3:z2, "  => should be: |X2| |Y2| |Z2|"
 ? "[3] MYCLASS3 VARS:", o:myclass3:x3, o:myclass3:y3, o:myclass3:z3, "  => should be: |X3| |Y3| |Z3|"
-cbErr:=errorBlock({|oErr|break(oErr)})
+cbErr := errorBlock( {| oErr | break( oErr ) } )
 begin sequence
    ? "[4] MYCLASS1 VARS:", o:myclass4:x1, o:myclass4:y1, o:myclass4:z1, "  => should be: ^X1^ ^Y1^ ^Z1^"
    ? "[4] MYCLASS2 VARS:", o:myclass4:x2, o:myclass4:y2, o:myclass4:z2, "  => should be: |X2| |Y2| |Z2|"
@@ -266,7 +266,7 @@ o:myclass3:myclass2:z2:="=Z2="
 ? "[3] MYCLASS1 VARS:", o:myclass3:x1, o:myclass3:y1, o:myclass3:z1, "  => should be: =X1= =Y1= =Z1="
 ? "[3] MYCLASS2 VARS:", o:myclass3:x2, o:myclass3:y2, o:myclass3:z2, "  => should be: =X2= =Y2= =Z2="
 ? "[3] MYCLASS3 VARS:", o:myclass3:x3, o:myclass3:y3, o:myclass3:z3, "  => should be: |X3| |Y3| |Z3|"
-cbErr:=errorBlock({|oErr|break(oErr)})
+cbErr := errorBlock( {| oErr | break( oErr ) } )
 begin sequence
    ? "[4] MYCLASS1 VARS:", o:myclass4:x1, o:myclass4:y1, o:myclass4:z1, "  => should be: =X1= =Y1= =Z1="
    ? "[4] MYCLASS2 VARS:", o:myclass4:x2, o:myclass4:y2, o:myclass4:z2, "  => should be: =X2= =Y2= =Z2="
@@ -298,7 +298,7 @@ o:super:z3:="*Z3*"
 ? "[3] MYCLASS1 VARS:", o:myclass3:x1, o:myclass3:y1, o:myclass3:z1, "  => should be: *X1* *Y1* *Z1*"
 ? "[3] MYCLASS2 VARS:", o:myclass3:x2, o:myclass3:y2, o:myclass3:z2, "  => should be: *X2* *Y2* *Z2*"
 ? "[3] MYCLASS3 VARS:", o:myclass3:x3, o:myclass3:y3, o:myclass3:z3, "  => should be: *X3* *Y3* *Z3*"
-cbErr:=errorBlock({|oErr|break(oErr)})
+cbErr := errorBlock( {| oErr | break( oErr ) } )
 begin sequence
    ? "[4] MYCLASS1 VARS:", o:myclass4:x1, o:myclass4:y1, o:myclass4:z1, "  => should be: *X1* *Y1* *Z1*"
    ? "[4] MYCLASS2 VARS:", o:myclass4:x2, o:myclass4:y2, o:myclass4:z2, "  => should be: *X2* *Y2* *Z2*"
@@ -322,7 +322,7 @@ for i:=1 to len(o); ?? "",o[i]; next
 ? "myclass1 shared class vars:", str( __CLS_CNTSHRDATA(o:myclass1:classH), 3), "  => should be:   3"
 ? "myclass2 shared class vars:", str( __CLS_CNTSHRDATA(o:myclass2:classH), 3), "  => should be:   3"
 ? "myclass3 shared class vars:", str( __CLS_CNTSHRDATA(o:myclass3:classH), 3), "  => should be:   3"
-cbErr:=errorBlock({|oErr|break(oErr)})
+cbErr := errorBlock( {| oErr | break( oErr ) } )
 begin sequence
    ? "myclass4 shared class vars:", str( __CLS_CNTSHRDATA(o:myclass4:classH), 3), "  => should be:   3"
 recover

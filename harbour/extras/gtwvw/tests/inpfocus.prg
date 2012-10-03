@@ -153,7 +153,7 @@ local ch
 
    * assign the key handler for previous window
    if nWinNum > 1
-      s_akeyhandlers[nWinNum-1] := {|n, ch| KeyHandler(n, ch)}
+      s_akeyhandlers[nWinNum-1] := {| n, ch | KeyHandler(n, ch)}
    endif
 
    * then echoing user input, until user press ESC

@@ -51,33 +51,34 @@
  */
 
 PROCEDURE Main( ... )
+
    LOCAL hZip, aDir, aFile, aWild, ;
-         cZipName, cPath, cFileName, cExt, cWild, cPassword, cComment,;
-         tmp
+      cZipName, cPath, cFileName, cExt, cWild, cPassword, cComment, ;
+      tmp
 
    aWild := { ... }
-   IF LEN(aWild) < 2
+   IF Len( aWild ) < 2
       ? "Usage: myzip <ZipName> [ --pass <password> ] [ --comment <comment> ] <FilePattern1> [ <FilePattern2> ... ]"
       RETURN
    ENDIF
 
-   HB_FNameSplit( aWild[ 1 ], @cPath, @cFileName, @cExt )
-   IF EMPTY( cExt )
+   hb_FNameSplit( aWild[ 1 ], @cPath, @cFileName, @cExt )
+   IF Empty( cExt )
       cExt := ".zip"
    ENDIF
-   cZipName := HB_FNameMerge( cPath, cFileName, cExt )
+   cZipName := hb_FNameMerge( cPath, cFileName, cExt )
 
-   HB_ADEL( aWild, 1, .T. )
+   hb_ADel( aWild, 1, .T. )
 
-   FOR tmp := LEN( aWild ) - 1 TO 1 STEP -1
-      IF LOWER( aWild[ tmp ] ) == "--pass"
-         IF EMPTY( cPassword )
+   FOR tmp := Len( aWild ) - 1 TO 1 STEP -1
+      IF Lower( aWild[ tmp ] ) == "--pass"
+         IF Empty( cPassword )
             cPassword := aWild[ tmp + 1 ]
          ENDIF
          aWild[ tmp ] := ""
          aWild[ tmp + 1 ] := ""
-      ELSEIF LOWER( aWild[ tmp ] ) == "--comment"
-         IF EMPTY( cComment )
+      ELSEIF Lower( aWild[ tmp ] ) == "--comment"
+         IF Empty( cComment )
             cComment := aWild[ tmp + 1 ]
          ENDIF
          aWild[ tmp ] := ""
@@ -86,12 +87,12 @@ PROCEDURE Main( ... )
    NEXT
 
    hZip := HB_ZIPOPEN( cZipName )
-   IF ! EMPTY( hZip )
+   IF ! Empty( hZip )
       ? "Archive file:", cZipName
       FOR EACH cWild IN aWild
-         IF !EMPTY( cWild )
-            HB_FNameSplit( cWild, @cPath, @cFileName, @cExt )
-            aDir := HB_DirScan( cPath, cFileName + cExt )
+         IF !Empty( cWild )
+            hb_FNameSplit( cWild, @cPath, @cFileName, @cExt )
+            aDir := hb_DirScan( cPath, cFileName + cExt )
             FOR EACH aFile IN aDir
                IF ! cPath + aFile[ 1 ] == cZipName
                   ? "Adding", cPath + aFile[ 1 ]

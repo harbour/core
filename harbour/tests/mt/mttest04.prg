@@ -37,7 +37,7 @@ proc main()
    s_hMutex := hb_mutexCreate()
    lEnd := .f.
    ? "Starting threads: "
-   for i :=1 to N_THREADS
+   for i := 1 to N_THREADS
       aadd( aThreads, hb_threadStart( @thFunc(), i, @lEnd ) )
       ?? "<" + ltrim( str( i ) ) + ">"
    next
@@ -45,10 +45,10 @@ proc main()
    inkey( 5 )
    lEnd := .t.
    ? "Waiting for threads..."
-   aEval( aThreads, { |x| hb_threadJoin( x ) } )
+   aEval( aThreads, {| x | hb_threadJoin( x ) } )
    ? "Threads joined"
    nSum := 0
-   aEval( s_aCounters, { |x| nSum += x } )
+   aEval( s_aCounters, {| x | nSum += x } )
    ? "Sum of thread local counters:", nSum
    ? "Protected item result.......:", s_nVar2, ;
      iif( nSum == s_nVar2, "OK", "ERROR" )
@@ -58,7 +58,7 @@ proc main()
 return
 
 proc thFunc( nThread, lEnd )
-   while !lEnd
+   while ! lEnd
       s_nVar1++
       hb_mutexLock( s_hMutex )
       s_nVar2++

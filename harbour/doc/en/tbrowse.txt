@@ -214,39 +214,39 @@
  *      <table>
  *      Inkey Value    Code Block
  *
- *      K_DOWN         {|Ob,nKey| Ob:Down(),0}
- *      K_END          {|Ob,nKey| Ob:End(),0}
- *      K_CTRL_PGDN    {|Ob,nKey| Ob:GoBottom(),0}
- *      K_CTRL_PGUP    {|Ob,nKey| Ob:GoTop(),0}
- *      K_HOME         {|Ob,nKey| Ob:Home(),0}
- *      K_LEFT         {|Ob,nKey| Ob:Left(),0}
- *      K_PGDN         {|Ob,nKey| Ob:PageDown(),0}
- *      K_PGUP         {|Ob,nKey| Ob:PageUp(),0}
- *      K_CTRL_END     {|Ob,nKey| Ob:PanEnd(),0}
- *      K_CTRL_HOME    {|Ob,nKey| Ob:PanHome(),0}
- *      K_CTRL_LEFT    {|Ob,nKey| Ob:PanLeft(),0}
- *      K_CTRL_RIGHT   {|Ob,nKey| Ob:PanRight(),0}
- *      K_RIGHT        {|Ob,nKey| Ob:Right(),0}
- *      K_UP           {|Ob,nKey| Ob:Up(),0}
- *      K_ESC          {|Ob,nKey| -1 }
+ *      K_DOWN         {| oB, nKey | oB:Down(), 0 }
+ *      K_END          {| oB, nKey | oB:End(), 0 }
+ *      K_CTRL_PGDN    {| oB, nKey | oB:GoBottom(), 0 }
+ *      K_CTRL_PGUP    {| oB, nKey | oB:GoTop(), 0 }
+ *      K_HOME         {| oB, nKey | oB:Home(), 0 }
+ *      K_LEFT         {| oB, nKey | oB:Left(), 0 }
+ *      K_PGDN         {| oB, nKey | oB:PageDown(), 0 }
+ *      K_PGUP         {| oB, nKey | oB:PageUp(), 0 }
+ *      K_CTRL_END     {| oB, nKey | oB:PanEnd(), 0 }
+ *      K_CTRL_HOME    {| oB, nKey | oB:PanHome(), 0 }
+ *      K_CTRL_LEFT    {| oB, nKey | oB:PanLeft(), 0 }
+ *      K_CTRL_RIGHT   {| oB, nKey | oB:PanRight(), 0 }
+ *      K_RIGHT        {| oB, nKey | oB:Right(), 0 }
+ *      K_UP           {| oB, nKey | oB:Up(), 0 }
+ *      K_ESC          {| oB, nKey | -1 }
  *      </table>
  *
  *      The keys handlers can be queried,added and replace an removed from
  *      the internal keyboard dictionary. See the example.
  *
- *      oTb:SETKEY( K_TAB,{|oTb,nKey| -1})
+ *      oTb:SETKEY( K_TAB, {| oTb, nKey | -1 } )
  *
  *      An default key handler can be declared by specifyin a value of 0
  *      for <nKey>. It associate code block will be evaluated each time
  *      TBrowse:Applykey() is called  with an key value that is not contained
  *      in the dictionary. For example
  *
- *      oTb:SetKey(0,{|oTb,nKey| DefKeyHandler(otb,nkey})
+ *      oTb:SetKey( 0, {| oTb, nKey | DefKeyHandler( otb, nkey } )
  *      This call the a function named DefKeyHandler() when nKey is not
  *      contained in the dictionary.
  *
  *      To remove an keypress/code block definition, specify NIL for <bBlock>
- *      oTb:SetKey(K_ESC,nil)
+ *      oTb:SetKey( K_ESC, NIL )
  *  $EXAMPLES$
  *      oTb:SeyKey( K_F10, {| otb, nkey | ShowListByname( otb ) }
  *  $END$

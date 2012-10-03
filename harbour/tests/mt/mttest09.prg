@@ -21,7 +21,7 @@ proc main()
 
    s_mainThreadID := hb_threadSelf()
    /* create table */
-   dbCreate("_tst",{{"F1","C",1,0}})
+   dbCreate("_tst", { { "F1", "C", 1, 0 } } )
    use _tst
    while lastRec() < 10000
       dbAppend()

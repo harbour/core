@@ -54,17 +54,17 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                            Wvt*Classes
  *                               2004
  *                Pritpal Bedi <pritpal@vouchcac.com>
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 #include                 "hbclass.ch"
 #include                   "inkey.ch"
@@ -73,7 +73,7 @@
 
 #include                  "wvtwin.ch"
 
-/*-*/
+//
 
 #define K_LBUTTONPRESSED        1021
 #define K_RBUTTONPRESSED        1022
@@ -92,18 +92,18 @@
 #define K_SBTHUMBTRACKVERT      1059
 #define K_SBTHUMBTRACKHORZ      1060
 
-/*-*/
+//
 
 #define OBJ_CHILD_OBJ             1
 #define OBJ_CHILD_EVENTS          2
 #define OBJ_CHILD_DATABLOCK       3
 #define OBJ_CHILD_REFRESHBLOCK    4
 
-/*-*/
+//
 /*
  *                         Class WvtDialog
  */
-/*-*/
+//
 
 CLASS wvtDialog
 
@@ -185,11 +185,11 @@ CLASS wvtDialog
    METHOD AddObject( oObject )                    INLINE aadd( ::aObjects, oObject )
    METHOD MaxRow()                                INLINE ::nRows - 1
    METHOD MaxCol()                                INLINE ::nCols - 1
-   METHOD OnTimer()                               INLINE aeval( ::aObjects, {|o| o:OnTimer() } )
+   METHOD OnTimer()                               INLINE aeval( ::aObjects, {| o | o:OnTimer() } )
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD wvtDialog:New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth,nFontBold,nFontQuality )
    LOCAL fnt_:= Wvt_GetFontInfo()
@@ -246,7 +246,7 @@ METHOD wvtDialog:New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth,nFont
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD wvtDialog:Create()
    LOCAL aPalette, i, j
@@ -302,7 +302,7 @@ METHOD wvtDialog:Create()
    next
    WvtSetPaint( wvg_GetPaint( ::cPaintBlockID ) )
 
-   IF ascan( ::aObjects, {|o| o:lTabStop } ) > 0
+   IF ascan( ::aObjects, {| o | o:lTabStop } ) > 0
       ::lTabStops := .t.
    ENDIF
 
@@ -316,7 +316,7 @@ METHOD wvtDialog:Create()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD wvtDialog:Destroy()
 
@@ -324,7 +324,7 @@ METHOD wvtDialog:Destroy()
       ::oMenu:Destroy()
    ENDIF
 
-   aeval( ::aObjects, {|o| o:destroy() } )
+   aeval( ::aObjects, {| o | o:destroy() } )
 
    Wvt_SetTooltip( 0,0,0,0,"" )
    Wvt_SetTooltipActive( ::oldToolTipActive )
@@ -356,7 +356,7 @@ METHOD wvtDialog:Destroy()
 
    RETURN nil
 
-/*-*/
+//
 
 METHOD wvtDialog:Event()
    LOCAL  nKey
@@ -369,7 +369,7 @@ METHOD wvtDialog:Event()
 
    RETURN nKey
 
-/*-*/
+//
 
 METHOD wvtDialog:Execute()
 
@@ -386,7 +386,7 @@ METHOD wvtDialog:Execute()
 
    RETURN ::nKey
 
-/*-*/
+//
 
 METHOD wvtDialog:Inkey()
    LOCAL  n, oObj, nID, i
@@ -465,7 +465,7 @@ METHOD wvtDialog:Inkey()
                oObj := ::aObjects[ ::nObjOver ]
                IF oObj:oParent:ClassName == "WVTBROWSE"
                   nID := oObj:oParent:nID
-                  IF ( n := ascan( ::aObjects, {|o| o:nID == nID } ) ) > 0
+                  IF ( n := ascan( ::aObjects, {| o | o:nID == nID } ) ) > 0
                      ::nCurObj := n
                   ENDIF
                ENDIF
@@ -577,7 +577,7 @@ METHOD wvtDialog:Inkey()
       IF !( ::lEventHandled )
          IF ::nCurObj > 0
             IF !empty( ::aDialogKeys )
-               IF ( n := ascan( ::aDialogKeys, {|e_| e_[ 1 ] == ::nKey } ) ) > 0
+               IF ( n := ascan( ::aDialogKeys, {| e_ | e_[ 1 ] == ::nKey } ) ) > 0
                   Eval( ::aDialogKeys[ n, 2 ], self, ::oCurObj )
                ENDIF
             ENDIF
@@ -605,7 +605,7 @@ METHOD wvtDialog:Inkey()
 
    RETURN ::nKey
 
-/*-*/
+//
 
 METHOD wvtDialog:MouseOver()
    LOCAL mRow := MRow()
@@ -613,10 +613,10 @@ METHOD wvtDialog:MouseOver()
    LOCAL nObj
 
    nObj := ascan( ::aObjects, ;
-                    {|o| o:nType != DLG_OBJ_STATIC               .AND. ;
-                         o:nType != DLG_OBJ_TOOLBAR              .AND. ;
-                         mRow >= o:nTop  .AND. mRow <= o:nBottom .AND. ;
-                         mCol >= o:nLeft .AND. mCol <= o:nRight      } )
+                    {| o | o:nType != DLG_OBJ_STATIC               .AND. ;
+                           o:nType != DLG_OBJ_TOOLBAR              .AND. ;
+                           mRow >= o:nTop  .AND. mRow <= o:nBottom .AND. ;
+                           mCol >= o:nLeft .AND. mCol <= o:nRight      } )
 
    ::nObjOver := nObj
    ::oObjOver := iif( nObj > 0, ::aObjects[ nObj ], nil )
@@ -628,7 +628,7 @@ METHOD wvtDialog:MouseOver()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD wvtDialog:Update()
 
@@ -636,7 +636,7 @@ METHOD wvtDialog:Update()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD wvtDialog:CreateObjects()
    LOCAL i, nObjs
@@ -692,7 +692,7 @@ METHOD wvtDialog:CreateObjects()
 
    RETURN self
 
-/*-*/
+//
 
 METHOD wvtDialog:Eval( bBlock, p1,p2,p3,p4,p5 )
    LOCAL lRet
@@ -703,7 +703,7 @@ METHOD wvtDialog:Eval( bBlock, p1,p2,p3,p4,p5 )
 
    RETURN lRet
 
-/*-*/
+//
 
 METHOD wvtDialog:ActivateMenu()
    LOCAL nMenu:= Wvt_GetLastMenuEvent()
@@ -721,17 +721,17 @@ METHOD wvtDialog:ActivateMenu()
 
    RETURN Self
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                         Class WvtObject
  *
  * Must never be used directly. It is parent class FOR all other objects!
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS WvtObject
 
@@ -844,7 +844,7 @@ CLASS WvtObject
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvtObject:New( oParent, nType, nID, nTop, nLeft, nBottom, nRight )
 
@@ -926,7 +926,7 @@ METHOD WvtObject:New( oParent, nType, nID, nTop, nLeft, nBottom, nRight )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtObject:Create()
 
@@ -935,7 +935,7 @@ METHOD WvtObject:Create()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtObject:Destroy()
 
@@ -951,7 +951,7 @@ METHOD WvtObject:Destroy()
 
    RETURN Nil
 
-/*-*/
+//
 
 METHOD WvtObject:CreatePopup()
    LOCAL i, nID
@@ -971,7 +971,7 @@ METHOD WvtObject:CreatePopup()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtObject:ShowPopup()
    LOCAL lRet := .f., nRet, n, aPos
@@ -982,7 +982,7 @@ METHOD WvtObject:ShowPopup()
       nRet := Wvt_TrackPopupMenu( ::hPopup, TPM_CENTERALIGN +TPM_RETURNCMD, ;
                              aPos[ 1 ], aPos[ 2 ], 0, Wvt_GetWindowHandle() )
       IF nRet > 0
-         IF ( n := ascan( ::aPopup, {|e_| e_[ 3 ] == nRet } ) ) > 0
+         IF ( n := ascan( ::aPopup, {| e_ | e_[ 3 ] == nRet } ) ) > 0
             lRet := .t.
 
             IF HB_ISBLOCK( ::aPopup[ n,2 ] )
@@ -994,15 +994,15 @@ METHOD WvtObject:ShowPopup()
 
    RETURN lRet
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                         Class WvtBrowse
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS WvtBrowse FROM WvtObject
 
@@ -1036,7 +1036,7 @@ CLASS WvtBrowse FROM WvtObject
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvtBrowse:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
@@ -1044,7 +1044,7 @@ METHOD WvtBrowse:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBrowse:Create()
 
@@ -1080,7 +1080,7 @@ METHOD WvtBrowse:Create()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBrowse:SetVBar()
 
@@ -1112,7 +1112,7 @@ METHOD WvtBrowse:SetVBar()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBrowse:SetHBar()
 
@@ -1142,7 +1142,7 @@ METHOD WvtBrowse:SetHBar()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBrowse:Refresh()
    LOCAL nWorkArea := Select()
@@ -1160,7 +1160,7 @@ METHOD WvtBrowse:Refresh()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBrowse:HandleEvent( nKey )
    LOCAL lRet := .f.
@@ -1171,7 +1171,7 @@ METHOD WvtBrowse:HandleEvent( nKey )
 
    RETURN lRet
 
-/*-*/
+//
 
 METHOD WvtBrowse:NotifyChild( nIndex, nKey, oCurObj )
    LOCAL xData, i
@@ -1203,7 +1203,7 @@ METHOD WvtBrowse:NotifyChild( nIndex, nKey, oCurObj )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBrowse:Hilite()
    LOCAL b := ::oBrw
@@ -1212,7 +1212,7 @@ METHOD WvtBrowse:Hilite()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBrowse:DeHilite()
    LOCAL b := ::oBrw
@@ -1221,7 +1221,7 @@ METHOD WvtBrowse:DeHilite()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBrowse:SetTooltip()
    LOCAL cTip, nArea
@@ -1247,7 +1247,7 @@ METHOD WvtBrowse:SetTooltip()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBrowse:SaveSettings()
 
@@ -1257,7 +1257,7 @@ METHOD WvtBrowse:SaveSettings()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBrowse:RestSettings()
 
@@ -1267,7 +1267,7 @@ METHOD WvtBrowse:RestSettings()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBrowse:PaintBlock( nPaintObj )
    LOCAL bBlock, b := ::oBrw
@@ -1298,15 +1298,15 @@ METHOD WvtBrowse:PaintBlock( nPaintObj )
 
    RETURN Self
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                            WvtStatusBar
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS WvtStatusBar FROM WvtObject
 
@@ -1324,7 +1324,7 @@ CLASS WvtStatusBar FROM WvtObject
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvtStatusBar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
@@ -1339,7 +1339,7 @@ METHOD WvtStatusBar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtStatusBar:Create()
 
@@ -1350,13 +1350,13 @@ METHOD WvtStatusBar:Create()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtStatusBar:PaintBlock()
    LOCAL a_:= {}, nPanels
 
-   aeval( ::aPanels, {|o| aadd( a_,o:nTop )   , aadd( a_,o:nLeft ), ;
-                          aadd( a_,o:nBottom ), aadd( a_,o:nRight ) } )
+   aeval( ::aPanels, {| o | aadd( a_,o:nTop )   , aadd( a_,o:nLeft ), ;
+                            aadd( a_,o:nBottom ), aadd( a_,o:nRight ) } )
 
    a_[ len( a_ ) ]++
    nPanels := len( ::aPanels )
@@ -1367,7 +1367,7 @@ METHOD WvtStatusBar:PaintBlock()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtStatusBar:SetPanels( aPanels )
    LOCAL i, oPanel, nID
@@ -1400,7 +1400,7 @@ METHOD WvtStatusBar:SetPanels( aPanels )
 
    RETURN self
 
-/*-*/
+//
 
 METHOD WvtStatusBar:Update( nPanel, cText, cColor )
    LOCAL oPanel
@@ -1414,7 +1414,7 @@ METHOD WvtStatusBar:Update( nPanel, cText, cColor )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtStatusBar:SetText( nPanel, cText, cColor )
    LOCAL oPanel
@@ -1429,7 +1429,7 @@ METHOD WvtStatusBar:SetText( nPanel, cText, cColor )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtStatusBar:SetIcon( nPanel, cIconFile )
 
@@ -1439,7 +1439,7 @@ METHOD WvtStatusBar:SetIcon( nPanel, cIconFile )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtStatusBar:Refresh()
    LOCAL i
@@ -1450,15 +1450,15 @@ METHOD WvtStatusBar:Refresh()
 
    RETURN nil
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                         Class WvtPanel
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS WvtPanel FROM WvtObject
 
@@ -1474,7 +1474,7 @@ CLASS WvtPanel FROM WvtObject
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvtPanel:New( oParent, nId, nTop, nLeft )
 
@@ -1482,7 +1482,7 @@ METHOD WvtPanel:New( oParent, nId, nTop, nLeft )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtPanel:Refresh()
 
@@ -1492,15 +1492,15 @@ METHOD WvtPanel:Refresh()
 
    RETURN Self
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                         Class WvtLabel
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS WvtLabel FROM WvtObject
 
@@ -1519,7 +1519,7 @@ CLASS WvtLabel FROM WvtObject
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvtLabel:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
@@ -1527,7 +1527,7 @@ METHOD WvtLabel:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtLabel:Create( lConfg )
 
@@ -1554,7 +1554,7 @@ METHOD WvtLabel:Create( lConfg )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtLabel:Refresh()
 
@@ -1562,7 +1562,7 @@ METHOD WvtLabel:Refresh()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtLabel:SetText( cTxt )
 
@@ -1573,7 +1573,7 @@ METHOD WvtLabel:SetText( cTxt )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtLabel:SetTextColor( nRGB )
 
@@ -1585,7 +1585,7 @@ METHOD WvtLabel:SetTextColor( nRGB )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtLabel:SetBackColor( nRGB )
 
@@ -1597,7 +1597,7 @@ METHOD WvtLabel:SetBackColor( nRGB )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtLabel:Configure()
 
@@ -1613,7 +1613,7 @@ METHOD WvtLabel:Configure()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtLabel:HoverOn()
    LOCAL lOn := .f.
@@ -1633,7 +1633,7 @@ METHOD WvtLabel:HoverOn()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtLabel:HoverOff()
    LOCAL lOn := .f.
@@ -1653,15 +1653,15 @@ METHOD WvtLabel:HoverOff()
 
    Return Self
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                       Class WvtToolBar
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS WvtToolBar FROM WvtObject
 
@@ -1688,7 +1688,7 @@ CLASS WvtToolBar FROM WvtObject
 
 ENDCLASS
 
-/*-*/
+//
 
 METHOD WvtToolBar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
@@ -1705,7 +1705,7 @@ METHOD WvtToolBar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtToolBar:Create()
 
@@ -1714,7 +1714,7 @@ METHOD WvtToolBar:Create()
       ::lHidden := .t.
    ENDIF
 
-   aeval( ::aObjects, {|o| o:lActive := ::lActive } )
+   aeval( ::aObjects, {| o | o:lActive := ::lActive } )
 
    ::bPaint := {|| ::PaintToolBar() }
    aadd( ::aPaint, { ::bPaint,;
@@ -1724,7 +1724,7 @@ METHOD WvtToolBar:Create()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtToolBar:Refresh()
 
@@ -1736,7 +1736,7 @@ METHOD WvtToolBar:Refresh()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtToolBar:PaintToolBar()
 
@@ -1746,7 +1746,7 @@ METHOD WvtToolBar:PaintToolBar()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtToolBar:AddButton( cFileImage, bBlock, cTooltip )
    LOCAL oObj, nCol
@@ -1780,7 +1780,7 @@ METHOD WvtToolBar:AddButton( cFileImage, bBlock, cTooltip )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtToolBar:HoverOn()
 
@@ -1791,21 +1791,21 @@ METHOD WvtToolBar:HoverOn()
       ::cScreen   := SaveScreen( ::nTop, ::nLeft, ::nBottom, ::nRight )
       ::wScreen   := Wvt_SaveScreen( ::nTop, ::nLeft, ::nBottom, ::nRight )
       #ENDIF
-      aeval( ::aObjects, {|o| o:lActive := ::lActive } )
+      aeval( ::aObjects, {| o | o:lActive := ::lActive } )
 
       ::Refresh()
    ENDIF
 
    RETURN self
 
-/*-*/
+//
 
 METHOD WvtToolBar:HoverOff()
 
    IF ::lFloating .and. !( ::lHidden )
       ::lHidden := .t.
       ::lActive := .f.
-      aeval( ::aObjects, {|o| o:lActive := ::lActive } )
+      aeval( ::aObjects, {| o | o:lActive := ::lActive } )
       #IF 0
       RestScreen( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cScreen )
       Wvt_RestScreen( ::nTop, ::nLeft, ::nBottom, ::nRight, ::wScreen, .f. )
@@ -1815,15 +1815,15 @@ METHOD WvtToolBar:HoverOff()
 
    RETURN Self
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                     Class WvtToolButton
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS WvtToolButton FROM WvtObject
 
@@ -1843,7 +1843,7 @@ CLASS WvtToolButton FROM WvtObject
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvtToolButton:New( oParent )
 
@@ -1851,7 +1851,7 @@ METHOD WvtToolButton:New( oParent )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtToolButton:Create()
 
@@ -1863,7 +1863,7 @@ METHOD WvtToolButton:Create()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtToolButton:Refresh()
 
@@ -1873,7 +1873,7 @@ METHOD WvtToolButton:Refresh()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtToolButton:PaintButton()
 
@@ -1887,7 +1887,7 @@ METHOD WvtToolButton:PaintButton()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtToolButton:LeftDown()
    LOCAL lRet := .f.
@@ -1899,7 +1899,7 @@ METHOD WvtToolButton:LeftDown()
 
    RETURN lRet
 
-/*-*/
+//
 
 METHOD WvtToolButton:LeftUp()
    LOCAL lRet := .f.
@@ -1912,7 +1912,7 @@ METHOD WvtToolButton:LeftUp()
 
    RETURN lRet
 
-/*-*/
+//
 
 METHOD WvtToolButton:HoverOn()
 
@@ -1924,7 +1924,7 @@ METHOD WvtToolButton:HoverOn()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtToolButton:HoverOff()
 
@@ -1936,15 +1936,15 @@ METHOD WvtToolButton:HoverOff()
 
    RETURN Self
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                          Class WvtImage
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS WvtImage FROM WvtObject
 
@@ -1959,7 +1959,7 @@ CLASS WvtImage FROM WvtObject
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvtImage:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
@@ -1967,7 +1967,7 @@ METHOD WvtImage:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtImage:Create()
 
@@ -1981,7 +1981,7 @@ METHOD WvtImage:Create()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtImage:SetImage( cImage )
 
@@ -1992,15 +1992,15 @@ METHOD WvtImage:SetImage( cImage )
 
    RETURN Self
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                          Class WvtStatic
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS WvtStatic FROM WvtObject
 
@@ -2031,7 +2031,7 @@ CLASS WvtStatic FROM WvtObject
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvtStatic:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
@@ -2039,7 +2039,7 @@ METHOD WvtStatic:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtStatic:Create()
    LOCAL lInside := .f.
@@ -2119,19 +2119,19 @@ METHOD WvtStatic:Create()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtStatic:HoverOn()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtStatic:HoverOff()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtStatic:Refresh()
 
@@ -2139,15 +2139,15 @@ METHOD WvtStatic:Refresh()
 
    RETURN Self
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                      Class WvtPushButton
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS WvtPushButton FROM WvtObject
 
@@ -2165,7 +2165,7 @@ CLASS WvtPushButton FROM WvtObject
 
 ENDCLASS
 
-/*-*/
+//
 
 METHOD WvtPushButton:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
@@ -2173,7 +2173,7 @@ METHOD WvtPushButton:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtPushButton:Create()
 
@@ -2186,7 +2186,7 @@ METHOD WvtPushButton:Create()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtPushButton:PaintButton()
 
@@ -2199,7 +2199,7 @@ METHOD WvtPushButton:PaintButton()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtPushButton:LeftDown()
 
@@ -2207,7 +2207,7 @@ METHOD WvtPushButton:LeftDown()
 
    RETURN .t.
 
-/*-*/
+//
 
 METHOD WvtPushButton:LeftUp()
 
@@ -2216,15 +2216,15 @@ METHOD WvtPushButton:LeftUp()
 
    RETURN .t.
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                           Class WvtGets
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS WvtGets FROM WvtObject
 
@@ -2249,7 +2249,7 @@ CLASS WvtGets FROM WvtObject
 
 ENDCLASS
 
-/*-*/
+//
 
 METHOD WvtGets:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
@@ -2257,7 +2257,7 @@ METHOD WvtGets:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtGets:Create()
    LOCAL i, GetList
@@ -2285,7 +2285,7 @@ METHOD WvtGets:Create()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtGets:PaintBlock( nIndex )
    LOCAL nLen, bPaint
@@ -2300,19 +2300,19 @@ METHOD WvtGets:PaintBlock( nIndex )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtGets:SetFocus()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtGets:KillFocus()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtGets:AddGets( nRow, nCol, xVar, cPic, cColor, bValid, bWhen )
 
@@ -2320,7 +2320,7 @@ METHOD WvtGets:AddGets( nRow, nCol, xVar, cPic, cColor, bValid, bWhen )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtGets:HandleEvent( nKey )
    LOCAL lRet := .f.
@@ -2333,7 +2333,7 @@ METHOD WvtGets:HandleEvent( nKey )
 
    RETURN lRet
 
-/*-*/
+//
 
 METHOD WvtGets:Read()
 
@@ -2341,20 +2341,20 @@ METHOD WvtGets:Read()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtGets:GetData()
    LOCAL aData := NIL
 
    RETURN aData
 
-/*-*/
+//
 
 METHOD WvtGets:SetData( /*aData*/ )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtGets:Hilite()
 
@@ -2362,7 +2362,7 @@ METHOD WvtGets:Hilite()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtGets:DeHilite()
 
@@ -2370,15 +2370,15 @@ METHOD WvtGets:DeHilite()
 
    RETURN Self
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                       Class WvtScrollBar
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS WvtScrollBar FROM WvtObject
 
@@ -2437,7 +2437,7 @@ CLASS WvtScrollBar FROM WvtObject
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD wvtScrollbar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
@@ -2445,7 +2445,7 @@ METHOD wvtScrollbar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD wvtScrollbar:Create()
 
@@ -2547,7 +2547,7 @@ METHOD wvtScrollbar:Create()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD wvtScrollbar:Configure( nTop, nLeft, nBottom, nRight )
 
@@ -2611,7 +2611,7 @@ METHOD wvtScrollbar:Configure( nTop, nLeft, nBottom, nRight )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD wvtScrollbar:Refresh()
 
@@ -2619,7 +2619,7 @@ METHOD wvtScrollbar:Refresh()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD wvtScrollbar:SetPos( nTotal, nCurrent )
 
@@ -2634,7 +2634,7 @@ METHOD wvtScrollbar:SetPos( nTotal, nCurrent )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD wvtScrollbar:ThumbPos()
    LOCAL  nNewPos, nRecPerUnit, nCurUnit
@@ -2684,13 +2684,13 @@ METHOD wvtScrollbar:ThumbPos()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD wvtScrollbar:GetPos()
 
    RETURN ::nCurrent
 
-/*-*/
+//
 
 METHOD wvtScrollbar:SetTooltip()
 
@@ -2701,7 +2701,7 @@ METHOD wvtScrollbar:SetTooltip()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD wvtScrollbar:HandleEvent( nKey )
    LOCAL nmRow, nmCol, nOff
@@ -2911,15 +2911,15 @@ METHOD wvtScrollbar:HandleEvent( nKey )
 
    RETURN lHit
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                        CLASS WvtBanner
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS WvtBanner FROM WvtObject
 
@@ -2950,7 +2950,7 @@ CLASS WvtBanner FROM WvtObject
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvtBanner:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
@@ -2958,7 +2958,7 @@ METHOD WvtBanner:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBanner:Create()
 
@@ -2992,7 +2992,7 @@ METHOD WvtBanner:Create()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBanner:Destroy()
 
@@ -3000,13 +3000,13 @@ METHOD WvtBanner:Destroy()
 
    RETURN nil
 
-/*-*/
+//
 
 METHOD WvtBanner:Configure()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBanner:OnTimer()
 
@@ -3014,7 +3014,7 @@ METHOD WvtBanner:OnTimer()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBanner:SetText( cText )
 
@@ -3025,7 +3025,7 @@ METHOD WvtBanner:SetText( cText )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBanner:Refresh()
    LOCAL nNewTime
@@ -3066,7 +3066,7 @@ METHOD WvtBanner:Refresh()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBanner:HoverOn()
 
@@ -3074,7 +3074,7 @@ METHOD WvtBanner:HoverOn()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtBanner:HoverOff()
 
@@ -3082,15 +3082,15 @@ METHOD WvtBanner:HoverOff()
 
    RETURN Self
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                        Class WvtTextBox
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS WvtTextBox FROM WvtObject
 
@@ -3106,7 +3106,7 @@ CLASS WvtTextBox FROM WvtObject
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvtTextBox:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
@@ -3114,7 +3114,7 @@ METHOD WvtTextBox:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtTextBox:Create()
 
@@ -3136,7 +3136,7 @@ METHOD WvtTextBox:Create()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtTextBox:Refresh()
 
@@ -3144,13 +3144,13 @@ METHOD WvtTextBox:Refresh()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtTextBox:Configure()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtTextBox:SetText( cText )
 
@@ -3161,7 +3161,7 @@ METHOD WvtTextBox:SetText( cText )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtTextBox:HoverOn( /*cText*/ )
 
@@ -3172,7 +3172,7 @@ METHOD WvtTextBox:HoverOn( /*cText*/ )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtTextBox:HoverOff( /*cText*/ )
 
@@ -3183,15 +3183,15 @@ METHOD WvtTextBox:HoverOff( /*cText*/ )
 
 RETURN Self
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                       Class WvtProgressBar
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS WvtProgressBar FROM WvtObject
 
@@ -3217,7 +3217,7 @@ CLASS WvtProgressBar FROM WvtObject
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvtProgressBar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
@@ -3225,7 +3225,7 @@ METHOD WvtProgressBar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtProgressBar:Create()
 
@@ -3243,7 +3243,7 @@ METHOD WvtProgressBar:Create()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtProgressBar:Display( nCurrent, nTotal )
 
@@ -3267,7 +3267,7 @@ METHOD WvtProgressBar:Display( nCurrent, nTotal )
                         ::nBackColor, ::nBarColor, ::cImage, ::lVertical, ::nDirection )
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtProgressBar:Activate()
 
@@ -3277,7 +3277,7 @@ METHOD WvtProgressBar:Activate()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtProgressBar:DeActivate()
 
@@ -3289,16 +3289,16 @@ METHOD WvtProgressBar:DeActivate()
 
    RETURN Self
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                           Class WvtMenu
  *                            Peter Rees
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS wvtMenu
 
@@ -3323,7 +3323,7 @@ CLASS wvtMenu
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD wvtMenu:Create( cCaption )
    ::aItems := {}
@@ -3337,7 +3337,7 @@ METHOD wvtMenu:Create( cCaption )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD wvtMenu:Destroy()
 
@@ -3354,7 +3354,7 @@ METHOD wvtMenu:Destroy()
 
    RETURN .T.
 
-/*-*/
+//
 
 METHOD wvtMenu:AddItem( cCaption, bAction )
    LOCAL lResult:= .F., aItem
@@ -3385,7 +3385,7 @@ METHOD wvtMenu:AddItem( cCaption, bAction )
 
    RETURN lResult
 
-/*-*/
+//
 
 METHOD wvtMenu:DelAllItems()
    LOCAL lResult:= .T.,  nItems
@@ -3398,7 +3398,7 @@ METHOD wvtMenu:DelAllItems()
 
    RETURN lResult
 
-/*-*/
+//
 
 METHOD wvtMenu:DelItem( nItemNum )
    LOCAL lResult:= .F.
@@ -3420,7 +3420,7 @@ METHOD wvtMenu:DelItem( nItemNum )
 
    RETURN lResult
 
-/*-*/
+//
 
 METHOD wvtMenu:EnableItem( nItemNum )
    LOCAL nPrevious:= -1
@@ -3431,7 +3431,7 @@ METHOD wvtMenu:EnableItem( nItemNum )
 
    RETURN nPrevious
 
-/*-*/
+//
 
 METHOD wvtMenu:DisableItem( nItemNum )
    LOCAL nPrevious:= -1
@@ -3442,13 +3442,13 @@ METHOD wvtMenu:DisableItem( nItemNum )
 
    RETURN nPrevious
 
-/*-*/
+//
 
 METHOD wvtMenu:NumItems()
 
    RETURN LEN( ::aItems )
 
-/*-*/
+//
 
 METHOD wvtMenu:GetItem( nItemNum )
    LOCAL nItems := ::NumItems(), aResult:= NIL
@@ -3459,7 +3459,7 @@ METHOD wvtMenu:GetItem( nItemNum )
 
    RETURN aResult
 
-/*-*/
+//
 
 METHOD wvtMenu:FindMenuItemById( nId )
    LOCAL x, aResult:= {}
@@ -3478,7 +3478,7 @@ METHOD wvtMenu:FindMenuItemById( nId )
 
    RETURN aResult
 
-/*-*/
+//
 
 METHOD wvtMenu:DrawMenuBar()
 
@@ -3486,15 +3486,15 @@ METHOD wvtMenu:DrawMenuBar()
 
    RETURN NIL
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                         Class WvtConsole
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS WvtConsole FROM WvtObject
 
@@ -3504,7 +3504,7 @@ CLASS WvtConsole FROM WvtObject
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvtConsole:New( oParent )
 
@@ -3512,7 +3512,7 @@ METHOD WvtConsole:New( oParent )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvtConsole:Say( nRow, nCol, xExp, cColor )
    LOCAL nCRow, nCCol, nCursor
@@ -3528,7 +3528,7 @@ METHOD WvtConsole:Say( nRow, nCol, xExp, cColor )
 
 RETURN Self
 
-/*-*/
+//
 
 METHOD WvtConsole:Box( nRow, nCol, n2Row, n2Col, cBoxChars, cColor )
 
@@ -3545,15 +3545,15 @@ METHOD WvtConsole:Box( nRow, nCol, n2Row, n2Col, cBoxChars, cColor )
 
    RETURN Self
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                      TBrowseWVG From TBrowse
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 #define _TBCI_COLOBJECT       1   /* column object                             */
 #define _TBCI_COLWIDTH        2   /* width of the column                       */
@@ -3571,7 +3571,7 @@ METHOD WvtConsole:Box( nRow, nCol, n2Row, n2Col, cBoxChars, cColor )
 #define _TBCI_LASTSPACE      14   /* space after last visible column           */
 #define _TBCI_SIZE           14   /* size of array with TBrowse column data    */
 
-/*-*/
+//
 
 CLASS TBrowseWVG FROM TBrowse
 
@@ -3581,7 +3581,7 @@ CLASS TBrowseWVG FROM TBrowse
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD TBrowseWVG:SetVisible()
    LOCAL lFirst, aCol, nColPos
@@ -3609,4 +3609,4 @@ METHOD TBrowseWVG:SetVisible()
 
    RETURN Self
 
-/*-*/
+//

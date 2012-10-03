@@ -166,7 +166,7 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbArray
 
    IF __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1,, @cValue, ;
                   {| cValue | iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
-      BEGIN SEQUENCE WITH {|oErr| break( oErr ) }
+      BEGIN SEQUENCE WITH {| oErr | break( oErr ) }
          pItem[ nSet ] := &cValue
       RECOVER USING oErr
          __dbgAlert( oErr:description )

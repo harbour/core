@@ -962,7 +962,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
 
       CASE nMode == 1 // run in loop
          aSubst := AClone( aParams )
-         nSubstPos := AScan( aParams, {|x| HB_ISSTRING( x ) .and. x == "$."} )
+         nSubstPos := AScan( aParams, {| x | HB_ISSTRING( x ) .and. x == "$."} )
 
          SWITCH aDesc[1]
             CASE 'A' // all results
@@ -1015,7 +1015,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
 
       CASE nMode == 2 // Run in a foreach loop
          aSubst := AClone( aParams )
-         nSubstPos := AScan( aParams, {|x| HB_ISSTRING( x ) .and. x == "$."} )
+         nSubstPos := AScan( aParams, {| x | HB_ISSTRING( x ) .and. x == "$."} )
 
          SWITCH aDesc[1]
             CASE 'A' // all results
@@ -1266,7 +1266,7 @@ METHOD Add( xFunction, cVersion, nLevel, oExec, oMethod )
    ENDIF
 
    HB_MutexLock( ::mtxBusy )
-   nElem := AScan( ::aFunctions, {|x| oFunction:cName == x:cName})
+   nElem := AScan( ::aFunctions, {| x | oFunction:cName == x:cName})
    IF nElem == 0
       Aadd( ::aFunctions  , oFunction )
       lRet := .T.
@@ -1280,7 +1280,7 @@ METHOD Find( cName ) class tRPCService
    LOCAL oRet := NIL
 
    HB_MutexLock( ::mtxBusy )
-   nElem := AScan( ::aFunctions, {|x| upper(cName) == upper(x:cName)})
+   nElem := AScan( ::aFunctions, {| x | upper(cName) == upper(x:cName)})
    IF nElem != 0
       oRet := ::aFunctions[ nElem ]
    ENDIF
@@ -1293,7 +1293,7 @@ METHOD Remove( cName ) class tRPCService
    LOCAL lRet := .F.
 
    HB_MutexLock( ::mtxBusy )
-   nElem := AScan( ::aFunctions, {|x| cName == x:cName})
+   nElem := AScan( ::aFunctions, {| x | cName == x:cName})
    IF nElem != 0
       ADel( ::aFunctions, nElem )
       ASize( ::aFunctions, Len( ::aFunctions ) - 1 )
@@ -1507,7 +1507,7 @@ METHOD Terminating( oConnection ) CLASS tRPCService
 
    ::OnClientTerminate( oConnection )
    HB_MutexLock( ::mtxBusy )
-   nToken := AScan( ::aServing, {|x| x == oConnection } )
+   nToken := AScan( ::aServing, {| x | x == oConnection } )
    IF nToken > 0
       ADel( ::aServing, nToken )
       ASize( ::aServing, Len( ::aServing ) -1 )

@@ -6313,7 +6313,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                            IF hbmk[ _HBMK_lTRACE ] .AND. hbmk[ _HBMK_lInfo ]
                               _hbmk_OutStd( hbmk, hb_StrFormat( I_( "'cd' to: %1$s" ), hbmk[ _HBMK_cWorkDir ] ) )
                            ENDIF
-                           DirChange( hbmk[ _HBMK_cWorkDir ] )
+                           hb_cwd( hbmk[ _HBMK_cWorkDir ] )
                         ENDIF
                      ENDIF
 
@@ -6403,7 +6403,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                      ENDIF
 
                      IF lCHD_Comp .AND. cCHD_DirOld != NIL
-                        DirChange( cCHD_DirOld )
+                        hb_cwd( cCHD_DirOld )
                         IF hbmk[ _HBMK_lTRACE ] .AND. hbmk[ _HBMK_lInfo ]
                            _hbmk_OutStd( hbmk, I_( "'cd' back." ) )
                         ENDIF

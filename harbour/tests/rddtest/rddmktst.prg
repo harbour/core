@@ -90,10 +90,10 @@ RDDTEST DBSEEK('', .f.,.t.)
 RDDTEST SET DELETE OFF
 
 RDDTEST ;
-  for n:=1 to N_LOOP                    ;;
-    dbappend()                          ;;
-    replace FNUM with int((n+2)/3)      ;;
-    replace FSTR with chr(FNUM+48)      ;;
+  for n := 1 to N_LOOP                     ;;
+    dbappend()                             ;;
+    replace FNUM with int( ( n + 2 ) / 3 ) ;;
+    replace FSTR with chr( FNUM +48 )      ;;
   next
 
 RDDTEST dbcommit()

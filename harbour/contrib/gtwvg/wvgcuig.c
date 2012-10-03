@@ -544,7 +544,7 @@ HB_FUNC( WVG_BOXGROUPRAISED )
    gObj->gObjNext         = pWVT->gObjs;
    pWVT->gObjs            = gObj;
 }
-/*-------------------------------------------------------------------*/
+
 static void hb_wvg_BoxGroupRaised( PHB_GTWVT pWVT, int iLeft, int iTop, int iRight, int iBottom )
 {
    HDC         hdc  = pWVT->hdc;

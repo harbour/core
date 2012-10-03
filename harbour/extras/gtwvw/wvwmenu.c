@@ -78,15 +78,15 @@
 #include "hbgtwvw.h"
 
 
-/*-------------------------------------------------------------------*/
-/*-------------------------------------------------------------------*/
-/*-------------------------------------------------------------------*/
+
+
+
 /*                                                                   */
 /*                 Peter Rees <peter@rees.co.nz>                     */
 /*                                                                   */
-/*-------------------------------------------------------------------*/
-/*-------------------------------------------------------------------*/
-/*-------------------------------------------------------------------*/
+
+
+
 
 HB_FUNC( WVW_SETMENU )
 {
@@ -97,7 +97,7 @@ HB_FUNC( WVW_SETMENU )
   hb_gt_wvwResetWindow( usWinNum );
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_SETPOPUPMENU )
 {
@@ -112,21 +112,21 @@ HB_FUNC( WVW_SETPOPUPMENU )
    }
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_CREATEMENU )
 {
   HB_RETHANDLE( CreateMenu() ) ;
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_CREATEPOPUPMENU )
 {
   HB_RETHANDLE( CreatePopupMenu() ) ;
 }
 
-/*-------------------------------------------------------------------*/
+
 
 /* WVW_APPENDMENU( hMenu, nFlags, nMenuItemId, cCaption ) */
 
@@ -172,28 +172,28 @@ HB_FUNC( WVW_APPENDMENU )
   hb_retl( AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT_PTR ) hb_parni( 3 ),( LPCTSTR ) lpszCaption ) ) ;
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_DELETEMENU )
 {
   hb_retl( DeleteMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_DESTROYMENU )
 {
   hb_retl( DestroyMenu( ( HMENU ) HB_PARHANDLE( 1 ) ) );
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_ENABLEMENUITEM )
 {
   hb_retni( EnableMenuItem( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_GETLASTMENUEVENT )
 {
@@ -201,7 +201,7 @@ HB_FUNC( WVW_GETLASTMENUEVENT )
   hb_retni( hb_gt_wvwGetLastMenuEvent( usWinNum ) ) ;
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_SETLASTMENUEVENT )
 {
@@ -209,7 +209,7 @@ HB_FUNC( WVW_SETLASTMENUEVENT )
   hb_retni( hb_gt_wvwSetLastMenuEvent( usWinNum, hb_parni(2) ) );
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_SETMENUKEYEVENT )
 {
@@ -301,7 +301,7 @@ HB_FUNC ( WVW_MENUITEM_SETBITMAPS )
 }
 
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_DRAWMENUBAR )
 {
@@ -310,7 +310,7 @@ HB_FUNC( WVW_DRAWMENUBAR )
   DrawMenuBar( pWindowData->hWnd ) ;
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_ENDMENU )
 {

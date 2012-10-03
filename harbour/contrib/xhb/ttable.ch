@@ -147,11 +147,11 @@
 
 #xCommand ADD FIELD <cFld> DATA [<xpression,...>] TO <oObj> ;
           => ;
-          <oObj>:ClassAdd( <"cFld">,, {|Self| [<xpression>] },,)
+          <oObj>:ClassAdd( <"cFld">,, {| Self | [<xpression>] },,)
 
 #xCommand DEFINE FIELD <cFld> DATA [<xpression,...>] TO <oObj> ;
           => ;
-          <oObj>:ClassAdd( <"cFld">,, {|Self| [<xpression>] },,)
+          <oObj>:ClassAdd( <"cFld">,, {| Self | [<xpression>] },,)
 
 
 // --> ::undo() buffer constants

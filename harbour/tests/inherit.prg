@@ -2,6 +2,7 @@
  * $Id$
  */
 
+#include "fileio.ch"
 #include "set.ch"
 
 //
@@ -23,32 +24,32 @@ PROCEDURE Main()
    LOCAL oTo
    LOCAL cOut
 
-   SET( _SET_EXACT, .T. )
+   Set( _SET_EXACT, .T. )
 
    oFrom := TOnTop()   :New( "hello.prg", "R" )
    oTo   := TTextFile():New( "hello.out", "W" )
 
-   QOut( "What's in oFrom" )
+   ? "What's in oFrom"
    ? hb_ValToExp(  { oFrom, __objGetMethodList( oFrom ) } )
 
-   QOut()
-   QOut( "What's in oFrom:TEmpty" )
+   ?
+   ? "What's in oFrom:TEmpty"
    ? hb_ValToExp(  { oFrom:TEmpty, __objGetMethodList( oFrom:TEmpty ) } )
 
-   QOut()
-   QOut( "Let's call Run() from TEmpty : " )
+   ?
+   ? "Let's call Run() from TEmpty : "
    oFrom:TEmpty:Run()
 
-   QOut()
-   QOut( "Let's call a method from TEmpty and one from TOnTop" )
+   ?
+   ? "Let's call a method from TEmpty and one from TOnTop"
    oFrom:Set( "Done !" )
    oFrom:Say( "Out" )
 
-   QOut()
-   QOut( "Basic copy loop using the default Run() from TTextFile" )
+   ?
+   ? "Basic copy loop using the default Run() from TTextFile"
    DO WHILE !oFrom:lEoF
       cOut := oFrom:Run()
-      QOut( cOut )
+      ? cOut
       oTo:Run( cOut )
    ENDDO
    oFrom:Dispose()
@@ -156,13 +157,13 @@ FUNCTION New( cFileName, cMode, nBlock )
    ELSEIF ::cMode == "W"
       ::hFile := FCreate( cFileName )
    ELSE
-      QOut( "DosFile Init: Unknown file mode:", ::cMode )
+      ? "DosFile Init: Unknown file mode:", ::cMode
    ENDIF
 
    ::nError := FError()
    IF ::nError != 0
       ::lEoF := .T.
-      QOut( "Error ", ::nError )
+      ? "Error ", ::nError
    ENDIF
    ::nBlockSize := Default( nBlock, 4096 )
 
@@ -190,13 +191,13 @@ FUNCTION Dispose()
    LOCAL self := QSelf()
 
    ::cBlock := NIL
-   IF ::hFile != - 1
+   IF ::hFile != F_ERROR
       IF ::cMode == "W" .AND. ::nError != 0
          ::Write( Chr( 26 ) )                     // Do not forget EOF marker
       ENDIF
       IF ! FClose( ::hFile )
          ::nError := FError()
-         QOut( "Dos Error closing ", ::cFileName, " Code ", ::nError )
+         ? "Dos Error closing ", ::cFileName, " Code ", ::nError
       ENDIF
    ENDIF
 
@@ -209,16 +210,16 @@ FUNCTION Dispose()
 FUNCTION READ()
 
    LOCAL self := QSelf()
-   LOCAL cRet  := ""
+   LOCAL cRet := ""
    LOCAL cBlock
    LOCAL nCrPos
    LOCAL nEoFPos
 
-   IF ::hFile == - 1
-      QOut( "DosFile:Read : No file open" )
+   IF ::hFile == F_ERROR
+      ? "DosFile:Read : No file open"
    ELSEIF ::cMode != "R"
-      QOut( "File ", ::cFileName, " not open for reading" )
-   ELSEIF !::lEoF
+      ? "File ", ::cFileName, " not open for reading"
+   ELSEIF ! ::lEoF
 
       IF Len( ::cBlock ) == 0                     // Read new block
          cBlock := FReadStr( ::hFile, ::nBlockSize )
@@ -230,7 +231,7 @@ FUNCTION READ()
          ENDIF
       ENDIF
 
-      IF !::lEoF
+      IF ! ::lEoF
          ::nLine++
          nCRPos := At( Chr( 10 ), ::cBlock )
          IF nCRPos != 0                         // More than one line read
@@ -240,7 +241,7 @@ FUNCTION READ()
             cRet     := ::cBlock
             ::cBlock := ""
             cRet     += ::Read()                // Read the rest
-            IF !::lEoF
+            IF ! ::lEoF
                ::nLine --                        // Adjust erroneous line count
             ENDIF
          ENDIF
@@ -268,10 +269,10 @@ FUNCTION WriteLn( xTxt, lCRLF )
    LOCAL self := QSelf()
    LOCAL cBlock
 
-   IF ::hFile == -1
-      QOut( "DosFile:Write : No file open" )
+   IF ::hFile == F_ERROR
+      ? "DosFile:Write : No file open"
    ELSEIF !( ::cMode == "W" )
-      QOut( "File ", ::cFileName, " not opened for writing" )
+      ? "File ", ::cFileName, " not opened for writing"
    ELSE
       cBlock := ToChar( xTxt )                  // Convert to string
       IF Default( lCRLF, .T. )
@@ -302,15 +303,15 @@ STATIC FUNCTION GOTO( nLine )
    LOCAL nWhere := 1
 
    IF Empty( ::hFile )
-      QOut( "DosFile:Goto : No file open" )
+      ? "DosFile:Goto : No file open"
    ELSEIF !( ::cMode == "R" )
-      QOut( "File ", ::cFileName, " not open for reading" )
+      ? "File ", ::cFileName, " not open for reading"
    ELSE
       ::lEoF   := .F.                           // Clear (old) End of file
       ::nLine  := 0                             // Start at beginning
       ::cBlock := ""
       FSeek( ::hFile, 0 )                         // Go top
-      DO WHILE !::lEoF .AND. nWhere < nLine
+      DO WHILE ! ::lEoF .AND. nWhere < nLine
          nWhere++
          ::Read()
       ENDDO

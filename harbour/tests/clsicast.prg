@@ -76,7 +76,7 @@ o:myclass3:z3:="[Z3]"
 ? "MYCLASS4 VARS:", o:x4, o:y4, o:z4, "  => should be:  X4   Y4   Z4"
 ?
 
-cbErr:=errorBlock({|oErr|break(oErr)})
+cbErr := errorBlock( {| oErr | break( oErr ) } )
 begin sequence
    ? "Setting MYCLASS4 instance variables..."
    o:myclass4:x4:="[X4]"

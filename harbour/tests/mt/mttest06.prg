@@ -29,7 +29,7 @@ proc main()
    next
    ? "Waiting for threads..."
    nSum := 0
-   aEval( aThreads, { |x| hb_threadJoin( x, @i ), nSum += i } )
+   aEval( aThreads, {| x | hb_threadJoin( x, @i ), nSum += i } )
    ? "Threads joined"
    ? "Sum of results:", nSum
    ? "     should be:", N_THREADS * ( N_INIT + N_COUNT ), ;

@@ -1,38 +1,38 @@
 /*
  * $Id$
  */
- 
-/*    
+
+/*
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
-/*----------------------------------------------------------------------*/
+//
 
 #include "inkey.ch"
 #include "common.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
-#include "wvgparts.ch" 
+#include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+//
 //
 //                    Simplified Console with GUI Look
 //
-/*----------------------------------------------------------------------*/
+//
 
 PROCEDURE ExecGCUI()
 
    IF hb_mtvm()
-      Hb_ThreadStart( {|oCrt|  oCrt := WvgCrt():New( , , { 2,4 }, { 20,81 }, , .t. ) , ;
-                               oCrt:icon := GetResource( "dia_excl.ico" ),;
-                               oCrt:create(), ;
-                               GCUIConsole( oCrt ) , ;
-                               oCrt:destroy()     } )
+      Hb_ThreadStart( {| oCrt | oCrt := WvgCrt():New( , , { 2,4 }, { 20,81 }, , .t. ) , ;
+                                oCrt:icon := GetResource( "dia_excl.ico" ),;
+                                oCrt:create(), ;
+                                GCUIConsole( oCrt ) , ;
+                                oCrt:destroy() } )
    ENDIF
    RETURN
-   
-//----------------------------------------------------------------------//
+
+//
 
 #xTranslate Alert( => MyAlert(
 
@@ -82,7 +82,7 @@ PROCEDURE GCUIConsole( oCrt )
    // The only additional calls to render your console GUI
    //
    // The GETLIST  : This can be embedded via  @ GET preprocessor command
-   aEval( GetList, {|oGet| Wvg_BoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } )
+   aEval( GetList, {| oGet | Wvg_BoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } )
    //
    hBoxR := Wvg_BoxRaised( 1,2,18,49, {-5,-5,5,5} )
    //
@@ -111,8 +111,8 @@ PROCEDURE GCUIConsole( oCrt )
    My_Alert( 'How did you like the "Alert" replacement?', { 'WOW','OK','OOps'} )
 
    RETURN
-   
-/*----------------------------------------------------------------------*/
+
+//
 
 STATIC FUNCTION FetchText( nMode )
    LOCAL cText
@@ -132,5 +132,5 @@ STATIC FUNCTION FetchText( nMode )
    ENDCASE
 
    RETURN cText
-   
-/*----------------------------------------------------------------------*/
+
+//

@@ -109,13 +109,13 @@ METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpO
    IF xValue != NIL
       // Search if a cookie already exists
                                         // case sensitive
-      IF ( nPos := aScan( ::aCookies, {|e| e[ 1 ] == cCookieName } ) ) > 0
+      IF ( nPos := aScan( ::aCookies, {| e | e[ 1 ] == cCookieName } ) ) > 0
          ::aCookies[ nPos ][ 2 ] := uhttpd_UrlEncode( hb_cStr( xValue ) )
       ELSE
          aAdd( ::aCookies, { cCookieName, uhttpd_UrlEncode( hb_cStr( xValue ) ) } )
       ENDIF
    ELSE
-      IF ( nPos := aScan( ::aCookies, {|e| e[ 1 ] == cCookieName } ) ) > 0
+      IF ( nPos := aScan( ::aCookies, {| e | e[ 1 ] == cCookieName } ) ) > 0
          hb_aDel( ::aCookies, nPos, .T. )
       ENDIF
    ENDIF
@@ -123,7 +123,7 @@ METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpO
    // Rebuild cookie string as per RFC2616 (comma separated list)
    cStr     := ""
    nCookies := Len( ::aCookies )
-   aEval( ::aCookies, {|e, i| cStr += e[ 1 ] + "=" + e[ 2 ] + iif( i < nCookies, ",", "" ) } )
+   aEval( ::aCookies, {| e, i | cStr += e[ 1 ] + "=" + e[ 2 ] + iif( i < nCookies, ",", "" ) } )
 
    //cStr := cCookieName + "=" + uhttpd_UrlEncode( hb_cStr( xValue ) )
 

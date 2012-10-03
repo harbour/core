@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                               EkOnkar
  *                         ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                              25Nov2008
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,13 +74,13 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*-*/
+//
 
 #ifndef __DBG_PARTS__
 #xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
-/*-*/
+//
 
 CLASS WvgStatusBar  INHERIT  WvgWindow /* WvgActiveXControl */
 
@@ -106,7 +106,7 @@ CLASS WvgStatusBar  INHERIT  WvgWindow /* WvgActiveXControl */
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvgStatusBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -118,7 +118,7 @@ METHOD WvgStatusBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -142,7 +142,7 @@ METHOD WvgStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgStatusBar:handleEvent( nMessage, aNM )
    LOCAL nHandled := 1
@@ -197,7 +197,7 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
 
    RETURN nHandled
 
-/*-*/
+//
 
 METHOD WvgStatusBar:destroy()
    LOCAL i, nItems
@@ -214,7 +214,7 @@ METHOD WvgStatusBar:destroy()
 
    RETURN NIL
 
-/*-*/
+//
 
 METHOD WvgStatusBar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -222,7 +222,7 @@ METHOD WvgStatusBar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisib
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgStatusBar:addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
    LOCAL oPanel, lSuccess
@@ -247,13 +247,13 @@ METHOD WvgStatusBar:addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
 
    RETURN oPanel
 
-/*-*/
+//
 
 METHOD WvgStatusBar:delItem( nItemORcKey )
    LOCAL nIndex := 0
 
    IF HB_ISNUMERIC( nItemORcKey )
-      nIndex := ascan( ::aItems, {|o| o:key == nItemORcKey } )
+      nIndex := ascan( ::aItems, {| o | o:key == nItemORcKey } )
    ELSEIF HB_ISNUMERIC( nItemORcKey )
       nIndex := nItemORcKey
    ENDIF
@@ -266,13 +266,13 @@ METHOD WvgStatusBar:delItem( nItemORcKey )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgStatusBar:getItem( nItemORcKey )
    LOCAL nIndex := 0, oPanel
 
    IF HB_ISSTRING( nItemORcKey  )
-      nIndex := ascan( ::aItems, {|o| o:key == nItemORcKey } )
+      nIndex := ascan( ::aItems, {| o | o:key == nItemORcKey } )
 
    ELSEIF HB_ISNUMERIC(  nItemORcKey  )
       nIndex := nItemORcKey
@@ -285,7 +285,7 @@ METHOD WvgStatusBar:getItem( nItemORcKey )
 
    RETURN oPanel
 
-/*-*/
+//
 METHOD WvgStatusBar:clear()
    LOCAL i
 
@@ -298,7 +298,7 @@ METHOD WvgStatusBar:clear()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgStatusBar:panelClick( xParam )
 
@@ -308,7 +308,7 @@ METHOD WvgStatusBar:panelClick( xParam )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgStatusBar:panelDblClick( xParam )
 
@@ -318,15 +318,15 @@ METHOD WvgStatusBar:panelDblClick( xParam )
 
    RETURN Self
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *       WvgToolbarButton() Class compatible with XbpToolbarButton()
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 CLASS WvgStatusBarPanel
 
@@ -351,7 +351,7 @@ CLASS WvgStatusBarPanel
    DATA     oParent
 
    ENDCLASS
-/*-*/
+//
 METHOD WvgStatusBarPanel:new( cCaption, nStyle, cKey )
 
    DEFAULT cCaption       TO ::sl_caption
@@ -363,7 +363,7 @@ METHOD WvgStatusBarPanel:new( cCaption, nStyle, cKey )
    ::key            := cKey
 
    RETURN Self
-/*-*/
+//
 METHOD WvgStatusBarPanel:caption( cCaption )
 
    IF cCaption == NIL

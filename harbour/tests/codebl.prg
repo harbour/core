@@ -14,12 +14,12 @@ PROCEDURE Main()
    ? Eval( a[ 1 ] )       // 42
    ? Eval( a[ 2 ], 15 )   // 15
 
-   mqout( 15, Eval( a[ 1 ] ) )      // 15 15
-   mqout( 14, Eval( a[ 1 ] ) )      // 14 15
-   mqout( 42, Eval( a[ 2 ], 42 ) )  // 42 42
-   mqout( 14, Eval( a[ 2 ], 42 ) )  // 14 42
-   mqout( 42, Eval( a[ 1 ] ) )      // 42 42
-   mqout( 14, Eval( a[ 1 ] ) )      // 14 42
+   myout( 15, Eval( a[ 1 ] ) )      // 15 15
+   myout( 14, Eval( a[ 1 ] ) )      // 14 15
+   myout( 42, Eval( a[ 2 ], 42 ) )  // 42 42
+   myout( 14, Eval( a[ 2 ], 42 ) )  // 14 42
+   myout( 42, Eval( a[ 1 ] ) )      // 42 42
+   myout( 14, Eval( a[ 1 ] ) )      // 14 42
 
    GetArray( @a )
    PrintArray( @a )
@@ -29,13 +29,13 @@ PROCEDURE Main()
 
    ? "Test for indirect detaching of local variables"
    DetachToStatic( 1 )
-   mqout( 2, Eval( s_cbStatic, 1 ) )
-   mqout( 3, Eval( s_cbStatic, 2 ) )
+   myout( 2, Eval( s_cbStatic, 1 ) )
+   myout( 3, Eval( s_cbStatic, 2 ) )
    cb := s_cbStatic
    DetachToStatic( 100 )
-   mqout( 200, Eval( s_cbStatic, 100 ) )
-   mqout( 300, Eval( s_cbStatic, 200 ) )
-   mqout( 4, Eval( cb, 3 ) )
+   myout( 200, Eval( s_cbStatic, 100 ) )
+   myout( 300, Eval( s_cbStatic, 200 ) )
+   myout( 4, Eval( cb, 3 ) )
 
    ReferParam()
 
@@ -47,7 +47,7 @@ STATIC FUNCTION TestBlocks()
 
    RETURN { {|| nFoo }, {| n | nFoo := n } }
 
-STATIC FUNCTION mqout( nExpected, nGot )
+STATIC FUNCTION myout( nExpected, nGot )
 
    ? nExpected, nGot
 
@@ -77,7 +77,7 @@ PROCEDURE PrintArray( a )
    FOR i := 1 TO 100
       IF a[ i ] != NIL
          Eval( a[ i ][ 2 ], i )
-         mqout( i, Eval( a[ i ][ 1 ] ) )
+         myout( i, Eval( a[ i ][ 1 ] ) )
       ENDIF
    NEXT
 

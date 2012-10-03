@@ -242,10 +242,10 @@ FUNCTION Main( ... )
    // Check GT version - if I have started app with //GT:NUL then I have to disable
    // console and application will start in hidden way.
    cGT := HB_GTVERSION()
-   IF ( cGT == "NUL" )
+   IF cGT == "NUL"
       lConsole := .F.
    ELSE
-      hb_gtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| GT_notifier( nEvent, ... ) } )
+      hb_gtInfo( HB_GTI_NOTIFIERBLOCK, {| nEvent, ... | GT_notifier( nEvent, ... ) } )
    ENDIF
 
    // TOCHECK: now not force case insensitive
@@ -254,7 +254,7 @@ FUNCTION Main( ... )
    // ----------------- Line command parameters checking ----------------------
 
    i := 1
-   DO WHILE ( i <= PCount() )
+   DO WHILE i <= PCount()
 
       cPar := hb_PValue( i++ )
 
@@ -623,7 +623,7 @@ FUNCTION Main( ... )
       // Send to threads that they have to stop
       AEVAL( aThreads, {|| hb_mutexNotify( s_hmtxQueue, NIL ) } )
       // Wait threads to end
-      AEVAL( aThreads, {|h| hb_threadJoin( h ) } )
+      AEVAL( aThreads, {| h | hb_threadJoin( h ) } )
 
    ENDIF
 
@@ -710,10 +710,10 @@ STATIC FUNCTION AcceptConnections()
          AEVAL( s_aServiceThreads, {|| hb_mutexNotify( s_hmtxServiceThreads, -1 ) } )
 #endif
          // waiting running threads to quit
-         AEVAL( s_aRunningThreads, {|h| hb_threadJoin( h ) } )
+         AEVAL( s_aRunningThreads, {| h | hb_threadJoin( h ) } )
 #ifndef FIXED_THREADS
          // waiting service threads to quit
-         AEVAL( s_aServiceThreads, {|h| hb_threadJoin( h ) } )
+         AEVAL( s_aServiceThreads, {| h | hb_threadJoin( h ) } )
 #endif
          IF hb_mutexLock( s_hmtxBusy )
             //hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
@@ -1117,20 +1117,20 @@ STATIC FUNCTION ParseRequest( cRequest )
    hb_ToOutDebug( "aRequest = %s\n\r", hb_ValToExp( aRequest ) )
 #endif
 
-   WriteToConsole( aRequest[1] )
-   aLine := uhttpd_split( " ", aRequest[1] )
+   WriteToConsole( aRequest[ 1 ] )
+   aLine := uhttpd_split( " ", aRequest[ 1 ] )
    IF LEN( aLine ) != 3 .OR. ;
-      ( aLine[1] != "GET" .AND. aLine[1] != "POST" ) .OR. ; // Sorry, we support GET and POST only
-      LEFT( aLine[3], 5 ) != "HTTP/"
+      ( aLine[1] != "GET" .AND. aLine[ 1 ] != "POST" ) .OR. ; // Sorry, we support GET and POST only
+      LEFT( aLine[ 3 ], 5 ) != "HTTP/"
       // Set status code
       t_nStatusCode := 501 // Not Implemented
       RETURN .F.
    ENDIF
 
    // define _SERVER var
-   _SERVER[ "REQUEST_METHOD"  ] := aLine[1]
-   _SERVER[ "REQUEST_URI"     ] := aLine[2]
-   _SERVER[ "SERVER_PROTOCOL" ] := aLine[3]
+   _SERVER[ "REQUEST_METHOD"  ] := aLine[ 1 ]
+   _SERVER[ "REQUEST_URI"     ] := aLine[ 2 ]
+   _SERVER[ "SERVER_PROTOCOL" ] := aLine[ 3 ]
 
    hUrl := uhttpd_SplitUrl( _SERVER[ "REQUEST_URI" ] )
 
@@ -1148,10 +1148,10 @@ STATIC FUNCTION ParseRequest( cRequest )
    */
 
    FOR nI := 2 TO LEN( aRequest )
-      IF aRequest[nI] == "";  EXIT
-      ELSEIF ( nJ := AT( ":", aRequest[nI] ) ) > 0
-         cI := LTRIM( SUBSTR( aRequest[nI], nJ + 1))
-         SWITCH UPPER( LEFT( aRequest[nI], nJ - 1))
+      IF aRequest[ nI ] == "";  EXIT
+      ELSEIF ( nJ := AT( ":", aRequest[ nI ] ) ) > 0
+         cI := LTRIM( SUBSTR( aRequest[ nI ], nJ + 1))
+         SWITCH UPPER( LEFT( aRequest[ nI ], nJ - 1))
            CASE "ACCEPT"
            CASE "ACCEPT-CHARSET"
            CASE "ACCEPT-ENCODING"
@@ -1162,12 +1162,12 @@ STATIC FUNCTION ParseRequest( cRequest )
            CASE "KEEP-ALIVE"
            CASE "REFERER"
            CASE "USER-AGENT"
-             _SERVER[ "HTTP_" + STRTRAN( UPPER( LEFT( aRequest[nI], nJ - 1 ) ), "-", "_" ) ] := cI
+             _SERVER[ "HTTP_" + STRTRAN( UPPER( LEFT( aRequest[ nI ], nJ - 1 ) ), "-", "_" ) ] := cI
              EXIT
            CASE "HOST"
              //aVal := uhttpd_split( ":", aRequest[ nI ] )
              //_SERVER[ "HTTP_" + STRTRAN( UPPER( aVal[ 1 ] ), "-", "_")] := AllTrim( aVal[ 2 ] )
-             _SERVER[ "HTTP_" + STRTRAN( UPPER( LEFT( aRequest[nI], nJ - 1 ) ), "-", "_" ) ] := cI
+             _SERVER[ "HTTP_" + STRTRAN( UPPER( LEFT( aRequest[ nI ], nJ - 1 ) ), "-", "_" ) ] := cI
              EXIT
            CASE "CONTENT-TYPE"
            CASE "CONTENT-LENGTH"
@@ -1336,7 +1336,7 @@ STATIC FUNCTION MakeResponse()
        cRet += v:__enumKey() + ": " + v + CR_LF
    NEXT
 
-   //AEVAL( t_aHeader, {|x| cRet += x[1] + ": " + x[2] + CR_LF } )
+   //AEVAL( t_aHeader, {| x | cRet += x[1] + ": " + x[2] + CR_LF } )
    cRet += CR_LF
    cRet += t_cResult
 
@@ -1636,7 +1636,7 @@ PROCEDURE uhttpd_SetHeader( cType, cValue )
    hb_HSet( _HTTP_RESPONSE, cType, cValue )
 
    /*
-   IF lReplace .AND. ( nI := ASCAN( t_aHeader, {|x| UPPER( x[ 1 ] ) == UPPER( cType ) } ) ) > 0
+   IF lReplace .AND. ( nI := ASCAN( t_aHeader, {| x | UPPER( x[ 1 ] ) == UPPER( cType ) } ) ) > 0
       t_aHeader[ nI, 2 ] := cValue
    ELSE
       AADD( t_aHeader, { cType, cValue } )
@@ -1652,7 +1652,7 @@ FUNCTION uhttpd_GetHeader( cType )
    DEFAULT nPos TO 1
 
    nPos := hb_HPos( hHash, cKey ))
-   IF ( nPos := ASCAN( t_aHeader, {|x| UPPER( x[ 1 ] ) == UPPER( cType ) }, nPos ) ) > 0
+   IF ( nPos := ASCAN( t_aHeader, {| x | UPPER( x[ 1 ] ) == UPPER( cType ) }, nPos ) ) > 0
       RETURN t_aHeader[ nPos, 2 ]
    ENDIF
    RETURN NIL
@@ -1667,7 +1667,7 @@ PROCEDURE uhttpd_DelHeader( cType )
 /*
    LOCAL nI
 
-   IF ( nI := ASCAN( t_aHeader, {|x| UPPER( x[ 1 ] ) == UPPER( cType ) } ) ) > 0
+   IF ( nI := ASCAN( t_aHeader, {| x | UPPER( x[ 1 ] ) == UPPER( cType ) } ) ) > 0
       hb_aDel( t_aHeader, nI, .T. )
    ENDIF
    RETURN
@@ -1811,9 +1811,9 @@ FUNCTION uhttpd_join( cSeparator, aData )
    FOR nI := 1 TO LEN( aData )
       IF nI > 1;  cRet += cSeparator
       ENDIF
-      IF     VALTYPE(aData[nI]) $ "CM";  cRet += aData[nI]
-      ELSEIF VALTYPE(aData[nI]) == "N";  cRet += LTRIM(STR(aData[nI]))
-      ELSEIF VALTYPE(aData[nI]) == "D";  cRet += iif(!EMPTY(aData[nI]), DTOC(aData[nI]), "")
+      IF     VALTYPE(aData[ nI ]) $ "CM";  cRet += aData[ nI ]
+      ELSEIF VALTYPE(aData[ nI ]) == "N";  cRet += LTRIM(STR(aData[ nI ]))
+      ELSEIF VALTYPE(aData[ nI ]) == "D";  cRet += iif(!EMPTY(aData[ nI ]), DTOC(aData[ nI ]), "")
       ELSE
       ENDIF
    NEXT
@@ -1829,7 +1829,7 @@ STATIC FUNCTION uproc_default()
    // Starting from Script Name request
    cScript := _SERVER[ "SCRIPT_NAME" ]
 
-   //cFileName := STRTRAN(cRoot + _SERVER["SCRIPT_NAME"], "//", "/")
+ //cFileName := STRTRAN(cRoot + _SERVER["SCRIPT_NAME"], "//", "/")
    cFileName := NIL
    cPathInfo := ""
 
@@ -1895,7 +1895,7 @@ STATIC FUNCTION uproc_default()
 
             // Search for directory index file, i.e.: index.html
             IF ASCAN( s_aDirectoryIndex, ;
-                      {|x| iif( HB_FileExists( uhttpd_OSFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
+                      {| x | iif( HB_FileExists( uhttpd_OSFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
 
                // I have to check filename again (behaviour changes on extension file name)
                // resetting extension
@@ -2011,7 +2011,7 @@ STATIC PROCEDURE ShowServerStatus()
       uhttpd_Write( '<br>Max Connections: ' + Str( s_nMaxConnections ) )
       uhttpd_Write( '<br>Total Connections: ' + Str( s_nTotConnections ) )
       cThreads := ""
-      aEval( s_aRunningThreads, {|e| cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
+      aEval( s_aRunningThreads, {| e | cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
       cThreads := "{ " + iif( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
       uhttpd_Write( '<br>Running Threads: ' + cThreads )
 
@@ -2021,7 +2021,7 @@ STATIC PROCEDURE ShowServerStatus()
       uhttpd_Write( '<br>Max Service Connections: ' + Str( s_nMaxServiceConnections ) )
       uhttpd_Write( '<br>Total Service Connections: ' + Str( s_nTotServiceConnections ) )
       cThreads := ""
-      aEval( s_aServiceThreads, {|e| cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
+      aEval( s_aServiceThreads, {| e | cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
       cThreads := "{ " + iif( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
       uhttpd_Write( '<br>Service Threads: ' + cThreads )
 #endif // FIXED_THREADS
@@ -2044,22 +2044,22 @@ STATIC PROCEDURE ShowFolder( cDir )
    aDir := DIRECTORY( uhttpd_OSFileName( cDir ), "D" )
    IF HB_HHasKey( _GET, "s" )
       IF _GET[ "s" ] == "s"
-         ASORT( aDir,,, {|X,Y| iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-                                    iif( Y[ 5 ] == "D", .F., X[ 2 ] < Y[ 2 ] ) ) } )
+         ASORT( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
+                                     iif( Y[ 5 ] == "D", .F., X[ 2 ] < Y[ 2 ] ) ) } )
       ELSEIF _GET[ "s" ] == "m"
-         ASORT( aDir,,, {|X,Y| iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T.), ;
-                                    iif( Y[ 5 ] == "D", .F., DTOS( X[ 3 ] ) + X[ 4 ] < DTOS( Y[ 3 ] ) + Y[ 4 ] ) ) } )
+         ASORT( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T.), ;
+                                     iif( Y[ 5 ] == "D", .F., DTOS( X[ 3 ] ) + X[ 4 ] < DTOS( Y[ 3 ] ) + Y[ 4 ] ) ) } )
       ELSE
-         ASORT( aDir,,, {|X,Y| iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-                                    iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
+         ASORT( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
+                                     iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
       ENDIF
    ELSE
-      ASORT( aDir,,, {|X,Y| iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
-                                 iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
+      ASORT( aDir,,, {| X, Y | iif( X[ 5 ] == "D", iif( Y[ 5 ] == "D", X[ 1 ] < Y[ 1 ], .T. ), ;
+                                  iif( Y[ 5 ] == "D", .F., X[ 1 ] < Y[ 1 ] ) ) } )
    ENDIF
 
-   uhttpd_Write( '<html><body><h1>Index of ' + _SERVER[ "SCRIPT_NAME" ] + '</h1><pre>      ')
-   uhttpd_Write( '<a href="?s=n">Name</a>                                                  ')
+   uhttpd_Write( '<html><body><h1>Index of ' + _SERVER[ "SCRIPT_NAME" ] + '</h1><pre>      ' )
+   uhttpd_Write( '<a href="?s=n">Name</a>                                                  ' )
    uhttpd_Write( '<a href="?s=m">Modified</a>             ' )
    uhttpd_Write( '<a href="?s=s">Size</a>' + CR_LF + '<hr>' )
 
@@ -2305,7 +2305,7 @@ STATIC FUNCTION ParseIni( cConfig )
 
                     ELSEIF ( cKey := Upper( cKey ) ) $ hDefault[ cSection ]  // force cKey to be uppercase
 
-                       IF ( nPos := hb_HScan( hSect, {|k| Upper( k ) == cKey } ) ) > 0
+                       IF ( nPos := hb_HScan( hSect, {| k | Upper( k ) == cKey } ) ) > 0
                           cVal := hb_HValueAt( hSect, nPos )
 
                           //hb_ToOutDebug( "cVal = %s\n\r", cVal )
@@ -2625,7 +2625,7 @@ STATIC FUNCTION Handler_ServerStatus()
       uhttpd_Write( '<br>Max Connections: ' + Str( s_nMaxConnections ) )
       uhttpd_Write( '<br>Total Connections: ' + Str( s_nTotConnections ) )
       cThreads := ""
-      aEval( s_aRunningThreads, {|e| cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
+      aEval( s_aRunningThreads, {| e | cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
       cThreads := "{ " + iif( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
       uhttpd_Write( '<br>Running Threads: ' + cThreads )
 
@@ -2635,7 +2635,7 @@ STATIC FUNCTION Handler_ServerStatus()
       uhttpd_Write( '<br>Max Service Connections: ' + Str( s_nMaxServiceConnections ) )
       uhttpd_Write( '<br>Total Service Connections: ' + Str( s_nTotServiceConnections ) )
       cThreads := ""
-      aEval( s_aServiceThreads, {|e| cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
+      aEval( s_aServiceThreads, {| e | cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
       cThreads := "{ " + iif( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
       uhttpd_Write( '<br>Service Threads: ' + cThreads )
 #endif // FIXED_THREADS

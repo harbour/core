@@ -25,7 +25,7 @@
 proc main()
    local i, aThreads
 
-   if !hb_mtvm()
+   if ! hb_mtvm()
       ? "This program needs HVM with MT support"
       quit
    endif

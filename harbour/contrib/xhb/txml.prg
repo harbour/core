@@ -308,12 +308,12 @@ METHOD MatchCriteria( oFound ) CLASS TXmlIteratorRegex
    ENDIF
 
    IF ::cAttribute != NIL .and. ;
-         hb_hScan( oFound:aAttributes, {|cKey| HB_REGEXLIKE( ::cAttribute, cKey, .t. ) } ) == 0
+         hb_hScan( oFound:aAttributes, {| cKey | HB_REGEXLIKE( ::cAttribute, cKey, .t. ) } ) == 0
       RETURN .F.
    ENDIF
 
    IF ::cValue != NIL .and. ;
-         hb_hScan( oFound:aAttributes, {|xKey, cValue| HB_SYMBOL_UNUSED( xKey ), HB_REGEXLIKE( ::cValue, cValue, .t. ) } ) == 0
+         hb_hScan( oFound:aAttributes, {| xKey, cValue | HB_SYMBOL_UNUSED( xKey ), HB_REGEXLIKE( ::cValue, cValue, .t. ) } ) == 0
       RETURN .F.
    ENDIF
 

@@ -13,44 +13,44 @@ PROCEDURE Main()
 
    l_pp := __pp_init()
 
-   QOut( "Testing Harbour run-time preprocessing" )
-   QOut( "======================================" )
-   QOut( "" )
+   ? "Testing Harbour run-time preprocessing"
+   ? "======================================"
+   ?
 
    cString := "@ 10, 10 SAY 'Hello!'"
-   QOut( cString )
-   QOut( __pp_process( l_pp, cString ) )
-   QOut( "" )
+   ? cString
+   ? __pp_process( l_pp, cString )
+   ?
 
    cString := "? 'Hello mom'"
-   QOut( cString )
-   QOut( __pp_process( l_pp, cString ) )
-   QOut( "" )
+   ? cString
+   ? __pp_process( l_pp, cString )
+   ?
 
    cString := 'SET RELATION TO Something INTO MySelf'
-   QOut( cString )
-   QOut( __pp_process( l_pp, cString ) )
-   QOut( "" )
+   ? cString
+   ? __pp_process( l_pp, cString )
+   ?
 
    cString := 'SET RELATION ADDITIVE TO Something INTO YourSelf'
-   QOut( cString )
-   QOut( __pp_process( l_pp, cString ) )
-   QOut( "" )
+   ? cString
+   ? __pp_process( l_pp, cString )
+   ?
 
    cString := "#xcommand DEFAULT <v1> := <x1> => IF <v1> == NIL ; <v1> := <x1> ; END"
-   QOut( cString )
+   ? cString
    IF __pp_addRule( l_pp, cString )
-      QOut( "Rule added successfully !" )
+      ? "Rule added successfully !"
    ELSE
-      QOut( "Rule addition failed ..." )
+      ? "Rule addition failed ..."
    ENDIF
 
    cString := 'DEFAULT x := 100'
-   QOut( cString )
-   QOut( __pp_process( l_pp, cString ) )
-   QOut( "" )
+   ? cString
+   ? __pp_process( l_pp, cString )
+   ?
 
-   QOut( "Press <Enter>..." )
+   ? "Press <Enter>..."
    __Accept( "" )
 
    CLS
@@ -66,16 +66,16 @@ PROCEDURE Main()
                 'CLOSE ALL' }
 
    FOR j := 1 TO 2
-      QOut( iif( j == 1, "Before", "After" ) + " __pp_process()" )
-      QOut( "===================" )
-      QOut( "" )
+      ? iif( j == 1, "Before", "After" ) + " __pp_process()"
+      ? "==================="
+      ?
       FOR i := 1 TO Len( aScript )
 
          ? iif( j == 1, aScript[ i ], __pp_process( l_pp, aScript[ i ] ) )
 
       NEXT
-      QOut( "" )
-      QOut( "Press <Enter> key..." )
+      ?
+      ? "Press <Enter> key..."
       __Accept( "" )
       CLS
    NEXT

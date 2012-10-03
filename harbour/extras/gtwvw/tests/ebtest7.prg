@@ -32,7 +32,7 @@
                         [<multiline: MULTILINE>]                        ;
                         [PICTURE <pic>]                                 ;
                                                                         ;
-      => AddEBGet(aEBGets, <row>, <col>, @<var>, <"var">, {|x| <var> := x}, <label>, <.multiline.>, <pic>)
+      => AddEBGet(aEBGets, <row>, <col>, @<var>, <"var">, {| x | <var> := x}, <label>, <.multiline.>, <pic>)
 
 ****************************
 * constants to aEBGets member,
@@ -123,7 +123,7 @@ local cdebugreport
    cRemark += chr(13)+chr(10)+"(from Session " + alltrim(str(nwinnum)) + ")"
 
    @ 1,15 ebGET cName      LABEL "Name:"
-   @ 3,15 ebGET cNickName  LABEL "Nickname:"   PICTURE repl("!",len(cNickName))
+   @ 3,15 ebGET cNickName  LABEL "Nickname:"   PICTURE Replicate("!",len(cNickName))
    @ 5,15 ebGET dBirthDate LABEL "Birth Date:"
    @ 7,15 ebGET nBudget    PICTURE "999,999.99"   //using default label
    @ 9,15 ebGET cRemark    LABEL "Remarks:" MULTILINE
@@ -180,13 +180,13 @@ local mcVarType, mbText
    do case
    case mcVarType=="C"
       mcPict := iif(valtype(mcPict)=="C",mcPict,repl("X", len(mxValue)))
-      mbText := {||mxValue}
+      mbText := {|| mxValue }
    case mcVarType=="N"
       mcPict := iif(valtype(mcPict)=="C",mcPict,"999,999,999.99")
-      mbText := {||trans(mxValue, mcPict)}
+      mbText := {|| transform( mxValue, mcPict ) }
    case mcVarType=="D"
       mcPict := iif(valtype(mcPict)=="C",mcPict,"99/99/9999")
-      mbText := {||dtoc(mxValue)}
+      mbText := {|| dtoc(mxValue)}
    otherwise
       * unsupported valtype
       return .f.
@@ -252,8 +252,8 @@ local nfocus, lchangefocus
       @ nrow1, ncol1-len(clabel)-1 say clabel
 
       aEBGets[i][__GET_NEBID] := wvw_ebcreate(nwinnum, nrow1, ncol1, nrow2, ncol2, ;
-                                     trans(aEBGets[i][__GET_XINIT],aEBGets[i][__GET_CPICT]), ;
-                                     {|nWinNum,nId,nEvent| MaskEditBox(nWinNum,nId,nEvent,@aEBGets) }, ;
+                                     transform(aEBGets[i][__GET_XINIT],aEBGets[i][__GET_CPICT]), ;
+                                     {| nWinNum, nId, nEvent | MaskEditBox(nWinNum,nId,nEvent,@aEBGets) }, ;
                                      aEBGets[i][__GET_LMULTILINE], ;  //EBtype
                                      0, ;  //nmorestyle
                                      iif(lmultiline,NIL,nlen+1), ; //nMaxChar
@@ -281,7 +281,7 @@ local nfocus, lchangefocus
    wvw_pbenable(nwinnum, nclosebutton, .f.)
 
    * register a keyhandler for WVW_INPFOCUS
-   inp_handler(nwinnum, {|n,ch| InpKeyHandler(n, ch, aEBGets, nOKbutton, nCancelbutton)})
+   inp_handler(nwinnum, {| n, ch | InpKeyHandler(n, ch, aEBGets, nOKbutton, nCancelbutton)})
 
    i := 1
    wvw_ebsetfocus(nwinnum, aEBGets[1][__GET_NEBID])
@@ -440,11 +440,11 @@ return
 
 static function nGetIndex(aEBGets, nEBId)
 * returns index to aEBGets array containing editbox nEBid
-return ascan(aEBGets, {|x|x[__GET_NEBID]==nEBId})
+return ascan(aEBGets, {| x | x[__GET_NEBID]==nEBId})
 
 static function nFocused(aEBGets)
 * returns index to aEBGets array containing editbox that is/was in focus
-return ascan(aEBGets, {|x|x[__GET_LFOCUSED]==.t.})
+return ascan(aEBGets, {| x | x[__GET_LFOCUSED]==.t.})
 
 
 
@@ -531,9 +531,7 @@ return NIL
 /************* borrowed and modified from minigui *************/
 
 //from h_textbox.prg
-*------------------------------------------------------------------------------*
 static PROCEDURE ProcessCharMask ( mnwinnum, mnebid, mcvaltype, mcpict )
-*------------------------------------------------------------------------------*
 Local InBuffer , OutBuffer := '' , icp , x , CB , CM , BadEntry := .F. , InBufferLeft , InBufferRight , Mask , OldChar , BackInbuffer
 Local pc := 0
 Local fnb := 0
@@ -732,9 +730,7 @@ Local ol := 0
 RETURN
 
 //from h_textbox.prg
-*------------------------------------------------------------------------------*
 static Function CharMaskTekstOK( cString, cvaltype, cMask )
-*------------------------------------------------------------------------------*
 Local lPassed:=.t.,CB,CM,x
    //x BEGIN
    if cvaltype=="D"

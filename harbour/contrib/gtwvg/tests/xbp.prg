@@ -6,7 +6,7 @@
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
-/*----------------------------------------------------------------------*/
+//
 
 #include "inkey.ch"
 #include "common.ch"
@@ -15,15 +15,15 @@
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+//
 
 #define MUSIC_WAITON          {800, 1600}
 
-/*----------------------------------------------------------------------*/
+//
 //
 //                     A Pure Xbase++ Implementation
 //
-//----------------------------------------------------------------------//
+//
 
 FUNCTION demoxbp()
    Local oCrt, oTBar, oSBar, oStatic, oCom, oXbp, oTree, oItem1, oItem2
@@ -51,7 +51,7 @@ FUNCTION demoxbp()
 
    //--------------------------- StatusBar ---------------------------\\
    oSBar   := WvgStatusBar():new( oCrt ):create( , , , , , .t. )
-   oSBar:panelClick := {|oPanel| WVG_MessageBox( , oPanel:caption ) }
+   oSBar:panelClick := {| oPanel | WVG_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
    oPanel:caption := 'My Root Panel'
    oPanel1 := oSBar:addItem()
@@ -99,7 +99,7 @@ FUNCTION demoxbp()
    aadd( aParts, '-------------'    )
    aadd( aParts, 'DataRef'          )
 
-   aeval( aParts, {|e| oListBox:addItem( e ) } )
+   aeval( aParts, {| e | oListBox:addItem( e ) } )
    oListBox:itemSelected := {|| WVG_MessageBox( , oListBox:getCurItem() ) }
    oListBox:setData( 3 )    // show selected 'XbpToolBar'
 
@@ -120,7 +120,7 @@ FUNCTION demoxbp()
    oTree:create()
    oTree:setColorBG( RGB( 120,15,240 ) )
    oTree:setColorFG( RGB( 15,240,120 ) )
-   oTree:itemSelected := {|oItem| iif( oItem != NIL, WVG_MessageBox( , oItem:caption ), NIL ) }
+   oTree:itemSelected := {| oItem | iif( oItem != NIL, WVG_MessageBox( , oItem:caption ), NIL ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
 
@@ -149,8 +149,8 @@ FUNCTION demoxbp()
    oCom:mapEvent( 269, {|| QOut( ' E X P L O R E R - 2 6 9' ) } )
    #else
    oCom := WvgHTMLViewer():New( oDA, , { 0, 0 }, { 100, 100 }, , .t. )
-   oCom:beforeNavigate := {|cURL, x, oHTML| x := x, oHTML := oHTML, oPanel:caption := cURL }
-   oCom:statusTextChange := {|cText| oPanel:caption := cText }
+   oCom:beforeNavigate := {| cURL, x, oHTML | x := x, oHTML := oHTML, oPanel:caption := cURL }
+   oCom:statusTextChange := {| cText | oPanel:caption := cText }
    oCom:mapEvent( 112, {|| oPanel:caption := ' E X P L O R E R - 2 6 9' } )
    #endif
    oCom:create()
@@ -160,12 +160,12 @@ FUNCTION demoxbp()
    oAddr:bufferLength := 500
    oAddr:border       := .t.
    cNavigate          := 'http://www.harbour.vouch.info'
-   oAddr:dataLink     := {|x| iif( x == NIL, cNavigate, cNavigate := x ) }
+   oAddr:dataLink     := {| x | iif( x == NIL, cNavigate, cNavigate := x ) }
    oAddr:setColorFG( RGB( 0,0,255   ) )
    oAddr:setColorBG( RGB( 0,255,255 ) )
    oAddr:create( oDA, , { 120, oTBar:currentSize()[2] }, { 500,20 }, , .t. )
    oAddr:setData()
-   oAddr:killInputFocus := {|m1,m2,oS| m1:=m1, m2:=m2, oS:getData(), oCom:navigate( cNavigate ) }
+   oAddr:killInputFocus := {| m1, m2, oS | m1:=m1, m2:=m2, oS:getData(), oCom:navigate( cNavigate ) }
 
    //----------------- Panel : Static + Radio + Checkbox ----------\\
    oStatic2:= WvgStatic():New( oDA, , { 150, 150 }, { 500,310 }, , .f. )
@@ -184,7 +184,7 @@ FUNCTION demoxbp()
    oRadio  := WvgRadioButton():new( oStatic2,, { 10,10 }, { 100,15 } )
    oRadio:caption   := "Com 1"
    oRadio:selection := .T.
-   oRadio:selected  := {|m1,m2,obj| m1:=m1, m2:=m2, WVG_MessageBox( , obj:caption + iif( obj:selection, '< S >', '< N >' ) ) }
+   oRadio:selected  := {| m1, m2, obj | m1:=m1, m2:=m2, WVG_MessageBox( , obj:caption + iif( obj:selection, '< S >', '< N >' ) ) }
    oRadio:create()
 
    oRadio  := WvgRadioButton():new( oStatic2,, { 10,35 }, { 100,15 } )
@@ -194,21 +194,21 @@ FUNCTION demoxbp()
    oCheck  := WvgCheckBox():New( oStatic2, , { 10,70 }, { 100,15 }, , .t. )
    oCheck:caption   := 'Checkbox A'
    oCheck:create()
-   oCheck:selected  := {|m1,m2,o| m1:=m1,m2:=m2, WVG_MessageBox( , iif( o:getData(), 'I am selected','I am not selected' ) ) }
+   oCheck:selected  := {| m1, m2, o | m1:=m1,m2:=m2, WVG_MessageBox( , iif( o:getData(), 'I am selected','I am not selected' ) ) }
 
    // Create first 3State button, passing the position to :create()
    oXbp    := Wvg3State():new()
    oXbp:caption := "3 State A"
    oXbp:create( oStatic2, , { 10,100 }, { 100,15 } )
    // Determine current state using mp1
-   oXbp:selected := {| m1,m2,oBtn | m2:=m2, oBtn:=oBtn, oPanel1:caption := "3State A ["+aState[ m1+1 ]+"]" }
+   oXbp:selected := {| m1, m2, oBtn | m2:=m2, oBtn:=oBtn, oPanel1:caption := "3State A ["+aState[ m1+1 ]+"]" }
 
    // Create second 3State Button, passing the position to :new()
    oXbp    := Wvg3State():new( oStatic2, , { 10,125 }, { 100,15 } )
    oXbp:caption := "3 State B"
    oXbp:create( oStatic2 )
    // Determine current state using :getData()
-   oXbp:selected := {| m1,m2,oBtn | m1:=m1,m2:=m2, WVG_MessageBox( , "3State B", aState[ oBtn:getData()+1 ] ) }
+   oXbp:selected := {| m1, m2, oBtn | m1:=m1,m2:=m2, WVG_MessageBox( , "3State B", aState[ oBtn:getData()+1 ] ) }
 
    // Create first SLE, specify position using :create()
    // On :typeOut set the focus to the second SLE
@@ -216,20 +216,20 @@ FUNCTION demoxbp()
    oXbp:autoTab        := .T.
    oXbp:bufferLength   := 20
    // Data code block containing assignment to LOCAL variable
-   oXbp:dataLink       := {|x| iif( x == NIL, cVarA, cVarA := x ) }
+   oXbp:dataLink       := {| x | iif( x == NIL, cVarA, cVarA := x ) }
    oXbp:create( oStatic2, , { 10,170 }, { 150,20 } )
    oXbp:setData()
    // Assign the value of the edit buffer to a LOCAL variable when the input focus is lost
-   oXbp:killInputFocus := { |x,y,oSLE| x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarA =" + cVarA }
+   oXbp:killInputFocus := {| x, y, oSLE | x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarA =" + cVarA }
 
    // Create second SLE, specify position using :new()
    oXbp                := WvgSLE():new( , , { 10,200 }, { 150,20 } )
    oXbp:tabStop        := .T.
    oXbp:bufferLength   := 15
-   oXbp:dataLink       := {|x| iif( x == NIL, cVarB, cVarB := x ) }
+   oXbp:dataLink       := {| x | iif( x == NIL, cVarB, cVarB := x ) }
    oXbp:create( oStatic2 )
    oXbp:setData()
-   oXbp:killInputFocus := { |x,y,oSLE| x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
+   oXbp:killInputFocus := {| x, y, oSLE | x:=x,y:=y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
 
    // Read file into LOCAL variable
    cText   := MemoRead( GetResource( 'gtwvg.hbc' ) )
@@ -238,18 +238,18 @@ FUNCTION demoxbp()
    oMLE    := WvgMLE():new()
    oMLE:wordWrap := .F.
    oMLE:border   := .t.
-   oMLE:dataLink := {|x| iif( x==NIL, cText, cText := x ) }
+   oMLE:dataLink := {| x | iif( x==NIL, cText, cText := x ) }
    oMLE:create( oStatic2, , { 180,10 }, { 310,250 } )
    // Copy text from LOCAL variable into edit buffer via :dataLink
    oMLE:setData()
 
    //--------------------------- Misc Config ------------------------\\
-   oTBar:buttonClick := {|oBtn| iif( oBtn:caption == 'Hide'   , oStatic:hide(), nil ),;
-                                iif( oBtn:caption == 'Show'   , oStatic:show(), nil ),;
-                                iif( oBtn:caption == 'Tools'  , oStatic2:show():toFront(), nil ),;
-                                iif( oBtn:caption == 'FontDlg', ExeFontDialogXbp( oCrt ), nil ),;
-                                iif( oBtn:caption $ 'Hide,Show', oCrt:sendMessage( WM_SIZE, 0, 0 ), NIL ),;
-                                    oPanel2:caption := "Button [ " + oBtn:caption + " ] clicked!" }
+   oTBar:buttonClick := {| oBtn | iif( oBtn:caption == 'Hide'   , oStatic:hide(), nil ),;
+                                  iif( oBtn:caption == 'Show'   , oStatic:show(), nil ),;
+                                  iif( oBtn:caption == 'Tools'  , oStatic2:show():toFront(), nil ),;
+                                  iif( oBtn:caption == 'FontDlg', ExeFontDialogXbp( oCrt ), nil ),;
+                                  iif( oBtn:caption $ 'Hide,Show', oCrt:sendMessage( WM_SIZE, 0, 0 ), NIL ),;
+                                      oPanel2:caption := "Button [ " + oBtn:caption + " ] clicked!" }
 
    oCrt:resize := {|| ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr ) }
 
@@ -266,7 +266,7 @@ FUNCTION demoxbp()
 
    Return nil
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr )
    LOCAL aCrt, aTBar, aSBar
@@ -294,7 +294,7 @@ STATIC FUNCTION ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr
 
    RETURN 1
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
    Local oMenuBar, oSubMenu
@@ -309,7 +309,7 @@ STATIC FUNCTION ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
    oSubMenu:title := "~Procedural"
    oSubMenu:addItem( { "Play Charge ~1", } )
    oSubMenu:addItem( { "Play Nannyboo ~2", } )
-   oSubMenu:itemSelected := {|mp1| MyFunctionXbp( 100+mp1 ) }
+   oSubMenu:itemSelected := {| mp1 | MyFunctionXbp( 100+mp1 ) }
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    // Define submenu in the functional style:
@@ -334,7 +334,7 @@ STATIC FUNCTION ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    RETURN NIL
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
    LOCAL oTBar
@@ -367,7 +367,7 @@ STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
 
    RETURN oTBar
 
-//----------------------------------------------------------------------//
+//
 
 Static Function MyFunctionXbp( nMode )
 
@@ -387,7 +387,7 @@ Static Function MyFunctionXbp( nMode )
       Eval( {|| tone(523,2),tone(698,2),tone(880,2),tone(1046,4),tone(880,2),tone(1046,8) } )
 
    case nMode == 102  // NannyBoo
-      AEval( {{196,2},{196,2},{164,2},{220,2},{196,4},{164,4}}, {|a| tone(a[1],a[2]) } )
+      AEval( {{196,2},{196,2},{164,2},{220,2},{196,4},{164,4}}, {| a | tone( a[ 1 ], a[ 2 ] ) } )
 
    case nMode == 103  // BADKEY
       tone( 480,0.25 )
@@ -397,7 +397,7 @@ Static Function MyFunctionXbp( nMode )
 
    Return nil
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION ExeFontDialogXbp( oCrt )
    LOCAL oFontDlg
@@ -428,4 +428,4 @@ STATIC FUNCTION ExeFontDialogXbp( oCrt )
 
    RETURN nil
 
-//----------------------------------------------------------------------//
+//

@@ -4607,11 +4607,11 @@ static void hb_wvt_gtCreateToolTipWindow( PHB_GTWVT pWVT )
       pWVT->hWndTT = hwndTT;
 }
 
-/*-----------------------------------------------------------------------/
+/*
  *
- *                 Exported functions for API calls
+ * Exported functions for API calls
  *
-/-----------------------------------------------------------------------*/
+ */
 
 PHB_GTWVT hb_wvt_gtGetWVT( void )
 {

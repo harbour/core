@@ -11,7 +11,7 @@
  *
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
-/*----------------------------------------------------------------------*/
+//
 
 #include "inkey.ch"
 #include "common.ch"
@@ -20,11 +20,11 @@
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+//
 
 #define CRLF   chr( 13 )+chr( 10 )
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION DialogWvgClassesOne( nMode )
    Local bBlock
@@ -33,7 +33,7 @@ FUNCTION DialogWvgClassesOne( nMode )
       if nMode == 2
          MyDialogOne()
       else
-         bBlock := { |oCrt| ;
+         bBlock := {| oCrt | ;
                         oCrt := WvgCrt():New( , , { -1,-1 }, { 54,184 }, , .f. ), ;
                         oCrt:fontName   := 'Courier',;
                         oCrt:fontHeight := 13       ,;
@@ -49,7 +49,7 @@ FUNCTION DialogWvgClassesOne( nMode )
    endif
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION MyDialogOne( oCrt )
    LOCAL aObjects:= WvtSetBlocks( {} )
@@ -332,7 +332,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
 
    RETURN Nil
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION DialogWvgClassesTwo()
    LOCAL aObjects := WvtSetBlocks( {} )
@@ -392,7 +392,7 @@ FUNCTION DialogWvgClassesTwo()
    WvtSetBlocks( aObjects )
    RETURN Nil
 
-//-------------------------------------------------------------------//
+//
 
 STATIC FUNCTION ExeProgBar( oPBar,oPBar1,oPBar2,oPBar3,oPBar4 )
    LOCAL i
@@ -418,7 +418,8 @@ STATIC FUNCTION ExeProgBar( oPBar,oPBar1,oPBar2,oPBar3,oPBar4 )
    oPBar4:DeActivate()
 
    RETURN nil
-//-------------------------------------------------------------------//
+
+//
 
 STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
    LOCAL i
@@ -435,4 +436,4 @@ STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
 
    RETURN NIL
 
-//-------------------------------------------------------------------//
+//

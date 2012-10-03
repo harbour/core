@@ -55,24 +55,24 @@
             end sequence
 
 
-#xcommand MAKE_TESTBLOCK(<fn>,<o>,<v>)                                  ;
-        =>  begin sequence                                              ;;
-               <fn>({|self|qout("      hVar:= ", ::hVar:=<v>)},<o>)     ;;
-            end sequence                                                ;;
-            begin sequence                                              ;;
-               <fn>({|self|qout("      hrVar:=", ::hrVar:=<v>)},<o>)    ;;
-            end sequence                                                ;;
-            begin sequence                                              ;;
-               <fn>({|self|qout("      pVar:= ", ::pVar:=<v>)},<o>)     ;;
-            end sequence                                                ;;
-            begin sequence                                              ;;
-               <fn>({|self|qout("      prVar:=", ::prVar:=<v>)},<o>)    ;;
-            end sequence                                                ;;
-            begin sequence                                              ;;
-               <fn>({|self|qout("      eVar:= ", ::eVar:=<v>)},<o>)     ;;
-            end sequence                                                ;;
-            begin sequence                                              ;;
-               <fn>({|self|qout("      erVar:=", ::erVar:=<v>)},<o>)    ;;
+#xcommand MAKE_TESTBLOCK(<fn>,<o>,<v>)                                     ;
+        =>  begin sequence                                                 ;;
+               <fn>({| self | qout("      hVar:= ", ::hVar:=<v>)},<o>)     ;;
+            end sequence                                                   ;;
+            begin sequence                                                 ;;
+               <fn>({| self | qout("      hrVar:=", ::hrVar:=<v>)},<o>)    ;;
+            end sequence                                                   ;;
+            begin sequence                                                 ;;
+               <fn>({| self | qout("      pVar:= ", ::pVar:=<v>)},<o>)     ;;
+            end sequence                                                   ;;
+            begin sequence                                                 ;;
+               <fn>({| self | qout("      prVar:=", ::prVar:=<v>)},<o>)    ;;
+            end sequence                                                   ;;
+            begin sequence                                                 ;;
+               <fn>({| self | qout("      eVar:= ", ::eVar:=<v>)},<o>)     ;;
+            end sequence                                                   ;;
+            begin sequence                                                 ;;
+               <fn>({| self | qout("      erVar:=", ::erVar:=<v>)},<o>)    ;;
             end sequence
 
 
@@ -169,7 +169,7 @@ LOCAL cbErr, self, o
 
 o:=clsX():new()
 self:=cls2():new()
-cbErr:=errorBlock({|oErr|errHandler(oErr)})
+cbErr := errorBlock( {| oErr | errHandler( oErr ) } )
 
 /***************************************************************/
 ? "Class Access:"

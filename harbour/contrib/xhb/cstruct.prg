@@ -185,7 +185,7 @@ FUNCTION HB_CStructureID( cStructure, lInplace )
    nID := aScan( s_aClasses, {| aClassInfo | aClassInfo[1] == cStructure } )
 
    IF nID == 0
-      nID := aScan( s_aSynonyms, {|aSynonym| aSynonym[1] == cStructure } )
+      nID := aScan( s_aSynonyms, {| aSynonym | aSynonym[1] == cStructure } )
       IF nID == 0
          oErr := ErrorNew()
          oErr:Args          := { cStructure, lInplace }
@@ -552,7 +552,7 @@ STATIC FUNCTION Value()
 
    //LOCAL aValues := {}
 
-   //aEval( QSelf(), {|xVal| aAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
+   //aEval( QSelf(), {| xVal | aAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
 
    QSelf():InternalBuffer := HB_ArrayToStructure( QSelf(), QSelf():aCTypes, QSelf():nAlign )
 
@@ -566,7 +566,7 @@ STATIC FUNCTION DeValue( lAdopt )
 
    //TraceLog( QSelf():ClassName(), QSelf():nAlign, Buffer, Len( Buffer ), lAdopt )
 
-   //aEval( QSelf(), {|xVal| aAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
+   //aEval( QSelf(), {| xVal | aAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
 
    IF ! HB_ISSTRING( Buffer ) .OR. Len( Buffer ) == 0
       //TraceLog( "EMPTY Buffer passed to " + ProcName() )
@@ -584,7 +584,7 @@ STATIC FUNCTION ArrayMethod()
 
    LOCAL aValues := {}
 
-   aEval( QSelf(), {|xVal| aAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
+   aEval( QSelf(), {| xVal | aAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
 
    RETURN aValues
 

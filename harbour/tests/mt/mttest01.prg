@@ -31,5 +31,5 @@ return
 
 func thFunc()
    local i := 12345.678
-   s_var := { || i++ }
-return repl( "Hello World!!! ", 3 )
+   s_var := {|| i++ }
+return replicate( "Hello World!!! ", 3 )

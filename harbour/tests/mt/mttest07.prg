@@ -34,7 +34,7 @@ proc main()
    s_mtxResults := hb_mutexCreate()
 
    ? "Starting threads: "
-   for i :=1 to N_THREADS
+   for i := 1 to N_THREADS
       aadd( aThreads, hb_threadStart( @thFunc() ) )
       ?? "<" + ltrim( str( i ) ) + ">"
    next
@@ -54,14 +54,14 @@ proc main()
    next
 
    ? "Collecting results... "
-   for i :=1 to N_JOBS
+   for i := 1 to N_JOBS
       hb_mutexSubscribe( s_mtxResults,, @nDigit )
       //?? "<" + ltrim( str( i ) ) + ">"
       aadd( aResults, nDigit )
    next
 
    ? "Waiting for threads..."
-   aEval( aThreads, { |x| hb_threadJoin( x ) } )
+   aEval( aThreads, {| x | hb_threadJoin( x ) } )
    ? "Threads joined"
 
    nSum := 0

@@ -2,13 +2,13 @@
  * $Id$
  */
 
-/*----------------------------------------------------------------------*/
+//
 //
 //                   GTWVT Console GUI Interface
 //
 //               Pritpal Bedi <bedipritpal@hotmail.com>
 //
-/*----------------------------------------------------------------------*/
+//
 
 #include "inkey.ch"
 #include "common.ch"
@@ -17,7 +17,7 @@
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-/*----------------------------------------------------------------------*/
+//
 
 #define IMAGE_VOUCH                hb_dirBase() + "vouch1.bmp"
 #define IMAGE_BROWSE               hb_dirBase() + "v_browse.ico"
@@ -26,11 +26,11 @@
 #define IMAGE_TOOLS                hb_dirBase() + "v_tools.ico"
 #define IMAGE_HELP                 hb_dirBase() + "v_notes.ico"
 
-/*----------------------------------------------------------------------*/
+//
 
 MEMVAR GetList
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION Main()
    LOCAL aPaint
@@ -60,20 +60,20 @@ FUNCTION Main()
    aAdd( aPaint, { "Image" , {|| Wvt_DrawImage( 8,62,12,69, IMAGE_VOUCH ) }                                                                         , { WVT_BLOCK_IMAGE,  8, 62, 12, 69 } } )
    aAdd( aPaint, { "Box_5" , {|| Wvt_DrawBoxRecessed( 7, 48, 13, 55 ) }                                                                             , { WVT_BLOCK_BOX  ,  7, 48, 13, 55 } } )
    aAdd( aPaint, { "Line_1", {|| Wvt_DrawLine( maxrow()-2,  0, maxrow()-2, maxcol(), WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_BOTTOM ) }          , NIL } )
-   aAdd( aPaint, { "Gets"  , {|| aEval( GetList, {|oGet| Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) }, NIL } )
+   aAdd( aPaint, { "Gets"  , {|| aEval( GetList, {| oGet | Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) }, NIL } )
 
    ExecForm( aPaint )
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+//
 /* This function must be linked with the application */
 
 FUNCTION Wvt_Paint()
    WvtPaintObjects()
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION ExecForm( aPaint )
    LOCAL cColor    := SetColor()
@@ -113,7 +113,7 @@ STATIC FUNCTION ExecForm( aPaint )
 
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION HB_GTSYS()
    REQUEST HB_GT_WVG_DEFAULT
@@ -121,7 +121,7 @@ FUNCTION HB_GTSYS()
    REQUEST HB_GT_WGU
    RETURN NIL
 
-/*----------------------------------------------------------------------*/
+//
 
 FUNCTION SetGT( nIndex, pGT )
    LOCAL oldGT
@@ -132,7 +132,7 @@ FUNCTION SetGT( nIndex, pGT )
    ENDIF
    RETURN oldGT
 
-/*----------------------------------------------------------------------*/
+//
 
 STATIC FUNCTION MyChoice( aChoices )
    LOCAL scr, clr, nChoice
@@ -149,12 +149,12 @@ STATIC FUNCTION MyChoice( aChoices )
 
    RETURN nChoice
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION rgb( r,g,b )
    RETURN r + ( g * 256 ) + ( b * 256 * 256 )
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION DispStatusMsg( cMsg )
 
@@ -166,7 +166,7 @@ FUNCTION DispStatusMsg( cMsg )
 
    RETURN .t.
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION ClearStatusMsg()
    LOCAL nRow := Row()
@@ -177,7 +177,7 @@ FUNCTION ClearStatusMsg()
 
    RETURN .t.
 
-//-------------------------------------------------------------------//
+//
 
 FUNCTION DoModalDialog()
    LOCAL oCrt, nSel
@@ -212,4 +212,4 @@ FUNCTION DoModalDialog()
    WvtSetPaint( aPnt )
    Return NIL
 
-//----------------------------------------------------------------------//
+//

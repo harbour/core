@@ -82,7 +82,7 @@ DEFAULT cId to ""
       ENDIF
       // version 0.01
 
-      _nFont := ascan( t_aReport[ FONTS ], {|arr| arr[1] == t_aReport[ FONTNAME ]} )
+      _nFont := ascan( t_aReport[ FONTS ], {| arr | arr[ 1 ] == t_aReport[ FONTNAME ]} )
       IF !( t_aReport[ FONTNAME ] == t_aReport[ FONTNAMEPREV ] )
          t_aReport[ FONTNAMEPREV ] := t_aReport[ FONTNAME ]
          t_aReport[ PAGEBUFFER ] += CRLF + "BT /Fo" + ltrim(str( _nFont )) + " " + ltrim(transform( t_aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET"
@@ -109,7 +109,7 @@ function pdfBold()                                                            /*
       t_aReport[ FONTNAME ] := 10 // Courier // 0.04
    ENDIF
    aadd( t_aReport[ PAGEFONTS ], t_aReport[ FONTNAME ] )
-   IF ascan( t_aReport[ FONTS ], { |arr| arr[1] == t_aReport[ FONTNAME ] } ) == 0
+   IF ascan( t_aReport[ FONTS ], {| arr | arr[ 1 ] == t_aReport[ FONTNAME ] } ) == 0
       aadd( t_aReport[ FONTS ], { t_aReport[ FONTNAME ], ++t_aReport[ NEXTOBJ ] } )
    ENDIF
 return nil
@@ -125,7 +125,7 @@ function pdfBoldItalic()                                                      /*
       t_aReport[ FONTNAME ] := 12 // 0.04
    ENDIF
    aadd( t_aReport[ PAGEFONTS ], t_aReport[ FONTNAME ] )
-   IF ascan( t_aReport[ FONTS ], { |arr| arr[1] == t_aReport[ FONTNAME ] } ) == 0
+   IF ascan( t_aReport[ FONTS ], {| arr | arr[ 1 ] == t_aReport[ FONTNAME ] } ) == 0
       aadd( t_aReport[ FONTS ], { t_aReport[ FONTNAME ], ++t_aReport[ NEXTOBJ ] } )
    ENDIF
 return nil
@@ -557,7 +557,7 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
       "<<"
 
       for nI := 1 to len( t_aReport[ PAGEFONTS ] )
-         nFont := ascan( t_aReport[ FONTS ], { |arr| arr[1] == t_aReport[ PAGEFONTS ][ nI ] } )
+         nFont := ascan( t_aReport[ FONTS ], {| arr | arr[ 1 ] == t_aReport[ PAGEFONTS ][ nI ] } )
          cTemp += CRLF + "/Fo" + ltrim(str( nFont )) + " " + ltrim(str( t_aReport[ FONTS ][ nFont ][ 2 ])) + " 0 R"
       next
 
@@ -567,7 +567,7 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
    IF len( t_aReport[ PAGEIMAGES ] ) > 0
       cTemp += CRLF + "/XObject" + CRLF + "<<"
       for nI := 1 to len( t_aReport[ PAGEIMAGES ] )
-         nImage := ascan( t_aReport[ IMAGES ], { |arr| arr[1] == t_aReport[ PAGEIMAGES ][ nI ][ 1 ] } )
+         nImage := ascan( t_aReport[ IMAGES ], {| arr | arr[ 1 ] == t_aReport[ PAGEIMAGES ][ nI ][ 1 ] } )
          IF nImage == 0
             aadd( t_aReport[ IMAGES ], { t_aReport[ PAGEIMAGES ][ nI ][ 1 ], ++t_aReport[ NEXTOBJ ], pdfImageInfo( t_aReport[ PAGEIMAGES ][ nI ][ 1 ] ) } )
             nImage := len( t_aReport[ IMAGES ] )
@@ -594,7 +594,7 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
       cTemp := ""
       for nI := 1 to len( t_aReport[ PAGEIMAGES ] )
          cTemp += CRLF + "q"
-         nImage := ascan( t_aReport[ IMAGES ], { |arr| arr[1] == t_aReport[ PAGEIMAGES ][ nI ][ 1 ] } )
+         nImage := ascan( t_aReport[ IMAGES ], {| arr | arr[ 1 ] == t_aReport[ PAGEIMAGES ][ nI ][ 1 ] } )
          cTemp += CRLF + ltrim(str( iif( t_aReport[ PAGEIMAGES ][ nI ][ 5 ] == 0, pdfM2X( t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_WIDTH ] / t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_XRES ] * 25.4 ), t_aReport[ PAGEIMAGES ][ nI ][ 5 ]))) + ;
          " 0 0 " + ;
          ltrim(str( iif( t_aReport[ PAGEIMAGES ][ nI ][ 4 ] == 0, pdfM2X( t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_HEIGHT ] / t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_YRES ] * 25.4 ), t_aReport[ PAGEIMAGES ][ nI ][ 4 ]))) + ;
@@ -772,7 +772,7 @@ function pdfItalic()                                                          /*
       t_aReport[ FONTNAME ] := 11 // 0.04
    ENDIF
    aadd( t_aReport[ PAGEFONTS ], t_aReport[ FONTNAME ] )
-   IF ascan( t_aReport[ FONTS ], { |arr| arr[1] == t_aReport[ FONTNAME ] } ) == 0
+   IF ascan( t_aReport[ FONTS ], {| arr | arr[ 1 ] == t_aReport[ FONTNAME ] } ) == 0
       aadd( t_aReport[ FONTS ], { t_aReport[ FONTNAME ], ++t_aReport[ NEXTOBJ ] } )
    ENDIF
 return nil
@@ -873,7 +873,7 @@ function pdfNormal()                                                          /*
       t_aReport[ FONTNAME ] := 9 // 0.04
    ENDIF
    aadd( t_aReport[ PAGEFONTS ], t_aReport[ FONTNAME ] )
-   IF ascan( t_aReport[ FONTS ], { |arr| arr[1] == t_aReport[ FONTNAME ] } ) == 0
+   IF ascan( t_aReport[ FONTS ], {| arr | arr[ 1 ] == t_aReport[ FONTNAME ] } ) == 0
       aadd( t_aReport[ FONTS ], { t_aReport[ FONTNAME ], ++t_aReport[ NEXTOBJ ] } )
    ENDIF
 return nil
@@ -967,7 +967,7 @@ local nSize, aSize, nWidth, nHeight
 
    if empty( _nWidth ) .or. empty( _nHeight )
 
-      nSize := ascan( aSize, { |arr| arr[ 1 ] == _cPageSize } )
+      nSize := ascan( aSize, {| arr | arr[ 1 ] == _cPageSize } )
 
       IF nSize == 0
          nSize := 1
@@ -983,10 +983,10 @@ local nSize, aSize, nWidth, nHeight
       _nWidth := val( str( _nWidth ) )
       _nHeight := val( str( _nHeight ) )
 
-      nSize := ascan( aSize, { |arr| ( arr[ 2 ] == _nWidth  ) .and. ( arr[ 3 ] == _nHeight ) } )
+      nSize := ascan( aSize, {| arr | ( arr[ 2 ] == _nWidth  ) .and. ( arr[ 3 ] == _nHeight ) } )
 
       if nSize == 0
-         nSize := ascan( aSize, { |arr| ( arr[ 3 ] == _nWidth ) .and. ( arr[ 2 ] == _nHeight ) } )
+         nSize := ascan( aSize, {| arr | ( arr[ 3 ] == _nWidth ) .and. ( arr[ 2 ] == _nHeight ) } )
       endif
 
       IF nSize == 0
@@ -1096,7 +1096,7 @@ DEFAULT _nSize to 10
 
    aadd( t_aReport[ PAGEFONTS ], t_aReport[ FONTNAME ] )
 
-   IF ascan( t_aReport[ FONTS ], { |arr| arr[1] == t_aReport[ FONTNAME ] } ) == 0
+   IF ascan( t_aReport[ FONTS ], {| arr | arr[ 1 ] == t_aReport[ FONTNAME ] } ) == 0
       aadd( t_aReport[ FONTS ], { t_aReport[ FONTNAME ], ++t_aReport[ NEXTOBJ ] } )
    ENDIF
 return nil

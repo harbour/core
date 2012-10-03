@@ -94,15 +94,15 @@ local getlist := {}
       @ 0,0 say "FileName  :" get cpict pict "@K" valid file(alltrim(cpict))
       @ 1,0 say "Transpar? :" get ltransp pict "Y"
       @ 2,0 say "Max Cache :" get nMaxCache pict "999"
-      @ 3,0 say "NumOfCache=" + trans(wvw_numBMcache(),"999") +;
-                ", Max NumOfCache=" + trans(wvw_SetMaxBMcache(),"999")
+      @ 3,0 say "NumOfCache=" + transform(wvw_numBMcache(),"999") +;
+                ", Max NumOfCache=" + transform(wvw_SetMaxBMcache(),"999")
       read
       if lastkey()==27
          exit
       endif
       wvw_SetMaxBMcache(nMaxCache)
-      @ 3,0 say "NumOfCache=" + trans(wvw_numBMcache(),"999") +;
-                ", Max NumOfCache=" + trans(wvw_SetMaxBMcache(),"999")
+      @ 3,0 say "NumOfCache=" + transform(wvw_numBMcache(),"999") +;
+                ", Max NumOfCache=" + transform(wvw_SetMaxBMcache(),"999")
 
       @ 5,0 say "TOPLEFT: stretched image                 TOPRIGHT: fit vertically (proportional)"
       @ 6,0 say "BOTLEFT: fit horizontally (proportional) BOTRIGHT: actual image size"
@@ -294,7 +294,7 @@ local nLen, aRect //20050720
    * ...
 
       * exist nType + cId ?
-      i := ASCAN(s_aPObjList[ nWinNum+1 ], {|x| x:nType==oWPaint:nType .and. x:cId==oWPaint:cId})
+      i := ASCAN(s_aPObjList[ nWinNum+1 ], {| x | x:nType==oWPaint:nType .and. x:cId==oWPaint:cId})
 
    if i > 0
       * so we are about to overwrite now...

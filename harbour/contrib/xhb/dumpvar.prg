@@ -375,7 +375,7 @@ STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
 
    // nRange is already defaulted in ClassFullSel in classes.c
 
-   aMessages := ASort( oObject:ClassSel( nRange, nScope, .T. ),,, {|x,y| x[HB_OO_DATA_SYMBOL] < y[HB_OO_DATA_SYMBOL] } )
+   aMessages := ASort( oObject:ClassSel( nRange, nScope, .T. ),,, {| x, y | x[HB_OO_DATA_SYMBOL] < y[HB_OO_DATA_SYMBOL] } )
    aReturn   := {}
 
    nFirstProperty := aScan( aMessages, {| aElement | Left( aElement[HB_OO_DATA_SYMBOL], 1 ) == '_' } )

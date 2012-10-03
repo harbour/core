@@ -2,6 +2,7 @@
  * $Id$
  */
 
+#include "fileio.ch"
 #include "set.ch"
 
 #xtranslate Default( <Var>, <xVal> ) => iif( <Var> == NIL, <xVal>, <Var> )
@@ -42,7 +43,7 @@ PROCEDURE Main( cFrom, cTo )
 
    DO WHILE !oFrom:EOF()
       cOut := oFrom:Run()
-      IF AllTrim( cOut ) != ""
+      IF ! Empty( cOut )
          oTo:Run( cOut )
       ENDIF
    ENDDO
@@ -134,11 +135,11 @@ FUNCTION Dispose()
    LOCAL self := QSelf()
 
    ::cBlock := NIL
-   IF ::hFile != - 1
+   IF ::hFile != F_ERROR
       IF ::cMode == "W" .AND. ::nError != 0
          ::Write( Chr( 26 ) )                     // Do not forget EOF marker
       ENDIF
-      IF !FClose( ::hFile )
+      IF ! FClose( ::hFile )
          ::nError := FError()
          ? "Dos Error closing ", ::cFileName, " Code ", ::nError
       ENDIF
@@ -158,11 +159,11 @@ FUNCTION READ()
    LOCAL nCrPos
    LOCAL nEoFPos
 
-   IF ::hFile == - 1
+   IF ::hFile == F_ERROR
       ? "DosFile:Read : No file open"
    ELSEIF ::cMode != "R"
       ? "File ", ::cFileName, " not open for reading"
-   ELSEIF !::lEoF
+   ELSEIF ! ::lEoF
 
       IF Len( ::cBlock ) == 0                     // Read new block
          cBlock := FReadStr( ::hFile, ::nBlockSize )
@@ -174,7 +175,7 @@ FUNCTION READ()
          ENDIF
       ENDIF
 
-      IF !::lEoF
+      IF ! ::lEoF
          ::nLine := ::nLine + 1                 // ++ not available
          nCRPos := At( Chr( 10 ), ::cBlock )
          IF nCRPos != 0                         // More than one line read
@@ -184,7 +185,7 @@ FUNCTION READ()
             cRet     := ::cBlock
             ::cBlock := ""
             cRet     += ::Read()                // Read the rest
-            IF !::lEoF
+            IF ! ::lEoF
                ::nLine := ::nLine - 1           // Adjust erroneous line count
             ENDIF
          ENDIF
@@ -212,7 +213,7 @@ FUNCTION WriteLn( xTxt, lCRLF )
    LOCAL self := QSelf()
    LOCAL cBlock
 
-   IF ::hFile == - 1
+   IF ::hFile == F_ERROR
       ? "DosFile:Write : No file open"
    ELSEIF !( ::cMode == "W" )
       ? "File ", ::cFileName, " not opened for writing"
@@ -248,13 +249,13 @@ FUNCTION GOTO( nLine )
       ::nLine  := 0                             // Start at beginning
       ::cBlock := ""
       FSeek( ::hFile, 0 )                         // Go top
-      DO WHILE !::lEoF .AND. nWhere < nLine
-         nWhere ++
+      DO WHILE ! ::lEoF .AND. nWhere < nLine
+         nWhere++
          ::Run()
       ENDDO
    ENDIF
 
-   RETURN !::lEoF
+   RETURN ! ::lEoF
 
 FUNCTION ToChar( xVal )
 

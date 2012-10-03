@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                               06Dec2008
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,13 +74,13 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*-*/
+//
 
 #ifndef __DBG_PARTS__
 #xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
-/*-*/
+//
 
 CLASS WvgRadioButton  INHERIT  WvgWindow, WvgDataRef
 
@@ -102,7 +102,7 @@ CLASS WvgRadioButton  INHERIT  WvgWindow, WvgDataRef
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
 
@@ -114,7 +114,7 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadio
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
 
@@ -138,7 +138,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRa
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
 
@@ -161,7 +161,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
 
    RETURN 1
 
-/*-*/
+//
 
 METHOD destroy() CLASS WvgRadioButton
 
@@ -171,7 +171,7 @@ METHOD destroy() CLASS WvgRadioButton
 
    RETURN NIL
 
-/*-*/
+//
 
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
 
@@ -179,7 +179,7 @@ METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS Wv
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD setCaption( xCaption ) CLASS WvgRadioButton
 
@@ -190,4 +190,4 @@ METHOD setCaption( xCaption ) CLASS WvgRadioButton
 
    RETURN Self
 
-/*-*/
+//

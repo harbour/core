@@ -77,17 +77,11 @@
     #define _WIN32_IE 0x0400
 #endif
 
-/*-------------------------------------------------------------------*/
-
 /* NOTE: User programs should never call this layer directly! */
 
 /* This definition has to be placed before #include "hbapigt.h" */
 
-/*-------------------------------------------------------------------*/
-
 #define HB_GT_NAME  WVW
-
-/*-------------------------------------------------------------------*/
 
 #ifndef CINTERFACE
    #define CINTERFACE 1
@@ -155,8 +149,6 @@
 
 #include <time.h>
 #include <ctype.h>
-
-/*-------------------------------------------------------------------*/
 
 /* xHarbour compatible definitions */
 #if !defined( K_SH_LEFT )
@@ -246,7 +238,6 @@
 
 //#define WVW_WHICH_WINDOW ( HB_ISNIL( 1 ) ? ( s_bMainCoordMode ? s_usNumWindows-1 : s_usCurWindow ) : ((UINT) hb_parni( 1 )) )
 #define WVW_WHICH_WINDOW ( HB_ISNIL( 1 ) ? ( hb_gt_wvw_GetMainCoordMode() ? ((hb_gt_wvw_GetNumWindows())-1)  : hb_gt_wvw_GetCurWindow() ) : ((UINT) hb_parni( 1 )) )
-/*-------------------------------------------------------------------*/
 
 #define BLACK          RGB( 0x0 ,0x0 ,0x0  )
 #define BLUE           RGB( 0x0 ,0x0 ,0x85 )
@@ -264,8 +255,6 @@
 #define BRIGHT_MAGENTA RGB( 0xFF,0x60,0xFF )
 #define YELLOW         RGB( 0xFF,0xFF,0x00 )
 #define BRIGHT_WHITE   RGB( 0xFF,0xFF,0xFF )
-
-/*-------------------------------------------------------------------*/
 
 #if defined(__DMC__)
 
@@ -322,7 +311,6 @@
        ULONG LowerRight;
    } GRADIENT_RECT,*PGRADIENT_RECT,*LPGRADIENT_RECT;
 #endif
-/*-------------------------------------------------------------------*/
 
 #define WM_MY_UPDATE_CARET ( WM_USER + 0x0101 )
 
@@ -333,8 +321,6 @@ typedef BOOL ( WINAPI *wvwGradientFill )     (
                       PVOID      pMesh,
                       ULONG      dwNumMesh,
                       ULONG      dwMode      );
-
-/*-------------------------------------------------------------------*/
 
 #ifndef _MAX_PATH
    #define _MAX_PATH 256
@@ -355,8 +341,6 @@ typedef struct picture_handle
   int     iWidth, iHeight;
   struct picture_handle * pNext;
 } PICTURE_HANDLE;
-
-/*-------------------------------------------------------------------*/
 
 #define WVW_CONTROL_SCROLLBAR    1
 #define WVW_CONTROL_PUSHBUTTON   2
@@ -389,8 +373,6 @@ typedef struct control_data
 
   struct control_data * pNext;
 } CONTROL_DATA;
-
-/*-------------------------------------------------------------------*/
 
 typedef struct app_data
 {

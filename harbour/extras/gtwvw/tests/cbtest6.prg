@@ -40,7 +40,7 @@ MEMVAR __nCBid__,__temp__
             ;
             __nCBid__ := wvw_cbCreate(NIL, <row>, <col>, <nWidth>,            ;
                                   <aOptions>,                                 ;
-                                  {|nWinNum,nId,nEvent,nIndex, temp|          ;
+                                  {| nWinNum, nId, nEvent, nIndex, temp |     ;
                                     CBhandler(nWinNum,nId,nEvent,nIndex,<"var">,GetList);
                                   },                                          ;
                                   NIL,NIL,s_nCB_Kbd,NIL);                     ;
@@ -48,9 +48,9 @@ MEMVAR __nCBid__,__temp__
             __temp__ := wvw_cbFindString(NIL, __nCBid__, <var> );             ;
             iif(__temp__>=0, wvw_cbSetIndex(NIL, __nCBid__, __temp__),NIL);   ;
             setpos(<row>,<col>);                                              ;
-            AAdd(GetList,_GET_(<var>,<"var">,repl("X",<nWidth>),,) ) ;        ;
+            AAdd(GetList,_GET_(<var>,<"var">,Replicate("X",<nWidth>),,) ) ;   ;
             ATAIL(GetList):cargo := __nCBid__;                                ;
-            ATAIL(GetList):reader := {|get| CBreader(get)}
+            ATAIL(GetList):reader := {| get | CBreader(get)}
 
 proc main
 local getlist := {}
@@ -78,7 +78,7 @@ local __nCBid__,__temp__  //these two are temporary var required by CB get creat
    read
 
    * disable all comboboxes:
-   aeval(s_aComboList, {|x| wvw_cbenable(NIL, x[1], .f.)})
+   aeval(s_aComboList, {| x | wvw_cbenable(NIL, x[1], .f.)})
 
    devpos(5,0)
    ? "name: '" + mname + "'"
@@ -89,7 +89,7 @@ local __nCBid__,__temp__  //these two are temporary var required by CB get creat
    inkey(0)
 
    * destroy all comboboxes:
-   aeval(s_aComboList, {|x| wvw_cbdestroy(NIL, x[1])})
+   aeval(s_aComboList, {| x | wvw_cbdestroy(NIL, x[1])})
    s_aComboList := {}
 
    ?
@@ -134,7 +134,7 @@ local oGet := GetActive()
 
    do case
    case nEvent==3 //CBN_SETFOCUS
-      i := ascan(GetList, {|x|x:Name==cVar})
+      i := ascan(GetList, {| x | x:Name == cVar } )
       if i>0
          /* !oGet:HasFocus means
           * CBN_SETFOCUS was NOT initiated from mouseclick

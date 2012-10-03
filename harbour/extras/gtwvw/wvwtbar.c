@@ -488,19 +488,19 @@ HB_FUNC( WVW_TBCMD2INDEX )
    hb_retni( CommandToIndex(hWndTB, iCmd) );
 }
 
-/*-------------------------------------------------------------------*/
+
 /* TOOLBAR ends                                                      */
-/*-------------------------------------------------------------------*/
+
 
 
 
 #if _WIN32_IE > 0x400
 
-/*-------------------------------------------------------------------*/
+
 /*                                                                   */
 /*                              Tooltips                             */
 /*                                                                   */
-/*-------------------------------------------------------------------*/
+
 
 /*WVW_SetToolTopActive([nWinNum], [lToggle]) */
 HB_FUNC( WVW_SETTOOLTIPACTIVE )
@@ -524,7 +524,7 @@ HB_FUNC( WVW_SETTOOLTIPACTIVE )
    hb_retl( bActive );
 }
 
-/*-------------------------------------------------------------------*/
+
 /*                                                                        */
 /*   Wvw_SetToolTip( [nWinNum], nTop, nLeft, nBottom, nRight, cToolText ) */
 /*                                                                        */
@@ -576,7 +576,7 @@ HB_FUNC( WVW_SETTOOLTIP )
    }
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_SETTOOLTIPTEXT )
 {
@@ -595,7 +595,7 @@ HB_FUNC( WVW_SETTOOLTIPTEXT )
    }
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_SETTOOLTIPMARGIN )
 {
@@ -626,7 +626,7 @@ HB_FUNC( WVW_SETTOOLTIPWIDTH )
    hb_retni( iTipWidth );
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_SETTOOLTIPBKCOLOR )
 {
@@ -642,7 +642,7 @@ HB_FUNC( WVW_SETTOOLTIPBKCOLOR )
    hb_retnl( ( COLORREF ) cr );
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_SETTOOLTIPTEXTCOLOR )
 {
@@ -658,7 +658,7 @@ HB_FUNC( WVW_SETTOOLTIPTEXTCOLOR )
    hb_retnl( ( COLORREF ) cr );
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_SETTOOLTIPTITLE )
 {
@@ -677,7 +677,7 @@ HB_FUNC( WVW_SETTOOLTIPTITLE )
    }
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_GETTOOLTIPWIDTH )
 {
@@ -686,7 +686,7 @@ HB_FUNC( WVW_GETTOOLTIPWIDTH )
    hb_retni( SendMessage( pWindowData->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 ) );
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_GETTOOLTIPBKCOLOR )
 {
@@ -695,7 +695,7 @@ HB_FUNC( WVW_GETTOOLTIPBKCOLOR )
    hb_retnl( ( COLORREF ) SendMessage( pWindowData->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
 }
 
-/*-------------------------------------------------------------------*/
+
 
 HB_FUNC( WVW_GETTOOLTIPTEXTCOLOR )
 {

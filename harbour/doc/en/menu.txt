@@ -31,9 +31,9 @@
  *
  *      <nLeft>          - leftmost row used to display array (default 0)
  *
- *      <nBottom>        - bottommost row used to display array (default MAXROW())
+ *      <nBottom>        - bottommost row used to display array (default MaxRow())
  *
- *      <nRight>         - rightmost row used to display array (default MAXCOL())
+ *      <nRight>         - rightmost row used to display array (default MaxCol())
  *
  *      <acMenuItems>    - the character array of items from which to select
  *
@@ -61,8 +61,8 @@
  *      <bUserBlock>     - a codeblock to be called which may
  *                         affect special processing of keystrokes. It
  *                         should be specified in the form
- *                         {|nMode, nCurElemenet, nRowPos| ;
- *                         MyFunc(nMode, nCurElemenet, nRowPos) }.
+ *                         {| nMode, nCurElemenet, nRowPos | ;
+ *                           MyFunc( nMode, nCurElemenet, nRowPos ) }.
  *                         Default NIL.
  *
  *      <nInitialItem>   - the number of the element to be highlighted as
@@ -80,7 +80,7 @@
  *      additional detail.
  *  $EXAMPLES$
  *      aItems := { "One", "Two", "Three" }
- *      nChoice := ACHOICE( 10, 10, 20, 20, aItems )
+ *      nChoice := AChoice( 10, 10, 20, 20, aItems )
  *      IF nChoice == 0
  *         ? "You did not choose an item"
  *      ELSE
@@ -111,10 +111,10 @@
  *      __AtPrompt( <nRow>, <nCol>, <cPrompt>, [<xMsg>] ) --> .F.
  *  $ARGUMENTS$
  *      <nRow> is the row number to display the menu <cPrompt>. Value could
- *      range from zero to MAXROW().
+ *      range from zero to MaxRow().
  *
  *      <nCol> is the column number to display the menu <cPrompt>. Value
- *      could range from zero to MAXCOL().
+ *      could range from zero to MaxCol().
  *
  *      <cPrompt> is the menu item character string to display.
  *
@@ -176,10 +176,10 @@
  *      @ <nRow>, <nCol> PROMPT <cPrompt> [MESSAGE <xMsg>]
  *  $ARGUMENTS$
  *      <nRow> is the row number to display the menu <cPrompt>. Value could
- *      range from zero to MAXROW().
+ *      range from zero to MaxRow().
  *
  *      <nCol> is the column number to display the menu <cPrompt>. Value
- *      could range from zero to MAXCOL().
+ *      could range from zero to MaxCol().
  *
  *      <cPrompt> is the menu item character string to display.
  *
@@ -282,7 +282,7 @@
  *       First letter   Select next menu with the same first letter,
  *       |              return this item position.
  *      </table>
- *      upon exit the cursor is placed at MAXROW()-1, 0
+ *      upon exit the cursor is placed at MaxRow()-1, 0
  *      __MenuTo() can be nested without loosing the previous prompts.
  *
  *      MENU TO command is preprocessed into __MenuTo() function during
@@ -290,14 +290,14 @@
  *  $EXAMPLES$
  *      // display menu item on each screen corner and let user select one
  *      CLS
- *      SET MESSAGE TO MAXROW() / 2 CENTER
+ *      SET MESSAGE TO MaxRow() / 2 CENTER
  *      SET WRAP ON
  *      @ 0           , 0           PROMPT "1. Upper left"   MESSAGE " One "
- *      @ 0           , MAXCOL()-16 PROMPT "2. Upper right"  MESSAGE " Two "
- *      @ MAXROW() - 1, MAXCOL()-16 PROMPT "3. Bottom right" MESSAGE "Three"
- *      @ MAXROW() - 1, 0           PROMPT "4. Bottom left"  MESSAGE "Four "
+ *      @ 0           , MaxCol()-16 PROMPT "2. Upper right"  MESSAGE " Two "
+ *      @ MaxRow() - 1, MaxCol()-16 PROMPT "3. Bottom right" MESSAGE "Three"
+ *      @ MaxRow() - 1, 0           PROMPT "4. Bottom left"  MESSAGE "Four "
  *      MENU TO nChoice
- *      SETPOS( MAXROW() / 2, MAXCOL() / 2 - 10 )
+ *      SetPos( MaxRow() / 2, MaxCol() / 2 - 10 )
  *      IF nChoice == 0
  *         ?? "Esc was pressed"
  *      ELSE
@@ -368,7 +368,7 @@
  *       First letter   - Select next menu with the same first letter,
  *       |              return this item position.
  *      </table>
- *      upon exit the cursor is placed at MAXROW()-1, 0
+ *      upon exit the cursor is placed at MaxRow()-1, 0
  *      Menu To can be nested without loosing the previous prompts.
  *
  *      MENU TO command is preprocessed into __MenuTo() function during
@@ -376,14 +376,14 @@
  *  $EXAMPLES$
  *      // display menu item on each screen corner and let user select one
  *      CLS
- *      SET MESSAGE TO MAXROW() / 2 CENTER
+ *      SET MESSAGE TO MaxRow() / 2 CENTER
  *      SET WRAP ON
  *      @ 0           , 0             PROMPT "1. Upper left"   MESSAGE " One "
- *      @ 0           , MAXCOL() - 16 PROMPT "2. Upper right"  MESSAGE " Two "
- *      @ MAXROW() - 1, MAXCOL() - 16 PROMPT "3. Bottom right" MESSAGE "Three"
- *      @ MAXROW() - 1, 0             PROMPT "4. Bottom left"  MESSAGE "Four "
+ *      @ 0           , MaxCol() - 16 PROMPT "2. Upper right"  MESSAGE " Two "
+ *      @ MaxRow() - 1, MaxCol() - 16 PROMPT "3. Bottom right" MESSAGE "Three"
+ *      @ MaxRow() - 1, 0             PROMPT "4. Bottom left"  MESSAGE "Four "
  *      MENU TO nChoice
- *      SETPOS( MAXROW() / 2, MAXCOL() / 2 - 10 )
+ *      SetPos( MaxRow() / 2, MaxCol() / 2 - 10 )
  *      IF nChoice == 0
  *         ?? "Esc was pressed"
  *      ELSE

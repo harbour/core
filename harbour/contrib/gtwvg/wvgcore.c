@@ -180,8 +180,6 @@ IPicture * hb_wvt_gtLoadPictureFromResource( LPCTSTR resource, LPCTSTR section )
    return ( IPicture * ) iPicture;
 }
 
-/*--------------------------------------------------------------------*/
-
 IPicture * hb_wvt_gtLoadPicture( LPCTSTR image )
 {
    IStream *   iStream;

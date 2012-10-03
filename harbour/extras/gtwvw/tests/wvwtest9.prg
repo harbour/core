@@ -2,7 +2,7 @@
  * $Id$
  */
 
-//-------------------------------------------------------------------//
+//
 //
 //                      Test/Demo Program for
 //                       GTWVW GUI Interface
@@ -20,7 +20,7 @@
 //
 //   parts of this program are copyrights of their respective owners
 //
-//-------------------------------------------------------------------//
+//
 
 /*
    Compile/Link info:
@@ -115,55 +115,55 @@
 
   #define IDTRYAGAIN          10
 
-#DEFINE CRLF chr(13)+chr(10)
+#define CRLF chr(13)+chr(10)
 
-#DEFINE WVW_MAXWINDOWS    20             //! must match with HBGTWVW.H
-#DEFINE WVW_DEFAULT_MENUKEYEVENT  1024   //! must match with HBGTWVW.H
+#define WVW_MAXWINDOWS    20             //! must match with HBGTWVW.H
+#define WVW_DEFAULT_MENUKEYEVENT  1024   //! must match with HBGTWVW.H
 
 //20040303: !!! copied from WVWMOUSE.PRG pls create an include file
 * mouse object types //20040303
-#DEFINE _MOBJECT_BUTTON  0      //mouse button
-#DEFINE _MOBJECT_HSCROLL 1      //horiz scrollbar  //obsolete, not used
-#DEFINE _MOBJECT_VSCROLL 2      //horiz scrollbar  //obsolete, not used
+#define _MOBJECT_BUTTON  0      //mouse button
+#define _MOBJECT_HSCROLL 1      //horiz scrollbar  //obsolete, not used
+#define _MOBJECT_VSCROLL 2      //horiz scrollbar  //obsolete, not used
 
 * for Button Types: //20040303
-#DEFINE _BUTTON_NORMAL 0        //normal button
-#DEFINE _BUTTON_FLAT   1        //'transparent', raised when mouseover
-#DEFINE _BUTTON_NONE   2        //no sign even when mouseover or clicked
-#DEFINE _BUTTON_HARD   3        //no recessed when pressed
+#define _BUTTON_NORMAL 0        //normal button
+#define _BUTTON_FLAT   1        //'transparent', raised when mouseover
+#define _BUTTON_NONE   2        //no sign even when mouseover or clicked
+#define _BUTTON_HARD   3        //no recessed when pressed
 
 * menu actions
-#DEFINE IDM_DEMO_GET     101
-#DEFINE IDM_DEMO_BROWSE  102
-#DEFINE IDM_DEMO_CONSOLE 103
-//#DEFINE IDM_DEMO_COLOR   104
-#DEFINE IDM_DEMO_EXIT    199
+#define IDM_DEMO_GET     101
+#define IDM_DEMO_BROWSE  102
+#define IDM_DEMO_CONSOLE 103
+//#define IDM_DEMO_COLOR   104
+#define IDM_DEMO_EXIT    199
 
-#DEFINE IDM_TOOLBAR_RESET  501
-#DEFINE IDM_TOOLBAR_DELETE 502
-#DEFINE IDM_TOOLBAR_ENABLE  503
-#DEFINE IDM_TOOLBAR_DISABLE  504
+#define IDM_TOOLBAR_RESET  501
+#define IDM_TOOLBAR_DELETE 502
+#define IDM_TOOLBAR_ENABLE  503
+#define IDM_TOOLBAR_DISABLE  504
 
-#DEFINE IDM_WINDOW_SPACING_INCREASE  201
-#DEFINE IDM_WINDOW_SPACING_DECREASE  202
-#DEFINE IDM_WINDOW_SPACING_DEFAULT   203
+#define IDM_WINDOW_SPACING_INCREASE  201
+#define IDM_WINDOW_SPACING_DECREASE  202
+#define IDM_WINDOW_SPACING_DEFAULT   203
 
-#DEFINE IDM_HELP_HELP    301
-#DEFINE IDM_HELP_INFO    302
+#define IDM_HELP_HELP    301
+#define IDM_HELP_INFO    302
 
 * menu action from toolbar only:
-#DEFINE IDM_NETCONNECT    401
-#DEFINE IDM_NETDISCONNECT 402
-#DEFINE IDM_BACK          403
-#DEFINE IDM_FORWARD       404
-#DEFINE IDM_COPY          405
-#DEFINE IDM_PASTE         406
+#define IDM_NETCONNECT    401
+#define IDM_NETDISCONNECT 402
+#define IDM_BACK          403
+#define IDM_FORWARD       404
+#define IDM_COPY          405
+#define IDM_PASTE         406
 
 
 static s_amiscobjlist := {}      //x misc object list (actually: list of codeblocks)
 static s_afontinfo := {}         //x current font info
 
-//-------------------------------------------------------------------//
+//
 PROCEDURE Main()
 local nCurWindow
 local hWnd, hMenu, hPopupmenu, hPopupmenu2
@@ -198,7 +198,7 @@ local ch
 
    s_afontinfo := WVW_getfontinfo()
 
-   hb_gtInfo( HB_GTI_INKEYFILTER, {|nkey| nAfterInkey(nkey) } )
+   hb_gtInfo( HB_GTI_INKEYFILTER, {| nkey | nAfterInkey(nkey) } )
    WVW_SETMOUSEMOVE(,.t.)                           //required by wvwmouse
    kF1 := SetKey( K_F1, {|| xHelp() } )
    kF2 := SetKey( K_F2, {|| xDebugInfo() } )
@@ -251,7 +251,7 @@ local ch
    CreateToolbar(nCurWindow)
 
    ResetMiscObjects( nCurWindow )
-     AddMiscObjects( nCurWindow, {|nWindow| WVW_DrawLabel( nWindow, 1,40, cLabel,6,, rgb(255,255,255), rgb(198,198,198), 'Arial', s_afontinfo[2], , , , , .t., .t. ) } )
+     AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,40, cLabel,6,, rgb(255,255,255), rgb(198,198,198), 'Arial', s_afontinfo[2], , , , , .t., .t. ) } )
 
    wvwm_ResetMouseObjects( nCurWindow )
      wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info!",   maxrow()-2,67, , , {|| xDebugInfo() } ))
@@ -320,7 +320,7 @@ local ch
 
 RETURN  //main()
 
-//-------------------------------------------------------------------//
+//
 
 static procedure xDisableMenus(nWinNum, nNumItem)
 * disables all Menu Items of window nWinNum
@@ -342,7 +342,7 @@ local hMenu := WVW_GetMenu(nWinNum)
 return
 
 
-//-------------------------------------------------------------------//
+//
 procedure Demo_Console(nTop, nLeft, nBottom, nRight)
 local cWinName, nCurWindow
 local nMaxrow, nMaxCol
@@ -421,7 +421,7 @@ local lEchoing := .f.
 return //Demo_Console()
 
 
-//-------------------------------------------------------------------//
+//
 PROCEDURE Demo_Get()
 local nCurWindow, getlist := {}
 local cLabel := "This is the GET Demo Window"
@@ -449,20 +449,20 @@ memvar x
    WVW_SetIcon(, 'vr_1.ico' )
 
    ResetMiscObjects( nCurWindow )
-   AddMiscObjects( nCurWindow, {|nWindow| WVW_DrawLabel( nWindow, 1,nRight-nLeft, cLabel,2,, rgb(255,255,255), rgb(198,198,198), 'Arial', s_afontinfo[2], , , , , .t., .t. ) } )
-   AddMiscObjects( nCurWindow, {|nWindow| WVW_DrawBoxRecessed( nWindow, 7-nTop, 61-nLeft, 13-nTop, 70-nLeft ) } )
-   AddMiscObjects( nCurWindow, {|nWindow| WVW_DrawBoxGroup( nWindow, 15-nTop, 59-nLeft, 18-nTop, 72-nLeft ) } )
-   AddMiscObjects( nCurWindow, {|nWindow| WVW_DrawBoxGroup( nWindow, 5-nTop, 6-nLeft, 19-nTop, 44-nLeft ) } )
-   AddMiscObjects( nCurWindow, {|nWindow| WVW_DrawImage( nWindow, 8-nTop,62-nLeft,12-nTop,69-nLeft, 'vouch1.bmp' ) } )
-   AddMiscObjects( nCurWindow, {|nWindow| WVW_DrawBoxRecessed( nWindow, 7-nTop, 48-nLeft, 13-nTop, 55-nLeft ) } )
-   AddMiscObjects( nCurWindow, {|nWindow| x:= nWindow, aEval( GetList, {|oGet| WVW_DrawBoxGet( x, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,nRight-nLeft, cLabel,2,, rgb(255,255,255), rgb(198,198,198), 'Arial', s_afontinfo[2], , , , , .t., .t. ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, 7-nTop, 61-nLeft, 13-nTop, 70-nLeft ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxGroup( nWindow, 15-nTop, 59-nLeft, 18-nTop, 72-nLeft ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxGroup( nWindow, 5-nTop, 6-nLeft, 19-nTop, 44-nLeft ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawImage( nWindow, 8-nTop,62-nLeft,12-nTop,69-nLeft, 'vouch1.bmp' ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, 7-nTop, 48-nLeft, 13-nTop, 55-nLeft ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | x:= nWindow, aEval( GetList, {| oGet | WVW_DrawBoxGet( x, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
    wvwm_ResetMouseObjects( nCurWindow )
 
    /* we now use native push button
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info",   maxrow()-1,maxcol()-15, , , {|| xDebugInfo() } ))
    */
-   WVW_PBcreate( nCurWindow, maxrow()-1,maxcol()-15, maxrow()-1, maxcol()-5, "Info", NIL, {||xDebugInfo()}, NIL)
+   WVW_PBcreate( nCurWindow, maxrow()-1,maxcol()-15, maxrow()-1, maxcol()-5, "Info", NIL, {|| xDebugInfo()}, NIL)
 
    CLS
 
@@ -492,7 +492,7 @@ memvar x
 RETURN  //Demo_Get()
 
 
-//-------------------------------------------------------------------//
+//
 FUNCTION DEMO_Browse()
 
    LOCAL nKey, bBlock, oBrowse , i
@@ -560,17 +560,17 @@ FUNCTION DEMO_Browse()
       tmp := oBrowse:getColumn( tmp:__enumIndex() ):colSep()
    NEXT
 
-   AddMiscObjects( nCurWindow, {|nWindow| WVW_DrawBoxRecessed( nWindow, oBrowse:nTop, oBrowse:nLeft, oBrowse:nBottom, oBrowse:nRight ) } )
-   AddMiscObjects( nCurWindow, {|nWindow| WVW_DrawGridHorz( nWindow, oBrowse:nTop+3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
-   AddMiscObjects( nCurWindow, {|nWindow| WVW_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, aColumnsSep, len( aColumnsSep ) ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, oBrowse:nTop, oBrowse:nLeft, oBrowse:nBottom, oBrowse:nRight ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawGridHorz( nWindow, oBrowse:nTop+3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, aColumnsSep, len( aColumnsSep ) ) } )
 
    /* we now use native push button
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info",   maxrow(),maxcol()-15, , , {|| xDebugInfo() } ))
    */
-   WVW_PBcreate( nCurWindow, maxrow(),maxcol()-15, maxrow(), maxcol()-5, "Info", NIL, {||xDebugInfo()}, NIL)
+   WVW_PBcreate( nCurWindow, maxrow(),maxcol()-15, maxrow(), maxcol()-5, "Info", NIL, {|| xDebugInfo()}, NIL)
 
-   nHScrollBar := wvw_xbCreate( nCurWindow, 0, oBrowse:nBottom+1, oBrowse:nLeft, oBrowse:nRight-oBrowse:nLeft+1, /*aBlock*/ {|nWinNum, nXBid, nXBmsg, nXBpos| HXBscroller(oBrowse, nWinNum, nXBid, nXBmsg)}, /*aOffset*/ NIL)
-   nVScrollBar := wvw_xbCreate( nCurWindow, 1, oBrowse:nTop, oBrowse:nRight+1, oBrowse:nBottom-oBrowse:nTop+1, /*aBlock*/ {|nWinNum, nXBid, nXBmsg, nXBpos| VXBscroller(oBrowse, nWinNum, nXBid, nXBmsg)}, /*aOffset*/ NIL)
+   nHScrollBar := wvw_xbCreate( nCurWindow, 0, oBrowse:nBottom+1, oBrowse:nLeft, oBrowse:nRight-oBrowse:nLeft+1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HXBscroller(oBrowse, nWinNum, nXBid, nXBmsg)}, /*aOffset*/ NIL)
+   nVScrollBar := wvw_xbCreate( nCurWindow, 1, oBrowse:nTop, oBrowse:nRight+1, oBrowse:nBottom-oBrowse:nTop+1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | VXBscroller(oBrowse, nWinNum, nXBid, nXBmsg)}, /*aOffset*/ NIL)
 
    hb_DispOutAt( nTop + 1-nTop, nleft-nleft, padc( hb_CurDrive()+':\'+CurDir()+'\'+'test.dbf', nRight - nLeft + 1 ), 'W+/W' )
 
@@ -802,7 +802,7 @@ return NIL
 
 
 
-//-------------------------------------------------------------------//
+//
 STATIC FUNCTION DbSkipBlock( n, oTbr )
 
    LOCAL nSkipped := 0
@@ -822,7 +822,7 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
 
 RETURN  nSkipped
 
-//-------------------------------------------------------------------//
+//
 STATIC FUNCTION TBNext( oTbr )
 
    LOCAL nSaveRecNum := recno()
@@ -839,7 +839,7 @@ STATIC FUNCTION TBNext( oTbr )
    endif
 
 RETURN lMoved
-//-------------------------------------------------------------------//
+//
 STATIC FUNCTION TBPrev( oTbr )
    LOCAL nSaveRecNum := Recno()
    LOCAL lMoved := .T.
@@ -852,15 +852,15 @@ STATIC FUNCTION TBPrev( oTbr )
    endif
 
 RETURN lMoved
-//-------------------------------------------------------------------//
+//
 STATIC FUNCTION VouBlockField( i )
 
 RETURN  { || fieldget( i ) }
 
-//-------------------------------------------------------------------//
+//
 //      WVW_Paint() must be a FUNCTION in your application
 //      as it is called when Window gets WM_PAINT message.
-//-------------------------------------------------------------------//
+//
 //20040330,was: FUNCTION WVW_Paint( hWnd, msg, wParam, lParam, nWinNum )
 //20040408,was: FUNCTION WVW_Paint( nWinNum, nrow1, ncol1, nrow2, ncol2 )
 FUNCTION WVW_Paint( nWinNum )
@@ -868,17 +868,17 @@ FUNCTION WVW_Paint( nWinNum )
    //       "hWnd = " + alltrim(str(hWnd)) + CRLF +;
    //       "nWinNum = " + alltrim(str(nWinNum)))
    if len(s_amiscobjlist) >= nWinNum+1
-      aeval( s_amiscobjlist[nWinNum+1], {|e| eval( e, nWinNum )} )
+      aeval( s_amiscobjlist[nWinNum+1], {| e | eval( e, nWinNum )} )
    endif
 
    wvwm_paint( nWinNum )
 RETURN 0
 
-//-------------------------------------------------------------------//
+//
 //      WVW_SetFocus() must be a FUNCTION in your application
 //      needs to process messages sent through WM_SETFOCUS message
 //      received by the window.
-//-------------------------------------------------------------------//
+//
 /*
 FUNCTION WVW_SetFocus( hWnd, nWinNum )
 static nGotFocus := 0
@@ -894,11 +894,11 @@ static nGotFocus := 0
 RETURN nil
 */
 
-//-------------------------------------------------------------------//
+//
 //      WVW_KillFocus() must be a FUNCTION in your application
 //      needs to process messages sent through WM_KILLFOCUS message
 //      received by the window.
-//-------------------------------------------------------------------//
+//
 //FUNCTION WVW_KillFocus( hWnd )
 //RETURN nil
 
@@ -971,7 +971,7 @@ local i
   next
 return NIL
 
-//-------------------------------------------------------------------//
+//
 
 function ResetMiscObjects( nWinNum )
    do while len(s_amiscobjlist) < nWinNum+1

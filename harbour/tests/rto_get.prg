@@ -1456,7 +1456,7 @@ PROCEDURE TEST_CALL( o, cBlock, bBlock )
 
    SetPos( 0, 0 ) // ; To check where the cursor was moved after evaluating the block.
 
-   bOldError := ErrorBlock( {|oError| oError:cargo := CallStack(), Break( oError ) } )
+   bOldError := ErrorBlock( {| oError | oError:cargo := CallStack(), Break( oError ) } )
 
    BEGIN SEQUENCE
       xResult := Eval( bBlock )

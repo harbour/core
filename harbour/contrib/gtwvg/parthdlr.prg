@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                               EkOnkar
  *                         ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                               08Nov2008
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,7 +74,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*-*/
+//
 
 CLASS WvgPartHandler
 
@@ -111,7 +111,7 @@ CLASS WvgPartHandler
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvgPartHandler:new( oParent, oOwner )
 
@@ -120,7 +120,7 @@ METHOD WvgPartHandler:new( oParent, oOwner )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgPartHandler:create( oParent, oOwner )
 
@@ -132,7 +132,7 @@ METHOD WvgPartHandler:create( oParent, oOwner )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgPartHandler:configure( oParent, oOwner )
 
@@ -144,7 +144,7 @@ METHOD WvgPartHandler:configure( oParent, oOwner )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgPartHandler:destroy()
 
@@ -155,7 +155,7 @@ METHOD WvgPartHandler:destroy()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgPartHandler:handleEvent( hEvent, mp1, mp2 )
 
@@ -165,13 +165,13 @@ METHOD WvgPartHandler:handleEvent( hEvent, mp1, mp2 )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgPartHandler:status()
 
    RETURN ::nStatus
 
-/*-*/
+//
 
 METHOD WvgPartHandler:addChild( oWvg )
 
@@ -180,7 +180,7 @@ METHOD WvgPartHandler:addChild( oWvg )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgPartHandler:childFromName( nNameId )
    LOCAL i, oWvg
@@ -193,29 +193,29 @@ METHOD WvgPartHandler:childFromName( nNameId )
 
    RETURN oWvg
 
-/*-*/
+//
 
 METHOD WvgPartHandler:childList()
 
    RETURN ::aChildren
 
-/*-*/
+//
 
 METHOD WvgPartHandler:removeChild( oChild )
    LOCAL n
 
-   IF ( n := ascan( ::aChildren, {|o| o == oChild } ) ) > 0
+   IF ( n := ascan( ::aChildren, {| o | o == oChild } ) ) > 0
       hb_aDel( ::aChildren, n, .t. )
    ENDIF
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgPartHandler:delChild( oWvg )
    LOCAL n
 
-   n := ascan( ::aChildren, {|o| o == oWvg } )
+   n := ascan( ::aChildren, {| o | o == oWvg } )
    IF n > 0
       oWvg:destroy()
       adel( ::aChildren, n )
@@ -224,7 +224,7 @@ METHOD WvgPartHandler:delChild( oWvg )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgPartHandler:setName( nNameId )
    LOCAL nOldNameId := ::nNameId
@@ -235,7 +235,7 @@ METHOD WvgPartHandler:setName( nNameId )
 
    RETURN nOldNameId
 
-/*-*/
+//
 
 METHOD WvgPartHandler:setOwner( oWvg )
    LOCAL oOldXbp := ::oOwner
@@ -246,7 +246,7 @@ METHOD WvgPartHandler:setOwner( oWvg )
 
    RETURN oOldXbp
 
-/*-*/
+//
 
 METHOD WvgPartHandler:setParent( oWvg )
    LOCAL oOldXbp := ::oParent
@@ -257,7 +257,7 @@ METHOD WvgPartHandler:setParent( oWvg )
 
    RETURN oOldXbp
 
-/*-*/
+//
 
 METHOD WvgPartHandler:notifierBlock( ... )
    LOCAL a_:= hb_AParams()
@@ -272,7 +272,7 @@ METHOD WvgPartHandler:notifierBlock( ... )
 
    RETURN NIL
 
-/*-*/
+//
 
 /*
    This will be called by the WvgCRT() console FOR various events TO be propogated TO child controls
@@ -369,7 +369,7 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
       ENDIF
 
    CASE nEvent == HB_GTE_SETFOCUS
-      /* aeval( ::aChildren, {|o| WVG_InvalidateRect( o:hWnd ) } ) */
+      /* aeval( ::aChildren, {| o | WVG_InvalidateRect( o:hWnd ) } ) */
 
       IF HB_ISBLOCK( ::sl_setInputFocus )
          eval( ::sl_setInputFocus, NIL, NIL, Self )
@@ -383,13 +383,13 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
       ::lHasInputFocus := .f.
 
    CASE nEvent == HB_GTE_PAINT
-      /* aeval( ::aChildren, {|o| WVG_InvalidateRect( o:hWnd ) } ) */
+      /* aeval( ::aChildren, {| o | WVG_InvalidateRect( o:hWnd ) } ) */
 
    CASE nEvent == HB_GTE_GUIPARTS
       /* Eventally every window be checked if it falls within returned rectangle or not
        * then it will avoid a lot of flickering
        */
-      aeval( ::aChildren, {|o| WVG_InvalidateRect( o:hWnd ) } )
+      aeval( ::aChildren, {| o | WVG_InvalidateRect( o:hWnd ) } )
 
    CASE nEvent == HB_GTE_CLOSE
       IF HB_ISBLOCK( ::close )
@@ -425,13 +425,13 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
 
    CASE nEvent == HB_GTE_NOTIFY
       nCtrlID := xParams[ 1 ]
-      IF ( nIndex := ascan( ::aChildren, {|o| o:nID == nCtrlID } ) ) > 0
+      IF ( nIndex := ascan( ::aChildren, {| o | o:nID == nCtrlID } ) ) > 0
          RETURN ::aChildren[ nIndex ]:handleEvent( HB_GTE_NOTIFY, xParams )
       ENDIF
 
    CASE nEvent == HB_GTE_COMMAND
       nCtrlID := xParams[ 2 ]
-      IF ( nIndex := ascan( ::aChildren, {|o| o:nID == nCtrlID } ) ) > 0
+      IF ( nIndex := ascan( ::aChildren, {| o | o:nID == nCtrlID } ) ) > 0
          RETURN ::aChildren[ nIndex ]:handleEvent( HB_GTE_COMMAND, xParams )
       ENDIF
 
@@ -470,7 +470,7 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
       IF HB_ISBLOCK( ::sl_resize )
          eval( ::sl_resize, { xParams[ 1 ], xParams[ 2 ] }, { xParams[ 3 ], xParams[ 4 ] }, Self )
       ENDIF
-      aeval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
+      aeval( ::aChildren, {| o | o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
 
    CASE nEvent == HB_GTE_KEYTOITEM
       IF xParams[ 3 ] == ::hWnd
@@ -486,7 +486,7 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
 
    RETURN nReturn
 
-/*-*/
+//
 /*
   This will be called if a control is assigned its own WndProc via ::SetWindowProcCallback()
 */
@@ -520,7 +520,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
          ENDIF
          RETURN 0
       ELSE
-         IF ( nObj := ascan( ::aChildren, {|o| o:nID == nCtrlID } ) ) > 0
+         IF ( nObj := ascan( ::aChildren, {| o | o:nID == nCtrlID } ) ) > 0
             nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_COMMAND, { nNotifctn, nCtrlID, hWndCtrl } )
             IF HB_ISNUMERIC( nReturn ) .AND. nReturn == 0
                RETURN 0
@@ -613,4 +613,4 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    RETURN WVG_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
 
-/*-*/
+//

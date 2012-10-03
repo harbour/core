@@ -427,15 +427,15 @@ TEST t047 WITH c := dtos( date() ) ;
           INFO "f2( c[1...8] )" ;
           CODE f2( c )
 
-TEST t048 WITH c := repl( dtos( date() ), 5000 ) ;
+TEST t048 WITH c := replicate( dtos( date() ), 5000 ) ;
           INFO "f2( c[1...40000] )" ;
           CODE f2( c )
 
-TEST t049 WITH c := repl( dtos( date() ), 5000 ) ;
+TEST t049 WITH c := replicate( dtos( date() ), 5000 ) ;
           INFO "f2( @c[1...40000] )" ;
           CODE f2( @c )
 
-TEST t050 WITH c := repl( dtos( date() ),5000 ), c2 ;
+TEST t050 WITH c := replicate( dtos( date() ), 5000 ), c2 ;
           INFO "f2( @c[1...40000] ), c2 := c" ;
           CODE f2( @c ), c2 := c
 

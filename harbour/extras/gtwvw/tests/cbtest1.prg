@@ -26,7 +26,7 @@ static s_aAnswers  := {"1-GTWVW is a great library!",;
 static s_cYourAnswer:="Your response is:"
 static s_cThankYou := "Thanks for participating in our survey :-)"
 
-#DEFINE _SECRET_KEY 101010
+#define _SECRET_KEY 101010
 
 ANNOUNCE HB_NOSTARTUPWINDOW
 
@@ -43,7 +43,7 @@ local ch,ncursor
    WVW_pbSetFont(NIL, "Arial", 16)
 
    nMaxWidth := 0
-   aeval(s_aAnswers, {|x| nMaxWIdth := max(nMaxWidth,len(x))})
+   aeval(s_aAnswers, {| x | nMaxWIdth := max(nMaxWidth,len(x))})
 
    setmode(11, nMaxWidth+1+10+2)
 
@@ -52,11 +52,11 @@ local ch,ncursor
    @ 1,1 say s_cQuestion
    @ 2,1 say s_cHint
    nCBid := wvw_cbCreate(NIL, 4, 1, nMaxWidth, s_aAnswers, ;
-                              {|nWinNum,nId,nEvent,nIndex|  ;
-                               CBhandler(nWinNum,nId,nEvent,nIndex, nPBid)})
+                              {| nWinNum, nId, nEvent, nIndex | ;
+                               CBhandler( nWinNum, nId, nEvent, nIndex, nPBid ) } )
 
    nPBid := wvw_pbCreate(NIL, 4,1+nMaxWidth+1, 4,1+nMaxWidth+1+10-1, "OK",NIL,;
-                              {||__keyboard(_SECRET_KEY)},{0,0,+2,0})
+                              {|| __keyboard( _SECRET_KEY ) },{0,0,+2,0})
 
    wvw_cbSetFocus(NIL, nCBid)
 

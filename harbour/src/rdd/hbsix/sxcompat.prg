@@ -392,7 +392,7 @@ FUNCTION RDD_Info( xID )
       ENDIF
    ELSEIF HB_ISSTRING( xID )
       cRDD := Upper( AllTrim( xID ) )
-      IF AScan( rddList(), {|x| Upper( x ) == cRDD } ) == 0
+      IF AScan( rddList(), {| x | Upper( x ) == cRDD } ) == 0
          cRDD := NIL
       ENDIF
    ELSEIF xID == NIL

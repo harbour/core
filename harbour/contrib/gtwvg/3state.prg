@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                               07Dec2008
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,13 +74,13 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*-*/
+//
 
 #ifndef __DBG_PARTS__
 #xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
 
-/*-*/
+//
 
 CLASS Wvg3State  INHERIT  WvgWindow, WvgDataRef
 
@@ -102,7 +102,7 @@ CLASS Wvg3State  INHERIT  WvgWindow, WvgDataRef
    METHOD   handleEvent( nMessage, aNM )
 
    ENDCLASS
-/*-*/
+//
 
 METHOD Wvg3State:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -114,7 +114,7 @@ METHOD Wvg3State:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD Wvg3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -144,7 +144,7 @@ METHOD Wvg3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD Wvg3State:handleEvent( nMessage, aNM )
 
@@ -178,7 +178,7 @@ METHOD Wvg3State:handleEvent( nMessage, aNM )
 
    RETURN 1
 
-/*-*/
+//
 
 METHOD Wvg3State:destroy()
 
@@ -188,7 +188,7 @@ METHOD Wvg3State:destroy()
 
    RETURN NIL
 
-/*-*/
+//
 
 METHOD Wvg3State:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -196,7 +196,7 @@ METHOD Wvg3State:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD Wvg3State:setCaption( xCaption )
 
@@ -207,4 +207,4 @@ METHOD Wvg3State:setCaption( xCaption )
 
    RETURN Self
 
-/*-*/
+//

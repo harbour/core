@@ -724,7 +724,7 @@ PVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piPos, int
                 * cannot detach this local variable
                 * For example:
                 * LOCAL locvar
-                * STATIC stavar:= {| x | locvar }
+                * STATIC stavar := {| x | locvar }
                 *
                 * NOTE: Clipper creates such a codeblock however at the
                 * time of codeblock evaluation it generates a runtime error:
@@ -2637,7 +2637,7 @@ static void hb_compCheckEarlyMacroEval( HB_COMP_DECL, const char *szVarName, int
        iScope == HB_VS_GLOBAL_FIELD )
    {
       /* Disable early evaluation if codeblock contains macros and
-       * declared variables, i.e. {|x| cLocal + &cPriv }
+       * declared variables, i.e. {| x | cLocal + &cPriv }
        * and support for macros with declared symbols is enabled.
        */
       if( HB_COMP_PARAM->functions.pLast->iEarlyEvalPass == 1 &&

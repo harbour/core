@@ -66,9 +66,9 @@ proc main()
    ? "HB_DATETIME() function is supported:", net:exists:HB_DATETIME
    ?
    /* display text on server console */
-   net:QOUT( repl( "=", 70 ) )
+   net:QOUT( replicate( "=", 70 ) )
    net:QOUT( "This is RPC TEST", hb_datetime(), version() )
-   net:QOUT( repl( "=", 70 ) )
+   net:QOUT( replicate( "=", 70 ) )
 
    /* execute some functions on the server side and display the results */
    ? "SERVER DATE:",     net:DATE()

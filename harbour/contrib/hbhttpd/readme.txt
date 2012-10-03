@@ -164,8 +164,8 @@ error is returned.
 
 NOTE 2: if you want to use a slash-less URL address as a synonym for
 the folder you may need an extra redirection rule. Ex.,
-     "/files"   => {{|| URedirect("/files/")}, .F.}
-     "/files/*" => {{|x| UProcFiles(DocumentRoot + x)}, .F.}
+     "/files"   => { {|| URedirect( "/files/" ) }, .F. }
+     "/files/*" => { {| x | UProcFiles(DocumentRoot + x ) }, .F. }
 
 
 Widgets
@@ -185,7 +185,7 @@ to use some objects (browse, etc.) instead of plain:
 
 To use UWigets under some URL subtree, you should add an entry to
 server mounting table specifying standard widgets handler:
-    "app/*" => {{|x| UProcWidgets(x, s_aMap)}, .T.}
+    "app/*" => { {| x | UProcWidgets( x, s_aMap ) }, .T. }
 You can see UWidgets handler requires requests to be sessioned.
 
 s_aMap is one more table similar to server mounting table. Actually,
@@ -198,7 +198,7 @@ containing the mapping of URL subtree into handler functions. Ex.,
                "account"      => @proc_account(), ;
                "items"        => @proc_items(), ;
                "items/edit"   => @proc_items_edit(), ;
-               "logout"       => @proc_logout()}
+               "logout"       => @proc_logout() }
 
 Page handler functions receives a parameter indicating received
 event/method. Handler has a structure:
@@ -222,7 +222,7 @@ As you can see this handler reminds the structure of traditional GUI
 based application message/event handler, for example in windows, we
 have:
 
-STATIC FUNC WndProc(hWnd, uMsg, wParam, lParam)
+STATIC FUNC WndProc( hWnd, uMsg, wParam, lParam )
    IF uMsg == WM_CREATE
    ELSEIF uMsg == WM_PAINT
    ELSEIF uMsg == WM_DESTROY
@@ -240,7 +240,7 @@ creates a main widget of web page. This main widget acts as a
 layout/container in for example, GTK+ library. It has :Add() method
 and other widgets can be included inside of it. Ex.,
      oM := UWMainNew()
-     oM:Add( UWLabelNew("Hello, Widgets World!") )
+     oM:Add( UWLabelNew( "Hello, Widgets World!" ) )
 
 UWidgets keeps main widget (and its children) inside session variable
 and produces html output for it upon GET (or POST) requests. Main
@@ -286,7 +286,7 @@ items dialog, and items_edit_handler() function for item_edit dialog.
          dialog := create_new_modal_dialog() // create items_edit dialog
          dialog:handler := @items_edit_handler()
          process_event_loop() // until dialog is closed
-         destroy_dialog(dialog)
+         destroy_dialog( dialog )
       ENDIF
       ...
    RETURN

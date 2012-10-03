@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                               26Nov2008
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,7 +74,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*-*/
+//
 
 CLASS WvgTreeView  INHERIT  WvgWindow, WvgDataRef
 
@@ -122,7 +122,7 @@ CLASS WvgTreeView  INHERIT  WvgWindow, WvgDataRef
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvgTreeView:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -136,7 +136,7 @@ METHOD WvgTreeView:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -171,7 +171,7 @@ METHOD WvgTreeView:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgTreeView:handleEvent( nMessage, aNM )
    LOCAL aHdr
@@ -271,13 +271,13 @@ METHOD WvgTreeView:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-/*-*/
+//
 
 METHOD WvgTreeView:destroy()
    ::wvgWindow:destroy()
    RETURN NIL
 
-/*-*/
+//
 
 METHOD WvgTreeView:getSelectionInfo( nlParam )
    LOCAL hItemSelected, hParentOfSelected
@@ -292,25 +292,25 @@ METHOD WvgTreeView:getSelectionInfo( nlParam )
    ::textParentSelected := trim( cParent )
    ::textItemSelected   := trim( cText   )
 
-   IF ( n := ascan( ::aItems, {|o| o:hItem == hItemSelected } ) ) > 0
+   IF ( n := ascan( ::aItems, {| o | o:hItem == hItemSelected } ) ) > 0
       ::oItemSelected      := ::aItems[ n ]
    ENDIF
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgTreeView:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgTreeView:itemFromPos( aPos )
    HB_SYMBOL_UNUSED( aPos )
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgTreeView:itemCollapsed( xParam )
 
@@ -320,7 +320,7 @@ METHOD WvgTreeView:itemCollapsed( xParam )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgTreeView:itemExpanded( xParam )
 
@@ -330,7 +330,7 @@ METHOD WvgTreeView:itemExpanded( xParam )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgTreeView:itemMarked( xParam )
 
@@ -340,7 +340,7 @@ METHOD WvgTreeView:itemMarked( xParam )
 
    RETURN Self
 
-/*-*/
+//
 #if 0
 METHOD WvgTreeView:itemSelected( xParam )
 
@@ -350,9 +350,9 @@ METHOD WvgTreeView:itemSelected( xParam )
 
    RETURN Self
 #endif
-/*-*/
+//
 /*                      Class WvgTreeViewItem                           */
-/*-*/
+//
 CLASS WvgTreeViewItem
 
    DATA     caption                               INIT ""
@@ -389,37 +389,37 @@ CLASS WvgTreeViewItem
    METHOD   insItem()
 
    ENDCLASS
-/*-*/
+//
 
 METHOD new() CLASS WvgTreeViewItem
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD create() CLASS WvgTreeViewItem
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD configure() CLASS WvgTreeViewItem
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD destroy() CLASS WvgTreeViewItem
 
    RETURN NIL
 
-/*-*/
+//
 
 METHOD isExpanded() CLASS WvgTreeViewItem
 
    RETURN NIL
 
-/*-*/
+//
 
 METHOD setCaption( cCaption ) CLASS WvgTreeViewItem
 
@@ -427,14 +427,14 @@ METHOD setCaption( cCaption ) CLASS WvgTreeViewItem
 
    RETURN NIL
 
-/*-*/
+//
 
 METHOD setExpandedImage( nResIdoBitmap ) CLASS WvgTreeViewItem
 
    HB_SYMBOL_UNUSED( nResIdoBitmap )
    RETURN NIL
 
-/*-*/
+//
 
 METHOD setImage( nResIdoBitmap ) CLASS WvgTreeViewItem
 
@@ -442,7 +442,7 @@ METHOD setImage( nResIdoBitmap ) CLASS WvgTreeViewItem
 
    RETURN NIL
 
-/*-*/
+//
 
 METHOD setMarkedImage( nResIdoBitmap ) CLASS WvgTreeViewItem
 
@@ -450,7 +450,7 @@ METHOD setMarkedImage( nResIdoBitmap ) CLASS WvgTreeViewItem
 
    RETURN NIL
 
-/*-*/
+//
 
 METHOD addItem( cCaption ) CLASS WvgTreeViewItem
    Local oItem, hParent
@@ -470,25 +470,25 @@ METHOD addItem( cCaption ) CLASS WvgTreeViewItem
 
    RETURN oItem
 
-/*-*/
+//
 
 METHOD delItem() CLASS WvgTreeViewItem
 
    RETURN NIL
 
-/*-*/
+//
 
 METHOD getChildItems() CLASS WvgTreeViewItem
 
    RETURN NIL
 
-/*-*/
+//
 
 METHOD getParentItem() CLASS WvgTreeViewItem
 
    RETURN NIL
 
-/*-*/
+//
 
 METHOD insItem() CLASS WvgTreeViewItem
 

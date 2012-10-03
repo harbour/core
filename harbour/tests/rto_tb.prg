@@ -354,7 +354,7 @@ PROCEDURE TEST_C_TBR( o, cBlock, bBlock )
    SetPos( 0, 0 ) // ; To check where the cursor was moved after evaluating the block.
 
    IF s_lCatchErr
-      bOldError := ErrorBlock( {|oError| Break( oError ) } )
+      bOldError := ErrorBlock( {| oError | Break( oError ) } )
    ENDIF
 
    BEGIN SEQUENCE
@@ -379,7 +379,7 @@ PROCEDURE TEST_C_TBC( o, cBlock, bBlock )
    SetPos( 0, 0 ) // ; To check where the cursor was moved after evaluating the block.
 
    IF s_lCatchErr
-      bOldError := ErrorBlock( {|oError| Break( oError ) } )
+      bOldError := ErrorBlock( {| oError | Break( oError ) } )
    ENDIF
 
    BEGIN SEQUENCE

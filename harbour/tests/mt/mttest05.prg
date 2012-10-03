@@ -22,13 +22,13 @@ proc main()
    ? Version()
    s_var := N_INIT * 25
    ? "Starting threads: "
-   for i :=1 to N_THREADS
+   for i := 1 to N_THREADS
       aadd( aThreads, hb_threadStart( @thFunc() ) )
       ?? "<" + ltrim( str( i ) ) + ">"
    next
    ? "Waiting for threads..."
    nSum := 0
-   aEval( aThreads, { |x| hb_threadJoin( x, @i ), nSum += i } )
+   aEval( aThreads, {| x | hb_threadJoin( x, @i ), nSum += i } )
    ? "Threads joined"
    ? "Sum of results:", nSum
    ? "     should be:", N_THREADS * ( N_INIT + N_COUNT ), ;

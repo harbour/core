@@ -172,7 +172,7 @@ FUNCTION xBrowse1()
 
    DBCloseArea()
 RETURN nil
-//-------------------------------------------------------------------//
+//
 STATIC FUNCTION DbSkipBlock( n, oTbr )
    LOCAL nSkipped := 0
    if n == 0
@@ -188,7 +188,7 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
    endif
 RETURN  nSkipped
 
-//-------------------------------------------------------------------//
+//
 STATIC FUNCTION TBNext( oTbr )
    LOCAL nSaveRecNum := recno()
    LOCAL lMoved := .T.
@@ -202,7 +202,7 @@ STATIC FUNCTION TBNext( oTbr )
       endif
    endif
 RETURN lMoved
-//-------------------------------------------------------------------//
+//
 STATIC FUNCTION TBPrev( oTbr )
    LOCAL nSaveRecNum := Recno()
    LOCAL lMoved := .T.
@@ -212,7 +212,7 @@ STATIC FUNCTION TBPrev( oTbr )
       lMoved := .F.
    endif
 RETURN lMoved
-//-------------------------------------------------------------------//
+//
 STATIC FUNCTION VouBlockField( i )
 RETURN  {|| fieldget( i ) }
 

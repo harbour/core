@@ -46,7 +46,7 @@ proc main( cdp, info, unicode )
 #else
    ? "Character encoding: " + _natSortVersion()
 #endif
-   ? repl( "=", 50 )
+   ? replicate( "=", 50 )
    lSort := .f.
    for i := 1 to len( a ) - 1
       if a[ i ] > a[ i + 1 ]
@@ -263,7 +263,7 @@ proc main( cdp, info, unicode )
       ? 'HB_CP_UPPER: "' + cUp + '"'
       ? 'HB_CP_LOWER: "' + cLo + '"'
    endif
-   ? repl( "=", 50 )
+   ? replicate( "=", 50 )
    ?
 
    if !empty( cdp )

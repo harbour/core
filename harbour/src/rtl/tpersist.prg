@@ -79,7 +79,7 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
    ENDIF
 
    bError := iif( HB_ISLOGICAL( lIgnoreErrors ) .AND. lIgnoreErrors, ;
-                  { |e| break( e ) }, errorBlock() )
+                  {| e | break( e ) }, errorBlock() )
 
    FOR EACH cLine IN hb_ATokens( StrTran( cObjectText, Chr( 13 ) ), Chr( 10 ) )
 

@@ -283,7 +283,7 @@
  *                   methods that need parameters. The first parameter to
  *                   <CodeBlock> must be Self, as in:
  *
- *      METHOD       <MethodName> BLOCK {|Self,<arg1>,<arg2>, ...,<argN>|...}
+ *      METHOD       <MethodName> BLOCK {| Self, <arg1>, <arg2>, ..., <argN> | ... }
  *
  *      EXTERN       If an external function does what the method needs,
  *                   use this clause to make an optimized call to that
@@ -307,8 +307,8 @@
  *         VAR    hWnd, nOldProc
  *         METHOD New( ) CONSTRUCTOR
  *         METHOD Capture() INLINE  SetCapture( ::hWnd )
- *         METHOD End() BLOCK  {| Self, lEnd | If( lEnd := ::lValid(),;
- *                                 ::PostMsg( WM_CLOSE ),), lEnd }
+ *         METHOD End() BLOCK  {| Self, lEnd | iif( lEnd := ::lValid(),;
+ *                                 ::PostMsg( WM_CLOSE ), ), lEnd }
  *         METHOD EraseBkGnd( hDC )
  *         METHOD cTitle( cNewTitle ) SETGET
  *         METHOD Close() VIRTUAL

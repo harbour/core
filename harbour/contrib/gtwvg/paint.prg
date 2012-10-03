@@ -47,26 +47,26 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                           WvtPaint.prg
  *
  *            Routines to manage Wvt*Classes Gui Painting
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 #include "wvtwin.ch"
 #include "common.ch"
 
-/*-*/
+//
 
 thread static t_paint_:= { { "", {} } }
 
-/*-*/
+//
 /*
  *        This function must have to be defined in your appls
  */
@@ -78,7 +78,7 @@ function Wvt_Paint()
 
    return nil
 #endif
-/*-*/
+//
 
 function WvtPaintObjects()
    LOCAL i, lExe, nLeft, nRight, b, tlbr_, aBlocks, nBlocks
@@ -140,7 +140,7 @@ function WvtPaintObjects()
 
    return 0
 
-/*-*/
+//
 
 function WvtSetPaint( a_ )
    local o
@@ -158,14 +158,14 @@ function WvtSetPaint( a_ )
 
    return o
 
-/*-*/
+//
 
 function wvg_SetPaint( cID, nAction, xData, aAttr )
    local n, n1, oldData
 
    if xData != nil
-      if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-         if ( n1 := ascan( t_paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
+      if ( n := ascan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
+         if ( n1 := ascan( t_paint_[ n, 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
             oldData := t_paint_[ n,2,n1,2 ]
             t_paint_[ n,2,n1,2 ] := xData
             t_paint_[ n,2,n1,3 ] := aAttr
@@ -181,24 +181,24 @@ function wvg_SetPaint( cID, nAction, xData, aAttr )
 
    return oldData
 
-/*-*/
+//
 
 function wvg_GetPaint( cID )
    local n
 
-   if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+   if ( n := ascan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
       return t_paint_[ n,2 ]
    endif
 
    return {}
 
-/*-*/
+//
 
 function wvg_DelPaint( cID, nAction )
    local xData, n1, n
 
-   if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
-      if ( n1 := ascan( t_paint_[ n,2 ], {|e_| e_[ 1 ] == nAction } ) ) > 0
+   if ( n := ascan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
+      if ( n1 := ascan( t_paint_[ n, 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
          xData := t_paint_[ n,2,n1,2 ]
          t_paint_[ n,2,n1,2 ] := {|| .t. }
       endif
@@ -206,14 +206,14 @@ function wvg_DelPaint( cID, nAction )
 
    return xData
 
-/*-*/
+//
 
 function wvg_PurgePaint( cID,lDummy )
    local n, aPaint
 
    DEFAULT lDummy TO .f.
 
-   if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+   if ( n := ascan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
       aPaint := t_paint_[ n ]
       ADel( t_paint_, n )
       aSize( t_paint_, len( t_paint_ ) - 1 )
@@ -225,14 +225,14 @@ function wvg_PurgePaint( cID,lDummy )
 
    return aPaint
 
-/*-*/
+//
 
 function wvg_InsertPaint( cID, aPaint, lSet )
    local n
 
    DEFAULT lSet TO .f.
 
-   if ( n := ascan( t_paint_, { |e_| e_[ 1 ] == cID } ) ) > 0
+   if ( n := ascan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
       t_paint_[ n ] := aPaint
    else
       aadd( t_paint_, aPaint )
@@ -244,17 +244,17 @@ function wvg_InsertPaint( cID, aPaint, lSet )
 
    return nil
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *               RunTime Dialog Generation Routines
  *
  *                      Courtesy What32.lib
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /* nMode : 0 == Rows/cols - DEFAULT    1 == DlagUnits as from any standard dialog definition */
 FUNCTION Wvt_SetDlgCoMode( nMode )
    LOCAL nOldMode
@@ -268,7 +268,7 @@ FUNCTION Wvt_SetDlgCoMode( nMode )
 
    RETURN nOldMode
 
-/*-*/
+//
 
 
 FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle, ;
@@ -350,7 +350,7 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
 
    Return aDlg
 
-/*-*/
+//
 
 Function Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet,;
                          cnId, cnDlgClass, nStyle, cText, nHelpId, nExStyle )
@@ -414,7 +414,7 @@ Function Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet,;
 
    Return aDlg
 
-/*-*/
+//
 
 Function Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu )
    LOCAL hDlg, cType, xTemplate, nDlgMode
@@ -456,7 +456,7 @@ Function Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
 
    Return hDlg
 
-/*-*/
+//
 
 Function Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
    LOCAL nResult, cType, xTemplate, nDlgMode
@@ -482,7 +482,7 @@ Function Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
 
    Return nResult
 
-/*-*/
+//
 /*
 Wvt_GetOpenFileName( hWnd, @cPath, cTitle, aFilter, nFlags, cInitDir, cDefExt, nIndex )
 
@@ -526,7 +526,7 @@ FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, c
 
    RETURN xRet
 
-/*-*/
+//
 /*
 Wvt_GetSaveFileName( hWnd, cDefFile, cTitle, acFilter, nFlags, cInitDir, cDefExt, @nFilterIndex )
 
@@ -569,32 +569,32 @@ FUNCTION WVT_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir
 
    RETURN xRet
 
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                      C Functions to PRG Ports
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
 
-/*-*/
+//
 
 FUNCTION Wvt_SetTitle( cTitle )
 
    RETURN Hb_GtInfo( HB_GTI_WINTITLE, cTitle )
 
-/*-*/
+//
 
 FUNCTION Wvt_GetTitle()
 
    RETURN Hb_GtInfo( HB_GTI_WINTITLE )
 
-/*-*/
+//
 
 FUNCTION Wvt_SetIcon( ncIconRes, cIconName )
 
@@ -611,7 +611,7 @@ FUNCTION Wvt_SetIcon( ncIconRes, cIconName )
 
    RETURN NIL
 
-/*-*/
+//
 
 FUNCTION Wvt_SetFont( cFontName, nSize, nWidth, nWeight, nQuality )
 
@@ -623,31 +623,31 @@ FUNCTION Wvt_SetFont( cFontName, nSize, nWidth, nWeight, nQuality )
 
    RETURN Hb_GtInfo( HB_GTI_SETFONT, { cFontName, nSize, nWidth, nWeight, nQuality } )
 
-/*-*/
+//
 
 FUNCTION Wvt_SetCodePage( nCodePage )
 
    RETURN Hb_GtInfo( HB_GTI_CODEPAGE, nCodePage )
 
-/*-*/
+//
 
 FUNCTION Wvt_GetPalette()
 
    RETURN Hb_GtInfo( HB_GTI_PALETTE )
 
-/*-*/
+//
 
 FUNCTION Wvt_SetPalette( aRGB )
 
    RETURN Hb_GtInfo( HB_GTI_PALETTE, aRGB )
 
-/*-*/
+//
 
 FUNCTION Wvt_GetRGBColor( nIndex )
 
    RETURN Hb_GtInfo( HB_GTI_PALETTE, nIndex )
 
-/*-*/
+//
 #define BLACK          RGB( 0x0 ,0x0 ,0x0  )
 #define BLUE           RGB( 0x0 ,0x0 ,0x85 )
 #define GREEN          RGB( 0x0 ,0x85,0x0  )
@@ -688,7 +688,7 @@ FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
          s := strtran( s, "*" )
          s := strtran( s, "+" )
       ENDIF
-      nIndex := ascan( a_, {|e| e == s } )
+      nIndex := ascan( a_, {| e | e == s } )
       IF nIndex > 0
          IF lEnh
             nIndex += 8
@@ -699,31 +699,31 @@ FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
 
    RETURN Hb_GtInfo( HB_GTI_PALETTE, nIndex )
 
-/*-*/
+//
 
 FUNCTION Wvt_SetAltF4Close( lSetClose )
 
    RETURN Hb_GtInfo( HB_GTI_CLOSABLE, lSetClose )
 
-/*-*/
+//
 
 FUNCTION Wvt_GetScreenWidth()
 
    RETURN Hb_GtInfo( HB_GTI_DESKTOPWIDTH )
 
-/*-*/
+//
 
 FUNCTION Wvt_GetScreenHeight()
 
    RETURN Hb_GtInfo( HB_GTI_DESKTOPHEIGHT )
 
-/*-*/
+//
 
 FUNCTION Wvt_GetWindowHandle()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
 
-/*-*/
+//
 
 FUNCTION Wvt_CenterWindow( lCenter, lRePaint )
 
@@ -732,7 +732,7 @@ FUNCTION Wvt_CenterWindow( lCenter, lRePaint )
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
 
-/*-*/
+//
 
 FUNCTION Wvt_WindowCentre( lCenter, lRePaint )
 
@@ -741,7 +741,7 @@ FUNCTION Wvt_WindowCentre( lCenter, lRePaint )
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
 
-/*-*/
+//
 
 FUNCTION Wvt_ProcessMessages()
 
@@ -749,7 +749,7 @@ FUNCTION Wvt_ProcessMessages()
 
    RETURN .t.
 
-/*-*/
+//
 
 FUNCTION Wvt_KeyBoard( nKey )
 
@@ -757,19 +757,19 @@ FUNCTION Wvt_KeyBoard( nKey )
 
    RETURN NIL
 
-/*-*/
+//
 
 FUNCTION Wvt_GetClipboard()
 
    RETURN Hb_GtInfo( HB_GTI_CLIPBOARDDATA )
 
-/*-*/
+//
 
 FUNCTION Wvt_SetClipboard( cText )
 
    RETURN Hb_GtInfo( HB_GTI_CLIPBOARDDATA, cText )
 
-/*-*/
+//
 
 FUNCTION Wvt_PasteFromClipboard()
    Local cText, nLen, i
@@ -783,76 +783,76 @@ FUNCTION Wvt_PasteFromClipboard()
 
    RETURN NIL
 
-/*-*/
+//
 
 FUNCTION Wvt_ResetWindow()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_RESETWINDOW )
 
-/*-*/
+//
 
 FUNCTION Wvt_SetTimer( nTimerID, nMiliSeconds )
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SETTIMER, { nTimerID, nMiliSeconds } )
 
-/*-*/
+//
 
 FUNCTION Wvt_KillTimer( nTimerID )
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_KILLTIMER, nTimerID )
 
-/*-*/
+//
 
 FUNCTION Wvt_SetOnTop()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETONTOP )
 
-/*-*/
+//
 
 FUNCTION Wvt_SetAsNormal()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETASNORMAL )
 
-/*-*/
+//
 
 FUNCTION Wvt_Minimize()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MINIMIZED )
 
-/*-*/
+//
 
 FUNCTION Wvt_Maximize()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED )
 
-/*-*/
+//
 
 FUNCTION Wvt_Hide()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_HIDDEN )
 
-/*-*/
+//
 
 FUNCTION Wvt_Show()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_NORMAL )
 
-/*-*/
+//
 
 FUNCTION Wvt_SetWindowPos( nX, nY )
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SETPOSITION, { nX, nY } )
 
-/*-*/
+//
 
 FUNCTION Wvt_ShowWindow( nState )
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, nState )
 
-/*-*/
+//
 
 FUNCTION Wvt_Update()
 
    RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_UPDATEWINDOW )
 
-/*-*/
+//

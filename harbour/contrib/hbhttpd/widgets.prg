@@ -33,7 +33,7 @@ METHOD Paint() CLASS UWMain
    UWrite( '<meta http-equiv="content-type" content="text/html; charset=windows-1257">' )
    UWrite( '<script language="javascript" src="/files/main.js"></script>' )
    UWrite( '<body>' )
-   AEval( Self:aChilds, {|x| X:Paint() } )
+   AEval( Self:aChilds, {| x | x:Paint() } )
    UWrite( '</body></html>' )
 
    RETURN Self
@@ -70,7 +70,7 @@ METHOD Paint() CLASS UWLayoutGrid
       UWrite( '<tr>' )
       FOR EACH aCell IN aRow
          UWrite( '<td>' )
-         AEval( aCell, {|o| o:Paint() } )
+         AEval( aCell, {| o | o:Paint() } )
          UWrite( '</td>' )
       NEXT
       UWrite( '</tr>' )
@@ -85,16 +85,16 @@ METHOD Add( oWidget, nRow, nCol ) CLASS UWLayoutGrid
 
    IF nRow > Len( Self:aChilds )
       FOR nI := Len( Self:aChilds ) + 1 TO nRow
-         aI := Array( Len( Self:aChilds[1] ) )
-         FOR nJ := 1 TO Len( Self:aChilds[1] )
-            aI[nJ] := {}
+         aI := Array( Len( Self:aChilds[ 1 ] ) )
+         FOR nJ := 1 TO Len( Self:aChilds[ 1 ] )
+            aI[ nJ ] := {}
          NEXT
          AAdd( Self:aChilds, aI )
       NEXT
    ENDIF
-   IF nCol > Len( Self:aChilds[1] )
-      FOR nI := Len( Self:aChilds[1] ) + 1 TO nCol
-         AEval( Self:aChilds, {|x| AAdd( x, {} ) } )
+   IF nCol > Len( Self:aChilds[ 1 ] )
+      FOR nI := Len( Self:aChilds[ 1 ] ) + 1 TO nCol
+         AEval( Self:aChilds, {| x | AAdd( x, {} ) } )
       NEXT
    ENDIF
    AAdd( Self:aChilds[nRow, nCol], oWidget )
@@ -185,7 +185,7 @@ METHOD Add( oWidget ) CLASS UWForm
 METHOD Paint() CLASS UWForm
 
    UWrite( '<form action="' + Self:cAction + '" method="' + Self:cMethod + '">' )
-   AEval( Self:aChilds, {|x| X:Paint() } )
+   AEval( Self:aChilds, {| x | x:Paint() } )
    UWrite( '</form>' )
 
    RETURN Self
@@ -363,20 +363,20 @@ METHOD Output() CLASS UWBrowse
 
    cRet += '<table class="ubr"><tr>'
 
-   // Header
+// Header
    cRet += '<tr>'
    FOR nI := 1 TO Len( Self:aColumns )
       cRet += '<th>' + UHtmlEncode( Self:aColumns[nI, 2] ) + '</th>'
    NEXT
    cRet += '</tr>'
 
-   // Body
+// Body
    nPos := 0
-   DBGOTOP()
+   dbGoTop()
    IF Self:nPageSize > 0 .AND. Self:nPos > 0
       dbSkip( Self:nPos )
    ENDIF
-   DO WHILE ! Eof()
+   DO WHILE ! EOF()
       cRet += '<tr>'
       FOR nI := 1 TO Len( Self:aColumns )
          xField := Self:aColumns[nI, 3]
@@ -397,12 +397,12 @@ METHOD Output() CLASS UWBrowse
       NEXT
       cRet += '</tr>'
       dbSkip()
-      IF ++ nPos >= Self:nPageSize
+      IF ++nPos >= Self:nPageSize
          EXIT
       ENDIF
    ENDDO
    cRet += '</table>'
-   IF ! Eof() .OR. Self:nPos > 0
+   IF ! EOF() .OR. Self:nPos > 0
       cUrl := server["REQUEST_URI"]
       IF ( nI := At( "?_ucs=", cUrl ) ) == 0
          nI := At( "&_ucs=", cUrl )
@@ -418,7 +418,7 @@ METHOD Output() CLASS UWBrowse
       ENDIF
       cUrl += iif( "?" $ cUrl, "&", "?" ) + "_pos="
       cRet := '<br>' + cRet
-      IF ! Eof()
+      IF ! EOF()
          cI := cUrl + hb_ntos( Self:nPos + Self:nPageSize )
          cRet := '<a href="' + iif( lValidate, UUrlChecksum( cI ), cI ) + '">&gt;&gt;</a>' + cRet
       ENDIF
@@ -458,7 +458,7 @@ METHOD Output() CLASS UWOption
 
    LOCAL cRet := ""
 
-   AEval( Self:aOption, {| X | cRet += HB_STRFORMAT( '<option value="%s"%s>%s</option>', UHtmlEncode(X[2] ), iif(X[2] == Self:cValue, " selected", "" ), X[1] ) } )
+   AEval( Self:aOption, {| X | cRet += hb_StrFormat( '<option value="%s"%s>%s</option>', UHtmlEncode( X[ 2 ] ), iif( X[ 2 ] == Self:cValue, " selected", "" ), X[ 1 ] ) } )
 
    RETURN cRet
 
@@ -472,8 +472,8 @@ PROCEDURE UProcWidgets( cURL, aMap )
 
    LOCAL aStack, aURL, aFrame, cI, nI, nL, lRet
 
-   IF HB_HHasKey( aMap, cURL )
-      // aStack[i] = {url_part, function, variables}
+   IF hb_HHasKey( aMap, cURL )
+      // aStack[ i ] = { url_part, function, variables }
       IF ( aStack := hb_HGetDef( session, "_ustack" ) ) == NIL
          session[ "_ustack" ] := aStack := {}
       ENDIF
@@ -482,8 +482,8 @@ PROCEDURE UProcWidgets( cURL, aMap )
       nI := 1
       nL := Min( Len( aURL ), Len( aStack ) )
       DO WHILE nI <= nL
-         IF aStack[nI, 1] == aURL[nI]
-            nI ++
+         IF aStack[ nI, 1 ] == aURL[ nI ]
+            nI++
          ELSE
             EXIT
          ENDIF
@@ -491,10 +491,10 @@ PROCEDURE UProcWidgets( cURL, aMap )
 
       // Exit procedures
       DO WHILE nI <= Len( aStack )
-         aFrame := ATAIL( aStack )
-         IF aFrame[2] != NIL
-            session[ "_uthis" ] := aFrame[3]
-            Eval( aFrame[2], "EXIT" )
+         aFrame := ATail( aStack )
+         IF aFrame[ 2 ] != NIL
+            session[ "_uthis" ] := aFrame[ 3 ]
+            Eval( aFrame[ 2 ], "EXIT" )
             session[ "_uthis" ] := NIL
          ENDIF
          ASize( aStack, Len( aStack ) - 1 )
@@ -505,7 +505,7 @@ PROCEDURE UProcWidgets( cURL, aMap )
       // Enter procedures
       DO WHILE nI <= Len( aURL )
          cI := uhttpd_join( "/", ASize( AClone(aURL ), nI ) )
-         IF HB_HHasKey( aMap, cI )
+         IF hb_HHasKey( aMap, cI )
             session[ "_uthis" ] := { "idhash" => { => } }
             IF ( lRet := Eval( aMap[cI], "INIT" ) ) == .T.
                AAdd( aStack, { aURL[nI], aMap[cI], session[ "_uthis" ] } )
@@ -517,17 +517,17 @@ PROCEDURE UProcWidgets( cURL, aMap )
          ELSE
             AAdd( aStack, { aURL[nI], NIL, NIL } )
          ENDIF
-         nI ++
+         nI++
       ENDDO
 
       IF lRet
-         session[ "_uthis" ] :=  ATAIL( aStack )[3]
+         session[ "_uthis" ] := ATail( aStack )[ 3 ]
          IF server[ "REQUEST_METHOD" ] == "GET"
-            Eval( ATAIL( aStack )[2], "GET" )
+            Eval( ATail( aStack )[ 2 ], "GET" )
          ELSEIF server[ "REQUEST_METHOD" ] == "POST"
-            Eval( ATAIL( aStack )[2], "POST" )
+            Eval( ATail( aStack )[ 2 ], "POST" )
          ENDIF
-         ATAIL( aStack )[3] := session[ "_uthis" ]
+         ATail( aStack )[ 3 ] := session[ "_uthis" ]
          session[ "_uthis" ] := NIL
       ENDIF
    ELSE
@@ -563,6 +563,7 @@ STATIC PROCEDURE SetWId( oW, cID )
    RETURN
 
 FUNCTION UGetWidgetById( cID )
+
    RETURN hb_HGetDef( session[ "_uthis", "idhash" ], cID )
 
 STATIC FUNCTION uhttpd_split( cSeparator, cString )

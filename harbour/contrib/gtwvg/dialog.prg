@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                               EkOnkar
  *                         ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                 Pritpal Bedi <pritpal@vouchcac.com>
  *                             17Nov2008
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,7 +74,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*-*/
+//
 
 CLASS WvgDialog FROM WvgWindow
 
@@ -101,7 +101,7 @@ CLASS WvgDialog FROM WvgWindow
                                                          ::aRect[ 3 ]-::aRect[ 1 ], ::aRect[ 4 ]-::aRect[ 2 ] }
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvgDialog:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -116,7 +116,7 @@ METHOD WvgDialog:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    LOCAL oW
@@ -171,11 +171,11 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::drawingArea := Self
    ENDIF
 
-   hb_gtInfo( HB_GTI_NOTIFIERBLOCK, {|nEvent, ...| ::notifier( nEvent, ... ) } )
+   hb_gtInfo( HB_GTI_NOTIFIERBLOCK, {| nEvent, ... | ::notifier( nEvent, ... ) } )
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgDialog:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -183,7 +183,7 @@ METHOD WvgDialog:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgDialog:destroy()
 
@@ -192,7 +192,7 @@ METHOD WvgDialog:destroy()
    ENDIF
 
    IF Len( ::aChildren ) > 0
-      aeval( ::aChildren, {|o| o:destroy() } )
+      aeval( ::aChildren, {| o | o:destroy() } )
    ENDIF
 
    IF !empty( ::hBrushBG )
@@ -204,7 +204,7 @@ METHOD WvgDialog:destroy()
 
    RETURN Self
 
-/*-*/
+//
 
 METHOD WvgDialog:setFrameState( nState )
    LOCAL lSuccess := .f.
@@ -224,7 +224,7 @@ METHOD WvgDialog:setFrameState( nState )
 
    RETURN lSuccess
 
-/*-*/
+//
 
 METHOD WvgDialog:getFrameState()
 
@@ -237,7 +237,7 @@ METHOD WvgDialog:getFrameState()
 
    RETURN WVGDLG_FRAMESTAT_NORMALIZED
 
-/*-*/
+//
 
 METHOD WvgDialog:menuBar()
 
@@ -247,4 +247,4 @@ METHOD WvgDialog:menuBar()
 
    RETURN ::oMenu
 
-/*-*/
+//

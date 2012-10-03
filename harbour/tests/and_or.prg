@@ -27,7 +27,7 @@ PROCEDURE Main()
 
 FUNCTION DispAndReturnNIL()
 
-   QOut( "this should not show!" )
+   ? "this should not show!"
 
    RETURN NIL
 

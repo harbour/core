@@ -49,9 +49,9 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
@@ -61,9 +61,9 @@
  *                  Pritpal Bedi <pritpal@vouchcac.com>
  *                               06Dec2008
  */
-/*-*/
-/*-*/
-/*-*/
+//
+//
+//
 
 #include "hbclass.ch"
 #include "common.ch"
@@ -74,7 +74,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-/*-*/
+//
 
 CLASS WvgDataRef
 
@@ -101,13 +101,13 @@ CLASS WvgDataRef
 
    ENDCLASS
 
-/*-*/
+//
 
 METHOD WvgDataRef:new()
 
    RETURN self
 
-/*-*/
+//
 
 METHOD WvgDataRef:getData()
 
@@ -145,7 +145,7 @@ METHOD WvgDataRef:getData()
 
    RETURN ::sl_editBuffer
 
-/*-*/
+//
 
 METHOD WvgDataRef:setData( xValue, mp2 )
    LOCAL s
@@ -196,13 +196,13 @@ METHOD WvgDataRef:setData( xValue, mp2 )
 
    RETURN ::sl_editBuffer
 
-/*-*/
+//
 
 METHOD WvgDataRef:undo()
 
    RETURN .f.
 
-/*-*/
+//
 
 METHOD WvgDataRef:validate( xParam )
 
@@ -214,4 +214,4 @@ METHOD WvgDataRef:validate( xParam )
 
    RETURN .t.
 
-/*-*/
+//

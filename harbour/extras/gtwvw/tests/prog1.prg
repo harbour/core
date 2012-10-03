@@ -22,7 +22,7 @@
    open and close any window, we only have to change these two functions
    and let all other functions unchanged (xGet1(), xBrowse1(), ...).
 
-   All changes are guarded by #IFDEF, so this program is still compilable
+   All changes are guarded by #ifdef, so this program is still compilable
    in Clipper resulting its original behaviour.
 
    Compiling and linking in Clipper:
@@ -38,19 +38,19 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#IFDEF __XHARBOUR__
-  #DEFINE __GTWVW__
-#ENDIF
+#ifdef __XHARBOUR__
+  #define __GTWVW__
+#endif
 
 static s_zwin := {}
 static s_cStdColor := "N/W,N/GR*,,,N/W*"
 
 proc main
 local i,j
-#IFDEF __GTWVW__
+#ifdef __GTWVW__
 local lMainCoord := WVW_SetMainCoord( .t. )
    WVW_SetCodePage(,255)
-#ENDIF
+#endif
    SET SCOREBOARD OFF
    SetColor( s_cStdColor )
    setcursor(SC_NONE)
@@ -196,7 +196,7 @@ FUNCTION xBrowse1()
 
    DBCloseArea()
 RETURN nil
-//-------------------------------------------------------------------//
+//
 STATIC FUNCTION DbSkipBlock( n, oTbr )
    LOCAL nSkipped := 0
    if n == 0
@@ -212,7 +212,7 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
    endif
 RETURN  nSkipped
 
-//-------------------------------------------------------------------//
+//
 STATIC FUNCTION TBNext( oTbr )
    LOCAL nSaveRecNum := recno()
    LOCAL lMoved := .T.
@@ -226,7 +226,7 @@ STATIC FUNCTION TBNext( oTbr )
       endif
    endif
 RETURN lMoved
-//-------------------------------------------------------------------//
+//
 STATIC FUNCTION TBPrev( oTbr )
    LOCAL nSaveRecNum := Recno()
    LOCAL lMoved := .T.
@@ -236,7 +236,7 @@ STATIC FUNCTION TBPrev( oTbr )
       lMoved := .F.
    endif
 RETURN lMoved
-//-------------------------------------------------------------------//
+//
 STATIC FUNCTION VouBlockField( i )
 RETURN  {|| fieldget( i ) }
 
@@ -344,9 +344,9 @@ FUNCTION ZNEWWINDOW(wtype,r1,c1,r2,c2,ctitle, ccolor)
   default ccolor to s_cStdColor
   setcolor(ccolor)
 
-#IFDEF __GTWVW__
+#ifdef __GTWVW__
   WVW_nOpenWindow(ctitle, r1, c1, r2, c2)
-#ENDIF
+#endif
 
   AADD(s_zwin,{i+1, r1, c1, r2, c2, cScreen, ctitle, nrow, ncol, coldcolor})
 
@@ -362,7 +362,7 @@ FUNCTION ZNEWWINDOW(wtype,r1,c1,r2,c2,ctitle, ccolor)
      DevPos( r1, nCeiling( (c2+c1-len(cTitle))/2 ) )
      DevOut( cTitle )
   endif
-#ENDIF
+#endif
 
   SETCOLOR(cOldColor)
 RETURN i+1
@@ -376,9 +376,9 @@ FUNCTION ZREVWINDOW()
      return NIL
   endif
 
-#IFDEF __GTWVW__
+#ifdef __GTWVW__
   WVW_lCloseWindow()
-#ENDIF
+#endif
 
   * restore states
   restscreen(s_zwin[i][2], s_zwin[i][3], s_zwin[i][4], s_zwin[i][5], s_zwin[i][6])

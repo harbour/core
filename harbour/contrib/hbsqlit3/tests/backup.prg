@@ -176,8 +176,8 @@ STATIC FUNCTION cErrorMsg( nError, lShortMsg )
       IF nError == 0
          cErrorMsg := "SQLITE_OK"
       ELSE
-         nIndex    := AScan( aErrorCodes, {|x| x[1] == nError } )
-         cErrorMsg := iif( nIndex > 0, aErrorCodes[ nIndex ][ iif(lShortMsg,2,3) ], cErrorMsg )
+         nIndex    := AScan( aErrorCodes, {| x | x[ 1 ] == nError } )
+         cErrorMsg := iif( nIndex > 0, aErrorCodes[ nIndex ][ iif( lShortMsg, 2, 3 ) ], cErrorMsg )
       ENDIF
    ENDIF
 
