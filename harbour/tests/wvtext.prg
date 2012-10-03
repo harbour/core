@@ -347,9 +347,9 @@ FUNCTION SetPalette( nMode )
    THREAD STATIC t_nG := 198
    THREAD STATIC t_nB := 198
 
-   t_nR += iif( nMode == 0, - 5, 5 )
-   t_nG += iif( nMode == 0, - 5, 5 )
-   t_nB += iif( nMode == 0, - 5, 5 )
+   t_nR += iif( nMode == 0, -5, 5 )
+   t_nG += iif( nMode == 0, -5, 5 )
+   t_nB += iif( nMode == 0, -5, 5 )
 
    // Change "W" to slightly gray everytime you press F5
    //
@@ -513,7 +513,7 @@ STATIC FUNCTION TBPrev( oTbr )
 
    HB_SYMBOL_UNUSED( oTbr )
 
-   dbSkip( - 1 )
+   dbSkip( -1 )
 
    IF Bof()
       dbGoto( nSaveRecNum )

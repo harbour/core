@@ -44,7 +44,7 @@ FUNCTION ft_unsqzn( cCompressed, nSize, nDecimals )
 
    nSize       := iif( nSize     == NIL, 10, nSize )
    nDecimals   := iif( nDecimals == NIL, 0, nDecimals )
-   cCompressed := iif( multi     == - 1, hb_BSubStr( cCompressed, 2 ), cCompressed )
+   cCompressed := iif( multi     == -1, hb_BSubStr( cCompressed, 2 ), cCompressed )
    nSize       := iif( nSize / 2 != Int( nSize / 2 ), nSize + 1, nSize )
    IF hb_BCode( cCompressed ) > 127
       tmp         := Str( hb_BCode( cCompressed ) - 128, 2 )

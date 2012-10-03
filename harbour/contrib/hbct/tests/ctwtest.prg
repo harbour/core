@@ -48,7 +48,7 @@ PROCEDURE Main()
       aWin[ i ] := wopen( y, x, y + 10, x + 20 )
       wbox()
 
-      @ - 1, 0 SAY "TITLE " + hb_ntos( aWin[ i ] )
+      @ -1, 0 SAY "TITLE " + hb_ntos( aWin[ i ] )
       ? hb_ntos( Row() ) + ":" + hb_ntos( Col() ), "/", hb_ntos( MaxRow() ) + ":" + hb_ntos( MaxCol() ), ""
       ? hb_ntos( wrow() ) + ":" + hb_ntos( wcol() ), "/", hb_ntos( MaxRow( .T. ) ) + ":" + hb_ntos( MaxCol( .T. ) ), ""
       ? hb_ntos( wfrow() ) + ":" + hb_ntos( wfcol() ), "/", ;

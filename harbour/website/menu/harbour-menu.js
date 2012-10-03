@@ -53,7 +53,7 @@ stm_aix("p0i16","p0i2",[]);
 stm_aix("p0i17","p0i3",[2,"","language_en.png","language_en.png",62,65,0,""]);
 stm_bpx("p7","p1",[1,4,0,-3,2,0,28]);
 stm_aix("p7i0","p1i0",[0," English ","","",-1,-1,0,"/","_self","","","flageua.png","flageua.png",28,17]);
-stm_aix("p7i1","p7i0",[0," Español ","","",-1,-1,0,"http://alex-degarate.110mb.com/harbour/","_self","","","flages.png","flages.png"]);
+stm_aix("p7i1","p7i0",[0," Espanol ","","",-1,-1,0,"http://alex-degarate.110mb.com/harbour/","_self","","","flages.png","flages.png"]);
 stm_aix("p7i2","p7i0",[0," Portugués ","","",-1,-1,0,"http://www.harbour-project.com.br","_self","","","flagbr.png","flagbr.png"]);
 stm_ep();
 stm_ep();

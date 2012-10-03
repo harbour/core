@@ -10,7 +10,7 @@
 
 PROCEDURE Main()
 
-   LOCAL n, value := - 5
+   LOCAL n, value := -5
 
    FOR n := 1 TO 100
       ? value,;

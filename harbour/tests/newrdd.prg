@@ -54,12 +54,12 @@ PROCEDURE Main()
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
-   dbSkip( - 1 )
+   dbSkip( -1 )
    ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
-   dbSkip( - 1 )
+   dbSkip( -1 )
    ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
@@ -89,12 +89,12 @@ PROCEDURE Main()
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
-   dbSkip( - 1 )
+   dbSkip( -1 )
    ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
-   dbSkip( - 1 )
+   dbSkip( -1 )
    ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
@@ -117,12 +117,12 @@ PROCEDURE Main()
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
-   dbSkip( - 1 )
+   dbSkip( -1 )
    ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
-   dbSkip( - 1 )
+   dbSkip( -1 )
    ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
@@ -366,7 +366,7 @@ PROCEDURE Main()
    NEXT
    ? "..."
    NEWRDD->( dbGoBottom() )
-   NEWRDD->( dbSkip( - 8 ) )
+   NEWRDD->( dbSkip( -8 ) )
    FOR nI := 1 TO 8
       ? NEWRDD->FIRST, NEWRDD->AGE
       NEWRDD->( dbSkip() )

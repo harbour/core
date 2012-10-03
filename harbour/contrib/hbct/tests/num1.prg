@@ -68,12 +68,12 @@ PROCEDURE Main()
    ?  Space( 11 ),  CELSIUS( 338.0 ), " <-- CT for Harbour "
    ?
 
-   ? "CELSIUS( 3380.0) = 1860             // CT3"
+   ? "CELSIUS( 3380.0 ) = 1860             // CT3"
    ?  Space( 12 ),  CELSIUS( 3380.0 ), " <-- CT for Harbour "
    ?
 
-   ? "CELSIUS( -33.8) = -36.5555..      // CT3"
-   ?  Space( 10 ), CELSIUS( - 33.8 ), " <-- CT for Harbour "
+   ? "CELSIUS( -33.8 ) = -36.5555..      // CT3"
+   ?  Space( 10 ), CELSIUS( -33.8 ), " <-- CT for Harbour "
    ?
 
    ? "FAHRENHEIT( 12.5 ) = 54.5           // CT3"
@@ -88,7 +88,7 @@ PROCEDURE Main()
    ?  Space( 14 ), FAHRENHEIT( 1250 ), " <-- CT for Harbour "
    ?
    ? "FAHRENHEIT( -155 ) = -247             // CT3"
-   ?  Space( 14 ), FAHRENHEIT( - 155 ), " <-- CT for Harbour "
+   ?  Space( 14 ), FAHRENHEIT( -155 ), " <-- CT for Harbour "
    ?
    ? "   PRESS ANY KEY"
 

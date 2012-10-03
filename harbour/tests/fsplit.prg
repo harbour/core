@@ -52,9 +52,9 @@ FUNCTION fsplit( csource, csplit, nbyte )
 
    // open the source file
    BEGIN SEQUENCE
-      IF ( hsource := FOpen( csource,FO_READ + FO_SHARED ) ) != F_ERROR
+      IF ( hsource := FOpen( csource, FO_READ + FO_SHARED ) ) != F_ERROR
          // is file size smaller than chunk size ?
-         IF ( nfilesize := FSeek( hsource, 0 , FS_END ) ) <= nbyte
+         IF ( nfilesize := FSeek( hsource, 0, FS_END ) ) <= nbyte
             Alert( "***** Error *****;File Size Is Smaller Than Chunk Size;" + "Source Size = " + hb_ntos( nfilesize ) + " Chunk Size = " + hb_ntos( nbyte ), { "  Okay  " }, "w+/b" )
             FClose( hsource )
             break
@@ -71,7 +71,7 @@ FUNCTION fsplit( csource, csplit, nbyte )
          ccommand     := "copy /b "                // line in join.bat
          ccommand     += cdestination + "+"        // line in join.bat
          hdestination := FCreate( cdestination )     // create 1st split file
-         IF hdestination != - 1
+         IF hdestination != F_ERROR
             nbufsize     *= 1024                      // buffer size
             cbuffer      := Space( nbufsize )         // buffer read/write
             AAdd( afile, cbat )
@@ -96,7 +96,7 @@ FUNCTION fsplit( csource, csplit, nbyte )
             ENDDO
             FClose( hsource )         // close source file
             FClose( hdestination )    // close split file
-            ccommand := Left( ccommand, RAt( "+",ccommand ) - 1 ) + " " // line in join.bat
+            ccommand := Left( ccommand, RAt( "+", ccommand ) - 1 ) + " " // line in join.bat
             ccommand += csource + cret                // line in join.bat
             ctmp += "rem the following files should be placed in a directory" + Chr( 13 ) + Chr( 10 )
             FOR i := 2 TO Len( afile )
@@ -113,7 +113,7 @@ FUNCTION fsplit( csource, csplit, nbyte )
             ctmp += "goto end" + cret
             FOR i := 2 TO nfile
                ctmp += ":error" + hb_ntos( i - 1 ) + cret
-               ctmp += "echo " + cret
+               ctmp += "echo " + Chr( 7 ) + cret
                ctmp += "echo missing file " + afile[ i ] + cret
                ctmp += "goto end" + cret
             NEXT
@@ -129,10 +129,10 @@ FUNCTION fsplit( csource, csplit, nbyte )
             ? "Done in " + hb_ntos( Seconds() - nseconds ) + " seconds."
             ? "To restore, type JOIN"
          ELSE
-            break
+            BREAK
          ENDIF
       ELSE
-         break
+         BREAK
       ENDIF
    RECOVER
       ? Chr( 7 )

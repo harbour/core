@@ -49,23 +49,23 @@ PROCEDURE Main()
    RestScreen( 10, 40, 23, 71, cT )
    pause()
 
-   Scroll ( 1, 1, 11, 30, - 2, - 5 )
+   Scroll( 1, 1, 11, 30, -2, -5 )
    pause()
-   Scroll ( 1, 1, 11, 30, 2, 5 )
+   Scroll( 1, 1, 11, 30, 2, 5 )
    pause()
-   Scroll ( 1, 1, 11, 30, - 5, 2 )
+   Scroll( 1, 1, 11, 30, -5, 2 )
    pause()
-   Scroll ( 1, 1, 11, 30, 7, - 12 )
+   Scroll( 1, 1, 11, 30, 7, -12 )
    pause()
    SET COLOR TO "W+/R"
-   Scroll ( 1, 1, 11, 30, 0, 0 )
+   Scroll( 1, 1, 11, 30, 0, 0 )
    pause()
 
    RETURN
 
 FUNCTION pause()
 
-   DevPos ( MaxRow() - 2, 0 )
-   __Accept ( "pause: " )
+   DevPos( MaxRow() - 2, 0 )
+   __Accept( "pause: " )
 
    RETURN NIL

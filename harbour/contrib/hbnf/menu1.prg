@@ -240,7 +240,7 @@ STATIC FUNCTION _ftBailOut( cBorder, cBox )
    sOldScreen := SaveScreen( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55 )
    cOldColor := SetColor( cBorder )
    hb_Shadow( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55 )
-   @ t_nMaxRow / 2 - 1, 24, t_nMaxRow/2 + 2, 55 BOX hb_UTF8ToStrBox( "╔═╗║╝═╚║ " )
+   @ t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55 BOX hb_UTF8ToStrBox( "╔═╗║╝═╚║ " )
    SetColor( cBox )
    @ t_nMaxRow / 2,  26 SAY "Press ESCape To Confirm Exit"
    @ t_nMaxRow / 2 + 1, 27 SAY "Or Any Other Key To Resume"

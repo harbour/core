@@ -138,9 +138,9 @@ FUNCTION FT_ClrSel( aClrs, lColour, cChr )
       )
 
    //.... determine co-ordinates for the achoice window
-   nT := Max( Int( ( 18 - Len( aPrompt ) ) /2 ) - 1, 1 )
+   nT := Max( Int( ( 18 - Len( aPrompt ) ) / 2 ) - 1, 1 )
    nB := Min( nT + Len( aPrompt ) + 1, 17 )
-   nL := Max( Int( ( 27 - nLen ) /2 ) - 2, 1 )
+   nL := Max( Int( ( 27 - nLen ) / 2 ) - 2, 1 )
    nR := Min( nL + nLen + 3, 26 )
 
    //.... set up the window for aChoice
@@ -232,7 +232,7 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
       nLen := Max( nLen, Len( aOpt[ C_NAME ] ) + 2 )
       nT := iif( aOpt[ C_TYPE ] == "M", 18, 19 )
       nB := nT + Len( aPrompt ) + 1
-      nL := Max( Int( ( 27 - nLen ) /2 ) - 2, 1 )
+      nL := Max( Int( ( 27 - nLen ) / 2 ) - 2, 1 )
       nR := Min( nL + nLen + 3, 26 )
 
       //.... set up the window for prompt
