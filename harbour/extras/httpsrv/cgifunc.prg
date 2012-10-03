@@ -523,108 +523,108 @@ RETURN uhttpd_StrStr( Upper( cSearch ), Upper( cString ) )
 
 FUNCTION uhttpd_HtmlEntities( cString, cQuote_style )
 //  LOCAL aTranslations := { ;  // ATTENTION, this chars are visible only with OEM font
-//                           { Chr( 160 ), '&#160;' } ,; // &nbsp;   Nonbreaking space
-//                           { Chr( 161 ), '&#161;' } ,; // &iexcl;  Inverted exclamation
-//                           { Chr( 162 ), '&#162;' } ,; // &cent;   Cent sign
-//                           { Chr( 163 ), '&#163;' } ,; // &pound;  Pound sterling
-//                           { Chr( 164 ), '&#164;' } ,; // &curren; General currency sign
-//                           { Chr( 165 ), '&#165;' } ,; // &yen;    Yen sign
-//                           { Chr( 166 ), '&#166;' } ,; // &brvbar; or &brkbar; Broken vertical bar
-//                           { Chr( 167 ), '&#167;' } ,; // &sect;   Section sign
-//                           { Chr( 168 ), '&#168;' } ,; // &uml; or &die; Diaeresis / Umlaut
-//                           { Chr( 169 ), '&#169;' } ,; // &copy;   Copyright
-//                           { Chr( 170 ), '&#170;' } ,; // &ordf;   Feminine ordinal
-//                           { Chr( 171 ), '&#171;' } ,; // &laquo;  Left angle quote, guillemet left
-//                           { Chr( 172 ), '&#172;' } ,; // &not     Not sign
-//                           { Chr( 173 ), '&#173;' } ,; // &shy;    Soft hyphen
-//                           { Chr( 174 ), '&#174;' } ,; // &reg;    Registered trademark
-//                           { Chr( 175 ), '&#175;' } ,; // &macr; or &hibar; Macron accent
-//                           { Chr( 176 ), '&#176;' } ,; // &deg;    Degree sign
-//                           { Chr( 177 ), '&#177;' } ,; // &plusmn; Plus or minus
-//                           { Chr( 178 ), '&#178;' } ,; // &sup2;   Superscript two
-//                           { Chr( 179 ), '&#179;' } ,; // &sup3;   Superscript three
-//                           { Chr( 180 ), '&#180;' } ,; // &acute;  Acute accent
-//                           { Chr( 181 ), '&#181;' } ,; // &micro;  Micro sign
-//                           { Chr( 182 ), '&#182;' } ,; // &para;   Paragraph sign
-//                           { Chr( 183 ), '&#183;' } ,; // &middot; Middle dot
-//                           { Chr( 184 ), '&#184;' } ,; // &cedil;  Cedilla
-//                           { Chr( 185 ), '&#185;' } ,; // &sup1;   Superscript one
-//                           { Chr( 186 ), '&#186;' } ,; // &ordm;   Masculine ordinal
-//                           { Chr( 187 ), '&#187;' } ,; // &raquo;  Right angle quote, guillemet right
-//                           { Chr( 188 ), '&#188;' } ,; // &frac14; Fraction one-fourth
-//                           { Chr( 189 ), '&#189;' } ,; // &frac12; Fraction one-half
-//                           { Chr( 190 ), '&#190;' } ,; // &frac34; Fraction three-fourths
-//                           { Chr( 191 ), '&#191;' } ,; // &iquest; Inverted question mark
-//                           { Chr( 192 ), '&#192;' } ,; // &Agrave; Capital A, grave accent
-//                           { Chr( 193 ), '&#193;' } ,; // &Aacute; Capital A, acute accent
-//                           { Chr( 194 ), '&#194;' } ,; // &Acirc;  Capital A, circumflex
-//                           { Chr( 195 ), '&#195;' } ,; // &Atilde; Capital A, tilde
-//                           { Chr( 196 ), '&#196;' } ,; // &Auml;   Capital A, diaeresis / umlaut
-//                           { Chr( 197 ), '&#197;' } ,; // &Aring;  Capital A, ring
-//                           { Chr( 198 ), '&#198;' } ,; // &AElig;  Capital AE ligature
-//                           { Chr( 199 ), '&#199;' } ,; // &Ccedil; Capital C, cedilla
-//                           { Chr( 200 ), '&#200;' } ,; // &Egrave; Capital E, grave accent
-//                           { Chr( 201 ), '&#201;' } ,; // &Eacute; Capital E, acute accent
-//                           { Chr( 202 ), '&#202;' } ,; // &Ecirc;  Capital E, circumflex
-//                           { Chr( 203 ), '&#203;' } ,; // &Euml;   Capital E, diaeresis / umlaut
-//                           { Chr( 204 ), '&#204;' } ,; // &Igrave; Capital I, grave accent
-//                           { Chr( 205 ), '&#205;' } ,; // &Iacute; Capital I, acute accent
-//                           { Chr( 206 ), '&#206;' } ,; // &Icirc;  Capital I, circumflex
-//                           { Chr( 207 ), '&#207;' } ,; // &Iuml;   Capital I, diaeresis / umlaut
-//                           { Chr( 208 ), '&#208;' } ,; // &ETH;    Capital Eth, Icelandic
-//                           { Chr( 209 ), '&#209;' } ,; // &Ntilde; Capital N, tilde
-//                           { Chr( 210 ), '&#210;' } ,; // &Ograve; Capital O, grave accent
-//                           { Chr( 211 ), '&#211;' } ,; // &Oacute; Capital O, acute accent
-//                           { Chr( 212 ), '&#212;' } ,; // &Ocirc;  Capital O, circumflex
-//                           { Chr( 213 ), '&#213;' } ,; // &Otilde; Capital O, tilde
-//                           { Chr( 214 ), '&#214;' } ,; // &Ouml;   Capital O, diaeresis / umlaut
-//                           { Chr( 215 ), '&#215;' } ,; // &times;  Multiply sign
-//                           { Chr( 216 ), '&#216;' } ,; // &Oslash; Capital O, slash
-//                           { Chr( 217 ), '&#217;' } ,; // &Ugrave; Capital U, grave accent
-//                           { Chr( 218 ), '&#218;' } ,; // &Uacute; Capital U, acute accent
-//                           { Chr( 219 ), '&#219;' } ,; // &Ucirc;  Capital U, circumflex
-//                           { Chr( 220 ), '&#220;' } ,; // &Uuml;   Capital U, diaeresis / umlaut
-//                           { Chr( 221 ), '&#221;' } ,; // &Yacute; Capital Y, acute accent
-//                           { Chr( 222 ), '&#222;' } ,; // &THORN;  Capital Thorn, Icelandic
-//                           { Chr( 223 ), '&#223;' } ,; // &szlig;  Small sharp s, German sz
-//                           { Chr( 224 ), '&#224;' } ,; // &agrave; Small a, grave accent
-//                           { Chr( 225 ), '&#225;' } ,; // &aacute; Small a, acute accent
-//                           { Chr( 226 ), '&#226;' } ,; // &acirc;  Small a, circumflex
-//                           { Chr( 227 ), '&#227;' } ,; // &atilde; Small a, tilde
-//                           { Chr( 228 ), '&#228;' } ,; // &auml;   Small a, diaeresis / umlaut
-//                           { Chr( 229 ), '&#229;' } ,; // &aring;  Small a, ring
-//                           { Chr( 230 ), '&#230;' } ,; // &aelig;  Small ae ligature
-//                           { Chr( 231 ), '&#231;' } ,; // &ccedil; Small c, cedilla
-//                           { Chr( 232 ), '&#232;' } ,; // &egrave; Small e, grave accent
-//                           { Chr( 233 ), '&#233;' } ,; // &eacute; Small e, acute accent
-//                           { Chr( 234 ), '&#234;' } ,; // &ecirc;  Small e, circumflex
-//                           { Chr( 235 ), '&#235;' } ,; // &euml;   Small e, diaeresis / umlaut
-//                           { Chr( 236 ), '&#236;' } ,; // &igrave; Small i, grave accent
-//                           { Chr( 237 ), '&#237;' } ,; // &iacute; Small i, acute accent
-//                           { Chr( 238 ), '&#238;' } ,; // &icirc;  Small i, circumflex
-//                           { Chr( 239 ), '&#239;' } ,; // &iuml;   Small i, diaeresis / umlaut
-//                           { Chr( 240 ), '&#240;' } ,; // &eth;    Small eth, Icelandic
-//                           { Chr( 241 ), '&#241;' } ,; // &ntilde; Small n, tilde
-//                           { Chr( 242 ), '&#242;' } ,; // &ograve; Small o, grave accent
-//                           { Chr( 243 ), '&#243;' } ,; // &oacute; Small o, acute accent
-//                           { Chr( 244 ), '&#244;' } ,; // &ocirc;  Small o, circumflex
-//                           { Chr( 245 ), '&#245;' } ,; // &otilde; Small o, tilde
-//                           { Chr( 246 ), '&#246;' } ,; // &ouml;   Small o, diaeresis / umlaut
-//                           { Chr( 247 ), '&#247;' } ,; // &divide; Division sign
-//                           { Chr( 248 ), '&#248;' } ,; // &oslash; Small o, slash
-//                           { Chr( 249 ), '&#249;' } ,; // &ugrave; Small u, grave accent
-//                           { Chr( 250 ), '&#250;' } ,; // &uacute; Small u, acute accent
-//                           { Chr( 251 ), '&#251;' } ,; // &ucirc;  Small u, circumflex
-//                           { Chr( 252 ), '&#252;' } ,; // &uuml;   Small u, diaeresis / umlaut
-//                           { Chr( 253 ), '&#253;' } ,; // &yacute; Small y, acute accent
-//                           { Chr( 254 ), '&#254;' } ,; // &thorn;  Small thorn, Icelandic
-//                           { Chr( 255 ), '&#255;' }  ; // &yuml;   Small y, diaeresis / umlaut
+//                           { hb_BChar( 160 ), '&#160;' } ,; // &nbsp;   Nonbreaking space
+//                           { hb_BChar( 161 ), '&#161;' } ,; // &iexcl;  Inverted exclamation
+//                           { hb_BChar( 162 ), '&#162;' } ,; // &cent;   Cent sign
+//                           { hb_BChar( 163 ), '&#163;' } ,; // &pound;  Pound sterling
+//                           { hb_BChar( 164 ), '&#164;' } ,; // &curren; General currency sign
+//                           { hb_BChar( 165 ), '&#165;' } ,; // &yen;    Yen sign
+//                           { hb_BChar( 166 ), '&#166;' } ,; // &brvbar; or &brkbar; Broken vertical bar
+//                           { hb_BChar( 167 ), '&#167;' } ,; // &sect;   Section sign
+//                           { hb_BChar( 168 ), '&#168;' } ,; // &uml; or &die; Diaeresis / Umlaut
+//                           { hb_BChar( 169 ), '&#169;' } ,; // &copy;   Copyright
+//                           { hb_BChar( 170 ), '&#170;' } ,; // &ordf;   Feminine ordinal
+//                           { hb_BChar( 171 ), '&#171;' } ,; // &laquo;  Left angle quote, guillemet left
+//                           { hb_BChar( 172 ), '&#172;' } ,; // &not     Not sign
+//                           { hb_BChar( 173 ), '&#173;' } ,; // &shy;    Soft hyphen
+//                           { hb_BChar( 174 ), '&#174;' } ,; // &reg;    Registered trademark
+//                           { hb_BChar( 175 ), '&#175;' } ,; // &macr; or &hibar; Macron accent
+//                           { hb_BChar( 176 ), '&#176;' } ,; // &deg;    Degree sign
+//                           { hb_BChar( 177 ), '&#177;' } ,; // &plusmn; Plus or minus
+//                           { hb_BChar( 178 ), '&#178;' } ,; // &sup2;   Superscript two
+//                           { hb_BChar( 179 ), '&#179;' } ,; // &sup3;   Superscript three
+//                           { hb_BChar( 180 ), '&#180;' } ,; // &acute;  Acute accent
+//                           { hb_BChar( 181 ), '&#181;' } ,; // &micro;  Micro sign
+//                           { hb_BChar( 182 ), '&#182;' } ,; // &para;   Paragraph sign
+//                           { hb_BChar( 183 ), '&#183;' } ,; // &middot; Middle dot
+//                           { hb_BChar( 184 ), '&#184;' } ,; // &cedil;  Cedilla
+//                           { hb_BChar( 185 ), '&#185;' } ,; // &sup1;   Superscript one
+//                           { hb_BChar( 186 ), '&#186;' } ,; // &ordm;   Masculine ordinal
+//                           { hb_BChar( 187 ), '&#187;' } ,; // &raquo;  Right angle quote, guillemet right
+//                           { hb_BChar( 188 ), '&#188;' } ,; // &frac14; Fraction one-fourth
+//                           { hb_BChar( 189 ), '&#189;' } ,; // &frac12; Fraction one-half
+//                           { hb_BChar( 190 ), '&#190;' } ,; // &frac34; Fraction three-fourths
+//                           { hb_BChar( 191 ), '&#191;' } ,; // &iquest; Inverted question mark
+//                           { hb_BChar( 192 ), '&#192;' } ,; // &Agrave; Capital A, grave accent
+//                           { hb_BChar( 193 ), '&#193;' } ,; // &Aacute; Capital A, acute accent
+//                           { hb_BChar( 194 ), '&#194;' } ,; // &Acirc;  Capital A, circumflex
+//                           { hb_BChar( 195 ), '&#195;' } ,; // &Atilde; Capital A, tilde
+//                           { hb_BChar( 196 ), '&#196;' } ,; // &Auml;   Capital A, diaeresis / umlaut
+//                           { hb_BChar( 197 ), '&#197;' } ,; // &Aring;  Capital A, ring
+//                           { hb_BChar( 198 ), '&#198;' } ,; // &AElig;  Capital AE ligature
+//                           { hb_BChar( 199 ), '&#199;' } ,; // &Ccedil; Capital C, cedilla
+//                           { hb_BChar( 200 ), '&#200;' } ,; // &Egrave; Capital E, grave accent
+//                           { hb_BChar( 201 ), '&#201;' } ,; // &Eacute; Capital E, acute accent
+//                           { hb_BChar( 202 ), '&#202;' } ,; // &Ecirc;  Capital E, circumflex
+//                           { hb_BChar( 203 ), '&#203;' } ,; // &Euml;   Capital E, diaeresis / umlaut
+//                           { hb_BChar( 204 ), '&#204;' } ,; // &Igrave; Capital I, grave accent
+//                           { hb_BChar( 205 ), '&#205;' } ,; // &Iacute; Capital I, acute accent
+//                           { hb_BChar( 206 ), '&#206;' } ,; // &Icirc;  Capital I, circumflex
+//                           { hb_BChar( 207 ), '&#207;' } ,; // &Iuml;   Capital I, diaeresis / umlaut
+//                           { hb_BChar( 208 ), '&#208;' } ,; // &ETH;    Capital Eth, Icelandic
+//                           { hb_BChar( 209 ), '&#209;' } ,; // &Ntilde; Capital N, tilde
+//                           { hb_BChar( 210 ), '&#210;' } ,; // &Ograve; Capital O, grave accent
+//                           { hb_BChar( 211 ), '&#211;' } ,; // &Oacute; Capital O, acute accent
+//                           { hb_BChar( 212 ), '&#212;' } ,; // &Ocirc;  Capital O, circumflex
+//                           { hb_BChar( 213 ), '&#213;' } ,; // &Otilde; Capital O, tilde
+//                           { hb_BChar( 214 ), '&#214;' } ,; // &Ouml;   Capital O, diaeresis / umlaut
+//                           { hb_BChar( 215 ), '&#215;' } ,; // &times;  Multiply sign
+//                           { hb_BChar( 216 ), '&#216;' } ,; // &Oslash; Capital O, slash
+//                           { hb_BChar( 217 ), '&#217;' } ,; // &Ugrave; Capital U, grave accent
+//                           { hb_BChar( 218 ), '&#218;' } ,; // &Uacute; Capital U, acute accent
+//                           { hb_BChar( 219 ), '&#219;' } ,; // &Ucirc;  Capital U, circumflex
+//                           { hb_BChar( 220 ), '&#220;' } ,; // &Uuml;   Capital U, diaeresis / umlaut
+//                           { hb_BChar( 221 ), '&#221;' } ,; // &Yacute; Capital Y, acute accent
+//                           { hb_BChar( 222 ), '&#222;' } ,; // &THORN;  Capital Thorn, Icelandic
+//                           { hb_BChar( 223 ), '&#223;' } ,; // &szlig;  Small sharp s, German sz
+//                           { hb_BChar( 224 ), '&#224;' } ,; // &agrave; Small a, grave accent
+//                           { hb_BChar( 225 ), '&#225;' } ,; // &aacute; Small a, acute accent
+//                           { hb_BChar( 226 ), '&#226;' } ,; // &acirc;  Small a, circumflex
+//                           { hb_BChar( 227 ), '&#227;' } ,; // &atilde; Small a, tilde
+//                           { hb_BChar( 228 ), '&#228;' } ,; // &auml;   Small a, diaeresis / umlaut
+//                           { hb_BChar( 229 ), '&#229;' } ,; // &aring;  Small a, ring
+//                           { hb_BChar( 230 ), '&#230;' } ,; // &aelig;  Small ae ligature
+//                           { hb_BChar( 231 ), '&#231;' } ,; // &ccedil; Small c, cedilla
+//                           { hb_BChar( 232 ), '&#232;' } ,; // &egrave; Small e, grave accent
+//                           { hb_BChar( 233 ), '&#233;' } ,; // &eacute; Small e, acute accent
+//                           { hb_BChar( 234 ), '&#234;' } ,; // &ecirc;  Small e, circumflex
+//                           { hb_BChar( 235 ), '&#235;' } ,; // &euml;   Small e, diaeresis / umlaut
+//                           { hb_BChar( 236 ), '&#236;' } ,; // &igrave; Small i, grave accent
+//                           { hb_BChar( 237 ), '&#237;' } ,; // &iacute; Small i, acute accent
+//                           { hb_BChar( 238 ), '&#238;' } ,; // &icirc;  Small i, circumflex
+//                           { hb_BChar( 239 ), '&#239;' } ,; // &iuml;   Small i, diaeresis / umlaut
+//                           { hb_BChar( 240 ), '&#240;' } ,; // &eth;    Small eth, Icelandic
+//                           { hb_BChar( 241 ), '&#241;' } ,; // &ntilde; Small n, tilde
+//                           { hb_BChar( 242 ), '&#242;' } ,; // &ograve; Small o, grave accent
+//                           { hb_BChar( 243 ), '&#243;' } ,; // &oacute; Small o, acute accent
+//                           { hb_BChar( 244 ), '&#244;' } ,; // &ocirc;  Small o, circumflex
+//                           { hb_BChar( 245 ), '&#245;' } ,; // &otilde; Small o, tilde
+//                           { hb_BChar( 246 ), '&#246;' } ,; // &ouml;   Small o, diaeresis / umlaut
+//                           { hb_BChar( 247 ), '&#247;' } ,; // &divide; Division sign
+//                           { hb_BChar( 248 ), '&#248;' } ,; // &oslash; Small o, slash
+//                           { hb_BChar( 249 ), '&#249;' } ,; // &ugrave; Small u, grave accent
+//                           { hb_BChar( 250 ), '&#250;' } ,; // &uacute; Small u, acute accent
+//                           { hb_BChar( 251 ), '&#251;' } ,; // &ucirc;  Small u, circumflex
+//                           { hb_BChar( 252 ), '&#252;' } ,; // &uuml;   Small u, diaeresis / umlaut
+//                           { hb_BChar( 253 ), '&#253;' } ,; // &yacute; Small y, acute accent
+//                           { hb_BChar( 254 ), '&#254;' } ,; // &thorn;  Small thorn, Icelandic
+//                           { hb_BChar( 255 ), '&#255;' }  ; // &yuml;   Small y, diaeresis / umlaut
 //                         }
 
   LOCAL aTranslations := {}
   LOCAL i
   FOR i := 160 TO 255
-      aAdd( aTranslations, { Chr( i ), "&#" + Str( i, 3 ) + ";" } )
+      aAdd( aTranslations, { hb_BChar( i ), "&#" + Str( i, 3 ) + ";" } )
   NEXT
 
 RETURN uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )

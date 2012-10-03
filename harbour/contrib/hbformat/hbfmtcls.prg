@@ -64,7 +64,6 @@
 /* TOFIX:
      1. 'var ++'
      2. '- 1' for numeric literals.
-     3. OTHERWISE not handled in DO CASE and SWITCH.
      ...
  */
 
@@ -113,6 +112,7 @@ CREATE CLASS HBFORMATCODE
                              { "while" , ""        , ""                , "enddo"     },;
                              { "for"   , ""        , ""                , "next"      },;
                              { "do"    , "case"    , "|case|otherwise|", "endcase"   },;
+                             { "with"  , "object"  , ""                , "end"       },;
                              { "begin" , "sequence", "|recover|"       , "end"       },;
                              { "switch", ""        , "|case|otherwise|", "endswitch" } }
 

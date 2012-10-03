@@ -38,7 +38,7 @@
 
 STATIC s_nESize := 4096       // default buffer size
 
-//---------------------------------------------------------
+//
 //03-06-93 07:52pm
 //
 // nTop, nLeft, nBottom, nRight - position on the screen
@@ -83,7 +83,7 @@ FUNCTION EditorNew( nTop, nLeft, nBottom, nRight, nLength, ;
 
    RETURN oEdit
 
-//---------------------------------------------------------
+//
 //03-06-93 09:16pm
 //
 
@@ -93,7 +93,7 @@ PROCEDURE EditorKill( oEdit )
 
    RETURN
 
-//---------------------------------------------------------
+//
 //03-06-93 10:20pm
 //
 
@@ -107,7 +107,7 @@ FUNCTION EditorCargo( oEdit, xCargo )
 
    RETURN _xCargo
 
-//---------------------------------------------------------
+//
 //19-07-93 01:08am
 //
 
@@ -121,7 +121,7 @@ FUNCTION EditorTitle( oEdit, cTitle )
 
    RETURN _cTitle
 
-//---------------------------------------------------------
+//
 //04-06-93 02:18am
 //
 // Sets
@@ -139,7 +139,7 @@ FUNCTION EditorMode( oEdit, lMode )
 
    RETURN _lMode
 
-//---------------------------------------------------------
+//
 //28-05-92 09:31am
 //
 
@@ -153,7 +153,7 @@ FUNCTION EditorSize( nSize )
 
    RETURN _nSize
 
-//---------------------------------------------------------
+//
 //28-02-92 10:57pm
 //
 // Appends passed text to the text already stored in editor
@@ -165,7 +165,7 @@ PROCEDURE EditorAddText( oEdit, cText )
 
    RETURN
 
-//---------------------------------------------------------
+//
 //05-03-92 10:21pm
 //
 // Sets new text in editor
@@ -177,7 +177,7 @@ PROCEDURE EditorSetText( oEdit, cText )
 
    RETURN
 
-//---------------------------------------------------------
+//
 //05-03-92 10:23pm
 //
 // Inserts passed text into editor starting from passed line number
@@ -191,7 +191,7 @@ PROCEDURE EditorInsText( oEdit, cText, nLine )
 
    RETURN
 
-//---------------------------------------------------------
+//
 //02-03-92 07:53pm
 //
 // Retrieves the text from editor
@@ -207,7 +207,7 @@ FUNCTION EditorGetText( oEdit, nCarret )
 
    RETURN ED_GetText( oEdit[ E_EDIT ], nCarret )
 
-//---------------------------------------------------------
+//
 //04-03-92 02:35pm
 //
 // Returns the line count stored in editor
@@ -217,7 +217,7 @@ FUNCTION EditorLCount( oEdit )
 
    RETURN ED_LCount( oEdit[ E_EDIT ] )
 
-//---------------------------------------------------------
+//
 //06-03-92 07:09pm
 //
 // Returns the specified line of text from the editor
@@ -227,7 +227,7 @@ FUNCTION EditorGetLine( oEdit, nLine )
 
    RETURN ED_GetLine( oEdit[ E_EDIT ], nLine )
 
-//---------------------------------------------------------
+//
 //06-03-92 07:10pm
 //
 // Returns the next line of text
@@ -244,7 +244,7 @@ FUNCTION EditorNextLine( oEdit )
 
    RETURN ED_GetNext( oEdit[ E_EDIT ] )
 
-//---------------------------------------------------------
+//
 //03-06-93 10:11pm
 //
 // Edit the specified file
@@ -303,7 +303,7 @@ FUNCTION EditorFile( xInput, cOutput, nLineLen, ;
 
    RETURN lSaved
 
-//---------------------------------------------------------
+//
 //06-07-93 06:05pm
 //
 // Reads a text from a file into the editor
@@ -321,7 +321,7 @@ FUNCTION EditorRead( oEditor, nHandle, nOffset, nLen, lConv )
    RETURN ED_ReadText( oEditor[ E_EDIT ], nHandle, nOffset, nLen, ;
       iif( lConv == NIL, .T., lConv ) )
 
-//---------------------------------------------------------
+//
 //03-06-93 08:31pm
 //
 // Start the editor
@@ -438,7 +438,7 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
 //*
 //
 
-//---------------------------------------------------------
+//
 //03-06-93 08:35pm
 //
 
@@ -478,7 +478,7 @@ STATIC PROCEDURE EditorKeys( oEdit, nKey )
 
    RETURN
 
-//---------------------------------------------------------
+//
 //04-06-93 02:06am
 //
 
@@ -504,7 +504,7 @@ STATIC FUNCTION EditorMove( pEdit, nKey )
 
    RETURN lMoved
 
-//---------------------------------------------------------
+//
 //03-06-93 10:23pm
 //
 
@@ -530,7 +530,7 @@ STATIC FUNCTION EditorSave( oEdit )
 
    RETURN nHandle > 0
 
-//---------------------------------------------------------
+//
 //09/29/91 08:40pm
 //
 
@@ -551,7 +551,7 @@ FUNCTION SaveBox( top, left, bott, right, kolor, patt )
 
    RETURN { top, left, nBottom, nRight, cBox, cClr }
 
-//---------------------------------------------------------
+//
 //09/29/91 08:42pm
 //
 

@@ -73,7 +73,7 @@ PROCEDURE __INIT_LONGLONGS
 
 RETURN
 
-//---------------------------------------------------------------------------//
+//
 FUNCTION __ActiveStructure( cStructure, nAlign )
 
    /* LOCAL oErr */
@@ -154,7 +154,7 @@ FUNCTION __ActiveStructure( cStructure, nAlign )
 
    RETURN t_aActiveStructure
 
-//---------------------------------------------------------------------------//
+//
 PROCEDURE HB_Member( cMember, CType )
 
   LOCAL nLen, nAt
@@ -174,7 +174,7 @@ PROCEDURE HB_Member( cMember, CType )
 
 Return
 
-//---------------------------------------------------------------------------//
+//
 FUNCTION HB_CStructureID( cStructure, lInplace )
 
    LOCAL nID
@@ -212,7 +212,7 @@ FUNCTION HB_CStructureID( cStructure, lInplace )
 
    RETURN nID
 
-//---------------------------------------------------------------------------//
+//
 PROCEDURE HB_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAlign )
 
    LOCAL cElem, nAt, nIndex := 1
@@ -304,7 +304,7 @@ PROCEDURE HB_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
 
 RETURN
 
-//---------------------------------------------------------------------------//
+//
 FUNCTION HB_CStructure( cStructure, nAlign )
 
    LOCAL hClass
@@ -337,7 +337,7 @@ FUNCTION HB_CStructure( cStructure, nAlign )
 
    RETURN oStructure
 
-//---------------------------------------------------------------------------//
+//
 STATIC PROCEDURE AllocateMembers( oStructure )
 
    LOCAL aCTypes, CType
@@ -356,7 +356,7 @@ STATIC PROCEDURE AllocateMembers( oStructure )
 
 RETURN
 
-//---------------------------------------------------------------------------//
+//
 FUNCTION HB_CStructureFromID( nID, nAlign )
 
    LOCAL hClass, oStructure
@@ -394,7 +394,7 @@ FUNCTION HB_CStructureFromID( nID, nAlign )
 
    RETURN oStructure
 
-//---------------------------------------------------------------------------//
+//
 FUNCTION HB_CTypeArrayID( CType, nLen )
 
    LOCAL hClass
@@ -457,12 +457,12 @@ FUNCTION HB_CTypeArrayID( CType, nLen )
 
    RETURN nID + CTYPE_STRUCTURE
 
-//---------------------------------------------------------------------------//
+//
 FUNCTION HB_IS_CStructure( x )
 
    RETURN Left( x:ClassName(), 11 ) == "C Structure"
 
-//---------------------------------------------------------------------------//
+//
 STATIC FUNCTION SayMembers( cPad, lShowMembers, lReturnString )
 
    LOCAL xProperty, cOut := ""
@@ -502,7 +502,7 @@ STATIC FUNCTION SayMembers( cPad, lShowMembers, lReturnString )
 
    RETURN iif( lReturnString, cOut, QSelf() )
 
-//---------------------------------------------------------------------------//
+//
 STATIC FUNCTION Reset()
 
    LOCAL xProperty, nProperties := Len( QSelf() ) - CLASS_PROPERTIES
@@ -521,7 +521,7 @@ STATIC FUNCTION Reset()
 
    RETURN QSelf()
 
-//---------------------------------------------------------------------------//
+//
 STATIC FUNCTION Buffer( Buffer, lAdopt )
 
    IF HB_ISSTRING( Buffer )
@@ -540,14 +540,14 @@ STATIC FUNCTION Buffer( Buffer, lAdopt )
 
    RETURN QSelf()
 
-//---------------------------------------------------------------------------//
+//
 STATIC FUNCTION GetPointer()
 
    QSelf():InternalBuffer := HB_ArrayToStructure( QSelf(), QSelf():aCTypes, QSelf():nAlign )
 
    RETURN hb_String2Pointer( QSelf():InternalBuffer )
 
-//---------------------------------------------------------------------------//
+//
 STATIC FUNCTION Value()
 
    //LOCAL aValues := {}
@@ -558,7 +558,7 @@ STATIC FUNCTION Value()
 
    RETURN QSelf():InternalBuffer
 
-//---------------------------------------------------------------------------//
+//
 STATIC FUNCTION DeValue( lAdopt )
 
    //LOCAL aValues := {}
@@ -579,7 +579,7 @@ STATIC FUNCTION DeValue( lAdopt )
 
    RETURN QSelf()
 
-//---------------------------------------------------------------------------//
+//
 STATIC FUNCTION ArrayMethod()
 
    LOCAL aValues := {}
@@ -588,7 +588,7 @@ STATIC FUNCTION ArrayMethod()
 
    RETURN aValues
 
-//---------------------------------------------------------------------------//
+//
 STATIC FUNCTION Init( aValues )
 
    LOCAL xProperty, nLen := Len( aValues )
@@ -607,7 +607,7 @@ STATIC FUNCTION Init( aValues )
 
    RETURN QSelf()
 
-//---------------------------------------------------------------------------//
+//
 STATIC FUNCTION Pointer( nNewPointer, lAdopt )
 
    IF nNewPointer != NIL
@@ -616,7 +616,7 @@ STATIC FUNCTION Pointer( nNewPointer, lAdopt )
 
    RETURN QSelf()
 
-//---------------------------------------------------------------------------//
+//
 STATIC FUNCTION AsString()
 
    LOCAL cChar, nLen := Len( QSelf() ) - CLASS_PROPERTIES, cString := Space( nLen )

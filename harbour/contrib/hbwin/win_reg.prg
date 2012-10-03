@@ -53,8 +53,6 @@
 
 #include "hbwin.ch"
 
-/* ------------------------------------------------------------------- */
-
 /* Predefined Value Types. from winnt.h */
 #define KEY_QUERY_VALUE                1
 #define KEY_SET_VALUE                  2
@@ -62,8 +60,6 @@
 #define KEY_ENUMERATE_SUB_KEYS         8
 #define KEY_NOTIFY                     16
 #define KEY_CREATE_LINK                32
-
-/* ------------------------------------------------------------------- */
 
 PROCEDURE win_regPathSplit( cRegPath, /* @ */ nHKEY, /* @ */ cKey, /* @ */ cEntry )
    LOCAL cHKEY

@@ -49,21 +49,20 @@
 
 #include "hbhpdf.h"
 
-/*----------------------------------------------------------------------*/
 /* HPdf_LoadPngImageFromFile( hDoc, cPNGFileName ) -> hImage
 */
 HB_FUNC( HPDF_LOADPNGIMAGEFROMFILE )
 {
    hb_retptr( ( void * ) HPDF_LoadPngImageFromFile( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
 }
-/*----------------------------------------------------------------------*/
+
 /* HPdf_LoadPngImageFromFile2( hDoc, cPNGFileName ) -> hImage
 */
 HB_FUNC( HPDF_LOADPNGIMAGEFROMFILE2 )
 {
    hb_retptr( ( void * ) HPDF_LoadPngImageFromFile2( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
 }
-/*----------------------------------------------------------------------*/
+
 /* HPdf_LoadRawImageFromFile( hDoc, cImageFileName, nWidth, nHeight, nColorSpace ) -> hImage
        nColorSpace
    HPDF_CS_DEVICE_GRAY
@@ -74,21 +73,21 @@ HB_FUNC( HPDF_LOADRAWIMAGEFROMFILE )
 {
    hb_retptr( ( void * ) HPDF_LoadRawImageFromFile( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HPDF_ColorSpace ) hb_parni( 5 ) ) );
 }
-/*----------------------------------------------------------------------*/
+
 /* HPdf_LoadRawImageFromMem( hDoc, cBuffer, nWidth, nHeight, nColorSpace, nBitsPerComponents ) -> hImage
 */
 HB_FUNC( HPDF_LOADRAWIMAGEFROMMEM )
 {
    hb_retptr( ( void * ) HPDF_LoadRawImageFromMem( hb_HPDF_Doc_par( 1 ), ( HPDF_BYTE * ) hb_parc( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HPDF_ColorSpace ) hb_parni( 5 ), hb_parni( 6 ) ) );
 }
-/*----------------------------------------------------------------------*/
+
 /* HPdf_LoadJPEGImageFromFile( hDoc, cHPEGFileName ) -> hImage
 */
 HB_FUNC( HPDF_LOADJPEGIMAGEFROMFILE )
 {
    hb_retptr( ( void * ) HPDF_LoadJpegImageFromFile( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
 }
-/*----------------------------------------------------------------------*/
+
 /*
 HPDF_EXPORT(HPDF_Image)
 HPDF_LoadPngImageFromMem  (HPDF_Doc     pdf,
@@ -135,7 +134,7 @@ HB_FUNC( HPDF_LOADJPEGIMAGEFROMMEM )
    hb_retptr( NULL );
 #endif
 }
-/*----------------------------------------------------------------------*/
+
 /* HPDF_Image_GetSize( hImage ) -> aSize[ nW, nH ]
 */
 HB_FUNC( HPDF_IMAGE_GETSIZE )
@@ -150,35 +149,35 @@ HB_FUNC( HPDF_IMAGE_GETSIZE )
 
    hb_itemReturnRelease( info );
 }
-/*----------------------------------------------------------------------*/
+
 /* HPDF_Image_GetWidth( hImage ) -> nWidth
 */
 HB_FUNC( HPDF_IMAGE_GETWIDTH )
 {
    hb_retni( HPDF_Image_GetWidth( ( HPDF_Image ) hb_parptr( 1 ) ) );
 }
-/*----------------------------------------------------------------------*/
+
 /* HPDF_Image_GetHeight( hImage ) -> nHeight
 */
 HB_FUNC( HPDF_IMAGE_GETHEIGHT )
 {
    hb_retni( HPDF_Image_GetHeight( ( HPDF_Image ) hb_parptr( 1 ) ) );
 }
-/*----------------------------------------------------------------------*/
+
 /* HPDF_Image_GetBitsPerComponent( hImage ) -> nBitsPerComponent
 */
 HB_FUNC( HPDF_IMAGE_GETBITSPERCOMPONENT )
 {
    hb_retni( HPDF_Image_GetBitsPerComponent( ( HPDF_Image ) hb_parptr( 1 ) ) );
 }
-/*----------------------------------------------------------------------*/
+
 /* HPDF_Image_GetColorSpace( hImage ) -> nColorSpace
 */
 HB_FUNC( HPDF_IMAGE_GETCOLORSPACE )
 {
    hb_retc( HPDF_Image_GetColorSpace( ( HPDF_Image ) hb_parptr( 1 ) ) );
 }
-/*----------------------------------------------------------------------*/
+
 /* HPDF_Image_SetColorMask( hImage, nRGB_R_Min, nRGB_R_Max, nRGB_G_Min, nRGB_G_Max, nRGB_B_Min, nRGB_B_Max )
 */
 HB_FUNC( HPDF_IMAGE_SETCOLORMASK )
@@ -191,14 +190,14 @@ HB_FUNC( HPDF_IMAGE_SETCOLORMASK )
                                                hb_parni( 6 ),
                                                hb_parni( 7 ) ) );
 }
-/*----------------------------------------------------------------------*/
+
 /* HPDF_Image_SetMaskImage( hImage, hImageMask ) -> hStatus
 */
 HB_FUNC( HPDF_IMAGE_SETMASKIMAGE )
 {
    hb_retnl( ( long ) HPDF_Image_SetMaskImage( ( HPDF_Image ) hb_parptr( 1 ), ( HPDF_Image ) hb_parptr( 2 ) ) );
 }
-/*----------------------------------------------------------------------*/
+
 /*
 HPDF_EXPORT(HPDF_STATUS)
 HPDF_Image_AddSMask  (HPDF_Image    image,

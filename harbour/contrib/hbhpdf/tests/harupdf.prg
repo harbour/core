@@ -49,7 +49,7 @@
 
 #include "harupdf.ch"
 
-//----------------------------------------------------------------------//
+//
 
 PROCEDURE Main( cFileToSave )
 
@@ -65,7 +65,7 @@ PROCEDURE Main( cFileToSave )
 
    RETURN
 
-//----------------------------------------------------------------------//
+//
 
 FUNCTION DesignHaruPDF( cFileToSave )
 
@@ -171,7 +171,7 @@ FUNCTION DesignHaruPDF( cFileToSave )
 
    RETURN hb_FileExists( cFileToSave )
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION Page_Lines( pdf )
 
@@ -426,7 +426,7 @@ STATIC FUNCTION Page_Lines( pdf )
 
    RETURN  NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION draw_rect( page, x, y, label )
 
@@ -439,7 +439,7 @@ STATIC FUNCTION draw_rect( page, x, y, label )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION draw_line( page, x, y, label )
 
@@ -454,7 +454,7 @@ STATIC FUNCTION draw_line( page, x, y, label )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION draw_line2( page, x, y, label )
 
@@ -469,7 +469,7 @@ STATIC FUNCTION draw_line2( page, x, y, label )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION Page_Text( pdf )
 
@@ -670,7 +670,7 @@ STATIC FUNCTION Page_Text( pdf )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION PrintText( page )
 
@@ -687,7 +687,7 @@ STATIC FUNCTION PrintText( page )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION Page_TextScaling( pdf )
 
@@ -944,7 +944,7 @@ STATIC FUNCTION Page_TextScaling( pdf )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION show_stripe_pattern( page, x, y )
 
@@ -963,7 +963,7 @@ STATIC FUNCTION show_stripe_pattern( page, x, y )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION show_description( page, x, y, text )
 
@@ -983,7 +983,7 @@ STATIC FUNCTION show_description( page, x, y, text )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 #define PAGE_WIDTH   420
 #define PAGE_HEIGHT  400
@@ -1070,7 +1070,7 @@ STATIC FUNCTION Page_CodePages( pdf )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION draw_graph( page )
 
@@ -1116,7 +1116,7 @@ STATIC FUNCTION draw_graph( page )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION draw_fonts( page )
 
@@ -1142,7 +1142,7 @@ STATIC FUNCTION draw_fonts( page )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION Page_Graphics( pdf )
 
@@ -1209,7 +1209,7 @@ STATIC FUNCTION Page_Graphics( pdf )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION Page_Annotation( pdf )
 
@@ -1313,9 +1313,9 @@ STATIC FUNCTION Page_Annotation( pdf )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 #define NULL  NIL
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION Page_Images( pdf )
 
@@ -1448,7 +1448,7 @@ STATIC FUNCTION Page_Images( pdf )
 
    RETURN NIL
 
-//----------------------------------------------------------------------//
+//
 
 STATIC FUNCTION show_description_1( page, x, y, text )
 
@@ -1477,5 +1477,3 @@ STATIC FUNCTION show_description_1( page, x, y, text )
    HPDF_Page_EndText( page )
 
    RETURN NIL
-
-//----------------------------------------------------------------------//

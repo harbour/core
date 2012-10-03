@@ -49,7 +49,6 @@
 
 #include "hbhpdf.h"
 
-/*----------------------------------------------------------------------*/
 /* HPdf_LoadTypeIFontFromFile( hDoc, cAFMFileName, cPFA_PFBFileName ) -> cFontName
 */
 HB_FUNC( HPDF_LOADTYPE1FONTFROMFILE )
@@ -67,7 +66,7 @@ HB_FUNC( HPDF_LOADTYPE1FONTFROMFILE )
    if( pszFree2 )
       hb_xfree( pszFree2 );
 }
-/*----------------------------------------------------------------------*/
+
 /* HPdf_LoadTTFontFromFile( hDoc, cTTFontFileName, lEmbed ) -> cFontName
 */
 HB_FUNC( HPDF_LOADTTFONTFROMFILE )
@@ -80,7 +79,7 @@ HB_FUNC( HPDF_LOADTTFONTFROMFILE )
    if( pszFree )
       hb_xfree( pszFree );
 }
-/*----------------------------------------------------------------------*/
+
 /* HPdf_LoadTTFontFromFile2( hDoc, cTTFontFileName, nIndexInFile, lEmbed ) -> cFontName
 */
 HB_FUNC( HPDF_LOADTTFONTFROMFILE2 )

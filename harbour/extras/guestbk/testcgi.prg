@@ -78,8 +78,6 @@ FUNCTION Hex2Dec( cHex )
 
    RETURN nRes
 
-   /*-------------------------------------------------------------------------*/
-
 FUNCTION THTML()
 
    STATIC oClass

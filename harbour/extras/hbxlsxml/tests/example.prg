@@ -71,20 +71,20 @@ PROCEDURE Main()
       :alignHorizontal( "Left" )
       :alignVertical( "Center" )
       :fontSize( 10 )
-   END WIDTH
+   ENDWITH
 
    WITH OBJECT oXml:addStyle( "textLeftWrap" )
       :alignHorizontal( "Left" )
       :alignVertical( "Center" )
       :alignWraptext()
       :fontSize( 10 )
-   END WIDTH
+   ENDWITH
    WITH OBJECT oXml:addStyle( "textLeftBold" )
       :alignHorizontal( "Left" )
       :alignVertical( "Center" )
       :fontSize( 10 )
       :setFontBold()
-   END WIDTH
+   ENDWITH
 
    WITH OBJECT oXml:addStyle( "textLeftBoldCor" )
       :alignHorizontal( "Left" )
@@ -93,20 +93,20 @@ PROCEDURE Main()
       :setFontBold()
       :bgColor( "lightblue" )
       :alignWraptext()
-   END WIDTH
+   ENDWITH
 
    WITH OBJECT oXml:addStyle( "textRight" )
       :alignHorizontal( "Right" )
       :alignVertical( "Center" )
       :fontSize( 10 )
-   END WIDTH
+   ENDWITH
 
    WITH OBJECT oXml:addStyle( "textRightBold" )
       :alignHorizontal( "Right" )
       :alignVertical( "Center" )
       :fontSize( 10 )
       :setFontBold()
-   END WIDTH
+   ENDWITH
 
    WITH OBJECT oXml:addStyle( "textRightBoldCor" )
       :alignHorizontal( "Right" )
@@ -115,14 +115,14 @@ PROCEDURE Main()
       :setFontBold()
       :bgColor( "lightblue" )
       :alignWraptext()
-   END WIDTH
+   ENDWITH
 
    WITH OBJECT oXml:addStyle( "numberRight" )
       :alignHorizontal( "Right" )
       :alignVertical( "Center" )
       :setNumberFormat( "#,##0.00" )
       :fontSize( 10 )
-   END WIDTH
+   ENDWITH
 
    WITH OBJECT oXml:addStyle( "numberRightBold" )
       :alignHorizontal( "Right" )
@@ -130,7 +130,7 @@ PROCEDURE Main()
       :setNumberFormat( "#,##0.00" )
       :fontSize( 10 )
       :setFontBold()
-   END WIDTH
+   ENDWITH
 
    WITH OBJECT oXml:addStyle( "numberRightBoldCor" )
       :alignHorizontal( "Right" )
@@ -139,7 +139,7 @@ PROCEDURE Main()
       :fontSize( 10 )
       :setFontBold()
       :bgColor( "lightblue" )
-   END WIDTH
+   ENDWITH
 
    WITH OBJECT oXml:addStyle( "numberRightZero" )
       :alignHorizontal( "Right" )
@@ -147,21 +147,21 @@ PROCEDURE Main()
       :setNumberFormat( "#,##0.00;[Red]-#,##0.00;;@" ) //"#,###.00")
       :fontSize( 10 )
       :setFontBold()
-   END WIDTH
+   ENDWITH
 
    WITH OBJECT oXml:addStyle( "Cabec" )
       :alignHorizontal( "Left" )
       :alignVertical( "Center" )
       :fontSize( 12 )
       :setFontBold()
-   END WIDTH
+   ENDWITH
 
    WITH OBJECT oXml:addStyle( "CabecRight" )
       :alignHorizontal( "Right" )
       :alignVertical( "Center" )
       :fontSize( 12 )
       :setFontBold()
-   END WIDTH
+   ENDWITH
 
    oSheet := oXml:addSheet( "Plan1" )
 
@@ -198,7 +198,7 @@ PROCEDURE Main()
       :cellMerge(     nLinha, 1, 5, 0 )
       :writeString( ++nLinha, 1, xOrdem   , "Cabec" )
       :cellMerge(     nLinha, 1, 5, 0 )
-   END WIDTH
+   ENDWITH
 
    WITH OBJECT oSheet
       :writeString( ++nLinha,  1, "N.Fiscal"          , "textLeftBoldCor" )
@@ -214,7 +214,7 @@ PROCEDURE Main()
       :writeString(   nLinha, 11, "Vlr ICMS"          , "textRightBoldCor" )
       :writeString(   nLinha, 12, "Base IPI"          , "textRightBoldCor" )
       :writeString(   nLinha, 13, "Valor IPI"         , "textRightBoldCor" )
-   END WIDTH
+   ENDWITH
 
    aDoc := {}
    FOR i := 1 TO 40
@@ -251,7 +251,7 @@ PROCEDURE Main()
          :writeNumber( nLinha, 11, aDoc[ i, 11 ], "numberRight" )
          :writeNumber( nLinha, 12, aDoc[ i, 12 ], "numberRight" )
          :writeNumber( nLinha, 13, aDoc[ i, 13 ], "numberRight" )
-      END WIDTH
+      ENDWITH
       xqtddoc++
       xttotnot += aDoc[ i, 9 ]
       xtbascal += aDoc[ i, 10 ]
@@ -275,7 +275,7 @@ PROCEDURE Main()
       :writeNumber(   nLinha, 11, xtvlricm, "numberRightBold" )
       :writeNumber(   nLinha, 12, xtbasipi, "numberRightBold" )
       :writeNumber(   nLinha, 13, xtvlripi, "numberRightBold" )
-   END WIDTH
+   ENDWITH
 
    oXml:writeData( xarquivo )
 

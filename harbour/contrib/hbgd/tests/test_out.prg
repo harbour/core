@@ -32,7 +32,7 @@ PROCEDURE Main( ... )
       hParams := GetParams( aParams )
    ENDIF
 
-   //-----------------------------------------------------------------------------------------
+   //
 
    // Gestione parametri
    IF ! Empty( hParams )
@@ -63,7 +63,8 @@ PROCEDURE Main( ... )
 
    //__OutDebug( cQuery, ValToPrg( hParams ) )
 
-   //-----------------------------------------------------------------------------------------
+   //
+
    //hb_default( @cText, "Testo di Prova" )
    hb_default( @nPt, 30 )
 

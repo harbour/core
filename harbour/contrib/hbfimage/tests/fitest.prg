@@ -38,7 +38,8 @@ PROCEDURE Main()
 
    ? "Initialise"
    fi_Initialise()
-   //---------------------------//
+
+   //
 
    ? "Set Error Message:", fi_SetOutPutMessage( fi_Error() )
    //? "Set Error Message:", fi_SetOutPutMessage( NIL )
@@ -170,22 +171,22 @@ PROCEDURE Main()
 
    //bkcolor:rgbBlue := 205
    //? fi_SetBackgroundColor( im, hb_String2Pointer( bkcolor:Value() ) )
-   Tracelog( "linha 168" )
+   Tracelog( "line 168" )
    //? fi_SetBackgroundColor( im, bkcolor:Value() )
-   Tracelog( "linha 170" )
+   Tracelog( "line 170" )
    //? bkcolor:SayMembers( " ", .T., .T. )
-   Tracelog( "linha 162" )
+   Tracelog( "line 162" )
    //? bkcolor:Pointer( fi_GetBackgroundColor( im ) )
    //? fi_GetBackgroundColor( im, @bkcolor:Value() )
    //bkcolor:Buffer( appo )
-   Tracelog( "linha 176" )
+   Tracelog( "line 176" )
    //? bkcolor:SayMembers( " ", .T., .T. )
 
-   Tracelog( "linha 179" )
+   Tracelog( "line 179" )
    //iccprofile:Pointer( fi_GetICCProfile( im ) )
-   Tracelog( "linha 181" )
+   Tracelog( "line 181" )
    //? "Header           :", ValToPrg( iccprofile )
-   Tracelog( "linha 183" )
+   Tracelog( "line 183" )
    //? iccprofile:SayMembers( " ", .T., .T. )
 
    //bmpinfoheader:Reset()
@@ -214,7 +215,8 @@ PROCEDURE Main()
       ? "Save PNG ?       :", fi_Save( FIF_PNG, im, IMAGES_OUT + "sample2.png", PNG_DEFAULT  )
    ENDIF
 
-   //---------------------------//
+   //
+
    ? "DeInitialise"
    fi_Deinitialise()
 

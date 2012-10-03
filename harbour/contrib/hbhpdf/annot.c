@@ -49,7 +49,6 @@
 
 #include "hbhpdf.h"
 
-/*----------------------------------------------------------------------*/
 /* HPDF_LinkAnnot_SetHighlightMode( hAnnot, nHilightMode ) -> hStatus
        nHilightMode ==
    HPDF_ANNOT_NO_HIGHTLIGHT       1     No highlighting.
@@ -61,14 +60,14 @@ HB_FUNC( HPDF_LINKANNOT_SETHIGHLIGHTMODE )
 {
    hb_retnl( ( long ) HPDF_LinkAnnot_SetHighlightMode( ( HPDF_Annotation ) hb_parptr( 1 ), ( HPDF_AnnotHighlightMode ) hb_parni( 2 ) ) );
 }
-/*----------------------------------------------------------------------*/
+
 /* HPDF_LinkAnnot_SetBorderStyle( hAnnot, nWidth, nDashOn, nDashOff ) -> hStatus
 */
 HB_FUNC( HPDF_LINKANNOT_SETBORDERSTYLE )
 {
    hb_retnl( ( long ) HPDF_LinkAnnot_SetBorderStyle( ( HPDF_Annotation ) hb_parptr( 1 ), ( HPDF_REAL ) hb_parnd( 2 ), ( HPDF_UINT16 ) hb_parni( 3 ), ( HPDF_UINT16 ) hb_parni( 4 ) ) );
 }
-/*----------------------------------------------------------------------*/
+
 /* HPDF_TextAnnot_SetIcon( hAnnot, nIconID ) -> hStatus
        nIconID
    HPDF_ANNOT_ICON_COMMENT
@@ -83,7 +82,7 @@ HB_FUNC( HPDF_TEXTANNOT_SETICON )
 {
    hb_retnl( ( long ) HPDF_TextAnnot_SetIcon( ( HPDF_Annotation ) hb_parptr( 1 ), ( HPDF_AnnotIcon ) hb_parni( 2 ) ) );
 }
-/*----------------------------------------------------------------------*/
+
 /* HPDF_TextAnnot_SetOpened( hAnnot, lOpened ) -> hStatus
 */
 HB_FUNC( HPDF_TEXTANNOT_SETOPENED )

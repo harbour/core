@@ -49,20 +49,14 @@
  *
  */
 
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//
-//          Collected by Pritpal Bedi <pritpal@vouchcac.com>
-//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
-//----------------------------------------------------------------------//
+//--------------------------------------------------//
+// Collected by Pritpal Bedi <pritpal@vouchcac.com>
+//--------------------------------------------------//
 
 #ifndef _HARUPDF_CH
 #define _HARUPDF_CH
 
-// HPDF_InfoType
+/* HPDF_InfoType */
 #define HPDF_INFO_CREATION_DATE             0
 #define HPDF_INFO_MOD_DATE                  1
 #define HPDF_INFO_AUTHOR                    2
@@ -73,7 +67,7 @@
 #define HPDF_INFO_KEYWORDS                  7
 #define HPDF_INFO_EOF                       8
 
-// HPDF_PdfVer
+/* HPDF_PdfVer */
 #define HPDF_VER_12                         0
 #define HPDF_VER_13                         1
 #define HPDF_VER_14                         2
@@ -81,11 +75,11 @@
 #define HPDF_VER_16                         4
 #define HPDF_VER_EOF                        5
 
-// HPDF_EncryptMode
+/* HPDF_EncryptMode */
 #define HPDF_ENCRYPT_R2                     2
 #define HPDF_ENCRYPT_R3                     3
 
-// HPDF_ColorSpace
+/* HPDF_ColorSpace */
 #define HPDF_CS_DEVICE_GRAY                 0
 #define HPDF_CS_DEVICE_RGB                  1
 #define HPDF_CS_DEVICE_CMYK                 2
@@ -99,19 +93,19 @@
 #define HPDF_CS_PATTERN                     10
 #define HPDF_CS_EOF                         11
 
-// HPDF_LineCap
+/* HPDF_LineCap */
 #define HPDF_BUTT_END                       0
 #define HPDF_ROUND_END                      1
 #define HPDF_PROJECTING_SCUARE_END          2
 #define HPDF_LINECAP_EOF                    3
 
-// HPDF_LineJoin
+/* HPDF_LineJoin */
 #define HPDF_MITER_JOIN                     0
 #define HPDF_ROUND_JOIN                     1
 #define HPDF_BEVEL_JOIN                     2
 #define HPDF_LINEJOIN_EOF                   3
 
-// HPDF_TextRenderingMode
+/* HPDF_TextRenderingMode */
 #define HPDF_FILL                           0
 #define HPDF_STROKE                         1
 #define HPDF_FILL_THEN_STROKE               2
@@ -122,26 +116,26 @@
 #define HPDF_CLIPPING                       7
 #define HPDF_RENDERING_MODE_EOF             8
 
-// HPDF_WritingMode
+/* HPDF_WritingMode */
 #define HPDF_WMODE_HORIZONTAL               0
 #define HPDF_WMODE_VERTICAL                 1
 #define HPDF_WMODE_EOF                      2
 
-// HPDF_PageLayout
+/* HPDF_PageLayout */
 #define HPDF_PAGE_LAYOUT_SINGLE             0
 #define HPDF_PAGE_LAYOUT_ONE_COLUMN         1
 #define HPDF_PAGE_LAYOUT_TWO_COLUMN_LEFT    2
 #define HPDF_PAGE_LAYOUT_TWO_COLUMN_RIGHT   3
 #define HPDF_PAGE_LAYOUT_EOF                4
 
-// HPDF_PageMode
+/* HPDF_PageMode */
 #define HPDF_PAGE_MODE_USE_NONE             0
 #define HPDF_PAGE_MODE_USE_OUTLINE          1
 #define HPDF_PAGE_MODE_USE_THUMBS           2
 #define HPDF_PAGE_MODE_FULL_SCREEN          3
 #define HPDF_PAGE_MODE_EOF                  4
 
-// HPDF_PageNumStyle
+/* HPDF_PageNumStyle */
 #define HPDF_PAGE_NUM_STYLE_DECIMAL         0
 #define HPDF_PAGE_NUM_STYLE_UPPER_ROMAN     1
 #define HPDF_PAGE_NUM_STYLE_LOWER_ROMAN     2
@@ -149,7 +143,7 @@
 #define HPDF_PAGE_NUM_STYLE_LOWER_LETTERS   4
 #define HPDF_PAGE_NUM_STYLE_EOF             5
 
-// HPDF_DestinationType
+/* HPDF_DestinationType */
 #define HPDF_XYZ                            0
 #define HPDF_FIT                            1
 #define HPDF_FIT_H                          2
@@ -160,7 +154,7 @@
 #define HPDF_FIT_BV                         7
 #define HPDF_DST_EOF                        8
 
-// HPDF_AnnotType
+/* HPDF_AnnotType */
 #define HPDF_ANNOT_TEXT_NOTES               0
 #define HPDF_ANNOT_LINK                     1
 #define HPDF_ANNOT_SOUND                    2
@@ -175,7 +169,7 @@
 #define HPDF_ANNOT_FILE_ATTACHMENT          11
 #define HPDF_ANNOT_POPUP                    12
 
-// HPDF_AnnotFlgs
+/* HPDF_AnnotFlgs */
 #define HPDF_ANNOT_INVISIBLE                0
 #define HPDF_ANNOT_HIDDEN                   1
 #define HPDF_ANNOT_PRINT                    2
@@ -184,14 +178,14 @@
 #define HPDF_ANNOT_NOVIEW                   5
 #define HPDF_ANNOT_READONLY                 6
 
-// HPDF_AnnotHighlightMode
+/* HPDF_AnnotHighlightMode */
 #define HPDF_ANNOT_NO_HIGHTLIGHT            0
 #define HPDF_ANNOT_INVERT_BOX               1
 #define HPDF_ANNOT_INVERT_BORDER            2
 #define HPDF_ANNOT_DOWN_APPEARANCE          3
 #define HPDF_ANNOT_HIGHTLIGHT_MODE_EOF      4
 
-// HPDF_AnnotIcon
+/* HPDF_AnnotIcon */
 #define HPDF_ANNOT_ICON_COMMENT             0
 #define HPDF_ANNOT_ICON_KEY                 1
 #define HPDF_ANNOT_ICON_NOTE                2
@@ -201,16 +195,14 @@
 #define HPDF_ANNOT_ICON_INSERT              6
 #define HPDF_ANNOT_ICON_EOF                 7
 
-
-// HPDF_BSSubtype
+/* HPDF_BSSubtype */
 #define HPDF_BS_SOLID                       0
 #define HPDF_BS_DASHED                      1
 #define HPDF_BS_BEVELED                     2
 #define HPDF_BS_INSET                       3
 #define HPDF_BS_UNDERLINED                  4
 
-
-// HPDF_BlendMode
+/* HPDF_BlendMode */
 #define HPDF_BM_NORMAL                      0
 #define HPDF_BM_MULTIPLY                    1
 #define HPDF_BM_SCREEN                      2
@@ -225,7 +217,7 @@
 #define HPDF_BM_EXCLUSHON                   11
 #define HPDF_BM_EOF                         12
 
-// HPDF_TransitionStyle
+/* HPDF_TransitionStyle */
 #define HPDF_TS_WIPE_RIGHT                  0
 #define HPDF_TS_WIPE_UP                     1
 #define HPDF_TS_WIPE_LEFT                   2
@@ -245,7 +237,7 @@
 #define HPDF_TS_REPLACE                     16
 #define HPDF_TS_EOF                         17
 
-// HPDF_PageSizes
+/* HPDF_PageSizes */
 #define HPDF_PAGE_SIZE_LETTER               0
 #define HPDF_PAGE_SIZE_LEGAL                1
 #define HPDF_PAGE_SIZE_A3                   2
@@ -260,33 +252,27 @@
 #define HPDF_PAGE_SIZE_COMM10               11
 #define HPDF_PAGE_SIZE_EOF                  12
 
-
-// HPDF_PageDirection
+/* HPDF_PageDirection */
 #define HPDF_PAGE_PORTRAIT                  0
 #define HPDF_PAGE_LANDSCAPE                 1
 
-
-//typedef enum  _HPDF_EncoderType
+/* typedef enum  _HPDF_EncoderType */
 #define HPDF_ENCODER_TYPE_SINGLE_BYTE       0
 #define HPDF_ENCODER_TYPE_DOUBLE_BYTE       1
 #define HPDF_ENCODER_TYPE_UNINITIALIZED     2
 #define HPDF_ENCODER_UNKNOWN                3
 
-
-// HPDF_ByteType
+/* HPDF_ByteType */
 #define HPDF_BYTE_TYPE_SINGLE               0
 #define HPDF_BYTE_TYPE_LEAD                 1
 #define HPDF_BYTE_TYPE_TRIAL                2
 #define HPDF_BYTE_TYPE_UNKNOWN              3
 
-
-// HPDF_TextAlignment
+/* HPDF_TextAlignment */
 #define HPDF_TALIGN_LEFT                    0
 #define HPDF_TALIGN_RIGHT                   1
 #define HPDF_TALIGN_CENTER                  2
 #define HPDF_TALIGN_JUSTIFY                 3
-
-//----------------------------------------------------------------------//
 
 #define  HPDF_TRUE                          .T.
 #define  HPDF_FALSE                         .F.
@@ -333,33 +319,24 @@
 #define HPDF_DEF_PAGE_WIDTH                 595.276F
 #define HPDF_DEF_PAGE_HEIGHT                841.89F
 
-/*---------------------------------------------------------------------------*/
-/*----- compression mode ----------------------------------------------------*/
-
+/* compression mode */
 #define HPDF_COMP_NONE                      0x00
 #define HPDF_COMP_TEXT                      0x01
 #define HPDF_COMP_IMAGE                     0x02
 #define HPDF_COMP_METADATA                  0x04
 #define HPDF_COMP_ALL                       0x0F
-/* #define  HPDF_COMP_BEST_COMPRESS             0x10
- * #define  HPDF_COMP_BEST_SPEED                0x20
- */
+/* #define  HPDF_COMP_BEST_COMPRESS             0x10 */
+/* #define  HPDF_COMP_BEST_SPEED                0x20 */
 #define HPDF_COMP_MASK                      0xFF
 
-
-/*----------------------------------------------------------------------------*/
-/*----- permission flags (only Revision 2 is supported)-----------------------*/
-
+/* permission flags (only Revision 2 is supported) */
 #define HPDF_ENABLE_READ                    0
 #define HPDF_ENABLE_PRINT                   4
 #define HPDF_ENABLE_EDIT_ALL                8
 #define HPDF_ENABLE_COPY                    16
 #define HPDF_ENABLE_EDIT                    32
 
-
-/*----------------------------------------------------------------------------*/
-/*------ viewer preferences definitions --------------------------------------*/
-
+/* viewer preferences definitions */
 #define HPDF_HIDE_TOOLBAR                   1
 #define HPDF_HIDE_MENUBAR                   2
 #define HPDF_HIDE_WINDOW_UI                 4
@@ -367,10 +344,7 @@
 #define HPDF_CENTER_WINDOW                  16
 #define HPDF_PRINT_SCALING_NONE             32
 
-
-/*---------------------------------------------------------------------------*/
-/*------ limitation of object implementation (PDF1.4) -----------------------*/
-
+/* limitation of object implementation (PDF1.4) */
 #define HPDF_LIMIT_MAX_INT                  2147483647
 #define HPDF_LIMIT_MIN_INT                  -2147483647
 
@@ -396,9 +370,7 @@
 #define HPDF_MIN_MAGNIFICATION_FACTOR       8
 #define HPDF_MAX_MAGNIFICATION_FACTOR       3200
 
-/*---------------------------------------------------------------------------*/
-/*------ limitation of various properties -----------------------------------*/
-
+/* limitation of various properties */
 #define HPDF_MIN_PAGE_SIZE                  3
 #define HPDF_MAX_PAGE_SIZE                  14400
 #define HPDF_MIN_HORIZONTALSCALING          10
@@ -415,9 +387,7 @@
 
 #define HPDF_MAX_JWW_NUM                    128
 
-/*----------------------------------------------------------------------------*/
-/*----- country code definition ----------------------------------------------*/
-
+/* country code definition */
 #define HPDF_COUNTRY_AF                     "AF"    /* AFGHANISTAN */
 #define HPDF_COUNTRY_AL                     "AL"    /* ALBANIA */
 #define HPDF_COUNTRY_DZ                     "DZ"    /* ALGERIA */
@@ -657,9 +627,7 @@
 #define HPDF_COUNTRY_ZM                     "ZM"    /* ZAMBIA */
 #define HPDF_COUNTRY_ZW                     "ZW"    /* ZIMBABWE */
 
-/*----------------------------------------------------------------------------*/
-/*----- lang code definition -------------------------------------------------*/
-
+/* lang code definition */
 #define HPDF_LANG_AA                        "aa"     /* Afar */
 #define HPDF_LANG_AB                        "ab"     /* Abkhazian */
 #define HPDF_LANG_AF                        "af"     /* Afrikaans */
@@ -796,10 +764,7 @@
 #define HPDF_LANG_ZH                        "zh"     /* Chinese */
 #define HPDF_LANG_ZU                        "zu"     /* Zulu */
 
-
-/*----------------------------------------------------------------------------*/
-/*----- Graphis mode ---------------------------------------------------------*/
-
+/* Graphis mode */
 #define HPDF_GMODE_PAGE_DESCRIPTION         0x0001
 #define HPDF_GMODE_PATH_OBJECT              0x0002
 #define HPDF_GMODE_TEXT_OBJECT              0x0004
@@ -808,15 +773,8 @@
 #define HPDF_GMODE_INLINE_IMAGE             0x0020
 #define HPDF_GMODE_EXTERNAL_OBJECT          0x0040
 
-//----------------------------------------------------------------------//
-
-/*----------------------------------------------------------------------------*/
-/*----- PDF/A mode -----------------------------------------------------------*/
-
+/* PDF/A mode */
 #define HPDF_PDFA_1A                        0
 #define HPDF_PDFA_1B                        1
 
-//----------------------------------------------------------------------//
-
-
-#endif // _HARUPDF_CH
+#endif /* _HARUPDF_CH */

@@ -49,7 +49,6 @@
 
 #include "hbhpdf.h"
 
-/*----------------------------------------------------------------------*/
 /* HPdf_UseCNSEncodings( hDoc ) -> hStatus
 */
 HB_FUNC( HPDF_USECNSENCODINGS )

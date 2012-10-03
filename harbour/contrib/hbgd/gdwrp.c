@@ -85,9 +85,9 @@
 #define IMAGE_GD       5
 
 
-/* ---------------------------------------------------------------------------*/
-/* Internal functions                                                         */
-/* ---------------------------------------------------------------------------*/
+/* - */
+/* Internal functions */
+/* - */
 
 /*
   *******************
@@ -128,7 +128,7 @@ static const HB_GC_FUNCS s_gcGDimageFuncs =
 };
 
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 /* function returns gdImage pointer or NULL when wrong variable is
  * passed or gdImage was freed before
@@ -144,7 +144,7 @@ static gdImagePtr hb_parGdImage( int iParam )
       return NULL;
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 /* function create in HVM stack return value item with gdImage pointer
  */
@@ -158,7 +158,7 @@ static void hb_retGdImage( gdImagePtr im )
    hb_retptrGC( ( void * ) imPtr );
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 #if 0
 /* function returns PHB_ITEM with gdImage pointer
@@ -206,7 +206,7 @@ static const HB_GC_FUNCS s_gcGDfontFuncs =
    hb_gcDummyMark
 };
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 /* function returns gdFont pointer or NULL when wrong variable is
  * passed or gdFont was freed before
@@ -222,7 +222,7 @@ static gdFontPtr hb_parGdFont( int iParam )
       return NULL;
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 /* function create in HVM stack return value item with gdFont pointer
  */
@@ -236,7 +236,7 @@ static void hb_retGdFont( gdFontPtr font )
    hb_retptrGC( ( void * ) fontPtr );
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 #if 0
 /* function returns PHB_ITEM with gdFont pointer
@@ -252,7 +252,7 @@ static PHB_ITEM hb_gdFontItemNew( gdFontPtr font )
 }
 #endif
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 static void * LoadImageFromHandle( HB_FHANDLE fhandle, int sz )
 {
@@ -269,7 +269,7 @@ static void * LoadImageFromHandle( HB_FHANDLE fhandle, int sz )
 
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 static void * LoadImageFromFile( const char *szFile, int *sz )
 {
@@ -301,7 +301,7 @@ static void * LoadImageFromFile( const char *szFile, int *sz )
 
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 static void SaveImageToHandle( HB_FHANDLE fhandle, const void * iptr, int sz )
 {
@@ -312,7 +312,7 @@ static void SaveImageToHandle( HB_FHANDLE fhandle, const void * iptr, int sz )
    hb_fsWriteLarge( fhandle, iptr, ( HB_SIZE ) sz );
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 static void SaveImageToFile( const char *szFile, const void * iptr, int sz )
 {
@@ -328,7 +328,7 @@ static void SaveImageToFile( const char *szFile, const void * iptr, int sz )
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 static void GDImageCreateFrom( int nType )
 {
@@ -414,7 +414,7 @@ static void GDImageCreateFrom( int nType )
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 static void GDImageSaveTo( int nType )
 {
@@ -577,11 +577,9 @@ HB_FUNC( GDVERSIONNUMBER )
 #endif
 }
 
-/* ---------------------------------------------------------------------------*/
-
-/* ---------------------------------------------------------------------------*/
-/* IMAGE CREATION, DESTRUCTION, LOADING AND SAVING                            */
-/* ---------------------------------------------------------------------------*/
+/* - */
+/* IMAGE CREATION, DESTRUCTION, LOADING AND SAVING */
+/* - */
 
 HB_FUNC( GDIMAGECREATE ) /* gdImagePtr gdImageCreate(sx, sy) */
 {
@@ -610,7 +608,7 @@ HB_FUNC( GDIMAGECREATE ) /* gdImagePtr gdImageCreate(sx, sy) */
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECREATEPALETTE ) /* gdImagePtr gdImageCreatePalette(sx, sy) */
 {
@@ -619,7 +617,7 @@ HB_FUNC( GDIMAGECREATEPALETTE ) /* gdImagePtr gdImageCreatePalette(sx, sy) */
 }
 
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECREATETRUECOLOR ) /* gdImageCreateTrueColor(sx, sy) */
 {
@@ -649,7 +647,7 @@ HB_FUNC( GDIMAGECREATETRUECOLOR ) /* gdImageCreateTrueColor(sx, sy) */
 }
 
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECREATEFROMJPEG ) /* gdImageCreateFromJpegPtr(int size, void *data) */
                                  /* implementation: gdImagePtr gdImageCreateFromJpeg( char *szFile ) */
@@ -658,7 +656,7 @@ HB_FUNC( GDIMAGECREATEFROMJPEG ) /* gdImageCreateFromJpegPtr(int size, void *dat
 }
 
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECREATEFROMGIF ) /* gdImageCreateFromGifPtr(int size, void *data) */
                                 /* implementation: gdImagePtr gdImageCreateFromGif( char *szFile ) */
@@ -667,7 +665,7 @@ HB_FUNC( GDIMAGECREATEFROMGIF ) /* gdImageCreateFromGifPtr(int size, void *data)
 }
 
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECREATEFROMPNG ) /* gdImageCreateFromPngPtr(int size, void *data) */
                                 /* implementation: gdImagePtr gdImageCreateFromPng( char *szFile ) */
@@ -676,7 +674,7 @@ HB_FUNC( GDIMAGECREATEFROMPNG ) /* gdImageCreateFromPngPtr(int size, void *data)
 }
 
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECREATEFROMWBMP ) /* gdImagePtr gdImageCreateFromWBMPPtr (int size, void *data) */
                                  /* implementation: gdImagePtr gdImageCreateFromWBMP ( char *szFile ) */
@@ -685,7 +683,7 @@ HB_FUNC( GDIMAGECREATEFROMWBMP ) /* gdImagePtr gdImageCreateFromWBMPPtr (int siz
 }
 
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECREATEFROMGD ) /* gdImagePtr gdImageCreateFromGdPtr (int size, void *data) */
                                /* implementation: gdImagePtr gdImageCreateFromGd ( char *szFile ) */
@@ -694,9 +692,9 @@ HB_FUNC( GDIMAGECREATEFROMGD ) /* gdImagePtr gdImageCreateFromGdPtr (int size, v
 }
 
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEJPEG ) /* original: void gdImageJpeg(gdImagePtr im, FILE *out) */
                        /* implementation: void gdImageJpeg(gdImagePtr im, char *szFile) */
@@ -705,7 +703,7 @@ HB_FUNC( GDIMAGEJPEG ) /* original: void gdImageJpeg(gdImagePtr im, FILE *out) *
 }
 
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEGIF ) /* original: void gdImageGif(gdImagePtr im, FILE *out) */
                       /* implementation: void gdImageGif(gdImagePtr im, char *szFile) */
@@ -719,7 +717,7 @@ HB_FUNC( GDIMAGEPNG ) /* original: void gdImagePngEx(gdImagePtr im, FILE *out, i
    GDImageSaveTo( IMAGE_PNG );
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEWBMP ) /* original: void gdImageWBMP(gdImagePtr im, FILE *out) */
                        /* implementation: void gdImageWBMP(gdImagePtr im, char *szFile, int fg) */
@@ -728,7 +726,7 @@ HB_FUNC( GDIMAGEWBMP ) /* original: void gdImageWBMP(gdImagePtr im, FILE *out) *
 }
 
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEGD ) /* original: void gdImageGD(gdImagePtr im, FILE *out) */
                      /* implementation: void gdImageGD(gdImagePtr im, char *szFile) */
@@ -737,7 +735,7 @@ HB_FUNC( GDIMAGEGD ) /* original: void gdImageGD(gdImagePtr im, FILE *out) */
 }
 
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 /*
   After Przemek changes on hb_*ptr() functions, this is a void function holded only
@@ -772,11 +770,11 @@ HB_FUNC( GDIMAGEDESTROY ) /* gdImageDestroy(gdImagePtr im) */
 
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
-/* ---------------------------------------------------------------------------*/
-/* DRAWING FUNCTIONS                                                          */
-/* ---------------------------------------------------------------------------*/
+/* - */
+/* DRAWING FUNCTIONS */
+/* - */
 
 HB_FUNC( GDIMAGESETPIXEL ) /* void gdImageSetPixel(gdImagePtr im, int x, int y, int color) */
 {
@@ -813,7 +811,7 @@ HB_FUNC( GDIMAGESETPIXEL ) /* void gdImageSetPixel(gdImagePtr im, int x, int y, 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGELINE ) /* void gdImageLine(gdImagePtr im, int x1, int y1, int x2, int y2, int color) */
 {
@@ -855,7 +853,7 @@ HB_FUNC( GDIMAGELINE ) /* void gdImageLine(gdImagePtr im, int x1, int y1, int x2
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEDASHEDLINE ) /* void gdImageDashedLine(gdImagePtr im, int x1, int y1, int x2, int y2, int color) */
 {
@@ -897,7 +895,7 @@ HB_FUNC( GDIMAGEDASHEDLINE ) /* void gdImageDashedLine(gdImagePtr im, int x1, in
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEPOLYGON ) /* original: void gdImagePolygon(gdImagePtr im, gdPointPtr points, int pointsTotal, int color) */
                           /* implementation: void gdImagePolygon(gdImagePtr im, gdPointPtr points, int color) */
@@ -952,7 +950,7 @@ HB_FUNC( GDIMAGEPOLYGON ) /* original: void gdImagePolygon(gdImagePtr im, gdPoin
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im, gdPointPtr points, int pointsTotal, int color) */
                               /* implementation: void gdImageOpenPolygon(gdImagePtr im, gdPointPtr points, int color) */
 {
@@ -1008,7 +1006,7 @@ HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im
 #endif /* ( GD_VERS >= 2033 ) */
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGERECTANGLE ) /* void gdImageRectangle(gdImagePtr im, int x1, int y1, int x2, int y2, int color) */
 {
@@ -1050,7 +1048,7 @@ HB_FUNC( GDIMAGERECTANGLE ) /* void gdImageRectangle(gdImagePtr im, int x1, int 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEFILLEDPOLYGON ) /* original: void gdImageFilledPolygon(gdImagePtr im, gdPointPtr points, int pointsTotal, int color) */
                                 /* implementation: void gdImageFilledPolygon(gdImagePtr im, gdPointPtr points, int color) */
@@ -1103,7 +1101,7 @@ HB_FUNC( GDIMAGEFILLEDPOLYGON ) /* original: void gdImageFilledPolygon(gdImagePt
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEFILLEDRECTANGLE ) /* void gdImageFilledRectangle(gdImagePtr im, int x1, int y1, int x2, int y2, int color) */
 {
@@ -1145,7 +1143,7 @@ HB_FUNC( GDIMAGEFILLEDRECTANGLE ) /* void gdImageFilledRectangle(gdImagePtr im, 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEARC ) /* void gdImageArc(gdImagePtr im, int cx, int cy, int w, int h, int s, int e, int color) */
 {
@@ -1190,7 +1188,7 @@ HB_FUNC( GDIMAGEARC ) /* void gdImageArc(gdImagePtr im, int cx, int cy, int w, i
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEFILLEDARC ) /* void gdImageFilledArc(gdImagePtr im, int cx, int cy, int w, int h, int s, int e, int color[, int style]) */
 {
@@ -1240,7 +1238,7 @@ HB_FUNC( GDIMAGEFILLEDARC ) /* void gdImageFilledArc(gdImagePtr im, int cx, int 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEFILLEDELLIPSE ) /* void gdImageFilledEllipse(gdImagePtr im, int cx, int cy, int w, int h, int color) */
 {
@@ -1281,7 +1279,7 @@ HB_FUNC( GDIMAGEFILLEDELLIPSE ) /* void gdImageFilledEllipse(gdImagePtr im, int 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEFILLTOBORDER ) /* void gdImageFillToBorder(gdImagePtr im, int x, int y, int border, int color) */
 {
@@ -1320,7 +1318,7 @@ HB_FUNC( GDIMAGEFILLTOBORDER ) /* void gdImageFillToBorder(gdImagePtr im, int x,
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 /* Disabled, because there is a .prg implementation which
    works with all gd lib versions. [vszakats] */
 #if 0
@@ -1365,7 +1363,7 @@ HB_FUNC( GDIMAGEELLIPSE ) /* void gdImageEllipse(gdImagePtr im, int cx, int cy, 
 }
 #endif
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEFILL ) /* void gdImageFill(gdImagePtr im, int x, int y, int color) */
 {
@@ -1400,7 +1398,7 @@ HB_FUNC( GDIMAGEFILL ) /* void gdImageFill(gdImagePtr im, int x, int y, int colo
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGESETANTIALIASED ) /* void gdImageSetAntiAliased(gdImagePtr im, int color) */
 {
@@ -1430,7 +1428,7 @@ HB_FUNC( GDIMAGESETANTIALIASED ) /* void gdImageSetAntiAliased(gdImagePtr im, in
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGESETANTIALIASEDDONTBLEND ) /* void gdImageSetAntiAliasedDontBlend(gdImagePtr im, int c, int dont_blend) */
 {
@@ -1465,7 +1463,7 @@ HB_FUNC( GDIMAGESETANTIALIASEDDONTBLEND ) /* void gdImageSetAntiAliasedDontBlend
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGESETBRUSH ) /* void gdImageSetBrush(gdImagePtr im, gdImagePtr brush) */
 {
@@ -1495,7 +1493,7 @@ HB_FUNC( GDIMAGESETBRUSH ) /* void gdImageSetBrush(gdImagePtr im, gdImagePtr bru
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGESETTILE ) /* void gdImageSetTile(gdImagePtr im, gdImagePtr tile) */
 {
@@ -1525,7 +1523,7 @@ HB_FUNC( GDIMAGESETTILE ) /* void gdImageSetTile(gdImagePtr im, gdImagePtr tile)
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGESETSTYLE ) /* original: void gdImageSetStyle(gdImagePtr im, int *style, int styleLength) */
                            /* implementation: void gdImageSetStyle(gdImagePtr im, int *style) */
@@ -1569,7 +1567,7 @@ HB_FUNC( GDIMAGESETSTYLE ) /* original: void gdImageSetStyle(gdImagePtr im, int 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGESETTHICKNESS ) /* void gdImageSetThickness(gdImagePtr im, int thickness) */
 {
@@ -1606,7 +1604,7 @@ HB_FUNC( GDIMAGESETTHICKNESS ) /* void gdImageSetThickness(gdImagePtr im, int th
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEALPHABLENDING ) /* void gdImageAlphaBlending(gdImagePtr im, int blending) */
 {
@@ -1636,7 +1634,7 @@ HB_FUNC( GDIMAGEALPHABLENDING ) /* void gdImageAlphaBlending(gdImagePtr im, int 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGESAVEALPHA ) /* void gdImageSaveAlpha(gdImagePtr im, int saveFlag) */
 {
@@ -1665,7 +1663,7 @@ HB_FUNC( GDIMAGESAVEALPHA ) /* void gdImageSaveAlpha(gdImagePtr im, int saveFlag
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGESETCLIP ) /* void gdImageSetClip(gdImagePtr im, int x1, int y1, int x2, int y2) */
 {
@@ -1701,7 +1699,7 @@ HB_FUNC( GDIMAGESETCLIP ) /* void gdImageSetClip(gdImagePtr im, int x1, int y1, 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEGETCLIP ) /* original: void gdImageGetClip(gdImagePtr im, int *x1P, int *y1P, int *x2P, int *y2P) */
                           /* implementation: array gdImageGetClip(gdImagePtr im) */
@@ -1738,12 +1736,11 @@ HB_FUNC( GDIMAGEGETCLIP ) /* original: void gdImageGetClip(gdImagePtr im, int *x
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
-/* ---------------------------------------------------------------------------*/
-/* QUERY FUNCTIONS                                                            */
-/* ---------------------------------------------------------------------------*/
-
+/* - */
+/* QUERY FUNCTIONS */
+/* - */
 
 HB_FUNC( GDIMAGECOLORSTOTAL ) /* int gdImageColorsTotal(gdImagePtr im) */
 {
@@ -1767,7 +1764,7 @@ HB_FUNC( GDIMAGECOLORSTOTAL ) /* int gdImageColorsTotal(gdImagePtr im) */
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEALPHA ) /* int gdImageAlpha(gdImagePtr im, int color) */
 {
@@ -1796,7 +1793,7 @@ HB_FUNC( GDIMAGEALPHA ) /* int gdImageAlpha(gdImagePtr im, int color) */
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGERED ) /* int gdImageRed(gdImagePtr im, int color) */
 {
@@ -1825,7 +1822,7 @@ HB_FUNC( GDIMAGERED ) /* int gdImageRed(gdImagePtr im, int color) */
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEGREEN ) /* int gdImageGreen(gdImagePtr im, int color) */
 {
@@ -1854,7 +1851,7 @@ HB_FUNC( GDIMAGEGREEN ) /* int gdImageGreen(gdImagePtr im, int color) */
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEBLUE ) /* int gdImageBlue(gdImagePtr im, int color) */
 {
@@ -1883,7 +1880,7 @@ HB_FUNC( GDIMAGEBLUE ) /* int gdImageBlue(gdImagePtr im, int color) */
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGESX ) /* int gdImageSX(gdImagePtr im) */
 {
@@ -1907,7 +1904,7 @@ HB_FUNC( GDIMAGESX ) /* int gdImageSX(gdImagePtr im) */
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGESY ) /* int gdImageSX(gdImagePtr im) */
 {
@@ -1931,7 +1928,7 @@ HB_FUNC( GDIMAGESY ) /* int gdImageSX(gdImagePtr im) */
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEGETPIXEL ) /* int gdImageGetPixel(gdImagePtr im, int x, int y) */
 {
@@ -1962,7 +1959,7 @@ HB_FUNC( GDIMAGEGETPIXEL ) /* int gdImageGetPixel(gdImagePtr im, int x, int y) *
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEBOUNDSSAFE ) /* int gdImageBoundsSafe(gdImagePtr im, int x, int y) */
 {
@@ -1993,7 +1990,7 @@ HB_FUNC( GDIMAGEBOUNDSSAFE ) /* int gdImageBoundsSafe(gdImagePtr im, int x, int 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEGETINTERLACED ) /* int gdImageGetInterlaced(gdImagePtr im) */
 {
@@ -2017,7 +2014,7 @@ HB_FUNC( GDIMAGEGETINTERLACED ) /* int gdImageGetInterlaced(gdImagePtr im) */
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEGETTRANSPARENT ) /* int gdImageGetTransparent(gdImagePtr im) */
 {
@@ -2042,7 +2039,7 @@ HB_FUNC( GDIMAGEGETTRANSPARENT ) /* int gdImageGetTransparent(gdImagePtr im) */
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGETRUECOLOR ) /* int gdImageTrueColor(gdImagePtr im) */
 {
@@ -2067,7 +2064,7 @@ HB_FUNC( GDIMAGETRUECOLOR ) /* int gdImageTrueColor(gdImagePtr im) */
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGETRUECOLORTOPALETTE ) /* void gdImageTrueColorToPalette (gdImagePtr im, int ditherFlag, int colorsWanted) */
 {
@@ -2101,7 +2098,7 @@ HB_FUNC( GDIMAGETRUECOLORTOPALETTE ) /* void gdImageTrueColorToPalette (gdImageP
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECREATEPALETTEFROMTRUECOLOR ) /* gdImagePtr gdImageCreatePaletteFromTrueColor(gdImagePtr im, int ditherFlag, int colorsWanted) */
 {
@@ -2139,7 +2136,7 @@ HB_FUNC( GDIMAGECREATEPALETTEFROMTRUECOLOR ) /* gdImagePtr gdImageCreatePaletteF
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEPALETTEPIXEL ) /* int gdImagePalettePixel(gdImagePtr im, int x, int y) */
 {
@@ -2171,7 +2168,7 @@ HB_FUNC( GDIMAGEPALETTEPIXEL ) /* int gdImagePalettePixel(gdImagePtr im, int x, 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGETRUECOLORPIXEL ) /* int gdImageTrueColorPixel(gdImagePtr im, int x, int y) */
 {
@@ -2203,7 +2200,7 @@ HB_FUNC( GDIMAGETRUECOLORPIXEL ) /* int gdImageTrueColorPixel(gdImagePtr im, int
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEGETTHICKNESS ) /* void gdImageGetThickness(gdImagePtr im) */
 {
@@ -2228,11 +2225,11 @@ HB_FUNC( GDIMAGEGETTHICKNESS ) /* void gdImageGetThickness(gdImagePtr im) */
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
-/* ---------------------------------------------------------------------------*/
-/* FONTS AND TEXT-HANDLING FUNCTIONS                                          */
-/* ---------------------------------------------------------------------------*/
+/* - */
+/* FONTS AND TEXT-HANDLING FUNCTIONS */
+/* - */
 
 HB_FUNC( GDFONTGETSMALL ) /* gdFontPtr gdFontGetSmall(void) */
 {
@@ -2246,7 +2243,7 @@ HB_FUNC( GDFONTGETSMALL ) /* gdFontPtr gdFontGetSmall(void) */
    /*hb_retptr( font ); */
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDFONTGETLARGE ) /* gdFontPtr gdFontGetLarge(void) */
 {
@@ -2260,7 +2257,7 @@ HB_FUNC( GDFONTGETLARGE ) /* gdFontPtr gdFontGetLarge(void) */
    /*hb_retptr( font ); */
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDFONTGETMEDIUMBOLD ) /* gdFontPtr gdFontGetMediumBold(void) */
 {
@@ -2274,7 +2271,7 @@ HB_FUNC( GDFONTGETMEDIUMBOLD ) /* gdFontPtr gdFontGetMediumBold(void) */
    /*hb_retptr( font ); */
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDFONTGETGIANT ) /* gdFontPtr gdFontGetGiant(void) */
 {
@@ -2288,7 +2285,7 @@ HB_FUNC( GDFONTGETGIANT ) /* gdFontPtr gdFontGetGiant(void) */
    /*hb_retptr( font ); */
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDFONTGETTINY ) /* gdFontPtr gdFontGetTiny(void) */
 {
@@ -2302,7 +2299,7 @@ HB_FUNC( GDFONTGETTINY ) /* gdFontPtr gdFontGetTiny(void) */
    /*hb_retptr( font ); */
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGESTRING ) /* void gdImageChar(gdImagePtr im, gdFontPtr font, int x, int y, int c, int color) */
                          /* void gdImageString(gdImagePtr im, gdFontPtr font, int x, int y, unsigned char *s, int color) */
@@ -2358,7 +2355,7 @@ HB_FUNC( GDIMAGESTRING ) /* void gdImageChar(gdImagePtr im, gdFontPtr font, int 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGESTRINGUP ) /* void gdImageCharUp(gdImagePtr im, gdFontPtr font, int x, int y, int c, int color) */
                            /* void gdImageStringUp(gdImagePtr im, gdFontPtr font, int x, int y, unsigned char *s, int color) */
@@ -2414,7 +2411,7 @@ HB_FUNC( GDIMAGESTRINGUP ) /* void gdImageCharUp(gdImagePtr im, gdFontPtr font, 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 /* char *gdImageStringFTEx(gdImagePtr im, int *brect, int fg, char *fontname, double ptsize, double angle, int x, int y, char *string, gdFTStringExtraPtr strex) */
 /* implementation: cError := gdImageStringFTEx( im, aRect, int fg, cFontname, nPtSize, nAngle, x, y, cString, nLinespacing, nCharmap, nResolution ) */
 HB_FUNC( GDIMAGESTRINGFTEX )
@@ -2540,7 +2537,7 @@ HB_FUNC( GDIMAGESTRINGFTEX )
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, int cx, int cy, double radius, double textRadius, double fillPortion, char *font, double points, char *top, char *bottom, int fgcolor) */
 {
@@ -2613,7 +2610,7 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDFONTCACHESETUP ) /* int gdFontCacheSetup (void) */
 {
@@ -2621,7 +2618,7 @@ HB_FUNC( GDFONTCACHESETUP ) /* int gdFontCacheSetup (void) */
    hb_retl( gdFontCacheSetup() );
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDFONTCACHESHUTDOWN ) /* void gdFontCacheShutdown (void) */
 {
@@ -2629,7 +2626,7 @@ HB_FUNC( GDFONTCACHESHUTDOWN ) /* void gdFontCacheShutdown (void) */
    gdFontCacheShutdown();
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDFONTGETWIDTH )
 {
@@ -2654,7 +2651,7 @@ HB_FUNC( GDFONTGETWIDTH )
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDFONTGETHEIGHT )
 {
@@ -2679,11 +2676,11 @@ HB_FUNC( GDFONTGETHEIGHT )
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
-/* ---------------------------------------------------------------------------*/
-/* COLOR HANDLING FUNCTIONS                                                   */
-/* ---------------------------------------------------------------------------*/
+/* - */
+/* COLOR HANDLING FUNCTIONS */
+/* - */
 
 HB_FUNC( GDIMAGECOLORALLOCATE ) /* int gdImageColorAllocate(gdImagePtr im, int r, int g, int b) */
 {
@@ -2721,7 +2718,7 @@ HB_FUNC( GDIMAGECOLORALLOCATE ) /* int gdImageColorAllocate(gdImagePtr im, int r
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECOLORDEALLOCATE ) /* void gdImageColorDeallocate(gdImagePtr im, int color) */
 {
@@ -2751,7 +2748,7 @@ HB_FUNC( GDIMAGECOLORDEALLOCATE ) /* void gdImageColorDeallocate(gdImagePtr im, 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECOLORALLOCATEALPHA ) /* int gdImageColorAllocateAlpha(gdImagePtr im, int r, int g, int b, int a) */
 {
@@ -2795,7 +2792,7 @@ HB_FUNC( GDIMAGECOLORALLOCATEALPHA ) /* int gdImageColorAllocateAlpha(gdImagePtr
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECOLORCLOSEST ) /* int gdImageColorClosest(gdImagePtr im, int r, int g, int b) */
 {
@@ -2833,7 +2830,7 @@ HB_FUNC( GDIMAGECOLORCLOSEST ) /* int gdImageColorClosest(gdImagePtr im, int r, 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECOLORCLOSESTALPHA ) /* int gdImageColorClosestAlpha(gdImagePtr im, int r, int g, int b, int a) */
 {
@@ -2877,7 +2874,7 @@ HB_FUNC( GDIMAGECOLORCLOSESTALPHA ) /* int gdImageColorClosestAlpha(gdImagePtr i
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECOLORCLOSESTHWB ) /*  gdImageColorClosestHWB(gdImagePtr im, int r, int g, int b) */
 {
@@ -2915,7 +2912,7 @@ HB_FUNC( GDIMAGECOLORCLOSESTHWB ) /*  gdImageColorClosestHWB(gdImagePtr im, int 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECOLOREXACT ) /* int gdImageColorExact(gdImagePtr im, int r, int g, int b) */
 {
@@ -2953,7 +2950,7 @@ HB_FUNC( GDIMAGECOLOREXACT ) /* int gdImageColorExact(gdImagePtr im, int r, int 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECOLORRESOLVE ) /* int gdImageColorResolve(gdImagePtr im, int r, int g, int b) */
 {
@@ -2991,7 +2988,7 @@ HB_FUNC( GDIMAGECOLORRESOLVE ) /* int gdImageColorResolve(gdImagePtr im, int r, 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECOLORRESOLVEALPHA ) /* int gdImageColorResolveAlpha(gdImagePtr im, int r, int g, int b, int a) */
 {
@@ -3035,7 +3032,7 @@ HB_FUNC( GDIMAGECOLORRESOLVEALPHA ) /* int gdImageColorResolveAlpha(gdImagePtr i
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECOLORTRANSPARENT ) /* void gdImageColorTransparent(gdImagePtr im, int color) */
 {
@@ -3065,7 +3062,7 @@ HB_FUNC( GDIMAGECOLORTRANSPARENT ) /* void gdImageColorTransparent(gdImagePtr im
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDTRUECOLOR ) /* int gdTrueColor(int red, int green, int blue) */
 {
@@ -3098,7 +3095,7 @@ HB_FUNC( GDTRUECOLOR ) /* int gdTrueColor(int red, int green, int blue) */
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDTRUECOLORALPHA ) /* int gdTrueColorAlpha(int red, int green, int blue, int alpha) */
 {
@@ -3133,11 +3130,11 @@ HB_FUNC( GDTRUECOLORALPHA ) /* int gdTrueColorAlpha(int red, int green, int blue
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
-/* ---------------------------------------------------------------------------*/
-/* COPY AND RESIZING FUNCTIONS                                                */
-/* ---------------------------------------------------------------------------*/
+/* - */
+/* COPY AND RESIZING FUNCTIONS */
+/* - */
 
 HB_FUNC( GDIMAGECOPY ) /* void gdImageCopy(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int w, int h) */
 {
@@ -3187,7 +3184,7 @@ HB_FUNC( GDIMAGECOPY ) /* void gdImageCopy(gdImagePtr dst, gdImagePtr src, int d
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECOPYRESIZED ) /* void gdImageCopyResized(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int dstW, int dstH, int srcW, int srcH) */
 {
@@ -3247,7 +3244,7 @@ HB_FUNC( GDIMAGECOPYRESIZED ) /* void gdImageCopyResized(gdImagePtr dst, gdImage
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECOPYRESAMPLED ) /* void gdImageCopyResampled(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int dstW, int dstH, int srcW, int srcH) */
 {
@@ -3307,7 +3304,7 @@ HB_FUNC( GDIMAGECOPYRESAMPLED ) /* void gdImageCopyResampled(gdImagePtr dst, gdI
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECOPYROTATED ) /* void gdImageCopyRotated(gdImagePtr dst, gdImagePtr src, double dstX, double dstY, int srcX, int srcY, int srcW, int srcH, int angle) */
 {
@@ -3363,7 +3360,7 @@ HB_FUNC( GDIMAGECOPYROTATED ) /* void gdImageCopyRotated(gdImagePtr dst, gdImage
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECOPYMERGE ) /* void gdImageCopyMerge(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int w, int h, int pct) */
 {
@@ -3418,7 +3415,7 @@ HB_FUNC( GDIMAGECOPYMERGE ) /* void gdImageCopyMerge(gdImagePtr dst, gdImagePtr 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGECOPYMERGEGRAY ) /* void gdImageCopyMergeGray(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int w, int h, int pct) */
 {
@@ -3473,7 +3470,7 @@ HB_FUNC( GDIMAGECOPYMERGEGRAY ) /* void gdImageCopyMergeGray(gdImagePtr dst, gdI
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEPALETTECOPY ) /* void gdImagePaletteCopy(gdImagePtr dst, gdImagePtr src) */
 {
@@ -3501,7 +3498,7 @@ HB_FUNC( GDIMAGEPALETTECOPY ) /* void gdImagePaletteCopy(gdImagePtr dst, gdImage
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGESQUARETOCIRCLE ) /* void gdImageSquareToCircle(gdImagePtr im, int radius) */
 {
@@ -3529,7 +3526,7 @@ HB_FUNC( GDIMAGESQUARETOCIRCLE ) /* void gdImageSquareToCircle(gdImagePtr im, in
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGESHARPEN ) /* void gdImageSharpen(gdImagePtr im, int pct) */
 {
@@ -3558,11 +3555,9 @@ HB_FUNC( GDIMAGESHARPEN ) /* void gdImageSharpen(gdImagePtr im, int pct) */
    }
 }
 
-/* ---------------------------------------------------------------------------*/
-
-/* ---------------------------------------------------------------------------*/
-/* MISCELLANEOUS FUNCTIONS                                                    */
-/* ---------------------------------------------------------------------------*/
+/* - */
+/* MISCELLANEOUS FUNCTIONS */
+/* - */
 
 HB_FUNC( GDIMAGECOMPARE ) /* int gdImageCompare(gdImagePtr im1, gdImagePtr im2) */
 {
@@ -3590,7 +3585,7 @@ HB_FUNC( GDIMAGECOMPARE ) /* int gdImageCompare(gdImagePtr im1, gdImagePtr im2) 
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( GDIMAGEINTERLACE ) /* void gdImageInterlace(gdImagePtr im, int interlace) */
 {
@@ -3620,7 +3615,7 @@ HB_FUNC( GDIMAGEINTERLACE ) /* void gdImageInterlace(gdImagePtr im, int interlac
    }
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 #if HB_GD_VERS( 2, 0, 33 )
 
@@ -3694,7 +3689,7 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
 #endif
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 /*BGD_DECLARE(void *) gdImageGifAnimAddPtr(gdImagePtr im, int *size, int LocalCM, int LeftOfs, int TopOfs, int Delay, int Disposal, gdImagePtr previm); */
 /* implementation: (void *) gdImageGifAnimAdd( gdImagePtr im, cFile | nHandle, int LocalCM, int LeftOfs, int TopOfs, int Delay, int Disposal, gdImagePtr previm); */
@@ -3753,7 +3748,7 @@ HB_FUNC( GDIMAGEGIFANIMADD )
 #endif
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 /*BGD_DECLARE(void *) gdImageGifAnimEndPtr(int *size); */
 /* implementation: gdImageGifAnimEnd( cFile | nHandle ); */
@@ -3792,7 +3787,7 @@ HB_FUNC( GDIMAGEGIFANIMEND )
 #endif
 }
 
-/* ---------------------------------------------------------------------------*/
+/* - */
 
 HB_FUNC( HB_GD_VERSION )
 {

@@ -192,8 +192,8 @@ static const char * hb_curl_StrHashNew( PHB_CURL hb_curl, const char * szValue )
 
 #endif /* HB_CURL_HASH_STRINGS */
 
-/* ---------------------------------------------------------------------------- */
 /* Global initialization/deinitialization */
+/* -------------------------------------- */
 
 static void * hb_curl_xgrab( size_t size )
 {
@@ -244,8 +244,8 @@ HB_FUNC( CURL_GLOBAL_CLEANUP )
    curl_global_cleanup();
 }
 
-/* ---------------------------------------------------------------------------- */
 /* Callbacks */
+/* --------- */
 
 static size_t hb_curl_read_dummy_callback( void * buffer, size_t size, size_t nmemb, void * Cargo )
 {
@@ -407,8 +407,8 @@ static int hb_curl_progress_callback( void * Cargo, double dltotal, double dlnow
    return 0;
 }
 
-/* ---------------------------------------------------------------------------- */
 /* Helpers */
+/* ------- */
 
 static void hb_curl_form_free( struct curl_httppost ** ptr )
 {
@@ -480,8 +480,8 @@ static void hb_curl_buff_dl_free( PHB_CURL hb_curl )
    }
 }
 
-/* ---------------------------------------------------------------------------- */
 /* Constructor/Destructor */
+/* ---------------------- */
 
 static void PHB_CURL_free( PHB_CURL hb_curl, HB_BOOL bFree )
 {
@@ -621,8 +621,8 @@ static PHB_CURL PHB_CURL_par( int iParam )
    return ph ? ( PHB_CURL ) * ph : NULL;
 }
 
-/* ---------------------------------------------------------------------------- */
 /* Harbour interface */
+/* ----------------- */
 
 HB_FUNC( CURL_EASY_INIT )
 {
@@ -2137,8 +2137,8 @@ HB_FUNC( CURL_EASY_UNESCAPE )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* ---------------------------------------------------------------------------- */
 /* Harbour interface (session independent) */
+/* --------------------------------------- */
 
 HB_FUNC( CURL_VERSION )
 {

@@ -55,8 +55,6 @@
 #include "memoedit.ch"
 #include "inkey.ch"
 
-
-//-------------------------------------------------------------------//
 //
 // A specialized HBEditor which can simulate MemoEdit() behaviour
 //
@@ -79,8 +77,6 @@ CREATE CLASS XHB_TMemoEditor FROM XHBEditor
    METHOD CallUdf( nMode )                         // Call user function. ( old xDo )
 
 ENDCLASS
-
-//-------------------------------------------------------------------//
 
 METHOD MemoInit( xUDF ) CLASS XHB_TMemoEditor
 
@@ -155,8 +151,6 @@ METHOD MemoInit( xUDF ) CLASS XHB_TMemoEditor
    ENDIF
 
    RETURN Self
-
-//-------------------------------------------------------------------//
 
 METHOD Edit() CLASS XHB_TMemoEditor
 
@@ -277,7 +271,6 @@ METHOD Edit() CLASS XHB_TMemoEditor
    RETURN Self
 
 
-//-------------------------------------------------------------------//
 //
 // I come here if I have an unknown key and it is not a configurable key
 // if there is an user function I leave to it its handling
@@ -293,7 +286,6 @@ METHOD KeyboardHook( nKey ) CLASS XHB_TMemoEditor
 
    RETURN Self
 
-//-------------------------------------------------------------------//
 
 METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS XHB_TMemoEditor
 
@@ -391,8 +383,6 @@ METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS XHB_TMemoEditor
 
    RETURN Self
 
-//-------------------------------------------------------------------//
-
 METHOD CallUdf( nMode ) CLASS XHB_TMemoEditor
 
    LOCAL nCurRow := ::Row()
@@ -410,7 +400,6 @@ METHOD CallUdf( nMode ) CLASS XHB_TMemoEditor
 
    RETURN xResult
 
-//-------------------------------------------------------------------//
 //                  Prg Level Call of MemoEdit()
 //-------------------------------------------------------------------//
 

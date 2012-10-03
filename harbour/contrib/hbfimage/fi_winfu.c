@@ -69,9 +69,7 @@
 
 #include "FreeImage.h"
 
-/* -------------------------------------------------------------------------- */
-/* Convert from FreeImage to HBITMAP ---------------------------------------- */
-/* -------------------------------------------------------------------------- */
+/* Convert from FreeImage to HBITMAP */
 
 /* implementation: HBITMAP bitmap = FI_FiToBitmap( FIBITMAP *dib ); */
 HB_FUNC( FI_FITOBITMAP )
@@ -108,11 +106,7 @@ HB_FUNC( FI_FITOBITMAP )
    }
 }
 
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-/* Convert from HBITMAP to FreeImage ---------------------------------------- */
-/* -------------------------------------------------------------------------- */
+/* Convert from HBITMAP to FreeImage */
 
 /* implementation:  FIBITMAP *dib = FI_BitmapToFi( HBITMAP bitmap ); */
 HB_FUNC( FI_BITMAPTOFI )
@@ -157,11 +151,7 @@ HB_FUNC( FI_BITMAPTOFI )
    }
 }
 
-/* -------------------------------------------------------------------------- */
-
-/* -------------------------------------------------------------------------- */
-/* Draw an image in a window Box -------------------------------------------- */
-/* -------------------------------------------------------------------------- */
+/* Draw an image in a window Box */
 
 /* implementation: int scanlines = FI_WinDraw( FIBITMAP *dib, HDC hDC, nTop, nLeft, nBottom, nRight ); */
 HB_FUNC( FI_WINDRAW )
@@ -212,8 +202,6 @@ HB_FUNC( FI_WINDRAW )
          hb_paramError( 4 ), hb_paramError( 5 ), hb_paramError( 6 ) );
    }
 }
-
-/* -------------------------------------------------------------------------- */
 
 #else
 

@@ -128,8 +128,8 @@ typedef struct _HB_EXPAT
          hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS ); \
    }
 
-/* ---------------------------------------------------------------------------- */
 /* Global initialization/deinitialization */
+/* -------------------------------------- */
 
 static void * XMLCALL hb_expat_xgrab( size_t size )
 {
@@ -147,8 +147,8 @@ static void * XMLCALL hb_expat_xrealloc( void * p, size_t size )
    return hb_xrealloc( p, size );
 }
 
-/* ---------------------------------------------------------------------------- */
 /* Callbacks */
+/* --------- */
 
 /* Common */
 
@@ -649,8 +649,8 @@ static int XMLCALL hb_expat_NotStandaloneHandler( void * userdata )
    return iResult;
 }
 
-/* ---------------------------------------------------------------------------- */
 /* Constructor/Destructor */
+/* ---------------------- */
 
 static void PHB_EXPAT_free( PHB_EXPAT hb_expat, HB_BOOL bFree )
 {
@@ -740,8 +740,8 @@ static void hb_expat_setvar( PHB_EXPAT hb_expat, int iHandler, PHB_ITEM pBlock )
    }
 }
 
-/* ---------------------------------------------------------------------------- */
 /* Harbour interface */
+/* ----------------- */
 
 HB_FUNC( XML_PARSERCREATE )
 {

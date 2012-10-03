@@ -49,7 +49,6 @@
 
 #include "hbhpdf.h"
 
-/*----------------------------------------------------------------------*/
 /* HPdf_UseJPFonts( hDoc ) -> hStatus
 */
 HB_FUNC( HPDF_USEJPFONTS )

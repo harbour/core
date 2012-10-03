@@ -53,8 +53,6 @@
 #ifndef FREEIMAGE_CH
 #define FREEIMAGE_CH
 
-/* ----------------------------------------------------------------------- */
-
 #ifndef FREEIMAGE_BIGENDIAN
 // Little Endian (x86 / MS Windows, Linux) : BGR(A) order
 #define FI_RGBA_RED           2
@@ -102,7 +100,7 @@
 #define FI16_565_GREEN_SHIFT  5
 #define FI16_565_BLUE_SHIFT   0
 
-// ICC profile support ------------------------------------------------------
+/* ICC profile support */
 
 #define FIICC_DEFAULT         0x00
 #define FIICC_COLOR_IS_CMYK   0x01
@@ -239,7 +237,7 @@ Constants used in color manipulation routines.
 #define FICC_MAG     8  // Complex images: use magnitude
 #define FICC_PHASE   9  // Complex images: use phase
 
-// Metadata support ---------------------------------------------------------
+/* Metadata support */
 
 /**
   Tag data type information (based on TIFF specifications)
@@ -281,7 +279,7 @@ Constants used in color manipulation routines.
 #define FIMD_ANIMATION       9  // Animation metadata
 #define FIMD_CUSTOM         10  // Used to attach other metadata types to a dib
 
-// Load / Save flag constants -----------------------------------------------
+/* Load / Save flag constants */
 
 #define BMP_DEFAULT         0
 #define BMP_SAVE_RLE        1

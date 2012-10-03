@@ -58,12 +58,11 @@
 
 // TODO: add language module request(s) and an achoice to select different lang modules
 
-
-//:--------------------------------------------------------------------
+//:
 
 PROCEDURE Main()
 
-   //:--------------------------------------------------------------------
+   //:
    LOCAL cScr
    LOCAL nchoice
    LOCAL c    := .T.
@@ -156,11 +155,11 @@ PROCEDURE Main()
 
    RETURN
 
-   //:--------------------------------------------------------------------
+//:
 
 FUNCTION addmtest()
 
-   //:--------------------------------------------------------------------
+   //:
    //: addmonth(ddate, nMonths)
    //: =========================
    //: This version will only accept an nMonths value of from 0 to 70
@@ -205,11 +204,11 @@ FUNCTION addmtest()
 
    RETURN NIL
 
-   //:--------------------------------------------------------------------
+//:
 
 FUNCTION bomtest()
 
-   //:--------------------------------------------------------------------
+   //:
    //: bom( ddate )
    //: =============
 
@@ -249,11 +248,11 @@ FUNCTION bomtest()
 
    RETURN NIL
 
-   //:--------------------------------------------------------------------
+//:
 
 FUNCTION boqtest()
 
-   //:--------------------------------------------------------------------
+   //:
    //: bom( ddate )
    //: =============
 
@@ -295,11 +294,11 @@ FUNCTION boqtest()
 
    RETURN NIL
 
-   //:--------------------------------------------------------------------
+//:
 
 FUNCTION boytest()
 
-   //:--------------------------------------------------------------------
+   //:
    //: boy( ddate )
    //: =============
 
@@ -341,11 +340,11 @@ FUNCTION boytest()
 
    RETURN NIL
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION ctodowtest()
 
-   //:----------------------------------------------------------------
+   //:
    //: ctodow( cDow )
    //: ==============
    //: Convert name of day of the week to its ordinal number
@@ -390,11 +389,11 @@ FUNCTION ctodowtest()
 
    RETURN NIL
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION ctomonthtest()
 
-   //:----------------------------------------------------------------
+   //:
    //: ctomonth(cDom )
    //: ===============
    //: Convert the name of a month to its ordinal number. If cMonth is
@@ -438,11 +437,11 @@ FUNCTION ctomonthtest()
 
    RETURN NIL
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION dInMonthtest()
 
-   //:----------------------------------------------------------------
+   //:
    //: daysInMonth( xDate, lleap )
    //: ============================
    //: Returns the number of days in nMonth, either whose name as a
@@ -511,11 +510,11 @@ FUNCTION dInMonthtest()
 
    RETURN NIL
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION d2month()
 
-   //:----------------------------------------------------------------
+   //:
    //: daystomonth()
    //: =============
    //: Total number days from first of Jan to beginning of nMonth.
@@ -574,11 +573,11 @@ FUNCTION d2month()
 
    RETURN NIL
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION dmytest()
 
-   //:----------------------------------------------------------------
+   //:
    //: dmy( ddate, lmode)
    //: ===================
    //: Returns the date as a string in DD Month YY format. If lmode
@@ -634,11 +633,11 @@ FUNCTION dmytest()
 
    RETURN NIL
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION doytest()
 
-   //:----------------------------------------------------------------
+   //:
    //: doy( ddate )
    //: =============
    //: Determines the day of the year for a specific date
@@ -682,11 +681,11 @@ FUNCTION doytest()
 
    RETURN NIL
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION eomtest()
 
-   //:----------------------------------------------------------------
+   //:
    //: dBom := eom( ddate )
    //: =====================
    //: Returns the last date in the month of the month appearing in
@@ -731,11 +730,11 @@ FUNCTION eomtest()
 
    RETURN NIL
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION eoqtest()
 
-   //:----------------------------------------------------------------
+   //:
    //: dret := eoq( ddate )
    //: =====================
    //: Returns the last date in the quarter in which ddate falls.
@@ -779,11 +778,11 @@ FUNCTION eoqtest()
 
    RETURN NIL
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION eoytest()
 
-   //:----------------------------------------------------------------
+   //:
    //: dEoy := eoy( ddate )
    //: =====================
    //: Returns the last date in the year of the year appearing in
@@ -828,11 +827,11 @@ FUNCTION eoytest()
 
    RETURN NIL
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION isleaptest()
 
-   //:----------------------------------------------------------------
+   //:
    //:  lRet :=  isleap( ddate )
    //:  ========================
    //:  if ddate is a leap year, lRet is .T., otherwise .F..
@@ -883,13 +882,13 @@ FUNCTION isleaptest()
 
    RETURN NIL
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION lastdayomtest()
 
-   //:----------------------------------------------------------------
+   //:
    //:   ndays := lastdayom( xDate )
-   //:--------------------------------------------------------------
+   //:   ===========================
    //: Returns the the number of days in the month.
    //: xDate can be a date or a month number. If empty uses the
    //: system date.
@@ -942,11 +941,11 @@ FUNCTION lastdayomtest()
 
    RETURN NIL
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION mdytest()
 
-   //:----------------------------------------------------------------
+   //:
    //:  cDate := mdy( dDate )
    //:  ======================
    //: Returns the date as a string in "Month DD, YY" or "Month DD, YYYY"
@@ -993,11 +992,11 @@ FUNCTION mdytest()
 
    RETURN NIL
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION ntocdowtest()
 
-   //:----------------------------------------------------------------
+   //:
    //:  cDay :=  ntocdow( nDayNum )
    //:  ==================================
    //:  ntocdow() receives the number of a day and returns its
@@ -1043,11 +1042,11 @@ FUNCTION ntocdowtest()
 
    RETURN NIL
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION ntocmthtest()
 
-   //:----------------------------------------------------------------
+   //:
    //:  cMonth :=  ntocmonth( nMonthNum )
    //:  ==================================
    //:  ntocmonth() receives the number of a month and returns its
@@ -1093,11 +1092,11 @@ FUNCTION ntocmthtest()
 
    RETURN NIL
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION qtrtest()
 
-   //:----------------------------------------------------------------
+   //:
    //:  nqtr := quarter( ddate )
    //:  ===========================
    //:  Returns the quarter as a number. If no date is specified,
@@ -1142,11 +1141,11 @@ FUNCTION qtrtest()
 
    RETURN NIL
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION stodtest()
 
-   //:----------------------------------------------------------------
+   //:
    //:  stod( ansi-date)
    //:  ================
    //:  Returns a Clipper format date. If Ansi date is invalid, a
@@ -1193,11 +1192,11 @@ FUNCTION stodtest()
 
    RETURN NIL
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION chkansi( cAnsidate )
 
-   //:----------------------------------------------------------------
+   //:
    LOCAL nYear
    LOCAL nMonth
    LOCAL nDay
@@ -1219,11 +1218,11 @@ FUNCTION chkansi( cAnsidate )
 
    RETURN lretval
 
-   //:----------------------------------------------------------------
+//:
 
 FUNCTION weektest()
 
-   //:----------------------------------------------------------------
+   //:
    //:  nWeek := week( ddate, lSWN )
    //:  =============================
    //:  Returns the calendar week as a number. If no date is specified,

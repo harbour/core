@@ -59,12 +59,12 @@
 #define EG_RENAME       26
 #endif
 
-#xtranslate THROW(<oErr>) => (Eval(ErrorBlock(), <oErr>), Break(<oErr>))
+#xtranslate THROW( <oErr> ) => ( Eval( ErrorBlock(), <oErr>), Break( <oErr> ) )
 
 /*
   xHarbour extensions by Ron Pinkas
  */
-//----------------------------------------------------------------------------//
+
 FUNCTION dbModifyStructure( cFile )
 
    LOCAL lRet
@@ -76,12 +76,12 @@ FUNCTION dbModifyStructure( cFile )
    LOCAL oErr
    LOCAL nPresetArea := Select()
    LOCAL nSourceArea
-   LOCAL cDateTime   := SubStr( dtos( Date() ), 3 ) + "." + StrTran( Left( Time(), 5 ), ":", "." )
+   LOCAL cDateTime   := SubStr( DToS( Date() ), 3 ) + "." + StrTran( Left( Time(), 5 ), ":", "." )
 
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
 
       // Open exclusively, get name info, and create the structure db.
-      //-------------------------------------------------------------//
+      // -----------------------
       USE ( cFile ) ALIAS ModifySource EXCLUSIVE NEW
       nSourceArea := Select()
 
@@ -95,10 +95,10 @@ FUNCTION dbModifyStructure( cFile )
       cNewFile       := cTable + ".new." + cDateTime + cExt
 
       COPY STRUCTURE EXTENDED TO ( cStructureFile )
-      //-------------------------------------------------------------//
+      // -----------------------
 
       // Let user modify the structure.
-      //-------------------------------------------------------------//
+      // -----------------------
       USE ( cStructureFile ) ALIAS NewStructure EXCLUSIVE NEW
 
       Browse( 0, 0, Min( 20, MaxRow() - 1 ), Min( MaxCol() - 30, 50 ) )
@@ -106,11 +106,11 @@ FUNCTION dbModifyStructure( cFile )
       CLOSE
 
       CREATE ( cNewFile ) FROM ( cStructureFile ) ALIAS NEW_MODIFIED NEW
-      //-------------------------------------------------------------//
+      // -----------------------
 
 
       // Import data into the new file, and close it
-      //-------------------------------------------------------------//
+      // -----------------------
       lRet := dbImport( nSourceArea )
       CLOSE
 
@@ -118,18 +118,18 @@ FUNCTION dbModifyStructure( cFile )
       CLOSE
 
       SELECT ( nPresetArea )
-      //-------------------------------------------------------------//
+      // -----------------------
 
       // Rename original as backup, and new file as the new original.
-      //-------------------------------------------------------------//
+      // -----------------------
       IF lRet
-         IF FRename( cFile, cBakFile ) == -1
+         IF FRename( cFile, cBakFile ) == - 1
             BREAK
          ENDIF
 
-         IF FRename( cNewFile, cFile ) == -1
+         IF FRename( cNewFile, cFile ) == - 1
             // If we can't then try to restore backup as original
-            IF FRename( cBakFile, cFile ) == -1
+            IF FRename( cBakFile, cFile ) == - 1
                // Oops - must advise the user!
                oErr := ErrorNew()
                oErr:severity     := ES_ERROR
@@ -146,7 +146,7 @@ FUNCTION dbModifyStructure( cFile )
             ENDIF
          ENDIF
       ENDIF
-      //-------------------------------------------------------------//
+      // -----------------------
 
    RECOVER USING oErr
       IF oErr:ClassName == "ERROR"
@@ -163,34 +163,32 @@ FUNCTION dbModifyStructure( cFile )
 
    SELECT ( nPresetArea )
 
-RETURN lRet
+   RETURN lRet
 
-//----------------------------------------------------------------------------//
 FUNCTION dbImport( xSource )
 
-RETURN dbMerge( xSource )
+   RETURN dbMerge( xSource )
 
-//----------------------------------------------------------------------------//
 FUNCTION dbMerge( xSource, lAppend )
 
    LOCAL nArea, nSource, nRecNo
    LOCAL aFields
    LOCAL cField, xField
    LOCAL nSourcePos, aTranslate := {}, aTranslation
+
 // LOCAL oErr
    LOCAL cTargetType
 
    // Safety
-   //-------------------------------------------------------------//
+   // -----------------------
    IF LastRec() > 0
       IF ! lAppend
          RETURN .F.
       ENDIF
    ENDIF
-   //-------------------------------------------------------------//
 
    // Validate args
-   //-------------------------------------------------------------//
+   // -----------------------
    IF HB_ISSTRING( xSource )
       nArea := Select()
 
@@ -203,7 +201,6 @@ FUNCTION dbMerge( xSource, lAppend )
    ELSE
       RETURN .F.
    ENDIF
-   //-------------------------------------------------------------//
 
    // Temp working record
    IF LastRec() == 0
@@ -211,12 +208,12 @@ FUNCTION dbMerge( xSource, lAppend )
    ENDIF
 
    // Create translation plan
-   //-------------------------------------------------------------//
+   // -----------------------
    aFields := Array( FCount() )
-   aFields( aFields )
+   AFields( aFields )
 
    FOR EACH cField IN aFields
-      nSourcePos := (nSource)->( FieldPos( cField ) )
+      nSourcePos := ( nSource )->( FieldPos( cField ) )
 
       IF nSourcePos > 0
          BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
@@ -224,68 +221,62 @@ FUNCTION dbMerge( xSource, lAppend )
             xField := FieldGet( cField:__EnumIndex() )
 
             // Test type compatability
-            FieldPut( cField:__EnumIndex(), (nSource)->( FieldGet( nSourcePos ) ) )
+            FieldPut( cField:__EnumIndex(), ( nSource )->( FieldGet( nSourcePos ) ) )
 
             // Restore
             FieldPut( cField:__EnumIndex(), xField )
 
             // Ok to process
-            aAdd( aTranslate, { cField:__EnumIndex(), nSourcePos, {| xSource | xSource } } )
+            AAdd( aTranslate, { cField:__EnumIndex(), nSourcePos, {| xSource | xSource } } )
          RECOVER // USING oErr
             cTargetType := ValType( FieldGet( cField:__EnumIndex() ) )
 
             BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
                // Test type compatability
-               FieldPut( cField:__EnumIndex(), ValToType( (nSource)->( FieldGet( nSourcePos ) ), cTargetType ) )
+               FieldPut( cField:__EnumIndex(), ValToType( (nSource )->( FieldGet( nSourcePos ) ), cTargetType ) )
 
                // Restore
                FieldPut( cField:__EnumIndex(), xField )
 
                // Ok to process
-               aAdd( aTranslate, { cField:__EnumIndex(), nSourcePos, {| xSource | ValToType( xSource, cTargetType ) } } )
+               AAdd( aTranslate, { cField:__EnumIndex(), nSourcePos, {| xSource | ValToType( xSource, cTargetType ) } } )
             RECOVER // USING oErr
                //TraceLog( oErr:Description, oErr:Operation )
             END SEQUENCE
          END SEQUENCE
       ENDIF
    NEXT
-   //-------------------------------------------------------------//
 
    // Reset
-   //-------------------------------------------------------------//
+   // -----------------------
    IF LastRec() == 1 .AND. ! lAppend
       DELETE
       ZAP
    ENDIF
-   //-------------------------------------------------------------//
 
    // Process
-   //-------------------------------------------------------------//
-   nRecNo := (nSource)->( RecNo() )
-   (nSource)->( dbGoTop(1) )
+   // -----------------------
+   nRecNo := ( nSource )->( RecNo() )
+   ( nSource )->( dbGoTop( 1 ) )
 
-   WHILE ! (nSource)->( Eof() )
+   WHILE ! ( nSource )->( EOF() )
       APPEND BLANK
 
       FOR EACH aTranslation IN aTranslate
-         FieldPut( aTranslation[1], Eval( aTranslation[3], (nSource)->( FieldGet( aTranslation[2] ) ) ) )
+         FieldPut( aTranslation[ 1 ], Eval( aTranslation[ 3 ], ( nSource )->( FieldGet( aTranslation[ 2 ] ) ) ) )
       NEXT
 
-      (nSource)->( dbSkip() )
+      ( nSource )->( dbSkip() )
    ENDDO
 
-   (nSource)->( dbGoTo( nRecNo ) )
-   //-------------------------------------------------------------//
+   ( nSource )->( dbGoto( nRecNo ) )
 
    // Reset
-   //-------------------------------------------------------------//
+   // -----------------------
    IF ! Empty( nArea )
       SELECT ( nSource )
       CLOSE
       SELECT ( nArea )
    ENDIF
-   //-------------------------------------------------------------//
 
-RETURN .T.
-
-//----------------------------------------------------------------------------//
+   RETURN .T.

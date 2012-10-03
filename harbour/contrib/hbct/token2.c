@@ -63,9 +63,7 @@
 #include "ct.h"
 #include "hbvm.h"
 
-/* ==================================================================== */
-/* static functions for token environment management                    */
-/* ==================================================================== */
+/* static functions for token environment management */
 
 #define TOKEN_ENVIRONMENT_STEP 100
 
@@ -77,9 +75,7 @@ typedef struct _TOKEN_POSITION
 } TOKEN_POSITION;
 typedef TOKEN_POSITION * TOKEN_ENVIRONMENT;
 
-/* -------------------------------------------------------------------- */
-/* alloc new token environment                                          */
-/* -------------------------------------------------------------------- */
+/* alloc new token environment */
 static TOKEN_ENVIRONMENT sTokEnvNew( void )
 {
    TOKEN_ENVIRONMENT env = ( TOKEN_ENVIRONMENT )
@@ -98,10 +94,7 @@ static TOKEN_ENVIRONMENT sTokEnvNew( void )
    return env;
 }
 
-/* -------------------------------------------------------------------- */
-/* add a tokenizing position to a token environment                     */
-/* -------------------------------------------------------------------- */
-
+/* add a tokenizing position to a token environment */
 static int sTokEnvAddPos( TOKEN_ENVIRONMENT * pEnv, TOKEN_POSITION * pPos )
 {
    HB_SIZE index;
@@ -125,28 +118,19 @@ static int sTokEnvAddPos( TOKEN_ENVIRONMENT * pEnv, TOKEN_POSITION * pPos )
    return 1;
 }
 
-/* -------------------------------------------------------------------- */
-/* check to see if token pointer is at end of environment               */
-/* -------------------------------------------------------------------- */
-
+/* check to see if token pointer is at end of environment */
 static int sTokEnvEnd( TOKEN_ENVIRONMENT env )
 {
    return env[ 1 ].sStartPos >= env[ 0 ].sStartPos;
 }
 
-/* -------------------------------------------------------------------- */
-/* get size of token environment in memory                              */
-/* -------------------------------------------------------------------- */
-
+/* get size of token environment in memory */
 static HB_SIZE sTokEnvGetSize( TOKEN_ENVIRONMENT env )
 {
    return sizeof( TOKEN_POSITION ) * ( 2 + env[ 0 ].sEndPos );
 }
 
-/* -------------------------------------------------------------------- */
-/* get position element pointed to by tokenizing pointer                */
-/* -------------------------------------------------------------------- */
-
+/* get position element pointed to by tokenizing pointer */
 static TOKEN_POSITION * sTokEnvGetPos( TOKEN_ENVIRONMENT env )
 {
    if( env[ 1 ].sStartPos >= env[ 0 ].sStartPos )
@@ -155,10 +139,7 @@ static TOKEN_POSITION * sTokEnvGetPos( TOKEN_ENVIRONMENT env )
    return env + 2 + ( env[ 1 ].sStartPos ); /* "+2" because of extra elements */
 }
 
-/* -------------------------------------------------------------------- */
-/* get position element pointed to by given 0-based index               */
-/* -------------------------------------------------------------------- */
-
+/* get position element pointed to by given 0-based index */
 static TOKEN_POSITION * sTokEnvGetPosIndex( TOKEN_ENVIRONMENT env, HB_SIZE index )
 {
    if( index >= env[ 0 ].sStartPos )
@@ -167,10 +148,7 @@ static TOKEN_POSITION * sTokEnvGetPosIndex( TOKEN_ENVIRONMENT env, HB_SIZE index
    return env + 2 + index; /* "+2" because of extra elements */
 }
 
-/* -------------------------------------------------------------------- */
-/* increment tokenizing pointer by one                                  */
-/* -------------------------------------------------------------------- */
-
+/* increment tokenizing pointer by one */
 static int sTokEnvIncPtr( TOKEN_ENVIRONMENT env )
 {
    if( env[ 1 ].sStartPos >= env[ 0 ].sStartPos )
@@ -182,10 +160,7 @@ static int sTokEnvIncPtr( TOKEN_ENVIRONMENT env )
    }
 }
 
-/* -------------------------------------------------------------------- */
-/* set tokenizing pointer to 0-based value                              */
-/* -------------------------------------------------------------------- */
-
+/* set tokenizing pointer to 0-based value */
 static int sTokEnvSetPtr( TOKEN_ENVIRONMENT env, HB_SIZE sCnt )
 {
    if( sCnt >= env[ 0 ].sStartPos )
@@ -197,9 +172,7 @@ static int sTokEnvSetPtr( TOKEN_ENVIRONMENT env, HB_SIZE sCnt )
    }
 }
 
-/* -------------------------------------------------------------------- */
-/* decrement tokenizing pointer by one                                  */
-/* -------------------------------------------------------------------- */
+/* decrement tokenizing pointer by one */
 
 /* sTokEnvDecPtr currently not used ! */
 /* static int sTokEnvDecPtr( TOKEN_ENVIRONMENT env )
@@ -213,36 +186,27 @@ static int sTokEnvSetPtr( TOKEN_ENVIRONMENT env, HB_SIZE sCnt )
    }
 } */
 
-/* -------------------------------------------------------------------- */
-/* get value of tokenizing pointer                                      */
-/* -------------------------------------------------------------------- */
-
+/* get value of tokenizing pointer */
 static HB_SIZE sTokEnvGetPtr( TOKEN_ENVIRONMENT env )
 {
    return env[ 1 ].sStartPos;
 }
 
-/* -------------------------------------------------------------------- */
-/* get token count                                                      */
-/* -------------------------------------------------------------------- */
-
+/* get token count */
 static HB_SIZE sTokEnvGetCnt( TOKEN_ENVIRONMENT env )
 {
    return env[ 0 ].sStartPos;
 }
 
-/* -------------------------------------------------------------------- */
-/* free token environment                                               */
-/* -------------------------------------------------------------------- */
-
+/* free token environment */
 static void sTokEnvDel( TOKEN_ENVIRONMENT env )
 {
    hb_xfree( env );
 }
 
-/* ==================================================================== */
-/* HARBOUR functions                                                    */
-/* ==================================================================== */
+/* ================= */
+/* HARBOUR functions */
+/* ================= */
 
 /* static data */
 static const char * spcSeparatorStr =

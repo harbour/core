@@ -101,9 +101,7 @@
 #include "color.ch"
 #include "hbgtinfo.ch"
 
-   //-------------------------------------------------------------------//
-
-   CREATE CLASS XHBEditor
+CREATE CLASS XHBEditor
 
    DATA  cFile          INIT ""     // name of file being edited
 
@@ -259,7 +257,7 @@
 
 ENDCLASS
 
-//-------------------------------------------------------------------//
+//
 
 METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextRow, nTextCol, nWndRow, nWndCol ) CLASS XHBEditor
 
@@ -394,10 +392,9 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   // Redefines editor window size and refreshes it
-   //
+//
+// Redefines editor window size and refreshes it
+//
 
 METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS XHBEditor
 
@@ -434,14 +431,13 @@ METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   //                            Screen Output
-   //
-   //-------------------------------------------------------------------//
-   //
-   // Redraws a screenfull of text
-   //
+//
+// Screen Output
+//
+
+//
+// Redraws a screenfull of text
+//
 
 METHOD RefreshWindow() CLASS XHBEditor
 
@@ -483,10 +479,9 @@ METHOD RefreshWindow() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   // Return the color of the row
-   //
+//
+// Return the color of the row
+//
 
 METHOD LineColor( nRow ) CLASS XHBEditor
 
@@ -501,10 +496,9 @@ METHOD LineColor( nRow ) CLASS XHBEditor
 
    RETURN cColor
 
-   //-------------------------------------------------------------------//
-   //
-   // Return the color of the Col
-   //
+//
+// Return the color of the Col
+//
 
 METHOD ColColor() CLASS XHBEditor
 
@@ -519,10 +513,9 @@ METHOD ColColor() CLASS XHBEditor
 
    RETURN cColor
 
-   //-------------------------------------------------------------------//
-   //
-   // Redraws current screen line
-   //
+//
+// Redraws current screen line
+//
 
 METHOD RefreshLine( lRefreshColSel ) CLASS XHBEditor
 
@@ -565,10 +558,9 @@ METHOD RefreshLine( lRefreshColSel ) CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   // Refreshes only one screen column of text ( for Left() and Right() movements )
-   //
+//
+// Refreshes only one screen column of text ( for Left() and Right() movements )
+//
 
 METHOD RefreshColumn() CLASS XHBEditor
 
@@ -597,20 +589,18 @@ METHOD RefreshColumn() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   // Wrapper for Cursor Movement to be used from Outside of This Class
-   //
-   //-------------------------------------------------------------------//
+//
+// Wrapper for Cursor Movement to be used from Outside of This Class
+//
 
 METHOD MoveCursor( nKey ) CLASS XHBEditor
 
    // Modified to handle cursor movements inside text array without crashing!
    // Modified to allow line wrapping, and to track cursor to line ends.
    //
-   Switch nKey
+   SWITCH nKey
 
-      // TODO: for optimization, change this with relativie GOTOCOL, GOTOPOS and GOTOROW
+   // TODO: for optimization, change this with relativie GOTOCOL, GOTOPOS and GOTOROW
    CASE K_DOWN
       ::ClrTextSelection()
       ::Down()
@@ -689,11 +679,9 @@ METHOD MoveCursor( nKey ) CLASS XHBEditor
 
    RETURN .T.
 
-   //-------------------------------------------------------------------//
-   //
-   //                             Editing
-   //
-   //-------------------------------------------------------------------//
+//
+//                             Editing
+//
 
 METHOD Edit( nPassedKey ) CLASS XHBEditor
 
@@ -1024,11 +1012,9 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   //                          Vertical Navigation
-   //
-   //-------------------------------------------------------------------//
+//
+//                          Vertical Navigation
+//
 
 METHOD Down() CLASS XHBEditor
 
@@ -1051,7 +1037,7 @@ METHOD Down() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD PageDown() CLASS XHBEditor
 
@@ -1086,7 +1072,7 @@ METHOD PageDown() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD Bottom() CLASS XHBEditor
 
@@ -1096,7 +1082,7 @@ METHOD Bottom() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD GoBottom() CLASS XHBEditor
 
@@ -1104,7 +1090,7 @@ METHOD GoBottom() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD Up() CLASS XHBEditor
 
@@ -1128,7 +1114,7 @@ METHOD Up() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD PageUp() CLASS XHBEditor
 
@@ -1163,7 +1149,7 @@ METHOD PageUp() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD Top() CLASS XHBEditor
 
@@ -1171,7 +1157,7 @@ METHOD Top() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD GoTop() CLASS XHBEditor
 
@@ -1179,11 +1165,9 @@ METHOD GoTop() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   //                       Horizontal Navigation
-   //
-   //-------------------------------------------------------------------//
+//
+//                       Horizontal Navigation
+//
 
 METHOD Right() CLASS XHBEditor
 
@@ -1210,7 +1194,7 @@ METHOD Right() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD WordRight() CLASS XHBEditor
 
@@ -1293,7 +1277,7 @@ METHOD WordRight() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD End() CLASS XHBEditor
 
@@ -1303,7 +1287,7 @@ METHOD End() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD Left() CLASS XHBEditor
 
@@ -1323,7 +1307,7 @@ METHOD Left() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD WordLeft() CLASS XHBEditor
 
@@ -1387,7 +1371,7 @@ METHOD WordLeft() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD Home() CLASS XHBEditor
 
@@ -1395,7 +1379,7 @@ METHOD Home() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD K_Mouse( nKey ) CLASS XHBEditor
 
@@ -1427,11 +1411,9 @@ METHOD K_Mouse( nKey ) CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   //                      Keystroke Handelling
-   //
-   //-------------------------------------------------------------------//
+//
+//                      Keystroke Handelling
+//
 
 METHOD K_Ascii( nKey ) CLASS XHBEditor
 
@@ -1477,9 +1459,7 @@ METHOD K_Ascii( nKey ) CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   // Backspace
-   //
+// Backspace
 
 METHOD K_Bs() CLASS XHBEditor
 
@@ -1562,9 +1542,7 @@ METHOD K_Bs() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   // Process DEL key
-   //
+// Process DEL key
 
 METHOD K_Del() CLASS XHBEditor
 
@@ -1636,7 +1614,7 @@ METHOD K_Del() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD K_Tab() CLASS XHBEditor
 
@@ -1688,7 +1666,7 @@ METHOD K_Tab() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD K_Return() CLASS XHBEditor
 
@@ -1754,7 +1732,7 @@ METHOD K_Return() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD K_Esc() CLASS XHBEditor
 
@@ -1785,14 +1763,13 @@ METHOD K_Esc() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   //                   Data Retrieval Methods
-   //
-   //-------------------------------------------------------------------//
-   //
-   // Add a new Line of text at end of current text
-   //
+//
+//                   Data Retrieval Methods
+//
+
+//
+// Add a new Line of text at end of current text
+//
 
 METHOD AddLine( cLine, lSoftCR ) CLASS XHBEditor
 
@@ -1803,10 +1780,9 @@ METHOD AddLine( cLine, lSoftCR ) CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   // Insert a line of text at a defined row
-   //
+//
+// Insert a line of text at a defined row
+//
 
 METHOD InsertLine( cLine, lSoftCR, nRow ) CLASS XHBEditor
 
@@ -1824,10 +1800,9 @@ METHOD InsertLine( cLine, lSoftCR, nRow ) CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   // Remove a line of text
-   //
+//
+// Remove a line of text
+//
 
 METHOD RemoveLine( nRow ) CLASS XHBEditor
 
@@ -1837,10 +1812,9 @@ METHOD RemoveLine( nRow ) CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   // Return line n of text
-   //
+//
+// Return line n of text
+//
 
 METHOD GetLine( nRow ) CLASS XHBEditor
 
@@ -1858,10 +1832,9 @@ METHOD GetLine( nRow ) CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   // Delete text from cursor to end of line.
-   //
+//
+// Delete text from cursor to end of line.
+//
 
 METHOD DelTextRight( nRow ) CLASS XHBEditor
 
@@ -1879,10 +1852,9 @@ METHOD DelTextRight( nRow ) CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   // Delete a word to the right of cursor. <CTRL-T>
-   //
+//
+// Delete a word to the right of cursor. <CTRL-T>
+//
 
 METHOD DelWordRight() CLASS XHBEditor
 
@@ -1939,9 +1911,7 @@ METHOD DelWordRight() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   // <CTRL-B> behaviour.
-   //
+// <CTRL-B> behaviour.
 
 METHOD ReformParagraph() CLASS XHBEditor
 
@@ -1972,7 +1942,7 @@ METHOD ReformParagraph() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD GotoLine( nRow ) CLASS XHBEditor
 
@@ -2003,7 +1973,7 @@ METHOD GotoLine( nRow ) CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD GotoCol( nCol ) CLASS XHBEditor
 
@@ -2031,7 +2001,7 @@ METHOD GotoCol( nCol ) CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD GotoPos( nRow, nCol, lRefresh ) CLASS XHBEditor
 
@@ -2083,34 +2053,32 @@ METHOD GotoPos( nRow, nCol, lRefresh ) CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   // Rebuild a long line from multiple short ones ( wrapped at soft CR )
-   //
-   //-------------------------------------------------------------------//
+//
+// Rebuild a long line from multiple short ones ( wrapped at soft CR )
+//
 
-/*
-*STATIC function GetParagraph( oSelf, nRow )
-*
-*   LOCAL cLine := ""
-*
-*   do while oSelf:aText[ nRow ]:lSoftCR
-*      cLine := cline + oSelf:aText[ nRow ]:cText
-*      // I don't need to increment nRow since I'm removing lines, ie line n is
-*      // a different line each time I add it to cLine
-*      oSelf:RemoveLine( nRow )
-*      IF Len( cLine ) > 0 .and. !( Right( cLine, 1 ) == " " )
-*         cLine += " "
-*      ENDIF
-*   enddo
-*
-*   // Last line, or only one line
-*   //
-*   cLine += oSelf:aText[ nRow ]:cText
-*   oSelf:RemoveLine( nRow )   // this is where array error occurs IF final line of text is allowed to have :lSoftCR
-*
-*return cLine
-*/
+#if 0
+STATIC FUNCTION GetParagraph( oSelf, nRow )
+
+   LOCAL cLine := ""
+
+   DO WHILE oSelf:aText[ nRow ]:lSoftCR
+      cLine := cline + oSelf:aText[ nRow ]:cText
+      // I don't need to increment nRow since I'm removing lines, ie line n is
+      // a different line each time I add it to cLine
+      oSelf:RemoveLine( nRow )
+      IF Len( cLine ) > 0 .AND. !( Right( cLine, 1 ) == " " )
+         cLine += " "
+      ENDIF
+   ENDDO
+
+   // Last line, or only one line
+   //
+   cLine += oSelf:aText[ nRow ]:cText
+   oSelf:RemoveLine( nRow )   // this is where array error occurs IF final line of text is allowed to have :lSoftCR
+
+   RETURN cLine
+#endif
 
 STATIC FUNCTION GetParagraph( oSelf, nRow )
 
@@ -2124,7 +2092,7 @@ STATIC FUNCTION GetParagraph( oSelf, nRow )
          EXIT
       ENDIF
       //GAD  This is not needed and will corrupt long lines that do not have any spaces with wordwrap on.
-/*      IF Len( cLine ) > 0 .and. !( Right( cLine, 1 ) == " " )
+/*    IF Len( cLine ) > 0 .and. !( Right( cLine, 1 ) == " " )
          cLine += " "
       ENDIF
 */
@@ -2139,12 +2107,10 @@ STATIC FUNCTION GetParagraph( oSelf, nRow )
 
    RETURN cLine
 
-   //-------------------------------------------------------------------//
-   //
-   // If a line of text is longer than nWordWrapCol divides it into multiple lines,
-   // Used during text editing to reflow a paragraph
-   //
-   //-------------------------------------------------------------------//
+//
+// If a line of text is longer than nWordWrapCol divides it into multiple lines,
+// Used during text editing to reflow a paragraph
+//
 
 METHOD SplitLine( nRow ) CLASS XHBEditor
 
@@ -2279,31 +2245,28 @@ METHOD SplitLine( nRow ) CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   //                         Utility Methods
-   //
-   //-------------------------------------------------------------------//
-   //
-   // This in an empty method which can be used by classes subclassing HBEditor to be able
-   // to handle particular keys.
-   //
-   //-------------------------------------------------------------------//
+//
+//                         Utility Methods
+//
+
+//
+// This in an empty method which can be used by classes subclassing HBEditor to be able
+// to handle particular keys.
+//
 
 METHOD KeyboardHook()  CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   // There are no more keys to handle. Can I do something for you?
-   //
+//
+// There are no more keys to handle. Can I do something for you?
+//
 
 METHOD IdleHook()  CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD SetColor( cColorString ) CLASS XHBEditor
 
@@ -2315,7 +2278,7 @@ METHOD SetColor( cColorString ) CLASS XHBEditor
 
    RETURN cOldColor
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD Hilite() CLASS XHBEditor
 
@@ -2329,7 +2292,7 @@ METHOD Hilite() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD DeHilite() CLASS XHBEditor
 
@@ -2343,7 +2306,7 @@ METHOD DeHilite() CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+//
 
 METHOD SetPos( nRow, nCol ) CLASS XHBEditor
 
@@ -2357,10 +2320,9 @@ METHOD SetPos( nRow, nCol ) CLASS XHBEditor
 
    return ::nPhysRow
 
-   //-------------------------------------------------------------------//
-   //
-   // Changes lInsert value and insertion / overstrike mode of editor
-   //
+//
+// Changes lInsert value and insertion / overstrike mode of editor
+//
 
 METHOD InsertState( lInsState ) CLASS XHBEditor
 
@@ -2384,9 +2346,9 @@ METHOD InsertState( lInsState ) CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   // 2006/JUL/15  - E.F. - Display "<insert>" message
-   //
+//
+// 2006/JUL/15  - E.F. - Display "<insert>" message
+//
 
 METHOD DisplayInsert( lInsert ) CLASS XHBEditor
 
@@ -2417,10 +2379,9 @@ METHOD DisplayInsert( lInsert ) CLASS XHBEditor
 
    RETURN NIL
 
-   //-------------------------------------------------------------------//
-   //
-   // Converts an array of text lines to a String
-   //
+//
+// Converts an array of text lines to a String
+//
 
 METHOD GetText( lSoftCr ) CLASS XHBEditor
 
@@ -2448,10 +2409,9 @@ METHOD GetText( lSoftCr ) CLASS XHBEditor
 
    RETURN cString
 
-   //-------------------------------------------------------------------//
-   //
-   // Returns the text selection in a string
-   //
+//
+// Returns the text selection in a string
+//
 
 METHOD GetTextSelection( lSoftCr ) CLASS XHBEditor
 
@@ -2493,10 +2453,9 @@ METHOD GetTextSelection( lSoftCr ) CLASS XHBEditor
 
    RETURN cString
 
-   //-------------------------------------------------------------------//
-   //
-   // Set current selection
-   //
+//
+// Set current selection
+//
 
 METHOD SetTextSelection( cAction, nCount ) CLASS XHBEditor
 
@@ -2742,10 +2701,9 @@ METHOD SetTextSelection( cAction, nCount ) CLASS XHBEditor
 
    RETURN nil
 
-   //-------------------------------------------------------------------//
-   //
-   // Clear current selection
-   //
+//
+// Clear current selection
+//
 
 METHOD ClrTextSelection() CLASS XHBEditor
 
@@ -2824,9 +2782,9 @@ METHOD DelTextSelection() CLASS XHBEditor
       ELSE
 
          IF ::nColSelStart > 0 .AND. ::nColSelEnd > 0
-            //            IF empty( nRowSelStart )
-            //               nRowSelStart := ::nColSelRow
-            //            ENDIF
+//          IF Empty( nRowSelStart )
+//             nRowSelStart := ::nColSelRow
+//          ENDIF
             cText := ::aText[ ::nRow ]:cText
             ::aText[::nRow]:cText := Stuff( cText, ::nColSelStart, ::nColSelEnd - ::nColSelStart + 1, "" )
             ::RefreshLine()
@@ -2923,7 +2881,7 @@ METHOD GetTextIndex() CLASS XHBEditor
 
    RETURN nPos
 
-   //-------------------------------------------------------------------//
+
 
 METHOD LoadText( cString ) CLASS XHBEditor
 
@@ -2938,7 +2896,7 @@ METHOD LoadText( cString ) CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
+
 
 METHOD LoadFile( cFileName ) CLASS XHBEditor
 
@@ -2960,10 +2918,9 @@ METHOD LoadFile( cFileName ) CLASS XHBEditor
 
    RETURN Self
 
-   //-------------------------------------------------------------------//
-   //
-   // Saves file being edited, if there is no file name does nothing, returns .T. if OK
-   //
+//
+// Saves file being edited, if there is no file name does nothing, returns .T. if OK
+//
 
 METHOD SaveFile() CLASS XHBEditor
 
@@ -2977,14 +2934,13 @@ METHOD SaveFile() CLASS XHBEditor
 
    RETURN .F.
 
-   //-------------------------------------------------------------------//
-   //
-   //                         Utility Functions
-   //
-   //-------------------------------------------------------------------//
-   //
-   // Returns EOL char ( be it either CR or LF or both )
-   //
+//
+//                         Utility Functions
+//
+
+//
+// Returns EOL char ( be it either CR or LF or both )
+//
 
 STATIC FUNCTION WhichEOL( cString )
 
@@ -3004,10 +2960,9 @@ STATIC FUNCTION WhichEOL( cString )
 
    RETURN hb_eol()
 
-   //-------------------------------------------------------------------//
-   //
-   // Converts a string to an array of strings splitting input string at EOL boundaries
-   //
+//
+// Converts a string to an array of strings splitting input string at EOL boundaries
+//
 
 STATIC FUNCTION Text2Array( cString, nWordWrapCol )
 
@@ -3102,11 +3057,10 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
 
    RETURN aArray
 
-   //-------------------------------------------------------------------//
-   //
-   // if editing isn't allowed we enter this loop which
-   // handles only movement keys and discards all the others
-   //
+//
+// if editing isn't allowed we enter this loop which
+// handles only movement keys and discards all the others
+//
 
 METHOD BrowseText( nPassedKey, lHandleOneKey ) CLASS XHBEditor
 
@@ -3157,6 +3111,4 @@ METHOD BrowseText( nPassedKey, lHandleOneKey ) CLASS XHBEditor
 
    ENDDO
 
-   RETURN nil
-
-//-------------------------------------------------------------------//
+   RETURN NIL

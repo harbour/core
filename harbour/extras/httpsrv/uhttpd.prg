@@ -2183,14 +2183,14 @@ STATIC PROCEDURE Progress( /*@*/ nProgress )
    LOCAL cString := "["
 
    DO CASE
-      CASE nProgress == 0
-          cString += "-"
-      CASE nProgress == 1
-          cString += "\"
-      CASE nProgress == 2
-          cString += "|"
-      CASE nProgress == 3
-          cString += "/"
+   CASE nProgress == 0
+       cString += "-"
+   CASE nProgress == 1
+       cString += "\"
+   CASE nProgress == 2
+       cString += "|"
+   CASE nProgress == 3
+       cString += "/"
    ENDCASE
 
    cString += "]"
@@ -2311,55 +2311,62 @@ STATIC FUNCTION ParseIni( cConfig )
                           //hb_ToOutDebug( "cVal = %s\n\r", cVal )
 
                           DO CASE
-                             CASE cSection == "MAIN"
-                                  DO CASE
-                                     CASE cKey == "PORT"
-                                          xVal := Val( cVal )
-                                     CASE cKey == "CONSOLE-ROWS"
-                                          xVal := Val( cVal )
-                                     CASE cKey == "CONSOLE-COLS"
-                                          xVal := Val( cVal )
-                                     CASE cKey == "APPLICATION_ROOT"
-                                          IF !Empty( cVal )
-                                             // Change APP_DIR macro with current exe path
-                                             xVal := cVal
-                                          ENDIF
-                                     CASE cKey == "DOCUMENT_ROOT"
-                                          IF !Empty( cVal )
-                                             // After will change APP_DIR macro with application dir
-                                             //xVal := StrTran( cVal, "$(APP_DIR)", Exe_Path() )
-                                             xVal := cVal
-                                          ENDIF
-                                     CASE cKey == "SCRIPTALIASMIXEDCASE"
-                                          xVal := cVal
-                                     CASE cKey == "SESSIONPATH"
-                                          IF !Empty( cVal )
-                                             // Change APP_DIR macro with current exe path
-                                             //xVal := StrTran( cVal, "$(APP_DIR)", Exe_Path() )
-                                             xVal := cVal
-                                          ENDIF
-                                     CASE cKey == "DIRECTORYINDEX"
-                                          IF !Empty( cVal )
-                                             xVal := uhttpd_split( " ", AllTrim( cVal ) )
-                                          ENDIF
-                                  ENDCASE
-                             CASE cSection == "LOGFILES"
-                                  DO CASE
-                                     CASE cKey == "ACCESS"
-                                          xVal := cVal
-                                     CASE cKey == "ERROR"
-                                          xVal := cVal
-                                  ENDCASE
-                             CASE cSection == "THREADS"
-                                  DO CASE
-                                     CASE cKey == "MAX_WAIT"
-                                          xVal := Val( cVal )
-                                     CASE cKey == "START_NUM"
-                                          xVal := Val( cVal )
-                                     CASE cKey == "MAX_NUM"
-                                          xVal := Val( cVal )
-                                  ENDCASE
+                          CASE cSection == "MAIN"
+
+                             DO CASE
+                             CASE cKey == "PORT"
+                                xVal := Val( cVal )
+                             CASE cKey == "CONSOLE-ROWS"
+                                xVal := Val( cVal )
+                             CASE cKey == "CONSOLE-COLS"
+                                xVal := Val( cVal )
+                             CASE cKey == "APPLICATION_ROOT"
+                                IF !Empty( cVal )
+                                   // Change APP_DIR macro with current exe path
+                                   xVal := cVal
+                                ENDIF
+                             CASE cKey == "DOCUMENT_ROOT"
+                                IF !Empty( cVal )
+                                   // After will change APP_DIR macro with application dir
+                                   //xVal := StrTran( cVal, "$(APP_DIR)", Exe_Path() )
+                                   xVal := cVal
+                                ENDIF
+                             CASE cKey == "SCRIPTALIASMIXEDCASE"
+                                xVal := cVal
+                             CASE cKey == "SESSIONPATH"
+                                IF !Empty( cVal )
+                                   // Change APP_DIR macro with current exe path
+                                   //xVal := StrTran( cVal, "$(APP_DIR)", Exe_Path() )
+                                   xVal := cVal
+                                ENDIF
+                             CASE cKey == "DIRECTORYINDEX"
+                                IF !Empty( cVal )
+                                   xVal := uhttpd_split( " ", AllTrim( cVal ) )
+                                ENDIF
+                             ENDCASE
+
+                          CASE cSection == "LOGFILES"
+
+                             DO CASE
+                             CASE cKey == "ACCESS"
+                                xVal := cVal
+                             CASE cKey == "ERROR"
+                                xVal := cVal
+                             ENDCASE
+
+                          CASE cSection == "THREADS"
+
+                             DO CASE
+                             CASE cKey == "MAX_WAIT"
+                                xVal := Val( cVal )
+                             CASE cKey == "START_NUM"
+                                xVal := Val( cVal )
+                             CASE cKey == "MAX_NUM"
+                                xVal := Val( cVal )
+                             ENDCASE
+
                           ENDCASE
+
                           IF xVal != NIL
                              hDefault[ cSection ][ cKey ] := xVal
                           ENDIF

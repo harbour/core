@@ -69,12 +69,10 @@
 #include "hbclass.ch"
 #include "sql.ch"
 
-*+--------------------------------------------------------------------
 *+
-*+    Class TODBCField
-*+    Fields information collection
-*+
-*+--------------------------------------------------------------------
+*+ Class TODBCField
+*+ Fields information collection
+*+-----------------------------------------------------------------
 
 CREATE CLASS TODBCField
 
@@ -90,17 +88,13 @@ CREATE CLASS TODBCField
 
 ENDCLASS
 
-/*-----------------------------------------------------------------------*/
-
 METHOD New() CLASS TODBCField
    RETURN Self
 
-*+--------------------------------------------------------------------
 *+
-*+    Class TODBC
-*+    Manages ODBC access
-*+
-*+--------------------------------------------------------------------
+*+ Class TODBC
+*+ Manages ODBC access
+*+-----------------------------------------------------------------
 
 CREATE CLASS TODBC
 
@@ -161,8 +155,7 @@ CREATE CLASS TODBC
 
 ENDCLASS
 
-/*-----------------------------------------------------------------------*/
-
+//
 METHOD SQLErrorMessage() CLASS TODBC
 
    LOCAL cErrorClass, nType, cErrorMsg
@@ -171,8 +164,7 @@ METHOD SQLErrorMessage() CLASS TODBC
 
    RETURN "Error " + cErrorClass + " - " + cErrorMsg
 
-/*-----------------------------------------------------------------------*/
-
+//
 METHOD New( cODBCStr, cUserName, cPassword, lCache ) CLASS TODBC
 
    LOCAL xBuf
@@ -213,8 +205,7 @@ METHOD New( cODBCStr, cUserName, cPassword, lCache ) CLASS TODBC
 
    RETURN Self
 
-/*-----------------------------------------------------------------------*/
-
+//
 METHOD SetAutocommit( lEnable ) CLASS TODBC
 
    LOCAL lOld := ::lAutoCommit
@@ -230,8 +221,7 @@ METHOD SetAutocommit( lEnable ) CLASS TODBC
 
    RETURN lOld
 
-/*-----------------------------------------------------------------------*/
-
+//
 METHOD Destroy() CLASS TODBC
 
    SQLDisConnect( ::hDbc )                        // Disconnects from Driver
@@ -240,8 +230,7 @@ METHOD Destroy() CLASS TODBC
 
    RETURN NIL
 
-/*-----------------------------------------------------------------------*/
-
+//
 METHOD GetCnnOptions( nType ) CLASS TODBC
 
    LOCAL cBuffer := Space( 256 )
@@ -250,26 +239,22 @@ METHOD GetCnnOptions( nType ) CLASS TODBC
 
    RETURN cBuffer
 
-/*-----------------------------------------------------------------------*/
-
+//
 METHOD SetCnnOptions( nType, uBuffer ) CLASS TODBC
 
    RETURN ::nRetCode := SQLSetConnectAttr( ::hDbc, nType, uBuffer )
 
-/*-----------------------------------------------------------------------*/
-
+//
 METHOD Commit() CLASS TODBC
 
    RETURN ::nRetCode := SQLCommit( ::hEnv, ::hDbc )
 
-/*-----------------------------------------------------------------------*/
-
+//
 METHOD RollBack() CLASS TODBC
 
    RETURN ::nRetCode := SQLRollBack( ::hEnv, ::hDbc )
 
-/*-----------------------------------------------------------------------*/
-
+//
 METHOD GetStmtOptions( nType ) CLASS TODBC
 
    LOCAL cBuffer := Space( 256 )
@@ -278,14 +263,12 @@ METHOD GetStmtOptions( nType ) CLASS TODBC
 
    RETURN cBuffer
 
-/*-----------------------------------------------------------------------*/
-
+//
 METHOD SetStmtOptions( nType, uBuffer ) CLASS TODBC
 
    RETURN ::nRetCode := SQLSetStmtAttr( ::hStmt, nType, uBuffer )
 
-/*-----------------------------------------------------------------------*/
-
+//
 METHOD SetSQL( cSQL ) CLASS TODBC
 
    // If the DataSet is active, close it
@@ -299,8 +282,7 @@ METHOD SetSQL( cSQL ) CLASS TODBC
 
    RETURN NIL
 
-/*-----------------------------------------------------------------------*/
-
+//
 METHOD Open() CLASS TODBC
 
    LOCAL nRet
@@ -402,9 +384,7 @@ METHOD Open() CLASS TODBC
 
    RETURN nRet == SQL_SUCCESS
 
-/*-----------------------------------------------------------------------*/
 // Only executes the SQL Statement
-
 METHOD ExecSQL() CLASS TODBC
    LOCAL xBuf
    LOCAL nRet
@@ -424,9 +404,7 @@ METHOD ExecSQL() CLASS TODBC
 
    RETURN nRet
 
-/*-----------------------------------------------------------------------*/
 // Closes the dataset
-
 METHOD Close() CLASS TODBC
 
    // Frees the statement
@@ -443,9 +421,7 @@ METHOD Close() CLASS TODBC
 
    RETURN NIL
 
-/*-----------------------------------------------------------------------*/
 // Returns the Field object for a named field
-
 METHOD FieldByName( cField ) CLASS TODBC
 
    LOCAL nRet
@@ -464,9 +440,7 @@ METHOD FieldByName( cField ) CLASS TODBC
 
    RETURN xRet
 
-/*-----------------------------------------------------------------------*/
 // General fetch wrapper - used by next methods
-
 METHOD Fetch( nFetchType, nOffset ) CLASS TODBC
 
    LOCAL nResult
@@ -546,9 +520,7 @@ METHOD Fetch( nFetchType, nOffset ) CLASS TODBC
 
    RETURN nResult
 
-/*-----------------------------------------------------------------------*/
 // Moves to next record on DataSet
-
 METHOD Next() CLASS TODBC
 
    LOCAL nResult := ::Fetch( SQL_FETCH_NEXT, 1 )
@@ -566,9 +538,7 @@ METHOD Next() CLASS TODBC
 
    RETURN nResult
 
-/*-----------------------------------------------------------------------*/
 // Moves to prior record on DataSet
-
 METHOD Prior() CLASS TODBC
 
    LOCAL nResult := ::Fetch( SQL_FETCH_PRIOR, 1 )
@@ -585,9 +555,7 @@ METHOD Prior() CLASS TODBC
 
    RETURN nResult
 
-/*-----------------------------------------------------------------------*/
 // Moves to first record on DataSet
-
 METHOD First() CLASS TODBC
 
    LOCAL nResult := ::Fetch( SQL_FETCH_FIRST, 1 )
@@ -600,9 +568,7 @@ METHOD First() CLASS TODBC
 
    RETURN nResult
 
-/*-----------------------------------------------------------------------*/
 // Moves to the last record on DataSet
-
 METHOD last() CLASS TODBC
 
    LOCAL nResult := ::Fetch( SQL_FETCH_LAST, 1 )
@@ -615,9 +581,7 @@ METHOD last() CLASS TODBC
 
    RETURN nResult
 
-/*-----------------------------------------------------------------------*/
 // Moves the DataSet nSteps from the current record
-
 METHOD MoveBy( nSteps ) CLASS TODBC
 
    // TODO: Check if nSteps goes beyond eof
@@ -631,9 +595,7 @@ METHOD MoveBy( nSteps ) CLASS TODBC
 
    RETURN nResult
 
-/*-----------------------------------------------------------------------*/
 // Moves the DataSet to absolute record number
-
 METHOD Goto( nRecNo ) CLASS TODBC
 
    LOCAL nResult := ::Fetch( SQL_FETCH_ABSOLUTE, nRecNo )
@@ -646,17 +608,13 @@ METHOD Goto( nRecNo ) CLASS TODBC
 
    RETURN nResult
 
-/*-----------------------------------------------------------------------*/
 // Skips dataset to the next record - wrapper to Next()
-
 METHOD Skip() CLASS TODBC
 
    RETURN ::Next()
 
-/*-----------------------------------------------------------------------*/
 // Checks for End of File (End of DataSet, actually)
 // NOTE: Current implementation usable only with drivers that report number of records in last select
-
 METHOD Eof() CLASS TODBC
 
    LOCAL lResult
@@ -671,37 +629,27 @@ METHOD Eof() CLASS TODBC
 
    RETURN lResult
 
-/*-----------------------------------------------------------------------*/
 // Checks for Begining of File
-
 METHOD Bof() CLASS TODBC
 
    RETURN ::lBof
 
-/*-----------------------------------------------------------------------*/
 // Returns the current row in dataset
-
 METHOD RecNo() CLASS TODBC
 
    RETURN ::nRecNo
 
-/*-----------------------------------------------------------------------*/
 // Returns number of rows ( if that function is supported by ODBC driver )
-
 METHOD Lastrec() CLASS TODBC
 
    RETURN ::nRecCount
 
-/*-----------------------------------------------------------------------*/
 // Returns number of rows ( if that function is supported by ODBC driver )
-
 METHOD RecCount() CLASS TODBC
 
    RETURN ::nRecCount
 
-/*-----------------------------------------------------------------------*/
 // Loads current record data into the Fields collection
-
 METHOD LoadData( nPos ) CLASS TODBC
 
    LOCAL uData

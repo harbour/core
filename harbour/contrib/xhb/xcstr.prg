@@ -58,11 +58,11 @@
    this define only used in ValTpPrg() which currently only used in win32.
  */
 #undef CRLF
-#define CRLF Chr(13) + Chr(10)
+#define CRLF Chr( 13 ) + Chr( 10 )
 
-#xtranslate THROW(<oErr>) => (Eval(ErrorBlock(), <oErr>), Break(<oErr>))
+#xtranslate THROW( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
 
-//--------------------------------------------------------------//
+//
 FUNCTION CStrToVal( cExp, cType )
 
    IF ! HB_ISSTRING( cExp )
@@ -109,7 +109,7 @@ FUNCTION CStrToVal( cExp, cType )
 
    RETURN NIL
 
-//--------------------------------------------------------------//
+//
 FUNCTION StringToLiteral( cString )
 
    LOCAL lDouble := .F., lSingle := .F.
@@ -132,7 +132,7 @@ FUNCTION StringToLiteral( cString )
 
    RETURN "[" + cString + "]"
 
-//--------------------------------------------------------------//
+//
 FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
 
    LOCAL aVar, cRet, cPad, nObj
@@ -250,11 +250,11 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
 
    RETURN cRet
 
-//--------------------------------------------------------------//
+//
 FUNCTION PrgExpToVal( cExp )
 RETURN &( cExp )
 
-//--------------------------------------------------------------//
+//
 FUNCTION ValToArray( xVal )
 
    IF HB_ISARRAY( xVal )
@@ -263,7 +263,7 @@ FUNCTION ValToArray( xVal )
 
    RETURN { xVal }
 
-//--------------------------------------------------------------//
+//
 FUNCTION ValToBlock( xVal )
 
    IF HB_ISBLOCK( xVal )
@@ -272,7 +272,7 @@ FUNCTION ValToBlock( xVal )
 
    RETURN {|| xVal }
 
-//--------------------------------------------------------------//
+//
 FUNCTION ValToCharacter( xVal )
 
    IF HB_ISSTRING( xVal )
@@ -282,7 +282,7 @@ FUNCTION ValToCharacter( xVal )
    RETURN LTrim( CStr( xVal ) )
 
 
-//--------------------------------------------------------------//
+//
 FUNCTION ValToDate( xVal )
 
    SWITCH ValType( xVal )
@@ -319,7 +319,7 @@ FUNCTION ValToDate( xVal )
 
    RETURN hb_SToD()
 
-//--------------------------------------------------------------//
+//
 FUNCTION ValToHash( xVal )
 
    IF HB_ISHASH( xVal )
@@ -328,7 +328,7 @@ FUNCTION ValToHash( xVal )
 
    RETURN { ValToCharacter( xVal ) => xVal }
 
-//--------------------------------------------------------------//
+//
 FUNCTION ValToLogical( xVal )
 
    SWITCH ValType( xVal )
@@ -365,7 +365,7 @@ FUNCTION ValToLogical( xVal )
 
    RETURN .F.
 
-//--------------------------------------------------------------//
+//
 FUNCTION ValToNumber( xVal )
 
    SWITCH ValType( xVal )
@@ -403,7 +403,7 @@ FUNCTION ValToNumber( xVal )
 
    RETURN 0
 
-//--------------------------------------------------------------//
+//
 FUNCTION ValToObject( xVal )
 
    SWITCH ValType( xVal )
@@ -452,7 +452,7 @@ FUNCTION ValToObject( xVal )
 
    RETURN 0
 
-//--------------------------------------------------------------//
+//
 FUNCTION ValToType( xVal, cType )
 
    SWITCH cType
@@ -491,4 +491,3 @@ FUNCTION ValToType( xVal, cType )
    ENDSWITCH
 
    RETURN NIL
-//--------------------------------------------------------------//

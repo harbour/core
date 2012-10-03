@@ -87,7 +87,7 @@ CLASS uhttpd_Cookie
 
 ENDCLASS
 
-// ------------------------------ ***************************** -----------------------------------
+// ------------------------------
 
 METHOD SetCookieDefaults( cDomain, cPath, nExpireDays, nExpireSecs ) CLASS uhttpd_Cookie
    IF cDomain     != NIL THEN ::cDomain     := cDomain

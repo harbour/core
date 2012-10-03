@@ -49,7 +49,6 @@
 
 #include "hbhpdf.h"
 
-/*----------------------------------------------------------------------*/
 /* HPdf_UseJPEncodings( hDoc ) -> hStatus
 */
 HB_FUNC( HPDF_USEJPENCODINGS )

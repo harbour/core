@@ -233,7 +233,7 @@ HB_FUNC( WAPI_ENABLESCROLLBAR )
    hbwapi_SetLastError( dwLastError );
    hbwapi_ret_L( bResult );
 }
-/*----------------------------------------------------------------------*/
+
 /*
 BOOL GetScrollBarInfo( HWND hwnd, LONG idObject, PSCROLLBARINFO psbi );
  $$
@@ -268,7 +268,7 @@ HB_FUNC( WAPI_GETSCROLLBARINFO )
    hbwapi_ret_L( bSuccess );
 }
 #endif
-/*----------------------------------------------------------------------*/
+
 /*
 BOOL GetScrollInfo( HWND hwnd, int fnBar, LPSCROLLINFO lpsi );
 */
@@ -288,7 +288,7 @@ HB_FUNC( WAPI_GETSCROLLINFO )
 
    hbwapi_ret_L( bSuccess );
 }
-/*----------------------------------------------------------------------*/
+
 /*
 int GetScrollPos( HWND hWnd, int nBar );
 */
@@ -309,7 +309,7 @@ HB_FUNC( WAPI_GETSCROLLPOS )
    hbwapi_SetLastError( dwLastError );
    hbwapi_ret_NI( iResult );
 }
-/*----------------------------------------------------------------------*/
+
 /*
 BOOL GetScrollRange( HWND hWnd, int nBar, LPINT lpMinPos, LPINT lpMaxPos );
 */
@@ -340,7 +340,7 @@ HB_FUNC( WAPI_GETSCROLLRANGE )
    hbwapi_SetLastError( dwLastError );
    hbwapi_ret_L( bSuccess );
 }
-/*----------------------------------------------------------------------*/
+
 #if 0
 /*
 BOOL ScrollDC( HDC hDC, int dx, int dy, const RECT *lprcScroll, const RECT *lprcClip,
@@ -350,7 +350,7 @@ HB_FUNC( WAPI_SCROLLDC )
 {
 
 }
-/*----------------------------------------------------------------------*/
+
 /*
 BOOL ScrollWindow( HWND hWnd, int XAmount, int YAmount, const RECT *lpRect,
                                                   const RECT *lpClipRect );
@@ -359,7 +359,7 @@ HB_FUNC( WAPI_SCROLLWINDOW )
 {
 
 }
-/*----------------------------------------------------------------------*/
+
 /*
 int ScrollWindowEx( HWND hWnd, int dx, int dy, const RECT *prcScroll, const RECT *prcClip,
                                           HRGN hrgnUpdate, LPRECT prcUpdate, UINT flags );
@@ -369,7 +369,7 @@ HB_FUNC( WAPI_SCROLLWINDOWEX )
 
 }
 #endif
-/*----------------------------------------------------------------------*/
+
 /*
 int SetScrollInfo( HWND hwnd, int fnBar, LPCSCROLLINFO lpsi, BOOL fRedraw );
 */
@@ -382,7 +382,7 @@ HB_FUNC( WAPI_SETSCROLLINFO )
                                  si,
                                  HB_ISLOG( 4 ) ? hbwapi_par_BOOL( 4 ) : TRUE ) );
 }
-/*----------------------------------------------------------------------*/
+
 /*
 int SetScrollPos( HWND hWnd, int nBar, int nPos, BOOL bRedraw );
 */
@@ -395,7 +395,7 @@ HB_FUNC( WAPI_SETSCROLLPOS )
    hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_NI( iResult );
 }
-/*----------------------------------------------------------------------*/
+
 /*
 BOOL SetScrollRange( HWND hWnd, int nBar, int nMinPos, int nMaxPos, BOOL bRedraw );
 */
@@ -409,7 +409,7 @@ HB_FUNC( WAPI_SETSCROLLRANGE )
    hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_L( bResult );
 }
-/*----------------------------------------------------------------------*/
+
 /*
 BOOL ShowScrollBar( HWND hWnd, int wBar, BOOL bShow );
 */
@@ -431,26 +431,26 @@ HB_FUNC( WAPI_SHOWSCROLLBAR )
    hbwapi_SetLastError( dwLastError );
    hbwapi_ret_L( bResult );
 }
-/*----------------------------------------------------------------------*/
+
 HB_FUNC( WAPI_SETFOCUS )
 {
    HWND hWnd = SetFocus( hbwapi_par_raw_HWND( 1 ) );
    hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_raw_HWND( hWnd );
 }
-/*----------------------------------------------------------------------*/
+
 HB_FUNC( WAPI_GETACTIVEWINDOW )
 {
    hbwapi_ret_raw_HWND( GetActiveWindow() );
 }
-/*----------------------------------------------------------------------*/
+
 HB_FUNC( WAPI_SETACTIVEWINDOW )
 {
    HWND hWnd = SetActiveWindow( hbwapi_par_raw_HWND( 1 ) );
    hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_raw_HWND( hWnd );
 }
-/*----------------------------------------------------------------------*/
+
 #if 0
 HB_FUNC( WAPI_LOADBITMAP )
 {
@@ -464,7 +464,7 @@ HB_FUNC( WAPI_LOADBITMAP )
    }
 }
 #endif
-/*----------------------------------------------------------------------*/
+
 /* WAPI_LoadImage( [<hInstance>], <cName>, [<nType>],
                    [<nWidth>], [<nHeight>], [<nFlags>] ) -> <hImage> */
 HB_FUNC( WAPI_LOADIMAGE )
