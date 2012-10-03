@@ -3042,22 +3042,22 @@ HB_BOOL hb_fsRename( const char * pOldName, const char * pNewName )
    return fResult;
 }
 
-HB_BOOL hb_fsMkDir( const char * pDirname )
+HB_BOOL hb_fsMkDir( const char * pszDirName )
 {
    HB_BOOL fResult;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsMkDir(%s)", pDirname));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsMkDir(%s)", pszDirName));
 
 #if defined( HB_OS_WIN )
    {
-      LPCTSTR lpDirname;
+      LPCTSTR lpDirName;
       LPTSTR lpFree;
 
-      lpDirname = HB_FSNAMECONV( pDirname, &lpFree );
+      lpDirName = HB_FSNAMECONV( pszDirName, &lpFree );
 
       hb_vmUnlock();
 
-      fResult = CreateDirectory( lpDirname, NULL ) != 0;
+      fResult = CreateDirectory( lpDirName, NULL ) != 0;
       hb_fsSetIOError( fResult, 0 );
 
       hb_vmLock();
@@ -3069,16 +3069,16 @@ HB_BOOL hb_fsMkDir( const char * pDirname )
    {
       char * pszFree;
 
-      pDirname = hb_fsNameConv( pDirname, &pszFree );
+      pszDirName = hb_fsNameConv( pszDirName, &pszFree );
 
       hb_vmUnlock();
 
 #  if ! defined( HB_OS_UNIX ) && \
       ( defined( __WATCOMC__ ) || defined( __BORLANDC__ ) || \
         defined( __IBMCPP__ ) || defined( __MINGW32__ ) )
-      fResult = ( mkdir( pDirname ) == 0 );
+      fResult = ( mkdir( pszDirName ) == 0 );
 #  else
-      fResult = ( mkdir( pDirname, S_IRWXU | S_IRWXG | S_IRWXO ) == 0 );
+      fResult = ( mkdir( pszDirName, S_IRWXU | S_IRWXG | S_IRWXO ) == 0 );
 #  endif
       hb_fsSetIOError( fResult, 0 );
 
@@ -3092,24 +3092,24 @@ HB_BOOL hb_fsMkDir( const char * pDirname )
    return fResult;
 }
 
-HB_BOOL hb_fsChDir( const char * pDirname )
+HB_BOOL hb_fsChDir( const char * pszDirName )
 {
    HB_BOOL fResult;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsChDir(%s)", pDirname));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsChDir(%s)", pszDirName));
 
 #if defined( HB_OS_WIN )
    {
-      LPCTSTR lpDirname;
+      LPCTSTR lpDirName;
       LPTSTR lpFree;
       UINT uiErrMode;
 
-      lpDirname = HB_FSNAMECONV( pDirname, &lpFree );
+      lpDirName = HB_FSNAMECONV( pszDirName, &lpFree );
 
       hb_vmUnlock();
 
       uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
-      fResult = SetCurrentDirectory( lpDirname ) != FALSE;
+      fResult = SetCurrentDirectory( lpDirName ) != FALSE;
       SetErrorMode( uiErrMode );
       hb_fsSetIOError( fResult, 0 );
 
@@ -3122,10 +3122,11 @@ HB_BOOL hb_fsChDir( const char * pDirname )
    {
       char * pszFree;
 
-      pDirname = hb_fsNameConv( pDirname, &pszFree );
+      pszDirName = hb_fsNameConv( pszDirName, &pszFree );
 
+      hb_vmUnlock();
 
-      fResult = ( chdir( pDirname ) == 0 );
+      fResult = ( chdir( pszDirName ) == 0 );
       hb_fsSetIOError( fResult, 0 );
 
       hb_vmLock();
@@ -3138,22 +3139,22 @@ HB_BOOL hb_fsChDir( const char * pDirname )
    return fResult;
 }
 
-HB_BOOL hb_fsRmDir( const char * pDirname )
+HB_BOOL hb_fsRmDir( const char * pszDirName )
 {
    HB_BOOL fResult;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsRmDir(%s)", pDirname));
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsRmDir(%s)", pszDirName));
 
 #if defined( HB_OS_WIN )
    {
-      LPCTSTR lpDirname;
+      LPCTSTR lpDirName;
       LPTSTR lpFree;
 
-      lpDirname = HB_FSNAMECONV( pDirname, &lpFree );
+      lpDirName = HB_FSNAMECONV( pszDirName, &lpFree );
 
       hb_vmUnlock();
 
-      fResult = RemoveDirectory( lpDirname ) != 0;
+      fResult = RemoveDirectory( lpDirName ) != 0;
       hb_fsSetIOError( fResult, 0 );
 
       hb_vmLock();
@@ -3165,11 +3166,11 @@ HB_BOOL hb_fsRmDir( const char * pDirname )
    {
       char * pszFree;
 
-      pDirname = hb_fsNameConv( pDirname, &pszFree );
+      pszDirName = hb_fsNameConv( pszDirName, &pszFree );
 
       hb_vmUnlock();
 
-      fResult = ( rmdir( pDirname ) == 0 );
+      fResult = ( rmdir( pszDirName ) == 0 );
       hb_fsSetIOError( fResult, 0 );
 
       hb_vmLock();
@@ -3204,8 +3205,6 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE nSize )
 {
    int iCurDrv = iDrive;
    HB_ERRCODE nResult;
-   char * pszStart;
-   HB_SIZE nLen;
 
    HB_TRACE(HB_TR_DEBUG, ("hb_fsCurDirBuff(%d)", iDrive));
 
@@ -3241,10 +3240,10 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE nSize )
 
    if( iDrive >= 0 )
    {
-      ULONG nLen = ( ULONG ) nSize;
+      ULONG ulLen = ( ULONG ) nSize;
 
       hb_fsSetIOError( DosQueryCurrentDir( iDrive, ( PBYTE ) pszBuffer,
-                                           &nLen ) == NO_ERROR, 0 );
+                                           &ulLen ) == NO_ERROR, 0 );
    }
    else
       hb_fsSetError( ( HB_ERRCODE ) FS_ERROR );
@@ -3276,18 +3275,26 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE nSize )
 
    if( nResult == 0 && pszBuffer[ 0 ] )
    {
+      char * pszStart;
+      HB_SIZE nLen;
+
       /* Strip the leading drive spec, and leading backslash if there's one. */
       /* NOTE: A trailing underscore is not returned on this platform,
                so we don't need to strip it. [vszakats] */
 
 #if defined( __DJGPP__ ) || defined( HB_OS_OS2 )
       /* convert '/' to '\' */
-      while( ( pszStart = strchr( pszBuffer, '/' ) ) != NULL )
-         *pszStart = '\\';
-#endif
-
-      pszStart = pszBuffer;
+      nLen = 0;
+      while( pszBuffer[ nLen ] != 0 )
+      {
+         if( pszBuffer[ nLen ] == '/' )
+            pszBuffer[ nLen ] = '\\';
+         ++nLen;
+      }
+#else
       nLen = strlen( pszBuffer );
+#endif
+      pszStart = pszBuffer;
 
 #if defined( HB_OS_HAS_DRIVE_LETTER )
       if( pszStart[ 1 ] == HB_OS_DRIVE_DELIM_CHR )
@@ -3329,6 +3336,158 @@ HB_ERRCODE hb_fsCurDirBuff( int iDrive, char * pszBuffer, HB_SIZE nSize )
    }
 
    return nResult;
+}
+
+HB_BOOL hb_fsGetCWD( char * pszBuffer, HB_SIZE nSize )
+{
+   HB_BOOL fResult;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsGetCWD(%p,%" HB_PFS "u)", pszBuffer, nSize));
+
+   pszBuffer[ 0 ] = '\0';
+
+   hb_vmUnlock();
+
+#if defined( HB_OS_WIN )
+   {
+      DWORD dwSize = ( DWORD ) nSize;
+      LPTSTR lpBuffer = ( LPTSTR ) hb_xgrab( dwSize * sizeof( TCHAR ) );
+      lpBuffer[ 0 ] = TEXT( '\0' );
+      fResult = GetCurrentDirectory( dwSize, lpBuffer ) != 0;
+      hb_fsSetIOError( fResult, 0 );
+      lpBuffer[ dwSize - 1 ] = TEXT( '\0' );
+      HB_OSSTRDUP2( lpBuffer, pszBuffer, nSize - 1 );
+      hb_xfree( lpBuffer );
+   }
+#elif defined( HB_OS_OS2 )
+   {
+      ULONG ulLen = ( ULONG ) nSize - 3, ulDrive, ulLogical;
+
+      DosQueryCurrentDisk( &ulDrive, &ulLogical );
+      pszBuffer[ 0 ] = ( char ) ( ulDrive + ( 'A' - 1 ) );
+      pszBuffer[ 1 ] = HB_OS_DRIVE_DELIM_CHR;
+      pszBuffer[ 2 ] = HB_OS_PATH_DELIM_CHR;
+      fResult = DosQueryCurrentDir( 0, ( PBYTE ) pszBuffer + 3, &ulLen ) == NO_ERROR;
+      hb_fsSetIOError( fResult, 0 );
+   }
+#else
+
+   fResult = getcwd( pszBuffer, nSize ) != NULL;
+   hb_fsSetIOError( fResult, 0 );
+
+#endif
+
+   hb_vmLock();
+
+   pszBuffer[ nSize - 1 ] = '\0';
+
+   if( fResult && pszBuffer[ 0 ] )
+   {
+      HB_SIZE nLen;
+#if defined( __DJGPP__ ) || defined( HB_OS_OS2 )
+      /* convert '/' to '\' */
+      nLen = 0;
+      while( pszBuffer[ nLen ] != 0 )
+      {
+         if( pszBuffer[ nLen ] == '/' )
+            pszBuffer[ nLen ] = '\\';
+         ++nLen;
+      }
+#else
+      nLen = strlen( pszBuffer );
+#endif
+
+      /* add the trailing (back)slash if there's no one */
+      if( nLen + 1 < nSize &&
+          strchr( HB_OS_PATH_DELIM_CHR_LIST, ( HB_UCHAR ) pszBuffer[ nLen - 1 ] ) == 0 )
+      {
+         pszBuffer[ nLen++ ] = HB_OS_PATH_DELIM_CHR;
+         pszBuffer[ nLen ] = '\0';
+      }
+
+#if !defined( HB_OS_WIN )
+      /* Convert from OS codepage */
+      {
+         char * pszFree = NULL;
+         const char * pszResult;
+
+         nLen = nSize;
+         pszResult = hb_osDecodeCP( pszBuffer, &pszFree, &nLen );
+
+         if( pszResult != pszBuffer )
+            hb_strncpy( pszBuffer, pszResult, nSize - 1 );
+         if( pszFree )
+            hb_xfree( pszFree );
+      }
+#endif
+   }
+
+   return fResult;
+}
+
+HB_BOOL hb_fsSetCWD( const char * pszDirName )
+{
+   HB_BOOL fResult;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetCWD(%s)", pszDirName));
+
+#if defined( HB_OS_WIN )
+   {
+      LPCTSTR lpDirName;
+      LPTSTR lpFree;
+      UINT uiErrMode;
+
+      lpDirName = HB_FSNAMECONV( pszDirName, &lpFree );
+
+      hb_vmUnlock();
+
+      uiErrMode = SetErrorMode( SEM_FAILCRITICALERRORS );
+      fResult = SetCurrentDirectory( lpDirName ) != FALSE;
+      hb_fsSetIOError( fResult, 0 );
+      SetErrorMode( uiErrMode );
+
+      hb_vmLock();
+
+      if( lpFree )
+         hb_xfree( lpFree );
+   }
+#else
+   {
+      char * pszFree;
+
+      pszDirName = hb_fsNameConv( pszDirName, &pszFree );
+
+      hb_vmUnlock();
+
+      fResult = ( chdir( pszDirName ) == 0 );
+      hb_fsSetIOError( fResult, 0 );
+
+#if defined( HB_OS_HAS_DRIVE_LETTER ) && !defined( __DJGPP__ )
+      if( fResult && pszDirName[ 0 ] != 0 &&
+          pszDirName[ 1 ] == HB_OS_DRIVE_DELIM_CHR )
+      {
+         int iDrive = pszDirName[ 0 ];
+
+         if( iDrive >= 'A' && iDrive <= 'Z' )
+            iDrive -= 'A';
+         else if( iDrive >= 'a' && iDrive <= 'z' )
+            iDrive -= 'a';
+         else
+            iDrive = 0;
+
+         if( iDrive )
+            HB_FS_SETDRIVE( iDrive );
+      }
+#endif
+
+      hb_vmLock();
+
+      if( pszFree )
+         hb_xfree( pszFree );
+   }
+#endif
+
+   return fResult;
 }
 
 /* NOTE: 0=A:, 1=B:, 2=C:, 3=D:, ... */

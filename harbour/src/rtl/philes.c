@@ -320,6 +320,20 @@ HB_FUNC( HB_CURDRIVE )
 #endif
 }
 
+HB_FUNC( HB_CWD )
+{
+   char szBuffer[ HB_PATH_MAX ];
+   const char * szNewWD = hb_parc( 1 );
+
+   if( szNewWD )
+      hb_fsSetCWD( szNewWD );
+
+   if( hb_fsGetCWD( szBuffer, sizeof( szBuffer ) ) )
+      hb_retc( szBuffer );
+   else
+      hb_retc_null();
+}
+
 HB_FUNC( HB_PROGNAME )
 {
    char * pszBaseName = hb_cmdargProgName();

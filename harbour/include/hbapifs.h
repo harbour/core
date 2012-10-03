@@ -169,6 +169,8 @@ extern HB_EXPORT HB_BOOL    hb_fsGetFileTime ( const char * pszFileName, long * 
 extern HB_EXPORT HB_BOOL    hb_fsSetFileTime ( const char * pszFileName, long lJulian, long lMillisec );
 extern HB_EXPORT HB_BOOL    hb_fsGetAttr     ( const char * pszFileName, HB_FATTR * pulAttr );
 extern HB_EXPORT HB_BOOL    hb_fsSetAttr     ( const char * pszFileName, HB_FATTR ulAttr );
+extern HB_EXPORT HB_BOOL    hb_fsGetCWD      ( char * pszBuffer, HB_SIZE nSize );
+extern HB_EXPORT HB_BOOL    hb_fsSetCWD      ( const char * pszDirName );
 extern HB_EXPORT void       hb_fsSetError    ( HB_ERRCODE uiError ); /* set the file system DOS error number */
 extern HB_EXPORT void       hb_fsSetIOError  ( HB_BOOL fResult, HB_USHORT uiOperation ); /* set the file system error number after IO operation */
 extern HB_EXPORT HB_BOOL    hb_fsTruncAt     ( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset ); /* truncate file to given size */

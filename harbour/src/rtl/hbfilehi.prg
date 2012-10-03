@@ -50,13 +50,6 @@
  *
  */
 
-/* QUESTION: How to return success/failure when dir is passed? */
-FUNCTION hb_cwd( cNewDir )
-   IF HB_ISSTRING( cNewDir )
-      /* TODO */
-   ENDIF
-   RETURN hb_DirSepAdd( hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
-
 #define _ISDRIVESPEC( cDir ) ( ! Empty( hb_osDriveSeparator() ) .AND. Right( cDir, Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
 
 /* NOTE: Can hurt if there are symlinks on the way. */
