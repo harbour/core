@@ -11,8 +11,8 @@
 
 PROCEDURE Main()
 
-   ? Chr( 34 ) + Version() + Chr( 34 )
-   ? Chr( 34 ) + hb_compiler() + Chr( 34 )
-   ? Chr( 34 ) + OS() + Chr( 34 )
+   ? '"' + Version() + '"'
+   ? '"' + hb_compiler() + '"'
+   ? '"' + OS() + '"'
 
    RETURN

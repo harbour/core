@@ -19,7 +19,6 @@
 //+               Function WNDVIVOD()
 //+               Static Procedure VIVSTR()
 //+               Function FLDSTR()
-//+               Function GetBuf()
 //+               Function InitList()
 //+               Function Defpict()
 //+               Function NUM_STR()
@@ -122,20 +121,10 @@ PROCEDURE Main( filename )
 //+
 //+--------------------------------------------------------------------
 //+
-#ifdef VER_MOUSE
-
-FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey, ctrl_ar )
-
-#else
 
 FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
 
-#endif
-
    LOCAL rezproc, xkey, rez, fipos, wndbuf, predit, predxx, oldcolors
-#ifdef VER_MOUSE
-   LOCAL ym, xm
-#endif
    LOCAL i
    LOCAL fbar1, fbar2, vartmp, varbuf, razmer
    LOCAL GetList := {}
@@ -214,7 +203,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
    ENDIF
    LI_COLPOS := 1
    LI_NLEFT  := LI_FREEZE + 1
-// DO MSFNEXT WITH mslist,LI_NLEFT
+// DO MSFNEXT WITH mslist, LI_NLEFT
    LI_LEFTVISIBLE := LI_NLEFT
    STORE .T. TO rez
    LI_NCOLUMNS := FLDCOUNT( mslist, LI_X1 + 2, LI_X2 - 2, LI_NLEFT )
@@ -223,7 +212,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
       Eval( LI_BGTOP, mslist )
       LI_NSTR := 1
    ELSE
-      Eval( LI_BSKIP, mslist, - ( LI_NSTR - 1 ) )
+      Eval( LI_BSKIP, mslist, -( LI_NSTR - 1 ) )
       IF Eval( LI_BBOF, mslist )
          Eval( LI_BGTOP, mslist )
          LI_NSTR := 1
@@ -233,303 +222,234 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
    Eval( LI_BSKIP, mslist, ( LI_NSTR - 1 ) )
    IF LI_KOLZ == 0 .AND. predit == 3
       LI_NSTR := 0
-      KEYBOARD Chr( 24 )
+      hb_keyIns( K_DOWN )
    ENDIF
    DO WHILE rez
       SetColor( LI_CLR )
       Eval( LI_B1, mslist )
-      //     IF predit>1
-      //      SETCOLOR(LI_CLRV+"*")
-      //     ELSE
-      SetColor( LI_CLRV )
-      //     ENDIF
+//    IF predit > 1
+//       SetColor( LI_CLRV + "*" )
+//    ELSE
+         SetColor( LI_CLRV )
+//    ENDIF
       VIVSTR( mslist, LI_NSTR + LI_Y1, iif( predit > 1, LI_COLPOS, 0 ) )
       SetColor( LI_CLR )
       //
-#ifdef RDD_AX
-      @ LI_Y1 + 2, LI_X2, LI_Y2 - 2, LI_X2 BOX str_barbox
-      @ LI_Y1 + 1, LI_X2 SAY SubStr( str_bar, 2, 1 )
-      @ LI_Y2 - 1, LI_X2 SAY SubStr( str_bar, 1, 1 )
-      @ LI_Y1 + 2 + Int( iif( LI_PRFLT, LI_TEKZP, Ax_Keyno() ) * ( LI_Y2 - LI_Y1 - 4 ) / iif( LI_PRFLT, LI_KOLZ, Ax_KeyCount() ) ), LI_X2 SAY Right( str_bar, 1 )
-#else
-      IF ! ( Type( "Sx_Keyno()" ) == "U" )
+      DO CASE
+      CASE !( Type( "Sx_KeyNo()" ) == "U" )
+         fbar1 := "Sx_KeyNo()"
+         fbar2 := "Sx_KeyCount()"
+      CASE !( Type( "ADSKeyNo()" ) == "U" )
+         fbar1 := "ADSKeyNo()"
+         fbar2 := "ADSKeyCount()"
+      CASE !( Type( "Ax_KeyNo()" ) == "U" )
+         fbar1 := "Ax_KeyNo()"
+         fbar2 := "Ax_KeyCount()"
+      ENDCASE
+      IF ! Empty( fbar1 )
          @ LI_Y1 + 2, LI_X2, LI_Y2 - 2, LI_X2 BOX str_barbox
          @ LI_Y1 + 1, LI_X2 SAY SubStr( str_bar, 2, 1 )
          @ LI_Y2 - 1, LI_X2 SAY SubStr( str_bar, 1, 1 )
-         fbar1 := "Sx_Keyno()"
-         fbar2 := "Sx_KeyCount()"
          @ LI_Y1 + 2 + Int( iif( LI_PRFLT, LI_TEKZP, &fbar1 ) * ( LI_Y2 - LI_Y1 - 4 ) / iif( LI_PRFLT, LI_KOLZ, &fbar2 ) ), LI_X2 SAY Right( str_bar, 1 )
       ENDIF
-#endif
       //
       IF LI_LVIEW
          xkey := K_ESC
       ELSE
-#ifdef VER_MOUSE
-         xkey := IN_KM( .F. )
-         IF xkey == 502
-            DO WHILE M_STAT() != 0
-            ENDDO
-            xkey := K_ESC
-         ELSEIF xkey == 501
-            ym := M_YTEXT()
-            xm := M_XTEXT()
-            IF ( ym <= LI_Y1 .OR. ym >= LI_Y2 .OR. xm <= LI_X1 .OR. xm >= LI_X2 )
-               IF xm <= LI_X2 .AND. xm >= LI_X1 .AND. ( ym == LI_Y1 .OR. ym == LI_Y2 )
-                  M_SHOW()
-                  i := Seconds()
-                  DO WHILE Seconds() - i < 0.05
-                  ENDDO
-                  KEYBOARD Chr( iif( ym == LI_Y1, 5, 24 ) )
-                  M_HIDE()
-                  LOOP
-               ELSEIF ctrl_ar != NIL
-                  FOR i := 1 TO Len( ctrl_ar )
-                     IF ValType( ctrl_ar[ i ] ) == "C"
-                        SetColor( ctrl_ar[ i ] )
-                     ELSE
-                        rezproc := F_CTRL( ctrl_ar[ i ], , , , , , 1, ym, xm )
-                        IF rezproc > 0
-                           EXIT
-                        ENDIF
-                     ENDIF
-                  NEXT
-                  SetColor( LI_CLR )
-                  IF rezproc > 0
-                     rezproc += 500
-                     EXIT
-                  ENDIF
-               ENDIF
-            ENDIF
-         ENDIF
-#else
          xkey := Inkey( 0 )
-#endif
       ENDIF
       VIVSTR( mslist, LI_NSTR + LI_Y1, 0 )
-      IF xkey < 500
-         DO CASE
-         CASE xkey == K_DOWN
-            IF ( LI_KOLZ > 0 .OR. predit == 3 ) .AND. ( LI_KOLZ == 0 .OR. ! Eval( LI_BEOF, mslist ) )
-               Eval( LI_BSKIP, mslist, 1 )
-               IF Eval( LI_BEOF, mslist ) .AND. ( predit < 3 .OR. LI_PRFLT )
-                  Eval( LI_BSKIP, mslist, -1 )
-               ELSE
-                  IF Eval( LI_BEOF, mslist )
-                     vartmp      := LI_NLEFT
-                     LI_NLEFT    := LI_LEFTVISIBLE
-                     LI_COLPOS   := LI_LEFTVISIBLE
-                     LI_NCOLUMNS := FLDCOUNT( mslist, LI_X1 + 2, LI_X2 - 2, LI_NLEFT )
-                     IF vartmp > LI_LEFTVISIBLE
-                        Eval( LI_BSKIP, mslist, -1 )
-                        Eval( LI_BSKIP, mslist, -( LI_NSTR - 1 ) )
-                        WNDVIVOD( mslist )
-                        Eval( LI_BSKIP, mslist, LI_NSTR - 1 )
-                        Eval( LI_BSKIP, mslist )
-                     ENDIF
-                  ENDIF
-                  LI_NSTR++
-                  IF LI_NSTR > razmer
-                     LI_NSTR := razmer
-                     Scroll( LI_Y1 + 1, LI_X1 + 1, LI_Y2 - 1, LI_X2 - 1, 1 )
-                     VIVSTR( mslist, LI_Y2 - 1, 0 )
-                  ENDIF
-                  IF Eval( LI_BEOF, mslist )
-                     KEYBOARD Chr( 13 )
-                  ENDIF
-               ENDIF
-            ENDIF
-         CASE xkey == K_UP .AND. LI_KOLZ > 0
-            Eval( LI_BSKIP, mslist, -1 )
-            IF Eval( LI_BBOF, mslist )
-               Eval( LI_BGTOP, mslist )
-            ELSE
-               LI_NSTR--
-               IF LI_NSTR == 0
-                  LI_NSTR := 1
-                  Scroll( LI_Y1 + 1, LI_X1 + 1, LI_Y2 - 1, LI_X2 - 1, -1 )
-                  VIVSTR( mslist, LI_Y1 + 1, 0 )
-               ENDIF
-            ENDIF
-         CASE xkey == K_RIGHT .AND. LI_KOLZ != 0
-            IF predit > 1
-               IF LI_COLPOS < LI_NCOLUMNS
-                  LI_COLPOS++
-                  LOOP
-               ENDIF
-            ENDIF
-            IF LI_NCOLUMNS + LI_NLEFT - LI_FREEZE - 1 < LI_COLCOUNT
-               i := LI_NLEFT + LI_NCOLUMNS
-               DO WHILE LI_NCOLUMNS + LI_NLEFT - LI_FREEZE - 1 < LI_COLCOUNT .AND. LI_NLEFT + LI_NCOLUMNS == i
-                  LI_NLEFT++
-                  // DO MSFNEXT WITH mslist,LI_NLEFT
-                  LI_NCOLUMNS := FLDCOUNT( mslist, LI_X1 + 2, LI_X2 - 2, LI_NLEFT )
-               ENDDO
-               LI_COLPOS := i - LI_NLEFT + 1
-               Eval( LI_BSKIP, mslist, - ( LI_NSTR - 1 ) )
-               WNDVIVOD( mslist )
-               Eval( LI_BSKIP, mslist, LI_NSTR - 1 )
-            ENDIF
-            VIVNAMES( mslist, LI_NLEFT )
-         CASE xkey == K_LEFT
-            IF predit > 1
-               IF LI_COLPOS != 1
-                  LI_COLPOS--
-                  LOOP
-               ENDIF
-            ENDIF
-            IF LI_NLEFT > LI_LEFTVISIBLE
-               LI_NLEFT--
-               // DO MSFBACK WITH mslist,LI_NLEFT
-               LI_NCOLUMNS := FLDCOUNT( mslist, LI_X1 + 2, LI_X2 - 2, LI_NLEFT )
-               LI_COLPOS   := 1
-               Eval( LI_BSKIP, mslist, -( LI_NSTR - 1 ) )
-               WNDVIVOD( mslist )
-               Eval( LI_BSKIP, mslist, LI_NSTR - 1 )
-            ENDIF
-            VIVNAMES( mslist, LI_NLEFT )
-         CASE xkey == K_PGDN
-            Eval( LI_BSKIP, mslist, razmer - LI_NSTR + 1 )
-            LI_NSTR := 1
-            IF Eval( LI_BEOF, mslist )
+      DO CASE
+      CASE xkey == K_DOWN
+         IF ( LI_KOLZ > 0 .OR. predit == 3 ) .AND. ( LI_KOLZ == 0 .OR. ! Eval( LI_BEOF, mslist ) )
+            Eval( LI_BSKIP, mslist, 1 )
+            IF Eval( LI_BEOF, mslist ) .AND. ( predit < 3 .OR. LI_PRFLT )
                Eval( LI_BSKIP, mslist, -1 )
-            ENDIF
-            WNDVIVOD( mslist )
-         CASE xkey == K_PGUP
-            IF LI_NSTR > 1
-               Eval( LI_BSKIP, mslist, -( LI_NSTR - 1 ) )
-               LI_NSTR := 1
             ELSE
-               Eval( LI_BSKIP, mslist, -razmer )
-               IF Eval( LI_BBOF, mslist )
-                  Eval( LI_BGTOP, mslist )
-               ENDIF
-               WNDVIVOD( mslist )
-            ENDIF
-         CASE xkey == K_END .AND. LI_KOLZ > 0
-            Eval( LI_BGBOT, mslist )
-            Eval( LI_BSKIP, mslist, -( razmer - 1 ) )
-            IF Eval( LI_BBOF, mslist )
-               Eval( LI_BGTOP, mslist )
-            ENDIF
-            LI_NSTR := WNDVIVOD( mslist )
-            Eval( LI_BSKIP, mslist, LI_NSTR - 1 )
-         CASE xkey == K_HOME .AND. LI_KOLZ > 0
-            LI_NSTR := 1
-            Eval( LI_BGTOP, mslist )
-            WNDVIVOD( mslist )
-         CASE xkey == K_ENTER .AND. predit < 2
-            rez     := .F.
-            rezproc := xkey
-         CASE ( xkey == K_ENTER .OR. ( xkey > 47 .AND. xkey < 58 ) .OR. ( xkey > 64 .AND. xkey < 91 ) ;
-               .OR. ( xkey > 96 .AND. xkey < 123 ) .OR. ( xkey > 127 .AND. xkey < 176 ) .OR. ( xkey > 223 .AND. xkey < 240 ) ) .AND. predit > 1
-            fipos := LI_COLPOS + LI_NLEFT - 1 - LI_FREEZE
-            IF LI_WHEN == NIL .OR. Len( LI_WHEN ) < fipos .OR. LI_WHEN[ fipos ] == NIL .OR. Eval( LI_WHEN[ fipos ] )
-               IF ValType( LI_MSED ) != "N"
-                  vartmp := iif( Len( LI_MSED ) < fipos, 1, LI_MSED[ fipos ] )
-                  IF ValType( vartmp ) == "N"
-                     IF vartmp != 2
-                        LOOP
-                     ENDIF
-                  ELSE
-                     LOOP
+               IF Eval( LI_BEOF, mslist )
+                  vartmp      := LI_NLEFT
+                  LI_NLEFT    := LI_LEFTVISIBLE
+                  LI_COLPOS   := LI_LEFTVISIBLE
+                  LI_NCOLUMNS := FLDCOUNT( mslist, LI_X1 + 2, LI_X2 - 2, LI_NLEFT )
+                  IF vartmp > LI_LEFTVISIBLE
+                     Eval( LI_BSKIP, mslist, -1 )
+                     Eval( LI_BSKIP, mslist, -( LI_NSTR - 1 ) )
+                     WNDVIVOD( mslist )
+                     Eval( LI_BSKIP, mslist, LI_NSTR - 1 )
+                     Eval( LI_BSKIP, mslist )
                   ENDIF
                ENDIF
-               SET CURSOR ON
-               SetColor( LI_CLRV + "," + LI_CLRV )
-               IF xkey != K_ENTER
-                  KEYBOARD Chr( xkey ) + GetBuf()
+               LI_NSTR++
+               IF LI_NSTR > razmer
+                  LI_NSTR := razmer
+                  Scroll( LI_Y1 + 1, LI_X1 + 1, LI_Y2 - 1, LI_X2 - 1, 1 )
+                  VIVSTR( mslist, LI_Y2 - 1, 0 )
                ENDIF
-               vartmp := ReadExit( .T. )
-               varbuf := FieldGet( fipos )
-               @ LI_NSTR + LI_Y1, LI_XPOS GET varbuf PICTURE Defpict( mslist, fipos, LI_X2 - LI_X1 - 3 )
-               IF LI_VALID != NIL .AND. Len( LI_VALID ) >= fipos .AND. LI_VALID[ fipos ] != NIL
-                  Getlist[ 1 ] :postBlock := LI_VALID[ fipos ]
-               ENDIF
-               READ
-               IF LastKey() != K_ESC .AND. Updated()
-                  IF Eval( LI_BEOF, mslist )
-                     APPEND BLANK
-                     LI_KOLZ := Eval( LI_RCOU, mslist )
-                  ELSE
-                     IF ! Set( _SET_EXCLUSIVE )
-                        RLock()
-                        IF NetErr()
-                           LOOP
-                        ENDIF
-                     ENDIF
-                  ENDIF
-                  IF LI_BDESHOUT != NIL .AND. ValType( varbuf ) == "C"
-                     varbuf := Eval( LI_BDESHOUT, mslist, varbuf )
-                  ENDIF
-                  FieldPut( fipos, varbuf )
-                  IF ! Set( _SET_EXCLUSIVE )
-                     UNLOCK
-                  ENDIF
-               ENDIF
-               IF ( LastKey() == K_ESC .OR. ! Updated() ) .AND. Eval( LI_BEOF, mslist )
-                  SetColor( LI_CLR )
-                  @ LI_NSTR + LI_Y1, LI_X1 + 1 CLEAR TO LI_NSTR + LI_Y1, LI_X2 - 1
-                  LI_NSTR--
-                  Eval( LI_BSKIP, mslist, -1 )
-               ELSE
-                  IF ( vartmp := LastKey() ) != K_ENTER .AND. vartmp != K_ESC .AND. vartmp < 32
-                     KEYBOARD Chr( vartmp )
-                  ENDIF
-               ENDIF
-               ReadExit( vartmp )
-               SET CURSOR OFF
-            ENDIF
-         CASE xkey == K_ESC
-            rez     := .F.
-            rezproc := 0
-         CASE xkey == K_F2 .AND. ( maskey == NIL .OR. AScan( maskey, xkey ) == 0 )
-            IF predit == 1
-               predit := predxx
-            ELSEIF predit > 1
-               predit := 1
-            ENDIF
-         OTHERWISE
-            IF maskey != NIL
-               IF AScan( maskey, xkey ) != 0
-                  rez     := .F.
-                  rezproc := xkey
-               ENDIF
-            ENDIF
-         ENDCASE
-#ifdef VER_MOUSE
-      ELSE
-         IF ym > LI_Y1 .AND. ym < LI_Y2 .AND. xm > LI_X1 .AND. xm < LI_X2
-            IF predit < 2
-               IF LI_NSTR == ym - LI_Y1
-                  rez     := .F.
-                  rezproc := 13
-               ELSE
-                  Eval( LI_BSKIP, mslist, ym - LI_Y1 - LI_NSTR )
-                  LI_NSTR := ym - LI_Y1
-               ENDIF
-            ELSE
-               i := FLDCOUNT( mslist, LI_X1 + 2, xm, LI_NLEFT ) + 1
-               IF i <= FLDCOUNT( mslist, LI_X1 + 2, LI_X2 - 2, LI_NLEFT )
-                  IF i == 2 .AND. xm < LI_X1 + 2 + Len( FLDSTR( mslist, LI_NLEFT + LI_COLPOS - 1 ) )
-                     i := 1
-                  ENDIF
-                  IF LI_COLPOS != i .OR. LI_NSTR != ym - LI_Y1
-                     LI_COLPOS := i
-                     Eval( LI_BSKIP, mslist, ym - LI_Y1 - LI_NSTR )
-                     LI_NSTR := ym - LI_Y1
-                  ELSE
-                     KEYBOARD Chr( 13 )
-                  ENDIF
+               IF Eval( LI_BEOF, mslist )
+                  hb_keyIns( K_ENTER )
                ENDIF
             ENDIF
          ENDIF
-         M_SHOW()
-         DO WHILE M_STAT() != 0
-         ENDDO
-         M_HIDE()
-#endif
-      ENDIF
+      CASE xkey == K_UP .AND. LI_KOLZ > 0
+         Eval( LI_BSKIP, mslist, -1 )
+         IF Eval( LI_BBOF, mslist )
+            Eval( LI_BGTOP, mslist )
+         ELSE
+            LI_NSTR--
+            IF LI_NSTR == 0
+               LI_NSTR := 1
+               Scroll( LI_Y1 + 1, LI_X1 + 1, LI_Y2 - 1, LI_X2 - 1, -1 )
+               VIVSTR( mslist, LI_Y1 + 1, 0 )
+            ENDIF
+         ENDIF
+      CASE xkey == K_RIGHT .AND. LI_KOLZ != 0
+         IF predit > 1
+            IF LI_COLPOS < LI_NCOLUMNS
+               LI_COLPOS++
+               LOOP
+            ENDIF
+         ENDIF
+         IF LI_NCOLUMNS + LI_NLEFT - LI_FREEZE - 1 < LI_COLCOUNT
+            i := LI_NLEFT + LI_NCOLUMNS
+            DO WHILE LI_NCOLUMNS + LI_NLEFT - LI_FREEZE - 1 < LI_COLCOUNT .AND. LI_NLEFT + LI_NCOLUMNS == i
+               LI_NLEFT++
+               // DO MSFNEXT WITH mslist, LI_NLEFT
+               LI_NCOLUMNS := FLDCOUNT( mslist, LI_X1 + 2, LI_X2 - 2, LI_NLEFT )
+            ENDDO
+            LI_COLPOS := i - LI_NLEFT + 1
+            Eval( LI_BSKIP, mslist, -( LI_NSTR - 1 ) )
+            WNDVIVOD( mslist )
+            Eval( LI_BSKIP, mslist, LI_NSTR - 1 )
+         ENDIF
+         VIVNAMES( mslist, LI_NLEFT )
+      CASE xkey == K_LEFT
+         IF predit > 1
+            IF LI_COLPOS != 1
+               LI_COLPOS--
+               LOOP
+            ENDIF
+         ENDIF
+         IF LI_NLEFT > LI_LEFTVISIBLE
+            LI_NLEFT--
+            // DO MSFBACK WITH mslist, LI_NLEFT
+            LI_NCOLUMNS := FLDCOUNT( mslist, LI_X1 + 2, LI_X2 - 2, LI_NLEFT )
+            LI_COLPOS   := 1
+            Eval( LI_BSKIP, mslist, -( LI_NSTR - 1 ) )
+            WNDVIVOD( mslist )
+            Eval( LI_BSKIP, mslist, LI_NSTR - 1 )
+         ENDIF
+         VIVNAMES( mslist, LI_NLEFT )
+      CASE xkey == K_PGDN
+         Eval( LI_BSKIP, mslist, razmer - LI_NSTR + 1 )
+         LI_NSTR := 1
+         IF Eval( LI_BEOF, mslist )
+            Eval( LI_BSKIP, mslist, -1 )
+         ENDIF
+         WNDVIVOD( mslist )
+      CASE xkey == K_PGUP
+         IF LI_NSTR > 1
+            Eval( LI_BSKIP, mslist, -( LI_NSTR - 1 ) )
+            LI_NSTR := 1
+         ELSE
+            Eval( LI_BSKIP, mslist, -razmer )
+            IF Eval( LI_BBOF, mslist )
+               Eval( LI_BGTOP, mslist )
+            ENDIF
+            WNDVIVOD( mslist )
+         ENDIF
+      CASE xkey == K_END .AND. LI_KOLZ > 0
+         Eval( LI_BGBOT, mslist )
+         Eval( LI_BSKIP, mslist, -( razmer - 1 ) )
+         IF Eval( LI_BBOF, mslist )
+            Eval( LI_BGTOP, mslist )
+         ENDIF
+         LI_NSTR := WNDVIVOD( mslist )
+         Eval( LI_BSKIP, mslist, LI_NSTR - 1 )
+      CASE xkey == K_HOME .AND. LI_KOLZ > 0
+         LI_NSTR := 1
+         Eval( LI_BGTOP, mslist )
+         WNDVIVOD( mslist )
+      CASE xkey == K_ENTER .AND. predit < 2
+         rez     := .F.
+         rezproc := xkey
+      CASE ( xkey == K_ENTER .OR. ! Empty( hb_keyChar( xkey ) ) ) .AND. predit > 1
+         fipos := LI_COLPOS + LI_NLEFT - 1 - LI_FREEZE
+         IF LI_WHEN == NIL .OR. Len( LI_WHEN ) < fipos .OR. LI_WHEN[ fipos ] == NIL .OR. Eval( LI_WHEN[ fipos ] )
+            IF ValType( LI_MSED ) != "N"
+               vartmp := iif( Len( LI_MSED ) < fipos, 1, LI_MSED[ fipos ] )
+               IF ValType( vartmp ) == "N"
+                  IF vartmp != 2
+                     LOOP
+                  ENDIF
+               ELSE
+                  LOOP
+               ENDIF
+            ENDIF
+            SET CURSOR ON
+            SetColor( LI_CLRV + "," + LI_CLRV )
+            IF xkey != K_ENTER
+               DO WHILE NextKey() != 0
+                  hb_keyPut( Inkey( 0 ) )
+               ENDDO
+               hb_keyIns( xkey )
+            ENDIF
+            vartmp := ReadExit( .T. )
+            varbuf := FieldGet( fipos )
+            @ LI_NSTR + LI_Y1, LI_XPOS GET varbuf PICTURE Defpict( mslist, fipos, LI_X2 - LI_X1 - 3 )
+            IF LI_VALID != NIL .AND. Len( LI_VALID ) >= fipos .AND. LI_VALID[ fipos ] != NIL
+               Getlist[ 1 ]:postBlock := LI_VALID[ fipos ]
+            ENDIF
+            READ
+            IF LastKey() != K_ESC .AND. Updated()
+               IF Eval( LI_BEOF, mslist )
+                  APPEND BLANK
+                  LI_KOLZ := Eval( LI_RCOU, mslist )
+               ELSE
+                  IF ! Set( _SET_EXCLUSIVE )
+                     RLock()
+                     IF NetErr()
+                        LOOP
+                     ENDIF
+                  ENDIF
+               ENDIF
+               IF LI_BDESHOUT != NIL .AND. ValType( varbuf ) == "C"
+                  varbuf := Eval( LI_BDESHOUT, mslist, varbuf )
+               ENDIF
+               FieldPut( fipos, varbuf )
+               IF ! Set( _SET_EXCLUSIVE )
+                  UNLOCK
+               ENDIF
+            ENDIF
+            IF ( LastKey() == K_ESC .OR. ! Updated() ) .AND. Eval( LI_BEOF, mslist )
+               SetColor( LI_CLR )
+               @ LI_NSTR + LI_Y1, LI_X1 + 1 CLEAR TO LI_NSTR + LI_Y1, LI_X2 - 1
+               LI_NSTR--
+               Eval( LI_BSKIP, mslist, -1 )
+            ELSE
+               IF ( vartmp := LastKey() ) != K_ENTER .AND. vartmp != K_ESC .AND. vartmp < 32
+                  hb_keyIns( vartmp )
+               ENDIF
+            ENDIF
+            ReadExit( vartmp )
+            SET CURSOR OFF
+         ENDIF
+      CASE xkey == K_ESC
+         rez     := .F.
+         rezproc := 0
+      CASE xkey == K_F2 .AND. ( maskey == NIL .OR. AScan( maskey, xkey ) == 0 )
+         IF predit == 1
+            predit := predxx
+         ELSEIF predit > 1
+            predit := 1
+         ENDIF
+      OTHERWISE
+         IF maskey != NIL
+            IF AScan( maskey, xkey ) != 0
+               rez     := .F.
+               rezproc := xkey
+            ENDIF
+         ENDIF
+      ENDCASE
    ENDDO
 
    IF LI_LSOHR
@@ -591,14 +511,14 @@ FUNCTION VIVNAMES( mslist )
       ENDIF
       @ LI_Y1, x - 1 CLEAR TO LI_Y1, LI_X2 - 1
       fif := iif( LI_FREEZE > 0, 1, LI_NLEFT )
-      // DO MSFNEXT WITH mslist,fif
+      // DO MSFNEXT WITH mslist, fif
       DO WHILE i <= LI_NCOLUMNS .AND. fif <= Len( LI_NAMES )
          IF LI_NAMES[ fif ] != NIL
             @ LI_Y1, x SAY LI_NAMES[ fif ]
          ENDIF
          x   := x + Max( Len( FLDSTR( mslist, fif ) ), Len( LI_NAMES[ fif ] ) ) + 1
          fif := iif( fif == LI_FREEZE, LI_NLEFT, fif + 1 )
-         // DO MSFNEXT WITH mslist,fif
+         // DO MSFNEXT WITH mslist, fif
          i++
       ENDDO
       IF LI_NMCLR != NIL
@@ -670,7 +590,7 @@ STATIC PROCEDURE VIVSTR( mslist, nstroka, vybfld )
             LI_XPOS := x
          ENDIF
          IF vybfld == 0 .OR. vybfld == i
-            // DO MSFNEXT WITH mslist,fif
+            // DO MSFNEXT WITH mslist, fif
             sviv := FLDSTR( mslist, fif )
             sviv := iif( Len( sviv ) < LI_X2 - 1 - x, sviv, SubStr( sviv, 1, LI_X2 - 1 - x ) )
             @ nstroka, x SAY sviv
@@ -681,7 +601,7 @@ STATIC PROCEDURE VIVSTR( mslist, nstroka, vybfld )
          x   := x + Max( Len( sviv ), iif( LI_NAMES != NIL .AND. Len( LI_NAMES ) >= fif, Len( LI_NAMES[ fif ] ), 0 ) ) + 1
          fif := iif( fif == LI_FREEZE, LI_NLEFT, fif + 1 )
       NEXT
-      // DO MSFNEXT WITH mslist,fif
+      // DO MSFNEXT WITH mslist, fif
       IF fif <= LI_COLCOUNT .AND. vybfld == 0
          IF LI_X2 - 1 - x > 0
             sviv := FLDSTR( mslist, fif )
@@ -728,13 +648,13 @@ FUNCTION FLDSTR( mslist, numf )
          ENDIF
       ENDIF
    ENDIF
-// fldtype := FIELDTYPE( numf )
+// fldtype := hb_FieldType( numf )
    fldtype := LI_MSTYP[ numf ]
    DO CASE
    CASE fldtype == "C"
       rez := FieldGet( numf )
    CASE fldtype == "N"
-      // rez := STR( FIELDGET( numf ), FIELDSIZE( numf ), FIELDDECI( numf ) )
+//    rez := Str( FieldGet( numf ), hb_FieldLen( numf ), hb_FieldDec( numf ) )
       rez := Str( FieldGet( numf ), LI_MSLEN[ numf ], LI_MSDEC[ numf ] )
    CASE fldtype == "D"
       rez := DToC( FieldGet( numf ) )
@@ -751,25 +671,6 @@ FUNCTION FLDSTR( mslist, numf )
 
 //+--------------------------------------------------------------------
 //+
-//+    Function GetBuf()
-//+
-//+    Called from ( db_brows.prg )   1 - function dbflist()
-//+
-//+--------------------------------------------------------------------
-//+
-
-FUNCTION GetBuf
-
-   LOCAL srez := ""
-
-   DO WHILE NextKey() != 0
-      srez += Chr( Inkey( 0 ) )
-   ENDDO
-
-   RETURN srez
-
-//+--------------------------------------------------------------------
-//+
 //+    Function InitList()
 //+
 //+    Called from ( db_brows.prg )   1 - PROCEDURE Main()
@@ -782,7 +683,8 @@ FUNCTION InitList
 
    LOCAL mslist := Array( LI_LEN )
 
-   LI_NSTR    := LI_MSED := 1
+   LI_NSTR    := 1
+   LI_MSED    := 3
    LI_CLR     := "W+/B"
    LI_CLRV    := "R/W"
    LI_BSKIP   := {| a, x | HB_SYMBOL_UNUSED( a ), dbSkip( x ) }
@@ -813,7 +715,7 @@ FUNCTION InitList
 
 FUNCTION Defpict( mslist, i, maxlen )
 
-// LOCAL spict, fldd, fldtype := FIELDTYPE( i ), fldlen := FIELDSIZE( i )
+// LOCAL spict, fldd, fldtype := hb_FieldType( i ), fldlen := hb_FieldLen( i )
    LOCAL spict, fldd, fldtype := LI_MSTYP[ i ], fldlen := LI_MSLEN[ i ]
    DO CASE
    CASE fldtype == "C"

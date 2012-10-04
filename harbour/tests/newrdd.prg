@@ -145,10 +145,10 @@ PROCEDURE Main()
    Inkey( 0 )
    CLS
 
-   ? "while !TESTDBF->( Eof() )"
+   ? "WHILE !TESTDBF->( EOF() )"
    ? "   ? TESTDBF->FIRST, TESTDBF->( RecNo() )"
    ? "   TESTDBF->( dbSkip() )"
-   ? "end"
+   ? "ENDDO"
    ? ""
    WHILE !TESTDBF->( EOF() )
       ? TESTDBF->FIRST, TESTDBF->( RecNo() )
@@ -162,10 +162,10 @@ PROCEDURE Main()
    ? "SET FILTER TO TESTDBF->AGE == 21"
    ? "? TESTDBF->( dbFilter() )"
    ? "TESTDBF->( dbGoTop() )"
-   ? "while !TESTDBF->( Eof() )"
+   ? "WHILE !TESTDBF->( EOF() )"
    ? "   ? TESTDBF->FIRST, TESTDBF->AGE, TESTDBF->( RecNo() )"
    ? "   TESTDBF->( dbSkip() )"
-   ? "enddo"
+   ? "ENDDO"
    ? "SET FILTER TO"
    ? ""
    SET FILTER TO TESTDBF->AGE == 21
@@ -183,10 +183,10 @@ PROCEDURE Main()
 
    ? "TESTDBF->( Found() )"
    ? "LOCATE FOR TESTDBF->AGE == 23"
-   ? "while TESTDBF->( Found() )"
+   ? "WHILE TESTDBF->( Found() )"
    ? "   ? TESTDBF->FIRST, TESTDBF->AGE, TESTDBF->( RecNo() )"
    ? "   CONTINUE"
-   ? "end"
+   ? "ENDDO"
    TESTDBF->( Found() )
    LOCATE FOR TESTDBF->AGE == 23
    WHILE TESTDBF->( Found() )
@@ -217,12 +217,13 @@ PROCEDURE Main()
    ? '                      { "Memo",       "M", 10, 0 }, ;'
    ? '                      { "Student",    "L",  1, 0 } },, .T., "newrdd" )'
    ? 'SET CENTURY ON'
-   dbCreate( "newrdd", { { "First_Name", "C", 20, 0 }, ;
+   dbCreate( "newrdd", { ;
+      { "First_Name", "C", 20, 0 }, ;
       { "Age",        "N",  3, 0 }, ;
       { "Date",       "D",  8, 0 }, ;
       { "Rate",       "N",  6, 2 }, ;
       { "Memo",       "M", 10, 0 }, ;
-      { "Student",    "L",  1, 0 } }, , .T. , "newrdd" )
+      { "Student",    "L",  1, 0 } }, "DBFCDX", .T. , "newrdd" )
    SET CENTURY ON
    ? "lUpdate:", NEWRDD->( LUpdate() )
 
@@ -233,7 +234,7 @@ PROCEDURE Main()
    ? 'Select( "TESTDBF" )'
    ? "SET FILTER TO TESTDBF->SALARY > 120000"
    ? "TESTDBF->( dbGoTop() )"
-   ? "while !TESTDBF->( Eof() )"
+   ? "WHILE !TESTDBF->( EOF() )"
    ? "   NEWRDD->( dbAppend() )"
    ? "   NEWRDD->FIRST_NAME := TESTDBF->FIRST"
    ? "   NEWRDD->AGE := TESTDBF->AGE"
@@ -244,7 +245,7 @@ PROCEDURE Main()
    ? "                   TESTDBF->STREET"
    ? "   NEWRDD->STUDENT := TESTDBF->MARRIED"
    ? "   TESTDBF->( dbSkip() )"
-   ? "end"
+   ? "ENDDO"
    ? "SET FILTER TO"
    ? "? NEWRDD->( RecCount() )"
    ? "NEWRDD->( dbGoTop() )"
@@ -289,9 +290,9 @@ PROCEDURE Main()
 
    aArray := NEWRDD->( dbRLockList() )
    ? "aArray := NEWRDD->( dbRLockList() )"
-   ? "for nI := 1 to Len( aArray )"
+   ? "FOR nI := 1 TO Len( aArray )"
    ? "   ? aArray[ nI ]"
-   ? "next"
+   ? "NEXT"
    ? "dbRLockList(): "
    FOR nI := 1 TO Len( aArray )
       ? aArray[ nI ]
@@ -308,7 +309,7 @@ PROCEDURE Main()
    ? '? "RecCount:", NEWRDD->( RecCount() )'
    ? ""
    NEWRDD->( dbCloseArea() )
-   dbUseArea( .T. , "DBF", "newrdd", "NEWRDD", .F. , .F. )
+   dbUseArea( .T. , "DBFCDX", "newrdd", "NEWRDD", .F. , .F. )
 
    ? "Press any key to continue..."
    Inkey( 0 )
@@ -338,17 +339,17 @@ PROCEDURE Main()
    ? 'SORT ON FIRST /DC, AGE /D TO NEWRDD'
    ? 'dbUseArea( .T., "DBF", "newrdd", "NEWRDD", .F., .F. )'
    ? '? "RecCount:", NEWRDD->( RecCount() )'
-   ? 'for nI := 1 to 8'
+   ? 'FOR nI := 1 TO 8'
    ? '   ? NEWRDD->FIRST, NEWRDD->AGE'
    ? '   NEWRDD->( dbSkip() )'
-   ? 'next'
+   ? 'NEXT'
    ? '? "..."'
    ? 'NEWRDD->( dbGoBottom() )'
    ? 'NEWRDD->( dbSkip( -8 ) )'
-   ? 'for nI := 1 to 8'
+   ? 'FOR nI := 1 TO 8'
    ? '   ? NEWRDD->FIRST, NEWRDD->AGE'
    ? '   NEWRDD->( dbSkip() )'
-   ? 'next'
+   ? 'NEXT'
 
    ? "Press any key to continue..."
    Inkey( 0 )
@@ -356,7 +357,7 @@ PROCEDURE Main()
 
    NEWRDD->( dbCloseArea() )
    SELECT( "TESTDBF" )
-   SORT ON FIRST /DC, AGE /D TO NEWRDD
+   SORT ON FIRST /DC, AGE /D TO newrdd
 
    dbUseArea( .T. , "DBF", "newrdd", "NEWRDD", .F. , .F. )
    ? "RecCount:", NEWRDD->( RecCount() )

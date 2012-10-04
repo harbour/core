@@ -2,7 +2,7 @@
  * $Id$
  */
 
-   /* Testing Harbour keyboard input. */
+/* Testing Harbour keyboard input. */
 
 /* Harbour Project source code
    http://harbour-project.org/
@@ -66,7 +66,11 @@ FUNCTION TEST( cText )
    Inkey( 2 )
    KEYBOARD cText
    DO WHILE NextKey() != 0
-      cResult += Chr( Inkey () )
+#ifdef __HARBOUR__
+      cResult += hb_keyChar( Inkey() )
+#else
+      cResult += Chr( Inkey() )
+#endif
    ENDDO
 
    RETURN "'" + cResult + "'"

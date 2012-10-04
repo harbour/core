@@ -9,9 +9,9 @@ PROCEDURE Main()
    StrDump( s )
    ? s
 
-   ? Chr( 34 ) + LTrim( s ) + Chr( 34 )
-   ? Chr( 34 ) + RTrim( s ) + Chr( 34 )
-   ? Chr( 34 ) + AllTrim( s ) + Chr( 34 )
+   ? '"' + LTrim( s ) + '"'
+   ? '"' + RTrim( s ) + '"'
+   ? '"' + AllTrim( s ) + '"'
 
    RETURN
 

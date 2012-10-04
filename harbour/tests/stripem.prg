@@ -136,9 +136,6 @@ FUNCTION Dispose()
 
    ::cBlock := NIL
    IF ::hFile != F_ERROR
-      IF ::cMode == "W" .AND. ::nError != 0
-         ::Write( Chr( 26 ) )                     // Do not forget EOF marker
-      ENDIF
       IF ! FClose( ::hFile )
          ::nError := FError()
          ? "Dos Error closing ", ::cFileName, " Code ", ::nError
@@ -176,7 +173,7 @@ FUNCTION READ()
       ENDIF
 
       IF ! ::lEoF
-         ::nLine := ::nLine + 1                 // ++ not available
+         ::nLine++
          nCRPos := At( Chr( 10 ), ::cBlock )
          IF nCRPos != 0                         // More than one line read
             cRet     := SubStr( ::cBlock, 1, nCRPos - 1 )
@@ -186,15 +183,15 @@ FUNCTION READ()
             ::cBlock := ""
             cRet     += ::Read()                // Read the rest
             IF ! ::lEoF
-               ::nLine := ::nLine - 1           // Adjust erroneous line count
+               ::nLine--                        // Adjust erroneous line count
             ENDIF
          ENDIF
-         nEoFPos := At( Chr( 26 ), cRet )
+         nEoFPos := hb_BAt( Chr( 26 ), cRet )
          IF nEoFPos != 0                        // End of file read
-            cRet   := SubStr( cRet, 1, nEoFPos - 1 )
+            cRet   := hb_BSubStr( cRet, 1, nEoFPos - 1 )
             ::lEoF := .T.
          ENDIF
-         cRet := StrTran( cRet, Chr( 13 ), "" )   // Remove CR
+         cRet := StrTran( cRet, Chr( 13 ) )   // Remove CR
       ENDIF
    ENDIF
 
@@ -218,9 +215,9 @@ FUNCTION WriteLn( xTxt, lCRLF )
    ELSEIF !( ::cMode == "W" )
       ? "File ", ::cFileName, " not opened for writing"
    ELSE
-      cBlock := ToChar( xTxt )                  // Convert to string
-      IF DEFAULT( lCRLF, .T. )
-         cBlock += Chr( 10 )                      // +chr(13) ??
+      cBlock := hb_ValToExp( xTxt )              // Convert to string
+      IF Default( lCRLF, .T. )
+         cBlock += hb_eol()
       ENDIF
       FWrite( ::hFile, cBlock, Len( cBlock ) )
       IF FError() != 0
@@ -235,7 +232,7 @@ FUNCTION WriteLn( xTxt, lCRLF )
 // Go to a specified line number
 //
 
-FUNCTION GOTO( nLine )
+STATIC FUNCTION GOTO( nLine )
 
    LOCAL self   := QSelf()
    LOCAL nWhere := 1
@@ -256,39 +253,3 @@ FUNCTION GOTO( nLine )
    ENDIF
 
    RETURN ! ::lEoF
-
-FUNCTION ToChar( xVal )
-
-   LOCAL cType := ValType( xVal )
-
-   DO CASE
-   CASE cType == "U"
-      RETURN "NIL"
-
-   CASE cType == "A"
-      RETURN "{}"
-
-   CASE cType == "B"
-      RETURN "{|| }"
-
-   CASE cType == "C"
-      RETURN xVal
-
-   CASE cType == "D"
-      RETURN DToC( xVal )
-
-   CASE cType == "L"
-      RETURN iif( xVal, ".T.", ".F." )
-
-   CASE cType == "M"
-      RETURN xVal
-
-   CASE cType == "N"
-      RETURN Str( xVal )
-
-   CASE cType == "O"
-      RETURN "{::}"
-
-   ENDCASE
-
-   RETURN "?"

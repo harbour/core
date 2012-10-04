@@ -80,9 +80,10 @@ PROCEDURE Main( cFrom )
       ELSE
          FReadStr( hFile, 2 )
          cBlock := FReadStr( hFile, 4 )
-         nSymbols := hb_BCode( hb_BSubStr( cBlock, 1, 1 ) )   + ;
-            hb_BCode( hb_BSubStr( cBlock, 2, 1 ) ) * 256      + ;
-            hb_BCode( hb_BSubStr( cBlock, 3, 1 ) ) * 65536    + ;
+         nSymbols := ;
+            hb_BCode( hb_BSubStr( cBlock, 1, 1 ) ) + ;
+            hb_BCode( hb_BSubStr( cBlock, 2, 1 ) ) * 256 + ;
+            hb_BCode( hb_BSubStr( cBlock, 3, 1 ) ) * 65536 + ;
             hb_BCode( hb_BSubStr( cBlock, 4, 1 ) ) * 16777216
 
          ?? "+--------------------------+------------+---------------------------------+"
@@ -110,9 +111,10 @@ PROCEDURE Main( cFrom )
          IF m $ "Yy"
             ?
             cBlock := FReadStr( hFile, 4 )
-            nFuncs := hb_BCode( hb_BSubStr( cBlock, 1, 1 ) )     + ;
-               hb_BCode( hb_BSubStr( cBlock, 2, 1 ) ) * 256      + ;
-               hb_BCode( hb_BSubStr( cBlock, 3, 1 ) ) * 65536    + ;
+            nFuncs := ;
+               hb_BCode( hb_BSubStr( cBlock, 1, 1 ) ) + ;
+               hb_BCode( hb_BSubStr( cBlock, 2, 1 ) ) * 256 + ;
+               hb_BCode( hb_BSubStr( cBlock, 3, 1 ) ) * 65536 + ;
                hb_BCode( hb_BSubStr( cBlock, 4, 1 ) ) * 16777216
             FOR n := 1 TO nFuncs
                cBlock := FReadStr( hFile, 1 )
@@ -122,9 +124,10 @@ PROCEDURE Main( cFrom )
                   cBlock := FReadStr( hFile, 1 )
                ENDDO
                cBlock := FReadStr( hFile, 4 )
-               nLenCount := hb_BCode( hb_BSubStr( cBlock, 1, 1 ) )  + ;
-                  hb_BCode( hb_BSubStr( cBlock, 2, 1 ) ) * 256      + ;
-                  hb_BCode( hb_BSubStr( cBlock, 3, 1 ) ) * 65536    + ;
+               nLenCount := ;
+                  hb_BCode( hb_BSubStr( cBlock, 1, 1 ) ) + ;
+                  hb_BCode( hb_BSubStr( cBlock, 2, 1 ) ) * 256 + ;
+                  hb_BCode( hb_BSubStr( cBlock, 3, 1 ) ) * 65536 + ;
                   hb_BCode( hb_BSubStr( cBlock, 4, 1 ) ) * 16777216
 
                ? "Symbol:", cSymbol
@@ -134,7 +137,7 @@ PROCEDURE Main( cFrom )
                FOR m := 1 TO nLenCount
                   cBlock := FReadStr( hFile, 1 )
                   nVal   := hb_BCode( cBlock )
-                  ?? Hex2Val( nVal )
+                  ?? hb_NumToHex( nVal, 2 )
                   IF nVal > 32 .AND. nVal < 128
                      ?? "(" + cBlock + ")"
                   ENDIF
@@ -156,7 +159,7 @@ PROCEDURE PrintItem( cSymbol, nType, nScope )
 
    LOCAL aTypes := { "NOLINK", "FUNC", "EXTERN", "SYM_DEF" }
 
-   ? "| " + PadR( cSymbol,25 ) + "| " + ;
+   ? "| " + PadR( cSymbol, 25 ) + "| " + ;
       PadR( hb_ntos( nType - 1 ) + " (" + aTypes[ nType ] + ")", 11 ) + "| " + ;
       PadR( DecodeScope( nScope ), 32 ) + "|"
 
@@ -173,12 +176,4 @@ FUNCTION DecodeScope( nScope )
       ENDIF
    NEXT
 
-   RETURN Hex2Val( nScope ) + iif( Empty( cScope ), "", " (" + SubStr( cScope, 2 ) + ")" )
-
-FUNCTION Hex2Val( nVal )
-
-   RETURN HexDigit( Int( nVal / 16 ) ) + HexDigit( Int( nVal % 16 ) )
-
-FUNCTION HexDigit( nDigit )
-
-   RETURN iif( nDigit >= 10, Chr( 55 + nDigit ), Chr( 48 + nDigit ) )
+   RETURN hb_NumToHex( nScope, 2 ) + iif( Empty( cScope ), "", " (" + SubStr( cScope, 2 ) + ")" )

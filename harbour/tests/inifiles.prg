@@ -83,21 +83,20 @@ STATIC FUNCTION New( cFileName )
          cFile := Space( 256 )
          Done := ( FRead( hFile, @cFile, 256 ) <= 0 )
 
-         cFile := StrTran( cFile, Chr( 10 ), "" ) // so we can just search for CHR(13)
+         cFile := StrTran( cFile, Chr( 13 ) ) // so we can just search for Chr( 10 )
 
          // prepend last read
          cFile := cLine + cFile
-         DO WHILE !Empty( cFile )
-            IF ( nPos := At( Chr(13 ), cFile ) ) > 0
+         DO WHILE ! Empty( cFile )
+            IF ( nPos := At( Chr( 10 ), cFile ) ) > 0
                cLine := Left( cFile, nPos - 1 )
                cFile := SubStr( cFile, nPos + 1 )
 
                IF !Empty( cLine )
                   IF Left( cLine, 1 ) == "[" // new section
                      IF ( nPos := At( "]", cLine ) ) > 1
-                        cLine := SubStr( cLine, 2, nPos - 2 );
-
-                           else
+                        cLine := SubStr( cLine, 2, nPos - 2 )
+                     ELSE
                         cLine := SubStr( cLine, 2 )
                      ENDIF
 
@@ -336,22 +335,22 @@ STATIC PROCEDURE UpdateFile()
 
    FOR i := 1 TO Len( ::Contents )
       IF ::Contents[ i ][ 1 ] == NIL
-         FWrite( hFile, ::Contents[ i ][ 2 ] + Chr( 13 ) + Chr( 10 ) )
+         FWrite( hFile, ::Contents[ i ][ 2 ] + hb_eol() )
 
       ELSEIF ValType( ::Contents[ i ][ 2 ] ) == "A"
-         FWrite( hFile, "[" + ::Contents[ i ][ 1 ] + "]" + Chr( 13 ) + Chr( 10 ) )
+         FWrite( hFile, "[" + ::Contents[ i ][ 1 ] + "]" + hb_eol() )
          FOR j := 1 TO Len( ::Contents[ i ][ 2 ] )
 
             IF ::Contents[ i ][ 2 ][ j ][ 1 ] == NIL
-               FWrite( hFile, ::Contents[ i ][ 2 ][ j ][ 2 ] + Chr( 13 ) + Chr( 10 ) )
+               FWrite( hFile, ::Contents[ i ][ 2 ][ j ][ 2 ] + hb_eol() )
             ELSE
-               FWrite( hFile, ::Contents[ i ][ 2 ][ j ][ 1 ] + "=" + ::Contents[ i ][ 2 ][ j ][ 2 ] + Chr( 13 ) + Chr( 10 ) )
+               FWrite( hFile, ::Contents[ i ][ 2 ][ j ][ 1 ] + "=" + ::Contents[ i ][ 2 ][ j ][ 2 ] + hb_eol() )
             ENDIF
          NEXT
-         FWrite( hFile, Chr( 13 ) + Chr( 10 ) )
+         FWrite( hFile, hb_eol() )
 
       ELSEIF ValType( ::Contents[ i ][ 2 ] ) == "C"
-         FWrite( hFile, ::Contents[ i ][ 1 ] + "=" + ::Contents[ i ][ 2 ] + Chr( 13 ) + Chr( 10 ) )
+         FWrite( hFile, ::Contents[ i ][ 1 ] + "=" + ::Contents[ i ][ 2 ] + hb_eol() )
 
       ENDIF
    NEXT
