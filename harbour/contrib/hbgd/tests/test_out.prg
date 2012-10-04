@@ -10,7 +10,9 @@
 
 #include "gd.ch"
 
-#command WRITE <c> => FWrite( 1, <c> + CHR( 13 ) + CHR( 10 ) )
+#define CRLF ( Chr( 13 ) + Chr( 10 ) )
+
+#command WRITE <c> => FWrite( 1, <c> + CRLF )
 #command OutHTML <c> => WRITE <c>
 
 PROCEDURE Main( ... )
@@ -110,7 +112,7 @@ PROCEDURE StartHTML( cTitle )
 
    WRITE 'content-type: text/html'
    WRITE 'Pragma: no-cache'
-   WRITE Chr( 13 ) + Chr( 10 )
+   WRITE CRLF
    WRITE "<html>"
    WRITE "<head>"
    WRITE "<title>" + cTitle + "</title>"
@@ -147,7 +149,7 @@ PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
 
    //__OutDebug( hb_dumpvar( oImage ) )
 
-   WRITE 'content-type: ' + oImage:cMime + Chr( 13 ) + Chr( 10 )
+   WRITE 'content-type: ' + oImage:cMime + CRLF
    cType := oImage:cType
 
    DO CASE
@@ -211,7 +213,7 @@ PROCEDURE OutJpg( cText, nPitch )
    //oI:SetColor( blue )
    //oI:Say( 0, 0, cText )
 
-   WRITE 'content-type: image/jpeg' + Chr( 13 ) + Chr( 10 )
+   WRITE 'content-type: image/jpeg' + CRLF
 
    oI:OutputJpeg()
 

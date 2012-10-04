@@ -52,7 +52,6 @@
 
 #include "hbclass.ch"
 
-#define CRLF ( chr( 13 ) + chr( 10 ) )
 #define TABLE_NAME_PATH ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "tests" + hb_ps() + "test.dbf"
 #define SIMULATE_SLOW_REPLY
 
@@ -317,7 +316,7 @@ METHOD getXmlCount( nCount ) CLASS TableManager
 
    xml:append( "<pages>" )
    FOR n := 1 TO nPages
-      xml:append( "<page>" + LTrim( Str( n ) ) + "</page>" )
+      xml:append( "<page>" + hb_ntos( n ) + "</page>" )
    NEXT
    xml:append( "</pages>" )
 
@@ -369,10 +368,10 @@ METHOD xmlEncode( input ) CLASS TableManager
       CASE '>'
          out += "&gt;"
          EXIT
-         //case ' '
-         //    out += "&nbsp;"
-         //    exit
-      CASE Chr( 9 ) //E'\t'
+//    CASE ' '
+//       out += "&nbsp;"
+//       EXIT
+      CASE Chr( 9 )  //E'\t'
       CASE Chr( 13 ) //E'\r'
       CASE Chr( 10 ) //E'\n'
          out += c
@@ -408,6 +407,6 @@ METHOD ToString() CLASS BasicXML
 
    LOCAL s := ""
 
-   AEval( ::aData, {| c | s += c + iif( Right( c, 1 ) == ">", CRLF, "" ) } )
+   AEval( ::aData, {| c | s += c + iif( Right( c, 1 ) == ">", hb_eol(), "" ) } )
 
    RETURN s

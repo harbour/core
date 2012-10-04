@@ -39,11 +39,7 @@
 
 //
 
-#define CRLF   chr( 13 )+chr( 10 )
-
-//
-
-thread static t_aSlides := {}
+THREAD STATIC t_aSlides := {}
 
 //
 
@@ -280,7 +276,7 @@ STATIC FUNCTION GetEditText()
    LOCAL cText := ""
 
    cText += "Welcome in the Wonderful World of Harbour!"
-   cText += CRLF + CRLF
+   cText += hb_eol() + hb_eol()
    cText += "When Peter Rees first published GTWVT, a Windows "
    cText += "Terminal Driver, on 22 Dec 2003, everybody took it "
    cText += "lightly, except for me, as I was aware that what "
@@ -288,11 +284,11 @@ STATIC FUNCTION GetEditText()
    cText += "what immense possibilities he has opened for Harbour "
    cText += "developers, what limitations he has cleared for Clipper "
    cText += "savvy user base."
-   cText += CRLF + CRLF
+   cText += hb_eol() + hb_eol()
    cText += "With a little effort I could extend GTWVT "
    cText += "to give it a GUI look. I also tried to give it "
    cText += "an event driven functionality, and up came Wvt*Classes."
-   cText += CRLF + CRLF
+   cText += hb_eol() + hb_eol()
    cText += "And yet another feather is added in the cap of GTWVT "
    cText += "as it is now capable of firing modeless dialogs like the one "
    cText += "you are viewing. These dialogs can be constructed dynamically ( Courtesy hbwhat32 ) "
@@ -300,8 +296,8 @@ STATIC FUNCTION GetEditText()
    cText += "can be active at any given time. Also note that dialogs created "
    cText += "dynamically respect Top, Left, Rows, Cols coordinates, which is an "
    cText += "undisputed productivity boost!"
-   cText += CRLF + CRLF
-   cText += "Enjoy!" + CRLF
+   cText += hb_eol() + hb_eol()
+   cText += "Enjoy!" + hb_eol()
    cText += "Pritpal Bedi, INDIA"
 
    RETURN cText

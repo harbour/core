@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#include "fileio.ch"
+
 FUNCTION TIniFile()
 
    STATIC oClass
@@ -48,8 +50,8 @@ STATIC FUNCTION New( cFileName )
       ::Contents := {}
       CurrArray := ::Contents
 
-      IF File( cFileName )
-         hFile := FOpen( cFilename, 0 )
+      IF hb_FileExists( cFileName )
+         hFile := FOpen( cFilename, FO_READ )
       ELSE
          hFile := FCreate( cFilename )
       ENDIF
@@ -60,12 +62,12 @@ STATIC FUNCTION New( cFileName )
          cFile := Space( 256 )
          Done := ( FRead( hFile, @cFile, 256 ) <= 0 )
 
-         cFile := StrTran( cFile, Chr( 10 ), "" ) // so we can just search for CHR(13)
+         cFile := StrTran( cFile, Chr( 13 ) ) // so we can just search for Chr( 10 )
 
          // prepend last read
          cFile := cLine + cFile
          WHILE ! Empty( cFile )
-            IF ( nPos := At( Chr(13 ), cFile ) ) > 0
+            IF ( nPos := At( Chr( 10 ), cFile ) ) > 0
                cLine := Left( cFile, nPos - 1 )
                cFile := SubStr( cFile, nPos + 1 )
 
@@ -161,7 +163,7 @@ STATIC PROCEDURE WriteString( cSection, cIdent, cString )
 
    ELSE
       cFind := Lower( cSection )
-      IF ( i := AScan( ::Contents, {| x | HB_ISSTRING(x[ 1 ] ) .AND. Lower(x[ 1 ] ) == cFind .AND. HB_ISARRAY(x[ 2 ] ) } ) ) > 0
+      IF ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind .AND. HB_ISARRAY( x[ 2 ] ) } ) ) > 0
          cFind := Lower( cIdent )
          j := AScan( ::Contents[ i ][ 2 ], {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind } )
 
@@ -252,7 +254,7 @@ STATIC PROCEDURE EraseSection( cSection )
 
    ELSE
       cSection := Lower( cSection )
-      IF ( i := AScan( ::Contents, {| x | HB_ISSTRING(x[ 1 ] ) .AND. Lower(x[ 1 ] ) == cSection .AND. HB_ISARRAY(x[ 2 ] ) } ) ) > 0
+      IF ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cSection .AND. HB_ISARRAY( x[ 2 ] ) } ) ) > 0
          ADel( ::Contents, i )
          ASize( ::Contents, Len( ::Contents ) - 1 )
       ENDIF
@@ -310,22 +312,22 @@ STATIC PROCEDURE UpdateFile()
 
    FOR i := 1 TO Len( ::Contents )
       if ::Contents[ i ][ 1 ] == NIL
-         FWrite( hFile, ::Contents[ i ][ 2 ] + Chr( 13 ) + Chr( 10 ) )
+         FWrite( hFile, ::Contents[ i ][ 2 ] + hb_eol() )
 
       ELSEIF HB_ISARRAY( ::Contents[ i ][ 2 ] )
-         FWrite( hFile, "[" + ::Contents[ i ][ 1 ] + "]" + Chr( 13 ) + Chr( 10 ) )
+         FWrite( hFile, "[" + ::Contents[ i ][ 1 ] + "]" + hb_eol() )
          FOR j := 1 TO Len( ::Contents[ i ][ 2 ] )
 
             if ::Contents[ i ][ 2 ][ j ][ 1 ] == NIL
-               FWrite( hFile, ::Contents[ i ][ 2 ][ j ][ 2 ] + Chr( 13 ) + Chr( 10 ) )
+               FWrite( hFile, ::Contents[ i ][ 2 ][ j ][ 2 ] + hb_eol() )
             ELSE
-               FWrite( hFile, ::Contents[ i ][ 2 ][ j ][ 1 ] + "=" + ::Contents[ i ][ 2 ][ j ][ 2 ] + Chr( 13 ) + Chr( 10 ) )
+               FWrite( hFile, ::Contents[ i ][ 2 ][ j ][ 1 ] + "=" + ::Contents[ i ][ 2 ][ j ][ 2 ] + hb_eol() )
             ENDIF
          NEXT
-         FWrite( hFile, Chr( 13 ) + Chr( 10 ) )
+         FWrite( hFile, hb_eol() )
 
       ELSEIF HB_ISSTRING( ::Contents[ i ][ 2 ] )
-         FWrite( hFile, ::Contents[ i ][ 1 ] + "=" + ::Contents[ i ][ 2 ] + Chr( 13 ) + Chr( 10 ) )
+         FWrite( hFile, ::Contents[ i ][ 1 ] + "=" + ::Contents[ i ][ 2 ] + hb_eol() )
 
       ENDIF
    NEXT

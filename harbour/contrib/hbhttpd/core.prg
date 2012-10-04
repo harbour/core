@@ -918,7 +918,7 @@ STATIC FUNCTION MakeResponse( hConfig )
       t_cResult := "<html><body><h1>" + cStatus + "</h1></body></html>"
    ENDIF
    UAddHeader( "Content-Length", hb_ntos( Len( t_cResult ) ) )
-   AEval( t_aHeader, {| x | cRet += x[1] + ": " + x[2] + CR_LF } )
+   AEval( t_aHeader, {| x | cRet += x[ 1 ] + ": " + x[ 2 ] + CR_LF } )
    cRet += CR_LF
    Eval( hConfig[ "Trace" ], cRet )
    cRet += t_cResult

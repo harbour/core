@@ -179,10 +179,10 @@ STATIC FUNCTION Generate()
 
    // Is this a meta file or hand generated script?
    IF Empty( ::cHTMLFile )
-      ::cContent :=                                                        ;
+      ::cContent :=                                                         ;
          "<html><head>"                                        + hb_eol() + ;
          "<title>" + ::cTitle + "</title>"                     + hb_eol() + ;
-         "<body link='" + ::cLinkColor + "' " +                            ;
+         "<body link='" + ::cLinkColor + "' " +                             ;
          "vlink='" + ::cvLinkColor + "'>" +                    + hb_eol() + ;
          ::cBody                                               + hb_eol() + ;
          "</body></html>"

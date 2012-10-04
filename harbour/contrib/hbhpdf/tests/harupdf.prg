@@ -1240,7 +1240,7 @@ STATIC FUNCTION Page_Annotation( pdf )
 
 
    annot := HPDF_Page_CreateTextAnnot( page, rect1, ;
-      "Annotation with Comment Icons" + Chr( 13 ) + Chr( 10 ) + ;
+      "Annotation with Comment Icons" + hb_eol() + ;
       "This annotation set to be opened initially.", ;
       NIL )
 

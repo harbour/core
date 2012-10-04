@@ -48,8 +48,8 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
-
-*/
+ *
+ */
 
 FUNCTION Main()
 
@@ -72,7 +72,7 @@ FUNCTION Main()
 
          cField := oIni:ReadString( "Header", "DataField" + hb_ntos( i ), "" )
          oIni:WriteString( "Entries", cField + hb_ntos( nEntry ), ;
-            StrTran( StrTran( oHTML:QueryFields( cField ), Chr( 10 ), "" ), Chr( 13 ), "<br />" ) )
+            StrTran( StrTran( oHTML:QueryFields( cField ), Chr( 13 ) ), Chr( 10 ), "<br />" ) )
 
       NEXT
 
@@ -128,7 +128,7 @@ FUNCTION Main()
       // Formats each line according to the INI file
       FOR i := 1 TO Len( aEntries )
 
-         cCode += "<table width=100% cellspacing=0>" + Chr( 13 ) + Chr( 10 )
+         cCode += "<table width=100% cellspacing=0>" + hb_eol()
          cColor := iif( Mod( i, 2 ) == 0, cEvenColor, cOddColor )
 
          FOR j := 1 TO oIni:ReadNumber( "Format", "FormatLines", 0 )
@@ -144,11 +144,11 @@ FUNCTION Main()
             cLine := StrTran( cLine, "<#DateTime>", ;
                oIni:ReadString( "Entries", "DateTime" + hb_ntos( Len(aEntries ) - i + 1 ), "" ) )
 
-            cCode += cLine + "</td></tr>" + Chr( 13 ) + Chr( 10 )
+            cCode += cLine + "</td></tr>" + hb_eol()
 
          NEXT
 
-         cCode += "</table>" + Chr( 13 ) + Chr( 10 )
+         cCode += "</table>" + hb_eol()
 
       NEXT
 

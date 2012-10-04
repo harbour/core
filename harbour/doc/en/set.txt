@@ -538,8 +538,8 @@
  *  $EXAMPLES$
  *      // Set F1 with a string
  *      CLS
- *      Set Function  1 to  "I Am Lazy" + CHR( 13 )
- *      cTest := SPACE( 20 )
+ *      SET FUNCTION 1 TO "I Am Lazy" + Chr( 13 )
+ *      cTest := Space( 20 )
  *      @ 10, 0 SAY "type something or F1 for lazy mode " GET cTest
  *      READ
  *      ? cTest

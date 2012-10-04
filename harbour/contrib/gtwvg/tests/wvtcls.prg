@@ -22,10 +22,6 @@
 
 //
 
-#define CRLF   chr( 13 )+chr( 10 )
-
-//
-
 FUNCTION DialogWvgClassesOne( nMode )
    Local bBlock
 
@@ -70,15 +66,15 @@ STATIC FUNCTION MyDialogOne( oCrt )
    hPopup := Wvt_SetPopupMenu()
    Popups()
 
-   cTxt := "GtWvt is capable of designing virtually any preceivable control "
+   cTxt := "GTWVG is capable of designing virtually any preceivable control "
    cTxt := cTxt + "Windows offers."
-   cTxt := cTxt + CRLF + CRLF
+   cTxt := cTxt + hb_eol() + hb_eol()
    cTxt := cTxt + "This text is placed in a WvtTextBox() control with "
    cTxt := cTxt + "font and alignment adjustments!"
-   cTxt := cTxt + CRLF + CRLF
+   cTxt := cTxt + hb_eol() + hb_eol()
    cTxt := cTxt + "Enjoy - Pritpal Bedi, INDIA"
 
-   aImg_:={}
+   aImg_ := {}
    aadd( aImg_, GetResource( "v_lock.bmp"   ) )
    aadd( aImg_, GetResource( "v_new.bmp"    ) )
    aadd( aImg_, GetResource( "v_clclt.bmp"  ) )
