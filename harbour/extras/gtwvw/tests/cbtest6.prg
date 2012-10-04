@@ -52,7 +52,7 @@ MEMVAR __nCBid__,__temp__
             ATAIL(GetList):cargo := __nCBid__;                                ;
             ATAIL(GetList):reader := {| get | CBreader(get)}
 
-proc main
+PROCEDURE Main()
 local getlist := {}
 local mname := padr("Budyanto Dj.",30), msex := "MALE", mage := 17, mstat := "married"
 local __nCBid__,__temp__  //these two are temporary var required by CB get creation

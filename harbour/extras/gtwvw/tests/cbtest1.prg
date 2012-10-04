@@ -30,7 +30,7 @@ static s_cThankYou := "Thanks for participating in our survey :-)"
 
 ANNOUNCE HB_NOSTARTUPWINDOW
 
-proc main
+PROCEDURE Main()
 local nMaxWidth, nCBid, nPBid, nPos
 local ch,ncursor
    setcolor("N/W")

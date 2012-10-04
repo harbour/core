@@ -72,7 +72,7 @@
 
 STATIC s_aPObjList := {}
 
-proc main
+PROCEDURE Main()
 local ntop := 7,;
       nleft:= 3,;
       nbot := maxrow()-2,;

@@ -77,17 +77,17 @@ return
 //REQUEST DBSEEK, DBGOTO, DBGOTOP, DBGOBOTTOM, ORDSETFOCUS, ORDSCOPE
 
 #ifdef _TEST_CREATE_
-  function main( cOutFile, rdd )
+  procedure main( cOutFile, rdd )
   test_init( rdd, cOutFile )
   test_main()
   test_close()
-  return nil
+  return
 #else
-  function main( rdd )
+  procedure main( rdd )
   test_init( rdd )
   test_main()
   test_close()
-  return nil
+  return
 #endif
 
 static function test_init(rdd,cOutFile)

@@ -19,7 +19,7 @@ EXTERNAL __case, __begin
 STATIC nExt, bEgin, bReak, cAse, do, wHile, wIth, eXit, eXternal, fIeld
 STATIC for, in, include, init, loop, local, using, static, return, recover
 
-FUNCTION Main()
+FUNCTION NoTestMain()
 
 //just to prevent any disaster if someone will want to run it
   IF .T.

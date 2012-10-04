@@ -51,7 +51,7 @@
  *
  */
 
-FUNCTION Main()
+PROCEDURE Main()
 
    LOCAL oIni  := TIniFile():New( "C:\inetpub\wwwroot\guestbk.ini" )
    LOCAL oHTML := THTML():New()
@@ -159,4 +159,4 @@ FUNCTION Main()
 
    ENDIF
 
-   RETURN NIL
+   RETURN

@@ -15,7 +15,7 @@ static s_nNormalMaxcol := 79
 
 STATIC s_lSizeReady := .F.
 
-procedure main
+PROCEDURE Main()
 local ch
    * activate WVW_SIZE()
    s_lSizeReady := .T.

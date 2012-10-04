@@ -161,7 +161,7 @@
 
 
 
-PROC MAIN()
+proc main()
 LOCAL cbErr, self, o
 
 ? DATE(), TIME(), VERSION(), OS()

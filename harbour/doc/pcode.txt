@@ -8,11 +8,11 @@ The Clipper OBJ and pcode model (GNU|Open|Clipper project)
 Let's consider the following Clipper sample Test.prg:
 
 
-function Main()
+FUNCTION Main()
 
    ? "Hello world!"
 
-return nil
+   RETURN NIL
 
 
 Once it gets compiled into a OBJ, what is there inside it?
@@ -127,4 +127,3 @@ to be continued...
 
 Antonio Linares
 www.fivetech.com
-

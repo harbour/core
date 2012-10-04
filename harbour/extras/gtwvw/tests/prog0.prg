@@ -25,7 +25,7 @@
 static s_zwin := {}
 static s_cStdColor := "N/W,N/GR*,,,N/W*"
 
-proc main
+PROCEDURE Main()
 local i,j
    SET SCOREBOARD OFF
    SetColor( s_cStdColor )

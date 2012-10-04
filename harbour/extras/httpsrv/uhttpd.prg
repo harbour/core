@@ -207,7 +207,7 @@ ANNOUNCE ERRORSYS
 //
 // ----------------------------------------
 
-FUNCTION Main( ... )
+PROCEDURE Main( ... )
    LOCAL nPort, hListen, hSocket, aRemote, cI, xVal
    LOCAL aThreads, nStartThreads, nMaxThreads, nStartServiceThreads
    LOCAL i, cPar, lStop
@@ -222,7 +222,8 @@ FUNCTION Main( ... )
    IF !HB_MTVM()
       ? "I need multhread support. Please, recompile me!"
       WAIT
-      RETURN 2
+      ErrorLevel( 2 )
+      RETURN
    ENDIF
 
    // ----------------------- Initializations ---------------------------------
@@ -291,11 +292,11 @@ FUNCTION Main( ... )
 
       CASE cPar == "--help"             .OR. Lower( cPar ) == "-h" .OR. cPar == "-?"
          help()
-         RETURN 0
+         RETURN
 
       OTHERWISE
          help()
-         RETURN 0
+         RETURN
       ENDCASE
    ENDDO
 
@@ -303,7 +304,7 @@ FUNCTION Main( ... )
 
    IF lStop
       HB_MEMOWRIT( FILE_STOP, "" )
-      RETURN 0
+      RETURN
    ELSE
       FERASE( FILE_STOP )
    ENDIF
@@ -401,7 +402,8 @@ FUNCTION Main( ... )
    IF nPort <= 0 .OR. nPort > 65535
       ? "Invalid port number:", nPort
       WAIT
-      RETURN 1
+      ErrorLevel( 1 )
+      RETURN
    ENDIF
 
    IF HB_ISSTRING( cApplicationRoot )
@@ -415,12 +417,14 @@ FUNCTION Main( ... )
       ELSE
          ? "Invalid application root:", cI
          WAIT
-         RETURN 3
+         ErrorLevel( 3 )
+         RETURN
       ENDIF
    ELSE
       ? "Invalid application root"
       WAIT
-      RETURN 3
+      ErrorLevel( 3 )
+      RETURN
    ENDIF
 
 #ifdef DEBUG_ACTIVE
@@ -439,12 +443,14 @@ FUNCTION Main( ... )
       ELSE
          ? "Invalid document root:", cI
          WAIT
-         RETURN 3
+         ErrorLevel( 3 )
+         RETURN
       ENDIF
    ELSE
       ? "Invalid document root"
       WAIT
-      RETURN 3
+      ErrorLevel( 3 )
+      RETURN
    ENDIF
 
 #ifdef DEBUG_ACTIVE
@@ -494,14 +500,16 @@ FUNCTION Main( ... )
    IF ( s_hfileLogAccess := FOPEN( cLogAccess, FO_CREAT + FO_WRITE ) ) == -1
       ? "Can't open access log file"
       WAIT
-      RETURN 1
+      ErrorLevel( 1 )
+      RETURN
    ENDIF
    FSEEK( s_hfileLogAccess, 0, FS_END )
 
    IF ( s_hfileLogError := FOPEN( cLogError, FO_CREAT + FO_WRITE ) ) == -1
       ? "Can't open error log file"
       WAIT
-      RETURN 1
+      ErrorLevel( 1 )
+      RETURN
    ENDIF
    FSEEK( s_hfileLogError, 0, FS_END )
 
@@ -638,7 +646,7 @@ FUNCTION Main( ... )
 
    SET CURSOR ON
 
-   RETURN 0
+   RETURN
 
 // --------------------------------------------------------------------------------- //
 // THREAD FUNCTIONS

@@ -45,7 +45,7 @@
 static s_zwin := {}
 static s_cStdColor := "N/W,N/GR*,,,N/W*"
 
-proc main
+PROCEDURE Main()
 local i,j
 #ifdef __GTWVW__
 local lMainCoord := WVW_SetMainCoord( .T. )

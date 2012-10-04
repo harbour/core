@@ -53,7 +53,7 @@
 
 //REQUEST HB_NOSTARTUPWINDOW
 
-proc main
+PROCEDURE Main()
 local nOpen, nClose
 local lClosepermitted := .F.
 local bSetKey := SETKEY(K_F8, {|| MyHelp()})

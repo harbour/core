@@ -76,7 +76,7 @@
  *  $DESCRIPTION$
  *      This function determines the size of a field, designated by its number.
  *  $EXAMPLES$
- *      FUNCTION Main()
+ *      PROCEDURE Main()
  *         LOCAL i
  *         USE tests NEW
  *         FOR i := 1 TO FCount()
@@ -114,7 +114,7 @@
  *  $DESCRIPTION$
  *      This function determines the number of decimal places of a given numeric field.
  *  $EXAMPLES$
- *      FUNCTION Main()
+ *      PROCEDURE Main()
  *         LOCAL i
  *         USE tests NEW
  *         FOR i := 1 TO FCount()

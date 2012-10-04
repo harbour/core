@@ -148,7 +148,7 @@ PROCEDURE Main1()
 FUNCTION Test()
    RETURN .T.
 
-FUNCTION Main2()
+FUNCTION Test2()
    Local n As Numeric, lVar AS LOGICAL
 
    n := iif( lVar, "A", 3 ) // iif() needs to be completed.
@@ -159,7 +159,7 @@ FUNCTION Main2()
 
    RETURN NIL
 
-FUNCTION Main3()
+FUNCTION Test3()
 
    LOCAL n AS NUMERIC, cVar AS STRING, a[5,5,5] AS ARRAY OF STRING
 

@@ -84,7 +84,7 @@ Incompatbility with the Clipper.
 the reference in a codeblock.
 The following code explains it (thanks to David G. Holm)
 
-FUNCTION Main()
+PROCEDURE Main()
    LOCAL nTest
    LOCAL bBlock1 := MakeBlock()
    LOCAL bBlock2 := {|| DoThing( @nTest ), QOut( "From Main: ", nTest ) }
@@ -92,7 +92,7 @@ FUNCTION Main()
    Eval( bBlock1 )
    Eval( bBlock2 )
 
-   RETURN NIL
+   RETURN
 
 FUNCTION MakeBlock()
    LOCAL nTest

@@ -37,7 +37,7 @@ static s_cStdColor := "N/W,N/GR*,,,N/W*"
 static s_amiscobjlist := {}      //x misc object list (actually: list of codeblocks)
 #endif
 
-proc main
+PROCEDURE Main()
 local i,j
 #ifdef __GTWVW__
 local lMainCoord := WVW_SetMainCoord( .T. )

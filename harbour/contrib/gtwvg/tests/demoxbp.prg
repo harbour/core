@@ -27,7 +27,7 @@
 
 //
 
-FUNCTION Main()
+PROCEDURE Main()
    Local oCrt, oTBar, oSBar, oStatic, oCom, oXbp, oTree, oItem1, oItem2
    LOCAL oListBox, oCheck, oRadio, oStatic2, oMLE, oAddr
    LOCAL oPanel, oPanel1, oPanel2, cText, cNavigate, oDA
@@ -264,7 +264,8 @@ FUNCTION Main()
    ENDDO
 
    oCrt:Destroy()
-   Return nil
+
+   RETURN
 
 //
 

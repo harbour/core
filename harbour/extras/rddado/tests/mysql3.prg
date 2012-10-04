@@ -8,18 +8,18 @@
 
 REQUEST ADORDD
 
-function Main()
+PROCEDURE Main()
 
    USE test00 VIA "ADORDD" TABLE "ACCOUNTS" MYSQL ;
       FROM "www.freesql.org" USER "myuser" PASSWORD "mypass"
 
    LOCATE FOR "City LIKE 'Chi*'"
 
-   while ! Eof()
+   DO WHILE ! EOF()
       ? test00->First, test00->City
       CONTINUE
-   end   
+   ENDDO
 
    USE
 
-return nil
+   RETURN

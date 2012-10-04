@@ -6,7 +6,7 @@
 
 REQUEST ADORDD
 
-function Main()
+PROCEDURE Main()
 
    USE test00 VIA "ADORDD" TABLE "ACCOUNTS" MYSQL ;
       FROM "www.freesql.org" USER "myuser" PASSWORD "mypass"
@@ -15,4 +15,4 @@ function Main()
 
    USE
 
-return nil
+   RETURN

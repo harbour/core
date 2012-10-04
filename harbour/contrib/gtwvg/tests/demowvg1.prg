@@ -32,7 +32,7 @@ MEMVAR GetList
 
 //
 
-FUNCTION Main()
+PROCEDURE Main()
    LOCAL aPaint
 
    SET DATE ANSI
@@ -64,7 +64,7 @@ FUNCTION Main()
 
    ExecForm( aPaint )
 
-   RETURN NIL
+   RETURN
 
 //
 /* This function must be linked with the application */

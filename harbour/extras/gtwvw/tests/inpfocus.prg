@@ -45,7 +45,7 @@
 //array of codeblock
 static s_akeyhandlers[_MAX_WINNUM]
 
-proc main
+PROCEDURE Main()
 local ch
    if !setmode(25,80)
       wvw_messagebox(0, "Cannot set to (25,80) screen", "Warning", MB_OK+MB_ICONEXCLAMATION)
