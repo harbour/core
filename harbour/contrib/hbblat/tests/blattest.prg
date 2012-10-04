@@ -77,7 +77,7 @@ PROCEDURE Main()
    // oBlat:cCCFile                 := "f_cc.txt"
    // oBlat:cBCC                    := "info@fsgiudice.com"
    // oBlat:cBCCFile                := "f_bcc.txt"
-   // oBlat:cBodyFile               := "c.bat"
+   // oBlat:cBodyFile               := "c.bin"
    oBlat:cBody                   := e"Body part\n\rEnd Body"
    oBlat:cServerSMTP             := SERVER_SMTP
    oBlat:cSubject                := "Test from Blat"
