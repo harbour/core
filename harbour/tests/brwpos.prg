@@ -4,6 +4,8 @@
 
 /* TEST BROWSE ROWPOS FOR COMPILER IN CLIPPER AND HARBOUR */
 
+#include "inkey.ch"
+
 STATIC s_nRecNo   := 1
 STATIC s_nLastRec := 100
 STATIC s_lFixPos := .F.
@@ -15,7 +17,7 @@ PROCEDURE Main()
    CLS
    @ 0, 4  SAY "Is current RecNo but not repositioned until FixPos .T. <F2> Change FixPos"
    @ MaxRow(), 1 SAY "Please press <Intro> to select or <Esc> to exit and <F2> to FixPos is "
-   WHILE LastKey() != 27
+   WHILE LastKey() != K_ESC
       @ 0, 0 SAY s_nRecNo PICTURE "###"
       @ MaxRow(), 68 SAY iif( s_lFixPos, ".T.", ".F." )
       nRow := TestBrw( nRow  )

@@ -500,8 +500,6 @@ FUNCTION hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, ;
 
    RETURN oMail:ToString()
 
-//-------------------------------------------------------------//
-
 FUNCTION hb_SetMimeType( cFile, cFname, cFext )
 
    cFile := Lower( cFile )

@@ -43,163 +43,183 @@
 #define _MAX_WINNUM  10
 
 //array of codeblock
-static s_akeyhandlers[_MAX_WINNUM]
+STATIC s_akeyhandlers[ _MAX_WINNUM ]
 
 PROCEDURE Main()
-local ch
-   if !setmode(25,80)
-      wvw_messagebox(0, "Cannot set to (25,80) screen", "Warning", MB_OK+MB_ICONEXCLAMATION)
-   endif
-   setcolor("W*/N+")
+
+   LOCAL ch
+
+   IF !SetMode( 25, 80 )
+      wvw_messagebox( 0, "Cannot set to (25,80) screen", "Warning", MB_OK + MB_ICONEXCLAMATION )
+   ENDIF
+   SetColor( "W*/N+" )
    CLS
-   setcursor(SC_NONE)
-   @ 0,0 say padc("This will demonstrate how to handle input on non-topmost window", maxcol()+1)
-   @ 1,0 say padc("(Sorry that currently caret is shown on topmost window only)", maxcol()+1)
+   SetCursor( SC_NONE )
+   @ 0, 0 SAY PadC( "This will demonstrate how to handle input on non-topmost window", MaxCol() + 1 )
+   @ 1, 0 SAY PadC( "(Sorry that currently caret is shown on topmost window only)", MaxCol() + 1 )
 
-   CreateToolbar(0)
-   CreateStatusbar(0)
+   CreateToolbar( 0 )
+   CreateStatusbar( 0 )
 
-   ch := inkey(0)
-   do while ch!=K_ESC
-      if ch==wvw_setMenuKeyEvent(0)
-         MenuAction(0, wvw_GetLastMenuEvent(0))
-      endif
-      ch := inkey(0)
-   enddo
+   ch := Inkey( 0 )
+   DO WHILE ch != K_ESC
+      IF ch == wvw_setMenuKeyEvent( 0 )
+         MenuAction( 0, wvw_GetLastMenuEvent( 0 ) )
+      ENDIF
+      ch := Inkey( 0 )
+   ENDDO
 
-   wvw_messagebox(0, "Thanks for trying this program", "Goodbye", MB_OK)
+   wvw_messagebox( 0, "Thanks for trying this program", "Goodbye", MB_OK )
 
-   * let toolbar and statusbar be autodestroyed
-return //main
+   // let toolbar and statusbar be autodestroyed
 
-static function CreateToolbar(nWinNum)
+   RETURN //main
+
 //for toolbar:
-local nSysBitmap := 1     //0:none 1:small 2:large
-local lDisplayText := .F. //text will be displayed as tooltip instead
-local hWndTB
-local ldefault
+STATIC FUNCTION CreateToolbar( nWinNum )
 
-   wvw_tbdestroy(nWinNum)   //just in case
+   LOCAL nSysBitmap := 1     //0:none 1:small 2:large
+   LOCAL lDisplayText := .F. //text will be displayed as tooltip instead
+   LOCAL hWndTB
+   LOCAL ldefault
 
-   hWndTB := wvw_tbcreate(nWinNum, lDisplayText, NIL, nSysBitmap)
+   wvw_tbdestroy( nWinNum )   //just in case
 
-   if hWndTB==0
-      wvw_messagebox(nWinNum, "FAILED to create toolbar", "Error", MB_OK+MB_ICONEXCLAMATION)
-      return .F.
-   endif
+   hWndTB := wvw_tbcreate( nWinNum, lDisplayText, NIL, nSysBitmap )
+
+   IF hWndTB == 0
+      wvw_messagebox( nWinNum, "FAILED to create toolbar", "Error", MB_OK + MB_ICONEXCLAMATION )
+      RETURN .F.
+   ENDIF
 
    /* using system std & view bitmaps */
-   wvw_tbAddButton(nWinNum, IDM_OPENWIN,  STD_FILENEW, "Open a new typewriter window", 1 /*system std bitmap*/)
-   wvw_tbAddButton(nWinNum, IDM_CLOSEWIN, STD_DELETE, "Close last window", 1 /*system std bitmap*/)
-   wvw_tbAddButton(nWinNum, IDM_ARRANGEWIN, VIEW_PARENTFOLDER, "Reposition all windows", 2 /*system view bitmap*/)
-return .T.  //CreateToolbar()
+   wvw_tbAddButton( nWinNum, IDM_OPENWIN,  STD_FILENEW, "Open a new typewriter window", 1 /*system std bitmap*/
+   )
+   wvw_tbAddButton( nWinNum, IDM_CLOSEWIN, STD_DELETE, "Close last window", 1 /*system std bitmap*/
+   )
+   wvw_tbAddButton( nWinNum, IDM_ARRANGEWIN, VIEW_PARENTFOLDER, "Reposition all windows", 2 /*system view bitmap*/
+   )
 
-static function CreateStatusbar(nWinNum)
-local hWndSB
-local ldefault
+   RETURN .T.  //CreateToolbar()
 
-   wvw_sbdestroy(nWinNum)   //just in case
-   hWndSB := wvw_sbcreate(nWinNum)
-   if hWndSB==0
-      wvw_messagebox(nWinNum, "FAILED to create statusbar", "Error", MB_OK+MB_ICONEXCLAMATION)
-      return .F.
-   endif
-return .T. //CreateStatusbar()
+STATIC FUNCTION CreateStatusbar( nWinNum )
 
-static function MenuAction(nWinNum, nCommand)
-* Handle Menu/Toolbar actions
+   LOCAL hWndSB
+   LOCAL ldefault
 
-   do case
-   case nCommand==IDM_OPENWIN
+   wvw_sbdestroy( nWinNum )   //just in case
+   hWndSB := wvw_sbcreate( nWinNum )
+   IF hWndSB == 0
+      wvw_messagebox( nWinNum, "FAILED to create statusbar", "Error", MB_OK + MB_ICONEXCLAMATION )
+      RETURN .F.
+   ENDIF
+
+   RETURN .T. //CreateStatusbar()
+
+// Handle Menu/Toolbar actions
+
+STATIC FUNCTION MenuAction( nWinNum, nCommand )
+
+   DO CASE
+   CASE nCommand == IDM_OPENWIN
       OpenNewWindow()
-   case nCommand==IDM_CLOSEWIN
+   CASE nCommand == IDM_CLOSEWIN
       CloseLastWindow()
-   case nCommand==IDM_ARRANGEWIN
+   CASE nCommand == IDM_ARRANGEWIN
       wvw_xReposWindow()
-   otherwise
-      wvw_messagebox(nWinNum, "Unknown menu command", "Internal Error", MB_OK+MB_ICONEXCLAMATION)
-   endcase
+   OTHERWISE
+      wvw_messagebox( nWinNum, "Unknown menu command", "Internal Error", MB_OK + MB_ICONEXCLAMATION )
+   ENDCASE
 
-return NIL
+   RETURN NIL
 
-static function OpenNewWindow()
-* opens a new typewriter window
-local nWinNum := wvw_nNumWindows()
-local ctitle, nrow1, ncol1, nrow2, ncol2
-local ch
+// opens a new typewriter window
+STATIC FUNCTION OpenNewWindow()
 
-   if nWinNum > _MAX_WINNUM
-      wvw_messagebox(nWinNum-1, "Sorry, I don't think you can handle that many of windows :-)",;
-                                "Sorry", MB_OK+MB_ICONASTERISK)
-      return .F.
-   endif
+   LOCAL nWinNum := wvw_nNumWindows()
+   LOCAL ctitle, nrow1, ncol1, nrow2, ncol2
+   LOCAL ch
 
-   * prepare titles and coordinates
-   ctitle := "Win #" + alltrim(str(nWinNum))
-   nrow1  := 4 + (nWinNum-1)
-   ncol1  := 1 + (nWinNum-1)*3
-   nrow2  := WinMaxRow(0)-_MAX_WINNUM+1 + (nWinNum-1)
-   ncol2  := WinMaxCol(0)-(_MAX_WINNUM+1)*3 + (nWinNum-1)*3
+   IF nWinNum > _MAX_WINNUM
+      wvw_messagebox( nWinNum - 1, "Sorry, I don't think you can handle that many of windows :-)", ;
+         "Sorry", MB_OK + MB_ICONASTERISK )
+      RETURN .F.
+   ENDIF
 
-   * open a window whose parent is Main Window
-   setcolor("W+/N")
-   if wvw_nOpenWindow(ctitle, nrow1, ncol1, nrow2, ncol2, NIL, 0) != nWinNum
-      * currently wvw_nOpenWindow() will always return sequentially numbered window
-      wvw_messagebox(0, "Something horrible has happened, program aborted",;
-                        "Internal Error", MB_OK+MB_ICONHAND)
-      quit
-   endif
-   wvw_noclose(nWinNum)  //disable close button
+   // prepare titles and coordinates
+   ctitle := "Win #" + hb_ntos( nWinNum )
+   nrow1  := 4 + ( nWinNum - 1 )
+   ncol1  := 1 + ( nWinNum - 1 ) * 3
+   nrow2  := WinMaxRow( 0 ) - _MAX_WINNUM + 1 + ( nWinNum - 1 )
+   ncol2  := WinMaxCol( 0 ) - ( _MAX_WINNUM + 1 ) * 3 + ( nWinNum - 1 ) * 3
 
-   * assign the key handler for previous window
-   if nWinNum > 1
-      s_akeyhandlers[nWinNum-1] := {| n, ch | KeyHandler(n, ch)}
-   endif
+   // open a window whose parent is Main Window
+   SetColor( "W+/N" )
+   IF wvw_nOpenWindow( ctitle, nrow1, ncol1, nrow2, ncol2, NIL, 0 ) != nWinNum
+      // currently wvw_nOpenWindow() will always return sequentially numbered window
+      wvw_messagebox( 0, "Something horrible has happened, program aborted", ;
+         "Internal Error", MB_OK + MB_ICONHAND )
+      QUIT
+   ENDIF
+   wvw_noclose( nWinNum )  //disable close button
 
-   * then echoing user input, until user press ESC
-   setcursor(SC_NORMAL)
-   ch := inkey(0)
-   do while ch!=K_ESC
-      typing(ch)
-      ch := inkey(0)
-   enddo
+   // assign the key handler for previous window
+   IF nWinNum > 1
+      s_akeyhandlers[ nWinNum - 1 ] := {| n, ch | KeyHandler( n, ch ) }
+   ENDIF
 
-   * close current window
+   // then echoing user input, until user press ESC
+   SetCursor( SC_NORMAL )
+   ch := Inkey( 0 )
+   DO WHILE ch != K_ESC
+      typing( ch )
+      ch := Inkey( 0 )
+   ENDDO
+
+   // close current window
    wvw_lclosewindow()
 
-   * release keyhandler for previous window, we're going back there
-   if nWinNum > 1
+   // release keyhandler for previous window, we're going back there
+   IF nWinNum > 1
       s_akeyhandlers[nWinNum-1] := NIL
-   elseif nWinNum==1
-      setcursor(SC_NONE)
-   endif
-return .T.//OpenNewWindow()
+   ELSEIF nWinNum == 1
+      SetCursor( SC_NONE )
+   ENDIF
 
-static function CloseLastWindow()
-* closes the last window. If no window left, Main Window will be closed too.
-* Closing is done indirectly by stuffing K_ESC into kbd buffer of the
-* designated window.
-local nWinNum := wvw_nNumWindows()-1
-   wvw_nSetCurWindow(nWinNum)
-   __keyboard(K_ESC)
-return NIL //CloseLastWindow()
+   RETURN .T. //OpenNewWindow()
 
-static function KeyHandler(nWinNum, ch)
-local nOldWin := wvw_nSetCurWindow(nWinNum)
-   typing(ch)
-   wvw_nSetCurWindow(nOldWin)
-return NIL //KeyHandler()
+// closes the last window. If no window left, Main Window will be closed too.
+// Closing is done indirectly by stuffing K_ESC into kbd buffer of the
+// designated window.
+STATIC FUNCTION CloseLastWindow()
 
-static function typing(ch)
-   if ch>=0 .and. ch<=255
-      ?? chr(ch)
-      if ch==K_ENTER
-         ?? chr(10)
-      elseif ch==K_BS
-         ?? " "+chr(K_BS)
-      endif
-   endif
-return NIL
+   LOCAL nWinNum := wvw_nNumWindows() - 1
+   wvw_nSetCurWindow( nWinNum )
+   __Keyboard( K_ESC )
+
+   RETURN NIL
+
+STATIC FUNCTION KeyHandler( nWinNum, ch )
+
+   LOCAL nOldWin := wvw_nSetCurWindow( nWinNum )
+
+   typing( ch )
+   wvw_nSetCurWindow( nOldWin )
+
+   RETURN NIL
+
+STATIC FUNCTION typing( ch )
+
+   IF ch >= 0 .AND. ch <= 255 // TOFIX for unicode
+      ?? hb_keyChar( ch )
+      IF ch == K_ENTER
+         ?? Chr( 10 )
+      ELSEIF ch == K_BS
+         ?? " " + Chr( K_BS )
+      ENDIF
+   ENDIF
+
+   RETURN NIL
 
 //from winuser.h
 #define WM_COMMAND                      0x0111
@@ -220,69 +240,72 @@ return NIL
  *
  */
 
-function WVW_INPUTFOCUS(nWinNum, hWnd, message, wParam, lParam)
-local wParamLow := WVW_LOWORD(wParam)
-local wParamHi := WVW_HIWORD(wParam)
-local nCommand, ch
-//local cdebug
+FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )
 
-   * did user perform a menu/toolbar action on Main Window?
-   if message==WM_COMMAND .and. nWinNum==0  //menu,toolbar,pushbutton
+   LOCAL wParamLow := WVW_LOWORD( wParam )
+   LOCAL wParamHi := WVW_HIWORD( wParam )
+   LOCAL nCommand, ch
+
+// LOCAL cdebug
+
+   // did user perform a menu/toolbar action on Main Window?
+   IF message == WM_COMMAND .AND. nWinNum == 0  //menu,toolbar,pushbutton
       nCommand := wParamLow
-      MenuAction(0, nCommand)
-      return .T.
-   endif
+      MenuAction( 0, nCommand )
+      RETURN .T.
+   ENDIF
 
-   * other types of input on main window is not handled here
-   if nWinNum==0
-      return .F.
-   endif
+   // other types of input on main window is not handled here
+   IF nWinNum == 0
+      RETURN .F.
+   ENDIF
 
-   * now we handle input on other non-topmost windows
+   // now we handle input on other non-topmost windows
 
-   * is it a pushbutton action?
-   * (TODO: create a sample of pushbutton event here)
+   // is it a pushbutton action?
+   // (TODO: create a sample of pushbutton event here)
 
-   do case
-   case message==WM_CHAR
+   DO CASE
+   CASE message == WM_CHAR
       ch := wParam
-      eval( s_akeyhandlers[nWinNum], nWinNum, ch )
-      return .T.
-   otherwise
-      * let it be ignored
-      return .T.
-   endcase
+      Eval( s_akeyhandlers[nWinNum], nWinNum, ch )
+      RETURN .T.
+   OTHERWISE
+      // let it be ignored
+      RETURN .T.
+   ENDCASE
 
-   /*
-   cdebug := "Sorry we can't handle this event:" + ceoln() +;
-             "nWinNum == " + alltrim(str(nWinNum)) + ceoln() +;
-             "message == " + alltrim(str(message)) + ceoln() +;
-             "wParam == " + alltrim(str(wParam)) + ceoln() +;
-             "wParamLow == " + alltrim(str(wParamLow)) + ceoln() +;
-             "wParamHi == " + alltrim(str(wParamHi))
+#if 0
+   cdebug := "Sorry we can't handle this event:" + hb_eol() + ;
+      "nWinNum == " + hb_ntos( nWinNum ) + hb_eol() + ;
+      "message == " + hb_ntos( message ) + hb_eol() + ;
+      "wParam == " + hb_ntos( wParam ) + hb_eol() + ;
+      "wParamLow == " + hb_ntos( wParamLow ) + hb_eol() + ;
+      "wParamHi == " + hb_ntos( wParamHi )
 
-   wvw_messagebox(0, cdebug, "Debug", MB_OK)
-   */
+   wvw_messagebox( 0, cdebug, "Debug", MB_OK )
+#endif
 
-return .F.//WVW_INPUTFOCUS()
+   RETURN .F. //WVW_INPUTFOCUS()
 
 //********************************************************************
 // SUPPORTING FUNCTIONS
 //********************************************************************
 
-static function winMaxRow(nWinNum)
-* returns maxrow() of window nWinNum
-local nOldWin := wvw_nsetCurWindow(nWinNum)
-local nmaxrow := maxrow()
-   wvw_nSetCurWindow(nOldWin)
-return nmaxrow
+// returns maxrow() of window nWinNum
+STATIC FUNCTION winMaxRow( nWinNum )
 
-static function winMaxCol(nWinNum)
-* returns maxCol() of window nWinNum
-local nOldWin := wvw_nsetCurWindow(nWinNum)
-local nmaxCol := maxCol()
-   wvw_nSetCurWindow(nOldWin)
-return nmaxCol
+   LOCAL nOldWin := wvw_nsetCurWindow( nWinNum )
+   LOCAL nmaxrow := MaxRow()
+   wvw_nSetCurWindow( nOldWin )
 
-static function ceoln()
-return chr(13)+chr(10)
+   RETURN nmaxrow
+
+// returns maxCol() of window nWinNum
+STATIC FUNCTION winMaxCol( nWinNum )
+
+   LOCAL nOldWin := wvw_nsetCurWindow( nWinNum )
+   LOCAL nmaxCol := MaxCol()
+   wvw_nSetCurWindow( nOldWin )
+
+   RETURN nmaxCol

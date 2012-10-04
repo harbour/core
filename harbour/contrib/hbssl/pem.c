@@ -57,8 +57,8 @@
 
 #include "hbssl.h"
 
-/* ---------------------------------------------------------------------------- */
 /* Callback */
+/* -------- */
 
 static int hb_ssl_pem_password_cb( char * buf, int size, int rwflag, void * userdata )
 {

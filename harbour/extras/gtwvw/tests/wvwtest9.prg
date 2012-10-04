@@ -34,105 +34,103 @@
 #include "setcurs.ch"
 #include "hbgtinfo.ch"
 
-    #define MF_INSERT                     0
-    #define MF_CHANGE                   128
-    #define MF_APPEND                   256
-    #define MF_DELETE                   512
-    #define MF_REMOVE                  4096
+#define MF_INSERT                     0
+#define MF_CHANGE                   128
+#define MF_APPEND                   256
+#define MF_DELETE                   512
+#define MF_REMOVE                  4096
 
-    #define MF_BYCOMMAND                  0
-    #define MF_BYPOSITION              1024
+#define MF_BYCOMMAND                  0
+#define MF_BYPOSITION              1024
 
-    #define MF_SEPARATOR               2048
+#define MF_SEPARATOR               2048
 
-    #define MF_ENABLED                    0
-    #define MF_GRAYED                     1
-    #define MF_DISABLED                   2
+#define MF_ENABLED                    0
+#define MF_GRAYED                     1
+#define MF_DISABLED                   2
 
-    #define MF_UNCHECKED                  0
-    #define MF_CHECKED                    8
-    #define MF_USECHECKBITMAPS          512
+#define MF_UNCHECKED                  0
+#define MF_CHECKED                    8
+#define MF_USECHECKBITMAPS          512
 
-    #define MF_STRING                     0
-    #define MF_BITMAP                     4
-    #define MF_OWNERDRAW                256
+#define MF_STRING                     0
+#define MF_BITMAP                     4
+#define MF_OWNERDRAW                256
 
-    #define MF_POPUP                     16
-    #define MF_MENUBARBREAK              32
-    #define MF_MENUBREAK                 64
+#define MF_POPUP                     16
+#define MF_MENUBARBREAK              32
+#define MF_MENUBREAK                 64
 
-    #define MF_UNHILITE                   0
-    #define MF_HILITE                   128
+#define MF_UNHILITE                   0
+#define MF_HILITE                   128
 
-    #define MB_OK                                 0
-    #define MB_OKCANCEL                           1
-    #define MB_ABORTRETRYIGNORE                   2
-    #define MB_YESNOCANCEL                        3
-    #define MB_YESNO                              4
-    #define MB_RETRYCANCEL                        5
-    #define MB_CANCELTRYCONTINUE                  6
+#define MB_OK                                 0
+#define MB_OKCANCEL                           1
+#define MB_ABORTRETRYIGNORE                   2
+#define MB_YESNOCANCEL                        3
+#define MB_YESNO                              4
+#define MB_RETRYCANCEL                        5
+#define MB_CANCELTRYCONTINUE                  6
 
 
-    #define MB_ICONHAND                          16
-    #define MB_ICONQUESTION                      32
-    #define MB_ICONEXCLAMATION                   48
-    #define MB_ICONASTERISK                      64
+#define MB_ICONHAND                          16
+#define MB_ICONQUESTION                      32
+#define MB_ICONEXCLAMATION                   48
+#define MB_ICONASTERISK                      64
 
-    #define MB_USERICON                         128
-    #define MB_ICONWARNING              MB_ICONEXCLAMATION
-    #define MB_ICONERROR                MB_ICONHAND
+#define MB_USERICON                         128
+#define MB_ICONWARNING              MB_ICONEXCLAMATION
+#define MB_ICONERROR                MB_ICONHAND
 
-    #define MB_ICONINFORMATION          MB_ICONASTERISK
-    #define MB_ICONSTOP                 MB_ICONHAND
+#define MB_ICONINFORMATION          MB_ICONASTERISK
+#define MB_ICONSTOP                 MB_ICONHAND
 
-    #define MB_DEFBUTTON1                         0
-    #define MB_DEFBUTTON2                       256
-    #define MB_DEFBUTTON3                       512
-    #define MB_DEFBUTTON4                       768
+#define MB_DEFBUTTON1                         0
+#define MB_DEFBUTTON2                       256
+#define MB_DEFBUTTON3                       512
+#define MB_DEFBUTTON4                       768
 
-    #define MB_APPLMODAL                          0
-    #define MB_SYSTEMMODAL                     4096
-    #define MB_TASKMODAL                       8192
-    #define MB_HELP                           16384 // Help Button
+#define MB_APPLMODAL                          0
+#define MB_SYSTEMMODAL                     4096
+#define MB_TASKMODAL                       8192
+#define MB_HELP                           16384 // Help Button
 
-    #define MB_NOFOCUS                        32768
-    #define MB_SETFOREGROUND                  65536
-    #define MB_DEFAULT_DESKTOP_ONLY          131072
+#define MB_NOFOCUS                        32768
+#define MB_SETFOREGROUND                  65536
+#define MB_DEFAULT_DESKTOP_ONLY          131072
 
-    #define MB_TOPMOST                       262144
-    #define MB_RIGHT                         524288
-    #define MB_RTLREADING                   1048576
+#define MB_TOPMOST                       262144
+#define MB_RIGHT                         524288
+#define MB_RTLREADING                   1048576
 
-  #define IDOK                1
-  #define IDCANCEL            2
-  #define IDABORT             3
-  #define IDRETRY             4
-  #define IDIGNORE            5
-  #define IDYES               6
-  #define IDNO                7
-  #define IDCLOSE             8
-  #define IDHELP              9
+#define IDOK                1
+#define IDCANCEL            2
+#define IDABORT             3
+#define IDRETRY             4
+#define IDIGNORE            5
+#define IDYES               6
+#define IDNO                7
+#define IDCLOSE             8
+#define IDHELP              9
 
-  #define IDTRYAGAIN          10
-
-#define CRLF chr(13)+chr(10)
+#define IDTRYAGAIN          10
 
 #define WVW_MAXWINDOWS    20             //! must match with HBGTWVW.H
 #define WVW_DEFAULT_MENUKEYEVENT  1024   //! must match with HBGTWVW.H
 
 //20040303: !!! copied from WVWMOUSE.PRG pls create an include file
-* mouse object types //20040303
+// mouse object types //20040303
 #define _MOBJECT_BUTTON  0      //mouse button
 #define _MOBJECT_HSCROLL 1      //horiz scrollbar  //obsolete, not used
 #define _MOBJECT_VSCROLL 2      //horiz scrollbar  //obsolete, not used
 
-* for Button Types: //20040303
+// for Button Types: //20040303
 #define _BUTTON_NORMAL 0        //normal button
 #define _BUTTON_FLAT   1        //'transparent', raised when mouseover
 #define _BUTTON_NONE   2        //no sign even when mouseover or clicked
 #define _BUTTON_HARD   3        //no recessed when pressed
 
-* menu actions
+// menu actions
 #define IDM_DEMO_GET     101
 #define IDM_DEMO_BROWSE  102
 #define IDM_DEMO_CONSOLE 103
@@ -151,7 +149,7 @@
 #define IDM_HELP_HELP    301
 #define IDM_HELP_INFO    302
 
-* menu action from toolbar only:
+// menu action from toolbar only:
 #define IDM_NETCONNECT    401
 #define IDM_NETDISCONNECT 402
 #define IDM_BACK          403
@@ -160,131 +158,133 @@
 #define IDM_PASTE         406
 
 
-static s_amiscobjlist := {}      //x misc object list (actually: list of codeblocks)
-static s_afontinfo := {}         //x current font info
+STATIC s_amiscobjlist := {}      //x misc object list (actually: list of codeblocks)
+STATIC s_afontinfo := {}         //x current font info
 
 //
+
 PROCEDURE Main()
-local nCurWindow
-local hWnd, hMenu, hPopupmenu, hPopupmenu2
-local cLabel := "This is the Main Window"
-local nMaxRow, nMaxCol
-local nCursor
-local kF1, kF2, kF3
-local kF9, kF10, kF11
-local oMouse
-local ch
+
+   LOCAL nCurWindow
+   LOCAL hWnd, hMenu, hPopupmenu, hPopupmenu2
+   LOCAL cLabel := "This is the Main Window"
+   LOCAL nMaxRow, nMaxCol
+   LOCAL nCursor
+   LOCAL kF1, kF2, kF3
+   LOCAL kF9, kF10, kF11
+   LOCAL oMouse
+   LOCAL ch
 
    SET( _SET_EVENTMASK, INKEY_ALL )
 
    SET DATE ANSI
    SET SCOREBOARD OFF
-   //wvw_SetPaintRefresh(0)
-   wvw_SetVertCaret(.T.)
-   wvw_pbSetFont(, "Tahoma", 14)
-   nCursor := setcursor(0)
+// wvw_SetPaintRefresh( 0 )
+   wvw_SetVertCaret( .T. )
+   wvw_pbSetFont( , "Tahoma", 14 )
+   nCursor := SetCursor( SC_NONE )
 
-   if !SetDefaultWindowSize()
-      ldebug("Cannot setDefaultWindowSize()")
-   else
-      ldebug("Successfully setDefaultWindowSize()")
-   endif
-   nMaxRow := maxrow(); nMaxCol := maxcol()
+   IF !SetDefaultWindowSize()
+      ldebug( "Cannot setDefaultWindowSize()" )
+   ELSE
+      ldebug( "Successfully setDefaultWindowSize()" )
+   ENDIF
+   nMaxRow := MaxRow(); nMaxCol := MaxCol()
 
-   if wvw_SBcreate() > 0 .and.;
-      wvw_SBaddPart(, "99:99:99") > 0
-      wvw_SetTimer(, 1000)
-   endif
+   IF wvw_SBcreate() > 0 .AND. ;
+         wvw_SBaddPart( , "99:99:99" ) > 0
+      wvw_SetTimer( , 1000 )
+   ENDIF
 
    s_afontinfo := WVW_getfontinfo()
 
-   hb_gtInfo( HB_GTI_INKEYFILTER, {| nkey | nAfterInkey(nkey) } )
-   WVW_SETMOUSEMOVE(,.T.)                           //required by wvwmouse
+   hb_gtInfo( HB_GTI_INKEYFILTER, {| nkey | nAfterInkey( nkey ) } )
+   WVW_SETMOUSEMOVE( , .T. )                           //required by wvwmouse
    kF1 := SetKey( K_F1, {|| xHelp() } )
    kF2 := SetKey( K_F2, {|| xDebugInfo() } )
    kF3 := SetKey( K_F3, {|| Demo_Console() } )
 
-   kF9 := SetKey( K_F9, {|| WVW_SetLineSpacing(NIL, WVW_SetLineSpacing()-2) } )
-   kF10 := SetKey( K_F10, {|| WVW_SetLineSpacing(NIL, WVW_SetLineSpacing()+2) } )
+   kF9 := SetKey( K_F9, {|| WVW_SetLineSpacing( NIL, WVW_SetLineSpacing() - 2 ) } )
+   kF10 := SetKey( K_F10, {|| WVW_SetLineSpacing( NIL, WVW_SetLineSpacing() + 2 ) } )
    kF11 := SetKey( K_F11, {|| WVW_SetDefLineSpacing( WVW_SetLineSpacing() ) } )
 
-   * start menu definitions *************************************
+   // start menu definitions *************************************
 
    hWnd := WVW_GETWINDOWHANDLE()
    hMenu := WVW_CreateMenu( )
-      hPopupMenu := WVW_CreateMenu( )
-      WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_GET, "~GET demo"  )
-      WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_BROWSE, "~BROWSE demo" )
-      WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_CONSOLE, "~CONSOLE demo (F3)" )
-      //WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_COLOR, "~COLOR demo" )
-      WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
-      WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_EXIT, "E~xit"  )
+   hPopupMenu := WVW_CreateMenu( )
+   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_GET, "~GET demo"  )
+   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_BROWSE, "~BROWSE demo" )
+   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_CONSOLE, "~CONSOLE demo (F3)" )
+// WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_COLOR, "~COLOR demo" )
+   WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
+   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_EXIT, "E~xit"  )
    WVW_AppendMenu( hMenu     , MF_ENABLED + MF_POPUP , hPopupMenu , "~Demos",  )
 
-      hPopupMenu := WVW_CreateMenu( )
-      WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_ENABLE,  "~Enable Toolbar" )
-      WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DISABLE, "~Disable Toolbar" )
-      WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
-      WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_RESET,  "~Reset Toolbar" )
-      WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DELETE, "~Delete Toolbar" )
+   hPopupMenu := WVW_CreateMenu( )
+   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_ENABLE,  "~Enable Toolbar" )
+   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DISABLE, "~Disable Toolbar" )
+   WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
+   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_RESET,  "~Reset Toolbar" )
+   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DELETE, "~Delete Toolbar" )
    WVW_AppendMenu( hMenu     , MF_ENABLED + MF_POPUP , hPopupMenu , "~Toolbar",  )
 
-      hPopupMenu := WVW_CreateMenu( )
-      WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DECREASE, "~Decrease Line Spacing (F9)" )
-      WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_INCREASE, "~Increase Line Spacing (F10)" )
-      WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
-      WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DEFAULT,  "~Set As Default Line Spacing (F11)" )
+   hPopupMenu := WVW_CreateMenu( )
+   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DECREASE, "~Decrease Line Spacing (F9)" )
+   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_INCREASE, "~Increase Line Spacing (F10)" )
+   WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
+   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DEFAULT,  "~Set As Default Line Spacing (F11)" )
    WVW_AppendMenu( hMenu     , MF_ENABLED + MF_POPUP , hPopupMenu , "~Window",  )
 
-      hPopupMenu := WVW_CreateMenu( )
-      WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_HELP_HELP, "~Help (F1)"  )
-      WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
-      WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_HELP_INFO, "~Info (F2)"  )
+   hPopupMenu := WVW_CreateMenu( )
+   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_HELP_HELP, "~Help (F1)"  )
+   WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
+   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_HELP_INFO, "~Info (F2)"  )
    WVW_AppendMenu( hMenu     , MF_ENABLED + MF_POPUP , hPopupMenu , "~Help",  )
 
-   WVW_SetMenu(, hMenu )
+   WVW_SetMenu( , hMenu )
 
-   * end menu definitions *************************************
+   // end menu definitions *************************************
 
-   nCurWindow := WVW_nNumWindows()-1 // == 0, Main Window
+   nCurWindow := WVW_nNumWindows() - 1 // == 0, Main Window
 
-   CreateToolbar(nCurWindow)
+   CreateToolbar( nCurWindow )
 
    ResetMiscObjects( nCurWindow )
-     AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,40, cLabel,6,, rgb(255,255,255), rgb(198,198,198), 'Arial', s_afontinfo[2], , , , , .T., .T. ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,40, cLabel,6,, rgb(255,255,255 ), rgb(198,198,198 ), 'Arial', s_afontinfo[2], , , , , .T. , .T. ) } )
 
    wvwm_ResetMouseObjects( nCurWindow )
-     wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info!",   maxrow()-2,67, , , {|| xDebugInfo() } ))
+   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Info!",   MaxRow() - 2,67, , , {|| xDebugInfo() } ) )
 
-     oMouse := WVWMouseButton():New("Flat",   maxrow()-2,67-11, , , {|| lboxmessage("flat") }, 1, NIL )
-     oMouse:cImage := "vouch1.gif"
-     oMouse:cCaption := ""
-     wvwm_AddMouseObjects( nCurWindow, oMouse )
+   oMouse := WVWMouseButton():New( "Flat",   MaxRow() - 2, 67 - 11, , , {|| lboxmessage( "flat" ) }, 1, NIL )
+   oMouse:cImage := "vouch1.gif"
+   oMouse:cCaption := ""
+   wvwm_AddMouseObjects( nCurWindow, oMouse )
 
-     oMouse := WVWMouseButton():New("None",   maxrow()-2,67-11-11, , , {|| lboxmessage("none") }, 2, NIL )
-     oMouse:Enable(.T.)
-     wvwm_AddMouseObjects( nCurWindow, oMouse )
+   oMouse := WVWMouseButton():New( "None",   MaxRow() - 2, 67 - 11 - 11, , , {|| lboxmessage( "none" ) }, 2, NIL )
+   oMouse:Enable( .T. )
+   wvwm_AddMouseObjects( nCurWindow, oMouse )
 
-     wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Hard",   maxrow()-2,67-11-11-11, , , {|| lboxmessage("hard") }, 3, NIL ))
-     oMouse := WVWMouseButton():New("Disabled",   maxrow()-2,67-11-11-11-11, , , {|| xDebugInfo() } )
-     oMouse:Enable(.F.)
-     wvwm_AddMouseObjects( nCurWindow, oMouse )
+   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Hard",   MaxRow() - 2,67 - 11 - 11 - 11, , , {|| lboxmessage("hard" ) }, 3, NIL ) )
+   oMouse := WVWMouseButton():New( "Disabled",   MaxRow() - 2, 67 - 11 - 11 - 11 - 11, , , {|| xDebugInfo() } )
+   oMouse:Enable( .F. )
+   wvwm_AddMouseObjects( nCurWindow, oMouse )
 
-     oMouse := WVWMouseButton():New("Tight",   maxrow()-2,67-11-11-11-11-11, , , {|| lboxmessage("tight") } )
-     oMouse:lTight := .T.
-     wvwm_AddMouseObjects( nCurWindow, oMouse )
+   oMouse := WVWMouseButton():New( "Tight",   MaxRow() - 2, 67 - 11 - 11 - 11 - 11 - 11, , , {|| lboxmessage( "tight" ) } )
+   oMouse:lTight := .T.
+   wvwm_AddMouseObjects( nCurWindow, oMouse )
 
-   * 20070525 the real pushbutton, easier and better looking. Nothing to do with wvwmouse.prg.
-   WVW_PBcreate( nCurWindow, maxrow()-4,67-11-11-11-11-11, maxrow()-4, 67+9-11-11-11-11-11, "native", NIL, {||lboxmessage("native pushbutton")}, NIL)
+   // 20070525 the real pushbutton, easier and better looking. Nothing to do with wvwmouse.prg.
+   WVW_PBcreate( nCurWindow, MaxRow() - 4, 67 - 11 - 11 - 11 - 11 - 11, MaxRow() - 4, 67 + 9 - 11 - 11 - 11 - 11 - 11, "native", NIL, {||lboxmessage( "native pushbutton" ) }, NIL )
 
    SetColor( 'N/W,N/GR*,,,N/W*' )
    CLS
-   @ 0,0 say "This is line 0"
-   @ 1,0 say "This is line 1"
-   @ maxrow()-1,0 say "This is line " + alltrim(str(maxrow()-1))
-   @ maxrow(),0 say "This is line " + alltrim(str(maxrow()))
+   @ 0, 0 SAY "This is line 0"
+   @ 1, 0 SAY "This is line 1"
+   @ MaxRow() - 1, 0 SAY "This is line " + hb_ntos( MaxRow() - 1 )
+   @ MaxRow(), 0 SAY "This is line " + hb_ntos( MaxRow() )
 
-   do while !((ch:=inkey(0))==K_ESC)
+   DO WHILE !( ( ch := Inkey(0 ) ) == K_ESC )
       /* experiment with different paintrefresh interval:
       do case
       case ch==asc("<")
@@ -300,199 +300,207 @@ local ch
          * do nothing. inkey() has been handled by nAfterInket()
       endcase
       */
-   enddo
+   ENDDO
 
-   lboxmessage("Thanks for trying this program." + CRLF +;
-               "Good bye!")
+   lboxmessage( "Thanks for trying this program." + hb_eol() + ;
+      "Good bye!" )
 
-   * restore state
+   // restore state
    wvwm_ResetMouseObjects( nCurWindow )
    ResetMiscObjects( nCurWindow )
    SetKey( K_F11, kF11 )
    SetKey( K_F10, kF10 )
    SetKey( K_F9, kF9 )
 
-   //SetKey( K_F4, kF4 )
+// SetKey( K_F4, kF4 )
    SetKey( K_F3, kF3 )
    SetKey( K_F2, kF2 )
    SetKey( K_F1, kF1 )
-   setcursor(nCursor)
+   SetCursor( nCursor )
 
-RETURN  //main()
+   RETURN  //main()
+
+//
+
+STATIC PROCEDURE xDisableMenus( nWinNum, nNumItem )
+
+   // disables all Menu Items of window nWinNum
+   LOCAL i
+   LOCAL hMenu := WVW_GetMenu( nWinNum )
+   FOR i := 0 TO nNumItem - 1
+      WVW_EnableMenuItem( hMenu, i, MF_BYPOSITION + MF_GRAYED )
+   NEXT
+
+   RETURN
+
+STATIC PROCEDURE xEnableMenus( nWinNum, nNumItem )
+
+   // enables all Menu Items of window nWinNum
+   LOCAL i
+   LOCAL hMenu := WVW_GetMenu( nWinNum )
+   FOR i := 0 TO nNumItem - 1
+      WVW_EnableMenuItem( hMenu, i, MF_BYPOSITION + MF_ENABLED )
+   NEXT
+   WVW_DrawMenuBar( nWinNum )   //to force redraw of menu
+
+   RETURN
 
 //
 
-static procedure xDisableMenus(nWinNum, nNumItem)
-* disables all Menu Items of window nWinNum
-local i
-local hMenu := WVW_GetMenu(nWinNum)
-   for i := 0 to nNumItem-1
-      WVW_EnableMenuItem(hMenu, i, MF_BYPOSITION + MF_GRAYED)
-   next
-return
+PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
 
-static procedure xEnableMenus(nWinNum, nNumItem)
-* enables all Menu Items of window nWinNum
-local i
-local hMenu := WVW_GetMenu(nWinNum)
-   for i := 0 to nNumItem-1
-      WVW_EnableMenuItem(hMenu, i, MF_BYPOSITION + MF_ENABLED)
-   next
-   WVW_DrawMenuBar(nWinNum)   //to force redraw of menu
-return
+   LOCAL cWinName, nCurWindow
+   LOCAL nMaxrow, nMaxCol
+   LOCAL nCursor
+   LOCAL cColor
+   LOCAL ch
+   LOCAL lMouseMove
+   LOCAL lEchoing := .F.
 
+   DEFAULT nTop TO 2
+   DEFAULT nLeft TO 2
+   DEFAULT nBottom TO nTop + 10
+   DEFAULT nRight TO nLeft + 45
 
-//
-procedure Demo_Console(nTop, nLeft, nBottom, nRight)
-local cWinName, nCurWindow
-local nMaxrow, nMaxCol
-local nCursor
-local cColor
-local ch
-local lMouseMove
-local lEchoing := .F.
-   default nTop to 2
-   default nLeft to 2
-   default nBottom to nTop+10
-   default nRight to nLeft+45
-
-   cWinName := "Typewriter (Win#" + alltrim( str( WVW_nNumWindows() ) ) + "); CtrlW: New Window; ESC: Exit"
+   cWinName := "Typewriter (Win#" + hb_ntos( WVW_nNumWindows() ) + "); CtrlW: New Window; ESC: Exit"
 
    //x init window
-   nCurWindow := WVW_nOpenWindow(cWinName, nTop, nLeft, nBottom, nRight)
-   if nCurWindow==0
-      lboxmessage("Failed Opening new window!")
-      return
-   endif
+   nCurWindow := WVW_nOpenWindow( cWinName, nTop, nLeft, nBottom, nRight )
+   IF nCurWindow == 0
+      lboxmessage( "Failed Opening new window!" )
+      RETURN
+   ENDIF
 
-   nCursor := setcursor(SC_NORMAL)
-   cColor := setcolor("W+/N")
-   lMouseMove := WVW_SETMOUSEMOVE(,.F.)
-   nMaxrow := maxrow(); nMaxcol := maxcol()
+   nCursor := SetCursor( SC_NORMAL )
+   cColor := SetColor( "W+/N" )
+   lMouseMove := WVW_SETMOUSEMOVE( , .F. )
+   nMaxrow := MaxRow(); nMaxcol := MaxCol()
 
    ResetMiscObjects( nCurWindow )
    wvwm_ResetMouseObjects( nCurWindow )
 
-   ************ begin typewriter mode *************
+   //*********** begin typewriter mode *************
    CLS
    ?? "Press Ctrl+E to toggle between echoing what you type to previous window"
    ?
-   do while inkey()!=0; enddo  //clear typeahead
-   ch := inkey(0)
-   do while !(ch == K_ESC)
-      if ch==K_ENTER
-         ?? chr(ch)+chr(10)
-         if lEchoing
-            * write the same thing to previous window
-            WVW_nSetCurWindow( nCurWindow-1 )
-            ?? chr(ch)+chr(10)
+   DO WHILE Inkey() != 0; ENDDO  //clear typeahead
+   ch := Inkey( 0 )
+   DO WHILE !( ch == K_ESC )
+      IF ch == K_ENTER
+         ?? hb_keyChar( ch ) + Chr( 10 )
+         IF lEchoing
+            // write the same thing to previous window
+            WVW_nSetCurWindow( nCurWindow - 1 )
+            ?? hb_keyChar( ch ) + Chr( 10 )
             WVW_nSetCurWindow( nCurWindow )
-         endif
-      elseif ch==K_CTRL_W
-         * Recursively call (another) typewriter, bigger one
-         Demo_Console(nTop+2, nLeft+2, nBottom+4, nRight+6)
-      elseif ch==K_CTRL_E
-         * toggle echoing output to prev window
+         ENDIF
+      ELSEIF ch == K_CTRL_W
+         // Recursively call (another) typewriter, bigger one
+         Demo_Console( nTop + 2, nLeft + 2, nBottom + 4, nRight + 6 )
+      ELSEIF ch == K_CTRL_E
+         // toggle echoing output to prev window
          lEchoing := !lEchoing
-      else
-         * any other char goes here
-         ?? chr(ch)
-         if lEchoing
-            * write the same thing to previous window
-            WVW_nSetCurWindow( nCurWindow-1 )
-            ?? chr(ch)
+      ELSE
+         // any other char goes here
+         ?? hb_keyChar( ch )
+         IF lEchoing
+            // write the same thing to previous window
+            WVW_nSetCurWindow( nCurWindow - 1 )
+            ?? hb_keyChar( ch )
             WVW_nSetCurWindow( nCurWindow )
-         endif
-      endif
-      ch := inkey(0)
-   enddo
+         ENDIF
+      ENDIF
+      ch := Inkey( 0 )
+   ENDDO
 
-   ************ end typewriter mode ***************
+   //*********** end typewriter mode ***************
 
-   * epilogue
+// epilogue
    WVW_lCloseWindow()
 
-   * restore state
+// restore state
    wvwm_ResetMouseObjects( nCurWindow )
    ResetMiscObjects( nCurWindow )
-   setcursor(nCursor)
-   setcolor(cColor)
-   WVW_SETMOUSEMOVE(,lMouseMove)
-return //Demo_Console()
+   SetCursor( nCursor )
+   SetColor( cColor )
+   WVW_SETMOUSEMOVE( , lMouseMove )
 
+   RETURN //Demo_Console()
 
 //
+
 PROCEDURE Demo_Get()
-local nCurWindow, getlist := {}
-local cLabel := "This is the GET Demo Window"
-LOCAL nTop    := 4
-LOCAL nLeft    := 4
-LOCAL nBottom    := 21
-LOCAL nRight    := 75
-LOCAL nColGet := 8
-LOCAL get_1   := SToD()
-LOCAL get_2   := Pad( 'Pritpal Bedi', 35 )
-LOCAL get_3   := Pad( '60, New Professor Colony', 35 )
-LOCAL get_4   := Pad( 'Ludhiana, INDIA', 35 )
-LOCAL get_5   := Pad( 'http://www.vouchcac.com', 35 )
-LOCAL get_6   := 20000
-local nCursor := setcursor(SC_NORMAL)
-memvar x
+
+   LOCAL nCurWindow, getlist := {}
+   LOCAL cLabel := "This is the GET Demo Window"
+   LOCAL nTop    := 4
+   LOCAL nLeft    := 4
+   LOCAL nBottom    := 21
+   LOCAL nRight    := 75
+   LOCAL nColGet := 8
+   LOCAL get_1   := SToD()
+   LOCAL get_2   := Pad( 'Pritpal Bedi', 35 )
+   LOCAL get_3   := Pad( '60, New Professor Colony', 35 )
+   LOCAL get_4   := Pad( 'Ludhiana, INDIA', 35 )
+   LOCAL get_5   := Pad( 'http://www.vouchcac.com', 35 )
+   LOCAL get_6   := 20000
+   LOCAL nCursor := SetCursor( SC_NORMAL )
+   MEMVAR x
 
    //x init window
-   nCurWindow := WVW_nOpenWindow("GET Demo", nTop, nLeft, nBottom, nRight)
-   if nCurWindow==0
-      lboxmessage("Failed Opening new window!")
-      return
-   endif
+   nCurWindow := WVW_nOpenWindow( "GET Demo", nTop, nLeft, nBottom, nRight )
+   IF nCurWindow == 0
+      lboxmessage( "Failed Opening new window!" )
+      RETURN
+   ENDIF
 
-   WVW_SetIcon(, 'vr_1.ico' )
+   WVW_SetIcon( , 'vr_1.ico' )
 
    ResetMiscObjects( nCurWindow )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,nRight-nLeft, cLabel,2,, rgb(255,255,255), rgb(198,198,198), 'Arial', s_afontinfo[2], , , , , .T., .T. ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, 7-nTop, 61-nLeft, 13-nTop, 70-nLeft ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxGroup( nWindow, 15-nTop, 59-nLeft, 18-nTop, 72-nLeft ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxGroup( nWindow, 5-nTop, 6-nLeft, 19-nTop, 44-nLeft ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawImage( nWindow, 8-nTop,62-nLeft,12-nTop,69-nLeft, 'vouch1.bmp' ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, 7-nTop, 48-nLeft, 13-nTop, 55-nLeft ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | x:= nWindow, aEval( GetList, {| oGet | WVW_DrawBoxGet( x, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,nRight - nLeft, cLabel,2,, rgb(255,255,255 ), rgb(198,198,198 ), 'Arial', s_afontinfo[2], , , , , .T. , .T. ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, 7 - nTop, 61 - nLeft, 13 - nTop, 70 - nLeft ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxGroup( nWindow, 15 - nTop, 59 - nLeft, 18 - nTop, 72 - nLeft ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxGroup( nWindow, 5 - nTop, 6 - nLeft, 19 - nTop, 44 - nLeft ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawImage( nWindow, 8 - nTop,62 - nLeft,12 - nTop,69 - nLeft, 'vouch1.bmp' ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, 7 - nTop, 48 - nLeft, 13 - nTop, 55 - nLeft ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | x := nWindow, AEval( GetList, {| oGet | WVW_DrawBoxGet( x, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
    wvwm_ResetMouseObjects( nCurWindow )
 
    /* we now use native push button
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info",   maxrow()-1,maxcol()-15, , , {|| xDebugInfo() } ))
    */
-   WVW_PBcreate( nCurWindow, maxrow()-1,maxcol()-15, maxrow()-1, maxcol()-5, "Info", NIL, {|| xDebugInfo()}, NIL)
+   WVW_PBcreate( nCurWindow, MaxRow() - 1, MaxCol() - 15, MaxRow() - 1, MaxCol() - 5, "Info", NIL, {|| xDebugInfo() }, NIL )
 
    CLS
 
-   @  6-nTop, nColGet-nLeft SAY '< Date >'
-   @  9-nTop, nColGet-nLeft SAY '<' + PadC( 'Name', 33 ) + '>'
-   @ 12-nTop, nColGet-nLeft SAY '<' + PadC( 'Address', 33 ) + '>'
-   @ 16-nTop, 61-nLeft      SAY '< Salary >'
+   @  6 - nTop, nColGet - nLeft SAY '< Date >'
+   @  9 - nTop, nColGet - nLeft SAY '<' + PadC( 'Name', 33 ) + '>'
+   @ 12 - nTop, nColGet - nLeft SAY '<' + PadC( 'Address', 33 ) + '>'
+   @ 16 - nTop, 61 - nLeft      SAY '< Salary >'
 
-   @  7-nTop, nColGet-nLeft GET get_1
-   @ 10-nTop, nColGet-nLeft GET get_2 //VALID ( VouChoice() < 7 )
-   @ 13-nTop, nColGet-nLeft GET get_3
-   @ 15-nTop, nColGet-nLeft GET get_4
-   @ 17-nTop, nColGet-nLeft GET get_5
-   @ 17-nTop, 61-nLeft      GET get_6 PICTURE '@Z 9999999.99'
+   @  7 - nTop, nColGet - nLeft GET get_1
+   @ 10 - nTop, nColGet - nLeft GET get_2 //VALID ( VouChoice() < 7 )
+   @ 13 - nTop, nColGet - nLeft GET get_3
+   @ 15 - nTop, nColGet - nLeft GET get_4
+   @ 17 - nTop, nColGet - nLeft GET get_5
+   @ 17 - nTop, 61 - nLeft      GET get_6 PICTURE '@Z 9999999.99'
 
    READ
 
-   * epilogue
-   //lboxmessage("Thanks for trying the GET Demo!")
+   // epilogue
+// lboxmessage( "Thanks for trying the GET Demo!" )
    WVW_lCloseWindow()
 
-   * restore state
+   // restore state
    wvwm_ResetMouseObjects( nCurWindow )
    ResetMiscObjects( nCurWindow )
-   setcursor(nCursor)
+   SetCursor( nCursor )
 
-RETURN  //Demo_Get()
-
+   RETURN
 
 //
+
 FUNCTION DEMO_Browse()
 
    LOCAL nKey, bBlock, oBrowse , i
@@ -500,25 +508,25 @@ FUNCTION DEMO_Browse()
    LOCAL info_   := {}             //WVW_nOpenWindow() has not been performed, so...
    LOCAL nTop    :=  3             //pls notice that this is relative to PARENT window!
    LOCAL nLeft   :=  3             //pls notice that this is relative to PARENT window!
-   LOCAL nBottom := maxrow() - 2   //pls notice that this is relative to PARENT window!
-   LOCAL nRight  := maxcol() - 3   //pls notice that this is relative to PARENT window!
+   LOCAL nBottom := MaxRow() - 2   //pls notice that this is relative to PARENT window!
+   LOCAL nRight  := MaxCol() - 3   //pls notice that this is relative to PARENT window!
    LOCAL cColor
-   local nMaxRow, nMaxCol
+   LOCAL nMaxRow, nMaxCol
 
-   local nStyle := 0
-   local nCurWindow
+   LOCAL nStyle := 0
+   LOCAL nCurWindow
 
-   local oMouse, nHScrollBar, nVScrollBar
+   LOCAL oMouse, nHScrollBar, nVScrollBar
 
-   local aColumnsSep, tmp
+   LOCAL aColumnsSep, tmp
 
    //x init window
-   nCurWindow := WVW_nOpenWindow("BROWSE Demo", nTop, nLeft, nBottom, nRight)
-   if nCurWindow==0
-      lboxmessage("Failed Opening new window!")
-      return NIL
-   endif
-   nMaxRow := maxrow(); nMaxCol := maxcol()
+   nCurWindow := WVW_nOpenWindow( "BROWSE Demo", nTop, nLeft, nBottom, nRight )
+   IF nCurWindow == 0
+      lboxmessage( "Failed Opening new window!" )
+      RETURN NIL
+   ENDIF
+   nMaxRow := MaxRow(); nMaxCol := MaxCol()
 
    ResetMiscObjects( nCurWindow )
    wvwm_ResetMouseObjects( nCurWindow )
@@ -528,32 +536,32 @@ FUNCTION DEMO_Browse()
    SetColor( 'N/W*,N/GR*,,,N/W* ' )
 
    USE '..\..\..\tests\TEST' NEW
-   if NetErr()
+   IF NetErr()
       WVW_lCloseWindow()
-      return nil
-   endif
+      RETURN nil
+   ENDIF
 
-   index on FIELD->LAST to TEST1  //20040707
+   INDEX ON FIELD->LAST TO TEST1  //20040707
 
-   info_:= DbStruct()
+   info_ := dbStruct()
 
-   oBrowse := TBrowseNew( 3, 2, maxrow()-3, maxcol()-3 )
+   oBrowse := TBRowseNew( 3, 2, MaxRow() - 3, MaxCol() - 3 )
 
    oBrowse:ColSep        := '  '
    oBrowse:HeadSep       := '__'
    oBrowse:GoTopBlock    := { || dbGoTop() }
    oBrowse:GoBottomBlock := { || dbGoBottom() }
-   oBrowse:SkipBlock     := { | nSkip | dbSkipBlock( nSkip,oBrowse ) }
+   oBrowse:SkipBlock     := { | nSkip | dbSkipBlock( nSkip, oBrowse ) }
 
-   for i := 1 to len( info_ )
+   FOR i := 1 TO Len( info_ )
       bBlock := VouBlockField( i )
       oBrowse:AddColumn( TBColumnNew( info_[ i,1 ], bBlock ) )
-   next
+   NEXT
 
    oBrowse:configure()
 
    WVW_SetPen( nStyle, 0, rgb( 210,1210,210 ) )
-   WVW_SetIcon(, 'DIA_EXCL.ico' )
+   WVW_SetIcon( , 'DIA_EXCL.ico' )
 
    aColumnsSep := Array( oBrowse:colCount )
    FOR EACH tmp IN aColumnsSep
@@ -561,196 +569,200 @@ FUNCTION DEMO_Browse()
    NEXT
 
    AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, oBrowse:nTop, oBrowse:nLeft, oBrowse:nBottom, oBrowse:nRight ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawGridHorz( nWindow, oBrowse:nTop+3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, aColumnsSep, len( aColumnsSep ) ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawGridHorz( nWindow, oBrowse:nTop + 3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, aColumnsSep, Len( aColumnsSep ) ) } )
 
    /* we now use native push button
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info",   maxrow(),maxcol()-15, , , {|| xDebugInfo() } ))
    */
-   WVW_PBcreate( nCurWindow, maxrow(),maxcol()-15, maxrow(), maxcol()-5, "Info", NIL, {|| xDebugInfo()}, NIL)
+   WVW_PBcreate( nCurWindow, MaxRow(), MaxCol() - 15, MaxRow(), MaxCol() - 5, "Info", NIL, {|| xDebugInfo() }, NIL )
 
-   nHScrollBar := wvw_xbCreate( nCurWindow, 0, oBrowse:nBottom+1, oBrowse:nLeft, oBrowse:nRight-oBrowse:nLeft+1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HXBscroller(oBrowse, nWinNum, nXBid, nXBmsg)}, /*aOffset*/ NIL)
-   nVScrollBar := wvw_xbCreate( nCurWindow, 1, oBrowse:nTop, oBrowse:nRight+1, oBrowse:nBottom-oBrowse:nTop+1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | VXBscroller(oBrowse, nWinNum, nXBid, nXBmsg)}, /*aOffset*/ NIL)
+   nHScrollBar := wvw_xbCreate( nCurWindow, 0, oBrowse:nBottom + 1, oBrowse:nLeft, oBrowse:nRight - oBrowse:nLeft + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ NIL )
+   nVScrollBar := wvw_xbCreate( nCurWindow, 1, oBrowse:nTop, oBrowse:nRight + 1, oBrowse:nBottom - oBrowse:nTop + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | VXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ NIL )
 
-   hb_DispOutAt( nTop + 1-nTop, nleft-nleft, padc( hb_CurDrive()+':\'+CurDir()+'\'+'test.dbf', nRight - nLeft + 1 ), 'W+/W' )
+   hb_DispOutAt( nTop + 1 - nTop, nleft - nleft, PadC( hb_CurDrive() + ':\' + CurDir() + '\' + 'test.dbf', nRight - nLeft + 1 ), 'W+/W' )
 
    oBrowse:ForceStable()
-   RefreshHXB(oBrowse, nCurWindow, nHScrollBar) //20040704
-   RefreshVXB(oBrowse, nCurWindow, nVScrollBar) //20040704
+   RefreshHXB( oBrowse, nCurWindow, nHScrollBar ) //20040704
+   RefreshVXB( oBrowse, nCurWindow, nVScrollBar ) //20040704
 
-   While !lEnd
-      nKey := InKey( 0 )
+   WHILE !lEnd
+      nKey := Inkey( 0 )
 
-      do case
-      case nKey == K_ESC .or. nKey == K_ENTER
+      DO CASE
+      CASE nKey == K_ESC .OR. nKey == K_ENTER
          lEnd := .T.
-         loop
+         LOOP
 
-      case nKey == K_DOWN
+      CASE nKey == K_DOWN
          oBrowse:Down()
 
-      case nKey == K_MWBACKWARD
+      CASE nKey == K_MWBACKWARD
          oBrowse:Down() //simple scroll down
 
-      case nKey == K_UP
+      CASE nKey == K_UP
          oBrowse:Up()
 
-      case nKey == K_MWFORWARD
+      CASE nKey == K_MWFORWARD
          oBrowse:Up()   //simple scroll up
 
-      case nKey == K_LEFT
-         if oBrowse:colPos== 1; loop; endif
+      CASE nKey == K_LEFT
+         IF oBrowse:colPos == 1; loop; ENDIF
          oBrowse:Left()
 
-      case nKey == K_RIGHT
-         if oBrowse:colPos== oBrowse:colCount(); loop; endif
+      CASE nKey == K_RIGHT
+         IF oBrowse:colPos == oBrowse:colCount(); loop; ENDIF
          oBrowse:Right()
 
-      case nKey == K_PGDN
+      CASE nKey == K_PGDN
          oBrowse:pageDown()
 
-      case nKey == K_PGUP
+      CASE nKey == K_PGUP
          oBrowse:pageUp()
 
-      case nKey == K_CTRL_PGUP
+      CASE nKey == K_CTRL_PGUP
          oBrowse:goTop()
 
-      case nKey == K_CTRL_PGDN
+      CASE nKey == K_CTRL_PGDN
          oBrowse:goBottom()
 
-      case nKey == K_HOME
+      CASE nKey == K_HOME
          oBrowse:home()
 
-      case nKey == K_END
+      CASE nKey == K_END
          oBrowse:end()
 
-      case nKey == K_CTRL_LEFT
+      CASE nKey == K_CTRL_LEFT
          oBrowse:panLeft()
 
-      case nKey == K_CTRL_RIGHT
+      CASE nKey == K_CTRL_RIGHT
          oBrowse:panRight()
 
-      case nKey == K_CTRL_HOME
+      CASE nKey == K_CTRL_HOME
          oBrowse:panHome()
 
-      case nKey == K_CTRL_END
+      CASE nKey == K_CTRL_END
          oBrowse:panEnd()
 
-      otherwise
-         * other keys, including mouse events do not need ForceStable
-         loop
+      OTHERWISE
+         // other keys, including mouse events do not need ForceStable
+         LOOP
 
-      endcase
+      ENDCASE
 
       oBrowse:ForceStable()
 
       //refresh the scrollbars due to keyboard navigation
-      RefreshHXB(oBrowse, nCurWindow, nHScrollBar) //20040704
-      RefreshVXB(oBrowse, nCurWindow, nVScrollBar) //20040704
+      RefreshHXB( oBrowse, nCurWindow, nHScrollBar ) //20040704
+      RefreshVXB( oBrowse, nCurWindow, nVScrollBar ) //20040704
 
-   enddo
+   ENDDO
 
-   DBCloseArea()
+   dbCloseArea()
 
-   * epilogue
+   // epilogue
    //lboxmessage("Thanks for trying the BROWSE Demo!")
    WVW_lCloseWindow()
 
-   * restore state
+   // restore state
    wvwm_ResetMouseObjects( nCurWindow )
    ResetMiscObjects( nCurWindow )
 
    WVW_SetPen( 0 )
 
    SetColor( cColor )
-   //SetCursor( nCursor )
+// SetCursor( nCursor )
 
-RETURN nil //DEMO_Browse()
+   RETURN nil //DEMO_Browse()
 
 /* generic Vertical Scrollbar handler for tbrowse */
-function VXBscroller(oBrowse, nWinNum, XBid, XBmsg)
-local nOldWin
-local lNeedStabilize
 
-//if we can't handle non topmost window we must return right away
-//if nWinNum != wvw_nNumWindows()-1 ; return ; endif
+FUNCTION VXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 
-   nOldWin := wvw_nSetCurWindow(nWinNum)
+   LOCAL nOldWin
+   LOCAL lNeedStabilize
+
+   //if we can't handle non topmost window we must return right away
+   //if nWinNum != wvw_nNumWindows()-1 ; return ; endif
+
+   nOldWin := wvw_nSetCurWindow( nWinNum )
 
    lNeedStabilize := .F.
-   do while .T.  //dummy loop
-      do case
-      case XBmsg == 0 //SB_LINEUP
-         if ordKeyNo() == 1; exit; endif
+   DO WHILE .T.  //dummy loop
+      DO CASE
+      CASE XBmsg == 0 //SB_LINEUP
+         IF ordKeyNo() == 1; exit; ENDIF
          oBrowse:up()
-      case XBmsg == 1 //SB_LINEDOWN
-         if ordKeyNo() == ordKeyCount(); exit; endif
+      CASE XBmsg == 1 //SB_LINEDOWN
+         IF ordKeyNo() == ordKeyCount(); exit; ENDIF
          oBrowse:down()
-      case XBmsg == 2 //SB_PAGEUP
-         if ordKeyNo() == 1; exit; endif
+      CASE XBmsg == 2 //SB_PAGEUP
+         IF ordKeyNo() == 1; exit; ENDIF
          oBrowse:pageup()
-      case XBmsg == 3 //SB_PAGEDOWN
-         if ordKeyNo() == ordKeyCount(); exit; endif
+      CASE XBmsg == 3 //SB_PAGEDOWN
+         IF ordKeyNo() == ordKeyCount(); exit; ENDIF
          oBrowse:pagedown()
-      otherwise
-         * ignore
+      OTHERWISE
+         // ignore
          lNeedStabilize := .F.
-         exit
-      endcase
+         EXIT
+      ENDCASE
       lNeedStabilize := .T.
-      exit
-   enddo //dummy loop
+      EXIT
+   ENDDO //dummy loop
 
-   if lNeedStabilize
+   IF lNeedStabilize
       oBrowse:ForceStable()
-      RefreshVXB(oBrowse, nWinNum, XBid)
-   endif
+      RefreshVXB( oBrowse, nWinNum, XBid )
+   ENDIF
 
-   wvw_nSetCurWindow(nOldWin)
+   wvw_nSetCurWindow( nOldWin )
 
-return NIL
+   RETURN NIL
 
-/* generic Horizontal Scrollbar handler for tbrowse */
-function HXBscroller(oBrowse, nWinNum, XBid, XBmsg)
-local nOldWin
-local lNeedStabilize
+   /* generic Horizontal Scrollbar handler for tbrowse */
+
+FUNCTION HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
+
+   LOCAL nOldWin
+   LOCAL lNeedStabilize
 
 //if we can't handle non topmost window we must return right away
 //if nWinNum != wvw_nNumWindows()-1 ; return ; endif
 
-   nOldWin := wvw_nSetCurWindow(nWinNum)
+   nOldWin := wvw_nSetCurWindow( nWinNum )
 
    lNeedStabilize := .F.
-   do while .T.  //dummy loop
-      do case
-      case XBmsg == 0 //SB_LINELEFT
-         if oBrowse:colPos== 1; exit; endif
-         oBrowse:left()
-      case XBmsg == 1 //SB_LINERIGHT
-         if oBrowse:colpos == oBrowse:colCount(); exit; endif
-         oBrowse:right()
-      case XBmsg == 2 //SB_PAGELEFT
-         if oBrowse:colPos== 1; exit; endif
+   DO WHILE .T.  //dummy loop
+      DO CASE
+      CASE XBmsg == 0 //SB_LINELEFT
+         IF oBrowse:colPos == 1; exit; ENDIF
+         oBrowse:Left()
+      CASE XBmsg == 1 //SB_LINERIGHT
+         IF oBrowse:colpos == oBrowse:colCount(); exit; ENDIF
+         oBrowse:Right()
+      CASE XBmsg == 2 //SB_PAGELEFT
+         IF oBrowse:colPos == 1; exit; ENDIF
          oBrowse:panleft()
-      case XBmsg == 3 //SB_PAGERIGHT
-         if oBrowse:colpos == oBrowse:colCount(); exit; endif
+      CASE XBmsg == 3 //SB_PAGERIGHT
+         IF oBrowse:colpos == oBrowse:colCount(); exit; ENDIF
          oBrowse:panright()
-      otherwise
-         * ignore
+      OTHERWISE
+         // ignore
          lNeedStabilize := .F.
-         exit
-      endcase
+         EXIT
+      ENDCASE
       lNeedStabilize := .T.
-      exit
-   enddo //dummy loop
-   if lNeedStabilize
+      EXIT
+   ENDDO //dummy loop
+   IF lNeedStabilize
       oBrowse:ForceStable()
-      RefreshHXB(oBrowse, nWinNum, XBid)
-   endif
+      RefreshHXB( oBrowse, nWinNum, XBid )
+   ENDIF
 
-   wvw_nSetCurWindow(nOldWin)
+   wvw_nSetCurWindow( nOldWin )
 
-return NIL
+   RETURN NIL
 
 /**
 20040704 notes:
@@ -761,101 +773,110 @@ nPage :: pagesize
 nMin <= nPos <= (nMax - max(nPage-1, 0))
 **/
 
-static function RefreshVXB(oBrowse, nWinNum, XBid)
-local nMin, nMax, nPage, nPos
-local nRatio
+STATIC FUNCTION RefreshVXB( oBrowse, nWinNum, XBid )
+
+   LOCAL nMin, nMax, nPage, nPos
+   LOCAL nRatio
+
    //recalc the pos
-   if ordKeyCount() < 30000
+   IF ordKeyCount() < 30000
       nRatio := 1
       nMin := 1
       nMax := ordKeyCount()
       nPage := oBrowse:RowCount()       // ordKeyCount()
-      nPos := ordKeyNo()-oBrowse:RowPos+1  // ordKeyCount()
-   else
+      nPos := ordKeyNo() - oBrowse:RowPos + 1  // ordKeyCount()
+   ELSE
       nRatio := ordKeyCount() / 10
-      do while nRatio > 30000
+      DO WHILE nRatio > 30000
          nRatio := nRatio / 10
-      enddo
+      ENDDO
 
       nMin := 1
-      nMax := round( ordKeyCount() / nRatio, 0)
-      nPage := round(oBrowse:RowCount() / nRatio, 0)       // ordKeyCount()
-      nPos := round( (ordKeyNo()-oBrowse:RowPos+1) / nRatio, 0 )// ordKeyCount()
-   endif
+      nMax := Round( ordKeyCount() / nRatio, 0 )
+      nPage := Round( oBrowse:RowCount() / nRatio, 0 )       // ordKeyCount()
+      nPos := Round( ( ordKeyNo() - oBrowse:RowPos + 1 ) / nRatio, 0 )// ordKeyCount()
+   ENDIF
 
-   WVW_XBupdate(nWinNum, XBid, nPos, nPage, nMin, nMax)
+   WVW_XBupdate( nWinNum, XBid, nPos, nPage, nMin, nMax )
 
-return NIL
+   RETURN NIL
 
-static function RefreshHXB(oBrowse, nWinNum, XBid)
-local nMin, nMax, nPage, nPos
-local nRatio
+STATIC FUNCTION RefreshHXB( oBrowse, nWinNum, XBid )
+
+   LOCAL nMin, nMax, nPage, nPos
+   LOCAL nRatio
+
    //recalc the pos
    nMin := 1
    nMax := oBrowse:ColCount
    nPage := oBrowse:RightVisible - oBrowse:LeftVisible + 1
-   nPos := iif(oBrowse:RightVisible==oBrowse:ColCount, nMax, oBrowse:LeftVisible)
+   nPos := iif( oBrowse:RightVisible == oBrowse:ColCount, nMax, oBrowse:LeftVisible )
 
-   WVW_XBupdate(nWinNum, XBid, nPos, nPage, nMin, nMax)
+   WVW_XBupdate( nWinNum, XBid, nPos, nPage, nMin, nMax )
 
-return NIL
-
-
+   RETURN NIL
 
 //
+
 STATIC FUNCTION DbSkipBlock( n, oTbr )
 
    LOCAL nSkipped := 0
 
-   if n == 0
-      DBSkip( 0 )
+   IF n == 0
+      dbSkip( 0 )
 
-   elseif n > 0
-      do while nSkipped != n .and. TBNext( oTbr )
+   ELSEIF n > 0
+      DO WHILE nSkipped != n .AND. TBNext( oTbr )
          nSkipped++
-      enddo
-   else
-      do while nSkipped != n .and. TBPrev( oTbr )
+      ENDDO
+   ELSE
+      DO WHILE nSkipped != n .AND. TBPrev( oTbr )
          nSkipped--
-      enddo
-   endif
+      ENDDO
+   ENDIF
 
-RETURN  nSkipped
+   RETURN  nSkipped
 
 //
+
 STATIC FUNCTION TBNext( oTbr )
 
-   LOCAL nSaveRecNum := recno()
+   LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
 
-   if Eof()
+   IF EOF()
       lMoved := .F.
-   else
-      DBSkip( 1 )
-      if Eof()
+   ELSE
+      dbSkip( 1 )
+      IF EOF()
          lMoved := .F.
-         DBGoTo( nSaveRecNum )
-      endif
-   endif
+         dbGoto( nSaveRecNum )
+      ENDIF
+   ENDIF
 
-RETURN lMoved
+   RETURN lMoved
+
 //
+
 STATIC FUNCTION TBPrev( oTbr )
-   LOCAL nSaveRecNum := Recno()
+
+   LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
 
-   DBSkip( -1 )
+   dbSkip( - 1 )
 
-   if Bof()
-      DBGoTo( nSaveRecNum )
+   IF BOF()
+      dbGoto( nSaveRecNum )
       lMoved := .F.
-   endif
+   ENDIF
 
-RETURN lMoved
+   RETURN lMoved
+
 //
+
 STATIC FUNCTION VouBlockField( i )
 
-RETURN  { || fieldget( i ) }
+   RETURN { || FieldGet( i ) }
 
 //
 //      WVW_Paint() must be a FUNCTION in your application
@@ -863,36 +884,41 @@ RETURN  { || fieldget( i ) }
 //
 //20040330,was: FUNCTION WVW_Paint( hWnd, msg, wParam, lParam, nWinNum )
 //20040408,was: FUNCTION WVW_Paint( nWinNum, nrow1, ncol1, nrow2, ncol2 )
+
 FUNCTION WVW_Paint( nWinNum )
-   //ldebug("WVW_Paint:" + CRLF +;
-   //       "hWnd = " + alltrim(str(hWnd)) + CRLF +;
-   //       "nWinNum = " + alltrim(str(nWinNum)))
-   if len(s_amiscobjlist) >= nWinNum+1
-      aeval( s_amiscobjlist[nWinNum+1], {| e | eval( e, nWinNum )} )
-   endif
+
+//ldebug( "WVW_Paint:" + hb_eol() +;
+//        "hWnd = " + hb_ntos( hWnd ) + hb_eol() +;
+//        "nWinNum = " + hb_ntos( nWinNum ) )
+   IF Len( s_amiscobjlist ) >= nWinNum + 1
+      AEval( s_amiscobjlist[nWinNum+1], {| e | Eval( e, nWinNum ) } )
+   ENDIF
 
    wvwm_paint( nWinNum )
-RETURN 0
+
+   RETURN 0
 
 //
 //      WVW_SetFocus() must be a FUNCTION in your application
 //      needs to process messages sent through WM_SETFOCUS message
 //      received by the window.
 //
-/*
+#if 0
 FUNCTION WVW_SetFocus( hWnd, nWinNum )
-static nGotFocus := 0
-   if nWinNum==0
-      return NIL
-   endif
-   nGotFocus++
-   @ 0,0 say nGotFocus
-   if nGotFocus % 3 == 0
-      alert("Got focus " + tran(nGotFocus,"9999") + "th times")
-   endif
 
-RETURN nil
-*/
+   STATIC nGotFocus := 0
+
+   IF nWinNum == 0
+      RETURN NIL
+   ENDIF
+   nGotFocus++
+   @ 0, 0 SAY nGotFocus
+   IF nGotFocus % 3 == 0
+      Alert( "Got focus " + tran( nGotFocus,"9999" ) + "th times" )
+   ENDIF
+
+   RETURN nil
+#endif
 
 //
 //      WVW_KillFocus() must be a FUNCTION in your application
@@ -902,328 +928,372 @@ RETURN nil
 //FUNCTION WVW_KillFocus( hWnd )
 //RETURN nil
 
-function WVW_TIMER(nWinNum, hWnd, message, wParam, lParam)
-* this function is called every certain interval, by GTWVW gtwndproc
-   WVW_SBsetText(0, 1, time())
-return NIL
+FUNCTION WVW_TIMER( nWinNum, hWnd, message, wParam, lParam )
 
-function CreateToolbar(nWinNum)
-//for toolbar:
-local nSysBitmap := 1     //0:none 1:small 2:large
-local lDisplayText := .F. //text will be displayed as tooltip instead
-local hWndTB
-local ldefault
+   // this function is called every certain interval, by GTWVW gtwndproc
+   WVW_SBsetText( 0, 1, Time() )
 
-   wvw_tbdestroy(nWinNum)
+   RETURN NIL
 
-   ldefault := lYesNo("would you like to use default toolbar setting?")
+FUNCTION CreateToolbar( nWinNum )
 
-   if !ldefault
-      nSysBitmap := alert("Select toolbar button size", {"Small", "Big"})
-      nSysBitmap := iif(nSysBitmap==0, 1, nSysBitmap)
-      lDisplayText:= alert("Display text in toolbar?", {"Yes", "No"})==1
-   endif
+   //for toolbar:
+   LOCAL nSysBitmap := 1     //0:none 1:small 2:large
+   LOCAL lDisplayText := .F. //text will be displayed as tooltip instead
+   LOCAL hWndTB
+   LOCAL ldefault
 
-   hWndTB := wvw_tbcreate(nWinNum, lDisplayText, NIL, nSysBitmap)
+   wvw_tbdestroy( nWinNum )
 
-   if hWndTB==0
-      lboxmessage("FAILED create toolbar")
-      return NIL
-   endif
+   ldefault := lYesNo( "would you like to use default toolbar setting?" )
+
+   IF !ldefault
+      nSysBitmap := Alert( "Select toolbar button size", { "Small", "Big" } )
+      nSysBitmap := iif( nSysBitmap == 0, 1, nSysBitmap )
+      lDisplayText := Alert( "Display text in toolbar?", { "Yes", "No" } ) == 1
+   ENDIF
+
+   hWndTB := wvw_tbcreate( nWinNum, lDisplayText, NIL, nSysBitmap )
+
+   IF hWndTB == 0
+      lboxmessage( "FAILED create toolbar" )
+      RETURN NIL
+   ENDIF
 
    /* system bitmaps use constants in commctrl.h */
 
    /* using system view bitmaps */
-   wvw_tbAddButton(nWinNum, IDM_NETCONNECT,    9  /*VIEW_NETCONNECT*/, "Connect",2)
-   wvw_tbAddButton(nWinNum, IDM_NETDISCONNECT, 10 /*VIEW_NETDISCONNECT*/, "Dis",2)
-   wvw_tbAddButton(nWinNum)  //separator
+   wvw_tbAddButton( nWinNum, IDM_NETCONNECT,    9  /*VIEW_NETCONNECT*/, "Connect", 2 )
+   wvw_tbAddButton( nWinNum, IDM_NETDISCONNECT, 10 /*VIEW_NETDISCONNECT*/, "Dis", 2 )
+   wvw_tbAddButton( nWinNum )  //separator
 
    /* using system history bitmaps */
-   wvw_tbAddButton(nWinNum, IDM_BACK,          0 /*HIST_BACK*/,   "Back",3)
-   wvw_tbAddButton(nWinNum, IDM_FORWARD,       1 /*HIST_FORWARD*/,"Forward",3)
-   wvw_tbAddButton(nWinNum)  //separator
+   wvw_tbAddButton( nWinNum, IDM_BACK,          0 /*HIST_BACK*/,   "Back", 3 )
+   wvw_tbAddButton( nWinNum, IDM_FORWARD,       1 /*HIST_FORWARD*/, "Forward", 3 )
+   wvw_tbAddButton( nWinNum )  //separator
 
    /* using custom bitmaps */
-   wvw_tbAddButton(nWinNum, IDM_DEMO_BROWSE, "def2.bmp","Browse",0)
-   wvw_tbAddButton(nWinNum, IDM_DEMO_GET,    "vouch1.bmp",  "Get",0)
-   wvw_tbAddButton(nWinNum)  //separator
+   wvw_tbAddButton( nWinNum, IDM_DEMO_BROWSE, "def2.bmp", "Browse", 0 )
+   wvw_tbAddButton( nWinNum, IDM_DEMO_GET,    "vouch1.bmp",  "Get", 0 )
+   wvw_tbAddButton( nWinNum )  //separator
 
    /* using system standard bitmaps */
-   wvw_tbAddButton(nWinNum, IDM_COPY,    1 /*STD_COPY*/, "Copy", 1)
-   wvw_tbAddButton(nWinNum, IDM_PASTE,   2 /*STD_PASTE*/,"Paste",  1)
-   wvw_tbAddButton(nWinNum)  //separator
+   wvw_tbAddButton( nWinNum, IDM_COPY,    1 /*STD_COPY*/, "Copy", 1 )
+   wvw_tbAddButton( nWinNum, IDM_PASTE,   2 /*STD_PASTE*/, "Paste",  1 )
+   wvw_tbAddButton( nWinNum )  //separator
 
-   wvw_tbAddButton(nWinNum, IDM_HELP_INFO, 10 /*STD_PROPERTIES*/,"Info",1)
-   wvw_tbAddButton(nWinNum, IDM_HELP_HELP, 11 /*STD_HELP*/,"Help",1)
-return NIL
+   wvw_tbAddButton( nWinNum, IDM_HELP_INFO, 10 /*STD_PROPERTIES*/, "Info", 1 )
+   wvw_tbAddButton( nWinNum, IDM_HELP_HELP, 11 /*STD_HELP*/, "Help", 1 )
 
-function xDisableToolbar(nWinNum)
-local i
-  for i := 0 to wvw_tbButtonCount(nWinNum)-1
-     WVW_TBEnableButton(nWinNum, i, .F.)
-  next
-return NIL
+   RETURN NIL
 
-function xEnableToolbar(nWinNum)
-local i
-  for i := 0 to wvw_tbButtonCount(nWinNum)-1
-     WVW_TBEnableButton(nWinNum, i, .T.)
-  next
-return NIL
+FUNCTION xDisableToolbar( nWinNum )
+
+   LOCAL i
+
+   FOR i := 0 TO wvw_tbButtonCount( nWinNum ) - 1
+      WVW_TBEnableButton( nWinNum, i, .F. )
+   NEXT
+
+   RETURN NIL
+
+FUNCTION xEnableToolbar( nWinNum )
+
+   LOCAL i
+
+   FOR i := 0 TO wvw_tbButtonCount( nWinNum ) - 1
+      WVW_TBEnableButton( nWinNum, i, .T. )
+   NEXT
+
+   RETURN NIL
 
 //
 
-function ResetMiscObjects( nWinNum )
-   do while len(s_amiscobjlist) < nWinNum+1
-      aadd( s_amiscobjlist, {} )
-   enddo
+FUNCTION ResetMiscObjects( nWinNum )
+
+   DO WHILE Len( s_amiscobjlist ) < nWinNum + 1
+      AAdd( s_amiscobjlist, {} )
+   ENDDO
    s_amiscobjlist[ nWinNum+1 ] := {}
-return .T.
 
-function AddMiscObjects( nWinNum, bAction )
-   aadd( s_amiscobjlist[ nWinNum+1 ], bAction )
-return .T.
+   RETURN .T.
 
+FUNCTION AddMiscObjects( nWinNum, bAction )
+
+   AAdd( s_amiscobjlist[ nWinNum+1 ], bAction )
+
+   RETURN .T.
 
 // inkey() handler **************************************
 
 /* this is for use with SETINKEYAFTERBLOCK() */
-function nAfterInkey(nkey)
-* check if nkey is:
-* (1) menu command, or
-* (2) mouse button action
-local bAction
-  if nkey==WVW_DEFAULT_MENUKEYEVENT
-     * MenuKeyEvent
-     return nMenuChecker(WVW_GETLASTMENUEVENT())
-  //was: elseif ASCAN({K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE}, nKey) > 0
-  elseif ASCAN({K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE, K_MMLEFTDOWN,;
-                K_LDBLCLK}, nKey) > 0
-     * MouseEvent
-     return wvwm_nMouseChecker(nkey)
-  elseif (bAction := SETKEY(nKey)) != NIL
-     eval(bAction, PROCNAME(), PROCLINE(), READVAR())
-     return 0
-  endif
-return nkey //nAfterInkey(nkey)
 
+FUNCTION nAfterInkey( nkey )
+
+   // check if nkey is:
+   // (1) menu command, or
+   // (2) mouse button action
+   LOCAL bAction
+   IF nkey == WVW_DEFAULT_MENUKEYEVENT
+      // MenuKeyEvent
+      RETURN nMenuChecker( WVW_GETLASTMENUEVENT() )
+      //was: elseif ASCAN({K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE}, nKey) > 0
+   ELSEIF AScan( { K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE, K_MMLEFTDOWN, ;
+         K_LDBLCLK }, nKey ) > 0
+      // MouseEvent
+      RETURN wvwm_nMouseChecker( nkey )
+   ELSEIF ( bAction := SetKey( nKey ) ) != NIL
+      Eval( bAction, ProcName(), ProcLine(), ReadVar() )
+      RETURN 0
+   ENDIF
+
+   RETURN nkey //nAfterInkey(nkey)
 
 // MENU handler **************************************
 
-function nMenuChecker(nMenuEvent)
-local nkey := 0
-   xDisableMenus(0, 4)
-   //xDisableToolbar(0)
+FUNCTION nMenuChecker( nMenuEvent )
 
-   do case
-   case nMenuEvent==IDM_DEMO_GET
-      * lboxmessage("Demo GET")
+   LOCAL nkey := 0
+
+   xDisableMenus( 0, 4 )
+// xDisableToolbar( 0 )
+
+   DO CASE
+   CASE nMenuEvent == IDM_DEMO_GET
+      // lboxmessage( "Demo GET" )
       Demo_Get()
-   case nMenuEvent==IDM_DEMO_BROWSE
-      * lboxmessage("Demo BROWSE")
+   CASE nMenuEvent == IDM_DEMO_BROWSE
+      // lboxmessage( "Demo BROWSE" )
       Demo_Browse()
-   case nMenuEvent==IDM_DEMO_CONSOLE
-      * lboxmessage("Demo CONSOLE")
+   CASE nMenuEvent == IDM_DEMO_CONSOLE
+      // lboxmessage( "Demo CONSOLE" )
       Demo_Console()
-   //case nMenuEvent==IDM_DEMO_COLOR
-   //   * lboxmessage("Demo COLOR")
-   //   Demo_Color()
-   case nMenuEvent==IDM_DEMO_EXIT
-      * lboxmessage("should EXIT!")
+// CASE nMenuEvent == IDM_DEMO_COLOR
+//    // lboxmessage( "Demo COLOR" )
+//    Demo_Color()
+   CASE nMenuEvent == IDM_DEMO_EXIT
+      // lboxmessage( "should EXIT!" )
       nkey := K_ESC
 
-   case nMenuEvent==IDM_WINDOW_SPACING_INCREASE
-      WVW_SetLineSpacing(NIL, WVW_SetLineSpacing()+2)
-   case nMenuEvent==IDM_WINDOW_SPACING_DECREASE
-      WVW_SetLineSpacing(NIL, WVW_SetLineSpacing()-2)
-   case nMenuEvent==IDM_WINDOW_SPACING_DEFAULT
+   CASE nMenuEvent == IDM_WINDOW_SPACING_INCREASE
+      WVW_SetLineSpacing( NIL, WVW_SetLineSpacing() + 2 )
+   CASE nMenuEvent == IDM_WINDOW_SPACING_DECREASE
+      WVW_SetLineSpacing( NIL, WVW_SetLineSpacing() - 2 )
+   CASE nMenuEvent == IDM_WINDOW_SPACING_DEFAULT
       WVW_SetDefLineSpacing( WVW_SetLineSpacing() )
 
-   case nMenuEvent==IDM_TOOLBAR_ENABLE
-      xEnableToolbar(0)
-   case nMenuEvent==IDM_TOOLBAR_DISABLE
-      xDisableToolbar(0)
-   case nMenuEvent==IDM_TOOLBAR_RESET
-      CreateToolbar(0)
-   case nMenuEvent==IDM_TOOLBAR_DELETE
-      WVW_TBdestroy(0)
+   CASE nMenuEvent == IDM_TOOLBAR_ENABLE
+      xEnableToolbar( 0 )
+   CASE nMenuEvent == IDM_TOOLBAR_DISABLE
+      xDisableToolbar( 0 )
+   CASE nMenuEvent == IDM_TOOLBAR_RESET
+      CreateToolbar( 0 )
+   CASE nMenuEvent == IDM_TOOLBAR_DELETE
+      WVW_TBdestroy( 0 )
 
-   case nMenuEvent==IDM_HELP_HELP
+   CASE nMenuEvent == IDM_HELP_HELP
       xHelp()
-   case nMenuEvent==IDM_HELP_INFO
+   CASE nMenuEvent == IDM_HELP_INFO
       xDebugInfo()
-   otherwise
-      lboxmessage("Sorry, unknown menu option")
-   endcase
+   OTHERWISE
+      lboxmessage( "Sorry, unknown menu option" )
+   ENDCASE
 
-   //xEnableToolbar(0)
-   xEnableMenus(0, 4)
-return nkey //nMenuChecker()
+// xEnableToolbar( 0 )
+   xEnableMenus( 0, 4 )
+
+   RETURN nkey //nMenuChecker()
 
 // MISCELLANEOUS *******************************************************
 
-function lBoxMessage(cMsg, cTitle)
-   default cTitle to "Info"
-   win_messagebox(WVW_GETWINDOWHANDLE(), cMsg, cTitle, MB_OK + MB_ICONINFORMATION + MB_SYSTEMMODAL)
-return .T.
+FUNCTION lBoxMessage( cMsg, cTitle )
 
-function lYesNo(cMsg, cTitle)
-   default cTitle to "Konfirmasi"
+   DEFAULT cTitle TO "Info"
+   win_messagebox( WVW_GETWINDOWHANDLE(), cMsg, cTitle, MB_OK + MB_ICONINFORMATION + MB_SYSTEMMODAL )
 
-return win_messagebox(WVW_GETWINDOWHANDLE(), cMsg, cTitle, MB_YESNO + MB_ICONQUESTION + MB_SYSTEMMODAL) == IDYES
+   RETURN .T.
 
-function lDebug(cMsg)
-return lBoxMessage(cMsg, "Debug")
+FUNCTION lYesNo( cMsg, cTitle )
 
-function xDebugInfo()
-static s_nfh := 0
-   MSETPOS(maxrow(), maxcol())
+   DEFAULT cTitle TO "Konfirmasi"
 
-   //SETMOUSE(.T., maxrow(), maxcol())
+   RETURN win_messagebox( WVW_GETWINDOWHANDLE(), cMsg, cTitle, MB_YESNO + MB_ICONQUESTION + MB_SYSTEMMODAL ) == IDYES
 
-   //WVW_SETMOUSEPOS(WVW_nNumWindows()-1, maxrow(), maxcol())
+FUNCTION lDebug( cMsg )
 
-   lboxmessage("GTWVW test/demo" + CRLF +;
-          "Budyanto Dj. <budyanto@centrin.net.id>" + CRLF+;
-          CRLF +;
-          "Topmost Window is Window #" + alltrim(str(wvw_nNumWindows()-1)) + CRLF +;
-          "Current Window is Window #" + alltrim(str(wvw_nSetCurWindow())) + CRLF +;
-          "MaxRow() = " + alltrim(str(maxrow())) + ", MaxCol() = " + alltrim(str(maxcol())) + CRLF +;
-          "Row() = " + alltrim(str(row())) + ", Col() = " + alltrim(str(col())) + CRLF +;
-          "WVW_RowOfs() = " + alltrim(str(wvw_nrowofs())) + ", WVW_ColOfs() = " + alltrim(str(wvw_ncolofs())) + CRLF +;
-          "Line Spacing = " + alltrim(str(WVW_SetLineSpacing()))  + CRLF +;
-          "Default Line Spacing = " + alltrim(str(WVW_SetDefLineSpacing()))  + CRLF +;
-          CRLF +;
-          "Font Face = '" + s_aFontInfo[1] + "'" + CRLF +;
-          "Font Height = " + alltrim(str(s_aFontInfo[2])) + CRLF +;
-          "Font Width = " + alltrim(str(s_aFontInfo[3])) + CRLF +;
-          CRLF+;
-          "BTW, mouse pointer now sits on maxrow(),maxcol(), doesn't it?")
-return NIL
+   RETURN lBoxMessage( cMsg, "Debug" )
 
-function xHelp()
-   lboxmessage("GTWVW test/demo" + CRLF +;
-          "Budyanto Dj. <budyanto@centrin.net.id>" + CRLF+;
-          CRLF +;
-          "Hotkeys (available in any window):" + CRLF+;
-          "F1 : Help" + CRLF+;
-          "F2 : Info on current window" + CRLF+;
-          "F3 : Open a new window of a pseudo-console typewriter" + CRLF+;
-          "F9 : Decrease Line Spacing" + CRLF+;
-          "F10: Increase Line Spacing" + CRLF+;
-          "F11: Set as Default Line Spacing" + CRLF+;
-          CRLF+;
-          "Test/demo available:" + CRLF+;
-          "GET: a simple GET/READ session"+CRLF+;
-          "BROWSE: a simple TBROWSE session"+CRLF+;
-          CRLF+;
-          "CONSOLE: a simple CONSOLE session" + CRLF+;
-          "You are interacting in a typewriter mode." + CRLF+;
-          "Press Ctrl+W to open a new, bigger window." + CRLF+;
-          "Press ESC to exit)"+CRLF+;
-          CRLF+;
-          "Maximum number of windows opened: " + alltrim(str(WVW_MAXWINDOWS)) + CRLF+;
-          CRLF+;
-          "Other info:"+CRLF+;
-          "Window repainting is checked at 100msec interval")
-return NIL
+FUNCTION xDebugInfo()
 
-function nCeiling(nNumber, nRoundDec)
-* WARNING!!! tidak bekerja untuk nRoundDec > 0
-* nRoundDec: 0=satuan, -1=puluhan, -2=ratusan, -3=ribuan
-local i
-local nTemp
-   default nRoundDec to 0   //SATUAN
-   if nRoundDec > 0
+   STATIC s_nfh := 0
+
+   MSetPos( MaxRow(), MaxCol() )
+
+// SETMOUSE( .T., MaxRow(), MaxCol() )
+
+// WVW_SETMOUSEPOS( WVW_nNumWindows() - 1, MaxRow(), MaxCol() )
+
+   lboxmessage( "GTWVW test/demo" + hb_eol() + ;
+      "Budyanto Dj. <budyanto@centrin.net.id>" + hb_eol() + ;
+      hb_eol() + ;
+      "Topmost Window is Window #" + hb_ntos( wvw_nNumWindows() - 1 ) + hb_eol() + ;
+      "Current Window is Window #" + hb_ntos( wvw_nSetCurWindow() ) + hb_eol() + ;
+      "MaxRow() = " + hb_ntos( MaxRow() ) + ", MaxCol() = " + hb_ntos( MaxCol() ) + hb_eol() + ;
+      "Row() = " + hb_ntos( Row() ) + ", Col() = " + hb_ntos( Col() ) + hb_eol() + ;
+      "WVW_RowOfs() = " + hb_ntos( wvw_nrowofs() ) + ", WVW_ColOfs() = " + hb_ntos( wvw_ncolofs() ) + hb_eol() + ;
+      "Line Spacing = " + hb_ntos( WVW_SetLineSpacing() ) + hb_eol() + ;
+      "Default Line Spacing = " + hb_ntos( WVW_SetDefLineSpacing() ) + hb_eol() + ;
+      hb_eol() + ;
+      "Font Face = '" + s_aFontInfo[ 1 ] + "'" + hb_eol() + ;
+      "Font Height = " + hb_ntos( s_aFontInfo[ 2 ] ) + hb_eol() + ;
+      "Font Width = " + hb_ntos( s_aFontInfo[ 3 ] ) + hb_eol() + ;
+      hb_eol() + ;
+      "BTW, mouse pointer now sits on maxrow(),maxcol(), doesn't it?" )
+
+   RETURN NIL
+
+FUNCTION xHelp()
+
+   lboxmessage( "GTWVW test/demo" + hb_eol() + ;
+      "Budyanto Dj. <budyanto@centrin.net.id>" + hb_eol() + ;
+      hb_eol() + ;
+      "Hotkeys (available in any window):" + hb_eol() + ;
+      "F1 : Help" + hb_eol() + ;
+      "F2 : Info on current window" + hb_eol() + ;
+      "F3 : Open a new window of a pseudo-console typewriter" + hb_eol() + ;
+      "F9 : Decrease Line Spacing" + hb_eol() + ;
+      "F10: Increase Line Spacing" + hb_eol() + ;
+      "F11: Set as Default Line Spacing" + hb_eol() + ;
+      hb_eol() + ;
+      "Test/demo available:" + hb_eol() + ;
+      "GET: a simple GET/READ session" + hb_eol() + ;
+      "BROWSE: a simple TBROWSE session" + hb_eol() + ;
+      hb_eol() + ;
+      "CONSOLE: a simple CONSOLE session" + hb_eol() + ;
+      "You are interacting in a typewriter mode." + hb_eol() + ;
+      "Press Ctrl+W to open a new, bigger window." + hb_eol() + ;
+      "Press ESC to exit)" + hb_eol() + ;
+      hb_eol() + ;
+      "Maximum number of windows opened: " + hb_ntos( WVW_MAXWINDOWS ) + hb_eol() + ;
+      hb_eol() + ;
+      "Other info:" + hb_eol() + ;
+      "Window repainting is checked at 100msec interval" )
+
+   RETURN NIL
+
+FUNCTION nCeiling( nNumber, nRoundDec )
+
+   // WARNING!!! tidak bekerja untuk nRoundDec > 0
+   // nRoundDec: 0=satuan, -1=puluhan, -2=ratusan, -3=ribuan
+   LOCAL i
+   LOCAL nTemp
+
+   DEFAULT nRoundDec TO 0   // SATUAN
+
+   IF nRoundDec > 0
       nRoundDec := 0
-   endif
+   ENDIF
 
-   * geser kanan
-   for i := nRoundDec to (0-1)   //artinya kalau SATUAN gak usah
+   // geser kanan
+   FOR i := nRoundDec to ( 0 - 1 )   //artinya kalau SATUAN gak usah
       nNumber := nNumber / 10
-   next
+   NEXT
 
-   nTemp := nNumber - INT(nNumber)  //right of dec point
-   if nTemp>0
-      nNumber := INT(nNumber) + 1
-   else
-      nNumber := INT(nNumber)
-   endif
+   nTemp := nNumber - Int( nNumber )  //right of dec point
+   IF nTemp > 0
+      nNumber := Int( nNumber ) + 1
+   ELSE
+      nNumber := Int( nNumber )
+   ENDIF
 
-   * geser kiri
-   for i := nRoundDec to (0-1)   //artinya kalau SATUAN gak usah
+   // geser kiri
+   FOR i := nRoundDec to ( 0 - 1 )   //artinya kalau SATUAN gak usah
       nNumber := nNumber * 10
-   next
-return nNumber
+   NEXT
+
+   RETURN nNumber
 
 /* Modified from SetDefaultWindowSize() sample from Peter Rees */
 /* Note: width < 0 appears better, but mouse caption will look bad */
+
 FUNCTION SetDefaultWindowSize()
-  //x was: LOCAL Result:= SetMode(32,98), ScreenWidth
-  LOCAL Result:= .T., ScreenWidth
-  SetMode(25,80)
-  IF Result
-     screenWidth := Wvw_GetScreenWidth()
-     DO CASE
-     CASE screenWidth >= 1024
-       Result:= Wvw_SetFont(,'Terminal',20,10)
-     CASE screenWidth >= 800
-       IF HB_OSISWINNT()
-          Result:= Wvw_SetFont(,'Lucida Console',16,-8)
-       ELSE
-          Result:= Wvw_SetFont(,'System',16,-8)
-       ENDIF
-     OTHERWISE
-        Result:= Wvw_SetFont(,'Terminal',12,6)
-     ENDCASE
-     IF Result
-        Wvw_SetCodePage(,255)  // #define OEM_CHARSET 255 - from wingdi.h
-        CLS
-     ENDIF
-  ENDIF
-RETURN Result
 
-//static function isWinNT()
-//return lYesNo("I am preparing the 'best' font for you..." + CRLF+;
-//              "Sorry, is it Windows NT?")
+//x was: LOCAL Result:= SetMode(32,98), ScreenWidth
+   LOCAL Result := .T. , ScreenWidth
+   SetMode( 25, 80 )
+   IF Result
+      screenWidth := Wvw_GetScreenWidth()
+      DO CASE
+      CASE screenWidth >= 1024
+         Result := Wvw_SetFont( , 'Terminal', 20, 10 )
+      CASE screenWidth >= 800
+         IF hb_osIsWinNT()
+            Result := Wvw_SetFont( , 'Lucida Console', 16, - 8 )
+         ELSE
+            Result := Wvw_SetFont( , 'System', 16, - 8 )
+         ENDIF
+      OTHERWISE
+         Result := Wvw_SetFont( , 'Terminal', 12, 6 )
+      ENDCASE
+      IF Result
+         Wvw_SetCodePage( , 255 )  // #define OEM_CHARSET 255 - from wingdi.h
+         CLS
+      ENDIF
+   ENDIF
 
+   RETURN Result
+
+#if 0
+
+STATIC FUNCTION isWinNT()
+
+   RETURN lYesNo( "I am preparing the 'best' font for you..." + hb_eol() + ;
+      "Sorry, is it Windows NT?" )
+
+#endif
 
 //ERROR handler *******************************************************
 
-procedure ErrorSys()
-ErrorBlock( { |e| MyError( e ) } )
-return
+PROCEDURE ErrorSys()
+
+   ErrorBlock( { |e| MyError( e ) } )
+
+   RETURN
+
+STATIC PROCEDURE MyError( e )
+
+   LOCAL cTrace := "", i := 1 , cErr
+
+   cErr := "Runtime error" + hb_eol() + ;
+      hb_eol() + ;
+      "Gencode: " + hb_ntos( e:GenCode ) + hb_eol() + ;
+      "Desc: " + e:Description +  + hb_eol() + ;
+      "Sub-system: " + hb_ntos( e:SubCode ) + hb_eol() + ;
+      hb_eol() + ;
+      "Call trace:" + hb_eol() + ;
+      hb_eol()
 
 
-static procedure MyError( e )
-local cTrace := "", i := 1 , cErr
+   DO WHILE ! Empty( ProcName( ++i ) )
+      cErr += RTrim( ProcName( i ) ) + "(" + hb_ntos( ProcLine( i ) ) + ")" + hb_eol()
+   ENDDO
 
-cErr := "Runtime error" + CRLF + ;
-        CRLF + ;
-        "Gencode: " + LTrim( Str( e:GenCode ) ) + CRLF + ;
-        "Desc: " + e:Description +  + CRLF + ;
-        "Sub-system: " + LTrim( Str( e:SubCode ) ) + CRLF + ;
-        CRLF + ;
-        "Call trace:" + CRLF + ;
-        CRLF
+// ? cErr  // Calls quit
+   ldebug( cErr )
+   hb_gtInfo( HB_GTI_INKEYFILTER, NIL )
+   QUIT
 
+   RETURN
 
-do while ! Empty( ProcName( ++i ) )
-    cErr += Trim( ProcName( i ) ) + "(" + Ltrim( Str( ProcLine( i ) ) ) + ")" + CRLF
-enddo
+PROCEDURE debugging( cMsg, nRow, nCol, nWinNum )
 
-//? cErr  // Calls quit
-ldebug(cErr)
-hb_gtInfo( HB_GTI_INKEYFILTER, NIL )
-quit
+   ? cmsg + hb_ntos( nrow ) + ", " + hb_ntos( ncol )
 
-return
+   RETURN
 
-proc debugging(cMsg, nRow, nCol, nWinNum)
-  ? cmsg + alltrim(str(nrow)) + ", " + alltrim(str(ncol))
-return
+PROCEDURE pause()
 
-proc pause
-  tone(660,2)
-  inkey(0)
-return
+   Tone( 660, 2 )
+   Inkey( 0 )
+
+   RETURN

@@ -1508,8 +1508,8 @@ HB_FUNC( SSL_USE_PRIVATEKEY )
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* ---------------------------------------------------------------------------- */
 /* Callback */
+/* -------- */
 
 static void hb_ssl_msg_callback( int write_p, int version, int content_type, const void * buf, size_t len, SSL * ssl, void * userdata )
 {

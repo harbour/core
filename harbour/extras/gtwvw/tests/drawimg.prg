@@ -31,7 +31,10 @@
    WUTIL.PRG is a simple "middle module" interfacing an application with
    gtwvw.
  */
+
 #include "common.ch"
+#include "inkey.ch"
+#include "setcurs.ch"
 #include "hbclass.ch"
 
 //WPAINTOBJ types
@@ -73,90 +76,93 @@
 STATIC s_aPObjList := {}
 
 PROCEDURE Main()
-local ntop := 7,;
-      nleft:= 3,;
-      nbot := maxrow()-2,;
-      nrig := maxcol()-2,;
-      nmidver:=INT((ntop+nbot)/2),;
-      nmidhor:=INT((nleft+nrig)/2)
-local cpict := "vouch1.gif",;
-      ltransp := .F.,;
+
+   LOCAL ntop := 7, ;
+      nleft := 3, ;
+      nbot := MaxRow() - 2, ;
+      nrig := MaxCol() - 2, ;
+      nmidver := Int( ( ntop + nbot ) / 2 ), ;
+      nmidhor := Int( ( nleft + nrig ) / 2 )
+   LOCAL cpict := "vouch1.gif", ;
+      ltransp := .F. , ;
       nMaxCache := wvw_SetMaxBMcache()
-local i,j,oWPaint
-local getlist := {}
-   setcolor("N/W,N/GR*,,,N/W*")
-   wvw_setcodepage(,255)
+   LOCAL i, j, oWPaint
+   LOCAL getlist := {}
+
+   SetColor( "N/W,N/GR*,,,N/W*" )
+   wvw_setcodepage( , 255 )
    wg_ResetWPaintObj( 0 )
-   do while .T.
+   DO WHILE .T.
       CLS
-      setcursor(1)
-      cpict := padr(cpict,40)
-      @ 0,0 say "FileName  :" get cpict pict "@K" valid file(alltrim(cpict))
-      @ 1,0 say "Transpar? :" get ltransp pict "Y"
-      @ 2,0 say "Max Cache :" get nMaxCache pict "999"
-      @ 3,0 say "NumOfCache=" + transform(wvw_numBMcache(),"999") +;
-                ", Max NumOfCache=" + transform(wvw_SetMaxBMcache(),"999")
-      read
-      if lastkey()==27
-         exit
-      endif
-      wvw_SetMaxBMcache(nMaxCache)
-      @ 3,0 say "NumOfCache=" + transform(wvw_numBMcache(),"999") +;
-                ", Max NumOfCache=" + transform(wvw_SetMaxBMcache(),"999")
+      SetCursor( SC_NORMAL )
+      cpict := PadR( cpict, 40 )
+      @ 0, 0 SAY "FileName  :" GET cpict PICT "@K" VALID File( AllTrim( cpict ) )
+      @ 1, 0 SAY "Transpar? :" GET ltransp PICT "Y"
+      @ 2, 0 SAY "Max Cache :" GET nMaxCache PICT "999"
+      @ 3, 0 SAY "NumOfCache=" + Transform( wvw_numBMcache(), "999" ) + ;
+         ", Max NumOfCache=" + Transform( wvw_SetMaxBMcache(), "999" )
+      READ
+      IF LastKey() == K_ESC
+         EXIT
+      ENDIF
+      wvw_SetMaxBMcache( nMaxCache )
+      @ 3, 0 SAY "NumOfCache=" + Transform( wvw_numBMcache(), "999" ) + ;
+         ", Max NumOfCache=" + Transform( wvw_SetMaxBMcache(), "999" )
 
-      @ 5,0 say "TOPLEFT: stretched image                 TOPRIGHT: fit vertically (proportional)"
-      @ 6,0 say "BOTLEFT: fit horizontally (proportional) BOTRIGHT: actual image size"
+      @ 5, 0 SAY "TOPLEFT: stretched image                 TOPRIGHT: fit vertically (proportional)"
+      @ 6, 0 SAY "BOTLEFT: fit horizontally (proportional) BOTRIGHT: actual image size"
 
-      cpict := alltrim(cpict)
+      cpict := AllTrim( cpict )
 
       //wvw_loadpicture( 1, cpict ) //20060707
 
-      setcursor(0)
-      DISPBEGIN()
-      for i := ntop to nbot
-         for j := nleft to nrig
-            @ i,j say "X"
-         next
-      next
-      @ ntop,nmidhor to nbot,nmidhor
-      @ nmidver,nleft to nmidver,nrig
-      @ ntop,nleft to nbot,nrig
-      DISPEND()
+      SetCursor( SC_NONE )
+      DispBegin()
+      FOR i := ntop TO nbot
+         FOR j := nleft TO nrig
+            @ i, j SAY "X"
+         NEXT
+      NEXT
+      @ ntop, nmidhor TO nbot, nmidhor
+      @ nmidver, nleft TO nmidver, nrig
+      @ ntop, nleft TO nbot, nrig
+      DispEnd()
 
-      * topleft panel, stretch/fit to panel
-      oWPaint := wPaintObj():New(0, WPAINTOBJ_IMAGE, "TOPLEFT", ntop+1, nleft+1, nmidver-1, nmidhor-1, NIL, ltransp)
+      // topleft panel, stretch/fit to panel
+      oWPaint := wPaintObj():New( 0, WPAINTOBJ_IMAGE, "TOPLEFT", ntop + 1, nleft + 1, nmidver - 1, nmidhor - 1, NIL, ltransp )
       oWPaint:cImage := cpict
       wg_AddWPaintObj( 0, oWPaint )
 
-      * topright panel, fit vertically
-      oWPaint := wPaintObj():New(0, WPAINTOBJ_IMAGE, "TOPRIGHT", ntop+1, nmidhor+1, nmidver-1, NIL, NIL, ltransp)
+      // topright panel, fit vertically
+      oWPaint := wPaintObj():New( 0, WPAINTOBJ_IMAGE, "TOPRIGHT", ntop + 1, nmidhor + 1, nmidver - 1, NIL, NIL, ltransp )
       oWPaint:cImage := cpict
       wg_AddWPaintObj( 0, oWPaint )
 
-      * botleft panel, fit horizontally
-      oWPaint := wPaintObj():New(0, WPAINTOBJ_IMAGE, "BOTLEFT", nmidver+1, nleft+1, NIL, nmidhor-1, NIL, ltransp)
+      // botleft panel, fit horizontally
+      oWPaint := wPaintObj():New( 0, WPAINTOBJ_IMAGE, "BOTLEFT", nmidver + 1, nleft + 1, NIL, nmidhor - 1, NIL, ltransp )
       oWPaint:cImage := cpict
       wg_AddWPaintObj( 0, oWPaint )
 
-      * botright panel, actual image size
-      oWPaint := wPaintObj():New(0, WPAINTOBJ_IMAGE, "BOTRIGHT", nmidver+1, nmidhor+1, NIL, NIL, NIL, ltransp)
+      // botright panel, actual image size
+      oWPaint := wPaintObj():New( 0, WPAINTOBJ_IMAGE, "BOTRIGHT", nmidver + 1, nmidhor + 1, NIL, NIL, NIL, ltransp )
       oWPaint:cImage := cpict
       wg_AddWPaintObj( 0, oWPaint )
 
-      inkey(0)
+      Inkey( 0 )
 
-      * delete all image objects
-      wg_DelWPaintObj(0, WPAINTOBJ_IMAGE, NIL)
-   enddo //while .T.
-   setcursor(1)
-return
+      // delete all image objects
+      wg_DelWPaintObj( 0, WPAINTOBJ_IMAGE, NIL )
+   ENDDO //while .T.
+   SetCursor( SC_NORMAL )
 
+   RETURN
 
-*************** simple wpaint organizer *******
+//************** simple wpaint organizer *******
 
 /*********************************************************/
 
 CLASS wGUIObj
+
    DATA nWinNum                      //parent window's number
    DATA lVisible                     //is the object visible
    DATA nType                        //Type
@@ -164,12 +170,13 @@ CLASS wGUIObj
    DATA nRow1, nCol1, nRow2, nCol2   //mouse object region
    DATA aOffTLBR                     //offset in pixels
 
-ENDCLASS //wGUIObj
+ENDCLASS
 
 /*********************************************************/
 
 CLASS wPaintObj FROM wGUIObj
-   * image like wvtimage
+
+   // image like wvtimage
    DATA cImage
    DATA lTransp
 
@@ -178,11 +185,13 @@ CLASS wPaintObj FROM wGUIObj
    METHOD Undraw()
    METHOD Hide()
    METHOD Show()
-ENDCLASS //wPaintOBJ
 
-METHOD New(nWinNum, nType, cId, nRow1, nCol1, nRow2, nCol2, aOffTLBR, lTransp) CLASS wPaintObj
-   default aOffTLBR to {0,0,0,0}
-   default lTransp to .F.
+ENDCLASS
+
+METHOD New( nWinNum, nType, cId, nRow1, nCol1, nRow2, nCol2, aOffTLBR, lTransp ) CLASS wPaintObj
+
+   DEFAULT aOffTLBR to { 0, 0, 0, 0 }
+   DEFAULT lTransp TO .F.
 
    ::nWinNum := nWinNum
    ::lVisible := .T.
@@ -194,163 +203,177 @@ METHOD New(nWinNum, nType, cId, nRow1, nCol1, nRow2, nCol2, aOffTLBR, lTransp) C
    ::nRow2 := nRow2
    ::nCol2 := nCol2
 
-   if !(valtype(aOffTLBR)=="A")
-      aOffTLBR := {0,0,0,0}
-   endif
+   IF !( ValType( aOffTLBR ) == "A" )
+      aOffTLBR := { 0, 0, 0, 0 }
+   ENDIF
 
-   ::aOffTLBR := aclone(aOffTLBR)
+   ::aOffTLBR := AClone( aOffTLBR )
 
    ::lTransp := lTransp
-RETURN Self
+
+   RETURN Self
 
 METHOD Draw() CLASS wPaintObj
-   if !::lVisible
-      return NIL
-   endif
 
-   do case
-   case ::nType==WPAINTOBJ_IMAGE
-      if !empty(::cImage)
+   IF !::lVisible
+      RETURN NIL
+   ENDIF
+
+   DO CASE
+   case ::nType == WPAINTOBJ_IMAGE
+      IF !Empty( ::cImage )
          WVW_DRAWIMAGE( ::nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ;
-                        ::cImage, ::aOffTLBR, ::lTransp )
-      endif
+            ::cImage, ::aOffTLBR, ::lTransp )
+      ENDIF
 
-   otherwise
-      * lBoxErrMessage()
-   endcase
+   OTHERWISE
+      // lBoxErrMessage()
+   ENDCASE
 
-RETURN NIL  //DRAW()
+   RETURN NIL  //DRAW()
 
+// undraw the object
+// normally this is called with ::lVisible == .F.,
+// otherwise the object will be redrawn by WVW_PAINT
 METHOD Undraw() CLASS wPaintObj
-* undraw the object
-* normally this is called with ::lVisible == .F.,
-* otherwise the object will be redrawn by WVW_PAINT
-local cScreen
-local nRow1, nCol1, nRow2, nCol2, nMaxRow, nMaxCol
-   * to be safer, the area can be enlarged first
-   nMaxRow := maxrow()
-   nMaxCol := maxcol()
 
-   do case
-   case ::nType==WPAINTOBJ_LABEL
+   LOCAL cScreen
+   LOCAL nRow1, nCol1, nRow2, nCol2, nMaxRow, nMaxCol
+
+   // to be safer, the area can be enlarged first
+   nMaxRow := MaxRow()
+   nMaxCol := MaxCol()
+
+   DO CASE
+   case ::nType == WPAINTOBJ_LABEL
       nRow1 := ::nRow1
       nCol1 := ::nCol1
       nRow2 := ::nRow2
       nCol2 := ::nCol2
-   otherwise
-      nRow1 := max(::nRow1-1, 0)
-      nCol1 := max(::nCol1-1, 0)
-      nRow2 := min(::nRow2+1, nMaxRow)
-      nCol2 := min(::nCol2+1, nMaxCol)
-   endcase
+   OTHERWISE
+      nRow1 := Max( ::nRow1 - 1, 0 )
+      nCol1 := Max( ::nCol1 - 1, 0 )
+      nRow2 := Min( ::nRow2 + 1, nMaxRow )
+      nCol2 := Min( ::nCol2 + 1, nMaxCol )
+   ENDCASE
 
-   cScreen := savescreen(nRow1, nCol1, nRow2, nCol2)
-   DISPBEGIN()
-   restscreen(nRow1, nCol1, nRow2, nCol2, cScreen)
-   DISPEND()
-RETURN NIL //undraw()
+   cScreen := SaveScreen( nRow1, nCol1, nRow2, nCol2 )
+   DispBegin()
+   RestScreen( nRow1, nCol1, nRow2, nCol2, cScreen )
+   DispEnd()
+
+   RETURN NIL //undraw()
 
 METHOD Hide() CLASS wPaintObj
-* temporarily hides the object
+
+   // temporarily hides the object
    ::lVisible := .F.
    ::Undraw()
-RETURN NIL
+
+   RETURN NIL
 
 METHOD Show() CLASS wPaintObj
-* show the object
+
+   // show the object
    ::lVisible := .T.
    ::draw()
-RETURN NIL
+
+   RETURN NIL
 
 /*********************************************************/
 
-function wg_ResetWPaintObj( nWinNum, nObjNum, lStrict )
-* clears all wPaint objects from window nWinNum
-* if nObjNum specified, clears object >= nObjNum
-local i
-   default nObjNum to 0
-   default lStrict to .F.
+// clears all wPaint objects from window nWinNum
+// if nObjNum specified, clears object >= nObjNum
+FUNCTION wg_ResetWPaintObj( nWinNum, nObjNum, lStrict )
 
-   do while len(s_aPObjList) < nWinNum+1
-      aadd( s_aPObjList, {} )
-   enddo
+   LOCAL i
+   DEFAULT nObjNum TO 0
+   DEFAULT lStrict TO .F.
 
-      asize(s_aPObjList[ nWinNum+1 ], nObjNum)
+   DO WHILE Len( s_aPObjList ) < nWinNum + 1
+      AAdd( s_aPObjList, {} )
+   ENDDO
 
-return .T.
+   ASize( s_aPObjList[ nWinNum + 1 ], nObjNum )
 
-function wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
-* adds a WPaint object oWPaint into window nWinNum
-* returns ::cId if successful. "" if failed.
-local i
-local nLen, aRect //20050720
-   default lStrict to .F.
-   default nOperation to WOBJ_ADD_OVERWRITE
+   RETURN .T.
 
-   * simplified:
+// adds a WPaint object oWPaint into window nWinNum
+// returns ::cId if successful. "" if failed.
+FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
+
+   LOCAL i
+   LOCAL nLen, aRect //20050720
+   DEFAULT lStrict TO .F.
+   DEFAULT nOperation TO WOBJ_ADD_OVERWRITE
+
+   // simplified:
    nOperation := WOBJ_ADD_OVERWRITE
 
-   * parameter checking...
-   * ...
+   // parameter checking...
+   // ...
 
-      * exist nType + cId ?
-      i := ASCAN(s_aPObjList[ nWinNum+1 ], {| x | x:nType==oWPaint:nType .and. x:cId==oWPaint:cId})
+   // exist nType + cId ?
+   i := AScan( s_aPObjList[ nWinNum + 1 ], {| x | x:nType == oWPaint:nType .AND. x:cId == oWPaint:cId } )
 
-   if i > 0
-      * so we are about to overwrite now...
+   IF i > 0
+      // so we are about to overwrite now...
       //::Hide() is ideal, but it can be slow
       //let's do it only of user want strict/perfect operation
-      if lStrict
-         s_aPObjList[ nWinNum+1 ][i]:Hide()
-      else
-         s_aPObjList[ nWinNum+1 ][i]:lVisible := .F.
-      endif
-      s_aPObjList[ nWinNum+1 ][i] := oWPaint
+      IF lStrict
+         s_aPObjList[ nWinNum + 1 ][ i ]:Hide()
+      ELSE
+         s_aPObjList[ nWinNum + 1 ][ i ]:lVisible := .F.
+      ENDIF
+      s_aPObjList[ nWinNum + 1 ][ i ] := oWPaint
 
-   else
-      aadd( s_aPObjList[ nWinNum+1 ], oWPaint )
-   endif
+   ELSE
+      AAdd( s_aPObjList[ nWinNum + 1 ], oWPaint )
+   ENDIF
 
-   * if it is visible, draw it now!
-   if oWPaint:lVisible
+   // if it is visible, draw it now!
+   IF oWPaint:lVisible
       oWPaint:draw()
-   endif
-return oWPaint:cId //20040811 was .T.
+   ENDIF
 
-function wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
-* deletes a WPaint object oWPaint from window nWinNum
-* returns number of object deleted.
-*
-*NOTE: if cId is NIL, delete all object of type nType
-local i
-local lDelAll := (cId == NIL)
-local nDeleted := 0
-local nLen
-local cCurId
-   default lStrict to .F.
+   RETURN oWPaint:cId //20040811 was .T.
 
-   * is nType set?
-   if nType < 1
-      return nDeleted
-   endif
+// deletes a WPaint object oWPaint from window nWinNum
+// returns number of object deleted.
+//
+//NOTE: if cId is NIL, delete all object of type nType
+FUNCTION wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
 
-   * exist nType + cId ?
+   LOCAL i
+   LOCAL lDelAll := ( cId == NIL )
+   LOCAL nDeleted := 0
+   LOCAL nLen
+   LOCAL cCurId
+   DEFAULT lStrict TO .F.
+
+   // is nType set?
+   IF nType < 1
+      RETURN nDeleted
+   ENDIF
+
+   // exist nType + cId ?
    i := 1
-   nLen := len(s_aPObjList[ nWinNum+1 ])
-   do while i <= nLen
-      if s_aPObjList[ nWinNum+1 ][i]:nType==nType .and.;
-         (lDelAll .or. s_aPObjList[ nWinNum+1 ][i]:cId==cId)
-         if lStrict
-            s_aPObjList[ nWinNum+1 ][i]:Hide()
-         else
-            s_aPObjList[ nWinNum+1 ][i]:lVisible := .F.
-         endif
-         cCurId := s_aPObjList[ nWinNum+1 ][i]:cId
-         adel(s_aPObjList[ nWinNum+1 ], i)
-         asize(s_aPObjList[ nWinNum+1 ], --nLen)
+   nLen := Len( s_aPObjList[ nWinNum + 1 ] )
+   DO WHILE i <= nLen
+      IF s_aPObjList[ nWinNum + 1 ][ i ]:nType == nType .AND. ;
+            ( lDelAll .OR. s_aPObjList[ nWinNum + 1 ][ i ]:cId == cId )
+         IF lStrict
+            s_aPObjList[ nWinNum + 1 ][ i ]:Hide()
+         ELSE
+            s_aPObjList[ nWinNum + 1 ][ i ]:lVisible := .F.
+         ENDIF
+         cCurId := s_aPObjList[ nWinNum + 1 ][ i ]:cId
+         ADel( s_aPObjList[ nWinNum + 1 ], i )
+         ASize( s_aPObjList[ nWinNum + 1 ], --nLen )
          nDeleted++
-      else
+      ELSE
          i++
-      endif
-   enddo
-return nDeleted
+      ENDIF
+   ENDDO
+
+   RETURN nDeleted

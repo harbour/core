@@ -25,82 +25,84 @@
 #define WVW_CB_KBD_CLIPPER   1
 
 // our preferred method (choose one of the above)
-static s_nCB_Kbd := WVW_CB_KBD_CLIPPER
+STATIC s_nCB_Kbd := WVW_CB_KBD_CLIPPER
 
 // list of created comboboxes
-static s_aComboList := {}
+STATIC s_aComboList := {}
 
 // create these two as local, otherwise it will be assumed PRIVATE
-MEMVAR __nCBid__,__temp__
+MEMVAR __nCBid__, __temp__
 
-#xcommand   @ <row>,<col> COMBOBOX <var>                        ;
-                          OPTIONS <aOptions>                    ;
-                          WIDTH <nWidth>   =>                   ;
-                                                                ;
-            ;
-            __nCBid__ := wvw_cbCreate(NIL, <row>, <col>, <nWidth>,            ;
-                                  <aOptions>,                                 ;
-                                  {| nWinNum, nId, nEvent, nIndex, temp |     ;
-                                    CBhandler(nWinNum,nId,nEvent,nIndex,<"var">,GetList);
-                                  },                                          ;
-                                  NIL,NIL,s_nCB_Kbd,NIL);                     ;
-            AADD(s_aComboList, {__nCBid__, <"var"> });                        ;
-            __temp__ := wvw_cbFindString(NIL, __nCBid__, <var> );             ;
-            iif(__temp__>=0, wvw_cbSetIndex(NIL, __nCBid__, __temp__),NIL);   ;
-            setpos(<row>,<col>);                                              ;
-            AAdd(GetList,_GET_(<var>,<"var">,Replicate("X",<nWidth>),,) ) ;   ;
-            ATAIL(GetList):cargo := __nCBid__;                                ;
-            ATAIL(GetList):reader := {| get | CBreader(get)}
+#xcommand   @ <row>, <col> COMBOBOX <var>                        ;
+      OPTIONS <aOptions>                    ;
+      WIDTH <nWidth>   =>                   ;
+      ;
+      ;
+      __nCBid__ := wvw_cbCreate( NIL, <row> , <col> , <nWidth> , ;
+      <aOptions> , ;
+      {| nWinNum, nId, nEvent, nIndex, temp |     ;
+      CBhandler( nWinNum, nId, nEvent, nIndex, <"var"> , GetList );
+      },                                          ;
+      NIL, NIL, s_nCB_Kbd, NIL );                     ;
+      AAdd( s_aComboList, { __nCBid__, <"var"> } );                        ;
+      __temp__ := wvw_cbFindString( NIL, __nCBid__, <var> );             ;
+      iif( __temp__ >= 0, wvw_cbSetIndex( NIL, __nCBid__, __temp__ ), NIL );   ;
+      SetPos( <row>, <col> );                                              ;
+      AAdd( GetList, _GET_( <var>, <"var">, Replicate( "X", <nWidth> ),, ) ) ;   ;
+      ATail( GetList ):cargo := __nCBid__;                                ;
+      ATail( GetList ):reader := {| get | CBreader( get ) }
 
 PROCEDURE Main()
-local getlist := {}
-local mname := padr("Budyanto Dj.",30), msex := "MALE", mage := 17, mstat := "married"
-local __nCBid__,__temp__  //these two are temporary var required by CB get creation
-   WVW_SetCodePage(NIL,255)
-   WVW_SetLineSpacing(NIL,4)
-   WVW_SetLSpaceColor(NIL,0)
-   WVW_cbSetFont(NIL, "Arial", 14)  //std: 20-2
-   //set(_SET_TRACESTACK, 0)
 
-   //wvw_setmousemove(,.T.)
+   LOCAL getlist := {}
+   LOCAL mname := PadR( "Budyanto Dj.", 30 ), msex := "MALE", mage := 17, mstat := "married"
+   LOCAL __nCBid__, __temp__  //these two are temporary var required by CB get creation
+
+   WVW_SetCodePage( NIL, 255 )
+   WVW_SetLineSpacing( NIL, 4 )
+   WVW_SetLSpaceColor( NIL, 0 )
+   WVW_cbSetFont( NIL, "Arial", 14 )  //std: 20-2
+// Set( _SET_TRACESTACK, 0 )
+
+// wvw_setmousemove( , .T. )
 
    CLS
 
-   * reset combobox list:
+  // reset combobox list:
    s_aComboList := {}
 
-   @ 0,0 say     "Name :" get mname pict "@K"
-   @ 1,0 say     "Sex  :"
-   @ 1,7 COMBOBOX msex OPTIONS {"Male","Female","Unknown"} WIDTH 10
-   @ 2,0 say     "Stat :"
-   @ 2,7 COMBOBOX mstat OPTIONS {"Married","Unmarried","Widowed"} WIDTH 15
-   @ 3,0 say     "age  :" get mage pict "999"
-   read
+   @ 0, 0 SAY     "Name :" GET mname PICT "@K"
+   @ 1, 0 SAY     "Sex  :"
+   @ 1, 7 COMBOBOX msex OPTIONS { "Male", "Female", "Unknown" } WIDTH 10
+   @ 2, 0 SAY     "Stat :"
+   @ 2, 7 COMBOBOX mstat OPTIONS { "Married", "Unmarried", "Widowed" } WIDTH 15
+   @ 3, 0 SAY     "age  :" GET mage PICT "999"
+   READ
 
-   * disable all comboboxes:
-   aeval(s_aComboList, {| x | wvw_cbenable(NIL, x[1], .F.)})
+   // disable all comboboxes:
+   AEval( s_aComboList, {| x | wvw_cbenable( NIL, x[1], .F. ) } )
 
-   devpos(5,0)
+   DevPos( 5, 0 )
    ? "name: '" + mname + "'"
    ? "sex : '" + msex + "'"
    ? "stat: '" + mstat + "'"
-   ? "age : " + alltrim(str(mage))
+   ? "age : " + hb_ntos( mage )
    ? "that's what you've got from GET"
-   inkey(0)
+   Inkey( 0 )
 
-   * destroy all comboboxes:
-   aeval(s_aComboList, {| x | wvw_cbdestroy(NIL, x[1])})
+   // destroy all comboboxes:
+   AEval( s_aComboList, {| x | wvw_cbdestroy( NIL, x[ 1 ] ) } )
    s_aComboList := {}
 
    ?
    ? "Comboboxes have now been removed"
    ? "Now press ESC to exit"
 
-   do while inkey(0)!=K_ESC
-   enddo
-return  //main
+   DO WHILE Inkey( 0 ) != K_ESC
+   ENDDO
 
-function CBhandler(nWinNum,nId,nEvent,nIndex, cVar, GetList)
+   RETURN
+
 /* this function is called by GTWVW indirectly, through the main program's codeblock
  * which adds 'cVar' and 'GetList' parameter to the original 4 parameter passed
  * by GTWVW.
@@ -119,30 +121,32 @@ function CBhandler(nWinNum,nId,nEvent,nIndex, cVar, GetList)
  * CBN_SELCHANGE: (1)
  * (do nothing)
  */
+FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 
-local i, ccursel
-local oGetList := __GetListActive()
-local oGet := GetActive()
+   LOCAL i, ccursel
+   LOCAL oGetList := __GetListActive()
+   LOCAL oGet := GetActive()
 
    /* if GetList is empty, then READ session is already ended
     * this should not be happenning!
     */
-   if empty(GetList)
-      MyAlert("Bad practice: you left an active combobox, but READ already ended")
-      return NIL//ignore this event
-   endif
 
-   do case
-   case nEvent==3 //CBN_SETFOCUS
-      i := ascan(GetList, {| x | x:Name == cVar } )
-      if i>0
+   IF Empty( GetList )
+      MyAlert( "Bad practice: you left an active combobox, but READ already ended" )
+      RETURN NIL//ignore this event
+   ENDIF
+
+   DO CASE
+   CASE nEvent == 3 //CBN_SETFOCUS
+      i := AScan( GetList, {| x | x:Name == cVar } )
+      IF i > 0
          /* !oGet:HasFocus means
           * CBN_SETFOCUS was NOT initiated from mouseclick
           * then we don't need to bother about setting focus to the
           * new GET. GetSys has already done that via CBreader().
           * It is CBreader() that brought us here, so ignore it.
           */
-         if oGet:HasFocus
+         IF oGet:HasFocus
             /* So user has jumped here by clicking on the combobox.
              * And this combobox has oNewGet beneath it.
              * But do NOT assign oGetList:oGet into this oNewGet
@@ -164,133 +168,142 @@ local oGet := GetActive()
              * We will then arrive at cbreader().
              */
 
-            SetWinFocus(nWinNum)
-            msetpos(GetList[i]:row, GetList[i]:col+1)
-            keyboard(K_LBUTTONDOWN)
-         endif //oGet:HasFocus
+            SetWinFocus( nWinNum )
+            MSetPos( GetList[i]:row, GetList[i]:col + 1 )
+            KEYBOARD( K_LBUTTONDOWN )
+         ENDIF //oGet:HasFocus
 
-      else  //i==0
+      ELSE  //i==0
          /* there's no GET object beneath the combobox.
           * This must be a combobox living in the wild.
           * Do what you want with it, we do nothing here.
           */
-      endif
+      ENDIF
 
-   case nEvent==4 //CBN_KILLFOCUS
+   CASE nEvent == 4 //CBN_KILLFOCUS
       // put current content of combobox into GET variable beneath it.
-      cCurSel := wvw_cbGetCurText(nWinNum, nId)
-      oGet:varput(cCurSel)
+      cCurSel := wvw_cbGetCurText( nWinNum, nId )
+      oGet:varput( cCurSel )
       oGet:display() //this is optional
 
-   endcase
-return NIL
+   ENDCASE
+
+   RETURN NIL
 
 /************* custom get reader ******************/
 
+// This is the reader() for oGet, a GET object hidden beneath a combobox.
+//
+// Some notes:
+// oGet:cargo stores combobox id over this oGet
+//
 FUNCTION CBreader( oGet )
-* This is the reader() for oGet, a GET object hidden beneath a combobox.
-*
-* Some notes:
-* oGet:cargo stores combobox id over this oGet
-*
+
    LOCAL nKey, bKeyBlock
    LOCAL nSelected, cSelected
-   local oGetList := __GetListActive()
+   LOCAL oGetList := __GetListActive()
 
-   if !wvw_cbIsFocused(NIL, oGet:cargo)
-      wvw_cbSetFocus(NIL, oGet:cargo)
-   endif
+   IF !wvw_cbIsFocused( NIL, oGet:cargo )
+      wvw_cbSetFocus( NIL, oGet:cargo )
+   ENDIF
 
    oGet:setfocus()
-   nKey := INKEY(0)
+   nKey := Inkey( 0 )
 
-   IF ( nKey == K_ENTER )
-      * NOTE that in WVW_CB_KBD_CLIPPER mode we will never get here
+   IF nKey == K_ENTER
+      // NOTE that in WVW_CB_KBD_CLIPPER mode we will never get here
       oGet:exitState := GE_DOWN
 
-   ELSEIF ( nKey == K_UP )
+   ELSEIF nKey == K_UP
       oGet:exitState := GE_UP
 
-   ELSEIF ( nKey == K_SH_TAB )
+   ELSEIF nKey == K_SH_TAB
       oGet:exitState := GE_UP
 
-   ELSEIF ( nKey == K_DOWN )
+   ELSEIF nKey == K_DOWN
       // NOTE that in WVW_CB_KBD_STANDARD mode we will never get here
       oGet:exitState := GE_DOWN
 
-   ELSEIF ( nKey == K_TAB )
+   ELSEIF nKey == K_TAB
       oGet:exitState := GE_DOWN
 
-   ELSEIF ( nKey == K_ESC )
-      IF ( Set(_SET_ESCAPE) )
+   ELSEIF nKey == K_ESC
+      IF Set( _SET_ESCAPE )
          oGet:exitState := GE_ESCAPE
       ENDIF
 
-   ELSEIF ( nKey == K_PGUP )
+   ELSEIF nKey == K_PGUP
       oGet:exitState := GE_WRITE
 
-   ELSEIF ( nKey == K_PGDN )
+   ELSEIF nKey == K_PGDN
       oGet:exitState := GE_WRITE
 
-   ELSEIF ( nKey == K_CTRL_HOME )
+   ELSEIF nKey == K_CTRL_HOME
       oGet:exitState := GE_TOP
 
-   ELSEIF ( nKey == K_LBUTTONDOWN .or. nKey == K_LDBLCLK )
-      * is there any GET object hit?
-      if !empty(HitTest(oGetList:aGetList, mrow(), mcol(), NIL))
+   ELSEIF nKey == K_LBUTTONDOWN .OR. nKey == K_LDBLCLK
+      // is there any GET object hit?
+      IF !Empty( HitTest( oGetList:aGetList, MRow(), MCol(), NIL ) )
          oGet:exitState := GE_MOUSEHIT
-      else
+      ELSE
          oGet:exitState := GE_NOEXIT
-      endif
+      ENDIF
 
-   ELSEIF valtype(bKeyBlock := SETKEY(nKey))=="B"
+   ELSEIF ValType( bKeyBlock := SetKey( nKey ) ) == "B"
       oGetList:GetDoSetKey( bKeyBlock )  //eval(bKeyBlock)
       oGet:exitState := GE_NOEXIT
 
    ENDIF
 
-   if oGet:exitState != GE_NOEXIT
-      SetWinFocus(NIL)  //assume current window
+   IF oGet:exitState != GE_NOEXIT
+      SetWinFocus( NIL )  //assume current window
       oGet:killfocus()
-   endif
+   ENDIF
 
-RETURN NIL  //cbreader()
+   RETURN NIL
 
-/* not used:
-static function MoveToGet(GetList, nPos)
+#if 0
 // move focus to GET object at GetList[nPos]
-local i
-local oGetList := __GetListActive( )
-local oGet
-   * leave current active get
+STATIC FUNCTION MoveToGet( GetList, nPos )
+
+   LOCAL i
+   LOCAL oGetList := __GetListActive( )
+   LOCAL oGet
+   // leave current active get
    oGet := GetActive()
 
-   if oGet!=NIL .and. oGet:HasFocus
-      if oGet:changed
-         if GetPostValidate(oGet)
+   IF oGet != NIL .AND. oGet:HasFocus
+      IF oGet:changed
+         IF GetPostValidate( oGet )
             oGet:updatebuffer()
-         else
+         ELSE
             //oGet:undo()
-            return .F.
-         endif
-      endif
+            RETURN .F.
+         ENDIF
+      ENDIF
       oGet:exitstate := GE_MOUSEHIT
       oGetList:nNextGet := nPos
-      oGetList:settle(,.F.)
-   endif
-return .T.
-*/
+      oGetList:settle( , .F. )
+   ENDIF
+
+   RETURN .T.
+#endif
 
 /* miscellaneous **********************************/
 
-static function SetWinFocus(nWinNum)
 // Set FOCUS to window nWinNum
-local hWnd := wvw_getWindowHandle(nWinNum)
-   WIN_SETFOCUS(hWnd)
-return NIL
+STATIC FUNCTION SetWinFocus( nWinNum )
 
-static function MyAlert(cMsg, par2, par3, par4, par5, par6)
-local nLineSpacing := WVW_SetLineSpacing(NIL,0)
-local retval := Alert(cMsg, par2, par3, par4, par5, par6)
-   WVW_SetLineSpacing(NIL,nLineSpacing)
-return retval
+   LOCAL hWnd := wvw_getWindowHandle( nWinNum )
+   WIN_SETFOCUS( hWnd )
+
+   RETURN NIL
+
+STATIC FUNCTION MyAlert( cMsg, par2, par3, par4, par5, par6 )
+
+   LOCAL nLineSpacing := WVW_SetLineSpacing( NIL, 0 )
+   LOCAL retval := Alert( cMsg, par2, par3, par4, par5, par6 )
+
+   WVW_SetLineSpacing( NIL, nLineSpacing )
+
+   RETURN retval

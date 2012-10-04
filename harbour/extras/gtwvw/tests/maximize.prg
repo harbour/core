@@ -9,114 +9,124 @@
 
 #include "inkey.ch"
 
-* this dimension will be used when user presses RESTORE button
-static s_nNormalMaxrow := 24
-static s_nNormalMaxcol := 79
+// this dimension will be used when user presses RESTORE button
+STATIC s_nNormalMaxrow := 24
+STATIC s_nNormalMaxcol := 79
 
 STATIC s_lSizeReady := .F.
 
 PROCEDURE Main()
-local ch
-   * activate WVW_SIZE()
+
+   LOCAL ch
+
+   // activate WVW_SIZE()
    s_lSizeReady := .T.
 
-   * the biggest possible window
-   setcolor("N/W")
-   setmode(wvw_maxmaxrow()+1, wvw_maxmaxcol()+1)
+   // the biggest possible window
+   SetColor( "N/W" )
+   SetMode( wvw_maxmaxrow() + 1, wvw_maxmaxcol() + 1 )
 
-   * enable MAXIMIZE button
-   wvw_enablemaximize(0, .T.)
+   // enable MAXIMIZE button
+   wvw_enablemaximize( 0, .T. )
 
-   * set the window to MAXIMIZED state
-   wvw_maximize(0)
+   // set the window to MAXIMIZED state
+   wvw_maximize( 0 )
 
    updatescr()
-   do while (ch := inkey(0))!=K_ESC
-      * refresh screen, probably in a new dimension
-      * (You may alternatively call updatescr() from WVW_SIZE instead)
+   DO WHILE ( ch := Inkey( 0 ) ) != K_ESC
+      // refresh screen, probably in a new dimension
+      // (You may alternatively call updatescr() from WVW_SIZE instead)
       updatescr()
-   enddo
-return
+   ENDDO
 
-procedure diminfo()
-   @ 0, 0 say "Window size: " + alltrim(str(maxrow()+1)) + " x " + alltrim(str(maxcol()+1)) + "   "
-return
+   RETURN
 
-procedure updatescr()
-local i
+PROCEDURE diminfo()
+
+   @ 0, 0 SAY "Window size: " + hb_ntos( MaxRow() + 1 ) + " x " + hb_ntos( MaxCol() + 1 ) + "   "
+
+   RETURN
+
+PROCEDURE updatescr()
+
+   LOCAL i
+
    CLS
-   for i := 0 to maxcol()
-      @ 0,i say "T"
-   next
-   for i := 0 to maxrow()
-      @ i,0 say "L"
-   next
-   for i := 0 to maxcol()
-      @ maxrow(),i say "B"
+   FOR i := 0 TO MaxCol()
+      @ 0, i SAY "T"
+   NEXT
+   FOR i := 0 TO MaxRow()
+      @ i, 0 SAY "L"
+   NEXT
+   FOR i := 0 TO MaxCol()
+      @ MaxRow(), i SAY "B"
       //@ maxrow()-1,i say right(tran(i,"999"),1)
-   next
-   for i := 0 to maxrow()
-      @ i,maxcol() say "R"
-   next
-   @ int(maxrow()/2)+0, 2 say padc("Press MAXIMIZE/RESTORE button to change dimension", maxcol()+1-4)
-   @ int(maxrow()/2)+1, 2 say padc("Try also changing taskbar size/position", maxcol()+1-4)
-   @ int(maxrow()/2)+3, 2 say padc("Press any key to redraw screen", maxcol()+1-4)
-   @ int(maxrow()/2)+4, 2 say padc("Press ESC to quit", maxcol()+1-4)
+   NEXT
+   FOR i := 0 TO MaxRow()
+      @ i, MaxCol() SAY "R"
+   NEXT
+   @ Int( MaxRow()/2 ) + 0, 2 SAY PadC( "Press MAXIMIZE/RESTORE button to change dimension", MaxCol() + 1 - 4 )
+   @ Int( MaxRow()/2 ) + 1, 2 SAY PadC( "Try also changing taskbar size/position", MaxCol() + 1 - 4 )
+   @ Int( MaxRow()/2 ) + 3, 2 SAY PadC( "Press any key to redraw screen", MaxCol() + 1 - 4 )
+   @ Int( MaxRow()/2 ) + 4, 2 SAY PadC( "Press ESC to quit", MaxCol() + 1 - 4 )
    diminfo()
-return
 
-function WVW_SIZE(nWinNum, hWnd, message, wParam, lParam)
-* this function is called by gtwvw AFTER the size is changed
-* WARNING: screen repainting is not performed completely by gtwvw at this point of call
-local cScreen
-local lNeedReset := .F., ;
+   RETURN
+
+// this function is called by gtwvw AFTER the size is changed
+// WARNING: screen repainting is not performed completely by gtwvw at this point of call
+FUNCTION WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )
+
+   LOCAL cScreen
+   LOCAL lNeedReset := .F. , ;
       maxsavedscrrow, maxsavedscrcol
-   if !s_lSizeReady
-      * program is not ready to handle window resizing
-      * (or this function is currently running)
-      return NIL
-   endif
-   if nWinNum!=0
-      * only care about Main Window
-      return NIL
-   endif
+   IF !s_lSizeReady
+      // program is not ready to handle window resizing
+      // (or this function is currently running)
+      RETURN NIL
+   ENDIF
+   IF nWinNum != 0
+      // only care about Main Window
+      RETURN NIL
+   ENDIF
 
-   * avoid reentrance
+   // avoid reentrance
    s_lSizeReady := .F.
 
-   do case
-   case wParam == 2 //SIZE_MAXIMIZED
-      //alert("MAXIMIZE")
-      * reset is required only if we are changing size
-      lNeedReset := maxcol() != wvw_maxmaxcol();
-                    .or. maxrow() != wvw_maxmaxrow()
+   DO CASE
+   CASE wParam == 2 //SIZE_MAXIMIZED
+      //Alert( "MAXIMIZE" )
+      // reset is required only if we are changing size
+      lNeedReset := MaxCol() != wvw_maxmaxcol();
+         .OR. MaxRow() != wvw_maxmaxrow()
 
-      if lNeedReset
-         maxsavedscrrow := min(min(s_nNormalMaxrow, wvw_maxmaxrow()),maxrow())
-         maxsavedscrcol := min(min(s_nNormalMaxcol, wvw_maxmaxcol()),maxcol())
-         cScreen := savescreen(0,0,maxsavedscrrow, maxsavedscrcol)
-         if setmode(wvw_maxmaxrow()+1, wvw_maxmaxcol()+1) //adjust maxrow() & maxcol()
-            restscreen(0,0,maxsavedscrrow, maxsavedscrcol, cScreen)
-         endif
+      IF lNeedReset
+         maxsavedscrrow := Min( Min( s_nNormalMaxrow, wvw_maxmaxrow() ), MaxRow() )
+         maxsavedscrcol := Min( Min( s_nNormalMaxcol, wvw_maxmaxcol() ), MaxCol() )
+         cScreen := SaveScreen( 0, 0, maxsavedscrrow, maxsavedscrcol )
+         IF SetMode( wvw_maxmaxrow() + 1, wvw_maxmaxcol() + 1 ) //adjust maxrow() & maxcol()
+            RestScreen( 0, 0, maxsavedscrrow, maxsavedscrcol, cScreen )
+         ENDIF
          diminfo()  //updatescr()
-      endif
-   case wParam == 0 //SIZE_RESTORED
-      //alert("RESTORE")
-      lNeedReset := maxcol() != s_nNormalMaxcol .or.;
-                    maxrow() != s_nNormalMaxrow
-      if lNeedReset
-         maxsavedscrrow := min(s_nNormalMaxrow, maxrow())
-         maxsavedscrcol := min(s_nNormalMaxcol, maxcol())
-         cScreen := savescreen(0,0,maxsavedscrrow, maxsavedscrcol)
-         if setmode(s_nNormalMaxrow+1,s_nNormalMaxcol+1)
-            restscreen(0,0,maxsavedscrrow, maxsavedscrcol, cScreen)
-         endif
+      ENDIF
+   CASE wParam == 0 //SIZE_RESTORED
+      //Alert( "RESTORE" )
+      lNeedReset := MaxCol() != s_nNormalMaxcol .OR. ;
+         MaxRow() != s_nNormalMaxrow
+      IF lNeedReset
+         maxsavedscrrow := Min( s_nNormalMaxrow, MaxRow() )
+         maxsavedscrcol := Min( s_nNormalMaxcol, MaxCol() )
+         cScreen := SaveScreen( 0, 0, maxsavedscrrow, maxsavedscrcol )
+         IF SetMode( s_nNormalMaxrow + 1, s_nNormalMaxcol + 1 )
+            RestScreen( 0, 0, maxsavedscrrow, maxsavedscrcol, cScreen )
+         ENDIF
          diminfo()  //updatescr()
-      endif
-   otherwise
-      * do nothing
-   endcase
+      ENDIF
+   OTHERWISE
+      // do nothing
+   ENDCASE
 
-   * allow next call
+   // allow next call
    s_lSizeReady := .T.
-return NIL
+
+   RETURN NIL

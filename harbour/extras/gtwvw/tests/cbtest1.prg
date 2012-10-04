@@ -16,109 +16,113 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-static s_cQuestion := "Quick survey: What do you think about GTWVW?"
-static s_cHint     := "Hint: Please be positive..."
+STATIC s_cQuestion := "Quick survey: What do you think about GTWVW?"
+STATIC s_cHint     := "Hint: Please be positive..."
 
-static s_aAnswers  := {"1-GTWVW is a great library!",;
-                       "2-GT who? I never heard about him",;
-                       "3-Sorry, I don't like it"}
+STATIC s_aAnswers  := { "1-GTWVW is a great library!", ;
+      "2-GT who? I never heard about him", ;
+      "3-Sorry, I don't like it" }
 
-static s_cYourAnswer:="Your response is:"
-static s_cThankYou := "Thanks for participating in our survey :-)"
+STATIC s_cYourAnswer := "Your response is:"
+STATIC s_cThankYou := "Thanks for participating in our survey :-)"
 
 #define _SECRET_KEY 101010
 
 ANNOUNCE HB_NOSTARTUPWINDOW
 
 PROCEDURE Main()
-local nMaxWidth, nCBid, nPBid, nPos
-local ch,ncursor
-   setcolor("N/W")
-   WVW_SetTitle(NIL,"Quick Survey")
-   WVW_NoClose(NIL)
-   WVW_SetAltF4Close(.F.)
-   WVW_SetLineSpacing(NIL,4)
-   //WVW_SetLSpaceColor(NIL,7)
-   WVW_cbSetFont(NIL, "Arial", 16)
-   WVW_pbSetFont(NIL, "Arial", 16)
+
+   LOCAL nMaxWidth, nCBid, nPBid, nPos
+   LOCAL ch, ncursor
+
+   SetColor( "N/W" )
+   WVW_SetTitle( NIL, "Quick Survey" )
+   WVW_NoClose( NIL )
+   WVW_SetAltF4Close( .F. )
+   WVW_SetLineSpacing( NIL, 4 )
+// WVW_SetLSpaceColor( NIL, 7 )
+   WVW_cbSetFont( NIL, "Arial", 16 )
+   WVW_pbSetFont( NIL, "Arial", 16 )
 
    nMaxWidth := 0
-   aeval(s_aAnswers, {| x | nMaxWIdth := max(nMaxWidth,len(x))})
+   AEval( s_aAnswers, {| x | nMaxWIdth := Max( nMaxWidth,Len(x ) ) } )
 
-   setmode(11, nMaxWidth+1+10+2)
+   SetMode( 11, nMaxWidth + 1 + 10 + 2 )
 
    CLS
-   nCursor := setcursor(SC_NONE)
-   @ 1,1 say s_cQuestion
-   @ 2,1 say s_cHint
-   nCBid := wvw_cbCreate(NIL, 4, 1, nMaxWidth, s_aAnswers, ;
-                              {| nWinNum, nId, nEvent, nIndex | ;
-                               CBhandler( nWinNum, nId, nEvent, nIndex, nPBid ) } )
+   nCursor := SetCursor( SC_NONE )
+   @ 1, 1 SAY s_cQuestion
+   @ 2, 1 SAY s_cHint
+   nCBid := wvw_cbCreate( NIL, 4, 1, nMaxWidth, s_aAnswers, ;
+      {| nWinNum, nId, nEvent, nIndex | ;
+      CBhandler( nWinNum, nId, nEvent, nIndex, nPBid ) } )
 
-   nPBid := wvw_pbCreate(NIL, 4,1+nMaxWidth+1, 4,1+nMaxWidth+1+10-1, "OK",NIL,;
-                              {|| __keyboard( _SECRET_KEY ) },{0,0,+2,0})
+   nPBid := wvw_pbCreate( NIL, 4, 1 + nMaxWidth + 1, 4, 1 + nMaxWidth + 1 + 10 - 1, "OK", NIL, ;
+      {|| __Keyboard( _SECRET_KEY ) }, { 0, 0, + 2, 0 } )
 
-   wvw_cbSetFocus(NIL, nCBid)
+   wvw_cbSetFocus( NIL, nCBid )
 
    wvw_ShowWindow()
 
    nPos := 1
-   do while (ch:=inkey(0))!=_SECRET_KEY
-      do case
-      case ch==K_TAB .or. ch==K_ENTER
-         if nPos==2 .and. ch==K_ENTER .and. wvw_pbEnable(NIL, nPBid)
-            keyboard(_SECRET_KEY)
-            loop
-         else
+   DO WHILE ( ch := Inkey( 0 ) ) != _SECRET_KEY
+      DO CASE
+      CASE ch == K_TAB .OR. ch == K_ENTER
+         IF nPos == 2 .AND. ch == K_ENTER .AND. wvw_pbEnable( NIL, nPBid )
+            KEYBOARD( _SECRET_KEY )
+            LOOP
+         ELSE
             nPos++
-         endif
-      case ch==K_SH_TAB
+         ENDIF
+      CASE ch == K_SH_TAB
          nPos--
-      endcase
-      if nPos>2
+      ENDCASE
+      IF nPos > 2
          nPos := 1
-      elseif nPos<1
-         nPos:=2
-      endif
-      do case
-      case nPos==1
-         wvw_cbSetFocus(NIL, nCBid)
-      case nPos==2
-         wvw_pbSetFocus(NIL, nPBid)
-         wvw_pbSetStyle(NIL, nPBid, 1) //BS_DEFPUSHBUTTON
-      endcase
-   enddo
+      ELSEIF nPos < 1
+         nPos := 2
+      ENDIF
+      DO CASE
+      CASE nPos == 1
+         wvw_cbSetFocus( NIL, nCBid )
+      CASE nPos == 2
+         wvw_pbSetFocus( NIL, nPBid )
+         wvw_pbSetStyle( NIL, nPBid, 1 ) //BS_DEFPUSHBUTTON
+      ENDCASE
+   ENDDO
 
-   wvw_cbEnable(NIL, nCBid, .F.)
-   wvw_pbEnable(NIL, nPBid, .F.)
-   @ 6,1 say "Your response is:"
-   @ 7,1 say wvw_cbGetCurText(NIL, nCBid)
-   @ 9,1 say s_cThankYou
-   inkey(0)
-   setcursor(nCursor)
-return  //main
+   wvw_cbEnable( NIL, nCBid, .F. )
+   wvw_pbEnable( NIL, nPBid, .F. )
+   @ 6, 1 SAY "Your response is:"
+   @ 7, 1 SAY wvw_cbGetCurText( NIL, nCBid )
+   @ 9, 1 SAY s_cThankYou
+   Inkey( 0 )
+   SetCursor( nCursor )
 
-static function CBhandler(nWinNum,nId,nEvent,nIndex, nPBid)
-   do case
-   case nEvent==3 //CBN_SETFOCUS
-      * none
-   case nEvent==4 //CBN_KILLFOCUS
-      * none
-      if nIndex==0
-         wvw_pbEnable(nWinNum, nPBid, .T.)
-      else
-         wvw_pbEnable(nWinNum, nPBid, .F.)
-      endif
-   case nEvent==1 //CBN_SELCHANGE
-      if !wvw_cbIsDropped(nWinNum, nId)
-         * nIndex is 0-based
-         if nIndex==0
-            wvw_pbEnable(nWinNum, nPBid, .T.)
-         else
-            wvw_pbEnable(nWinNum, nPBid, .F.)
-         endif
-         wvw_cbSetFocus(nWinNum, nId)
-      endif
-   endcase
+   RETURN  //main
 
-return NIL
+STATIC FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, nPBid )
+
+   DO CASE
+   CASE nEvent == 3 //CBN_SETFOCUS
+      // none
+   CASE nEvent == 4 //CBN_KILLFOCUS
+      // none
+      IF nIndex == 0
+         wvw_pbEnable( nWinNum, nPBid, .T. )
+      ELSE
+         wvw_pbEnable( nWinNum, nPBid, .F. )
+      ENDIF
+   CASE nEvent == 1 //CBN_SELCHANGE
+      IF !wvw_cbIsDropped( nWinNum, nId )
+         // nIndex is 0-based
+         IF nIndex == 0
+            wvw_pbEnable( nWinNum, nPBid, .T. )
+         ELSE
+            wvw_pbEnable( nWinNum, nPBid, .F. )
+         ENDIF
+         wvw_cbSetFocus( nWinNum, nId )
+      ENDIF
+   ENDCASE
+
+   RETURN NIL

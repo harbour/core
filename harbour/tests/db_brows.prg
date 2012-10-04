@@ -425,7 +425,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
                LI_NSTR--
                Eval( LI_BSKIP, mslist, -1 )
             ELSE
-               IF ( vartmp := LastKey() ) != K_ENTER .AND. vartmp != K_ESC .AND. vartmp < 32
+               IF ( vartmp := LastKey() ) != K_ENTER .AND. vartmp != K_ESC .AND. vartmp < hb_keyCode( " " )
                   hb_keyIns( vartmp )
                ENDIF
             ENDIF

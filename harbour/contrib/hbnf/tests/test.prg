@@ -4,6 +4,8 @@
 
 #require "hbnf"
 
+#include "inkey.ch"
+
 PROCEDURE Main()
 
    LOCAL nver, nmar, ntype, nir, ppp
@@ -22,10 +24,10 @@ PROCEDURE Main()
    ? ft_mylimit( 0, 8 * MaxRow() )
    Inkey( 0 )
 
-   DO WHILE LastKey() != 27
+   DO WHILE LastKey() != K_ESC
       ? 'mouse row is', ft_mgetx()
       ? 'mouse col is', ft_mgety()
-      IF LastKey() == 27
+      IF LastKey() == K_ESC
          EXIT
       ENDIF
    ENDDO
