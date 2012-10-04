@@ -44,8 +44,8 @@ FUNCTION FT_ROUND( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
 
    // Are We Rounding to the Nearest Whole
    // Number or to Zero Decimal Places??
-   IF ( Left( cRoundType, 1 ) != NEAREST_WHOLE_NUMBER .AND. ;
-         ( nRoundToAmount := Int( nRoundToAmount ) ) != 0 )
+   IF !( Left( cRoundType, 1 ) == NEAREST_WHOLE_NUMBER ) .AND. ;
+      ( nRoundToAmount := Int( nRoundToAmount ) ) != 0
 
       // No, Are We Rounding to the Nearest
       // Decimal Place??
@@ -58,8 +58,7 @@ FUNCTION FT_ROUND( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
 
       // Are We Already Within the Acceptable
       // Error Factor??
-      IF ( Abs( Int( nResult * nRoundToAmount ) - ( nResult * nRoundToAmount ) ) > ;
-            nAcceptableError )
+      IF Abs( Int( nResult * nRoundToAmount ) - ( nResult * nRoundToAmount ) ) > nAcceptableError
          // No, Are We Rounding Down??
          nResult -= iif( Left( cRoundDirection, 1 ) == ROUND_DOWN, ;
             ; // Yes, Make Downward Adjustment

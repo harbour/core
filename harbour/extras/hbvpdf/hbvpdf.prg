@@ -2470,7 +2470,7 @@ if hFile == NIL
      endif
      cData := space(3)
      fRead(hFile,@cData,3)
-     if left(cData,1) != 'A'
+     if !( left(cData,1) == 'A' )
          return aRay
      endif
      nLen := bin2i(right(cData,2))
@@ -2483,7 +2483,7 @@ do while nDepth < nLen
     endif
     cType:= padl(cData,1)
     nDataLen:= bin2i(right(cData,2))
-    if cType != 'A'
+    if !( cType == 'A' )
        cData := space(nDataLen)
        nBytes:= fRead(hFile,@cData,nDataLen)
        if nBytes<nDataLen

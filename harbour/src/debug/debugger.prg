@@ -1092,7 +1092,7 @@ METHOD EditColor( nColor, oBrwColors ) CLASS HBDebugger
    oBrwColors:ForceStable()
 
    IF __dbgInput( Row(), Col() + 15,, @cColor, ;
-                  {| cColor | iif( Type( cColor ) != "C", ;
+                  {| cColor | iif( !( Type( cColor ) == "C" ), ;
                           ( __dbgAlert( "Must be string" ), .F. ), .T. ) }, ;
                   SubStr( ::ClrModal(), 5 ) )
       ::aColors[ nColor ] := &cColor
@@ -1112,7 +1112,7 @@ METHOD EditSet( nSet, oBrwSets ) CLASS HBDebugger
    oBrwSets:ForceStable()
 
    IF __dbgInput( Row(), Col() + 13,, @cSet, ;
-                  {| cSet | iif( Type( cSet ) != cType, ;
+                  {| cSet | iif( !( Type( cSet ) == cType ), ;
                     ( __dbgAlert( "Must be of type '" + cType + "'" ), .F. ), .T. ) }, ;
                   SubStr( ::ClrModal(), 5 ) )
       Set( nSet, &cSet )
@@ -1511,7 +1511,7 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
 
    IF lEditable
 
-      IF cType != "C" .OR. Len( uValue ) < nWidth
+      IF !( cType == "C" ) .OR. Len( uValue ) < nWidth
          uTemp := PadR( uValue, nWidth )
       ENDIF
       __dbgInput( nTop + 1, nLeft + 1, nWidth, @uTemp, bValid, ;

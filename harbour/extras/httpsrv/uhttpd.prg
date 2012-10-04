@@ -407,7 +407,7 @@ FUNCTION Main( ... )
    IF HB_ISSTRING( cApplicationRoot )
       cI := cApplicationRoot
       IF HB_DirExists( cI )
-         IF RIGHT( cI, 1 ) == "/" .AND. LEN(cI) > 2 .AND. SUBSTR( cI, LEN( cI ) - 2, 1 ) != ":"
+         IF RIGHT( cI, 1 ) == "/" .AND. LEN(cI) > 2 .AND. !( SUBSTR( cI, LEN( cI ) - 2, 1 ) == ":" )
            s_cApplicationRoot := LEFT( cI, LEN( cI ) - 1 )
          ELSE
            s_cApplicationRoot := cI
@@ -431,7 +431,7 @@ FUNCTION Main( ... )
       //cI := STRTRAN( SUBSTR( cDocumentRoot, 2 ), "\", "/" )
       cI := cDocumentRoot
       IF HB_DirExists( cI )
-         IF RIGHT( cI, 1 ) == "/" .AND. LEN(cI) > 2 .AND. SUBSTR( cI, LEN( cI ) - 2, 1 ) != ":"
+         IF RIGHT( cI, 1 ) == "/" .AND. LEN(cI) > 2 .AND. !( SUBSTR( cI, LEN( cI ) - 2, 1 ) == ":" )
            s_cDocumentRoot := LEFT( cI, LEN( cI ) - 1 )
          ELSE
            s_cDocumentRoot := cI
@@ -1120,8 +1120,9 @@ STATIC FUNCTION ParseRequest( cRequest )
    WriteToConsole( aRequest[ 1 ] )
    aLine := uhttpd_split( " ", aRequest[ 1 ] )
    IF LEN( aLine ) != 3 .OR. ;
-      ( aLine[1] != "GET" .AND. aLine[ 1 ] != "POST" ) .OR. ; // Sorry, we support GET and POST only
-      LEFT( aLine[ 3 ], 5 ) != "HTTP/"
+      ( !( Left( aLine[ 1 ], 3 ) == "GET" ) .AND. ;
+        !( Left( aLine[ 1 ], 4 ) == "POST" ) ) .OR. ; // Sorry, we support GET and POST only
+        !( LEFT( aLine[ 3 ], 5 ) == "HTTP/" )
       // Set status code
       t_nStatusCode := 501 // Not Implemented
       RETURN .F.
@@ -1619,10 +1620,10 @@ STATIC FUNCTION CGIKill( hProc, hmtxCGIKill )
 ********************************************************************/
 
 FUNCTION uhttpd_OSFileName( cFileName )
-   IF hb_ps() != "/"
-      RETURN STRTRAN( cFileName, "/", hb_ps() )
+   IF hb_ps() == "/"
+      RETURN cFileName
    ENDIF
-   RETURN cFileName
+   RETURN STRTRAN( cFileName, "/", hb_ps() )
 
 PROCEDURE uhttpd_SetStatusCode(nStatusCode)
    t_nStatusCode := nStatusCode
@@ -1888,7 +1889,7 @@ STATIC FUNCTION uproc_default()
          ELSEIF HB_DirExists( uhttpd_OSFileName( cFileName ) )
 
             // if it exists as folder and it is missing trailing slash I add it and redirect to it
-            IF RIGHT( cFileName, 1 ) != "/"
+            IF !( RIGHT( cFileName, 1 ) == "/" )
                uhttpd_SetHeader( "Location", "http://" + _SERVER[ "HTTP_HOST" ] + _SERVER[ "SCRIPT_NAME" ] + "/" )
                RETURN MakeResponse()
             ENDIF

@@ -253,11 +253,10 @@ METHOD Start( cSID ) CLASS uhttpd_Session
       // // Check whether the current request was referred to by
       // // an external site which invalidates the previously found ID
       // $url = parse_url($GLOBALS['HTTP_REFERER']);
-      // if (trim($url['host']) != $GLOBALS['SERVER_NAME']) {
-      //    unset($session->id);
-      //    $send_cookie = true;
-      //    $define_sid = true;
-      // }
+      // IF !(trim($url['host']) == $GLOBALS['SERVER_NAME'])
+      //    unset(session->id)
+      //    send_cookie := .T.
+      //    define_sid := .T.
    ENDIF
 
    // Do we have an existing session ID?
@@ -751,8 +750,8 @@ STATIC FUNCTION FT_ELAPSED(dStart, dEnd, cTimeStart, cTimeEnd)
       dEnd     := DATE()
    ENDIF
 
-   iif( VALTYPE(cTimeStart) != 'C', cTimeStart := '00:00:00', )
-   iif( VALTYPE(cTimeEnd)   != 'C', cTimeEnd   := '00:00:00', )
+   iif( ! HB_ISSTRING(cTimeStart), cTimeStart := '00:00:00', )
+   iif( ! HB_ISSTRING(cTimeEnd)  , cTimeEnd   := '00:00:00', )
 
    nTotalSec  := (dEnd - dStart) * 86400                              + ;
                  VAL(cTimeEnd)   *  3600                              + ;

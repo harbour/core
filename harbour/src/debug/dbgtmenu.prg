@@ -186,7 +186,7 @@ METHOD Build() CLASS HBDbMenu
       ::nRight  := nPos + 1
       ::nBottom := ::nTop + Len( ::aItems ) + 1
       FOR n := 1 TO Len( ::aItems )
-         IF ::aItems[ n ]:cPrompt != "-"
+         IF !( Left( ::aItems[ n ]:cPrompt, 1 ) == "-" )
             ::aItems[ n ]:cPrompt := " " + PadR( ::aItems[ n ]:cPrompt, ::nRight - ::nLeft - 1 )
          ENDIF
       NEXT

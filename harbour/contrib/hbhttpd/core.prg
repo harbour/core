@@ -87,7 +87,7 @@ METHOD RUN( hConfig ) CLASS UHttpd
       "FirewallFilter"       => "0.0.0.0/0" }
 
    FOR EACH xValue IN hConfig
-      IF ! HB_HHasKey( Self:hConfig, xValue:__enumKey ) .OR. ValType( xValue ) != ValType( Self:hConfig[xValue:__enumKey] )
+      IF ! HB_HHasKey( Self:hConfig, xValue:__enumKey ) .OR. !( ValType( xValue ) == ValType( Self:hConfig[ xValue:__enumKey ] ) )
          Self:cError := "Invalid config option '" + xValue:__enumKey + "'"
          RETURN .F.
       ENDIF
@@ -1440,7 +1440,7 @@ PROCEDURE UProcFiles( cFileName, lIndex )
          UWrite( HB_MEMOREAD( UOsFileName(cFileName ) ) )
       ENDIF
    ELSEIF HB_DirExists( UOsFileName( cFileName ) )
-      IF Right( cFileName, 1 ) != "/"
+      IF !( Right( cFileName, 1 ) == "/" )
          URedirect( "http://" + server["HTTP_HOST"] + server["SCRIPT_NAME"] + "/" )
          RETURN
       ENDIF
@@ -1551,14 +1551,14 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
       cExtend := NIL
       cRet := ""
       FOR EACH aInstr IN aCode
-         SWITCH aInstr[1]
+         SWITCH aInstr[ 1 ]
          CASE "txt"
-            cRet += aInstr[2]
+            cRet += aInstr[ 2 ]
             EXIT
 
          CASE "="
-            IF HB_HHasKey( aData, aInstr[2] )
-               xValue := aData[aInstr[2]]
+            IF HB_HHasKey( aData, aInstr[ 2 ] )
+               xValue := aData[ aInstr[ 2 ] ]
                IF HB_ISSTRING( xValue )
                   cRet += UHtmlEncode( xValue )
                ELSEIF HB_ISNUMERIC( xValue )
@@ -1573,13 +1573,13 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
                   Eval( hConfig[ "Trace" ], HB_STRFORMAT( "Template error: invalid type '%s'", ValType( xValue ) ) )
                ENDIF
             ELSE
-               Eval( hConfig[ "Trace" ], HB_STRFORMAT( "Template error: variable '%s' not found", aInstr[2] ) )
+               Eval( hConfig[ "Trace" ], HB_STRFORMAT( "Template error: variable '%s' not found", aInstr[ 2 ] ) )
             ENDIF
             EXIT
 
          CASE ":"
-            IF HB_HHasKey( aData, aInstr[2] )
-               xValue := aData[aInstr[2]]
+            IF HB_HHasKey( aData, aInstr[ 2 ] )
+               xValue := aData[ aInstr[ 2 ] ]
                IF HB_ISSTRING( xValue )
                   cRet += xValue
                ELSEIF HB_ISNUMERIC( xValue )
@@ -1594,44 +1594,44 @@ STATIC FUNCTION parse_data( aData, aCode, hConfig )
                   Eval( hConfig[ "Trace" ], HB_STRFORMAT( "Template error: invalid type '%s'", ValType( xValue ) ) )
                ENDIF
             ELSE
-               Eval( hConfig[ "Trace" ], HB_STRFORMAT( "Template error: variable '%s' not found", aInstr[2] ) )
+               Eval( hConfig[ "Trace" ], HB_STRFORMAT( "Template error: variable '%s' not found", aInstr[ 2 ] ) )
             ENDIF
             EXIT
 
          CASE "if"
-            xValue := iif( HB_HHasKey( aData, aInstr[2] ), aData[aInstr[2]], NIL )
+            xValue := iif( HB_HHasKey( aData, aInstr[ 2 ] ), aData[ aInstr[ 2 ] ], NIL )
             IF ! Empty( xValue )
-               cRet += parse_data( aData, aInstr[3], hConfig )
+               cRet += parse_data( aData, aInstr[ 3 ], hConfig )
             ELSE
-               cRet += parse_data( aData, aInstr[4], hConfig )
+               cRet += parse_data( aData, aInstr[ 4 ], hConfig )
             ENDIF
             EXIT
 
          CASE "loop"
-            IF HB_HHasKey( aData, aInstr[2] ) .AND. HB_ISARRAY( aValue := aData[aInstr[2]] )
+            IF HB_HHasKey( aData, aInstr[ 2 ] ) .AND. HB_ISARRAY( aValue := aData[ aInstr[ 2 ] ] )
                FOR EACH xValue IN aValue
                   aData2 := HB_HCLONE( aData )
-                  HB_HEVAL( xValue, {| k, v | aData2[aInstr[2] + "." + k] := v } )
-                  aData2[aInstr[2] + ".__index"] := xValue:__enumIndex
-                  cRet += parse_data( aData2, aInstr[3], hConfig )
+                  HB_HEVAL( xValue, {| k, v | aData2[ aInstr[ 2 ] + "." + k ] := v } )
+                  aData2[ aInstr[ 2 ] + ".__index"] := xValue:__enumIndex
+                  cRet += parse_data( aData2, aInstr[ 3 ], hConfig )
                   aData2 := NIL
                NEXT
             ELSE
-               Eval( hConfig[ "Trace" ], HB_STRFORMAT( "Template error: loop variable '%s' not found", aInstr[2] ) )
+               Eval( hConfig[ "Trace" ], HB_STRFORMAT( "Template error: loop variable '%s' not found", aInstr[ 2 ] ) )
             ENDIF
             EXIT
 
          CASE "extend"
-            cExtend := aInstr[2]
+            cExtend := aInstr[ 2 ]
             EXIT
 
          CASE "include"
-            cRet += parse_data( aData, compile_file( aInstr[2], hConfig ), hConfig )
+            cRet += parse_data( aData, compile_file( aInstr[ 2 ], hConfig ), hConfig )
             EXIT
          ENDSWITCH
       NEXT
       IF cExtend != NIL
-         aData[""] := cRet
+         aData[ "" ] := cRet
          cRet := ""
          aCode := compile_file( cExtend, hConfig )
       ENDIF

@@ -67,19 +67,19 @@ PROCEDURE Main( ... )
 
    //
 
-   //hb_default( @cText, "Testo di Prova" )
+ //hb_default( @cText, "Testo di Prova" )
    hb_default( @nPt, 30 )
 
    IF cImg != NIL
-      //OutJpg( cImg, nPt )
+    //OutJpg( cImg, nPt )
       OutPhoto( cImg, nWidth, nHeight )
 
    ELSEIF cPhoto != NIL
       StartHTML()
-      //OutHTML ValToPrg( hParams ) + "<br>"
-      //OutHTML ValToPrg( cParams ) + "<br>"
-      //OutHTML ValToPrg( cQuery ) + "<br>"
-      //OutHTML "<img src='test_out.exe?img=" + cPhoto + "&width=" + hb_ntos( nWidth ) + "&height=" + hb_ntos( nHeight ) + "'>" + "<br>"
+    //OutHTML ValToPrg( hParams ) + "<br>"
+    //OutHTML ValToPrg( cParams ) + "<br>"
+    //OutHTML ValToPrg( cQuery ) + "<br>"
+    //OutHTML "<img src='test_out.exe?img=" + cPhoto + "&width=" + hb_ntos( nWidth ) + "&height=" + hb_ntos( nHeight ) + "'>" + "<br>"
       OutHTML "<table border=1>"
       OutHTML "<tr><td align='center'>"
       OutHTML "<img src='test_out.exe?img=" + cPhoto + "'>" + "<br>"
@@ -95,9 +95,9 @@ PROCEDURE Main( ... )
       OutHTML "</td></tr>"
       OutHTML "</table>"
       OutHTML "<br>"
-      //OutHTML "<img src='test_out.exe?img=" + cText + "_2&pt=" + hb_ntos( nPt ) + "'>" + "<br>"
-      //OutHTML OS() + "<br>"
-      //OutHTML iif( OS_ISWINNT(), "WIN NT", "NON WIN NT" ) + "<br>"
+    //OutHTML "<img src='test_out.exe?img=" + cText + "_2&pt=" + hb_ntos( nPt ) + "'>" + "<br>"
+    //OutHTML OS() + "<br>"
+    //OutHTML iif( OS_ISWINNT(), "WIN NT", "NON WIN NT" ) + "<br>"
       EndHTML()
    ELSE
       StartHTML()
@@ -180,10 +180,10 @@ PROCEDURE OutJpg( cText, nPitch )
    oI := GDImage( 400, 100 )
 
    /* Allocate background */
-   // cyan  := oI:SetColor( 0, 255, 255 )
+// cyan  := oI:SetColor( 0, 255, 255 )
 
    /* Allocate drawing color */
-   // blue := oI:SetColor( 0, 0, 200 )
+// blue := oI:SetColor( 0, 0, 200 )
 
    //oI:SetTransparent( blue )
    oI:SetFontName( cFont )
@@ -293,10 +293,10 @@ FUNCTION GetParams( aParams )
 
    RETURN hHashVars
 
-   //***********************************************************
-   // Decoding URL
-   // Can return both a string or a number
-   //
+//***********************************************************
+// Decoding URL
+// Can return both a string or a number
+//
 
 FUNCTION URLDecode( cStr )
 
@@ -321,7 +321,7 @@ FUNCTION URLDecode( cStr )
 
       ENDCASE
 
-      // IF (cRet[ i ] > "9" .or. cRet[ i ] < "0") .and. cRet[ i ] != "."
+      // IF ( cRet[ i ] > "9" .or. cRet[ i ] < "0" ) .AND. !( cRet[ i ] == "." )
       //    lNumeric := .F.
       // ENDIF
    NEXT

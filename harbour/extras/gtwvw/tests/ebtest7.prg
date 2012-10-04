@@ -531,7 +531,7 @@ return NIL
 /************* borrowed and modified from minigui *************/
 
 //from h_textbox.prg
-static PROCEDURE ProcessCharMask ( mnwinnum, mnebid, mcvaltype, mcpict )
+static PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 Local InBuffer , OutBuffer := '' , icp , x , CB , CM , BadEntry := .F. , InBufferLeft , InBufferRight , Mask , OldChar , BackInbuffer
 Local pc := 0
 Local fnb := 0
@@ -560,28 +560,28 @@ Local ol := 0
    pFlag := .F. //x for clarity
    if mcvaltype=="N"
       // RL 104
-      If Left ( AllTrim(InBuffer) , 1 ) == '-' .And. Val(InBuffer) == 0
+      If Left( AllTrim(InBuffer) , 1 ) == '-' .And. Val(InBuffer) == 0
          NegativeZero := .T.
       EndIf
 
       If Pcount() > 1
          // Point Count For Numeric InputMask
-         For x := 1 To Len ( InBuffer )
-            CB := SubStr (InBuffer , x , 1 )
+         For x := 1 To Len( InBuffer )
+            CB := SubStr(InBuffer , x , 1 )
             If CB == '.' .or. CB == ','
                  pc++
             EndIf
          Next x
 
          // RL 89
-         If left (InBuffer,1) == '.' .or. left (InBuffer,1) == ','
+         If left( InBuffer, 1 ) == '.' .or. left( InBuffer, 1 ) == ','
             pFlag := .T.
          EndIf
 
          // Find First Non-Blank Position
-         For x := 1 To Len ( InBuffer )
-            CB := SubStr (InBuffer , x , 1 )
-            If CB != ' '
+         For x := 1 To Len( InBuffer )
+            CB := SubStr( InBuffer , x , 1 )
+            If !( CB == " " )
                fnb := x
                Exit
             EndIf
@@ -591,12 +591,12 @@ Local ol := 0
 
    BackInBuffer := InBuffer
 
-   OldChar := SubStr ( InBuffer , icp+1 , 1 )
+   OldChar := SubStr( InBuffer , icp+1 , 1 )
 
-   If Len ( InBuffer ) < Len ( Mask )
-      InBufferLeft := Left ( InBuffer , icp )
+   If Len( InBuffer ) < Len( Mask )
+      InBufferLeft := Left( InBuffer , icp )
 
-      InBufferRight := Right ( InBuffer , Len (InBuffer) - icp )
+      InBufferRight := Right( InBuffer , Len(InBuffer) - icp )
 
       if CharMaskTekstOK(InBufferLeft + ' ' + InBufferRight,mcvaltype, Mask) .and. ;
          !CharMaskTekstOK(InBufferLeft + InBufferRight,mcvaltype,Mask)
@@ -606,12 +606,12 @@ Local ol := 0
       endif
    EndIf
 
-   If Len ( InBuffer ) > Len ( Mask ) .and.;
+   If Len( InBuffer ) > Len( Mask ) .and.;
       len(Mask)>0
 
-      InBufferLeft := Left ( InBuffer , icp )
+      InBufferLeft := Left( InBuffer , icp )
 
-      InBufferRight := Right ( InBuffer , Len (InBuffer) - icp - 1 )
+      InBufferRight := Right( InBuffer , Len(InBuffer) - icp - 1 )
 
       InBuffer := InBufferLeft + InBufferRight
    EndIf
@@ -619,13 +619,13 @@ Local ol := 0
    // Process Mask
    OutBuffer := "" //x for clarity
    BadEntry := .F. //x for clarity
-   For x := 1 To Len (Mask)
-      CB := SubStr (InBuffer , x , 1 )
-      CM := SubStr (Mask , x , 1 )
+   For x := 1 To Len(Mask)
+      CB := SubStr(InBuffer , x , 1 )
+      CM := SubStr(Mask , x , 1 )
 
       Do Case
       Case (CM) == 'A' .or. (CM) == '!'
-         If IsAlpha ( CB ) .Or. CB == ' '
+         If IsAlpha( CB ) .Or. CB == ' '
             if (CM)=="!"
                OutBuffer := OutBuffer + UPPER(CB)
             else
@@ -641,7 +641,7 @@ Local ol := 0
          EndIf
 
       Case CM == '9'
-         If IsDigit ( CB ) .Or. CB == ' ' .Or.;
+         If IsDigit( CB ) .Or. CB == ' ' .Or.;
             ( mcvaltype=="N" .and.; //x
               CB == '-' .And. x == fnb .And. Pcount() > 1 )
 
@@ -687,7 +687,7 @@ Local ol := 0
 
       // RL 104
       If NegativeZero == .T.
-         Output := Transform ( GetValFromText ( wvw_ebgettext(mnwinnum, mnebid) , mcvaltype ) , Mask )
+         Output := Transform( GetValFromText( wvw_ebgettext(mnwinnum, mnebid) , mcvaltype ) , Mask )
 
          //x better:
          ol := len(Output)
@@ -697,13 +697,13 @@ Local ol := 0
          wvw_ebsettext(mnwinnum, mnebid, Output)
          wvw_ebsetsel(mnwinnum, mnebid, at('.',OutBuffer) + dc, at('.',OutBuffer) + dc)
       Else
-         wvw_ebsettext(mnwinnum, mnebid, Transform ( GetValFromText ( wvw_ebgettext(mnwinnum, mnebid) , mcvaltype ) , Mask ))
+         wvw_ebsettext(mnwinnum, mnebid, Transform( GetValFromText( wvw_ebgettext(mnwinnum, mnebid) , mcvaltype ) , Mask ))
          wvw_ebsetsel(mnwinnum, mnebid, at('.',OutBuffer) + dc, at('.',OutBuffer) + dc)
       EndIf
 
    Else
       If pFlag == .T.
-         ncp := at ( '.' , wvw_ebgettext(mnwinnum, mnebid) )
+         ncp := at( '.' , wvw_ebgettext(mnwinnum, mnebid) )
          wvw_ebsetsel(mnwinnum, mnebid, ncp, ncp)
       Else
          // Restore Initial CaretPos
@@ -714,9 +714,9 @@ Local ol := 0
          wvw_ebsetsel(mnwinnum, mnebid, icp, icp)
 
          // Skip Protected Characters
-         For x := 1 To Len (OutBuffer)
-            CB := SubStr ( OutBuffer , icp+x , 1 )
-            CM := SubStr ( Mask , icp+x , 1 )
+         For x := 1 To Len(OutBuffer)
+            CB := SubStr( OutBuffer , icp+x , 1 )
+            CM := SubStr( Mask , icp+x , 1 )
 
             If !IsDigit(CB) .And. !IsAlpha(CB) .And.;
                ( !( CB == ' ' ) .or. ( CB == ' ' .and. CM == ' ' ) )
@@ -735,11 +735,11 @@ Local lPassed:=.T.,CB,CM,x
    //x BEGIN
    if cvaltype=="D"
       For x := 1 To min(Len(cString),Len(cMask))
-         CB := SubStr ( cString , x , 1 )
-         CM := SubStr ( cMask , x , 1 )
+         CB := SubStr( cString , x , 1 )
+         CM := SubStr( cMask , x , 1 )
          Do Case
          Case CM == '9'
-            If IsDigit ( CB ) .Or. CB == ' '
+            If IsDigit( CB ) .Or. CB == ' '
                * lPassed:=.T.
             Else
                Return .F.
@@ -753,18 +753,18 @@ Local lPassed:=.T.,CB,CM,x
    //x END
 
    For x := 1 To min(Len(cString),Len(cMask))
-      CB := SubStr ( cString , x , 1 )
-      CM := SubStr ( cMask , x , 1 )
+      CB := SubStr( cString , x , 1 )
+      CM := SubStr( cMask , x , 1 )
       Do Case
       // JK
       Case (CM) == 'A' .or. (CM) == '!'
-         If IsAlpha ( CB ) .Or. CB == ' '
+         If IsAlpha( CB ) .Or. CB == ' '
             * lPassed:=.T.
          Else
             Return .F.
          EndIf
       Case CM == '9'
-         If IsDigit ( CB ) .Or. CB == ' '
+         If IsDigit( CB ) .Or. CB == ' '
             * lPassed:=.T.
          Else
             Return .F.
@@ -782,7 +782,7 @@ Local lPassed:=.T.,CB,CM,x
 Return .T. //lPassed
 
 //from h_textbox.prg
-static Function GetValFromText ( Text , mcvaltype )
+static Function GetValFromText( Text , mcvaltype )
 * eg. GetValFromText( "999,999.99" ) --> 999999.99
 Local x , c , s
 
@@ -799,7 +799,7 @@ Local x , c , s
 
    * ASSUME numeric
    s := ''
-   For x := 1 To Len ( Text )
+   For x := 1 To Len( Text )
       c := SubStr(Text,x,1)
       //If c='0' .or. c='1' .or. c='2' .or. c='3' .or. c='4' .or. c='5' .or. c='6' .or. c='7' .or. c='8' .or. c='9' .or. c='.' .or. c='-'
       If c $ '0123456789' .or. c $ '.-'
@@ -807,17 +807,17 @@ Local x , c , s
       EndIf
    Next x
 
-   If Left ( AllTrim(Text) , 1 ) == '(' .OR.  Right ( AllTrim(Text) , 2 ) == 'DB'
+   If Left( AllTrim(Text) , 1 ) == '(' .OR.  Right( AllTrim(Text) , 2 ) == 'DB'
       s := '-' + s
    EndIf
 
    //useless!
-   //s := Transform ( Val(s) , Getnummask(s_cmask, mcvaltype) )
+   //s := Transform( Val(s) , Getnummask(s_cmask, mcvaltype) )
 
 Return Val(s)
 
 //from h_textbox.prg
-static Function GetNumMask ( Text, mcvaltype )
+static Function GetNumMask( Text, mcvaltype )
 * eg. GetNumMask("999,999.99") --> "999999.99"
 Local i , c , s
    //x BEGIN
@@ -828,7 +828,7 @@ Local i , c , s
    //x END
 
    s := ''
-   For i := 1 To Len ( Text )
+   For i := 1 To Len( Text )
       c := SubStr(Text,i,1)
       If c='9' .or. c='.'
          s := s + c

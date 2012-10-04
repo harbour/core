@@ -30,7 +30,7 @@ PROCEDURE main()
       RETURN
    ENDIF
 
-   IF hb_md5( _ENCODE( node ) ) != mxmlElementGetAttr( node, "checksum" )
+   IF !( hb_md5( _ENCODE( node ) ) == mxmlElementGetAttr( node, "checksum" ) )
       OutErr( "Custom data of element <hash> is corrupted!" )
       mxmlDelete( tree )
 

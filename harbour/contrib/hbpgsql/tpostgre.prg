@@ -509,7 +509,7 @@ CREATE CLASS TPQQuery
    METHOD   Append( oRow )
    METHOD   SetKey()
 
-   METHOD   Changed( nField )  INLINE ::aRow[ nField ] != ::aOld[ nField ]
+   METHOD   Changed( nField )  INLINE !( ::aRow[ nField ] == ::aOld[ nField ] )
    METHOD   Blank()            INLINE ::GetBlankRow()
 
    METHOD   Struct()

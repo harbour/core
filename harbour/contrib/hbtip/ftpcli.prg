@@ -215,7 +215,7 @@ METHOD GetReply() CLASS tIPClientFTP
    ENDDO
 
    // 4 and 5 are error codes
-   IF ::InetErrorCode( ::SocketCon ) != 0 .OR. Left( ::cReply, 1 ) >= "4"
+   IF ::InetErrorCode( ::SocketCon ) != 0 .OR. Val( Left( ::cReply, 1 ) ) >= 4
       RETURN .F.
    ENDIF
 

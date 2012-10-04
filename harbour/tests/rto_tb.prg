@@ -823,7 +823,7 @@ FUNCTION __eInstVar53( oVar, cMethod, xValue, cType, nSubCode, bValid )
 
    LOCAL oError
 
-   IF VALTYPE( xValue ) != cType .OR. ;
+   IF !( VALTYPE( xValue ) == cType ) .OR. ;
       ( bValid != NIL .AND. !EVAL( bValid, oVar, xValue ) )
       oError := ErrorNew()
       oError:description := HB_LANGERRMSG( 1 )
@@ -835,7 +835,7 @@ FUNCTION __eInstVar53( oVar, cMethod, xValue, cType, nSubCode, bValid )
       oError:subcode := nSubCode
       oError:args := { xValue }
       xValue := EVAL( ERRORBLOCK(), oError )
-      IF VALTYPE( xValue ) != cType
+      IF !( VALTYPE( xValue ) == cType )
          __errInHandler()
       ENDIF
    ENDIF

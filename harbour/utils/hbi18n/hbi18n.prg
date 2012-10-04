@@ -101,7 +101,7 @@ PROCEDURE Main( ... )
          ELSEIF LEFTEQUAL( param, "o" )
             IF !Empty( param := SubStr( param, 2 ) )
                cFileOut := param
-            ELSEIF n < Len( aParams ) .AND. aParams[ n + 1 ] != "-"
+            ELSEIF n < Len( aParams ) .AND. ! LEFTEQUAL( aParams[ n + 1 ], "-" )
                cFileOut := aParams[ ++n ]
             ELSE
                lError := .T.

@@ -155,7 +155,7 @@ METHOD New( aParams, cIniName ) CLASS HBFORMATCODE
       NEXT
    ENDIF
 
-   IF Right( ::cCommands, 1 ) != ","
+   IF !( Right( ::cCommands, 1 ) == "," )
       ::cCommands += ","
    ENDIF
    ::cCommands += "IF,ELSEIF,ELSE,ENDIF,END,DO,WHILE,ENDDO,WITH,CASE,OTHERWISE,ENDCASE,BEGIN," +;
@@ -165,7 +165,7 @@ METHOD New( aParams, cIniName ) CLASS HBFORMATCODE
                   "LOOP,MENU,NEXT,PACK,PRINT,QUIT,READ,RECALL,REINDEX,RELEASE,RENAME,REQUEST,REPLACE,RESTORE," +;
                   "RUN,SAVE,SEEK,SELECT,SET,SKIP,SORT,STORE,SUM,TEXT,TOTAL,UNLOCK,USE,WAIT,ZAP,"
 
-   IF Right( ::cClauses, 1 ) != ","
+   IF !( Right( ::cClauses, 1 ) == "," )
       ::cClauses += ","
    ENDIF
    ::cClauses += "ADDITIVE,ALIAS,ALL,BLANK,BOTTOM,BOX,COLOR,DATE,DELETED,EACH,EXTENDED,EXCLUSIVE,FROM,GET," +;
@@ -173,7 +173,7 @@ METHOD New( aParams, cIniName ) CLASS HBFORMATCODE
                  "EXACT,EXCLUSIVE,FILTER,FIXED,FORMAT,INTENSITY,KEY,LIKE,MARGIN,MESSAGE,NEW,OFF,ON,ORDER,PATH,PICTURE,PRINTER,PROMPT," +;
                  "PROTECTED,RELATION,SCOREBOARD,SEQUENCE,SOFTSEEK,STEP,STRUCTURE,TYPEAHEAD,UNIQUE,WRAP,TAG,TO,TOP,VALID,WHEN,"
 
-   IF Right( ::cFunctions, 1 ) != ","
+   IF !( Right( ::cFunctions, 1 ) == "," )
       ::cFunctions += ","
    ENDIF
    IF !( ",STR," $ Upper( ::cFunctions ) )
@@ -289,7 +289,7 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
                nLineSegment := 1
                DO WHILE .T.
                   nPos := nPosSep
-                  IF Left( aFile[ i ], 1 ) != "#" .AND. ;
+                  IF !( Left( aFile[ i ], 1 ) == "#" ) .AND. ;
                         ( nPosSep := FindNotQuoted( ";", aFile[ i ], nPosSep ) ) != 0 .AND. ;
                         nPosSep < Len( aFile[ i ] ) .AND. ( nPosComment == 0 .OR. nPosSep < nPosComment )
                      cLine := SubStr( aFile[ i ], nPos, nPosSep - nPos + 1 )
@@ -581,7 +581,7 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFORMATCODE
                   nA := i
                ENDIF
                nState := FL_STATE_ANY
-            ELSEIF c == "!" .AND. SubStr( cLine, i + 1, 1 ) != "="
+            ELSEIF c == "!" .AND. !( SubStr( cLine, i + 1, 1 ) == "=" )
                IF nState == FL_STATE_STRING
                   IF nEnd == nBegin
                      nEnd := i
@@ -610,12 +610,12 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFORMATCODE
                lFirst := .F.
             ENDIF
             IF !( "|" + SubStr( cLine, nB, 2 ) + "|" $ "|--|++|->|" )
-               IF nA != 0 .AND. ::lSpaces .AND. nA < nLen .AND. SubStr( cLine, nA + 1, 1 ) != " "
+               IF nA != 0 .AND. ::lSpaces .AND. nA < nLen .AND. !( SubStr( cLine, nA + 1, 1 ) == " " )
                   cLine := Left( cLine, nA ) + " " + SubStr( cLine, nA + 1 )
                   nLen++
                   i++
                ENDIF
-               IF nB != 0 .AND. ::lSpaces .AND. nB > 1 .AND. SubStr( cLine, nB - 1, 1 ) != " "
+               IF nB != 0 .AND. ::lSpaces .AND. nB > 1 .AND. !( SubStr( cLine, nB - 1, 1 ) == " " )
                   cLine := Left( cLine, nB - 1 ) + " " + SubStr( cLine, nB )
                   nLen++
                   i++
@@ -747,7 +747,7 @@ METHOD SetOption( cLine, i, aIni ) CLASS HBFORMATCODE
          ELSE
             ::nErr := 3
          ENDIF
-         IF ::nErr == 0 .AND. ValType( xRes ) != Left( cToken1, 1 )
+         IF ::nErr == 0 .AND. !( ValType( xRes ) == Left( cToken1, 1 ) )
             ::nErr := 4
          ENDIF
       ELSE
@@ -774,7 +774,7 @@ METHOD ReadIni( cIniName ) CLASS HBFORMATCODE
       nLen := Len( aIni )
       FOR i := 1 TO nLen
          IF ! Empty( aIni[ i ] := AllTrim( aIni[ i ] ) ) .AND. ;
-               ( c := Left( aIni[ i ], 1 ) ) != ";" .AND. c != "#"
+               !( ( c := Left( aIni[ i ], 1 ) ) == ";" ) .AND. !( c == "#" )
             IF ! ::SetOption( aIni[ i ], @i, aIni )
                EXIT
             ENDIF
@@ -807,14 +807,14 @@ METHOD Array2File( cFileName, aFile ) CLASS HBFORMATCODE
 
    cName := iif( ( i := RAt( ".", cFileName ) ) == 0, cFileName, SubStr( cFileName, 1, i - 1 ) )
    IF Empty( ::cExtSave )
-      cBakName := cName + iif( Left( ::cExtBack, 1 ) != ".", ".", "" ) + ::cExtBack
+      cBakName := cName + iif( Left( ::cExtBack, 1 ) == ".", "", "." ) + ::cExtBack
       IF hb_FCopy( cFileName, cBakName ) == F_ERROR
          RETURN .F.
       ENDIF
    ENDIF
 
    IF ! Empty( ::cExtSave )
-      cFileName := cName + iif( Left( ::cExtSave, 1 ) != ".", ".", "" ) + ::cExtSave
+      cFileName := cName + iif( Left( ::cExtSave, 1 ) == ".", "", "." ) + ::cExtSave
    ENDIF
    IF ::lFCaseLow
       cPath := iif( ( i := RAt( "\", cFileName ) ) == 0, ;

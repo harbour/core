@@ -1588,8 +1588,8 @@ else
       if nPatSize == nStrSize
          lMatch := .T.
          for y := 1 to nPatSize
-            if substr(cPattern,y,1)!="?" .and. ;
-               substr(cPattern,y,1)!= substr(cString,y,1)
+            if !(substr(cPattern,y,1)=="?") .and. ;
+               !(substr(cPattern,y,1)== substr(cString,y,1))
                   lMatch := .F.
                   exit
             endif

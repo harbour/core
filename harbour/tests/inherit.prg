@@ -214,7 +214,7 @@ FUNCTION READ()
 
    IF ::hFile == F_ERROR
       ? "DosFile:Read : No file open"
-   ELSEIF ::cMode != "R"
+   ELSEIF !( ::cMode == "R" )
       ? "File ", ::cFileName, " not open for reading"
    ELSEIF ! ::lEoF
 

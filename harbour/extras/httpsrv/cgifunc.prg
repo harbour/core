@@ -680,8 +680,8 @@ STATIC FUNCTION FT_ELAPSED(dStart, dEnd, cTimeStart, cTimeEnd)
      dEnd     := DATE()
   ENDIF
 
-  iif( VALTYPE(cTimeStart) != 'C', cTimeStart := '00:00:00', )
-  iif( VALTYPE(cTimeEnd)   != 'C', cTimeEnd   := '00:00:00', )
+  iif( ! HB_ISSTRING( cTimeStart ), cTimeStart := '00:00:00', )
+  iif( ! HB_ISSTRING( cTimeEnd )  , cTimeEnd   := '00:00:00', )
 
   nTotalSec  := (dEnd - dStart) * 86400                              + ;
                 VAL(cTimeEnd)   *  3600                              + ;
@@ -779,7 +779,7 @@ RETURN hExeFile:FULLNAME
 
 FUNCTION uhttpd_CStrToVal( cExp, cType )
 
-   IF ValType( cExp ) != 'C'
+   IF ! HB_ISSTRING( cExp )
       Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
    ENDIF
 

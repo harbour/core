@@ -2563,7 +2563,7 @@ if hFile == NIL        // First Timer
    endif
    cData := space( 3 )
    fRead( hFile, @cData, 3 )
-   if !( left( cData,1 ) == "A" )     //  If format of file != array
+   if !( left( cData,1 ) == "A" )     //  If format of file not an array
       fClose( hFile )            //////////
       return aRay
    endif
