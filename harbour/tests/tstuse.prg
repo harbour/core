@@ -7,10 +7,10 @@
 PROCEDURE Main()
 
    ? OS(), Version()
-   IF ! hb_FileExists( "_tst.dbf" )
+   IF ! hb_dbExists( "_tst.dbf" )
       dbCreate( "_tst", { { "F1", "C", 1, 0 } } )
    ENDIF
-   IF ! hb_FileExists( "_tst2.dbf" )
+   IF ! hb_dbExists( "_tst2.dbf" )
       dbCreate( "_tst2", { { "F1", "C", 1, 0 } } )
    ENDIF
 
@@ -34,6 +34,11 @@ PROCEDURE Main()
    dbSelectArea( 1 )
    mkTest( .F., "NORDD", , "TWO", .T., .F. )
    ?
+
+   dbCloseAll()
+
+   hb_dbDrop( "_tst.dbf" )
+   hb_dbDrop( "_tst2.dbf" )
 
    RETURN
 

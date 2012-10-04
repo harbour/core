@@ -68,7 +68,7 @@ FUNCTION TEmpty()
    IF oEmpty == NIL
       oEmpty := HBClass():New( "TEmpty" )             // Create a new class def
 
-      oEmpty:AddInline( "New", {| self |self } )
+      oEmpty:AddInline( "New", {| self | self } )
 
       oEmpty:AddInline( "Run", {|| QOut( "Run !" ) } )  // Test command
       oEmpty:AddInline( "Set", {| self, xParam | ::Out := xParam } )

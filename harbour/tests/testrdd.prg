@@ -38,5 +38,6 @@ PROCEDURE Main()
    dbSkip()
    dbCloseArea()
    dbCloseAll()
+   hb_dbDrop( "testdbf",, "DBFCDX" )
 
    RETURN

@@ -16,7 +16,7 @@ proc main()
    local cFile := "_tst"
 
    if !dbExists( cFile )
-      dbCreate( cFile, {{"F","C",10,0}} )
+      dbCreate( cFile, { { "F", "C", 10, 0 } } )
       use _tst exclusive
       while lastRec() < 100
          dbAppend()
@@ -98,6 +98,8 @@ proc main()
    setLock(9)
    dspLock()
    wait
+   dbCloseAll()
+   hb_dbDrop( cFile )
 return
 
 proc setLock( n )
@@ -106,7 +108,7 @@ return
 
 proc dspLock()
    local n
-   ? alias(), "active locks:" 
+   ? alias(), "active locks:"
    for each n in dbRLockList()
       ?? "", ltrim( str( n ) )
    next

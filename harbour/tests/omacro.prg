@@ -19,7 +19,7 @@ PROCEDURE Main()
    obj:&send1 := "test"
 
    obj:tries += 1
-   obj:tries ++
+   obj:tries++
    ++obj:tries
 
    WITH OBJECT obj
@@ -35,17 +35,17 @@ PROCEDURE Main()
       To access the object variable using macro the '_' should be omitted
 */
       :&send2 += 1
-      :&send2 ++
+      :&send2++
       ++:&send2
       ++:&( send2 )
 
-      :&( send2 ) := :&( SubStr( send2,2 ) ) + 1
+      :&( send2 ) := :&( SubStr( send2, 2 ) ) + 1
 
       :&send1 += " description"
       :&( send1 ) += " of "
    ENDWITH
 
-   obj:&( "_" + SubStr( send1,2 ) ) += "Error object"
+   obj:&( "_" + SubStr( send1, 2 ) ) += "Error object"
    ? send1, "=", obj:&( SubStr( send1, 2 ) )
    ? send2, "=", obj:tries
 

@@ -373,4 +373,8 @@ PROCEDURE Main()
       NEWRDD->( dbSkip() )
    NEXT
 
+   dbCloseAll()
+
+   hb_dbDrop( "newrdd",, "DBFCDX" )
+
    RETURN

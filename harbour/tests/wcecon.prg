@@ -66,7 +66,7 @@ proc main()
    dbCreate( cPath + "mydata", { { "F1", "C", 10, 0 }, ;
                                  { "F2", "=",  8, 0 }, ;
                                  { "FX", "M",  4, 0 } } )
-   use ( cPath+"mydata" )
+   use ( cPath + "mydata" )
    index on F1 tag T1
    index on F2 tag T2
    while lastrec() < 10
@@ -101,5 +101,10 @@ proc main()
    while ( k := inkey( 0 ) ) != hb_keyCode( "@" )
       ? ; devout( "key=" + str( k, 4 ) + ", char='" + chr( k ) + "'" )
    enddo
+
+   dbCloseAll()
+
+   hb_dbDrop( cPath + "mydata" )
+   dirRemove( cPath )
 
 return

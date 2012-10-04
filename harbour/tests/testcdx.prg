@@ -48,4 +48,7 @@ PROCEDURE Main()
    Select( "TESTCDX" )
    ordCreate( "testcdx", "Character", "CHARACTER", FIELD->CHARACTER, .F. )
 
+   dbCloseAll()
+   hb_dbDrop( "testcdx",, "DBFCDX" )
+
    RETURN

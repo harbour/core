@@ -2,6 +2,7 @@
  * $Id$
  */
 
+#include "directry.ch"
 #include "ord.ch"
 
 #define MAX_TEST_RECS   100
@@ -10,13 +11,18 @@
 #define INDEX_KEY_DATE  DATE
 #define INDEX_KEY_LOG   LOG
 
+#ifdef WITH_ADS
+#include "ads.ch"
+
 EXTERNAL _ADS
+#endif
+
 EXTERNAL DBFNTX
 EXTERNAL DBFCDX
 
 PROCEDURE Main( cRDDType, cAdsMode )
 
-   LOCAL cRDD, aStruct, xTemp, bMemoText
+   LOCAL cRDD := "", aStruct, xTemp, bMemoText
 
    FIELD CHAR, NUM, DATE, LOG
 
@@ -37,24 +43,16 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    CASE Empty( cRDDType )
 
-      NotifyUser( "Usage: TESTRDD RDDTYPE [ADSMODE]" + hb_eol() + ;
+      NotifyUser( "Usage: TESTRDD2 RDDTYPE [ADSMODE]" + hb_eol() + ;
          hb_eol() + ;
          "RDDTYPE = DBFNTX, DBFCDX, ADSCDX, ADSNTX or ADSADT" + hb_eol() + ;
          hb_eol() + ;
          "ADSMODE = LOCAL or SERVER (only applies to ADSCDX, ADSNTX and ADSADT)" + hb_eol() + ;
          "(If specify SERVER, must be run from a drive suported by ADS server)", .T. )
 
+#ifdef WITH_ADS
+
    CASE Left( cRDDType := Upper( AllTrim( cRDDType ) ), 3 ) == "ADS"
-
-      // Do not include ads.ch as don't want unintended affects when not using
-      // ADS - If need behavior from ads.ch, include defines and undefs in
-      // these areas.
-
-#define ADS_LOCAL_SERVER  1
-#define ADS_REMOTE_SERVER 2
-#define ADS_NTX           1
-#define ADS_CDX           2
-#define ADS_ADT           3
 
       rddRegister( "ADS", 1 )
       rddSetDefault( "ADS" )
@@ -84,11 +82,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
       AdsSetDefault( "" )
       AdsSetSearchPath( "" )
 
-#undef ADS_LOCAL_SERVER
-#undef ADS_REMOTE_SERVER
-#undef ADS_NTX
-#undef ADS_CDX
-#undef ADS_ADT
+#endif
 
    CASE cRDDType == "DBFCDX" .OR. ;
         cRDDType == "DBFNTX"
@@ -101,43 +95,41 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    ENDCASE
 
-   // Delete test.* since may be changing RDD flavors (avoid conflicts)
-   AEval( Directory( "test.*"  ), {| a | FErase( a[ 1 ] ) } )
-   AEval( Directory( "test?.*" ), {| a | FErase( a[ 1 ] ) } )
+   // Delete test_?.* since may be changing RDD flavors (avoid conflicts)
+   AEval( Directory( "test_?.*" ), {| a | FErase( a[ F_NAME ] ) } )
 
-   IF File( "test.dbf" )
-      NotifyUser( "Cannot delete test.dbf" )
+   IF File( "test_2.dbf" )
+      NotifyUser( "Cannot delete test_2.dbf" )
    ENDIF
 
-   // TEST: DBCreate()
+   // TEST: dbCreate()
 
-   dbCreate( "test.dbf", ;
-      aStruct := { ;
+   dbCreate( "test_2.dbf", aStruct := { ;
       { "CHAR", "C", 30, 0 }, ;
       { "NUM",  "N", 15, 3 }, ;
       { "DATE", "D",  8, 0 }, ;
       { "LOG",  "L",  1, 0 }, ;
       { "MEMO", "M", 10, 0 } } )
 
-   IF ! File( "test.dbf" )
-      NotifyUser( "Failed to create test.dbf" )
+   IF ! File( "test_2.dbf" )
+      NotifyUser( "Failed to create test_2.dbf" )
    ENDIF
 
-   // TEST: DBUseArea()/USE
+   // TEST: dbUseArea()/USE
 
-   USE test.dbf NEW shared ALIAS MYTEST
+   USE test_2.dbf NEW SHARED ALIAS mytest
 
    IF ! Alias() == "MYTEST"
-      NotifyUser( "Failed to open test.dbf" )
+      NotifyUser( "Failed to open test_2.dbf" )
    ENDIF
 
-   // TEST: RDDName()
+   // TEST: rddName()
 
    IF ! rddName() == cRDD
       NotifyUser( "Failed to set RDD to " + cRDD )
    ENDIF
 
-   // TEST: DBStruct()
+   // TEST: dbStruct()
 
    IF ! CompareArray( aStruct, dbStruct() )
       NotifyUser( "Resulting table structure is not what we asked for" )
@@ -159,7 +151,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
       // TEST: REPLACE
 
-      REPLACE CHAR WITH Chr( 65 + Val( SubStr( LTrim( Str( RecNo() ) ), 2, 1 ) ) ) + ;
+      REPLACE CHAR WITH Chr( Asc( "A" ) + Val( SubStr( LTrim( Str( RecNo() ) ), 2, 1 ) ) ) + ;
          " RECORD " + LTrim( Str( RecNo() ) )
 
       // TEST: Direct field assigment
@@ -216,10 +208,10 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    // TEST: Index creation
 
-   INDEX ON INDEX_KEY_CHAR TO TESTC
-   INDEX ON INDEX_KEY_NUM  TO TESTN ADDITIVE
-   INDEX ON INDEX_KEY_DATE TO TESTD ADDITIVE
-   INDEX ON INDEX_KEY_LOG  TO TESTL ADDITIVE
+   INDEX ON INDEX_KEY_CHAR TO test_c.idx
+   INDEX ON INDEX_KEY_NUM  TO test_n.idx ADDITIVE
+   INDEX ON INDEX_KEY_DATE TO test_d.idx ADDITIVE
+   INDEX ON INDEX_KEY_LOG  TO test_l.idx ADDITIVE
 
    // TEST: IndexOrd()
 
@@ -309,15 +301,15 @@ PROCEDURE Main( cRDDType, cAdsMode )
    SET EXACT ON
    SET ORDER TO 0
    COUNT for Trim( FIELD->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count
-   INDEX ON CHAR TO TESTE for Trim( FIELD->CHAR ) = "A RECORD 1" additive
+   INDEX ON CHAR TO test_e.idx FOR RTrim( FIELD->CHAR ) = "A RECORD 1" ADDITIVE
    IF ! dbOrderInfo( DBOI_KEYCOUNT ) == xTemp
       NotifyUser( "Bad conditional index count with EXACT ON" )
    ENDIF
 
    SET EXACT OFF
    SET ORDER TO 0
-   COUNT for Trim( FIELD->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count
-   INDEX ON CHAR TO TESTE for Trim( FIELD->CHAR ) = "A RECORD 1" additive
+   COUNT FOR RTrim( FIELD->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count
+   INDEX ON CHAR TO test_e.idx FOR RTrim( FIELD->CHAR ) = "A RECORD 1" ADDITIVE
    IF ! dbOrderInfo( DBOI_KEYCOUNT ) == xTemp
       NotifyUser( "Bad conditional index count with EXACT OFF" )
    ENDIF
@@ -331,7 +323,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
    //
    //
 
-   // TEST: DBCloseArea()
+   // TEST: dbCloseArea()
 
    MYTEST->( dbCloseArea() )
 
@@ -351,7 +343,8 @@ PROCEDURE ErrorSys()
 
 STATIC PROCEDURE MyError( e )
 
-   LOCAL i := 1 /* Start are "real" error */, cErr
+   LOCAL i := 1 /* Start are "real" error */
+   LOCAL cErr
 
    cErr := "Runtime error" + hb_eol() + ;
       hb_eol() + ;
@@ -398,6 +391,15 @@ STATIC PROCEDURE NotifyUser( cErr, lNotError )
 
    ? cErr
 
-   QUIT  // If remove this, will display all error without stopping
+   dbCloseAll()
+
+   hb_dbDrop( "test_2" )
+   hb_dbDrop( "test_e.idx" )
+   hb_dbDrop( "test_c.idx" )
+   hb_dbDrop( "test_n.idx" )
+   hb_dbDrop( "test_d.idx" )
+   hb_dbDrop( "test_l.idx" )
+
+   QUIT
 
    RETURN

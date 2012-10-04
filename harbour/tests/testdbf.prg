@@ -183,4 +183,7 @@ PROCEDURE Main()
       CONTINUE
    ENDDO
 
+   dbCloseAll()
+   hb_dbDrop( "testdbf",, "DBFCDX" )
+
    RETURN
