@@ -24,8 +24,6 @@ PROCEDURE Main()
    LOCAL oTo
    LOCAL cOut
 
-   Set( _SET_EXACT, .T. )
-
    oFrom := TOnTop()   :New( "hello.prg", "R" )
    oTo   := TTextFile():New( "hello.out", "W" )
 

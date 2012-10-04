@@ -2155,7 +2155,6 @@ STATIC PROCEDURE SysSettings()
    SET DATE      ANSI
    SET BELL       OFF
    SET DELETED     ON
-   SET EXACT      OFF
    SET CONFIRM     ON
    SET ESCAPE      ON
    SET WRAP        ON

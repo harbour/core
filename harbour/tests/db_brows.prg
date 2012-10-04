@@ -184,7 +184,6 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
       predxx := predit := iif( AScan( LI_MSED, 3 ) != 0, 3, iif( AScan( LI_MSED, 2 ) != 0, 2, 1 ) )
    ENDIF
    SET CURSOR ( predit > 1 )
-   SET EXACT OFF
    IF LI_LSOHR
       wndbuf := SaveScreen( LI_Y1, LI_X1, LI_Y2, LI_X2 )
    ENDIF

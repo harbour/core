@@ -30,7 +30,6 @@ PROCEDURE Main( cFrom, cTo )
    LOCAL oTo
    LOCAL cOut
 
-   SET( _SET_EXACT, .T. )
    cFrom := Default( cFrom, "strip.prg" )
    cTo   := Default( cTo,   "strip.out" )
 
