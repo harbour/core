@@ -5,8 +5,8 @@
 HOW TO USE THE SVN
 ------------------
 
-First and if your OS doesn't have it by default (like Windows, OS/2),
-download the client from this link:
+First and if your OS doesn't have it by default, download
+the client from this link:
 
    http://subversion.tigris.org
 

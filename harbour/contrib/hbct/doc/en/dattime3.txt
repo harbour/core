@@ -46,7 +46,7 @@
  *  $COMPLIANCE$
  *      WAITPERIOD() is Clipper Tools compatible.
  *  $PLATFORMS$
- *      Windows
+ *      All
  *  $FILES$
  *      Source is dattime3.c, library is libct.
  *  $SEEALSO$
@@ -108,7 +108,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Cl*pper Tools compatible.
  *  $PLATFORMS$
- *      Windows
+ *      All
  *  $FILES$
  *      Source is dattime3.c, library is libct.
  *  $SEEALSO$
@@ -131,7 +131,7 @@
  *
  *      <lMode>  Designates whether the time should also be set in the
  *      CMOS-RAM of an AT.  The default is do not write to CMOS-RAM. Note that in
- *      Windows plataform this adjust is automatic, therefore this parameter is
+ *      Windows platform this adjust is automatic, therefore this parameter is
  *      without efect.
  *  $RETURNS$
  *      The FUNCTION RETURNs .T. when the time is set successfully.
@@ -160,7 +160,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Cl*pper Tools compatible.
  *  $PLATFORMS$
- *      Windows
+ *      Windows, Linux
  *  $FILES$
  *      Source is dattime3.c, library is libct.
  *  $SEEALSO$
@@ -211,7 +211,7 @@
  *  $COMPLIANCE$
  *      This function is CA-Cl*pper Tools compatible.
  *  $PLATFORMS$
- *      Windows
+ *      Windows, Linux
  *  $FILES$
  *      Source is dattime3.c, library is libct.
  *  $SEEALSO$

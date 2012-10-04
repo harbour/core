@@ -7,7 +7,7 @@
  * Language Support Module (es)
  *
  * Copyright 2000 Jose Lalin <dezac@corevia.com>
- * Adapted to Windows by Antonio Linares <alinares@fivetechsoft.com>
+ * Copyright 2000 Antonio Linares <alinares@fivetechsoft.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify

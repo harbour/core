@@ -21,7 +21,7 @@
  *      During idle states the virtual machine calls the garbage collector and
  *      it can call user defined actions (background tasks). It also releases
  *      the CPU time slices for some poor platforms that are not smart enough
- *      (Windows NT).
+ *      to detect it automatically.
  *
  *      For defining the background tasks see the HB_IDLEADD() and HB_IDLEDEL()
  *      functions.

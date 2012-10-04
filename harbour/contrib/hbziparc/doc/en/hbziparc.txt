@@ -20,7 +20,7 @@
  *     It should be called before any of the compression functions.
  * $EXAMPLES$
  *     hb_SetZipComment( "This is an Test" )
- *     hb_ZipFile( "test.zip", { "\windows\ios.ini", "\windows\win.ini" } )
+ *     hb_ZipFile( "test.zip", { "ios.ini", "win.ini" } )
  * $STATUS$
  *     R
  * $COMPLIANCE$

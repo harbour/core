@@ -1982,7 +1982,7 @@ STATIC FUNCTION uproc_default()
 
    RETURN MakeResponse()
 
-// Define environment SET variables - TODO: Actually only for windows, make multiplatform
+// Define environment variables
 STATIC PROCEDURE Define_Env( hmServer )
    LOCAL v
 

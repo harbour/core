@@ -19,7 +19,7 @@ gtxxxxxx convention and are called by the _gt functions in gtapi.c.
 I've provided the following files to implement the console functions:
 
 gtdos.c - DOS implemenation
-gtwin.c - Windows 95/NT implementation
+gtwin.c - Windows implementation
 gtos2.c - OS/2 implementation
 gtxxx.c - Generic template for implementation
 
@@ -262,13 +262,13 @@ gtdos  - GT driver for DOS - it uses BIOS and direct hardware screen output
          environment you will noticed that all small details of Clipper
          GT drivers are replicated here. You can think about it like 100%
          Clipper compatible.
-         Supported only by DOS builds.
+         Supported only by MS-DOS builds.
 
-gtos2  - GT driver for OS2 - It's sth like GTWIN but for other OS.
-         Supported only by OS2 builds.
+gtos2  - GT driver for OS/2 - It's sth like GTWIN but for other OS.
+         Supported only by OS/2 builds.
 
 gtwin  - GT driver for MS-Windows console window.
-         Supported only by MS-WINDOWS (W95 or higher) builds.
+         Supported only by Windows builds.
 
 gtcrs  - GT driver for platforms which supports curses or compatible
          (ncurses) library - in practice POSIX systems.
@@ -297,22 +297,22 @@ gttrm  - it's like GTCRS and GTSLN but it does not use any external
 gtwvt  - GT driver for MS-Windows. It creates its own GUI window
          instead of using MS-console window. It allows to change
          font, window size, etc.
-         Supported only by MS-WINDOWS (W95 or higher) builds.
-         is a pure console implementation of traditional Clipper terminal 
-         taking Windows API as its base console IO protocols. Its OI are 
-         rendered in a Windows window and hence all of MSDN is available 
+         Supported only by Windows builds.
+         is a pure console implementation of traditional Clipper terminal
+         taking Windows API as its base console IO protocols. Its OI are
+         rendered in a Windows window and hence all of MSDN is available
          for use with GTWVT.
- To let the memory refreshed, I must remind 
-         everybody that it is a superb work of Peter Rees contributed 
+ To let the memory refreshed, I must remind
+         everybody that it is a superb work of Peter Rees contributed
          to xHarbour on 22nd December 2003.
-GTWVG  - GUI emulation of GTWVT. It implements itself on top of GTWVT. 
-         GTWVG ( WVTGUI in xHarbour ) offers functions and classes to 
-         present a console application look like a windows one. 
-         It renderes GUI elements on top of Clipper elements 
-         ( GETS, BROWSERS, BOXES, LINES ) which makes them 
-         feel like a Windows element. GTWVG can be used with existing 
-         code just adding some more code but without sacrificing or 
-         modifying old one. 
+GTWVG  - GUI emulation of GTWVT. It implements itself on top of GTWVT.
+         GTWVG ( WVTGUI in xHarbour ) offers functions and classes to
+         present a console application look like a windows one.
+         It renderes GUI elements on top of Clipper elements
+         ( GETS, BROWSERS, BOXES, LINES ) which makes them
+         feel like a Windows element. GTWVG can be used with existing
+         code just adding some more code but without sacrificing or
+         modifying old one.
          Also all IO commands can be rendered on top of the GUI elements
 gtxwc  - GT driver for X-Window. It's like GTWVT but for nixes.
          Additionaly it has set of predefined vector characters

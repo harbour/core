@@ -50,7 +50,7 @@ FBCloseBlob( blob_id )
 
 BUGS:
 
-Fix a few windows gpf and linux segment fault. I Need some help to find what's going on here.
+Fix a few segment faults. I Need some help to find what's going on here.
 
 
 That's all folks and sorry my poor english

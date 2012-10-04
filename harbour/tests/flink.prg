@@ -30,7 +30,7 @@ PROCEDURE Main()
 
    hb_MemoWrit( "_hb_s.tmp", ">s.tmp<" )
 
-   /* Requires special rights on Windows system,
+   /* Requires special rights on Windows platform,
       by default Administrators are allowed. */
 
    ? hb_FLinkSym()

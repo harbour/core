@@ -15,7 +15,7 @@
  *    Rev 1.1   22 Apr 2004 15:44:00   DGH
  * Fixed compiler warnings about pointer vs. integer by changing NULL to 0.
  * Commented out #ifdef and #endif lines, because there is nothing that is
- * even remotely DOS- or Windows-specific in the code.
+ * even remotely platform-specific in the code.
  *    Rev 1.0   01 Jan 1995 03:01:00   TED
  * Initial release
  *
