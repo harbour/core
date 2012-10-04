@@ -154,7 +154,7 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
    ::license    := cLicense
    ::hContainer := ::oParent:getHWND()
 
-   IF ValType( ::hContainer ) + ValType( ::CLSID ) != "NC"
+   IF ! HB_ISNUMERIC( ::hContainer ) .OR. ! HB_ISSTRING( ::CLSID )
       RETURN NIL
    ENDIF
 

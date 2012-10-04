@@ -11,6 +11,8 @@
  *
  */
 
+#include "inkey.ch"
+
 PROCEDURE Main( xBlink )
 
    LOCAL bg, fg, n
@@ -30,7 +32,7 @@ PROCEDURE Main( xBlink )
    NEXT
    ?
    ?
-   WHILE Inkey( 0 ) != 13
+   WHILE Inkey( 0 ) != K_ENTER
    ENDDO
 
    RETURN

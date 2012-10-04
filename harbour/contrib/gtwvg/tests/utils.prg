@@ -477,7 +477,7 @@ FUNCTION ClearStatusMsg()
 FUNCTION WvtPictures( nSlot,cFilePic )
 
    IF nSlot != NIL .AND. nSlot <= 20 .AND. file( cFilePic )
-      IF t_pic_[ nSlot ] != cFilePic
+      IF !( t_pic_[ nSlot ] == cFilePic )
          IF Wvt_LoadPicture( cFilePic, nSlot )
             t_pic_[ nSlot ] := cFilePic
          ENDIF
@@ -524,7 +524,8 @@ FUNCTION MyError( oError )
    ? procname( 2 ), procline( 2 )
    ? procname( 3 ), procline( 3 )
    ? procname( 4 ), procline( 4 )
-   DO WHILE inkey() != 27; ENDDO
+   DO WHILE inkey() != K_ESC
+   ENDDO
 
    RETURN NIL
 

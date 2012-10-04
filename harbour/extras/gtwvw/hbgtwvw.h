@@ -4,13 +4,13 @@
 
 /*
  * Harbour Project source code:
- * Video subsystem for Win32 using GUI windows instead of Console
+ * Video subsystem for Windows using GUI windows instead of Console
  * WITH MULTIPLE WINDOW SUPPORT
  *   Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
  *
  * initially based on:
  *
- * Header File for Video subsystem for Win32 using GUI windows instead of Console
+ * Header File for Video subsystem for Windows using GUI windows instead of Console
  * Copyright 2003 Peter Rees <peter@rees.co.nz>
  *                Rees Software & Systems Ltd
  * www - http://harbour-project.org

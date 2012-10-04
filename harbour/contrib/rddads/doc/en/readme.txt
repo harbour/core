@@ -128,6 +128,7 @@
  *      codeblock by the ADS server.
  *
  *       <table>
+ *       #include "inkey.ch"
  *       PROCEDURE Main()
  *          ...
  *          AdsRegCallBack( {| nPercent | outputstuff( nPercent ) }  )
@@ -136,12 +137,12 @@
  *               The codeblock can return .T. to abort.   */
  *          INDEX ON First+LAST+LABEL1+LABEL2 TAG First
  *          AdsClrCallBack()
- *       RETURN
+ *          RETURN
  *
  *       FUNCTION outputstuff( nPercent )  /* The "callback" function */
  *          ? "output stuff", nPercent
- *       RETURN Inkey() == 27
- *       /*  If press ESC, returns .T. to abort.   */
+ *          RETURN Inkey() == K_ESC
+ *          /*  If press ESC, returns .T. to abort.   */
  *      </table>
  *
  *      For programmers who are already familiar with the ACE engine,

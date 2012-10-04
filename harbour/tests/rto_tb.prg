@@ -63,7 +63,6 @@
 
 /* NOTE: This source can be compiled with both Harbour and CA-Cl*pper. */
 
-#include "common.ch"
 #include "error.ch"
 #include "fileio.ch"
 
@@ -97,10 +96,18 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
 
    LOCAL cCommandLine
 
-   DEFAULT cArg01 TO ""
-   DEFAULT cArg02 TO ""
-   DEFAULT cArg03 TO ""
-   DEFAULT cArg04 TO ""
+   IF cArg01 == NIL
+      cArg01 := ""
+   ENDIF
+   IF cArg02 == NIL
+      cArg02 := ""
+   ENDIF
+   IF cArg03 == NIL
+      cArg03 := ""
+   ENDIF
+   IF cArg04 == NIL
+      cArg04 := ""
+   ENDIF
 
    SET DATE ANSI
 
@@ -306,7 +313,7 @@ PROCEDURE TBRAssign( xVar )
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:nLeft         := xVar )
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:nRight        := xVar )
    // ; This is needed for CA-Cl*pper 5.x otherwise an unmaskable (bug?) RTE would be thrown. [vszakats]
-   IF ISNUMBER( xVar ) .AND. xVar < o:nBottom
+   IF ValType( xVar ) == "N" .AND. xVar < o:nBottom
       o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:nTop          := xVar )
    ENDIF
    o := TBrowseNew( 10, 10, 20, 50 ) ; TEST_L_TBR( o:RightVisible  := xVar )
@@ -501,7 +508,7 @@ PROCEDURE LogTBRVars( o, desc, xResult )
    FOR tmp := 1 TO o:colCount
       FWrite( s_fhnd, "   Column: " + StrZero( tmp, 3 ) + hb_eol() )
       col := o:GetColumn( tmp )
-      IF ISOBJECT( col )
+      IF ValType( col ) == "O"
          FWrite( s_fhnd, "      Block         " + XToStr( col:Block       ) + hb_eol() )
          FWrite( s_fhnd, "      Cargo         " + XToStr( col:Cargo       ) + hb_eol() )
          FWrite( s_fhnd, "      ColorBlock    " + XToStr( col:ColorBlock  ) + hb_eol() )
@@ -548,7 +555,7 @@ PROCEDURE LogTBCVars( o, desc, xResult )
    FWrite( s_fhnd, "---------------------" + hb_eol() )
    FWrite( s_fhnd, "   s_xVar        " + XToStr( s_xVar        ) + hb_eol() )
    FWrite( s_fhnd, "   xResult       " + XToStr( xResult       ) + hb_eol() )
-   IF ISOBJECT( o )
+   IF ValType( o ) == "O"
       FWrite( s_fhnd, "   Block         " + XToStr( o:Block       ) + hb_eol() )
       FWrite( s_fhnd, "   Cargo         " + XToStr( o:Cargo       ) + hb_eol() )
       FWrite( s_fhnd, "   ColorBlock    " + XToStr( o:ColorBlock  ) + hb_eol() )

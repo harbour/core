@@ -7,38 +7,38 @@ REQUEST FCOMMA
 PROCEDURE Main()
 
    USE test.csv VIA "FCOMMA"
-   ? "ALIAS", ALIAS(), "RECNO", RECNO(), ;
-     "BOF", BOF(), "EOF", EOF(), "LASTREC", LASTREC()
-   ? RECNO(), '"' + FIELD->LINE + '"'
-   DBGOBOTTOM()
-   ? RECNO(), '"' + FIELD->LINE + '"'
-   DBGOTOP()
-   ? RECNO(), '"' + FIELD->LINE + '"'
+   ? "ALIAS", Alias(), "RECNO", RecNo(), ;
+      "BOF", BOF(), "EOF", EOF(), "LASTREC", LastRec()
+   ? RecNo(), '"' + FIELD->LINE + '"'
+   dbGoBottom()
+   ? RecNo(), '"' + FIELD->LINE + '"'
+   dbGoTop()
+   ? RecNo(), '"' + FIELD->LINE + '"'
    WAIT
    DO WHILE !EOF()
-      ? RECNO(), '"' + FIELD->LINE + '"'
-      IF RECNO() == 20
-         INKEY( 0 )
+      ? RecNo(), '"' + FIELD->LINE + '"'
+      IF RecNo() == 20
+         Inkey( 0 )
       ENDIF
-      DBSKIP()
+      dbSkip()
    ENDDO
-   ? "ALIAS", ALIAS(), "RECNO", RECNO(), ;
-     "BOF", BOF(), "EOF", EOF(), "LASTREC", LASTREC()
+   ? "ALIAS", Alias(), "RECNO", RecNo(), ;
+      "BOF", BOF(), "EOF", EOF(), "LASTREC", LastRec()
    WAIT
-   DBGOBOTTOM()
-   ? "ALIAS", ALIAS(), "RECNO", RECNO(), ;
-     "BOF", BOF(), "EOF", EOF(), "LASTREC", LASTREC()
+   dbGoBottom()
+   ? "ALIAS", Alias(), "RECNO", RecNo(), ;
+      "BOF", BOF(), "EOF", EOF(), "LASTREC", LastRec()
    WAIT
    DO WHILE !BOF()
-      ? RECNO(), '[' + FIELD->LINE + ']'
-      IF RECNO() == LASTREC() - 20
-         INKEY( 0 )
+      ? RecNo(), '[' + FIELD->LINE + ']'
+      IF RecNo() == LastRec() - 20
+         Inkey( 0 )
       ENDIF
-      DBSKIP( -1 )
+      dbSkip( -1 )
    ENDDO
-   ? "ALIAS", ALIAS(), "RECNO", RECNO(), ;
-     "BOF", BOF(), "EOF", EOF(), "LASTREC", LASTREC()
+   ? "ALIAS", Alias(), "RECNO", RecNo(), ;
+      "BOF", BOF(), "EOF", EOF(), "LASTREC", LastRec()
    WAIT
-   BROWSE()
+   Browse()
 
    RETURN

@@ -338,8 +338,6 @@ PROCEDURE init_Templates()
       { "SUNOS",     "This is available on the SUNOS platform" }, ;
       { "Unix",      "This is available on the Unix platform(s)" }, ;
       { "Win",       "This is available on the MS-Windows platform(s)" }, ;
-      { "Win32",     "This is available on the MS-Windows (32-bit) platform(s)" }, ;
-      { "Win64",     "This is available on the MS-Windows (64-bit) platform(s)" }, ;
       { "WinCE",     "This is available on the MS-Windows-CE platform" } ;
    }
 

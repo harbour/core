@@ -266,7 +266,7 @@ RETURN Self
 
 METHOD MatchCriteria( oFound ) CLASS TXmlIteratorScan
 
-   IF ::cName != NIL .and. ( oFound:cName == NIL .or. ::cName != oFound:cName )
+   IF ::cName != NIL .and. ( oFound:cName == NIL .or. !( ::cName == oFound:cName ) )
       RETURN .F.
    ENDIF
 
@@ -275,11 +275,11 @@ METHOD MatchCriteria( oFound ) CLASS TXmlIteratorScan
    ENDIF
 
    IF ::cValue != NIL .and. ;
-      hb_HScan( oFound:aAttributes, {| xKey, cValue| HB_SYMBOL_UNUSED( xKey ), ::cValue == cValue}) == 0
+      hb_HScan( oFound:aAttributes, {| xKey, cValue | HB_SYMBOL_UNUSED( xKey ), ::cValue == cValue } ) == 0
       RETURN .F.
    ENDIF
 
-   IF ::cData != NIL .and. ( oFound:cData == NIL .or. ::cData != oFound:cData )
+   IF ::cData != NIL .and. ( oFound:cData == NIL .or. !( ::cData == oFound:cData ) )
       RETURN .F.
    ENDIF
 

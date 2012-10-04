@@ -2,7 +2,7 @@
  * $Id$
  */
 
-#include "common.ch"
+#include "inkey.ch"
 
 #include "hbsocket.ch"
 
@@ -46,7 +46,7 @@ PROCEDURE Main()
          ? "accept socket request"
          hb_threadDetach( hb_threadStart( @process(), hSocket ) )
       ENDIF
-      IF Inkey() == 27
+      IF Inkey() == K_ESC
          ? "quitting - esc pressed"
          EXIT
       ENDIF

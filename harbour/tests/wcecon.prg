@@ -98,7 +98,7 @@ proc main()
 
    ?
    ? "@ - interrupt, keycodes test "
-   while ( k := inkey( 0 ) ) != 64
+   while ( k := inkey( 0 ) ) != hb_keyCode( "@" )
       ? ; devout( "key=" + str( k, 4 ) + ", char='" + chr( k ) + "'" )
    enddo
 

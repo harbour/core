@@ -52,7 +52,6 @@
 
 /* NOTE: This source can be compiled with both Harbour and CA-Cl*pper. */
 
-#include "common.ch"
 #include "error.ch"
 #include "fileio.ch"
 #include "inkey.ch"
@@ -93,10 +92,18 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    LOCAL nOldRow
    LOCAL nOldCol
 
-   DEFAULT cArg01 TO ""
-   DEFAULT cArg02 TO ""
-   DEFAULT cArg03 TO ""
-   DEFAULT cArg04 TO ""
+   IF cArg01 == NIL
+      cArg01 := ""
+   ENDIF
+   IF cArg02 == NIL
+      cArg02 := ""
+   ENDIF
+   IF cArg03 == NIL
+      cArg03 := ""
+   ENDIF
+   IF cArg04 == NIL
+      cArg04 := ""
+   ENDIF
 
    SET DATE ANSI
 
@@ -726,10 +733,12 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
 PROCEDURE TGetTOVS( o, aKeys, lInsert )
    LOCAL tmp, tmp1
 
-   DEFAULT lInsert TO .F.
+   IF !( ValType( lInsert ) == "L" )
+      lInsert := .F.
+   ENDIF
 
    FOR tmp := 1 TO Len( aKeys )
-      IF ISCHAR( aKeys[ tmp ] )
+      IF ValType( aKeys[ tmp ] ) == "C"
          FOR tmp1 := 1 TO Len( aKeys[ tmp ] )
             IF lInsert
                TEST_CALL( o, "o:insert( '" + SubStr( aKeys[ tmp ], tmp1, 1 ) + "' )", {|| o:insert( SubStr( aKeys[ tmp ], tmp1, 1 ) ) } )
@@ -737,7 +746,7 @@ PROCEDURE TGetTOVS( o, aKeys, lInsert )
                TEST_CALL( o, "o:overStrike( '" + SubStr( aKeys[ tmp ], tmp1, 1 ) + "' )", {|| o:overStrike( SubStr( aKeys[ tmp ], tmp1, 1 ) ) } )
             ENDIF
          NEXT
-      ELSEIF ISNUM( aKeys[ tmp ] )
+      ELSEIF ValType( aKeys[ tmp ] ) == "N"
          DO CASE
          CASE aKeys[ tmp ] == K_INS                          ; lInsert := ! lInsert
          CASE aKeys[ tmp ] == K_HOME                         ; TEST_LINE( o:Home() )

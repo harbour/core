@@ -55,6 +55,7 @@ REQUEST ARRAYRDD
 #define USE_DBCREATE_EXTENSIONS
 
 PROCEDURE Main()
+
    LOCAL aStruct
 
    SET DATE ANSI
@@ -63,35 +64,36 @@ PROCEDURE Main()
    CLS
 
    ? "Create a new dbf in memory using dbCreate() command"
-   aStruct := { { "NAME"     , "C", 40, 0 } ,;
-                { "ADDRESS"  , "C", 40, 0 } ,;
-                { "BIRTHDAY" , "D",  8, 0 } ,;
-                { "AGE"      , "N",  3, 0 } }
+   aStruct := { ;
+      { "NAME"     , "C", 40, 0 } , ;
+      { "ADDRESS"  , "C", 40, 0 } , ;
+      { "BIRTHDAY" , "D",  8, 0 } , ;
+      { "AGE"      , "N",  3, 0 } }
 
 #ifndef USE_DBCREATE_EXTENSIONS
    ? "Create it"
    dbCreate( "arrtest.dbf", aStruct, "ARRAYRDD" )
-   wait
+   WAIT
    ? "Open it"
    USE arrtest.dbf VIA "ARRAYRDD"
-   wait
+   WAIT
 #else
    ? "Create it and leave opened"
-   dbCreate( "arrtest.dbf", aStruct, "ARRAYRDD", .T., "arrtest" )
-   wait
+   dbCreate( "arrtest.dbf", aStruct, "ARRAYRDD", .T. , "arrtest" )
+   WAIT
 #endif
 
    ? "Show structure"
    ? hb_ValToExp( dbStruct() )
    WAIT
 
-   ? "ALIAS", ALIAS(), "RECNO", RECNO(), ;
-     "BOF", BOF(), "EOF", EOF(), "LASTREC", LASTREC()
-   ? RECNO(), '"' + FIELD->NAME + '"'
-   DBGOBOTTOM()
-   ? RECNO(), '"' + FIELD->NAME + '"'
-   DBGOTOP()
-   ? RECNO(), '"' + FIELD->NAME + '"'
+   ? "ALIAS", Alias(), "RECNO", RecNo(), ;
+      "BOF", BOF(), "EOF", EOF(), "LASTREC", LastRec()
+   ? RecNo(), '"' + FIELD->NAME + '"'
+   dbGoBottom()
+   ? RecNo(), '"' + FIELD->NAME + '"'
+   dbGoTop()
+   ? RecNo(), '"' + FIELD->NAME + '"'
    WAIT
 
    ? "Adding some data"
@@ -101,7 +103,7 @@ PROCEDURE Main()
    field->birthday := SToD( "19670103" )
    field->age      := 39
 
-   ? RECNO(), '"' + FIELD->NAME + '"'
+   ? RecNo(), '"' + FIELD->NAME + '"'
 
    dbAppend()
    field->name     := "Mouse Mickey"
@@ -110,34 +112,34 @@ PROCEDURE Main()
    field->age      := 66
 
    WHILE !EOF()
-      ? RECNO(), '"' + FIELD->NAME + '"'
-      IF RECNO() == 20
-         INKEY( 0 )
+      ? RecNo(), '"' + FIELD->NAME + '"'
+      IF RecNo() == 20
+         Inkey( 0 )
       ENDIF
-      DBSKIP()
+      dbSkip()
    ENDDO
-   ? "ALIAS", ALIAS(), "RECNO", RECNO(), ;
-     "BOF", BOF(), "EOF", EOF(), "LASTREC", LASTREC()
+   ? "ALIAS", Alias(), "RECNO", RecNo(), ;
+      "BOF", BOF(), "EOF", EOF(), "LASTREC", LastRec()
    WAIT
-   DBGOBOTTOM()
-   ? "ALIAS", ALIAS(), "RECNO", RECNO(), ;
-     "BOF", BOF(), "EOF", EOF(), "LASTREC", LASTREC()
+   dbGoBottom()
+   ? "ALIAS", Alias(), "RECNO", RecNo(), ;
+      "BOF", BOF(), "EOF", EOF(), "LASTREC", LastRec()
    WAIT
    WHILE !BOF()
-      ? RECNO(), '[' + FIELD->NAME + ']'
-      IF RECNO() == LASTREC() - 20
-         INKEY( 0 )
+      ? RecNo(), '[' + FIELD->NAME + ']'
+      IF RecNo() == LastRec() - 20
+         Inkey( 0 )
       ENDIF
-      DBSKIP( -1 )
+      dbSkip( -1 )
    ENDDO
-   ? "ALIAS", ALIAS(), "RECNO", RECNO(), ;
-     "BOF", BOF(), "EOF", EOF(), "LASTREC", LASTREC()
+   ? "ALIAS", Alias(), "RECNO", RecNo(), ;
+      "BOF", BOF(), "EOF", EOF(), "LASTREC", LastRec()
    WAIT
 
    ? "Show it - Please don't press any key except movement keys and ESC"
    ? "          to exit from browse(), otherwise you will get an error"
    ? "          due to missing index support"
    WAIT
-   BROWSE()
+   Browse()
 
-RETURN
+   RETURN

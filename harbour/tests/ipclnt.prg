@@ -2,8 +2,6 @@
  * $Id$
  */
 
-#include "common.ch"
-
 #include "hbsocket.ch"
 
 #define ADDRESS                     "127.0.0.1"

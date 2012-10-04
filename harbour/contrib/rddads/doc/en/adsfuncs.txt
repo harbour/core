@@ -43,7 +43,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit only
+ *      Windows
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -83,7 +83,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit only
+ *      Windows
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -114,7 +114,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit
+ *      Windows
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -183,7 +183,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit
+ *      Windows
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -218,7 +218,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit
+ *      Windows
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -251,7 +251,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit
+ *      Windows
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -282,7 +282,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit
+ *      Windows
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -314,7 +314,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit
+ *      Windows
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -348,7 +348,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit
+ *      Windows
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -384,7 +384,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit
+ *      Windows
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -415,7 +415,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit
+ *      Windows
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -454,7 +454,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit
+ *      Windows
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -492,7 +492,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit
+ *      Windows
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -541,7 +541,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit
+ *      Windows
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -591,7 +591,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit
+ *      Windows
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -637,7 +637,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit
+ *      Windows
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -680,7 +680,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit
+ *      Windows
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -714,6 +714,7 @@
  *      DLLs doing all the indexing. So to do progress meters
  *      you need to implement this.
  *  $EXAMPLES$
+ *       #include "inkey.ch"
  *       PROCEDURE Main()
  *          ...
  *          AdsRegCallBack( {| nPercent | outputstuff( nPercent ) }  )
@@ -722,18 +723,18 @@
  *               The codeblock can return .T. to abort.   */
  *          INDEX ON First+LAST+LABEL1+LABEL2 TAG First
  *          AdsClrCallBack()
- *       RETURN
+ *          RETURN
  *
  *       FUNCTION outputstuff( nPercent )  /* The "callback" function */
  *          ? "output stuff", nPercent
- *       RETURN Inkey() == 27
- *       /*  If press ESC, returns .T. to abort.   */
+ *          RETURN Inkey() == K_ESC
+ *          /*  If press ESC, returns .T. to abort.   */
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -765,7 +766,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -802,7 +803,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -841,7 +842,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -877,7 +878,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -913,7 +914,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -955,7 +956,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -987,7 +988,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *  $SEEALSO$
@@ -1035,7 +1036,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -1066,7 +1067,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -1112,7 +1113,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -1153,7 +1154,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -1190,7 +1191,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -1230,7 +1231,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -1260,7 +1261,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *  $SEEALSO$
  *      ADSCONNECT60()
@@ -1299,7 +1300,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -1337,7 +1338,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -1376,7 +1377,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -1413,7 +1414,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Ads 7.x and above, Windows 32-bit, Linux
+ *      Ads 7.x and above, Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch
@@ -1448,7 +1449,7 @@
  *  $COMPLIANCE$
  *      Harbour extension
  *  $PLATFORMS$
- *      Windows 32-bit, Linux
+ *      Windows, Linux
  *  $FILES$
  *      Library is RddAds
  *      Header is ads.ch

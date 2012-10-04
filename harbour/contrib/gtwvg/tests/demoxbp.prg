@@ -258,7 +258,7 @@ FUNCTION Main()
    oCrt:show()
 
    DO WHILE .T.
-      IF inkey() == 27
+      IF inkey() == K_ESC
          EXIT
       ENDIF
    ENDDO

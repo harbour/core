@@ -6,44 +6,44 @@ REQUEST RLCDX
 
 PROCEDURE Main()
 
-   DBCREATE( "_tst", { { "F1", "C", 10, 0 } }, "RLCDX" )
+   dbCreate( "_tst", { { "F1", "C", 10, 0 } }, "RLCDX" )
    USE _tst VIA "RLCDX" SHARED
-   ? "Table: ", ALIAS(), " open VIA: ", RDDNAME()
+   ? "Table: ", Alias(), " open VIA: ", rddName()
    ? "APPEND"
-   DBAPPEND()
+   dbAppend()
    ? "Current record locks:"
-   AEVAL( DBRLOCKLIST(), {| nRecNo | qqout( nRecNo ) } )
+   AEval( dbRLockList(), {| nRecNo | QQOut( nRecNo ) } )
    ? "APPEND"
-   DBAPPEND()
+   dbAppend()
    ? "Current record locks:"
-   AEVAL( DBRLOCKLIST(), {| nRecNo | qqout( nRecNo ) } )
+   AEval( dbRLockList(), {| nRecNo | QQOut( nRecNo ) } )
    ? "UNLOCK"
-   DBUNLOCK()
+   dbUnlock()
    ? "Current record locks:"
-   AEVAL( DBRLOCKLIST(), {| nRecNo | qqout( nRecNo ) } )
+   AEval( dbRLockList(), {| nRecNo | QQOut( nRecNo ) } )
 
-   ? "Locking record 1", DBRLOCK( 1 )
-   ? "Locking record 1", DBRLOCK( 1 )
-   ? "Locking record 1", DBRLOCK( 1 )
-   ? "Locking record 2", DBRLOCK( 2 )
+   ? "Locking record 1", dbRLock( 1 )
+   ? "Locking record 1", dbRLock( 1 )
+   ? "Locking record 1", dbRLock( 1 )
+   ? "Locking record 2", dbRLock( 2 )
    ? "Current record locks:"
-   AEVAL( DBRLOCKLIST(), {| nRecNo | qqout( nRecNo ) } )
+   AEval( dbRLockList(), {| nRecNo | QQOut( nRecNo ) } )
    ? "UnLocking record 1..."
-   DBRUNLOCK(1)
+   dbRUnlock( 1 )
    ? "Current record locks:"
-   AEVAL( DBRLOCKLIST(), {| nRecNo | qqout( nRecNo ) } )
+   AEval( dbRLockList(), {| nRecNo | QQOut( nRecNo ) } )
    ? "UnLocking record 2..."
-   DBRUNLOCK(2)
+   dbRUnlock( 2 )
    ? "Current record locks:"
-   AEVAL( DBRLOCKLIST(), {| nRecNo | qqout( nRecNo ) } )
+   AEval( dbRLockList(), {| nRecNo | QQOut( nRecNo ) } )
    ? "UnLocking record 1..."
-   DBRUNLOCK(1)
+   dbRUnlock( 1 )
    ? "Current record locks:"
-   AEVAL( DBRLOCKLIST(), {| nRecNo | qqout( nRecNo ) } )
+   AEval( dbRLockList(), {| nRecNo | QQOut( nRecNo ) } )
    ? "UnLocking record 1..."
-   DBRUNLOCK(1)
+   dbRUnlock( 1 )
    ? "Current record locks:"
-   AEVAL( DBRLOCKLIST(), {| nRecNo | qqout( nRecNo ) } )
+   AEval( dbRLockList(), {| nRecNo | QQOut( nRecNo ) } )
 
    CLOSE
 

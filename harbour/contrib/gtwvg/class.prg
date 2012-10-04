@@ -380,7 +380,7 @@ METHOD wvtDialog:Execute()
          ENDIF
       ENDDO
    ELSE
-      DO WHILE ( ::Inkey() != K_ESC )
+      DO WHILE ::Inkey() != K_ESC
       ENDDO
    ENDIF
 

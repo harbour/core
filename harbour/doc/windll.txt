@@ -2,8 +2,8 @@
  * $Id$
  */
 
-Windows 32-bit DLLs with Harbour code
-=====================================
+Windows DLLs with Harbour code
+==============================
 
 Programs created with Clipper or Harbour are traditionally a
 monolithic EXE containing all executable code.  This includes

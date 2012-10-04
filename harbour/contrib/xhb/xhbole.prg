@@ -230,7 +230,7 @@ OLE OPERATOR "==" METHOD OleValueExactEqual WITH xArg IS ::OleValue == xArg
 
 OLE OPERATOR "=" METHOD OleValueEqual WITH xArg IS ::OleValue = xArg
 
-OLE OPERATOR "!=" METHOD OleValueNotEqual WITH xArg IS ::OleValue != xArg
+OLE OPERATOR "!=" METHOD OleValueNotEqual WITH xArg IS ::OleValue != xArg /* Intentionally using != operator */
 
 OLE OPERATOR "+" METHOD OleValuePlus WITH xArg IS ::OleValue + xArg
 
