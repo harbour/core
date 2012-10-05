@@ -2122,7 +2122,7 @@ METHOD SplitLine( nRow ) CLASS XHBEditor
    LOCAL nPosInWord
 
    // Do something only if Word Wrapping is on
-   IF .NOT. ::lWordWrap // .OR. ( ::LineLen( nRow ) <= ::nWordWrapCol )
+   IF ! ::lWordWrap // .OR. ::LineLen( nRow ) <= ::nWordWrapCol
       RETURN Self
    ENDIF
 

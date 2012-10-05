@@ -2448,7 +2448,7 @@ local cData  := valtype(xData)
    if HB_ISSTRING(xData)
        cData += i2bin(len(xData))+xData
    elseif HB_ISNUMERIC(xData)
-       cData += i2bin(len(alhb_ntos(xData)) )+hb_ntos(str(xData))
+       cData += i2bin(len(hb_ntos(xData)))+hb_ntos(xData)
    elseif HB_ISDATE(xData)
        cData += i2bin(8)+dtos(xData)
    elseif HB_ISLOGICAL(xData)

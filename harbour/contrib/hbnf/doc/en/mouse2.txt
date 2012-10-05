@@ -22,7 +22,7 @@
  *     movement is set to the maximum for the current video mode.
  *     Use FT_MSHOWCRS() to display the mouse cursor.
  *  $EXAMPLES$
- *     IF .NOT. FT_MINIT()
+ *     IF ! FT_MINIT()
  *        ? "No mouse driver is installed"
  *     ENDIF
  *  $SEEALSO$

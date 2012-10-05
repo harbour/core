@@ -3,4 +3,4 @@
  */
 
 FUNCTION vpdf_FontsDat()
-   #pragma __streaminclude "fonts.dat" | RETURN { %s }
+   #pragma __streaminclude "fonts.dat" | RETURN %s

@@ -1190,7 +1190,7 @@ endif
 //  See if the DBF file exists
 //
 //////////////////////////////////////
-if .not. "."$cDBF
+if ! "."$cDBF
    cDBF += ".DBF"
 endif
 
@@ -1364,7 +1364,7 @@ endif
 //  See if the DBF file exists
 //
 //////////////////////////////////////
-if .not. "."$cDBF
+if ! "."$cDBF
    cDBF += ".DBF"
 endif
 

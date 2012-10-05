@@ -173,7 +173,7 @@ STATIC FUNCTION cton( cString, nBase ) // this function called only used in pdf_
 
    FOR nI := 1 TO nLen
       cChar := SubStr( cTemp, nI, 1 )
-      IF .NOT. IsDigit( cChar )
+      IF ! IsDigit( cChar )
          n := n + ( ( Asc( cChar ) - 65 ) + 10 ) * ( nBase ^ ( nI - 1 ) )
       ELSE
          n := n + ( ( nBase ^ ( nI - 1 ) ) * Val( cChar ) )

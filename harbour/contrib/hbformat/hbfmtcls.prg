@@ -87,7 +87,7 @@ CREATE CLASS HBFORMATCODE
    VAR nIndCont       INIT   3      // Indent for continuation ( after ';' ) lines - amount of spaces
    VAR lCnvAst        INIT .T.      // If true, convert asterisk '*' to '//'
    VAR lCnvAmp        INIT .T.      // If true, convert '&&' to '//'
-   VAR lCnvNot        INIT .F.      // If true, convert .NOT. TO !
+   VAR lCnvNot        INIT .T.      // If true, convert .NOT. TO !
    VAR nCaseCmd       INIT   1      // Case of commands ( -1 - no change, 1 - upper, 2 - lower, 3 - title )
    VAR nCaseBoo       INIT   1      // Case of boolean operators ( -1 - no change, 1 - upper, 2 - lower, 3 - title )
    VAR nCaseFnc       INIT   4      // Case of functions ( -1 - no change, 1 - upper, 2 - lower, 3 - title, 4 - as in pattern )
