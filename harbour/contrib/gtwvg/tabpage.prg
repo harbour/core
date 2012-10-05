@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -89,8 +90,8 @@ CLASS WvgTabPage  INHERIT  WvgWindow
    DATA     minimized                             INIT .T. /* Determines whether the XbpTabPage is minimized after it is created (the page is not visible).                    */
    DATA     postOffset                            INIT 80  /* Determines the distance between the end of the tab and the end of the page as a percentage of the page width.    */
    DATA     preOffset                             INIT 0   /* Determines the distance between the start of the tab and the start of the page as a percentage of the page width.*/
-   DATA     tabHeight                             INIT -1  /* Determines the height of the tab.                                                                                */
-   DATA     type                                  INIT WVGTABPAGE_TAB_TOP /* Determines the position of the tab.                                                               */
+   DATA     tabHeight                             INIT - 1  /* Determines the height of the tab.                                                                                */
+   DATA     TYPE                                  INIT WVGTABPAGE_TAB_TOP /* Determines the position of the tab.                                                               */
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -104,7 +105,7 @@ CLASS WvgTabPage  INHERIT  WvgWindow
    DATA     sl_tabActivate
    METHOD   tabActivate( xParam )                  SETGET
 
-   ENDCLASS
+ENDCLASS
 
 //
 
@@ -157,9 +158,10 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTa
 //
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
+
    LOCAL aHdr
 
-   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
+   hb_traceLog( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
 
    DO CASE
 
@@ -180,7 +182,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
       aHdr := Wvg_GetNMHdrInfo( aNM[ 2 ] )
 
       DO CASE
-      CASE aHdr[ NMH_code ] == -551 /* TCN_SELCHANGE */
+      CASE aHdr[ NMH_code ] == - 551 /* TCN_SELCHANGE */
 
       ENDCASE
 

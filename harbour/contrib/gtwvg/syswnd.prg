@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -77,7 +78,6 @@
 //
 
 CLASS WvgSysWindow INHERIT WvgPartHandler
-
 
    METHOD   new( oParent, oOwner, aPos )
    METHOD   create( oParent, oOwner, aPos )
@@ -109,10 +109,10 @@ CLASS WvgSysWindow INHERIT WvgPartHandler
    ASSIGN   move( bBlock )                        INLINE  ::sl_move := bBlock
 
    DATA     sl_quit
-   ACCESS   quit                                  INLINE  ::sl_quit
+   ACCESS   QUIT                                  INLINE  ::sl_quit
    ASSIGN   quit( bBlock )                        INLINE  ::sl_quit := bBlock
 
-   ENDCLASS
+ENDCLASS
 
 //
 
@@ -193,6 +193,7 @@ METHOD WvgSysWindow:setPos( aPos )
 //
 
 METHOD WvgSysWindow:currentPos()
+
    LOCAL aRect
 
    aRect := WVG_GetWindowRect( ::hWnd )
@@ -202,6 +203,7 @@ METHOD WvgSysWindow:currentPos()
 //
 
 METHOD WvgSysWindow:currentSize()
+
    LOCAL aRect
 
    aRect := WVG_GetClientRect( ::hWnd )
@@ -246,8 +248,8 @@ CLASS WvgFontDialog INHERIT WvgSysWindow
 
 
    DATA     outLine                               INIT   .T.
-   DATA     previewBGClr                          INIT   RGB( 255,255,255 )
-   DATA     previewFGClr                          INIT   RGB( 0,0,0 )
+   DATA     previewBGClr                          INIT   RGB( 255, 255, 255 )
+   DATA     previewFGClr                          INIT   RGB( 0, 0, 0 )
    DATA     previewString                         INIT   " "
    DATA     printerPS                             INIT   NIL
    DATA     screenPS                              INIT   NIL
@@ -289,7 +291,7 @@ CLASS WvgFontDialog INHERIT WvgSysWindow
    METHOD   wndProc( hWnd, nMessage, nwParam, nlParam )
    METHOD   GetWvgFont( aFont )                   PROTECTED
 
-   ENDCLASS
+ENDCLASS
 
 //
 
@@ -327,10 +329,10 @@ METHOD create( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialo
    ::oPrinterPS := oPrinterPS
    ::aPos       := aPos
 
-   IF ::viewPrinterFonts .and. ::oPrinterPS == NIL
+   IF ::viewPrinterFonts .AND. ::oPrinterPS == NIL
       ::viewPrinterFonts := .F.
    ENDIF
-   IF ( ! ::viewScreenFonts .and. ! ::viewPrinterFonts )
+   IF ( ! ::viewScreenFonts .AND. ! ::viewPrinterFonts )
       ::viewScreenFonts := .T.
    ENDIF
 
@@ -343,6 +345,7 @@ METHOD create( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialo
 //
 
 METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
+
    LOCAL aRect, nL, nH
 
    HB_SYMBOL_UNUSED( nlParam )
@@ -352,7 +355,7 @@ METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
    CASE nMessage == WM_INITDIALOG
       ::hWnd := hWnd
 
-      IF !empty( ::title )
+      IF !Empty( ::title )
          WVG_SetWindowText( ::hWnd, ::title )
       ENDIF
       IF !( ::buttonCancel )
@@ -382,7 +385,7 @@ METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
 
       IF ::aPos[ 1 ] > 0 .OR. ::aPos[ 2 ] > 0
          aRect := WVG_GetWindowRect( ::hWnd )
-         WVG_MoveWindow( ::hWnd, ::aPos[ 1 ], ::aPos[ 2 ], aRect[3]-aRect[1], aRect[4]-aRect[2], .F. )
+         WVG_MoveWindow( ::hWnd, ::aPos[ 1 ], ::aPos[ 2 ], aRect[3] - aRect[1], aRect[4] - aRect[2], .F. )
       ENDIF
 
       RETURN 1
@@ -398,17 +401,17 @@ METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
       CASE nL == IDOK
          ::ok := .T.
          IF HB_ISBLOCK( ::sl_activateOk )
-            eval( ::sl_activateOk, ::GetWvgFont(), NIL, Self )
+            Eval( ::sl_activateOk, ::GetWvgFont(), NIL, Self )
          ENDIF
 
       CASE nL == IDCANCEL
          IF HB_ISBLOCK( ::sl_activateCancel )
-            eval( ::sl_activateCancel, NIL, NIL, Self )
+            Eval( ::sl_activateCancel, NIL, NIL, Self )
          ENDIF
 
       CASE nL == 1026
          IF HB_ISBLOCK( ::sl_activateApply )
-            eval( ::sl_activateApply, ::GetWvgFont(), NIL, Self )
+            Eval( ::sl_activateApply, ::GetWvgFont(), NIL, Self )
          ENDIF
 
       CASE nL == 1038  /* Help */
@@ -422,6 +425,7 @@ METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
 //
 
 METHOD display( nMode ) CLASS WvgFontDialog
+
    LOCAL hWnd, aInfo
 
    IF nMode == 0
@@ -432,8 +436,8 @@ METHOD display( nMode ) CLASS WvgFontDialog
 
    ::ok := .F.
    aInfo := Wvg_ChooseFont( hWnd, {| h, m, w, l | ::wndProc( h, m, w, l ) }, ::familyName, ;
-                            ::nominalPointSize, ::viewScreenFonts, ::viewPrinterFonts )
-   IF !( ::ok )
+      ::nominalPointSize, ::viewScreenFonts, ::viewPrinterFonts )
+   IF ! ::ok
       RETURN NIL
    ENDIF
 
@@ -451,7 +455,9 @@ METHOD destroy() CLASS WvgFontDialog
 /*
  * Only callable from ::activateOK and ::activateApply
  */
+
 METHOD GetWvgFont( aFont ) CLASS WvgFontDialog
+
    LOCAL oWvgFont
 
    DEFAULT aFont TO Wvg_ChooseFont_GetLogFont( ::hWnd )
@@ -467,8 +473,8 @@ METHOD GetWvgFont( aFont ) CLASS WvgFontDialog
    oWvgFont:underscore       := aFont[ 6 ]
    oWvgFont:strikeOut        := aFont[ 7 ]
    oWvgFont:codePage         := aFont[ 8 ]
-   oWvgFont:setCompoundName( trim( aFont[ 1 ] +" "+ iif( oWvgFont:bold, "Bold ", "" ) + ;
-                                                    iif( oWvgFont:italic, "Italic", "" ) ) )
+   oWvgFont:setCompoundName( Trim( aFont[ 1 ] + " " + iif( oWvgFont:bold, "Bold ", "" ) + ;
+      iif( oWvgFont:italic, "Italic", "" ) ) )
    oWvgFont:create()
 
    RETURN oWvgFont
@@ -504,7 +510,7 @@ CLASS WvgFont
    DATA     underscore                            INIT   .F.
    DATA     codePage                              INIT   DEFAULT_CHARSET
 
-   DATA     fixed                                 INIT   .F.
+   DATA     FIXED                                 INIT   .F.
    DATA     antiAliased                           INIT   .F.
 
    DATA     compoundName                          INIT   ""
@@ -529,7 +535,7 @@ CLASS WvgFont
 
    DESTRUCTOR destroy()
 
-   ENDCLASS
+ENDCLASS
 
 //
 
@@ -578,6 +584,7 @@ METHOD destroy() CLASS WvgFont
 //
 
 METHOD list() CLASS WvgFont
+
    LOCAL aList := {}
 
    RETURN aList
@@ -585,6 +592,7 @@ METHOD list() CLASS WvgFont
 //
 
 METHOD createFont() CLASS WvgFont
+
    LOCAL aFont
 
    IF ::hFont != NIL
@@ -596,7 +604,7 @@ METHOD createFont() CLASS WvgFont
       ::height := Wvg_PointSizeToHeight( ::oPS:hdc, ::nominalPointSize )
    ENDIF
 
-   ::aFontInfo := array( 15 )
+   ::aFontInfo := Array( 15 )
 
    ::aFontInfo[  1 ] := ::familyName
    ::aFontInfo[  2 ] := ::height
@@ -615,7 +623,7 @@ METHOD createFont() CLASS WvgFont
 
    aFont := Wvg_FontCreate( ::aFontInfo )
 
-   IF empty( aFont[ 1 ] )
+   IF Empty( aFont[ 1 ] )
       RETURN nil
    ENDIF
 

@@ -33,10 +33,11 @@ MEMVAR GetList
 //
 
 PROCEDURE Main()
+
    LOCAL aPaint
 
    SET DATE ANSI
-   SET( _SET_EVENTMASK, INKEY_ALL + HB_INKEY_GTEVENT )
+   Set( _SET_EVENTMASK, INKEY_ALL + HB_INKEY_GTEVENT )
 
    Wvt_SetGui( .T. )
    Wvt_SetFont( "Courier New", 18, 0, 0 )
@@ -46,21 +47,21 @@ PROCEDURE Main()
    CLS
    Wvt_ShowWindow( SW_RESTORE )
    Wvt_SetTitle( "Harbour's GTWVG Demo ( Simplified )" )
-   Wvt_SetIcon( hb_dirBase() +  "vr_1.ico" )
+   Wvt_SetIcon( hb_DirBase() +  "vr_1.ico" )
 
    SetGT( 1, hb_gtSelect() )
 
    aPaint := {}
 
-   aAdd( aPaint, { "Label" , {|| Wvt_DrawLabel( 1, 40, "Harbour Console GUI Demo", 6, , rgb( 255,255,255 ), rgb( 198,198,198 ), "Arial", 26, , , , , .T., .T. ) }    , { WVT_BLOCK_LABEL,  1, 10,  3, 50 } } )
-   aAdd( aPaint, { "Box_1" , {|| Wvt_DrawBoxRaised( 4, 4, 20, 75 ) }                                                                                , { WVT_BLOCK_BOX  ,  4,  4, 20, 75 } } )
-   aAdd( aPaint, { "Box_2" , {|| Wvt_DrawBoxRecessed( 7, 61, 13, 70 ) }                                                                             , { WVT_BLOCK_BOX  ,  7, 61, 13, 70 } } )
-   aAdd( aPaint, { "Box_3" , {|| Wvt_DrawBoxGroup( 15, 59, 18, 72 ) }                                                                               , { WVT_BLOCK_BOX  , 15, 59, 18, 72 } } )
-   aAdd( aPaint, { "Box_4" , {|| Wvt_DrawBoxGroup( 5, 6, 19, 44 ) }                                                                                 , { WVT_BLOCK_BOX  ,  5,  6, 19, 44 } } )
-   aAdd( aPaint, { "Image" , {|| Wvt_DrawImage( 8,62,12,69, IMAGE_VOUCH ) }                                                                         , { WVT_BLOCK_IMAGE,  8, 62, 12, 69 } } )
-   aAdd( aPaint, { "Box_5" , {|| Wvt_DrawBoxRecessed( 7, 48, 13, 55 ) }                                                                             , { WVT_BLOCK_BOX  ,  7, 48, 13, 55 } } )
-   aAdd( aPaint, { "Line_1", {|| Wvt_DrawLine( maxrow()-2,  0, maxrow()-2, maxcol(), WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_BOTTOM ) }          , NIL } )
-   aAdd( aPaint, { "Gets"  , {|| aEval( GetList, {| oGet | Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) }, NIL } )
+   AAdd( aPaint, { "Label" , {|| Wvt_DrawLabel( 1, 40, "Harbour Console GUI Demo", 6, , rgb( 255,255,255 ), rgb( 198,198,198 ), "Arial", 26, , , , , .T. , .T. ) }    , { WVT_BLOCK_LABEL,  1, 10,  3, 50 } } )
+   AAdd( aPaint, { "Box_1" , {|| Wvt_DrawBoxRaised( 4, 4, 20, 75 ) }                                                                                , { WVT_BLOCK_BOX  ,  4,  4, 20, 75 } } )
+   AAdd( aPaint, { "Box_2" , {|| Wvt_DrawBoxRecessed( 7, 61, 13, 70 ) }                                                                             , { WVT_BLOCK_BOX  ,  7, 61, 13, 70 } } )
+   AAdd( aPaint, { "Box_3" , {|| Wvt_DrawBoxGroup( 15, 59, 18, 72 ) }                                                                               , { WVT_BLOCK_BOX  , 15, 59, 18, 72 } } )
+   AAdd( aPaint, { "Box_4" , {|| Wvt_DrawBoxGroup( 5, 6, 19, 44 ) }                                                                                 , { WVT_BLOCK_BOX  ,  5,  6, 19, 44 } } )
+   AAdd( aPaint, { "Image" , {|| Wvt_DrawImage( 8,62,12,69, IMAGE_VOUCH ) }                                                                         , { WVT_BLOCK_IMAGE,  8, 62, 12, 69 } } )
+   AAdd( aPaint, { "Box_5" , {|| Wvt_DrawBoxRecessed( 7, 48, 13, 55 ) }                                                                             , { WVT_BLOCK_BOX  ,  7, 48, 13, 55 } } )
+   AAdd( aPaint, { "Line_1", {|| Wvt_DrawLine( MaxRow() - 2,  0, MaxRow() - 2, MaxCol(), WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_BOTTOM ) }          , NIL } )
+   AAdd( aPaint, { "Gets"  , {|| AEval( GetList, {| oGet | Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) }, NIL } )
 
    ExecForm( aPaint )
 
@@ -70,15 +71,18 @@ PROCEDURE Main()
 /* This function must be linked with the application */
 
 FUNCTION Wvt_Paint()
+
    WvtPaintObjects()
+
    RETURN NIL
 
 //
 
 STATIC FUNCTION ExecForm( aPaint )
+
    LOCAL cColor    := SetColor()
    LOCAL aPnt
-   LOCAL dDate     := date()
+   LOCAL dDate     := Date()
    LOCAL cName     := Pad( "Pritpal Bedi", 35 )
    LOCAL cAdd1     := Pad( "60, New Professor Colony", 35 )
    LOCAL cAdd2     := Pad( "Ludhiana, INDIA", 35 )
@@ -115,31 +119,39 @@ STATIC FUNCTION ExecForm( aPaint )
 
 //
 
-FUNCTION HB_GTSYS()
-   REQUEST HB_GT_WVG_DEFAULT
-   REQUEST HB_GT_WVT
-   REQUEST HB_GT_WGU
+FUNCTION hb_GTSYS()
+
+REQUEST HB_GT_WVG_DEFAULT
+
+REQUEST HB_GT_WVT
+
+REQUEST HB_GT_WGU
+
    RETURN NIL
 
 //
 
 FUNCTION SetGT( nIndex, pGT )
+
    LOCAL oldGT
-   STATIC pGT_:= { NIL, NIL, NIL }
+   STATIC pGT_ := { NIL, NIL, NIL }
+
    oldGT := pGT_[ nIndex ]
    IF PCount() == 2
       pGT_[ nIndex ] := pGT
    ENDIF
+
    RETURN oldGT
 
 //
 
 STATIC FUNCTION MyChoice( aChoices )
+
    LOCAL scr, clr, nChoice
 
-   DEFAULT aChoices TO { "One","Two","Three","Four","Five","Six","Seven" }
+   DEFAULT aChoices TO { "One", "Two", "Three", "Four", "Five", "Six", "Seven" }
 
-   scr := SaveScreen( 7,48,13,55 )
+   scr := SaveScreen( 7, 48, 13, 55 )
    clr := SetColor( "N/W*,GR+/B*,,,GR+/B" )
 
    nChoice := AChoice( 7, 48, 13, 55, aChoices )
@@ -151,7 +163,8 @@ STATIC FUNCTION MyChoice( aChoices )
 
 //
 
-FUNCTION rgb( r,g,b )
+FUNCTION rgb( r, g, b )
+
    RETURN r + ( g * 256 ) + ( b * 256 * 256 )
 
 //
@@ -169,10 +182,11 @@ FUNCTION DispStatusMsg( cMsg )
 //
 
 FUNCTION ClearStatusMsg()
+
    LOCAL nRow := Row()
    LOCAL nCol := Col()
 
-   DispOutAt( MaxRow(), 42, space( 37 ), "W/W" )
+   DispOutAt( MaxRow(), 42, Space( 37 ), "W/W" )
    SetPos( nRow, nCol )
 
    RETURN .T.
@@ -180,22 +194,23 @@ FUNCTION ClearStatusMsg()
 //
 
 FUNCTION DoModalDialog()
+
    LOCAL oCrt, nSel
    LOCAL aPnt   := WvtSetPaint( {} )
    LOCAL aPaint := {}
 
-   oCrt := WvgCrt():New( , , { 4,8 }, { 12,49 }, , .T. )
+   oCrt := WvgCrt():New( , , { 4, 8 }, { 12, 49 }, , .T. )
 
    oCrt:lModal      := .T.
    oCrt:resizable   := .F.
    oCrt:closable    := .F.
    oCrt:title       := 'Modal Dialog!'
-   oCrt:icon        := hb_dirBase() + "vr_1.ico"
+   oCrt:icon        := hb_DirBase() + "vr_1.ico"
 
    oCrt:Create()
    oCrt:show()
 
-   aAdd( aPaint, { "Box_V" , {|| Wvt_DrawBoxRaised( 1, 2, 11, 47 ) }, NIL, { WVT_BLOCK_BOX,  0, 0, MaxRow(), MaxCol() } } )
+   AAdd( aPaint, { "Box_V" , {|| Wvt_DrawBoxRaised( 1, 2, 11, 47 ) }, NIL, { WVT_BLOCK_BOX,  0, 0, MaxRow(), MaxCol() } } )
    WvtSetPaint( aPaint )
 
    SetColor( 'N/W' )
@@ -210,6 +225,7 @@ FUNCTION DoModalDialog()
    oCrt:Destroy()
 
    WvtSetPaint( aPnt )
-   Return NIL
+
+   RETURN NIL
 
 //

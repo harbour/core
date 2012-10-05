@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -87,7 +88,8 @@ CLASS WvgDrawingArea  INHERIT  WvgWindow
    METHOD   destroy()
    METHOD   handleEvent( nMessage, aNM )
 
-   ENDCLASS
+ENDCLASS
+
 //
 
 METHOD WvgDrawingArea:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -128,9 +130,9 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
    DO CASE
    CASE nMessage == HB_GTE_RESIZED
       IF HB_ISBLOCK( ::sl_resize )
-         eval( ::sl_resize, NIL, NIL, self )
+         Eval( ::sl_resize, NIL, NIL, self )
       ENDIF
-      aeval( ::aChildren, {| o | o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
+      AEval( ::aChildren, {| o | o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
       RETURN EVENT_HANDELLED
 
    CASE nMessage == HB_GTE_CTLCOLOR
@@ -139,7 +141,7 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
       ENDIF
       IF HB_ISNUMERIC( ::hBrushBG )
          WVG_SetBkMode( aNM[ 1 ], 1 )
-         WVG_FillRect( aNM[ 1 ], { 0,0,::currentSize()[1],::currentSize()[2]}, ::hBrushBG )
+         WVG_FillRect( aNM[ 1 ], { 0, 0, ::currentSize()[1], ::currentSize()[2] }, ::hBrushBG )
          RETURN EVENT_HANDELLED
       ENDIF
 

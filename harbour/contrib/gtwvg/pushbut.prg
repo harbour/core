@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -84,7 +85,7 @@ CLASS WvgPushButton  INHERIT  WvgWindow
    DATA     pointerFocus                          INIT .T.
    DATA     preSelect                             INIT .F.
    DATA     drawMode                              INIT WVG_DRAW_NORMAL
-   DATA     default                               INIT .F.
+   DATA     DEFAULT                               INIT .F.
    DATA     cancel                                INIT .F.
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -100,7 +101,7 @@ CLASS WvgPushButton  INHERIT  WvgWindow
    METHOD   setColorFG()                          INLINE NIL
    METHOD   setColorBG()                          INLINE NIL
 
-   ENDCLASS
+ENDCLASS
 
 //
 
@@ -123,9 +124,9 @@ METHOD WvgPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    IF HB_ISNUMERIC( ::caption )
       ::style += BS_BITMAP
    ELSEIF HB_ISSTRING( ::caption )
-      IF ".ICO" == upper( right( ::caption, 4 ) )
+      IF ".ICO" == Upper( Right( ::caption, 4 ) )
          ::style += BS_ICON
-      ELSEIF ".BMP" == upper( right( ::caption, 4 ) )
+      ELSEIF ".BMP" == Upper( Right( ::caption, 4 ) )
          ::style += BS_BITMAP
       ENDIF
    ENDIF
@@ -160,7 +161,7 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
       ENDIF
       ::sendMessage( WM_SIZE, 0, 0 )
       IF HB_ISBLOCK( ::sl_resize )
-         eval( ::sl_resize, NIL, NIL, self )
+         Eval( ::sl_resize, NIL, NIL, self )
       ENDIF
 
    CASE nMessage == HB_GTE_COMMAND
@@ -169,7 +170,7 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
-            eval( ::sl_lbClick, NIL, NIL, self )
+            Eval( ::sl_lbClick, NIL, NIL, self )
             IF ::pointerFocus
                ::setFocus()
             ENDIF
@@ -196,7 +197,7 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
-            eval( ::sl_lbClick, NIL, NIL, Self )
+            Eval( ::sl_lbClick, NIL, NIL, Self )
          ENDIF
       ENDIF
 #endif
@@ -207,13 +208,17 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
 //
 
 METHOD WvgPushButton:destroy()
+
    ::wvgWindow:destroy()
+
    RETURN NIL
 
 //
 
 METHOD WvgPushButton:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
    RETURN Self
 
 //
@@ -225,9 +230,9 @@ METHOD WvgPushButton:setCaption( xCaption, cDll )
 
    IF HB_ISSTRING( xCaption )
       ::caption := xCaption
-      IF ".ico" == lower( right( ::caption, 4 ) )
+      IF ".ico" == Lower( Right( ::caption, 4 ) )
          WVG_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_ICON, WVG_LoadImage( ::caption, 2, IMAGE_ICON ) )
-      ELSEIF ".BMP" == upper( right( ::caption, 4 ) )
+      ELSEIF ".BMP" == Upper( Right( ::caption, 4 ) )
          WVG_SendMessage( ::hWnd, BM_SETIMAGE, IMAGE_BITMAP, WVG_LoadImage( ::caption, 2, IMAGE_BITMAP ) )
       ELSE
          WVG_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::caption )
@@ -245,7 +250,7 @@ METHOD WvgPushButton:setCaption( xCaption, cDll )
 
 METHOD WvgPushButton:activate( xParam )
 
-   IF HB_ISBLOCK( xParam ) .OR. ( xParam == NIL )
+   IF HB_ISBLOCK( xParam ) .OR. xParam == NIL
       ::sl_lbClick := xParam
    ENDIF
 
@@ -255,7 +260,7 @@ METHOD WvgPushButton:activate( xParam )
 
 METHOD WvgPushButton:draw( xParam )
 
-   IF HB_ISBLOCK( xParam ) .or. ( xParam == NIL )
+   IF HB_ISBLOCK( xParam ) .OR. xParam == NIL
       ::sl_paint := xParam
    ENDIF
 

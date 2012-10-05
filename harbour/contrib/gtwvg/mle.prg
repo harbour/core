@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -99,11 +100,11 @@ CLASS WvgMLE INHERIT WvgWindow, WvgDataRef
    METHOD   destroy()
    METHOD   handleEvent( nMessage, aNM )
 
-   METHOD   clear()
+   METHOD   CLEAR()
    METHOD   copyMarked()
    METHOD   cutMarked()
    METHOD   deleteMarked()                        VIRTUAL
-   METHOD   delete()                              VIRTUAL
+   METHOD   DELETE()                              VIRTUAL
    METHOD   pasteMarked()                         VIRTUAL
    METHOD   queryFirstChar()                      VIRTUAL
    METHOD   queryMarked()                         VIRTUAL
@@ -131,7 +132,7 @@ CLASS WvgMLE INHERIT WvgWindow, WvgDataRef
 
    METHOD   changed( lChanged )                   SETGET
 
-   ENDCLASS
+ENDCLASS
 
 //
 
@@ -199,22 +200,22 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
       DO CASE
       CASE aNM[ NMH_code ] == EN_KILLFOCUS
          IF HB_ISBLOCK( ::sl_killInputFocus )
-            eval( ::sl_killInputFocus, NIL, NIL, Self )
+            Eval( ::sl_killInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_SETFOCUS
          IF HB_ISBLOCK( ::sl_setInputFocus )
-            eval( ::sl_setInputFocus, NIL, NIL, Self )
+            Eval( ::sl_setInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_HSCROLL
          IF HB_ISBLOCK( ::sl_hScroll )
-            eval( ::sl_hScroll, NIL, NIL, Self )
+            Eval( ::sl_hScroll, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_VSCROLL
          IF HB_ISBLOCK( ::sl_vScroll )
-            eval( ::sl_vScroll, NIL, NIL, Self )
+            Eval( ::sl_vScroll, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_CHANGE
@@ -246,22 +247,22 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
 
          CASE aNM[ NMH_code ] == WM_KILLFOCUS
             IF HB_ISBLOCK( ::sl_killInputFocus )
-               eval( ::sl_killInputFocus, NIL, NIL, Self )
+               Eval( ::sl_killInputFocus, NIL, NIL, Self )
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_SETFOCUS
             IF HB_ISBLOCK( ::sl_setInputFocus )
-               eval( ::sl_setInputFocus, NIL, NIL, Self )
+               Eval( ::sl_setInputFocus, NIL, NIL, Self )
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_HSCROLL
             IF HB_ISBLOCK( ::sl_hScroll )
-               eval( ::sl_hScroll, NIL, NIL, Self )
+               Eval( ::sl_hScroll, NIL, NIL, Self )
             ENDIF
 
          CASE aNM[ NMH_code ] == WM_VSCROLL
             IF HB_ISBLOCK( ::sl_vScroll )
-               eval( ::sl_vScroll, NIL, NIL, Self )
+               Eval( ::sl_vScroll, NIL, NIL, Self )
             ENDIF
 
          ENDCASE
@@ -284,6 +285,7 @@ METHOD WvgMLE:destroy()
 //
 
 METHOD WvgMLE:changed( lChanged )
+
    LOCAL lChg := ::sendMessage( EM_GETMODIFY, 0, 0 )
 
    IF HB_ISLOGICAL( lChanged )
@@ -295,15 +297,17 @@ METHOD WvgMLE:changed( lChanged )
 //
 
 METHOD WvgMLE:clear()
+
    LOCAL cText := ::getData()
 
    ::setData( "" )
 
-   RETURN len( cText )
+   RETURN Len( cText )
 
 //
 
 METHOD WvgMLE:copyMarked()
+
    LOCAL n, nB, nE
 
    n := ::sendMessage( EM_GETSEL )
@@ -311,7 +315,7 @@ METHOD WvgMLE:copyMarked()
    nE := WVG_HIWORD( n )
 
    IF ( n := nE - nB ) > 0
-      Wvt_SetClipboard( substr( ::getData(), nB, n ) )
+      Wvt_SetClipboard( SubStr( ::getData(), nB, n ) )
    ENDIF
 
    RETURN n
@@ -319,6 +323,7 @@ METHOD WvgMLE:copyMarked()
 //
 
 METHOD WvgMLE:cutMarked()
+
    LOCAL n, nB, nE, cText
 
    n := ::sendMessage( EM_GETSEL )
@@ -327,7 +332,7 @@ METHOD WvgMLE:cutMarked()
 
    IF ( n := nE - nB ) > 0
       cText := ::getData()
-      ::setData( substr( cText, 1, nB-1 ) + substr( cText, nE ) )
+      ::setData( SubStr( cText, 1, nB - 1 ) + SubStr( cText, nE ) )
    ENDIF
 
    RETURN n

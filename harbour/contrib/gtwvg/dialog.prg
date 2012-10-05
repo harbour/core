@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -95,11 +96,12 @@ CLASS WvgDialog FROM WvgWindow
    METHOD   setTitle( cTitle )                    INLINE ::title := cTitle, hb_gtInfo( HB_GTI_WINTITLE, cTitle )
    METHOD   getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )
    METHOD   calcClientRect()                      INLINE ::aRect := WVG_GetClientRect( ::hWnd ), ;
-                                                         { 0, 0, ::aRect[ 3 ], ::aRect[ 4 ] }
-   METHOD   calcFrameRect()                       INLINE ::aRect := WVG_GetWindowRect( ::hWnd ),;
-                                                         { ::aRect[ 1 ], ::aRect[ 2 ], ;
-                                                         ::aRect[ 3 ]-::aRect[ 1 ], ::aRect[ 4 ]-::aRect[ 2 ] }
-   ENDCLASS
+      { 0, 0, ::aRect[ 3 ], ::aRect[ 4 ] }
+   METHOD   calcFrameRect()                       INLINE ::aRect := WVG_GetWindowRect( ::hWnd ), ;
+      { ::aRect[ 1 ], ::aRect[ 2 ], ;
+      ::aRect[ 3 ] - ::aRect[ 1 ], ::aRect[ 4 ] - ::aRect[ 2 ] }
+
+ENDCLASS
 
 //
 
@@ -112,13 +114,14 @@ METHOD WvgDialog:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::mouseMode   := 0
    ::objType     := objTypeDialog
 
-   ::style       := WS_THICKFRAME+WS_OVERLAPPED+WS_CAPTION+WS_SYSMENU+WS_MINIMIZEBOX+WS_MAXIMIZEBOX
+   ::style       := WS_THICKFRAME + WS_OVERLAPPED + WS_CAPTION + WS_SYSMENU + WS_MINIMIZEBOX + WS_MAXIMIZEBOX
 
    RETURN Self
 
 //
 
 METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
    LOCAL oW
 
    ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -126,19 +129,19 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    if ::lModal
       ::pGT  := hb_gtCreate( "WGU" )
       ::pGTp := hb_gtSelect( ::pGT )
-   else
+   ELSE
       hb_gtReload( "WGU" )
       ::pGT := hb_gtSelect()
-   endif
+   ENDIF
 
    hb_gtInfo( HB_GTI_PRESPARAMS, { ::exStyle, ::style, ::aPos[ 1 ], ::aPos[ 2 ], ;
-               ::aSize[ 1 ], ::aSize[ 2 ], ::pGTp, .F., .F., HB_WNDTYPE_DIALOG } )
+      ::aSize[ 1 ], ::aSize[ 2 ], ::pGTp, .F. , .F. , HB_WNDTYPE_DIALOG } )
 
    if ::visible
       hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )
    ELSE
       hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_HIDE   )
-   endif
+   ENDIF
 
    ::hWnd := hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
 
@@ -146,26 +149,26 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    hb_gtInfo( HB_GTI_CLOSABLE  , ::closable  )
    hb_gtInfo( HB_GTI_WINTITLE  , ::title     )
 
-   if !empty( ::icon )
-      if HB_ISNUMERIC( ::icon )
+   IF !Empty( ::icon )
+      IF HB_ISNUMERIC( ::icon )
          hb_gtInfo( HB_GTI_ICONRES, ::icon )
 
-      elseif HB_ISSTRING( ::icon )
+      ELSEIF HB_ISSTRING( ::icon )
          hb_gtInfo( HB_GTI_ICONFILE, ::icon )
 
-      endif
-   endif
+      ENDIF
+   ENDIF
 
    if ::lModal
       hb_gtInfo( HB_GTI_DISABLE, ::pGTp )
-   endif
+   ENDIF
 
    if ::visible
       ::lHasInputFocus := .T.
    ENDIF
 
-   oW := WvgDrawingArea():new( Self ):create( , , {0,0}, Self:currentSize(), , .F. )
-   IF ! empty( oW:hWnd )
+   oW := WvgDrawingArea():new( Self ):create( , , { 0, 0 }, Self:currentSize(), , .F. )
+   IF ! Empty( oW:hWnd )
       ::drawingArea := oW
    ELSE
       ::drawingArea := Self
@@ -192,10 +195,10 @@ METHOD WvgDialog:destroy()
    ENDIF
 
    IF Len( ::aChildren ) > 0
-      aeval( ::aChildren, {| o | o:destroy() } )
+      AEval( ::aChildren, {| o | o:destroy() } )
    ENDIF
 
-   IF !empty( ::hBrushBG )
+   IF !Empty( ::hBrushBG )
       WVG_DeleteObject( ::hBrushBG )
    ENDIF
 
@@ -207,6 +210,7 @@ METHOD WvgDialog:destroy()
 //
 
 METHOD WvgDialog:setFrameState( nState )
+
    LOCAL lSuccess := .F.
 
    DO CASE

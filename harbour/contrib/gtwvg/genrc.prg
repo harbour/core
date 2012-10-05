@@ -49,18 +49,19 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
- *
- *                               EkOnkar
- *                         ( The LORD is ONE )
- *
- *                  Xbase++ Parts Compatible functions
- *
- *                Pritpal Bedi  <bedipritpal@hotmail.com>
- *                              03Dec2011
- *
+//
+//                               EkOnkar
+//                         ( The LORD is ONE )
+//
+//                  Xbase++ Parts Compatible functions
+//
+//                Pritpal Bedi  <bedipritpal@hotmail.com>
+//                              03Dec2011
+//
 //
 //
 //
@@ -80,7 +81,7 @@
 
 //
 
-EXIT PROCEDURE KillGTChildren()
+   EXIT PROCEDURE KillGTChildren()
 
    IF HB_ISOBJECT( s_oCrt ) .AND. __objGetClsName( s_oCrt ) == "WVGCRT" .AND. s_oCrt:isGT
       s_oCrt:destroy()
@@ -92,14 +93,15 @@ EXIT PROCEDURE KillGTChildren()
 //
 
 FUNCTION WvgSetAppWindow( oCrt )
+
    LOCAL ooCrt := s_oCrt
 
-   IF empty( oCrt )
-      IF empty( s_oCrt )
+   IF Empty( oCrt )
+      IF Empty( s_oCrt )
          s_oCrt := WvgCrt():new()
          s_oCrt:hWnd := Wvt_GetWindowHandle()
          s_oCrt:pWnd := Win_N2P( s_oCrt:hWnd )
-         HB_GtInfo( HB_GTI_NOTIFIERBLOCKGUI, {| nEvent, ... | s_oCrt:notifier( nEvent, ... ) } )
+         hb_gtInfo( HB_GTI_NOTIFIERBLOCKGUI, {| nEvent, ... | s_oCrt:notifier( nEvent, ... ) } )
          s_oCrt:isGT := .T.
          RETURN s_oCrt
       ENDIF

@@ -4,6 +4,7 @@
 /*
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
+
 //
 
 #include "inkey.ch"
@@ -15,12 +16,13 @@
 
 //
 
-#xUntranslate alert( =>
+#xuntranslate alert( =>
 
 FUNCTION MyAlert( cMsg, aOpt )
+
    LOCAL nSel, oCrt
 
-   oCrt := WvgCrt():New( , , { -1,-1 }, { 9, MaxCol()-6 }, , .T. )
+   oCrt := WvgCrt():New( , , { -1, -1 }, { 9, MaxCol() - 6 }, , .T. )
    oCrt:lModal := .T.
    oCrt:icon   := "dia_excl.ico"
    oCrt:create()
@@ -36,19 +38,23 @@ FUNCTION MyAlert( cMsg, aOpt )
 
    RETURN nSel
 
-#xTranslate Alert( => MyAlert(
+#xtranslate Alert( => MyAlert(
 
 //
 
 FUNCTION My_Alert( cMessage, aOptions, cCaption, nInit, nTime )
-   RETURN DialogAlert( cCaption, cMessage, aOptions, nInit, , ,nTime )
+
+   RETURN DialogAlert( cCaption, cMessage, aOptions, nInit, , , nTime )
 
 //
 
-#xUntranslate alert( =>
+#xuntranslate alert( =>
+
 FUNCTION Just_Alert( cMsg, aOpt )
+
    RETURN Alert( cMsg, aOpt )
-#xTranslate Alert( => MyAlert(
+
+#xtranslate Alert( => MyAlert(
 
 //
 
@@ -70,96 +76,97 @@ FUNCTION Just_Alert( cMsg, aOpt )
 #define K_RIGHT_UP                 1005
 
 #xtranslate B_CRT <nTop>,<nLeft>,<nBottom>,<nRight> ;
-            [ TITLE    <ttl>     ] ;
-            [ ICON    <icon>     ] ;
-            [ <lModal:MODAL>     ] ;
-            [ <lRowCols:RESIZEROWCOLS> ] ;
-            [ <lHidden:HIDDEN>   ] ;
-            [ <lCenter:CENTER>   ] ;
-            [ AT <nRow>,<nCol>   ] ;
-            [ <lNoTitleBar:NOTITLEBAR> ] ;
-            INTO <oCrt> ;
-            => ;
-   <oCrt> := CreateOCrt( <nTop>, <nLeft>, <nBottom>, <nRight>, <ttl>, <icon>, ;
-                         <.lModal.>, <.lRowCols.>, <.lHidden.>, <.lCenter.>, ;
-                         <nRow>, <nCol>, <.lNoTitleBar.> )
+      [ TITLE    <ttl>     ] ;
+      [ ICON    <icon>     ] ;
+      [ <lModal:MODAL>     ] ;
+      [ <lRowCols:RESIZEROWCOLS> ] ;
+      [ <lHidden:HIDDEN>   ] ;
+      [ <lCenter:CENTER>   ] ;
+      [ AT <nRow>,<nCol>   ] ;
+      [ <lNoTitleBar:NOTITLEBAR> ] ;
+      INTO < oCrt > ;
+      => ;
+      < oCrt > := CreateOCrt( < nTop > , < nLeft > , < nBottom > , < nRight > , < ttl > , < icon > , ;
+      < .lModal. > , < .lRowCols. > , < .lHidden. > , < .lCenter. > , ;
+      < nRow > , < nCol > , < .lNoTitleBar. > )
 
 //
 
 FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
+
    LOCAL nLinesRqd, nColRqd, nLeft, nBottom, nRight, oCrt
    LOCAL nColTxt, nColCap, nColBut, nBtnRow
    LOCAL i, nTopReq, lGo, nKey, nMCol, nMRow, nTrg
-   LOCAL maxCol  := maxcol()
-   LOCAL maxRow  := maxrow()
+   LOCAL maxCol  := MaxCol()
+   LOCAL maxRow  := MaxRow()
    LOCAL nBtnCol_
-   LOCAL pal_    := {"w+/n","w/r","n/w","n/bg","r/bg","N/W","n/B","w+/B"}
-   LOCAL aTrg_   , x_:={}
+   LOCAL pal_    := { "w+/n", "w/r", "n/w", "n/bg", "r/bg", "N/W", "n/B", "w+/B" }
+   LOCAL aTrg_   , x_ := {}
 
    DEFAULT cCaption  TO "Your Attention Please!"
-   DEFAULT aButtons_ TO {"OK"}
+   DEFAULT aButtons_ TO { "OK" }
    DEFAULT aText_    TO {}
    DEFAULT aMessage_ TO {}
    DEFAULT sel       TO 1
    DEFAULT nTime     TO 10
 
-   if nTime == 0
+   IF nTime == 0
       nTime := 10000   //  Seconds
-   endif
+   ENDIF
 
-   if valtype( aText_ ) == "C"
-      aText_:= {aText_}
-   endif
+   IF ValType( aText_ ) == "C"
+      aText_ := { aText_ }
+   ENDIF
 
-   if valtype(aButtons_) == "C"
-      aButtons_:= {aButtons_}
-   endif
+   IF ValType( aButtons_ ) == "C"
+      aButtons_ := { aButtons_ }
+   ENDIF
 
-   nLinesRqd := len( aText_ )+ iif( len( aText_ )== 0, 4, 5 )
-   nTopReq   := int( ( maxRow - nLinesRqd ) / 2 )
-   nTop      := iif( nTop == nil, nTopReq, iif( nTop >  nTopReq, nTop, nTopReq ) )
+   nLinesRqd := Len( aText_ ) + iif( Len( aText_ ) == 0, 4, 5 )
+   nTopReq   := Int( ( maxRow - nLinesRqd ) / 2 )
+   nTop      := iif( nTop == NIL, nTopReq, iif( nTop >  nTopReq, nTop, nTopReq ) )
    nBottom   := nTop + nLinesRqd - 1   // 1 for shadow
 
    // check for columns
    // place 2 spaces before and after the buttons
-   nColCap   := len( cCaption )+ 7  // " - "+"  "+caption+"  "
+   nColCap   := Len( cCaption ) + 7  // " - "+"  "+caption+"  "
    nColTxt   := 0
-   if !empty(aText_)
-      aeval(aText_, {| e | nColTxt := max( nColTxt, len( e ) ) } )
-   endif
+   IF !Empty( aText_ )
+      AEval( aText_, {| e | nColTxt := Max( nColTxt, Len( e ) ) } )
+   ENDIF
    nColTxt   += 6                   // for two spaces at both sides
    nColBut   := 0
-   aeval( aButtons_, {| e | nColBut += len( e ) + 7 } )
+   AEval( aButtons_, {| e | nColBut += Len( e ) + 7 } )
    nColBut   += 3
 
    nColRqd   := 0
-   aeval( { nColCap, nColTxt, nColBut }, {| e | nColRqd := max( nColRqd, e ) } )
+   AEval( { nColCap, nColTxt, nColBut }, {| e | nColRqd := Max( nColRqd, e ) } )
 
-   nLeft     := iif( maxCol > nColRqd, int( ( maxCol - nColRqd ) / 2 ), 0 )
-   nRight    := nLeft+nColRqd
+   nLeft     := iif( maxCol > nColRqd, Int( ( maxCol - nColRqd ) / 2 ), 0 )
+   nRight    := nLeft + nColRqd
 
-   aTrg_:= array( len( aButtons_ ) )
-   for i := 1 to len( aButtons_ )
-      aTrg_[i] := upper( substr( aButtons_[ i ], 1, 1 ) )
-   next
+   aTrg_ := Array( Len( aButtons_ ) )
+   FOR i := 1 TO Len( aButtons_ )
+      aTrg_[i] := Upper( SubStr( aButtons_[ i ], 1, 1 ) )
+   NEXT
 
    //                        Create a new Window
    //
-   B_CRT nTop, nLeft, nBottom-1, nRight MODAL ICON "dia_excl.ico" TITLE '  '+cCaption INTO oCrt
+   B_CRT nTop, nLeft, nBottom - 1, nRight MODAL ICON "dia_excl.ico" TITLE '  ' + cCaption INTO oCrt
 
    nTop    := -1
    nLeft   := 0
    nBottom := nTop + nLinesRqd - 1
    nRight  := nLeft + nColRqd
-   nBtnRow := nTop + 1 + len( aText_ ) + iif( len( aText_ ) == 0, 1, 2 )
+   nBtnRow := nTop + 1 + Len( aText_ ) + iif( Len( aText_ ) == 0, 1, 2 )
 
-   nBtnCol_  := array( len( aButtons_ ) )
+   nBtnCol_  := Array( Len( aButtons_ ) )
 
-   nBtnCol_[ 1 ] := int( ( nColRqd - nColBut ) / 2 ) + 3
-   if len( aButtons_ ) > 1
-      for i := 2 to len( aButtons_ )
-         nBtnCol_[ i ] := nBtnCol_[ i-1 ] + len( aButtons_[ i-1 ] ) + 3 + 4
-      next
+   nBtnCol_[ 1 ] := Int( ( nColRqd - nColBut ) / 2 ) + 3
+   IF Len( aButtons_ ) > 1
+      FOR i := 2 TO Len( aButtons_ )
+         nBtnCol_[ i ] := nBtnCol_[ i-1 ] + Len( aButtons_[ i-1 ] ) + 3 + 4
+      NEXT
    ENDIF
 
    SetCursor( 0 )
@@ -172,113 +179,114 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
    Wvg_BoxRaised( nTop, nLeft, nBottom, nRight )
 
    SetColor( pal_[ DLG_CLR_TEXT ] )
-   if !empty( aText_ )
-      FOR  i := 1 to len( aText_ )
-         @ nTop+1+i, nLeft SAY padc( aText_[ i ], nRight-nLeft+1 )
+   IF !Empty( aText_ )
+      FOR  i := 1 TO Len( aText_ )
+         @ nTop + 1 + i, nLeft SAY PadC( aText_[ i ], nRight - nLeft + 1 )
       NEXT
    ENDIF
 
    // display buttons
    //
-   for i := 1 to len( aButtons_ )
+   FOR i := 1 TO Len( aButtons_ )
       SetColor( pal_[ DLG_CLR_BTN ] )
-      @ nBtnRow, nBtnCol_[ i ] SAY "  "+aButtons_[ i ]+"  "
+      @ nBtnRow, nBtnCol_[ i ] SAY "  " + aButtons_[ i ] + "  "
       SetColor( pal_[ DLG_CLR_TRG ] )
-      @ nBtnRow, nBtnCol_[ i ]+2 say substr( aButtons_[ i ],1,1 )
+      @ nBtnRow, nBtnCol_[ i ] + 2 SAY SubStr( aButtons_[ i ], 1, 1 )
 
-      aadd( x_, { nBtnRow, nBtnCol_[ i ], nBtnRow, nBtnCol_[ i ] + len( aButtons_[ i ] ) + 3 } )
-   next
+      AAdd( x_, { nBtnRow, nBtnCol_[ i ], nBtnRow, nBtnCol_[ i ] + Len( aButtons_[ i ] ) + 3 } )
+   NEXT
 
-   setColor( pal_[ DLG_CLR_HILITE ] )
-   @ nBtnRow, nBtnCol_[ sel ] SAY "  "+aButtons_[sel]+"  "
+   SetColor( pal_[ DLG_CLR_HILITE ] )
+   @ nBtnRow, nBtnCol_[ sel ] SAY "  " + aButtons_[sel] + "  "
 
-   setColor( pal_[ DLG_CLR_HISEL ] )
-   @ nBtnRow, nBtnCol_[ sel ]+2 SAY substr( aButtons_[ sel ],1,1 )
+   SetColor( pal_[ DLG_CLR_HISEL ] )
+   @ nBtnRow, nBtnCol_[ sel ] + 2 SAY SubStr( aButtons_[ sel ], 1, 1 )
 
-   aeval( x_, {| e_ | Wvg_BoxRaised( e_[ 1 ], e_[ 2 ], e_[ 3 ], e_[ 4 ] ) } )
+   AEval( x_, {| e_ | Wvg_BoxRaised( e_[ 1 ], e_[ 2 ], e_[ 3 ], e_[ 4 ] ) } )
 
-   dispend()
+   DispEnd()
 
    lGo := .T.
-   do while lGo
+   DO WHILE lGo
       IF ( nKey := Inkey() ) == 0
          LOOP
       ENDIF
 
-      if nKey == K_ESC
+      IF nKey == K_ESC
          sel := 0
-         exit
-      endif
+         EXIT
+      ENDIF
       nMRow := MRow()
       nMCol := MCol()
 
-      do case
-      case nKey == K_RIGHT_DOWN
+      DO CASE
+      CASE nKey == K_RIGHT_DOWN
          sel := 0
          lGo := .F.
-      case nKey == K_LEFT_DOWN
-         if nMRow == nTop
-            if nMCol >= nLeft .and. nMCol <= nLeft+3
+      CASE nKey == K_LEFT_DOWN
+         IF nMRow == nTop
+            IF nMCol >= nLeft .AND. nMCol <= nLeft + 3
                sel := 0
                lGo := .F.
-            endif
-         elseif nMRow == nBtnRow
-            for i := 1 to len( nBtnCol_ )
-               if nMCol >= nBtnCol_[ i ] .and. nMCol <= nBtnCol_[ i ] + len( aButtons_[ i ] )+4
+            ENDIF
+         ELSEIF nMRow == nBtnRow
+            FOR i := 1 TO Len( nBtnCol_ )
+               IF nMCol >= nBtnCol_[ i ] .AND. nMCol <= nBtnCol_[ i ] + Len( aButtons_[ i ] ) + 4
                   sel := i
                   lGo := .F.
-               endif
-            next
-         endif
-      case nKey == K_ESC
+               ENDIF
+            NEXT
+         ENDIF
+      CASE nKey == K_ESC
          sel := 0
          lGo := .F.
-      case nKey == K_ENTER
+      CASE nKey == K_ENTER
          lGo := .F.
-      case nKey == K_LEFT  .or. nKey == K_DOWN
+      CASE nKey == K_LEFT  .OR. nKey == K_DOWN
          sel--
-      case nKey == K_RIGHT .or. nKey == K_UP
+      CASE nKey == K_RIGHT .OR. nKey == K_UP
          sel++
-      case ( nTrg := ascan( aTrg_, upper( chr( nKey ) ) ) ) > 0
+      CASE ( nTrg := AScan( aTrg_, Upper( Chr( nKey ) ) ) ) > 0
          sel := nTrg
          lGo := .F.
-      otherwise
-         if setkey( nKey ) != nil
-            eval( setKey( nKey ) )
-         endif
-      endcase
+      OTHERWISE
+         IF SetKey( nKey ) != NIL
+            Eval( SetKey( nKey ) )
+         ENDIF
+      ENDCASE
 
-      if sel > len( aButtons_ )
+      IF sel > Len( aButtons_ )
          sel := 1
-      elseif sel < 1
-         sel := len( aButtons_ )
-      endif
+      ELSEIF sel < 1
+         sel := Len( aButtons_ )
+      ENDIF
 
-      dispbegin()
-      for i := 1 to len ( aButtons_ )
-         setColor( pal_[ DLG_CLR_BTN ] )
-         @ nBtnRow, nBtnCol_[ i ] SAY "  "+aButtons_[i]+"  "
-         setColor( pal_[ DLG_CLR_TRG])
-         @ nBtnRow, nBtnCol_[i]+2 say substr(aButtons_[i],1,1)
-      next
-      if sel > 0
-         setColor( pal_[ DLG_CLR_HILITE ] )
-         @ nBtnRow, nBtnCol_[sel] SAY "  "+aButtons_[ sel ]+"  "
-         setColor( pal_[ DLG_CLR_HISEL ] )
-         @ nBtnRow, nBtnCol_[ sel ]+2 SAY substr( aButtons_[ sel ], 1, 1 )
-      endif
+      DispBegin()
+      FOR i := 1 TO Len ( aButtons_ )
+         SetColor( pal_[ DLG_CLR_BTN ] )
+         @ nBtnRow, nBtnCol_[ i ] SAY "  " + aButtons_[i] + "  "
+         SetColor( pal_[ DLG_CLR_TRG] )
+         @ nBtnRow, nBtnCol_[i] + 2 SAY SubStr( aButtons_[i], 1, 1 )
+      NEXT
+      IF sel > 0
+         SetColor( pal_[ DLG_CLR_HILITE ] )
+         @ nBtnRow, nBtnCol_[sel] SAY "  " + aButtons_[ sel ] + "  "
+         SetColor( pal_[ DLG_CLR_HISEL ] )
+         @ nBtnRow, nBtnCol_[ sel ] + 2 SAY SubStr( aButtons_[ sel ], 1, 1 )
+      ENDIF
 
-      dispend()
-   enddo
+      DispEnd()
+   ENDDO
 
    oCrt:destroy()
 
-   return sel
+   RETURN sel
 
 //
 
 FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
-                                                  lCenter, nRow, nCol, lNoTitleBar )
+      lCenter, nRow, nCol, lNoTitleBar )
+
    LOCAL oCrt, aPos
 
    DEFAULT cTitle        TO 'Info'
@@ -288,7 +296,7 @@ FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
    DEFAULT lCenter       TO .F.
    DEFAULT lNoTitleBar   TO .F.
 
-   aPos := iif( lCenter, {-1,-1}, iif( nRow == NIL, { nT, nL }, { nRow,nCol } ) )
+   aPos := iif( lCenter, { -1, -1 }, iif( nRow == NIL, { nT, nL }, { nRow,nCol } ) )
 
    oCrt := WvgCrt():new( , , aPos, { nB - nT, nR - nL }, , !lHidden )
    oCrt:lModal := lModal
@@ -301,10 +309,10 @@ FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
    IF HB_ISNUMERIC( xIcon )
       hb_gtInfo( HB_GTI_ICONRES, xIcon )
    ELSE
-      IF ( '.ico' $ lower( xIcon ) )
+      IF ( '.ico' $ Lower( xIcon ) )
          hb_gtInfo( HB_GTI_ICONFILE, xIcon )
       ELSE
-         IF '.bmp' $ lower( xIcon )
+         IF '.bmp' $ Lower( xIcon )
             xIcon := 'VW_DFT'
          ENDIF
          hb_gtInfo( HB_GTI_ICONRES, xIcon )
@@ -321,23 +329,25 @@ FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
 //
 
 FUNCTION DoModalWindow()
+
    LOCAL oCrt, nSel, pGT
    LOCAL aLastPaint := WvtSetBlocks( {} )
 
    /* This part can be clubbed in a separate prg for different dialogs
     * OR can be loaded from a data dictionary.
     */
-   oCrt := WvgCrt():New( , , { 4,8 }, { 12,49 }, , .T. )
+
+   oCrt := WvgCrt():New( , , { 4, 8 }, { 12, 49 }, , .T. )
 
    oCrt:lModal      := .T.
    oCrt:resizable   := .F.
    oCrt:closable    := .F.
    oCrt:title       := 'Information! [R:4 C:8]'
 
-   oCrt:rbUp        := {|| DispOutAt( maxrow(), 0, padc( 'rbUp', maxcol()+1 ),'W+/R*' ) }
-   oCrt:lbUp        := {|| DispOutAt( maxrow(), 0, padc( 'lbUp', maxcol()+1 ),'W+/B*' ) }
-   oCrt:leave       := {|| DispOutAt( maxrow(), 0, padc( 'Leaving', maxcol()+1 ), 'W+/RB' ) }
-   oCrt:enter       := {|| DispOutAt( maxrow(), 0, padc( 'Entering', maxcol()+1 ), 'W+/B' ) }
+   oCrt:rbUp        := {|| DispOutAt( MaxRow(), 0, PadC( 'rbUp', MaxCol() + 1 ), 'W+/R*' ) }
+   oCrt:lbUp        := {|| DispOutAt( MaxRow(), 0, PadC( 'lbUp', MaxCol() + 1 ), 'W+/B*' ) }
+   oCrt:leave       := {|| DispOutAt( MaxRow(), 0, PadC( 'Leaving', MaxCol() + 1 ), 'W+/RB' ) }
+   oCrt:enter       := {|| DispOutAt( MaxRow(), 0, PadC( 'Entering', MaxCol() + 1 ), 'W+/B' ) }
 
    oCrt:Create()
    oCrt:show()
@@ -348,19 +358,20 @@ FUNCTION DoModalWindow()
    //
    SetColor( 'N/W' )
    CLS
-   do while .T.
+   DO WHILE .T.
       nSel := Just_Alert( 'I am in modal window !;< Try: MMove LBUp RBUp >;Click Parent Window', { 'OK' } )
 
-      if nSel == 0  .or. nSel == 1
-         exit
+      IF nSel == 0  .OR. nSel == 1
+         EXIT
 
-      endif
-   enddo
+      ENDIF
+   ENDDO
 
    SetGT( 3, pGT )
    oCrt:Destroy()
 
    WvtSetBlocks( aLastPaint )
-   Return NIL
+
+   RETURN NIL
 
 //

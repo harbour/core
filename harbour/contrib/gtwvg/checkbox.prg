@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -89,17 +90,18 @@ CLASS WvgCheckBox  INHERIT  WvgWindow, WvgDataRef
    METHOD   destroy()
    METHOD   handleEvent( nMessage, aNM )
 
-   #if 0
+#if 0
    METHOD   editBuffer()                          INLINE ( WVG_Button_GetCheck( ::hWnd ) == BST_CHECKED )
    METHOD   getData()                             INLINE ( WVG_Button_GetCheck( ::hWnd ) == BST_CHECKED )
    METHOD   setData( lCheck )                     INLINE ::sendMessage( BM_SETCHECK, iif( lCheck, BST_CHECKED, BST_UNCHECKED ), 0 )
-   #endif
+#endif
    METHOD   setCaption( xCaption )
 
    ACCESS   selected                              INLINE ::sl_lbClick
    ASSIGN   selected( bBlock )                    INLINE ::sl_lbClick := bBlock
 
-   ENDCLASS
+ENDCLASS
+
 //
 
 METHOD WvgCheckBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -158,7 +160,7 @@ METHOD WvgCheckBox:handleEvent( nMessage, aNM )
             IF ::isParentCrt()
                ::oParent:setFocus()
             ENDIF
-            eval( ::sl_lbClick, ::editBuffer, NIL, Self )
+            Eval( ::sl_lbClick, ::editBuffer, NIL, Self )
             IF ::pointerFocus
                ::setFocus()
             ENDIF
@@ -184,7 +186,7 @@ METHOD WvgCheckBox:handleEvent( nMessage, aNM )
                ::oParent:setFocus()
                ::sendMessage( BM_SETCHECK, iif( WVG_Button_GetCheck( ::hWnd ) == BST_CHECKED, BST_UNCHECKED, BST_CHECKED ), 0 )
                ::editBuffer := ( WVG_Button_GetCheck( ::hWnd ) == BST_CHECKED )
-               eval( ::sl_lbClick, NIL, NIL, Self )
+               Eval( ::sl_lbClick, NIL, NIL, Self )
             ENDIF
          ENDIF
       ENDIF
@@ -197,13 +199,17 @@ METHOD WvgCheckBox:handleEvent( nMessage, aNM )
 //
 
 METHOD WvgCheckBox:destroy()
+
    ::wvgWindow:destroy()
+
    RETURN NIL
 
 //
 
 METHOD WvgCheckBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
    RETURN Self
 
 //

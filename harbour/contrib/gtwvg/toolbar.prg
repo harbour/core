@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -112,7 +113,7 @@ CLASS WvgToolBar  INHERIT  WvgWindow /*WvgActiveXControl*/
    METHOD   delItem()
 
    METHOD   getItem()
-   METHOD   clear()
+   METHOD   CLEAR()
    METHOD   customize()
    METHOD   loadImageSet()
    METHOD   saveToolbar()
@@ -125,7 +126,7 @@ CLASS WvgToolBar  INHERIT  WvgWindow /*WvgActiveXControl*/
    METHOD   buttonMenuClick( xParam )             SETGET
    METHOD   buttonDropDown( xParam )              SETGET
 
-   ENDCLASS
+ENDCLASS
 
 //
 
@@ -133,10 +134,10 @@ METHOD WvgToolBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   #if 0
-   + TBSTYLE_LIST   caption to the right, otherwise caption to the bottom
+#if 0
+   + TBSTYLE_LIST   caption TO the right, OTHERWISE caption TO the bottom
    ::style       := WS_CHILD + TBSTYLE_FLAT + CCS_ADJUSTABLE + CCS_NODIVIDER + CCS_VERT
-   #endif
+#endif
 
    ::exStyle     := TBSTYLE_EX_DOUBLEBUFFER + TBSTYLE_EX_MIXEDBUTTONS
    ::className   := TOOLBARCLASSNAME
@@ -168,26 +169,26 @@ METHOD WvgToolBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF ::borderStyle == WVGFRAME_RECT
       ::style += WS_BORDER
    ENDIF
-   #if 0
+#if 0
    IF ::appearance == WVG_APPEARANCE_3D
    ENDIF
-   #endif
+#endif
 
    ::oParent:AddChild( SELF )
 
    ::createControl()
 
-   #if 0
+#if 0
    /* Should not be defined as we only require its notifications
     * so the parent of toolbar will process them anyway
     * All other functionality should be default until ownerdraw is introduced.
     */
-      ::SetWindowProcCallback()
-   #endif
+   ::SetWindowProcCallback()
+#endif
 
-   IF !empty( ::hWnd )
+   IF !Empty( ::hWnd )
       ::SendToolbarMessage( TB_BUTTONSTRUCTSIZE )
-      ::hImageList := WAPI_ImageList_Create( ::imageWidth, ::imageHeight, ILC_COLOR32+ILC_MASK, 0, 1 )
+      ::hImageList := WAPI_ImageList_Create( ::imageWidth, ::imageHeight, ILC_COLOR32 + ILC_MASK, 0, 1 )
       ::SendToolbarMessage( TB_SETIMAGELIST, ::hImageList )
 
       ::SendToolbarMessage( TB_BUTTONSTRUCTSIZE )
@@ -203,6 +204,7 @@ METHOD WvgToolBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 //
 
 METHOD WvgToolBar:handleEvent( nMessage, aNM )
+
    LOCAL nObj, aNMMouse
 
    SWITCH nMessage
@@ -223,7 +225,7 @@ METHOD WvgToolBar:handleEvent( nMessage, aNM )
       DO CASE
 
       CASE aNMMouse[ NMH_code ] == NM_CLICK
-         IF ( nObj := ascan( ::aItems, {| e_ | e_[ 1 ] == aNMMouse[ NMH_dwItemSpec ] } ) ) > 0
+         IF ( nObj := AScan( ::aItems, {| e_ | e_[ 1 ] == aNMMouse[ NMH_dwItemSpec ] } ) ) > 0
             IF HB_ISBLOCK( ::sl_lbClick )
                IF ::isParentCrt()
                   ::oParent:setFocus()
@@ -247,6 +249,7 @@ METHOD WvgToolBar:handleEvent( nMessage, aNM )
 //
 
 METHOD WvgToolBar:destroy()
+
    LOCAL i, nItems
 
    IF ( nItems := Len( ::aItems ) ) > 0
@@ -263,7 +266,7 @@ METHOD WvgToolBar:destroy()
       NEXT
    ENDIF
 
-   IF !empty( ::hImageList )
+   IF !Empty( ::hImageList )
       WAPI_ImageList_Destroy( ::hImageList )
    ENDIF
 
@@ -288,6 +291,7 @@ METHOD WvgToolBar:sendToolbarMessage( nMsg, p1, p2 )
 //
 
 METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB )
+
    LOCAL oBtn, pBitmap, cType, nBtn
 
    HB_SYMBOL_UNUSED( xDisabledImage )
@@ -296,9 +300,9 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
 
    /* Issue this at the begining of first item */
    IF ! ::lSized
-      #if 0
+#if 0
       ::SendToolbarMessage( TB_SETBUTTONWIDTH, ::buttonWidth, ::buttonWidth )
-      #endif
+#endif
       ::lSized := .T.
    ENDIF
 
@@ -307,26 +311,26 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
    oBtn:index   := ::numItems + 1
    oBtn:command := 100 + oBtn:index
 
-   cType   := valtype( xImage )
+   cType   := ValType( xImage )
 
    DO CASE
 
    CASE cType == "C"
-      IF ( "." $ xImage ) .or. ( "/" $ xImage ) .or. ( "\" $ xImage ) .or. ( ":" $ xImage ) .or. file( xImage )
-         pBitmap := Wvg_PrepareBitmapFromFile( xImage, ::imageWidth, ::imageHeight, .T., ::hWnd )
+      IF ( "." $ xImage ) .OR. ( "/" $ xImage ) .OR. ( "\" $ xImage ) .OR. ( ":" $ xImage ) .OR. File( xImage )
+         pBitmap := Wvg_PrepareBitmapFromFile( xImage, ::imageWidth, ::imageHeight, .T. , ::hWnd )
       ELSE
-         pBitmap := Wvg_PrepareBitmapFromResourceName( xImage, ::imageWidth, ::imageHeight, .T., ::hWnd )
+         pBitmap := Wvg_PrepareBitmapFromResourceName( xImage, ::imageWidth, ::imageHeight, .T. , ::hWnd )
       ENDIF
 
    CASE cType == "N"
-      pBitmap := Wvg_PrepareBitmapFromResourceID( xImage, ::imageWidth, ::imageHeight, .T., ::hWnd )
+      pBitmap := Wvg_PrepareBitmapFromResourceID( xImage, ::imageWidth, ::imageHeight, .T. , ::hWnd )
 
    CASE cType == "P"
       pBitmap := xImage
 
    ENDCASE
 
-   IF ! empty( pBitmap )
+   IF ! Empty( pBitmap )
       /* oBtn:image := pBitmap */
 
       IF HB_ISNUMERIC( nMapRGB )
@@ -343,17 +347,17 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       /* Set Button Size */
       ::SendToolbarMessage( TB_SETBUTTONSIZE, ::buttonWidth, ::buttonHeight )
 
-      #if 0
+#if 0
       SendMessage( hWndTB, TB_SETPADDING, ( WPARAM ) 0, ( LPARAM ) MAKELPARAM(  10,10 ) );
-      ::sendToolbarMessage( TB_SETPADDING, 10, 10 )
-      #endif
+         ::sendToolbarMessage( TB_SETPADDING, 10, 10 )
+#endif
       ::sendToolbarMessage( TB_AUTOSIZE )
    ELSE
       Wvg_AddToolbarButton( ::pWnd, , , oBtn:command, 3, .F. )
 
    ENDIF
 
-   aadd( ::aItems, { oBtn:command, oBtn } )
+   AAdd( ::aItems, { oBtn:command, oBtn } )
 
    RETURN oBtn
 
@@ -417,7 +421,7 @@ METHOD WvgToolBar:setSize()
 
 METHOD WvgToolBar:buttonClick( xParam )
 
-   IF HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
+   IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
       ::sl_lbClick := xParam
    ENDIF
 
@@ -427,7 +431,7 @@ METHOD WvgToolBar:buttonClick( xParam )
 
 METHOD WvgToolBar:change( xParam )
 
-   IF HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
+   IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
       ::sl_change := xParam
    ENDIF
 
@@ -437,7 +441,7 @@ METHOD WvgToolBar:change( xParam )
 
 METHOD WvgToolBar:buttonMenuClick( xParam )
 
-   IF HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
+   IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
       ::sl_buttonMenuClick := xParam
    ENDIF
 
@@ -447,7 +451,7 @@ METHOD WvgToolBar:buttonMenuClick( xParam )
 
 METHOD WvgToolBar:buttonDropDown( xParam )
 
-   IF HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
+   IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
       ::sl_buttonDropDown := xParam
    ENDIF
 
@@ -466,8 +470,8 @@ METHOD WvgToolBar:buttonDropDown( xParam )
 CLASS WvgToolBarButton
 
    DATA     enabled                               INIT .T.
-   DATA     index                                 INIT 0
-   DATA     key                                   INIT ""
+   DATA     INDEX                                 INIT 0
+   DATA     KEY                                   INIT ""
    DATA     style                                 INIT WVGTOOLBAR_BUTTON_DEFAULT
    DATA     caption                               INIT ""
    DATA     image                                 INIT NIL
@@ -477,8 +481,8 @@ CLASS WvgToolBarButton
    DATA     pressed                               INIT .F.
    DATA     visible                               INIT .T.
    DATA     left                                  INIT 0
-   DATA     bottom                                INIT 0
-   DATA     top                                   INIT 0
+   DATA     BOTTOM                                INIT 0
+   DATA     TOP                                   INIT 0
    DATA     width                                 INIT 0
    DATA     height                                INIT 0
    DATA     description                           INIT ""
@@ -487,7 +491,7 @@ CLASS WvgToolBarButton
 
    METHOD   new( cCaption, nStyle, cKey )
 
-   ENDCLASS
+ENDCLASS
 
 //
 

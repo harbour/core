@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -75,53 +76,13 @@
 #include "wvgparts.ch"
 
 //
-#if 0
-
-#include "xhb.ch"
-#include "cstruct.ch"
-#include "wintypes.ch"
-
-typedef struct tagSCROLLBARINFO {;
-    DWORD cbSize;
-    RECT  rcScrollBar;
-    int   dxyLineButton;
-    int   xyThumbTop;
-    int   xyThumbBottom;
-    int   reserved;
-    DWORD x; /* rgstate[CCHILDREN_SCROLLBAR+1]; */
-} SCROLLBARINFO
-
-typedef struct tagSCROLLINFO {;
-    UINT cbSize;
-    UINT fMask;
-    int  nMin;
-    int  nMax;
-    UINT nPage;
-    int  nPos;
-    int  nTrackPos;
-}   SCROLLINFO
-
-typedef struct tagPOINT {;
-    LONG x;
-    LONG y;
-} POINT
-
-typedef struct tagRECT { ;
-    LONG left;
-    LONG top;
-    LONG right;
-    LONG bottom;
-} RECT
-
-#endif
-//
 
 CLASS WvgScrollBar  INHERIT  WvgWindow, WvgDataRef
 
    DATA     autoTrack                             INIT .T.
-   DATA     range                                 INIT {0,1}
-   DATA     scrollBoxSize                         INIT -1
-   DATA     type                                  INIT WVGSCROLL_HORIZONTAL
+   DATA     RANGE                                 INIT { 0, 1 }
+   DATA     scrollBoxSize                         INIT - 1
+   DATA     TYPE                                  INIT WVGSCROLL_HORIZONTAL
    DATA     excludeScrollBox                      INIT .F.
 
    DATA     sl_xbeSB_Scroll
@@ -134,12 +95,12 @@ CLASS WvgScrollBar  INHERIT  WvgWindow, WvgDataRef
    METHOD   destroy()
    METHOD   handleEvent( nMessage, aNM )
 
-   METHOD   scroll( xParam )                      SETGET
+   METHOD   Scroll( xParam )                      SETGET
 
    METHOD   setRange( aRange )
    METHOD   setScrollBoxSize( nUnits )
 
-   ENDCLASS
+ENDCLASS
 
 //
 
@@ -194,6 +155,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSc
 //
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
+
    LOCAL nScrMsg, nScrPos, nCommand
 
    DO CASE
@@ -219,7 +181,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
       ENDIF
 
       nScrMsg := aNM[ 1 ]
-      IF nScrMsg == SB_THUMBPOSITION .or. nScrMsg == SB_THUMBTRACK
+      IF nScrMsg == SB_THUMBPOSITION .OR. nScrMsg == SB_THUMBTRACK
          nScrPos := aNM[ 2 ]
       ELSE
          nScrPos := WAPI_GetScrollPos( ::pWnd, SB_CTL )
@@ -277,7 +239,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
       ENDCASE
 
       ::sl_editBuffer := nScrPos
-      eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, Self )
+      Eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, Self )
       RETURN EVENT_HANDELLED
 
 
@@ -287,7 +249,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
       ENDIF
 
       nScrMsg := aNM[ 1 ]
-      IF nScrMsg == SB_THUMBPOSITION .or. nScrMsg == SB_THUMBTRACK
+      IF nScrMsg == SB_THUMBPOSITION .OR. nScrMsg == SB_THUMBTRACK
          nScrPos := aNM[ 2 ]
       ELSE
          nScrPos := WAPI_GetScrollPos( ::pWnd, SB_CTL )
@@ -349,7 +311,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
       ENDCASE
 
       ::sl_editBuffer := nScrPos
-      eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, self )
+      Eval( ::sl_xbeSB_Scroll, { nScrPos, nCommand }, NIL, self )
       RETURN EVENT_HANDELLED
 
    ENDCASE
@@ -368,7 +330,7 @@ METHOD destroy() CLASS WvgScrollBar
 
 //
 
-METHOD scroll( xParam ) CLASS WvgScrollBar
+METHOD Scroll( xParam ) CLASS WvgScrollBar
 
    IF HB_ISBLOCK( xParam )
       ::sl_xbeSB_Scroll := xParam
@@ -379,6 +341,7 @@ METHOD scroll( xParam ) CLASS WvgScrollBar
 //
 
 METHOD setRange( aRange ) CLASS WvgScrollBar
+
    LOCAL aOldRange, nMin, nMax
 
    IF WAPI_GetScrollRange( ::pWnd, SB_CTL, @nMin, @nMax )
@@ -396,276 +359,7 @@ METHOD setRange( aRange ) CLASS WvgScrollBar
 //
 
 METHOD setScrollBoxSize( nUnits ) CLASS WvgScrollBar
+
    LOCAL nOldUnits := nUnits
 
    RETURN nOldUnits
-
-//
-#if 0
-
-Scroll Bar
-This section contains information about the programming elements used with scroll bars.
-A window can display a data object, such as a document or a bitmap, that is larger than
-the windows client area. When provided with a scroll bar, the user can scroll a data
-object in the client area to bring into view the portions of the object that extend beyond
-the borders of the window.
-
-
-Overviews
-About Scroll Bars
-A scroll bar consists of a shaded shaft with an arrow button at each end and a scroll
-box (sometimes called a thumb) between the arrow buttons.
-
-Using Scroll Bars
-When creating an overlapped, pop-up, or child window, you can add standard scroll bars
-by using the CreateWindowEx function and specifying WS_HSCROLL, WS_VSCROLL, or both styles.
-
-
-
-Functions
-EnableScrollBar
-The EnableScrollBar function enables or disables one or both scroll bar arrows.
-
-GetScrollBarInfo
-The GetScrollBarInfo function retrieves information about the specified scroll bar.
-
-GetScrollInfo
-The GetScrollInfo function retrieves the parameters of a scroll bar, including
-the minimum and maximum scrolling positions, the page size, and the position of the
-scroll box (thumb).
-
-GetScrollPos
-The GetScrollPos function retrieves the current position of the scroll box (thumb)
-in the specified scroll bar. The current position is a relative value that depends on
-the current scrolling range. For example, if the scrolling range is 0 through 100 and the
-scroll box is in the middle of the bar, the current position is 50.
-
-Note   The GetScrollPos function is provided for backward compatibility. New applications
-should use the GetScrollInfo function.
-
-GetScrollRange
-The GetScrollRange function retrieves the current minimum and maximum scroll box
-(thumb) positions for the specified scroll bar.
-
-Note  The GetScrollRange function is provided for compatibility only. New applications
-should use the GetScrollInfo function.
-
-ScrollDC
-The ScrollDC function scrolls a rectangle of bits horizontally and vertically.
-
-ScrollWindow
-The ScrollWindow function scrolls the contents of the specified windows client area.
-
-Note  The ScrollWindow function is provided for backward compatibility.
-New applications should use the ScrollWindowEx function.
-
-ScrollWindowEx
-The ScrollWindowEx function scrolls the contents of the specified windows client area.
-
-SetScrollInfo
-The SetScrollInfo function sets the parameters of a scroll bar, including the
-minimum and maximum scrolling positions, the page size, and the position of the
-scroll box (thumb). The function also redraws the scroll bar, if requested.
-
-SetScrollPos
-The SetScrollPos function sets the position of the scroll box (thumb) in the specified
-scroll bar and, if requested, redraws the scroll bar to reflect the new position of
-the scroll box.
-
-Note  The SetScrollPos function is provided for backward compatibility.
-New applications should use the SetScrollInfo function.
-
-SetScrollRange
-The SetScrollRange function sets the minimum and maximum scroll box positions for
-the specified scroll bar.
-
-Note  The SetScrollRange function is provided for backward compatibility.
-New applications should use the SetScrollInfo function.
-
-ShowScrollBar
-The ShowScrollBar function shows or hides the specified scroll bar.
-
-
-
-Messages
-========
-
-SBM_ENABLE_ARROWS
-An application sends the SBM_ENABLE_ARROWS message to enable or disable one or
-both arrows of a scroll bar control.
-
-SBM_GETPOS
-The SBM_GETPOS message is sent to retrieve the current position of the scroll box
-of a scroll bar control. The current position is a relative value that depends on the
-current scrolling range. For example, if the scrolling range is 0 through 100 and the
-scroll box is in the middle of the bar, the current position is 50.
-
-Applications should not send this message directly. Instead, they should use the
-GetScrollPos function. A window receives this message through its WindowProc function.
-Applications which implement a custom scroll bar control must respond to these messages
-for the GetScrollPos function to function properly.
-
-SBM_GETRANGE
-The SBM_GETRANGE message is sent to retrieve the minimum and maximum position values
-for the scroll bar control.
-
-Applications should not send this message directly. Instead, they should use the
-GetScrollRange function. A window receives this message through its WindowProc function.
-Applications which implement a custom scroll bar control must respond to these
-messages for the GetScrollRange function to work properly.
-
-SBM_GETSCROLLBARINFO
-Sent by an application to retrieve information about the specified scroll bar.
-
-SBM_GETSCROLLINFO
-The SBM_GETSCROLLINFO message is sent to retrieve the parameters of a scroll bar.
-
-Applications should not send this message directly. Instead, they should use
-the GetScrollInfo function. A window receives this message through its WindowProc function.
-Applications which implement a custom scroll bar control must respond to these
-messages for the GetScrollInfo function to work properly.
-
-SBM_SETPOS
-The SBM_SETPOS message is sent to set the position of the scroll box (thumb) and,
-if requested, redraw the scroll bar to reflect the new position of the scroll box.
-
-Applications should not send this message directly. Instead, they should use the
-SetScrollPos function. A window receives this message through its WindowProc function.
-Applications which implement a custom scroll bar control must respond to
-these messages for the SetScrollPos function to work properly.
-
-SBM_SETRANGE
-The SBM_SETRANGE message is sent to set the minimum and maximum position values
-for the scroll bar control.
-
-Applications should not send this message directly. Instead, they should use the
-SetScrollRange function. A window receives this message through its WindowProc function.
-Applications which implement a custom scroll bar control must respond to these
-messages for the SetScrollRange function to work properly.
-
-SBM_SETRANGEREDRAW
-An application sends the SBM_SETRANGEREDRAW message to a scroll bar control to
-set the minimum and maximum position values and to redraw the control.
-
-SBM_SETSCROLLINFO
-The SBM_SETSCROLLINFO message is sent to set the parameters of a scroll bar.
-
-Applications should not send this message directly. Instead, they should use
-the SetScrollInfo function. A window receives this message through its WindowProc function.
-Applications which implement a custom scroll bar control must respond to
-these messages for the SetScrollInfo function to function properly.
-
-
-
-Notifications
-
-WM_CTLCOLORSCROLLBAR
-The WM_CTLCOLORSCROLLBAR message is sent to the parent window of a
-scroll bar control when the control is about to be drawn. By responding to this
-message, the parent window can use the display context handle to set the background
-color of the scroll bar control.
-
-A window receives this message through its WindowProc function.
-
-WM_HSCROLL
-The WM_HSCROLL message is sent to a window when a scroll event occurs in the
-windows standard horizontal scroll bar. This message is also sent to the owner
-of a horizontal scroll bar control when a scroll event occurs in the control.
-
-A window receives this message through its WindowProc function.
-
-WM_VSCROLL
-The WM_VSCROLL message is sent to a window when a scroll event occurs in the windows
-standard vertical scroll bar. This message is also sent to the owner of a vertical
-scroll bar control when a scroll event occurs in the control.
-
-A window receives this message through its WindowProc function.
-
-
-
-Structures
-==========
-SCROLLBARINFO
-The SCROLLBARINFO structure contains scroll bar information.
-
-SCROLLINFO
-The SCROLLINFO structure contains scroll bar parameters to be set by the SetScrollInfo function (or SBM_SETSCROLLINFO message), or retrieved by the GetScrollInfo function (or SBM_GETSCROLLINFO message).
-
-
-
-Constants
-=========
-Scroll Bar Control Styles
-
-To create a scroll bar control using the CreateWindow or CreateWindowEx
-function specify the SCROLLBAR class, appropriate window style constants,
-and a combination of the following scroll bar control styles. Some of the styles
-create a scroll bar control that uses a default width or height. However,
-you must always specify the x- and y-coordinates and the other dimensions of the
-scroll bar when you call CreateWindow or CreateWindowEx.
-
-
-SBS_BOTTOMALIGN
-
-Aligns the bottom edge of the scroll bar with the bottom edge of the rectangle
-defined by the x, y, nWidth, and nHeight parameters of CreateWindowEx function.
-The scroll bar has the default height for system scroll bars. Use this style with
-the SBS_HORZ style.
-
-SBS_HORZ
-
-Designates a horizontal scroll bar. If neither the SBS_BOTTOMALIGN nor SBS_TOPALIGN
-style is specified, the scroll bar has the height, width, and position specified by the
-x, y, nWidth, and nHeight parameters of CreateWindowEx.
-
-SBS_LEFTALIGN
-
-Aligns the left edge of the scroll bar with the left edge of the rectangle defined
-by the x, y, nWidth, and nHeight parameters of CreateWindowEx. The scroll bar has
-the default width for system scroll bars. Use this style with the SBS_VERT style.
-
-SBS_RIGHTALIGN
-
-Aligns the right edge of the scroll bar with the right edge of the rectangle defined
-by the x, y, nWidth, and nHeight parameters of CreateWindowEx. The scroll bar has the
-default width for system scroll bars. Use this style with the SBS_VERT style.
-
-SBS_SIZEBOX
-
-Designates a size box. If you specify neither the SBS_SIZEBOXBOTTOMRIGHTALIGN nor the
-SBS_SIZEBOXTOPLEFTALIGN style, the size box has the height, width, and position
-specified by the x, y, nWidth, and nHeight parameters of CreateWindowEx.
-
-SBS_SIZEBOXBOTTOMRIGHTALIGN
-
-Aligns the lower right corner of the size box with the lower right corner of the
-rectangle specified by the x, y, nWidth, and nHeight parameters of CreateWindowEx.
-The size box has the default size for system size boxes. Use this style with the
-SBS_SIZEBOX style.
-
-SBS_SIZEBOXTOPLEFTALIGN
-
-Aligns the upper left corner of the size box with the upper left corner of the
-rectangle specified by the x, y, nWidth, and nHeight parameters of CreateWindowEx.
-The size box has the default size for system size boxes. Use this style with the
-SBS_SIZEBOX style.
-
-SBS_SIZEGRIP
-
-Same as SBS_SIZEBOX, but with a raised edge.
-
-SBS_TOPALIGN
-
-Aligns the top edge of the scroll bar with the top edge of the rectangle defined
-by the x, y, nWidth, and nHeight parameters of CreateWindowEx. The scroll bar has
-the default height for system scroll bars. Use this style with the SBS_HORZ style.
-
-SBS_VERT
-
-Designates a vertical scroll bar. If you specify neither the SBS_RIGHTALIGN nor
-the SBS_LEFTALIGN style, the scroll bar has the height, width, and position specified
-by the x, y, nWidth, and nHeight parameters of CreateWindowEx.
-
-
-#endif
-//

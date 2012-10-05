@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -93,7 +94,7 @@ CLASS WvgSLE INHERIT WvgWindow, WvgDataRef
    METHOD   destroy()
    METHOD   handleEvent( nMessage, aNM )
 
-   METHOD   clear()
+   METHOD   CLEAR()
    METHOD   copyMarked()
    METHOD   cutMarked()
    METHOD   delMarked()                           VIRTUAL
@@ -119,7 +120,7 @@ CLASS WvgSLE INHERIT WvgWindow, WvgDataRef
    DATA     sl_returnPressed
    METHOD   returnPressed( ... )                  SETGET
 
-   ENDCLASS
+ENDCLASS
 
 //
 
@@ -136,7 +137,8 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
 //
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
-   LOCAL es_:= { ES_LEFT, ES_RIGHT, ES_CENTER }
+
+   LOCAL es_ := { ES_LEFT, ES_RIGHT, ES_CENTER }
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -171,7 +173,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSL
    ::setPosAndSize()
 
    IF HB_ISOBJECT( ::datalink )
-      eval( ::datalink )
+      Eval( ::datalink )
    ENDIF
 
    ::sendMessage( EM_SETLIMITTEXT, ::bufferLength )
@@ -200,12 +202,12 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
 
       CASE aNM[ NMH_code ] == EN_KILLFOCUS
          IF HB_ISBLOCK( ::sl_killInputFocus )
-            eval( ::sl_killInputFocus, NIL, NIL, Self )
+            Eval( ::sl_killInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == EN_SETFOCUS
          IF HB_ISBLOCK( ::sl_setInputFocus )
-            eval( ::sl_setInputFocus, NIL, NIL, Self )
+            Eval( ::sl_setInputFocus, NIL, NIL, Self )
          ENDIF
 
       ENDCASE
@@ -225,12 +227,12 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
       DO CASE
       CASE aNM[ NMH_code ] == WM_KILLFOCUS
          IF HB_ISBLOCK( ::sl_killInputFocus )
-            eval( ::sl_killInputFocus, NIL, NIL, Self )
+            Eval( ::sl_killInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == WM_SETFOCUS
          IF HB_ISBLOCK( ::sl_setInputFocus )
-            eval( ::sl_setInputFocus, NIL, NIL, Self )
+            Eval( ::sl_setInputFocus, NIL, NIL, Self )
          ENDIF
 
       CASE aNM[ NMH_code ] == WM_KEYDOWN
@@ -239,7 +241,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
                ::oParent:setFocus()
             ENDIF
             IF HB_ISBLOCK( ::sl_returnPressed )
-               eval( ::sl_returnPressed, NIL, NIL, Self )
+               Eval( ::sl_returnPressed, NIL, NIL, Self )
             ENDIF
          ELSEIF aNM[ 2 ] == VK_TAB
             IF ::isParentCrt()
@@ -269,6 +271,7 @@ METHOD destroy() CLASS WvgSLE
 //
 
 METHOD WvgSLE:changed( lChanged )
+
    LOCAL lChg := ::sendMessage( EM_GETMODIFY, 0, 0 )
 
    IF HB_ISLOGICAL( lChanged )
@@ -280,15 +283,17 @@ METHOD WvgSLE:changed( lChanged )
 //
 
 METHOD WvgSLE:clear()
+
    LOCAL cText := ::getData()
 
    ::setData( "" )
 
-   RETURN len( cText )
+   RETURN Len( cText )
 
 //
 
 METHOD WvgSLE:copyMarked()
+
    LOCAL n, nB, nE
 
    n := ::sendMessage( EM_GETSEL )
@@ -296,7 +301,7 @@ METHOD WvgSLE:copyMarked()
    nE := WVG_HIWORD( n )
 
    IF ( n := nE - nB ) > 0
-      Wvt_SetClipboard( substr( ::getData(), nB, n ) )
+      Wvt_SetClipboard( SubStr( ::getData(), nB, n ) )
    ENDIF
 
    RETURN n
@@ -304,6 +309,7 @@ METHOD WvgSLE:copyMarked()
 //
 
 METHOD WvgSLE:cutMarked()
+
    LOCAL n, nB, nE, cText
 
    n := ::sendMessage( EM_GETSEL )
@@ -312,7 +318,7 @@ METHOD WvgSLE:cutMarked()
 
    IF ( n := nE - nB ) > 0
       cText := ::getData()
-      ::setData( substr( cText, 1, nB-1 ) + substr( cText, nE ) )
+      ::setData( SubStr( cText, 1, nB - 1 ) + SubStr( cText, nE ) )
    ENDIF
 
    RETURN n
@@ -320,12 +326,15 @@ METHOD WvgSLE:cutMarked()
 //
 
 METHOD WvgSLE:returnPressed( ... )
-   LOCAL a_:= hb_aParams()
-   IF len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
+
+   LOCAL a_ := hb_AParams()
+
+   IF Len( a_ ) == 1 .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sl_returnPressed := a_[ 1 ]
-   ELSEIF len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_returnPressed )
-      eval( ::sl_returnPressed, NIL, NIL, Self )
+   ELSEIF Len( a_ ) >= 0 .AND. HB_ISBLOCK( ::sl_returnPressed )
+      Eval( ::sl_returnPressed, NIL, NIL, Self )
    ENDIF
+
    RETURN Self
 
 //

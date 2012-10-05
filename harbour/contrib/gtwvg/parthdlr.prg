@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -109,7 +110,7 @@ CLASS WvgPartHandler
    DATA     sb_notifier
    METHOD   notifierBlock( ... )                  SETGET
 
-   ENDCLASS
+ENDCLASS
 
 //
 
@@ -176,17 +177,18 @@ METHOD WvgPartHandler:status()
 METHOD WvgPartHandler:addChild( oWvg )
 
    oWvg:nNameID := oWvg:nID
-   aadd( ::aChildren, oWvg )
+   AAdd( ::aChildren, oWvg )
 
    RETURN Self
 
 //
 
 METHOD WvgPartHandler:childFromName( nNameId )
+
    LOCAL i, oWvg
 
-   FOR i := 1 TO len( ::aChildren )
-      IF ::aChildren[ i ]:nNameID != NIL .and. ::aChildren[ i ]:nNameID == nNameID
+   FOR i := 1 TO Len( ::aChildren )
+      IF ::aChildren[ i ]:nNameID != NIL .AND. ::aChildren[ i ]:nNameID == nNameID
          oWvg := ::aChildren[ i ]
       ENDIF
    NEXT
@@ -202,10 +204,11 @@ METHOD WvgPartHandler:childList()
 //
 
 METHOD WvgPartHandler:removeChild( oChild )
+
    LOCAL n
 
-   IF ( n := ascan( ::aChildren, {| o | o == oChild } ) ) > 0
-      hb_aDel( ::aChildren, n, .T. )
+   IF ( n := AScan( ::aChildren, {| o | o == oChild } ) ) > 0
+      hb_ADel( ::aChildren, n, .T. )
    ENDIF
 
    RETURN Self
@@ -213,23 +216,25 @@ METHOD WvgPartHandler:removeChild( oChild )
 //
 
 METHOD WvgPartHandler:delChild( oWvg )
+
    LOCAL n
 
-   n := ascan( ::aChildren, {| o | o == oWvg } )
+   n := AScan( ::aChildren, {| o | o == oWvg } )
    IF n > 0
       oWvg:destroy()
-      adel( ::aChildren, n )
-      asize( ::aChildren, len( ::aChildren )-1 )
-   endif
+      ADel( ::aChildren, n )
+      ASize( ::aChildren, Len( ::aChildren ) - 1 )
+   ENDIF
 
    RETURN Self
 
 //
 
 METHOD WvgPartHandler:setName( nNameId )
+
    LOCAL nOldNameId := ::nNameId
 
-   IF Valtype( nNameId ) == "N"
+   IF ValType( nNameId ) == "N"
       ::nNameID := nNameId
    ENDIF
 
@@ -238,9 +243,10 @@ METHOD WvgPartHandler:setName( nNameId )
 //
 
 METHOD WvgPartHandler:setOwner( oWvg )
+
    LOCAL oOldXbp := ::oOwner
 
-   IF valtype( oWvg ) == "O"
+   IF ValType( oWvg ) == "O"
       ::oOwner := oWvg
    ENDIF
 
@@ -249,9 +255,10 @@ METHOD WvgPartHandler:setOwner( oWvg )
 //
 
 METHOD WvgPartHandler:setParent( oWvg )
+
    LOCAL oOldXbp := ::oParent
 
-   IF valtype( oWvg ) == "O"
+   IF ValType( oWvg ) == "O"
       ::oParent := oWvg
    ENDIF
 
@@ -260,7 +267,8 @@ METHOD WvgPartHandler:setParent( oWvg )
 //
 
 METHOD WvgPartHandler:notifierBlock( ... )
-   LOCAL a_:= hb_AParams()
+
+   LOCAL a_ := hb_AParams()
 
    IF ! Empty( a_ ) .AND. HB_ISBLOCK( a_[ 1 ] )
       ::sb_notifier := a_[ 1 ]
@@ -277,8 +285,10 @@ METHOD WvgPartHandler:notifierBlock( ... )
 /*
    This will be called by the WvgCRT() console FOR various events TO be propogated TO child controls
 */
+
 METHOD WvgPartHandler:notifier( nEvent, xParams )
-   Local aPos, aMenuItem, nIndex, nCtrlID, oObj
+
+   LOCAL aPos, aMenuItem, nIndex, nCtrlID, oObj
    LOCAL nReturn := 0
 
    DO CASE
@@ -286,9 +296,9 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
    CASE nEvent == HB_GTE_MOUSE
       IF     xParams[ 1 ] == WM_MOUSEHOVER
          aPos := { xParams[ 3 ], xParams[ 4 ] }
-      elseif xParams[ 1 ] == WM_MOUSELEAVE
+      ELSEIF xParams[ 1 ] == WM_MOUSELEAVE
          /* Nothing */
-      else
+      ELSE
          aPos := iif( ::mouseMode == 2, { xParams[ 3 ], xParams[ 4 ] }, { xParams[ 5 ], xParams[ 6 ] } )
       ENDIF
 
@@ -296,67 +306,67 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
 
       CASE WM_MOUSEHOVER
          IF HB_ISBLOCK( ::sl_enter )
-            eval( ::sl_enter, aPos, NIL, Self )
+            Eval( ::sl_enter, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_MOUSELEAVE
          IF HB_ISBLOCK( ::sl_leave )
-            eval( ::sl_leave, aPos, NIL, Self )
+            Eval( ::sl_leave, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_RBUTTONDOWN
          IF HB_ISBLOCK( ::sl_rbDown )
-            eval( ::sl_rbDown, aPos, NIL, Self )
+            Eval( ::sl_rbDown, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_LBUTTONDOWN
          IF HB_ISBLOCK( ::sl_lbDown )
-            eval( ::sl_lbDown, aPos, NIL, Self )
+            Eval( ::sl_lbDown, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_RBUTTONUP
          IF HB_ISBLOCK( ::sl_rbUp )
-            eval( ::sl_rbUp, aPos, NIL, Self )
+            Eval( ::sl_rbUp, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_LBUTTONUP
          IF HB_ISBLOCK( ::sl_lbUp )
-            eval( ::sl_lbUp, aPos, NIL, Self )
+            Eval( ::sl_lbUp, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_RBUTTONDBLCLK
          IF HB_ISBLOCK( ::sl_rbDblClick )
-            eval( ::sl_rbDblClick, aPos, NIL, Self )
+            Eval( ::sl_rbDblClick, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_LBUTTONDBLCLK
          IF HB_ISBLOCK( ::sl_lbDblClick )
-            eval( ::sl_lbDblClick, aPos, NIL, Self )
+            Eval( ::sl_lbDblClick, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_MBUTTONDOWN
          IF HB_ISBLOCK( ::sl_mbDown )
-            eval( ::sl_mbDown, aPos, NIL, Self )
+            Eval( ::sl_mbDown, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_MBUTTONUP
          IF HB_ISBLOCK( ::sl_mbClick )
-            eval( ::sl_mbClick, aPos, NIL, Self )
+            Eval( ::sl_mbClick, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_MBUTTONDBLCLK
          IF HB_ISBLOCK( ::sl_mbDblClick )
-            eval( ::sl_mbDblClick, aPos, NIL, Self )
+            Eval( ::sl_mbDblClick, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_MOUSEMOVE
          IF HB_ISBLOCK( ::sl_motion )
-            eval( ::sl_motion, aPos, NIL, Self )
+            Eval( ::sl_motion, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_MOUSEWHEEL
          IF HB_ISBLOCK( ::sl_wheel )
-            eval( ::sl_wheel, aPos, NIL, Self )
+            Eval( ::sl_wheel, aPos, NIL, Self )
          ENDIF
          EXIT
       CASE WM_NCMOUSEMOVE
@@ -365,20 +375,20 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
 
    CASE nEvent == HB_GTE_KEYBOARD
       IF HB_ISBLOCK( ::keyboard )
-         eval( ::keyboard, xParams, NIL, Self )
+         Eval( ::keyboard, xParams, NIL, Self )
       ENDIF
 
    CASE nEvent == HB_GTE_SETFOCUS
       /* aeval( ::aChildren, {| o | WVG_InvalidateRect( o:hWnd ) } ) */
 
       IF HB_ISBLOCK( ::sl_setInputFocus )
-         eval( ::sl_setInputFocus, NIL, NIL, Self )
+         Eval( ::sl_setInputFocus, NIL, NIL, Self )
       ENDIF
       ::lHasInputFocus := .T.
 
    CASE nEvent == HB_GTE_KILLFOCUS
       IF HB_ISBLOCK( ::sl_killInputFocus )
-         eval( ::sl_killInputFocus, NIL, NIL, Self )
+         Eval( ::sl_killInputFocus, NIL, NIL, Self )
       ENDIF
       ::lHasInputFocus := .F.
 
@@ -389,18 +399,18 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
       /* Eventally every window be checked if it falls within returned rectangle or not
        * then it will avoid a lot of flickering
        */
-      aeval( ::aChildren, {| o | WVG_InvalidateRect( o:hWnd ) } )
+      AEval( ::aChildren, {| o | WVG_InvalidateRect( o:hWnd ) } )
 
    CASE nEvent == HB_GTE_CLOSE
       IF HB_ISBLOCK( ::close )
-         nReturn := eval( ::close, NIL, NIL, Self )
+         nReturn := Eval( ::close, NIL, NIL, Self )
       ENDIF
 
    CASE nEvent == HB_GTE_MENU
       DO CASE
       CASE xParams[ 1 ] == 0                             /* menu selected */
          IF HB_ISOBJECT( ::oMenu )
-            IF !empty( aMenuItem := ::oMenu:FindMenuItemById( xParams[ 2 ] ) )
+            IF !Empty( aMenuItem := ::oMenu:FindMenuItemById( xParams[ 2 ] ) )
                IF HB_ISBLOCK( aMenuItem[ 2 ] )
                   Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
 
@@ -411,12 +421,12 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
             ENDIF
          ENDIF
 
-      CASE xParams[ 1 ] == 1 .and. HB_ISOBJECT( ::oMenu ) /* enter menu loop */
+      CASE xParams[ 1 ] == 1 .AND. HB_ISOBJECT( ::oMenu ) /* enter menu loop */
          IF HB_ISBLOCK( ::oMenu:sl_beginMenu )
             Eval( ::oMenu:sl_beginMenu, NIL, NIL, Self )
          ENDIF
 
-      CASE xParams[ 1 ] == 2 .and. HB_ISOBJECT( ::oMenu ) /* exit menu loop */
+      CASE xParams[ 1 ] == 2 .AND. HB_ISOBJECT( ::oMenu ) /* exit menu loop */
          IF HB_ISBLOCK( ::oMenu:sl_endMenu )
             Eval( ::oMenu:sl_endMenu, NIL, NIL, Self )
          ENDIF
@@ -425,13 +435,13 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
 
    CASE nEvent == HB_GTE_NOTIFY
       nCtrlID := xParams[ 1 ]
-      IF ( nIndex := ascan( ::aChildren, {| o | o:nID == nCtrlID } ) ) > 0
+      IF ( nIndex := AScan( ::aChildren, {| o | o:nID == nCtrlID } ) ) > 0
          RETURN ::aChildren[ nIndex ]:handleEvent( HB_GTE_NOTIFY, xParams )
       ENDIF
 
    CASE nEvent == HB_GTE_COMMAND
       nCtrlID := xParams[ 2 ]
-      IF ( nIndex := ascan( ::aChildren, {| o | o:nID == nCtrlID } ) ) > 0
+      IF ( nIndex := AScan( ::aChildren, {| o | o:nID == nCtrlID } ) ) > 0
          RETURN ::aChildren[ nIndex ]:handleEvent( HB_GTE_COMMAND, xParams )
       ENDIF
 
@@ -464,13 +474,13 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
    CASE nEvent == HB_GTE_RESIZED
       IF ::objType == objTypeDialog
          IF ::drawingArea:objType == objTypeDA
-            ::drawingArea:setPosAndSize( {0,0}, ::currentSize(), .F. )
+            ::drawingArea:setPosAndSize( { 0, 0 }, ::currentSize(), .F. )
          ENDIF
       ENDIF
       IF HB_ISBLOCK( ::sl_resize )
-         eval( ::sl_resize, { xParams[ 1 ], xParams[ 2 ] }, { xParams[ 3 ], xParams[ 4 ] }, Self )
+         Eval( ::sl_resize, { xParams[ 1 ], xParams[ 2 ] }, { xParams[ 3 ], xParams[ 4 ] }, Self )
       ENDIF
-      aeval( ::aChildren, {| o | o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
+      AEval( ::aChildren, {| o | o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
 
    CASE nEvent == HB_GTE_KEYTOITEM
       IF xParams[ 3 ] == ::hWnd
@@ -490,13 +500,15 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
 /*
   This will be called if a control is assigned its own WndProc via ::SetWindowProcCallback()
 */
+
 METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
+
    LOCAL nCtrlID, nNotifctn, hWndCtrl, nObj, aMenuItem, oObj, nReturn
 
    SWITCH nMessage
 
    CASE WM_ERASEBKGND
-      IF ::objType == objTypeDA .AND. ! empty( ::hBrushBG )
+      IF ::objType == objTypeDA .AND. ! Empty( ::hBrushBG )
          ::handleEvent( HB_GTE_CTLCOLOR, { nwParam, nlParam } )
       ENDIF
       EXIT
@@ -508,7 +520,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
       IF hWndCtrl == 0                            /* It is menu */
          IF HB_ISOBJECT( ::oMenu )
-            IF !empty( aMenuItem := ::oMenu:FindMenuItemById( nCtrlID ) )
+            IF !Empty( aMenuItem := ::oMenu:FindMenuItemById( nCtrlID ) )
                IF HB_ISBLOCK( aMenuItem[ 2 ] )
                   Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
 
@@ -520,7 +532,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
          ENDIF
          RETURN 0
       ELSE
-         IF ( nObj := ascan( ::aChildren, {| o | o:nID == nCtrlID } ) ) > 0
+         IF ( nObj := AScan( ::aChildren, {| o | o:nID == nCtrlID } ) ) > 0
             nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_COMMAND, { nNotifctn, nCtrlID, hWndCtrl } )
             IF HB_ISNUMERIC( nReturn ) .AND. nReturn == 0
                RETURN 0
@@ -530,7 +542,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
       EXIT
 
    CASE WM_NOTIFY
-      IF ( nObj := ascan( ::aChildren, {| o | o:nID == nwParam } ) ) > 0
+      IF ( nObj := AScan( ::aChildren, {| o | o:nID == nwParam } ) ) > 0
          nReturn := ::aChildren[ nObj ]:handleEvent( HB_GTE_NOTIFY, { nwParam, nlParam } )
          IF HB_ISNUMERIC( nReturn ) .AND. nReturn == EVENT_HANDELLED
             RETURN 0

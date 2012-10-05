@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -82,8 +83,8 @@ CLASS WvgStatic  INHERIT  WvgWindow
    DATA     caption                               INIT ""
    DATA     clipParent                            INIT .T.
    DATA     clipSiblings                          INIT .F.
-   DATA     options                               INIT -1 /* WVGSTATIC_TEXT_LEFT */
-   DATA     type                                  INIT -1 /* WVGSTATIC_TYPE_TEXT */
+   DATA     options                               INIT - 1 /* WVGSTATIC_TEXT_LEFT */
+   DATA     TYPE                                  INIT - 1 /* WVGSTATIC_TYPE_TEXT */
 
    DATA     hBitmap
 
@@ -95,7 +96,7 @@ CLASS WvgStatic  INHERIT  WvgWindow
 
    METHOD   setCaption( xCaption, cDll )
 
-   ENDCLASS
+ENDCLASS
 
 //
 
@@ -117,7 +118,7 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   #if 0
+#if 0
    SS_ETCHEDFRAME
    SS_SUNKEN
    SS_LEFTNOWORDWRAP
@@ -128,7 +129,7 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    SS_ETCHEDHORZ
    SS_ETCHEDVERT
    SS_RIGHTJUST
-   #endif
+#endif
 
 
    SWITCH ::type
@@ -200,9 +201,9 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       EXIT
    ENDSWITCH  /* ::type */
 
-   #if 1
+#if 1
    /* Options */
-   IF ( ascan( { WVGSTATIC_TYPE_FGNDFRAME, WVGSTATIC_TYPE_BGNDFRAME, WVGSTATIC_TYPE_HALFTONEFRAME }, ::type ) > 0 )
+   IF ( AScan( { WVGSTATIC_TYPE_FGNDFRAME, WVGSTATIC_TYPE_BGNDFRAME, WVGSTATIC_TYPE_HALFTONEFRAME }, ::type ) > 0 )
       IF     ( hb_bitAnd( ::options, WVGSTATIC_FRAMETHIN ) == WVGSTATIC_FRAMETHIN )
          ::style += WS_BORDER
 
@@ -211,8 +212,8 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
       ENDIF
    ENDIF
-   #endif
-   #if 0
+#endif
+#if 0
    IF ::type == WVGSTATIC_TYPE_TEXT
       IF ::options == WVGSTATIC_FRAMETHIN
          ::style += WS_BORDER
@@ -220,7 +221,7 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
          ::style += WS_DLGFRAME
       ENDIF
    ENDIF
-   #endif
+#endif
 
    ::oParent:addChild( SELF )
 
@@ -248,9 +249,9 @@ METHOD WvgStatic:handleEvent( nMessage, aNM )
          ::rePosition()
       ENDIF
       IF HB_ISBLOCK( ::sl_resize )
-         eval( ::sl_resize, NIL, NIL, self )
+         Eval( ::sl_resize, NIL, NIL, self )
       ENDIF
-      aeval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
+      AEval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
       RETURN EVENT_HANDELLED
 
    CASE nMessage == HB_GTE_CTLCOLOR
@@ -288,7 +289,9 @@ METHOD WvgStatic:destroy()
 //
 
 METHOD WvgStatic:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+
    RETURN Self
 
 //

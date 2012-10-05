@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -100,7 +101,7 @@ CLASS WvgRadioButton  INHERIT  WvgWindow, WvgDataRef
    ACCESS   selected                              INLINE ::sl_lbClick
    ASSIGN   selected( bBlock )                    INLINE ::sl_lbClick := bBlock
 
-   ENDCLASS
+ENDCLASS
 
 //
 
@@ -151,7 +152,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
          ::editBuffer := ( WVG_Button_GetCheck( ::hWnd ) == BST_CHECKED )
 
          IF HB_ISBLOCK( ::sl_lbClick )
-            eval( ::sl_lbClick, ::editBuffer, NIL, self )
+            Eval( ::sl_lbClick, ::editBuffer, NIL, self )
             RETURN 0
          ENDIF
       ENDIF

@@ -50,6 +50,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -139,7 +140,7 @@ CLASS WvgHTMLViewer INHERIT WvgActiveXControl
 
    DATA     CLSID                                 INIT   "Shell.Explorer"      PROTECTED
 
-   ENDCLASS
+ENDCLASS
 
 //
 
@@ -158,7 +159,7 @@ METHOD WvgHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    ::wvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::mapEvent( evBeforeNavigate,   {| cURL, Flags, TFName, PData, Headers | ;
-                                       ::xBeforeNavigate( cURL, Flags, TFName, PData, Headers ) } )
+      ::xBeforeNavigate( cURL, Flags, TFName, PData, Headers ) } )
 
    ::mapEvent( evStatusTextChange, {| cText| ::xStatusTextChange( cText ) } )
 
@@ -172,7 +173,6 @@ METHOD WvgHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    ::WvgActiveXControl:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-
    RETURN Self
 
 //
@@ -184,8 +184,8 @@ METHOD WvgHTMLViewer:xBeforeNavigate( cURL, Flags, TFName, PData, Headers )
    HB_SYMBOL_UNUSED( PData   )
    HB_SYMBOL_UNUSED( Headers )
 
-   IF PCount() >= 1 .and. HB_ISBLOCK( ::sl_beforeNavigate )
-      eval( ::sl_beforeNavigate, cURL, NIL, Self )
+   IF PCount() >= 1 .AND. HB_ISBLOCK( ::sl_beforeNavigate )
+      Eval( ::sl_beforeNavigate, cURL, NIL, Self )
       RETURN nil
    ENDIF
 
@@ -196,7 +196,7 @@ METHOD WvgHTMLViewer:xBeforeNavigate( cURL, Flags, TFName, PData, Headers )
 METHOD WvgHTMLViewer:xStatusTextChange( cText )
 
    IF HB_ISBLOCK( ::sl_statusTextChange )
-      eval( ::sl_statusTextChange, cText, NIL, Self )
+      Eval( ::sl_statusTextChange, cText, NIL, Self )
    ENDIF
 
    RETURN Self
@@ -206,7 +206,7 @@ METHOD WvgHTMLViewer:xStatusTextChange( cText )
 METHOD WvgHTMLViewer:xNavigateComplete( cURL )
 
    IF HB_ISBLOCK( ::sl_navigateComplete )
-      eval( ::sl_navigateComplete, cURL, NIL, Self )
+      Eval( ::sl_navigateComplete, cURL, NIL, Self )
    ENDIF
 
    RETURN Self
@@ -216,7 +216,7 @@ METHOD WvgHTMLViewer:xNavigateComplete( cURL )
 METHOD WvgHTMLViewer:xProgressChange( nProgress, nProgMax )
 
    IF HB_ISBLOCK( ::sl_progressChange )
-      eval( ::sl_progressChange, nProgress, nProgMax, Self )
+      Eval( ::sl_progressChange, nProgress, nProgMax, Self )
    ENDIF
 
    RETURN Self
@@ -226,7 +226,7 @@ METHOD WvgHTMLViewer:xProgressChange( nProgress, nProgMax )
 METHOD WvgHTMLViewer:xTitleChange( cTitle )
 
    IF HB_ISBLOCK( ::sl_titleChange )
-      eval( ::sl_titleChange, cTitle, NIL, Self )
+      Eval( ::sl_titleChange, cTitle, NIL, Self )
    ENDIF
 
    RETURN Self
@@ -236,7 +236,7 @@ METHOD WvgHTMLViewer:xTitleChange( cTitle )
 METHOD WvgHTMLViewer:xDocumentComplete( cURI )
 
    IF HB_ISBLOCK( ::sl_documentComplete )
-      eval( ::sl_documentComplete, cURI, NIL, Self )
+      Eval( ::sl_documentComplete, cURI, NIL, Self )
    ENDIF
 
    RETURN Self
@@ -251,3 +251,4 @@ METHOD WvgHTMLViewer:setHTML( cHTML )
    RETURN self
 
 //
+

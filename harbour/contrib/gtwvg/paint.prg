@@ -47,6 +47,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -64,87 +65,93 @@
 
 //
 
-thread static t_paint_:= { { "", {} } }
+THREAD STATIC t_paint_ := { { "", {} } }
 
 //
 /*
  *        This function must have to be defined in your appls
  */
 #if 0
-function Wvt_Paint()
+
+FUNCTION Wvt_Paint()
 
    /* Call this function from this funtion */
    WvtPaintObjects()
 
-   return nil
+   RETURN nil
+
 #endif
+
 //
 
-function WvtPaintObjects()
+FUNCTION WvtPaintObjects()
+
    LOCAL i, lExe, nLeft, nRight, b, tlbr_, aBlocks, nBlocks
 
    aBlocks := WvtSetPaint()
 
-   if ( nBlocks := len( aBlocks ) ) > 0
-      tlbr_:= Wvt_GetPaintRect()
+   IF ( nBlocks := Len( aBlocks ) ) > 0
+      tlbr_ := Wvt_GetPaintRect()
 
-      for i := 1 to nBlocks
+      FOR i := 1 TO nBlocks
          lExe := .T.
 
-         if aBlocks[ i,3 ] != nil .and. !empty( aBlocks[ i,3 ] )
+         IF aBlocks[ i,3 ] != nil .AND. !Empty( aBlocks[ i,3 ] )
             /*  Check parameters against tlbr_ depending upon the
              *  type of object and attributes contained in aAttr
              */
-            do case
-            case aBlocks[ i,3,1 ] == WVT_BLOCK_GRID_V
+            DO CASE
+            CASE aBlocks[ i,3,1 ] == WVT_BLOCK_GRID_V
                b := aBlocks[ i,3,6 ]
-               if len( b:aColumnsSep ) == 0
+               IF Len( b:aColumnsSep ) == 0
                   lExe := .F.
-               else
+               ELSE
                   nLeft  := b:aColumnsSep[ 1 ]
                   nRight := b:aColumnsSep[ len( b:aColumnsSep ) ]
-                  if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; /* top   < bottom */
-                        tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; /* bootm > top    */
-                        tlbr_[ 2 ] <= nRight + 1       .and. ; /* left  < right  */
-                        tlbr_[ 4 ] >= nLeft  - 2             ) /* right > left   */
+                  IF !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .AND. ; /* top   < bottom */
+                     tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .AND. ; /* bootm > top    */
+                     tlbr_[ 2 ] <= nRight + 1       .AND. ; /* left  < right  */
+                     tlbr_[ 4 ] >= nLeft  - 2             ) /* right > left   */
                      lExe := .F.
-                  endif
-               endif
+                  ENDIF
+               ENDIF
 
-            case aBlocks[ i,3,1 ] == WVT_BLOCK_GETS
-               if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; /* top   < bott  */
-                     tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; /* bootm > top   */
-                     tlbr_[ 2 ] <= aBlocks[ i,3,5 ] .and. ; /* left  < righ  */
-                     tlbr_[ 4 ] >= aBlocks[ i,3,3 ]       ) /* right > left  */
+            CASE aBlocks[ i,3,1 ] == WVT_BLOCK_GETS
+               IF !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .AND. ; /* top   < bott  */
+                  tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .AND. ; /* bootm > top   */
+                  tlbr_[ 2 ] <= aBlocks[ i,3,5 ] .AND. ; /* left  < righ  */
+                  tlbr_[ 4 ] >= aBlocks[ i,3,3 ]       ) /* right > left  */
                   lExe := .F.
-               endif
+               ENDIF
 
-            otherwise
+            OTHERWISE
                /* If refreshing rectangle's top is less than objects' bottom    */
                /* and left is less than objects' right                          */
                /*                                                               */
-               if !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .and. ; /* top   <= bottom  */
-                     tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .and. ; /* bootm >= top     */
-                     tlbr_[ 2 ] <= aBlocks[ i,3,5 ] .and. ; /* left  < right    */
-                     tlbr_[ 4 ] >= aBlocks[ i,3,3 ]       ) /* right > left     */
+               IF !( tlbr_[ 1 ] <= aBlocks[ i,3,4 ] .AND. ; /* top   <= bottom  */
+                  tlbr_[ 3 ] >= aBlocks[ i,3,2 ] .AND. ; /* bootm >= top     */
+                  tlbr_[ 2 ] <= aBlocks[ i,3,5 ] .AND. ; /* left  < right    */
+                  tlbr_[ 4 ] >= aBlocks[ i,3,3 ]       ) /* right > left     */
                   lExe := .F.
-               endif
-            endcase
-         endif
+               ENDIF
+            ENDCASE
+         ENDIF
 
-         if lExe
-            eval( aBlocks[ i,2 ] )
-         endif
-      next
-   endif
+         IF lExe
+            Eval( aBlocks[ i,2 ] )
+         ENDIF
+      NEXT
+   ENDIF
 
-   return 0
+   RETURN 0
 
 //
 
-function WvtSetPaint( a_ )
-   local o
-   thread static t
+FUNCTION WvtSetPaint( a_ )
+
+   LOCAL o
+
+   THREAD STATIC t
 
    IF t == nil
       t := {}
@@ -152,97 +159,102 @@ function WvtSetPaint( a_ )
 
    o := t
 
-   if a_ != nil
+   IF a_ != nil
       t := a_
-   endif
+   ENDIF
 
-   return o
+   RETURN o
 
 //
 
-function wvg_SetPaint( cID, nAction, xData, aAttr )
-   local n, n1, oldData
+FUNCTION wvg_SetPaint( cID, nAction, xData, aAttr )
 
-   if xData != nil
-      if ( n := ascan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
-         if ( n1 := ascan( t_paint_[ n, 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
+   LOCAL n, n1, oldData
+
+   IF xData != nil
+      IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
+         IF ( n1 := AScan( t_paint_[ n, 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
             oldData := t_paint_[ n,2,n1,2 ]
             t_paint_[ n,2,n1,2 ] := xData
             t_paint_[ n,2,n1,3 ] := aAttr
-         else
-            aadd( t_paint_[ n,2 ], { nAction,xData,aAttr } )
-         endif
-      else
-         aadd( t_paint_, { cID, {} } )
-         n := len( t_paint_ )
-         aadd( t_paint_[ n,2 ], { nAction, xData, aAttr } )
-      endif
-   endif
+         ELSE
+            AAdd( t_paint_[ n,2 ], { nAction, xData, aAttr } )
+         ENDIF
+      ELSE
+         AAdd( t_paint_, { cID, {} } )
+         n := Len( t_paint_ )
+         AAdd( t_paint_[ n,2 ], { nAction, xData, aAttr } )
+      ENDIF
+   ENDIF
 
-   return oldData
-
-//
-
-function wvg_GetPaint( cID )
-   local n
-
-   if ( n := ascan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
-      return t_paint_[ n,2 ]
-   endif
-
-   return {}
+   RETURN oldData
 
 //
 
-function wvg_DelPaint( cID, nAction )
-   local xData, n1, n
+FUNCTION wvg_GetPaint( cID )
 
-   if ( n := ascan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
-      if ( n1 := ascan( t_paint_[ n, 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
+   LOCAL n
+
+   IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
+      RETURN t_paint_[ n,2 ]
+   ENDIF
+
+   RETURN {}
+
+//
+
+FUNCTION wvg_DelPaint( cID, nAction )
+
+   LOCAL xData, n1, n
+
+   IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
+      IF ( n1 := AScan( t_paint_[ n, 2 ], {| e_ | e_[ 1 ] == nAction } ) ) > 0
          xData := t_paint_[ n,2,n1,2 ]
          t_paint_[ n,2,n1,2 ] := {|| .T. }
-      endif
-   endif
+      ENDIF
+   ENDIF
 
-   return xData
+   RETURN xData
 
 //
 
-function wvg_PurgePaint( cID,lDummy )
-   local n, aPaint
+FUNCTION wvg_PurgePaint( cID, lDummy )
+
+   LOCAL n, aPaint
 
    DEFAULT lDummy TO .F.
 
-   if ( n := ascan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
+   IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
       aPaint := t_paint_[ n ]
       ADel( t_paint_, n )
-      aSize( t_paint_, len( t_paint_ ) - 1 )
-   endif
+      ASize( t_paint_, Len( t_paint_ ) - 1 )
+   ENDIF
 
-   if lDummy
+   IF lDummy
       WvtSetPaint( {} )
-   endif
+   ENDIF
 
-   return aPaint
+   RETURN aPaint
 
 //
 
-function wvg_InsertPaint( cID, aPaint, lSet )
-   local n
+FUNCTION wvg_InsertPaint( cID, aPaint, lSet )
+
+   LOCAL n
 
    DEFAULT lSet TO .F.
 
-   if ( n := ascan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
+   IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
       t_paint_[ n ] := aPaint
-   else
-      aadd( t_paint_, aPaint )
-   endif
+   ELSE
+      AAdd( t_paint_, aPaint )
+   ENDIF
 
-   if lSet
+   IF lSet
       WvtSetPaint( aPaint )
-   endif
+   ENDIF
 
-   return nil
+   RETURN nil
 
 //
 //
@@ -255,14 +267,16 @@ function wvg_InsertPaint( cID, aPaint, lSet )
 //
 //
 //
-/* nMode : 0 == Rows/cols - DEFAULT    1 == DlagUnits as from any standard dialog definition */
+   /* nMode : 0 == Rows/cols - DEFAULT    1 == DlagUnits as from any standard dialog definition */
+
 FUNCTION Wvt_SetDlgCoMode( nMode )
+
    LOCAL nOldMode
 
    STATIC sMode := 0
 
    nOldMode := sMode
-   IF HB_ISNUMERIC( nMode ) .and. nMode <= 1 .and. nMode >= 0
+   IF HB_ISNUMERIC( nMode ) .AND. nMode <= 1 .AND. nMode >= 0
       sMode := nMode
    ENDIF
 
@@ -270,9 +284,8 @@ FUNCTION Wvt_SetDlgCoMode( nMode )
 
 //
 
-
 FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle, ;
-                              cFaceName, nPointSize, nWeight, lItalic, nHelpId, nExStyle )
+      cFaceName, nPointSize, nWeight, lItalic, nHelpId, nExStyle )
 
    LOCAL aDlg := { {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {} }
    LOCAL aXY, nX, nY, nW, nH, nXM, nYM
@@ -284,7 +297,7 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
 
    IF nMode == 0
       DEFAULT aOffSet TO {}
-      aSize( aOffSet,4 )
+      ASize( aOffSet, 4 )
       DEFAULT aOffSet[ 1 ] TO 0
       DEFAULT aOffSet[ 2 ] TO 0
       DEFAULT aOffSet[ 3 ] TO 0
@@ -299,7 +312,7 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
 
       /* Position it exactly where user has requested */
 
-      aXY := Wvt_ClientToScreen( nTop,nLeft )
+      aXY := Wvt_ClientToScreen( nTop, nLeft )
       nX  := aXY[ 1 ] + aOffSet[ 2 ]
       nY  := aXY[ 2 ] + aOffSet[ 1 ]
 
@@ -322,38 +335,39 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
       nH  := nRows
    ENDIF
 
-   If !HB_ISNUMERIC( nStyle )
+   IF !HB_ISNUMERIC( nStyle )
       nStyle := + WS_CAPTION    + WS_SYSMENU              ;
-                + WS_GROUP      + WS_TABSTOP + DS_SETFONT ;
-                + WS_THICKFRAME + WS_VISIBLE + WS_POPUP   ;
-                + DS_3DLOOK
-   EndIf
+         + WS_GROUP      + WS_TABSTOP + DS_SETFONT ;
+         + WS_THICKFRAME + WS_VISIBLE + WS_POPUP   ;
+         + DS_3DLOOK
+   ENDIF
 
-   aAdd( aDlg[ 1 ] , iif( Empty( nHelpId  ), 0, nHelpId  ) )
-   aAdd( aDlg[ 1 ] , iif( Empty( nExStyle ), 0, nExStyle ) )
-   aAdd( aDlg[ 1 ] , nStyle  )
-   aAdd( aDlg[ 1 ] , 0       )
-   aAdd( aDlg[ 1 ] , nX      )
-   aAdd( aDlg[ 1 ] , nY      )
-   aAdd( aDlg[ 1 ] , nW      )
-   aAdd( aDlg[ 1 ] , nH      )
-   aAdd( aDlg[ 1 ] , 0       )
-   aAdd( aDlg[ 1 ] , 0       )
-   aAdd( aDlg[ 1 ] , iif( ValType( cTitle ) == "C", cTitle, "" ) )
+   AAdd( aDlg[ 1 ] , iif( Empty( nHelpId  ), 0, nHelpId  ) )
+   AAdd( aDlg[ 1 ] , iif( Empty( nExStyle ), 0, nExStyle ) )
+   AAdd( aDlg[ 1 ] , nStyle  )
+   AAdd( aDlg[ 1 ] , 0       )
+   AAdd( aDlg[ 1 ] , nX      )
+   AAdd( aDlg[ 1 ] , nY      )
+   AAdd( aDlg[ 1 ] , nW      )
+   AAdd( aDlg[ 1 ] , nH      )
+   AAdd( aDlg[ 1 ] , 0       )
+   AAdd( aDlg[ 1 ] , 0       )
+   AAdd( aDlg[ 1 ] , iif( ValType( cTitle ) == "C", cTitle, "" ) )
 
-   if hb_bitAnd( nStyle, DS_SETFONT ) == DS_SETFONT
-      aAdd( aDlg[ 1 ], iif( ValType( nPointSize ) == "N", nPointSize, 8               ) )
-      aAdd( aDlg[ 1 ], iif( ValType( nWeight    ) == "N", nWeight   , 400             ) )
-      aAdd( aDlg[ 1 ], iif( ValType( lItalic    ) == "L", lItalic   , .F.             ) )
-      aAdd( aDlg[ 1 ], iif( ValType( cFaceName  ) == "C", cFaceName , "MS Sans Serif" ) )
-   EndIf
+   IF hb_bitAnd( nStyle, DS_SETFONT ) == DS_SETFONT
+      AAdd( aDlg[ 1 ], iif( ValType( nPointSize ) == "N", nPointSize, 8               ) )
+      AAdd( aDlg[ 1 ], iif( ValType( nWeight    ) == "N", nWeight   , 400             ) )
+      AAdd( aDlg[ 1 ], iif( ValType( lItalic    ) == "L", lItalic   , .F.             ) )
+      AAdd( aDlg[ 1 ], iif( ValType( cFaceName  ) == "C", cFaceName , "MS Sans Serif" ) )
+   ENDIF
 
-   Return aDlg
+   RETURN aDlg
 
 //
 
-Function Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet,;
-                         cnId, cnDlgClass, nStyle, cText, nHelpId, nExStyle )
+FUNCTION Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet, ;
+      cnId, cnDlgClass, nStyle, cText, nHelpId, nExStyle )
+
    LOCAL aXY, nX, nY, nW, nH, nXM, nYM
    LOCAL nBaseUnits, nBaseUnitsX, nBaseUnitsY
    LOCAL nBottom, nRight
@@ -365,7 +379,7 @@ Function Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet,;
 
       DEFAULT aOffSet TO {}
 
-      aSize( aOffSet,4 )
+      ASize( aOffSet, 4 )
 
       DEFAULT aOffSet[ 1 ] TO 0
       DEFAULT aOffSet[ 2 ] TO 0
@@ -380,7 +394,7 @@ Function Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet,;
       nX  := aXY[ 1 ] + aOffSet[ 2 ]
       nY  := aXY[ 2 ] + aOffSet[ 1 ]
 
-      aXY := Wvt_GetXYFromRowCol( nBottom+1, nRight+1 )
+      aXY := Wvt_GetXYFromRowCol( nBottom + 1, nRight + 1 )
       nW  := aXY[ 1 ] + aOffSet[ 4 ] - nX
       nH  := aXY[ 2 ] + aOffSet[ 3 ] - nY
 
@@ -400,87 +414,89 @@ Function Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet,;
 
    aDlg[ 1,4 ]++      /* item count */
 
-   aAdd( aDlg[  2 ] , iif( ValType( nHelpId  ) == "N", nHelpId , 0                     ) )
-   aAdd( aDlg[  3 ] , iif( ValType( nExStyle ) == "N", nExStyle, 0                     ) )
-   aAdd( aDlg[  4 ] , iif( ValType( nStyle   ) == "N", nStyle  , WS_CHILD + WS_VISIBLE ) )
-   aAdd( aDlg[  5 ] , nX         )
-   aAdd( aDlg[  6 ] , nY         )
-   aAdd( aDlg[  7 ] , nW         )
-   aAdd( aDlg[  8 ] , nH         )
-   aAdd( aDlg[  9 ] , cnId       )
-   aAdd( aDlg[ 10 ] , cnDlgClass )
-   aAdd( aDlg[ 11 ] , iif( HB_ISSTRING( cText ), cText, iif( HB_ISNUMERIC( cText ), cText, "" ) ) )
-   aAdd( aDlg[ 12 ] , 0 )
+   AAdd( aDlg[  2 ] , iif( ValType( nHelpId  ) == "N", nHelpId , 0                     ) )
+   AAdd( aDlg[  3 ] , iif( ValType( nExStyle ) == "N", nExStyle, 0                     ) )
+   AAdd( aDlg[  4 ] , iif( ValType( nStyle   ) == "N", nStyle  , WS_CHILD + WS_VISIBLE ) )
+   AAdd( aDlg[  5 ] , nX         )
+   AAdd( aDlg[  6 ] , nY         )
+   AAdd( aDlg[  7 ] , nW         )
+   AAdd( aDlg[  8 ] , nH         )
+   AAdd( aDlg[  9 ] , cnId       )
+   AAdd( aDlg[ 10 ] , cnDlgClass )
+   AAdd( aDlg[ 11 ] , iif( HB_ISSTRING( cText ), cText, iif( HB_ISNUMERIC( cText ), cText, "" ) ) )
+   AAdd( aDlg[ 12 ] , 0 )
 
-   Return aDlg
+   RETURN aDlg
 
 //
 
-Function Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu )
+FUNCTION Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu )
+
    LOCAL hDlg, cType, xTemplate, nDlgMode
 
-   if valtype( cbDlgProc ) == "C"
-      cbDlgProc := upper( cbDlgProc )
-   endif
+   IF ValType( cbDlgProc ) == "C"
+      cbDlgProc := Upper( cbDlgProc )
+   ENDIF
 
-   cType    := Valtype( acnDlg )
+   cType    := ValType( acnDlg )
    nDlgMode := iif( cType == "C", 0, iif( cType == "N", 1, 2 ) )
 
-   if cType == "A"
+   IF cType == "A"
       xTemplate := Wvt__MakeDlgTemplate( acnDlg[ 1 ] , acnDlg[  2 ] , acnDlg[  3 ] , acnDlg[  4 ] , ;
-                                         acnDlg[ 5 ] , acnDlg[  6 ] , acnDlg[  7 ] , acnDlg[  8 ] , ;
-                                         acnDlg[ 9 ] , acnDlg[ 10 ] , acnDlg[ 11 ] , acnDlg[ 12 ] )
-   else
+         acnDlg[ 5 ] , acnDlg[  6 ] , acnDlg[  7 ] , acnDlg[  8 ] , ;
+         acnDlg[ 9 ] , acnDlg[ 10 ] , acnDlg[ 11 ] , acnDlg[ 12 ] )
+   ELSE
       xTemplate := acnDlg
-   endif
+   ENDIF
 
    hDlg := Wvt_CreateDialogDynamic( xTemplate, lOnTop, cbDlgProc, nDlgMode )
 
-   if hDlg != 0
-      if ncIcon != nil
+   IF hDlg != 0
+      IF ncIcon != nil
          Wvt_DlgSetIcon( hDlg, ncIcon )
 
-      endif
+      ENDIF
 
-      if valtype( nTimerTicks ) == "N"
+      IF ValType( nTimerTicks ) == "N"
          WVG_SetTimer( hDlg, 1001, nTimerTicks )
 
-      endif
+      ENDIF
 
-      if hMenu != nil
+      IF hMenu != nil
          WVG_SetMenu( hDlg, hMenu )
 
-      endif
+      ENDIF
 
-   endif
+   ENDIF
 
-   Return hDlg
+   RETURN hDlg
 
 //
 
-Function Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
+FUNCTION Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
+
    LOCAL nResult, cType, xTemplate, nDlgMode
 
-   if valtype( cbDlgProc ) == "C"
-      cbDlgProc := upper( cbDlgProc )
-   endif
+   IF ValType( cbDlgProc ) == "C"
+      cbDlgProc := Upper( cbDlgProc )
+   ENDIF
 
-   cType    := Valtype( acnDlg )
+   cType    := ValType( acnDlg )
    nDlgMode := iif( cType == "C", 0, iif( cType == "N", 1, 2 ) )
 
-   if cType == "A"
+   IF cType == "A"
       xTemplate := Wvt__MakeDlgTemplate( acnDlg[ 1 ] , acnDlg[  2 ] , acnDlg[  3 ] , acnDlg[  4 ] , ;
-                                         acnDlg[ 5 ] , acnDlg[  6 ] , acnDlg[  7 ] , acnDlg[  8 ] , ;
-                                         acnDlg[ 9 ] , acnDlg[ 10 ] , acnDlg[ 11 ] , acnDlg[ 12 ] )
-   else
+         acnDlg[ 5 ] , acnDlg[  6 ] , acnDlg[  7 ] , acnDlg[  8 ] , ;
+         acnDlg[ 9 ] , acnDlg[ 10 ] , acnDlg[ 11 ] , acnDlg[ 12 ] )
+   ELSE
       xTemplate := acnDlg
-   endif
+   ENDIF
 
-   nResult := Wvt_CreateDialogModal( xTemplate, .F., cbDlgProc, nDlgMode, hWndParent )
+   nResult := Wvt_CreateDialogModal( xTemplate, .F. , cbDlgProc, nDlgMode, hWndParent )
 
    Wvg_SetFocus( hWndParent )
 
-   Return nResult
+   RETURN nResult
 
 //
 /*
@@ -498,7 +514,9 @@ cDefName: DEFAULT file name
 
 Returns:  If OFN_ALLOWMULTISELECT ?  Array of files selected : FileName.
 */
+
 FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex, cDefName )
+
    LOCAL cRet, aTmp, xRet, i
 
    HB_SYMBOL_UNUSED( hWnd )
@@ -514,10 +532,10 @@ FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, c
 
    IF WVG_And( nFlags, OFN_ALLOWMULTISELECT ) > 0
       xRet := {}
-      IF ! empty( aTmp := hb_aTokens( cRet, chr( 0 ) ) )
+      IF ! Empty( aTmp := hb_ATokens( cRet, Chr( 0 ) ) )
          cPath := aTmp[ 1 ]
-         FOR i := 2 TO len( aTmp )
-            aadd( xRet, cPath + "\" + aTmp[ i ] )
+         FOR i := 2 TO Len( aTmp )
+            AAdd( xRet, cPath + "\" + aTmp[ i ] )
          NEXT
       ENDIF
    ELSE
@@ -543,6 +561,7 @@ Returns:  FileName.
 */
 
 FUNCTION WVT_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex )
+
    LOCAL cRet, aTmp, xRet, i, cPath
 
    HB_SYMBOL_UNUSED( hWnd )
@@ -557,10 +576,10 @@ FUNCTION WVT_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir
 
    IF WVG_And( nFlags, OFN_ALLOWMULTISELECT ) > 0
       xRet := {}
-      IF ! empty( aTmp := hb_aTokens( cRet, chr( 0 ) ) )
+      IF ! Empty( aTmp := hb_ATokens( cRet, Chr( 0 ) ) )
          cPath := aTmp[ 1 ]
-         FOR i := 2 TO len( aTmp )
-            aadd( xRet, cPath + "\" + aTmp[ i ] )
+         FOR i := 2 TO Len( aTmp )
+            AAdd( xRet, cPath + "\" + aTmp[ i ] )
          NEXT
       ENDIF
    ELSE
@@ -586,28 +605,28 @@ FUNCTION WVT_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir
 
 FUNCTION Wvt_SetTitle( cTitle )
 
-   RETURN Hb_GtInfo( HB_GTI_WINTITLE, cTitle )
+   RETURN hb_gtInfo( HB_GTI_WINTITLE, cTitle )
 
 //
 
 FUNCTION Wvt_GetTitle()
 
-   RETURN Hb_GtInfo( HB_GTI_WINTITLE )
+   RETURN hb_gtInfo( HB_GTI_WINTITLE )
 
 //
 
 FUNCTION Wvt_SetIcon( ncIconRes, cIconName )
 
-   if     valtype( ncIconRes ) == "N"
-      Hb_GtInfo( HB_GTI_ICONRES, ncIconRes )
+   IF     ValType( ncIconRes ) == "N"
+      hb_gtInfo( HB_GTI_ICONRES, ncIconRes )
 
-   elseif valtype( cIconName ) == "C"
-      Hb_GtInfo( HB_GTI_ICONRES, cIconName )
+   ELSEIF ValType( cIconName ) == "C"
+      hb_gtInfo( HB_GTI_ICONRES, cIconName )
 
-   elseif valtype( ncIconRes ) == "C"
-      Hb_GtInfo( HB_GTI_ICONFILE, ncIconRes )
+   ELSEIF ValType( ncIconRes ) == "C"
+      hb_gtInfo( HB_GTI_ICONFILE, ncIconRes )
 
-   endif
+   ENDIF
 
    RETURN NIL
 
@@ -615,37 +634,37 @@ FUNCTION Wvt_SetIcon( ncIconRes, cIconName )
 
 FUNCTION Wvt_SetFont( cFontName, nSize, nWidth, nWeight, nQuality )
 
-   DEFAULT cFontName TO Hb_GtInfo( HB_GTI_FONTNAME    )
-   DEFAULT nWidth    TO Hb_GtInfo( HB_GTI_FONTWIDTH   )
-   DEFAULT nWeight   TO Hb_GtInfo( HB_GTI_FONTWEIGHT  )
-   DEFAULT nQuality  TO Hb_GtInfo( HB_GTI_FONTQUALITY )
-   DEFAULT nSize     TO Hb_GtInfo( HB_GTI_FONTSIZE    )
+   DEFAULT cFontName TO hb_gtInfo( HB_GTI_FONTNAME    )
+   DEFAULT nWidth    TO hb_gtInfo( HB_GTI_FONTWIDTH   )
+   DEFAULT nWeight   TO hb_gtInfo( HB_GTI_FONTWEIGHT  )
+   DEFAULT nQuality  TO hb_gtInfo( HB_GTI_FONTQUALITY )
+   DEFAULT nSize     TO hb_gtInfo( HB_GTI_FONTSIZE    )
 
-   RETURN Hb_GtInfo( HB_GTI_SETFONT, { cFontName, nSize, nWidth, nWeight, nQuality } )
+   RETURN hb_gtInfo( HB_GTI_SETFONT, { cFontName, nSize, nWidth, nWeight, nQuality } )
 
 //
 
 FUNCTION Wvt_SetCodePage( nCodePage )
 
-   RETURN Hb_GtInfo( HB_GTI_CODEPAGE, nCodePage )
+   RETURN hb_gtInfo( HB_GTI_CODEPAGE, nCodePage )
 
 //
 
 FUNCTION Wvt_GetPalette()
 
-   RETURN Hb_GtInfo( HB_GTI_PALETTE )
+   RETURN hb_gtInfo( HB_GTI_PALETTE )
 
 //
 
 FUNCTION Wvt_SetPalette( aRGB )
 
-   RETURN Hb_GtInfo( HB_GTI_PALETTE, aRGB )
+   RETURN hb_gtInfo( HB_GTI_PALETTE, aRGB )
 
 //
 
 FUNCTION Wvt_GetRGBColor( nIndex )
 
-   RETURN Hb_GtInfo( HB_GTI_PALETTE, nIndex )
+   RETURN hb_gtInfo( HB_GTI_PALETTE, nIndex )
 
 //
 #define BLACK          RGB( 0x0 ,0x0 ,0x0  )
@@ -666,29 +685,30 @@ FUNCTION Wvt_GetRGBColor( nIndex )
 #define WHITE          RGB( 0xFF,0xFF,0xFF )
 
 FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
+
    LOCAL s, n, lEnh
    LOCAL nIndex := 0
-   LOCAL a_:= { "N", "B", "G", "BG", "R", "RB", "GR", "W" }
+   LOCAL a_ := { "N", "B", "G", "BG", "R", "RB", "GR", "W" }
 
    nForeBack := iif( HB_ISNUMERIC( nForeBack ), nForeBack, 0 )
 
    IF HB_ISSTRING( cColor )
-      IF ( n := at( "/", cColor ) ) > 0
+      IF ( n := At( "/", cColor ) ) > 0
          IF nForeBack == 0
-            s := substr( cColor, 1, n-1 )
+            s := SubStr( cColor, 1, n - 1 )
          ELSE
-            s := substr( cColor, n+1 )
+            s := SubStr( cColor, n + 1 )
          ENDIF
       ELSE
          s := cColor
       ENDIF
-      s := upper( s )
+      s := Upper( s )
       lEnh := ( "*" $ s ) .OR. ( "+" $ s )
       IF lEnh
-         s := strtran( s, "*" )
-         s := strtran( s, "+" )
+         s := StrTran( s, "*" )
+         s := StrTran( s, "+" )
       ENDIF
-      nIndex := ascan( a_, {| e | e == s } )
+      nIndex := AScan( a_, {| e | e == s } )
       IF nIndex > 0
          IF lEnh
             nIndex += 8
@@ -697,31 +717,31 @@ FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
       ENDIF
    ENDIF
 
-   RETURN Hb_GtInfo( HB_GTI_PALETTE, nIndex )
+   RETURN hb_gtInfo( HB_GTI_PALETTE, nIndex )
 
 //
 
 FUNCTION Wvt_SetAltF4Close( lSetClose )
 
-   RETURN Hb_GtInfo( HB_GTI_CLOSABLE, lSetClose )
+   RETURN hb_gtInfo( HB_GTI_CLOSABLE, lSetClose )
 
 //
 
 FUNCTION Wvt_GetScreenWidth()
 
-   RETURN Hb_GtInfo( HB_GTI_DESKTOPWIDTH )
+   RETURN hb_gtInfo( HB_GTI_DESKTOPWIDTH )
 
 //
 
 FUNCTION Wvt_GetScreenHeight()
 
-   RETURN Hb_GtInfo( HB_GTI_DESKTOPHEIGHT )
+   RETURN hb_gtInfo( HB_GTI_DESKTOPHEIGHT )
 
 //
 
 FUNCTION Wvt_GetWindowHandle()
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
+   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
 
 //
 
@@ -730,7 +750,7 @@ FUNCTION Wvt_CenterWindow( lCenter, lRePaint )
    DEFAULT lCenter  TO .T.
    DEFAULT lRePaint TO .F.
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
+   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
 
 //
 
@@ -739,13 +759,13 @@ FUNCTION Wvt_WindowCentre( lCenter, lRePaint )
    DEFAULT lCenter  TO .T.
    DEFAULT lRePaint TO .F.
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
+   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
 
 //
 
 FUNCTION Wvt_ProcessMessages()
 
-   Hb_GtInfo( HB_GTI_SPEC, HB_GTS_PROCESSMESSAGES )
+   hb_gtInfo( HB_GTI_SPEC, HB_GTS_PROCESSMESSAGES )
 
    RETURN .T.
 
@@ -753,7 +773,7 @@ FUNCTION Wvt_ProcessMessages()
 
 FUNCTION Wvt_KeyBoard( nKey )
 
-   Hb_GtInfo( HB_GTI_SPEC, HB_GTS_KEYBOARD, nKey )
+   hb_gtInfo( HB_GTI_SPEC, HB_GTS_KEYBOARD, nKey )
 
    RETURN NIL
 
@@ -761,25 +781,26 @@ FUNCTION Wvt_KeyBoard( nKey )
 
 FUNCTION Wvt_GetClipboard()
 
-   RETURN Hb_GtInfo( HB_GTI_CLIPBOARDDATA )
+   RETURN hb_gtInfo( HB_GTI_CLIPBOARDDATA )
 
 //
 
 FUNCTION Wvt_SetClipboard( cText )
 
-   RETURN Hb_GtInfo( HB_GTI_CLIPBOARDDATA, cText )
+   RETURN hb_gtInfo( HB_GTI_CLIPBOARDDATA, cText )
 
 //
 
 FUNCTION Wvt_PasteFromClipboard()
-   Local cText, nLen, i
 
-   cText := Hb_GtInfo( HB_GTI_CLIPBOARDDATA )
-   if ( nLen := Len( cText ) ) > 0
-      for i := 1 to nLen
-         Wvt_KeyBoard( asc( substr( cText, i, 1 ) ) )
-      next
-   endif
+   LOCAL cText, nLen, i
+
+   cText := hb_gtInfo( HB_GTI_CLIPBOARDDATA )
+   IF ( nLen := Len( cText ) ) > 0
+      FOR i := 1 TO nLen
+         Wvt_KeyBoard( Asc( SubStr( cText, i, 1 ) ) )
+      NEXT
+   ENDIF
 
    RETURN NIL
 
@@ -787,72 +808,72 @@ FUNCTION Wvt_PasteFromClipboard()
 
 FUNCTION Wvt_ResetWindow()
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_RESETWINDOW )
+   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_RESETWINDOW )
 
 //
 
 FUNCTION Wvt_SetTimer( nTimerID, nMiliSeconds )
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SETTIMER, { nTimerID, nMiliSeconds } )
+   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_SETTIMER, { nTimerID, nMiliSeconds } )
 
 //
 
 FUNCTION Wvt_KillTimer( nTimerID )
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_KILLTIMER, nTimerID )
+   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_KILLTIMER, nTimerID )
 
 //
 
 FUNCTION Wvt_SetOnTop()
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETONTOP )
+   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETONTOP )
 
 //
 
 FUNCTION Wvt_SetAsNormal()
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETASNORMAL )
+   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_SETASNORMAL )
 
 //
 
 FUNCTION Wvt_Minimize()
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MINIMIZED )
+   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MINIMIZED )
 
 //
 
 FUNCTION Wvt_Maximize()
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED )
+   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_MAXIMIZED )
 
 //
 
 FUNCTION Wvt_Hide()
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_HIDDEN )
+   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_HIDDEN )
 
 //
 
 FUNCTION Wvt_Show()
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_NORMAL )
+   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_WNDSTATE, HB_GTS_WS_NORMAL )
 
 //
 
 FUNCTION Wvt_SetWindowPos( nX, nY )
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SETPOSITION, { nX, nY } )
+   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_SETPOSITION, { nX, nY } )
 
 //
 
 FUNCTION Wvt_ShowWindow( nState )
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, nState )
+   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, nState )
 
 //
 
 FUNCTION Wvt_Update()
 
-   RETURN Hb_GtInfo( HB_GTI_SPEC, HB_GTS_UPDATEWINDOW )
+   RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_UPDATEWINDOW )
 
 //

@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -99,7 +100,7 @@ CLASS WvgDataRef
 
    METHOD   validate( xParam )                     SETGET
 
-   ENDCLASS
+ENDCLASS
 
 //
 
@@ -125,22 +126,22 @@ METHOD WvgDataRef:getData()
       ::sl_editBuffer := WVG_GetMessageText( ::hWnd, WM_GETTEXT, ::bufferLength + 1 )
 
    CASE ::className == "LISTBOX"
-      ::sl_editBuffer := WVG_LBGetCurSel( ::hWnd )+ 1
+      ::sl_editBuffer := WVG_LBGetCurSel( ::hWnd ) + 1
 
 #if 0 /* This is contrary the documentation of Xbase++ */
       IF ::oParent:className == "COMBOBOX"
          ::sl_editBuffer := {}
          FOR i := 1 TO ::numItems()
-            aadd( ::sl_editBuffer, ::getItem( i ) )
+            AAdd( ::sl_editBuffer, ::getItem( i ) )
          NEXT
       ELSE
-         ::sl_editBuffer := WVG_LBGetCurSel( ::hWnd )+ 1
+         ::sl_editBuffer := WVG_LBGetCurSel( ::hWnd ) + 1
       ENDIF
 #endif
    ENDCASE
 
    IF HB_ISBLOCK( ::dataLink )
-      eval( ::dataLink, ::sl_editBuffer )
+      Eval( ::dataLink, ::sl_editBuffer )
    ENDIF
 
    RETURN ::sl_editBuffer
@@ -148,12 +149,13 @@ METHOD WvgDataRef:getData()
 //
 
 METHOD WvgDataRef:setData( xValue, mp2 )
+
    LOCAL s
 
    HB_SYMBOL_UNUSED( mp2 )
 
    IF HB_ISBLOCK( ::dataLink )
-      ::sl_editBuffer := eval( ::dataLink  )
+      ::sl_editBuffer := Eval( ::dataLink  )
    ELSEIF xValue != NIL
       ::sl_editBuffer := xValue
    ENDIF
@@ -169,7 +171,7 @@ METHOD WvgDataRef:setData( xValue, mp2 )
       ENDIF
 
    CASE ::className == "SysTreeView32"
-      IF ::sl_editBuffer != NIL .and. ::sl_editBuffer:hItem != NIL
+      IF ::sl_editBuffer != NIL .AND. ::sl_editBuffer:hItem != NIL
          WVG_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
       ENDIF
 
@@ -206,8 +208,8 @@ METHOD WvgDataRef:undo()
 
 METHOD WvgDataRef:validate( xParam )
 
-   IF PCount() == 0 .and. HB_ISBLOCK( ::sl_validate )
-      RETURN eval( ::sl_validate, self )
+   IF PCount() == 0 .AND. HB_ISBLOCK( ::sl_validate )
+      RETURN Eval( ::sl_validate, self )
    ELSEIF HB_ISBLOCK( xParam )
       ::sl_validate := xParam
    ENDIF

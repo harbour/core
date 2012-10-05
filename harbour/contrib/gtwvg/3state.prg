@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -101,7 +102,8 @@ CLASS Wvg3State  INHERIT  WvgWindow, WvgDataRef
 
    METHOD   handleEvent( nMessage, aNM )
 
-   ENDCLASS
+ENDCLASS
+
 //
 
 METHOD Wvg3State:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -148,7 +150,7 @@ METHOD Wvg3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 METHOD Wvg3State:handleEvent( nMessage, aNM )
 
-   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
+   hb_traceLog( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
 
    DO CASE
 
@@ -157,7 +159,7 @@ METHOD Wvg3State:handleEvent( nMessage, aNM )
          ::editBuffer := WVG_Button_GetCheck( ::hWnd )
 
          IF HB_ISBLOCK( ::sl_lbClick )
-            eval( ::sl_lbClick, ::editBuffer, NIL, self )
+            Eval( ::sl_lbClick, ::editBuffer, NIL, self )
             RETURN 0
 
          ENDIF

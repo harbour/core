@@ -50,6 +50,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -90,7 +91,7 @@ CLASS WvgActiveXControl FROM WvgWindow
    DATA   server                             INIT NIL
    DATA   license                            INIT NIL
    DATA   controlFlags                       INIT 0
-   DATA   default                            INIT .F.
+   DATA   DEFAULT                            INIT .F.
    DATA   cancel                             INIT .F.
 
    DATA   interface
@@ -125,7 +126,7 @@ CLASS WvgActiveXControl FROM WvgWindow
 
    ERROR HANDLER OnError
 
-   ENDCLASS
+ENDCLASS
 
 //
 
@@ -143,6 +144,7 @@ METHOD WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 //
 
 METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLicense )
+
    LOCAL hObj, hWnd
 
    ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -165,15 +167,15 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
    Win_AxInit()
 
    hWnd := WAPI_CreateWindowEX( ::exStyle, "AtlAxWin", ::CLSID, ::style, ::aPos[ 1 ], ::aPos[ 2 ], ;
-                                    ::aSize[ 1 ], ::aSize[ 2 ], Win_N2P( ::hContainer ), 0 )
-   IF empty( hWnd )
+      ::aSize[ 1 ], ::aSize[ 2 ], Win_N2P( ::hContainer ), 0 )
+   IF Empty( hWnd )
       RETURN NIL
    ENDIF
    ::hWnd := Win_P2N( hWnd )
    ::pWnd := hWnd
 
    hObj := __AxGetControl( ::pWnd )
-   if empty( hObj )
+   IF Empty( hObj )
       RETURN NIL
    ENDIF
    ::oOLE:__hObj := hObj
@@ -203,16 +205,18 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
 //
 
 PROCEDURE execEvent( nEvent, ... ) CLASS WvgActiveXControl
+
 #if 0
-   LOCAL cEvents := HB_ValToStr( nEvent ) + ", "
+
+   LOCAL cEvents := hb_ValToStr( nEvent ) + ", "
    LOCAL aEvents := { ... }
 
-   aEval( aEvents, {| xEvent | cEvents += HB_ValToStr( xEvent ) + ", " } )
-   hb_TraceLog( cEvents )
+   AEval( aEvents, {| xEvent | cEvents += hb_ValToStr( xEvent ) + ", " } )
+   hb_traceLog( cEvents )
 #endif
 
-   IF hb_hHaskey( ::hEvents, nEvent )
-      eval( ::hEvents[ nEvent ], ... )
+   IF hb_HHasKey( ::hEvents, nEvent )
+      Eval( ::hEvents[ nEvent ], ... )
    ENDIF
 
    RETURN
@@ -220,6 +224,7 @@ PROCEDURE execEvent( nEvent, ... ) CLASS WvgActiveXControl
 //
 
 METHOD WvgActiveXControl:handleEvent( nEvent, aNM )
+
    LOCAL nHandled := 0
 
    HB_SYMBOL_UNUSED( aNM )
@@ -231,7 +236,7 @@ METHOD WvgActiveXControl:handleEvent( nEvent, aNM )
          ::rePosition()
       ENDIF
       IF HB_ISBLOCK( ::sl_resize )
-         eval( ::sl_resize, NIL, NIL, Self )
+         Eval( ::sl_resize, NIL, NIL, Self )
       ENDIF
       EXIT
 
@@ -245,16 +250,19 @@ METHOD WvgActiveXControl:handleEvent( nEvent, aNM )
 //
 
 METHOD WvgActiveXControl:OnError()
+
 #if 0
-   hb_TraceLog( "HI: " + HB_ValToStr( __GetMessage() ) + " : " + str( len( HB_AParams() ) ) )
+
+   hb_traceLog( "HI: " + hb_ValToStr( __GetMessage() ) + " : " + Str( Len( hb_AParams() ) ) )
 #endif
-   RETURN HB_ExecFromArray( ::oOLE, __GetMessage(), HB_AParams() )
+
+   RETURN hb_ExecFromArray( ::oOLE, __GetMessage(), hb_AParams() )
 
 //
 
 METHOD WvgActiveXControl:Destroy()
 
-   IF ! empty( ::oOLE:__hObj )
+   IF ! Empty( ::oOLE:__hObj )
       IF WAPI_IsWindow( ::pWnd )
          WAPI_DestroyWindow( ::pWnd )
       ENDIF
@@ -277,63 +285,75 @@ METHOD WvgActiveXControl:mapEvent( nEvent, bBlock )
 //
 
 METHOD WvgActiveXControl:inheritPresParams()
-   Local lSuccess := .T.
+
+   LOCAL lSuccess := .T.
 
    RETURN lSuccess
 
 //
 
 METHOD WvgActiveXControl:presParamsChanged()
+
    RETURN Self
 
 //
 
 METHOD WvgActiveXControl:setInputFocus()
+
    RETURN Self
 
 //
 
 METHOD WvgActiveXControl:subscribeStdEvents()
+
    RETURN NIL
 
 //
 
 METHOD WvgActiveXControl:unsubscribeStdEvents()
+
    RETURN Self
 
 //
 
 METHOD WvgActiveXControl:keyDown()
+
    RETURN Self
 
 //
 
 METHOD WvgActiveXControl:click()
+
    RETURN Self
 
 //
 
 METHOD WvgActiveXControl:dblClick()
+
    RETURN Self
 
 //
 
 METHOD WvgActiveXControl:mouseDown()
+
    RETURN Self
 
 //
 
 METHOD WvgActiveXControl:mouseUp()
+
    RETURN Self
 
 //
 
 METHOD WvgActiveXControl:mouseMove()
+
    RETURN Self
 
 //
 
 METHOD WvgActiveXControl:activate()
+
    RETURN Self
 
 //

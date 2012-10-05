@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -112,7 +113,7 @@ CLASS WvgBitmap
    METHOD   getPicture()                          VIRTUAL
    METHOD   setPicture()                          VIRTUAL
 
-   ENDCLASS
+ENDCLASS
 
 //
 

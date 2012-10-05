@@ -49,6 +49,7 @@
  * If you do not wish that, delete this exception notice.
  *
  */
+
 //
 //
 //
@@ -100,11 +101,11 @@ CLASS WvgStatusBar  INHERIT  WvgWindow /* WvgActiveXControl */
    METHOD   addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
    METHOD   delItem( nItemORcKey )
    METHOD   getItem( nItemORcKey )
-   METHOD   clear()
+   METHOD   CLEAR()
    METHOD   panelClick( xParam )                  SETGET
    METHOD   panelDblClick( xParam )               SETGET
 
-   ENDCLASS
+ENDCLASS
 
 //
 
@@ -138,17 +139,18 @@ METHOD WvgStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
       ::show()
    ENDIF
 
-   ::addItem( , , , , , -1 )
+   ::addItem( , , , , , - 1 )
 
    RETURN Self
 
 //
 
 METHOD WvgStatusBar:handleEvent( nMessage, aNM )
+
    LOCAL nHandled := 1
    LOCAL nObj, aNMH
 
-   hb_traceLog( "       %s:handleEvent( %i )", __ObjGetClsName( self ), nMessage )
+   hb_traceLog( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
 
    DO CASE
 
@@ -158,7 +160,7 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_COMMAND
       IF HB_ISBLOCK( ::sl_lbClick )
-         eval( ::sl_lbClick, NIL, NIL, self )
+         Eval( ::sl_lbClick, NIL, NIL, self )
          RETURN 0
       ENDIF
 
@@ -200,6 +202,7 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
 //
 
 METHOD WvgStatusBar:destroy()
+
    LOCAL i, nItems
 
    hb_traceLog( "          %s:destroy()", __objGetClsName() )
@@ -225,6 +228,7 @@ METHOD WvgStatusBar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisib
 //
 
 METHOD WvgStatusBar:addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
+
    LOCAL oPanel, lSuccess
 
    DEFAULT nMode TO 0
@@ -240,28 +244,29 @@ METHOD WvgStatusBar:addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
    lSuccess := Wvg_StatusBarCreatePanel( ::hWnd, nMode )
 
    IF lSuccess
-      aadd( ::aItems, oPanel )
+      AAdd( ::aItems, oPanel )
    ELSE
       RETURN nil
-   endif
+   ENDIF
 
    RETURN oPanel
 
 //
 
 METHOD WvgStatusBar:delItem( nItemORcKey )
+
    LOCAL nIndex := 0
 
    IF HB_ISNUMERIC( nItemORcKey )
-      nIndex := ascan( ::aItems, {| o | o:key == nItemORcKey } )
+      nIndex := AScan( ::aItems, {| o | o:key == nItemORcKey } )
    ELSEIF HB_ISNUMERIC( nItemORcKey )
       nIndex := nItemORcKey
    ENDIF
 
    IF nIndex > 0
       /* Delete panel by window */
-      adel( ::aItems, nIndex )
-      asize( ::aItems, len( ::aItems ) - 1 )
+      ADel( ::aItems, nIndex )
+      ASize( ::aItems, Len( ::aItems ) - 1 )
    ENDIF
 
    RETURN Self
@@ -269,10 +274,11 @@ METHOD WvgStatusBar:delItem( nItemORcKey )
 //
 
 METHOD WvgStatusBar:getItem( nItemORcKey )
+
    LOCAL nIndex := 0, oPanel
 
    IF HB_ISSTRING( nItemORcKey  )
-      nIndex := ascan( ::aItems, {| o | o:key == nItemORcKey } )
+      nIndex := AScan( ::aItems, {| o | o:key == nItemORcKey } )
 
    ELSEIF HB_ISNUMERIC(  nItemORcKey  )
       nIndex := nItemORcKey
@@ -286,7 +292,9 @@ METHOD WvgStatusBar:getItem( nItemORcKey )
    RETURN oPanel
 
 //
+
 METHOD WvgStatusBar:clear()
+
    LOCAL i
 
    FOR i := 1 TO ::numItems
@@ -302,7 +310,7 @@ METHOD WvgStatusBar:clear()
 
 METHOD WvgStatusBar:panelClick( xParam )
 
-   IF HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
+   IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
       ::sl_lbClick := xParam
    ENDIF
 
@@ -312,7 +320,7 @@ METHOD WvgStatusBar:panelClick( xParam )
 
 METHOD WvgStatusBar:panelDblClick( xParam )
 
-   IF HB_ISBLOCK( xParam ) .or. HB_ISNIL( xParam )
+   IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
       ::sl_lbDblClick := xParam
    ENDIF
 
@@ -334,8 +342,8 @@ CLASS WvgStatusBarPanel
    DATA     autosize                              INIT WVGSTATUSBAR_AUTOSIZE_NONE
    DATA     bevel                                 INIT WVGSTATUSBAR_BEVEL_INSET
    DATA     enabled                               INIT .T.
-   DATA     index                                 INIT 0
-   DATA     key                                   INIT ""
+   DATA     INDEX                                 INIT 0
+   DATA     KEY                                   INIT ""
    DATA     style                                 INIT WVGSTATUSBAR_PANEL_TEXT
    DATA     sl_caption                            INIT ""
    DATA     image                                 INIT NIL
@@ -350,8 +358,10 @@ CLASS WvgStatusBarPanel
 
    DATA     oParent
 
-   ENDCLASS
+ENDCLASS
+
 //
+
 METHOD WvgStatusBarPanel:new( cCaption, nStyle, cKey )
 
    DEFAULT cCaption       TO ::sl_caption
@@ -363,7 +373,9 @@ METHOD WvgStatusBarPanel:new( cCaption, nStyle, cKey )
    ::key            := cKey
 
    RETURN Self
+
 //
+
 METHOD WvgStatusBarPanel:caption( cCaption )
 
    IF cCaption == NIL
