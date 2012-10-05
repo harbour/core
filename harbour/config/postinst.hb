@@ -215,8 +215,7 @@ PROCEDURE Main( ... )
                      no zip 2.x compatible way to force creation of a new .zip, so we have to delete it
                      first to avoid mixing in an existing .zip file. [vszakats] */
 
-            cOldDir := hb_cwd()
-            hb_cwd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) )
+            cOldDir := hb_cwd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) )
 
             mk_hb_processRun( PathSepToSelf( GetEnvC( "HB_DIR_ZIP" ) ) + "zip" +;
                               " -q -9 -X -r -o" +;
@@ -265,8 +264,7 @@ PROCEDURE Main( ... )
                cGroup := iif( GetEnvC( "HB_PLATFORM" ) == "darwin" .OR. ;
                               GetEnvC( "HB_PLATFORM" ) == "bsd", "wheel", "root" )
 
-               cOldDir := hb_cwd()
-               hb_cwd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) )
+               cOldDir := hb_cwd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) )
 
                /* TODO: Add support for non-GNU non-BSD tar (which gets the data from stdio) */
 

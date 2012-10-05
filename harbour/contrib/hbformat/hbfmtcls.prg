@@ -61,12 +61,11 @@
 
 #define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
 
-/* TOFIX:
-     1. 'var ++'
-     2. '- 1' for numeric literals.
-     3. wrongly breaks line: 'FUNCTION Hello( /* comment */ )'
-     ...
- */
+// TOFIX:
+//   1. 'var ++'
+//   2. '- 1' for numeric literals.
+//   3. wrongly breaks line: 'FUNCTION Hello( /* comment */ )'
+//   ...
 
 CREATE CLASS HBFORMATCODE
 

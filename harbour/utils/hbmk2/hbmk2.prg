@@ -6311,11 +6311,10 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                         IF hbmk[ _HBMK_lDONTEXEC ]
                            cCHD_DirOld := NIL
                         ELSE
-                           cCHD_DirOld := hb_cwd()
+                           cCHD_DirOld := hb_cwd( hbmk[ _HBMK_cWorkDir ] )
                            IF hbmk[ _HBMK_lTRACE ] .AND. hbmk[ _HBMK_lInfo ]
                               _hbmk_OutStd( hbmk, hb_StrFormat( I_( "'cd' to: %1$s" ), hbmk[ _HBMK_cWorkDir ] ) )
                            ENDIF
-                           hb_cwd( hbmk[ _HBMK_cWorkDir ] )
                         ENDIF
                      ENDIF
 
