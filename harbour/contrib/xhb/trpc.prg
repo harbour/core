@@ -232,7 +232,7 @@ METHOD New( cFname, cSerial, nAuthLevel, oExec, oMeth ) CLASS tRPCFunction
    LOCAL cParam
    LOCAL aParams, aFuncDef
 
-// Analyze the function definition
+   // Analyze the function definition
    aFuncDef := hb_regex( "^([a-zA-Z0-9_-]+)\(([^)]*)\) *(-->)? *(.*)$", cFname )
    IF Empty( aFuncDef )
       Alert( "Invalid function defintion" )
@@ -244,7 +244,7 @@ METHOD New( cFname, cSerial, nAuthLevel, oExec, oMeth ) CLASS tRPCFunction
    cParam := aFuncDef[3]
    ::cReturn := iif( Len( aFuncDef ) == 4, aFuncDef[4], aFuncDef[5] )
 
-// analyze parameter list
+   // analyze parameter list
    IF Len( Trim( cParam ) ) > 0
       aParams := hb_ATokens( cParam, "," )
       ::aParameters := {}
@@ -257,17 +257,17 @@ METHOD New( cFname, cSerial, nAuthLevel, oExec, oMeth ) CLASS tRPCFunction
       ::aParameters := {}
    ENDIF
 
-// Analyze function definition return
+   // Analyze function definition return
    ::CheckParam( ::cReturn )
 
-// Analyze function serial number
+   // Analyze function serial number
    IF ! hb_regexMatch( "[0-9]{8}\..", cSerial )
       Alert( "Serial value not valid" )
       ErrorLevel( 1 )
       QUIT
    ENDIF
 
-// analyze function authorization level
+   // analyze function authorization level
    IF nAuthLevel < 1
       Alert( "Authorization level must be at least 1" )
       ErrorLevel( 1 )
@@ -277,7 +277,7 @@ METHOD New( cFname, cSerial, nAuthLevel, oExec, oMeth ) CLASS tRPCFunction
    ::cSerial := cSerial
    ::nAuthLevel := nAuthLevel
 
-// Set now Executable object if given
+   // Set now Executable object if given
    IF oExec != NIL
       ::SetCallable( oExec, oMeth )
    ENDIF
@@ -286,15 +286,15 @@ METHOD New( cFname, cSerial, nAuthLevel, oExec, oMeth ) CLASS tRPCFunction
 
 METHOD SetCallable( oExec, oMeth ) CLASS tRPCFunction
 
-// If the callable is an object, we need to store the method
+   // If the callable is an object, we need to store the method
    IF HB_ISOBJECT( oExec )
       ::aCall := Array( Len( ::aParameters ) + 3 )
-      ::aCall[2] := oMeth
+      ::aCall[ 2 ] := oMeth
    ELSE
       ::aCall := Array( Len( ::aParameters ) + 2 )
    ENDIF
 
-   ::aCall[1] := oExec
+   ::aCall[ 1 ] := oExec
 
    RETURN .T.
 
@@ -306,11 +306,11 @@ METHOD RUN( aParams, oClient ) CLASS tRPCFunction
       RETURN NIL
    ENDIF
 
-   nStart := iif( HB_ISOBJECT( ::aCall[1] ), 3, 2 )
+   nStart := iif( HB_ISOBJECT( ::aCall[ 1 ] ), 3, 2 )
 
    FOR nCount := 1 TO Len( aParams )
       ::aCall[ nStart ] := aParams[ nCount ]
-      nStart ++
+      nStart++
    NEXT
 
    ::aCall[ nStart ] := oClient
@@ -440,14 +440,14 @@ METHOD New( oParent, skIn ) CLASS tRPCServeCon
    ::mtxBusy := hb_mutexCreate()
    ::bEncrypted := .F.
    ::nAuthLevel := 0
-   ::nChallengeCRC := - 1
+   ::nChallengeCRC := -1
 
    RETURN Self
 
 METHOD Destroy() CLASS tRPCServeCon
 
    hb_mutexLock( ::mtxBusy )
-// Eventually wait for the function to terminate
+   // Eventually wait for the function to terminate
    IF ::thFunction != NIL
       ::lCanceled := .T.
       hb_mutexUnlock( ::mtxBusy )
@@ -590,7 +590,7 @@ METHOD RUN() CLASS tRPCServeCon
          IF nSafeStatus == RPCS_STATUS_LOGGED
             aData := ::RecvFunction( .F. , .T. )
             IF aData != NIL
-               lBreak := ! ::FuncLoopCall( aData[1], aData[2] )
+               lBreak := ! ::FuncLoopCall( aData[ 1 ], aData[ 2 ] )
             ELSE
                lBreak := .T.
             ENDIF
@@ -605,7 +605,7 @@ METHOD RUN() CLASS tRPCServeCon
          IF nSafeStatus == RPCS_STATUS_LOGGED
             aData := ::RecvFunction( .T. , .T. )
             IF aData != NIL
-               lBreak := ! ::FuncLoopCall( aData[1], aData[2] )
+               lBreak := ! ::FuncLoopCall( aData[ 1 ], aData[ 2 ] )
             ELSE
                lBreak := .T.
             ENDIF
@@ -620,7 +620,7 @@ METHOD RUN() CLASS tRPCServeCon
          IF nSafeStatus == RPCS_STATUS_LOGGED
             aData := ::RecvFunction( .F. , .T. )
             IF aData != NIL
-               lBreak := ! ::FuncForeachCall( aData[1], aData[2] )
+               lBreak := ! ::FuncForeachCall( aData[ 1 ], aData[ 2 ] )
             ELSE
                lBreak := .T.
             ENDIF
@@ -635,7 +635,7 @@ METHOD RUN() CLASS tRPCServeCon
          IF nSafeStatus == RPCS_STATUS_LOGGED
             aData := ::RecvFunction( .T. , .T. )
             IF aData  != NIL
-               lBreak := ! ::FuncForeachCall( aData[1], aData[2] )
+               lBreak := ! ::FuncForeachCall( aData[ 1 ], aData[ 2 ] )
             ELSE
                lBreak := .T.
             ENDIF
@@ -686,9 +686,9 @@ METHOD RUN() CLASS tRPCServeCon
 
    ENDDO
 
-// signaling termination of this thread
+   // signaling termination of this thread
    ::oServer:Terminating( Self )
-// Destroy resources just before termination
+   // Destroy resources just before termination
    ::Destroy()
 
    RETURN .T.
@@ -922,7 +922,7 @@ METHOD LaunchFunction( cFuncName, aParams, nMode, aDesc ) CLASS tRPCServeCon
 
    LOCAL oFunc
 
-//Check for function existance
+   //Check for function existance
    oFunc := ::oServer:Find( cFuncName )
    IF Empty( oFunc )
       // signal error
@@ -931,7 +931,7 @@ METHOD LaunchFunction( cFuncName, aParams, nMode, aDesc ) CLASS tRPCServeCon
       RETURN .T.
    ENDIF
 
-// check for level
+   // check for level
    IF oFunc:nAuthLevel > ::nAuthLevel
       // signal error
       ::oServer:OnFunctionError( Self, cFuncName, 01 )
@@ -939,7 +939,7 @@ METHOD LaunchFunction( cFuncName, aParams, nMode, aDesc ) CLASS tRPCServeCon
       RETURN .T.
    ENDIF
 
-//check for parameters
+   //check for parameters
    IF aParams == NIL .OR. ! oFunc:CheckTypes( aParams )
       // signal error
       ::oServer:OnFunctionError( Self, cFuncName, 02 )
@@ -948,11 +948,11 @@ METHOD LaunchFunction( cFuncName, aParams, nMode, aDesc ) CLASS tRPCServeCon
    ENDIF
 
    hb_mutexLock( ::mtxBusy )
-// allow progress indicator by default
+   // allow progress indicator by default
    ::lAllowProgress := .T.
-// setting the cancel indicator as false
+   // setting the cancel indicator as false
    ::lCanceled := .F.
-// Set the running status
+   // Set the running status
    ::nStatus := RPCS_STATUS_RUNNING
    ::thFunction := StartThread( Self, "FunctionRunner", ;
       cFuncName, oFunc, nMode, aParams, aDesc )
@@ -978,7 +978,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
       nSubstPos := AScan( aParams, {| x | HB_ISSTRING( x ) .AND. x == "$." } )
 
       SWITCH aDesc[ 1 ]
-      CASE 'A' // all results
+      CASE "A" // all results
          FOR nCount := aDesc[ 2 ] TO aDesc[ 3 ] STEP aDesc[ 4 ]
             IF nSubstPos > 0
                aSubst[ nSubstPos ] := nCount
@@ -989,7 +989,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
          oRet := "Done"
          EXIT
 
-      CASE 'C' // Vector of all results
+      CASE "C" // Vector of all results
          aRet := {}
          ::lAllowProgress := .F.
          FOR nCount := aDesc[ 2 ] TO aDesc[ 3 ] STEP aDesc[ 4 ]
@@ -1008,7 +1008,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
          ENDIF
          EXIT
 
-      CASE 'E' // Just send confirmation at end
+      CASE "E" // Just send confirmation at end
          ::lAllowProgress := .F.
          FOR nCount := aDesc[ 2 ] TO aDesc[ 3 ] STEP aDesc[ 4 ]
             IF nSubstPos > 0
@@ -1031,7 +1031,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
       nSubstPos := AScan( aParams, {| x | HB_ISSTRING( x ) .AND. x == "$." } )
 
       SWITCH aDesc[ 1 ]
-      CASE 'A' // all results
+      CASE "A" // all results
          FOR EACH oElem IN  aDesc[ 2 ]
             IF nSubstPos > 0
                aSubst[ nSubstPos ] := oElem
@@ -1042,7 +1042,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
          oRet := "Done"
          EXIT
 
-      CASE 'C' // Vector of all results
+      CASE "C" // Vector of all results
          aRet := {}
          ::lAllowProgress := .F.
          FOR EACH oElem IN  aDesc[ 2 ]
@@ -1061,7 +1061,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
          ENDIF
          EXIT
 
-      CASE 'E' // Just send confirmation at end
+      CASE "E" // Just send confirmation at end
          ::lAllowProgress := .F.
          FOR EACH oElem IN aDesc[ 2 ]
             IF nSubstPos > 0
@@ -1076,17 +1076,17 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
       ENDSWITCH
    ENDCASE
 
-// Now we can signal that execution terminated
+   // Now we can signal that execution terminated
    hb_mutexLock( ::mtxBusy )
    ::nStatus := RPCS_STATUS_LOGGED
    hb_mutexUnlock( ::mtxBusy )
-// The execution of the function terminates BEFORE the sending of
-// the last data or the confirmation data, even if the thread
-// has still something to do.
+   // The execution of the function terminates BEFORE the sending of
+   // the last data or the confirmation data, even if the thread
+   // has still something to do.
    ::SendResult( oRet, cFuncName )
 
-//Signal that the thread is no longer alive
-// Should not be needed!
+   //Signal that the thread is no longer alive
+   // Should not be needed!
    /*HB_MutexLock( ::mtxBusy )
    ::thFunction := -1
    HB_MutexUnlock( ::mtxBusy )*/
@@ -1097,7 +1097,7 @@ METHOD SendResult( oRet, cFuncName )
 
    LOCAL cData, cOrigLen, cCompLen
 
-// Ignore requests to send result if function is canceled
+   // Ignore requests to send result if function is canceled
    hb_mutexLock( ::mtxBusy )
    IF ::lCanceled
       hb_mutexUnlock( ::mtxBusy )
@@ -1135,7 +1135,7 @@ METHOD SendProgress( nProgress, oData ) CLASS tRPCServeCon
    LOCAL cOrigLen, cCompLen, lRet := .T.
    LOCAL cData
 
-//Ignore if told so
+   // Ignore if told so
    hb_mutexLock( ::mtxBusy )
    IF ! ::lAllowProgress .OR. ::lCanceled
       hb_mutexUnlock( ::mtxBusy )
@@ -1380,7 +1380,7 @@ METHOD Stop() CLASS tRPCService
    ENDIF
 
    hb_inetClose( ::skServer )
-// closing the socket will make their infinite loops to terminate.
+   // closing the socket will make their infinite loops to terminate.
    hb_threadQuitRequest( ::thAccept )
    hb_threadJoin( ::thAccept )
    IF hb_threadID( ::thUDP ) != 0
@@ -1397,7 +1397,7 @@ METHOD Stop() CLASS tRPCService
    NEXT
    ASize( ::aServing, 0 )
 
-// now destroy all the allocated resources
+   // now destroy all the allocated resources
    ::skServer := NIL
    ::skUdp := NIL
 

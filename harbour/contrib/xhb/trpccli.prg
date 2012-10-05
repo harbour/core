@@ -665,7 +665,7 @@ METHOD SetPeriodCallback( ... ) CLASS tRPCClient
    IF ! HB_ISARRAY( caCalling )
       caCalling := Array( PCount() - 2 )
       FOR nCount := 3 TO PCount()
-         caCalling[nCount - 2] :=  hb_PValue( nCount )
+         caCalling[ nCount - 2 ] := hb_PValue( nCount )
       NEXT
    ENDIF
    ::caPerCall := caCalling

@@ -68,7 +68,7 @@ CLASS TCgiFile
    METHOD Open( nMode )
 
    METHOD CLOSE() INLINE FClose( ::Handle ), ;
-      ::Handle := - 999
+      ::Handle := -999
 
    METHOD RENAME( c ) INLINE FRename( ::File, c ) == 0
 
@@ -222,13 +222,13 @@ METHOD ReadAhead( nSize, cBuff ) CLASS TCgiFile
    DEFAULT nSize TO 1024
    DEFAULT cBuff TO Space( nSize )
 
-// --> save position in file
+   // --> save position in file
    nCurrent := FPOS( ::Handle )
 
-// --> read ahead
+   // --> read ahead
    ::BytesRead := FRead( ::Handle, @cBuff, nSize )
 
-// --> RETURN to saved position
+   // --> RETURN to saved position
    FSeek( ::Handle, nCurrent )
 
    RETURN cBuff
@@ -257,7 +257,7 @@ METHOD Readline( nSize ) CLASS TCgiFile
    FSeek( ::Handle, nCr + 1, 1 )
 
    ::Buffer := SubStr( cString, 1, nCr - 1 )
-   ::nRecord ++
+   ::nRecord++
 
    RETURN ::Buffer
 
@@ -361,7 +361,7 @@ METHOD GOTO( nLine ) CLASS TCgiFile
          EXIT
       ENDIF
 
-      nCount ++
+      nCount++
    ENDDO
 
    RETURN nPos
@@ -393,7 +393,7 @@ METHOD SKIP( nLines ) CLASS TCgiFile
       ENDIF
 
       ::ReadLine()
-      nCount ++
+      nCount++
    ENDDO
 
    RETURN nPos
@@ -443,7 +443,7 @@ METHOD NextPage( nBytes ) CLASS TCgiFile
 
    IF !::EOF()
       ::cPage := FReadStr( ::Handle, nBytes )
-      ::nPage ++
+      ::nPage++
    ENDIF
 
    RETURN ::cPage
@@ -475,18 +475,18 @@ METHOD PrevLine( nBytes ) CLASS TCgiFile
       lMoved := .T.
 
       //  Check preceeding 2 chars for CR+LF
-      FSeek( fHandle, - 2, FS_RELATIVE )
+      FSeek( fHandle, -2, FS_RELATIVE )
       cTemp := Space( 2 )
       FRead( fHandle, @cTemp, hb_BLen( cTemp ) )
 
       IF cTemp == CRLF()
-         FSeek( fHandle, - 2, FS_RELATIVE )
+         FSeek( fHandle, -2, FS_RELATIVE )
       ENDIF
 
       nMaxRead := Min( nBytes, FPOS( fHandle ) )
 
       cBuff   := Space( nMaxRead )
-      nNewPos := FSeek( fHandle, - nMaxRead, FS_RELATIVE )
+      nNewPos := FSeek( fHandle, -nMaxRead, FS_RELATIVE )
       FRead( fHandle, @cBuff, nMaxRead )
       nWhereCrLf := RAt( CRLF(), cBuff )
       IF nWhereCrLf == 0

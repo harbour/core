@@ -183,37 +183,37 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
 
    WHILE lContinue == .T.
 
-   /*
-   IF (nKey := INKEY()) == K_ESC
-      RestScreen( maxrow(),0,maxrow(),maxcol()+1, cSave)
-      EXIT
-   ENDIF
-   */
+      #if 0
+      IF ( nKey := Inkey() ) == K_ESC
+         RestScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1, cSave )
+         EXIT
+      ENDIF
+      #endif
 
       WHILE nSeconds > 0 .AND. lContinue == .T.
          IF Eval( bOperation, xIdentifier )
             nSeconds  := 0
             lSuccess  := .T.
             lContinue := .F.
-            s_lNetOk   := .T.
+            s_lNetOk  := .T.
             EXIT
          ELSE
             IF nType == 1
-               cWord := "( " + dbInfo( 33 ) + " - Record Lock )"
+               cWord := "( " + dbInfo( DBI_ALIAS ) + " - Record Lock )"
             ELSEIF nType == 2
-               cWord := "( " + dbInfo( 33 ) + " - File Lock )"
+               cWord := "( " + dbInfo( DBI_ALIAS ) + " - File Lock )"
             ELSEIF nType == 3
-               cWord := "( " + dbInfo( 33 ) + " - File Append )"
+               cWord := "( " + dbInfo( DBI_ALIAS ) + " - File Append )"
             ELSE
-               cWord := "( " + dbInfo( 33 ) + " -  ??? "
+               cWord := "( " + dbInfo( DBI_ALIAS ) + " -  ??? "
             ENDIF
 
             DispOutAt( MaxRow(), 0, ;
                PadC( "Network Retry " + cWord + " | " + Str( nSeconds, 3 ) + " | ESC Exit", MaxCol() + 1 ), ;
                s_cNetMsgColor )
 
-            nKey := Inkey( 1 )          //TONE( 1,1 )
-            nSeconds --                 //.5
+            nKey := Inkey( 1 )          // Tone( 1, 1 )
+            nSeconds--                  // .5
             IF nKey == K_ESC
                RestScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1, cSave )
                EXIT
@@ -283,7 +283,7 @@ FUNCTION NetOpenFiles( aFiles )
    FOR EACH xFile IN aFiles
 
       IF !hb_FileExists( xFile[ 1 ] )
-         nRet := - 1
+         nRet := -1
          EXIT
       ENDIF
 
@@ -293,13 +293,13 @@ FUNCTION NetOpenFiles( aFiles )
                IF hb_FileExists( cIndex )
                   ordListAdd( cIndex )
                ELSE
-                  nRet := - 3
+                  nRet := -3
                   EXIT
                ENDIF
             NEXT
          ENDIF
       ELSE
-         nRet := - 2
+         nRet := -2
          EXIT
       ENDIF
    NEXT
@@ -458,7 +458,7 @@ FUNCTION TableNew( cDBF, cALIAS, cOrderBag, cDRIVER, ;
    DEFAULT lNEW TO .T.
    DEFAULT lREADONLY TO .F.
    DEFAULT cDRIVER TO "DBFCDX"
-   DEFAULT cPATH TO SET( _SET_DEFAULT )
+   DEFAULT cPATH TO Set( _SET_DEFAULT )
    DEFAULT cAlias TO FixExt( cDbf )
    DEFAULT cOrderBag TO FixExt( cDbf )  //+".CDX"
 
@@ -479,7 +479,7 @@ FUNCTION TableNew( cDBF, cALIAS, cOrderBag, cDRIVER, ;
 
    ENDIF
 
-   SET( _SET_AUTOPEN, lAuto )
+   Set( _SET_AUTOPEN, lAuto )
 
    RETURN oDB
 
@@ -792,7 +792,7 @@ METHOD New( cDBF, cALIAS, cOrderBag, cDRIVER, ;
    DEFAULT lNEW TO .T.
    DEFAULT lREADONLY TO .F.
    DEFAULT cDRIVER TO "DBFCDX"
-   DEFAULT cPATH TO SET( _SET_DEFAULT )
+   DEFAULT cPATH TO Set( _SET_DEFAULT )
    DEFAULT cAlias TO FixExt( cDbf )
    DEFAULT cOrderBag TO FixExt( cDbf )  //+".CDX"
 
@@ -858,7 +858,7 @@ METHOD PROCEDURE DBMove( nDirection ) CLASS HBTable
       ( ::Alias )->( dbGoBottom() )
    CASE nDirection == _DB_BOF
       ( ::Alias )->( dbGoTop() )
-      ( ::Alias )->( dbSkip( - 1 ) )
+      ( ::Alias )->( dbSkip( -1 ) )
    CASE nDirection == _DB_EOF
       ( ::Alias )->( dbGoBottom() )
       ( ::Alias )->( dbSkip( 1 ) )
@@ -1098,7 +1098,7 @@ METHOD __oTDelete( lKeepBuffer )        // ::Delete()
       ( ::Alias )->( dbUnlock() )
    ENDIF
 
-   SET( _SET_DELETED, lDeleted )
+   Set( _SET_DELETED, lDeleted )
 
    RETURN lRet
 
@@ -1134,7 +1134,7 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
 
       IF !Empty( ::DeleteBuffers )
 
-         SET( _SET_DELETED, .F. )       // make deleted records visible temporarily...
+         Set( _SET_DELETED, .F. )       // make deleted records visible temporarily...
 
          nLen := Len( ::deleteBuffers )
 
@@ -1178,7 +1178,7 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
 
          ENDIF
 
-         SET( _SET_DELETED, lDelState )
+         Set( _SET_DELETED, lDelState )
 
       ENDIF
       EXIT
@@ -1474,7 +1474,7 @@ METHOD OnError( uParam ) CLASS HBTable
       oErr:GenCode       := EG_NOVARMETHOD
       oErr:Operation     := "HBTable:" + cMsg
       oErr:Severity      := ES_ERROR
-      oErr:SubCode       := - 1
+      oErr:SubCode       := -1
       oErr:SubSystem     := "HBTable"
       uRet := Eval( ErrorBlock(), oErr )
 

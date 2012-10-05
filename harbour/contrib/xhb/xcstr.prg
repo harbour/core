@@ -63,6 +63,7 @@
 #xtranslate THROW( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
 
 //
+
 FUNCTION CStrToVal( cExp, cType )
 
    IF ! HB_ISSTRING( cExp )
@@ -70,36 +71,36 @@ FUNCTION CStrToVal( cExp, cType )
    ENDIF
 
    SWITCH cType
-   CASE 'C'
+   CASE "C"
       RETURN cExp
 
-   CASE 'P'
+   CASE "P"
       RETURN hb_HexToNum( cExp )
 
-   CASE 'D'
-      IF cExp[3] >= '0' .AND. cExp[3] <= '9' .AND. cExp[5] >= '0' .AND. cExp[5] <= '9'
+   CASE "D"
+      IF cExp[ 3 ] >= "0" .AND. cExp[ 3 ] <= "9" .AND. cExp[ 5 ] >= "0" .AND. cExp[ 5 ] <= "9"
          RETURN hb_SToD( cExp )
       ELSE
-         RETURN cToD( cExp )
+         RETURN CToD( cExp )
       ENDIF
 
-   CASE 'L'
-      RETURN iif( cExp[1] == 'T' .OR. cExp[1] == 'Y' .OR. cExp[2] == 'T' .OR. cExp[2] == 'Y', .T., .F. )
+   CASE "L"
+      RETURN iif( cExp[ 1 ] == "T" .OR. cExp[ 1 ] == "Y" .OR. cExp[ 2 ] == "T" .OR. cExp[ 2 ] == "Y", .T. , .F. )
 
-   CASE 'N'
+   CASE "N"
       RETURN Val( cExp )
 
-   CASE 'U'
+   CASE "U"
       RETURN NIL
 
    /*
-   CASE 'A'
+   CASE "A"
       Throw( xhb_ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
 
-   CASE 'B'
+   CASE "B"
       Throw( xhb_ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
 
-   CASE 'O'
+   CASE "O"
       Throw( xhb_ErrorNew( "CSTRTOVAL", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
    */
 
@@ -110,16 +111,17 @@ FUNCTION CStrToVal( cExp, cType )
    RETURN NIL
 
 //
+
 FUNCTION StringToLiteral( cString )
 
-   LOCAL lDouble := .F., lSingle := .F.
+   LOCAL lDouble := .F. , lSingle := .F.
 
    IF hb_regexHas( "\n|\r", cString ) .OR. ;
-      ( ( lDouble := '"' $ cString ) .AND. ( lSingle := "'" $ cString ) .AND. hb_regexHas( "\[|\]", cString ) )
+         ( ( lDouble := '"' $ cString ) .AND. ( lSingle := "'" $ cString ) .AND. hb_regexHas( "\[|\]", cString ) )
 
       cString := StrTran( cString, '"', '\"' )
-      cString := StrTran( cString, Chr(10), '\n' )
-      cString := StrTran( cString, Chr(13), '\r' )
+      cString := StrTran( cString, Chr( 10 ), "\n" )
+      cString := StrTran( cString, Chr( 13 ), "\r" )
 
       //TraceLog( cString )
 
@@ -133,40 +135,41 @@ FUNCTION StringToLiteral( cString )
    RETURN "[" + cString + "]"
 
 //
+
 FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
 
    LOCAL aVar, cRet, cPad, nObj
 
-   //TraceLog( xVal, cName, nPad, aObjs )
+// TraceLog( xVal, cName, nPad, aObjs )
 
    SWITCH ValType( xVal )
-   CASE 'C'
+   CASE "C"
       RETURN StringToLiteral( xVal )
 
-   CASE 'D'
-      RETURN "hb_SToD( '" + dToS( xVal ) + "' )"
+   CASE "D"
+      RETURN "hb_SToD( '" + DToS( xVal ) + "' )"
 
-   CASE 'L'
+   CASE "L"
       RETURN iif( xVal, ".T.", ".F." )
 
-   CASE 'N'
-      RETURN hb_nToS( xVal )
+   CASE "N"
+      RETURN hb_ntos( xVal )
 
-   CASE 'A'
+   CASE "A"
       IF cName == NIL
          nPad := 0
          cName := "M->__ValToPrg_Array"
          aObjs := {}
          cRet  := cName + " := "
       ELSE
-         IF ( nObj := aScan( aObjs, {| a | HB_ArrayID( a[ 1 ] ) == HB_ArrayID( xVal ) } ) ) > 0
-             RETURN aObjs[ nObj ][ 2 ] + " /* Cyclic */"
+         IF ( nObj := AScan( aObjs, {| a | HB_ArrayID( a[ 1 ] ) == HB_ArrayID( xVal ) } ) ) > 0
+            RETURN aObjs[ nObj ][ 2 ] + " /* Cyclic */"
          ENDIF
 
          cRet := ""
       ENDIF
 
-      aAdd( aObjs, { xVal, cName } )
+      AAdd( aObjs, { xVal, cName } )
 
       cRet  += "Array(" + hb_ntos( Len( xVal ) ) + ")" + CRLF
 
@@ -177,11 +180,11 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
          cRet += cPad + cName + "[" + hb_ntos( aVar:__EnumIndex() ) + "] := " + ValToPrg( aVar, cName + "[" + hb_ntos( aVar:__EnumIndex() ) + "]", nPad, aObjs ) + CRLF
       NEXT
 
-      nPad -=3
+      nPad -= 3
 
       RETURN cRet
 
-   CASE 'H'
+   CASE "H"
       IF Empty( xVal )
          cRet := "hb_Hash()"
       ELSE
@@ -199,16 +202,16 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
 
       RETURN cRet
 
-/* There is no support for codeblock serialization */
+      /* There is no support for codeblock serialization */
 #if 0
-   CASE 'B'
+   CASE "B"
       RETURN ValToPrgExp( xVal )
 #endif
 
-   CASE 'P'
+   CASE "P"
       RETURN "0x" + hb_NumToHex( xVal )
 
-   CASE 'O'
+   CASE "O"
       /* TODO: Use HBPersistent() when avialable! */
       IF cName == NIL
          cName := "M->__ValToPrg_Object"
@@ -216,14 +219,14 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
          aObjs := {}
          cRet  := cName + " := "
       ELSE
-         IF ( nObj := aScan( aObjs, {| a | HB_ArrayID( a[ 1 ] ) == HB_ArrayID( xVal ) } ) ) > 0
-             RETURN aObjs[ nObj ][ 2 ] + " /* Cyclic */"
+         IF ( nObj := AScan( aObjs, {| a | HB_ArrayID( a[ 1 ] ) == HB_ArrayID( xVal ) } ) ) > 0
+            RETURN aObjs[ nObj ][ 2 ] + " /* Cyclic */"
          ENDIF
 
          cRet := ""
       ENDIF
 
-      aAdd( aObjs, { xVal, cName } )
+      AAdd( aObjs, { xVal, cName } )
 
       cRet += xVal:ClassName + "():New()" + CRLF
 
@@ -231,10 +234,10 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
       cPad := Space( nPad )
 
       FOR EACH aVar IN __objGetValueList( xVal )
-         cRet += cPad + cName + ":" + aVar[1] + " := " + ValToPrg( aVar[2], cName + ":" + aVar[1], nPad, aObjs ) + CRLF
+         cRet += cPad + cName + ":" + aVar[ 1 ] + " := " + ValToPrg( aVar[ 2 ], cName + ":" + aVar[ 1 ], nPad, aObjs ) + CRLF
       NEXT
 
-      nPad -=3
+      nPad -= 3
       RETURN cRet
 
    OTHERWISE
@@ -246,15 +249,18 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
       ENDIF
    ENDSWITCH
 
-   //TraceLog( cRet )
+// TraceLog( cRet )
 
    RETURN cRet
 
 //
+
 FUNCTION PrgExpToVal( cExp )
-RETURN &( cExp )
+
+   RETURN &( cExp )
 
 //
+
 FUNCTION ValToArray( xVal )
 
    IF HB_ISARRAY( xVal )
@@ -264,6 +270,7 @@ FUNCTION ValToArray( xVal )
    RETURN { xVal }
 
 //
+
 FUNCTION ValToBlock( xVal )
 
    IF HB_ISBLOCK( xVal )
@@ -273,6 +280,7 @@ FUNCTION ValToBlock( xVal )
    RETURN {|| xVal }
 
 //
+
 FUNCTION ValToCharacter( xVal )
 
    IF HB_ISSTRING( xVal )
@@ -281,36 +289,36 @@ FUNCTION ValToCharacter( xVal )
 
    RETURN LTrim( CStr( xVal ) )
 
-
 //
+
 FUNCTION ValToDate( xVal )
 
    SWITCH ValType( xVal )
-   CASE 'A'
-   CASE 'H'
-   CASE 'L'
-   CASE 'O'
-   CASE 'U'
+   CASE "A"
+   CASE "H"
+   CASE "L"
+   CASE "O"
+   CASE "U"
       EXIT
 
-   CASE 'B'
+   CASE "B"
       RETURN ValToDate( Eval( xVal ) )
 
-   CASE 'C'
-      IF SubStr( DToS( xVal ), 3, 1 ) >= '0' .AND. ;
-         SubStr( DToS( xVal ), 3, 1 ) <= '9' .AND. ;
-         SubStr( DToS( xVal ), 5, 1 ) >= '0' .AND. ;
-         SubStr( DToS( xVal ), 5, 1 ) <= '9'
+   CASE "C"
+      IF SubStr( DToS( xVal ), 3, 1 ) >= "0" .AND. ;
+         SubStr( DToS( xVal ), 3, 1 ) <= "9" .AND. ;
+         SubStr( DToS( xVal ), 5, 1 ) >= "0" .AND. ;
+         SubStr( DToS( xVal ), 5, 1 ) <= "9"
          RETURN hb_SToD( xVal )
       ELSE
-         RETURN cToD( xVal )
+         RETURN CToD( xVal )
       ENDIF
 
-   CASE 'D'
+   CASE "D"
       RETURN xVal
 
-   CASE 'N'
-   CASE 'P'
+   CASE "N"
+   CASE "P"
       RETURN 0d19000101 + xVal
 
    OTHERWISE
@@ -320,6 +328,7 @@ FUNCTION ValToDate( xVal )
    RETURN hb_SToD()
 
 //
+
 FUNCTION ValToHash( xVal )
 
    IF HB_ISHASH( xVal )
@@ -329,22 +338,23 @@ FUNCTION ValToHash( xVal )
    RETURN { ValToCharacter( xVal ) => xVal }
 
 //
+
 FUNCTION ValToLogical( xVal )
 
    SWITCH ValType( xVal )
-   CASE 'A'
-   CASE 'D'
-   CASE 'H'
-   CASE 'N'
-   CASE 'O'
-   CASE 'P'
+   CASE "A"
+   CASE "D"
+   CASE "H"
+   CASE "N"
+   CASE "O"
+   CASE "P"
       RETURN ! Empty( xVal )
 
-   CASE 'B'
+   CASE "B"
       RETURN ValToLogical( Eval( xVal ) )
 
-   CASE 'C'
-      IF Left( xVal, 1 ) == '.' .AND. SubStr( xVal, 3, 1 ) == '.' .AND. Upper( SubStr( xVal, 2, 1 ) ) $ "TFYN"
+   CASE "C"
+      IF Left( xVal, 1 ) == "." .AND. SubStr( xVal, 3, 1 ) == "." .AND. Upper( SubStr( xVal, 2, 1 ) ) $ "TFYN"
          RETURN Upper( SubStr( xVal, 2, 1 ) ) $ "TY"
       ELSEIF Len( xVal ) == 1 .AND. Upper( xVal ) $ "TFYN"
          RETURN Upper( xVal ) $ "TY"
@@ -353,10 +363,10 @@ FUNCTION ValToLogical( xVal )
       ENDIF
       EXIT
 
-   CASE 'L'
+   CASE "L"
       RETURN xVal
 
-   CASE 'U'
+   CASE "U"
       RETURN .F.
 
    OTHERWISE
@@ -366,35 +376,36 @@ FUNCTION ValToLogical( xVal )
    RETURN .F.
 
 //
+
 FUNCTION ValToNumber( xVal )
 
    SWITCH ValType( xVal )
-   CASE 'A'
-   CASE 'H'
+   CASE "A"
+   CASE "H"
       RETURN Len( xVal )
 
-   CASE 'B'
+   CASE "B"
       RETURN ValToNumber( Eval( xVal ) )
 
-   CASE 'C'
+   CASE "C"
       RETURN Val( xVal )
 
-   CASE 'D'
+   CASE "D"
       RETURN xVal - 0d19000101
 
-   CASE 'L'
+   CASE "L"
       RETURN iif( xVal, 1, 0 )
 
-   CASE 'O'
+   CASE "O"
       RETURN xVal:hClass
 
-   CASE 'N'
+   CASE "N"
       RETURN xVal
 
-   CASE 'P'
+   CASE "P"
       RETURN xVal - 0
 
-   CASE 'U'
+   CASE "U"
       RETURN 0
 
    OTHERWISE
@@ -404,45 +415,46 @@ FUNCTION ValToNumber( xVal )
    RETURN 0
 
 //
+
 FUNCTION ValToObject( xVal )
 
    SWITCH ValType( xVal )
-   CASE 'A'
+   CASE "A"
       ENABLE TYPE CLASS ARRAY
       EXIT
 
-   CASE 'B'
+   CASE "B"
       ENABLE TYPE CLASS BLOCK
       EXIT
 
-   CASE 'C'
+   CASE "C"
       ENABLE TYPE CLASS CHARACTER
       EXIT
 
-   CASE 'D'
+   CASE "D"
       ENABLE TYPE CLASS DATE
       EXIT
 
-   CASE 'H'
+   CASE "H"
       ENABLE TYPE CLASS HASH
       EXIT
 
-   CASE 'L'
+   CASE "L"
       ENABLE TYPE CLASS LOGICAL
       EXIT
 
-   CASE 'N'
+   CASE "N"
       ENABLE TYPE CLASS NUMERIC
       EXIT
 
-   CASE 'O'
+   CASE "O"
       RETURN xVal
 
-   CASE 'P'
+   CASE "P"
       ENABLE TYPE CLASS POINTER
       EXIT
 
-   CASE 'U'
+   CASE "U"
       ENABLE TYPE CLASS NIL
       EXIT
 
@@ -453,37 +465,38 @@ FUNCTION ValToObject( xVal )
    RETURN 0
 
 //
+
 FUNCTION ValToType( xVal, cType )
 
    SWITCH cType
-   CASE 'A'
+   CASE "A"
       RETURN ValToArray( xVal )
 
-   CASE 'B'
+   CASE "B"
       RETURN ValToBlock( xVal )
 
-   CASE 'C'
+   CASE "C"
       RETURN ValToCharacter( xVal )
 
-   CASE 'D'
+   CASE "D"
       RETURN ValToDate( xVal )
 
-   CASE 'H'
+   CASE "H"
       RETURN ValToHash( xVal )
 
-   CASE 'L'
+   CASE "L"
       RETURN ValToLogical( xVal )
 
-   CASE 'N'
+   CASE "N"
       RETURN ValToNumber( xVal )
 
-   CASE 'O'
+   CASE "O"
       RETURN ValToObject( xVal )
 
-   CASE 'P'
+   CASE "P"
       RETURN ValToNumber( xVal )
 
-   CASE 'U'
+   CASE "U"
       RETURN NIL
 
    OTHERWISE

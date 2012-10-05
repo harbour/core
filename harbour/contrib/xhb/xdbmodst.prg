@@ -123,13 +123,13 @@ FUNCTION dbModifyStructure( cFile )
       // Rename original as backup, and new file as the new original.
       // -----------------------
       IF lRet
-         IF FRename( cFile, cBakFile ) == - 1
+         IF FRename( cFile, cBakFile ) == -1
             BREAK
          ENDIF
 
-         IF FRename( cNewFile, cFile ) == - 1
+         IF FRename( cNewFile, cFile ) == -1
             // If we can't then try to restore backup as original
-            IF FRename( cBakFile, cFile ) == - 1
+            IF FRename( cBakFile, cFile ) == -1
                // Oops - must advise the user!
                oErr := ErrorNew()
                oErr:severity     := ES_ERROR

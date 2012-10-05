@@ -94,7 +94,7 @@ CLASS TJsWindow
 
    METHOD Paragraph() INLINE ::QOut( "<P></P>" )
 
-   METHOD CENTER( l ) INLINE ::QOut( iif( l, "<CENTER>", "</CENTER>" ) )
+   METHOD Center( l ) INLINE ::QOut( iif( l, "<CENTER>", "</CENTER>" ) )
 
    METHOD bold( l ) INLINE ::QOut( iif( l, "<B>", "</B>" ) )
 
@@ -106,20 +106,20 @@ CLASS TJsWindow
 
    METHOD Begin()
 
-   METHOD END ()
+   METHOD End()
 
-   METHOD Qout( c )
+   METHOD QOut( c )
 
-   METHOD WriteLN( c ) INLINE ::qOut( c )
+   METHOD WriteLN( c ) INLINE ::QOut( c )
 
    METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
-                       Resizable, Menubar, personalBar, ;
-                       dependent, location, directories, ;
-                       Scrollbars, Status, TitleBar, Toolbar, copyHistory )
+      Resizable, Menubar, personalBar, ;
+      dependent, location, directories, ;
+      Scrollbars, Status, TitleBar, Toolbar, copyHistory )
 
    METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
-                    cOnClick, cOnMsover, cOnMsout, ;
-                    cName, cAlt )
+      cOnClick, cOnMsover, cOnMsout, ;
+      cName, cAlt )
 
 ENDCLASS
 
@@ -150,7 +150,7 @@ METHOD New( cVarName, cUrl, cName, x, y, w, h ) CLASS TJsWindow
    ::height  := h
    ::width   := w
 
-RETURN Self
+   RETURN Self
 
 /****
 *
@@ -159,9 +159,9 @@ RETURN Self
 */
 
 METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
-                    Resizable, Menubar, personalBar, ;
-                    dependent, location, directories, ;
-                    Scrollbars, Status, TitleBar, Toolbar, copyHistory ) CLASS TJsWindow
+      Resizable, Menubar, personalBar, ;
+      dependent, location, directories, ;
+      Scrollbars, Status, TitleBar, Toolbar, copyHistory ) CLASS TJsWindow
 
    LOCAL cStr := ""
 
@@ -247,7 +247,7 @@ METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
 
    ::features += iif( Empty( ::Features ), cStr + ",", cStr )
 
-RETURN Self
+   RETURN Self
 
 /****
 *
@@ -258,6 +258,7 @@ RETURN Self
 METHOD SetSize( x, y, h, w ) CLASS TJsWindow
 
    LOCAL cStr := ""
+
    DEFAULT x TO ::ScreenX, ;
       y TO ::ScreenY, ;
       h TO ::height, ;
@@ -276,7 +277,7 @@ METHOD SetSize( x, y, h, w ) CLASS TJsWindow
 
    ::features += iif( Empty( ::Features ), cStr + ",", cStr )
 
-RETURN Self
+   RETURN Self
 
 /****
 *
@@ -311,7 +312,7 @@ METHOD Put() CLASS TJsWindow
 
    HtmlJsCmd( ::nH, cStr )
 
-RETURN Self
+   RETURN Self
 
 /****
 *
@@ -322,7 +323,8 @@ RETURN Self
 METHOD Write( c ) CLASS TJsWindow
 
    HtmlJsCmd( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
-RETURN Self
+
+   RETURN Self
 
 /****
 *
@@ -331,10 +333,11 @@ RETURN Self
 *
 */
 
-METHOD Qout( c ) CLASS TJsWindow
+METHOD QOut( c ) CLASS TJsWindow
 
-   Fwrite( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
-RETURN Self
+   FWrite( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
+
+   RETURN Self
 
 /****
 *
@@ -348,8 +351,8 @@ METHOD Begin() CLASS TJsWindow
 
    LOCAL i
 
-   Fwrite( ::nH, "<SCRIPT LANGUAGE=JavaScript 1.2>" + CRLF() )
-   Fwrite( ::nH, "<!--" + CRLF() )
+   FWrite( ::nH, "<SCRIPT LANGUAGE=JavaScript 1.2>" + CRLF() )
+   FWrite( ::nH, "<!--" + CRLF() )
    ::QOut( "<HTML><HEAD>" )
 
    IF ::Title != NIL
@@ -359,14 +362,14 @@ METHOD Begin() CLASS TJsWindow
    IF ::aScriptSrc != NIL
       FOR i := 1 TO Len( ::aScriptSrc )
          ::QOut( ;
-                 '<SCRIPT LANGUAGE=JavaScript SRC="' + ::aScriptSrc[ i ] + '"></SCRIPT>' )
+            '<SCRIPT LANGUAGE=JavaScript SRC="' + ::aScriptSrc[ i ] + '"></SCRIPT>' )
       NEXT
    ENDIF
 
    IF ::aServerSrc != NIL
       FOR i := 1 TO Len( ::aServerSrc )
          ::QOut( ;
-                 '<SCRIPT LANGUAGE=JavaScript SRC="' + ::aServerSrc[ i ] + '" RUNAT=SERVER></SCRIPT>' )
+            '<SCRIPT LANGUAGE=JavaScript SRC="' + ::aServerSrc[ i ] + '" RUNAT=SERVER></SCRIPT>' )
       NEXT
    ENDIF
 
@@ -377,7 +380,7 @@ METHOD Begin() CLASS TJsWindow
    ::QOut( "</HEAD>" + "<BODY" )
 
    IF ::onLoad != NIL
-      ::Qout( '   onLoad="' + ::onLoad + '"' )
+      ::QOut( '   onLoad="' + ::onLoad + '"' )
    ENDIF
 
    IF ::onUnLoad != NIL
@@ -398,10 +401,10 @@ METHOD Begin() CLASS TJsWindow
       ::QOut( '<BODY BACKGROUND="' + ::bgImage + '">' )
    ENDIF
 
-   Fwrite( ::nH, "//-->" )
-   Fwrite( ::nH, "</SCRIPT>" + CRLF() )
+   FWrite( ::nH, "//-->" )
+   FWrite( ::nH, "</SCRIPT>" + CRLF() )
 
-RETURN Self
+   RETURN Self
 
 /****
 *
@@ -409,11 +412,11 @@ RETURN Self
 *
 */
 
-METHOD END () CLASS TJsWindow
+METHOD End() CLASS TJsWindow
 
    HtmlJsCmd( ::nH, ::varName + ".document.write('</BODY></HTML>')" + CRLF() )
 
-RETURN Self
+   RETURN Self
 
 /****
 *
@@ -422,8 +425,8 @@ RETURN Self
 */
 
 METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
-                    cOnClick, cOnMsover, cOnMsout, ;
-                    cName, cAlt ) CLASS TJsWindow
+      cOnClick, cOnMsover, cOnMsout, ;
+      cName, cAlt ) CLASS TJsWindow
 
    LOCAL cStr := ""
 
@@ -456,9 +459,10 @@ METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
 
    IF cURL != NIL
       ::QOut( '<A HREF=' + cUrl + '><IMG SRC="' + cImage + '"' + ;
-              cStr + '></A>' )
+         cStr + '></A>' )
    ELSE
       ::QOut( '<IMG SRC="' + cImage + '"' + ;
-              cStr + '></A>' )
+         cStr + '></A>' )
    ENDIF
-RETURN Self
+
+   RETURN Self

@@ -53,4 +53,4 @@
 
 FUNCTION HB_ARRAYBLOCK( aArray, nIndex )
 
-   RETURN {| x | iif( PCount() == 0, aArray[ nIndex ], aArray[ nIndex ] := x )}
+   RETURN {| x | iif( PCount() == 0, aArray[ nIndex ], aArray[ nIndex ] := x ) }

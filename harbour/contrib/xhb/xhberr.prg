@@ -306,7 +306,7 @@ STATIC FUNCTION LogError( oerr )
    LOCAL nHandle
    LOCAL nBytes
 
-   LOCAL nHandle2   := - 1
+   LOCAL nHandle2   := F_ERROR
    LOCAL cLogFile2  := "_error.log"
    LOCAL cBuff      := ""
    LOCAL nRead
@@ -537,7 +537,7 @@ STATIC FUNCTION LogError( oerr )
       FWriteLine( nHandle, PadR( ProcName(), 21 ) + " : " + Transform( ProcLine(), "999,999" ) + " in Module: " + ProcFile() )
 
       nCount := 3
-      WHILE !Empty( ProcName( ++ nCount ) )
+      WHILE ! Empty( ProcName( ++nCount ) )
          FWriteLine( nHandle, PadR( ProcName( nCount ), 21 ) + " : " + Transform( ProcLine( nCount ), "999,999" ) + " in Module: " + ProcFile( nCount ) )
       ENDDO
 
@@ -609,7 +609,7 @@ STATIC FUNCTION LogError( oerr )
       FErase( "errormem.mem" )
 #endif
 
-      IF lAppendLog .AND. nHandle2 != - 1
+      IF lAppendLog .AND. nHandle2 != F_ERROR
 
          nBytes := FSeek( nHandle2, 0, FS_END )
 

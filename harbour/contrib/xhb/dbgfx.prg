@@ -58,33 +58,45 @@ STATIC s_lToLogFile    := .T.
 STATIC s_lEmptyLogFile := .T.
 
 FUNCTION HB_ToOutDebugOnOff( lOnOff )
+
    LOCAL lOld := s_lToOutDebug
+
    IF HB_ISLOGICAL( lOnOff )
       s_lToOutDebug := lOnOff
    ENDIF
-RETURN lOld
+
+   RETURN lOld
 
 PROCEDURE HB_ToOutDebug( ... )
+
    IF s_lToOutDebug
       hb_OutDebug( sprintf( ... ) )
    ENDIF
-RETURN
+
+   RETURN
 
 FUNCTION HB_ToLogFileOnOff( lOnOff )
+
    LOCAL lOld := s_lToLogFile
+
    IF HB_ISLOGICAL( lOnOff )
       s_lToLogFile := lOnOff
    ENDIF
-RETURN lOld
+
+   RETURN lOld
 
 FUNCTION HB_EmptyLogFileOnOff( lOnOff )
+
    LOCAL lOld := s_lEmptyLogFile
+
    IF HB_ISLOGICAL( lOnOff )
       s_lEmptyLogFile := lOnOff
    ENDIF
-RETURN lOld
+
+   RETURN lOld
 
 PROCEDURE HB_ToLogFile( cLogFile, ... )
+
    LOCAL nHandle
 
    IF !s_lToLogFile
@@ -115,4 +127,5 @@ PROCEDURE HB_ToLogFile( cLogFile, ... )
          FClose( nHandle )
       ENDIF
    ENDIF
-RETURN
+
+   RETURN

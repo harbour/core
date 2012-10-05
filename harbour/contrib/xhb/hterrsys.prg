@@ -47,11 +47,11 @@
 #include "error.ch"
 #include "cgi.ch"
 
-#define DEF_ERR_HEADER "Date : "+DTOC(Date())+"<BR>"+"Time : " + Time() + "<BR>"
+#define DEF_ERR_HEADER "Date : " + DToC( Date() ) + "<BR>" + "Time : " + Time() + "<BR>"
 
 // put messages to STDERR
 #command ? <list,...>   =>  ?? Chr(13) + Chr(10) ; ?? <list>
-#command ?? <list,...>  =>  OutErr(<list>)
+#command ?? <list,...>  =>  OutErr( <list> )
 
 REQUEST HARDCR
 REQUEST MEMOWRIT
@@ -64,9 +64,9 @@ STATIC s_cErrFooter  := " "
 * DefError()
 */
 
-/*
-STATIC FUNC xhb_cgi_DefError( e )
+#if 0
 
+STATIC FUNC xhb_cgi_DefError( e )
 
    LOCAL i
    LOCAL cMessage   := ""
@@ -88,18 +88,18 @@ STATIC FUNC xhb_cgi_DefError( e )
    ENDIF
 
    // for network open error, set NETERR() and subsystem default
-   IF e:genCode == EG_OPEN .and. ( e:osCode == 32 .or. e:osCode == 5 ) ;
-      .and. e:canDefault
+   IF e:genCode == EG_OPEN .AND. ( e:osCode == 32 .OR. e:osCode == 5 ) ;
+         .AND. e:canDefault
 
-      Neterr( .T. )
+      NetErr( .T. )
       RETURN .F.                    // NOTE
 
    ENDIF
 
    // for lock error during APPEND BLANK, set NETERR() and subsystem default
-   IF e:genCode == EG_APPENDLOCK .and. e:canDefault
+   IF e:genCode == EG_APPENDLOCK .AND. e:canDefault
 
-      Neterr( .T. )
+      NetErr( .T. )
       RETURN .F.                    // NOTE
 
    ENDIF
@@ -108,7 +108,7 @@ STATIC FUNC xhb_cgi_DefError( e )
    cMessage += ErrorMessage( e )
 
    // display message and traceback
-   IF ( !Empty( e:osCode ) )
+   IF ! Empty( e:osCode )
       cMessage += " (DOS Error   : " + hb_ntos( e:osCode ) + ")"
    ENDIF
 
@@ -147,12 +147,12 @@ STATIC FUNC xhb_cgi_DefError( e )
 
    i := 2
 
-   DO WHILE ( !Empty( Procname( i ) ) )
+   DO WHILE !Empty( ProcName( i ) )
 
-      cErrString += "Called from " + RTrim( Procname( i ) ) + ;
-                                           "(" + hb_ntos( Procline( i ) ) + ") <BR>" + CRLF()
+      cErrString += "Called from " + RTrim( ProcName( i ) ) + ;
+         "(" + hb_ntos( ProcLine( i ) ) + ") <BR>" + CRLF()
 
-      i ++
+      i++
    ENDDO
 
    cErrstring += '</EM>'
@@ -162,24 +162,25 @@ STATIC FUNC xhb_cgi_DefError( e )
    cErrstring += "Extra Notes..."
 
    cErrString += "</TD>" + CRLF() + "</TR>" + CRLF() + "</TABLE>" + CRLF()
-   Fwrite( nH, "<BR>" + cErrString + CRLF() )
-   Memowrit( "Error.Log", Hardcr( cErrString ) + CRLF() + ;
-             Hardcr( Memoread( "Error.Log" ) ) )
+   FWrite( nH, "<BR>" + cErrString + CRLF() )
+   MemoWrit( "Error.Log", HardCR( cErrString ) + CRLF() + ;
+      HardCR( MemoRead( "Error.Log" ) ) )
 
-   Fwrite( nH, "</TD>" + CRLF() + "</TR>" + CRLF() + "</TABLE>" + CRLF() )
+   FWrite( nH, "</TD>" + CRLF() + "</TR>" + CRLF() + "</TABLE>" + CRLF() )
 
    HtmlJsCmd( nH, 'alert("There was an error processing your request:\n' + ;
-            'Look at the bottom of this page for\n' + ;
-            'error description and parameters...");' )
-   Fwrite( nH, "</FONT>" + CRLF() + "</BODY></HTML>" + CRLF() )
+      'Look at the bottom of this page for\n' + ;
+      'error description and parameters...");' )
+   FWrite( nH, "</FONT>" + CRLF() + "</BODY></HTML>" + CRLF() )
 
    CLOSE ALL
 
-   Errorlevel( 1 )
+   ErrorLevel( 1 )
    QUIT
 
-RETURN .F.
-*/
+   RETURN .F.
+
+#endif
 
 FUNCTION SetCorruptFunc( bFunc )
 
@@ -187,19 +188,19 @@ FUNCTION SetCorruptFunc( bFunc )
       s_bFixCorrupt := bFunc
    ENDIF
 
-RETURN s_bFixCorrupt
+   RETURN s_bFixCorrupt
 
 FUNCTION SetErrorFooter()
 
-RETURN s_cErrFooter
+   RETURN s_cErrFooter
 
 /***
 * ErrorMessage()
 */
 
-/*
-STATIC FUNC ErrorMessage( e )
+#if 0
 
+STATIC FUNCTION ErrorMessage( e )
 
    LOCAL cMessage := ""
 
@@ -235,5 +236,6 @@ STATIC FUNC ErrorMessage( e )
    ENDIF
    cMessage += CRLF()
 
-RETURN cMessage
-*/
+   RETURN cMessage
+
+#endif
