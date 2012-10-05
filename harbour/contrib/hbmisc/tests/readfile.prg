@@ -9,8 +9,6 @@
    Donated to the public domain on 2001-03-08 by David G. Holm <dholm@jsd-llc.com>
 */
 
-#include "fileio.ch"
-
 PROCEDURE Main( cFile )
    LOCAL oFile := TFileRead():New( cFile )
 
@@ -19,7 +17,7 @@ PROCEDURE Main( cFile )
       ? oFile:ErrorMsg( "FileRead: " )
    ELSE
       DO WHILE oFile:MoreToRead()
-         ? oFile:ReadLine() )
+         ? oFile:ReadLine()
       ENDDO
       oFile:Close()
    ENDIF

@@ -73,7 +73,7 @@ STATIC FUNCTION write( csource )
    // + means a turn-on
    // - means a turn-off
    LOCAL attrib := { ;
-      { "+b"  , "\b "            } /* turn bold on*/ , ;
+      { "+b"  , "\b "            } /* turn bold on*/, ;
       { "+bu" , "\ul\b "         } /* turn bold_underline on */, ;
       { "+bi" , "\b\i "          } /* turn bold_italic on */, ;
       { "+bui", "\ul\b\i "       } /* turn bold_underline_italic on */, ;
@@ -87,20 +87,20 @@ STATIC FUNCTION write( csource )
       { "-i"  , "\i0 "           } /* turn italic off */, ;
       { "-il" , "\ulnone\i0 "    } /* turn italic_underline off */, ;
       { "-u"  , "\ulnone "       } /* turn underline off */;
-   }
+      }
 
    hb_fuse( csource )  // open source file
    WHILE ! hb_FEof()   // read the file line by line
       cline := hb_freadln() + "\par"
       y     := Len( cline )
-      for nchar := 1 TO y
+      FOR nchar := 1 TO y
          cchar := SubStr( cline, nchar, 1 )
 
          // todo : i need function dec2hex()
          // to convert ascii to 2-characters hex
          // ie   : dec2hex( "H" ) -> 48
          IF cchar == "+" .OR. cchar == "-"
-            xatt := cchar                         + ;
+            xatt := cchar + ;
                SubStr( cline, nchar + 1, 1 ) + ;
                SubStr( cline, nchar + 2, 1 ) + ;
                SubStr( cline, nchar + 3, 1 )
@@ -127,7 +127,7 @@ STATIC FUNCTION write( csource )
          ELSE
             FWrite( ::nhandle, cchar )
          ENDIF
-      next
+      NEXT
       FWrite( ::nhandle, hb_eol() )
       hb_fskip() // read next line
    ENDDO

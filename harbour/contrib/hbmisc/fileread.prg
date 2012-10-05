@@ -57,7 +57,7 @@ METHOD New( cFile, nSize ) CLASS TFileRead
    ENDIF
 
    ::cFile     := cFile             // Save the file name
-   ::nHan      := -1                // It's not open yet
+   ::nHan      := F_ERROR           // It's not open yet
    ::lEOF      := .T.               // So it must be at EOF
    ::nError    := 0                 // But there haven't been any errors
    ::nLastOp   := oF_CREATE_OBJECT  // Because we just created the class
@@ -68,15 +68,15 @@ METHOD New( cFile, nSize ) CLASS TFileRead
 
 METHOD Open( nMode ) CLASS TFileRead
 
-   IF ::nHan == -1
+   IF ::nHan == F_ERROR
       // Only open the file if it isn't already open.
       IF nMode == NIL
          nMode := FO_READ + FO_SHARED   // Default to shared read-only mode
       ENDIF
       ::nLastOp := oF_OPEN_FILE
-      ::nHan := FOPEN( ::cFile, nMode )   // Try to open the file
-      IF ::nHan == -1
-         ::nError := FERROR()       // It didn't work
+      ::nHan := FOpen( ::cFile, nMode )   // Try to open the file
+      IF ::nHan == F_ERROR
+         ::nError := FError()       // It didn't work
          ::lEOF   := .T.            // So force EOF
       ELSE
          ::nError := 0              // It worked
@@ -84,10 +84,10 @@ METHOD Open( nMode ) CLASS TFileRead
       ENDIF
    ELSE
       // The file is already open, so rewind to the beginning.
-      IF FSEEK( ::nHan, 0 ) == 0
+      IF FSeek( ::nHan, 0 ) == 0
          ::lEOF := .F.              // Definitely not at EOF
       ELSE
-         ::nError := FERROR()       // Save error code if not at BOF
+         ::nError := FError()       // Save error code if not at BOF
       ENDIF
       ::cBuffer := ""               // Clear the readahead buffer
    ENDIF
@@ -95,25 +95,26 @@ METHOD Open( nMode ) CLASS TFileRead
    RETURN Self
 
 METHOD ReadLine() CLASS TFileRead
+
    LOCAL cLine := ""
    LOCAL nPos
 
    ::nLastOp := oF_READ_FILE
 
-   IF ::nHan == -1
-      ::nError := -1                // Set unknown error if file not open
+   IF ::nHan == F_ERROR
+      ::nError := F_ERROR           // Set unknown error if file not open
    ELSE
       // Is there a whole line in the readahead buffer?
       nPos := ::EOL_pos()
-      WHILE ( nPos <= 0 .OR. nPos > LEN( ::cBuffer ) - 3 ) .AND. !::lEOF
+      WHILE ( nPos <= 0 .OR. nPos > Len( ::cBuffer ) - 3 ) .AND. !::lEOF
          // Either no or maybe, but there is possibly more to be read.
          // Maybe means that we found either a CR or an LF, but we don't
          // have enough characters to discriminate between the three types
          // of end of line conditions that the class recognizes (see below).
-         cLine := FREADSTR( ::nHan, ::nReadSize )
-         IF EMPTY( cLine )
+         cLine := FReadStr( ::nHan, ::nReadSize )
+         IF Empty( cLine )
             // There was nothing more to be read. Why? (Error or EOF.)
-            ::nError := FERROR()
+            ::nError := FError()
             IF ::nError == 0
                // Because the file is at EOF.
                ::lEOF := .T.
@@ -124,7 +125,7 @@ METHOD ReadLine() CLASS TFileRead
          ENDIF
          // Is there a whole line in the readahead buffer yet?
          nPos := ::EOL_pos()
-      END WHILE
+      ENDDO
       // Is there a whole line in the readahead buffer?
       IF nPos <= 0
          // No, which means that there is nothing left in the file either, so
@@ -135,47 +136,48 @@ METHOD ReadLine() CLASS TFileRead
          // Yes. Is there anything in the line?
          IF nPos > 1
             // Yes, so return the contents.
-            cLine := LEFT( ::cBuffer, nPos - 1 )
+            cLine := Left( ::cBuffer, nPos - 1 )
          ELSE
             // No, so return an empty string.
             cLine := ""
          ENDIF
          // Deal with multiple possible end of line conditions.
          DO CASE
-            CASE SUBSTR( ::cBuffer, nPos, 3 ) == CHR( 13 ) + CHR( 13 ) + CHR( 10 )
-               // It's a messed up DOS newline (such as that created by a program
-               // that uses "\r\n" as newline when writing to a text mode file,
-               // which causes the '\n' to expand to "\r\n", giving "\r\r\n").
-               nPos += 3
-            CASE SUBSTR( ::cBuffer, nPos, 2 ) == CHR( 13 ) + CHR( 10 )
-               // It's a standard DOS newline
-               nPos += 2
-            OTHERWISE
-               // It's probably a Mac or Unix newline
-               nPos++
+         CASE SubStr( ::cBuffer, nPos, 3 ) == Chr( 13 ) + Chr( 13 ) + Chr( 10 )
+            // It's a messed up DOS newline (such as that created by a program
+            // that uses "\r\n" as newline when writing to a text mode file,
+            // which causes the '\n' to expand to "\r\n", giving "\r\r\n").
+            nPos += 3
+         CASE SubStr( ::cBuffer, nPos, 2 ) == Chr( 13 ) + Chr( 10 )
+            // It's a standard DOS newline
+            nPos += 2
+         OTHERWISE
+            // It's probably a Mac or Unix newline
+            nPos++
          ENDCASE
-         ::cBuffer := SUBSTR( ::cBuffer, nPos )
+         ::cBuffer := SubStr( ::cBuffer, nPos )
       ENDIF
    ENDIF
 
    RETURN cLine
 
 METHOD EOL_pos() CLASS TFileRead
+
    LOCAL nCRpos, nLFpos, nPos
 
    // Look for both CR and LF in the file read buffer.
-   nCRpos := AT( CHR( 13 ), ::cBuffer )
-   nLFpos := AT( CHR( 10 ), ::cBuffer )
+   nCRpos := At( Chr( 13 ), ::cBuffer )
+   nLFpos := At( Chr( 10 ), ::cBuffer )
    DO CASE
-      CASE nCRpos == 0
-         // If there's no CR, use the LF position.
-         nPos := nLFpos
-      CASE nLFpos == 0
-         // If there's no LF, use the CR position.
-         nPos := nCRpos
-      OTHERWISE
-         // If there's both a CR and an LF, use the position of the first one.
-         nPos := MIN( nCRpos, nLFpos )
+   CASE nCRpos == 0
+      // If there's no CR, use the LF position.
+      nPos := nLFpos
+   CASE nLFpos == 0
+      // If there's no LF, use the CR position.
+      nPos := nCRpos
+   OTHERWISE
+      // If there's both a CR and an LF, use the position of the first one.
+      nPos := Min( nCRpos, nLFpos )
    ENDCASE
 
    RETURN nPos
@@ -185,42 +187,53 @@ METHOD Close() CLASS TFileRead
    ::nLastOp := oF_CLOSE_FILE
    ::lEOF := .T.
    // Is the file already closed.
-   IF ::nHan == -1
+   IF ::nHan == F_ERROR
       // Yes, so indicate an unknown error.
-      ::nError := -1
+      ::nError := F_ERROR
    ELSE
       // No, so close it already!
-      FCLOSE( ::nHan )
-      ::nError := FERROR()
-      ::nHan   := -1                // The file is no longer open
+      FClose( ::nHan )
+      ::nError := FError()
+      ::nHan   := F_ERROR           // The file is no longer open
       ::lEOF   := .T.               // So force an EOF condition
    ENDIF
 
    RETURN Self
 
 METHOD Name() CLASS TFileRead
+
    // Returns the filename associated with this class instance.
+
    RETURN ::cFile
 
 METHOD IsOpen() CLASS TFileRead
+
    // Returns .T. if the file is open.
-   RETURN ::nHan != -1
+
+   RETURN ::nHan != F_ERROR
 
 METHOD MoreToRead() CLASS TFileRead
+
    // Returns .T. if there is more to be read from either the file or the
    // readahead buffer. Only when both are exhausted is there no more to read.
-   RETURN !::lEOF .OR. !EMPTY( ::cBuffer )
+
+   RETURN !::lEOF .OR. !Empty( ::cBuffer )
 
 METHOD Error() CLASS TFileRead
+
    // Returns .T. if an error was recorded.
+
    RETURN ::nError != 0
 
 METHOD ErrorNo() CLASS TFileRead
+
    // Returns the last error code that was recorded.
+
    RETURN ::nError
 
 METHOD ErrorMsg( cText ) CLASS TFileRead
-   STATIC s_cAction := {"on", "creating object for", "opening", "reading from", "closing"}
+
+   STATIC s_cAction := { "on", "creating object for", "opening", "reading from", "closing" }
 
    LOCAL cMessage, nTemp
 
@@ -235,7 +248,7 @@ METHOD ErrorMsg( cText ) CLASS TFileRead
       ELSE
          nTemp := ::nLastOp + 1
       ENDIF
-      cMessage := iif( EMPTY( cText ), "", cText ) + "Error " + hb_ntos( ::nError ) + " " + s_cAction[ nTemp ] + " " + ::cFile
+      cMessage := iif( Empty( cText ), "", cText ) + "Error " + hb_ntos( ::nError ) + " " + s_cAction[ nTemp ] + " " + ::cFile
    ENDIF
 
    RETURN cMessage

@@ -22,8 +22,8 @@ PROCEDURE Main()
    // open a text file here
    IF hb_fuse( "testhbf.prg", 0 ) > 1
 
-      DO WHILE ! hb_feof()
-         ? "line " + str( hb_frecno(), 2 ) + " " + hb_freadln()
+      DO WHILE ! hb_FEof()
+         ? "line " + Str( hb_frecno(), 2 ) + " " + hb_freadln()
          hb_fskip( 1 )
       ENDDO
       ?
@@ -51,7 +51,7 @@ STATIC PROCEDURE my_goto( n_go )
 
    hb_fgoto( n_go )
    ?
-   ? "after hb_fgoto("+ hb_ntos( n_go ) + ")"
-   ? "line "+ hb_ntos( hb_frecno() ) + " is " + ltrim( hb_freadln() )
+   ? "after hb_fgoto(" + hb_ntos( n_go ) + ")"
+   ? "line " + hb_ntos( hb_frecno() ) + " is " + LTrim( hb_freadln() )
 
    RETURN
