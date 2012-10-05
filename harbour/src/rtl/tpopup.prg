@@ -260,7 +260,7 @@ METHOD display() CLASS POPUPMENU
                ELSE
                   cCaption := SubStr( cCaption, 1, Len( cCaption ) - 1 )
                ENDIF
-            ELSEIF nHotKeyPos == Len( Trim( cCaption ) )
+            ELSEIF nHotKeyPos == Len( RTrim( cCaption ) )
                cCaption := SubStr( cCaption, 1, Len( cCaption ) - 1 )
                nHotKeyPos := 0
             ELSE

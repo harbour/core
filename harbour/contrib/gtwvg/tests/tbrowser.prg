@@ -426,7 +426,7 @@ STATIC FUNCTION BrwBuildSLE( oCrt, oBrw )
    oXbp:create( , , { -16, -1 }, { -1, -10 } )
    oXbp:setColorFG( "N"  )
    oXbp:setColorBG( "BG+"  )
-   oXbp:returnPressed := {| m1, m2, o | m1 := m1, m2 := m2, BrwShowColumn( oBrw, Upper( Trim( o:getData() ) ) ) }
+   oXbp:returnPressed := {| m1, m2, o | m1 := m1, m2 := m2, BrwShowColumn( oBrw, Upper( RTrim( o:getData() ) ) ) }
    oXbp:tooltipText := "Type in a field name and press ENTER"
 
    RETURN oXbp
@@ -452,7 +452,7 @@ STATIC FUNCTION BrwBuildNvg( oCrt, oBrw, oCom )
    oXbp:create( , , { -23, -19 }, { -1, {|| -( MaxCol() - 1 - 19 ) } }, , .F. )
    oXbp:setColorFG( "N"  )
    oXbp:setColorBG( "BG+"  )
-   oXbp:returnPressed := {| m1, m2, o | m1 := m2, oCom:navigate( Trim( o:getData() ) ) }
+   oXbp:returnPressed := {| m1, m2, o | m1 := m2, oCom:navigate( RTrim( o:getData() ) ) }
    oXbp:tooltipText := "Type-in a http:// address and press ENTER"
    oXbp:setData( "http://hbide.vouch.info/" )
 

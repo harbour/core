@@ -125,7 +125,7 @@ STATIC FUNCTION __FieldTwo( cAlias, aFields )
    ENDIF
 
    aFldTemp := {}
-   AEval( aFields, {| cFld | AAdd( aFldTemp, Trim( Upper( cFld ) ) ) } )
+   AEval( aFields, {| cFld | AAdd( aFldTemp, RTrim( Upper( cFld ) ) ) } )
 
    aFields := aFldTemp
 

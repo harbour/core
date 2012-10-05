@@ -245,7 +245,7 @@ METHOD New( cFname, cSerial, nAuthLevel, oExec, oMeth ) CLASS tRPCFunction
    ::cReturn := iif( Len( aFuncDef ) == 4, aFuncDef[4], aFuncDef[5] )
 
    // analyze parameter list
-   IF Len( Trim( cParam ) ) > 0
+   IF Len( RTrim( cParam ) ) > 0
       aParams := hb_ATokens( cParam, "," )
       ::aParameters := {}
       FOR EACH cParam IN aParams

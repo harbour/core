@@ -123,7 +123,7 @@ PROCEDURE Main( cUrl, cFile )
             cData := oClient:Read()
             IF ! Empty( cData )
                @ 7, 5 SAY "First 80 characters:"
-               ? Trim( SubStr( cData, 1, 80 ) )
+               ? RTrim( SubStr( cData, 1, 80 ) )
             ELSE
                @ 7, 5 SAY "ERROR - file can't be retrieved " + oClient:lastErrorMessage()
             ENDIF

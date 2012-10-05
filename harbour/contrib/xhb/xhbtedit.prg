@@ -2211,10 +2211,10 @@ METHOD SplitLine( nRow ) CLASS XHBEditor
    //
    IF nStartRow + 1 <= ::LastRow()
       IF ::LineLen( nStartRow + 1 ) == 0 .OR. Len( AllTrim( cLine ) ) > 0
-         ::InsertLine( Trim( cLine ), .F. , nStartRow )
+         ::InsertLine( RTrim( cLine ), .F. , nStartRow )
       ENDIF
    ELSE
-      ::InsertLine( Trim( cLine ), .F. , nStartRow )
+      ::InsertLine( RTrim( cLine ), .F. , nStartRow )
    ENDIF
 
    // re-count words and see where current word has gone.
@@ -2775,7 +2775,7 @@ METHOD DelTextSelection() CLASS XHBEditor
          IF Empty( ::aText )
             ::DelText()
          ELSE
-            ::GoToPos( Max( 1,nRowSelStart ) , 1 )
+            ::GoToPos( Max( 1, nRowSelStart ), 1 )
          ENDIF
 
          ::ClrTextSelection()
@@ -2789,7 +2789,7 @@ METHOD DelTextSelection() CLASS XHBEditor
             cText := ::aText[ ::nRow ]:cText
             ::aText[::nRow]:cText := Stuff( cText, ::nColSelStart, ::nColSelEnd - ::nColSelStart + 1, "" )
             ::RefreshLine()
-            ::GoToPos( ::nRow, Max( 1,::nColSelStart ) )
+            ::GoToPos( ::nRow, Max( 1, ::nColSelStart ) )
             ::nColSelStart := ::nColSelEnd := 0
             ::lChanged := .T.
             IF Empty( ::aText )

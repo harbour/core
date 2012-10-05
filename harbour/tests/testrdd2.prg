@@ -191,7 +191,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
       // TEST: Field access
 
-      IF ! Trim( FIELD->CHAR ) == Chr( 65 + Val( SubStr( LTrim( Str( RecNo() ) ), 2, 1 ) ) ) + ;
+      IF ! RTrim( FIELD->CHAR ) == Chr( 65 + Val( SubStr( LTrim( Str( RecNo() ) ), 2, 1 ) ) ) + ;
             " RECORD " + LTrim( Str( RecNo() ) ) .OR. ;
             ! FIELD->NUM == ( iif( RecNo() % 2 > 0, - 1, 1 ) * RecNo() ) + ( RecNo() / 1000 ) .OR. ;
             ! FIELD->DATE == Date() + Int( FIELD->NUM ) .OR. ;
@@ -300,7 +300,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    SET EXACT ON
    SET ORDER TO 0
-   COUNT for Trim( FIELD->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count
+   COUNT FOR RTrim( FIELD->CHAR ) = "A RECORD 1" TO xTemp  // Get proper count
    INDEX ON CHAR TO test_e.idx FOR RTrim( FIELD->CHAR ) = "A RECORD 1" ADDITIVE
    IF ! dbOrderInfo( DBOI_KEYCOUNT ) == xTemp
       NotifyUser( "Bad conditional index count with EXACT ON" )

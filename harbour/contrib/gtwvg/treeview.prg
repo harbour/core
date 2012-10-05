@@ -294,8 +294,8 @@ METHOD WvgTreeView:getSelectionInfo( nlParam )
 
    ::hParentSelected    := hParentOfSelected
    ::hItemSelected      := hItemSelected
-   ::textParentSelected := Trim( cParent )
-   ::textItemSelected   := Trim( cText   )
+   ::textParentSelected := RTrim( cParent )
+   ::textItemSelected   := RTrim( cText   )
 
    IF ( n := AScan( ::aItems, {| o | o:hItem == hItemSelected } ) ) > 0
       ::oItemSelected      := ::aItems[ n ]

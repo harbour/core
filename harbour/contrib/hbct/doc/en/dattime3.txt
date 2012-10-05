@@ -91,7 +91,7 @@
  *
  *      cBegin := SPACE( 11 )
  *      @ 5, 10 SAY "Please input time for beginning work:";
- *      GET cBegin VALID TIMEVALID( TRIM( cBegin ) )
+ *      GET cBegin VALID TIMEVALID( RTRIM( cBegin ) )
  *      READ
  *
  *      Using a VALID clause without TRIM, hours and minutes must be

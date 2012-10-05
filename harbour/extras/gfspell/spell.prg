@@ -201,7 +201,7 @@ STATIC nBuffCount  := 0
 
 
 LOCAL ok      := .T.
-LOCAL cLookup := upper(trim(cWord))
+LOCAL cLookup := upper(rtrim(cWord))
 LOCAL nRow
 LOCAL nCol
 LOCAL x
@@ -489,7 +489,7 @@ LOCAL arr_
 **DEBUG**
 @24,30 SAY "At SP_suggest"
 
-cWord := upper(trim(cWord))
+cWord := upper(rtrim(cWord))
 zz    := len(cWord)
 
 if zz =1                           // Don't offer suggestions for
@@ -614,7 +614,7 @@ if SUGGEST_PREFERENCE $ "AB"
    //
 
    for jj := 1 to nSugg
-      cHold := trim(substr(aRet_[jj],5))    // Extract the word
+      cHold := rtrim(substr(aRet_[jj],5))    // Extract the word
       zz    := len(cHold)
       //
       // Check suffixes
@@ -841,7 +841,7 @@ LOCAL cHold,ll,cTemp
 **DEBUG**
 @24,30 SAY "At SP_quick"
 
-cWord    := upper(trim(cWord))
+cWord    := upper(rtrim(cWord))
 
 if zz < 3                          && Don't offer suggestions for
    return {}                       && one or two letter words
@@ -1256,12 +1256,12 @@ if nH >= 0
                skip +1
             enddo
             do while substr(DICT->word,2,1)==chr(j+64) .and. !eof()
-               if len(trim(DICT->word))=3
+               if len(rtrim(DICT->word))=3
                   Bit(cBits,asc(substr(DICT->word,3,1))-64,.T.)
-               elseif len(trim(DICT->word))==2
+               elseif len(rtrim(DICT->word))==2
                   Bit(cBits,27,.T.)
                else
-                  temp += StoreWord(trim(DICT->word))
+                  temp += StoreWord(rtrim(DICT->word))
                endif
                skip +1
                if lTalk
@@ -1604,7 +1604,7 @@ return lMatch
 #ifndef CLIP52
 function aWords(cLine)
 LOCAL aWords_   := {}
-LOCAL nSize     := len(trim(cLine))
+LOCAL nSize     := len(rtrim(cLine))
 LOCAL x,y,z
 LOCAL cWord     := ""
 LOCAL nOffset
