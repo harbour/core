@@ -323,15 +323,18 @@ HB_FUNC( HB_CURDRIVE )
 HB_FUNC( HB_CWD )
 {
    char szBuffer[ HB_PATH_MAX ];
-   const char * szNewWD = hb_parc( 1 );
-
-   if( szNewWD )
-      hb_fsSetCWD( szNewWD );
+   const char * szNewWD;
 
    if( hb_fsGetCWD( szBuffer, sizeof( szBuffer ) ) )
       hb_retc( szBuffer );
    else
       hb_retc_null();
+
+   szNewWD = hb_parc( 1 );
+   if( szNewWD )
+      hb_fsSetCWD( szNewWD );
+
+   hb_fsSetFError( hb_fsError() );
 }
 
 HB_FUNC( HB_PROGNAME )
@@ -405,6 +408,7 @@ HB_FUNC( HB_FGETATTR )
    HB_FATTR nAttr;
 
    hb_retl( hb_fsGetAttr( hb_parcx( 1 ), &nAttr ) );
+   hb_fsSetFError( hb_fsError() );
 
    hb_stornl( nAttr, 2 );
 }
@@ -412,6 +416,7 @@ HB_FUNC( HB_FGETATTR )
 HB_FUNC( HB_FSETATTR )
 {
    hb_retl( hb_fsSetAttr( hb_parcx( 1 ), hb_parnl( 2 ) ) );
+   hb_fsSetFError( hb_fsError() );
 }
 
 HB_FUNC( HB_FSETDATETIME )
@@ -433,13 +438,18 @@ HB_FUNC( HB_FSETDATETIME )
    }
 
    hb_retl( hb_fsSetFileTime( hb_parcx( 1 ), lDate, lTime ) );
+   hb_fsSetFError( hb_fsError() );
 }
 
 HB_FUNC( HB_FGETDATETIME )
 {
    long lJulian, lMillisec;
+   HB_BOOL fOK;
 
-   if( hb_fsGetFileTime( hb_parcx( 1 ), &lJulian, &lMillisec ) )
+   fOK = hb_fsGetFileTime( hb_parcx( 1 ), &lJulian, &lMillisec );
+   hb_fsSetFError( hb_fsError() );
+
+   if( fOK )
    {
       if( HB_ISBYREF( 3 ) )
       {
@@ -477,6 +487,7 @@ HB_FUNC( HB_FSETDEVMODE )
 HB_FUNC( HB_FISDEVICE )
 {
    hb_retl( hb_fsIsDevice( hb_numToHandle( hb_parnint( 1 ) ) ) );
+   hb_fsSetFError( hb_fsError() );
 }
 
 /* HB_PREAD( <nPipeHandle>, <@cBuffer>, [<nBytes>], [<nTimeOut>] )
