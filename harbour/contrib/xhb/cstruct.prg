@@ -401,7 +401,7 @@ FUNCTION HB_CTypeArrayID( CType, nLen )
    LOCAL Counter
    LOCAL nID
    LOCAL aCTypes, acMembers, cMember
-   LOCAL cArrayClassName := "C Array of [" + LTrim( Str( nLen ) ) + "] CType: " + Str( CType )
+   LOCAL cArrayClassName := "C Array of [" + hb_ntos( nLen ) + "] CType: " + Str( CType )
 
    nID := aScan( s_aArrayClasses, {| aArrayDefinitions | aArrayDefinitions[1] == CType .AND. aArrayDefinitions[2] == nLen } )
 
@@ -437,7 +437,7 @@ FUNCTION HB_CTypeArrayID( CType, nLen )
       //ENDIF
 
       FOR Counter := 1 TO nLen
-         cMember := LTrim( Str( Counter ) )
+         cMember := hb_ntos( Counter )
          acMembers[Counter] := cMember
          __clsAddMsg( hClass,       cMember, Counter, HB_OO_MSG_PROPERTY )
       NEXT

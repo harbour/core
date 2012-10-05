@@ -111,7 +111,7 @@ FUNCTION PutCounter( oHtm, nNumber, cDir, nDigits, nWidth, bgColor, nBorder )
    DEFAULT nNumber TO 0
    DEFAULT cDir TO "/images/counters/"
    DEFAULT nWidth TO 50
-   DEFAULT nDigits TO Len( Alltrim( Str( nNumber ) ) )
+   DEFAULT nDigits TO Len( hb_ntos( nNumber ) )
    DEFAULT nBorder TO 1
    DEFAULT BGCOLOR TO "black"
 

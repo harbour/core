@@ -285,21 +285,22 @@ PROCEDURE Main()
    @ MaxRow(), 0 SAY "This is line " + hb_ntos( MaxRow() )
 
    DO WHILE !( ( ch := Inkey(0 ) ) == K_ESC )
-      /* experiment with different paintrefresh interval:
-      do case
-      case ch==asc("<")
-         wvw_setPaintRefresh( INT(wvw_setPaintRefresh() / 2) )
-         alert(wvw_setPaintRefresh())
-      case ch==asc(">")
-         wvw_setPaintRefresh( INT(wvw_setPaintRefresh() * 2) )
-         alert(wvw_setPaintRefresh())
-      case ch==asc("0")
+      // experiment with different paintrefresh interval:
+      #if 0
+      DO CASE
+      CASE ch == hb_keyCode( "<" )
+         wvw_setPaintRefresh( Int( wvw_setPaintRefresh() / 2 ) )
+         Alert( wvw_setPaintRefresh() )
+      CASE ch == hb_keyCode( ">" )
+         wvw_setPaintRefresh( Int( wvw_setPaintRefresh() * 2 ) )
+         Alert( wvw_setPaintRefresh() )
+      CASE ch == hb_keyCode( "0" )
          wvw_setPaintRefresh( 0 )
-         alert(wvw_setPaintRefresh())
-      otherwise
-         * do nothing. inkey() has been handled by nAfterInket()
-      endcase
-      */
+         Alert( wvw_setPaintRefresh() )
+      OTHERWISE
+         // do nothing. inkey() has been handled by nAfterInket()
+      ENDCASE
+      #endif
    ENDDO
 
    lboxmessage( "Thanks for trying this program." + hb_eol() + ;

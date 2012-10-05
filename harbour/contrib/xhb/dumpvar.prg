@@ -142,7 +142,7 @@ STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursion
 
    CASE cType == "A"
         IF nRecursionLevel == 1
-           cString += Space( nIndent ) + "Type='A' -> { Array of " + LTrim( Str( Len( xVar ) ) ) + " Items }" + hb_eol()
+           cString += Space( nIndent ) + "Type='A' -> { Array of " + hb_ntos( Len( xVar ) ) + " Items }" + hb_eol()
         ENDIF
         IF nMaxRecursionLevel > 0 .AND. nRecursionLevel > nMaxRecursionLevel
            cString += AsString( xVar )
@@ -152,7 +152,7 @@ STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursion
 
    CASE cType == "H"
         IF nRecursionLevel == 1
-           cString += Space( nIndent ) + "Type='H' -> { Hash of " + LTrim( Str( Len( xVar ) ) ) + " Items }" + hb_eol()
+           cString += Space( nIndent ) + "Type='H' -> { Hash of " + hb_ntos( Len( xVar ) ) + " Items }" + hb_eol()
         ENDIF
         IF nMaxRecursionLevel > 0 .AND. nRecursionLevel > nMaxRecursionLevel
            cString += AsString( xVar )
@@ -214,8 +214,8 @@ STATIC FUNCTION DShowArray( aVar, lRecursive, nIndent, nRecursionLevel, nMaxRecu
 
    IF HB_ISARRAY( aVar )
       nEolLen := Len( hb_eol() )
-      nChar := Len( LTrim( Str( Len( aVar ) ) ) )  // return number of chars to display that value
-                                                   // i.e. if Len( aVar ) == 99, then nChar := 2
+      nChar := Len( hb_ntos( Len( aVar ) ) )  // return number of chars to display that value
+                                              // i.e. if Len( aVar ) == 99, then nChar := 2
       cString += Space( nIndent ) + "{" + hb_eol()
       FOR EACH xVal IN aVar
           cString += Space( nIndent ) + " ["+ LTrim( StrZero( xVal:__EnumIndex(), nChar ) ) + "] => " + AsString( xVal ) + ", " + hb_eol()

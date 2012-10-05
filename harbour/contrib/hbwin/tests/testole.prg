@@ -20,6 +20,8 @@ PROCEDURE Main()
 
    LOCAL nOption
 
+   CLS
+
    DO WHILE .T.
       ? ""
       ? "Select OLE test:"
@@ -41,37 +43,37 @@ PROCEDURE Main()
       ? "> "
 
       nOption := Inkey( 0 )
-      ?? Chr( nOption )
+      ?? hb_keyChar( nOption )
 
-      IF     nOption == Asc( "1" )
+      IF     nOption == hb_keyCode( "1" )
          Exm_MSExcel()
-      ELSEIF nOption == Asc( "2" )
+      ELSEIF nOption == hb_keyCode( "2" )
          Exm_MSWord()
-      ELSEIF nOption == Asc( "3" )
+      ELSEIF nOption == hb_keyCode( "3" )
          Exm_MSOutlook()
-      ELSEIF nOption == Asc( "4" )
+      ELSEIF nOption == hb_keyCode( "4" )
          Exm_MSOutlook2()
-      ELSEIF nOption == Asc( "5" )
+      ELSEIF nOption == hb_keyCode( "5" )
          Exm_IExplorer()
-      ELSEIF nOption == Asc( "6" )
+      ELSEIF nOption == hb_keyCode( "6" )
          Exm_OOCalc()
-      ELSEIF nOption == Asc( "7" )
+      ELSEIF nOption == hb_keyCode( "7" )
          Exm_OOWriter()
-      ELSEIF nOption == Asc( "8" )
+      ELSEIF nOption == hb_keyCode( "8" )
          Exm_OOOpen()
-      ELSEIF nOption == Asc( "9" )
+      ELSEIF nOption == hb_keyCode( "9" )
          Exm_CDO()
-      ELSEIF nOption == Asc( "a" )
+      ELSEIF nOption == hb_keyCode( "a" )
          Exm_ADODB()
-      ELSEIF nOption == Asc( "b" )
+      ELSEIF nOption == hb_keyCode( "b" )
          Exm_SOAP()
-      ELSEIF nOption == Asc( "c" )
+      ELSEIF nOption == hb_keyCode( "c" )
          Exm_PocketSOAP()
-      ELSEIF nOption == Asc( "d" )
+      ELSEIF nOption == hb_keyCode( "d" )
          Exm_IExplorer2()
-      ELSEIF nOption == Asc( "e" )
+      ELSEIF nOption == hb_keyCode( "e" )
          Exm_CreateShortcut()
-      ELSEIF nOption == Asc( "0" )
+      ELSEIF nOption == hb_keyCode( "0" )
          EXIT
       ENDIF
    ENDDO

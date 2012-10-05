@@ -542,7 +542,7 @@ METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
    ENDIF
 
    IF nSize != NIL
-      cStr += ' SIZE="' + LTrim( Str( nSize ) ) + '"'
+      cStr += ' SIZE="' + hb_ntos( nSize ) + '"'
 
       IF lSet
          ::fontSize := nSize
@@ -608,7 +608,7 @@ METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLA
    IF lPut
 
       IF nSize != NIL
-         cStr += ' SIZE="' + LTrim( Str( nSize ) ) + '"'
+         cStr += ' SIZE="' + hb_ntos( nSize ) + '"'
 
          IF lSet
             ::fontSize := nSize
@@ -674,7 +674,7 @@ METHOD DefineFont( cFont, cType, nSize, cColor, lSet ) CLASS THtml
    ENDIF
 
    IF nSize != NIL
-      cStr += ' SIZE="' + LTrim( Str( nSize ) ) + '"'
+      cStr += ' SIZE="' + hb_ntos( nSize ) + '"'
 
       IF lSet
          ::fontSize := nSize
@@ -2288,7 +2288,7 @@ FUNCTION HtmlPadR( cStr, n )
 
    RETURN cRet
 
-//----------------------------------------------------------------------------
+//
 
 FUNCTION ANY2STR( xVal )
 
@@ -2302,7 +2302,7 @@ FUNCTION HTMLANY2STR( xVal )
       xRet := iif( Empty( xVal ), ".", xVal )
 
    ELSEIF HB_ISNUMERIC( xVal )
-      xRet := AllTrim( Str( xVal ) )
+      xRet := hb_ntos( xVal )
 
    ELSEIF HB_ISOBJECT( xVal )
       xRet := "<" + xVal:CLASSNAME() + ">"

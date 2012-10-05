@@ -5,7 +5,7 @@
 #include "fileio.ch"
 #include "common.ch"
 
-#define CRLF chr(13)+chr(10)
+#define CRLF ( Chr( 13 ) + Chr( 10 ) )
 
 #define NORMAL        0
 #define BOLD          1

@@ -43,7 +43,7 @@ DEFAULT cId to ""
    ENDIF
 
    IF ( nAt := at( "#pagenumber#", cString ) ) > 0
-      cString := left( cString, nAt - 1 ) + ltrim(str( pdfPageNumber())) + substr( cString, nAt + 12 )
+      cString := left( cString, nAt - 1 ) + hb_ntos( pdfPageNumber() ) + substr( cString, nAt + 12 )
    ENDIF
 
    lReverse := .F.
@@ -85,10 +85,10 @@ DEFAULT cId to ""
       _nFont := ascan( t_aReport[ FONTS ], {| arr | arr[ 1 ] == t_aReport[ FONTNAME ]} )
       IF !( t_aReport[ FONTNAME ] == t_aReport[ FONTNAMEPREV ] )
          t_aReport[ FONTNAMEPREV ] := t_aReport[ FONTNAME ]
-         t_aReport[ PAGEBUFFER ] += CRLF + "BT /Fo" + ltrim(str( _nFont )) + " " + ltrim(transform( t_aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET"
+         t_aReport[ PAGEBUFFER ] += CRLF + "BT /Fo" + hb_ntos( _nFont ) + " " + ltrim(transform( t_aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET"
       ELSEIF t_aReport[ FONTSIZE ] != t_aReport[ FONTSIZEPREV ]
          t_aReport[ FONTSIZEPREV ] := t_aReport[ FONTSIZE ]
-         t_aReport[ PAGEBUFFER ] += CRLF + "BT /Fo" + ltrim(str( _nFont )) + " " + ltrim(transform( t_aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET"
+         t_aReport[ PAGEBUFFER ] += CRLF + "BT /Fo" + hb_ntos( _nFont ) + " " + ltrim(transform( t_aReport[ FONTSIZE ], "999.99")) + " Tf " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET"
       ELSE
          t_aReport[ PAGEBUFFER ] += CRLF + "BT " + ltrim(transform( nCol, "9999.99" )) + " " + ltrim(transform( nRow, "9999.99" )) + " Td (" + cString + ") Tj ET"
       ENDIF
@@ -281,20 +281,20 @@ DEFAULT cColor to ""
 
       IF nShade > 0
          // version 0.02
-         t_aReport[ PAGEBUFFER ] += CRLF + transform( 1.00 - nShade / 100.00, "9.99") + " g " + cBoxColor + ltrim(str(pdfM2X( y1 ))) + " " + ltrim(str(pdfM2Y( x1 ))) + " " + ltrim(str(pdfM2X( y2 - y1 ))) + " -" + ltrim(str(pdfM2X( x2 - x1 ))) + " re f 0 g"
+         t_aReport[ PAGEBUFFER ] += CRLF + transform( 1.00 - nShade / 100.00, "9.99") + " g " + cBoxColor + hb_ntos( pdfM2X( y1 ) ) + " " + hb_ntos( pdfM2Y( x1 ) ) + " " + hb_ntos( pdfM2X( y2 - y1 ) ) + " -" + hb_ntos( pdfM2X( x2 - x1 ) ) + " re f 0 g"
       ENDIF
 
       IF nBorder > 0
-         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + ltrim(str(pdfM2X( y1 ))) + " " + ltrim(str(pdfM2Y( x1 ))) + " " + ltrim(str(pdfM2X( y2 - y1 ))) + " -" + ltrim(str(pdfM2X( nBorder ))) + " re f"
-         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + ltrim(str(pdfM2X( y2 - nBorder ))) + " " + ltrim(str(pdfM2Y( x1 ))) + " " + ltrim(str(pdfM2X( nBorder ))) + " -" + ltrim(str(pdfM2X( x2 - x1 ))) + " re f"
-         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + ltrim(str(pdfM2X( y1 ))) + " " + ltrim(str(pdfM2Y( x2 - nBorder ))) + " " + ltrim(str(pdfM2X( y2 - y1 ))) + " -" + ltrim(str(pdfM2X( nBorder ))) + " re f"
-         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + ltrim(str(pdfM2X( y1 ))) + " " + ltrim(str(pdfM2Y( x1 ))) + " " + ltrim(str(pdfM2X( nBorder ))) + " -" + ltrim(str(pdfM2X( x2 - x1 ))) + " re f"
+         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + hb_ntos( pdfM2X( y1 ) ) + " " + hb_ntos(pdfM2Y( x1 )) + " " + hb_ntos(pdfM2X( y2 - y1 )) + " -" + hb_ntos(pdfM2X( nBorder )) + " re f"
+         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + hb_ntos(pdfM2X( y2 - nBorder )) + " " + hb_ntos(pdfM2Y( x1 )) + " " + hb_ntos(pdfM2X( nBorder )) + " -" + hb_ntos(pdfM2X( x2 - x1 )) + " re f"
+         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + hb_ntos(pdfM2X( y1 )) + " " + hb_ntos(pdfM2Y( x2 - nBorder )) + " " + hb_ntos(pdfM2X( y2 - y1 )) + " -" + hb_ntos(pdfM2X( nBorder )) + " re f"
+         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + hb_ntos(pdfM2X( y1 )) + " " + hb_ntos(pdfM2Y( x1 )) + " " + hb_ntos(pdfM2X( nBorder )) + " -" + hb_ntos(pdfM2X( x2 - x1 )) + " re f"
       ENDIF
    ELSEIF cUnits == "D"// "Dots"
       //x1, y1, x2, y2 - nTop, nLeft, nBottom, nRight
       IF nShade > 0
          // version 0.02
-         t_aReport[ PAGEBUFFER ] += CRLF + transform( 1.00 - nShade / 100.00, "9.99") + " g " + cBoxColor + ltrim(str( y1 )) + " " + ltrim(str( t_aReport[ PAGEY ] - x1 )) + " " + ltrim(str( y2 - y1 )) + " -" + ltrim(str( x2 - x1 )) + " re f 0 g"
+         t_aReport[ PAGEBUFFER ] += CRLF + transform( 1.00 - nShade / 100.00, "9.99") + " g " + cBoxColor + hb_ntos( y1 ) + " " + hb_ntos( t_aReport[ PAGEY ] - x1 ) + " " + hb_ntos( y2 - y1 ) + " -" + hb_ntos( x2 - x1 ) + " re f 0 g"
       ENDIF
 
       IF nBorder > 0
@@ -305,10 +305,10 @@ DEFAULT cColor to ""
          +-----+
             3
 */
-         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + ltrim(str( y1 )) + " " + ltrim(str( t_aReport[ PAGEY ] - x1 )) + " " + ltrim(str( y2 - y1 )) + " -" + ltrim(str( nBorder )) + " re f"
-         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + ltrim(str( y2 - nBorder )) + " " + ltrim(str( t_aReport[ PAGEY ] - x1 )) + " " + ltrim(str( nBorder )) + " -" + ltrim(str( x2 - x1 )) + " re f"
-         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + ltrim(str( y1 )) + " " + ltrim(str( t_aReport[ PAGEY ] - x2 + nBorder )) + " " + ltrim(str( y2 - y1 )) + " -" + ltrim(str( nBorder )) + " re f"
-         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + ltrim(str( y1 )) + " " + ltrim(str( t_aReport[ PAGEY ] - x1 )) + " " + ltrim(str( nBorder )) + " -" + ltrim(str( x2 - x1 )) + " re f"
+         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + hb_ntos( y1 ) + " " + hb_ntos( t_aReport[ PAGEY ] - x1 ) + " " + hb_ntos( y2 - y1 ) + " -" + hb_ntos( nBorder ) + " re f"
+         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + hb_ntos( y2 - nBorder ) + " " + hb_ntos( t_aReport[ PAGEY ] - x1 ) + " " + hb_ntos( nBorder ) + " -" + hb_ntos( x2 - x1 ) + " re f"
+         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + hb_ntos( y1 ) + " " + hb_ntos( t_aReport[ PAGEY ] - x2 + nBorder ) + " " + hb_ntos( y2 - y1 ) + " -" + hb_ntos( nBorder ) + " re f"
+         t_aReport[ PAGEBUFFER ] += CRLF + "0 g " + hb_ntos( y1 ) + " " + hb_ntos( t_aReport[ PAGEY ] - x1 ) + " " + hb_ntos( nBorder ) + " -" + hb_ntos( x2 - x1 ) + " re f"
       ENDIF
    ENDIF
 
@@ -332,11 +332,11 @@ DEFAULT cBoxColor to chr(255) + chr(255) + chr(255)
                          Chr_RGB( substr( cBoxColor, 2, 1 )) + " " + ;
                          Chr_RGB( substr( cBoxColor, 3, 1 )) + ;
                          " rg" + ;
-                         CRLF + ltrim(str( nBorderWidth )) + " w" + ;
-                         CRLF + ltrim( str ( nLeft + nBorderWidth / 2 )) + " " + ;
-                         CRLF + ltrim( str ( t_aReport[ PAGEY ] - nBottom + nBorderWidth / 2)) + " " + ;
-                         CRLF + ltrim( str ( nRight - nLeft -  nBorderWidth )) + ;
-                         CRLF + ltrim( str ( nBottom - nTop - nBorderWidth )) + " " + ;
+                         CRLF + hb_ntos( nBorderWidth ) + " w" + ;
+                         CRLF + hb_ntos( nLeft + nBorderWidth / 2 ) + " " + ;
+                         CRLF + hb_ntos( t_aReport[ PAGEY ] - nBottom + nBorderWidth / 2 ) + " " + ;
+                         CRLF + hb_ntos( nRight - nLeft - nBorderWidth ) + ;
+                         CRLF + hb_ntos( nBottom - nTop - nBorderWidth ) + " " + ;
                          " re" + ;
                          CRLF + "B"
 return nil
@@ -355,7 +355,7 @@ DEFAULT nCol to iif( cUnits == "R", t_aReport[ REPORTWIDTH ] / 2, t_aReport[ PAG
    ENDIF
 
    IF ( nAt := at( "#pagenumber#", cString ) ) > 0
-      cString := left( cString, nAt - 1 ) + ltrim(str( pdfPageNumber())) + substr( cString, nAt + 12 )
+      cString := left( cString, nAt - 1 ) + hb_ntos( pdfPageNumber() ) + substr( cString, nAt + 12 )
    ENDIF
 
    nLen := pdfLen( cString ) / 2
@@ -392,11 +392,11 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
    cTemp := ;
    "1 0 obj"+CRLF+;
    "<<"+CRLF+;
-   "/Type /Pages /Count " + ltrim(str(t_aReport[ REPORTPAGE ])) + CRLF +;
+   "/Type /Pages /Count " + hb_ntos( t_aReport[ REPORTPAGE ] ) + CRLF +;
    "/Kids ["
 
    for nI := 1 to t_aReport[ REPORTPAGE ]
-      cTemp += " " + ltrim(str( t_aReport[ PAGES ][ nI ] )) + " 0 R"
+      cTemp += " " + hb_ntos( t_aReport[ PAGES ][ nI ] ) + " 0 R"
    next
 
    cTemp += " ]" + CRLF + ;
@@ -409,7 +409,7 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
    // info
    ++t_aReport[ REPORTOBJ ]
    aadd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
-   cTemp := ltrim(str( t_aReport[ REPORTOBJ ] )) + " 0 obj" + CRLF + ;
+   cTemp := hb_ntos( t_aReport[ REPORTOBJ ] ) + " 0 obj" + CRLF + ;
             "<<" + CRLF + ;
             "/Producer ()" + CRLF + ;
             "/Title ()" + CRLF + ;
@@ -426,8 +426,8 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
    // root
    ++t_aReport[ REPORTOBJ ]
    aadd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
-   cTemp := ltrim(str( t_aReport[ REPORTOBJ ] )) + " 0 obj" + CRLF + ;
-   "<< /Type /Catalog /Pages 1 0 R /Outlines " + ltrim(str( t_aReport[ REPORTOBJ ] + 1 )) + " 0 R" + iif( ( nBookLen := len( t_aReport[ BOOKMARK ] )) > 0, " /PageMode /UseOutlines", "") + " >>" + CRLF + "endobj" + CRLF
+   cTemp := hb_ntos( t_aReport[ REPORTOBJ ] ) + " 0 obj" + CRLF + ;
+   "<< /Type /Catalog /Pages 1 0 R /Outlines " + hb_ntos( t_aReport[ REPORTOBJ ] + 1 ) + " 0 R" + iif( ( nBookLen := len( t_aReport[ BOOKMARK ] )) > 0, " /PageMode /UseOutlines", "") + " >>" + CRLF + "endobj" + CRLF
    t_aReport[ DOCLEN ] += len( cTemp )
    fwrite( t_aReport[ HANDLE ], cTemp )
 
@@ -457,7 +457,7 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
 
       nLast += t_aReport[ REPORTOBJ ]
 
-      cTemp := ltrim(str( t_aReport[ REPORTOBJ ] )) + " 0 obj" + CRLF + "<< /Type /Outlines /Count " + ltrim(str( nCount )) + " /First " + ltrim(str( nFirst )) + " 0 R /Last " + ltrim(str( nLast )) + " 0 R >>" + CRLF + "endobj" //+ CRLF
+      cTemp := hb_ntos( t_aReport[ REPORTOBJ ] ) + " 0 obj" + CRLF + "<< /Type /Outlines /Count " + hb_ntos( nCount ) + " /First " + hb_ntos( nFirst ) + " 0 R /Last " + hb_ntos( nLast ) + " 0 R >>" + CRLF + "endobj" //+ CRLF
       aadd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
       t_aReport[ DOCLEN ] += len( cTemp )
       fwrite( t_aReport[ HANDLE ], cTemp )
@@ -465,16 +465,16 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
       ++t_aReport[ REPORTOBJ ]
       nRecno := 1
       FOR nI := 1 to nBookLen
-         cTemp := CRLF + ltrim(str( t_aReport[ REPORTOBJ ] + nI - 1 )) + " 0 obj" + CRLF + ;
+         cTemp := CRLF + hb_ntos( t_aReport[ REPORTOBJ ] + nI - 1 ) + " 0 obj" + CRLF + ;
                  "<<" + CRLF + ;
-                 "/Parent " + ltrim(str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKPARENT ])) + " 0 R" + CRLF + ;
-                 "/Dest [" + ltrim(str( t_aReport[ PAGES ][ t_aReport[ BOOKMARK ][ nRecno ][ BOOKPAGE ] ] )) + " 0 R /XYZ 0 " + ltrim( str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKCOORD ])) + " 0]" + CRLF + ;
+                 "/Parent " + hb_ntos( t_aReport[ BOOKMARK ][ nRecno ][ BOOKPARENT ]) + " 0 R" + CRLF + ;
+                 "/Dest [" + hb_ntos( t_aReport[ PAGES ][ t_aReport[ BOOKMARK ][ nRecno ][ BOOKPAGE ] ] ) + " 0 R /XYZ 0 " + hb_ntos( t_aReport[ BOOKMARK ][ nRecno ][ BOOKCOORD ] ) + " 0]" + CRLF + ;
                  "/Title (" + alltrim( t_aReport[ BOOKMARK ][ nRecno ][ BOOKTITLE ]) + ")" + CRLF + ;
-                 iif( t_aReport[ BOOKMARK ][ nRecno ][ BOOKPREV ] > 0, "/Prev " + ltrim(str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKPREV ])) + " 0 R" + CRLF, "") + ;
-                 iif( t_aReport[ BOOKMARK ][ nRecno ][ BOOKNEXT ] > 0, "/Next " + ltrim(str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKNEXT ])) + " 0 R" + CRLF, "") + ;
-                 iif( t_aReport[ BOOKMARK ][ nRecno ][ BOOKFIRST ] > 0, "/First " + ltrim(str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKFIRST ])) + " 0 R" + CRLF, "") + ;
-                 iif( t_aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ] > 0, "/Last " + ltrim(str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ])) + " 0 R" + CRLF, "") + ;
-                 iif( t_aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ] != 0, "/Count " + ltrim(str( t_aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ])) + CRLF, "") + ;
+                 iif( t_aReport[ BOOKMARK ][ nRecno ][ BOOKPREV ] > 0, "/Prev " + hb_ntos( t_aReport[ BOOKMARK ][ nRecno ][ BOOKPREV ]) + " 0 R" + CRLF, "") + ;
+                 iif( t_aReport[ BOOKMARK ][ nRecno ][ BOOKNEXT ] > 0, "/Next " + hb_ntos( t_aReport[ BOOKMARK ][ nRecno ][ BOOKNEXT ]) + " 0 R" + CRLF, "") + ;
+                 iif( t_aReport[ BOOKMARK ][ nRecno ][ BOOKFIRST ] > 0, "/First " + hb_ntos( t_aReport[ BOOKMARK ][ nRecno ][ BOOKFIRST ]) + " 0 R" + CRLF, "") + ;
+                 iif( t_aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ] > 0, "/Last " + hb_ntos( t_aReport[ BOOKMARK ][ nRecno ][ BOOKLAST ]) + " 0 R" + CRLF, "") + ;
+                 iif( t_aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ] != 0, "/Count " + hb_ntos( t_aReport[ BOOKMARK ][ nRecno ][ BOOKCOUNT ]) + CRLF, "") + ;
                  ">>" + CRLF + "endobj" + CRLF
 
          aadd( t_aReport[ REFS ], t_aReport[ DOCLEN ] + 2 )
@@ -486,7 +486,7 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
 
       t_aReport[ REPORTOBJ ] += nBookLen - 1
    ELSE
-      cTemp := ltrim(str( t_aReport[ REPORTOBJ ] )) + " 0 obj" + CRLF + "<< /Type /Outlines /Count 0 >>" + CRLF + "endobj" + CRLF
+      cTemp := hb_ntos( t_aReport[ REPORTOBJ ] ) + " 0 obj" + CRLF + "<< /Type /Outlines /Count 0 >>" + CRLF + "endobj" + CRLF
       aadd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
       t_aReport[ DOCLEN ] += len( cTemp )
       fwrite( t_aReport[ HANDLE ], cTemp )
@@ -498,16 +498,16 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
    ++t_aReport[ REPORTOBJ ]
 
    cTemp += "xref" + CRLF + ;
-   "0 " + ltrim(str( t_aReport[ REPORTOBJ ] )) + CRLF +;
+   "0 " + hb_ntos( t_aReport[ REPORTOBJ ] ) + CRLF +;
    padl( t_aReport[ REFS ][ 1 ], 10, "0") + " 65535 f" + CRLF
 
    for nI := 2 to len( t_aReport[ REFS ] )
       cTemp += padl( t_aReport[ REFS ][ nI ], 10, "0") + " 00000 n" + CRLF
    next
 
-   cTemp += "trailer << /Size " + ltrim(str( t_aReport[ REPORTOBJ ] )) + " /Root " + ltrim(str( nObj1 - 1 )) + " 0 R /Info " + ltrim(str( nObj1 - 2 )) + " 0 R >>" + CRLF + ;
+   cTemp += "trailer << /Size " + hb_ntos( t_aReport[ REPORTOBJ ] ) + " /Root " + hb_ntos( nObj1 - 1 ) + " 0 R /Info " + hb_ntos( nObj1 - 2 ) + " 0 R >>" + CRLF + ;
             "startxref" + CRLF + ;
-            ltrim(str( t_aReport[ DOCLEN ] )) + CRLF + ;
+            hb_ntos( t_aReport[ DOCLEN ] ) + CRLF + ;
             "%%EOF" + CRLF
    fwrite( t_aReport[ HANDLE ], cTemp )
 /*
@@ -531,13 +531,13 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
    aadd( t_aReport[ PAGES ], t_aReport[ REPORTOBJ ] + 1 )
 
    cTemp := ;
-   ltrim(str( ++t_aReport[ REPORTOBJ ] )) + " 0 obj" + CRLF + ;
+   hb_ntos( ++t_aReport[ REPORTOBJ ] ) + " 0 obj" + CRLF + ;
    "<<" + CRLF + ;
    "/Type /Page /Parent 1 0 R" + CRLF + ;
-   "/Resources " + ltrim(str( ++t_aReport[ REPORTOBJ ] )) + " 0 R" + CRLF + ;
+   "/Resources " + hb_ntos( ++t_aReport[ REPORTOBJ ] ) + " 0 R" + CRLF + ;
    "/MediaBox [ 0 0 " + ltrim(transform( t_aReport[ PAGEX ], "9999.99")) + " " + ;
    ltrim(transform(t_aReport[ PAGEY ], "9999.99")) + " ]" + CRLF + ;
-   "/Contents " + ltrim(str( ++t_aReport[ REPORTOBJ ] )) + " 0 R" + CRLF + ;
+   "/Contents " + hb_ntos( ++t_aReport[ REPORTOBJ ] ) + " 0 R" + CRLF + ;
    ">>" + CRLF + ;
    "endobj" + CRLF
 
@@ -546,7 +546,7 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
 
    aadd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
    cTemp := ;
-   ltrim(str(t_aReport[ REPORTOBJ ] - 1)) + " 0 obj" + CRLF + ;
+   hb_ntos( t_aReport[ REPORTOBJ ] - 1 ) + " 0 obj" + CRLF + ;
    "<<"+CRLF+;
    "/ColorSpace << /DeviceRGB /DeviceGray >>" + CRLF + ; //version 0.01
    "/ProcSet [ /PDF /Text /ImageB /ImageC ]"
@@ -558,7 +558,7 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
 
       for nI := 1 to len( t_aReport[ PAGEFONTS ] )
          nFont := ascan( t_aReport[ FONTS ], {| arr | arr[ 1 ] == t_aReport[ PAGEFONTS ][ nI ] } )
-         cTemp += CRLF + "/Fo" + ltrim(str( nFont )) + " " + ltrim(str( t_aReport[ FONTS ][ nFont ][ 2 ])) + " 0 R"
+         cTemp += CRLF + "/Fo" + hb_ntos( nFont ) + " " + hb_ntos( t_aReport[ FONTS ][ nFont ][ 2 ]) + " 0 R"
       next
 
       cTemp += CRLF + ">>"
@@ -572,7 +572,7 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
             aadd( t_aReport[ IMAGES ], { t_aReport[ PAGEIMAGES ][ nI ][ 1 ], ++t_aReport[ NEXTOBJ ], pdfImageInfo( t_aReport[ PAGEIMAGES ][ nI ][ 1 ] ) } )
             nImage := len( t_aReport[ IMAGES ] )
          ENDIF
-         cTemp += CRLF + "/Image" + ltrim(str( nImage )) + " " + ltrim(str( t_aReport[ IMAGES ][ nImage ][ 2 ])) + " 0 R"
+         cTemp += CRLF + "/Image" + hb_ntos( nImage ) + " " + hb_ntos( t_aReport[ IMAGES ][ nImage ][ 2 ]) + " 0 R"
       next
       cTemp += CRLF + ">>"
    ENDIF
@@ -583,8 +583,8 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
    fwrite( t_aReport[ HANDLE ], cTemp )
 
    aadd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
-   cTemp := ltrim(str( t_aReport[ REPORTOBJ ] )) + " 0 obj << /Length " + ;
-   ltrim(str( t_aReport[ REPORTOBJ ] + 1 )) + " 0 R >>" + CRLF +;
+   cTemp := hb_ntos( t_aReport[ REPORTOBJ ] ) + " 0 obj << /Length " + ;
+   hb_ntos( t_aReport[ REPORTOBJ ] + 1 ) + " 0 R >>" + CRLF +;
    "stream"
 
    t_aReport[ DOCLEN ] += len( cTemp )
@@ -595,13 +595,13 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
       for nI := 1 to len( t_aReport[ PAGEIMAGES ] )
          cTemp += CRLF + "q"
          nImage := ascan( t_aReport[ IMAGES ], {| arr | arr[ 1 ] == t_aReport[ PAGEIMAGES ][ nI ][ 1 ] } )
-         cTemp += CRLF + ltrim(str( iif( t_aReport[ PAGEIMAGES ][ nI ][ 5 ] == 0, pdfM2X( t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_WIDTH ] / t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_XRES ] * 25.4 ), t_aReport[ PAGEIMAGES ][ nI ][ 5 ]))) + ;
+         cTemp += CRLF + hb_ntos( iif( t_aReport[ PAGEIMAGES ][ nI ][ 5 ] == 0, pdfM2X( t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_WIDTH ] / t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_XRES ] * 25.4 ), t_aReport[ PAGEIMAGES ][ nI ][ 5 ])) + ;
          " 0 0 " + ;
-         ltrim(str( iif( t_aReport[ PAGEIMAGES ][ nI ][ 4 ] == 0, pdfM2X( t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_HEIGHT ] / t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_YRES ] * 25.4 ), t_aReport[ PAGEIMAGES ][ nI ][ 4 ]))) + ;
-         " " + ltrim(str( t_aReport[ PAGEIMAGES ][ nI ][ 3 ] )) + ;
-         " " + ltrim(str( t_aReport[ PAGEY ] - t_aReport[ PAGEIMAGES ][ nI ][ 2 ] - ;
-         iif( t_aReport[ PAGEIMAGES ][ nI ][ 4 ] == 0, pdfM2X( t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_HEIGHT ] / t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_YRES ] * 25.4 ), t_aReport[ PAGEIMAGES ][ nI ][ 4 ]))) + " cm"
-         cTemp += CRLF + "/Image" + ltrim(str( nImage )) + " Do"
+         hb_ntos( iif( t_aReport[ PAGEIMAGES ][ nI ][ 4 ] == 0, pdfM2X( t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_HEIGHT ] / t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_YRES ] * 25.4 ), t_aReport[ PAGEIMAGES ][ nI ][ 4 ])) + ;
+         " " + hb_ntos( t_aReport[ PAGEIMAGES ][ nI ][ 3 ] ) + ;
+         " " + hb_ntos( t_aReport[ PAGEY ] - t_aReport[ PAGEIMAGES ][ nI ][ 2 ] - ;
+         iif( t_aReport[ PAGEIMAGES ][ nI ][ 4 ] == 0, pdfM2X( t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_HEIGHT ] / t_aReport[ IMAGES ][ nImage ][ 3 ][ IMAGE_YRES ] * 25.4 ), t_aReport[ PAGEIMAGES ][ nI ][ 4 ])) + " cm"
+         cTemp += CRLF + "/Image" + hb_ntos( nImage ) + " Do"
          cTemp += CRLF + "Q"
       next
       t_aReport[ PAGEBUFFER ] := cTemp + t_aReport[ PAGEBUFFER ]
@@ -617,8 +617,8 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
 
    aadd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
 
-   cTemp := ltrim(str( ++t_aReport[ REPORTOBJ ] )) + " 0 obj" + CRLF + ;
-   ltrim(str(len( t_aReport[ PAGEBUFFER ] ))) + CRLF + ;
+   cTemp := hb_ntos( ++t_aReport[ REPORTOBJ ] ) + " 0 obj" + CRLF + ;
+   hb_ntos( len( t_aReport[ PAGEBUFFER ] )) + CRLF + ;
    "endobj" + CRLF
 
    t_aReport[ DOCLEN ] += len( cTemp )
@@ -630,11 +630,11 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
          aadd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
 
          cTemp := ;
-         ltrim(str( t_aReport[ FONTS ][ nI ][ 2 ] )) + " 0 obj" + CRLF + ;
+         hb_ntos( t_aReport[ FONTS ][ nI ][ 2 ] ) + " 0 obj" + CRLF + ;
          "<<" + CRLF + ;
          "/Type /Font" + CRLF + ;
          "/Subtype /Type1" + CRLF + ;
-         "/Name /Fo" + ltrim(str( nI )) + CRLF + ;
+         "/Name /Fo" + hb_ntos( nI ) + CRLF + ;
          "/BaseFont /" + t_aReport[ TYPE1 ][ t_aReport[ FONTS ][ nI ][ 1 ] ] + CRLF + ;
          "/Encoding /WinAnsiEncoding" + CRLF + ;
          ">>" + CRLF + ;
@@ -653,17 +653,17 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
 
          // "/Filter /CCITTFaxDecode" for B&W only ?
          cTemp :=  ;
-         ltrim(str( t_aReport[ IMAGES ][ nI ][ 2 ] )) + " 0 obj" + CRLF + ;
+         hb_ntos( t_aReport[ IMAGES ][ nI ][ 2 ] ) + " 0 obj" + CRLF + ;
          "<<" + CRLF + ;
          "/Type /XObject" + CRLF + ;
          "/Subtype /Image" + CRLF + ;
-         "/Name /Image" + ltrim(str(nI)) + CRLF + ;
+         "/Name /Image" + hb_ntos(nI) + CRLF + ;
          "/Filter [" + iif( at( ".jpg", lower( t_aReport[ IMAGES ][ nI ][ 1 ]) ) > 0, " /DCTDecode", "" ) + " ]" + CRLF + ;
-         "/Width " + ltrim(str( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_WIDTH ] )) + CRLF + ;
-         "/Height " + ltrim(str( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_HEIGHT ] )) + CRLF + ;
-         "/BitsPerComponent " + ltrim(str( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_BITS ] )) + CRLF + ;
+         "/Width " + hb_ntos( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_WIDTH ] ) + CRLF + ;
+         "/Height " + hb_ntos( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_HEIGHT ] ) + CRLF + ;
+         "/BitsPerComponent " + hb_ntos( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_BITS ] ) + CRLF + ;
          "/ColorSpace /" + iif( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_SPACE ] == 1, "DeviceGray", "DeviceRGB") + CRLF + ;
-         "/Length " + ltrim(str( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_LENGTH ])) + CRLF + ;
+         "/Length " + hb_ntos( t_aReport[ IMAGES ][ nI ][ 3 ][ IMAGE_LENGTH ]) + CRLF + ;
          ">>" + CRLF + ;
          "stream" + CRLF
 
@@ -1057,7 +1057,7 @@ DEFAULT lExact to .F.
    ENDIF
 
    IF ( nAt := at( "#pagenumber#", cString ) ) > 0
-      cString := left( cString, nAt - 1 ) + ltrim(str( pdfPageNumber())) + substr( cString, nAt + 12 )
+      cString := left( cString, nAt - 1 ) + hb_ntos( pdfPageNumber()) + substr( cString, nAt + 12 )
    ENDIF
 
    nLen := pdfLen( cString )
@@ -1104,7 +1104,7 @@ return nil
 =========================                                                     */
 function pdfSetLPI(_nLpi)                                                     /*
 =========================                                                     */
-local cLpi := alltrim(str(_nLpi))
+local cLpi := hb_ntos(_nLpi)
 DEFAULT _nLpi to 6
 
    cLpi := iif(cLpi$"1;2;3;4;6;8;12;16;24;48",cLpi,"6")
@@ -1415,7 +1415,7 @@ local nId, nI, nLen, nIdLen
             ENDIF
          next
          ++nId
-         cId += ltrim(str(nId))
+         cId += hb_ntos(nId)
       ENDIF
       aadd( t_aReport[ HEADER ], { .T., cFunction, cId } )
       ++nLen
@@ -1783,7 +1783,7 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
       nIFD := bin2l( cIFDNext )
 
       fseek( nHandle, nIFD )
-      //?'*** IFD ' + ltrim(str( ++nPages ))
+      //?'*** IFD ' + hb_ntos( ++nPages )
 
       fread( nHandle, @c2, 2 )
       nFields := bin2i( c2 )
@@ -2236,11 +2236,11 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
          endcase
       /*
       ??padr( cTag, 30 )
-      ??' type ' + padr(aType[ nFieldType ], 10) + ' count ' + ltrim(str(nCount)) + ' <'
+      ??' type ' + padr(aType[ nFieldType ], 10) + ' count ' + hb_ntos(nCount) + ' <'
       do case
          case nFieldType ==  BYTE
               for nI := 1 to nCount
-                  ??' ' + ltrim(str(asc( substr( cValues, nI, 1 ))))
+                  ??' ' + hb_ntos(asc( substr( cValues, nI, 1 )))
               next
          case nFieldType ==  ASCII
               ??' '
@@ -2249,19 +2249,19 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
               next
          case nFieldType ==  SHORT
               for nI := 1 to nCount
-                  ??' ' + ltrim(str(bin2w(substr( cValues, ( nI - 1 ) * 2 + 1, 2 ))))
+                  ??' ' + hb_ntos(bin2w(substr( cValues, ( nI - 1 ) * 2 + 1, 2 )))
               next
          case nFieldType ==  LONG
               for nI := 1 to nCount
-                  ??' ' + ltrim(str(bin2l(substr( cValues, ( nI - 1 ) * 4 + 1, 4 ))))
+                  ??' ' + hb_ntos(bin2l(substr( cValues, ( nI - 1 ) * 4 + 1, 4 )))
               next
          case nFieldType ==  RATIONAL
               for nI := 1 to nCount
-                  ??' ' + ltrim(str(bin2l(substr( cValues, ( nI - 1 ) * 8 + 1, 4 )))) + '/' + ltrim(str(bin2l(substr( cValues, nI + 4, 4 ))))
+                  ??' ' + hb_ntos(bin2l(substr( cValues, ( nI - 1 ) * 8 + 1, 4 ))) + '/' + hb_ntos(bin2l(substr( cValues, nI + 4, 4 )))
               next
          case nFieldType ==  SBYTE
               for nI := 1 to nCount
-                  ??' ' + ltrim(str(asc( substr( cValues, nI, 1 ))))
+                  ??' ' + hb_ntos(asc( substr( cValues, nI, 1 )))
               next
          case nFieldType ==  UNDEFINED
               for nI := 1 to nCount
@@ -2269,20 +2269,20 @@ local nWidth := 0, nHeight := 0, nBits := 0, nFrom := 0, nLength := 0, xRes := 0
               next
          case nFieldType ==  SSHORT
               for nI := 1 to nCount
-                  ??' ' + ltrim(str(bin2i(substr( cValues, ( nI - 1 ) * 2 + 1, 2 ))))
+                  ??' ' + hb_ntos(bin2i(substr( cValues, ( nI - 1 ) * 2 + 1, 2 )))
               next
          case nFieldType ==  SLONG
               for nI := 1 to nCount
-                  ??' ' + ltrim(str(bin2l(substr( cValues, ( nI - 1 ) * 4 + 1, 4 ))))
+                  ??' ' + hb_ntos(bin2l(substr( cValues, ( nI - 1 ) * 4 + 1, 4 )))
               next
          case nFieldType == SRATIONAL
               for nI := 1 to nCount
-                  ??' ' + ltrim(str(bin2l(substr( cValues, ( nI - 1 ) * 8 + 1, 4 )))) + '/' + ltrim(str(bin2l(substr( cValues, nI + 4, 4 ))))
+                  ??' ' + hb_ntos(bin2l(substr( cValues, ( nI - 1 ) * 8 + 1, 4 ))) + '/' + hb_ntos(bin2l(substr( cValues, nI + 4, 4 )))
               next
          case nFieldType == FLOAT
          case nFieldType == DOUBLE
               for nI := 1 to nCount
-                  ??' ' + ltrim(str(ctof(substr( cValues, ( nI - 1 ) * 8 + 1, 8 ))))
+                  ??' ' + hb_ntos(ctof(substr( cValues, ( nI - 1 ) * 8 + 1, 8 )))
               next
 
       endcase
@@ -2448,7 +2448,7 @@ local cData  := valtype(xData)
    if HB_ISSTRING(xData)
        cData += i2bin(len(xData))+xData
    elseif HB_ISNUMERIC(xData)
-       cData += i2bin(len(alltrim(str(xData))) )+alltrim(str(xData))
+       cData += i2bin(len(alhb_ntos(xData)) )+hb_ntos(str(xData))
    elseif HB_ISDATE(xData)
        cData += i2bin(8)+dtos(xData)
    elseif HB_ISLOGICAL(xData)

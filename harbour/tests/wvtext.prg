@@ -80,7 +80,7 @@ PROCEDURE Main()
       CASE nKey == K_ENTER
          Alert( "<Enter> Pressed" )
 
-      CASE nKey == Asc( "0" ) // setmode
+      CASE nKey == hb_keyCode( "0" ) // setmode
          SetColor( "W+/B,GR+/N,W/B,B/B,G+/N" )
          DO WHILE .T.
             nModeCols := MaxCol() + 1
@@ -103,7 +103,7 @@ PROCEDURE Main()
          ENDDO
          DispScreen()
 
-      CASE nKey == Asc( "1" ) // "1" get/set Window-Height
+      CASE nKey == hb_keyCode( "1" ) // "1" get/set Window-Height
          nWndHeight := hb_gtInfo( HB_GTI_SCREENHEIGHT )
          nMaxWHeight := hb_gtInfo( HB_GTI_DESKTOPHEIGHT )
          SetColor( "W+/B,GR+/N,W/B,B/B,G+/N" )
@@ -118,7 +118,7 @@ PROCEDURE Main()
          ENDIF
          DispScreen()
 
-      CASE nKey == Asc( "2" )  // get/set Window-WIDTH
+      CASE nKey == hb_keyCode( "2" )  // get/set Window-WIDTH
          nWndWIDTH := hb_gtInfo( HB_GTI_SCREENWIDTH )
          nMaxWWIDTH := hb_gtInfo( HB_GTI_DESKTOPWIDTH )
          SetColor( "W+/B,GR+/N,W/B,B/B,G+/N" )
@@ -133,7 +133,7 @@ PROCEDURE Main()
          ENDIF
          DispScreen()
 
-      CASE nKey == Asc( "3" ) // get/set Window-Size
+      CASE nKey == hb_keyCode( "3" ) // get/set Window-Size
          aWndSize := hb_gtInfo( HB_GTI_SCREENSIZE )
          nMaxWWIDTH := hb_gtInfo( HB_GTI_DESKTOPWIDTH )
          nMaxWHeight := hb_gtInfo( HB_GTI_DESKTOPHEIGHT )
@@ -150,7 +150,7 @@ PROCEDURE Main()
          ENDIF
          DispScreen()
 
-      CASE nKey == Asc( "4" ) // set Window-Position by pixels
+      CASE nKey == hb_keyCode( "4" ) // set Window-Position by pixels
          aWndSize := hb_gtInfo( HB_GTI_SETPOS_XY )
          SetColor( "W+/B,GR+/N,W/B,B/B,G+/N" )
          @ MaxRow() / 2 - 1, 0 SAY Space( MaxCol() )
@@ -165,7 +165,7 @@ PROCEDURE Main()
          ENDIF
          DispScreen()
 
-      CASE nKey == Asc( "5" ) // set Window-Position by row/col
+      CASE nKey == hb_keyCode( "5" ) // set Window-Position by row/col
          aWndSize := hb_gtInfo( HB_GTI_SETPOS_ROWCOL )
          SetColor( "W+/B,GR+/N,W/B,B/B,G+/N" )
          @ MaxRow() / 2 - 1, 0 SAY Space( MaxCol() )

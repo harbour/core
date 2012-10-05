@@ -56,13 +56,14 @@
 #define HB_SET_TRACESTACK_CURRENT 1
 #define HB_SET_TRACESTACK_ALL     2
 
-#xtranslate Write( <cString> ) => FWrite( FileHandle, <cString> ) //;HB_OutDebug( <cString> )
+#xtranslate Write( <cString> ) => FWrite( FileHandle, <cString> )
 
 STATIC s_lSET_TRACE      := .T.
 STATIC s_cSET_TRACEFILE  := "trace.log"
 STATIC s_nSET_TRACESTACK := HB_SET_TRACESTACK_ALL
 
 FUNCTION xhb_setTrace( xTrace )
+
    LOCAL lTrace := s_lSET_TRACE
 
    IF HB_ISLOGICAL( xTrace )
@@ -78,6 +79,7 @@ FUNCTION xhb_setTrace( xTrace )
    RETURN lTrace
 
 FUNCTION xhb_setTraceFile( xFile, lAppend )
+
    LOCAL cTraceFile := s_cSET_TRACEFILE
 
    IF HB_ISSTRING( xFile )
@@ -90,6 +92,7 @@ FUNCTION xhb_setTraceFile( xFile, lAppend )
    RETURN cTraceFile
 
 FUNCTION xhb_setTraceStack( xLevel )
+
    LOCAL nTraceLevel := s_nSET_TRACESTACK
 
    IF HB_ISSTRING( xLevel )
@@ -116,12 +119,12 @@ FUNCTION TraceLog( ... )
    LOCAL cFile, FileHandle, nLevel, ProcName, xParam
 
 #ifdef __XHARBOUR__
-   IF ! SET( _SET_TRACE )
+   IF ! Set( _SET_TRACE )
       RETURN .T.
    ENDIF
 
-   cFile := SET( _SET_TRACEFILE )
-   nLevel := SET( _SET_TRACESTACK )
+   cFile := Set( _SET_TRACEFILE )
+   nLevel := Set( _SET_TRACESTACK )
 #else
    IF !s_lSET_TRACE
       RETURN .T.
@@ -144,21 +147,21 @@ FUNCTION TraceLog( ... )
    FSeek( FileHandle, 0, FS_END )
 
    IF nLevel > 0
-      Write( '[' + ProcFile(1) + "->" + ProcName( 1 ) + '] (' + LTrim( Str( Procline(1) ) ) + ')' )
+      Write( "[" + ProcFile( 1 ) + "->" + ProcName( 1 ) + "] (" + hb_ntos( ProcLine( 1 ) ) + ")" )
    ENDIF
 
-   IF nLevel > 1 .AND. ! ( ProcName( 2 ) == '' )
-      Write( ' Called from: '  + hb_eol() )
+   IF nLevel > 1 .AND. ! ( ProcName( 2 ) == "" )
+      Write( " Called from: "  + hb_eol() )
       nLevel := 1
-      DO WHILE ! ( ( ProcName := ProcName( ++nLevel ) ) == '' )
-         Write( space(30) + ProcFile( nLevel ) + "->" + ProcName + '(' + LTrim( Str( Procline( nLevel ) ) ) + ')' + hb_eol() )
+      DO WHILE ! ( ( ProcName := ProcName( ++nLevel ) ) == "" )
+         Write( Space( 30 ) + ProcFile( nLevel ) + "->" + ProcName + "(" + hb_ntos( ProcLine( nLevel ) ) + ")" + hb_eol() )
       ENDDO
    ELSE
       Write( hb_eol() )
    ENDIF
 
-   FOR EACH xParam IN HB_aParams()
-      Write( 'Type: ' + ValType( xParam ) + ' >>>' + hb_CStr( xParam ) + '<<<' + hb_eol() )
+   FOR EACH xParam IN hb_AParams()
+      Write( "Type: " + ValType( xParam ) + " >>>" + hb_CStr( xParam ) + "<<<" + hb_eol() )
    NEXT
 
    Write( hb_eol() )
@@ -167,7 +170,7 @@ FUNCTION TraceLog( ... )
 
    RETURN .T.
 
-//--------------------------------------------------------------//
+//
 
 STATIC FUNCTION cWithPath( cFilename )
 /* Ensure cFilename contains path. If it doesn't, add current directory to the front of it */

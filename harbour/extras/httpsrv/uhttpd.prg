@@ -563,7 +563,7 @@ PROCEDURE Main( ... )
 
       IF s_lConsole
          hb_DispOutAt( 1, 5, APP_NAME + " - web server - v. " + APP_VERSION )
-         hb_DispOutAt( 4, 5, "Server listening (Port: " + LTrim( Str( nPort ) ) + ") : ..." )
+         hb_DispOutAt( 4, 5, "Server listening (Port: " + hb_ntos( nPort ) + ") : ..." )
          hb_DispOutAt( 10, 9, "Waiting." )
       ENDIF
 
@@ -1436,7 +1436,7 @@ STATIC PROCEDURE WriteToLog( cRequest )
                        aMonths[ VAL( SUBSTR( cDate, 5, 2 ) ) ] + ;
                        "/" + LEFT( cDate, 4 ) + ":" + cTime + ' ' + cBias + '] "' + ;
                        LEFT( cRequest, AT( CR_LF, cRequest ) - 1 ) + '" ' + ;
-                       LTRIM( STR( t_nStatusCode ) ) + " " + iif( nSize == 0, "-", LTRIM( STR( nSize ) ) ) + ;
+                       hb_ntos( t_nStatusCode ) + " " + iif( nSize == 0, "-", hb_ntos( nSize ) ) + ;
                        ' "' + iif( Empty( cReferer ), "-", cReferer ) + '" "' + _SERVER[ "HTTP_USER_AGENT" ] + ;
                        '"' + hb_eol()
 
@@ -1764,7 +1764,7 @@ STATIC PROCEDURE defineServer( hSocket )
 
    IF ! Empty( aI := hb_socketGetSockName( hSocket ) )
       _SERVER[ "SERVER_ADDR" ] := aI[ HB_SOCKET_ADINFO_ADDRESS ]
-      _SERVER[ "SERVER_PORT" ] := LTrim( Str( aI[ HB_SOCKET_ADINFO_PORT ] ) )
+      _SERVER[ "SERVER_PORT" ] := hb_ntos( aI[ HB_SOCKET_ADINFO_PORT ] )
    ENDIF
 
    // add other _SERVER vars
@@ -2007,7 +2007,7 @@ STATIC PROCEDURE ShowServerStatus()
    LOCAL cThreads
    uhttpd_SetHeader( "Content-Type", "text/html" )
    uhttpd_Write( '<html><head>' )
-   uhttpd_Write( '<META HTTP-EQUIV="Refresh" CONTENT="' + LTrim( Str( PAGE_STATUS_REFRESH ) ) + ';URL=/ServerStatus">' )
+   uhttpd_Write( '<META HTTP-EQUIV="Refresh" CONTENT="' + hb_ntos( PAGE_STATUS_REFRESH ) + ';URL=/ServerStatus">' )
    uhttpd_Write( '<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">' )
    uhttpd_Write( '<title>Server Status</title><body><h1>Server Status</h1><pre>')
    //uhttpd_Write( '<table border="0">')
@@ -2020,7 +2020,7 @@ STATIC PROCEDURE ShowServerStatus()
       uhttpd_Write( '<br>Max Connections: ' + Str( s_nMaxConnections ) )
       uhttpd_Write( '<br>Total Connections: ' + Str( s_nTotConnections ) )
       cThreads := ""
-      aEval( s_aRunningThreads, {| e | cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
+      aEval( s_aRunningThreads, {| e | cThreads += hb_ntos( hb_threadId( e ) ) + "," } )
       cThreads := "{ " + iif( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
       uhttpd_Write( '<br>Running Threads: ' + cThreads )
 
@@ -2030,7 +2030,7 @@ STATIC PROCEDURE ShowServerStatus()
       uhttpd_Write( '<br>Max Service Connections: ' + Str( s_nMaxServiceConnections ) )
       uhttpd_Write( '<br>Total Service Connections: ' + Str( s_nTotServiceConnections ) )
       cThreads := ""
-      aEval( s_aServiceThreads, {| e | cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
+      aEval( s_aServiceThreads, {| e | cThreads += hb_ntos( hb_threadId( e ) ) + "," } )
       cThreads := "{ " + iif( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
       uhttpd_Write( '<br>Service Threads: ' + cThreads )
 #endif // FIXED_THREADS
@@ -2141,17 +2141,17 @@ STATIC PROCEDURE Help()
    ?
    ? "Parameters: (all optionals)"
    ?
-   ? "-p       | --port           webserver tcp port         (default: " + LTrim( Str( LISTEN_PORT ) ) + ")"
+   ? "-p       | --port           webserver tcp port         (default: " + hb_ntos( LISTEN_PORT ) + ")"
    ? "-c       | --config         Configuration file         (default: " + APP_NAME + ".ini)"
    ? "                            It is possibile to define file path"
    ? "-a       | --approot        Application root directory (default: <curdir>)"
    ? "-d       | --docroot        Document root directory    (default: <curdir>\home)"
    ? "-i       | --indexes        Allow directory view       (default: no)"
    ? "-s       | --stop           Stop webserver"
-   ? "-ts      | --start-threads  Define starting threads    (default: " + LTrim( Str( START_RUNNING_THREADS ) ) + ")"
-   ? "-tm      | --max-threads    Define max threads         (default: " + LTrim( Str( MAX_RUNNING_THREADS ) ) + ")"
-   ? "-cr      | --console-rows   Console rows               (default: " + LTrim( Str( MaxRow() + 1 ) ) + ")"
-   ? "-cc      | --console-cols   Console cols               (default: " + LTrim( Str( MaxCol() + 1 ) ) + ")"
+   ? "-ts      | --start-threads  Define starting threads    (default: " + hb_ntos( START_RUNNING_THREADS ) + ")"
+   ? "-tm      | --max-threads    Define max threads         (default: " + hb_ntos( MAX_RUNNING_THREADS ) + ")"
+   ? "-cr      | --console-rows   Console rows               (default: " + hb_ntos( MaxRow() + 1 ) + ")"
+   ? "-cc      | --console-cols   Console cols               (default: " + hb_ntos( MaxCol() + 1 ) + ")"
    ? "-h | -?  | --help           This help message"
    ?
    WAIT
@@ -2627,7 +2627,7 @@ STATIC FUNCTION Handler_ServerStatus()
    LOCAL cThreads
    uhttpd_SetHeader( "Content-Type", "text/html" )
    uhttpd_Write( '<html><head>' )
-   uhttpd_Write( '<META HTTP-EQUIV="Refresh" CONTENT="' + LTrim( Str( PAGE_STATUS_REFRESH ) ) + ';URL=/ServerStatus">' )
+   uhttpd_Write( '<META HTTP-EQUIV="Refresh" CONTENT="' + hb_ntos( PAGE_STATUS_REFRESH ) + ';URL=/ServerStatus">' )
    uhttpd_Write( '<META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">' )
    uhttpd_Write( '<title>Server Status</title><body><h1>Server Status</h1><pre>')
    //uhttpd_Write( '<table border="0">')
@@ -2640,7 +2640,7 @@ STATIC FUNCTION Handler_ServerStatus()
       uhttpd_Write( '<br>Max Connections: ' + Str( s_nMaxConnections ) )
       uhttpd_Write( '<br>Total Connections: ' + Str( s_nTotConnections ) )
       cThreads := ""
-      aEval( s_aRunningThreads, {| e | cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
+      aEval( s_aRunningThreads, {| e | cThreads += hb_ntos( hb_threadId( e ) ) + "," } )
       cThreads := "{ " + iif( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
       uhttpd_Write( '<br>Running Threads: ' + cThreads )
 
@@ -2650,7 +2650,7 @@ STATIC FUNCTION Handler_ServerStatus()
       uhttpd_Write( '<br>Max Service Connections: ' + Str( s_nMaxServiceConnections ) )
       uhttpd_Write( '<br>Total Service Connections: ' + Str( s_nTotServiceConnections ) )
       cThreads := ""
-      aEval( s_aServiceThreads, {| e | cThreads += LTrim( Str( hb_threadId( e ) ) ) + "," } )
+      aEval( s_aServiceThreads, {| e | cThreads += hb_ntos( hb_threadId( e ) ) + "," } )
       cThreads := "{ " + iif( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
       uhttpd_Write( '<br>Service Threads: ' + cThreads )
 #endif // FIXED_THREADS

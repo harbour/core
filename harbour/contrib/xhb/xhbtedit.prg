@@ -675,7 +675,7 @@ METHOD MoveCursor( nKey ) CLASS XHBEditor
       OTHERWISE
       RETURN .F.
 
-   endswitch
+   ENDSWITCH
 
    RETURN .T.
 
@@ -1385,7 +1385,7 @@ METHOD K_Mouse( nKey ) CLASS XHBEditor
 
    LOCAL nRow, nCol, nJump
 
-   Switch nKey
+   SWITCH nKey
    CASE K_LBUTTONUP
 
       nRow := MRow()
@@ -1407,7 +1407,7 @@ METHOD K_Mouse( nKey ) CLASS XHBEditor
       ::ClrTextSelection()
       ::Down()
       EXIT
-   end
+   ENDSWITCH
 
    RETURN Self
 

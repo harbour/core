@@ -125,7 +125,7 @@ STATIC FUNCTION xhb_DefError( oError )
       IF ProcName( n ) == ProcName()
          n := 3
          TraceLog( "Error system failure!", err_ProcName( oError, n ), err_ProcLine( oError, n ), err_ModuleName( oError, n ), oError:description )
-         Alert( "Error system failure!;Please correct error handler:;" + err_ProcName( oError, n ) + "(" + LTrim( Str( err_ProcLine( oError, n ) ) ) +  ") in module: " + err_ModuleName( oError, n ) )
+         Alert( "Error system failure!;Please correct error handler:;" + err_ProcName( oError, n ) + "(" + hb_ntos( err_ProcLine( oError, n ) ) +  ") in module: " + err_ModuleName( oError, n ) )
          ErrorLevel( 1 )
          QUIT
       ENDIF
@@ -165,7 +165,7 @@ STATIC FUNCTION xhb_DefError( oError )
 
    cMessage := ErrorMessage( oError )
    IF !Empty( oError:osCode )
-      cDOSError := "(DOS Error " + LTrim( Str( oError:osCode ) ) + ")"
+      cDOSError := "(DOS Error " + hb_ntos( oError:osCode ) + ")"
    ENDIF
 
 
@@ -215,9 +215,9 @@ STATIC FUNCTION xhb_DefError( oError )
       ENDIF
    ELSE
       IF Empty( oError:osCode )
-         Alert( cMessage + ";" + err_ProcName( oError, 3 ) + "(" + LTrim( Str( err_ProcLine( oError, 3 ) ) ) +  ") in module: " + err_ModuleName( oError, 3 ) )
+         Alert( cMessage + ";" + err_ProcName( oError, 3 ) + "(" + hb_ntos( err_ProcLine( oError, 3 ) ) +  ") in module: " + err_ModuleName( oError, 3 ) )
       ELSE
-         Alert( cMessage + ";" + cDOSError + ";" + err_ProcName( oError, 3 ) + "(" + LTrim( Str( err_ProcLine( oError, 3 ) ) ) +  ") in module: " + err_ModuleName( oError, 3 ) )
+         Alert( cMessage + ";" + cDOSError + ";" + err_ProcName( oError, 3 ) + "(" + hb_ntos( err_ProcLine( oError, 3 ) ) +  ") in module: " + err_ModuleName( oError, 3 ) )
       ENDIF
    ENDIF
 
@@ -230,11 +230,11 @@ STATIC FUNCTION xhb_DefError( oError )
    ? cMessage
 
    ?
-   ? "Error at ...:", ProcName() + "(" + LTrim( Str( ProcLine() ) ) + ") in Module:", ProcFile()
+   ? "Error at ...:", ProcName() + "(" + hb_ntos( ProcLine() ) + ") in Module:", ProcFile()
    n := 2
    WHILE ! Empty( ProcName( ++n ) )
       ? "Called from :", ProcName( n ) + ;
-         "(" + LTrim( Str( ProcLine( n ) ) ) + ") in Module:", ProcFile( n )
+         "(" + hb_ntos( ProcLine( n ) ) + ") in Module:", ProcFile( n )
    ENDDO
 
    // For some strange reason, the DOS prompt gets written on the first line
@@ -266,7 +266,7 @@ STATIC FUNCTION ErrorMessage( oError )
 
    // add subsystem's error code if available
    IF HB_ISNUMERIC( oError:subCode )
-      cMessage += "/" + LTrim( Str( oError:subCode ) )
+      cMessage += "/" + hb_ntos( oError:subCode )
    ELSE
       cMessage += "/???"
    ENDIF
@@ -588,7 +588,7 @@ STATIC FUNCTION LogError( oerr )
          cTemp  += " TYPE " + Type( cVarName )
          cTemp  += " " + iif( Type( cVarName ) == "C", '"' + &cVarName + '"', strvalue( &cVarName ) )
          nBytes := 0
-         Switch ValType( cVarName )
+         SWITCH ValType( cVarName )
          CASE "C"
             nBytes += ( nLenTemp := Len( &cVarName ) )
             EXIT
@@ -601,7 +601,7 @@ STATIC FUNCTION LogError( oerr )
          CASE "D"
             nBytes += ( nLenTemp := 9 )
             EXIT
-         End
+         ENDSWITCH
          FWrite( nFhandle, "            " + Transform( nLenTemp, "999999" ) + "bytes -> " )
          FWriteLine( nHandle, "      " + cTemp )
       ENDDO

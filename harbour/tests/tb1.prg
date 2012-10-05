@@ -38,6 +38,7 @@
    #define _DRAW_7 Chr( 183 ) + " " + Chr( 214 ) + Chr( 196 ) + "HIDE" + Chr( 195 ) + Chr( 196 )
    #define _DRAW_8 Chr( 189 ) + " " + Chr( 211 ) + Chr( 196 )
    #define _DRAW_9 Chr( 186 ) + " " + Chr( 186 )
+   #define hb_keyCode( n ) Asc( n )
 #endif
 
 PROCEDURE Main()
@@ -131,8 +132,8 @@ PROCEDURE Main()
          oBrw:colorRect( { oBrw:rowPos, 1, oBrw:rowPos, 4 }, { 7, 6 } )
       ELSEIF nKey == K_DEL
          oBrw:refreshCurrent()
-      ELSEIF nKey >= Asc( "0" ) .AND. nKey <= Asc( "3" )
-         oBrw:freeze := nKey - Asc( "0" )
+      ELSEIF nKey >= hb_keyCode( "0" ) .AND. nKey <= hb_keyCode( "3" )
+         oBrw:freeze := nKey - hb_keyCode( "0" )
       ELSEIF nKey == K_LBUTTONDOWN .AND. ;
             oBrw:HitTest( MRow(), MCol() ) == HTHEADSEP .AND. ;
             ( ( nCol := oBrw:mColPos ) == 2 .OR. nCol == 3 )

@@ -65,22 +65,22 @@ PROCEDURE Main()
       k := Inkey( 0, INKEY_ALL )
       IF k == K_ESC
          EXIT
-      ELSEIF k >= Asc( "1" ) .AND. k <= Asc( "9" )
-         wselect( aWin[ k - Asc( "0" ) ] )
-      ELSEIF k == Asc( "0" )
+      ELSEIF k >= hb_keyCode( "1" ) .AND. k <= hb_keyCode( "9" )
+         wselect( aWin[ k - hb_keyCode( "0" ) ] )
+      ELSEIF k == hb_keyCode( "0" )
          wselect( 0 )
-      ELSEIF k == Asc( "C" ) .OR. k == Asc( "c" )
+      ELSEIF k == hb_keyCode( "C" ) .OR. k == hb_keyCode( "c" )
          wclose()
-      ELSEIF k == Asc( "Q" ) .OR. k == Asc( "q" )
+      ELSEIF k == hb_keyCode( "Q" ) .OR. k == hb_keyCode( "q" )
          CLS
-      ELSEIF k == Asc( "B" ) .OR. k == Asc( "b" )
+      ELSEIF k == hb_keyCode( "B" ) .OR. k == hb_keyCode( "b" )
          IF lBoard
             wboard( 0, 0, MaxRow( .T. ) - 1, MaxCol( .T. ) )
          ELSE
             wboard( 5, 5, 20, 75 )
          ENDIF
          lBoard := !lBoard
-      ELSEIF k == Asc( "P" ) .OR. k == Asc( "P" )
+      ELSEIF k == hb_keyCode( "P" ) .OR. k == hb_keyCode( "P" )
          y := wfrow()
          x := wfcol()
          i := wselect()
@@ -106,13 +106,13 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC PROC dspcord()
+STATIC PROCEDURE dspcord()
 
    LOCAL mr := MRow(), mc := MCol(), r := wrow(), c := wcol(), w := wselect()
 
    wselect( 0 )
-   @ MaxRow(), 0 SAY PadR( "WPOS(" + LTrim( Str( r ) ) + "," + LTrim( Str( c ) ) + ")" + ;
-      iif( MPresent(), "MPOS(" + LTrim( Str( mr ) ) + "," + LTrim( Str( mc ) ) + ")", "" ), MaxCol() + 1 )
+   @ MaxRow(), 0 SAY PadR( "WPOS(" + hb_ntos( r ) + "," + hb_ntos( c ) + ")" + ;
+      iif( MPresent(), "MPOS(" + hb_ntos( mr ) + "," + hb_ntos( mc ) + ")", "" ), MaxCol() + 1 )
    wselect( w )
 
    RETURN

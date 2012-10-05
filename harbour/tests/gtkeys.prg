@@ -19,6 +19,10 @@ REQUEST HB_CODEPAGE_PLMAZ
 REQUEST HB_CODEPAGE_PLISO
 REQUEST HB_CODEPAGE_PL852
 REQUEST HB_CODEPAGE_PLWIN
+
+#define hb_keyCode( n ) Asc( n )
+#define hb_keyChar( c ) Chr( c )
+#define hb_ntos( n ) LTrim( Str( n ) )
 #endif
 
 PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
@@ -267,14 +271,14 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
       IF ( i := AScan( aKeys, {| x | x[ 2 ] == k } ) ) != 0
          ? " key:" + Str( aKeys[ i, 2 ], 7 ) + "  " + PadR( aKeys[ i, 1 ], 18 ) + aKeys[ i, 3 ]
       ELSEIF k >= 32 .AND. k <= 126 .OR. ( k >= 160 .AND. k <= 255 ) .OR. ;
-            ( k >= 0 .AND. k <= 255 .AND. IsAlpha( Chr( k ) ) )
-         ? "char:" + Str( k, 7 ) + "  " + Chr( k )
+            ( k >= 0 .AND. k <= 255 .AND. IsAlpha( hb_keyChar( k ) ) )
+         ? "char:" + Str( k, 7 ) + "  " + hb_keyChar( k )
       ELSE
          ? " key:" + Str( k, 7 )
       ENDIF
- //   ?? "  (" + ltrim( str( maxrow() ) ) + ":" + ltrim( str( maxcol() ) ) + ")"
+ //   ?? "  (" + hb_ntos( maxrow() ) + ":" + hb_ntos( maxcol() ) + ")"
 
-      IF k == Asc( "@" ) .AND. NextKey() == 0
+      IF k == hb_keyCode( "@" ) .AND. NextKey() == 0
          EXIT
 #ifdef __HARBOUR__
       ELSEIF k == K_CTRL_INS
