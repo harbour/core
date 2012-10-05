@@ -64,6 +64,7 @@
 /* TOFIX:
      1. 'var ++'
      2. '- 1' for numeric literals.
+     3. wrongly breaks line: 'FUNCTION Hello( /* comment */ )'
      ...
  */
 
