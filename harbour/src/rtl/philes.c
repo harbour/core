@@ -466,7 +466,17 @@ HB_FUNC( HB_FGETDATETIME )
       hb_retl( HB_TRUE );
    }
    else
+   {
+      if( HB_ISBYREF( 3 ) )
+      {
+         hb_storc( "", 3 );
+         hb_stordl( 0, 2 );
+      }
+      else
+         hb_stortdt( 0, 0, 2 );
+
       hb_retl( HB_FALSE );
+   }
 }
 
 HB_FUNC( HB_FSETDEVMODE )
