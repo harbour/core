@@ -66,7 +66,7 @@ STATIC s_cErrFooter  := " "
 
 #if 0
 
-STATIC FUNC xhb_cgi_DefError( e )
+STATIC FUNCTION xhb_cgi_DefError( e )
 
    LOCAL i
    LOCAL cMessage   := ""

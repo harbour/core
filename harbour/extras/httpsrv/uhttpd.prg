@@ -497,7 +497,7 @@ PROCEDURE Main( ... )
 
    // --------------------- Open log files -------------------------------------
 
-   IF ( s_hfileLogAccess := FOPEN( cLogAccess, FO_CREAT + FO_WRITE ) ) == -1
+   IF ( s_hfileLogAccess := FOPEN( cLogAccess, FO_CREAT + FO_WRITE ) ) == F_ERROR
       ? "Can't open access log file"
       WAIT
       ErrorLevel( 1 )
@@ -505,7 +505,7 @@ PROCEDURE Main( ... )
    ENDIF
    FSEEK( s_hfileLogAccess, 0, FS_END )
 
-   IF ( s_hfileLogError := FOPEN( cLogError, FO_CREAT + FO_WRITE ) ) == -1
+   IF ( s_hfileLogError := FOPEN( cLogError, FO_CREAT + FO_WRITE ) ) == F_ERROR
       ? "Can't open error log file"
       WAIT
       ErrorLevel( 1 )
@@ -2175,7 +2175,7 @@ STATIC FUNCTION Exe_Path()
    IF nPos == 0
       cPath := ""
    ELSE
-      cPath := SubStr( cPath, 1, nPos-1 )
+      cPath := SubStr( cPath, 1, nPos - 1 )
    ENDIF
    RETURN cPath
 

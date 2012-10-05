@@ -21,6 +21,8 @@
 *
 **/
 
+#include "fileio.ch"
+
 #include "cgi.ch"
 
 #define IF_BUFFER 65535
@@ -195,7 +197,7 @@ STATIC FUNCTION Generate()
             ::cHTMLFile
       ELSE
          // Read from file
-         hFile := FOpen( ::cHTMLFile, 0 )
+         hFile := FOpen( ::cHTMLFile, FO_READ )
          cFile := Space( IF_BUFFER )
          DO WHILE ( nPos := FRead( hFile, @cFile, IF_BUFFER ) ) > 0
 

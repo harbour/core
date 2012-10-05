@@ -78,7 +78,7 @@ CLASS TCgiFile
 
    METHOD Error() INLINE FError() != 0
 
-   METHOD Tell() INLINE FSeek( ::handle, FS_RELATIVE, 0 )
+   METHOD Tell() INLINE FSeek( ::handle, 0, FS_RELATIVE )
 
    METHOD Pointer() INLINE FPOS( ::handle )
 
@@ -249,12 +249,12 @@ METHOD Readline( nSize ) CLASS TCgiFile
       RETURN ""
    ENDIF
 
-   nCurrent := FSeek( ::Handle, 0, 1 )
+   nCurrent := FSeek( ::Handle, 0, FS_RELATIVE )
    cString  := FReadStr( ::Handle, nSize )
    nCr      := At( Chr( 13 ), cString )
 
-   FSeek( ::Handle, nCurrent, 0 )
-   FSeek( ::Handle, nCr + 1, 1 )
+   FSeek( ::Handle, nCurrent, FS_SET )
+   FSeek( ::Handle, nCr + 1, FS_RELATIVE )
 
    ::Buffer := SubStr( cString, 1, nCr - 1 )
    ::nRecord++

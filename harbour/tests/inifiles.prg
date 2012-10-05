@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#include "fileio.ch"
+
 PROCEDURE Main( cFilename, cSection )
 
    LOCAL oIni := TIniFile():New( Default( cFilename, "harbour.ini" ) )
@@ -72,7 +74,7 @@ STATIC FUNCTION New( cFileName )
       CurrArray := ::Contents
 
       IF File( cFileName )
-         hFile := FOpen( cFilename, 0 )
+         hFile := FOpen( cFilename, FO_READ )
       ELSE
          hFile := FCreate( cFilename )
       ENDIF

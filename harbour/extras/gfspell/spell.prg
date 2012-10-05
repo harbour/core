@@ -26,6 +26,7 @@
 *
 ****************************************************************************
 
+#include "fileio.ch"
 
 #xtranslate    StoreWord(<cWord>)     => Xform(<cWord>)
 #xtranslate    ExtractWord(<cWord>)   => Xunform(<cWord>)
@@ -125,13 +126,13 @@ if SP_Init() .and. !empty( AUXILIARY_DICTIONARY )
    //
 
    if file( AUXILIARY_DICTIONARY )
-      nAuxHandle := fopen( AUXILIARY_DICTIONARY,2+32 )
+      nAuxHandle := fopen( AUXILIARY_DICTIONARY, FO_READWRITE + FO_DENYWRITE )
    else
       nAuxHandle := fcreate( AUXILIARY_DICTIONARY )
    endif
    if nAuxHandle >= 0
 
-      Fseek(nAuxHandle,0,2)                  // Bottom of the file
+      Fseek(nAuxHandle,0,FS_END)             // Bottom of the file
       nWritten := Fwrite(nAuxHandle,;        // Write word into file
                   cWord+CRLF,len(cWord)+2)
 
@@ -233,7 +234,7 @@ if sp_init()
              #ifdef REDUCE_MEMORY_NEEDS
 
                 cOffsets := space(6)
-                fseek(nHandle,((nRow-1)*156)+((nCol-1)*6+1)+5,0)
+                fseek(nHandle,((nRow-1)*156)+((nCol-1)*6+1)+5,FS_SET)
                 fread(nHandle,@cOffsets,6)
                 x  := bin2l(substr(cOffsets,1,4))
                 y  := bin2w(substr(cOffsets,5,2))
@@ -248,7 +249,7 @@ if sp_init()
              if !empty(x)
                 if !(cLast==substr(cLookup,1,2))
                    cBuf := space(y)
-                   fseek(nHandle,x,0)
+                   fseek(nHandle,x,FS_SET)
                    fread(nHandle,@cBuf,y)
                    nDicCount++
                 else
@@ -314,7 +315,7 @@ if (nRow>0 .and. nRow<=26) .and. (nCol>0 .and. nCol<=26)
    if !empty(x)
        y    := bin2w(substr(cOffsets,((nRow-1)*156)+((nCol-1)*EACH_WORD+5),2))
        cBuf := space(y)
-       fseek(nHandle,x+4,0)
+       fseek(nHandle,x+4,FS_SET)
        fread(nHandle,@cBuf,y-4)
    endif
 endif
@@ -388,17 +389,17 @@ LOCAL nSize
 
 if !empty(cFile)
    if file(cFile)
-      x := fopen(cFile,64)
+      x := fopen(cFile, FO_READ + FO_DENYNONE )
    else
       x := fcreate(cFile)
    endif
    SP_GetSet(5,cFile)
 
    if x > 0
-      nSize := fseek(x,0,2)
+      nSize := fseek(x,0,FS_END)
       if nSize < MAX_STRING
          cStr  := space(nSize)
-         fseek(x,0,0)
+         fseek(x,0,FS_SET)
          fread(x,@cStr,nSize)
          cStr  := "|"+strtran(cStr,CRLF,"|")
          CACHE_WORDS += upper(cStr)
@@ -1082,7 +1083,7 @@ LOCAL nFileSize
 
 if cOffsets == NIL
    isok    := .F.
-   nHandle := fopen(DICTIONARY_PATH+DICTIONARY_NAME,32)
+   nHandle := fopen(DICTIONARY_PATH+DICTIONARY_NAME, FO_READ + FO_DENYWRITE )
    if nHandle > 0
 
       #ifdef REDUCE_MEMORY_NEEDS
@@ -1106,10 +1107,10 @@ if cOffsets == NIL
 
          #endif
 
-         nFileSize := fseek(nHandle,0,2)
+         nFileSize := fseek(nHandle,0,FS_END)
          if nFileSize-nOther > 0
             cOther   := space(nFileSize-nOther)
-            fseek(nHandle,nOther,0)
+            fseek(nHandle,nOther,FS_SET)
             fread(nHandle,@cOther,(nFileSize-nOther))
          endif
          aGlobal[2] += cOther
@@ -1271,21 +1272,21 @@ if nH >= 0
             enddo
             if !empty(temp) .or. cBits != FOUR_BYTES
 
-               nWhere := fseek(nH,0,2)
+               nWhere := fseek(nH,0,FS_END)
 
                Fseek(nH,((i-1)*26*EACH_WORD)+((j-1)*EACH_WORD)+6)
                Fwrite(nH,l2bin(nWhere)+i2bin(len(temp)+4),EACH_WORD)
-               Fseek(nH,0,2)
+               Fseek(nH,0,FS_END)
                Fwrite(nH,cBits+temp,len(temp)+4)
             endif
          next
       enddo
    next
-   j := fseek(nH,0,2)
-   fseek(nH,2,0)
+   j := fseek(nH,0,FS_END)
+   fseek(nH,2,FS_SET)
    fwrite(nH,l2bin(j),4)
    if !empty(cOther)
-      fseek(nH,j,0)
+      fseek(nH,j,FS_SET)
       cOther += "|"
       fwrite(nH,cOther,len(cOther))
    endif
@@ -1410,7 +1411,7 @@ for i := 1 to 26
          endif
 
          cBuf := space(y)
-         fseek(nHandle,x,0)
+         fseek(nHandle,x,FS_SET)
          fread(nHandle,@cBuf,y)
          for z := 1 to 26
             if bit(cBuf,z)

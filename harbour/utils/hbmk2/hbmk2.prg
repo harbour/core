@@ -10949,7 +10949,7 @@ STATIC FUNCTION rtlnk_read( cFileName, aPrevFiles )
 
    /* protection against recursive calls */
    IF AScan( aPrevFiles, {| x | x == cFileName } ) == 0
-      IF ( hFile := FOpen( cFileName ) ) != -1
+      IF ( hFile := FOpen( cFileName ) ) != F_ERROR
          cFileBody := Space( FSeek( hFile, 0, FS_END ) )
          FSeek( hFile, 0, FS_SET )
          IF FRead( hFile, @cFileBody, hb_BLen( cFileBody ) ) != hb_BLen( cFileBody )

@@ -576,7 +576,7 @@ STATIC FUNCTION LogError( oerr )
       nMemLength := FSeek( nMemHandle, 0, FS_END )
       FSeek( nMemHandle, 0 )
       nCount := 1
-      WHILE FSeek( nMemHandle, 0, 1 ) + 1 < nMemLength
+      WHILE FSeek( nMemHandle, 0, FS_RELATIVE ) + 1 < nMemLength
          nMemWidth := Space( 18 )
          FRead( nMemHandle, @nMemWidth, 18 )
          cVarName  := Left( nMemWidth, At( Chr( 0 ), nMemWidth ) - 1 )

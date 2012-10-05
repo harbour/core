@@ -143,7 +143,7 @@ FUNCTION PutCounter( oHtm, nNumber, cDir, nDigits, nWidth, bgColor, nBorder )
 
    RETURN Nil
 
-PROC htmlBrowse( oHtm, cAction, lUseLinks )
+PROCEDURE htmlBrowse( oHtm, cAction, lUseLinks )
 
    LOCAL i
    LOCAL n      := 0
@@ -214,7 +214,7 @@ oHtm:endTable()
 
 #ifdef MYSQL
 
-PROC htmlBrowseSql( oHtm, cAction, lUseLinks, cTarget, oServer, oQuery )
+PROCEDURE htmlBrowseSql( oHtm, cAction, lUseLinks, cTarget, oServer, oQuery )
 
    LOCAL i
    LOCAL p

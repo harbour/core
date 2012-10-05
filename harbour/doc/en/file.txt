@@ -69,7 +69,7 @@
  *      possible reasons for the error.
  *  $EXAMPLES$
  *      #include "fileio.ch"
- *      IF ( nH := FOpen( "x.txt", 66 ) ) == F_ERROR
+ *      IF ( nH := FOpen( "x.txt", FO_READWRITE + FO_DENYNONE ) ) == F_ERROR
  *         ? "File can't be opened"
  *      ENDIF
  *  $STATUS$
