@@ -80,7 +80,7 @@ PROCEDURE Main()
    DispOutAt( nBottom - 2, nLeft,  _DRAW_1, cColor )
    DispOutAt( nBottom - 2, nRight, _DRAW_2, cColor )
 
-   oBrw:colorSpec( cColor )
+   oBrw:colorSpec := cColor
    oBrw:headSep := _DRAW_3
    oBrw:footSep := _DRAW_4
    oBrw:colSep  := _DRAW_5

@@ -2710,8 +2710,8 @@ METHOD Step() CLASS HBDebugger
 
 METHOD ToCursor() CLASS HBDebugger
 
-   IF ::IsValidStopLine( strip_path( ::cPrgName ), ::oBrwText:RowPos() )
-      __dbgSetToCursor( ::pInfo, strip_path( ::cPrgName ), ::oBrwText:RowPos() )
+   IF ::IsValidStopLine( strip_path( ::cPrgName ), ::oBrwText:RowPos )
+      __dbgSetToCursor( ::pInfo, strip_path( ::cPrgName ), ::oBrwText:RowPos )
       ::RestoreAppScreen()
       ::RestoreAppState()
       ::Exit()
@@ -2734,7 +2734,7 @@ METHOD ToggleBreakPoint( nLine, cFileName ) CLASS HBDebugger
 
    IF nLine == NIL
       cFileName := strip_path( ::cPrgName )
-      nLine := ::oBrwText:RowPos()
+      nLine := ::oBrwText:RowPos
    ENDIF
 
    IF !::IsValidStopLine( cFileName, nLine )

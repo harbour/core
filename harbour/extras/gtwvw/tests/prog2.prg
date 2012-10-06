@@ -175,7 +175,7 @@ FUNCTION xBrowse1()
 
    aColumnsSep := Array( oBrowse:colCount )
    FOR EACH tmp IN aColumnsSep
-      tmp := oBrowse:getColumn( tmp:__enumIndex() ):colSep()
+      tmp := oBrowse:getColumn( tmp:__enumIndex() ):colSep
    NEXT
 
    AddMiscObjects( nWin, {| nWindow | WVW_DrawBoxRecessed( nWindow, nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 ) } )

@@ -1256,7 +1256,7 @@ METHOD TBApplyKey( oGet, oTB, nKey, oMenu, aMsg ) CLASS HBGetList
 
    CASE K_ENTER
 #ifndef HB_CLP_STRICT
-      IF !oTb:Stable()
+      IF ! oTb:Stable
          oTb:ForceStable()
       ENDIF
 #endif

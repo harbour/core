@@ -566,7 +566,7 @@ FUNCTION DEMO_Browse()
 
    aColumnsSep := Array( oBrowse:colCount )
    FOR EACH tmp IN aColumnsSep
-      tmp := oBrowse:getColumn( tmp:__enumIndex() ):colSep()
+      tmp := oBrowse:getColumn( tmp:__enumIndex() ):colSep
    NEXT
 
    AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, oBrowse:nTop, oBrowse:nLeft, oBrowse:nBottom, oBrowse:nRight ) } )
@@ -612,7 +612,7 @@ FUNCTION DEMO_Browse()
          oBrowse:Left()
 
       CASE nKey == K_RIGHT
-         IF oBrowse:colPos == oBrowse:colCount(); loop; ENDIF
+         IF oBrowse:colPos == oBrowse:colCount; loop; ENDIF
          oBrowse:Right()
 
       CASE nKey == K_PGDN
@@ -740,13 +740,13 @@ FUNCTION HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
          IF oBrowse:colPos == 1; exit; ENDIF
          oBrowse:Left()
       CASE XBmsg == 1 //SB_LINERIGHT
-         IF oBrowse:colpos == oBrowse:colCount(); exit; ENDIF
+         IF oBrowse:colpos == oBrowse:colCount; exit; ENDIF
          oBrowse:Right()
       CASE XBmsg == 2 //SB_PAGELEFT
          IF oBrowse:colPos == 1; exit; ENDIF
          oBrowse:panleft()
       CASE XBmsg == 3 //SB_PAGERIGHT
-         IF oBrowse:colpos == oBrowse:colCount(); exit; ENDIF
+         IF oBrowse:colpos == oBrowse:colCount; exit; ENDIF
          oBrowse:panright()
       OTHERWISE
          // ignore
@@ -784,7 +784,7 @@ STATIC FUNCTION RefreshVXB( oBrowse, nWinNum, XBid )
       nRatio := 1
       nMin := 1
       nMax := ordKeyCount()
-      nPage := oBrowse:RowCount()       // ordKeyCount()
+      nPage := oBrowse:RowCount       // ordKeyCount()
       nPos := ordKeyNo() - oBrowse:RowPos + 1  // ordKeyCount()
    ELSE
       nRatio := ordKeyCount() / 10
@@ -794,7 +794,7 @@ STATIC FUNCTION RefreshVXB( oBrowse, nWinNum, XBid )
 
       nMin := 1
       nMax := Round( ordKeyCount() / nRatio, 0 )
-      nPage := Round( oBrowse:RowCount() / nRatio, 0 )       // ordKeyCount()
+      nPage := Round( oBrowse:RowCount / nRatio, 0 )       // ordKeyCount()
       nPos := Round( ( ordKeyNo() - oBrowse:RowPos + 1 ) / nRatio, 0 )// ordKeyCount()
    ENDIF
 
