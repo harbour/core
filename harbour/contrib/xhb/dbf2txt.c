@@ -266,7 +266,7 @@ HB_FUNC( DBF2TEXT )
       }
 
       if( nCount != -1 )
-         nCount-- ;
+         nCount--;
 
       /* DBSKIP() */
       SELF_SKIP( pArea, 1 );

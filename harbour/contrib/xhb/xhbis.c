@@ -161,7 +161,7 @@ HB_FUNC( ISPRINT )
 {
    const char * szString = hb_parc( 1 );
 
-   hb_retl( szString && isprint( ( HB_BYTE ) * szString ) ) ;
+   hb_retl( szString && isprint( ( HB_BYTE ) * szString ) );
 }
 
 /* determines if first char of a string is a punctuation character.

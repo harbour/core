@@ -296,7 +296,7 @@ static HB_BYTE * ArrayToStructure( PHB_ITEM aVar, PHB_ITEM aDef, HB_UINT uiAlign
    HB_UINT uiOffset = 0, uiMemberSize;
    HB_BYTE cShift;
 
-   *puiSize = SizeOfCStructure( aDef, uiAlign ) ;
+   *puiSize = SizeOfCStructure( aDef, uiAlign );
 
    /* printf( "Size: %i\n", *puiSize ); */
 
@@ -1283,7 +1283,7 @@ static PHB_ITEM StructureToArray( HB_BYTE* Buffer, HB_SIZE nBufferLen, PHB_ITEM 
 
          default:
          {
-            HB_UINT uiNestedSize /*, uiNestedAlign */ ;
+            HB_UINT uiNestedSize /*, uiNestedAlign */;
             PHB_ITEM pID = hb_itemPutNI( NULL, ( pBaseDef->pItems + nIndex )->item.asInteger.value );
             PHB_ITEM pStructure = hb_itemDoC( "HB_CSTRUCTUREFROMID", 1, pID );
 

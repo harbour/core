@@ -6797,7 +6797,7 @@ static void hb_gt_wvwFillLineSpace( WIN_DATA * pWindowData, HDC hdc, USHORT star
    HBRUSH   hBrush;
 
    int      byColorIndex   = pWindowData->iLSpaceColor < 0 ?
-                                                         ( byAttrib& 0x00F0 )> > 4 :
+                                                         ( byAttrib & 0x00F0 ) >> 4 :
                              pWindowData->iLSpaceColor;
    COLORREF bkColor        = _COLORS[ byColorIndex ];
 

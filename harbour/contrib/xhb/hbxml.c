@@ -1078,7 +1078,7 @@ static void mxml_node_read_pi( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM doc )
    /* and then we'll put all the "data" into the data member, up to ?> */
 
    buf = ( char * ) MXML_ALLOCATOR( MXML_ALLOC_BLOCK );
-   iAllocated = MXML_ALLOC_BLOCK ;
+   iAllocated = MXML_ALLOC_BLOCK;
 
    while( iStatus < 2 )
    {
@@ -1195,7 +1195,7 @@ static void mxml_node_read_comment( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM d
    /* we'll put all the comment into the data member, up to -> */
 
    buf = ( char * ) MXML_ALLOCATOR( MXML_ALLOC_BLOCK );
-   iAllocated = MXML_ALLOC_BLOCK ;
+   iAllocated = MXML_ALLOC_BLOCK;
 
    while( iStatus < 3 )
    {
@@ -1375,7 +1375,7 @@ static void mxml_node_read_cdata( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM pDo
       iStatus = 0;
 
       buf = ( char * ) MXML_ALLOCATOR( MXML_ALLOC_BLOCK );
-      iAllocated = MXML_ALLOC_BLOCK ;
+      iAllocated = MXML_ALLOC_BLOCK;
 
       /* now we can read the node */
       while( iStatus < 3 )
