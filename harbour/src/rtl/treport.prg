@@ -1389,30 +1389,30 @@ STATIC FUNCTION MakeAStr( uVar, cType )
    LOCAL cString
 
    SWITCH Asc( cType )
-      CASE Asc( "D" )
-      CASE Asc( "d" )
-         cString := DToC( uVar )
-         EXIT
-      CASE Asc( "T" )
-      CASE Asc( "t" )
-         cString := hb_TToC( uVar )
-         EXIT
-      CASE Asc( "L" )
-      CASE Asc( "l" )
-         cString := iif( uVar, "T", "F" )
-         EXIT
-      CASE Asc( "N" )
-      CASE Asc( "n" )
-         cString := Str( uVar )
-         EXIT
-      CASE Asc( "C" )
-      CASE Asc( "c" )
-      CASE Asc( "M" )
-      CASE Asc( "m" )
-         cString := uVar
-         EXIT
-      OTHERWISE
-         cString := "INVALID EXPRESSION"
+   CASE Asc( "D" )
+   CASE Asc( "d" )
+      cString := DToC( uVar )
+      EXIT
+   CASE Asc( "T" )
+   CASE Asc( "t" )
+      cString := hb_TToC( uVar )
+      EXIT
+   CASE Asc( "L" )
+   CASE Asc( "l" )
+      cString := iif( uVar, "T", "F" )
+      EXIT
+   CASE Asc( "N" )
+   CASE Asc( "n" )
+      cString := Str( uVar )
+      EXIT
+   CASE Asc( "C" )
+   CASE Asc( "c" )
+   CASE Asc( "M" )
+   CASE Asc( "m" )
+      cString := uVar
+      EXIT
+   OTHERWISE
+      cString := "INVALID EXPRESSION"
    ENDSWITCH
 
    RETURN cString

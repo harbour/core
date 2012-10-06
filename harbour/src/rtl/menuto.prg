@@ -198,56 +198,56 @@ FUNCTION __MenuTo( bBlock, cVariable )
          // check for keystrokes
          SWITCH nKey
 #ifdef HB_COMPAT_C53
-            CASE K_MOUSEMOVE
-               EXIT
-            CASE K_LBUTTONDOWN
-            CASE K_LDBLCLK
-               IF ( nMouseClik := HitTest( t_aLevel[ nPointer - 1 ], ;
-                                           MRow(), MCol() ) ) > 0
-                  n := nMouseClik
-               ENDIF
-               IF nKey == K_LDBLCLK
-                   lExit := .T.
-               ENDIF
-               EXIT
+         CASE K_MOUSEMOVE
+            EXIT
+         CASE K_LBUTTONDOWN
+         CASE K_LDBLCLK
+            IF ( nMouseClik := HitTest( t_aLevel[ nPointer - 1 ], ;
+                                        MRow(), MCol() ) ) > 0
+               n := nMouseClik
+            ENDIF
+            IF nKey == K_LDBLCLK
+                lExit := .T.
+            ENDIF
+            EXIT
 #endif
-            CASE K_DOWN
-            CASE K_RIGHT
-               IF ++n > nArrLen
-                  n := iif( Set( _SET_WRAP ), 1, nArrLen )
-               ENDIF
-               EXIT
-            CASE K_UP
-            CASE K_LEFT
-               IF --n < 1
-                  n := iif( Set( _SET_WRAP ), nArrLen, 1 )
-               ENDIF
-               EXIT
-            CASE K_HOME
-               n := 1
-               EXIT
-            CASE K_END
-               n := nArrLen
-               EXIT
-            CASE K_ENTER
-            CASE K_PGUP
-            CASE K_PGDN
-               lExit := .T.
-               EXIT
-            CASE K_ESC
-               n := 0
-               EXIT
-            OTHERWISE
-               // did user hit a hot key?
-               IF Len( cKey := Upper( hb_keyChar( nKey ) ) ) > 0
-                  FOR y := 1 TO nArrLen
-                     IF Upper( Left( LTrim( t_aLevel[ nPointer - 1, y, 3 ] ), Len( cKey ) ) ) == cKey
-                        n := y
-                        lExit := .T.
-                        EXIT
-                     ENDIF
-                  NEXT
-               ENDIF
+         CASE K_DOWN
+         CASE K_RIGHT
+            IF ++n > nArrLen
+               n := iif( Set( _SET_WRAP ), 1, nArrLen )
+            ENDIF
+            EXIT
+         CASE K_UP
+         CASE K_LEFT
+            IF --n < 1
+               n := iif( Set( _SET_WRAP ), nArrLen, 1 )
+            ENDIF
+            EXIT
+         CASE K_HOME
+            n := 1
+            EXIT
+         CASE K_END
+            n := nArrLen
+            EXIT
+         CASE K_ENTER
+         CASE K_PGUP
+         CASE K_PGDN
+            lExit := .T.
+            EXIT
+         CASE K_ESC
+            n := 0
+            EXIT
+         OTHERWISE
+            // did user hit a hot key?
+            IF Len( cKey := Upper( hb_keyChar( nKey ) ) ) > 0
+               FOR y := 1 TO nArrLen
+                  IF Upper( Left( LTrim( t_aLevel[ nPointer - 1, y, 3 ] ), Len( cKey ) ) ) == cKey
+                     n := y
+                     lExit := .T.
+                     EXIT
+                  ENDIF
+               NEXT
+            ENDIF
          ENDSWITCH
 
          IF n != 0

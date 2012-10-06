@@ -72,17 +72,19 @@ FUNCTION NETIO_MTSERVER( nPort, cIfAddr, cRootDir, xRPC, ;
    ENDIF
 
    IF hb_mtvm()
+
       SWITCH ValType( xRPC )
-         CASE "S"
-         CASE "H"
-            lRPC := .T.
-            EXIT
-         CASE "L"
-            lRPC := xRPC
-            EXIT
-         OTHERWISE
-            xRPC := NIL
+      CASE "S"
+      CASE "H"
+         lRPC := .T.
+         EXIT
+      CASE "L"
+         lRPC := xRPC
+         EXIT
+      OTHERWISE
+         xRPC := NIL
       ENDSWITCH
+
       pListenSocket := netio_listen( nPort, cIfAddr, cRootDir, lRPC )
       IF !Empty( pListenSocket )
          hb_threadDetach( hb_threadStart( @netio_srvloop(), pListenSocket, ;

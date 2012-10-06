@@ -239,44 +239,44 @@ FUNCTION DBEDIT( nTop, nLeft, nBottom, nRight, ;
 #ifdef HB_CLP_UNDOC
          IF lAppend
             SWITCH nKey
-               CASE K_DOWN
-               CASE K_PGDN
-               CASE K_CTRL_PGDN
-                  oBrowse:hitBottom := .T.
-                  LOOP
-               CASE K_UP
-               CASE K_PGUP
-               CASE K_CTRL_PGUP
-                  oBrowse:hitTop := .T.
-                  LOOP
+            CASE K_DOWN
+            CASE K_PGDN
+            CASE K_CTRL_PGDN
+               oBrowse:hitBottom := .T.
+               LOOP
+            CASE K_UP
+            CASE K_PGUP
+            CASE K_CTRL_PGUP
+               oBrowse:hitTop := .T.
+               LOOP
             ENDSWITCH
          ENDIF
 #endif
          SWITCH nKey
 #ifdef HB_COMPAT_C53
-            CASE K_LBUTTONDOWN
-            CASE K_LDBLCLK
-               TBMouse( oBrowse, MRow(), MCol() )
-               EXIT
+         CASE K_LBUTTONDOWN
+         CASE K_LDBLCLK
+            TBMouse( oBrowse, MRow(), MCol() )
+            EXIT
 #endif
-            CASE K_DOWN          ; oBrowse:down()     ; EXIT
-            CASE K_UP            ; oBrowse:up()       ; EXIT
-            CASE K_PGDN          ; oBrowse:pageDown() ; EXIT
-            CASE K_PGUP          ; oBrowse:pageUp()   ; EXIT
-            CASE K_CTRL_PGUP     ; oBrowse:goTop()    ; EXIT
-            CASE K_CTRL_PGDN     ; oBrowse:goBottom() ; EXIT
-            CASE K_RIGHT         ; oBrowse:right()    ; EXIT
-            CASE K_LEFT          ; oBrowse:left()     ; EXIT
-            CASE K_HOME          ; oBrowse:home()     ; EXIT
-            CASE K_END           ; oBrowse:end()      ; EXIT
-            CASE K_CTRL_LEFT     ; oBrowse:panLeft()  ; EXIT
-            CASE K_CTRL_RIGHT    ; oBrowse:panRight() ; EXIT
-            CASE K_CTRL_HOME     ; oBrowse:panHome()  ; EXIT
-            CASE K_CTRL_END      ; oBrowse:panEnd()   ; EXIT
-            OTHERWISE
-               lContinue := CallUser( oBrowse, xUserFunc, nKey, @lAppend, @lFlag )
-               lDoIdleCall := .F.
-               EXIT
+         CASE K_DOWN          ; oBrowse:down()     ; EXIT
+         CASE K_UP            ; oBrowse:up()       ; EXIT
+         CASE K_PGDN          ; oBrowse:pageDown() ; EXIT
+         CASE K_PGUP          ; oBrowse:pageUp()   ; EXIT
+         CASE K_CTRL_PGUP     ; oBrowse:goTop()    ; EXIT
+         CASE K_CTRL_PGDN     ; oBrowse:goBottom() ; EXIT
+         CASE K_RIGHT         ; oBrowse:right()    ; EXIT
+         CASE K_LEFT          ; oBrowse:left()     ; EXIT
+         CASE K_HOME          ; oBrowse:home()     ; EXIT
+         CASE K_END           ; oBrowse:end()      ; EXIT
+         CASE K_CTRL_LEFT     ; oBrowse:panLeft()  ; EXIT
+         CASE K_CTRL_RIGHT    ; oBrowse:panRight() ; EXIT
+         CASE K_CTRL_HOME     ; oBrowse:panHome()  ; EXIT
+         CASE K_CTRL_END      ; oBrowse:panEnd()   ; EXIT
+         OTHERWISE
+            lContinue := CallUser( oBrowse, xUserFunc, nKey, @lAppend, @lFlag )
+            lDoIdleCall := .F.
+            EXIT
          ENDSWITCH
       ENDIF
    ENDDO

@@ -166,29 +166,34 @@ PROCEDURE netiosrv_Main( lUI, ... )
          hb_StrClear( @cParam )
       CASE Lower( Left( cParam, 5 ) ) == "-rpc="
          netiosrv[ _NETIOSRV_cRPCFFileName ] := SubStr( cParam, 6 )
+
          hb_FNameSplit( netiosrv[ _NETIOSRV_cRPCFFileName ], NIL, NIL, @cExt )
+
          cExt := Lower( cExt )
+
          SWITCH cExt
-            CASE ".prg"
-            CASE ".hb"
-            CASE ".hrb"
-               EXIT
-            OTHERWISE
-               cExt := FileSig( cFile )
+         CASE ".prg"
+         CASE ".hb"
+         CASE ".hrb"
+            EXIT
+         OTHERWISE
+            cExt := FileSig( cFile )
          ENDSWITCH
+
          SWITCH cExt
-            CASE ".prg"
-            CASE ".hb"
-               cFile := hb_compileBuf( hb_argv( 0 ), "-n2", "-w", "-es2", "-q0",;
-                                       "-D" + "__HBSCRIPT__HBNETIOSRV", netiosrv[ _NETIOSRV_cRPCFFileName ] )
-               IF cFile != NIL
-                  netiosrv[ _NETIOSRV_hRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
-               ENDIF
-               EXIT
-            OTHERWISE
-               netiosrv[ _NETIOSRV_hRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, netiosrv[ _NETIOSRV_cRPCFFileName ] )
-               EXIT
+         CASE ".prg"
+         CASE ".hb"
+            cFile := hb_compileBuf( hb_argv( 0 ), "-n2", "-w", "-es2", "-q0",;
+                                    "-D" + "__HBSCRIPT__HBNETIOSRV", netiosrv[ _NETIOSRV_cRPCFFileName ] )
+            IF cFile != NIL
+               netiosrv[ _NETIOSRV_hRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
+            ENDIF
+            EXIT
+         OTHERWISE
+            netiosrv[ _NETIOSRV_hRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, netiosrv[ _NETIOSRV_cRPCFFileName ] )
+            EXIT
          ENDSWITCH
+
          netiosrv[ _NETIOSRV_lRPC ] := ! Empty( netiosrv[ _NETIOSRV_hRPCFHRB ] ) .AND. ! Empty( hb_hrbGetFunSym( netiosrv[ _NETIOSRV_hRPCFHRB ], _RPC_FILTER ) )
          IF ! netiosrv[ _NETIOSRV_lRPC ]
             netiosrv[ _NETIOSRV_cRPCFFileName ] := NIL

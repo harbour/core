@@ -62,18 +62,20 @@
 MEMVAR SxIniInfo
 
 STATIC FUNCTION _sx_INIlogical( cVal )
+
    SWITCH Upper( cVal )
-      CASE ".T."
-      CASE "TRUE"
-      CASE "YES"
-      CASE "ON"
-         RETURN .T.
-      CASE ".F."
-      CASE "FALSE"
-      CASE "NO"
-      CASE "OFF"
-         RETURN .F.
+   CASE ".T."
+   CASE "TRUE"
+   CASE "YES"
+   CASE "ON"
+      RETURN .T.
+   CASE ".F."
+   CASE "FALSE"
+   CASE "NO"
+   CASE "OFF"
+      RETURN .F.
    ENDSWITCH
+
    RETURN NIL
 
 FUNCTION _sx_INIinit( nArea )
@@ -105,18 +107,18 @@ FUNCTION _sx_INIinit( nArea )
       IF hb_HHasKey( hIni, HB_SIX_SECTION )
          FOR EACH item IN hIni[ HB_SIX_SECTION ]
             SWITCH item:__enumKey()
-               CASE "SHARED"
-                  xShared := _sx_INIlogical( item )
-                  EXIT
-               CASE "READONLY"
-                  xReadOnly := _sx_INIlogical( item )
-                  EXIT
-               CASE "ALIAS"
-                  xAlias := item
-                  EXIT
-               CASE "TRIGGER"
-                  xTrigger := item
-                  EXIT
+            CASE "SHARED"
+               xShared := _sx_INIlogical( item )
+               EXIT
+            CASE "READONLY"
+               xReadOnly := _sx_INIlogical( item )
+               EXIT
+            CASE "ALIAS"
+               xAlias := item
+               EXIT
+            CASE "TRIGGER"
+               xTrigger := item
+               EXIT
             ENDSWITCH
          NEXT
          IF xTrigger != NIL

@@ -762,38 +762,38 @@ METHOD CommandWindowProcessKey( nKey ) CLASS HBDebugger
    LOCAL n
 
    SWITCH nKey
-      CASE K_UP
-      CASE K_F3
-         IF ::nCommand > 1
-            ::aLastCommands[ ::nCommand ] := RTrim( ::oGet:getValue() )
-            ::oGet:setValue( ::aLastCommands[ --::nCommand ] ):display()
+   CASE K_UP
+   CASE K_F3
+      IF ::nCommand > 1
+         ::aLastCommands[ ::nCommand ] := RTrim( ::oGet:getValue() )
+         ::oGet:setValue( ::aLastCommands[ --::nCommand ] ):display()
+      ENDIF
+      EXIT
+   CASE K_DOWN
+      IF ::nCommand < Len( ::aLastCommands )
+         ::aLastCommands[ ::nCommand ] := RTrim( ::oGet:getValue() )
+         ::oGet:setValue( ::aLastCommands[ ++::nCommand ] ):display()
+      ENDIF
+      EXIT
+   CASE K_ENTER
+      cCommand := RTrim( ::oGet:getValue() )
+      IF ! Empty( cCommand )
+         IF ( n := AScan( ::aLastCommands, cCommand ) ) > 0 .AND. n < Len( ::aLastCommands )
+            HB_ADel( ::aLastCommands, n, .T. )
          ENDIF
-         EXIT
-      CASE K_DOWN
-         IF ::nCommand < Len( ::aLastCommands )
-            ::aLastCommands[ ::nCommand ] := RTrim( ::oGet:getValue() )
-            ::oGet:setValue( ::aLastCommands[ ++::nCommand ] ):display()
-         ENDIF
-         EXIT
-      CASE K_ENTER
-         cCommand := RTrim( ::oGet:getValue() )
-         IF ! Empty( cCommand )
-            IF ( n := AScan( ::aLastCommands, cCommand ) ) > 0 .AND. n < Len( ::aLastCommands )
-               HB_ADel( ::aLastCommands, n, .T. )
-            ENDIF
-            ::nCommand := Len( ::aLastCommands )
-            ::aLastCommands[ ::nCommand ] := cCommand
-            AAdd( ::aLastCommands, "" )
-            ::nCommand := Len( ::aLastCommands )
-            ::oWndCommand:ScrollUp( 1 )
-            ::DoCommand( cCommand )
-         ENDIF
-         hb_dispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, "> ", ;
-                       __DbgColors()[ 2 ] )
-         ::oGet:setValue( "" ):display()
-         EXIT
-      OTHERWISE
-         ::oGet:applyKey( nKey )
+         ::nCommand := Len( ::aLastCommands )
+         ::aLastCommands[ ::nCommand ] := cCommand
+         AAdd( ::aLastCommands, "" )
+         ::nCommand := Len( ::aLastCommands )
+         ::oWndCommand:ScrollUp( 1 )
+         ::DoCommand( cCommand )
+      ENDIF
+      hb_dispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, "> ", ;
+                    __DbgColors()[ 2 ] )
+      ::oGet:setValue( "" ):display()
+      EXIT
+   OTHERWISE
+      ::oGet:applyKey( nKey )
    ENDSWITCH
 
    RETURN NIL
@@ -1517,9 +1517,9 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
       __dbgInput( nTop + 1, nLeft + 1, nWidth, @uTemp, bValid, ;
                   __DbgColors()[ 5 ], Max( Max( nWidth, Len( uTemp ) ), 256 ) )
       SWITCH cType
-         CASE "C" ; uTemp := AllTrim( uTemp ) ; EXIT
-         CASE "D" ; uTemp := CToD( uTemp )    ; EXIT
-         CASE "N" ; uTemp := Val( uTemp )     ; EXIT
+      CASE "C" ; uTemp := AllTrim( uTemp ) ; EXIT
+      CASE "D" ; uTemp := CToD( uTemp )    ; EXIT
+      CASE "N" ; uTemp := Val( uTemp )     ; EXIT
       ENDSWITCH
 
    ELSE
@@ -3329,14 +3329,14 @@ FUNCTION __dbgAchoice( nTop, nLeft, nBottom, nRight, aItems, cColors )
       oBrw:forceStable()
       nKey := Inkey( 0 )
       SWITCH nKey
-         CASE K_UP;     oBrw:up();        EXIT
-         CASE K_DOWN;   oBrw:down();      EXIT
-         CASE K_PGUP;   oBrw:pageUp();    EXIT
-         CASE K_PGDN;   oBrw:pageDown();  EXIT
-         CASE K_HOME;   oBrw:goTop();     EXIT
-         CASE K_END;    oBrw:goBottom();  EXIT
-         CASE K_ESC;    nRow := 0
-         CASE K_ENTER;  RETURN nRow
+      CASE K_UP;     oBrw:up();        EXIT
+      CASE K_DOWN;   oBrw:down();      EXIT
+      CASE K_PGUP;   oBrw:pageUp();    EXIT
+      CASE K_PGDN;   oBrw:pageDown();  EXIT
+      CASE K_HOME;   oBrw:goTop();     EXIT
+      CASE K_END;    oBrw:goBottom();  EXIT
+      CASE K_ESC;    nRow := 0
+      CASE K_ENTER;  RETURN nRow
       ENDSWITCH
    ENDDO
 

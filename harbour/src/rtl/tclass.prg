@@ -309,24 +309,24 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
    /* Default Init for Logical and numeric */
    IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
       SWITCH Asc( cType )
-         CASE Asc( "L" )   /* Logical */
-         CASE Asc( "l" )   /* Logical */
-            xInit := .F.
-            EXIT
-         CASE Asc( "I" )   /* Numeric or Integer */
-         CASE Asc( "i" )   /* Numeric or Integer */
-         CASE Asc( "N" )   /* Numeric or Integer */
-         CASE Asc( "n" )   /* Numeric or Integer */
-            xInit := 0
-            EXIT
-         CASE Asc( "D" )   /* Date */
-         CASE Asc( "d" )   /* Date */
-            xInit := hb_SToD()
-            EXIT
-         CASE Asc( "T" )   /* Timestamp */
-         CASE Asc( "t" )   /* Timestamp */
-            xInit := hb_SToT()
-            EXIT
+      CASE Asc( "L" )   /* Logical */
+      CASE Asc( "l" )   /* Logical */
+         xInit := .F.
+         EXIT
+      CASE Asc( "I" )   /* Numeric or Integer */
+      CASE Asc( "i" )   /* Numeric or Integer */
+      CASE Asc( "N" )   /* Numeric or Integer */
+      CASE Asc( "n" )   /* Numeric or Integer */
+         xInit := 0
+         EXIT
+      CASE Asc( "D" )   /* Date */
+      CASE Asc( "d" )   /* Date */
+         xInit := hb_SToD()
+         EXIT
+      CASE Asc( "T" )   /* Timestamp */
+      CASE Asc( "t" )   /* Timestamp */
+         xInit := hb_SToT()
+         EXIT
       ENDSWITCH
    ENDIF
 
@@ -356,24 +356,24 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
    /* Default Init for Logical and numeric */
    IF ! lNoInit .AND. cType != NIL .AND. xInit == NIL
       SWITCH Asc( cType )
-         CASE Asc( "L" )   /* Logical */
-         CASE Asc( "l" )   /* Logical */
-            xInit := .F.
-            EXIT
-         CASE Asc( "I" )   /* Numeric or Integer */
-         CASE Asc( "i" )   /* Numeric or Integer */
-         CASE Asc( "N" )   /* Numeric or Integer */
-         CASE Asc( "n" )   /* Numeric or Integer */
-            xInit := 0
-            EXIT
-         CASE Asc( "D" )   /* Date */
-         CASE Asc( "d" )   /* Date */
-            xInit := hb_SToD()
-            EXIT
-         CASE Asc( "T" )   /* Timestamp */
-         CASE Asc( "t" )   /* Timestamp */
-            xInit := hb_SToT()
-            EXIT
+      CASE Asc( "L" )   /* Logical */
+      CASE Asc( "l" )   /* Logical */
+         xInit := .F.
+         EXIT
+      CASE Asc( "I" )   /* Numeric or Integer */
+      CASE Asc( "i" )   /* Numeric or Integer */
+      CASE Asc( "N" )   /* Numeric or Integer */
+      CASE Asc( "n" )   /* Numeric or Integer */
+         xInit := 0
+         EXIT
+      CASE Asc( "D" )   /* Date */
+      CASE Asc( "d" )   /* Date */
+         xInit := hb_SToD()
+         EXIT
+      CASE Asc( "T" )   /* Timestamp */
+      CASE Asc( "t" )   /* Timestamp */
+         xInit := hb_SToT()
+         EXIT
       ENDSWITCH
    ENDIF
 

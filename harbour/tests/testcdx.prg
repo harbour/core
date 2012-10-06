@@ -18,7 +18,7 @@ PROCEDURE Main()
 
    ? "RddName:", rddName()
 // ? "Press any key to continue..."
-// InKey( 0 )
+// Inkey( 0 )
    Select( "TESTDBF" )
    SET FILTER TO TESTDBF->SALARY > 140000
    TESTDBF->( dbGoTop() )
@@ -40,7 +40,7 @@ PROCEDURE Main()
       ? TESTCDX->MEMO
       TESTCDX->( dbSkip() )
 //    ? "Press any key to continue..."
-//    InKey( 0 )
+//    Inkey( 0 )
    ENDDO
 
    FErase( "testcdx.cdx" )

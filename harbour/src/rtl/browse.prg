@@ -125,7 +125,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
             ENDIF
             oBrw:Down()
             oBrw:ForceStable()
-            oBrw:ColorRect( { oBrw:RowPos, 1, oBrw:RowPos, oBrw:ColCount() }, ;
+            oBrw:ColorRect( { oBrw:RowPos, 1, oBrw:RowPos, oBrw:ColCount }, ;
                             { 2, 2 } )
          ENDIF
 
@@ -133,7 +133,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
 
          oBrw:ForceStable()
 
-         nKey := InKey( 0 )
+         nKey := Inkey( 0 )
          IF ( bAction := SetKey( nKey ) ) != NIL
             Eval( bAction, ProcName( 1 ), ProcLine( 1 ), "")
             LOOP
@@ -363,7 +363,7 @@ STATIC FUNCTION DoGet( oBrw, lAppend )
    ENDIF
 
    IF lAppend
-      oBrw:ColorRect( { oBrw:rowpos, 1, oBrw:rowpos, oBrw:colcount }, ;
+      oBrw:ColorRect( { oBrw:RowPos, 1, oBrw:RowPos, oBrw:ColCount }, ;
                       { 2, 2 } )
    ENDIF
 
@@ -391,7 +391,7 @@ STATIC FUNCTION ExitKey( lAppend )
       EXIT
 
    OTHERWISE
-      nKey := iif( nKey == 13 .OR. ;
+      nKey := iif( nKey == K_ENTER .OR. ;
                    !( hb_keyChar( nKey ) == "" ), K_RIGHT, 0 )
       EXIT
    ENDSWITCH

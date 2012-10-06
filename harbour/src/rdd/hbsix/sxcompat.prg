@@ -88,21 +88,21 @@
 FUNCTION sxChar( nLen, xKeyVal )
 
    SWITCH ValType( xKeyVal )
-      CASE "C"
-      CASE "M"
-         EXIT
-      CASE "N"
-         xKeyVal := Str( xKeyVal )
-         EXIT
-      CASE "D"
-         xKeyVal := DToS( xKeyVal )
-         EXIT
-      CASE "L"
-         xKeyVal := iif( xKeyVal, "T", "F" )
-         EXIT
-      OTHERWISE
-         xKeyVal := iif( HB_ISNUMERIC( nLen ), "", Space( 10 ) )
-         EXIT
+   CASE "C"
+   CASE "M"
+      EXIT
+   CASE "N"
+      xKeyVal := Str( xKeyVal )
+      EXIT
+   CASE "D"
+      xKeyVal := DToS( xKeyVal )
+      EXIT
+   CASE "L"
+      xKeyVal := iif( xKeyVal, "T", "F" )
+      EXIT
+   OTHERWISE
+      xKeyVal := iif( HB_ISNUMERIC( nLen ), "", Space( 10 ) )
+      EXIT
    ENDSWITCH
 
    RETURN iif( HB_ISNUMERIC( nLen ), PadR( LTrim( xKeyVal ), nLen ), xKeyVal )
@@ -110,21 +110,21 @@ FUNCTION sxChar( nLen, xKeyVal )
 FUNCTION sxNum( xKeyVal )
 
    SWITCH ValType( xKeyVal )
-      CASE "N"
-         EXIT
-      CASE "C"
-      CASE "M"
-         xKeyVal := Val( xKeyVal )
-         EXIT
-      CASE "D"
-         xKeyVal := xKeyVal - hb_SToD()
-         EXIT
-      CASE "L"
-         xKeyVal := iif( xKeyVal, 1, 0 )
-         EXIT
-      OTHERWISE
-         xKeyVal := 0.00
-         EXIT
+   CASE "N"
+      EXIT
+   CASE "C"
+   CASE "M"
+      xKeyVal := Val( xKeyVal )
+      EXIT
+   CASE "D"
+      xKeyVal := xKeyVal - hb_SToD()
+      EXIT
+   CASE "L"
+      xKeyVal := iif( xKeyVal, 1, 0 )
+      EXIT
+   OTHERWISE
+      xKeyVal := 0.00
+      EXIT
    ENDSWITCH
 
    RETURN xKeyVal
@@ -132,18 +132,18 @@ FUNCTION sxNum( xKeyVal )
 FUNCTION sxDate( xKeyVal )
 
    SWITCH ValType( xKeyVal )
-      CASE "D"
-         EXIT
-      CASE "C"
-      CASE "M"
-         xKeyVal := CToD( xKeyVal )
-         EXIT
-      CASE "N"
-         xKeyVal := hb_SToD() + xKeyVal
-         EXIT
-      OTHERWISE
-         xKeyVal := hb_SToD()
-         EXIT
+   CASE "D"
+      EXIT
+   CASE "C"
+   CASE "M"
+      xKeyVal := CToD( xKeyVal )
+      EXIT
+   CASE "N"
+      xKeyVal := hb_SToD() + xKeyVal
+      EXIT
+   OTHERWISE
+      xKeyVal := hb_SToD()
+      EXIT
    ENDSWITCH
 
    RETURN xKeyVal
@@ -151,26 +151,26 @@ FUNCTION sxDate( xKeyVal )
 FUNCTION sxLog( xKeyVal )
 
    SWITCH ValType( xKeyVal )
-      CASE "L"
-         EXIT
-      CASE "C"
-      CASE "M"
-         SWITCH xKeyVal
-            CASE  "T";  CASE  "t";  CASE  "Y";  CASE  "y"
-            CASE ".T."; CASE ".t."; CASE ".Y."; CASE ".y."
-               xKeyVal := .T.
-               EXIT
-            OTHERWISE
-               xKeyVal := .F.
-               EXIT
-         ENDSWITCH
-         EXIT
-      CASE "N"
-         xKeyVal := xKeyVal != 0
-         EXIT
-      OTHERWISE
-         xKeyVal := .F.
-         EXIT
+   CASE "L"
+      EXIT
+   CASE "C"
+   CASE "M"
+      SWITCH xKeyVal
+         CASE  "T";  CASE  "t";  CASE  "Y";  CASE  "y"
+         CASE ".T."; CASE ".t."; CASE ".Y."; CASE ".y."
+            xKeyVal := .T.
+            EXIT
+         OTHERWISE
+            xKeyVal := .F.
+            EXIT
+      ENDSWITCH
+      EXIT
+   CASE "N"
+      xKeyVal := xKeyVal != 0
+      EXIT
+   OTHERWISE
+      xKeyVal := .F.
+      EXIT
    ENDSWITCH
 
    RETURN xKeyVal
@@ -455,19 +455,19 @@ FUNCTION Sx_dbCreate( cFileName, aStruct, cRDD )
    aDbStruct := AClone( aStruct )
    FOR EACH aField IN aDbStruct
       SWITCH aField[ 2 ]
-         CASE "V"
-            aField[ 3 ] += 6
-            EXIT
-         CASE "D"
-            IF aField[ 3 ] == 3
-               aField[ 2 ] := "V"
-            ENDIF
-            EXIT
-         CASE "I"
-            IF aField[ 3 ] == 4
-               aField[ 2 ] := "V"
-            ENDIF
-            EXIT
+      CASE "V"
+         aField[ 3 ] += 6
+         EXIT
+      CASE "D"
+         IF aField[ 3 ] == 3
+            aField[ 2 ] := "V"
+         ENDIF
+         EXIT
+      CASE "I"
+         IF aField[ 3 ] == 4
+            aField[ 2 ] := "V"
+         ENDIF
+         EXIT
       ENDSWITCH
    NEXT
 
@@ -533,20 +533,20 @@ FUNCTION Sx_SetTrigger( nAction, cTriggerName, cRDD /* Harbour extensions */ )
       ELSEIF Used()
          cPrevTrigger := dbInfo( DBI_TRIGGER )
          SWITCH nAction
-            CASE TRIGGER_ENABLE
-               dbInfo( DBI_TRIGGER, .T. )
-               EXIT
-            CASE TRIGGER_DISABLE
-               dbInfo( DBI_TRIGGER, .F. )
-               EXIT
-            CASE TRIGGER_REMOVE
-               dbInfo( DBI_TRIGGER, "" )
-               EXIT
-            CASE TRIGGER_INSTALL
-               IF HB_ISSTRING( cTriggerName )
-                  dbInfo( DBI_TRIGGER, cTriggerName )
-               ENDIF
-               EXIT
+         CASE TRIGGER_ENABLE
+            dbInfo( DBI_TRIGGER, .T. )
+            EXIT
+         CASE TRIGGER_DISABLE
+            dbInfo( DBI_TRIGGER, .F. )
+            EXIT
+         CASE TRIGGER_REMOVE
+            dbInfo( DBI_TRIGGER, "" )
+            EXIT
+         CASE TRIGGER_INSTALL
+            IF HB_ISSTRING( cTriggerName )
+               dbInfo( DBI_TRIGGER, cTriggerName )
+            ENDIF
+            EXIT
          ENDSWITCH
       ENDIF
    ENDIF

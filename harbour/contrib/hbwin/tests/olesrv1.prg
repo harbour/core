@@ -127,28 +127,28 @@ METHOD Eval( cMethodName, ... ) CLASS OleNetioSrv
 
    BEGIN SEQUENCE WITH {| oErr | BREAK( oErr ) }
       SWITCH cMethodName
-         CASE "CONNECT"
-            xRetVal := !Empty( ::pConn := NETIO_GETCONNECTION( ... ) )
-            EXIT
-         CASE "DISCONNECT"
-            ::pConn := NIL
-            xRetVal := .T.
-            EXIT
-         CASE "PROCEXISTS"
-            xRetVal := NETIO_PROCEXISTS( ::pConn, ... )
-            EXIT
-         CASE "PROCEXEC"
-            xRetVal := NETIO_PROCEXEC( ::pConn, ... )
-            EXIT
-         CASE "PROCEXECW"
-            xRetVal := NETIO_PROCEXECW( ::pConn, ... )
-            EXIT
-         CASE "FUNCEXEC"
-            xRetVal := NETIO_FUNCEXEC( ::pConn, ... )
-            EXIT
-         OTHERWISE
-            /* redirect all other messages to RPC server as function calls */
-            xRetVal := NETIO_FUNCEXEC( ::pConn, cMethodName, ... )
+      CASE "CONNECT"
+         xRetVal := !Empty( ::pConn := NETIO_GETCONNECTION( ... ) )
+         EXIT
+      CASE "DISCONNECT"
+         ::pConn := NIL
+         xRetVal := .T.
+         EXIT
+      CASE "PROCEXISTS"
+         xRetVal := NETIO_PROCEXISTS( ::pConn, ... )
+         EXIT
+      CASE "PROCEXEC"
+         xRetVal := NETIO_PROCEXEC( ::pConn, ... )
+         EXIT
+      CASE "PROCEXECW"
+         xRetVal := NETIO_PROCEXECW( ::pConn, ... )
+         EXIT
+      CASE "FUNCEXEC"
+         xRetVal := NETIO_FUNCEXEC( ::pConn, ... )
+         EXIT
+      OTHERWISE
+         /* redirect all other messages to RPC server as function calls */
+         xRetVal := NETIO_FUNCEXEC( ::pConn, cMethodName, ... )
       ENDSWITCH
    RECOVER USING oErr
       xRetVal := oErr

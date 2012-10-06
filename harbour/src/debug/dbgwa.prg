@@ -327,34 +327,34 @@ STATIC FUNCTION DbfInfo( aInfo )
       xType  := ValType( xValue )
 
       SWITCH xType
-         CASE "C"
-         CASE "M"
-            cValue := xValue
-            EXIT
-         CASE "N"
-            cValue := hb_NToS( xValue )
-             EXIT
-         CASE "D"
-            cValue := DToC( xValue )
-            EXIT
-         CASE "T"
-            cValue := hb_TsToStr( xValue )
-            EXIT
-         CASE "L"
-            cValue := iif( xValue, ".T.", ".F." )
-            EXIT
-         CASE "A"
-            cValue := "Array"
-            EXIT
-         CASE "H"
-            cValue := "Hash"
-            EXIT
-         CASE "U"
-            cValue := "NIL"
-            EXIT
-         OTHERWISE
-            cValue := "Error"
-            EXIT
+      CASE "C"
+      CASE "M"
+         cValue := xValue
+         EXIT
+      CASE "N"
+         cValue := hb_NToS( xValue )
+          EXIT
+      CASE "D"
+         cValue := DToC( xValue )
+         EXIT
+      CASE "T"
+         cValue := hb_TsToStr( xValue )
+         EXIT
+      CASE "L"
+         cValue := iif( xValue, ".T.", ".F." )
+         EXIT
+      CASE "A"
+         cValue := "Array"
+         EXIT
+      CASE "H"
+         cValue := "Hash"
+         EXIT
+      CASE "U"
+         cValue := "NIL"
+         EXIT
+      OTHERWISE
+         cValue := "Error"
+         EXIT
       ENDSWITCH
 
       AAdd( aInfo, Space( 8 ) + PadR( FieldName( nFor ), 10 ) + " = " + PadR( cValue, 17 ) )

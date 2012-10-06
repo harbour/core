@@ -8,7 +8,7 @@
 #include "hbzebra.ch"
 #include "hbcairo.ch"
 
-PROCEDURE main()
+PROCEDURE Main()
    LOCAL hCairo, hSurface
 
    hSurface := cairo_pdf_surface_create( "testcair.pdf", 567, 794 )  // A4

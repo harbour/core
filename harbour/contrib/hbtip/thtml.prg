@@ -1385,7 +1385,7 @@ STATIC FUNCTION __ParseAttr( parser )
 
          EXIT
 
-         OTHERWISE
+      OTHERWISE
          aAttr[ nMode ] += cChr
       ENDSWITCH
    ENDDO
@@ -4585,7 +4585,7 @@ FUNCTION AnsiToHtml( cAnsiText )
          nStart    := nEnd
          cHtmlText += "&amp;" + SubStr( cText, 2 )
          LOOP
-         OTHERWISE
+      OTHERWISE
          cEntity := NIL
       ENDSWITCH
 
@@ -4761,7 +4761,7 @@ FUNCTION tip_StrToHtml( cAnsiText )
          nStart    := nEnd
          cHtmlText += "&amp;" + SubStr( cText, 2 )
          LOOP
-         OTHERWISE
+      OTHERWISE
          cEntity := NIL
       ENDSWITCH
 
@@ -4873,4 +4873,3 @@ STATIC PROCEDURE _Init_Html_CharacterEntities()
    ENDIF
 
    RETURN
-

@@ -160,54 +160,54 @@ METHOD applyKey( nKey ) CLASS HbDbInput
    LOCAL lUpdate := .T.
 
    SWITCH nKey
-      CASE K_HOME
-         ::nPos := 1
-         EXIT
-      CASE K_END
-         ::nPos := Len( RTrim( ::cValue ) ) + 1
-         IF ::nPos > ::nSize
-            ::nPos := ::nSize
+   CASE K_HOME
+      ::nPos := 1
+      EXIT
+   CASE K_END
+      ::nPos := Len( RTrim( ::cValue ) ) + 1
+      IF ::nPos > ::nSize
+         ::nPos := ::nSize
+      ENDIF
+      EXIT
+   CASE K_LEFT
+      IF ::nPos > 1
+         ::nPos--
+      ENDIF
+      EXIT
+   CASE K_RIGHT
+      IF ::nPos < ::nSize
+         ::nPos++
+      ENDIF
+      EXIT
+   CASE K_DEL
+      ::cValue := Stuff( ::cValue, ::nPos, 1, "" ) + " "
+      EXIT
+   CASE K_BS
+      IF ::nPos > 1
+         ::cValue := Stuff( ::cValue, --::nPos, 1, "" ) + " "
+      ENDIF
+      EXIT
+   CASE K_CTRL_Y
+   CASE K_CTRL_DEL
+      ::cValue := Space( ::nSize )
+      ::nPos := 1
+      EXIT
+   CASE K_INS
+      Set( _SET_INSERT, !Set( _SET_INSERT ) )
+      EXIT
+   OTHERWISE
+      IF nKey >= 32 .AND. nKey <= 255
+         IF Set( _SET_INSERT )
+            ::cValue := Left( Stuff( ::cValue, ::nPos, 0, Chr( nKey ) ), ::nSize )
+         ELSE
+            ::cValue := Stuff( ::cValue, ::nPos, 1, Chr( nKey ) )
          ENDIF
-         EXIT
-      CASE K_LEFT
-         IF ::nPos > 1
-            ::nPos--
-         ENDIF
-         EXIT
-      CASE K_RIGHT
          IF ::nPos < ::nSize
             ::nPos++
          ENDIF
-         EXIT
-      CASE K_DEL
-         ::cValue := Stuff( ::cValue, ::nPos, 1, "" ) + " "
-         EXIT
-      CASE K_BS
-         IF ::nPos > 1
-            ::cValue := Stuff( ::cValue, --::nPos, 1, "" ) + " "
-         ENDIF
-         EXIT
-      CASE K_CTRL_Y
-      CASE K_CTRL_DEL
-         ::cValue := Space( ::nSize )
-         ::nPos := 1
-         EXIT
-      CASE K_INS
-         Set( _SET_INSERT, !Set( _SET_INSERT ) )
-         EXIT
-      OTHERWISE
-         IF nKey >= 32 .AND. nKey <= 255
-            IF Set( _SET_INSERT )
-               ::cValue := Left( Stuff( ::cValue, ::nPos, 0, Chr( nKey ) ), ::nSize )
-            ELSE
-               ::cValue := Stuff( ::cValue, ::nPos, 1, Chr( nKey ) )
-            ENDIF
-            IF ::nPos < ::nSize
-               ::nPos++
-            ENDIF
-         ELSE
-            lUpdate := .F.
-         ENDIF
+      ELSE
+         lUpdate := .F.
+      ENDIF
    ENDSWITCH
 
    IF lUpdate
