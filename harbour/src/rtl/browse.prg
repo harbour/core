@@ -50,14 +50,14 @@
  *
  */
 
+#include "box.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
-#include "box.ch"
 
 FUNCTION Browse( nTop, nLeft, nBottom, nRight )
 
    LOCAL oBrw
-   LOCAL lExit, lAppend, lKeyPressed, lRefresh
+   LOCAL lContinue, lAppend, lKeyPressed, lRefresh
    LOCAL n, nOldCursor, nKey
    LOCAL cOldScreen
    LOCAL bAction
@@ -66,7 +66,8 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
       RETURN .F.
    ENDIF
 
-   lExit := lAppend := lKeyPressed := lRefresh := .F.
+   lAppend := lKeyPressed := lRefresh := .F.
+   lContinue := .T.
 
    IF PCount() < 4
       nTop    := 1
@@ -81,8 +82,8 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
    cOldScreen := SaveScreen( nTop, nLeft, nBottom, nRight )
 
    hb_dispBox( nTop, nLeft, nBottom, nRight, HB_B_DOUBLE_SINGLE_UNI )
-   hb_dispBox( nTop + 3, nLeft, nTop + 3, nLeft, hb_UTF8ToStrBox( "╞" ) )
-   hb_dispBox( nTop + 3, nRight, nTop + 3, nRight, hb_UTF8ToStrBox( "╡" ) )
+   hb_dispOutAtBox( nTop + 3, nLeft, hb_UTF8ToStrBox( "╞" ) )
+   hb_dispOutAtBox( nTop + 3, nRight, hb_UTF8ToStrBox( "╡" ) )
    hb_dispOutAt( nTop + 1, nLeft + 1, Space( nRight - nLeft - 1 ) )
 
    oBrw := TBrowseDB( nTop + 2, nLeft + 1, nBottom - 1, nRight - 1 )
@@ -106,7 +107,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
       lKeyPressed := .T.
    ENDIF
 
-   DO WHILE ! lExit
+   DO WHILE lContinue
 
       DO WHILE ! lKeyPressed .AND. ! oBrw:Stabilize()
          lKeyPressed := ( nKey := Inkey() ) != 0
@@ -114,7 +115,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
 
       IF ! lKeyPressed
 
-         IF oBrw:HitBottom() .AND. ( ! lAppend .OR. RecNo() != LastRec() + 1 )
+         IF oBrw:HitBottom .AND. ( ! lAppend .OR. RecNo() != LastRec() + 1 )
             IF lAppend
                oBrw:RefreshCurrent()
                oBrw:ForceStable()
@@ -135,7 +136,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
 
          nKey := Inkey( 0 )
          IF ( bAction := SetKey( nKey ) ) != NIL
-            Eval( bAction, ProcName( 1 ), ProcLine( 1 ), "")
+            Eval( bAction, ProcName( 1 ), ProcLine( 1 ), "" )
             LOOP
          ENDIF
       ELSE
@@ -166,7 +167,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
 #endif
       CASE K_DOWN
          IF lAppend
-            oBrw:HitBottom( .T. )
+            oBrw:HitBottom := .T.
          ELSE
             oBrw:Down()
          ENDIF
@@ -182,7 +183,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
 
       CASE K_PGDN
          IF lAppend
-            oBrw:HitBottom( .T. )
+            oBrw:HitBottom := .T.
          ELSE
             oBrw:PageDown()
          ENDIF
@@ -263,7 +264,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
          EXIT
 
       CASE K_ESC
-         lExit := .T.
+         lContinue := .F.
          EXIT
 
       OTHERWISE
@@ -292,12 +293,11 @@ STATIC PROCEDURE StatLine( oBrw, lAppend )
 
    LOCAL nTop   := oBrw:nTop - 1
    LOCAL nRight := oBrw:nRight
-   LOCAL nRecNo, nLastRec
+
+   LOCAL nRecNo := RecNo()
+   LOCAL nLastRec := LastRec()
 
    hb_dispOutAt( nTop, nRight - 27, "Record " )
-
-   nRecNo := RecNo()
-   nLastRec := LastRec()
 
    IF nLastRec == 0 .AND. ! lAppend
       hb_dispOutAt( nTop, nRight - 20, "<none>               " )
@@ -306,9 +306,9 @@ STATIC PROCEDURE StatLine( oBrw, lAppend )
       hb_dispOutAt( nTop, nRight - 20, "                <new>" )
    ELSE
       hb_dispOutAt( nTop, nRight - 40, iif( Deleted(), "<Deleted>", "         " ) )
-      hb_dispOutAt( nTop, nRight - 20, PadR( hb_NToS( nRecNo ) + "/" + ;
-                                             hb_NToS( nLastRec ), 16 ) + ;
-                                       iif( oBrw:HitTop(), "<bof>", "     " ) )
+      hb_dispOutAt( nTop, nRight - 20, PadR( hb_ntos( nRecNo ) + "/" + ;
+                                             hb_ntos( nLastRec ), 16 ) + ;
+                                       iif( oBrw:HitTop, "<bof>", "     " ) )
    ENDIF
 
    RETURN
@@ -320,7 +320,7 @@ STATIC FUNCTION DoGet( oBrw, lAppend )
    LOCAL cIndexKey, cForExp, xKeyValue
    LOCAL lSuccess, nKey, xValue
 
-   oBrw:HitTop( .F. )
+   oBrw:HitTop := .F.
    StatLine( oBrw, lAppend )
    oBrw:ForceStable()
 
@@ -426,13 +426,13 @@ STATIC FUNCTION Skipped( nRecs, lAppend )
             dbSkip()
             IF Eof()
                IF lAppend
-                  nSkipped++
+                  ++nSkipped
                ELSE
                   dbSkip( -1 )
                ENDIF
                EXIT
             ENDIF
-            nSkipped++
+            ++nSkipped
          ENDDO
       ELSEIF nRecs < 0
          DO WHILE nSkipped > nRecs
@@ -440,7 +440,7 @@ STATIC FUNCTION Skipped( nRecs, lAppend )
             IF Bof()
                EXIT
             ENDIF
-            nSkipped--
+            --nSkipped
          ENDDO
       ENDIF
    ENDIF
