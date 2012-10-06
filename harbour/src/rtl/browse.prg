@@ -67,7 +67,6 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
    ENDIF
 
    lAppend := lKeyPressed := lRefresh := .F.
-   lContinue := .T.
 
    IF PCount() < 4
       nTop    := 1
@@ -106,6 +105,8 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
       nKey := K_DOWN
       lKeyPressed := .T.
    ENDIF
+
+   lContinue := .T.
 
    DO WHILE lContinue
 
@@ -273,7 +274,6 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
             nKey := K_ENTER
             lKeyPressed := .T.
          ENDIF
-         EXIT
       ENDSWITCH
 
       IF lRefresh
@@ -393,7 +393,6 @@ STATIC FUNCTION ExitKey( lAppend )
    OTHERWISE
       nKey := iif( nKey == K_ENTER .OR. ;
                    !( hb_keyChar( nKey ) == "" ), K_RIGHT, 0 )
-      EXIT
    ENDSWITCH
 
    RETURN nKey

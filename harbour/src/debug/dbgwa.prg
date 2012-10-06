@@ -354,7 +354,6 @@ STATIC FUNCTION DbfInfo( aInfo )
          EXIT
       OTHERWISE
          cValue := "Error"
-         EXIT
       ENDSWITCH
 
       AAdd( aInfo, Space( 8 ) + PadR( FieldName( nFor ), 10 ) + " = " + PadR( cValue, 17 ) )

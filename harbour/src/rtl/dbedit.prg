@@ -276,7 +276,6 @@ FUNCTION DBEDIT( nTop, nLeft, nBottom, nRight, ;
          OTHERWISE
             lContinue := CallUser( oBrowse, xUserFunc, nKey, @lAppend, @lFlag )
             lDoIdleCall := .F.
-            EXIT
          ENDSWITCH
       ENDIF
    ENDDO
