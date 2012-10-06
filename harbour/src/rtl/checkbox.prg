@@ -108,7 +108,7 @@ CREATE CLASS CHECKBOX FUNCTION HBCheckBox
    VAR cMessage   INIT ""
    VAR nRow
    VAR bSBlock
-   VAR cStyle     INIT hb_UTF8ToStr( "[√]" )
+   VAR cStyle     INIT hb_UTF8ToStr( "[√ ]" )
 
    VAR nCursor
 
