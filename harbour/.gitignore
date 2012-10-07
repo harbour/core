@@ -1,6 +1,3 @@
-# legacy
-.svn
-
 # build generated files
 /include/hbverbld.h
 *.hbl

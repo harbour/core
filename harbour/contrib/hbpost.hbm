@@ -2,7 +2,7 @@
 # $Id$
 #
 
-# These are mandatory in Harbour SVN, they will always
+# These are mandatory inside Harbour repository, they will always
 # override project options.
 
 "{HB_BUILD_PARTS='lib'&!hblib}-stop=! Skipped because HB_BUILD_PARTS=lib"

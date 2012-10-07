@@ -1729,6 +1729,10 @@ ifeq ($(HB_INIT_DONE),)
          endif
          $(info ! REVISION: $(_tmp))
       endif
+#     ifneq ($(call find_in_path,git),)
+#        _tmp := $(shell git rev-parse --short HEAD)
+#        $(info ! REVISION: $(_tmp))
+#     endif
    endif
 endif
 

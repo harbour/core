@@ -2,8 +2,8 @@
  * $Id$
  */
 
-HOW TO USE THE SVN
-------------------
+HOW TO USE THE SOURCE REPOSITORY
+--------------------------------
 
 First and if your OS doesn't have it by default, download
 the client from this link:

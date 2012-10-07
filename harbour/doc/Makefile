@@ -18,7 +18,7 @@ DOC_FILES := \
    gtapi.txt \
    hdr_tpl.txt \
    howtorel.txt \
-   howtosvn.txt \
+   howtorep.txt \
    inet.txt \
    locks.txt \
    pcode.txt \

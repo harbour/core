@@ -35,7 +35,9 @@
 
 PROCEDURE Main()
 
-   LOCAL aChanges := DoctorChanges( Changes() )
+   LOCAL cVCS := VCSDetect()
+
+   LOCAL aChanges := DoctorChanges( cVCS, Changes( cVCS ) )
    LOCAL cLog
    LOCAL cLogNew
    LOCAL cLine
@@ -88,44 +90,110 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION DoctorChanges( aChanges )
+STATIC FUNCTION VCSDetect()
+
+   DO CASE
+   CASE hb_DirExists( ".svn" ) ; RETURN "svn"
+   CASE hb_DirExists( ".." + hb_ps() +  ".git" ) ; RETURN "git"
+   ENDCASE
+
+   RETURN ""
+
+STATIC FUNCTION DoctorChanges( cVCS, aChanges )
    LOCAL cLine
    LOCAL cStart
    LOCAL aNew := {}
 
    ASort( aChanges,,, {| x, y | x < y } )
 
-   FOR EACH cLine IN aChanges
-      IF ! Empty( cLine ) .AND. SubStr( cLine, 8, 1 ) == " "
-         cStart := Left( cLine, 1 )
-         SWITCH cStart
-         CASE "M"
-         CASE " " /* modified props */
-            cStart := "*"
-            EXIT
-         CASE "A"
-            cStart := "+"
-            EXIT
-         CASE "D"
-            cStart := "-"
-            EXIT
-         CASE "X"
-            cStart := ""
-            EXIT
-         OTHERWISE
-            cStart := "?"
-         ENDSWITCH
-         IF ! Empty( cStart )
-            AAdd( aNew, "  " + cStart + " " + StrTran( SubStr( cLine, 8 + 1 ), "\", "/" ) )
+   DO CASE
+   CASE cVCS == "svn"
+
+      FOR EACH cLine IN aChanges
+         IF ! Empty( cLine ) .AND. SubStr( cLine, 8, 1 ) == " "
+            cStart := Left( cLine, 1 )
+            SWITCH cStart
+            CASE "M"
+            CASE " " /* modified props */
+               cStart := "*"
+               EXIT
+            CASE "A"
+               cStart := "+"
+               EXIT
+            CASE "D"
+               cStart := "-"
+               EXIT
+            CASE "X"
+               cStart := ""
+               EXIT
+            OTHERWISE
+               cStart := "?"
+            ENDSWITCH
+            IF ! Empty( cStart )
+               AAdd( aNew, "  " + cStart + " " + StrTran( SubStr( cLine, 8 + 1 ), "\", "/" ) )
+            ENDIF
          ENDIF
-      ENDIF
-   NEXT
+      NEXT
+
+   CASE cVCS == "git"
+
+      FOR EACH cLine IN aChanges
+         IF ! Empty( cLine ) .AND. SubStr( cLine, 3, 1 ) == " "
+            cStart := Left( cLine, 1 )
+            SWITCH cStart
+            CASE " "
+            CASE "?"
+               cStart := ""
+               EXIT
+            CASE "M"
+            CASE "R"
+            CASE "U"
+               cStart := "*"
+               EXIT
+            CASE "A"
+            CASE "C"
+               cStart := "+"
+               EXIT
+            CASE "D"
+               cStart := "-"
+               EXIT
+            OTHERWISE
+               cStart := "?"
+            ENDSWITCH
+            IF ! Empty( cStart )
+               AAdd( aNew, "  " + cStart + " " + StrTran( SubStr( cLine, 3 + 1 ), "\", "/" ) )
+            ENDIF
+         ENDIF
+      NEXT
+
+   ENDCASE
 
    RETURN aNew
 
-STATIC FUNCTION Changes()
-   LOCAL cStdOut
 
-   hb_processRun( "svn status -q",, @cStdOut )
+STATIC FUNCTION Shell()
+   LOCAL cShell
+
+   #if defined( __PLATFORM__UNIX )
+      cShell := hb_GetEnv( "SHELL" )
+   #else
+      cShell := hb_GetEnv( "COMSPEC" )
+   #endif
+
+   IF ! Empty( cShell )
+      #if defined( __PLATFORM__WINDOWS ) .OR. defined( __PLATFORM__DOS )
+         cShell := cShell + " /c"
+      #endif
+   ENDIF
+
+   RETURN cShell
+
+STATIC FUNCTION Changes( cVCS )
+   LOCAL cStdOut := ""
+
+   DO CASE
+   CASE cVCS == "svn" ; hb_processRun( Shell() + " " + "svn status -q",, @cStdOut )
+   CASE cVCS == "git" ; hb_processRun( Shell() + " " + "git status -s",, @cStdOut )
+   ENDCASE
 
    RETURN hb_ATokens( StrTran( cStdOut, Chr( 13 ) ), Chr( 10 ) )
