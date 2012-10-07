@@ -6,9 +6,6 @@ Harbour directory structure
 ===========================
 
 Follow are the various directories that exist under the Harbour tree.
-Under each directory exist in this list there is also a special directory
-named .svn, which should normally ignored since it is used by the SVN to keep
-track of all files (read the FAQ if you don't know what SVN is).
 
 
 <harbour>               - Main Harbour directory. Contain all the various
@@ -165,7 +162,7 @@ track of all files (read the FAQ if you don't know what SVN is).
 Legend:
 =======
 (*)      Should exist in a final build or if you build them yourself, in
-         normal SVN distribution this directory is empty or does not contain
+         source repository this directory is empty or does not contain
          all files.
 
 

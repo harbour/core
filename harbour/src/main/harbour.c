@@ -53,20 +53,20 @@
 #include "hbcomp.h"
 #include "hbverbld.h"
 
-/* ChangeLog SVN revision number */
-int hb_verSvnID( void )
+/* Source repository revision number */
+int hb_verRevision( void )
 {
-   return HB_VER_SVNID;
+   return HB_VER_REVID;
 }
 
 /* ChangeLog ID string */
-const char * hb_verSvnChangeLogID( void )
+const char * hb_verChangeLogID( void )
 {
    return HB_VER_CHLID;
 }
 
 /* ChangeLog last entry string */
-const char * hb_verSvnLastEntry( void )
+const char * hb_verChangeLogLastEntry( void )
 {
    return HB_VER_LENTRY;
 }

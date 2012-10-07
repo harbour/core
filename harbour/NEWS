@@ -957,7 +957,7 @@ preprocessor:
          #pragma -kM-
          #pragma -kx1
          #pragma -kJ0
-- added to PP predefined defines: HB_VER_LENTRY, HB_VER_CHLID, HB_VER_SVNID
+- added to PP predefined defines: HB_VER_LENTRY, HB_VER_CHLID, HB_VER_REVID
   with ChangeLog entry, ChangeLog ID and SVN revision
 - added to PP support for:
       #pragma __[c]streaminclude "fileName"|<code with %s result marker>

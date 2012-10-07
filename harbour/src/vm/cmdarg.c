@@ -647,10 +647,30 @@ HB_U32 hb_cmdargProcessVM( int * pCancelKey, int * pCancelKeyEx )
    return ulFlags;
 }
 
-/* ChangeLog SVN revision number */
+/* Source repository revision number */
+int hb_verRevision( void )
+{
+   return HB_VER_REVID;
+}
+
+/* ChangeLog ID string */
+const char * hb_verChangeLogID( void )
+{
+   return HB_VER_CHLID;
+}
+
+/* ChangeLog last entry string */
+const char * hb_verChangeLogLastEntry( void )
+{
+   return HB_VER_LENTRY;
+}
+
+#if defined( HB_LEGACY_LEVEL4 )
+
+/* Source repository revision number */
 int hb_verSvnID( void )
 {
-   return HB_VER_SVNID;
+   return HB_VER_REVID;
 }
 
 /* ChangeLog ID string */
@@ -664,6 +684,8 @@ const char * hb_verSvnLastEntry( void )
 {
    return HB_VER_LENTRY;
 }
+
+#endif
 
 /* build time C compiler flags in HB_USER_CFLAGS envvar */
 const char * hb_verFlagsC( void )

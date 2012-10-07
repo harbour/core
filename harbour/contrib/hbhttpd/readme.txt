@@ -23,20 +23,21 @@ for some time): http://www.dbtopas.lt:8001/
 
 
 I also want to add answer about one question. uhttpd support and
-upload into Harbour SVN. I expected and wrote some time before:
+upload into Harbour source repository. I expected and wrote some time
+before:
 ------
 I just have some ideas how to extend it, but I'm not sure if these
-ideas will be similar to SVN changes by other people. It can happen,
-that after some time I will propose something completely different
-and incompatible from SVN.
+ideas will be similar to repository changes by other people. It can
+happen, that after some time I will propose something completely
+different and incompatible from repository.
 ------
 I see many backward incompatible changes in my uhttpd, and I'm going
 to do development in this incompatible way. I'm just experimenting
 with my simple applications, and I want to find a best web application
 architecture solution. I'm not interested in showcounter sample,
-or uhttp_cookie object, so, I do not want to do any changes to SVN
-uhttpd sample. Feel free to pick the features you like and put it
-into SVN.
+or uhttp_cookie object, so, I do not want to do any changes to
+repository uhttpd sample. Feel free to pick the features you like
+and put it into repository.
 
 
 

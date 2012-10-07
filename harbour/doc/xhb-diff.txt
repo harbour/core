@@ -1594,7 +1594,7 @@ In xHarbour there is some basic protection but it was never
 fully functional. Sometimes it may cause that internal error
 message is generated but in most of cases internal HVM memory
 is silently corrupted. A good example which illustrates what
-may happen is in Harbour SVN in harbour/tests/destruct.prg
+may happen is in Harbour source repository in harbour/tests/destruct.prg
 This code can be compiled and executed by Harbour and xHarbour.
 But only Harbour version detects user errors generating RTE
 and is necessary in all cases to keep internal memory cleaned

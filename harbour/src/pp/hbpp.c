@@ -54,7 +54,7 @@
 
 #include "hbapi.h"
 
-int hb_verSvnID( void ) { return 0; }
+int hb_verRevision( void ) { return 0; }
 
 #include "ppcore.c"
 
@@ -351,7 +351,7 @@ static int hb_pp_generateVerInfo( char * szVerFile, int iSVNID, char * szChangeL
          " */\n\n" );
 
       if( iSVNID )
-         fprintf( fout, "\n#define HB_VER_SVNID             %d\n", iSVNID );
+         fprintf( fout, "\n#define HB_VER_REVID             %d\n", iSVNID );
 
       if( szChangeLogID )
       {
@@ -606,7 +606,12 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
          *piSVNID = szFrom ? ( int ) hb_strValInt( szFrom, &iLen ) : 0;
 
          if( *piSVNID )
+         {
+            hb_pp_addDefine( pState, "HB_VER_REVID", szFrom );
+#ifdef HB_LEGACY_LEVEL4
             hb_pp_addDefine( pState, "HB_VER_SVNID", szFrom );
+#endif
+         }
          else
          {
             if( iQuiet < 2 )

@@ -1166,9 +1166,14 @@ extern HB_EXPORT char *       hb_verHarbour( void );         /* retrieves a newl
 extern HB_EXPORT char *       hb_verPCode( void );           /* retrieves a newly allocated buffer containing PCode version */
 extern HB_EXPORT char *       hb_verBuildDate( void );       /* retrieves a newly allocated buffer containing build date and time */
 extern HB_EXPORT void         hb_verBuildInfo( void );       /* display harbour, compiler, and platform versions to standard console */
-extern HB_EXPORT int          hb_verSvnID( void );           /* retrieves ChangeLog SVN revision number */
+extern HB_EXPORT int          hb_verRevision( void );        /* retrieves source repository revision number */
+extern HB_EXPORT const char * hb_verChangeLogID( void );     /* retrieves a static buffer containing ChangeLog ID string */
+extern HB_EXPORT const char * hb_verChangeLogLastEntry( void ); /* retrieves a static buffer containing ChangeLog last entry string */
+#if defined( HB_LEGACY_LEVEL4 )
+extern HB_EXPORT int          hb_verSvnID( void );           /* retrieves source repository revision number */
 extern HB_EXPORT const char * hb_verSvnChangeLogID( void );  /* retrieves a static buffer containing ChangeLog ID string */
 extern HB_EXPORT const char * hb_verSvnLastEntry( void );    /* retrieves a static buffer containing ChangeLog last entry string */
+#endif
 extern HB_EXPORT const char * hb_verFlagsC( void );          /* retrieves a static buffer containing build time C compiler flags in HB_USER_CFLAGS envvar */
 extern HB_EXPORT const char * hb_verFlagsL( void );          /* retrieves a static buffer containing build time linker flags in HB_USER_LDFLAGS envvar */
 extern HB_EXPORT const char * hb_verFlagsPRG( void );        /* retrieves a static buffer containing build time Harbour compiler flags in HB_USER_PRGFLAGS envvar */

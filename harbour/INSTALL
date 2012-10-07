@@ -392,7 +392,7 @@ HARBOUR
    To explicitly disable any given components, use the value 'no' (without
    quotes). This may be useful to avoid autodetection of installed packages
    on *nix systems. You may also use the value 'local' to force using the
-   locally hosted copy (inside Harbour SVN source tree) of these packages,
+   locally hosted copy (inside Harbour source repository) of these packages,
    where applicable. 'nolocal' will explicitly disable using locally hosted
    copy.
 
