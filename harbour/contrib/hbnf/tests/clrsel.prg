@@ -4,7 +4,6 @@
 
 #require "hbnf"
 
-#include "common.ch"
 #include "setcurs.ch"
 
 PROCEDURE Main( cVidMode )
@@ -16,7 +15,8 @@ PROCEDURE Main( cVidMode )
    LOCAL lColour
    LOCAL aClrs
 
-   DEFAULT cVidMode TO ""
+   __defaultNIL( @cVidMode, "" )
+
    NoSnow( ( "NOSNOW" $ Upper( cVidMode ) ) )
    IF "VGA" $ Upper( cVidMode )
       SetMode( 50, 80 )

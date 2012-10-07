@@ -54,7 +54,6 @@
  * 2. Passing and evaluating the block for the TbSkipWhil().
  */
 
-#include "common.ch"
 #include "inkey.ch"
 #include "set.ch"
 #include "setcurs.ch"
@@ -69,14 +68,14 @@ FUNCTION FT_BRWSWHL( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
    LOCAL cColorSave, cColorBack, nCursSave
    LOCAL lMore, nKey, nPassRec
 
-   DEFAULT nFreeze TO 0
-   DEFAULT lSaveScrn  TO .T.
-   DEFAULT cColorList TO "N/W, N/BG, B/W, B/BG, B/W, B/BG, R/W, B/R"
-   DEFAULT cColorShad TO "N/N"
-   DEFAULT nTop       TO 2
-   DEFAULT nLeft      TO 2
-   DEFAULT nBottom    TO MaxRow() - 2
-   DEFAULT nRight     TO MaxCol() - 2
+   __defaultNIL( @nFreeze, 0 )
+   __defaultNIL( @lSaveScrn, .T. )
+   __defaultNIL( @cColorList, "N/W, N/BG, B/W, B/BG, B/W, B/BG, R/W, B/R" )
+   __defaultNIL( @cColorShad, "N/N" )
+   __defaultNIL( @nTop, 2 )
+   __defaultNIL( @nLeft, 2 )
+   __defaultNIL( @nBottom, MaxRow() - 2 )
+   __defaultNIL( @nRight, MaxCol() - 2 )
 
    lKeepScrn := PCount() > 6
 

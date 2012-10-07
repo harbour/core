@@ -2,8 +2,6 @@
  * $Id$
  */
 
-#include "common.ch"
-
 #ifndef __HARBOUR__
    #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
 #endif

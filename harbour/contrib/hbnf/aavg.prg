@@ -23,14 +23,12 @@
  *
  */
 
-#include "common.ch"
-
 #define FORCE_BETWEEN( x, y, z )         ( y := MAX( MIN( y, z ), x ) )
 
 FUNCTION FT_AAVG( aArray, nStartIndex, nEndIndex )
 
-   DEFAULT nStartIndex TO 1
-   DEFAULT nEndIndex   TO Len( aArray )
+   __defaultNIL( @nStartIndex, 1 )
+   __defaultNIL( @nEndIndex, Len( aArray ) )
 
    // Make Sure Bounds are in Range
 

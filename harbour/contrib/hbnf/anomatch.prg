@@ -23,16 +23,14 @@
  *
  */
 
-#include "common.ch"
-
 #define FORCE_BETWEEN( x, y, z )         ( y := MAX( MIN( y, z ), x ) )
 
 FUNCTION FT_ANOMATCHES( aArray, bCompareBlock, nStartIndex, nEndIndex )
 
    LOCAL nNoOfMatches := 0              // Number of Matches Found
 
-   DEFAULT nStartIndex TO 1
-   DEFAULT nEndIndex   TO Len( aArray )
+   __defaultNIL( @nStartIndex, 1 )
+   __defaultNIL( @nEndIndex, Len( aArray ) )
 
    // Make Sure Bounds are in Range
    FORCE_BETWEEN( 1, nEndIndex,   Len( aArray ) )

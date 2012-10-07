@@ -30,7 +30,6 @@
  */
 
 #include "inkey.ch"
-#include "common.ch"
 #include "setcurs.ch"
 #include "hbgtinfo.ch"
 
@@ -358,10 +357,10 @@ PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
    LOCAL lMouseMove
    LOCAL lEchoing := .F.
 
-   DEFAULT nTop TO 2
-   DEFAULT nLeft TO 2
-   DEFAULT nBottom TO nTop + 10
-   DEFAULT nRight TO nLeft + 45
+   hb_default( @nTop, 2 )
+   hb_default( @nLeft, 2 )
+   hb_default( @nBottom, nTop + 10 )
+   hb_default( @nRight, nLeft + 45 )
 
    cWinName := "Typewriter (Win#" + hb_ntos( WVW_nNumWindows() ) + "); CtrlW: New Window; ESC: Exit"
 
@@ -1109,14 +1108,14 @@ FUNCTION nMenuChecker( nMenuEvent )
 
 FUNCTION lBoxMessage( cMsg, cTitle )
 
-   DEFAULT cTitle TO "Info"
+   hb_default( @cTitle, "Info" )
    win_messagebox( WVW_GETWINDOWHANDLE(), cMsg, cTitle, MB_OK + MB_ICONINFORMATION + MB_SYSTEMMODAL )
 
    RETURN .T.
 
 FUNCTION lYesNo( cMsg, cTitle )
 
-   DEFAULT cTitle TO "Konfirmasi"
+   hb_default( @cTitle, "Konfirmasi" )
 
    RETURN win_messagebox( WVW_GETWINDOWHANDLE(), cMsg, cTitle, MB_YESNO + MB_ICONQUESTION + MB_SYSTEMMODAL ) == IDYES
 
@@ -1189,7 +1188,7 @@ FUNCTION nCeiling( nNumber, nRoundDec )
    LOCAL i
    LOCAL nTemp
 
-   DEFAULT nRoundDec TO 0   // SATUAN
+   hb_default( @nRoundDec, 0 )  // SATUAN
 
    IF nRoundDec > 0
       nRoundDec := 0

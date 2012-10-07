@@ -23,8 +23,6 @@
  *
  */
 
-#include "common.ch"
-
 #define NEAREST_DECIMAL      "D"
 #define NEAREST_FRACTION     "F"
 #define NEAREST_WHOLE_NUMBER "W"
@@ -37,10 +35,10 @@ FUNCTION FT_ROUND( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
 
    LOCAL nResult := Abs( nNumber )        // The Result of the Rounding
 
-   DEFAULT nRoundToAmount   TO 2
-   DEFAULT cRoundType       TO NEAREST_DECIMAL
-   DEFAULT cRoundDirection  TO ROUND_NORMAL
-   DEFAULT nAcceptableError TO 1 / ( nRoundToAmount ** 2 )
+   __defaultNIL( @nRoundToAmount  , 2 )
+   __defaultNIL( @cRoundType      , NEAREST_DECIMAL )
+   __defaultNIL( @cRoundDirection , ROUND_NORMAL )
+   __defaultNIL( @nAcceptableError, 1 / ( nRoundToAmount ** 2 ) )
 
    // Are We Rounding to the Nearest Whole
    // Number or to Zero Decimal Places??

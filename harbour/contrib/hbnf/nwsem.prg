@@ -36,7 +36,6 @@
 //    Semaphore Package for Novell NetWare
 // --------------------------------------------------------------
 
-#include "common.ch"
 #include "ftint86.ch"
 
 #define INT21    33
@@ -52,10 +51,10 @@ FUNCTION ft_nwSemOpen( cName, nInitVal, nHandle, nOpenCnt )
 
    LOCAL aRegs[ INT86_MAX_REGS ], cRequest, nRet
 
-   DEFAULT cName    TO ""
-   DEFAULT nInitVal TO 0
-   DEFAULT nHandle  TO 0
-   DEFAULT nOpenCnt TO 0
+   __defaultNIL( @cName, "" )
+   __defaultNIL( @nInitVal, 0 )
+   __defaultNIL( @nHandle, 0 )
+   __defaultNIL( @nOpenCnt, 0 )
 
    cName    := iif( hb_BLen( cName ) > 127, hb_BSubStr( cName, 1, 127 ), cName )
    cRequest := hb_BChar( Len( cName ) ) + cName
@@ -78,9 +77,9 @@ FUNCTION ft_nwSemEx( nHandle, nValue, nOpenCnt )
 
    LOCAL aRegs[ INT86_MAX_REGS ], nRet
 
-   DEFAULT nHandle  TO 0
-   DEFAULT nValue   TO 0
-   DEFAULT nOpenCnt TO 0
+   __defaultNIL( @nHandle, 0 )
+   __defaultNIL( @nValue, 0 )
+   __defaultNIL( @nOpenCnt, 0 )
 
    aRegs[ AX ] :=  makehi( 197 ) + 1                         // C5h, 01h
    aRegs[ CX ] :=  Bin2I( hb_BSubStr( L2Bin( nHandle ), 1, 2 ) )
@@ -121,9 +120,9 @@ STATIC FUNCTION _ftnwsem( nOp, nHandle, nTimeout )
 
    LOCAL aRegs[ INT86_MAX_REGS ], nRet
 
-   DEFAULT nOp      TO SIGNAL_SEMAPHORE
-   DEFAULT nHandle  TO 0
-   DEFAULT nTimeout TO 0
+   __defaultNIL( @nOp, SIGNAL_SEMAPHORE )
+   __defaultNIL( @nHandle, 0 )
+   __defaultNIL( @nTimeout, 0 )
 
    aRegs[ AX ] :=  makehi( 197 ) + nOp
    aRegs[ CX ] :=  Bin2I( hb_BSubStr( L2Bin( nHandle ), 1, 2 ) )

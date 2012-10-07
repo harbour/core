@@ -53,7 +53,6 @@
 //------------------------------------------------
 // Pre-processor stuff
 
-#include "common.ch"
 #include "setcurs.ch"
 #include "inkey.ch"
 
@@ -113,8 +112,9 @@ FUNCTION FT_ClrSel( aClrs, lColour, cChr )
    LOCAL aEnvSav := FT_SaveSets()
    LOCAL cScrSav := SaveScreen( 0, 0, MaxRow(), MaxCol() )
 
-   DEFAULT lColour TO IsColor()
-   DEFAULT cChr TO hb_UTF8ToStr( "■■" )
+   __defaultNIL( @lColour, IsColor() )
+   __defaultNIL( @cChr, hb_UTF8ToStr( "■■" ) )
+
    cChr := PadR( cChr, 2 )
 
    SetCursor( SC_NONE )
@@ -205,12 +205,12 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
    LOCAL cScrSav := SaveScreen( 18, 0, MaxRow(), MaxCol() )
 
    ASize( aOpt, 4 )                            // check incoming parameters
-   DEFAULT aOpt[ C_CHAR ] TO ""
-   DEFAULT aOpt[ C_TYPE ] TO "W"
+   __defaultNIL( @aOpt[ C_CHAR ], "" )
+   __defaultNIL( @aOpt[ C_TYPE ], "W" )
    aOpt[ C_CLR ]  := Upper( aOpt[ C_CLR ] )    // need upper case
    aOpt[ C_TYPE ] := Upper( aOpt[ C_TYPE ] )
 
-   DEFAULT lColour TO IsColor()
+   __defaultNIL( @lColour, IsColor() )
 
    //.... display appropriate prompts based on type of colour setting
    nChoice := 1
@@ -271,11 +271,11 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
       ASize( aClrs, 5 )                      // make sure there are 5 settings
       //.... empty elements are made NIL so they can be defaulted
       AEval( aClrs, {| v, e | aClrs[ e ] := iif( Empty( v ), NIL, AllTrim( v ) ) } )
-      DEFAULT aClrs[ 1 ] TO "W/N"
-      DEFAULT aClrs[ 2 ] TO "N/W"   // place default colours into
-      DEFAULT aClrs[ 3 ] TO "N/N"   // elements which are empty
-      DEFAULT aClrs[ 4 ] TO "N/N"
-      DEFAULT aClrs[ 5 ] TO "N/W"
+      __defaultNIL( @aClrs[ 1 ], "W/N" )
+      __defaultNIL( @aClrs[ 2 ], "N/W" )  // place default colours into
+      __defaultNIL( @aClrs[ 3 ], "N/N" )  // elements which are empty
+      __defaultNIL( @aClrs[ 4 ], "N/N" )
+      __defaultNIL( @aClrs[ 5 ], "N/W" )
       cClr := aClrs[ nChoice ]    // selected colour
 
       //.... allow change to specific part of colour string
@@ -557,8 +557,9 @@ STATIC FUNCTION _ftChr2Arr( cString, cDelim )
 
    LOCAL n, aArray := {}
 
-   DEFAULT cDelim  TO ","
-   DEFAULT cString TO ""  // this should really be passed
+   __defaultNIL( @cDelim, "," )
+   __defaultNIL( @cString, "" )  // this should really be passed
+
    cString += cDelim
 
    DO WHILE .T.
@@ -581,8 +582,8 @@ STATIC FUNCTION _ftArr2Chr( aArray, cDelim )
 
    LOCAL cString := ""
 
-   DEFAULT aArray TO {}
-   DEFAULT cDelim TO ","
+   __defaultNIL( @aArray, {} )
+   __defaultNIL( @cDelim, "," )
 
    AEval( aArray, {| v, e | cString += iif( e == 1, v, cDelim + v ) } )
 

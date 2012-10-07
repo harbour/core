@@ -23,8 +23,6 @@
  *
  */
 
-#include "common.ch"
-
 #define log10( num )    Log( num ) / Log( 10 )
 #define DEFAULT_PRECISION     6
 
@@ -32,7 +30,7 @@ FUNCTION ft_d2e( nDec, nPrecision )
 
    LOCAL nExp, sScn
 
-   DEFAULT nPrecision TO DEFAULT_PRECISION
+   __defaultNIL( @nPrecision, DEFAULT_PRECISION )
 
    IF nDec == 0
       nExp := 0

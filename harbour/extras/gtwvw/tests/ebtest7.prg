@@ -26,7 +26,6 @@
 #include "inkey.ch"
 #include "set.ch"
 #include "setcurs.ch"
-#include "common.ch"
 
 
 #command @ <row>, <col> EBGET <var>                                       ;
@@ -994,7 +993,7 @@ STATIC FUNCTION MyMessageBox( nwinnum, cMessage, cCaption, nFlags )
 
    LOCAL nParent
 
-   DEFAULT cCaption TO "Debug Message"
+   hb_default( @cCaption, "Debug Message" )
    nParent := wvw_getwindowhandle( nwinnum )
 
    RETURN win_messagebox( nParent, cMessage, cCaption, nFlags )

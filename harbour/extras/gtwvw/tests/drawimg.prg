@@ -32,7 +32,6 @@
    gtwvw.
  */
 
-#include "common.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 #include "hbclass.ch"
@@ -190,8 +189,8 @@ ENDCLASS
 
 METHOD New( nWinNum, nType, cId, nRow1, nCol1, nRow2, nCol2, aOffTLBR, lTransp ) CLASS wPaintObj
 
-   DEFAULT aOffTLBR to { 0, 0, 0, 0 }
-   DEFAULT lTransp TO .F.
+   hb_default( @aOffTLBR, { 0, 0, 0, 0 } )
+   hb_default( @lTransp, .F. )
 
    ::nWinNum := nWinNum
    ::lVisible := .T.
@@ -287,8 +286,8 @@ METHOD Show() CLASS wPaintObj
 FUNCTION wg_ResetWPaintObj( nWinNum, nObjNum, lStrict )
 
    LOCAL i
-   DEFAULT nObjNum TO 0
-   DEFAULT lStrict TO .F.
+   hb_default( @nObjNum, 0 )
+   hb_default( @lStrict, .F. )
 
    DO WHILE Len( s_aPObjList ) < nWinNum + 1
       AAdd( s_aPObjList, {} )
@@ -304,8 +303,8 @@ FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
 
    LOCAL i
    LOCAL nLen, aRect //20050720
-   DEFAULT lStrict TO .F.
-   DEFAULT nOperation TO WOBJ_ADD_OVERWRITE
+   hb_default( @lStrict, .F. )
+   hb_default( @nOperation, WOBJ_ADD_OVERWRITE )
 
    // simplified:
    nOperation := WOBJ_ADD_OVERWRITE
@@ -349,7 +348,8 @@ FUNCTION wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
    LOCAL nDeleted := 0
    LOCAL nLen
    LOCAL cCurId
-   DEFAULT lStrict TO .F.
+
+   hb_default( @lStrict, .F. )
 
    // is nType set?
    IF nType < 1

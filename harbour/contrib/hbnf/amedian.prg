@@ -23,16 +23,14 @@
  *
  */
 
-#include "common.ch"
-
 #define FORCE_BETWEEN( x, y, z )         ( y := MAX( MIN( y, z ), x ) )
 
 FUNCTION FT_AMEDIAN( aArray, nStart, nEnd )
 
    LOCAL nTemplen, aTemparray, nMiddle1, nMiddle2, nMedian
 
-   DEFAULT nStart TO 1
-   DEFAULT nEnd   TO Len( aArray )
+   __defaultNIL( @nStart, 1 )
+   __defaultNIL( @nEnd, Len( aArray ) )
 
    // Make Sure Bounds are in Range
    FORCE_BETWEEN( 1, nEnd,   Len( aArray ) )

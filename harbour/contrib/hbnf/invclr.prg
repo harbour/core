@@ -23,8 +23,6 @@
  *
  */
 
-#include "common.ch"
-
 #define NULL ""
 
 FUNCTION FT_INVCLR( cDsrdColor )
@@ -33,7 +31,8 @@ FUNCTION FT_INVCLR( cDsrdColor )
    LOCAL cForeground                    // The Foreground Color, New Background
    LOCAL cModifiers                     // Any Color Modifiers (+*)
 
-   DEFAULT cDsrdColor TO SetColor()
+   __defaultNIL( @cDsrdColor, SetColor() )
+
    // Remove Anything Past 1st Color
    cDsrdColor := Left( cDsrdColor, At( ",", cDsrdColor + "," ) - 1 )
 

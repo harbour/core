@@ -23,8 +23,6 @@
  *
  */
 
-#include "common.ch"
-
 #define BLOCKIFY( x )                {|| x }
 #define CASE_AT( x, y, z )           z[ AT( x, y ) + 1 ]
 #define NULL                         ""
@@ -45,7 +43,7 @@
 
 FUNCTION FT_XTOY( xValueToConvert, cTypeToConvertTo, lWantYesNo )
 
-   DEFAULT lWantYesNo TO .F.
+   __defaultNIL( @lWantYesNo, .F. )
 
    DO CASE
 

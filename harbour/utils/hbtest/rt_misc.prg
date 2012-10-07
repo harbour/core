@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 #include "rt_main.ch"
 
 /* Don't change the position of this #include. */

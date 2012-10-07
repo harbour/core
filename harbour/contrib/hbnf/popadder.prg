@@ -30,7 +30,6 @@
  *
  */
 
-#include "common.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 #include "achoice.ch"
@@ -1081,7 +1080,7 @@ STATIC FUNCTION _ftPushMessage( cMessage, lWait, cTitle, cBotTitle, xQuiet, nTop
    nNumRows  := MLCount( cMessage, nWide )
 
    // If they didn't say what the top row is, Center it on the screen
-   DEFAULT nTop TO Int( ( MaxRow() - nNumRows ) / 2 )
+   __defaultNIL( @nTop, Int( ( MaxRow() - nNumRows ) / 2 ) )
 
    nBottom   := nTop + nNumRows + 2
    nLeft     := Int( ( MaxCol() - nWide ) / 2 ) - 3

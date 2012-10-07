@@ -23,8 +23,6 @@
  *
  */
 
-#include "common.ch"
-
 #define CASE_AT( x, y, z )               z[ AT( x, y ) + 1 ]
 #define FORCE_BETWEEN( x, y, z )         ( y := MAX( MIN( y, z ), x ) )
 
@@ -32,8 +30,8 @@ FUNCTION FT_ASUM( aArray, nStartIndex, nEndIndex )
 
    LOCAL nSumTotal := 0                 // Array Sum
 
-   DEFAULT nStartIndex TO 1
-   DEFAULT nEndIndex   TO Len( aArray )
+   __defaultNIL( @nStartIndex, 1 )
+   __defaultNIL( @nEndIndex, Len( aArray ) )
 
    // Make Sure Bounds are in Range
    FORCE_BETWEEN( 1, nEndIndex,   Len( aArray ) )

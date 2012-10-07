@@ -19,7 +19,6 @@
 */
 
 #include "inkey.ch"
-#include "common.ch"
 #include "setcurs.ch"
 #include "hbclass.ch"
 
@@ -127,14 +126,14 @@ ENDCLASS   //WVWMouseButton
 
 METHOD New( cCaption, nRow1, nCol1, nRow2, nCol2, bClickBlock, nType, lDraw, nWinId ) CLASS WVWMouseButton
 
-   DEFAULT cCaption TO "" //20040325,was: "Button"
-   DEFAULT nRow1 TO 0
-   DEFAULT nCol1 TO 0
-   DEFAULT nRow2 TO nRow1
-   DEFAULT nCol2 TO nCol1 + Max( 10, Len( cCaption ) + 2 ) - 1
-   DEFAULT nType TO _BUTTON_NORMAL         //20040303
-   DEFAULT lDraw TO .T.
-   DEFAULT nWinId TO wvw_nNumWindows() - 1   //20040303
+   hb_default( @cCaption, "" ) //20040325,was: "Button"
+   hb_default( @nRow1, 0 )
+   hb_default( @nCol1, 0 )
+   hb_default( @nRow2, nRow1 )
+   hb_default( @nCol2, nCol1 + Max( 10, Len( cCaption ) + 2 ) - 1 )
+   hb_default( @nType, _BUTTON_NORMAL )        //20040303
+   hb_default( @lDraw, .T. )
+   hb_default( @nWinId, wvw_nNumWindows() - 1 )  //20040303
 
    //TODO: ::nId := iif( Empty( s_amouseobjlist ), 1, s_amouseobjlist[ Len( s_amouseobjlist ) ]:nGetId() + 1 )
    //TODO: ::nHotKey := NIL
@@ -335,7 +334,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
       RETURN Self
    ENDIF
 
-   DEFAULT nWinNum to ::nWinId
+   hb_default( @nWinNum, ::nWinId )
 
    IF lPressed //::lPressed
       IF ::nType != _BUTTON_HARD
@@ -410,7 +409,7 @@ FUNCTION wvwm_ResetMouseObjects( nWinNum )
 FUNCTION wvwm_AddMouseObjects( nWinNum, oMouse, nObjType )
 
    // adds a mouse object oMouse into window nWinNum
-   DEFAULT nObjType TO _MOBJECT_BUTTON
+   hb_default( @nObjType, _MOBJECT_BUTTON )
    AAdd( s_amouseobjlist[ nWinNum + 1 ], { nObjType, oMouse } )
 
    RETURN .T.
@@ -550,7 +549,7 @@ STATIC PROCEDURE xKeyRepeater( lInit )
    LOCAL nNow
    LOCAL nRepeatInterval
 
-   DEFAULT lInit TO .F.
+   hb_default( @lInit, .F. )
 
    IF lInit
       // simply init the locally static var

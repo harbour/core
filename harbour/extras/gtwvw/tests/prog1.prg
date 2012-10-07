@@ -34,7 +34,6 @@
 */
 
 
-#include "common.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -287,7 +286,7 @@ FUNCTION lYesNo( cMsg )
    LOCAL oldCurs := SetCursor( SC_NONE )
    LOCAL oldColor := SetColor( s_cStdColor )
 
-   DEFAULT cMsg TO "Please Confirm"
+   hb_default( @cMsg, "Please Confirm" )
 
    cmsg := " " + AllTrim( cmsg ) + " "
    nWidth := Max( Len( cmsg ), Len( "Yes" ) )
@@ -321,7 +320,7 @@ FUNCTION lBoxMessage( cMsg, cTitle )
    LOCAL oldCurs := SetCursor( SC_NONE )
    LOCAL oldColor := SetColor( s_cStdColor )
 
-   DEFAULT cTitle TO "Info"
+   hb_default( @cTitle, "Info" )
 
    cmsg := AllTrim( cmsg )
    nNumLines := MLCount( cmsg, ( nright - nleft ) - 1 )
@@ -371,8 +370,9 @@ FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
    LOCAL cOldColor := SetColor()
    LOCAL nrow := Row(), ncol := Col()
 
-   DEFAULT ctitle TO ""
-   DEFAULT ccolor TO s_cStdColor
+   hb_default( @ctitle, "" )
+   hb_default( @ccolor, s_cStdColor )
+
    SetColor( ccolor )
 
 #ifdef __GTWVW__
