@@ -98,6 +98,6 @@ METHOD Display( cClrText, cClrHotKey ) CLASS HBDbMenuItem
      ( nAt := At( "~", ::cPrompt ) ) - 1,;
      SubStr( ::cPrompt, nAt + 1, 1 ), cClrHotKey )
 
-   hb_dispOutAt( ::nRow, ::nCol, iif( ::lChecked, Chr( 251 ), "" ), cClrText )
+   hb_dispOutAtBox( ::nRow, ::nCol, iif( ::lChecked, hb_UTF8ToStrBox( "√" ), "" ), cClrText )
 
    RETURN Self

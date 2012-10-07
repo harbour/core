@@ -5,7 +5,6 @@
 #xtranslate _ENCODE( <xData> ) => ( hb_base64encode( hb_serialize( mxmlGetCustom( <xData> ) ) ) )
 
 #include "hbmxml.ch"
-#include "hbinkey.ch"
 
 PROCEDURE main()
 
@@ -116,7 +115,7 @@ FUNCTION whitespace_cb( node, where )
          nLevel := 0
       ENDIF
 
-      RETURN Replicate( Chr( HB_K_TAB ), nLevel )
+      RETURN Replicate( Chr( 9 ), nLevel )
 
    ELSEIF where == MXML_WS_AFTER_CLOSE .OR. ;
           ( ( name == "group".OR. name == "option" .OR. name == "choice" ) .AND. ;

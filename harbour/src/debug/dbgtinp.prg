@@ -196,11 +196,11 @@ METHOD applyKey( nKey ) CLASS HbDbInput
       Set( _SET_INSERT, !Set( _SET_INSERT ) )
       EXIT
    OTHERWISE
-      IF nKey >= 32 .AND. nKey <= 255
+      IF !( hb_keyChar( nKey ) == "" )
          IF Set( _SET_INSERT )
-            ::cValue := Left( Stuff( ::cValue, ::nPos, 0, Chr( nKey ) ), ::nSize )
+            ::cValue := Left( Stuff( ::cValue, ::nPos, 0, hb_keyChar( nKey ) ), ::nSize )
          ELSE
-            ::cValue := Stuff( ::cValue, ::nPos, 1, Chr( nKey ) )
+            ::cValue := Stuff( ::cValue, ::nPos, 1, hb_keyChar( nKey ) )
          ENDIF
          IF ::nPos < ::nSize
             ::nPos++

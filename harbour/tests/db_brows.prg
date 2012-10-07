@@ -371,7 +371,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
       CASE xkey == K_ENTER .AND. predit < 2
          rez     := .F.
          rezproc := xkey
-      CASE ( xkey == K_ENTER .OR. ! Empty( hb_keyChar( xkey ) ) ) .AND. predit > 1
+      CASE ( xkey == K_ENTER .OR. !( hb_keyChar( xkey ) == "" ) ) .AND. predit > 1
          fipos := LI_COLPOS + LI_NLEFT - 1 - LI_FREEZE
          IF LI_WHEN == NIL .OR. Len( LI_WHEN ) < fipos .OR. LI_WHEN[ fipos ] == NIL .OR. Eval( LI_WHEN[ fipos ] )
             IF !( ValType( LI_MSED ) == "N" )

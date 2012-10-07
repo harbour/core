@@ -645,7 +645,7 @@ METHOD new( oParent, cTagName, cAttrib, cContent ) CLASS THtmlNode
    IF HB_ISSTRING( oParent )
       // a HTML string is passed -> build new tree of objects
       IF Chr( 9 ) $ oParent
-         oParent := StrTran( oParent, Chr( 9 ), Chr( 32 ) )
+         oParent := StrTran( oParent, Chr( 9 ), " " )
       ENDIF
       ::root           := Self
       ::htmlTagName    := "_root_"

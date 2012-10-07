@@ -277,7 +277,7 @@ METHOD SendMail( oTIpMail ) CLASS TIpClientSmtp
    cTo := oTIpMail:getFieldPart( "To" )
    cTo := StrTran( cTo, tip_CRLF() )
    cTo := StrTran( cTo, Chr( 9 ) )
-   cTo := StrTran( cTo, Chr( 32 ) )
+   cTo := StrTran( cTo, " " )
 
    FOR EACH cTo IN hb_regexSplit( ",", cTo )
       ::rcpt( cTo )

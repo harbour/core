@@ -165,10 +165,10 @@ PROCEDURE Terminate()
 
 PROCEDURE ShowGauge( nSent, nSize )
 
-   @ 6, 5 SAY "Sending: " + Replicate( Chr( 176 ), 60 )
+   @ 6, 5 SAY "Sending: " + Replicate( hb_UTF8ToStr( "░" ), 60 )
    /* nSent may be zero */
    IF nSent > 0
-      @ 6, 14 SAY Replicate( Chr( 219 ), 60 * nSent / nSize )
+      @ 6, 14 SAY Replicate( hb_UTF8ToStr( "█" ), 60 * nSent / nSize )
    ENDIF
 
    RETURN

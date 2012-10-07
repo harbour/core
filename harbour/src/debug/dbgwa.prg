@@ -177,16 +177,16 @@ STATIC PROCEDURE DlgWorkAreaPaint( oDlg, aBrw )
    /* Display separator lines */
 
    hb_dispBox( oDlg:nTop + 1, oDlg:nLeft + 12, oDlg:nBottom - 1, oDlg:nLeft + 12, HB_B_SINGLE_UNI, oDlg:cColor )
-   hb_dispOutAt( oDlg:nTop, oDlg:nLeft + 12, Chr( 194 ), oDlg:cColor )
-   hb_dispOutAt( oDlg:nBottom, oDlg:nLeft + 12, Chr( 193 ), oDlg:cColor )
+   hb_dispOutAtBox( oDlg:nTop, oDlg:nLeft + 12, hb_UTF8ToStrBox( "┬" ), oDlg:cColor )
+   hb_dispOutAtBox( oDlg:nBottom, oDlg:nLeft + 12, hb_UTF8ToStrBox( "┴" ), oDlg:cColor )
 
    hb_dispBox( oDlg:nTop + 1, oDlg:nLeft + 51, oDlg:nBottom - 1, oDlg:nLeft + 51, HB_B_SINGLE_UNI, oDlg:cColor )
-   hb_dispOutAt( oDlg:nTop, oDlg:nLeft + 51, Chr( 194 ), oDlg:cColor )
-   hb_dispOutAt( oDlg:nBottom, oDlg:nLeft + 51, Chr( 193 ), oDlg:cColor )
+   hb_dispOutAtBox( oDlg:nTop, oDlg:nLeft + 51, hb_UTF8ToStrBox( "┬" ), oDlg:cColor )
+   hb_dispOutAtBox( oDlg:nBottom, oDlg:nLeft + 51, hb_UTF8ToStrBox( "┴" ), oDlg:cColor )
 
    hb_dispBox( oDlg:nTop + 6, oDlg:nLeft + 13, oDlg:nTop + 6, oDlg:nLeft + 50, HB_B_SINGLE_UNI, oDlg:cColor )
-   hb_dispOutAt( oDlg:nTop + 6, oDlg:nLeft + 12, Chr( 195 ), oDlg:cColor )
-   hb_dispOutAt( oDlg:nTop + 6, oDlg:nLeft + 51, Chr( 180 ), oDlg:cColor )
+   hb_dispOutAtBox( oDlg:nTop + 6, oDlg:nLeft + 12, hb_UTF8ToStrBox( "├" ), oDlg:cColor )
+   hb_dispOutAtBox( oDlg:nTop + 6, oDlg:nLeft + 51, hb_UTF8ToStrBox( "┤" ), oDlg:cColor )
 
    /* Display labels */
 

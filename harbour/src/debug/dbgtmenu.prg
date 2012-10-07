@@ -237,8 +237,8 @@ METHOD Display() CLASS HBDbMenu
 
    FOR n := 1 TO Len( ::aItems )
       IF ::aItems[ n ]:cPrompt == "-"  // Separator
-         hb_dispOutAt( ::aItems[ n ]:nRow, ::nLeft,;
-            Chr( 195 ) + Replicate( Chr( 196 ), ::nRight - ::nLeft - 1 ) + Chr( 180 ) )
+         hb_dispOutAtBox( ::aItems[ n ]:nRow, ::nLeft,;
+            hb_UTF8ToStrBox( "├" + Replicate( "─", ::nRight - ::nLeft - 1 ) + "┤" ) )
       ELSE
          ::aItems[ n ]:Display( ::cClrPopup, ::cClrHotKey )
       ENDIF
@@ -481,9 +481,9 @@ METHOD ProcessKey( nKey ) CLASS HBDbMenu
    OTHERWISE
 
       IF ::nOpenPopup > 0
-         IF IsAlpha( Chr( nKey ) )
+         IF IsAlpha( hb_keyChar( nKey ) )
             oPopup := ::aItems[ ::nOpenPopup ]:bAction
-            nPopup := oPopup:GetHotKeyPos( Upper( Chr( nKey ) ) )
+            nPopup := oPopup:GetHotKeyPos( Upper( hb_keyChar( nKey ) ) )
             IF nPopup > 0 .AND. oPopup:nOpenPopup != nPopup
                oPopup:DeHilite()
                oPopup:ShowPopup( nPopup )

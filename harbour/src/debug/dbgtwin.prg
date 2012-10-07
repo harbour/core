@@ -198,7 +198,7 @@ METHOD Refresh() CLASS HBDbWindow
    DispBegin()
 
    hb_dispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, iif( ::lFocused, HB_B_DOUBLE_UNI, HB_B_SINGLE_UNI ), ::cColor )
-   hb_dispOutAt( ::nTop, ::nLeft + 1, "[" + Chr( 254 ) + "]", ::cColor )
+   hb_dispOutAtBox( ::nTop, ::nLeft + 1, hb_UTF8ToStrBox( "[■]" ), ::cColor )
 
    ::ShowCaption( ::cCaption )
 
@@ -290,7 +290,7 @@ METHOD Move() Class HBDbWindow
 
    DO WHILE .T.
       RestScreen( ,,,, ::cBackImage )
-      hb_dispBox( ::nTop, ::nLeft, ::nRight, ::nBottom, Replicate( Chr( 176 ), 8 ) + " " )
+      hb_dispBox( ::nTop, ::nLeft, ::nRight, ::nBottom, Replicate( hb_UTF8ToStrBox( "░" ), 8 ) + " " )
 
       nKey := Inkey( 0 )
 
@@ -337,7 +337,7 @@ METHOD Move() Class HBDbWindow
       ENDIF
    ENDDO
 
-   // __Keyboard( Chr( 0 ) ), Inkey() )
+   // hb_keyPut( 0 ); Inkey()
 
    RETURN NIL
 

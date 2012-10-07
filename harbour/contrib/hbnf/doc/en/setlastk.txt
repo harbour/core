@@ -29,12 +29,12 @@
  *     work.  If this makes you uncomfortable, then don't use this function,
  *     you worthless crybaby.
  *  $EXAMPLES$
- *     keyboard chr( K_ESC )
+ *     hb_keyPut( K_ESC )
  *
- *     ? lastkey()  // returns 27
+ *     ? LastKey()  // returns 27
  *
  *     FT_LastKey( K_F1 )
  *
- *     ? lastkey()  // now returns 28
+ *     ? LastKey()  // now returns 28
  *  $END$
  */

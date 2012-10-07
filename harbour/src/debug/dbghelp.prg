@@ -99,8 +99,8 @@ PROCEDURE __dbgHelp( nTopic )
 STATIC PROCEDURE PaintWindow( oDlg, oBrw, aTopics )
 
    hb_dispBox( oDlg:nTop + 1, oDlg:nLeft + 13, oDlg:nBottom - 1, oDlg:nLeft + 13, HB_B_SINGLE_UNI, oDlg:cColor )
-   hb_dispOutAt( oDlg:nTop , oDlg:nLeft + 13 , Chr( 194 ), oDlg:cColor )
-   hb_dispOutAt( oDlg:nBottom , oDlg:nLeft + 13 , Chr( 193 ), oDlg:cColor )
+   hb_dispOutAtBox( oDlg:nTop , oDlg:nLeft + 13, hb_UTF8ToStrBox( "┬" ), oDlg:cColor )
+   hb_dispOutAtBox( oDlg:nBottom , oDlg:nLeft + 13, hb_UTF8ToStrBox( "┴" ), oDlg:cColor )
 
    oBrw:ForceStable()
    ShowTopic( oDlg, aTopics, oBrw:Cargo, 0 ) // Start on page 1
@@ -259,7 +259,8 @@ STATIC FUNCTION GetTopics()
                       { "Script files", } }
 
    aTopics[ 1 ][ 2 ] := ;
-      { " " + Chr( 24 ) + Chr( 25 ) + "             Select help topic.",;
+      { " " + Chr( 24 ) /* LOW-ASCII "↑" */ + Chr( 25 ) /* LOW-ASCII "↓" */ +;
+           "             Select help topic.",;
         " PageUp         Page help text down.",;
         " PageDn         Page help text down.",;
         " Esc            Returns to debugger." }
