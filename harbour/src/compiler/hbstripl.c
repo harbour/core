@@ -66,12 +66,31 @@ HB_EXTERN_END
 
 static HB_STRIP_FUNC( hb_p_line )
 {
-   HB_SYMBOL_UNUSED( cargo );
    switch( pFunc->pCode[ nPCodePos + 3 ] )
    {
       case HB_P_LINE:
       case HB_P_MODULENAME:
          hb_compNOOPfill( pFunc, nPCodePos, 3, HB_FALSE, HB_FALSE );
+         break;
+      default:
+         if( !( ( HB_COMP_PTR ) cargo )->fDebugInfo )
+         {
+            HB_SIZE nNewPos = nPCodePos;
+            switch( pFunc->pCode[ nPCodePos + 3 ] )
+            {
+               case HB_P_JUMPNEAR:
+                  nNewPos += 3 + ( signed char ) pFunc->pCode[ nPCodePos + 4 ];
+                  break;
+               case HB_P_JUMP:
+                  nNewPos += 3 + HB_PCODE_MKSHORT( &pFunc->pCode[ nPCodePos + 4 ] );
+                  break;
+               case HB_P_JUMPFAR:
+                  nNewPos += 3 + HB_PCODE_MKINT24( &pFunc->pCode[ nPCodePos + 4 ] );
+                  break;
+            }
+            if( nNewPos != nPCodePos && pFunc->pCode[ nNewPos ] == HB_P_LINE )
+               hb_compNOOPfill( pFunc, nPCodePos, 3, HB_FALSE, HB_FALSE );
+         }
    }
 
    return 3;
@@ -268,9 +287,9 @@ static const PHB_STRIP_FUNC s_stripLines_table[] =
    NULL                        /* HB_P_PUSHAPARAMS           */
 };
 
-void hb_compStripFuncLines( PFUNCTION pFunc )
+void hb_compStripFuncLines( HB_COMP_DECL, PFUNCTION pFunc )
 {
    assert( HB_P_LAST_PCODE == sizeof( s_stripLines_table ) / sizeof( PHB_STRIP_FUNC ) );
 
-   hb_compPCodeEval( pFunc, s_stripLines_table, NULL );
+   hb_compPCodeEval( pFunc, s_stripLines_table, ( void * ) HB_COMP_PARAM );
 }

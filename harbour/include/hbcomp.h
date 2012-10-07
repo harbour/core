@@ -324,7 +324,7 @@ extern void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc );
 extern void hb_compOptimizePCode( HB_COMP_DECL, PFUNCTION pFunc );
 extern void hb_compPCodeTraceOptimizer( HB_COMP_DECL );
 /* Misc functions defined in hbstripl.c */
-extern void hb_compStripFuncLines( PFUNCTION pFunc );
+extern void hb_compStripFuncLines( HB_COMP_DECL, PFUNCTION pFunc );
 
 /* output related functions defined in gen*.c */
 extern void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME );      /* generates the C language output */

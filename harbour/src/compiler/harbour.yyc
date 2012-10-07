@@ -8487,11 +8487,35 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
       pCase = (HB_SWITCHCASE_PTR) hb_xgrab( sizeof( HB_SWITCHCASE ) );
       pCase->nOffset = pFunc->nPCodePos;
       pCase->pNext = NULL;
-      pExpr = hb_compExprReduce( pExpr, HB_COMP_PARAM );
+      pCase->pExpr = pExpr = hb_compExprReduce( pExpr, HB_COMP_PARAM );
       if( !( hb_compExprIsLong( pExpr ) || hb_compExprIsString( pExpr ) ) )
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_NOT_LITERAL_CASE, NULL, NULL );
+      else if( pFunc->pSwitch->pCases )
+      {
+         HB_SWITCHCASE_PTR pCases = pFunc->pSwitch->pCases;
+         while( pCases )
+         {
+            HB_BOOL fEqual = HB_FALSE;
 
-      pCase->pExpr = pExpr;
+            if( hb_compExprIsLong( pExpr ) )
+            {
+               if( hb_compExprIsLong( pCases->pExpr ) )
+                  fEqual = hb_compExprAsLongNum( pExpr ) == hb_compExprAsLongNum( pCases->pExpr );
+            }
+            else
+            {
+               if( hb_compExprIsString( pCases->pExpr ) )
+                  fEqual = hb_compExprAsStringLen( pExpr ) == hb_compExprAsStringLen( pCases->pExpr ) &&
+                           memcmp( hb_compExprAsString( pExpr ),
+                                   hb_compExprAsString( pCases->pExpr ),
+                                   hb_compExprAsStringLen( pExpr ) ) == 0;
+            }
+            if( fEqual )
+               hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_DUPL_CASE, NULL, NULL );
+            pCases = pCases->pNext;
+         }
+      }
+
 
       if( pFunc->pSwitch->pLast )
       {

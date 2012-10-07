@@ -1346,7 +1346,7 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
 
       if( iPass == 3 && fLineStrip )
       {
-         hb_compStripFuncLines( HB_COMP_PARAM->functions.pLast );
+         hb_compStripFuncLines( HB_COMP_PARAM, HB_COMP_PARAM->functions.pLast );
          fLineStrip = HB_FALSE;
       }
 
@@ -1501,7 +1501,7 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
          if( iPass == 0 )
             continue;
          if( fLineStrip )
-            hb_compStripFuncLines( HB_COMP_PARAM->functions.pLast );
+            hb_compStripFuncLines( HB_COMP_PARAM, HB_COMP_PARAM->functions.pLast );
          if( HB_COMP_PARAM->functions.pLast->nNOOPs == 0 )
             return;
       }

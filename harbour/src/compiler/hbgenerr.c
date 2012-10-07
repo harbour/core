@@ -100,6 +100,7 @@ const char * const hb_comp_szErrors[] =
    "Can't find %s file",
    "Invalid ALWAYS after %s in RECOVER code",
    "File write error",
+   "Duplicate case value",
    /* Some historical, funny sounding error messages from original CA-Cl*pper.
       They serve no purpose whatsoever. [vszakats] */
    "END wreaks terrible vengeance on control stack",
