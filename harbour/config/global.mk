@@ -326,7 +326,7 @@ endif
 CMDPREF :=
 ifneq ($(HB_SHELL),sh)
    ifneq ($(COMSPEC),)
-      CMDPREF := $(COMSPEC) /C
+      CMDPREF := $(COMSPEC) /c
    endif
 endif
 

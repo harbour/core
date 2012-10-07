@@ -81,7 +81,11 @@ FUNCTION RunShell( cCommand, cProgram, lAsync, lBackground )
    ENDIF
 
    IF HB_ISSTRING( cCommand )
-      cProgram += " " + cCommand
+      #if defined( __PLATFORM__UNIX )
+         cProgram += " " + cCommand
+      #else
+         cProgram += " /c " + cCommand
+      #endif
    ENDIF
 
    RETURN hb_processRun( LTrim( cProgram ), NIL, NIL, NIL, lAsync )

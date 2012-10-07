@@ -94,7 +94,8 @@ STATIC FUNCTION VCSDetect()
 
    DO CASE
    CASE hb_DirExists( ".svn" ) ; RETURN "svn"
-   CASE hb_DirExists( ".." + hb_ps() +  ".git" ) ; RETURN "git"
+   CASE hb_DirExists( ".git" ) ; RETURN "git"
+   CASE hb_DirExists( ".." + hb_ps() + ".git" ) ; RETURN "git"
    ENDCASE
 
    RETURN ""
@@ -181,7 +182,7 @@ STATIC FUNCTION Shell()
    #endif
 
    IF ! Empty( cShell )
-      #if defined( __PLATFORM__WINDOWS ) .OR. defined( __PLATFORM__DOS )
+      #if ! defined( __PLATFORM__UNIX )
          cShell := cShell + " /c"
       #endif
    ENDIF
