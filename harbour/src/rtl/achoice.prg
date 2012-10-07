@@ -15,7 +15,7 @@
    ---
    #include "inkey.ch"
    CLS
-   KEYBOARD Chr( K_DOWN ) + Chr( K_UP ) // bogus '2' appears out of the area here.
+   hb_keyPut( { K_DOWN, K_UP } ) // bogus '2' appears out of the area here.
    AChoice( 0, 0, 0, 0, { "1", "2" } )
    ---
  */

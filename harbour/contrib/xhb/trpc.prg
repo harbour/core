@@ -240,9 +240,9 @@ METHOD New( cFname, cSerial, nAuthLevel, oExec, oMeth ) CLASS tRPCFunction
       QUIT
    ENDIF
 
-   ::cName := aFuncDef[2]
-   cParam := aFuncDef[3]
-   ::cReturn := iif( Len( aFuncDef ) == 4, aFuncDef[4], aFuncDef[5] )
+   ::cName := aFuncDef[ 2 ]
+   cParam := aFuncDef[ 3 ]
+   ::cReturn := iif( Len( aFuncDef ) == 4, aFuncDef[ 4 ], aFuncDef[ 5 ] )
 
    // analyze parameter list
    IF Len( RTrim( cParam ) ) > 0
@@ -356,7 +356,7 @@ METHOD Describe() CLASS tRPCFunction
 
    IF Len( ::aParameters ) > 0
       FOR nCount := 1 TO Len( ::aParameters ) - 1
-         cRet += ::aParameters[nCount] + ","
+         cRet += ::aParameters[ nCount ] + ","
       NEXT
       cRet += ::aParameters[ -1 ]
    ENDIF
@@ -559,7 +559,7 @@ METHOD RUN() CLASS tRPCServeCon
          IF nSafeStatus == RPCS_STATUS_LOGGED
             aData := ::RecvFunction( .F. , .F. )
             IF aData != NIL
-               lBreak := ! ::FuncCall( aData[2] )
+               lBreak := ! ::FuncCall( aData[ 2 ] )
             ELSE
                lBreak := .T.
             ENDIF
@@ -575,7 +575,7 @@ METHOD RUN() CLASS tRPCServeCon
          IF nSafeStatus == RPCS_STATUS_LOGGED
             aData := ::RecvFunction( .T. , .F. )
             IF aData != NIL
-               lBreak := ! ::FuncCall( aData[2] )
+               lBreak := ! ::FuncCall( aData[ 2 ] )
             ELSE
                lBreak := .T.
             ENDIF
@@ -754,7 +754,7 @@ METHOD LaunchChallenge( cUserid, cPassword ) CLASS tRPCServeCon
    /* Let's generate the sequence */
    cChallenge := Space( 255 )
    FOR nCount := 1 TO 255
-      cChallenge[ nCount ] := Chr( HB_Random(0,255 ) )
+      cChallenge[ nCount ] := Chr( HB_Random(0, 255 ) )
    NEXT
 
    ::nChallengeCRC := HB_Checksum( cChallenge )

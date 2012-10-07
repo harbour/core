@@ -92,11 +92,11 @@ void hb_verBuildInfo( void )
    }
 
    hb_conOutErr( "ChangeLog last entry: ", 0 );
-   hb_conOutErr( hb_verSvnLastEntry(), 0 );
+   hb_conOutErr( hb_verChangeLogLastEntry(), 0 );
    hb_conOutErr( hb_conNewLine(), 0 );
 
    hb_conOutErr( "ChangeLog ID: ", 0 );
-   hb_conOutErr( hb_verSvnChangeLogID(), 0 );
+   hb_conOutErr( hb_verChangeLogID(), 0 );
    hb_conOutErr( hb_conNewLine(), 0 );
 
    {
