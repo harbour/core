@@ -432,7 +432,7 @@ HARBOUR
 
       You'll need these base packages to build/package/test/use Harbour:
 
-         $ sudo apt-get install bash subversion gcc binutils fakeroot debhelper valgrind upx uncrustify
+         $ sudo apt-get install bash subversion git gcc binutils fakeroot debhelper valgrind upx uncrustify
 
       You'll need these packages to compile certain contribs and optional Harbour features:
 
@@ -471,7 +471,7 @@ HARBOUR
 
       You'll need these base packages to build/package/test/use Harbour:
 
-         bash subversion gcc make glibc-devel rpm valgrind upx uncrustify
+         bash subversion git gcc make glibc-devel rpm valgrind upx uncrustify
 
       You'll need these packages to compile certain contribs and optional Harbour features:
 
@@ -508,7 +508,7 @@ HARBOUR
    OpenSolaris
    -----------
 
-      - $ pkg install SUNWsvn SUNWgcc SUNWgmake
+      - $ pkg install SUNWsvn SUNWgit SUNWgcc SUNWgmake
 
    FreeBSD
    -------
@@ -1702,6 +1702,8 @@ HARBOUR
 
       Subversion (Version Control System) [multiplatform, free, open-source]
          http://subversion.tigris.org/
+      Git (Version Control System) [multiplatform, free, open-source]
+         http://git-scm.com/
       GNU Bison (grammer paser generator) [multiplatform, free, open-source]
          Windows binary:
             http://gnuwin32.sourceforge.net/packages/bison.htm
@@ -1760,6 +1762,8 @@ HARBOUR
          http://tools.ietf.org/html/rfc1855
       Subversion book [free]
          http://svnbook.red-bean.com/
+      Git book [free]
+         http://git-scm.com/book
 
 
 14. HOW TO PARTICIPATE
