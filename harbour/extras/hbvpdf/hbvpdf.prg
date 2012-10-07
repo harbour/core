@@ -62,18 +62,18 @@ DEFAULT cId to ""
    ENDIF
    IF !empty( cString )
       cString := pdfStringB( cString )
-      IF right( cString, 1 ) == chr(255) //reverse
+      IF right( cString, 1 ) == Chr( 255 ) //reverse
          cString := left( cString, len( cString ) - 1 )
          pdfBox( t_aReport[ PAGEY ] - nRow - t_aReport[ FONTSIZE ] + 2.0 , nCol, t_aReport[ PAGEY ] - nRow + 2.0, nCol + pdfM2X( pdfLen( cString )) + 1,,100, "D")
          t_aReport[ PAGEBUFFER ] += " 1 g "
          lReverse := .T.
-      ELSEIF right( cString, 1 ) == chr(254) //underline
+      ELSEIF right( cString, 1 ) == Chr( 254 ) //underline
          cString := left( cString, len( cString ) - 1 )
          pdfBox( t_aReport[ PAGEY ] - nRow + 0.5,  nCol, t_aReport[ PAGEY ] - nRow + 1, nCol + pdfM2X( pdfLen( cString )) + 1,,100, "D")
       ENDIF
 
       // version 0.01
-      IF ( nAt := at( chr(253), cString )) > 0 // some color text inside
+      IF ( nAt := at( Chr( 253 ), cString )) > 0 // some color text inside
          t_aReport[ PAGEBUFFER ] += CRLF + ;
          Chr_RGB( substr( cString, nAt + 1, 1 )) + " " + ;
          Chr_RGB( substr( cString, nAt + 2, 1 )) + " " + ;
@@ -319,8 +319,8 @@ return nil
 function pdfBox1( nTop, nLeft, nBottom, nRight, nBorderWidth, cBorderColor, cBoxColor )       /*
 ===============================================================                               */
 DEFAULT nBorderWidth to 0.5
-DEFAULT cBorderColor to chr(0) + chr(0) + chr(0)
-DEFAULT cBoxColor to chr(255) + chr(255) + chr(255)
+DEFAULT cBorderColor to Chr( 0 ) + Chr( 0 ) + Chr( 0 )
+DEFAULT cBoxColor to Chr( 255 ) + Chr( 255 ) + Chr( 255 )
 
    t_aReport[ PAGEBUFFER ] +=  CRLF + ;
                          Chr_RGB( substr( cBorderColor, 1, 1 )) + " " + ;
@@ -783,7 +783,7 @@ function pdfLen( cString )                                                    /*
 local nWidth := 0.00, nI, nLen, nArr, nAdd := ( t_aReport[ FONTNAME ] - 1 ) % 4
 
    nLen := len( cString )
-   IF right( cString, 1 ) == chr(255) .or. right( cString, 1 ) == chr(254 )// reverse or underline
+   IF right( cString, 1 ) == Chr( 255 ) .or. right( cString, 1 ) == Chr( 254 ) // reverse or underline
       --nLen
    ENDIF
    IF pdfGetFontInfo("NAME") == "Times"
@@ -1042,7 +1042,7 @@ return t_aReport[ REPORTPAGE ]
 ==============================                                                */
 function pdfReverse( cString )                                                /*
 ==============================                                                */
-return cString + chr(255)
+return cString + Chr( 255 )
                                                                               /*
 =============================================================                 */
 function pdfRJust( cString, nRow, nCol, cUnits, lExact, cId )                 /*
@@ -1128,7 +1128,7 @@ return pdfText( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, .F. )
 =================================================================================*/
 function pdfText( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, cColor, lPrint )/*
 =================================================================================*/
-local cDelim := chr(0)+chr(9)+chr(10)+chr(13)+chr(26)+chr(32)+chr(138)+chr(141)
+local cDelim := Chr( 0 ) + chr( 9 ) + chr( 10 ) + chr( 13 ) + chr( 26 ) + chr( 32 ) + chr( 138 ) + chr( 141 )
 local nI, cTemp, cToken, k, nL, nRow, nLines, nLineLen, nStart
 local lParagraph, nSpace, nNew, nTokenLen, nCRLF, nTokens, nLen
 DEFAULT nTab to -1
@@ -1292,8 +1292,8 @@ local nAt, cAt, nCRLF, nNew, nRat, nRet := 0
    // check if next spaces paragraph(s)
    nAt := attoken( cString, cDelim, nI ) + len( token( cString, cDelim, nI ) )
    cAt := substr( cString, nAt, attoken( cString, cDelim, nI + 1 ) - nAt )
-   nCRLF := numat( chr(13) + chr(10), cAt )
-   nRat := rat( chr(13) + chr(10), cAt )
+   nCRLF := numat( chr( 13 ) + chr( 10 ), cAt )
+   nRat := rat( chr( 13 ) + chr( 10 ), cAt )
    nNew := len( cAt ) - nRat - iif( nRat > 0, 1, 0 )
    IF nCRLF > 1 .or. ( nCRLF == 1 .and. nNew > 0 )
       nRet := nCRLF
@@ -1303,7 +1303,7 @@ return nRet
 ================================                                              */
 function pdfUnderLine( cString )                                              /*
 ================================                                              */
-return cString + chr(254)
+return cString + chr( 254 )
                                                                               /*
 ===========================                                                   */
 static function pdfX2M( n )                                                   /*
@@ -1759,7 +1759,7 @@ local cTemp := upper(substr( cFile, rat('.', cFile) + 1 )), aTemp := {}
 return aTemp
 
 function pdfTIFFInfo( cFile )
-local c40 := chr(0)+chr(0)+chr(0)+chr(0)
+local c40 := chr( 0 ) + chr( 0 ) + chr( 0 ) + chr( 0 )
 //local aType := {"BYTE","ASCII","SHORT","LONG","RATIONAL","SBYTE","UNDEFINED","SSHORT","SLONG","SRATIONAL","FLOAT","DOUBLE"}
 local aCount := { 1, 1, 2, 4, 8, 1, 1, 2, 4, 8, 4, 8 }
 local nTemp, nHandle, cValues, c2, nFieldType, nCount, nPos, nTag, nValues
@@ -2320,7 +2320,7 @@ local nSpace  // := 3 // 3 - RGB, 1 - GREY, 4 - CMYK
    xRes := asc(substr( c255, 15, 1 )) * 256 + asc(substr( c255, 16, 1 ))
    yRes := asc( substr( c255, 17, 1 )) * 256 + asc(substr( c255, 18, 1 ))
 
-   nAt := rat( chr(255) + chr(192), c255 ) + 5
+   nAt := rat( chr( 255 ) + chr( 192 ), c255 ) + 5
    nHeight := asc(substr( c255, nAt, 1 )) * 256 + asc(substr( c255, nAt + 1, 1 ))
    nWidth := asc( substr( c255, nAt + 2, 1 )) * 256 + asc(substr( c255, nAt + 3, 1 ))
 
@@ -2358,7 +2358,7 @@ RETURN AllToken( cString, cDelimiter, nPointer, 2 )
 
 STATIC FUNCTION AllToken( cString, cDelimiter, nPointer, nAction )
 LOCAL nTokens := 0, nPos := 1, nLen := len( cString ), nStart, cRet
-DEFAULT cDelimiter to chr(0)+chr(9)+chr(10)+chr(13)+chr(26)+chr(32)+chr(138)+chr(141)
+DEFAULT cDelimiter to chr( 0 ) + chr( 9 ) + chr( 10 ) + chr( 13 ) + chr( 26 ) + chr( 32 ) + chr( 138 ) + chr( 141 )
 DEFAULT nAction to 0
 
 // nAction == 0 - numtoken

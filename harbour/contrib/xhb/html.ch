@@ -50,8 +50,10 @@
 #include "htmlform.ch"
 #include "htmlclrs.ch"
 #include "cgi.ch"
-#xtranslate CRLF(<str>) => ( <str> + chr(13) + chr(10) )
-#xtranslate CRLF() => chr(13) + chr(10)
+
+#xtranslate CRLF( <str> ) => ( <str> + Chr( 13 ) + Chr( 10 ) )
+#xtranslate CRLF()        => ( Chr( 13 ) + Chr( 10 ) )
+
 /*
 #xCommand DEFINE HTML                ;
           [FILE <file>]              ;

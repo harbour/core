@@ -628,9 +628,9 @@
  *      ter (ASCII 26) is found.
 
  *      NOTE  This function is similar to the FREAD() function, except that
- *      it will not     read binary characters that may he required as part of
- *      a header of a file construct. Characters Such as CHR(0) and CHR(26)
- *      may keep this   function from performing its intended operation. In this
+ *      it will not read binary characters that may he required as part of
+ *      a header of a file construct. Characters Such as CHR( 0 ) and CHR( 26 )
+ *      may keep this function from performing its intended operation. In this
  *      event, the FREAD() function should he used in place of the FREADSTR()
  *      function.
  *  $EXAMPLES$

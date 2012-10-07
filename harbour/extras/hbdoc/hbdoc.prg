@@ -224,9 +224,9 @@ PROCEDURE Main( ... )
    OutStd( hb_eol() )
 
    ASort( aContent, , , {| oL, oR | ;
-      hb_ntos( oL:CategoryIndex( oL:Category ) ) + " " + hb_ntos( oL:SubcategoryIndex( oL:Category, oL:Subcategory ) ) + Chr(1) + oL:Name + " " ;
+      hb_ntos( oL:CategoryIndex( oL:Category ) ) + " " + hb_ntos( oL:SubcategoryIndex( oL:Category, oL:Subcategory ) ) + Chr( 1 ) + oL:Name + " " ;
       <= ;
-      hb_ntos( oR:CategoryIndex( oR:Category ) ) + " " + hb_ntos( oR:SubcategoryIndex( oR:Category, oR:Subcategory ) ) + Chr(1) + oR:Name + " " ;
+      hb_ntos( oR:CategoryIndex( oR:Category ) ) + " " + hb_ntos( oR:SubcategoryIndex( oR:Category, oR:Subcategory ) ) + Chr( 1 ) + oR:Name + " " ;
       } )
 
    // TODO: what is this for?  it is sorting the category sub-arrays and removing empty (?) sub-arrays, but why?

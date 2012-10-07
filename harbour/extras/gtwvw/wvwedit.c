@@ -561,8 +561,8 @@ HB_FUNC( WVW_EBISMULTILINE )
  *             insert soft line break character (CR+CR+LF) at wordwrap positions
  *             can be usefull to convert the text to MEMO format
  *             eg. converting editbox's softbreaks into memoline softbreak:
- *                cStr := wvw_ebgettext(NIL, nEBid, .t.)
- *                cStr := strtran(cStr, CR+CR+LF, chr(141)+LF)
+ *                cStr := wvw_ebgettext( NIL, nEBid, .T. )
+ *                cStr := StrTran( cStr, CR + CR + LF, Chr( 141 ) + LF )
  *
  **returns "" in case of error (eg. nEBid not valid)
  */

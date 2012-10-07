@@ -88,9 +88,9 @@ METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateXML
 
 METHOD BeginSection( cSection, cFilename ) CLASS GenerateXML
    IF ::Depth == 0
-      FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [<Section name="] + cSection + [" file="] + cFilename + ::cExtension + [">] + hb_eol() )
+      FWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + [<Section name="] + cSection + [" file="] + cFilename + ::cExtension + [">] + hb_eol() )
    ELSE
-      FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [<Section name="] + cSection + [">] + hb_eol() )
+      FWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + [<Section name="] + cSection + [">] + hb_eol() )
    ENDIF
    ::Depth++
    RETURN self
@@ -99,7 +99,7 @@ METHOD EndSection( cSection, cFilename ) CLASS GenerateXML
    HB_SYMBOL_UNUSED( cSection )
    HB_SYMBOL_UNUSED( cFilename )
    ::Depth--
-   FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + [</Section>] + hb_eol() )
+   FWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + [</Section>] + hb_eol() )
    RETURN self
 
 METHOD AddIndex( oEntry ) CLASS GenerateXML
@@ -147,9 +147,9 @@ METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateXML
       NEXT
       cEntry := cResult
 
-      FWrite( ::nHandle, Replicate( Chr(9), ::Depth ) + "<" + cCaption + iif( lPreformatted, ' preformatted="yes"', "") + ">" )
+      FWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + "<" + cCaption + iif( lPreformatted, ' preformatted="yes"', "") + ">" )
       FWrite( ::nHandle, cEntry )
-      FWrite( ::nHandle, /* Replicate( Chr(9), ::Depth ) + */ "</" + cCaption + ">" + hb_eol() )
+      FWrite( ::nHandle, /* Replicate( Chr( 9 ), ::Depth ) + */ "</" + cCaption + ">" + hb_eol() )
    ENDIF
 
    RETURN

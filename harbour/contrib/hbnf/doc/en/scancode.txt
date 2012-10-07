@@ -27,7 +27,7 @@
  *     For example, calling FT_SCANCODE() and pressing the Grey-minus
  *     key will return a two character string:
  *
- *            CHR(45) + CHR(74)
+ *            Chr( 45 ) + Chr( 74 )
  *
  *     LASTKEY() is not updated by FT_SCANCODE(), so don't try to
  *     test LASTKEY() to see what was pressed during an FT_SCANCODE()
@@ -42,9 +42,9 @@
  *  $EXAMPLES$
  *      cKey := FT_SCANCODE()
  *
- *      [grey-] returns:  CHR(45) + CHR(74)
- *      [-]     returns:  CHR(45) + CHR(12)
- *      [grey+] returns:  CHR(43) + CHR(78)
- *      [+]     returns:  CHR(43) + CHR(13)
+ *      [grey-] returns:  Chr( 45 ) + Chr( 74 )
+ *      [-]     returns:  Chr( 45 ) + Chr( 12 )
+ *      [grey+] returns:  Chr( 43 ) + Chr( 78 )
+ *      [+]     returns:  Chr( 43 ) + Chr( 13 )
  *  $END$
  */

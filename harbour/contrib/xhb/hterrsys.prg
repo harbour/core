@@ -50,7 +50,7 @@
 #define DEF_ERR_HEADER "Date : " + DToC( Date() ) + "<BR>" + "Time : " + Time() + "<BR>"
 
 // put messages to STDERR
-#command ? <list,...>   =>  ?? Chr(13) + Chr(10) ; ?? <list>
+#command ? <list,...>   =>  ?? Chr( 13 ) + Chr( 10 ) ; ?? <list>
 #command ?? <list,...>  =>  OutErr( <list> )
 
 REQUEST HARDCR

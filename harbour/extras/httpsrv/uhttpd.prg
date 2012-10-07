@@ -139,8 +139,8 @@ REQUEST __HB_EXTERN__
 // TOCHECK: Caching of HRB modules (Is this faster than loading HRBBody from file where OS will cache ?)
 #define HRB_ACTIVATE_CACHE   .F.   // if .T. caching of HRB modules will be enabled. (NOTE: changes of files will not be loaded until server is active)
 
-#define CR_LF    (CHR(13)+CHR(10))
-#define HB_IHASH()   HB_HSETCASEMATCH( {=>}, .F. )
+#define CR_LF    ( CHR( 13 ) + CHR( 10 ) )
+#define HB_IHASH()   HB_HSETCASEMATCH( { => }, .F. )
 
 #ifdef __PLATFORM__WINDOWS
    REQUEST HB_GT_WVT_DEFAULT

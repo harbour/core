@@ -597,11 +597,11 @@ FUNCTION XToStr( xValue )
    DO CASE
    CASE cType == "C"
 
-      xValue := StrTran( xValue, Chr(0), '"+Chr(0)+"' )
-      xValue := StrTran( xValue, Chr(9), '"+Chr(9)+"' )
-      xValue := StrTran( xValue, Chr(10), '"+Chr(10)+"' )
-      xValue := StrTran( xValue, Chr(13), '"+Chr(13)+"' )
-      xValue := StrTran( xValue, Chr(26), '"+Chr(26)+"' )
+      xValue := StrTran( xValue, Chr( 0 ), '" + Chr( 0 ) + "' )
+      xValue := StrTran( xValue, Chr( 9 ), '" + Chr( 9 ) + "' )
+      xValue := StrTran( xValue, Chr( 10 ), '" + Chr( 10 ) + "' )
+      xValue := StrTran( xValue, Chr( 13 ), '" + Chr( 13 ) + "' )
+      xValue := StrTran( xValue, Chr( 26 ), '" + Chr( 26 ) + "' )
 
       RETURN '"' + xValue + '"'
 
@@ -636,11 +636,11 @@ FUNCTION XToStrE( xValue )
    DO CASE
    CASE cType == "C"
 
-      xValue := StrTran( xValue, Chr(0), '"+Chr(0)+"' )
-      xValue := StrTran( xValue, Chr(9), '"+Chr(9)+"' )
-      xValue := StrTran( xValue, Chr(10), '"+Chr(10)+"' )
-      xValue := StrTran( xValue, Chr(13), '"+Chr(13)+"' )
-      xValue := StrTran( xValue, Chr(26), '"+Chr(26)+"' )
+      xValue := StrTran( xValue, Chr( 0 ), '" + Chr( 0 ) + "' )
+      xValue := StrTran( xValue, Chr( 9 ), '" + Chr( 9 ) + "' )
+      xValue := StrTran( xValue, Chr( 10 ), '" + Chr( 10 ) + "' )
+      xValue := StrTran( xValue, Chr( 13 ), '" + Chr( 13 ) + "' )
+      xValue := StrTran( xValue, Chr( 26 ), '" + Chr( 26 ) + "' )
 
       RETURN xValue
 
@@ -665,11 +665,11 @@ FUNCTION XToStrX( xValue )
    DO CASE
    CASE cType == "C"
 
-      xValue := StrTran( xValue, Chr(0), '"+Chr(0)+"' )
-      xValue := StrTran( xValue, Chr(9), '"+Chr(9)+"' )
-      xValue := StrTran( xValue, Chr(10), '"+Chr(10)+"' )
-      xValue := StrTran( xValue, Chr(13), '"+Chr(13)+"' )
-      xValue := StrTran( xValue, Chr(26), '"+Chr(26)+"' )
+      xValue := StrTran( xValue, Chr( 0 ), '" + Chr( 0 ) + "' )
+      xValue := StrTran( xValue, Chr( 9 ), '" + Chr( 9 ) + "' )
+      xValue := StrTran( xValue, Chr( 10 ), '" + Chr( 10 ) + "' )
+      xValue := StrTran( xValue, Chr( 13 ), '" + Chr( 13 ) + "' )
+      xValue := StrTran( xValue, Chr( 26 ), '" + Chr( 26 ) + "' )
 
       RETURN xValue
 

@@ -28,13 +28,13 @@
 
 #include "fileio.ch"
 
-#xtranslate    StoreWord(<cWord>)     => Xform(<cWord>)
-#xtranslate    ExtractWord(<cWord>)   => Xunform(<cWord>)
+#xtranslate    StoreWord( <cWord> )   => Xform( <cWord> )
+#xtranslate    ExtractWord( <cWord> ) => Xunform( <cWord> )
 
 #define    NSIZE                  26*26*6
 #define    EACH_WORD                    6
-#define    CRLF                   chr(13)+chr(10)
-#define    FOUR_BYTES             chr(0)+chr(0)+chr(0)+chr(0)
+#define    CRLF                   Chr( 13 ) + Chr( 10 )
+#define    FOUR_BYTES             Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
 #define    MAX_STRING             40000
 
 #define    COMMON_WORDS           aGlobal[ 1]
@@ -1033,9 +1033,9 @@ if SP_Init()
 
 
    for z := nStart to nEnd
-      cTemp  := SP_GetBuf(substr(cPattern,1,1)+chr(z+64) )
+      cTemp  := SP_GetBuf(substr(cPattern,1,1)+chr( z + 64 ) )
       ii     := len(cTemp)
-      cFirst := substr(cPattern,1,1)+chr(z+64)
+      cFirst := substr(cPattern,1,1)+chr( z + 64 )
 
       if ii > 0
          kk := 1
@@ -1243,10 +1243,10 @@ if nH >= 0
    // Write out enough bytes to hold the index information
    //
    /////////////////////////////////////////////////////////////////////////
-   fwrite(nH,"JJ"+l2bin(NSIZE+4)+replicate(chr(0),NSIZE)+space(10),NSIZE+16)
+   fwrite(nH,"JJ"+l2bin(NSIZE+4)+replicate(chr( 0 ),NSIZE)+space(10),NSIZE+16)
 
    for i := 1 to 26
-      do while substr(DICT->word,1,1)==chr(i+64) .and. !eof()
+      do while substr(DICT->word,1,1)==chr( i + 64 ) .and. !eof()
          for j := 1 to 26
             temp  := ""
             cBits := FOUR_BYTES
@@ -1256,7 +1256,7 @@ if nH >= 0
                endif
                skip +1
             enddo
-            do while substr(DICT->word,2,1)==chr(j+64) .and. !eof()
+            do while substr(DICT->word,2,1)==chr( j + 64 ) .and. !eof()
                if len(rtrim(DICT->word))=3
                   Bit(cBits,asc(substr(DICT->word,3,1))-64,.T.)
                elseif len(rtrim(DICT->word))==2
@@ -1400,7 +1400,7 @@ next
 
 for i := 1 to 26
    for j := 1 to 26
-      temp := chr(i+64)+chr(j+64)
+      temp := chr( i + 64 )+chr( j + 64 )
       x  := bin2l(substr(cOffsets,((i-1)*156)+((j-1)*EACH_WORD+1),4))
       if !empty(x)
          y    := bin2w(substr(cOffsets,((i-1)*156)+((j-1)*EACH_WORD+5),2))
@@ -1416,7 +1416,7 @@ for i := 1 to 26
          for z := 1 to 26
             if bit(cBuf,z)
                append blank
-               replace DICT->word with temp+chr(z+64)
+               replace DICT->word with temp+chr( z + 64 )
             endif
          next
          if bit(cBuf,27)
@@ -1426,7 +1426,7 @@ for i := 1 to 26
          cBuf := substr(cBuf,5)
          z    := 1
          do while !empty(cBuf)
-            if substr(cBuf,z,1)>=Chr(128)
+            if substr(cBuf,z,1)>=Chr( 128 )
                cWord := substr(cBuf,1,z)
                append blank
                replace DICT->word with temp+ExtractWord(cWord)
@@ -1617,13 +1617,13 @@ z := 0
 do while z <= nSize
   z++
   y := asc(substr(cLine,z,1))
-  if  y >=48 .and. ! chr(y)$ ":;<=>?@[\^]_`{|}~"
+  if  y >=48 .and. ! chr( y ) $ ":;<=>?@[\^]_`{|}~"
      nOffset := z
-     cWord   := chr(y)
+     cWord   := chr( y )
      z++
      y     := asc(substr(cLine,z,1))
-     while ( y >=48 .and. ! chr(y)$ ":;<=>?@[\^]_`{|}~" ) .or. y == 39
-        cWord += chr(y)
+     while ( y >=48 .and. ! chr( y ) $ ":;<=>?@[\^]_`{|}~" ) .or. y == 39
+        cWord += chr( y )
         z++
         if z > nSize
            exit

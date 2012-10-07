@@ -56,7 +56,7 @@
 
 //#define HB_USE_HBTIP    // Use functions from HBTIP - TOIMPLEMENT
 
-#define CRLF (Chr(13)+Chr(10))
+#define CRLF ( Chr( 13 ) + Chr( 10 ) )
 #xtranslate THROW( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
 #define HB_IHASH()   HB_HSETCASEMATCH( {=>}, .F. )
 
@@ -285,7 +285,7 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
    LOCAL aLines  := {}, cLine
    LOCAL nHowMany := 0
 
-   DEFAULT cDelim    TO ( CHR(13) + CHR(10) )
+   DEFAULT cDelim    TO ( CHR( 13 ) + CHR( 10 ) )
    DEFAULT lRemDelim TO .T.
    DEFAULT nCount    TO -1
 

@@ -236,7 +236,7 @@ METHOD OpenTag( cText, ... ) CLASS GenerateHTML
    LOCAL idx
 
    FOR idx := 2 TO Len( aArgs ) STEP 2
-      cTag += " " + aArgs[ idx ] + "=" + Chr(34) + aArgs[ idx + 1 ] + Chr(34)
+      cTag += " " + aArgs[ idx ] + "=" + Chr( 34 ) + aArgs[ idx + 1 ] + Chr( 34 )
    NEXT
 
    FWrite( ::nHandle, "<" + cTag + ">" + hb_eol() )
@@ -249,7 +249,7 @@ METHOD Tagged( cText, cTag, ... ) CLASS GenerateHTML
    LOCAL idx
 
    FOR idx := 3 TO Len( aArgs ) STEP 2
-      cResult += " " + aArgs[ idx ] + "=" + Chr(34) + aArgs[ idx + 1 ] + Chr(34)
+      cResult += " " + aArgs[ idx ] + "=" + Chr( 34 ) + aArgs[ idx + 1 ] + Chr( 34 )
    NEXT
 
    FWrite( ::nHandle, cResult + ">" + cText + "</" + cTag + ">" + /* "4" + */ hb_eol() )

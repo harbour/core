@@ -133,19 +133,19 @@
  *      buffer after clearing it first.
  *
  *      Note: The character ";" is converted
- *      to CHR(13) (this is an undocumented CA-Cl*pper feature).
+ *      to Chr( 13 ) (this is an undocumented CA-Cl*pper feature).
  *  $DESCRIPTION$
  *      Clears the Harbour keyboard typeahead buffer and then inserts an
  *      optional string into it.
  *  $EXAMPLES$
  *      // Stuff an Enter key into the keyboard buffer
- *      KEYBOARD Chr(13)
+ *      KEYBOARD Chr( 13 )
  *      // Clear the keyboard buffer
  *      CLEAR TYPEAHEAD
  *  $TESTS$
- *      KEYBOARD Chr(13); ? INKEY() ==> 13
- *      KEYBOARD ";" ? INKEY() ==> 13
- *      KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? INKEY() ==> 0
+ *      KEYBOARD Chr( 13 ); ? Inkey() ==> 13
+ *      KEYBOARD ";" ? Inkey() ==> 13
+ *      KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? Inkey() ==> 0
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -237,7 +237,7 @@
  *         ENDIF
  *      ENDDO
  *  $TESTS$
- *      KEYBOARD "AB"; ? NEXTKEY(), NEXTKEY() ==>   65   65
+ *      KEYBOARD "AB"; ? NextKey(), NextKey() ==>   65   65
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
@@ -325,12 +325,12 @@
  *      Issuing a KEYBOARD " " will clear the keyboard buffer.
  *  $EXAMPLES$
  *      // Stuff an Enter key into the keyboard buffer
- *      KEYBOARD CHR(13)
+ *      KEYBOARD Chr( 13 )
  *      // Clear the keyboard buffer
  *      CLEAR TYPEAHEAD
  *  $TESTS$
- *      KEYBOARD CHR(13); ? INKEY() ==> 13
- *      KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? INKEY() ==> 0
+ *      KEYBOARD Chr( 13 ); ? Inkey() ==> 13
+ *      KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? Inkey() ==> 0
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

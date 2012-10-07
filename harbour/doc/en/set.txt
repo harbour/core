@@ -213,7 +213,7 @@
  *              _SET_EOF         <lFlag> | <cOnOff>
  *
  *                   Defaults to FALSE on UN*X, but defaults to TRUE on
- *                   everything else. If set to FALSE, then CHR(26) does not
+ *                   everything else. If set to FALSE, then CHR( 26 ) does not
  *                   get written when using COPY TO DELIMITED, COPY TO SDF,
  *                   or when closing any of the various text files that are
  *                   created using various SET values.
@@ -479,8 +479,8 @@
  *  $EXAMPLES$
  *      // Set F1 with a string
  *      CLS
- *      __SetFunction( 1, "I Am Lazy" + CHR( 13 ) )
- *      cTest := SPACE( 20 )
+ *      __SetFunction( 1, "I Am Lazy" + Chr( 13 ) )
+ *      cTest := Space( 20 )
  *      @ 10, 0 SAY "type something or F1 for lazy mode " GET cTest
  *      READ
  *      ? cTest

@@ -3190,7 +3190,7 @@ STATIC PROCEDURE SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cCaption, bEdit )
       ENDIF
 
       IF LastKey() == K_ENTER
-         KEYBOARD Chr( K_DOWN )
+         hb_keyPut( K_DOWN )
       ENDIF
 
    ENDCASE

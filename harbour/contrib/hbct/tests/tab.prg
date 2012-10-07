@@ -65,12 +65,12 @@ PROCEDURE Main()
 
    // simple tests
    ? "Simple tests:"
-   ? [  tabexpand("-"+chr(9)+"!")             == "-       !" ? -> "] + tabexpand( "-" + Chr(9 ) + "!" )             + ["]
-   ? [  tabexpand("----"+chr(9) +"!")         == "----    !" ? -> "] + tabexpand( "----" + Chr(9 ) + "!" )         + ["]
-   ? [  tabexpand("-"+chr(9)+"!",, "+")       == "-+++++++!" ? -> "] + tabexpand( "-" + Chr(9 ) + "!",, "+" )       + ["]
-   ? [  tabexpand("-"+chr(9)+ "!", 4)         == "-   !"     ? -> "] + tabexpand( "-" + Chr(9 ) + "!", 4 )         + ["]
-   ? [  tabexpand("----"+chr(9)+ "!", 8)      == "----    !" ? -> "] + tabexpand( "----" + Chr(9 ) + "!", 8 )      + ["]
-   ? [  tabexpand("----"+chr(9)+ "!", 8, "+") == "----++++!" ? -> "] + tabexpand( "----" + Chr(9 ) + "!", 8, "+" ) + ["]
+   ? [  tabexpand("-"+chr(9)+"!")             == "-       !" ? -> "] + tabexpand( "-" + Chr( 9 ) + "!" )            + ["]
+   ? [  tabexpand("----"+chr(9) +"!")         == "----    !" ? -> "] + tabexpand( "----" + Chr( 9 ) + "!" )         + ["]
+   ? [  tabexpand("-"+chr(9)+"!",, "+")       == "-+++++++!" ? -> "] + tabexpand( "-" + Chr( 9 ) + "!",, "+" )      + ["]
+   ? [  tabexpand("-"+chr(9)+ "!", 4)         == "-   !"     ? -> "] + tabexpand( "-" + Chr( 9 ) + "!", 4 )         + ["]
+   ? [  tabexpand("----"+chr(9)+ "!", 8)      == "----    !" ? -> "] + tabexpand( "----" + Chr( 9 ) + "!", 8 )      + ["]
+   ? [  tabexpand("----"+chr(9)+ "!", 8, "+") == "----++++!" ? -> "] + tabexpand( "----" + Chr( 9 ) + "!", 8, "+" ) + ["]
    ?
 
    ? "Tests with newline characters: ^J == LF, ^M == CR"
@@ -92,9 +92,9 @@ PROCEDURE Main()
    ?
 
    ? "Tests with tab characters:"
-   ? [  tabexpand("-"+chr(9)+"-",,"+")      == "-+++++++-" ? -> "] + tabexpand( "-" + Chr(9 ) + "-",,"+" )     + ["]
+   ? [  tabexpand("-"+chr(9)+"-",,"+")      == "-+++++++-" ? -> "] + tabexpand( "-" + Chr( 9 ) + "-",, "+" ) + ["]
    ? [  tabexpand("-"+chr(9)+"-",,"+",,"-")]
-   ? [                              == "++++++++^I+++++++" ? -> "] + StrTran( tabexpand("-" + Chr(9 ) + "-",,"+",,"-" ),Chr(9 ),"^I" ) + ["]
+   ? [                              == "++++++++^I+++++++" ? -> "] + StrTran( tabexpand( "-" + Chr( 9 ) + "-",, "+",, "-" ), Chr( 9 ), "^I" ) + ["]
    ?
 
    ? "End test of TABEXPAND()"
@@ -108,9 +108,9 @@ PROCEDURE Main()
    // simple tests
    ? "Simple tests: ^I == tab character"
 
-   ? [  tabpack("AAAAAAA*",, "*")   == "AAAAAAA*"  ? -> "] + StrTran( tabpack("AAAAAAA*",, "*" ),Chr(9 ),"^I" )  + ["]
-   ? [  tabpack("AAAAA***",, "*")   == "AAAAA^I"   ? -> "] + StrTran( tabpack("AAAAA***",, "*" ),Chr(9 ),"^I" )  + ["]
-   ? [  tabpack("AAAAA*****",, "*") == "AAAAA^I**" ? -> "] + StrTran( tabpack("AAAAA*****",, "*" ),Chr(9 ),"^I" ) + ["]
+   ? [  tabpack("AAAAAAA*",, "*")   == "AAAAAAA*"  ? -> "] + StrTran( tabpack("AAAAAAA*",, "*" ), Chr( 9 ), "^I" )  + ["]
+   ? [  tabpack("AAAAA***",, "*")   == "AAAAA^I"   ? -> "] + StrTran( tabpack("AAAAA***",, "*" ), Chr( 9 ), "^I" )  + ["]
+   ? [  tabpack("AAAAA*****",, "*") == "AAAAA^I**" ? -> "] + StrTran( tabpack("AAAAA*****",, "*" ), Chr( 9 ), "^I" ) + ["]
    ?
 
    ? "Tests with newline characters:"

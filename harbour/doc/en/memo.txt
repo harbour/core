@@ -250,7 +250,7 @@
  *  $ONELINER$
  *      Write a memo field or character string to a text file on disk
  *  $SYNTAX$
- *      MEMOWRIT( <cFileName>, <cString>, [<lWriteEof>] ) --> lSuccess
+ *      MEMOWRIT( <cFileName>, <cString> ) --> lSuccess
  *  $ARGUMENTS$
  *      <cFileName> is the filename to read from disk.
  *                  It must include the file extension. If file to be read
@@ -258,10 +258,6 @@
  *
  *      <cString>   Is the memo field or character string, to be write to
  *                  <cFile>.
- *
- *      <lWriteEof> Is a logic variable that settle if the "end of file"
- *                  character - CHR(26) - is written to disk.
- *                  This parameter is optional. By default is true (.T.)
  *  $RETURNS$
  *      Function returns true (.T.) if the writing operation was successful;
  *      otherwise, it returns false (.F.).
@@ -274,11 +270,6 @@
  *      There is a third parameter (optional), <lWriteEof>, (not found in
  *      CA-Cl*pper) which let to programmer change the default behavior of
  *      - always - to write the EOF character, CHR(26) as in CA-Cl*pper.
- *
- *      If there is no third parameter, nothing change, EOF is written as
- *      in CA-Cl*pper, the same occurs when <lWriteEof> is set to .T.
- *      But, if <lWriteEof> is set to .F., EOF char is Not written to the
- *      end of the file.
  *
  *      MEMOWRIT() function is used together with MEMOREAD() and MEMOEDIT()
  *      to save to disk text from several sources that was edited, searched,
@@ -330,7 +321,7 @@
  *                  <cFile>.
  *
  *      <lWriteEof> Is a logic variable that settle if the "end of file"
- *                  character - CHR(26) - is written to disk.
+ *                  character - CHR( 26 ) - is written to disk.
  *                  This parameter is optional. By default is true (.T.)
  *  $RETURNS$
  *      Function returns true (.T.) if the writing operation was successful;
@@ -343,7 +334,7 @@
  *
  *      There is a third parameter (optional), <lWriteEof>, (not found in
  *      CA-Cl*pper) which let to programmer change the default behavior of
- *      - always - to write the EOF character, CHR(26) as in CA-Cl*pper.
+ *      - always - to write the EOF character, CHR( 26 ) as in CA-Cl*pper.
  *
  *      If there is no third parameter, nothing change, EOF is written as
  *      in CA-Cl*pper, the same occurs when <lWriteEof> is set to .T.
