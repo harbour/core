@@ -68,7 +68,6 @@
 //
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
@@ -149,8 +148,8 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
 
    ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   DEFAULT cCLSID   TO ::CLSID
-   DEFAULT cLicense TO ::license
+   __defaultNIL( @cCLSID  , ::CLSID )
+   __defaultNIL( @cLicense, ::license )
 
    ::CLSID      := cCLSID
    ::license    := cLicense

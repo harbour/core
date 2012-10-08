@@ -67,7 +67,6 @@
 //
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
@@ -276,12 +275,12 @@ ENDCLASS
 
 METHOD WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   DEFAULT oParent     TO ::oParent
-   DEFAULT oOwner      TO ::oOwner
-   DEFAULT aPos        TO ::aPos
-   DEFAULT aSize       TO ::aSize
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
+   __defaultNIL( @oParent    , ::oParent )
+   __defaultNIL( @oOwner     , ::oOwner )
+   __defaultNIL( @aPos       , ::aPos )
+   __defaultNIL( @aSize      , ::aSize )
+   __defaultNIL( @aPresParams, ::aPresParams )
+   __defaultNIL( @lVisible   , ::visible )
 
    ::oParent     := oParent
    ::oOwner      := oOwner
@@ -298,12 +297,12 @@ METHOD WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 METHOD WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   DEFAULT oParent     TO ::oParent
-   DEFAULT oOwner      TO ::oOwner
-   DEFAULT aPos        TO ::aPos
-   DEFAULT aSize       TO ::aSize
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
+   __defaultNIL( @oParent    , ::oParent )
+   __defaultNIL( @oOwner     , ::oOwner )
+   __defaultNIL( @aPos       , ::aPos )
+   __defaultNIL( @aSize      , ::aSize )
+   __defaultNIL( @aPresParams, ::aPresParams )
+   __defaultNIL( @lVisible   , ::visible )
 
    ::oParent     := oParent
    ::oOwner      := oOwner
@@ -326,12 +325,12 @@ METHOD WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 METHOD WvgWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   DEFAULT oParent     TO ::oParent
-   DEFAULT oOwner      TO ::oOwner
-   DEFAULT aPos        TO ::aPos
-   DEFAULT aSize       TO ::aSize
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
+   __defaultNIL( @oParent    , ::oParent )
+   __defaultNIL( @oOwner     , ::oOwner )
+   __defaultNIL( @aPos       , ::aPos )
+   __defaultNIL( @aSize      , ::aSize )
+   __defaultNIL( @aPresParams, ::aPresParams )
+   __defaultNIL( @lVisible   , ::visible )
 
    RETURN Self
 
@@ -538,7 +537,7 @@ METHOD WvgWindow:setPos( aPos, lPaint )
    LOCAL aPosSz
 
    IF HB_ISARRAY( aPos )
-      DEFAULT lPaint TO .T.
+      __defaultNIL( @lPaint, .T. )
 
       SWITCH ::objType
 
@@ -568,11 +567,11 @@ METHOD WvgWindow:setPosAndSize( aPos, aSize, lPaint )
 
    LOCAL aPosSz
 
-   DEFAULT aPos  TO ::aPos
-   DEFAULT aSize TO ::aSize
+   __defaultNIL( @aPos , ::aPos )
+   __defaultNIL( @aSize, ::aSize )
 
    IF HB_ISARRAY( aPos ) .AND. HB_ISARRAY( aSize )
-      DEFAULT lPaint TO .T.
+      __defaultNIL( @lPaint, .T. )
 
       SWITCH ::objType
 
@@ -596,7 +595,7 @@ METHOD WvgWindow:setSize( aSize, lPaint )
    LOCAL aPosSz
 
    IF HB_ISARRAY( aSize )
-      DEFAULT lPaint TO .T.
+      __defaultNIL( @lPaint, .T. )
 
       SWITCH ::objType
 
@@ -1270,12 +1269,12 @@ METHOD WvgWindow:dragDrop( xParam, xParam1 )
 
 METHOD WvgWindow:Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   DEFAULT oParent     TO ::oParent
-   DEFAULT oOwner      TO ::oOwner
-   DEFAULT aPos        TO ::aPos
-   DEFAULT aSize       TO ::aSize
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
+   __defaultNIL( @oParent    , ::oParent )
+   __defaultNIL( @oOwner     , ::oOwner )
+   __defaultNIL( @aPos       , ::aPos )
+   __defaultNIL( @aSize      , ::aSize )
+   __defaultNIL( @aPresParams, ::aPresParams )
+   __defaultNIL( @lVisible   , ::visible )
 
    ::oParent     := oParent
    ::oOwner      := oOwner
@@ -1322,8 +1321,8 @@ METHOD WvgWindow:getPosAndSize( aPs, aSz )
    LOCAL aPos, aSize
    LOCAL nFH, nFW
 
-   DEFAULT aPs TO AClone( ::aPos  )
-   DEFAULT aSz TO AClone( ::aSize )
+   __defaultNIL( @aPs, AClone( ::aPos  ) )
+   __defaultNIL( @aSz, AClone( ::aSize ) )
 
    aPos  := AClone( aPs )
    aSize := AClone( aSz )

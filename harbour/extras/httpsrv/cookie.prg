@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "hbclass.ch"
 
 #command IF <lexpr> THEN <*statement*>  =>;
@@ -99,10 +98,13 @@ METHOD SetCookieDefaults( cDomain, cPath, nExpireDays, nExpireSecs ) CLASS uhttp
 METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpOnly ) CLASS uhttpd_Cookie
    LOCAL cStr, nPos, nCookies
 
-   DEFAULT cDomain      TO ::cDomain
-   DEFAULT cPath        TO ::cPath
-   DEFAULT cExpires     TO uhttpd_DateToGMT( Date(), Time(), ::nExpireDays, ::nExpireSecs )
-   DEFAULT lHttpOnly    TO .F.
+   __defaultNIL( @cDomain, ::cDomain )
+   __defaultNIL( @cPath, ::cPath )
+   __defaultNIL( @lHttpOnly, .F. )
+
+   IF cExpires == NIL
+      cExpires := uhttpd_DateToGMT( Date(), Time(), ::nExpireDays, ::nExpireSecs )
+   ENDIF
 
    ::lHttpOnly := lHttpOnly
 

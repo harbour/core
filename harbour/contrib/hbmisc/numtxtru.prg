@@ -509,7 +509,7 @@ STATIC FUNCTION MnyToStrRaw( nValue, cLang, aCur, nMode )
          cRetVal := NumToStrRaw( nValue, aMsg, aCur[ 1 ] )
       ENDIF
    ELSE
-      cRetVal := LTrim( iif( nValue < 100, StrZero( nValue, 2 ), Str( nValue ) ) )
+      cRetVal := iif( nValue < 100, StrZero( nValue, 2 ), hb_ntos( nValue ) )
    ENDIF
 
    IF ! lShort

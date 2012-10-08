@@ -67,7 +67,6 @@
 //
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
@@ -125,8 +124,8 @@ METHOD WvgPartHandler:new( oParent, oOwner )
 
 METHOD WvgPartHandler:create( oParent, oOwner )
 
-   DEFAULT oParent TO ::oParent
-   DEFAULT oOwner  TO ::oOwner
+   __defaultNIL( @oParent, ::oParent )
+   __defaultNIL( @oOwner , ::oOwner )
 
    ::oParent := oParent
    ::oOwner  := oOwner
@@ -137,8 +136,8 @@ METHOD WvgPartHandler:create( oParent, oOwner )
 
 METHOD WvgPartHandler:configure( oParent, oOwner )
 
-   DEFAULT oParent TO ::oParent
-   DEFAULT oOwner  TO ::oOwner
+   __defaultNIL( @oParent, ::oParent )
+   __defaultNIL( @oOwner , ::oOwner )
 
    ::oParent := oParent
    ::oOwner  := oOwner

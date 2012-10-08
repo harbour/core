@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "hbclass.ch"
 #include "fileio.ch"
 #include "directry.ch"
@@ -165,8 +164,8 @@ METHOD New( cSessionName, cSessionPath ) CLASS uhttpd_Session
 
    //hb_ToOutDebug( "cSessionName = %s, cSessionPath = %s\n\r", cSessionName, cSessionPath )
 
-   DEFAULT cSessionName TO "SESSION"
-   DEFAULT cSessionPath TO ::cSavePath
+   __defaultNIL( @cSessionName, "SESSION" )
+   __defaultNIL( @cSessionPath, ::cSavePath )
 
    //::cSID := ::GenerateSID()
 
@@ -414,7 +413,7 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
    LOCAL cSessPrefix := ::cName + "_"
    LOCAL cFieldsNotInSession := ""
    LOCAL cSessVarName
-   DEFAULT cSeparator TO "&"
+   __defaultNIL( @cSeparator, "&" )
 
    aFields := hb_regexSplit( cSeparator, cFields )
 
@@ -490,8 +489,9 @@ METHOD GenerateSID( cCRCKey ) CLASS uhttpd_Session
    LOCAL nLenTemp
    //LOCAL a := 0
 
-   //DEFAULT cCRCKey  TO "3InFoW4lL5" // Max Lenght must to be 10
-   DEFAULT cCRCKey  TO MY_CRCKEY // Max Lenght must to be 10
+   // Max Lenght must to be 10
+// __defaultNIL( @cCRCKey, "3InFoW4lL5" )
+   __defaultNIL( @cCRCKey, MY_CRCKEY )
 
    /* Let's generate the sequence */
    //cSID := Space( nLenSID )
@@ -529,9 +529,10 @@ METHOD CheckSID( cSID, cCRCKey ) CLASS uhttpd_Session
    LOCAL lOk
    //LOCAL a := 0
 
-   DEFAULT ::cSID  TO ::RegenerateID()
-   DEFAULT cSID    TO ::cSID
-   DEFAULT cCRCKey  TO MY_CRCKEY // Max Lenght must to be 10
+   __defaultNIL( @::cSID, ::RegenerateID() )
+   __defaultNIL( @cSID, ::cSID )
+   // Max Lenght must to be 10
+   __defaultNIL( @cCRCKey, MY_CRCKEY )
 
    //hb_toOutDebug( "cSID = %s, ::cSID = %s\n\r", hb_valtoexp( cSID ), hb_valtoexp( ::cSID ) )
 
@@ -592,7 +593,7 @@ METHOD SessionRead( cID ) CLASS uhttpd_Session
    LOCAL cBuffer
    LOCAL nRetry  := 0
 
-   DEFAULT cID TO ::cSID
+   __defaultNIL( @cID, ::cSID )
    cFile := ::cSavePath + hb_ps() + ::cName + "_" + cID
    //TraceLog( "SessionRead: cFile", cFile )
    IF File( cFile )
@@ -632,8 +633,8 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
    LOCAL nRetry  := 0
 
    //TraceLog( "SessionWrite() - cID, cData", cID, cData )
-   DEFAULT cID   TO ::cSID
-   DEFAULT cData TO ""
+   __defaultNIL( @cID, ::cSID )
+   __defaultNIL( @cData, "" )
 
    nFileSize := Len( cData )
 
@@ -671,7 +672,7 @@ METHOD SessionDestroy( cID ) CLASS uhttpd_Session
    LOCAL nRetry  := 0
 
    //TraceLog( "SessionDestroy() - cID", cID )
-   DEFAULT cID TO ::cSID
+   __defaultNIL( @cID, ::cSID )
 
    _SESSION := { => }
    ::oCookie:DeleteCookie( ::cName )
@@ -706,7 +707,7 @@ METHOD SessionGC( nMaxLifeTime ) CLASS uhttpd_Session
    LOCAL nSecs
    LOCAL aDir, aFile
 
-   DEFAULT nMaxLifeTime TO ::nGc_MaxLifeTime
+   __defaultNIL( @nMaxLifeTime, ::nGc_MaxLifeTime )
    aDir := Directory( ::cSavePath + hb_ps() + ::cName + "_*.*" )
 
    FOR EACH aFile IN aDir
@@ -724,8 +725,8 @@ METHOD SessionGC( nMaxLifeTime ) CLASS uhttpd_Session
 STATIC FUNCTION TimeDiffAsSeconds( dDateStart, dDateEnd, cTimeStart, cTimeEnd )
    LOCAL aRetVal
 
-   DEFAULT dDateEnd     TO DATE()
-   DEFAULT cTimeEnd     TO TIME()
+   __defaultNIL( @dDateEnd, DATE() )
+   __defaultNIL( @cTimeEnd, TIME() )
 
    aRetVal := FT_ELAPSED( dDateStart, dDateEnd, cTimeStart, cTimeEnd )
 

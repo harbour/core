@@ -67,7 +67,6 @@
 //
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
@@ -142,9 +141,9 @@ ENDCLASS
 
 METHOD WvgMenuBar:new( oParent, aPresParams, lVisible )
 
-   DEFAULT oParent     TO ::oParent
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
+   __defaultNIL( @oParent    , ::oParent )
+   __defaultNIL( @aPresParams, ::aPresParams )
+   __defaultNIL( @lVisible   , ::visible )
 
    ::oParent     := oParent
    ::aPresParams := aPresParams
@@ -158,9 +157,9 @@ METHOD WvgMenuBar:new( oParent, aPresParams, lVisible )
 
 METHOD WvgMenuBar:create( oParent, aPresParams, lVisible )
 
-   DEFAULT oParent     TO ::oParent
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
+   __defaultNIL( @oParent    , ::oParent )
+   __defaultNIL( @aPresParams, ::aPresParams )
+   __defaultNIL( @lVisible   , ::visible )
 
    ::oParent     := oParent
    ::aPresParams := aPresParams
@@ -199,9 +198,9 @@ METHOD WvgMenuBar:create( oParent, aPresParams, lVisible )
 
 METHOD WvgMenuBar:configure( oParent, aPresParams, lVisible )
 
-   DEFAULT oParent     TO ::oParent
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
+   __defaultNIL( @oParent    , ::oParent )
+   __defaultNIL( @aPresParams, ::aPresParams )
+   __defaultNIL( @lVisible   , ::visible )
 
    ::oParent     := oParent
    ::aPresParams := aPresParams
@@ -295,7 +294,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
    LOCAL nItemIndex, cCaption
    LOCAL xCaption, bAction, nStyle, nAttrib
 
-   DEFAULT lInsert TO .T.
+   __defaultNIL( @lInsert, .T. )
 
    ASize( aItem, 4 )
 
@@ -422,7 +421,7 @@ METHOD WvgMenuBar:checkItem( nItemNum, lCheck )
 
    LOCAL nRet := - 1
 
-   DEFAULT lCheck TO .T.
+   __defaultNIL( @lCheck, .T. )
 
    IF !Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum )
       nRet := WVG_CheckMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + iif( lCheck, MF_CHECKED, MF_UNCHECKED ) )
@@ -606,9 +605,9 @@ ENDCLASS
 
 METHOD WvgMenu:new( oParent, aPresParams, lVisible )
 
-   DEFAULT oParent     TO ::oParent
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
+   __defaultNIL( @oParent    , ::oParent )
+   __defaultNIL( @aPresParams, ::aPresParams )
+   __defaultNIL( @lVisible   , ::visible )
 
    ::oParent     := oParent
    ::aPresParams := aPresParams
@@ -620,9 +619,9 @@ METHOD WvgMenu:new( oParent, aPresParams, lVisible )
 
 METHOD WvgMenu:create( oParent, aPresParams, lVisible )
 
-   DEFAULT oParent     TO ::oParent
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
+   __defaultNIL( @oParent    , ::oParent )
+   __defaultNIL( @aPresParams, ::aPresParams )
+   __defaultNIL( @lVisible   , ::visible )
 
    ::oParent     := oParent
    ::aPresParams := aPresParams

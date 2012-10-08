@@ -67,7 +67,6 @@
 //
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
@@ -497,9 +496,9 @@ ENDCLASS
 
 METHOD WvgToolBarButton:new( cCaption, nStyle, cKey )
 
-   DEFAULT cCaption       TO ::caption
-   DEFAULT nStyle         TO ::style
-   DEFAULT cKey           TO ::key
+   __defaultNIL( @cCaption      , ::caption )
+   __defaultNIL( @nStyle        , ::style )
+   __defaultNIL( @cKey          , ::key )
 
    ::caption        := cCaption
    ::style          := nStyle

@@ -67,7 +67,6 @@
 //
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
@@ -231,7 +230,7 @@ METHOD WvgStatusBar:addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
 
    LOCAL oPanel, lSuccess
 
-   DEFAULT nMode TO 0
+   __defaultNIL( @nMode, 0 )
 
    HB_SYMBOL_UNUSED( xImage )
    HB_SYMBOL_UNUSED( cDLL )
@@ -364,9 +363,9 @@ ENDCLASS
 
 METHOD WvgStatusBarPanel:new( cCaption, nStyle, cKey )
 
-   DEFAULT cCaption       TO ::sl_caption
-   DEFAULT nStyle         TO ::style
-   DEFAULT cKey           TO ::key
+   __defaultNIL( @cCaption      , ::sl_caption )
+   __defaultNIL( @nStyle        , ::style )
+   __defaultNIL( @cKey          , ::key )
 
    ::sl_caption     := cCaption
    ::style          := nStyle
@@ -382,7 +381,7 @@ METHOD WvgStatusBarPanel:caption( cCaption )
       RETURN ::sl_caption
 
    ELSE
-      DEFAULT cCaption TO ::sl_caption
+      __defaultNIL( @cCaption, ::sl_caption )
 
       ::sl_caption := cCaption
 

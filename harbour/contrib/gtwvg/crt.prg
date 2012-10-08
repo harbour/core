@@ -67,7 +67,6 @@
 //
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
@@ -291,12 +290,12 @@ METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    LOCAL lRowCol := .T.
 
-   DEFAULT oParent     TO ::oParent
-   DEFAULT oOwner      TO ::oOwner
-   DEFAULT aPos        TO ::aPos
-   DEFAULT aSize       TO ::aSize
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
+   __defaultNIL( @oParent    , ::oParent )
+   __defaultNIL( @oOwner     , ::oOwner )
+   __defaultNIL( @aPos       , ::aPos )
+   __defaultNIL( @aSize      , ::aSize )
+   __defaultNIL( @aPresParams, ::aPresParams )
+   __defaultNIL( @lVisible   , ::visible )
 
    ::oParent     := oParent
    ::oOwner      := oOwner
@@ -367,12 +366,12 @@ METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 METHOD WvgCrt:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   DEFAULT oParent     TO ::oParent
-   DEFAULT oOwner      TO ::oOwner
-   DEFAULT aPos        TO ::aPos
-   DEFAULT aSize       TO ::aSize
-   DEFAULT aPresParams TO ::aPresParams
-   DEFAULT lVisible    TO ::visible
+   __defaultNIL( @oParent    , ::oParent )
+   __defaultNIL( @oOwner     , ::oOwner )
+   __defaultNIL( @aPos       , ::aPos )
+   __defaultNIL( @aSize      , ::aSize )
+   __defaultNIL( @aPresParams, ::aPresParams )
+   __defaultNIL( @lVisible   , ::visible )
 
    ::oParent     := oParent
    ::oOwner      := oOwner
@@ -489,10 +488,10 @@ METHOD WvgCrt:hide()
 
 METHOD WvgCrt:invalidateRect( nTop, nLeft, nBottom, nRight )
 
-   DEFAULT nTop TO 0
-   DEFAULT nLeft TO 0
-   DEFAULT nBottom TO MaxRow()
-   DEFAULT nRight TO MaxCol()
+   __defaultNIL( @nTop, 0 )
+   __defaultNIL( @nLeft, 0 )
+   __defaultNIL( @nBottom, MaxRow() )
+   __defaultNIL( @nRight, MaxCol() )
 
    Wvt_InvalidateRect( nTop, nLeft, nBottom, nRight )
 
@@ -618,7 +617,7 @@ METHOD WvgCrt:setPresParam()
 METHOD WvgCrt:setSize( aSize, lPaint )
 
    IF HB_ISARRAY( aSize )
-      DEFAULT lPaint TO .T.
+      __defaultNIL( @lPaint, .T. )
 
       hb_gtInfo( HB_GTI_SCREENHEIGHT, aSize[ 1 ] )
       hb_gtInfo( HB_GTI_SCREENWIDTH , aSize[ 2 ] )

@@ -67,7 +67,6 @@
 //
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
@@ -141,7 +140,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTa
 
    ::SetWindowProcCallback()
 
-   DEFAULT ::caption TO " "
+   __defaultNIL( @::caption, " " )
 
    WAPI_TabCtrl_InsertItem( ::pWnd, 0, ::caption )
 

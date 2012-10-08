@@ -67,7 +67,6 @@
 //
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
@@ -118,9 +117,9 @@ ENDCLASS
 
 METHOD WvgSysWindow:new( oParent, oOwner, aPos )
 
-   DEFAULT oParent TO ::oParent
-   DEFAULT oOwner  TO ::oOwner
-   DEFAULT aPos    TO ::aPos
+   __defaultNIL( @oParent, ::oParent )
+   __defaultNIL( @oOwner , ::oOwner )
+   __defaultNIL( @aPos   , ::aPos )
 
    ::oParent := oParent
    ::oOwner  := oOwner
@@ -134,9 +133,9 @@ METHOD WvgSysWindow:new( oParent, oOwner, aPos )
 
 METHOD WvgSysWindow:create( oParent, oOwner, aPos )
 
-   DEFAULT oParent TO ::oParent
-   DEFAULT oOwner  TO ::oOwner
-   DEFAULT aPos    TO ::aPos
+   __defaultNIL( @oParent, ::oParent )
+   __defaultNIL( @oOwner , ::oOwner )
+   __defaultNIL( @aPos   , ::aPos )
 
    ::oParent := oParent
    ::oOwner  := oOwner
@@ -297,11 +296,11 @@ ENDCLASS
 
 METHOD new( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialog
 
-   DEFAULT oParent    TO ::oParent
-   DEFAULT oOwner     TO ::oOwner
-   DEFAULT oScreenPS  TO ::oScreenPS
-   DEFAULT oPrinterPS TO ::oPrinterPS
-   DEFAULT aPos       TO ::aPos
+   __defaultNIL( @oParent   , ::oParent )
+   __defaultNIL( @oOwner    , ::oOwner )
+   __defaultNIL( @oScreenPS , ::oScreenPS )
+   __defaultNIL( @oPrinterPS, ::oPrinterPS )
+   __defaultNIL( @aPos      , ::aPos )
 
    ::oParent    := oParent
    ::oOwner     := oOwner
@@ -317,11 +316,11 @@ METHOD new( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialog
 
 METHOD create( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialog
 
-   DEFAULT oParent    TO ::oParent
-   DEFAULT oOwner     TO ::oOwner
-   DEFAULT oScreenPS  TO ::oScreenPS
-   DEFAULT oPrinterPS TO ::oPrinterPS
-   DEFAULT aPos       TO ::aPos
+   __defaultNIL( @oParent   , ::oParent )
+   __defaultNIL( @oOwner    , ::oOwner )
+   __defaultNIL( @oScreenPS , ::oScreenPS )
+   __defaultNIL( @oPrinterPS, ::oPrinterPS )
+   __defaultNIL( @aPos      , ::aPos )
 
    ::oParent    := oParent
    ::oOwner     := oOwner
@@ -460,7 +459,9 @@ METHOD GetWvgFont( aFont ) CLASS WvgFontDialog
 
    LOCAL oWvgFont
 
-   DEFAULT aFont TO Wvg_ChooseFont_GetLogFont( ::hWnd )
+   IF aFont == NIL
+      aFont := Wvg_ChooseFont_GetLogFont( ::hWnd )
+   ENDIF
 
    oWvgFont := WvgFont():new()
 
@@ -541,7 +542,7 @@ ENDCLASS
 
 METHOD new( oPS ) CLASS WvgFont
 
-   DEFAULT oPS TO ::oPS
+   __defaultNIL( @oPS, ::oPS )
 
    ::oPS := oPS
 
@@ -551,7 +552,7 @@ METHOD new( oPS ) CLASS WvgFont
 
 METHOD create( cFontName ) CLASS WvgFont
 
-   DEFAULT cFontName TO ::familyName
+   __defaultNIL( @cFontName, ::familyName )
 
    ::familyName := cFontName
 
@@ -563,7 +564,7 @@ METHOD create( cFontName ) CLASS WvgFont
 
 METHOD configure( cFontName ) CLASS WvgFont
 
-   DEFAULT cFontName TO ::familyName
+   __defaultNIL( @cFontName, ::familyName )
 
    ::familyName := cFontName
 

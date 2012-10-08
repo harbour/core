@@ -85,7 +85,6 @@
 #define FIXED_THREADS         // This force application to use fixed number of running threads and no service threads
 
 #include "fileio.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "error.ch"
 #include "hbmemory.ch"
@@ -1639,8 +1638,9 @@ PROCEDURE uhttpd_SetStatusCode(nStatusCode)
 
 
 PROCEDURE uhttpd_SetHeader( cType, cValue )
-   //LOCAL nI
-   //DEFAULT lReplace TO .T. // Needed from SetCookie()
+// LOCAL nI
+// // Needed from SetCookie()
+// __defaultNIL( @lReplace, .T. )
 
    hb_HSet( _HTTP_RESPONSE, cType, cValue )
 
@@ -1658,7 +1658,7 @@ PROCEDURE uhttpd_SetHeader( cType, cValue )
 FUNCTION uhttpd_GetHeader( cType )
    RETURN uhttpd_HGetValue( _HTTP_RESPONSE, cType )
 /*
-   DEFAULT nPos TO 1
+   __defaultNIL( @nPos, 1 )
 
    nPos := hb_HPos( hHash, cKey ))
    IF ( nPos := ASCAN( t_aHeader, {| x | UPPER( x[ 1 ] ) == UPPER( cType ) }, nPos ) ) > 0
@@ -1802,7 +1802,7 @@ FUNCTION uhttpd_split( cSeparator, cString, nMax )
    LOCAL aRet := {}, nI
    LOCAL nIter := 0
 
-   DEFAULT nMax TO 0
+   __defaultNIL( @nMax, 0 )
 
    DO WHILE ( nI := AT( cSeparator, cString ) ) > 0
       AADD( aRet, LEFT( cString, nI - 1 ) )

@@ -2,11 +2,16 @@
  * $Id$
  */
 
-REQUEST HB_CODEPAGE_RU1251
+#require "hbmisc"
+
+REQUEST HB_CODEPAGE_UTF8EX
 
 PROCEDURE Main()
 
-   HB_CDPSelect( "RU1251" )
+   CLS
+
+   hb_cdpSelect( "UTF8EX" )
+   hb_SetTermCP( "UTF8EX" )
 
    ? "Press ESC to break"
    ? "Russian"
@@ -18,21 +23,14 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE test( cLang )
+PROCEDURE Test( cLang )
 
    LOCAL nTemp
 
-   dbCreate( "_num_" + cLang, ;
-      { { "NUM" , "N",  19, 0 },;
-        { "STR1", "C", 100, 0 },;
-        { "STR2", "C", 100, 0 },;
-        { "STR3", "C",  50, 0 } }, , .T. , "num" )
    FOR nTemp := 1 TO 1000000000
-      num->( dbAppend() )
-      num->Num := nTemp
-      num->Str1 := MnyToTxtRU( nTemp + ( nTemp % 100 ) * 0.01, cLang, , 3 )
-      num->Str2 := NumToTxtRU( nTemp, cLang, , .T. )
-      num->Str3 := DateToTxtRU( Date() + nTemp, cLang, .T. )
+      OutStd( PadR( MnyToTxtRU( nTemp + ( nTemp % 100 ) * 0.01, cLang, , 3 ), 100 ) + " " +;
+              PadR( NumToTxtRU( nTemp, cLang, , .T. ), 100 ) + " " +;
+              PadR( DateToTxtRU( Date() + nTemp, cLang, .T. ), 50 ) + hb_eol() )
       IF nTemp % 1000 == 0
          ? nTemp
       ENDIF
@@ -42,6 +40,5 @@ PROCEDURE test( cLang )
          ENDIF
       ENDIF
    NEXT
-   CLOSE
 
    RETURN

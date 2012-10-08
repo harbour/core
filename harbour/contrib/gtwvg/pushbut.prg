@@ -67,7 +67,6 @@
 //
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
@@ -225,7 +224,7 @@ METHOD WvgPushButton:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisi
 
 METHOD WvgPushButton:setCaption( xCaption, cDll )
 
-   DEFAULT xCaption TO ::caption
+   __defaultNIL( @xCaption, ::caption )
    HB_SYMBOL_UNUSED( cDll )
 
    IF HB_ISSTRING( xCaption )

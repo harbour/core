@@ -68,7 +68,6 @@
 //
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
@@ -251,4 +250,3 @@ METHOD WvgHTMLViewer:setHTML( cHTML )
    RETURN self
 
 //
-

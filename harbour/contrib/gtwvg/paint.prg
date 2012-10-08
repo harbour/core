@@ -61,7 +61,6 @@
 //
 
 #include "wvtwin.ch"
-#include "common.ch"
 
 //
 
@@ -222,7 +221,7 @@ FUNCTION wvg_PurgePaint( cID, lDummy )
 
    LOCAL n, aPaint
 
-   DEFAULT lDummy TO .F.
+   __defaultNIL( @lDummy, .F. )
 
    IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
       aPaint := t_paint_[ n ]
@@ -242,7 +241,7 @@ FUNCTION wvg_InsertPaint( cID, aPaint, lSet )
 
    LOCAL n
 
-   DEFAULT lSet TO .F.
+   __defaultNIL( @lSet, .F. )
 
    IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
       t_paint_[ n ] := aPaint
@@ -296,12 +295,12 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
    aFont := Wvt_GetFontInfo()
 
    IF nMode == 0
-      DEFAULT aOffSet TO {}
+      __defaultNIL( @aOffSet, {} )
       ASize( aOffSet, 4 )
-      DEFAULT aOffSet[ 1 ] TO 0
-      DEFAULT aOffSet[ 2 ] TO 0
-      DEFAULT aOffSet[ 3 ] TO 0
-      DEFAULT aOffSet[ 4 ] TO 0
+      __defaultNIL( @aOffSet[ 1 ], 0 )
+      __defaultNIL( @aOffSet[ 2 ], 0 )
+      __defaultNIL( @aOffSet[ 3 ], 0 )
+      __defaultNIL( @aOffSet[ 4 ], 0 )
 
       nBaseUnits  := WVG_GetDialogBaseUnits()
       nBaseUnitsX := WVG_LOWORD( nBaseUnits )
@@ -377,14 +376,14 @@ FUNCTION Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet, ;
       nBottom := nTop  + nRows - 1
       nRight  := nLeft + nCols - 1
 
-      DEFAULT aOffSet TO {}
+      __defaultNIL( @aOffSet, {} )
 
       ASize( aOffSet, 4 )
 
-      DEFAULT aOffSet[ 1 ] TO 0
-      DEFAULT aOffSet[ 2 ] TO 0
-      DEFAULT aOffSet[ 3 ] TO 0
-      DEFAULT aOffSet[ 4 ] TO 0
+      __defaultNIL( @aOffSet[ 1 ], 0 )
+      __defaultNIL( @aOffSet[ 2 ], 0 )
+      __defaultNIL( @aOffSet[ 3 ], 0 )
+      __defaultNIL( @aOffSet[ 4 ], 0 )
 
       nBaseUnits  := WVG_GetDialogBaseUnits()
       nBaseUnitsX := WVG_LOWORD( nBaseUnits )
@@ -521,8 +520,8 @@ FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, c
 
    HB_SYMBOL_UNUSED( hWnd )
 
-   DEFAULT cPath  TO ""
-   DEFAULT nFlags TO OFN_EXPLORER + OFN_NOCHANGEDIR
+   __defaultNIL( @cPath , "" )
+   __defaultNIL( @nFlags, OFN_EXPLORER + OFN_NOCHANGEDIR )
 
 /* WIN_GETOPENFILENAME( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
@@ -566,7 +565,7 @@ FUNCTION WVT_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir
 
    HB_SYMBOL_UNUSED( hWnd )
 
-   DEFAULT nFlags TO OFN_EXPLORER + OFN_NOCHANGEDIR
+   __defaultNIL( @nFlags, OFN_EXPLORER + OFN_NOCHANGEDIR )
 
 /* WIN_GETSAVEFILENAME( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
@@ -634,11 +633,11 @@ FUNCTION Wvt_SetIcon( ncIconRes, cIconName )
 
 FUNCTION Wvt_SetFont( cFontName, nSize, nWidth, nWeight, nQuality )
 
-   DEFAULT cFontName TO hb_gtInfo( HB_GTI_FONTNAME    )
-   DEFAULT nWidth    TO hb_gtInfo( HB_GTI_FONTWIDTH   )
-   DEFAULT nWeight   TO hb_gtInfo( HB_GTI_FONTWEIGHT  )
-   DEFAULT nQuality  TO hb_gtInfo( HB_GTI_FONTQUALITY )
-   DEFAULT nSize     TO hb_gtInfo( HB_GTI_FONTSIZE    )
+   __defaultNIL( @cFontName, hb_gtInfo( HB_GTI_FONTNAME    ) )
+   __defaultNIL( @nWidth   , hb_gtInfo( HB_GTI_FONTWIDTH   ) )
+   __defaultNIL( @nWeight  , hb_gtInfo( HB_GTI_FONTWEIGHT  ) )
+   __defaultNIL( @nQuality , hb_gtInfo( HB_GTI_FONTQUALITY ) )
+   __defaultNIL( @nSize    , hb_gtInfo( HB_GTI_FONTSIZE    ) )
 
    RETURN hb_gtInfo( HB_GTI_SETFONT, { cFontName, nSize, nWidth, nWeight, nQuality } )
 
@@ -747,8 +746,8 @@ FUNCTION Wvt_GetWindowHandle()
 
 FUNCTION Wvt_CenterWindow( lCenter, lRePaint )
 
-   DEFAULT lCenter  TO .T.
-   DEFAULT lRePaint TO .F.
+   __defaultNIL( @lCenter , .T. )
+   __defaultNIL( @lRePaint, .F. )
 
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
 
@@ -756,8 +755,8 @@ FUNCTION Wvt_CenterWindow( lCenter, lRePaint )
 
 FUNCTION Wvt_WindowCentre( lCenter, lRePaint )
 
-   DEFAULT lCenter  TO .T.
-   DEFAULT lRePaint TO .F.
+   __defaultNIL( @lCenter , .T. )
+   __defaultNIL( @lRePaint, .F. )
 
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
 

@@ -67,12 +67,11 @@
 //
 //
 
-#include                 "hbclass.ch"
-#include                   "inkey.ch"
-#include                  "common.ch"
-#include                 "setcurs.ch"
+#include "hbclass.ch"
+#include "inkey.ch"
+#include "setcurs.ch"
 
-#include                  "wvtwin.ch"
+#include "wvtwin.ch"
 
 //
 
@@ -196,14 +195,14 @@ METHOD wvtDialog:New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth, nFon
 
    LOCAL fnt_ := Wvt_GetFontInfo()
 
-   DEFAULT nRows         TO 25
-   DEFAULT nCols         TO 80
-   DEFAULT cTitle        TO Wvt_GetTitle()
-   DEFAULT cFont         TO fnt_[ 1 ]
-   DEFAULT nFontHeight   TO fnt_[ 2 ]
-   DEFAULT nFontWidth    TO fnt_[ 3 ]
-   DEFAULT nFontBold     TO fnt_[ 4 ]
-   DEFAULT nFontQuality  TO fnt_[ 5 ]
+   __defaultNIL( @nRows        , 25 )
+   __defaultNIL( @nCols        , 80 )
+   __defaultNIL( @cTitle       , Wvt_GetTitle() )
+   __defaultNIL( @cFont        , fnt_[ 1 ] )
+   __defaultNIL( @nFontHeight  , fnt_[ 2 ] )
+   __defaultNIL( @nFontWidth   , fnt_[ 3 ] )
+   __defaultNIL( @nFontBold    , fnt_[ 4 ] )
+   __defaultNIL( @nFontQuality , fnt_[ 5 ] )
 
    IF Empty( cFont )
       cFont := fnt_[ 1 ]
@@ -856,7 +855,9 @@ ENDCLASS
 
 METHOD WvtObject:New( oParent, nType, nID, nTop, nLeft, nBottom, nRight )
 
-   DEFAULT nID TO ++::nObjID
+   IF nID == NIL
+      nID := ++::nObjID
+   ENDIF
 
    ::oParent   :=  oParent
    ::nType     :=  nType
@@ -1077,12 +1078,12 @@ METHOD WvtBrowse:Create()
 
    ::Super:Create()
 
-   DEFAULT ::bTotalRecords  TO {|| ( ::cAlias )->( ordKeyCount() ) }
-   DEFAULT ::bCurrentRecord TO {|| ( ::cAlias )->( ordKeyNo()    ) }
+   __defaultNIL( @::bTotalRecords , {|| ( ::cAlias )->( ordKeyCount() ) } )
+   __defaultNIL( @::bCurrentRecord, {|| ( ::cAlias )->( ordKeyNo()    ) } )
    ::SetVBar()
 
-   DEFAULT ::bTotalColumns  TO {|| ::oBrw:ColCount }
-   DEFAULT ::bCurrentColumn TO {|| ::oBrw:ColPos   }
+   __defaultNIL( @::bTotalColumns , {|| ::oBrw:ColCount } )
+   __defaultNIL( @::bCurrentColumn, {|| ::oBrw:ColPos   } )
    ::SetHBar()
 
    ::oBrw:ForceStable()
@@ -1345,10 +1346,10 @@ ENDCLASS
 
 METHOD WvtStatusBar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
-   DEFAULT nTop    TO oParent:MaxRow()
-   DEFAULT nLeft   TO 0
-   DEFAULT nBottom TO oParent:MaxRow()
-   DEFAULT nRight  TO oParent:MaxCol()
+   __defaultNIL( @nTop   , oParent:MaxRow() )
+   __defaultNIL( @nLeft  , 0 )
+   __defaultNIL( @nBottom, oParent:MaxRow() )
+   __defaultNIL( @nRight , oParent:MaxCol() )
 
    ::Super:New( oParent, DLG_OBJ_STATUSBAR, nID, nTop, nLeft, nBottom, nRight )
 
@@ -1440,7 +1441,7 @@ METHOD WvtStatusBar:SetText( nPanel, cText, cColor )
 
    LOCAL oPanel
 
-   DEFAULT cColor TO ::cColor
+   __defaultNIL( @cColor, ::cColor )
 
    IF nPanel > 0 .AND. nPanel <= Len( ::aPanels )
       oPanel        := ::aPanels[ nPanel ]
@@ -1553,11 +1554,11 @@ METHOD WvtLabel:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
 METHOD WvtLabel:Create( lConfg )
 
-   DEFAULT lConfg       TO .F.
+   __defaultNIL( @lConfg      , .F. )
 
-   DEFAULT ::nBottom    TO ::nTop
-   DEFAULT ::nRight     TO ::nLeft + Len( ::Text )
-   DEFAULT ::nTextColor TO RGB( 0, 0, 0 )
+   __defaultNIL( @::nBottom   , ::nTop )
+   __defaultNIL( @::nRight    , ::nLeft + Len( ::Text ) )
+   __defaultNIL( @::nTextColor, RGB( 0, 0, 0 ) )
 
    ::nTextColorHoverOff := ::nTextColor
    ::nBackColorHoverOff := ::nBackColor
@@ -1718,7 +1719,7 @@ METHOD WvtToolBar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
    nTop    := 0
    nLeft   := 0
-   DEFAULT nBottom TO 1
+   __defaultNIL( @nBottom, 1 )
    nRight  := oParent:MaxCol()
 
    ::Super:New( oParent, DLG_OBJ_TOOLBAR, nID, nTop, nLeft, nBottom, nRight )
@@ -2296,9 +2297,9 @@ METHOD WvtGets:Create()
    FOR i := 1 TO Len( ::aGetList )
       GetList := {}
 
-      DEFAULT ::aGetList[ i,7 ] TO "N/W*,N/W*,,,N/GR*"
-      DEFAULT ::aGetList[ i,5 ] TO {|| .T. }
-      DEFAULT ::aGetList[ i,6 ] TO {|| .T. }
+      __defaultNIL( @::aGetList[ i,7 ], "N/W*,N/W*,,,N/GR*" )
+      __defaultNIL( @::aGetList[ i,5 ], {|| .T. } )
+      __defaultNIL( @::aGetList[ i,6 ], {|| .T. } )
 
       @ ::aGetList[ i,1 ], ::aGetList[ i,2 ] GET ::aGetList[ i,3 ] PICTURE ::aGetList[ i,4 ] COLOR ::aGetList[ i,7 ]
 
@@ -2486,8 +2487,8 @@ METHOD wvtScrollbar:Create()
    ENDIF
 
    IF ::nBarType == WVT_SCROLLBAR_VERT
-      DEFAULT ::nBottom TO ::nTop + 5
-      DEFAULT ::nRight  TO ::nLeft + 1
+      __defaultNIL( @::nBottom, ::nTop + 5 )
+      __defaultNIL( @::nRight , ::nLeft + 1 )
 
       ::nRight       := ::nLeft + 1
       ::nBottom      := Max( 7, ::nBottom )
@@ -2526,8 +2527,8 @@ METHOD wvtScrollbar:Create()
          {|| Wvt_DrawScrollButton( ::nBtn2Top, ::nBtn2Left, ::nBtn2Bottom, ::nBtn2Right, ::aPxlBtnBtm, 3, .T. ) }
 
    ELSE
-      DEFAULT ::nBottom TO ::nTop
-      DEFAULT ::nRight  TO ::nLeft + 11
+      __defaultNIL( @::nBottom, ::nTop )
+      __defaultNIL( @::nRight , ::nLeft + 11 )
 
       ::nBottom      := ::nTop
       ::nRight       := Max( 11, ::nRight )
@@ -2655,8 +2656,8 @@ METHOD wvtScrollbar:Refresh()
 
 METHOD wvtScrollbar:setPos( nTotal, nCurrent )
 
-   DEFAULT nTotal   TO Eval( ::bTotal   )
-   DEFAULT nCurrent TO Eval( ::bCurrent )
+   __defaultNIL( @nTotal  , Eval( ::bTotal   ) )
+   __defaultNIL( @nCurrent, Eval( ::bCurrent ) )
 
    ::nTotal   := nTotal
    ::nCurrent := nCurrent
@@ -3264,12 +3265,12 @@ METHOD WvtProgressBar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
 METHOD WvtProgressBar:Create()
 
-   DEFAULT ::nTop       TO 0
-   DEFAULT ::nLeft      TO 0
-   DEFAULT ::nBottom    TO iif( ::lVertical, ::nTop + 9, ::nTop )
-   DEFAULT ::nRight     TO iif( ::lVertical, ::nLeft + 1, ::nLeft + 19 )
-   DEFAULT ::nTextColor TO RGB( 255, 255, 255 )
-   DEFAULT ::nBackColor TO RGB( 198, 198, 198 )
+   __defaultNIL( @::nTop      , 0 )
+   __defaultNIL( @::nLeft     , 0 )
+   __defaultNIL( @::nBottom   , iif( ::lVertical, ::nTop + 9, ::nTop ) )
+   __defaultNIL( @::nRight    , iif( ::lVertical, ::nLeft + 1, ::nLeft + 19 ) )
+   __defaultNIL( @::nTextColor, RGB( 255, 255, 255 ) )
+   __defaultNIL( @::nBackColor, RGB( 198, 198, 198 ) )
 
    ::bPaint := {|| ::Display() }
    AAdd( ::aPaint, { ::bPaint, { WVT_BLOCK_LABEL, ::nTop, ::nLeft, ::nBottom, ::nRight } } )
@@ -3286,8 +3287,8 @@ METHOD WvtProgressBar:Display( nCurrent, nTotal )
       RETURN Self
    ENDIF
 
-   DEFAULT nCurrent TO ::nCurrent
-   DEFAULT nTotal   TO ::nTotal
+   __defaultNIL( @nCurrent, ::nCurrent )
+   __defaultNIL( @nTotal  , ::nTotal )
 
    ::nCurrent := nCurrent
    ::nTotal   := nTotal

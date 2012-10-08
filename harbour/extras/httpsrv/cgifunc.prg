@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "error.ch"
 #include "fileio.ch"
 
@@ -66,7 +65,7 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
    LOCAL hHashVars := { => }
    LOCAL aField, cField, aFields
    LOCAL cName, xValue
-   DEFAULT cSeparator TO "&"
+   __defaultNIL( @cSeparator, "&" )
 
    aFields := uhttpd_Split( cSeparator, cFields )
 
@@ -285,9 +284,9 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
    LOCAL aLines  := {}, cLine
    LOCAL nHowMany := 0
 
-   DEFAULT cDelim    TO ( CHR( 13 ) + CHR( 10 ) )
-   DEFAULT lRemDelim TO .T.
-   DEFAULT nCount    TO -1
+   __defaultNIL( @cDelim, ( CHR( 13 ) + CHR( 10 ) ) )
+   __defaultNIL( @lRemDelim, .T. )
+   __defaultNIL( @nCount, -1 )
 
    //WriteToLogFile( "Splitstring: " + cStr( cString ) )
 
@@ -320,12 +319,12 @@ RETURN aLines
 */
 FUNCTION uhttpd_URLEncode( cString, lComplete )
 #ifdef HB_USE_HBTIP
-   DEFAULT lComplete TO .T.
+   __defaultNIL( @lComplete, .T. )
    RETURN TIPENCODERURL_ENCODE( cString, lComplete )
 #else
    LOCAL cRet := "", i, nVal, cChar
 
-   DEFAULT lComplete TO .T.
+   __defaultNIL( @lComplete, .T. )
 
    FOR i := 1 TO Len( cString )
       cChar := SubStr( cString, i, 1)
@@ -396,10 +395,10 @@ FUNCTION uhttpd_DateToGMT( dDate, cTime, nDayToAdd, nSecsToAdd )
   LOCAL aDays   := { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }
   LOCAL aMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
 
-  DEFAULT dDate      TO DATE()
-  DEFAULT cTime      TO TIME()
-  DEFAULT nDayToAdd  TO 0
-  DEFAULT nSecsToAdd TO 0
+  __defaultNIL( @dDate, DATE() )
+  __defaultNIL( @cTime, TIME() )
+  __defaultNIL( @nDayToAdd, 0 )
+  __defaultNIL( @nSecsToAdd, 0 )
 
   //Tracelog( "DateToGMT - StartingValue", dDate, cTime, nDayToAdd, nSecsToAdd )
 
@@ -438,9 +437,10 @@ FUNCTION uhttpd_AddSecondsToTime( cTime, nSecsToAdd, nDaysAdded )
   LOCAL nOneDaySeconds := 86400  // 24 * 60 * 60
   LOCAL cNewTime, nSecs
 
-  DEFAULT cTime      TO TIME()
-  DEFAULT nSecsToAdd TO 0
-  DEFAULT nDaysAdded TO 0      // nDaysAdded can be already valued, so below i add to this value
+  __defaultNIL( @cTime, TIME() )
+  __defaultNIL( @nSecsToAdd, 0 )
+  // nDaysAdded can be already valued, so below i add to this value
+  __defaultNIL( @nDaysAdded, 0 )
 
   IF nSecsToAdd != 0
      nSecs      := Secs( cTime ) + nSecsToAdd
@@ -456,8 +456,8 @@ RETURN cNewTime
 FUNCTION uhttpd_TimeDiffAsSeconds( dDateStart, dDateEnd, cTimeStart, cTimeEnd )
   LOCAL aRetVal
 
-  DEFAULT dDateEnd     TO DATE()
-  DEFAULT cTimeEnd     TO TIME()
+  __defaultNIL( @dDateEnd, DATE() )
+  __defaultNIL( @cTimeEnd, TIME() )
 
   aRetVal := FT_ELAPSED( dDateStart, dDateEnd, cTimeStart, cTimeEnd )
 
@@ -465,8 +465,8 @@ RETURN aRetVal[ 4, 2 ]
 
 FUNCTION uhttpd_OutputString( cString, aTranslate, lProtected )
   LOCAL cHtml
-  DEFAULT lProtected TO .F.
-  DEFAULT aTranslate TO { { '"', '&quot;' }, { ' ', '&nbsp;' } }
+  __defaultNIL( @lProtected, .F. )
+  __defaultNIL( @aTranslate, { { '"', '&quot;' }, { ' ', '&nbsp;' } } )
 
   //TraceLog( "OutputString( cString, aTranslate, lProtected )", cString, aTranslate, lProtected )
   IF lProtected
@@ -487,7 +487,7 @@ FUNCTION uhttpd_HtmlSpecialChars( cString, cQuote_style )
 RETURN uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
 
 FUNCTION uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
-  DEFAULT cQuote_style TO "ENT_COMPAT"
+  __defaultNIL( @cQuote_style, "ENT_COMPAT" )
   DO CASE
      CASE cQuote_style == "ENT_COMPAT"
           aAdd( aTranslations, { '"', '&quot;'  } )
@@ -709,9 +709,9 @@ PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
 
   cSep := hb_ps()
 
-  //DEFAULT cLog    TO AppFullPath() + cSep + "logfile.log"
-  DEFAULT cLog    TO cSep + "tmp" + cSep + "logfile.log"
-  DEFAULT lCreate TO .F.
+// __defaultNIL( @cLog, AppFullPath() + cSep + "logfile.log" )
+  __defaultNIL( @cLog, cSep + "tmp" + cSep + "logfile.log" )
+  __defaultNIL( @lCreate, .F. )
 
   IF cLog != NIL
 

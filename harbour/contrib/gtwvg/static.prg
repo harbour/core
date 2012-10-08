@@ -67,7 +67,6 @@
 //
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
 
@@ -300,7 +299,7 @@ METHOD WvgStatic:setCaption( xCaption, cDll )
 
    HB_SYMBOL_UNUSED( cDll )
 
-   DEFAULT xCaption TO ::caption
+   __defaultNIL( @xCaption, ::caption )
    ::caption := xCaption
 
    DO CASE
