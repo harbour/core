@@ -45,8 +45,8 @@
 *.yyh     text
 
 # Text files with fixed EOL requirements
-*.bat     eol=crlf
-*.sh      eol=lf
+*.bat     text eol=crlf
+*.sh      text eol=lf
 
 # Binary files
 *.a       binary
