@@ -59,7 +59,10 @@ STATIC s_aGreek := {}
 PROCEDURE BackButton( cImage, oHtm )
 
    DEFAULT cImage TO "back.gif"
-   DEFAULT oHtm TO HtmlPageObject()
+
+   IF oHtm == NIL
+      oHtm := HtmlPageObject()
+   ENDIF
 
    IMAGE( cImage ) ;
       URL "" ;
@@ -78,7 +81,9 @@ PROCEDURE BackFormButton( cImage, oForm )
 
    LOCAL oBut
 
-   DEFAULT oForm TO HtmlFormObject()
+   IF oForm == NIL
+      oForm := HtmlFormObject()
+   ENDIF
 
    IF cImage == NIL
       DEFINE BUTTON oBut ;
@@ -107,7 +112,10 @@ FUNCTION PutCounter( oHtm, nNumber, cDir, nDigits, nWidth, bgColor, nBorder )
    LOCAL i
    LOCAL cStr    := ""
 
-   DEFAULT oHtm TO HtmlPageObject()
+   IF oHtm == NIL
+      oHtm := HtmlPageObject()
+   ENDIF
+
    DEFAULT nNumber TO 0
    DEFAULT cDir TO "/images/counters/"
    DEFAULT nWidth TO 50
@@ -417,19 +425,19 @@ METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
 
    LOCAL cStr := ""
 
-   DEFAULT alwaysRaised to ::alwaysRaised
-   DEFAULT alwaysLowered to ::alwaysLowered
-   DEFAULT Resizable to ::Resizable
-   DEFAULT Menubar to ::Menubar
-   DEFAULT personalBar to ::personalBar
-   DEFAULT dependent to ::dependent
-   DEFAULT location to ::location
-   DEFAULT directories to ::directories
-   DEFAULT Scrollbars to ::Scrollbars
-   DEFAULT Status to ::Status
-   DEFAULT TitleBar to ::TitleBar
-   DEFAULT Toolbar to ::Toolbar
-   DEFAULT copyHistory to ::copyHistory
+   DEFAULT alwaysRaised TO ::alwaysRaised
+   DEFAULT alwaysLowered TO ::alwaysLowered
+   DEFAULT Resizable TO ::Resizable
+   DEFAULT Menubar TO ::Menubar
+   DEFAULT personalBar TO ::personalBar
+   DEFAULT dependent TO ::dependent
+   DEFAULT location TO ::location
+   DEFAULT directories TO ::directories
+   DEFAULT Scrollbars TO ::Scrollbars
+   DEFAULT Status TO ::Status
+   DEFAULT TitleBar TO ::TitleBar
+   DEFAULT Toolbar TO ::Toolbar
+   DEFAULT copyHistory TO ::copyHistory
 
    IF alwaysRaised
       cStr += "alwaysraised=yes,"
@@ -513,10 +521,10 @@ METHOD SetSize( x, y, h, w ) CLASS JWindow
 
    LOCAL cStr := ""
 
-   DEFAULT x to ::ScreenX, ;
-      y to ::ScreenY, ;
-      h to ::height, ;
-      w to ::width
+   DEFAULT x TO ::ScreenX
+   DEFAULT y TO ::ScreenY
+   DEFAULT h TO ::height
+   DEFAULT w TO ::width
 
    ::ScreenX := x
    ::ScreenY := y

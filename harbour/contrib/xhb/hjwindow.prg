@@ -259,10 +259,10 @@ METHOD SetSize( x, y, h, w ) CLASS TJsWindow
 
    LOCAL cStr := ""
 
-   DEFAULT x TO ::ScreenX, ;
-      y TO ::ScreenY, ;
-      h TO ::height, ;
-      w TO ::width
+   DEFAULT x TO ::ScreenX
+   DEFAULT y TO ::ScreenY
+   DEFAULT h TO ::height
+   DEFAULT w TO ::width
 
    ::ScreenX := x
    ::ScreenY := y

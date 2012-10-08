@@ -1940,7 +1940,7 @@ METHOD iFrame( name, src, border, marginwidth, marginheight, ;
 
    DEFAULT BORDER TO .T.
    DEFAULT name TO "Frame01"
-//DEFAULT align  := "vertical"
+// DEFAULT align TO "vertical"
 
    IF name != NIL
       cStr += Space( 5 ) + '        NAME="' + name + '"' + CRLF()
