@@ -2,9 +2,11 @@
  * $Id$
  */
 
-REQUEST HB_CODEPAGE_RU866
+REQUEST HB_CODEPAGE_RU1251
 
 PROCEDURE Main()
+
+   HB_CDPSelect( "RU1251" )
 
    ? "Press ESC to break"
    ? "Russian"
@@ -16,11 +18,11 @@ PROCEDURE Main()
 
    RETURN
 
-PROCEDURE test( nLang )
+PROCEDURE test( cLang )
 
    LOCAL nTemp
 
-   dbCreate( "_num" + hb_ntos( nLang ), ;
+   dbCreate( "_num_" + cLang, ;
       { { "NUM" , "N",  19, 0 },;
         { "STR1", "C", 100, 0 },;
         { "STR2", "C", 100, 0 },;
@@ -28,9 +30,9 @@ PROCEDURE test( nLang )
    FOR nTemp := 1 TO 1000000000
       num->( dbAppend() )
       num->Num := nTemp
-      num->Str1 := MnyToTxtRU( nTemp + ( nTemp % 100 ) * 0.01, nLang, , 3 )
-      num->Str2 := NumToTxtRU( nTemp, nLang, , .T. )
-      num->Str3 := DateToTxtRU( Date() + nTemp, nLang, .T. )
+      num->Str1 := MnyToTxtRU( nTemp + ( nTemp % 100 ) * 0.01, cLang, , 3 )
+      num->Str2 := NumToTxtRU( nTemp, cLang, , .T. )
+      num->Str3 := DateToTxtRU( Date() + nTemp, cLang, .T. )
       IF nTemp % 1000 == 0
          ? nTemp
       ENDIF

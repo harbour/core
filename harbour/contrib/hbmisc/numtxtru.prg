@@ -196,9 +196,9 @@ STATIC aUkr := { ;
      "три", ;
      "чотири", ;
      "п'ять", ;
-     "шiсть", ;
-     "сiм", ;
-     "вiсiм", ;
+     "шість", ;
+     "сім", ;
+     "вісім", ;
      "дев'ять", ;
      "десять", ;
      "одинадцять", ;
@@ -206,36 +206,36 @@ STATIC aUkr := { ;
      "тринадцять", ;
      "чотирнадцять", ;
      "п'ятнадцять", ;
-     "шiстнадцять", ;
-     "сiмнадцять", ;
-     "вiсiмнадцять", ;
+     "шістнадцять", ;
+     "сімнадцять", ;
+     "вісімнадцять", ;
      "дев'ятнадцять", ;
      "двадцять", ;
      "тридцять", ;
      "сорок", ;
      "п'ятдесят", ;
-     "шiстдесят", ;
-     "сiмдесят", ;
-     "вiсiмдесят", ;
+     "шістдесят", ;
+     "сімдесят", ;
+     "вісімдесят", ;
      "дев'яносто", ;
      "сто", ;
-     "двiстi", ;
+     "двісті", ;
      "триста", ;
      "чотириста", ;
      "п'ятсот", ;
-     "шiстсот", ;
-     "сiмсот", ;
-     "вiсiмсот", ;
+     "шістсот", ;
+     "сімсот", ;
+     "вісімсот", ;
      "дев'ятсот" }, ;
-   { "нуль", "одна", "двi" }, ;
+   { "нуль", "одна", "дві" }, ;
    { "нуль", "одно" }, ;
-   { "тисяча", "мiльон", "мiльярд", "трильон", "квадрильон" }, ;
-   { "тисячi", "мiльона", "мiльярда", "трильона", "квадрильона" }, ;
-   { "тисяч", "мiльонiв", "мiлльярдiв", "трильонiв", "квадрильонiв" }, ;
+   { "тисяча", "мільон", "мільярд", "трильон", "квадрильон" }, ;
+   { "тисячі", "мільона", "мільярда", "трильона", "квадрильона" }, ;
+   { "тисяч", "мільонів", "мілльярдів", "трильонів", "квадрильонів" }, ;
    { "нульовий", ;
      "перший", ;
      "другий", ;
-     "третiй", ;
+     "третій", ;
      "четвертий", ;
      "п'ятий", ;
      "шостий", ;
@@ -248,9 +248,9 @@ STATIC aUkr := { ;
      "тринадцятий", ;
      "чотирнадцятий", ;
      "п'ятнадцятий", ;
-     "шiстнадцятий", ;
-     "сiмнадцятий", ;
-     "вiсiмнадцятий", ;
+     "шістнадцятий", ;
+     "сімнадцятий", ;
+     "вісімнадцятий", ;
      "дев'ятнадцятий", ;
      "двадцятий", ;
      "тридцятий", ;
@@ -258,7 +258,7 @@ STATIC aUkr := { ;
      "п'ятидесятий", ;
      "шестидесятий", ;
      "семидесятий", ;
-     "вiсьмидесятий", ;
+     "вісьмидесятий", ;
      "дев'яностий", ;
      "сотий", ;
      "двухсотий", ;
@@ -267,9 +267,9 @@ STATIC aUkr := { ;
      "п'ятисотий", ;
      "шестисотий", ;
      "семисотий", ;
-     "вiсiмсотий", ;
+     "вісімсотий", ;
      "дев'ятисотий", ;
-     "тисячний", "мiльонний", "мiльярдний", "трильонний", "квадрильонний" }, ;
+     "тисячний", "мільонний", "мільярдний", "трильонний", "квадрильонний" }, ;
    { "", ;
      "", ;
      "двух", ;
@@ -278,7 +278,7 @@ STATIC aUkr := { ;
      "п'яти", ;
      "шости", ;
      "семи", ;
-     "вiсьми", ;
+     "вісьми", ;
      "дев'яти", ;
      "десяти", ;
      "одинадцяти", ;
@@ -286,9 +286,9 @@ STATIC aUkr := { ;
      "тринадцяти", ;
      "чотирнадцяти", ;
      "п'ятнадцяти", ;
-     "шiстнадцяти", ;
-     "сiмнадцяти", ;
-     "вiсiмнадцяти", ;
+     "шістнадцяти", ;
+     "сімнадцяти", ;
+     "вісімнадцяти", ;
      "дев'ятнадцяти", ;
      "двадцяти", ;
      "тридцяти", ;
@@ -296,20 +296,20 @@ STATIC aUkr := { ;
      "п'ятидесяти", ;
      "шестидесяти", ;
      "семидесяти", ;
-     "вiсьмидесяти", ;
+     "вісьмидесяти", ;
      "дев'яносто" }, ;
-   { "iй", "я", "а", "е", "е" }, ;
-   { NTSR_FEMA, "грн.", "гривня", "гривнi", "гривень" }, ;
-   { NTSR_FEMA, "коп.", "копiйка", "копiйки", "копiйок" }, ;
-   "мiнус", ;
-   { "сiчня", "лютого", "березня", "квiтня", "травня", "червня", ;
+   { "ій", "я", "а", "е", "е" }, ;
+   { NTSR_FEMA, "грн.", "гривня", "гривні", "гривень" }, ;
+   { NTSR_FEMA, "коп.", "копійка", "копійки", "копійок" }, ;
+   "мінус", ;
+   { "січня", "лютого", "березня", "квітня", "травня", "червня", ;
      "липня", "серпня", "вересня", "жовтня", "листопада", "грудня" }, ;
-   { "рiк", "року" } }
+   { "рік", "року" } }
 
 /* Belorussian messages */
 STATIC aBel := { ;
    { "нуль", ;
-     "адзiн", ;
+     "адзін", ;
      "два", ;
      "тры", ;
      "чатыры", ;
@@ -319,7 +319,7 @@ STATIC aBel := { ;
      "восем", ;
      "дзевяць", ;
      "дзесяць", ;
-     "адзiнаццаць", ;
+     "адзінаццаць", ;
      "дванаццаць", ;
      "трынаццаць", ;
      "чатырнаццаць", ;
@@ -347,13 +347,13 @@ STATIC aBel := { ;
      "дзевяцьсот" }, ;
    { "нуль", "адна", "две" }, ;
    { "нуль", "адно" }, ;
-   { "тысяча", "мiльён", "мiльярд", "трыльён", "квадрыльён" }, ;
-   { "тысячы", "мiльёна", "мiльярда", "трыльёна", "квадрыльёна" }, ;
-   { "тысяч", "мiльёнаў", "мiльярдаў", "трыльёнаў", "квадрыльёнаў" }, ;
+   { "тысяча", "мільён", "мільярд", "трыльён", "квадрыльён" }, ;
+   { "тысячы", "мільёна", "мільярда", "трыльёна", "квадрыльёна" }, ;
+   { "тысяч", "мільёнаў", "мільярдаў", "трыльёнаў", "квадрыльёнаў" }, ;
    { "нулёвы", ;
      "першы", ;
-     "другi", ;
-     "трэйцi", ;
+     "другі", ;
+     "трэйці", ;
      "чацьверты", ;
      "пяты", ;
      "шосты", ;
@@ -361,7 +361,7 @@ STATIC aBel := { ;
      "восьмы", ;
      "дзявяты", ;
      "дзясяты", ;
-     "адзiнаццаты", ;
+     "адзінаццаты", ;
      "дванаццаты", ;
      "трынаццаты", ;
      "чатырнаццаты", ;
@@ -373,55 +373,55 @@ STATIC aBel := { ;
      "дваццаты", ;
      "трыццаты", ;
      "саракавы", ;
-     "пяцiдзесяты", ;
-     "шасьцiдзясяты", ;
-     "сямiдзясяты", ;
-     "васьмiдзясяты", ;
+     "пяцідзесяты", ;
+     "шасьцідзясяты", ;
+     "сямідзясяты", ;
+     "васьмідзясяты", ;
      "дзевяносты", ;
      "соты", ;
      "двухсоты", ;
      "трохсоты", ;
      "чатырохсоты", ;
-     "пяцiсоты", ;
-     "шасьцiсоты", ;
-     "сямiсоты", ;
-     "васьмiсоты", ;
-     "дзевяцiсоты", ;
-     "тысячны", "мiльённы", "мiльярдны", "трыльённы", "квадрыльённы" }, ;
+     "пяцісоты", ;
+     "шасьцісоты", ;
+     "сямісоты", ;
+     "васьмісоты", ;
+     "дзевяцісоты", ;
+     "тысячны", "мільённы", "мільярдны", "трыльённы", "квадрыльённы" }, ;
    { "", ;
      "", ;
      "двух", ;
      "трах", ;
      "чатырох", ;
-     "пяцi", ;
-     "шасцi", ;
-     "сямi", ;
-     "васьмi", ;
-     "дзевяцi", ;
-     "дзесяцi", ;
-     "адзiнаццацi", ;
-     "дванаццацi", ;
-     "трынаццацi", ;
-     "чатырнаццацi", ;
-     "пятнаццацi", ;
-     "шаснаццацi", ;
-     "сямнаццацi", ;
-     "васямнаццацi", ;
-     "дзевятнаццацi", ;
-     "дваццацi", ;
-     "трыццацi", ;
+     "пяці", ;
+     "шасці", ;
+     "сямі", ;
+     "васьмі", ;
+     "дзевяці", ;
+     "дзесяці", ;
+     "адзінаццаці", ;
+     "дванаццаці", ;
+     "трынаццаці", ;
+     "чатырнаццаці", ;
+     "пятнаццаці", ;
+     "шаснаццаці", ;
+     "сямнаццаці", ;
+     "васямнаццаці", ;
+     "дзевятнаццаці", ;
+     "дваццаці", ;
+     "трыццаці", ;
      "сарака", ;
-     "пяцiцдзесяцi", ;
-     "шасцiдзесяцi", ;
-     "сямiдзесяцi", ;
-     "васьмiдзесяцi", ;
+     "пяціцдзесяці", ;
+     "шасцідзесяці", ;
+     "сямідзесяці", ;
+     "васьмідзесяці", ;
      "дзевяноста" }, ;
-   { "i", "яя", "ая", "яе", "ае" }, ;
-   { NTSR_MALE, "руб.", "рубель", "рублi", "рублеў" }, ;
-   { NTSR_FEMA, "коп.", "капейка", "капейкi", "капеек" }, ;
-   "мiнус", ;
-   { "студзеня", "люты", "сакавiка", "красавiка", "мая", "чэрвеня", ;
-     "лiпеня", "жнiвеня", "верасня", "кастрычнiка", "лiстапада", "снежаня" }, ;
+   { "і", "яя", "ая", "яе", "ае" }, ;
+   { NTSR_MALE, "руб.", "рубель", "рублі", "рублеў" }, ;
+   { NTSR_FEMA, "коп.", "капейка", "капейкі", "капеек" }, ;
+   "мінус", ;
+   { "студзеня", "люты", "сакавіка", "красавіка", "мая", "чэрвеня", ;
+     "ліпеня", "жнівеня", "верасня", "кастрычніка", "лістапада", "снежаня" }, ;
    { "год", "года" } }
 
 /*
@@ -437,7 +437,7 @@ FUNCTION NumToTxtRU( nValue, cLang, nGender, lOrd )
 
    IF nValue < 0
       nValue := -nValue
-      cRetVal := hb_UTF8ToStr( aMsg[ NTSR_MINUS ] ) + " "
+      cRetVal := aMsg[ NTSR_MINUS ] + " "
    ELSE
       cRetVal := ""
    ENDIF
@@ -445,7 +445,7 @@ FUNCTION NumToTxtRU( nValue, cLang, nGender, lOrd )
    nValue := Int( nValue )
    cRetVal += NumToStrRaw( nValue, aMsg, nGender, lOrd )
 
-   RETURN cRetVal
+   RETURN hb_UTF8ToStr( cRetVal )
 
 /*
  * nValue:  integer value;
@@ -466,10 +466,10 @@ FUNCTION MnyToTxtRU( nValue, cLang, nMode1, nMode2 )
    nCent  := Round( ( nValue - Int( nValue ) ) * 100, 0 )
    nValue := Int( nValue )
 
-   cRetVal := MnyToStrRaw( nValue, cLang, hb_UTF8ToStr( aMsg[ NTSR_CURR ] ), nMode1 ) + " " + ;
-      MnyToStrRaw( nCent, cLang, hb_UTF8ToStr( aMsg[ NTSR_CENT ] ), nMode2 )
+   cRetVal := MnyToStrRaw( nValue, cLang, aMsg[ NTSR_CURR ], nMode1 ) + " " + ;
+      MnyToStrRaw( nCent, cLang, aMsg[ NTSR_CENT ], nMode2 )
 
-   RETURN cRetVal
+   RETURN hb_UTF8ToStr( cRetVal )
 
 FUNCTION DateToTxtRU( dDate, cLang, lWord )
 
@@ -484,13 +484,13 @@ FUNCTION DateToTxtRU( dDate, cLang, lWord )
          cRetVal := hb_ntos( nTemp )
       ENDIF
 
-      cRetVal += " " + hb_UTF8ToStr( aMsg[ NTSR_MONTH, Month( dDate ) ] ) + " " + ;
-         Str( Year( dDate ), 4 ) + " " + hb_UTF8ToStr( aMsg[ NTSR_YEAR, 2 ] )
+      cRetVal += " " + aMsg[ NTSR_MONTH, Month( dDate ) ] + " " + ;
+         Str( Year( dDate ), 4 ) + " " + aMsg[ NTSR_YEAR, 2 ]
    ELSE
       cRetVal := ""
    ENDIF
 
-   RETURN cRetVal
+   RETURN hb_UTF8ToStr( cRetVal )
 
 STATIC FUNCTION MnyToStrRaw( nValue, cLang, aCur, nMode )
 
@@ -504,7 +504,7 @@ STATIC FUNCTION MnyToStrRaw( nValue, cLang, aCur, nMode )
    ENDIF
    IF nMode <= 2
       IF nValue == 0
-         cRetVal := hb_UTF8ToStr( aMsg[ NTSR_MALE, 1 ] )
+         cRetVal := aMsg[ NTSR_MALE, 1 ]
       ELSE
          cRetVal := NumToStrRaw( nValue, aMsg, aCur[ 1 ] )
       ENDIF
@@ -574,11 +574,11 @@ STATIC FUNCTION NumToStrRaw( nValue, aMsg, nGender, lOrd )
                cTemp += " "
                nTemp1 := ( nValue % 10 )
                IF nTemp1 == 1 .AND. nValue != 11
-                  cTemp += hb_UTF8ToStr( aMsg[ NTSR_1000_1, nTri ] )
+                  cTemp += aMsg[ NTSR_1000_1, nTri ]
                ELSEIF nTemp1 >= 2 .AND. nTemp1 <= 4 .AND. ( nValue < 10 .OR. nValue > 20 )
-                  cTemp += hb_UTF8ToStr( aMsg[ NTSR_1000_2, nTri ] )
+                  cTemp += aMsg[ NTSR_1000_2, nTri ]
                ELSE
-                  cTemp += hb_UTF8ToStr( aMsg[ NTSR_1000_3, nTri ] )
+                  cTemp += aMsg[ NTSR_1000_3, nTri ]
                ENDIF
             ELSE
                cTemp += "10**" + hb_ntos( nTri * 3 ) + " "
@@ -609,7 +609,7 @@ STATIC FUNCTION TriToStr( nValue, aMsg, nGender, lOrd, lLast, nTri )
       ELSE
          nIdx := NTSR_MALE
       ENDIF
-      cRetVal := hb_UTF8ToStr( aMsg[ nIdx, Int( nValue / 100 ) + 28 ] )
+      cRetVal := aMsg[ nIdx, Int( nValue / 100 ) + 28 ]
       IF nIdx == NTSR_CNT
          cRetVal := OrdToGender( cRetVal, aMsg, nGender )
       ENDIF
@@ -633,7 +633,7 @@ STATIC FUNCTION TriToStr( nValue, aMsg, nGender, lOrd, lLast, nTri )
          nIdx := NTSR_ROD
          lLast := .F.
       ENDIF
-      cTemp := hb_UTF8ToStr( aMsg[ nIdx, Int( nValue / 10 ) - 1 + 20 ] )
+      cTemp := aMsg[ nIdx, Int( nValue / 10 ) - 1 + 20 ]
       IF nIdx == NTSR_CNT
          cTemp := OrdToGender( cTemp, aMsg, nGender )
       ENDIF
@@ -661,7 +661,7 @@ STATIC FUNCTION TriToStr( nValue, aMsg, nGender, lOrd, lLast, nTri )
       ELSE
          nIdx := iif( nValue + 1 <= Len( aMsg[ nGender ] ), nGender, NTSR_MALE )
       ENDIF
-      cTemp := hb_UTF8ToStr( aMsg[ nIdx, nValue + 1 ] )
+      cTemp := aMsg[ nIdx, nValue + 1 ]
       IF nIdx == NTSR_CNT
          cTemp := OrdToGender( cTemp, aMsg, nGender )
       ENDIF
@@ -675,10 +675,10 @@ STATIC FUNCTION OrdToGender( cValue, aMsg, nGender )
    LOCAL nTemp := Len( cValue ) - Len( aMsg[ NTSR_ORDG, 1 ] )
 
    IF nGender == NTSR_FEMA
-      cValue := Left( cValue, nTemp ) + iif( SubStr( cValue, nTemp + 1 ) == hb_UTF8ToStr( aMsg[ NTSR_ORDG, 1 ] ), ;
+      cValue := Left( cValue, nTemp ) + iif( SubStr( cValue, nTemp + 1 ) == aMsg[ NTSR_ORDG, 1 ], ;
          aMsg[ NTSR_ORDG, 2 ], aMsg[ NTSR_ORDG, 3 ] )
    ELSEIF nGender == NTSR_MIDD
-      cValue := Left( cValue, nTemp ) + iif( SubStr( cValue, nTemp + 1 ) == hb_UTF8ToStr( aMsg[ NTSR_ORDG, 1 ] ), ;
+      cValue := Left( cValue, nTemp ) + iif( SubStr( cValue, nTemp + 1 ) == aMsg[ NTSR_ORDG, 1 ], ;
          aMsg[ NTSR_ORDG, 4 ], aMsg[ NTSR_ORDG, 5 ] )
    ENDIF
 
