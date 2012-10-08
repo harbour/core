@@ -79,6 +79,8 @@ extern HB_EXPORT int     hb_ctwCloseAllWindows( void );
 extern HB_EXPORT int     hb_ctwCloseWindow( int iWindow );
 extern HB_EXPORT int     hb_ctwCurrentWindow( void );
 extern HB_EXPORT int     hb_ctwSelectWindow( int iWindow, HB_BOOL fToTop );
+extern HB_EXPORT int     hb_ctwChangeWindowHandle( int iNewWindow );
+extern HB_EXPORT int     hb_ctwGetWindowStack( const int ** piStack );
 extern HB_EXPORT int     hb_ctwVisible( int iWindow, int iVisible );
 extern HB_EXPORT int     hb_ctwSetWindowShadow( int iWindow, int iAttr );
 extern HB_EXPORT int     hb_ctwSetWindowLevel( int iWindow, int iLevel );

@@ -384,6 +384,72 @@ HB_FUNC( HBCT_MAXCOL ) /* Return the maximum screen/window column number (zero o
       hb_retni( hb_gtMaxCol() );
 }
 
+/* Undocumented CT3 window functions
+ */
+
+/*
+   WALIAS( <nHandle> ) -> <nHandle> | -1
+   change current window handle to <nHandle>
+   if <nHandle> is not used by other window
+   or is current window.
+*/
+HB_FUNC( WALIAS )
+{
+   int iWindow = hb_parnidef( 1, -1 );
+
+   /* 255 is original CT3 limit,
+    * harbour CTWIN does not have such intenral limits
+    */
+   if( iWindow >= 0 && iWindow <= 255 )
+      iWindow = hb_ctwChangeWindowHandle( iWindow );
+   else
+      iWindow = -1;
+
+   hb_retni( iWindow );
+}
+
+/*
+   WLIST() -> <cHandleList>
+   _WSTACK() -> <cHandleList>
+   return string with window handles in each character,
+   the last character is the top window.
+
+   Warning: this is compatibility only function
+            which works correctly only for 255 windows.
+*/
+
+HB_FUNC( WLIST )
+{
+   const int * piStack;
+   int iWindows, iFrom, i;
+
+   iWindows = hb_ctwGetWindowStack( &piStack );
+   if( iWindows < 0 )
+      hb_retc_null();
+   else if( iWindows == 0 )
+      hb_retclen( "\000", 1 );
+   else
+   {
+      char * pszWindows = ( char * ) hb_xgrab( iWindows + 2 );
+
+      iFrom = 0;
+      if( hb_ctwCurrentWindow() == 0 )
+         pszWindows[ iWindows ] = 0;
+      else
+         pszWindows[ iFrom++ ] = 0;
+
+      for( i = 0; i < iWindows; ++i )
+         pszWindows[ iFrom + i ] = ( char ) piStack[ i ];
+
+      hb_retclen_buffer( pszWindows, iWindows + 1 );
+   }
+}
+
+HB_FUNC( _WSTACK )
+{
+   HB_FUNC_EXEC( WLIST );
+}
+
 /* Temporary Harbour extensions to test some extended CTW functionality
  */
 

@@ -8516,7 +8516,6 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
          }
       }
 
-
       if( pFunc->pSwitch->pLast )
       {
          pFunc->pSwitch->pLast->pNext = pCase;

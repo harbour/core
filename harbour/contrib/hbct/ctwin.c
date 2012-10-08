@@ -210,7 +210,8 @@ static void hb_ctw_SetMap( PHB_GTCTW pCTW, int * piMap, int iWindow, int iTop, i
       {
          nIndex = iTop * pCTW->iMapWidth + iLeft;
          for( i = iLeft; i <= iRight; ++i, ++nIndex )
-            piMap[ nIndex ] = iWindow | ( piMap[ nIndex ] != 0 ? iNested : 0 );
+            piMap[ nIndex ] = iWindow |
+                     ( ( piMap[ nIndex ] != 0 && piMap[ nIndex ] != iWindow ) ? iNested : 0 );
          ++iTop;
       }
    }
@@ -242,7 +243,7 @@ static void hb_ctw_WindowMap( PHB_GTCTW pCTW, int iWindow, HB_BOOL fExpose )
 {
    PHB_CT_WND pWnd;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_WindowMap(%p,%d,%d)", pCTW, iWindow, (int) fExpose));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_WindowMap(%p,%d,%d)", pCTW, iWindow, ( int ) fExpose));
 
    pWnd = pCTW->windows[ iWindow ];
 
@@ -277,18 +278,20 @@ static void hb_ctw_WindowMap( PHB_GTCTW pCTW, int iWindow, HB_BOOL fExpose )
    }
 }
 
-static void hb_ctw_RemapAllWindows( PHB_GTCTW pCTW, int iFrom )
+static void hb_ctw_RemapAllWindows( PHB_GTCTW pCTW, int iFrom, HB_BOOL fExpose )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_RemapAllWindows(%p,%d)", pCTW, iFrom));
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_RemapAllWindows(%p,%d,%d)", pCTW, iFrom, ( int ) fExpose));
 
    if( pCTW->iMaxWindow )
    {
       int i;
 
-      hb_ctw_ClearMap( pCTW );
+      if( iFrom == 0 )
+         hb_ctw_ClearMap( pCTW );
       for( i = iFrom; i < pCTW->iOpenWindows; ++i )
          hb_ctw_WindowMap( pCTW, pCTW->windowStack[ i ], HB_FALSE );
-      hb_ctw_TouchLines( pCTW, 0, pCTW->iMapHeight );
+      if( fExpose )
+         hb_ctw_TouchLines( pCTW, 0, pCTW->iMapHeight );
    }
 }
 
@@ -359,7 +362,7 @@ static int hb_ctw_SetWindowBoard( PHB_GTCTW pCTW, int iTop, int iLeft, int iBott
       pCTW->iBoardBottom  = iBottom;
       pCTW->iBoardRight   = iRight;
       pCTW->fBoardSet     = HB_TRUE;
-      hb_ctw_RemapAllWindows( pCTW, 0 );
+      hb_ctw_RemapAllWindows( pCTW, 0, HB_TRUE );
 
       return 0;
    }
@@ -440,7 +443,7 @@ static int hb_ctw_SelectWindow( PHB_GTCTW pCTW, int iWindow, HB_BOOL fToTop )
                {
                   /* INFO: CT effectively calls hb_ctw_RemapAllWindows() here */
                   if( i < pCTW->iOpenWindows - 1 )
-                     hb_ctw_RemapAllWindows( pCTW, i );
+                     hb_ctw_RemapAllWindows( pCTW, i, HB_TRUE );
                   else
                      hb_ctw_WindowMap( pCTW, iWindow, HB_TRUE );
                }
@@ -454,6 +457,68 @@ static int hb_ctw_SelectWindow( PHB_GTCTW pCTW, int iWindow, HB_BOOL fToTop )
       iWindow = HB_CTW_GETCURRENT( pCTW );
 
    return iWindow;
+}
+
+static int hb_ctw_ChangeWindowHandle( PHB_GTCTW pCTW, int iNewWindow )
+{
+   int iWindow, i;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_ChangeWindowHandle(%p,%d)", pCTW, iNewWindow));
+
+   iWindow = HB_CTW_GETCURRENT( pCTW );
+   if( iWindow != iNewWindow )
+   {
+      if( iWindow > 0 && iNewWindow > 0 && iNewWindow <= 255 &&
+          ( iNewWindow > pCTW->iMaxWindow ||
+            pCTW->windows[ iNewWindow ] == NULL ) )
+      {
+         PHB_CT_WND pWnd = pCTW->windows[ iWindow ];
+
+         if( iNewWindow > pCTW->iMaxWindow )
+         {
+            i = pCTW->iMaxWindow;
+            while( iNewWindow > pCTW->iMaxWindow )
+               pCTW->iMaxWindow += HB_CTWIN_ALLOC;
+            pCTW->windows = ( PHB_CT_WND * ) hb_xrealloc( pCTW->windows, ( pCTW->iMaxWindow + 1 ) * sizeof( PHB_CT_WND ) );
+            pCTW->windowStack = ( int * ) hb_xrealloc( pCTW->windowStack, pCTW->iMaxWindow * sizeof( int ) );
+            do
+            {
+               pCTW->windows[ i + 1 ] = NULL;
+               pCTW->windowStack[ i ] = 0;
+            }
+            while( ++i < pCTW->iMaxWindow );
+         }
+         pWnd->iHandle = iNewWindow;
+         pCTW->windows[ iWindow ] = NULL;
+         pCTW->windows[ iNewWindow ] = pWnd;
+
+         i = pCTW->iOpenWindows - 1;
+         while( i >= 0 && pCTW->windowStack[ i ] != iWindow )
+            --i;
+         if( i >= 0 )
+         {
+            pCTW->windowStack[ i ] = iNewWindow;
+            if( !pWnd->fHidden )
+            {
+               if( pWnd->iShadowAttr == HB_CTW_SHADOW_EXT2 )
+                  i = 0;
+               hb_ctw_RemapAllWindows( pCTW, i, HB_FALSE );
+            }
+         }
+      }
+      else
+         iNewWindow = -1;
+   }
+   return iNewWindow;
+}
+
+static int hb_ctw_GetWindowStack( PHB_GTCTW pCTW, const int ** piStack )
+{
+   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_GetWindowStack(%p,%p)", pCTW, piStack));
+
+   *piStack = pCTW->windowStack;
+
+   return pCTW->iOpenWindows;
 }
 
 static int hb_ctw_Visible( PHB_GTCTW pCTW, int iWindow, int iVisible )
@@ -474,7 +539,7 @@ static int hb_ctw_Visible( PHB_GTCTW pCTW, int iWindow, int iVisible )
           pWnd->fHidden != ( iVisible == HB_CTW_HIDDEN ) )
       {
          pWnd->fHidden = ( iVisible == HB_CTW_HIDDEN );
-         hb_ctw_RemapAllWindows( pCTW, 0 );
+         hb_ctw_RemapAllWindows( pCTW, 0, HB_TRUE );
       }
    }
 
@@ -530,7 +595,7 @@ static int hb_ctw_SetWindowLevel( PHB_GTCTW pCTW, int iWindow, int iLevel )
                   pCTW->windowStack[ i ] = iWindow;
                }
                if( !pWnd->fHidden && iPos != i )
-                  hb_ctw_RemapAllWindows( pCTW, HB_MIN( iPos, i ) );
+                  hb_ctw_RemapAllWindows( pCTW, HB_MIN( iPos, i ), HB_TRUE );
             }
          }
       }
@@ -559,7 +624,7 @@ static int hb_ctw_SetWindowShadow( PHB_GTCTW pCTW, int iWindow, int iAttr )
       {
          pWnd->iShadowAttr = iAttr;
          if( !pWnd->fHidden )
-            hb_ctw_RemapAllWindows( pCTW, 0 );
+            hb_ctw_RemapAllWindows( pCTW, 0, HB_TRUE );
       }
    }
 
@@ -721,7 +786,7 @@ static int hb_ctw_CreateWindow( PHB_GTCTW pCTW, int iTop, int iLeft, int iBottom
    if( !pWnd->fHidden )
    {
       if( iTmp < pCTW->iOpenWindows - 1 )
-         hb_ctw_RemapAllWindows( pCTW, iTmp );
+         hb_ctw_RemapAllWindows( pCTW, iTmp, HB_TRUE );
       else
          hb_ctw_WindowMap( pCTW, pWnd->iHandle, HB_TRUE );
    }
@@ -765,7 +830,7 @@ static int hb_ctw_CloseWindow( PHB_GTCTW pCTW, int iWindow )
       }
 
       if( !fHidden )
-         hb_ctw_RemapAllWindows( pCTW, 0 );
+         hb_ctw_RemapAllWindows( pCTW, 0, HB_TRUE );
 
       return iLast;
    }
@@ -795,7 +860,7 @@ static int hb_ctw_CloseAllWindows( PHB_GTCTW pCTW )
       }
       pCTW->iOpenWindows = 0;
       HB_CTW_SETCURRENT( pCTW, 0 );
-      hb_ctw_RemapAllWindows( pCTW, 0 );
+      hb_ctw_RemapAllWindows( pCTW, 0, HB_TRUE );
       return 0;
    }
 
@@ -841,7 +906,7 @@ static int hb_ctw_CenterWindow( PHB_GTCTW pCTW, int iWindow, HB_BOOL fCenter )
 
          if( !pWnd->fHidden &&
              ( iRow != pWnd->iFirstRow || iCol != pWnd->iFirstCol ) )
-            hb_ctw_RemapAllWindows( pCTW, 0 );
+            hb_ctw_RemapAllWindows( pCTW, 0, HB_TRUE );
 
          return iWindow;
       }
@@ -868,7 +933,7 @@ static int hb_ctw_MoveWindow( PHB_GTCTW pCTW, int iWindow, int iRow, int iCol )
             pWnd->iFirstRow = iRow;
             pWnd->iFirstCol = iCol;
             if( ! pWnd->fHidden )
-               hb_ctw_RemapAllWindows( pCTW, 0 );
+               hb_ctw_RemapAllWindows( pCTW, 0, HB_TRUE );
             return iWindow;
          }
       }
@@ -1090,7 +1155,7 @@ static int hb_ctw_SwapWindows( PHB_GTCTW pCTW, int iWindow1, int iWindow2 )
       pCTW->windows[ iWindow1 ]->fHidden = fHidden;
 
       if( !fHidden || !pWnd->fHidden )
-         hb_ctw_RemapAllWindows( pCTW, 0 );
+         hb_ctw_RemapAllWindows( pCTW, 0, HB_TRUE );
       return iWindow1;
    }
 
@@ -2463,6 +2528,30 @@ int  hb_ctwSelectWindow( int iWindow, HB_BOOL fToTop )
    {
       iResult = hb_ctw_SelectWindow( pCTW, iWindow, fToTop );
       HB_GTSELF_FLUSH( pCTW->pGT );
+      hb_gt_BaseFree( pCTW->pGT );
+   }
+   return iResult;
+}
+
+int  hb_ctwChangeWindowHandle( int iNewWindow )
+{
+   int iResult = -1;
+   PHB_GTCTW pCTW = hb_ctw_base();
+   if( pCTW )
+   {
+      iResult = hb_ctw_ChangeWindowHandle( pCTW, iNewWindow );
+      hb_gt_BaseFree( pCTW->pGT );
+   }
+   return iResult;
+}
+
+int  hb_ctwGetWindowStack( const int ** piStack )
+{
+   int iResult = -1;
+   PHB_GTCTW pCTW = hb_ctw_base();
+   if( pCTW )
+   {
+      iResult = hb_ctw_GetWindowStack( pCTW, piStack );
       hb_gt_BaseFree( pCTW->pGT );
    }
    return iResult;
