@@ -1,5 +1,5 @@
 /*
- * $Id: testmny.prg 18197 2012-10-08 17:39:24Z ptsarenko $
+ * $Id$
  */
 
 //
@@ -9,47 +9,48 @@
 // www - http://harbour-project.org
 //
 
-#include "common.ch"
 #include "error.ch"
 #include "hbclass.ch"
 
-procedure main
-   Local m1 := Money():new( 12.2 )
-   Local m2 := Money():new( 7.8 )
-   Local m3 := m1 - m2
+PROCEDURE Main()
 
-   ? "(12.2 - 7.8) == 4.4", (12.2 - 7.8) == 4.4
+   LOCAL m1 := Money():new( 12.2 )
+   LOCAL m2 := Money():new( 7.8 )
+   LOCAL m3 := m1 - m2
+
+   ? "(12.2 - 7.8) == 4.4", ( 12.2 - 7.8 ) == 4.4
    ? m1:value
    ? m2:value
-   ? (m1 - m2) == 4.4
+   ? ( m1 - m2 ) == 4.4
    ? m3 == 4.4
-   ? m1:str()
+   ? m1:Str()
    ? m3:value
    ? m3 == 4.4
    m3 := 5.5
-   ? (m3 + m1):value
-   ? (m3 + 12.2):value
-   ? (m3 * 2):value
-   ? (m3 / 2):value
-   ? (m3 * m1):value
-   return
+   ? ( m3 + m1 ):value
+   ? ( m3 + 12.2 ):value
+   ? ( m3 * 2 ):value
+   ? ( m3 / 2 ):value
+   ? ( m3 * m1 ):value
 
-CLASS Money
+   RETURN
+
+CREATE CLASS Money
 
    VAR nValue AS INTEGER INIT 0
    VAR nDec AS INTEGER INIT 2
    VAR nMul AS INTEGER INIT 100
 
-PROTECTED:
+   PROTECTED:
 
    METHOD normalize( xArg )
-   METHOD set( nValue ) INLINE ::nValue := Int( nValue * ::nMul )
+   METHOD Set( nValue ) INLINE ::nValue := Int( nValue * ::nMul )
 
-EXPORTED:
+   EXPORTED:
 
    METHOD new( nValue, nDec ) CONSTRUCTOR
    METHOD value()
-   METHOD str( nLen, nDec )
+   METHOD Str( nLen, nDec )
    METHOD getMoney( oMoney )
 
    OPERATOR ":=" ARG xArg INLINE ( ::nValue := ::normalize( xArg ), Self )
@@ -69,95 +70,123 @@ EXPORTED:
 ENDCLASS
 
 METHOD new( nValue, nDec ) CLASS Money
-   DEFAULT nDec TO 2
-   DEFAULT nValue TO 0
+
+   hb_default( @nDec, 2 )
+   hb_default( @nValue, 0 )
 
    ::nDec := nDec
    ::nMul := Int( 10 ** nDec )
-   ::set( nValue )
+   ::Set( nValue )
+
    RETURN Self
 
 METHOD value( ) CLASS Money
+
    RETURN ::nValue / ::nMul
 
 METHOD getMoney( oMoney ) CLASS Money
+
    LOCAL nValue
+
    IF ::nDec == oMoney:nDec
       nValue := oMoney:nValue
    ELSE
       nValue := Int( oMoney:nValue * ( ::nMul / oMoney:nMul ) )
    ENDIF
+
    RETURN nValue
 
 METHOD normalize( xArg ) CLASS Money
+
    LOCAL nValue
 
    IF IsMoney( xArg )
       nValue := ::getMoney( xArg )
-   ELSEIF IsNumber( xArg )
+   ELSEIF HB_ISNUMERIC( xArg )
       nValue := Int( xArg * ::nMul )
    ELSE
-      nValue := EVAL( ERRORBLOCK(), GenError( xArg ) )
+      nValue := Eval( ErrorBlock(), GenError( xArg ) )
    ENDIF
+
    RETURN nValue
 
 METHOD Equal( xArg ) CLASS Money
-   Return ::nValue == ::normalize( xArg )
+
+   RETURN ::nValue == ::normalize( xArg )
 
 METHOD Plus( xArg ) CLASS Money
+
    LOCAL oResult := Money():new( ::nDec )
+
    oResult:nValue := ::nValue + ::normalize( xArg )
-   Return oResult
+
+   RETURN oResult
 
 METHOD Minus( xArg ) CLASS Money
+
    LOCAL oResult := Money():new( ::nDec )
+
    oResult:nValue := ::nValue - ::normalize( xArg )
-   Return oResult
+
+   RETURN oResult
 
 METHOD Multiple( xArg ) CLASS Money
+
    LOCAL oResult := Money():new( ::nDec )
+
    IF IsMoney( xArg )
       oResult:nValue := Int( ::nValue * xArg:nValue / xArg:nMul )
-   ELSEIF IsNumber( xArg )
+   ELSEIF HB_ISNUMERIC( xArg )
       oResult:nValue := Int( ::nValue * xArg )
    ELSE
-      EVAL( ERRORBLOCK(), GenError( xArg ) )
+      Eval( ErrorBlock(), GenError( xArg ) )
    ENDIF
-   Return oResult
+
+   RETURN oResult
 
 METHOD Divide( xArg ) CLASS Money
+
    LOCAL oResult := Money():new( ::nDec )
+
    IF IsMoney( xArg )
       oResult:nValue := Int( ::nValue / xArg:nValue * xArg:nMul )
-   ELSEIF IsNumber( xArg )
+   ELSEIF HB_ISNUMERIC( xArg )
       oResult:nValue := Int( ::nValue / xArg )
    ELSE
-      EVAL( ERRORBLOCK(), GenError( xArg ) )
+      Eval( ErrorBlock(), GenError( xArg ) )
    ENDIF
-   Return oResult
 
-METHOD str( nLen, nDec ) CLASS Money
+   RETURN oResult
+
+METHOD Str( nLen, nDec ) CLASS Money
+
    LOCAL cStr
    LOCAL nValue := ::value()
-   IF nLen == Nil
+
+   IF nLen == NIL
       cStr := Str( nValue )
-   ELSEIF nDec == Nil
+   ELSEIF nDec == NIL
       cStr := Str( nValue, nLen )
    ELSE
       cStr := Str( nValue, nLen, nDec )
    ENDIF
-   Return cStr
+
+   RETURN cStr
 
 STATIC FUNCTION IsMoney( xArg )
-   RETURN ISOBJECT( xArg ) .and. xArg:className() = "MONEY"
+
+   RETURN HB_ISOBJECT( xArg ) .AND. xArg:className() = "MONEY"
 
 STATIC FUNCTION GenError( xArg )
+
    LOCAL oError := ErrorNew()
-   oError:description := HB_LANGERRMSG( EG_DATATYPE )
+
+   oError:description := hb_langErrMsg( EG_DATATYPE )
    oError:gencode := EG_DATATYPE
    oError:severity := ES_ERROR
    oError:cansubstitute := .T.
    oError:subsystem := "MONEY"
    oError:subcode := 0
    oError:args := { xArg }
+
    RETURN oError
