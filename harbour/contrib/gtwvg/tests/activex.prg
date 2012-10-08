@@ -9,7 +9,6 @@
 //
 
 #include "inkey.ch"
-#include "common.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
@@ -317,7 +316,7 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
 
    LOCAL oCom
 
-   DEFAULT nActiveX TO 2
+   hb_default( @nActiveX, 2 )
 
    oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .T. )
 

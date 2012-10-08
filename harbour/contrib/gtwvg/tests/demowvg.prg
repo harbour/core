@@ -26,7 +26,6 @@
 //
 
 #include "inkey.ch"
-#include "common.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
@@ -215,7 +214,7 @@ FUNCTION hb_GTSYS()
 
 PROCEDURE WvtConsoleGets( nMode )
 
-   DEFAULT nMode TO 0
+   hb_default( @nMode, 0 )
 
    IF hb_mtvm()
       hb_threadStart( {| oCrt | hb_gtReload( 'WVT' ) , ;

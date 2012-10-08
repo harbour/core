@@ -15,7 +15,6 @@
 //
 
 #include "inkey.ch"
-#include "common.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"

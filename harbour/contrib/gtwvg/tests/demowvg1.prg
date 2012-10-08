@@ -11,7 +11,6 @@
 //
 
 #include "inkey.ch"
-#include "common.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
@@ -149,7 +148,7 @@ STATIC FUNCTION MyChoice( aChoices )
 
    LOCAL scr, clr, nChoice
 
-   DEFAULT aChoices TO { "One", "Two", "Three", "Four", "Five", "Six", "Seven" }
+   hb_default( @aChoices, { "One", "Two", "Three", "Four", "Five", "Six", "Seven" } )
 
    scr := SaveScreen( 7, 48, 13, 55 )
    clr := SetColor( "N/W*,GR+/B*,,,GR+/B" )

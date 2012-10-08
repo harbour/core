@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "hbclass.ch"
 
 MEMVAR _REQUEST
@@ -66,8 +65,8 @@ FUNCTION HRBMAIN()
 
    //hb_ToOutDebug( "cCookie = %s, cAction = %s\n\r", hb_ValToExp( cCookie ), cAction )
 
-   DEFAULT cCookie TO ""
-   DEFAULT cAction TO ""
+   hb_default( @cCookie, "" )
+   hb_default( @cAction, "" )
 
    // Sample page embedded
    TEXT INTO cHtml

@@ -9,7 +9,6 @@
 //
 
 #include "inkey.ch"
-#include "common.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
@@ -260,7 +259,7 @@ FUNCTION WvtSetObjects( aObject )
          ELSE
             ASize( aObject, WVT_OBJ_VRBLS )
 
-            DEFAULT aObject[ WVT_OBJ_STATE ] TO OBJ_STATE_DISP
+            hb_default( @aObject[ WVT_OBJ_STATE ], OBJ_STATE_DISP )
 
             AAdd( t_aObjects, aObject )
          ENDIF
@@ -307,7 +306,7 @@ FUNCTION VouChoice( aChoices )
 
    LOCAL scr, clr, nChoice
 
-   DEFAULT aChoices TO { "One", "Two", "Three", "Four", "Five", "Six", "Seven" }
+   hb_default( @aChoices, { "One", "Two", "Three", "Four", "Five", "Six", "Seven" } )
 
    scr := SaveScreen( 7, 48, 13, 55 )
    clr := SetColor( "N/W*,GR+/B*,,,GR+/B" )
@@ -346,7 +345,7 @@ FUNCTION BuildWvgToolBar( oDA, nActiveX )
 
    LOCAL oTBar
 
-   DEFAULT nActiveX TO 0
+   hb_default( @nActiveX, 0 )
 
    oTBar := WvgToolBar():new( oDA, , { 0, 0 }, { oDA:currentSize()[ 1 ], 30 }, , .T. )
 

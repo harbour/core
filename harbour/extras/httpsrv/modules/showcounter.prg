@@ -55,7 +55,6 @@
 MEMVAR _SERVER // defined in uHTTPD
 MEMVAR _REQUEST // defined in uHTTPD
 
-#include "common.ch"
 #include "gd.ch"
 
 #define IMAGES_IN  ".." + hb_ps() + ".." + hb_ps() + ".." + hb_ps() + "contrib" + hb_ps() + "hbgd" + hb_ps() + "tests" + hb_ps() + "digits" + hb_ps()
@@ -99,10 +98,10 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    //LOCAL cFile
 
    // A value if not passed
-   DEFAULT cValue     TO Str( hb_RandomInt( 1, 10^DISPLAY_NUM ), DISPLAY_NUM )
-   DEFAULT cBaseImage TO "57chevy.gif"
+   hb_default( @cValue    , Str( hb_RandomInt( 1, 10 ^ DISPLAY_NUM ), DISPLAY_NUM ) )
+   hb_default( @cBaseImage, "57chevy.gif" )
 
-   IF !File( IMAGES_IN + cBaseImage )
+   IF !hb_FileExists( IMAGES_IN + cBaseImage )
       //hb_ToOutDebug( "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' not found" )
       //THROW( "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' not found" )
       RETURN NIL

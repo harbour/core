@@ -8,7 +8,6 @@
 //
 
 #include "inkey.ch"
-#include "common.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
@@ -103,12 +102,12 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
    LOCAL pal_    := { "w+/n", "w/r", "n/w", "n/bg", "r/bg", "N/W", "n/B", "w+/B" }
    LOCAL aTrg_   , x_ := {}
 
-   DEFAULT cCaption  TO "Your Attention Please!"
-   DEFAULT aButtons_ TO { "OK" }
-   DEFAULT aText_    TO {}
-   DEFAULT aMessage_ TO {}
-   DEFAULT sel       TO 1
-   DEFAULT nTime     TO 10
+   hb_default( @cCaption  , "Your Attention Please!" )
+   hb_default( @aButtons_ , { "OK" } )
+   hb_default( @aText_    , {} )
+   hb_default( @aMessage_ , {} )
+   hb_default( @sel       , 1 )
+   hb_default( @nTime     , 10 )
 
    IF nTime == 0
       nTime := 10000   //  Seconds
@@ -289,12 +288,12 @@ FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
 
    LOCAL oCrt, aPos
 
-   DEFAULT cTitle        TO 'Info'
-   DEFAULT xIcon         TO 'VW_DFT'
-   DEFAULT lModal        TO .T.
-   DEFAULT lHidden       TO .F.
-   DEFAULT lCenter       TO .F.
-   DEFAULT lNoTitleBar   TO .F.
+   hb_default( @cTitle      , 'Info' )
+   hb_default( @xIcon       , 'VW_DFT' )
+   hb_default( @lModal      , .T. )
+   hb_default( @lHidden     , .F. )
+   hb_default( @lCenter     , .F. )
+   hb_default( @lNoTitleBar , .F. )
 
    aPos := iif( lCenter, { -1, -1 }, iif( nRow == NIL, { nT, nL }, { nRow,nCol } ) )
 

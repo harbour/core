@@ -2419,7 +2419,6 @@ STATIC FUNCTION FileSize( nHandle )
 RETURN nLength
 
 // next 3 function written by Peter Kulek
-//modified for compatibility with common.ch by V.K.
 //modified DATE processing by V.K.
 static function Array2File(cFile,aRay,nDepth,hFile)
 local nBytes := 0
