@@ -72,10 +72,6 @@
 
 #xtranslate THROW( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
 
-/*
-  To activate debug see infos in INSTALL point 7
-*/
-
 ANNOUNCE ARRAYRDD
 
 #define DATABASE_FILENAME    1

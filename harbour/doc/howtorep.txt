@@ -181,24 +181,14 @@ by David G. Holm
 ==================================
 by Maurilio Longo
 
-When a new file is added to SVN tree it has not a SVN ID.
-SVN IDs look like this:
+Add these three lines to the top of your source file:
 
 /*
  * $Id$
  */
 
-
-To add one to a file lacking it simply put as first lines:
-
-/*
- * Chr(36) + "Id" + Chr(36)
- */
-
-IMPORTANT 1: In real code, replace 'Chr(36)' with '$' signes.
-
-as soon as you commit your file SVN ID string will be expanded
-by SVN server to full length.
+As soon as you commit your file, SVN ID string will be expanded
+by SVN client to full length.
 
 IMPORTANT 2: Run these commands and commit:
   svn propset svn:keywords "Author Date Id Revision" <filename>
@@ -211,7 +201,7 @@ IMPORTANT 3: Use operating system (or tool) specific quote
              quoting only for space characters, etc.
 
 
-[ Copyright (c) 1999-2011 Viktor Szakats (harbour syenar.net)
+[ Copyright (c) 1999-2012 Viktor Szakats (harbour syenar.net)
   Licensed under Creative Commons Attribution-ShareAlike 3.0:
   http://creativecommons.org/licenses/by-sa/3.0/
   See COPYING. ]
