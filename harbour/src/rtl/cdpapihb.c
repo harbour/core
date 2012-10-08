@@ -221,7 +221,8 @@ HB_FUNC( HB_STRTOUTF8 )
 
    if( nLen )
    {
-      PHB_CODEPAGE cdp = HB_ISCHAR( 2 ) ? hb_cdpFindExt( hb_parc( 2 ) ) : hb_vmCDP();
+      const char * szCP = hb_parc( 2 );
+      PHB_CODEPAGE cdp = szCP ? hb_cdpFindExt( szCP ) : hb_vmCDP();
 
       if( cdp )
       {
@@ -256,7 +257,8 @@ HB_FUNC( HB_UTF8TOSTR )
 
       if( nLen )
       {
-         PHB_CODEPAGE cdp = HB_ISCHAR( 2 ) ? hb_cdpFindExt( hb_parc( 2 ) ) : hb_vmCDP();
+         const char * szCP = hb_parc( 2 );
+         PHB_CODEPAGE cdp = szCP ? hb_cdpFindExt( szCP ) : hb_vmCDP();
 
          if( cdp )
          {
