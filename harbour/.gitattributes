@@ -1,0 +1,72 @@
+# Default
+*         text=auto
+
+# These files are text and should be normalized (convert CRLF => LF)
+*.1       text
+*.api     text
+*.bas     text
+*.c       text
+*.cfg     text
+*.cfm     text
+*.ch      text
+*.css     text
+*.def     text
+*.dif     text
+*.h       text
+*.hb      text
+*.hbc     text
+*.hbm     text
+*.hbp     text
+*.hbx     text
+*.htm     text
+*.html    text
+*.in      text
+*.ini     text
+*.js      text
+*.m       text
+*.mft     text
+*.mk      text
+*.nsi     text
+*.pem     text
+*.po      text
+*.prg     text
+*.rb      text
+*.rc      text
+*.sfc     text
+*.spec    text
+*.sx      text
+*.tpl     text
+*.txt     text
+*.vbs     text
+*.xml     text
+*.xsl     text
+*.y       text
+*.yyc     text
+*.yyh     text
+
+# Text files with fixed EOL requirements
+*.bat     eol=crlf
+*.sh      eol=lf
+
+# Binary files
+*.a       binary
+*.afm     binary
+*.bmp     binary
+*.dat     binary
+*.dbf     binary
+*.exe     binary
+*.frm     binary
+*.gif     binary
+*.icns    binary
+*.ico     binary
+*.jpg     binary
+*.lbl     binary
+*.lib     binary
+*.mdb     binary
+*.ng      binary
+*.odt     binary
+*.pdf     binary
+*.pfb     binary
+*.png     binary
+*.sq3     binary
+*.tif     binary
