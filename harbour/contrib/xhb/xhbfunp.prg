@@ -50,8 +50,6 @@
  *
  */
 
-#include "common.ch"
-
 #include "hbgtinfo.ch"
 
 FUNCTION gtSetClipboard( x )            ; RETURN hb_gtInfo( HB_GTI_CLIPBOARDDATA, x )

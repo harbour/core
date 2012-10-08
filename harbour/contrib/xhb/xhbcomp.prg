@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "hbclass.ch"
 
 ANNOUNCE XHB_LIB

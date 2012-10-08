@@ -45,7 +45,6 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "cgi.ch"
 
 #define _OPTION_TEXT     1
@@ -513,11 +512,11 @@ METHOD New( cName, cAction, cMethod, lFrame, cCaption, nWidth ) CLASS THtmlForm
 
    HB_SYMBOL_UNUSED( cAction )
 
-   DEFAULT cName TO "Form1"
-   DEFAULT cMethod TO "POST"
-   DEFAULT lFrame TO .F.
-   DEFAULT cCaption TO ""
-   DEFAULT nWidth TO 90
+   __defaultNIL( @cName, "Form1" )
+   __defaultNIL( @cMethod, "POST" )
+   __defaultNIL( @lFrame, .F. )
+   __defaultNIL( @cCaption, "" )
+   __defaultNIL( @nWidth, 90 )
    ::oHtm := HtmlPageObject()
    ::Name   := cName
    ::Method := cMethod
@@ -542,7 +541,7 @@ RETURN Self
 
 METHOD Put( lPutControls ) CLASS THtmlForm
 
-   DEFAULT lPutControls TO .F.
+   __defaultNIL( @lPutControls, .F. )
 
    IF ! HB_ISNUMERIC( ::width )
       ::width := 90

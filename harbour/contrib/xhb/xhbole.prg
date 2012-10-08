@@ -72,7 +72,6 @@ FUNCTION CreateOLEObject()
 
 #include "hbclass.ch"
 
-#include "common.ch"
 #include "error.ch"
 
 #define EG_OLEEXCEPTION 1001

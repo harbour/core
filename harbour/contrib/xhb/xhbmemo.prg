@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "hbclass.ch"
 #include "memoedit.ch"
 #include "inkey.ch"
@@ -82,7 +81,7 @@ METHOD MemoInit( xUDF ) CLASS XHB_TMemoEditor
 
    LOCAL nUdfReturn
 
-   DEFAULT xUDF TO NIL
+   __defaultNIL( @xUDF, NIL )
 
    ::aEditKeys := { K_DOWN,;
                     K_UP,;
@@ -294,8 +293,8 @@ METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS XHB_TMemoEditor
                    A little trick to be able to handle a nUdfReturn with value of NIL
                    like it had a value of ME_DEFAULT
    */
-   DEFAULT nUdfReturn TO ME_DEFAULT
-   DEFAULT lEdited TO .F.
+   __defaultNIL( @nUdfReturn, ME_DEFAULT )
+   __defaultNIL( @lEdited, .F. )
 
    // I won't reach this point during ME_INIT since ME_DEFAULT ends
    // initialization phase of MemoEdit()
@@ -417,21 +416,21 @@ FUNCTION xhb_MemoEdit( cString,;
 
    LOCAL oEd
 
-   DEFAULT cString         TO ""
-   DEFAULT nTop            TO 0
-   DEFAULT nLeft           TO 0
-   DEFAULT nBottom         TO MaxRow()
-   DEFAULT nRight          TO MaxCol()
-   DEFAULT lEditMode       TO .T.
-   DEFAULT nLineLength     TO NIL
+   __defaultNIL( @cString, "" )
+   __defaultNIL( @nTop, 0 )
+   __defaultNIL( @nLeft, 0 )
+   __defaultNIL( @nBottom, MaxRow() )
+   __defaultNIL( @nRight, MaxCol() )
+   __defaultNIL( @lEditMode, .T. )
+   __defaultNIL( @nLineLength, NIL )
    /* 24/10/2005 - <maurilio.longo@libero.it>
                    NG says 4, but clipper 5.2e inserts 3 spaces when pressing K_TAB
    */
-   DEFAULT nTabSize        TO 3
-   DEFAULT nTextBuffRow    TO 1
-   DEFAULT nTextBuffColumn TO 0
-   DEFAULT nWindowRow      TO 0
-   DEFAULT nWindowColumn   TO nTextBuffColumn
+   __defaultNIL( @nTabSize, 3 )
+   __defaultNIL( @nTextBuffRow, 1 )
+   __defaultNIL( @nTextBuffColumn, 0 )
+   __defaultNIL( @nWindowRow, 0 )
+   __defaultNIL( @nWindowColumn, nTextBuffColumn )
 
    // 2006/JUL/22 - E.F. Check argument types.
    //

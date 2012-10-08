@@ -64,7 +64,6 @@ RETURN NIL
 #else
 
 #include "hbclass.ch"
-#include "common.ch"
 
 #define TA_LEFT               0
 #define TA_BOTTOM             8
@@ -104,16 +103,16 @@ METHOD StartPage() CLASS WIN32PRN
 
 METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert ) CLASS WIN32PRN
 
-   DEFAULT nAlignHori TO ::SetTextHori
-   DEFAULT nAlignVert TO ::SetTextVert
+   __defaultNIL( @nAlignHori, ::SetTextHori )
+   __defaultNIL( @nAlignVert, ::SetTextVert )
 
    RETURN ::WIN_PRN:TextOut( cString, lNewLine, lUpdatePosX, ;
                              HB_BITOR( nAlignHori, nAlignVert ) )
 
 METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert ) CLASS WIN32PRN
 
-   DEFAULT nAlignHori TO ::SetTextHori
-   DEFAULT nAlignVert TO ::SetTextVert
+   __defaultNIL( @nAlignHori, ::SetTextHori )
+   __defaultNIL( @nAlignVert, ::SetTextVert )
 
    RETURN ::WIN_PRN:TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, ;
                                HB_BITOR( nAlignHori, nAlignVert ) )
@@ -122,8 +121,8 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, ;
                    nWidth, nBold, lUnderLine, lItalic, lNewLine, ;
                    lUpdatePosX, nColor, nAlignHori, nAlignVert ) CLASS WIN32PRN
 
-   DEFAULT nAlignHori TO ::SetTextHori
-   DEFAULT nAlignVert TO ::SetTextVert
+   __defaultNIL( @nAlignHori, ::SetTextHori )
+   __defaultNIL( @nAlignVert, ::SetTextVert )
 
    RETURN ::WIN_PRN:TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, ;
                                 nWidth, nBold, lUnderLine, lItalic, lNewLine, ;

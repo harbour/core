@@ -51,8 +51,6 @@
  *
  */
 
-#include "common.ch"
-
 /*
 PROCEDURE Main()
    LOCAL aArray

@@ -45,7 +45,6 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "cgi.ch"
 
 CLASS TCgi FROM THtml
@@ -206,7 +205,7 @@ METHOD Field( cQueryName ) CLASS TCgi
    LOCAL cRet := ""
    LOCAL nRet
 
-   DEFAULT cQueryName TO ""
+   __defaultNIL( @cQueryName, "" )
 
    nRet := AScan( ::aQueryFields, ;
       {| x | Upper( x[ 1 ] ) == Upper( cQueryName ) } )

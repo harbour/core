@@ -45,7 +45,6 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "fileio.ch"
 #include "cgi.ch"
 
@@ -154,7 +153,7 @@ METHOD New( cName ) CLASS TCgiFile
 
 METHOD Open( nMode ) CLASS TCgiFile
 
-   DEFAULT nMode TO FO_EXCLUSIVE
+   __defaultNIL( @nMode, FO_EXCLUSIVE )
    ::Handle := FOpen( ::Name, nMode )
    IF ::Handle > 0
       ::Size()
@@ -170,7 +169,7 @@ METHOD CREATE ( nAttr ) CLASS TCgiFile
 
    LOCAL nSuccess
 
-   DEFAULT nAttr TO 0
+   __defaultNIL( @nAttr, 0 )
    nSuccess := FCreate( ::Name, nAttr )
    ::Handle := nSuccess
 
@@ -201,8 +200,8 @@ METHOD Size() CLASS TCgiFile
 
 METHOD _Read( nSize, cBuff ) CLASS TCgiFile
 
-   DEFAULT nSize TO 1024
-   DEFAULT cBuff TO Space( nSize )
+   __defaultNIL( @nSize, 1024 )
+   __defaultNIL( @cBuff, Space( nSize ) )
 
    ::BytesRead := FRead( ::Handle, @cBuff, nSize )
    ::Buffer    := cBuff
@@ -219,8 +218,8 @@ METHOD ReadAhead( nSize, cBuff ) CLASS TCgiFile
 
    LOCAL nCurrent
 
-   DEFAULT nSize TO 1024
-   DEFAULT cBuff TO Space( nSize )
+   __defaultNIL( @nSize, 1024 )
+   __defaultNIL( @cBuff, Space( nSize ) )
 
    // --> save position in file
    nCurrent := FPOS( ::Handle )
@@ -243,7 +242,7 @@ METHOD Readline( nSize ) CLASS TCgiFile
    LOCAL nCurrent
    LOCAL nCr
 
-   DEFAULT nSize TO 1024
+   __defaultNIL( @nSize, 1024 )
 
    IF nSize <= 0
       RETURN ""
@@ -378,7 +377,7 @@ METHOD SKIP( nLines ) CLASS TCgiFile
    LOCAL nCount := 0
    LOCAL nPos   := FPOS( ::Handle )
 
-   DEFAULT nLines TO 1
+   __defaultNIL( @nLines, 1 )
 
    IF nLines <= 0   // don't accept < 0
 
@@ -404,7 +403,7 @@ METHOD SKIP( nLines ) CLASS TCgiFile
 
 METHOD MaxPages( nPageSize ) CLASS TCgiFile
 
-   DEFAULT nPageSize TO ::nPageSize
+   __defaultNIL( @nPageSize, ::nPageSize )
 
    RETURN ::Size() / nPageSize
 
@@ -414,7 +413,7 @@ METHOD MaxPages( nPageSize ) CLASS TCgiFile
 
 METHOD PrevPage( nBytes ) CLASS TCgiFile
 
-   DEFAULT nBytes TO 1024
+   __defaultNIL( @nBytes, 1024 )
 
    IF nBytes <= 0
       RETURN ""
@@ -435,7 +434,7 @@ METHOD PrevPage( nBytes ) CLASS TCgiFile
 
 METHOD NextPage( nBytes ) CLASS TCgiFile
 
-   DEFAULT nBytes TO 1024
+   __defaultNIL( @nBytes, 1024 )
 
    IF nBytes <= 0
       RETURN ""
@@ -464,7 +463,7 @@ METHOD PrevLine( nBytes ) CLASS TCgiFile
    LOCAL nPrev
    LOCAL cTemp
 
-   DEFAULT nBytes TO 256
+   __defaultNIL( @nBytes, 256 )
 
    IF nOrigPos == 0
 

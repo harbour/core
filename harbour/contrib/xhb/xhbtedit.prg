@@ -92,7 +92,6 @@
  * Modifications are based upon the following source file:
  */
 
-#include "common.ch"
 #include "hbclass.ch"
 #include "error.ch"
 #include "fileio.ch"
@@ -261,18 +260,18 @@ ENDCLASS
 
 METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextRow, nTextCol, nWndRow, nWndCol ) CLASS XHBEditor
 
-   DEFAULT  cString     TO ""
-   DEFAULT  nTop        TO 0
-   DEFAULT  nLeft       TO 0
-   DEFAULT  nBottom     TO MaxRow()
-   DEFAULT  nRight      TO MaxCol()
-   DEFAULT  lEditMode   TO .T.
-   DEFAULT  nLineLength TO NIL
-   DEFAULT  nTabSize    TO NIL
-   DEFAULT  nTextRow    TO 1
-   DEFAULT  nTextCol    TO 0 // 1   Clipper Documentations says it is 0
-   DEFAULT  nWndRow     TO 0 // 1   "
-   DEFAULT  nWndCol     TO 0 // 1   "
+   __defaultNIL( @ cString, "" )
+   __defaultNIL( @ nTop, 0 )
+   __defaultNIL( @ nLeft, 0 )
+   __defaultNIL( @ nBottom, MaxRow() )
+   __defaultNIL( @ nRight, MaxCol() )
+   __defaultNIL( @ lEditMode, .T. )
+   __defaultNIL( @ nLineLength, NIL )
+   __defaultNIL( @ nTabSize, NIL )
+   __defaultNIL( @ nTextRow, 1 )
+   __defaultNIL( @ nTextCol, 0 )
+   __defaultNIL( @ nWndRow, 0 )
+   __defaultNIL( @ nWndCol, 0 )
 
    // 2006/JUL/22 - E.F. To avoid run time error.
    IF nTop > nBottom .OR. nLeft > nRight
@@ -399,10 +398,10 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS XHBEditor
 
    // don't change coordinates not given
-   DEFAULT nTop    to ::nTop
-   DEFAULT nLeft   to ::nLeft
-   DEFAULT nBottom to ::nBottom
-   DEFAULT nRight  to ::nRight
+   __defaultNIL( @nTop, ::nTop )
+   __defaultNIL( @nLeft, ::nLeft )
+   __defaultNIL( @nBottom, ::nBottom )
+   __defaultNIL( @nRight, ::nRight )
 
    ::nTop      := nTop
    ::nLeft     := nLeft
@@ -523,7 +522,7 @@ METHOD RefreshLine( lRefreshColSel ) CLASS XHBEditor
    LOCAL nORow
    LOCAL nCol, nFirstCol
 
-   DEFAULT lRefreshColSel TO .F.
+   __defaultNIL( @lRefreshColSel, .F. )
 
    IF ::nRow <= ::LastRow()
 
@@ -1774,8 +1773,8 @@ METHOD K_Esc() CLASS XHBEditor
 
 METHOD AddLine( cLine, lSoftCR ) CLASS XHBEditor
 
-   DEFAULT cLine TO ""
-   DEFAULT lSoftCR TO .F.
+   __defaultNIL( @cLine, "" )
+   __defaultNIL( @lSoftCR, .F. )
 
    AAdd( ::aText, HBTextLine():New( cLine, lSoftCR ) )
 
@@ -1787,8 +1786,8 @@ METHOD AddLine( cLine, lSoftCR ) CLASS XHBEditor
 
 METHOD InsertLine( cLine, lSoftCR, nRow ) CLASS XHBEditor
 
-   DEFAULT nRow TO ::nRow
-   DEFAULT lSoftCR TO .F.
+   __defaultNIL( @nRow, ::nRow )
+   __defaultNIL( @lSoftCR, .F. )
 
    IF nRow > ::LastRow()
       IF Len( cLine ) == 0
@@ -1807,7 +1806,7 @@ METHOD InsertLine( cLine, lSoftCR, nRow ) CLASS XHBEditor
 
 METHOD RemoveLine( nRow ) CLASS XHBEditor
 
-   DEFAULT nRow TO ::nRow
+   __defaultNIL( @nRow, ::nRow )
 
    hb_ADel( ::aText, nRow, .T. )
 
@@ -1819,7 +1818,7 @@ METHOD RemoveLine( nRow ) CLASS XHBEditor
 
 METHOD GetLine( nRow ) CLASS XHBEditor
 
-   DEFAULT nRow TO ::nRow
+   __defaultNIL( @nRow, ::nRow )
 
    IF nRow <= ::LastRow() .AND. nRow > 0
       IF ::lEditAllow .OR. Empty( ::nTabWidth )
@@ -1839,7 +1838,7 @@ METHOD GetLine( nRow ) CLASS XHBEditor
 
 METHOD DelTextRight( nRow ) CLASS XHBEditor
 
-   DEFAULT nRow TO ::nRow
+   __defaultNIL( @nRow, ::nRow )
 
    IF !::lEditAllow
       RETURN Self
@@ -2006,7 +2005,7 @@ METHOD GotoCol( nCol ) CLASS XHBEditor
 
 METHOD GotoPos( nRow, nCol, lRefresh ) CLASS XHBEditor
 
-   DEFAULT lRefresh TO .F.
+   __defaultNIL( @lRefresh, .F. )
 
    DispBegin()  // to minimize flicker
 
@@ -2311,8 +2310,8 @@ METHOD DeHilite() CLASS XHBEditor
 
 METHOD SetPos( nRow, nCol ) CLASS XHBEditor
 
-   DEFAULT nRow to ::nPhysRow
-   DEFAULT nCol to ::nPhysCol
+   __defaultNIL( @nRow, ::nPhysRow )
+   __defaultNIL( @nCol, ::nPhysCol )
 
    ::nPhysRow := nRow
    ::nPhysCol := nCol
@@ -2389,7 +2388,7 @@ METHOD GetText( lSoftCr ) CLASS XHBEditor
    LOCAL cString := "", cSoft := ""
    LOCAL cEOL := hb_eol()
 
-   DEFAULT lSoftCr TO .F.
+   __defaultNIL( @lSoftCr, .F. )
 
    IF ::LastRow() > 0
 
@@ -2423,7 +2422,7 @@ METHOD GetTextSelection( lSoftCr ) CLASS XHBEditor
    LOCAL nRowSelEnd
    LOCAL nI
 
-   DEFAULT lSoftCr TO .F.
+   __defaultNIL( @lSoftCr, .F. )
 
    IF !::lSelActive
       RETURN cString
@@ -2832,7 +2831,7 @@ METHOD AddText( cString, lAtPos ) CLASS XHBEditor
          ::InsertState( .T. )
       ENDIF
 
-      DEFAULT lAtPos TO .F.
+      __defaultNIL( @lAtPos, .F. )
 
       IF ! lAtPos .OR. nAtRow > ::LastRow()
          FOR i := 1 TO nLines
@@ -3067,7 +3066,7 @@ METHOD BrowseText( nPassedKey, lHandleOneKey ) CLASS XHBEditor
 
    LOCAL nKey, bKeyBlock
 
-   DEFAULT lHandleOneKey TO .F.
+   __defaultNIL( @lHandleOneKey, .F. )
 
 
    DO WHILE ! ::lExitEdit

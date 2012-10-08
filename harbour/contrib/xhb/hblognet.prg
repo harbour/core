@@ -50,7 +50,6 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
 
 #define CRLF Chr( 13 ) + Chr( 10 )
 

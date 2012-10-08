@@ -45,7 +45,6 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "cgi.ch"
 
 CLASS TJsWindow
@@ -131,13 +130,13 @@ ENDCLASS
 
 METHOD New( cVarName, cUrl, cName, x, y, w, h ) CLASS TJsWindow
 
-   DEFAULT cVarName TO "newWin"
-   DEFAULT cURL TO " "
-   DEFAULT cName TO cVarName
-   DEFAULT x TO 100
-   DEFAULT y TO 100
-   DEFAULT h TO 300
-   DEFAULT w TO 300
+   __defaultNIL( @cVarName, "newWin" )
+   __defaultNIL( @cURL, " " )
+   __defaultNIL( @cName, cVarName )
+   __defaultNIL( @x, 100 )
+   __defaultNIL( @y, 100 )
+   __defaultNIL( @h, 300 )
+   __defaultNIL( @w, 300 )
 
    ::nH      := HtmlPageHandle()
    ::oHtm    := HtmlPageObject()
@@ -165,19 +164,19 @@ METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
 
    LOCAL cStr := ""
 
-   DEFAULT alwaysRaised TO ::alwaysRaised
-   DEFAULT alwaysLowered TO ::alwaysLowered
-   DEFAULT Resizable TO ::Resizable
-   DEFAULT Menubar TO ::Menubar
-   DEFAULT personalBar TO ::personalBar
-   DEFAULT dependent TO ::dependent
-   DEFAULT location TO ::location
-   DEFAULT directories TO ::directories
-   DEFAULT Scrollbars TO ::Scrollbars
-   DEFAULT Status TO ::Status
-   DEFAULT TitleBar TO ::TitleBar
-   DEFAULT Toolbar TO ::Toolbar
-   DEFAULT copyHistory TO ::copyHistory
+   __defaultNIL( @alwaysRaised, ::alwaysRaised )
+   __defaultNIL( @alwaysLowered, ::alwaysLowered )
+   __defaultNIL( @Resizable, ::Resizable )
+   __defaultNIL( @Menubar, ::Menubar )
+   __defaultNIL( @personalBar, ::personalBar )
+   __defaultNIL( @dependent, ::dependent )
+   __defaultNIL( @location, ::location )
+   __defaultNIL( @directories, ::directories )
+   __defaultNIL( @Scrollbars, ::Scrollbars )
+   __defaultNIL( @Status, ::Status )
+   __defaultNIL( @TitleBar, ::TitleBar )
+   __defaultNIL( @Toolbar, ::Toolbar )
+   __defaultNIL( @copyHistory, ::copyHistory )
 
    IF alwaysRaised
       cStr += "alwaysraised=yes,"
@@ -259,10 +258,10 @@ METHOD SetSize( x, y, h, w ) CLASS TJsWindow
 
    LOCAL cStr := ""
 
-   DEFAULT x TO ::ScreenX
-   DEFAULT y TO ::ScreenY
-   DEFAULT h TO ::height
-   DEFAULT w TO ::width
+   __defaultNIL( @x, ::ScreenX )
+   __defaultNIL( @y, ::ScreenY )
+   __defaultNIL( @h, ::height )
+   __defaultNIL( @w, ::width )
 
    ::ScreenX := x
    ::ScreenY := y
@@ -430,7 +429,7 @@ METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
 
    LOCAL cStr := ""
 
-   DEFAULT cUrl TO ""
+   __defaultNIL( @cUrl, "" )
 
    IF cName != NIL
       cStr += ' NAME= "' + cName + '"' + CRLF()

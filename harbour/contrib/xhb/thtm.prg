@@ -44,7 +44,6 @@
  *
  */
 
-#include "common.ch"
 #include "hbclass.ch"
 #include "cgi.ch"
 
@@ -105,11 +104,11 @@ CLASS THtml
 
    METHOD CGIClose()
 
-   METHOD SetPageColor( cColor, lBody ) INLINE DEFAULT( lBody , .T. ), ::cStr +=  iif( lBody, '<BODY BGCOLOR="' + cColor + '">', ' BGCOLOR="' + cColor + '" ' )
+   METHOD SetPageColor( cColor, lBody ) INLINE DEFAULT( lBody, .T. ), ::cStr +=  iif( lBody, '<BODY BGCOLOR="' + cColor + '">', ' BGCOLOR="' + cColor + '" ' )
 
-   METHOD SetTextColor( cColor, lBody ) INLINE DEFAULT( lBody , .T. ), ::cStr +=  iif( lBody, '<BODY TEXT="' + cColor + '">', ' TEXT="' + cColor + '" ' )
+   METHOD SetTextColor( cColor, lBody ) INLINE DEFAULT( lBody, .T. ), ::cStr +=  iif( lBody, '<BODY TEXT="' + cColor + '">', ' TEXT="' + cColor + '" ' )
 
-   METHOD SetBgImage( cImage, lBody ) INLINE DEFAULT( lBody , .T. ), ::cStr +=  iif( lBody, '<BODY BACKGROUND="' + cImage + '">', ' BACKGROUND="' + cImage + '" ' )
+   METHOD SetBgImage( cImage, lBody ) INLINE DEFAULT( lBody, .T. ), ::cStr +=  iif( lBody, '<BODY BACKGROUND="' + cImage + '">', ' BACKGROUND="' + cImage + '" ' )
 
    METHOD CLOSE()
 
@@ -148,8 +147,8 @@ CLASS THtml
       DEFAULT( cols, 2 ), ;
       DEFAULT( gutter, 5 ), ;
       DEFAULT( width, 100 ), ;
-      ::cStr +=  '<MULTICOL COLS="' + hb_ntos( cols ) + '" GUTTER="' + hb_ntos( gutter ) + '" WIDTH="' + hb_ntos( width ) + '">' , ;
-      ::cStr +=  txt , ;
+      ::cStr +=  '<MULTICOL COLS="' + hb_ntos( cols ) + '" GUTTER="' + hb_ntos( gutter ) + '" WIDTH="' + hb_ntos( width ) + '">', ;
+      ::cStr +=  txt, ;
       ::cStr +=  "</MULTICOL>"
 
    METHOD PutHeading( cText, nWeight, lCentered )
@@ -293,7 +292,7 @@ METHOD cgiNew( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
       cBaseURL, cBaseTarget, ;
       nRefresh, cRefreshURL, cStyleScr, ;
       lNocache, NOF, nMarginTop, nMarginHeight, ;
-      nMarginWidth, nMarginLeft , .T. , cFile )
+      nMarginWidth, nMarginLeft, .T., cFile )
 
 METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
       BGIMAGE, BGCOLOR, txtColor, aJsCode, ;
@@ -307,21 +306,21 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
 
    LOCAL i
 
-   DEFAULT lCgi TO .F.
+   __defaultNIL( @lCgi, .F. )
    ::lCgi := lCgi
    IF lCgi
-      DEFAULT cTitle TO "New CGI-HTML page"
-      DEFAULT cLinkTitle TO cTitle
-      DEFAULT cRefreshURL TO ""
-      DEFAULT cCharset TO "windows-1251"
-      DEFAULT lNocache TO .F.
+      __defaultNIL( @cTitle, "New CGI-HTML page" )
+      __defaultNIL( @cLinkTitle, cTitle )
+      __defaultNIL( @cRefreshURL, "" )
+      __defaultNIL( @cCharset, "windows-1251" )
+      __defaultNIL( @lNocache, .F. )
    ELSE
-      DEFAULT cFile TO "file1.htm"
-      DEFAULT cTitle TO "New HTML page"
-      DEFAULT cLinkTitle TO cTitle
-      DEFAULT cRefreshURL TO ""
-      DEFAULT cCharset TO "windows-1251"
-      DEFAULT lNocache TO .F.
+      __defaultNIL( @cFile, "file1.htm" )
+      __defaultNIL( @cTitle, "New HTML page" )
+      __defaultNIL( @cLinkTitle, cTitle )
+      __defaultNIL( @cRefreshURL, "" )
+      __defaultNIL( @cCharset, "windows-1251" )
+      __defaultNIL( @lNocache, .F. )
    ENDIF
 
 
@@ -527,10 +526,10 @@ METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
 
    LOCAL cStr := CRLF() + '<FONT'
 
-   DEFAULT cFont TO ::fontFace
-   DEFAULT nSize TO ::fontSize
-   DEFAULT cColor TO ::fontColor
-   DEFAULT lset TO iif( cFont != NIL, .T. , .F. )
+   __defaultNIL( @cFont, ::fontFace )
+   __defaultNIL( @nSize, ::fontSize )
+   __defaultNIL( @cColor, ::fontColor )
+   __defaultNIL( @lset, iif( cFont != NIL, .T., .F. ) )
 
    IF cFont != NIL
       cStr += ' FACE="' + cFont + '"'
@@ -590,11 +589,11 @@ METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLA
 
    LOCAL cStr := "<FONT "
 
-   DEFAULT lSet TO .T.
-   DEFAULT lPut TO .F.
-   DEFAULT cFont TO ::fontFace
-   DEFAULT nSize TO ::fontSize
-   DEFAULT cColor TO ::fontColor
+   __defaultNIL( @lSet, .T. )
+   __defaultNIL( @lPut, .F. )
+   __defaultNIL( @cFont, ::fontFace )
+   __defaultNIL( @nSize, ::fontSize )
+   __defaultNIL( @cColor, ::fontColor )
 
    IF cFont != NIL
       cStr += ' FACE="' + cFont + '"'
@@ -659,10 +658,10 @@ METHOD DefineFont( cFont, cType, nSize, cColor, lSet ) CLASS THtml
 
    LOCAL cStr := "<FONT "
 
-   DEFAULT cFont TO ::fontFace
-   DEFAULT nSize TO ::fontSize
-   DEFAULT cColor TO ::fontColor
-   DEFAULT lset TO iif( cFont != NIL, .T. , .F. )
+   __defaultNIL( @cFont, ::fontFace )
+   __defaultNIL( @nSize, ::fontSize )
+   __defaultNIL( @cColor, ::fontColor )
+   __defaultNIL( @lset, iif( cFont != NIL, .T., .F. ) )
 
    IF cFont != NIL
       cStr += ' FACE="' + cFont + '"'
@@ -732,10 +731,10 @@ METHOD SAY( str, font, size, type, color, style ) CLASS THtml
    LOCAL lStrong := .F.
    LOCAL nSize   := Size
 
-   DEFAULT str TO ""
-   DEFAULT FONT TO ::FontFace
-   DEFAULT size TO ::FontSize
-   DEFAULT COLOR TO ::FontColor
+   __defaultNIL( @str, "" )
+   __defaultNIL( @FONT, ::FontFace )
+   __defaultNIL( @size, ::FontSize )
+   __defaultNIL( @COLOR, ::FontColor )
 
    IF FONT != NIL .OR. Size != NIL .OR. COLOR != NIL
       cOut := '<FONT ' + iif( font != NIL, 'FACE="' + font + '"', '' ) + iif( color != NIL, ' COLOR=' + color, '' ) + iif( nSize != NIL, ' SIZE=' + hb_ntos( size ), "" )
@@ -823,8 +822,8 @@ METHOD Paragraph( lStart, cAlign, cStyle ) CLASS THtml
 
    LOCAL cStr := "<P"
 
-   DEFAULT lStart TO .T.
-   DEFAULT cAlign TO "LEFT"
+   __defaultNIL( @lStart, .T. )
+   __defaultNIL( @cAlign, "LEFT" )
 
    IF lStart
       cStr := "<P ALIGN='" + cAlign + "'"
@@ -852,9 +851,9 @@ METHOD Paragraph( lStart, cAlign, cStyle ) CLASS THtml
 
 METHOD HLine( nSize, nWidth, lShade, cColor ) CLASS THtml
 
-   DEFAULT nSize TO 3
-   DEFAULT nWidth TO 100
-   DEFAULT lShade TO .T.
+   __defaultNIL( @nSize, 3 )
+   __defaultNIL( @nWidth, 100 )
+   __defaultNIL( @lShade, .T. )
 
    IF lShade
       ::cStr +=  CRLF() + ;
@@ -877,8 +876,8 @@ METHOD HLine( nSize, nWidth, lShade, cColor ) CLASS THtml
 
 METHOD PutHeading( cText, nWeight, lCentered ) CLASS THtml
 
-   DEFAULT nWeight TO 3
-   DEFAULT lCentered TO .F.
+   __defaultNIL( @nWeight, 3 )
+   __defaultNIL( @lCentered, .F. )
 
    IF lCentered
       ::cStr +=  "<CENTER>"
@@ -903,9 +902,9 @@ METHOD PutTextUrl( cText, cUrl, cOnClick, cOnMsOver, cOnMsout, cTarget, font, cl
 
    LOCAL cStr := ""
 
-   DEFAULT cUrl TO ""
-   DEFAULT bld TO .F.
-   DEFAULT lBreak TO .F.
+   __defaultNIL( @cUrl, "" )
+   __defaultNIL( @bld, .F. )
+   __defaultNIL( @lBreak, .F. )
 
    ::cStr +=  ;
       '<A HREF="' + cUrl + '"' + CRLF()
@@ -995,7 +994,7 @@ METHOD PutImageUrl( cImage, nBorder, nHeight, cUrl, ;
 
    LOCAL cStr := ""
 
-   DEFAULT lbreak TO .F.
+   __defaultNIL( @lbreak, .F. )
 
    IF cName != NIL
       cStr += ' NAME= "' + cName + '"' + CRLF()
@@ -1060,7 +1059,7 @@ METHOD PutTextImageUrl( cImage, nBorder, nHeight, cUrl, ;
 
    LOCAL cStr := ""
 
-   DEFAULT lbreak TO .F.
+   __defaultNIL( @lbreak, .F. )
    IF cName != NIL
       cStr += ' NAME= "' + cName + '"'
    ENDIF
@@ -1120,7 +1119,7 @@ METHOD PutImage( cImage, nBorder, nHeight, ;
 
    LOCAL cStr := ""
 
-   DEFAULT lbreak TO .F.
+   __defaultNIL( @lbreak, .F. )
 
    IF cName != NIL
       cStr += ' NAME= "' + cName + '"'
@@ -1243,9 +1242,9 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
    LOCAL cStr  := CRLF() + CRLF() + "<TABLE "
    LOCAL xCols := nCols
 
-   DEFAULT l3d TO .T.
-   DEFAULT lRuleCols TO .F.
-   DEFAULT lRuleRows TO .F.
+   __defaultNIL( @l3d, .T. )
+   __defaultNIL( @lRuleCols, .F. )
+   __defaultNIL( @lRuleRows, .F. )
 
    IF ColorFore != NIL
       cStr += " bordercolor=" + ColorFore + ' '
@@ -1342,9 +1341,9 @@ METHOD TableHead( cHead, cColor, cAlign, ;
 
    LOCAL cStr := Space( 3 ) + "<TH"
 
-   DEFAULT cFont TO ::fontFace
-   DEFAULT nSize TO ::fontSize
-   DEFAULT cFntColor TO ::fontColor
+   __defaultNIL( @cFont, ::fontFace )
+   __defaultNIL( @nSize, ::fontSize )
+   __defaultNIL( @cFntColor, ::fontColor )
 
    IF cColor != NIL
       cStr += " bgcolor=" + '"' + cColor + '"'
@@ -1443,12 +1442,12 @@ METHOD NewTableCell( cAlign, cColor, ;
    LOCAL cStr := Space( 10 ) + "<TD"
    LOCAL cAli := cAlign
 
-   DEFAULT lNoFont TO .T.
-   DEFAULT cFont TO ::fontFace
-   DEFAULT nSize TO ::fontSize
-   DEFAULT cFntColor TO ::fontColor
-   DEFAULT cAlign TO "LEFT"
-   DEFAULT lWrap TO .T.
+   __defaultNIL( @lNoFont, .T. )
+   __defaultNIL( @cFont, ::fontFace )
+   __defaultNIL( @nSize, ::fontSize )
+   __defaultNIL( @cFntColor, ::fontColor )
+   __defaultNIL( @cAlign, "LEFT" )
+   __defaultNIL( @lWrap, .T. )
 
    IF cBdrClr != NIL
       cStr += " BORDERCOLOR=" + cBdrClr
@@ -1581,8 +1580,8 @@ METHOD EndTable() CLASS THtml
 
 METHOD NewForm( cMethod, cAction, cName ) CLASS THtml
 
-   DEFAULT cMethod TO "POST"
-   DEFAULT cName TO "newForm"
+   __defaultNIL( @cMethod, "POST" )
+   __defaultNIL( @cName, "newForm" )
 
    ::cStr +=  CRLF() + "<FORM"
 
@@ -1614,7 +1613,7 @@ METHOD NewForm( cMethod, cAction, cName ) CLASS THtml
 
 METHOD FormEdit( cType, cName, xValue, nSize ) CLASS THtml
 
-   DEFAULT cType TO "edit"
+   __defaultNIL( @cType, "edit" )
 
    ::cStr +=  '<INPUT Type="' + cType + '"'
 
@@ -1695,8 +1694,8 @@ METHOD PushButton( cName, cCaption, ;
 
    LOCAL cStr := CRLF() + "<INPUT TYPE=BUTTON " + CRLF()
 
-   DEFAULT cOnMsOver TO "window.status=this.name;"
-   DEFAULT cOnMsOut TO "window.status='';"
+   __defaultNIL( @cOnMsOver, "window.status=this.name;" )
+   __defaultNIL( @cOnMsOut, "window.status='';" )
 
    IF cName != NIL
       cStr += "        NAME=" + cName
@@ -1758,8 +1757,8 @@ METHOD Button( cName, cCaption, ;
 
    LOCAL cStr := CRLF() + "<BUTTON " + CRLF()
 
-   DEFAULT cOnMsOver TO "window.status=this.name;"
-   DEFAULT cOnMsOut TO "window.status='';"
+   __defaultNIL( @cOnMsOver, "window.status=this.name;" )
+   __defaultNIL( @cOnMsOut, "window.status='';" )
 
    IF cName != NIL
       cStr += "        NAME=" + cName
@@ -1825,18 +1824,18 @@ METHOD Marquee( cText, cFont, cFntColor, nFntSize, ;
       nScrollAmt, nScrollDelay, LOOP, ;
       onMsOver, onMsOut, onClick, onStart, onFinish ) CLASS THtml
 
-   DEFAULT cFont TO "Verdana"
-   DEFAULT cFntColor TO "white"
-   DEFAULT nFntSize TO 3
-   DEFAULT cAlign TO "middle"
-   DEFAULT nWidth TO 100
-   DEFAULT cText TO ""
-   DEFAULT cBgColor TO "black"
-   DEFAULT cBehavior TO "scroll"
-   DEFAULT cDirection TO "left"
-   DEFAULT nScrollAmt TO 5
-   DEFAULT nScrolldelay TO 2
-   DEFAULT LOOP TO 0
+   __defaultNIL( @cFont, "Verdana" )
+   __defaultNIL( @cFntColor, "white" )
+   __defaultNIL( @nFntSize, 3 )
+   __defaultNIL( @cAlign, "middle" )
+   __defaultNIL( @nWidth, 100 )
+   __defaultNIL( @cText, "" )
+   __defaultNIL( @cBgColor, "black" )
+   __defaultNIL( @cBehavior, "scroll" )
+   __defaultNIL( @cDirection, "left" )
+   __defaultNIL( @nScrollAmt, 5 )
+   __defaultNIL( @nScrolldelay, 2 )
+   __defaultNIL( @LOOP, 0 )
 
    ::StartFont( cFont, , , , nFntSize, cFntColor )
 
@@ -1878,16 +1877,16 @@ METHOD StartMarquee( cFont, cFntColor, nFntSize, ;
 
    LOCAL cStr := ""
 
-   DEFAULT cFont TO "Verdana"
-   DEFAULT cFntColor TO "white"
-   DEFAULT nFntSize TO 3
-   DEFAULT cAlign TO "middle"
-   DEFAULT nWidth TO 100
-   DEFAULT cBgColor TO "black"
-   DEFAULT cBehavior TO "scroll"
-   DEFAULT cDirection TO "left"
-   DEFAULT nScrollAmt TO 5
-   DEFAULT nScrolldelay TO 2
+   __defaultNIL( @cFont, "Verdana" )
+   __defaultNIL( @cFntColor, "white" )
+   __defaultNIL( @nFntSize, 3 )
+   __defaultNIL( @cAlign, "middle" )
+   __defaultNIL( @nWidth, 100 )
+   __defaultNIL( @cBgColor, "black" )
+   __defaultNIL( @cBehavior, "scroll" )
+   __defaultNIL( @cDirection, "left" )
+   __defaultNIL( @nScrollAmt, 5 )
+   __defaultNIL( @nScrolldelay, 2 )
 
    ::StartFont( cFont, , , , nFntSize, cFntColor )
 
@@ -1938,9 +1937,9 @@ METHOD iFrame( name, src, border, marginwidth, marginheight, ;
 
    LOCAL cStr := "<IFRAME " + CRLF()
 
-   DEFAULT BORDER TO .T.
-   DEFAULT name TO "Frame01"
-// DEFAULT align TO "vertical"
+   __defaultNIL( @BORDER, .T. )
+   __defaultNIL( @name, "Frame01" )
+// __defaultNIL( @align, "vertical" )
 
    IF name != NIL
       cStr += Space( 5 ) + '        NAME="' + name + '"' + CRLF()
@@ -2203,8 +2202,8 @@ PROCEDURE HtmlJsCmd( nH, cCmd )
 
    LOCAL cStr := ""
 
-   DEFAULT nH TO HtmlPageHandle()
-   DEFAULT cCmd TO ""
+   __defaultNIL( @nH, HtmlPageHandle() )
+   __defaultNIL( @cCmd, "" )
 
    cStr += '<SCRIPT LANGUAGE=JavaScript 1.2>' + CRLF() + ;
       "<!--" + CRLF()
@@ -2226,12 +2225,12 @@ FUNCTION HtmlLinkStyle( cHoverStyle, cHoverClr, cHoverBG, ;
 
    LOCAL cStr
 
-   DEFAULT cHoverStyle TO "normal"
-   DEFAULT cLinkStyle TO "normal"
-   DEFAULT cHoverClr TO "white"
-   DEFAULT cHoverBg TO "black"
-   DEFAULT cLinkClr TO "black"
-   DEFAULT cLinkBg TO "white"
+   __defaultNIL( @cHoverStyle, "normal" )
+   __defaultNIL( @cLinkStyle, "normal" )
+   __defaultNIL( @cHoverClr, "white" )
+   __defaultNIL( @cHoverBg, "black" )
+   __defaultNIL( @cLinkClr, "black" )
+   __defaultNIL( @cLinkBg, "white" )
    cStr := ;
       "<!-- A:hover {text-decoration:" + cHoverStyle + ";color:" + cHoverClr + ";background:" + cHoverBG + ;
       ";} A:link {text-decoration:" + cLinkStyle + ";color:" + cLinkClr + ";background:" + cLinkBG + ";}-->"

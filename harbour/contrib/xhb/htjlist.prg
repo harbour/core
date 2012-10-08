@@ -49,7 +49,6 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "cgi.ch"
 
 CLASS TJsList
@@ -98,16 +97,16 @@ METHOD New( name, lOpen, width, height, bgColor, ;
 
    LOCAL cStr
 
-   DEFAULT name TO "l"
-   DEFAULT lOpen TO .F.
-   DEFAULT WIDTH TO 200
-   DEFAULT HEIGHT TO 22
-   DEFAULT BGCOLOR TO "white"
-   DEFAULT FONT TO "Verdana"
-   DEFAULT fntColor TO "black"
-   DEFAULT fntSize TO 2
-   DEFAULT cMinusImg TO "minus.gif"
-   DEFAULT cPlusImg TO "plus.gif"
+   __defaultNIL( @name, "l" )
+   __defaultNIL( @lOpen, .F. )
+   __defaultNIL( @WIDTH, 200 )
+   __defaultNIL( @HEIGHT, 22 )
+   __defaultNIL( @BGCOLOR, "white" )
+   __defaultNIL( @FONT, "Verdana" )
+   __defaultNIL( @fntColor, "black" )
+   __defaultNIL( @fntSize, 2 )
+   __defaultNIL( @cMinusImg, "minus.gif" )
+   __defaultNIL( @cPlusImg, "plus.gif" )
 
    ::font      := FONT
    ::size      := fntSize
@@ -157,10 +156,10 @@ METHOD NewNode( name, lOpen, width, height, bgColor ) CLASS TJsList
 
    LOCAL cStr := ""
 
-   DEFAULT lOpen TO .F.
-   DEFAULT WIDTH TO 200
-   DEFAULT HEIGHT TO 22
-   DEFAULT BGCOLOR TO "white"
+   __defaultNIL( @lOpen, .F. )
+   __defaultNIL( @WIDTH, 200 )
+   __defaultNIL( @HEIGHT, 22 )
+   __defaultNIL( @BGCOLOR, "white" )
    cStr += ""       //SPACE(10)
    cStr += name + "= new List("
    cStr += iif( lOpen, "true,", "false," )
@@ -186,10 +185,10 @@ METHOD SetFont( name, font, fntColor, fntSize ) CLASS TJsList
 
    LOCAL cStr := ""
 
-   DEFAULT name TO ::cCurrentNode
-   DEFAULT FONT TO ::font
-   DEFAULT fntColor TO ::fontColor
-   DEFAULT fntSize TO ::Size
+   __defaultNIL( @name, ::cCurrentNode )
+   __defaultNIL( @FONT, ::font )
+   __defaultNIL( @fntColor, ::fontColor )
+   __defaultNIL( @fntSize, ::Size )
 
    cStr += name + [.setFont("<FONT ] + ;
       [ FACE = '] + font + [' ] + ;
@@ -212,8 +211,8 @@ METHOD AddItem( name, url, bgColor ) CLASS TJsList
    LOCAL cStr := ""
    LOCAL cUrl
 
-   DEFAULT name TO "o"
-   DEFAULT url TO ""
+   __defaultNIL( @name, "o" )
+   __defaultNIL( @url, "" )
    cUrl := [<A HREF='] + url + ['>] + htmlSpace( 2 ) + name + htmlSpace( 2 )
    cStr += ::cCurrentNode + '.addItem( "' + cUrl + '"' + iif( bgColor != NIL, ',"' + bgColor + '"', "" ) + ');' + CRLF()
    ::nItems++
@@ -232,9 +231,9 @@ METHOD AddLink( name, url, img, bgColor ) CLASS TJsList
    LOCAL cStr := ""
    LOCAL cUrl
 
-   DEFAULT name TO "o"
-   DEFAULT url TO ""
-   DEFAULT img TO "webpage.jpg"
+   __defaultNIL( @name, "o" )
+   __defaultNIL( @url, "" )
+   __defaultNIL( @img, "webpage.jpg" )
    cUrl := "<A HREF='" + url + "'><IMG SRC='" + img + "' border=0 align=absmiddle>" + htmlSpace( 2 ) + name + htmlSpace( 2 )
    cStr += ::cCurrentNode + '.addItem( "' + curl + '"' + iif( bgColor != NIL, ',"' + bgColor + '"', "" ) + ');' + CRLF()
    ::nItems++
@@ -259,8 +258,8 @@ METHOD Build( xPos, yPos ) CLASS TJsList
    LOCAL i
    LOCAL cStr := ""
 
-   DEFAULT xPos TO 5
-   DEFAULT yPos TO 5
+   __defaultNIL( @xPos, 5 )
+   __defaultNIL( @yPos, 5 )
 
    cStr += ::cMainNode + ".build(" + hb_ntos( xPos ) + "," + hb_ntos( yPos ) + ");" + CRLF()
    cStr += "}" + CRLF()

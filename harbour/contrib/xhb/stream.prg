@@ -52,7 +52,6 @@
 
 #include "hbclass.ch"
 
-#include "common.ch"
 #include "fileio.ch"
 
 #xtranslate THROW(<oErr>) => (Eval(ErrorBlock(), <oErr>), Break(<oErr>))
@@ -219,7 +218,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileWriter
    ::cFile := cFile
 
    IF hb_FileExists( cFile )
-      DEFAULT nMode TO FO_READWRITE
+      __defaultNIL( @nMode, FO_READWRITE )
 
       ::Handle := FOpen( cFile, nMode )
       IF ::Handle <= 0
@@ -229,7 +228,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileWriter
       ::nLength := FSeek( ::Handle, 0, FS_END )
       ::nPosition := ::nLength
    ELSE
-      DEFAULT nMode TO FC_NORMAL
+      __defaultNIL( @nMode, FC_NORMAL )
 
       ::Handle := FCreate( cFile, nMode )
       IF ::Handle <= 0

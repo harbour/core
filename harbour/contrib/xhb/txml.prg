@@ -52,7 +52,6 @@
  *
  */
 
-#include "common.ch"
 #include "fileio.ch"
 #include "hbxml.ch"
 #include "hbclass.ch"

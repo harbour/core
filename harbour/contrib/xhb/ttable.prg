@@ -66,7 +66,6 @@
 #include "ttable.ch"
 #include "set.ch"
 #include "ord.ch"
-#include "common.ch"
 #include "inkey.ch"
 #include "dbinfo.ch"
 #include "error.ch"
@@ -86,11 +85,11 @@ FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, ;
    LOCAL cOldScreen := SaveScreen( MaxRow(), 0, MaxRow(), MaxCol() + 1 )
    LOCAL lFirstPass := .T.
 
-   DEFAULT cDriver TO "DBFCDX"
-   DEFAULT lNew TO .T.
-   DEFAULT lOpenMode TO NET_OPEN_MODE
-   DEFAULT lReadOnly TO .F.
-   DEFAULT nSeconds TO s_nNetDelay
+   __defaultNIL( @cDriver, "DBFCDX" )
+   __defaultNIL( @lNew, .T. )
+   __defaultNIL( @lOpenMode, NET_OPEN_MODE )
+   __defaultNIL( @lReadOnly, .F. )
+   __defaultNIL( @nSeconds, s_nNetDelay )
 
    s_lNetOk  := .F.
    nSeconds *= 1.00
@@ -160,8 +159,8 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
       RETURN lSuccess
    ENDIF
 
-   DEFAULT lReleaseLocks TO .F.
-   DEFAULT nSeconds TO s_nNetDelay
+   __defaultNIL( @lReleaseLocks, .F. )
+   __defaultNIL( @nSeconds, s_nNetDelay )
 
    nWaitTime := nSeconds
 
@@ -253,7 +252,7 @@ FUNCTION NetFunc( bBlock, nSeconds )
 
    LOCAL lForever      // Retry forever?
 
-   DEFAULT nSeconds TO s_nNetDelay
+   __defaultNIL( @nSeconds, s_nNetDelay )
    lForever := ( nSeconds == 0 )
 
 // Keep trying as long as specified or default
@@ -348,7 +347,7 @@ FUNCTION NetReCall()
 
 FUNCTION NetRecLock( nSeconds )
 
-   DEFAULT nSeconds TO s_nNetDelay
+   __defaultNIL( @nSeconds, s_nNetDelay )
 
    s_lNetOk := .F.
 
@@ -361,7 +360,7 @@ FUNCTION NetRecLock( nSeconds )
 FUNCTION NetFileLock( nSeconds )
 
    s_lNetOk := .F.
-   DEFAULT nSeconds TO s_nNetDelay
+   __defaultNIL( @nSeconds, s_nNetDelay )
 
    IF NetLock( NET_FILELOCK, , nSeconds )
       s_lNetOk := .T.
@@ -373,8 +372,8 @@ FUNCTION NetAppend( nSeconds, lReleaseLocks )
 
    LOCAL nOrd
 
-   DEFAULT lReleaseLocks TO .T.
-   DEFAULT nSeconds TO s_nNetDelay
+   __defaultNIL( @lReleaseLocks, .T. )
+   __defaultNIL( @nSeconds, s_nNetDelay )
    s_lNetOk := .F.
    nOrd    := ordSetFocus( 0 )          // --> set order to 0 to append ???
 
@@ -409,7 +408,7 @@ FUNCTION NetCommitAll()
 
 FUNCTION IsLocked( nRecId )
 
-   DEFAULT nRecID TO RecNo()
+   __defaultNIL( @nRecID, RecNo() )
 
    RETURN AScan( dbRLockList(), {| n | n == nRecID } ) > 0
 
@@ -454,13 +453,13 @@ FUNCTION TableNew( cDBF, cALIAS, cOrderBag, cDRIVER, ;
    LOCAL oDB
    LOCAL o
 
-   DEFAULT lNET TO .T.
-   DEFAULT lNEW TO .T.
-   DEFAULT lREADONLY TO .F.
-   DEFAULT cDRIVER TO "DBFCDX"
-   DEFAULT cPATH TO Set( _SET_DEFAULT )
-   DEFAULT cAlias TO FixExt( cDbf )
-   DEFAULT cOrderBag TO FixExt( cDbf )  //+".CDX"
+   __defaultNIL( @lNET, .T. )
+   __defaultNIL( @lNEW, .T. )
+   __defaultNIL( @lREADONLY, .F. )
+   __defaultNIL( @cDRIVER, "DBFCDX" )
+   __defaultNIL( @cPATH, Set( _SET_DEFAULT ) )
+   __defaultNIL( @cAlias, FixExt( cDbf ) )
+   __defaultNIL( @cOrderBag, FixExt( cDbf ) )
 
    lAuto := Set( _SET_AUTOPEN, .F. )
 
@@ -547,7 +546,7 @@ METHOD NEW( cAlias ) CLASS HBRecord
    LOCAL aStruc
    LOCAL aItem
 
-   DEFAULT cAlias TO Alias()
+   __defaultNIL( @cAlias, Alias() )
 
    ::Alias   := cAlias
    ::Buffer  := {}
@@ -788,13 +787,13 @@ METHOD New( cDBF, cALIAS, cOrderBag, cDRIVER, ;
 
    LOCAL cOldRdd
 
-   DEFAULT lNET TO .F.
-   DEFAULT lNEW TO .T.
-   DEFAULT lREADONLY TO .F.
-   DEFAULT cDRIVER TO "DBFCDX"
-   DEFAULT cPATH TO Set( _SET_DEFAULT )
-   DEFAULT cAlias TO FixExt( cDbf )
-   DEFAULT cOrderBag TO FixExt( cDbf )  //+".CDX"
+   __defaultNIL( @lNET, .F. )
+   __defaultNIL( @lNEW, .T. )
+   __defaultNIL( @lREADONLY, .F. )
+   __defaultNIL( @cDRIVER, "DBFCDX" )
+   __defaultNIL( @cPATH, Set( _SET_DEFAULT ) )
+   __defaultNIL( @cAlias, FixExt( cDbf ) )
+   __defaultNIL( @cOrderBag, FixExt( cDbf ) )
 
 
    ::IsNew      := lNEW
@@ -805,7 +804,7 @@ METHOD New( cDBF, cALIAS, cOrderBag, cDRIVER, ;
    ::cOrderBag  := FixExt( cOrderBag )
    cOldRdd      := rddSetDefault( ::driver )
 
-   ::cOrderFile := ::cOrderBag + ordBagExt()                //".CDX"
+   ::cOrderFile := ::cOrderBag + ordBagExt()                //".cdx"
    rddSetDefault( cOldRdd )
    ::Driver      := cDRIVER
    ::aOrders     := {}
@@ -847,7 +846,7 @@ METHOD OPEN() CLASS HBTable
 
 METHOD PROCEDURE DBMove( nDirection ) CLASS HBTable
 
-   DEFAULT nDirection TO 0
+   __defaultNIL( @nDirection, 0 )
 
    DO CASE
    CASE nDirection == 0
@@ -944,7 +943,7 @@ METHOD PROCEDURE READ( lKeepBuffer ) CLASS HBTable
    LOCAL adata  := Array( 1, 2 )
    LOCAL Buffer
 
-   DEFAULT lKeepBuffer TO .F.
+   __defaultNIL( @lKeepBuffer, .F. )
 
 //? len( ::Buffer )
 
@@ -975,7 +974,7 @@ METHOD PROCEDURE ReadBlank( lKeepBuffer ) CLASS HBTable
    LOCAL adata  := Array( 1, 2 )
    LOCAL Buffer
 
-   DEFAULT lKeepBuffer TO .F.
+   __defaultNIL( @lKeepBuffer, .F. )
 
    ( ::Alias )->( dbGoBottom() )
    ( ::Alias )->( dbSkip( 1 ) )         // go EOF
@@ -1009,7 +1008,7 @@ METHOD Write( lKeepBuffer ) CLASS HBTable
    LOCAL xBuffer
    LOCAL n
 
-   DEFAULT lKeepBuffer TO .F.
+   __defaultNIL( @lKeepBuffer, .F. )
 
    IF ( lKeepBuffer == .T. ) .OR. ( ::lMonitor == .T. )
 
@@ -1050,7 +1049,7 @@ METHOD BUFWrite( aBuffer ) CLASS HBTable
    LOCAL nOrd       := ( ::Alias )->( ordSetFocus() )
    LOCAL Buffer
 
-   DEFAULT aBuffer TO ::Buffer
+   __defaultNIL( @aBuffer, ::Buffer )
 
    IF ::isNet
       IF !( ::Alias )->( NetRecLock() )
@@ -1079,7 +1078,7 @@ METHOD __oTDelete( lKeepBuffer )        // ::Delete()
    LOCAL lDeleted := Set( _SET_DELETED, .F. )                  // make deleted records visible
 
 // temporarily...
-   DEFAULT lKeepBuffer TO .F.
+   __defaultNIL( @lKeepBuffer, .F. )
 
    ::Read()
 
@@ -1122,7 +1121,7 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
    LOCAL nRec      := ::RecNo()
    LOCAL aBuffers
 
-   DEFAULT nBuffer TO _WRITE_BUFFER
+   __defaultNIL( @nBuffer, _WRITE_BUFFER )
 
    IF nLevel == NIL
       nLevel := 0
@@ -1138,7 +1137,7 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
 
          nLen := Len( ::deleteBuffers )
 
-         DEFAULT nLevel TO nLen
+         __defaultNIL( @nLevel, nLen )
 
          IF nLevel == 0 .OR. nLevel == nLen     // DO ALL...
             FOR EACH aBuffers IN ::deleteBuffers
@@ -1187,7 +1186,7 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
       IF !Empty( ::WriteBuffers )
 
          nLen := Len( ::WriteBuffers )
-         DEFAULT nLevel TO nLen
+         __defaultNIL( @nLevel, nLen )
 
          IF nLevel == 0 .OR. nLen == nLevel   // Do All...
 
@@ -1255,7 +1254,7 @@ METHOD AddOrder( cTag, cKey, cLabel, ;
 
    LOCAL oOrd
 
-   DEFAULT cOrderFile TO ::cOrderBag
+   __defaultNIL( @cOrderFile, ::cOrderBag )
 
    oOrd := HBOrder():New( cTag, cKey, cLabel, ;
       cFor, cWhile, ;
@@ -1284,7 +1283,7 @@ METHOD REINDEX() CLASS HBTable
 
       IF hb_FileExists( ::cPath + ::cOrderFile )
          IF FErase( ::cPath + ::cOrderFile ) != 0
-            // --> ALERT(".CDX *NOT* Deleted !!!" )
+            // --> ALERT(".cdx *NOT* Deleted !!!" )
          ENDIF
       ENDIF
 
@@ -1323,7 +1322,7 @@ METHOD FastReindex() CLASS HBTable
       ::Isnet := .F.
       IF hb_FileExists( ::cPath + ::cOrderFile )
          IF FErase( ::cPath + ::cOrderFile ) != 0
-            // --> ALERT(".CDX *NOT* Deleted !!!" )
+            // --> ALERT(".cdx *NOT* Deleted !!!" )
          ENDIF
       ENDIF
 
@@ -1417,7 +1416,7 @@ PROCEDURE AddChild( oChild, cKey ) CLASS HBTable                 // ::addChild()
 
 /****
 *     FixExt( cFileName )
-*     extract .CDX filename from .DBF filename
+*     extract .cdx filename from .dbf filename
 */
 
 STATIC FUNCTION FixExt( cFileName )
@@ -1513,13 +1512,13 @@ ENDCLASS
 
 METHOD New( cTag, cKey, cLabel, cFor, cWhile, lUnique, bEval, nInterval, cOrderBag ) CLASS HBOrder
 
-   DEFAULT cKey TO ".T."
-   DEFAULT lUnique TO .F.
-   DEFAULT cFor TO ".T."
-   DEFAULT cWhile TO ".T."
-   DEFAULT bEval TO {|| .T. }
-   DEFAULT nInterval TO 1
-   DEFAULT cLabel TO cTag
+   __defaultNIL( @cKey, ".T." )
+   __defaultNIL( @lUnique, .F. )
+   __defaultNIL( @cFor, ".T." )
+   __defaultNIL( @cWhile, ".T." )
+   __defaultNIL( @bEval, {|| .T. } )
+   __defaultNIL( @nInterval, 1 )
+   __defaultNIL( @cLabel, cTag )
    ::cOrderBag := cOrderBag
    ::Tag       := cTag
    ::cKey      := cKey
@@ -1536,7 +1535,7 @@ METHOD New( cTag, cKey, cLabel, cFor, cWhile, lUnique, bEval, nInterval, cOrderB
 
 METHOD PROCEDURE CREATE() CLASS HBOrder
 
-   DEFAULT ::cOrderBag TO ::oTable:cOrderBag
+   __defaultNIL( @::cOrderBag, ::oTable:cOrderBag )
 
 // ? "<<<", ::alias, ::cOrderBag
 

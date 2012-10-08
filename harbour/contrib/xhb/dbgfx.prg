@@ -50,7 +50,6 @@
  *
  */
 
-#include "common.ch"
 #include "fileio.ch"
 
 STATIC s_lToOutDebug   := .T.
@@ -103,7 +102,7 @@ PROCEDURE HB_ToLogFile( cLogFile, ... )
       RETURN
    ENDIF
 
-   DEFAULT cLogFile TO "logfile.log"
+   __defaultNIL( @cLogFile, "logfile.log" )
 
    IF cLogFile != NIL
 

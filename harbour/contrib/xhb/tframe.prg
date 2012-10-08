@@ -45,7 +45,6 @@
  */
 
 #include "hbclass.ch"
-#include "common.ch"
 #include "cgi.ch"
 
 
@@ -75,7 +74,7 @@ METHOD New( cFName, cTitle ) CLASS THtmlFrameSet
 
    LOCAL cStr
 
-   DEFAULT cTitle TO ""
+   __defaultNIL( @cTitle, "" )
 
    ::FName := cFName
    ::Title := cTitle
@@ -172,11 +171,11 @@ METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
 
    LOCAL cStr
 
-   DEFAULT lBorder TO .T.
-   DEFAULT lResize TO .T.
-   DEFAULT lScrolling TO .F.
-   DEFAULT cScrolling TO "AUTO"
-   DEFAULT cTarget TO "_self"
+   __defaultNIL( @lBorder, .T. )
+   __defaultNIL( @lResize, .T. )
+   __defaultNIL( @lScrolling, .F. )
+   __defaultNIL( @cScrolling, "AUTO" )
+   __defaultNIL( @cTarget, "_self" )
 
    cStr := "  <frame "
 

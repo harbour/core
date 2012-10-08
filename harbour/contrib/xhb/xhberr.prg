@@ -66,7 +66,6 @@
  *    LogError()
  */
 
-#include "common.ch"
 #include "error.ch"
 #include "fileio.ch"
 #include "set.ch"
@@ -640,7 +639,7 @@ STATIC FUNCTION strvalue( c, l )
 
    LOCAL cr := ""
 
-   DEFAULT l TO .F.
+   __defaultNIL( @l, .F. )
 
    SWITCH ValType( c )
    CASE "C"
