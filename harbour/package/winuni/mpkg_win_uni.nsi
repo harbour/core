@@ -112,7 +112,7 @@ Section "Main components" hb_main
   File "$%HB_ABSROOT%doc\*.*"
 
   SetOutPath $INSTDIR\addons
-  File "$%HB_ABSROOT%addons\HARBOUR_README_ADDONS"
+  File "$%HB_ABSROOT%addons\HARBOUR_README_ADDONS.txt"
 
   ; Write the installation path into the registry
 ; WriteRegStr HKLM "SOFTWARE\Harbour $%HB_VM%" "InstallDir" "$INSTDIR"
@@ -163,7 +163,7 @@ Section "Libs for MinGW" hb_lib_mingw
   SetOutPath $INSTDIR\lib\win\mingw
   File "$%HB_ABSROOT%lib\win\mingw\*.*"
   SetOutPath $INSTDIR\comp\mingw
-  File "$%HB_ABSROOT%comp\mingw\HARBOUR_README_MINGW"
+  File "$%HB_ABSROOT%comp\mingw\HARBOUR_README_MINGW.txt"
 SectionEnd
 
 !ifndef PKG_NO_COMP_MINGW64
@@ -171,7 +171,7 @@ Section /o "Libs for MinGW x64" hb_lib_mingw64
   SetOutPath $INSTDIR\lib\win\mingw64
   File "$%HB_ABSROOT%lib\win\mingw64\*.*"
   SetOutPath $INSTDIR\comp\mingw64
-  File "$%HB_ABSROOT%comp\mingw64\HARBOUR_README_MINGW64"
+  File "$%HB_ABSROOT%comp\mingw64\HARBOUR_README_MINGW64.txt"
 SectionEnd
 !endif
 
@@ -180,7 +180,7 @@ Section /o "Libs for MinGW WinCE/ARM" hb_lib_mingwarm
   SetOutPath $INSTDIR\lib\wce\mingwarm
   File "$%HB_ABSROOT%lib\wce\mingwarm\*.*"
   SetOutPath $INSTDIR\comp\mingwarm
-  File "$%HB_ABSROOT%comp\mingwarm\HARBOUR_README_MINGWARM"
+  File "$%HB_ABSROOT%comp\mingwarm\HARBOUR_README_MINGWARM.txt"
 SectionEnd
 !endif
 
@@ -212,7 +212,7 @@ Section /o "Libs for Open Watcom" hb_lib_watcom
   SetOutPath $INSTDIR\lib\win\watcom
   File "$%HB_ABSROOT%lib\win\watcom\*.*"
   SetOutPath $INSTDIR\comp\watcom
-  File "$%HB_ABSROOT%comp\watcom\HARBOUR_README_WATCOM"
+  File "$%HB_ABSROOT%comp\watcom\HARBOUR_README_WATCOM.txt"
 SectionEnd
 !endif
 
@@ -221,7 +221,7 @@ Section /o "Libs for Pelles C" hb_lib_pocc
   SetOutPath $INSTDIR\lib\win\pocc
   File "$%HB_ABSROOT%lib\win\pocc\*.*"
   SetOutPath $INSTDIR\comp\pocc
-  File "$%HB_ABSROOT%comp\pocc\HARBOUR_README_POCC"
+  File "$%HB_ABSROOT%comp\pocc\HARBOUR_README_POCC.txt"
 SectionEnd
 !endif
 
@@ -244,7 +244,7 @@ Section /o "Libs for Open Watcom Linux" hb_lib_linux
   SetOutPath $INSTDIR\lib\linux\watcom
   File "$%HB_ABSROOT%lib\linux\watcom\*.*"
   SetOutPath $INSTDIR\comp\watcom
-  File "$%HB_ABSROOT%comp\watcom\HARBOUR_README_WATCOM"
+  File "$%HB_ABSROOT%comp\watcom\HARBOUR_README_WATCOM.txt"
 SectionEnd
 !endif
 
@@ -253,7 +253,7 @@ Section /o "Libs for Open Watcom OS/2" hb_lib_os2
   SetOutPath $INSTDIR\lib\os2\watcom
   File "$%HB_ABSROOT%lib\os2\watcom\*.*"
   SetOutPath $INSTDIR\comp\watcom
-  File "$%HB_ABSROOT%comp\watcom\HARBOUR_README_WATCOM"
+  File "$%HB_ABSROOT%comp\watcom\HARBOUR_README_WATCOM.txt"
 SectionEnd
 !endif
 
@@ -262,7 +262,7 @@ Section /o "Libs for Open Watcom MS-DOS" hb_lib_dos
   SetOutPath $INSTDIR\lib\dos\watcom
   File "$%HB_ABSROOT%lib\dos\watcom\*.*"
   SetOutPath $INSTDIR\comp\watcom
-  File "$%HB_ABSROOT%comp\watcom\HARBOUR_README_WATCOM"
+  File "$%HB_ABSROOT%comp\watcom\HARBOUR_README_WATCOM.txt"
 SectionEnd
 !endif
 
@@ -271,7 +271,7 @@ Section /o "Libs for DJGPP MS-DOS" hb_lib_djgpp
   SetOutPath $INSTDIR\lib\dos\djgpp
   File "$%HB_ABSROOT%lib\dos\djgpp\*.*"
   SetOutPath $INSTDIR\comp\djgpp
-  File "$%HB_ABSROOT%comp\djgpp\HARBOUR_README_DJGPP"
+  File "$%HB_ABSROOT%comp\djgpp\HARBOUR_README_DJGPP.txt"
 SectionEnd
 !endif
 

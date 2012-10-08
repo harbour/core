@@ -33,13 +33,13 @@ if exist %HB_ABSROOT% rd /q /s %HB_ABSROOT%
 xcopy /y       %~dp0RELNOTES                                                              %HB_ABSROOT%
 xcopy /y /s    %~dp0..\..\extras\*.*                                                      %HB_ABSROOT%extras\
 xcopy /y /s    %~dp0..\..\tests\*.*                                                       %HB_ABSROOT%tests\
-xcopy /y       %~dp0HARBOUR_README_ADDONS                                                 %HB_ABSROOT%addons\
-xcopy /y       %~dp0HARBOUR_README_DJGPP                                                  %HB_ABSROOT%comp\djgpp\
-xcopy /y       %~dp0HARBOUR_README_MINGW                                                  %HB_ABSROOT%comp\mingw\
-xcopy /y       %~dp0HARBOUR_README_MINGW64                                                %HB_ABSROOT%comp\mingw64\
-xcopy /y       %~dp0HARBOUR_README_MINGWARM                                               %HB_ABSROOT%comp\mingwarm\
-xcopy /y       %~dp0HARBOUR_README_POCC                                                   %HB_ABSROOT%comp\pocc\
-xcopy /y       %~dp0HARBOUR_README_WATCOM                                                 %HB_ABSROOT%comp\watcom\
+xcopy /y       %~dp0HARBOUR_README_ADDONS.txt                                             %HB_ABSROOT%addons\
+xcopy /y       %~dp0HARBOUR_README_DJGPP.txt                                              %HB_ABSROOT%comp\djgpp\
+xcopy /y       %~dp0HARBOUR_README_MINGW.txt                                              %HB_ABSROOT%comp\mingw\
+xcopy /y       %~dp0HARBOUR_README_MINGW64.txt                                            %HB_ABSROOT%comp\mingw64\
+xcopy /y       %~dp0HARBOUR_README_MINGWARM.txt                                           %HB_ABSROOT%comp\mingwarm\
+xcopy /y       %~dp0HARBOUR_README_POCC.txt                                               %HB_ABSROOT%comp\pocc\
+xcopy /y       %~dp0HARBOUR_README_WATCOM.txt                                             %HB_ABSROOT%comp\watcom\
 
 xcopy /y /s    %~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw                         %HB_ABSROOT%
 
@@ -126,13 +126,13 @@ echo "%HB_DR%bin\hbtest-x64.exe"                    >> _hbfiles
 echo "%HB_DR%lib\win\mingw\*.*"                     >> _hbfiles
 echo "%HB_DR%lib\win\mingw64\*.*"                   >> _hbfiles
 echo "%HB_DR%lib\wce\mingwarm\*.*"                  >> _hbfiles
-echo "%HB_DR%addons\HARBOUR_README_ADDONS"          >> _hbfiles
-rem echo "%HB_DR%comp\djgpp\HARBOUR_README_DJGPP"       >> _hbfiles
-echo "%HB_DR%comp\watcom\HARBOUR_README_WATCOM"     >> _hbfiles
-echo "%HB_DR%comp\pocc\HARBOUR_README_POCC"         >> _hbfiles
-echo "%HB_DR%comp\mingw\HARBOUR_README_MINGW"       >> _hbfiles
-echo "%HB_DR%comp\mingw64\HARBOUR_README_MINGW64"   >> _hbfiles
-echo "%HB_DR%comp\mingwarm\HARBOUR_README_MINGWARM" >> _hbfiles
+echo "%HB_DR%addons\HARBOUR_README_ADDONS.txt"          >> _hbfiles
+rem echo "%HB_DR%comp\djgpp\HARBOUR_README_DJGPP.txt"       >> _hbfiles
+echo "%HB_DR%comp\watcom\HARBOUR_README_WATCOM.txt"     >> _hbfiles
+echo "%HB_DR%comp\pocc\HARBOUR_README_POCC.txt"         >> _hbfiles
+echo "%HB_DR%comp\mingw\HARBOUR_README_MINGW.txt"       >> _hbfiles
+echo "%HB_DR%comp\mingw64\HARBOUR_README_MINGW64.txt"   >> _hbfiles
+echo "%HB_DR%comp\mingwarm\HARBOUR_README_MINGWARM.txt" >> _hbfiles
 rem echo "%HB_DR%lib\dos\djgpp\*.*"                     >> _hbfiles
 echo "%HB_DR%lib\dos\watcom\*.*"                    >> _hbfiles
 echo "%HB_DR%lib\linux\watcom\*.*"                  >> _hbfiles
