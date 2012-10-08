@@ -4,6 +4,8 @@
 
 #include "hbvpdf.ch"
 
+#include "fileio.ch"
+
 THREAD STATIC t_aReport
                                                                               /*
 ===========================================================                 */
@@ -33,10 +35,10 @@ function pdfAtSay( cString, nRow, nCol, cUnits, lExact, cId )                 /*
 =============================================================                 */
 local _nFont, lReverse, nAt
 
-DEFAULT nRow to t_aReport[ REPORTLINE ]
-DEFAULT cUnits to "R"
-DEFAULT lExact to .F.
-DEFAULT cId to ""
+__defaultNIL( @nRow, t_aReport[ REPORTLINE ] )
+__defaultNIL( @cUnits, "R" )
+__defaultNIL( @lExact, .F. )
+__defaultNIL( @cId, "" )
 
    IF t_aReport[ HEADEREDIT ]
       return pdfHeader( "PDFATSAY", cId, { cString, nRow, nCol, cUnits, lExact } )
@@ -254,10 +256,10 @@ return iif( nPrev == 0, nPrev, nObj + nPrev )
 function pdfBox( x1, y1, x2, y2, nBorder, nShade, cUnits, cColor, cId )       /*
 ===============================================================               */
 local cBoxColor
-DEFAULT nBorder to 0
-DEFAULT nShade to 0
-DEFAULT cUnits to "M"
-DEFAULT cColor to ""
+__defaultNIL( @nBorder, 0 )
+__defaultNIL( @nShade, 0 )
+__defaultNIL( @cUnits, "M" )
+__defaultNIL( @cColor, "" )
 
    // version 0.02
    cBoxColor := ""
@@ -318,9 +320,9 @@ return nil
 ===============================================================                               */
 function pdfBox1( nTop, nLeft, nBottom, nRight, nBorderWidth, cBorderColor, cBoxColor )       /*
 ===============================================================                               */
-DEFAULT nBorderWidth to 0.5
-DEFAULT cBorderColor to Chr( 0 ) + Chr( 0 ) + Chr( 0 )
-DEFAULT cBoxColor to Chr( 255 ) + Chr( 255 ) + Chr( 255 )
+__defaultNIL( @nBorderWidth, 0.5 )
+__defaultNIL( @cBorderColor, Chr( 0 ) + Chr( 0 ) + Chr( 0 ) )
+__defaultNIL( @cBoxColor, Chr( 255 ) + Chr( 255 ) + Chr( 255 ) )
 
    t_aReport[ PAGEBUFFER ] +=  CRLF + ;
                          Chr_RGB( substr( cBorderColor, 1, 1 )) + " " + ;
@@ -345,10 +347,10 @@ return nil
 function pdfCenter( cString, nRow, nCol, cUnits, lExact, cId )                /*
 ==============================================================                */
 local nLen, nAt
-DEFAULT nRow to t_aReport[ REPORTLINE ]
-DEFAULT cUnits to "R"
-DEFAULT lExact to .F.
-DEFAULT nCol to iif( cUnits == "R", t_aReport[ REPORTWIDTH ] / 2, t_aReport[ PAGEX ] / 72 * 25.4 / 2 )
+__defaultNIL( @nRow, t_aReport[ REPORTLINE ] )
+__defaultNIL( @cUnits, "R" )
+__defaultNIL( @lExact, .F. )
+__defaultNIL( @nCol, iif( cUnits == "R", t_aReport[ REPORTWIDTH ] / 2, t_aReport[ PAGEX ] / 72 * 25.4 / 2 ) )
 
    IF t_aReport[ HEADEREDIT ]
       return pdfHeader( "PDFCENTER", cId, { cString, nRow, nCol, cUnits, lExact } )
@@ -729,12 +731,12 @@ return cRet
 function pdfImage( cFile, nRow, nCol, cUnits, nHeight, nWidth, cId )          /*
 ====================================================================          */
 
-DEFAULT nRow to t_aReport[ REPORTLINE ]
-DEFAULT nCol to 0
-DEFAULT nHeight to 0
-DEFAULT nWidth to 0
-DEFAULT cUnits to "R"
-DEFAULT cId to ""
+__defaultNIL( @nRow, t_aReport[ REPORTLINE ] )
+__defaultNIL( @nCol, 0 )
+__defaultNIL( @nHeight, 0 )
+__defaultNIL( @nWidth, 0 )
+__defaultNIL( @cUnits, "R" )
+__defaultNIL( @cId, "" )
 
    IF t_aReport[ HEADEREDIT ]
       return pdfHeader( "PDFIMAGE", cId, { cFile, nRow, nCol, cUnits, nHeight, nWidth } )
@@ -820,7 +822,7 @@ return t_aReport[ PAGEY ] -  n * 72 / 25.4
 ========================                                                      */
 function pdfNewLine( n )                                                      /*
 ========================                                                      */
-DEFAULT n to 1
+__defaultNIL( @n, 1 )
    IF t_aReport[ REPORTLINE ] + n + t_aReport[ PDFTOP ] > t_aReport[ PDFBOTTOM ]
       pdfNewPage()
       t_aReport[ REPORTLINE ] += 1
@@ -833,12 +835,12 @@ return t_aReport[ REPORTLINE ]
 function pdfNewPage( _cPageSize, _cPageOrient, _nLpi, _cFontName, _nFontType, _nFontSize )/*
 ==========================================================================================*/
 
-DEFAULT _cPageSize to t_aReport[ PAGESIZE ]
-DEFAULT _cPageOrient to t_aReport[ PAGEORIENT ]
-DEFAULT _nLpi to t_aReport[ LPI ]
-DEFAULT _cFontName to pdfGetFontInfo("NAME")
-DEFAULT _nFontType to pdfGetFontInfo("TYPE")
-DEFAULT _nFontSize to t_aReport[ FONTSIZE ]
+__defaultNIL( @_cPageSize, t_aReport[ PAGESIZE ] )
+__defaultNIL( @_cPageOrient, t_aReport[ PAGEORIENT ] )
+__defaultNIL( @_nLpi, t_aReport[ LPI ] )
+__defaultNIL( @_cFontName, pdfGetFontInfo("NAME") )
+__defaultNIL( @_nFontType, pdfGetFontInfo("TYPE") )
+__defaultNIL( @_nFontSize, t_aReport[ FONTSIZE ] )
 
    IF !empty(t_aReport[ PAGEBUFFER ])
       pdfClosePage()
@@ -882,8 +884,8 @@ return nil
 function pdfOpen( cFile, nLen, lOptimize )                                    /*
 ==========================================                                    */
 local cTemp, nI, nJ, n1, n2 := 896, n12
-DEFAULT nLen to 200
-DEFAULT lOptimize to .F.
+__defaultNIL( @nLen, 200 )
+__defaultNIL( @lOptimize, .F. )
 
    t_aReport[ FONTNAME     ] := 1
    t_aReport[ FONTSIZE     ] := 10
@@ -963,7 +965,7 @@ local nSize, aSize, nWidth, nHeight
               { "B5",        6.93,  9.84 }, ;
               { "USSTDFOLD", 14.87, 11.00 } }
 
-   DEFAULT _cPageSize to "LETTER"
+   __defaultNIL( @_cPageSize, "LETTER" )
 
    if empty( _nWidth ) .or. empty( _nHeight )
 
@@ -1013,7 +1015,7 @@ local nSize, aSize, nWidth, nHeight
 ======================================                                        */
 function pdfPageOrient( _cPageOrient )                                        /*
 ======================================                                        */
-DEFAULT _cPageOrient to "P"
+__defaultNIL( @_cPageOrient, "P" )
 
    t_aReport[ PAGEORIENT ] := _cPageOrient
    pdfPageSize( t_aReport[ PAGESIZE ] )
@@ -1033,7 +1035,7 @@ return 25.4 * nRow / t_aReport[ LPI ]
 ===========================                                                   */
 function pdfPageNumber( n )                                                   /*
 ===========================                                                   */
-DEFAULT n to 0
+__defaultNIL( @n, 0 )
    IF n > 0
       t_aReport[ REPORTPAGE ] := n // NEW !!!
    ENDIF
@@ -1048,9 +1050,9 @@ return cString + Chr( 255 )
 function pdfRJust( cString, nRow, nCol, cUnits, lExact, cId )                 /*
 =============================================================                 */
 local nLen, nAdj := 1.0, nAt
-DEFAULT nRow to t_aReport[ REPORTLINE ]
-DEFAULT cUnits to "R"
-DEFAULT lExact to .F.
+__defaultNIL( @nRow, t_aReport[ REPORTLINE ] )
+__defaultNIL( @cUnits, "R" )
+__defaultNIL( @lExact, .F. )
 
    IF t_aReport[ HEADEREDIT ]
       return pdfHeader( "PDFRJUST", cId, { cString, nRow, nCol, cUnits, lExact } )
@@ -1075,9 +1077,9 @@ return nil
 function pdfSetFont( _cFont, _nType, _nSize, cId )                            /*
 ==================================================                            */
 
-DEFAULT _cFont to "Times"
-DEFAULT _nType to 0
-DEFAULT _nSize to 10
+__defaultNIL( @_cFont, "Times" )
+__defaultNIL( @_nType, 0 )
+__defaultNIL( @_nSize, 10 )
 
    IF t_aReport[ HEADEREDIT ]
       return pdfHeader( "PDFSETFONT", cId, { _cFont, _nType, _nSize } )
@@ -1105,7 +1107,7 @@ return nil
 function pdfSetLPI(_nLpi)                                                     /*
 =========================                                                     */
 local cLpi := hb_ntos(_nLpi)
-DEFAULT _nLpi to 6
+__defaultNIL( @_nLpi, 6 )
 
    cLpi := iif(cLpi$"1;2;3;4;6;8;12;16;24;48",cLpi,"6")
    t_aReport[ LPI ] := val( cLpi )
@@ -1131,11 +1133,11 @@ function pdfText( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, cColor,
 local cDelim := Chr( 0 ) + chr( 9 ) + chr( 10 ) + chr( 13 ) + chr( 26 ) + chr( 32 ) + chr( 138 ) + chr( 141 )
 local nI, cTemp, cToken, k, nL, nRow, nLines, nLineLen, nStart
 local lParagraph, nSpace, nNew, nTokenLen, nCRLF, nTokens, nLen
-DEFAULT nTab to -1
-DEFAULT cUnits to 'R'
-DEFAULT nJustify to 4 // justify
-DEFAULT lPrint to .T.
-DEFAULT cColor to ""
+__defaultNIL( @nTab, -1 )
+__defaultNIL( @cUnits, 'R' )
+__defaultNIL( @nJustify, 4 ) // justify
+__defaultNIL( @lPrint, .T. )
+__defaultNIL( @cColor, "" )
 
    IF cUnits == "M"
       nTop := pdfM2R( nTop )
@@ -1325,7 +1327,7 @@ return cTime
 
 function pdfOpenHeader( cFile )
 local nAt //, nErrorCode:=0
-DEFAULT cFile to ""
+__defaultNIL( @cFile, "" )
    IF !empty( cFile )
       cFile := alltrim( cFile )
       IF len( cFile ) > 12 .or. ;
@@ -1486,9 +1488,10 @@ local nI, nLen := len( t_aReport[ HEADER ] ), nTemp, aTemp, nHeight
 
 // version 0.07 begin
 
-   DEFAULT nTop to 1 // top
-   DEFAULT nLeft to 10 // left & right
-   DEFAULT nBottom to t_aReport[ PAGEY ] / 72 * t_aReport[ LPI ] - 1 // bottom, default "LETTER", "P", 6
+   __defaultNIL( @nTop, 1 )
+   __defaultNIL( @nLeft, 10 )
+   // bottom, default "LETTER", "P", 6
+   __defaultNIL( @nBottom, t_aReport[ PAGEY ] / 72 * t_aReport[ LPI ] - 1 )
 
    t_aReport[ PDFTOP ] := nTop
    t_aReport[ PDFLEFT ] := nLeft
@@ -1667,10 +1670,10 @@ local ;
                    }
 local nStyle := 1, nAdd := 0.00
 
-DEFAULT _size to t_aReport[ PAGESIZE ]
-DEFAULT _orient to t_aReport[ PAGEORIENT ]
-DEFAULT _lpi to t_aReport[ LPI ]
-DEFAULT _width to 200
+__defaultNIL( @_size, t_aReport[ PAGESIZE ] )
+__defaultNIL( @_orient, t_aReport[ PAGEORIENT ] )
+__defaultNIL( @_lpi, t_aReport[ LPI ] )
+__defaultNIL( @_width, 200 )
 
    IF _size == "LETTER"
       IF _orient == "P"
@@ -2358,8 +2361,8 @@ RETURN AllToken( cString, cDelimiter, nPointer, 2 )
 
 STATIC FUNCTION AllToken( cString, cDelimiter, nPointer, nAction )
 LOCAL nTokens := 0, nPos := 1, nLen := len( cString ), nStart, cRet
-DEFAULT cDelimiter to chr( 0 ) + chr( 9 ) + chr( 10 ) + chr( 13 ) + chr( 26 ) + chr( 32 ) + chr( 138 ) + chr( 141 )
-DEFAULT nAction to 0
+__defaultNIL( @cDelimiter, chr( 0 ) + chr( 9 ) + chr( 10 ) + chr( 13 ) + chr( 26 ) + chr( 32 ) + chr( 138 ) + chr( 141 ) )
+__defaultNIL( @nAction, 0 )
 
 // nAction == 0 - numtoken
 // nAction == 1 - token

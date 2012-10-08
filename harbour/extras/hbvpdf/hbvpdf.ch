@@ -2,9 +2,6 @@
  * $Id$
  */
 
-#include "fileio.ch"
-#include "common.ch"
-
 #define CRLF ( Chr( 13 ) + Chr( 10 ) )
 
 #define NORMAL        0
