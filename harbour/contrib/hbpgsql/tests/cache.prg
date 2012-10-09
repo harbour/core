@@ -536,10 +536,10 @@ FUNCTION TempFile( cPath, cExt )
    hb_default( @cPath, hb_DirTemp() )
    hb_default( @cExt, "tmp" )
 
-   cString := cPath + StrZero( Int( hb_random( Val( StrTran( Time(), ":", "" ) ) ) ), 8 ) + "." + cExt
+   cString := cPath + StrZero( Int( hb_random( Val( StrTran( Time(), ":" ) ) ) ), 8 ) + "." + cExt
 
    DO WHILE hb_FileExists( cString )
-      cString := cPath + StrZero( Int( hb_random( Val( StrTran( Time(), ":", "" ) ) ) ), 8 ) + "." + cExt
+      cString := cPath + StrZero( Int( hb_random( Val( StrTran( Time(), ":" ) ) ) ), 8 ) + "." + cExt
    ENDDO
 
    RETURN cString

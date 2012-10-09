@@ -958,11 +958,11 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
             FOR n := 1 TO 11
                IF At( ",", cParam1 ) != 0
                   ::aColors[ n ] := ;
-                     StrTran( Left( cParam1, At( ",", cParam1 ) - 1 ), '"', "" )
+                     StrTran( Left( cParam1, At( ",", cParam1 ) - 1 ), '"' )
                   cParam1 := SubStr( cParam1, At( ",", cParam1 ) + 1 )
                ELSE
                   ::aColors[ n ] := ;
-                     StrTran( Left( cParam1, At( "}", cParam1 ) - 1 ), '"', "" )
+                     StrTran( Left( cParam1, At( "}", cParam1 ) - 1 ), '"' )
                ENDIF
             NEXT
             ::LoadColors()

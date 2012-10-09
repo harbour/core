@@ -334,13 +334,13 @@ METHOD VerticalBarChart() CLASS GDChart
        nTot      += hElement[ "VALUE" ]
    NEXT
 
-   IF nLeftLabelSpace == NIL
+   IF ! HB_ISNUMERIC( nLeftLabelSpace )
       nLeftLabelSpace := nBorder + Len( LTrim( Transform( nMax, cAxisPict ) ) ) * ::GetFontWidth() + nBorder
    ENDIF
-   IF nRightLabelSpace == NIL
+   IF ! HB_ISNUMERIC( nRightLabelSpace )
       nRightLabelSpace := nLeftLabelSpace //nBorder + Len( hb_ntos( nMax ) ) * ::GetFontWidth() + nBorder
    ENDIF
-   IF nBottomLabelSpace == NIL
+   IF ! HB_ISNUMERIC( nBottomLabelSpace )
       nBottomLabelSpace := nBorder + nMaxLabel * ::GetFontWidth() + nBorder
    ENDIF
 
@@ -524,16 +524,16 @@ METHOD HorizontalBarChart() CLASS GDChart
       nTot      += hElement[ "VALUE" ]
    NEXT
 
-   IF nLeftLabelSpace == NIL
+   IF ! HB_ISNUMERIC( nLeftLabelSpace )
       nLeftLabelSpace := nBorder + nMaxLabel * ::GetFontWidth() + nBorder
    ENDIF
-   IF nRightLabelSpace == NIL
+   IF ! HB_ISNUMERIC( nRightLabelSpace )
       nRightLabelSpace := nBorder + ( Len( LTrim( Transform( nMax, cAxisPict ) ) ) * ::GetFontWidth() / 2 )
    ENDIF
-   IF nTopLabelSpace == NIL
+   IF ! HB_ISNUMERIC( nTopLabelSpace )
       nTopLabelSpace := nBorder + ::GetFontHeight() + nBorder
    ENDIF
-   IF nBottomLabelSpace == NIL
+   IF ! HB_ISNUMERIC( nBottomLabelSpace )
       nBottomLabelSpace := nTopLabelSpace // nBorder + ::GetFontHeight() + nBorder
    ENDIF
 
@@ -731,13 +731,13 @@ METHOD LineChart() CLASS GDChart
       nMinLabel := Max( nMinLabel, Len( iif( cLabel != NIL, cLabel, "" ) ) )
    NEXT
 
-   IF nLeftLabelSpace == NIL
+   IF ! HB_ISNUMERIC( nLeftLabelSpace )
       nLeftLabelSpace := nBorder + Max( Len( LTrim( Transform( nMax, cAxisPict ) ) ), Len( LTrim( Transform( nMin, cAxisPict ) ) ) ) * ::GetFontWidth() + nBorder
    ENDIF
-   IF nRightLabelSpace == NIL
+   IF ! HB_ISNUMERIC( nRightLabelSpace )
       nRightLabelSpace := nLeftLabelSpace
    ENDIF
-   IF nBottomLabelSpace == NIL
+   IF ! HB_ISNUMERIC( nBottomLabelSpace )
       nBottomLabelSpace := nBorder + nMaxLabel * ::GetFontWidth() + nBorder
    ENDIF
 

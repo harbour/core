@@ -151,7 +151,7 @@ METHOD AddItem( oMenuItem ) CLASS HBDbMenu
       IF Len( oLastMenu:aItems ) > 0
          oLastMenuItem := ATail( oLastMenu:aItems )
          oMenuItem:nCol := oLastMenuItem:nCol + ;
-                          Len( StrTran( oLastMenuItem:cPrompt, "~", "" ) )
+                          Len( StrTran( oLastMenuItem:cPrompt, "~" ) )
       ELSE
          oMenuItem:nCol := 0
       ENDIF
@@ -171,7 +171,7 @@ METHOD Build() CLASS HBDbMenu
       FOR n := 1 TO Len( ::aItems )
          ::aItems[ n ]:nRow := 0
          ::aItems[ n ]:nCol := nPos
-         nPos += Len( StrTran( ::aItems[ n ]:cPrompt, "~", "" ) )
+         nPos += Len( StrTran( ::aItems[ n ]:cPrompt, "~" ) )
       NEXT
    ELSE
       oMenuItem := ATail( ::aMenus[ Len( ::aMenus ) - 1 ]:aItems )
@@ -181,7 +181,7 @@ METHOD Build() CLASS HBDbMenu
       FOR n := 1 TO Len( ::aItems )
          ::aItems[ n ]:nRow := ::nTop + n
          ::aItems[ n ]:nCol := ::nLeft + 1
-         nPos := Max( nPos, ::nLeft + Len( StrTran( ::aItems[ n ]:cPrompt, "~", "" ) ) + 1 )
+         nPos := Max( nPos, ::nLeft + Len( StrTran( ::aItems[ n ]:cPrompt, "~" ) ) + 1 )
       NEXT
       ::nRight  := nPos + 1
       ::nBottom := ::nTop + Len( ::aItems ) + 1

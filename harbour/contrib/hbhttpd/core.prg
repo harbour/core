@@ -943,7 +943,7 @@ STATIC FUNCTION HttpDateUnformat( cDate, tDate )
       nMonth := AScan( { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", ;
          "Oct", "Nov", "Dec" }, SubStr( cDate, 9, 3 ) )
       IF nMonth > 0
-         tI := HB_STOT( SubStr( cDate, 13, 4 ) + PadL( nMonth, 2, "0" ) + SubStr( cDate, 6, 2 ) + StrTran( SubStr(cDate, 18, 8 ), ":", "" ) )
+         tI := HB_STOT( SubStr( cDate, 13, 4 ) + PadL( nMonth, 2, "0" ) + SubStr( cDate, 6, 2 ) + StrTran( SubStr( cDate, 18, 8 ), ":" ) )
          IF ! Empty( tI )
             tDate := tI + HB_UTCOFFSET() / ( 3600 * 24 )
             RETURN .T.

@@ -939,7 +939,7 @@ STATIC function ChrCount(cChar,cString)
 **DEBUG**
 @24,30 SAY "At ChrCount"
 
-return len(cString)-len(strTran(cString,cChar,""))
+return len(cString)-len(strTran(cString,cChar))
 
 **
 **     Function:  Sp_Split()

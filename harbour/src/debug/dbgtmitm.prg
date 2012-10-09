@@ -92,7 +92,7 @@ METHOD Display( cClrText, cClrHotKey ) CLASS HBDbMenuItem
 
    LOCAL nAt
 
-   hb_dispOutAt( ::nRow, ::nCol, StrTran( ::cPrompt, "~", "" ), cClrText )
+   hb_dispOutAt( ::nRow, ::nCol, StrTran( ::cPrompt, "~" ), cClrText )
 
    hb_dispOutAt( ::nRow, ::nCol + ;
      ( nAt := At( "~", ::cPrompt ) ) - 1,;

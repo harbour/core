@@ -855,7 +855,7 @@ ENDCLASS
 
 METHOD WvtObject:New( oParent, nType, nID, nTop, nLeft, nBottom, nRight )
 
-   IF nID == NIL
+   IF ! HB_ISNUMERIC( nID )
       nID := ++::nObjID
    ENDIF
 

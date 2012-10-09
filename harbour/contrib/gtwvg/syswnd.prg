@@ -459,7 +459,7 @@ METHOD GetWvgFont( aFont ) CLASS WvgFontDialog
 
    LOCAL oWvgFont
 
-   IF aFont == NIL
+   IF ! HB_ISARRAY( aFont )
       aFont := Wvg_ChooseFont_GetLogFont( ::hWnd )
    ENDIF
 

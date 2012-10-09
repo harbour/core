@@ -1023,7 +1023,7 @@ METHOD FieldGet( nField, nRow ) CLASS TPQquery
 
       CASE "D"
          IF result != NIL
-            result := hb_SToD( StrTran( result, "-", "" ) )
+            result := hb_SToD( StrTran( result, "-" ) )
          ELSE
             result := hb_SToD()
          ENDIF

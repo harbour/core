@@ -224,7 +224,7 @@ FUNCTION ParseString( cString, cDelim, nRet )
    LOCAL nSize
    LOCAL i
 
-   nSize := Len( cString ) - Len( StrTran( cString, cDelim, "" ) ) + 1
+   nSize := Len( cString ) - Len( StrTran( cString, cDelim ) ) + 1
    aElem := Array( nSize )
 
    cBuf := cString

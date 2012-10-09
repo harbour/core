@@ -129,7 +129,7 @@ FUNCTION FT_METAPH( cName, nSize )
 
    //  Remove inner spaces (1st and last byte are spaces)
    IF " " $ SubStr( cMeta, 2, Len( cMeta ) - 2 )
-      cMeta := " " + StrTran( cMeta, " " , "" ) + " "
+      cMeta := " " + StrTran( cMeta, " " ) + " "
    ENDIF
 
    //  Double consonants sound much the same as singles
@@ -220,7 +220,7 @@ FUNCTION FT_METAPH( cName, nSize )
    IF "C"   $ cMeta ;  cMeta := StrTran( cMeta, "C"   , "K"  ) ;  ENDIF
 
    //  Remove vowels
-   cMeta := StrTran( cMeta, "v", "" )
+   cMeta := StrTran( cMeta, "v" )
 
    RETURN PadR( AllTrim( cMeta ), nSize )
 

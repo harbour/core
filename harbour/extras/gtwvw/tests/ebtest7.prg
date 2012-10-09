@@ -922,9 +922,9 @@ STATIC FUNCTION IsBadDate( cBuffer ) //, cPicFunc )
 //    cBuffer := InvertDwM( cBuffer )
 // ENDIF
 
-   cBuffer2 := StrTran( cBuffer, "/", "" )
-   cBuffer2 := StrTran( cBuffer2, "-", "" )
-   cBuffer2 := StrTran( cBuffer2, ".", "" )
+   cBuffer2 := StrTran( cBuffer, "/" )
+   cBuffer2 := StrTran( cBuffer2, "-" )
+   cBuffer2 := StrTran( cBuffer2, "." )
 
    IF Empty( cBuffer2 )
       RETURN .F.

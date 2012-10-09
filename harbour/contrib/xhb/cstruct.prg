@@ -64,19 +64,23 @@ STATIC s_aArrayClasses := {}
 STATIC s_aSynonyms := {}
 STATIC s_lInitLongs := .T.
 
-PROCEDURE __INIT_LONGLONGS
+PROCEDURE __INIT_LONGLONGS()
+
    HB_CStructureCSyntax( "ULONGLONG", { "-4", "ulong[2]", }, , , 8 )
    __ClsSetModule( __ActiveStructure() )
 
    HB_CStructureCSyntax( "LONGLONG", { "4", "long[2]", } , , , 8 )
    __ClsSetModule( __ActiveStructure() )
 
-RETURN
+   RETURN
 
 //
+
 FUNCTION __ActiveStructure( cStructure, nAlign )
 
-   /* LOCAL oErr */
+#if 0
+   LOCAL oErr
+#endif
    LOCAL acMembers, aCTypes, hClass, Counter, cMember
 
    IF s_lInitLongs
@@ -87,42 +91,43 @@ FUNCTION __ActiveStructure( cStructure, nAlign )
    IF PCount() == 2
       cStructure := Upper( cStructure )
 
-      IF aScan( s_aClasses, {| aClassInfo | aClassInfo[1] == cStructure } ) > 0
-         /* In most cases we can simply ignore the reduefinition, by returning a FAKED Structure Array!
+      IF AScan( s_aClasses, {| aClassInfo | aClassInfo[ 1 ] == cStructure } ) > 0
+         /* In most cases we can simply ignore the redefinition, by returning a FAKED Structure Array! */
+#if 0
          oErr := ErrorNew()
          oErr:Args := { cStructure, nAlign }
          oErr:CanDefault    := .F.
          oErr:CanRetry      := .F.
          oErr:CanSubstitute := .T.
-         oErr:Description  := "Structure already defined."
+         oErr:Description   := "Structure already defined."
          oErr:Operation     := "__ActiveStructure()"
          oErr:Severity      := ES_ERROR
          oErr:SubCode       := 1
          oErr:SubSystem     := "C Structure"
 
          RETURN Eval( ErrorBlock(), oErr )
-         */
+#endif
 
          // In most cases we can simply ignore the redefinition, by returning a FAKED Structure Array!
          //TraceLog( "Redefinition of C Structure: " + cStructure )
          RETURN t_aActiveStructure := { cStructure, NIL, {}, {}, iif( HB_ISNUMERIC( nAlign ), nAlign, 8 ) }
       ENDIF
 
-      aAdd( s_aClasses, { cStructure, NIL, {}, {}, iif( HB_ISNUMERIC( nAlign ), nAlign, 8 ) } )
-      //TraceLog( "Registered: " + cStructure, s_aClasses[-1][5] )
+      AAdd( s_aClasses, { cStructure, NIL, {}, {}, iif( HB_ISNUMERIC( nAlign ), nAlign, 8 ) } )
+      //TraceLog( "Registered: " + cStructure, s_aClasses[ -1 ][ 5 ] )
 
-      t_aActiveStructure := atail(s_aClasses)
+      t_aActiveStructure := ATail( s_aClasses )
    ELSE
       //TraceLog( "Created: " + Str( nId ) )
 
-      acMembers := t_aActiveStructure[3]
-      aCTypes   := t_aActiveStructure[4]
-      nAlign    := t_aActiveStructure[5]
+      acMembers := t_aActiveStructure[ 3 ]
+      aCTypes   := t_aActiveStructure[ 4 ]
+      nAlign    := t_aActiveStructure[ 5 ]
 
-      hClass := __clsNew( "C Structure " + t_aActiveStructure[1] , Len( acMembers ) + CLASS_PROPERTIES )
+      hClass := __clsNew( "C Structure " + t_aActiveStructure[ 1 ] , Len( acMembers ) + CLASS_PROPERTIES )
       //__clsDelMsg( hClass, "C" )
 
-      t_aActiveStructure[2] := hClass
+      t_aActiveStructure[ 2 ] := hClass
 
       __clsAddMsg( hClass,  "Reset"     , @Reset()         , HB_OO_MSG_METHOD )
       __clsAddMsg( hClass,  "Buffer"    , @Buffer()        , HB_OO_MSG_METHOD )
@@ -148,33 +153,35 @@ FUNCTION __ActiveStructure( cStructure, nAlign )
       // WARNING InternalBuffer *MUST* remain the *LAST* Property!!!
       __clsAddMsg( hClass,  "InternalBuffer", ++Counter, HB_OO_MSG_PROPERTY, , HB_OO_CLSTP_READONLY )
 
-      //TraceLog( Len( aCTypes ), aCTypes[1], aCTypes )
+      //TraceLog( Len( aCTypes ), aCTypes[ 1 ], aCTypes )
       RETURN hClass
    ENDIF
 
    RETURN t_aActiveStructure
 
 //
+
 PROCEDURE HB_Member( cMember, CType )
 
-  LOCAL nLen, nAt
+   LOCAL nLen, nAt
 
-  IF right(cMember,1) == "]"
-     nAt := At( "[", cMember )
-     //nLen := Val( SubStr( cMember, nAt + 1, Len( cMember ) ) )
-     // Support expressions like x + y, x - y, x * y
-     nLen := &( SubStr( cMember, nAt + 1, Len( cMember ) - nAt - 1 ) )
+   IF Right( cMember, 1 ) == "]"
+      nAt := At( "[", cMember )
+      //nLen := Val( SubStr( cMember, nAt + 1, Len( cMember ) ) )
+      // Support expressions like x + y, x - y, x * y
+      nLen := &( SubStr( cMember, nAt + 1, Len( cMember ) - nAt - 1 ) )
 
-     aAdd( t_aActiveStructure[3], Left( cMember, nAt - 1 ) )
-     aAdd( t_aActiveStructure[4], HB_CTypeArrayID( CType, nLen ) )
-  ELSE
-     aAdd( t_aActiveStructure[3], cMember )
-     aAdd( t_aActiveStructure[4], CType )
-  ENDIF
+      AAdd( t_aActiveStructure[ 3 ], Left( cMember, nAt - 1 ) )
+      AAdd( t_aActiveStructure[ 4 ], HB_CTypeArrayID( CType, nLen ) )
+   ELSE
+      AAdd( t_aActiveStructure[ 3 ], cMember )
+      AAdd( t_aActiveStructure[ 4 ], CType )
+   ENDIF
 
-Return
+   RETURN
 
 //
+
 FUNCTION HB_CStructureID( cStructure, lInplace )
 
    LOCAL nID
@@ -182,10 +189,10 @@ FUNCTION HB_CStructureID( cStructure, lInplace )
 
    cStructure := Upper( cStructure )
 
-   nID := aScan( s_aClasses, {| aClassInfo | aClassInfo[1] == cStructure } )
+   nID := AScan( s_aClasses, {| aClassInfo | aClassInfo[ 1 ] == cStructure } )
 
    IF nID == 0
-      nID := aScan( s_aSynonyms, {| aSynonym | aSynonym[1] == cStructure } )
+      nID := AScan( s_aSynonyms, {| aSynonym | aSynonym[ 1 ] == cStructure } )
       IF nID == 0
          oErr := ErrorNew()
          oErr:Args          := { cStructure, lInplace }
@@ -200,7 +207,7 @@ FUNCTION HB_CStructureID( cStructure, lInplace )
 
          RETURN Eval( ErrorBlock(), oErr )
       ELSE
-         nID := s_aSynonyms[nID][2]
+         nID := s_aSynonyms[ nID ][ 2 ]
       ENDIF
 
       nID += iif( lInplace, 0, CTYPE_STRUCTURE_PTR - CTYPE_STRUCTURE )
@@ -208,11 +215,12 @@ FUNCTION HB_CStructureID( cStructure, lInplace )
       nID += iif( lInplace, CTYPE_STRUCTURE, CTYPE_STRUCTURE_PTR )
    ENDIF
 
-   //TraceLog( cStructure, nID )
+// TraceLog( cStructure, nID )
 
    RETURN nID
 
 //
+
 PROCEDURE HB_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAlign )
 
    LOCAL cElem, nAt, nIndex := 1
@@ -221,63 +229,63 @@ PROCEDURE HB_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
    LOCAL nID, cSynon
 
    FOR EACH cElem IN aDefinitions
-       // *** PP bug - remove when possible! ***
-       IF cElem == NIL
-          aSize( aDefinitions, nIndex - 1 )
-          EXIT
-       ENDIF
+      // *** PP bug - remove when possible! ***
+      IF cElem == NIL
+         ASize( aDefinitions, nIndex - 1 )
+         EXIT
+      ENDIF
 
-       IF ( nAt := At( "*", cElem ) ) > 1
-          IF nIndex < Len( aDefinitions )
-             hb_aIns( aDefinitions, nIndex + 1, SubStr( cElem, nAt + 1 ), .T. )
-          ELSE
-             aAdd( aDefinitions, SubStr( cElem, nAt + 1 ) )
-          ENDIF
+      IF ( nAt := At( "*", cElem ) ) > 1
+         IF nIndex < Len( aDefinitions )
+            hb_AIns( aDefinitions, nIndex + 1, SubStr( cElem, nAt + 1 ), .T. )
+         ELSE
+            AAdd( aDefinitions, SubStr( cElem, nAt + 1 ) )
+         ENDIF
 
-          aDefinitions[nIndex] := StrTran( Left( cElem, nAt ), " ", "" )
-       ELSEIF ( nAt := At( "-", cElem ) ) > 1
-          IF nIndex < Len( aDefinitions )
-             hb_aIns( aDefinitions, nIndex + 1, SubStr( cElem, nAt ), .T. )
-          ELSE
-             aAdd( aDefinitions, SubStr( cElem, nAt ) )
-          ENDIF
+         aDefinitions[nIndex] := StrTran( Left( cElem, nAt ), " " )
+      ELSEIF ( nAt := At( "-", cElem ) ) > 1
+         IF nIndex < Len( aDefinitions )
+            hb_AIns( aDefinitions, nIndex + 1, SubStr( cElem, nAt ), .T. )
+         ELSE
+            AAdd( aDefinitions, SubStr( cElem, nAt ) )
+         ENDIF
 
-          aDefinitions[nIndex] := RTrim( Left( cElem, nAt - 1 ) )
-       ENDIF
+         aDefinitions[nIndex] := RTrim( Left( cElem, nAt - 1 ) )
+      ENDIF
 
-       nIndex++
+      nIndex++
    NEXT
 
    __ActiveStructure( cStructure, nAlign )
    nID := Len( s_aClasses )
 
    IF ! Empty( cTag )
-      aAdd( s_aSynonyms, { Upper( cTag ), nID + CTYPE_STRUCTURE } )
-      //Tracelog( s_aSynonyms[-1][1], s_aSynonyms[-1][2] )
+      AAdd( s_aSynonyms, { Upper( cTag ), nID + CTYPE_STRUCTURE } )
+      //Tracelog( s_aSynonyms[ -1 ][ 1 ], s_aSynonyms[ -1 ][ 2 ] )
    ENDIF
 
    IF ! Empty( cSynonList )
-      FOR EACH cSynon IN HB_aTokens( cSynonList )
-         IF left( cSynon,1 ) == '*'
-            aAdd( s_aSynonyms, { Upper( SubStr( cSynon, 2 ) ), nID + CTYPE_STRUCTURE_PTR } )
+      FOR EACH cSynon IN hb_ATokens( cSynonList )
+         IF Left( cSynon, 1 ) == "*"
+            AAdd( s_aSynonyms, { Upper( SubStr( cSynon, 2 ) ), nID + CTYPE_STRUCTURE_PTR } )
          ELSE
-            aAdd( s_aSynonyms, { Upper( cSynon ), nID + CTYPE_STRUCTURE } )
+            AAdd( s_aSynonyms, { Upper( cSynon ), nID + CTYPE_STRUCTURE } )
          ENDIF
 
-         //Tracelog( s_aSynonyms[-1][1], s_aSynonyms[-1][2] )
+         //Tracelog( s_aSynonyms[ -1 ][ 1 ], s_aSynonyms[ -1 ][ 2 ] )
       NEXT
    ENDIF
 
    nLen := Len( aDefinitions )
 
    FOR Counter := 1 TO nLen STEP 2
-      //TraceLog( "Member: " + aDefinitions[Counter + 1], "Type: " + aDefinitions[Counter] )
+      //TraceLog( "Member: " + aDefinitions[ Counter + 1 ], "Type: " + aDefinitions[ Counter ] )
 
-      CType := aDefinitions[Counter]
+      CType := aDefinitions[ Counter ]
       IF Val( CType ) != 0
-         HB_Member( aDefinitions[Counter + 1], Val( aDefinitions[Counter] ) )
+         HB_Member( aDefinitions[ Counter + 1 ], Val( aDefinitions[ Counter ] ) )
       ELSE
-         IF right(CType,1) == '*'
+         IF Right( CType, 1 ) == "*"
             CType := HB_CStructureID( Left( CType, Len( CType ) - 1 ), .F. )
          ELSE
             CType := HB_CStructureID( CType, .T. )
@@ -288,7 +296,7 @@ PROCEDURE HB_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
                oErr:CanDefault    := .F.
                oErr:CanRetry      := .F.
                oErr:CanSubstitute := .T.
-               oErr:Description   := "Undefined CType: '" + aDefinitions[Counter] + "'"
+               oErr:Description   := "Undefined CType: '" + aDefinitions[ Counter ] + "'"
                oErr:Operation     := "HB_CStructureCSyntax()"
                oErr:Severity      := ES_ERROR
                oErr:SubCode       := 2
@@ -298,13 +306,14 @@ PROCEDURE HB_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
             ENDIF
          ENDIF
 
-         HB_Member( aDefinitions[Counter + 1], CType )
+         HB_Member( aDefinitions[ Counter + 1 ], CType )
       ENDIF
    NEXT
 
-RETURN
+   RETURN
 
 //
+
 FUNCTION HB_CStructure( cStructure, nAlign )
 
    LOCAL hClass
@@ -313,7 +322,7 @@ FUNCTION HB_CStructure( cStructure, nAlign )
    LOCAL oErr
 
    cStructure := Upper( cStructure )
-   nID        := aScan( s_aClasses, {| aClassInfo | aClassInfo[1] == cStructure } )
+   nID        := AScan( s_aClasses, {| aClassInfo | aClassInfo[ 1 ] == cStructure } )
 
    IF nID == 0
       oErr := ErrorNew()
@@ -330,7 +339,7 @@ FUNCTION HB_CStructure( cStructure, nAlign )
       RETURN Eval( ErrorBlock(), oErr )
    ENDIF
 
-   hClass := s_aClasses[nId][2]
+   hClass := s_aClasses[ nId ][ 2 ]
    oStructure := __clsInst( hClass )
 
    AllocateMembers( oStructure )
@@ -338,12 +347,14 @@ FUNCTION HB_CStructure( cStructure, nAlign )
    RETURN oStructure
 
 //
+
 STATIC PROCEDURE AllocateMembers( oStructure )
 
    LOCAL aCTypes, CType
+
    aCTypes := oStructure:aCTypes
 
-   //TraceLog( "Scaning: " + oStructure:ClassName )
+// TraceLog( "Scaning: " + oStructure:ClassName )
 
    FOR EACH CType IN aCTypes
       IF CType > CTYPE_STRUCTURE .AND. CType < CTYPE_STRUCTURE_PTR
@@ -352,17 +363,18 @@ STATIC PROCEDURE AllocateMembers( oStructure )
       ENDIF
    NEXT
 
-   //TraceLog( "Finished: " + oStructure:ClassName )
+// TraceLog( "Finished: " + oStructure:ClassName )
 
-RETURN
+   RETURN
 
 //
+
 FUNCTION HB_CStructureFromID( nID, nAlign )
 
    LOCAL hClass, oStructure
    LOCAL oErr
 
-   //TraceLog( nId, s_aClasses )
+// TraceLog( nId, s_aClasses )
 
    IF nID > CTYPE_STRUCTURE_PTR
       nID -= CTYPE_STRUCTURE_PTR
@@ -383,11 +395,11 @@ FUNCTION HB_CStructureFromID( nID, nAlign )
       RETURN Eval( ErrorBlock(), oErr )
    ENDIF
 
-   IF s_aClasses[nID][2] == NIL
+   IF s_aClasses[ nID ][ 2 ] == NIL
       // Meta class was not created yet.
-      RETURN HB_CStructure( s_aClasses[nId][1] )
+      RETURN HB_CStructure( s_aClasses[ nId ][ 1 ] )
    ELSE
-      hClass := s_aClasses[nId][2]
+      hClass := s_aClasses[ nId ][ 2 ]
 
       oStructure := __clsInst( hClass )
    ENDIF
@@ -395,6 +407,7 @@ FUNCTION HB_CStructureFromID( nID, nAlign )
    RETURN oStructure
 
 //
+
 FUNCTION HB_CTypeArrayID( CType, nLen )
 
    LOCAL hClass
@@ -403,23 +416,23 @@ FUNCTION HB_CTypeArrayID( CType, nLen )
    LOCAL aCTypes, acMembers, cMember
    LOCAL cArrayClassName := "C Array of [" + hb_ntos( nLen ) + "] CType: " + Str( CType )
 
-   nID := aScan( s_aArrayClasses, {| aArrayDefinitions | aArrayDefinitions[1] == CType .AND. aArrayDefinitions[2] == nLen } )
+   nID := AScan( s_aArrayClasses, {| aArrayDefinitions | aArrayDefinitions[ 1 ] == CType .AND. aArrayDefinitions[ 2 ] == nLen } )
 
    IF nID == 0
       hClass := __clsNew( "C Structure " + cArrayClassName, nLen + CLASS_PROPERTIES )
       //__clsDelMsg( hClass, "C" )
 
       __ClsSetModule( hClass )
-      aAdd( s_aClasses, { cArrayClassName, hClass, Array( nLen ), Array( nLen ), 1 } )
+      AAdd( s_aClasses, { cArrayClassName, hClass, Array( nLen ), Array( nLen ), 1 } )
       nID := Len( s_aClasses )
 
-      acMembers := s_aClasses[nID][3]
-      aCTypes   := s_aClasses[nID][4]
+      acMembers := s_aClasses[ nID ][ 3 ]
+      aCTypes   := s_aClasses[ nID ][ 4 ]
 
-      // Sames as s_aClasses[nID][4]
-      aFill( aCTypes, CType )
+      // Sames as s_aClasses[ nID ][ 4 ]
+      AFill( aCTypes, CType )
 
-      aAdd( s_aArrayClasses, { CType, nLen, nID } )
+      AAdd( s_aArrayClasses, { CType, nLen, nID } )
 
       __clsAddMsg( hClass,  "Reset"     , @Reset()         , HB_OO_MSG_METHOD )
       __clsAddMsg( hClass,  "Buffer"    , @Buffer()        , HB_OO_MSG_METHOD )
@@ -433,12 +446,12 @@ FUNCTION HB_CTypeArrayID( CType, nLen )
       __clsAddMsg( hClass,  "CopyTo"    , @__CSTR_CopyTo() , HB_OO_MSG_METHOD )
 
       //IF Abs( CType ) == 1
-         __clsAddMsg( hClass, "AsString", @AsString()   , HB_OO_MSG_METHOD )
+      __clsAddMsg( hClass, "AsString", @AsString()   , HB_OO_MSG_METHOD )
       //ENDIF
 
       FOR Counter := 1 TO nLen
          cMember := hb_ntos( Counter )
-         acMembers[Counter] := cMember
+         acMembers[ Counter ] := cMember
          __clsAddMsg( hClass,       cMember, Counter, HB_OO_MSG_PROPERTY )
       NEXT
 
@@ -451,18 +464,20 @@ FUNCTION HB_CTypeArrayID( CType, nLen )
       __clsAddMsg( hClass,  "InternalBuffer", Counter, HB_OO_MSG_PROPERTY, , HB_OO_CLSTP_READONLY )
       //TraceLog( "Registered: " + cArrayClassName, nID, Len( s_aArrayClasses ), HB_SizeOfCStructure( aCTypes, 1 ), nLen )
    ELSE
-      nID := s_aArrayClasses[nID][3]
-      //TraceLog( "Reused: " + s_aClasses[nID][1], nID )
+      nID := s_aArrayClasses[ nID ][ 3 ]
+      //TraceLog( "Reused: " + s_aClasses[ nID ][ 1 ], nID )
    ENDIF
 
    RETURN nID + CTYPE_STRUCTURE
 
 //
+
 FUNCTION HB_IS_CStructure( x )
 
    RETURN Left( x:ClassName(), 11 ) == "C Structure"
 
 //
+
 STATIC FUNCTION SayMembers( cPad, lShowMembers, lReturnString )
 
    LOCAL xProperty, cOut := ""
@@ -477,8 +492,8 @@ STATIC FUNCTION SayMembers( cPad, lShowMembers, lReturnString )
       lReturnString := .F.
    ENDIF
 
-   //QOut( cPad + SubStr( QSelf():ClassName, 13 ) )
-   //QOut( cPad + Replicate( "-", Len( SubStr( QSelf():ClassName, 13 ) ) ) )
+// QOut( cPad + SubStr( QSelf():ClassName, 13 ) )
+// QOut( cPad + Replicate( "-", Len( SubStr( QSelf():ClassName, 13 ) ) ) )
 
    cOut += cPad + SubStr( QSelf():ClassName, 13 )
    cOut += hb_eol() + cPad + Replicate( "-", Len( SubStr( QSelf():ClassName, 13 ) ) )
@@ -492,17 +507,18 @@ STATIC FUNCTION SayMembers( cPad, lShowMembers, lReturnString )
          ENDIF
       ELSE
          //QOut( cPad + iif( lShowMembers, acMembers[ xProperty:__enumIndex() ], "" ) + ":", xProperty )
-         cOut += hb_eol() + cPad + iif( lShowMembers, QSelf():acMembers[ xProperty:__enumIndex() ], "" ) + ":" + hb_cStr( xProperty )
+         cOut += hb_eol() + cPad + iif( lShowMembers, QSelf():acMembers[ xProperty:__enumIndex() ], "" ) + ":" + hb_CStr( xProperty )
       ENDIF
    NEXT
 
-   IF !lReturnString
+   IF ! lReturnString
       QOut( cOut )
    ENDIF
 
    RETURN iif( lReturnString, cOut, QSelf() )
 
 //
+
 STATIC FUNCTION Reset()
 
    LOCAL xProperty, nProperties := Len( QSelf() ) - CLASS_PROPERTIES
@@ -522,12 +538,13 @@ STATIC FUNCTION Reset()
    RETURN QSelf()
 
 //
+
 STATIC FUNCTION Buffer( Buffer, lAdopt )
 
    IF HB_ISSTRING( Buffer )
       IF Len( Buffer ) < QSelf():SizeOf
          //TraceLog( Buffer )
-         Buffer := PadR( Buffer, QSelf():SizeOf, Chr(0) )
+         Buffer := PadR( Buffer, QSelf():SizeOf, Chr( 0 ) )
       ENDIF
 
       QSelf():InternalBuffer := Buffer
@@ -541,6 +558,7 @@ STATIC FUNCTION Buffer( Buffer, lAdopt )
    RETURN QSelf()
 
 //
+
 STATIC FUNCTION GetPointer()
 
    QSelf():InternalBuffer := HB_ArrayToStructure( QSelf(), QSelf():aCTypes, QSelf():nAlign )
@@ -548,31 +566,33 @@ STATIC FUNCTION GetPointer()
    RETURN hb_String2Pointer( QSelf():InternalBuffer )
 
 //
+
 STATIC FUNCTION Value()
 
-   //LOCAL aValues := {}
+// LOCAL aValues := {}
 
-   //aEval( QSelf(), {| xVal | aAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
+// AEval( QSelf(), {| xVal | aAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
 
    QSelf():InternalBuffer := HB_ArrayToStructure( QSelf(), QSelf():aCTypes, QSelf():nAlign )
 
    RETURN QSelf():InternalBuffer
 
 //
+
 STATIC FUNCTION DeValue( lAdopt )
 
-   //LOCAL aValues := {}
+// LOCAL aValues := {}
    LOCAL Buffer := QSelf():InternalBuffer
 
-   //TraceLog( QSelf():ClassName(), QSelf():nAlign, Buffer, Len( Buffer ), lAdopt )
+// TraceLog( QSelf():ClassName(), QSelf():nAlign, Buffer, Len( Buffer ), lAdopt )
 
-   //aEval( QSelf(), {| xVal | aAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
+// AEval( QSelf(), {| xVal | aAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
 
    IF ! HB_ISSTRING( Buffer ) .OR. Len( Buffer ) == 0
       //TraceLog( "EMPTY Buffer passed to " + ProcName() )
    ELSEIF Len( Buffer ) < QSelf():SizeOf
       //TraceLog( "Should have been caught at ::Buffer()!!!", Buffer )
-      //Buffer := PadR( Buffer, QSelf():SizeOf, Chr(0) )
+      //Buffer := PadR( Buffer, QSelf():SizeOf, Chr( 0 ) )
    ELSE
       HB_StructureToArray( Buffer, QSelf():aCTypes, QSelf():nAlign, lAdopt, QSelf()  )
    ENDIF
@@ -580,15 +600,17 @@ STATIC FUNCTION DeValue( lAdopt )
    RETURN QSelf()
 
 //
+
 STATIC FUNCTION ArrayMethod()
 
    LOCAL aValues := {}
 
-   aEval( QSelf(), {| xVal | aAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
+   AEval( QSelf(), {| xVal | AAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
 
    RETURN aValues
 
 //
+
 STATIC FUNCTION Init( aValues )
 
    LOCAL xProperty, nLen := Len( aValues )
@@ -608,6 +630,7 @@ STATIC FUNCTION Init( aValues )
    RETURN QSelf()
 
 //
+
 STATIC FUNCTION Pointer( nNewPointer, lAdopt )
 
    IF nNewPointer != NIL
@@ -617,6 +640,7 @@ STATIC FUNCTION Pointer( nNewPointer, lAdopt )
    RETURN QSelf()
 
 //
+
 STATIC FUNCTION AsString()
 
    LOCAL cChar, nLen := Len( QSelf() ) - CLASS_PROPERTIES, cString := Space( nLen )
