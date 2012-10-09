@@ -27,3 +27,5 @@ wvwtbar.c
 -cpp=no
 # NOTE: Due to large quantity of unprecise code, it doesn't build in C++ mode.
 -warn=no
+
+$hb_pkg_install.hbm

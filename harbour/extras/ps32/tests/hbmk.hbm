@@ -2,4 +2,6 @@
 # $Id$
 #
 
-../ps32.hbc
+ps32.hbc
+
+-w3 -es2

@@ -12,3 +12,5 @@
 xlsxml.prg
 xlsxml_s.prg
 xlsxml_y.prg
+
+$hb_pkg_install.hbm

@@ -2,11 +2,6 @@
 # $Id$
 #
 
--w3
--es2
+hbxlsxml.hbc
 
--L../
-
--lhbxlsxml
-
-
+-w3 -es2

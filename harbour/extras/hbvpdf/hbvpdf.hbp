@@ -9,7 +9,7 @@
 
 -w3 -es2
 
--instfile=inc:hbvpdf.ch
-
 hbvpdf.prg
 hbvpsup.prg
+
+$hb_pkg_install.hbm

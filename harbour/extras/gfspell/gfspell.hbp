@@ -9,7 +9,7 @@
 
 -w1 -es2
 
--instfile=inc:spell.ch
-
 spell.prg
 spellc.c
+
+$hb_pkg_install.hbm

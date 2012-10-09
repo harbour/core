@@ -216,3 +216,5 @@ s_womon.prg
 s_woyear.prg
 s_writef.prg
 s_xbxx.prg
+
+$hb_pkg_install.hbm

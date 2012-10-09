@@ -2,7 +2,7 @@
 # $Id$
 #
 
-../gtwvw.hbc
+gtwvw.hbc
 
 # NOTE: Disabled until test code is cleaned/fixed.
 #-w3 -es2

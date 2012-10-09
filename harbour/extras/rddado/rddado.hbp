@@ -11,6 +11,6 @@
 
 -stop{!win}
 
--instfile=inc:adordd.ch
-
 adordd.prg
+
+$hb_pkg_install.hbm

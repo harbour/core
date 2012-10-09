@@ -5,7 +5,7 @@
 incpaths=.
 libpaths=lib/${hb_plat}/${hb_comp}
 
-libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+libs=${hb_name}
 
 {win}libs=libusb-1
 {!win}libs=libusb

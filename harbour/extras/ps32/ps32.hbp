@@ -11,6 +11,6 @@
 
 hbxpp.hbc
 
--instfile=inc:pscript.ch
-
 tpscript.prg
+
+$hb_pkg_install.hbm
