@@ -26,7 +26,7 @@ core.c
 -instfile=misc:*.hbc
 -instfile=inc:*.ch
 -instfile=inc:*.hbx
--instfile=tests:${_HB_CONTRIB_SUBDIR}tests/*.*
+-instfile=tests:tests/*.*
 
 -instpath=${HB_ADDONS}/${hb_name}/lib/${hb_plat}/${hb_comp}/
 -instpath=depimplib:${HB_ADDONS}/${hb_name}/lib/${hb_plat}/${hb_comp}/
