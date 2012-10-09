@@ -2197,7 +2197,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       IF ! hbmk[ _HBMK_lQuiet ]
          _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing local make script: %1$s" ), _HBMK_AUTOHBM_NAME ) )
       ENDIF
-      HBM_Load( hbmk, aParams, _HBMK_AUTOHBM_NAME, 1, .F. ) /* Do not allow sub-projects in automatic make file */
+      HBM_Load( hbmk, aParams, _HBMK_AUTOHBM_NAME, 1, .F., _HBMK_AUTOHBM_NAME ) /* Do not allow sub-projects in automatic make file */
    ENDIF
 
    /* Collect all command line parameters */
@@ -10247,11 +10247,8 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP, cPa
          cFile := hbmk_builtin_Load( cFileName )
          /* Built-in files will act as if they were part of the parant file,
             since their name is fixed and have no useful meaning whatsoever. */
-         OUTSTD( "Buildin file" + hb_eol() )
          IF ! Empty( cParentFileName )
-            OUTSTD( "Rebasing from: " + cFileName + hb_eol() )
             cFileName := cParentFileName
-            OUTSTD( "Rebasing to " + cFileName + hb_eol() )
          ENDIF
       ELSE
          cFile := hbmk_MemoRead( cFileName ) /* NOTE: Intentionally using hbmk_MemoRead() which handles EOF char. */
