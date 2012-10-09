@@ -1093,24 +1093,41 @@ STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk, l_cHB_INSTALL_PREFIX )
             AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( PathSepToSelf( tmp ) ) ) + "%{hb_name}" )
          ENDIF
       NEXT
+      /* do not use user-supplied dir[s] as default one */
+      hbmk[ _HBMK_cHB_INSTALL_ADD ] := ""
    ENDIF
    /* Add default search paths for .hbc files */
    AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + _HBMK_SPECDIR_CONTRIB + hb_ps() + "%{hb_name}" )
    AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + _HBMK_SPECDIR_ADDONS + hb_ps() + "%{hb_name}" )
 #if defined( __PLATFORM__UNIX )
    IF hb_DirExists( "/opt/harbour" )
+      IF Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] )
+         hbmk[ _HBMK_cHB_INSTALL_ADD ] := "/opt/harbour/" + _HBMK_SPECDIR_ADDONS
+      ENDIF
       AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/" + _HBMK_SPECDIR_CONTRIB + "/%{hb_name}" )
       AAdd( hbmk[ _HBMK_aLIBPATH ], "/opt/harbour/" + _HBMK_SPECDIR_ADDONS + "/%{hb_name}" )
    ENDIF
    IF hb_DirExists( "/usr/local/share/harbour" )
+      IF Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] )
+         hbmk[ _HBMK_cHB_INSTALL_ADD ] := "/opt/harbour/" + _HBMK_SPECDIR_ADDONS
+      ENDIF
       AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/share/harbour/" + _HBMK_SPECDIR_CONTRIB + "/%{hb_name}" )
       AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/local/share/harbour/" + _HBMK_SPECDIR_ADDONS + "/%{hb_name}" )
    ENDIF
    IF hb_DirExists( "/usr/share/harbour" )
+      IF Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] )
+         hbmk[ _HBMK_cHB_INSTALL_ADD ] := "/opt/harbour/" + _HBMK_SPECDIR_ADDONS
+      ENDIF
       AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/share/harbour/" + _HBMK_SPECDIR_CONTRIB + "/%{hb_name}" )
       AAdd( hbmk[ _HBMK_aLIBPATH ], "/usr/share/harbour/" + _HBMK_SPECDIR_ADDONS + "/%{hb_name}" )
    ENDIF
+   IF Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] )
+      hbmk[ _HBMK_cHB_INSTALL_ADD ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + _HBMK_SPECDIR_ADDONS
+   ENDIF
 #endif
+   IF Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] )
+      hbmk[ _HBMK_cHB_INSTALL_ADD ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + _HBMK_SPECDIR_ADDONS
+   ENDIF
 
    RETURN
 
@@ -10542,6 +10559,8 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
       cMacro := hbmk[ _HBMK_cHB_INSTALL_DYN ] ; EXIT
    CASE "HB_INC"
       cMacro := hbmk[ _HBMK_cHB_INSTALL_INC ] ; EXIT
+   CASE "HB_ADDONS"
+      cMacro := hbmk[ _HBMK_cHB_INSTALL_ADD ] ; EXIT
    CASE "HB_FIRST"
       cMacro := hb_FNameName( hbmk[ _HBMK_cFIRST ] ) ; EXIT
    CASE "HB_OUTPUTDIR"
