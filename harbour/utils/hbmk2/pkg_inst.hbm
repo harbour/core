@@ -1,0 +1,41 @@
+#
+# $Id$
+#
+
+# hbmk2 include file to setup standard installation rules
+# for 3rd party packages. To use it just add the line
+# '$hb_pkg_install.hbm' to the beginning of your project
+# .hbp file. [vszakats]
+
+# specify public/redistributable files
+# ------------------------------------
+
+-instfile=misc:*.hb
+-instfile=misc:*.hbc
+-instfile=misc:*.txt
+-instfile=inc:*.ch
+-instfile=inc:*.hbx
+-instfile=tests:tests/*.*
+
+# setup target directories for installation
+# -----------------------------------------
+
+# static library & dynamic library on *nix
+{hblib|(hbdyn&unix)}-instpath=${HB_ADDONS}/${hb_name}/lib/${hb_plat}/${hb_comp}/
+
+# dynamic library on non-*nix
+{hbdyn&!unix}-instpath=${HB_ADDONS}/${hb_name}/bin/${hb_plat}/${hb_comp}/
+
+# import library on non-*nix
+-instpath=implib:${HB_ADDONS}/${hb_name}/lib/${hb_plat}/${hb_comp}/
+
+# dynamic libraries belonging to project dependencies
+{hbdyn&(win|os2)&HB_INSTALL_3RDDYN='yes'}-instpath=depimplibsrc:${HB_ADDONS}/${hb_name}/bin/${hb_plat}/${hb_comp}/
+
+# import libraries belonging to project dependencies
+{!(HB_INSTALL_IMPLIB='no')}-instpath=depimplib:${HB_ADDONS}/${hb_name}/lib/${hb_plat}/${hb_comp}/
+
+# misc files, public headers, tests
+-instpath=misc:${HB_ADDONS}/${hb_name}/
+-instpath=inc:${HB_ADDONS}/${hb_name}/
+-instpath=tests:${HB_ADDONS}/${hb_name}/tests/

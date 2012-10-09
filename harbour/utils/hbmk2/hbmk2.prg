@@ -859,7 +859,7 @@ STATIC FUNCTION hbmk_new()
    hbmk[ _HBMK_aDEPTHBC ] := {}
    hbmk[ _HBMK_lDEPIMPLIB ] := .T.
 
-   hb_HSetCaseMatch( hbmk[ _HBMK_hDEP ], .F. )
+   hb_HCaseMatch( hbmk[ _HBMK_hDEP ], .F. )
 
    hbmk[ _HBMK_lBLDFLGP ] := .F.
    hbmk[ _HBMK_lBLDFLGC ] := .F.
@@ -870,7 +870,7 @@ STATIC FUNCTION hbmk_new()
    hbmk[ _HBMK_aPLUGINPars ] := {}
    hbmk[ _HBMK_hPLUGINExt ] := { => }
 
-   hb_HSetCaseMatch( hbmk[ _HBMK_hPLUGINExt ], .F. )
+   hb_HCaseMatch( hbmk[ _HBMK_hPLUGINExt ], .F. )
 
    hbmk[ _HBMK_lDEBUGTIME ] := .F.
    hbmk[ _HBMK_lDEBUGINC ] := .F.
@@ -2215,7 +2215,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                hb_default( @hbmk[ _HBMK_cFIRST ], hbmk[ _HBMK_aOBJUSER ][ 1 ] )
             ENDIF
          ELSE
-            tmp := HBM_Load( hbmk, aParams, PathSepToSelf( cParam ), 1, .T. ) /* Load parameters from script file */
+            tmp := HBM_Load( hbmk, aParams, PathSepToSelf( cParam ), 1, .T., PathSepToSelf( cParam ) ) /* Load parameters from script file */
             IF tmp != _ERRLEV_OK .AND. ;
                tmp != _ERRLEV_STOP
                RETURN tmp
@@ -2240,7 +2240,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             NEXT
          ENDIF
 
-         tmp := HBM_Load( hbmk, aParams, cParam, 1, .T. ) /* Load parameters from script file */
+         tmp := HBM_Load( hbmk, aParams, cParam, 1, .T., cParam ) /* Load parameters from script file */
          IF tmp != _ERRLEV_OK .AND. ;
             tmp != _ERRLEV_STOP
             RETURN tmp
@@ -2790,6 +2790,13 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF inst_split_arg( cParam, @tmp, @cParam )
             FOR EACH cParam IN FN_Expand( PathMakeAbsolute( cParam, aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
                AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { tmp, cParam } )
+            NEXT
+         ELSE
+            /* -instfile=[<group>:] will delete all previous files added to that group */
+            FOR EACH tmp1 IN hbmk[ _HBMK_aINSTFILE ] DESCEND
+               IF tmp1[ 1 ] == tmp
+                  hb_ADel( hbmk[ _HBMK_aINSTFILE ], tmp1:__enumIndex(), .T. )
+               ENDIF
             NEXT
          ENDIF
 
@@ -7596,8 +7603,8 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
    LOCAL cDependency
    LOCAL aCommand
 
-   STATIC s_pRegexInclude := NIL
-   STATIC s_hExclStd := NIL
+   THREAD STATIC t_pRegexInclude := NIL
+   THREAD STATIC t_hExclStd := NIL
 
    IF hbmk[ _HBMK_nHEAD ] == _HEAD_OFF
       RETURN .F.
@@ -7728,9 +7735,9 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
 #define _HBMK_HEADER_LEN_           2
 
 STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
-   STATIC s_pRegexInclude
-   STATIC s_pRegexRequire
-   STATIC s_hExclStd
+   THREAD STATIC t_pRegexInclude
+   THREAD STATIC t_pRegexRequire
+   THREAD STATIC t_hExclStd
 
    LOCAL aDeps
    LOCAL cFileBody
@@ -7743,29 +7750,29 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
          http://en.wikipedia.org/wiki/PCRE
          http://www.pcre.org/pcre.txt */
 
-   IF s_pRegexInclude == NIL
+   IF t_pRegexInclude == NIL
       /* Switch to non UTF8 CP - otherwise PCRE fails on user files
        * containing non UTF8 characters. For this expression we do
        * not need UTF8 or any other fixed encoding.
        */
       tmp := hb_cdpSelect( "EN" )
-      s_pRegexInclude := hb_regexComp( _HBMK_REGEX_INCLUDE, .F. /* lCaseSensitive */, .T. /* lNewLine */ )
-      s_pRegexRequire := hb_regexComp( _HBMK_REGEX_REQUIRE, .F. /* lCaseSensitive */, .T. /* lNewLine */ )
+      t_pRegexInclude := hb_regexComp( _HBMK_REGEX_INCLUDE, .F. /* lCaseSensitive */, .T. /* lNewLine */ )
+      t_pRegexRequire := hb_regexComp( _HBMK_REGEX_REQUIRE, .F. /* lCaseSensitive */, .T. /* lNewLine */ )
       hb_cdpSelect( tmp )
-      IF Empty( s_pRegexInclude )
+      IF Empty( t_pRegexInclude )
          _hbmk_OutErr( hbmk, I_( "Internal Error: Regular expression engine missing or unsupported. Check your Harbour build settings." ) )
-         s_pRegexInclude := 0 /* To show the error only once by setting to non-NIL empty value */
+         t_pRegexInclude := 0 /* To show the error only once by setting to non-NIL empty value */
       ENDIF
    ENDIF
 
    aDeps := {}
-   IF ! Empty( s_pRegexInclude ) .AND. ;
-      ! Empty( s_pRegexRequire )
+   IF ! Empty( t_pRegexInclude ) .AND. ;
+      ! Empty( t_pRegexRequire )
 
       cFileBody := MemoRead( cFile )
 
       IF ! Empty( cFileBody )
-         FOR EACH tmp IN hb_regexAll( s_pRegexInclude, cFileBody, ;
+         FOR EACH tmp IN hb_regexAll( t_pRegexInclude, cFileBody, ;
                                       NIL /* lCaseSensitive */, ;
                                       NIL /* lNewLine */, NIL, ;
                                       NIL /* nGetMatch */, ;
@@ -7777,8 +7784,8 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
             /* Don't spend time on known system headers */
             IF lSystemHeader
 
-               IF s_hExclStd == NIL
-                  s_hExclStd := {;
+               IF t_hExclStd == NIL
+                  t_hExclStd := {;
                      "assert.h"       => NIL ,; /* Standard C */
                      "ctype.h"        => NIL ,;
                      "errno.h"        => NIL ,;
@@ -7870,7 +7877,7 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
                      "os2.h"          => NIL }  /* OS (os2) */
                ENDIF
 
-               IF StrTran( Lower( cHeader ), "\", "/" ) $ s_hExclStd
+               IF StrTran( Lower( cHeader ), "\", "/" ) $ t_hExclStd
                   LOOP
                ENDIF
             ENDIF
@@ -7894,7 +7901,7 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
          NEXT
 
          IF ! lCMode
-            FOR EACH tmp IN hb_regexAll( s_pRegexRequire, cFileBody, ;
+            FOR EACH tmp IN hb_regexAll( t_pRegexRequire, cFileBody, ;
                                          NIL /* lCaseSensitive */, ;
                                          NIL /* lNewLine */, NIL, ;
                                          NIL /* nGetMatch */, ;
@@ -10198,7 +10205,33 @@ STATIC FUNCTION ValueIsF( cString )
    RETURN cString == "no" .OR. ;
           cString == "0" /* Compatibility */
 
-STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP )
+/* built-in files */
+
+STATIC FUNCTION hbmk_builtin_File_hb_pkg_install()
+   #pragma __streaminclude "pkg_inst.hbm" | RETURN %s
+
+/* interface for handling built-in files */
+
+#define _HBMK_BUILDIN_FILENAME_MARKER_ "$"
+
+STATIC FUNCTION hbmk_builtin_List()
+   STATIC s_hHBM_BuildIn := {;
+      _HBMK_BUILDIN_FILENAME_MARKER_ + "hb_pkg_install.hbm" => {|| hbmk_builtin_File_hb_pkg_install() } }
+   RETURN s_hHBM_BuildIn
+
+STATIC FUNCTION hbmk_builtin_Is( cFileName )
+   RETURN LEFTEQUAL( cFileName, _HBMK_BUILDIN_FILENAME_MARKER_ ) .AND. ;
+      Len( cFileName ) > Len( _HBMK_BUILDIN_FILENAME_MARKER_ )
+
+STATIC FUNCTION hbmk_builtin_Exists( cFileName )
+   RETURN hbmk_builtin_Is( cFileName ) .AND. cFileName $ hbmk_builtin_List()
+
+STATIC FUNCTION hbmk_builtin_Load( cFileName )
+   RETURN Eval( hbmk_builtin_List()[ cFileName ] )
+
+/* ; */
+
+STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP, cParentFileName )
    LOCAL cFile
    LOCAL cLine
    LOCAL cParam
@@ -10208,9 +10241,21 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP )
    LOCAL lFound
    LOCAL tmp
 
-   IF hbmk_hb_FileExists( cFileName )
+   IF hbmk_builtin_Exists( cFileName ) .OR. hbmk_hb_FileExists( cFileName )
 
-      cFile := hbmk_MemoRead( cFileName ) /* NOTE: Intentionally using hbmk_MemoRead() which handles EOF char. */
+      IF hbmk_builtin_Is( cFileName )
+         cFile := hbmk_builtin_Load( cFileName )
+         /* Built-in files will act as if they were part of the parant file,
+            since their name is fixed and have no useful meaning whatsoever. */
+         OUTSTD( "Buildin file" + hb_eol() )
+         IF ! Empty( cParentFileName )
+            OUTSTD( "Rebasing from: " + cFileName + hb_eol() )
+            cFileName := cParentFileName
+            OUTSTD( "Rebasing to " + cFileName + hb_eol() )
+         ENDIF
+      ELSE
+         cFile := hbmk_MemoRead( cFileName ) /* NOTE: Intentionally using hbmk_MemoRead() which handles EOF char. */
+      ENDIF
 
       IF !( hb_eol() == _CHR_EOL )
          cFile := StrTran( cFile, hb_eol(), _CHR_EOL )
@@ -10235,7 +10280,7 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP )
                            cParam := hb_FNameExtSet( cParam, ".hbm" )
                         ENDIF
                         /* TODO: Modify '@script.ext' (@ prefixes) inclusion to not inherit path from parent */
-                        nResult := HBM_Load( hbmk, aParams, PathMakeAbsolute( PathSepToSelf( cParam ), cFileName ), nNestingLevel + 1, .T. ) /* Load parameters from script file */
+                        nResult := HBM_Load( hbmk, aParams, PathMakeAbsolute( PathSepToSelf( cParam ), cFileName ), nNestingLevel + 1, .T., cFileName ) /* Load parameters from script file */
                         IF nResult != _ERRLEV_OK .AND. ;
                            nResult != _ERRLEV_STOP
                            RETURN nResult
@@ -10246,7 +10291,7 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP )
                   CASE !( Left( cParam, 1 ) == "-" ) .AND. ;
                        Lower( hb_FNameExt( cParam ) ) == ".hbm"
                      IF nNestingLevel < _HBMK_NEST_MAX
-                        nResult := HBM_Load( hbmk, aParams, PathMakeAbsolute( PathSepToSelf( cParam ), cFileName ), nNestingLevel + 1, .T. ) /* Load parameters from script file */
+                        nResult := HBM_Load( hbmk, aParams, PathMakeAbsolute( PathSepToSelf( cParam ), cFileName ), nNestingLevel + 1, .T., cFileName ) /* Load parameters from script file */
                         IF nResult != _ERRLEV_OK .AND. ;
                            nResult != _ERRLEV_STOP
                            RETURN nResult
@@ -12186,100 +12231,100 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
          "knows" where Harbour headers reside on disk. */
 
 STATIC FUNCTION hbmk_CoreHeaderFiles()
-   STATIC s_hHeaders := NIL
+   THREAD STATIC t_hHeaders := NIL
 
 #if defined( HBMK_WITH_EMBEDDED_HEADERS ) .OR. ;
     defined( HBMK_WITH_ALL_EMBEDDED_HEADERS )
 
-   IF s_hHeaders == NIL
-      s_hHeaders := { => }
+   IF t_hHeaders == NIL
+      t_hHeaders := { => }
 
       /* command to store header files in hash array */
       #command ADD HEADER TO <hash> FILE <(cFile)> => ;
                #pragma __streaminclude <(cFile)> | <hash>\[ <(cFile)> \] := %s
 
 #if defined( HBMK_WITH_ALL_EMBEDDED_HEADERS )
-      ADD HEADER TO s_hHeaders FILE "achoice.ch"
-      ADD HEADER TO s_hHeaders FILE "assert.ch"
-      ADD HEADER TO s_hHeaders FILE "blob.ch"
-      ADD HEADER TO s_hHeaders FILE "box.ch"
-      ADD HEADER TO s_hHeaders FILE "button.ch"
-      ADD HEADER TO s_hHeaders FILE "color.ch"
-      ADD HEADER TO s_hHeaders FILE "common.ch"
-      ADD HEADER TO s_hHeaders FILE "dbedit.ch"
-      ADD HEADER TO s_hHeaders FILE "dbinfo.ch"
-      ADD HEADER TO s_hHeaders FILE "dbstruct.ch"
-      ADD HEADER TO s_hHeaders FILE "directry.ch"
-      ADD HEADER TO s_hHeaders FILE "error.ch"
-      ADD HEADER TO s_hHeaders FILE "fileio.ch"
-      ADD HEADER TO s_hHeaders FILE "getexit.ch"
-      ADD HEADER TO s_hHeaders FILE "hb.ch"
-      ADD HEADER TO s_hHeaders FILE "hbclass.ch"
-      ADD HEADER TO s_hHeaders FILE "hbcom.ch"
-      ADD HEADER TO s_hHeaders FILE "hbdebug.ch"
-      ADD HEADER TO s_hHeaders FILE "hbdyn.ch"
-      ADD HEADER TO s_hHeaders FILE "hbextcdp.ch"
-      ADD HEADER TO s_hHeaders FILE "hbextern.ch"
-      ADD HEADER TO s_hHeaders FILE "hbextlng.ch"
-      ADD HEADER TO s_hHeaders FILE "hbgfx.ch"
-      ADD HEADER TO s_hHeaders FILE "hbgfxdef.ch"
-      ADD HEADER TO s_hHeaders FILE "hbgtinfo.ch"
-      ADD HEADER TO s_hHeaders FILE "hbhash.ch"
-      ADD HEADER TO s_hHeaders FILE "hbhrb.ch"
-      ADD HEADER TO s_hHeaders FILE "hbinkey.ch"
-      ADD HEADER TO s_hHeaders FILE "hblang.ch"
-      ADD HEADER TO s_hHeaders FILE "hblpp.ch"
-      ADD HEADER TO s_hHeaders FILE "hbmacro.ch"
-      ADD HEADER TO s_hHeaders FILE "hbmath.ch"
-      ADD HEADER TO s_hHeaders FILE "hbmemory.ch"
-      ADD HEADER TO s_hHeaders FILE "hbmemvar.ch"
-      ADD HEADER TO s_hHeaders FILE "hboo.ch"
-      ADD HEADER TO s_hHeaders FILE "hbpers.ch"
-      ADD HEADER TO s_hHeaders FILE "hbsetup.ch"
-      ADD HEADER TO s_hHeaders FILE "hbsix.ch"
-      ADD HEADER TO s_hHeaders FILE "hbsocket.ch"
-      ADD HEADER TO s_hHeaders FILE "hbstdgen.ch"
-      ADD HEADER TO s_hHeaders FILE "hbsxdef.ch"
-      ADD HEADER TO s_hHeaders FILE "hbthread.ch"
-      ADD HEADER TO s_hHeaders FILE "hbtrace.ch"
-      ADD HEADER TO s_hHeaders FILE "hbusrrdd.ch"
-      ADD HEADER TO s_hHeaders FILE "hbver.ch"
-      ADD HEADER TO s_hHeaders FILE "hbzlib.ch"
-      ADD HEADER TO s_hHeaders FILE "inkey.ch"
-      ADD HEADER TO s_hHeaders FILE "memoedit.ch"
-      ADD HEADER TO s_hHeaders FILE "ord.ch"
-      ADD HEADER TO s_hHeaders FILE "rddsys.ch"
-      ADD HEADER TO s_hHeaders FILE "reserved.ch"
-      ADD HEADER TO s_hHeaders FILE "set.ch"
-      ADD HEADER TO s_hHeaders FILE "setcurs.ch"
-      ADD HEADER TO s_hHeaders FILE "simpleio.ch"
-      ADD HEADER TO s_hHeaders FILE "std.ch"
-      ADD HEADER TO s_hHeaders FILE "tbrowse.ch"
-      ADD HEADER TO s_hHeaders FILE "harbour.hbx"
-      ADD HEADER TO s_hHeaders FILE "hbcpage.hbx"
-      ADD HEADER TO s_hHeaders FILE "hblang.hbx"
-      ADD HEADER TO s_hHeaders FILE "hbscalar.hbx"
-      ADD HEADER TO s_hHeaders FILE "hbusrrdd.hbx"
+      ADD HEADER TO t_hHeaders FILE "achoice.ch"
+      ADD HEADER TO t_hHeaders FILE "assert.ch"
+      ADD HEADER TO t_hHeaders FILE "blob.ch"
+      ADD HEADER TO t_hHeaders FILE "box.ch"
+      ADD HEADER TO t_hHeaders FILE "button.ch"
+      ADD HEADER TO t_hHeaders FILE "color.ch"
+      ADD HEADER TO t_hHeaders FILE "common.ch"
+      ADD HEADER TO t_hHeaders FILE "dbedit.ch"
+      ADD HEADER TO t_hHeaders FILE "dbinfo.ch"
+      ADD HEADER TO t_hHeaders FILE "dbstruct.ch"
+      ADD HEADER TO t_hHeaders FILE "directry.ch"
+      ADD HEADER TO t_hHeaders FILE "error.ch"
+      ADD HEADER TO t_hHeaders FILE "fileio.ch"
+      ADD HEADER TO t_hHeaders FILE "getexit.ch"
+      ADD HEADER TO t_hHeaders FILE "hb.ch"
+      ADD HEADER TO t_hHeaders FILE "hbclass.ch"
+      ADD HEADER TO t_hHeaders FILE "hbcom.ch"
+      ADD HEADER TO t_hHeaders FILE "hbdebug.ch"
+      ADD HEADER TO t_hHeaders FILE "hbdyn.ch"
+      ADD HEADER TO t_hHeaders FILE "hbextcdp.ch"
+      ADD HEADER TO t_hHeaders FILE "hbextern.ch"
+      ADD HEADER TO t_hHeaders FILE "hbextlng.ch"
+      ADD HEADER TO t_hHeaders FILE "hbgfx.ch"
+      ADD HEADER TO t_hHeaders FILE "hbgfxdef.ch"
+      ADD HEADER TO t_hHeaders FILE "hbgtinfo.ch"
+      ADD HEADER TO t_hHeaders FILE "hbhash.ch"
+      ADD HEADER TO t_hHeaders FILE "hbhrb.ch"
+      ADD HEADER TO t_hHeaders FILE "hbinkey.ch"
+      ADD HEADER TO t_hHeaders FILE "hblang.ch"
+      ADD HEADER TO t_hHeaders FILE "hblpp.ch"
+      ADD HEADER TO t_hHeaders FILE "hbmacro.ch"
+      ADD HEADER TO t_hHeaders FILE "hbmath.ch"
+      ADD HEADER TO t_hHeaders FILE "hbmemory.ch"
+      ADD HEADER TO t_hHeaders FILE "hbmemvar.ch"
+      ADD HEADER TO t_hHeaders FILE "hboo.ch"
+      ADD HEADER TO t_hHeaders FILE "hbpers.ch"
+      ADD HEADER TO t_hHeaders FILE "hbsetup.ch"
+      ADD HEADER TO t_hHeaders FILE "hbsix.ch"
+      ADD HEADER TO t_hHeaders FILE "hbsocket.ch"
+      ADD HEADER TO t_hHeaders FILE "hbstdgen.ch"
+      ADD HEADER TO t_hHeaders FILE "hbsxdef.ch"
+      ADD HEADER TO t_hHeaders FILE "hbthread.ch"
+      ADD HEADER TO t_hHeaders FILE "hbtrace.ch"
+      ADD HEADER TO t_hHeaders FILE "hbusrrdd.ch"
+      ADD HEADER TO t_hHeaders FILE "hbver.ch"
+      ADD HEADER TO t_hHeaders FILE "hbzlib.ch"
+      ADD HEADER TO t_hHeaders FILE "inkey.ch"
+      ADD HEADER TO t_hHeaders FILE "memoedit.ch"
+      ADD HEADER TO t_hHeaders FILE "ord.ch"
+      ADD HEADER TO t_hHeaders FILE "rddsys.ch"
+      ADD HEADER TO t_hHeaders FILE "reserved.ch"
+      ADD HEADER TO t_hHeaders FILE "set.ch"
+      ADD HEADER TO t_hHeaders FILE "setcurs.ch"
+      ADD HEADER TO t_hHeaders FILE "simpleio.ch"
+      ADD HEADER TO t_hHeaders FILE "std.ch"
+      ADD HEADER TO t_hHeaders FILE "tbrowse.ch"
+      ADD HEADER TO t_hHeaders FILE "harbour.hbx"
+      ADD HEADER TO t_hHeaders FILE "hbcpage.hbx"
+      ADD HEADER TO t_hHeaders FILE "hblang.hbx"
+      ADD HEADER TO t_hHeaders FILE "hbscalar.hbx"
+      ADD HEADER TO t_hHeaders FILE "hbusrrdd.hbx"
 #else
-      ADD HEADER TO s_hHeaders FILE "color.ch"
-      ADD HEADER TO s_hHeaders FILE "common.ch"
-      ADD HEADER TO s_hHeaders FILE "directry.ch"
-      ADD HEADER TO s_hHeaders FILE "error.ch"
-      ADD HEADER TO s_hHeaders FILE "fileio.ch"
-      ADD HEADER TO s_hHeaders FILE "hbhash.ch"
-      ADD HEADER TO s_hHeaders FILE "hbmemory.ch"
-      ADD HEADER TO s_hHeaders FILE "hbver.ch"
-      ADD HEADER TO s_hHeaders FILE "inkey.ch"
-      ADD HEADER TO s_hHeaders FILE "setcurs.ch"
-      ADD HEADER TO s_hHeaders FILE "simpleio.ch"
+      ADD HEADER TO t_hHeaders FILE "color.ch"
+      ADD HEADER TO t_hHeaders FILE "common.ch"
+      ADD HEADER TO t_hHeaders FILE "directry.ch"
+      ADD HEADER TO t_hHeaders FILE "error.ch"
+      ADD HEADER TO t_hHeaders FILE "fileio.ch"
+      ADD HEADER TO t_hHeaders FILE "hbhash.ch"
+      ADD HEADER TO t_hHeaders FILE "hbmemory.ch"
+      ADD HEADER TO t_hHeaders FILE "hbver.ch"
+      ADD HEADER TO t_hHeaders FILE "inkey.ch"
+      ADD HEADER TO t_hHeaders FILE "setcurs.ch"
+      ADD HEADER TO t_hHeaders FILE "simpleio.ch"
 #endif
 
-      hb_HCaseMatch( s_hHeaders, .T. )
+      hb_HCaseMatch( t_hHeaders, .T. )
    ENDIF
 
 #endif
 
-   RETURN s_hHeaders
+   RETURN t_hHeaders
 
 /* Implement hbshell (formerly known as hbrun) */
 
@@ -13870,7 +13915,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-manifest=<file>"   , I_( "embed manifest <file> in executable/dynamic lib (Windows only)" ) },;
       { "-sign=<key>"        , I_( "sign executable with <key> (Windows and Darwin only)" ) },;
       { "-signpw=<pw>"       , I_( "use <pw> as password when signing executable (Windows and Darwin only)" ) },;
-      { "-instfile=<g:file>" , I_( "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group, it must be at least two characters long." ) },;
+      { "-instfile=<g:file>" , I_( "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group (case sensitive), it must be at least two characters long. In case you don't specify <file>, the list of files in that group will be emptied." ) },;
       { "-instpath=<g:path>" , I_( "copy target to <path>. if <path> is a directory, it should end with path separatorm, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group." ) },;
       { "-instforce[-]"      , I_( "copy target to install path even if it is up to date" ) },;
       { "-depimplib[-]"      , I_( "enable (or disable) import library generation for import library sources specified in -depimplibs= options (default: yes)" ) },;

@@ -23,13 +23,4 @@ hbusb.hbx
 
 core.c
 
--instfile=misc:*.hbc
--instfile=inc:*.ch
--instfile=inc:*.hbx
--instfile=tests:tests/*.*
-
--instpath=${HB_ADDONS}/${hb_name}/lib/${hb_plat}/${hb_comp}/
--instpath=depimplib:${HB_ADDONS}/${hb_name}/lib/${hb_plat}/${hb_comp}/
--instpath=misc:${HB_ADDONS}/${hb_name}/
--instpath=inc:${HB_ADDONS}/${hb_name}/
--instpath=tests:${HB_ADDONS}/${hb_name}/tests/
+$hb_pkg_install.hbm

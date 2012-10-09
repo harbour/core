@@ -1009,7 +1009,7 @@ msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group, it must be at least two characters long."
+msgid "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group (case sensitive), it must be at least two characters long. In case you don't specify <file>, the list of files in that group will be emptied."
 msgstr ""
 
 #: hbmk2.prg:6385 hbmk2.prg:7111
