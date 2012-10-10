@@ -323,15 +323,13 @@ HB_FUNC( FBQUERY )
       isc_stmt_handle  stmt = ( isc_stmt_handle ) 0;
       XSQLVAR *        var;
 
-      char             sel_str[ 256 ];
       unsigned short   dialect = ( unsigned short ) hb_parnidef( 3, SQL_DIALECT_V5 );
       int              i;
       int              num_cols;
 
       PHB_ITEM qry_handle;
       PHB_ITEM aNew;
-
-      hb_strncpy( sel_str, hb_parcx( 2 ), sizeof( sel_str ) - 1 );
+      PHB_ITEM aTemp;
 
       if( HB_ISPOINTER( 4 ) )
          trans = ( isc_tr_handle ) ( HB_PTRDIFF ) hb_parptr( 4 );
@@ -354,7 +352,7 @@ HB_FUNC( FBQUERY )
       sqlda->version = 1;
 
       /* Prepare the statement. */
-      if( isc_dsql_prepare( status, &trans, &stmt, 0, sel_str, dialect, sqlda ) )
+      if( isc_dsql_prepare( status, &trans, &stmt, 0, hb_parcx( 2 ), dialect, sqlda ) )
       {
          hb_xfree( sqlda );
          hb_retnl( isc_sqlcode( status ) );
@@ -368,9 +366,6 @@ HB_FUNC( FBQUERY )
          hb_retnl( isc_sqlcode( status ) );
          return;
       }
-
-      num_cols = sqlda->sqld;
-      aNew = hb_itemArrayNew( num_cols );
 
       /* Relocate necessary number of columns */
       if( sqlda->sqld > sqlda->sqln )
@@ -388,10 +383,12 @@ HB_FUNC( FBQUERY )
          }
       }
 
+      num_cols = sqlda->sqld;
+      aNew = hb_itemArrayNew( num_cols );
+      aTemp = hb_itemNew( NULL );
+
       for( i = 0, var = sqlda->sqlvar; i < sqlda->sqld; i++, var++ )
       {
-         PHB_ITEM aTemp;
-
          int dtype = ( var->sqltype & ~1 );
 
          switch( dtype )
@@ -415,7 +412,7 @@ HB_FUNC( FBQUERY )
          if( var->sqltype & 1 )
             var->sqlind = ( short * ) hb_xgrab( sizeof( short ) );
 
-         aTemp = hb_itemArrayNew( 5 );
+         hb_arrayNew( aTemp, 5 );
 
          hb_arraySetC(  aTemp, 1, sqlda->sqlvar[ i ].sqlname );
          hb_arraySetNL( aTemp, 2, ( long ) dtype );
@@ -423,17 +420,17 @@ HB_FUNC( FBQUERY )
          hb_arraySetNL( aTemp, 4, sqlda->sqlvar[ i ].sqlscale );
          hb_arraySetC(  aTemp, 5, sqlda->sqlvar[ i ].relname );
 
-         hb_itemArrayPut( aNew, i + 1, aTemp );
-
-         hb_itemRelease( aTemp );
+         hb_arraySetForward( aNew, i + 1, aTemp );
       }
+
+      hb_itemRelease( aTemp );
 
       if( ! sqlda->sqld )
       {
          /* Execute and commit non-select querys */
          if( isc_dsql_execute( status, &trans, &stmt, dialect, NULL ) )
          {
-            /* TOFIX: memory leak */
+            hb_itemRelease( aNew );
             hb_retnl( isc_sqlcode( status ) );
             return;
          }
@@ -442,7 +439,7 @@ HB_FUNC( FBQUERY )
       {
          if( isc_dsql_execute( status, &trans, &stmt, dialect, sqlda ) )
          {
-            /* TOFIX: memory leak */
+            hb_itemRelease( aNew );
             hb_retnl( isc_sqlcode( status ) );
             return;
          }
@@ -458,13 +455,14 @@ HB_FUNC( FBQUERY )
 
       hb_arraySetNL( qry_handle, 4, ( long ) num_cols );
       hb_arraySetNI( qry_handle, 5, ( int ) dialect );
-      hb_arraySet(   qry_handle, 6, aNew );
+      hb_arraySetForward( qry_handle, 6, aNew );
 
       hb_itemReturnRelease( qry_handle );
       hb_itemRelease( aNew );
    }
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+
 }
 
 HB_FUNC( FBFETCH )
