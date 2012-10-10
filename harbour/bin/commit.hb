@@ -27,7 +27,7 @@
  */
 
 #define _MY_NAME_ "Firstname Lastname (me domain.net)"
-#define _PCOMMIT_ ".hbcommit"
+#define _CONFIGF_ ".hbcommit"
 
 #pragma warninglevel=3
 #pragma -km+
@@ -53,16 +53,17 @@ PROCEDURE Main()
 
    // ;
 
-   IF hb_FileExists( _PCOMMIT_ )
-      cMyName := AllTrim( hb_MemoRead( _PCOMMIT_ ) )
+   IF hb_FileExists( _CONFIGF_ )
+      cMyName := AllTrim( hb_MemoRead( _CONFIGF_ ) )
    ELSE
       cMyName := _MY_NAME_
    ENDIF
 
    nOffset := hb_UTCOffset()
 
-   cLogNew := hb_StrFormat( "%1$s UTC+%2$02d%3$02d %4$s",;
+   cLogNew := hb_StrFormat( "%1$s UTC%2$s%3$02d%4$02d %5$s",;
                  hb_TToC( hb_DateTime(), "YYYY-MM-DD", "HH:MM" ),;
+                 iif( nOffset < 0, "-", "+" ),;
                  Int( nOffset / 3600 ),;
                  Int( ( ( nOffset / 3600 ) - Int( nOffset / 3600 ) ) * 60 ),;
                  cMyName ) + hb_eol()
