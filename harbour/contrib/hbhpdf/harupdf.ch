@@ -274,11 +274,11 @@
 #define HPDF_TALIGN_CENTER                  2
 #define HPDF_TALIGN_JUSTIFY                 3
 
-#define  HPDF_TRUE                          .T.
-#define  HPDF_FALSE                         .F.
+#define HPDF_TRUE                           .T.
+#define HPDF_FALSE                          .F.
 
-#define  HPDF_OK                            0
-#define  HPDF_NOERROR                       0
+#define HPDF_OK                             0
+#define HPDF_NOERROR                        0
 
 /* buffer size which is required when we convert to character string. */
 #define HPDF_TMP_BUF_SIZ                    512
@@ -325,8 +325,8 @@
 #define HPDF_COMP_IMAGE                     0x02
 #define HPDF_COMP_METADATA                  0x04
 #define HPDF_COMP_ALL                       0x0F
-/* #define  HPDF_COMP_BEST_COMPRESS             0x10 */
-/* #define  HPDF_COMP_BEST_SPEED                0x20 */
+/* #define HPDF_COMP_BEST_COMPRESS             0x10 */
+/* #define HPDF_COMP_BEST_SPEED                0x20 */
 #define HPDF_COMP_MASK                      0xFF
 
 /* permission flags (only Revision 2 is supported) */
