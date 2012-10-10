@@ -45,6 +45,7 @@ PROCEDURE Main()
    LOCAL cHit
    LOCAL nPos
    LOCAL cMyName
+   LOCAL cOldLang
 
    IF Empty( aChanges )
       OutStd( hb_progname() + ": no changes" + hb_eol() )
@@ -75,10 +76,12 @@ PROCEDURE Main()
    // ;
 
    cLog := MemoRead( "ChangeLog" )
+   cOldLang := hb_cdpSelect( "EN" )
    cHit := hb_AtX( "\n[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9] UTC[\-+][0-9][0-9][0-9][0-9] ", cLog )
    IF Empty( cHit )
       cHit := ""
    ENDIF
+   hb_cdpSelect( cOldLang )
 
    nPos := At( AllTrim( cHit ), cLog )
    IF nPos > 0
