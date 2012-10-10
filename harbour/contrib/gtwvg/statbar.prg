@@ -264,8 +264,7 @@ METHOD WvgStatusBar:delItem( nItemORcKey )
 
    IF nIndex > 0
       /* Delete panel by window */
-      ADel( ::aItems, nIndex )
-      ASize( ::aItems, Len( ::aItems ) - 1 )
+      hb_ADel( ::aItems, nIndex, .T. )
    ENDIF
 
    RETURN Self

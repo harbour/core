@@ -242,8 +242,8 @@ PROCEDURE Main( ... )
                         hb_ntos( oR:CategoryIndex( oR:Category ) ) + " " + hb_ntos( oR:SubcategoryIndex( oR:Category, oR:Subcategory ) ) + " " + oR:Name ;
                         } )
                ELSE
-                  ASize( ADel( p_aCategories[ idx ][ 2 ], idx2 ), Len( p_aCategories[ idx ][ 2 ] ) - 1 )
-                  ASize( ADel( p_aCategories[ idx ][ 3 ], idx2 ), Len( p_aCategories[ idx ][ 3 ] ) - 1 )
+                  hb_ADel( p_aCategories[ idx ][ 2 ], idx2, .T. )
+                  hb_ADel( p_aCategories[ idx ][ 3 ], idx2, .T. )
                ENDIF
             NEXT
          ELSE

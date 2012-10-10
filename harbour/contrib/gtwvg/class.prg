@@ -3450,8 +3450,7 @@ METHOD wvtMenu:DelItem( nItemNum )
       ENDIF
 
       IF ( lResult := Wvt_DeleteMenu( ::hMenu, nItemNum - 1,MF_BYPOSITION ) ) /* Remember ZERO base */
-         ADel( ::aItems, nItemNum )
-         ASize( ::aItems, Len( ::aItems ) - 1 )
+         hb_ADel( ::aItems, nItemNum, .T. )
       ELSE
 #if 0
          Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:DelItem()", "Delete menu item FAILED", { nItemNum },"wvt.prg" ) )

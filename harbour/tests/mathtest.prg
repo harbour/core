@@ -72,18 +72,18 @@ FUNCTION localmatherr( nType, cFuncname, cError, nArg1, nArg2, aInfo )
 
    cStr += hb_ntos( nType ) + " in " + cFuncname + "("
 
-   IF ValType( nArg1 ) == "N"
+   IF HB_ISNUMERIC( nArg1 )
       cStr += hb_ntos( nArg1 )
    ENDIF
-   IF ValType( nArg2 ) == "N"
+   IF HB_ISNUMERIC( nArg2 )
       cStr += "," + hb_ntos( nArg2 )
    ENDIF
    cStr += "):"
    ? cStr
    ? "!!                              " + cError
-   IF aInfo[HB_MATHERRORBLOCK_HANDLED]
+   IF aInfo[ HB_MATHERRORBLOCK_HANDLED ]
       ? "!!                               --> already handled with return value: " + ;
-         hb_ntos( aInfo[HB_MATHERRORBLOCK_RETVAL] )
+         hb_ntos( aInfo[ HB_MATHERRORBLOCK_RETVAL ] )
       RETURN 1
    ENDIF
 

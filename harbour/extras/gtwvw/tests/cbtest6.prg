@@ -249,7 +249,7 @@ FUNCTION CBreader( oGet )
          oGet:exitState := GE_NOEXIT
       ENDIF
 
-   ELSEIF ValType( bKeyBlock := SetKey( nKey ) ) == "B"
+   ELSEIF HB_ISBLOCK( bKeyBlock := SetKey( nKey ) )
       oGetList:GetDoSetKey( bKeyBlock )  //eval(bKeyBlock)
       oGet:exitState := GE_NOEXIT
 

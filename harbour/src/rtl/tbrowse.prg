@@ -2147,8 +2147,7 @@ METHOD delColumn( nColumn ) CLASS TBROWSE
    IF .T.      /* It's optimized by compiler without any RT overhead */
 #endif
       oCol := ::columns[ nColumn ]
-      ADel( ::columns, nColumn )
-      ASize( ::columns, Len( ::columns ) - 1 )
+      hb_ADel( ::columns, nColumn, .T. )
       ::configure( _TBR_CONF_COLUMNS )
    ENDIF
 
@@ -2657,8 +2656,7 @@ METHOD setKey( nKey, bBlock ) CLASS TBROWSE
    ELSE
       bReturn := ::keys[ nPos ][ _TBC_SETKEY_BLOCK ]
       IF PCount() == 2 .AND. bBlock == NIL .AND. nKey != 0
-         ADel( ::keys, nPos )
-         ASize( ::keys, Len( ::keys ) - 1 )
+         hb_ADel( ::keys, nPos, .T. )
       ENDIF
    ENDIF
 

@@ -949,8 +949,7 @@ STATIC FUNCTION AR_UNLOCK( nWA, nRec )
          nPos := AScan( aRecords, nRec )
          IF nPos > 0
             aRecInfo[ nRec, RECDATA_LOCKED ] := 0
-            ADel( aRecords, nPos )
-            ASize( aRecords, Len( aRecords ) - 1 )
+            hb_ADel( aRecords, nPos, .T. )
          ENDIF
       ENDIF
    ENDIF

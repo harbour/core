@@ -221,8 +221,7 @@ METHOD WvgPartHandler:delChild( oWvg )
    n := AScan( ::aChildren, {| o | o == oWvg } )
    IF n > 0
       oWvg:destroy()
-      ADel( ::aChildren, n )
-      ASize( ::aChildren, Len( ::aChildren ) - 1 )
+      hb_ADel( ::aChildren, n, .T. )
    ENDIF
 
    RETURN Self

@@ -118,8 +118,7 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
          DO CASE
          CASE nKey == K_F7
             FOR nDim := 1 TO Len( ar )
-               ADel( ar[ nDim ], nElem )
-               ASize( ar[ nDim ], Len( ar[ nDim ] ) - 1 )
+               hb_ADel( ar[ nDim ], nElem, .T. )
             NEXT
             b:refreshAll()
 
@@ -128,8 +127,7 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
                // check valtype of current element before AINS()
                cType := ValType( ar[ nDim, nElem ] )
                cVal  := ar[ nDim, nElem ]
-               ASize( ar[ nDim ], Len( ar[ nDim ] ) + 1 )
-               AIns( ar[ nDim ], nElem )
+               hb_AIns( ar[ nDim ], nElem,, .T. )
                IF cType == "C"
                   ar[ nDim, nElem ] := Space( Len( cVal ) )
                ELSEIF cType == "N"

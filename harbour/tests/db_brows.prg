@@ -158,7 +158,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
          LI_MSLEN := Array( LI_COLCOUNT )
          LI_MSDEC := Array( LI_COLCOUNT )
          FOR i := 1 TO LI_COLCOUNT
-            IF ValType( LI_MSF[ i ] ) == "B"
+            IF HB_ISBLOCK( LI_MSF[ i ] )
                vartmp        := Eval( LI_MSF[ i ], mslist, i )
                LI_MSTYP[ i ] := ValType( vartmp )
                IF LI_MSTYP[ i ] == "C"
@@ -178,7 +178,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
          NEXT
       ENDIF
    ENDIF
-   IF ValType( LI_MSED ) == "N"
+   IF HB_ISNUMERIC( LI_MSED )
       predxx := predit := LI_MSED
    ELSE
       predxx := predit := iif( AScan( LI_MSED, 3 ) != 0, 3, iif( AScan( LI_MSED, 2 ) != 0, 2, 1 ) )
@@ -374,9 +374,9 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
       CASE ( xkey == K_ENTER .OR. !( hb_keyChar( xkey ) == "" ) ) .AND. predit > 1
          fipos := LI_COLPOS + LI_NLEFT - 1 - LI_FREEZE
          IF LI_WHEN == NIL .OR. Len( LI_WHEN ) < fipos .OR. LI_WHEN[ fipos ] == NIL .OR. Eval( LI_WHEN[ fipos ] )
-            IF !( ValType( LI_MSED ) == "N" )
+            IF ! HB_ISNUMERIC( LI_MSED )
                vartmp := iif( Len( LI_MSED ) < fipos, 1, LI_MSED[ fipos ] )
-               IF ValType( vartmp ) == "N"
+               IF HB_ISNUMERIC( vartmp )
                   IF vartmp != 2
                      LOOP
                   ENDIF
@@ -411,7 +411,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
                      ENDIF
                   ENDIF
                ENDIF
-               IF LI_BDESHOUT != NIL .AND. ValType( varbuf ) == "C"
+               IF LI_BDESHOUT != NIL .AND. HB_ISSTRING( varbuf )
                   varbuf := Eval( LI_BDESHOUT, mslist, varbuf )
                ENDIF
                FieldPut( fipos, varbuf )

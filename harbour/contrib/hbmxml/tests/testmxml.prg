@@ -457,14 +457,14 @@ PROCEDURE Main( cFileArg )
     */
 
    IF Left( cFileArg, 1 ) == "<"
-      hTree := mxmlLoadString( nil, cFileArg, @type_cb() )
+      hTree := mxmlLoadString( NIL, cFileArg, @type_cb() )
    ELSE
 
       /*
        * Read the file...
        */
 
-      hTree := mxmlLoadFile( nil, cFileArg, @type_cb() )
+      hTree := mxmlLoadFile( NIL, cFileArg, @type_cb() )
    ENDIF
 
    IF Empty( hTree )
@@ -525,14 +525,14 @@ PROCEDURE Main( cFileArg )
     */
 
    IF Left( cFileArg, 1 ) == "<"
-      mxmlSAXLoadString( nil, cFileArg, @type_cb(), @sax_cb(), nil )
+      mxmlSAXLoadString( NIL, cFileArg, @type_cb(), @sax_cb(), NIL )
    ELSE
 
       /*
        * Read the file...
        */
 
-      mxmlSAXLoadFile( nil, cFileArg, @type_cb(), @sax_cb(), nil )
+      mxmlSAXLoadFile( NIL, cFileArg, @type_cb(), @sax_cb(), NIL )
    ENDIF
 
    IF cFileArg == "test.xml"
@@ -632,7 +632,7 @@ FUNCTION type_cb( hNode )                 /* O - Data type */
  *                     newlines and tabs...
  */
 
-FUNCTION whitespace_cb( hNode, nWhere )   /* O - Whitespace string or nil */
+FUNCTION whitespace_cb( hNode, nWhere )   /* O - Whitespace string or NIL */
                                           /* I - Element node */
                                           /* I - Open or close tag? */
 
@@ -681,7 +681,7 @@ FUNCTION whitespace_cb( hNode, nWhere )   /* O - Whitespace string or nil */
       IF nWhere == MXML_WS_AFTER_OPEN
          RETURN hb_eol()
       ELSE
-         RETURN nil
+         RETURN NIL
       ENDIF
    ELSEIF nWhere == MXML_WS_BEFORE_OPEN .OR.                                                          ;
           ( ( cName == "choice" .OR. cName == "option" ) .AND. nWhere == MXML_WS_BEFORE_CLOSE )
@@ -712,4 +712,4 @@ FUNCTION whitespace_cb( hNode, nWhere )   /* O - Whitespace string or nil */
     * Return NULL for no added whitespace...
     */
 
-   RETURN nil
+   RETURN NIL

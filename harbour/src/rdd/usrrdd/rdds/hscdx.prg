@@ -200,10 +200,8 @@ FUNCTION HSX_CLOSE( xHSX )
          nSlot := 0
       ENDIF
       IF nSlot != 0
-         ADEL( aWData[ 2 ], nSlot )
-         ADEL( aWData[ 3 ], nSlot )
-         ASIZE( aWData[ 2 ], LEN( aWData[ 2 ] ) - 1 )
-         ASIZE( aWData[ 3 ], LEN( aWData[ 3 ] ) - 1 )
+         hb_ADEL( aWData[ 2 ], nSlot, .T. )
+         hb_ADEL( aWData[ 3 ], nSlot, .T. )
       ENDIF
    ENDIF
 

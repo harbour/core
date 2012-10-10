@@ -41,7 +41,7 @@ FUNCTION trtf()
 
    STATIC oclass
 
-   IF oclass == nil
+   IF oclass == NIL
       oclass := HBClass():new( "trtf" )
       oclass:adddata( "nhandle" )
       oclass:addmethod( "new",  @new() )

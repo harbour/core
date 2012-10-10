@@ -63,8 +63,6 @@
       MemoEdit( <mess>, <t>, <l>, <b>, <r>, .F., NIL, ( <r> ) - ( <l> ) + 1 ) ;;
       _ftPopKeys()
 
-#define ASHRINK( ar ) ASize( ar, Len( ar ) - 1 )
-
 /* This INKEY UDC was posted by Don Caton on NanForum... Thanks Don <g> */
 #command FT_INKEY [ <secs> ] TO <var>                                     ;
       =>                                                                  ;
@@ -1510,7 +1508,7 @@ STATIC FUNCTION _ftPopWin
       _ftLastWinColor()
    ENDIF
 
-   ASHRINK( t_aWindow )
+   ASize( t_aWindow, Len( t_aWindow ) - 1 )
 
    IF ! Empty( t_aWindow )
       _ftSetWinColor( W_CURR, W_SCREEN, W_VARIAB )

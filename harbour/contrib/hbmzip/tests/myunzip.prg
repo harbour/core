@@ -68,8 +68,7 @@ PROCEDURE Main( ... )
    ENDIF
    cFileName := hb_FNameMerge( cPath, cFileName, cExt )
 
-   ADel( aWild, 1 )
-   ASize( aWild, Len( aWild ) - 1 )
+   hb_ADel( aWild, 1, .T. )
 
    FOR tmp := 1 TO Len( aWild ) - 1
       IF Lower( aWild[ tmp ] ) == "--pass"

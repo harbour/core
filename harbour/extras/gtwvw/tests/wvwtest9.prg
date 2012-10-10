@@ -538,7 +538,7 @@ FUNCTION DEMO_Browse()
    USE '..\..\..\tests\TEST' NEW
    IF NetErr()
       WVW_lCloseWindow()
-      RETURN nil
+      RETURN NIL
    ENDIF
 
    INDEX ON FIELD->LAST TO TEST1  //20040707
@@ -673,7 +673,7 @@ FUNCTION DEMO_Browse()
    SetColor( cColor )
 // SetCursor( nCursor )
 
-   RETURN nil //DEMO_Browse()
+   RETURN NIL //DEMO_Browse()
 
 /* generic Vertical Scrollbar handler for tbrowse */
 
@@ -917,7 +917,7 @@ FUNCTION WVW_SetFocus( hWnd, nWinNum )
       Alert( "Got focus " + tran( nGotFocus,"9999" ) + "th times" )
    ENDIF
 
-   RETURN nil
+   RETURN NIL
 #endif
 
 //
@@ -926,7 +926,7 @@ FUNCTION WVW_SetFocus( hWnd, nWinNum )
 //      received by the window.
 //
 //FUNCTION WVW_KillFocus( hWnd )
-//RETURN nil
+//RETURN NIL
 
 FUNCTION WVW_TIMER( nWinNum, hWnd, message, wParam, lParam )
 

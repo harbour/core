@@ -102,7 +102,7 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
                AAdd( aObjects, &( cLine ) )
             ENDIF
 
-            CASE hb_asciiUpper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "ENDOBJECT"
+         CASE hb_asciiUpper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "ENDOBJECT"
             ASize( aObjects, Len( aObjects ) - 1 )
 
          CASE hb_asciiUpper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "ARRAY"

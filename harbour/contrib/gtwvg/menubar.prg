@@ -252,8 +252,7 @@ METHOD WvgMenuBar:delItem( nItemNum )
       ENDIF
 
       IF ( lResult := WVG_DeleteMenu( ::hMenu, nItemNum - 1, MF_BYPOSITION ) ) /* Remember ZERO base */
-         ADel( ::aMenuItems, nItemNum )
-         ASize( ::aMenuItems, Len( ::aMenuItems ) - 1 )
+         hb_ADel( ::aMenuItems, nItemNum, .T. )
       ELSE
 #if 0
          Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:DelItem()", "Delete menu item FAILED", { nItemNum },"wvt.prg" ) )

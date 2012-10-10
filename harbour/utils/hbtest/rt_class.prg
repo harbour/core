@@ -109,7 +109,7 @@ PROCEDURE Main_CLASS()
    oValue := DTORCLASS():NEW(0)
    TEST_LINE( oValue:type                     , 0                                      )
    /* create cross reference */
-   aRef := { oValue, nil }; aRef[2] := aRef; aRef := NIL
+   aRef := { oValue, NIL }; aRef[2] := aRef; aRef := NIL
    TEST_LINE( oValue := NIL                   , NIL                                    )
    TEST_LINE( objHolder                       , NIL                                    )
    TEST_LINE( cDtorResult                     , ""                                     )
@@ -122,7 +122,7 @@ PROCEDURE Main_CLASS()
    oValue := DTORCLASS():NEW(1)
    TEST_LINE( oValue:type                     , 1                                      )
    /* create cross reference */
-   aRef := { oValue, nil }; aRef[2] := aRef; aRef := NIL
+   aRef := { oValue, NIL }; aRef[2] := aRef; aRef := NIL
    TEST_LINE( oValue := NIL                   , NIL                                    )
    TEST_LINE( objHolder                       , NIL                                    )
    TEST_LINE( cDtorResult                     , ""                                     )
@@ -135,7 +135,7 @@ PROCEDURE Main_CLASS()
    oValue := DTORCLASS():NEW(2)
    TEST_LINE( oValue:type                     , 2                                      )
    /* create cross reference */
-   aRef := { oValue, nil }; aRef[2] := aRef; aRef := NIL
+   aRef := { oValue, NIL }; aRef[2] := aRef; aRef := NIL
    TEST_LINE( oValue := NIL                   , NIL                                    )
    TEST_LINE( objHolder                       , NIL                                    )
    TEST_LINE( cDtorResult                     , ""                                     )
@@ -148,7 +148,7 @@ PROCEDURE Main_CLASS()
    oValue := DTORCLASS():NEW(3)
    TEST_LINE( oValue:type                     , 3                                      )
    /* create cross reference */
-   aRef := { oValue, nil }; aRef[2] := aRef; aRef := NIL
+   aRef := { oValue, NIL }; aRef[2] := aRef; aRef := NIL
    TEST_LINE( oValue := NIL                   , NIL                                    )
    TEST_LINE( objHolder                       , NIL                                    )
    TEST_LINE( cDtorResult                     , ""                                     )

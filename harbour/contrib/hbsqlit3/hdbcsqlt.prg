@@ -56,7 +56,7 @@
 #include "error.ch"
 #include "hbsqlit3.ch"
 
-#define _TODO_ nil
+#define _TODO_ NIL
 
 create class hdbcSQLTConnection
 
@@ -96,9 +96,9 @@ method new( cDBFile, lCreateIfNotExist ) class hdbcSQLTConnection
 
 method close() class hdbcSQLTConnection
 
-   ::pDb := nil
+   ::pDb := NIL
 
-   return nil
+   return NIL
 
 method startTransaction() class hdbcSQLTConnection
 
@@ -106,7 +106,7 @@ method startTransaction() class hdbcSQLTConnection
       raiseError( sqlite3_errmsg( ::pDb ) )
    endif
 
-   return nil
+   return NIL
 
 
 method commit() class hdbcSQLTConnection
@@ -115,7 +115,7 @@ method commit() class hdbcSQLTConnection
       raiseError( sqlite3_errmsg( ::pDb ) )
    endif
 
-   return nil
+   return NIL
 
 method rollback() class hdbcSQLTConnection
 
@@ -123,7 +123,7 @@ method rollback() class hdbcSQLTConnection
       raiseError( sqlite3_errmsg( ::pDb ) )
    endif
 
-   return nil
+   return NIL
 
 method createStatement() class hdbcSQLTConnection
 
@@ -193,11 +193,11 @@ method Close() class hdbcSQLTStatement
 
       sqlite3_finalize( ::pRes )
 
-      ::pRes := nil
+      ::pRes := NIL
 
    endif
 
-   return nil
+   return NIL
 
 create class hdbcSQLTPreparedStatement
 
@@ -270,7 +270,7 @@ method setString( nParam, xValue ) class hdbcSQLTPreparedStatement
       endif
    endif
 
-   return nil
+   return NIL
 
 method Close() class hdbcSQLTPreparedStatement
 
@@ -278,11 +278,11 @@ method Close() class hdbcSQLTPreparedStatement
 
       sqlite3_finalize( ::pRes )
 
-      ::pRes := nil
+      ::pRes := NIL
 
    endif
 
-   return nil
+   return NIL
 
 create class hdbcSQLTResultSet
 
@@ -370,7 +370,7 @@ method new( pDB, pStmt ) class hdbcSQLTResultSet
 
 method Close() class hdbcSQLTResultSet
 
-   return nil
+   return NIL
 
 method beforeFirst() class hdbcSQLTResultSet
 
@@ -378,7 +378,7 @@ method beforeFirst() class hdbcSQLTResultSet
    ::lBeforeFirst := .T.
    ::lAfterLast := .F.
 
-   return nil
+   return NIL
 
 method afterLast() class hdbcSQLTResultSet
 
@@ -386,7 +386,7 @@ method afterLast() class hdbcSQLTResultSet
    ::lBeforeFirst := .F.
    ::lAfterLast := .T.
 
-   return nil
+   return NIL
 
 method relative( nMove ) class hdbcSQLTResultSet
 
@@ -469,13 +469,13 @@ method moveToInsertRow() class hdbcSQLTResultSet
 
    ::aBuffer := array( _TODO_ )
 
-   return nil
+   return NIL
 
 method moveToCurrentRow() class hdbcSQLTResultSet
 
    ::nRow := ::nCurrentRow
 
-   return nil
+   return NIL
 
 method updateBuffer( nField, xValue, cType ) class hdbcSQLTResultSet
 
@@ -483,31 +483,31 @@ method updateBuffer( nField, xValue, cType ) class hdbcSQLTResultSet
       nField := ::findColumn( nField )
    endif
 
-   if ::aBuffer == nil
+   if ::aBuffer == NIL
       ::aBuffer := array( _TODO_ )
    endif
 
    ::aBuffer[ nField ] := { xValue, cType }
 
-   return nil
+   return NIL
 
 method insertRow() class hdbcSQLTResultSet
 
    /* TODO */
 
-   return nil
+   return NIL
 
 method updateRow() class hdbcSQLTResultSet
 
    /* TODO */
 
-   return nil
+   return NIL
 
 method deleteRow() class hdbcSQLTResultSet
 
    /* TODO */
 
-   return nil
+   return NIL
 
 create class hdbcSQLTResultSetMetaData
 

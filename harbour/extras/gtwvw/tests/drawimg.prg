@@ -202,7 +202,7 @@ METHOD New( nWinNum, nType, cId, nRow1, nCol1, nRow2, nCol2, aOffTLBR, lTransp )
    ::nRow2 := nRow2
    ::nCol2 := nCol2
 
-   IF !( ValType( aOffTLBR ) == "A" )
+   IF ! HB_ISARRAY( aOffTLBR )
       aOffTLBR := { 0, 0, 0, 0 }
    ENDIF
 

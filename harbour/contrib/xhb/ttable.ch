@@ -72,8 +72,8 @@
 
 #xcommand DEFAULT <uVar1> := <uVal1> ;
                [, <uVarN> := <uValN> ] => ;
-                  <uVar1> := If( <uVar1> == nil, <uVal1>, <uVar1> ) ;;
-                [ <uVarN> := If( <uVarN> == nil, <uValN>, <uVarN> ); ]
+                  <uVar1> := iif( <uVar1> == NIL, <uVal1>, <uVar1> ) ;;
+                [ <uVarN> := iif( <uVarN> == NIL, <uValN>, <uVarN> ); ]
 
 #xcommand DEFAULT <v1> TO <x1> [, <vn> TO <xn> ]                        ;
           =>                                                            ;
@@ -83,7 +83,7 @@
 // --> OOPs
 #xtranslate BYNAME <V> [, <VN> ]     => ::<V> := <V> [; ::<VN> := <VN> ]
 #xtranslate BYNAME <V> DEFAULT <Val> => ::<V> := BYDEFAULT <V>, <Val>
-#xtranslate BYDEFAULT <V>, <Val>     => if( <V> == NIL, <Val>, <V> )
+#xtranslate BYDEFAULT <V>, <Val>     => iif( <V> == NIL, <Val>, <V> )
 
 #xCommand  NETUSE <(cDBF)>  ;
            [ALIAS <cAlias>] ;

@@ -159,8 +159,7 @@ STATIC FUNCTION RLCDX_UNLOCK( nWA, xRecID )
          IF --aWData[ 2, i, 2 ] > 0
             RETURN HB_SUCCESS
          ENDIF
-         ADEL( aWData[ 2 ], i )
-         ASIZE( aWData[ 2 ], LEN( aWData[ 2 ] ) - 1 )
+         hb_ADEL( aWData[ 2 ], i, .T. )
       ELSE
          RETURN HB_SUCCESS
       ENDIF

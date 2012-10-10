@@ -8,7 +8,7 @@ FUNCTION TIniFile()
 
    STATIC oClass
 
-   IF oClass == nil
+   IF oClass == NIL
       oClass := HBClass():New( "TINIFILE" ) // starts a new class definition
 
       oClass:AddData( "FileName" )           // define this class objects datas
@@ -43,7 +43,7 @@ STATIC FUNCTION New( cFileName )
    IF Empty( cFileName )
       // raise an error?
       OutErr( "No filename passed to TIniFile():New()" )
-      RETURN nil
+      RETURN NIL
 
    ELSE
       ::FileName := cFilename
@@ -156,7 +156,7 @@ STATIC PROCEDURE WriteString( cSection, cIdent, cString )
       IF j > 0
          ::Contents[ j ][ 2 ] := cString
       ELSE
-         AAdd( ::Contents, nil )
+         AAdd( ::Contents, NIL )
          AIns( ::Contents, 1 )
          ::Contents[ 1 ] := { cIdent, cString }
       ENDIF
@@ -198,7 +198,7 @@ STATIC FUNCTION ReadDate( cSection, cIdent, dDefault )
 
    LOCAL Self := QSelf()
 
-   RETURN SToD( ::ReadString( cSection, cIdent, DToS(dDefault ) ) )
+   RETURN SToD( ::ReadString( cSection, cIdent, DToS( dDefault ) ) )
 
 STATIC PROCEDURE WriteDate( cSection, cIdent, dDate )
 
@@ -235,8 +235,7 @@ STATIC PROCEDURE DeleteKey( cSection, cIdent )
       cIdent := Lower( cIdent )
       j := AScan( ::Contents[ i ][ 2 ], {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cIdent } )
 
-      ADel( ::Contents[ i ][ 2 ], j )
-      ASize( ::Contents[ i ][ 2 ], Len( ::Contents[ i ][ 2 ] ) - 1 )
+      hb_ADel( ::Contents[ i ][ 2 ], j, .T. )
    ENDIF
 
    RETURN
@@ -247,16 +246,14 @@ STATIC PROCEDURE EraseSection( cSection )
    LOCAL i
 
    IF Empty( cSection )
-      WHILE ( i := AScan( ::Contents, {| x | HB_ISSTRING(x[ 1 ] ) .AND. HB_ISSTRING(x[ 2 ] ) } ) ) > 0
-         ADel( ::Contents, i )
-         ASize( ::Contents, Len( ::Contents ) - 1 )
-      end
+      WHILE ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. HB_ISSTRING( x[ 2 ] ) } ) ) > 0
+         hb_ADel( ::Contents, i, .T. )
+      ENDDO
 
    ELSE
       cSection := Lower( cSection )
       IF ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cSection .AND. HB_ISARRAY( x[ 2 ] ) } ) ) > 0
-         ADel( ::Contents, i )
-         ASize( ::Contents, Len( ::Contents ) - 1 )
+         hb_ADel( ::Contents, i, .T. )
       ENDIF
    ENDIF
 
@@ -276,7 +273,7 @@ STATIC FUNCTION ReadSection( cSection )
 
    ELSE
       cSection := Lower( cSection )
-      IF ( i := AScan( ::Contents, {| x | HB_ISSTRING(x[ 1 ] ) .AND. x[ 1 ] == cSection .AND. HB_ISARRAY(x[ 2 ] ) } ) ) > 0
+      IF ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. x[ 1 ] == cSection .AND. HB_ISARRAY( x[ 2 ] ) } ) ) > 0
 
          FOR j := 1 TO Len( ::Contents[ i ][ 2 ] )
 
@@ -311,7 +308,7 @@ STATIC PROCEDURE UpdateFile()
    hFile := FCreate( ::Filename )
 
    FOR i := 1 TO Len( ::Contents )
-      if ::Contents[ i ][ 1 ] == NIL
+      IF ::Contents[ i ][ 1 ] == NIL
          FWrite( hFile, ::Contents[ i ][ 2 ] + hb_eol() )
 
       ELSEIF HB_ISARRAY( ::Contents[ i ][ 2 ] )

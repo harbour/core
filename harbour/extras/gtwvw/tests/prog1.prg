@@ -130,7 +130,7 @@ FUNCTION xBrowse1()
 
    USE '..\..\..\tests\TEST' NEW
    IF NetErr()
-      RETURN nil
+      RETURN NIL
    ENDIF
    info_ := dbStruct()
 
@@ -202,7 +202,7 @@ FUNCTION xBrowse1()
 
    dbCloseArea()
 
-   RETURN nil
+   RETURN NIL
 
 //
 
@@ -414,13 +414,12 @@ FUNCTION ZREVWINDOW()
 #endif
 
    // restore states
-   RestScreen( s_zwin[ i ][2], s_zwin[ i ][3], s_zwin[ i ][4], s_zwin[ i ][5], s_zwin[ i ][6] )
-   SetPos( s_zwin[ i ][8], s_zwin[ i ][9] )
-   SetColor( s_zwin[ i ][10] )
+   RestScreen( s_zwin[ i ][ 2 ], s_zwin[ i ][ 3 ], s_zwin[ i ][ 4 ], s_zwin[ i ][ 5 ], s_zwin[ i ][ 6 ] )
+   SetPos( s_zwin[ i ][ 8 ], s_zwin[ i ][ 9 ] )
+   SetColor( s_zwin[ i ][ 10 ] )
 
    // remove window from list
-   ADel( s_zwin, i )
-   ASize( s_zwin, Len( s_zwin ) - 1 )
+   hb_ADel( s_zwin, i, .T. )
 
    RETURN NIL
 

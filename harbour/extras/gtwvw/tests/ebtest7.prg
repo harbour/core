@@ -191,39 +191,40 @@ FUNCTION AddEBGet( aEBGets, mnrow, mncol, mxValue, mcVarName, mbAssign, mcLabel,
    mcVarType := ValType( mxValue )
    DO CASE
    CASE mcVarType == "C"
-      mcPict := iif( ValType( mcPict ) == "C", mcPict, repl( "X", Len(mxValue ) ) )
+      mcPict := iif( HB_ISSTRING( mcPict ), mcPict, replicate( "X", Len(mxValue ) ) )
       mbText := {|| mxValue }
    CASE mcVarType == "N"
-      mcPict := iif( ValType( mcPict ) == "C", mcPict, "999,999,999.99" )
+      mcPict := iif( HB_ISSTRING( mcPict ), mcPict, "999,999,999.99" )
       mbText := {|| Transform( mxValue, mcPict ) }
    CASE mcVarType == "D"
-      mcPict := iif( ValType( mcPict ) == "C", mcPict, "99/99/9999" )
+      mcPict := iif( HB_ISSTRING( mcPict ), mcPict, "99/99/9999" )
       mbText := {|| DToC( mxValue ) }
    OTHERWISE
       // unsupported valtype
       RETURN .F.
    ENDCASE
 
-   IF !( ValType( aEBGets ) == "A" )
+   IF ! HB_ISARRAY( aEBGets )
       aEBGEts := {}
    ENDIF
 
-   IF !( ValType( mlMultiline ) == "L" ) .OR. ;
-         !( ValType( mxValue ) == "C" )
+   IF ! HB_ISLOGICAL( mlMultiline ) .OR. ;
+      ! HB_ISSTRING( mxValue )
       mlMultiline := .F.
    ENDIF
-   IF !( ValType( mcLabel ) == "C" )
+   IF ! HB_ISSTRING( mcLabel )
       mcLabel := mcVarName + ":"
    ENDIF
 
-   AAdd( aEBGets, { mlMultiline, ;   //__GET_LMULTILINE
-   mcLabel, ;        //__GET_CLABEL
+   AAdd( aEBGets, { ;
+      mlMultiline, ;    //__GET_LMULTILINE
+      mcLabel, ;        //__GET_CLABEL
       mnrow, ;          //__GET_NROW
-      mncol, ;         //__GET_NCOL
+      mncol, ;          //__GET_NCOL
       mxValue, ;        //__GET_XINIT
       mcPict, ;         //__GET_CPICT
       mcVarType, ;      //__GET_CVALTYPE
-   mbText, ;         //__GET_BTEXT
+      mbText, ;         //__GET_BTEXT
       mbAssign, ;       //__GET_BASSIGN
       NIL, ;            //__GET_NEBID
       .F. } )           //__GET_LFOCUSED
@@ -301,7 +302,7 @@ PROCEDURE EBReadGets( nwinnum, aEBGets )
    nFocus := 1
    ch := Inkey( 0.5 )
    DO WHILE !lDone
-      IF ValType( SetKey( ch ) ) == "B"
+      IF HB_ISBLOCK( SetKey( ch ) )
          Eval( SetKey( ch ) )
       ELSEIF ch != 0
          lchangefocus := .T.
@@ -358,7 +359,7 @@ STATIC PROCEDURE InpKeyHandler( nwinnum, ch, aEBGets, nOKbutton, nCancelbutton )
    LOCAL nNumGets := Len( aEBGets )
    LOCAL nFocus, lchangefocus
 
-   IF ValType( SetKey( ch ) ) == "B"
+   IF HB_ISBLOCK( SetKey( ch ) )
       Eval( SetKey( ch ) )
       RETURN
    ELSEIF ch == 0
@@ -425,8 +426,8 @@ STATIC PROCEDURE SaveVar( nwinnum, aEBGets, lDone )
    LOCAL i, cdebugreport
    FOR i := 1 TO Len( aEBGets )
       // do some validation if necessary
-      Eval( aEBGets[i][__GET_BASSIGN], ;
-         GetValFromText( wvw_ebgettext( nwinnum, aEBGets[i][__GET_NEBID] ), aEBGets[i][__GET_CVALTYPE] ) )
+      Eval( aEBGets[ i ][ __GET_BASSIGN ], ;
+         GetValFromText( wvw_ebgettext( nwinnum, aEBGets[ i ][ __GET_NEBID ] ), aEBGets[ i ][ __GET_CVALTYPE ] ) )
    NEXT
    lDone := .T.
 
@@ -562,20 +563,20 @@ STATIC FUNCTION MaskEditBox( nWinNum, nId, nEvent, aEBGets )
             // don't leave it in an invalid state
             wvw_ebsetfocus( nwinnum, nid )
          ELSE
-            wvw_ebsettext( nwinnum, nId, Transform( GetValFromText(ctext,mcvaltype ), mcpict ) )
+            wvw_ebsettext( nwinnum, nId, Transform( GetValFromText( ctext, mcvaltype ), mcpict ) )
          ENDIF
       ENDIF
    CASE nEvent == EN_SETFOCUS
       IF !mlmultiline .AND. mcvaltype == "N"
          ctext := wvw_ebgettext( nwinnum, nid )
-         wvw_ebsettext( nwinnum, nId, Transform( GetValFromText(ctext,mcvaltype ), GetNumMask(mcpict, mcvaltype ) ) )
+         wvw_ebsettext( nwinnum, nId, Transform( GetValFromText( ctext, mcvaltype ), GetNumMask( mcpict, mcvaltype ) ) )
       ENDIF
-      wvw_ebsetsel( nwinnum, nid, 0, - 1 )
+      wvw_ebsetsel( nwinnum, nid, 0, -1 )
       nwasFocus := nFocused( aEBGets )
       IF nwasFocus != 0
-         aEBGets[nwasFocus][__GET_LFOCUSED] := .F.
+         aEBGets[ nwasFocus ][ __GET_LFOCUSED ] := .F.
       ENDIF
-      aEBGets[nIndex][__GET_LFOCUSED] := .T.
+      aEBGets[ nIndex ][ __GET_LFOCUSED ] := .T.
    CASE nEvent == EN_CHANGE
       IF !mlmultiline
          ProcessCharMask( nwinnum, nId, mcvaltype, mcpict )
@@ -591,7 +592,7 @@ STATIC FUNCTION MaskEditBox( nWinNum, nId, nEvent, aEBGets )
 
 STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
-   LOCAL InBuffer , OutBuffer := '' , icp , x , CB , CM , BadEntry := .F. , InBufferLeft , InBufferRight , Mask , OldChar , BackInbuffer
+   LOCAL InBuffer, OutBuffer := "", icp, x, CB, CM, BadEntry := .F., InBufferLeft, InBufferRight, Mask, OldChar, BackInbuffer
    LOCAL pc := 0
    LOCAL fnb := 0
    LOCAL dc := 0
@@ -959,7 +960,7 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )
    CASE message == WM_CHAR
       ch := wParam
       bhandler := inp_handler( nWinNum )
-      IF ValType( bhandler ) == "B"
+      IF HB_ISBLOCK( bhandler )
          Eval( bhandler, nWinNum, ch )
          RETURN .T.
       ELSE
@@ -978,7 +979,7 @@ FUNCTION inp_handler( nwinnum, bhandler )
    LOCAL i
    LOCAL retval := iif( Len( sbhandlers ) >= nwinnum + 1, sbhandlers[nwinnum+1], NIL )
 
-   IF ValType( bhandler ) == "B"
+   IF HB_ISBLOCK( bhandler )
       IF Len( sbhandlers ) < nwinnum + 1
          ASize( sbhandlers, nwinnum + 1 )
       ENDIF

@@ -1883,8 +1883,7 @@ METHOD Open() CLASS HBDebugger
    LOCAL cExt
 
    ASort( aFiles )
-   ASize( aFiles, Len( aFiles ) + 1 )
-   HB_AIns( aFiles, 1, "(Another file)", .F. )
+   hb_AIns( aFiles, 1, "(Another file)", .T. )
 
    nFileName := ::ListBox( "Please choose a source file", aFiles )
    IF nFileName == 0

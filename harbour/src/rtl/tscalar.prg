@@ -85,7 +85,7 @@ METHOD AsString() CLASS ScalarObject
    CASE "T" ; RETURN HB_TToC( Self )
    CASE "H" ; RETURN "{ ... => ... }"
    CASE "L" ; RETURN iif( Self, ".T.", ".F." )
-   CASE "N" ; RETURN hb_NToS( Self )
+   CASE "N" ; RETURN hb_ntos( Self )
    CASE "S" ; RETURN "@" + Self:name + "()"
    CASE "P" ; RETURN "<0x...>"
    CASE "U" ; RETURN "NIL"
@@ -184,8 +184,7 @@ METHOD Copy() CLASS Array
 METHOD DeleteAt( n ) CLASS Array
 
    IF n > 0 .AND. n <= Len( Self )
-      ADel( Self, n )
-      ASize( Self, Len( Self ) - 1 )
+      hb_ADel( Self, n, .T. )
    ENDIF
 
    RETURN Self
@@ -196,9 +195,7 @@ METHOD InsertAt( n, x ) CLASS Array
       ASize( Self, n )
       Self[ n ] := x
    ELSEIF n > 0
-      ASize( Self, Len( Self ) + 1 )
-      AIns( Self, n )
-      Self[ n ] := x
+      hb_AIns( Self, n, x, .T. )
    ENDIF
 
    RETURN Self
@@ -386,7 +383,7 @@ CREATE CLASS Numeric INHERIT HBScalar FUNCTION __HBNumeric
 ENDCLASS
 
 METHOD AsString() CLASS Numeric
-   RETURN hb_NToS( Self )
+   RETURN hb_ntos( Self )
 
 /* -------------------------------------------- */
 

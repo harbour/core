@@ -6,8 +6,14 @@
 
 PROCEDURE Main( cFilename, cSection )
 
-   LOCAL oIni := TIniFile():New( Default( cFilename, "harbour.ini" ) )
-   LOCAL s, n := Val( Default( cSection, "1" ) )
+   LOCAL oIni
+   LOCAL s, n
+
+   hb_default( @cFilename, "harbour.ini" )
+   hb_default( @cSection, "1" )
+
+   oIni := TIniFile():New( cFileName )
+   n := Val( cSection )
 
    ?
    ? "Sections:"
@@ -142,7 +148,7 @@ STATIC FUNCTION ReadString( cSection, cIdent, cDefault )
 
    IF Empty( cSection )
       cFind := Lower( cIdent )
-      j := AScan( ::Contents, {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cFind .AND. ValType( x[ 2 ] ) == "C" } )
+      j := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind .AND. HB_ISSTRING( x[ 2 ] ) } )
 
       IF j > 0
          cResult := ::Contents[ j ][ 2 ]
@@ -150,11 +156,11 @@ STATIC FUNCTION ReadString( cSection, cIdent, cDefault )
 
    ELSE
       cFind := Lower( cSection )
-      i := AScan( ::Contents, {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cFind } )
+      i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind } )
 
       IF i > 0
          cFind := Lower( cIdent )
-         j := AScan( ::Contents[ i ][ 2 ], {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cFind } )
+         j := AScan( ::Contents[ i ][ 2 ], {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind } )
 
          IF j > 0
             cResult := ::Contents[ i ][ 2 ][ j ][ 2 ]
@@ -174,7 +180,7 @@ STATIC PROCEDURE WriteString( cSection, cIdent, cString )
 
    ELSEIF Empty( cSection )
       cFind := Lower( cIdent )
-      j := AScan( ::Contents, {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cFind .AND. ValType( x[ 2 ] ) == "C" } )
+      j := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind .AND. HB_ISSTRING( x[ 2 ] ) } )
 
       IF j > 0
          ::Contents[ j ][ 2 ] := cString
@@ -187,9 +193,9 @@ STATIC PROCEDURE WriteString( cSection, cIdent, cString )
 
    ELSE
       cFind := Lower( cSection )
-      IF ( i := AScan( ::Contents, {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cFind .AND. ValType( x[ 2 ] ) == "A" } ) ) > 0
+      IF ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind .AND. HB_ISARRAY( x[ 2 ] ) } ) ) > 0
          cFind := Lower( cIdent )
-         j := AScan( ::Contents[ i ][ 2 ], {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cFind } )
+         j := AScan( ::Contents[ i ][ 2 ], {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cFind } )
 
          IF j > 0
             ::Contents[ i ][ 2 ][ j ][ 2 ] := cString
@@ -254,14 +260,13 @@ STATIC PROCEDURE DeleteKey( cSection, cIdent )
    LOCAL i, j
 
    cSection := Lower( cSection )
-   i := AScan( ::Contents, {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cSection } )
+   i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cSection } )
 
    IF i > 0
       cIdent := Lower( cIdent )
-      j := AScan( ::Contents[ i ][ 2 ], {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cIdent } )
+      j := AScan( ::Contents[ i ][ 2 ], {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cIdent } )
 
-      ADel( ::Contents[ i ][ 2 ], j )
-      ASize( ::Contents[ i ][ 2 ], Len( ::Contents[ i ][ 2 ] ) - 1 )
+      hb_ADel( ::Contents[ i ][ 2 ], j, .T. )
    ENDIF
 
    RETURN
@@ -272,16 +277,14 @@ STATIC PROCEDURE EraseSection( cSection )
    LOCAL i
 
    IF Empty( cSection )
-      DO WHILE ( i := AScan( ::Contents, {| x | ValType( x[ 1 ] ) == "C" .AND. ValType( x[ 2 ] ) == "C" } ) ) > 0
-         ADel( ::Contents, i )
-         ASize( ::Contents, Len( ::Contents ) - 1 )
+      DO WHILE ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. HB_ISSTRING( x[ 2 ] ) } ) ) > 0
+         hb_ADel( ::Contents, i, .T. )
       ENDDO
 
    ELSE
       cSection := Lower( cSection )
-      IF ( i := AScan( ::Contents, {| x | ValType( x[ 1 ] ) == "C" .AND. Lower( x[ 1 ] ) == cSection .AND. ValType( x[ 2 ] ) == "A" } ) ) > 0
-         ADel( ::Contents, i )
-         ASize( ::Contents, Len( ::Contents ) - 1 )
+      IF ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. Lower( x[ 1 ] ) == cSection .AND. HB_ISARRAY( x[ 2 ] ) } ) ) > 0
+         hb_ADel( ::Contents, i, .T. )
       ENDIF
    ENDIF
 
@@ -294,14 +297,14 @@ STATIC FUNCTION ReadSection( cSection )
 
    IF Empty( cSection )
       FOR i := 1 TO Len( ::Contents )
-         IF ValType( ::Contents[ i ][ 1 ] ) == "C" .AND. ValType( ::Contents[ i ][ 2 ] ) == "C"
+         IF HB_ISSTRING( ::Contents[ i ][ 1 ] ) .AND. HB_ISSTRING( ::Contents[ i ][ 2 ] )
             AAdd( aSection, ::Contents[ i ][ 1 ] )
          ENDIF
       NEXT
 
    ELSE
       cSection := Lower( cSection )
-      IF ( i := AScan( ::Contents, {| x | ValType(x[ 1 ] ) == "C" .AND. x[ 1 ] == cSection .AND. ValType( x[ 2 ] ) == "A" } ) ) > 0
+      IF ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. x[ 1 ] == cSection .AND. HB_ISARRAY( x[ 2 ] ) } ) ) > 0
 
          FOR j := 1 TO Len( ::Contents[ i ][ 2 ] )
 
@@ -321,7 +324,7 @@ STATIC FUNCTION ReadSections()
 
    FOR i := 1 TO Len( ::Contents )
 
-      IF ValType( ::Contents[ i ][ 2 ] ) == "A"
+      IF HB_ISARRAY( ::Contents[ i ][ 2 ] )
          AAdd( aSections, ::Contents[ i ][ 1 ] )
       ENDIF
    NEXT
@@ -339,7 +342,7 @@ STATIC PROCEDURE UpdateFile()
       IF ::Contents[ i ][ 1 ] == NIL
          FWrite( hFile, ::Contents[ i ][ 2 ] + hb_eol() )
 
-      ELSEIF ValType( ::Contents[ i ][ 2 ] ) == "A"
+      ELSEIF HB_ISARRAY( ::Contents[ i ][ 2 ] )
          FWrite( hFile, "[" + ::Contents[ i ][ 1 ] + "]" + hb_eol() )
          FOR j := 1 TO Len( ::Contents[ i ][ 2 ] )
 
@@ -351,7 +354,7 @@ STATIC PROCEDURE UpdateFile()
          NEXT
          FWrite( hFile, hb_eol() )
 
-      ELSEIF ValType( ::Contents[ i ][ 2 ] ) == "C"
+      ELSEIF HB_ISSTRING( ::Contents[ i ][ 2 ] )
          FWrite( hFile, ::Contents[ i ][ 1 ] + "=" + ::Contents[ i ][ 2 ] + hb_eol() )
 
       ENDIF

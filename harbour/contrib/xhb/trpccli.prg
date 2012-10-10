@@ -881,7 +881,7 @@ METHOD TCPParse( cCode ) CLASS tRPCClient
             IF ::oResult != NIL
                ::OnFunctionReturn( ::oResult )
             ENDIF
-            // todo: rise an error if ::oResult is nil
+            // TODO: rise an error if ::oResult is NIL
          ENDIF
       ENDIF
 

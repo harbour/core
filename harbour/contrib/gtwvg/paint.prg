@@ -225,8 +225,7 @@ FUNCTION wvg_PurgePaint( cID, lDummy )
 
    IF ( n := AScan( t_paint_, {| e_ | e_[ 1 ] == cID } ) ) > 0
       aPaint := t_paint_[ n ]
-      ADel( t_paint_, n )
-      ASize( t_paint_, Len( t_paint_ ) - 1 )
+      hb_ADel( t_paint_, n, .T. )
    ENDIF
 
    IF lDummy

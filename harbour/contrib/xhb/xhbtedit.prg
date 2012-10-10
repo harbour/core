@@ -709,7 +709,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
       ENDIF
 
          /*
-          * 2006/AUG/12 -E.F. Trap Set key only if nKey is nil.
+          * 2006/AUG/12 -E.F. Trap Set key only if nKey is NIL.
           */
       IF nPassedKey == NIL
          IF ( ::bKeyBlock := SetKey( nKey ) ) != NIL
@@ -2689,7 +2689,7 @@ METHOD SetTextSelection( cAction, nCount ) CLASS XHBEditor
 
    ENDIF
 
-   RETURN nil
+   RETURN NIL
 
 //
 // Clear current selection
@@ -2705,7 +2705,7 @@ METHOD ClrTextSelection() CLASS XHBEditor
       ::RefreshWindow()
    ENDIF
 
-   RETURN nil
+   RETURN NIL
 
 METHOD DelText() CLASS XHBEditor
 
@@ -2812,7 +2812,7 @@ METHOD AddText( cString, lAtPos ) CLASS XHBEditor
 
    IF !Empty( cString )
 
-      aTmpText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, nil ) )
+      aTmpText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, NIL ) )
       nLines := Len( aTmpText )
       nAtRow := ::nRow
       lSaveIns := ::lInsert
@@ -2875,7 +2875,7 @@ METHOD GetTextIndex() CLASS XHBEditor
 
 METHOD LoadText( cString ) CLASS XHBEditor
 
-   ::aText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, nil ) )
+   ::aText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, NIL ) )
 
    IF ::LastRow() == 0
       AAdd( ::aText, HBTextLine():New() )
@@ -2897,7 +2897,7 @@ METHOD LoadFile( cFileName ) CLASS XHBEditor
       cString := MemoRead( cFileName )
    ENDIF
 
-   ::aText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, nil ) )
+   ::aText := Text2Array( cString, iif( ::lWordWrap, ::nNumCols, NIL ) )
 
    IF ::LastRow() == 0
       AAdd( ::aText, HBTextLine():New() )
