@@ -114,7 +114,7 @@ FUNCTION __ActiveStructure( cStructure, nAlign )
       ENDIF
 
       AAdd( s_aClasses, { cStructure, NIL, {}, {}, iif( HB_ISNUMERIC( nAlign ), nAlign, 8 ) } )
-      //TraceLog( "Registered: " + cStructure, s_aClasses[ -1 ][ 5 ] )
+      //TraceLog( "Registered: " + cStructure, ATail( s_aClasses )[ 5 ] )
 
       t_aActiveStructure := ATail( s_aClasses )
    ELSE
@@ -261,7 +261,7 @@ PROCEDURE HB_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
 
    IF ! Empty( cTag )
       AAdd( s_aSynonyms, { Upper( cTag ), nID + CTYPE_STRUCTURE } )
-      //Tracelog( s_aSynonyms[ -1 ][ 1 ], s_aSynonyms[ -1 ][ 2 ] )
+      //Tracelog( ATail( s_aSynonyms )[ 1 ], ATail( s_aSynonyms )[ 2 ] )
    ENDIF
 
    IF ! Empty( cSynonList )
@@ -272,7 +272,7 @@ PROCEDURE HB_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
             AAdd( s_aSynonyms, { Upper( cSynon ), nID + CTYPE_STRUCTURE } )
          ENDIF
 
-         //Tracelog( s_aSynonyms[ -1 ][ 1 ], s_aSynonyms[ -1 ][ 2 ] )
+         //Tracelog( ATail( s_aSynonyms )[ 1 ], ATail( s_aSynonyms )[ 2 ] )
       NEXT
    ENDIF
 

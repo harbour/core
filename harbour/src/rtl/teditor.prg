@@ -813,6 +813,13 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
          CASE ::MoveCursor( nKey )
             // if it's a movement key ::MoveCursor() handles it
 
+         CASE K_CTRL_B
+            /* TODO: Resolve keycode collision with K_CTRL_RIGHT */
+            /* TODO: Implement reform paragraph */
+
+         CASE K_CTRL_T
+            /* TODO: Implement delete word right */
+
          CASE nKey == K_ALT_W
             /* TOFIX: Not clipper compatible */
             ::lSaved := .T.

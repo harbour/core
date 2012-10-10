@@ -775,7 +775,7 @@ for strings in XHB.LIB for his own preferences removing the RTE.
 ============================================================================
 xHarbour supports negative indexes in [] operator. They are used
 to access items from tail, f.e. aVal[ -1 ] is the same as
-aVal[ len( aVal ) - 1 ].
+aVal[ len( aVal ) ] or ATail( aVal ).
 By default Harbour core code does not give such functionality but
 it has strong enough OOP API to allow adding such extension without
 touching core code even by user at .prg level. It was implemented

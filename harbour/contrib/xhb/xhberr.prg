@@ -578,12 +578,12 @@ STATIC FUNCTION LogError( oerr )
       WHILE FSeek( nMemHandle, 0, FS_RELATIVE ) + 1 < nMemLength
          nMemWidth := Space( 18 )
          FRead( nMemHandle, @nMemWidth, 18 )
-         cVarName  := Left( nMemWidth, At( Chr( 0 ), nMemWidth ) - 1 )
-         cVarType  := SubStr( nMemWidth, 12, 1 )
-         cVarRec   := Bin2W( Right( nMemWidth, 2 ) )
-         nMemCount := iif( cVarType $ Chr( 195 ) + Chr( 204 ), 14 + cVarRec, 22 )
+         cVarName  := hb_BLeft( nMemWidth, hb_BAt( Chr( 0 ), nMemWidth ) - 1 )
+         cVarType  := hb_BSubStr( nMemWidth, 12, 1 )
+         cVarRec   := Bin2W( hb_BRight( nMemWidth, 2 ) )
+         nMemCount := iif( cVarType $ hb_BChar( 195 ) + hb_BChar( 204 ), 14 + cVarRec, 22 )
          FSeek( nMemHandle, nMemCount, FS_RELATIVE )
-         cTemp  := Left( cVarName + Space( 10 ), 10 )
+         cTemp  := hb_BLeft( cVarName + Space( 10 ), 10 )
          cTemp  += " TYPE " + Type( cVarName )
          cTemp  += " " + iif( Type( cVarName ) == "C", '"' + &cVarName + '"', strvalue( &cVarName ) )
          nBytes := 0
@@ -655,7 +655,7 @@ STATIC FUNCTION strvalue( c, l )
       cr := DToC( c )
       EXIT
    CASE "L"
-      //     cr := iif( l, iif( c, "On", "Off" ), iif( c, "True", "False" ) )
+//    cr := iif( l, iif( c, "On", "Off" ), iif( c, "True", "False" ) )
       cr := iif( l, iif( c, "On", "Off" ), iif( c, ".t.", ".f." ) )
       EXIT
    ENDSWITCH

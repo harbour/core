@@ -487,7 +487,7 @@ FUNCTION xhb_MemoEdit( cString,;
    /* 24/10/2005 - <maurilio.longo@libero.it>
                    Clipper MemoEdit() converts Tabs into spaces
    */
-   oEd := XHB_TMemoEditor():New( StrTran( cString, Chr( K_TAB ), Space( nTabSize ) ),;
+   oEd := XHB_TMemoEditor():New( StrTran( cString, Chr( 9 ), Space( nTabSize ) ),;
                                  nTop, nLeft, nBottom, nRight,;
                                  lEditMode,;
                                  nLineLength,;

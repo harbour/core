@@ -1172,7 +1172,7 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
             NEXT
 
             IF lRet
-               ASize( ::deleteBuffers, ( nLen - nLevel ) )
+               ASize( ::deleteBuffers, nLen - nLevel )
             ENDIF
 
          ENDIF
@@ -1225,7 +1225,7 @@ METHOD Undo( nBuffer, nLevel ) CLASS HBTable
 
             // erase entries
             IF lRet
-               ASize( ::WriteBuffers, ( nLen - nLevel ) )
+               ASize( ::WriteBuffers, nLen - nLevel )
             ENDIF
 
          ENDIF

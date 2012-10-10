@@ -80,7 +80,7 @@ CLASS HB_LogEmail FROM HB_LogChannel
 
 ENDCLASS
 
-METHOD New(  nLevel, cHelo, cServer, cSendTo, cSubject, cFrom ) CLASS HB_LogEmail
+METHOD New( nLevel, cHelo, cServer, cSendTo, cSubject, cFrom ) CLASS HB_LogEmail
 
    LOCAL nPos
 
@@ -272,8 +272,8 @@ METHOD Open( cName ) CLASS HB_LogInetPort
    ::mtxBusy := hb_mutexCreate()
    ::nThread := hb_threadStart( Self, "AcceptCon" )
 #else
-// If we have not threads, we have to sync accept incoming connection
-// when we log a message
+   // If we have not threads, we have to sync accept incoming connection
+   // when we log a message
    hb_inetTimeout( ::skIn, 50 )
 #endif
 
@@ -290,16 +290,16 @@ METHOD Close( cName ) CLASS HB_LogInetPort
    ENDIF
 
 #ifdef HB_THREAD_SUPPORT
-// kind termination request
+   // kind termination request
    ::bTerminate := .T.
    hb_threadJoin( ::nThread )
 #endif
 
    hb_inetClose( ::skIn )
 
-// we now are sure that incoming thread index is not used.
+   // we now are sure that incoming thread index is not used.
 
-   DO WHILE  Len( ::aListeners ) > 0
+   DO WHILE Len( ::aListeners ) > 0
       sk := ATail( ::aListeners )
       ASize( ::aListeners, Len( ::aListeners ) - 1 )
       hb_inetClose( sk )
@@ -315,10 +315,10 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogInetPort
 
 #ifdef HB_THREAD_SUPPORT
 
-// be sure thread is not busy now
+   // be sure thread is not busy now
    hb_mutexLock( ::mtxBusy )
 #else
-// IF we have not a thread, we must see if there is a new connection
+   // IF we have not a thread, we must see if there is a new connection
    sk := hb_inetAccept( ::skIn )  //timeout should be short
 
    IF sk != NIL
@@ -326,7 +326,7 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogInetPort
    ENDIF
 #endif
 
-// now we transmit the message to all the available channels
+   // now we transmit the message to all the available channels
    cMessage := ::Format( nStyle, cMessage, cName, nPriority )
 
    nCount := 1
@@ -335,8 +335,7 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogInetPort
       hb_inetSendAll( sk, cMessage + CRLF )
       // if there is an error, we remove the listener
       IF hb_inetErrorCode( sk ) != 0
-         ADel( ::aListeners, nCount )
-         ASize( ::aListeners , Len( ::aListeners ) - 1 )
+         hb_ADel( ::aListeners, nCount, .T. )
       ELSE
          nCount++
       ENDIF

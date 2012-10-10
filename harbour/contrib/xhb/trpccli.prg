@@ -474,12 +474,12 @@ METHOD BuildChallengePwd( cPassword ) CLASS tRPCClient
    cRet := ""
 
    FOR nCount := 1 TO nLen
-      cRet += Chr( Int( hb_Random( 2, 254 ) ) )
+      cRet += hb_BChar( Int( hb_Random( 2, 254 ) ) )
    NEXT
    cRet += "PASSWORD:" + cPassword + ":"
 
-   DO WHILE Len( cRet ) < 100
-      cRet += Chr( Int( hb_Random( 2, 254 ) ) )
+   DO WHILE hb_BLen( cRet ) < 100
+      cRet += hb_BChar( Int( hb_Random( 2, 254 ) ) )
    ENDDO
 
    cRet := ::Encrypt( cRet )
@@ -532,7 +532,7 @@ METHOD Disconnect() CLASS tRPCClient
 
    IF ::nStatus >= RPC_STATUS_LOGGED
       hb_mutexLock( ::mtxBusy )
-      ::nStatus :=  RPC_STATUS_NONE
+      ::nStatus := RPC_STATUS_NONE
       hb_inetSendAll( ::skTcp, "XHBR92" )
       hb_inetClose( ::skTcp )
       hb_mutexUnlock( ::mtxBusy )
@@ -552,12 +552,12 @@ METHOD SetLoopMode( nMethod, xData, nEnd, nStep ) CLASS tRPCClient
    IF HB_ISARRAY( xData )
       ::aLoopData := xData
    ELSE
-      IF ValType( xData ) == "NI"
+      IF HB_ISNUMERIC( xData )
          // this is to allow garbage collecting
          ::aLoopData := NIL
          ::nLoopStart := xData
          ::nLoopEnd := nEnd
-         IF ValType( nStep ) == "NI"
+         IF HB_ISNUMERIC( nStep )
             ::nLoopStep := nStep
          ELSE
             ::nLoopStep := 1
@@ -606,8 +606,7 @@ METHOD Call( ... ) CLASS tRPCClient
    oCalling := hb_PValue( 1 )
    IF HB_ISARRAY( oCalling )
       cFunction := oCalling[ 1 ]
-      ADel( oCalling, 1 )
-      ASize( oCalling, Len( oCalling ) - 1 )
+      hb_ADel( oCalling, 1, .T. )
       aParams := oCalling
    ELSE
       cFunction := oCalling
@@ -777,18 +776,18 @@ METHOD SendCall( cFunction, aParams ) CLASS tRPCClient
          hb_Serialize( ::nLoopStep )
    ENDIF
 
-   cData +=  hb_Serialize( cFunction ) + hb_Serialize( aParams )
+   cData += hb_Serialize( cFunction ) + hb_Serialize( aParams )
 
    IF ::aLoopData != NIL
       cData += hb_Serialize( ::aLoopData )
       nReq += 2
    ENDIF
 
-   nLen := Len( cData )
+   nLen := hb_BLen( cData )
    IF nLen > 512
       cData := HB_Compress( cData )
       cData := "XHBR2" + hb_ntos( nReq + 1 ) + ;
-         HB_CreateLen8( nLen ) + HB_CreateLen8( Len( cData ) ) + ;
+         HB_CreateLen8( nLen ) + HB_CreateLen8( hb_BLen( cData ) ) + ;
          cType + ::Encrypt( cData )
    ELSE
       cData := "XHBR2" + hb_ntos( nReq ) + HB_CreateLen8( nLen ) + ;

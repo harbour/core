@@ -75,19 +75,19 @@
  */
 
 /*
- * Teditor Fix: teditorx.prg  -- V 2.0 2003/11/17
+ * Teditor Fix: teditorx.prg  -- v2.0 2003-11-17
  * Copyright 2003 Lance Owens <servant@gnosis.org>
  *
- * This Revised Version has a completely rewritten edit method key commands, with dynamic line & paragraqph reformatting.
- * Includes a fix for the bugs in Teditor key processing that previously caused array errors
+ * This Revised Version has a completely rewritten edit method key commands, with dynamic line & paragraph reformatting.
+ * Includes a fix for the bugs in TEditor key processing that previously caused array errors
  *
- * Note: --If using the paste function to enter text, increase size of keyboard buffer to 2048 or 4096!
- *         Otherwise buffer will overrun -- it takes some processor time to do all the dynamic reformatting
- *   --SetCursor() is used to change cursor between insert and overwrite. Modify if desired....
- *         This will need to be cleared to return to original cursor within Memoedit()!!
- *       --K_LEFT is set to exit Memoedit() in read-only mode, in addition to the standard exit keys ESC.
- *       --CHR(141)+CHR(10) "soft CR" inserted by Clipper memoedit() is automatically removed when encountered in text
- *       --Color persistence problems in previous version corrected by taking setcolor() at Method New file call.
+ * Note: -- If using the paste function to enter text, increase size of keyboard buffer to 2048 or 4096!
+ *          Otherwise buffer will overrun -- it takes some processor time to do all the dynamic reformatting
+ *       -- SetCursor() is used to change cursor between insert and overwrite. Modify if desired....
+ *          This will need to be cleared to return to original cursor within Memoedit()!!
+ *       -- K_LEFT is set to exit MemoEdit() in read-only mode, in addition to the standard exit keys ESC.
+ *       -- __SoftCR() "soft CR" inserted by Clipper MemoEdit() is automatically removed when encountered in text
+ *       -- Color persistence problems in previous version corrected by taking SetColor() at Method New file call.
  *
  * Modifications are based upon the following source file:
  */
@@ -143,17 +143,17 @@ CREATE CLASS XHBEditor
    DATA  nMarkLen
    DATA  nOrigCursor    INIT SetCursor()  // Save to restore original cursor format on exit
 
-   DATA  ProcName        INIT ""
-   DATA  ProcLine        INIT 0
+   DATA  ProcName       INIT ""
+   DATA  ProcLine       INIT 0
 
-   DATA  nCurrentCursor  INIT SetCursor()
+   DATA  nCurrentCursor INIT SetCursor()
 
-   DATA  lSelActive      INIT .F.
-   DATA  nRowSelStart    INIT 0                             // First row selected
-   DATA  nRowSelEnd      INIT 0                             // Last row selected
-   DATA  nColSelRow      INIT 0                             // Row of col selected
-   DATA  nColSelStart    INIT 0                             // First col selected
-   DATA  nColSelEnd      INIT 0                             // Last col selected
+   DATA  lSelActive     INIT .F.
+   DATA  nRowSelStart   INIT 0                             // First row selected
+   DATA  nRowSelEnd     INIT 0                             // Last row selected
+   DATA  nColSelRow     INIT 0                             // Row of col selected
+   DATA  nColSelStart   INIT 0                             // First col selected
+   DATA  nColSelEnd     INIT 0                             // Last col selected
 
    // Class DATA can be faster, but since the user can change directly
    // READINSERT(), ::lInsert must check in it.
@@ -233,15 +233,15 @@ CREATE CLASS XHBEditor
    METHOD  K_Esc()
 
    // 2006/07/19 - E.F. - Added datas and methods.
-   DATA    cInsLabel                       // <Insert> label to display at toggle insert.
-   DATA    lVerticalScroll   INIT .T.      // True if vertical scrolling is active (default).
+   DATA    cInsLabel                       // <Insert> label to display at toggle insert
+   DATA    lVerticalScroll   INIT .T.      // True if vertical scrolling is active (default)
    DATA    bKeyBlock                       // To process set key codeblock
 
-   METHOD  DisplayInsert( lInsert )        // Show <insert> message at top of screen.
+   METHOD  DisplayInsert( lInsert )        // Show <insert> message at top of screen
    METHOD  LastRow() INLINE Len( ::aText ) // Replace old ::naTextLen
-   METHOD  DelTextRight( nRow )            // Delete text right of cursor.
-   METHOD  DelWordRight()                  // Delete word right <CTRL-T> key.
-   METHOD  ReformParagraph()               // Reformat paragraph. CTRL-B behaviour
+   METHOD  DelTextRight( nRow )            // Delete text right of cursor
+   METHOD  DelWordRight()                  // Delete word right <Ctrl+T> key
+   METHOD  ReformParagraph()               // Reformat paragraph. <Ctrl+B> behaviour
 
    /////////////////
 
@@ -342,18 +342,16 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    ::nFirstCol := Max( 1, ::nTextCol - ::nWndCol )
 
 
-   // If memofield was created with Clipper, it needs to have chr( 141 )+chr( 10 ) stripped
+   // If memofield was created with Clipper, it needs to have __SoftCR() stripped
 
-   // 2006/JUL/20 - E.F. - We should not replace SoftCR with chr(32).
+   // 2006/JUL/20 - E.F. - We should not replace SoftCR with Chr( 32 ).
    //                      See Text2Array function for more details.
-   /*
-    * IF chr( 141 ) $ cString
-    *    acsn := chr( 32 ) + chr( 141 ) + chr( 10 )
-    *    cString := STRTRAN( cString, acsn, " " )
-    *    acsn := chr( 141 ) + chr( 10 )
-    *    cString := STRTRAN( cString, acsn, " " )
-    * ENDIF
-    */
+// IF hb_BChar( 141 ) $ cString
+//    acsn := Chr( 32 ) + Chr( 141 ) + Chr( 10 )
+//    cString := StrTran( cString, acsn, " " )
+//    acsn := Chr( 141 ) + Chr( 10 )
+//    cString := StrTran( cString, acsn, " " )
+// ENDIF
 
 
    // Load text to internal array.
@@ -671,7 +669,7 @@ METHOD MoveCursor( nKey ) CLASS XHBEditor
       ::End()
       EXIT
 
-      OTHERWISE
+   OTHERWISE
       RETURN .F.
 
    ENDSWITCH
@@ -987,13 +985,13 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
          ENDIF
          EXIT
 
-      CASE K_CTRL_BS         // block chr( 127 ), a printable character in windows
+      CASE K_CTRL_BS         // block Chr( 127 ), a printable character in windows
          ::ClrTextSelection()
          EXIT
 
-         OTHERWISE
+      OTHERWISE
 
-         IF Len( hb_KeyChar( nKey ) ) > 0
+         IF Len( hb_keyChar( nKey ) ) > 0
             IF ::lEditAllow
                ::ClrTextSelection()
                ::K_Ascii( nKey )
@@ -1439,10 +1437,10 @@ METHOD K_Ascii( nKey ) CLASS XHBEditor
    // insert char if in insert mode or at end of current line
    //
    IF ::lInsert .OR. ( ::nCol > ::LineLen( ::nRow ) )
-      ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 0, hb_KeyChar( nKey ) )
+      ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 0, hb_keyChar( nKey ) )
       ::lChanged := .T.
    ELSE
-      ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 1, hb_KeyChar( nKey ) )
+      ::aText[ ::nRow ]:cText := Stuff( ::aText[ ::nRow ]:cText, ::nCol, 1, hb_keyChar( nKey ) )
       ::lChanged := .T.
    ENDIF
 
@@ -1754,7 +1752,7 @@ METHOD K_Esc() CLASS XHBEditor
 
       // 2006/JUL/21 - E.F - Exit only if "Y" is pressed.
       //
-      ::lExitEdit := ( Upper( hb_KeyChar( nKey ) ) == "Y" )
+      ::lExitEdit := ( Upper( hb_keyChar( nKey ) ) == "Y" )
    ENDIF
 
    IF ::lExitEdit
@@ -1853,7 +1851,7 @@ METHOD DelTextRight( nRow ) CLASS XHBEditor
    RETURN Self
 
 //
-// Delete a word to the right of cursor. <CTRL-T>
+// Delete a word to the right of cursor. <Ctrl+T>
 //
 
 METHOD DelWordRight() CLASS XHBEditor
@@ -1887,7 +1885,7 @@ METHOD DelWordRight() CLASS XHBEditor
       IF nCutCol <= 1 .AND. nCol < ::LineLen( ::nRow ) - 1
          nCol++
       ELSEIF nCutCol <= 1 .AND. nCol >= ::LineLen( ::nRow )
-         nCutCol := Len( SubStr( ::aText[::nRow]:cText, ::nCol, nCol - ::nCol ) )
+         nCutCol := Len( SubStr( ::aText[ ::nRow ]:cText, ::nCol, nCol - ::nCol ) )
          EXIT
       ENDIF
    ENDDO
@@ -1904,40 +1902,32 @@ METHOD DelWordRight() CLASS XHBEditor
       IF ::lWordWrap .AND. ::aText[ ::nRow ]:lSoftCR
          ::SplitLine( ::nRow )
       ELSE
-         ::aText[::nRow]:lSoftCR := .F.
+         ::aText[ ::nRow ]:lSoftCR := .F.
       ENDIF
 
    ENDIF
 
    RETURN Self
 
-// <CTRL-B> behaviour.
+// <Ctrl+B> behaviour.
 
 METHOD ReformParagraph() CLASS XHBEditor
 
    LOCAL nRow
-   LOCAL cHardCR := hb_eol()
-   LOCAL cSoftCR := Chr( 141 ) + Chr( 10 )
 
-   IF !::lEditAllow
-      RETURN Self
-   ENDIF
-
-   IF ::LastRow() > 0
+   IF ::lEditAllow .AND. ::LastRow() > 0
 
       ::lChanged := .T.
 
       FOR nRow := 1 TO ::LastRow()
 
-         ::aText[ nRow ]:cText := StrTran( ::aText[ nRow ]:cText, cSoftCR )
+         ::aText[ nRow ]:cText := StrTran( ::aText[ nRow ]:cText, __SoftCR() )
          ::aText[ nRow ]:lSoftCR := .F.
 
-         IF At( cHardCR, ::aText[ nRow ]:cText ) != 0
+         IF At( hb_eol(), ::aText[ nRow ]:cText ) != 0
             EXIT
          ENDIF
-
       NEXT
-
    ENDIF
 
    RETURN Self
@@ -2029,7 +2019,7 @@ METHOD GotoPos( nRow, nCol, lRefresh ) CLASS XHBEditor
       //                    line, with or without chars.
       // Note: ::nWordWrapCol can be different than ::nNumCols if user has
       //       informed nLineLength > 0
-      nCol := Max( 1, Min( nCol, Max(::nNumCols,::nWordWrapCol + 1 ) ) )
+      nCol := Max( 1, Min( nCol, Max( ::nNumCols, ::nWordWrapCol + 1 ) ) )
 
 
       // I need to move cursor if is past requested line number and if requested line is
@@ -2393,7 +2383,7 @@ METHOD GetText( lSoftCr ) CLASS XHBEditor
    IF ::LastRow() > 0
 
       IF lSoftCr
-         cSoft := Chr( 141 ) + Chr( 10 )
+         cSoft := __SoftCR()
       ENDIF
 
       IF ::lWordWrap
@@ -2429,7 +2419,7 @@ METHOD GetTextSelection( lSoftCr ) CLASS XHBEditor
    ENDIF
 
    IF lSoftCr
-      cSoft := Chr( 141 ) + Chr( 10 )
+      cSoft := __SoftCR()
    ENDIF
 
    IF ::nRowSelStart > 0 .AND. ::nRowSelEnd > 0
@@ -2786,7 +2776,7 @@ METHOD DelTextSelection() CLASS XHBEditor
 //             nRowSelStart := ::nColSelRow
 //          ENDIF
             cText := ::aText[ ::nRow ]:cText
-            ::aText[::nRow]:cText := Stuff( cText, ::nColSelStart, ::nColSelEnd - ::nColSelStart + 1, "" )
+            ::aText[ ::nRow ]:cText := Stuff( cText, ::nColSelStart, ::nColSelEnd - ::nColSelStart + 1, "" )
             ::RefreshLine()
             ::GoToPos( ::nRow, Max( 1, ::nColSelStart ) )
             ::nColSelStart := ::nColSelEnd := 0
@@ -2976,7 +2966,7 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
    LOCAL cSplittedLine
    LOCAL nTokPos := 0
    LOCAL lTokenized := .F.
-   LOCAL cSoftCR := Chr( 141 ) + Chr( 10 )
+   LOCAL cSoftCR := __SoftCR()
 
    // 2005/JUL/19 - E.F. - SoftCR must be removed before convert string to
    //                      array. It will be treated by HBEditor.
@@ -3112,3 +3102,6 @@ METHOD BrowseText( nPassedKey, lHandleOneKey ) CLASS XHBEditor
    ENDDO
 
    RETURN NIL
+
+STATIC FUNCTION __SoftCR()
+   RETURN Chr( 141 ) + Chr( 10 ) /* TOFIX: Won't work in UTF-8 mode */

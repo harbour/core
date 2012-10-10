@@ -358,7 +358,7 @@ METHOD Describe() CLASS tRPCFunction
       FOR nCount := 1 TO Len( ::aParameters ) - 1
          cRet += ::aParameters[ nCount ] + ","
       NEXT
-      cRet += ::aParameters[ -1 ]
+      cRet += ATail( ::aParameters )
    ENDIF
 
    cRet += ")-->" + ::cReturn
@@ -386,7 +386,7 @@ CLASS tRPCServeCon
    /* User ID */
    DATA cUserId
 
-   /* Allow progress ?*/
+   /* Allow progress ? */
    DATA lAllowProgress
 
    METHOD New( oParent, skIn ) CONSTRUCTOR
@@ -714,13 +714,13 @@ METHOD RecvAuth( lEncrypt ) CLASS tRPCServeCon
       RETURN .F.
    ENDIF
 
-   nPos := At( ":", cReadin )
+   nPos := hb_BAt( ":", cReadin )
    IF nPos == 0
       RETURN .F.
    ENDIF
 
-   cUserID := SubStr( cReadin, 1, nPos - 1 )
-   cPassword := SubStr( cReadin, nPos + 1 )
+   cUserID := hb_BSubStr( cReadin, 1, nPos - 1 )
+   cPassword := hb_BSubStr( cReadin, nPos + 1 )
 
    IF ! lEncrypt
       ::nAuthLevel := ::oServer:Authorize( cUserid, cPassword )
@@ -752,21 +752,21 @@ METHOD LaunchChallenge( cUserid, cPassword ) CLASS tRPCServeCon
    ::cChallengeUserid := cUserid
 
    /* Let's generate the sequence */
-   cChallenge := Space( 255 )
+   cChallenge := ""
    FOR nCount := 1 TO 255
-      cChallenge[ nCount ] := Chr( HB_Random(0, 255 ) )
+      cChallenge += hb_BChar( HB_Random(0, 255 ) )
    NEXT
 
    ::nChallengeCRC := HB_Checksum( cChallenge )
    cChallenge := HB_Crypt( cChallenge, ::cCryptKey )
 
-   hb_inetSendAll( ::skRemote, "XHBR94" + HB_CreateLen8( Len( cChallenge ) ) + cChallenge )
+   hb_inetSendAll( ::skRemote, "XHBR94" + HB_CreateLen8( hb_BLen( cChallenge ) ) + cChallenge )
 
    IF hb_inetErrorCode( ::skRemote ) != 0
       RETURN .F.
    ENDIF
 
-RETURN .T.
+   RETURN .T.
 
 
 METHOD RecvChallenge() CLASS tRPCServeCon
@@ -1085,11 +1085,13 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
    // has still something to do.
    ::SendResult( oRet, cFuncName )
 
-   //Signal that the thread is no longer alive
+   // Signal that the thread is no longer alive
    // Should not be needed!
-   /*HB_MutexLock( ::mtxBusy )
+   /*
+   hb_mutexLock( ::mtxBusy )
    ::thFunction := -1
-   HB_MutexUnlock( ::mtxBusy )*/
+   hb_mutexUnlock( ::mtxBusy )
+   */
 
    RETURN .T.
 
@@ -1315,8 +1317,7 @@ METHOD Remove( cName ) CLASS tRPCService
    hb_mutexLock( ::mtxBusy )
    nElem := AScan( ::aFunctions, {| x | cName == x:cName } )
    IF nElem != 0
-      ADel( ::aFunctions, nElem )
-      ASize( ::aFunctions, Len( ::aFunctions ) - 1 )
+      hb_ADel( ::aFunctions, nElem, .T. )
       lRet := .T.
    ENDIF
    hb_mutexUnlock( ::mtxBusy )
@@ -1470,7 +1471,7 @@ METHOD UDPInterpretRequest( cData, nPacketLen, cRes ) CLASS tRPCService
       RETURN .F.
    ENDIF
 
-   cCode := Substr( cData, 1, 6 )
+   cCode := hb_BSubstr( cData, 1, 6 )
 
    DO CASE
    /* XHRB00 - server scan */
@@ -1479,7 +1480,7 @@ METHOD UDPInterpretRequest( cData, nPacketLen, cRes ) CLASS tRPCService
          RETURN .F.
       ENDIF
       IF nPacketLen > 6
-         cMatch := hb_Deserialize( Substr( cData, 7 ) )
+         cMatch := hb_Deserialize( hb_BSubstr( cData, 7 ) )
          IF hb_regexMatch( cMatch, ::cServerName )
            cRes := "XHBR10" + hb_Serialize( ::cServerName )
          ENDIF
@@ -1495,7 +1496,7 @@ METHOD UDPInterpretRequest( cData, nPacketLen, cRes ) CLASS tRPCService
       ENDIF
       /* minimal length to be valid */
       IF nPacketLen > 24
-         cSerial := hb_DeserialBegin( Substr( cData, 7 ) )
+         cSerial := hb_DeserialBegin( hb_BSubstr( cData, 7 ) )
          cMatch := hb_DeserialNext( @cSerial )
          cNumber := NIL
          IF ! Empty( cMatch )
@@ -1533,8 +1534,7 @@ METHOD Terminating( oConnection ) CLASS tRPCService
    hb_mutexLock( ::mtxBusy )
    nToken := AScan( ::aServing, {| x | x == oConnection } )
    IF nToken > 0
-      ADel( ::aServing, nToken )
-      ASize( ::aServing, Len( ::aServing ) - 1 )
+      hb_ADel( ::aServing, nToken, .T. )
    ENDIF
    hb_mutexUnlock( ::mtxBusy )
 
