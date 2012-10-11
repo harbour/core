@@ -1819,6 +1819,30 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
+      case HB_GTI_RESIZABLE:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, HB_FALSE );
+         break;
+
+      case HB_GTI_RESIZEMODE:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, HB_GTI_RESIZEMODE_ROWS );
+         break;
+
+      case HB_GTI_ALTENTER:
+         pInfo->pResult = hb_itemPutL( pInfo->pResult, ! hb_iswinvista() );
+         break;
+
+      case HB_GTI_FONTNAME:
+         pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
+         break;
+
+      case HB_GTI_FONTSIZE:
+      case HB_GTI_FONTWIDTH:
+      case HB_GTI_FONTWEIGHT:
+      case HB_GTI_FONTQUALITY:
+      case HB_GTI_FONTATTRIBUTE:
+         pInfo->pResult = hb_itemPutNI( pInfo->pResult, 0 );
+         break;
+
       case HB_GTI_PALETTE:
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC )
          {
@@ -1866,23 +1890,29 @@ static HB_BOOL hb_gt_win_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          break;
 
+      case HB_GTI_DESKTOPROWS:
+      case HB_GTI_DESKTOPHEIGHT:
       case HB_GTI_VIEWMAXHEIGHT:
       {
          COORD coBuf = GetLargestConsoleWindowSize( s_HOutput );
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, coBuf.Y - 1 );
          break;
       }
+      case HB_GTI_DESKTOPCOLS:
+      case HB_GTI_DESKTOPWIDTH:
       case HB_GTI_VIEWMAXWIDTH:
       {
          COORD coBuf = GetLargestConsoleWindowSize( s_HOutput );
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, coBuf.X - 1 );
          break;
       }
+      case HB_GTI_SCREENHEIGHT:
       case HB_GTI_VIEWPORTHEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_csbi.srWindow.Bottom -
                                                         s_csbi.srWindow.Top );
          break;
 
+      case HB_GTI_SCREENWIDTH:
       case HB_GTI_VIEWPORTWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, s_csbi.srWindow.Right -
                                                         s_csbi.srWindow.Left );

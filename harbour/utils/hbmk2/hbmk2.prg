@@ -151,6 +151,7 @@ EXTERNAL HB_GT_CGI_DEFAULT
    EXTERNAL HB_GT_WVT
 #elif defined( __PLATFORM__WINDOWS )
    EXTERNAL HB_GT_WIN
+   EXTERNAL HB_GT_WVT
 #elif defined( __PLATFORM__DOS )
    EXTERNAL HB_GT_DOS
 #elif defined( __PLATFORM__OS2 )
@@ -12444,9 +12445,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
          s_lInteractive := .F.
          __hbshell_ext_init( aExtension )
          hHRB := hb_hrbLoad( cFile )
-         IF __hbshell_detect_CUI( hHRB )
-            hbshell_gtInteractive()
-         ENDIF
+         hbshell_gtSelect( __hbshell_detect_GT( hHRB ) )
          hb_argShift( .T. )
          hb_hrbDo( hHRB, ... )
          EXIT
@@ -12862,7 +12861,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
    LOCAL cPrompt
    LOCAL tmp
 
-   hbshell_gtInteractive()
+   hbshell_gtSelect()
 
    IF ! hb_gtInfo( HB_GTI_ISSCREENPOS )
       OutErr( hb_StrFormat( I_( "hbshell: Error: Interactive session not possible with %1$s terminal driver" ), hb_gtVersion( 0 ) ) + _OUT_EOL )
@@ -13281,7 +13280,7 @@ STATIC FUNCTION __hbshell_detect_CUI_extern_negative()
    RETURN {;
       "HB_GT_CGI_DEFAULT" => NIL }
 
-STATIC FUNCTION __hbshell_detect_CUI( hHRB )
+STATIC FUNCTION __hbshell_detect_GT( hHRB )
    LOCAL aFunction
    LOCAL cFunction
    LOCAL hFilter
@@ -13294,7 +13293,7 @@ STATIC FUNCTION __hbshell_detect_CUI( hHRB )
 
    FOR EACH cFunction IN aFunction
       IF cFunction $ hFilter
-         RETURN .F.
+         RETURN "GTCGI"
       ENDIF
    NEXT
 
@@ -13302,11 +13301,11 @@ STATIC FUNCTION __hbshell_detect_CUI( hHRB )
 
    FOR EACH cFunction IN aFunction
       IF cFunction $ hFilter
-         RETURN .T.
+         RETURN __hbshell_gtDefault()
       ENDIF
    NEXT
 
-   RETURN .F.
+   RETURN "GTCGI"
 
 /* ------------------------------------------------------------- */
 
@@ -13322,9 +13321,12 @@ FUNCTION hbshell_DirBase()
 FUNCTION hbshell_ProgName()
    RETURN s_cProgName_hbshell
 
-FUNCTION hbshell_gtInteractive()
-   IF !( "GT" + hb_gtVersion( 0 ) == __hbshell_gtDefault() )
-      hb_gtSelect( hb_gtCreate( __hbshell_gtDefault() ) )
+FUNCTION hbshell_gtSelect( cGT )
+   IF ! HB_ISSTRING( cGT )
+      cGT := __hbshell_gtDefault()
+   ENDIF
+   IF !( "GT" + hb_gtVersion( 0 ) == cGT )
+      hb_gtSelect( hb_gtCreate( cGT ) )
       hb_SetTermCP( hb_cdpTerm() )
       hb_gtInfo( HB_GTI_BOXCP, hb_cdpSelect() )
    ENDIF

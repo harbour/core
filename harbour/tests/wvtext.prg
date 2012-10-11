@@ -30,6 +30,10 @@ PROCEDURE Main()
 
    LOCAL nMSec
 
+#if defined( __PLATFORM__WINDOWS ) .AND. defined( __HBSCRIPT__HBSHELL )
+   hbshell_gtSelect( "GTWVT" )
+#endif
+
    AFill( aKeys, 0 )
 
    hb_gtInfo( HB_GTI_FONTNAME , "Lucida Console" )
@@ -330,12 +334,16 @@ STATIC PROCEDURE DispScreen()
 
 //
 
+#if defined( __PLATFORM__WINDOWS ) .AND. ! defined( __HBSCRIPT__HBSHELL )
+
 PROCEDURE HB_GTSYS()
 
    REQUEST HB_GT_WVT_DEFAULT
    REQUEST HB_GT_WIN
 
    RETURN
+
+#endif
 
 //
 
