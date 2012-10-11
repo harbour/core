@@ -364,6 +364,9 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->MarginTop         = 0;
    pWVT->MarginLeft        = 0;
 
+   pWVT->iNewPosX          = -1;
+   pWVT->iNewPosY          = -1;
+
    pWVT->lpSelectCopy      = TEXT( "Mark and Copy" );
    pWVT->hSelectCopy       = NULL;
    pWVT->bSelectCopy       = HB_TRUE;
@@ -900,8 +903,14 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT, HFONT hFont )
             bRecenter = HB_TRUE;
          }
 
-         wi.left = rcWorkArea.left + ( ( rcWorkArea.right - rcWorkArea.left - width  ) / 2 );
-         wi.top  = rcWorkArea.top  + ( ( rcWorkArea.bottom - rcWorkArea.top - height ) / 2 );
+         if( bRecenter ||
+             rcWorkArea.left + width > rcWorkArea.right ||
+             rcWorkArea.top + height > rcWorkArea.bottom ||
+             wi.left != pWVT->iNewPosX || wi.top != pWVT->iNewPosY )
+         {
+            wi.left = rcWorkArea.left + ( ( rcWorkArea.right - rcWorkArea.left - width  ) / 2 );
+            wi.top  = rcWorkArea.top  + ( ( rcWorkArea.bottom - rcWorkArea.top - height ) / 2 );
+         }
 
          if( pWVT->ResizeMode == HB_GTI_RESIZEMODE_ROWS )
          {
@@ -931,9 +940,6 @@ static void hb_gt_wvt_ResetWindowSize( PHB_GTWVT pWVT, HFONT hFont )
       }
 #endif
    }
-
-
-
 
    HB_GTSELF_EXPOSEAREA( pWVT->pGT, 0, 0, pWVT->ROWS, pWVT->COLS );
 
@@ -1992,6 +1998,14 @@ static HB_BOOL hb_gt_wvt_CreateConsoleWindow( PHB_GTWVT pWVT )
       }
       else
       {
+         if( pWVT->iNewPosX >= 0 && pWVT->iNewPosY >= 0 )
+         {
+            RECT wi = { 0,0,0,0 };
+            GetWindowRect( pWVT->hWnd, &wi );
+            SetWindowPos( pWVT->hWnd, NULL, pWVT->iNewPosX, pWVT->iNewPosY,
+                          wi.right - wi.left, wi.bottom - wi.top,
+                          SWP_NOSIZE | SWP_NOZORDER );
+         }
          ShowWindow( pWVT->hWnd, pWVT->bMaximized ? SW_SHOWMAXIMIZED : pWVT->iCmdShow );
          UpdateWindow( pWVT->hWnd );
       }
@@ -2523,7 +2537,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_SCREENHEIGHT:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->PTEXTSIZE.y * pWVT->ROWS );
          iVal = hb_itemGetNI( pInfo->pNewVal );
-         if( iVal > 0 && !pWVT->bMaximized )  /* Don't allow if Maximized or FullScreen */
+         if( iVal > 0 && !pWVT->bMaximized && !pWVT->bFullScreen && pWVT->hWnd )  /* Don't allow if Maximized or FullScreen */
          {
             /* Now conforms to pWVT->ResizeMode setting, resize by FONT or ROWS as applicable [HVB] */
             RECT ci;
@@ -2541,7 +2555,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_SCREENWIDTH:
          pInfo->pResult = hb_itemPutNI( pInfo->pResult, pWVT->PTEXTSIZE.x * pWVT->COLS );
          iVal = hb_itemGetNI( pInfo->pNewVal );
-         if( iVal > 0 && !pWVT->bMaximized )  /* Don't allow if Maximized or FullScreen */
+         if( iVal > 0 && !pWVT->bMaximized && !pWVT->bFullScreen && pWVT->hWnd )  /* Don't allow if Maximized or FullScreen */
          {
             /* Now conforms to pWVT->ResizeMode setting, resize by FONT or ROWS as applicable [HVB] */
             RECT ci;
@@ -2822,7 +2836,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             iY = hb_arrayGetNI( pInfo->pNewVal, 2 );
             iX = hb_arrayGetNI( pInfo->pNewVal, 1 );
 
-            if( iY > 0 && iX > 0 && !pWVT->bMaximized)  /* Don't allow if Maximized or FullScreen */
+            if( iY > 0 && iX > 0 && !pWVT->bMaximized && !pWVT->bFullScreen && pWVT->hWnd )  /* Don't allow if Maximized or FullScreen */
             {
                /* Now conforms to pWVT->ResizeMode setting, resize by FONT or ROWS as applicable [HVB] */
                RECT ci;
@@ -2959,65 +2973,62 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_SETPOS_XY:
       case HB_GTI_SETPOS_ROWCOL:
       {
+         RECT wi = { 0,0,0,0 };
+         int x = 0, y = 0;
+
          if( pWVT->hWnd )
          {
-           int x, y;
-           RECT wi = { 0,0,0,0 };
-           GetWindowRect( pWVT->hWnd, &wi );
-           if( ! pInfo->pResult )
-              pInfo->pResult = hb_itemNew( NULL );
+            GetWindowRect( pWVT->hWnd, &wi );
+            if( iType == HB_GTI_SETPOS_ROWCOL )
+            {
+               y = wi.left / pWVT->PTEXTSIZE.x;
+               x = wi.top / pWVT->PTEXTSIZE.y;
+            }
+            else
+            {
+               x = wi.left;
+               y = wi.top;
+            }
+         }
 
-           hb_arrayNew( pInfo->pResult, 2 );
-           if( iType == HB_GTI_SETPOS_ROWCOL )
-           {
-              hb_arraySetNI( pInfo->pResult, 1, wi.top / pWVT->PTEXTSIZE.y );
-              hb_arraySetNI( pInfo->pResult, 2, wi.left / pWVT->PTEXTSIZE.x );
-           }
-           else
-           {
-              hb_arraySetNI( pInfo->pResult, 2, wi.top );
-              hb_arraySetNI( pInfo->pResult, 1, wi.left );
-           }
+         if( ! pInfo->pResult )
+            pInfo->pResult = hb_itemNew( NULL );
+         hb_arrayNew( pInfo->pResult, 2 );
 
-           if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) &&
-               ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC ) )
-           {
+         hb_arraySetNI( pInfo->pResult, 1, x );
+         hb_arraySetNI( pInfo->pResult, 2, y );
 
-              if( iType == HB_GTI_SETPOS_ROWCOL )
-              {
-                 y = hb_itemGetNI( pInfo->pNewVal ) * pWVT->PTEXTSIZE.y;
-                 x = hb_itemGetNI( pInfo->pNewVal2 ) * pWVT->PTEXTSIZE.x;
-              }
-              else
-              {
-                 x = hb_itemGetNI( pInfo->pNewVal );
-                 y = hb_itemGetNI( pInfo->pNewVal2 );
-              }
-              hb_retl( SetWindowPos( pWVT->hWnd, NULL,
-                                     x,
-                                     y,
-                                     wi.right - wi.left,
-                                     wi.bottom - wi.top,
-                                     SWP_NOSIZE | SWP_NOZORDER ) );
-           }
-           else if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) && hb_arrayLen( pInfo->pNewVal ) == 2 )
-           {
-              y = hb_arrayGetNI( pInfo->pNewVal, 2 );
-              x = hb_arrayGetNI( pInfo->pNewVal, 1 );
+         if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) &&
+             ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC ) )
+         {
+            x = hb_itemGetNI( pInfo->pNewVal );
+            y = hb_itemGetNI( pInfo->pNewVal2 );
+         }
+         else if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_ARRAY ) &&
+                  hb_arrayLen( pInfo->pNewVal ) == 2 )
+         {
+            x = hb_arrayGetNI( pInfo->pNewVal, 1 );
+            y = hb_arrayGetNI( pInfo->pNewVal, 2 );
+         }
+         else
+            break;
 
-              if( iType == HB_GTI_SETPOS_ROWCOL )
-              {
-                 y *= pWVT->PTEXTSIZE.y;
-                 x *= pWVT->PTEXTSIZE.x;
-              }
-              hb_retl( SetWindowPos( pWVT->hWnd, NULL,
-                                     x,
-                                     y,
-                                     wi.right - wi.left,
-                                     wi.bottom - wi.top,
-                                     SWP_NOSIZE | SWP_NOZORDER ) );
-
-           }
+         if( iType == HB_GTI_SETPOS_ROWCOL )
+         {
+            int c = y;
+            y = x * pWVT->PTEXTSIZE.y;
+            x = c * pWVT->PTEXTSIZE.x;
+         }
+         if( pWVT->hWnd )
+         {
+            SetWindowPos( pWVT->hWnd, NULL,
+                          x, y, wi.right - wi.left, wi.bottom - wi.top,
+                          SWP_NOSIZE | SWP_NOZORDER );
+         }
+         else
+         {
+            pWVT->iNewPosX = x;
+            pWVT->iNewPosY = y;
          }
          break;
       }

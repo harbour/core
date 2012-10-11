@@ -180,6 +180,9 @@ typedef struct
    int      MarginTop;
    int      MarginLeft;
 
+   int      iNewPosX;
+   int      iNewPosY;
+
    HB_BOOL  bMaximized;                   /* Flag is set when window has been maximized */
    HB_BOOL  bBeingMarked;                 /* Flag to control DOS window like copy operation */
    HB_BOOL  bBeginMarked;
