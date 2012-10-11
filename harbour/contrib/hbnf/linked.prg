@@ -58,7 +58,7 @@ FUNCTION FT_Linked( cFuncs )
       ENDDO
       // Scan through the array of functions, stop after the first occurence
       // of a function which returns a TYPE() of "U" (hence is not linked in)
-      lRetVal := AScan( aFuncArray, {| element | Type( element ) == "U" } ) = 0
+      lRetVal := AScan( aFuncArray, {| element | Type( element ) == "U" } ) == 0
    ENDIF
 
    RETURN lRetVal

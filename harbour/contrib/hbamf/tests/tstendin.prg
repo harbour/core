@@ -2,40 +2,41 @@
  * $Id$
  */
 
+#require "hbamf"
+
 REQUEST HB_CODEPAGE_UTF8EX
 
-#uncommand ? [<explist,...>] =>
-#command ? [<explist,...>]  => A( <explist> )
+#command TEST [<explist,...>] => _TEST( <explist> )
 
 PROCEDURE Main()
 
    hb_cdpSelect( "UTF8EX" )
 
-   ? { }, "8352"
-   ? "a", "F248"
-   ? "¥", "96F0"
-   ? 1,   "AE79"
-   ? 1000, "278B"
-   ? 1000000, "A752"
-   ? 268435455, "4907"
-   ? 268435456, "E677"
-   ? 268435456000, "4271"
-   ? - 1, "FE11"
-   ? 9007199254740990, "0009"
-   ? AMF3_DECODE( AMF3_ENCODE( 9007199254740990 ) ), "0009"
-   ? 9007199254740991, "8918"
-   ? AMF3_DECODE( AMF3_ENCODE( 9007199254740991 ) ), "8918"
-   ? 9007199254740991.00, "8918"
-   ? 6969.69, "10AF"
-   ? NIL, "F1E1"
-   ? .T. , "E3C2"
-   ? .F. , "6AD3"
-   ? { 1, - 1 }, "0560"
-   ? { "ONE" => 0xcafe, "TWO" => 0xbabe }, "CE93"
+   TEST {}, "8352"
+   TEST "a", "F248"
+   TEST "ą", "96F0"
+   TEST 1, "AE79"
+   TEST 1000, "278B"
+   TEST 1000000, "A752"
+   TEST 268435455, "4907"
+   TEST 268435456, "E677"
+   TEST 268435456000, "4271"
+   TEST -1, "FE11"
+   TEST 9007199254740990, "0009"
+   TEST AMF3_DECODE( AMF3_ENCODE( 9007199254740990 ) ), "0009"
+   TEST 9007199254740991, "8918"
+   TEST AMF3_DECODE( AMF3_ENCODE( 9007199254740991 ) ), "8918"
+   TEST 9007199254740991.00, "8918"
+   TEST 6969.69, "10AF"
+   TEST NIL, "F1E1"
+   TEST .T. , "E3C2"
+   TEST .F. , "6AD3"
+   TEST { 1, -1 }, "0560"
+   TEST { "ONE" => 0xcafe, "TWO" => 0xbabe }, "CE93"
 
    RETURN
 
-PROCEDURE A( a, cChkOK )
+STATIC PROCEDURE _TEST( a, cChkOK )
 
    LOCAL x := AMF3_ENCODE( a )
    LOCAL cChk := hb_StrToHex( I2Bin( hb_CRC( x ) ) )

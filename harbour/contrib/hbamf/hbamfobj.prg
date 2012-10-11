@@ -48,7 +48,7 @@ METHOD noMessage( ... ) CLASS AMF_Obj
 
 METHOD msgNotFound( cMessage, ... ) CLASS AMF_Obj
 
-   IF PCount() = 1 .AND. !( hb_BLeft( cMessage, 1 ) == "_" )
+   IF PCount() == 1 .AND. !( hb_BLeft( cMessage, 1 ) == "_" )
       IF ! Empty( ::hCachedData ) .AND. hb_HHasKey( ::hCachedData, cMessage )
          RETURN ::hCachedData[ cMessage ]
       ENDIF

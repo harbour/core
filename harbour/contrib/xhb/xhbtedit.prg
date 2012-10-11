@@ -1350,11 +1350,11 @@ METHOD WordLeft() CLASS XHBEditor
          ::nCol < ::LineLen( ::nRow ) .AND. ;
          Empty( ::GetCol( ::nRow,::nCol ) )
       ::WordRight()
-   ELSEIF ::lWordWrap .AND. ::nCol = 1 .AND. ::nRow = 1 .AND. ;
+   ELSEIF ::lWordWrap .AND. ::nCol == 1 .AND. ::nRow == 1 .AND. ;
          Empty( ::GetCol( ::nRow,::nCol ) )
       ::WordRight()
-   ELSEIF ::lWordWrap .AND. ::nCol = 1 .AND. ::nRow > 1
-      DO While ::nCol = 1 .AND. ::nRow > 1 .AND. Empty( ::GetCol( ::nRow, ::nCol ) )
+   ELSEIF ::lWordWrap .AND. ::nCol == 1 .AND. ::nRow > 1
+      DO While ::nCol == 1 .AND. ::nRow > 1 .AND. Empty( ::GetCol( ::nRow, ::nCol ) )
          ::up()
          IF !::IsEmptyLine( ::nRow )
             ::end()
@@ -2495,7 +2495,7 @@ METHOD SetTextSelection( cAction, nCount ) CLASS XHBEditor
             ENDIF
          ELSEIF nCount < 0  // Shift Left
             IF ::nCol > 1
-               IF ::nColSelStart = 0 .AND. ::nColSelEnd = 0
+               IF ::nColSelStart == 0 .AND. ::nColSelEnd == 0
                   ::nColSelEnd := ::nColSelStart := ::nCol
                ENDIF
                ::GotoCol( ::nCol - 1 )
@@ -2655,7 +2655,7 @@ METHOD SetTextSelection( cAction, nCount ) CLASS XHBEditor
                ELSE
                   ::nColSelStart := Max( 1, ::nCol )
                ENDIF
-               IF ::nCol = 1 .AND. ::nColSelStart == ::nColSelEnd
+               IF ::nCol == 1 .AND. ::nColSelStart == ::nColSelEnd
                   ::lSelActive := .F.
                ENDIF
                ::RefreshLine( .T. )

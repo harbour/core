@@ -899,7 +899,7 @@ STATIC FUNCTION GetNumMask( Text, mcvaltype )
    s := ''
    FOR i := 1 TO Len( Text )
       c := SubStr( Text, i, 1 )
-      IF c = '9' .OR. c = '.'
+      IF c == '9' .OR. c == '.'
          s := s + c
       ENDIF
       IF c == '$' .OR. c == '*'

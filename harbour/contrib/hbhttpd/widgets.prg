@@ -473,7 +473,7 @@ PROCEDURE UProcWidgets( cURL, aMap )
    LOCAL aStack, aURL, aFrame, cI, nI, nL, lRet
 
    IF hb_HHasKey( aMap, cURL )
-      // aStack[ i ] = { url_part, function, variables }
+      // aStack[ i ] := { url_part, function, variables }
       IF ( aStack := hb_HGetDef( session, "_ustack" ) ) == NIL
          session[ "_ustack" ] := aStack := {}
       ENDIF
