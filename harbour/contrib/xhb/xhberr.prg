@@ -321,7 +321,7 @@ STATIC FUNCTION LogError( oerr )
    IF ! lAppendLog
       nHandle := FCreate( cLogFile, FC_NORMAL )
    ELSE
-      IF !File( cLogFile )
+      IF ! hb_FileExists( cLogFile )
          nHandle := FCreate( cLogFile, FC_NORMAL )
       ELSE
          nHandle  := FCreate( cLogFile2, FC_NORMAL )

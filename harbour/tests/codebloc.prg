@@ -55,7 +55,7 @@ PROCEDURE Main()
    OutStd( hb_eol() )
 
    yy := 5
-   x  := {| xx | OutStd( LTrim( Str(xx ) ) ), OutStd( "+" ), OutStd( LTrim( Str(yy ) ) ), OutStd( "=" ), xx + yy }
+   x  := {| xx | OutStd( hb_ntos( xx ) ), OutStd( "+" ), OutStd( hb_ntos( yy ) ), OutStd( "=" ), xx + yy }
    OutStd( Eval( x, 1 ) )       //this is OK
    OutStd( hb_eol() )
    OutStd( Eval( x, 1, 2 ) )    //this should ignore unnecesary parameters

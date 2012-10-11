@@ -1178,7 +1178,7 @@ METHOD WvtBrowse:HandleEvent( nKey )
 
    LOCAL lRet := .F.
 
-   IF ValType( ::bHandleEvent ) == "B"
+   IF HB_ISBLOCK( ::bHandleEvent )
       lRet := Eval( ::bHandleEvent, self, ::oParent:cPaintBlockID, ::oBrw, nKey )
    ENDIF
 
@@ -1191,7 +1191,7 @@ METHOD WvtBrowse:NotifyChild( nIndex, nKey, oCurObj )
    LOCAL xData, i
 
    IF nIndex > 0 .AND. nIndex <= Len( ::aChildren )
-      IF ValType( ::aChildren[ nIndex, OBJ_CHILD_DATABLOCK ] ) == "B"
+      IF HB_ISBLOCK( ::aChildren[ nIndex, OBJ_CHILD_DATABLOCK ] )
          xData := Eval( ::aChildren[ nIndex, OBJ_CHILD_DATABLOCK ] )
       ENDIF
 
@@ -1589,7 +1589,7 @@ METHOD WvtLabel:Refresh()
 
 METHOD WvtLabel:SetText( cTxt )
 
-   IF ValType( cTxt ) == "C"
+   IF HB_ISSTRING( cTxt )
       ::Text := cTxt
       ::Refresh()
    ENDIF
@@ -1600,7 +1600,7 @@ METHOD WvtLabel:SetText( cTxt )
 
 METHOD WvtLabel:SetTextColor( nRGB )
 
-   IF ValType( nRGB ) == "N"
+   IF HB_ISNUMERIC( nRGB )
       ::nTextColor := nRGB
       ::nTextColorHoverOff := nRGB
       ::Refresh()
@@ -1612,7 +1612,7 @@ METHOD WvtLabel:SetTextColor( nRGB )
 
 METHOD WvtLabel:SetBackColor( nRGB )
 
-   IF ValType( nRGB ) == "N"
+   IF HB_ISNUMERIC( nRGB )
       ::nBackColor := nRGB
       ::nBackColorHoverOff := nRGB
       ::Refresh()
@@ -1786,7 +1786,7 @@ METHOD WvtToolBar:AddButton( cFileImage, bBlock, cTooltip )
    oObj:nLeft      := ::nBtnLeft + 1
    oObj:nBottom    := ::nBottom
 
-   IF ValType( cFileImage ) == "C"
+   IF HB_ISSTRING( cFileImage )
       oObj:nBtnType   := TLB_BUTTON_TYPE_IMAGE
       oObj:nRight     := oObj:nLeft + nCol - 1
       oObj:cFileImage := cFileImage
@@ -1999,7 +1999,7 @@ METHOD WvtImage:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
 METHOD WvtImage:Create()
 
-   ::bPaint := {|| iif( File( ::cImage ), ;
+   ::bPaint := {|| iif( hb_FileExists( ::cImage ), ;
       Wvt_DrawImage( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cImage ), "" ) }
 
    AAdd( ::aPaint, { ::bPaint, ;
@@ -2013,7 +2013,7 @@ METHOD WvtImage:Create()
 
 METHOD WvtImage:SetImage( cImage )
 
-   IF cImage != nil .AND. File( cImage )
+   IF cImage != NIL .AND. hb_FileExists( cImage )
       ::cImageFile := cImage
       ::Refresh()
    ENDIF

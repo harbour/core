@@ -350,13 +350,13 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
    AAdd( aDlg[ 1 ] , nH      )
    AAdd( aDlg[ 1 ] , 0       )
    AAdd( aDlg[ 1 ] , 0       )
-   AAdd( aDlg[ 1 ] , iif( ValType( cTitle ) == "C", cTitle, "" ) )
+   AAdd( aDlg[ 1 ] , iif( HB_ISSTRING( cTitle ), cTitle, "" ) )
 
    IF hb_bitAnd( nStyle, DS_SETFONT ) == DS_SETFONT
-      AAdd( aDlg[ 1 ], iif( ValType( nPointSize ) == "N", nPointSize, 8               ) )
-      AAdd( aDlg[ 1 ], iif( ValType( nWeight    ) == "N", nWeight   , 400             ) )
-      AAdd( aDlg[ 1 ], iif( ValType( lItalic    ) == "L", lItalic   , .F.             ) )
-      AAdd( aDlg[ 1 ], iif( ValType( cFaceName  ) == "C", cFaceName , "MS Sans Serif" ) )
+      AAdd( aDlg[ 1 ], iif( HB_ISNUMERIC( nPointSize ), nPointSize, 8               ) )
+      AAdd( aDlg[ 1 ], iif( HB_ISNUMERIC( nWeight    ), nWeight   , 400             ) )
+      AAdd( aDlg[ 1 ], iif( HB_ISLOGICAL( lItalic    ), lItalic   , .F.             ) )
+      AAdd( aDlg[ 1 ], iif( HB_ISSTRING(  cFaceName  ), cFaceName , "MS Sans Serif" ) )
    ENDIF
 
    RETURN aDlg
@@ -412,9 +412,9 @@ FUNCTION Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet, ;
 
    aDlg[ 1,4 ]++      /* item count */
 
-   AAdd( aDlg[  2 ] , iif( ValType( nHelpId  ) == "N", nHelpId , 0                     ) )
-   AAdd( aDlg[  3 ] , iif( ValType( nExStyle ) == "N", nExStyle, 0                     ) )
-   AAdd( aDlg[  4 ] , iif( ValType( nStyle   ) == "N", nStyle  , WS_CHILD + WS_VISIBLE ) )
+   AAdd( aDlg[  2 ] , iif( HB_ISNUMERIC( nHelpId  ), nHelpId , 0                     ) )
+   AAdd( aDlg[  3 ] , iif( HB_ISNUMERIC( nExStyle ), nExStyle, 0                     ) )
+   AAdd( aDlg[  4 ] , iif( HB_ISNUMERIC( nStyle   ), nStyle  , WS_CHILD + WS_VISIBLE ) )
    AAdd( aDlg[  5 ] , nX         )
    AAdd( aDlg[  6 ] , nY         )
    AAdd( aDlg[  7 ] , nW         )
@@ -432,7 +432,7 @@ FUNCTION Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
 
    LOCAL hDlg, cType, xTemplate, nDlgMode
 
-   IF ValType( cbDlgProc ) == "C"
+   IF HB_ISSTRING( cbDlgProc )
       cbDlgProc := Upper( cbDlgProc )
    ENDIF
 
@@ -455,7 +455,7 @@ FUNCTION Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
 
       ENDIF
 
-      IF ValType( nTimerTicks ) == "N"
+      IF HB_ISNUMERIC( nTimerTicks )
          WVG_SetTimer( hDlg, 1001, nTimerTicks )
 
       ENDIF
@@ -475,7 +475,7 @@ FUNCTION Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
 
    LOCAL nResult, cType, xTemplate, nDlgMode
 
-   IF ValType( cbDlgProc ) == "C"
+   IF HB_ISSTRING( cbDlgProc )
       cbDlgProc := Upper( cbDlgProc )
    ENDIF
 
@@ -615,13 +615,13 @@ FUNCTION Wvt_GetTitle()
 
 FUNCTION Wvt_SetIcon( ncIconRes, cIconName )
 
-   IF     ValType( ncIconRes ) == "N"
+   IF HB_ISNUMERIC( ncIconRes )
       hb_gtInfo( HB_GTI_ICONRES, ncIconRes )
 
-   ELSEIF ValType( cIconName ) == "C"
+   ELSEIF HB_ISSTRING( cIconName )
       hb_gtInfo( HB_GTI_ICONRES, cIconName )
 
-   ELSEIF ValType( ncIconRes ) == "C"
+   ELSEIF HB_ISSTRING( ncIconRes )
       hb_gtInfo( HB_GTI_ICONFILE, ncIconRes )
 
    ENDIF

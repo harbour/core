@@ -28,7 +28,7 @@ PROCEDURE Main()
       QUIT
    ENDIF
 
-   IF File( cLogFile )
+   IF hb_FileExists( cLogFile )
       FErase( cLogFile )
    ENDIF
 

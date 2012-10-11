@@ -46,8 +46,8 @@ proc main()
    SetMode( nMaxScrRow, nMaxScrCol )
 
    /* display console window size */
-   ? "rows =", ltrim( str( maxrow() + 1 ) )
-   ? "cols =", ltrim( str( maxcol() + 1 ) )
+   ? "rows =", hb_ntos( maxrow() + 1 )
+   ? "cols =", hb_ntos( maxcol() + 1 )
    inkey( 0 )
 
    /* display infomration aboout used OS, harbour version and GT driver */

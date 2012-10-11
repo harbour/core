@@ -14,6 +14,10 @@
 
 #include "inkey.ch"
 
+#ifndef __HARBOUR__
+#define hb_ntos( n ) LTrim( Str( n ) )
+#endif
+
 PROCEDURE Main( cSkip, cRaw )
 
    AltD( 0 )
@@ -263,6 +267,6 @@ PROCEDURE TEST7( cSkip, cRaw )
       ENDCASE
 
    ENDDO
-   ? "The TAB key (" + LTrim( Str( nKey ) ) + ") was pressed. Exiting..."
+   ? "The TAB key (" + hb_ntos( nKey ) + ") was pressed. Exiting..."
 
    RETURN

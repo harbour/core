@@ -271,7 +271,7 @@ METHOD WvgMenuBar:addItem( aItem, p2, p3, p4 )
 
    LOCAL xCaption, bAction, nStyle, nAttrib
 
-   IF PCount() == 1 .AND. ValType( aItem ) == "A"
+   IF PCount() == 1 .AND. HB_ISARRAY( aItem )
       ASize( aItem, 4 )
       xCaption := aItem[ 1 ]
       bAction  := aItem[ 2 ]
@@ -344,7 +344,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
             aItem[ 2 ], ;
             iif( HB_ISSTRING( aItem[ 3 ] ), StrTran( aItem[ 3 ], "~", "&" ), aItem[ 3 ] ) )
       ELSE
-         IF ValType( xCaption ) == "C"
+         IF HB_ISSTRING( xCaption )
             aItem[ 2 ] := ::aMenuItems[ nItemIndex, 2 ]
          ENDIF
          ::aMenuItems[ nItemIndex ] := aItem
@@ -352,7 +352,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
             nItemIndex - 1, ;
             aItem[ 2 ], ;
             iif( HB_ISSTRING( aItem[ 3 ] ), StrTran( aItem[ 3 ], "~", "&" ), aItem[ 3 ] ), ;
-            ValType( xCaption ) == "C" )
+            HB_ISSTRING( xCaption ) )
       ENDIF
    ENDIF
 

@@ -596,7 +596,7 @@ METHOD SessionRead( cID ) CLASS uhttpd_Session
    __defaultNIL( @cID, ::cSID )
    cFile := ::cSavePath + hb_ps() + ::cName + "_" + cID
    //TraceLog( "SessionRead: cFile", cFile )
-   IF File( cFile )
+   IF hb_FileExists( cFile )
       DO WHILE nRetry++ <= ::nFileRetry
          IF ( nH := FOpen( cFile, FO_READ + FO_DENYWRITE ) ) != F_ERROR
 
@@ -658,7 +658,7 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
       ENDDO
    ELSE
       // If session data is empty, I will delete the file if exist
-      //IF File( cFile )
+      //IF hb_FileExists( cFile )
       //   FErase( cFile )
       //ENDIF
       // Return that all is ok

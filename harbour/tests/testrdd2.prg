@@ -26,7 +26,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    FIELD CHAR, NUM, DATE, LOG
 
-   bMemoText := {|| "This is memo #" + LTrim( Str( RecNo() ) ) + "." + hb_eol() + ;
+   bMemoText := {|| "This is memo #" + hb_ntos( RecNo() ) + "." + hb_eol() + ;
       hb_eol() + ;
       "This is a very long string. " + ;
       "This may seem silly however strings like this are still " + ;
@@ -98,7 +98,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
    // Delete test_?.* since may be changing RDD flavors (avoid conflicts)
    AEval( Directory( "test_?.*" ), {| a | FErase( a[ F_NAME ] ) } )
 
-   IF File( "test_2.dbf" )
+   IF hb_FileExists( "test_2.dbf" )
       NotifyUser( "Cannot delete test_2.dbf" )
    ENDIF
 
@@ -111,7 +111,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
       { "LOG",  "L",  1, 0 }, ;
       { "MEMO", "M", 10, 0 } } )
 
-   IF ! File( "test_2.dbf" )
+   IF ! hb_FileExists( "test_2.dbf" )
       NotifyUser( "Failed to create test_2.dbf" )
    ENDIF
 
@@ -138,7 +138,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
    // TEST: Header()
 
    IF ! Header() == 194
-      NotifyUser( "Header() returned wrong size (" + LTrim( Str( Header() ) ) + " bytes)" )
+      NotifyUser( "Header() returned wrong size (" + hb_ntos( Header() ) + " bytes)" )
    ENDIF
 
    // Add a mix of data to table
@@ -151,8 +151,8 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
       // TEST: REPLACE
 
-      REPLACE CHAR WITH Chr( Asc( "A" ) + Val( SubStr( LTrim( Str( RecNo() ) ), 2, 1 ) ) ) + ;
-         " RECORD " + LTrim( Str( RecNo() ) )
+      REPLACE CHAR WITH Chr( Asc( "A" ) + Val( SubStr( hb_ntos( RecNo() ), 2, 1 ) ) ) + ;
+         " RECORD " + hb_ntos( RecNo() )
 
       // TEST: Direct field assigment
 
@@ -191,8 +191,8 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
       // TEST: Field access
 
-      IF ! RTrim( FIELD->CHAR ) == Chr( 65 + Val( SubStr( LTrim( Str( RecNo() ) ), 2, 1 ) ) ) + ;
-            " RECORD " + LTrim( Str( RecNo() ) ) .OR. ;
+      IF ! RTrim( FIELD->CHAR ) == Chr( Asc( "A" ) + Val( SubStr( hb_ntos( RecNo() ), 2, 1 ) ) ) + ;
+            " RECORD " + hb_ntos( RecNo() ) .OR. ;
             ! FIELD->NUM == ( iif( RecNo() % 2 > 0, - 1, 1 ) * RecNo() ) + ( RecNo() / 1000 ) .OR. ;
             ! FIELD->DATE == Date() + Int( FIELD->NUM ) .OR. ;
             ! FIELD->LOG == ( FIELD->NUM < 0 ) .OR. ;
@@ -348,15 +348,15 @@ STATIC PROCEDURE MyError( e )
 
    cErr := "Runtime error" + hb_eol() + ;
       hb_eol() + ;
-      "Gencode: " + LTrim( Str( e:GenCode ) ) + hb_eol() + ;
+      "Gencode: " + hb_ntos( e:GenCode ) + hb_eol() + ;
       "Desc: " + e:Description +  + hb_eol() + ;
-      "Sub-system: " + LTrim( Str( e:SubCode ) ) + hb_eol() + ;
+      "Sub-system: " + hb_ntos( e:SubCode ) + hb_eol() + ;
       hb_eol() + ;
       "Call trace:" + hb_eol() + ;
       hb_eol()
 
    DO WHILE ! Empty( ProcName( ++i ) )
-      cErr += RTrim( ProcName( i ) ) + "(" + LTrim( Str( ProcLine( i ) ) ) + ")" + hb_eol()
+      cErr += RTrim( ProcName( i ) ) + "(" + hb_ntos( ProcLine( i ) ) + ")" + hb_eol()
    ENDDO
 
    NotifyUser( cErr )  // Calls quit

@@ -95,7 +95,7 @@ PROCEDURE Main()
       CLS
       SetCursor( SC_NORMAL )
       cpict := PadR( cpict, 40 )
-      @ 0, 0 SAY "FileName  :" GET cpict PICT "@K" VALID File( AllTrim( cpict ) )
+      @ 0, 0 SAY "FileName  :" GET cpict PICT "@K" VALID hb_FileExists( AllTrim( cpict ) )
       @ 1, 0 SAY "Transpar? :" GET ltransp PICT "Y"
       @ 2, 0 SAY "Max Cache :" GET nMaxCache PICT "999"
       @ 3, 0 SAY "NumOfCache=" + Transform( wvw_numBMcache(), "999" ) + ;

@@ -2892,7 +2892,7 @@ METHOD LoadFile( cFileName ) CLASS XHBEditor
 
    LOCAL cString := ""
 
-   IF File( cFileName )
+   IF hb_FileExists( cFileName )
       ::cFile := cFileName
       cString := MemoRead( cFileName )
    ENDIF
@@ -2916,10 +2916,10 @@ METHOD SaveFile() CLASS XHBEditor
 
    LOCAL cString
 
-   IF !Empty( ::cFile )
+   IF ! Empty( ::cFile )
       cString := ::GetText()
-      ::lChanged := !MemoWrit( ::cFile, cString )
-      RETURN !::lChanged
+      ::lChanged := ! MemoWrit( ::cFile, cString )
+      RETURN ! ::lChanged
    ENDIF
 
    RETURN .F.

@@ -254,7 +254,7 @@ FUNCTION WvtSetObjects( aObject )
       IF Empty( aObject )
          t_aObjects := {}
       ELSE
-         IF ValType( aObject[ 1 ] ) == "A"
+         IF HB_ISARRAY( aObject[ 1 ] )
             AEval( aObject, {| e_ | AAdd( t_aObjects, e_ ) } )
          ELSE
             ASize( aObject, WVT_OBJ_VRBLS )
@@ -511,7 +511,7 @@ FUNCTION ClearStatusMsg()
 
 FUNCTION WvtPictures( nSlot, cFilePic )
 
-   IF nSlot != NIL .AND. nSlot <= 20 .AND. File( cFilePic )
+   IF nSlot != NIL .AND. nSlot <= 20 .AND. hb_FileExists( cFilePic )
       IF !( t_pic_[ nSlot ] == cFilePic )
          IF Wvt_LoadPicture( cFilePic, nSlot )
             t_pic_[ nSlot ] := cFilePic

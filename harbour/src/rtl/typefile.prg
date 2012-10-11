@@ -100,7 +100,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
       ENDDO
 
       FOR EACH cPath IN hb_ATokens( cTmp, ";" )
-         IF File( cTmp := hb_FNameMerge( cPath, cName, cExt ) )
+         IF hb_FileExists( cTmp := hb_FNameMerge( cPath, cName, cExt ) )
             cFile := cTmp
             EXIT
          ENDIF

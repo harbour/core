@@ -73,7 +73,7 @@ CLASS TCgiFile
 
    METHOD ERASE() INLINE FErase( ::File ) == 0
 
-   METHOD Exists() INLINE File( ::File )
+   METHOD Exists() INLINE hb_FileExists( ::File )
 
    METHOD Error() INLINE FError() != 0
 

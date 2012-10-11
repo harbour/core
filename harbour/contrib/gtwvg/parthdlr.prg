@@ -232,7 +232,7 @@ METHOD WvgPartHandler:setName( nNameId )
 
    LOCAL nOldNameId := ::nNameId
 
-   IF ValType( nNameId ) == "N"
+   IF HB_ISNUMERIC( nNameId )
       ::nNameID := nNameId
    ENDIF
 
@@ -244,7 +244,7 @@ METHOD WvgPartHandler:setOwner( oWvg )
 
    LOCAL oOldXbp := ::oOwner
 
-   IF ValType( oWvg ) == "O"
+   IF HB_ISOBJECT( oWvg )
       ::oOwner := oWvg
    ENDIF
 
@@ -256,7 +256,7 @@ METHOD WvgPartHandler:setParent( oWvg )
 
    LOCAL oOldXbp := ::oParent
 
-   IF ValType( oWvg ) == "O"
+   IF HB_ISOBJECT( oWvg )
       ::oParent := oWvg
    ENDIF
 

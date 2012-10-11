@@ -334,7 +334,7 @@ STATIC PROCEDURE OpenLogFile( nWA )
    IF lActive .AND. nHandle == NIL
 
       /* Open Access Log File */
-      IF File( cFileName )
+      IF hb_FileExists( cFileName )
          nHandle := FOpen( cFileName, FO_READWRITE + FO_SHARED )
       ELSE
          nHandle := FCreate( cFileName )

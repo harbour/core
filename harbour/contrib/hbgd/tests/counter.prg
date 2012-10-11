@@ -36,7 +36,7 @@ PROCEDURE Main( cValue, cBaseImage )
    hb_default( @cValue    , Str( hb_RandomInt( 1, 10 ^ DISPLAY_NUM ), DISPLAY_NUM ) )
    hb_default( @cBaseImage, "57chevy.gif" )
 
-   IF !File( IMAGES_IN + cBaseImage )
+   IF ! hb_FileExists( IMAGES_IN + cBaseImage )
       ? "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' not found"
       QUIT
    ENDIF

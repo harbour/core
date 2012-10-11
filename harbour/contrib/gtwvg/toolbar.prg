@@ -291,7 +291,7 @@ METHOD WvgToolBar:sendToolbarMessage( nMsg, p1, p2 )
 
 METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB )
 
-   LOCAL oBtn, pBitmap, cType, nBtn
+   LOCAL oBtn, pBitmap, nBtn
 
    HB_SYMBOL_UNUSED( xDisabledImage )
    HB_SYMBOL_UNUSED( xHotImage )
@@ -310,24 +310,28 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
    oBtn:index   := ::numItems + 1
    oBtn:command := 100 + oBtn:index
 
-   cType   := ValType( xImage )
-
-   DO CASE
-
-   CASE cType == "C"
-      IF ( "." $ xImage ) .OR. ( "/" $ xImage ) .OR. ( "\" $ xImage ) .OR. ( ":" $ xImage ) .OR. File( xImage )
+   SWITCH ValType( xImage )
+   CASE "C"
+      IF "." $ xImage .OR. ;
+         "/" $ xImage .OR. ;
+         "\" $ xImage .OR. ;
+         ":" $ xImage .OR. ;
+         hb_FileExists( xImage )
          pBitmap := Wvg_PrepareBitmapFromFile( xImage, ::imageWidth, ::imageHeight, .T. , ::hWnd )
       ELSE
          pBitmap := Wvg_PrepareBitmapFromResourceName( xImage, ::imageWidth, ::imageHeight, .T. , ::hWnd )
       ENDIF
+      EXIT
 
-   CASE cType == "N"
+   CASE "N"
       pBitmap := Wvg_PrepareBitmapFromResourceID( xImage, ::imageWidth, ::imageHeight, .T. , ::hWnd )
+      EXIT
 
-   CASE cType == "P"
+   CASE "P"
       pBitmap := xImage
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
 
    IF ! Empty( pBitmap )
       /* oBtn:image := pBitmap */
@@ -337,7 +341,7 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       ELSE
          nBtn := WAPI_ImageList_Add( ::hImageList, pBitmap )
       ENDIF
-      IF !( cType == "P" )
+      IF ! HB_ISPOINTER( xImage )
          WVG_DeleteObject( pBitmap )
       ENDIF
 

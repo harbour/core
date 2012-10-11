@@ -23,7 +23,7 @@ PROCEDURE Main( cFileName )
       QUIT
    ENDIF
 
-   IF ( ! File( cFileName ) )
+   IF ! hb_FileExists( cFileName )
       ?
       ? "File", cFileName, "is not valid"
       ?

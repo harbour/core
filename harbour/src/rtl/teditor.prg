@@ -201,7 +201,7 @@ METHOD LoadFile( cFileName ) CLASS HBEditor
 
    LOCAL cString
 
-   IF File( cFileName )
+   IF hb_FileExists( cFileName )
       ::cFile := cFileName
       cString := hb_MemoRead( cFileName )
    ELSE
@@ -239,11 +239,11 @@ METHOD LoadText( cString ) CLASS HBEditor
 // Saves file being edited, if there is no file name does nothing, returns .T. if OK
 METHOD SaveFile() CLASS HBEditor
 
-   IF !Empty( ::cFile )
+   IF ! Empty( ::cFile )
 
-      ::lDirty := !hb_MemoWrit( ::cFile, ::GetText() )
+      ::lDirty := ! hb_MemoWrit( ::cFile, ::GetText() )
 
-      RETURN !::lDirty
+      RETURN ! ::lDirty
    ENDIF
 
    RETURN .F.

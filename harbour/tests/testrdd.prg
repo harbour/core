@@ -15,7 +15,7 @@ PROCEDURE Main()
 
    SET EXCLUSIVE OFF
 
-   QOut( "Registered RDD's:", LTrim( Str( Len( aRdd ) ) ), "=>" )
+   QOut( "Registered RDD's:", hb_ntos( Len( aRdd ) ), "=>" )
    AEval( aRdd, {| cDriver | QQOut( "", cDriver ) } )
    QOut()
    rddSetDefault( "DBFCDX" )

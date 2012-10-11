@@ -34,7 +34,7 @@ FUNCTION FT_DFSETUP( cInFile, nTop, nLeft, nBottom, nRight, ;
 
    LOCAL rval
 
-   IF File( cInFile )
+   IF hb_FileExists( cInFile )
       nTop    := iif( HB_ISNUMERIC( nTop )   , nTop,           0 )
       nLeft   := iif( HB_ISNUMERIC( nLeft )  , nLeft,          0 )
       nBottom := iif( HB_ISNUMERIC( nBottom ), nBottom, MaxRow() )

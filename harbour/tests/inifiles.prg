@@ -79,7 +79,7 @@ STATIC FUNCTION New( cFileName )
       ::Contents := {}
       CurrArray := ::Contents
 
-      IF File( cFileName )
+      IF hb_FileExists( cFileName )
          hFile := FOpen( cFilename, FO_READ )
       ELSE
          hFile := FCreate( cFilename )
@@ -215,13 +215,13 @@ STATIC FUNCTION ReadNumber( cSection, cIdent, nDefault )
 
    LOCAL Self := QSelf()
 
-   RETURN Val( ::ReadString( cSection, cIdent, Str(nDefault ) ) )
+   RETURN Val( ::ReadString( cSection, cIdent, Str( nDefault ) ) )
 
 STATIC PROCEDURE WriteNumber( cSection, cIdent, nNumber )
 
    LOCAL Self := QSelf()
 
-   ::WriteString( cSection, cIdent, AllTrim( Str(nNumber ) ) )
+   ::WriteString( cSection, cIdent, hb_ntos( nNumber ) )
 
    RETURN
 
@@ -229,7 +229,7 @@ STATIC FUNCTION ReadDate( cSection, cIdent, dDefault )
 
    LOCAL Self := QSelf()
 
-   RETURN SToD( ::ReadString( cSection, cIdent, DToS(dDefault ) ) )
+   RETURN SToD( ::ReadString( cSection, cIdent, DToS( dDefault ) ) )
 
 STATIC PROCEDURE WriteDate( cSection, cIdent, dDate )
 

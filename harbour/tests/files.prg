@@ -42,11 +42,11 @@ PROCEDURE Main()
    DO WHILE n < NFILES
       n++
       @ 10, 0 SAY "Building files.... " + Str( n )
-      dbCreate( "file" + LTrim( Str( n ) ), aCampos )
-      USE ( "file" + LTrim( Str( n ) ) ) NEW
+      dbCreate( "file" + hb_ntos( n ), aCampos )
+      USE ( "file" + hb_ntos( n ) ) NEW
 
 #ifdef WITH_ADS
-      INDEX ON CODIGO TAG CODIGO TO ( "file" + LTrim( Str( n ) ) )
+      INDEX ON CODIGO TAG CODIGO TO ( "file" + hb_ntos( n ) )
 #endif
 
       CLOSE DATA
@@ -57,7 +57,7 @@ PROCEDURE Main()
    DO WHILE n < NFILES
       n++
       @ 12, 0 SAY "Opening files.... " + Str( n )
-      USE ( "file" + LTrim( Str( n ) ) ) NEW
+      USE ( "file" + hb_ntos( n ) ) NEW
 
    #ifdef WITH_ADS
       SET ORDER TO TAG CODIGO
@@ -72,7 +72,7 @@ PROCEDURE Main()
    DO WHILE n < NFILES
       n++
       @ 14, 0 SAY "Deleting files.... " + Str( n )
-      hb_dbDrop( "file" + LTrim( Str( n ) ) + ".dbf" )
+      hb_dbDrop( "file" + hb_ntos( n ) + ".dbf" )
    ENDDO
 
    RETURN

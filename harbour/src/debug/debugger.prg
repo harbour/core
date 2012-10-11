@@ -410,7 +410,7 @@ METHOD New() CLASS HBDebugger
    ::BuildCommandWindow()
    ::BuildBrowseStack()
 
-   IF File( ::cSettingsFileName )
+   IF hb_FileExists( ::cSettingsFileName )
       ::LoadSettings()
       ::lGo := ::lRunAtStartup // Once again after settings file is loaded
    ENDIF
@@ -1071,7 +1071,7 @@ METHOD DoScript( cFileName ) CLASS HBDebugger
    LOCAL cLine
    LOCAL nLen
 
-   IF File( cFileName )
+   IF hb_FileExists( cFileName )
       cInfo := MemoRead( cFileName )
       nLen := MLCount( cInfo, NIL, NIL, .F. )
       FOR n := 1 TO nLen
@@ -1826,7 +1826,7 @@ METHOD LocatePrgPath( cPrgName ) CLASS HBDebugger
 
    FOR i := 1 TO iMax
       cRetPrgName := aPaths[ i ] + hb_ps() + cPrgName
-      IF File( cRetPrgName )
+      IF hb_FileExists( cRetPrgName )
          RETURN cRetPrgName
       ENDIF
    NEXT
@@ -1898,7 +1898,7 @@ METHOD Open() CLASS HBDebugger
    IF !Empty( cFileName ) ;
         .AND. ( ValType( ::cPrgName ) == "U" .OR. !hb_FileMatch( cFileName, ::cPrgName ) )
 
-      IF ! File( cFileName ) .AND. ! Empty( ::cPathForFiles )
+      IF ! hb_FileExists( cFileName ) .AND. ! Empty( ::cPathForFiles )
          cRealName := ::LocatePrgPath( cFileName )
          IF Empty( cRealName )
            __dbgAlert( "File '" + cFileName + "' not found!" )
@@ -1938,11 +1938,11 @@ METHOD OpenPPO() CLASS HBDebugger
 
    IF Lower( cExt ) == ".ppo"
       ::cPrgName := hb_FNameMerge( cDir, cName, ".prg" )
-      lSuccess := File( ::cPrgName )
+      lSuccess := hb_FileExists( ::cPrgName )
       ::lPPO := !lSuccess
    ELSE
       ::cPrgName := hb_FNameMerge( cDir, cName, ".ppo" )
-      lSuccess := File( ::cPrgName )
+      lSuccess := hb_FileExists( ::cPrgName )
       ::lPPO := lSuccess
    ENDIF
 
@@ -2474,16 +2474,16 @@ METHOD ShowCodeLine( nProc ) CLASS HBDebugger
 
       IF ! Empty( cPrgName )
 
-         IF !hb_FileMatch( strip_path( cPrgName ), strip_path( ::cPrgName ) ) ;
+         IF ! hb_FileMatch( strip_path( cPrgName ), strip_path( ::cPrgName ) ) ;
               .OR. ::oBrwText == NIL
 
-            IF ! File( cPrgName ) .AND. !Empty( ::cPathForFiles )
+            IF ! hb_FileExists( cPrgName ) .AND. ! Empty( ::cPathForFiles )
                cPrgName := ::LocatePrgPath( cPrgName )
             ENDIF
 
             ::cPrgName := cPrgName
 
-            IF !File( cPrgName )
+            IF ! hb_FileExists( cPrgName )
                ::oBrwText := NIL
                ::oWndCode:Browser := NIL
                ::oWndCode:SetCaption( ::aProcStack[ nProc ][ CSTACK_MODULE ] + ;

@@ -19,7 +19,7 @@ REQUEST HB_CODEPAGE_PLMAZ
 REQUEST HB_CODEPAGE_PLISO
 REQUEST HB_CODEPAGE_PL852
 REQUEST HB_CODEPAGE_PLWIN
-
+#else
 #define hb_keyCode( n ) Asc( n )
 #define hb_keyChar( c ) Chr( c )
 #define hb_ntos( n ) LTrim( Str( n ) )
