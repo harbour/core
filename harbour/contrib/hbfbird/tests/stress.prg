@@ -72,7 +72,7 @@ PROCEDURE Main()
 
       oRow:Fieldput( 1, i )
       oRow:Fieldput( 2, i + 1 )
-      oRow:Fieldput( 3, "DEPARTMENT NAME " + strzero( i ) )
+      oRow:Fieldput( 3, "DEPARTMENT NAME " + StrZero( i ) )
       oRow:Fieldput( 4, ( i % 10 ) == 0 )
       oRow:Fieldput( 5, 3000 + i )
       oRow:fieldput( 6, Date() )
