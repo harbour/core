@@ -791,7 +791,7 @@ STATIC FUNCTION ADO_FIELDNAME( nWA, nField, cFieldName )
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       cFieldName := oRecordSet:Fields( nField - 1 ):Name
    RECOVER
-      cFieldName := ''
+      cFieldName := ""
       nResult    := HB_FAILURE
    END SEQUENCE
 
@@ -843,7 +843,7 @@ STATIC FUNCTION ADO_FIELDINFO( nWA, nField, nInfoType, uInfo )
 
    CASE nInfoType == DBS_LEN
       ADO_FIELDINFO( nWA, nField, DBS_TYPE, @nType )
-      IF nType == 'N'
+      IF nType == "N"
          nLen := oRecordSet:Fields( nField - 1 ):Precision
       ELSE
          nLen := oRecordSet:Fields( nField - 1 ):DefinedSize
@@ -856,7 +856,7 @@ STATIC FUNCTION ADO_FIELDINFO( nWA, nField, nInfoType, uInfo )
       ADO_FIELDINFO( nWA, nField, DBS_TYPE, @nType )
       IF oRecordSet:Fields( nField - 1 ):Type == adInteger
          uInfo := 0
-      ELSEIF nType == 'N'
+      ELSEIF nType == "N"
          uInfo := Min( Max( 0, nLen - 1 - oRecordSet:Fields( nField - 1 ):DefinedSize ), 15 )
       ELSE
          uInfo := 0
@@ -890,7 +890,7 @@ STATIC FUNCTION ADO_ORDLSTFOCUS( nWA, aOrderInfo )
    IF aOrderInfo[ UR_ORI_TAG ] == 0
        oRecordSet:Open( "SELECT * FROM " + s_aTableNames[ nWA ] , HB_QWith(), adOpenDynamic, adLockPessimistic )
    ELSE
-    // oRecordSet:Open( "SELECT * FROM " + ::oTabla:cTabla + ' ORDER BY ' + ::OrdKey( uTag ) , QWith(), adOpenDynamic, adLockPessimistic, adCmdUnspecified )
+    // oRecordSet:Open( "SELECT * FROM " + ::oTabla:cTabla + " ORDER BY " + ::OrdKey( uTag ) , QWith(), adOpenDynamic, adLockPessimistic, adCmdUnspecified )
        oRecordSet:Open( "SELECT * FROM " + s_aTableNames[ nWA ], HB_QWith(), adOpenDynamic, adLockPessimistic )
    ENDIF
    aOrderInfo[ UR_ORI_RESULT ] := aOrderInfo[ UR_ORI_TAG ]
@@ -1036,7 +1036,7 @@ STATIC FUNCTION ADO_RELTEXT( nWA, nRelNo, cExpr )
          cExpr := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Keys( nRelNo - 1 ):Columns( 0 ):RelatedColumn
       ENDIF
    RECOVER
-      cExpr := ''
+      cExpr := ""
    END SEQUENCE
 
    RETURN HB_SUCCESS

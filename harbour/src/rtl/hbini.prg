@@ -64,10 +64,10 @@
  * On error, the function returns NIL. On success, you will have an hash
  * array of this form:
  *
- *    { 'MAIN' => { 'Key1' => 'Val1', ... ,'KeyN' => 'ValN'},
- *      'Section1' => { 'Key1' => 'Val1', ... ,'KeyN' => 'ValN'},
+ *    { "MAIN" => { "Key1" => "Val1", ... , "KeyN" => "ValN" },
+ *      "Section1" => { "Key1" => "Val1", ... , "KeyN" => "ValN" },
  *      ...
- *      'SectionN' => { 'Key1' => 'Val1', ... ,'KeyN' => 'ValN'}
+ *      "SectionN" => { "Key1" => "Val1", ... , "KeyN" => "ValN" }
  *    }
  *
  * Main is the default section (variables that are declared without a section).
