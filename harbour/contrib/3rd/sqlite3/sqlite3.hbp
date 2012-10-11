@@ -45,8 +45,8 @@
 sqlite3.c
 
 # ORIGIN http://www.sqlite.org/
-# VER    3.7.14
-# URL    http://www.sqlite.org/sqlite-amalgamation-3071400.zip
+# VER    3.7.14.1
+# URL    http://www.sqlite.org/sqlite-amalgamation-3071401.zip
 # DIFF   sqlite3.dif
 #
 # MAP    sqlite3.c
