@@ -83,16 +83,20 @@ STATIC PROC draw_table( hCairo, nX, nY, aCol )
       nDX := nX
       FOR nI := 1 TO LEN( aCol )
         xValue := FIELDGET( FIELDPOS( aCol[ nI, 2 ] ) )
-        IF VALTYPE( xValue ) == "C"
+        SWITCH VALTYPE( xValue )
+        CASE "C"
           cairo_move_to( hCairo, nDX + 10, nY + 10 )
           cairo_show_text( hCairo, xValue )
-        ELSEIF VALTYPE( xValue ) == "N"
+          EXIT
+        CASE "N"
           cairo_move_to( hCairo, nDX + aWidth[ nI ] - 10, nY + 10 )
           show_text_right( hCairo, STR( xValue ) )
-        ELSEIF VALTYPE( xValue ) == "D"
+          EXIT
+        CASE "D"
           cairo_move_to( hCairo, nDX + 10, nY + 10 )
           show_text_right( hCairo, DTOC( xValue ) )
-        ENDIF
+          EXIT
+        ENDSWITCH
         nDX += aWidth[ nI ]
         IF nI < LEN( aCol )
            cairo_move_to( hCairo, nDX, nY )

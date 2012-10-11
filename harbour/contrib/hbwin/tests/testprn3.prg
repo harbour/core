@@ -30,7 +30,7 @@ STATIC PROCEDURE Dump( a )
    ? "=================="
    FOR EACH b IN a
       ?
-      IF ValType( b ) == "A"
+      IF HB_ISARRAY( b )
          FOR EACH c IN b
             ?? c:__enumIndex(), c
             IF c:__enumIndex() == 2

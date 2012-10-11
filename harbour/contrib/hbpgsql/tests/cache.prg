@@ -429,7 +429,7 @@ FUNCTION SQLPrepare( cQuery, ... )
          ELSEIF ValType( x ) == "L"
             x := iif( x, "'t'", "'f'" )
 
-         ELSEIF ValType( x ) == "C" .OR. ValType( x ) == "M"
+         ELSEIF ValType( x ) $ "CM"
             x := SToQ( RTrim( x ) )
 
          ELSE

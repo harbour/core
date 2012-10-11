@@ -97,7 +97,7 @@ PROCEDURE Main()
       cScr := SaveScreen( 4, 5, 21, 66 )
 
       @  4, 5 TO 21, 66
-      nchoice := AChoice( 5, 7,  20,  65, farr )   //, ,1)
+      nchoice := AChoice( 5, 7, 20, 65, farr )   //, ,1)
 
       IF Empty( nchoice )
          RETURN
@@ -373,7 +373,7 @@ FUNCTION ctodowtest()
       IF nKey == K_ESC
          c := .F.
       ELSE
-         @ 11, 10 SAY "The day number is " + Str( ctodow( Upper(AllTrim(cDow ) ) ) )
+         @ 11, 10 SAY "The day number is " + Str( ctodow( Upper( AllTrim( cDow ) ) ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -1026,7 +1026,7 @@ FUNCTION ntocdowtest()
       ELSE
 
          @ 11, 10 SAY "The day selected is " + ;
-            PadR( ntocdow( Val(cDay ) ), 10 )
+            PadR( ntocdow( Val( cDay ) ), 10 )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -1076,7 +1076,7 @@ FUNCTION ntocmthtest()
       ELSE
 
          @ 11, 10 SAY "The month selected is " + ;
-            PadR( ntocmonth( Val(cMonth ) ), 10 )
+            PadR( ntocmonth( Val( cMonth ) ), 10 )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -1202,7 +1202,7 @@ FUNCTION chkansi( cAnsidate )
    LOCAL nDay
    LOCAL lretval := .T.
 
-   nYear  := Val(  Left( cAnsidate, 4 ) )
+   nYear  := Val( Left( cAnsidate, 4 ) )
    nMonth := Val( SubStr( cAnsidate, 5, 2 ) )
    nDay   := Val( Right( cAnsidate, 2 ) )
 
@@ -1257,7 +1257,7 @@ FUNCTION weektest()
       ELSE
 
          @  8, 10 SAY "The week number is " + ;
-            PadR( LTrim( Str(week( ddate, cMode == "Y" ) ) ), 10 )
+            PadR( LTrim( Str( week( ddate, cMode == "Y" ) ) ), 10 )
 
          SET CURSOR OFF
          Inkey( 0 )

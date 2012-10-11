@@ -573,7 +573,7 @@ FUNCTION HB_I18N_SAVEPOT( cFile, pI18N, cErrorMsg )
             cPOT += "msgid "
             cPOT += __I18N_strEncode( trans:__enumKey() )
             cPOT += cEol
-            IF valtype( trans ) == "A"
+            IF HB_ISARRAY( trans )
                FOR EACH msgstr IN trans
                   cPOT += "msgstr["
                   cPOT += hb_nToS( msgstr:__enumIndex() - 1 )

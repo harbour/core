@@ -53,7 +53,7 @@ Short description of Harbour functions
               STATIC FUNCTION ConvOut( xVal, pOuterContext )
                  LOCAL lClose
 
-                 IF ValType( xVal ) = "O"
+                 IF HB_ISOBJECT( xVal )
                      IF xVal:className == "WORKAREAEXPORT"
                        lClose := xVal:lCloseWA
                        SELECT ( xVal:nWorkArea )

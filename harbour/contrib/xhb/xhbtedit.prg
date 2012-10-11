@@ -1743,7 +1743,7 @@ METHOD K_Esc() CLASS XHBEditor
       nCurRow    := ::Row()
       cScreenMsg := SaveScreen( 0, 60, 0, 77 )
       nCursor := SetCursor( SC_NORMAL )
-      @ 0, 60 SAY '(Abort Edit? Y/N)'
+      @ 0, 60 SAY "(Abort Edit? Y/N)"
       nKey := Inkey( 0 )
       Inkey()
       RestScreen( 0, 60, 0, 77, cScreenMsg )
@@ -2075,7 +2075,7 @@ STATIC FUNCTION GetParagraph( oSelf, nRow )
    LOCAL cLine := ""
 
    // V@
-   DO WHILE nRow <= oSelf:LastRow() .AND.  ValType( oSelf:aText[ nRow ]:lSoftCR ) == 'L' .AND. oSelf:aText[ nRow ]:lSoftCR
+   DO WHILE nRow <= oSelf:LastRow() .AND.  HB_ISLOGICAL( oSelf:aText[ nRow ]:lSoftCR ) .AND. oSelf:aText[ nRow ]:lSoftCR
       cLine += oSelf:aText[ nRow ]:cText
       oSelf:RemoveLine( nRow )
       IF oSelf:LastRow() <= 0 // V@

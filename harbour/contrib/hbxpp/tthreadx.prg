@@ -225,7 +225,7 @@ METHOD start( xAction, ... ) CLASS THREAD
                ENDIF
 
                ::atStart( ... )
-               IF ValType( ::_atStart ) == "B"
+               IF HB_ISBLOCK( ::_atStart )
                   EVAL( ::_atStart, ... )
                ENDIF
 
@@ -264,7 +264,7 @@ METHOD start( xAction, ... ) CLASS THREAD
                ENDDO
 
                ::atEnd( ... )
-               IF ValType( ::_atEnd ) == "B"
+               IF HB_ISBLOCK( ::_atEnd )
                   EVAL( ::_atEnd, ... )
                ENDIF
                ::active := .F.
