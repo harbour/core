@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbcups"
+
 PROCEDURE Main()
    LOCAL i
    LOCAL aPrinter

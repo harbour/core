@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbbz2"
+
 #include "simpleio.ch"
 
 PROCEDURE Main()

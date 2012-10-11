@@ -337,7 +337,7 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       ELSE
          nBtn := WAPI_ImageList_Add( ::hImageList, pBitmap )
       ENDIF
-      IF cType <> "P"
+      IF !( cType == "P" )
          WVG_DeleteObject( pBitmap )
       ENDIF
 

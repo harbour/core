@@ -50,6 +50,8 @@
  *
  */
 
+#require "hbsqlit3"
+
 #include "hbsqlit3.ch"
 
 #define TABLE_SQL "CREATE TABLE image( id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT(50), image BLOB )"

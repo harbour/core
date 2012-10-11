@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbodbc"
+
 #include "simpleio.ch"
 
 #include "sql.ch"

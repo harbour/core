@@ -7,6 +7,8 @@
  * www - http://harbour-project.org
  */
 
+#require "hbssl"
+
 #include "simpleio.ch"
 
 #include "hbssl.ch"

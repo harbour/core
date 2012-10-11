@@ -46,6 +46,8 @@
  *      it will be sent instead of being retrieved.
  *****************************************************/
 
+#require "hbtip"
+
 #include "hbclass.ch"
 #include "tip.ch"
 

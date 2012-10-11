@@ -11,7 +11,7 @@
  * the set of files given in the command line.
  *
  * Usage:
- * testmmail [options] attachment1, attachment2...
+ * tipmmail [options] attachment1, attachment2...
  *  options:
  *    -h              Help
  *    -f "from"       Set "mail from" field
@@ -24,6 +24,8 @@
  * This test writes data to standard output, and is
  * compiled only under GTCGI;
  ******************************************/
+
+#require "hbtip"
 
 PROCEDURE Main( ... )
 

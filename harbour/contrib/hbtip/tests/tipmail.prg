@@ -14,6 +14,8 @@
  * compiled only under GTCGI;
  ******************************************/
 
+#require "hbtip"
+
 PROCEDURE Main( cFileName )
 
    LOCAL oMail, cData, i

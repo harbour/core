@@ -11,11 +11,13 @@
 * input/output file against other OS encoded/decoded data
 *
 * Usage:
-* base64test < file-to-encode >encoded-file
-* base64test -d  < encoded-file  >file-to-decode
-* base64test -q [-d]  to use quoted printable encoding/decoding.
-* base64test -u [-d]  to use url encoding/decoding.
+* base64 < file-to-encode >encoded-file
+* base64 -d  < encoded-file  >file-to-decode
+* base64 -q [-d]  to use quoted printable encoding/decoding.
+* base64 -u [-d]  to use url encoding/decoding.
 *****/
+
+#require "hbtip"
 
 #define hSTDIN 0
 #define hSTDOUT 1

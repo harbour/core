@@ -50,6 +50,7 @@
  *
  */
 
+#require "hbblat"
 
 #include "hbblat.ch"
 
@@ -70,37 +71,37 @@ PROCEDURE Main()
 
    oBlat:cFrom                   := ADDRESS_FROM
    oBlat:cTo                     := ADDRESS_TO
-   // oBlat:cUserAUTH               := "myaccount@mydomain.org"
-   // oBlat:cPasswordAUTH           := "mypassword"
-   // oBlat:cHostname               := "mail.anydomain.com"
-   // oBlat:cCC                     := ADDRESS_CC
-   // oBlat:cCCFile                 := "f_cc.txt"
-   // oBlat:cBCC                    := "info@fsgiudice.com"
-   // oBlat:cBCCFile                := "f_bcc.txt"
-   // oBlat:cBodyFile               := "c.bin"
+// oBlat:cUserAUTH               := "myaccount@mydomain.org"
+// oBlat:cPasswordAUTH           := "mypassword"
+// oBlat:cHostname               := "mail.anydomain.com"
+// oBlat:cCC                     := ADDRESS_CC
+// oBlat:cCCFile                 := "f_cc.txt"
+// oBlat:cBCC                    := "info@fsgiudice.com"
+// oBlat:cBCCFile                := "f_bcc.txt"
+// oBlat:cBodyFile               := "c.bin"
    oBlat:cBody                   := e"Body part\n\rEnd Body"
    oBlat:cServerSMTP             := SERVER_SMTP
    oBlat:cSubject                := "Test from Blat"
-   // oBlat:lSuppressSubject        := .T.
-   // oBlat:cSubjectFile            := "f_subjct.txt"
-   // oBlat:lToUndiscloseRecipients := .T.
+// oBlat:lSuppressSubject        := .T.
+// oBlat:cSubjectFile            := "f_subjct.txt"
+// oBlat:lToUndiscloseRecipients := .T.
    oBlat:cPostScriptumFile       := "f_ps.txt"
    oBlat:lRequestDisposition     := .T.          // does not work ???
    oBlat:lRequestReturnReceipt   := .T.
 
-   oBlat:cAttachTextFiles         := "f_subjct.txt"
-   oBlat:aAttachTextFiles         := { "f_ps.txt", "blattest.prg", "blatcmd.prg" }
-   oBlat:cAttachListTextFile      := "f_listtx.txt"
+   oBlat:cAttachTextFiles        := "f_subjct.txt"
+   oBlat:aAttachTextFiles        := { "f_ps.txt", "blattest.prg", "blatcmd.prg" }
+   oBlat:cAttachListTextFile     := "f_listtx.txt"
 
-   oBlat:cLogFile                 := "log.txt"
-   oBlat:lLogTimestamp            := .T.
-   oBlat:lDebug                   := .T.
-   oBlat:lLogOverwrite            := .T.
+   oBlat:cLogFile                := "log.txt"
+   oBlat:lLogTimestamp           := .T.
+   oBlat:lDebug                  := .T.
+   oBlat:lLogOverwrite           := .T.
 
-   // oBlat:lSuperDebug              := .T.     // This display internal checking
+// oBlat:lSuperDebug             := .T.     // This display internal checking
 
    ? "Checking options ..."
-   //oBlat:Check()
+// oBlat:Check()
    ?
    ? "Command .........: ", oBlat:GetCommand()  // Not necessary - this show complete command line sent to blat
 

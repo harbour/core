@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbmxml"
+
 #xtranslate _ENCODE( <xData> ) => ( hb_base64encode( hb_serialize( mxmlGetCustom( <xData> ) ) ) )
 
 #include "hbmxml.ch"

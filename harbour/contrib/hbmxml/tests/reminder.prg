@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbmxml"
+
 #include "hbmxml.ch"
 
 STATIC s_mxml_error := .F.

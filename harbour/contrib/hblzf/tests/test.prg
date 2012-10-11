@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hblzf"
+
 #include "simpleio.ch"
 
 #include "hblzf.ch"

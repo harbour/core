@@ -2,9 +2,10 @@
  * $Id$
  */
 
+#require "hbxdiff"
+
 #include "hbxdiff.ch"
 
-#include "fileio.ch"
 #include "simpleio.ch"
 
 FUNCTION Diff( ... )
@@ -12,7 +13,7 @@ FUNCTION Diff( ... )
    LOCAL e
 
    FOR EACH e IN { ... }
-      OutStd( e )
+      ? e
    NEXT
 
    RETURN 0

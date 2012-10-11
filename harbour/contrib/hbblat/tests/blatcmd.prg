@@ -50,6 +50,8 @@
  *
  */
 
+#require "hbblat"
+
 PROCEDURE Main()
 
    LOCAL cCmd := win_GetCommandLineParam()

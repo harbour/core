@@ -50,6 +50,8 @@
  *
  */
 
+#require "hbsqlit3"
+
 #include "hbsqlit3.ch"
 
 PROCEDURE main()

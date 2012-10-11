@@ -47,6 +47,8 @@
  *
  */
 
+#require "hbhpdf"
+
 #include "harupdf.ch"
 
 //

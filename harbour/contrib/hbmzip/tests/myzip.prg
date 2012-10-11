@@ -50,6 +50,8 @@
  *
  */
 
+#require "hbmzip"
+
 PROCEDURE Main( ... )
 
    LOCAL hZip, aDir, aFile, aWild, ;

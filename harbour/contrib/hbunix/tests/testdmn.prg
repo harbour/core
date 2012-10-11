@@ -10,6 +10,8 @@
  *
  */
 
+#require "hbunix"
+
 REQUEST HB_GT_CGI_DEFAULT
 
 PROCEDURE Main()

@@ -8,6 +8,8 @@
  * FreeImage API test file
  */
 
+#require "hbfimage"
+
 #include "freeimag.ch"
 
 #include "fileio.ch"
@@ -148,51 +150,51 @@ PROCEDURE Main()
    ? "Create ERROR     :"
    ? "Save GIF ?       :", fi_Save( FIF_GIF, im, IMAGES_OUT + "wrong.gif", 0 )
 
-   //? ValToPrg( fi_GetInfoHeader( im ) )
-   //bmpinfoheader:Buffer( fi_GetInfoHeader( im ), .T. )
-   //bmpinfoheader:Pointer( fi_GetInfoHeader( im ) )
-   //? "Header           :", ValToPrg( bmpinfoheader )
-   //? bmpinfoheader:SayMembers(" ", .T., .T. )
+// ? ValToPrg( fi_GetInfoHeader( im ) )
+// bmpinfoheader:Buffer( fi_GetInfoHeader( im ), .T. )
+// bmpinfoheader:Pointer( fi_GetInfoHeader( im ) )
+// ? "Header           :", ValToPrg( bmpinfoheader )
+// ? bmpinfoheader:SayMembers(" ", .T., .T. )
 
    //bmpinfo:Pointer( fi_GetInfo( im ) )
    bmpinfo := NIL // To fix warning
    ? "Info           :", ValToPrg( bmpinfo )
-   //? bmpinfo:SayMembers(" ", .T., .T. )
+// ? bmpinfo:SayMembers(" ", .T., .T. )
    ? "-----------------------------------------------------"
-   //? ValType( bmpinfo:Devalue() )
-   //Tracelog( "bmpinfoheader", ValToPrg( bmpinfoheader ), ;
-   //          bmpinfoheader:SayMembers(, .T.), bmpinfoheader:Value(), bmpinfoheader:DeValue(), hb_dumpvar( bmpinfoheader:Array() ), hb_dumpvar( bmpinfoheader:acMembers ) )
+// ? ValType( bmpinfo:Devalue() )
+// Tracelog( "bmpinfoheader", ValToPrg( bmpinfoheader ), ;
+// infoheader:SayMembers(, .T.), bmpinfoheader:Value(), bmpinfoheader:DeValue(), hb_dumpvar( bmpinfoheader:Array() ), hb_dumpvar( bmpinfoheader:acMembers ) )
 
-   //appo := bkcolor:Value()
-   //? bkcolor:Pointer( fi_GetBackgroundColor( im ) )
-   //? fi_GetBackgroundColor( im, @bkcolor:Value() )
-   //bkcolor:Buffer( appo )
-   //? bkcolor:SayMembers( " ", .T., .T. )
+// appo := bkcolor:Value()
+// ? bkcolor:Pointer( fi_GetBackgroundColor( im ) )
+// ? fi_GetBackgroundColor( im, @bkcolor:Value() )
+// bkcolor:Buffer( appo )
+// ? bkcolor:SayMembers( " ", .T., .T. )
 
-   //bkcolor:rgbBlue := 205
-   //? fi_SetBackgroundColor( im, hb_String2Pointer( bkcolor:Value() ) )
+// bkcolor:rgbBlue := 205
+// ? fi_SetBackgroundColor( im, hb_String2Pointer( bkcolor:Value() ) )
    Tracelog( "line 168" )
-   //? fi_SetBackgroundColor( im, bkcolor:Value() )
+// ? fi_SetBackgroundColor( im, bkcolor:Value() )
    Tracelog( "line 170" )
-   //? bkcolor:SayMembers( " ", .T., .T. )
+// ? bkcolor:SayMembers( " ", .T., .T. )
    Tracelog( "line 162" )
-   //? bkcolor:Pointer( fi_GetBackgroundColor( im ) )
-   //? fi_GetBackgroundColor( im, @bkcolor:Value() )
-   //bkcolor:Buffer( appo )
+// ? bkcolor:Pointer( fi_GetBackgroundColor( im ) )
+// ? fi_GetBackgroundColor( im, @bkcolor:Value() )
+// bkcolor:Buffer( appo )
    Tracelog( "line 176" )
-   //? bkcolor:SayMembers( " ", .T., .T. )
+// ? bkcolor:SayMembers( " ", .T., .T. )
 
    Tracelog( "line 179" )
-   //iccprofile:Pointer( fi_GetICCProfile( im ) )
+// iccprofile:Pointer( fi_GetICCProfile( im ) )
    Tracelog( "line 181" )
-   //? "Header           :", ValToPrg( iccprofile )
+// ? "Header           :", ValToPrg( iccprofile )
    Tracelog( "line 183" )
-   //? iccprofile:SayMembers( " ", .T., .T. )
+// ? iccprofile:SayMembers( " ", .T., .T. )
 
-   //bmpinfoheader:Reset()
-   //appo := NIL
-   //bmpinfoheader := NIL
-   //hb_GCAll( .T. )
+// bmpinfoheader:Reset()
+// appo := NIL
+// bmpinfoheader := NIL
+// hb_GCAll( .T. )
 
    ? "Unload images from memory"
    fi_Unload( im )

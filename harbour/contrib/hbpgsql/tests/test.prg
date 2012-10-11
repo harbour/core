@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbpgsql"
+
 #include "postgres.ch"
 
 PROCEDURE main()

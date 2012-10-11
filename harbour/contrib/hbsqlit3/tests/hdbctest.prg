@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbsqlit3"
+
 PROCEDURE Main()
 
    LOCAL oConn, oMeta, oStmt, cSql, n, oRs

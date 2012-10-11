@@ -6,6 +6,8 @@
  * Download an file from an ftp server
  */
 
+#require "hbtip"
+
 PROCEDURE Main( cFile )
 
    ? TRP20FTPEnv( cFile )

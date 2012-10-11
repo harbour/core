@@ -10,6 +10,8 @@
  *
  */
 
+#require "hbgs"
+
 #include "simpleio.ch"
 
 PROCEDURE Main()

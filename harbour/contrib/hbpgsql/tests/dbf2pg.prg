@@ -51,6 +51,8 @@
  *
  */
 
+#require "hbpgsql"
+
 #include "inkey.ch"
 #include "fileio.ch"
 

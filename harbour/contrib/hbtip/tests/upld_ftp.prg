@@ -7,6 +7,8 @@
  * Send an file or list of files to ftp server
  */
 
+#require "hbtip"
+
 #include "directry.ch"
 
 PROCEDURE Main( cMask )

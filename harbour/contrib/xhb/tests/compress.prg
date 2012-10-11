@@ -7,6 +7,8 @@
 //
 // Giancarlo Niccolai
 
+#require "xhb"
+
 #include "hbcomprs.ch"
 
 PROCEDURE Main()
@@ -27,7 +29,7 @@ PROCEDURE Main()
    cDecomp := HB_Uncompress( nBuflen, cComp )
 
    @ 3, 7 SAY "Uncompressed: (" + hb_ntos( Len( cText ) ) + ")" + cText + "<<"
-   @ 4, 7 SAY "Compressed (" + hb_ntos( Len( cComp ) ) + ")" + cComp + "<<"
+   @ 4, 7 SAY "Compressed (" + hb_ntos( Len( cComp ) ) + ")" + hb_StrToHex( cComp ) + "<<"
    @ 5, 7 SAY "Decompressed: (" + hb_ntos( Len( cDecomp ) ) + ")" + cDecomp + "<<"
 
    @ 7, 5 SAY "TEST 2: using preallocated buffers"
@@ -42,7 +44,7 @@ PROCEDURE Main()
    HB_Uncompress( Len( cText ), cComp, nBuflen , @cDecomp )
 
    @ 8, 7 SAY "Uncompressed: (" + hb_ntos( Len( cText ) ) + ")" + cText + "<<"
-   @ 9, 7 SAY "Compressed (" + hb_ntos( nBuflen ) + ")" + cComp + "<<"
+   @ 9, 7 SAY "Compressed (" + hb_ntos( nBuflen ) + ")" + hb_StrToHex( cComp ) + "<<"
    // Notice: this time the lenght of the destination buffer is not the lenght of
    // the original buffer, but Int(nBufLen * 1.1)
    @ 10, 7 SAY "Decompressed: (" + hb_ntos( Len( cDecomp ) ) + ")" + cDecomp + "<<"

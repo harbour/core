@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbpgsql"
+
 PROCEDURE Main( cHost, cDatabase, cUser, cPass )
    LOCAL oServer, oQuery, oRow, i, x, aTables, aStruct
 

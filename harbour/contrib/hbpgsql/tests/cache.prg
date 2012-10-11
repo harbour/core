@@ -6,6 +6,8 @@
  * This samples show how to use dbf to cache postgres records.
  */
 
+#require "hbpgsql"
+
 #include "postgres.ch"
 
 #define DB_ALIAS                        1

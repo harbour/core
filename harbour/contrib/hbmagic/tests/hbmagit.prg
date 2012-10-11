@@ -50,6 +50,8 @@
  *
  */
 
+#require "hbmagic"
+
 #include "hbmagic.ch"
 #include "simpleio.ch"
 

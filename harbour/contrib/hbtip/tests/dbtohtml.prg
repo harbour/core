@@ -7,6 +7,8 @@
  * creating a HTML document.
  */
 
+#require "hbtip"
+
 PROCEDURE Main
 
    LOCAL oDoc, oNode, oTable, oRow, oCell

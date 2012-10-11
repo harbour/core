@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbfbird"
+
 #include "simpleio.ch"
 
 PROCEDURE Main()

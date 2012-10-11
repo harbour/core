@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "rddsql"
+
 REQUEST SQLMIX
 
 PROCEDURE Main()

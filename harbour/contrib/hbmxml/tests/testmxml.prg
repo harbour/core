@@ -19,6 +19,8 @@
  *
  */
 
+#require "hbmxml"
+
 #include "hbmxml.ch"
 #include "simpleio.ch"
 

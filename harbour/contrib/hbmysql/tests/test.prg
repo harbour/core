@@ -50,6 +50,8 @@
  *
  */
 
+#require "hbmysql"
+
 #include "dbstruct.ch"
 
 PROCEDURE Main( cArg )

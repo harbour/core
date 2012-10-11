@@ -6,6 +6,8 @@
  * Sends a query to Google and displays the Links from the response HTML page
  */
 
+#require "hbtip"
+
 PROCEDURE Main
 
    LOCAL oHttp, cHtml, hQuery, aLink, oNode, oDoc

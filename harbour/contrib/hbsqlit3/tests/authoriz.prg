@@ -76,6 +76,8 @@
  * that contain additional details about the action to be authorized.
  */
 
+#require "hbsqlit3"
+
 #include "hbsqlit3.ch"
 
 PROCEDURE main()

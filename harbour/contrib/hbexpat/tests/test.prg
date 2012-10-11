@@ -10,6 +10,8 @@
  *
  */
 
+#require "hbexpat"
+
 #include "hbexpat.ch"
 
 PROCEDURE Main( cFileName )

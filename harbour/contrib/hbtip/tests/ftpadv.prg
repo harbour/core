@@ -7,6 +7,8 @@
  * FTP Advanced operations Test
  ******************************************/
 
+#require "hbtip"
+
 PROCEDURE Main( cUrl )
 
    LOCAL oCon, oUrl

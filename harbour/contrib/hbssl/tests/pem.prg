@@ -7,6 +7,8 @@
  * www - http://harbour-project.org
  */
 
+#require "hbssl"
+
 #include "simpleio.ch"
 
 #include "hbssl.ch"
@@ -76,4 +78,3 @@ STATIC FUNCTION cb_function( lWrite )
 STATIC FUNCTION Output( ... )
    ? ...
    RETURN NIL
-

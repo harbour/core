@@ -7,6 +7,8 @@
  * www - http://harbour-project.org
  */
 
+#require "hbtip"
+
 #include "simpleio.ch"
 
 PROCEDURE Main()

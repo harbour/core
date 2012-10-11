@@ -12,6 +12,8 @@
  *
  */
 
+#require "hbcomm"
+
 STATIC s_nHandle
 STATIC s_lConnected := .F.
 

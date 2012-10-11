@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbtip"
+
 PROCEDURE Main()
 
    LOCAL oHttp

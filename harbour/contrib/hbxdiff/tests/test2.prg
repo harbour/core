@@ -2,7 +2,10 @@
  * $Id$
  */
 
+#require "hbxdiff"
+
 #include "hbxdiff.ch"
+
 #include "fileio.ch"
 #include "simpleio.ch"
 
@@ -16,7 +19,7 @@ PROCEDURE main()
    pMMFOld := xdl_init_mmfile( XDLT_STD_BLKSIZE )
    pMMFNew := xdl_init_mmfile( XDLT_STD_BLKSIZE, XDL_MMF_ATOMIC )
 
-   cFileCtx := hb_memoRead( __FILE__ )
+   cFileCtx := hb_MemoRead( __FILE__ )
 
    xdl_write_mmfile( pMMFOld, @cFileCtx )
    xdl_write_mmfile( pMMFNew, cFileCtx + hb_eol() + Space( 3 ) + "RETURN NIL" + hb_eol() )
@@ -26,7 +29,7 @@ PROCEDURE main()
    hb_FNameSplit( __FILE__, NIL, @cDiffName, NIL )
    cDiffName := hb_FNameMerge( NIL, cDiffName, ".dif" )
 
-   hDif := FCreate( cDiffName , FC_NORMAL )
+   hDif := FCreate( cDiffName, FC_NORMAL )
    IF FError() == 0
       FWrite( hDif, "diff ---" + hb_eol() )
       xdl_diff( pMMFOld, pMMFNew, 0, 3, hDif )

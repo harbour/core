@@ -9,9 +9,10 @@
  * This test tries to detect the mime type of a give file.
  *
  * Usage:
- * mimetest filename
+ * tipmime filename
  ******************************************/
 
+#require "hbtip"
 
 PROCEDURE Main( cFileName )
 

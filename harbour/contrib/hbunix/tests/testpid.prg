@@ -10,6 +10,8 @@
  *
  */
 
+#require "hbunix"
+
 #include "simpleio.ch"
 
 PROCEDURE Main()

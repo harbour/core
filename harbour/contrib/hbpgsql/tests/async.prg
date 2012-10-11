@@ -6,6 +6,8 @@
  * This sample show howto use asynchronous/nonblocking queries
  */
 
+#require "hbpgsql"
+
 #include "inkey.ch"
 
 PROCEDURE Main( cServer, cDatabase, cUser, cPass )

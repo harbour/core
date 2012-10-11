@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "xhb"
+
 #include "hbxml.ch"
 
 PROCEDURE Main()

@@ -11,6 +11,8 @@
  * See COPYING for licensing terms.
  */
 
+#require "hbexpat"
+
 #include "hbexpat.ch"
 
 #define _D_aTree            1

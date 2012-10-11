@@ -7,6 +7,8 @@
  * www - http://www.harbour-project.org
  */
 
+#require "hbsms"
+
 PROCEDURE Main( cPort )
 
 #if   defined( __PLATFORM__WINDOWS )
