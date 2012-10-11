@@ -52,6 +52,8 @@
  *
  */
 
+/* UTF-8 */
+
 #include "hbclass.ch"
 #include "fileio.ch"
 
@@ -258,12 +260,12 @@ METHOD ExcelWriterXML:writeData( target )
       format:bgColor( "red" )
    ENDIF
 
-   IF ! Empty( ::cDocTitle   ); docTitle   := "<Title>"   + OemToHtmlEspecial( ::cDocTitle   ) + "</Title>"   + hb_osNewLine(); ENDIF
-   IF ! Empty( ::cDocSubject ); docSubject := "<Subject>" + OemToHtmlEspecial( ::cDocSubject ) + "</Subject>" + hb_osNewLine(); ENDIF
-   IF ! Empty( ::cDocAuthor  ); docAuthor  := "<Author>"  + OemToHtmlEspecial( ::cDocAuthor  ) + "</Author>"  + hb_osNewLine(); ENDIF
-   IF ! Empty( ::cDocCreated ); docCreated := "<Created>" + OemToHtmlEspecial( ::cDocCreated ) + "</Created>" + hb_osNewLine(); ENDIF
-   IF ! Empty( ::cDocManager ); docManager := "<Manager>" + OemToHtmlEspecial( ::cDocManager ) + "</Manager>" + hb_osNewLine(); ENDIF
-   IF ! Empty( ::cDocCompany ); docCompany := "<Company>" + OemToHtmlEspecial( ::cDocCompany ) + "</Company>" + hb_osNewLine(); ENDIF
+   IF ! Empty( ::cDocTitle   ); docTitle   := "<Title>"   + StrToHtmlEspecial( ::cDocTitle   ) + "</Title>"   + hb_osNewLine(); ENDIF
+   IF ! Empty( ::cDocSubject ); docSubject := "<Subject>" + StrToHtmlEspecial( ::cDocSubject ) + "</Subject>" + hb_osNewLine(); ENDIF
+   IF ! Empty( ::cDocAuthor  ); docAuthor  := "<Author>"  + StrToHtmlEspecial( ::cDocAuthor  ) + "</Author>"  + hb_osNewLine(); ENDIF
+   IF ! Empty( ::cDocCreated ); docCreated := "<Created>" + StrToHtmlEspecial( ::cDocCreated ) + "</Created>" + hb_osNewLine(); ENDIF
+   IF ! Empty( ::cDocManager ); docManager := "<Manager>" + StrToHtmlEspecial( ::cDocManager ) + "</Manager>" + hb_osNewLine(); ENDIF
+   IF ! Empty( ::cDocCompany ); docCompany := "<Company>" + StrToHtmlEspecial( ::cDocCompany ) + "</Company>" + hb_osNewLine(); ENDIF
 
    xml := '<?xml version="1.0"?>' + hb_osNewLine()
    xml += '<?mso-application progid="Excel.Sheet"?>' + hb_osNewLine()
@@ -359,46 +361,42 @@ METHOD ExcelWriterXML:docCompany( company )
 
    RETURN NIL
 
-FUNCTION AnsiToHtml( x )
-
-   RETURN x
-
-FUNCTION OEMTOHTML( xtxt )
+FUNCTION STRTOHTML( xtxt )
 
    LOCAL afrm, i, xret := "", xpos
 
    afrm := { ;
-      { hb_BChar( 160 ), "&aacute;" }, ;
-      { hb_BChar( 131 ), "&acirc;"  }, ;
-      { hb_BChar(   7 ), "&agrave;" }, ;
-      { hb_BChar( 198 ), "&atilde;" }, ;
-      { hb_BChar(  43 ), "&ccedil;" }, ;
-      { hb_BChar(  39 ), "&eacute;" }, ;
-      { hb_BChar( 136 ), "&ecirc;"  }, ;
-      { hb_BChar( 161 ), "&iacute;" }, ;
-      { hb_BChar( 162 ), "&oacute;" }, ;
-      { hb_BChar( 147 ), "&ocirc;"  }, ;
-      { hb_BChar( 228 ), "&otilde;" }, ;
-      { hb_BChar( 163 ), "&uacute;" }, ;
-      { hb_BChar( 129 ), "&uuml;"   }, ;
-      { hb_BChar( 117 ), "&Aacute;" }, ;
-      { hb_BChar(  20 ), "&Acirc;"  }, ;
-      { hb_BChar(   7 ), "&Agrave;" }, ;
-      { hb_BChar( 199 ), "&Atilde;" }, ;
-      { hb_BChar( 128 ), "&Ccedil;" }, ;
-      { hb_BChar( 144 ), "&Eacute;" }, ;
-      { hb_BChar( 210 ), "&Ecirc;"  }, ;
-      { hb_BChar( 214 ), "&Iacute;" }, ;
-      { hb_BChar( 224 ), "&Oacute;" }, ;
-      { hb_BChar( 226 ), "&Ocirc;"  }, ;
-      { hb_BChar( 229 ), "&Otilde;" }, ;
-      { hb_BChar( 233 ), "&Uacute;" }, ;
-      { hb_BChar( 154 ), "&Uuml;"   }, ;
-      { hb_BChar(  45 ), "&ndash;"  } ;
+      { "á", "&aacute;" }, ;
+      { "â", "&acirc;"  }, ;
+      { "à", "&agrave;" }, ;
+      { "ã", "&atilde;" }, ;
+      { "ç", "&ccedil;" }, ;
+      { "é", "&eacute;" }, ;
+      { "ê", "&ecirc;"  }, ;
+      { "í", "&iacute;" }, ;
+      { "ó", "&oacute;" }, ;
+      { "ô", "&ocirc;"  }, ;
+      { "õ", "&otilde;" }, ;
+      { "ú", "&uacute;" }, ;
+      { "ü", "&uuml;"   }, ;
+      { "Á", "&Aacute;" }, ;
+      { "Â", "&Acirc;"  }, ;
+      { "À", "&Agrave;" }, ;
+      { "Ã", "&Atilde;" }, ;
+      { "Ç", "&Ccedil;" }, ;
+      { "É", "&Eacute;" }, ;
+      { "Ê", "&Ecirc;"  }, ;
+      { "Í", "&Iacute;" }, ;
+      { "Ó", "&Oacute;" }, ;
+      { "Ô", "&Ocirc;"  }, ;
+      { "Õ", "&Otilde;" }, ;
+      { "Ú", "&Uacute;" }, ;
+      { "Ü", "&Uuml;"   }, ;
+      { "-", "&ndash;"  } ;
       }
 
    FOR i := 1 TO Len( xtxt )
-      IF ( xpos := AScan( afrm, {| x | SubStr( xtxt, i, 1 ) == x[ 1 ] } ) ) > 0
+      IF ( xpos := AScan( afrm, {| x | SubStr( xtxt, i, 1 ) == hb_UTF8ToStr( x[ 1 ] ) } ) ) > 0
          xret += afrm[ xpos, 2 ]
       ELSE
          xret += SubStr( xtxt, i, 1 )
@@ -407,7 +405,7 @@ FUNCTION OEMTOHTML( xtxt )
 
    RETURN xret
 
-FUNCTION OEMTOHTMLESPECIAL( xtxt )
+FUNCTION STRTOHTMLESPECIAL( xtxt )
 
    LOCAL afrm, i, xret := "", xpos
 
@@ -435,40 +433,39 @@ FUNCTION EXRETIRAACENTOS( xtxt )
    LOCAL afrm, i, xret := "", xpos
 
    afrm := { ;
-      { hb_BChar( 160 ), "a" }, ;
-      { hb_BChar( 131 ), "a" }, ;
-      { hb_BChar(   7 ), "a" }, ;
-      { hb_BChar( 198 ), "a" }, ;
-      { hb_BChar(  43 ), "c" }, ;
-      { hb_BChar(  39 ), "e" }, ;
-      { hb_BChar( 136 ), "e" }, ;
-      { hb_BChar( 161 ), "i" }, ;
-      { hb_BChar( 162 ), "o" }, ;
-      { hb_BChar( 147 ), "o" }, ;
-      { hb_BChar( 228 ), "o" }, ;
-      { hb_BChar( 163 ), "u" }, ;
-      { hb_BChar( 129 ), "u" }, ;
-      { hb_BChar( 117 ), "A" }, ;
-      { hb_BChar(  20 ), "A" }, ;
-      { hb_BChar(   7 ), "A" }, ;
-      { hb_BChar( 199 ), "A" }, ;
-      { hb_BChar( 128 ), "C" }, ;
-      { hb_BChar( 144 ), "E" }, ;
-      { hb_BChar( 210 ), "E" }, ;
-      { hb_BChar( 214 ), "I" }, ;
-      { hb_BChar( 224 ), "O" }, ;
-      { hb_BChar( 226 ), "O" }, ;
-      { hb_BChar( 229 ), "O" }, ;
-      { hb_BChar( 233 ), "U" }, ;
-      { hb_BChar( 154 ), "U" }, ;
-      { hb_BChar( 166 ), "." }, ;
-      { hb_BChar( 167 ), "." }, ;
-      { hb_BChar( 248 ), "." }, ;
-      { hb_BChar( 141 ), ""  } ;
+      { "á", "a" }, ;
+      { "â", "a" }, ;
+      { "à", "a" }, ;
+      { "ã", "a" }, ;
+      { "ç", "c" }, ;
+      { "é", "e" }, ;
+      { "ê", "e" }, ;
+      { "í", "i" }, ;
+      { "ó", "o" }, ;
+      { "ô", "o" }, ;
+      { "õ", "o" }, ;
+      { "ú", "u" }, ;
+      { "ü", "u" }, ;
+      { "Á", "A" }, ;
+      { "Â", "A" }, ;
+      { "À", "A" }, ;
+      { "Ã", "A" }, ;
+      { "Ç", "C" }, ;
+      { "É", "E" }, ;
+      { "Ê", "E" }, ;
+      { "Í", "I" }, ;
+      { "Ó", "O" }, ;
+      { "Ô", "O" }, ;
+      { "Õ", "O" }, ;
+      { "Ú", "U" }, ;
+      { "Ü", "U" }, ;
+      { "ª", "." }, ;
+      { "º", "." }, ;
+      { "°", "." }  ;
       }
 
    FOR i := 1 TO Len( xtxt )
-      IF ( xpos := AScan( afrm, {| x | SubStr( xtxt, i, 1 ) == x[ 1 ] } ) ) > 0
+      IF ( xpos := AScan( afrm, {| x | SubStr( xtxt, i, 1 ) == hb_UTF8ToStr( x[ 1 ] ) } ) ) > 0
          xret += afrm[ xpos, 2 ]
       ELSE
          xret += SubStr( xtxt, i, 1 )

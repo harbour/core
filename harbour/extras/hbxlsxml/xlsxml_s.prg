@@ -259,7 +259,7 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
 
             xml += "         <Cell " + style + ' ss:Index="' + AllTrim( Str( column, 10 ) ) + '" ' + URL + " " + mergeCell + " " + formula + ">" + hb_osNewLine()
             xml += '            <Data ss:Type="' + type + '">'
-            xml += oemToHtmlEspecial( xData )
+            xml += StrToHtmlEspecial( xData )
             xml += "</Data>" + hb_osNewLine()
             xml += comment
             xml += "         </Cell>" + hb_osNewLine()
