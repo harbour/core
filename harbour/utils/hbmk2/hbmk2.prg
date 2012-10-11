@@ -2742,6 +2742,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                      ENDIF
                   ENDIF
                ENDSWITCH
+               IF ! Empty( hbmk[ _HBMK_cCPPRG ] )
+                  AAddNew( hbmk[ _HBMK_aOPTPRG ], "-ku" )
+               ENDIF
             ENDIF
          ELSE
             IF hbmk[ _HBMK_lInfo ]
