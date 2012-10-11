@@ -16,7 +16,9 @@
 #include "box.ch"
 
 #ifdef __PLATFORM__WINDOWS
-   REQUEST HB_GT_WVT_DEFAULT
+   #if ! defined( __HBSCRIPT__HBSHELL )
+      REQUEST HB_GT_WVT_DEFAULT
+   #endif
    #define THREAD_GT "WVT"
 #else
    REQUEST HB_GT_STD_DEFAULT
@@ -25,6 +27,10 @@
 
 proc main()
    local pGT, pGT1, pGT2
+
+#if defined( __PLATFORM__WINDOWS ) .AND. defined( __HBSCRIPT__HBSHELL )
+   hbshell_gtSelect( "GTWVT" )
+#endif
 
    ? "This is small test for using more then one console window."
    ? "It needs GT which supports such functionality i.e. GTWVT in"

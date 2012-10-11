@@ -8,6 +8,10 @@
 PROCEDURE Main()
    LOCAL cGt
 
+#if defined( __PLATFORM__WINDOWS ) .AND. defined( __HBSCRIPT__HBSHELL )
+   hbshell_gtSelect( "GTWVT" )
+#endif
+
    cGt := HB_GtVersion( 0 )
    IF cGt == "WVT"
       HB_GtInfo( HB_GTI_FONTNAME, "Lucida Console" )
