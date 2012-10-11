@@ -329,7 +329,7 @@ PROCEDURE UsePriv()
 
 PROCEDURE UseParam()
 
-   PARAMETER param2
+   PARAMETERS param2
 
    ? "In UseParam before assignment"
    ? "Private1 : ", private1
@@ -346,7 +346,7 @@ PROCEDURE UseParam()
 
 //
 
-PROCEDURE TEST9()
+PROCEDURE Test9()
 
    PUBLIC MEMVAR
    PUBLIC memfunc
@@ -367,9 +367,9 @@ STATIC FUNCTION memfunc( memfunc )
 
    RETURN memfunc * memfunc
 
-   INIT PROCEDURE initmem()
-   PARA MEMVAR
-   PARA initmem
+INIT PROCEDURE initmem()
+   PARAMETERS MEMVAR
+   PARAMETERS initmem
    ? "Tests for PARAMETERS, PRIVATE nad PUBLIC variables"
    ?
    ? "in INIT function - Passed parameter : ", memvar

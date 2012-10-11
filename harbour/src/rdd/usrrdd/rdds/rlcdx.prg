@@ -70,7 +70,9 @@ ANNOUNCE RLCDX
  * these methods does not have to execute SUPER methods - these is
  * always done by low level USRRDD code
  */
+
 STATIC FUNCTION RLCDX_NEW( pWA )
+
    LOCAL aWData := { 0, {} }
 
    /*
@@ -83,6 +85,7 @@ STATIC FUNCTION RLCDX_NEW( pWA )
    RETURN HB_SUCCESS
 
 STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
+
    LOCAL aWData, nResult, xRecId, i
 
    aWData := USRRDD_AREADATA( nWA )
@@ -91,7 +94,7 @@ STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
    IF aLockInfo[ UR_LI_METHOD ] == DBLM_EXCLUSIVE
 
       aLockInfo[ UR_LI_METHOD ] := DBLM_MULTIPLE
-      aLockInfo[ UR_LI_RECORD ] := RECNO()
+      aLockInfo[ UR_LI_RECORD ] := RecNo()
 
    ENDIF
 
@@ -103,14 +106,14 @@ STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
       ENDIF
 
       xRecID := aLockInfo[ UR_LI_RECORD ]
-      IF EMPTY( xRecID )
-         xRecID := RECNO()
+      IF Empty( xRecID )
+         xRecID := RecNo()
       ENDIF
 
       IF aWData[ 1 ] > 0
          aLockInfo[ UR_LI_RESULT ] := .T.
          RETURN HB_SUCCESS
-      ELSEIF ( i := ASCAN( aWData[ 2 ], {| x | x[ 1 ] == xRecID } ) ) != 0
+      ELSEIF ( i := AScan( aWData[ 2 ], {| x | x[ 1 ] == xRecID } ) ) != 0
          ++aWData[ 2, i, 2 ]
          aLockInfo[ UR_LI_RESULT ] := .T.
          RETURN HB_SUCCESS
@@ -119,7 +122,7 @@ STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
       nResult := UR_SUPER_LOCK( nWA, aLockInfo )
       IF nResult == HB_SUCCESS
          IF aLockInfo[ UR_LI_RESULT ]
-            AADD( aWData[ 2 ], { xRecID, 1 } )
+            AAdd( aWData[ 2 ], { xRecID, 1 } )
          ENDIF
       ENDIF
 
@@ -136,7 +139,7 @@ STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
       IF nResult == HB_SUCCESS
 
          /* FLOCK always first remove all RLOCKs, even if it fails */
-         ASIZE( aWData[ 2 ], 0 )
+         ASize( aWData[ 2 ], 0 )
 
          IF aLockInfo[ UR_LI_RESULT ]
             aWData[ 1 ] := 1
@@ -152,14 +155,15 @@ STATIC FUNCTION RLCDX_LOCK( nWA, aLockInfo )
    RETURN HB_FAILURE
 
 STATIC FUNCTION RLCDX_UNLOCK( nWA, xRecID )
+
    LOCAL aWData := USRRDD_AREADATA( nWA ), i
 
    IF HB_ISNUMERIC( xRecID ) .AND. xRecID > 0
-      IF ( i := ASCAN( aWData[ 2 ], {| x | x[ 1 ] == xRecID } ) ) != 0
+      IF ( i := AScan( aWData[ 2 ], {| x | x[ 1 ] == xRecID } ) ) != 0
          IF --aWData[ 2, i, 2 ] > 0
             RETURN HB_SUCCESS
          ENDIF
-         hb_ADEL( aWData[ 2 ], i, .T. )
+         hb_ADel( aWData[ 2 ], i, .T. )
       ELSE
          RETURN HB_SUCCESS
       ENDIF
@@ -169,12 +173,13 @@ STATIC FUNCTION RLCDX_UNLOCK( nWA, xRecID )
          RETURN HB_SUCCESS
       ENDIF
       aWData[ 1 ] := 0
-      ASIZE( aWData[ 2 ], 0 )
+      ASize( aWData[ 2 ], 0 )
    ENDIF
 
    RETURN UR_SUPER_UNLOCK( nWA, xRecID )
 
 STATIC FUNCTION RLCDX_APPEND( nWA, lUnlockAll )
+
    LOCAL aWData, nResult, xRecId, i
 
    /* Never unlock other records, they have to be explicitly unlocked */
@@ -185,10 +190,10 @@ STATIC FUNCTION RLCDX_APPEND( nWA, lUnlockAll )
 
       aWData := USRRDD_AREADATA( nWA )
       IF aWData[ 1 ] == 0
-         xRecId := RECNO()
+         xRecId := RecNo()
          /* Some RDDs may allow to set phantom locks with RLOCK so we should
             check if it's not the case and increase the counter when it is */
-         IF ( i := ASCAN( aWData[ 2 ], {| x | x[ 1 ] == xRecID } ) ) != 0
+         IF ( i := AScan( aWData[ 2 ], {| x | x[ 1 ] == xRecID } ) ) != 0
             ++aWData[ 2, i, 2 ]
          ELSE
             AADD( aWData[ 2 ], { xRecID, 1 } )
@@ -205,6 +210,7 @@ REQUEST DBFCDX
  * This function have to exist in all RDD and then name have to be in
  * format: <RDDNAME>_GETFUNCTABLE
  */
+
 FUNCTION RLCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuperRddID )
 
    LOCAL cSuperRDD := "DBFCDX" /* We are inheriting from DBFCDX */
@@ -216,8 +222,10 @@ FUNCTION RLCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuper
    aMethods[ UR_APPEND ] := ( @RLCDX_APPEND() )
 
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
-                               cSuperRDD, aMethods, pSuperRddID )
+      cSuperRDD, aMethods, pSuperRddID )
 
 INIT PROCEDURE RLCDX_INIT()
+
    rddRegister( "RLCDX", RDT_FULL )
+
    RETURN

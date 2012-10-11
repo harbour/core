@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    a small memory mangaer test code
+ *    a small memory manager test code
  */
 
 #include "simpleio.ch"
@@ -12,96 +12,99 @@
 #define N_LOOPS   100000
 
 #ifdef __HARBOUR__
-   #include "hbmemory.ch"
+#include "hbmemory.ch"
 #endif
 
 PROCEDURE Main()
-local nCPUSec, nRealSec, i, a
+
+   LOCAL nCPUSec, nRealSec, i, a
 
 #ifdef __HARBOUR__
-if MEMORY( HB_MEM_USEDMAX ) != 0
-   ?
-   ? "Warning !!! Memory statistic enabled."
-endif
+
+   IF Memory( HB_MEM_USEDMAX ) != 0
+      ?
+      ? "Warning !!! Memory statistics enabled."
+   ENDIF
 #endif
-?
-? date(), time(), VERSION()+build_mode()+", "+OS()
+   ?
+   ? Date(), Time(), Version() + build_mode() + ", " + OS()
 
-?
-? "testing single large memory blocks allocation and freeing..."
-nRealSec := seconds()
-nCPUSec := hb_secondsCPU()
-for i := 1 to N_LOOPS
-    a := space( 50000 )
-next
-a := NIL
-nCPUSec := hb_secondsCPU() - nCPUSec
-nRealSec := seconds() - nRealSec
-? " CPU time:", nCPUSec, "sec."
-? "real time:", nRealSec, "sec."
+   ?
+   ? "testing single large memory blocks allocation and freeing..."
+   nRealSec := Seconds()
+   nCPUSec := hb_SecondsCPU()
+   FOR i := 1 TO N_LOOPS
+      a := Space( 50000 )
+   NEXT
+   a := NIL
+   nCPUSec := hb_SecondsCPU() - nCPUSec
+   nRealSec := Seconds() - nRealSec
+   ? " CPU time:", nCPUSec, "sec."
+   ? "real time:", nRealSec, "sec."
 
-?
-? "testing many large memory blocks allocation and freeing..."
-nRealSec := seconds()
-nCPUSec := hb_secondsCPU()
-a := array(100)
-for i := 1 to N_LOOPS
-    a[ i % 100 + 1 ] := space( 50000 )
-    if i % 200 == 0
-       afill(a,"")
-    endif
-next
-a := NIL
-nCPUSec := hb_secondsCPU() - nCPUSec
-nRealSec := seconds() - nRealSec
-? " CPU time:", nCPUSec, "sec."
-? "real time:", nRealSec, "sec."
+   ?
+   ? "testing many large memory blocks allocation and freeing..."
+   nRealSec := Seconds()
+   nCPUSec := hb_SecondsCPU()
+   a := Array( 100 )
+   FOR i := 1 TO N_LOOPS
+      a[ i % 100 + 1 ] := Space( 50000 )
+      IF i % 200 == 0
+         AFill( a, "" )
+      ENDIF
+   NEXT
+   a := NIL
+   nCPUSec := hb_SecondsCPU() - nCPUSec
+   nRealSec := Seconds() - nRealSec
+   ? " CPU time:", nCPUSec, "sec."
+   ? "real time:", nRealSec, "sec."
 
-?
-? "testing large memory block reallocation with intermediate allocations..."
-? "Warning!!! some compilers may badly fail here"
-wait
+   ?
+   ? "testing large memory block reallocation with intermediate allocations..."
+   ? "Warning!!! some compilers may badly fail here"
+   WAIT
 
-nRealSec := seconds()
-nCPUSec := hb_secondsCPU()
-a := {}
-for i := 1 to N_LOOPS
-   aadd( a, {} )
-   if i%1000 == 0
-      ?? i
-   endif
-next
-nCPUSec := hb_secondsCPU() - nCPUSec
-nRealSec := seconds() - nRealSec
-? " CPU time:", nCPUSec, "sec."
-? "real time:", nRealSec, "sec."
-wait
+   nRealSec := Seconds()
+   nCPUSec := hb_SecondsCPU()
+   a := {}
+   FOR i := 1 TO N_LOOPS
+      AAdd( a, {} )
+      IF i % 1000 == 0
+         ?? i
+      ENDIF
+   NEXT
+   nCPUSec := hb_SecondsCPU() - nCPUSec
+   nRealSec := Seconds() - nRealSec
+   ? " CPU time:", nCPUSec, "sec."
+   ? "real time:", nRealSec, "sec."
+   WAIT
 
-return
+   RETURN
 
-
-function build_mode()
+FUNCTION build_mode()
 #ifdef __CLIP__
-   return " (MT)"
+   RETURN " (MT)"
 #else
-   #ifdef __XHARBOUR__
-      return iif( HB_MULTITHREAD(), " (MT)", "" ) + ;
-             iif( MEMORY( HB_MEM_USEDMAX ) != 0, " (FMSTAT)", "" )
-   #else
-      #ifdef __HARBOUR__
-         return iif( HB_MTVM(), " (MT)", "" ) + ;
-                iif( MEMORY( HB_MEM_USEDMAX ) != 0, " (FMSTAT)", "" )
-      #else
-         #ifdef __XPP__
-            return " (MT)"
-         #else
-            return ""
-         #endif
-      #endif
-   #endif
+#ifdef __XHARBOUR__
+   RETURN iif( HB_MULTITHREAD(), " (MT)", "" ) + ;
+      iif( Memory( HB_MEM_USEDMAX ) != 0, " (FMSTAT)", "" )
+#else
+#ifdef __HARBOUR__
+   RETURN iif( hb_mtvm(), " (MT)", "" ) + ;
+      iif( Memory( HB_MEM_USEDMAX ) != 0, " (FMSTAT)", "" )
+#else
+#ifdef __XPP__
+   RETURN " (MT)"
+#else
+   RETURN ""
+#endif
+#endif
+#endif
 #endif
 
 #if __HARBOUR__ < 0x010100
-FUNCTION HB_MTVM()
+
+FUNCTION hb_mtvm()
    RETURN .F.
+
 #endif

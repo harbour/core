@@ -2,11 +2,11 @@
  * $Id$
  */
 
+REQUEST _DBF
+
 PROCEDURE Main()
 
    LOCAL nI, aArray
-
-   REQUEST _DBF
 
    rddSetDefault( "DBF" )
 

@@ -21,7 +21,7 @@ MEMVAR mxStayHere
 
 PROCEDURE Main()
    PRIVATE mcLongerNameThen10Chars := "Long String Name!"
-   PRIVATE mcString   := "This is a" + Chr(0) + "string to save."
+   PRIVATE mcString   := "This is a" + Chr( 0 ) + "string to save."
    PRIVATE mnDouble   := 100.0000
    PRIVATE mnDoubleH  := 5000000000
    PRIVATE mnInt      := 35

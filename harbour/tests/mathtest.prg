@@ -9,6 +9,8 @@ PROCEDURE Main()
    LOCAL nOldMathErrMode
    LOCAL bOldMathErr
 
+   CLS
+
    ? "Testing math function: EXP(), LOG() and SQRT():"
    ?
    ? "  I) Test with correct arguments:"

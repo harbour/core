@@ -65,7 +65,7 @@
 //   1. 'var ++'
 //   2. '- 1' for numeric literals.
 //   3. wrongly breaks line: 'FUNCTION Hello( /* comment */ )'
-//   ...
+//   4. INIT PROCEDURE/EXIT PROCEDURE are not recognized as PROCEDURE statement
 
 CREATE CLASS HBFORMATCODE
 

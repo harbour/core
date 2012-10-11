@@ -53,10 +53,11 @@
 MEMVAR _REQUEST
 
 FUNCTION HRBMAIN()
+
    LOCAL cW
    LOCAL cHtml := ""
 
-   IF HB_HHasKey( _REQUEST, "w" )
+   IF hb_HHasKey( _REQUEST, "w" )
       IF ! Empty( cW := _REQUEST[ "w" ] )
          cHtml += "This is a reply from testajax : " + cW
       ENDIF

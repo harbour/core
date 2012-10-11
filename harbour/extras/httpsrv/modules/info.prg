@@ -61,6 +61,7 @@
 MEMVAR _SERVER, _REQUEST, _GET, _POST, _COOKIE, _SESSION, _HTTP_REQUEST, _HTTP_RESPONSE
 
 FUNCTION HRBMAIN()
+
    LOCAL cHtml
 
    cHtml := ShowServerInfo()
@@ -68,11 +69,13 @@ FUNCTION HRBMAIN()
    RETURN cHtml
 
 STATIC FUNCTION ShowServerInfo()
+
    LOCAL cHtml := ""
-   //LOCAL oCookie
+
+// LOCAL oCookie
 
    cHtml += "<BIG>Server Info</BIG>"
-   //cHtml += "<br><br>If it is first time you see this page reload it to see cookies<br><br>"
+// cHtml += "<br><br>If it is first time you see this page reload it to see cookies<br><br>"
    cHtml += '<br><br>Return to <a href="/">Main Page</a><br><br>'
 
    cHtml += DisplayVars( _Server       , "SERVER Vars" )
@@ -87,17 +90,17 @@ STATIC FUNCTION ShowServerInfo()
    cHtml += "<br>"
    cHtml += DisplayVars( _Cookie       , "COOKIE Vars" )
    cHtml += "<br>"
-   //cHtml += DisplayVars( _Files      , "FILE Vars" )
-   //cHtml += "<br>"
+// cHtml += DisplayVars( _Files      , "FILE Vars" )
+// cHtml += "<br>"
    cHtml += DisplayVars( _Request      , "REQUEST Vars" )
    cHtml += "<br>"
    cHtml += DisplayVars( _Session      , "SESSION Vars" )
    cHtml += "<br>"
 
    // Set a simple cookie
-   //oCookie := uhttpd_CookieNew( "localhost", "/", 1, 0 )
-   //oCookie:SetCookie( "samplecookie", "test" )
-   //oCookie:SetCookie( "samplecookie2", "test2" )
+// oCookie := uhttpd_CookieNew( "localhost", "/", 1, 0 )
+// oCookie:SetCookie( "samplecookie", "test" )
+// oCookie:SetCookie( "samplecookie2", "test2" )
 
    _SESSION[ "Session_Var1" ] := "Test1"
    _SESSION[ "Session_Var2" ] := "Test2"
@@ -105,37 +108,41 @@ STATIC FUNCTION ShowServerInfo()
    RETURN cHtml
 
 STATIC FUNCTION DisplayVars( hHash, cTitle )
+
    LOCAL cHtml := ""
+
    cHtml += "<table width='90%' align='center' border='1'>"
-   cHtml += "<th colspan=2>" + hb_cStr( cTitle ) + "</th>"
+   cHtml += "<th colspan=2>" + hb_CStr( cTitle ) + "</th>"
    cHtml += "<tr>"
    cHtml += "<th width='20%'>KEY</th>"
    cHtml += "<th width='80%'>VALUE</th>"
    cHtml += "</tr>"
    cHtml += DisplayHash( hHash )
    cHtml += "</table>"
+
    RETURN cHtml
 
 STATIC FUNCTION DisplayHash( hHash )
+
    LOCAL cHtml := ""
    LOCAL cKey, cSubKey, xValue
 
    FOR EACH cKey IN hHash:Keys
       cHtml += "<tr>"
       IF HB_ISHASH( hHash[ cKey ] )
-         cHtml += "<td>" + hb_cStr( cKey ) + "</td>"
+         cHtml += "<td>" + hb_CStr( cKey ) + "</td>"
          cHtml += "<td>-------</td>"
          FOR EACH cSubKey IN hHash[ cKey ]:Keys
             xValue := hHash[ cKey ][ cSubKey ]
             cHtml += "<tr>"
-            cHtml += "<td>" + hb_cStr( cSubKey ) + "</td>"
-            cHtml += "<td>" + IIF( Empty( xValue ), "<i>no value</i>", hb_cStr( xValue ) ) + "</td>"
+            cHtml += "<td>" + hb_CStr( cSubKey ) + "</td>"
+            cHtml += "<td>" + iif( Empty( xValue ), "<i>no value</i>", hb_CStr( xValue ) ) + "</td>"
             cHtml += "</tr>"
          NEXT
       ELSE
          xValue := hHash[ cKey ]
-         cHtml += "<td>" + hb_cStr( cKey ) + "</td>"
-         cHtml += "<td>" + IIF( Empty( xValue ), "<i>no value</i>", hb_cStr( xValue ) ) + "</td>"
+         cHtml += "<td>" + hb_CStr( cKey ) + "</td>"
+         cHtml += "<td>" + iif( Empty( xValue ), "<i>no value</i>", hb_CStr( xValue ) ) + "</td>"
       ENDIF
       cHtml += "</tr>"
    NEXT

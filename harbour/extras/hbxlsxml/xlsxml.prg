@@ -398,7 +398,7 @@ FUNCTION OEMTOHTML( xtxt )
       }
 
    FOR i := 1 TO Len( xtxt )
-      IF( xpos := AScan( afrm, {| x | SubStr( xtxt, i, 1 ) == x[ 1 ] } ) ) > 0
+      IF ( xpos := AScan( afrm, {| x | SubStr( xtxt, i, 1 ) == x[ 1 ] } ) ) > 0
          xret += afrm[ xpos, 2 ]
       ELSE
          xret += SubStr( xtxt, i, 1 )

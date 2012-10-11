@@ -447,7 +447,7 @@ static HB_ISIZ InsText( PHB_EDITOR pEd, char * adres, HB_ISIZ line )
       {
          /* there is enough free room in text buffer
           */
-         if( (adres[ dl - 1 ] != '\n' ) && ( adres[ dl - 2 ] != '\r' ) )
+         if( ( adres[ dl - 1 ] != '\n' ) && ( adres[ dl - 2 ] != '\r' ) )
          {
             /* There is no CRLF at the end of inserted text -
              * we have to add CRLF to separate it from existing text

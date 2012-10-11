@@ -63,15 +63,16 @@ MEMVAR _REQUEST // defined in uHTTPD
 #define DISPLAY_NUM  10
 
 FUNCTION HRBMAIN()
+
    LOCAL cHtml
 
-   IF HB_HHasKey( _REQUEST, "w" )
+   IF hb_HHasKey( _REQUEST, "w" )
 
       cHtml := CreateCounter( hb_ntos( Val( _REQUEST[ "w" ] ) ) )
       IF !Empty( cHtml )
          uhttpd_SetHeader( "Content-Type", "image/gif" )
          uhttpd_SetHeader( "Pragma", "no-cache" )
-         uhttpd_SetHeader( "Content-Disposition", "inline; filename=counter" + hb_ntos( hb_randomint( 100 ) ) + ".gif" )
+         uhttpd_SetHeader( "Content-Disposition", "inline; filename=counter" + hb_ntos( hb_RandomInt( 100 ) ) + ".gif" )
          uhttpd_Write( cHtml )
       ELSE
          uhttpd_SetHeader( "Content-Type", "text/html" )
@@ -91,50 +92,51 @@ FUNCTION HRBMAIN()
 STATIC FUNCTION CreateCounter( cValue, cBaseImage )
 
    LOCAL oI, oIDigits, nWidth, nHeight, nDigits, nNumWidth, oTemp
-   //LOCAL black, white, blue, red, green, cyan, gray
-   //LOCAL white
+
+// LOCAL black, white, blue, red, green, cyan, gray
+// LOCAL white
    LOCAL aNumberImages := {}
    LOCAL n, nValue
-   //LOCAL cFile
+// LOCAL cFile
 
    // A value if not passed
    hb_default( @cValue    , Str( hb_RandomInt( 1, 10 ^ DISPLAY_NUM ), DISPLAY_NUM ) )
    hb_default( @cBaseImage, "57chevy.gif" )
 
-   IF !hb_FileExists( IMAGES_IN + cBaseImage )
+   IF ! hb_FileExists( IMAGES_IN + cBaseImage )
       //hb_ToOutDebug( "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' not found" )
       //THROW( "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' not found" )
       RETURN NIL
-   //ELSE
-   //   hb_ToOutDebug( "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' FOUND" )
+      //ELSE
+      //   hb_ToOutDebug( "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' FOUND" )
    ENDIF
 
    nValue := Val( cValue )
 
    // Fix num lenght
-   IF nValue > 10^DISPLAY_NUM
-      nValue := 10^DISPLAY_NUM
+   IF nValue > 10 ^ DISPLAY_NUM
+      nValue := 10 ^ DISPLAY_NUM
    ENDIF
 
    cValue := StrZero( nValue, DISPLAY_NUM )
 
-   //? "Value = ", cValue
+// ? "Value = ", cValue
 
    // To set fonts run this command:
    // for windows: SET GDFONTPATH=%WINDIR%\fonts
    // per linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType
 
    // SET GDFONTPATH=%WINDIR%\fonts
-   //IF GetEnv( "GDFONTPATH" ) == ""
-   //   ? "Please set GDFONTPATH"
-   //   ? "On Windows: SET GDFONTPATH=%WINDIR%\fonts"
-   //   ? "On Linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType"
-   //   ?
-   //ENDIF
+// IF GetEnv( "GDFONTPATH" ) == ""
+//    ? "Please set GDFONTPATH"
+//    ? "On Windows: SET GDFONTPATH=%WINDIR%\fonts"
+//    ? "On Linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType"
+//    ?
+// ENDIF
 
    // Check output directory
    /*
-   IF !hb_DirExists( IMAGES_OUT )
+   IF ! hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
    */
@@ -161,58 +163,59 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    ENDCASE
    nNumWidth := nWidth / nDigits
 
-   //? "nNumWidth, nWidth, nHeight, nDigits = ", nNumWidth, nWidth, nHeight, nDigits
+// ? "nNumWidth, nWidth, nHeight, nDigits = ", nNumWidth, nWidth, nHeight, nDigits
 
    /* extracts single digits */
    FOR n := 1 TO nDigits
-       oTemp := oIDigits:Copy( (n - 1) * nNumWidth, 0, nNumWidth, nHeight )
-       //oTemp:SaveGif( IMAGES_OUT + StrZero( n-1, 2 ) + ".gif" )
-       // Here I have to clone the image, otherwise on var destruction I loose
-       // the image in memory
-       aAdd( aNumberImages, oTemp:Clone() )
+      oTemp := oIDigits:Copy( ( n - 1 ) * nNumWidth, 0, nNumWidth, nHeight )
+      //oTemp:SaveGif( IMAGES_OUT + StrZero( n - 1, 2 ) + ".gif" )
+      // Here I have to clone the image, otherwise on var destruction I loose
+      // the image in memory
+      AAdd( aNumberImages, oTemp:Clone() )
    NEXT
 
    /* Create counter image in memory */
    oI := GDImage():New( nNumWidth * DISPLAY_NUM, nHeight )  // the counter
-   //? "Image dimensions: ", oI:Width(), oI:Height()
+// ? "Image dimensions: ", oI:Width(), oI:Height()
 
    /* Allocate background */
-   //white := oI:SetColor( 255, 255, 255 )
+// white := oI:SetColor( 255, 255, 255 )
 
    /* Allocate drawing color */
-   //black := oI:SetColor( 0, 0, 0 )
-   //blue  := oI:SetColor( 0, 0, 255 )
-   //red   := oI:SetColor( 255, 0, 0 )
-   //green := oI:SetColor( 0, 255, 0 )
-   //cyan  := oI:SetColor( 0, 255, 255 )
+// black := oI:SetColor( 0, 0, 0 )
+// blue  := oI:SetColor( 0, 0, 255 )
+// red   := oI:SetColor( 255, 0, 0 )
+// green := oI:SetColor( 0, 255, 0 )
+// cyan  := oI:SetColor( 0, 255, 255 )
 
    /* Draw rectangle */
-   //oI:Rectangle( 0, 0, 200, 30, , blue )
+// oI:Rectangle( 0, 0, 200, 30, , blue )
 
    /* Draw Digits */
    FOR n := 1 TO Len( cValue )
-       // Retrieve the number from array in memory
-       oTemp := aNumberImages[ Val( SubStr( cValue, n, 1 ) ) + 1 ]:Clone()
-       // Save it to show the number for a position
-       //oTemp:SaveGif( IMAGES_OUT + "Pos_" + StrZero( n, 2 ) + ".gif" )
-       // Set the digit as tile that I have to use to fill position in counter
-       oI:SetTile( oTemp )
-       // Fill the position with the image digit
-       oI:Rectangle( (n - 1) * nNumWidth, 0, (n - 1) * nNumWidth + nNumWidth, nHeight, .T., gdTiled )
+      // Retrieve the number from array in memory
+      oTemp := aNumberImages[ Val( SubStr( cValue, n, 1 ) ) + 1 ]:Clone()
+      // Save it to show the number for a position
+      //oTemp:SaveGif( IMAGES_OUT + "Pos_" + StrZero( n, 2 ) + ".gif" )
+      // Set the digit as tile that I have to use to fill position in counter
+      oI:SetTile( oTemp )
+      // Fill the position with the image digit
+      oI:Rectangle( ( n - 1 ) * nNumWidth, 0, ( n - 1 ) * nNumWidth + nNumWidth, nHeight, .T. , gdTiled )
    NEXT
 
    /* Write Final Counter Image */
-   //cFile := "counter" + StrZero( hb_RandomInt( 1, 99 ), 2 ) + ".gif"
-   //oI:SaveGif( IMAGES_OUT + cFile )
+// cFile := "counter" + StrZero( hb_RandomInt( 1, 99 ), 2 ) + ".gif"
+// oI:SaveGif( IMAGES_OUT + cFile )
 
    /* Destroy images in memory */
    // Class does it automatically
 
-   //?
-   //? "Look at " + IMAGES_OUT + " folder for output images"
-   //?
+// ?
+// ? "Look at " + IMAGES_OUT + " folder for output images"
+// ?
 
 // RETURN cFile
+
    RETURN oI:ToStringGif()
 
 #endif
