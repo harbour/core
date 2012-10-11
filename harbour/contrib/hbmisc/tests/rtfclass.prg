@@ -8,10 +8,11 @@
            - using hb_f*() - some compilers are not friendly with this :(
            - rtf is assumed to have association
  * initial release : 23 June 1999 Andi Jahja
- * tested under Windows 98 only with RTF associated to WinWord
  * works with printable ascii only
  * placed in the public domain
 */
+
+#require "hbmisc"
 
 PROCEDURE Main()
 

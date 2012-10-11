@@ -122,18 +122,6 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
 
 // ? "Value = ", cValue
 
-   // To set fonts run this command:
-   // for windows: SET GDFONTPATH=%WINDIR%\fonts
-   // per linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType
-
-   // SET GDFONTPATH=%WINDIR%\fonts
-// IF GetEnv( "GDFONTPATH" ) == ""
-//    ? "Please set GDFONTPATH"
-//    ? "On Windows: SET GDFONTPATH=%WINDIR%\fonts"
-//    ? "On Linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType"
-//    ?
-// ENDIF
-
    // Check output directory
    /*
    IF ! hb_DirExists( IMAGES_OUT )

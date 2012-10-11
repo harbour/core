@@ -743,31 +743,6 @@ HB_FUNC( GDIMAGEGD ) /* original: void gdImageGD(gdImagePtr im, FILE *out) */
 */
 HB_FUNC( GDIMAGEDESTROY ) /* gdImageDestroy(gdImagePtr im) */
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 ) )
-   {
-      /*
-      gdImagePtr im;
-      */
-
-      /* Retrieve image pointer */
-      /*
-      im = (gdImagePtr)hb_parptr( 1 );
-      */
-
-      /* Destroy the image */
-      /*
-      gdImageDestroy( im );
-      */
-
-   }
-   else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-         HB_ERR_FUNCNAME, 1,
-         hb_paramError( 1 ) );
-   }
-
 }
 
 /* - */

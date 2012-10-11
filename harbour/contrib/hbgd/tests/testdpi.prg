@@ -9,6 +9,8 @@
  * Copyright 2005 Francesco Saverio Giudice <info@fsgiudice.com>
  */
 
+#require "hbgd"
+
 #include "gd.ch"
 
 #define IMAGES_IN  "imgs_in" + hb_ps()
@@ -18,10 +20,10 @@ PROCEDURE Main()
 
    LOCAL oI := GDImage():Create( 600, 300 )
 
-   LOCAL black := oI:SetColor( 0, 0, 0 )
+   LOCAL black := oI:SetColor( 50, 0, 0 )
 
    oI:SetColor( black )
-   oI:SetFontName( GetEnv( "WINDIR" ) + "\fonts\arial.ttf" )
+   oI:SetFontName( "Arial" ) // TOFIX
    oI:SetFontPitch( 10 )
 
    // Resolution = 96 dpi, default

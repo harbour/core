@@ -30,7 +30,7 @@ FUNCTION UWMainNew()
 METHOD Paint() CLASS UWMain
 
    UWrite( '<html><link href="/files/main.css" type=text/css rel=stylesheet>' )
-   UWrite( '<meta http-equiv="content-type" content="text/html; charset=windows-1257">' )
+   UWrite( '<meta http-equiv="content-type" content="text/html; charset=UTF-8">' )
    UWrite( '<script language="javascript" src="/files/main.js"></script>' )
    UWrite( '<body>' )
    AEval( Self:aChilds, {| x | x:Paint() } )
@@ -545,7 +545,7 @@ PROCEDURE UWDefaultHandler( cMethod )
          session[ "_uthis", "main" ]:Paint()
       ELSE
          IF ( oW := UGetWidgetById( cID ) ) != NIL
-            UAddHeader( "Content-type", "text/html; charset=windows-1257" )
+            UAddHeader( "Content-type", "text/html; charset=UTF-8" )
             oW:Ajax( hb_HGetDef( get, "action" ) )
          ENDIF
       ENDIF

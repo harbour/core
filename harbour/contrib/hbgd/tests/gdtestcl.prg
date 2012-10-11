@@ -8,6 +8,8 @@
  * GD Class test file
  */
 
+#require "hbgd"
+
 #include "gd.ch"
 #include "simpleio.ch"
 
@@ -22,18 +24,9 @@ PROCEDURE Main()
    LOCAL oI5
    LOCAL oB
 
-   // LOCAL aClip
-
-   // SET GDFONTPATH=%WINDIR%\fonts
-   IF GetEnv( "GDFONTPATH" ) == ""
-      ? "Please set GDFONTPATH"
-      ? "On Windows: SET GDFONTPATH=%WINDIR%\fonts"
-      ? "On Linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType"
-      ?
-   ENDIF
 /*
    // Check output directory
-   IF !hb_DirExists( IMAGES_OUT )
+   IF ! hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
 */
@@ -122,11 +115,6 @@ PROCEDURE Main()
 
    /* Set Clip Rectangle */
    oI:SetClippingArea( 25, 25, 75, 75 )
-
-   /* Retrieve Clipping rectangle */
-   // aClip := oI:GetClippingArea()
-   ? "Clipping rectangle values"
-   //   ? hb_DumpVar( aClip )
 
    /* Query functions */
 

@@ -2,10 +2,11 @@
  * $Id$
  */
 
+#require "hbcairo"
 
 #include "hbcairo.ch"
 
-PROC main()
+PROCEDURE Main()
    LOCAL hSurface, hCairo
 
    hSurface := cairo_pdf_surface_create( "glyphdbg.pdf", 566.9, 793.7 )  // 200x280 mm in pt

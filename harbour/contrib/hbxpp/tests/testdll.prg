@@ -11,6 +11,8 @@
  *
  */
 
+#require "hbxpp"
+
 #include "simpleio.ch"
 
 #include "dll.ch"

@@ -11,6 +11,8 @@
  * i.e.: counter 34524
  */
 
+#require "hbgd"
+
 #include "gd.ch"
 #include "simpleio.ch"
 
@@ -50,21 +52,9 @@ PROCEDURE Main( cValue, cBaseImage )
 
    ? "Value = ", cValue
 
-   // To set fonts run this command:
-   // for Windows: SET GDFONTPATH=%WINDIR%\fonts
-   // per Linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType
-
-// SET GDFONTPATH=%WINDIR%\fonts
-// IF GetEnv( "GDFONTPATH" ) == ""
-//    ? "Please set GDFONTPATH"
-//    ? "On Windows: SET GDFONTPATH=%WINDIR%\fonts"
-//    ? "On Linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType"
-//    ?
-// ENDIF
-
    // Check output directory
    /*
-   IF !hb_DirExists( IMAGES_OUT )
+   IF ! hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
    */

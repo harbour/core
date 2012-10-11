@@ -134,7 +134,7 @@ CREATE CLASS GDImage
    METHOD ToString()                       INLINE gdImageToString( Self )
 
    // Destructor
-   METHOD Destroy()                        INLINE gdImageDestroy( ::pImage )
+   METHOD Destroy()
    DESTRUCTOR Destruct()
 
 
@@ -298,11 +298,6 @@ METHOD New( sx, sy ) CLASS GDImage
    RETURN Self
 
 METHOD PROCEDURE Destruct() CLASS GDImage
-
-   IF ::lDestroy
-      ::Destroy()
-   ENDIF
-
    RETURN
 
 METHOD Polygon( aPoints, lFilled, color ) CLASS GDImage
@@ -383,6 +378,10 @@ METHOD LoadFromFile( cFile ) CLASS GDImage
    ::cType := aLoad[3]
    ::cMime := aLoad[4]
 
+   RETURN Self
+
+/* dummy. no longer needed */
+METHOD Destroy() CLASS GDImage
    RETURN Self
 
 METHOD Copy( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, oDestImage ) CLASS GDImage

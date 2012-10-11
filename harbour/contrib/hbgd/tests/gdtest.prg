@@ -8,6 +8,8 @@
  * GD API test file
  */
 
+#require "hbgd"
+
 #include "gd.ch"
 #include "simpleio.ch"
 
@@ -20,18 +22,9 @@ PROCEDURE Main()
    LOCAL black, blue, red, green, cyan
    LOCAL color, font
 
-   // LOCAL aClip
-
-   // SET GDFONTPATH=%WINDIR%\fonts
-   IF GetEnv( "GDFONTPATH" ) == ""
-      ? "Please set GDFONTPATH"
-      ? "On Windows: SET GDFONTPATH=%WINDIR%\fonts"
-      ? "On Linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType"
-      ?
-   ENDIF
 /*
    // Check output directory
-   IF !hb_DirExists( IMAGES_OUT )
+   IF ! hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
 */
@@ -87,17 +80,10 @@ PROCEDURE Main()
 
    gdImageStringFt( im, blue, "arial", 20, 30, 20, 90, "Test" )
 
-   ? gdImageStringFTCircle( im, 120, 120, 50, 25, 0.8, "arial", 24, "Up", /*"Down"*/
-   , red )
+   ? gdImageStringFTCircle( im, 120, 120, 50, 25, 0.8, "arial", 24, "Up", /*"Down"*/, red )
 
    /* Set Clip Rectangle */
    gdImageSetClip( im, 25, 25, 75, 75 )
-
-   /* Retrieve Clipping rectangle */
-   // aClip := gdImageGetClip(im)
-
-   //   ? "Clipping rectangle values"
-   //   ? hb_DumpVar( aClip )
 
    /* Query functions */
    color := gdImageGetPixel( im, gdImageSX( im ) / 2, gdImageSY( im ) / 2 )

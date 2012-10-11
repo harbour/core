@@ -15,7 +15,7 @@ PROCEDURE Main()
    LOCAL cUser := "SYSDBA"
    LOCAL cPass := "masterkey"
    LOCAL nPageSize := 1024
-   LOCAL cCharSet := "WIN1251"
+   LOCAL cCharSet := "UTF8"
    LOCAL nDialect := 1
    LOCAL cQuery, cName
 
@@ -66,16 +66,16 @@ PROCEDURE Main()
    oServer:StartTransaction()
 
    FOR i := 1 TO 10000
-      @ 15, 0 say "Inserting values...." + hb_ntos( i )
+      @ 15, 0 SAY "Inserting values...." + hb_ntos( i )
 
       oRow := oQuery:Blank()
 
-      oRow:Fieldput(1, i)
-      oRow:Fieldput(2, i+1)
-      oRow:Fieldput(3, "DEPARTMENT NAME " + strzero( i ) )
-      oRow:Fieldput(4, (i % 10) == 0)
-      oRow:Fieldput(5, 3000 + i )
-      oRow:fieldput(6, Date() )
+      oRow:Fieldput( 1, i )
+      oRow:Fieldput( 2, i + 1 )
+      oRow:Fieldput( 3, "DEPARTMENT NAME " + strzero( i ) )
+      oRow:Fieldput( 4, ( i % 10 ) == 0 )
+      oRow:Fieldput( 5, 3000 + i )
+      oRow:fieldput( 6, Date() )
 
       oServer:Append( oRow )
 
@@ -86,10 +86,10 @@ PROCEDURE Main()
    NEXT
 
    FOR i := 5000 TO 7000
-      @ 16,0 say "Deleting values...." + str( i )
+      @ 16, 0 SAY "Deleting values...." + Str( i )
 
       oRow := oQuery:Blank()
-      oServer:Delete( oRow, "code = " + str( i ) )
+      oServer:Delete( oRow, "code = " + Str( i ) )
 
       IF i % 100 == 0
          oServer:Commit()
@@ -98,11 +98,11 @@ PROCEDURE Main()
    NEXT
 
    FOR i := 2000 TO 3000
-      @ 17,0 say "Updating values...." + str( i )
+      @ 17, 0 SAY "Updating values...." + Str( i )
 
       oRow := oQuery:Blank()
       oRow:Fieldput( 5, 4000 + i )
-      oServer:update( oRow, "code = " + str( i ) )
+      oServer:update( oRow, "code = " + Str( i ) )
 
       IF i % 100 == 0
          oServer:Commit()
@@ -114,13 +114,13 @@ PROCEDURE Main()
 
    IF ! oQuery:Neterr()
       oQuery:Fetch()
-      @ 18,0 say "Sum values...." + Str( oQuery:Fieldget( 1 ) )
+      @ 18, 0 SAY "Sum values...." + Str( oQuery:Fieldget( 1 ) )
       oQuery:Destroy()
    ENDIF
 
    x := 0
    FOR i := 1 TO 4000
-      oQuery := oServer:Query( "SELECT * FROM test WHERE code = " + str( i ) )
+      oQuery := oServer:Query( "SELECT * FROM test WHERE code = " + Str( i ) )
 
       IF ! oQuery:Neterr()
          oQuery:Fetch()
@@ -129,7 +129,7 @@ PROCEDURE Main()
          oQuery:destroy()
          x += oRow:fieldget( oRow:fieldpos( "salary" ) )
 
-         @ 19,0 say "Sum values...." + str( x )
+         @ 19, 0 SAY "Sum values...." + Str( x )
       ENDIF
    NEXT
 

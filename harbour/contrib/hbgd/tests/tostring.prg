@@ -8,6 +8,8 @@
  * GD Class test file: tostring() demo
  */
 
+#require "hbgd"
+
 #include "gd.ch"
 #include "simpleio.ch"
 
@@ -20,7 +22,7 @@ PROCEDURE Main()
 
    /*
    // Check output directory
-   IF !hb_DirExists( IMAGES_OUT )
+   IF ! hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
    */

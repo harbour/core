@@ -2,11 +2,12 @@
  * $Id$
  */
 
+#require "hbcairo"
 
 #include "hbcairo.ch"
 
 
-PROC main()
+PROCEDURE Main()
    LOCAL hSurface, hCairo
    FIELD CODE, NAME, RESIDENTS
 

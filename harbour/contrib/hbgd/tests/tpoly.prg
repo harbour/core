@@ -6,6 +6,8 @@
  * Koch Flake -- for testing gdImage*Polygon()
  */
 
+#require "hbgd"
+
 #include "gd.ch"
 #include "simpleio.ch"
 

@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbxpp"
+
 #include "hbxpp.ch"
 
 PROCEDURE Main()

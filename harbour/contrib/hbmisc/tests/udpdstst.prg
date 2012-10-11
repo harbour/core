@@ -6,6 +6,8 @@
  * This module demonstrates a simple UDP Discovery Server
  */
 
+#require "hbmisc"
+
 PROCEDURE main( cParam )
 
    LOCAL h

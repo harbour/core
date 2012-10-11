@@ -17,6 +17,8 @@ inplementation of :
   * hb_fgobottom()
 */
 
+#require "hbmisc"
+
 PROCEDURE Main()
 
    // open a text file here

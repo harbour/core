@@ -2,11 +2,12 @@
  * $Id$
  */
 
+#require "hbcairo"
 
 #include "hbcairo.ch"
 
 
-PROC main()
+PROCEDURE Main()
    LOCAL hSurface, hCairo, nI
 
    hSurface := cairo_pdf_surface_create( "lightning.pdf", 566.9, 793.7 )  // 200x280 mm in pt
@@ -14,9 +15,9 @@ PROC main()
 
    // 20 pages
    FOR nI := 1 TO 20
-     cairo_set_source_rgb( hCairo, 0, 0, 0 ) 
+     cairo_set_source_rgb( hCairo, 0, 0, 0 )
      cairo_paint( hCairo )
-     cairo_set_source_rgb( hCairo, 1, 0.7, 1 ) 
+     cairo_set_source_rgb( hCairo, 1, 0.7, 1 )
      DrawLightning( hCairo, 250, 50, 700, 3 )
      cairo_show_page( hCairo )
    NEXT
@@ -38,7 +39,7 @@ PROC DrawLightning( hCairo, nX, nY, nLen, nW, nInit )
      // AR(1) process
      nInit := nInit * 0.9 + (hb_random() - 0.5)
      // ARIMA(1, 1, 0) process
-     nK += nInit 
+     nK += nInit
      // ARIMA(1, 1, 0) + white noise
      nX2 := nX + nK + hb_random()
      cairo_line_to( hCairo, nX2, nI + nY )

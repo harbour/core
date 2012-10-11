@@ -4,11 +4,13 @@
 
 /* UTF-8 */
 
+#require "hbcairo"
+
 #include "hbcairo.ch"
 
 REQUEST HB_CODEPAGE_LTWIN
 
-PROC main()
+PROCEDURE Main()
    LOCAL hSurface, hCairo, nI
 
    HB_CDPSELECT("LTWIN")

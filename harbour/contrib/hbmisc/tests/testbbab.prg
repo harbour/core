@@ -10,6 +10,8 @@
  *
  */
 
+#require "hbmisc"
+
 PROCEDURE Main()
 
    ? BubbleBabbleEncode_prg( "" )

@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbgd"
+
 #define IMAGES_OUT "imgs_out" + hb_ps()
 
 PROCEDURE Main()
@@ -44,7 +46,7 @@ PROCEDURE Main()
    2 - Height
    3 - Filename (empty : display on screen)
    4 - Background color */
-   bar:CreateBar( 205, 105,, white )
+   bar:CreateBar( 205, 105, IMAGES_OUT + "bar13.jpg", white )
 
    // 1 - code bar
    bar:Draw13( ccode13 )
@@ -57,7 +59,7 @@ PROCEDURE Main()
 
    bar:Configure( 70, black, white, 2, 1 )
 
-   bar:CreateBar( 154, 100,, white )
+   bar:CreateBar( 154, 100, IMAGES_OUT + "bar8.gif", white )
 
    bar:Draw8( ccode8 )
 
@@ -70,7 +72,7 @@ PROCEDURE Main()
 
    bar:Configure( 50, black, white, 2, 1 )
 
-   bar:CreateBar( 300, 400, IMAGES_OUT + "Bar128", white )
+   bar:CreateBar( 300, 400, IMAGES_OUT + "bar128.gif", white )
 
    // 1- code bar
    // 2- barcode types A/B/C
@@ -86,7 +88,7 @@ PROCEDURE Main()
 
    bar:Configure( 25, black, white, 1, 1,, .T. )
 
-   bar:CreateBar( 560, 60, IMAGES_OUT + "febraban", white )
+   bar:CreateBar( 560, 60, IMAGES_OUT + "febraban.gif", white )
    bar:DrawI25( "104995628545723070285700000008218000" )
    bar:Finish( 8 )
 

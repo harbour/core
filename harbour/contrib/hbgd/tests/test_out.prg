@@ -5,26 +5,26 @@
 /*
  * Copyright 2004-2005 Francesco Saverio Giudice <info@fsgiudice.com>
  *
- * Windows CGI test application
+ * CGI test application
  */
+
+#require "hbgd"
 
 #include "gd.ch"
 
-#define CRLF ( Chr( 13 ) + Chr( 10 ) )
-
-#command WRITE <c> => FWrite( 1, <c> + CRLF )
+#command WRITE <c> => FWrite( 1, <c> + hb_eol() )
 #command OutHTML <c> => WRITE <c>
 
 PROCEDURE Main( ... )
 
    LOCAL cPar
-   LOCAL aParams := hb_aParams()
+   LOCAL aParams := hb_AParams()
    LOCAL cQuery  := GetEnv( "QUERY_STRING" )
    LOCAL hParams := { => }
 
    LOCAL cImg, nPt, nWidth, nHeight, cPhoto
 
-   // LOCAL cText
+// LOCAL cText
 
    IF Empty( aParams )
       IF ! Empty( cQuery )
@@ -34,7 +34,7 @@ PROCEDURE Main( ... )
       hParams := GetParams( aParams )
    ENDIF
 
-   //
+//
 
    // Gestione parametri
    IF ! Empty( hParams )
@@ -42,44 +42,42 @@ PROCEDURE Main( ... )
 
          DO CASE
          CASE cPar == "txt"
-            // cText := hb_hGet( hParams, cPar )
+            // cText := hb_HGet( hParams, cPar )
 
          CASE cPar == "img"
-            cImg := hb_hGet( hParams, cPar )
+            cImg := hb_HGet( hParams, cPar )
 
          CASE cPar == "photo"
-            cPhoto := hb_hGet( hParams, cPar )
+            cPhoto := hb_HGet( hParams, cPar )
 
          CASE cPar == "width"
-            nWidth := Val( hb_hGet( hParams, cPar ) )
+            nWidth := Val( hb_HGet( hParams, cPar ) )
 
          CASE cPar == "height"
-            nHeight := Val( hb_hGet( hParams, cPar ) )
+            nHeight := Val( hb_HGet( hParams, cPar ) )
 
          CASE cPar == "pt"
-            nPt := Val( hb_hGet( hParams, cPar ) )
+            nPt := Val( hb_HGet( hParams, cPar ) )
 
          ENDCASE
       NEXT
    ENDIF
 
-   //__OutDebug( cQuery, ValToPrg( hParams ) )
+// __OutDebug( cQuery, ValToPrg( hParams ) )
 
-   //
-
- //hb_default( @cText, "Testo di Prova" )
+// hb_default( @cText, "Testo di Prova" )
    hb_default( @nPt, 30 )
 
    IF cImg != NIL
-    //OutJpg( cImg, nPt )
+      //OutJpg( cImg, nPt )
       OutPhoto( cImg, nWidth, nHeight )
 
    ELSEIF cPhoto != NIL
       StartHTML()
-    //OutHTML ValToPrg( hParams ) + "<br>"
-    //OutHTML ValToPrg( cParams ) + "<br>"
-    //OutHTML ValToPrg( cQuery ) + "<br>"
-    //OutHTML "<img src='test_out.exe?img=" + cPhoto + "&width=" + hb_ntos( nWidth ) + "&height=" + hb_ntos( nHeight ) + "'>" + "<br>"
+      //OutHTML ValToPrg( hParams ) + "<br>"
+      //OutHTML ValToPrg( cParams ) + "<br>"
+      //OutHTML ValToPrg( cQuery ) + "<br>"
+      //OutHTML "<img src='test_out.exe?img=" + cPhoto + "&width=" + hb_ntos( nWidth ) + "&height=" + hb_ntos( nHeight ) + "'>" + "<br>"
       OutHTML "<table border=1>"
       OutHTML "<tr><td align='center'>"
       OutHTML "<img src='test_out.exe?img=" + cPhoto + "'>" + "<br>"
@@ -95,9 +93,8 @@ PROCEDURE Main( ... )
       OutHTML "</td></tr>"
       OutHTML "</table>"
       OutHTML "<br>"
-    //OutHTML "<img src='test_out.exe?img=" + cText + "_2&pt=" + hb_ntos( nPt ) + "'>" + "<br>"
-    //OutHTML OS() + "<br>"
-    //OutHTML iif( OS_ISWINNT(), "WIN NT", "NON WIN NT" ) + "<br>"
+      //OutHTML "<img src='test_out.exe?img=" + cText + "_2&pt=" + hb_ntos( nPt ) + "'>" + "<br>"
+      //OutHTML OS() + "<br>"
       EndHTML()
    ELSE
       StartHTML()
@@ -112,7 +109,7 @@ PROCEDURE StartHTML( cTitle )
 
    WRITE 'content-type: text/html'
    WRITE 'Pragma: no-cache'
-   WRITE CRLF
+   WRITE hb_eol()
    WRITE "<html>"
    WRITE "<head>"
    WRITE "<title>" + cTitle + "</title>"
@@ -127,9 +124,6 @@ PROCEDURE EndHTML()
    WRITE "</html>"
 
    RETURN
-
-// per windows: SET GDFONTPATH=%WINDIR%\fonts
-// per linux  : export GDFONTPATH=/usr/share/fonts/default/TrueType
 
 PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
 
@@ -147,9 +141,9 @@ PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
       oImage:Resize( nWidth, nHeight )
    ENDIF
 
-   //__OutDebug( hb_dumpvar( oImage ) )
+// __OutDebug( hb_dumpvar( oImage ) )
 
-   WRITE 'content-type: ' + oImage:cMime + CRLF
+   WRITE 'content-type: ' + oImage:cMime + hb_eol()
    cType := oImage:cType
 
    DO CASE
@@ -165,13 +159,11 @@ PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
 
 PROCEDURE OutJpg( cText, nPitch )
 
-   LOCAL cPath := GetEnv( "WINDIR" ) + "\fonts\"
    LOCAL oI
 
-   // LOCAL cyan
+// LOCAL cyan
    LOCAL blue
    LOCAL aSize, nWidth, nHeight, nX, nY
-   LOCAL cFont := cPath + "verdana.ttf"
 
    hb_default( @cText , "Sample TEXT" )
    hb_default( @nPitch, 30 )
@@ -185,10 +177,10 @@ PROCEDURE OutJpg( cText, nPitch )
    /* Allocate drawing color */
 // blue := oI:SetColor( 0, 0, 200 )
 
-   //oI:SetTransparent( blue )
-   oI:SetFontName( cFont )
+// oI:SetTransparent( blue )
+   oI:SetFontName( "Verdana" ) // TOFIX
    oI:SetFontPitch( nPitch )
-   //__OutDebug( oI:GetFTFontHeight() )
+// __OutDebug( oI:GetFTFontHeight() )
    aSize := oI:GetFTStringSize( cText )
    nWidth  := aSize[ 1 ]
    nHeight := aSize[ 2 ]
@@ -199,21 +191,21 @@ PROCEDURE OutJpg( cText, nPitch )
 
    /* Allocate drawing color */
    blue := oI:SetColor( 0, 0, 200 )
-   oI:SetFontName( cPath + "verdana.ttf" )
+   oI:SetFontName( "Verdana" ) // TOFIX
    oI:SetFontPitch( nPitch )
    oI:SayFreeType( 0 - nX, 0 + nHeight - nY, cText, , , 0, blue )
-   //oI:SayFreeType( 0, 0, cText, , , 0, blue )
+// oI:SayFreeType( 0, 0, cText, , , 0, blue )
 
-   //oI:Resize( nWidth, nHeight )
-   //__OutDebug( "prima", oI:Width(), oI:Height() )
-   //oI:Resize( 60, 40 )
-   //__OutDebug( "dopo", oI:Width(), oI:Height() )
+// oI:Resize( nWidth, nHeight )
+// __OutDebug( "prima", oI:Width(), oI:Height() )
+// oI:Resize( 60, 40 )
+// __OutDebug( "dopo", oI:Width(), oI:Height() )
 
-   //oI:SetFontLarge()
-   //oI:SetColor( blue )
-   //oI:Say( 0, 0, cText )
+// oI:SetFontLarge()
+// oI:SetColor( blue )
+// oI:Say( 0, 0, cText )
 
-   WRITE 'content-type: image/jpeg' + CRLF
+   WRITE 'content-type: image/jpeg' + hb_eol()
 
    oI:OutputJpeg()
 
@@ -227,10 +219,10 @@ FUNCTION GetVars( cFields, cSeparator )
 
    hb_default( @cSeparator, "&" )
 
-   aFields := HB_RegExSplit( cSeparator, cFields )
+   aFields := hb_regexSplit( cSeparator, cFields )
 
    FOR EACH cField in aFields
-      aField := HB_RegexSplit( "=", cField, 2 )
+      aField := hb_regexSplit( "=", cField, 2 )
       IF Len( aField ) != 2
          LOOP
       ENDIF
@@ -253,7 +245,7 @@ FUNCTION GetVars( cFields, cSeparator )
       ENDIF
       //Tracelog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
    NEXT
-   //__OutDebug( hHashVars )
+// __OutDebug( hHashVars )
 
    RETURN hHashVars
 
@@ -266,7 +258,7 @@ FUNCTION GetParams( aParams )
    aFields := aParams
 
    FOR EACH cField in aFields
-      aField := HB_RegexSplit( "=", cField, 2 )
+      aField := hb_regexSplit( "=", cField, 2 )
       IF Len( aField ) != 2
          LOOP
       ENDIF
@@ -289,7 +281,7 @@ FUNCTION GetParams( aParams )
       ENDIF
       //Tracelog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
    NEXT
-   //__OutDebug( hHashVars )
+// __OutDebug( hHashVars )
 
    RETURN hHashVars
 
@@ -302,7 +294,7 @@ FUNCTION URLDecode( cStr )
 
    LOCAL cRet := "", i, cCar
 
-   // LOCAL lNumeric := .T.
+// LOCAL lNumeric := .T.
 
    FOR i := 1 TO Len( cStr )
       cCar := cStr[ i ]
@@ -316,7 +308,7 @@ FUNCTION URLDecode( cStr )
          cRet += Chr( hb_HexToNum( SubStr( cStr, i, 2 ) ) )
          i++
 
-         OTHERWISE
+      OTHERWISE
          cRet += cCar
 
       ENDCASE
@@ -326,9 +318,9 @@ FUNCTION URLDecode( cStr )
       // ENDIF
    NEXT
 
-   // IF lNumeric
-   //    cRet := Val( cRet )
-   // ENDIF
+// IF lNumeric
+//    cRet := Val( cRet )
+// ENDIF
 
    RETURN cRet
 

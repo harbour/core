@@ -612,7 +612,7 @@ METHOD GenCodei25() CLASS TCode
    LOCAL lError   := .F.
    LOCAL bc_string // := ::text
 
-   //LOCAL new_string := ""
+// LOCAL new_string := ""
 
    IF ( Len( ::text ) % 2 ) != 0
       ::DrawError( "Invalid barcode lenght" )
@@ -623,11 +623,11 @@ METHOD GenCodei25() CLASS TCode
 
       bc_string := Upper( ::text )
 
-      // encode itemId to I25 barcode standard. //////////////////////////////////////
+      // encode itemId to I25 barcode standard.
 
       bc_string := ::MixCode( bc_string )
 
-      ///////////////////////////////////////////////////////////////////////////////////////////////
+      ///////////////////////////////
       //Adding Start and Stop Pattern
 
       ::DrawSingleI25( ::acode[ 11 ] + bc_string + ::acode[ 12 ]  )
@@ -666,14 +666,14 @@ METHOD MixCode( value ) CLASS TCode
 
       DO WHILE i < l
 
-         cFirst := ::Findcode( value[ i ] )
-         cnext  := ::Findcode( value[ i + 1 ] )
+         cFirst := ::Findcode( SubStr( value, i, 1 ) )
+         cnext  := ::Findcode( SubStr( value, i + 1, 1 ) )
 
          // Mix of the codes
          // NNNNWNNWWW
          //  N N N W W
          FOR k := 1 TO 5
-            s += cFirst[ k ] + cnext[ k ]
+            s += SubStr( cFirst, k, 1 ) + SubStr( cnext, k, 1 )
          NEXT
 
          i += 2
@@ -691,7 +691,7 @@ METHOD Findcode( uval ) CLASS TCode
    LOCAL npos
    LOCAL cretc
 
-   npos  :=  AScan( ::keys, {| x | x[ 1 ] == uval } )
+   npos  := AScan( ::keys, {| x | Left( x, 1 ) == uval } )
    cretc := ::acode[ npos ]
 
    RETURN cretc

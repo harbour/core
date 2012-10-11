@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbmisc"
+
 PROCEDURE Main()
 
    ? StrFormat( "%1 thing %2", "a", "b" )
