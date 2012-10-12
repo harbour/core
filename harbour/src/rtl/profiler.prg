@@ -454,7 +454,7 @@ METHOD gatherOPCodes() CLASS HBProfileLowLevel
    LOCAL nOP
 
    // Loop over all the harbour OP codes. Note that they start at 0.
-   FOR nOP := 0 TO ( nMax - 1 )
+   FOR nOP := 0 TO nMax - 1
       // If we're not ignoring this opcode.
       IF ! ::ignoreSymbol( cName := "OPCODE( " + PadL( nOP, 3 ) + " )" )
          // Add it to the profile.
@@ -691,7 +691,7 @@ METHOD generate( bFilter, nTop, nLeft, nBottom, nRight ) CLASS HBProfileReportTo
    ::super:generate( bFilter )
 
    // Build the browse.
-   oBrowse := TBRowseNew( nTop, nLeft, nBottom, nRight )
+   oBrowse := TBrowseNew( nTop, nLeft, nBottom, nRight )
 
    oBrowse:goTopBlock    := {|| ::nEntity := 1 }
    oBrowse:goBottomBlock := {|| ::nEntity := Len( ::aReport ) }

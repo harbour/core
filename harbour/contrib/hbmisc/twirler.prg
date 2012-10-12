@@ -19,6 +19,7 @@ CREATE CLASS Twirler
    VAR n_Smooth
    VAR c_Chars
    VAR c_Title
+
    METHOD new( nRow, nCol, cTitle, cChars, nSmooth )
    METHOD twirl()
    METHOD show()
@@ -45,12 +46,12 @@ METHOD twirl() CLASS Twirler
    LOCAL nSeconds := Seconds()
 
    IF Empty( ::n_Seconds ) .OR. nSeconds - ::n_Seconds >= ::n_Smooth .OR. nSeconds < ::n_Seconds
-      @ ::n_Row, ::n_Col SAY SubStr( ::c_Chars, ::n_Index, 1 )
+      hb_DispOutAt( ::n_Row, ::n_Col, SubStr( ::c_Chars, ::n_Index, 1 ) )
       ::n_Index++
       if ::n_Index > Len( ::c_Chars )
          ::n_Index := 1
       ENDIF
-      IF !Empty( ::n_Seconds )
+      IF ! Empty( ::n_Seconds )
          ::n_Seconds := nSeconds
       ENDIF
    ENDIF
@@ -63,12 +64,12 @@ METHOD show() CLASS Twirler
    IF ! Empty( ::n_Smooth )
       ::n_Seconds := - ::n_Smooth
    ENDIF
-   @ ::n_Row, ::n_Col - Len( ::c_Title ) SAY ::c_Title
+   hb_DispOutAt( ::n_Row, ::n_Col - Len( ::c_Title ), ::c_Title )
 
    RETURN Self
 
 METHOD hide() CLASS Twirler
 
-   @ ::n_Row, ::n_Col - Len( ::c_Title ) SAY Space( Len( ::c_Title ) + 1 )
+   hb_DispOutAt( ::n_Row, ::n_Col - Len( ::c_Title ), Space( Len( ::c_Title ) + 1 ) )
 
    RETURN Self

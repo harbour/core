@@ -1743,7 +1743,7 @@ METHOD K_Esc() CLASS XHBEditor
       nCurRow    := ::Row()
       cScreenMsg := SaveScreen( 0, 60, 0, 77 )
       nCursor := SetCursor( SC_NORMAL )
-      @ 0, 60 SAY "(Abort Edit? Y/N)"
+      hb_DispOutAt( 0, 60, "(Abort Edit? Y/N)" )
       nKey := Inkey( 0 )
       Inkey()
       RestScreen( 0, 60, 0, 77, cScreenMsg )
@@ -2354,7 +2354,7 @@ METHOD DisplayInsert( lInsert ) CLASS XHBEditor
          IF ::cInsLabel == NIL
             ::cInsLabel := SaveScreen( 0, 60, 0, 67 )
          ENDIF
-         @ 0, 60 SAY "<insert>"
+         hb_DispOutAt( 0, 60, "<insert>" )
       ELSE
          IF ::cInsLabel != NIL
             RestScreen( 0, 60, 0, 67, ::cInsLabel )

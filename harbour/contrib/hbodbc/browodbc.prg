@@ -187,18 +187,18 @@ STATIC PROCEDURE Statline( oBrw, oDataSource )
    LOCAL nTop   := oBrw:nTop - 1
    LOCAL nRight := oBrw:nRight
 
-   @ nTop, nRight - 27 SAY "Record "
+   hb_DispOutAt( nTop, nRight - 27, "Record " )
 
    IF oDataSource:LastRec() == 0
-      @ nTop, nRight - 20 SAY "<none>               "
+      hb_DispOutAt( nTop, nRight - 20, "<none>               " )
    ELSEIF oDataSource:RecNo() == oDataSource:LastRec() + 1
-      @ nTop, nRight - 40 SAY "         "
-      @ nTop, nRight - 20 SAY "                <new>"
+      hb_DispOutAt( nTop, nRight - 40, "         " )
+      hb_DispOutAt( nTop, nRight - 20, "                <new>" )
    ELSE
-      @ nTop, nRight - 20 SAY PadR( hb_ntos( oDataSource:RecNo() ) + "/" +;
-                                    hb_ntos( oDataSource:LastRec() ), 16 ) +;
-                              iif( oBrw:hitTop, "<bof>", "     " )+;
-                              iif( oBrw:hitBottom, "<eof>", "     " )
+      hb_DispOutAt( nTop, nRight - 20, PadR( hb_ntos( oDataSource:RecNo() ) + "/" +;
+                                             hb_ntos( oDataSource:LastRec() ), 16 ) +;
+                                       iif( oBrw:hitTop, "<bof>", "     " ) +;
+                                       iif( oBrw:hitBottom, "<eof>", "     " ) )
    ENDIF
 
    RETURN

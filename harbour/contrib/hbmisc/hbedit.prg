@@ -377,15 +377,15 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
 
    DO WHILE .T.
       nRow := ED_Stabilize( oEdit[ E_EDIT ] )    //displays all visible lines
-      // It don't uses incremantal stabilization for performance reasons
+      // It doesn't uses incremantal stabilization for performance reasons
 
       IF nRow != ED_Row( oEdit[ E_EDIT ] )
          nRow := ED_Row( oEdit[ E_EDIT ] )
-         @ oEdit[ E_TOP ], nState SAY StrZero( nRow, 4 )
+         hb_DispOutAt( oEdit[ E_TOP ], nState, StrZero( nRow, 4 ) )
       ENDIF
       IF nCol != ED_Col( oEdit[ E_EDIT ] )
          nCol := ED_Col( oEdit[ E_EDIT ] )
-         @ oEdit[ E_TOP ], nState + 5 SAY StrZero( nCol, 3 )
+         hb_DispOutAt( oEdit[ E_TOP ], nState + 5, StrZero( nCol, 3 ) )
       ENDIF
       SetPos( nTop + ED_WinRow( oEdit[ E_EDIT ] ), nLeft + ED_WinCol( oEdit[ E_EDIT ] ) )
 
@@ -393,9 +393,9 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
       nKey := Inkey( 0 )
 
       DO CASE
-      CASE nKey >= 32 .AND. nKey < 256
+      CASE !( hb_keyChar( nKey ) == "" )
          IF oEdit[ E_MODE ]
-            ED_PutChar( oEdit[ E_EDIT ], nKey, oEdit[ E_INSERT ] )
+            ED_PutChar( oEdit[ E_EDIT ], Asc( hb_keyChar( nKey ) ), oEdit[ E_INSERT ] )
          ENDIF
 
       CASE nKey == K_F2 .AND. lSaveAllowed
@@ -465,7 +465,7 @@ STATIC PROCEDURE EditorKeys( oEdit, nKey )
    CASE nKey == K_TAB
 //    ED_Tab( oEdit[ E_EDIT ], oEdit[ E_INSERT ] )
       FOR i := 1 TO 4
-         ED_PutChar( oEdit[ E_EDIT ], 32, oEdit[ E_INSERT ] )
+         ED_PutChar( oEdit[ E_EDIT ], Asc( " " ), oEdit[ E_INSERT ] )
       NEXT
 
    CASE nKey == K_INS
