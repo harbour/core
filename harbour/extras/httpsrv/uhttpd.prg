@@ -1820,11 +1820,12 @@ FUNCTION uhttpd_join( cSeparator, aData )
    FOR nI := 1 TO LEN( aData )
       IF nI > 1;  cRet += cSeparator
       ENDIF
-      IF     VALTYPE(aData[ nI ]) $ "CM";  cRet += aData[ nI ]
-      ELSEIF VALTYPE(aData[ nI ]) == "N";  cRet += LTRIM(STR(aData[ nI ]))
-      ELSEIF VALTYPE(aData[ nI ]) == "D";  cRet += iif(!EMPTY(aData[ nI ]), DTOC(aData[ nI ]), "")
-      ELSE
-      ENDIF
+      SWITCH VALTYPE( aData[ nI ] )
+      CASE "C"
+      CASE "M"; cRet += aData[ nI ]; EXIT
+      CASE "N"; cRet += LTRIM(STR(aData[ nI ])); EXIT
+      CASE "D"; cRet += iif(!EMPTY(aData[ nI ]), DTOC(aData[ nI ]), ""); EXIT
+      ENDSWITCH
    NEXT
    RETURN cRet
 

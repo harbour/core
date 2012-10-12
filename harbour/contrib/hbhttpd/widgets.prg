@@ -380,16 +380,17 @@ METHOD Output() CLASS UWBrowse
       cRet += '<tr>'
       FOR nI := 1 TO Len( Self:aColumns )
          xField := Self:aColumns[nI, 3]
-         IF ValType( xField ) == "C"
+         IF HB_ISSTRING( xField )
             xI := FieldGet( FieldPos( xField ) )
-         ELSEIF ValType( xField ) == "B"
+         ELSEIF HB_ISBLOCK( xField )
             xI := Eval( xField )
          ENDIF
-         IF     ValType( xI ) == "C";  xI := RTrim( xI )
-         ELSEIF ValType( xI ) == "N";  xI := Str( xI )
-         ELSEIF ValType( xI ) == "D";  xI := DToC( xI )
-         ELSE ;  xI := "VALTYPE()==" + ValType( xI )
-         ENDIF
+         SWITCH ValType( xI )
+         CASE "C"  ; xI := RTrim( xI ); EXIT
+         CASE "N"  ; xI := Str( xI ); EXIT
+         CASE "D"  ; xI := DToC( xI ); EXIT
+         OTHERWISE ; xI := "VALTYPE()==" + ValType( xI )
+         ENDSWITCH
          IF ! Self:aColumns[nI, 4]
             xI := UHtmlEncode( xI )
          ENDIF
@@ -590,11 +591,12 @@ STATIC FUNCTION uhttpd_join( cSeparator, aData )
          cRet += cSeparator
       ENDIF
 
-      IF     ValType( aData[ nI ] ) $ "CM" ; cRet += aData[ nI ]
-      ELSEIF ValType( aData[ nI ] ) == "N" ; cRet += hb_ntos( aData[ nI ] )
-      ELSEIF ValType( aData[ nI ] ) == "D" ; cRet += iif( Empty( aData[ nI ] ), "", DToC( aData[ nI ] ) )
-      ELSE
-      ENDIF
+      SWITCH ValType( aData[ nI ] )
+      CASE "C"
+      CASE "M" ; cRet += aData[ nI ]; EXIT
+      CASE "N" ; cRet += hb_ntos( aData[ nI ] ); EXIT
+      CASE "D" ; cRet += iif( Empty( aData[ nI ] ), "", DToC( aData[ nI ] ) ); EXIT
+      ENDSWITCH
    NEXT
 
    RETURN cRet

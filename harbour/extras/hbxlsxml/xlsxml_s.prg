@@ -129,17 +129,17 @@ METHOD ExcelWriterXML_Sheet:writeString( row, column, xData, style )
 
 METHOD ExcelWriterXML_Sheet:writeNumber( row, column, xData, style )
 
-   IF !( ValType( xData ) == "N" )
+   IF ! HB_ISNUMERIC( xData )
       ::writeData( "String", row, column, xData, style )
    ELSE
-      ::writeData( "Number", row , column, AllTrim( Str( xData, 18, 6 ) ), style )
+      ::writeData( "Number", row, column, AllTrim( Str( xData, 18, 6 ) ), style )
    ENDIF
 
    RETURN NIL
 
 METHOD ExcelWriterXML_Sheet:writeDateTime( row, column, xData, style )
 
-   IF ValType( xData ) == "D"
+   IF HB_ISDATE( xData )
       ::writeData( "DateTime", row, column, DToC( xData ), style )
    ELSE
       ::writeData( "String", row, column, xData, style )
@@ -201,8 +201,8 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
       FOR ic := 1 TO Len( ::colWidth )
          colIndex := hb_HKeyAt( ::colWidth, ic )
          colWidth := hb_HValueAt( ::colWidth, ic )
-         colIndex := AllTrim( Str( colIndex, 10 ) )
-         colWidth := AllTrim( Str( colWidth, 10 ) )
+         colIndex := hb_ntos( colIndex )
+         colWidth := hb_ntos( colWidth )
          xml += '      <Column ss:Index="' + colIndex + '" ss:AutoFitWidth="0" ss:Width="' + colWidth + '"/>' + hb_eol()
       NEXT
    ENDIF
@@ -221,7 +221,7 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
             rowHeight := ""
          ENDIF
 
-         xml += '      <Row ss:Index="' + AllTrim( Str( row, 10 ) ) + '" ' + rowHeight + " >" + hb_eol()
+         xml += '      <Row ss:Index="' + hb_ntos( row ) + '" ' + rowHeight + " >" + hb_eol()
          FOR ic := 1 TO Len( rowData )
             column := hb_HKeyAt( rowData, ic )
             cell   := hb_HValueAt( rowData, ic )
@@ -239,7 +239,7 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
             mergeCell := ""
             IF hb_HPos( ::mergeCells, row ) > 0
                IF hb_HPos( ::mergeCells[ row ], column ) > 0
-                  mergeCell := 'ss:MergeAcross="' + AllTrim( Str( ::mergeCells[ row ][ column ][ "width" ], 10 ) ) + '" ss:MergeDown="' + AllTrim( Str( ::mergeCells[ row ][ column ][ "height" ], 10 ) ) + '"'
+                  mergeCell := 'ss:MergeAcross="' + hb_ntos( ::mergeCells[ row ][ column ][ "width" ] ) + '" ss:MergeDown="' + hb_ntos( ::mergeCells[ row ][ column ][ "height" ] ) + '"'
                ENDIF
             ENDIF
             comment := ""
@@ -257,7 +257,7 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
             type  := cell[ "type" ]
             xData := cell[ "data" ]
 
-            xml += "         <Cell " + style + ' ss:Index="' + AllTrim( Str( column, 10 ) ) + '" ' + URL + " " + mergeCell + " " + formula + ">" + hb_eol()
+            xml += "         <Cell " + style + ' ss:Index="' + hb_ntos( column ) + '" ' + URL + " " + mergeCell + " " + formula + ">" + hb_eol()
             xml += '            <Data ss:Type="' + type + '">'
             xml += StrToHtmlEspecial( xData )
             xml += "</Data>" + hb_eol()

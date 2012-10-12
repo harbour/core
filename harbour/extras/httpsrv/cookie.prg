@@ -138,7 +138,7 @@ METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpO
    IF cExpires != NIL
       cStr += "; expires=" + cExpires
    ENDIF
-   IF ValType( lSecure ) == "L" .AND. lSecure
+   IF HB_ISLOGICAL( lSecure ) .AND. lSecure
        cStr += "; secure"
    ENDIF
 

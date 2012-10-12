@@ -422,16 +422,16 @@ FUNCTION SQLPrepare( cQuery, ... )
          IF x != NIL .AND. Empty( x )
             x := "null"
 
-         ELSEIF ValType( x ) == "N"
+         ELSEIF HB_ISNUMBER( x )
             x := hb_ntos( x )
 
-         ELSEIF ValType( x ) == "D"
+         ELSEIF HB_ISDATE( x )
             x := DToQ( x )
 
-         ELSEIF ValType( x ) == "L"
+         ELSEIF HB_ISLOGICAL( x )
             x := iif( x, "'t'", "'f'" )
 
-         ELSEIF ValType( x ) $ "CM"
+         ELSEIF HB_ISSTRING( x )
             x := SToQ( RTrim( x ) )
 
          ELSE

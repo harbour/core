@@ -91,5 +91,5 @@ FUNCTION hb_DirScan( cPath, cFileMask, cAttr )
 
    RETURN HB_DoScan( cFilePath, ;
                      iif( Empty( cFileMask ), hb_osFileMask(), cFileMask ), ;
-                     iif( ValType( cAttr ) $ "CM", cAttr, "" ), ;
+                     iif( HB_ISSTRING( cAttr ), cAttr, "" ), ;
                      hb_ps() )

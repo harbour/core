@@ -718,9 +718,9 @@ STATIC PROCEDURE ProcessRequest( oServer )
       bEval := aMount[cMount]
       BEGIN SEQUENCE WITH {| oErr | UErrorHandler( oErr, oServer ) }
          xRet := Eval( bEval, cPath )
-         IF ValType( xRet ) == "C"
+         IF HB_ISSTRING( xRet )
             UWrite( xRet )
-         ELSEIF ValType( xRet ) == "H"
+         ELSEIF HB_ISHASH( xRet )
             UWrite( UParse( xRet ) )
          ENDIF
       RECOVER
@@ -1011,7 +1011,7 @@ STATIC FUNCTION GetErrorDesc( oErr )
       NEXT
       cI += ")"
       nJ := Len( aPar )
-      DO WHILE !( ValType( xI := __dbgvmVarLGet( nI, ++nJ ) ) == "S" )
+      DO WHILE ! HB_ISSYMBOL( xI := __dbgvmVarLGet( nI, ++nJ ) )
          cI += ", " + cvt2str( xI )
       ENDDO
       xI := NIL

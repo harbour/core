@@ -113,7 +113,7 @@ METHOD ExcelWriterXML:new( fileName )
 
 METHOD ExcelWriterXML:setOverwriteFile( overwrite )
 
-   IF ! ( ValType( overwrite ) == "L" )
+   IF ! HB_ISLOGICAL( overwrite )
       ::overwriteFile := .F.
    ELSE
       ::overwriteFile := overwrite
@@ -123,7 +123,7 @@ METHOD ExcelWriterXML:setOverwriteFile( overwrite )
 
 METHOD ExcelWriterXML:showErrorSheet( show )
 
-   IF ! ( ValType( show ) == "L" )
+   IF ! HB_ISLOGICAL( show )
       ::lShowErrorSheet := .T.
    ELSE
       ::lShowErrorSheet := show
@@ -157,12 +157,12 @@ METHOD ExcelWriterXML:addStyle( id )
    ENDIF
 
    IF id == NIL
-      id := "CustomStyle" + AllTrim( Str( styleNum, 3 ) )
+      id := "CustomStyle" + hb_ntos( styleNum )
       styleNum++
    ENDIF
 
    WHILE ! ::checkStyleID( id )
-      id := "CustomStyle" + AllTrim( Str( styleNum, 3 ) )
+      id := "CustomStyle" + hb_ntos( styleNum )
       styleNum++
    ENDDO
 
@@ -178,12 +178,12 @@ METHOD ExcelWriterXML:addSheet( id )
    STATIC sheetNum := 1
 
    IF id == NIL
-      id := "Sheet" + AllTrim( Str( sheetNum, 3 ) )
+      id := "Sheet" + hb_ntos( sheetNum )
       sheetNum++
    ENDIF
 
    WHILE ! ::checkSheetID( id )
-      id := "Sheet" + AllTrim( Str( sheetNum, 3 ) )
+      id := "Sheet" + hb_ntos( sheetNum )
       sheetNum++
    ENDDO
 

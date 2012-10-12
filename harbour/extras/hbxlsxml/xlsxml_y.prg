@@ -225,7 +225,7 @@ METHOD ExcelWriterXML_Style:getStyleXML()
          fontFamily := 'x:Family="' + ::fontFamily + '"'
       ENDIF
       IF ! Empty( ::fontSize )
-         fontSize := 'ss:Size="' + AllTrim( Str( ::fontSize, 10 ) ) + '"'
+         fontSize := 'ss:Size="' + hb_ntos( ::fontSize ) + '"'
       ENDIF
    ENDIF
 
@@ -350,7 +350,7 @@ METHOD ExcelWriterXML_Style:alignRotate( rotate )
    IF Abs( rotate ) > 90
       rotate := rotate % 90
    ENDIF
-   ::rotate := AllTrim( Str( rotate, 3 ) )
+   ::rotate := hb_ntos( rotate )
    ::useAlignment := .T.
 
    RETURN NIL

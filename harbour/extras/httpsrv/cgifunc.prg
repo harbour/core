@@ -666,18 +666,18 @@ RETURN replicate( "&nbsp;", n )  //"&#32;"
 STATIC FUNCTION FT_ELAPSED(dStart, dEnd, cTimeStart, cTimeEnd)
   LOCAL nTotalSec, nCtr, nConstant, nTemp, aRetVal[4,2]
 
-  IF ! ( VALTYPE(dStart) $ 'DC' )
-     dStart := DATE()
-  ELSEIF VALTYPE(dStart) == 'C'
+  IF HB_ISSTRING( dStart )
      cTimeStart := dStart
      dStart     := DATE()
+  ELSEIF ! HB_ISDATE( dStart )
+     dStart := DATE()
   ENDIF
 
-  IF ! ( VALTYPE(dEnd) $ 'DC' )
-     dEnd := DATE()
-  ELSEIF VALTYPE(dEnd) == 'C'
+  IF HB_ISSTRING( dEnd )
      cTimeEnd := dEnd
      dEnd     := DATE()
+  ELSEIF ! HB_ISDATE( dEnd )
+     dEnd := DATE()
   ENDIF
 
   iif( ! HB_ISSTRING( cTimeStart ), cTimeStart := '00:00:00', )
