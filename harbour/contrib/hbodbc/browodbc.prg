@@ -58,6 +58,7 @@
  * and fieldbl.prg. Only minor changes were needed to adapt them to ODBC.
  */
 
+#include "box.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -86,8 +87,8 @@ FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
    nOldCursor := SetCursor( SC_NONE )
    cOldScreen := SaveScreen( nTop, nLeft, nBottom, nRight )
 
-   @ nTop, nLeft TO nBottom, nRight
-   @ nTop + 1, nLeft + 1 SAY Space( nRight - nLeft - 1 )
+   hb_DispBox( nTop, nLeft, nBottom, nRight, HB_B_SINGLE_UNI )
+   hb_DispOutAt( nTop + 1, nLeft + 1, Space( nRight - nLeft - 1 ) )
 
    oBrw := TBrowseNew( nTop + 2, nLeft + 1, nBottom - 1, nRight - 1 )
 
