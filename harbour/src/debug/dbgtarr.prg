@@ -96,12 +96,12 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
 
    IF nSize < MaxRow() - 2
       IF nRow != NIL
-         oWndSets := HBDbWindow():New( GetTopPos( nRow ), 5, getBottomPos( nRow + nSize + 1 ), MaxCol() - 5, ::arrayName + "[1.." + LTrim( Str( nSize, 6 ) ) + "]", "N/W" )
+         oWndSets := HBDbWindow():New( GetTopPos( nRow ), 5, getBottomPos( nRow + nSize + 1 ), MaxCol() - 5, ::arrayName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )
       ELSE
-         oWndSets := HBDbWindow():New( 1, 5, 2 + nSize, MaxCol() - 5, ::arrayName + "[1.." + LTrim( Str( nSize, 6 ) ) + "]", "N/W" )
+         oWndSets := HBDbWindow():New( 1, 5, 2 + nSize, MaxCol() - 5, ::arrayName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )
       ENDIF
    ELSE
-      oWndSets := HBDbWindow():New( 1, 5, MaxRow() - 2, MaxCol() - 5, ::arrayName + "[1.." + LTrim( Str( nSize, 6 ) ) + "]", "N/W" )
+      oWndSets := HBDbWindow():New( 1, 5, MaxRow() - 2, MaxCol() - 5, ::arrayName + "[1.." + hb_ntos( nSize ) + "]", "N/W" )
    ENDIF
 
    ::nCurWindow++
@@ -115,8 +115,8 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
    oBrwSets:Cargo := { 1, {} } // Actual highligthed row
    AAdd( oBrwSets:Cargo[ 2 ], aArray )
 
-   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| ::arrayName + "[" + LTrim( Str( oBrwSets:cargo[ 1 ], 6 ) ) + "]" } ) )
-   oCol:width := Len( ::arrayName + "[" + LTrim( Str( Len( aArray ), 6 ) ) + "]" )
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| ::arrayName + "[" + hb_ntos( oBrwSets:cargo[ 1 ] ) + "]" } ) )
+   oCol:width := Len( ::arrayName + "[" + hb_ntos( Len( aArray ) ) + "]" )
    oCol:DefColor := { 1, 2 }
    nColWidth := oCol:Width
 
@@ -206,7 +206,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
          ELSE
             SetPos( oWnd:nBottom, oWnd:nLeft )
             ::aWindows[ ::nCurWindow ]:lFocused := .F.
-            ::arrayname := ::arrayname + "[" + LTrim( Str( nSet, 4 ) ) + "]"
+            ::arrayname := ::arrayname + "[" + hb_ntos( nSet ) + "]"
             ::AddWindows( aArray[ nSet ], oBrwSets:RowPos + oBrwSets:nTop )
             ::arrayname := cOldName
 
@@ -223,9 +223,9 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
          IF ::lEditable
             oBrwSets:RefreshCurrent()
             IF HB_ISOBJECT( aArray[ nSet ] )
-               __DbgObject( aArray[ nSet ], cName + "[" + hb_NToS( nSet ) + "]" )
+               __DbgObject( aArray[ nSet ], cName + "[" + hb_ntos( nSet ) + "]" )
             ELSEIF HB_ISHASH( aArray[ nSet ] )
-               __DbgHashes( aArray[ nSet ], cName + "[" + hb_NToS( nSet ) + "]" )
+               __DbgHashes( aArray[ nSet ], cName + "[" + hb_ntos( nSet ) + "]" )
             ELSE
                ::doGet( oBrwsets, aArray, nSet )
             ENDIF
@@ -240,8 +240,8 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
 
    RefreshVarsS( oBrwSets )
 
-   ::aWindows[ ::nCurWindow ]:SetCaption( cName + "[" + hb_NToS( oBrwSets:cargo[ 1 ] ) + ".." + ;
-                                          hb_NToS( Len( aArray ) ) + "]" )
+   ::aWindows[ ::nCurWindow ]:SetCaption( cName + "[" + hb_ntos( oBrwSets:cargo[ 1 ] ) + ".." + ;
+                                          hb_ntos( Len( aArray ) ) + "]" )
 
    RETURN self
 

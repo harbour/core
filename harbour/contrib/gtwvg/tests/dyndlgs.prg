@@ -52,7 +52,7 @@ FUNCTION DynWinDialog( nInfo )
    nStyle := DS_SETFONT + WS_VISIBLE + WS_POPUP + WS_CAPTION + WS_SYSMENU + WS_THICKFRAME + WS_MINIMIZEBOX
 
    aDlg := Wvt_MakeDlgTemplate( 1, 4, 21, 60, { 0, 0, 0, 0 },  ;
-      "Dialog First [ " + LTrim( Str( nInfo,10,0 ) ) + " ] " + ;
+      "Dialog First [ " + LTrim( Str( nInfo, 10, 0 ) ) + " ] " + ;
       iif( nInfo % 2 == 0, "Modeless", "Modal" ), " Dialog !", nStyle )
 
    // Multi line edit control

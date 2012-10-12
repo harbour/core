@@ -39,7 +39,7 @@ proc main()
    ? "Starting threads: "
    for i := 1 to N_THREADS
       aadd( aThreads, hb_threadStart( @thFunc(), i, @lEnd ) )
-      ?? "<" + ltrim( str( i ) ) + ">"
+      ?? "<" + hb_ntos( i ) + ">"
    next
    ? "Wait 5 seconds or hit any key..."
    inkey( 5 )

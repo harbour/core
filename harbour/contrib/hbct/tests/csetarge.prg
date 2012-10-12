@@ -241,43 +241,43 @@ FUNCTION myerrhandler( oerr )
          ? "    Here it's a " + AllTrim( Str( nDigit ) ) + ", so I return a "
          DO CASE
          CASE nDigit == 0
-            Q? "NIL."
+            ?? "NIL."
             Input := NIL
 
          CASE nDigit == 1
-            Q? "String."
+            ?? "String."
             Input := ""
 
          CASE nDigit == 2
-            Q? "Integer."
+            ?? "Integer."
             Input := 0
 
          CASE nDigit == 3
-            Q? "Float."
+            ?? "Float."
             Input := 0.0
 
          CASE nDigit == 4
-            Q? "Boolean."
+            ?? "Boolean."
             Input := .F.
 
          CASE nDigit == 5
-            Q? "Date."
+            ?? "Date."
             Input := CToD( "" )
 
          CASE nDigit == 6
-            Q? "Block."
+            ?? "Block."
             Input := {|| NIL }
 
          CASE nDigit == 7
-            Q? "Array."
+            ?? "Array."
             Input := {}
 
          CASE nDigit == 8
-            Q? "Object."
+            ?? "Object."
             Input := GetNew()
 
          CASE nDigit == 9
-            Q? "<don't know, NIL would be best."
+            ?? "<don't know, NIL would be best."
             Input := NIL
 
          ENDCASE

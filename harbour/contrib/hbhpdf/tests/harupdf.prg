@@ -1467,7 +1467,7 @@ STATIC FUNCTION show_description_1( page, x, y, text )
 
    HPDF_Page_BeginText( page )
 
-   buf := "x=" + LTrim( Str( x, 10, 0 ) ) + ",y=" + LTrim( Str( y, 10, 0 ) )
+   buf := "x=" + hb_ntos( x ) + ",y=" + hb_ntos( y )
 
    HPDF_Page_MoveTextPos( page, x - HPDF_Page_TextWidth( page, buf ) - 5, y - 10 )
    HPDF_Page_ShowText( page, buf )

@@ -36,27 +36,27 @@ proc main()
    ? "Starting threads: "
    for i := 1 to N_THREADS
       aadd( aThreads, hb_threadStart( @thFunc() ) )
-      ?? "<" + ltrim( str( i ) ) + ">"
+      ?? "<" + hb_ntos( i ) + ">"
    next
 
    ? "Sending jobs... "
    nDigit := 10
    for i := 1 to N_JOBS
       hb_mutexNotify( s_mtxJobs, nDigit )
-      //?? "<" + ltrim( str( i ) ) + ">"
+      //?? "<" + hb_ntos( i ) + ">"
       nDigit++
    next
 
    ? "Sending terminate values..."
    for i := 1 to N_THREADS
       hb_mutexNotify( s_mtxJobs, NIL )
-      ?? "<" + ltrim( str( i ) ) + ">"
+      ?? "<" + hb_ntos( i ) + ">"
    next
 
    ? "Collecting results... "
    for i := 1 to N_JOBS
       hb_mutexSubscribe( s_mtxResults,, @nDigit )
-      //?? "<" + ltrim( str( i ) ) + ">"
+      //?? "<" + hb_ntos( i ) + ">"
       aadd( aResults, nDigit )
    next
 
@@ -73,10 +73,10 @@ proc main()
    nExpected := round( ( 10 + 10 + N_JOBS - 1 ) / 2 / 3 * N_JOBS, 2 )
 
    if round( nSum - nExpected, 2 ) == 0
-      ? "OK, final sum:", ltrim( str( nSum ) )
+      ? "OK, final sum:", hb_ntos( nSum )
    else
-      ? "ERROR, final sum:", ltrim( str( nSum ) ), ;
-        "expected:", ltrim( str( nExpected ) )
+      ? "ERROR, final sum:", hb_ntos( nSum ), ;
+        "expected:", hb_ntos( nExpected )
    endif
    ? "End of main"
 return

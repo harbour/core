@@ -25,7 +25,7 @@ proc main()
    ? "Starting threads: "
    for i :=1 to N_THREADS
       aadd( aThreads, hb_threadStart( @thFunc() ) )
-      ?? "<" + ltrim( str( i ) ) + ">"
+      ?? "<" + hb_ntos( i ) + ">"
    next
    ? "Waiting for threads..."
    nSum := 0

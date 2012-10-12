@@ -94,7 +94,7 @@ STATIC FUNCTION NumToTxtRaw( nValue )
    LOCAL cValue
    LOCAL tmp
 
-   cValue := LTrim( Str( nValue, 20, 0 ) )
+   cValue := hb_ntos( nValue )
    cValue := PadL( cValue, ( Int( Max( Len( cValue ) - 1, 0 ) / 3 ) + 1 ) * 3, "0" )
 
    aDigit := Array( nLen := Len( cValue ) )

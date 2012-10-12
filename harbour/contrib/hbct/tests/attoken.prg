@@ -76,9 +76,9 @@ PROCEDURE Main()
    ? "    Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 )
    ?
    for ni := 1 TO numtoken( cStr, ".!", 1 )
-      ? [    Token #] + AllTrim( Str(ni ) ) + [("] + token( cStr, ".!", ni, 1 ) + [")]
+      ? [    Token #] + AllTrim( Str( ni ) ) + [("] + token( cStr, ".!", ni, 1 ) + [")]
       ? "          starts at pos " + Str( npos := attoken(cStr, ".!", ni, 1 ),3 ) + ;
-         " and is " + iif( SubStr( cStr,npos,1 ) $ ".!", "", "not " ) + "an empty token." )
+         " and is " + iif( SubStr( cStr, npos, 1 ) $ ".!", "", "not " ) + "an empty token." )
    next ni
 
    ?

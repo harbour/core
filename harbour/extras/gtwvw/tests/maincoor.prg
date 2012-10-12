@@ -35,7 +35,7 @@ PROCEDURE fillscreen()
    DevPos( 1, 0 )
    FOR i := 1 TO MaxRow() - 1
       FOR j := 0 TO MaxCol()
-         ?? AllTrim( Str( j % 10, 0 ) )
+         ?? hb_ntos( j % 10 )
       NEXT
    NEXT
    ?? "Done. Press ESC to exit."

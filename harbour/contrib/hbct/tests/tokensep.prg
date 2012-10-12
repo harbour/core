@@ -69,7 +69,7 @@ PROCEDURE Main()
    ? [    with skip width == 1 and ".,!" as tokenizer list:]
    ?
    for ni := 1 TO numtoken( cStr, ".,!", 1 )
-      ? [    Token #] + AllTrim( Str(ni ) ) + [("] + token( cStr, ".,!", ni, 1 ) + ;
+      ? [    Token #] + AllTrim( Str( ni ) ) + [("] + token( cStr, ".,!", ni, 1 ) + ;
          [") is tokenized by "] + tokensep( .F. ) + [" and "] + tokensep( .T. ) + ["] )
    next ni
 
@@ -78,7 +78,7 @@ PROCEDURE Main()
    ? [    with skip width == 3 and ".,!" as tokenizer list:]
    ?
    for ni := 1 TO numtoken( cStr, ".,!", 3 )
-      ? [    Token #] + AllTrim( Str(ni ) ) + [("] + token( cStr, ".,!", ni, 3 ) + ;
+      ? [    Token #] + AllTrim( Str( ni ) ) + [("] + token( cStr, ".,!", ni, 3 ) + ;
          [") is tokenized by "] + tokensep( .F. ) + [" and "] + tokensep( .T. ) + ["] )
    next ni
 

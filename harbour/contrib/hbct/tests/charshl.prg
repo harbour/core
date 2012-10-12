@@ -72,9 +72,9 @@ PROCEDURE Main()
    ? [  ]
    cStr :=  charshl( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
    for ni := 1 TO Len( cStr )
-      Q? "chr(" + AllTrim( Str(Asc(SubStr(cStr, ni, 1 ) ) ) ) + ")"
+      ?? "chr(" + AllTrim( Str( Asc( SubStr( cStr, ni, 1 ) ) ) ) + ")"
       IF ni < Len( cStr )
-         Q? "+"
+         ?? "+"
       ENDIF
    next ni
    ?

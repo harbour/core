@@ -70,17 +70,17 @@ PROCEDURE Main()
    ? [  chr(170)+chr(127)+chr(85)+chr(254) ? -->]
 
    ? [  ]
-   cStr :=  charnot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) )
+   cStr := charnot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) )
    for ni := 1 TO Len( cStr )
-      Q? "chr(" + AllTrim( Str(Asc(SubStr(cStr, ni, 1 ) ) ) ) + ")"
+      ?? "chr(" + AllTrim( Str( Asc( SubStr( cStr, ni, 1 ) ) ) ) + ")"
       IF ni < Len( cStr )
-         Q? "+"
+         ?? "+"
       ENDIF
    next ni
    ?
 
    ? [  charnot(charnot("This is a test!")) == "This is a test!" ?]
-   ? [  --> "] + charnot( charnot("This is a test!" ) ) + ["]
+   ? [  --> "] + charnot( charnot( "This is a test!" ) ) + ["]
    ?
 
    ? "End test of CHARNOT()"
