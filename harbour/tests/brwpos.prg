@@ -27,7 +27,7 @@ PROCEDURE Main()
 
 FUNCTION TestBrw( nRowIni )
 
-   LOCAL nKey, oBrw := TBRowseNew( 1, 0, MaxRow() - 1, MaxCol() )
+   LOCAL nKey, oBrw := TBrowseNew( 1, 0, MaxRow() - 1, MaxCol() )
 
    oBrw:SkipBlock     := {| n | n := iif( n < 0, Max( n, 1 - s_nRecNo ), ;
       Min( s_nLastRec - s_nRecNo, n ) ), ;

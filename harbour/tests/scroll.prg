@@ -13,7 +13,7 @@ PROCEDURE Main()
 
    LOCAL ct
 
-   DevPos( MaxRow(), 0 )
+   SetPos( MaxRow(), 0 )
    DispBegin()
    ? "If you have the GT API linked in, the screen will be blanked, a text block"
    ? "will be drawn in the upper-left hand corner of the screen, and then the inside"
@@ -65,7 +65,7 @@ PROCEDURE Main()
 
 FUNCTION pause()
 
-   DevPos( MaxRow() - 2, 0 )
+   SetPos( MaxRow() - 2, 0 )
    __Accept( "pause: " )
 
    RETURN NIL

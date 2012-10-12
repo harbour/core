@@ -85,7 +85,7 @@ FUNCTION FT_BRWSWHL( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
    ENDIF
 
    /* make new browse object */
-   b := TBRowseDb( nTop, nLeft, nBottom, nRight )
+   b := TBrowseDb( nTop, nLeft, nBottom, nRight )
 
    /* default heading and column separators */
    b:headSep := hb_UTF8ToStrBox( "═╤═" )

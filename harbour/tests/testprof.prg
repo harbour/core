@@ -9,11 +9,10 @@
 PROCEDURE Main()
 
    LOCAL oProfile := HBProfile():new()
-   LOCAL oGet     := GetNew()
    LOCAL n
 
    // Turn on profiling.
-   __setProfiler( .T. )
+   __SetProfiler( .T. )
 
    // Make sure we've got something to see timewise.
    DrawScreen( "Doing nothing for a couple of seconds" )
@@ -24,25 +23,20 @@ PROCEDURE Main()
       CallMe500Times()
    NEXT
 
-   // Generate some object oriented (oriented? <g>) entries.
-   FOR n := 1 TO 500
-      oGet:row := 0
-   NEXT
-
    // Take a profile snapshot.
    oProfile:gather()
 
    // Report on calls greater than 0
    DrawScreen( "All methods/functions called one or more times" )
-   MemoEdit( HBProfileReportToString():new( oProfile:callSort() ):generate( {| o | o:nCalls > 0 } ), 1, , , , .F. )
+   MemoEdit( HBProfileReportToString():new( oProfile:callSort() ):generate( {| o | o:nCalls > 0 } ), 1,,,, .F. )
 
    // Sorted by name
    DrawScreen( "All methods/functions called one or more times, sorted by name" )
-   MemoEdit( HBProfileReportToString():new( oProfile:nameSort() ):generate( {| o | o:nCalls > 0 } ), 1, , , , .F. )
+   MemoEdit( HBProfileReportToString():new( oProfile:nameSort() ):generate( {| o | o:nCalls > 0 } ), 1,,,, .F. )
 
    // Sorted by time
    DrawScreen( "All methods/functions taking measurable time, sorted by time" )
-   MemoEdit( HBProfileReportToString():new( oProfile:timeSort() ):generate( {| o | o:nTicks > 0 } ), 1, , , , .F. )
+   MemoEdit( HBProfileReportToString():new( oProfile:timeSort() ):generate( {| o | o:nTicks > 0 } ), 1,,,, .F. )
 
    // TBrowse all calls greater than 0
    DrawScreen( "TBrowse all methods/functions called one or more times" )
@@ -56,62 +50,59 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC FUNCTION DrawScreen( cTitle )
+STATIC PROCEDURE DrawScreen( cTitle )
 
-   hb_Scroll()
+   CLS
 
    @ 0, 0 SAY PadR( cTitle, MaxCol() + 1 ) COLOR "N/W"
 
-   RETURN NIL
+   RETURN
 
-FUNCTION DoNothingForTwoSeconds()
+PROCEDURE DoNothingForTwoSeconds()
 
    Inkey( 2 )
 
-   RETURN NIL
+   RETURN
 
-FUNCTION CallMe500Times()
+PROCEDURE CallMe500Times()
 
-   RETURN NIL
+   RETURN
 
-STATIC FUNCTION Browser( oBrowse )
+STATIC PROCEDURE Browser( oBrowse )
 
    LOCAL lBrowsing := .T.
-   LOCAL nKey
 
    DO WHILE lBrowsing
 
       oBrowse:forceStable()
 
-      nKey := Inkey( 0 )
-
-      DO CASE
-
-      CASE nKey == K_ESC
+      SWITCH Inkey( 0 )
+      CASE K_ESC
          lBrowsing := .F.
-
-      CASE nKey == K_DOWN
+         EXIT
+      CASE K_DOWN
          oBrowse:down()
-
-      CASE nKey == K_UP
+         EXIT
+      CASE K_UP
          oBrowse:up()
-
-      CASE nKey == K_LEFT
-         oBrowse:Left()
-
-      CASE nKey == K_RIGHT
-         oBrowse:Right()
-
-      CASE nKey == K_PGDN
+         EXIT
+      CASE K_LEFT
+         oBrowse:left()
+         EXIT
+      CASE K_RIGHT
+         oBrowse:right()
+         EXIT
+      CASE K_PGDN
          oBrowse:pageDown()
-
-      CASE nKey == K_PGUP
+         EXIT
+      CASE K_PGUP
          oBrowse:pageUp()
+         EXIT
 
-         // And so on.... (not really necessary for this test)
+      // And so on.... (not really necessary for this test)
 
-      ENDCASE
+      ENDSWITCH
 
    ENDDO
 
-   RETURN NIL
+   RETURN

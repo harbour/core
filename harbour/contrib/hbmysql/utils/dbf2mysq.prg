@@ -149,9 +149,9 @@ PROCEDURE Main( ... )
 
       oRecord := oTable:GetBlankRow()
 
-      for i := 1 TO dbffile->( FCount() )
+      FOR i := 1 TO dbffile->( FCount() )
          oRecord:FieldPut( i, dbffile->( FieldGet(i ) ) )
-      next
+      NEXT
 
       oTable:Append( oRecord )
       IF oTable:NetErr()

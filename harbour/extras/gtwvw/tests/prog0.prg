@@ -38,8 +38,7 @@ PROCEDURE Main()
    DispBegin()
    FOR i := 1 TO MaxRow() - 1
       FOR j := 0 TO MaxCol()
-         DevPos( i, j )
-         DevOut( hb_UTF8ToStr( "▒" ) )
+         hb_DispOutAtBox( i, j, hb_UTF8ToStrBox( "▒" ) )
       NEXT
    NEXT
    DispEnd()
@@ -111,7 +110,7 @@ FUNCTION xBrowse1()
    info_ := dbStruct()
 
    SetColor( 'N/W*,N/GR*,,,N/W* ' )
-   oBrowse := TBRowseNew( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 )
+   oBrowse := TBrowseNew( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 )
 
    oBrowse:ColSep        := hb_UTF8ToStrBox( "│" )
    oBrowse:HeadSep       := hb_UTF8ToStrBox( "─" )
@@ -320,8 +319,7 @@ FUNCTION lBoxMessage( cMsg, cTitle )
    DispBegin()
    FOR i := 1 TO nNumLines
       cAline := MemoLine( cMsg, nWidth, i )
-      DevPos( nTopLine + i, nLeft + 1 )
-      DevOut( PadC( AllTrim( cAline ), nMaxWidth ) )
+      hb_DispOutAt( nTopLine + i, nLeft + 1, PadC( AllTrim( cAline ), nMaxWidth ) )
    NEXT
    DispEnd()
 
@@ -361,8 +359,7 @@ FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
    hb_DispBox( r1, c1, r2, c2, wtype )
    IF !Empty( ctitle )
       cTitle := " " + AllTrim( ctitle ) + " "
-      DevPos( r1, nCeiling( (c2 + c1 - Len(cTitle ) )/2 ) )
-      DevOut( cTitle )
+      hb_DispOutAt( r1, nCeiling( ( c2 + c1 - Len( cTitle ) ) / 2 ), cTitle )
    ENDIF
 
    SetColor( cOldColor )

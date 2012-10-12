@@ -140,7 +140,7 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
    // display the menu bar
    SetColor( cBar )
    @ nTopRow, 0
-   AEval( aBar, {| x, i | HB_SYMBOL_UNUSED( x ), DevPos( nTopRow, aBarCol[ i ] ), DevOut( aBar[ i ] ) } )
+   AEval( aBar, {| x, i | HB_SYMBOL_UNUSED( x ), hb_DispOutAt( nTopRow, aBarCol[ i ], aBar[ i ] ) } )
 
    // store inkey code for each item on menu bar to aBarKeys
    AEval( aBarKeys, {| x, i | HB_SYMBOL_UNUSED( x ), aBarKeys[ i ] := ;

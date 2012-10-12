@@ -22,10 +22,10 @@ PROCEDURE Main()
    @ 11, 2 SAY "Memory after TEST() and before collecting" + Str( Memory( HB_MEM_USED ) )
    hb_gcAll()
    @ 12, 2 SAY "Memory after collecting" + Str( Memory( HB_MEM_USED ) )
-   nH1 := hb_idleAdd( {|| DevPos( 0, 01 ), DevOut( Time() ) } )
-   nH2 := hb_idleAdd( {|| DevPos( 0, 21 ), TEST(), DevOut( Memory(HB_MEM_USED ) ) } )
-   nH3 := hb_idleAdd( {|| DevPos( 0, 41 ), iif( n == 4, n := 1, n++ ), DevOut( aSign[ n ] ) } )
-   nH4 := hb_idleAdd( {|| DevPos( 0, 61 ), DevOut( 1000 * ( Seconds() - nPrev ) ), nPrev := Seconds() } )
+   nH1 := hb_idleAdd( {||                             hb_DispOutAt( 0,  1, Time() ) } )
+   nH2 := hb_idleAdd( {|| TEST(),                     hb_DispOutAt( 0, 21, Memory( HB_MEM_USED ) ) } )
+   nH3 := hb_idleAdd( {|| iif( n == 4, n := 1, n++ ), hb_DispOutAt( 0, 41, aSign[ n ] ) } )
+   nH4 := hb_idleAdd( {||                             hb_DispOutAt( 0, 61, 1000 * ( Seconds() - nPrev ) ), nPrev := Seconds() } )
 
    ? ValType( nH1 ), nH1, ValType( nH2 ), nH2, ValType( nH3 ), nH3, ValType( nH4 ), nH4
 

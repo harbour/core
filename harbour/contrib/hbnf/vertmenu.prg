@@ -59,7 +59,7 @@ FUNCTION ft_menu2( aMenuInfo, cColors )
       cOldscreen := SaveScreen( nTop, nLeft - 1, nTop + nOptions + 1, nLeft + nMaxwidth )
 
       hb_DispBox( nTop, nLeft - 1, nTop + nOptions + 1, nLeft + nMaxwidth, hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
-      DevPos( nTop, nLeft )
+      SetPos( nTop, nLeft )
       FOR x := 1 TO Len( aMenuInfo )
          IF Len( aMenuInfo[ x ] ) > 1 .AND. aMenuInfo[ x, 2 ] != NIL
             @ Row() + 1, nLeft PROMPT PadR( aMenuInfo[ x, 1 ], nMaxwidth ) ;

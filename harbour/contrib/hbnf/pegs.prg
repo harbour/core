@@ -131,9 +131,8 @@ FUNCTION FT_PEGS()
                buffer := SaveScreen( toprow, 55, 22, 74 )
                DOUBLEBOX( toprow, 55, 22, 74 )
                @ toprow, 58 SAY "Possible Moves"
-               DevPos( toprow, 65 )
-               AEval( possible_, {| a | DevPos( Row() + 1, 65 ), ;
-                  DevOutPict( a[ 2 ], "##" ) } )
+               SetPos( toprow, 65 )
+               AEval( possible_, {| a | hb_DispOutAt( Row() + 1, 65, Translate( a[ 2 ], "##" ) ) } )
                oldscore := Set( _SET_SCOREBOARD, .F. )
                @ 23, 44 GET move2 PICTURE "##" ;
                   VALID AScan( possible_, scanblock ) > 0
@@ -163,11 +162,14 @@ FUNCTION FT_PEGS()
 STATIC FUNCTION DrawBox( nelement )
 
    SetColor( iif( t_board_[ nelement ][ 4 ], "+w/rb", "w/n" ) )
-   hb_DispBox( t_board_[ nelement ][ 1, 1 ], t_board_[ nelement ][ 1, 2 ], ;
-               t_board_[ nelement ][ 1, 3 ], t_board_[ nelement ][ 1, 4 ], ;
-               hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
-   DevPos( t_board_[ nelement ][ 1, 1 ] + 1, t_board_[ nelement ][ 1, 2 ] + 2 )
-   DevOut( hb_ntos( nelement ) )
+
+   hb_DispBox( t_board_[ nelement ][ 1, 1 ], ;
+               t_board_[ nelement ][ 1, 2 ], ;
+               t_board_[ nelement ][ 1, 3 ], ;
+               t_board_[ nelement ][ 1, 4 ], hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
+
+   hb_DispOutAt( t_board_[ nelement ][ 1, 1 ] + 1, ;
+                 t_board_[ nelement ][ 1, 2 ] + 2, hb_ntos( nelement ) )
 
    RETURN NIL
 

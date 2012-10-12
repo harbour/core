@@ -545,7 +545,7 @@ FUNCTION DEMO_Browse()
 
    info_ := dbStruct()
 
-   oBrowse := TBRowseNew( 3, 2, MaxRow() - 3, MaxCol() - 3 )
+   oBrowse := TBrowseNew( 3, 2, MaxRow() - 3, MaxCol() - 3 )
 
    oBrowse:ColSep        := '  '
    oBrowse:HeadSep       := '__'

@@ -10,7 +10,7 @@
 
 PROCEDURE Main()
 
-   LOCAL oBrowse := TBRowseNew( 5, 5, 16, 30 )
+   LOCAL oBrowse := TBrowseNew( 5, 5, 16, 30 )
    LOCAL aTest0  := { "This", "is", "a", "browse", "on", "an", "array", "test", "with", "a", "long", "data" }
    LOCAL aTest1  := { 1, 2, 3, 4, 5, 6, 7, 8, 10000, - 1000, 54, 456342 }
    LOCAL aTest2  := { Date(), Date() + 4, Date() + 56, Date() + 14, Date() + 5, Date() + 6, Date() + 7, Date() + 8, Date() + 10000, Date() - 1000, Date() - 54, Date() + 456342 }
@@ -129,7 +129,7 @@ PROCEDURE Main()
 
    end
 #endif
-   DevPos( nRow, nCol )
+   SetPos( nRow, nCol )
    SetColor( cColor )
    SetCursor( nCursor )
 

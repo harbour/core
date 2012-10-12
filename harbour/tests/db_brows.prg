@@ -691,7 +691,7 @@ FUNCTION InitList
    LI_BGBOT   := {|| dbGoBottom() }
    LI_BEOF    := {|| EOF() }
    LI_BBOF    := {|| BOF() }
-   LI_B1      := {| a | HB_SYMBOL_UNUSED( a ), DevPos( LI_Y2, LI_X1 + 2 ), DevOut( Str( RecNo(), 6 ) + "/" + Str( LI_KOLZ, 6 ) ) }
+   LI_B1      := {| a | HB_SYMBOL_UNUSED( a ), hb_DispOutAt( LI_Y2, LI_X1 + 2, Str( RecNo(), 6 ) + "/" + Str( LI_KOLZ, 6 ) ) }
    LI_FREEZE  := 0
    LI_RCOU    := {|| RecCount() }
    LI_RECNO   := {|| RecNo() }

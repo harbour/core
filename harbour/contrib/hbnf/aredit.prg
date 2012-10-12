@@ -85,7 +85,7 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
    cSaveWin := SaveScreen( nTop, nLeft, nBot, nRight )
    @ nTop, nLeft TO nBot, nRight
 
-   b := TBRowseNew( nTop + 1, nLeft + 1, nBot - 1, nRight - 1 )
+   b := TBrowseNew( nTop + 1, nLeft + 1, nBot - 1, nRight - 1 )
    b:headsep := DEF_HSEP
    b:colsep  := DEF_CSEP
    b:footsep := DEF_FSEP
