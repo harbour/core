@@ -30,6 +30,7 @@
  *
  */
 
+#include "box.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 #include "achoice.ch"
@@ -53,8 +54,8 @@
 #define STD_VARIABLE 6
 #define STD_BORDER   7
 
-#define B_DOUBLE   hb_UTF8ToStrBox( "╔═╗║╝═╚║ " )
-#define B_SINGLE                    "+-+|+-+| "
+#define FT_B_DOUBLE   hb_UTF8ToStrBox( "╔═╗║╝═╚║ " )
+#define FT_B_SINGLE                    "+-+|+-+| "
 
 #define nTotTran Len( aTrans )
 
@@ -178,7 +179,7 @@ FUNCTION FT_Adder()
 
    // Set the decimals to 2 & display a cleared adder
    _ftChangeDec( aAdder, 2 )
-   @ 4 + nTopOS, 7 + nAddSpace SAY nTotal PICTURE cTotPict
+   hb_DispOutAt( 4 + nTopOS, 7 + nAddSpace, Transform( nTotal, cTotPict ) )
 
    DO WHILE ! lDone                      // Input key & test loop
       FT_INKEY 0 TO nKey
@@ -239,22 +240,22 @@ FUNCTION FT_Adder()
             lTape := .F.
             _ftDisplayTape( aAdder, nKey )
          ENDIF
-         @ 4 + nTopOS, 8 + nAddSpace SAY cTotal
+         hb_DispOutAt( 4 + nTopOS, 8 + nAddSpace, cTotal )
          IF !Empty( cMoveTotSubTot )
             _ftSetWinColor( W_CURR, W_SCREEN )
-            @ 6 + nTopOS, 18 + nAddSpace SAY iif( cMoveTotSubTot == "T", "   <TOTAL>", ;
-               "<SUBTOTAL>" )
+            hb_DispOutAt( 6 + nTopOS, 18 + nAddSpace, iif( cMoveTotSubTot == "T", "   <TOTAL>", ;
+               "<SUBTOTAL>" ) )
             _ftSetWinColor( W_CURR, W_PROMPT )
          ENDIF
       CASE ( nKey == 83 .OR. nKey == 115 ) .AND. lTape  // <S> Scroll tape display
          IF nTotTran > 16                  // We need to scroll
             SetColor( "GR+/W" )
-            @ 21 + nTopOS, 8 + nTapeSpace SAY " " + /* LOW-ASCII "↑↓" */ Chr( 24 ) + Chr( 25 ) + "-SCROLL  <ESC>-QUIT "
+            hb_DispOutAt( 21 + nTopOS, 8 + nTapeSpace, " " + /* LOW-ASCII "↑↓" */ Chr( 24 ) + Chr( 25 ) + "-SCROLL  <ESC>-QUIT " )
             SetColor( "N/W,W+/N" )
             AChoice( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, aTrans, .T. , ;
                "_ftAdderTapeUDF", nTotTran, 20 )
             SetColor( "R+/W" )
-            @ 21 + nTopOS, 8 + nTapeSpace TO 21 + nTopOS, 30 + nTapeSpace
+            hb_DispBox( 21 + nTopOS, 8 + nTapeSpace, 21 + nTopOS, 30 + nTapeSpace, HB_B_SINGLE_UNI )
             _ftSetWinColor( W_CURR, W_PROMPT )
             CLEAR TYPEAHEAD
          ELSE
@@ -317,47 +318,47 @@ STATIC FUNCTION _ftAddScreen( aAdder )
    LOCAL nCol
 
    _ftPushWin( 2 + nTopOS, 2 + nAddSpace, 22 + nTopOS, 30 + nAddSpace, "   Adder   ", ;
-      "<F-1> for Help", , B_DOUBLE )
+      "<F-1> for Help", , FT_B_DOUBLE )
    nCol := 5 + nAddSpace
-   @  7 + nTopOS, nCol SAY hb_UTF8ToStr( "      ┌───┐ ┌───┐ ┌───┐" )
-   @  8 + nTopOS, nCol SAY hb_UTF8ToStr( "      │   │ │   │ │   │" )
-   @  9 + nTopOS, nCol SAY hb_UTF8ToStr( "      └───┘ └───┘ └───┘" )
-   @ 10 + nTopOS, nCol SAY hb_UTF8ToStr( "┌───┐ ┌───┐ ┌───┐ ┌───┐" )
-   @ 11 + nTopOS, nCol SAY hb_UTF8ToStr( "│   │ │   │ │   │ │   │" )
-   @ 12 + nTopOS, nCol SAY hb_UTF8ToStr( "└───┘ └───┘ └───┘ │   │" )
-   @ 13 + nTopOS, nCol SAY hb_UTF8ToStr( "┌───┐ ┌───┐ ┌───┐ │   │" )
-   @ 14 + nTopOS, nCol SAY hb_UTF8ToStr( "│   │ │   │ │   │ │   │" )
-   @ 15 + nTopOS, nCol SAY hb_UTF8ToStr( "└───┘ └───┘ └───┘ └───┘" )
-   @ 16 + nTopOS, nCol SAY hb_UTF8ToStr( "┌───┐ ┌───┐ ┌───┐ ┌───┐" )
-   @ 17 + nTopOS, nCol SAY hb_UTF8ToStr( "│   │ │   │ │   │ │   │" )
-   @ 18 + nTopOS, nCol SAY hb_UTF8ToStr( "└───┘ └───┘ └───┘ │   │" )
-   @ 19 + nTopOS, nCol SAY hb_UTF8ToStr( "┌─────────┐ ┌───┐ │   │" )
-   @ 20 + nTopOS, nCol SAY hb_UTF8ToStr( "│         │ │   │ │   │" )
-   @ 21 + nTopOS, nCol SAY hb_UTF8ToStr( "└─────────┘ └───┘ └───┘" )
+   hb_DispOutAt(  7 + nTopOS, nCol, hb_UTF8ToStr( "      ┌───┐ ┌───┐ ┌───┐" ) )
+   hb_DispOutAt(  8 + nTopOS, nCol, hb_UTF8ToStr( "      │   │ │   │ │   │" ) )
+   hb_DispOutAt(  9 + nTopOS, nCol, hb_UTF8ToStr( "      └───┘ └───┘ └───┘" ) )
+   hb_DispOutAt( 10 + nTopOS, nCol, hb_UTF8ToStr( "┌───┐ ┌───┐ ┌───┐ ┌───┐" ) )
+   hb_DispOutAt( 11 + nTopOS, nCol, hb_UTF8ToStr( "│   │ │   │ │   │ │   │" ) )
+   hb_DispOutAt( 12 + nTopOS, nCol, hb_UTF8ToStr( "└───┘ └───┘ └───┘ │   │" ) )
+   hb_DispOutAt( 13 + nTopOS, nCol, hb_UTF8ToStr( "┌───┐ ┌───┐ ┌───┐ │   │" ) )
+   hb_DispOutAt( 14 + nTopOS, nCol, hb_UTF8ToStr( "│   │ │   │ │   │ │   │" ) )
+   hb_DispOutAt( 15 + nTopOS, nCol, hb_UTF8ToStr( "└───┘ └───┘ └───┘ └───┘" ) )
+   hb_DispOutAt( 16 + nTopOS, nCol, hb_UTF8ToStr( "┌───┐ ┌───┐ ┌───┐ ┌───┐" ) )
+   hb_DispOutAt( 17 + nTopOS, nCol, hb_UTF8ToStr( "│   │ │   │ │   │ │   │" ) )
+   hb_DispOutAt( 18 + nTopOS, nCol, hb_UTF8ToStr( "└───┘ └───┘ └───┘ │   │" ) )
+   hb_DispOutAt( 19 + nTopOS, nCol, hb_UTF8ToStr( "┌─────────┐ ┌───┐ │   │" ) )
+   hb_DispOutAt( 20 + nTopOS, nCol, hb_UTF8ToStr( "│         │ │   │ │   │" ) )
+   hb_DispOutAt( 21 + nTopOS, nCol, hb_UTF8ToStr( "└─────────┘ └───┘ └───┘" ) )
    _ftSetWinColor( W_CURR, W_TITLE )
    nCol := 7 + nAddSpace
-   @ 11 + nTopOS, nCol SAY "7"
-   @ 14 + nTopOS, nCol SAY "4"
-   @ 17 + nTopOS, nCol SAY "1"
+   hb_DispOutAt( 11 + nTopOS, nCol, "7" )
+   hb_DispOutAt( 14 + nTopOS, nCol, "4" )
+   hb_DispOutAt( 17 + nTopOS, nCol, "1" )
    nCol := 13 + nAddSpace
-   @  8 + nTopOS, nCol SAY "/"
-   @ 11 + nTopOS, nCol SAY "8"
-   @ 14 + nTopOS, nCol SAY "5"
-   @ 17 + nTopOS, nCol SAY "2"
+   hb_DispOutAt(  8 + nTopOS, nCol, "/" )
+   hb_DispOutAt( 11 + nTopOS, nCol, "8" )
+   hb_DispOutAt( 14 + nTopOS, nCol, "5" )
+   hb_DispOutAt( 17 + nTopOS, nCol, "2" )
    nCol := 19 + nAddSpace
-   @  8 + nTopOS, nCol SAY "X"
-   @ 11 + nTopOS, nCol SAY "9"
-   @ 14 + nTopOS, nCol SAY "6"
-   @ 17 + nTopOS, nCol SAY "3"
-   @ 20 + nTopOS, nCol SAY "."
-   @ 20 + nTopOS, 10 + nAddSpace SAY "0"
+   hb_DispOutAt(  8 + nTopOS, nCol, "X" )
+   hb_DispOutAt( 11 + nTopOS, nCol, "9" )
+   hb_DispOutAt( 14 + nTopOS, nCol, "6" )
+   hb_DispOutAt( 17 + nTopOS, nCol, "3" )
+   hb_DispOutAt( 20 + nTopOS, nCol, "." )
+   hb_DispOutAt( 20 + nTopOS, 10 + nAddSpace, "0" )
    nCol := 25 + nAddSpace
-   @  8 + nTopOS, nCol SAY "-"
-   @ 13 + nTopOS, nCol SAY "+"
-   @ 18 + nTopOS, nCol SAY "="
-   @ 19 + nTopOS, nCol SAY Chr( 4 ) /* LOW-ASCII "♦" */
+   hb_DispOutAt(  8 + nTopOS, nCol, "-" )
+   hb_DispOutAt( 13 + nTopOS, nCol, "+" )
+   hb_DispOutAt( 18 + nTopOS, nCol, "=" )
+   hb_DispOutAt( 19 + nTopOS, nCol, Chr( 4 ) /* LOW-ASCII "♦" */ )
    _ftSetWinColor( W_CURR, W_PROMPT )
-   hb_DispBox( 3 + nTopOS, 6 + nAddSpace, 5 + nTopOS, 27 + nAddSpace, B_DOUBLE )
+   hb_DispBox( 3 + nTopOS, 6 + nAddSpace, 5 + nTopOS, 27 + nAddSpace, FT_B_DOUBLE )
 
    RETURN NIL
 
@@ -421,7 +422,7 @@ STATIC FUNCTION _ftDispTotal( aAdder )
 
    IF nTotal > Val( _ftCharRem( ",", cTotPict ) )
       cTotStr   := _ftStuffComma( hb_ntos( nTotal ) )
-      @ 4 + nTopOS, 8 + nAddSpace SAY "****  ERROR  **** "
+      hb_DispOutAt( 4 + nTopOS, 8 + nAddSpace, "****  ERROR  **** " )
       _ftError( "that number is to big to display! I believe the answer was " + ;
          cTotStr + "." )
       lAddError := .T.
@@ -431,7 +432,7 @@ STATIC FUNCTION _ftDispTotal( aAdder )
       nNumTotal := 0
       lAddError := .F.
    ELSE
-      @ 4 + nTopOS, 7 + nAddSpace SAY nTotal PICTURE cTotPict
+      hb_DispOutAt( 4 + nTopOS, 7 + nAddSpace, Transform( nTotal, cTotPict ) )
    ENDIF
 
    RETURN NIL
@@ -455,7 +456,7 @@ STATIC FUNCTION _ftDispSubTot( aAdder )
 
    IF nNumTotal > Val( _ftCharRem( ",", cTotPict ) )
       cStotStr  := _ftStuffComma( hb_ntos( nNumTotal ) )
-      @ 4 + nTopOS, 8 + nAddSpace SAY "****  ERROR  **** "
+      hb_DispOutAt( 4 + nTopOS, 8 + nAddSpace, "****  ERROR  **** " )
       _ftError( "that number is to big to display! I believe the answer was " + ;
          cStotStr + "." )
       lAddError := .T.
@@ -465,7 +466,7 @@ STATIC FUNCTION _ftDispSubTot( aAdder )
       nNumTotal := 0
       lAddError := .F.
    ELSE
-      @ 4 + nTopOS, 7 + nAddSpace SAY nNumTotal PICTURE cTotPict
+      hb_DispOutAt( 4 + nTopOS, 7 + nAddSpace, Transform( nNumTotal, cTotPict ) )
    ENDIF
 
    RETURN NIL
@@ -538,7 +539,7 @@ STATIC FUNCTION _ftAddTotal( aAdder )
    IF lSubRtn                            // If this was the second time they
       IF !lMultDiv
          _ftSetWinColor( W_CURR, W_SCREEN )
-         @ 6 + nTopOS, 18 + nAddSpace SAY "   <TOTAL>"
+         hb_DispOutAt( 6 + nTopOS, 18 + nAddSpace, "   <TOTAL>" )
          _ftSetWinColor( W_CURR, W_PROMPT )
          _ftUpdateTrans( aAdder, .T. , NIL )
          _ftDispTotal( aAdder )
@@ -554,7 +555,7 @@ STATIC FUNCTION _ftAddTotal( aAdder )
       IF _ftRoundIt( nTotal, nMaxDeci ) != 0 .OR. _ftRoundIt( nNumTotal, nMaxDeci ) != 0
          IF ! lMultDiv
             _ftSetWinColor( W_CURR, W_SCREEN )
-            @ 6 + nTopOS, 18 + nAddSpace SAY "<SUBTOTAL>"
+            hb_DispOutAt( 6 + nTopOS, 18 + nAddSpace, "<SUBTOTAL>" )
             _ftSetWinColor( W_CURR, W_PROMPT )
          ENDIF
          IF _ftRoundIt( nNumTotal, nMaxDeci ) != 0
@@ -581,7 +582,7 @@ STATIC FUNCTION _ftAddTotal( aAdder )
       _ftDispTotal( aAdder )
       IF lMultDiv                         // This was a multiply or divide
          _ftSetWinColor( W_CURR, W_SCREEN )
-         @ 6 + nTopOS, 18 + nAddSpace SAY "   <TOTAL>"
+         hb_DispOutAt( 6 + nTopOS, 18 + nAddSpace, "   <TOTAL>" )
          _ftSetWinColor( W_CURR, W_PROMPT )
          lSubRtn := .F.                    // pressed total so key reset everything
          IF ! lTotalOk                     // If you haven't printed total DO-IT
@@ -848,7 +849,7 @@ STATIC FUNCTION _ftUpdateTrans( aAdder, lTypeTotal, nAmount )
 STATIC FUNCTION _ftEraseTotSubTot( aAdder )
 
    _ftSetWinColor( W_CURR, W_SCREEN )
-   @ 6 + nTopOS, 18 + nAddSpace SAY "          "
+   hb_DispOutAt( 6 + nTopOS, 18 + nAddSpace, "          " )
    _ftSetWinColor( W_CURR, W_PROMPT )
 
    RETURN NIL
@@ -948,7 +949,7 @@ STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
       SetColor( "N/W" )
       hb_Scroll( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, 1 )
       IF nTotTran > 0                       // Any transactions been entered yet?
-         @ 20 + nTopOS, 7 + nTapeSpace SAY aTrans[ nTotTran ]
+         hb_DispOutAt( 20 + nTopOS, 7 + nTapeSpace, aTrans[ nTotTran ] )
       ENDIF
       _ftSetWinColor( W_CURR, W_PROMPT )
    ELSE                                  // Start displaying tape
@@ -956,15 +957,15 @@ STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
       SetColor( "N/W" )
       cTapeScr := SaveScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace )
       hb_Shadow( 4 + nTopOS, 6 + nTapeSpace, 21 + nTopOS, 33 + nTapeSpace )
-      hb_DispBox( 4 + nTopOS, 6 + nTapeSpace, 21 + nTopOS, 33 + nTapeSpace, B_SINGLE, "R+/W" )
+      hb_DispBox( 4 + nTopOS, 6 + nTapeSpace, 21 + nTopOS, 33 + nTapeSpace, FT_B_SINGLE, "R+/W" )
       SetColor( "GR+/W" )
-      @ 4 + nTopOS, 17 + nTapeSpace SAY " TAPE "
+      hb_DispOutAt( 4 + nTopOS, 17 + nTapeSpace, " TAPE " )
       SetColor( "N/W" )
       IF nTotTran > 15
          nTopTape := nTotTran - 15
       ENDIF
       FOR nDispTape := nTotTran TO nTopTape STEP -1
-         @ 20 + nDispTape - nTotTran + nTopOS, 7 + nTapeSpace SAY aTrans[ nDispTape ]
+         hb_DispOutAt( 20 + nDispTape - nTotTran + nTopOS, 7 + nTapeSpace, aTrans[ nDispTape ] )
       NEXT
    ENDIF
    _ftSetWinColor( W_CURR, W_PROMPT )
@@ -1314,9 +1315,9 @@ STATIC FUNCTION _ftError( cMessage, xDontReset )
 
    cErrorScr := SaveScreen( nTop, nLeft, nBot + 1, nRight + 2 )
    hb_Shadow( nTop, nLeft, nBot, nRight )
-   hb_DispBox( nTop, nLeft, nBot, nRight, B_SINGLE )
-   @ nTop, nLeft + Int( nWide / 2 ) - 1 SAY " ERROR "
-   @ nBot - 1, nLeft + Int( nWide - 28 ) / 2 + 3 SAY "Press any key to continue..."
+   hb_DispBox( nTop, nLeft, nBot, nRight, FT_B_SINGLE )
+   hb_DispOutAt( nTop, nLeft + Int( nWide / 2 ) - 1, " ERROR " )
+   hb_DispOutAt( nBot - 1, nLeft + Int( nWide - 28 ) / 2 + 3, "Press any key to continue..." )
    DISPMESSAGE cMessage, nTop + 1, nLeft + 3, nBot - 2, nRight - 3
    Tone( 70, 5 )
    FT_INKEY 0 TO nKey
@@ -1460,7 +1461,7 @@ STATIC FUNCTION _ftPushWin( t, l, b, r, cTitle, cBotTitle, nWinColor )
    AAdd( t_aWindow, { t, l, b, r, nWinColor, SaveScreen( t, l, b + 1, r + 2 ), lAutoWindow } )
    hb_Shadow( t, l, b, r )
    _ftSetWinColor( nWinColor, W_BORDER )
-   hb_DispBox( t, l, b, r, B_SINGLE )
+   hb_DispBox( t, l, b, r, FT_B_SINGLE )
 
    IF cTitle != NIL
       _ftSetWinColor( nWinColor, W_TITLE )
@@ -1613,8 +1614,8 @@ STATIC FUNCTION _ftWinTitle( cTheTitle, cTopOrBot )
    LOCAL nCurWin  := Len( t_aWindow )
    LOCAL nLenTitle := Len( cTheTitle )
 
-   @ t_aWindow[ nCurWin, iif( cTopOrBot == NIL, 1, 3 ) ], ( t_aWindow[ nCurWin, 4 ] - ;
-      t_aWindow[ nCurWin, 2 ] - nLenTitle ) / 2 + t_aWindow[ nCurWin, 2 ] SAY " " + cTheTitle + " "
+   hb_DispOutAt( t_aWindow[ nCurWin, iif( cTopOrBot == NIL, 1, 3 ) ], ( t_aWindow[ nCurWin, 4 ] - ;
+      t_aWindow[ nCurWin, 2 ] - nLenTitle ) / 2 + t_aWindow[ nCurWin, 2 ], " " + cTheTitle + " " )
 
    RETURN NIL
 

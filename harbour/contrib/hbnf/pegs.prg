@@ -94,7 +94,7 @@ FUNCTION FT_PEGS()
    CLS
    SetColor( "w/r" )
    SINGLEBOX( 22, 31, 24, 48 )
-   @ 23, 33 SAY "Your move:"
+   hb_DispOutAt( 23, 33, "Your move:" )
    AEval( t_board_, {| a, x | HB_SYMBOL_UNUSED( a ), drawbox( x ) } )
    DO WHILE LastKey() != K_ESC .AND. moremoves()
       move := 1
@@ -130,9 +130,9 @@ FUNCTION FT_PEGS()
                SetColor( "+w/b" )
                buffer := SaveScreen( toprow, 55, 22, 74 )
                DOUBLEBOX( toprow, 55, 22, 74 )
-               @ toprow, 58 SAY "Possible Moves"
+               hb_DispOutAt( toprow, 58, "Possible Moves" )
                SetPos( toprow, 65 )
-               AEval( possible_, {| a | hb_DispOutAt( Row() + 1, 65, Translate( a[ 2 ], "##" ) ) } )
+               AEval( possible_, {| a | hb_DispOutAt( Row() + 1, 65, Transform( a[ 2 ], "##" ) ) } )
                oldscore := Set( _SET_SCOREBOARD, .F. )
                @ 23, 44 GET move2 PICTURE "##" ;
                   VALID AScan( possible_, scanblock ) > 0
@@ -181,7 +181,7 @@ STATIC FUNCTION err_msg( msg )
 
    SetCursor( SC_NONE )
    SetColor( "+w/r" )
-   @ 23, 33 SAY msg
+   hb_DispOutAt( 23, 33, msg )
    Inkey( 2 )
    SetCursor( SC_NORMAL )
    RestScreen( 23, 33, 23, 47, buffer )
@@ -212,8 +212,8 @@ STATIC FUNCTION moremoves()
       SetColor( "+w/b" )
       buffer := SaveScreen( 18, 55, 21, 74 )
       DOUBLEBOX( 18, 55, 21, 74 )
-      @ 19, 58 SAY "No more moves!"
-      @ 20, 58 SAY hb_ntos( piecesleft ) + " pieces left"
+      hb_DispOutAt( 19, 58, "No more moves!" )
+      hb_DispOutAt( 20, 58, hb_ntos( piecesleft ) + " pieces left" )
       Inkey( 0 )
       RestScreen( 18, 55, 21, 74, buffer )
    ENDIF

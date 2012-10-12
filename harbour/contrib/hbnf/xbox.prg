@@ -26,6 +26,8 @@
  *
  */
 
+#include "box.ch"
+
 /* NOTE: In original NF, flag parameters were also accepted when
          having extra characters (f.e. "DOUBLE" instead of "D"),
          but only if _SET_EXACT was set to .F., Harbour accepts them
@@ -103,9 +105,9 @@ FUNCTION FT_XBOX( cJustType, ; // "L" -> left, otherwise centered
    // draw border
    SetColor( cBorColor )
    IF Left( cBorType, 1 ) == "D"
-      @ nTRow, nLCol TO nBRow, nRCol double
+      hb_DispBox( nTRow, nLCol, nBRow, nRCol, HB_B_DOUBLE_UNI )
    ELSE
-      @ nTRow, nLCol TO nBRow, nRCol
+      hb_DispBox( nTRow, nLCol, nBRow, nRCol, HB_B_SINGLE_UNI )
    ENDIF
 
    // write shadow
@@ -132,6 +134,6 @@ FUNCTION FT_XBOX( cJustType, ; // "L" -> left, otherwise centered
 
 STATIC FUNCTION _FTSAY( nSayRow, nSayCol, cSayStr )
 
-   @ nSayRow, nSayCol SAY cSayStr
+   hb_DispOutAt( nSayRow, nSayCol, cSayStr )
 
    RETURN NIL

@@ -174,12 +174,9 @@ FUNCTION FT_ClrSel( aClrs, lColour, cChr )
 
 STATIC FUNCTION _ftHiLite( nRow, nCol, cStr, nLen )
 
-   LOCAL cClr := SetColor()
-   LOCAL aClr := _ftChr2Arr( cClr )
+   LOCAL aClr := _ftChr2Arr( SetColor() )
 
-   SetColor( aClr[ 2 ] )                  // enhanced colour
-   @ nRow, nCol SAY PadR( cStr, nLen )
-   SetColor( cClr )
+   hb_DispOutAt( nRow, nCol, PadR( cStr, nLen ), aClr[ 2 ] ) // enhanced colour
 
    RETURN NIL
 
@@ -244,7 +241,7 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
       IF !( aOpt[ C_TYPE ] == "T" )  // no prompt for titles
          SetColor( iif( lColour, "N/W,W+/R,,,N/W", "N/W,W+/N,,,N/W" ) )
          Double( nT, nL + 1, nB, nR - 1 )
-         @ nT, nL + 2 SAY PadC( " " + aOpt[ C_NAME ] + " ", nR - nL - 3, hb_UTF8ToStr( "═" ) )
+         hb_DispOutAt( nT, nL + 2, PadC( " " + aOpt[ C_NAME ] + " ", nR - nL - 3, hb_UTF8ToStr( "═" ) ) )
          FOR nX := 1 TO Len( aPrompt )
             @ nX + nT, nL + 2 PROMPT PadR( aPrompt[ nX ], nR - nL - 3 )
          NEXT
@@ -277,7 +274,7 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
       //.... allow change to specific part of colour string
       IF !( aOpt[ C_TYPE ] == "T" )
          Single( nT, nL + 1, nB, nR - 1 )
-         @ nT, nL + 2 SAY PadC( " " + aOpt[ C_NAME ] + " ", nR - nL - 3, hb_UTF8ToStr( "─" ) )
+         hb_DispOutAt( nT, nL + 2, PadC( " " + aOpt[ C_NAME ] + " ", nR - nL - 3, hb_UTF8ToStr( "─" ) ) )
       ENDIF
       cClr := _ftClrSel( aClrPal, cClr, nChoice, aOpt )  //  selection routine
       aClrs[ nChoice ] := cClr               // put colour back in array
@@ -317,81 +314,81 @@ STATIC FUNCTION _ftShowIt( aOpt )
 
    CASE aOpt[ C_TYPE ] == "T"    // Title
       SetColor( aClr[ 1 ] )
-      @ 20, 08 SAY PadC( "This is an example of how the text shall look", 63 )
+      hb_DispOutAt( 20, 08, PadC( "This is an example of how the text shall look", 63 ) )
 
    CASE aOpt[ C_TYPE ] == "M"    // Menus
       SetColor( "W/N" )
       BkGrnd( 19, 41, 23, 66, hb_UTF8ToStrBox( "▒" ) )
       SetColor( aClr[ 1 ] )
       Single( 19, 43, 22, 60 )
-      @ 18, 41 SAY "   Report  Inquiry  Quit  "
-      @ 21, 44 SAY    " eXit           "
+      hb_DispOutAt( 18, 41, "   Report  Inquiry  Quit  " )
+      hb_DispOutAt( 21, 44,    " eXit           " )
       SetColor( aClr[ 4 ] )
-      @ 18, 43 SAY    " Report "
-      @ 20, 44 SAY    " Product List   "
+      hb_DispOutAt( 18, 43, " Report " )
+      hb_DispOutAt( 20, 44, " Product List   " )
       SetColor( aClr[ 3 ] )
-      @ 18, 52 SAY            "I"
-      @ 18, 61 SAY                     "Q"
-      @ 21, 46 SAY      "X"
+      hb_DispOutAt( 18, 52, "I" )
+      hb_DispOutAt( 18, 61, "Q" )
+      hb_DispOutAt( 21, 46, "X" )
       SetColor( aClr[ 5 ] )
-      @ 18, 44 SAY     "R"
-      @ 20, 45 SAY     "P"
+      hb_DispOutAt( 18, 44, "R" )
+      hb_DispOutAt( 20, 45, "P" )
       SetColor( aClr[ 2 ] )
-      @ 24, 41 SAY PadC( "Inventory Report", 26 )
+      hb_DispOutAt( 24, 41, PadC( "Inventory Report", 26 ) )
 
    CASE aOpt[ C_TYPE ] == "G"    // Get windows
       SetColor( aClr[ 1 ] )
       hb_Scroll( 19, 41, 24, 66 )
       Single( 19, 42, 24, 65 )
-      @ 20, 43 SAY  "    Invoice Entry    "
-      @ 21, 42 SAY hb_UTF8ToStr( "├──────────────────────┤" )
-      @ 22, 43 SAY  "   Amount            "
-      @ 23, 43 SAY  "   Date              "
+      hb_DispOutAt( 20, 43, "    Invoice Entry    " )
+      hb_DispOutAt( 21, 42, hb_UTF8ToStr( "├──────────────────────┤" ) )
+      hb_DispOutAt( 22, 43, "   Amount            " )
+      hb_DispOutAt( 23, 43, "   Date              " )
       SetColor( aClr[ 2 ] )
-      @ 22, 53 SAY             "  199.95"
+      hb_DispOutAt( 22, 53, "  199.95" )
       SetColor( aClr[ 5 ] )
-      @ 23, 53 SAY             "09/15/91"
+      hb_DispOutAt( 23, 53, "09/15/91" )
 
    CASE aOpt[ C_TYPE ] == "W"    // Alert windows
       SetColor( aClr[ 1 ] )
       hb_Scroll( 18, 40, 24, 66 )
       Single( 18, 41, 24, 65 )
-      @ 19, 42 SAY  "                       "
-      @ 20, 42 SAY  "     Test Message      "
-      @ 21, 42 SAY  "                       "
-      @ 22, 41 SAY hb_UTF8ToStr( "├───────────────────────┤" )
+      hb_DispOutAt( 19, 42, "                       " )
+      hb_DispOutAt( 20, 42, "     Test Message      " )
+      hb_DispOutAt( 21, 42, "                       " )
+      hb_DispOutAt( 22, 41, hb_UTF8ToStr( "├───────────────────────┤" ) )
       SetColor( aClr[ 2 ] )
-      @ 23, 44 SAY  " Accept "
+      hb_DispOutAt( 23, 44, " Accept " )
       SetColor( aClr[ 5 ] )
-      @ 23, 55 SAY             " Reject "
+      hb_DispOutAt( 23, 55, " Reject " )
 
    CASE aOpt[ C_TYPE ] == "B"    // browse windows
       SetColor( aClr[ 1 ] )
       hb_Scroll( 18, 37, 24, 70 )
       Single( 18, 38, 24, 69 )
-      @ 19, 39 SAY  " Cust   Name           Amount "
-      @ 20, 38 SAY hb_UTF8ToStr( "╞══════╤══════════════╤════════╡" )
-      @ 21, 39 SAY hb_UTF8ToStr(  "  312 │ Rick Shaw    │ 143.25 "  )
-      @ 23, 39 SAY hb_UTF8ToStr(  "      │              │        "  )
-      @ 24, 38 SAY hb_UTF8ToStr( "╘══════╧══════════════╧════════╛" )
+      hb_DispOutAt( 19, 39,                " Cust   Name           Amount " )
+      hb_DispOutAt( 20, 38, hb_UTF8ToStr( "╞══════╤══════════════╤════════╡" ) )
+      hb_DispOutAt( 21, 39, hb_UTF8ToStr(  "  312 │ Rick Shaw    │ 143.25 "  ) )
+      hb_DispOutAt( 23, 39, hb_UTF8ToStr(  "      │              │        "  ) )
+      hb_DispOutAt( 24, 38, hb_UTF8ToStr( "╘══════╧══════════════╧════════╛" ) )
       SetColor( aClr[ 2 ] )
-      @ 22, 39 SAY hb_UTF8ToStr(  " 1005 │ Harry Pitts  │  78.95 "  )
+      hb_DispOutAt( 22, 39, hb_UTF8ToStr(  " 1005 │ Harry Pitts  │  78.95 "  ) )
       SetColor( aClr[ 5 ] )
-      @ 23, 39 SAY  " 3162 "
-      @ 23, 46 SAY         " Barb Wire    "
-      @ 23, 61 SAY                        " 345.06 "
+      hb_DispOutAt( 23, 39,                " 3162 " )
+      hb_DispOutAt( 23, 46,                       " Barb Wire    " )
+      hb_DispOutAt( 23, 61,                                      " 345.06 " )
 
    CASE aOpt[ C_TYPE ] == "A"    // achoice type window
       SetColor( aClr[ 1 ] )
       hb_Scroll( 18, 42, 24, 64 )
       Single( 18, 43, 24, 63 )
-      @ 19, 44 SAY  " Daily Reports     "
-      @ 21, 44 SAY  " Quarterly Reports "
-      @ 23, 44 SAY  " Exit ...   <Esc>  "
+      hb_DispOutAt( 19, 44, " Daily Reports     " )
+      hb_DispOutAt( 21, 44, " Quarterly Reports " )
+      hb_DispOutAt( 23, 44, " Exit ...   <Esc>  " )
       SetColor( aClr[ 2 ] )
-      @ 20, 44 SAY  " Monthend Reports  "
+      hb_DispOutAt( 20, 44, " Monthend Reports  " )
       SetColor( aClr[ 5 ] )
-      @ 22, 44 SAY  " Yearend Reports   "
+      hb_DispOutAt( 22, 44, " Yearend Reports   " )
 
    ENDCASE
    DispEnd()
@@ -453,11 +450,11 @@ STATIC FUNCTION _ftClrSel( aClrPal, cClr, nElem, aOpt )
 
       //.... highlight the colour palette element
       SetColor( "W+/N" )
-      @ nR, nC * 3 + 26 SAY ""
-      @ nR, nC * 3 + 29 SAY ""
+      hb_DispOutAt( nR, nC * 3 + 26, "" ) /* LOW-ASCII "►" */
+      hb_DispOutAt( nR, nC * 3 + 29, "" ) /* LOW-ASCII "◄" */
       nKey := Inkey( 0 )
-      @ nR, nC * 3 + 26 SAY " "
-      @ nR, nC * 3 + 29 SAY " "
+      hb_DispOutAt( nR, nC * 3 + 26, " " )
+      hb_DispOutAt( nR, nC * 3 + 29, " " )
 
       //.... check key movement and modify co-ordinates
       DO CASE
@@ -510,7 +507,7 @@ STATIC FUNCTION _ftDeskChar( aOpt )
    //.... draw the choices on the screen
    SetColor( cClr )
    FOR n := 1 TO Len( aChar )
-      @ n + 18, 29 SAY Replicate( hb_UTF8ToStr( aChar[ n ] ), 10 )
+      hb_DispOutAt( n + 18, 29, Replicate( hb_UTF8ToStr( aChar[ n ] ), 10 ) )
    NEXT
 
    n := nElem + 18
@@ -523,11 +520,11 @@ STATIC FUNCTION _ftDeskChar( aOpt )
       _ftShowIt( aOpt )
 
       SetColor( "W+/N" )
-      @ n, 28 SAY ""
-      @ n, 39 SAY ""
+      hb_DispOutAt( n, 28, "" ) /* LOW-ASCII "►" */
+      hb_DispOutAt( n, 39, "" ) /* LOW-ASCII "◄" */
       nKey := Inkey( 0 )
-      @ n, 28 SAY " "
-      @ n, 39 SAY " "
+      hb_DispOutAt( n, 28, " " )
+      hb_DispOutAt( n, 39, " " )
 
       //.... check key movement and modify co-ordinates
       DO CASE
@@ -604,7 +601,7 @@ STATIC FUNCTION _ftShowPal( aClrPal, cChr )
    FOR nF := 1 TO Len( aClrPal )
       FOR nB := 1 TO  Len( aClrPal[ nF ] )
          SetColor( aClrPal[ nF, nB ] )
-         @ nF, nB * 3 + 27 SAY cChr
+         hb_DispOutAt( nF, nB * 3 + 27, cChr )
       NEXT
    NEXT
    DispEnd()

@@ -23,9 +23,10 @@
  *
  */
 
+/* NOTE: In its original version, this function changed cursor position,
+         in Harbour it doesn't. */
 FUNCTION FT_BLINK( cMsg, nRow, nCol )
 
-   // Declare color restore var.
    LOCAL cSavColor
 
    // Return if no msg.
@@ -33,16 +34,12 @@ FUNCTION FT_BLINK( cMsg, nRow, nCol )
       RETURN NIL
    ENDIF
 
-   // Set default row and col to current.
-   nRow := iif( nRow == NIL, Row(), nRow )
-   nCol := iif( nCol == NIL, Col(), nCol )
-
-   cSavColor := SetColor()                // Save colors to restore on exit.
+   cSavColor := SetColor()
 
    // IF blink colors not already set, add blink to current foreground color.
-   SetColor( iif( ( "*" $ Left( cSavColor, 4 ) ), cSavColor, "*" + cSavColor ) )
-
-   @ nRow, nCol SAY cMsg                  // Say the dreaded blinking msg.
-   SetColor( cSavColor )                  // It's a wrap, restore colors & exit.
+   hb_DispOutAt( iif( nRow == NIL, Row(), nRow ), ;
+                 iif( nCol == NIL, Col(), nCol ), ;
+                 cMsg, ;
+                 iif( "*" $ Left( cSavColor, 4 ), cSavColor, "*" + cSavColor ) )
 
    RETURN NIL

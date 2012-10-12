@@ -20,6 +20,7 @@
  *
  */
 
+#include "box.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -43,7 +44,7 @@ FUNCTION FT_CALENDAR( nRow, nCol, cColor, lShadow, lShowHelp )
    cSaveCursor := SetCursor( SC_NONE )     // save current and turn off cursor
 
    IF lShadow
-      @ nRow - 1, nCol - 1 TO nRow + 2, nCol + 15
+      hb_DispBox( nRow - 1, nCol - 1, nRow + 2, nCol + 15, HB_B_SINGLE_UNI )
       hb_Shadow( nRow - 1, nCol - 1, nRow + 2, nCol + 15 )
    ENDIF
 
@@ -103,15 +104,18 @@ FUNCTION FT_CALENDAR( nRow, nCol, cColor, lShadow, lShowHelp )
       aRetVal[ 6 ] :=   CDOW( Date() + nJump )
       aRetVal[ 7 ] :=   JDOY( aRetVal[ 4 ], aRetVal[ 2 ], aRetVal[ 3 ] )
 
-      @ nRow, nCol SAY SubStr( aRetval[ 6 ], 1, 3 ) + " " + ;
+      hb_DispOutAt( nRow, nCol, ;
+         SubStr( aRetval[ 6 ], 1, 3 ) + " " + ;
          Str( aRetVal[ 3 ], 2, 0 ) + " " + ;
          SubStr( aRetVal[ 5 ], 1, 3 ) + " " + ;
-         Str( aRetVal[ 4 ], 4, 0 )
-      @ nRow + 1, nCol SAY Str( aRetVal[ 7 ], 3, 0 )
+         Str( aRetVal[ 4 ], 4, 0 ) )
+
+      hb_DispOutAt( nRow + 1, nCol, ;
+         Str( aRetVal[ 7 ], 3, 0 ) )
 
       nKey := 0
       DO WHILE nKey == 0
-         @ nRow + 1, nCol + 3 SAY "    " + Time()
+         hb_DispOutAt( nRow + 1, nCol + 3, "    " + Time() )
          nKey := Inkey( 1 )
       ENDDO
       aRetVal[ 8 ] := Time()

@@ -139,7 +139,7 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
 
    // display the menu bar
    SetColor( cBar )
-   @ nTopRow, 0
+   hb_Scroll( nTopRow, 0, nTopRow )
    AEval( aBar, {| x, i | HB_SYMBOL_UNUSED( x ), hb_DispOutAt( nTopRow, aBarCol[ i ], aBar[ i ] ) } )
 
    // store inkey code for each item on menu bar to aBarKeys
@@ -158,7 +158,7 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
    DO WHILE lLooping
       RESTORE SCREEN FROM sMainScrn
       SetColor( cCurrent )
-      @ nTopRow, aBarCol[ t_nHPos ] SAY aBar[ t_nHPos ]
+      hb_DispOutAt( nTopRow, aBarCol[ t_nHPos ], aBar[ t_nHPos ] )
       IF lShadow == NIL .OR. lShadow
          hb_Shadow( nTopRow + 1, aBoxLoc[ t_nHPos ], Len( t_aChoices[ t_nHPos, 1 ] ) + nTopRow + 2, aBarWidth[ t_nHPos ] + 3 + aBoxLoc[ t_nHPos ] )
       ENDIF
@@ -233,17 +233,15 @@ STATIC FUNCTION _ftLocat( i, aBarCol, aBarWidth, aBoxLoc, t_nMaxCol )
 
 STATIC FUNCTION _ftBailOut( cBorder, cBox )
 
-   LOCAL cOldColor, sOldScreen, nKeyPress, nOldCursor
+   LOCAL sOldScreen, nKeyPress, nOldCursor
 
    nOldCursor := SetCursor( SC_NONE )
    sOldScreen := SaveScreen( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55 )
    hb_Shadow( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55 )
    hb_DispBox( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55, hb_UTF8ToStrBox( "╔═╗║╝═╚║ " ), cBorder )
-   cOldColor := SetColor( cBox )
-   @ t_nMaxRow / 2,  26 SAY "Press ESCape To Confirm Exit"
-   @ t_nMaxRow / 2 + 1, 27 SAY "Or Any Other Key To Resume"
+   hb_DispOutAt( t_nMaxRow / 2, 26, "Press ESCape To Confirm Exit", cBox )
+   hb_DispOutAt( t_nMaxRow / 2 + 1, 27, "Or Any Other Key To Resume", cBox )
    nKeyPress := Inkey( 0 )
-   SetColor( cOldColor )
    RestScreen( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55, sOldScreen )
    SetCursor( nOldCursor )
 

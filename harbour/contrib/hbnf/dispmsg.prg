@@ -132,7 +132,7 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
 
    /* display messages */
    FOR i := 1 TO Len( aInfo[ 1 ] )
-      @ nBoxTop + i, aLeft[ i ] SAY aInfo[ 1, i ] COLOR aInfo[ 2, i ]
+      hb_DispOutAt( nBoxTop + i, aLeft[ i ], aInfo[ 1, i ], aInfo[ 2, i ] )
    NEXT
 
    /* highlight characters */

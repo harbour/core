@@ -28,7 +28,7 @@ FUNCTION FT_PENDING( cMsg, nRow, nCol, nWait, cColor )
    THREAD STATIC t_nWait1 := 5
    THREAD STATIC t_cColor1 := "W+/R,X"
 
-   LOCAL  nThis_Time, nTiny := 0.1, cSavColor
+   LOCAL nThis_Time, nTiny := 0.1
 
    //
    // cMsg        Message to display
@@ -63,10 +63,6 @@ FUNCTION FT_PENDING( cMsg, nRow, nCol, nWait, cColor )
 
    hb_Scroll( t_nRow1, 0, t_nRow1, 80 )          // clear the display line
 
-   cSavColor := SetColor( t_cColor1 )            // save current and set display color
-
-   @ t_nRow1, t_nCol1 SAY cMsg                   // display message
-
-   SetColor( cSavColor )                         // restore colors.
+   hb_DispOutAt( t_nRow1, t_nCol1, cMsg, t_cColor1 ) // display message
 
    RETURN NIL

@@ -39,6 +39,7 @@
 
 */
 
+#include "box.ch"
 #include "inkey.ch"
 
 // Default heading, column, footer separators
@@ -83,7 +84,7 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
       }
 
    cSaveWin := SaveScreen( nTop, nLeft, nBot, nRight )
-   @ nTop, nLeft TO nBot, nRight
+   hb_DispBox( nTop, nLeft, nBot, nRight, HB_B_SINGLE_UNI )
 
    b := TBrowseNew( nTop + 1, nLeft + 1, nBot - 1, nRight - 1 )
    b:headsep := DEF_HSEP

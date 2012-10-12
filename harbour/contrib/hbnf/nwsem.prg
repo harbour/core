@@ -87,13 +87,6 @@ FUNCTION ft_nwSemEx( nHandle, nValue, nOpenCnt )
 
    ft_int86( INT21, aRegs )
 
-#ifdef FT_TEST
-
-   @ 5, 1 SAY highbyte( aregs[ CX ] )
-   @ 6, 1 SAY lowbyte( aregs[ CX ] )
-
-#endif
-
    nValue   := aRegs[ CX ]
    nOpenCnt := lowbyte( aRegs[ DX ] )
    nRet     := lowbyte( aRegs[ AX ] )
