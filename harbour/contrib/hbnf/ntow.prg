@@ -75,8 +75,4 @@ STATIC FUNCTION grp_to_words( nGrp, sQual )
 
 STATIC FUNCTION sol10( nNumber )
 
-   LOCAL sTemp
-
-   sTemp := LTrim( Str( Int( nNumber ), 0 ) )
-
-   RETURN Len( sTemp ) - 1
+   RETURN Len( hb_ntos( Int( nNumber ) ) ) - 1

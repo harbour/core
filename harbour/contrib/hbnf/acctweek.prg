@@ -48,8 +48,7 @@ FUNCTION FT_ACCTWEEK( dGivenDate, nWeekNum )
       dGivenDate := aRetVal[ 2 ] + ( nWeekNum - 1 ) * 7
    ENDIF
 
-   aRetVal[ 1 ] += PadL( LTrim( Str( Int( ( dGivenDate - ;
-      aRetVal[ 2 ] ) / 7 ) + 1, 2 ) ), 2, "0" )
+   aRetVal[ 1 ] += StrZero( Int( ( dGivenDate - aRetVal[ 2 ] ) / 7 ) + 1, 2 )
    dGivenDate += ( 6 - FT_DAYTOBOW( dGivenDate ) )  // end of week
    aRetVal[ 2 ] := dGivenDate - 6
    aRetVal[ 3 ] := dGivenDate

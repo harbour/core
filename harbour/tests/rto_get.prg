@@ -57,7 +57,8 @@
 #include "inkey.ch"
 
 #ifndef __HARBOUR__
-   #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
+   #define hb_eol()     ( Chr( 13 ) + Chr( 10 ) )
+   #define hb_ntos( n ) LTrim( Str( n ) )
 #endif
 
 #translate TEST_LINE( <x> ) => TEST_CALL( o, #<x>, {|| <x> } )
@@ -1484,7 +1485,7 @@ FUNCTION CallStack()
    LOCAL cString := ""
 
    DO WHILE !Empty( ProcName( tmp ) )
-      cString += ProcName( tmp ) + " (" + LTrim( Str( ProcLine( tmp ) ) ) + ") "
+      cString += ProcName( tmp ) + " (" + hb_ntos( ProcLine( tmp ) ) + ") "
       tmp++
    ENDDO
 
@@ -1499,7 +1500,7 @@ PROCEDURE LogMe( nPCount, data, desc )
       IF Empty( ProcName( nLevel ) )
          EXIT
       ENDIF
-      cStack += ProcName( nLevel ) + " (" + LTrim( Str( ProcLine( nLevel ) ) ) + ") "
+      cStack += ProcName( nLevel ) + " (" + hb_ntos( ProcLine( nLevel ) ) + ") "
    NEXT
 
    IF desc == NIL
@@ -1530,7 +1531,7 @@ PROCEDURE LogGETVars( o, desc, xResult )
       IF Empty( ProcName( nLevel ) )
          EXIT
       ENDIF
-      cStack += ProcName( nLevel ) + " (" + LTrim( Str( ProcLine( nLevel ) ) ) + ") "
+      cStack += ProcName( nLevel ) + " (" + hb_ntos( ProcLine( nLevel ) ) + ") "
    NEXT
 
    IF desc == NIL
@@ -1608,7 +1609,7 @@ FUNCTION XToStr( xValue )
 
       RETURN '"' + xValue + '"'
 
-   CASE cType == "N" ; RETURN LTrim( Str( xValue ) )
+   CASE cType == "N" ; RETURN hb_ntos( xValue )
    CASE cType == "D" ; RETURN 'HB_SToD("' + DToS( xValue ) + '")'
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
@@ -1647,7 +1648,7 @@ FUNCTION XToStrE( xValue )
 
       RETURN xValue
 
-   CASE cType == "N" ; RETURN LTrim( Str( xValue ) )
+   CASE cType == "N" ; RETURN hb_ntos( xValue )
    CASE cType == "D" ; RETURN DToS( xValue )
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
@@ -1676,7 +1677,7 @@ FUNCTION XToStrX( xValue )
 
       RETURN xValue
 
-   CASE cType == "N" ; RETURN LTrim( Str( xValue ) )
+   CASE cType == "N" ; RETURN hb_ntos( xValue )
    CASE cType == "D" ; RETURN DToS( xValue )
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
@@ -1720,7 +1721,7 @@ STATIC FUNCTION ErrorMessage( oError )
          cMessage += oError:subsystem + " "
       ENDIF
       IF ValType( oError:subCode ) == "N"
-         cMessage += LTrim( Str( oError:subCode ) ) + " "
+         cMessage += hb_ntos( oError:subCode ) + " "
       ENDIF
       IF ValType( oError:description ) == "C"
          cMessage += oError:description + " "
@@ -1733,7 +1734,7 @@ STATIC FUNCTION ErrorMessage( oError )
       ENDIF
 
       IF ValType( oError:Args ) == "A"
-         cMessage += "A:" + LTrim( Str( Len( oError:Args ) ) ) + ":"
+         cMessage += "A:" + hb_ntos( Len( oError:Args ) ) + ":"
          FOR tmp := 1 TO Len( oError:Args )
             cMessage += ValType( oError:Args[ tmp ] ) + ":" + XToStrE( oError:Args[ tmp ] )
             IF tmp < Len( oError:Args )

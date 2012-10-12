@@ -227,7 +227,7 @@ METHOD Draw13( cText )  CLASS TCode
          FOR ii := 1 TO Len( ::text )
 
             // Calculate check digit
-            IF Mod( ( (Len(::text ) + 1 ) - ii ), 2 ) == 0
+            IF Mod( ( Len( ::text ) + 1 ) - ii, 2 ) == 0
                nchkSum := nchkSum + Int( Val( SubStr(::text, ii, 1 ) ) )
             ELSE
                nchkSum := nchkSum + Int( Val( SubStr( ::text, ii, 1 ) ) ) * 3
@@ -250,7 +250,7 @@ METHOD Draw13( cText )  CLASS TCode
 
             IF ii > 1 .AND. ii < 8
 
-               ::DrawSingleBar( iif( SubStr(xParity, ii - 1, 1 ) == "E",;
+               ::DrawSingleBar( iif( SubStr( xParity, ii - 1, 1 ) == "E",;
                   ::LeftHand_Even[ jj ], ;
                   ::LeftHand_Odd[ jj ] ) )
             ELSEIF ii > 1 .AND. ii >= 8
@@ -280,7 +280,7 @@ METHOD Draw13( cText )  CLASS TCode
          ::lastX := ::positionX
          ::lastY := ::maxHeight
 
-         ctext += AllTrim( Str( nChk, 1 ) )
+         ctext += Str( nChk, 1 ) // TOFIX? nChk can be 10 at this point, is this intended?
 
          // Draw Text
          IF ::lDrawValue
@@ -298,13 +298,13 @@ METHOD DrawText13()  CLASS TCode
 
    IF ::textfont != 0
 
-      ::Say( 2, ::maxHeight - ( ::GetFontHeight() / 2 ), SubStr( ::text,1,1 ) , ::FillColor )
-      ::Say( ( 10 + (3 * ::res + 48 * ::res )/2 ) - ( ::GetFontWidth() * (6/2 ) ), ::maxHeight + 1, SubStr( ::text,2,6 ), ::FillColor )
-      ::Say( 10 + 46 * ::res + ( 3 * ::res + 46 * ::res )/2 - ::GetFontWidth() * ( 6/2 ), ::maxHeight + 1, SubStr( ::text,8,6 ), ::FillColor )
+      ::Say( 2, ::maxHeight - ( ::GetFontHeight() / 2 ), SubStr( ::text, 1, 1 ) , ::FillColor )
+      ::Say( ( 10 + ( 3 * ::res + 48 * ::res ) / 2 ) - ( ::GetFontWidth() * ( 6 / 2 ) ), ::maxHeight + 1, SubStr( ::text, 2, 6 ), ::FillColor )
+      ::Say( 10 + 46 * ::res + ( 3 * ::res + 46 * ::res ) / 2 - ::GetFontWidth() * ( 6 / 2 ), ::maxHeight + 1, SubStr( ::text, 8, 6 ), ::FillColor )
 
    ENDIF
 
-   ::lastY :=  ::maxHeight + ::GetFontHeight()
+   ::lastY := ::maxHeight + ::GetFontHeight()
 
    RETURN NIL
 
@@ -326,7 +326,7 @@ METHOD Draw8( cText ) CLASS TCode
 
    IF !lerror
 
-      ::positionX := iif( ::textfont == 0 , 0, 10 )
+      ::positionX := iif( ::textfont == 0, 0, 10 )
 
       //xParity := ::Parity[ 7 ]
 
@@ -340,7 +340,7 @@ METHOD Draw8( cText ) CLASS TCode
 
       FOR ii := 1 TO Len( ::text )
 
-         IF Mod( ( (Len(::text ) + 1 ) - ii ), 2 ) == 0
+         IF Mod( ( Len( ::text ) + 1 ) - ii, 2 ) == 0
             nchkSum := nchkSum +  Int( Val( SubStr( ::text, ii, 1 ) ) )
          ELSE
             nchkSum := nchkSum +  Int( Val( SubStr( ::text, ii, 1 ) ) ) * 3
@@ -383,7 +383,7 @@ METHOD Draw8( cText ) CLASS TCode
       ::lastX := ::positionX
       ::lastY := ::maxHeight
 
-      ctext += AllTrim( Str( nChk, 1 ) )
+      ctext += Str( nChk, 1 )
 
       // Draw text
       IF ::lDrawValue

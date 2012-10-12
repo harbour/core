@@ -191,8 +191,8 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
 
    displayRightToLeft := iif( ::ldisplayRightToLeft, 'ss:RightToLeft="1"', "" )
 
-   xml := '<Worksheet ss:Name="' + ::id + '" ' + displayRightToLeft + ">" + hb_osNewLine()
-   xml += "   <Table>" + hb_osNewLine()
+   xml := '<Worksheet ss:Name="' + ::id + '" ' + displayRightToLeft + ">" + hb_eol()
+   xml += "   <Table>" + hb_eol()
 
    FWrite( handle, xml )
    xml := ""
@@ -203,7 +203,7 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
          colWidth := hb_HValueAt( ::colWidth, ic )
          colIndex := AllTrim( Str( colIndex, 10 ) )
          colWidth := AllTrim( Str( colWidth, 10 ) )
-         xml += '      <Column ss:Index="' + colIndex + '" ss:AutoFitWidth="0" ss:Width="' + colWidth + '"/>' + hb_osNewLine()
+         xml += '      <Column ss:Index="' + colIndex + '" ss:AutoFitWidth="0" ss:Width="' + colWidth + '"/>' + hb_eol()
       NEXT
    ENDIF
 
@@ -221,7 +221,7 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
             rowHeight := ""
          ENDIF
 
-         xml += '      <Row ss:Index="' + AllTrim( Str( row, 10 ) ) + '" ' + rowHeight + " >" + hb_osNewLine()
+         xml += '      <Row ss:Index="' + AllTrim( Str( row, 10 ) ) + '" ' + rowHeight + " >" + hb_eol()
          FOR ic := 1 TO Len( rowData )
             column := hb_HKeyAt( rowData, ic )
             cell   := hb_HValueAt( rowData, ic )
@@ -245,34 +245,34 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
             comment := ""
             IF hb_HPos( ::comments, row ) > 0
                IF hb_HPos( ::comments[ row ], column ) > 0
-                  comment := '               <Comment ss:Author="' + ::comments[ row ][ column ][ "author" ] + '">' + hb_osNewLine()
-                  comment += '               <ss:Data xmlns="http://www.w3.org/TR/REC-html40">' + hb_osNewLine()
-                  comment += '               <B><Font html:Face="Tahoma" x:CharSet="1" html:Size="8" html:Color="#000000">' + ::comments[ row ][ column ][ "author" ] + ":</Font></B>" + hb_osNewLine()
-                  comment += '               <Font html:Face="Tahoma" x:CharSet="1" html:Size="8" html:Color="#000000">' + ::comments[ row ][ column ][ "comment" ] + "</Font>" + hb_osNewLine()
-                  comment += "               </ss:Data>" + hb_osNewLine()
-                  comment += "               </Comment>" + hb_osNewLine()
+                  comment := '               <Comment ss:Author="' + ::comments[ row ][ column ][ "author" ] + '">' + hb_eol()
+                  comment += '               <ss:Data xmlns="http://www.w3.org/TR/REC-html40">' + hb_eol()
+                  comment += '               <B><Font html:Face="Tahoma" x:CharSet="1" html:Size="8" html:Color="#000000">' + ::comments[ row ][ column ][ "author" ] + ":</Font></B>" + hb_eol()
+                  comment += '               <Font html:Face="Tahoma" x:CharSet="1" html:Size="8" html:Color="#000000">' + ::comments[ row ][ column ][ "comment" ] + "</Font>" + hb_eol()
+                  comment += "               </ss:Data>" + hb_eol()
+                  comment += "               </Comment>" + hb_eol()
                ENDIF
             ENDIF
             comment := ""
             type  := cell[ "type" ]
             xData := cell[ "data" ]
 
-            xml += "         <Cell " + style + ' ss:Index="' + AllTrim( Str( column, 10 ) ) + '" ' + URL + " " + mergeCell + " " + formula + ">" + hb_osNewLine()
+            xml += "         <Cell " + style + ' ss:Index="' + AllTrim( Str( column, 10 ) ) + '" ' + URL + " " + mergeCell + " " + formula + ">" + hb_eol()
             xml += '            <Data ss:Type="' + type + '">'
             xml += StrToHtmlEspecial( xData )
-            xml += "</Data>" + hb_osNewLine()
+            xml += "</Data>" + hb_eol()
             xml += comment
-            xml += "         </Cell>" + hb_osNewLine()
+            xml += "         </Cell>" + hb_eol()
 
          NEXT
-         xml += "      </Row>" + hb_osNewLine()
+         xml += "      </Row>" + hb_eol()
 
          FWrite( handle, xml )
          xml := ""
       NEXT
    ENDIF
-   xml += "   </Table>" + hb_osNewLine()
-   xml += "</Worksheet>" + hb_osNewLine()
+   xml += "   </Table>" + hb_eol()
+   xml += "</Worksheet>" + hb_eol()
 
    FWrite( handle, xml )
    xml := ""

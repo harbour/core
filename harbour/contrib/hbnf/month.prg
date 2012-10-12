@@ -50,7 +50,7 @@ FUNCTION FT_MONTH( dGivenDate, nMonthNum )
    nTemp := Month( dGivenDate ) - Month( aRetVal[ 2 ] )
    nTemp += iif( nTemp >= 0, 1, 13 )
 
-   aRetVal[ 1 ] += PadL( LTrim( Str( nTemp, 2 ) ), 2, "0" )
+   aRetVal[ 1 ] += StrZero( nTemp, 2 )
    aRetVal[ 2 ] := FT_MADD( aRetVal[ 2 ], nTemp - 1 )
    aRetVal[ 3 ] := FT_MADD( aRetVal[ 2 ], 1 ) - 1
 

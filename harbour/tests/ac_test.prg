@@ -20,6 +20,10 @@
 #include "achoice.ch"
 #include "inkey.ch"
 
+#ifndef __HARBOUR__
+#define hb_ntos( n ) LTrim( Str( n ) )
+#endif
+
 //+--------------------------------------------------------------------
 //+
 //+    Procedure test()
@@ -211,7 +215,7 @@ FUNCTION cUserFunction( nMode, nCurElement, nRowPos )
    DO CASE
       // After all pending keys are processed, display message
    CASE nMode == AC_IDLE
-      @  0,  0 SAY PadR( LTrim( Str( nCurElement ) ), 10 )
+      @  0,  0 SAY PadR( hb_ntos( nCurElement ), 10 )
       nRetVal := AC_CONT                   // Continue ACHOICE()
    CASE nMode == AC_HITTOP                 // Attempt to go past Top
       @  0,  0 SAY "Hit Top   "

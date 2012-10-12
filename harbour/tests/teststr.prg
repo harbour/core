@@ -69,7 +69,7 @@ PROCEDURE test()
 
    FOR nI := 1 TO 20
       ?
-      ?? LTrim( Str( 6 + nI ) ) + ": "
+      ?? Str( 6 + nI ) + ": "
       ?? 10 ** nI + ( 1.02 * 1.02 )
    NEXT
    ?

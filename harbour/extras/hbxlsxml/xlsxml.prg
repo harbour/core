@@ -260,32 +260,32 @@ METHOD ExcelWriterXML:writeData( target )
       format:bgColor( "red" )
    ENDIF
 
-   IF ! Empty( ::cDocTitle   ); docTitle   := "<Title>"   + StrToHtmlEspecial( ::cDocTitle   ) + "</Title>"   + hb_osNewLine(); ENDIF
-   IF ! Empty( ::cDocSubject ); docSubject := "<Subject>" + StrToHtmlEspecial( ::cDocSubject ) + "</Subject>" + hb_osNewLine(); ENDIF
-   IF ! Empty( ::cDocAuthor  ); docAuthor  := "<Author>"  + StrToHtmlEspecial( ::cDocAuthor  ) + "</Author>"  + hb_osNewLine(); ENDIF
-   IF ! Empty( ::cDocCreated ); docCreated := "<Created>" + StrToHtmlEspecial( ::cDocCreated ) + "</Created>" + hb_osNewLine(); ENDIF
-   IF ! Empty( ::cDocManager ); docManager := "<Manager>" + StrToHtmlEspecial( ::cDocManager ) + "</Manager>" + hb_osNewLine(); ENDIF
-   IF ! Empty( ::cDocCompany ); docCompany := "<Company>" + StrToHtmlEspecial( ::cDocCompany ) + "</Company>" + hb_osNewLine(); ENDIF
+   IF ! Empty( ::cDocTitle   ); docTitle   := "<Title>"   + StrToHtmlEspecial( ::cDocTitle   ) + "</Title>"   + hb_eol(); ENDIF
+   IF ! Empty( ::cDocSubject ); docSubject := "<Subject>" + StrToHtmlEspecial( ::cDocSubject ) + "</Subject>" + hb_eol(); ENDIF
+   IF ! Empty( ::cDocAuthor  ); docAuthor  := "<Author>"  + StrToHtmlEspecial( ::cDocAuthor  ) + "</Author>"  + hb_eol(); ENDIF
+   IF ! Empty( ::cDocCreated ); docCreated := "<Created>" + StrToHtmlEspecial( ::cDocCreated ) + "</Created>" + hb_eol(); ENDIF
+   IF ! Empty( ::cDocManager ); docManager := "<Manager>" + StrToHtmlEspecial( ::cDocManager ) + "</Manager>" + hb_eol(); ENDIF
+   IF ! Empty( ::cDocCompany ); docCompany := "<Company>" + StrToHtmlEspecial( ::cDocCompany ) + "</Company>" + hb_eol(); ENDIF
 
-   xml := '<?xml version="1.0"?>' + hb_osNewLine()
-   xml += '<?mso-application progid="Excel.Sheet"?>' + hb_osNewLine()
-   xml += "<Workbook" + hb_osNewLine()
-   xml += 'xmlns="urn:schemas-microsoft-com:office:spreadsheet"' + hb_osNewLine()
-   xml += 'xmlns:o="urn:schemas-microsoft-com:office:office"' + hb_osNewLine()
-   xml += 'xmlns:x="urn:schemas-microsoft-com:office:excel"' + hb_osNewLine()
-   xml += 'xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"' + hb_osNewLine()
-   xml += 'xmlns:html="http://www.w3.org/TR/REC-html40">' + hb_osNewLine()
-   xml += '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">' + hb_osNewLine()
+   xml := '<?xml version="1.0"?>' + hb_eol()
+   xml += '<?mso-application progid="Excel.Sheet"?>' + hb_eol()
+   xml += "<Workbook" + hb_eol()
+   xml += 'xmlns="urn:schemas-microsoft-com:office:spreadsheet"' + hb_eol()
+   xml += 'xmlns:o="urn:schemas-microsoft-com:office:office"' + hb_eol()
+   xml += 'xmlns:x="urn:schemas-microsoft-com:office:excel"' + hb_eol()
+   xml += 'xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"' + hb_eol()
+   xml += 'xmlns:html="http://www.w3.org/TR/REC-html40">' + hb_eol()
+   xml += '<DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">' + hb_eol()
    IF ! Empty( ::cDocTitle   ); xml += "   " + docTitle  ; ENDIF
    IF ! Empty( ::cDocSubject ); xml += "   " + docSubject; ENDIF
    IF ! Empty( ::cDocAuthor  ); xml += "   " + docAuthor ; ENDIF
    IF ! Empty( ::cDocCreated ); xml += "   " + docCreated; ENDIF
    IF ! Empty( ::cDocManager ); xml += "   " + docManager; ENDIF
    IF ! Empty( ::cDocCompany ); xml += "   " + docCompany; ENDIF
-   xml += "   <Version>" + ::cDocVersion + "</Version>" + hb_osNewLine()
-   xml += "</DocumentProperties>" + hb_osNewLine()
-   xml += '<ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel" />' + hb_osNewLine()
-   xml += "<Styles>" + hb_osNewLine()
+   xml += "   <Version>" + ::cDocVersion + "</Version>" + hb_eol()
+   xml += "</DocumentProperties>" + hb_eol()
+   xml += '<ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel" />' + hb_eol()
+   xml += "<Styles>" + hb_eol()
 
    FWrite( handle, xml )
    xml := ""
@@ -293,7 +293,7 @@ METHOD ExcelWriterXML:writeData( target )
    FOR EACH style IN ::styles
       xml += style:getStyleXML()
    NEXT
-   xml += "</Styles>" + hb_osNewLine()
+   xml += "</Styles>" + hb_eol()
 
    FWrite( handle, xml )
    xml := ""

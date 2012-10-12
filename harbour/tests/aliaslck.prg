@@ -103,13 +103,13 @@ proc main()
 return
 
 proc setLock( n )
-   ? "locking record: " + ltrim( str( n ) ) + " ->", dbRLock( n )
+   ? "locking record: " + hb_ntos( n ) + " ->", dbRLock( n )
 return
 
 proc dspLock()
    local n
    ? alias(), "active locks:"
    for each n in dbRLockList()
-      ?? "", ltrim( str( n ) )
+      ?? "", hb_ntos( n )
    next
 return

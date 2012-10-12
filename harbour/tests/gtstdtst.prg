@@ -4,6 +4,10 @@
 
 /* gtstd test */
 
+#ifndef __HARBOUR__
+#define hb_ntos( n ) LTrim( Str( n ) )
+#endif
+
 PROCEDURE Main()
 
    LOCAL n
@@ -14,13 +18,13 @@ PROCEDURE Main()
    ? "Press a key to continue: "
    ?? Inkey( 0 )
 
-   ? "This is row " + AllTrim( Str( Row() ) )
+   ? "This is row " + hb_ntos( Row() )
 
-   @ 7, 30 SAY "@ 7,30"
-   @ 7, 10 SAY "@ 7,10"
-   @ 7, 60 SAY "@ 7,60"
+   @ 7, 30 SAY "@ 7, 30"
+   @ 7, 10 SAY "@ 7, 10"
+   @ 7, 60 SAY "@ 7, 60"
    @ 7, 75 SAY "9876543210"
-   @ 6, 10 SAY "@ 6,10.."
+   @ 6, 10 SAY "@ 6, 10.."
    PosNow()
 
    ?
@@ -38,7 +42,7 @@ PROCEDURE Main()
    PosNow()
 
    ?
-   ? "Press key to test for n := 100 to 120 ; tone(n, 1) ; next"
+   ? "Press key to test FOR n := 100 to 120; Tone( n, 1 ); NEXT"
    Inkey( 0 )
    FOR n := 100 TO 120
       Tone( n, 1 )
@@ -50,7 +54,7 @@ PROCEDURE Main()
 
    FOR n := 1 TO 25
       ? "This line is on row "
-      ?? AllTrim( Str( Row() ) )
+      ?? hb_ntos( Row() )
       Inkey( 0 )
    NEXT
 
@@ -58,6 +62,6 @@ PROCEDURE Main()
 
 FUNCTION PosNow()
 
-   ?? "[" + AllTrim( Str( Row() ) ) + "," + AllTrim( Str( Col() ) ) + "]"
+   ?? "[" + hb_ntos( Row() ) + "," + hb_ntos( Col() ) + "]"
 
    RETURN NIL

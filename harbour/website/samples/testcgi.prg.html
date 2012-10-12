@@ -282,8 +282,8 @@ body { color: #000000; background-color: #FFFFFF; }
    </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
 
    ::cBody := ::cBody + ;
-      </SPAN><SPAN class=any1-string>"&lt;P ALIGN='"</SPAN><SPAN class=any1-space> + cAlign + </SPAN><SPAN class=any1-string>"'&gt;"</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + ;
-      cPara + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + ;
+      </SPAN><SPAN class=any1-string>"&lt;P ALIGN='"</SPAN><SPAN class=any1-space> + cAlign + </SPAN><SPAN class=any1-string>"'&gt;"</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-variable>hb_eol</SPAN><SPAN class=any1-symbol>() + ;
+      cPara + </SPAN><SPAN class=any1-variable>hb_eol</SPAN><SPAN class=any1-symbol>() + ;
       </SPAN><SPAN class=any1-string>"&lt;/P&gt;"
 
 </SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )
@@ -297,11 +297,11 @@ body { color: #000000; background-color: #FFFFFF; }
 </SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-comment>// Is this a meta file or hand generated script?
 </SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>empty</SPAN><SPAN class=any1-symbol>( ::cHTMLFile )
       ::cContent :=                                                        ;
-         </SPAN><SPAN class=any1-string>"&lt;HTML&gt;&lt;HEAD&gt;"</SPAN><SPAN class=any1-space>                                        + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + ;
-         </SPAN><SPAN class=any1-string>"&lt;TITLE&gt;"</SPAN><SPAN class=any1-space> + ::cTitle + </SPAN><SPAN class=any1-string>"&lt;/TITLE&gt;"</SPAN><SPAN class=any1-space>                     + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + ;
+         </SPAN><SPAN class=any1-string>"&lt;HTML&gt;&lt;HEAD&gt;"</SPAN><SPAN class=any1-space>                                        + </SPAN><SPAN class=any1-variable>hb_eol</SPAN><SPAN class=any1-symbol>() + ;
+         </SPAN><SPAN class=any1-string>"&lt;TITLE&gt;"</SPAN><SPAN class=any1-space> + ::cTitle + </SPAN><SPAN class=any1-string>"&lt;/TITLE&gt;"</SPAN><SPAN class=any1-space>                     + </SPAN><SPAN class=any1-variable>hb_eol</SPAN><SPAN class=any1-symbol>() + ;
          </SPAN><SPAN class=any1-string>"&lt;BODY link='"</SPAN><SPAN class=any1-space> + ::cLinkColor + </SPAN><SPAN class=any1-string>"' "</SPAN><SPAN class=any1-space> +                            ;
-         </SPAN><SPAN class=any1-string>"vlink='"</SPAN><SPAN class=any1-space> + ::cvLinkColor + </SPAN><SPAN class=any1-string>"'&gt;"</SPAN><SPAN class=any1-space> +                    + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + ;
-         ::cBody                                               + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + ;
+         </SPAN><SPAN class=any1-string>"vlink='"</SPAN><SPAN class=any1-space> + ::cvLinkColor + </SPAN><SPAN class=any1-string>"'&gt;"</SPAN><SPAN class=any1-space> +                    + </SPAN><SPAN class=any1-variable>hb_eol</SPAN><SPAN class=any1-symbol>() + ;
+         ::cBody                                               + </SPAN><SPAN class=any1-variable>hb_eol</SPAN><SPAN class=any1-symbol>() + ;
          </SPAN><SPAN class=any1-string>"&lt;/BODY&gt;&lt;/HTML&gt;"
 </SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ELSE
 </SPAN><SPAN class=any1-space>      ::cContent := </SPAN><SPAN class=any1-string>""
@@ -361,8 +361,8 @@ body { color: #000000; background-color: #FFFFFF; }
    </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
 
    </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>(                                                                 ;
-      </SPAN><SPAN class=any1-string>"HTTP/1.0 200 OK"</SPAN><SPAN class=any1-space>                                        + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + ;
-      </SPAN><SPAN class=any1-string>"CONTENT-TYPE: TEXT/HTML"</SPAN><SPAN class=any1-space>                      + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + </SPAN><SPAN class=any1-variable>HB_OSNewLine</SPAN><SPAN class=any1-symbol>() + ;
+      </SPAN><SPAN class=any1-string>"HTTP/1.0 200 OK"</SPAN><SPAN class=any1-space>                                        + </SPAN><SPAN class=any1-variable>hb_eol</SPAN><SPAN class=any1-symbol>() + ;
+      </SPAN><SPAN class=any1-string>"CONTENT-TYPE: TEXT/HTML"</SPAN><SPAN class=any1-space>                      + </SPAN><SPAN class=any1-variable>hb_eol</SPAN><SPAN class=any1-symbol>() + </SPAN><SPAN class=any1-variable>hb_eol</SPAN><SPAN class=any1-symbol>() + ;
       ::cContent )
 
    </SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( Self )

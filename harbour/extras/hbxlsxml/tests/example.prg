@@ -225,7 +225,7 @@ PROCEDURE Main()
          Date() - 50 - i, ;
          "5.102", ;
          StrZero( i, 5 ), ;
-         "NOME DO CLIENTE TESTE " + AllTrim( Str( i, 5, 0 ) ), ;
+         "NOME DO CLIENTE TESTE " + hb_ntos( i ) ), ;
          "PR", ;
          i * 100, ;
          i * 100 * 0.90, ;

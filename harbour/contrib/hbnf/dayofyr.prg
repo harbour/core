@@ -56,7 +56,7 @@ FUNCTION FT_DAYOFYR( dGivenDate, nDayNum, lIsAcct )
       ENDIF
       aRetVal[ 1 ] := aRetVal[ 2 ] + nDayNum - 1
    ELSE
-      aRetVal[ 1 ] += PadL( LTrim( Str( dGivenDate - aRetVal[ 2 ] + 1, 3 ) ), 3, "0" )
+      aRetVal[ 1 ] += StrZero( dGivenDate - aRetVal[ 2 ] + 1, 3 )
    ENDIF
 
    RETURN aRetVal

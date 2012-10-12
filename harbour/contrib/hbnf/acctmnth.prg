@@ -80,6 +80,6 @@ FUNCTION FT_ACCTMONTH( dGivenDate, nMonthNum )
       aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
    ENDIF
 
-   aRetVal[ 1 ] := Str( nYTemp, 4 ) + PadL( LTrim( Str( nMTemp, 2 ) ), 2, "0" )
+   aRetVal[ 1 ] := Str( nYTemp, 4 ) + StrZero( nMTemp, 2 )
 
    RETURN aRetVal

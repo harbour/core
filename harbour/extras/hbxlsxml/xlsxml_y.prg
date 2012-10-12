@@ -230,7 +230,7 @@ METHOD ExcelWriterXML_Style:getStyleXML()
    ENDIF
 
    IF ::useBorder
-      borders := "      <Borders>" + hb_osNewLine()
+      borders := "      <Borders>" + hb_eol()
       positions := { ;
          "Top"           => ::borderTop,    ;
          "Bottom"        => ::borderBottom, ;
@@ -254,9 +254,9 @@ METHOD ExcelWriterXML_Style:getStyleXML()
          bWeight := iif( hb_HPos( pData, "Weight" ) > 0, ;
             'ss:Weight="' + Str( pData[ "Weight" ], 1 ) + '"', ;
             "" )
-         borders += '<Border ss:Position="' + position + '" ' + bLinestyle + " " + bColor + " " + bWeight + "/>" + hb_osNewLine()
+         borders += '<Border ss:Position="' + position + '" ' + bLinestyle + " " + bColor + " " + bWeight + "/>" + hb_eol()
       NEXT
-      borders += "</Borders>" + hb_osNewLine()
+      borders += "</Borders>" + hb_eol()
    ENDIF
 
    IF ::useInterior
@@ -269,31 +269,31 @@ METHOD ExcelWriterXML_Style:getStyleXML()
       IF ! Empty( ::interiorPatternColor )
          interiorPatternColor := 'ss:PatternColor="' + ::interiorPatternColor + '"'
       ENDIF
-      interior := "      <Interior " + interiorColor + " " + interiorPattern + " " + interiorPatternColor + "/>" + hb_osNewLine()
+      interior := "      <Interior " + interiorColor + " " + interiorPattern + " " + interiorPatternColor + "/>" + hb_eol()
    ENDIF
 
    IF ! Empty( ::numberFormat )
-      numberFormat := '      <NumberFormat ss:Format="' + ::numberFormat + '"/>' + hb_osNewLine()
+      numberFormat := '      <NumberFormat ss:Format="' + ::numberFormat + '"/>' + hb_eol()
    ELSE
-      numberFormat := "      <NumberFormat/>" + hb_osNewLine()
+      numberFormat := "      <NumberFormat/>" + hb_eol()
    ENDIF
 
-   xml := '   <Style ss:ID="' + ::id + '" ' + name + ">" + hb_osNewLine()
+   xml := '   <Style ss:ID="' + ::id + '" ' + name + ">" + hb_eol()
    IF ::useAlignment
-      xml += "      <Alignment " + valign + " " + halign + " " + rotate + " " + shrinktofit + " " + wraptext + " " + verticaltext + "/>" + hb_osNewLine()
+      xml += "      <Alignment " + valign + " " + halign + " " + rotate + " " + shrinktofit + " " + wraptext + " " + verticaltext + "/>" + hb_eol()
    ENDIF
    IF ::useBorder
       xml += borders
    ENDIF
    IF ::useFont
-      xml += "      <Font " + fontSize + " " + fontColor + " " + bold + " " + italic + " " + strikethrough + " " + underline + " " + shadow + " " + outline + " " + fontName + " " + fontFamily + "/>" + hb_osNewLine()
+      xml += "      <Font " + fontSize + " " + fontColor + " " + bold + " " + italic + " " + strikethrough + " " + underline + " " + shadow + " " + outline + " " + fontName + " " + fontFamily + "/>" + hb_eol()
    ENDIF
    IF ::useInterior
       xml += interior
    ENDIF
    xml += numberFormat
-   xml += "      <Protection/>" + hb_osNewLine()
-   xml += "   </Style>" + hb_osNewLine()
+   xml += "      <Protection/>" + hb_eol()
+   xml += "   </Style>" + hb_eol()
 
    RETURN xml
 
