@@ -41,7 +41,7 @@ PROCEDURE Main()
    oBrowse:AddColumn( TBColumnNew( "Forth",  {|| aTest2[ n ] } ) )
    oBrowse:AddColumn( TBColumnNew( "Fifth",  {|| aTest3[ n ] } ) )
    oBrowse:GetColumn( 1 ):Footing := "Number"
-   oBrowse:GetColumn( 2 ):Footing := "Strins"
+   oBrowse:GetColumn( 2 ):Footing := "String"
 
    oBrowse:GetColumn( 2 ):Picture := "@!"
 
@@ -60,7 +60,7 @@ PROCEDURE Main()
    cColor := SetColor( "W+/B" )
    nRow := Row()
    nCol := Col()
-   @ 4, 4, 17, 31 BOX hb_UTF8ToStrBox( "┌─┐│┘─└│ " )
+   hb_DispBox( 4, 4, 17, 31, hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
 #ifdef HB_COMPAT_C53
    oBrowse:SetKey( 0, {| ob, nkey | Defproc( ob, nKey ) } )
    WHILE .T.
@@ -123,10 +123,7 @@ PROCEDURE Main()
          oBrowse:panEnd()
 
       CASE nKey == K_TAB
-         nTmpRow := Row()
-         nTmpCol := Col()
-         @ 0, 0 SAY Time()
-         DevPos( nTmpRow, nTmpCol )
+         hb_DispOutAt( 0, 0, Time() )
 
       ENDCASE
 
@@ -142,13 +139,8 @@ PROCEDURE Main()
 
 FUNCTION defproc( ob, nkey )
 
-   LOCAL nTmpRow, nTmpCol
-
    IF nKey == K_TAB
-      nTmpRow := Row()
-      nTmpCol := Col()
-      @ 0, 0 SAY Time()
-      DevPos( nTmpRow, nTmpCol )
+      hb_DispOutAt( 0, 0, Time() )
       ob:Refreshall()
    ENDIF
 

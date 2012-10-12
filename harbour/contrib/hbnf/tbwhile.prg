@@ -149,9 +149,9 @@ FUNCTION FT_BRWSWHL( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
 
    /* make a window shadow */
    SetColor( cColorShad )
-   @ nTop + 1, nLeft + 1 CLEAR TO nBottom + 1, nRight + 1
+   hb_Scroll( nTop + 1, nLeft + 1, nBottom + 1, nRight + 1 )
    SetColor( cColorBack )
-   @ nTop, nLeft CLEAR TO nBottom, nRight
+   hb_Scroll( nTop, nLeft, nBottom, nRight )
    SetColor( cColorSave )
 
    nCursSave := SetCursor( SC_NONE )

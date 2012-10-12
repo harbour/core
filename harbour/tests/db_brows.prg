@@ -189,7 +189,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
    ENDIF
    oldcolors := SetColor()
    SetColor( LI_CLR )
-   @ LI_Y1, LI_X1, LI_Y2, LI_X2 BOX hb_UTF8ToStrBox( "┌─┐│┘─└│ " )
+   hb_DispBox( LI_Y1, LI_X1, LI_Y2, LI_X2, hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
    IF title != NIL
       @ LI_Y1, ( LI_X2 - LI_X1 - 1 - Len( title ) ) / 2 + LI_X1 SAY " " + title + " "
    ENDIF
@@ -246,7 +246,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
          fbar2 := "Ax_KeyCount()"
       ENDCASE
       IF ! Empty( fbar1 )
-         @ LI_Y1 + 2, LI_X2, LI_Y2 - 2, LI_X2 BOX str_barbox
+         hb_DispBox( LI_Y1 + 2, LI_X2, LI_Y2 - 2, LI_X2, str_barbox )
          @ LI_Y1 + 1, LI_X2 SAY SubStr( str_bar, 2, 1 )
          @ LI_Y2 - 1, LI_X2 SAY SubStr( str_bar, 1, 1 )
          @ LI_Y1 + 2 + Int( iif( LI_PRFLT, LI_TEKZP, &fbar1 ) * ( LI_Y2 - LI_Y1 - 4 ) / iif( LI_PRFLT, LI_KOLZ, &fbar2 ) ), LI_X2 SAY Right( str_bar, 1 )
@@ -421,7 +421,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
             ENDIF
             IF ( LastKey() == K_ESC .OR. ! Updated() ) .AND. Eval( LI_BEOF, mslist )
                SetColor( LI_CLR )
-               @ LI_NSTR + LI_Y1, LI_X1 + 1 CLEAR TO LI_NSTR + LI_Y1, LI_X2 - 1
+               hb_Scroll( LI_NSTR + LI_Y1, LI_X1 + 1, LI_NSTR + LI_Y1, LI_X2 - 1 )
                LI_NSTR--
                Eval( LI_BSKIP, mslist, -1 )
             ELSE
@@ -508,7 +508,7 @@ FUNCTION VIVNAMES( mslist )
       IF LI_NMCLR != NIL
          oldc := SetColor( LI_NMCLR )
       ENDIF
-      @ LI_Y1, x - 1 CLEAR TO LI_Y1, LI_X2 - 1
+      hb_Scroll( LI_Y1, x - 1, LI_Y1, LI_X2 - 1 )
       fif := iif( LI_FREEZE > 0, 1, LI_NLEFT )
       // DO MSFNEXT WITH mslist, fif
       DO WHILE i <= LI_NCOLUMNS .AND. fif <= Len( LI_NAMES )
@@ -545,7 +545,7 @@ FUNCTION WNDVIVOD( mslist )
    ENDIF
    firstrec := Eval( LI_RECNO, mslist )
    SetColor( LI_CLR )
-   @ LI_Y1 + 1, LI_X1 + 1 CLEAR TO LI_Y2 - 1, LI_X2 - 1
+   hb_Scroll( LI_Y1 + 1, LI_X1 + 1, LI_Y2 - 1, LI_X2 - 1 )
    DO WHILE .T.
       VIVSTR( mslist, nstr + LI_Y1, 0 )
       nstr++

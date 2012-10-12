@@ -62,14 +62,10 @@
 #define C_CHAR   4
 
 #translate Single( <t>, <l>, <b>, <r> ) =>;
-      @ <t>, <l>, <b>, <r> BOX hb_UTF8ToStrBox( "┌─┐│┘─└│" )
-
+      hb_DispBox( <t>, <l>, <b>, <r>, hb_UTF8ToStrBox( "┌─┐│┘─└│" ) )
 
 #translate Double( <t>, <l>, <b>, <r> ) =>;
-      @ <t>, <l>, <b>, <r> BOX hb_UTF8ToStrBox( "╔═╗║╝═╚║" )
-
-#translate ClearS( <t>, <l>, <b>, <r> ) =>;
-      @ <t>, <l> CLEAR TO <b>, <r>
+      hb_DispBox( <t>, <l>, <b>, <r>, hb_UTF8ToStrBox( "╔═╗║╝═╚║" ) )
 
 #translate BkGrnd( <t>, <l>, <b>, <r>, <c> ) =>;
       hb_DispBox( <t>, <l>, <b>, <r>, Replicate( <c>, 9 ) )
@@ -145,7 +141,7 @@ FUNCTION FT_ClrSel( aClrs, lColour, cChr )
 
    //.... set up the window for aChoice
    SetColor( iif( lColour, "N/W,W+/R", "N/W,W+/N" ) )
-   ClearS( nT, nL,   nB, nR )
+   hb_Scroll( nT, nL, nB, nR )
 
    //.... prompt for colour setting and modify
    DO WHILE nChoice != 0
@@ -237,7 +233,7 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
 
       //.... set up the window for prompt
       SetColor( "N/W" )
-      ClearS( nT, nL, nB, nR )
+      hb_Scroll( nT, nL, nB, nR )
    ENDIF
 
    DO WHILE .T.
@@ -345,7 +341,7 @@ STATIC FUNCTION _ftShowIt( aOpt )
 
    CASE aOpt[ C_TYPE ] == "G"    // Get windows
       SetColor( aClr[ 1 ] )
-      ClearS( 19, 41, 24, 66 )
+      hb_Scroll( 19, 41, 24, 66 )
       Single( 19, 42, 24, 65 )
       @ 20, 43 SAY  "    Invoice Entry    "
       @ 21, 42 SAY hb_UTF8ToStr( "├──────────────────────┤" )
@@ -358,7 +354,7 @@ STATIC FUNCTION _ftShowIt( aOpt )
 
    CASE aOpt[ C_TYPE ] == "W"    // Alert windows
       SetColor( aClr[ 1 ] )
-      ClearS( 18, 40, 24, 66 )
+      hb_Scroll( 18, 40, 24, 66 )
       Single( 18, 41, 24, 65 )
       @ 19, 42 SAY  "                       "
       @ 20, 42 SAY  "     Test Message      "
@@ -371,7 +367,7 @@ STATIC FUNCTION _ftShowIt( aOpt )
 
    CASE aOpt[ C_TYPE ] == "B"    // browse windows
       SetColor( aClr[ 1 ] )
-      ClearS( 18, 37, 24, 70 )
+      hb_Scroll( 18, 37, 24, 70 )
       Single( 18, 38, 24, 69 )
       @ 19, 39 SAY  " Cust   Name           Amount "
       @ 20, 38 SAY hb_UTF8ToStr( "╞══════╤══════════════╤════════╡" )
@@ -387,7 +383,7 @@ STATIC FUNCTION _ftShowIt( aOpt )
 
    CASE aOpt[ C_TYPE ] == "A"    // achoice type window
       SetColor( aClr[ 1 ] )
-      ClearS( 18, 42, 24, 64 )
+      hb_Scroll( 18, 42, 24, 64 )
       Single( 18, 43, 24, 63 )
       @ 19, 44 SAY  " Daily Reports     "
       @ 21, 44 SAY  " Quarterly Reports "
@@ -544,7 +540,7 @@ STATIC FUNCTION _ftDeskChar( aOpt )
    ENDDO
 
    SetColor( "W+/N" )
-   ClearS( 18, 28, 23, 39 )
+   hb_Scroll( 18, 28, 23, 39 )
 
    RETURN aOpt
 

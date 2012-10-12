@@ -61,7 +61,7 @@ FUNCTION FT_PENDING( cMsg, nRow, nCol, nWait, cColor )
       t_nLast_Time := nThis_Time                 // set time counter for next message.
    ENDIF
 
-   @ t_nRow1, 0 CLEAR TO t_nRow1, 80             // clear the display line
+   hb_Scroll( t_nRow1, 0, t_nRow1, 80 )          // clear the display line
 
    cSavColor := SetColor( t_cColor1 )            // save current and set display color
 

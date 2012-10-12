@@ -357,7 +357,7 @@ STATIC FUNCTION _ftAddScreen( aAdder )
    @ 18 + nTopOS, nCol SAY "="
    @ 19 + nTopOS, nCol SAY Chr( 4 ) /* LOW-ASCII "♦" */
    _ftSetWinColor( W_CURR, W_PROMPT )
-   @ 3 + nTopOS, 6 + nAddSpace, 5 + nTopOS, 27 + nAddSpace BOX B_DOUBLE
+   hb_DispBox( 3 + nTopOS, 6 + nAddSpace, 5 + nTopOS, 27 + nAddSpace, B_DOUBLE )
 
    RETURN NIL
 
@@ -957,7 +957,7 @@ STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
       cTapeScr := SaveScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace )
       hb_Shadow( 4 + nTopOS, 6 + nTapeSpace, 21 + nTopOS, 33 + nTapeSpace )
       SetColor( "R+/W" )
-      @ 4 + nTopOS, 6 + nTapeSpace, 21 + nTopOS, 33 + nTapeSpace BOX B_SINGLE
+      hb_DispBox( 4 + nTopOS, 6 + nTapeSpace, 21 + nTopOS, 33 + nTapeSpace, B_SINGLE )
       SetColor( "GR+/W" )
       @ 4 + nTopOS, 17 + nTapeSpace SAY " TAPE "
       SetColor( "N/W" )
@@ -1315,7 +1315,7 @@ STATIC FUNCTION _ftError( cMessage, xDontReset )
 
    cErrorScr := SaveScreen( nTop, nLeft, nBot + 1, nRight + 2 )
    hb_Shadow( nTop, nLeft, nBot, nRight )
-   @ nTop, nLeft, nBot, nRight BOX B_SINGLE
+   hb_DispBox( nTop, nLeft, nBot, nRight, B_SINGLE )
    @ nTop, nLeft + Int( nWide / 2 ) - 1 SAY " ERROR "
    @ nBot - 1, nLeft + Int( nWide - 28 ) / 2 + 3 SAY "Press any key to continue..."
    DISPMESSAGE cMessage, nTop + 1, nLeft + 3, nBot - 2, nRight - 3
@@ -1461,7 +1461,7 @@ STATIC FUNCTION _ftPushWin( t, l, b, r, cTitle, cBotTitle, nWinColor )
    AAdd( t_aWindow, { t, l, b, r, nWinColor, SaveScreen( t, l, b + 1, r + 2 ), lAutoWindow } )
    hb_Shadow( t, l, b, r )
    _ftSetWinColor( nWinColor, W_BORDER )
-   @ t, l, b, r BOX B_SINGLE
+   hb_DispBox( t, l, b, r, B_SINGLE )
 
    IF cTitle != NIL
       _ftSetWinColor( nWinColor, W_TITLE )
@@ -1474,7 +1474,7 @@ STATIC FUNCTION _ftPushWin( t, l, b, r, cTitle, cBotTitle, nWinColor )
    ENDIF
 
    _ftSetWinColor( nWinColor, W_SCREEN, W_VARIAB )
-   @ t + 1, l + 1 CLEAR TO b - 1, r - 1
+   hb_Scroll( t + 1, l + 1, b - 1, r - 1 )
 
    RETURN NIL
 

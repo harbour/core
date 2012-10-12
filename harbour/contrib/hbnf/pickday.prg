@@ -30,7 +30,7 @@ FUNCTION FT_PICKDAY()
    LOCAL sel := 0
    LOCAL oldscrn := SaveScreen( 8, 35, 16, 45 ), oldcolor := SetColor( "+w/r" )
 
-   @ 8, 35, 16, 45 BOX hb_UTF8ToStrBox( "┌─┐│┘─└│ " )
+   hb_DispBox( 8, 35, 16, 45, hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
    /* do not allow user to Esc out, which would cause array access error */
    DO WHILE sel == 0
       sel := AChoice( 9, 36, 15, 44, days )

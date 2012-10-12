@@ -541,7 +541,7 @@ FUNCTION SaveBox( top, left, bott, right, kolor, patt )
    IF PCount() > 4
       cClr    := SetColor( kolor )
       cBox    := SaveScreen( top, left, bott, right )
-      @ top, left, bott, right BOX patt
+      hb_DispBox( top, left, bott, right, patt )
    ELSE
       cClr    := SetColor()
       cBox    := SaveScreen( top, left, bott, right )

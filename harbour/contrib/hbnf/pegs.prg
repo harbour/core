@@ -32,9 +32,9 @@
 #include "setcurs.ch"
 
 #translate SINGLEBOX( <top>, <left>, <bottom>, <right> ) => ;
-      @ <top>, <left>, <bottom>, <right> BOX hb_UTF8ToStrBox( "┌─┐│┘─└│ " )
+      hb_DispBox( <top>, <left>, <bottom>, <right>, hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
 #translate DOUBLEBOX( <top>, <left>, <bottom>, <right> ) => ;
-      @ <top>, <left>, <bottom>, <right> BOX hb_UTF8ToStrBox( "╔═╗║╝═╚║ " )
+      hb_DispBox( <top>, <left>, <bottom>, <right>, hb_UTF8ToStrBox( "╔═╗║╝═╚║ " ) )
 MEMVAR GetList
 
 /*
@@ -163,8 +163,9 @@ FUNCTION FT_PEGS()
 STATIC FUNCTION DrawBox( nelement )
 
    SetColor( iif( t_board_[ nelement ][ 4 ], "+w/rb", "w/n" ) )
-   @ t_board_[ nelement ][ 1, 1 ], t_board_[ nelement ][ 1, 2 ], t_board_[ nelement ][ 1, 3 ], ;
-      t_board_[ nelement ][ 1, 4 ] BOX hb_UTF8ToStrBox( "┌─┐│┘─└│ " )
+   hb_DispBox( t_board_[ nelement ][ 1, 1 ], t_board_[ nelement ][ 1, 2 ], ;
+               t_board_[ nelement ][ 1, 3 ], t_board_[ nelement ][ 1, 4 ], ;
+               hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
    DevPos( t_board_[ nelement ][ 1, 1 ] + 1, t_board_[ nelement ][ 1, 2 ] + 2 )
    DevOut( hb_ntos( nelement ) )
 

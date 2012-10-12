@@ -39,10 +39,10 @@ PROCEDURE ExecGCUI()
 PROCEDURE GCUIConsole( oCrt )
 
    LOCAL dDate      := Date()
-   LOCAL cName      := Pad( 'Some Usefule Name'   , 35 )
-   LOCAL cAdd1      := Pad( 'Linda Goldman Avenue', 35 )
-   LOCAL cAdd2      := Pad( 'Excellent Street'    , 35 )
-   LOCAL cAdd3      := Pad( 'Suit #415'           , 35 )
+   LOCAL cName      := PadR( 'Some Usefule Name'   , 35 )
+   LOCAL cAdd1      := PadR( 'Linda Goldman Avenue', 35 )
+   LOCAL cAdd2      := PadR( 'Excellent Street'    , 35 )
+   LOCAL cAdd3      := PadR( 'Suit #415'           , 35 )
    LOCAL nSlry      := 9000
    LOCAL nColGet    := 8
    LOCAL GetList    := {}

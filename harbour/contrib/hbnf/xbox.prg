@@ -98,7 +98,7 @@ FUNCTION FT_XBOX( cJustType, ; // "L" -> left, otherwise centered
 
    // save screen color and set new color
 // cOldColor := SetColor( cBoxColor )
-   @ nTRow, nLCol CLEAR TO nBRow, nRCol
+   hb_Scroll( nTRow, nLCol, nBRow, nRCol )
 
    // draw border
    SetColor( cBorColor )

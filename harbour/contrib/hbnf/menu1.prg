@@ -163,7 +163,7 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
          hb_Shadow( nTopRow + 1, aBoxLoc[ t_nHPos ], Len( t_aChoices[ t_nHPos, 1 ] ) + nTopRow + 2, aBarWidth[ t_nHPos ] + 3 + aBoxLoc[ t_nHPos ] )
       ENDIF
       SetColor( cBorder )
-      @ nTopRow + 1, aBoxLoc[ t_nHPos ], Len( t_aChoices[ t_nHPos, 1 ] ) + nTopRow + 2, aBarWidth[ t_nHPos ] + 3 + aBoxLoc[ t_nHPos ] BOX hb_UTF8ToStrBox( "╔═╗║╝═╚║ " )
+      hb_DispBox( nTopRow + 1, aBoxLoc[ t_nHPos ], Len( t_aChoices[ t_nHPos, 1 ] ) + nTopRow + 2, aBarWidth[ t_nHPos ] + 3 + aBoxLoc[ t_nHPos ], hb_UTF8ToStrBox( "╔═╗║╝═╚║ " ) )
       SetColor( cBox + "," + cCurrent + ",,," + cUnselec )
       t_nVPos := AChoice( nTopRow + 2, aBoxLoc[ t_nHPos ] + 2, Len( t_aChoices[ t_nHPos, 1 ] ) + nTopRow + 2, aBarWidth[ t_nHPos ] + 1 + aBoxLoc[ t_nHPos ], t_aChoices[ t_nHPos, 1 ], t_aChoices[ t_nHPos, 3 ], "__ftAcUdf", aLastSel[ t_nHPos ] )
       DO CASE
@@ -240,7 +240,7 @@ STATIC FUNCTION _ftBailOut( cBorder, cBox )
    sOldScreen := SaveScreen( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55 )
    cOldColor := SetColor( cBorder )
    hb_Shadow( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55 )
-   @ t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55 BOX hb_UTF8ToStrBox( "╔═╗║╝═╚║ " )
+   hb_DispBox( t_nMaxRow / 2 - 1, 24, t_nMaxRow / 2 + 2, 55, hb_UTF8ToStrBox( "╔═╗║╝═╚║ " ) )
    SetColor( cBox )
    @ t_nMaxRow / 2,  26 SAY "Press ESCape To Confirm Exit"
    @ t_nMaxRow / 2 + 1, 27 SAY "Or Any Other Key To Resume"

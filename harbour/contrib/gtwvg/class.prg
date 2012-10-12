@@ -1223,7 +1223,7 @@ METHOD WvtBrowse:Hilite()
 
    LOCAL b := ::oBrw
 
-   hb_DispOutAt( b:nTop - 2, b:nLeft - 2, Pad( " " + ::cDesc, b:nRight - b:nLeft + 5 ), ::cColorHilite )
+   hb_DispOutAt( b:nTop - 2, b:nLeft - 2, PadR( " " + ::cDesc, b:nRight - b:nLeft + 5 ), ::cColorHilite )
 
    RETURN Self
 
@@ -1233,7 +1233,7 @@ METHOD WvtBrowse:DeHilite()
 
    LOCAL b := ::oBrw
 
-   hb_DispOutAt( b:nTop - 2, b:nLeft - 2, Pad( " " + ::cDesc, b:nRight - b:nLeft + 5 ), ::cColorDeHilite )
+   hb_DispOutAt( b:nTop - 2, b:nLeft - 2, PadR( " " + ::cDesc, b:nRight - b:nLeft + 5 ), ::cColorDeHilite )
 
    RETURN Self
 
@@ -1490,7 +1490,7 @@ CLASS WvtPanel FROM WvtObject
    DATA   cIconFile
 
    ACCESS TEXT                                    INLINE ::cTxt
-   ASSIGN TEXT( cText )                           INLINE ::cTxt := Pad( cText, ::nRight - ::nLeft - 2 )
+   ASSIGN TEXT( cText )                           INLINE ::cTxt := PadR( cText, ::nRight - ::nLeft - 2 )
 
    METHOD New( oParent, nId, nTop, nLeft )
    METHOD Refresh()
@@ -2391,7 +2391,7 @@ METHOD WvtGets:SetData( /*aData*/ )
 
 METHOD WvtGets:Hilite()
 
-   hb_DispOutAt( ::nTop, ::nLeft, Pad( " " + ::cDesc, ::nRight - ::nLeft + 1 ), ::cColorHilite )
+   hb_DispOutAt( ::nTop, ::nLeft, PadR( " " + ::cDesc, ::nRight - ::nLeft + 1 ), ::cColorHilite )
 
    RETURN Self
 
@@ -2399,7 +2399,7 @@ METHOD WvtGets:Hilite()
 
 METHOD WvtGets:DeHilite()
 
-   hb_DispOutAt( ::nTop, ::nLeft, Pad( " " + ::cDesc, ::nRight - ::nLeft + 1 ), ::cColorDeHilite )
+   hb_DispOutAt( ::nTop, ::nLeft, PadR( " " + ::cDesc, ::nRight - ::nLeft + 1 ), ::cColorDeHilite )
 
    RETURN Self
 

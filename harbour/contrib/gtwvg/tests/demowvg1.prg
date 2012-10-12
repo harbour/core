@@ -82,10 +82,10 @@ STATIC FUNCTION ExecForm( aPaint )
    LOCAL cColor    := SetColor()
    LOCAL aPnt
    LOCAL dDate     := Date()
-   LOCAL cName     := Pad( "Pritpal Bedi", 35 )
-   LOCAL cAdd1     := Pad( "60, New Professor Colony", 35 )
-   LOCAL cAdd2     := Pad( "Ludhiana, INDIA", 35 )
-   LOCAL cAdd3     := Pad( "http://hbide.vouch.info", 35 )
+   LOCAL cName     := PadR( "Pritpal Bedi", 35 )
+   LOCAL cAdd1     := PadR( "60, New Professor Colony", 35 )
+   LOCAL cAdd2     := PadR( "Ludhiana, INDIA", 35 )
+   LOCAL cAdd3     := PadR( "http://hbide.vouch.info", 35 )
    LOCAL nSlry     := 20000
    LOCAL nColGet   := 8
 
