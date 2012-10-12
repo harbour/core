@@ -1223,7 +1223,7 @@ METHOD WvtBrowse:Hilite()
 
    LOCAL b := ::oBrw
 
-   DispOutAt( b:nTop - 2, b:nLeft - 2, Pad( " " + ::cDesc, b:nRight - b:nLeft + 5 ), ::cColorHilite )
+   hb_DispOutAt( b:nTop - 2, b:nLeft - 2, Pad( " " + ::cDesc, b:nRight - b:nLeft + 5 ), ::cColorHilite )
 
    RETURN Self
 
@@ -1233,7 +1233,7 @@ METHOD WvtBrowse:DeHilite()
 
    LOCAL b := ::oBrw
 
-   DispOutAt( b:nTop - 2, b:nLeft - 2, Pad( " " + ::cDesc, b:nRight - b:nLeft + 5 ), ::cColorDeHilite )
+   hb_DispOutAt( b:nTop - 2, b:nLeft - 2, Pad( " " + ::cDesc, b:nRight - b:nLeft + 5 ), ::cColorDeHilite )
 
    RETURN Self
 
@@ -1510,7 +1510,7 @@ METHOD WvtPanel:New( oParent, nId, nTop, nLeft )
 METHOD WvtPanel:Refresh()
 
    IF ::Text != nil
-      DispOutAt( ::nTop, ::nLeft + 1, ::Text, ::cColor )
+      hb_DispOutAt( ::nTop, ::nLeft + 1, ::Text, ::cColor )
    ENDIF
 
    RETURN Self
@@ -1754,7 +1754,7 @@ METHOD WvtToolBar:Create()
 METHOD WvtToolBar:Refresh()
 
    IF ::lFloating
-      DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, "         ", "n/w" )
+      hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, "         ", "n/w" )
    ELSE
       Wvt_InvalidateRect( ::nTop, ::nLeft, ::nTop, ::nLeft )
    ENDIF
@@ -2391,7 +2391,7 @@ METHOD WvtGets:SetData( /*aData*/ )
 
 METHOD WvtGets:Hilite()
 
-   DispOutAt( ::nTop, ::nLeft, Pad( " " + ::cDesc, ::nRight - ::nLeft + 1 ), ::cColorHilite )
+   hb_DispOutAt( ::nTop, ::nLeft, Pad( " " + ::cDesc, ::nRight - ::nLeft + 1 ), ::cColorHilite )
 
    RETURN Self
 
@@ -2399,7 +2399,7 @@ METHOD WvtGets:Hilite()
 
 METHOD WvtGets:DeHilite()
 
-   DispOutAt( ::nTop, ::nLeft, Pad( " " + ::cDesc, ::nRight - ::nLeft + 1 ), ::cColorDeHilite )
+   hb_DispOutAt( ::nTop, ::nLeft, Pad( " " + ::cDesc, ::nRight - ::nLeft + 1 ), ::cColorDeHilite )
 
    RETURN Self
 
@@ -3309,7 +3309,7 @@ METHOD WvtProgressBar:Display( nCurrent, nTotal )
 METHOD WvtProgressBar:Activate()
 
    ::cScreen := SaveScreen( ::nTop, ::nLeft, ::nBottom, ::nRight )
-   DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, "         ", ::cBackColor )
+   hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, "         ", ::cBackColor )
    ::lActive := .T.
 
    RETURN Self
@@ -3566,8 +3566,8 @@ METHOD WvtConsole:Say( nRow, nCol, xExp, cColor )
       nCursor := SetCursor( SC_NONE )
       nCRow   := Row()
       nCCol   := Col()
-      DispOutAt( nRow, nCol, xExp, cColor )
-      setPos( nCRow, nCCol )
+      hb_DispOutAt( nRow, nCol, xExp, cColor )
+      SetPos( nCRow, nCCol )
       SetCursor( nCursor )
    ENDIF
 
@@ -3583,8 +3583,8 @@ METHOD WvtConsole:Box( nRow, nCol, n2Row, n2Col, cBoxChars, cColor )
       nCursor := SetCursor( SC_NONE )
       nCRow   := Row()
       nCCol   := Col()
-      DispBox( nRow, nCol, n2Row, n2Col, cBoxChars, cColor )
-      setPos( nCRow, nCCol )
+      hb_DispBox( nRow, nCol, n2Row, n2Col, cBoxChars, cColor )
+      SetPos( nCRow, nCCol )
       SetCursor( nCursor )
    ENDIF
 

@@ -100,7 +100,7 @@ FUNCTION NetDbUse( cDataBase, cAlias, nSeconds, cDriver, ;
 
    DO WHILE ( lforever .OR. nSeconds > 0 ) .AND. LastKey() != K_ESC
       IF !lfirstPass
-         DispOutAt( MaxRow(), 0, ;
+         hb_DispOutAt( MaxRow(), 0, ;
             PadC( "Network retry | " + ;
             LTrim( Str( nSeconds, 4, 1 ) ) + " | ESCape = Exit ", ;
             MaxCol() + 1 ), ;
@@ -207,7 +207,7 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
                cWord := "( " + dbInfo( DBI_ALIAS ) + " -  ??? "
             ENDIF
 
-            DispOutAt( MaxRow(), 0, ;
+            hb_DispOutAt( MaxRow(), 0, ;
                PadC( "Network Retry " + cWord + " | " + Str( nSeconds, 3 ) + " | ESC Exit", MaxCol() + 1 ), ;
                s_cNetMsgColor )
 

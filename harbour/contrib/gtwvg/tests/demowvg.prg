@@ -368,7 +368,7 @@ FUNCTION WvtPartialScreen()
 
    aLastPaint := WvtSetBlocks( {} )
 
-   DispBox( 7, 20, 15, 60, "         ", "W/GR*" )
+   hb_DispBox( 7, 20, 15, 60, "         ", "W/GR*" )
    @ 10, 25 SAY "Wvt_SaveScreen()" COLOR "N/GR*"
    @ 11, 25 SAY "Wvt_RestScreen()" COLOR "N/GR*"
    @ 13, 25 SAY "Press Esc "       COLOR "N/GR*"
@@ -379,7 +379,7 @@ FUNCTION WvtPartialScreen()
    DO WHILE Inkey( 0 ) != K_ESC
    ENDDO
 
-   DispBox( 7, 20, 15, 60, "         ", "W/B*" )
+   hb_DispBox( 7, 20, 15, 60, "         ", "W/B*" )
    @ 10, 25 SAY "Wvt_SaveScreen()" COLOR "N/B*"
    @ 11, 25 SAY "Wvt_RestScreen()" COLOR "N/B*"
    @ 13, 25 SAY "Press Esc "       COLOR "N/B*"

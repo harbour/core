@@ -405,12 +405,12 @@ FUNCTION EditorEdit( oEdit, lEdit, lFrame )
 
       CASE nKey == K_DOWN
          IF ! ED_Down( oEdit[ E_EDIT ] )
-            Scroll( nTop, nLeft, nBottom, nRight, 1 )
+            hb_Scroll( nTop, nLeft, nBottom, nRight, 1 )
          ENDIF
 
       CASE nKey == K_UP
          IF ! ED_Up( oEdit[ E_EDIT ] )
-            Scroll( nTop, nLeft, nBottom, nRight, - 1 )
+            hb_Scroll( nTop, nLeft, nBottom, nRight, -1 )
          ENDIF
 
       CASE nKey == K_ESC

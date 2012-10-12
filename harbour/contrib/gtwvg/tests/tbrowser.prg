@@ -147,8 +147,8 @@ FUNCTION ExecBrowser( oCrt )
 
    aLastPaint := WvtSetBlocks( aBlocks )
 
-   DispBox( 0, 0, MaxRow(), MaxCol(), "         ", "N/W" )
-   DispOutAt( oBrowse:nTop - 2, oBrowse:nleft - 2, PadC( cFileDbf, oBrowse:nRight - oBrowse:nLeft + 5 ), "W+/B*" )
+   hb_DispBox( 0, 0, MaxRow(), MaxCol(), "         ", "N/W" )
+   hb_DispOutAt( oBrowse:nTop - 2, oBrowse:nleft - 2, PadC( cFileDbf, oBrowse:nRight - oBrowse:nLeft + 5 ), "W+/B*" )
 
    oCom := BrwBuildActiveX( oCrt, oBrowse )
    oChk := BrwBuildCheckBox( oCrt, oBrowse, @lActiveX )
@@ -245,8 +245,8 @@ STATIC FUNCTION BrwHandleResize( oCrt, oBrw, oVBar, oHBar, oCom, oSLE, oLBx, oTr
    oBrw:nRight  := MaxCol() - 4
    oBrw:configure()
 
-   DispBox( 0, 0, MaxRow(), MaxCol(), "         ", "N/W" )
-   DispOutAt( oBrw:nTop - 2, oBrw:nleft - 2, PadC( cFileDbf, oBrw:nRight - oBrw:nLeft + 5 ), "W+/B*" )
+   hb_DispBox( 0, 0, MaxRow(), MaxCol(), "         ", "N/W" )
+   hb_DispOutAt( oBrw:nTop - 2, oBrw:nleft - 2, PadC( cFileDbf, oBrw:nRight - oBrw:nLeft + 5 ), "W+/B*" )
 
    oVBar:setPosAndSize()
    oHBar:setPosAndSize()

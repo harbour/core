@@ -492,7 +492,7 @@ METHOD BarDisplay() CLASS HBDebugger
 
    SetColor( cClrItem )
 
-   @ ::nMaxRow, 0 CLEAR TO ::nMaxRow, ::nMaxCol
+   hb_Scroll( ::nMaxRow, 0, ::nMaxRow, ::nMaxCol )
 
    hb_dispOutAt( ::nMaxRow,  0, "F1-Help F2-Zoom F3-Repeat F4-User F5-Go F6-WA F7-Here F8-Step F9-BkPt F10-Trace", cClrItem )
    hb_dispOutAt( ::nMaxRow,  0, "F1", cClrHotKey )

@@ -461,7 +461,7 @@ METHOD RefreshWindow() CLASS XHBEditor
       // 2006/JUL/23 - E.F. Adjusted to avoid out of bound.
       //               Don't replace ::GetLine(nRow) by ::aText[nRow]:cText here,
       //               because getline return line number in tbrwtext.prg (debug).
-      DispOutAt( Min( ::nTop + i,::nBottom ), ::nLeft, ;
+      hb_DispOutAt( Min( ::nTop + i,::nBottom ), ::nLeft, ;
          PadR( iif( ::nFirstRow + i <= ::LastRow(), SubStr( ::GetLine( ::nFirstRow + i ), ::nFirstCol, ::nNumCols ), Space(::nNumCols ) ), ::nNumCols ), ;
          ::LineColor( ::nFirstRow + i ) )
 
@@ -532,7 +532,7 @@ METHOD RefreshLine( lRefreshColSel ) CLASS XHBEditor
       // 2006/AUG/02 - E.F.
       //               Don't replace ::GetLine(nRow) by ::aText[nRow]:cText here
       //               because getline return line number in tbrwtext.prg (debug).
-      DispOutAt( ::Row(), ::nLeft, PadR( SubStr( ::GetLine( ::nRow ), ::nFirstCol, ::nNumCols ), ::nNumCols, " " ), ::LineColor( ::nRow ) )
+      hb_DispOutAt( ::Row(), ::nLeft, PadR( SubStr( ::GetLine( ::nRow ), ::nFirstCol, ::nNumCols ), ::nNumCols, " " ), ::LineColor( ::nRow ) )
 
       IF lRefreshColSel
 
@@ -543,7 +543,7 @@ METHOD RefreshLine( lRefreshColSel ) CLASS XHBEditor
          //       nCol := nFirstCol + ::nColSelStart - 1
          nCol := Max( ::nLeft, nFirstCol + ::nColSelStart - 1 )
 
-         DispOutAt( ::Row(), nCol, SubStr( ::GetLine( ::nRow ), Max(1,::nColSelStart ), (::nColSelEnd - ::nColSelStart + 1 ) ) , ::ColColor() )
+         hb_DispOutAt( ::Row(), nCol, SubStr( ::GetLine( ::nRow ), Max(1,::nColSelStart ), (::nColSelEnd - ::nColSelStart + 1 ) ) , ::ColColor() )
 
       ENDIF
 
@@ -576,7 +576,7 @@ METHOD RefreshColumn() CLASS XHBEditor
    //               Don't replace ::GetLine(nRow) by ::aText[nRow]:cText here
    //               because getline return line number in tbrwtext.prg (debug).
    FOR i := 0 TO Min( ::nNumRows - 1, ::LastRow() - 1 )
-      DispOutAt( ::nTop + i, nOCol, SubStr( ::GetLine(::nFirstRow + i ), ::nCol, 1 ), ::LineColor( ::nFirstRow + i ) )
+      hb_DispOutAt( ::nTop + i, nOCol, SubStr( ::GetLine(::nFirstRow + i ), ::nCol, 1 ), ::LineColor( ::nFirstRow + i ) )
    NEXT
 
    DispEnd()

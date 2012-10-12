@@ -281,7 +281,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
                LI_NSTR++
                IF LI_NSTR > razmer
                   LI_NSTR := razmer
-                  Scroll( LI_Y1 + 1, LI_X1 + 1, LI_Y2 - 1, LI_X2 - 1, 1 )
+                  hb_Scroll( LI_Y1 + 1, LI_X1 + 1, LI_Y2 - 1, LI_X2 - 1, 1 )
                   VIVSTR( mslist, LI_Y2 - 1, 0 )
                ENDIF
                IF Eval( LI_BEOF, mslist )
@@ -297,7 +297,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
             LI_NSTR--
             IF LI_NSTR == 0
                LI_NSTR := 1
-               Scroll( LI_Y1 + 1, LI_X1 + 1, LI_Y2 - 1, LI_X2 - 1, -1 )
+               hb_Scroll( LI_Y1 + 1, LI_X1 + 1, LI_Y2 - 1, LI_X2 - 1, -1 )
                VIVSTR( mslist, LI_Y1 + 1, 0 )
             ENDIF
          ENDIF

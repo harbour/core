@@ -185,7 +185,7 @@ FUNCTION ClearStatusMsg()
    LOCAL nRow := Row()
    LOCAL nCol := Col()
 
-   DispOutAt( MaxRow(), 42, Space( 37 ), "W/W" )
+   hb_DispOutAt( MaxRow(), 42, Space( 37 ), "W/W" )
    SetPos( nRow, nCol )
 
    RETURN .T.

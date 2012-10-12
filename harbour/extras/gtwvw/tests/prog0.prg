@@ -355,7 +355,7 @@ FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
 
    SetColor( ccolor )
 
-   Scroll( r1, c1, r2, c2 )
+   hb_Scroll( r1, c1, r2, c2 )
 
    // GTWVW doesn't need box or textual title
    hb_DispBox( r1, c1, r2, c2, wtype )

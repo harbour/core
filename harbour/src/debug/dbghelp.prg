@@ -217,7 +217,7 @@ STATIC PROCEDURE ShowTopic( oDlg, aTopics, nTopic, nPageOp )
       ENDCASE
    ENDIF
 
-   Scroll( oDlg:nTop + 1, oDlg:nLeft + 14, oDlg:nBottom - 1, oDlg:nRight - 1 )
+   hb_Scroll( oDlg:nTop + 1, oDlg:nLeft + 14, oDlg:nBottom - 1, oDlg:nRight - 1 )
 
    nRowsToPaint := Min( nRows, Len( aTopics[ nTopic ][ 2 ] ) - ( ( oDebug:nHelpPage - 1 ) * nRows ) )
 

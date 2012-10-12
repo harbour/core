@@ -27,7 +27,7 @@ PROCEDURE fillscreen()
 
    LOCAL i, j
 
-   Scroll()
+   hb_Scroll()
    WVW_nOpenWindow( "Win2", 10, 10, 19, 69 )
    WVW_nOpenWindow( "Win3", 15, 15, 22, 75 )
    DevPos( 0, 0 )

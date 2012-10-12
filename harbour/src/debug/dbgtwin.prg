@@ -136,7 +136,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, cCaption, cColor ) CLASS HBDbWindow
 METHOD Clear() CLASS HBDbWindow
 
    SetColor( ::cColor )
-   Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1 )
+   hb_Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1 )
 
    RETURN NIL
 
@@ -159,7 +159,7 @@ METHOD ScrollUp( nLines ) CLASS HBDbWindow
    hb_default( @nLines, 1 )
 
    SetColor( ::cColor )
-   Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1, nLines )
+   hb_Scroll( ::nTop + 1, ::nLeft + 1, ::nBottom - 1, ::nRight - 1, nLines )
 
    RETURN NIL
 
@@ -219,7 +219,7 @@ METHOD Show( lFocused ) CLASS HBDbWindow
    ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ),;
                                ::nRight + iif( ::lShadow, 2, 0 ) )
    SetColor( ::cColor )
-   hb_scroll( ::nTop, ::nLeft, ::nBottom, ::nRight )
+   hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight )
    ::SetFocus( lFocused )
 
    IF ::lShadow

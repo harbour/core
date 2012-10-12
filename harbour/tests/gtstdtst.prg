@@ -42,7 +42,7 @@ PROCEDURE Main()
    PosNow()
 
    ?
-   ? "Press key to test FOR n := 100 to 120; Tone( n, 1 ); NEXT"
+   ? "Press key to test FOR n := 100 TO 120; Tone( n, 1 ); NEXT"
    Inkey( 0 )
    FOR n := 100 TO 120
       Tone( n, 1 )

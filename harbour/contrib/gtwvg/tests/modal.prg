@@ -343,10 +343,10 @@ FUNCTION DoModalWindow()
    oCrt:closable    := .F.
    oCrt:title       := 'Information! [R:4 C:8]'
 
-   oCrt:rbUp        := {|| DispOutAt( MaxRow(), 0, PadC( 'rbUp', MaxCol() + 1 ), 'W+/R*' ) }
-   oCrt:lbUp        := {|| DispOutAt( MaxRow(), 0, PadC( 'lbUp', MaxCol() + 1 ), 'W+/B*' ) }
-   oCrt:leave       := {|| DispOutAt( MaxRow(), 0, PadC( 'Leaving', MaxCol() + 1 ), 'W+/RB' ) }
-   oCrt:enter       := {|| DispOutAt( MaxRow(), 0, PadC( 'Entering', MaxCol() + 1 ), 'W+/B' ) }
+   oCrt:rbUp        := {|| hb_DispOutAt( MaxRow(), 0, PadC( 'rbUp', MaxCol() + 1 ), 'W+/R*' ) }
+   oCrt:lbUp        := {|| hb_DispOutAt( MaxRow(), 0, PadC( 'lbUp', MaxCol() + 1 ), 'W+/B*' ) }
+   oCrt:leave       := {|| hb_DispOutAt( MaxRow(), 0, PadC( 'Leaving', MaxCol() + 1 ), 'W+/RB' ) }
+   oCrt:enter       := {|| hb_DispOutAt( MaxRow(), 0, PadC( 'Entering', MaxCol() + 1 ), 'W+/B' ) }
 
    oCrt:Create()
    oCrt:show()

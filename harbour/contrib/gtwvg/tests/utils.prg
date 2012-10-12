@@ -106,7 +106,7 @@ FUNCTION Wvt_SetFocus()
    LOCAL nRow := Row()
    LOCAL nCol := Col()
 
-   DispOutAt( 1, 3, "Focus Gained!", "R/W" )
+   hb_DispOutAt( 1, 3, "Focus Gained!", "R/W" )
 
    DevPos( nRow, nCol )
 
@@ -126,7 +126,7 @@ FUNCTION Wvt_KillFocus()
    LOCAL nRow := Row()
    LOCAL nCol := Col()
 
-   DispOutAt( 1, 3, "Focus Lost...", "B/W" )
+   hb_DispOutAt( 1, 3, "Focus Lost...", "B/W" )
 
    DevPos( nRow, nCol )
 
@@ -501,7 +501,7 @@ FUNCTION ClearStatusMsg()
    LOCAL nRow := Row()
    LOCAL nCol := Col()
 
-   DispOutAt( MaxRow(), 42, Space( 37 ), "W/W" )
+   hb_DispOutAt( MaxRow(), 42, Space( 37 ), "W/W" )
 
    SetPos( nRow, nCol )
 

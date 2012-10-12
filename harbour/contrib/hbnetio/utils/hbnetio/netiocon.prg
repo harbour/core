@@ -222,7 +222,7 @@ STATIC PROCEDURE ShowHelp( hCommands )
          QQOut( "Press any key to continue..." )
          Inkey( 0 )
 
-         Scroll( Row(), 0, Row(), MaxCol(), 0 )
+         hb_Scroll( Row(), 0, Row(), MaxCol(), 0 )
          SetPos( Row(), 0 )
       ENDIF
    NEXT

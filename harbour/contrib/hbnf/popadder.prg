@@ -946,7 +946,7 @@ STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
    ENDIF
    IF lTape                              // Are we in the display mode
       SetColor( "N/W" )
-      Scroll( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, 1 )
+      hb_Scroll( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, 1 )
       IF nTotTran > 0                       // Any transactions been entered yet?
          @ 20 + nTopOS, 7 + nTapeSpace SAY aTrans[ nTotTran ]
       ENDIF
