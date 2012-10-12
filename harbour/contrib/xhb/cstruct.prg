@@ -242,7 +242,7 @@ PROCEDURE HB_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
             AAdd( aDefinitions, SubStr( cElem, nAt + 1 ) )
          ENDIF
 
-         aDefinitions[nIndex] := StrTran( Left( cElem, nAt ), " " )
+         aDefinitions[ nIndex ] := StrTran( Left( cElem, nAt ), " " )
       ELSEIF ( nAt := At( "-", cElem ) ) > 1
          IF nIndex < Len( aDefinitions )
             hb_AIns( aDefinitions, nIndex + 1, SubStr( cElem, nAt ), .T. )
@@ -250,7 +250,7 @@ PROCEDURE HB_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
             AAdd( aDefinitions, SubStr( cElem, nAt ) )
          ENDIF
 
-         aDefinitions[nIndex] := RTrim( Left( cElem, nAt - 1 ) )
+         aDefinitions[ nIndex ] := RTrim( Left( cElem, nAt - 1 ) )
       ENDIF
 
       nIndex++

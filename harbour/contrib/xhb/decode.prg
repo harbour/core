@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    Decode function
+ *    hb_Decode() function
  *
  * Copyright 2006 Francesco Saverio Giudice <info / at / fsgiudice / dot / com>
  * www - http://harbour-project.org
@@ -51,35 +51,6 @@
  *
  */
 
-/*
-PROCEDURE Main()
-   LOCAL aArray
-
-   ? "DECODE FUNCTION TESTS"
-
-   // Single, return empty value
-   ? Decode( 10 )
-   // A list
-   ? Decode( 3, 1, "A", 2, "B", 3, "C" )
-   // A list with default
-   ? Decode( 4, 1, "A", 2, "B", 3, "C", "X" )
-   // Using an array as list of values to check
-   ? Decode( 2, { 1, "A", 2, "B", 3, "C" } )
-   // Using an array with default as list of values to check
-   ? Decode( 2, { 1, "A", 2, "B", 3, "C", "X" } )
-   // Using an hash as list
-   ? Decode( 2, { 1 => "A", 2 => "B", 3 => "C" } )
-
-   // Returning a codeblock
-   ? cStr( Decode( 2, 1, {|| 1 }, 2, {|| 2 }, 3, {|| 3 } ) )
-
-   // Checking an array
-   aArray := { 1 }
-   ? Decode( aArray, aArray, "A", { 2 }, "B", { 3 }, "C" )
-
-   RETURN
-*/
-
 /******************
 * Function .......: hb_Decode( <var>, [ <case1,ret1 [,...,caseN,retN] ] [, <def> ]> ) ---> <xRet>
 * Author .........: Francesco Saverio Giudice
@@ -88,13 +59,14 @@ PROCEDURE Main()
 *
 *                   Decode a value from a list.
 *******************/
-FUNCTION HB_Decode(...)
+
+FUNCTION HB_Decode( ... )
 
    LOCAL aParams, nParams, xDefault
    LOCAL xVal, cKey, xRet
    LOCAL aValues, aResults, n, i, nPos, nLen
 
-   aParams  := hb_aParams()
+   aParams  := hb_AParams()
    nParams  := PCount()
    xDefault := NIL
 
@@ -108,7 +80,7 @@ FUNCTION HB_Decode(...)
 
       // if I have a odd number of members, last is default
       IF ( nParams % 2 != 0 )
-         xDefault := aTail( aParams )
+         xDefault := ATail( aParams )
          // Resize again deleting last
          hb_ADel( aParams, nParams, .T. )
          nParams := Len( aParams )
@@ -117,8 +89,8 @@ FUNCTION HB_Decode(...)
       // Ok because I have no other value than default, I will check if it is a complex value
       // like an array or an hash, so I can get it to decode values
       IF xDefault != NIL .AND. ;
-         ( HB_ISARRAY( xDefault ) .OR. ;
-           HB_ISHASH( xDefault ) )
+            ( HB_ISARRAY( xDefault ) .OR. ;
+            HB_ISHASH( xDefault ) )
 
          // If it is an array I will restart this function creating a linear call
          IF HB_ISARRAY( xDefault ) .AND. Len( xDefault ) > 0
@@ -147,7 +119,7 @@ FUNCTION HB_Decode(...)
                      aParams[ n++ ] := xDefault[ i ][ 2 ]
                   NEXT
 
-                  aAdd( aParams, xDefault[ nLen ] )
+                  AAdd( aParams, xDefault[ nLen ] )
 
                ELSE
 
@@ -169,15 +141,15 @@ FUNCTION HB_Decode(...)
             ENDIF
 
 
-         // If it is an hash, translate it in an array
+            // If it is an hash, translate it in an array
          ELSEIF HB_ISHASH( xDefault )
 
             aParams := Array( Len( xDefault ) * 2 )
 
             i := 1
             FOR EACH cKey IN xDefault:Keys
-                aParams[ i++ ] := cKey
-                aParams[ i++ ] := xDefault[ cKey ]
+               aParams[ i++ ] := cKey
+               aParams[ i++ ] := xDefault[ cKey ]
             NEXT
 
          ENDIF
@@ -206,7 +178,7 @@ FUNCTION HB_Decode(...)
          // Check if value exists (valtype of values MUST be same of xVal,
          // otherwise I will get a runtime error)
          // TODO: Have I to check also between different valtypes, jumping different ?
-         nPos := aScan( aValues, {| e | e == xVal } )
+         nPos := AScan( aValues, {| e | e == xVal } )
 
          IF nPos == 0 // Not Found, returning default
             xRet := xDefault   // it could be also nil because not present
@@ -225,50 +197,34 @@ FUNCTION HB_Decode(...)
 
    RETURN xRet
 
-FUNCTION HB_DecodeOrEmpty(...)
-   LOCAL aParams := hb_aParams()
+FUNCTION HB_DecodeOrEmpty( ... )
+
+   LOCAL aParams := hb_AParams()
    LOCAL xVal    := hb_ExecFromArray( @hb_decode(), aParams )
+
    RETURN iif( xVal == NIL, EmptyValue( aParams[ 1 ] ), xVal )
 
 STATIC FUNCTION EmptyValue( xVal )
-   LOCAL xRet
-   LOCAL cType := ValType( xVal )
 
-   SWITCH cType
+   SWITCH ValType( xVal )
    CASE "C"  // Char
    CASE "M"  // Memo
-        xRet := ""
-        EXIT
+      RETURN ""
    CASE "D"  // Date
-        xRet := hb_SToD()
-        EXIT
+      RETURN hb_SToD()
    CASE "L"  // Logical
-        xRet := .F.
-        EXIT
+      RETURN .F.
    CASE "N"  // Number
-        xRet := 0
-        EXIT
+      RETURN 0
    CASE "B"  // code block
-        xRet := {|| NIL }
-        EXIT
+      RETURN {|| NIL }
    CASE "A"  // array
-        xRet := {}
-        EXIT
+      RETURN {}
    CASE "H"  // hash
-        xRet := { => }
-        EXIT
+      RETURN { => }
    CASE "U"  // undefined
-        xRet := NIL
-        EXIT
    CASE "O"  // Object
-        xRet := NIL   // Or better another value ?
-        EXIT
-
-   OTHERWISE
-        // Create a runtime error for new datatypes
-        xRet := ""
-        IF xRet == 0 // BANG!
-        ENDIF
+      RETURN NIL   // Or better another value ?
    ENDSWITCH
 
-   RETURN xRet
+   RETURN ( "" == 0 ) // BANG! Create a runtime error for new datatypes

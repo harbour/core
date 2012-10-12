@@ -462,7 +462,7 @@ STATIC FUNCTION AR_PUTVALUE( nWA, nField, xValue )
    HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, nField = %2$d, xValue = %3$s", nWA, nField, hb_ValToExp( xValue ) ) )
 
    IF nField > 0 .AND. nField <= Len( aStruct ) .AND. ;
-      iif( ValType( xValue ) == "C" .AND. aStruct[ nField ][ DBS_TYPE ] == "M", .T., ValType( xValue ) == aStruct[ nField ][ DBS_TYPE ] )
+      iif( HB_ISSTRING( xValue ) .AND. aStruct[ nField ][ DBS_TYPE ] == "M", .T., ValType( xValue ) == aStruct[ nField ][ DBS_TYPE ] )
 
       xVal := PutValue( xValue, aStruct[ nField ][ DBS_TYPE ], aStruct[ nField ][ DBS_LEN ], aStruct[ nField ][ DBS_DEC ] )
 
@@ -1213,7 +1213,7 @@ STATIC FUNCTION AR_ORDCREATE( nWA, aOrderCreate )
    nIndex := AScan( aIndexes, {| x | x[ INDEX_TAG ] == cIndex } )
    IF nIndex > 0
       ADel( aIndexes, nIndex )
-      aIndexes[ -1 ] := aIndex
+      aIndexes[ Len( aIndexes ) ] := aIndex
    ELSE
       AAdd( aIndexes, aIndex )
    ENDIF

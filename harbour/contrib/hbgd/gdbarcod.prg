@@ -543,7 +543,7 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
          IF lTypeCodeC
 
             IF Len( ::TEXT ) == n
-               cconc += ::aCode[ 101 ]
+               cconc += ::aCode[ CODEB ]
                nvalchar := Asc( cchar ) - 31
             ELSE
                nvalchar := Val( SubStr( ::text, n, 2 ) ) + 1
@@ -553,7 +553,7 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
          ELSEIF lTypeCodeA
 
             IF cchar > "_"
-               cconc += ::aCode[ 101 ]
+               cconc += ::aCode[ CODEB ]
                nvalchar  := Asc( cchar ) - 31
             ELSEIF cchar <= " "
                nvalchar  := Asc( cchar ) + 64
