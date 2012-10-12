@@ -260,18 +260,18 @@ ENDCLASS
 
 METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextRow, nTextCol, nWndRow, nWndCol ) CLASS XHBEditor
 
-   __defaultNIL( @ cString, "" )
-   __defaultNIL( @ nTop, 0 )
-   __defaultNIL( @ nLeft, 0 )
-   __defaultNIL( @ nBottom, MaxRow() )
-   __defaultNIL( @ nRight, MaxCol() )
-   __defaultNIL( @ lEditMode, .T. )
-   __defaultNIL( @ nLineLength, NIL )
-   __defaultNIL( @ nTabSize, NIL )
-   __defaultNIL( @ nTextRow, 1 )
-   __defaultNIL( @ nTextCol, 0 )
-   __defaultNIL( @ nWndRow, 0 )
-   __defaultNIL( @ nWndCol, 0 )
+   __defaultNIL( @cString, "" )
+   __defaultNIL( @nTop, 0 )
+   __defaultNIL( @nLeft, 0 )
+   __defaultNIL( @nBottom, MaxRow() )
+   __defaultNIL( @nRight, MaxCol() )
+   __defaultNIL( @lEditMode, .T. )
+   __defaultNIL( @nLineLength, NIL )
+   __defaultNIL( @nTabSize, NIL )
+   __defaultNIL( @nTextRow, 1 )
+   __defaultNIL( @nTextCol, 0 )
+   __defaultNIL( @nWndRow, 0 )
+   __defaultNIL( @nWndCol, 0 )
 
    // 2006/JUL/22 - E.F. To avoid run time error.
    IF nTop > nBottom .OR. nLeft > nRight
