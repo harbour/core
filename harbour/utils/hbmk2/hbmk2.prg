@@ -10224,14 +10224,16 @@ STATIC FUNCTION hbmk_builtin_List()
    RETURN s_hHBM_BuildIn
 
 STATIC FUNCTION hbmk_builtin_Is( cFileName )
+   cFileName := hb_FNameNameExt( cFileName )
    RETURN LEFTEQUAL( cFileName, _HBMK_BUILDIN_FILENAME_MARKER_ ) .AND. ;
       Len( cFileName ) > Len( _HBMK_BUILDIN_FILENAME_MARKER_ )
 
 STATIC FUNCTION hbmk_builtin_Exists( cFileName )
+   cFileName := hb_FNameNameExt( cFileName )
    RETURN hbmk_builtin_Is( cFileName ) .AND. cFileName $ hbmk_builtin_List()
 
 STATIC FUNCTION hbmk_builtin_Load( cFileName )
-   RETURN Eval( hbmk_builtin_List()[ cFileName ] )
+   RETURN Eval( hbmk_builtin_List()[ hb_FNameNameExt( cFileName ) ] )
 
 /* ; */
 

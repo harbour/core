@@ -164,7 +164,7 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
       ENDIF
       hb_DispBox( nTopRow + 1, aBoxLoc[ t_nHPos ], Len( t_aChoices[ t_nHPos, 1 ] ) + nTopRow + 2, aBarWidth[ t_nHPos ] + 3 + aBoxLoc[ t_nHPos ], hb_UTF8ToStrBox( "╔═╗║╝═╚║ " ), cBorder )
       SetColor( cBox + "," + cCurrent + ",,," + cUnselec )
-      t_nVPos := AChoice( nTopRow + 2, aBoxLoc[ t_nHPos ] + 2, Len( t_aChoices[ t_nHPos, 1 ] ) + nTopRow + 2, aBarWidth[ t_nHPos ] + 1 + aBoxLoc[ t_nHPos ], t_aChoices[ t_nHPos, 1 ], t_aChoices[ t_nHPos, 3 ], "__ftAcUdf", aLastSel[ t_nHPos ] )
+      t_nVPos := AChoice( nTopRow + 2, aBoxLoc[ t_nHPos ] + 2, Len( t_aChoices[ t_nHPos, 1 ] ) + nTopRow + 2, aBarWidth[ t_nHPos ] + 1 + aBoxLoc[ t_nHPos ], t_aChoices[ t_nHPos, 1 ], t_aChoices[ t_nHPos, 3 ], {| nMode | __ftAcUdf( nMode ) }, aLastSel[ t_nHPos ] )
       DO CASE
       CASE LastKey() == K_RIGHT .OR. LastKey() == K_TAB
          t_nHPos := iif( t_nHPos == Len( t_aChoices ), 1, t_nHPos + 1 )

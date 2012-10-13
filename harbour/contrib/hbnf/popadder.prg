@@ -54,8 +54,8 @@
 #define STD_VARIABLE 6
 #define STD_BORDER   7
 
-#define FT_B_DOUBLE   hb_UTF8ToStrBox( "╔═╗║╝═╚║ " )
-#define FT_B_SINGLE                    "+-+|+-+| "
+#define FT_B_DOUBLE  HB_B_DOUBLE_UNI + " "
+#define FT_B_SINGLE  HB_B_SINGLE_UNI + " "
 
 #define nTotTran Len( aTrans )
 
@@ -141,6 +141,8 @@ FUNCTION FT_Adder()
    LOCAL lShowRight  := .T.
    LOCAL aAdder      := Array( 23 )
    LOCAL tmp, tmp1
+
+   LOCAL lAC_exit_ok
 
    // Must prevent recursive calls
    IF t_lAdderOpen
@@ -252,8 +254,9 @@ FUNCTION FT_Adder()
             SetColor( "GR+/W" )
             hb_DispOutAt( 21 + nTopOS, 8 + nTapeSpace, " " + /* LOW-ASCII "↑↓" */ Chr( 24 ) + Chr( 25 ) + "-SCROLL  <ESC>-QUIT " )
             SetColor( "N/W,W+/N" )
+            lAC_exit_ok := .F.
             AChoice( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, aTrans, .T. , ;
-               "_ftAdderTapeUDF", nTotTran, 20 )
+               {| nMode, cur_elem, rel_pos | _ftAdderTapeUDF( nMode, cur_elem, rel_pos, @lAC_exit_ok ) }, nTotTran, 20 )
             SetColor( "R+/W" )
             hb_DispBox( 21 + nTopOS, 8 + nTapeSpace, 21 + nTopOS, 30 + nTapeSpace, HB_B_SINGLE_UNI )
             _ftSetWinColor( W_CURR, W_PROMPT )
@@ -1245,11 +1248,9 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
   +--------------------------------------------------------------------------+
 */
 
-FUNCTION _ftAdderTapeUDF( mode, cur_elem, rel_pos )
+FUNCTION _ftAdderTapeUDF( mode, cur_elem, rel_pos, /* @ */ lAC_exit_ok )
 
    LOCAL nKey, nRtnVal
-
-   THREAD STATIC ac_exit_ok := .F.
 
    HB_SYMBOL_UNUSED( cur_elem )
    HB_SYMBOL_UNUSED( rel_pos )
@@ -1262,11 +1263,11 @@ FUNCTION _ftAdderTapeUDF( mode, cur_elem, rel_pos )
          nRtnVal := AC_CONT
       CASE nKey == K_ESC
          hb_keyPut( { K_CTRL_PGDN, K_RETURN } )  // Go to last item
-         ac_exit_ok := .T.
+         lAC_exit_ok := .T.
          nRtnVal := AC_CONT
-      CASE ac_exit_ok
+      CASE lAC_exit_ok
          nRtnVal := AC_ABORT
-         ac_exit_ok := .F.
+         lAC_exit_ok := .F.
       OTHERWISE
          nRtnVal := AC_CONT
       ENDCASE
