@@ -50,6 +50,9 @@
  *
  */
 
+/* NOTE: CA-Cl*pper 5.x uses DevPos(), DevOut() to display messages
+         on screen. Harbour uses Disp*() functions only. [vszakats] */
+
 #include "hbclass.ch"
 
 #include "error.ch"
@@ -323,14 +326,14 @@ METHOD SampleLabels() CLASS HBLabelForm
       ENDIF
 
       // Prompt for more
-      @ Row(), 0 SAY __NatMsg( _LF_SAMPLES ) + " (" + __NatMsg( _LF_YN ) + ")"
+      DispOutAt( Row(), 0, __NatMsg( _LF_SAMPLES ) + " (" + __NatMsg( _LF_YN ) + ")" )
       cKey := hb_KeyChar( Inkey( 0 ) )
-      @ Row(), Col() SAY cKey
+      DispOutAt( Row(), Col(), cKey )
       IF Row() == MaxRow()
-         hb_scroll( 0, 0, MaxRow(), MaxCol(), 1 )
-         @ MaxRow(), 0 SAY ""
+         hb_Scroll( 0, 0, MaxRow(), MaxCol(), 1 )
+         SetPos( MaxRow(), 0 )
       ELSE
-         @ Row() + 1, 0 SAY ""
+         SetPos( Row() + 1, 0 )
       ENDIF
       IF __NatIsNegative( cKey )    // Don't give sample labels
          lMoreSamples := .F.
@@ -411,13 +414,13 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
    IF nFileError == 0
 
       // Load label dimension into aLabel
-      aLabel[ LBL_REMARK ] := SubStr(cBuff, REMARKOFFSET, REMARKSIZE)
-      aLabel[ LBL_HEIGHT ] := BIN2W(SubStr(cBuff, HEIGHTOFFSET, HEIGHTSIZE))
-      aLabel[ LBL_WIDTH  ] := BIN2W(SubStr(cBuff, WIDTHOFFSET, WIDTHSIZE))
-      aLabel[ LBL_LMARGIN] := BIN2W(SubStr(cBuff, LMARGINOFFSET, LMARGINSIZE))
-      aLabel[ LBL_LINES  ] := BIN2W(SubStr(cBuff, LINESOFFSET, LINESSIZE))
-      aLabel[ LBL_SPACES ] := BIN2W(SubStr(cBuff, SPACESOFFSET, SPACESSIZE))
-      aLabel[ LBL_ACROSS ] := BIN2W(SubStr(cBuff, ACROSSOFFSET, ACROSSSIZE))
+      aLabel[ LBL_REMARK  ] := SubStr( cBuff, REMARKOFFSET, REMARKSIZE )
+      aLabel[ LBL_HEIGHT  ] := BIN2W( SubStr( cBuff, HEIGHTOFFSET, HEIGHTSIZE ) )
+      aLabel[ LBL_WIDTH   ] := BIN2W( SubStr( cBuff, WIDTHOFFSET, WIDTHSIZE ) )
+      aLabel[ LBL_LMARGIN ] := BIN2W( SubStr( cBuff, LMARGINOFFSET, LMARGINSIZE ) )
+      aLabel[ LBL_LINES   ] := BIN2W( SubStr( cBuff, LINESOFFSET, LINESSIZE ) )
+      aLabel[ LBL_SPACES  ] := BIN2W( SubStr( cBuff, SPACESOFFSET, SPACESSIZE ) )
+      aLabel[ LBL_ACROSS  ] := BIN2W( SubStr( cBuff, ACROSSOFFSET, ACROSSSIZE ) )
 
       FOR i := 1 TO aLabel[ LBL_HEIGHT ]
 
