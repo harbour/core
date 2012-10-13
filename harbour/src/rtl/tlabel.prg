@@ -110,7 +110,7 @@ CREATE CLASS HBLabelForm
    VAR nCurrentCol  AS NUMERIC // The current column in the band
 
    METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
-                          bWhile, nNext, nRecord, lRest, lSample )
+      bWhile, nNext, nRecord, lRest, lSample )
 
    METHOD ExecuteLabel()
    METHOD SampleLabels()
@@ -119,7 +119,7 @@ CREATE CLASS HBLabelForm
 ENDCLASS
 
 METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
-                       bWhile, nNext, nRecord, lRest, lSample ) CLASS HBLabelForm
+      bWhile, nNext, nRecord, lRest, lSample ) CLASS HBLabelForm
 
    LOCAL lPrintOn := .F.               // PRINTER status
    LOCAL lConsoleOn                    // CONSOLE status
@@ -128,7 +128,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    LOCAL err
    LOCAL OldMargin
 
-   ::aBandToPrint := {} // Array(5)
+   ::aBandToPrint := {} // Array( 5 )
    ::nCurrentCol := 1
 
    // Resolve parameters
@@ -137,7 +137,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       err:severity := ES_ERROR
       err:genCode := EG_ARG
       err:subSystem := "FRMLBL"
-      Eval(ErrorBlock(), err)
+      Eval( ErrorBlock(), err )
    ELSE
       /* NOTE: CA-Cl*pper does an RTrim() on the filename here,
                but in Harbour we're using _SET_TRIMFILENAME. [vszakats] */
@@ -151,18 +151,18 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
 
    // Set output devices
    IF lPrinter             // To the printer
-      lPrintOn  := Set( _SET_PRINTER, lPrinter )
+      lPrintOn := Set( _SET_PRINTER, lPrinter )
    ENDIF
 
    lConsoleOn := Set( _SET_CONSOLE )
-   Set( _SET_CONSOLE, ! ( lNoConsole .OR. !lConsoleOn ) )
+   Set( _SET_CONSOLE, ! ( lNoConsole .OR. ! lConsoleOn ) )
 
-   IF !Empty(cAltFile)         // To file
+   IF !Empty( cAltFile )         // To file
       lExtraState := Set( _SET_EXTRA, .T. )
       cExtraFile  := Set( _SET_EXTRAFILE, cAltFile )
    ENDIF
 
-   OldMargin := Set( _SET_MARGIN, 0)
+   OldMargin := Set( _SET_MARGIN, 0 )
 
    BEGIN SEQUENCE
 
@@ -171,7 +171,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       // Add to the left margin if a SET MARGIN has been defined
       ::aLabelData[ LBL_LMARGIN ] := ::aLabelData[ LBL_LMARGIN ] + OldMargin
 
-      ASize( ::aBandToPrint, Len( ::aLabelData[ LBL_FIELDS ]))
+      ASize( ::aBandToPrint, Len( ::aLabelData[ LBL_FIELDS ] ) )
       AFill( ::aBandToPrint, Space( ::aLabelData[ LBL_LMARGIN ] ) )
 
       // Create enough space for a blank record
@@ -183,7 +183,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
       ENDIF
 
       // Execute the actual label run based on matching records
-      DBEval( {|| ::ExecuteLabel() }, bFor, bWhile, nNext, nRecord, lRest )
+      dbEval( {|| ::ExecuteLabel() }, bFor, bWhile, nNext, nRecord, lRest )
 
       // Print the last band if there is one
       IF ::lOneMoreBand
@@ -208,7 +208,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    Set( _SET_PRINTER, lPrintOn ) // Set the printer back to prior state
    Set( _SET_CONSOLE, lConsoleOn )  // Set the console back to prior state
 
-   IF !Empty(cAltFile)            // Set extrafile back
+   IF !Empty( cAltFile )            // Set extrafile back
       Set( _SET_EXTRAFILE, cExtraFile )
       Set( _SET_EXTRA, lExtraState )
    ENDIF
@@ -228,26 +228,26 @@ METHOD ExecuteLabel() CLASS HBLabelForm
    // Load the current record into aBuffer
    FOR nField := 1 TO Len( ::aLabelData[ LBL_FIELDS ] )
 
-      if ::aLabelData[ LBL_FIELDS, nField ] != NIL
+      IF ::aLabelData[ LBL_FIELDS, nField ] != NIL
 
          v := Eval( ::aLabelData[ LBL_FIELDS, nField, LF_EXP ] )
 
          cBuffer := PadR( v, ::aLabelData[ LBL_WIDTH ] )
          cBuffer := cBuffer + Space( ::aLabelData[ LBL_SPACES ] )
 
-         if ( ::aLabelData[ LBL_FIELDS, nField, LF_BLANK ] )
-            if ( !Empty( cBuffer ) )
+         IF ::aLabelData[ LBL_FIELDS, nField, LF_BLANK ]
+            IF ! Empty( cBuffer )
                AAdd( aBuffer, cBuffer )
-            endif
-         else
+            ENDIF
+         ELSE
             AAdd( aBuffer, cBuffer )
-         endif
+         ENDIF
 
-      else
+      ELSE
 
          AAdd( aBuffer, NIL )
 
-      endif
+      ENDIF
 
    NEXT
 
@@ -258,7 +258,7 @@ METHOD ExecuteLabel() CLASS HBLabelForm
       IF aBuffer[ nField ] == NIL
          ::aBandToPrint[ nField ] := ::aBandToPrint[ nField ] + ::cBlank
       ELSE
-         ::aBandToPrint[ nField ] := ::aBandToPrint[ nField ]  + aBuffer[ nField ]
+         ::aBandToPrint[ nField ] := ::aBandToPrint[ nField ] + aBuffer[ nField ]
       ENDIF
    NEXT
 
@@ -268,7 +268,6 @@ METHOD ExecuteLabel() CLASS HBLabelForm
       FOR nField := 1 TO Len( ::aBandToPrint )
          ::aBandToPrint[ nField ] := RTrim( ::aBandToPrint[ nField ] )
       NEXT
-
 
       ::lOneMoreBand := .F.
       ::nCurrentCol  := 1
@@ -295,7 +294,7 @@ METHOD ExecuteLabel() CLASS HBLabelForm
       AFill( ::aBandToPrint, Space( ::aLabelData[ LBL_LMARGIN ] ) )
    ELSE
       ::lOneMoreBand := .T.
-      ::nCurrentCol :=  ::nCurrentCol + 1
+      ::nCurrentCol := ::nCurrentCol + 1
    ENDIF
 
    RETURN Self
@@ -307,10 +306,10 @@ METHOD SampleLabels() CLASS HBLabelForm
    // Create the sample label row
    ASize( aBand, ::aLabelData[ LBL_HEIGHT ] )
    AFill( aBand, Space( ::aLabelData[ LBL_LMARGIN ] ) +;
-              Replicate( Replicate( "*", ;
-              ::aLabelData[ LBL_WIDTH ] ) + ;
-              Space( ::aLabelData[ LBL_SPACES ] ), ;
-              ::aLabelData[ LBL_ACROSS ] ) )
+      Replicate( Replicate( "*", ;
+      ::aLabelData[ LBL_WIDTH ] ) + ;
+      Space( ::aLabelData[ LBL_SPACES ] ), ;
+      ::aLabelData[ LBL_ACROSS ] ) )
 
    // Prints sample labels
    DO WHILE lMoreSamples
@@ -327,7 +326,7 @@ METHOD SampleLabels() CLASS HBLabelForm
 
       // Prompt for more
       DispOutAt( Row(), 0, __NatMsg( _LF_SAMPLES ) + " (" + __NatMsg( _LF_YN ) + ")" )
-      cKey := hb_KeyChar( Inkey( 0 ) )
+      cKey := hb_keyChar( Inkey( 0 ) )
       DispOutAt( Row(), Col(), cKey )
       IF Row() == MaxRow()
          hb_Scroll( 0, 0, MaxRow(), MaxCol(), 1 )
@@ -382,7 +381,6 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
          // if no error is reported, we have our label file
          IF Empty( nFileError := FError() )
             EXIT
-
          ENDIF
 
       NEXT
@@ -397,7 +395,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
       err:subSystem := "FRMLBL"
       err:osCode := nFileError
       err:filename := cLblFile
-      Eval(ErrorBlock(), err)
+      Eval( ErrorBlock(), err )
    ENDIF
 
    // If we got this far, assume the label file is open and ready to go
@@ -426,7 +424,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
 
          // Get the text of the expression
          cFieldText := RTrim( SubStr( cBuff, nOffset, FIELDSIZE ) )
-         nOffset :=nOffSet + 60
+         nOffset := nOffSet + 60
 
          IF !Empty( cFieldText )
 
@@ -457,10 +455,10 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
    RETURN aLabel
 
 FUNCTION __LabelForm( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
-                       bWhile, nNext, nRecord, lRest, lSample )
+      bWhile, nNext, nRecord, lRest, lSample )
 
    RETURN HBLabelForm():New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
-                          bWhile, nNext, nRecord, lRest, lSample )
+      bWhile, nNext, nRecord, lRest, lSample )
 
 STATIC PROCEDURE PrintIt( cString )
 
