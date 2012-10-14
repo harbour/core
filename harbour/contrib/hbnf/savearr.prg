@@ -30,8 +30,6 @@
  *
  */
 
-MEMVAR lRet
-
 FUNCTION FT_SAVEARR( aArray, cFileName, nErrorCode )
 
    LOCAL nHandle, lRet
@@ -54,9 +52,9 @@ FUNCTION FT_SAVEARR( aArray, cFileName, nErrorCode )
 STATIC FUNCTION _ftsavesub( xMemVar, nHandle, nErrorCode )
 
    LOCAL cValType, nLen, cString
-   PRIVATE lRet       // accessed in code block
 
-   lRet := .T.
+   LOCAL lRet := .T.
+
    cValType := ValType( xMemVar )
    FWrite( nHandle, cValType, 1 )
    IF FError() == 0
@@ -134,7 +132,7 @@ STATIC FUNCTION _ftrestsub( nHandle, nErrorCode )
       CASE cValType == "D"
          cMemVar := Space( 8 )
          FRead( nHandle, @cMemVar, 8 )
-         xMemVar := CToD( cMemVar )
+         xMemVar := CToD( cMemVar ) /* TOFIX: It's not Y2K compatible, and it needs same _SET_DATEFORMAT on save and load */
       CASE cValType == "L"
          cMemVar := " "
          FRead( nHandle, @cMemVar, 1 )

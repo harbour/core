@@ -27,20 +27,20 @@
  *     These code fragments find the week number, given a date.
  *
  *     // literal character date
- *     dDate  := CTOD("01/01/91")
- *     nWkNum := FT_WOY(dDate)              // result:  1
+ *     dDate  := SToD( "19910101" )
+ *     nWkNum := FT_WOY( dDate )            // result:  1
  *
  *     // presume DOS date to be 01/06/91
- *     nWkNum := FT_WOY(DATE())             // result:  2
+ *     nWkNum := FT_WOY( Date() )           // result:  2
  *
  *     // date input
- *     cDate  := SPACE(8)
- *     @ 4,10 get cDate PICT "##/##/##"     // input 07/04/91
+ *     dDate := SToD( "" )
+ *     @ 4, 10 GET cDate                    // input 1991/07/04
  *     READ
- *     nWkNum := FT_WOY(CTOD(cDate))        // result: 27
+ *     nWkNum := FT_WOY( dDate )            // result: 27
  *
  *     // last day of year
- *     nWkNum := FT_WOY(CTOD("12/31/91"))    // result: 53
+ *     nWkNum := FT_WOY( SToD( "19911231" ) ) // result: 53
  *
  *     For a demonstration of this function, compile and link the
  *     program woy.prg in the Nanforum Toolkit source code.
@@ -69,20 +69,20 @@
  *     These code fragments find the day number, given a date.
  *
  *     // literal character date
- *     dDate  := CTOD("01/01/91")
- *     nDayNum := FT_DOY(dDate)              // result:  1
+ *     dDate  := SToD( "19910101" )
+ *     nDayNum := FT_DOY( dDate )            // result:  1
  *
  *     // presume DOS date to be 01/06/91
- *     nDayNum := FT_DOY(DATE())             // result:  6
+ *     nDayNum := FT_DOY( Date() )           // result:  6
  *
  *     // date input
- *     cDate  := SPACE(8)
- *     @ 4,10 get cDate PICT "##/##/##"      // input 07/04/91
+ *     dDate := SToD( "" )
+ *     @ 4, 10 GET cDate                     // input 1991/07/04
  *     READ
- *     nDayNum := FT_DOY(CTOD(cDate))        // result: 185
+ *     nDayNum := FT_DOY( dDate )            // result: 185
  *
  *     // last day of year
- *     nDayNum := FT_DOY(CTOD("12/31/91"))    // result: 365
+ *     nDayNum := FT_DOY( SToD( "19911231" ) ) // result: 365
  *
  *     For a demonstration of this function, compile and link the
  *     program woy.prg in the Nanforum Toolkit source code.

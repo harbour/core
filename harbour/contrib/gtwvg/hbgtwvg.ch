@@ -56,7 +56,7 @@
 /*-*/
 /*                 Extended GT Manipulation Constants                   */
 /*-*/
-#if 0  /*Already in hbgtinfo.ch */
+#ifndef HB_GTE_ACTIVATE
    #define HB_GTE_ACTIVATE                1
    #define HB_GTE_SETFOCUS                2
    #define HB_GTE_KILLFOCUS               3

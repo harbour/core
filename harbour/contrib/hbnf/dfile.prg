@@ -26,7 +26,9 @@
  *
  */
 
-THREAD STATIC t_nHandle := 0
+#include "fileio.ch"
+
+THREAD STATIC t_nHandle := F_ERROR
 
 FUNCTION FT_DFSETUP( cInFile, nTop, nLeft, nBottom, nRight, ;
       nStart, nCNormal, nCHighlight, cExitKeys, ;
@@ -71,12 +73,12 @@ FUNCTION FT_DFSETUP( cInFile, nTop, nLeft, nBottom, nRight, ;
 
 FUNCTION FT_DFCLOSE()
 
-   IF t_nHandle > 0
+   IF t_nHandle != F_ERROR
       _FT_DFCLOS()
 
       FClose( t_nHandle )
 
-      t_nHandle := 0
+      t_nHandle := F_ERROR
    ENDIF
 
    RETURN NIL

@@ -53,6 +53,9 @@ PROCEDURE Main()
    LOCAL nNum, dDate, aTestData, aTemp, cFY_Start, nDOW_Start
 
    SET DATE ANSI                                 // User's normal date format
+   SET CENTURY ON
+   hb_langSelect( "EN" )
+
    aTemp      := FT_DATECNFG()                   // Get/Set cFY_Start & nDOW_Start.
 // aTemp      := FT_DATECNFG( "1980.01.03", 1 )  // Date string in user's format.
    cFY_Start  := aTemp[ 1 ]                      // See FT_DATECNFG() in ft_date0.prg

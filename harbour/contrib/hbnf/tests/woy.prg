@@ -4,49 +4,32 @@
 
 #require "hbnf"
 
-// ADD PARAMETER "CENTURY" ON COMMAND LINES TO TEST 4-DIGIT YEARS
+PROCEDURE Main()
 
-PROCEDURE Main( cCent )
+   LOCAL dDate
+   LOCAL GetList := {}
 
-   LOCAL  lCentOn := .F. , cDate
-   MEMVAR getlist
-
-   IF HB_ISSTRING( cCent ) .AND. "CENT" $ Upper( cCent )
-      SET CENTURY ON
-      lCentOn := .T.
-   ENDIF
+   SET DATE ANSI
+   SET CENTURY ON
 
    DO WHILE .T.
-      CLEAR
+
       @ 2, 10 SAY "Date to Test"
 
-      IF lCentOn
-         cDate := Space( 10 )
-         @ 2, 24 GET cDate PICTURE "##/##/####"
-      ELSE
-         cDate := Space( 8 )
-         @ 2, 24 GET cDate PICTURE "##/##/##"
-      ENDIF
+      dDate := SToD( "" )
+      @ 2, 24 GET dDate
       READ
 
-      IF Empty( cDate )
+      IF Empty( dDate )
          EXIT
       ENDIF
 
-      IF Left( DToC( CToD( cDate ) ), 1 ) == " "
-         Tone( 800, 1 )
-         @ 4, 24 SAY "INVALID DATE"
-         Inkey( 2 )
-         LOOP
-      ENDIF
-
-      @ 4, 10 SAY "Is Day Number " + Str( FT_DOY( CToD( cDate ) ), 3 )
-
-      @ 6, 10 SAY "Is in Week Number " + Str( FT_WOY( CToD( cDate ) ), 2 )
+      @ 4, 10 SAY "Is Day Number " + Str( FT_DOY( dDate ), 10 )
+      @ 6, 10 SAY "Is in Week Number " + Str( FT_WOY( dDate ), 10 )
       @ 7, 0
-      WAIT
-   ENDDO
 
-   CLEAR
+      WAIT
+
+   ENDDO
 
    RETURN

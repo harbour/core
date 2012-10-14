@@ -41,16 +41,16 @@
  *     weeks.
  *  $EXAMPLES$
  *     // get info about accounting month containing 9/15/90
- *     aDateInfo := FT_ACCTQTR( CTOD("09/15/90") )
- *     ? aDateInfo[1]   //  199003       (3rd quarter)
- *     ? aDateInfo[2]   //  07/01/90     beginning of quarter 3
- *     ? aDateInfo[3]   //  09/29/90     end of quarter 3
+ *     aDateInfo := FT_ACCTQTR( SToD( "19900915" ) )
+ *     ? aDateInfo[ 1 ]   //  199003       (3rd quarter)
+ *     ? aDateInfo[ 2 ]   //  07/01/90     beginning of quarter 3
+ *     ? aDateInfo[ 3 ]   //  09/29/90     end of quarter 3
  *
  *     // get info about accounting qtr. 2 in year containing 9/15/90
- *     aDateInfo := FT_ACCTQTR( CTOD("09/15/90"), 2 )
- *     ? aDateInfo[1]   //  199002
- *     ? aDateInfo[2]   //  04/01/89   beginning of quarter 2
- *     ? aDateInfo[3]   //  06/30/90   end of quarter 2
+ *     aDateInfo := FT_ACCTQTR( SToD( "19900915" ), 2 )
+ *     ? aDateInfo[ 1 ]   //  199002
+ *     ? aDateInfo[ 2 ]   //  04/01/89   beginning of quarter 2
+ *     ? aDateInfo[ 3 ]   //  06/30/90   end of quarter 2
  *  $SEEALSO$
  *     FT_DATECNFG() FT_ACCTWEEK() FT_ACCTMONTH() FT_ACCTYEAR()
  *  $END$

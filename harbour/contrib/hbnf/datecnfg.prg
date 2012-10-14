@@ -28,10 +28,9 @@
 
 FUNCTION FT_DATECNFG( cFYStart, nDow )
 
-   THREAD STATIC t_aDatePar := { "1980.01.01", 1 }
+   THREAD STATIC t_aDatePar := { SToD( "19800101" ), 1 }
 
    LOCAL dCheck
-   LOCAL cDateFormat
 
    IF HB_ISSTRING( cFYStart )
       dCheck := CToD( cFYStart )
@@ -42,9 +41,7 @@ FUNCTION FT_DATECNFG( cFYStart, nDow )
             dCheck--
          ENDIF
 
-         cDateFormat := Set( _SET_DATEFORMAT, "yyyy.mm.dd" )
-         t_aDatePar[ 1 ] := DToC( dCheck )
-         Set( _SET_DATEFORMAT, cDateFormat )
+         t_aDatePar[ 1 ] := dCheck
       ENDIF
    ENDIF
 
@@ -52,4 +49,4 @@ FUNCTION FT_DATECNFG( cFYStart, nDow )
       t_aDatePar[ 2 ] := nDow
    ENDIF
 
-   RETURN AClone( t_aDatePar )
+   RETURN { hb_DToC( t_aDatePar[ 1 ], "yyyy.mm.dd" ), t_aDatePar[ 2 ] }

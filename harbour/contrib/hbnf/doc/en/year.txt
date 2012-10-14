@@ -36,16 +36,16 @@
  *  $EXAMPLES$
  *     // Get info about year containing 9/15/90, assuming default
  *     // beginning of year is January 1st.
- *     aDateInfo := FT_YEAR( Ctod("09/15/90") )
- *     ? aDateInfo[1]   //  1990
- *     ? aDateInfo[2]   //  01/01/90     beginning of year
- *     ? aDateInfo[3]   //  12/31/90     end of year
+ *     aDateInfo := FT_YEAR( SToD( "19900915" ) )
+ *     ? aDateInfo[ 1 ]   //  1990
+ *     ? aDateInfo[ 2 ]   //  01/01/90     beginning of year
+ *     ? aDateInfo[ 3 ]   //  12/31/90     end of year
  *
  *     // get info about current year (1991).
  *     aDateInfo := FT_YEAR()
- *     ? aDateInfo[1]   //  1991
- *     ? aDateInfo[2]   //  01/01/91   beginning of year
- *     ? aDateInfo[3]   //  12/31/91   end of year
+ *     ? aDateInfo[ 1 ]   //  1991
+ *     ? aDateInfo[ 2 ]   //  01/01/91   beginning of year
+ *     ? aDateInfo[ 3 ]   //  12/31/91   end of year
  *  $SEEALSO$
  *     FT_DATECNFG() FT_WEEK() FT_MONTH() FT_QTR()
  *  $END$

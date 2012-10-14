@@ -10,6 +10,9 @@ PROCEDURE Main()
 
    LOCAL aRet
 
+   SET DATE ANSI
+   SET CENTURY ON
+
    SetColor( "w+/b" )
    CLS
    IF ft_numlock()

@@ -38,10 +38,10 @@
  *     weeks.
  *  $EXAMPLES$
  *     // get info about accounting year containing 9/15/90
- *     aDateInfo := FT_ACCTYEAR( CTOD("09/15/90") )
- *     ? aDateInfo[1]   //  1990
- *     ? aDateInfo[2]   //  12/31/89    beginning of year
- *     ? aDateInfo[3]   //  12/29/90    end of year
+ *     aDateInfo := FT_ACCTYEAR( SToD( "19900915" ) )
+ *     ? aDateInfo[ 1 ]   //  1990
+ *     ? aDateInfo[ 2 ]   //  12/31/89    beginning of year
+ *     ? aDateInfo[ 3 ]   //  12/29/90    end of year
  *  $SEEALSO$
  *     FT_DATECNFG() FT_ACCTWEEK() FT_ACCTMONTH() FT_ACCTQTR()
  *  $END$

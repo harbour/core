@@ -41,13 +41,13 @@
  *     weeks.
  *  $EXAMPLES$
  *     // get info about accounting month containing 9/15/90
- *     aDateInfo := FT_ACCTMONTH( Ctod("09/15/90") )
+ *     aDateInfo := FT_ACCTMONTH( SToD("19900915") )
  *     ? aDateInfo[1]   //  199009       (9th month)
  *     ? aDateInfo[2]   //  09/02/90     beginning of month 9
  *     ? aDateInfo[3]   //  09/29/90     end of month 9
  *
  *     // get info about accounting month 5 in year containing 9/15/90
- *     aDateInfo := FT_ACCTMONTH( Ctod("09/15/90"), 5 )
+ *     aDateInfo := FT_ACCTMONTH( SToD("19900915"), 5 )
  *     ? aDateInfo[1]   //  199005
  *     ? aDateInfo[2]   //  04/29/89   beginning of month 5
  *     ? aDateInfo[3]   //  06/02/90   end of month 5

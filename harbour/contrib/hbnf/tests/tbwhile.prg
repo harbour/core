@@ -19,8 +19,9 @@ PROCEDURE Main()
    LOCAL nFreeze := 1, lSaveScrn := .T. , nRecSel
    LOCAL cColorList := "N/W, N/BG, B/W, B/BG, B/W, B/BG, R/W, B/R"
    LOCAL cColorShad := "N/N"
+   LOCAL GetList := {}
+
    FIELD last, first
-   MEMVAR GetList
 
    IF ! hb_FileExists( "tbnames.dbf" )
       MAKE_DBF()

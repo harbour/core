@@ -41,16 +41,16 @@
  *     weeks.
  *  $EXAMPLES$
  *     // get info about accounting week containing 9/15/90
- *     aDateInfo := FT_ACCTWEEK( CTOD("09/15/90") )
- *     ? aDateInfo[1]   //  199037       (37th week)
- *     ? aDateInfo[2]   //  09/09/90     beginning of week 37
- *     ? aDateInfo[3]   //  09/15/90     end of week 37
+ *     aDateInfo := FT_ACCTWEEK( SToD( "19900915" ) )
+ *     ? aDateInfo[ 1 ]   //  199037       (37th week)
+ *     ? aDateInfo[ 2 ]   //  09/09/90     beginning of week 37
+ *     ? aDateInfo[ 3 ]   //  09/15/90     end of week 37
  *
  *     // get info about accounting week 25 in year containing 9/15/90
- *     aDateInfo := FT_ACCTWEEK( CTOD("09/15/90"), 25 )
- *     ? aDateInfo[1]   //  199025
- *     ? aDateInfo[2]   //  06/17/89   beginning of week 25
- *     ? aDateInfo[3]   //  06/23/90   end of week 25
+ *     aDateInfo := FT_ACCTWEEK( SToD( "19900915" ), 25 )
+ *     ? aDateInfo[ 1 ]   //  199025
+ *     ? aDateInfo[ 2 ]   //  06/17/89   beginning of week 25
+ *     ? aDateInfo[ 3 ]   //  06/23/90   end of week 25
  *  $SEEALSO$
  *     FT_DATECNFG() FT_ACCTMONTH() FT_ACCTQTR() FT_ACCTYEAR()
  *  $END$

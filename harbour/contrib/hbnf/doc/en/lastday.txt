@@ -22,7 +22,7 @@
  *     passed, or the last day of the current month if no argument is
  *     supplied.
  *  $EXAMPLES$
- *     dDate := CTOD( "09/15/90" )
+ *     dDate := SToD( "19900915" )
  *     ? FT_LDAY( dDate )             // 09/30/90
  *     ? FT_LDAY()                    // 03/31/91  (current month)
  *  $SEEALSO$

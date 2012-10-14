@@ -24,6 +24,9 @@ PROCEDURE Main( cCmdLine )
 
    LOCAL nMaxRow
 
+   SET DATE ANSI
+   SET CENTURY ON
+
    AEval( aBar, {| x, i | HB_SYMBOL_UNUSED( x ), aOptions[ i ] := { {}, {}, {} } } )
 
    cCmdLine := iif( cCmdLine == NIL, "", cCmdLine )

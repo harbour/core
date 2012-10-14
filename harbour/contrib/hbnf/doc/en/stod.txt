@@ -4,13 +4,13 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *     FT_STOD()
+ *     FT_SToD()
  *  $CATEGORY$
  *     Conversion
  *  $ONELINER$
  *     Convert a date string to a Clipper date data type
  *  $SYNTAX$
- *     FT_STOD( <cDateStr> ) -> dDateType
+ *     FT_SToD( <cDateStr> ) -> dDateType
  *  $ARGUMENTS$
  *     <cDateStr> is a Clipper string in the format "CCYYMMDD".
  *  $RETURNS$
@@ -21,6 +21,6 @@
  *     function is the converse of the Clipper DTOS() function.
  *  $EXAMPLES$
  *     LOCAL dMyDate
- *     dMyDate := FT_STOD( "19901127" )
+ *     dMyDate := FT_SToD( "19901127" )
  *  $END$
  */

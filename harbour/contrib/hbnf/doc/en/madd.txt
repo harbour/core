@@ -31,12 +31,12 @@
  *     it will return the EOM of calculated month.  Otherwise it will
  *     return the same day as the day of the passed date.
  *  $EXAMPLES$
- *     dDate := CTOD( "09/15/90" )
+ *     dDate := SToD( "19900915" )
  *     ? FT_MADD( dDate, 1 )        // 10/15/90
  *     ? FT_MADD( dDate, -2 )       // 07/15/90
  *
  *     // force EOM
- *     dDate := CTOD( "04/30/91" )
+ *     dDate := SToD( "19910430" )
  *     ? FT_MADD( dDate, 1 )        // 05/30/91
  *     ? FT_MADD( dDate, 1, .T. )   // 05/31/91  <- forced EOM
  *     ? FT_MADD( dDate, 2 )        // 06/30/91

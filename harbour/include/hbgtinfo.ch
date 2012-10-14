@@ -126,7 +126,7 @@
 #define HB_GTI_CLOSABLE         50  /* toggles ability to close window (supported by: GTWVT) */
 
 /* Additional constants to enhance GT */
-#define HB_GTI_NOTIFIERBLOCK    51  /* This optional codeblock gets called whenever certain events occur. See HB_GTE_* */
+#define HB_GTI_NOTIFIERBLOCK    51  /* Deprecated. Use HB_K_* inkey.ch events instead. */
 #define HB_GTI_SCREENSIZE       52  /* Get/Set height/width of application window in pixels */
 #define HB_GTI_PALETTE          53  /* Get/Set console colors 0 - 15 given an array of 16 elements containing RGB colors */
 
@@ -192,12 +192,14 @@
 #define HB_GTI_KBD_LALT         0x100000
 #define HB_GTI_KBD_RALT         0x200000
 
+#ifdef HB_LEGACY_LEVEL4
 /* Harbour GT callback events - WORK IN PROGRESS */
 #define HB_GTE_ACTIVATE         1
 #define HB_GTE_SETFOCUS         2
 #define HB_GTE_KILLFOCUS        3
 #define HB_GTE_CLOSE            4
 #define HB_GTE_RESIZED          5
+#endif
 
 /* Harbour GT Reszing mode constants */
 #define HB_GTI_RESIZEMODE_FONT  0   /* Default */

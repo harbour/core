@@ -26,7 +26,7 @@
  *      When is the due date?  Assuming you are printing the invoices
  *      today, your answer is:
  *
- *           dDueDate := DATE() + ft_addWkDay( DATE(), 10 )
+ *           dDueDate := DATE() + ft_addWkDay( Date(), 10 )
  *
  *      A work day is defined as Monday through Friday.  Unfortunately
  *      this routine does _not_ account for holidays.
@@ -36,9 +36,9 @@
  *
  *  $EXAMPLES$
  *      // Postdate 5 working days from the first of January
- *      dPost := CTOD("01/01/91")
+ *      dPost := SToD( "19910101" )
  *      dPost += FT_ADDWKDY( dPost, 5 )   // returns 7 true days
- *      ? dPost                          //  01/08/91
+ *      ? dPost                           //  01/08/91
  *
  *  $SEEALSO$
  *      FT_WORKDAYS()

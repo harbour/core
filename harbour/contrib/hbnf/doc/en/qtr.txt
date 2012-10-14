@@ -39,22 +39,22 @@
  *     parameters.
  *  $EXAMPLES$
  *     // get info about quarter containing 9/15/90
- *     aDateInfo := FT_QTR( CTOD("09/15/90") )
- *     ? aDateInfo[1]   //  199003       (3rd quarter)
- *     ? aDateInfo[2]   //  07/01/90     beginning of quarter 3
- *     ? aDateInfo[3]   //  09/30/90     end of week quarter 3
+ *     aDateInfo := FT_QTR( SToD( "19900915" ) )
+ *     ? aDateInfo[ 1 ]   //  199003       (3rd quarter)
+ *     ? aDateInfo[ 2 ]   //  07/01/90     beginning of quarter 3
+ *     ? aDateInfo[ 3 ]   //  09/30/90     end of week quarter 3
  *
  *     // get info about quarter 2 in year containing 9/15/90
- *     aDateInfo := FT_QTR( CTOD("09/15/90"), 2 )
- *     ? aDateInfo[1]   //  199002
- *     ? aDateInfo[2]   //  04/01/90   beginning of quarter 2
- *     ? aDateInfo[3]   //  06/30/90   end of quarter 2
+ *     aDateInfo := FT_QTR( SToD( "19900915" ), 2 )
+ *     ? aDateInfo[ 1 ]   //  199002
+ *     ? aDateInfo[ 2 ]   //  04/01/90   beginning of quarter 2
+ *     ? aDateInfo[ 3 ]   //  06/30/90   end of quarter 2
  *
  *     // get info about quarter 2 in current year (1991)
  *     aDateInfo := FT_QTR( , 2 )
- *     ? aDateInfo[1]   //  199102
- *     ? aDateInfo[2]   //  04/01/91   beginning of quarter 2
- *     ? aDateInfo[3]   //  06/30/91   end of quarter 2
+ *     ? aDateInfo[ 1 ]   //  199102
+ *     ? aDateInfo[ 2 ]   //  04/01/91   beginning of quarter 2
+ *     ? aDateInfo[ 3 ]   //  06/30/91   end of quarter 2
  *  $SEEALSO$
  *     FT_DATECNFG() FT_WEEK() FT_MONTH() FT_YEAR()
  *  $END$

@@ -28,21 +28,19 @@
 
 FUNCTION FT_YEAR( dGivenDate )
 
-   LOCAL aRetVal[ 3 ], cFY_Start, cDateFormat
+   LOCAL aRetVal[ 3 ]
 
-   cFY_Start   := FT_DATECNFG()[ 1 ]
-   cDateFormat := Set( _SET_DATEFORMAT, "yyyy.mm.dd" )
+   LOCAL cFY_Start := FT_DATECNFG()[ 1 ]
 
    IF ! HB_ISDATE( dGivenDate )
       dGivenDate := Date()
    ENDIF
 
-   aRetVal[ 2 ] := CToD( Str( Year( dGivenDate ) - iif( Month( dGivenDate ) < ;
-      Month( CToD( cFY_Start ) ), 1, 0 ), 4 ) + ;
-      SubStr( cFY_Start, 5, 6 ) )
+   aRetVal[ 2 ] := SToD( ;
+      StrZero( Year( dGivenDate ) - iif( Month( dGivenDate ) < Month( hb_CToD( cFY_Start, "yyyy.mm.dd" ) ), 1, 0 ), 4 ) + ;
+      SubStr( cFY_Start, 6, 2 ) + ;
+      SubStr( cFY_Start, 9, 6 ) )
    aRetval[ 3 ] := FT_MADD( aRetVal[ 2 ], 12 ) - 1
    aRetVal[ 1 ] := Str( Year( aRetVal[ 3 ] ), 4 )      // End of Year
-
-   Set( _SET_DATEFORMAT, cDateFormat )
 
    RETURN aRetVal

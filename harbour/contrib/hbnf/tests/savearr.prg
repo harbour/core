@@ -12,6 +12,9 @@ PROCEDURE Main()
       { "Invoice 3", Date() + 1, 0, .T. } }, aSave
    LOCAL nErrorCode := 0
 
+   SET DATE ANSI
+   SET CENTURY OFF /* TOFIX: RTEs with ON */
+
    FT_SAVEARR( aArray, "invoice.dat", @nErrorCode )
    IF nErrorCode == 0
       CLS
