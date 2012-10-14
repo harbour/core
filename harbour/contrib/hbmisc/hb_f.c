@@ -50,8 +50,6 @@
  *
  */
 
-/* please run tests\testhbf.prg for testing */
-
 #include "hbapifs.h"
 
 #define _B_SIZE   4096

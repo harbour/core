@@ -58,7 +58,7 @@ PROCEDURE Main()
       CBhandler( nWinNum, nId, nEvent, nIndex, nPBid ) } )
 
    nPBid := wvw_pbCreate( NIL, 4, 1 + nMaxWidth + 1, 4, 1 + nMaxWidth + 1 + 10 - 1, "OK", NIL, ;
-      {|| __Keyboard( _SECRET_KEY ) }, { 0, 0, + 2, 0 } )
+      {|| hb_keyPut( _SECRET_KEY ) }, { 0, 0, + 2, 0 } )
 
    wvw_cbSetFocus( NIL, nCBid )
 
@@ -69,7 +69,7 @@ PROCEDURE Main()
       DO CASE
       CASE ch == K_TAB .OR. ch == K_ENTER
          IF nPos == 2 .AND. ch == K_ENTER .AND. wvw_pbEnable( NIL, nPBid )
-            KEYBOARD( _SECRET_KEY )
+            hb_keyPut( _SECRET_KEY )
             LOOP
          ELSE
             nPos++

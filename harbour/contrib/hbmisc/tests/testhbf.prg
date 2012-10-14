@@ -22,7 +22,7 @@ inplementation of :
 PROCEDURE Main()
 
    // open a text file here
-   IF hb_fuse( "testhbf.prg", 0 ) > 1
+   IF hb_fuse( __FILE__, 0 ) > 1
 
       DO WHILE ! hb_FEof()
          ? "line " + Str( hb_frecno(), 2 ) + " " + hb_freadln()

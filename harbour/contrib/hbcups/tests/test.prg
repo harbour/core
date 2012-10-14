@@ -26,12 +26,12 @@ PROCEDURE Main()
       CLS
       aPrinter := cupsGetDests()
       i := AChoice( 2, 5, 30, Len( aPrinter ) + 2, aPrinter )
-      ? "Printing... Job ID:", cupsPrintFile( aPrinter[ i ], "test.prg", "Harbour CUPS Printing" )
+      ? "Printing... Job ID:", cupsPrintFile( aPrinter[ i ], __FILE__, "Harbour CUPS Printing" )
 /*    for duplex printing, tested on OKI B410 */
-/*    ? "Printing... Job ID:", cupsPrintFile( aPrinter[ i ], "../../../tests/speedstr.prg", "Harbour CUPS Printing", { "sides=two-sided-short-edge" } ) */
+/*    ? "Printing... Job ID:", cupsPrintFile( aPrinter[ i ], ".." + hb_ps() + "core.c", "Harbour CUPS Printing", { "sides=two-sided-short-edge" } ) */
    ELSE
-      ? "Printing... Job ID:", cupsPrintFile( cupsGetDefault(), "test.prg", "Harbour CUPS Printing", { "sides=one-sided" } )
-/*    ? "Printing... Job ID:", cupsPrintFile( cupsGetDefault(), "test.prg", "Harbour CUPS Printing", { "sides" => "one-sided" } ) */
+      ? "Printing... Job ID:", cupsPrintFile( cupsGetDefault(), __FILE__, "Harbour CUPS Printing", { "sides=one-sided" } )
+/*    ? "Printing... Job ID:", cupsPrintFile( cupsGetDefault(), __FILE__, "Harbour CUPS Printing", { "sides" => "one-sided" } ) */
    ENDIF
 
    RETURN

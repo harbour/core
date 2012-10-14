@@ -6,7 +6,7 @@
 
 PROCEDURE Main()
 
-   LOCAL cInFile   := "dfile.prg"
+   LOCAL cInFile   := __FILE__
    LOCAL CKEY
    LOCAL NNCOLOR   := 7
    LOCAL NHCOLOR   := 15

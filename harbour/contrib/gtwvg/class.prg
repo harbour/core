@@ -3365,7 +3365,7 @@ METHOD wvtMenu:Create( cCaption )
 
    IF Empty( ::hMenu := Wvt_CreateMenu() )
 #if 0
-      Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Init()", "Create Menu Error", { cCaption, cCaption },"wvt.prg" ) )
+      Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Init()", "Create Menu Error", { cCaption, cCaption }, __FILE__ ) )
 #endif
    ENDIF
    ::Caption := iif( cCaption == NIL, "", cCaption )
@@ -3381,7 +3381,7 @@ METHOD wvtMenu:Destroy()
 
       IF !Wvt_DestroyMenu( ::hMenu )
 #if 0
-         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Destroy()", "Destroy menu FAILED", {},"wvt.prg" ) )
+         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Destroy()", "Destroy menu FAILED", {},__FILE__ ) )
 #endif
       ENDIF
       ::hMenu := 0
@@ -3405,13 +3405,13 @@ METHOD wvtMenu:AddItem( cCaption, bAction )
          aItem := { MF_SEPARATOR, 0, 0, NIL }
       ELSE
 #if 0
-         Throw( ErrorNew( "wvtMenu", 3101, "wvtMenu:AddItem()", "Argument Error", { cCaption, bAction },"wvt.prg" ) )
+         Throw( ErrorNew( "wvtMenu", 3101, "wvtMenu:AddItem()", "Argument Error", { cCaption, bAction },__FILE__ ) )
 #endif
       ENDIF
 
       IF !Wvt_AppendMenu( ::hMenu, aItem[WVT_MENU_TYPE], aItem[WVT_MENU_IDENTIFIER], aItem[WVT_MENU_CAPTION] )
 #if 0
-         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:AddItem()", "Add menu item", { cCaption, bAction },"wvt.prg" ) )
+         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:AddItem()", "Add menu item", { cCaption, bAction },__FILE__ ) )
 #endif
       ENDIF
 
@@ -3450,7 +3450,7 @@ METHOD wvtMenu:DelItem( nItemNum )
          hb_ADel( ::aItems, nItemNum, .T. )
       ELSE
 #if 0
-         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:DelItem()", "Delete menu item FAILED", { nItemNum },"wvt.prg" ) )
+         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:DelItem()", "Delete menu item FAILED", { nItemNum },__FILE__ ) )
 #endif
       ENDIF
    ENDIF

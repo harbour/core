@@ -52,8 +52,6 @@
 //
 //
 /*
- *                           WvtPaint.prg
- *
  *            Routines to manage Wvt*Classes Gui Painting
  */
 //

@@ -9,8 +9,8 @@
  * This is an original work by Ralph Oliver and is placed in the
  * public domain.
  *
- * This program uses the preprocessor #defines and #command in
- * Aavg.prg by David Husnian.
+ * This program uses the preprocessor #defines and #command
+ * by David Husnian.
  *
  * Modification history:
  * ---------------------
@@ -23,7 +23,7 @@
  *
  */
 
-#define FORCE_BETWEEN( x, y, z )         ( y := MAX( MIN( y, z ), x ) )
+#define FORCE_BETWEEN( x, y, z )         ( y := Max( Min( y, z ), x ) )
 
 FUNCTION FT_AMEDIAN( aArray, nStart, nEnd )
 

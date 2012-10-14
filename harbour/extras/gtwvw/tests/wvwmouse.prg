@@ -573,7 +573,7 @@ STATIC PROCEDURE xKeyRepeater( lInit )
 
    // mouse is down long enough since last valid check
    // let's repeat it
-   __Keyboard( K_LBUTTONDOWN )
+   hb_keyPut( K_LBUTTONDOWN )
 
    // to be more precise
    s_nLastValidCheck := Seconds()   //nNow

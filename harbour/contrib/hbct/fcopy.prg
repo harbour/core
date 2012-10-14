@@ -7,7 +7,6 @@
  *   CT3 file functions:
  *    FILECOPY(), FILECOPEN(), FILECCLOSE(), FILEAPPEND()
  *
- *    Program..: fcopy.prg
  *    Author...: Frederic J. Bell
  *    Dated....: Jun,17 94
  *    Revised..: Sep,20 94

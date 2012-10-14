@@ -170,7 +170,7 @@ FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 
             SetWinFocus( nWinNum )
             MSetPos( GetList[i]:row, GetList[i]:col + 1 )
-            KEYBOARD( K_LBUTTONDOWN )
+            hb_keyPut( K_LBUTTONDOWN )
          ENDIF //oGet:HasFocus
 
       ELSE  //i==0

@@ -356,7 +356,7 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
       CASE ( nScan := AScan( t_aTriggerInkey[ nMenu ], nKey ) ) > 0
          nActive := nScan
          IF ! lCold
-            FT_PutKey( K_ENTER )
+            hb_keyPut( K_ENTER )
          ENDIF
       ENDCASE
 

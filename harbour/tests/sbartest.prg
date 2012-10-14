@@ -73,7 +73,7 @@ FUNCTION InitScrlBar()
 
 // function used to update scrollbar
 
-FUNCTION updateFilesScroll( modo )
+STATIC FUNCTION updateFilesScroll( modo )
 
    LOCAL newPos, valRet := AC_CONT   // Default to continue
    LOCAL ultTecla := LastKey()

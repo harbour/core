@@ -195,7 +195,7 @@ STATIC FUNCTION CloseLastWindow()
 
    LOCAL nWinNum := wvw_nNumWindows() - 1
    wvw_nSetCurWindow( nWinNum )
-   __Keyboard( K_ESC )
+   hb_keyPut( K_ESC )
 
    RETURN NIL
 
@@ -215,7 +215,7 @@ STATIC FUNCTION typing( ch )
       IF ch == K_ENTER
          ?? Chr( 10 )
       ELSEIF ch == K_BS
-         ?? " " + Chr( K_BS )
+         ?? " " + Chr( 8 )
       ENDIF
    ENDIF
 

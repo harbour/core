@@ -3,7 +3,6 @@
  */
 
 /*
- * Uploadftp.prg
  * Send an file or list of files to ftp server
  */
 

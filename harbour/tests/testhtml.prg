@@ -4,7 +4,6 @@
 
 /*
 *
-*  testhtml.prg
 *  Harbour Test of a HTML-Generator class.
 *
 *              Tips: - Use ShowResults to make dynamic html (to test dynamic

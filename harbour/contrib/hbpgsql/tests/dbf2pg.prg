@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * dbf2pg.prg - converts a .dbf file into a Postgres table
+ * Converts a .dbf file into a Postgres table
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  * (The original file was ported from mysql and changed by Rodrigo Moreno rodrigo_moreno@yahoo.com)

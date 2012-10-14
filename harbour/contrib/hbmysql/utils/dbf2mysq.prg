@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * dbf2mysq.prg - converts a .dbf file into a MySQL table
+ * Converts a .dbf file into a MySQL table
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  * www - http://harbour-project.org

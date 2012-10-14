@@ -448,7 +448,7 @@ FUNCTION WvtLines()
    @ 15, 8 SAY "D"
    @ 16, 9 SAY "E"
 
-   DO WHILE ( Inkey( 0 ) != K_ESC )
+   DO WHILE Inkey( 0 ) != K_ESC
    ENDDO
 
    //  Restore Environments

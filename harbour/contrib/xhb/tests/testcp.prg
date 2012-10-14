@@ -6,6 +6,6 @@
 
 PROCEDURE Main()
 
-   XHB_COPYFILE( "testcp.prg", "testcp.bak", {| x | QOut( x ) } )
+   XHB_COPYFILE( __FILE__, "testcp.bak", {| x | QOut( x ) } )
 
    RETURN

@@ -30,7 +30,7 @@ PROCEDURE Main( cFrom, cTo )
    LOCAL oTo
    LOCAL cOut
 
-   cFrom := Default( cFrom, "strip.prg" )
+   cFrom := Default( cFrom, __FILE__ )
    cTo   := Default( cTo,   "strip.out" )
 
    oFrom := TTextFile()

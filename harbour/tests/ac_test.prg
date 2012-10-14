@@ -4,8 +4,6 @@
 
 //+====================================================================
 //+
-//+    Source Module => ac_test.prg
-//+
 //+    Released to Public Domain.
 //+
 //+    Functions: Procedure test()

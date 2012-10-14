@@ -63,7 +63,7 @@
 
 /*
  *
- * Teditor Fix: teditorx.prg  -- V 3.0beta 2004/04/17
+ * Teditor Fix: v3.0beta 2004/04/17
  * Copyright 2004 Giancarlo Niccolai <antispam /at/ niccolai /dot/ ws>
  *
  * Minimal revision for proper working (expecially with word warping).
@@ -75,7 +75,7 @@
  */
 
 /*
- * Teditor Fix: teditorx.prg  -- v2.0 2003-11-17
+ * Teditor Fix: v2.0 2003-11-17
  * Copyright 2003 Lance Owens <servant@gnosis.org>
  *
  * This Revised Version has a completely rewritten edit method key commands, with dynamic line & paragraph reformatting.
@@ -459,7 +459,7 @@ METHOD RefreshWindow() CLASS XHBEditor
    FOR i := 0 TO Min( ::nNumRows - 1, ::LastRow() - 1 )
 
       // 2006/JUL/23 - E.F. Adjusted to avoid out of bound.
-      //               Don't replace ::GetLine(nRow) by ::aText[nRow]:cText here,
+      //               Don't replace ::GetLine( nRow ) by ::aText[ nRow ]:cText here,
       //               because getline return line number in tbrwtext.prg (debug).
       hb_DispOutAt( Min( ::nTop + i,::nBottom ), ::nLeft, ;
          PadR( iif( ::nFirstRow + i <= ::LastRow(), SubStr( ::GetLine( ::nFirstRow + i ), ::nFirstCol, ::nNumCols ), Space(::nNumCols ) ), ::nNumCols ), ;
@@ -530,7 +530,7 @@ METHOD RefreshLine( lRefreshColSel ) CLASS XHBEditor
       DispBegin()
 
       // 2006/AUG/02 - E.F.
-      //               Don't replace ::GetLine(nRow) by ::aText[nRow]:cText here
+      //               Don't replace ::GetLine( nRow ) by ::aText[ nRow ]:cText here
       //               because getline return line number in tbrwtext.prg (debug).
       hb_DispOutAt( ::Row(), ::nLeft, PadR( SubStr( ::GetLine( ::nRow ), ::nFirstCol, ::nNumCols ), ::nNumCols, " " ), ::LineColor( ::nRow ) )
 
@@ -573,7 +573,7 @@ METHOD RefreshColumn() CLASS XHBEditor
    DispBegin()
 
    // 2006/AUG/02 - E.F.
-   //               Don't replace ::GetLine(nRow) by ::aText[nRow]:cText here
+   //               Don't replace ::GetLine( nRow ) by ::aText[ nRow ]:cText here
    //               because getline return line number in tbrwtext.prg (debug).
    FOR i := 0 TO Min( ::nNumRows - 1, ::LastRow() - 1 )
       hb_DispOutAt( ::nTop + i, nOCol, SubStr( ::GetLine(::nFirstRow + i ), ::nCol, 1 ), ::LineColor( ::nFirstRow + i ) )

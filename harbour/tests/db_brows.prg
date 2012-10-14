@@ -9,8 +9,6 @@
 //+
 //+ Placed in the public domain
 //+
-//+    Source Module => db_brows.prg
-//+
 //+    Functions: PROCEDURE Main()
 //+               Function DBFLIST()
 //+               Function DBFLIST()

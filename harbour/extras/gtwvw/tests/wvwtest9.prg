@@ -283,7 +283,7 @@ PROCEDURE Main()
    @ MaxRow() - 1, 0 SAY "This is line " + hb_ntos( MaxRow() - 1 )
    @ MaxRow(), 0 SAY "This is line " + hb_ntos( MaxRow() )
 
-   DO WHILE !( ( ch := Inkey(0 ) ) == K_ESC )
+   DO WHILE ( ch := Inkey( 0 ) ) != K_ESC
       // experiment with different paintrefresh interval:
       #if 0
       DO CASE
@@ -385,7 +385,7 @@ PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
    ?
    DO WHILE Inkey() != 0; ENDDO  //clear typeahead
    ch := Inkey( 0 )
-   DO WHILE !( ch == K_ESC )
+   DO WHILE ch != K_ESC
       IF ch == K_ENTER
          ?? hb_keyChar( ch ) + Chr( 10 )
          IF lEchoing
@@ -415,10 +415,10 @@ PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
 
    //*********** end typewriter mode ***************
 
-// epilogue
+   // epilogue
    WVW_lCloseWindow()
 
-// restore state
+   // restore state
    wvwm_ResetMouseObjects( nCurWindow )
    ResetMiscObjects( nCurWindow )
    SetCursor( nCursor )
@@ -727,8 +727,8 @@ FUNCTION HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
    LOCAL nOldWin
    LOCAL lNeedStabilize
 
-//if we can't handle non topmost window we must return right away
-//if nWinNum != wvw_nNumWindows()-1 ; return ; endif
+   //if we can't handle non topmost window we must return right away
+   //if nWinNum != wvw_nNumWindows()-1 ; return ; endif
 
    nOldWin := wvw_nSetCurWindow( nWinNum )
 

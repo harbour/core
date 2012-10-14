@@ -14,7 +14,7 @@ PROCEDURE Main()
    LOCAL lFromUser := .T.
    LOCAL aSender := { "test from", "from@test.com" }
    LOCAL aDest := { { "test to", "to@test.com", WIN_MAPI_TO } }
-   LOCAL aFiles := { { "testmapi.prg", "testmapi" } }
+   LOCAL aFiles := { { __FILE__, "testmapi" } }
 
    ? win_MAPISendMail( cSubject,                        ; // subject
                        cBody,                           ; // menssage
@@ -39,7 +39,7 @@ PROCEDURE Main()
                        lFromUser,                       ; // user intervention
                        "from@test.com",                 ; // sender
                        { "to@test.com" },               ; // destinators
-                       { "testmapi.prg" }               ; // attach
+                       { __FILE__ }                     ; // attach
                      )
 
    RETURN

@@ -82,7 +82,7 @@ PROCEDURE main()
 
    PQexec( conn, "begin" )
 
-   ? ( x := lo_Import( conn, "test.prg" ) )
+   ? ( x := lo_Import( conn, __FILE__ ) )
    ? lo_Export( conn, x, "test.new" )
    ? lo_Unlink( conn, x )
 

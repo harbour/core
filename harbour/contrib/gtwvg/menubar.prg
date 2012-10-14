@@ -217,7 +217,7 @@ METHOD WvgMenuBar:destroy()
 
       IF !WVG_DestroyMenu( ::hMenu )
 #if 0
-         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Destroy()", "Destroy menu FAILED", {},"wvt.prg" ) )
+         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Destroy()", "Destroy menu FAILED", {},__FILE__ ) )
 #endif
       ENDIF
 
@@ -255,7 +255,7 @@ METHOD WvgMenuBar:delItem( nItemNum )
          hb_ADel( ::aMenuItems, nItemNum, .T. )
       ELSE
 #if 0
-         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:DelItem()", "Delete menu item FAILED", { nItemNum },"wvt.prg" ) )
+         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:DelItem()", "Delete menu item FAILED", { nItemNum },__FILE__ ) )
 #endif
       ENDIF
    ENDIF
