@@ -48,10 +48,7 @@
  * If you write modifications of your own for Harbour, it is your choice
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
-
-   V 1.0  April White            Initial version
-   V 1.1  April White            Add a Help() function to test default F1
-*/
+ */
 
 #include "inkey.ch"
 
@@ -76,17 +73,8 @@ PROCEDURE Main()
    @ 11, 10 GET bravo
    @ 12, 10 GET charlie
 
-#ifndef K_F10
-
-#define K_F10 -9
-#define K_F9  -8
-#define K_F8  -7
-#define K_ESC 27
-
-#endif
-
    SetKey( K_F10, {|| Alert( Transform( GetActive():varGet(), NIL ) ) }, ;
-      {|| !Empty( GetActive():VarGet() ) } )  /* :buffer */
+      {|| ! Empty( GetActive():VarGet() ) } )  /* :buffer */
    SetKey( K_F9 , {|| k := hb_SetKeySave( NIL ), ;
       SetKey( K_F9, {|| hb_SetKeySave( k ) } ) } )
    SetKey( K_F8 , {|| SubMain() }, {|| F8Active } )
@@ -105,15 +93,15 @@ STATIC PROCEDURE SubMain()
    bF8Action := hb_SetKeyGet( K_F8, @bF8Active )
    SetKey( K_F8, NIL )
 
-   hb_SetKeyArray( { 49, 50, 52, 53 }, {| x | QOut( Chr( x ) ) } )
+   hb_SetKeyArray( { 49, 50, 52, 53 }, {| x | QOut( hb_keyChar( x ) ) } )
    DO WHILE ( n := Inkey( 0 ) ) != K_ESC
       IF hb_SetKeyCheck( n, ProcName(), ProcLine(), ReadVar() )
-         QQOut( " hit hot" )
+         ?? " hit hot"
       ELSE
-         QOut( Chr( n ) )
-         QQOut( " hit cold" )
+         ? hb_keyChar( n )
+         ?? " hit cold"
       ENDIF
-   end
+   ENDDO
 
    hb_SetKeyArray( { 49, 50, 52, 53 }, NIL )
    SetKey( K_F8, bF8Action, bF8Active )

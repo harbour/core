@@ -12877,7 +12877,6 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
 
    hb_Scroll()
    Set( _SET_SCOREBOARD, .F. )
-   GetList := {}
 
    __hbshell_HistoryLoad()
 
@@ -12923,7 +12922,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
 
       hb_DispOutAt( nMaxRow, 0, cPrompt := cDomain + "." )
 
-      AAdd( GetList, Get():New( nMaxRow, Len( cPrompt ), {| v | iif( PCount() == 0, cLine, cLine := v ) }, "cLine", "@KS" + hb_ntos( nMaxCol - Len( cPrompt ) + 1 ) ) )
+      GetList := { Get():New( nMaxRow, Len( cPrompt ), {| v | iif( PCount() == 0, cLine, cLine := v ) }, "cLine", "@KS" + hb_ntos( nMaxCol - Len( cPrompt ) + 1 ) ) }
       ATail( GetList ):display()
 
       SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
@@ -12942,7 +12941,6 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
          {|| lResize := .T., hb_KeyPut( K_ENTER ) } )
 
       ReadModal( GetList )
-      GetList := {}
 
       SetKey( K_DOWN, bKeyDown )
       SetKey( K_UP, bKeyUp )

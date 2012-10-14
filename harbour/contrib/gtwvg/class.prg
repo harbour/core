@@ -2290,20 +2290,17 @@ METHOD WvtGets:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
 METHOD WvtGets:Create()
 
-   LOCAL i, GetList
+   LOCAL i
    LOCAL nCurRow := Row()
    LOCAL nCurCol := Col()
 
    FOR i := 1 TO Len( ::aGetList )
-      GetList := {}
 
       __defaultNIL( @::aGetList[ i,7 ], "N/W*,N/W*,,,N/GR*" )
       __defaultNIL( @::aGetList[ i,5 ], {|| .T. } )
       __defaultNIL( @::aGetList[ i,6 ], {|| .T. } )
 
-      @ ::aGetList[ i,1 ], ::aGetList[ i,2 ] GET ::aGetList[ i,3 ] PICTURE ::aGetList[ i,4 ] COLOR ::aGetList[ i,7 ]
-
-      AAdd( ::GetList, GetList[ 1 ] )
+      AAdd( ::GetList, Get():New( ::aGetList[ i,1 ], ::aGetList[ i,2 ], {| v | iif( PCount() == 0, ::aGetList[ i,3 ], ::aGetList[ i,3 ] := v ) }, "::aGetList[ i, 3 ]", ::aGetList[ i,7 ] ) )
 
       ::GetList[ i ]:Display()
       ::PaintBlock( i )

@@ -106,6 +106,7 @@ PROCEDURE Main()
    LOCAL oError := ErrorBlock( {| o | MyError( o ) } )
 
    SET DATE ANSI
+   SET CENTURY ON
 
    Set( _SET_EVENTMASK, INKEY_ALL + HB_INKEY_GTEVENT )
 

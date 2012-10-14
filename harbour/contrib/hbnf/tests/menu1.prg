@@ -119,7 +119,8 @@ PROCEDURE Main( cCmdLine )
    ENDIF
    RESTORE SCREEN FROM sDosScrn
    SetPos( nDosRow, nDosCol )
-   QUIT
+
+   RETURN
 
 FUNCTION fubar()
 

@@ -35,7 +35,6 @@
       hb_DispBox( <top>, <left>, <bottom>, <right>, hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
 #translate DOUBLEBOX( <top>, <left>, <bottom>, <right> ) => ;
       hb_DispBox( <top>, <left>, <bottom>, <right>, hb_UTF8ToStrBox( "╔═╗║╝═╚║ " ) )
-MEMVAR GetList
 
 /*
    here's the board array -- structure of which is:
@@ -46,26 +45,26 @@ MEMVAR GetList
 */
 
 THREAD STATIC t_board_ := {;
-   { { 0, 29, 2, 34 }, { 2, 4 }, { 3, 9 }, .T. } , ;
-   { { 0, 37, 2, 42 }, { 5 }, { 10 }, .T. }      , ;
-   { { 0, 45, 2, 50 }, { 2, 6 }, { 1, 11 }, .T. } , ;
-   { { 3, 29, 5, 34 }, { 5, 9 }, { 6, 16 }, .T. } , ;
-   { { 3, 37, 5, 42 }, { 10 }, { 17 }, .T. } , ;
-   { { 3, 45, 5, 50 }, { 5, 11 }, { 4, 18 }, .T. } , ;
-   { { 6, 13, 8, 18 }, { 8, 14 }, { 9, 21 }, .T. } , ;
-   { { 6, 21, 8, 26 }, { 9, 15 }, { 10, 22 }, .T. } , ;
-   { { 6, 29, 8, 34 }, { 4, 8, 10, 16 }, { 1, 7, 11, 23 }, .T. } , ;
-   { { 6, 37, 8, 42 }, { 5, 9, 11, 17 }, { 2, 8, 12, 24 }, .T. } , ;
-   { { 6, 45, 8, 50 }, { 6, 10, 12, 18 }, { 3, 9, 13, 25 }, .T. } , ;
-   { { 6, 53, 8, 58 }, { 11, 19 }, { 10, 26 }, .T. } , ;
-   { { 6, 61, 8, 66 }, { 12, 20 }, { 11, 27 }, .T. } , ;
-   { { 9, 13, 11, 18 }, { 15 }, { 16 }, .T. } , ;
-   { { 9, 21, 11, 26 }, { 16 }, { 17 }, .T. } , ;
-   { { 9, 29, 11, 34 }, { 9, 15, 17, 23 }, { 4, 14, 18, 28 }, .T. } , ;
-   { { 9, 37, 11, 42 }, { 10, 16, 18, 24 }, { 5, 15, 19, 29 }, .F. } , ;
-   { { 9, 45, 11, 50 }, { 11, 17, 19, 25 }, { 6, 16, 20, 30 }, .T. } , ;
-   { { 9, 53, 11, 58 }, { 18 }, { 17 }, .T. } , ;
-   { { 9, 61, 11, 66 }, { 19 }, { 18 }, .T. } , ;
+   { {  0, 29,  2, 34 }, { 2, 4 }, { 3, 9 }, .T. } , ;
+   { {  0, 37,  2, 42 }, { 5 }, { 10 }, .T. }      , ;
+   { {  0, 45,  2, 50 }, { 2, 6 }, { 1, 11 }, .T. } , ;
+   { {  3, 29,  5, 34 }, { 5, 9 }, { 6, 16 }, .T. } , ;
+   { {  3, 37,  5, 42 }, { 10 }, { 17 }, .T. } , ;
+   { {  3, 45,  5, 50 }, { 5, 11 }, { 4, 18 }, .T. } , ;
+   { {  6, 13,  8, 18 }, { 8, 14 }, { 9, 21 }, .T. } , ;
+   { {  6, 21,  8, 26 }, { 9, 15 }, { 10, 22 }, .T. } , ;
+   { {  6, 29,  8, 34 }, { 4, 8, 10, 16 }, { 1, 7, 11, 23 }, .T. } , ;
+   { {  6, 37,  8, 42 }, { 5, 9, 11, 17 }, { 2, 8, 12, 24 }, .T. } , ;
+   { {  6, 45,  8, 50 }, { 6, 10, 12, 18 }, { 3, 9, 13, 25 }, .T. } , ;
+   { {  6, 53,  8, 58 }, { 11, 19 }, { 10, 26 }, .T. } , ;
+   { {  6, 61,  8, 66 }, { 12, 20 }, { 11, 27 }, .T. } , ;
+   { {  9, 13, 11, 18 }, { 15 }, { 16 }, .T. } , ;
+   { {  9, 21, 11, 26 }, { 16 }, { 17 }, .T. } , ;
+   { {  9, 29, 11, 34 }, { 9, 15, 17, 23 }, { 4, 14, 18, 28 }, .T. } , ;
+   { {  9, 37, 11, 42 }, { 10, 16, 18, 24 }, { 5, 15, 19, 29 }, .F. } , ;
+   { {  9, 45, 11, 50 }, { 11, 17, 19, 25 }, { 6, 16, 20, 30 }, .T. } , ;
+   { {  9, 53, 11, 58 }, { 18 }, { 17 }, .T. } , ;
+   { {  9, 61, 11, 66 }, { 19 }, { 18 }, .T. } , ;
    { { 12, 13, 14, 18 }, { 14, 22 }, { 7, 23 }, .T. } , ;
    { { 12, 21, 14, 26 }, { 15, 23 }, { 8, 24 }, .T. } , ;
    { { 12, 29, 14, 34 }, { 16, 22, 24, 28 }, { 9, 21, 25, 31 }, .T. } , ;
@@ -85,10 +84,12 @@ FUNCTION FT_PEGS()
    LOCAL XX, MOVE, MPOS, POSSIBLE_, BUFFER, TOPROW, OLDSCORE, MOVE2
    LOCAL SCANBLOCK, OLDCOLOR := SetColor( "w/n" )
    LOCAL oldscrn := SaveScreen( 0, 0, MaxRow(), MaxCol() )
-/*
-   the following code block is used in conjunction with ASCAN()
-   to validate entry when there is more than one possible move
-*/
+   LOCAL GetList
+
+   /*
+      the following code block is used in conjunction with ASCAN()
+      to validate entry when there is more than one possible move
+   */
 
    scanblock := {| a | a[ 2 ] == move2 }
    CLS
@@ -98,9 +99,13 @@ FUNCTION FT_PEGS()
    AEval( t_board_, {| a, x | HB_SYMBOL_UNUSED( a ), drawbox( x ) } )
    DO WHILE LastKey() != K_ESC .AND. moremoves()
       move := 1
+
       SetColor( "w/n" )
-      @ 23, 44 GET move PICTURE "##" RANGE 1, 33
+      GetList := { Get():New( 23, 44, {| v | iif( PCount() == 0, move, move := v ) }, "move", "##" ) }
+      ATail( GetList ):postBlock := {| oGet | RangeCheck( oGet, , 1, 33 ) }
+      ATail( GetList ):display()
       READ
+
       IF move > 0
          DO CASE
          CASE ! t_board_[ move ][ 4 ]
@@ -109,7 +114,7 @@ FUNCTION FT_PEGS()
             possible_ := {}
             FOR xx := 1 TO Len( t_board_[ move ][ 2 ] )
                IF t_board_[ t_board_[ move ][ 2, xx ] ][ 4 ] .AND. ;
-                     ! t_board_[ t_board_[ move ][ 3, xx ] ][ 4 ]
+                ! t_board_[ t_board_[ move ][ 3, xx ] ][ 4 ]
                   AAdd( possible_, { t_board_[ move ][ 2, xx ], t_board_[ move ][ 3, xx ] } )
                ENDIF
             NEXT
@@ -134,9 +139,12 @@ FUNCTION FT_PEGS()
                SetPos( toprow, 65 )
                AEval( possible_, {| a | hb_DispOutAt( Row() + 1, 65, Transform( a[ 2 ], "##" ) ) } )
                oldscore := Set( _SET_SCOREBOARD, .F. )
-               @ 23, 44 GET move2 PICTURE "##" ;
-                  VALID AScan( possible_, scanblock ) > 0
+
+               GetList := { Get():New( 23, 44, {| v | iif( PCount() == 0, move2, move2 := v ) }, "move2", "##" ) }
+               ATail( GetList ):postBlock := {|| AScan( possible_, scanblock ) > 0 }
+               ATail( GetList ):display()
                READ
+
                RestScreen( toprow, 55, 22, 74, buffer )
                Set( _SET_SCOREBOARD, oldscore )
                mpos := AScan( possible_, {| a | move2 == a[ 2 ] } )
@@ -196,9 +204,9 @@ STATIC FUNCTION moremoves()
 
    FOR xx := 1 TO 33
       FOR yy := 1 TO Len( t_board_[ xx ][ 2 ] )
-         IF t_board_[ xx ][ 4 ] .AND.  ;            // if current location is filled
-               t_board_[ t_board_[ xx ][ 2, yy ] ][ 4 ] .AND. ;  // adjacent must be filled
-            ! t_board_[ t_board_[ xx ][ 3, yy ] ][ 4 ]           // target must be empty
+         IF t_board_[ xx ][ 4 ] .AND.  ;                       // if current location is filled
+            t_board_[ t_board_[ xx ][ 2, yy ] ][ 4 ] .AND. ;   // adjacent must be filled
+          ! t_board_[ t_board_[ xx ][ 3, yy ] ][ 4 ]           // target must be empty
             canmove := .T.
             EXIT
          ENDIF
