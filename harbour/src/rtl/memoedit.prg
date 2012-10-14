@@ -305,7 +305,7 @@ FUNCTION MemoEdit( cString,;
    IF ! HB_ISSTRING( cString )          ; cString         := ""                 ; ENDIF
 
    // Original MemoEdit() converts Tabs into spaces;
-   oEd := HBMemoEditor():New( StrTran( cString, Chr( K_TAB ), Space( 1 ) ), nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextBuffRow, nTextBuffColumn, nWindowRow, nWindowColumn )
+   oEd := HBMemoEditor():New( StrTran( cString, Chr( 9 ), Space( 1 ) ), nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextBuffRow, nTextBuffColumn, nWindowRow, nWindowColumn )
    oEd:MemoInit( xUserFunction )
    oEd:display()
 

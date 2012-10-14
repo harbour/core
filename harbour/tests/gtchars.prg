@@ -48,7 +48,9 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    hb_gtInfo( HB_GTI_FONTWIDTH, 9 )
    hb_gtInfo( HB_GTI_FONTSIZE, 20 )
 
-   hb_SetTermCP( cTermCP, cHostCP, lBoxChar )
+   hb_cdpSelect( cHostCP )
+
+   hb_SetTermCP( cTermCP,, lBoxChar )
 
    ? OS(), Version(), Date(), Time()
    ? hb_gtVersion(), hb_gtVersion( 1 )

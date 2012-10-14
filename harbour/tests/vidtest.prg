@@ -201,7 +201,7 @@ STATIC FUNCTION ColourBoxes()
       nDepth += nDir
 
       IF nDepth > 4 .OR. nDepth < 1
-         nDir := - nDir
+         nDir := -nDir
       ENDIF
       i := nFrames % 16 + 1
       DispBox( 5, 10, MaxRow() - 5, MaxCol() - 10, ;

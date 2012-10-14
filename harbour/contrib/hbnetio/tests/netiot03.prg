@@ -189,7 +189,7 @@ return nil
 static func rpc_charstream( pConnSock, nStream )
    local n := 0
    while .t.
-      if !netio_srvSendData( pConnSock, nStream, chr( 65 + n ) )
+      if !netio_srvSendData( pConnSock, nStream, chr( asc( "A" ) + n ) )
          ? "CLOSED STREAM:", nStream
          exit
       endif
