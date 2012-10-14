@@ -71,7 +71,7 @@
 #define NTSR_YEAR   14
 
 /* Russian messages */
-STATIC aRus := { ;
+STATIC sc_aRus := { ;
    { "ноль", ;
      "один", ;
      "два", ;
@@ -189,7 +189,7 @@ STATIC aRus := { ;
    { "год", "года" } }
 
 /* Ukrainian messages */
-STATIC aUkr := { ;
+STATIC sc_aUkr := { ;
    { "нуль", ;
      "один", ;
      "два", ;
@@ -307,7 +307,7 @@ STATIC aUkr := { ;
    { "рік", "року" } }
 
 /* Belorussian messages */
-STATIC aBel := { ;
+STATIC sc_aBel := { ;
    { "нуль", ;
      "адзін", ;
      "два", ;
@@ -534,11 +534,11 @@ STATIC FUNCTION GetLangMsg( cLang )
    LOCAL aMsg
 
    IF cLang == NIL .OR. Lower( cLang ) == "ru"
-      aMsg := aRus
+      aMsg := sc_aRus
    ELSEIF Lower( cLang ) == "uk"
-      aMsg := aUkr
+      aMsg := sc_aUkr
    ELSEIF Lower( cLang ) == "be"
-      aMsg := aBel
+      aMsg := sc_aBel
    ENDIF
 
    RETURN aMsg

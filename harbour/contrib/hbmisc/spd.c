@@ -218,13 +218,14 @@ HB_FUNC( SQL_SPRINTF )
    }
    else
    {
+      static const char s_szToken[] = "stTcdiouxXaAeEfgGpnSC";
+
       PHB_ITEM       pItmPar, pItmCpy;
       char *         cIntMod, * cBuffer, * cParFrm;
       const char *   c;
       int            p, arg, iCOut, IsType, IsIndW, IsIndP, iIndWidth, iIndPrec, iErrorPar = 0;
       HB_UINT        s, f, i, ulWidth, ulParPos = 0, ulResPos = 0, ulMaxBuf = DK_INCBUF, ulMaxRes =
          DK_INCRES;
-      static char    cToken[] = "stTcdiouxXaAeEfgGpnSC";
 
       cIntMod = NULL;
       cRes = ( char * ) hb_xgrab( ulMaxRes );
@@ -322,7 +323,7 @@ HB_FUNC( SQL_SPRINTF )
                   }
                }
             }
-            else if( f && strchr( cToken, *c ) )
+            else if( f && strchr( s_szToken, *c ) )
             {
                f = 3; iCOut = *c;
             }

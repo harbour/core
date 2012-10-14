@@ -15,7 +15,6 @@
 #define EDIT_SAME       2       // no convertion
 
 #define EDIT_HARD       13      // hard cariage
-#define EDIT_SOFT       141     // soft cariage
 
 #define EDIT_EDIT       .T.     // full edit mode
 #define EDIT_VIEW       .F.     // view only mode
@@ -36,7 +35,7 @@
 #define E_CARGO         12          // cargo slot
 #define E_STRUCT_LEN    12
 
-STATIC s_nESize := 4096       // default buffer size
+THREAD STATIC s_nESize := 4096       // default buffer size
 
 //
 //03-06-93 07:52pm

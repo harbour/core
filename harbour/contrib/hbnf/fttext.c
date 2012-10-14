@@ -163,17 +163,17 @@
 
 typedef struct
 {
-   int area;
-   int doInt; /* for debugging purposes */
+   int        area;
+   int        doInt; /* for debugging purposes */
    /* arrays used by the text workareas */
-   long recno[ TEXT_WORKAREAS ];
+   long       recno[ TEXT_WORKAREAS ];
    HB_FOFFSET offset[ TEXT_WORKAREAS ];
    HB_FHANDLE handles[ TEXT_WORKAREAS ];
-   long last_rec[ TEXT_WORKAREAS ];
+   long       last_rec[ TEXT_WORKAREAS ];
    HB_FOFFSET last_off[ TEXT_WORKAREAS ];
    HB_FOFFSET lastbyte[ TEXT_WORKAREAS ];
-   HB_BOOL isBof[ TEXT_WORKAREAS ];
-   HB_BOOL isEof[ TEXT_WORKAREAS ];
+   HB_BOOL    isBof[ TEXT_WORKAREAS ];
+   HB_BOOL    isEof[ TEXT_WORKAREAS ];
    HB_ERRCODE error[ TEXT_WORKAREAS ];
 } FT_TEXT, * PFT_TEXT;
 
@@ -195,8 +195,6 @@ static int _del_buff( PFT_TEXT ft_text, HB_ISIZ iLen );
 static long _ft_skip( long recs );
 static int _writeLine( PFT_TEXT ft_text, const char * theData, HB_SIZE iDataLen );
 static HB_BOOL _writeeol( HB_FHANDLE fhnd );
-
-HB_FUNC_EXTERN( FT_GOBOT );
 
 HB_FUNC( FTSETINT )
 {
