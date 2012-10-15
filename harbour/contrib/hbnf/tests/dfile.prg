@@ -4,19 +4,24 @@
 
 #require "hbnf"
 
+#include "inkey.ch"
+
 PROCEDURE Main()
 
    LOCAL cInFile   := __FILE__
-   LOCAL CKEY
+   LOCAL nKey
    LOCAL NNCOLOR   := 7
    LOCAL NHCOLOR   := 15
    LOCAL NCOLSKIP  := 5
    LOCAL NRMARGIN  := 132
-   LOCAL CEXITKEYS := "AABBC       "
+   LOCAL CEXITKEYS := PadR( "AABBC", 12 )
    LOCAL LBROWSE   := .F.
    LOCAL NSTART    := 1
    LOCAL NBUFFSIZE := 4096
    LOCAL GetList := {}
+
+   LOCAL aExitKeys
+   LOCAL tmp
 
    @ 0, 0 CLEAR
 
@@ -35,20 +40,26 @@ PROCEDURE Main()
     * REMEMBER A WINDOW WILL BE ONE SIZE LESS AND GREATER THAN THE PASSED COORD.'S
     *
     * THE 9TH PARAMETER CONTAINS THE KEYS THAT THE ROUTINE WILL TERMINATE ON
-    * AND THE hb_BChar(143) represents the F3 key.
     *
     */
+
+   aExitKeys := {}
+   FOR EACH tmp IN cExitKeys
+      AAdd( aExitKeys, hb_keyCode( tmp ) )
+   NEXT
+
+   AAdd( aExitKeys, K_F3 )
 
    @ 4, 9 TO 11, 71
 
    FT_DFSETUP( cInFile, 5, 10, 10, 70, nStart, ;
-      nNColor, nHColor, cExitKeys + hb_BChar( 143 ), ;
+      nNColor, nHColor, aExitKeys, ;
       lBrowse, nColSkip, nRMargin, nBuffSize )
 
-   cKey := FT_DISPFILE()
+   nKey := FT_DISPFILE()
 
    FT_DFCLOSE()
 
-   @ 20, 0 SAY "Key pressed was: " + "[" + cKey + "]"
+   @ 20, 0 SAY "Key pressed was: " + "[" + hb_keyChar( nKey ) + "] (" + hb_ntos( nKey ) + ")"
 
    RETURN

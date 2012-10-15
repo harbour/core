@@ -1033,6 +1033,22 @@ HB_ERRCODE hb_gtSetKeyCP( const char * pszTermCDP, const char * pszHostCDP )
    return errCode;
 }
 
+HB_BOOL hb_gtIsCompatBuffer( void )
+{
+   HB_BOOL fCompatBuffer = HB_TRUE;
+   PHB_GT pGT;
+
+   HB_TRACE(HB_TR_DEBUG, ("hb_gtCompatBuffer()"));
+
+   pGT = hb_gt_Base();
+   if( pGT )
+   {
+      fCompatBuffer = pGT->fVgaCell;
+      hb_gt_BaseFree( pGT );
+   }
+   return fCompatBuffer;
+}
+
 PHB_CODEPAGE hb_gtHostCP( void )
 {
    PHB_CODEPAGE cdp = NULL;

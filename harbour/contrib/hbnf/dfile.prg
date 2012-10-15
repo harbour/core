@@ -52,9 +52,15 @@ FUNCTION FT_DFSETUP( cInFile, nTop, nLeft, nBottom, nRight, ;
       nRMargin  := iif( HB_ISNUMERIC( nRMargin ) , nRMargin,   255 )
       nBuffSize := iif( HB_ISNUMERIC( nBuffSize ), nBuffSize, 4096 )
 
-      cExitKeys := iif( HB_ISSTRING( cExitKeys ) , cExitKeys,  "" )
-
-      cExitKeys := iif( Len( cExitKeys ) > 25, SubStr( cExitKeys, 1, 25 ), cExitKeys )
+      IF HB_ISARRAY( cExitKeys ) /* Harbour extension */
+         IF Len( cExitKeys ) > 25
+            ASize( cExitKeys, 25 )
+         ENDIF
+      ELSEIF HB_ISSTRING( cExitKeys )
+         cExitKeys := Left( cExitKeys, 25 )
+      ELSE
+         cExitKeys := {}
+      ENDIF
 
       t_nHandle := FOpen( cInFile )
 

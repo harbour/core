@@ -50,7 +50,8 @@
  *
  */
 
-/* TOFIX: for unicode savescreen buffers */
+/* TOFIX: support for reading files with any encoding
+          and translating it to unicode for the GT */
 
 #include "hbapi.h"
 #include "hbapifs.h"
@@ -90,14 +91,14 @@ typedef struct
    int colinc;                   /* col increment amount                */
    HB_BOOL bBrowse;              /* browse flag                         */
    HB_BOOL bRefresh;             /* HB_TRUE means refresh screen        */
-   char kstr[ 25 ];              /* terminate key string                */
    int keylist[ 24 ];            /* terminate key list                  */
    int keytype;                  /* K_STRING or K_LIST                  */
 
    HB_BOOL bIsAllocated;         /* if buffers were allocated           */
    char * buffer;                /* file buffer pointer                 */
    char * lbuff;                 /* line buffer pointer                 */
-   char * vseg;                  /* video segment variable              */
+   HB_UCHAR * vseg;              /* video segment variable              */
+   HB_BOOL fCompatBuffer;        /* HB_GTI_COMPATBUFFER setting         */
 } FT_DISPC, * PFT_DISPC;
 
 static HB_TSD_NEW( s_dispc, sizeof( FT_DISPC ), NULL, NULL );
@@ -124,14 +125,26 @@ static void          filebot( PFT_DISPC dispc );
 
 static void chattr( PFT_DISPC dispc, int x, int y, int len, int attr )
 {
-   int         i;
-   char *      vmem;
+   int i;
 
-   vmem = dispc->vseg + ( y * ( dispc->width + 1 ) * 2 ) + ( x * 2 ) + 1;
    /* calc the screen memory coord */
+   HB_UCHAR * vmem;
 
-   for( i = 0; i <= len; i++, vmem += 2 )   /* write the new attribute value */
-      *vmem = ( char ) attr;
+   /* write the new attribute value */
+   if( dispc->fCompatBuffer )
+   {
+      vmem = dispc->vseg + ( y * ( dispc->width + 1 ) * 2 ) + ( x * 2 ) + 1;
+
+      for( i = 0; i <= len; i++, vmem += 2 )
+         *vmem = ( char ) attr;
+   }
+   else
+   {
+      vmem = dispc->vseg + ( y * ( dispc->width + 1 ) * 4 ) + ( x * 4 ) + 2;
+
+      for( i = 0; i <= len; i++, vmem += 4 )   /* write the new attribute value */
+         *vmem = ( char ) attr;
+   }
 }
 
 /*
@@ -285,8 +298,7 @@ static void win_align( PFT_DISPC dispc )
 
 static void disp_update( PFT_DISPC dispc, int offset )
 {
-   int         line, col, pos, i;
-   char *      vmem;
+   int line, col, pos, i;
 
    dispc->bRefresh   = HB_FALSE;
    line              = 0;
@@ -299,7 +311,10 @@ static void disp_update( PFT_DISPC dispc, int offset )
          from the line start
        */
 
-      pos = ( line * ( dispc->width + 1 ) * 2 );
+      if( dispc->fCompatBuffer )
+         pos = ( line * ( dispc->width + 1 ) * 2 );
+      else
+         pos = ( line * ( dispc->width + 1 ) * 4 );
 
       /* copy string to temp buffer */
 
@@ -326,7 +341,12 @@ static void disp_update( PFT_DISPC dispc, int offset )
 
       for( i = dispc->wincol, col = 0; col <= dispc->width; col++ )
       {
-         vmem  = dispc->vseg + pos + ( col * 2 );
+         HB_UCHAR * vmem;
+
+         if( dispc->fCompatBuffer )
+            vmem = dispc->vseg + pos + ( col * 2 );
+         else
+            vmem = dispc->vseg + pos + ( col * 4 );
 
          *vmem = dispc->lbuff[ i++ ];
       }
@@ -368,8 +388,7 @@ static void winup( PFT_DISPC dispc )
 
       dispc->winbot = k + 2;
    }
-   else
-   if( dispc->bufftop + dispc->buffoffset > 0 && dispc->fsize > dispc->buffsize )
+   else if( dispc->bufftop + dispc->buffoffset > 0 && dispc->fsize > dispc->buffsize )
    {
       i  = dispc->buffoffset + dispc->wintop;
       j  = dispc->buffoffset - ( dispc->buffsize / 2 );
@@ -413,8 +432,7 @@ static void windown( PFT_DISPC dispc )
          k++;
       dispc->wintop = k + 2;
    }
-   else
-   if( ( dispc->buffbot + dispc->buffoffset ) < dispc->fsize && dispc->fsize > dispc->buffsize )
+   else if( ( dispc->buffbot + dispc->buffoffset ) < dispc->fsize && dispc->fsize > dispc->buffsize )
    {
       i  = dispc->buffoffset + dispc->wintop;
       j  = i;
@@ -439,7 +457,7 @@ static void windown( PFT_DISPC dispc )
 static void linedown( PFT_DISPC dispc )
 {
    if( dispc->winrow < dispc->eline )     /* if cursor not at last line */
-      dispc->winrow += 1;
+      ++dispc->winrow;
    else                                   /* otherwise adjust the window top variable */
       windown( dispc );
 }
@@ -449,7 +467,7 @@ static void linedown( PFT_DISPC dispc )
 static void lineup( PFT_DISPC dispc )
 {
    if( dispc->winrow > dispc->sline )
-      dispc->winrow -= 1;
+      --dispc->winrow;
    else
       winup( dispc );
 }
@@ -511,8 +529,10 @@ HB_FUNC( _FT_DFINIT )
    dispc->width   = dispc->ecol - dispc->scol;        /* calc width of window  */
    dispc->height  = dispc->eline - dispc->sline + 1;  /* calc height of window */
 
+   dispc->fCompatBuffer = hb_gtIsCompatBuffer();
+
    hb_gtRectSize( dispc->sline, dispc->scol, dispc->eline, dispc->ecol, &ulSize );
-   dispc->vseg    = ( char * ) hb_xalloc( ulSize );
+   dispc->vseg    = ( HB_UCHAR * ) hb_xalloc( ulSize );
    if( dispc->vseg != NULL )
       hb_gtSave( dispc->sline, dispc->scol, dispc->eline, dispc->ecol, dispc->vseg );
 
@@ -552,11 +572,13 @@ HB_FUNC( _FT_DFINIT )
       }
       else
       {
+         const char * pszKeys = hb_parcx( 9 );
          dispc->keytype = K_STRING;
          dispc->kcount  = hb_parclen( 9 );
          if( dispc->kcount > 24 )
             dispc->kcount = 24;
-         hb_strncpy( dispc->kstr, hb_parcx( 9 ), dispc->kcount - 1 );    /* get exit key string */
+         for( i = 1; i <= dispc->kcount; i++ )
+            dispc->keylist[ i - 1 ] = pszKeys[ i - 1 ];  /* get exit key list */
       }
 
       dispc->bBrowse    = hb_parl( 10 );           /* get browse flag   */
@@ -785,20 +807,10 @@ HB_FUNC( FT_DISPFILE )
 
             default:
 
-               if( dispc->keytype == K_STRING )
+               for( i = 0; i < dispc->kcount; i++ )
                {
-                  for( i = 0; i <= dispc->kcount; i++ )
-                     if( ch > 0 && ch < 256 )
-                        if( ( int ) dispc->kstr[ i ] == ch )
-                           bDone = HB_TRUE;
-                  break;                                   /* if so terminate */
-               }
-               else
-               {
-                  for( i = 0; i < dispc->kcount; i++ )
-                     if( dispc->keylist[ i ] == ch )
-                        bDone = HB_TRUE;
-                  break;
+                  if( dispc->keylist[ i ] == ch )
+                     bDone = HB_TRUE;
                }
          }
       }

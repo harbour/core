@@ -13331,6 +13331,7 @@ FUNCTION hbshell_gtSelect( cGT )
    IF !( "GT" + hb_gtVersion( 0 ) == cGT )
       hb_gtSelect( hb_gtCreate( cGT ) )
       hb_SetTermCP( hb_cdpTerm() )
+      hb_gtInfo( HB_GTI_COMPATBUFFER, .F. )
       hb_gtInfo( HB_GTI_BOXCP, hb_cdpSelect() )
    ENDIF
    RETURN NIL
@@ -13775,6 +13776,7 @@ STATIC PROCEDURE SetUILang( cUILNG )
 
    /* Setup input CP of the translation */
    hb_cdpSelect( "UTF8EX" )
+   hb_gtInfo( HB_GTI_COMPATBUFFER, .F. )
    hb_gtInfo( HB_GTI_BOXCP, hb_cdpSelect() )
 
    /* Configure terminal and OS codepage */
