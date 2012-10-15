@@ -412,13 +412,15 @@ HB_FUNC( FBQUERY )
          if( var->sqltype & 1 )
             var->sqlind = ( short * ) hb_xgrab( sizeof( short ) );
 
-         hb_arrayNew( aTemp, 5 );
+         hb_arrayNew( aTemp, 7 );
 
          hb_arraySetC(  aTemp, 1, sqlda->sqlvar[ i ].sqlname );
          hb_arraySetNL( aTemp, 2, ( long ) dtype );
          hb_arraySetNL( aTemp, 3, sqlda->sqlvar[ i ].sqllen );
          hb_arraySetNL( aTemp, 4, sqlda->sqlvar[ i ].sqlscale );
          hb_arraySetC(  aTemp, 5, sqlda->sqlvar[ i ].relname );
+         hb_arraySetNL( aTemp, 6, sqlda->sqlvar[ i ].aliasname_length );  // support for aliases
+         hb_arraySetC(  aTemp, 7, sqlda->sqlvar[ i ].aliasname ); // support for aliases
 
          hb_arraySetForward( aNew, i + 1, aTemp );
       }

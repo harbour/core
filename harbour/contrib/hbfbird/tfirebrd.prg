@@ -982,13 +982,13 @@ STATIC FUNCTION StructConvert( aStru, db, dialect )
    IF HB_ISARRAY( qry )
 
       DO WHILE FBFetch( qry ) == 0
-         AAdd( aDomains, { FBGetdata( qry, 1 ), FBGetdata( qry, 2 ), FBGetdata( qry, 3 ) } )
+         AAdd( aDomains, { IIF(FBGetdata( qry, 1 )==NIL,"",FBGetdata( qry, 1 )),  IIF(FBGetdata( qry, 2 )==NIL,"",FBGetdata( qry, 2 )),  IIF(FBGetdata( qry, 1 )==NIL,"",FBGetdata( qry, 3 )) } )
       ENDDO
 
       FBFree( qry )
 
       FOR i := 1 TO Len( aStru )
-         cField := RTrim( aStru[ i ][ 1 ] )
+         cField := RTrim( aStru[ i ][ 7 ] )
          nType := aStru[ i ][ 2 ]
          nSize := aStru[ i ][ 3 ]
          nDec := aStru[ i ][ 4 ] * -1
@@ -1039,7 +1039,7 @@ STATIC FUNCTION StructConvert( aStru, db, dialect )
             nSize := 15
             EXIT
          CASE SQL_TIMESTAMP
-            cType := "D"
+            cType := "T"
             nSize := 8
             EXIT
          CASE SQL_TYPE_DATE
