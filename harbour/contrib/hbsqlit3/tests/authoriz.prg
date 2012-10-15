@@ -80,7 +80,8 @@
 
 #include "hbsqlit3.ch"
 
-PROCEDURE main()
+PROCEDURE Main()
+
    LOCAL cFile := ":memory:"
    LOCAL cSQLTEXT
    LOCAL pDb, cb
@@ -111,14 +112,16 @@ PROCEDURE main()
    ? cErrorMsg( sqlite3_exec( pDb, cSQLTEXT, cb ), .F. )
 
    sqlite3_sleep( 3000 )
-   //
-   pDb := NIL   // close database
+
+   pDb := NIL // close database
 
    RETURN
 
 /**
 */
+
 FUNCTION Authorizer( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
+
    LOCAL oldColor := SetColor( "R/N" )
 
    ? "=>", StrZero( nAction, 2 ), cName1, cName2, cDatabaseName, cTriggerOrViewName
@@ -129,7 +132,9 @@ FUNCTION Authorizer( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName 
 
 /**
 */
+
 FUNCTION Authorizer2( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
+
    LOCAL oldColor := SetColor( "R/N" )
 
    ? "=>", StrZero( nAction, 2 ), cName1, cName2, cDatabaseName, cTriggerOrViewName
@@ -140,6 +145,7 @@ FUNCTION Authorizer2( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName
 
 /**
 */
+
 FUNCTION Authorizer3( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName )
 
    HB_SYMBOL_UNUSED( cName1 )
@@ -151,12 +157,14 @@ FUNCTION Authorizer3( nAction, cName1, cName2, cDatabaseName, cTriggerOrViewName
 
 /**
 */
+
 FUNCTION CallBack( nColCount, aValue, aColName )
+
    LOCAL nI
    LOCAL oldColor := SetColor( "G/N" )
 
    FOR nI := 1 TO nColCount
-      ? Padr( aColName[ nI ], 5 ) , " == ", aValue[ nI ]
+      ? PadR( aColName[ nI ], 5 ), " == ", aValue[ nI ]
    NEXT
 
    SetColor( oldColor )
@@ -165,37 +173,39 @@ FUNCTION CallBack( nColCount, aValue, aColName )
 
 /**
 */
+
 STATIC FUNCTION cErrorMsg( nError, lShortMsg )
+
    LOCAL aErrorCodes := { ;
-      { SQLITE_ERROR      , "SQLITE_ERROR"      , "SQL error or missing database"               }, ;
-      { SQLITE_INTERNAL   , "SQLITE_INTERNAL"   , "NOT USED. Internal logic error in SQLite"    }, ;
-      { SQLITE_PERM       , "SQLITE_PERM"       , "Access permission denied"                    }, ;
-      { SQLITE_ABORT      , "SQLITE_ABORT"      , "Callback routine requested an abort"         }, ;
-      { SQLITE_BUSY       , "SQLITE_BUSY"       , "The database file is locked"                 }, ;
-      { SQLITE_LOCKED     , "SQLITE_LOCKED"     , "A table in the database is locked"           }, ;
-      { SQLITE_NOMEM      , "SQLITE_NOMEM"      , "A malloc() failed"                           }, ;
-      { SQLITE_READONLY   , "SQLITE_READONLY"   , "Attempt to write a readonly database"        }, ;
-      { SQLITE_INTERRUPT  , "SQLITE_INTERRUPT"  , "Operation terminated by sqlite3_interrupt()" }, ;
-      { SQLITE_IOERR      , "SQLITE_IOERR"      , "Some kind of disk I/O error occurred"        }, ;
-      { SQLITE_CORRUPT    , "SQLITE_CORRUPT"    , "The database disk image is malformed"        }, ;
-      { SQLITE_NOTFOUND   , "SQLITE_NOTFOUND"   , "NOT USED. Table or record not found"         }, ;
-      { SQLITE_FULL       , "SQLITE_FULL"       , "Insertion failed because database is full"   }, ;
-      { SQLITE_CANTOPEN   , "SQLITE_CANTOPEN"   , "Unable to open the database file"            }, ;
-      { SQLITE_PROTOCOL   , "SQLITE_PROTOCOL"   , "NOT USED. Database lock protocol error"      }, ;
-      { SQLITE_EMPTY      , "SQLITE_EMPTY"      , "Database is empty"                           }, ;
-      { SQLITE_SCHEMA     , "SQLITE_SCHEMA"     , "The database schema changed"                 }, ;
-      { SQLITE_TOOBIG     , "SQLITE_TOOBIG"     , "String or BLOB exceeds size limit"           }, ;
-      { SQLITE_CONSTRAINT , "SQLITE_CONSTRAINT" , "Abort due to constraint violation"           }, ;
-      { SQLITE_MISMATCH   , "SQLITE_MISMATCH"   , "Data type mismatch"                          }, ;
-      { SQLITE_MISUSE     , "SQLITE_MISUSE"     , "Library used incorrectly"                    }, ;
-      { SQLITE_NOLFS      , "SQLITE_NOLFS"      , "Uses OS features not supported on host"      }, ;
-      { SQLITE_AUTH       , "SQLITE_AUTH"       , "Authorization denied"                        }, ;
-      { SQLITE_FORMAT     , "SQLITE_FORMAT"     , "Auxiliary database format error"             }, ;
-      { SQLITE_RANGE      , "SQLITE_RANGE"      , "2nd parameter to sqlite3_bind out of range"  }, ;
-      { SQLITE_NOTADB     , "SQLITE_NOTADB"     , "File opened that is not a database file"     }, ;
-      { SQLITE_ROW        , "SQLITE_ROW"        , "sqlite3_step() has another row ready"        }, ;
-      { SQLITE_DONE       , "SQLITE_DONE"       , "sqlite3_step() has finished executing"       } ;
-   }, nIndex, cErrorMsg := "UNKNOWN"
+      { SQLITE_ERROR, "SQLITE_ERROR", "SQL error or missing database" }, ;
+      { SQLITE_INTERNAL, "SQLITE_INTERNAL", "NOT USED. Internal logic error in SQLite" }, ;
+      { SQLITE_PERM, "SQLITE_PERM", "Access permission denied" }, ;
+      { SQLITE_ABORT, "SQLITE_ABORT", "Callback routine requested an abort" }, ;
+      { SQLITE_BUSY, "SQLITE_BUSY", "The database file is locked" }, ;
+      { SQLITE_LOCKED, "SQLITE_LOCKED", "A table in the database is locked" }, ;
+      { SQLITE_NOMEM, "SQLITE_NOMEM", "A malloc() failed" }, ;
+      { SQLITE_READONLY, "SQLITE_READONLY", "Attempt to write a readonly database" }, ;
+      { SQLITE_INTERRUPT, "SQLITE_INTERRUPT", "Operation terminated by sqlite3_interrupt()" }, ;
+      { SQLITE_IOERR, "SQLITE_IOERR", "Some kind of disk I/O error occurred" }, ;
+      { SQLITE_CORRUPT, "SQLITE_CORRUPT", "The database disk image is malformed" }, ;
+      { SQLITE_NOTFOUND, "SQLITE_NOTFOUND", "NOT USED. Table or record not found" }, ;
+      { SQLITE_FULL, "SQLITE_FULL", "Insertion failed because database is full" }, ;
+      { SQLITE_CANTOPEN, "SQLITE_CANTOPEN", "Unable to open the database file" }, ;
+      { SQLITE_PROTOCOL, "SQLITE_PROTOCOL", "NOT USED. Database lock protocol error" }, ;
+      { SQLITE_EMPTY, "SQLITE_EMPTY", "Database is empty" }, ;
+      { SQLITE_SCHEMA, "SQLITE_SCHEMA", "The database schema changed" }, ;
+      { SQLITE_TOOBIG, "SQLITE_TOOBIG", "String or BLOB exceeds size limit" }, ;
+      { SQLITE_CONSTRAINT, "SQLITE_CONSTRAINT", "Abort due to constraint violation" }, ;
+      { SQLITE_MISMATCH, "SQLITE_MISMATCH", "Data type mismatch" }, ;
+      { SQLITE_MISUSE, "SQLITE_MISUSE", "Library used incorrectly" }, ;
+      { SQLITE_NOLFS, "SQLITE_NOLFS", "Uses OS features not supported on host" }, ;
+      { SQLITE_AUTH, "SQLITE_AUTH", "Authorization denied" }, ;
+      { SQLITE_FORMAT, "SQLITE_FORMAT", "Auxiliary database format error" }, ;
+      { SQLITE_RANGE, "SQLITE_RANGE", "2nd parameter to sqlite3_bind out of range" }, ;
+      { SQLITE_NOTADB, "SQLITE_NOTADB", "File opened that is not a database file" }, ;
+      { SQLITE_ROW, "SQLITE_ROW", "sqlite3_step() has another row ready" }, ;
+      { SQLITE_DONE, "SQLITE_DONE", "sqlite3_step() has finished executing" } ;
+      }, nIndex, cErrorMsg := "UNKNOWN"
 
    hb_default( @lShortMsg, .T. )
 
@@ -203,7 +213,7 @@ STATIC FUNCTION cErrorMsg( nError, lShortMsg )
       IF nError == 0
          cErrorMsg := "SQLITE_OK"
       ELSE
-         nIndex    := AScan( aErrorCodes, {| x | x[ 1 ] == nError } )
+         nIndex := AScan( aErrorCodes, {| x | x[ 1 ] == nError } )
          cErrorMsg := iif( nIndex > 0, aErrorCodes[ nIndex ][ iif( lShortMsg, 2, 3 ) ], cErrorMsg )
       ENDIF
    ENDIF
@@ -212,16 +222,18 @@ STATIC FUNCTION cErrorMsg( nError, lShortMsg )
 
 /**
 */
+
 STATIC FUNCTION PrepareDB( cFile )
+
    LOCAL cSQLTEXT, cMsg
    LOCAL pDb, pStmt
    LOCAL hPerson := { ;
-                     "Bob"   => 52, ;
-                     "Fred"  => 32, ;
-                     "Sasha" => 17, ;
-                     "Andy"  => 20, ;
-                     "Ivet"  => 28  ;
-                    }, enum
+      "Bob" => 52, ;
+      "Fred" => 32, ;
+      "Sasha" => 17, ;
+      "Andy" => 20, ;
+      "Ivet" => 28 ;
+      }, enum
 
    pDb := sqlite3_open( cFile, .T. )
    IF Empty( pDb )
@@ -239,7 +251,7 @@ STATIC FUNCTION PrepareDB( cFile )
 
       RETURN NIL
    ENDIF
-   //
+
    cSQLTEXT := "INSERT INTO person( name, age, pasw ) VALUES( :name, :age, :pasw )"
    pStmt := sqlite3_prepare( pDb, cSQLTEXT )
    IF Empty( pStmt )
@@ -253,7 +265,7 @@ STATIC FUNCTION PrepareDB( cFile )
       sqlite3_reset( pStmt )
       sqlite3_bind_text( pStmt, 1, enum:__enumKey() )
       sqlite3_bind_int( pStmt, 2, enum:__enumValue() )
-      sqlite3_bind_text( pStmt, 3, hb_md5( enum:__enumKey() ) )
+      sqlite3_bind_text( pStmt, 3, hb_MD5( enum:__enumKey() ) )
       sqlite3_step( pStmt )
    NEXT
 

@@ -275,7 +275,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
 
    // 2006/JUL/22 - E.F. To avoid run time error.
    IF nTop > nBottom .OR. nLeft > nRight
-      Throw( ErrorNew( "BASE", 0, 1127, "Argument error: <nTop,nRight,nLeft,nBottom>" , ProcName() ) )
+      Throw( ErrorNew( "BASE", 0, 1127, "Argument error: <nTop,nRight,nLeft,nBottom>", ProcName() ) )
    ENDIF
 
 
@@ -369,7 +369,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    // Setting datas that depend of ::aText filled.
    //
    ::nRow := Max( 1, Min( ::nTextRow, Len( ::aText ) ) )
-   ::nCol := Max( 1, Min( Len( ::aText[ ::nRow ]:cText ) , ::nTextCol + 1 ) )
+   ::nCol := Max( 1, Min( Len( ::aText[ ::nRow ]:cText ), ::nTextCol + 1 ) )
 
    // extra sanitization over max bounds
    IF ::nFirstRow >  ::LastRow()
@@ -543,7 +543,7 @@ METHOD RefreshLine( lRefreshColSel ) CLASS XHBEditor
          //       nCol := nFirstCol + ::nColSelStart - 1
          nCol := Max( ::nLeft, nFirstCol + ::nColSelStart - 1 )
 
-         hb_DispOutAt( ::Row(), nCol, SubStr( ::GetLine( ::nRow ), Max(1,::nColSelStart ), (::nColSelEnd - ::nColSelStart + 1 ) ) , ::ColColor() )
+         hb_DispOutAt( ::Row(), nCol, SubStr( ::GetLine( ::nRow ), Max(1,::nColSelStart ), (::nColSelEnd - ::nColSelStart + 1 ) ), ::ColColor() )
 
       ENDIF
 
@@ -785,7 +785,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
             ::ClrTextSelection()
             ::lChanged := .T.
             ::Home()
-            ::InsertLine( "", .F. , ::nRow )
+            ::InsertLine( "", .F., ::nRow )
             ::RefreshLine()
             ::RefreshWindow()
          ENDIF
@@ -1185,7 +1185,7 @@ METHOD Right() CLASS XHBEditor
    ELSE
       IF ::nCol < Max( ::nNumCols, ::nWordWrapCol + 1 )
          //::GotoCol( ::nCol + 1 )
-         ::GotoPos( ::nRow, ::nCol + 1 , .T. )
+         ::GotoPos( ::nRow, ::nCol + 1, .T. )
       ENDIF
    ENDIF
 
@@ -1294,7 +1294,7 @@ METHOD Left() CLASS XHBEditor
          IF ::nRow > 1
             // 2006/07/19 E.F. left should be at max in the leftmost column.
             //
-            ::GotoPos( ::nRow - 1, Max( ::nNumCols, ::nWordWrapCol + 1 ) , .T. )
+            ::GotoPos( ::nRow - 1, Max( ::nNumCols, ::nWordWrapCol + 1 ), .T. )
          ENDIF
          //else do nothing
       ENDIF
@@ -1705,7 +1705,7 @@ METHOD K_Return() CLASS XHBEditor
                ::nCol > ::LineLen( ::nRow )
             ::AddLine( "", .F. )
          ELSE
-            ::InsertLine( SubStr( ::aText[ ::nRow ]:cText, ::nCol ), .F. , ::nRow + 1 )
+            ::InsertLine( SubStr( ::aText[ ::nRow ]:cText, ::nCol ), .F., ::nRow + 1 )
          ENDIF
 
          ::aText[ ::nRow ]:cText := Left( ::aText[ ::nRow ]:cText, ::nCol - 1 )
@@ -2188,7 +2188,7 @@ METHOD SplitLine( nRow ) CLASS XHBEditor
       ENDIF
       // We must not trim the line as split occurs next to a space
       //
-      ::InsertLine( cSplittedLine, .T. , nStartRow++ )
+      ::InsertLine( cSplittedLine, .T., nStartRow++ )
       cLine := SubStr( cLine, Len( cSplittedLine ) + 1 )
    ENDDO
 
@@ -2200,10 +2200,10 @@ METHOD SplitLine( nRow ) CLASS XHBEditor
    //
    IF nStartRow + 1 <= ::LastRow()
       IF ::LineLen( nStartRow + 1 ) == 0 .OR. Len( AllTrim( cLine ) ) > 0
-         ::InsertLine( RTrim( cLine ), .F. , nStartRow )
+         ::InsertLine( RTrim( cLine ), .F., nStartRow )
       ENDIF
    ELSE
-      ::InsertLine( RTrim( cLine ), .F. , nStartRow )
+      ::InsertLine( RTrim( cLine ), .F., nStartRow )
    ENDIF
 
    // re-count words and see where current word has gone.
@@ -2858,7 +2858,7 @@ METHOD GetTextIndex() CLASS XHBEditor
    IF ::lWordWrap
       FOR nCount := 1 TO ::nRow - 1
          oItem := ::aText[ nCount ]
-         nPos += iif( oItem:lSoftCR, 0 , nEol ) + Len( oItem:cText )
+         nPos += iif( oItem:lSoftCR, 0, nEol ) + Len( oItem:cText )
       NEXT
    ELSE
       FOR nCount := 1 TO ::nRow - 1

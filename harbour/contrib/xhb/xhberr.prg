@@ -340,7 +340,7 @@ STATIC FUNCTION LogError( oerr )
    IF nHandle < 3
    ELSE
 
-      FWriteLine( nHandle, PadC( " xHarbour Error Log " , 79, "-" ) )
+      FWriteLine( nHandle, PadC( " xHarbour Error Log ", 79, "-" ) )
       FWriteLine( nHandle, "" )
 
       FWriteLine( nHandle, "Date...............: " + DToC( Date() )  )

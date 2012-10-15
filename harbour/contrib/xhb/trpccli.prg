@@ -116,11 +116,11 @@ CLASS tRPCClient
    METHOD HasError()                INLINE ::nErrorCode != 0 .OR. ::TcpHasError() .OR. ::UdpHasError()
    METHOD GetErrorCode()            INLINE ::nErrorCode
 
-   METHOD TcpHasError()             INLINE iif( Empty( ::skTCP ), .F. , hb_inetErrorCode( ::skTCP ) > 0 )
+   METHOD TcpHasError()             INLINE iif( Empty( ::skTCP ), .F., hb_inetErrorCode( ::skTCP ) > 0 )
    METHOD GetTcpErrorCode()         INLINE iif( Empty( ::skTCP ), 0, hb_inetErrorCode( ::skTCP ) )
    METHOD GetTcpErrorDesc()         INLINE iif( Empty( ::skTCP ), "", hb_inetErrorDesc( ::skTCP ) )
 
-   METHOD UdpHasError()             INLINE iif( Empty( ::skUDP ), .F. , hb_inetErrorCode( ::skUDP ) > 0 )
+   METHOD UdpHasError()             INLINE iif( Empty( ::skUDP ), .F., hb_inetErrorCode( ::skUDP ) > 0 )
    METHOD UdpGetErrorCode()         INLINE iif( Empty( ::skUDP ), 0, hb_inetErrorCode( ::skUDP ) )
    METHOD UdpGetErrorDesc()         INLINE iif( Empty( ::skUDP ), "", hb_inetErrorDesc( ::skUDP ) )
    /* Used to retreive data from scans */
@@ -257,7 +257,7 @@ METHOD ScanServers( cName ) CLASS tRPCClient
    ::aServers := {}
    hb_mutexUnlock( ::mtxBusy )
 
-   hb_inetDGramSend( ::skUDP, ::cNetwork , ::nUdpPort, "XHBR00" + hb_Serialize( cName ) )
+   hb_inetDGramSend( ::skUDP, ::cNetwork, ::nUdpPort, "XHBR00" + hb_Serialize( cName ) )
    ::StartScan()
 
    RETURN .F.

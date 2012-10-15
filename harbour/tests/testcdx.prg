@@ -13,8 +13,8 @@ PROCEDURE Main()
       { "LOGICAL",   "L",  1, 0 } }
 
    CLS
-   dbUseArea( .T. , "DBFCDX", "test", "TESTDBF", .T. , .F. )
-   dbCreate( "testcdx", aStruct, "DBFCDX", .T. , "TESTCDX" )
+   dbUseArea( .T., "DBFCDX", "test", "TESTDBF", .T., .F. )
+   dbCreate( "testcdx", aStruct, "DBFCDX", .T., "TESTCDX" )
 
    ? "RddName:", rddName()
 // ? "Press any key to continue..."

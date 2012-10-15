@@ -24,7 +24,7 @@ PROCEDURE Main( cVidMode )
    IF "EGA" $ Upper( cVidMode )
       SetMode( 43, 80 )
    ENDIF
-   lColour := iif( "MONO" $ Upper( cVidMode ), .F. , IsColor() )
+   lColour := iif( "MONO" $ Upper( cVidMode ), .F., IsColor() )
 
    SET SCOREBOARD OFF
    SetCursor( SC_NONE )

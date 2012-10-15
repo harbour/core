@@ -48,7 +48,7 @@ FUNCTION TestBrw( nRowIni )
       IF nKey == 27 .OR. nKey == 13
          EXIT
       ELSEIF nKey == -1
-         s_lFixPos := iif( s_lFixPos, .F. , .T. )
+         s_lFixPos := iif( s_lFixPos, .F., .T. )
          EXIT
       ELSEIF nKey == 24
          oBrw:Down()

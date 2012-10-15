@@ -7,22 +7,22 @@
 PROCEDURE Main()
 
    LOCAL datamenu := { ;
-      { "Customers", , {|| cust() } }   , ;
-      { "Invoices",  , {|| inv() } }    , ;
+      { "Customers", , {|| cust()    } }, ;
+      { "Invoices",  , {|| inv()     } }, ;
       { "Vendors",   , {|| vendors() } }, ;
       { "Exit", "Return to Main Menu" } }
 
    LOCAL repmenu :=  { ;
-      { "Customer List", , {|| custrep() } }  , ;
-      { "Past Due",      , {|| pastdue() } }  , ;
+      { "Customer List", , {|| custrep()   } }, ;
+      { "Past Due",      , {|| pastdue()   } }, ;
       { "Weekly Sales",  , {|| weeksales() } }, ;
-      { "Monthly P&L",   , {|| monthpl() } }  , ;
+      { "Monthly P&L",   , {|| monthpl()   } }, ;
       { "Vendor List",   , {|| vendorrep() } }, ;
       { "Exit", "Return to Main Menu" } }
 
    LOCAL maintmenu := { ;
-      { "Reindex",  "Rebuild index files", {|| re_ntx() } } , ;
-      { "Backup",   "Backup data files"  , {|| backup() } } , ;
+      { "Reindex",  "Rebuild index files", {|| re_ntx() } }, ;
+      { "Backup",   "Backup data files"  , {|| backup() } }, ;
       { "Compress", "Compress data files", {|| compress() } }, ;
       { "Exit",     "Return to Main Menu" } }
 

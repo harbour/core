@@ -207,7 +207,7 @@ FUNCTION HB_LogDateStamp()
 
    LOCAL dToday := Date()
 
-   RETURN  Str( Year( dToday ), 4 ) + "-" + PadL( Month( dToday ) , 2, "0" ) + "-" + PadL( Day( dToday ), 2, "0" )
+   RETURN  Str( Year( dToday ), 4 ) + "-" + PadL( Month( dToday ), 2, "0" ) + "-" + PadL( Day( dToday ), 2, "0" )
 
 /**********************************************
 * Logger class
@@ -606,12 +606,11 @@ CLASS HB_LogDbf FROM HB_LogChannel
    VAR cIndexName  INIT "messages.cdx"
    VAR cDriver     INIT "DBFCDX"
    VAR aStruct     INIT { ;
-      { "PRIORITY", "N",   2, 0 } , ;
-      { "PROGNAME", "C",  30, 0 } , ;
-      { "MESSAGE" , "C", 250, 0 } , ;
-      { "DATE"    , "D",   8, 0 } , ;
-      { "TIME"    , "C",   8, 0 }  ;
-      }
+      { "PRIORITY", "N",   2, 0 }, ;
+      { "PROGNAME", "C",  30, 0 }, ;
+      { "MESSAGE" , "C", 250, 0 }, ;
+      { "DATE"    , "D",   8, 0 }, ;
+      { "TIME"    , "C",   8, 0 } }
 
    METHOD New( nLevel, cDBFName, cIndexName, aStruct, cDriver )
    METHOD Open( cProgName )
@@ -633,7 +632,7 @@ METHOD New( nLevel, cDBFName, cIndexName, aStruct, cDriver ) CLASS HB_LogDbf
          cExt := "dbf"
       ENDIF
       ::cDBFName := iif( !Empty( cDrive ), cDrive + ":\", "" ) + ;
-         iif( !Empty( cPath ) , cPath + "\", "" ) + ;
+         iif( !Empty( cPath ), cPath + "\", "" ) + ;
          cName + cExt
       //__OutDebug( "::cDBFName", ::cDBFName )
    ENDIF
@@ -644,7 +643,7 @@ METHOD New( nLevel, cDBFName, cIndexName, aStruct, cDriver ) CLASS HB_LogDbf
          cExt := "cdx"
       ENDIF
       ::cIndexName := iif( !Empty( cDrive ), cDrive + ":\", "" ) + ;
-         iif( !Empty( cPath ) , cPath + "\", "" ) + ;
+         iif( !Empty( cPath ), cPath + "\", "" ) + ;
          cName + cExt
       //__OutDebug( "::cCDXName", ::cCDXName )
    ENDIF
@@ -667,18 +666,18 @@ METHOD Open( cProgName ) CLASS HB_LogDbf
 
    IF ! hb_FileExists( ::cDBFName )
       dbCreate( ::cDBFName, ::aStruct )
-      dbUseArea( .T. , ::cDriver, ::cDBFName, "LogDbf", .T. )
+      dbUseArea( .T., ::cDriver, ::cDBFName, "LogDbf", .T. )
       INDEX ON DToS( FIELD->date ) + FIELD->time + Str( FIELD->priority, 2 ) + FIELD->MESSAGE TAG "datetime" TO ( ::cIndexName )
       INDEX ON Str( FIELD->priority, 2 ) + DToS( FIELD->date ) + FIELD->time + FIELD->MESSAGE TAG "priority" TO ( ::cIndexName )
       LogDbf->( dbCloseArea() )
    ELSEIF ! hb_FileExists( ::cIndexName )
-      dbUseArea( .T. , ::cDriver, ::cDBFName, "LogDbf", .T. )
+      dbUseArea( .T., ::cDriver, ::cDBFName, "LogDbf", .T. )
       INDEX ON DToS( FIELD->date ) + FIELD->time + Str( FIELD->priority, 2 ) + FIELD->MESSAGE TAG "datetime" TO ( ::cIndexName )
       INDEX ON Str( FIELD->priority, 2 ) + DToS( FIELD->date ) + FIELD->time + FIELD->MESSAGE TAG "priority" TO ( ::cIndexName )
       LogDbf->( dbCloseArea() )
    ENDIF
 // __OutDebug( "::cDriver, ::cDBFName", ::cDriver, ::cDBFName )
-   dbUseArea( .T. , ::cDriver, ::cDBFName, "LogDbf", .T. )
+   dbUseArea( .T., ::cDriver, ::cDBFName, "LogDbf", .T. )
    SET INDEX TO ( ::cIndexName )
 
    LogDbf->( dbAppend() )

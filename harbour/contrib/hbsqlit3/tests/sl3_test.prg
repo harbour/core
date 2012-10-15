@@ -57,7 +57,7 @@
 #define TRACE
 #define TABLE_SQL "CREATE TABLE t1( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER )"
 
-PROCEDURE main()
+PROCEDURE Main()
 
    ? sqlite3_libversion()
    sqlite3_sleep( 3000 )
@@ -148,7 +148,7 @@ PROCEDURE t2()
 
       ? "The number of database rows that were changed: " + hb_ntos( sqlite3_changes( db ) )
       ? "Total changes: " + hb_ntos( sqlite3_total_changes( db ) )
-      ? "Last _ROWID_: " + str( sqlite3_last_insert_rowid( db ) )
+      ? "Last _ROWID_: " + Str( sqlite3_last_insert_rowid( db ) )
       ? ""
 
       stmt := sqlite3_prepare( db, "SELECT * FROM t1 WHERE name == :name ")
@@ -161,7 +161,7 @@ PROCEDURE t2()
       DO WHILE sqlite3_step( stmt ) == SQLITE_ROW
          nCCount := sqlite3_column_count( stmt )
          ++nJ
-         ? "Record # " + str( nJ )
+         ? "Record # " + Str( nJ )
 
          IF nCCount > 0
             FOR nI := 0 TO nCCount - 1
@@ -176,7 +176,7 @@ PROCEDURE t2()
                   EXIT
 
                CASE SQLITE_INTEGER
-                  ?? str ( sqlite3_column_int( stmt, nI ) )
+                  ?? Str( sqlite3_column_int( stmt, nI ) )
                   EXIT
 
                CASE SQLITE_NULL
@@ -191,7 +191,7 @@ PROCEDURE t2()
             NEXT
          ENDIF
       ENDDO
-      ? "Total records - " + str( nJ )
+      ? "Total records - " + Str( nJ )
 
       sqlite3_clear_bindings( stmt )
       sqlite3_finalize( stmt )
@@ -207,7 +207,7 @@ PROCEDURE t2()
       DO WHILE sqlite3_step( stmt ) == SQLITE_ROW
          nCCount := sqlite3_column_count( stmt )
          ++nJ
-         ? "Record # " + str( nJ )
+         ? "Record # " + Str( nJ )
 
          IF nCCount > 0
             FOR nI := 1 TO nCCount
@@ -222,7 +222,7 @@ PROCEDURE t2()
                   EXIT
 
                CASE SQLITE_INTEGER
-                  ?? str( sqlite3_column_int( stmt, nI ) )
+                  ?? Str( sqlite3_column_int( stmt, nI ) )
                   EXIT
 
                CASE SQLITE_NULL
@@ -237,7 +237,7 @@ PROCEDURE t2()
             NEXT
          ENDIF
       ENDDO
-      ? "Total records - " + str( nJ )
+      ? "Total records - " + Str( nJ )
       sqlite3_clear_bindings( stmt )
       sqlite3_finalize( stmt )
 

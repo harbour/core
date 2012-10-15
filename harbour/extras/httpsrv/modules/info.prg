@@ -90,7 +90,7 @@ STATIC FUNCTION ShowServerInfo()
    cHtml += "<br>"
    cHtml += DisplayVars( _Cookie       , "COOKIE Vars" )
    cHtml += "<br>"
-// cHtml += DisplayVars( _Files      , "FILE Vars" )
+// cHtml += DisplayVars( _Files        , "FILE Vars" )
 // cHtml += "<br>"
    cHtml += DisplayVars( _Request      , "REQUEST Vars" )
    cHtml += "<br>"

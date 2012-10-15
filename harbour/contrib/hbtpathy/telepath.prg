@@ -465,7 +465,7 @@ FUNCTION tp_waitfor( ... )
          IF lIgnorecase
             nAt := At( Upper( acList[ x ] ), Upper( t_aPorts[ nPort, TPFP_INBUF ] ) )
          ELSE
-            nAt := At( acList[ x ] , t_aPorts[ nPort, TPFP_INBUF ] )
+            nAt := At( acList[ x ], t_aPorts[ nPort, TPFP_INBUF ] )
          ENDIF
          IF nAt > 0 .AND. nAt < nFirst
             nFirst := nAt

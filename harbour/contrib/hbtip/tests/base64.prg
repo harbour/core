@@ -28,7 +28,7 @@ PROCEDURE Main( ... )
    LOCAL cData
    LOCAL cBuffer := Space( 1024 )
    LOCAL nLen
-   LOCAL lHelp := .F. , lDecode := .F. , lQp := .F. , lUrl := .F.
+   LOCAL lHelp := .F., lDecode := .F., lQp := .F., lUrl := .F.
    LOCAL hInput := hSTDIN
    LOCAL hOutput := hSTDOUT
 

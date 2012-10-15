@@ -79,7 +79,7 @@ PROCEDURE Main()
    WAIT
 #else
    ? "Create it and leave opened"
-   dbCreate( "arrtest.dbf", aStruct, "ARRAYRDD", .T. , "arrtest" )
+   dbCreate( "arrtest.dbf", aStruct, "ARRAYRDD", .T., "arrtest" )
    WAIT
 #endif
 

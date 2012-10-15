@@ -15,11 +15,11 @@
 
 PROCEDURE Main()
 
-   LOCAL aWin := Array( 9 ), y, x, i, k, lFlag := .F. , lBoard := .T.
+   LOCAL aWin := Array( 9 ), y, x, i, k, lFlag := .F., lBoard := .T.
 
    SetBlink( .F. )
    wboard( 5, 5, 20, 75 )
-   wmode( .T. , .T. , .T. , .T. )
+   wmode( .T., .T., .T., .T. )
    wsetshadow( 7 )
    setclearA( 10 * 16 + 14 )
    setclearB( 35 )

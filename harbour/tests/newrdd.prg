@@ -13,7 +13,7 @@ PROCEDURE Main()
    SET EXCLUSIVE OFF
    CLS
 
-   dbUseArea( .T. , "DBF", "test", "TESTDBF", .T. , .F. )
+   dbUseArea( .T., "DBF", "test", "TESTDBF", .T., .F. )
    ? "RecCount:", TESTDBF->( RecCount() )
    ? "Used:", TESTDBF->( Used() )
    ? "Select:", TESTDBF->( Select() )
@@ -41,7 +41,7 @@ PROCEDURE Main()
    aArray := TESTDBF->( dbStruct() )
    ? "dbStruct:"
    FOR nI := 1 TO Len( aArray )
-      ? PadR( aArray[ nI ][ 1 ], 10 ) , aArray[ nI ][ 2 ], aArray[ nI ][ 3 ], aArray[ nI ][ 4 ]
+      ? PadR( aArray[ nI ][ 1 ], 10 ), aArray[ nI ][ 2 ], aArray[ nI ][ 3 ], aArray[ nI ][ 4 ]
    NEXT
 
    ? "Press any key to continue..."
@@ -223,7 +223,7 @@ PROCEDURE Main()
       { "Date",       "D",  8, 0 }, ;
       { "Rate",       "N",  6, 2 }, ;
       { "Memo",       "M", 10, 0 }, ;
-      { "Student",    "L",  1, 0 } }, "DBFCDX", .T. , "newrdd" )
+      { "Student",    "L",  1, 0 } }, "DBFCDX", .T., "newrdd" )
    SET CENTURY ON
    ? "lUpdate:", NEWRDD->( LUpdate() )
 
@@ -309,7 +309,7 @@ PROCEDURE Main()
    ? '? "RecCount:", NEWRDD->( RecCount() )'
    ? ""
    NEWRDD->( dbCloseArea() )
-   dbUseArea( .T. , "DBFCDX", "newrdd", "NEWRDD", .F. , .F. )
+   dbUseArea( .T., "DBFCDX", "newrdd", "NEWRDD", .F., .F. )
 
    ? "Press any key to continue..."
    Inkey( 0 )
@@ -359,7 +359,7 @@ PROCEDURE Main()
    SELECT( "TESTDBF" )
    SORT ON FIRST /DC, AGE /D TO newrdd
 
-   dbUseArea( .T. , "DBF", "newrdd", "NEWRDD", .F. , .F. )
+   dbUseArea( .T., "DBF", "newrdd", "NEWRDD", .F., .F. )
    ? "RecCount:", NEWRDD->( RecCount() )
    FOR nI := 1 TO 8
       ? NEWRDD->FIRST, NEWRDD->AGE

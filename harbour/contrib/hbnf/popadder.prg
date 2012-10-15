@@ -255,7 +255,7 @@ FUNCTION FT_Adder()
             hb_DispOutAt( 21 + nTopOS, 8 + nTapeSpace, " " + /* LOW-ASCII "↑↓" */ Chr( 24 ) + Chr( 25 ) + "-SCROLL  <ESC>-QUIT " )
             SetColor( "N/W,W+/N" )
             lAC_exit_ok := .F.
-            AChoice( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, aTrans, .T. , ;
+            AChoice( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, aTrans, .T., ;
                {| nMode, cur_elem, rel_pos | _ftAdderTapeUDF( nMode, cur_elem, rel_pos, @lAC_exit_ok ) }, nTotTran, 20 )
             SetColor( "R+/W" )
             hb_DispBox( 21 + nTopOS, 8 + nTapeSpace, 21 + nTopOS, 30 + nTapeSpace, HB_B_SINGLE_UNI )
@@ -429,7 +429,7 @@ STATIC FUNCTION _ftDispTotal( aAdder )
       _ftError( "that number is to big to display! I believe the answer was " + ;
          cTotStr + "." )
       lAddError := .T.
-      _ftUpdateTrans( aAdder, .T. , NIL )
+      _ftUpdateTrans( aAdder, .T., NIL )
       _ftClearAdder( aAdder )
       nTotal    := 0
       nNumTotal := 0
@@ -463,7 +463,7 @@ STATIC FUNCTION _ftDispSubTot( aAdder )
       _ftError( "that number is to big to display! I believe the answer was " + ;
          cStotStr + "." )
       lAddError := .T.
-      _ftUpdateTrans( aAdder, .T. , nNumTotal )
+      _ftUpdateTrans( aAdder, .T., nNumTotal )
       _ftClearAdder( aAdder )
       nTotal    := 0
       nNumTotal := 0
@@ -544,7 +544,7 @@ STATIC FUNCTION _ftAddTotal( aAdder )
          _ftSetWinColor( W_CURR, W_SCREEN )
          hb_DispOutAt( 6 + nTopOS, 18 + nAddSpace, "   <TOTAL>" )
          _ftSetWinColor( W_CURR, W_PROMPT )
-         _ftUpdateTrans( aAdder, .T. , NIL )
+         _ftUpdateTrans( aAdder, .T., NIL )
          _ftDispTotal( aAdder )
          lSubRtn   := .F.                  // pressed the total key reset everyting
          nSavTotal := nTotal
@@ -563,7 +563,7 @@ STATIC FUNCTION _ftAddTotal( aAdder )
          ENDIF
          IF _ftRoundIt( nNumTotal, nMaxDeci ) != 0
             lSubRtn := .F.
-            _ftUpdateTrans( aAdder, .F. , nNumTotal )
+            _ftUpdateTrans( aAdder, .F., nNumTotal )
          ENDIF
          IF !lMultDiv
             lSubRtn := .T.                  // total key
@@ -590,14 +590,14 @@ STATIC FUNCTION _ftAddTotal( aAdder )
          lSubRtn := .F.                    // pressed total so key reset everything
          IF ! lTotalOk                     // If you haven't printed total DO-IT
             lTotalOk := .T.
-            _ftUpdateTrans( aAdder, .F. , NIL )
+            _ftUpdateTrans( aAdder, .F., NIL )
          ENDIF
          nNumTotal := 0
          nSavTotal := nTotal
          nTotal    := 0
       ELSE
          IF ! lTotalOk                     // If you haven't printed total DO-IT
-            _ftUpdateTrans( aAdder, .F. , NIL )
+            _ftUpdateTrans( aAdder, .F., NIL )
             nNumTotal := 0
          ENDIF
       ENDIF
@@ -637,7 +637,7 @@ STATIC FUNCTION _ftAddSub( aAdder, nKey )
       IF !lNewNum                         // They pressed + again to add the same
          nNumTotal := nSavSubTot           // number without re-entering
       ENDIF
-      _ftUpdateTrans( aAdder, .F. , nNumTotal )
+      _ftUpdateTrans( aAdder, .F., nNumTotal )
       nTotal     := nTotal + nNumTotal
       lNewNum    := .F.
       nSavSubTot := nNumTotal   // Save this number in case they just press + or -
@@ -648,7 +648,7 @@ STATIC FUNCTION _ftAddSub( aAdder, nKey )
          nNumTotal := nSavSubTot           // number without re-entering
          lNewNum   := .T.
       ENDIF
-      _ftUpdateTrans( aAdder, .F. , nNumTotal )
+      _ftUpdateTrans( aAdder, .F., nNumTotal )
       nTotal     := nTotal - nNumTotal
       lNewNum    := .F.
       nSavSubTot := nNumTotal   // Save this number in case they just press + or -
@@ -689,22 +689,22 @@ STATIC FUNCTION _ftMultDiv( aAdder, nKey )
    IF _ftRoundIt( nTotal, nMaxDeci ) == 0
       IF nKey == hb_keyCode( "*" )            // Setup mode
          nAddMode := 3
-         _ftUpdateTrans( aAdder, .F. , nNumTotal )
+         _ftUpdateTrans( aAdder, .F., nNumTotal )
       ELSEIF nKey == hb_keyCode( "/" )
          nAddMode := 4
-         _ftUpdateTrans( aAdder, .F. , nNumTotal )
+         _ftUpdateTrans( aAdder, .F., nNumTotal )
       ENDIF
       nTotal    := nNumTotal
       nNumTotal := 0
    ELSE
       IF nKey == hb_keyCode( "*" )           // Multiply
          nAddMode  := 3
-         _ftUpdateTrans( aAdder, .F. , nNumTotal )
+         _ftUpdateTrans( aAdder, .F., nNumTotal )
          nTotal    := nTotal * nNumTotal
          nNumTotal := 0
       ELSEIF nKey == hb_keyCode( "/" )       // Divide
          nAddMode := 4
-         _ftUpdateTrans( aAdder, .F. , nNumTotal )
+         _ftUpdateTrans( aAdder, .F., nNumTotal )
          nTotal := _ftDivide( aAdder, nTotal, nNumTotal )
          IF lDivError
             _ftError( "you can't divide by ZERO!" )
@@ -751,7 +751,7 @@ STATIC FUNCTION _ftAddHelp
       "         <ESC>      - Quit"                          + hb_eol() + ;
       "         <F10>      - return a <TOTAL> to the active get"
 
-   _ftPushMessage( cMess, .T. , "ADDER HELP", "press any key to continue...", ;
+   _ftPushMessage( cMess, .T., "ADDER HELP", "press any key to continue...", ;
       "QUIET" )
 
    RETURN NIL
@@ -777,7 +777,7 @@ STATIC FUNCTION _ftClearAdder( aAdder )
    IF lClAdder                           // If it has alredy been pressed once
       nTotal    := 0                      // then we are clearing the total
       nSavTotal := 0
-      _ftUpdateTrans( aAdder, .F. , NIL )
+      _ftUpdateTrans( aAdder, .F., NIL )
       lClAdder  := .F.
       _ftDispTotal( aAdder )
    ELSE
@@ -1086,7 +1086,7 @@ STATIC FUNCTION _ftPushMessage( cMessage, lWait, cTitle, cBotTitle, xQuiet, nTop
    nBottom   := nTop + nNumRows + 2
    nLeft     := Int( ( MaxCol() - nWide ) / 2 ) - 3
    nRight    := nLeft + nWide + 4
-   lWait     := iif( lWait == NIL, .F. , lWait )
+   lWait     := iif( lWait == NIL, .F., lWait )
 
    _ftPushWin( nTop, nLeft, nBottom, nRight, cTitle, cBotTitle, nWinColor )
    DISPMESSAGE cMessage, nTop + 1, nLeft + 2, nBottom - 1, nRight - 2
@@ -1296,7 +1296,7 @@ STATIC FUNCTION _ftError( cMessage, xDontReset )
    LOCAL nOldRow, nOldCol, nOldCurs, nTop, nLeft, nBot, nRight, cOldColor
    LOCAL nOldLastKey, cErrorScr, nMessLen, nWide, nNumRows, nKey
    LOCAL cOldDevic, lOldPrint
-   LOCAL lResetLKey := iif( xDontReset == NIL, .T. , .F. )
+   LOCAL lResetLKey := iif( xDontReset == NIL, .T., .F. )
 
    nOldLastKey := LastKey()
    nOldRow  := Row()
@@ -1354,7 +1354,7 @@ STATIC FUNCTION _ftStuffComma( cStrToStuff, lTrimStuffedStr )
 
    LOCAL nDecPosit, x
 
-   lTrimStuffedStr := iif( lTrimStuffedStr == NIL, .F. , lTrimStuffedStr )
+   lTrimStuffedStr := iif( lTrimStuffedStr == NIL, .F., lTrimStuffedStr )
    IF !( "." $ cStrToStuff )
       cStrToStuff := _ftPosIns( cStrToStuff, ".", iif( "C" $ cStrToStuff .OR. ;
          "E" $ cStrToStuff .OR. "+" $ cStrToStuff .OR. "-" $ cStrToStuff ;

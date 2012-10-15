@@ -38,10 +38,10 @@ MEMVAR __nCBid__, __temp__
       WIDTH <nWidth>   =>                   ;
       ;
       ;
-      __nCBid__ := wvw_cbCreate( NIL, <row> , <col> , <nWidth> , ;
-      <aOptions> , ;
+      __nCBid__ := wvw_cbCreate( NIL, <row>, <col>, <nWidth>, ;
+      <aOptions>, ;
       {| nWinNum, nId, nEvent, nIndex, temp |     ;
-      CBhandler( nWinNum, nId, nEvent, nIndex, <"var"> , GetList );
+      CBhandler( nWinNum, nId, nEvent, nIndex, <"var">, GetList );
       },                                          ;
       NIL, NIL, s_nCB_Kbd, NIL );                     ;
       AAdd( s_aComboList, { __nCBid__, <"var"> } );                        ;

@@ -226,20 +226,20 @@ PROCEDURE Main()
    WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
    WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_RESET,  "~Reset Toolbar" )
    WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DELETE, "~Delete Toolbar" )
-   WVW_AppendMenu( hMenu     , MF_ENABLED + MF_POPUP , hPopupMenu , "~Toolbar",  )
+   WVW_AppendMenu( hMenu     , MF_ENABLED + MF_POPUP , hPopupMenu, "~Toolbar",  )
 
    hPopupMenu := WVW_CreateMenu( )
    WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DECREASE, "~Decrease Line Spacing (F9)" )
    WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_INCREASE, "~Increase Line Spacing (F10)" )
    WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
    WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DEFAULT,  "~Set As Default Line Spacing (F11)" )
-   WVW_AppendMenu( hMenu     , MF_ENABLED + MF_POPUP , hPopupMenu , "~Window",  )
+   WVW_AppendMenu( hMenu     , MF_ENABLED + MF_POPUP , hPopupMenu, "~Window",  )
 
    hPopupMenu := WVW_CreateMenu( )
    WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_HELP_HELP, "~Help (F1)"  )
    WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
    WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_HELP_INFO, "~Info (F2)"  )
-   WVW_AppendMenu( hMenu     , MF_ENABLED + MF_POPUP , hPopupMenu , "~Help",  )
+   WVW_AppendMenu( hMenu     , MF_ENABLED + MF_POPUP , hPopupMenu, "~Help",  )
 
    WVW_SetMenu( , hMenu )
 
@@ -250,10 +250,10 @@ PROCEDURE Main()
    CreateToolbar( nCurWindow )
 
    ResetMiscObjects( nCurWindow )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,40, cLabel,6,, rgb(255,255,255 ), rgb(198,198,198 ), "Arial", s_afontinfo[2], , , , , .T. , .T. ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1, 40, cLabel, 6,, rgb( 255, 255, 255 ), rgb( 198, 198, 198 ), "Arial", s_afontinfo[ 2 ], , , , , .T. , .T. ) } )
 
    wvwm_ResetMouseObjects( nCurWindow )
-   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Info!",   MaxRow() - 2,67, , , {|| xDebugInfo() } ) )
+   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Info!", MaxRow() - 2, 67, , , {|| xDebugInfo() } ) )
 
    oMouse := WVWMouseButton():New( "Flat",   MaxRow() - 2, 67 - 11, , , {|| lboxmessage( "flat" ) }, 1, NIL )
    oMouse:cImage := "vouch1.gif"
@@ -264,7 +264,7 @@ PROCEDURE Main()
    oMouse:Enable( .T. )
    wvwm_AddMouseObjects( nCurWindow, oMouse )
 
-   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Hard",   MaxRow() - 2,67 - 11 - 11 - 11, , , {|| lboxmessage("hard" ) }, 3, NIL ) )
+   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Hard",   MaxRow() - 2, 67 - 11 - 11 - 11, , , {|| lboxmessage( "hard" ) }, 3, NIL ) )
    oMouse := WVWMouseButton():New( "Disabled",   MaxRow() - 2, 67 - 11 - 11 - 11 - 11, , , {|| xDebugInfo() } )
    oMouse:Enable( .F. )
    wvwm_AddMouseObjects( nCurWindow, oMouse )
@@ -457,18 +457,18 @@ PROCEDURE Demo_Get()
    WVW_SetIcon( , "vr_1.ico" )
 
    ResetMiscObjects( nCurWindow )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,nRight - nLeft, cLabel,2,, rgb(255,255,255 ), rgb(198,198,198 ), "Arial", s_afontinfo[2], , , , , .T. , .T. ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,nRight - nLeft, cLabel,2,, rgb( 255, 255, 255 ), rgb( 198, 198, 198 ), "Arial", s_afontinfo[ 2 ], , , , , .T. , .T. ) } )
    AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, 7 - nTop, 61 - nLeft, 13 - nTop, 70 - nLeft ) } )
    AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxGroup( nWindow, 15 - nTop, 59 - nLeft, 18 - nTop, 72 - nLeft ) } )
    AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxGroup( nWindow, 5 - nTop, 6 - nLeft, 19 - nTop, 44 - nLeft ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawImage( nWindow, 8 - nTop,62 - nLeft,12 - nTop,69 - nLeft, "vouch1.bmp" ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawImage( nWindow, 8 - nTop,62 - nLeft, 12 - nTop,69 - nLeft, "vouch1.bmp" ) } )
    AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, 7 - nTop, 48 - nLeft, 13 - nTop, 55 - nLeft ) } )
    AddMiscObjects( nCurWindow, {| nWindow | x := nWindow, AEval( GetList, {| oGet | WVW_DrawBoxGet( x, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
    wvwm_ResetMouseObjects( nCurWindow )
 
    /* we now use native push button
-   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info",   maxrow()-1,maxcol()-15, , , {|| xDebugInfo() } ))
+   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info", maxrow() - 1, maxcol() - 15, , , {|| xDebugInfo() } ))
    */
    WVW_PBcreate( nCurWindow, MaxRow() - 1, MaxCol() - 15, MaxRow() - 1, MaxCol() - 5, "Info", NIL, {|| xDebugInfo() }, NIL )
 
@@ -503,7 +503,7 @@ PROCEDURE Demo_Get()
 
 FUNCTION DEMO_Browse()
 
-   LOCAL nKey, bBlock, oBrowse , i
+   LOCAL nKey, bBlock, oBrowse, i
    LOCAL lEnd    := .F.
    LOCAL info_   := {}             //WVW_nOpenWindow() has not been performed, so...
    LOCAL nTop    :=  3             //pls notice that this is relative to PARENT window!
@@ -573,7 +573,7 @@ FUNCTION DEMO_Browse()
    AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, aColumnsSep, Len( aColumnsSep ) ) } )
 
    /* we now use native push button
-   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info",   maxrow(),maxcol()-15, , , {|| xDebugInfo() } ))
+   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info", maxrow(), maxcol() - 15, , , {|| xDebugInfo() } ))
    */
    WVW_PBcreate( nCurWindow, MaxRow(), MaxCol() - 15, MaxRow(), MaxCol() - 5, "Info", NIL, {|| xDebugInfo() }, NIL )
 
@@ -1219,7 +1219,7 @@ FUNCTION nCeiling( nNumber, nRoundDec )
 FUNCTION SetDefaultWindowSize()
 
 //x was: LOCAL Result:= SetMode(32,98), ScreenWidth
-   LOCAL Result := .T. , ScreenWidth
+   LOCAL Result := .T., ScreenWidth
    SetMode( 25, 80 )
    IF Result
       screenWidth := Wvw_GetScreenWidth()
@@ -1262,7 +1262,7 @@ PROCEDURE ErrorSys()
 
 STATIC PROCEDURE MyError( e )
 
-   LOCAL cTrace := "", i := 1 , cErr
+   LOCAL cTrace := "", i := 1, cErr
 
    cErr := "Runtime error" + hb_eol() + ;
       hb_eol() + ;

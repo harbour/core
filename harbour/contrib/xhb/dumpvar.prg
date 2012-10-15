@@ -180,7 +180,7 @@ STATIC FUNCTION DShowProperties( oVar, nScope, lRecursive, nIndent, nRecursionLe
 
    IF HB_ISOBJECT( oVar )
 //    lOldScope := __SetClassScope( .F. )
-      aMethods  := __objGetMsgFullList( oVar, .F. , HB_MSGLISTALL, nScope )
+      aMethods  := __objGetMsgFullList( oVar, .F., HB_MSGLISTALL, nScope )
       aProps    := __objGetValueFullList( oVar, NIL, nScope )
 //    __SetClassScope( lOldScope )
 
@@ -427,7 +427,7 @@ STATIC FUNCTION __objGetValueFullList( oObject, aExcept, nScope, nNoScope )
       aExcept := {}
    ENDIF
 
-   aVars   := __objGetMsgFullList( oObject, .T. , HB_MSGLISTALL, nScope, nNoScope )
+   aVars   := __objGetMsgFullList( oObject, .T., HB_MSGLISTALL, nScope, nNoScope )
    aReturn := {}
    FOR EACH aVar IN aVars
       IF hb_AScan( aExcept, aVar[HB_OO_DATA_SYMBOL], , , .T. ) == 0

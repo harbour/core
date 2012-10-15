@@ -62,7 +62,7 @@ FUNCTION FT_TEMPFIL( cPath, lHide, nHandle )
    LOCAL cRet, aRegs[ 3 ]
 
    cPath := iif( ! HB_ISSTRING( cPath ), ;
-      Replicate( hb_BChar( 0 ), 13 ) , ;
+      Replicate( hb_BChar( 0 ), 13 ), ;
       cPath += Replicate( hb_BChar( 0 ), 13 ) )
 
    lHide := iif( HB_ISLOGICAL( lHide ), lHide, .F. )

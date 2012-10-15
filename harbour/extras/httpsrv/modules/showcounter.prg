@@ -188,7 +188,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
       // Set the digit as tile that I have to use to fill position in counter
       oI:SetTile( oTemp )
       // Fill the position with the image digit
-      oI:Rectangle( ( n - 1 ) * nNumWidth, 0, ( n - 1 ) * nNumWidth + nNumWidth, nHeight, .T. , gdTiled )
+      oI:Rectangle( ( n - 1 ) * nNumWidth, 0, ( n - 1 ) * nNumWidth + nNumWidth, nHeight, .T., gdTiled )
    NEXT
 
    /* Write Final Counter Image */

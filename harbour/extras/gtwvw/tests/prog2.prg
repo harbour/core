@@ -125,7 +125,7 @@ PROCEDURE xGet1()
 
 FUNCTION xBrowse1()
 
-   LOCAL nKey, bBlock, oBrowse , i
+   LOCAL nKey, bBlock, oBrowse, i
    LOCAL lEnd    := .F.
    LOCAL info_   := {}
    LOCAL nTop    :=  6

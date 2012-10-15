@@ -212,7 +212,7 @@ METHOD Draw13( cText )  CLASS TCode
       IF !lerror
 
          // If we have to write text, we moved the barcode to the right to have space to put digit
-         ::positionX := iif( ::textfont == 0 , 0, 10 )
+         ::positionX := iif( ::textfont == 0, 0, 10 )
 
          xParity := ::Parity[ Val( SubStr( ::text, 1, 1 ) ) ]
 
@@ -298,7 +298,7 @@ METHOD DrawText13()  CLASS TCode
 
    IF ::textfont != 0
 
-      ::Say( 2, ::maxHeight - ( ::GetFontHeight() / 2 ), SubStr( ::text, 1, 1 ) , ::FillColor )
+      ::Say( 2, ::maxHeight - ( ::GetFontHeight() / 2 ), SubStr( ::text, 1, 1 ), ::FillColor )
       ::Say( ( 10 + ( 3 * ::res + 48 * ::res ) / 2 ) - ( ::GetFontWidth() * ( 6 / 2 ) ), ::maxHeight + 1, SubStr( ::text, 2, 6 ), ::FillColor )
       ::Say( 10 + 46 * ::res + ( 3 * ::res + 46 * ::res ) / 2 - ::GetFontWidth() * ( 6 / 2 ), ::maxHeight + 1, SubStr( ::text, 8, 6 ), ::FillColor )
 

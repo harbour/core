@@ -13,7 +13,7 @@ PROCEDURE Main()
 
    // First, try all the types. This checks that the VM can cope.
 
-   AEval( { NIL, {}, "", 0, CToD( "" ), .F. , {|| NIL }, ErrorNew() }, ;
+   AEval( { NIL, {}, "", 0, CToD( "" ), .F., {|| NIL }, ErrorNew() }, ;
       {| x | QOut( x:className ) } )
 
    // Now try against values "in the code". This checks that the

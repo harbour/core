@@ -12,13 +12,13 @@ PROCEDURE Main()
    ENDIF
 
    ? "Testing .T. .T."
-   AndOr( .T. , .T. )
+   AndOr( .T., .T. )
 
    ? "Testing .T. .F."
-   AndOr( .T. , .F. )
+   AndOr( .T., .F. )
 
    ? "Testing .F. .F."
-   AndOr( .F. , .F. )
+   AndOr( .F., .F. )
 
    ? "Testing errors..."
    AndOr( 1, .T. )

@@ -337,7 +337,7 @@ STATIC PROCEDURE Exm_OOWriter()
       oTable:getCellByName( "C2" ):setValue( 106.38 )
       oTable:getCellByName( "D2" ):setFormula( "sum <A2:C2>" )
 
-      oText:insertControlCharacter( oCursor, 0 , .F. )  // PARAGRAPH_BREAK
+      oText:insertControlCharacter( oCursor, 0, .F. )  // PARAGRAPH_BREAK
 
       oCursor:setPropertyValue( "CharColor", 255 )
       oText:insertString( oCursor, "Good bye!", .F. )

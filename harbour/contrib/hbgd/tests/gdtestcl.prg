@@ -48,7 +48,7 @@ PROCEDURE Main()
    cyan  := oI:SetColor( 0, 255, 255 )
 
    /* Draw rectangle */
-   oI:Rectangle( 0, 0, 199, 199, .T. , cyan )
+   oI:Rectangle( 0, 0, 199, 199, .T., cyan )
    oI:Rectangle( 0, 0, 199, 199, , black )
 
    oI:SetColor( blue )
@@ -89,7 +89,7 @@ PROCEDURE Main()
    oI:AddPoint( 160, 180 )
    oI:AddPoint( 170, 110 )
    oI:AddPoint( 150, 160 )
-   oI:Polygon( , .T. , green )
+   oI:Polygon( , .T., green )
 
    /* Draw an arc */
    oI:Arc( 50, 50, 40, 40, 30, 190, , red )
@@ -293,7 +293,7 @@ PROCEDURE Main()
    oI5:Clone():HorizontalBarChart():SaveJpeg( IMAGES_OUT + "horzbars.jpg" )
 
    oI5:LineChart()
-   oI5:SaveJpeg( IMAGES_OUT + "hystogram1.jpg" )
+   oI5:SaveJpeg( IMAGES_OUT + "hystogrm.jpg" )
 
    //oI4 := GDImage():CreateTrueColor( oI2:Width * 2, oI2:Height * 2 )
    //oI2:CopyResampled( 0, 0, oI2:Width, oI2:Height, 0, 0, oI2:Width, oI2:Height, oI4 )

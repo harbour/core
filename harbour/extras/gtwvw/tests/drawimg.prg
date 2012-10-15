@@ -83,7 +83,7 @@ PROCEDURE Main()
       nmidver := Int( ( ntop + nbot ) / 2 ), ;
       nmidhor := Int( ( nleft + nrig ) / 2 )
    LOCAL cpict := "vouch1.gif", ;
-      ltransp := .F. , ;
+      ltransp := .F., ;
       nMaxCache := wvw_SetMaxBMcache()
    LOCAL i, j, oWPaint
    LOCAL getlist := {}

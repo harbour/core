@@ -69,7 +69,7 @@ PROCEDURE Main()
    ? [  atrepl("ABC", "ABCDABCDABC", "xx", 2) == "xxDxxDABC" ? --> "] + atrepl( "ABC", "ABCDABCDABC", "xx", 2 ) + ["]
    ? [  atrepl("ABC", "ABCDABCDABC", "xx", 2, .T.) == "ABCDxxDABC" ? --> "] + atrepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) + ["]
    ? [  atrepl("ABC", "ABCDABCDABC", "xx", 2, .T., 1) == "ABCDABCDxx" ? ]
-   ? [          --> "] + atrepl( "ABC", "ABCDABCDABC", "xx", 2, .T. , 1 ) + ["]
+   ? [          --> "] + atrepl( "ABC", "ABCDABCDABC", "xx", 2, .T., 1 ) + ["]
 
    ? "End test of ATREPL()"
    ?

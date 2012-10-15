@@ -132,8 +132,8 @@ METHOD CreateBar( sx, sy, filename, ccolor ) CLASS TBarCode
       ::filename  := filename
    ENDIF
 
-   ::FillColor  := ::SetColor( ::color_f[ 1 ] , ::color_f[ 2 ] , ::color_f[ 3 ] )
-   ::BackColor  := ::SetColor( ::color_b[ 1 ] , ::color_b[ 2 ] , ::color_b[ 3 ] )
+   ::FillColor  := ::SetColor( ::color_f[ 1 ], ::color_f[ 2 ], ::color_f[ 3 ] )
+   ::BackColor  := ::SetColor( ::color_b[ 1 ], ::color_b[ 2 ], ::color_b[ 3 ] )
 
    ::Setfont( "Arial" )
 
@@ -181,8 +181,8 @@ METHOD SetText( ptext )  CLASS TBarCode
 
 METHOD ResetColor() CLASS TBarCode
 
-   ::FillColor  := ::SetColor( ::color_f[ 1 ] , ::color_f[ 2 ] , ::color_f[ 3 ] )
-   ::BackColor  := ::SetColor( ::color_b[ 1 ] , ::color_b[ 2 ] , ::color_b[ 3 ] )
+   ::FillColor  := ::SetColor( ::color_f[ 1 ], ::color_f[ 2 ], ::color_f[ 3 ] )
+   ::BackColor  := ::SetColor( ::color_b[ 1 ], ::color_b[ 2 ], ::color_b[ 3 ] )
 
    RETURN NIL
 
@@ -202,7 +202,7 @@ METHOD DrawSingleBar( pcode ) CLASS TBarCode
    FOR j := 1 TO Len( pcode )
 
       FOR i := 1 TO ::res
-         ::Line( ::positionX + i  , ::positionY , ::positionX + i , ( ::positionY + ::maxHeight ) , ;
+         ::Line( ::positionX + i, ::positionY, ::positionX + i, ( ::positionY + ::maxHeight ), ;
             iif( SubStr( pcode, j, 1 ) $ "0", ::BackColor, ::FillColor  ) )
       NEXT
 
@@ -229,7 +229,7 @@ METHOD DrawSingleI25( pcode ) CLASS TBarCode
    FOR j := 1 TO Len( pcode )
 
       imgBar := iif( j % 2 == 0, ::FillColor, ::BackColor )
-      imgWid := iif( SubStr( pcode,j,1 ) == "0" , widthSlimBar, widthFatBar )
+      imgWid := iif( SubStr( pcode,j,1 ) == "0", widthSlimBar, widthFatBar )
 
       end_y := ::maxHeight
 
@@ -248,7 +248,7 @@ METHOD DrawError( ptext ) CLASS TBarCode
 
    ::error ++
 
-   ::lastX := iif( ( ::GetFontWidth() * Len(ptext ) ) > ::lastX , ( ::GetFontWidth() * Len(ptext ) ) , ::lastX )
+   ::lastX := iif( ( ::GetFontWidth() * Len(ptext ) ) > ::lastX, ( ::GetFontWidth() * Len(ptext ) ), ::lastX )
    ::lastY := ::error * 15
 
    RETURN NIL
@@ -274,7 +274,7 @@ METHOD DrawText( lIsI25 ) CLASS TBarCode
    IF lIsI25
       If ::textfont != 0
          xPosition  := 10 * ::GetFontWidth()
-         ::say(  xPosition, ::maxHeight, "*" + ::text + "*" , ::FillColor )
+         ::say(  xPosition, ::maxHeight, "*" + ::text + "*", ::FillColor )
          ::lastY    := ::maxHeight + ::GetFontHeight()
       ENDIF
    ELSE

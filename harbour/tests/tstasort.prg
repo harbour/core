@@ -8,7 +8,7 @@ PROCEDURE Main()
 
    LOCAL a := { 3, 2, 1 }
    LOCAL b := { 10 }
-   LOCAL c := { 2, .T. , "B", NIL, { 1 }, {|| b }, oError, Date(), 1, .F. , "A", NIL, Date() - 1, { 0 }, {|| a }, oError }
+   LOCAL c := { 2, .T., "B", NIL, { 1 }, {|| b }, oError, Date(), 1, .F., "A", NIL, Date() - 1, { 0 }, {|| a }, oError }
 
    ?
    ?

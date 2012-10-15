@@ -25,9 +25,9 @@ PROCEDURE Main()
    aStyle := { "Normal", "Bold", "Italic", "BoldItalic" }
 
    aFonts := {;
-      { "Times",     .T. , .T. , .T. , .T. }, ;
-      { "Helvetica", .T. , .T. , .T. , .T. }, ;
-      { "Courier",   .T. , .T. , .T. , .T. } }
+      { "Times",     .T., .T., .T., .T. }, ;
+      { "Helvetica", .T., .T., .T., .T. }, ;
+      { "Courier",   .T., .T., .T., .T. } }
 
    pdfOpen( "test.pdf", 200, .T. )
 

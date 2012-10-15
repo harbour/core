@@ -54,13 +54,13 @@ PROCEDURE Main()
       CASE nCounter == 1
          AChoice( 2, 1, 3, 11, aMenu1 )
       CASE nCounter == 2
-         AChoice( 2, 13, 3, 23, aMenu2, .T. , "cUF" )
+         AChoice( 2, 13, 3, 23, aMenu2, .T., "cUF" )
       CASE nCounter == 3
          AChoice( 2, 25, 3, 35, aMenu3, .T. )
       CASE nCounter == 4
          // User function cUF2() fill screen with exclamation marks
          // in clipper it does not get called in AC_NOITEM mode
-         AChoice( 2, 37, 3, 47, aMenu4, .T. , "cUF2" )
+         AChoice( 2, 37, 3, 47, aMenu4, .T., "cUF2" )
 
       ENDCASE
 

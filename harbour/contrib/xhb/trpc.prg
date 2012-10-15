@@ -557,7 +557,7 @@ METHOD RUN() CLASS tRPCServeCon
          /* Execute function */
       CASE cCode == "XHBR20"
          IF nSafeStatus == RPCS_STATUS_LOGGED
-            aData := ::RecvFunction( .F. , .F. )
+            aData := ::RecvFunction( .F., .F. )
             IF aData != NIL
                lBreak := ! ::FuncCall( aData[ 2 ] )
             ELSE
@@ -573,7 +573,7 @@ METHOD RUN() CLASS tRPCServeCon
          /* Execute function */
       CASE cCode == "XHBR21"
          IF nSafeStatus == RPCS_STATUS_LOGGED
-            aData := ::RecvFunction( .T. , .F. )
+            aData := ::RecvFunction( .T., .F. )
             IF aData != NIL
                lBreak := ! ::FuncCall( aData[ 2 ] )
             ELSE
@@ -588,7 +588,7 @@ METHOD RUN() CLASS tRPCServeCon
          /* Loop function */
       CASE cCode == "XHBR22"
          IF nSafeStatus == RPCS_STATUS_LOGGED
-            aData := ::RecvFunction( .F. , .T. )
+            aData := ::RecvFunction( .F., .T. )
             IF aData != NIL
                lBreak := ! ::FuncLoopCall( aData[ 1 ], aData[ 2 ] )
             ELSE
@@ -603,7 +603,7 @@ METHOD RUN() CLASS tRPCServeCon
          /* Loop function - compressed */
       CASE cCode == "XHBR23"
          IF nSafeStatus == RPCS_STATUS_LOGGED
-            aData := ::RecvFunction( .T. , .T. )
+            aData := ::RecvFunction( .T., .T. )
             IF aData != NIL
                lBreak := ! ::FuncLoopCall( aData[ 1 ], aData[ 2 ] )
             ELSE
@@ -618,7 +618,7 @@ METHOD RUN() CLASS tRPCServeCon
          /* Foreach function */
       CASE cCode == "XHBR24"
          IF nSafeStatus == RPCS_STATUS_LOGGED
-            aData := ::RecvFunction( .F. , .T. )
+            aData := ::RecvFunction( .F., .T. )
             IF aData != NIL
                lBreak := ! ::FuncForeachCall( aData[ 1 ], aData[ 2 ] )
             ELSE
@@ -633,7 +633,7 @@ METHOD RUN() CLASS tRPCServeCon
          /* Foreach function - compressed*/
       CASE cCode == "XHBR25"
          IF nSafeStatus == RPCS_STATUS_LOGGED
-            aData := ::RecvFunction( .T. , .T. )
+            aData := ::RecvFunction( .T., .T. )
             IF aData  != NIL
                lBreak := ! ::FuncForeachCall( aData[ 1 ], aData[ 2 ] )
             ELSE
@@ -1288,7 +1288,7 @@ METHOD Add( xFunction, cVersion, nLevel, oExec, oMethod )
    hb_mutexLock( ::mtxBusy )
    nElem := AScan( ::aFunctions, {| x | oFunction:cName == x:cName } )
    IF nElem == 0
-      AAdd( ::aFunctions  , oFunction )
+      AAdd( ::aFunctions, oFunction )
       lRet := .T.
    ENDIF
    hb_mutexUnlock( ::mtxBusy )

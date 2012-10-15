@@ -66,7 +66,7 @@ __defaultNIL( @cId, "" )
       cString := pdfStringB( cString )
       IF right( cString, 1 ) == Chr( 255 ) //reverse
          cString := left( cString, len( cString ) - 1 )
-         pdfBox( t_aReport[ PAGEY ] - nRow - t_aReport[ FONTSIZE ] + 2.0 , nCol, t_aReport[ PAGEY ] - nRow + 2.0, nCol + pdfM2X( pdfLen( cString )) + 1,,100, "D")
+         pdfBox( t_aReport[ PAGEY ] - nRow - t_aReport[ FONTSIZE ] + 2.0, nCol, t_aReport[ PAGEY ] - nRow + 2.0, nCol + pdfM2X( pdfLen( cString )) + 1,,100, "D")
          t_aReport[ PAGEBUFFER ] += " 1 g "
          lReverse := .T.
       ELSEIF right( cString, 1 ) == Chr( 254 ) //underline

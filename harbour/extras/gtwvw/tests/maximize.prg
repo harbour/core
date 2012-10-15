@@ -78,7 +78,7 @@ PROCEDURE updatescr()
 FUNCTION WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )
 
    LOCAL cScreen
-   LOCAL lNeedReset := .F. , ;
+   LOCAL lNeedReset := .F., ;
       maxsavedscrrow, maxsavedscrcol
    IF !s_lSizeReady
       // program is not ready to handle window resizing

@@ -35,7 +35,7 @@ PROCEDURE Main()
    ? PadR( "FT_AADDITION( aList1, aList2, , .F. ) ->", 44 )
    AEval( var0, {| x | QQOut( x + "," ) } )
    ?
-   var0 := FT_AADDITION( aList1, aList2, .F. , .F. )
+   var0 := FT_AADDITION( aList1, aList2, .F., .F. )
    ? PadR( "FT_AADDITION( aList1, aList2, .F., .F. ) ->", 44 )
    AEval( var0, {| x | QQOut( x + "," ) } )
    ?

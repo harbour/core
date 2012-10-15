@@ -85,7 +85,7 @@ FUNCTION CStrToVal( cExp, cType )
       ENDIF
 
    CASE "L"
-      RETURN iif( cExp[ 1 ] == "T" .OR. cExp[ 1 ] == "Y" .OR. cExp[ 2 ] == "T" .OR. cExp[ 2 ] == "Y", .T. , .F. )
+      RETURN iif( cExp[ 1 ] == "T" .OR. cExp[ 1 ] == "Y" .OR. cExp[ 2 ] == "T" .OR. cExp[ 2 ] == "Y", .T., .F. )
 
    CASE "N"
       RETURN Val( cExp )
@@ -114,7 +114,7 @@ FUNCTION CStrToVal( cExp, cType )
 
 FUNCTION StringToLiteral( cString )
 
-   LOCAL lDouble := .F. , lSingle := .F.
+   LOCAL lDouble := .F., lSingle := .F.
 
    IF hb_regexHas( "\n|\r", cString ) .OR. ;
          ( ( lDouble := '"' $ cString ) .AND. ( lSingle := "'" $ cString ) .AND. hb_regexHas( "\[|\]", cString ) )

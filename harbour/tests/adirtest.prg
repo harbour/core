@@ -39,7 +39,7 @@ STATIC FUNCTION TestIt( cSpec )
    OutStd( "--------------------------------------------------------" )
    OutStd( hb_eol() )
 
-   ADir( cSpec , a1, a2, a3, a4, a5 )
+   ADir( cSpec, a1, a2, a3, a4, a5 )
 
    AEval( a1, {| tmp | OutStd( tmp ), OutStd( hb_eol() ) } )
    AEval( a2, {| tmp | OutStd( tmp ), OutStd( hb_eol() ) } )

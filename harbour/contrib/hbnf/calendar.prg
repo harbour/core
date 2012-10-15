@@ -33,8 +33,8 @@ FUNCTION FT_CALENDAR( nRow, nCol, cColor, lShadow, lShowHelp )
    nRow    := iif( nRow != NIL, nRow, 1 )           //check display row
    nCol    := iif( nCol != NIL, nCol, 63 )           //check display col
    cColor  := iif( cColor != NIL, cColor, "W+/G" )  //check display color
-   lShadow := iif( lShadow == NIL , .F. , lShadow )  //check shadow switch
-   lShowHelp := iif( lShowHelp == NIL , .F. , lShowHelp )//check help switch
+   lShadow := iif( lShadow == NIL, .F., lShadow )  //check shadow switch
+   lShowHelp := iif( lShowHelp == NIL, .F., lShowHelp )//check help switch
 
    nRow := iif( nRow < 1 .OR. nRow > 21,  1, nRow )   //check row bounds
    nCol := iif( nCol < 1 .OR. nCol > 63, 63, nCol )   //check col bounds
@@ -49,7 +49,7 @@ FUNCTION FT_CALENDAR( nRow, nCol, cColor, lShadow, lShowHelp )
    ENDIF
 
    IF lShowHelp
-      nHelpRow := iif( nRow > 10 , nRow - 10 , nRow + 6 )
+      nHelpRow := iif( nRow > 10, nRow - 10, nRow + 6 )
    ENDIF
 
    DO WHILE nKey != K_ESC

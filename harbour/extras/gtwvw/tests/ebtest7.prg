@@ -33,7 +33,7 @@
       [<multiline: MULTILINE>]                        ;
       [PICTURE <pic>]                                 ;
       ;
-      => AddEBGet( aEBGets, <row>, <col>, @<var>, <"var"> , {| x | <var> := x }, <label>, <.multiline.>, <pic> )
+      => AddEBGet( aEBGets, <row>, <col>, @<var>, <"var">, {| x | <var> := x }, <label>, <.multiline.>, <pic> )
 
 //***************************
 // constants to aEBGets member,
@@ -620,14 +620,14 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
    pFlag := .F. //x for clarity
    IF mcvaltype == "N"
       // RL 104
-      IF Left( AllTrim( InBuffer ) , 1 ) == "-" .AND. Val( InBuffer ) == 0
+      IF Left( AllTrim( InBuffer ), 1 ) == "-" .AND. Val( InBuffer ) == 0
          NegativeZero := .T.
       ENDIF
 
       IF PCount() > 1
          // Point Count For Numeric InputMask
          FOR x := 1 TO Len( InBuffer )
-            CB := SubStr( InBuffer , x , 1 )
+            CB := SubStr( InBuffer, x, 1 )
             IF CB == "." .OR. CB == ","
                pc++
             ENDIF
@@ -640,7 +640,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
          // Find First Non-Blank Position
          FOR x := 1 TO Len( InBuffer )
-            CB := SubStr( InBuffer , x , 1 )
+            CB := SubStr( InBuffer, x, 1 )
             IF !( CB == " " )
                fnb := x
                EXIT
@@ -651,12 +651,12 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
    BackInBuffer := InBuffer
 
-   OldChar := SubStr( InBuffer , icp + 1 , 1 )
+   OldChar := SubStr( InBuffer, icp + 1, 1 )
 
    IF Len( InBuffer ) < Len( Mask )
-      InBufferLeft := Left( InBuffer , icp )
+      InBufferLeft := Left( InBuffer, icp )
 
-      InBufferRight := Right( InBuffer , Len( InBuffer ) - icp )
+      InBufferRight := Right( InBuffer, Len( InBuffer ) - icp )
 
       IF CharMaskTekstOK( InBufferLeft + " " + InBufferRight, mcvaltype, Mask ) .AND. ;
             !CharMaskTekstOK( InBufferLeft + InBufferRight, mcvaltype, Mask )
@@ -669,9 +669,9 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
    IF Len( InBuffer ) > Len( Mask ) .AND. ;
          Len( Mask ) > 0
 
-      InBufferLeft := Left( InBuffer , icp )
+      InBufferLeft := Left( InBuffer, icp )
 
-      InBufferRight := Right( InBuffer , Len( InBuffer ) - icp - 1 )
+      InBufferRight := Right( InBuffer, Len( InBuffer ) - icp - 1 )
 
       InBuffer := InBufferLeft + InBufferRight
    ENDIF
@@ -680,8 +680,8 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
    OutBuffer := "" //x for clarity
    BadEntry := .F. //x for clarity
    FOR x := 1 TO Len( Mask )
-      CB := SubStr( InBuffer , x , 1 )
-      CM := SubStr( Mask , x , 1 )
+      CB := SubStr( InBuffer, x, 1 )
+      CM := SubStr( Mask, x, 1 )
 
       DO CASE
       CASE CM == "A" .OR. CM == "!"
@@ -747,7 +747,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
       // RL 104
       IF NegativeZero == .T.
-         Output := Transform( GetValFromText( wvw_ebgettext( mnwinnum, mnebid ), mcvaltype ) , Mask )
+         Output := Transform( GetValFromText( wvw_ebgettext( mnwinnum, mnebid ), mcvaltype ), Mask )
 
          //x better:
          ol := Len( Output )
@@ -757,13 +757,13 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
          wvw_ebsettext( mnwinnum, mnebid, Output )
          wvw_ebsetsel( mnwinnum, mnebid, At( ".", OutBuffer ) + dc, At( ".", OutBuffer ) + dc )
       ELSE
-         wvw_ebsettext( mnwinnum, mnebid, Transform( GetValFromText( wvw_ebgettext( mnwinnum, mnebid ), mcvaltype ) , Mask ) )
+         wvw_ebsettext( mnwinnum, mnebid, Transform( GetValFromText( wvw_ebgettext( mnwinnum, mnebid ), mcvaltype ), Mask ) )
          wvw_ebsetsel( mnwinnum, mnebid, At( ".", OutBuffer ) + dc, At( ".", OutBuffer ) + dc )
       ENDIF
 
    ELSE
       IF pFlag == .T.
-         ncp := At( "." , wvw_ebgettext( mnwinnum, mnebid ) )
+         ncp := At( ".", wvw_ebgettext( mnwinnum, mnebid ) )
          wvw_ebsetsel( mnwinnum, mnebid, ncp, ncp )
       ELSE
          // Restore Initial CaretPos
@@ -775,8 +775,8 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
          // Skip Protected Characters
          FOR x := 1 TO Len( OutBuffer )
-            CB := SubStr( OutBuffer , icp + x , 1 )
-            CM := SubStr( Mask , icp + x , 1 )
+            CB := SubStr( OutBuffer, icp + x, 1 )
+            CM := SubStr( Mask, icp + x, 1 )
 
             IF !IsDigit( CB ) .AND. !IsAlpha( CB ) .AND. ;
                   ( !( CB == " " ) .OR. ( CB == " " .AND. CM == " " ) )
@@ -794,12 +794,12 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
 STATIC FUNCTION CharMaskTekstOK( cString, cvaltype, cMask )
 
-   LOCAL lPassed := .T. , CB, CM, x
+   LOCAL lPassed := .T., CB, CM, x
 
    IF cvaltype == "D"
       FOR x := 1 TO Min( Len( cString ), Len( cMask ) )
-         CB := SubStr( cString , x , 1 )
-         CM := SubStr( cMask , x , 1 )
+         CB := SubStr( cString, x, 1 )
+         CM := SubStr( cMask, x, 1 )
          DO CASE
          CASE CM == "9"
             IF IsDigit( CB ) .OR. CB == " "
@@ -815,8 +815,8 @@ STATIC FUNCTION CharMaskTekstOK( cString, cvaltype, cMask )
    ENDIF
 
    FOR x := 1 TO Min( Len( cString ), Len( cMask ) )
-      CB := SubStr( cString , x , 1 )
-      CM := SubStr( cMask , x , 1 )
+      CB := SubStr( cString, x, 1 )
+      CM := SubStr( cMask, x, 1 )
       DO CASE
          // JK
       CASE ( CM ) == "A" .OR. ( CM ) == "!"
@@ -846,10 +846,10 @@ STATIC FUNCTION CharMaskTekstOK( cString, cvaltype, cMask )
 
 //from h_textbox.prg
 
-STATIC FUNCTION GetValFromText( Text , mcvaltype )
+STATIC FUNCTION GetValFromText( Text, mcvaltype )
 
    // eg. GetValFromText( "999,999.99" ) --> 999999.99
-   LOCAL x , c , s
+   LOCAL x, c, s
 
    IF mcvaltype == "C"
       RETURN TEXT
@@ -884,7 +884,7 @@ STATIC FUNCTION GetValFromText( Text , mcvaltype )
 STATIC FUNCTION GetNumMask( Text, mcvaltype )
 
    // eg. GetNumMask( "999,999.99" ) --> "999999.99"
-   LOCAL i , c , s
+   LOCAL i, c, s
 
    IF mcvaltype == "D" .OR. mcvaltype == "C"
       s := Text

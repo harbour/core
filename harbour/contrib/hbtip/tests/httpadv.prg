@@ -40,7 +40,7 @@ PROCEDURE Main( cUrl )
             ? hb_HKeyAt( oCon:hHeaders, i ) + ":", hb_HValueAt( oCon:hHeaders, i )
          NEXT
       ELSE
-         ? "Get failure (server reply:", oCon:cReply , ")"
+         ? "Get failure (server reply:", oCon:cReply, ")"
       ENDIF
 
       oCon:Close()

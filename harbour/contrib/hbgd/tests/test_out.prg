@@ -84,7 +84,7 @@ PROCEDURE Main( ... )
       OutHTML "</td></tr>"
       OutHTML "<tr><td align='center'>"
       OutHTML "<img src='test_out.exe?img=" + cPhoto + ;
-         iif( nWidth != NIL , "&width="  + hb_ntos( nWidth ) , "" ) + ;
+         iif( nWidth != NIL, "&width="  + hb_ntos( nWidth ), "" ) + ;
          iif( nHeight != NIL, "&height=" + hb_ntos( nHeight ), "" ) + ;
          "'>" + "<br>"
       OutHTML "</td></tr>"
@@ -165,7 +165,7 @@ PROCEDURE OutJpg( cText, nPitch )
    LOCAL blue
    LOCAL aSize, nWidth, nHeight, nX, nY
 
-   hb_default( @cText , "Sample TEXT" )
+   hb_default( @cText, "Sample TEXT" )
    hb_default( @nPitch, 30 )
 
    /* Create an image in memory */

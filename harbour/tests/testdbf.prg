@@ -15,7 +15,7 @@ PROCEDURE Main()
 
    REQUEST DBFCDX
 
-   dbCreate( "testdbf", aStruct, "DBFCDX", .T. , "MYALIAS" )
+   dbCreate( "testdbf", aStruct, "DBFCDX", .T., "MYALIAS" )
 
    ? "[" + MYALIAS->MEMO1 + "]"
    ? "[" + MYALIAS->MEMO2 + "]"
@@ -75,7 +75,7 @@ PROCEDURE Main()
    Inkey( 0 )
    dbCloseAll()
 
-   dbCreate( "testdbf", aStruct, , .T. , "MYALIAS" )
+   dbCreate( "testdbf", aStruct, , .T., "MYALIAS" )
 
    FOR nI := 1 TO 10
       MYALIAS->( dbAppend() )

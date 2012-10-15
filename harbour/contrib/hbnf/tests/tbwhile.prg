@@ -16,7 +16,7 @@
 PROCEDURE Main()
 
    LOCAL aFields := {}, cKey := "O", cOldColor
-   LOCAL nFreeze := 1, lSaveScrn := .T. , nRecSel
+   LOCAL nFreeze := 1, lSaveScrn := .T., nRecSel
    LOCAL cColorList := "N/W, N/BG, B/W, B/BG, B/W, B/BG, R/W, B/R"
    LOCAL cColorShad := "N/N"
    LOCAL GetList := {}
@@ -93,11 +93,11 @@ STATIC FUNCTION make_dbf()
       { "SUGARMAN", "CANDY", "1541 SWEETHEART ROAD", "HERSHEY", "PA", "10132"           } }
 
    dbCreate( "TBNAMES", {;
-      { "LAST ", "C", 18, 0, } , ;
-      { "FIRST", "C",  9, 0, } , ;
-      { "ADDR ", "C", 28, 0, } , ;
-      { "CITY ", "C", 21, 0, } , ;
-      { "STATE", "C",  2, 0, } , ;
+      { "LAST ", "C", 18, 0, }, ;
+      { "FIRST", "C",  9, 0, }, ;
+      { "ADDR ", "C", 28, 0, }, ;
+      { "CITY ", "C", 21, 0, }, ;
+      { "STATE", "C",  2, 0, }, ;
       { "ZIP  ", "C",  9, 0, } } )
    USE tbnames
    FOR x := 1 TO Len( aData )

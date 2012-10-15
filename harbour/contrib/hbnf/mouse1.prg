@@ -61,8 +61,8 @@ FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
    DO WHILE !lDone
 
       FT_MBUTPRS( nButton, @nPrs, @nVert, @nHorz )
-      nVert := Int( nVert/8 )
-      nHorz := Int( nHorz/8 )
+      nVert := Int( nVert / 8 )
+      nHorz := Int( nHorz / 8 )
 
       lDouble := ( nPrs > 0 )
       ldone := Seconds() - nStart >= nInterval .OR. lDouble
@@ -111,11 +111,11 @@ FUNCTION FT_MCONOFF( nTop, nLeft, nBottom, nRight )
    // Fill the registers
 
 /*
-   aReg[ AX ]:=16
-   aReg[ DX ]:=nTop*8
-   aReg[ CX ]:=nLeft*8
-   aReg[DI]:=nBottom*8
-   aReg[SI]:=nRight*8
+   aReg[ AX ] := 16
+   aReg[ DX ] := nTop * 8
+   aReg[ CX ] := nLeft * 8
+   aReg[ DI ] := nBottom * 8
+   aReg[ SI ] := nRight * 8
    FT_INT86( 51, aReg )        // execute mouse interrupt
 */
    _mse_conoff( nTop * 8, nLeft * 8, nBottom * 8, nRight * 8 )

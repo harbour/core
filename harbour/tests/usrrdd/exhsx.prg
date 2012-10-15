@@ -22,7 +22,7 @@ PROCEDURE Main()
       { "SALARY",      "N",  6,  0 }, ;
       { "NOTES",       "C", 70,  0 } } )
    USE _tst
-   HSX_CREATE( "_tst", "FIRST+LAST+STREET+CITY", 2, 0, .T. , 3 )
+   HSX_CREATE( "_tst", "FIRST+LAST+STREET+CITY", 2, 0, .T., 3 )
    APPEND FROM test
 
    /* Look for all records which have 'SHERMAN' string inside */

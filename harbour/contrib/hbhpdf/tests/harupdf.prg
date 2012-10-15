@@ -725,7 +725,7 @@ STATIC FUNCTION Page_TextScaling( pdf )
       /* measure the number of characters which included in the page. */
       buf := samp_text
       HPDF_Page_MeasureText( page, samp_text, ;
-         HPDF_Page_GetWidth( page ) - 120, .F. , NIL )
+         HPDF_Page_GetWidth( page ) - 120, .F., NIL )
 
       HPDF_Page_ShowText( page, buf )
 

@@ -1712,7 +1712,7 @@ FUNCTION THtmlTagType( cTagName )
 
 FUNCTION THtmlIsValid( cTagName, cAttrName )
 
-   LOCAL lRet := .T. , aValue
+   LOCAL lRet := .T., aValue
 
    IF t_hTagTypes == NIL
       THtmlInit()

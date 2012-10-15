@@ -513,7 +513,7 @@ CLASS HBField
    DATA Value
 
    METHOD Get() INLINE ::value := ( ::alias )->( FieldGet( ::order ) )
-   METHOD Put( x ) INLINE ::value := x , ;
+   METHOD Put( x ) INLINE ::value := x, ;
       ( ::alias )->( FieldPut( ::order, x ) )
 
 ENDCLASS
@@ -667,7 +667,7 @@ CLASS HBTable
    METHOD CONTINUE() INLINE ( ::Alias )->( __dbContinue() )
    METHOD Found() INLINE ( ::Alias )->( Found() )
    METHOD Kill() INLINE ( ::Alias )->( dbCommit() ), ;
-      ( ::Alias )->( dbUnlock() ) , ;
+      ( ::Alias )->( dbUnlock() ), ;
       ( ::Alias )->( dbCloseArea() ), ;
       ::ClearBuffers()
    METHOD ClearBuffers() INLINE ::ReadBuffers := {}, ;
@@ -725,7 +725,7 @@ CLASS HBTable
       ( ::alias )->( ordScope( TOPSCOPE, xScope ) )
    METHOD SetBottomScope( xScope ) INLINE ;
       ( ::alias )->( ordScope( BOTTOMSCOPE, xScope ) )
-   METHOD KillScope() INLINE ( ::alias )->( ordScope( TOPSCOPE, NIL ) )  , ;
+   METHOD KillScope() INLINE ( ::alias )->( ordScope( TOPSCOPE, NIL ) ), ;
       ( ::alias )->( ordScope( BOTTOMSCOPE, NIL ) )
 
    METHOD New( cDBF, cALIAS, cOrderBag, cDRIVER, ;
@@ -1083,7 +1083,7 @@ METHOD __oTDelete( lKeepBuffer )        // ::Delete()
    ::Read()
 
    IF ::isNet
-      lRet := iif( ( ::Alias )->( NetDelete() ), .T. , .F. )
+      lRet := iif( ( ::Alias )->( NetDelete() ), .T., .F. )
    ELSE
       ( ::alias )->( dbDelete() ) ; lRet := .T.
    ENDIF
@@ -1540,7 +1540,7 @@ METHOD PROCEDURE CREATE() CLASS HBOrder
 // ? "<<<", ::alias, ::cOrderBag
 
    ( ::alias )->( ordCondSet( ::cFor, ::bFor, ;
-      .T. , ;
+      .T., ;
       ::bWhile, ;
       ::bEval, ::nInterval ) )
 

@@ -134,11 +134,11 @@ STATIC FUNCTION _ReadBootSector( ;
    LOCAL nErrorCode
    LOCAL lCarryFlag
 
-   aRegs[ DX ] := nDriveNum   // DH = 0 Head 0, DL = drive number
-   aRegs[ CX ] := 1          // CH = 0 track 0, CL=1 sector 1
-   aRegs[ BX ] := REG_ES           // buffer in ES:BX
+   aRegs[ DX ] := nDriveNum            // DH = 0 Head 0, DL = drive number
+   aRegs[ CX ] := 1                    // CH = 0 track 0, CL=1 sector 1
+   aRegs[ BX ] := REG_ES               // buffer in ES:BX
    aRegs[ ES ] := cBuffer
-   aRegs[ AX ] := makehi( 2 ) + 1      // AH = 02 read , AL=1 read one sector
+   aRegs[ AX ] := makehi( 2 ) + 1      // AH = 02 read, AL=1 read one sector
 
    lSuccess := _CallInt13hRetry( aRegs, @lCarryFlag, @nErrorCode )
 
@@ -154,16 +154,16 @@ STATIC FUNCTION _WriteBootSector( ;
       )
 
    // call BIOS INT 13 for sector write
-   LOCAL aRegs[INT86_MAX_REGS]
+   LOCAL aRegs[ INT86_MAX_REGS ]
    LOCAL lSuccess
    LOCAL nErrorCode
    LOCAL lCarryFlag
 
-   aRegs[ DX ] := nDriveNum // DH = 0 Head 0 , DL = drive number
-   aRegs[ CX ] := 1          // CH = 0 track 0, CL=1 sector 1
-   aRegs[ BX ] := REG_ES           // buffer in ES:BX
+   aRegs[ DX ] := nDriveNum            // DH = 0 Head 0, DL = drive number
+   aRegs[ CX ] := 1                    // CH = 0 track 0, CL=1 sector 1
+   aRegs[ BX ] := REG_ES               // buffer in ES:BX
    aRegs[ ES ] := cBuffer_i
-   aRegs[ AX ] := makehi( 3 ) + 1      // AH = 03 write , AL=1 read one sector
+   aRegs[ AX ] := makehi( 3 ) + 1      // AH = 03 write, AL=1 read one sector
 
    lSuccess := _CallInt13hRetry( aRegs, @lCarryFlag, @nErrorCode )
 

@@ -31,7 +31,7 @@ PROCEDURE Main( cCmdLine )
 
    cCmdLine := iif( cCmdLine == NIL, "", cCmdLine )
 
-   lColor := iif( "MONO" $ Upper( cCmdLine ), .F. , IsColor() )
+   lColor := iif( "MONO" $ Upper( cCmdLine ), .F., IsColor() )
 
    // Border, Box, Bar, Current, Unselected
    aColors := iif( lColor, { "W+/G", "N/G", "N/G", "N/W", "N+/G" }, ;

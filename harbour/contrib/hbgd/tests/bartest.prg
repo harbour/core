@@ -24,7 +24,7 @@ PROCEDURE Main()
 // LOCAL ccode128   := "00011005100000000"
    LOCAL ccode128   := "Code 128"
 
-// LOCAL nlower := 1 , nhight := 50
+// LOCAL nlower := 1, nhight := 50
 
    /* here is the list of arguments
    1- Barcode Type 13,8  and 128

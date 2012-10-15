@@ -66,6 +66,7 @@
 //   2. '- 1' for numeric literals.
 //   3. wrongly breaks line: 'FUNCTION Hello( /* comment */ )'
 //   4. INIT PROCEDURE/EXIT PROCEDURE are not recognized as PROCEDURE statement
+//   5. ".T.," / ".F.," gets wrongly corrected to ".T. ," / ".F. ,"
 
 CREATE CLASS HBFORMATCODE
 

@@ -230,9 +230,9 @@ PROCEDURE Main()
    ? "Parameters info:"
    ? "================"
    ?
-   ? '  _pcount() with Params1( 1, "a", .T., 10 ) =>', Params1( 1, "a", .T. , 10 )
-   ? '  _parinfo() with Params2( 1, "a", .T., 0 ) =>', Params2( 1, "a", .T. , 0 )
-   ? '  _parinfo() with Params2( 1, "a", .T., 3 ) =>', Params2( 1, "a", .T. , 3 ), "( IT_LOGICAL )"
+   ? '  _pcount() with Params1( 1, "a", .T., 10 ) =>', Params1( 1, "a", .T., 10 )
+   ? '  _parinfo() with Params2( 1, "a", .T., 0 ) =>', Params2( 1, "a", .T., 0 )
+   ? '  _parinfo() with Params2( 1, "a", .T., 3 ) =>', Params2( 1, "a", .T., 3 ), "( IT_LOGICAL )"
    ?
    ?
    ?

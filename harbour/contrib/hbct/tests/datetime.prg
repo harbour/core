@@ -613,7 +613,7 @@ FUNCTION dmytest()
       IF nKey == K_ESC
          c := .F.
       ELSE
-         iif( cMode == "Y", lMode := .T. , lMode := .F. )
+         iif( cMode == "Y", lMode := .T., lMode := .F. )
 
          @ 12, 10 SAY "The date string returned is " + ;
             LTrim( dmy( ddate, lmode ) )
