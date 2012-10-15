@@ -703,7 +703,7 @@ METHOD SessionDestroy( cID ) CLASS uhttpd_Session
 
 METHOD SessionGC( nMaxLifeTime ) CLASS uhttpd_Session
    //TraceLog( "SessionGC() - nMaxLifeTime", nMaxLifeTime )
-   //STATIC nStartTime
+   //STATIC s_nStartTime
    LOCAL nSecs
    LOCAL aDir, aFile
 

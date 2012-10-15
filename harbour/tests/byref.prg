@@ -6,7 +6,7 @@
 
 PROCEDURE Main()
 
-   STATIC s := 10
+   STATIC s_x := 10
 
    LOCAL x := 0
 
@@ -17,9 +17,9 @@ PROCEDURE Main()
 
 
    ? "Managing STATIC variables by reference"
-   ? "In main before ref1 s=", s
-   ref1( @s )
-   ? " In main after ref1 s=", s
+   ? "In main before ref1 s=", s_x
+   ref1( @s_x )
+   ? " In main after ref1 s=", s_x
 
    RETURN
 
@@ -43,12 +43,12 @@ FUNCTION ref2( x )
 
 FUNCTION ref3( x )
 
-   STATIC a
+   STATIC s_a
 
    x++
    ? "   In ref3 before ref4 =", x
-   a := { x, x }
-   Ref4( @a )
+   s_a := { x, x }
+   Ref4( @s_a )
    ? "   In ref3 after ref4 =", x
 
    RETURN NIL

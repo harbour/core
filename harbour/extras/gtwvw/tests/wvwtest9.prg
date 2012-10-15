@@ -906,15 +906,15 @@ FUNCTION WVW_Paint( nWinNum )
 #if 0
 FUNCTION WVW_SetFocus( hWnd, nWinNum )
 
-   STATIC nGotFocus := 0
+   STATIC s_nGotFocus := 0
 
    IF nWinNum == 0
       RETURN NIL
    ENDIF
-   nGotFocus++
-   @ 0, 0 SAY nGotFocus
-   IF nGotFocus % 3 == 0
-      Alert( "Got focus " + tran( nGotFocus,"9999" ) + "th times" )
+   s_nGotFocus++
+   @ 0, 0 SAY s_nGotFocus
+   IF s_nGotFocus % 3 == 0
+      Alert( "Got focus " + transform( s_nGotFocus,"9999" ) + "th times" )
    ENDIF
 
    RETURN NIL

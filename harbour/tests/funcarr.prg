@@ -58,6 +58,6 @@ PROCEDURE Main()
 
 FUNCTION aFunc()
 
-   STATIC aArray := { [Test] }
+   STATIC s_aArray := { [Test] }
 
-   RETURN aArray
+   RETURN s_aArray

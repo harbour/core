@@ -49,32 +49,32 @@
 
 CLASS TCgi FROM THtml
 
-   DATA nH
-   DATA Server_Software
-   DATA Server_Name
-   DATA Gateway_Interface
-   DATA Server_Protocol
-   DATA Server_Port
-   DATA Request_Method
-   DATA Http_Accept
-   DATA Http_User_agent
-   DATA Http_Referer
-   DATA Path_Info
-   DATA Path_Translated
-   DATA Script_Name
-   DATA Query_String
-   DATA Remote_Host
-   DATA Remote_Addr
-   DATA ipAddress
-   DATA Remote_User
-   DATA Auth_Type
-   DATA Auth_User
-   DATA Auth_Pass
-   DATA Content_Type
-   DATA Content_Length
-   DATA Annotation_Server
+   VAR nH
+   VAR Server_Software
+   VAR Server_Name
+   VAR Gateway_Interface
+   VAR Server_Protocol
+   VAR Server_Port
+   VAR Request_Method
+   VAR Http_Accept
+   VAR Http_User_agent
+   VAR Http_Referer
+   VAR Path_Info
+   VAR Path_Translated
+   VAR Script_Name
+   VAR Query_String
+   VAR Remote_Host
+   VAR Remote_Addr
+   VAR ipAddress
+   VAR Remote_User
+   VAR Auth_Type
+   VAR Auth_User
+   VAR Auth_Pass
+   VAR Content_Type
+   VAR Content_Length
+   VAR Annotation_Server
 
-   DATA aQueryFields INIT {}
+   VAR aQueryFields INIT {}
 
    METHOD New( cInBuffer )
 
@@ -157,11 +157,12 @@ METHOD ToObject() CLASS TCgi
    LOCAL nScope    := 1
    LOCAL aDb
    LOCAL oNew
-   STATIC sn       := 0
+
+   STATIC s_n := 0
 
    // --> create new oObject class from this one...
-   sn++
-   aDb := HBClass():New( "NewCgi" + StrZero( sn, 3 ), { "TCgi" } )
+   s_n++
+   aDb := HBClass():New( "NewCgi" + StrZero( s_n, 3 ), { "TCgi" } )
 
    FOR i := 1 TO Len( ::aQueryFields )
 

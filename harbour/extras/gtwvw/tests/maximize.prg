@@ -60,7 +60,7 @@ PROCEDURE updatescr()
    NEXT
    FOR i := 0 TO MaxCol()
       @ MaxRow(), i SAY "B"
-      //@ maxrow()-1,i say right(tran(i,"999"),1)
+      //@ maxrow()-1,i say right(transform(i,"999"),1)
    NEXT
    FOR i := 0 TO MaxRow()
       @ i, MaxCol() SAY "R"

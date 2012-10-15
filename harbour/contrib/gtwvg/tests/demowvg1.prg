@@ -133,11 +133,11 @@ REQUEST HB_GT_WGU
 FUNCTION SetGT( nIndex, pGT )
 
    LOCAL oldGT
-   STATIC pGT_ := { NIL, NIL, NIL }
+   STATIC s_pGT_ := { NIL, NIL, NIL }
 
-   oldGT := pGT_[ nIndex ]
+   oldGT := s_pGT_[ nIndex ]
    IF PCount() == 2
-      pGT_[ nIndex ] := pGT
+      s_pGT_[ nIndex ] := pGT
    ENDIF
 
    RETURN oldGT

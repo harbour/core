@@ -99,7 +99,7 @@ PROCEDURE Main()
 // "NEW" button in the main window multiple times.
 PROCEDURE GetSession()
 
-   STATIC snsession := 0
+   STATIC s_nsession := 0
    LOCAL aEBGets := {}
    LOCAL cName      := Space( 30 )
    LOCAL cNickName  := Space( 10 )
@@ -110,19 +110,19 @@ PROCEDURE GetSession()
    LOCAL nwinnum
    LOCAL nrow1, ncol1, nrow2, ncol2
    LOCAL cdebugreport
-   IF snsession > 15
+   IF s_nsession > 15
       MyMessageBox( 0, "Sorry, maximum number of sessions reached" )
       RETURN
    ENDIF
 
-   snsession++
-   nwinnum := snsession
+   s_nsession++
+   nwinnum := s_nsession
 
-   nrow1 := 4 + ( snsession - 1 ) * 1
-   ncol1 := 10 + ( snsession - 1 ) * 2
+   nrow1 := 4 + ( s_nsession - 1 ) * 1
+   ncol1 := 10 + ( s_nsession - 1 ) * 2
    nrow2 := nrow1 + 15
    ncol2 := ncol1 + 60
-   wvw_nOpenWindow( "Session " + hb_ntos( snsession ) + " (press F8 for help)", ;
+   wvw_nOpenWindow( "Session " + hb_ntos( s_nsession ) + " (press F8 for help)", ;
       nrow1, ncol1, nrow2, ncol2, NIL, 0 )
 
    cRemark += hb_eol() + "(from Session " + hb_ntos( nwinnum ) + ")"
@@ -139,13 +139,13 @@ PROCEDURE GetSession()
    cdebugreport += "cName:" + cName + hb_eol()
    cdebugreport += "cNickName:" + cNickName + hb_eol()
    cdebugreport += "dBirthDate:" + DToC( dBirthDate ) + hb_eol()
-   cdebugreport += "nBudget:" + tran( nBudget, "999,999.99" ) + hb_eol()
+   cdebugreport += "nBudget:" + transform( nBudget, "999,999.99" ) + hb_eol()
    cdebugreport += "cRemark:" + cRemark
    MyMessageBox( nwinnum, cdebugreport )
 
    wvw_lclosewindow()
 
-   snsession--
+   s_nsession--
 
    RETURN
 
@@ -539,18 +539,18 @@ STATIC FUNCTION nFocused( aEBGets )
 // callback function called by GTWVW during some events on editbox
 STATIC FUNCTION MaskEditBox( nWinNum, nId, nEvent, aEBGets )
 
-   STATIC bBusy := .F.
+   STATIC s_bBusy := .F.
    LOCAL ctext
    LOCAL nIndex := nGetIndex( aEBGets, nId )
    LOCAL mcvaltype, mcpict, mlmultiline
    LOCAL nwasfocus
-   IF bBusy
+   IF s_bBusy
       RETURN NIL
    ENDIF
    IF nIndex == 0
       RETURN NIL
    ENDIF
-   bBusy := .T.
+   s_bBusy := .T.
    mcvaltype := aEBGets[ nIndex ][ __GET_CVALTYPE ]
    mcpict := aEBGets[ nIndex ][ __GET_CPICT ]
    mlmultiline := aEBGets[ nIndex ][ __GET_LMULTILINE ]
@@ -582,7 +582,7 @@ STATIC FUNCTION MaskEditBox( nWinNum, nId, nEvent, aEBGets )
          ProcessCharMask( nwinnum, nId, mcvaltype, mcpict )
       ENDIF
    ENDCASE
-   bBusy := .F.
+   s_bBusy := .F.
 
    RETURN NIL
 
@@ -975,15 +975,15 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )
 
 FUNCTION inp_handler( nwinnum, bhandler )
 
-   STATIC sbhandlers := {}
+   STATIC s_bhandlers := {}
    LOCAL i
-   LOCAL retval := iif( Len( sbhandlers ) >= nwinnum + 1, sbhandlers[nwinnum+1], NIL )
+   LOCAL retval := iif( Len( s_bhandlers ) >= nwinnum + 1, s_bhandlers[nwinnum+1], NIL )
 
    IF HB_ISBLOCK( bhandler )
-      IF Len( sbhandlers ) < nwinnum + 1
-         ASize( sbhandlers, nwinnum + 1 )
+      IF Len( s_bhandlers ) < nwinnum + 1
+         ASize( s_bhandlers, nwinnum + 1 )
       ENDIF
-      sbhandlers[nwinnum+1] := bhandler
+      s_bhandlers[ nwinnum + 1 ] := bhandler
    ENDIF
 
    RETURN retval

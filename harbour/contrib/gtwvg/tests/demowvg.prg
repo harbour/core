@@ -297,12 +297,12 @@ PROCEDURE WvtNextGets_X()
    LOCAL scr        := SaveScreen( 0, 0, MaxRow(), MaxCol() )
    LOCAL wvtScr     := Wvt_SaveScreen( 0, 0, MaxRow(), MaxCol() )
 
-   STATIC nPalletMultiplier := 0
+   STATIC s_nPalletMultiplier := 0
 
    // Change the values of pallatte arbitrarily though yu can fine tune
    // these values with realistic values.
    //
-   aNewPalette[ 8 ] := aNewPalette[ 8 ] + ( 100000 * ++nPalletMultiplier )
+   aNewPalette[ 8 ] := aNewPalette[ 8 ] + ( 100000 * ++s_nPalletMultiplier )
 
    Wvt_SetPalette( aNewPalette )
 

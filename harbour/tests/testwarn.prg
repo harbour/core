@@ -53,7 +53,7 @@ FIELD b AS STRING
 
 MEMVAR Var1 AS STRING
 
-STATIC lGlobal AS LOGICAL
+STATIC s_lGlobal AS LOGICAL
 
 PROCEDURE Main( optional )
 
@@ -98,7 +98,7 @@ PROCEDURE Main( optional )
       Var1 := .F.
    ENDIF
 
-   IF lGlobal
+   IF s_lGlobal
       Var1 := .T.
    ENDIF
 
@@ -122,8 +122,8 @@ PROCEDURE SOMEPROC()
 
    Var1 := 1
 
-   IF lGlobal == 0
-      ? "lGlobal is NOT Numeric"
+   IF s_lGlobal == 0
+      ? "s_lGlobal is NOT Numeric"
    ENDIF
 
    RETURN

@@ -381,26 +381,26 @@ FUNCTION SetPaletteIndex()
 
 PROCEDURE thFunc()
 
-   STATIC nBrowser := 0
-   STATIC nZx := 0
-   STATIC nZy := 0
+   STATIC s_nBrowser := 0
+   STATIC s_nZx := 0
+   STATIC s_nZy := 0
 
    LOCAL cTitle, oBrowse, lEnd, nKey, i, aStruct
    LOCAL aColor := { "W+/N", "W+/B", "W+/G", "W+/BG", "W+/N*", "W+/RB", "N/W*", "N/GR*" }
 
-   nBrowser++
-   nZx += 20
-   nZy += 20
+   s_nBrowser++
+   s_nZx += 20
+   s_nZy += 20
 
    /* allocate own GT driver */
    hb_gtReload( "WVT" )
    hb_gtInfo( HB_GTI_PALETTE, 8, RGB( 120, 200, 240 ) )
 
-   IF ( nBrowser % 2 ) != 0
+   IF ( s_nBrowser % 2 ) != 0
       hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
    ENDIF
    hb_gtInfo( HB_GTI_FONTNAME , "Lucida Console" )
-   hb_gtInfo( HB_GTI_WINTITLE, "test.dbf    [" + iif( ( nBrowser % 2 ) != 0, "RESIZABLE_BY_ROWS", "RESIZABLE_BY_FONT" ) + "]" )
+   hb_gtInfo( HB_GTI_WINTITLE, "test.dbf    [" + iif( ( s_nBrowser % 2 ) != 0, "RESIZABLE_BY_ROWS", "RESIZABLE_BY_FONT" ) + "]" )
    hb_gtInfo( HB_GTI_ALTENTER, .T. )  //allow alt-enter for full screen
 
    SetCursor( SC_NONE )
@@ -420,7 +420,7 @@ PROCEDURE thFunc()
       " Rows and " + hb_ntos( MaxCol() ) + " Columns"
    hb_DispOutAt( 0, 0, PadC( cTitle, MaxCol() + 1 ), "N/GR*" )
 
-   hb_gtInfo( HB_GTI_SETPOS_XY, nZx, nZy ) //this does not work until something is displayed
+   hb_gtInfo( HB_GTI_SETPOS_XY, s_nZx, s_nZy ) //this does not work until something is displayed
 
    USE test NEW SHARED
    aStruct := dbStruct()

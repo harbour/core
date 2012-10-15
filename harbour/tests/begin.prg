@@ -6,12 +6,12 @@
 // and BREAK statement
 
 MEMVAR oMemvar
-MEMVAR mPrivate
+MEMVAR p_mPrivate
 
 PROCEDURE Main()
 
    LOCAL oLocal
-   PRIVATE mPrivate := "private value in MAIN"
+   PRIVATE p_mPrivate := "private value in MAIN"
 
    BEGIN SEQUENCE
       ? " Inside SEQUENCE 1"
@@ -73,7 +73,7 @@ PROCEDURE Main()
    END SEQUENCE
    ? "After SEQUENCE 7"
 
-   ? M->mPrivate
+   ? M->p_mPrivate
    Break( "exit from MAIN" )
    ? "This text will be not printed"
 
@@ -81,9 +81,9 @@ PROCEDURE Main()
 
 PROCEDURE Break1()
 
-   PRIVATE mPrivate := "VALUE from Break1"
+   PRIVATE p_mPrivate := "VALUE from Break1"
 
-   BREAK M->mPrivate
+   BREAK M->p_mPrivate
 
 PROCEDURE Break2()
 
@@ -100,7 +100,7 @@ PROCEDURE Break2()
 
 PROCEDURE Break3()
 
-   STATIC oStatic
+   STATIC s_oStatic
 
    BEGIN SEQUENCE
       ? " Inside SEQUENCE 9"
@@ -108,8 +108,8 @@ PROCEDURE Break3()
       BEGIN SEQUENCE
          ? " Inside SEQUENCE 10"
          Break( "value from nested SEQUENCE 10" )
-      RECOVER USING oStatic
-         ? "  Recovering in 10 using...", oStatic
+      RECOVER USING s_oStatic
+         ? "  Recovering in 10 using...", s_oStatic
       END SEQUENCE
       ? "After SEQUENCE 10"
 

@@ -383,7 +383,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
 
    LOCAL nKey, sData
 
-   STATIC nTurn := 0
+   STATIC s_nTurn := 0
 
    // After :CREATE() Messages
    //
@@ -435,15 +435,15 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
 
       ELSEIF nKey == K_F11
          IF nActiveX == 4
-            nTurn++
-            IF nTurn > 6
-               nTurn := 1
+            s_nTurn++
+            IF s_nTurn > 6
+               s_nTurn := 1
             ENDIF
             sData := NIL
             sData := ''
 
             DO CASE
-            CASE nTurn == 1
+            CASE s_nTurn == 1
                hb_gtInfo( HB_GTI_WINTITLE, 'RMChart [ Next:F11 ] ' + 'Stacked Bars' )
                //SetMode( 30,100 )
 
@@ -464,7 +464,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
                sData += "140033|140045|140055|14006-1|1400925|140131|14014-1|140171|14019-4684277|1402111"
                sData += "|140221|140236|140535000*9000*12000*6000*10000*5000"
 
-            CASE nTurn == 2
+            CASE s_nTurn == 2
                hb_gtInfo( HB_GTI_WINTITLE, 'RMChart [ Next:F11 ] ' + 'Floating Bars' )
                //SetMode( 20,90 )
 
@@ -479,7 +479,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
                sData += "531*3*4*6*6*4*7*4*9*3*10*3|120011|120026|120044|120101|120132|12019-47872|120211"
                sData += "1|120221|1202312|120531*.5*1.5*10.5*12*1*12*1*12.5*.5*2*11"
 
-            CASE nTurn == 3
+            CASE s_nTurn == 3
                hb_gtInfo( HB_GTI_WINTITLE, 'RMChart [ Next:F11 ] ' + 'Four Regions' )
                //SetMode( 40,120 )
 
@@ -512,7 +512,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
                sData += "171|42019-16744448|4202115|420221|4202310|420261|420538.1*6.2*4.3*2.2*1.2*3.1*5."
                sData += "2*11.4*7.3*4.2"
 
-            CASE nTurn == 4
+            CASE s_nTurn == 4
                hb_gtInfo( HB_GTI_WINTITLE, 'RMChart [ Next:F11 ] ' + '10 Biggest Companies' )
                //SetMode( 25,90 )
 
@@ -530,7 +530,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
                sData += "0052|120061|120071|1200970|120111|120121|120131|1201421|120171|12019-16744448|12"
                sData += "02115|120221|1202310|120261|120538.9*4.1*4.4*2.1*.3*.3*5.9*11.3*6.7*6"
 
-            CASE nTurn == 5
+            CASE s_nTurn == 5
                hb_gtInfo( HB_GTI_WINTITLE, 'RMChart [ Next:F11 ] ' + 'Grouped Bars' )
                //SetMode( 25,80 )
 
@@ -543,7 +543,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
                sData += "0*50*70*60|130011|130022|130044|130131|1302111|130221|130235|1305340*10*30*20*80"
                sData += "|140011|140022|140044|140131|1402111|140221|140235|1405370*50*80*40*30"
 
-            CASE nTurn == 6
+            CASE s_nTurn == 6
                hb_gtInfo( HB_GTI_WINTITLE, 'RMChart [ Next:F11 ] ' + 'Flow Chart' )
                //SetMode( 30,50 )
 

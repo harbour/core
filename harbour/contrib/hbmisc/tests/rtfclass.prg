@@ -14,9 +14,11 @@
 
 #require "hbmisc"
 
+#include "hbclass.ch"
+
 PROCEDURE Main()
 
-   LOCAL ortf  := trtf():new( "test.rtf" )
+   LOCAL ortf  := TRtf():new( "test.rtf" )
    LOCAL htest := FCreate( "rtf_test.txt" )
    LOCAL ctest := ""
 
@@ -38,24 +40,17 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION trtf()
+CREATE CLASS TRtf
 
-   STATIC oclass
+   VAR nHandle
 
-   IF oclass == NIL
-      oclass := HBClass():new( "trtf" )
-      oclass:adddata( "nhandle" )
-      oclass:addmethod( "new",  @new() )
-      oclass:addmethod( "write", @write() )
-      oclass:addmethod( "close", @close() )
-      oclass:create()
-   ENDIF
+   METHOD new( cfilename )
+   METHOD write( csource )
+   METHOD close()
 
-   RETURN oclass:instance()
+END CLASS
 
-STATIC FUNCTION new( cfilename )
-
-   LOCAL self := qself()
+METHOD new( cfilename ) CLASS TRtf
 
    ::nhandle   := FCreate( cfilename )
    FWrite( ::nhandle, ;
@@ -64,9 +59,8 @@ STATIC FUNCTION new( cfilename )
 
    RETURN self
 
-STATIC FUNCTION write( csource )
+METHOD write( csource ) CLASS TRtf
 
-   LOCAL self := qself()
    LOCAL cchar, cline, xatt, i
    LOCAL nchar, y
 
@@ -136,9 +130,7 @@ STATIC FUNCTION write( csource )
 
    RETURN self
 
-STATIC FUNCTION CLOSE()
-
-   LOCAL self := qself()
+METHOD close() CLASS TRtf
 
    FWrite( ::nhandle, "\f1\fs16\par" + hb_eol() + "}" )
    FClose( ::nhandle )

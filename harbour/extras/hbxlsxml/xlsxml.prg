@@ -150,20 +150,20 @@ METHOD ExcelWriterXML:addStyle( id )
 
    LOCAL style
 
-   STATIC styleNum := 1
+   STATIC s_styleNum := 1
 
    IF Empty( id )
       id := NIL
    ENDIF
 
    IF id == NIL
-      id := "CustomStyle" + hb_ntos( styleNum )
-      styleNum++
+      id := "CustomStyle" + hb_ntos( s_styleNum )
+      s_styleNum++
    ENDIF
 
    WHILE ! ::checkStyleID( id )
-      id := "CustomStyle" + hb_ntos( styleNum )
-      styleNum++
+      id := "CustomStyle" + hb_ntos( s_styleNum )
+      s_styleNum++
    ENDDO
 
    style := ExcelWriterXML_Style():new( id )
@@ -175,16 +175,16 @@ METHOD ExcelWriterXML:addSheet( id )
 
    LOCAL sheet
 
-   STATIC sheetNum := 1
+   STATIC s_sheetNum := 1
 
    IF id == NIL
-      id := "Sheet" + hb_ntos( sheetNum )
-      sheetNum++
+      id := "Sheet" + hb_ntos( s_sheetNum )
+      s_sheetNum++
    ENDIF
 
    WHILE ! ::checkSheetID( id )
-      id := "Sheet" + hb_ntos( sheetNum )
-      sheetNum++
+      id := "Sheet" + hb_ntos( s_sheetNum )
+      s_sheetNum++
    ENDDO
 
    sheet := ExcelWriterXML_Sheet():New( id )

@@ -233,7 +233,7 @@ METHOD ErrorNo() CLASS TFileRead
 
 METHOD ErrorMsg( cText ) CLASS TFileRead
 
-   STATIC s_cAction := { "on", "creating object for", "opening", "reading from", "closing" }
+   STATIC sc_cAction := { "on", "creating object for", "opening", "reading from", "closing" }
 
    LOCAL cMessage, nTemp
 
@@ -248,7 +248,7 @@ METHOD ErrorMsg( cText ) CLASS TFileRead
       ELSE
          nTemp := ::nLastOp + 1
       ENDIF
-      cMessage := iif( Empty( cText ), "", cText ) + "Error " + hb_ntos( ::nError ) + " " + s_cAction[ nTemp ] + " " + ::cFile
+      cMessage := iif( Empty( cText ), "", cText ) + "Error " + hb_ntos( ::nError ) + " " + sc_cAction[ nTemp ] + " " + ::cFile
    ENDIF
 
    RETURN cMessage

@@ -165,7 +165,7 @@ FUNCTION DesignHaruPDF( cFileToSave )
    Page_Images( pdf )
 
    // Commentout the following line if you need ASCII chart by Codepages
-   //Page_CodePages( pdf )
+   Page_CodePages( pdf )
 
    HPDF_SaveToFile( pdf, cFileToSave )
 
@@ -669,23 +669,6 @@ STATIC FUNCTION Page_Text( pdf )
    NEXT
 
    HPDF_Page_EndText( page )
-
-   RETURN NIL
-
-//
-
-STATIC FUNCTION PrintText( page )
-
-   LOCAL buf
-   LOCAL pos := HPDF_Page_GetCurrentTextPos( page )
-
-   STATIC no := 0
-
-   no ++
-
-   buf := hb_ntos( no ) + " " + hb_ntos( pos[ 1 ] ) + " " + hb_ntos( pos[ 2 ] )
-
-   HPDF_Page_ShowText( page, buf )
 
    RETURN NIL
 

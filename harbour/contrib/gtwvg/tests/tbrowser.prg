@@ -77,7 +77,7 @@ FUNCTION ExecBrowser( oCrt )
    LOCAL hPopup     := Wvt_SetPopupMenu()
    LOCAL oVBar, oHBar, oCom, oTre, oChk, oSLE, oLBx, aNvg, oIdx
 
-   STATIC nStyle := 0
+   STATIC s_nStyle := 0
 
    THREAD STATIC t_nFactor := 200
    THREAD STATIC t_lActiveX := .F.
@@ -131,11 +131,11 @@ FUNCTION ExecBrowser( oCrt )
    NEXT
    oBrowse:configure()
 
-   IF nStyle > 5
-      nStyle := 0
+   IF s_nStyle > 5
+      s_nStyle := 0
    ENDIF
-   Wvt_SetPen( nStyle, 0, rgb( 210,1210,210 ) )
-   nStyle++
+   Wvt_SetPen( s_nStyle, 0, rgb( 210,1210,210 ) )
+   s_nStyle++
    hb_gtInfo( HB_GTI_WINTITLE, "WVT Gui TBrowse()" )
 
    AAdd( aBlocks, {|| Wvt_DrawBoxRaised( oBrowse:nTop - 2, oBrowse:nLeft - 2, oBrowse:nBottom + 1, oBrowse:nRight + 2 ) } )

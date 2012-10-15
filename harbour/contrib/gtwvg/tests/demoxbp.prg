@@ -410,7 +410,7 @@ STATIC FUNCTION ExeFontDialog( oCrt )
 
    LOCAL oFontDlg, oWvgFont
 
-   STATIC nMode := 0
+   STATIC s_nMode := 0
 
    oFontDlg := WvgFontDialog():new( oCrt )
 
@@ -430,7 +430,7 @@ STATIC FUNCTION ExeFontDialog( oCrt )
    oFontDlg:create()
 
    // Every 2nd FontDialog will be MODAL
-   oWvgFont := oFontDlg:display( ++nMode % 2 )
+   oWvgFont := oFontDlg:display( ++s_nMode % 2 )
 
    HB_SYMBOL_UNUSED( oWvgFont )
 
