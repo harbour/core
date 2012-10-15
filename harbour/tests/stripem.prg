@@ -4,6 +4,7 @@
 
 #include "fileio.ch"
 #include "set.ch"
+#include "hbclass.ch"
 
 #xtranslate Default( <Var>, <xVal> ) => iif( <Var> == NIL, <xVal>, <Var> )
 
@@ -56,39 +57,28 @@ PROCEDURE Main( cFrom, cTo )
 // Generic DOS file handler
 //
 
-FUNCTION TTextFile()                            // Parameter = dirty
+CREATE CLASS TTextFile
 
-   STATIC oFile := NIL
+   VAR cFileName               // Filename spec. by user
+   VAR hFile                   // File handle
+   VAR nLine                   // Current linenumber
+   VAR nError                  // Last error
+   VAR lEoF                    // End of file
+   VAR cBlock                  // Storage block
+   VAR nBlockSize              // Size of read-ahead buffer
+   VAR cMode                   // Mode of file use  R = read, W = write
 
-   IF oFile == NIL
-      oFile := HBClass():New( "TTEXTFILE" )      // Create a new class def
+   METHOD New( cFileName, cMode, nBlock ) // Constructor
+   METHOD Dispose()                       // Clean up code
+   METHOD Read()                          // Read line
+   METHOD WriteLn( xTxt, lCRLF )          // Write line
+   METHOD Goto( nLine )                   // Go to line
 
-      oFile:AddData( "cFileName"  )             // Filename spec. by user
-      oFile:AddData( "hFile"      )             // File handle
-      oFile:AddData( "nLine"      )             // Current linenumber
-      oFile:AddData( "nError"     )             // Last error
-      oFile:AddData( "lEoF"       )             // End of file
-      oFile:AddData( "cBlock"     )             // Storage block
-      oFile:AddData( "nBlockSize" )             // Size of read-ahead buffer
-      oFile:AddData( "cMode"      )             // Mode of file use
-      // R = read, W = write
+   METHOD Run( xTxt, lCRLF ) INLINE iif( ::cMode == "R", ::Read(), ::WriteLn( xTxt, lCRLF ) )
+   METHOD Write( xTxt )      INLINE ::WriteLn( xTxt, .F. ) // Write without CR
+   METHOD Eof()              INLINE ::lEoF
 
-      oFile:AddMethod( "New"    , @New()     )  // Constructor
-      oFile:AddMethod( "Dispose", @Dispose() )  // Clean up code
-      oFile:AddMethod( "Read"   , @Read()    )  // Read line
-      oFile:AddMethod( "WriteLn", @WriteLn() )  // Write line
-      oFile:AddMethod( "Goto"   , @Goto()    )  // Go to line
-
-      oFile:AddInline( "Run"    , ;             // Get/set data
-         {| self, xTxt, lCRLF | iif( ::cMode == "R", ::Read(), ::WriteLn( xTxt, lCRLF ) ) } )
-      oFile:AddInline( "Write"  , {| self, xTxt | ::WriteLn( xTxt, .F. ) } )
-      // Write without CR
-      oFile:AddInline( "EoF"    , {| self | ::lEoF } )
-      // End of file as function
-      oFile:Create()
-   ENDIF
-
-   RETURN  oFile:Instance()
+END CLASS
 
 //
 // Method TextFile:New -> Create a new text file
@@ -98,9 +88,7 @@ FUNCTION TTextFile()                            // Parameter = dirty
 // <nBlockSize> Optional maximum blocksize
 //
 
-FUNCTION New( cFileName, cMode, nBlock )
-
-   LOCAL self := QSelf()                        // Get self
+METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
 
    ::nLine     := 0
    ::lEoF      := .F.
@@ -129,9 +117,7 @@ FUNCTION New( cFileName, cMode, nBlock )
 // Dispose -> Close the file handle
 //
 
-FUNCTION Dispose()
-
-   LOCAL self := QSelf()
+METHOD Dispose() CLASS TTextFile
 
    ::cBlock := NIL
    IF ::hFile != F_ERROR
@@ -147,9 +133,8 @@ FUNCTION Dispose()
 // Read a single line
 //
 
-FUNCTION READ()
+METHOD Read() CLASS TTextFile
 
-   LOCAL self := QSelf()
    LOCAL cRet  := ""
    LOCAL cBlock
    LOCAL nCrPos
@@ -204,9 +189,8 @@ FUNCTION READ()
 // <lCRLF> End with Carriage Return/Line Feed (Default == TRUE)
 //
 
-FUNCTION WriteLn( xTxt, lCRLF )
+METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
 
-   LOCAL self := QSelf()
    LOCAL cBlock
 
    IF ::hFile == F_ERROR
@@ -231,9 +215,8 @@ FUNCTION WriteLn( xTxt, lCRLF )
 // Go to a specified line number
 //
 
-STATIC FUNCTION GOTO( nLine )
+METHOD Goto( nLine ) CLASS TTextFile
 
-   LOCAL self   := QSelf()
    LOCAL nWhere := 1
 
    IF Empty( ::hFile )

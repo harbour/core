@@ -3,6 +3,7 @@
  */
 
 #include "fileio.ch"
+#include "hbclass.ch"
 
 PROCEDURE Main( cFilename, cSection )
 
@@ -33,39 +34,30 @@ PROCEDURE Main( cFilename, cSection )
 
    RETURN
 
-FUNCTION TIniFile()
+CREATE CLASS TIniFile
 
-   STATIC oClass
+   VAR FileName
+   VAR Contents
 
-   IF oClass == NIL
-      oClass := HBClass():New( "TINIFILE" ) // starts a new class definition
+   METHOD New( cFileName )
+   METHOD ReadString( cSection, cIdent, cDefault )
+   METHOD WriteString( cSection, cIdent, cString )
+   METHOD ReadNumber( cSection, cIdent, nDefault )
+   METHOD WriteNumber( cSection, cIdent, nNumber )
+   METHOD ReadDate( cSection, cIdent, dDefault )
+   METHOD WriteDate( cSection, cIdent, dDate )
+   METHOD ReadBool( cSection, cIdent, lDefault )
+   METHOD WriteBool( cSection, cIdent, lBool )
+   METHOD DeleteKey( cSection, cIdent )
+   METHOD EraseSection( cSection )
+   METHOD ReadSection( cSection )
+   METHOD ReadSections()
+   METHOD UpdateFile()
 
-      oClass:AddData( "FileName" )           // define this class objects datas
-      oClass:AddData( "Contents" )
+END CLASS
 
-      oClass:AddMethod( "New",  @New() )  // define this class objects methods
-      oClass:AddMethod( "ReadString", @ReadString() )
-      oClass:AddMethod( "WriteString", @WriteString() )
-      oClass:AddMethod( "ReadNumber", @ReadNumber() )
-      oClass:AddMethod( "WriteNumber", @WriteNumber() )
-      oClass:AddMethod( "ReadDate", @ReadDate() )
-      oClass:AddMethod( "WriteDate", @WriteDate() )
-      oClass:AddMethod( "ReadBool", @ReadBool() )
-      oClass:AddMethod( "WriteBool", @WriteBool() )
-      oClass:AddMethod( "ReadSection", @ReadSection() )
-      oClass:AddMethod( "ReadSections", @ReadSections() )
-      oClass:AddMethod( "DeleteKey", @DeleteKey() )
-      oClass:AddMethod( "EraseSection", @EraseSection() )
-      oClass:AddMethod( "UpdateFile", @UpdateFile() )
+METHOD New( cFileName ) CLASS TIniFile
 
-      oClass:Create()                     // builds this class
-   ENDIF
-
-   RETURN oClass:Instance()                  // builds an object of this class
-
-STATIC FUNCTION New( cFileName )
-
-   LOCAL Self := QSelf()
    LOCAL Done, hFile, cFile, cLine, cIdent, nPos
    LOCAL CurrArray
 
@@ -140,9 +132,8 @@ STATIC FUNCTION New( cFileName )
 
    RETURN Self
 
-STATIC FUNCTION ReadString( cSection, cIdent, cDefault )
+METHOD ReadString( cSection, cIdent, cDefault ) CLASS TIniFile
 
-   LOCAL Self := QSelf()
    LOCAL cResult := cDefault
    LOCAL i, j, cFind
 
@@ -170,9 +161,8 @@ STATIC FUNCTION ReadString( cSection, cIdent, cDefault )
 
    RETURN cResult
 
-STATIC PROCEDURE WriteString( cSection, cIdent, cString )
+METHOD PROCEDURE WriteString( cSection, cIdent, cString ) CLASS TIniFile
 
-   LOCAL Self := QSelf()
    LOCAL i, j, cFind
 
    IF Empty( cIdent )
@@ -211,52 +201,40 @@ STATIC PROCEDURE WriteString( cSection, cIdent, cString )
 
    RETURN
 
-STATIC FUNCTION ReadNumber( cSection, cIdent, nDefault )
-
-   LOCAL Self := QSelf()
+METHOD ReadNumber( cSection, cIdent, nDefault ) CLASS TIniFile
 
    RETURN Val( ::ReadString( cSection, cIdent, Str( nDefault ) ) )
 
-STATIC PROCEDURE WriteNumber( cSection, cIdent, nNumber )
-
-   LOCAL Self := QSelf()
+METHOD PROCEDURE WriteNumber( cSection, cIdent, nNumber ) CLASS TIniFile
 
    ::WriteString( cSection, cIdent, hb_ntos( nNumber ) )
 
    RETURN
 
-STATIC FUNCTION ReadDate( cSection, cIdent, dDefault )
-
-   LOCAL Self := QSelf()
+METHOD ReadDate( cSection, cIdent, dDefault ) CLASS TIniFile
 
    RETURN SToD( ::ReadString( cSection, cIdent, DToS( dDefault ) ) )
 
-STATIC PROCEDURE WriteDate( cSection, cIdent, dDate )
-
-   LOCAL Self := QSelf()
+METHOD PROCEDURE WriteDate( cSection, cIdent, dDate ) CLASS TIniFile
 
    ::WriteString( cSection, cIdent, DToS( dDate ) )
 
    RETURN
 
-STATIC FUNCTION ReadBool( cSection, cIdent, lDefault )
+METHOD ReadBool( cSection, cIdent, lDefault ) CLASS TIniFile
 
-   LOCAL Self := QSelf()
    LOCAL cDefault := iif( lDefault, ".T.", ".F." )
 
    return ::ReadString( cSection, cIdent, cDefault ) == ".T."
 
-STATIC PROCEDURE WriteBool( cSection, cIdent, lBool )
-
-   LOCAL Self := QSelf()
+METHOD PROCEDURE WriteBool( cSection, cIdent, lBool ) CLASS TIniFile
 
    ::WriteString( cSection, cIdent, iif( lBool, ".T.", ".F." ) )
 
    RETURN
 
-STATIC PROCEDURE DeleteKey( cSection, cIdent )
+METHOD PROCEDURE DeleteKey( cSection, cIdent ) CLASS TIniFile
 
-   LOCAL Self := QSelf()
    LOCAL i, j
 
    cSection := Lower( cSection )
@@ -271,9 +249,8 @@ STATIC PROCEDURE DeleteKey( cSection, cIdent )
 
    RETURN
 
-STATIC PROCEDURE EraseSection( cSection )
+METHOD PROCEDURE EraseSection( cSection ) CLASS TIniFile
 
-   LOCAL Self := QSelf()
    LOCAL i
 
    IF Empty( cSection )
@@ -290,9 +267,8 @@ STATIC PROCEDURE EraseSection( cSection )
 
    RETURN
 
-STATIC FUNCTION ReadSection( cSection )
+METHOD ReadSection( cSection ) CLASS TIniFile
 
-   LOCAL Self := QSelf()
    LOCAL i, j, aSection := {}
 
    IF Empty( cSection )
@@ -317,9 +293,8 @@ STATIC FUNCTION ReadSection( cSection )
 
    RETURN aSection
 
-STATIC FUNCTION ReadSections()
+METHOD ReadSections() CLASS TIniFile
 
-   LOCAL Self := QSelf()
    LOCAL i, aSections := {}
 
    FOR i := 1 TO Len( ::Contents )
@@ -331,9 +306,8 @@ STATIC FUNCTION ReadSections()
 
    RETURN aSections
 
-STATIC PROCEDURE UpdateFile()
+METHOD PROCEDURE UpdateFile() CLASS TIniFile
 
-   LOCAL Self := QSelf()
    LOCAL i, j, hFile
 
    hFile := FCreate( ::Filename )

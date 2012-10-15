@@ -22,6 +22,7 @@
 **/
 
 #include "fileio.ch"
+#include "hbclass.ch"
 
 #include "cgi.ch"
 
@@ -51,78 +52,37 @@ FUNCTION ParseString( cString, cDelim, nRet )
 
    RETURN aElem[ nRet ]
 
-FUNCTION Hex2Dec( cHex )
+CREATE CLASS THTML
 
-   LOCAL aHex := {;
-      { "0", 00 }, ;
-      { "1", 01 }, ;
-      { "2", 02 }, ;
-      { "3", 03 }, ;
-      { "4", 04 }, ;
-      { "5", 05 }, ;
-      { "6", 06 }, ;
-      { "7", 07 }, ;
-      { "8", 08 }, ;
-      { "9", 09 }, ;
-      { "A", 10 }, ;
-      { "B", 11 }, ;
-      { "C", 12 }, ;
-      { "D", 13 }, ;
-      { "E", 14 }, ;
-      { "F", 15 } }
-   LOCAL nRet
-   LOCAL nRes
+   VAR cTitle                          // Page Title
+   VAR cBody                           // HTML Body Handler
+   VAR cBGColor                        // Background Color
+   VAR cLinkColor                      // Link Color
+   VAR cvLinkColor                     // Visited Link Color
+   VAR cContent                        // Page Content Handler
 
-   nRet := AScan( aHex, {| x | Upper( x[ 1 ] ) == Upper( Left( cHex, 1 ) ) } )
-   nRes := aHex[ nRet, 2 ] * 16
-   nRet := AScan( aHex, {| x | Upper( x[ 1 ] ) == Upper( Right( cHex, 1 ) ) } )
-   nRes += aHex[ nRet, 2 ]
+   VAR aCGIContents
+   VAR aQueryFields
+   VAR cHTMLFile
+   VAR aReplaceTags
 
-   RETURN nRes
+   METHOD New()
+   METHOD SetTitle( cTitle )
+   METHOD AddLink( cLinkTo, cLinkName )
+   METHOD AddHead( cDescr )
+   METHOD AddPara( cPara, cAlign )
+   METHOD Generate()
+   METHOD ShowResult()
+   METHOD SaveToFile( cFile )
+   METHOD ProcessCGI()
+   METHOD GetCGIParam( nParam )
+   METHOD QueryFields( cQueryName )
+   METHOD SetHTMLFile( cFile )
+   METHOD AddReplaceTag( cTag, cReplaceText )
 
-FUNCTION THTML()
+END CLASS
 
-   STATIC oClass
-
-   IF oClass == NIL
-      oClass := HBClass():New( "THTML" )
-
-      oClass:AddData( "cTitle" )                       // Page Title
-      oClass:AddData( "cBody" )                        // HTML Body Handler
-      oClass:AddData( "cBGColor" )                     // Background Color
-      oClass:AddData( "cLinkColor" )                   // Link Color
-      oClass:AddData( "cvLinkColor" )                  // Visited Link Color
-      oClass:AddData( "cContent" )                     // Page Content Handler
-
-      oClass:AddData( "aCGIContents" )
-      oClass:AddData( "aQueryFields" )
-      oClass:AddData( "cHTMLFile" )
-      oClass:AddData( "aReplaceTags" )
-
-      oClass:AddMethod( "New",        @New() )         // New Method
-      oClass:AddMethod( "SetTitle",   @SetTitle() )    // Set Page Title
-      oClass:AddMethod( "AddHead",    @AddHead() )     // Add <H1> Header
-      oClass:AddMethod( "AddLink",    @AddLink() )     // Add Hyperlink
-      oClass:AddMethod( "AddPara",    @AddPara() )     // Add Paragraph
-      oClass:AddMethod( "SaveToFile", @SaveToFile() )  // Saves Content to File
-      oClass:AddMethod( "ShowResult", @ShowResult() )  // Show Result - SEE Fcn
-      oClass:AddMethod( "Generate",   @Generate() )    // Generate HTML
-      oClass:AddMethod( "SetHTMLFile", @SetHTMLFile() ) // Sets source HTML file
-
-      oClass:AddMethod( "ProcessCGI",    @ProcessCGI() )
-      oClass:AddMethod( "GetCGIParam",   @GetCGIParam() )
-      oClass:AddMethod( "QueryFields",   @QueryFields() )
-      oClass:AddMethod( "AddReplaceTag", @AddReplaceTag() )
-
-      oClass:Create()
-
-   ENDIF
-
-   RETURN oClass:Instance()
-
-STATIC FUNCTION New()
-
-   LOCAL Self := QSelf()
+METHOD New() CLASS THTML
 
    ::cTitle       := "Untitled"
    ::cBGColor     := "#FFFFFF"
@@ -137,34 +97,26 @@ STATIC FUNCTION New()
 
    RETURN Self
 
-STATIC FUNCTION SetTitle( cTitle )
-
-   LOCAL Self := QSelf()
+METHOD SetTitle( cTitle ) CLASS THTML
 
    ::cTitle := cTitle
 
    RETURN Self
 
-STATIC FUNCTION AddLink( cLinkTo, cLinkName )
-
-   LOCAL Self := QSelf()
+METHOD AddLink( cLinkTo, cLinkName ) CLASS THTML
 
    ::cBody := ::cBody + ;
       "<a href='" + cLinkTo + "'>" + cLinkName + "</a>"
 
    RETURN Self
 
-STATIC FUNCTION AddHead( cDescr )
-
-   LOCAL Self := QSelf()
+METHOD AddHead( cDescr ) CLASS THTML
 
    ::cBody += "<h1>" + cDescr + "</h1>"
 
    RETURN NIL
 
-STATIC FUNCTION AddPara( cPara, cAlign )
-
-   LOCAL Self := QSelf()
+METHOD AddPara( cPara, cAlign ) CLASS THTML
 
    ::cBody := ::cBody + ;
       "<p align='" + cAlign + "'>" + hb_eol() + ;
@@ -173,9 +125,8 @@ STATIC FUNCTION AddPara( cPara, cAlign )
 
    RETURN Self
 
-STATIC FUNCTION Generate()
+METHOD Generate() CLASS THTML
 
-   LOCAL Self := QSelf()
    LOCAL cFile, i, hFile, nPos, cRes := ""
    LOCAL lFlag := .F.
 
@@ -241,9 +192,7 @@ STATIC FUNCTION Generate()
 
    RETURN Self
 
-STATIC FUNCTION ShowResult()
-
-   LOCAL Self := QSelf()
+METHOD ShowResult() CLASS THTML
 
    OutStd(                                                                   ;
       "HTTP/1.0 200 OK"                                         + hb_eol() + ;
@@ -252,9 +201,8 @@ STATIC FUNCTION ShowResult()
 
    RETURN Self
 
-STATIC FUNCTION SaveToFile( cFile )
+METHOD SaveToFile( cFile ) CLASS THTML
 
-   LOCAL Self  := QSelf()
    LOCAL hFile := FCreate( cFile )
 
    FWrite( hFile, ::cContent )
@@ -262,9 +210,8 @@ STATIC FUNCTION SaveToFile( cFile )
 
    RETURN Self
 
-STATIC FUNCTION ProcessCGI()
+METHOD ProcessCGI() CLASS THTML
 
-   LOCAL Self   := QSelf()
    LOCAL cQuery := ""
    LOCAL cBuff  := ""
    LOCAL nBuff  := 0
@@ -311,7 +258,7 @@ STATIC FUNCTION ProcessCGI()
                cBuff := ""
             ELSE
                IF SubStr( cQuery, i, 1 ) == "%"
-                  cBuff += Chr( Hex2Dec( SubStr( cQuery, i + 1, 2 ) ) )
+                  cBuff += Chr( hb_HexToNum( SubStr( cQuery, i + 1, 2 ) ) )
                   nBuff := 3
                ENDIF
 
@@ -330,9 +277,7 @@ STATIC FUNCTION ProcessCGI()
 
    RETURN Self
 
-STATIC FUNCTION GetCGIParam( nParam )
-
-   LOCAL Self := QSelf()
+METHOD GetCGIParam( nParam ) CLASS THTML
 
    ::ProcessCGI()
 
@@ -343,9 +288,8 @@ STATIC FUNCTION GetCGIParam( nParam )
 
    RETURN ::aCGIContents[nParam]
 
-STATIC FUNCTION QueryFields( cQueryName )
+METHOD QueryFields( cQueryName ) CLASS THTML
 
-   LOCAL Self := QSelf()
    LOCAL cRet := ""
    LOCAL nRet
 
@@ -360,17 +304,13 @@ STATIC FUNCTION QueryFields( cQueryName )
 
    RETURN cRet
 
-STATIC FUNCTION SetHTMLFile( cFile )
-
-   LOCAL Self := QSelf()
+METHOD SetHTMLFile( cFile ) CLASS THTML
 
    ::cHTMLFile := cFile
 
    RETURN Self
 
-STATIC FUNCTION AddReplaceTag( cTag, cReplaceText )
-
-   LOCAL Self := QSelf()
+METHOD AddReplaceTag( cTag, cReplaceText ) CLASS THTML
 
    AAdd( ::aReplaceTags, { cTag, cReplaceText } )
 
