@@ -2646,7 +2646,8 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
                if( nLen > ( HB_SIZE ) pField->uiLen )
                   nLen = pField->uiLen;
                u32RetVal = AdsSetStringW( pArea->hTable, ADSFIELD( uiIndex ),
-                                          ( WCHAR * ) pwBuffer, nLen );
+                                          ( WCHAR * ) pwBuffer,
+                                          ( UNSIGNED32 ) nLen );
                hb_strfree( hString );
             }
             else
@@ -2660,7 +2661,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
                if( hb_ads_bOEM )
                {
 #if ADS_LIB_VERSION >= 600
-                  u32RetVal = AdsSetFieldRaw( pArea->hTable, ADSFIELD( uiIndex ), ( UNSIGNED8 * ) hb_itemGetCPtr( pItem ), nLen );
+                  u32RetVal = AdsSetFieldRaw( pArea->hTable, ADSFIELD( uiIndex ), ( UNSIGNED8 * ) hb_itemGetCPtr( pItem ), ( UNSIGNED32 ) nLen );
 #else
                   char * pBuffer = hb_adsOemToAnsi( hb_itemGetCPtr( pItem ), nLen );
                   u32RetVal = AdsSetString( pArea->hTable, ADSFIELD( uiIndex ), ( UNSIGNED8 * ) pBuffer, nLen );
@@ -2670,7 +2671,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
                else
 #endif
                {
-                  u32RetVal = AdsSetString( pArea->hTable, ADSFIELD( uiIndex ), ( UNSIGNED8 * ) hb_itemGetCPtr( pItem ), nLen );
+                  u32RetVal = AdsSetString( pArea->hTable, ADSFIELD( uiIndex ), ( UNSIGNED8 * ) hb_itemGetCPtr( pItem ), ( UNSIGNED32 ) nLen );
                }
             }
          }
@@ -2763,7 +2764,8 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
                const HB_WCHAR * pwBuffer = hb_itemGetStrU16( pItem, HB_CDP_ENDIAN_LITTLE,
                                                              &hString, &nLen );
                u32RetVal = AdsSetStringW( pArea->hTable, ADSFIELD( uiIndex ),
-                                          ( WCHAR * ) pwBuffer, nLen );
+                                          ( WCHAR * ) pwBuffer,
+                                          ( UNSIGNED32 ) nLen );
                hb_strfree( hString );
             }
 #endif

@@ -29,8 +29,8 @@
 typedef struct
 {
    const char * cBuf;
-   int position;
-   int length;
+   HB_ISIZ position;
+   HB_ISIZ length;
    PHB_ITEM obj_ref;
    PHB_ITEM str_ref;
    PHB_ITEM class_ref;
@@ -78,7 +78,7 @@ static PHB_ITEM hbamf_cls_externalizable_instance( PHB_ITEM pClassFuncStr )
 
 static char * readByte( amfContext * context )
 {
-   int      new_position = context->position + 1;
+   HB_ISIZ  new_position = context->position + 1;
    char *   byte_ref;
 
    if( new_position < 0 || new_position > context->length )
@@ -89,9 +89,9 @@ static char * readByte( amfContext * context )
    return byte_ref;
 }
 
-static char * readBytes( amfContext * context, int len )
+static char * readBytes( amfContext * context, HB_ISIZ len )
 {
-   int      new_position = context->position + len;
+   HB_ISIZ  new_position = context->position + len;
    char *   result;
 
    if( new_position < 0 || new_position > context->length )
@@ -236,7 +236,7 @@ static void amf3_add_reference( PHB_ITEM pHash, PHB_ITEM pItem )
       sequentially - this means we can also use an array,
       not hash for the purpose */
 
-   hb_itemPutNI( pKey, /* ++ first one was 0 */ iRef );
+   hb_itemPutNS( pKey, /* ++ first one was 0 */ iRef );
    hb_hashAdd( pHash, pKey, pItem );
 
    hb_itemRelease( pKey );

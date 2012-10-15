@@ -244,8 +244,6 @@ PROCEDURE Main( ... )
    cGT := HB_GTVERSION()
    IF cGT == "NUL"
       lConsole := .F.
-   ELSE
-      hb_gtInfo( HB_GTI_NOTIFIERBLOCK, {| nEvent, ... | GT_notifier( nEvent, ... ) } )
    ENDIF
 
    // TOCHECK: now not force case insensitive
@@ -574,6 +572,11 @@ PROCEDURE Main( ... )
             EXIT
          ENDIF
 #endif
+
+         IF Inkey( , HB_INKEY_GTEVENT ) == HB_K_CLOSE
+            GT_notifier( HB_K_CLOSE )
+         ENDIF
+
          IF hb_mutexLock( s_hmtxBusy )
             IF s_lQuitRequest
                hb_mutexUnlock( s_hmtxBusy )
@@ -2817,7 +2820,7 @@ STATIC FUNCTION GT_notifier( nEvent, xParams )
    LOCAL nReturn := 0
 
    DO CASE
-   CASE nEvent == HB_GTE_CLOSE
+   CASE nEvent == HB_K_CLOSE
       IF hb_mutexLock( s_hmtxBusy )
          s_lQuitRequest := .T.
          nReturn := 1

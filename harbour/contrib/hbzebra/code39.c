@@ -103,7 +103,7 @@ static const HB_UCHAR s_code[] =
    0xA2,   /* + */
    0xA8 }; /* % */
 
-static int _code39_charno( char ch )
+static HB_PTRDIFF _code39_charno( char ch )
 {
    static const char * s_symbols = "-. $/+%";
 
@@ -165,7 +165,8 @@ static void _code39_add( PHB_BITBUFFER pBits, char code, int iFlags, HB_BOOL fLa
 PHB_ZEBRA hb_zebra_create_code39( const char * szCode, HB_SIZE nLen, int iFlags )
 {
    PHB_ZEBRA  pZebra;
-   int        i, csum, iLen = ( int ) nLen;
+   int        i, iLen = ( int ) nLen;
+   HB_PTRDIFF csum;
 
    pZebra = hb_zebra_create();
    pZebra->iType = HB_ZEBRA_TYPE_CODE39;
@@ -191,7 +192,7 @@ PHB_ZEBRA hb_zebra_create_code39( const char * szCode, HB_SIZE nLen, int iFlags 
    csum = 0;
    for( i = 0; i < iLen; i++ )
    {
-      int no = _code39_charno( szCode[ i ] );
+      HB_PTRDIFF no = _code39_charno( szCode[ i ] );
       _code39_add( pZebra->pBits, ( char ) s_code[ no ], iFlags, HB_FALSE );
       csum += no;
    }

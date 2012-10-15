@@ -631,7 +631,8 @@ static int _qr_cci_len( int iVersion, int iMode ) /* Character Count Indicator *
 
 static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pData, int iLevel )
 {
-   int i, iVersion, iMode, iLen, iDataLen;
+   int i, iVersion, iMode;
+   HB_ISIZ iLen, iDataLen, m;
    HB_SIZE n;
    char ch;
 
@@ -679,7 +680,7 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
       return 0; /* Too large */
 
 #ifdef DEBUG_CODE
-   HB_TRACE( HB_TR_ALWAYS, ("iMode:%d iLen:%d iDataLen:%d iVersion:%d", iMode, iLen, iDataLen, iVersion) ) ;
+   HB_TRACE( HB_TR_ALWAYS, ("iMode:%d iLen:%" HB_PFS "d iDataLen:%d iVersion:%d", iMode, iLen, iDataLen, iVersion) ) ;
 #endif
 
    /* Encode */
@@ -725,15 +726,15 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
       hb_bitbuffer_cat_int_rev( pData, 0, 8 - ( hb_bitbuffer_len( pData ) & 7 ) );
 
    iLen = iDataLen - hb_bitbuffer_len( pData ) / 8;
-   for( i = 0; i < iLen; i++ )
+   for( m = 0; m < iLen; m++ )
    {
-      hb_bitbuffer_cat_int_rev( pData, ( i & 1 ) ? 0x11 : 0xEC, 8 );
+      hb_bitbuffer_cat_int_rev( pData, ( m & 1 ) ? 0x11 : 0xEC, 8 );
    }
 
 #ifdef DEBUG_CODE
-   for( i = 0; i < iDataLen; i++ )
+   for( m = 0; m < iDataLen; m++ )
    {
-      HB_TRACE( HB_TR_ALWAYS, ("data:%3d %02X", s_rev[ * (hb_bitbuffer_buffer(pData) + i) ], s_rev[ * (hb_bitbuffer_buffer(pData) + i) ]) );
+      HB_TRACE( HB_TR_ALWAYS, ("data:%3d %02X", s_rev[ *( hb_bitbuffer_buffer( pData ) + m ) ], s_rev[ *( hb_bitbuffer_buffer( pData ) + m ) ] ) );
    }
 #endif
    return iVersion;
@@ -872,7 +873,7 @@ static unsigned char * _qr_checksum( PHB_BITBUFFER pData, int iVersion, int iLev
 static void _qr_draw( PHB_BITBUFFER pBits, PHB_BITBUFFER pCWBits, int iVersion )
 {
    int i, j, no, up, right, iLength;
-   unsigned char *pi, *pj;
+   unsigned char * pi, * pj;
 
    HB_SYMBOL_UNUSED( pCWBits );
 

@@ -163,7 +163,7 @@ static int hb_gz_compress( char ** pDstPtr, HB_SIZE * pnDst,
       if( *pDstPtr == NULL )
       {
          if( *pnDst == 0 )
-            *pnDst = deflateBound( &stream, nSrc );
+            *pnDst = deflateBound( &stream, ( uLong ) nSrc );
          *pDstPtr = ( char * ) hb_xalloc( *pnDst + 1 );
          if( *pDstPtr == NULL )
             iResult = Z_MEM_ERROR;

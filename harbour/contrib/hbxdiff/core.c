@@ -251,7 +251,7 @@ HB_FUNC( XDL_READ_MMFILE )
 
       if( data && size )
       {
-         lResult = xdl_read_mmfile( phb_mmf->mmf, data, size );
+         lResult = xdl_read_mmfile( phb_mmf->mmf, data, ( long ) size );
          if( lResult == -1 )
          {
             hb_retc_null();
@@ -287,7 +287,7 @@ HB_FUNC( XDL_WRITE_MMFILE )
    {
       if( HB_ISCHAR( 2 ) )
       {
-         long lSize = hb_parclen( 2 );
+         long lSize = ( long ) hb_parclen( 2 );
 
          if( hb_pcount() > 2 )
             lSize = hb_parnldef( 3, lSize );

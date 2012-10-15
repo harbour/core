@@ -129,7 +129,7 @@ HB_FUNC( HB_LZF_COMPRESS )
 
          if( out_data )
          {
-            unsigned int uiResult = lzf_compress( in_data, in_len, out_data, out_len );
+            unsigned int uiResult = lzf_compress( in_data, ( unsigned int ) in_len, out_data, ( unsigned int ) out_len );
 
             if( uiResult != 0 )
             {
@@ -199,7 +199,7 @@ HB_FUNC( HB_LZF_DECOMPRESS )
                buffer_size <<= 1;
                buffer = ( char * ) hb_xrealloc( buffer, buffer_size + 1 );
 
-               uiResult = lzf_decompress( in_data, in_len, buffer, buffer_size );
+               uiResult = lzf_decompress( in_data, ( unsigned int ) in_len, buffer, ( unsigned int ) buffer_size );
             }
             while( uiResult == 0
 #if ! AVOID_ERRNO

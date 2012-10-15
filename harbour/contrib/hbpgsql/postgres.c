@@ -1140,7 +1140,7 @@ HB_FUNC( PQEXECPREPARED )
       for( i = 0; i < n; ++i )
          paramvalues[ i ] = hb_arrayGetCPtr( aParam, i + 1 );
 
-      hb_PGresult_ret( PQexecPrepared( conn, hb_parcx( 2 ), n, ( const char * const * ) paramvalues, NULL, NULL, 1 ) );
+      hb_PGresult_ret( PQexecPrepared( conn, hb_parcx( 2 ), ( int ) n, ( const char * const * ) paramvalues, NULL, NULL, 1 ) );
 
       hb_xfree( paramvalues );
    }
@@ -1154,7 +1154,7 @@ HB_FUNC( PQPUTCOPYDATA )
    PGconn * conn = hb_PGconn_par( 1 );
 
    if( conn )
-      hb_retni( PQputCopyData( conn, hb_parcx( 2 ), hb_parclen( 2 ) ) );
+      hb_retni( PQputCopyData( conn, hb_parcx( 2 ), ( int ) hb_parclen( 2 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 #else
