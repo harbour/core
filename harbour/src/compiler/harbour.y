@@ -1706,7 +1706,6 @@ DoSwitch    : SwitchBegin
               EndSwitch
                {
                   HB_COMP_EXPR_FREE( $1 );
-                  hb_compGenPCode1( HB_P_POP, HB_COMP_PARAM );
                }
             ;
 
