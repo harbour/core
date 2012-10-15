@@ -419,8 +419,8 @@ HB_FUNC( FBQUERY )
          hb_arraySetNL( aTemp, 3, sqlda->sqlvar[ i ].sqllen );
          hb_arraySetNL( aTemp, 4, sqlda->sqlvar[ i ].sqlscale );
          hb_arraySetC(  aTemp, 5, sqlda->sqlvar[ i ].relname );
-         hb_arraySetNL( aTemp, 6, sqlda->sqlvar[ i ].aliasname_length );  // support for aliases
-         hb_arraySetC(  aTemp, 7, sqlda->sqlvar[ i ].aliasname ); // support for aliases
+         hb_arraySetNL( aTemp, 6, sqlda->sqlvar[ i ].aliasname_length ); /* support for aliases */
+         hb_arraySetC(  aTemp, 7, sqlda->sqlvar[ i ].aliasname ); /* support for aliases */
 
          hb_arraySetForward( aNew, i + 1, aTemp );
       }

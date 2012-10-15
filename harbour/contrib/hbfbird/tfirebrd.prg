@@ -982,7 +982,9 @@ STATIC FUNCTION StructConvert( aStru, db, dialect )
    IF HB_ISARRAY( qry )
 
       DO WHILE FBFetch( qry ) == 0
-         AAdd( aDomains, { IIF(FBGetdata( qry, 1 )==NIL,"",FBGetdata( qry, 1 )),  IIF(FBGetdata( qry, 2 )==NIL,"",FBGetdata( qry, 2 )),  IIF(FBGetdata( qry, 1 )==NIL,"",FBGetdata( qry, 3 )) } )
+         AAdd( aDomains, { iif( FBGetdata( qry, 1 ) == NIL, "", FBGetdata( qry, 1 ) ),;
+                           iif( FBGetdata( qry, 2 ) == NIL, "", FBGetdata( qry, 2 ) ),;
+                           iif( FBGetdata( qry, 3 ) == NIL, "", FBGetdata( qry, 3 ) ) } )
       ENDDO
 
       FBFree( qry )
@@ -1010,8 +1012,8 @@ STATIC FUNCTION StructConvert( aStru, db, dialect )
             cType := "C"
             EXIT
          CASE SQL_SHORT
-               /* Firebird doesn't have boolean field, so if you define domain with BOOL then i will consider logical, ex:
-              create domain boolean_field as smallint default 0 not null check (value in (0,1)) */
+            /* Firebird doesn't have boolean field, so if you define domain with BOOL then i will consider logical, ex:
+               create domain boolean_field as smallint default 0 not null check (value in (0,1)) */
 
             IF "BOOL" $ cDomain
                cType := "L"

@@ -4,22 +4,21 @@
 
 #include "hbapigt.h"
 
-void main( void )
+int main( void )
 {
-   HB_BYTE * test = "Testing GT API Functions";
-   HB_BYTE * test2 = "This message wraps!";
-   int iRow, iCol;
+   const char * test = "Testing GT API Functions";
+   const char * test2 = "This message wraps!";
 
    /* NOTE: always have to initialze video subsystem */
-   hb_gtInit();
+   hb_gtInit( 0, 0, 0 );
 
    /* save screen (doesn't work under DOS) */
    /*
-   HB_BYTE * scr;
+   void * scr;
    HB_SIZE size;
 
    hb_gtRectSize( 1, 1, hb_gtMaxRow(), hb_gtMaxCol(), &size );
-   scr = ( HB_BYTE * ) hb_xgrab( size );
+   scr = hb_xgrab( size );
    hb_gtSave( 1, 1, hb_gtMaxRow() - 1, hb_gtMaxCol() - 1, scr );
    */
 
@@ -35,10 +34,10 @@ void main( void )
 
    /* writing color text */
    hb_gtSetColorStr( "W+/B, B/W" );
-   hb_gtColorSelect( _CLR_STANDARD );
+   hb_gtColorSelect( HB_CLR_STANDARD );
    hb_gtWrite( "Enhanced color (B/W)", 20 );
    hb_gtSetPos( 22, 62 );
-   hb_gtColorSelect( _CLR_ENHANCED );
+   hb_gtColorSelect( HB_CLR_ENHANCED );
    hb_gtWrite( "Standard Color (W+/B)", 21 );
 
    /* boxes */
@@ -49,28 +48,30 @@ void main( void )
    hb_gtSetPos( 12, 1 );
 
    /* none */
-   hb_gtSetCursor( _SC_NONE );
-   getch();
+   hb_gtSetCursor( SC_NONE );
+   hb_inkey( HB_TRUE, 0.0, INKEY_ALL );
 
    /* underline */
-   hb_gtSetCursor( _SC_NORMAL );
-   getch();
+   hb_gtSetCursor( SC_NORMAL );
+   hb_inkey( HB_TRUE, 0.0, INKEY_ALL );
 
    /* lower half block */
-   hb_gtSetCursor( _SC_INSERT );
-   getch();
+   hb_gtSetCursor( SC_INSERT );
+   hb_inkey( HB_TRUE, 0.0, INKEY_ALL );
 
    /* full block */
-   hb_gtSetCursor( _SC_SPECIAL1 );
-   getch();
+   hb_gtSetCursor( SC_SPECIAL1 );
+   hb_inkey( HB_TRUE, 0.0, INKEY_ALL );
 
    /* upper half block */
-   hb_gtSetCursor( _SC_SPECIAL2 );
-   getch();
+   hb_gtSetCursor( SC_SPECIAL2 );
+   hb_inkey( HB_TRUE, 0.0, INKEY_ALL );
 
    /* restore screen (doesn't work under DOS) */
    /*
    hb_gtRest( 1, 1, hb_gtMaxRow() - 1, hb_gtMaxCol() - 1, scr );
    hb_xfree( scr );
    */
+
+   return 0;
 }
