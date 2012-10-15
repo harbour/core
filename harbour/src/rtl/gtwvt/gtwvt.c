@@ -1600,6 +1600,12 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                case 50:
                   c = K_ALT_M;
                   break;
+               case 51:
+                  c = K_ALT_COMMA;
+                  break;
+               case 52:
+                  c = K_ALT_PERIOD;
+                  break;
                default:
                   c = ( int ) wParam;
                   break;
