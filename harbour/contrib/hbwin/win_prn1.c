@@ -578,10 +578,11 @@ HB_FUNC( WIN_ENUMFONTS )
 
 HB_FUNC( WIN_ENUMFONTFAMILIES )
 {
+   PHB_ITEM pArray = hb_itemArrayNew( 0 );
+#if ! defined( HB_OS_WIN_CE )
    HDC hDC = hbwapi_par_HDC( 1 );
    HB_BOOL fNullDC = ( ! hDC );
    LOGFONT Logfont;
-   PHB_ITEM pArray = hb_itemArrayNew( 0 );
 
    memset( &Logfont, 0, sizeof( Logfont ) );
 
@@ -600,6 +601,7 @@ HB_FUNC( WIN_ENUMFONTFAMILIES )
 
    if( fNullDC )
       ReleaseDC( NULL, hDC );
+#endif
 
    hb_itemReturnRelease( pArray );
 }
