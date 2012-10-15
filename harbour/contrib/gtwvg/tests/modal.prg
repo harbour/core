@@ -245,7 +245,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
          sel--
       CASE nKey == K_RIGHT .OR. nKey == K_UP
          sel++
-      CASE ( nTrg := AScan( aTrg_, Upper( Chr( nKey ) ) ) ) > 0
+      CASE ( nTrg := hb_AScan( aTrg_, Upper( hb_keyChar( nKey ) ), , , .T. ) ) > 0
          sel := nTrg
          lGo := .F.
       OTHERWISE
@@ -261,7 +261,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
       ENDIF
 
       DispBegin()
-      FOR i := 1 TO Len ( aButtons_ )
+      FOR i := 1 TO Len( aButtons_ )
          SetColor( pal_[ DLG_CLR_BTN ] )
          @ nBtnRow, nBtnCol_[ i ] SAY "  " + aButtons_[i] + "  "
          SetColor( pal_[ DLG_CLR_TRG] )

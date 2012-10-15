@@ -36,10 +36,10 @@
 
 #ifdef FlagShip
 
-STATIC nDispCount := 0
+STATIC s_nDispCount := 0
 
-#xtranslate DispBegin() => iif( ( ++nDispCount ) == 1, DispBegin( NIL ), )
-#xtranslate DispEnd()   => iif( nDispCount > 0 .AND. ( --nDispCount ) == 0, DispEnd( NIL ), )
+#xtranslate DispBegin() => iif( ( ++s_nDispCount ) == 1, DispBegin( NIL ), )
+#xtranslate DispEnd()   => iif( s_nDispCount > 0 .AND. ( --s_nDispCount ) == 0, DispEnd( NIL ), )
 
 #endif
 

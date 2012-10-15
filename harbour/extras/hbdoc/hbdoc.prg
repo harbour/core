@@ -106,7 +106,7 @@ REQUEST HB_GT_CGI_DEFAULT
 
 #define BASE_DIR ".." + hb_ps() + ".." + hb_ps()
 
-STATIC s_aExclusions := { "class_tp.txt", "hdr_tpl.txt" }
+STATIC sc_aExclusions := { "class_tp.txt", "hdr_tpl.txt" }
 
 MEMVAR p_hsSwitches
 
@@ -399,11 +399,11 @@ STATIC PROCEDURE ProcessFolder( cFolder, aContent ) // this is a recursive proce
                !( aFiles[ idx ][ F_NAME ] == ".." )
 
                IF ( p_hsSwitches[ "source" ] .OR. p_hsSwitches[ "contribs" ] ) /* .AND. ;
-                  hb_AScan( s_aSkipDirs, {| d | Lower( d ) == Lower( aFiles[ idx ][ F_NAME ] ) } ) == 0 */
+                  AScan( s_aSkipDirs, {| d | Lower( d ) == Lower( aFiles[ idx ][ F_NAME ] ) } ) == 0 */
                   ProcessFolder( cFolder + aFiles[ idx ][ F_NAME ], @aContent )
                ENDIF
             ENDIF
-         ELSEIF hb_AScan( s_aExclusions, {| f | Lower( f ) == Lower( aFiles[ idx ][ F_NAME ] ) } ) == 0
+         ELSEIF AScan( sc_aExclusions, {| f | Lower( f ) == Lower( aFiles[ idx ][ F_NAME ] ) } ) == 0
             hb_FNameSplit( aFiles[ idx ][ F_NAME ], , , @cExt )
             IF Lower( cExt ) == ".txt"
                IF ! ProcessFile( cFolder + aFiles[ idx ][ F_NAME ], @aContent )
@@ -507,7 +507,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
             CASE cSectionName == "CATEGORY"
 
-               IF ( idxCategory := hb_AScan( p_aCategories, {| c | ! Empty( c ) .AND. ( iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) ) } ) ) == 0
+               IF ( idxCategory := AScan( p_aCategories, {| c | ! Empty( c ) .AND. ( iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) ) } ) ) == 0
                   AddErrorCondition( cFile, "Unknown CATEGORY '" + cSection + "' for template '" + o:Template, aHandle[ 2 ] )
                   lAccepted := .F.
                ENDIF
@@ -519,7 +519,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
                   AddErrorCondition( cFile, "SUBCATEGORY '" + cSection + "' defined before CATEGORY", aHandle[ 2 ] )
                   lAccepted := .F.
 
-               ELSEIF ( idxSubCategory := hb_AScan( p_aCategories[ idxCategory ][ 2 ], {| c | ! ( c == NIL ) .AND. ( iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) ) } ) ) == 0
+               ELSEIF ( idxSubCategory := AScan( p_aCategories[ idxCategory ][ 2 ], {| c | c != NIL .AND. ( iif( HB_ISCHAR( c ), Lower( c ) == Lower( cSection ), Lower( c[ 1 ] ) == Lower( cSection ) ) ) } ) ) == 0
 
                   AddErrorCondition( cFile, "Unknown SUBCATEGORY '" + p_aCategories[ idxCategory ][ 1 ] + "-" + cSection, aHandle[ 2 ] )
                   lAccepted := .F.
@@ -779,7 +779,7 @@ FUNCTION Decode( cType, hsBlock, cKey )
 
    DO CASE
    CASE cType == "STATUS"
-      IF "," $ cCode .AND. hb_AScan( p_aStatus, Parse( cCode, "," ) ) > 0
+      IF "," $ cCode .AND. hb_AScan( p_aStatus, Parse( cCode, "," ), , , .T. ) > 0
          cResult := ""
          DO WHILE Len( cCode ) > 0
             cResult += hb_eol() + Decode( cType, hsBlock, Parse( @cCode, "," ) )
@@ -787,7 +787,7 @@ FUNCTION Decode( cType, hsBlock, cKey )
          RETURN SubStr( cResult, Len( hb_eol() ) + 1 )
       ENDIF
 
-      IF ( idx := hb_AScan( p_aStatus, {| a | a[ 1 ] == cCode } ) ) > 0
+      IF ( idx := AScan( p_aStatus, {| a | a[ 1 ] == cCode } ) ) > 0
          RETURN p_aStatus[ idx ][ 2 ]
       ELSEIF Len( cCode ) > 1
          RETURN cCode
@@ -798,7 +798,7 @@ FUNCTION Decode( cType, hsBlock, cKey )
       ENDIF
 
    CASE cType == "PLATFORMS"
-      IF "," $ cCode .AND. hb_AScan( p_aPlatforms, Parse( cCode, "," ) ) > 0
+      IF "," $ cCode .AND. hb_AScan( p_aPlatforms, Parse( cCode, "," ), , , .T. ) > 0
          cResult := ""
          DO WHILE Len( cCode ) > 0
             cResult += hb_eol() + Decode( cType, hsBlock, Parse( @cCode, "," ) )
@@ -806,14 +806,14 @@ FUNCTION Decode( cType, hsBlock, cKey )
          RETURN SubStr( cResult, Len( hb_eol() ) + 1 )
       ENDIF
 
-      IF ( idx := hb_AScan( p_aPlatforms, {| a | a[ 1 ] == cCode } ) ) > 0
+      IF ( idx := AScan( p_aPlatforms, {| a | a[ 1 ] == cCode } ) ) > 0
          RETURN p_aPlatforms[ idx ][ 2 ]
       ELSE
          RETURN "Unknown 'PLATFORMS' code: '" + cCode + "'"
       ENDIF
 
    CASE cType == "COMPLIANCE"
-      IF "," $ cCode .AND. hb_AScan( p_aCompliance, Parse( cCode, "," ) ) > 0
+      IF "," $ cCode .AND. hb_AScan( p_aCompliance, Parse( cCode, "," ), , , .T. ) > 0
          cResult := ""
          DO WHILE Len( cCode ) > 0
             cResult += hb_eol() + Decode( cType, hsBlock, Parse( @cCode, "," ) )
@@ -821,7 +821,7 @@ FUNCTION Decode( cType, hsBlock, cKey )
          RETURN SubStr( cResult, Len( hb_eol() ) + 1 )
       ENDIF
 
-      IF ( idx := hb_AScan( p_aCompliance, {| a | a[ 1 ] == cCode } ) ) > 0
+      IF ( idx := AScan( p_aCompliance, {| a | a[ 1 ] == cCode } ) ) > 0
          RETURN p_aCompliance[ idx ][ 2 ]
       ELSE
          RETURN "Unknown 'COMPLIANCE' code: '" + cCode + "'"

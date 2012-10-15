@@ -53,7 +53,7 @@
 #define _OPTION_SELECTED 4
 #define _OPTION_DISABLED 5
 
-STATIC soForm
+STATIC s_oForm
 
 /****
 *
@@ -61,55 +61,56 @@ STATIC soForm
 *
 */
 
-CLASS THtmlControl
-   DATA nH
-   DATA Document
-   DATA Form
-   Data oHtm
+CREATE CLASS THtmlControl
 
-   DATA Caption
-   DATA lBreak INIT .F.
+   VAR nH
+   VAR Document
+   VAR FORM
+   VAR oHtm
 
-   DATA Type INIT "TEXT"
-   DATA Name
-   DATA Value
-   DATA Size
-   DATA ROWS, COLS
+   VAR Caption
+   VAR lBreak INIT .F.
 
-   DATA cOutPut INIT ""
+   VAR TYPE INIT "TEXT"
+   VAR Name
+   VAR Value
+   VAR Size
+   VAR ROWS, COLS
 
-   DATA PICTURE INIT "@X"
+   VAR cOutPut INIT ""
 
-   DATA aOptions INIT {}                // SELECT options
+   VAR PICTURE INIT "@X"
 
-   DATA TabIndex INIT 0
-   DATA disabled INIT .F.
-   DATA READONLY INIT .F.
-   DATA Multiple INIT .F.
-   DATA style
-   DATA ID
+   VAR aOptions INIT {} // SELECT options
 
-   DATA MaxLength   // length in chars
-   DATA MaxChars    // length on screen
+   VAR TabIndex INIT 0
+   VAR disabled INIT .F.
+   VAR READONLY INIT .F.
+   VAR Multiple INIT .F.
+   VAR style
+   VAR ID
 
-   DATA Checked INIT .F.                // checkboxes...
-   DATA lLabel INIT .F.
+   VAR MaxLength // length in chars
+   VAR MaxChars // length on screen
 
-   DATA Source, Align                   // images...
-   DATA Wrap        // textarea
+   VAR Checked INIT .F. // checkboxes...
+   VAR lLabel INIT .F.
 
-   DATA onBlur
-   DATA onChange
-   DATA onFocus
-   DATA onSelect
-   DATA onClick
-   DATA onMouseOver
-   DATA onMouseOut
-   DATA onMouseDown
-   DATA onMouseup
-   DATA onKeyPress
-   DATA onKeyDown
-   DATA onKeyUp
+   VAR Source, Align // images...
+   VAR WRAP // textarea
+
+   VAR onBlur
+   VAR onChange
+   VAR onFocus
+   VAR onSelect
+   VAR onClick
+   VAR onMouseOver
+   VAR onMouseOut
+   VAR onMouseDown
+   VAR onMouseup
+   VAR onKeyPress
+   VAR onKeyDown
+   VAR onKeyUp
 
    METHOD SetName( c ) INLINE ::Name := c
 
@@ -176,10 +177,10 @@ CLASS THtmlControl
    METHOD AddOption( cOption, cValue, cLabel, lSelected, lDisabled )
 
    METHOD SetControl( name, rows, cols, size, maxchars, value, onfocus, ;
-                      onblur, onchange, onselect, onclick, onmsover, onmsout, ;
-                      onmsdown, onmsup, onkdown, onkup, onkprs, ;
-                      pic, cap, dis, ro, lMulti, checked, ;
-                      align, wrap, type, Style, ID, lLabel )
+      onblur, onchange, onselect, onclick, onmsover, onmsout, ;
+      onmsdown, onmsup, onkdown, onkup, onkprs, ;
+      pic, cap, dis, ro, lMulti, checked, ;
+      align, wrap, type, Style, ID, lLabel )
 
 ENDCLASS
 
@@ -194,7 +195,7 @@ METHOD Put() CLASS THtmlControl
    LOCAL i
    LOCAL cStr := ""
 
-   ::nH   := HtmlPageHandle()
+   ::nH := HtmlPageHandle()
    ::form := HtmlFormName()
    ::oHtm := HtmlPageObject()
 
@@ -232,7 +233,7 @@ METHOD Put() CLASS THtmlControl
          ::cOutput += Space( 2 ) + '     WRAP="' + ::Wrap + '"' + CRLF()
       ENDIF
 
-   ENDIF            // textArea
+   ENDIF
 
    IF ::value != NIL
 
@@ -271,7 +272,7 @@ METHOD Put() CLASS THtmlControl
       ::cOutput += Space( 2 ) + '    ALIGN="' + ::Align + '"' + CRLF()
    ENDIF
 
-   IF ::type == "RADIO" .or. ::type == "CHECKBOX"
+   IF ::type == "RADIO" .OR. ::type == "CHECKBOX"
 
       IF ::Checked
          ::cOutput += Space( 2 ) + '   CHECKED' + CRLF()
@@ -341,7 +342,7 @@ METHOD Put() CLASS THtmlControl
       ::cOutPut += CRLF() + "</LABEL>" + CRLF()
    ENDIF
 
-   //Fwrite( ::nH, ::cOutput )
+// FWrite( ::nH, ::cOutput )
    ::oHtm:cStr += ::cOutput
 
    IF ::Type == "SELECT"
@@ -349,23 +350,23 @@ METHOD Put() CLASS THtmlControl
       FOR i := 1 TO Len( ::aOptions )
          cStr := "<OPTION"
          cStr += iif( ::aOptions[ i, _OPTION_VALUE ] != NIL, ;
-                     " value=" + ::aOptions[ i, _OPTION_VALUE ], "" )
+            " value=" + ::aOptions[ i, _OPTION_VALUE ], "" )
          cStr += iif( ::aOptions[ i, _OPTION_LABEL ] != NIL, ;
-                     " label=" + ::aOptions[ i, _OPTION_LABEL ], "" )
-         cStr += iif( ::aOptions[ i, _OPTION_SELECTED ] == .T., ;
-                     " SELECTED ", "" )
-         cStr += iif( ::aOptions[ i, _OPTION_DISABLED ] == .T., ;
-                     " DISABLED ", "" )
+            " label=" + ::aOptions[ i, _OPTION_LABEL ], "" )
+         cStr += iif( ::aOptions[ i, _OPTION_SELECTED ] == .T. , ;
+            " SELECTED ", "" )
+         cStr += iif( ::aOptions[ i, _OPTION_DISABLED ] == .T. , ;
+            " DISABLED ", "" )
          cStr += ">" + ::aOptions[ i, _OPTION_TEXT ] + "</OPTION>" + CRLF()
-         //Fwrite( ::nH, cStr )
+//       FWrite( ::nH, cStr )
          ::oHtm:cStr += cStr
       NEXT
 
-      //Fwrite( ::nH, "</SELECT>" )
+//    FWrite( ::nH, "</SELECT>" )
       ::oHtm:cStr += "</SELECT>"
    ENDIF
 
-RETURN Self
+   RETURN Self
 
 /****
 *
@@ -375,9 +376,9 @@ RETURN Self
 
 METHOD AddOption( cOption, cValue, cLabel, lSelected, lDisabled ) CLASS THtmlControl
 
-   Aadd( ::aOptions, { cOption, cValue, cLabel, lSelected, lDisabled } )
+   AAdd( ::aOptions, { cOption, cValue, cLabel, lSelected, lDisabled } )
 
-RETURN Self
+   RETURN Self
 
 /****
 *
@@ -388,41 +389,41 @@ RETURN Self
 */
 
 METHOD SetControl( name, rows, cols, size, maxchars, value, onfocus, ;
-                   onblur, onchange, onselect, onclick, onmsover, onmsout, ;
-                   onmsdown, onmsup, onkdown, onkup, onkprs, ;
-                   pic, cap, dis, ro, lMulti, checked, ;
-                   align, wrap, type, Style, ID, lLabel ) CLASS THtmlControl
+      onblur, onchange, onselect, onclick, onmsover, onmsout, ;
+      onmsdown, onmsup, onkdown, onkup, onkprs, ;
+      pic, cap, dis, ro, lMulti, checked, ;
+      align, wrap, type, Style, ID, lLabel ) CLASS THtmlControl
 
-   ::name        := name
-   ::rows        := ROWS
-   ::cols        := COLS
-   ::size        := size
-   ::maxChars    := maxchars
-   ::value       := value
-   ::onFocus     := onfocus
-   ::onBlur      := onblur
-   ::onChange    := onchange
-   ::onSelect    := onselect
-   ::onClick     := onclick
+   ::name := name
+   ::rows := ROWS
+   ::cols := COLS
+   ::size := size
+   ::maxChars := maxchars
+   ::value := value
+   ::onFocus := onfocus
+   ::onBlur := onblur
+   ::onChange := onchange
+   ::onSelect := onselect
+   ::onClick := onclick
    ::onMouseOver := onmsover
-   ::onMouseOut  := onmsout
+   ::onMouseOut := onmsout
    ::onMouseDown := onmsdown
-   ::onMouseUp   := onmsup
-   ::onKeyDown   := onkdown
-   ::onKeyUp     := onkup
-   ::onKeyPress  := onkprs
-   ::picture     := pic
-   ::caption     := cap
-   ::disabled    := dis
-   ::readonly    := ro
-   ::Multiple    := lMulti
-   ::Checked     := checked
-   ::Align       := align
-   ::Wrap        := wrap
-   ::type        := type
-   ::Style       := Style
-   ::Id          := ID
-   ::lLabel      := lLabel
+   ::onMouseUp := onmsup
+   ::onKeyDown := onkdown
+   ::onKeyUp := onkup
+   ::onKeyPress := onkprs
+   ::picture := pic
+   ::caption := cap
+   ::disabled := dis
+   ::readonly := ro
+   ::Multiple := lMulti
+   ::Checked := checked
+   ::Align := align
+   ::Wrap := wrap
+   ::type := type
+   ::Style := Style
+   ::Id := ID
+   ::lLabel := lLabel
 
    RETURN Self
 
@@ -432,30 +433,30 @@ METHOD SetControl( name, rows, cols, size, maxchars, value, onfocus, ;
 *
 */
 
-CLASS THtmlForm
+CREATE CLASS THtmlForm
 
-   DATA nH
-   Data oHtm
+   VAR nH
+   VAR oHtm
 
-   DATA aControls INIT {}
-   DATA Name INIT ""
-   DATA Action
-   DATA METHOD
-   DATA EncType INIT "multipart/form-data"
-   DATA onSubmit
-   DATA onReset
-   DATA Target
-   DATA Frame INIT .F.
-   DATA Caption INIT ""
-   DATA CaptionColor INIT "black"
-   DATA CapFontColor INIT "white"
-   DATA CaptionImage
-   DATA BGIMAGE
-   DATA fontColor INIT "black"
-   DATA COLOR INIT "#9196A0"
-   DATA WIDTH INIT 90
+   VAR aControls INIT {}
+   VAR Name INIT ""
+   VAR Action
+   VAR METHOD
+   VAR EncType INIT "multipart/form-data"
+   VAR onSubmit
+   VAR onReset
+   VAR Target
+   VAR Frame INIT .F.
+   VAR Caption INIT ""
+   VAR CaptionColor INIT "black"
+   VAR CapFontColor INIT "white"
+   VAR CaptionImage
+   VAR BGIMAGE
+   VAR fontColor INIT "black"
+   VAR COLOR INIT "#9196A0"
+   VAR WIDTH INIT 90
 
-   DATA cOutput INIT ""
+   VAR cOutput INIT ""
 
    METHOD setHandle( h ) INLINE ::nH := h
 
@@ -487,10 +488,10 @@ CLASS THtmlForm
 
    METHOD setwidth( c ) INLINE ::width := c
 
-   METHOD AddControl( o ) INLINE iif( HB_ISOBJECT( o ), ( o:nH := ::nH, o:Form := Self ), ),;
-          Aadd( ::aControls, o )
+   METHOD AddControl( o ) INLINE iif( HB_ISOBJECT( o ), ( o:nH := ::nH, o:Form := Self ), ), ;
+      AAdd( ::aControls, o )
 
-   METHOD PutControls() INLINE Aeval( ::aControls, {| e | e:Put() } )
+   METHOD PutControls() INLINE AEval( ::aControls, {| e | e:Put() } )
 
    METHOD New( cName, cAction, cMethod, lFrame, cCaption, nWidth )
 
@@ -517,21 +518,22 @@ METHOD New( cName, cAction, cMethod, lFrame, cCaption, nWidth ) CLASS THtmlForm
    __defaultNIL( @lFrame, .F. )
    __defaultNIL( @cCaption, "" )
    __defaultNIL( @nWidth, 90 )
+
    ::oHtm := HtmlPageObject()
-   ::Name   := cName
+   ::Name := cName
    ::Method := cMethod
 
    ::nH := HtmlPageHandle()
 
-   ::Frame   := lFrame
+   ::Frame := lFrame
    ::Caption := cCaption
-   ::width   := nWidth
+   ::width := nWidth
 
    ::aControls := {}
 
-   soForm := Self
+   s_oForm := Self
 
-RETURN Self
+   RETURN Self
 
 /****
 *
@@ -561,130 +563,130 @@ METHOD Put( lPutControls ) CLASS THtmlForm
 
    IF ::Frame
       ::cOutPut := CRLF() + CRLF() + CRLF() + "<!-------  Start of Form ------->" + CRLF() + CRLF()
-//      Fwrite( ::nH, ::cOutput )
-      ::oHtm:cStr +=  ::cOutput
+//    FWrite( ::nH, ::cOutput )
+      ::oHtm:cStr += ::cOutput
       ::cOutPut := '<TABLE BGCOLOR="#9196A0" ' + CRLF() + ;
-                   "       COLS=1 " + CRLF() + ;
-                   "       ROWS=1 " + CRLF() + ;
-                   "       CELLPADDING=3 " + CRLF() + ;
-                   "       CELLSPACING=3 " + CRLF() + ;
-                   "       WIDTH=" + hb_ntos( ::width ) + "% " + CRLF() + ;
-                   '       BORDERCOLORLIGHT="#000000" ' + CRLF() + ;
-                   '       BORDERCOLORDARK="#FFFFFF" ' + CRLF() + ;
-                   "       BORDER " + CRLF() + ;
-                   "       >" + CRLF()
-//      Fwrite( ::nH, ::cOutput )
-::oHtm:cStr += ::cOutput
+         "       COLS=1 " + CRLF() + ;
+         "       ROWS=1 " + CRLF() + ;
+         "       CELLPADDING=3 " + CRLF() + ;
+         "       CELLSPACING=3 " + CRLF() + ;
+         "       WIDTH=" + hb_ntos( ::width ) + "% " + CRLF() + ;
+         '       BORDERCOLORLIGHT="#000000" ' + CRLF() + ;
+         '       BORDERCOLORDARK="#FFFFFF" ' + CRLF() + ;
+         "       BORDER " + CRLF() + ;
+         "       >" + CRLF()
+//    FWrite( ::nH, ::cOutput )
+      ::oHtm:cStr += ::cOutput
       ::cOutPut := '<TR BGCOLOR="' + ::captionColor + '">' + CRLF()
 
       IF ::Caption != NIL
          ::cOutPut := "<TD"
-         //Fwrite( ::nH, ::cOutput )
+//       FWrite( ::nH, ::cOutput )
          ::oHtm:cStr += ::cOutput
 
          IF ::captionImage != NIL
             ::cOutPut := ' BACKGROUND="' + ::captionImage + '"' + CRLF()
-         //   Fwrite( ::nH, ::cOutput )
-         ::oHtm:cStr += ::cOutput
+//          FWrite( ::nH, ::cOutput )
+            ::oHtm:cStr += ::cOutput
          ENDIF
 
          ::cOutPut := '>'
-         //Fwrite( ::nH, ::cOutput )
+//       FWrite( ::nH, ::cOutput )
          ::oHtm:cStr += ::cOutput
 
          IF ::capFontColor != NIL
             ::cOutPut := '<FONT COLOR="' + ::capFontColor + '">' + CRLF()
-         //   Fwrite( ::nH, ::cOutput )
-         ::oHtm:cStr += ::cOutput
+//          FWrite( ::nH, ::cOutput )
+            ::oHtm:cStr += ::cOutput
          ENDIF
 
          ::cOutPut := "<B>" + ::Caption + "</B>" + CRLF()
-         //Fwrite( ::nH, ::cOutput )
+//       FWrite( ::nH, ::cOutput )
          ::oHtm:cStr += ::cOutput
          ::cOutPut := "</TD></TR>"
-         //Fwrite( ::nH, ::cOutput )
+//       FWrite( ::nH, ::cOutput )
          ::oHtm:cStr += ::cOutput
       ENDIF
 
       ::cOutPut := '<TR BGCOLOR="' + ::color + '">' + CRLF()
-      //Fwrite( ::nH, ::cOutput )
+//    FWrite( ::nH, ::cOutput )
       ::oHtm:cStr += ::cOutput
       ::cOutPut := '<TD'
-      //Fwrite( ::nH, ::cOutput )
+//    FWrite( ::nH, ::cOutput )
       ::oHtm:cStr += ::cOutput
       IF ::bgImage != NIL
          ::cOutPut := ' BACKGROUND="' + ::bgImage + '"' + CRLF()
-      //   Fwrite( ::nH, ::cOutput )
-      ::oHtm:cStr += ::cOutput
+//       FWrite( ::nH, ::cOutput )
+         ::oHtm:cStr += ::cOutput
       ENDIF
 
       ::cOutPut := '>'
-      //Fwrite( ::nH, ::cOutput )
-::oHtm:cStr += ::cOutput
+//    FWrite( ::nH, ::cOutput )
+      ::oHtm:cStr += ::cOutput
       IF ::fontColor != NIL
          ::cOutPut := '<FONT COLOR="' + ::FontColor + '">' + CRLF()
-//         Fwrite( ::nH, ::cOutput )
-::oHtm:cStr += ::cOutput
+//       FWrite( ::nH, ::cOutput )
+         ::oHtm:cStr += ::cOutput
       ENDIF
 
    ENDIF
 
    ::cOutput += CRLF() + "<FORM " + CRLF()
-//   Fwrite( ::nH, ::cOutput )
-::oHtm:cStr += ::cOutput
+// FWrite( ::nH, ::cOutput )
+   ::oHtm:cStr += ::cOutput
 
    IF ::name != NIL
       ::cOutPut := Space( 5 ) + '    NAME="' + ::Name + '"' + CRLF()
-//      Fwrite( ::nH, ::cOutput )
-::oHtm:cStr += ::cOutput
+//    FWrite( ::nH, ::cOutput )
+      ::oHtm:cStr += ::cOutput
    ENDIF
 
    IF ::method != NIL
       ::cOutPut := Space( 5 ) + '  METHOD="' + ::Method + '"' + CRLF()
-//      Fwrite( ::nH, ::cOutput )
-::oHtm:cStr += ::cOutput
+//    FWrite( ::nH, ::cOutput )
+      ::oHtm:cStr += ::cOutput
    ENDIF
 
    IF ::Action != NIL
       ::cOutPut := Space( 5 ) + '  ACTION=' + ::Action + '' + CRLF()
-//      Fwrite( ::nH, ::cOutput )
-::oHtm:cStr += ::cOutput
+//    FWrite( ::nH, ::cOutput )
+      ::oHtm:cStr += ::cOutput
    ENDIF
 
    IF ::Target != NIL
       ::cOutPut := Space( 5 ) + '  TARGET=' + ::Target + '' + CRLF()
-//      Fwrite( ::nH, ::cOutput )
-::oHtm:cStr += ::cOutput
+//    FWrite( ::nH, ::cOutput )
+      ::oHtm:cStr += ::cOutput
    ENDIF
 
    IF ::Enctype != NIL
       ::cOutPut := Space( 5 ) + ' ENCTYPE="' + ::encType + '"' + CRLF()
-//      Fwrite( ::nH, ::cOutput )
-::oHtm:cStr += ::cOutput
+//    FWrite( ::nH, ::cOutput )
+      ::oHtm:cStr += ::cOutput
    ENDIF
 
    IF ::onSubmit != NIL
       ::cOutPut := Space( 5 ) + 'onSubmit="' + ::onSubmit + '"' + CRLF()
-//      Fwrite( ::nH, ::cOutput )
-::oHtm:cStr += ::cOutput
+//    FWrite( ::nH, ::cOutput )
+      ::oHtm:cStr += ::cOutput
    ENDIF
 
    IF ::onReset != NIL
       ::cOutPut := Space( 5 ) + ' onReset="' + ::onReset + '"' + CRLF()
-//      Fwrite( ::nH, ::cOutput )
-::oHtm:cStr += ::cOutput
+//    FWrite( ::nH, ::cOutput )
+      ::oHtm:cStr += ::cOutput
    ENDIF
 
    ::cOutPut := ">" + CRLF()
 
-//   Fwrite( ::nH, ::cOutput )
-::oHtm:cStr += ::cOutput
+// FWrite( ::nH, ::cOutput )
+   ::oHtm:cStr += ::cOutput
    IF lPutControls
-      Aeval( ::aControls, {| e | iif( HB_ISOBJECT( e ), ;
-                            e:Put(), ::oHtm:cStr += e  ) } )
+      AEval( ::aControls, {| e | iif( HB_ISOBJECT( e ), ;
+         e:Put(), ::oHtm:cStr += e ) } )
    ENDIF
 
-RETURN Self
+   RETURN Self
 
 /****
 *
@@ -694,16 +696,17 @@ RETURN Self
 
 METHOD End() CLASS THtmlForm
 
-   ::ohtm:cStr +=  "</FORM>" + CRLF()
+   ::ohtm:cStr += "</FORM>" + CRLF()
 
    IF ::Frame
-      ::ohtm:cStr +=  "</TD>" + CRLF()
-      ::ohtm:cStr +=  "</TR>" + CRLF()
-      ::ohtm:cStr +=  "</TABLE>" + CRLF()
+      ::ohtm:cStr += "</TD>" + CRLF()
+      ::ohtm:cStr += "</TR>" + CRLF()
+      ::ohtm:cStr += "</TABLE>" + CRLF()
    ENDIF
 
-   ::ohtm:cStr +=  CRLF() + CRLF() + "<!---  End of Form --->" + CRLF() + CRLF() + CRLF()
-RETURN Self
+   ::ohtm:cStr += CRLF() + CRLF() + "<!---  End of Form --->" + CRLF() + CRLF() + CRLF()
+
+   RETURN Self
 
 /****
 *
@@ -716,13 +719,13 @@ RETURN Self
 METHOD GetControl( cName ) CLASS THtmlForm
 
    LOCAL oRet
-   LOCAL nPos := Ascan( ::aControls, {| e | e:name == cName } )
+   LOCAL nPos := AScan( ::aControls, {| e | e:name == cName } )
 
    IF nPos > 0
       oRet := ::aControls[ nPos ]
    ENDIF
 
-RETURN oRet
+   RETURN oRet
 
 /****
 *
@@ -734,4 +737,4 @@ RETURN oRet
 
 FUNCTION HtmlFormObject()
 
-   RETURN soForm
+   RETURN s_oForm

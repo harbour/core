@@ -505,7 +505,7 @@ FUNCTION __I18N_POTARRAYJOIN( aTrans, aTrans2, hIndex )
             ELSE
                aSrc := hb_aTokens( aDest[ _I18N_SOURCE ] )
                FOR EACH ctx IN hb_aTokens( aItem[ _I18N_SOURCE ] )
-                  IF Ascan( aSrc, ctx,,, .T. ) == 0
+                  IF hb_AScan( aSrc, ctx,,, .T. ) == 0
                      aDest[ _I18N_SOURCE ] += " "
                      aDest[ _I18N_SOURCE ] += ctx
                   ENDIF

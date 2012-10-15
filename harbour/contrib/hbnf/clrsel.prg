@@ -496,7 +496,7 @@ STATIC FUNCTION _ftDeskChar( aOpt )
    LOCAL aChar := { " ", "░", "▒", "▓" }
    LOCAL cChar := aOpt[ C_CHAR ]
    LOCAL cClr  := aOpt[ C_CLR ]
-   LOCAL nElem := AScan( aChar, cChar )
+   LOCAL nElem := hb_AScan( aChar, cChar, , , .T. )
    LOCAL n, nKey
 
    IF nElem == 0             // this allows another character to be selected

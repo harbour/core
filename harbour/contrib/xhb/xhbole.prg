@@ -80,17 +80,17 @@ FUNCTION CreateOLEObject()
 STATIC s_bBreak := {| oError | Break( oError ) }
 
 STATIC FUNCTION s_oleOpError( cOperator, ... )
-   STATIC s_hErrCode := { "==" => 1070, ;
-                          "="  => 1071, ;
-                          "!=" => 1072, ;
-                          "+"  => 1081, ;
-                          "-"  => 1082, ;
-                          "*"  => 1083, ;
-                          "/"  => 1084, ;
-                          "%"  => 1085, ;
-                          "++" => 1086, ;
-                          "--" => 1087, ;
-                          "^"  => 1088 }
+   STATIC sc_hErrCode := { "==" => 1070, ;
+                           "="  => 1071, ;
+                           "!=" => 1072, ;
+                           "+"  => 1081, ;
+                           "-"  => 1082, ;
+                           "*"  => 1083, ;
+                           "/"  => 1084, ;
+                           "%"  => 1085, ;
+                           "++" => 1086, ;
+                           "--" => 1087, ;
+                           "^"  => 1088 }
    LOCAL oErr
 
    oErr := ErrorNew()
@@ -102,7 +102,7 @@ STATIC FUNCTION s_oleOpError( cOperator, ... )
    oErr:GenCode       := EG_ARG
    oErr:Operation     := cOperator
    oErr:Severity      := ES_ERROR
-   oErr:SubCode       := s_hErrCode[ cOperator ]
+   oErr:SubCode       := sc_hErrCode[ cOperator ]
    oErr:SubSystem     := "BASE"
 
    RETURN oErr

@@ -778,7 +778,7 @@ METHOD CommandWindowProcessKey( nKey ) CLASS HBDebugger
    CASE K_ENTER
       cCommand := RTrim( ::oGet:getValue() )
       IF ! Empty( cCommand )
-         IF ( n := AScan( ::aLastCommands, cCommand ) ) > 0 .AND. n < Len( ::aLastCommands )
+         IF ( n := hb_AScan( ::aLastCommands, cCommand, , , .T. ) ) > 0 .AND. n < Len( ::aLastCommands )
             HB_ADel( ::aLastCommands, n, .T. )
          ENDIF
          ::nCommand := Len( ::aLastCommands )

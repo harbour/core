@@ -124,7 +124,7 @@ PROCEDURE Main( ... )
    ENDIF
 
    IF lCreateTable
-      IF AScan( oServer:ListTables(), cTable ) > 0
+      IF hb_AScan( oServer:ListTables(), cTable, , , .T. ) > 0
          oServer:DeleteTable( cTable )
          IF oServer:NetErr()
             ? oServer:Error()

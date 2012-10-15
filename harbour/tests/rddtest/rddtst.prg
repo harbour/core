@@ -47,10 +47,10 @@ field FSTR, FNUM
 #include "fileio.ch"
 
 #ifdef _TEST_CREATE_
-  static hMake := F_ERROR
+  static s_hMake := F_ERROR
 #endif
-static nTested := 0
-static nErrors := 0
+static s_nTested := 0
+static s_nErrors := 0
 
 /* list of functions which may return unexpected value in Clipper
     instead of documented NIL. If you will find others please add them */
@@ -105,7 +105,7 @@ rddSetDefault(rdd)
   if empty( cOutFile )
     ? "Syntax: <outfile.prg> [<rddname>]"
     quit
-  elseif ( hMake := fcreate( cOutFile ) ) == F_ERROR
+  elseif ( s_hMake := fcreate( cOutFile ) ) == F_ERROR
     ? "Cannot create file: ", cOutFile
     quit
   endif
@@ -120,7 +120,7 @@ rddSetDefault(rdd)
         EOL +;
         'FUNCTION test_main()' + EOL +;
         EOL
-  if ! fwrite( hMake, cOut ) == len( cOut )
+  if ! fwrite( s_hMake, cOut ) == len( cOut )
     ? "write error."
     quit
   endif
@@ -150,19 +150,19 @@ return nil
 static function test_close()
 local cOut
 #ifdef _TEST_CREATE_
-  if hMake != F_ERROR
+  if s_hMake != F_ERROR
     cOut :=EOL +;
           'RETURN NIL' + EOL
-    if ! fwrite( hMake, cOut ) == len( cOut )
+    if ! fwrite( s_hMake, cOut ) == len( cOut )
       ? "write error."
       quit
     endif
-    fclose( hMake )
+    fclose( s_hMake )
   endif
 #else
   ?
-  ? "Number of tests: " + ltrim( str( nTested ) )
-  ? "Number of errors: " + ltrim( str( nErrors ) )
+  ? "Number of tests: " + ltrim( str( s_nTested ) )
+  ? "Number of errors: " + ltrim( str( s_nErrors ) )
 #endif
 dbclosearea()
 aeval( directory( "./" + _DBNAME + ".??x" ), {| x | ferase( x[ 1 ] ) } )
@@ -215,7 +215,7 @@ return cStr
   else
     cOut:="RDDTESTC " + itm2str( aState ) + ", " + cAction + EOL
   endif
-  if ! fwrite( hMake, cOut ) == len( cOut )
+  if ! fwrite( s_hMake, cOut ) == len( cOut )
     ? "write error."
     quit
   endif
@@ -254,8 +254,8 @@ return cStr
   if !lOK
     ?
     ?? "    " + cAction + " => " + s2 + itm2str( aExState )
-    nErrors++
+    s_nErrors++
   endif
-  nTested++
+  s_nTested++
   return nil
 #endif

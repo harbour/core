@@ -6,7 +6,7 @@
 
 #include "inkey.ch"
 
-STATIC s_nRecNo   := 1
+STATIC s_nRecNo := 1
 STATIC s_nLastRec := 100
 STATIC s_lFixPos := .F.
 

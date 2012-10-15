@@ -458,17 +458,6 @@ METHOD Skip( nRows ) CLASS TMySQLQuery
 //DAVID: DBSKIP() RETURN NIL  RETURN ::nCurRow
    RETURN NIL
 
-
-/* Given a three letter month name gives back month number as two char string (ie. Apr -> 04) */
-/*
-STATIC FUNCTION NMonth( cMonthValue )
-
-   STATIC s_cMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dec" }
-
-   RETURN PadL( AScan( s_cMonths, cMonthValue ), 2, "0" )
-*/
-
-
 // Get row n of a query and return it as a TMySQLRow object
 METHOD GetRow( nRow ) CLASS TMySQLQuery
 

@@ -5,17 +5,17 @@
 // ; Donated to the public domain by
 //   Viktor Szakats (harbour syenar.net)
 
-MEMVAR cMyPubVar
+MEMVAR p_cMyPubVar
 
-STATIC bBlock1 := {|| Hello() }
-STATIC bBlock2 := {|| cMyPubVar }
+STATIC s_bBlock1 := {|| Hello() }
+STATIC s_bBlock2 := {|| p_cMyPubVar }
 
 PROCEDURE Main()
 
-   PUBLIC cMyPubVar := "Printed from a PUBLIC var from a codeblock assigned to a static variable."
+   PUBLIC p_cMyPubVar := "Printed from a PUBLIC var from a codeblock assigned to a static variable."
 
-   Eval( bBlock1 )
-   ? Eval( bBlock2 )
+   Eval( s_bBlock1 )
+   ? Eval( s_bBlock2 )
 
    RETURN
 

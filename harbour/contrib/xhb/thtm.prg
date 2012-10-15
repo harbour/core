@@ -47,9 +47,9 @@
 #include "hbclass.ch"
 #include "cgi.ch"
 
-STATIC snHtm   := NIL
-STATIC scForm  := 0
-STATIC soPage  := 0
+STATIC s_nHtm   := NIL
+STATIC s_cForm  := 0
+STATIC s_oPage  := 0
 
 /****
 *
@@ -63,18 +63,18 @@ STATIC soPage  := 0
 *
 */
 
-CLASS THtml
+CREATE CLASS THtml
 
-   DATA nH
-   DATA FName, TITLE
-   DATA FontFace INIT "Verdana"
-   DATA FontSize INIT 1
-   DATA FontColor INIT "black"
-   DATA aImages
-   DATA lCgi  INIT .F.
-   DATA cStr    Init ""
-   DATA BaseURL, BaseTarget
-   DATA lFont INIT .F.
+   VAR nH
+   VAR FName, TITLE
+   VAR FontFace INIT "Verdana"
+   VAR FontSize INIT 1
+   VAR FontColor INIT "black"
+   VAR aImages
+   VAR lCgi  INIT .F.
+   VAR cStr    Init ""
+   VAR BaseURL, BaseTarget
+   VAR lFont INIT .F.
 
 // METHOD New( cFile, cTitle, cLinkTitle, cCharSet, cScriptSRC, ;
 //         BGIMAGE, BGCOLOR, txtColor, cJavaCode, ;
@@ -497,9 +497,9 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
 
    ::cStr +=  CRLF()
 
-   snHtm := ::nH
+   s_nHtm := ::nH
 
-   soPage := Self
+   s_oPage := Self
 
    RETURN self
 
@@ -508,9 +508,9 @@ METHOD NewAlt( cType ) CLASS THtml
    ::nH    := STD_OUT
    ::cStr +=  'Content-Type: ' + cType + CRLF() + CRLF()
 
-   snHtm := ::nH
+   s_nHtm := ::nH
 
-   soPage := Self
+   s_oPage := Self
 
    RETURN self
 
@@ -1599,7 +1599,7 @@ METHOD NewForm( cMethod, cAction, cName ) CLASS THtml
 
    ::cStr +=  '>' + CRLF()
 
-   scForm := cName
+   s_cForm := cName
 
    RETURN Self
 
@@ -2089,7 +2089,7 @@ METHOD PutLinkName( cName ) CLASS THtml
 
 FUNCTION HtmlPageHandle()
 
-   RETURN snHtm
+   RETURN s_nHtm
 
 /****
 *
@@ -2101,7 +2101,7 @@ FUNCTION HtmlPageHandle()
 
 FUNCTION HtmlFormName()
 
-   RETURN scForm
+   RETURN s_cForm
 
 /****
 *     HtmlPageObject()
@@ -2112,7 +2112,7 @@ FUNCTION HtmlFormName()
 
 FUNCTION HtmlPageObject()
 
-   RETURN soPage
+   RETURN s_oPage
 
 /****
 *

@@ -809,7 +809,7 @@ METHOD listFiles( cFileSpec ) CLASS tIPClientFTP
          ENDDO
          nEnd          := hb_At( " ", cEntry, nStart )
          cMonth        := SubStr( cEntry, nStart, nEnd - nStart )
-         cMonth        := PadL( AScan( aMonth, cMonth ), 2, "0" )
+         cMonth        := PadL( hb_AScan( aMonth, cMonth, , , .T. ), 2, "0" )
          nStart        := nEnd
 
          // Day

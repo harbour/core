@@ -207,8 +207,7 @@ METHOD Field( cQueryName ) CLASS TCgi
 
    __defaultNIL( @cQueryName, "" )
 
-   nRet := AScan( ::aQueryFields, ;
-      {| x | Upper( x[ 1 ] ) == Upper( cQueryName ) } )
+   nRet := AScan( ::aQueryFields, {| x | Upper( x[ 1 ] ) == Upper( cQueryName ) } )
 
    IF nRet > 0
       cRet := ::aQueryFields[ nRet, 2 ]

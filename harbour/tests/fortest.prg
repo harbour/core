@@ -9,9 +9,9 @@
 
 // TODO: add test for "step 0"
 
-STATIC snFrom
-STATIC snTo
-STATIC snStep
+STATIC s_nFrom
+STATIC s_nTo
+STATIC s_nStep
 
 PROCEDURE Main()
 
@@ -32,13 +32,13 @@ PROCEDURE Main()
 
    FOR tmp := 1 TO Len( array )
 
-      snFrom := array[ tmp ][ 1 ]
-      snTo   := array[ tmp ][ 2 ]
-      snStep := array[ tmp ][ 3 ]
+      s_nFrom := array[ tmp ][ 1 ]
+      s_nTo   := array[ tmp ][ 2 ]
+      s_nStep := array[ tmp ][ 3 ]
 
-      ? " From:", snFrom,;
-        "   To:", snTo,;
-        " Step:", snStep
+      ? " From:", s_nFrom,;
+        "   To:", s_nTo,;
+        " Step:", s_nStep
 
       FOR n := Eval( {|| ValFrom() } ) TO Eval( {|| ValTo() } ) STEP Eval( {|| ValStep() } )
          ? "Exec", n
@@ -52,16 +52,16 @@ STATIC FUNCTION ValFrom()
 
    ? "From"
 
-   RETURN snFrom
+   RETURN s_nFrom
 
 STATIC FUNCTION ValTo()
 
    ? "To"
 
-   RETURN snTo
+   RETURN s_nTo
 
 STATIC FUNCTION ValStep()
 
    ? "Step"
 
-   RETURN snStep
+   RETURN s_nStep

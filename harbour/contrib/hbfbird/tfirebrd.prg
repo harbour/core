@@ -560,7 +560,7 @@ METHOD Refresh() CLASS TFbQuery
 
       /* Tables in query */
       FOR i := 1 TO Len( ::aStruct )
-         IF AScan( aTable, ::aStruct[ i ][ 5 ] ) == 0
+         IF hb_AScan( aTable, ::aStruct[ i ][ 5 ], , , .T. ) == 0
             AAdd( aTable, ::aStruct[ i ][ 5 ] )
          ENDIF
       NEXT

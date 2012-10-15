@@ -17,7 +17,7 @@ PROCEDURE Main()
 
    rddSetDefault( "SQLMIX" )
 
-   AEval( rddList(), {| X | QOut( X ) } )
+   AEval( rddList(), {| x | QOut( x ) } )
 
    IF rddInfo( RDDI_CONNECT, { "MYSQL", "localhost", "test", , "test" } ) == 0
       ? "Unable connect to the server"
@@ -40,7 +40,7 @@ PROCEDURE Main()
 
    RETURN
 
-STATIC PROC CreateTable()
+STATIC PROCEDURE CreateTable()
 
    ? rddInfo( RDDI_EXECUTE, "DROP TABLE country" )
    ? rddInfo( RDDI_EXECUTE, "CREATE TABLE country (CODE char(3), NAME char(50), RESIDENTS int(11))" )
