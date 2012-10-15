@@ -15,12 +15,12 @@
 #define N_COUNT   1000000
 #define N_INIT    100
 
-thread static s_var := N_INIT
+thread static t_var := N_INIT
 
 proc main()
    local aThreads := {}, i, nSum
    ? Version()
-   s_var := N_INIT * 25
+   t_var := N_INIT * 25
    ? "Starting threads: "
    for i := 1 to N_THREADS
       aadd( aThreads, hb_threadStart( @thFunc() ) )
@@ -38,6 +38,6 @@ return
 func thFunc()
    local i
    for i := 1 to N_COUNT
-      ++s_var
+      ++t_var
    next
-return s_var
+return t_var

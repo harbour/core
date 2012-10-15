@@ -79,8 +79,8 @@ FUNCTION ExecBrowser( oCrt )
 
    STATIC nStyle := 0
 
-   THREAD STATIC nFactor := 200
-   THREAD STATIC lActiveX := .F.
+   THREAD STATIC t_nFactor := 200
+   THREAD STATIC t_lActiveX := .F.
 
    IF oCrt == NIL
       cScr := SaveScreen( 0, 0, MaxRow(), MaxCol() )
@@ -151,7 +151,7 @@ FUNCTION ExecBrowser( oCrt )
    hb_DispOutAt( oBrowse:nTop - 2, oBrowse:nleft - 2, PadC( cFileDbf, oBrowse:nRight - oBrowse:nLeft + 5 ), "W+/B*" )
 
    oCom := BrwBuildActiveX( oCrt, oBrowse )
-   oChk := BrwBuildCheckBox( oCrt, oBrowse, @lActiveX )
+   oChk := BrwBuildCheckBox( oCrt, oBrowse, @t_lActiveX )
    oSLE := BrwBuildSLE( oCrt, oBrowse )
    aNvg := BrwBuildNvg( oCrt, oBrowse, oCom )
    oLBx := BrwBuildListBox( oCrt, oBrowse )
@@ -176,12 +176,12 @@ FUNCTION ExecBrowser( oCrt )
 
       DO CASE
       CASE nKey == K_F12
-         nFactor--
-         hb_gtInfo( HB_GTI_SPEC, HB_GTS_FACTOR, nFactor )
+         t_nFactor--
+         hb_gtInfo( HB_GTI_SPEC, HB_GTS_FACTOR, t_nFactor )
 
       CASE nKey == K_F11
-         nFactor++
-         hb_gtInfo( HB_GTI_SPEC, HB_GTS_FACTOR, nFactor )
+         t_nFactor++
+         hb_gtInfo( HB_GTI_SPEC, HB_GTS_FACTOR, t_nFactor )
 
       CASE nKey == K_F6
          hb_gtInfo( HB_GTI_RESIZABLE, .F. )
@@ -208,10 +208,10 @@ FUNCTION ExecBrowser( oCrt )
       CASE BrwHandleKey( oBrowse, nKey, @lEnd )
 
       CASE nKey == HB_K_RESIZE
-         BrwHandleResize( oCrt, oBrowse, oVBar, oHBar, oCom, oSLE, oLBx, oTre, oChk, aNvg, oIdx, lActiveX, cFileDbf )
+         BrwHandleResize( oCrt, oBrowse, oVBar, oHBar, oCom, oSLE, oLBx, oTre, oChk, aNvg, oIdx, t_lActiveX, cFileDbf )
 
       ENDCASE
-   END
+   ENDDO
 
    Wvt_SetPen( 0 )
    WvtSetBlocks( aLastPaint )
@@ -899,7 +899,7 @@ FUNCTION Vou_BrwSetVScroll( mp1, oBrowse )
 
 STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
 
-   LOCAL lRet := .T. , lRefAll := .F.
+   LOCAL lRet := .T., lRefAll := .F.
 
    HB_SYMBOL_UNUSED( cPaintID )
 

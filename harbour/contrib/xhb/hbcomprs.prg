@@ -54,7 +54,7 @@
 
 #include "hbzlib.ch"
 
-THREAD STATIC s_nLastError := HB_ZLIB_RES_OK
+THREAD STATIC t_nLastError := HB_ZLIB_RES_OK
 
 /****** COMPRESSOR WRAPPER *****
 *  HB_COMPRESS(               cSource [,nSourceLen ] ) --> cDest
@@ -109,22 +109,22 @@ FUNCTION HB_COMPRESS( xPar1, xPar2, xPar3, xPar4, xPar5 )
 
    IF lReturnByRef
       IF HB_ISNUMERIC( xPar1 )
-         xPar4 := HB_ZCOMPRESS( cSource, nDestLen, @s_nLastError, nComprFactor )
+         xPar4 := HB_ZCOMPRESS( cSource, nDestLen, @t_nLastError, nComprFactor )
          IF ! HB_ISSTRING( xPar4 )
             xPar4 := ""
          ENDIF
          xPar5 := Len( xPar4 )
       ELSE
-         xPar3 := HB_ZCOMPRESS( cSource, nDestLen, @s_nLastError, nComprFactor )
+         xPar3 := HB_ZCOMPRESS( cSource, nDestLen, @t_nLastError, nComprFactor )
          IF ! HB_ISSTRING( xPar3 )
             xPar3 := ""
          ENDIF
          xPar4 := Len( xPar3 )
       ENDIF
-      RETURN s_nLastError
+      RETURN t_nLastError
    ENDIF
 
-   RETURN HB_ZCOMPRESS( cSource, nDestLen, @s_nLastError, nComprFactor )
+   RETURN HB_ZCOMPRESS( cSource, nDestLen, @t_nLastError, nComprFactor )
 
 /****** DECOMPRESSOR WRAPPER *****
 *  HB_UNCOMPRESS( nDestLen, cSource [, nSourceLen ] ) --> cDest
@@ -153,17 +153,17 @@ FUNCTION HB_UNCOMPRESS( nDestLen, cSource, nSourceLen, /* @ */ cDest )
    ENDIF
 
    IF PCount() >= 4
-      cDest := HB_ZUNCOMPRESS( cSource, nDestLen, @s_nLastError )
-      RETURN s_nLastError
+      cDest := HB_ZUNCOMPRESS( cSource, nDestLen, @t_nLastError )
+      RETURN t_nLastError
    ENDIF
 
-   RETURN HB_ZUNCOMPRESS( cSource, nDestLen, @s_nLastError )
+   RETURN HB_ZUNCOMPRESS( cSource, nDestLen, @t_nLastError )
 
 /*********************************
 *  HB_COMPRESSERROR() --> nError
 */
 FUNCTION HB_COMPRESSERROR()
-   RETURN s_nLastError
+   RETURN t_nLastError
 
 /*********************************
 *  HB_COMPRESSERRORDESC( nErrorCode ) --> cDesc

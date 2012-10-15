@@ -142,7 +142,7 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
 
    LOCAL lClicked, cPrompt, nIndex, hFont, aHFonts
 
-   Switch ( nMsg )
+   SWITCH nMsg
 
    CASE WM_TIMER
       WVG_SetDlgItemText( hDlg, ID_EDT_TIME, Time() )
@@ -269,7 +269,7 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       /* cText := */
       WVG_GetDlgItemText( hDlg, ID_MLE )
       EXIT
-   END
+   ENDSWITCH
 
    RETURN 0
 
@@ -326,7 +326,7 @@ FUNCTION DlgSlideShow()
 
 FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
 
-   THREAD STATIC nSlide := 1
+   THREAD STATIC t_nSlide := 1
 
    HB_SYMBOL_UNUSED( wParam )
    HB_SYMBOL_UNUSED( lParam )
@@ -334,22 +334,22 @@ FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
    SWITCH nMsg
 
    CASE WM_INITDIALOG
-      DrawSlide( hDlg, nSlide )
+      DrawSlide( hDlg, t_nSlide )
       EXIT
 
    CASE WM_PAINT
-      DrawSlide( hDlg, nSlide )
+      DrawSlide( hDlg, t_nSlide )
       EXIT
 
    CASE WM_TIMER
-      nSlide++
-      IF nSlide > Len( t_aSlides )
-         nSlide := 1
+      t_nSlide++
+      IF t_nSlide > Len( t_aSlides )
+         t_nSlide := 1
       ENDIF
-      DrawSlide( hDlg, nSlide )
+      DrawSlide( hDlg, t_nSlide )
 
       EXIT
-   END
+   ENDSWITCH
 
    RETURN 0
 

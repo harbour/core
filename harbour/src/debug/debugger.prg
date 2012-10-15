@@ -118,7 +118,7 @@
 #define DEBUGGER_MAXROW         22
 #define DEBUGGER_MAXCOL         77
 
-THREAD STATIC s_oDebugger
+THREAD STATIC t_oDebugger
 
 PROCEDURE __dbgAltDEntry()
 
@@ -142,22 +142,22 @@ PROCEDURE __dbgEntry( nMode, uParam1, uParam2, uParam3, uParam4, uParam5 )
 
    CASE nMode == HB_DBG_ACTIVATE
 
-      IF ( lStartup := ( s_oDebugger == NIL ) )
-         s_oDebugger := HBDebugger():New()
-         s_oDebugger:pInfo := uParam1
+      IF ( lStartup := ( t_oDebugger == NIL ) )
+         t_oDebugger := HBDebugger():New()
+         t_oDebugger:pInfo := uParam1
       ENDIF
-      s_oDebugger:nProcLevel := uParam2
-      s_oDebugger:aCallStack := uParam3
-      s_oDebugger:aModules := uParam4
-      s_oDebugger:aBreakPoints := uParam5
+      t_oDebugger:nProcLevel := uParam2
+      t_oDebugger:aCallStack := uParam3
+      t_oDebugger:aModules := uParam4
+      t_oDebugger:aBreakPoints := uParam5
       IF lStartup
-         IF s_oDebugger:lRunAtStartup
+         IF t_oDebugger:lRunAtStartup
             __dbgSetGo( uParam1 )
             RETURN
          ENDIF
       ENDIF
-      s_oDebugger:lGo := .F.
-      s_oDebugger:Activate()
+      t_oDebugger:lGo := .F.
+      t_oDebugger:Activate()
 
    ENDCASE
 
@@ -378,7 +378,7 @@ ENDCLASS
 
 METHOD New() CLASS HBDebugger
 
-   s_oDebugger := Self
+   t_oDebugger := Self
 
    /* default the search path for files to the current directory
       that way if the source is in the same directory it will still be found even if the application
@@ -1294,7 +1294,7 @@ METHOD HandleEvent() CLASS HBDebugger
 
       DO CASE
       CASE nKey == K_ALT_X
-         s_oDebugger:Quit()
+         t_oDebugger:Quit()
 
       CASE ::oPullDown:IsOpen()
          ::oPullDown:ProcessKey( nKey )
@@ -1356,7 +1356,7 @@ METHOD HandleEvent() CLASS HBDebugger
 /*
       CASE nKey == K_ESC
          ::RestoreAppStatus()
-         s_oDebugger := NIL
+         t_oDebugger := NIL
          s_lExit := .T.
          DispEnd()
          ::Exit()
@@ -2003,7 +2003,7 @@ METHOD Quit() CLASS HBDebugger
    ::Exit()
    ::Hide()
    __dbgSetQuit( ::pInfo )
-   s_oDebugger := NIL
+   t_oDebugger := NIL
 
    __QUIT()
 
@@ -3202,11 +3202,11 @@ STATIC PROCEDURE SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cCaption, bEdit )
 
 
 FUNCTION __DbgColors()
-   RETURN s_oDebugger:GetColors()
+   RETURN t_oDebugger:GetColors()
 
 
 FUNCTION __Dbg()
-   RETURN s_oDebugger
+   RETURN t_oDebugger
 
 
 STATIC PROCEDURE RefreshVarsS( oBrowse )

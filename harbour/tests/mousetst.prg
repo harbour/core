@@ -149,15 +149,15 @@ PROCEDURE TEST2( nR, nC )
    @ nR + 10, nC SAY  "|            mouse  |"
    @ nR + 11, nC SAY  "+-------------------+"
 
-   SET( _SET_EVENTMASK, INKEY_ALL )
+   Set( _SET_EVENTMASK, INKEY_ALL )
 
    IF ! Empty( cSkip )
       IF Upper( cSkip ) == "BREAK"
          SetCancel( .T. )
       ELSE
          SetCancel( .F. )
-      END IF
-   END IF
+      ENDIF
+   ENDIF
 
    MUPDATE()
 

@@ -109,13 +109,13 @@ ENDCLASS
 
 METHOD aMenus( xNewVal ) CLASS HBDbMenu
 
-   THREAD STATIC ts_aMenus
+   THREAD STATIC t_aMenus
 
    IF PCount() > 0
-      ts_aMenus := xNewVal
+      t_aMenus := xNewVal
    ENDIF
 
-   RETURN ts_aMenus
+   RETURN t_aMenus
 
 METHOD New() CLASS HBDbMenu
 
