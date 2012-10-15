@@ -76,9 +76,6 @@
 #define LI_COLCOUNT     mslist[ 42 ]
 #define LI_LEN          42
 
-MEMVAR str_barbox
-MEMVAR str_bar
-
 //+--------------------------------------------------------------------
 //+
 //+    PROCEDURE Main()
@@ -127,17 +124,11 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
    LOCAL fbar1, fbar2, vartmp, varbuf, razmer
    LOCAL GetList := {}
 
-   MEMVAR str_barbox
-   MEMVAR str_bar
+   LOCAL str_barbox := hb_UTF8ToStrBox( "░" )
+   LOCAL str_bar    := /* LOW-ASCII "▼▲" */ Chr( 31 ) + Chr( 30 ) + hb_UTF8ToStr( "■" )
 
    IF mslist == NIL
       mslist := InitList()
-   ENDIF
-   IF !( Type( "str_barbox" ) == "C" )
-      PRIVATE str_barbox := hb_UTF8ToStrBox( "░" )
-   ENDIF
-   IF !( Type( "str_bar" ) == "C" )
-      PRIVATE str_bar := /* LOW-ASCII "▼▲" */ Chr( 31 ) + Chr( 30 ) + hb_UTF8ToStr( "■" )
    ENDIF
    LI_Y1 := y1
    LI_X1 := x1
@@ -189,7 +180,7 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
    SetColor( LI_CLR )
    hb_DispBox( LI_Y1, LI_X1, LI_Y2, LI_X2, hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
    IF title != NIL
-      @ LI_Y1, ( LI_X2 - LI_X1 - 1 - Len( title ) ) / 2 + LI_X1 SAY " " + title + " "
+      hb_DispOutAt( LI_Y1, ( LI_X2 - LI_X1 - 1 - Len( title ) ) / 2 + LI_X1, " " + title + " " )
    ENDIF
    IF title != NIL .AND. LI_NAMES != NIL
       LI_Y1++
@@ -245,9 +236,9 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
       ENDCASE
       IF ! Empty( fbar1 )
          hb_DispBox( LI_Y1 + 2, LI_X2, LI_Y2 - 2, LI_X2, str_barbox )
-         @ LI_Y1 + 1, LI_X2 SAY SubStr( str_bar, 2, 1 )
-         @ LI_Y2 - 1, LI_X2 SAY SubStr( str_bar, 1, 1 )
-         @ LI_Y1 + 2 + Int( iif( LI_PRFLT, LI_TEKZP, &fbar1 ) * ( LI_Y2 - LI_Y1 - 4 ) / iif( LI_PRFLT, LI_KOLZ, &fbar2 ) ), LI_X2 SAY Right( str_bar, 1 )
+         hb_DispOutAt( LI_Y1 + 1, LI_X2, SubStr( str_bar, 2, 1 ) )
+         hb_DispOutAt( LI_Y2 - 1, LI_X2, SubStr( str_bar, 1, 1 ) )
+         hb_DispOutAt( LI_Y1 + 2 + Int( iif( LI_PRFLT, LI_TEKZP, &fbar1 ) * ( LI_Y2 - LI_Y1 - 4 ) / iif( LI_PRFLT, LI_KOLZ, &fbar2 ) ), LI_X2, Right( str_bar, 1 ) )
       ENDIF
       //
       IF LI_LVIEW
@@ -511,7 +502,7 @@ FUNCTION VIVNAMES( mslist )
       // DO MSFNEXT WITH mslist, fif
       DO WHILE i <= LI_NCOLUMNS .AND. fif <= Len( LI_NAMES )
          IF LI_NAMES[ fif ] != NIL
-            @ LI_Y1, x SAY LI_NAMES[ fif ]
+            hb_DispOutAt( LI_Y1, x, LI_NAMES[ fif ] )
          ENDIF
          x   := x + Max( Len( FLDSTR( mslist, fif ) ), Len( LI_NAMES[ fif ] ) ) + 1
          fif := iif( fif == LI_FREEZE, LI_NLEFT, fif + 1 )
@@ -577,10 +568,10 @@ STATIC PROCEDURE VIVSTR( mslist, nstroka, vybfld )
    IF LI_KOLZ > 0
       fif     := iif( LI_FREEZE > 0, 1, LI_NLEFT )
       IF LI_NLEFT != LI_LEFTVISIBLE .AND. vybfld == 0
-         @ nstroka, LI_X1 + 1 SAY "<"
+         hb_DispOutAt( nstroka, LI_X1 + 1, "<" )
       ENDIF
       IF Deleted()
-         @ nstroka, LI_X1 + 1 SAY "*"
+         hb_DispOutAt( nstroka, LI_X1 + 1, "*" )
       ENDIF
       FOR i := 1 TO LI_NCOLUMNS
          IF i == LI_COLPOS
@@ -590,7 +581,7 @@ STATIC PROCEDURE VIVSTR( mslist, nstroka, vybfld )
             // DO MSFNEXT WITH mslist, fif
             sviv := FLDSTR( mslist, fif )
             sviv := iif( Len( sviv ) < LI_X2 - 1 - x, sviv, SubStr( sviv, 1, LI_X2 - 1 - x ) )
-            @ nstroka, x SAY sviv
+            hb_DispOutAt( nstroka, x, sviv )
          ELSE
             sviv := FLDSTR( mslist, fif )
             sviv := iif( Len( sviv ) < LI_X2 - 1 - x, sviv, SubStr( sviv, 1, LI_X2 - 1 - x ) )
@@ -602,9 +593,9 @@ STATIC PROCEDURE VIVSTR( mslist, nstroka, vybfld )
       IF fif <= LI_COLCOUNT .AND. vybfld == 0
          IF LI_X2 - 1 - x > 0
             sviv := FLDSTR( mslist, fif )
-            @ nstroka, x SAY SubStr( sviv, 1, LI_X2 - 1 - x )
+            hb_DispOutAt( nstroka, x, SubStr( sviv, 1, LI_X2 - 1 - x ) )
          ENDIF
-         @ nstroka, LI_X2 - 1 SAY ">"
+         hb_DispOutAt( nstroka, LI_X2 - 1, ">" )
       ENDIF
    ENDIF
 

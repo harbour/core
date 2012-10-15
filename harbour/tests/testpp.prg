@@ -4,7 +4,7 @@
 
 // Tests for stringify match markers
 // Preproces  and compile only
-PROC MAIN()
+PROCEDURE Main()
 LOCAL b := ""
 MEMVAR a
 MEMVAR c

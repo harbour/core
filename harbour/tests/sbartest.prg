@@ -34,8 +34,9 @@ PROCEDURE Main()
 FUNCTION InitScrlBar()
 
    LOCAL tmpFileList, i
-   MEMVAR aFileList, filesScroll
-   PRIVATE aFileList := {}, filesScroll
+
+   LOCAL aFileList := {}
+   LOCAL filesScroll
 
    CLS
    SetBlink( .F. )
@@ -63,7 +64,7 @@ FUNCTION InitScrlBar()
 
    filesScroll:display()
 
-   i := AChoice( 06, 29, 14, 59, aFileList, , "updateFilesScroll" )
+   i := AChoice( 06, 29, 14, 59, aFileList, , {| modo | updateFilesScroll( modo, aFileList, filesScroll ) } )
 
    @ 23, 0 SAY iif( i < 1, "", aFileList[ i ] ) COLOR "N/W*"
    SET COLOR TO
@@ -73,12 +74,10 @@ FUNCTION InitScrlBar()
 
 // function used to update scrollbar
 
-STATIC FUNCTION updateFilesScroll( modo )
+STATIC FUNCTION updateFilesScroll( modo, aFileList, filesScroll )
 
    LOCAL newPos, valRet := AC_CONT   // Default to continue
    LOCAL ultTecla := LastKey()
-
-   MEMVAR filesScroll
 
    newPos := filesScroll:current
 

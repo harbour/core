@@ -21,7 +21,7 @@
 #include "inkey.ch"
 #include "achoice.ch"
 
-MEMVAR lHiLiTest
+MEMVAR p_lHiLiTest
 
 PROCEDURE Main()
 
@@ -41,7 +41,7 @@ PROCEDURE Main()
 
    // set to True for items (de)highlighting
    // algoritm in clipper
-   PUBLIC lHiLiTest := .F.
+   PUBLIC p_lHiLiTest := .F.
 
 
    SetColor( "W+/N, BG+/B, , , W/N" )
@@ -88,7 +88,7 @@ FUNCTION cUF( nMode, nCurElement, nRowPos )
    HB_SYMBOL_UNUSED( nCurElement )
    HB_SYMBOL_UNUSED( nRowPos )
 
-   IF lHiLiTest
+   IF p_lHiLiTest
       DispBox( 0, 0, MaxRow(), MaxCol(), Replicate( "#", 9 ), "GR+/G" )
    ENDIF
 

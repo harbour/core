@@ -5,13 +5,13 @@
 // This files demonstrates the use of BEGIN/RECOVER/END SEQUENCE
 // and BREAK statement
 
-MEMVAR oMemvar
-MEMVAR p_mPrivate
+MEMVAR m_oMemvar
+MEMVAR m_cPrivate
 
 PROCEDURE Main()
 
    LOCAL oLocal
-   PRIVATE p_mPrivate := "private value in MAIN"
+   PRIVATE m_cPrivate := "private value in MAIN"
 
    BEGIN SEQUENCE
       ? " Inside SEQUENCE 1"
@@ -59,8 +59,8 @@ PROCEDURE Main()
    BEGIN SEQUENCE
       ? " Inside SEQUENCE 6"
       Break1( )
-   RECOVER USING oMemvar
-      ? "  Recovering in 6 using... ", oMemvar
+   RECOVER USING m_oMemvar
+      ? "  Recovering in 6 using... ", m_oMemvar
    END SEQUENCE
    ? "After SEQUENCE 6"
 
@@ -68,12 +68,12 @@ PROCEDURE Main()
    BEGIN SEQUENCE
       ? " Inside SEQUENCE 7"
       Break2( )
-   RECOVER USING oMemvar
-      ? "  Recovering in 7 using... ", oMemvar
+   RECOVER USING m_oMemvar
+      ? "  Recovering in 7 using... ", m_oMemvar
    END SEQUENCE
    ? "After SEQUENCE 7"
 
-   ? M->p_mPrivate
+   ? M->m_cPrivate
    Break( "exit from MAIN" )
    ? "This text will be not printed"
 
@@ -81,17 +81,17 @@ PROCEDURE Main()
 
 PROCEDURE Break1()
 
-   PRIVATE p_mPrivate := "VALUE from Break1"
+   PRIVATE m_cPrivate := "VALUE from Break1"
 
-   BREAK M->p_mPrivate
+   BREAK M->m_cPrivate
 
 PROCEDURE Break2()
 
    BEGIN SEQUENCE
       ? " Inside SEQUENCE 8"
       Break3( )
-   RECOVER USING oMemvar
-      ? "  Recovering in 8 using...", Eval( oMemvar, " eval in 8" )
+   RECOVER USING m_oMemvar
+      ? "  Recovering in 8 using...", Eval( m_oMemvar, " eval in 8" )
       Break( "BREAK from recovery code" )
    END SEQUENCE
    ? "After SEQUENCE 8"
@@ -115,9 +115,9 @@ PROCEDURE Break3()
 
       Break4( " and parameter" )
 
-   RECOVER USING oMemvar
-      ? "  Recovering in 9 using...", Eval( oMemvar, " eval in 9" )
-      Break( oMemvar )
+   RECOVER USING m_oMemvar
+      ? "  Recovering in 9 using...", Eval( m_oMemvar, " eval in 9" )
+      Break( m_oMemvar )
    END SEQUENCE
    ? "After SEQUENCE 9"
 

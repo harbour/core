@@ -6,18 +6,16 @@ PROCEDURE Main()
 
    LOCAL i, bBlock[ 3 ]
 
-   MEMVAR  Var1, Var2, Var3, Macro
-   PRIVATE Var1, Var2, Var3, Macro
+   MEMVAR  m_Var1, m_Var2, m_Var3, m_Macro
+   PRIVATE m_Var1, m_Var2, m_Var3, m_Macro
 
-   M->Var1 := "Var1"
-   M->Var2 := "Var2"
-   M->Var3 := "Var3"
-
-   CLS
+   m_Var1 := "m_Var1"
+   m_Var2 := "m_Var2"
+   m_Var3 := "m_Var3"
 
    FOR i := 1 TO 3
-      M->Macro := "Var" + Str( i, 1 )
-      bBlock[ i ] := {|| &Macro }
+      m_Macro := "m_Var" + Str( i, 1 )
+      bBlock[ i ] := {|| &m_Macro }
    NEXT
 
    ? "Early (Simple):"
@@ -27,8 +25,8 @@ PROCEDURE Main()
    NEXT
 
    FOR i := 1 TO 3
-      M->Macro := "Var" + Str( i, 1 )
-      bBlock[ i ] := {|| &Macro + "!" }
+      m_Macro := "m_Var" + Str( i, 1 )
+      bBlock[ i ] := {|| &m_Macro + "!" }
    NEXT
 
    ?
@@ -39,8 +37,8 @@ PROCEDURE Main()
    NEXT
 
    FOR i := 1 TO 3
-      M->Macro := "Var" + Str( i, 1 )
-      bBlock[ i ] := {|| &( Macro ) }
+      m_Macro := "m_Var" + Str( i, 1 )
+      bBlock[ i ] := {|| &( m_Macro ) }
    NEXT
 
    ?

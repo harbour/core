@@ -4,50 +4,50 @@
 
 /* TEST FOR USING VARIABLE NUMBER OF PARAMETERS */
 
-MEMVAR iLoop
+MEMVAR m_iLoop
 
 PROCEDURE Main()
 
    LOCAL l1 := 11, l2 := 22, l3 := 33, l4 := 44, l5 := 55, l6 := 66
-   PRIVATE iLoop
+   PRIVATE m_iLoop
 
-   ? "passed 0:  "; TEST_0_0( )
+   ? "passed 0:  "; TEST_0_0()
    ? "passed 1:  "; TEST_0_0( 1 )
    ? "passed 2:  "; TEST_0_0( 1, 2 )
    ? "passed 3:  "; TEST_0_0( 1, 2, 3 )
 
    ? "---------------------------------------"
-   ? "passed 0:  "; TEST_0_0v( )
+   ? "passed 0:  "; TEST_0_0v()
    ? "passed 1:  "; TEST_0_0v( 1 )
    ? "passed 2:  "; TEST_0_0v( 1, 2 )
    ? "passed 3:  "; TEST_0_0v( 1, 2, 3 )
 
    ? "---------------------------------------"
-   ? "passed 0:  "; TEST_1_0( )
+   ? "passed 0:  "; TEST_1_0()
    ? "passed 1:  "; TEST_1_0( 1 )
    ? "passed 2:  "; TEST_1_0( 1, 2 )
    ? "passed 3:  "; TEST_1_0( 1, 2, 3 )
 
    ? "---------------------------------------"
-   ? "passed 0:  "; TEST_1_0v( )
+   ? "passed 0:  "; TEST_1_0v()
    ? "passed 1:  "; TEST_1_0v( 1 )
    ? "passed 2:  "; TEST_1_0v( 1, 2 )
    ? "passed 3:  "; TEST_1_0v( 1, 2, 3 )
 
    ? "---------------------------------------"
-   ? "passed 0:  "; TEST_1_1( )
+   ? "passed 0:  "; TEST_1_1()
    ? "passed 1:  "; TEST_1_1( 1 )
    ? "passed 2:  "; TEST_1_1( 1, 2 )
    ? "passed 3:  "; TEST_1_1( 1, 2, 3 )
 
    ? "---------------------------------------"
-   ? "passed 0:  "; TEST_1_1v( )
+   ? "passed 0:  "; TEST_1_1v()
    ? "passed 1:  "; TEST_1_1v( 1 )
    ? "passed 2:  "; TEST_1_1v( 1, 2 )
    ? "passed 3:  "; TEST_1_1v( 1, 2, 3 )
 
    ? "---------------------------------------"
-   ? "passed 0:  "; TEST_1_3( )
+   ? "passed 0:  "; TEST_1_3()
    ? "passed 1:  "; TEST_1_3( 1 )
    ? "passed 2:  "; TEST_1_3( 1, 2 )
    ? "passed 3:  "; TEST_1_3( 1, 2, 3 )
@@ -56,7 +56,7 @@ PROCEDURE Main()
    ? "passed 6:  "; TEST_1_3( 1, 2, 3, 4, 5, 6 )
 
    ? "---------------------------------------"
-   ? "passed 0:  "; TEST_1_3v( )
+   ? "passed 0:  "; TEST_1_3v()
    ? "passed 1:  "; TEST_1_3v( 1 )
    ? "passed 2:  "; TEST_1_3v( 1, 2 )
    ? "passed 3:  "; TEST_1_3v( 1, 2, 3 )
@@ -65,7 +65,7 @@ PROCEDURE Main()
    ? "passed 6:  "; TEST_1_3v( 1, 2, 3, 4, 5, 6 )
 
    ? "---------------------------------------"
-   ? "passed 0:  "; TEST_3_0( )
+   ? "passed 0:  "; TEST_3_0()
    ? "passed 1:  "; TEST_3_0( 1 )
    ? "passed 2:  "; TEST_3_0( 1, 2 )
    ? "passed 3:  "; TEST_3_0( 1, 2, 3 )
@@ -74,7 +74,7 @@ PROCEDURE Main()
    ? "passed 6:  "; TEST_3_0( 1, 2, 3, 4, 5, 6 )
 
    ? "---------------------------------------"
-   ? "passed 0:  "; TEST_3_0v( )
+   ? "passed 0:  "; TEST_3_0v()
    ? "passed 1:  "; TEST_3_0v( 1 )
    ? "passed 2:  "; TEST_3_0v( 1, 2 )
    ? "passed 3:  "; TEST_3_0v( 1, 2, 3 )
@@ -83,7 +83,7 @@ PROCEDURE Main()
    ? "passed 6:  "; TEST_3_0v( 1, 2, 3, 4, 5, 6 )
 
    ? "---------------------------------------"
-   ? "passed 0:  "; TEST_3_3( )
+   ? "passed 0:  "; TEST_3_3()
    ? "passed 1:  "; TEST_3_3( 1 )
    ? "passed 2:  "; TEST_3_3( 1, 2 )
    ? "passed 3:  "; TEST_3_3( 1, 2, 3 )
@@ -92,7 +92,7 @@ PROCEDURE Main()
    ? "passed 6:  "; TEST_3_3( 1, 2, 3, 4, 5, 6 )
 
    ? "---------------------------------------"
-   ? "passed 0:  "; TEST_3_3v( )
+   ? "passed 0:  "; TEST_3_3v()
    ? "passed 1:  "; TEST_3_3v( 1 )
    ? "passed 2:  "; TEST_3_3v( 1, 2 )
    ? "passed 3:  "; TEST_3_3v( 1, 2, 3 )
@@ -129,19 +129,19 @@ PROCEDURE Main()
 PROCEDURE TEST_0_0v( ... )
 
    ?? ProcName( 0 ), " received: ", PCount()
-   FOR m->iLoop := 1 TO PCount()
-      ? m->iLoop, "=", hb_PValue( m->iLoop )
+   FOR m_iLoop := 1 TO PCount()
+      ? m_iLoop, "=", hb_PValue( m_iLoop )
    NEXT
 
    Inkey( 0 )
 
    RETURN
 
-PROCEDURE TEST_0_0( )
+PROCEDURE TEST_0_0()
 
    ?? ProcName( 0 ), " received: ", PCount()
-   FOR m->iLoop := 1 TO PCount()
-      ? m->iLoop, "=", hb_PValue( m->iLoop )
+   FOR m_iLoop := 1 TO PCount()
+      ? m_iLoop, "=", hb_PValue( m_iLoop )
    NEXT
 
    Inkey( 0 )
@@ -162,7 +162,7 @@ PROCEDURE TEST_1_0v( ... )
 
    RETURN
 
-PROCEDURE TEST_1_0( )
+PROCEDURE TEST_1_0()
 
    LOCAL i := "i"
 
@@ -259,8 +259,8 @@ PROCEDURE TEST_3_3v( a, b, c, ... )
    ? "a=", a
    ? "b=", b
    ? "c=", c
-   FOR m->iLoop := 1 TO PCount()
-      ? m->iLoop, "=", hb_PValue( m->iLoop )
+   FOR m_iLoop := 1 TO PCount()
+      ? m_iLoop, "=", hb_PValue( m_iLoop )
    NEXT
 
    test_ref( @a, @b, @c, @x, @y, @z )
@@ -280,8 +280,8 @@ PROCEDURE TEST_3_3( a, b, c )
    ? "a=", a
    ? "b=", b
    ? "c=", c
-   FOR m->iLoop := 1 TO PCount()
-      ? m->iLoop, "=", hb_PValue( m->iLoop )
+   FOR m_iLoop := 1 TO PCount()
+      ? m_iLoop, "=", hb_PValue( m_iLoop )
    NEXT
 
    test_ref( @a, @b, @c, @x, @y, @z )
@@ -290,7 +290,7 @@ PROCEDURE TEST_3_3( a, b, c )
 
    RETURN
 
-PROCEDURE TEST_3_0( )
+PROCEDURE TEST_3_0()
 
    LOCAL x := "x", y := "y", z := "z"
 
@@ -298,8 +298,8 @@ PROCEDURE TEST_3_0( )
    ? "x=", x
    ? "y=", y
    ? "z=", z
-   FOR m->iLoop := 1 TO PCount()
-      ? m->iLoop, "=", hb_PValue( m->iLoop )
+   FOR m_iLoop := 1 TO PCount()
+      ? m_iLoop, "=", hb_PValue( m_iLoop )
    NEXT
 
    Inkey( 0 )
@@ -314,8 +314,8 @@ PROCEDURE TEST_3_0v( ... )
    ? "x=", x
    ? "y=", y
    ? "z=", z
-   FOR m->iLoop := 1 TO PCount()
-      ? m->iLoop, "=", hb_PValue( m->iLoop )
+   FOR m_iLoop := 1 TO PCount()
+      ? m_iLoop, "=", hb_PValue( m_iLoop )
    NEXT
 
    Inkey( 0 )

@@ -10,13 +10,15 @@
 PROCEDURE Main()
 
    LOCAL obj := ErrorNew()
-   MEMVAR send1, send2
 
-   PRIVATE send1 := "_description"
-   PRIVATE send2 := "_tries"
+   MEMVAR m_send1
+   MEMVAR m_send2
+
+   PRIVATE m_send1 := "_description"
+   PRIVATE m_send2 := "_tries"
 
    obj:tries := 1
-   obj:&send1 := "test"
+   obj:&m_send1 := "test"
 
    obj:tries += 1
    obj:tries++
@@ -34,19 +36,19 @@ PROCEDURE Main()
 
       To access the object variable using macro the '_' should be omitted
 */
-      :&send2 += 1
-      :&send2++
-      ++:&send2
-      ++:&( send2 )
+      :&m_send2 += 1
+      :&m_send2++
+      ++:&m_send2
+      ++:&( m_send2 )
 
-      :&( send2 ) := :&( SubStr( send2, 2 ) ) + 1
+      :&( m_send2 ) := :&( SubStr( m_send2, 2 ) ) + 1
 
-      :&send1 += " description"
-      :&( send1 ) += " of "
+      :&m_send1 += " description"
+      :&( m_send1 ) += " of "
    ENDWITH
 
-   obj:&( "_" + SubStr( send1, 2 ) ) += "Error object"
-   ? send1, "=", obj:&( SubStr( send1, 2 ) )
-   ? send2, "=", obj:tries
+   obj:&( "_" + SubStr( m_send1, 2 ) ) += "Error object"
+   ? m_send1, "=", obj:&( SubStr( m_send1, 2 ) )
+   ? m_send2, "=", obj:tries
 
    RETURN

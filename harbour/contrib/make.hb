@@ -39,7 +39,7 @@
 #define _ACT_INC_REBUILD        4
 #define _ACT_INC_REBUILD_INST   5
 
-STATIC hActions := {;
+STATIC sc_hActions := {;
    _ACT_INC_CLEAN        => "clean" ,;
    _ACT_INC              => "build" ,;
    _ACT_INC_INST         => "build and install" ,;
@@ -180,7 +180,7 @@ PROCEDURE Standalone( aParams, hProjectList )
       IF Empty( hProjectReqList )
          lCustom := .T.
       ELSE
-         OutStd( hb_StrFormat( "! Package %1$s... %2$d project(s)", hActions[ nAction ], Len( hProjectReqList ) ) + hb_eol() )
+         OutStd( hb_StrFormat( "! Package %1$s... %2$d project(s)", sc_hActions[ nAction ], Len( hProjectReqList ) ) + hb_eol() )
       ENDIF
    ENDIF
 
@@ -341,11 +341,11 @@ PROCEDURE GNUMake( aParams, hProjectList )
 
    /* Start building */
 
-   OutStd( hb_StrFormat( "! Started package %1$s...", hActions[ nAction ] ) + hb_eol() )
+   OutStd( hb_StrFormat( "! Started package %1$s...", sc_hActions[ nAction ] ) + hb_eol() )
 
    build_projects( nAction, hProjectList, hProjectReqList, "", .F. )
 
-   OutStd( hb_StrFormat( "! Finished package %1$s...", hActions[ nAction ] ) + hb_eol() )
+   OutStd( hb_StrFormat( "! Finished package %1$s...", sc_hActions[ nAction ] ) + hb_eol() )
 
    RETURN
 

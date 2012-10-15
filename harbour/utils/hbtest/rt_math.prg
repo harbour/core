@@ -59,7 +59,7 @@ PROCEDURE Main_MATH()
 
    LOCAL l, s, o
    MEMVAR s0, s1, v2
-   PRIVATE s0:="V2", s1:="V", v2
+   PRIVATE s0 := "V2", s1 := "V", v2
 
    /* LOG() */
 

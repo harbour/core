@@ -10,8 +10,8 @@
 PROCEDURE Main()
 
    LOCAL a := 1
-   MEMVAR b
-   PRIVATE b := "b"
+   MEMVAR m_b
+   PRIVATE m_b := "m_b"
 
 #ifndef __XHARBOUR__
 
@@ -69,7 +69,7 @@ PROCEDURE Main()
       ? a + a
       EXIT
 
-   CASE "a&b"
+   CASE "a&m_b"
    CASE 1 + 1
    CASE { 11111111, 22222222222 }[ 1 ]
    CASE 1 + 1 + 1
