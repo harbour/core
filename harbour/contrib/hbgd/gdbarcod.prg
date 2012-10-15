@@ -62,7 +62,7 @@
 
 CREATE CLASS TCode FROM TBarCode
 
-   DATA nType
+   VAR nType
 
    // EAN-13 ISBN
 

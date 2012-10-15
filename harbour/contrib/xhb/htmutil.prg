@@ -300,7 +300,7 @@ PROCEDURE htmlBrowseSql( oHtm, cAction, lUseLinks, cTarget, oServer, oQuery )
 
 #endif
 
-CLASS JWindow
+CREATE CLASS JWindow
 
    VAR nH
    VAR Name INIT ""

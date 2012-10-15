@@ -104,40 +104,40 @@ CLASS uhttpd_Session
 
  HIDDEN:
 
-   DATA oCookie
-   DATA cSID
-   DATA cSavePath               INIT "/tmp"
-   DATA cName                   // INIT "SESSIONID"
-   DATA lAuto_Start             INIT .F.       // .F. = no autostart
-   DATA nGc_Probability         INIT 33        // Every 1/3 of checks i'll lunch Session GC
-   DATA nGc_MaxLifeTime         INIT 1440      // seconds - Number of seconds after gc can delete a session
-   // DATA cSerialize_Handler      INIT "HBHTMLLIB"
-   DATA nCookie_LifeTime        INIT 3600 //0         // Number of seconds to keep cookie, 0 = until browser is closed
-   DATA cCookie_Path            INIT "/"
-   DATA cCookie_Domain
-   DATA lCookie_Secure          INIT .F.
-   DATA lUse_Cookies            INIT .T.       // .T. = Use cookies to store session id on client side
-   DATA lUse_Only_Cookies       INIT .F.
-   DATA cReferrer_Check                        // If is set check if referrer is equal to, if it isn't block
-   // DATA cEntropy_File
-   // DATA nEntropy_Lenght
-   DATA cCache_Limiter          INIT "nocache" // Possible values are: none, nocache, private, private_no_expire, public
-   DATA nCache_Expire           INIT 180       // in minutes, not checked if cCache_Limiter == none or nocache
-   DATA lUse_Trans_SID          INIT .F.       // .F. = no SID appended to URL
+   VAR oCookie
+   VAR cSID
+   VAR cSavePath               INIT "/tmp"
+   VAR cName                   // INIT "SESSIONID"
+   VAR lAuto_Start             INIT .F.       // .F. = no autostart
+   VAR nGc_Probability         INIT 33        // Every 1/3 of checks i'll lunch Session GC
+   VAR nGc_MaxLifeTime         INIT 1440      // seconds - Number of seconds after gc can delete a session
+   // VAR cSerialize_Handler      INIT "HBHTMLLIB"
+   VAR nCookie_LifeTime        INIT 3600 //0         // Number of seconds to keep cookie, 0 = until browser is closed
+   VAR cCookie_Path            INIT "/"
+   VAR cCookie_Domain
+   VAR lCookie_Secure          INIT .F.
+   VAR lUse_Cookies            INIT .T.       // .T. = Use cookies to store session id on client side
+   VAR lUse_Only_Cookies       INIT .F.
+   VAR cReferrer_Check                        // If is set check if referrer is equal to, if it isn't block
+   // VAR cEntropy_File
+   // VAR nEntropy_Lenght
+   VAR cCache_Limiter          INIT "nocache" // Possible values are: none, nocache, private, private_no_expire, public
+   VAR nCache_Expire           INIT 180       // in minutes, not checked if cCache_Limiter == none or nocache
+   VAR lUse_Trans_SID          INIT .F.       // .F. = no SID appended to URL
 
    // Session Storage code blocks
-   DATA bOpen                   //INIT {| cPath, cName | ::SessionOpen( cPath, cName ) }
-   DATA bClose                  //INIT {|| ::SessionClose() }
-   DATA bRead                   //INIT {| cID | ::SessionRead( cID ) }
-   DATA bWrite                  //INIT {| cID, cData | ::SessionWrite( cID, cData ) }
-   DATA bDestroy                //INIT {| cID | ::SessionDestroy( cID ) }
-   DATA bGC                     //INIT {| nMaxLifeTime | ::SessionGC( nMaxLifeTime ) }
-   DATA nFileRetry              INIT 10        // How many time try to open / write / delete file in case of error
-   DATA nFileWait               INIT 500       // How many milliseconds have to wait before retry
+   VAR bOpen                   //INIT {| cPath, cName | ::SessionOpen( cPath, cName ) }
+   VAR bClose                  //INIT {|| ::SessionClose() }
+   VAR bRead                   //INIT {| cID | ::SessionRead( cID ) }
+   VAR bWrite                  //INIT {| cID, cData | ::SessionWrite( cID, cData ) }
+   VAR bDestroy                //INIT {| cID | ::SessionDestroy( cID ) }
+   VAR bGC                     //INIT {| nMaxLifeTime | ::SessionGC( nMaxLifeTime ) }
+   VAR nFileRetry              INIT 10        // How many time try to open / write / delete file in case of error
+   VAR nFileWait               INIT 500       // How many milliseconds have to wait before retry
 
-   DATA nActiveSessions         INIT 0
+   VAR nActiveSessions         INIT 0
 
-   DATA lSessionActive          INIT .F.
+   VAR lSessionActive          INIT .F.
 
    METHOD GenerateSID()
    METHOD CheckSID()

@@ -28,7 +28,7 @@
  *  $SUBCATEGORY$
  *      Objects
  *  $ONELINER$
- *      Determine whether a symbol exist in object as DATA
+ *      Determine whether a symbol exist in object as VAR
  *  $SYNTAX$
  *      __objHasData( <oObject>, <cSymbol> ) --> lExist
  *  $ARGUMENTS$
@@ -36,7 +36,7 @@
  *
  *      <cSymbol> is the name of the symbol to look for.
  *  $RETURNS$
- *      __objHasData() return .T. if the given <cSymbol> exist as DATA
+ *      __objHasData() return .T. if the given <cSymbol> exist as VAR
  *      (instance variable) in object <oObject), .F. if it does not exist.
  *  $DESCRIPTION$
  *      __objHasData() is a low level class support function that let you
@@ -82,7 +82,7 @@
  *      find out if a symbol is a class function in a given object.
  *  $EXAMPLES$
  *      oB := TBrowseNew( 0, 0, 24, 79 )
- *      ? __objHasMethod( oB, "nLeft" )      // .F. since this is a DATA
+ *      ? __objHasMethod( oB, "nLeft" )      // .F. since this is a VAR
  *      ? __objHasMethod( oB, "FixBugs" )    // hopefully this should be .F.
  *      ? __objHasMethod( oB, "Left" )       // this should return .T.
  *  $STATUS$
@@ -106,7 +106,7 @@
  *  $SUBCATEGORY$
  *      Objects
  *  $ONELINER$
- *      Return names of all DATA or METHOD for a given object
+ *      Return names of all VAR or METHOD for a given object
  *  $SYNTAX$
  *      __objGetMsgList( <oObject>, [<lData>], [nClassType] ) --> aNames
  *  $ARGUMENTS$
@@ -114,14 +114,14 @@
  *
  *      <lData> is an optional logical value that specifies the information
  *      to return. A value of .T. instruct the function to return list of
- *      all DATA names, .F. return list of all METHOD names. Default value
+ *      all VAR names, .F. return list of all METHOD names. Default value
  *      is .T.
  *
  *      <nClassType> is on optional numeric code for selecting which class
  *      type to return. Default value is HB_MSGLISTALL, returning the whole
  *      list.
  *  $RETURNS$
- *      __objGetMsgList() return an array of character stings with all DATA
+ *      __objGetMsgList() return an array of character stings with all VAR
  *      names or all METHOD names for a given object. __objGetMsgList()
  *      would return an empty array {} if the given object does not contain
  *      the requested information.
@@ -130,21 +130,21 @@
  *      find all instance variable or method names for a given object.
  *
  *      If specified, the following table shows the values for <nClassType>
- *      that allow you to distinguish between DATA and CLASSDATA:
+ *      that allow you to distinguish between VAR and CLASS VAR:
  *
  *     <table>
  *      hboo.ch           Value   Meaning
  *
  *      HB_MSGLISTALL     0       All types
- *      HB_MSGLISTCLASS   1       CLASSDATA only
- *      HB_MSGLISTPURE    2       DATA only
+ *      HB_MSGLISTCLASS   1       CLASS VAR only
+ *      HB_MSGLISTPURE    2       VAR only
  *     </table>
  *
- *      DATA are instance variable usable within each object from a class,
- *      where each object has its own DATAs.
+ *      VAR are instance variable usable within each object from a class,
+ *      where each object has its own VARs.
  *
- *      CLASSDATA are shared by all objects from a Class, so the changed
- *      value within Object1 will be reflected when accessing the CLASSDATA
+ *      CLASS VAR are shared by all objects from a Class, so the changed
+ *      value within Object1 will be reflected when accessing the CLASS VAR
  *      from Object2.
  *  $EXAMPLES$
  *      // show information about TBrowse class
@@ -153,10 +153,10 @@
  *      aClassData := __objGetMsgList( oB, .T., HB_MSGLISTCLASS )
  *      aMethod    := __objGetMsgList( oB, .F. )
  *      FOR i := 1 TO Len( aData )
- *          ? "DATA name:", aData[ i ]
+ *          ? "VAR name:", aData[ i ]
  *      NEXT
  *      FOR i := 1 TO Len( aClassData )
- *          ? "CLASSDATA name:", aClassData[ i ]
+ *          ? "CLASS VAR name:", aClassData[ i ]
  *      NEXT
  *      FOR i := 1 TO Len( aMethod )
  *          ? "METHOD name:", aMethod[ i ]
@@ -224,22 +224,22 @@
  *  $SUBCATEGORY$
  *      Objects
  *  $ONELINER$
- *      Return an array of DATA names and values for a given object
+ *      Return an array of VAR names and values for a given object
  *  $SYNTAX$
  *      __objGetValueList( <oObject>, [<aExcept>] ) --> aData
  *  $ARGUMENTS$
  *      <oObject> is an object to scan.
  *
- *      <aExcept> is an optional array with DATA names you want to exclude
+ *      <aExcept> is an optional array with VAR names you want to exclude
  *      from the scan.
  *  $RETURNS$
- *      __objGetValueList() return a 2D array that contain pairs of a DATA
- *      symbol name and the value of DATA. __objGetValueList() would return
+ *      __objGetValueList() return a 2D array that contain pairs of a VAR
+ *      symbol name and the value of VAR. __objGetValueList() would return
  *      an empty array {} if the given object does not contain the requested
  *      information.
  *  $DESCRIPTION$
  *      __objGetValueList() is a low level class support function that
- *      return an array with DATA names and value, each array element is a
+ *      return an array with VAR names and value, each array element is a
  *      pair of: aData[ i, HB_OO_DATA_SYMBOL ] contain the symbol name
  *               aData[ i, HB_OO_DATA_VALUE  ] contain the value of DATA
  *  $EXAMPLES$
@@ -247,8 +247,8 @@
  *      oB := TBrowseNew( 0, 0, 24, 79 )
  *      aData := __objGetValueList( oB )
  *      FOR i := 1 TO len( aData )
- *          ? "DATA name:", aData[ i, HB_OO_DATA_SYMBOL ], ;
- *            "    value=", aData[ i, HB_OO_DATA_VALUE  ]
+ *          ? "VAR name:", aData[ i, HB_OO_DATA_SYMBOL ], ;
+ *            "   value=", aData[ i, HB_OO_DATA_VALUE  ]
  *      NEXT
  *  $STATUS$
  *      R
@@ -272,7 +272,7 @@
  *  $SUBCATEGORY$
  *      Objects
  *  $ONELINER$
- *      Set object with an array of DATA names and values
+ *      Set object with an array of VAR names and values
  *  $SYNTAX$
  *      __ObjSetValueList( <oObject>, <aData> ) --> oObject
  *  $ARGUMENTS$
@@ -429,21 +429,21 @@
  *  $SUBCATEGORY$
  *      Objects
  *  $ONELINER$
- *      Add a DATA to an already existing class
+ *      Add a VAR to an already existing class
  *  $SYNTAX$
  *      __objAddData( <oObject>, <cDataName> ) --> oObject
  *  $ARGUMENTS$
  *      <oObject> is the object to work on.
  *
- *      <cDataName> is the symbol name of the new DATA to add.
+ *      <cDataName> is the symbol name of the new VAR to add.
  *  $RETURNS$
  *      __objAddData() return a reference to <oObject>.
  *  $DESCRIPTION$
  *      __objAddData() is a low level class support function that add a new
- *      DATA to an object. <oObject> is unchanged if a symbol with the name
+ *      VAR to an object. <oObject> is unchanged if a symbol with the name
  *      <cDataName> already exist in <oObject>.
  *  $EXAMPLES$
- *      // create a new THappy class and add a lHappy DATA
+ *      // create a new THappy class and add a lHappy VAR
  *      oHappy  := HBClass():New( "THappy" )
  *      __objAddData( oHappy, "lHappy" )
  *      oHappy:lHappy := .T.
@@ -704,26 +704,26 @@
  *  $SUBCATEGORY$
  *      Objects
  *  $ONELINER$
- *      Delete a DATA (instance variable) from class
+ *      Delete a VAR (instance variable) from class
  *  $SYNTAX$
  *      __objDelMethod( <oObject>, <cDataName> ) --> oObject
  *  $ARGUMENTS$
  *      <oObject> is the object to work on.
  *
- *      <cDataName> is the symbol name of DATA to be deleted (removed) from
+ *      <cDataName> is the symbol name of VAR to be deleted (removed) from
  *      the object.
  *  $RETURNS$
  *      __objDelData() return a reference to <oObject>.
  *  $DESCRIPTION$
  *      __objDelData() is a low level class support function that delete
- *      (remove) a DATA from an object. <oObject> is unchanged if a symbol
+ *      (remove) a VAR from an object. <oObject> is unchanged if a symbol
  *      with the name <cDataName> does not exist in <oObject>.
  *  $EXAMPLES$
- *      // create a new THappy class and add a lHappy DATA
+ *      // create a new THappy class and add a lHappy VAR
  *      oHappy  := HBClass():New( "THappy" )
  *      __objAddData( oHappy, "lHappy" )
  *      ? __objHasData( oHappy, "lHappy" )    // .T.
- *      // remove lHappy DATA
+ *      // remove lHappy VAR
  *      __objDelData( oHappy, "lHappy" )
  *      ? __objHasData( oHappy, "lHappy" )    // .F.
  *  $STATUS$

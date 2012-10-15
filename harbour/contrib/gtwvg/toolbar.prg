@@ -76,7 +76,7 @@
 
 //
 
-CLASS WvgToolBar  INHERIT  WvgWindow /*WvgActiveXControl*/
+CREATE CLASS WvgToolBar  INHERIT  WvgWindow /*WvgActiveXControl*/
 
    VAR      appearance
    VAR      style                                 INIT WVGTOOLBAR_STYLE_STANDARD
@@ -470,7 +470,7 @@ METHOD WvgToolBar:buttonDropDown( xParam )
 //
 //
 
-CLASS WvgToolBarButton
+CREATE CLASS WvgToolBarButton
 
    VAR      enabled                               INIT .T.
    VAR      INDEX                                 INIT 0

@@ -76,7 +76,7 @@
 
 //
 
-CLASS WvgSysWindow INHERIT WvgPartHandler
+CREATE CLASS WvgSysWindow INHERIT WvgPartHandler
 
    METHOD   new( oParent, oOwner, aPos )
    METHOD   create( oParent, oOwner, aPos )
@@ -92,22 +92,22 @@ CLASS WvgSysWindow INHERIT WvgPartHandler
    METHOD   currentPos()
    METHOD   currentSize()
 
-   DATA     aPos                                  INIT    { 0, 0 }
+   VAR      aPos                                  INIT    { 0, 0 }
 
-   DATA     hWnd                                  PROTECTED
-   DATA     nOldProc                              PROTECTED
-   DATA     nWndProc                              PROTECTED
+   VAR      hWnd                                  PROTECTED
+   VAR      nOldProc                              PROTECTED
+   VAR      nWndProc                              PROTECTED
 
 
-   DATA     sl_helpRequest
+   VAR      sl_helpRequest
    ACCESS   helpRequest                           INLINE  ::sl_helpRequest
    ASSIGN   helpRequest( bBlock )                 INLINE  ::sl_helpRequest := bBlock
 
-   DATA     sl_move
+   VAR      sl_move
    ACCESS   move                                  INLINE  ::sl_move
    ASSIGN   move( bBlock )                        INLINE  ::sl_move := bBlock
 
-   DATA     sl_quit
+   VAR      sl_quit
    ACCESS   QUIT                                  INLINE  ::sl_quit
    ASSIGN   quit( bBlock )                        INLINE  ::sl_quit := bBlock
 
@@ -219,73 +219,73 @@ METHOD WvgSysWindow:currentSize()
 //
 //
 
-CLASS WvgFontDialog INHERIT WvgSysWindow
+CREATE CLASS WvgFontDialog INHERIT WvgSysWindow
 
    /* Appearance */
-   DATA     title                                 INIT   ""
-   DATA     buttonApply                           INIT   .F.
-   DATA     buttonCancel                          INIT   .T.
-   DATA     buttonHelp                            INIT   .F.
-   DATA     buttonOk                              INIT   .T.
-   DATA     buttonReset                           INIT   .F.
-   DATA     strikeOut                             INIT   .T.
-   DATA     underscore                            INIT   .T.
+   VAR      title                                 INIT   ""
+   VAR      buttonApply                           INIT   .F.
+   VAR      buttonCancel                          INIT   .T.
+   VAR      buttonHelp                            INIT   .F.
+   VAR      buttonOk                              INIT   .T.
+   VAR      buttonReset                           INIT   .F.
+   VAR      strikeOut                             INIT   .T.
+   VAR      underscore                            INIT   .T.
 
-   DATA     name                                  INIT   .T.
-   DATA     style                                 INIT   .T.
-   DATA     size                                  INIT   .T.
+   VAR      name                                  INIT   .T.
+   VAR      style                                 INIT   .T.
+   VAR      size                                  INIT   .T.
 
-   DATA     displayFilter                         INIT   .T.
-   DATA     printerFilter                         INIT   .T.
+   VAR      displayFilter                         INIT   .T.
+   VAR      printerFilter                         INIT   .T.
 
-   DATA     familyName                            INIT   " "
-   DATA     nominalPointSize                      INIT   0
+   VAR      familyName                            INIT   " "
+   VAR      nominalPointSize                      INIT   0
 
-   DATA     bitmapOnly                            INIT   .F.
-   DATA     fixedOnly                             INIT   .F.
-   DATA     proportionalOnly                      INIT   .T.
+   VAR      bitmapOnly                            INIT   .F.
+   VAR      fixedOnly                             INIT   .F.
+   VAR      proportionalOnly                      INIT   .T.
 
 
-   DATA     outLine                               INIT   .T.
-   DATA     previewBGClr                          INIT   RGB( 255, 255, 255 )
-   DATA     previewFGClr                          INIT   RGB( 0, 0, 0 )
-   DATA     previewString                         INIT   " "
-   DATA     printerPS                             INIT   NIL
-   DATA     screenPS                              INIT   NIL
+   VAR      outLine                               INIT   .T.
+   VAR      previewBGClr                          INIT   RGB( 255, 255, 255 )
+   VAR      previewFGClr                          INIT   RGB( 0, 0, 0 )
+   VAR      previewString                         INIT   " "
+   VAR      printerPS                             INIT   NIL
+   VAR      screenPS                              INIT   NIL
 
-   DATA     synthesizeFonts                       INIT   .T.
+   VAR      synthesizeFonts                       INIT   .T.
 
-   DATA     vectorOnly                            INIT   .F.
-   DATA     vectorSizes                           INIT   {}
+   VAR      vectorOnly                            INIT   .F.
+   VAR      vectorSizes                           INIT   {}
 
-   DATA     viewPrinterFonts                      INIT   .F.
-   DATA     viewScreenFonts                       INIT   .T.
+   VAR      viewPrinterFonts                      INIT   .F.
+   VAR      viewScreenFonts                       INIT   .T.
 
    METHOD   new( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
    METHOD   create( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
    METHOD   destroy()
    METHOD   display( nMode )
 
-   DATA     sl_activateApply
+   VAR      sl_activateApply
    ACCESS   activateApply                         INLINE ::sl_activateApply
    ASSIGN   activateApply( bBlock )               INLINE ::sl_activateApply := bBlock
 
-   DATA     sl_activateCancel
+   VAR      sl_activateCancel
    ACCESS   activateCancel                        INLINE ::sl_activateCancel
    ASSIGN   activateCancel( bBlock )              INLINE ::sl_activateCancel := bBlock
 
-   DATA     sl_activateOk
+   VAR      sl_activateOk
    ACCESS   activateOk                            INLINE ::sl_activateOk
    ASSIGN   activateOk( bBlock )                  INLINE ::sl_activateOk := bBlock
 
-   DATA     sl_activateReset
+   VAR      sl_activateReset
    ACCESS   activateReset                         INLINE ::sl_activateReset
    ASSIGN   activateReset( bBlock )               INLINE ::sl_activateReset := bBlock
 
-   DATA     oScreenPS
-   DATA     oPrinterPS
-   DATA     aPos                                  INIT   { 0, 0 }
-   DATA     ok                                    INIT   .F.
+   VAR      oScreenPS
+   VAR      oPrinterPS
+   VAR      aPos                                  INIT   { 0, 0 }
+   VAR      ok                                    INIT   .F.
 
    METHOD   wndProc( hWnd, nMessage, nwParam, nlParam )
    METHOD   GetWvgFont( aFont )                   PROTECTED
@@ -490,43 +490,43 @@ METHOD GetWvgFont( aFont ) CLASS WvgFontDialog
 //
 //
 
-CLASS WvgFont
+CREATE CLASS WvgFont
 
-   DATA     hFont
-   DATA     oPS
-   DATA     hdc
+   VAR      hFont
+   VAR      oPS
+   VAR      hdc
 
-   DATA     familyName                            INIT   ""
-   DATA     height                                INIT   0
-   DATA     nominalPointSize                      INIT   0
+   VAR      familyName                            INIT   ""
+   VAR      height                                INIT   0
+   VAR      nominalPointSize                      INIT   0
 
-   DATA     width                                 INIT   0
-   DATA     widthClass                            INIT   .F.
+   VAR      width                                 INIT   0
+   VAR      widthClass                            INIT   .F.
 
-   DATA     bold                                  INIT   .F.
-   DATA     weightClass                           INIT   FW_DONTCARE
+   VAR      bold                                  INIT   .F.
+   VAR      weightClass                           INIT   FW_DONTCARE
 
-   DATA     italic                                INIT   .F.
-   DATA     strikeout                             INIT   .F.
-   DATA     underscore                            INIT   .F.
-   DATA     codePage                              INIT   DEFAULT_CHARSET
+   VAR      italic                                INIT   .F.
+   VAR      strikeout                             INIT   .F.
+   VAR      underscore                            INIT   .F.
+   VAR      codePage                              INIT   DEFAULT_CHARSET
 
-   DATA     FIXED                                 INIT   .F.
-   DATA     antiAliased                           INIT   .F.
+   VAR      FIXED                                 INIT   .F.
+   VAR      antiAliased                           INIT   .F.
 
-   DATA     compoundName                          INIT   ""
+   VAR      compoundName                          INIT   ""
    METHOD   setCompoundName( cName )              INLINE ::compoundName := cName
 
-   DATA     generic                               INIT   .T.
+   VAR      generic                               INIT   .T.
 
-   DATA     baseLine                              INIT   0                READONLY
-   DATA     dbcs                                  INIT   .F.
-   DATA     kerning                               INIT   .F.
-   DATA     mbcs                                  INIT   .F.
-   DATA     vector                                INIT   .F.
-   DATA     outlined                              INIT   .F.
+   VAR      baseLine                              INIT   0                READONLY
+   VAR      dbcs                                  INIT   .F.
+   VAR      kerning                               INIT   .F.
+   VAR      mbcs                                  INIT   .F.
+   VAR      vector                                INIT   .F.
+   VAR      outlined                              INIT   .F.
 
-   DATA     aFontInfo                             INIT   {}
+   VAR      aFontInfo                             INIT   {}
 
    METHOD   new( oPS )
    METHOD   create( cFontName )

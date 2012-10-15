@@ -76,16 +76,16 @@
 
 //
 
-CLASS WvgSLE INHERIT WvgWindow, WvgDataRef
+CREATE CLASS WvgSLE INHERIT WvgWindow, WvgDataRef
 
-   DATA     align                                 INIT WVGSLE_LEFT
-   DATA     autoKeyboard                          INIT .T.
-   DATA     autoSize                              INIT .F.
-   DATA     autoTab                               INIT .F.
-   DATA     border                                INIT .T.
-   DATA     bufferLength                          INIT 32
-   DATA     editable                              INIT .T.
-   DATA     unReadable                            INIT .F.
+   VAR      align                                 INIT WVGSLE_LEFT
+   VAR      autoKeyboard                          INIT .T.
+   VAR      autoSize                              INIT .F.
+   VAR      autoTab                               INIT .F.
+   VAR      border                                INIT .T.
+   VAR      bufferLength                          INIT 32
+   VAR      editable                              INIT .T.
+   VAR      unReadable                            INIT .F.
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -106,17 +106,17 @@ CLASS WvgSLE INHERIT WvgWindow, WvgDataRef
 
    METHOD   setInsertMode( lInsertMode )          VIRTUAL
 
-   DATA     sl_hScroll
+   VAR      sl_hScroll
    ACCESS   hScroll                               INLINE  ::sl_hScroll
    ASSIGN   hScroll( bBlock )                     INLINE  ::sl_hScroll := bBlock
 
-   DATA     sl_typeOut
+   VAR      sl_typeOut
    ACCESS   typeOut                               INLINE  ::sl_typeOut
    ASSIGN   typeOut( bBlock )                     INLINE  ::sl_typeOut := bBlock
 
    METHOD   changed( lChanged )                   SETGET
 
-   DATA     sl_returnPressed
+   VAR      sl_returnPressed
    METHOD   returnPressed( ... )                  SETGET
 
 ENDCLASS

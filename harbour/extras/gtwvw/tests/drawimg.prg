@@ -160,24 +160,24 @@ PROCEDURE Main()
 
 /*********************************************************/
 
-CLASS wGUIObj
+CREATE CLASS wGUIObj
 
-   DATA nWinNum                      //parent window's number
-   DATA lVisible                     //is the object visible
-   DATA nType                        //Type
-   DATA cId                          //Id
-   DATA nRow1, nCol1, nRow2, nCol2   //mouse object region
-   DATA aOffTLBR                     //offset in pixels
+   VAR nWinNum                      //parent window's number
+   VAR lVisible                     //is the object visible
+   VAR nType                        //Type
+   VAR cId                          //Id
+   VAR nRow1, nCol1, nRow2, nCol2   //mouse object region
+   VAR aOffTLBR                     //offset in pixels
 
 ENDCLASS
 
 /*********************************************************/
 
-CLASS wPaintObj FROM wGUIObj
+CREATE CLASS wPaintObj FROM wGUIObj
 
    // image like wvtimage
-   DATA cImage
-   DATA lTransp
+   VAR cImage
+   VAR lTransp
 
    METHOD New()
    METHOD Draw()

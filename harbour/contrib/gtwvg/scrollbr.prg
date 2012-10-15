@@ -76,17 +76,17 @@
 
 //
 
-CLASS WvgScrollBar  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS WvgScrollBar  INHERIT  WvgWindow, WvgDataRef
 
-   DATA     autoTrack                             INIT .T.
-   DATA     RANGE                                 INIT { 0, 1 }
-   DATA     scrollBoxSize                         INIT - 1
-   DATA     TYPE                                  INIT WVGSCROLL_HORIZONTAL
-   DATA     excludeScrollBox                      INIT .F.
+   VAR      autoTrack                             INIT .T.
+   VAR      RANGE                                 INIT { 0, 1 }
+   VAR      scrollBoxSize                         INIT - 1
+   VAR      TYPE                                  INIT WVGSCROLL_HORIZONTAL
+   VAR      excludeScrollBox                      INIT .F.
 
-   DATA     sl_xbeSB_Scroll
+   VAR      sl_xbeSB_Scroll
 
-   DATA     lTracking                             INIT .F.
+   VAR      lTracking                             INIT .F.
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )

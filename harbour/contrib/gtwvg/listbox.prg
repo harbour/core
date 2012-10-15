@@ -76,14 +76,14 @@
 
 //
 
-CLASS WvgListBox  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS WvgListBox  INHERIT  WvgWindow, WvgDataRef
 
-   DATA     adjustHeight                          INIT .F.
-   DATA     horizScroll                           INIT .F.
-   DATA     markMode                              INIT WVGLISTBOX_MM_SINGLE
-   DATA     multiColumn                           INIT .F.
-   DATA     vertScroll                            INIT .T.
-   DATA     drawMode                              INIT WVG_DRAW_NORMAL
+   VAR      adjustHeight                          INIT .F.
+   VAR      horizScroll                           INIT .F.
+   VAR      markMode                              INIT WVGLISTBOX_MM_SINGLE
+   VAR      multiColumn                           INIT .F.
+   VAR      vertScroll                            INIT .T.
+   VAR      drawMode                              INIT WVG_DRAW_NORMAL
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -110,31 +110,31 @@ CLASS WvgListBox  INHERIT  WvgWindow, WvgDataRef
    METHOD   setTabstops()                         VIRTUAL
 
 
-   DATA     sl_hScroll
+   VAR      sl_hScroll
    ACCESS   hScroll                               INLINE ::sl_hScroll
    ASSIGN   hScroll( bBlock )                     INLINE ::sl_hScroll := bBlock
 
-   DATA     sl_vScroll
+   VAR      sl_vScroll
    ACCESS   vScroll                               INLINE ::sl_vScroll
    ASSIGN   vScroll( bBlock )                     INLINE ::sl_vScroll := bBlock
 
-   DATA     sl_itemMarked
+   VAR      sl_itemMarked
    ACCESS   itemMarked                            INLINE ::sl_itemMarked
    ASSIGN   itemMarked( bBlock )                  INLINE ::sl_itemMarked := bBlock
 
-   DATA     sl_itemSelected
+   VAR      sl_itemSelected
    ACCESS   itemSelected                          INLINE ::sl_itemSelected
    ASSIGN   itemSelected( bBlock )                INLINE ::sl_itemSelected := bBlock
 
-   DATA     sl_drawItem
+   VAR      sl_drawItem
    ACCESS   drawItem                              INLINE ::sl_drawItem
    ASSIGN   drawItem( bBlock )                    INLINE ::sl_drawItem := bBlock
 
-   DATA     sl_measureItem
+   VAR      sl_measureItem
    ACCESS   measureItem                           INLINE ::sl_measureItem
    ASSIGN   measureItem( bBlock )                 INLINE ::sl_measureItem := bBlock
 
-   DATA     nCurSelected                          INIT 0
+   VAR      nCurSelected                          INIT 0
    METHOD   getCurItem()                          INLINE ::getItem( ::nCurSelected )
 
 ENDCLASS

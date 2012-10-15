@@ -102,62 +102,62 @@
 
 CREATE CLASS XHBEditor
 
-   DATA  cFile          INIT ""     // name of file being edited
+   VAR   cFile          INIT ""     // name of file being edited
 
-   DATA  aText          INIT {}     // array with lines of text being edited
+   VAR   aText          INIT {}     // array with lines of text being edited
 
-   DATA  nTop                       // boundaries of editor window, without box around
-   DATA  nLeft
-   DATA  nBottom
-   DATA  nRight
+   VAR   nTop                       // boundaries of editor window, without box around
+   VAR   nLeft
+   VAR   nBottom
+   VAR   nRight
 
-   DATA  nFirstCol      INIT 1      // FirstCol/Row of current text visible inside editor window
-   DATA  nFirstRow      INIT 1
-   DATA  nRow           INIT 1      // Cursor position inside aText (nRow) and inside current line of text (nCol)
-   DATA  nCol           INIT 1
+   VAR   nFirstCol      INIT 1      // FirstCol/Row of current text visible inside editor window
+   VAR   nFirstRow      INIT 1
+   VAR   nRow           INIT 1      // Cursor position inside aText (nRow) and inside current line of text (nCol)
+   VAR   nCol           INIT 1
 
-   DATA  nPhysRow       INIT 0      // Hardware cursor position, I cannot rely on Row()/Col() because I could be inside another
-   DATA  nPhysCol       INIT 0      // application/object and this one could be moving real cursor. If I'm running full
+   VAR   nPhysRow       INIT 0      // Hardware cursor position, I cannot rely on Row()/Col() because I could be inside another
+   VAR   nPhysCol       INIT 0      // application/object and this one could be moving real cursor. If I'm running full
    // screen nPhysRow will always have the same value as Row() and nPhysCol as Col()
 
-   DATA  nTextRow       INIT 0      // Display position of the cursor whitin the text buffer.
-   DATA  nTextCol       INIT 0      // idem.
-   DATA  nWndRow        INIT 0      // Initial position of cursor whitin text window.
-   DATA  nWndCol        INIT 0      // idem.
+   VAR   nTextRow       INIT 0      // Display position of the cursor whitin the text buffer.
+   VAR   nTextCol       INIT 0      // idem.
+   VAR   nWndRow        INIT 0      // Initial position of cursor whitin text window.
+   VAR   nWndCol        INIT 0      // idem.
 
-   DATA  nNumCols       INIT 1      // How many columns / rows can be displayed inside editor window
-   DATA  nNumRows       INIT 1
+   VAR   nNumCols       INIT 1      // How many columns / rows can be displayed inside editor window
+   VAR   nNumRows       INIT 1
 
-   DATA  nTabWidth      INIT 5      // Size of Tab chars
-   DATA  lEditAllow     INIT .T.    // Are changes to text allowed?
-   DATA  lSaved         INIT .F.    // True if user exited editor with K_CTRL_W
-   DATA  lWordWrap      INIT .T.    // .F. earlier, True if word wrapping is active
-   DATA  nWordWrapCol   INIT 0      // At which column word wrapping occurs
-   DATA  lChanged       INIT .F.    // .T. if there are changes not saved
-   DATA  lExitEdit      INIT .F.    // .T. if user requested to end Edit() method
+   VAR   nTabWidth      INIT 5      // Size of Tab chars
+   VAR   lEditAllow     INIT .T.    // Are changes to text allowed?
+   VAR   lSaved         INIT .F.    // True if user exited editor with K_CTRL_W
+   VAR   lWordWrap      INIT .T.    // .F. earlier, True if word wrapping is active
+   VAR   nWordWrapCol   INIT 0      // At which column word wrapping occurs
+   VAR   lChanged       INIT .F.    // .T. if there are changes not saved
+   VAR   lExitEdit      INIT .F.    // .T. if user requested to end Edit() method
 
-   DATA  cColorSpec     INIT SetColor()     // Color string used for screen writes
+   VAR   cColorSpec     INIT SetColor()     // Color string used for screen writes
 
-   DATA  lRightScroll   INIT .T.    // MARKER TO SET LINE SCROLLING OF R_KEY
-   DATA  nMarkPos                   // Mark proper new position of cursor when wrapping and splitting lines
-   DATA  nMarkLen
-   DATA  nOrigCursor    INIT SetCursor()  // Save to restore original cursor format on exit
+   VAR   lRightScroll   INIT .T.    // MARKER TO SET LINE SCROLLING OF R_KEY
+   VAR   nMarkPos                   // Mark proper new position of cursor when wrapping and splitting lines
+   VAR   nMarkLen
+   VAR   nOrigCursor    INIT SetCursor()  // Save to restore original cursor format on exit
 
-   DATA  ProcName       INIT ""
-   DATA  ProcLine       INIT 0
+   VAR   ProcName       INIT ""
+   VAR   ProcLine       INIT 0
 
-   DATA  nCurrentCursor INIT SetCursor()
+   VAR   nCurrentCursor INIT SetCursor()
 
-   DATA  lSelActive     INIT .F.
-   DATA  nRowSelStart   INIT 0                             // First row selected
-   DATA  nRowSelEnd     INIT 0                             // Last row selected
-   DATA  nColSelRow     INIT 0                             // Row of col selected
-   DATA  nColSelStart   INIT 0                             // First col selected
-   DATA  nColSelEnd     INIT 0                             // Last col selected
+   VAR   lSelActive     INIT .F.
+   VAR   nRowSelStart   INIT 0                             // First row selected
+   VAR   nRowSelEnd     INIT 0                             // Last row selected
+   VAR   nColSelRow     INIT 0                             // Row of col selected
+   VAR   nColSelStart   INIT 0                             // First col selected
+   VAR   nColSelEnd     INIT 0                             // Last col selected
 
-   // Class DATA can be faster, but since the user can change directly
+   // Class VAR can be faster, but since the user can change directly
    // READINSERT(), ::lInsert must check in it.
-   // DATA  lInsert        INIT .F.              // Is editor in Insert mode or in Overstrike one? Default : Overstrike - Clipper
+   // VAR   lInsert        INIT .F.              // Is editor in Insert mode or in Overstrike one? Default : Overstrike - Clipper
    METHOD lInsert()              BLOCK {|| Set( _SET_INSERT ) }
    METHOD _lInsert( lInsert )    BLOCK {| Self, lInsert | HB_SYMBOL_UNUSED( Self ), iif( HB_ISLOGICAL( lInsert ), Set( _SET_INSERT, lInsert ), Set( _SET_INSERT ) ) }
 
@@ -233,9 +233,9 @@ CREATE CLASS XHBEditor
    METHOD  K_Esc()
 
    // 2006/07/19 - E.F. - Added datas and methods.
-   DATA    cInsLabel                       // <Insert> label to display at toggle insert
-   DATA    lVerticalScroll   INIT .T.      // True if vertical scrolling is active (default)
-   DATA    bKeyBlock                       // To process set key codeblock
+   VAR     cInsLabel                       // <Insert> label to display at toggle insert
+   VAR     lVerticalScroll   INIT .T.      // True if vertical scrolling is active (default)
+   VAR     bKeyBlock                       // To process set key codeblock
 
    METHOD  DisplayInsert( lInsert )        // Show <insert> message at top of screen
    METHOD  LastRow() INLINE Len( ::aText ) // Replace old ::naTextLen

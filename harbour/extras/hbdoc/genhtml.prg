@@ -63,7 +63,7 @@
    #define EXTENSION ".html"
 #endif
 
-CLASS GenerateHTML2 FROM GenerateHTML
+CREATE CLASS GenerateHTML2 FROM GenerateHTML
    METHOD NewIndex( cFolder, cFilename, cTitle )
    METHOD NewDocument( cFolder, cFilename, cTitle )
 ENDCLASS
@@ -85,8 +85,8 @@ CREATE CLASS GenerateHTML FROM TPLGenerate
    METHOD Append( cText, cFormat )
    METHOD Newline() INLINE FWrite( ::nHandle, "<br />" + hb_eol() ), self
 
-   CLASSDATA lCreateStyleDocument AS LOGICAL INIT .T.
-   DATA TargetFilename AS STRING INIT ""
+   CLASS VAR lCreateStyleDocument AS LOGICAL INIT .T.
+   VAR TargetFilename AS STRING INIT ""
 
    EXPORTED:
    METHOD NewFile() HIDDEN

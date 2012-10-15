@@ -23,7 +23,7 @@ DECLARE SomeFunc( OPTIONAL SomeVar AS STRING )
 
 //DECLARE SomeFunc( OPTIONAL SomeVar AS STRING, OPTIONAL OtherVar )
 
-CLASS MyClass
+CREATE CLASS MyClass
    METHOD New() Constructor
    VAR While AS STRING
    VAR cVar  AS STRING

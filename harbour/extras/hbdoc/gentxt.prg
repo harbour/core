@@ -72,11 +72,11 @@ METHOD NewIndex( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateAscii
    super:NewIndex( cFolder, cFilename, cTitle, cDescription )
    RETURN self
 
-CLASS GenerateText FROM TPLGenerate
+CREATE CLASS GenerateText FROM TPLGenerate
 HIDDEN:
 
 PROTECTED:
-   DATA lContinuous AS LOGICAL INIT .F.
+   VAR lContinuous AS LOGICAL INIT .F.
 
 EXPORTED:
    METHOD NewIndex( cFolder, cFilename, cTitle )

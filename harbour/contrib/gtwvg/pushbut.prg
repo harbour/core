@@ -76,16 +76,16 @@
 
 //
 
-CLASS WvgPushButton  INHERIT  WvgWindow
+CREATE CLASS WvgPushButton  INHERIT  WvgWindow
 
-   DATA     autosize                              INIT .F.
-   DATA     border                                INIT .T.
-   DATA     caption                               INIT NIL
-   DATA     pointerFocus                          INIT .T.
-   DATA     preSelect                             INIT .F.
-   DATA     drawMode                              INIT WVG_DRAW_NORMAL
-   DATA     DEFAULT                               INIT .F.
-   DATA     cancel                                INIT .F.
+   VAR      autosize                              INIT .F.
+   VAR      border                                INIT .T.
+   VAR      caption                               INIT NIL
+   VAR      pointerFocus                          INIT .T.
+   VAR      preSelect                             INIT .F.
+   VAR      drawMode                              INIT WVG_DRAW_NORMAL
+   VAR      DEFAULT                               INIT .F.
+   VAR      cancel                                INIT .F.
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )

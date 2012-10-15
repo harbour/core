@@ -38,10 +38,10 @@
  *                   as a static function. It will therefore not be available outside the current module.
  *  $DESCRIPTION$
  *      CLASS creates a class from which you can create objects.
- *      The CLASS command begins the class specification, in which the DATA
+ *      The CLASS command begins the class specification, in which the VAR
  *      elements (also known as instance variables) and METHODS of the
  *      class are named. The following scoping commands may also appear.
- *      They control the default scope of DATA and METHOD commands that follow them.
+ *      They control the default scope of VAR and METHOD commands that follow them.
  *
  *      <fixed>
  *         EXPORTED:
@@ -56,7 +56,7 @@
  *
  *      A program uses a Class by calling the Class Constructor, usually the
  *      New() method, to create an object. That object is usually assigned
- *      to a variable, which is used to access the DATA elements and
+ *      to a variable, which is used to access the VAR elements and
  *      methods.
  *
  *      Harbour's OOP syntax and implementation supports Scoping (Protect, Hidden and Readonly)
@@ -87,7 +87,7 @@
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      HBClass(),Object Oriented Programming,DATA,METHOD
+ *      HBClass(),Object Oriented Programming,VAR,METHOD
  *  $END$
  */
 
@@ -95,7 +95,7 @@
  *  $TEMPLATE$
  *      Command
  *  $NAME$
- *      DATA
+ *      VAR
  *  $CATEGORY$
  *      Class
  *  $SUBCATEGORY$
@@ -103,22 +103,22 @@
  *  $ONELINER$
  *      Alternate syntax for VAR: instance variable for the objects.
  *  $SYNTAX$
- *      DATA <DataName1> [,<DataNameN>] [ AS <type> ] [ INIT <uValue> ]
+ *      VAR <DataName1> [,<DataNameN>] [ AS <type> ] [ INIT <uValue> ]
  *      [[EXPORTED | VISIBLE] | [PROTECTED] | [HIDDEN]] [READONLY | RO]
  *  $ARGUMENTS$
- *      <DataName1>  Name of the DATA
+ *      <DataName1>  Name of the VAR
 
  *      <type>       Optional data type specification from the following:
  *                   Character, Numeric, Date, Logical, Codeblock, Nil.
  *
  *      <uValue>     Optional initial value when creating a new object.
  *
- *      EXPORTED     Specifies that this DATA is accessible to functions and
+ *      EXPORTED     Specifies that this VAR is accessible to functions and
  *                   methods outside of the class.  VISIBLE is a synonym for EXPORTED.
  *
- *      PROTECTED    Specifies that this DATA is only accessible to functions and methods within this class and its subclasses.
+ *      PROTECTED    Specifies that this VAR is only accessible to functions and methods within this class and its subclasses.
  *
- *      HIDDEN       Specifies that this DATA is only accessible to the
+ *      HIDDEN       Specifies that this VAR is only accessible to the
  *                   class where it was defined, and is not inherited by the
  *                   subclasses.
  *
@@ -128,37 +128,37 @@
  *                   assignment is only permitted from the current class.
  *                   RO is a synonym for READONLY.
  *  $DESCRIPTION$
- *      DATA elements can also be thought of as the "properties" of an
+ *      VAR elements can also be thought of as the "properties" of an
  *      object. They can be of any data type, including codeblock.
- *      Once an object has been created, the DATA elements are referenced
+ *      Once an object has been created, the VAR elements are referenced
  *      with the colon (:) as in  MyObject:Heading := "Last name".
- *      Usually a class also defines methods to manipulate the DATA.
+ *      Usually a class also defines methods to manipulate the VAR.
  *
- *      You can use the "AS <type>" clause to enforce that the DATA is
+ *      You can use the "AS <type>" clause to enforce that the VAR is
  *      maintained as a certain type. Otherwise it will take on the type of
  *      whatever value is first assigned to it.
  *
- *      Use the "INIT <uValue>" clause to initialize that DATA to <uValue>
+ *      Use the "INIT <uValue>" clause to initialize that VAR to <uValue>
  *      whenever a new object is created.
  *
- *      VAR can be a synonym for DATA, or it can use a slightly different
+ *      VAR can be a synonym for VAR, or it can use a slightly different
  *      syntax for compatibility with other dialects.
  *  $EXAMPLES$
  *      CREATE CLASS TBColumn
  *
- *         DATA Block      // Code block to retrieve data for the column
- *         DATA Cargo      // User-definable variable
- *         DATA ColorBlock // Code block that determines color of data items
- *         DATA ColSep     // Column separator character
- *         DATA DefColor   // Array of numeric indexes into the color table
- *         DATA Footing    // Column footing
- *         DATA FootSep    // Footing separator character
- *         DATA Heading    // Column heading
- *         DATA HeadSep    // Heading separator character
- *         DATA Width      // Column display width
- *         DATA ColPos     // Temporary column position on screen
+ *         VAR Block      // Code block to retrieve data for the column
+ *         VAR Cargo      // User-definable variable
+ *         VAR ColorBlock // Code block that determines color of data items
+ *         VAR ColSep     // Column separator character
+ *         VAR DefColor   // Array of numeric indexes into the color table
+ *         VAR Footing    // Column footing
+ *         VAR FootSep    // Footing separator character
+ *         VAR Heading    // Column heading
+ *         VAR HeadSep    // Heading separator character
+ *         VAR Width      // Column display width
+ *         VAR ColPos     // Temporary column position on screen
  *
- *         METHOD New()    // Constructor
+ *         METHOD New()   // Constructor
  *
  *      ENDCLASS
  *  $STATUS$
@@ -168,7 +168,7 @@
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      Object Oriented Programming,CLASS,METHOD,CLASSDATA,VAR
+ *      Object Oriented Programming,CLASS,METHOD,CLASS VAR,VAR
  *  $END$
  */
 
@@ -176,39 +176,39 @@
  *  $TEMPLATE$
  *      Command
  *  $NAME$
- *      CLASSDATA
+ *      CLASS VAR
  *  $CATEGORY$
  *      Class
  *  $SUBCATEGORY$
  *      Data
  *  $ONELINER$
- *      Define a CLASSDATA variable for a class (NOT for an Object!)
+ *      Define a CLASS VAR variable for a class (NOT for an Object!)
  *  $SYNTAX$
- *      CLASSDATA <DataName1> [,<DataNameN>] [ AS <type> ] [ INIT <uValue> ]
+ *      CLASS VAR <DataName1> [,<DataNameN>] [ AS <type> ] [ INIT <uValue> ]
  *  $ARGUMENTS$
- *      <DataName1>  Name of the DATA
+ *      <DataName1>  Name of the VAR
  *
  *      <type>       Optional data type specification from the following:
  *                      Character, Numeric, Date, Logical, Codeblock, Nil
  *
  *      <uValue>     Optional initial value at program startup
  *  $DESCRIPTION$
- *      CLASSDATA variables can also be thought of as the "properties" of an
- *      entire class. Each CLASSDATA exists only once, no matter how many
+ *      CLASS VAR variables can also be thought of as the "properties" of an
+ *      entire class. Each CLASS VAR exists only once, no matter how many
  *      objects are created. A common usage is for a counter that is
  *      incremented whenever an object is created and decremented when one
  *      is destroyed, thus monitoring the number of objects in existence
  *      for this class.
  *
- *      You can use the "AS <type>" clause to enforce that the CLASSDATA is
+ *      You can use the "AS <type>" clause to enforce that the CLASS VAR is
  *      maintained as a certain type. Otherwise it will take on the type of
  *      whatever value is first assigned to it.
- *      Use the "INIT <uValue>" clause to initialize that DATA to <uValue>
+ *      Use the "INIT <uValue>" clause to initialize that VAR to <uValue>
  *      whenever the class is first used.
  *  $EXAMPLES$
  *      CREATE CLASS TWindow
- *         DATA   hWnd, nOldProc
- *         CLASSDATA lRegistered AS LOGICAL
+ *         VAR   hWnd, nOldProc
+ *         CLASS VAR lRegistered AS LOGICAL
  *      ENDCLASS
  *  $STATUS$
  *      R
@@ -217,7 +217,7 @@
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      Object Oriented Programming,CLASS,METHOD,DATA
+ *      Object Oriented Programming,CLASS,METHOD,VAR
  *  $END$
  */
 
@@ -328,7 +328,7 @@
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      HBClass(),Object Oriented Programming,DATA,CLASS
+ *      HBClass(),Object Oriented Programming,VAR,CLASS
  *  $END$
  */
 
@@ -384,7 +384,7 @@
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      METHOD,DATA,CLASS,Object Oriented Programming
+ *      METHOD,VAR,CLASS,Object Oriented Programming
  *  $END$
  */
 
@@ -419,7 +419,7 @@
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      Object Oriented Programming,ON ERROR,CLASS,METHOD,DATA
+ *      Object Oriented Programming,ON ERROR,CLASS,METHOD,VAR
  *  $END$
  */
 
@@ -455,7 +455,7 @@
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      Object Oriented Programming,ERROR HANDLER,CLASS,METHOD,DATA
+ *      Object Oriented Programming,ERROR HANDLER,CLASS,METHOD,VAR
  *  $END$
  */
 
@@ -488,6 +488,6 @@
  *  $PLATFORMS$
  *      All
  *  $SEEALSO$
- *      Object Oriented Programming,CLASS,METHOD,DATA
+ *      Object Oriented Programming,CLASS,METHOD,VAR
  *  $END$
  */

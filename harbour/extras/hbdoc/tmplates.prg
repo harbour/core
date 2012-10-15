@@ -62,7 +62,7 @@ CREATE CLASS Entry
 
    EXPORTED:
 
-   CLASSDATA Fields AS ARRAY INIT { ;
+   CLASS VAR Fields AS ARRAY INIT { ;
       { "DOC",          "Doc" }, ;
       { "TEMPLATE",     "Template" }, ;
       { "NAME",         "" }, ;
@@ -98,7 +98,7 @@ CREATE CLASS Entry
 
    // this is best viewed with a fixed-width font
    // the columns of this array correspond to the elements of Fields
-   CLASSDATA Templates AS ARRAY INIT { ;
+   CLASS VAR Templates AS ARRAY INIT { ;
       { "Template"      , { S, T, x+U, x, O  , x+U, x+U, x+U, x+U, x+U, x+U, x+U, x+U, x+U, x  +U, x  +U, x+U, x+U, x+U, x+U, x+U, E } }, ;
       { "Document"      , { S, T, R+U, R, O+U, O+U, x+U, x+U, x+U, R+U, x+U, x+U, x+U, x+U, x  +U, x  +U, x+U, x+U, O+U, O+U, O+U, E } }, ;
       { "Function"      , { S, T, R+U, R, R  , O+U, O+U, O+U, O+U, O+U, x+U, x+U, x+U, x+U, P+O+U, P+O+U, O+U, O+U, O+U, O+U, O+U, E } }, ;
@@ -134,13 +134,13 @@ CREATE CLASS Entry
    METHOD CategoryIndex( cCategory )
    METHOD SubcategoryIndex( cCategory, cSubcategory )
 
-   DATA Group AS ARRAY
-   DATA filename AS STRING
-   DATA type_ AS STRING
-   DATA sourcefile_ AS STRING
-   DATA sourcefileversion_ AS STRING
-   DATA uid_ AS STRING
-   CLASSDATA uid__ AS INTEGER INIT 0
+   VAR Group AS ARRAY
+   VAR filename AS STRING
+   VAR type_ AS STRING
+   VAR sourcefile_ AS STRING
+   VAR sourcefileversion_ AS STRING
+   VAR uid_ AS STRING
+   CLASS VAR uid__ AS INTEGER INIT 0
 ENDCLASS
 
 METHOD New( cType ) CLASS Entry

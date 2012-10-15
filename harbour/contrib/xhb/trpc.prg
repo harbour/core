@@ -203,20 +203,20 @@
 * RPC FUNCTION
 *************************************/
 
-CLASS tRPCFunction
+CREATE CLASS tRPCFunction
 
-   DATA cName
-   DATA aParameters
-   DATA cReturn
-   DATA cSerial
-   DATA nAuthLevel
+   VAR cName
+   VAR aParameters
+   VAR cReturn
+   VAR cSerial
+   VAR nAuthLevel
 
-   DATA oExecutable
-   DATA oMethod
+   VAR oExecutable
+   VAR oMethod
 
-   DATA aCall
+   VAR aCall
 
-   CLASSDATA cPattern INIT hb_regexComp( "^C:[0-9]{1,6}$|^A$|^O$|^D$|^N$|^NI$" )
+   CLASS VAR cPattern INIT hb_regexComp( "^C:[0-9]{1,6}$|^A$|^O$|^D$|^N$|^NI$" )
 
    METHOD New( cFname, cSerial, nAuthLevel, oExec, oMeth ) CONSTRUCTOR
    METHOD SetCallable( oExec, oMeth )
@@ -370,24 +370,24 @@ METHOD Describe() CLASS tRPCFunction
 * Connection manager class; this manages a single connection
 ************************************************************/
 
-CLASS tRPCServeCon
+CREATE CLASS tRPCServeCon
 
    /* back reference to the parent to get callback blocks */
-   DATA oServer
+   VAR oServer
 
    /* Socket, mutex and thread */
-   DATA skRemote
-   DATA mtxBusy
-   DATA thSelf INIT NIL
+   VAR skRemote
+   VAR mtxBusy
+   VAR thSelf INIT NIL
 
    /* Assigned authorization level */
-   DATA nAuthLevel
+   VAR nAuthLevel
 
    /* User ID */
-   DATA cUserId
+   VAR cUserId
 
    /* Allow progress ? */
-   DATA lAllowProgress
+   VAR lAllowProgress
 
    METHOD New( oParent, skIn ) CONSTRUCTOR
    METHOD Destroy()
@@ -404,18 +404,18 @@ CLASS tRPCServeCon
    METHOD GetStatus()         INLINE ::nStatus
    HIDDEN:
    /* Current status */
-   DATA  nStatus              INIT RPCS_STATUS_NONE
+   VAR  nStatus              INIT RPCS_STATUS_NONE
    /* Is this connection encrypted? */
-   DATA bEncrypted
+   VAR bEncrypted
    /* crc for challenge handshake */
-   DATA nChallengeCRC
+   VAR nChallengeCRC
    /* Temporary supposed user in challenge */
-   DATA cChallengeUserid
-   DATA cCryptKey
+   VAR cChallengeUserid
+   VAR cCryptKey
 
    /* Function execution data */
-   DATA thFunction   INIT NIL
-   DATA lCanceled    INIT  .F.
+   VAR thFunction   INIT NIL
+   VAR lCanceled    INIT  .F.
 
    METHOD RecvAuth( lEncrypt )
    METHOD RecvChallenge()
@@ -1189,42 +1189,42 @@ METHOD Decrypt( cDataIn ) CLASS tRPCServeCon
 * RPC SERVICE
 *************************************/
 
-CLASS tRPCService
+CREATE CLASS tRPCService
 
-   DATA cServerName INIT "RPCGenericServer"
-   DATA aFunctions
-   CLASSDATA lInit INIT hb_inetInit()
+   VAR cServerName INIT "RPCGenericServer"
+   VAR aFunctions
+   CLASS VAR lInit INIT hb_inetInit()
 
-   DATA nUdpPort INIT 1139
-   DATA nTcpPort INIT 1140
-   DATA cBindAddress INIT NIL
-   DATA thAccept INIT 0
-   DATA thUdp INIT 0
-   DATA aServing INIT {}
-   DATA mtxBusy INIT hb_mutexCreate()
+   VAR nUdpPort INIT 1139
+   VAR nTcpPort INIT 1140
+   VAR cBindAddress INIT NIL
+   VAR thAccept INIT 0
+   VAR thUdp INIT 0
+   VAR aServing INIT {}
+   VAR mtxBusy INIT hb_mutexCreate()
 
-   DATA skUdp
-   DATA skServer
+   VAR skUdp
+   VAR skServer
 
    /* Code blocks corresponding to event handlers */
-   DATA bAuthorize
-   DATA bGetEncryption
-   DATA bOnFunctionScan
-   DATA bOnServerScan
-   DATA bOnClientConnect
-   DATA bOnClientLogin
-   DATA bOnClientRequest
-   DATA bOnFunctionProgress
-   DATA bOnFunctionError
-   DATA bOnFunctionReturn
-   DATA bOnFunctionCanceled
-   DATA bOnClientLogout
-   DATA bOnClientTerminate
+   VAR bAuthorize
+   VAR bGetEncryption
+   VAR bOnFunctionScan
+   VAR bOnServerScan
+   VAR bOnClientConnect
+   VAR bOnClientLogin
+   VAR bOnClientRequest
+   VAR bOnFunctionProgress
+   VAR bOnFunctionError
+   VAR bOnFunctionReturn
+   VAR bOnFunctionCanceled
+   VAR bOnClientLogout
+   VAR bOnClientTerminate
 
    METHOD New() CONSTRUCTOR
 
    /* Block run on client connection request */
-   DATA bConnection
+   VAR bConnection
 
    /* Function management */
    METHOD Add( xFunction, cVersion, nLevel, oExec, oMethod )

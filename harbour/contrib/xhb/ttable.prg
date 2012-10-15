@@ -502,15 +502,15 @@ FUNCTION GetTable( cAlias )
 *
 */
 
-CLASS HBField
+CREATE CLASS HBField
 
-   DATA ALIAS INIT Alias()
-   DATA Name INIT ""
-   DATA TYPE INIT "C"
-   DATA Len INIT 0
-   DATA Dec INIT 0
-   DATA ORDER INIT 0
-   DATA Value
+   VAR ALIAS INIT Alias()
+   VAR Name INIT ""
+   VAR TYPE INIT "C"
+   VAR Len INIT 0
+   VAR Dec INIT 0
+   VAR ORDER INIT 0
+   VAR Value
 
    METHOD Get() INLINE ::value := ( ::alias )->( FieldGet( ::order ) )
    METHOD Put( x ) INLINE ::value := x, ;
@@ -526,12 +526,12 @@ ENDCLASS
 *
 */
 
-CLASS HBRecord
+CREATE CLASS HBRecord
 
-   DATA Buffer INIT {}
-   DATA ALIAS INIT Alias()
-   DATA Number INIT 0
-   DATA aFields INIT {}
+   VAR Buffer INIT {}
+   VAR ALIAS INIT Alias()
+   VAR Number INIT 0
+   VAR aFields INIT {}
 
    METHOD New( cAlias )
    METHOD Get()
@@ -618,33 +618,33 @@ METHOD PROCEDURE Put() CLASS HBRecord
 //ORDER Management
 //
 
-CLASS HBTable
+CREATE CLASS HBTable
 
-   DATA Buffer INIT {}                  // 1
-   DATA ALIAS INIT Alias()              // 2
-   DATA Area INIT 0 // 3
+   VAR Buffer INIT {}                  // 1
+   VAR ALIAS INIT Alias()              // 2
+   VAR Area INIT 0 // 3
 
-   DATA oRec
-   DATA aStruc INIT {}
-   DATA nRecno INIT 0
-   DATA cDBF INIT ""
-   DATA cOrderBag INIT ""
-   DATA cOrderFile INIT ""
-   DATA cPATH INIT ""
-   DATA Driver INIT "DBFCDX"
-   DATA IsNew INIT .T.
-   DATA IsReadOnly INIT .F.
-   DATA IsNet INIT .T.
-   DATA aSaveState INIT {}
-   DATA lMonitor INIT .F.
-   DATA ReadBuffers INIT {}
-   DATA WriteBuffers INIT {}
-   DATA DeleteBuffers INIT {}
-   DATA nDataOffset INIT 0
-   DATA BlankBuffer INIT {}
-   DATA aOrders INIT {}
-   DATA aChildren INIT {}
-   DATA oParent
+   VAR oRec
+   VAR aStruc INIT {}
+   VAR nRecno INIT 0
+   VAR cDBF INIT ""
+   VAR cOrderBag INIT ""
+   VAR cOrderFile INIT ""
+   VAR cPATH INIT ""
+   VAR Driver INIT "DBFCDX"
+   VAR IsNew INIT .T.
+   VAR IsReadOnly INIT .F.
+   VAR IsNet INIT .T.
+   VAR aSaveState INIT {}
+   VAR lMonitor INIT .F.
+   VAR ReadBuffers INIT {}
+   VAR WriteBuffers INIT {}
+   VAR DeleteBuffers INIT {}
+   VAR nDataOffset INIT 0
+   VAR BlankBuffer INIT {}
+   VAR aOrders INIT {}
+   VAR aChildren INIT {}
+   VAR oParent
 
    METHOD EOF() INLINE ( ::Alias )->( EOF() )
    METHOD BOF() INLINE ( ::Alias )->( BOF() )
@@ -1481,17 +1481,17 @@ METHOD OnError( uParam ) CLASS HBTable
 
    RETURN uRet
 
-CLASS HBOrder
+CREATE CLASS HBOrder
 
-   DATA oTable
-   DATA cOrderBag
-   DATA Label, TAG
-   DATA cKey, bKey
-   DATA cFor, bFor
-   DATA cWhile, bWhile
-   DATA UNIQUE INIT .F.
-   DATA bEval
-   DATA nInterval
+   VAR oTable
+   VAR cOrderBag
+   VAR Label, TAG
+   VAR cKey, bKey
+   VAR cFor, bFor
+   VAR cWhile, bWhile
+   VAR UNIQUE INIT .F.
+   VAR bEval
+   VAR nInterval
    METHOD Alias() INLINE ::oTable:Alias
 
    METHOD New( cTag, cKey, cLabel, cFor, cWhile, lUnique, bEval, nInterval, cOrderBag )

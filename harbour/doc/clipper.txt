@@ -150,12 +150,12 @@ for example:
        is not a value of type object.
 
 for example:
-   CLASS foo
-      DATA name INIT 'FOO'
+   CREATE CLASS foo
+      VAR name INIT 'FOO'
    ENDCLASS
 
-   CLASS bar
-      DATA name INIT 'BAR'
+   CREATE CLASS bar
+      VAR name INIT 'BAR'
    ENDCLASS
 
    WITH OBJECT foo():new()

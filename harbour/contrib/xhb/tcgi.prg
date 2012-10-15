@@ -47,7 +47,7 @@
 #include "hbclass.ch"
 #include "cgi.ch"
 
-CLASS TCgi FROM THtml
+CREATE CLASS TCgi FROM THtml
 
    VAR nH
    VAR Server_Software

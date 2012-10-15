@@ -213,7 +213,7 @@ FUNCTION HB_LogDateStamp()
 * Logger class
 ***********************************************/
 
-CLASS HB_Logger
+CREATE CLASS HB_Logger
 
    VAR cProgName
    VAR aLogToChannel                   INIT  {}
@@ -309,7 +309,7 @@ METHOD PROCEDURE Log( cMessage, nPriority ) CLASS HB_Logger
 * Logger Channel class (mostly VIRTUAL)
 ***********************************************/
 
-CLASS HB_LogChannel
+CREATE CLASS HB_LogChannel
 
    VAR lOpened                   INIT .F.
 
@@ -420,7 +420,7 @@ METHOD Format( nStyle, cMessage, cName, nPriority ) CLASS HB_LogChannel
 * Console channel
 ***********************************************/
 
-CLASS HB_LogConsole FROM HB_LogChannel
+CREATE CLASS HB_LogConsole FROM HB_LogChannel
 
    METHOD New( nLevel )
    METHOD Open( cName )
@@ -492,7 +492,7 @@ METHOD PROCEDURE Out( ... ) CLASS HB_LogConsole
 * Console channel - to file
 ***********************************************/
 
-CLASS HB_LogFile FROM HB_LogChannel
+CREATE CLASS HB_LogFile FROM HB_LogChannel
 
    VAR cFileName
    VAR nFileHandle
@@ -600,7 +600,7 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogFile
 * Console channel - to dbf
 ***********************************************/
 
-CLASS HB_LogDbf FROM HB_LogChannel
+CREATE CLASS HB_LogDbf FROM HB_LogChannel
 
    VAR cDBFName    INIT "messages.dbf"
    VAR cIndexName  INIT "messages.cdx"
@@ -730,7 +730,7 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogDbf
 * C interface to syslog/ event log system
 ***********************************************/
 
-CLASS HB_LogSyslog FROM HB_LogChannel
+CREATE CLASS HB_LogSyslog FROM HB_LogChannel
 
    VAR nId
 
@@ -788,7 +788,7 @@ METHOD Send( nType, cMessage, cName, nPriority ) CLASS HB_LogSyslog
 * Debug channel
 ***********************************************/
 
-CLASS HB_LogDebug FROM HB_LogChannel
+CREATE CLASS HB_LogDebug FROM HB_LogChannel
 
    VAR nMaxLevel
 

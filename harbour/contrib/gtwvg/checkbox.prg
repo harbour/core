@@ -76,12 +76,12 @@
 
 //
 
-CLASS WvgCheckBox  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS WvgCheckBox  INHERIT  WvgWindow, WvgDataRef
 
-   DATA     autosize                              INIT .F.
-   DATA     caption                               INIT ""
-   DATA     pointerFocus                          INIT .T.
-   DATA     selection                             INIT .F.
+   VAR      autosize                              INIT .F.
+   VAR      caption                               INIT ""
+   VAR      pointerFocus                          INIT .T.
+   VAR      selection                             INIT .F.
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )

@@ -85,7 +85,7 @@
 
 //
 
-CLASS WvgWindow  INHERIT  WvgPartHandler
+CREATE CLASS WvgWindow  INHERIT  WvgPartHandler
 
    /*  CONFIGURATION */
    VAR      animate                               INIT  .F.

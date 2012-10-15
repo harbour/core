@@ -65,33 +65,33 @@ STATIC s_nrepeatdelay := 0.5
 // WVWMouseButton
 //**************************************************************
 
-CLASS WVWMouseButton
+CREATE CLASS WVWMouseButton
 
-// DATA nId         /* TODO */       //mouse object id
-// DATA nHotKey     /* TODO */       //hotkey associated with this object
-   DATA nWinId                       //20040303, parent window's number
-   DATA lVisible                     //is the object visible
-   DATA lEnable                      //20040303, is the object enable
-   DATA lTight                       //allow tight neighboring
-   DATA nType                        //20040303, appearance of this button
-   DATA nRow1, nCol1, nRow2, nCol2   //mouse object region
+// VAR nId         /* TODO */       //mouse object id
+// VAR nHotKey     /* TODO */       //hotkey associated with this object
+   VAR nWinId                       //20040303, parent window's number
+   VAR lVisible                     //is the object visible
+   VAR lEnable                      //20040303, is the object enable
+   VAR lTight                       //allow tight neighboring
+   VAR nType                        //20040303, appearance of this button
+   VAR nRow1, nCol1, nRow2, nCol2   //mouse object region
 
-   DATA bClickBlock                  //executed on Left Click
-   DATA bPressBlock                  //executed on Left Press
+   VAR bClickBlock                  //executed on Left Click
+   VAR bPressBlock                  //executed on Left Press
 
-   DATA lRepeatPress                 //repeat Left Press when pressed during mouse over?
+   VAR lRepeatPress                 //repeat Left Press when pressed during mouse over?
 
-   DATA cCaption
-   DATA cCaptionFont                 //font name for caption
-   DATA nCaptionHeight               //height of font for caption, if NIL use current wvw_getfontinfo()
-   DATA cImage                       //20040325, image file name
+   VAR cCaption
+   VAR cCaptionFont                 //font name for caption
+   VAR nCaptionHeight               //height of font for caption, if NIL use current wvw_getfontinfo()
+   VAR cImage                       //20040325, image file name
 
-   DATA cNormalColor    //button normal color, pls use single color, eg "W"
-   DATA cPressedColor   //button pressed color, pls use single color, eg "B"
+   VAR cNormalColor    //button normal color, pls use single color, eg "W"
+   VAR cPressedColor   //button pressed color, pls use single color, eg "B"
 
 // private DATA, should be protected
-   DATA lPressed                     //is it being pressed by Left Button?
-   DATA lHover                       //20040303, is mouse over the button?
+   VAR lPressed                     //is it being pressed by Left Button?
+   VAR lHover                       //20040303, is mouse over the button?
 
 // METHODS
    METHOD New( cCaption, nRow1, nCol1, nRow2, nCol2, bClickBlock, nType, lDraw, nWinId )

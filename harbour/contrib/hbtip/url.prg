@@ -82,9 +82,9 @@ CREATE CLASS tURL
 
    HIDDEN:
 
-   CLASSDATA cREuri   INIT hb_regexComp("(?:(.*)://)?([^?/]*)(/[^?]*)?\??(.*)")
-   CLASSDATA cREServ  INIT hb_regexComp("(?:([^:@]*):?([^@:]*)@|)([^:]+):?(.*)")
-   CLASSDATA cREFile  INIT hb_regexComp("^((?:/.*/)|/)*(.*)$")
+   CLASS VAR cREuri   INIT hb_regexComp("(?:(.*)://)?([^?/]*)(/[^?]*)?\??(.*)")
+   CLASS VAR cREServ  INIT hb_regexComp("(?:([^:@]*):?([^@:]*)@|)([^:]+):?(.*)")
+   CLASS VAR cREFile  INIT hb_regexComp("^((?:/.*/)|/)*(.*)$")
 
 ENDCLASS
 

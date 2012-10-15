@@ -76,16 +76,16 @@
 
 //
 
-CLASS WvgStatic  INHERIT  WvgWindow
+CREATE CLASS WvgStatic  INHERIT  WvgWindow
 
-   DATA     autoSize                              INIT .F.
-   DATA     caption                               INIT ""
-   DATA     clipParent                            INIT .T.
-   DATA     clipSiblings                          INIT .F.
-   DATA     options                               INIT - 1 /* WVGSTATIC_TEXT_LEFT */
-   DATA     TYPE                                  INIT - 1 /* WVGSTATIC_TYPE_TEXT */
+   VAR      autoSize                              INIT .F.
+   VAR      caption                               INIT ""
+   VAR      clipParent                            INIT .T.
+   VAR      clipSiblings                          INIT .F.
+   VAR      options                               INIT - 1 /* WVGSTATIC_TEXT_LEFT */
+   VAR      TYPE                                  INIT - 1 /* WVGSTATIC_TYPE_TEXT */
 
-   DATA     hBitmap
+   VAR      hBitmap
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )

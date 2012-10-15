@@ -76,7 +76,7 @@
 
 //
 
-CLASS WvgPartHandler
+CREATE CLASS WvgPartHandler
 
    VAR      cargo
 

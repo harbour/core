@@ -76,19 +76,19 @@
 
 //
 
-CLASS WvgDataRef
+CREATE CLASS WvgDataRef
 
-   DATA     changed                               INIT .F.
-   DATA     dataLink                              INIT NIL
-   DATA     lastValid                             INIT .T.
-   DATA     sl_undo                               INIT NIL
-   DATA     undoBuffer                            INIT NIL
-   DATA     sl_validate                           INIT NIL
+   VAR      changed                               INIT .F.
+   VAR      dataLink                              INIT NIL
+   VAR      lastValid                             INIT .T.
+   VAR      sl_undo                               INIT NIL
+   VAR      undoBuffer                            INIT NIL
+   VAR      sl_validate                           INIT NIL
 
    METHOD   new()
 
-   DATA     sl_editBuffer
-   DATA     sl_buffer
+   VAR      sl_editBuffer
+   VAR      sl_buffer
 
    ACCESS   editBuffer                             INLINE ::sl_editBuffer
    ASSIGN   editBuffer( xData )                    INLINE ::sl_editBuffer := xData

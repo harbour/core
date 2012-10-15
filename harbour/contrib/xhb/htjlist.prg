@@ -51,21 +51,21 @@
 #include "hbclass.ch"
 #include "cgi.ch"
 
-CLASS TJsList
+CREATE CLASS TJsList
 
-   DATA nH INIT STD_OUT
-   DATA aScript INIT {}
-   DATA aItems INIT {}
-   DATA cScript INIT ""
-   DATA nTimes INIT 0
-   DATA nItems INIT 0
-   DATA cMainNode INIT ""
-   DATA cCurrentNode INIT ""
-   DATA Style INIT _WHITE_BLACK_STYLE
-   DATA FONT INIT "Verdana"
-   DATA Size INIT 2
-   DATA BGCOLOR INIT "white"
-   DATA FontColor INIT "black"
+   VAR nH INIT STD_OUT
+   VAR aScript INIT {}
+   VAR aItems INIT {}
+   VAR cScript INIT ""
+   VAR nTimes INIT 0
+   VAR nItems INIT 0
+   VAR cMainNode INIT ""
+   VAR cCurrentNode INIT ""
+   VAR Style INIT _WHITE_BLACK_STYLE
+   VAR FONT INIT "Verdana"
+   VAR Size INIT 2
+   VAR BGCOLOR INIT "white"
+   VAR FontColor INIT "black"
 
    METHOD New( name, lOpen, width, height, bgColor, ;
       FONT, fntColor, fntSize, cMinusImg, cPlusImg )

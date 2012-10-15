@@ -55,17 +55,17 @@
 
 #define HB_THREAD_SUPPORT
 
-CLASS HB_LogEmail FROM HB_LogChannel
+CREATE CLASS HB_LogEmail FROM HB_LogChannel
 
-   DATA cServer
-   DATA cAddress        INIT "log@xharbour.org"
-   DATA cSubject        INIT "Log message from xharbour application"
-   DATA cSendTo
-   DATA cHelo           INIT "XHarbour E-mail Logger"
-   DATA nPort           INIT 25
+   VAR cServer
+   VAR cAddress        INIT "log@xharbour.org"
+   VAR cSubject        INIT "Log message from xharbour application"
+   VAR cSendTo
+   VAR cHelo           INIT "XHarbour E-mail Logger"
+   VAR nPort           INIT 25
 
-   DATA cPrefix
-   DATA cPostfix
+   VAR cPrefix
+   VAR cPostfix
 
    METHOD New( nLevel, cHelo, cServer, cSendTo, cSubject, cFrom )
    METHOD Open( cName )
@@ -220,16 +220,16 @@ METHOD Prepare( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
 * Channel for monitors listening on a port
 *************************************************/
 
-CLASS HB_LogInetPort FROM HB_LogChannel
+CREATE CLASS HB_LogInetPort FROM HB_LogChannel
 
-   DATA nPort           INIT 7761
-   DATA aListeners      INIT {}
-   DATA skIn
+   VAR nPort           INIT 7761
+   VAR aListeners      INIT {}
+   VAR skIn
 
 #ifdef HB_THREAD_SUPPORT
-   DATA bTerminate      INIT .F.
-   DATA nThread
-   DATA mtxBusy
+   VAR bTerminate      INIT .F.
+   VAR nThread
+   VAR mtxBusy
 #endif
 
    METHOD New( nLevel, nPort )

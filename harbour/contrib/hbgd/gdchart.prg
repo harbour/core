@@ -53,19 +53,19 @@
 #include "hbclass.ch"
 #include "gd.ch"
 
-CLASS GDChart FROM GDImage
+CREATE CLASS GDChart FROM GDImage
 
-   DATA cTitle
-   DATA cAxisX
-   DATA cAxisY
-   DATA nWidth
-   DATA nHeight
-   DATA nScaleX
-   DATA nScaleY
+   VAR cTitle
+   VAR cAxisX
+   VAR cAxisY
+   VAR nWidth
+   VAR nHeight
+   VAR nScaleX
+   VAR nScaleY
 
-   DATA aSeries
-   DATA aDataOfHashes         // Hash contains graph datas
-   DATA hDefs
+   VAR aSeries
+   VAR aDataOfHashes         // Hash contains graph datas
+   VAR hDefs
 
 
    METHOD New( sx, sy )  CONSTRUCTOR

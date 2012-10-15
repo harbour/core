@@ -76,30 +76,30 @@
 
 //
 
-CLASS wvgMenuBar INHERIT wvgWindow
+CREATE CLASS wvgMenuBar INHERIT wvgWindow
 
-   DATA     hMenu
-   DATA     pMenu
+   VAR      hMenu
+   VAR      pMenu
 
    /* Event CallBack Slots */
-   DATA     sl_beginMenu
-   DATA     sl_endMenu
-   DATA     sl_itemMarked
-   DATA     sl_itemSelected
-   DATA     sl_drawItem
-   DATA     sl_measureItem
-   DATA     sl_onMenuKey
+   VAR      sl_beginMenu
+   VAR      sl_endMenu
+   VAR      sl_itemMarked
+   VAR      sl_itemSelected
+   VAR      sl_drawItem
+   VAR      sl_measureItem
+   VAR      sl_onMenuKey
 
-   DATA     aMenuItems                             INIT {}
+   VAR      aMenuItems                             INIT {}
 
-   CLASSVAR nMenuItemID                            INIT 0
-   DATA     nPass                                  INIT 0
+   CLASS VAR nMenuItemID                           INIT 0
+   VAR      nPass                                  INIT 0
 
-   DATA     caption                                INIT ""
-   DATA     nItemID                                INIT 0
-   DATA     aIds                                   INIT {}
+   VAR      caption                                INIT ""
+   VAR      nItemID                                INIT 0
+   VAR      aIds                                   INIT {}
 
-   DATA     className                              INIT "MENUBAR"
+   VAR      className                              INIT "MENUBAR"
 
    METHOD   numItems()                             INLINE Len( ::aMenuItems )
 
@@ -587,9 +587,9 @@ METHOD WvgMenuBar:onMenuKey( xParam )
 //
 //
 
-CLASS wvgMenu INHERIT wvgMenuBar
+CREATE CLASS wvgMenu INHERIT wvgMenuBar
 
-   DATA     title                                 INIT  ""
+   VAR      title                                 INIT  ""
 
    METHOD   new( oParent, aPresParams, lVisible )
    METHOD   create( oParent, aPresParams, lVisible )

@@ -55,28 +55,28 @@
 
 #include "hbrpc.ch"
 
-CLASS tRPCClient
+CREATE CLASS tRPCClient
 
-   DATA aServers
-   DATA aFunctions
+   VAR aServers
+   VAR aFunctions
 
-   DATA nUdpPort
-   DATA nTcpPort
+   VAR nUdpPort
+   VAR nTcpPort
 
    /* asyncrhonous mode */
-   DATA lAsyncMode
+   VAR lAsyncMode
    /* block to be called at scan completion */
-   DATA bOnScanComplete
+   VAR bOnScanComplete
    /*block called when there is a progress in the scan */
-   DATA bOnScanServersProgress
-   DATA bOnScanFunctionsProgress
+   VAR bOnScanServersProgress
+   VAR bOnScanFunctionsProgress
 
    /* block to be called at function error */
-   DATA bOnFunctionProgress
+   VAR bOnFunctionProgress
    /* block to be called at function success */
-   DATA bOnFunctionReturn
+   VAR bOnFunctionReturn
    /* block to be called at function failure */
-   DATA bOnFunctionFail
+   VAR bOnFunctionFail
 
 
    METHOD New( cNetwork, nTcpPort, nUdpPort ) CONSTRUCTOR
@@ -130,44 +130,44 @@ CLASS tRPCClient
 
    HIDDEN:
    // Automatic initialization of inet support
-   CLASSDATA lInit INIT hb_inetInit()
+   CLASS VAR lInit INIT hb_inetInit()
 
-   DATA mtxBusy INIT hb_mutexCreate()
+   VAR mtxBusy INIT hb_mutexCreate()
 
-   DATA nStatus
+   VAR nStatus
    // This RPC protocol breaking error code
-   DATA nErrorCode
+   VAR nErrorCode
 
    /* Network data */
-   DATA cServer
-   DATA cNetwork
-   DATA skUdp
-   DATA skTcp
+   VAR cServer
+   VAR cNetwork
+   VAR skUdp
+   VAR skTcp
 
    /* Timeout system */
-   DATA nTimeout        INIT -1
-   DATA nTimeLimit      INIT -1
-   DATA caPerCall
+   VAR nTimeout        INIT -1
+   VAR nTimeLimit      INIT -1
+   VAR caPerCall
 
-   DATA nUdpTimeBegin   INIT 0
-   DATA thUdpAccept     INIT NIL
+   VAR nUdpTimeBegin   INIT 0
+   VAR thUdpAccept     INIT NIL
 
-   DATA nTcpTimeBegin   INIT 0
-   DATA thTcpAccept     INIT NIL
+   VAR nTcpTimeBegin   INIT 0
+   VAR thTcpAccept     INIT NIL
 
    /* XHB RPC Loop system */
-   DATA nLoopMode
-   DATA aLoopData
-   DATA nLoopStart
-   DATA nLoopEnd
-   DATA nLoopStep
+   VAR nLoopMode
+   VAR aLoopData
+   VAR nLoopStart
+   VAR nLoopEnd
+   VAR nLoopStep
 
    /* Encryption data */
-   DATA bEncrypted
-   DATA cCryptKey
+   VAR bEncrypted
+   VAR cCryptKey
 
    /* Last connection result */
-   DATA oResult
+   VAR oResult
 
    /* Encryption system */
    METHOD Encrypt( cDataIn )

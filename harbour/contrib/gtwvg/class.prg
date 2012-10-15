@@ -105,7 +105,7 @@
  */
 //
 
-CLASS wvtDialog
+CREATE CLASS wvtDialog
 
    /*  To hold previous settings  */
    VAR    nOldRows
@@ -740,7 +740,7 @@ METHOD wvtDialog:ActivateMenu()
 //
 //
 
-CLASS WvtObject
+CREATE CLASS WvtObject
 
    VAR    oParent
    VAR    nType
@@ -1015,7 +1015,7 @@ METHOD WvtObject:ShowPopup()
 //
 //
 
-CLASS WvtBrowse FROM WvtObject
+CREATE CLASS WvtBrowse FROM WvtObject
 
    VAR    cAlias
    VAR    oBrw
@@ -1326,7 +1326,7 @@ METHOD WvtBrowse:PaintBlock( nPaintObj )
 //
 //
 
-CLASS WvtStatusBar FROM WvtObject
+CREATE CLASS WvtStatusBar FROM WvtObject
 
    VAR    aPanels
    VAR    cColor
@@ -1483,7 +1483,7 @@ METHOD WvtStatusBar:Refresh()
 //
 //
 
-CLASS WvtPanel FROM WvtObject
+CREATE CLASS WvtPanel FROM WvtObject
 
    VAR    cColor
    VAR    cTxt
@@ -1525,7 +1525,7 @@ METHOD WvtPanel:Refresh()
 //
 //
 
-CLASS WvtLabel FROM WvtObject
+CREATE CLASS WvtLabel FROM WvtObject
 
    ACCESS TEXT                                    INLINE iif( ::cText == nil, "", ::cText )
    ASSIGN TEXT( cTxt )                            INLINE ::cText := iif( cTxt == nil, "", cTxt )
@@ -1688,7 +1688,7 @@ METHOD WvtLabel:HoverOff()
 //
 //
 
-CLASS WvtToolBar FROM WvtObject
+CREATE CLASS WvtToolBar FROM WvtObject
 
    VAR    nPaintID
    VAR    aObjects                                INIT {}
@@ -1851,7 +1851,7 @@ METHOD WvtToolBar:HoverOff()
 //
 //
 
-CLASS WvtToolButton FROM WvtObject
+CREATE CLASS WvtToolButton FROM WvtObject
 
    VAR    cFileImage
    VAR    nCurState             INIT 0
@@ -1974,7 +1974,7 @@ METHOD WvtToolButton:HoverOff()
 //
 //
 
-CLASS WvtImage FROM WvtObject
+CREATE CLASS WvtImage FROM WvtObject
 
    VAR    cImageFile
 
@@ -2030,7 +2030,7 @@ METHOD WvtImage:SetImage( cImage )
 //
 //
 
-CLASS WvtStatic FROM WvtObject
+CREATE CLASS WvtStatic FROM WvtObject
 
    VAR    nStatic
    VAR    nOrient
@@ -2178,7 +2178,7 @@ METHOD WvtStatic:Refresh()
 //
 //
 
-CLASS WvtPushButton FROM WvtObject
+CREATE CLASS WvtPushButton FROM WvtObject
 
    VAR    cCaption
    VAR    cFileImage
@@ -2255,7 +2255,7 @@ METHOD WvtPushButton:LeftUp()
 //
 //
 
-CLASS WvtGets FROM WvtObject
+CREATE CLASS WvtGets FROM WvtObject
 
    VAR    aGetList                                INIT  {}
    VAR    nLastGet                                INIT  1
@@ -2410,7 +2410,7 @@ METHOD WvtGets:DeHilite()
 //
 //
 
-CLASS WvtScrollBar FROM WvtObject
+CREATE CLASS WvtScrollBar FROM WvtObject
 
    VAR    nBarType                                INIT WVT_SCROLLBAR_VERT
 
@@ -2953,7 +2953,7 @@ METHOD wvtScrollbar:HandleEvent( nKey )
 //
 //
 
-CLASS WvtBanner FROM WvtObject
+CREATE CLASS WvtBanner FROM WvtObject
 
    VAR    nTimeDelay                              INIT 0.5    /* One-half Second */
    VAR    nDirection                              INIT 0      /* LEFT 1-RIGHT */
@@ -3125,7 +3125,7 @@ METHOD WvtBanner:HoverOff()
 //
 //
 
-CLASS WvtTextBox FROM WvtObject
+CREATE CLASS WvtTextBox FROM WvtObject
 
    VAR    cText                                   INIT ""
 
@@ -3226,7 +3226,7 @@ METHOD WvtTextBox:HoverOff( /*cText*/ )
 //
 //
 
-CLASS WvtProgressBar FROM WvtObject
+CREATE CLASS WvtProgressBar FROM WvtObject
 
    VAR    cImage
    VAR    nDirection                              INIT 0      /* 0-Left-Right,Top-Bottom  1-Right-Left,Bottom-Top */
@@ -3334,7 +3334,7 @@ METHOD WvtProgressBar:DeActivate()
 //
 //
 
-CLASS wvtMenu
+CREATE CLASS wvtMenu
 
    METHOD create( cCaption )
    METHOD AddItem( cCaption, bAction )
@@ -3348,7 +3348,7 @@ CLASS wvtMenu
    METHOD FindMenuItemById( nId )
    METHOD DrawMenuBar()
 
-   CLASSVAR MenuItemId                            INIT 1
+   CLASS VAR MenuItemId                            INIT 1
 
    VAR    aItems
    VAR    hMenu
@@ -3537,7 +3537,7 @@ METHOD wvtMenu:DrawMenuBar()
 //
 //
 
-CLASS WvtConsole FROM WvtObject
+CREATE CLASS WvtConsole FROM WvtObject
 
    METHOD New( oParent )
    METHOD Say( nRow, nCol, xExp, cColor )
@@ -3615,7 +3615,7 @@ METHOD WvtConsole:Box( nRow, nCol, n2Row, n2Col, cBoxChars, cColor )
 
 //
 
-CLASS TBrowseWVG FROM TBrowse
+CREATE CLASS TBrowseWVG FROM TBrowse
 
    VAR    aColumnsSep                             INIT {}
 

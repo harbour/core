@@ -60,15 +60,15 @@ RETURN uhttpd_Cookie():New( cDomain, cPath, nExpireDays, nExpireSecs )
 CLASS uhttpd_Cookie
 
    // Data for cookies
-   DATA aCookies           INIT {}  // Using an array to mantain order
-   DATA cDomain
-   DATA cPath              INIT "/"
-   DATA cExpire
-   DATA lSecure            INIT .F.
-   DATA lHttpOnly
-   DATA nExpireDays        INIT 0
-   DATA nExpireSecs        INIT 7200       // 1 hour  - TODO set environment constant
-   DATA lCookiesSent       INIT .F.
+   VAR aCookies           INIT {}  // Using an array to mantain order
+   VAR cDomain
+   VAR cPath              INIT "/"
+   VAR cExpire
+   VAR lSecure            INIT .F.
+   VAR lHttpOnly
+   VAR nExpireDays        INIT 0
+   VAR nExpireSecs        INIT 7200       // 1 hour  - TODO set environment constant
+   VAR lCookiesSent       INIT .F.
 
    METHOD SetCookie()
    METHOD DeleteCookie()

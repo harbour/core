@@ -56,18 +56,18 @@
 #include "hbxml.ch"
 #include "hbclass.ch"
 
-CLASS TXMLNode
+CREATE CLASS TXMLNode
 
-   DATA nType
-   DATA cName
-   DATA aAttributes
-   DATA nBeginLine
-   DATA cData
+   VAR nType
+   VAR cName
+   VAR aAttributes
+   VAR nBeginLine
+   VAR cData
 
-   DATA oNext
-   DATA oPrev
-   DATA oParent
-   DATA oChild
+   VAR oNext
+   VAR oPrev
+   VAR oParent
+   VAR oChild
 
    METHOD New( nType, cName, aAttributes, cData ) CONSTRUCTOR
    METHOD Clone()                      INLINE HBXml_node_clone( Self )
@@ -166,7 +166,7 @@ METHOD Path() CLASS TXmlNode
    Iterator class
 *********************************************/
 
-CLASS TXmlIterator
+CREATE CLASS TXmlIterator
 
    METHOD New( oNodeTop )           CONSTRUCTOR
    METHOD Next()
@@ -180,16 +180,16 @@ CLASS TXmlIterator
    PROTECTED:
    METHOD MatchCriteria( oNode )
 
-   DATA cName
-   DATA cAttribute
-   DATA cValue
-   DATA cData
+   VAR cName
+   VAR cAttribute
+   VAR cValue
+   VAR cData
 
    HIDDEN:
-   DATA nTopLevel
+   VAR nTopLevel
 
-   DATA oNode
-   DATA oTop
+   VAR oNode
+   VAR oTop
 
 ENDCLASS
 
@@ -269,7 +269,7 @@ METHOD MatchCriteria( oNode ) CLASS TXmlIterator
    Iterator scan class
 *********************************************/
 
-CLASS TXmlIteratorScan FROM TXmlIterator
+CREATE CLASS TXmlIteratorScan FROM TXmlIterator
 
    METHOD New( oNodeTop ) CONSTRUCTOR
    PROTECTED:
@@ -308,7 +308,7 @@ METHOD MatchCriteria( oFound ) CLASS TXmlIteratorScan
    Iterator regex class
 *********************************************/
 
-CLASS TXmlIteratorRegex FROM TXmlIterator
+CREATE CLASS TXmlIteratorRegex FROM TXmlIterator
 
    METHOD New( oNodeTop ) CONSTRUCTOR
    PROTECTED:
@@ -351,14 +351,14 @@ METHOD MatchCriteria( oFound ) CLASS TXmlIteratorRegex
    Document Class
 *********************************************/
 
-CLASS TXmlDocument
+CREATE CLASS TXmlDocument
 
-   DATA oRoot
-   DATA nStatus
-   DATA nError
-   DATA nLine
-   DATA oErrorNode
-   DATA nNodeCount
+   VAR oRoot
+   VAR nStatus
+   VAR nError
+   VAR nLine
+   VAR oErrorNode
+   VAR nNodeCount
 
    METHOD New( xElem, nStyle )        CONSTRUCTOR
    METHOD Read( xData, nStyle )       INLINE HBXML_DATAREAD( Self, xData, nStyle )
@@ -373,8 +373,8 @@ CLASS TXmlDocument
 
    HIDDEN:
 
-   DATA oIterator
-   DATA cHeader
+   VAR oIterator
+   VAR cHeader
 
 ENDCLASS
 

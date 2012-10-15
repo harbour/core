@@ -64,11 +64,11 @@ CREATE CLASS TPLGenerate
 
    EXPORTED:
 //~ PROTECTED:
-   DATA nHandle AS NUMERIC
-   DATA cFolder AS STRING
-   DATA cFilename AS STRING
-   DATA cTitle AS STRING
-   DATA cExtension AS STRING
+   VAR nHandle AS NUMERIC
+   VAR cFolder AS STRING
+   VAR cFilename AS STRING
+   VAR cTitle AS STRING
+   VAR cExtension AS STRING
 
    METHOD NewIndex( cFolder, cFilename, cTitle, cExtension )
    METHOD NewDocument( cFolder, cFilename, cTitle, cExtension )
@@ -81,8 +81,8 @@ CREATE CLASS TPLGenerate
 
    PROTECTED:
    METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) HIDDEN
-   DATA nType AS INTEGER
-   DATA Depth AS INTEGER INIT 0
+   VAR nType AS INTEGER
+   VAR Depth AS INTEGER INIT 0
 ENDCLASS
 
 METHOD NewIndex( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate

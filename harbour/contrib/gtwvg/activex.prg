@@ -83,25 +83,25 @@
 
 //
 
-CLASS WvgActiveXControl FROM WvgWindow
+CREATE CLASS WvgActiveXControl FROM WvgWindow
 
-   DATA   oOLE
-   DATA   CLSID                              INIT ""
-   DATA   server                             INIT NIL
-   DATA   license                            INIT NIL
-   DATA   controlFlags                       INIT 0
-   DATA   DEFAULT                            INIT .F.
-   DATA   cancel                             INIT .F.
+   VAR    oOLE
+   VAR    CLSID                              INIT ""
+   VAR    server                             INIT NIL
+   VAR    license                            INIT NIL
+   VAR    controlFlags                       INIT 0
+   VAR    DEFAULT                            INIT .F.
+   VAR    cancel                             INIT .F.
 
-   DATA   interface
-   DATA   interfaceName
+   VAR    interface
+   VAR    interfaceName
 
-   DATA   lSubStdEvents                      INIT .F.
+   VAR    lSubStdEvents                      INIT .F.
 
-   DATA   hEvents                            INIT { => }
-   DATA   hContainer
+   VAR    hEvents                            INIT { => }
+   VAR    hContainer
 
-   DATA   ClassName
+   VAR    ClassName
 
    METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLicense )

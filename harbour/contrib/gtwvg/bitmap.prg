@@ -82,18 +82,18 @@
 
 //
 
-CLASS WvgBitmap
+CREATE CLASS WvgBitmap
 
-   DATA     bits                                  INIT 0        READONLY
-   DATA     bufferOffset                          INIT 0        READONLY
-   DATA     planes                                INIT 0        READONLY
-   DATA     transparentClr                        INIT 0
-   DATA     xSize                                 INIT 0        READONLY
-   DATA     ySize                                 INIT 0        READONLY
+   VAR      bits                                  INIT 0        READONLY
+   VAR      bufferOffset                          INIT 0        READONLY
+   VAR      planes                                INIT 0        READONLY
+   VAR      transparentClr                        INIT 0
+   VAR      xSize                                 INIT 0        READONLY
+   VAR      ySize                                 INIT 0        READONLY
 
-   DATA     hBitmap
-   DATA     hDCcompat
-   DATA     lDCToDestroy                          INIT .F.
+   VAR      hBitmap
+   VAR      hDCcompat
+   VAR      lDCToDestroy                          INIT .F.
 
    METHOD   new()
    METHOD   create( oPScompat )

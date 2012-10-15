@@ -82,12 +82,12 @@
 
 //
 
-CLASS WvgStatusBar  INHERIT  WvgWindow /* WvgActiveXControl */
+CREATE CLASS WvgStatusBar  INHERIT  WvgWindow /* WvgActiveXControl */
 
-   DATA     caption                               INIT ""
-   DATA     sizeGrip                              INIT .T.
+   VAR      caption                               INIT ""
+   VAR      sizeGrip                              INIT .T.
 
-   DATA     aItems                                INIT {}
+   VAR      aItems                                INIT {}
 
    METHOD   numItems()                            INLINE Len( ::aItems )
 
@@ -334,27 +334,27 @@ METHOD WvgStatusBar:panelDblClick( xParam )
 //
 //
 
-CLASS WvgStatusBarPanel
+CREATE CLASS WvgStatusBarPanel
 
-   DATA     alignment                             INIT WVGALIGN_LEFT
-   DATA     autosize                              INIT WVGSTATUSBAR_AUTOSIZE_NONE
-   DATA     bevel                                 INIT WVGSTATUSBAR_BEVEL_INSET
-   DATA     enabled                               INIT .T.
-   DATA     INDEX                                 INIT 0
-   DATA     KEY                                   INIT ""
-   DATA     style                                 INIT WVGSTATUSBAR_PANEL_TEXT
-   DATA     sl_caption                            INIT ""
-   DATA     image                                 INIT NIL
-   DATA     tooltipText                           INIT ""
-   DATA     visible                               INIT .T.
-   DATA     left                                  INIT 0
-   DATA     width                                 INIT 0
-   DATA     minWidth                              INIT 0
+   VAR      alignment                             INIT WVGALIGN_LEFT
+   VAR      autosize                              INIT WVGSTATUSBAR_AUTOSIZE_NONE
+   VAR      bevel                                 INIT WVGSTATUSBAR_BEVEL_INSET
+   VAR      enabled                               INIT .T.
+   VAR      INDEX                                 INIT 0
+   VAR      KEY                                   INIT ""
+   VAR      style                                 INIT WVGSTATUSBAR_PANEL_TEXT
+   VAR      sl_caption                            INIT ""
+   VAR      image                                 INIT NIL
+   VAR      tooltipText                           INIT ""
+   VAR      visible                               INIT .T.
+   VAR      left                                  INIT 0
+   VAR      width                                 INIT 0
+   VAR      minWidth                              INIT 0
 
    METHOD   new( cCaption, nStyle, cKey )
    METHOD   caption( cCaption )                   SETGET
 
-   DATA     oParent
+   VAR      oParent
 
 ENDCLASS
 

@@ -76,15 +76,15 @@
 
 //
 
-CLASS WvgTreeView  INHERIT  WvgWindow, WvgDataRef
+CREATE CLASS WvgTreeView  INHERIT  WvgWindow, WvgDataRef
 
-   DATA     alwaysShowSelection                   INIT .F.
-   DATA     hasButtons                            INIT .F.
-   DATA     hasLines                              INIT .F.
+   VAR      alwaysShowSelection                   INIT .F.
+   VAR      hasButtons                            INIT .F.
+   VAR      hasLines                              INIT .F.
 
-   DATA     aItems                                INIT {}
+   VAR      aItems                                INIT {}
 
-   DATA     oRootItem
+   VAR      oRootItem
    ACCESS   rootItem()                            INLINE ::oRootItem
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -95,23 +95,23 @@ CLASS WvgTreeView  INHERIT  WvgWindow, WvgDataRef
 
    METHOD   itemFromPos( aPos )
 
-   DATA     sl_itemCollapsed
-   DATA     sl_itemExpanded
-   DATA     sl_itemMarked
-   DATA     sl_itemSelected
+   VAR      sl_itemCollapsed
+   VAR      sl_itemExpanded
+   VAR      sl_itemMarked
+   VAR      sl_itemSelected
 
    METHOD   itemCollapsed( xParam )               SETGET
    METHOD   itemExpanded( xParam )                SETGET
    METHOD   itemMarked( xParam )                  SETGET
 
-   DATA     oItemSelected
+   VAR      oItemSelected
    ACCESS   itemSelected                          INLINE ::sl_itemSelected
    ASSIGN   itemSelected( bBlock )                INLINE ::sl_itemSelected := bBlock
 
-   DATA     hParentSelected
-   DATA     hItemSelected
-   DATA     textParentSelected                    INIT ""
-   DATA     textItemSelected                      INIT ""
+   VAR      hParentSelected
+   VAR      hItemSelected
+   VAR      textParentSelected                    INIT ""
+   VAR      textItemSelected                      INIT ""
 
    METHOD   getSelectionInfo( nlParam )
    METHOD   setColorFG( nRGB )                    INLINE WVG_TreeView_SetTextColor( ::hWnd, iif( HB_ISSTRING( nRGB ), Wvt_GetRGBColorByString( nRGB, 0 ), nRGB ) )
@@ -365,21 +365,21 @@ METHOD WvgTreeView:itemSelected( xParam )
 /*                      Class WvgTreeViewItem                           */
 //
 
-CLASS WvgTreeViewItem
+CREATE CLASS WvgTreeViewItem
 
-   DATA     caption                               INIT ""
-   DATA     dllName                               INIT NIL
-   DATA     expandedImage                         INIT - 1
-   DATA     image                                 INIT - 1
-   DATA     markedImage                           INIT - 1
+   VAR      caption                               INIT ""
+   VAR      dllName                               INIT NIL
+   VAR      expandedImage                         INIT - 1
+   VAR      image                                 INIT - 1
+   VAR      markedImage                           INIT - 1
 
-   DATA     hTree
-   DATA     hItem
-   DATA     oParent
-   DATA     oWnd
+   VAR      hTree
+   VAR      hItem
+   VAR      oParent
+   VAR      oWnd
 
-   DATA     className                              INIT "TREEVIEWITEM"
-   DATA     objType                                INIT objTypeTreeViewItem
+   VAR      className                              INIT "TREEVIEWITEM"
+   VAR      objType                                INIT objTypeTreeViewItem
 
    METHOD   new()
    METHOD   create()

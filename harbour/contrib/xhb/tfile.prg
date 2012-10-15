@@ -50,17 +50,17 @@
 
 #translate FPOS( <f> ) => FSeek( <f>, 0, FS_RELATIVE )
 
-CLASS TCgiFile
+CREATE CLASS TCgiFile
 
-   DATA Buffer INIT ""
-   DATA Name INIT ""
-   DATA Handle
-   DATA FileSize INIT 0
-   DATA BytesRead INIT 0
-   DATA cPage INIT ""
-   DATA nPage INIT 0
-   DATA nPageSize INIT 1024
-   DATA nRecord INIT 0
+   VAR Buffer INIT ""
+   VAR Name INIT ""
+   VAR Handle
+   VAR FileSize INIT 0
+   VAR BytesRead INIT 0
+   VAR cPage INIT ""
+   VAR nPage INIT 0
+   VAR nPageSize INIT 1024
+   VAR nRecord INIT 0
 
    METHOD New( cName )
 

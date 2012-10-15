@@ -76,12 +76,12 @@
 
 //
 
-CLASS WvgDialog FROM WvgWindow
+CREATE CLASS WvgDialog FROM WvgWindow
 
-   DATA     oMenu
-   DATA     aRect
-   DATA     drawingArea
-   DATA     tasklist                              INIT  .T.
+   VAR      oMenu
+   VAR      aRect
+   VAR      drawingArea
+   VAR      tasklist                              INIT  .T.
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )

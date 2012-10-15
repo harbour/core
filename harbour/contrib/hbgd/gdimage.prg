@@ -56,24 +56,24 @@
 CREATE CLASS GDImage
 
    PROTECTED:
-   DATA pImage
-   DATA pBrush
-   DATA pTile
-   DATA pFont
-   DATA pColor
+   VAR pImage
+   VAR pBrush
+   VAR pTile
+   VAR pFont
+   VAR pColor
 
-   DATA cFontName    INIT "Arial"
-   DATA nFontPitch   INIT 20
-   DATA nFontAngle   INIT 0
+   VAR cFontName    INIT "Arial"
+   VAR nFontPitch   INIT 20
+   VAR nFontAngle   INIT 0
 
-   DATA aPoints      INIT {}
-   DATA aStyles      INIT {}
-   DATA lDestroy     INIT .T.
+   VAR aPoints      INIT {}
+   VAR aStyles      INIT {}
+   VAR lDestroy     INIT .T.
 
    EXPORTED:
-   DATA hFile
-   DATA cType
-   DATA cMime
+   VAR hFile
+   VAR cType
+   VAR cMime
 
    METHOD New( sx, sy )  CONSTRUCTOR
 

@@ -67,6 +67,7 @@
 //   3. wrongly breaks line: 'FUNCTION Hello( /* comment */ )'
 //   4. INIT PROCEDURE/EXIT PROCEDURE are not recognized as PROCEDURE statement
 //   5. ".T.," / ".F.," gets wrongly corrected to ".T. ," / ".F. ,"
+//   6. "end class" is converted to "end CLASS" instead of "END CLASS"
 
 CREATE CLASS HBFORMATCODE
 

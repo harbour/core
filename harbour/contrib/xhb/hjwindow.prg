@@ -47,33 +47,33 @@
 #include "hbclass.ch"
 #include "cgi.ch"
 
-CLASS TJsWindow
+CREATE CLASS TJsWindow
 
-   DATA nH
-   DATA Name INIT ""
-   DATA oHtm
-   DATA VarName INIT ""
-   DATA URL INIT ""
-   DATA Features INIT ""
+   VAR nH
+   VAR Name INIT ""
+   VAR oHtm
+   VAR VarName INIT ""
+   VAR URL INIT ""
+   VAR Features INIT ""
 
-   DATA ScreenX, ScreenY INIT 100
-   DATA HEIGHT, WIDTH INIT 300
-   DATA innerHeight, innerWidth, outerHeight INIT 0
-   DATA alwaysRaised, alwaysLowered INIT .F.
-   DATA Menubar, personalBar INIT .F.
-   DATA location, directories, copyHistory INIT .F.
-   DATA Toolbar INIT .F.
-   DATA Status, TitleBar INIT .T.
-   DATA Scrollbars, Resizable, dependent INIT .T.
+   VAR ScreenX, ScreenY INIT 100
+   VAR HEIGHT, WIDTH INIT 300
+   VAR innerHeight, innerWidth, outerHeight INIT 0
+   VAR alwaysRaised, alwaysLowered INIT .F.
+   VAR Menubar, personalBar INIT .F.
+   VAR location, directories, copyHistory INIT .F.
+   VAR Toolbar INIT .F.
+   VAR Status, TitleBar INIT .T.
+   VAR Scrollbars, Resizable, dependent INIT .T.
 
-   DATA TITLE
-   DATA aScriptSRC
-   DATA aServerSRC
-   DATA BGIMAGE, BGCOLOR, fontColor
-   DATA Style
+   VAR TITLE
+   VAR aScriptSRC
+   VAR aServerSRC
+   VAR BGIMAGE, BGCOLOR, fontColor
+   VAR Style
 
-   DATA onLoad
-   DATA onUnLoad
+   VAR onLoad
+   VAR onUnLoad
 
    METHOD New( cVarName, cUrl, cName, x, y, w, h )
 
