@@ -8738,7 +8738,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
                hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
                cType := I_( "(compiled)" )
                lOK := .T.
-            END
+            END /* SEQUENCE */
          ENDIF
          IF ! lOK .AND. !( Lower( cExt ) == ".hrb" ) /* Optimization: Don't try to load it as .prg if the extension is .hrb */
             cType := I_( "(source)" )
@@ -8978,7 +8978,7 @@ STATIC FUNCTION PlugIn_call_low( hbmk, cName, hrb, ctx )
       IF ! hbmk[ _HBMK_lQuiet ]
          _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Executing plugin: %1$s at %3$s(%4$d)\n'%2$s'" ), cName, hbmk_ErrorMessage( oError ), oError:cargo[ 1 ], oError:cargo[ 2 ] ) )
       ENDIF
-   END
+   END /* SEQUENCE */
 
    RETURN lSuccess
 
@@ -10484,7 +10484,7 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
             IF ! hbmk[ _HBMK_lQuiet ]
                _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Error in filter expression: '%1$s'" ), cFilterSrc ) )
             ENDIF
-         END
+         END /* SEQUENCE */
 
          RETURN cRetVal
       ENDIF
@@ -12766,7 +12766,7 @@ STATIC FUNCTION __hbshell_plugins_load( hPlugins, aParams )
          RECOVER USING oError
             plugin[ _PLUGIN_hHRB ] := NIL
             OutErr( hb_StrFormat( I_( "Error: Loading shell plugin: %1$s\n'%2$s'" ), cFile:__enumKey(), hbmk_ErrorMessage( oError ) ) + _OUT_EOL )
-         END
+         END /* SEQUENCE */
       ENDIF
 
       IF ! Empty( plugin[ _PLUGIN_hHRB ] )
@@ -13116,7 +13116,7 @@ STATIC PROCEDURE __hbshell_Exec( cCommand )
          ENDIF
       ENDIF
 
-   END
+   END /* SEQUENCE */
 
    s_nRow := Row()
    s_nCol := Col()

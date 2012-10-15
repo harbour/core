@@ -103,20 +103,20 @@ FUNCTION xBrowse1()
    LOCAL nCursor := SetCursor( SC_NONE )
    LOCAL nWin
 
-   USE '..\..\..\tests\test' NEW
+   USE "..\..\..\tests\test" NEW
    IF NetErr()
       RETURN NIL
    ENDIF
    info_ := dbStruct()
 
-   SetColor( 'N/W*,N/GR*,,,N/W* ' )
+   SetColor( "N/W*,N/GR*,,,N/W* " )
    oBrowse := TBrowseNew( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 )
 
    oBrowse:ColSep        := hb_UTF8ToStrBox( "│" )
    oBrowse:HeadSep       := hb_UTF8ToStrBox( "─" )
-   oBrowse:GoTopBlock    := { || dbGoTop() }
-   oBrowse:GoBottomBlock := { || dbGoBottom() }
-   oBrowse:SkipBlock     := { | nSkip | dbSkipBlock( nSkip, oBrowse ) }
+   oBrowse:GoTopBlock    := {|| dbGoTop() }
+   oBrowse:GoBottomBlock := {|| dbGoBottom() }
+   oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip, oBrowse ) }
 
    FOR i := 1 TO Len( info_ )
       bBlock := VouBlockField( i )
@@ -166,7 +166,7 @@ FUNCTION xBrowse1()
       CASE nKey == K_CTRL_END
          oBrowse:panEnd()
       ENDCASE
-   end
+   ENDDO
 
    lMessage( "" )
 

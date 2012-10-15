@@ -108,65 +108,65 @@
 CLASS wvtDialog
 
    /*  To hold previous settings  */
-   DATA   nOldRows
-   DATA   nOldCols
-   DATA   aOldFont
-   DATA   cOldTitle
-   DATA   cOldColor
-   DATA   nOldCursor
-   DATA   aPalette
-   DATA   cScreen
-   DATA   aWvtScreen
-   DATA   aOldPnt
-   DATA   oldTooltipActive
-   DATA   oldTooltipWidth
-   DATA   oldTooltipBkColor
-   DATA   oldTooltipTextColor
-   DATA   oldMenuHandle
-   DATA   oldMenuBlock
-   DATA   lGui
+   VAR    nOldRows
+   VAR    nOldCols
+   VAR    aOldFont
+   VAR    cOldTitle
+   VAR    cOldColor
+   VAR    nOldCursor
+   VAR    aPalette
+   VAR    cScreen
+   VAR    aWvtScreen
+   VAR    aOldPnt
+   VAR    oldTooltipActive
+   VAR    oldTooltipWidth
+   VAR    oldTooltipBkColor
+   VAR    oldTooltipTextColor
+   VAR    oldMenuHandle
+   VAR    oldMenuBlock
+   VAR    lGui
 
    /*  Dialog Parameters  */
-   DATA   nRows
-   DATA   nCols
-   DATA   cFont
-   DATA   nFontHeight
-   DATA   nFontWidth
-   DATA   nFontBold
-   DATA   nFontQuality
-   DATA   cTitle
-   DATA   cColor
+   VAR    nRows
+   VAR    nCols
+   VAR    cFont
+   VAR    nFontHeight
+   VAR    nFontWidth
+   VAR    nFontBold
+   VAR    nFontQuality
+   VAR    cTitle
+   VAR    cColor
 
    /*  Objects handelling  */
-   DATA   aObjects                                INIT {}
-   DATA   oCurObj
-   DATA   oLastObj
-   DATA   oObjOver
-   DATA   oLastOver
-   DATA   nCurObj                                 INIT 1
-   DATA   nLastObj                                INIT 0
-   DATA   nObjOver                                INIT 0
-   DATA   nLastOver                               INIT - 1
-   DATA   nUseObj
-   DATA   oMenu
-   DATA   aDialogKeys                             INIT {}
-   DATA   cDialogID                               INIT ""
+   VAR    aObjects                                INIT {}
+   VAR    oCurObj
+   VAR    oLastObj
+   VAR    oObjOver
+   VAR    oLastOver
+   VAR    nCurObj                                 INIT 1
+   VAR    nLastObj                                INIT 0
+   VAR    nObjOver                                INIT 0
+   VAR    nLastOver                               INIT - 1
+   VAR    nUseObj
+   VAR    oMenu
+   VAR    aDialogKeys                             INIT {}
+   VAR    cDialogID                               INIT ""
 
    /*  Tooltip Management  */
-   DATA   nTooltipWidth
-   DATA   nTooltipBkColor
-   DATA   nTooltipTextColor
+   VAR    nTooltipWidth
+   VAR    nTooltipBkColor
+   VAR    nTooltipTextColor
 
    /*  Miscellaneous  */
-   DATA   ClassName                               INIT "WVTDIALOG"
-   DATA   cPaintBlockID
-   DATA   nPaintID                                INIT 1
-   DATA   nObjID                                  INIT 5000
-   DATA   nKey
-   DATA   hFonts                                  INIT {}
-   DATA   lEventHandled
-   DATA   lTabStops                               INIT .F.
-   DATA   bOnCreate
+   VAR    ClassName                               INIT "WVTDIALOG"
+   VAR    cPaintBlockID
+   VAR    nPaintID                                INIT 1
+   VAR    nObjID                                  INIT 5000
+   VAR    nKey
+   VAR    hFonts                                  INIT {}
+   VAR    lEventHandled
+   VAR    lTabStops                               INIT .F.
+   VAR    bOnCreate
 
    ACCESS nObjects                                INLINE Len( ::aObjects )
 
@@ -649,7 +649,7 @@ METHOD wvtDialog:CreateObjects()
    nObjs := Len( ::aObjects )
 
    FOR i := 1 TO nObjs
-      switch ::aObjects[ i ]:nType
+      SWITCH ::aObjects[ i ]:nType
 
       CASE DLG_OBJ_BROWSE
          ::aObjects[ i ]:Create()
@@ -692,7 +692,7 @@ METHOD wvtDialog:CreateObjects()
       CASE DLG_OBJ_PROGRESSBAR
          ::aObjects[ i ]:Create()
          EXIT
-      end
+      ENDSWITCH
    NEXT
 
    RETURN self
@@ -742,83 +742,83 @@ METHOD wvtDialog:ActivateMenu()
 
 CLASS WvtObject
 
-   DATA   oParent
-   DATA   nType
-   DATA   nId
+   VAR    oParent
+   VAR    nType
+   VAR    nId
 
-   DATA   nTop
-   DATA   nLeft
-   DATA   nBottom
-   DATA   nRight
-   DATA   aPxlTLBR                                INIT {}
+   VAR    nTop
+   VAR    nLeft
+   VAR    nBottom
+   VAR    nRight
+   VAR    aPxlTLBR                                INIT {}
 
-   DATA   aObjects                                INIT {}
-   DATA   aParent                                 INIT {}
-   DATA   aChildren                               INIT {}
-   DATA   aPaint                                  INIT {}
-   DATA   bPaint
-   DATA   ClassName                               INIT ""
+   VAR    aObjects                                INIT {}
+   VAR    aParent                                 INIT {}
+   VAR    aChildren                               INIT {}
+   VAR    aPaint                                  INIT {}
+   VAR    bPaint
+   VAR    ClassName                               INIT ""
 
-   DATA   nObjID                                  INIT 900000
-   DATA   nPointer
-   DATA   cargo
-   DATA   xSettings
-   DATA   cText
-   DATA   cToolTip
-   DATA   lActive                                 INIT .T.
-   DATA   lAnimate                                INIT .F.
-   DATA   lTabStop                                INIT .T.
-   DATA   hFont
+   VAR    nObjID                                  INIT 900000
+   VAR    nPointer
+   VAR    cargo
+   VAR    xSettings
+   VAR    cText
+   VAR    cToolTip
+   VAR    lActive                                 INIT .T.
+   VAR    lAnimate                                INIT .F.
+   VAR    lTabStop                                INIT .T.
+   VAR    hFont
 
-   DATA   aPopup                                  INIT {}
-   DATA   hPopup                                  INIT nil
-   DATA   nPopupItemID                            INIT 700000
+   VAR    aPopup                                  INIT {}
+   VAR    hPopup                                  INIT nil
+   VAR    nPopupItemID                            INIT 700000
 
-   DATA   nMRow                                   INIT 0
-   DATA   nMCol                                   INIT 0
-   DATA   cColorHilite                            INIT "W+/B*"
-   DATA   cColorDehilite                          INIT "W/N*"
+   VAR    nMRow                                   INIT 0
+   VAR    nMCol                                   INIT 0
+   VAR    cColorHilite                            INIT "W+/B*"
+   VAR    cColorDehilite                          INIT "W/N*"
 
-   DATA   nTextColor
-   DATA   nBackColor
-   DATA   nBackMode                               INIT 0 /* OPAQUE 1-TRANSPARENT */
-   DATA   nTextColorHoverOn
-   DATA   nTextColorHoverOff
-   DATA   nBackColorHoverOn
-   DATA   nBackColorHoverOff
-   DATA   cFont
-   DATA   nFontHeight
-   DATA   nFontWidth
-   DATA   nFontWeight
-   DATA   nFontQuality
-   DATA   nCharSet
-   DATA   lItalic
-   DATA   lUnderline
-   DATA   lStrikeOut
-   DATA   nAlignHorz
-   DATA   nAlignVert
-   DATA   nAngle
+   VAR    nTextColor
+   VAR    nBackColor
+   VAR    nBackMode                               INIT 0 /* OPAQUE 1-TRANSPARENT */
+   VAR    nTextColorHoverOn
+   VAR    nTextColorHoverOff
+   VAR    nBackColorHoverOn
+   VAR    nBackColorHoverOff
+   VAR    cFont
+   VAR    nFontHeight
+   VAR    nFontWidth
+   VAR    nFontWeight
+   VAR    nFontQuality
+   VAR    nCharSet
+   VAR    lItalic
+   VAR    lUnderline
+   VAR    lStrikeOut
+   VAR    nAlignHorz
+   VAR    nAlignVert
+   VAR    nAngle
 
    ACCESS ToolTip                                 INLINE iif( ::cTooltip == nil, "", ::cTooltip )
    ASSIGN ToolTip( cTip )                         INLINE ::cToolTip := cTip
 
-   DATA   bHandleEvent
-   DATA   bOnCreate                               INIT   {|| NIL }
-   DATA   bOnSelect                               INIT   {|| NIL }
-   DATA   bOnFocus                                INIT   {|| NIL }
-   DATA   bOnRefresh                              INIT   {|| NIL }
-   DATA   bOnLeftUp                               INIT   {|| NIL }
-   DATA   bOnLeftDown                             INIT   {|| .F. }
-   DATA   bOnMMLeftDown                           INIT   {|| NIL }
-   DATA   bOnLeftPressed                          INIT   {|| NIL }
-   DATA   bTooltip                                INIT   {|| NIL }
-   DATA   bSaveSettings                           INIT   {|| NIL }
-   DATA   bRestSettings                           INIT   {|| NIL }
-   DATA   bOnHilite                               INIT   {|| NIL }
-   DATA   bOnDeHilite                             INIT   {|| NIL }
+   VAR    bHandleEvent
+   VAR    bOnCreate                               INIT   {|| NIL }
+   VAR    bOnSelect                               INIT   {|| NIL }
+   VAR    bOnFocus                                INIT   {|| NIL }
+   VAR    bOnRefresh                              INIT   {|| NIL }
+   VAR    bOnLeftUp                               INIT   {|| NIL }
+   VAR    bOnLeftDown                             INIT   {|| .F. }
+   VAR    bOnMMLeftDown                           INIT   {|| NIL }
+   VAR    bOnLeftPressed                          INIT   {|| NIL }
+   VAR    bTooltip                                INIT   {|| NIL }
+   VAR    bSaveSettings                           INIT   {|| NIL }
+   VAR    bRestSettings                           INIT   {|| NIL }
+   VAR    bOnHilite                               INIT   {|| NIL }
+   VAR    bOnDeHilite                             INIT   {|| NIL }
 
    ACCESS nChildren                               INLINE Len( ::aChildren )
-   DATA   nIndexOrder
+   VAR    nIndexOrder
 
    METHOD New( oParent, nType, nID, nTop, nLeft, nBottom, nRight )
    METHOD create()
@@ -867,7 +867,7 @@ METHOD WvtObject:New( oParent, nType, nID, nTop, nLeft, nBottom, nRight )
    ::nBottom   :=  nBottom
    ::nRight    :=  nRight
 
-   switch nType
+   SWITCH nType
 
    CASE DLG_OBJ_BROWSE
       ::ClassName := "WVTBROWSE"
@@ -931,7 +931,7 @@ METHOD WvtObject:New( oParent, nType, nID, nTop, nLeft, nBottom, nRight )
       ::lTabStop  := .F.
       EXIT
 
-   end
+   ENDSWITCH
 
    RETURN Self
 
@@ -1017,16 +1017,16 @@ METHOD WvtObject:ShowPopup()
 
 CLASS WvtBrowse FROM WvtObject
 
-   DATA   cAlias
-   DATA   oBrw
-   DATA   lHSBar                                  INIT .T.
-   DATA   lVSBar                                  INIT .T.
-   DATA   oHBar
-   DATA   oVBar
-   DATA   bTotalRecords
-   DATA   bCurrentRecord
-   DATA   bTotalColumns
-   DATA   bCurrentColumn
+   VAR    cAlias
+   VAR    oBrw
+   VAR    lHSBar                                  INIT .T.
+   VAR    lVSBar                                  INIT .T.
+   VAR    oHBar
+   VAR    oVBar
+   VAR    bTotalRecords
+   VAR    bCurrentRecord
+   VAR    bTotalColumns
+   VAR    bCurrentColumn
 
    ACCESS cDesc                                   INLINE iif( ::cText == nil, "", ::cText )
    ASSIGN cDesc( cText )                          INLINE ::cText := cText
@@ -1290,7 +1290,7 @@ METHOD WvtBrowse:PaintBlock( nPaintObj )
 
    LOCAL bBlock, b := ::oBrw
 
-   switch nPaintObj
+   SWITCH nPaintObj
 
    CASE 1
       bBlock := {|| Wvt_DrawBoxRaised( b:nTop - 2, b:nLeft - 2, b:nBottom + 1, b:nRight + 2 ) }
@@ -1312,7 +1312,7 @@ METHOD WvtBrowse:PaintBlock( nPaintObj )
       AAdd( ::aPaint, { bBlock, { WVT_BLOCK_GRID_V, b:nTop + 1, b:nLeft + 1, b:nBottom - 1, b:nRight - 1, b } } )
       EXIT
 
-   end
+   ENDSWITCH
 
    RETURN Self
 
@@ -1328,8 +1328,8 @@ METHOD WvtBrowse:PaintBlock( nPaintObj )
 
 CLASS WvtStatusBar FROM WvtObject
 
-   DATA   aPanels
-   DATA   cColor
+   VAR    aPanels
+   VAR    cColor
 
    METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD create()
@@ -1485,9 +1485,9 @@ METHOD WvtStatusBar:Refresh()
 
 CLASS WvtPanel FROM WvtObject
 
-   DATA   cColor
-   DATA   cTxt
-   DATA   cIconFile
+   VAR    cColor
+   VAR    cTxt
+   VAR    cIconFile
 
    ACCESS TEXT                                    INLINE ::cTxt
    ASSIGN TEXT( cText )                           INLINE ::cTxt := PadR( cText, ::nRight - ::nLeft - 2 )
@@ -1690,16 +1690,16 @@ METHOD WvtLabel:HoverOff()
 
 CLASS WvtToolBar FROM WvtObject
 
-   DATA   nPaintID
-   DATA   aObjects                                INIT {}
-   DATA   lHidden                                 INIT .F.
-   DATA   nCurButton                              INIT 0
-   DATA   lActive
-   DATA   lFloating
-   DATA   wScreen
-   DATA   cScreen
-   DATA   nBtnLeft                                INIT 0
-   DATA   nRGBSep                                 INIT RGB( 150, 150, 150 )
+   VAR    nPaintID
+   VAR    aObjects                                INIT {}
+   VAR    lHidden                                 INIT .F.
+   VAR    nCurButton                              INIT 0
+   VAR    lActive
+   VAR    lFloating
+   VAR    wScreen
+   VAR    cScreen
+   VAR    nBtnLeft                                INIT 0
+   VAR    nRGBSep                                 INIT RGB( 150, 150, 150 )
 
    ACCESS nButtons                                INLINE Len( ::aButtons )
 
@@ -1853,10 +1853,10 @@ METHOD WvtToolBar:HoverOff()
 
 CLASS WvtToolButton FROM WvtObject
 
-   DATA   cFileImage
-   DATA   nCurState             INIT 0
-   DATA   nBtnType              INIT TLB_BUTTON_TYPE_IMAGE
-   DATA   aPxlOffSet            INIT { 0, - 1, - 3, 1 }
+   VAR    cFileImage
+   VAR    nCurState             INIT 0
+   VAR    nBtnType              INIT TLB_BUTTON_TYPE_IMAGE
+   VAR    aPxlOffSet            INIT { 0, - 1, - 3, 1 }
 
    METHOD New( oParent )
    METHOD create()
@@ -1976,7 +1976,7 @@ METHOD WvtToolButton:HoverOff()
 
 CLASS WvtImage FROM WvtObject
 
-   DATA   cImageFile
+   VAR    cImageFile
 
    ACCESS cImage                                  INLINE ::cImageFile
    ASSIGN cImage( cImg )                          INLINE ::cImageFile := cImg
@@ -2032,24 +2032,24 @@ METHOD WvtImage:SetImage( cImage )
 
 CLASS WvtStatic FROM WvtObject
 
-   DATA   nStatic
-   DATA   nOrient
-   DATA   nFormat
-   DATA   nAlign
-   DATA   nStyle
-   DATA   nThick
-   DATA   nColor
+   VAR    nStatic
+   VAR    nOrient
+   VAR    nFormat
+   VAR    nAlign
+   VAR    nStyle
+   VAR    nThick
+   VAR    nColor
 
-   DATA   nfTop
-   DATA   nfLeft
-   DATA   nfBottom
-   DATA   nfRight
+   VAR    nfTop
+   VAR    nfLeft
+   VAR    nfBottom
+   VAR    nfRight
 
-   DATA   nHorzVert                               INIT 0
-   DATA   aRGBb
-   DATA   aRGBe
+   VAR    nHorzVert                               INIT 0
+   VAR    aRGBb
+   VAR    aRGBe
 
-   DATA   aPxlOffSet                              INIT {}
+   VAR    aPxlOffSet                              INIT {}
 
    METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD create()
@@ -2180,8 +2180,8 @@ METHOD WvtStatic:Refresh()
 
 CLASS WvtPushButton FROM WvtObject
 
-   DATA   cCaption
-   DATA   cFileImage
+   VAR    cCaption
+   VAR    cFileImage
 
    ACCESS block                                   INLINE ::bOnLeftUp
    ASSIGN block( bBlock )                         INLINE ::bOnLeftUp := bBlock
@@ -2257,11 +2257,11 @@ METHOD WvtPushButton:LeftUp()
 
 CLASS WvtGets FROM WvtObject
 
-   DATA   aGetList                                INIT  {}
-   DATA   nLastGet                                INIT  1
-   DATA   nCurGet                                 INIT  1
-   DATA   GetList                                 INIT  {}
-   DATA   cDesc                                   INIT  ""
+   VAR    aGetList                                INIT  {}
+   VAR    nLastGet                                INIT  1
+   VAR    nCurGet                                 INIT  1
+   VAR    GetList                                 INIT  {}
+   VAR    cDesc                                   INIT  ""
 
    METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD create()
@@ -2412,48 +2412,48 @@ METHOD WvtGets:DeHilite()
 
 CLASS WvtScrollBar FROM WvtObject
 
-   DATA   nBarType                                INIT WVT_SCROLLBAR_VERT
+   VAR    nBarType                                INIT WVT_SCROLLBAR_VERT
 
-   DATA   nTotal                                  INIT 100
-   DATA   nCurrent                                INIT 1
-   DATA   nThumbPos                               INIT 0
-   DATA   nBlockNo                                INIT 1
+   VAR    nTotal                                  INIT 100
+   VAR    nCurrent                                INIT 1
+   VAR    nThumbPos                               INIT 0
+   VAR    nBlockNo                                INIT 1
 
-   DATA   nSTop
-   DATA   nSLeft
-   DATA   nSBottom
-   DATA   nSRight
+   VAR    nSTop
+   VAR    nSLeft
+   VAR    nSBottom
+   VAR    nSRight
 
-   DATA   nBtn1Top
-   DATA   nBtn1Left
-   DATA   nBtn1Bottom
-   DATA   nBtn1Right
+   VAR    nBtn1Top
+   VAR    nBtn1Left
+   VAR    nBtn1Bottom
+   VAR    nBtn1Right
 
-   DATA   nBtn2Top
-   DATA   nBtn2Left
-   DATA   nBtn2Bottom
-   DATA   nBtn2Right
-   DATA   bBtnLeftTop
-   DATA   bBtnLeftTopDep
-   DATA   bBtnRightBottom
-   DATA   bBtnRightBottomDep
-   DATA   bBtnScroll
-   DATA   bTotal
-   DATA   bCurrent
-   DATA   lHidden                                 INIT .T.
+   VAR    nBtn2Top
+   VAR    nBtn2Left
+   VAR    nBtn2Bottom
+   VAR    nBtn2Right
+   VAR    bBtnLeftTop
+   VAR    bBtnLeftTopDep
+   VAR    bBtnRightBottom
+   VAR    bBtnRightBottomDep
+   VAR    bBtnScroll
+   VAR    bTotal
+   VAR    bCurrent
+   VAR    lHidden                                 INIT .T.
 
-   DATA   aPxlBtnTop                              INIT { 0, 0, 0, 0 }
-   DATA   aPxlBtnLft                              INIT { 0, 0, 0, 0 }
-   DATA   aPxlBtnBtm                              INIT { 0, 0, 0, 0 }
-   DATA   aPxlBtnRgt                              INIT { 0, 0, 0, 0 }
-   DATA   aPxlScroll                              INIT { 0, 0, 0, 0 }
+   VAR    aPxlBtnTop                              INIT { 0, 0, 0, 0 }
+   VAR    aPxlBtnLft                              INIT { 0, 0, 0, 0 }
+   VAR    aPxlBtnBtm                              INIT { 0, 0, 0, 0 }
+   VAR    aPxlBtnRgt                              INIT { 0, 0, 0, 0 }
+   VAR    aPxlScroll                              INIT { 0, 0, 0, 0 }
 
-   DATA   lLeftDown                               INIT .F.
-   DATA   lOnThumb                                INIT .F.
-   DATA   lAnchored                               INIT .F.
-   DATA   lOnLeftDown                             INIT .F.
+   VAR    lLeftDown                               INIT .F.
+   VAR    lOnThumb                                INIT .F.
+   VAR    lAnchored                               INIT .F.
+   VAR    lOnLeftDown                             INIT .F.
 
-   DATA   nScrollUnits                            INIT 0
+   VAR    nScrollUnits                            INIT 0
 
    METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD create()
@@ -2955,20 +2955,20 @@ METHOD wvtScrollbar:HandleEvent( nKey )
 
 CLASS WvtBanner FROM WvtObject
 
-   DATA   nTimeDelay                              INIT 0.5    /* One-half Second */
-   DATA   nDirection                              INIT 0      /* LEFT 1-RIGHT */
-   DATA   nCharToSkip                             INIT 1
-   DATA   cText                                   INIT ""
-   DATA   cDispText                               INIT ""
-   DATA   nTextLen                                INIT 0
-   DATA   nTextIndex                              INIT 0
+   VAR    nTimeDelay                              INIT 0.5    /* One-half Second */
+   VAR    nDirection                              INIT 0      /* LEFT 1-RIGHT */
+   VAR    nCharToSkip                             INIT 1
+   VAR    cText                                   INIT ""
+   VAR    cDispText                               INIT ""
+   VAR    nTextLen                                INIT 0
+   VAR    nTextIndex                              INIT 0
 
-   DATA   oLabel
+   VAR    oLabel
 
-   DATA   nAlignVert                              INIT 2     /* Center */
+   VAR    nAlignVert                              INIT 2     /* Center */
 
-   DATA   nCurSeconds                             INIT 0
-   DATA   nCurAlign
+   VAR    nCurSeconds                             INIT 0
+   VAR    nCurAlign
 
    METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD create()
@@ -3127,7 +3127,7 @@ METHOD WvtBanner:HoverOff()
 
 CLASS WvtTextBox FROM WvtObject
 
-   DATA   cText                                   INIT ""
+   VAR    cText                                   INIT ""
 
    METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD create()
@@ -3228,19 +3228,19 @@ METHOD WvtTextBox:HoverOff( /*cText*/ )
 
 CLASS WvtProgressBar FROM WvtObject
 
-   DATA   cImage
-   DATA   nDirection                              INIT 0      /* 0-Left-Right,Top-Bottom  1-Right-Left,Bottom-Top */
-   DATA   nStyle                                  INIT 0
-   DATA   lVertical                               INIT .F.
-   DATA   lActive                                 INIT .F.
+   VAR    cImage
+   VAR    nDirection                              INIT 0      /* 0-Left-Right,Top-Bottom  1-Right-Left,Bottom-Top */
+   VAR    nStyle                                  INIT 0
+   VAR    lVertical                               INIT .F.
+   VAR    lActive                                 INIT .F.
 
-   DATA   nBarColor                               INIT RGB( 0, 0, 128 )
-   DATA   nCurrent                                INIT 0
-   DATA   nTotal                                  INIT 1
-   DATA   nPercent                                INIT 0
-   DATA   cBackColor                              INIT "W/W"
+   VAR    nBarColor                               INIT RGB( 0, 0, 128 )
+   VAR    nCurrent                                INIT 0
+   VAR    nTotal                                  INIT 1
+   VAR    nPercent                                INIT 0
+   VAR    cBackColor                              INIT "W/W"
 
-   DATA   cScreen
+   VAR    cScreen
 
    METHOD New( oParent, nID, nTop, nLeft, nBottom, nRight )
    METHOD create()
@@ -3617,7 +3617,7 @@ METHOD WvtConsole:Box( nRow, nCol, n2Row, n2Col, cBoxChars, cColor )
 
 CLASS TBrowseWVG FROM TBrowse
 
-   DATA   aColumnsSep                             INIT {}
+   VAR    aColumnsSep                             INIT {}
 
    METHOD SetVisible()
 

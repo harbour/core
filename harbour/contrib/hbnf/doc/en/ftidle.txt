@@ -30,13 +30,13 @@
  *     this fact makes you uncomfortable then don't use this function, you
  *     miserable jello-spined lump of human debris.
  *  $EXAMPLES$
- *     while Whatever         // Some batch process
+ *     DO WHILE Whatever      // Some batch process
  *
  *       Something()          // Create 'n' discard a bunch of stuff
  *
  *       FT_Idle()            // Take out the garbage
  *
- *     end
+ *     ENDDO
  *  $SEEALSO$
  *     FT_OnIdle()
  *  $END$

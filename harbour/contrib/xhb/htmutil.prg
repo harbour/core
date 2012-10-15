@@ -160,16 +160,16 @@ PROCEDURE htmlBrowse( oHtm, cAction, lUseLinks )
    __defaultNIL( @cAction, "confirm('RECORD: '+this.name+'\nPlace your action here !!!')" )
    __defaultNIL( @lUseLinks, .F. )
 
-   /*
-// browse caption...
-oHtm:defineTable( 1, 1, 98 )
-oHtm:newTableRow("black")
-oHtm:newTableCell(,,,3,"white")
-oHtm:Write( htmlSpace( 5 ) +"Browsing Table: <B>"+ALIAS()+"</B>" )
-oHtm:endTableCell()
-oHtm:endTableRow("black")
-oHtm:endTable()
-*/
+#if 0
+   // browse caption...
+   oHtm:defineTable( 1, 1, 98 )
+   oHtm:newTableRow( "black" )
+   oHtm:newTableCell(,,, 3, "white" )
+   oHtm:Write( htmlSpace( 5 ) + "Browsing Table: <B>" + Alias() + "</B>" )
+   oHtm:endTableCell()
+   oHtm:endTableRow( "black" )
+   oHtm:endTable()
+#endif
 
    oHtm:defineTable( FCount(), 1, 98 )
 
@@ -233,16 +233,17 @@ PROCEDURE htmlBrowseSql( oHtm, cAction, lUseLinks, cTarget, oServer, oQuery )
    __defaultNIL( @cAction, "confirm('RECORD: '+this.name+'\nPlace your action here !!!')" )
    __defaultNIL( @lUseLinks, .F. )
 
-   /*
-// browse caption...
-oHtm:defineTable( 1, 1, 98 )
-oHtm:newTableRow("black")
-oHtm:newTableCell(,,,3,"white")
-oHtm:Write( htmlSpace( 5 ) +"Browsing Table: <B>"+ALIAS()+"</B>" )
-oHtm:endTableCell()
-oHtm:endTableRow("black")
-oHtm:endTable()
-*/
+#if 0
+   // browse caption...
+   oHtm:defineTable( 1, 1, 98 )
+   oHtm:newTableRow( "black" )
+   oHtm:newTableCell(,,, 3, "white" )
+   oHtm:Write( htmlSpace( 5 ) + "Browsing Table: <B>" + Alias() + "</B>" )
+   oHtm:endTableCell()
+   oHtm:endTableRow( "black" )
+   oHtm:endTable()
+#endif
+
    oquery := oServer:query( 'Select * from rafael' )
 
    oHtm:defineTable( oQuery:FCount(), 1, 98 )
@@ -286,7 +287,7 @@ oHtm:endTable()
          oHtm:newTableCell( cAlign, , , , "black" )
          oHtm:Write( greek2Html( htmlany2Str( oCurRow:FieldGet( i ) ) ) )
          oHtm:EndTableCell()
-      END
+      NEXT
       oHtm:endTableRow()
       IF !oquery:EOF()
          oquery:skip()
@@ -299,35 +300,33 @@ oHtm:endTable()
 
 #endif
 
-//*** EOF ***//
-
 CLASS JWindow
 
-   DATA nH
-   DATA Name INIT ""
-   DATA oHtm
-   DATA VarName INIT ""
-   DATA URL INIT ""
-   DATA Features INIT ""
+   VAR nH
+   VAR Name INIT ""
+   VAR oHtm
+   VAR VarName INIT ""
+   VAR URL INIT ""
+   VAR Features INIT ""
 
-   DATA ScreenX, ScreenY INIT 100
-   DATA HEIGHT, WIDTH INIT 300
-   DATA innerHeight, innerWidth, outerHeight INIT 0
-   DATA alwaysRaised, alwaysLowered INIT .F.
-   DATA Menubar, personalBar INIT .F.
-   DATA location, directories, copyHistory INIT .F.
-   DATA Toolbar INIT .F.
-   DATA Status, TitleBar INIT .T.
-   DATA Scrollbars, Resizable, dependent INIT .T.
+   VAR ScreenX, ScreenY INIT 100
+   VAR HEIGHT, WIDTH INIT 300
+   VAR innerHeight, innerWidth, outerHeight INIT 0
+   VAR alwaysRaised, alwaysLowered INIT .F.
+   VAR Menubar, personalBar INIT .F.
+   VAR location, directories, copyHistory INIT .F.
+   VAR Toolbar INIT .F.
+   VAR Status, TitleBar INIT .T.
+   VAR Scrollbars, Resizable, dependent INIT .T.
 
-   DATA TITLE
-   DATA aScriptSRC
-   DATA aServerSRC
-   DATA BGIMAGE, BGCOLOR, fontColor
-   DATA Style
+   VAR TITLE
+   VAR aScriptSRC
+   VAR aServerSRC
+   VAR BGIMAGE, BGCOLOR, fontColor
+   VAR Style
 
-   DATA onLoad
-   DATA onUnLoad
+   VAR onLoad
+   VAR onUnLoad
 
    METHOD New( cVarName, cUrl, cName, x, y, w, h )
 
@@ -376,7 +375,7 @@ CLASS JWindow
 
 ENDCLASS
 
-   /****
+/****
 *
 *     Start a new window definition
 *

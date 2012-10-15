@@ -54,12 +54,6 @@
 #include "fileio.ch"
 #include "directry.ch"
 
-#command IF <lexpr> THEN <*statement*>  =>;
-         IF (<lexpr>) ; <statement> ; END
-
-#command IF <lexpr> THEN <statement1> ELSE <statement2> =>;
-         IF (<lexpr>) ; <statement1> ; ELSE ; <statement2> ; END
-
 #xtranslate SetNewValueReturnOld( <p>, <v> ) => LOCAL xOld, xOld := <p>, iif( <v> != NIL, <p> := <v>,  ), xOld
 #xtranslate DEFAULT( <p>, <v> ) => ( <p> := iif( <p> == NIL, <v>, <p> ) )
 
@@ -380,10 +374,18 @@ METHOD CacheLimiter( cNewLimiter ) CLASS uhttpd_Session
    RETURN cOldLimiter
 
 METHOD SetCookieParams( nLifeTime, cPath, cDomain, lSecure  ) CLASS uhttpd_Session
-   IF nLifeTime != NIL THEN ::nCookie_LifeTime := nLifeTime
-   IF cPath     != NIL THEN ::cCookie_Path     := cPath
-   IF cDomain   != NIL THEN ::cCookie_Domain   := cDomain
-   IF lSecure   != NIL THEN ::lCookie_Secure   := lSecure
+   IF nLifeTime != NIL
+      ::nCookie_LifeTime := nLifeTime
+   ENDIF
+   IF cPath     != NIL
+      ::cCookie_Path     := cPath
+   ENDIF
+   IF cDomain   != NIL
+      ::cCookie_Domain   := cDomain
+   ENDIF
+   IF lSecure   != NIL
+      ::lCookie_Secure   := lSecure
+   ENDIF
    RETURN NIL
 
 METHOD RegenerateID() CLASS uhttpd_Session
@@ -566,18 +568,34 @@ METHOD CheckSID( cSID, cCRCKey ) CLASS uhttpd_Session
 // ------------------------------
 
 METHOD SetSaveHandler( bOpen, bClose, bRead, bWrite, bDestroy, bGC ) CLASS uhttpd_Session
-   IF bOpen    != NIL THEN ::bOpen    := bOpen
-   IF bClose   != NIL THEN ::bClose   := bClose
-   IF bRead    != NIL THEN ::bRead    := bRead
-   IF bWrite   != NIL THEN ::bWrite   := bWrite
-   IF bDestroy != NIL THEN ::bDestroy := bDestroy
-   IF bGC      != NIL THEN ::bGC      := bGC
+   IF bOpen != NIL
+      ::bOpen := bOpen
+   ENDIF
+   IF bClose != NIL
+      ::bClose := bClose
+   ENDIF
+   IF bRead != NIL
+      ::bRead := bRead
+   ENDIF
+   IF bWrite != NIL
+      ::bWrite := bWrite
+   ENDIF
+   IF bDestroy != NIL
+      ::bDestroy := bDestroy
+   ENDIF
+   IF bGC != NIL
+      ::bGC := bGC
+   ENDIF
    RETURN NIL
 
 METHOD SessionOpen( cPath, cName ) CLASS uhttpd_Session
    //TraceLog( "SessionOpen() - cName", cName )
-   IF cPath != NIL THEN ::cSavePath := cPath
-   IF cName != NIL THEN ::cName     := cName
+   IF cPath != NIL
+      ::cSavePath := cPath
+   ENDIF
+   IF cName != NIL
+      ::cName := cName
+   ENDIF
 
    RETURN .T.
 
@@ -785,7 +803,9 @@ METHOD Encode() CLASS uhttpd_Session
 
       FOR EACH cKey IN _SESSION:Keys
           xVal := _SESSION[ cKey ]
-          IF xVal != NIL THEN aAdd( aSerial, { cKey, xVal } )
+          IF xVal != NIL
+             AAdd( aSerial, { cKey, xVal } )
+          ENDIF
       NEXT
 
    ENDIF

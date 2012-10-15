@@ -845,7 +845,7 @@ METHOD forceStable() CLASS TBROWSE
     *       be changed. I'll change it in the future but first I will have
     *       to revert my stupid modifications in Harbour core code. Looking
     *       at old TBrowse implementation I replaced some:
-    *             DO WHILE !oBrw:stabilize(); END
+    *             DO WHILE !oBrw:stabilize(); ENDDO
     *       with:
     *             oBrw:forceStable()
     *       In Clipper it's not the same because oBrw:forceStable()

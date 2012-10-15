@@ -25,7 +25,7 @@ PROCEDURE Main( cUrl )
       ? 'Use an ftp address with a file that you can delete.'
       ?
       QUIT
-   END
+   ENDIF
 
    oCon := TipClientFtp():New( oUrl )
    oCon:nConnTimeout := 20000
@@ -54,7 +54,7 @@ PROCEDURE Main( cUrl )
       ELSE
          ? "Error in connection:", hb_InetErrorDesc( oCon:SocketCon )
       ENDIF
-   END
+   ENDIF
 
    ? "Done"
    ?

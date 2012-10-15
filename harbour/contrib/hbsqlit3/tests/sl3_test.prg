@@ -104,7 +104,7 @@ PROCEDURE t2()
 
       IF sqlite3_exec( db, TABLE_SQL ) == SQLITE_OK
          ? "CREATE TABLE t1 - Ok"
-      END
+      ENDIF
 
       sqlite3_exec( db, ;
          "BEGIN TRANSACTION;" + ;

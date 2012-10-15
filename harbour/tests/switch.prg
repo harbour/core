@@ -4,6 +4,7 @@
 
 #ifdef __XHARBOUR__
 #define OTHERWISE DEFAULT
+#define ENDSWITCH END
 #endif
 
 PROCEDURE Main()
@@ -15,7 +16,7 @@ PROCEDURE Main()
 #ifndef __XHARBOUR__
 
    SWITCH a
-   END
+   ENDSWITCH
 #endif
 
    ?
@@ -23,7 +24,7 @@ PROCEDURE Main()
    SWITCH a
    CASE 1
       ? "FOUND: 1"
-   END
+   ENDSWITCH
 
    ?
    ? "2222222222222222222222222222222"
@@ -33,7 +34,7 @@ PROCEDURE Main()
       EXIT
    CASE "2"
       ? a
-   END
+   ENDSWITCH
 
    ?
    ? "3333333333333333333333333333333"
@@ -44,7 +45,7 @@ PROCEDURE Main()
       ? "FOUND: 2"
    OTHERWISE
       ? "other"
-   END
+   ENDSWITCH
 
 #ifndef __XHARBOUR__
    ?
@@ -52,7 +53,7 @@ PROCEDURE Main()
    SWITCH a
    OTHERWISE
       ? "OTHERWISE"
-   END
+   ENDSWITCH
 #endif
 
    ?
@@ -92,7 +93,7 @@ PROCEDURE Main()
       EXIT
    OTHERWISE
       ? "NOT FOUND: running OTHER"
-   END
+   ENDSWITCH
 #endif
 
    ?
@@ -113,10 +114,10 @@ PROCEDURE Main()
          EXIT
       OTHERWISE
          ? "Nested OTHERWISE"
-      END
+      ENDSWITCH
       ?? "In CASE 1"
       ? a
-   END
+   ENDSWITCH
 
    ? "========================================="
 

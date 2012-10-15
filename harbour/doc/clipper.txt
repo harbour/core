@@ -124,7 +124,7 @@ Harbour supports the following statement:
 
    WITH OBJECT expression
       ...
-   END
+   ENDWITH
 
    Inside this WITH OBJECT/END enclosure you can use the simplified
    form of sending messages to the object. You can use the syntax
@@ -136,7 +136,7 @@ for example:
    WITH OBJECT myobj:a[1]:myitem
       :message( 1 )
       :value := 9
-   END
+   ENDWITH
 
    The above code is equivalent to:
    myobj:a[1]:myitem:message( 1 )
@@ -163,4 +163,4 @@ for example:
       ? :__withobject:name    //also prints 'FOO'
       ? :__withobject := bar():new()
       ? :name                 //prints 'BAR'
-   END
+   ENDWITH

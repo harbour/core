@@ -9,8 +9,8 @@
   This is a sample of implementation of a pseudo GUI object in GTWVW,
   using GTWVW GUI primitives.
 
-  Example on how to use it is given in WVWTEST9.PRG.
-  eg. WVWMouseObject():New("Button1", maxrow()-1, 10, , , {|| tone(660,3) } )
+  Example on how to use it is given in wvwtest9.prg.
+  eg. WVWMouseObject():New( "Button1", MaxRow() - 1, 10, , , {|| Tone( 660, 3 ) } )
 
   NOTES:
   This is just a sample. You may not want to see it as a 'model'.

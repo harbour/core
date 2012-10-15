@@ -78,7 +78,7 @@
 
 CLASS WvgPartHandler
 
-   DATA     cargo
+   VAR      cargo
 
    METHOD   new( oParent, oOwner )
    METHOD   create( oParent, oOwner )
@@ -99,14 +99,14 @@ CLASS WvgPartHandler
    METHOD   notifier( nEvent, xParams )
    METHOD   controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
-   DATA     aChildren                             INIT    {}
-   DATA     nNameId
-   DATA     oParent
-   DATA     oOwner
-   DATA     nStatus                               INIT    0
+   VAR      aChildren                             INIT    {}
+   VAR      nNameId
+   VAR      oParent
+   VAR      oOwner
+   VAR      nStatus                               INIT    0
 
    /* Application Level Notifier */
-   DATA     sb_notifier
+   VAR      sb_notifier
    METHOD   notifierBlock( ... )                  SETGET
 
 ENDCLASS
@@ -369,7 +369,7 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
          EXIT
       CASE WM_NCMOUSEMOVE
          EXIT
-      END
+      ENDSWITCH
 
    CASE nEvent == HB_GTE_KEYBOARD
       IF HB_ISBLOCK( ::keyboard )

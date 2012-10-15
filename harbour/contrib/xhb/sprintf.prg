@@ -156,7 +156,7 @@ FUNCTION sprintf( ... )
                   nDec := Str( nLen )
                   DO WHILE Right( nDec, 1 ) == "0"
                     nDec := Left( nDec, Len( nDec ) - 1 )
-                  END
+                  ENDDO
                   nDec := Val( SubStr( nDec, At( ".", nDec ) + 1 ) )
                ELSE
                   nDec := 0

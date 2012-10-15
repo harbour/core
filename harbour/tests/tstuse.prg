@@ -51,7 +51,7 @@ PROCEDURE mkTest( lNewArea, cRdd, cFile, cAlias, lShared, lReadOnly )
       dbUseArea( lNewArea, cRdd, cFile, cAlias, lShared, lReadOnly )
    RECOVER USING oErr
       ? "Error:", oErr:subCode, oErr:description, oErr:operation, oErr:osCode
-   END
+   END SEQUENCE
    ? Select(), Alias(), NetErr(), Used()
    ErrorBlock( cbErr )
 

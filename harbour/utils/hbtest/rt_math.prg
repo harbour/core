@@ -459,8 +459,8 @@ PROCEDURE Main_MATH()
 
 #ifdef __HARBOUR__
 
-   o:=errornew()
-   s:="oscode"
+   o := ErrorNew()
+   s := "oscode"
    o:&s := 1
    TEST_LINE( o:&(s)                          , 1   )
    o:&s++
@@ -473,7 +473,7 @@ PROCEDURE Main_MATH()
    TEST_LINE( o:&(s)                          , 15  )
    TEST_LINE( o:&(s)+=200                     , 215 )
 
-   WITH OBJECT errornew()
+   WITH OBJECT ErrorNew()
       :&(s) := 1
       TEST_LINE( :&(s)                           , 1   )
       :&(s)++
@@ -485,9 +485,9 @@ PROCEDURE Main_MATH()
       :&(s)+=10
       TEST_LINE( :&(s)                           , 15  )
       TEST_LINE( :&(s)+=200                      , 215 )
-   END
+   ENDWITH
 
-   WITH OBJECT errornew()
+   WITH OBJECT ErrorNew()
       :oscode := 1
       TEST_LINE( :oscode                         , 1   )
       :oscode++
@@ -499,7 +499,7 @@ PROCEDURE Main_MATH()
       :oscode+=10
       TEST_LINE( :oscode                         , 15  )
       TEST_LINE( :oscode+=200                    , 215 )
-   END
+   ENDWITH
 
    &s0 := 1
    TEST_LINE( &s0                             , 1   )

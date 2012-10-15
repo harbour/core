@@ -250,7 +250,7 @@ PROCEDURE Main()
    CreateToolbar( nCurWindow )
 
    ResetMiscObjects( nCurWindow )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,40, cLabel,6,, rgb(255,255,255 ), rgb(198,198,198 ), 'Arial', s_afontinfo[2], , , , , .T. , .T. ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,40, cLabel,6,, rgb(255,255,255 ), rgb(198,198,198 ), "Arial", s_afontinfo[2], , , , , .T. , .T. ) } )
 
    wvwm_ResetMouseObjects( nCurWindow )
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Info!",   MaxRow() - 2,67, , , {|| xDebugInfo() } ) )
@@ -276,7 +276,7 @@ PROCEDURE Main()
    // 20070525 the real pushbutton, easier and better looking. Nothing to do with wvwmouse.prg.
    WVW_PBcreate( nCurWindow, MaxRow() - 4, 67 - 11 - 11 - 11 - 11 - 11, MaxRow() - 4, 67 + 9 - 11 - 11 - 11 - 11 - 11, "native", NIL, {||lboxmessage( "native pushbutton" ) }, NIL )
 
-   SetColor( 'N/W,N/GR*,,,N/W*' )
+   SetColor( "N/W,N/GR*,,,N/W*" )
    CLS
    @ 0, 0 SAY "This is line 0"
    @ 1, 0 SAY "This is line 1"
@@ -439,10 +439,10 @@ PROCEDURE Demo_Get()
    LOCAL nRight    := 75
    LOCAL nColGet := 8
    LOCAL get_1   := SToD()
-   LOCAL get_2   := PadR( 'Pritpal Bedi', 35 )
-   LOCAL get_3   := PadR( '60, New Professor Colony', 35 )
-   LOCAL get_4   := PadR( 'Ludhiana, INDIA', 35 )
-   LOCAL get_5   := PadR( 'http://www.vouchcac.com', 35 )
+   LOCAL get_2   := PadR( "Pritpal Bedi", 35 )
+   LOCAL get_3   := PadR( "60, New Professor Colony", 35 )
+   LOCAL get_4   := PadR( "Ludhiana, INDIA", 35 )
+   LOCAL get_5   := PadR( "http://www.vouchcac.com", 35 )
    LOCAL get_6   := 20000
    LOCAL nCursor := SetCursor( SC_NORMAL )
    MEMVAR x
@@ -454,14 +454,14 @@ PROCEDURE Demo_Get()
       RETURN
    ENDIF
 
-   WVW_SetIcon( , 'vr_1.ico' )
+   WVW_SetIcon( , "vr_1.ico" )
 
    ResetMiscObjects( nCurWindow )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,nRight - nLeft, cLabel,2,, rgb(255,255,255 ), rgb(198,198,198 ), 'Arial', s_afontinfo[2], , , , , .T. , .T. ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,nRight - nLeft, cLabel,2,, rgb(255,255,255 ), rgb(198,198,198 ), "Arial", s_afontinfo[2], , , , , .T. , .T. ) } )
    AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, 7 - nTop, 61 - nLeft, 13 - nTop, 70 - nLeft ) } )
    AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxGroup( nWindow, 15 - nTop, 59 - nLeft, 18 - nTop, 72 - nLeft ) } )
    AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxGroup( nWindow, 5 - nTop, 6 - nLeft, 19 - nTop, 44 - nLeft ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawImage( nWindow, 8 - nTop,62 - nLeft,12 - nTop,69 - nLeft, 'vouch1.bmp' ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawImage( nWindow, 8 - nTop,62 - nLeft,12 - nTop,69 - nLeft, "vouch1.bmp" ) } )
    AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, 7 - nTop, 48 - nLeft, 13 - nTop, 55 - nLeft ) } )
    AddMiscObjects( nCurWindow, {| nWindow | x := nWindow, AEval( GetList, {| oGet | WVW_DrawBoxGet( x, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
@@ -474,17 +474,17 @@ PROCEDURE Demo_Get()
 
    CLS
 
-   @  6 - nTop, nColGet - nLeft SAY '< Date >'
-   @  9 - nTop, nColGet - nLeft SAY '<' + PadC( 'Name', 33 ) + '>'
-   @ 12 - nTop, nColGet - nLeft SAY '<' + PadC( 'Address', 33 ) + '>'
-   @ 16 - nTop, 61 - nLeft      SAY '< Salary >'
+   @  6 - nTop, nColGet - nLeft SAY "< Date >"
+   @  9 - nTop, nColGet - nLeft SAY "<" + PadC( "Name", 33 ) + ">"
+   @ 12 - nTop, nColGet - nLeft SAY "<" + PadC( "Address", 33 ) + ">"
+   @ 16 - nTop, 61 - nLeft      SAY "< Salary >"
 
    @  7 - nTop, nColGet - nLeft GET get_1
    @ 10 - nTop, nColGet - nLeft GET get_2 //VALID ( VouChoice() < 7 )
    @ 13 - nTop, nColGet - nLeft GET get_3
    @ 15 - nTop, nColGet - nLeft GET get_4
    @ 17 - nTop, nColGet - nLeft GET get_5
-   @ 17 - nTop, 61 - nLeft      GET get_6 PICTURE '@Z 9999999.99'
+   @ 17 - nTop, 61 - nLeft      GET get_6 PICTURE "@Z 9999999.99"
 
    READ
 
@@ -531,11 +531,11 @@ FUNCTION DEMO_Browse()
    ResetMiscObjects( nCurWindow )
    wvwm_ResetMouseObjects( nCurWindow )
 
-   cColor := SetColor( 'N/W' )
+   cColor := SetColor( "N/W" )
    CLS
-   SetColor( 'N/W*,N/GR*,,,N/W* ' )
+   SetColor( "N/W*,N/GR*,,,N/W* " )
 
-   USE '..\..\..\tests\TEST' NEW
+   USE "..\..\..\tests\test" NEW
    IF NetErr()
       WVW_lCloseWindow()
       RETURN NIL
@@ -547,11 +547,11 @@ FUNCTION DEMO_Browse()
 
    oBrowse := TBrowseNew( 3, 2, MaxRow() - 3, MaxCol() - 3 )
 
-   oBrowse:ColSep        := '  '
-   oBrowse:HeadSep       := '__'
-   oBrowse:GoTopBlock    := { || dbGoTop() }
-   oBrowse:GoBottomBlock := { || dbGoBottom() }
-   oBrowse:SkipBlock     := { | nSkip | dbSkipBlock( nSkip, oBrowse ) }
+   oBrowse:ColSep        := "  "
+   oBrowse:HeadSep       := "__"
+   oBrowse:GoTopBlock    := {|| dbGoTop() }
+   oBrowse:GoBottomBlock := {|| dbGoBottom() }
+   oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip, oBrowse ) }
 
    FOR i := 1 TO Len( info_ )
       bBlock := VouBlockField( i )
@@ -561,7 +561,7 @@ FUNCTION DEMO_Browse()
    oBrowse:configure()
 
    WVW_SetPen( nStyle, 0, rgb( 210,1210,210 ) )
-   WVW_SetIcon( , 'DIA_EXCL.ico' )
+   WVW_SetIcon( , "dia_excl.ico" )
 
    aColumnsSep := Array( oBrowse:colCount )
    FOR EACH tmp IN aColumnsSep
@@ -580,7 +580,7 @@ FUNCTION DEMO_Browse()
    nHScrollBar := wvw_xbCreate( nCurWindow, 0, oBrowse:nBottom + 1, oBrowse:nLeft, oBrowse:nRight - oBrowse:nLeft + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ NIL )
    nVScrollBar := wvw_xbCreate( nCurWindow, 1, oBrowse:nTop, oBrowse:nRight + 1, oBrowse:nBottom - oBrowse:nTop + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | VXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ NIL )
 
-   hb_DispOutAt( nTop + 1 - nTop, nleft - nleft, PadC( hb_CurDrive() + ':\' + CurDir() + '\' + 'test.dbf', nRight - nLeft + 1 ), 'W+/W' )
+   hb_DispOutAt( nTop + 1 - nTop, nleft - nleft, PadC( hb_CurDrive() + ":" + hb_ps() + CurDir() + hb_ps() + "test.dbf", nRight - nLeft + 1 ), "W+/W" )
 
    oBrowse:ForceStable()
    RefreshHXB( oBrowse, nCurWindow, nHScrollBar ) //20040704
@@ -876,7 +876,7 @@ STATIC FUNCTION TBPrev( oTbr )
 
 STATIC FUNCTION VouBlockField( i )
 
-   RETURN { || FieldGet( i ) }
+   RETURN {|| FieldGet( i ) }
 
 //
 //      WVW_Paint() must be a FUNCTION in your application
@@ -914,7 +914,7 @@ FUNCTION WVW_SetFocus( hWnd, nWinNum )
    s_nGotFocus++
    @ 0, 0 SAY s_nGotFocus
    IF s_nGotFocus % 3 == 0
-      Alert( "Got focus " + transform( s_nGotFocus,"9999" ) + "th times" )
+      Alert( "Got focus " + Transform( s_nGotFocus, "9999" ) + "th times" )
    ENDIF
 
    RETURN NIL
@@ -1225,15 +1225,15 @@ FUNCTION SetDefaultWindowSize()
       screenWidth := Wvw_GetScreenWidth()
       DO CASE
       CASE screenWidth >= 1024
-         Result := Wvw_SetFont( , 'Terminal', 20, 10 )
+         Result := Wvw_SetFont( , "Terminal", 20, 10 )
       CASE screenWidth >= 800
          IF hb_osIsWinNT()
-            Result := Wvw_SetFont( , 'Lucida Console', 16, - 8 )
+            Result := Wvw_SetFont( , "Lucida Console", 16, - 8 )
          ELSE
-            Result := Wvw_SetFont( , 'System', 16, - 8 )
+            Result := Wvw_SetFont( , "System", 16, - 8 )
          ENDIF
       OTHERWISE
-         Result := Wvw_SetFont( , 'Terminal', 12, 6 )
+         Result := Wvw_SetFont( , "Terminal", 12, 6 )
       ENDCASE
       IF Result
          Wvw_SetCodePage( , 255 )  // #define OEM_CHARSET 255 - from wingdi.h
@@ -1256,7 +1256,7 @@ STATIC FUNCTION isWinNT()
 
 PROCEDURE ErrorSys()
 
-   ErrorBlock( { |e| MyError( e ) } )
+   ErrorBlock( {| e | MyError( e ) } )
 
    RETURN
 

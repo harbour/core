@@ -88,103 +88,103 @@
 CLASS WvgWindow  INHERIT  WvgPartHandler
 
    /*  CONFIGURATION */
-   DATA     animate                               INIT  .F.
-   DATA     clipChildren                          INIT  .F.
-   DATA     clipParent                            INIT  .F.
-   DATA     clipSiblings                          INIT  .T.
-   DATA     group                                 INIT  0    /* XBP_NO_GROUP */
-   DATA     sizeRedraw                            INIT  .F.
-   DATA     tabStop                               INIT  .F.
-   DATA     visible                               INIT  .T.
+   VAR      animate                               INIT  .F.
+   VAR      clipChildren                          INIT  .F.
+   VAR      clipParent                            INIT  .F.
+   VAR      clipSiblings                          INIT  .T.
+   VAR      group                                 INIT  0    /* XBP_NO_GROUP */
+   VAR      sizeRedraw                            INIT  .F.
+   VAR      tabStop                               INIT  .F.
+   VAR      visible                               INIT  .T.
 
-   DATA     pointerFocus                          INIT  .T.
+   VAR      pointerFocus                          INIT  .T.
 
-   /*  RUNTIME DATA */
-   DATA     dropZone                              INIT  .F.
-   DATA     helpLink
-   DATA     s_tooltipText                         INIT  ""
+   /*  RUNTIME VAR  */
+   VAR      dropZone                              INIT  .F.
+   VAR      helpLink
+   VAR      s_tooltipText                         INIT  ""
    METHOD   tooltipText                           SETGET
 
-   DATA     clr_FG
-   DATA     clr_BG
-   DATA     fnt_COMMPOUNDNAME
-   DATA     fnt_hFont
+   VAR      clr_FG
+   VAR      clr_BG
+   VAR      fnt_COMMPOUNDNAME
+   VAR      fnt_hFont
 
    /*  CALLBACK SLOTS */
-   DATA     sl_enter
-   DATA     sl_leave
-   DATA     sl_lbClick
-   DATA     sl_lbDblClick
-   DATA     sl_lbDown
-   DATA     sl_lbUp
-   DATA     sl_mbClick
-   DATA     sl_mbDblClick
-   DATA     sl_mbDown
-   DATA     sl_mbUp
-   DATA     sl_motion
-   DATA     sl_rbClick
-   DATA     sl_rbDblClick
-   DATA     sl_rbDown
-   DATA     sl_rbUp
-   DATA     sl_wheel
+   VAR      sl_enter
+   VAR      sl_leave
+   VAR      sl_lbClick
+   VAR      sl_lbDblClick
+   VAR      sl_lbDown
+   VAR      sl_lbUp
+   VAR      sl_mbClick
+   VAR      sl_mbDblClick
+   VAR      sl_mbDown
+   VAR      sl_mbUp
+   VAR      sl_motion
+   VAR      sl_rbClick
+   VAR      sl_rbDblClick
+   VAR      sl_rbDown
+   VAR      sl_rbUp
+   VAR      sl_wheel
 
-   DATA     sl_helpRequest
-   DATA     sl_keyboard
-   DATA     sl_killInputFocus
-   DATA     sl_move
-   DATA     sl_paint
-   DATA     sl_quit
-   DATA     sl_resize
-   DATA     sl_setInputFocus
-   DATA     sl_dragEnter
-   DATA     sl_dragMotion
-   DATA     sl_dragLeave
-   DATA     sl_dragDrop
+   VAR      sl_helpRequest
+   VAR      sl_keyboard
+   VAR      sl_killInputFocus
+   VAR      sl_move
+   VAR      sl_paint
+   VAR      sl_quit
+   VAR      sl_resize
+   VAR      sl_setInputFocus
+   VAR      sl_dragEnter
+   VAR      sl_dragMotion
+   VAR      sl_dragLeave
+   VAR      sl_dragDrop
 
-   DATA     sl_close
-   DATA     sl_setDisplayFocus
-   DATA     sl_killDisplayFocus
+   VAR      sl_close
+   VAR      sl_setDisplayFocus
+   VAR      sl_killDisplayFocus
 
-   DATA     hBrushBG
-   DATA     is_hidden                             INIT   .F.
-   DATA     is_enabled                            INIT   .T.
-   DATA     title                                 INIT   " "
-   DATA     icon                                  INIT   0
-   DATA     closable                              INIT   .T.
-   DATA     resizable                             INIT   .T.
-   DATA     resizeMode                            INIT   0
-   DATA     style                                 INIT   WS_OVERLAPPEDWINDOW
-   DATA     exStyle                               INIT   0
-   DATA     lModal                                INIT   .F.
-   DATA     pGTp
-   DATA     pGT
-   DATA     objType                               INIT   objTypeNone
-   DATA     className                             INIT   ""
+   VAR      hBrushBG
+   VAR      is_hidden                             INIT   .F.
+   VAR      is_enabled                            INIT   .T.
+   VAR      title                                 INIT   " "
+   VAR      icon                                  INIT   0
+   VAR      closable                              INIT   .T.
+   VAR      resizable                             INIT   .T.
+   VAR      resizeMode                            INIT   0
+   VAR      style                                 INIT   WS_OVERLAPPEDWINDOW
+   VAR      exStyle                               INIT   0
+   VAR      lModal                                INIT   .F.
+   VAR      pGTp
+   VAR      pGT
+   VAR      objType                               INIT   objTypeNone
+   VAR      className                             INIT   ""
 
-   DATA     hWnd
-   DATA     pWnd
-   DATA     aPos                                  INIT   { 0, 0 }
-   DATA     aSize                                 INIT   { 0, 0 }
-   DATA     aPresParams                           INIT   {}
-   DATA     lHasInputFocus                        INIT   .F.
-   DATA     nFrameState                           INIT   0       /* normal */
+   VAR      hWnd
+   VAR      pWnd
+   VAR      aPos                                  INIT   { 0, 0 }
+   VAR      aSize                                 INIT   { 0, 0 }
+   VAR      aPresParams                           INIT   {}
+   VAR      lHasInputFocus                        INIT   .F.
+   VAR      nFrameState                           INIT   0       /* normal */
 
-   DATA     maxCol                                INIT   79
-   DATA     maxRow                                INIT   24
-   DATA     mouseMode                             INIT   1
+   VAR      maxCol                                INIT   79
+   VAR      maxRow                                INIT   24
+   VAR      mouseMode                             INIT   1
 
-   DATA     nID                                   INIT   0
-   DATA     nControlID                            INIT   5000
-   DATA     nOldProc                              INIT   0
+   VAR      nID                                   INIT   0
+   VAR      nControlID                            INIT   5000
+   VAR      nOldProc                              INIT   0
 
-   DATA     oMenu
+   VAR      oMenu
 
-   DATA     nTop
-   DATA     nLeft
-   DATA     nBottom
-   DATA     nRight
+   VAR      nTop
+   VAR      nLeft
+   VAR      nBottom
+   VAR      nRight
 
-   DATA     hWndTT
+   VAR      hWndTT
 
    METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -547,9 +547,8 @@ METHOD WvgWindow:setPos( aPos, lPaint )
       OTHERWISE
          aPosSz := ::getPosAndSize( aPos )
          WVG_SetWindowPosition( ::hWnd, aPosSz[ 1 ], aPosSz[ 2 ], lPaint )
-         EXIT
 
-      END
+      ENDSWITCH
    ENDIF
 
    RETURN Self
@@ -581,9 +580,8 @@ METHOD WvgWindow:setPosAndSize( aPos, aSize, lPaint )
       OTHERWISE
          aPosSz := ::getPosAndSize( aPos, aSize )
          WVG_SetWindowPosAndSize( ::hWnd, aPosSz[ 1 ], aPosSz[ 2 ], aPosSz[ 3 ], aPosSz[ 4 ], lPaint )
-         EXIT
 
-      END
+      ENDSWITCH
    ENDIF
 
    RETURN Self
@@ -605,9 +603,8 @@ METHOD WvgWindow:setSize( aSize, lPaint )
       OTHERWISE
          aPosSz := ::getPosAndSize( , aSize )
          WVG_SetWindowSize( ::hWnd, aPosSz[ 3 ], aPosSz[ 4 ], lPaint )
-         EXIT
 
-      END
+      ENDSWITCH
    ENDIF
 
    RETURN Self

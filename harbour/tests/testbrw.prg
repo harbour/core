@@ -127,7 +127,7 @@ PROCEDURE Main()
 
       ENDCASE
 
-   end
+   ENDDO
 #endif
    SetPos( nRow, nCol )
    SetColor( cColor )

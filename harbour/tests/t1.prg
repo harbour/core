@@ -13,6 +13,6 @@ PROCEDURE Main()
       ? i
       Eval( cb )
       i++
-   END
+   ENDDO
 
    RETURN

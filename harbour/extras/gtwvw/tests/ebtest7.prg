@@ -139,7 +139,7 @@ PROCEDURE GetSession()
    cdebugreport += "cName:" + cName + hb_eol()
    cdebugreport += "cNickName:" + cNickName + hb_eol()
    cdebugreport += "dBirthDate:" + DToC( dBirthDate ) + hb_eol()
-   cdebugreport += "nBudget:" + transform( nBudget, "999,999.99" ) + hb_eol()
+   cdebugreport += "nBudget:" + Transform( nBudget, "999,999.99" ) + hb_eol()
    cdebugreport += "cRemark:" + cRemark
    MyMessageBox( nwinnum, cdebugreport )
 
@@ -251,24 +251,24 @@ PROCEDURE EBReadGets( nwinnum, aEBGets )
    nmaxrow := 0
    nmincol := 99999
    FOR i := 1 TO nNumGets
-      lmultiline := aEBGets[i][__GET_LMULTILINE]
+      lmultiline := aEBGets[ i ][__GET_LMULTILINE]
       IF !lmultiline
-         nlen := Len( aEBGets[i][__GET_CPICT] )
+         nlen := Len( aEBGets[ i ][__GET_CPICT] )
       ELSE
          nlen := 30
       ENDIF
-      clabel := aEBGets[i][__GET_CLABEL]
-      nrow1 := aEBGets[i][__GET_NROW]
-      ncol1 := aEBGets[i][__GET_NCOL]
-      nrow2 := iif( aEBGets[i][__GET_LMULTILINE], nrow1 + 3, nrow1 )
+      clabel := aEBGets[ i ][__GET_CLABEL]
+      nrow1 := aEBGets[ i ][__GET_NROW]
+      ncol1 := aEBGets[ i ][__GET_NCOL]
+      nrow2 := iif( aEBGets[ i ][__GET_LMULTILINE], nrow1 + 3, nrow1 )
       ncol2 := ncol1 + nlen - 1
 
       @ nrow1, ncol1 - Len( clabel ) - 1 SAY clabel
 
-      aEBGets[i][__GET_NEBID] := wvw_ebcreate( nwinnum, nrow1, ncol1, nrow2, ncol2, ;
-         Transform( aEBGets[i][__GET_XINIT], aEBGets[i][__GET_CPICT] ), ;
+      aEBGets[ i ][__GET_NEBID] := wvw_ebcreate( nwinnum, nrow1, ncol1, nrow2, ncol2, ;
+         Transform( aEBGets[ i ][__GET_XINIT], aEBGets[ i ][__GET_CPICT] ), ;
          {| nWinNum, nId, nEvent | MaskEditBox( nWinNum, nId, nEvent, @aEBGets ) }, ;
-         aEBGets[i][__GET_LMULTILINE], ;  //EBtype
+         aEBGets[ i ][__GET_LMULTILINE], ;  //EBtype
       0, ;  //nmorestyle
       iif( lmultiline, NIL, nlen + 1 ), ; //nMaxChar
       NIL, NIL )
@@ -407,7 +407,7 @@ STATIC PROCEDURE EndGets( nwinnum, aEBGets, nOKbutton, nCancelbutton, nCloseButt
 
    // session ended
    FOR i := 1 TO Len( aEBGets )
-      wvw_ebenable( nwinnum, aEBGets[i][__GET_NEBID], .F. )
+      wvw_ebenable( nwinnum, aEBGets[ i ][__GET_NEBID], .F. )
    NEXT
    wvw_pbenable( nwinnum, nOKbutton, .F. )
    wvw_pbenable( nwinnum, nCancelbutton, .F. )
@@ -599,7 +599,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
    LOCAL pFlag := .F.
    LOCAL ncp := 0
    LOCAL NegativeZero := .F.
-   LOCAL Output := ''
+   LOCAL Output := ""
    LOCAL ol := 0
 
    IF mcvaltype == "N"
@@ -620,7 +620,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
    pFlag := .F. //x for clarity
    IF mcvaltype == "N"
       // RL 104
-      IF Left( AllTrim( InBuffer ) , 1 ) == '-' .AND. Val( InBuffer ) == 0
+      IF Left( AllTrim( InBuffer ) , 1 ) == "-" .AND. Val( InBuffer ) == 0
          NegativeZero := .T.
       ENDIF
 
@@ -628,13 +628,13 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
          // Point Count For Numeric InputMask
          FOR x := 1 TO Len( InBuffer )
             CB := SubStr( InBuffer , x , 1 )
-            IF CB == '.' .OR. CB == ','
+            IF CB == "." .OR. CB == ","
                pc++
             ENDIF
          NEXT x
 
          // RL 89
-         IF Left( InBuffer, 1 ) == '.' .OR. Left( InBuffer, 1 ) == ','
+         IF Left( InBuffer, 1 ) == "." .OR. Left( InBuffer, 1 ) == ","
             pFlag := .T.
          ENDIF
 
@@ -658,9 +658,9 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
       InBufferRight := Right( InBuffer , Len( InBuffer ) - icp )
 
-      IF CharMaskTekstOK( InBufferLeft + ' ' + InBufferRight, mcvaltype, Mask ) .AND. ;
+      IF CharMaskTekstOK( InBufferLeft + " " + InBufferRight, mcvaltype, Mask ) .AND. ;
             !CharMaskTekstOK( InBufferLeft + InBufferRight, mcvaltype, Mask )
-         InBuffer := InBufferLeft + ' ' + InBufferRight
+         InBuffer := InBufferLeft + " " + InBufferRight
       ELSE
          InBuffer := InBufferLeft + InBufferRight
       ENDIF
@@ -684,9 +684,9 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
       CM := SubStr( Mask , x , 1 )
 
       DO CASE
-      CASE ( CM ) == 'A' .OR. ( CM ) == '!'
-         IF IsAlpha( CB ) .OR. CB == ' '
-            IF ( CM ) == "!"
+      CASE CM == "A" .OR. CM == "!"
+         IF IsAlpha( CB ) .OR. CB == " "
+            IF CM == "!"
                OutBuffer := OutBuffer + Upper( CB )
             ELSE
                OutBuffer := OutBuffer + CB
@@ -696,14 +696,14 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
                BadEntry := .T.
                OutBuffer := OutBuffer + OldChar
             ELSE
-               OutBuffer := OutBuffer + ' '
+               OutBuffer := OutBuffer + " "
             ENDIF
          ENDIF
 
-      CASE CM == '9'
-         IF IsDigit( CB ) .OR. CB == ' ' .OR. ;
+      CASE CM == "9"
+         IF IsDigit( CB ) .OR. CB == " " .OR. ;
                ( mcvaltype == "N" .AND. ; //x
-            CB == '-' .AND. x == fnb .AND. PCount() > 1 )
+            CB == "-" .AND. x == fnb .AND. PCount() > 1 )
 
             OutBuffer := OutBuffer + CB
          ELSE
@@ -711,24 +711,24 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
                BadEntry := .T.
                OutBuffer := OutBuffer + OldChar
             ELSE
-               OutBuffer := OutBuffer + ' '
+               OutBuffer := OutBuffer + " "
             ENDIF
          ENDIF
 
-      CASE CM == ' '
-         IF CB == ' '
+      CASE CM == " "
+         IF CB == " "
             OutBuffer := OutBuffer + CB
          ELSE
             IF x == icp
                BadEntry := .T.
                OutBuffer := OutBuffer + OldChar
             ELSE
-               OutBuffer := OutBuffer + ' '
+               OutBuffer := OutBuffer + " "
             ENDIF
          ENDIF
 
          //x
-      CASE CM == 'X'
+      CASE CM == "X"
          OutBuffer := OutBuffer + CB
 
       OTHERWISE
@@ -747,23 +747,23 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
       // RL 104
       IF NegativeZero == .T.
-         Output := Transform( GetValFromText( wvw_ebgettext(mnwinnum, mnebid ) , mcvaltype ) , Mask )
+         Output := Transform( GetValFromText( wvw_ebgettext( mnwinnum, mnebid ), mcvaltype ) , Mask )
 
          //x better:
          ol := Len( Output )
-         Output := PadL( "-" + SubStr( Output, At('.',OutBuffer ) - 1 ), ol )
+         Output := PadL( "-" + SubStr( Output, At( ".", OutBuffer ) - 1 ), ol )
 
          // Replace Text
          wvw_ebsettext( mnwinnum, mnebid, Output )
-         wvw_ebsetsel( mnwinnum, mnebid, At( '.',OutBuffer ) + dc, At( '.',OutBuffer ) + dc )
+         wvw_ebsetsel( mnwinnum, mnebid, At( ".", OutBuffer ) + dc, At( ".", OutBuffer ) + dc )
       ELSE
-         wvw_ebsettext( mnwinnum, mnebid, Transform( GetValFromText( wvw_ebgettext(mnwinnum, mnebid ) , mcvaltype ) , Mask ) )
-         wvw_ebsetsel( mnwinnum, mnebid, At( '.',OutBuffer ) + dc, At( '.',OutBuffer ) + dc )
+         wvw_ebsettext( mnwinnum, mnebid, Transform( GetValFromText( wvw_ebgettext( mnwinnum, mnebid ), mcvaltype ) , Mask ) )
+         wvw_ebsetsel( mnwinnum, mnebid, At( ".", OutBuffer ) + dc, At( ".", OutBuffer ) + dc )
       ENDIF
 
    ELSE
       IF pFlag == .T.
-         ncp := At( '.' , wvw_ebgettext( mnwinnum, mnebid ) )
+         ncp := At( "." , wvw_ebgettext( mnwinnum, mnebid ) )
          wvw_ebsetsel( mnwinnum, mnebid, ncp, ncp )
       ELSE
          // Restore Initial CaretPos
@@ -779,7 +779,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
             CM := SubStr( Mask , icp + x , 1 )
 
             IF !IsDigit( CB ) .AND. !IsAlpha( CB ) .AND. ;
-                  ( !( CB == ' ' ) .OR. ( CB == ' ' .AND. CM == ' ' ) )
+                  ( !( CB == " " ) .OR. ( CB == " " .AND. CM == " " ) )
                wvw_ebsetsel( mnwinnum, mnebid, icp + x, icp + x )
             ELSE
                EXIT
@@ -796,14 +796,13 @@ STATIC FUNCTION CharMaskTekstOK( cString, cvaltype, cMask )
 
    LOCAL lPassed := .T. , CB, CM, x
 
-//x BEGIN
    IF cvaltype == "D"
       FOR x := 1 TO Min( Len( cString ), Len( cMask ) )
          CB := SubStr( cString , x , 1 )
          CM := SubStr( cMask , x , 1 )
          DO CASE
-         CASE CM == '9'
-            IF IsDigit( CB ) .OR. CB == ' '
+         CASE CM == "9"
+            IF IsDigit( CB ) .OR. CB == " "
                // lPassed:=.T.
             ELSE
                RETURN .F.
@@ -814,33 +813,32 @@ STATIC FUNCTION CharMaskTekstOK( cString, cvaltype, cMask )
       NEXT i
       RETURN .T.
    ENDIF
-//x END
 
    FOR x := 1 TO Min( Len( cString ), Len( cMask ) )
       CB := SubStr( cString , x , 1 )
       CM := SubStr( cMask , x , 1 )
       DO CASE
          // JK
-      CASE ( CM ) == 'A' .OR. ( CM ) == '!'
-         IF IsAlpha( CB ) .OR. CB == ' '
-            // lPassed:=.T.
+      CASE ( CM ) == "A" .OR. ( CM ) == "!"
+         IF IsAlpha( CB ) .OR. CB == " "
+            // lPassed := .T.
          ELSE
             RETURN .F.
          ENDIF
-      CASE CM == '9'
-         IF IsDigit( CB ) .OR. CB == ' '
-            // lPassed:=.T.
+      CASE CM == "9"
+         IF IsDigit( CB ) .OR. CB == " "
+            // lPassed := .T.
          ELSE
             RETURN .F.
          ENDIF
-      CASE CM == ' '
-         IF CB == ' '
-            // lPassed:=.T.
+      CASE CM == " "
+         IF CB == " "
+            // lPassed := .T.
          ELSE
             RETURN .F.
          ENDIF
       OTHERWISE
-         // lPassed:=.T.
+         // lPassed := .T.
       ENDCASE
    NEXT i
 
@@ -853,7 +851,6 @@ STATIC FUNCTION GetValFromText( Text , mcvaltype )
    // eg. GetValFromText( "999,999.99" ) --> 999999.99
    LOCAL x , c , s
 
-//x BEGIN
    IF mcvaltype == "C"
       RETURN TEXT
    ENDIF
@@ -862,24 +859,23 @@ STATIC FUNCTION GetValFromText( Text , mcvaltype )
       s := CToD( Text )
       RETURN s
    ENDIF
-//x END
 
    // ASSUME numeric
-   s := ''
+   s := ""
    FOR x := 1 TO Len( Text )
       c := SubStr( Text, x, 1 )
-      //If c='0' .or. c='1' .or. c='2' .or. c='3' .or. c='4' .or. c='5' .or. c='6' .or. c='7' .or. c='8' .or. c='9' .or. c='.' .or. c='-'
-      IF c $ '0123456789' .OR. c $ '.-'
-         s := s + c
+      //If c="0" .or. c="1" .or. c="2" .or. c="3" .or. c="4" .or. c="5" .or. c="6" .or. c="7" .or. c="8" .or. c="9" .or. c="." .or. c="-"
+      IF c $ "0123456789" .OR. c $ ".-"
+         s += c
       ENDIF
    NEXT x
 
-   IF Left( AllTrim( Text ) , 1 ) == '(' .OR.  Right( AllTrim( Text ) , 2 ) == 'DB'
-      s := '-' + s
+   IF Left( AllTrim( Text ), 1 ) == "(" .OR.  Right( AllTrim( Text ), 2 ) == "DB"
+      s := "-" + s
    ENDIF
 
    //useless!
-// s := Transform( Val( s ) , Getnummask( s_cmask, mcvaltype ) )
+// s := Transform( Val( s ), Getnummask( s_cmask, mcvaltype ) )
 
    RETURN Val( s )
 
@@ -887,23 +883,22 @@ STATIC FUNCTION GetValFromText( Text , mcvaltype )
 
 STATIC FUNCTION GetNumMask( Text, mcvaltype )
 
-   // eg. GetNumMask("999,999.99") --> "999999.99"
+   // eg. GetNumMask( "999,999.99" ) --> "999999.99"
    LOCAL i , c , s
-//x BEGIN
+
    IF mcvaltype == "D" .OR. mcvaltype == "C"
       s := Text
       RETURN s
    ENDIF
-//x END
 
-   s := ''
+   s := ""
    FOR i := 1 TO Len( Text )
       c := SubStr( Text, i, 1 )
-      IF c == '9' .OR. c == '.'
-         s := s + c
+      IF c == "9" .OR. c == "."
+         s += c
       ENDIF
-      IF c == '$' .OR. c == '*'
-         s := s + '9'
+      IF c == "$" .OR. c == "*"
+         s += "9"
       ENDIF
    NEXT i
 

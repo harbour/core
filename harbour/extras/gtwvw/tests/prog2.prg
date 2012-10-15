@@ -65,7 +65,7 @@ PROCEDURE Main()
    DispEnd()
 #else
    ResetMiscObjects( 0 )   //make sure we start with no GUI objects
-   AddMiscObjects( 0, {| nWindow | WVW_DrawImage( nWindow, 1, 0, nmaxrow, nmaxcol, 'vouch1.bmp' ) } )
+   AddMiscObjects( 0, {| nWindow | WVW_DrawImage( nWindow, 1, 0, nmaxrow, nmaxcol, "vouch1.bmp" ) } )
 #endif
 
    lboxmessage( "Welcome to our test program." + hb_eol() + ;
@@ -139,13 +139,13 @@ FUNCTION xBrowse1()
    LOCAL aColumnsSep, tmp
 #endif
 
-   USE '..\..\..\tests\TEST' NEW
+   USE "..\..\..\tests\test" NEW
    IF NetErr()
       RETURN NIL
    ENDIF
    info_ := dbStruct()
 
-   SetColor( 'N/W*,N/GR*,,,N/W* ' )
+   SetColor( "N/W*,N/GR*,,,N/W* " )
    oBrowse := TBrowseNew( nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 )
 
 #ifndef __GTWVW__
@@ -155,13 +155,13 @@ FUNCTION xBrowse1()
    oBrowse:ColSep        := "  "     //we'll draw a line between these spaces
    oBrowse:HeadSep       := "__"
 #endif
-   oBrowse:GoTopBlock    := { || dbGoTop() }
-   oBrowse:GoBottomBlock := { || dbGoBottom() }
-   oBrowse:SkipBlock     := { | nSkip | dbSkipBlock( nSkip, oBrowse ) }
+   oBrowse:GoTopBlock    := {|| dbGoTop() }
+   oBrowse:GoBottomBlock := {|| dbGoBottom() }
+   oBrowse:SkipBlock     := {| nSkip | dbSkipBlock( nSkip, oBrowse ) }
 
    FOR i := 1 TO Len( info_ )
       bBlock := VouBlockField( i )
-      oBrowse:AddColumn( TBColumnNew( info_[ i,1 ], bBlock ) )
+      oBrowse:AddColumn( TBColumnNew( info_[ i, 1 ], bBlock ) )
    NEXT
 
    oBrowse:configure()

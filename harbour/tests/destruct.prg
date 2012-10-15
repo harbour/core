@@ -56,7 +56,7 @@ STATIC PROCEDURE SIMPLETEST( type )
    ? "=> o := NIL"
    BEGIN SEQUENCE
       o := NIL
-   END
+   END SEQUENCE
 
    RETURN
 
@@ -73,11 +73,11 @@ STATIC PROCEDURE GCFREETEST( type )
    ? "=> o := NIL"
    BEGIN SEQUENCE
       o := NIL
-   END
+   END SEQUENCE
    ? "=> hb_gcAll()"
    BEGIN SEQUENCE
       hb_gcAll()
-   END
+   END SEQUENCE
 
    RETURN
 

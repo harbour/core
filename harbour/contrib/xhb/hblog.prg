@@ -215,10 +215,10 @@ FUNCTION HB_LogDateStamp()
 
 CLASS HB_Logger
 
-   DATA cProgName
-   DATA aLogToChannel                  INIT  {}
-   DATA nStyle                         INIT  -1
-   DATA nDefaultPriority               INIT  HB_LOG_INFO
+   VAR cProgName
+   VAR aLogToChannel                   INIT  {}
+   VAR nStyle                          INIT  -1
+   VAR nDefaultPriority                INIT  HB_LOG_INFO
 
    METHOD New()
    METHOD AddChannel( oChannel )       INLINE AAdd( ::aLogToChannel, oChannel )
@@ -311,7 +311,7 @@ METHOD PROCEDURE Log( cMessage, nPriority ) CLASS HB_Logger
 
 CLASS HB_LogChannel
 
-   DATA lOpened                  INIT .F.
+   VAR lOpened                   INIT .F.
 
    METHOD New( nLevel )          CONSTRUCTOR
    METHOD Open( cName )          VIRTUAL
@@ -326,8 +326,8 @@ CLASS HB_LogChannel
    METHOD Send( nStyle, cMessage, cName, nPriority )    VIRTUAL
 
    HIDDEN:
-   DATA nLevel
-   DATA lActive                  INIT .T.
+   VAR nLevel
+   VAR lActive                  INIT .T.
 
 ENDCLASS
 
@@ -431,7 +431,7 @@ CLASS HB_LogConsole FROM HB_LogChannel
 
    PROTECTED:
    METHOD Send( nStyle, cMessage, cName, nPriority )
-   DATA lRealConsole    INIT .T.
+   VAR lRealConsole    INIT .T.
 
 ENDCLASS
 
@@ -494,10 +494,10 @@ METHOD PROCEDURE Out( ... ) CLASS HB_LogConsole
 
 CLASS HB_LogFile FROM HB_LogChannel
 
-   DATA cFileName
-   DATA nFileHandle
-   DATA nFileLimit         INIT -1
-   DATA nBackup            INIT 5
+   VAR cFileName
+   VAR nFileHandle
+   VAR nFileLimit         INIT -1
+   VAR nBackup            INIT 5
 
    METHOD New( nLevel, cFilename, nMaxSize, nBackup )
    METHOD Open( cProgName )
@@ -533,7 +533,7 @@ METHOD Open( cProgName ) CLASS HB_LogFile
       ::nFileHandle := FOpen( ::cFileName, FO_READWRITE )
       IF ::nFileHandle != F_ERROR
          FSeek( ::nFileHandle, 0, FS_END )
-      END
+      ENDIF
    ELSE
       ::nFileHandle := hb_FCreate( ::cFileName, FC_NORMAL, FO_READWRITE )
    ENDIF
@@ -602,10 +602,10 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogFile
 
 CLASS HB_LogDbf FROM HB_LogChannel
 
-   DATA cDBFName    INIT "messages.dbf"
-   DATA cIndexName  INIT "messages.cdx"
-   DATA cDriver     INIT "DBFCDX"
-   DATA aStruct     INIT { ;
+   VAR cDBFName    INIT "messages.dbf"
+   VAR cIndexName  INIT "messages.cdx"
+   VAR cDriver     INIT "DBFCDX"
+   VAR aStruct     INIT { ;
       { "PRIORITY", "N",   2, 0 } , ;
       { "PROGNAME", "C",  30, 0 } , ;
       { "MESSAGE" , "C", 250, 0 } , ;
@@ -733,7 +733,7 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogDbf
 
 CLASS HB_LogSyslog FROM HB_LogChannel
 
-   DATA nId
+   VAR nId
 
    METHOD New( nLevel, nId )
    METHOD Open( cName )
@@ -791,7 +791,7 @@ METHOD Send( nType, cMessage, cName, nPriority ) CLASS HB_LogSyslog
 
 CLASS HB_LogDebug FROM HB_LogChannel
 
-   DATA nMaxLevel
+   VAR nMaxLevel
 
    METHOD New( nLevel, nMaxLevel )
    // Nothing to do in this version

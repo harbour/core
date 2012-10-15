@@ -52,12 +52,6 @@
 
 #include "hbclass.ch"
 
-#command IF <lexpr> THEN <*statement*>  =>;
-         IF (<lexpr>) ; <statement> ; END
-
-#command IF <lexpr> THEN <statement1> ELSE <statement2> =>;
-         IF (<lexpr>) ; <statement1> ; ELSE ; <statement2> ; END
-
 MEMVAR _COOKIE
 
 FUNCTION uhttpd_CookieNew( cDomain, cPath, nExpireDays, nExpireSecs )
@@ -89,10 +83,18 @@ ENDCLASS
 // ------------------------------
 
 METHOD SetCookieDefaults( cDomain, cPath, nExpireDays, nExpireSecs ) CLASS uhttpd_Cookie
-   IF cDomain     != NIL THEN ::cDomain     := cDomain
-   IF cPath       != NIL THEN ::cPath       := cPath
-   IF nExpireDays != NIL THEN ::nExpireDays := nExpireDays
-   IF nExpireSecs != NIL THEN ::nExpireSecs := nExpireSecs
+   IF cDomain != NIL
+      ::cDomain := cDomain
+   ENDIF
+   IF cPath != NIL
+      ::cPath := cPath
+   ENDIF
+   IF nExpireDays != NIL
+      ::nExpireDays := nExpireDays
+   ENDIF
+   IF nExpireSecs != NIL
+      ::nExpireSecs := nExpireSecs
+   ENDIF
    RETURN NIL
 
 METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpOnly ) CLASS uhttpd_Cookie

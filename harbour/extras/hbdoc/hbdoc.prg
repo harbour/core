@@ -182,7 +182,7 @@ PROCEDURE Main( ... )
                ELSE
                   AAdd( p_hsSwitches[ "format" ], arg )
                ENDIF
-            END
+            ENDIF
          CASE cArgName == "-output-single" ;          p_hsSwitches[ "output" ] := "single"
          CASE cArgName == "-output-category" ;        p_hsSwitches[ "output" ] := "category"
          CASE cArgName == "-output-entry" ;           p_hsSwitches[ "output" ] := "entry"

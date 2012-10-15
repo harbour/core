@@ -78,27 +78,27 @@
 
 CLASS WvgToolBar  INHERIT  WvgWindow /*WvgActiveXControl*/
 
-   DATA     appearance
-   DATA     style                                 INIT WVGTOOLBAR_STYLE_STANDARD
-   DATA     allowCustomize                        INIT .T.
-   DATA     enabled                               INIT .T.
-   DATA     showToolTips                          INIT .T.
-   DATA     borderStyle                           INIT WVGFRAME_NONE
-   DATA     wrappable                             INIT .T.
-   DATA     buttonWidth                           INIT 0
-   DATA     buttonHeight                          INIT 0
-   DATA     textAlign                             INIT WVGALIGN_BOTTOM
-   DATA     imageWidth                            INIT 0
-   DATA     imageHeight                           INIT 0
-   DATA     transparentColor                      INIT 0
+   VAR      appearance
+   VAR      style                                 INIT WVGTOOLBAR_STYLE_STANDARD
+   VAR      allowCustomize                        INIT .T.
+   VAR      enabled                               INIT .T.
+   VAR      showToolTips                          INIT .T.
+   VAR      borderStyle                           INIT WVGFRAME_NONE
+   VAR      wrappable                             INIT .T.
+   VAR      buttonWidth                           INIT 0
+   VAR      buttonHeight                          INIT 0
+   VAR      textAlign                             INIT WVGALIGN_BOTTOM
+   VAR      imageWidth                            INIT 0
+   VAR      imageHeight                           INIT 0
+   VAR      transparentColor                      INIT 0
 
-   DATA     aItems                                INIT {}
-   DATA     hImageList
-   DATA     lSized                                INIT .F.
+   VAR      aItems                                INIT {}
+   VAR      hImageList
+   VAR      lSized                                INIT .F.
 
-   DATA     sl_change
-   DATA     sl_buttonMenuClick
-   DATA     sl_buttonDropDown
+   VAR      sl_change
+   VAR      sl_buttonMenuClick
+   VAR      sl_buttonDropDown
 
    METHOD   numItems()                            INLINE Len( ::aItems )
 
@@ -241,7 +241,7 @@ METHOD WvgToolBar:handleEvent( nMessage, aNM )
       ENDCASE
 
       EXIT
-   END
+   ENDSWITCH
 
    RETURN EVENT_UNHANDELLED
 
@@ -472,25 +472,25 @@ METHOD WvgToolBar:buttonDropDown( xParam )
 
 CLASS WvgToolBarButton
 
-   DATA     enabled                               INIT .T.
-   DATA     INDEX                                 INIT 0
-   DATA     KEY                                   INIT ""
-   DATA     style                                 INIT WVGTOOLBAR_BUTTON_DEFAULT
-   DATA     caption                               INIT ""
-   DATA     image                                 INIT NIL
-   DATA     disabledImage                         INIT NIL
-   DATA     hotImage                              INIT NIL
-   DATA     mixedState                            INIT .F.
-   DATA     pressed                               INIT .F.
-   DATA     visible                               INIT .T.
-   DATA     left                                  INIT 0
-   DATA     BOTTOM                                INIT 0
-   DATA     TOP                                   INIT 0
-   DATA     width                                 INIT 0
-   DATA     height                                INIT 0
-   DATA     description                           INIT ""
-   DATA     tooltipText                           INIT ""
-   DATA     command                               INIT 0
+   VAR      enabled                               INIT .T.
+   VAR      INDEX                                 INIT 0
+   VAR      KEY                                   INIT ""
+   VAR      style                                 INIT WVGTOOLBAR_BUTTON_DEFAULT
+   VAR      caption                               INIT ""
+   VAR      image                                 INIT NIL
+   VAR      disabledImage                         INIT NIL
+   VAR      hotImage                              INIT NIL
+   VAR      mixedState                            INIT .F.
+   VAR      pressed                               INIT .F.
+   VAR      visible                               INIT .T.
+   VAR      left                                  INIT 0
+   VAR      BOTTOM                                INIT 0
+   VAR      TOP                                   INIT 0
+   VAR      width                                 INIT 0
+   VAR      height                                INIT 0
+   VAR      description                           INIT ""
+   VAR      tooltipText                           INIT ""
+   VAR      command                               INIT 0
 
    METHOD   new( cCaption, nStyle, cKey )
 

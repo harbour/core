@@ -201,6 +201,6 @@ STATIC FUNCTION FT_CAL( dGivenDate, nType )
          dTemp++
       NEXT
       ?
-   END
+   ENDDO
 
    RETURN NIL
