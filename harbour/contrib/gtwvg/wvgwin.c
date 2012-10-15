@@ -1550,14 +1550,14 @@ HB_FUNC( WVG_SENDCBMESSAGE )
       hb_retnint( SendMessage( hCB, CB_GETHORIZONTALEXTENT, 0, 0 ) );
       break;
    case CB_GETITEMDATA            : // An application sends a CB_GETITEMDATA message to a combo box to retrieve the application-supplied value associated with the specified item in the combo box.
-      hb_retnint( SendMessage( hCB, CB_GETITEMDATA, hb_parnint( 3 ), 0 ) );
+      hb_retnint( SendMessage( hCB, CB_GETITEMDATA, ( WPARAM ) hb_parnint( 3 ), 0 ) );
       break;
    case CB_GETITEMHEIGHT          : // Determines the height of list items or the selection field in a combo box.
       hb_retnint( SendMessage( hCB, CB_GETITEMHEIGHT, 0, 0 ) );
       break;
    case CB_GETLBTEXT              : // Gets a string from the list of a combo box.
    {
-      HB_ISIZ iSize = SendMessage( hCB, CB_GETLBTEXTLEN, hb_parnint( 3 ), 0 );
+      HB_ISIZ iSize = SendMessage( hCB, CB_GETLBTEXTLEN, ( WPARAM ) hb_parnint( 3 ), 0 );
       LPTSTR text = ( LPTSTR ) hb_xgrab( iSize + 1 );
       SendMessage( hCB, CB_GETLBTEXT, iSize, ( LPARAM ) text );
       HB_RETSTR( text );
@@ -1565,7 +1565,7 @@ HB_FUNC( WVG_SENDCBMESSAGE )
       break;
    }
    case CB_GETLBTEXTLEN           : // Gets the length, in characters, of a string in the list of a combo box.
-      hb_retnint( SendMessage( hCB, CB_GETLBTEXTLEN, hb_parnint( 3 ), 0 ) );
+      hb_retnint( SendMessage( hCB, CB_GETLBTEXTLEN, ( WPARAM ) hb_parnint( 3 ), 0 ) );
       break;
    case CB_GETLOCALE              : // Gets the current locale of the combo box. The locale is used to determine the correct sorting order of displayed text for combo boxes with the CBS_SORT style and text added by using the CB_ADDSTRING message.
 #if ( _WIN32_IE >= 0x0600 )
@@ -1595,10 +1595,10 @@ HB_FUNC( WVG_SENDCBMESSAGE )
       break;
 #endif
    case CB_SETCURSEL              : // An application sends a CB_SETCURSEL message to select a string in the list of a combo box. If necessary, the list scrolls the string into view. The text in the edit control of the combo box changes to reflect the new selection, and any previous selection in the list is removed.
-      hb_retnint( SendMessage( hCB, CB_SETCURSEL, hb_parnint( 3 ), 0 ) );
+      hb_retnint( SendMessage( hCB, CB_SETCURSEL, ( WPARAM ) hb_parnint( 3 ), 0 ) );
       break;
    case CB_SETDROPPEDWIDTH        : // An application sends the CB_SETDROPPEDWIDTH message to set the maximum allowable width, in pixels, of the list box of a combo box with the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
-      hb_retnint( SendMessage( hCB, CB_SETDROPPEDWIDTH, hb_parnint( 3 ), 0 ) );
+      hb_retnint( SendMessage( hCB, CB_SETDROPPEDWIDTH, ( WPARAM ) hb_parnint( 3 ), 0 ) );
       break;
    case CB_SETEDITSEL             : // An application sends a CB_SETEDITSEL message to select characters in the edit control of a combo box.
       break;
@@ -1612,18 +1612,18 @@ HB_FUNC( WVG_SENDCBMESSAGE )
       SendMessage( hCB, CB_SETITEMDATA, hb_parl( 3 ), ( LPARAM ) hb_parnint( 4 ) );
       break;
    case CB_SETITEMHEIGHT          : // An application sends a CB_SETITEMHEIGHT message to set the height of list items or the selection field in a combo box.
-      hb_retnint( SendMessage( hCB, CB_SETITEMHEIGHT, hb_parnint( 3 ), 0 ) );
+      hb_retnint( SendMessage( hCB, CB_SETITEMHEIGHT, ( WPARAM ) hb_parnint( 3 ), 0 ) );
       break;
    case CB_SETLOCALE              : // An application sends a CB_SETLOCALE message to set the current locale of the combo box. If the combo box has the CBS_SORT style and strings are added using CB_ADDSTRING, the locale of a combo box affects how list items are sorted.
       hb_retnint( SendMessage( hCB, CB_SETLOCALE, ( WPARAM ) hb_parnint( 3 ), 0 ) );
       break;
 #if ( _WIN32_IE >= 0x0600 )
    case CB_SETMINVISIBLE          : // An application sends a CB_SETMINVISIBLE message to set the minimum number of visible items in the drop-down list of a combo box.
-      hb_retl( SendMessage( hCB, CB_SETMINVISIBLE, hb_parnint( 3 ), 0 ) );
+      hb_retl( SendMessage( hCB, CB_SETMINVISIBLE, ( WPARAM ) hb_parnint( 3 ), 0 ) );
       break;
 #endif
    case CB_SETTOPINDEX            : // An application sends the CB_SETTOPINDEX message to ensure that a particular item is visible in the list box of a combo box. The system scrolls the list box contents so that either the specified item appears at the top of the list box or the maximum scroll range has been reached.
-      hb_retl( SendMessage( hCB, CB_SETTOPINDEX, hb_parnint( 3 ), 0 ) ? FALSE : TRUE );
+      hb_retl( SendMessage( hCB, CB_SETTOPINDEX, ( WPARAM ) hb_parnint( 3 ), 0 ) ? FALSE : TRUE );
       break;
    case CB_SHOWDROPDOWN           : // An application sends a CB_SHOWDROPDOWN message to show or hide the list box of a combo box that has the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
       SendMessage( hCB, CB_SHOWDROPDOWN, hb_parl( 3 ), 0 );
