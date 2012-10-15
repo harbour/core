@@ -50,7 +50,7 @@ METHOD New( cFileName ) CLASS TIniFile
 
       cLine := ""
       Done := .F.
-      WHILE ! Done
+      DO WHILE ! Done
          cFile := Space( 256 )
          Done := ( FRead( hFile, @cFile, 256 ) <= 0 )
 
@@ -58,7 +58,7 @@ METHOD New( cFileName ) CLASS TIniFile
 
          // prepend last read
          cFile := cLine + cFile
-         WHILE ! Empty( cFile )
+         DO WHILE ! Empty( cFile )
             IF ( nPos := At( Chr( 10 ), cFile ) ) > 0
                cLine := Left( cFile, nPos - 1 )
                cFile := SubStr( cFile, nPos + 1 )
@@ -95,8 +95,8 @@ METHOD New( cFileName ) CLASS TIniFile
                cLine := cFile
                cFile := ""
             ENDIF
-         end
-      end
+         ENDDO
+      ENDDO
 
       FClose( hFile )
    ENDIF
@@ -164,7 +164,7 @@ METHOD PROCEDURE WriteString( cSection, cIdent, cString ) CLASS TIniFile
          ENDIF
 
       ELSE
-         AAdd( ::Contents, { cSection, { {cIdent, cString} } } )
+         AAdd( ::Contents, { cSection, { { cIdent, cString } } } )
       ENDIF
    ENDIF
 
@@ -172,7 +172,7 @@ METHOD PROCEDURE WriteString( cSection, cIdent, cString ) CLASS TIniFile
 
 METHOD ReadNumber( cSection, cIdent, nDefault ) CLASS TIniFile
 
-   RETURN Val( ::ReadString( cSection, cIdent, Str(nDefault ) ) )
+   RETURN Val( ::ReadString( cSection, cIdent, Str( nDefault ) ) )
 
 METHOD PROCEDURE WriteNumber( cSection, cIdent, nNumber ) CLASS TIniFile
 
@@ -192,13 +192,13 @@ METHOD PROCEDURE WriteDate( cSection, cIdent, dDate ) CLASS TIniFile
 
 METHOD ReadBool( cSection, cIdent, lDefault ) CLASS TIniFile
 
-   LOCAL cDefault := iif( lDefault, ".t.", ".f." )
+   LOCAL cDefault := iif( lDefault, ".T.", ".F." )
 
-   RETURN ::ReadString( cSection, cIdent, cDefault ) == ".t."
+   RETURN ::ReadString( cSection, cIdent, cDefault ) == ".T."
 
 METHOD PROCEDURE WriteBool( cSection, cIdent, lBool ) CLASS TIniFile
 
-   ::WriteString( cSection, cIdent, iif( lBool, ".t.", ".f." ) )
+   ::WriteString( cSection, cIdent, iif( lBool, ".T.", ".F." ) )
 
    RETURN
 
@@ -223,7 +223,7 @@ METHOD PROCEDURE EraseSection( cSection ) CLASS TIniFile
    LOCAL i
 
    IF Empty( cSection )
-      WHILE ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. HB_ISSTRING( x[ 2 ] ) } ) ) > 0
+      DO WHILE ( i := AScan( ::Contents, {| x | HB_ISSTRING( x[ 1 ] ) .AND. HB_ISSTRING( x[ 2 ] ) } ) ) > 0
          hb_ADel( ::Contents, i, .T. )
       ENDDO
 
@@ -289,7 +289,7 @@ METHOD PROCEDURE UpdateFile() CLASS TIniFile
          FWrite( hFile, "[" + ::Contents[ i ][ 1 ] + "]" + hb_eol() )
          FOR j := 1 TO Len( ::Contents[ i ][ 2 ] )
 
-            if ::Contents[ i ][ 2 ][ j ][ 1 ] == NIL
+            IF ::Contents[ i ][ 2 ][ j ][ 1 ] == NIL
                FWrite( hFile, ::Contents[ i ][ 2 ][ j ][ 2 ] + hb_eol() )
             ELSE
                FWrite( hFile, ::Contents[ i ][ 2 ][ j ][ 1 ] + "=" + ::Contents[ i ][ 2 ][ j ][ 2 ] + hb_eol() )
@@ -302,6 +302,7 @@ METHOD PROCEDURE UpdateFile() CLASS TIniFile
 
       ENDIF
    NEXT
+
    FClose( hFile )
 
    RETURN

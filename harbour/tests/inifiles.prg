@@ -79,7 +79,7 @@ METHOD New( cFileName ) CLASS TIniFile
 
       cLine := ""
       Done := .F.
-      DO WHILE !Done
+      DO WHILE ! Done
          cFile := Space( 256 )
          Done := ( FRead( hFile, @cFile, 256 ) <= 0 )
 
@@ -92,7 +92,7 @@ METHOD New( cFileName ) CLASS TIniFile
                cLine := Left( cFile, nPos - 1 )
                cFile := SubStr( cFile, nPos + 1 )
 
-               IF !Empty( cLine )
+               IF ! Empty( cLine )
                   IF Left( cLine, 1 ) == "[" // new section
                      IF ( nPos := At( "]", cLine ) ) > 1
                         cLine := SubStr( cLine, 2, nPos - 2 )
@@ -174,7 +174,6 @@ METHOD PROCEDURE WriteString( cSection, cIdent, cString ) CLASS TIniFile
 
       IF j > 0
          ::Contents[ j ][ 2 ] := cString
-
       ELSE
          AAdd( ::Contents, NIL )
          AIns( ::Contents, 1 )
@@ -189,7 +188,6 @@ METHOD PROCEDURE WriteString( cSection, cIdent, cString ) CLASS TIniFile
 
          IF j > 0
             ::Contents[ i ][ 2 ][ j ][ 2 ] := cString
-
          ELSE
             AAdd( ::Contents[ i ][ 2 ], { cIdent, cString } )
          ENDIF
@@ -225,7 +223,7 @@ METHOD ReadBool( cSection, cIdent, lDefault ) CLASS TIniFile
 
    LOCAL cDefault := iif( lDefault, ".T.", ".F." )
 
-   return ::ReadString( cSection, cIdent, cDefault ) == ".T."
+   RETURN ::ReadString( cSection, cIdent, cDefault ) == ".T."
 
 METHOD PROCEDURE WriteBool( cSection, cIdent, lBool ) CLASS TIniFile
 
