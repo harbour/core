@@ -105,7 +105,7 @@ static const char s_code[] = {
    0x4C,  /* (+) 46 */
    0x7A};  /* Start/Stop 47 */
 
-static HB_PTRDIFF _code93_charno( char ch )
+static int _code93_charno( char ch )
 {
    static const char * s_symbols = "-. $/+%";
 
@@ -117,7 +117,7 @@ static HB_PTRDIFF _code93_charno( char ch )
    {
       const char * ptr = strchr( s_symbols, ch );
       if( ptr && *ptr )
-         return ptr - s_symbols + 36;
+         return ( int ) ( ptr - s_symbols + 36 );
    }
    return -1;
 }
@@ -126,7 +126,7 @@ PHB_ZEBRA hb_zebra_create_code93( const char * szCode, HB_SIZE nLen, int iFlags 
 {
    PHB_ZEBRA  pZebra;
    int        k, i, j, iLen = ( int ) nLen;
-   HB_PTRDIFF csum, ksum;
+   int        csum, ksum;
 
    HB_SYMBOL_UNUSED( iFlags );
 
@@ -169,7 +169,7 @@ PHB_ZEBRA hb_zebra_create_code93( const char * szCode, HB_SIZE nLen, int iFlags 
    k++;
    for( i = 0; i < iLen; i++ )
    {
-      HB_PTRDIFF no = _code93_charno( szCode[ i ] );
+      int no = _code93_charno( szCode[ i ] );
       if( no >= 0 )
       {
          hb_bitbuffer_cat_int( pZebra->pBits, 1, 1 );

@@ -75,9 +75,9 @@ static const char s_code[] = {
    0x2C,   /* A */
    0x4A,   /* B */
    0x68,   /* C */
-   0x38};  /* D */
+   0x38 }; /* D */
 
-static HB_PTRDIFF _codabar_charno( char ch )
+static int _codabar_charno( char ch )
 {
    static const char * s_symbols = "-$:/.+ABCD";
 
@@ -87,7 +87,7 @@ static HB_PTRDIFF _codabar_charno( char ch )
    {
       const char * ptr = strchr( s_symbols, ch );
       if( ptr && *ptr )
-         return ptr - s_symbols + 10;
+         return ( int ) ( ptr - s_symbols + 10 );
    }
    return -1;
 }
@@ -132,7 +132,7 @@ PHB_ZEBRA hb_zebra_create_codabar( const char * szCode, HB_SIZE nLen, int iFlags
 {
    PHB_ZEBRA  pZebra;
    int        i, iLen = ( int ) nLen;
-   HB_PTRDIFF j;
+   int        j;
 
    pZebra = hb_zebra_create();
    pZebra->iType = HB_ZEBRA_TYPE_CODABAR;
@@ -159,7 +159,7 @@ PHB_ZEBRA hb_zebra_create_codabar( const char * szCode, HB_SIZE nLen, int iFlags
 
    for( i = 0; i < iLen; i++ )
    {
-      HB_PTRDIFF no = _codabar_charno( szCode[ i ] );
+      HB_ISIZ no = _codabar_charno( szCode[ i ] );
       _codabar_add( pZebra->pBits, s_code[ no ], iFlags, i > 0 && no >= 16 );
    }
 
