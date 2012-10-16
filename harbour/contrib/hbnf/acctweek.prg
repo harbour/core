@@ -28,7 +28,7 @@
 
 FUNCTION FT_ACCTWEEK( dGivenDate, nWeekNum )
 
-   LOCAL nTemp, lIsWeek, aRetVal
+   LOCAL nTemp, aRetVal
 
    IF HB_ISNUMERIC( dGivenDate )
       nWeekNum := dGivenDate
@@ -39,8 +39,7 @@ FUNCTION FT_ACCTWEEK( dGivenDate, nWeekNum )
 
    aRetVal := FT_ACCTYEAR( dGivenDate )
 
-   lIsWeek := HB_ISNUMERIC( nWeekNum )
-   IF lIsWeek
+   IF HB_ISNUMERIC( nWeekNum )
       nTemp := Int( ( aRetVal[ 3 ] - aRetVal[ 2 ] ) / 7 ) + 1
       IF nWeekNum < 1 .OR. nWeekNum > nTemp
          nWeekNum := nTemp

@@ -40,15 +40,19 @@ FUNCTION FT_ACCTYEAR( dGivenDate )
    aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
 
    IF dGivenDate < aRetVal[ 2 ]
+
       aRetVal    := FT_YEAR( FT_MADD( dGivenDate, - 1 ) )
       nYTemp--
       aRetVal[ 2 ] := FT_ACCTADJ( aRetVal[ 2 ] )
       aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
+
    ELSEIF dGivenDate > aRetVal[ 3 ]
+
       aRetVal    := FT_YEAR( FT_MADD( dGivenDate, 1 ) )
       nYTemp++
       aRetVal[ 2 ] := FT_ACCTADJ( aRetVal[ 2 ] )
       aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
+
    ENDIF
 
    aRetVal[ 1 ] := Str( nYTemp, 4 )

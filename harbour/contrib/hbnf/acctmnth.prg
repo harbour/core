@@ -28,7 +28,7 @@
 
 FUNCTION FT_ACCTMONTH( dGivenDate, nMonthNum )
 
-   LOCAL nYTemp, nMTemp, lIsMonth, aRetVal
+   LOCAL nYTemp, nMTemp, aRetVal
 
    IF HB_ISNUMERIC( dGivenDate )
       nMonthNum := dGivenDate
@@ -44,6 +44,7 @@ FUNCTION FT_ACCTMONTH( dGivenDate, nMonthNum )
    aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
 
    IF dGivenDate < aRetVal[ 2 ]
+
       dGivenDate := FT_MADD( dGivenDate, - 1 )
       aRetVal    := FT_MONTH( dGivenDate )
       nMTemp     -= 1
@@ -68,8 +69,7 @@ FUNCTION FT_ACCTMONTH( dGivenDate, nMonthNum )
 
    ENDIF
 
-   lIsMonth := HB_ISNUMERIC( nMonthNum )
-   IF lIsMonth
+   IF HB_ISNUMERIC( nMonthNum )
       IF nMonthNum < 1 .OR. nMonthNum > 12
          nMonthNum := 12
       ENDIF

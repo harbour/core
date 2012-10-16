@@ -28,7 +28,7 @@
 
 FUNCTION FT_ACCTQTR( dGivenDate, nQtrNum )
 
-   LOCAL nYTemp, nQTemp, lIsQtr, aRetVal
+   LOCAL nYTemp, nQTemp, aRetVal
 
    IF HB_ISNUMERIC( dGivenDate )
       nQtrNum    := dGivenDate
@@ -44,6 +44,7 @@ FUNCTION FT_ACCTQTR( dGivenDate, nQtrNum )
    aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
 
    IF dGivenDate < aRetVal[ 2 ]
+
       dGivenDate := FT_MADD( dGivenDate, - 1 )
       aRetVal    := FT_QTR( dGivenDate )
       nQTemp     -= 1
@@ -54,7 +55,7 @@ FUNCTION FT_ACCTQTR( dGivenDate, nQtrNum )
       aRetVal[ 2 ] := FT_ACCTADJ( aRetVal[ 2 ] )
       aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
 
-   ELSEIF dGivenDate > aRetVal[3]
+   ELSEIF dGivenDate > aRetVal[ 3 ]
 
       dGivenDate := FT_MADD( dGivenDate, 1 )
       aRetVal    := FT_QTR( dGivenDate )
@@ -63,13 +64,12 @@ FUNCTION FT_ACCTQTR( dGivenDate, nQtrNum )
          nYTemp  += 1
          nQTemp  := 1
       ENDIF
-      aRetVal[2] := FT_ACCTADJ( aRetVal[ 2 ] )
-      aRetVal[3] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
+      aRetVal[ 2 ] := FT_ACCTADJ( aRetVal[ 2 ] )
+      aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
 
    ENDIF
 
-   lIsQtr     := HB_ISNUMERIC( nQtrNum )
-   IF lIsQtr
+   IF HB_ISNUMERIC( nQtrNum )
       IF nQtrNum < 1 .OR. nQtrNum > 4
          nQtrNum := 4
       ENDIF

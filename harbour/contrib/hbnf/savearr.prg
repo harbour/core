@@ -30,7 +30,7 @@
  *
  */
 
-FUNCTION FT_SAVEARR( aArray, cFileName, nErrorCode )
+FUNCTION FT_SAVEARR( aArray, cFileName, /* @ */ nErrorCode )
 
    LOCAL nHandle, lRet
 
@@ -49,7 +49,7 @@ FUNCTION FT_SAVEARR( aArray, cFileName, nErrorCode )
 
    RETURN lRet
 
-STATIC FUNCTION _ftsavesub( xMemVar, nHandle, nErrorCode )
+STATIC FUNCTION _ftsavesub( xMemVar, nHandle, /* @ */ nErrorCode )
 
    LOCAL cValType, nLen, cString
 
@@ -58,8 +58,8 @@ STATIC FUNCTION _ftsavesub( xMemVar, nHandle, nErrorCode )
    cValType := ValType( xMemVar )
    FWrite( nHandle, cValType, 1 )
    IF FError() == 0
-      DO CASE
-      CASE cValType == "A"
+      SWITCH cValType
+      CASE "A"
          nLen := Len( xMemVar )
          FWrite( nHandle, L2Bin( nLen ), 4 )
          IF FError() == 0
@@ -67,26 +67,32 @@ STATIC FUNCTION _ftsavesub( xMemVar, nHandle, nErrorCode )
          ELSE
             lRet := .F.
          ENDIF
-      CASE cValType == "B"
+         EXIT
+      CASE "B"
          lRet := .F.
-      CASE cValType == "C"
+         EXIT
+      CASE "C"
          nLen := Len( xMemVar )
          FWrite( nHandle, L2Bin( nLen ), 4 )
          FWrite( nHandle, xMemVar )
-      CASE cValType == "D"
+         EXIT
+      CASE "D"
          nLen := 8
          FWrite( nHandle, L2Bin( nLen ), 4 )
          FWrite( nHandle, DToC( xMemVar ) )
-      CASE cValType == "L"
+         EXIT
+      CASE "L"
          nLen := 1
          FWrite( nHandle, L2Bin( nLen ), 4 )
          FWrite( nHandle, iif( xMemVar, "T", "F" ) )
-      CASE cValType == "N"
+         EXIT
+      CASE "N"
          cString := Str( xMemVar )
          nLen := Len( cString )
          FWrite( nHandle, L2Bin( nLen ), 4 )
          FWrite( nHandle, cString )
-      ENDCASE
+         EXIT
+      ENDSWITCH
    ELSE
       lRet := .F.
    ENDIF
@@ -94,7 +100,7 @@ STATIC FUNCTION _ftsavesub( xMemVar, nHandle, nErrorCode )
 
    RETURN lRet
 
-FUNCTION FT_RESTARR( cFileName, nErrorCode )
+FUNCTION FT_RESTARR( cFileName, /* @ */ nErrorCode )
 
    LOCAL nHandle, aArray
 
@@ -109,7 +115,7 @@ FUNCTION FT_RESTARR( cFileName, nErrorCode )
 
    RETURN aArray
 
-STATIC FUNCTION _ftrestsub( nHandle, nErrorCode )
+STATIC FUNCTION _ftrestsub( nHandle, /* @ */ nErrorCode )
 
    LOCAL cValType, nLen, cLenStr, xMemVar, cMemVar, nk
 
