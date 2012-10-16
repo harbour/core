@@ -146,7 +146,7 @@ static int _datamatrix_encode( const char * szCode, int iLen, char * pCW )
       }
       else
       {
-         pCW[ iPos++ ] = ( char ) 235; /* Shift to extended ASCII for 1 character */
+         pCW[ iPos++ ] = '\xEB'; /* Shift to extended ASCII for 1 character */
          pCW[ iPos++ ] = szCode[ i ] - 127;
       }
    }
