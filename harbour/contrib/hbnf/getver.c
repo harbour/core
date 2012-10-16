@@ -53,13 +53,12 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+
 #if defined( HB_OS_DOS )
 #  include "dos.h"
 #endif
-#include "string.h"
-#include "stdlib.h"
 
-HB_FUNC( _GET_DOSVER )
+HB_FUNC( FT_DOSVER )
 {
 #if defined( HB_OS_DOS )
    {
@@ -74,10 +73,12 @@ HB_FUNC( _GET_DOSVER )
 
       hb_retc_buffer( pszPlatform );
    }
+#else
+   hb_retc_null();
 #endif
 }
 
-HB_FUNC( _FT_ISSHARE )
+HB_FUNC( FT_ISSHARE )
 {
    int iShare;
 
@@ -116,7 +117,7 @@ HB_FUNC( _FT_NWKSTAT )
    hb_retni( iConnect );
 }
 
-HB_FUNC( _FT_SETMODE )
+HB_FUNC( FT_SETMODE )
 {
 #if defined( HB_OS_DOS )
    {
@@ -128,7 +129,7 @@ HB_FUNC( _FT_SETMODE )
 #endif
 }
 
-HB_FUNC( _FT_GETMODE )
+HB_FUNC( FT_GETMODE )
 {
    int iMode;
 

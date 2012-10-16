@@ -120,28 +120,33 @@ STATIC FUNCTION _ftrestsub( nHandle, nErrorCode )
    nLen := Bin2L( cLenStr )
    nErrorCode := FError()
    IF nErrorCode == 0
-      DO CASE
-      CASE cValType == "A"
+      SWITCH cValType
+      CASE "A"
          xMemVar := {}
          FOR nk := 1 TO nLen
             AAdd( xMemVar, _ftrestsub( nHandle ) )      // Recursive call
          NEXT
-      CASE cValType == "C"
+         EXIT
+      CASE "C"
          xMemVar := Space( nLen )
          FRead( nHandle, @xMemVar, nLen )
-      CASE cValType == "D"
+         EXIT
+      CASE "D"
          cMemVar := Space( 8 )
          FRead( nHandle, @cMemVar, 8 )
          xMemVar := CToD( cMemVar ) /* TOFIX: It's not Y2K compatible, and it needs same _SET_DATEFORMAT on save and load */
-      CASE cValType == "L"
+         EXIT
+      CASE "L"
          cMemVar := " "
          FRead( nHandle, @cMemVar, 1 )
          xMemVar := ( cMemVar == "T" )
-      CASE cValType == "N"
+         EXIT
+      CASE "N"
          cMemVar := Space( nLen )
          FRead( nHandle, @cMemVar, nLen )
          xMemVar := Val( cMemVar )
-      ENDCASE
+         EXIT
+      ENDSWITCH
       nErrorCode := FError()
    ENDIF
 

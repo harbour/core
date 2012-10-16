@@ -29,17 +29,15 @@ FUNCTION FT_BLINK( cMsg, nRow, nCol )
 
    LOCAL cSavColor
 
-   // Return if no msg.
-   IF cMsg == NIL
-      RETURN NIL
+   IF cMsg != NIL
+
+      cSavColor := SetColor()
+
+      // If blink colors not already set, add blink to current foreground color.
+      hb_DispOutAt( iif( nRow == NIL, Row(), nRow ), ;
+                    iif( nCol == NIL, Col(), nCol ), ;
+                    cMsg, ;
+                    iif( "*" $ Left( cSavColor, 4 ), cSavColor, "*" + cSavColor ) )
    ENDIF
-
-   cSavColor := SetColor()
-
-   // IF blink colors not already set, add blink to current foreground color.
-   hb_DispOutAt( iif( nRow == NIL, Row(), nRow ), ;
-                 iif( nCol == NIL, Col(), nCol ), ;
-                 cMsg, ;
-                 iif( "*" $ Left( cSavColor, 4 ), cSavColor, "*" + cSavColor ) )
 
    RETURN NIL

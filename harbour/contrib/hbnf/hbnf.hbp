@@ -87,7 +87,6 @@ dectobin.prg
 dfile.prg
 diskfunc.prg
 dispmsg.prg
-dosver.prg
 e2d.prg
 easter.prg
 elapmil.prg
@@ -101,7 +100,6 @@ hex2dec.prg
 invclr.prg
 isbit.prg
 isbiton.prg
-isshare.prg
 lastday.prg
 linked.prg
 madd.prg
@@ -111,7 +109,7 @@ metaph.prg
 miltime.prg
 min2dhm.prg
 month.prg
-mouse2.prg
+mouse1.prg
 netpv.prg
 nooccur.prg
 ntow.prg
@@ -119,7 +117,6 @@ nwlstat.prg
 nwsem.prg
 nwuid.prg
 ontick.prg
-page.prg
 pchr.prg
 pegs.prg
 pending.prg
@@ -145,13 +142,9 @@ tbwhile.prg
 tempfile.prg
 vertmenu.prg
 vidcur.prg
-vidmode.prg
 wda.prg
 week.prg
 workdays.prg
 woy.prg
 xbox.prg
 year.prg
-
-# BAD_PRG_SOURCES
-#mouse1.prg

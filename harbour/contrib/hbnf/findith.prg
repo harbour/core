@@ -23,28 +23,21 @@
  *
  */
 
-#define MAKE_UPPER( cString )           ( cString := UPPER( cString ) )
-#define NULL                            ""
-
 FUNCTION FT_FINDITH( cCheckFor, cCheckIn, nWhichOccurrence, lIgnoreCase )
 
    LOCAL nIthOccurrence
 
-   // Is Case Sensitivity Important??
-   IF ! HB_ISLOGICAL( lIgnoreCase ) .OR. ;
-         lIgnoreCase
-
-      MAKE_UPPER( cCheckFor )             // No, Force Everything to Uppercase
-      MAKE_UPPER( cCheckIn )
-
-   ENDIF                                // IS_NOT_LOGICAL(lIgnoreCase) or
-   // lIgnoreCase
+   // Is Case Important??
+   IF ! HB_ISLOGICAL( lIgnoreCase ) .OR. lIgnoreCase
+      cCheckFor := Upper( cCheckFor )
+      cCheckIn  := Upper( cCheckIn )
+   ENDIF
 
    RETURN iif( nWhichOccurrence == 1, ;
       At( cCheckFor, cCheckIn ), ;
       iif( ( nIthOccurrence := At( cCheckFor, ;
       StrTran( cCheckIn, cCheckFor, ;
-      NULL, 1, ;
+      "", 1, ;
       nWhichOccurrence - 1 ) ) ) == 0, ;
       0, ;
       nIthOccurrence + ( ( nWhichOccurrence - 1 ) * Len( cCheckFor ) ) ) )

@@ -28,7 +28,7 @@
 
 FUNCTION FT_ELAPSED( dStart, dEnd, cTimeStart, cTimeEnd )
 
-   LOCAL nTotalSec, nCtr, nConstant, nTemp, aRetVal[ 4, 2 ]
+   LOCAL nTotalSec, nCtr, nConstant, nTemp, aRetVal[ 4 ][ 2 ]
 
    IF HB_ISSTRING( dStart )
       cTimeStart := dStart
@@ -51,7 +51,7 @@ FUNCTION FT_ELAPSED( dStart, dEnd, cTimeStart, cTimeEnd )
       cTimeEnd   := "00:00:00"
    ENDIF
 
-   nTotalSec  := ( dEnd - dStart ) * 86400 + ;
+   nTotalSec := ( dEnd - dStart ) * 86400 + ;
       Val( cTimeEnd ) *  3600 + ;
       Val( SubStr( cTimeEnd, At( ":", cTimeEnd ) + 1, 2 ) ) * 60 + ;
       iif( RAt( ":", cTimeEnd ) == At( ":", cTimeEnd ), 0, ;
@@ -65,9 +65,9 @@ FUNCTION FT_ELAPSED( dStart, dEnd, cTimeStart, cTimeEnd )
 
    FOR nCtr := 1 TO 4
       nConstant := iif( nCtr == 1, 86400, iif( nCtr == 2, 3600, iif( nCtr == 3, 60, 1 ) ) )
-      aRetVal[ nCtr, 1 ] := Int( nTemp / nConstant )
-      aRetval[ nCtr, 2 ] := nTotalSec / nConstant
-      nTemp -= aRetVal[ nCtr, 1 ] * nConstant
+      aRetVal[ nCtr ][ 1 ] := Int( nTemp / nConstant )
+      aRetval[ nCtr ][ 2 ] := nTotalSec / nConstant
+      nTemp -= aRetVal[ nCtr ][ 1 ] * nConstant
    NEXT
 
    RETURN aRetVal

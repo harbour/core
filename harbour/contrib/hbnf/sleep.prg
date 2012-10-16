@@ -22,26 +22,15 @@
 
 FUNCTION FT_SLEEP( nSeconds, nInitial )
 
-   IF ! HB_ISNUMERIC( nInitial )
-      nInitial := Seconds()
+   IF HB_ISNUMERIC( nInitial )
+      nInitial -= Seconds()
+      IF nInitial > 0
+         nInitial -= 86399
+      ENDIF
+      // calculate final time
+      nSeconds += ninitial
    ENDIF
 
-   // correct for running at midnight
-
-   IF nInitial + nSeconds > 86399
-      nInitial -= 86399
-      //  Wait until midnight
-      DO WHILE Seconds() > 100  // no problem with a _very_ slow machine
-      ENDDO
-   ENDIF
-
-   // calculate final time
-
-   nSeconds += ninitial
-
-   // Loop until we are done
-
-   DO WHILE Seconds() < nSeconds
-   ENDDO
+   hb_idleSleep( nSeconds )
 
    RETURN NIL

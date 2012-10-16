@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION FT_ELAPMIN( cTIME1, cTIME2 )
+FUNCTION FT_ELAPMIN( cTime1, cTime2 )
 
-   RETURN ( ( Val( Left( cTIME2, 2 ) ) * 60 ) + ( Val( Right( cTIME2, 2 ) ) ) ) - ;
-          ( ( Val( Left( cTIME1, 2 ) ) * 60 ) + ( Val( Right( cTIME1, 2 ) ) ) )
+   RETURN ( ( Val( Left( cTime2, 2 ) ) * 60 ) + ( Val( Right( cTime2, 2 ) ) ) ) - ;
+          ( ( Val( Left( cTime1, 2 ) ) * 60 ) + ( Val( Right( cTime1, 2 ) ) ) )

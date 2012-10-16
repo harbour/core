@@ -14,15 +14,15 @@
  * ---------------------
  *
  *    Rev 1.5   07 Jan 1993 08:01:04   GLENN
- * We forgot to escape the less-than symbols in the highbyte() and
- * lowbyte() #translates.
+ * We forgot to escape the less-than symbols in the HIGHBYTE() and
+ * LOWBYTE() #translates.
  *
  *    Rev 1.4   31 Dec 1992 21:35:46   GLENN
  * Some typos made it into the most recent version of ftint86,
- * particularly within the highbyte() macro.  This has been fixed.
+ * particularly within the HIGHBYTE() macro.  This has been fixed.
  *
  *    Rev 1.3   01 Jul 1992 01:00:52   GLENN
- * Rodgers Moore submitted some fixes to the highbyte() and lowbyte()
+ * Rodgers Moore submitted some fixes to the HIGHBYTE() and LOWBYTE()
  * macros that take negative numbers into account.  Ted Means and
  * Glenn Scott added #defines for the Flag registers.  General cleanup
  * of formatting, etc.
@@ -66,11 +66,11 @@
 #define FLAG_DIR            10    // Direction flag
 #define FLAG_OFLOW          11    // Overflow flag
 
-#translate makehi( <X> )        => ( ( <X> ) * 256 )
+#translate MAKEHI( <X> )        => ( ( <X> ) * 256 )
 #translate REG_DS               => .T.
 #translate REG_ES               => .F.
-#translate highbyte( <X> )      => ( int( iif( (<X>) \< 0, 65536 + (<X>), (<X>) ) / 256 ) )
-#translate lowbyte( <X> )       => (      iif( (<X>) \< 0, 65536 + (<X>), (<X>) ) % 256   )
-#translate carrySet( <XFLAGS> ) => ( hb_bitTest( <XFLAGS>, FLAG_CARRY ) )
+#translate HIGHBYTE( <X> )      => ( Int( iif( ( <X> ) \< 0, 65536 + ( <X> ), ( <X> ) ) / 256 ) )
+#translate LOWBYTE( <X> )       => (      iif( ( <X> ) \< 0, 65536 + ( <X> ), ( <X> ) ) % 256   )
+#translate CARRYSET( <XFLAGS> ) => ( hb_bitTest( <XFLAGS>, FLAG_CARRY ) )
 
 #endif // __FTINT86_CH__

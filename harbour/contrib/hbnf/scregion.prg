@@ -54,6 +54,7 @@ FUNCTION FT_RSTRGN( cScreen, nTop, nLeft )
 FUNCTION FT_RGNSTACK( cAction, nTop, nLeft, nBottom, nRight )
 
    THREAD STATIC t_nStackPtr := 0
+
    LOCAL nPopTop
 
    IF cAction == "push"

@@ -27,12 +27,4 @@
  */
 
 FUNCTION FT_HEX2DEC( cHexNum )
-
-   LOCAL n, nDec := 0, nHexPower := 1
-
-   FOR n := Len( cHexNum ) TO 1 STEP -1
-      nDec += ( At( SubStr( Upper( cHexNum ), n, 1 ), "0123456789ABCDEF" ) - 1 ) * nHexPower
-      nHexPower *= 16
-   NEXT
-
-   RETURN nDec
+   RETURN hb_HexToNum( cHexNum )

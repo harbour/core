@@ -27,10 +27,8 @@
 
 #include "fileio.ch"
 
-#define DRVTABLE "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-
 FUNCTION FT_DSKSIZE( cDrive )
-   RETURN DiskSpace( iif( cDrive == NIL, 0, At( Upper( cDrive ), DRVTABLE ) ), HB_DISK_TOTAL )
+   RETURN hb_DiskSpace( cDrive + hb_osDriveSeparator(), HB_DISK_TOTAL )
 
 FUNCTION FT_DSKFREE( cDrive )
-   RETURN DiskSpace( iif( cDrive == NIL, 0, At( Upper( cDrive ), DRVTABLE ) ), HB_DISK_FREE )
+   RETURN hb_DiskSpace( cDrive + hb_osDriveSeparator(), HB_DISK_FREE )

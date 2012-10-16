@@ -52,11 +52,12 @@
  */
 
 #include "hbapi.h"
+#include "hbapigt.h"
+#include "hbapiitm.h"
+
 #if defined( HB_OS_DOS )
 #  include "dos.h"
 #endif
-#include "hbapiitm.h"
-#include "hbapigt.h"
 
 HB_FUNC( _MGET_PAGE )
 {
@@ -74,6 +75,7 @@ HB_FUNC( _MGET_PAGE )
       iPage = 0;
    }
 #endif
+
    hb_retni( iPage );
 }
 
@@ -145,6 +147,7 @@ HB_FUNC( _MGET_HORISPEED )
       iSpeed = 0;
    }
 #endif
+
    hb_retni( iSpeed );
 }
 
@@ -164,6 +167,7 @@ HB_FUNC( _MGET_VERSPEED )
       iSpeed = 0;
    }
 #endif
+
    hb_retni( iSpeed );
 }
 
@@ -183,6 +187,7 @@ HB_FUNC( _MGET_DOUBLESPEED )
       iSpeed = 0;
    }
 #endif
+
    hb_retni( iSpeed );
 }
 
@@ -246,23 +251,22 @@ HB_FUNC( _MGET_MICS )
 
 HB_FUNC( _M_RESET )
 {
-   int iMouse;
+   HB_BOOL fMouse;
 
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
       regs.HB_XREGS.ax  = 0;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      iMouse            = regs.HB_XREGS.ax;
+      fMouse = regs.HB_XREGS.ax != 0;
    }
 #else
    {
-      iMouse = 0;
+      fMouse = HB_FALSE;
    }
 #endif
-   {
-      hb_retl( iMouse );
-   }
+
+   hb_retl( fMouse );
 }
 
 HB_FUNC( _MSE_SHOWCURS )
@@ -332,6 +336,7 @@ HB_FUNC( _M_GETX )
       iRow = 0;
    }
 #endif
+
    hb_retni( iRow );
 }
 
@@ -351,6 +356,7 @@ HB_FUNC( _M_GETY )
       iCol = 0;
    }
 #endif
+
    hb_retni( iCol );
 }
 

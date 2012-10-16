@@ -179,7 +179,6 @@ extern HB_EXPORT HB_ERRCODE hb_gtGetBlink( HB_BOOL * pbBlink );
 extern HB_EXPORT HB_ERRCODE hb_gtGetColorStr( char * pszColorString );
 extern HB_EXPORT HB_ERRCODE hb_gtGetCursor( int * piCursorShape );
 extern HB_EXPORT HB_ERRCODE hb_gtGetPos( int * piRow, int * piCol );
-extern HB_EXPORT HB_BOOL    hb_gtIsCompatBuffer( void );
 extern HB_EXPORT HB_BOOL    hb_gtIsColor( void );
 extern HB_EXPORT int        hb_gtMaxCol( void );
 extern HB_EXPORT int        hb_gtMaxRow( void );

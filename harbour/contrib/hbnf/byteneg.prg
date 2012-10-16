@@ -24,4 +24,9 @@
  */
 
 FUNCTION FT_BYTENEG( cByte )
-   RETURN iif( HB_ISSTRING( cByte ), hb_BChar( ( 256 - hb_BCode( cByte ) ) % 256 ), NIL )
+
+   IF HB_ISSTRING( cByte )
+      RETURN hb_BChar( ( 256 - hb_BCode( cByte ) ) % 256 )
+   ENDIF
+
+   RETURN NIL

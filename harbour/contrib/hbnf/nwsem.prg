@@ -38,7 +38,7 @@
 
 #include "ftint86.ch"
 
-#define INT21    33
+#define INT21             33
 
 #define WAIT_SEMAPHORE    2
 #define SIGNAL_SEMAPHORE  3
@@ -59,17 +59,17 @@ FUNCTION ft_nwSemOpen( cName, nInitVal, nHandle, nOpenCnt )
    cName    := iif( hb_BLen( cName ) > 127, hb_BSubStr( cName, 1, 127 ), cName )
    cRequest := hb_BChar( Len( cName ) ) + cName
 
-   aRegs[ AX ]      := makehi( 197 )                       // C5h
-   aRegs[ DS ]      := cRequest
-   aRegs[ DX ]      := REG_DS
-   aRegs[ CX ]      := nInitVal
+   aRegs[ AX ] := MAKEHI( 197 )                       // C5h
+   aRegs[ DS ] := cRequest
+   aRegs[ DX ] := REG_DS
+   aRegs[ CX ] := nInitVal
 
    ft_int86( INT21, aRegs )
 
    nHandle  := Bin2L( I2Bin( aRegs[ CX ] ) + I2Bin( aRegs[ DX ] ) )
-   nOpenCnt := lowbyte( aRegs[ BX ] )
+   nOpenCnt := LOWBYTE( aRegs[ BX ] )
 
-   nRet := lowbyte( aRegs[ AX ] )
+   nRet := LOWBYTE( aRegs[ AX ] )
 
    RETURN iif( nRet < 0, nRet + 256, nRet )
 
@@ -81,15 +81,15 @@ FUNCTION ft_nwSemEx( nHandle, nValue, nOpenCnt )
    __defaultNIL( @nValue, 0 )
    __defaultNIL( @nOpenCnt, 0 )
 
-   aRegs[ AX ] :=  makehi( 197 ) + 1                         // C5h, 01h
-   aRegs[ CX ] :=  Bin2I( hb_BSubStr( L2Bin( nHandle ), 1, 2 ) )
-   aRegs[ DX ] :=  Bin2I( hb_BSubStr( L2Bin( nHandle ), 3, 2 ) )
+   aRegs[ AX ] := MAKEHI( 197 ) + 1                         // C5h, 01h
+   aRegs[ CX ] := Bin2I( hb_BSubStr( L2Bin( nHandle ), 1, 2 ) )
+   aRegs[ DX ] := Bin2I( hb_BSubStr( L2Bin( nHandle ), 3, 2 ) )
 
    ft_int86( INT21, aRegs )
 
    nValue   := aRegs[ CX ]
-   nOpenCnt := lowbyte( aRegs[ DX ] )
-   nRet     := lowbyte( aRegs[ AX ] )
+   nOpenCnt := LOWBYTE( aRegs[ DX ] )
+   nRet     := LOWBYTE( aRegs[ AX ] )
 
    RETURN iif( nRet < 0, nRet + 256, nRet )
 
@@ -117,13 +117,13 @@ STATIC FUNCTION _ftnwsem( nOp, nHandle, nTimeout )
    __defaultNIL( @nHandle, 0 )
    __defaultNIL( @nTimeout, 0 )
 
-   aRegs[ AX ] :=  makehi( 197 ) + nOp
-   aRegs[ CX ] :=  Bin2I( hb_BSubStr( L2Bin( nHandle ), 1, 2 ) )
-   aRegs[ DX ] :=  Bin2I( hb_BSubStr( L2Bin( nHandle ), 3, 2 ) )
-   aRegs[ BP ] :=  nTimeout
+   aRegs[ AX ] := MAKEHI( 197 ) + nOp
+   aRegs[ CX ] := Bin2I( hb_BSubStr( L2Bin( nHandle ), 1, 2 ) )
+   aRegs[ DX ] := Bin2I( hb_BSubStr( L2Bin( nHandle ), 3, 2 ) )
+   aRegs[ BP ] := nTimeout
 
    ft_int86( INT21, aRegs )
-   nRet := lowbyte( aRegs[ AX ] )
+   nRet := LOWBYTE( aRegs[ AX ] )
    nRet := iif( nRet < 0, nRet + 256, nRet )
 
    RETURN nRet

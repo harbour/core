@@ -26,7 +26,7 @@
 FUNCTION FT_SETCENTURY( lNewSetState )
 
    // Note that if CENTURY is ON then
-   // DTOC() Will Return a String of Length
+   // DToC() Will Return a String of Length
    // 10, Otherwise it Will be of Length 8
 
    LOCAL lOldSetState := ( Len( DToC( Date() ) ) == 10 )

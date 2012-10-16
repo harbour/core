@@ -24,20 +24,10 @@
  *
  */
 
-#include "ftint86.ch"
-
-#define DOS         33
-#define STATNUM    220
-
 FUNCTION FT_NWLSTAT()
 
-// LOCAL aRegs[ INT86_MAX_REGS ]
-   LOCAL nStation
-/*
-   aRegs[ AX ] := MAKEHI( STATNUM )
-   FT_INT86( DOS, aRegs )
- */
-   nStation := _ft_nwkstat() /* LOWBYTE( aRegs[ AX ] ) */
+   LOCAL nStation := _ft_nwkstat()
+
    IF nStation < 0
       nStation += 256
    ENDIF

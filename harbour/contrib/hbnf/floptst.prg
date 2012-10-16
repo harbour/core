@@ -96,7 +96,7 @@ STATIC FUNCTION _GetDisketteNum( nDrive_i ) // drive number to query status
 
    lRetCode := .F.
    IF FT_INT86( 1 * 16 + 1, aRegs )  // INT for equipment determination
-      nByte := lowbyte( aRegs[ AX ] )
+      nByte := LOWBYTE( aRegs[ AX ] )
       // bit 0 indicates floppy drive installed
       IF Int( nByte / 2 ) * 2 != nByte // is it odd i.e. is bit 0 set??
          // bits 6 & 7 indicate number of floppies installed upto 4.
@@ -138,7 +138,7 @@ STATIC FUNCTION _ReadBootSector( ;
    aRegs[ CX ] := 1                    // CH = 0 track 0, CL=1 sector 1
    aRegs[ BX ] := REG_ES               // buffer in ES:BX
    aRegs[ ES ] := cBuffer
-   aRegs[ AX ] := makehi( 2 ) + 1      // AH = 02 read, AL=1 read one sector
+   aRegs[ AX ] := MAKEHI( 2 ) + 1      // AH = 02 read, AL=1 read one sector
 
    lSuccess := _CallInt13hRetry( aRegs, @lCarryFlag, @nErrorCode )
 
@@ -163,7 +163,7 @@ STATIC FUNCTION _WriteBootSector( ;
    aRegs[ CX ] := 1                    // CH = 0 track 0, CL=1 sector 1
    aRegs[ BX ] := REG_ES               // buffer in ES:BX
    aRegs[ ES ] := cBuffer_i
-   aRegs[ AX ] := makehi( 3 ) + 1      // AH = 03 write, AL=1 read one sector
+   aRegs[ AX ] := MAKEHI( 3 ) + 1      // AH = 03 write, AL=1 read one sector
 
    lSuccess := _CallInt13hRetry( aRegs, @lCarryFlag, @nErrorCode )
 
@@ -186,19 +186,19 @@ STATIC FUNCTION _CallInt13hRetry( ;     // logical: did the interrupt succeed?
    aRegisters := AClone( aRegs_io )
    lSuccess := FT_INT86( nInterrupt_c, aRegisters )
    IF lSuccess
-      lCarrySet := carrySet( aRegisters[ FLAGS ] )
+      lCarrySet := CARRYSET( aRegisters[ FLAGS ] )
       IF lCarrySet
          _ResetDisketteSystem()
 
          aRegisters := AClone( aRegs_io )
          FT_INT86( nInterrupt_c, aRegisters )
-         lCarrySet := carrySet( aRegisters[ FLAGS ] )
+         lCarrySet := CARRYSET( aRegisters[ FLAGS ] )
          IF lCarrySet
             _ResetDisketteSystem()
 
             aRegisters := AClone( aRegs_io )
             FT_INT86( nInterrupt_c, aRegisters )
-            lCarrySet := carrySet( aRegisters[ FLAGS ] )
+            lCarrySet := CARRYSET( aRegisters[ FLAGS ] )
             IF lCarrySet
                _ResetDisketteSystem()
             ENDIF
@@ -211,6 +211,6 @@ STATIC FUNCTION _CallInt13hRetry( ;     // logical: did the interrupt succeed?
       aRegs_io[ i ] := aRegisters[ i ]
    NEXT
    lCarrySet_o := lCarrySet
-   nDriveStatus_o := highByte( aRegisters[ AX ] )
+   nDriveStatus_o := HIGHBYTE( aRegisters[ AX ] )
 
    RETURN lSuccess

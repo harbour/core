@@ -46,21 +46,21 @@ FUNCTION FT_NWUID( nConn )
 
    // Set up request packet
 
-   cReqPkt  :=  hb_BChar( 22 )          // Function 22: Get Connection Information
-   cReqPkt  +=  hb_BChar( nConn )
-   cReqPkt  :=  I2Bin( hb_BLen( cReqPkt ) ) + cReqPkt
+   cReqPkt := hb_BChar( 22 )          // Function 22: Get Connection Information
+   cReqPkt += hb_BChar( nConn )
+   cReqPkt := I2Bin( hb_BLen( cReqPkt ) ) + cReqPkt
 
    // Set up reply packet
 
-   cRepPkt  :=  Space( 63 )
+   cRepPkt := Space( 63 )
 
    // Assign registers
 
-   aRegs[ AX ] :=  MAKEHI( NW_LOG )
-   aRegs[ DS ] :=  cReqPkt
-   aRegs[ SI ] :=  REG_DS
-   aRegs[ ES ] :=  cRepPkt
-   aRegs[ DI ] :=  REG_ES
+   aRegs[ AX ] := MAKEHI( NW_LOG )
+   aRegs[ DS ] := cReqPkt
+   aRegs[ SI ] := REG_DS
+   aRegs[ ES ] := cRepPkt
+   aRegs[ DI ] := REG_ES
 
    FT_INT86( DOS, aRegs )
 

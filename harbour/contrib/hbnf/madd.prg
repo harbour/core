@@ -30,15 +30,15 @@ FUNCTION FT_MADD( dGivenDate, nAddMonths, lMakeEOM )
 
    LOCAL nAdjDay, dTemp, i
 
-   IF ! HB_ISDATE( dGivenDate ); dGivenDate := Date() ; ENDIF
-   IF ! HB_ISNUMERIC( nAddMonths ); nAddMonths := 0 ; ENDIF
-   IF ! HB_ISLOGICAL( lMakeEOM ); lMakeEom := .F. ; ENDIF
+   hb_default( @dGivenDate, Date() )
+   hb_default( @nAddMonths, 0 )
+   hb_default( @lMakeEOM, .F. )
 
    nAdjDay := Day( dGivenDate ) - 1
 
    /* If givendate is end of month and lMakeEom, then force EOM.*/
 
-   lMakeEom := ( lMakeEom .AND. dGivenDate ==  dGivenDate - nAdjDay + 31 - ;
+   lMakeEom := ( lMakeEom .AND. dGivenDate == dGivenDate - nAdjDay + 31 - ;
       Day( dGivenDate - nAdjDay + 31 ) )
 
    dTemp := dGivenDate - nAdjDay     // first of month
@@ -52,7 +52,7 @@ FUNCTION FT_MADD( dGivenDate, nAddMonths, lMakeEOM )
    IF lMakeEom
       dTemp += 31 - Day( dTemp + 31 )
    ELSE
-      dTemp := Min( ( dTemp + nAdjday ), ( dTemp += 31 - Day( dTemp + 31 ) ) )
+      dTemp := Min( dTemp + nAdjday, ( dTemp += 31 - Day( dTemp + 31 ) ) )
    ENDIF
 
    RETURN dTemp

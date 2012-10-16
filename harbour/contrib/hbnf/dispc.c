@@ -98,7 +98,7 @@ typedef struct
    char * buffer;                /* file buffer pointer                 */
    char * lbuff;                 /* line buffer pointer                 */
    HB_UCHAR * vseg;              /* video segment variable              */
-   HB_BOOL fCompatBuffer;        /* HB_GTI_COMPATBUFFER setting         */
+   int iCellSize;                /* size of one buffer cell             */
 } FT_DISPC, * PFT_DISPC;
 
 static HB_TSD_NEW( s_dispc, sizeof( FT_DISPC ), NULL, NULL );
@@ -130,21 +130,13 @@ static void chattr( PFT_DISPC dispc, int x, int y, int len, int attr )
    /* calc the screen memory coord */
    HB_UCHAR * vmem;
 
-   /* write the new attribute value */
-   if( dispc->fCompatBuffer )
-   {
-      vmem = dispc->vseg + ( y * ( dispc->width + 1 ) * 2 ) + ( x * 2 ) + 1;
+   vmem = dispc->vseg + ( y * ( dispc->width + 1 ) * dispc->iCellSize ) + ( x * dispc->iCellSize ) + 1;
 
-      for( i = 0; i <= len; i++, vmem += 2 )
-         *vmem = ( char ) attr;
-   }
-   else
-   {
-      vmem = dispc->vseg + ( y * ( dispc->width + 1 ) * 4 ) + ( x * 4 ) + 2;
+   if( dispc->iCellSize == 4 )
+      vmem++;
 
-      for( i = 0; i <= len; i++, vmem += 4 )   /* write the new attribute value */
-         *vmem = ( char ) attr;
-   }
+   for( i = 0; i <= len; i++, vmem += dispc->iCellSize ) /* write the new attribute value */
+      *vmem = ( char ) attr;
 }
 
 /*
@@ -311,10 +303,7 @@ static void disp_update( PFT_DISPC dispc, int offset )
          from the line start
        */
 
-      if( dispc->fCompatBuffer )
-         pos = ( line * ( dispc->width + 1 ) * 2 );
-      else
-         pos = ( line * ( dispc->width + 1 ) * 4 );
+      pos = ( line * ( dispc->width + 1 ) * dispc->iCellSize );
 
       /* copy string to temp buffer */
 
@@ -341,12 +330,7 @@ static void disp_update( PFT_DISPC dispc, int offset )
 
       for( i = dispc->wincol, col = 0; col <= dispc->width; col++ )
       {
-         HB_UCHAR * vmem;
-
-         if( dispc->fCompatBuffer )
-            vmem = dispc->vseg + pos + ( col * 2 );
-         else
-            vmem = dispc->vseg + pos + ( col * 4 );
+         HB_UCHAR * vmem = dispc->vseg + pos + ( col * dispc->iCellSize );
 
          *vmem = dispc->lbuff[ i++ ];
       }
@@ -517,7 +501,7 @@ HB_FUNC( _FT_DFINIT )
    int         rval;
    HB_ISIZ     j;
    HB_ISIZ     i;
-   HB_SIZE     ulSize;
+   HB_SIZE     nSize;
 
    rval           = 0;
 
@@ -529,10 +513,12 @@ HB_FUNC( _FT_DFINIT )
    dispc->width   = dispc->ecol - dispc->scol;        /* calc width of window  */
    dispc->height  = dispc->eline - dispc->sline + 1;  /* calc height of window */
 
-   dispc->fCompatBuffer = hb_gtIsCompatBuffer();
+   hb_gtRectSize( 0, 0, 0, 0, &nSize );
 
-   hb_gtRectSize( dispc->sline, dispc->scol, dispc->eline, dispc->ecol, &ulSize );
-   dispc->vseg    = ( HB_UCHAR * ) hb_xalloc( ulSize );
+   dispc->iCellSize = ( int ) nSize;
+
+   hb_gtRectSize( dispc->sline, dispc->scol, dispc->eline, dispc->ecol, &nSize );
+   dispc->vseg    = ( HB_UCHAR * ) hb_xalloc( nSize );
    if( dispc->vseg != NULL )
       hb_gtSave( dispc->sline, dispc->scol, dispc->eline, dispc->ecol, dispc->vseg );
 

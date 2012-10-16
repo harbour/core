@@ -45,10 +45,8 @@ FUNCTION FT_AT2( cSearch, cTarget, nOccurs, lCaseSens )
       // Store position of next occurrence of cSearch.
       IF lCaseSens
          nPos := At( cSearch, cSubstr )
-
       ELSE
          nPos := At( Upper( cSearch ), Upper( cSubstr ) )
-
       ENDIF
 
       // Store position of cSearch relative to original string.
@@ -62,7 +60,6 @@ FUNCTION FT_AT2( cSearch, cTarget, nOccurs, lCaseSens )
       IF nPos == 0
          EXIT
       ENDIF
-
    NEXT
 
    RETURN nPos2
@@ -76,20 +73,26 @@ FUNCTION FT_RAT2( cSearch, cTarget, nOccurs, lCaseSens )
    IF lCaseSens == NIL
       lCaseSens := .T.
    ENDIF
+
    IF nOccurs == NIL
       nOccurs := 1
    ENDIF
+
    FOR nCount := 1 TO nOccurs
+
       // Store position of next occurrence of cSearch.
       IF lCaseSens
          nPos := RAt( cSearch, cSubstr )
       ELSE
          nPos := RAt( Upper( cSearch ), Upper( cSubstr ) )
       ENDIF
+
       // Store position of cSearch relative to original string.
       nPos2 := nPos
+
       // Resize cSubstr
       cSubstr := SubStr( cSubstr, 1, RAt( cSearch, cSubstr ) - 1 )
+
       // Breakout if there are no occurences here
       IF nPos == 0
          EXIT

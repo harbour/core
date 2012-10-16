@@ -23,12 +23,12 @@
  *
  */
 
-#define log10( num )    Log( num ) / Log( 10 )
+#define log10( num )          ( Log( num ) / Log( 10 ) )
 #define DEFAULT_PRECISION     6
 
 FUNCTION ft_d2e( nDec, nPrecision )
 
-   LOCAL nExp, sScn
+   LOCAL nExp
 
    __defaultNIL( @nPrecision, DEFAULT_PRECISION )
 
@@ -47,6 +47,4 @@ FUNCTION ft_d2e( nDec, nPrecision )
       nExp++
    ENDIF // another kludge FOR stuff LIKE "999999999"
 
-   sScn := LTrim( Str( nDec, nPrecision + 3, nPrecision ) )
-
-   RETURN sScn + "E" + AllTrim( Str( nExp, 5, 0 ) )
+   RETURN LTrim( Str( nDec, nPrecision + 3, nPrecision ) ) + "E" + hb_ntos( nExp )

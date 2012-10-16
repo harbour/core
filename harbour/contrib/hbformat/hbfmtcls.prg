@@ -840,7 +840,7 @@ METHOD Array2File( cFileName, aFile ) CLASS HBFORMATCODE
 
 STATIC FUNCTION rf_AINS( arr, nItem, cItem )
 
-   IF Atail( arr ) != NIL
+   IF ATail( arr ) != NIL
       AAdd( arr, NIL )
    ENDIF
    AIns( arr, nItem )

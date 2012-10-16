@@ -5,17 +5,12 @@
 THREAD STATIC t_lCrsState := .F.
 THREAD STATIC t_lMinit := .F.
 
-FUNCTION FT_MMICKEYS( nX, nY ) // read mouse motion counters
-/*
-   aReg[ AX ] := 11                // set mouse function call 11
-   FT_INT86( 51, aReg )        // execute mouse interrupt
-   */
+FUNCTION FT_MMICKEYS( /* @ */ nX, /* @ */ nY ) // read mouse motion counters
 
-   LOCAL areturn
+   LOCAL aReturn := _mget_mics()
 
-   areturn := _mget_mics()
-   nX := areturn[ 1 ]             // store horizontal motion units
-   nY := areturn[ 2 ]             // store vertical motion units
+   nX := aReturn[ 1 ]             // store horizontal motion units
+   nY := aReturn[ 2 ]             // store vertical motion units
 
    RETURN NIL                     // no function output
 
@@ -108,23 +103,14 @@ FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
 
 FUNCTION FT_MCONOFF( nTop, nLeft, nBottom, nRight )
 
-   // Fill the registers
-
-/*
-   aReg[ AX ] := 16
-   aReg[ DX ] := nTop * 8
-   aReg[ CX ] := nLeft * 8
-   aReg[ DI ] := nBottom * 8
-   aReg[ SI ] := nRight * 8
-   FT_INT86( 51, aReg )        // execute mouse interrupt
-*/
    _mse_conoff( nTop * 8, nLeft * 8, nBottom * 8, nRight * 8 )
 
    RETURN NIL
 
 FUNCTION FT_MINREGION( nTR, nLC, nBR, nRC )
 
-   RETURN FT_MGETX() >= nTR .AND. FT_MGETX() <= nBR .AND. ;
+   RETURN ;
+      FT_MGETX() >= nTR .AND. FT_MGETX() <= nBR .AND. ;
       FT_MGETY() >= nLC .AND. FT_MGETY() <= nRC
 
 FUNCTION FT_MSETSENS( nHoriz, nVert, nDouble )
@@ -154,19 +140,7 @@ FUNCTION FT_MSETSENS( nHoriz, nVert, nDouble )
 
    RETURN NIL
 
-FUNCTION FT_MGETSENS( nHoriz, nVert, nDouble )
-/*
-   // Fill the register
-
-   aReg[ AX ] := 27
-
-   // Execute interupt
-
-   FT_INT86( 51, aReg )        // execute mouse interrupt
-
-*/
-
-   // Set the return values
+FUNCTION FT_MGETSENS( /* @ */ nHoriz, /* @ */ nVert, /* @ */ nDouble )
 
    nHoriz  := _mget_horispeed()
    nVert   := _mget_verspeed()
@@ -174,54 +148,21 @@ FUNCTION FT_MGETSENS( nHoriz, nVert, nDouble )
 
    RETURN NIL
 
-FUNCTION FT_MVERSION( nMinor, nType, nIRQ )
+FUNCTION FT_MVERSION( /* @ */ nMinor, /* @ */ nType, /* @ */ nIRQ )
 
-   LOCAL aReturn
+   LOCAL aReturn := _mget_mversion()
 
-   // Set up register
-/*
-   aReg[ AX ] := 36
+   nMinor := aReturn[ 1 ]
+   nType  := aReturn[ 2 ]
+   nIRQ   := aReturn[ 3 ]
 
-   // Call interupt
-
-   FT_INT86( 51, aReg)
-*/
-   // decode out of half registers
-   areturn := _mget_mversion()
-
-   nMinor := areturn[ 1 ]
-   nType  := areturn[ 2 ]
-   nIRQ   := areturn[ 3 ]
-
-   // Return
-
-   RETURN areturn[ 4 ]
+   RETURN aReturn[ 4 ]
 
 FUNCTION FT_MSETPAGE( nPage )
 
-   // Set up register
-/*
-   aReg[ AX ] := 29
-   aReg[ BX ] := nPage
-
-   // Call interupt
-
-   FT_INT86( 51, aReg)
-*/
-   _mset_page( nPage )
-
-   RETURN NIL
+   RETURN _mset_page( nPage )
 
 FUNCTION FT_MGETPAGE()
-
-   // Set up register
-/*
-   aReg[ AX ] := 30
-
-   // Call interupt
-
-   FT_INT86( 51, aReg)
-*/
 
    RETURN _mget_page()
 
@@ -243,10 +184,6 @@ FUNCTION FT_MINIT()
 FUNCTION FT_MRESET()
 
    LOCAL lStatus
-/*
-   aReg[ AX ] := 0          // set mouse function call 0
-   FT_INT86( 51, aReg )  // execute mouse interrupt
-*/
 
    t_lCrsState := .F.         // Cursor is off after reset
    lStatus := _m_reset()
@@ -272,169 +209,84 @@ FUNCTION FT_MCURSOR( lState )
    RETURN lSavState
 
 FUNCTION FT_MSHOWCRS()
-/*
-   aReg[ AX ] := 1         // set mouse function call 1
-   FT_INT86( 51, aReg ) // execute mouse interrupt
-*/
 
    _mse_showcurs()
+
    t_lCrsState := .T.
 
    RETURN NIL              // no output from function
 
 FUNCTION FT_MHIDECRS()   // decrement internal cursor flag and hide cursor
-/*
-   aReg[ AX ] := 2         // set mouse function call 2
-   FT_INT86( 51, aReg )  // execute mouse interrupt
-*/
 
    _mse_mhidecrs()
+
    t_lCrsState := .F.
 
    RETURN NIL               // no output from function
 
-FUNCTION FT_MGETPOS( nX, nY )
+FUNCTION FT_MGETPOS( /* @ */ nX, /* @ */ nY )
 
-   LOCAL amse
+   LOCAL aReturn := _mse_getpos()
 
-   nX := iif( nX == NIL, 0, nX )
-   nY := iif( nY == NIL, 0, nY )
-/*
-   aReg[ AX ] := 3                // set mouse function call 3
-   FT_INT86( 51, aReg )        // execute mouse interrupt
-*/
-   amse := _mse_getpos()
+   nX := aReturn[ 1 ]                  // store new x-coordinate
+   nY := aReturn[ 2 ]                  // store new y-coordinate
 
-   nX := amse[1]               // store new x-coordinate
-   nY := amse[2]               // store new y-coordinate
-
-   RETURN amse[3]                 // return button status
+   RETURN aReturn[ 3 ]                 // return button status
 
 FUNCTION FT_MGETX()
-
-   // Duplicated code from FT_MGETPOS() for speed reasons
-/*
-   aReg[ AX ] := 3                // set mouse function call 3
-   FT_INT86( 51, aReg )        // execute mouse interrupt
-*/
 
    RETURN _m_getx() / 8        // return x-coordinate
 
 FUNCTION FT_MGETY()
 
-// Duplicated code from FT_MGETPOS() for speed reasons
-   /*
-   aReg[ AX ] := 3                // set mouse function call 3
-   FT_INT86( 51, aReg )        // execute mouse interrupt
- */
-
    RETURN _m_gety() / 8         // return y-coordinate
 
 FUNCTION FT_MSETPOS( nX, nY )  // set mouse cursor location
-/*
-   aReg[ AX ] := 4                // set mouse function call 4
-   aReg[ CX ] := nY               // assign new x-coordinate
-   aReg[ DX ] := nX               // assign new y-coordinate
-   FT_INT86( 51, aReg )        // execute mouse interrupt
-*/
 
-   _m_msetpos( nY, nX )
-
-   RETURN NIL                     // no function output
+   RETURN _m_msetpos( nY, nX )
 
 FUNCTION FT_MSETCOORD( nX, nY )  // set mouse cursor location
-/*
-   aReg[ AX ] := 4                // set mouse function call 4
-   aReg[ CX ] := nY*8             // assign new x-coordinate
-   aReg[ DX ] := nX*8             // assign new y-coordinate
-   FT_INT86( 51, aReg )        // execute mouse interrupt
-*/
 
-   _m_MSETCOORD( nY * 8, nX * 8 )
-
-   RETURN NIL                     // no function output
+   RETURN _m_MSETCOORD( nY * 8, nX * 8 )
 
 FUNCTION FT_MXLIMIT( nXMin, nXMax )   // set vertical minimum and maximum coordinates
-/*
-   aReg[ AX ] := 7                        // set mouse function call 7
-   aReg[ CX ] := nXMin                    // load vertical minimum parameter
-   aReg[ DX ] := nXMax                    // load vertical maximum parameter
-   FT_INT86( 51, aReg )               // execute mouse interrupt
-*/
 
-   _m_mxlimit( nXMin, nXMAX )
-
-   RETURN NIL
+   RETURN _m_mxlimit( nXMin, nXMAX )
 
 FUNCTION FT_MYLIMIT( nYMin, nYMax )  // set horizontal minimum and maximum coordinates
-/*
-   aReg[ AX ] := 8                       // set mouse function call 8
-   aReg[ CX ] := nYMin                   // load horz minimum parameter
-   aReg[ DX ] := nYMax                   // load horz maximum parameter
-   FT_INT86( 51, aReg )              // execute mouse interrupt
-*/
 
-   _m_mYlimit( nYMin, nYMAX )
+   RETURN _m_mYlimit( nYMin, nYMAX )
 
-   RETURN NIL                           // no function output
+FUNCTION FT_MBUTPRS( nButton, /* @ */ nButPrs, /* @ */ nX, /* @ */ nY ) // get button press information
 
-FUNCTION FT_MBUTPRS( nButton, nButPrs, nX, nY ) // get button press information
+   LOCAL aReturn := _m_MBUTPRS( nButton )
 
-   LOCAL aReg := {}
-/*
-   aReg[ AX ] := 5               // set mouse function call 5
-   aReg[ BX ] := nButton         // pass parameter for left or right button
-   FT_INT86( 51, aReg )        // execute mouse interrupt
-*/
+   nButPrs := aReturn[ 1 ]      // store updated press count
+   nX      := aReturn[ 2 ]      // x-coordinate at last press
+   nY      := aReturn[ 3 ]      // y-coordinate at last press
 
-   nButPrs := aReg[ 1 ] // store updated press count
-   nX := aReg[ 2 ]      // x-coordinate at last press
-   nY := aReg[ 3 ]      // y-coordinate at last press
+   RETURN aReturn[ 4 ]          // return button status
 
-   _m_MBUTPRS( nButton )
+FUNCTION FT_MBUTREL( nButton, /* @ */ nButRel, /* @ */ nX, /* @ */ nY ) // get button release information
 
-   RETURN aReg[4 ]                 // return button status
+   LOCAL aReturn := _m_MBUTREL( nButton )
 
-FUNCTION FT_MBUTREL( nButton, nButRel, nX, nY ) // get button release information
+   nButRel := aReturn[ 1 ]       // store updated release count
+   nX      := aReturn[ 2 ]       // x-coordinate at last release
+   nY      := aReturn[ 3 ]       // y-coordinate at last release
 
-   LOCAL areg
-   LOCAL iButton
-
-   areg := _m_MBUTREL( nButton )
-   nButRel := aReg[ 1 ]  // store updated release count
-   nX := aReg[ 2 ]       // x-coordinate at last release
-   nY := aReg[ 3 ]       // y-coordinate at last release
-   iButton := aReg[ 4 ]                 // return button status
-
-   RETURN iButton
+   RETURN aReturn[ 4 ]           // return button status
 
 FUNCTION FT_MDEFCRS( nCurType, nScrMask, nCurMask )   // define text cursor type and masks
-/*
-   aReg[ AX ] := 10         // set mouse function call 10
-   aReg[ BX ] := nCurType   // load cursor type parameter
-   aReg[ CX ] := nScrMask   // load screen mask value
-   aReg[ DX ] := nCurMask   // load cursor mask value
-   FT_INT86( 51, aReg )  // execute mouse interrupt
-*/
 
-   _m_mdefcrs( nCurType, nScrMask, nCurMask )
+   RETURN _m_mdefcrs( nCurType, nScrMask, nCurMask )
 
-   RETURN NIL              // no function output
+// Duplicated code from FT_MGETPOS() for speed reasons
+FUNCTION FT_MGETCOORD( /* @ */ nX, /* @ */ nY )
 
-FUNCTION FT_MGETCOORD( nX, nY )
+   LOCAL aReturn := _m_mgetcoord()
 
-   // Duplicated code from FT_MGETPOS() for speed reasons
-   LOCAL aReg
-   LOCAL iButton
-   nX := iif( nX == NIL, 0, nX )
-   nY := iif( nY == NIL, 0, nY )
-/*
-   aReg[ AX ] := 3                // set mouse function call 3
-   FT_INT86( 51, aReg )           // execute mouse interrupt
-*/
-   areg := _m_mgetcoord()
-   nX := Int( aReg[ 1 ] / 8 )        // store new x-coordinate
-   nY := Int( aReg[ 2 ] / 8 )        // store new y-coordinate
-   iButton := aReg[ 3 ]              // return button status
+   nX := Int( aReturn[ 1 ] / 8 )   // store new x-coordinate
+   nY := Int( aReturn[ 2 ] / 8 )   // store new y-coordinate
 
-   RETURN iButton
+   RETURN aReturn[ 3 ]             // return button status

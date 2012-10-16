@@ -52,20 +52,21 @@
  */
 
 #include "hbapi.h"
+
 #if defined( HB_OS_DOS )
 #  include "dos.h"
 #endif
 
-HB_FUNC( _FT_GETVPG )
+HB_FUNC( FT_GETVPG )
 {
    int iPage;
 
 #if defined( HB_OS_DOS )
    {
       union REGS registers;
-      registers.h.ah = 0x0F;
+      registers.h.ah = 15;
       HB_DOS_INT86( 0x10, &registers, &registers );
-      iPage          = registers.h.bh;
+      iPage = registers.h.bh;
    }
 #else
    {
@@ -76,14 +77,13 @@ HB_FUNC( _FT_GETVPG )
    hb_retni( iPage );
 }
 
-HB_FUNC( _V_SETVPG )
+HB_FUNC( FT_SETVPG )
 {
 #if defined( HB_OS_DOS )
    {
-      int         iPage;
-      union REGS  registers;
-      iPage          = hb_parni( 1 );
-      registers.h.ah = 0x05;
+      int iPage = hb_parni( 1 );
+      union REGS registers;
+      registers.h.ah = 5;
       registers.h.al = iPage;
       HB_DOS_INT86( 0x10, &registers, &registers );
    }
