@@ -196,7 +196,7 @@ FUNCTION FT_Adder()
          _ftMultDiv( aAdder, nKey )
       CASE nKey == hb_keyCode( "/" )    // </> sign
          _ftMultDiv( aAdder, nKey )
-      CASE nKey == K_RETURN             // <RTN> Total or Subtotal
+      CASE nKey == K_ENTER              // <RTN> Total or Subtotal
          _ftAddTotal( aAdder )
       CASE nKey == K_ESC                // <ESC> Quit
          Set( _SET_DECIMALS, nOldDecim )
@@ -210,11 +210,11 @@ FUNCTION FT_Adder()
          SetKey( K_F10, bOldF10 )
          t_lAdderOpen := .F.               // Reset the recursive flag
          lDone      := .T.
-      CASE nKey == 68 .OR. nKey == 100  // <D> Change number of decimal places
+      CASE nKey == hb_keyCode( "D" ) .OR. nKey == hb_keyCode( "d" )  // <D> Change number of decimal places
          _ftChangeDec( aAdder )
-      CASE nKey == 84 .OR. nKey == 116  // <T> Display Tape
+      CASE nKey == hb_keyCode( "T" ) .OR. nKey == hb_keyCode( "t" )  // <T> Display Tape
          _ftDisplayTape( aAdder, nKey )
-      CASE nKey == 77 .OR. nKey == 109  // <M> Move Adder
+      CASE nKey == hb_keyCode( "M" ) .OR. nKey == hb_keyCode( "m" )  // <M> Move Adder
          IF lTape
             RestScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace, cTapeScr )
          ENDIF
@@ -249,7 +249,7 @@ FUNCTION FT_Adder()
                "<SUBTOTAL>" ) )
             _ftSetWinColor( W_CURR, W_PROMPT )
          ENDIF
-      CASE ( nKey == 83 .OR. nKey == 115 ) .AND. lTape  // <S> Scroll tape display
+      CASE ( nKey == hb_keyCode( "S" ) .OR. nKey == hb_keyCode( "s" ) ) .AND. lTape  // <S> Scroll tape display
          IF nTotTran > 16                  // We need to scroll
             SetColor( "GR+/W" )
             hb_DispOutAt( 21 + nTopOS, 8 + nTapeSpace, " " + /* LOW-ASCII "↑↓" */ Chr( 24 ) + Chr( 25 ) + "-SCROLL  <ESC>-QUIT " )
@@ -267,7 +267,7 @@ FUNCTION FT_Adder()
                " transactions entered so far." + ;
                " No need to scroll!" )
          ENDIF
-      CASE nKey == 7                    // Delete - Clear adder
+      CASE nKey == K_DEL                // Delete - Clear adder
          _ftClearAdder( aAdder )
       CASE nKey == K_F1                 // <F1> Help
          _ftAddHelp()
@@ -505,7 +505,7 @@ STATIC FUNCTION _ftProcessNumb( aAdder, nKey )
       ENDIF
    ELSE                                  // It must be a number input
       lNewNum := .T.
-      nNum := nKey - 48
+      nNum := nKey - hb_keyCode( "0" )
       IF lDecSet                         // Decimal set
          IF nDecDigit < nMaxDeci         // Check how many decimals are allowed
             nDecDigit := ++nDecDigit
@@ -552,7 +552,7 @@ STATIC FUNCTION _ftAddTotal( aAdder )
          lTotalOk  := .T.
       ENDIF
    ELSE                                  // This was the first time they pressed
-      IF ! lMultDiv .AND. LastKey() == K_RETURN // total key
+      IF ! lMultDiv .AND. LastKey() == K_ENTER // total key
          lSubRtn := .T.
       ENDIF
       IF _ftRoundIt( nTotal, nMaxDeci ) != 0 .OR. _ftRoundIt( nNumTotal, nMaxDeci ) != 0
@@ -943,7 +943,7 @@ STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
 
    LOCAL nDispTape, nTopTape := 1
 
-   IF ( nKey == 84 .OR. nKey == 116 ) .AND. lTape  // Stop displaying tape
+   IF ( nKey == hb_keyCode( "T" ) .OR. nKey == hb_keyCode( "t" ) ) .AND. lTape  // Stop displaying tape
       lTape := .F.
       RestScreen( 4 + nTopOS, 6 + nTapeSpace, 22 + nTopOS, 35 + nTapeSpace, cTapeScr )
       RETURN NIL
@@ -1153,9 +1153,10 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
    LOCAL nOldRow, nOldCol, cOldColor, nMessLen, nWide, nNumRows, nBottom, nLeft
    LOCAL nRight, oNewGet, nNumMessRow, nLenLastRow, lGetOnNextLine, nOldCurs
    LOCAL cVarType := ValType( xVarVal )
-   LOCAL nVarLen  := iif( cVarType == "C", Len( xVarVal ), iif( cVarType == "D", 8, ;
-      iif( cVarType == "L", 1, iif( cVarType == "N", iif( cPict == NIL, 9, ;
-      Len( cPict ) ), 0 ) ) ) )
+   LOCAL nVarLen  := iif( cVarType == "C", Len( xVarVal ),;
+                     iif( cVarType == "D", 8, ;
+                     iif( cVarType == "L", 1, ;
+                     iif( cVarType == "N", iif( cPict == NIL, 9, Len( cPict ) ), 0 ) ) ) )
    LOCAL nOldLastKey := LastKey()
    LOCAL cOldDevice  := Set( _SET_DEVICE, "SCREEN" )
    LOCAL lOldPrint   := Set( _SET_PRINTER, .F. )
@@ -1259,10 +1260,10 @@ FUNCTION _ftAdderTapeUDF( mode, cur_elem, rel_pos, /* @ */ lAC_exit_ok )
    CASE mode == AC_EXCEPT
       nKey := LastKey()
       DO CASE
-      CASE nKey == 30
+      CASE nKey == K_CTRL_PGDN
          nRtnVal := AC_CONT
       CASE nKey == K_ESC
-         hb_keyPut( { K_CTRL_PGDN, K_RETURN } )  // Go to last item
+         hb_keyPut( { K_CTRL_PGDN, K_ENTER } )  // Go to last item
          lAC_exit_ok := .T.
          nRtnVal := AC_CONT
       CASE lAC_exit_ok
@@ -1541,11 +1542,11 @@ STATIC FUNCTION _ftPopWin
 
 STATIC FUNCTION _ftSetWinColor( nWin, nStd, nEnh, nBord, nBack, nUnsel )
 
-   nWin  := iif( nWin   == NIL, t_nWinColor, nWin )
-   nStd  := iif( nStd   == NIL, 7, nStd )
-   nEnh  := iif( nEnh   == NIL, 7, nEnh )
-   nBord := iif( nBord  == NIL, 7, nBord )
-   nBack := iif( nBack  == NIL, 7, nBack )
+   nWin   := iif( nWin   == NIL, t_nWinColor, nWin )
+   nStd   := iif( nStd   == NIL, 7, nStd )
+   nEnh   := iif( nEnh   == NIL, 7, nEnh )
+   nBord  := iif( nBord  == NIL, 7, nBord )
+   nBack  := iif( nBack  == NIL, 7, nBack )
    nUnsel := iif( nUnsel == NIL, nEnh, nUnsel )
 
    RETURN SetColor( ;

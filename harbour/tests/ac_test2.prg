@@ -96,7 +96,7 @@ FUNCTION cUF( nMode, nCurElement, nRowPos )
       nRetVal := AC_ABORT
    ELSEIF nMode == AC_EXCEPT
       DO CASE
-      CASE nKey == K_RETURN
+      CASE nKey == K_ENTER
          nRetVal := AC_SELECT
       OTHERWISE
          nRetVal := AC_ABORT
@@ -122,7 +122,7 @@ FUNCTION cUF2( nMode, nCurElement, nRowPos )
       nRetVal := AC_ABORT
    ELSEIF nMode == AC_EXCEPT
       DO CASE
-      CASE nKey == K_RETURN
+      CASE nKey == K_ENTER
          nRetVal := AC_SELECT
       OTHERWISE
          nRetVal := AC_ABORT

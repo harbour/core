@@ -32,7 +32,7 @@
        of using the longer DO CASE method.
 
        Jim Gale showed me the basic array browser and Robert DiFalco
-       showed me the improved  skipblock in public messages on Nanforum.
+       showed me the improved skipblock in public messages on Nanforum.
 
        I added the functionality of the "Edit Get" code block
        (ie bGetFunc), TestGet() demo, and the add/delete rows.
@@ -41,11 +41,6 @@
 
 #include "box.ch"
 #include "inkey.ch"
-
-// Default heading, column, footer separators
-#define DEF_HSEP    hb_UTF8ToStrBox( "═╤═" )
-#define DEF_CSEP    hb_UTF8ToStrBox( " │ " )
-#define DEF_FSEP    hb_UTF8ToStrBox( "═╧═" )
 
 // Default info for tb_methods section
 #define KEY_ELEM 1
@@ -87,9 +82,9 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
    hb_DispBox( nTop, nLeft, nBot, nRight, HB_B_SINGLE_UNI )
 
    b := TBrowseNew( nTop + 1, nLeft + 1, nBot - 1, nRight - 1 )
-   b:headsep := DEF_HSEP
-   b:colsep  := DEF_CSEP
-   b:footsep := DEF_FSEP
+   b:headsep := hb_UTF8ToStrBox( "═╤═" )
+   b:colsep  := hb_UTF8ToStrBox( " │ " )
+   b:footsep := hb_UTF8ToStrBox( "═╧═" )
 
    b:gotopblock    := {|| nElem := 1 }
    b:gobottomblock := {|| nElem := Len( ar[ 1 ] ) }
@@ -107,7 +102,7 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
    exit_requested := .F.
    DO WHILE ! exit_requested
 
-      DO WHILE NextKey() == 0 .AND. !b:stabilize()
+      DO WHILE NextKey() == 0 .AND. ! b:stabilize()
       ENDDO
 
       nKey := Inkey( 0 )

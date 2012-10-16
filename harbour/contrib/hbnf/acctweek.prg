@@ -30,10 +30,10 @@ FUNCTION FT_ACCTWEEK( dGivenDate, nWeekNum )
 
    LOCAL nTemp, lIsWeek, aRetVal
 
-   IF ! ValType( dGivenDate ) $ "ND"
-      dGivenDate := Date()
-   ELSEIF HB_ISNUMERIC( dGivenDate )
+   IF HB_ISNUMERIC( dGivenDate )
       nWeekNum := dGivenDate
+      dGivenDate := Date()
+   ELSEIF ! HB_ISDATE( dGivenDate )
       dGivenDate := Date()
    ENDIF
 

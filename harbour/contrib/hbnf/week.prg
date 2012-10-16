@@ -28,12 +28,12 @@
 
 FUNCTION FT_WEEK( dGivenDate, nWeekNum )
 
-   LOCAL lIsWeek, nTemp, aRetVal, dTemp
+   LOCAL nTemp, aRetVal, dTemp
 
-   IF !( ValType( dGivenDate ) $ "ND" )
-      dGivenDate := Date()
-   ELSEIF HB_ISNUMERIC( dGivenDate )
+   IF HB_ISNUMERIC( dGivenDate )
       nWeekNum   := dGivenDate
+      dGivenDate := Date()
+   ELSEIF ! HB_ISDATE( dGivenDate )
       dGivenDate := Date()
    ENDIF
 
@@ -41,8 +41,7 @@ FUNCTION FT_WEEK( dGivenDate, nWeekNum )
    dTemp        := aRetVal[ 2 ]
    aRetVal[ 2 ] -= FT_DAYTOBOW( aRetVal[ 2 ] )
 
-   lIsWeek := HB_ISNUMERIC( nWeekNum )
-   IF lIsWeek
+   IF HB_ISNUMERIC( nWeekNum )
       nTemp := Int( ( aRetVal[ 3 ] - aRetVal[ 2 ] ) / 7 ) + 1
       IF nWeekNum < 1 .OR. nWeekNum > nTemp
          nWeekNum := nTemp

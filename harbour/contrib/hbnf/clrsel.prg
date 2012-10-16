@@ -306,17 +306,20 @@ STATIC FUNCTION _ftShowIt( aOpt )
    ENDIF
 
    DispBegin()
-   DO CASE
 
-   CASE aOpt[ C_TYPE ] == "D"    // Desktop Background
+   SWITCH aOpt[ C_TYPE ]
+
+   CASE "D"    // Desktop Background
       SetColor( aClr[ 1 ] )
       BkGrnd( 19, 43, 22, 64, hb_UTF8ToStrBox( aOpt[ C_CHAR ] ) )
+      EXIT
 
-   CASE aOpt[ C_TYPE ] == "T"    // Title
+   CASE "T"    // Title
       SetColor( aClr[ 1 ] )
       hb_DispOutAt( 20, 08, PadC( "This is an example of how the text shall look", 63 ) )
+      EXIT
 
-   CASE aOpt[ C_TYPE ] == "M"    // Menus
+   CASE "M"    // Menus
       SetColor( "W/N" )
       BkGrnd( 19, 41, 23, 66, hb_UTF8ToStrBox( "▒" ) )
       SetColor( aClr[ 1 ] )
@@ -335,8 +338,9 @@ STATIC FUNCTION _ftShowIt( aOpt )
       hb_DispOutAt( 20, 45, "P" )
       SetColor( aClr[ 2 ] )
       hb_DispOutAt( 24, 41, PadC( "Inventory Report", 26 ) )
+      EXIT
 
-   CASE aOpt[ C_TYPE ] == "G"    // Get windows
+   CASE "G"    // Get windows
       SetColor( aClr[ 1 ] )
       hb_Scroll( 19, 41, 24, 66 )
       Single( 19, 42, 24, 65 )
@@ -348,8 +352,9 @@ STATIC FUNCTION _ftShowIt( aOpt )
       hb_DispOutAt( 22, 53, "  199.95" )
       SetColor( aClr[ 5 ] )
       hb_DispOutAt( 23, 53, "09/15/91" )
+      EXIT
 
-   CASE aOpt[ C_TYPE ] == "W"    // Alert windows
+   CASE "W"    // Alert windows
       SetColor( aClr[ 1 ] )
       hb_Scroll( 18, 40, 24, 66 )
       Single( 18, 41, 24, 65 )
@@ -361,8 +366,9 @@ STATIC FUNCTION _ftShowIt( aOpt )
       hb_DispOutAt( 23, 44, " Accept " )
       SetColor( aClr[ 5 ] )
       hb_DispOutAt( 23, 55, " Reject " )
+      EXIT
 
-   CASE aOpt[ C_TYPE ] == "B"    // browse windows
+   CASE "B"    // browse windows
       SetColor( aClr[ 1 ] )
       hb_Scroll( 18, 37, 24, 70 )
       Single( 18, 38, 24, 69 )
@@ -377,8 +383,9 @@ STATIC FUNCTION _ftShowIt( aOpt )
       hb_DispOutAt( 23, 39,                " 3162 " )
       hb_DispOutAt( 23, 46,                       " Barb Wire    " )
       hb_DispOutAt( 23, 61,                                      " 345.06 " )
+      EXIT
 
-   CASE aOpt[ C_TYPE ] == "A"    // achoice type window
+   CASE "A"    // achoice type window
       SetColor( aClr[ 1 ] )
       hb_Scroll( 18, 42, 24, 64 )
       Single( 18, 43, 24, 63 )
@@ -389,8 +396,10 @@ STATIC FUNCTION _ftShowIt( aOpt )
       hb_DispOutAt( 20, 44, " Monthend Reports  " )
       SetColor( aClr[ 5 ] )
       hb_DispOutAt( 22, 44, " Yearend Reports   " )
+      EXIT
 
-   ENDCASE
+   ENDSWITCH
+
    DispEnd()
 
    RETURN NIL

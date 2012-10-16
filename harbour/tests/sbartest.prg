@@ -77,32 +77,32 @@ FUNCTION InitScrlBar()
 STATIC FUNCTION updateFilesScroll( modo, aFileList, filesScroll )
 
    LOCAL newPos, valRet := AC_CONT   // Default to continue
-   LOCAL ultTecla := LastKey()
+   LOCAL nLastKey := LastKey()
 
    newPos := filesScroll:current
 
    DO CASE
-   CASE ultTecla == K_CTRL_PGUP
+   CASE nLastKey == K_CTRL_PGUP
       newPos := 1
-   CASE ultTecla == K_CTRL_PGDN
+   CASE nLastKey == K_CTRL_PGDN
       newPos := filesScroll:total
-   CASE ultTecla == K_CTRL_HOME
+   CASE nLastKey == K_CTRL_HOME
       newPos := newPos - ( filesScroll:barLength + 1 )
-   CASE ultTecla == K_CTRL_END
+   CASE nLastKey == K_CTRL_END
       newPos := newPos + ( filesScroll:barLength + 1 )
-   CASE ultTecla == K_PGUP
+   CASE nLastKey == K_PGUP
       newPos := newPos - ( filesScroll:barLength + 1 )
-   CASE ultTecla == K_PGDN
+   CASE nLastKey == K_PGDN
       newPos := newPos + ( filesScroll:barLength + 1 )
-   CASE ultTecla == K_UP
+   CASE nLastKey == K_UP
       newPos--
-   CASE ultTecla == K_DOWN
+   CASE nLastKey == K_DOWN
       newPos++
    CASE modo == AC_EXCEPT
       DO CASE
-      CASE ultTecla == K_RETURN
+      CASE nLastKey == K_ENTER
          valRet := AC_SELECT
-      CASE ultTecla == K_ESC
+      CASE nLastKey == K_ESC
          valRet := AC_ABORT
       OTHERWISE
          valRet := AC_GOTO

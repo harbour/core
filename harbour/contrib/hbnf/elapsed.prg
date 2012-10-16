@@ -30,22 +30,26 @@ FUNCTION FT_ELAPSED( dStart, dEnd, cTimeStart, cTimeEnd )
 
    LOCAL nTotalSec, nCtr, nConstant, nTemp, aRetVal[ 4, 2 ]
 
-   IF !( ValType( dStart ) $ "DC" )
-      dStart := Date()
-   ELSEIF HB_ISSTRING( dStart )
+   IF HB_ISSTRING( dStart )
       cTimeStart := dStart
+      dStart     := Date()
+   ELSEIF ! HB_ISDATE( dStart )
       dStart     := Date()
    ENDIF
 
-   IF !( ValType( dEnd ) $ "DC" )
-      dEnd := Date()
-   ELSEIF HB_ISSTRING( dEnd )
+   IF HB_ISSTRING( dEnd )
       cTimeEnd := dEnd
+      dEnd     := Date()
+   ELSEIF ! HB_ISDATE( dEnd )
       dEnd     := Date()
    ENDIF
 
-   IF ! HB_ISSTRING( cTimeStart ); cTimeStart := "00:00:00" ; ENDIF
-   IF ! HB_ISSTRING( cTimeEnd )  ; cTimeEnd   := "00:00:00" ; ENDIF
+   IF ! HB_ISSTRING( cTimeStart )
+      cTimeStart := "00:00:00"
+   ENDIF
+   IF ! HB_ISSTRING( cTimeEnd )
+      cTimeEnd   := "00:00:00"
+   ENDIF
 
    nTotalSec  := ( dEnd - dStart ) * 86400 + ;
       Val( cTimeEnd ) *  3600 + ;

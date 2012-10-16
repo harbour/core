@@ -48,6 +48,8 @@
 
 #require "hbnf"
 
+#include "simpleio.ch"
+
 PROCEDURE Main()
 
    LOCAL nNum, dDate, aTestData, aTemp, cFY_Start, nDOW_Start
@@ -60,8 +62,7 @@ PROCEDURE Main()
 // aTemp      := FT_DATECNFG( "1980.01.03", 1 )  // Date string in user's format.
    cFY_Start  := aTemp[ 1 ]                      // See FT_DATECNFG() in ft_date0.prg
    nDOW_Start := ATEMP[ 2 ]                      // FOR PARAMETERS.
-   dDate      := Date()
-// dDate      := SToD( "19880229" )              // Test date, in user's normal date format
+   dDate      := Date() - 500
 
    CLS
    ?    "Given       Date:  "

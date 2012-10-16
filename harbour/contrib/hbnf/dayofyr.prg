@@ -28,28 +28,25 @@
 
 FUNCTION FT_DAYOFYR( dGivenDate, nDayNum, lIsAcct )
 
-   LOCAL lIsDay, nTemp, aRetVal
+   LOCAL nTemp, aRetVal
 
-   IF !( ValType( dGivenDate ) $ "NDL" )
-      dGivenDate := Date()
-   ELSEIF HB_ISNUMERIC( dGivenDate )
+   IF HB_ISNUMERIC( dGivenDate )
       nDayNum    := dGivenDate
       dGivenDate := Date()
    ELSEIF HB_ISLOGICAL( dGivenDate )
       lIsAcct    := dGivenDate
       dGivenDate := Date()
+   ELSEIF ! HB_ISDATE( dGivenDate )
+      dGivenDate := Date()
    ENDIF
 
-   lIsDay  := HB_ISNUMERIC( nDayNum )
-   lIsAcct := HB_ISLOGICAL( lIsAcct )
-
-   IF lIsAcct
+   IF HB_ISLOGICAL( lIsAcct )
       aRetVal := FT_ACCTYEAR( dGivenDate )
    ELSE
       aRetVal := FT_YEAR( dGivenDate )
    ENDIF
 
-   IF lIsDay
+   IF HB_ISNUMERIC( nDayNum )
       nTemp := aRetVal[ 3 ] - aRetVal[ 2 ] + 1
       IF nDayNum < 1 .OR. nDayNum > nTemp
          nDayNum := nTemp

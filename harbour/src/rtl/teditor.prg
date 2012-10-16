@@ -722,7 +722,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
             ::RefreshLine()
             ::SplitLine( ::nRow )
 
-         CASE nKey == K_RETURN
+         CASE nKey == K_ENTER
             ::lDirty := .T.
             IF Set( _SET_INSERT ) .OR. ::nRow == ::naTextLen
                IF ::LineLen( ::nRow ) > 0

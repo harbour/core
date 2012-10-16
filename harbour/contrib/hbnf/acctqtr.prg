@@ -30,12 +30,13 @@ FUNCTION FT_ACCTQTR( dGivenDate, nQtrNum )
 
    LOCAL nYTemp, nQTemp, lIsQtr, aRetVal
 
-   IF ! ( ValType( dGivenDate ) $ "ND" )
-      dGivenDate := Date()
-   ELSEIF HB_ISNUMERIC( dGivenDate )
+   IF HB_ISNUMERIC( dGivenDate )
       nQtrNum    := dGivenDate
       dGivenDate := Date()
+   ELSEIF ! HB_ISDATE( dGivenDate )
+      dGivenDate := Date()
    ENDIF
+
    aRetVal      := FT_QTR( dGivenDate )
    nYTemp       := Val( SubStr( aRetVal[ 1 ], 1, 4 ) )
    nQTemp       := Val( SubStr( aRetVal[ 1 ], 5, 2 ) )

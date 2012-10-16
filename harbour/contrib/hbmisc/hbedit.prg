@@ -458,7 +458,7 @@ STATIC PROCEDURE EditorKeys( oEdit, nKey )
    CASE nKey == K_BS
       ED_BSpace( oEdit[ E_EDIT ], oEdit[ E_INSERT ] )
 
-   CASE nKey == K_RETURN
+   CASE nKey == K_ENTER
       ED_Return( oEdit[ E_EDIT ], oEdit[ E_INSERT ] )
 
    CASE nKey == K_TAB

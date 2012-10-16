@@ -224,7 +224,7 @@ FUNCTION cUserFunction( nMode, nCurElement, nRowPos )
    CASE nMode == AC_EXCEPT                 // Key Exception
       @  0,  0 SAY "Exception "
       DO CASE
-      CASE nKey == K_RETURN                // If RETURN key, select
+      CASE nKey == K_ENTER                 // If RETURN key, select
          nRetVal := AC_SELECT
       CASE nKey == K_ESC                   // If ESCAPE key, abort
          nRetVal := AC_ABORT

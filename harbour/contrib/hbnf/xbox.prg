@@ -122,18 +122,12 @@ FUNCTION FT_XBOX( cJustType, ; // "L" -> left, otherwise centered
       nLCol + 2, ;
       nLCol + 2 + ( nLLen - Int( Len( aLines_[ nLoop ] ) ) ) / 2 ), ;
       nLoop++, ;
-      _FTSAY( nSayRow, nSayCol, cSayStr );
+      hb_DispOutAt( nSayRow, nSayCol, cSayStr );
       } )
 
    // wait for keypress if desired
    IF Left( cRetWait, 1 ) == "W"
       Inkey( 0 )
    ENDIF
-
-   RETURN NIL
-
-STATIC FUNCTION _FTSAY( nSayRow, nSayCol, cSayStr )
-
-   hb_DispOutAt( nSayRow, nSayCol, cSayStr )
 
    RETURN NIL

@@ -390,7 +390,7 @@ METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
       CASE nKey == K_CTRL_END
          ::panEnd()
 
-      CASE nKey == K_RETURN .AND. lCanEdit
+      CASE nKey == K_ENTER .AND. lCanEdit
          ::EditField()
 
 #if 0

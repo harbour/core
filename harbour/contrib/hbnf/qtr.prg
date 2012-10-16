@@ -28,19 +28,18 @@
 
 FUNCTION FT_QTR( dGivenDate, nQtrNum )
 
-   LOCAL lIsQtr, nTemp, aRetVal
+   LOCAL nTemp, aRetVal
 
-   IF !( ValType( dGivenDate ) $ "ND" )
-      dGivenDate := Date()
-   ELSEIF HB_ISNUMERIC( dGivenDate )
+   IF HB_ISNUMERIC( dGivenDate )
       nQtrNum    := dGivenDate
+      dGivenDate := Date()
+   ELSEIF ! HB_ISDATE( dGivenDate )
       dGivenDate := Date()
    ENDIF
 
    aRetval := FT_YEAR( dGivenDate )
 
-   lIsQtr  := HB_ISNUMERIC( nQtrNum )
-   IF lIsQtr
+   IF HB_ISNUMERIC( nQtrNum )
       IF nQtrNum < 1 .OR. nQtrNum > 4
          nQtrNum := 4
       ENDIF

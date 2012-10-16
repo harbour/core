@@ -926,7 +926,7 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
          ::K_Esc()
          EXIT
 
-      CASE K_RETURN
+      CASE K_ENTER
          ::ClrTextSelection()
          ::K_Return()
          EXIT

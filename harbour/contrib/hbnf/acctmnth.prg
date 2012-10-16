@@ -30,10 +30,10 @@ FUNCTION FT_ACCTMONTH( dGivenDate, nMonthNum )
 
    LOCAL nYTemp, nMTemp, lIsMonth, aRetVal
 
-   IF ! ( ValType( dGivenDate ) $ "ND" )
-      dGivenDate := Date()
-   ELSEIF HB_ISNUMERIC( dGivenDate )
+   IF HB_ISNUMERIC( dGivenDate )
       nMonthNum := dGivenDate
+      dGivenDate := Date()
+   ELSEIF ! HB_ISDATE( dGivenDate )
       dGivenDate := Date()
    ENDIF
 

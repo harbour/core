@@ -184,57 +184,74 @@ FUNCTION FT_BRWSWHL( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
       ENDIF
 
       /* process key */
-      DO CASE
-      CASE nKey == K_DOWN
+      SWITCH nKey
+      CASE K_DOWN
          b:down()
+         EXIT
 
-      CASE nKey == K_UP
+      CASE K_UP
          b:up()
+         EXIT
 
-      CASE nKey == K_PGDN
+      CASE K_PGDN
          b:pageDown()
+         EXIT
 
-      CASE nKey == K_PGUP
+      CASE K_PGUP
          b:pageUp()
+         EXIT
 
-      CASE nKey == K_CTRL_PGUP
+      CASE K_CTRL_PGUP
          b:goTop()
+         EXIT
 
-      CASE nKey == K_CTRL_PGDN
+      CASE K_CTRL_PGDN
          b:goBottom()
+         EXIT
 
-      CASE nKey == K_RIGHT
+      CASE K_RIGHT
          b:Right()
+         EXIT
 
-      CASE nKey == K_LEFT
+      CASE K_LEFT
          b:Left()
+         EXIT
 
-      CASE nKey == K_HOME
+      CASE K_HOME
          b:home()
+         EXIT
 
-      CASE nKey == K_END
+      CASE K_END
          b:end()
+         EXIT
 
-      CASE nKey == K_CTRL_LEFT
+      CASE K_CTRL_LEFT
          b:panLeft()
+         EXIT
 
-      CASE nKey == K_CTRL_RIGHT
+      CASE K_CTRL_RIGHT
          b:panRight()
+         EXIT
 
-      CASE nKey == K_CTRL_HOME
+      CASE K_CTRL_HOME
          b:panHome()
+         EXIT
 
-      CASE nKey == K_CTRL_END
+      CASE K_CTRL_END
          b:panEnd()
+         EXIT
 
-      CASE nKey == K_ESC
+      CASE K_ESC
          nPassRec := 0
          lMore := .F.
+         EXIT
 
-      CASE nKey == K_RETURN
+      CASE K_ENTER
          nPassRec := RecNo()
          lMore := .F.
-      ENDCASE
+         EXIT
+
+      ENDSWITCH
    ENDDO
 
    /* restore old screen */

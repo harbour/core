@@ -28,19 +28,18 @@
 
 FUNCTION FT_MONTH( dGivenDate, nMonthNum )
 
-   LOCAL lIsMonth, nTemp, aRetVal
+   LOCAL nTemp, aRetVal
 
-   IF !( ValType( dGivenDate ) $ "ND" )
-      dGivenDate := Date()
-   ELSEIF HB_ISNUMERIC( dGivenDate )
+   IF HB_ISNUMERIC( dGivenDate )
       nMonthNum  := dGivenDate
+      dGivenDate := Date()
+   ELSEIF ! HB_ISDATE( dGivenDate )
       dGivenDate := Date()
    ENDIF
 
-   aRetVal   := FT_YEAR( dGivenDate )
+   aRetVal := FT_YEAR( dGivenDate )
 
-   lIsMonth  := HB_ISNUMERIC( nMonthNum )
-   IF lISMonth
+   IF HB_ISNUMERIC( nMonthNum )
       IF nMonthNum < 1 .OR. nMonthNum > 12
          nMonthNum := 12
       ENDIF

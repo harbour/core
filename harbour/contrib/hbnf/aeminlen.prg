@@ -23,7 +23,7 @@
 
 FUNCTION FT_AEminlen( aArray, nDimension, nStart, nCount )
 
-   LOCAL i, nLast, cType, nMinlen := 65519
+   LOCAL i, nLast, nMinlen := NIL, nLen
 
    // Set default parameters as necessary.
    IF nDimension == NIL
@@ -41,20 +41,23 @@ FUNCTION FT_AEminlen( aArray, nDimension, nStart, nCount )
    nLast := Min( nStart + nCount - 1, Len( aArray ) )
 
    FOR i := nStart TO nLast
-      cType := ValType( aArray[ i ] )
-      DO CASE
-      CASE cType == "C"
-         nMinlen := Min( nMinlen, Len( aArray[ i ] ) )
 
-      CASE cType == "A"
-         nMinlen := Min( nMinlen, ;
-            Len( LTrim( Transform( aArray[ i ][ nDimension ], "@X" ) ) ) )
-
+      SWITCH ValType( aArray[ i ] )
+      CASE "C"
+         nLen := Len( aArray[ i ] )
+         EXIT
+      CASE "A"
+         nLen := Len( LTrim( Transform( aArray[ i ][ nDimension ], "@X" ) ) )
+         EXIT
       OTHERWISE
-         nMinlen := Min( nMinlen, ;
-            Len( LTrim( Transform( aArray[ i ], "@X" ) ) ) )
+         nLen := Len( LTrim( Transform( aArray[ i ], "@X" ) ) )
+      ENDSWITCH
 
-      ENDCASE
+      nMinlen := iif( nMinLen == NIL, nLen, Min( nMinlen, nLen ) )
    NEXT
+
+   IF nMinLen == NIL
+      nMinLen := 65519 /* for compatibility */
+   ENDIF
 
    RETURN nMinlen
