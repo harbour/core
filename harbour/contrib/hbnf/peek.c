@@ -29,35 +29,7 @@
 
 #include "hbapi.h"
 
-#include "cpmi.h"
-
-#define FP_SEG( fp ) ( *( ( unsigned int * ) &( fp ) + 1 ) )
-#define FP_OFF( fp ) ( *( ( unsigned int * ) &( fp ) ) )
-
 HB_FUNC( FT_PEEK )
 {
-   auto unsigned int    ProtMode = cpmiIsProtected();
-   auto unsigned char * bytePtr;
-
-   if( PCOUNT >= 2 && HB_ISNUM( 1 ) && HB_ISNUM( 2 ) )
-   {
-      FP_SEG( bytePtr ) = hb_parni( 1 );
-      FP_OFF( bytePtr ) = hb_parni( 2 );
-
-      if( ProtMode )
-      {
-         FP_SEG( bytePtr ) = hb_cpmiProtectedPtr( bytePtr, 1 );
-         FP_OFF( bytePtr ) = 0;
-
-         if( FP_SEG( bytePtr ) == 0 )
-            goto Bogus;
-      }
-
-      hb_retni( ( int ) *bytePtr );
-
-      if( ProtMode )
-         hb_cpmiFreeSelector( FP_SEG( bytePtr ) );
-   }
-   else
- Bogus: hb_retni( -1 );
+   hb_retni( -1 );
 }

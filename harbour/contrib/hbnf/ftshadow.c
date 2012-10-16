@@ -54,12 +54,7 @@
 #include "hbapi.h"
 #include "hbapigt.h"
 
-HB_FUNC_EXTERN( HB_SHADOW );
-
-HB_FUNC( FT_SHADOW )
-{
-   HB_FUNC_EXEC( HB_SHADOW );
-}
+HB_FUNC_TRANSLATE( FT_SHADOW, HB_SHADOW )
 
 HB_FUNC( FT_SETATTR )
 {

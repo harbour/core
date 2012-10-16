@@ -95,6 +95,7 @@ HB_FUNC( FT_ISSHARE )
       iShare = 0;
    }
 #endif
+
    hb_retni( iShare );
 }
 
@@ -105,15 +106,16 @@ HB_FUNC( _FT_NWKSTAT )
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax  = 0xDC;
+      regs.HB_XREGS.ax = 0xDC;
       HB_DOS_INT86( 0x2F, &regs, &regs );
-      iConnect          = regs.h.al;
+      iConnect = regs.h.al;
    }
 #else
    {
       iConnect = 0;
    }
 #endif
+
    hb_retni( iConnect );
 }
 
@@ -122,8 +124,8 @@ HB_FUNC( FT_SETMODE )
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.h.ah   = 0;
-      regs.h.al   = hb_parni( 1 );
+      regs.h.ah = 0;
+      regs.h.al = hb_parni( 1 );
       HB_DOS_INT86( 0x10, &regs, &regs );
    }
 #endif
@@ -136,15 +138,16 @@ HB_FUNC( FT_GETMODE )
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.h.ah   = 0x0F;
+      regs.h.ah = 0x0F;
       HB_DOS_INT86( 0x10, &regs, &regs );
-      iMode       = regs.h.al;
+      iMode = regs.h.al;
    }
 #else
    {
       iMode = 0;
    }
 #endif
+
    hb_retni( iMode );
 }
 

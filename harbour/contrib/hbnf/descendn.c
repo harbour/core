@@ -25,50 +25,45 @@
 
 HB_FUNC( FT_DESCEND )
 {
-#if defined( HB_OS_DOS ) || defined( HB_OS_WIN )
+   PHB_ITEM iP       = hb_itemParam( 1 );
+   HB_TYPE  uiType   = hb_itemType( iP );
+
+   PHB_ITEM iR       = NULL;
+
+   if( ( uiType & HB_IT_NUMERIC ) && ( uiType & HB_IT_DOUBLE ) )
+      iR = hb_itemPutND( 0, 0 - hb_itemGetND( iP ) );
+
+   else if( uiType & HB_IT_NUMERIC )
+      iR = hb_itemPutNL( 0, 0 - hb_itemGetNL( iP ) );
+
+   else if( uiType & HB_IT_DATE )
+      iR = hb_itemPutNL( 0, 0x4FD4C0L - hb_itemGetNL( iP ) );
+
+   else if( uiType & HB_IT_TIMESTAMP )
+      iR = hb_itemPutND( 0, 0x4FD4C0L - hb_itemGetTD( iP ) );
+
+   else if( uiType & HB_IT_LOGICAL )
+      iR = hb_itemPutL( 0, ( hb_itemGetL( iP ) > 0 ) ? 0 : 1 );
+
+   else if( uiType & HB_IT_STRING )
    {
-      PHB_ITEM iP       = hb_itemParam( 1 );
-      HB_TYPE  uiType   = hb_itemType( iP );
+      HB_SIZE uiLen = hb_itemSize( iP );
+      HB_SIZE n;
 
-      PHB_ITEM iR       = NULL;
-      HB_SIZE  uiLen, n;
-      char *   pDescend;
+      char * pDescend = ( char * ) hb_xgrab( uiLen );
 
-      if( ( uiType & HB_IT_NUMERIC ) && ( uiType & HB_IT_DOUBLE ) )
-         iR = hb_itemPutND( 0, 0 - hb_itemGetND( iP ) );
+      hb_itemCopyC( iP, pDescend, uiLen );
 
-      else if( uiType & HB_IT_NUMERIC )
-         iR = hb_itemPutNL( 0, 0 - hb_itemGetNL( iP ) );
+      for( n = 0; n < uiLen; n++ )
+         pDescend[ n ] = ( char ) 0 - pDescend[ n ];
 
-      else if( uiType & HB_IT_DATE )
-         iR = hb_itemPutNL( 0, 0x4FD4C0L - hb_itemGetNL( iP ) );
+      iR = hb_itemPutCL( 0, pDescend, uiLen );
 
-      else if( uiType & HB_IT_TIMESTAMP )
-         iR = hb_itemPutND( 0, 0x4FD4C0L - hb_itemGetTD( iP ) );
-
-      else if( uiType & HB_IT_LOGICAL )
-         iR = hb_itemPutL( 0, ( hb_itemGetL( iP ) > 0 ) ? 0 : 1 );
-
-      else if( uiType & HB_IT_STRING )
-      {
-         uiLen    = hb_itemSize( iP );
-
-         pDescend = ( char * ) hb_xgrab( uiLen );
-
-         hb_itemCopyC( iP, pDescend, uiLen );
-
-         for( n = 0; n < uiLen; n++ )
-            pDescend[ n ] = ( char ) 0 - pDescend[ n ];
-
-         iR = hb_itemPutCL( 0, pDescend, uiLen );
-
-         hb_xfree( pDescend );
-      }
-
-      hb_itemReturn( iR );
-
-      hb_itemRelease( iP );
-      hb_itemRelease( iR );
+      hb_xfree( pDescend );
    }
-#endif
+
+   hb_itemReturn( iR );
+
+   hb_itemRelease( iP );
+   hb_itemRelease( iR );
 }

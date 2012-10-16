@@ -37,6 +37,8 @@ mouse.c
 n2color.c
 numlock.c
 origin.c
+peek.c
+poke.c
 proper.c
 prtscr.c
 putkey.c
@@ -45,10 +47,6 @@ setkeys.c
 setlastk.c
 shift.c
 stod.c
-
-# BAD_C_SOURCES
-#peek.c
-#poke.c
 
 aading.prg
 aavg.prg

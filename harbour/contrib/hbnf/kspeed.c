@@ -24,6 +24,7 @@
  */
 
 #include "hbapi.h"
+
 #if defined( HB_OS_DOS )
 #  include "dos.h"
 #endif

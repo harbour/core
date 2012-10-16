@@ -98,8 +98,8 @@ HB_FUNC( FT_PROPER )
    /* // If "Mc" was found, Cap next letter if Alpha
       if( iPos > 1 )
       if( iPos < iLen )
-         if( ! _ftIsUpper( cStr[iPos] ) )
-            cStr[iPos] = _ftToUpper( cStr[iPos] );
+         if( ! _ftIsUpper( cStr[ iPos ] ) )
+            cStr[ iPos ] = _ftToUpper( cStr[ iPos ] );
     */
    if( cDst )
       hb_retclen_buffer( cDst, iLen );
