@@ -5,15 +5,6 @@
 THREAD STATIC t_lCrsState := .F.
 THREAD STATIC t_lMinit := .F.
 
-FUNCTION FT_MMICKEYS( /* @ */ nX, /* @ */ nY ) // read mouse motion counters
-
-   LOCAL aReturn := _mget_mics()
-
-   nX := aReturn[ 1 ]             // store horizontal motion units
-   nY := aReturn[ 2 ]             // store vertical motion units
-
-   RETURN NIL                     // no function output
-
 FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
 
    LOCAL nVert, nHorz  // local row and col coordinates
@@ -101,12 +92,6 @@ FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
 
    RETURN lDouble
 
-FUNCTION FT_MCONOFF( nTop, nLeft, nBottom, nRight )
-
-   _mse_conoff( nTop * 8, nLeft * 8, nBottom * 8, nRight * 8 )
-
-   RETURN NIL
-
 FUNCTION FT_MINREGION( nTR, nLC, nBR, nRC )
 
    RETURN ;
@@ -118,19 +103,15 @@ FUNCTION FT_MSETSENS( nHoriz, nVert, nDouble )
    LOCAL nCurHoriz, nCurVert, nCurDouble
 
    // Get current values
-
    FT_MGETSENS( @nCurHoriz, @nCurVert, @nCurDouble )
 
    // Set defaults if necessary
-
    IF ! HB_ISNUMERIC( nHoriz )
       nHoriz := nCurHoriz
    ENDIF
-
    IF ! HB_ISNUMERIC( nVert )
       nVert := nCurVert
    ENDIF
-
    IF ! HB_ISNUMERIC( nDouble )
       nDouble := nCurDouble
    ENDIF
@@ -139,32 +120,6 @@ FUNCTION FT_MSETSENS( nHoriz, nVert, nDouble )
    _mset_sensitive( nHoriz, nVert, nDouble )
 
    RETURN NIL
-
-FUNCTION FT_MGETSENS( /* @ */ nHoriz, /* @ */ nVert, /* @ */ nDouble )
-
-   nHoriz  := _mget_horispeed()
-   nVert   := _mget_verspeed()
-   nDouble := _mget_doublespeed()
-
-   RETURN NIL
-
-FUNCTION FT_MVERSION( /* @ */ nMinor, /* @ */ nType, /* @ */ nIRQ )
-
-   LOCAL aReturn := _mget_mversion()
-
-   nMinor := aReturn[ 1 ]
-   nType  := aReturn[ 2 ]
-   nIRQ   := aReturn[ 3 ]
-
-   RETURN aReturn[ 4 ]
-
-FUNCTION FT_MSETPAGE( nPage )
-
-   RETURN _mset_page( nPage )
-
-FUNCTION FT_MGETPAGE()
-
-   RETURN _mget_page()
 
 FUNCTION FT_MINIT()
 
@@ -223,70 +178,3 @@ FUNCTION FT_MHIDECRS()   // decrement internal cursor flag and hide cursor
    t_lCrsState := .F.
 
    RETURN NIL               // no output from function
-
-FUNCTION FT_MGETPOS( /* @ */ nX, /* @ */ nY )
-
-   LOCAL aReturn := _mse_getpos()
-
-   nX := aReturn[ 1 ]                  // store new x-coordinate
-   nY := aReturn[ 2 ]                  // store new y-coordinate
-
-   RETURN aReturn[ 3 ]                 // return button status
-
-FUNCTION FT_MGETX()
-
-   RETURN _m_getx() / 8        // return x-coordinate
-
-FUNCTION FT_MGETY()
-
-   RETURN _m_gety() / 8         // return y-coordinate
-
-FUNCTION FT_MSETPOS( nX, nY )  // set mouse cursor location
-
-   RETURN _m_msetpos( nY, nX )
-
-FUNCTION FT_MSETCOORD( nX, nY )  // set mouse cursor location
-
-   RETURN _m_MSETCOORD( nY * 8, nX * 8 )
-
-FUNCTION FT_MXLIMIT( nXMin, nXMax )   // set vertical minimum and maximum coordinates
-
-   RETURN _m_mxlimit( nXMin, nXMAX )
-
-FUNCTION FT_MYLIMIT( nYMin, nYMax )  // set horizontal minimum and maximum coordinates
-
-   RETURN _m_mYlimit( nYMin, nYMAX )
-
-FUNCTION FT_MBUTPRS( nButton, /* @ */ nButPrs, /* @ */ nX, /* @ */ nY ) // get button press information
-
-   LOCAL aReturn := _m_MBUTPRS( nButton )
-
-   nButPrs := aReturn[ 1 ]      // store updated press count
-   nX      := aReturn[ 2 ]      // x-coordinate at last press
-   nY      := aReturn[ 3 ]      // y-coordinate at last press
-
-   RETURN aReturn[ 4 ]          // return button status
-
-FUNCTION FT_MBUTREL( nButton, /* @ */ nButRel, /* @ */ nX, /* @ */ nY ) // get button release information
-
-   LOCAL aReturn := _m_MBUTREL( nButton )
-
-   nButRel := aReturn[ 1 ]       // store updated release count
-   nX      := aReturn[ 2 ]       // x-coordinate at last release
-   nY      := aReturn[ 3 ]       // y-coordinate at last release
-
-   RETURN aReturn[ 4 ]           // return button status
-
-FUNCTION FT_MDEFCRS( nCurType, nScrMask, nCurMask )   // define text cursor type and masks
-
-   RETURN _m_mdefcrs( nCurType, nScrMask, nCurMask )
-
-// Duplicated code from FT_MGETPOS() for speed reasons
-FUNCTION FT_MGETCOORD( /* @ */ nX, /* @ */ nY )
-
-   LOCAL aReturn := _m_mgetcoord()
-
-   nX := Int( aReturn[ 1 ] / 8 )   // store new x-coordinate
-   nY := Int( aReturn[ 2 ] / 8 )   // store new y-coordinate
-
-   RETURN aReturn[ 3 ]             // return button status

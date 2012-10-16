@@ -59,16 +59,16 @@
 #  include "dos.h"
 #endif
 
-HB_FUNC( _MGET_PAGE )
+HB_FUNC( FT_MGETPAGE )
 {
    int iPage;
 
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax  = 0x1E;
+      regs.HB_XREGS.ax = 0x1E;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      iPage             = regs.HB_XREGS.bx;
+      iPage = regs.HB_XREGS.bx;
    }
 #else
    {
@@ -79,174 +79,132 @@ HB_FUNC( _MGET_PAGE )
    hb_retni( iPage );
 }
 
-HB_FUNC( _MSET_PAGE )
+HB_FUNC( FT_MSETPAGE )
 {
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax  = 0x1D;
-      regs.HB_XREGS.bx  = hb_parni( 1 );
+      regs.HB_XREGS.ax = 0x1D;
+      regs.HB_XREGS.bx = hb_parni( 1 );
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
 #endif
 }
 
-HB_FUNC( _MGET_MVERSION )
+HB_FUNC( FT_MVERSION )
 {
-   int   iMinor;
-   int   iType;
-   int   iIRQ;
-   int   iMajor;
+   int iMinor;
+   int iType;
+   int iIRQ;
+   int iMajor;
 
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
 
-      regs.HB_XREGS.ax  = 0x24;
+      regs.HB_XREGS.ax = 0x24;
       HB_DOS_INT86( 0x33, &regs, &regs );
 
-      iMinor            = regs.h.bl;
-      iType             = regs.h.ch;
-      iIRQ              = regs.h.cl;
-      iMajor            = regs.h.bh;
+      iMinor = regs.h.bl;
+      iType  = regs.h.ch;
+      iIRQ   = regs.h.cl;
+      iMajor = regs.h.bh;
    }
 #else
    {
-      iMinor   = 0;
-      iType    = 0;
-      iIRQ     = 0;
-      iMajor   = 0;
+      iMinor = 0;
+      iType  = 0;
+      iIRQ   = 0;
+      iMajor = 0;
    }
 #endif
 
-   {
-      PHB_ITEM pArray = hb_itemArrayNew( 4 );
+   hb_storni( iMinor, 1 );
+   hb_storni( iType, 2 );
+   hb_storni( iIRQ, 3 );
 
-      hb_arraySetNI( pArray, 1, iMinor );
-      hb_arraySetNI( pArray, 2, iType );
-      hb_arraySetNI( pArray, 3, iIRQ );
-      hb_arraySetNI( pArray, 4, iMajor );
-
-      hb_itemReturnRelease( pArray );
-   }
+   hb_retni( iMajor );
 }
 
-HB_FUNC( _MGET_HORISPEED )
+HB_FUNC( _MSET_SENSITIVE ) /* nHoriz, nVert, nDouble */
 {
-   int iSpeed;
+#if defined( HB_OS_DOS )
+   {
+      union REGS regs;
+      regs.HB_XREGS.ax = 0x1A;
+      regs.HB_XREGS.bx = hb_parni( 1 );
+      regs.HB_XREGS.cx = hb_parni( 2 );
+      regs.HB_XREGS.dx = hb_parni( 3 );
+      HB_DOS_INT86( 0x33, &regs, &regs );
+   }
+#endif
+}
+
+HB_FUNC( FT_MGETSENS )
+{
+   int iHoriz;
+   int iVert;
+   int iDouble;
 
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax  = 0x1B;
+      regs.HB_XREGS.ax = 0x1B;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      iSpeed            = regs.HB_XREGS.bx;
+      iHoriz  = regs.HB_XREGS.bx;
+      iVert   = regs.HB_XREGS.cx;
+      iDouble = regs.HB_XREGS.dx;
    }
 #else
    {
-      iSpeed = 0;
+      iHoriz  = 0;
+      iVert   = 0;
+      iDouble = 0;
    }
 #endif
 
-   hb_retni( iSpeed );
+   hb_storni( iHoriz, 1 );
+   hb_storni( iVert, 2 );
+   hb_storni( iDouble, 3 );
 }
 
-HB_FUNC( _MGET_VERSPEED )
+HB_FUNC( FT_MCONOFF )
 {
-   int iSpeed;
+#if defined( HB_OS_DOS )
+   {
+      union REGS regs;
+      regs.HB_XREGS.ax = 0x1A;
+      regs.HB_XREGS.cx = hb_parni( 2 ) * 8; /* nLeft */
+      regs.HB_XREGS.dx = hb_parni( 1 ) * 8; /* nTop */
+      regs.HB_XREGS.si = hb_parni( 4 ) * 8; /* nRight */
+      regs.HB_XREGS.di = hb_parni( 3 ) * 8; /* nBottom */
+      HB_DOS_INT86( 0x33, &regs, &regs );
+   }
+#endif
+}
+
+HB_FUNC( FT_MMICKEYS )
+{
+   int iX;
+   int iY;
 
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax  = 0x1B;
+      regs.HB_XREGS.ax = 0x0B;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      iSpeed            = regs.HB_XREGS.cx;
+      iX = regs.HB_XREGS.cx;
+      iY = regs.HB_XREGS.dx;
    }
 #else
    {
-      iSpeed = 0;
+      iX = 0;
+      iY = 0;
    }
 #endif
 
-   hb_retni( iSpeed );
-}
-
-HB_FUNC( _MGET_DOUBLESPEED )
-{
-   int iSpeed;
-
-#if defined( HB_OS_DOS )
-   {
-      union REGS regs;
-      regs.HB_XREGS.ax  = 0x1B;
-      HB_DOS_INT86( 0x33, &regs, &regs );
-      iSpeed            = regs.HB_XREGS.dx;
-   }
-#else
-   {
-      iSpeed = 0;
-   }
-#endif
-
-   hb_retni( iSpeed );
-}
-
-HB_FUNC( _MSET_SENSITIVE ) /* nHoriz,nVert,nDouble) */
-{
-#if defined( HB_OS_DOS )
-   {
-      union REGS regs;
-      regs.HB_XREGS.ax  = 0x1A;
-      regs.HB_XREGS.bx  = hb_parni( 1 );
-      regs.HB_XREGS.cx  = hb_parni( 2 );
-      regs.HB_XREGS.dx  = hb_parni( 3 );
-      HB_DOS_INT86( 0x33, &regs, &regs );
-   }
-#endif
-}
-
-HB_FUNC( _MSE_CONOFF ) /* nTop*8,nLeft*8,nBotton*8,nRight*8) */
-{
-#if defined( HB_OS_DOS )
-   {
-      union REGS regs;
-      regs.HB_XREGS.ax  = 0x1A;
-      regs.HB_XREGS.cx  = hb_parni( 2 );
-      regs.HB_XREGS.dx  = hb_parni( 1 );
-      regs.HB_XREGS.si  = hb_parni( 4 );
-      regs.HB_XREGS.di  = hb_parni( 3 );
-      HB_DOS_INT86( 0x33, &regs, &regs );
-   }
-#endif
-}
-
-HB_FUNC( _MGET_MICS )
-{
-   int   iHori;
-   int   iVert;
-
-#if defined( HB_OS_DOS )
-   {
-      union REGS regs;
-      regs.HB_XREGS.ax  = 0x0B;
-      HB_DOS_INT86( 0x33, &regs, &regs );
-      iHori             = regs.HB_XREGS.cx;
-      iVert             = regs.HB_XREGS.dx;
-   }
-#else
-   {
-      iHori = 0;
-      iVert = 0;
-   }
-#endif
-   {
-      PHB_ITEM pArray = hb_itemArrayNew( 2 );
-
-      hb_arraySetNI( pArray, 1, iHori );
-      hb_arraySetNI( pArray, 2, iVert );
-
-      hb_itemReturnRelease( pArray );
-   }
+   hb_storni( 1, iX );
+   hb_storni( 2, iY );
 }
 
 HB_FUNC( _M_RESET )
@@ -291,45 +249,45 @@ HB_FUNC( _MSE_MHIDECRS )
 #endif
 }
 
-HB_FUNC( _MSE_GETPOS )
+HB_FUNC( FT_MGETPOS )
 {
-   int   iHori;
-   int   iVert;
+   int iX;
+   int iY;
+   int iButton;
 
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax  = 3;
+      regs.HB_XREGS.ax = 3;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      iHori             = regs.HB_XREGS.cx;
-      iVert             = regs.HB_XREGS.dx;
+      iX      = regs.HB_XREGS.dx;
+      iY      = regs.HB_XREGS.cx;
+      iButton = regs.HB_XREGS.bx;
    }
 #else
    {
-      iHori = 0;
-      iVert = 0;
+      iX      = 0;
+      iY      = 0;
+      iButton = 0;
    }
 #endif
-   {
-      PHB_ITEM pArray = hb_itemArrayNew( 2 );
 
-      hb_arraySetNI( pArray, 1, iHori );
-      hb_arraySetNI( pArray, 2, iVert );
+   hb_storni( iX, 1 );
+   hb_storni( iY, 2 );
 
-      hb_itemReturnRelease( pArray );
-   }
+   hb_retni( iButton );
 }
 
-HB_FUNC( _M_GETX )
+HB_FUNC( FT_MGETX )
 {
    int iRow;
 
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax  = 3;
+      regs.HB_XREGS.ax = 3;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      iRow              = regs.HB_XREGS.dx;
+      iRow = regs.HB_XREGS.dx / 8;
    }
 #else
    {
@@ -340,16 +298,16 @@ HB_FUNC( _M_GETX )
    hb_retni( iRow );
 }
 
-HB_FUNC( _M_GETY )
+HB_FUNC( FT_MGETY )
 {
    int iCol;
 
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax  = 3;
+      regs.HB_XREGS.ax = 3;
       HB_DOS_INT86( 0x33, &regs, &regs );
-      iCol              = regs.HB_XREGS.cx;
+      iCol = regs.HB_XREGS.cx / 8;
    }
 #else
    {
@@ -360,157 +318,154 @@ HB_FUNC( _M_GETY )
    hb_retni( iCol );
 }
 
-HB_FUNC( _M_MSETPOS )
+HB_FUNC( FT_MSETPOS )
 {
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax  = 4;
-      regs.HB_XREGS.cx  = hb_parni( 1 );
-      regs.HB_XREGS.dx  = hb_parni( 2 );
+      regs.HB_XREGS.ax = 4;
+      regs.HB_XREGS.dx = hb_parni( 1 ); /* x */
+      regs.HB_XREGS.cx = hb_parni( 2 ); /* y */
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
 #endif
 }
 
-HB_FUNC( _M_MSETCOORD )
+HB_FUNC( FT_MSETCOORD )
 {
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax  = 4;
-      regs.HB_XREGS.cx  = hb_parni( 1 );
-      regs.HB_XREGS.dx  = hb_parni( 2 );
+      regs.HB_XREGS.ax = 4;
+      regs.HB_XREGS.dx = hb_parni( 1 ) * 8; /* x */
+      regs.HB_XREGS.cx = hb_parni( 2 ) * 8; /* y */
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
 #endif
 }
 
-HB_FUNC( _M_MXLIMIT )
+HB_FUNC( FT_MXLIMIT )
 {
 #if defined( HB_OS_DOS )
    {
-      union REGS  regs;
-      int         iMaxRow  = hb_parni( 2 );
-      int         iMinRow  = hb_parni( 1 );
-
-      regs.HB_XREGS.ax  = 7;
-      regs.HB_XREGS.cx  = iMinRow;
-      regs.HB_XREGS.dx  = iMaxRow;
-
+      union REGS regs;
+      regs.HB_XREGS.ax = 7;
+      regs.HB_XREGS.cx = hb_parni( 1 ); /* nXMin */
+      regs.HB_XREGS.dx = hb_parni( 2 ); /* nXMax */
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
 #endif
 }
 
-HB_FUNC( _M_MYLIMIT )
+HB_FUNC( FT_MYLIMIT )
 {
 #if defined( HB_OS_DOS )
    {
-      union REGS  regs;
-      int         iMaxCol  = hb_parni( 2 );
-      int         iMinCol  = hb_parni( 1 );
-      regs.HB_XREGS.ax  = 8;
-
-      regs.HB_XREGS.cx  = iMinCol;
-      regs.HB_XREGS.dx  = iMaxCol;
+      union REGS regs;
+      regs.HB_XREGS.ax = 8;
+      regs.HB_XREGS.cx = hb_parni( 1 ); /* nYMin */
+      regs.HB_XREGS.dx = hb_parni( 2 ); /* nYMax */
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
 #endif
 }
 
-HB_FUNC( _M_MBUTPRS )
+HB_FUNC( FT_MBUTPRS )
 {
-   int   inX;
-   int   inY;
-   int   inButton;
-   int   lStatus;
+   int inX;
+   int inY;
+   int inButton;
+   int iStatus;
 
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax  = 6;
-      regs.HB_XREGS.bx  = hb_parni( 1 );
+      regs.HB_XREGS.ax = 5;
+      regs.HB_XREGS.bx = hb_parni( 1 );
       HB_DOS_INT86( 0x33, &regs, &regs );
-
-      inY               = regs.HB_XREGS.cx;
-      inX               = regs.HB_XREGS.dx;
-      inButton          = regs.HB_XREGS.bx;
-      lStatus           = regs.HB_XREGS.ax;
+      inX      = regs.HB_XREGS.dx;
+      inY      = regs.HB_XREGS.cx;
+      inButton = regs.HB_XREGS.bx;
+      iStatus  = regs.HB_XREGS.ax;
    }
 #else
    {
-      inY      = 0;
       inX      = 0;
+      inY      = 0;
       inButton = 0;
-      lStatus  = 0;
+      iStatus  = 0;
    }
 #endif
-   {
-      PHB_ITEM pArray = hb_itemArrayNew( 4 );
 
-      hb_arraySetNI( pArray, 1, inButton ); /* NOTE: I've changed 1 to 3 */
-      hb_arraySetNI( pArray, 2, inX );
-      hb_arraySetNI( pArray, 3, inY );
-      hb_arraySetNI( pArray, 4, lStatus ); /* NOTE: I've changed 1 to 3 */
+   hb_storni( inButton, 2 );
+   hb_storni( inX, 3 );
+   hb_storni( inY, 4 );
 
-      hb_itemReturnRelease( pArray );
-   }
+   hb_retni( iStatus );
 }
 
-HB_FUNC( _M_MBUTREL )
+HB_FUNC( FT_MBUTREL )
 {
+   int inX;
+   int inY;
+   int inButton;
+   int iStatus;
+
 #if defined( HB_OS_DOS )
-   union REGS regs;
-   regs.HB_XREGS.ax  = 0x0A;
-   regs.HB_XREGS.bx  = hb_parni( 1 );
-
-   HB_DOS_INT86( 0x33, &regs, &regs );
-
-   hb_reta( 4 );
-   hb_storvni( regs.HB_XREGS.bx, -1, 1 );
-   hb_storvni( regs.HB_XREGS.cx, -1, 2 );
-   hb_storvni( regs.HB_XREGS.dx, -1, 3 );
-   hb_storvni( regs.HB_XREGS.ax, -1, 4 );
+   {
+      union REGS regs;
+      regs.HB_XREGS.ax = 6;
+      regs.HB_XREGS.bx = hb_parni( 1 );
+      HB_DOS_INT86( 0x33, &regs, &regs );
+      inX      = regs.HB_XREGS.dx;
+      inY      = regs.HB_XREGS.cx;
+      inButton = regs.HB_XREGS.bx;
+      iStatus  = regs.HB_XREGS.ax;
+   }
 #else
-   hb_reta( 4 );
-   hb_storvni( 0, -1, 1 );
-   hb_storvni( 0, -1, 2 );
-   hb_storvni( 0, -1, 3 );
-   hb_storvni( 0, -1, 4 );
+   {
+      inX      = 0;
+      inY      = 0;
+      inButton = 0;
+      iStatus  = 0;
+   }
 #endif
+
+   hb_storni( inButton, 2 );
+   hb_storni( inX, 3 );
+   hb_storni( inY, 4 );
+
+   hb_retni( iStatus );
 }
 
-HB_FUNC( _M_MDEFCRS )
+HB_FUNC( FT_MDEFCRS )
 {
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax  = 0x0A;
-      regs.HB_XREGS.bx  = hb_parni( 1 );
-      regs.HB_XREGS.cx  = hb_parni( 2 );
-      regs.HB_XREGS.dx  = hb_parni( 3 );
-
+      regs.HB_XREGS.ax = 10;
+      regs.HB_XREGS.bx = hb_parni( 1 ); /* nCurType */
+      regs.HB_XREGS.cx = hb_parni( 2 ); /* nScrMask */
+      regs.HB_XREGS.dx = hb_parni( 3 ); /* nCurMask */
       HB_DOS_INT86( 0x33, &regs, &regs );
    }
 #endif
 }
 
-HB_FUNC( _M_MGETCOORD )
+HB_FUNC( FT_MGETCOORD )
 {
-   int   inX;
-   int   inY;
-   int   inButton;
+   int inX;
+   int inY;
+   int inButton;
 
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      regs.HB_XREGS.ax  = 3;
+      regs.HB_XREGS.ax = 3;
       HB_DOS_INT86( 0x33, &regs, &regs );
-
-      inButton          = regs.HB_XREGS.bx;
-      inY               = regs.HB_XREGS.cx;
-      inX               = regs.HB_XREGS.dx;
+      inX      = regs.HB_XREGS.dx / 8;
+      inY      = regs.HB_XREGS.cx / 8;
+      inButton = regs.HB_XREGS.bx;
    }
 #else
    {
@@ -519,13 +474,9 @@ HB_FUNC( _M_MGETCOORD )
       inButton = 0;
    }
 #endif
-   {
-      PHB_ITEM pArray = hb_itemArrayNew( 3 );
 
-      hb_arraySetNI( pArray, 1, inX );
-      hb_arraySetNI( pArray, 2, inY );
-      hb_arraySetNI( pArray, 3, inButton );
+   hb_storni( inX, 1 );
+   hb_storni( inY, 2 );
 
-      hb_itemReturnRelease( pArray );
-   }
+   hb_retni( inButton );
 }

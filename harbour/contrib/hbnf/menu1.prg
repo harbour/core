@@ -196,7 +196,7 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
    RETURN NIL
 
 // ACHOICE() user function
-FUNCTION __ftAcUdf( nMode )
+STATIC FUNCTION __ftAcUdf( nMode )
 
    LOCAL nRtnVal := AC_CONT
    DO CASE
