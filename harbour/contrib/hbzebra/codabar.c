@@ -159,7 +159,7 @@ PHB_ZEBRA hb_zebra_create_codabar( const char * szCode, HB_SIZE nLen, int iFlags
 
    for( i = 0; i < iLen; i++ )
    {
-      HB_ISIZ no = _codabar_charno( szCode[ i ] );
+      int no = _codabar_charno( szCode[ i ] );
       _codabar_add( pZebra->pBits, s_code[ no ], iFlags, i > 0 && no >= 16 );
    }
 
