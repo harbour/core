@@ -58,7 +58,7 @@ FUNCTION FT_WorkDays( dStart, dStop )
 
          nWorkDays := Int( nDays / 7 ) * 5 + nAdjust
 
-      ELSEIF ( DOW( dStart ) != 1 .AND. DOW( dStart ) != 7 )
+      ELSEIF DOW( dStart ) != 1 .AND. DOW( dStart ) != 7
 
          nWorkDays := 1
 

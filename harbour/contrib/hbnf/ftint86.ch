@@ -71,6 +71,6 @@
 #translate REG_ES               => .F.
 #translate highbyte( <X> )      => ( int( iif( (<X>) \< 0, 65536 + (<X>), (<X>) ) / 256 ) )
 #translate lowbyte( <X> )       => (      iif( (<X>) \< 0, 65536 + (<X>), (<X>) ) % 256   )
-#translate carrySet( <XFLAGS> ) => ( ft_isbiton( ( <XFLAGS> ), FLAG_CARRY ) )
+#translate carrySet( <XFLAGS> ) => ( hb_bitTest( <XFLAGS>, FLAG_CARRY ) )
 
 #endif // __FTINT86_CH__

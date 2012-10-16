@@ -23,19 +23,10 @@
  *
  */
 
-FUNCTION FT_BITSET( cInByte, nBitpos )
-
-   LOCAL cByte
+FUNCTION FT_BITSET( cInbyte, nBitpos )
 
    IF HB_ISSTRING( cInbyte ) .AND. HB_ISNUMERIC( nBitpos )
-      IF nBitPos > 7 .OR. nBitPos < 0 .OR. nBitPos != Int( nBitPos )
-         cByte := NIL
-      ELSE
-         cByte := iif( FT_ISBIT( cInByte, nBitpos ), cInByte, ;
-            hb_BChar( hb_BCode( cInByte ) + ( 2 ^ nBitpos ) ) )
-      ENDIF
-   ELSE
-      cByte := NIL
+      RETURN hb_BChar( hb_bitSet( hb_BCode( cInbyte ), nBitpos ) )
    ENDIF
 
-   RETURN cByte
+   RETURN NIL

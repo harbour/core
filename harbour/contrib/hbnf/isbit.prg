@@ -25,16 +25,8 @@
 
 FUNCTION FT_ISBIT( cInbyte, nBitPos )
 
-   LOCAL lBitStat
-
    IF HB_ISSTRING( cInbyte ) .AND. HB_ISNUMERIC( nBitPos )
-      IF nBitPos > 7 .OR. nBitPos < 0 .OR. nBitPos != Int( nBitPos )
-         lBitStat := NIL
-      ELSE
-         lBitStat := Int( ( ( hb_BCode( cInByte ) * ( 2 ^ ( 7 - nBitPos ) ) ) % 256 ) / 128 ) == 1
-      ENDIF
-   ELSE
-      lBitStat := NIL
+      RETURN hb_bitTest( hb_BCode( cInbyte ), nBitpos )
    ENDIF
 
-   RETURN lBitStat
+   RETURN NIL

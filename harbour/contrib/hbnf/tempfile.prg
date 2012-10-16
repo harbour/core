@@ -79,7 +79,7 @@ FUNCTION FT_TEMPFIL( cPath, lHide, nHandle )
      *  sitting in AX that needs to be closed.
      */
 
-   IF ! ft_isBitOn( aRegs[ 3 ], FLAG_CARRY )
+   IF ! hb_bitTest( aRegs[ 3 ], FLAG_CARRY )
       IF PCount() >= 3
          nHandle := aRegs[ 1 ]
       ELSE

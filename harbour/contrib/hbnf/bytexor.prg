@@ -28,19 +28,8 @@
 
 FUNCTION FT_BYTEXOR( cByte1, cByte2 )
 
-   LOCAL nCounter, cNewByte
-
    IF HB_ISSTRING( cByte1 ) .AND. HB_ISSTRING( cByte2 )
-      cNewByte := hb_BChar( 0 )
-      FOR nCounter := 0 TO 7           // test each bit position
-         IF FT_ISBIT( cByte1, nCounter ) .OR. FT_ISBIT( cByte2, nCounter )
-            IF ! ( FT_ISBIT( cByte1, nCounter ) .AND. FT_ISBIT( cByte2, nCounter ) )
-               cNewByte := FT_BITSET( cNewByte, nCounter )
-            ENDIF
-         ENDIF
-      NEXT
-   ELSE
-      cNewByte := NIL
+      RETURN hb_BChar( hb_bitXor( hb_BCode( cByte1 ), hb_BCode( cByte2 ) ) )
    ENDIF
 
-   RETURN cNewByte
+   RETURN NIL

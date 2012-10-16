@@ -27,10 +27,4 @@
  */
 
 FUNCTION FT_ISBITON( nWord, nBit )
-
-   nWord := iif( nWord < 0, nWord + 65536, nWord )
-   nWord := Int( nWord * ( 2 ^ ( 15 - nBit ) ) )
-   nWord := Int( nWord % 65536 )
-   nWord := Int( nWord / 32768 )
-
-   RETURN ( nWord == 1 )
+   RETURN hb_bitTest( nWord, nBit )

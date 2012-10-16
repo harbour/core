@@ -25,15 +25,8 @@
 
 FUNCTION FT_BYT2HEX( cByte )
 
-   LOCAL cHexTable := "0123456789ABCDEF"
-   LOCAL xHexString
-
    IF HB_ISSTRING( cByte )
-      xHexString := SubStr( cHexTable, Int( hb_BCode( cByte ) / 16 ) + 1, 1 ) + ;
-                    SubStr( cHexTable, Int( hb_BCode( cByte ) % 16 ) + 1, 1 ) + ;
-                    "h"
-   ELSE
-      xHexString := NIL
+      RETURN hb_StrToHex( Left( cByte, 1 ) ) + "h"
    ENDIF
 
-   RETURN xHexString
+   RETURN NIL

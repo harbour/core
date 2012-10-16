@@ -25,15 +25,15 @@
 
 FUNCTION FT_BYT2BIT( cByte )
 
-   LOCAL nCounter, xBitstring
+   LOCAL nCounter, cBitstring
 
    IF HB_ISSTRING( cByte )
-      xBitString := ""
+      cByte := hb_BCode( cByte )
+      cBitString := ""
       FOR nCounter := 7 TO 0 STEP -1
-         xBitString += iif( FT_ISBIT( cByte, nCounter ), "1", "0" )
+         cBitString += iif( hb_bitTest( cByte, nCounter ), "1", "0" )
       NEXT
-   ELSE
-      xBitString := NIL
+      RETURN cBitString
    ENDIF
 
-   RETURN xBitString
+   RETURN NIL
