@@ -50,32 +50,26 @@
  *
  */
 
-PROCEDURE FT_CLS( nTop, nLeft, nBottom, nRight, nColor )
+FUNCTION FT_CLS( nTop, nLeft, nBottom, nRight, nColor )
 
    IF ! HB_ISNUMERIC( nColor )
       nColor := 0
    ENDIF
 
-   hb_Scroll( nTop, nLeft, nBottom, nRight, , , nColor )
+   RETURN hb_Scroll( nTop, nLeft, nBottom, nRight, , , nColor )
 
-   RETURN
-
-PROCEDURE FT_VIDSTR( nRow, nCol, cString, nColor )
+FUNCTION FT_VIDSTR( nRow, nCol, cString, nColor )
 
    IF ! HB_ISNUMERIC( nColor )
       nColor := 0
    ENDIF
 
-   hb_DispOutAt( nRow, nCol, cString, nColor )
+   RETURN hb_DispOutAt( nRow, nCol, cString, nColor )
 
-   RETURN
-
-PROCEDURE FT_WRTCHR( nRow, nCol, cChar, nColor )
+FUNCTION FT_WRTCHR( nRow, nCol, cChar, nColor )
 
    IF ! HB_ISNUMERIC( nColor )
       nColor := 0
    ENDIF
 
-   hb_DispOutAt( nRow, nCol, Left( cChar, 1 ), nColor )
-
-   RETURN
+   RETURN hb_DispOutAt( nRow, nCol, Left( cChar, 1 ), nColor )

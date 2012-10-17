@@ -1153,10 +1153,11 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
    LOCAL nOldRow, nOldCol, cOldColor, nMessLen, nWide, nNumRows, nBottom, nLeft
    LOCAL nRight, oNewGet, nNumMessRow, nLenLastRow, lGetOnNextLine, nOldCurs
    LOCAL cVarType := ValType( xVarVal )
-   LOCAL nVarLen  := iif( cVarType == "C", Len( xVarVal ),;
-                     iif( cVarType == "D", 8, ;
-                     iif( cVarType == "L", 1, ;
-                     iif( cVarType == "N", iif( cPict == NIL, 9, Len( cPict ) ), 0 ) ) ) )
+   LOCAL nVarLen  := ;
+      iif( cVarType == "C", Len( xVarVal ),;
+      iif( cVarType == "D", 8, ;
+      iif( cVarType == "L", 1, ;
+      iif( cVarType == "N", iif( cPict == NIL, 9, Len( cPict ) ), 0 ) ) ) )
    LOCAL nOldLastKey := LastKey()
    LOCAL cOldDevice  := Set( _SET_DEVICE, "SCREEN" )
    LOCAL lOldPrint   := Set( _SET_PRINTER, .F. )
@@ -1185,7 +1186,8 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
       .AND. nVarLen > nWide, /* LOW-ASCII "←" */ Chr( 27 ) + " scroll " + Chr( 26 ) /* LOW-ASCII "→" */, NIL ), nWinColor )
    DISPMESSAGE cMessage, nTop + 1, nLeft + 2, nBottom - 1, nRight - 2
 
-   oNewGet := GetNew( iif( lGetOnNextLine,Row() + 1,Row() ), ;
+   oNewGet := GetNew( ;
+      iif( lGetOnNextLine, Row() + 1, Row() ), ;
       iif( lGetOnNextLine, nLeft + 2, Col() + 1 ), ;
       {| x | iif( PCount() > 0, xVarVal := x, xVarVal ) }, ;
       "xVarVal" )
