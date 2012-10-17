@@ -136,7 +136,7 @@ FUNCTION demoxbp()
 #if 0
    oItem1:expand( .T. )
 #else
-   oTree:showExpanded( .T. , 2 )
+   oTree:showExpanded( .T., 2 )
 #endif
 
    oTree:setData( oItem2 )

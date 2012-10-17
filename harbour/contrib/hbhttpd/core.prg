@@ -74,7 +74,7 @@ METHOD RUN( hConfig ) CLASS UHttpd
    ENDIF
 
    Self:hConfig := {;
-      "SSL"                  => .F. , ;
+      "SSL"                  => .F., ;
       "Port"                 => 80, ;
       "BindAddress"          => "0.0.0.0", ;
       "LogAccess"            => {|| NIL }, ;
@@ -1461,17 +1461,17 @@ PROCEDURE UProcFiles( cFileName, lIndex )
       IF HB_HHasKey( get, "s" )
          IF get["s"] == "s"
             ASort( aDir, , , {| X, Y | iif( X[5] == "D", iif(Y[5] == "D", X[1] < Y[1], .T. ), ;
-               iif( Y[5] == "D", .F. , X[2] < Y[2] ) ) } )
+               iif( Y[5] == "D", .F., X[2] < Y[2] ) ) } )
          ELSEIF get["s"] == "m"
             ASort( aDir, , , {| X, Y | iif( X[5] == "D", iif(Y[5] == "D", X[1] < Y[1], .T. ), ;
-               iif( Y[5] == "D", .F. , DToS( X[3] ) + X[4] < DToS( Y[3] ) + Y[4] ) ) } )
+               iif( Y[5] == "D", .F., DToS( X[3] ) + X[4] < DToS( Y[3] ) + Y[4] ) ) } )
          ELSE
             ASort( aDir, , , {| X, Y | iif( X[5] == "D", iif(Y[5] == "D", X[1] < Y[1], .T. ), ;
-               iif( Y[5] == "D", .F. , X[1] < Y[1] ) ) } )
+               iif( Y[5] == "D", .F., X[1] < Y[1] ) ) } )
          ENDIF
       ELSE
          ASort( aDir, , , {| X, Y | iif( X[5] == "D", iif(Y[5] == "D", X[1] < Y[1], .T. ), ;
-            iif( Y[5] == "D", .F. , X[1] < Y[1] ) ) } )
+            iif( Y[5] == "D", .F., X[1] < Y[1] ) ) } )
       ENDIF
 
       UWrite( '<html><body><h1>Index of ' + server["SCRIPT_NAME"] + '</h1><pre>      ' )

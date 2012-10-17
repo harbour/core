@@ -144,7 +144,7 @@ PROCEDURE Main()
 
    AAdd( aBlocks, {|| Wvt_SetIcon( GetResource( "vr_1.ico" ) ) } )
    AAdd( aBlocks, {|| Wvt_SetTitle( "Vouch" ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLabel( 1,40, cLabel,6,, rgb(255,255,255 ), rgb(198,198,198 ), "Arial", 26, , , , , .T. , .T. ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLabel( 1,40, cLabel,6,, rgb(255,255,255 ), rgb(198,198,198 ), "Arial", 26, , , , , .T., .T. ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxRaised( nTop, nLft, nBtm, nRgt ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxRecessed( 7, 61, 13, 70 ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxGroup( 15, 59, 18, 72 ) } )

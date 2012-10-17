@@ -1172,28 +1172,28 @@ STATIC FUNCTION AR_ORDCREATE( nWA, aOrderCreate )
    ELSE
       aOCInfo   := aOrderCreate[ UR_ORCR_CONDINFO ] := ;
                   { ;
-                    .F. ,; /* #define UR_ORC_ACTIVE         1   */
-                    ""  ,; /* #define UR_ORC_CFOR           2   */
-                    ""  ,; /* #define UR_ORC_CWHILE         3   */
-                    NIL ,; /* #define UR_ORC_BFOR           4   */
-                    NIL ,; /* #define UR_ORC_BWHILE         5   */
-                    NIL ,; /* #define UR_ORC_BEVAL          6   */
-                    0   ,; /* #define UR_ORC_STEP           7   */
-                    0   ,; /* #define UR_ORC_STARTREC       8   */
-                    0   ,; /* #define UR_ORC_NEXT           9   */
-                    0   ,; /* #define UR_ORC_RECORD         10  */
-                    .F. ,; /* #define UR_ORC_REST           11  */
-                    .F. ,; /* #define UR_ORC_DESCEND        12  */
-                    .F. ,; /* #define UR_ORC_SCOPED         13  */
-                    .T. ,; /* #define UR_ORC_ALL            14  */
-                    .F. ,; /* #define UR_ORC_ADDITIVE       15  */
-                    .F. ,; /* #define UR_ORC_USECURRENT     16  */
-                    .F. ,; /* #define UR_ORC_CUSTOM         17  */
-                    .F. ,; /* #define UR_ORC_NOOPTIMIZE     18  */
-                    .F. ,; /* #define UR_ORC_COMPOUND       19  */
-                    .F. ,; /* #define UR_ORC_USEFILTER      20  */
-                    .F. ,; /* #define UR_ORC_TEMPORARY      21  */
-                    .F. ,; /* #define UR_ORC_EXCLUSIVE      22  */
+                    .F., ; /* #define UR_ORC_ACTIVE         1   */
+                    "" , ; /* #define UR_ORC_CFOR           2   */
+                    "" , ; /* #define UR_ORC_CWHILE         3   */
+                    NIL, ; /* #define UR_ORC_BFOR           4   */
+                    NIL, ; /* #define UR_ORC_BWHILE         5   */
+                    NIL, ; /* #define UR_ORC_BEVAL          6   */
+                    0  , ; /* #define UR_ORC_STEP           7   */
+                    0  , ; /* #define UR_ORC_STARTREC       8   */
+                    0  , ; /* #define UR_ORC_NEXT           9   */
+                    0  , ; /* #define UR_ORC_RECORD         10  */
+                    .F., ; /* #define UR_ORC_REST           11  */
+                    .F., ; /* #define UR_ORC_DESCEND        12  */
+                    .F., ; /* #define UR_ORC_SCOPED         13  */
+                    .T., ; /* #define UR_ORC_ALL            14  */
+                    .F., ; /* #define UR_ORC_ADDITIVE       15  */
+                    .F., ; /* #define UR_ORC_USECURRENT     16  */
+                    .F., ; /* #define UR_ORC_CUSTOM         17  */
+                    .F., ; /* #define UR_ORC_NOOPTIMIZE     18  */
+                    .F., ; /* #define UR_ORC_COMPOUND       19  */
+                    .F., ; /* #define UR_ORC_USEFILTER      20  */
+                    .F., ; /* #define UR_ORC_TEMPORARY      21  */
+                    .F., ; /* #define UR_ORC_EXCLUSIVE      22  */
                     NIL  ; /* #define UR_ORC_CARGO          23  */
                   }
    ENDIF

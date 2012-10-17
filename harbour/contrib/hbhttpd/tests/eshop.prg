@@ -43,7 +43,7 @@ PROCEDURE Main()
 
    IF ! HB_FILEEXISTS( "users.dbf" )
       FErase( "users.cdx" )
-      dbCreate( "users", { { "USER", "C", 16, 0 }, { "PASSWORD", "C", 16, 0 }, { "NAME", "C", 50, 0 } }, , .T. , "user" )
+      dbCreate( "users", { { "USER", "C", 16, 0 }, { "PASSWORD", "C", 16, 0 }, { "NAME", "C", 50, 0 } }, , .T., "user" )
       dbAppend()
       FIELD->USER := "demo"
       FIELD->PASSWORD := "demo"
@@ -51,29 +51,29 @@ PROCEDURE Main()
       OrdCreate( "users", "user", "USER" )
       dbCloseArea()
    ELSEIF ! HB_FILEEXISTS( "users.cdx" )
-      dbUseArea( .T. , , "users", , .F. , .F. )
+      dbUseArea( .T., , "users", , .F., .F. )
       OrdCreate( "users", "user", "USER" )
       dbCloseArea()
    ENDIF
 
    IF ! HB_FILEEXISTS( "carts.dbf" )
       FErase( "carts.cdx" )
-      dbCreate( "carts", { { "USER", "C", 16, 0 }, { "CODE", "C", 16, 0 }, { "AMOUNT", "N", 6, 0 }, { "TOTAL", "N", 9, 2 } }, , .T. , "cart" )
+      dbCreate( "carts", { { "USER", "C", 16, 0 }, { "CODE", "C", 16, 0 }, { "AMOUNT", "N", 6, 0 }, { "TOTAL", "N", 9, 2 } }, , .T., "cart" )
       OrdCreate( "carts", "user", "USER+CODE" )
       dbCloseArea()
    ELSEIF ! HB_FILEEXISTS( "carts.cdx" )
-      dbUseArea( .T. , , "carts", , .F. , .F. )
+      dbUseArea( .T., , "carts", , .F., .F. )
       OrdCreate( "carts", "user", "USER+CODE" )
       dbCloseArea()
    ENDIF
 
    IF ! HB_FILEEXISTS( "items.dbf" )
       FErase( "items.cdx" )
-      dbCreate( "items", { { "CODE", "C", 16, 0 }, { "TITLE", "C", 80, 0 }, { "PRICE", "N", 9, 2 } }, , .T. , "items" )
+      dbCreate( "items", { { "CODE", "C", 16, 0 }, { "TITLE", "C", 80, 0 }, { "PRICE", "N", 9, 2 } }, , .T., "items" )
       OrdCreate( "items", "code", "CODE" )
       dbCloseArea()
    ELSEIF ! HB_FILEEXISTS( "item.cdx" )
-      dbUseArea( .T. , , "items", , .F. , .F. )
+      dbUseArea( .T., , "items", , .F., .F. )
       OrdCreate( "items", "code", "CODE" )
       dbCloseArea()
    ENDIF
@@ -108,7 +108,7 @@ PROCEDURE Main()
       "Idle"                => {| o | iif( HB_FILEEXISTS( ".uhttpd.stop" ), ( FErase(".uhttpd.stop" ), o:Stop() ), NIL ) }, ;
       "PrivateKeyFilename"  => "private.key", ;
       "CertificateFilename" => "certificate.crt", ;
-      "SSL"                 => .T. , ;
+      "SSL"                 => .T., ;
       "Mount"          => {;
          "/hello"            => {|| UWrite( "Hello!" ) }, ;
          "/info"             => {|| UProcInfo() }, ;
@@ -139,7 +139,7 @@ STATIC FUNCTION proc_login()
    LOCAL cUser
 
    IF server["REQUEST_METHOD"] == "POST"
-      dbUseArea( .T. , , "users", "users", .T. , .T. )
+      dbUseArea( .T., , "users", "users", .T., .T. )
       OrdSetFocus( "user" )
       cUser := PadR( HB_HGetDef( post, "user", "" ), 16 )
       USessionStart()
@@ -188,9 +188,9 @@ STATIC FUNCTION proc_shopping()
       RETURN NIL
    ENDIF
 
-   dbUseArea( .T. , , "carts", "carts", .T. , .F. )
+   dbUseArea( .T., , "carts", "carts", .T., .F. )
    OrdSetFocus( "user" )
-   dbUseArea( .T. , , "items", "items", .T. , .T. )
+   dbUseArea( .T., , "items", "items", .T., .T. )
    OrdSetFocus( "code" )
 
    IF HB_HHasKey( get, "add" )
@@ -237,9 +237,9 @@ STATIC FUNCTION proc_cart()
       RETURN NIL
    ENDIF
 
-   dbUseArea( .T. , , "items", "items", .T. , .T. )
+   dbUseArea( .T., , "items", "items", .T., .T. )
    OrdSetFocus( "code" )
-   dbUseArea( .T. , , "carts", "carts", .T. , .F. )
+   dbUseArea( .T., , "carts", "carts", .T., .F. )
    OrdSetFocus( "user" )
 
    IF HB_HHasKey( get, "del" )
@@ -281,7 +281,7 @@ STATIC FUNCTION proc_account()
       URedirect( "/app/login" )
       RETURN NIL
    ENDIF
-   dbUseArea( .T. , , "users", "users", .T. , .F. )
+   dbUseArea( .T., , "users", "users", .T., .F. )
    OrdSetFocus( "user" )
    dbSeek( session["user"], .F. )
 
@@ -296,7 +296,7 @@ STATIC FUNCTION proc_account_edit()
       URedirect( "/app/login" )
       RETURN NIL
    ENDIF
-   dbUseArea( .T. , , "users", "users", .T. , .F. )
+   dbUseArea( .T., , "users", "users", .T., .F. )
    OrdSetFocus( "user" )
    dbSeek( session["user"], .F. )
 
@@ -352,7 +352,7 @@ STATIC FUNCTION proc_register()
       cName := session["formdata_register", "name"]
    ENDIF
    IF server["REQUEST_METHOD"] == "POST"
-      dbUseArea( .T. , , "users", "users", .T. , .F. )
+      dbUseArea( .T., , "users", "users", .T., .F. )
       OrdSetFocus( "user" )
       cUser := HB_HGetDef( post, "user", "" )
       cName := HB_HGetDef( post, "name", "" )

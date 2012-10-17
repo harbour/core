@@ -52,7 +52,7 @@ PROCEDURE Main()
 
    aPaint := {}
 
-   AAdd( aPaint, { "Label" , {|| Wvt_DrawLabel( 1, 40, "Harbour Console GUI Demo", 6, , rgb( 255,255,255 ), rgb( 198,198,198 ), "Arial", 26, , , , , .T. , .T. ) }    , { WVT_BLOCK_LABEL,  1, 10,  3, 50 } } )
+   AAdd( aPaint, { "Label" , {|| Wvt_DrawLabel( 1, 40, "Harbour Console GUI Demo", 6, , rgb( 255,255,255 ), rgb( 198,198,198 ), "Arial", 26, , , , , .T., .T. ) }    , { WVT_BLOCK_LABEL,  1, 10,  3, 50 } } )
    AAdd( aPaint, { "Box_1" , {|| Wvt_DrawBoxRaised( 4, 4, 20, 75 ) }                                                                                , { WVT_BLOCK_BOX  ,  4,  4, 20, 75 } } )
    AAdd( aPaint, { "Box_2" , {|| Wvt_DrawBoxRecessed( 7, 61, 13, 70 ) }                                                                             , { WVT_BLOCK_BOX  ,  7, 61, 13, 70 } } )
    AAdd( aPaint, { "Box_3" , {|| Wvt_DrawBoxGroup( 15, 59, 18, 72 ) }                                                                               , { WVT_BLOCK_BOX  , 15, 59, 18, 72 } } )

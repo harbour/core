@@ -230,7 +230,7 @@ METHOD WvgMenuBar:destroy()
 
 METHOD WvgMenuBar:delAllItems()
 
-   LOCAL lResult := .T. ,  nItems
+   LOCAL lResult := .T., nItems
 
    nItems := ::numItems()
    DO WHILE nItems > 0 .AND. lResult
@@ -426,7 +426,7 @@ METHOD WvgMenuBar:checkItem( nItemNum, lCheck )
       nRet := WVG_CheckMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + iif( lCheck, MF_CHECKED, MF_UNCHECKED ) )
    ENDIF
 
-   RETURN iif( nRet == - 1, .F. , .T. )
+   RETURN iif( nRet == -1, .F., .T. )
 
 //
 

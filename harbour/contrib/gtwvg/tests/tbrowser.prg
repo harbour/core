@@ -328,7 +328,7 @@ STATIC FUNCTION BrwBuildTree( oCrt /*, oBrw*/ )
    oItem2:addItem( "Third level y" )
    oItem2:addItem( "Third level z" )
 
-   oTree:showExpanded( .T. , 2 )
+   oTree:showExpanded( .T., 2 )
    oTree:setData( oItem2 )
 
    oTree:tooltipText := "Treeview embedded onto CUI window"

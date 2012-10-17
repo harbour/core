@@ -250,7 +250,7 @@ PROCEDURE Main()
    CreateToolbar( nCurWindow )
 
    ResetMiscObjects( nCurWindow )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1, 40, cLabel, 6,, rgb( 255, 255, 255 ), rgb( 198, 198, 198 ), "Arial", s_afontinfo[ 2 ], , , , , .T. , .T. ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1, 40, cLabel, 6,, rgb( 255, 255, 255 ), rgb( 198, 198, 198 ), "Arial", s_afontinfo[ 2 ], , , , , .T., .T. ) } )
 
    wvwm_ResetMouseObjects( nCurWindow )
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Info!", MaxRow() - 2, 67, , , {|| xDebugInfo() } ) )
@@ -457,7 +457,7 @@ PROCEDURE Demo_Get()
    WVW_SetIcon( , "vr_1.ico" )
 
    ResetMiscObjects( nCurWindow )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,nRight - nLeft, cLabel,2,, rgb( 255, 255, 255 ), rgb( 198, 198, 198 ), "Arial", s_afontinfo[ 2 ], , , , , .T. , .T. ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1,nRight - nLeft, cLabel,2,, rgb( 255, 255, 255 ), rgb( 198, 198, 198 ), "Arial", s_afontinfo[ 2 ], , , , , .T., .T. ) } )
    AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, 7 - nTop, 61 - nLeft, 13 - nTop, 70 - nLeft ) } )
    AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxGroup( nWindow, 15 - nTop, 59 - nLeft, 18 - nTop, 72 - nLeft ) } )
    AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxGroup( nWindow, 5 - nTop, 6 - nLeft, 19 - nTop, 44 - nLeft ) } )

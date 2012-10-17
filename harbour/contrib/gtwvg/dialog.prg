@@ -134,7 +134,7 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ENDIF
 
    hb_gtInfo( HB_GTI_PRESPARAMS, { ::exStyle, ::style, ::aPos[ 1 ], ::aPos[ 2 ], ;
-      ::aSize[ 1 ], ::aSize[ 2 ], ::pGTp, .F. , .F. , HB_WNDTYPE_DIALOG } )
+      ::aSize[ 1 ], ::aSize[ 2 ], ::pGTp, .F., .F., HB_WNDTYPE_DIALOG } )
 
    if ::visible
       hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )

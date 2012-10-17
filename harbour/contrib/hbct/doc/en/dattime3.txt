@@ -16,7 +16,7 @@
  *      1/100ths of seconds.  Values from 1 to 8, 640, 000 (one day) are
  *      possible.
  *  $RETURNS$
- *      WAITPERIOD() returns .T. , if the time span designated at initialization
+ *      WAITPERIOD() returns .T., if the time span designated at initialization
  *      has not elapsed.
  *  $DESCRIPTION$
  *      This function sets a time span for a xHarbour DO WHILE loop to run.

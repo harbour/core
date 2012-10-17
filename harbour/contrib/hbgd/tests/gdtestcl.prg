@@ -225,11 +225,11 @@ PROCEDURE Main()
    oI5:AddDef( "FONTPITCH", "GIANT" )
 
    oI5:SetData( { ;
-      { "LABEL" => "One"  , "VALUE" => 10, "COLOR"  => blue , "FILLED" => .T. , "EXTRUDE" => 40/*, "TILE" => oB*/ }, ;
-      { "LABEL" => "Two"  , "VALUE" => 35, "COLOR"  => gray , "FILLED" => .T. , "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  }, ;
+      { "LABEL" => "One"  , "VALUE" => 10, "COLOR"  => blue , "FILLED" => .T., "EXTRUDE" => 40/*, "TILE" => oB*/ }, ;
+      { "LABEL" => "Two"  , "VALUE" => 35, "COLOR"  => gray , "FILLED" => .T., "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  }, ;
       { "LABEL" => "Three", "VALUE" => 55, "COLOR"  => green, "FILLED" => .T. }, ;
       { "LABEL" => "Four" , "VALUE" => 55, "FILLED" => .T.  , "TILE"   => oB }, ;
-      { "LABEL" => "Five" , "VALUE" => 55, "COLOR"  => red  , "FILLED" => .T. , "EXTRUDE" => 20 }, ;
+      { "LABEL" => "Five" , "VALUE" => 55, "COLOR"  => red  , "FILLED" => .T., "EXTRUDE" => 20 }, ;
       { "LABEL" => "Six"  , "VALUE" => 55, "FILLED" => .T.  , "TILE"   => oB }, ;
       { "LABEL" => "Seven", "VALUE" => 55, "FILLED" => .T.  , "COLOR"  => green } ;
       } )
@@ -276,13 +276,13 @@ PROCEDURE Main()
 
 
    oI5:SetData( { ;
-      { "LABEL" => "One", "VALUE" => 10, "COLOR" => blue, "FILLED" => .T. , "EXTRUDE" => 40/*, "TILE" => oB*/ }, ;
-      { "LABEL" => "Two", "VALUE" => 35, "COLOR" => gray, "FILLED" => .T. , "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  }, ;
+      { "LABEL" => "One", "VALUE" => 10, "COLOR" => blue, "FILLED" => .T., "EXTRUDE" => 40/*, "TILE" => oB*/ }, ;
+      { "LABEL" => "Two", "VALUE" => 35, "COLOR" => gray, "FILLED" => .T., "FONT" => { "NAME" => "Verdana", "PITCH" => 12, "ANGLE" => 0, "COLOR" => red }  }, ;
       { "LABEL" => "Three", "VALUE" => 55, "COLOR" => green, "FILLED" => .T. }, ;
-      { "LABEL" => "Four", "VALUE" => 65, "FILLED" => .T. , "TILE" => oB }, ;
-      { "LABEL" => "Five", "VALUE" => 34, "FILLED" => .T. , "COLOR" => green }, ;
+      { "LABEL" => "Four", "VALUE" => 65, "FILLED" => .T., "TILE" => oB }, ;
+      { "LABEL" => "Five", "VALUE" => 34, "FILLED" => .T., "COLOR" => green }, ;
       { "LABEL" => "Six", "VALUE" => 100 }, ;
-      { "LABEL" => "Seven", "VALUE" => 0, "FILLED" => .T. , "COLOR" => red }, ;
+      { "LABEL" => "Seven", "VALUE" => 0, "FILLED" => .T., "COLOR" => red }, ;
       { "LABEL" => "Eight", "VALUE" => - 0 }, ;
       { "LABEL" => "Nine", "VALUE" => - 0, "COLOR" => blue, "FILLED" => .T. } ;
       } )

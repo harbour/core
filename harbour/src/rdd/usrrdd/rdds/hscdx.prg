@@ -75,7 +75,7 @@ ANNOUNCE HSCDX
 
 STATIC FUNCTION _HSX_NEW( pWA )
 
-   LOCAL aWData := { .F. , {}, {} }
+   LOCAL aWData := { .F., {}, {} }
 
    /*
     * Set in our private AREA item the array where we will kepp HSX indexes

@@ -488,7 +488,7 @@ FUNCTION Wvt_DialogBox( acnDlg, cbDlgProc, hWndParent )
       xTemplate := acnDlg
    ENDIF
 
-   nResult := Wvt_CreateDialogModal( xTemplate, .F. , cbDlgProc, nDlgMode, hWndParent )
+   nResult := Wvt_CreateDialogModal( xTemplate, .F., cbDlgProc, nDlgMode, hWndParent )
 
    Wvg_SetFocus( hWndParent )
 

@@ -318,7 +318,7 @@ FUNCTION DlgSlideShow()
 
    aDlg    := Wvt_MakeDlgTemplate( 0, 0, 20, 40, {}, "Slide Show", nStyle )
 
-   hDlg    := Wvt_CreateDialog( aDlg, .F. , "DlgSlideShowProc", "vr_1.ico", 5000 )
+   hDlg    := Wvt_CreateDialog( aDlg, .F., "DlgSlideShowProc", "vr_1.ico", 5000 )
 
    RETURN hDlg
 

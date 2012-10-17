@@ -985,7 +985,7 @@ METHOD WvtObject:CreatePopup()
 
 METHOD WvtObject:ShowPopup()
 
-   LOCAL lRet := .F. , nRet, n, aPos
+   LOCAL lRet := .F., nRet, n, aPos
 
    IF ::hPopup != nil
       aPos := Wvt_GetCursorPos()
@@ -3393,7 +3393,7 @@ METHOD wvtMenu:Destroy()
 
 METHOD wvtMenu:AddItem( cCaption, bAction )
 
-   LOCAL lResult := .F. , aItem
+   LOCAL lResult := .F., aItem
 
    IF !Empty( ::hMenu ) .AND. ( !Empty( cCaption ) .OR. !Empty( bAction ) )
       IF HB_ISOBJECT( bAction )
@@ -3425,7 +3425,7 @@ METHOD wvtMenu:AddItem( cCaption, bAction )
 
 METHOD wvtMenu:DelAllItems()
 
-   LOCAL lResult := .T. ,  nItems
+   LOCAL lResult := .T., nItems
 
    nItems := ::NumItems()
    DO WHILE nItems > 0 .AND. lResult

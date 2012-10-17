@@ -329,7 +329,7 @@ METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    hb_gtInfo( HB_GTI_RESIZABLE, ::resizable )
    hb_gtInfo( HB_GTI_PRESPARAMS, { ::exStyle, ::style, ::aPos[ 1 ], ::aPos[ 2 ], ;
-      ::maxRow + 1, ::maxCol + 1, ::pGTp, .F. , lRowCol, HB_WNDTYPE_CRT } )
+      ::maxRow + 1, ::maxCol + 1, ::pGTp, .F., lRowCol, HB_WNDTYPE_CRT } )
    hb_gtInfo( HB_GTI_SETFONT, { ::fontName, ::fontHeight, ::fontWidth } )
 
    IF HB_ISNUMERIC( ::icon )

@@ -29,8 +29,8 @@ PROCEDURE Main()
    TEST 9007199254740991.00, "8918"
    TEST 6969.69, "10AF"
    TEST NIL, "F1E1"
-   TEST .T. , "E3C2"
-   TEST .F. , "6AD3"
+   TEST .T., "E3C2"
+   TEST .F., "6AD3"
    TEST { 1, -1 }, "0560"
    TEST { "ONE" => 0xcafe, "TWO" => 0xbabe }, "CE93"
 

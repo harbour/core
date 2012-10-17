@@ -353,9 +353,9 @@ METHOD Put() CLASS THtmlControl
             " value=" + ::aOptions[ i, _OPTION_VALUE ], "" )
          cStr += iif( ::aOptions[ i, _OPTION_LABEL ] != NIL, ;
             " label=" + ::aOptions[ i, _OPTION_LABEL ], "" )
-         cStr += iif( ::aOptions[ i, _OPTION_SELECTED ] == .T. , ;
+         cStr += iif( ::aOptions[ i, _OPTION_SELECTED ] == .T., ;
             " SELECTED ", "" )
-         cStr += iif( ::aOptions[ i, _OPTION_DISABLED ] == .T. , ;
+         cStr += iif( ::aOptions[ i, _OPTION_DISABLED ] == .T., ;
             " DISABLED ", "" )
          cStr += ">" + ::aOptions[ i, _OPTION_TEXT ] + "</OPTION>" + CRLF()
 //       FWrite( ::nH, cStr )

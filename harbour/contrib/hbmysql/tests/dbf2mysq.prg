@@ -108,7 +108,7 @@ PROCEDURE Main( ... )
       ENDCASE
    ENDDO
 
-   dbUseArea( .T. , , cFile, "dbffile", , .T. )
+   dbUseArea( .T., , cFile, "dbffile", , .T. )
    aDbfStruct := dbffile->( dbStruct() )
 
    oServer := TMySQLServer():New( cHostName, cUser, cPassWord )

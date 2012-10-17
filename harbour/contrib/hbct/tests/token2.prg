@@ -122,8 +122,8 @@ PROCEDURE Main()
    ENDDO
    ?
    ? [    access tokens directly with tokenat]
-   ? [      tokenat(.F.,2) == 3 ? ---------------> ] + Str( tokenat( .F. ,2 ) )
-   ? [      tokenat(.T.,4) == 14 ? --------------> ] + Str( tokenat( .T. ,4 ) )
+   ? [      tokenat(.F.,2) == 3 ? ---------------> ] + Str( tokenat( .F., 2 ) )
+   ? [      tokenat(.T.,4) == 14 ? --------------> ] + Str( tokenat( .T., 4 ) )
    ?
 
    ? "...Press any key..."
@@ -133,7 +133,7 @@ PROCEDURE Main()
    ? [  Save global token environment with savetoken]
    cTE1 := savetoken()
    ? [    tokeninit a different string, cStr4 := "] + cStr4 + [", with tokeninit()]
-   ? [    tokeninit(@cStr4, ":", 1) == .T. ? ----> ] + ltoc( tokeninit(@cStr4, ":", 1 ) )
+   ? [    tokeninit(@cStr4, ":", 1) == .T. ? ----> ] + ltoc( tokeninit( @cStr4, ":", 1 ) )
    ? [    tokennum() == 5 ? ---------------------> ] + Str( tokennum() )
    ? [    tokennext() == "08" ? ------------------> "] + tokennext( @cStr4 ) + ["]
    ? [    Now restore global token environment with resttoken and rewind it]

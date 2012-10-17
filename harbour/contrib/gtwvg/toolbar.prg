@@ -317,14 +317,14 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
          "\" $ xImage .OR. ;
          ":" $ xImage .OR. ;
          hb_FileExists( xImage )
-         pBitmap := Wvg_PrepareBitmapFromFile( xImage, ::imageWidth, ::imageHeight, .T. , ::hWnd )
+         pBitmap := Wvg_PrepareBitmapFromFile( xImage, ::imageWidth, ::imageHeight, .T., ::hWnd )
       ELSE
-         pBitmap := Wvg_PrepareBitmapFromResourceName( xImage, ::imageWidth, ::imageHeight, .T. , ::hWnd )
+         pBitmap := Wvg_PrepareBitmapFromResourceName( xImage, ::imageWidth, ::imageHeight, .T., ::hWnd )
       ENDIF
       EXIT
 
    CASE "N"
-      pBitmap := Wvg_PrepareBitmapFromResourceID( xImage, ::imageWidth, ::imageHeight, .T. , ::hWnd )
+      pBitmap := Wvg_PrepareBitmapFromResourceID( xImage, ::imageWidth, ::imageHeight, .T., ::hWnd )
       EXIT
 
    CASE "P"
