@@ -41,7 +41,7 @@ C_SOURCES := \
    thunder.c \
    tile.c \
    version.c \
-   warning.c \
+   warn.c \
 
 C_SOURCES += \
    close.c \
@@ -149,7 +149,7 @@ endif
 # MAP    libtiff/tif_tile.c       tile.c
 # MAP    libtiff/tif_unix.c       unix.c
 # MAP    libtiff/tif_version.c    version.c
-# MAP    libtiff/tif_warning.c    warning.c
+# MAP    libtiff/tif_warning.c    warn.c
 # MAP    libtiff/tif_win32.c      win32.c
 # MAP    libtiff/tif_write.c      write.c
 # MAP    libtiff/tif_zip.c        zip.c
