@@ -45,7 +45,7 @@ FUNCTION FT_ACCTMONTH( dGivenDate, nMonthNum )
 
    IF dGivenDate < aRetVal[ 2 ]
 
-      dGivenDate := FT_MADD( dGivenDate, - 1 )
+      dGivenDate := FT_MADD( dGivenDate, -1 )
       aRetVal    := FT_MONTH( dGivenDate )
       nMTemp     -= 1
       IF nMTemp  == 0

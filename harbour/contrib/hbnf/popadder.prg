@@ -874,8 +874,8 @@ STATIC FUNCTION _ftRoundIt( nNumber, nPlaces )
 
    nPlaces := iif( nPlaces == NIL, 0, nPlaces )
 
-   RETURN iif( nNumber < 0.0, - 1.0, 1.0 ) * ;
-      Int( Abs( nNumber ) * 10 ^ nPlaces + 0.50 + 10 ^ - 12 ) / 10 ^ nPlaces
+   RETURN iif( nNumber < 0.0, -1.0, 1.0 ) * ;
+      Int( Abs( nNumber ) * 10 ^ nPlaces + 0.50 + 10 ^ -12 ) / 10 ^ nPlaces
 
 /*+- Function ---------------------------------------------------------------+
   |         Name: _ftDivide()           Docs: Keith A. Wire                  |
