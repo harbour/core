@@ -33,7 +33,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is trig.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SIN(),COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),TANH(),RTOD(),DTOR()
  *  $END$
@@ -73,7 +73,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is trig.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),TANH(),RTOD(),DTOR(),PI()
  *  $END$
@@ -113,7 +113,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is trig.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SIN(),TAN(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),TANH(),RTOD(),DTOR(),PI()
  *  $END$
@@ -153,7 +153,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is trig.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SIN(),COS(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),TANH(),RTOD(),DTOR(),PI()
  *  $END$
@@ -191,7 +191,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is trig.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SIN(),COS(),TAN(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),TANH(),RTOD(),DTOR(),PI()
  *  $END$
@@ -232,7 +232,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is trig.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SIN(),COS(),TAN(),COT(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),TANH(),RTOD(),DTOR(),PI()
  *  $END$
@@ -274,7 +274,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is trig.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SIN(),COS(),TAN(),COT(),ASIN(),ATAN(),ATN2(),SINH(),COSH(),TANH(),RTOD(),DTOR(),PI()
  *  $END$
@@ -312,7 +312,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is trig.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SIN(),COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),SINH(),COSH(),TANH(),RTOD(),DTOR(),PI()
  *  $END$
@@ -357,7 +357,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is trig.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SIN(),COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),SINH(),COSH(),TANH(),RTOD(),DTOR(),PI()
  *  $END$
@@ -396,7 +396,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is trig.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SIN(),COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),COSH(),TANH(),RTOD(),DTOR(),PI()
  *  $END$
@@ -435,7 +435,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is trig.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SIN(),COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),TANH(),RTOD(),DTOR(),PI()
  *  $END$
@@ -470,7 +470,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is trig.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SIN(),COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),RTOD(),DTOR(),PI()
  *  $END$
@@ -506,7 +506,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is trig.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SIN(),COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),TANH(),DTOR(),PI()
  *  $END$
@@ -541,7 +541,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is trig.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SIN(),COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),TANH(),RTOD(),PI()
  *  $END$

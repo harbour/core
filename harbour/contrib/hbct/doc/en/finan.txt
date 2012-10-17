@@ -48,7 +48,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is finan.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      PV(),PAYMENT(),PERIODS(),RATE()
  *  $END$
@@ -99,7 +99,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is finan.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      FV(),PAYMENT(),PERIODS(),RATE()
  *  $END$
@@ -148,7 +148,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is finan.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      PV(),FV(),PERIODS(),RATE()
  *  $END$
@@ -202,7 +202,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is finan.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      PV(),FV(),PAYMENT(),RATE()
  *  $END$
@@ -249,7 +249,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is finan.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      PV(),FV(),PAYMENT(),PERIODS()
  *  $END$

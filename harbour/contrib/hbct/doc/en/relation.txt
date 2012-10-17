@@ -29,7 +29,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is relation.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHARRELREP()
  *  $END$
@@ -63,7 +63,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is relation.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHARRELA(),CSETREF()
  *  $END$

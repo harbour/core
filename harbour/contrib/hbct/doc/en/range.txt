@@ -33,7 +33,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is range.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      RANGEREPL()
  *  $END$
@@ -71,7 +71,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is range.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      RANGEREM()
  *  $END$

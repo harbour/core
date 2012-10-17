@@ -33,7 +33,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is num1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      FAHRENHEIT()
  *  $END$
@@ -70,7 +70,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is num1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      CELSIUS()
  *  $END$
@@ -108,7 +108,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is num1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$

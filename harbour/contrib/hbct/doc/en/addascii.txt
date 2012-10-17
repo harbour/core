@@ -60,7 +60,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is addascii.c, library is ct3.
+ *      Library is ct3.
  *  $SEEALSO$
  *      CSETREF()
  *  $END$

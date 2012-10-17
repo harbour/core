@@ -34,7 +34,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is charlist.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHARNOLIST(),CHARSLIST(),CHARHIST()
  *  $END$
@@ -72,7 +72,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is charlist.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHARLIST(),CHARSLIST(),CHARHIST()
  *  $END$

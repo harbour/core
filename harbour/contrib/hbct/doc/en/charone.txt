@@ -40,7 +40,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is charone.c, library is ct3.
+ *      Library is ct3.
  *  $SEEALSO$
  *      CHARREM()   WORDONE()
  *  $END$
@@ -81,7 +81,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is charone.c, library is ct3.
+ *      Library is ct3.
  *  $SEEALSO$
  *      CHARONE()   CHARREM()
  *  $END$

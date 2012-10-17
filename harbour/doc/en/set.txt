@@ -7,17 +7,17 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    Documentation for: SET(), __SETCENTURY()
+ *    Documentation for: Set(), __SETCENTURY()
  *
  * Copyright 1999 April White <april@users.sourceforge.net>
- *    Documentation for: SETKEY(), HB_SetKeyGet(), HB_SETKEYSAVE(),
- *                       HB_SetKeyCheck(), SET KEY
+ *    Documentation for: SetKey(), hb_SetKeyGet(), hb_SetKeySave(),
+ *                       hb_SetKeyCheck(), SET KEY
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: __SetFunction(), SET FUNCTION
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    Documentation for: SETTYPEAHEAD()
+ *    Documentation for: SetTypeAhead()
  *    Documentation for: __XHELP()
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
@@ -30,7 +30,7 @@
  *
  */
 
-/* $DOC$
+/*  $DOC$
  *  $TEMPLATE$
  *      Function
  *  $NAME$
@@ -56,13 +56,13 @@
  *  $END$
  */
 
-/* $DOC$
+/*  $DOC$
  *  $TEMPLATE$
  *      Function
  *  $NAME$
  *      SET()
  *  $CATEGORY$
- *       API
+ *      API
  *  $SUBCATEGORY$
  *      Environment
  *  $ONELINER$
@@ -508,50 +508,50 @@
  *  $SUBCATEGORY$
  *     Environment
  *  $ONELINER$
- *      Assign a character string to a function key
+ *     Assign a character string to a function key
  *  $SYNTAX$
- *      SET FUNCTION <nFunctionKey> TO [<cString>]
+ *     SET FUNCTION <nFunctionKey> TO [<cString>]
  *  $ARGUMENTS$
- *      <nFunctionKey> is a number in the range 1..40 that represent the
- *      function key to be assigned.
+ *     <nFunctionKey> is a number in the range 1..40 that represent the
+ *     function key to be assigned.
  *
- *      <cString> is a character string to set. If <cString> is not
- *      specified, the function key is going to be set to NIL releasing by
- *      that any previous Set Function or SETKEY() for that function.
+ *     <cString> is a character string to set. If <cString> is not
+ *     specified, the function key is going to be set to NIL releasing by
+ *     that any previous Set Function or SETKEY() for that function.
  *  $DESCRIPTION$
- *      Set Function assign a character string with a function key, when
- *      this function key is pressed, the keyboard is stuffed with this
- *      character string. Set Function has the effect of clearing any
- *      SETKEY() previously set to the same function number and vice versa.
+ *     Set Function assign a character string with a function key, when
+ *     this function key is pressed, the keyboard is stuffed with this
+ *     character string. Set Function has the effect of clearing any
+ *     SETKEY() previously set to the same function number and vice versa.
  *
- *      <table>
- *      nFunctionKey    Key to be set
+ *     <table>
+ *     nFunctionKey    Key to be set
  *
- *         1 .. 12      F1 .. F12
- *        13 .. 20      Shift-F3 .. Shift-F10
- *        21 .. 30      Ctrl-F1 .. Ctrl-F10
- *        31 .. 40      Alt-F1 .. Alt-F10
- *      </table>
+ *        1 .. 12      F1 .. F12
+ *       13 .. 20      Shift-F3 .. Shift-F10
+ *       21 .. 30      Ctrl-F1 .. Ctrl-F10
+ *       31 .. 40      Alt-F1 .. Alt-F10
+ *     </table>
  *
- *      SET FUNCTION command is preprocessed into __SetFunction() function
- *      during compile time.
+ *     SET FUNCTION command is preprocessed into __SetFunction() function
+ *     during compile time.
  *  $EXAMPLES$
- *      // Set F1 with a string
- *      CLS
- *      SET FUNCTION 1 TO "I Am Lazy" + Chr( 13 )
- *      cTest := Space( 20 )
- *      @ 10, 0 SAY "type something or F1 for lazy mode " GET cTest
- *      READ
- *      ? cTest
+ *     // Set F1 with a string
+ *     CLS
+ *     SET FUNCTION 1 TO "I Am Lazy" + Chr( 13 )
+ *     cTest := Space( 20 )
+ *     @ 10, 0 SAY "type something or F1 for lazy mode " GET cTest
+ *     READ
+ *     ? cTest
  *  $STATUS$
- *      R
+ *     R
  *  $COMPLIANCE$
- *      Harbour use 11 and 12 to represent F11 and F12, while CA-Cl*pper use
- *      11 and 12 to represent Shift-F1 and Shift-F2.
+ *     Harbour use 11 and 12 to represent F11 and F12, while CA-Cl*pper use
+ *     11 and 12 to represent Shift-F1 and Shift-F2.
  *  $PLATFORMS$
- *      All
+ *     All
  *  $SEEALSO$
- *      INKEY(),SETKEY(),__Keyboard()
+ *     INKEY(),SETKEY(),__Keyboard()
  *  $END$
  */
 
@@ -570,9 +570,9 @@
  *      SETKEY( <anKey> [, <bAction> [, <bCondition> ] ] )
  *  $ARGUMENTS$
  *      <anKey> is either a numeric key value, or an array of such values
-
+ *
  *      <bAction> is an optional code-block to be assigned
-
+ *
  *      <bCondition> is an optional condition code-block
  *  $RETURNS$
  *      Current assigned action-block
@@ -709,7 +709,7 @@
  *      HB_SetKeyCheck( <nKey> [, <p1> ][, <p2> ][, <p3> ] )
  *  $ARGUMENTS$
  *      <nKey> is a numeric key value to be tested code-block, if executed
-
+ *
  *      <p1>..<p3> are optional parameters that will be passed to the code-block
  *  $RETURNS$
  *      True if there is a hot-key associated with <nKey> and it was executed;
@@ -762,9 +762,9 @@
  *      SET KEY   <anKey> to p<bAction>] [when  <bCondition> ]  )
  *  $ARGUMENTS$
  *      <anKey> is either a numeric key value, or an array of such values
-
+ *
  *      <bAction> is an optional code-block to be assigned
-
+ *
  *      <bCondition> is an optional condition code-block
  *  $DESCRIPTION$
  *      The Set Key Command function is translated to the SetKey() function
@@ -947,7 +947,7 @@
  *      @...PROMPT commands. With this command, a row number between 0 and
  *      MAXROW() may be specified in <nRow>. This establishes the row on
  *      witch any message associated with an @...PROMPT command will appear.
-
+ *
  *      If the value of <nRow> is 0, all messages will be suppressed.
  *      All messaged will be left-justifies unless the CENTER clause is
  *      used. In this case, the individual messages in each @...PROMPT command
@@ -955,7 +955,7 @@
  *      messages are independent; therefore, the screen area is cleared out
  *      by the centered message will vary based on the length of each
  *      individual message.
-
+ *
  *      Specifying no parameters with this command set the row value to 0,
  *      witch suppresses all messages output.
  *      The British spelling of CENTRE is also supported.
@@ -1198,6 +1198,7 @@
  *      SET DATE,SET CENTURY,CTOD(),DATE(),DTOC(),SET()
  *  $END$
  */
+
 /*  $DOC$
  *  $TEMPLATE$
  *      Command

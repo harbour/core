@@ -38,7 +38,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is screen1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$
@@ -70,7 +70,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is screen1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$
@@ -105,7 +105,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is screen1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SCREENMIX()
  *  $END$
@@ -137,7 +137,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is color.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$
@@ -190,7 +190,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is screen1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$
@@ -233,7 +233,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is screen1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$
@@ -278,7 +278,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is screen1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$
@@ -314,7 +314,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is screen1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$
@@ -350,7 +350,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is screen1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$

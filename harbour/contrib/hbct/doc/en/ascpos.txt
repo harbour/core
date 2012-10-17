@@ -36,7 +36,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is asciisum.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      VALPOS()
  *  $END$
@@ -78,7 +78,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is asciisum.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      ASCPOS()
  *  $END$

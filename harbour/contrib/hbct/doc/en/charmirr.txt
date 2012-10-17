@@ -41,7 +41,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is charmirr.c, library is ct3.
+ *      Library is ct3.
  *  $SEEALSO$
  *      CSETREF()
  *  $END$

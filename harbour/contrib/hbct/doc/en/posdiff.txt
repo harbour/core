@@ -28,7 +28,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is posdiff.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      POSEQUAL()
  *  $END$
@@ -60,7 +60,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is posdiff.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      POSDIFF()
  *  $END$

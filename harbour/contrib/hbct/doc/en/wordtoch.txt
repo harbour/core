@@ -29,7 +29,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is wordtoch.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      CSETATMUPA(),CHARREPL(),WORDREPL()
  *  $END$

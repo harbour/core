@@ -28,7 +28,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is count.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *     COUNTRIGHT()
  *  $END$
@@ -60,7 +60,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is count.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *     COUNTLEFT()
  *  $END$

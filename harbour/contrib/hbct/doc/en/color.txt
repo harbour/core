@@ -28,7 +28,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is color.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$
@@ -71,7 +71,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is color.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$
@@ -116,7 +116,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is color.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$
@@ -148,7 +148,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is color.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      STANDARD(),UNSELECTED()
  *  $END$
@@ -180,7 +180,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is color.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      ENHANCED(),UNSELECTED()
  *  $END$
@@ -212,7 +212,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is color.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      ENHANCED(),STANDARD()
  *  $END$

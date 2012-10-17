@@ -64,7 +64,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is strdiff.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SETATLIKE()
  *  $END$

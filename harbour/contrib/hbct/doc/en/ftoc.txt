@@ -37,7 +37,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ftoc.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      CTOF(), XTOC()
  *  $END$
@@ -79,7 +79,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ftoc.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      FTOC(), XTOC()
  *  $END$

@@ -28,7 +28,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is pos2.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      POSDEL(),POSINS(),POSREPL(),CSETREF()
  *  $END$
@@ -60,7 +60,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is pos2.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      POSCHAR(),POSINS(),POSREPL()
  *  $END$
@@ -92,7 +92,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is pos2.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      POSCHAR,POSDEL(),POSREPL()
  *  $END$
@@ -124,7 +124,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is pos2.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      POSCHAR(),POSDEL(),POSINS(),CSETREF()
  *  $END$

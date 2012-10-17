@@ -28,7 +28,7 @@
  *  $PLATFORMS$
  *      DJGPP
  *  $FILES$
- *      Source is video.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$
@@ -68,7 +68,7 @@
  *  $PLATFORMS$
  *      DJGPP
  *  $FILES$
- *      Source is video.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      EGAPALETTE() FONTRESET()
  *  $END$
@@ -100,7 +100,7 @@
  *  $PLATFORMS$
  *      DJGPP
  *  $FILES$
- *      Source is video.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      ISCGA(), ISEGA(), ISHERCULES(), ISMCGA(), ISMONO(), ISPGA(), ISVGA()
  *  $END$
@@ -138,7 +138,7 @@
  *  $PLATFORMS$
  *      DJGPP
  *  $FILES$
- *      Source is video.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$

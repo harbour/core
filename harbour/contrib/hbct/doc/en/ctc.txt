@@ -39,7 +39,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ct.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$
@@ -72,7 +72,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ctc.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      CTINIT(),CTEXIT()
  *  $END$
@@ -105,7 +105,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ctc.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      CTINIT(),CTEXIT()
  *  $END$

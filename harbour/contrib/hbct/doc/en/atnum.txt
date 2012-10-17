@@ -52,7 +52,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is atnum.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      ATNUM(),BEFORATNUM(),CSETATMUPA(),SETATLIKE()
  *  $END$
@@ -108,7 +108,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is atnum.c, library is ct3.
+ *      Library is ct3.
  *  $SEEALSO$
  *      ATNUM()  AFTERATNUM()  CSETATMUPA()  SETATLIKE()
  *  $END$
@@ -163,7 +163,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is atnum.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      ATNUM()  AFTERATNUM()  CSETATMUPA()  SETATLIKE()
  *  $END$

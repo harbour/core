@@ -48,7 +48,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is tab.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      TABPACK()
  *  $END$
@@ -94,7 +94,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is tab.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      TABEXPAND()
  *  $END$

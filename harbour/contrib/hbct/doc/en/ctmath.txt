@@ -29,7 +29,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ctmath.c, library is ct3.
+ *      Library is ct3.
  *  $SEEALSO$
  *
  *  $END$
@@ -62,7 +62,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ctmath.c, library is ct3.
+ *      Library is ct3.
  *  $SEEALSO$
  *
  *  $END$

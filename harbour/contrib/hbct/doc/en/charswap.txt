@@ -34,7 +34,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is charswap.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      WORDSWAP(),CSETREF()
  *  $END$
@@ -78,7 +78,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is charswap.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHARSWAP(),CSETREF()
  *  $END$

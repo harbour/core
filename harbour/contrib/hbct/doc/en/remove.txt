@@ -28,7 +28,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is remove.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      REMLEFT(),REMRIGHT()
  *  $END$
@@ -60,7 +60,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is remove.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      REMALL(),REMRIGHT()
  *  $END$
@@ -92,7 +92,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is remove.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      REMALL(),REMLEFT()
  *  $END$

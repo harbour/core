@@ -28,7 +28,7 @@
  *  $PLATFORMS$
  *      DOS
  *  $FILES$
- *      Source is keyset.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$
@@ -60,7 +60,7 @@
  *  $PLATFORMS$
  *      DOS
  *  $FILES$
- *      Source is keyset.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$
@@ -92,7 +92,7 @@
  *  $PLATFORMS$
  *      DOS
  *  $FILES$
- *      Source is keyset.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$
@@ -124,7 +124,7 @@
  *  $PLATFORMS$
  *      DOS
  *  $FILES$
- *      Source is keyset.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$

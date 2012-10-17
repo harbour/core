@@ -7,7 +7,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    Documentation for: DESCEND()
+ *    Documentation for: Descend()
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentation for: HB_OEMTOANSI(), HB_ANSITOOEM(), ISALPHA(), ISDIGIT(),
@@ -750,84 +750,6 @@
  *  $TEMPLATE$
  *      Function
  *  $NAME$
- *      HB_ANSITOOEM()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Strings
- *  $ONELINER$
- *      Convert a windows Character to a Dos based character
- *  $SYNTAX$
- *      HB_ANSITOOEM( <cString> ) --> cDosString
- *  $ARGUMENTS$
- *      <cString> Windows ansi string to convert to DOS oem String
- *  $RETURNS$
- *      <cDosString> Dos based  string
- *  $DESCRIPTION$
- *      This function converts each character in <cString> to the
- *      corresponding character in the MS-DOS (OEM) character set. The
- *      character expression <cString> should contain characters from the
- *      ANSI character set. If a character in <cString> doesn't have a
- *      MS-DOS equivalent, the character is converted to a similar MS-DOS
- *      character.
- *  $EXAMPLES$
- *      ? HB_OEMTOANSI( "Harbour" )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *      Win
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      HB_OEMTOANSI()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_OEMTOANSI()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Strings
- *  $ONELINER$
- *      Convert a DOS(OEM) Character to a WINDOWS (ANSI) based character
- *  $SYNTAX$
- *      HB_OEMTOANSI( <cString> )  --> cDosString
- *  $ARGUMENTS$
- *      <cString>  DOS (OEM)  string to convert to WINDOWS (ANSI) String
- *  $RETURNS$
- *      <cDosString> WINDOWS based  string
- *  $DESCRIPTION$
- *      This function converts each character in <cString> to the
- *      corresponding character in the Windows (ANSI) character set. The
- *      character expression <cString> should contain characters from the
- *      OEM character set. If a character in <cString> doesn't have a ANSI
- *      equivalent, the character is remains the same.
- *  $EXAMPLES$
- *      ? HB_OEMTOANSI( "Harbour" )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *      Win
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      HB_ANSITOOEM()
- *  $END$
- */
-
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
  *      LOWER()
  *  $CATEGORY$
  *      API
@@ -1476,7 +1398,7 @@
  *  $ONELINER$
  *      Formats a value based on a specific picture template.
  *  $SYNTAX$
- *      TRANSFORM( <xExpression>, <cTemplate> )  --> cFormatted
+ *      Transform( <xExpression>, <cTemplate> )  --> cFormatted
  *  $ARGUMENTS$
  *      <xExpression> Any expression to be formated.
  *
@@ -1540,14 +1462,14 @@
  *      LOCAL nNumber := 9923.34
  *      LOCAL nNumber1 := -95842.00
  *      LOCAL lValue := .T.
- *      LOCAL dDate := DATE()
+ *      LOCAL dDate := Date()
  *      ? "working with String"
  *      ? "Current String is", cString
- *      ? "All uppercased", TRANSFORM( cString, "@!" )
+ *      ? "All uppercased", Transform( cString, "@!" )
  *      ? "Date is", ddate
- *      ? "Date is ", TRANSFORM( ddate, "@D" )
- *      ? TRANSFORM( nNumber, "@L 99999999" )  //  "009923.34"
- *      ? TRANSFORM( 0      , "@L 9999"     )  //  "0000"
+ *      ? "Date is ", Transform( ddate, "@D" )
+ *      ? Transform( nNumber, "@L 99999999" )  //  "009923.34"
+ *      ? Transform( 0      , "@L 9999"     )  //  "0000"
  *  $TESTS$
  *      See regression Test
  *  $STATUS$

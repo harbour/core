@@ -34,7 +34,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is asciisum.c, library is ct3.
+ *      Library is ct3.
  *  $SEEALSO$
  *      CHECKSUM()
  *  $END$

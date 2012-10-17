@@ -32,7 +32,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is charevod.c, library is ct3.
+ *      Library is ct3.
  *  $SEEALSO$
  *      CHARODD()  CHARMIX()
  *  $END$
@@ -67,7 +67,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is charevod.c, library is ct3.
+ *      Library is ct3.
  *  $SEEALSO$
  *      CHAREVEN()  CHARMIX()
  *  $END$

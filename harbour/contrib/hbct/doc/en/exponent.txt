@@ -38,7 +38,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is exponent.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      EXPONENT()
  *  $END$
@@ -85,7 +85,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is exponent.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      MANTISSA()
  *  $END$

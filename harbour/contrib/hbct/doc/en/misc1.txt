@@ -44,7 +44,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is misc1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      CTOF(), FTOC()
  *  $END$

@@ -80,7 +80,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token2.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      TOKEN(),TOKENEXIT(),TOKENNEXT(),TOKENNUM(),TOKENAT(),SAVETOKEN(),RESTTOKEN(),TOKENEND()
  *  $END$
@@ -139,7 +139,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token2.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      TOKENINIT(),TOKENEXIT(),TOKENNUM(),TOKENAT(),SAVETOKEN(),RESTTOKEN(),TOKENEND()
  *  $END$
@@ -176,7 +176,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token2.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      TOKENINIT(),TOKENEXIT(),TOKENNEXT(),TOKENAT(),SAVETOKEN(),RESTTOKEN(),TOKENEND()
  *  $END$
@@ -220,7 +220,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token2.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      TOKENINIT(),TOKENEXIT(),TOKENNEXT(),TOKENNUM(),TOKENAT(),SAVETOKEN(),RESTTOKEN()
  *  $END$
@@ -260,7 +260,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token2.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      TOKENINIT(),TOKENNEXT(),TOKENNUM(),TOKENAT(),SAVETOKEN(),RESTTOKEN(),TOKENEND()
  *  $END$
@@ -317,7 +317,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token2.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      TOKENINIT(),TOKENEXIT(),TOKENNEXT(),TOKENNUM(),SAVETOKEN(),RESTTOKEN(),TOKENEND()
  *  $END$
@@ -352,7 +352,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token2.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      TOKENINIT(),TOKENEXIT(),TOKENNEXT(),TOKENNUM(),TOKENAT(),RESTTOKEN(),TOKENEND()
  *  $END$
@@ -387,7 +387,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token2.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      TOKENINIT(),TOKENEXIT(),TOKENNEXT(),TOKENNUM(),TOKENAT(),SAVETOKEN(),TOKENEND()
  *  $END$

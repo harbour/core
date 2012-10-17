@@ -28,7 +28,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is pad.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      PADRIGHT()
  *  $END$
@@ -60,7 +60,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is pad.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      PADLEFT()
  *  $END$

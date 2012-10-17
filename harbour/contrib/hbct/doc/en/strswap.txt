@@ -28,7 +28,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is strswap.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$

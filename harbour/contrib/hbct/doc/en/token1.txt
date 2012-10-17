@@ -59,7 +59,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      TOKEN(),NUMTOKEN(),TOKENLOWER(),TOKENUPPER(),TOKENSEP()
  *  $END$
@@ -128,7 +128,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      NUMTOKEN(),ATTOKEN(),TOKENLOWER(),TOKENUPPER(),TOKENSEP()
  *  $END$
@@ -162,7 +162,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      TOKEN(),ATTOKEN(),TOKENLOWER(),TOKENUPPER(),TOKENSEP()
  *  $END$
@@ -224,7 +224,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      TOKEN(),NUMTOKEN(),ATTOKEN(),TOKENUPPER(),TOKENSEP(),CSETREF()
  *  $END$
@@ -286,7 +286,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      TOKEN(),NUMTOKEN(),ATTOKEN(),TOKENLOWER(),TOKENSEP(),CSETREF()
  *  $END$
@@ -327,7 +327,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is token1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      TOKEN(),NUMTOKEN(),ATTOKEN(),TOKENLOWER(),TOKENUPPER()
  *  $END$

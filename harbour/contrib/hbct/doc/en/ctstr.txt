@@ -50,7 +50,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ctstr.c, library is ct3.
+ *      Library is ct3.
  *  $SEEALSO$
  *      ADDASCII()   BLANK()       CHARADD()
  *      CHARAND()    CHARMIRR()    CHARNOT()
@@ -100,7 +100,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ctstr.c, library is ct3.
+ *      Library is ct3.
  *  $SEEALSO$
  *      ATNUM()       AFTERATNUM()  BEFORATNUM()
  *      ATREPL()      NUMAT()       ATADJUST()
@@ -164,7 +164,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is ctstr.c, header is ct.ch, library is ct3.
+ *      Header is ct.ch, library is ct3.
  *  $SEEALSO$
  *
  *  $END$

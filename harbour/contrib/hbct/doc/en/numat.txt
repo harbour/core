@@ -28,7 +28,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is numat.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      CSETATMUPA(),SETATLIKE()
  *  $END$

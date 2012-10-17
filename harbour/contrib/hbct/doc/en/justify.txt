@@ -28,7 +28,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is justify.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      JUSTRIGHT()
  *  $END$
@@ -60,7 +60,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is justify.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      JUSTLEFT()
  *  $END$

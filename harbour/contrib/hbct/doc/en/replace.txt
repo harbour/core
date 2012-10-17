@@ -28,7 +28,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is replace.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      REPLLEFT(),REPLRIGHT()
  *  $END$
@@ -60,7 +60,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is replace.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      REPLALL(),REPLRIGHT()
  *  $END$
@@ -92,7 +92,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is replace.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      REPLALL(),REPLLEFT()
  *  $END$

@@ -59,7 +59,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is charrepl.c, library is ct3.
+ *      Library is ct3.
  *  $SEEALSO$
  *      WORDREPL()   POSREPL()   RANGEREPL()
  *      CSETREF()

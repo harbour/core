@@ -1,9 +1,10 @@
 /*
  * $Id$
  */
+
 /*
  * Copyright 2000 Alejandro de Garate <alex_degarate@hotmail.com>
- *    Documentation for: SETMODE()
+ *    Documentation for: SetMode()
  *
  * See COPYING for licensing terms.
  */
@@ -75,8 +76,6 @@
  *      Some of these modes are not availables in CA-Cl*pper
  *  $PLATFORMS$
  *      DOS,Win
- *  $FILES$
- *      Source is gtdos.c,gtwin.c
  *  $SEEALSO$
  *      MAXCOL(),MAXROW()
  *  $END$

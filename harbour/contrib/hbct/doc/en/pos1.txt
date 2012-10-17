@@ -28,7 +28,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is pos1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      POSLOWER(),POSUPPER(),POSRANGE()
  *  $END$
@@ -60,7 +60,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is pos1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      POSALPHA(),POSUPPER(),POSRANGE()
  *  $END$
@@ -93,7 +93,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is pos1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      POSALPHA(),POSLOWER(),POSUPPER()
  *  $END$
@@ -125,7 +125,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is pos1.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      POSALPHA(),POSLOWER(),POSRANGE()
  *  $END$
