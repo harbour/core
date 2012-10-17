@@ -48,16 +48,16 @@
  *                  keys must be passed by a unique value and that value
  *                  can be found by looking in the keys.h file.
  *  $EXAMPLES$
- *     @ 4,9 TO 11,71
+ *     @ 4, 9 TO 11, 71
  *
- *     FT_DFSETUP("test.txt", 5, 10, 10, 70, 1, 7, 15,;
- *                 "AaBb" + Chr(143), .T., 5, 132, 4096)
+ *     FT_DFSETUP( "test.txt", 5, 10, 10, 70, 1, 7, 15,;
+ *                 "AaBb" + Chr( 143 ), .T., 5, 132, 4096 )
  *
- *     cKey = FT_DISPFILE()
+ *     cKey := FT_DISPFILE()
  *
  *     FT_DFCLOSE()
  *
- *     @ 20,0 SAY "Key that terminated FT_DISPFILE() was: " + '[' + cKey + ']'
+ *     @ 20, 0 SAY "Key that terminated FT_DISPFILE() was: " + "[" + cKey + "]"
  *  $SEEALSO$
  *     FT_DFSETUP() FT_DFCLOSE()
  *  $END$

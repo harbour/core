@@ -32,16 +32,16 @@
  *
  *     FT_OnTick( "CLOCK", 9 )
  *
- *     procedure Clock
+ *     PROCEDURE Clock()
  *
- *     local nRow := Row()
- *     local nCol := Col()
+ *        LOCAL nRow := Row()
+ *        LOCAL nCol := Col()
  *
- *     @ 0, 0 say Time()
+ *        @ 0, 0 SAY Time()
  *
- *     SetPos( nRow, nCol )
+ *        SetPos( nRow, nCol )
  *
- *     return
+ *        RETURN
  *
  *  $SEEALSO$
  *

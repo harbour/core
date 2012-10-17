@@ -41,9 +41,6 @@
  *
  *     // last day of year
  *     nWkNum := FT_WOY( SToD( "19911231" ) ) // result: 53
- *
- *     For a demonstration of this function, compile and link the
- *     program woy.prg in the Nanforum Toolkit source code.
  *  $END$
  */
 

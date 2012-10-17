@@ -28,7 +28,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is numconv.prg, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      CTON()
  *  $END$
@@ -60,7 +60,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is numconv.prg, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      NTOC()
  *  $END$
@@ -92,7 +92,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is numconv.prg, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      CTOBIT()
  *  $END$
@@ -124,7 +124,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is numconv.prg, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      BITTOC()
  *  $END$

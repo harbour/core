@@ -38,9 +38,9 @@
  *     also the FutureValue and PresentValue for further explanations.
  *     The formula to calculate the net present value is:
  *
- *     NetPresentValue = SUM(CashFlow[i] / ((1 + InterestRate) ** i))
- *                       FOR i = 1 TO NoOfCashFlows
+ *     NetPresentValue := SUM( CashFlow[ i ] / ( ( 1 + InterestRate ) ** i ) )
+ *     FOR i := 1 TO NoOfCashFlows
  *  $EXAMPLES$
- *     nNetPresentValue := FT_NETPV(10000, 10, { 10000,15000,16000,17000 } )
+ *     nNetPresentValue := FT_NETPV( 10000, 10, { 10000, 15000, 16000, 17000 } )
  *  $END$
  */

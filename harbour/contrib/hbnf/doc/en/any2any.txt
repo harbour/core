@@ -30,7 +30,7 @@
  *     be meaningful (i.e., converting from a code block returns an EMPTY()
  *     value of the desired type).
  *  $EXAMPLES$
- *     nNumericValue := FT_XTOY(cInputValue, "N")
- *     IF (FT_XTOY(nInputValue, "L"))
+ *     nNumericValue := FT_XTOY( cInputValue, "N" )
+ *     IF FT_XTOY( nInputValue, "L" )
  *  $END$
  */

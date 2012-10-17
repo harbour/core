@@ -16,8 +16,8 @@
  *      <[@]cString>          is the processed string
  *      <cTokenizer>          is a list of characters separating the tokens
  *                            in <cString>
- *                            Default: chr(0)+chr(9)+chr(10)+chr(13)+chr(26)+
- *                                     chr(32)+chr(32)+chr(138)+chr(141)+
+ *                            Default: Chr(0)+Chr(9)+Chr(10)+Chr(13)+Chr(26)+
+ *                                     Chr(32)+Chr(32)+Chr(138)+Chr(141)+
  *                                     ",.;:!\?/\\<>()#&%+-*"
  *      <nSkipWidth>          specifies the maximum number of successive
  *                            tokenizing characters that are combined as

@@ -28,6 +28,6 @@
  *     This function was written for version 5.1 of MicroSoft C.  You may
  *     have to modify the source code to use another compiler.
  *  $EXAMPLES$
- *     local nVMode := FT_PEEK( 0, 1097 )  // Get the current video mode
+ *     LOCAL nVMode := FT_PEEK( 0, 1097 )  // Get the current video mode
  *  $END$
  */

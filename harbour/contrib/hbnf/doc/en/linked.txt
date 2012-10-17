@@ -35,13 +35,11 @@
  *
  *
  *  $EXAMPLES$
- *     cString := "FT_GoodFunc(BadFunc(3,2))"
- *     IF FT_LINKED(cString)
- *        EVAL( &("{||"+cString+"}") )
+ *     cString := "FT_GoodFunc( BadFunc( 3, 2 ) )"
+ *     IF FT_LINKED( cString )
+ *        Eval( &( "{||" + cString + "}" ) )
  *     ELSE
- *        ALERT("Error: "+cString+" was not linked in. Called by FT_LINKED()")
+ *        Alert( "Error: " + cString + " was not linked in. Called by FT_LINKED()" )
  *     ENDIF
- *
- *
  *  $END$
  */

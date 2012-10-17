@@ -27,12 +27,12 @@
  *
  *     This routine requires FT_ASUM().
  *  $EXAMPLES$
- *     FT_AAVG(aSubTotals)          // Get Average of Entire Array
+ *     FT_AAVG( aSubTotals )          // Get Average of Entire Array
  *
- *     FT_AAVG(aSubTotals, 5)       // Get Average of 5th Element On
+ *     FT_AAVG( aSubTotals, 5 )       // Get Average of 5th Element On
  *
- *     FT_AAVG(aSubTotals, , 10)    // Get Average of 1st 10 Elements
+ *     FT_AAVG( aSubTotals, , 10 )    // Get Average of 1st 10 Elements
  *
- *     FT_AAVG(aSubTotals, 5, 10)   // Get Average of Elements 5-10
+ *     FT_AAVG( aSubTotals, 5, 10 )   // Get Average of Elements 5-10
  *  $END$
  */

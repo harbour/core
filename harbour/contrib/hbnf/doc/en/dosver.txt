@@ -28,9 +28,8 @@
  *
  *
  *  $EXAMPLES$
- *      PROCEDURE Main()
- *         ? "Dos version: " + FT_DOSVER()
- *         RETURN
- *
+ *     PROCEDURE Main()
+ *        ? "Dos version: " + FT_DOSVER()
+ *        RETURN
  *  $END$
  */

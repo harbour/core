@@ -20,9 +20,9 @@
  *     shift key is pressed, such as during a MemoEdit().
  *  $EXAMPLES$
  *     IF FT_SHIFT()
- *        @24, 0 say "Shift"
+ *        @ 24, 0 say "Shift"
  *     ELSE
- *        @24, 0 say "     "
+ *        @ 24, 0 say "     "
  *     ENDIF
  *  $SEEALSO$
  *     FT_CAPLOCK() FT_CTRL() FT_NUMLOCK() FT_PRTSCR() FT_ALT()

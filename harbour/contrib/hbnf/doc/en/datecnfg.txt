@@ -58,20 +58,20 @@
  *       // Configure library date functions to begin year on
  *       //  July 1st.
  *
- *       FT_DATECNFG("07/01/80")    // year is insignificant
+ *       FT_DATECNFG( "07/01/80" )    // year is insignificant
  *
  *       // Examples of return values:
  *
- *       //  System date format: American           aArray[1]    aArray[2]
+ *       //  System date format: American            aArray[1]    aArray[2]
  *
- *       aArray := FT_DATECNFG()              //  '1980.01.01'     1 (Sun.)
- *       aArray := FT_DATECNFG('07/01/80')    //  '1980.07.01'     1 (Sun.)
- *       aArray := FT_DATECNFG('07/01/80', 2) //  '1980.07.01'     2 (Mon.)
- *       aArray := FT_DATECNFG( , 2 )         //  '1980.01.01'     2 (Mon.)
+ *       aArray := FT_DATECNFG()                //  "1980.01.01"     1 (Sun.)
+ *       aArray := FT_DATECNFG( "07/01/80" )    //  "1980.07.01"     1 (Sun.)
+ *       aArray := FT_DATECNFG( "07/01/80", 2 ) //  "1980.07.01"     2 (Mon.)
+ *       aArray := FT_DATECNFG( , 2 )           //  "1980.01.01"     2 (Mon.)
  *
  *       //  System date format: British
  *
- *       aArray := FT_DATECNFG('01/07/80', 2) //  '1980.07.01'     2 (Mon.)
+ *       aArray := FT_DATECNFG( "01/07/80", 2 ) //  "1980.07.01"     2 (Mon.)
  *  $SEEALSO$
  *     FT_ACCTADJ()
  *  $END$

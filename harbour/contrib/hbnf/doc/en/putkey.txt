@@ -41,8 +41,8 @@
  *     To use another assembler, rearrange the SEGMENT and PROC directives
  *     and make any other necessary changes to the source code.
  *  $EXAMPLES$
- *       FT_PUTKEY( -9 )   //  Stuff the F10 key
- *       FT_PUTKEY( 276 )  //  Stuff the Alt T key
- *       KEYSTROKE 28      //  Stuff the F1 key using a User-Defined Command
+ *     FT_PUTKEY( -9 )   //  Stuff the F10 key
+ *     FT_PUTKEY( 276 )  //  Stuff the Alt T key
+ *     KEYSTROKE 28      //  Stuff the F1 key using a User-Defined Command
  *  $END$
  */

@@ -18,13 +18,13 @@
  *  $RETURNS$
  *     The greatest common divisor of the 2 numbers, or 0 if either is 0.
  *  $DESCRIPTION$
- *   This function calculates the greatest common divisor between 2 numbers,
- *   i.e., the largest number that will divide into both numbers evenly.  It
- *   will return zero (0) if either number is zero.
+ *     This function calculates the greatest common divisor between 2 numbers,
+ *     i.e., the largest number that will divide into both numbers evenly.  It
+ *     will return zero (0) if either number is zero.
  *  $EXAMPLES$
- *     ? FT_GCD(10,15)                  // Result: 5
- *     ? FT_GCD(108,54)                 // Result: 54
- *     ? FT_GCD(102,54)                 // Result: 6
- *     ? FT_GCD(111,17)                 // Result: 1
+ *     ? FT_GCD( 10, 15 )                  // Result: 5
+ *     ? FT_GCD( 108, 54 )                 // Result: 54
+ *     ? FT_GCD( 102, 54 )                 // Result: 6
+ *     ? FT_GCD( 111, 17 )                 // Result: 1
  *  $END$
  */

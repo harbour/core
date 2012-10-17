@@ -12,7 +12,7 @@
  *  $SYNTAX$
  *     FT_BITSET( <cByte>, <nBitPos> ) -> cByte
  *  $ARGUMENTS$
- *     <cByte> is a character from CHR(0) to CHR(255).
+ *     <cByte> is a character from Chr(0) to Chr(255).
  *
  *     <nBitPos> is a number from 0 to 7 conforming to standard right-to-left
  *     bit numbering convention and representing the position of the bit
@@ -29,20 +29,17 @@
  *     are possible with Clipper code.  For greater speed, write .c or
  *     .asm versions and use the Clipper Extend system.
  *  $EXAMPLES$
- *     This code would set bit 4 in a byte represented by CHR(107):
+ *     This code would set bit 4 in a byte represented by Chr( 107 ):
  *
- *          cNewbyte := FT_BITSET( CHR(107), 4 )
- *          ? ASC( cNewbyte )             // result: 123
- *          ? cNewbyte                    // result: '{'
+ *          cNewbyte := FT_BITSET( Chr( 107 ), 4 )
+ *          ? Asc( cNewbyte )             // result: 123
+ *          ? cNewbyte                    // result: "{"
  *
  *
- *     This code would set bit 5 in the byte represented by the letter 'A'.
+ *     This code would set bit 5 in the byte represented by the letter "A".
  *
- *          ? FT_BITSET( 'A', 5 )         // result: 'a'
+ *          ? FT_BITSET( "A", 5 )         // result: "a"
  *                                        // bit 5 set
- *
- *     For a demonstration of Clipper bit manipulations, compile and
- *     link the program bittest.prg in the Nanforum Toolkit source code.
  *  $SEEALSO$
  *     FT_BITCLR() FT_ISBIT()
  *  $END$

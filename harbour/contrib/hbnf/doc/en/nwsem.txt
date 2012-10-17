@@ -86,8 +86,8 @@
  *                                @nHandle, @nOpenCnt )
  *
  *      IF nRc != 0
- *        ? "Error: " + Str( nRc ) )
- *        QUIT
+ *         ? "Error: " + Str( nRc )
+ *         QUIT
  *      ENDIF
  *  $SEEALSO$
  *      FT_NWSEMEX() FT_NWSEMWAIT() FT_NWSEMSIG() FT_NWSEMCLOSE() FT_NWSEMLOCK()

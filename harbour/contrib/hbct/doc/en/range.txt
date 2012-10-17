@@ -19,8 +19,8 @@
  *      TODO: add documentation
  *  $EXAMPLES$
  *      ? rangerem( "0", "9", "year2002.dbf" ) // "year.dbf", remove all digits
- *      ? rangerem( "9", "0", "year2002.dbf" ) // "22", testing removal from "9" to chr(255)
- *                                             // and from chr(0) to "0"
+ *      ? rangerem( "9", "0", "year2002.dbf" ) // "22", testing removal from "9" to Chr(255)
+ *                                             // and from Chr(0) to "0"
  *      ? rangerem( "0", "9", "yearcurr.dbf" ) // "yearcurr.dbf", test leaving string untouched
  *  $TESTS$
  *      rangerem( "0", "9", "year2002.dbf" ) == "year.dbf"
@@ -57,8 +57,8 @@
  *      TODO: add documentation
  *  $EXAMPLES$
  *      ? rangerepl( "0", "9", "year2002.dbf", "?" ) // "year????.dbf", replace all digits
- *      ? rangerepl( "9", "0", "year2002.dbf", "?" ) // "????2??2????", testing replacement from "9" to chr(255)
- *                                                   // and from chr(0) to "0"
+ *      ? rangerepl( "9", "0", "year2002.dbf", "?" ) // "????2??2????", testing replacement from "9" to Chr(255)
+ *                                                   // and from Chr(0) to "0"
  *      ? rangerepl( "0", "9", "yearcurr.dbf", "?" ) // "yearcurr.dbf", test leaving string untouched
  *  $TESTS$
  *      rangerepl( "0", "9", "year2002.dbf", "?" ) == "year????.dbf"

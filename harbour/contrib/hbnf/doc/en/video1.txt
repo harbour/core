@@ -41,13 +41,13 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *     FT_WRTCHR()
+ *     FT_WRTChr()
  *  $CATEGORY$
  *     Video
  *  $ONELINER$
  *     Display character on screen
  *  $SYNTAX$
- *     FT_WRTCHR( <nRow>, <nCol>, <cChar>, <nColor> ) -> NIL
+ *     FT_WRTChr( <nRow>, <nCol>, <cChar>, <nColor> ) -> NIL
  *  $ARGUMENTS$
  *     <nRow> and <nCol> are the screen coordinates.
  *
@@ -64,11 +64,11 @@
  *     on screen in a specified color attribute.  This function is useful
  *     for constructing screens with a lot of text or repetitive screen prints
  *     where speed is important.  It is faster and requires less memory than
- *     FT_VIDSTR().  A working example is contained in ClrTable.Prg.
+ *     FT_VIDSTR().  A working example is contained in clrtable.prg.
  *  $EXAMPLES$
  *     FOR nX = 1 to MaxRow()
  *        FOR nY = 1 to MaxCol()
- *           FT_WRTCHR( nX, nY, "∙", ( nX - 1 ) + ( nY * 16 ) )
+ *           FT_WRTChr( nX, nY, "∙", ( nX - 1 ) + ( nY * 16 ) )
  *        NEXT
  *     NEXT
  *
@@ -173,13 +173,13 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *     FT_REVCHR()
+ *     FT_REVChr()
  *  $CATEGORY$
  *     Video
  *  $ONELINER$
  *     Reverse the color of a single character on the screen
  *  $SYNTAX$
- *     FT_REVCHR( <nTRow>, <nLCol> ) -> NIL
+ *     FT_REVChr( <nTRow>, <nLCol> ) -> NIL
  *  $ARGUMENTS$
  *     <nTRow>, <nLCol> are the screen coordinates of the character.
  *  $RETURNS$
@@ -190,7 +190,7 @@
  *     This function is the same as FT_REVATTR() except that it changes
  *     only one character on screen and hence is faster and uses less memory.
  *  $EXAMPLES$
- *     FT_REVCHR( 10, 20 )
+ *     FT_REVChr( 10, 20 )
  *
  *     This example will change the text and background at 10, 20 to it's
  *     reverse color attributes without changing or overwriting the

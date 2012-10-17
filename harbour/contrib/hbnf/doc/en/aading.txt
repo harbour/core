@@ -32,19 +32,19 @@
  *     It returns a new array including all the elements of aList1
  *     plus the unique elements of aList2.
  *  $EXAMPLES$
- *     aList1 := {"apple", "orange", "pear"}
- *     aList2 := {"apple ", "banana", "PEAR"}
+ *     aList1 := { "apple", "orange", "pear" }
+ *     aList2 := { "apple ", "banana", "PEAR" }
  *
  *     FT_AADDITION( aList1, aList2 )
  *          // ignores spaces, sensitive to case
- *          // returns {"apple","orange","pear","banana","PEAR"}
+ *          // returns { "apple", "orange", "pear", "banana", "PEAR" }
  *
  *     FT_AADDITION( aList1, aList2, , .F. )
  *          // ignores spaces, not sensitive to case
- *          // returns {"apple","orange","pear","banana"}
+ *          // returns { "apple", "orange", "pear", "banana" }
  *
  *     FT_AADDITION( aList1, aList2, .F., .F. )
  *          // sensitive to spaces, not sensitive to case
- *          // returns {"apple","orange","pear","apple ","banana"}
+ *          // returns { "apple", "orange", "pear", "apple ", "banana" }
  *  $END$
  */

@@ -48,7 +48,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is dattime3.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *
  *  $END$
@@ -110,7 +110,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is dattime3.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SETTIME()
  *  $END$
@@ -162,7 +162,7 @@
  *  $PLATFORMS$
  *      Windows, Linux
  *  $FILES$
- *      Source is dattime3.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SETDATE(),TIMEVALID()
  *  $END$
@@ -213,7 +213,7 @@
  *  $PLATFORMS$
  *      Windows, Linux
  *  $FILES$
- *      Source is dattime3.c, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      SETTIME()
  *  $END$

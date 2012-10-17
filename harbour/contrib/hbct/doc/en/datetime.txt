@@ -28,7 +28,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is datetime.prg, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      EOM(),BOQ(),EOQ(),BOY(),EOY()
  *  $END$
@@ -60,7 +60,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is datetime.prg, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      BOM(),BOQ(),EOQ(),BOY(),EOY()
  *  $END$
@@ -92,7 +92,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is datetime.prg, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      BOM(),EOM(),EOQ(),BOY(),EOY()
  *  $END$
@@ -124,7 +124,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is datetime.prg, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      BOM(),EOM(),BOQ(),BOY(),EOY()
  *  $END$
@@ -156,7 +156,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is datetime.prg, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      BOM(),EOM(),BOQ(),EOQ(),EOY()
  *  $END$
@@ -188,7 +188,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Source is datetime.prg, library is libct.
+ *      Library is libct.
  *  $SEEALSO$
  *      BOM(),EOM(),BOQ(),EOQ(),BOY()
  *  $END$

@@ -25,17 +25,14 @@
  *     .asm versions and use the Clipper Extend system.
  *  $EXAMPLES$
  *     These three code lines perform a bitwise AND on bytes with values of
- *     CHR(20) and CHR(36), and deliver the result as a string in hexadecimal
+ *     Chr(20) and Chr(36), and deliver the result as a string in hexadecimal
  *     format, using 'h' to signify hexadecimal.
  *
- *          ? FT_BYT2HEX(CHR(20))         // byte1: '14h'
- *          ? FT_BYT2HEX(CHR(36))         // byte2: '24h'
+ *          ? FT_BYT2HEX( Chr( 20 ) )         // byte1: '14h'
+ *          ? FT_BYT2HEX( Chr( 36 ) )         // byte2: '24h'
  *
- *          ? FT_BYT2HEX(FT_BYTEAND(CHR(20), CHR(36)))
+ *          ? FT_BYT2HEX( FT_BYTEAND( Chr( 20 ), Chr( 36 ) ) )
  *                             // result: '04h'
- *
- *     For a demonstration of Clipper bit manipulations, compile and
- *     link the program bittest.prg in the Nanforum Toolkit source code.
  *  $SEEALSO$
  *     FT_BYT2BIT()
  *  $END$

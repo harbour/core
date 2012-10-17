@@ -61,8 +61,8 @@
  *
  *     This source code is written for Microsoft Assembler v5.1.
  *  $EXAMPLES$
- *     FT_SETRATE(0,0)    // Set keyboard to fastest possible settings
- *     FT_SETRATE()       // Set keyboard to AT defaults (10.9cps,500ms delay)
- *     FT_SETRATE(11,1)   // Set keyboard to PS/2 defaults (10cps,500ms delay)
+ *     FT_SETRATE( 0, 0 )    // Set keyboard to fastest possible settings
+ *     FT_SETRATE()          // Set keyboard to AT defaults (10.9cps,500ms delay)
+ *     FT_SETRATE( 11, 1 )   // Set keyboard to PS/2 defaults (10cps,500ms delay)
  *  $END$
  */

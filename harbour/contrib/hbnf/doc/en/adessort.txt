@@ -24,12 +24,12 @@
  *  $DESCRIPTION$
  *     This function is used to sort an array in descending order, i.e., Z-A
  *  $EXAMPLES$
- *     FT_ADESSORT(aNames)               // Sort the Entire Array
+ *     FT_ADESSORT( aNames )               // Sort the Entire Array
  *
- *     FT_ADESSORT(aNames, 5)            // Sort from the 5th Element On
+ *     FT_ADESSORT( aNames, 5 )            // Sort from the 5th Element On
  *
- *     FT_ADESSORT(aNames, , 10)         // Sort the 1st 10 Elements
+ *     FT_ADESSORT( aNames, , 10 )         // Sort the 1st 10 Elements
  *
- *     FT_ADESSORT(aNames, 5, 10)        // Sort Elements 5-10
+ *     FT_ADESSORT( aNames, 5, 10 )        // Sort Elements 5-10
  *  $END$
  */

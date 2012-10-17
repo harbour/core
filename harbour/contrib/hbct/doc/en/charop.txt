@@ -28,14 +28,14 @@
  *      <cString2> has been processed, the function restarts with the first
  *      character of <cString2>.
  *  $EXAMPLES$
- *      ? charadd( "012345678", chr( 1 ) ) // --> "123456789"
- *      ? charadd( "123456789", chr( 255 ) ) // --> "012345678"
- *      ? charadd( "0000", chr( 0 ) + chr( 1 ) + chr( 2 ) + chr( 3 ) ) // --> "0123"
+ *      ? charadd( "012345678", Chr( 1 ) ) // --> "123456789"
+ *      ? charadd( "123456789", Chr( 255 ) ) // --> "012345678"
+ *      ? charadd( "0000", Chr( 0 ) + Chr( 1 ) + Chr( 2 ) + Chr( 3 ) ) // --> "0123"
  *  $TESTS$
- *      charadd( "012345678", chr( 1 ) ) == "123456789"
- *      charadd( "012345678", chr( 1 ) + chr( 2 ) ) == "133557799"
- *      charadd( "123456789", chr( 255 ) ) == "012345678"
- *      charadd( "123456789", chr( 255 ) + chr( 254 ) ) == "002244668"
+ *      charadd( "012345678", Chr( 1 ) ) == "123456789"
+ *      charadd( "012345678", Chr( 1 ) + Chr( 2 ) ) == "133557799"
+ *      charadd( "123456789", Chr( 255 ) ) == "012345678"
+ *      charadd( "123456789", Chr( 255 ) + Chr( 254 ) ) == "002244668"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -80,11 +80,11 @@
  *      character of <cString2>.
  *  $EXAMPLES$
  *      // clear the LSB
- *      ? charand( "012345678", chr( 254 ) ) // --> "002244668"
- *      ? charand( "012345678", chr( 254 ) + chr( 252 ) ) // --> "002044648"
+ *      ? charand( "012345678", Chr( 254 ) ) // --> "002244668"
+ *      ? charand( "012345678", Chr( 254 ) + Chr( 252 ) ) // --> "002044648"
  *  $TESTS$
- *      charand( "012345678", chr( 254 ) ) == "002244668"
- *      charand( "012345678", chr( 254 ) + chr( 252 ) ) == "002044648"
+ *      charand( "012345678", Chr( 254 ) ) == "002244668"
+ *      charand( "012345678", Chr( 254 ) + Chr( 252 ) ) == "002044648"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$
@@ -125,10 +125,10 @@
  *      stored in <cString>, too. By setting the CSETREF()-switch to .T.,
  *      the return value can be omitted.
  *  $EXAMPLES$
- *      ? charnot( chr( 85 ) + chr( 128 ) + chr( 170 ) + chr( 1 ) ) // --> chr( 170 ) + chr( 127 ) + chr( 85 ) + chr( 254 )
+ *      ? charnot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) ) // --> Chr( 170 ) + Chr( 127 ) + Chr( 85 ) + Chr( 254 )
  *      ? charnot( charnot( "This is a test!" ) ) --> "This is a test!"
  *  $TESTS$
- *      charnot( chr( 85 ) + chr( 128 ) + chr( 170 ) + chr( 1 ) ) == chr( 170 ) + chr( 127 ) + chr( 85 ) + chr( 254 )
+ *      charnot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) ) == Chr( 170 ) + Chr( 127 ) + Chr( 85 ) + Chr( 254 )
  *      charnot( charnot( "This is a test!" ) ) == "This is a test!"
  *  $STATUS$
  *      Ready
@@ -174,11 +174,11 @@
  *      character of <cString2>.
  *  $EXAMPLES$
  *      // set the LSB
- *      ? charor( "012345678", chr( 1 ) ) // --> "113355779"
- *      ? charor( "012345678", chr( 1 ) + chr( 3 ) ) // --> "133357779"
+ *      ? charor( "012345678", Chr( 1 ) ) // --> "113355779"
+ *      ? charor( "012345678", Chr( 1 ) + Chr( 3 ) ) // --> "133357779"
  *  $TESTS$
- *      charor( "012345678", chr( 1 ) ) == "113355779"
- *      charor( "012345678", chr( 1 ) + chr( 3 ) ) == "133357779"
+ *      charor( "012345678", Chr( 1 ) ) == "113355779"
+ *      charor( "012345678", Chr( 1 ) + Chr( 3 ) ) == "133357779"
  *  $STATUS$
  *      Ready
  *  $COMPLIANCE$

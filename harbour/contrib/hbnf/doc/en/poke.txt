@@ -31,6 +31,6 @@
  *     This function was written for version 5.1 of MicroSoft C.  You may
  *     have to modify the source code to use another compiler.
  *  $EXAMPLES$
- *     FT_POKE( 0, 1047, 64)  // Turn CapsLock on
+ *     FT_POKE( 0, 1047, 64 )  // Turn CapsLock on
  *  $END$
  */

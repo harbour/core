@@ -89,7 +89,7 @@
  *     and returns to the calling procedure.
  *
  *        FT_DISPMSG( { { "Please Do Not Interrupt" }   , ;
- *                      { "W+/B", "GR+/B" } }          , ;
+ *                      { "W+/B", "GR+/B" } }           , ;
  *                      , 5, )
  *  $END$
  */

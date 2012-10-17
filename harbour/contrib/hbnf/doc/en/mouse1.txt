@@ -102,15 +102,15 @@
  *     This is a mouse meta function that checks for the presence
  *     of a double click.
  *  $EXAMPLES$
- *    IF FT_MISREGION( 10, 10, 11, 20 ) .AND.;
- *       FT_MDBLCLK(0,1,,FT_MGETX(),FT_MGETY())  // double click, right button
- *                                               // at current location with
- *                                               // default interval
+ *     IF FT_MISREGION( 10, 10, 11, 20 ) .AND.;
+ *        FT_MDBLCLK( 0, 1,, FT_MGETX(), FT_MGETY() ) // double click, right button
+ *                                                    // at current location with
+ *                                                    // default interval
  *
- *          MnuItem1()
- *    ENDIF
+ *           MnuItem1()
+ *     ENDIF
  *  $SEEALSO$
- *      FT_MBUTPRS() FT_MBUTREL()
+ *     FT_MBUTPRS() FT_MBUTREL()
  *  $END$
  */
 
@@ -138,7 +138,7 @@
  *  $EXAMPLES$
  *     FT_MCONOFF( 10, 10, 11, 20 )
  *  $SEEALSO$
- *      FT_MSHOWCRS() FT_MHIDECRS() FT_MXLIMIT() FT_MYLIMIT() FT_MINREGION()
+ *     FT_MSHOWCRS() FT_MHIDECRS() FT_MXLIMIT() FT_MYLIMIT() FT_MINREGION()
  *  $END$
  */
 
@@ -160,10 +160,10 @@
  *     within the confines of the specified region.
  *  $EXAMPLES$
  *     IF FT_MINREGION( 10, 10, 11, 20 )
- *       nChoice := 1
+ *        nChoice := 1
  *     ENDIF
  *  $SEEALSO$
- *      FT_MXLIMIT() FT_MYLIMIT() FT_MINREGION()
+ *     FT_MXLIMIT() FT_MYLIMIT() FT_MINREGION()
  *  $END$
  */
 
@@ -223,7 +223,7 @@
  *
  *
  *  $EXAMPLES$
- *     FT_MSETSENS( 75,75,50 )     // a little less mouse movement necessary.
+ *     FT_MSETSENS( 75, 75, 50 )     // a little less mouse movement necessary.
  *  $SEEALSO$
  *     FT_MGETSENS()
  *  $END$
@@ -293,10 +293,10 @@
  *     my screen showed 6.24 but this routine returned 30 for the minor version
  *     number!
  *  $EXAMPLES$
- *     nMajor:=FT_MVERSION( @nMinor )
- *     IF (nMajor+nMinor/100)<7.2
- *          ? "Sorry mouse driver version too old"
- *          RETURN
+ *     nMajor := FT_MVERSION( @nMinor )
+ *     IF ( nMajor + nMinor / 100 ) < 7.2
+ *        ? "Sorry mouse driver version too old"
+ *        RETURN
  *     ENDIF
  *  $SEEALSO$
  *     FT_MSETSENS()
@@ -313,7 +313,7 @@
  *  $SYNTAX$
  *     FT_MSETPAGE( <@nPage> ) -> NIL
  *  $ARGUMENTS$
- *     <nPage>  is the desired display page.
+ *     <nPage> is the desired display page.
  *  $RETURNS$
  *     NIL
  *  $DESCRIPTION$
@@ -346,7 +346,7 @@
  *     values of nPage is dependent upon the display mode. See FT_SETVPG()
  *     for changing the current video page
  *  $EXAMPLES$
- *     nPage = FT_MGETPAGE( )  // Gets the mouse cursor display page
+ *     nPage := FT_MGETPAGE( )  // Gets the mouse cursor display page
  *  $SEEALSO$
  *     FT_MSETPAGE()
  *  $END$
@@ -404,7 +404,7 @@
  *     This function works like most Clipper state functions.  If no value
  *     is sent to FT_MCURSOR() it will return the state of the mouse cursor.
  *  $EXAMPLES$
- *     IF !( FT_MCURSOR() )
+ *     IF ! FT_MCURSOR()
  *        FT_MCURSOR( .T. )
  *     ENDIF
  *  $END$
@@ -471,7 +471,7 @@
  *     does not increment the varaible above 0.
  *  $EXAMPLES$
  *     FT_MHIDECRS()
- *     @ 10, 10 to 20, 20
+ *     @ 10, 10 TO 20, 20
  *     FT_MSHOWCRS()
  *  $SEEALSO$
  *     FT_MSHOWCRS() FT_MCONOFF()
@@ -543,7 +543,7 @@
  *  $EXAMPLES$
  *     ? FT_MGETX()
  *  $SEEALSO$
- *      FT_MGETCOORD() FT_MDEFCRS() FT_MGETPOS() FT_MGETY()
+ *     FT_MGETCOORD() FT_MDEFCRS() FT_MGETPOS() FT_MGETY()
  *  $END$
  */
 
@@ -618,7 +618,7 @@
  *     coordinates.
  *  $EXAMPLES$
  *     FT_MSETCOORD( 10, 20 )     // position mouse cursor at row 10, col 20
- *                              // in text screen coordinates
+ *                                // in text screen coordinates
  *  $SEEALSO$
  *     FT_MGETPOS() FT_MGETCOORD() FT_MSETPOS() FT_MDEFCRS() FT_MGETX() FT_MGETY()
  *  $END$
@@ -644,7 +644,7 @@
  *  $EXAMPLES$
  *     FT_MXLIMIT( 10, 20 )
  *  $SEEALSO$
- *      FT_MYLIMIT() FT_MINREGION()
+ *     FT_MYLIMIT() FT_MINREGION()
  *  $END$
  */
 
@@ -668,7 +668,7 @@
  *  $EXAMPLES$
  *     FT_MYLIMIT( 10, 20 )
  *  $SEEALSO$
- *      FT_MXLIMIT() FT_MINREGION()
+ *     FT_MXLIMIT() FT_MINREGION()
  *  $END$
  */
 
@@ -710,11 +710,11 @@
  *     Retrieves the mouse button status and the position of the cursor when
  *     a button was last pressed.
  *  $EXAMPLES$
- *     IF Empty( FT_MBUTPRS(1) )
+ *     IF Empty( FT_MBUTPRS( 1 ) )
  *        ? "No Item selected"
  *     ENDIF
  *  $SEEALSO$
- *      FT_MBUTREL() FT_MDBLCLK()
+ *     FT_MBUTREL() FT_MDBLCLK()
  *  $END$
  */
 

@@ -16,7 +16,7 @@
  *
  *     <xReceiveVar> can be a character type variable, in which case
  *     the function will place all environment strings in the variable
- *     separated by carriage return/line feeds (chr 13 + chr(10)).
+ *     separated by carriage return/line feeds (chr 13 + Chr(10)).
  *
  *     <xReceiveVar> can be an array type, in which case the function
  *     will place each string in an array element.  The array MUST be
@@ -44,23 +44,23 @@
  *     Get the environment in text form and browse it:
  *
  *        cEnvBlock   := ""
- *        nNumStrings := FT_GETE(@cEnvBlock)
- *        @  0, 0 to MAXROW() - 1, MAXCOL()
- *        @  MAXROW(), 0 say 'Browse strings, press ESC to exit...'
- *        MEMOWRIT(cEnvBlock, 1, 1, MAXROW() - 2,MAXCOL() - 1, .F.)
+ *        nNumStrings := FT_GETE( @cEnvBlock )
+ *        @ 0, 0 TO MaxRow() - 1, MaxCol()
+ *        @ MaxRow(), 0 SAY 'Browse strings, press ESC to exit...'
+ *        MemoWrit( cEnvBlock, 1, 1, MaxRow() - 2, MaxCol() - 1, .F. )
  *
  *     Get the environment in text form and write it to a file:
  *
  *        cEnvBlock := ""
- *        FT_GETE(@cEnvBlock)
- *        MEMOWRIT("environ.txt", cEnvBlock)
+ *        FT_GETE( @cEnvBlock )
+ *        MEMOWRIT( "environ.txt", cEnvBlock )
  *
  *     Get the environment in Array form:
  *
- *        aEnvArray := ARRAY(FT_GETE())
- *        FT_GETE(aEnvArray)
- *        ? aEnvArray[1]       // "COMSPEC=C:\command.com"
- *        ? aEnvArray[2]       // "PATH=C:\;C:\util;C:\harbour"
+ *        aEnvArray := Array( FT_GETE() )
+ *        FT_GETE( aEnvArray )
+ *        ? aEnvArray[ 1 ]       // "COMSPEC=C:\command.com"
+ *        ? aEnvArray[ 2 ]       // "PATH=C:\;C:\util;C:\harbour"
  *          ... etc ...
  *  $END$
  */

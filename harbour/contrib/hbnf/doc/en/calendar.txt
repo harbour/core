@@ -55,17 +55,17 @@
  *              from the Nanforum Toolkit!
  *
  *  $EXAMPLES$
- *   LOCAL aRetVal[8]
- *   CLS
- *   aRetVal := FT_CALENDAR (10,40,'W+/RB',.T.,.T.)
- *   ?aRetVal[1]      // Result: 04/20/91
- *   ?aRetVal[2]      // Result:   4
- *   ?aRetVal[3]      // Result:  20
- *   ?aRetVal[4]      // Result:  1991
- *   ?aRetVal[5]      // Result: April
- *   ?aRetVal[6]      // Result: Saturday
- *   ?aRetVal[7]      // Result:        110
- *   ?aRetVal[8]      // Result: 12:45:20
+ *     LOCAL aRetVal[ 8 ]
+ *     CLS
+ *     aRetVal := FT_CALENDAR( 10, 40, "W+/RB", .T., .T. )
+ *     ? aRetVal[ 1 ]      // Result: 04/20/91
+ *     ? aRetVal[ 2 ]      // Result:   4
+ *     ? aRetVal[ 3 ]      // Result:  20
+ *     ? aRetVal[ 4 ]      // Result:  1991
+ *     ? aRetVal[ 5 ]      // Result: April
+ *     ? aRetVal[ 6 ]      // Result: Saturday
+ *     ? aRetVal[ 7 ]      // Result:        110
+ *     ? aRetVal[ 8 ]      // Result: 12:45:20
  *
  *  $SEEALSO$
  *     FT_DAYOFYR()

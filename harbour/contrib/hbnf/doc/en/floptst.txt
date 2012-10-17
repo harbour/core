@@ -35,7 +35,7 @@
  *      should be no problems.
  *
  *      This function does not currently check subst'd drives.  So if you
- *      have SUBST E: A:\ then FT_FLOPTST( ASC("E")-ASC("A") ) == 4
+ *      have SUBST E: A:\ then FT_FLOPTST( Asc("E")-Asc("A") ) == 4
  *      Any suggestions to fix this limitation are appreciated.
  *
  *  $EXAMPLES$

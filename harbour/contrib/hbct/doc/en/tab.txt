@@ -21,10 +21,10 @@
  *                                default is the string returned by
  *                                hb_eol()
  *      <cTabChar|nTabChar>       character indicating a tab stop,
- *                                default is chr(9)
+ *                                default is Chr(9)
  *      <lIgnore141>              .T., if the soft-CR used by MEMOEDIT()
  *                                should be ignored as a newline indicator,
- *                                default is .F. (functions uses chr(141))
+ *                                default is .F. (functions uses Chr(141))
  *  $RETURNS$
  *
  *  $DESCRIPTION$
@@ -32,13 +32,13 @@
  *  $EXAMPLES$
  *
  *  $TESTS$
- *      tabexpand("-"+chr(9)+"!")             == "-       !"
- *      tabexpand("----"+chr(9) +"!")         == "----    !"
- *      tabexpand("-"+chr(9)+"!",, "+")       == "-+++++++!"
- *      tabexpand("-"+chr(9)+ "!", 4)         == "-   !"
- *      tabexpand("----"+chr(9)+ "!", 8)      == "----    !"
- *      tabexpand("----"+chr(9)+ "!", 8, "+") == "----++++!"
- *      tabexpand("-"+chr(9)+"!"+hb_eol()+"----"+chr(9)+ "!",, "+") == "-+++++++!"+hb_eol()+"----++++!"
+ *      tabexpand("-"+Chr(9)+"!")             == "-       !"
+ *      tabexpand("----"+Chr(9) +"!")         == "----    !"
+ *      tabexpand("-"+Chr(9)+"!",, "+")       == "-+++++++!"
+ *      tabexpand("-"+Chr(9)+ "!", 4)         == "-   !"
+ *      tabexpand("----"+Chr(9)+ "!", 8)      == "----    !"
+ *      tabexpand("----"+Chr(9)+ "!", 8, "+") == "----++++!"
+ *      tabexpand("-"+Chr(9)+"!"+hb_eol()+"----"+Chr(9)+ "!",, "+") == "-+++++++!"+hb_eol()+"----++++!"
  *  $STATUS$
  *      Started
  *  $COMPLIANCE$
@@ -73,10 +73,10 @@
  *                                default is the string returned by
  *                                hb_eol()
  *      <cTabChar|nTabChar>       character indicating a tab stop,
- *                                default is chr(9)
+ *                                default is Chr(9)
  *      <lIgnore141>              .T., if the soft-CR used by MEMOEDIT()
  *                                should be ignored as a newline indicator,
- *                                default is .F. (functions uses chr(141))
+ *                                default is .F. (functions uses Chr(141))
  *  $RETURNS$
  *
  *  $DESCRIPTION$

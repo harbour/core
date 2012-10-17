@@ -97,13 +97,13 @@
  *     database workareas.
  *
  *  $EXAMPLES$
- *     FT_FSELECT(1)
+ *     FT_FSELECT( 1 )
  *
  *     nFile1 := FT_FUSE( "temp.c" )
  *
  *     ? FT_FLASTRE()                 // no. of lines in temp.c
  *
- *     FT_FSELECT(2)
+ *     FT_FSELECT( 2 )
  *
  *     nFile2 := FT_FUSE( "temp.h" )
  *
@@ -183,7 +183,7 @@
  *  $EXAMPLES$
  *     IF ft_fUse( "text.c" ) < 0     // open text file
  *        err := ft_fError()
- *        ? 'Error opening file "Text.c", error code (' + ;
+ *        ? 'Error opening file "rext.c", error code (' + ;
  *                  LTrim( Str( err ) ) + ')'
  *     ENDIF
  *
@@ -378,7 +378,7 @@
  *  $ONELINER$
  *     Deletes a line from the currently selected text file
  *  $SYNTAX$
- *     FT_FDELETE( [ < nLines > ] ) -> lSuccess
+ *     FT_FDELETE( [ <nLines> ] ) -> lSuccess
  *
  *  $ARGUMENTS$
  *     ^b<nLines>^n is the number of lines to be eliminated, beginning with
@@ -416,7 +416,7 @@
  *  $ONELINER$
  *     Inserts a line in the currently selected text file
  *  $SYNTAX$
- *     FT_FINSERT( [ < nLines > ] ) -> lSuccess
+ *     FT_FINSERT( [ <nLines> ] ) -> lSuccess
  *
  *  $ARGUMENTS$
  *     ^b<nLines>^n is the number of lines that should be inserted at the
@@ -440,7 +440,7 @@
  *
  *  $EXAMPLES$
  *     // add a couple of blank lines of text to a file
- *     ft fUse( "test.txt" )
+ *     ft_fUse( "test.txt" )
  *
  *     ft_fGoTo( 10 )
  *
@@ -493,11 +493,11 @@
  *     // add a blank line of text to a file
  *     FT_FUSE( "test.txt" )
  *
- *     ?FT_FRECNO()           // displays 5
+ *     ? FT_FRECNO()           // displays 5
  *
  *     FT_FAPPEND()
  *
- *     ?FT_FRECNO()           // displays 6
+ *     ? FT_FRECNO()           // displays 6
  *
  *  $SEEALSO$
  *     FT_FRECNO() FT_FDELETE() FT_FINSERT() FT_FLASTRE()
@@ -659,7 +659,7 @@
  *
  *     ? FT_FBOF()        // .F.
  *
- *     FT_FSKIP(-1)
+ *     FT_FSKIP( -1 )
  *
  *     ? FT_FBOF()        // .T.
  *

@@ -53,7 +53,7 @@
  *                 a more appropriate test display.
  *
  *         [4]  cFillChar  is the character (for desktop background only)
- *                 Default is CHR(177) "▒▒▒▒▒▒▒▒▒▒▒▒▒▒"
+ *                 Default is Chr(177) "▒▒▒▒▒▒▒▒▒▒▒▒▒▒"
  *
  *
  *     <lClrMode>   .T.  use colour palette
@@ -63,7 +63,7 @@
  *
  *     <cTestChr>  2 Byte character string for colour test display
  *
- *                 Default is the CHR(254)+CHR(254)  "■■"
+ *                 Default is the Chr(254)+Chr(254)  "■■"
  *
  *  $RETURNS$
  *     An array identical to the one passed, with new selected colours
@@ -76,8 +76,8 @@
  *     a normal colour string returned.
  *  $EXAMPLES$
  *     LOCAL aClrs   := {}
- *     LOCAL lColour := ISCOLOR()
- *     LOCAL cChr    := CHR(254) + CHR(254)
+ *     LOCAL lColour := IsColor()
+ *     LOCAL cChr    := Chr( 254 ) + Chr( 254 )
  *
  *     SET SCOREBOARD Off
  *     SETBLINK( .F. )       // Allow bright backgrounds

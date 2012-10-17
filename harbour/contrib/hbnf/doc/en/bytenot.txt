@@ -12,11 +12,11 @@
  *  $SYNTAX$
  *     FT_BYTENOT( <cByte> ) -> cNewByte
  *  $ARGUMENTS$
- *     <cByte> is a character from CHR(0) to CHR(255).
- *     May be passed in CHR() form, as character literal, or
- *     as expression evaluating to CHR() value.
+ *     <cByte> is a character from Chr(0) to Chr(255).
+ *     May be passed in Chr() form, as character literal, or
+ *     as expression evaluating to Chr() value.
  *  $RETURNS$
- *     Returns resulting byte, in CHR() form.  If parameters are faulty,
+ *     Returns resulting byte, in Chr() form.  If parameters are faulty,
  *     returns NIL.
  *  $DESCRIPTION$
  *     Can be used for bitwise byte manipulation.  In effect, this is a
@@ -27,13 +27,10 @@
  *     are possible with Clipper code.  For greater speed, write .c or
  *     .asm versions and use the Clipper Extend system.
  *  $EXAMPLES$
- *     This code performs a bitwise NOT on byte represented by CHR(32):
+ *     This code performs a bitwise NOT on byte represented by Chr( 32 ):
  *
- *          cNewByte := FT_BYTENOT( CHR(32) )
- *          ? ASC( cNewByte )     // result: 223
- *
- *     For a demonstration of Clipper bit manipulations, compile and
- *     link the program bittest.prg in the Nanforum Toolkit source code.
+ *          cNewByte := FT_BYTENOT( Chr( 32 ) )
+ *          ? Asc( cNewByte )     // result: 223
  *  $SEEALSO$
  *     FT_BYTEOR() FT_BYTEXOR() FT_BYTENEG() FT_BYTEAND()
  *  $END$

@@ -40,16 +40,16 @@
  *     This is the smallest you should make the buffer.  For normal use,
  *     4096 bytes is recommended
  *  $EXAMPLES$
- *     @ 4,9 TO 11,71
+ *     @ 4, 9 TO 11, 71
  *
- *     FT_DFSETUP("test.txt", 5, 10, 10, 70, 1, 7, 15,;
- *                "AaBb" + Chr(143), .T., 5, 132, 4096)
+ *     FT_DFSETUP( "test.txt", 5, 10, 10, 70, 1, 7, 15,;
+ *                 "AaBb" + Chr( 143 ), .T., 5, 132, 4096 )
  *
- *     cKey = FT_DISPFILE()
+ *     cKey := FT_DISPFILE()
  *
  *     FT_DFCLOSE()
  *
- *     @ 20,0 SAY "Key that terminated FT_DISPFILE() was: " + '[' + cKey + ']'
+ *     @ 20, 0 SAY "Key that terminated FT_DISPFILE() was: " + "[" + cKey + "]"
  *  $SEEALSO$
  *     FT_DISPFILE() FT_DFCLOSE()
  *  $END$
@@ -71,16 +71,16 @@
  *  $DESCRIPTION$
  *     Closes the file opened by FT_DFSETUP()
  *  $EXAMPLES$
- *     @ 4,9 TO 11,71
+ *     @ 4, 9 TO 11, 71
  *
- *     FT_DFSETUP("test.txt", 5, 10, 10, 70, 1, 7, 15,;
- *                 "AaBb" + Chr(143), .T., 5, 132, 4096)
+ *     FT_DFSETUP( "test.txt", 5, 10, 10, 70, 1, 7, 15,;
+ *                 "AaBb" + Chr( 143 ), .T., 5, 132, 4096 )
  *
- *     cKey = FT_DISPFILE()
+ *     cKey := FT_DISPFILE()
  *
  *     FT_DFCLOSE()
  *
- *     @ 20,0 SAY "Key that terminated FT_DISPFILE() was: " + '[' + cKey + ']'
+ *     @ 20, 0 SAY "Key that terminated FT_DISPFILE() was: " + "[" + cKey + "]"
  *  $SEEALSO$
  *     FT_DFSETUP() FT_DISPFILE()
  *  $END$

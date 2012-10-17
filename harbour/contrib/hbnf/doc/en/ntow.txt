@@ -40,10 +40,10 @@
  *                -> Twenty Three Dollars and 99/100
  *
  *          x      := -23.99
- *          cents  := Str( ( x - int( x ) ) * 100, 2, 0 ) + "/100"
- *          x      := int( x )
+ *          cents  := Str( ( x - Int( x ) ) * 100, 2, 0 ) + "/100"
+ *          x      := Int( x )
  *          string := iif( x < 0, "Credit of ", "Debit of " )
- *          ? string + FT_NTOW( abs( x ) ) + " Dollars and " + "99/100"
+ *          ? string + FT_NTOW( Abs( x ) ) + " Dollars and " + "99/100"
  *                -> Credit of Twenty Three Dollars and 99/100
  *  $END$
  */

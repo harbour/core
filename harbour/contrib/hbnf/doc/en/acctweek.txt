@@ -20,9 +20,9 @@
  *  $RETURNS$
  *     A three element array containing the following data:
  *
- *        aDateInfo[1] - The year and week as a character string "YYYYWW"
- *        aDateInfo[2] - The beginning date of the accounting week
- *        aDateInfo[3] - The ending date of the accounting week
+ *        aDateInfo[ 1 ] - The year and week as a character string "YYYYWW"
+ *        aDateInfo[ 2 ] - The beginning date of the accounting week
+ *        aDateInfo[ 3 ] - The ending date of the accounting week
  *  $DESCRIPTION$
  *     FT_ACCTWEEK() returns an array containing data about the
  *     accounting week containing the given date.

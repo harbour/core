@@ -12,11 +12,11 @@
  *  $SYNTAX$
  *     FT_BYTEXOR( <cByte1>, <cByte2> ) -> cNewByte
  *  $ARGUMENTS$
- *     <cByte1> and <cByte2> are characters from CHR(0) to CHR(255).
- *     May be passed in CHR() form, as character literals, or
- *     as expressions evaluating to CHR() values.
+ *     <cByte1> and <cByte2> are characters from Chr(0) to Chr(255).
+ *     May be passed in Chr() form, as character literals, or
+ *     as expressions evaluating to Chr() values.
  *  $RETURNS$
- *     Returns resulting byte, in CHR() form.  If parameters are faulty,
+ *     Returns resulting byte, in Chr() form.  If parameters are faulty,
  *     returns NIL.
  *  $DESCRIPTION$
  *     Can be used for bit-wise byte manipulation.  In effect, this is a
@@ -27,14 +27,11 @@
  *     .asm versions and use the Clipper Extend system.
  *  $EXAMPLES$
  *     This code performs a bit-wise XOR on two bytes represented
- *     by CHR(32) and CHR(55):
+ *     by Chr( 32 ) and Chr( 55 ):
  *
- *          cNewByte := FT_BYTEXOR( CHR(32), CHR(55) )
- *          ? ASC( cNewByte )     // result: 23
+ *          cNewByte := FT_BYTEXOR( Chr( 32 ), Chr( 55 ) )
+ *          ? Asc( cNewByte )     // result: 23
  *          ? cNewByte            // result: non-printable character
- *
- *     For a demonstration of Clipper bit manipulations, compile and
- *     link the program bittest.prg in the Nanforum Toolkit source code.
  *  $SEEALSO$
  *     FT_BYTEOR() FT_BYTENOT() FT_BYTENEG() FT_BYTEAND()
  *  $END$

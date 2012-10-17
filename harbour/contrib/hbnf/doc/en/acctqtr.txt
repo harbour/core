@@ -20,9 +20,9 @@
  *  $RETURNS$
  *     A three element array containing the following data:
  *
- *        aDateInfo[1] - The year and qtr. as a character string "YYYYQQ"
- *        aDateInfo[2] - The beginning date of the accounting quarter
- *        aDateInfo[3] - The ending date of the accounting quarter
+ *        aDateInfo[ 1 ] - The year and qtr. as a character string "YYYYQQ"
+ *        aDateInfo[ 2 ] - The beginning date of the accounting quarter
+ *        aDateInfo[ 3 ] - The ending date of the accounting quarter
  *  $DESCRIPTION$
  *     FT_ACCTQTR() creates an array containing data about the
  *     accounting quarter containing the given date.

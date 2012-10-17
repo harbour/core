@@ -26,7 +26,7 @@
  *      ? charslist( "Hello World !" ) // --> " !HWdelor"
  *  $TESTS$
  *      charslist( "Hello World !" ) == " !HWdelor"
- *      charslist( "Hello World !" ) == charsort (charlist ("Hello World !"))
+ *      charslist( "Hello World !" ) == charsort( charlist( "Hello World !" ) )
  *      charslist( NIL ) == ""
  *  $STATUS$
  *      Ready

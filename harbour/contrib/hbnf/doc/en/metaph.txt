@@ -26,11 +26,11 @@
  *     the string are pronounced.  FT_METAPH() will group sound-alikes
  *     together, and forgive shortcomings in spelling ability.
  *  $EXAMPLES$
- *     USE Persons
- *     INDEX ON FT_METAPH( LastName ) TO LastName
+ *     USE persons
+ *     INDEX ON FT_METAPH( LastName ) TO lastname
  *     SEEK FT_METAPH( "Philmore" )
- *     ? FOUND(), LastName             // Result: .T. Philmore
+ *     ? Found(), LastName             // Result: .T. Philmore
  *     SEEK FT_METAPH( "Fillmore" )
- *     ? FOUND(), LastName             // Result: .T. Philmore
+ *     ? Found(), LastName             // Result: .T. Philmore
  *  $END$
  */

@@ -138,20 +138,20 @@
  *     The following example uses FT_RGNSTACK() to save and restore various
  *     sections of the screen.
  *
- *     @ 00, 00, 24, 79 BOX "111111111"         // fill the screen with 1's
- *     FT_RGNSTACK("push", 10, 05, 15, 15)      // push a region
- *     @ 00, 00, 24, 79 BOX "222222222"         // fill the screen with 2's
- *     FT_RGNSTACK("push", 10, 20, 15, 30)      // push a region
- *     @ 00, 00, 24, 79 BOX "333333333"         // fill the screen with 3's
- *     FT_RGNSTACK("push", 10, 35, 15, 45)      // push a region
- *     @ 00, 00, 24, 79 BOX "444444444"         // fill the screen with 4's
- *     FT_RGNSTACK("push", 10, 50, 15, 60)      // push a region
- *     @ 00, 00, 24, 79 BOX "555555555"         // fill the screen with 5's
- *     FT_RGNSTACK("push", 10, 65, 15, 75)      // push a region
+ *     @ 00, 00, 24, 79 BOX "111111111"           // fill the screen with 1's
+ *     FT_RGNSTACK( "push", 10, 05, 15, 15 )      // push a region
+ *     @ 00, 00, 24, 79 BOX "222222222"           // fill the screen with 2's
+ *     FT_RGNSTACK( "push", 10, 20, 15, 30 )      // push a region
+ *     @ 00, 00, 24, 79 BOX "333333333"           // fill the screen with 3's
+ *     FT_RGNSTACK( "push", 10, 35, 15, 45 )      // push a region
+ *     @ 00, 00, 24, 79 BOX "444444444"           // fill the screen with 4's
+ *     FT_RGNSTACK( "push", 10, 50, 15, 60 )      // push a region
+ *     @ 00, 00, 24, 79 BOX "555555555"           // fill the screen with 5's
+ *     FT_RGNSTACK( "push", 10, 65, 15, 75 )      // push a region
  *     CLEAR
- *     FT_RGNSTACK("pop")        // restore the 5's region
- *     FT_RGNSTACK("pop")        // restore the 4's region
- *     FT_RGNSTACK("pop all")    // restore the 3's, 2's and 1's regions
+ *     FT_RGNSTACK( "pop" )        // restore the 5's region
+ *     FT_RGNSTACK( "pop" )        // restore the 4's region
+ *     FT_RGNSTACK( "pop all" )    // restore the 3's, 2's and 1's regions
  *  $SEEALSO$
  *     FT_SAVRGN() FT_RSTRGN()
  *  $END$

@@ -18,7 +18,7 @@
  *  $DESCRIPTION$
  *     Converts time in military format to number of minute of the day.
  *  $EXAMPLES$
- *     FT_MIL2MIN( "1729" ) -> 1049
+ *     FT_MIL2MIN( "1729" ) // 1049
  *  $SEEALSO$
  *     FT_MIN2MIL() FT_CIV2MIL() FT_MIL2CIV() FT_SYS2MIL()
  *  $END$
@@ -40,7 +40,7 @@
  *  $DESCRIPTION$
  *     Converts minute of the day to military format time.
  *  $EXAMPLES$
- *     FT_MIN2MIL( 279 ) -> 0439
+ *     FT_MIN2MIL( 279 ) // 0439
  *  $SEEALSO$
  *     FT_MIL2MIN() FT_MIL2CIV() FT_CIV2MIL() FT_SYS2MIL()
  *  $END$
@@ -63,13 +63,15 @@
  *  $DESCRIPTION$
  *     Converts time from military to civilian format
  *  $EXAMPLES$
- *     FT_MIL2CIV( "1640" ) ->  4:40 pm
+ *     FT_MIL2CIV( "1640" ) //  4:40 pm
  *
- *     FT_MIL2CIV( "0440" ) ->  4:40 am
+ *     FT_MIL2CIV( "0440" ) //  4:40 am
  *
- *     FT_MIL2CIV( "1200" ) -> 12:00 n
+ *     FT_MIL2CIV( "1200" ) // 12:00 n
  *
- *     FT_MIL2CIV( "0000" ) and FT_MIL2CIV( "2400" ) -> 12:00 m
+ *     FT_MIL2CIV( "0000" ) // 12:00 m
+ *
+ *     FT_MIL2CIV( "2400" ) // 12:00 m
  *
  *     Caution:  leading blanks are irrelevant.
  *  $SEEALSO$
@@ -94,13 +96,13 @@
  *  $DESCRIPTION$
  *     Converts time from 12-hour civilian format to military.
  *  $EXAMPLES$
- *     FT_CIV2MIL( " 5:40 pm" ) -> 1740
+ *     FT_CIV2MIL( " 5:40 pm" ) // 1740
  *
- *     FT_CIV2MIL( " 5:40 am" ) -> 0540
+ *     FT_CIV2MIL( " 5:40 am" ) // 0540
  *
- *     FT_CIV2MIL( "12:00 n" ) -> 1200
+ *     FT_CIV2MIL( "12:00 n" ) // 1200
  *
- *     FT_CIV2MIL( "12:00 m" ) -> 0000
+ *     FT_CIV2MIL( "12:00 m" ) // 0000
  *
  *     Caution:  leading blanks are irrelevant; p,a,n,m must be preceded by
  *               one and only one space.
@@ -125,7 +127,7 @@
  *  $DESCRIPTION$
  *     Return current system time as character string in military format.
  *  $EXAMPLES$
- *     FT_SYS2MIL() -> 1623
+ *     FT_SYS2MIL() // 1623
  *  $SEEALSO$
  *     FT_MIL2CIV() FT_CIV2MIL()
  *  $END$

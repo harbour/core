@@ -4,13 +4,13 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *      FT_PCHR()
+ *      FT_PChr()
  *  $CATEGORY$
  *      String
  *  $ONELINER$
  *      Convert printer control codes
  *  $SYNTAX$
- *      FT_PCHR( <cString> )  ->  <cPrinterFormat>
+ *      FT_PChr( <cString> )  ->  <cPrinterFormat>
  *  $ARGUMENTS$
  *       <cString> is the representation of the printer control codes in
  *       text, numeric, hexadecimal, Epson command format, or any combination
@@ -74,17 +74,17 @@
  *           /USA              Select USA international char set
  *
  *  $EXAMPLES$
- *       cSetUp := '27,116,1'
- *       Set Print ON
- *       ? FT_PCHR( cSetUp )      ->  (CHR(27)+CHR(116)+CHR(1))
+ *       cSetUp := "27,116,1"
+ *       SET PRINT ON
+ *       ? FT_PChr( cSetUp )      ->  (Chr(27)+Chr(116)+Chr(1))
  *                                            <select Epson char. graphics>
  *
- *       ? FT_PCHR( '27,"x",0' )  ->  (CHR(27)+CHR(120)+CHR(0))
+ *       ? FT_PChr( '27,"x",0' )  ->  (Chr(27)+Chr(120)+Chr(0))
  *                                         <Epson draft mode>
  *
- *       ? FT_PCHR( '&1B,"E"'  )  ->  (CHR(27)+CHR(69))   <HP reset>
+ *       ? FT_PChr( '&1B,"E"'  )  ->  (Chr(27)+Chr(69))   <HP reset>
  *
- *       ? FT_PCHR( '/ELITE,/NLQ' ) ->(CHR(27)+CHR(77)+CHR(27)+CHR(120)+CHR(1))
+ *       ? FT_PChr( "/ELITE,/NLQ" ) ->(Chr(27)+Chr(77)+Chr(27)+Chr(120)+Chr(1))
  *                                <Epson elite & near letter quality>
  *  $SEEALSO$
  *

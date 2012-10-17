@@ -31,7 +31,7 @@
  *     // the 10th Occurrence of "the", case
  *     // insensitive
  *
- *     nNextPosition := FT_FINDITH("the", cMemoString, 10)
+ *     nNextPosition := FT_FINDITH( "the", cMemoString, 10 )
  *  $SEEALSO$
  *     FT_AT2()
  *  $END$

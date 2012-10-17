@@ -20,9 +20,9 @@
  *  $RETURNS$
  *     A three element array containing the following data:
  *
- *        aDateInfo[1] - The year and month as a character string "YYYYMM"
- *        aDateInfo[2] - The beginning date of the month
- *        aDateInfo[3] - The ending date of the month
+ *        aDateInfo[ 1 ] - The year and month as a character string "YYYYMM"
+ *        aDateInfo[ 2 ] - The beginning date of the month
+ *        aDateInfo[ 3 ] - The ending date of the month
  *  $DESCRIPTION$
  *     FT_MONTH() returns an array containing data about the month
  *     containing the given date.

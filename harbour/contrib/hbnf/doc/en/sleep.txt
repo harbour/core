@@ -37,15 +37,15 @@
  *     work for more than 24 hours.
  *  $EXAMPLES$
  *     Example 1:
- *         FT_SLEEP(10.0)    // Sleep for 10.0 seconds
+ *         FT_SLEEP( 10.0 )     // Sleep for 10.0 seconds
  *     Example 2:
  *         nTime := SECONDS()   // usually after some interupt from mouse or
  *                              // keyboard
  *
  *         ... intervening code ...
  *
- *         FT_SLEEP(0.5, nTime) // Sleep until the sytem clock is
- *                              // nTime+0.5 seconds.
+ *         FT_SLEEP( 0.5, nTime ) // Sleep until the sytem clock is
+ *                                // nTime+0.5 seconds.
  *
  *  $END$
  */
