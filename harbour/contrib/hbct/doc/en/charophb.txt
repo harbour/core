@@ -43,7 +43,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHARADD()   CHARAND()   CHARNOT()
  *      CHAROR()    CHARXOR()   CHARSHL()
@@ -89,7 +89,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHARADD()   CHARSUB()   CHARAND()
  *      CHAROR()    CHARXOR()   CHARNOT()
@@ -135,7 +135,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHARADD()   CHARSUB()   CHARAND()
  *      CHAROR()    CHARXOR()   CHARNOT()
@@ -181,7 +181,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHARADD()   CHARSUB()   CHARAND()
  *      CHAROR()    CHARXOR()   CHARNOT()
@@ -227,7 +227,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHARADD()   CHARSUB()   CHARAND()
  *      CHAROR()    CHARXOR()   CHARNOT()

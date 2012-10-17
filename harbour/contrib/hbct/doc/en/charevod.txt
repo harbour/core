@@ -32,7 +32,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHARODD()  CHARMIX()
  *  $END$
@@ -67,7 +67,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHAREVEN()  CHARMIX()
  *  $END$

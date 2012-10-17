@@ -108,7 +108,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      ATNUM()  AFTERATNUM()  CSETATMUPA()  SETATLIKE()
  *  $END$

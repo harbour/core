@@ -4,10 +4,10 @@
 
 /*
  * Harbour Project source code:
- *   NF function: FT_SETATTR()
+ *   NF functions: FT_SETATTR(), FT_REVATTR(), FT_REVCHR()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *
+ * Copyright 2012 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -63,16 +63,58 @@ HB_FUNC( FT_SETATTR )
                       hb_parni( 5 ) );
 }
 
-#if 0
-
 HB_FUNC( FT_REVATTR )
 {
-   hb_ret();
+   int iTop     = hb_parni( 1 );  /* Defaults to zero on bad type */
+   int iLeft    = hb_parni( 2 );  /* Defaults to zero on bad type */
+   int iMaxRow  = hb_gtMaxRow();
+   int iMaxCol  = hb_gtMaxCol();
+   int iBottom  = hb_parnidef( 3, iMaxRow );
+   int iRight   = hb_parnidef( 4, iMaxCol );
+
+   if( iTop < 0 )
+      iTop = 0;
+   if( iLeft < 0 )
+      iLeft = 0;
+   if( iBottom > iMaxRow )
+      iBottom = iMaxRow;
+   if( iRight > iMaxCol )
+      iRight = iMaxCol;
+
+   if( iTop <= iBottom && iLeft <= iRight )
+   {
+      hb_gtDispBegin();
+
+      while( iTop <= iBottom )
+      {
+         int iCol = iLeft;
+         while( iCol <= iRight )
+         {
+            int       iColor;
+            HB_BYTE   bAttr;
+            HB_USHORT usChar;
+            hb_gtGetChar( iTop, iCol, &iColor, &bAttr, &usChar );
+            iColor = ( iColor << 4 ) | ( iColor >> 4 );
+            hb_gtPutChar( iTop, iCol, iColor, bAttr, usChar );
+            ++iCol;
+         }
+         ++iTop;
+      }
+
+      hb_gtDispEnd();
+   }
 }
 
 HB_FUNC( FT_REVCHR )
 {
-   hb_ret();
-}
+   int iRow = hb_parni( 1 );
+   int iCol = hb_parni( 2 );
 
-#endif
+   int       iColor;
+   HB_BYTE   bAttr;
+   HB_USHORT usChar;
+
+   hb_gtGetChar( iRow, iCol, &iColor, &bAttr, &usChar );
+   iColor = ( iColor << 4 ) | ( iColor >> 4 );
+   hb_gtPutChar( iRow, iCol, iColor, bAttr, usChar );
+}

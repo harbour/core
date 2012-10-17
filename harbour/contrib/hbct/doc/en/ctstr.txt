@@ -50,7 +50,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      ADDASCII()   BLANK()       CHARADD()
  *      CHARAND()    CHARMIRR()    CHARNOT()
@@ -100,7 +100,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      ATNUM()       AFTERATNUM()  BEFORATNUM()
  *      ATREPL()      NUMAT()       ATADJUST()
@@ -164,7 +164,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Header is ct.ch, library is ct3.
+ *      Header is ct.ch, library is libct.
  *  $SEEALSO$
  *
  *  $END$

@@ -59,7 +59,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      WORDREPL()   POSREPL()   RANGEREPL()
  *      CSETREF()

@@ -40,7 +40,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHARREM()   WORDONE()
  *  $END$
@@ -81,7 +81,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHARONE()   CHARREM()
  *  $END$

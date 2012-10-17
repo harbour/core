@@ -173,13 +173,13 @@
 
 /*  $DOC$
  *  $FUNCNAME$
- *     FT_REVChr()
+ *     FT_REVCHR()
  *  $CATEGORY$
  *     Video
  *  $ONELINER$
  *     Reverse the color of a single character on the screen
  *  $SYNTAX$
- *     FT_REVChr( <nTRow>, <nLCol> ) -> NIL
+ *     FT_REVCHR( <nTRow>, <nLCol> ) -> NIL
  *  $ARGUMENTS$
  *     <nTRow>, <nLCol> are the screen coordinates of the character.
  *  $RETURNS$
@@ -190,7 +190,7 @@
  *     This function is the same as FT_REVATTR() except that it changes
  *     only one character on screen and hence is faster and uses less memory.
  *  $EXAMPLES$
- *     FT_REVChr( 10, 20 )
+ *     FT_REVCHR( 10, 20 )
  *
  *     This example will change the text and background at 10, 20 to it's
  *     reverse color attributes without changing or overwriting the

@@ -47,7 +47,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHAREVEN()   CHARODD()
  *  $END$

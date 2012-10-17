@@ -3,214 +3,90 @@
  */
 
 /*
- * Author....: Gary Smith
- * CIS ID....: 70714,3015
+ * Harbour Project source code:
+ * FT_FLOPTST()
  *
- * This work is based on an original work by Joseph LaCour that
- * was placed in the public domain.  This work is placed in the
- * public domain.
+ * Copyright 2012 Viktor Szakats (harbour syenar.net)
+ * www - http://harbour-project.org
  *
- *  ACKNOWLEDGEMENTS:
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2, or (at your option)
+ * any later version.
  *
- *          PAOLO RAMOZZI FOR HIS WORK IN DBDCHECK FOR SHOWING HOW TO
- *          USE INT 13H.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
+ * You should have received a copy of the GNU General Public License
+ * along with this software; see the file COPYING.  If not, write to
+ * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+ * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
  *
- * Modification history:
- * ---------------------
+ * As a special exception, the Harbour Project gives permission for
+ * additional uses of the text contained in its release of Harbour.
  *
- *     Rev 1.4   05 May 1995 03:05:00   TED
- * Gary Smith ported ASM source to Clipper.
+ * The exception is that, if you link the Harbour libraries with other
+ * files to produce an executable, this does not by itself cause the
+ * resulting executable to be covered by the GNU General Public License.
+ * Your use of that executable is in no way restricted on account of
+ * linking the Harbour library code into it.
  *
- *     Rev 1.3   23 Sep 1991 14:56:42   GLENN
- *  Bug reports from Craig Austin, James Finnal, and Ted Means.  Line 128
- *  had MOV FDRIVE,AL which should have been MOV FDRIVE,BL.  This caused the
- *  function to erroneously use the last drive available instead of the one
- *  specified by the calling process.
+ * This exception does not however invalidate any other reasons why
+ * the executable file might be covered by the GNU General Public License.
  *
- *     Rev 1.2   15 Aug 1991 23:07:48   GLENN
- *  Forest Belt proofread/edited/cleaned up doc
+ * This exception applies only to the code released by the Harbour
+ * Project under the name Harbour.  If you copy code from other
+ * Harbour Project or Free Software Foundation releases into a copy of
+ * Harbour, as the General Public License permits, the exception does
+ * not apply to the code that you add in this way.  To avoid misleading
+ * anyone as to the status of such modified files, you must delete
+ * this exception notice from them.
  *
- *     Rev 1.1   11 May 1991 00:21:42   GLENN
- *  File header changed to conform to Toolkit standard.
+ * If you write modifications of your own for Harbour, it is your choice
+ * whether to permit this exception to apply to your modifications.
+ * If you do not wish that, delete this exception notice.
+ *
  */
 
-#include "ftint86.ch"
+#include "fileio.ch"
 
-#define ERR_WRONG_PARAMETERS  -1
+#define ERR_WRONG_PARAMETERS  ( -1 )
 #define ERR_NO_ERROR          0
-#define ERR_DRIVE_NOT_READY   1
-#define ERR_UNFORMATTED       2
+#define ERR_DRIVE_NOT_READY   1 /* unused */
+#define ERR_UNFORMATTED       2 /* unused */
 #define ERR_WRITE_PROTECTED   3
-#define ERR_UNKNOWN           4
 
-// error code defined by ERR_*
-FUNCTION FT_FLOPTST( nDriveNum_i /* letter of floppy drive */ )
-   LOCAL cBuffer
-   LOCAL nErrorCode
-   LOCAL nRetCode
+/* NOTE: Harbour port accepts a path as a string for checking
+         for writability. It also won't detected unformatted
+         state and "not ready" state. [vszakats] */
+FUNCTION FT_FLOPTST( nDriveNum )
+   LOCAL cFileName
+   LOCAL fhnd
 
-   nRetCode := ERR_WRONG_PARAMETERS
-   IF HB_ISNUMERIC( nDriveNum_i )
-
-      IF _GetDisketteNum( nDriveNum_i )
-         _ResetDisketteSystem()
-         _ReadBootSector( nDriveNum_i, @cBuffer, @nErrorCode )
-
-         IF nErrorCode == 0
-            _WriteBootSector( nDriveNum_i, cBuffer, @nErrorCode )
-            DO CASE
-            CASE nErrorCode == 0
-               nRetCode := ERR_NO_ERROR
-            CASE nErrorCode == 3
-               nRetCode := ERR_WRITE_PROTECTED
-            OTHERWISE
-               nRetCode := ERR_UNKNOWN
-            ENDCASE
-         ELSE
-            DO CASE
-            CASE nErrorCode == 128 // 80h
-               nRetCode := ERR_DRIVE_NOT_READY
-            CASE nErrorCode == 2
-               nRetCode := ERR_UNFORMATTED
-            OTHERWISE
-               nRetCode := ERR_UNKNOWN
-            ENDCASE
-         ENDIF
-      ENDIF
+   IF HB_ISNUMERIC( nDriveNum )
+      cFileName := Chr( Asc( "A" ) + nDriveNum ) + hb_osDriveSeparator()
+   ELSEIF HB_ISSTRING( nDriveNum )
+      cFileName := nDriveNum
+   ELSE
+      RETURN ERR_WRONG_PARAMETERS
    ENDIF
 
-   RETURN nRetCode
+   cFileName := hb_DirSepAdd( cFileName ) + "nf$rwtst.tmp"
 
-#define BITS_6AND7      192   // value of byte when bits 6&7 are high
-
-// returns false if no floppy drive installed or nDrive_i is invalid
-STATIC FUNCTION _GetDisketteNum( nDrive_i ) // drive number to query status
-
-   LOCAL aRegs[ INT86_MAX_REGS ]
-   LOCAL lRetCode
-   LOCAL nByte
-   LOCAL nDriveCount
-
-   // ASSERT 0 <= nDrive_i
-
-   lRetCode := .F.
-   IF FT_INT86( 1 * 16 + 1, aRegs )  // INT for equipment determination
-      nByte := LOWBYTE( aRegs[ AX ] )
-      // bit 0 indicates floppy drive installed
-      IF Int( nByte / 2 ) * 2 != nByte // is it odd i.e. is bit 0 set??
-         // bits 6 & 7 indicate number of floppies installed upto 4.
-         nDriveCount := hb_BCode( FT_BYTEAND( hb_BChar( nByte ), hb_BChar( BITS_6AND7 ) ) )
-         IF nDriveCount >= nDrive_i
-            lRetCode := .T.
-         ENDIF
+   IF hb_FileExists( cFileName )
+      IF ( fhnd := FOpen( cFileName, FO_DENYNONE + FO_READWRITE ) ) == F_ERROR
+         RETURN ERR_WRITE_PROTECTED
       ENDIF
+      FClose( fhnd )
+   ELSE
+      IF ( fhnd := hb_FCreate( cFileName, FC_NORMAL, FO_DENYNONE + FO_READWRITE ) ) == F_ERROR
+         RETURN ERR_WRITE_PROTECTED
+      ENDIF
+      FClose( fhnd )
+
+      FErase( cFileName )
    ENDIF
 
-   RETURN lRetCode
-
-STATIC PROCEDURE _ResetDisketteSystem()
-
-   LOCAL aRegs[ INT86_MAX_REGS ]
-
-   aRegs[ AX ] := 0
-
-   FT_INT86( 1 * 16 + 3, aRegs )
-
-   RETURN
-
-#define BUFFER_SIZEOF_SECTOR  512+1
-
-STATIC FUNCTION _ReadBootSector( ;
-      nDriveNum, ;
-      cBuffer_o, ;
-      nErrCode_o ;
-      )
-
-   // call BIOS INT 13 for sector read
-   LOCAL aRegs[ INT86_MAX_REGS ]
-   LOCAL cBuffer := Space( BUFFER_SIZEOF_SECTOR )
-   LOCAL lSuccess
-   LOCAL nErrorCode
-   LOCAL lCarryFlag
-
-   aRegs[ DX ] := nDriveNum            // DH = 0 Head 0, DL = drive number
-   aRegs[ CX ] := 1                    // CH = 0 track 0, CL=1 sector 1
-   aRegs[ BX ] := REG_ES               // buffer in ES:BX
-   aRegs[ ES ] := cBuffer
-   aRegs[ AX ] := MAKEHI( 2 ) + 1      // AH = 02 read, AL=1 read one sector
-
-   lSuccess := _CallInt13hRetry( aRegs, @lCarryFlag, @nErrorCode )
-
-   cBuffer_o := aRegs[ ES ]
-   nErrCode_o := nErrorCode
-
-   RETURN lSuccess
-
-STATIC FUNCTION _WriteBootSector( ;
-      nDriveNum, ;
-      cBuffer_i, ;
-      nErrCode_o ;
-      )
-
-   // call BIOS INT 13 for sector write
-   LOCAL aRegs[ INT86_MAX_REGS ]
-   LOCAL lSuccess
-   LOCAL nErrorCode
-   LOCAL lCarryFlag
-
-   aRegs[ DX ] := nDriveNum            // DH = 0 Head 0, DL = drive number
-   aRegs[ CX ] := 1                    // CH = 0 track 0, CL=1 sector 1
-   aRegs[ BX ] := REG_ES               // buffer in ES:BX
-   aRegs[ ES ] := cBuffer_i
-   aRegs[ AX ] := MAKEHI( 3 ) + 1      // AH = 03 write, AL=1 read one sector
-
-   lSuccess := _CallInt13hRetry( aRegs, @lCarryFlag, @nErrorCode )
-
-   nErrCode_o := nErrorCode
-
-   RETURN lSuccess
-
-STATIC FUNCTION _CallInt13hRetry( ;     // logical: did the interrupt succeed?
-      aRegs_io, ;      // registers values for INT 13h
-   lCarrySet_o, ;      // status of carry flag if return code is true.
-   nDriveStatus_o ;    // status of drive ( error code )
-      )
-   LOCAL lCarrySet
-   LOCAL aRegisters
-   LOCAL lSuccess
-   LOCAL nInterrupt_c := 1 * 16 + 3  // INT 13h
-   LOCAL i
-
-   lCarrySet := .F.
-   aRegisters := AClone( aRegs_io )
-   lSuccess := FT_INT86( nInterrupt_c, aRegisters )
-   IF lSuccess
-      lCarrySet := CARRYSET( aRegisters[ FLAGS ] )
-      IF lCarrySet
-         _ResetDisketteSystem()
-
-         aRegisters := AClone( aRegs_io )
-         FT_INT86( nInterrupt_c, aRegisters )
-         lCarrySet := CARRYSET( aRegisters[ FLAGS ] )
-         IF lCarrySet
-            _ResetDisketteSystem()
-
-            aRegisters := AClone( aRegs_io )
-            FT_INT86( nInterrupt_c, aRegisters )
-            lCarrySet := CARRYSET( aRegisters[ FLAGS ] )
-            IF lCarrySet
-               _ResetDisketteSystem()
-            ENDIF
-         ENDIF
-      ENDIF
-   ENDIF
-
-   FOR i := 1 TO INT86_MAX_REGS
-      // pass altered register back up
-      aRegs_io[ i ] := aRegisters[ i ]
-   NEXT
-   lCarrySet_o := lCarrySet
-   nDriveStatus_o := HIGHBYTE( aRegisters[ AX ] )
-
-   RETURN lSuccess
+   RETURN ERR_NO_ERROR

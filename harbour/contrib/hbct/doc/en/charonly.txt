@@ -35,7 +35,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHARREM()   WORDONLY()   WORDREM()
  *  $END$
@@ -74,7 +74,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHARONLY()   CHARREM()   WORDREM()
  *  $END$
@@ -112,7 +112,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHARONLY()   WORDONLY()   WORDREM()
  *  $END$
@@ -151,7 +151,7 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      Library is ct3.
+ *      Library is libct.
  *  $SEEALSO$
  *      CHARONLY   CHARREM()   WORDREM()
  *  $END$

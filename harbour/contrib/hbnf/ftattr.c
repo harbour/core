@@ -35,7 +35,7 @@ HB_FUNC( FT_SAVEATT )
    int      iBottom  = hb_parnidef( 3, iMaxRow );
    int      iRight   = hb_parnidef( 4, iMaxRow );
 
-   HB_SIZE  ulSize;
+   HB_SIZE  nSize;
    char *   pBuffer;
    char *   pAttrib;
 
@@ -50,23 +50,23 @@ HB_FUNC( FT_SAVEATT )
 
    if( iTop <= iBottom && iLeft <= iRight )
    {
-      ulSize   = ( iBottom - iTop + 1 ) * ( iRight - iLeft + 1 );
-      pBuffer  = pAttrib = ( char * ) hb_xgrab( ulSize + 1 );
+      nSize    = ( iBottom - iTop + 1 ) * ( iRight - iLeft + 1 );
+      pBuffer  = pAttrib = ( char * ) hb_xgrab( nSize + 1 );
       while( iTop <= iBottom )
       {
          int iCol = iLeft;
          while( iCol <= iRight )
          {
-            int         iColor;
-            HB_BYTE     bAttr;
-            HB_USHORT   usChar;
+            int       iColor;
+            HB_BYTE   bAttr;
+            HB_USHORT usChar;
             hb_gtGetChar( iTop, iCol, &iColor, &bAttr, &usChar );
             *pBuffer++ = ( char ) iColor;
             ++iCol;
          }
          ++iTop;
       }
-      hb_retclen_buffer( pAttrib, ulSize );
+      hb_retclen_buffer( pAttrib, nSize );
    }
    else
       hb_retc_null();
@@ -96,17 +96,17 @@ HB_FUNC( FT_SAVEATT )
 
 HB_FUNC( FT_RESTATT )
 {
-   HB_SIZE ulLen = hb_parclen( 5 );
+   HB_SIZE nLen = hb_parclen( 5 );
 
-   if( ulLen )
+   if( nLen )
    {
-      int            iTop     = hb_parni( 1 );  /* Defaults to zero on bad type */
-      int            iLeft    = hb_parni( 2 );  /* Defaults to zero on bad type */
-      int            iMaxRow  = hb_gtMaxRow();
-      int            iMaxCol  = hb_gtMaxCol();
-      int            iBottom  = hb_parnidef( 3, iMaxRow );
-      int            iRight   = hb_parnidef( 4, iMaxCol );
-      const char *   pAttrib  = hb_parc( 5 );
+      int          iTop     = hb_parni( 1 );  /* Defaults to zero on bad type */
+      int          iLeft    = hb_parni( 2 );  /* Defaults to zero on bad type */
+      int          iMaxRow  = hb_gtMaxRow();
+      int          iMaxCol  = hb_gtMaxCol();
+      int          iBottom  = hb_parnidef( 3, iMaxRow );
+      int          iRight   = hb_parnidef( 4, iMaxCol );
+      const char * pAttrib  = hb_parc( 5 );
 
       if( iTop < 0 )
          iTop = 0;
@@ -119,22 +119,26 @@ HB_FUNC( FT_RESTATT )
 
       if( iTop <= iBottom && iLeft <= iRight )
       {
-         while( ulLen && iTop <= iBottom )
+         hb_gtDispBegin();
+
+         while( nLen && iTop <= iBottom )
          {
             int iCol = iLeft;
-            while( ulLen && iCol <= iRight )
+            while( nLen && iCol <= iRight )
             {
-               int         iColor;
-               HB_BYTE     bAttr;
-               HB_USHORT   usChar;
+               int       iColor;
+               HB_BYTE   bAttr;
+               HB_USHORT usChar;
                hb_gtGetChar( iTop, iCol, &iColor, &bAttr, &usChar );
                iColor = ( HB_UCHAR ) *pAttrib++;
                hb_gtPutChar( iTop, iCol, iColor, bAttr, usChar );
                ++iCol;
-               --ulLen;
+               --nLen;
             }
             ++iTop;
          }
+
+         hb_gtDispEnd();
       }
    }
 }
