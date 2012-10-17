@@ -28,11 +28,12 @@
 
 #include "hbapi.h"
 
-#define pbyte *( ( char * ) 0x00400100 )
-
 HB_FUNC( FT_PRTSCR )
 {
 #if defined( HB_OS_DOS )
+
+   #define pbyte *( ( char * ) 0x00400100 )
+
    if( HB_ISLOG( 1 ) )
    {
       if( hb_parl( 1 ) )

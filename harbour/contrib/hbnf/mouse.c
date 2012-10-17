@@ -4,7 +4,6 @@
 
 /*
  * Harbour Project source code
- *
  * Mouse support functions for Nanfor Library
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
@@ -52,8 +51,6 @@
  */
 
 #include "hbapi.h"
-#include "hbapigt.h"
-#include "hbapiitm.h"
 
 #if defined( HB_OS_DOS )
 #  include "dos.h"

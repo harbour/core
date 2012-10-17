@@ -58,8 +58,6 @@
 #include "hbapigt.h"
 #include "hbstack.h"
 
-#include "inkey.ch"
-
 #define K_STRING     0
 #define K_LIST       ( ! K_STRING )
 

@@ -1,0 +1,37 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *     FT_REBOOT()
+ *  $CATEGORY$
+ *     DOS/BIOS
+ *  $ONELINER$
+ *     Force a warm or cold boot
+ *  $SYNTAX$
+ *     FT_REBOOT( <nBootType> ) -> NIL
+ *  $ARGUMENTS$
+ *     <nBootType> is used to indicate the type of reboot.  A value of zero
+ *     will cause a cold boot, while any other value will cause a warm boot.
+ *  $RETURNS$
+ *     NIL
+ *  $DESCRIPTION$
+ *     This function is valuable if you need to reboot the PC for some
+ *     reason; e.g. an installation routine that modifies CONFIG.SYS or
+ *     AUTOEXEC.BAT.
+ * 
+ *     The source code is written to adhere to Turbo Assembler's IDEAL mode.
+ *     To use another assembler, you will need to rearrange the PROC and
+ *     SEGMENT directives, and also the ENDP and ENDS directives (a very
+ *     minor task).
+ *  $EXAMPLES$
+ *     #define COLD 0
+ *     #define WARM 1
+ * 
+ *     // Issue a warm boot
+ * 
+ *     FT_Reboot(WARM)
+ * 
+ *  $END$
+ */

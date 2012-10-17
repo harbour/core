@@ -4,6 +4,34 @@
 
 /*  $DOC$
  *  $FUNCNAME$
+ *     FT_MINIT()
+ *  $CATEGORY$
+ *     Keyboard/Mouse
+ *  $ONELINER$
+ *     Initialize the mouse driver, vars and return status of mouse
+ *  $SYNTAX$
+ *     FT_MINIT() -> lMouseStatus
+ *  $ARGUMENTS$
+ *     NONE
+ *  $RETURNS$
+ *     An logical representing the mouse status (.F. == mouse not installed)
+ *  $DESCRIPTION$
+ *     Initializes the mouse drive, associated variables and returns mouse
+ *     status. It checks to see if the mouse has been previously initialized
+ *     and if so it does not reinitialize. The row and column limits of mouse
+ *     movement is set to the maximum for the current video mode.
+ *     Use FT_MSHOWCRS() to display the mouse cursor.
+ *  $EXAMPLES$
+ *     IF ! FT_MINIT()
+ *        ? "No mouse driver is installed"
+ *     ENDIF
+ *  $SEEALSO$
+ *     FT_MRESET()
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
  *     FT_MMICKEYS()
  *  $CATEGORY$
  *     Keyboard/Mouse

@@ -1,0 +1,199 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *     FT_VIDSTR()
+ *  $CATEGORY$
+ *     Video
+ *  $ONELINER$
+ *     Display string on screen in specified attribute
+ *  $SYNTAX$
+ *     FT_VIDSTR( <nRow>, <nCol>, <cString> [, <nColor> ] ) -> NIL
+ *  $ARGUMENTS$
+ *     <nRow> and <nCol> are the screen coordinates.
+ * 
+ *     <cString> is the string to be printed on the screen.
+ * 
+ *     <nColor> is an integer representing the color attribute.
+ *     The formula is:
+ * 
+ *       nFore + ( nBack * 16 )
+ * 
+ *     FT_VIDSTR() will display the string in the current color if
+ *     <nColor> is not passed.
+ *  $RETURNS$
+ *     NIL
+ *  $DESCRIPTION$
+ *     This is a high speed function to display a string of any ASCII
+ *     characters on screen in a specified color attribute.  This function
+ *     is useful for constructing screens with a lot of text or repetitive
+ *     screen prints where speed is important.
+ *  $EXAMPLES$
+ *     FT_VIDSTR( 10, 20, "Enter Name :", 165 )
+ * 
+ *     This example will print the specified text at coordinates 10, 20
+ *     in bright white on top of Magenta.
+ * 
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *     FT_WRTCHR()
+ *  $CATEGORY$
+ *     Video
+ *  $ONELINER$
+ *     Display character on screen
+ *  $SYNTAX$
+ *     FT_WRTCHR( <nRow>, <nCol>, <cChar>, <nColor> ) -> NIL
+ *  $ARGUMENTS$
+ *     <nRow> and <nCol> are the screen coordinates.
+ * 
+ *     <cChar> is the single character to print on the screen.
+ * 
+ *     <nColor> is an integer representing the color attribute.
+ *     The formula is:
+ * 
+ *        nFore + ( nBack * 16 )
+ *  $RETURNS$
+ *     NIL
+ *  $DESCRIPTION$
+ *     This is a high speed function to display a single ASCII character
+ *     on screen in a specified color attribute.  This function is useful
+ *     for constructing screens with a lot of text or repetitive screen prints
+ *     where speed is important.  It is faster and requires less memory than
+ *     FT_VIDSTR().  A working example is contained in ClrTable.Prg.
+ *  $EXAMPLES$
+ *     FOR nX = 1 to MaxRow()
+ *        FOR nY = 1 to MaxCol()
+ *           FT_PRNTCHR( nX, nY, "ù", (nX - 1)+(nY * 16) )
+ *        NEXT
+ *     NEXT
+ * 
+ *     This example will write the ASCII character 249 to every location
+ *     on screen in every possible color combination.  It will recognize
+ *     the status of SetBlink().  It uses direct video writes for speed.
+ * 
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *     FT_CLS()
+ *  $CATEGORY$
+ *     Video
+ *  $ONELINER$
+ *     Clear screen
+ *  $SYNTAX$
+ *     FT_CLS( <nTRow>, <nLCol>, <nBRow>, <nRCol>, <nColor> ) -> NIL
+ *  $ARGUMENTS$
+ *     <nTRow>, <nLCol>, <nBRow> and  <nRCol> are the screen coordinates
+ *     to clear.
+ * 
+ *     <nColor> is an integer representing the color attribute.
+ *     The formula is:
+ * 
+ *       nFore + ( nBack * 16 )
+ * 
+ *     The default is black.
+ *  $RETURNS$
+ *     NIL
+ *  $DESCRIPTION$
+ *     This is a high speed function to clear the screen at the given
+ *     coordinates with the given color attribute.  This does not change
+ *     Clipper's color settings.  It uses direct video writes for speed.
+ * 
+ *  $EXAMPLES$
+ *     FT_CLS( 0, 0, MaxRow(), MaxCol(), 165 )
+ * 
+ *     This example will clear the entire screen with the colors
+ *     bright white on magenta.
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *     FT_SETATTR()
+ *  $CATEGORY$
+ *     Video
+ *  $ONELINER$
+ *     Change color attributes of screen region
+ *  $SYNTAX$
+ *     FT_SETATTR( <nTRow>, <nLCol>, <nBRow>, <nRCol>, <nColor> ) -> NIL
+ *  $ARGUMENTS$
+ *     <nTRow>, <nLCol>, <nBRow>, and <nRCol> are the coordinates of the
+ *     screen region.
+ * 
+ *     <nColor> is an integer representing the new color attribute.
+ *     The formula is:
+ * 
+ *         nFore + ( nBack * 16 )
+ *  $RETURNS$
+ *     NIL
+ *  $DESCRIPTION$
+ *     This is a high speed function to change the colors of a specified
+ *     region of the screen without disturbing any text.  Uses direct
+ *     video writes.
+ *  $EXAMPLES$
+ *     FT_SETATTR( 0, 0, MaxRow(), MaxCol(), 95 )
+ * 
+ *     This example will change the entire screen's colors to bright white on
+ *     magenta without changing or overwriting any text on the screen.
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *     FT_REVATTR()
+ *  $CATEGORY$
+ *     Video
+ *  $ONELINER$
+ *     Reverse colors of specified screen coordinates
+ *  $SYNTAX$
+ *     FT_REVATTR( <nTRow>, <nLCol>, <nBRow>, <nRCol> ) -> NIL
+ *  $ARGUMENTS$
+ *     <nTRow>, <nLCol>, <nBRow>, and <nRCol> are the coordinates of the
+ *     screen region.
+ *  $RETURNS$
+ *     NIL
+ *  $DESCRIPTION$
+ *     This is a high speed function to reverse the color of a specified
+ *     screen region without disturbing any text on the screen.  This
+ *     function will correctly reverse the color attributes in a region
+ *     containing multiple color combinations.
+ *  $EXAMPLES$
+ *     FT_REVATTR( 0, 0, MaxRow(), MaxCol() )
+ * 
+ *     This example will change the entire screen's colors to their reverse
+ *     attributes without changing  or overwriting any text.
+ *  $END$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *     FT_REVCHR()
+ *  $CATEGORY$
+ *     Video
+ *  $ONELINER$
+ *     Reverse the color of a single character on the screen
+ *  $SYNTAX$
+ *     FT_REVCHR( <nTRow>, <nLCol> ) -> NIL
+ *  $ARGUMENTS$
+ *     <nTRow>, <nLCol> are the screen coordinates of the character.
+ *  $RETURNS$
+ *     NIL
+ *  $DESCRIPTION$
+ *     This is a high speed function to reverse the color of a single
+ *     character on the screen without changing the character itself.
+ *     This function is the same as FT_REVATTR() except that it changes
+ *     only one character on screen and hence is faster and uses less memory.
+ *  $EXAMPLES$
+ *     FT_REVCHR( 10, 20 )
+ * 
+ *     This example will change the text and background at 10, 20 to it's
+ *     reverse color attributes without changing or overwriting the
+ *     character itself.
+ *  $END$
+ */

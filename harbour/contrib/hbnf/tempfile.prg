@@ -42,57 +42,7 @@
 
 #include "fileio.ch"
 
-#ifdef HB_OS_DOS
-#define FT_TEMPFILE_ORIGINAL
-#endif
-
-#ifdef HB_OS_DOS_32
-#undef FT_TEMPFILE_ORIGINAL
-#endif
-
-#ifdef FT_TEMPFILE_ORIGINAL
-
-#include "ftint86.ch"
-
-#define DOS         33
-#define TEMPNAME    90
-
-FUNCTION FT_TEMPFIL( cPath, lHide, nHandle )
-
-   LOCAL cRet, aRegs[ 3 ]
-
-   cPath := iif( HB_ISSTRING( cPath ), cPath, "" ) + Replicate( hb_BChar( 0 ), 13 )
-   lHide := iif( HB_ISLOGICAL( lHide ), lHide, .F. )
-
-   /*
-   aRegs[ AX ] := MAKEHI( TEMPNAME )
-   aRegs[ CX ] := iif( lHide, 2, 0 )
-   aRegs[ DS ] := cPath
-   aRegs[ DX ] := REG_DS
-
-   FT_INT86( DOS, aRegs )
-   */
-   aRegs := _ft_tempfil( cPath, lHide )
-    /*  If carry flag is clear, then call succeeded and a file handle is
-     *  sitting in AX that needs to be closed.
-     */
-
-   IF ! hb_bitTest( aRegs[ 3 ], FLAG_CARRY )
-      IF PCount() >= 3
-         nHandle := aRegs[ 1 ]
-      ELSE
-         FClose( aRegs[ 1 ] )
-      ENDIF
-      cRet := AllTrim( StrTran( aRegs[ 2 ], hb_BChar( 0 ) ) )
-   ELSE
-      cRet := ""
-   ENDIF
-
-   RETURN cRet
-
-#else
-
-FUNCTION FT_TEMPFIL( cPath, lHide, nHandle )
+FUNCTION FT_TEMPFIL( cPath, lHide, /* @ */ nHandle )
 
    LOCAL cFile
 
@@ -108,5 +58,3 @@ FUNCTION FT_TEMPFIL( cPath, lHide, nHandle )
    ENDIF
 
    RETURN cFile
-
-#endif /* FT_TEMPFILE_ORIGINAL */

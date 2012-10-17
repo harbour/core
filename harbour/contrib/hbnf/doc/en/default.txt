@@ -1,0 +1,32 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *     FT_DEFAULT()
+ *  $CATEGORY$
+ *     DOS/BIOS
+ *  $ONELINER$
+ *     Retrieve and optionally change the current default drive
+ *  $SYNTAX$
+ *     FT_DEFAULT( [ <cDrive> ] ) -> cDrive
+ *  $ARGUMENTS$
+ *     <cDrive> is optional, and if specified is the new default drive.
+ *  $RETURNS$
+ *     The current default drive.  If a change of default drive is requested,
+ *     the return value is the drive AFTER the change is made.  This allows
+ *     you to make sure you specified a valid drive (i.e. if you attempt to
+ *     change the default drive, and the function returns a different drive
+ *     letter than the one you specified, then the drive does not exist).
+ *  $DESCRIPTION$
+ *     Useful any time you need to know or change the default drive.
+ *  $EXAMPLES$
+ *     cDrive := FT_DEFAULT()  // Get the current drive
+ *     FT_DEFAULT( "C" )       // Switch to drive C
+ *
+ *     IF !( FT_DEFAULT( "E" ) == "E" )
+ *        QOut( "Drive E does not exist!" )
+ *     ENDIF
+ *  $END$
+ */

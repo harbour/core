@@ -1,0 +1,32 @@
+/*
+ * $Id$
+ */
+
+/*  $DOC$
+ *  $FUNCNAME$
+ *     FT_INP()
+ *  $CATEGORY$
+ *     DOS/BIOS
+ *  $ONELINER$
+ *     Retrieve a byte from a specified I/O port
+ *  $SYNTAX$
+ *     FT_INP( <nPort> ) -> nValue
+ *  $ARGUMENTS$
+ *     <nPort> is the port from which to retrieve the byte.  If it is
+ *     invalid in any way, the function will return zero.
+ *  $RETURNS$
+ *     The byte retrieved.
+ *  $DESCRIPTION$
+ *     It may sometimes be useful to read a byte from a port without having
+ *     to resort to C or assembler.  This function allows you to do so.
+ * 
+ *     The source code is written to adhere to Turbo Assembler's IDEAL mode.
+ *     To use another assembler, you will need to rearrange the PROC and
+ *     SEGMENT directives, and also the ENDP and ENDS directives (a very
+ *     minor task).
+ *  $EXAMPLES$
+ *     byte := FT_INP( 100 )   // read a byte from port 100 (064h)
+ *  $SEEALSO$
+ *     FT_OUTP()
+ *  $END$
+ */

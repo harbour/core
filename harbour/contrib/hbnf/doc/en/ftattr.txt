@@ -10,7 +10,7 @@
  *  $ONELINER$
  *     Save the attribute bytes of a specified screen region.
  *  $SYNTAX$
- *     FT_SAVEATT( <nTop>, <nLeft>, <nBottom>, <nRight>  ) -> cAttributes
+ *     FT_SAVEATT( <nTop>, <nLeft>, <nBottom>, <nRight> ) -> cAttributes
  *  $ARGUMENTS$
  *     <nTop>, <nLeft>, <nBottom>, and <nRight> define the screen region.
  *  $RETURNS$
@@ -29,10 +29,10 @@
  *     to use internals, then this function isn't for you.
  *  $EXAMPLES$
  *     // Save attributes of row 4
- *     cBuffer := FT_SAVEATT( 4, 0, 4, maxcol())
+ *     cBuffer := FT_SAVEATT( 4, 0, 4, MaxCol() )
  *
  *     // Save attributes from middle of screen
- *     cBuffer := FT_SAVEATT(10,20,14,59)
+ *     cBuffer := FT_SAVEATT( 10, 20, 14, 59 )
  *  $SEEALSO$
  *     FT_RESTATT()
  *  $END$
@@ -67,10 +67,10 @@
  *     internals, then this function isn't for you.
  *  $EXAMPLES$
  *     // Restore attributes of row 4
- *     FT_RESTATT( 4, 0, 4, maxcol(), cBuffer)
+ *     FT_RESTATT( 4, 0, 4, MaxCol(), cBuffer )
  *
  *     // Restore attributes to middle of screen
- *     FT_RESTATT(10,20,14,59,cBuffer)
+ *     FT_RESTATT( 10, 20, 14, 59, cBuffer )
  *  $SEEALSO$
  *     FT_SAVEATT()
  *  $END$

@@ -39,13 +39,9 @@ HB_FUNC( FT_PUTKEY )
 
    if( HB_ISNUM( 1 ) )
    {
-      int iKey = hb_parni( 1 );
-
-      if( iKey >= -39 && iKey <= 385 )
-      {
-         hb_inkeyPut( iKey );
-         lSuccess = HB_TRUE;
-      }
+      hb_inkeyPut( hb_parni( 1 ) );
+      lSuccess = HB_TRUE;
    }
+
    hb_retl( lSuccess );
 }

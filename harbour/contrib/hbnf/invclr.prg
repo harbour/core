@@ -23,8 +23,6 @@
  *
  */
 
-#define NULL ""
-
 FUNCTION FT_INVCLR( cDsrdColor )
 
    LOCAL cBackground                    // The Background Color, New Foreground
@@ -37,12 +35,14 @@ FUNCTION FT_INVCLR( cDsrdColor )
    cDsrdColor := Left( cDsrdColor, At( ",", cDsrdColor + "," ) - 1 )
 
    // Get Any Modifiers
-   cModifiers := iif( "*" $ cDsrdColor, "*", NULL ) + ;
-      iif( "+" $ cDsrdColor, "+", NULL )
+   cModifiers := ;
+      iif( "*" $ cDsrdColor, "*", "" ) +;
+      iif( "+" $ cDsrdColor, "+", "" )
 
    // Separate the Fore/Background Colors
    cForeground := AllTrim( Left( cDsrdColor,   At( "/", cDsrdColor ) - 1 ) )
    cBackground := AllTrim( SubStr( cDsrdColor, At( "/", cDsrdColor ) + 1 ) )
 
-   RETURN StrTran( StrTran( cBackground, "+" ), "*" ) + cModifiers + "/" + ;
+   RETURN ;
+      StrTran( StrTran( cBackground, "+" ), "*" ) + cModifiers + "/" + ;
       StrTran( StrTran( cForeground, "+" ), "*" )
