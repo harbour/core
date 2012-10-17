@@ -98,6 +98,8 @@
 
 #if defined( HB_OS_WIN )
 #  include <windows.h>
+#elif defined( HB_OS_DOS )
+#  include <dos.h>
 #endif
 
 #if defined( HB_MT_VM )
@@ -1338,6 +1340,13 @@ HB_SIZE hb_xquery( int iMode )
                nResult = 0;
             else
                nResult = ulSysInfo / 1024;
+         }
+#elif defined( HB_OS_DOS )
+         {
+            union REGS regs;
+            regs.HB_XREGS.ax = 0;
+            HB_DOS_INT86( 0x12, &regs, &regs );
+            iMode = regs.h.al;
          }
 #else
          nResult = 9999;

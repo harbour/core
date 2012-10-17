@@ -33,9 +33,6 @@
 
 #include "ftint86.ch"
 
-#define DOS         33
-#define NW_LOG     227
-
 FUNCTION FT_NWUID( nConn )
 
    LOCAL aRegs[ INT86_MAX_REGS ]
@@ -45,23 +42,20 @@ FUNCTION FT_NWUID( nConn )
    nConn := iif( nConn == NIL, FT_NWLSTAT(), nConn )
 
    // Set up request packet
-
-   cReqPkt := hb_BChar( 22 )          // Function 22: Get Connection Information
+   cReqPkt := hb_BChar( 22 )          // Get Connection Information
    cReqPkt += hb_BChar( nConn )
    cReqPkt := I2Bin( hb_BLen( cReqPkt ) ) + cReqPkt
 
    // Set up reply packet
-
    cRepPkt := Space( 63 )
 
    // Assign registers
-
-   aRegs[ AX ] := MAKEHI( NW_LOG )
+   aRegs[ AX ] := MAKEHI( 227 ) // NW_LOG
    aRegs[ DS ] := cReqPkt
    aRegs[ SI ] := REG_DS
    aRegs[ ES ] := cRepPkt
    aRegs[ DI ] := REG_ES
 
-   FT_INT86( DOS, aRegs )
+   FT_INT86( 33, aRegs )
 
    RETURN AllTrim( StrTran( hb_BSubStr( aRegs[ ES ], 9, 48 ), hb_BChar( 0 ) ) )

@@ -29,15 +29,8 @@
  *
  */
 
-#include "ftint86.ch"
-
-#define MEMSIZE    18
+#include "hbmemory.ch"
 
 FUNCTION FT_SYSMEM()
 
-   LOCAL aRegs[ INT86_MAX_REGS ]
-
-   aRegs[ AX ] := 0
-   FT_INT86( MEMSIZE, aRegs )
-
-   RETURN aRegs[ AX ]
+   RETURN Memory( HB_MEM_FM )

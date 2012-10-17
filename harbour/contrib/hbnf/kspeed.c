@@ -26,7 +26,7 @@
 #include "hbapi.h"
 
 #if defined( HB_OS_DOS )
-#  include "dos.h"
+#  include <dos.h>
 #endif
 
 HB_FUNC( FT_SETRATE )

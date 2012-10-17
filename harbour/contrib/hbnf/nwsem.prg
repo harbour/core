@@ -38,15 +38,11 @@
 
 #include "ftint86.ch"
 
-#define INT21             33
-
 #define WAIT_SEMAPHORE    2
 #define SIGNAL_SEMAPHORE  3
 #define CLOSE_SEMAPHORE   4
 
-// Sorry this test routine is pretty lame but it sort of gets
-// the point across
-
+/* TODO: rewrite in C */
 FUNCTION ft_nwSemOpen( cName, nInitVal, nHandle, nOpenCnt )
 
    LOCAL aRegs[ INT86_MAX_REGS ], cRequest, nRet
@@ -64,7 +60,7 @@ FUNCTION ft_nwSemOpen( cName, nInitVal, nHandle, nOpenCnt )
    aRegs[ DX ] := REG_DS
    aRegs[ CX ] := nInitVal
 
-   ft_int86( INT21, aRegs )
+   ft_int86( 33, aRegs )
 
    nHandle  := Bin2L( I2Bin( aRegs[ CX ] ) + I2Bin( aRegs[ DX ] ) )
    nOpenCnt := LOWBYTE( aRegs[ BX ] )
@@ -73,6 +69,7 @@ FUNCTION ft_nwSemOpen( cName, nInitVal, nHandle, nOpenCnt )
 
    RETURN iif( nRet < 0, nRet + 256, nRet )
 
+/* TODO: rewrite in C */
 FUNCTION ft_nwSemEx( nHandle, nValue, nOpenCnt )
 
    LOCAL aRegs[ INT86_MAX_REGS ], nRet
@@ -85,7 +82,7 @@ FUNCTION ft_nwSemEx( nHandle, nValue, nOpenCnt )
    aRegs[ CX ] := Bin2I( hb_BSubStr( L2Bin( nHandle ), 1, 2 ) )
    aRegs[ DX ] := Bin2I( hb_BSubStr( L2Bin( nHandle ), 3, 2 ) )
 
-   ft_int86( INT21, aRegs )
+   ft_int86( 33, aRegs )
 
    nValue   := aRegs[ CX ]
    nOpenCnt := LOWBYTE( aRegs[ DX ] )
@@ -109,6 +106,7 @@ FUNCTION ft_nwSemClose( nHandle )
 // _ftnwsem() - internal for the semaphore package
 // ---------------------------------------------------------
 
+/* TODO: rewrite in C */
 STATIC FUNCTION _ftnwsem( nOp, nHandle, nTimeout )
 
    LOCAL aRegs[ INT86_MAX_REGS ], nRet
@@ -122,7 +120,7 @@ STATIC FUNCTION _ftnwsem( nOp, nHandle, nTimeout )
    aRegs[ DX ] := Bin2I( hb_BSubStr( L2Bin( nHandle ), 3, 2 ) )
    aRegs[ BP ] := nTimeout
 
-   ft_int86( INT21, aRegs )
+   ft_int86( 33, aRegs )
    nRet := LOWBYTE( aRegs[ AX ] )
    nRet := iif( nRet < 0, nRet + 256, nRet )
 
@@ -130,10 +128,8 @@ STATIC FUNCTION _ftnwsem( nOp, nHandle, nTimeout )
 
 FUNCTION ft_nwSemLock( cSemaphore, nHandle )
 
-   LOCAL nRc
    LOCAL nOpenCnt := 0
-
-   nRc := FT_NWSEMOPEN( cSemaphore, 0, @nHandle, @nOpenCnt )
+   LOCAL nRc := FT_NWSEMOPEN( cSemaphore, 0, @nHandle, @nOpenCnt )
 
    IF nRc == 0
       IF nOpenCnt != 1

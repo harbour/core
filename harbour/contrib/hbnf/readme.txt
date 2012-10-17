@@ -15,6 +15,4 @@ nwuid.prg                 FT_NWUID()
 
 scancode.prg              FT_SCANCODE()
 
-sysmem.prg                FT_SYSMEM()
-
 vidcur.prg                FT_GETVCUR(), FT_SETVCUR()
