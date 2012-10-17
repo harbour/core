@@ -43,8 +43,10 @@ proper.c
 prtscr.c
 putkey.c
 rmdir.c
+setdate.c
 setkeys.c
 setlastk.c
+settime.c
 shadow.c
 shift.c
 stod.c
@@ -136,8 +138,6 @@ savearr.prg
 savesets.prg
 scancode.prg
 scregion.prg
-setdate.prg
-settime.prg
 sinkey.prg
 sleep.prg
 sqzn.prg

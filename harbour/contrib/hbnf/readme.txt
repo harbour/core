@@ -15,9 +15,6 @@ nwuid.prg                 FT_NWUID()
 
 scancode.prg              FT_SCANCODE()
 
-setdate.prg               FT_SETDATE()
-settime.prg               FT_SETTIME()
-
 sysmem.prg                FT_SYSMEM()
 
 vidcur.prg                FT_GETVCUR(), FT_SETVCUR()
