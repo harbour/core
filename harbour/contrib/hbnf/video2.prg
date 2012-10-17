@@ -4,10 +4,9 @@
 
 /*
  * Harbour Project source code:
- *   NF function: FT_SETATTR()
+ * FT_CLS(), FT_VIDSTR(), FT_WRTCHR()
  *
- * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *
+ * Copyright 2012 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,28 +50,32 @@
  *
  */
 
-#include "hbapi.h"
-#include "hbapigt.h"
+PROCEDURE FT_CLS( nTop, nLeft, nBottom, nRight, nColor )
 
-HB_FUNC( FT_SETATTR )
-{
-   hb_gtSetAttribute( hb_parni( 1 ),
-                      hb_parni( 2 ),
-                      hb_parni( 3 ),
-                      hb_parni( 4 ),
-                      hb_parni( 5 ) );
-}
+   IF ! HB_ISNUMERIC( nColor )
+      nColor := 0
+   ENDIF
 
-#if 0
+   hb_Scroll( nTop, nLeft, nBottom, nRight, , , nColor )
 
-HB_FUNC( FT_REVATTR )
-{
-   hb_ret();
-}
+   RETURN
 
-HB_FUNC( FT_REVCHR )
-{
-   hb_ret();
-}
+PROCEDURE FT_VIDSTR( nRow, nCol, cString, nColor )
 
-#endif
+   IF ! HB_ISNUMERIC( nColor )
+      nColor := 0
+   ENDIF
+
+   hb_DispOutAt( nRow, nCol, cString, nColor )
+
+   RETURN
+
+PROCEDURE FT_WRTCHR( nRow, nCol, cChar, nColor )
+
+   IF ! HB_ISNUMERIC( nColor )
+      nColor := 0
+   ENDIF
+
+   hb_DispOutAt( nRow, nCol, Left( cChar, 1 ), nColor )
+
+   RETURN

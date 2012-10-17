@@ -4,7 +4,7 @@
 
 Functions to be rewritten:
 
-c\video1.c                FT_VIDSTR(), FT_WRTCHR(), FT_CLS(), FT_REVATTR(), FT_REVCHR()
+c\video1.c                FT_REVATTR(), FT_REVCHR()
 
 Functions to be fixed:
 
