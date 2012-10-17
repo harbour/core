@@ -7479,6 +7479,7 @@ STATIC FUNCTION hbmk_hb_compile( hbmk, ... )
       RETURN hb_compile( ... )
    ELSE
       cSaveCP := hb_cdpSelect( hbmk[ _HBMK_cCPPRG ] )
+      /* We can use this function as this is a GPL licenced application */
       xRetVal := hb_compile( ... )
       hb_cdpSelect( cSaveCP )
    ENDIF
@@ -7493,6 +7494,7 @@ STATIC FUNCTION hbmk_hb_compileBuf( hbmk, ... )
       RETURN hb_compileBuf( ... )
    ELSE
       cSaveCP := hb_cdpSelect( hbmk[ _HBMK_cCPPRG ] )
+      /* We can use this function as this is a GPL licenced application */
       xRetVal := hb_compileBuf( ... )
       hb_cdpSelect( cSaveCP )
    ENDIF
@@ -8742,6 +8744,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
          ENDIF
          IF ! lOK .AND. !( Lower( cExt ) == ".hrb" ) /* Optimization: Don't try to load it as .prg if the extension is .hrb */
             cType := I_( "(source)" )
+            /* We can use this function as this is a GPL licenced application */
             cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0", "-i" + hbmk[ _HBMK_cHB_INSTALL_INC ], "-D" + _HBMK_PLUGIN )
             IF ! Empty( cFile )
                hrb := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
@@ -12439,6 +12442,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
             AAdd( aINCPATH, "-I" + tmp )
          NEXT
 
+         /* We can use this function as this is a GPL licenced application */
          cFile := hb_compileBuf( hbmk_CoreHeaderFiles(), hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
                                  hb_ArrayToParams( aINCPATH ), "-D" + _HBMK_SHELL, cFile )
          IF cFile == NIL
@@ -12754,6 +12758,7 @@ STATIC FUNCTION __hbshell_plugins_load( hPlugins, aParams )
       plugin[ _PLUGIN_hHRB ] := NIL
 
       IF !( Lower( hb_FNameExt( cFile:__enumKey() ) ) == ".hrb" )
+         /* We can use this function as this is a GPL licenced application */
          cFile := hb_compileFromBuf( cFile, hbmk_CoreHeaderFiles(), hb_ProgName(), "-n2", "-w", "-es2", "-q0" )
       ENDIF
 
@@ -13105,6 +13110,7 @@ STATIC PROCEDURE __hbshell_Exec( cCommand )
 
    BEGIN SEQUENCE WITH {| oErr | __hbshell_Err( oErr, cCommand ) }
 
+      /* We can use this function as this is a GPL licenced application */
       cHRB := hb_compileFromBuf( cFunc, hb_ProgName(), "-n2", "-q2" )
       IF Empty( cHRB )
          Eval( ErrorBlock(), I_( "Syntax error." ) )
