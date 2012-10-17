@@ -115,3 +115,27 @@ HB_FUNC( _FT_TEMPFIL )
       hb_itemReturnRelease( pArray );
    }
 }
+
+HB_FUNC( FT_INP )
+{
+#if defined( HB_OS_DOS )
+   /* TODO */
+#endif
+   hb_retni( 0 );
+}
+
+HB_FUNC( FT_OUTP )
+{
+#if defined( HB_OS_DOS )
+   /* TODO */
+#endif
+   hb_retl( HB_FALSE );
+}
+
+HB_FUNC( FT_REBOOT )
+{
+#if defined( HB_OS_DOS )
+   /* TODO */
+#endif
+   hb_ret();
+}

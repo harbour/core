@@ -22,9 +22,9 @@
  *     a printscreen is already in progress.  The BIOS will then refuse
  *     to invoke the printscreen handler.
  *  $EXAMPLES$
- *     FT_PRTSCR( .F. )       && Disable the printscreen key
- *     FT_PRTSCR( .T. )       && Enable the printscreen key
- *     MemVar := FT_PRTSCR()  && Get the current status
+ *     FT_PRTSCR( .F. )       // Disable the printscreen key
+ *     FT_PRTSCR( .T. )       // Enable the printscreen key
+ *     MemVar := FT_PRTSCR()  // Get the current status
  *  $SEEALSO$
  *     FT_CAPLOCK() FT_CTRL() FT_NUMLOCK() FT_SHIFT() FT_ALT()
  *  $END$

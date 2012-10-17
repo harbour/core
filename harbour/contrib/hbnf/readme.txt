@@ -4,11 +4,7 @@
 
 Functions to be rewritten:
 
-asm\adapter.asm           FT_ADAPTER()
-asm\inp.asm               FT_INP()
-asm\outp.asm              FT_OUTP()
-asm\reboot.asm            FT_REBOOT()
-c\video1.c                FT_VIDSTR(), FT_WRTCHR(), FT_CLS(), FT_SETATTR(), FT_REVATTR(), FT_REVCHR()
+c\video1.c                FT_VIDSTR(), FT_WRTCHR(), FT_CLS(), FT_REVATTR(), FT_REVCHR()
 
 Functions to be fixed:
 

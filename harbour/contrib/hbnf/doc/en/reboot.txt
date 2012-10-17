@@ -20,7 +20,7 @@
  *     This function is valuable if you need to reboot the PC for some
  *     reason; e.g. an installation routine that modifies CONFIG.SYS or
  *     AUTOEXEC.BAT.
- * 
+ *
  *     The source code is written to adhere to Turbo Assembler's IDEAL mode.
  *     To use another assembler, you will need to rearrange the PROC and
  *     SEGMENT directives, and also the ENDP and ENDS directives (a very
@@ -28,10 +28,10 @@
  *  $EXAMPLES$
  *     #define COLD 0
  *     #define WARM 1
- * 
+ *
  *     // Issue a warm boot
- * 
- *     FT_Reboot(WARM)
- * 
+ *
+ *     FT_Reboot( WARM )
+ *
  *  $END$
  */
