@@ -149,7 +149,7 @@ static void hb_ocidd_exit( void * cargo )
 }
 
 /* force SQLBASE linking */
-HB_FUNC_EXTERN( SQLBASE ); HB_FUNC( SDDOCI ) { HB_FUNC_EXEC( SQLBASE ); }
+HB_FUNC_TRANSLATE( SDDOCI, SQLBASE )
 
 HB_INIT_SYMBOLS_BEGIN( ocidd__InitSymbols )
 { "SDDOCI", {HB_FS_PUBLIC}, {HB_FUNCNAME( SDDOCI )}, NULL },

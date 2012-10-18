@@ -109,7 +109,7 @@ static void hb_firebirddd_init( void * cargo )
 }
 
 /* force SQLBASE linking */
-HB_FUNC_EXTERN( SQLBASE ); HB_FUNC( SDDFB ) { HB_FUNC_EXEC( SQLBASE ); }
+HB_FUNC_TRANSLATE( SDDFB, SQLBASE )
 
 HB_INIT_SYMBOLS_BEGIN( firebirddd__InitSymbols )
 { "SDDFB", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( SDDFB ) }, NULL },

@@ -122,7 +122,7 @@ static void hb_sqlt3dd_exit( void * cargo )
 }
 
 /* force SQLBASE linking */
-HB_FUNC_EXTERN( SQLBASE ); HB_FUNC( SDDSQLITE3 ) { HB_FUNC_EXEC( SQLBASE ); }
+HB_FUNC_TRANSLATE( SDDSQLITE3, SQLBASE )
 
 HB_INIT_SYMBOLS_BEGIN( sqlt3dd__InitSymbols )
 { "SDDSQLITE3", {HB_FS_PUBLIC}, {HB_FUNCNAME( SDDSQLITE3 )}, NULL },

@@ -156,10 +156,7 @@ HB_FUNC( ASPLICE )
 
 /* TOFIX: Move this to hbxpp library */
 /* Synonym of aSplice() Xbase++ compatibility (extended with optional replacemenet values) */
-HB_FUNC( AREMOVE )
-{
-   HB_FUNC_EXEC( ASPLICE )
-}
+HB_FUNC_TRANSLATE( AREMOVE, ASPLICE )
 
 /* aMerge( <aTarget>, <aSource> [, <nPos>] ) => aTarget */
 HB_FUNC( AMERGE )
@@ -258,4 +255,4 @@ HB_FUNC( XHB_AINS )
    }
 }
 
-HB_FUNC_EXTERN( HB_RASCAN             ) ; HB_FUNC( RASCAN                   ) { HB_FUNC_EXEC( HB_RASCAN             ); }
+HB_FUNC_TRANSLATE( RASCAN, HB_RASCAN )

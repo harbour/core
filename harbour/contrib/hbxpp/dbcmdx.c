@@ -52,27 +52,7 @@
  */
 
 #include "hbapi.h"
-#include "hbapirdd.h"
-#include "hbapierr.h"
-#include "hbapiitm.h"
 
-HB_FUNC_EXTERN( HB_DBPACK );
-
-HB_FUNC( DBPACK )
-{
-   HB_FUNC_EXEC( HB_DBPACK );
-}
-
-HB_FUNC_EXTERN( HB_DBZAP );
-
-HB_FUNC( DBZAP )
-{
-   HB_FUNC_EXEC( HB_DBZAP );
-}
-
-HB_FUNC_EXTERN( __DBSKIPPER );
-
-HB_FUNC( DBSKIPPER )
-{
-   HB_FUNC_EXEC( __DBSKIPPER );
-}
+HB_FUNC_TRANSLATE( DBPACK, HB_DBPACK )
+HB_FUNC_TRANSLATE( DBZAP, HB_DBZAP )
+HB_FUNC_TRANSLATE( DBSKIPPER, __DBSKIPPER )

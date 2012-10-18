@@ -103,16 +103,12 @@ HB_FUNC( HB_STRING2POINTER )
 
 #endif
 
-HB_FUNC_EXTERN( HB_PROGNAME );
+/* xHarbour really returns:
+ *       hb_retc( hb_cmdargARGVN( 0 ) );
+ * probably typo - replicated here by HB_PROGNAME()
+ */
+HB_FUNC_TRANSLATE( HB_CMDARGARGV, HB_PROGNAME )
 
-HB_FUNC( HB_CMDARGARGV )
-{
-   /* xHarbour really returns:
-    *       hb_retc( hb_cmdargARGVN( 0 ) );
-    * probably typo - replicated here by HB_PROGNAME()
-    */
-   HB_FUNC_EXEC( HB_PROGNAME );
-}
 
 HB_FUNC( HB_VMMODE )
 {
@@ -189,8 +185,6 @@ HB_FUNC( HB_GETLEN8 )
       hb_retni( -1 );
 }
 
-HB_FUNC_EXTERN( HB_DESERIALIZE );
-
 HB_FUNC( HB_DESERIALBEGIN )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
@@ -198,25 +192,9 @@ HB_FUNC( HB_DESERIALBEGIN )
       hb_itemReturn( pItem );
 }
 
-HB_FUNC( HB_DESERIALNEXT )
-{
-   HB_FUNC_EXEC( HB_DESERIALIZE );
-}
-
-
-HB_FUNC_EXTERN( HB_WILDMATCH );
-
-HB_FUNC( WILDMATCH )
-{
-   HB_FUNC_EXEC( HB_WILDMATCH );
-}
-
-HB_FUNC_EXTERN( HB_ADLER32 );
-
-HB_FUNC( HB_CHECKSUM )
-{
-   HB_FUNC_EXEC( HB_ADLER32 );
-}
+HB_FUNC_TRANSLATE( HB_DESERIALNEXT, HB_DESERIALIZE )
+HB_FUNC_TRANSLATE( WILDMATCH, HB_WILDMATCH )
+HB_FUNC_TRANSLATE( HB_CHECKSUM, HB_ADLER32 )
 
 HB_FUNC( HB_F_EOF )
 {
@@ -260,12 +238,7 @@ HB_FUNC( CURDIRX )
    hb_fsSetError( uiErrorOld );
 }
 
-HB_FUNC_EXTERN( HB_CSTR );
-
-HB_FUNC( CSTR )
-{
-   HB_FUNC_EXEC( HB_CSTR );
-}
+HB_FUNC_TRANSLATE( CSTR, HB_CSTR )
 
 HB_FUNC( HB_ARRAYID )  /* for debugging: returns the array's "address" so dual references to same array can be seen */
 {
@@ -346,18 +319,18 @@ HB_FUNC( HB_ISBYREF )
 
 #endif
 
-HB_FUNC_EXTERN( HB_METHODNAME         ) ; HB_FUNC( METHODNAME               ) { HB_FUNC_EXEC( HB_METHODNAME         ); }
-HB_FUNC_EXTERN( HB_LIBLOAD            ) ; HB_FUNC( LIBLOAD                  ) { HB_FUNC_EXEC( HB_LIBLOAD            ); }
-HB_FUNC_EXTERN( HB_LIBFREE            ) ; HB_FUNC( LIBFREE                  ) { HB_FUNC_EXEC( HB_LIBFREE            ); }
-HB_FUNC_EXTERN( DO                    ) ; HB_FUNC( HB_LIBDO                 ) { HB_FUNC_EXEC( DO                    ); }
-HB_FUNC_EXTERN( HB_BITTEST            ) ; HB_FUNC( HB_BITISSET              ) { HB_FUNC_EXEC( HB_BITTEST            ); }
-HB_FUNC_EXTERN( HB_IDLESLEEP          ) ; HB_FUNC( SECONDSSLEEP             ) { HB_FUNC_EXEC( HB_IDLESLEEP          ); }
-HB_FUNC_EXTERN( __DYNSN2SYM           ) ; HB_FUNC( HB_FUNCPTR               ) { HB_FUNC_EXEC( __DYNSN2SYM           ); }
-HB_FUNC_EXTERN( HB_VALTOEXP           ) ; HB_FUNC( VALTOPRGEXP              ) { HB_FUNC_EXEC( HB_VALTOEXP           ); }
-HB_FUNC_EXTERN( HB_HEXTONUM           ) ; HB_FUNC( HEXTONUM                 ) { HB_FUNC_EXEC( HB_HEXTONUM           ); }
-HB_FUNC_EXTERN( HB_NUMTOHEX           ) ; HB_FUNC( NUMTOHEX                 ) { HB_FUNC_EXEC( HB_NUMTOHEX           ); }
-HB_FUNC_EXTERN( HB_HEXTOSTR           ) ; HB_FUNC( HEXTOSTR                 ) { HB_FUNC_EXEC( HB_HEXTOSTR           ); }
-HB_FUNC_EXTERN( HB_STRTOHEX           ) ; HB_FUNC( STRTOHEX                 ) { HB_FUNC_EXEC( HB_STRTOHEX           ); }
-HB_FUNC_EXTERN( HB_ISPOINTER          ) ; HB_FUNC( ISPOINTER                ) { HB_FUNC_EXEC( HB_ISPOINTER          ); }
-HB_FUNC_EXTERN( HB_CDPSELECT          ) ; HB_FUNC( HB_SETCODEPAGE           ) { HB_FUNC_EXEC( HB_CDPSELECT          ); }
-HB_FUNC_EXTERN( __DEFAULTNIL          ) ; HB_FUNC( DEFAULT                  ) { HB_FUNC_EXEC( __DEFAULTNIL          ); }
+HB_FUNC_TRANSLATE( METHODNAME     , HB_METHODNAME )
+HB_FUNC_TRANSLATE( LIBLOAD        , HB_LIBLOAD    )
+HB_FUNC_TRANSLATE( LIBFREE        , HB_LIBFREE    )
+HB_FUNC_TRANSLATE( HB_LIBDO       , DO            )
+HB_FUNC_TRANSLATE( HB_BITISSET    , HB_BITTEST    )
+HB_FUNC_TRANSLATE( SECONDSSLEEP   , HB_IDLESLEEP  )
+HB_FUNC_TRANSLATE( HB_FUNCPTR     , __DYNSN2SYM   )
+HB_FUNC_TRANSLATE( VALTOPRGEXP    , HB_VALTOEXP   )
+HB_FUNC_TRANSLATE( HEXTONUM       , HB_HEXTONUM   )
+HB_FUNC_TRANSLATE( NUMTOHEX       , HB_NUMTOHEX   )
+HB_FUNC_TRANSLATE( HEXTOSTR       , HB_HEXTOSTR   )
+HB_FUNC_TRANSLATE( STRTOHEX       , HB_STRTOHEX   )
+HB_FUNC_TRANSLATE( ISPOINTER      , HB_ISPOINTER  )
+HB_FUNC_TRANSLATE( HB_SETCODEPAGE , HB_CDPSELECT  )
+HB_FUNC_TRANSLATE( DEFAULT        , __DEFAULTNIL  )

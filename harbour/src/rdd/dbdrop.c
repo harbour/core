@@ -59,11 +59,6 @@
          original CA-Cl*pper namespace. This should have been
          marked as HB_EXTENSION, but it's not. */
 
-HB_FUNC_EXTERN( HB_DBDROP );
-
-HB_FUNC( DBDROP )
-{
-   HB_FUNC_EXEC( HB_DBDROP );
-}
+HB_FUNC_TRANSLATE( DBDROP, HB_DBDROP )
 
 #endif

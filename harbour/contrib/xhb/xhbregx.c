@@ -52,4 +52,4 @@
 
 #include "hbapi.h"
 
-HB_FUNC_EXTERN( HB_ISREGEX            ) ; HB_FUNC( HB_ISREGEXSTRING         ) { HB_FUNC_EXEC( HB_ISREGEX            ); }
+HB_FUNC_TRANSLATE( HB_ISREGEXSTRING, HB_ISREGEX )

@@ -2175,11 +2175,8 @@ static RDDFUNCS sqlmixTable =
   ( DBENTRYP_SVP ) NULL,                  /* sqlmixWhoCares */
 };
 
-
-HB_FUNC_EXTERN( SQLBASE ); HB_FUNC( SQLMIX )
-{
-   HB_FUNC_EXEC( SQLBASE );
-}
+/* force SQLBASE linking */
+HB_FUNC_TRANSLATE( SQLMIX, SQLBASE )
 
 HB_FUNC_STATIC( SQLMIX_GETFUNCTABLE )
 {

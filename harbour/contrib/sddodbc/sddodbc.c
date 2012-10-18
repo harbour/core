@@ -138,7 +138,7 @@ static void hb_odbcdd_init( void * cargo )
 }
 
 /* force SQLBASE linking */
-HB_FUNC_EXTERN( SQLBASE ); HB_FUNC( SDDODBC ) { HB_FUNC_EXEC( SQLBASE ); }
+HB_FUNC_TRANSLATE( SDDODBC, SQLBASE )
 
 HB_INIT_SYMBOLS_BEGIN( odbcdd__InitSymbols )
 { "SDDODBC", { HB_FS_PUBLIC }, { HB_FUNCNAME( SDDODBC ) }, NULL },

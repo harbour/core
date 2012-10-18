@@ -53,21 +53,21 @@
 #include "hbapi.h"
 
 /* MT functions */
-HB_FUNC_EXTERN( HB_MTVM               ) ; HB_FUNC( HB_MULTITHREAD           ) { HB_FUNC_EXEC( HB_MTVM               ); }
-HB_FUNC_EXTERN( HB_THREADSELF         ) ; HB_FUNC( GETCURRENTTHREAD         ) { HB_FUNC_EXEC( HB_THREADSELF         ); }
-HB_FUNC_EXTERN( HB_THREADID           ) ; HB_FUNC( GETTHREADID              ) { HB_FUNC_EXEC( HB_THREADID           ); }
-HB_FUNC_EXTERN( HB_THREADID           ) ; HB_FUNC( THREADGETCURRENTINTERNAL ) { HB_FUNC_EXEC( HB_THREADID           ); }
-HB_FUNC_EXTERN( HB_THREADJOIN         ) ; HB_FUNC( JOINTHREAD               ) { HB_FUNC_EXEC( HB_THREADJOIN         ); }
-HB_FUNC_EXTERN( HB_THREADTERMINATEALL ) ; HB_FUNC( KILLALLTHREADS           ) { HB_FUNC_EXEC( HB_THREADTERMINATEALL ); }
-HB_FUNC_EXTERN( HB_THREADWAITFORALL   ) ; HB_FUNC( WAITFORTHREADS           ) { HB_FUNC_EXEC( HB_THREADWAITFORALL   ); }
+HB_FUNC_TRANSLATE( HB_MULTITHREAD           , HB_MTVM               )
+HB_FUNC_TRANSLATE( GETCURRENTTHREAD         , HB_THREADSELF         )
+HB_FUNC_TRANSLATE( GETTHREADID              , HB_THREADID           )
+HB_FUNC_TRANSLATE( THREADGETCURRENTINTERNAL , HB_THREADID           )
+HB_FUNC_TRANSLATE( JOINTHREAD               , HB_THREADJOIN         )
+HB_FUNC_TRANSLATE( KILLALLTHREADS           , HB_THREADTERMINATEALL )
+HB_FUNC_TRANSLATE( WAITFORTHREADS           , HB_THREADWAITFORALL   )
 
-HB_FUNC_EXTERN( HB_MUTEXNOTIFY        ) ; HB_FUNC( NOTIFY                   ) { HB_FUNC_EXEC( HB_MUTEXNOTIFY        ); }
-HB_FUNC_EXTERN( HB_MUTEXNOTIFYALL     ) ; HB_FUNC( NOTIFYALL                ) { HB_FUNC_EXEC( HB_MUTEXNOTIFYALL     ); }
+HB_FUNC_TRANSLATE( NOTIFY                   , HB_MUTEXNOTIFY        )
+HB_FUNC_TRANSLATE( NOTIFYALL                , HB_MUTEXNOTIFYALL     )
 
 /* not possible to well replicate xHarbour behavior because it's buggy
    these function results are different on different platform, chosen
    translation which returns compatible types (numeric) */
-HB_FUNC_EXTERN( HB_THREADID           ) ; HB_FUNC( THREADGETCURRENT         ) { HB_FUNC_EXEC( HB_THREADID          ); }
+HB_FUNC_TRANSLATE( THREADGETCURRENT         , HB_THREADID           )
 
 HB_FUNC( DESTROYMUTEX )
 {

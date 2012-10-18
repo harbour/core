@@ -128,7 +128,7 @@ static void hb_pgsqldd_init( void * cargo )
 }
 
 /* force SQLBASE linking */
-HB_FUNC_EXTERN( SQLBASE ); HB_FUNC( SDDPG ) { HB_FUNC_EXEC( SQLBASE ); }
+HB_FUNC_TRANSLATE( SDDPG, SQLBASE )
 
 HB_INIT_SYMBOLS_BEGIN( sddpostgre__InitSymbols )
 { "SDDPG", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( SDDPG ) }, NULL },

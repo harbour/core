@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Compatibility calls (MS-Win).
+ * Compatibility calls (Windows)
  *
  * Copyright 2009 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
@@ -54,35 +54,17 @@
    OLE implementation. Please update your code to use this new API,
    the old one will be removed in a future revision. [vszakats] */
 
-/* NOTE: Add to this file functions coming from old OLE source only.
-         [vszakats] */
-
 #include "hbapi.h"
 
-#if ! defined( HB_OS_WIN )
-
-HB_FUNC( ANSITOWIDE ) {}
-HB_FUNC( WIDETOANSI ) {}
-HB_FUNC( MESSAGEBOX ) {}
-
-#else
+#if defined( HB_OS_WIN )
 
 #include "hbwinuni.h"
 #include <windows.h>
 
-HB_FUNC_EXTERN( WIN_ANSITOWIDE );
 /* Original version may have returned NIL in some error situations. */
-HB_FUNC( ANSITOWIDE )
-{
-   HB_FUNC_EXEC( WIN_ANSITOWIDE );
-}
-
-HB_FUNC_EXTERN( WIN_WIDETOANSI );
+HB_FUNC_TRANSLATE( ANSITOWIDE, WIN_ANSITOWIDE )
 /* Original version may have returned NIL in some error situations. */
-HB_FUNC( WIDETOANSI )
-{
-   HB_FUNC_EXEC( WIN_WIDETOANSI );
-}
+HB_FUNC_TRANSLATE( WIDETOANSI, WIN_WIDETOANSI )
 
 HB_FUNC( MESSAGEBOX )
 {
@@ -95,4 +77,10 @@ HB_FUNC( MESSAGEBOX )
    hb_strfree( hStr2 );
 }
 
-#endif /* HB_OS_WIN */
+#else
+
+HB_FUNC( ANSITOWIDE ) {}
+HB_FUNC( WIDETOANSI ) {}
+HB_FUNC( MESSAGEBOX ) {}
+
+#endif

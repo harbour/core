@@ -52,4 +52,4 @@
 
 #include "hbapi.h"
 
-HB_FUNC_EXTERN( HB_I18N_GETTEXT       ) ; HB_FUNC( I18N                     ) { HB_FUNC_EXEC( HB_I18N_GETTEXT       ); }
+HB_FUNC_TRANSLATE( I18N, HB_I18N_GETTEXT )

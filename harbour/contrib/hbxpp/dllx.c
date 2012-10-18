@@ -96,22 +96,10 @@ static const HB_GC_FUNCS s_gcDllFuncs =
    _DLLMark
 };
 
-/* NOTE: In Harbour this function will return an in-memory object, not a string. */
-/* NOTE: 2nd and 3rd parameters are not supported in Harbour. */
-
-HB_FUNC_EXTERN( HB_LIBLOAD );
-
-HB_FUNC( DLLLOAD )
-{
-   HB_FUNC_EXEC( HB_LIBLOAD );
-}
-
-HB_FUNC_EXTERN( HB_LIBFREE );
-
-HB_FUNC( DLLUNLOAD )
-{
-   HB_FUNC_EXEC( HB_LIBFREE );
-}
+/* NOTE: In Harbour this function will return an in-memory object, not a string.
+         2nd and 3rd parameters are not supported in Harbour. */
+HB_FUNC_TRANSLATE( DLLLOAD, HB_LIBLOAD )
+HB_FUNC_TRANSLATE( DLLUNLOAD, HB_LIBFREE )
 
 /* NOTE: Function ordinals are not supported in 3rd parameter. */
 

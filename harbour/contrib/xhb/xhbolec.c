@@ -52,28 +52,13 @@
 
 #include "hbapi.h"
 
-#if ! defined( HB_OS_WIN )
-
-HB_FUNC( OLEERROR ) {}
-HB_FUNC( OLE2TXTERROR ) {}
-HB_FUNC( __OLEPDISP ) {}
-
-#else
+#if defined( HB_OS_WIN )
 
 #include "hbwin.h"
 #include "hbwinole.h"
 
-HB_FUNC_EXTERN( WIN_OLEERROR );
-HB_FUNC( OLEERROR )
-{
-   HB_FUNC_EXEC( WIN_OLEERROR );
-}
-
-HB_FUNC_EXTERN( WIN_OLEERRORTEXT );
-HB_FUNC( OLE2TXTERROR )
-{
-   HB_FUNC_EXEC( WIN_OLEERRORTEXT );
-}
+HB_FUNC_TRANSLATE( OLEERROR     , WIN_OLEERROR )
+HB_FUNC_TRANSLATE( OLE2TXTERROR , WIN_OLEERRORTEXT )
 
 HB_FUNC( __OLEPDISP )
 {
@@ -82,4 +67,10 @@ HB_FUNC( __OLEPDISP )
                   ( IDispatch * ) ( HB_PTRUINT ) hb_parnint( 1 ) );
 }
 
-#endif /* HB_OS_WIN */
+#else
+
+HB_FUNC( OLEERROR ) {}
+HB_FUNC( OLE2TXTERROR ) {}
+HB_FUNC( __OLEPDISP ) {}
+
+#endif

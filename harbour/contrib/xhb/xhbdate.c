@@ -52,10 +52,10 @@
 
 #include "hbapi.h"
 
-HB_FUNC_EXTERN( HB_DATETIME           ) ; HB_FUNC( DATETIME                 ) { HB_FUNC_EXEC( HB_DATETIME           ); }
-HB_FUNC_EXTERN( HB_HOUR               ) ; HB_FUNC( HOUR                     ) { HB_FUNC_EXEC( HB_HOUR               ); }
-HB_FUNC_EXTERN( HB_MINUTE             ) ; HB_FUNC( MINUTE                   ) { HB_FUNC_EXEC( HB_MINUTE             ); }
-HB_FUNC_EXTERN( HB_TTOS               ) ; HB_FUNC( TTOS                     ) { HB_FUNC_EXEC( HB_TTOS               ); }
-HB_FUNC_EXTERN( HB_STOT               ) ; HB_FUNC( STOT                     ) { HB_FUNC_EXEC( HB_STOT               ); }
-HB_FUNC_EXTERN( HB_TTOC               ) ; HB_FUNC( TTOC                     ) { HB_FUNC_EXEC( HB_TTOC               ); }
-HB_FUNC_EXTERN( HB_CTOT               ) ; HB_FUNC( CTOT                     ) { HB_FUNC_EXEC( HB_CTOT               ); }
+HB_FUNC_TRANSLATE( DATETIME , HB_DATETIME )
+HB_FUNC_TRANSLATE( HOUR     , HB_HOUR     )
+HB_FUNC_TRANSLATE( MINUTE   , HB_MINUTE   )
+HB_FUNC_TRANSLATE( TTOS     , HB_TTOS     )
+HB_FUNC_TRANSLATE( STOT     , HB_STOT     )
+HB_FUNC_TRANSLATE( TTOC     , HB_TTOC     )
+HB_FUNC_TRANSLATE( CTOT     , HB_CTOT     )

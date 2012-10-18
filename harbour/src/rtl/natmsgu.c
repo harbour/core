@@ -66,45 +66,12 @@
 
 #ifdef HB_CLP_UNDOC
 
-HB_FUNC_EXTERN( __NATISAFFIRM );
-
-HB_FUNC( ISAFFIRM )
-{
-   HB_FUNC_EXEC( __NATISAFFIRM )
-}
-
-HB_FUNC_EXTERN( __NATISNEGATIVE );
-
-HB_FUNC( ISNEGATIVE )
-{
-   HB_FUNC_EXEC( __NATISNEGATIVE )
-}
-
-HB_FUNC_EXTERN( __NATMSG );
-
-HB_FUNC( NATIONMSG )
-{
-   HB_FUNC_EXEC( __NATMSG )
-}
-
-/* NOTE: Intentionally using one leading underscore, like in Clipper.
-         [vszakats] */
-
-HB_FUNC_EXTERN( __NATSORTVER );
-
-HB_FUNC( _NATSORTVER )
-{
-   HB_FUNC_EXEC( __NATSORTVER )
-}
-
-/* NOTE: Intentionally using one leading underscore, like in Clipper.
-         [vszakats] */
-
-HB_FUNC_EXTERN( __NATMSGVER );
-
-HB_FUNC( _NATMSGVER )
-{
-   HB_FUNC_EXEC( __NATMSGVER )
-}
+HB_FUNC_TRANSLATE( ISAFFIRM, __NATISAFFIRM )
+HB_FUNC_TRANSLATE( ISNEGATIVE, __NATISNEGATIVE )
+HB_FUNC_TRANSLATE( NATIONMSG, __NATMSG )
+/* NOTE: Intentionally using one leading underscore, like in Clipper. [vszakats] */
+HB_FUNC_TRANSLATE( _NATSORTVER, __NATSORTVER )
+/* NOTE: Intentionally using one leading underscore, like in Clipper. [vszakats] */
+HB_FUNC_TRANSLATE( _NATMSGVER, __NATMSGVER )
 
 #endif

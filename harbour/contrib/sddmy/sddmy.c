@@ -116,7 +116,7 @@ static void hb_mysqldd_init( void * cargo )
 }
 
 /* force SQLBASE linking */
-HB_FUNC_EXTERN( SQLBASE ); HB_FUNC( SDDMY ) { HB_FUNC_EXEC( SQLBASE ); }
+HB_FUNC_TRANSLATE( SDDMY, SQLBASE )
 
 HB_INIT_SYMBOLS_BEGIN( mysqldd__InitSymbols )
 { "SDDMY", { HB_FS_PUBLIC }, { HB_FUNCNAME( SDDMY ) }, NULL },

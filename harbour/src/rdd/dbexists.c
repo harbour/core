@@ -59,11 +59,6 @@
          original CA-Cl*pper namespace. This should have been
          marked as HB_EXTENSION, but it's not. */
 
-HB_FUNC_EXTERN( HB_DBEXISTS );
-
-HB_FUNC( DBEXISTS )
-{
-   HB_FUNC_EXEC( HB_DBEXISTS );
-}
+HB_FUNC_TRANSLATE( DBEXISTS, HB_DBEXISTS )
 
 #endif

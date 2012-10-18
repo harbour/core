@@ -552,9 +552,4 @@ HB_FUNC( HB_UTF8LEN )
  * character position in string so we do not need to create new
  * HB_UTF8STRTRAN() but we can safely use normal STRTRAN() function
  */
-HB_FUNC_EXTERN( STRTRAN );
-
-HB_FUNC( HB_UTF8STRTRAN )
-{
-   HB_FUNC_EXEC( STRTRAN )
-}
+HB_FUNC_TRANSLATE( HB_UTF8STRTRAN, STRTRAN )
