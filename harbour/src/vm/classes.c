@@ -4096,29 +4096,17 @@ HB_FUNC( __CLS_INCDATA )
 }
 
 /* NOTE: Undocumented Clipper function */
-
 /* see for parameter compatibility with Clipper. */
-HB_FUNC( __CLASSNEW )
-{
-   HB_FUNC_EXEC( __CLSNEW );
-}
 
+HB_FUNC_TRANSLATE( __CLASSNEW, __CLSNEW )
 
 /* NOTE: Undocumented Clipper function */
 
-HB_FUNC( __CLASSINSTANCE )
-{
-   HB_FUNC_EXEC( __CLSINST );
-}
-
+HB_FUNC_TRANSLATE( __CLASSINSTANCE, __CLSINST )
 
 /* NOTE: Undocumented Clipper function */
 
-HB_FUNC( __CLASSADD )
-{
-   HB_FUNC_EXEC( __CLSADDMSG );
-}
-
+HB_FUNC_TRANSLATE( __CLASSADD, __CLSADDMSG )
 
 /* NOTE: Undocumented Clipper function */
 

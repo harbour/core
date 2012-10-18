@@ -342,7 +342,7 @@ HB_FUNC( DBCREATE )
 
    /*
     * NOTE: 4-th, 5-th and 6-th parameters are undocumented Clipper ones
-    * 4-th is boolean flag indicating if file should stay open (any boolean 
+    * 4-th is boolean flag indicating if file should stay open (any boolean
     *      value will enable this behavior)
     * 5-th is alias - if not given then WA is open without alias
     * 6-th is optional DELIMITED value used by some RDDs like DELIM
@@ -1585,10 +1585,7 @@ HB_FUNC( RDDREGISTER )
 }
 
 /* Same as LASTREC() */
-HB_FUNC( RECCOUNT )
-{
-   HB_FUNC_EXEC( LASTREC );
-}
+HB_FUNC_TRANSLATE( RECCOUNT, LASTREC )
 
 HB_FUNC( RECNO )
 {

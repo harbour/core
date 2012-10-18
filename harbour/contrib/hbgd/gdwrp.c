@@ -610,12 +610,8 @@ HB_FUNC( GDIMAGECREATE ) /* gdImagePtr gdImageCreate(sx, sy) */
 
 /* - */
 
-HB_FUNC( GDIMAGECREATEPALETTE ) /* gdImagePtr gdImageCreatePalette(sx, sy) */
-{
-   /* Alias of GDCreate() */
-   HB_FUNC_EXEC( GDIMAGECREATE );
-}
-
+/* Alias of GDCreate() */
+HB_FUNC_TRANSLATE( GDIMAGECREATEPALETTE, GDIMAGECREATE ) /* gdImagePtr gdImageCreatePalette(sx, sy) */
 
 /* - */
 

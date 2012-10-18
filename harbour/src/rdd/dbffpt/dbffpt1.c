@@ -5452,9 +5452,7 @@ static const RDDFUNCS fptTable =
    ( DBENTRYP_SVP )   NULL    /* hb_fptWhoCares */
 };
 
-HB_FUNC_EXTERN( _DBF );
-
-HB_FUNC( DBFFPT ) { HB_FUNC_EXEC( _DBF ); }
+HB_FUNC_TRANSLATE( DBFFPT, _DBF )
 HB_FUNC( DBFDBT ) {;}
 HB_FUNC( DBFSMT ) {;}
 HB_FUNC( DBFBLOB ) {;}

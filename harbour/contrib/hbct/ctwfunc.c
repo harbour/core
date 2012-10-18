@@ -445,10 +445,7 @@ HB_FUNC( WLIST )
    }
 }
 
-HB_FUNC( _WSTACK )
-{
-   HB_FUNC_EXEC( WLIST );
-}
+HB_FUNC_TRANSLATE( _WSTACK, WLIST )
 
 /* Temporary Harbour extensions to test some extended CTW functionality
  */

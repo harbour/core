@@ -7850,7 +7850,7 @@ static const RDDFUNCS ntxTable = {
                              hb_ntxWhoCares
                            };
 
-HB_FUNC_EXTERN( _DBF ); HB_FUNC( DBFNTX ) { HB_FUNC_EXEC( _DBF ); }
+HB_FUNC_TRANSLATE( DBFNTX, _DBF )
 
 HB_FUNC_STATIC( DBFNTX_GETFUNCTABLE )
 {

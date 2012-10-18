@@ -137,13 +137,9 @@ HB_FUNC( HB_CDPLIST )
    hb_xfree( ( void * ) list );
 }
 
-HB_FUNC( __NATSORTVER )
-{
-   /* NOTE: CA-Cl*pper 5.2e Intl. will return: "NATSORT v1.2i x14 19/Mar/93" */
-   /* NOTE: CA-Cl*pper 5.3  Intl. will return: "NATSORT v1.3i x19 06/Mar/95" */
-
-   HB_FUNC_EXEC( HB_CDPINFO );
-}
+/* NOTE: CA-Cl*pper 5.2e Intl. will return: "NATSORT v1.2i x14 19/Mar/93" */
+/* NOTE: CA-Cl*pper 5.3  Intl. will return: "NATSORT v1.3i x19 06/Mar/95" */
+HB_FUNC_TRANSLATE( __NATSORTVER, HB_CDPINFO )
 
 /*
  * extended CP PRG functions

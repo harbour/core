@@ -282,10 +282,7 @@ HB_FUNC( FILEMOVE )
                             hb_parcx( 2 ) ) ? 0 : - ( HB_MAXINT ) hb_fsOsError() );
 }
 
-HB_FUNC( RENAMEFILE )
-{
-   HB_FUNC_EXEC( FILEMOVE );
-}
+HB_FUNC_TRANSLATE( RENAMEFILE, FILEMOVE )
 
 HB_FUNC( DELETEFILE )
 {

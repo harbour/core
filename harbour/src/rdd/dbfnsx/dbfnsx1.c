@@ -8170,7 +8170,7 @@ static const RDDFUNCS nsxTable = {
                              NULL
                            };
 
-HB_FUNC_EXTERN( _DBF ); HB_FUNC( DBFNSX ) { HB_FUNC_EXEC( _DBF ); }
+HB_FUNC_TRANSLATE( DBFNSX, _DBF )
 
 HB_FUNC_STATIC( DBFNSX_GETFUNCTABLE )
 {

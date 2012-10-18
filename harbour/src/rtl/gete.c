@@ -102,11 +102,7 @@ HB_FUNC( GETENV )
 }
 
 /* NOTE: Undocumented Clipper function. [vszakats] */
-
-HB_FUNC( GETE )
-{
-   HB_FUNC_EXEC( GETENV );
-}
+HB_FUNC_TRANSLATE( GETE, GETENV )
 
 /* NOTE: Harbour extended version of GETENV(). The 2nd parameter
          can be used to specify a default value, returned if the

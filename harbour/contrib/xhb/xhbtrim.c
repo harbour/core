@@ -81,10 +81,7 @@ HB_FUNC( XHB_RTRIM )
 }
 
 /* synonymn for XHB_RTRIM */
-HB_FUNC( XHB_TRIM )
-{
-   HB_FUNC_EXEC( XHB_RTRIM );
-}
+HB_FUNC_TRANSLATE( XHB_TRIM, XHB_RTRIM )
 
 /* trims leading and trailing spaces from a string */
 

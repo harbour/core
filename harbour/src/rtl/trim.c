@@ -138,10 +138,7 @@ HB_FUNC( RTRIM )
 }
 
 /* synonymn for RTRIM */
-HB_FUNC( TRIM )
-{
-   HB_FUNC_EXEC( RTRIM );
-}
+HB_FUNC_TRANSLATE( TRIM, RTRIM )
 
 /* trims leading and trailing spaces from a string */
 
