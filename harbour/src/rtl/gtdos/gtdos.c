@@ -133,20 +133,20 @@
 #if !defined( __DJGPP__ )
    #ifndef MK_FP
       #define MK_FP( seg, off ) \
-         ((void FAR *)(((unsigned long)(seg) << 16)|(unsigned)(off)))
+         ((void FAR *)(((unsigned long)(seg) << 4)|(unsigned)(off)))
    #endif
    static unsigned char FAR * s_pScreenAddres;
 #endif
 
 #if defined( __WATCOMC__ ) && defined( __386__ )
    #define HB_PEEK_BYTE(s,o)     ( *( ( HB_UCHAR * ) ( ( (s) << 4 ) | (o) ) ) )
-   #define HB_POKE_BYTE(s,o,b)   *( ( HB_UCHAR * ) ( ( (s) << 4 ) | (o) ) ) = (b)
+   #define HB_POKE_BYTE(s,o,b)   ( *( ( HB_UCHAR * ) ( ( (s) << 4 ) | (o) ) ) = ( HB_UCHAR ) (b) )
 #elif defined( __DJGPP__ )
    #define HB_PEEK_BYTE(s,o)     _farpeekb( (s), (o) )
    #define HB_POKE_BYTE(s,o,b)   _farpokeb( (s), (o), (b) )
 #else
    #define HB_PEEK_BYTE(s,o)     ( *( ( HB_UCHAR FAR * ) MK_FP( (s), (o) ) ) )
-   #define HB_POKE_BYTE(s,o,b)   *( ( HB_UCHAR FAR * ) MK_FP( (s), (o) ) ) = (b)
+   #define HB_POKE_BYTE(s,o,b)   ( *( ( HB_UCHAR FAR * ) MK_FP( (s), (o) ) ) = ( HB_UCHAR ) (b) )
 #endif
 
 static int           s_GtId;
@@ -213,29 +213,15 @@ static int hb_gt_dos_GetScreenMode( void )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_GetScreenMode()"));
 
-#if defined( __WATCOMC__ ) && defined( __386__ )
-   return ( int ) *( ( unsigned char * ) 0x0449 );
-#elif defined( __DJGPP__ )
-   return ( int ) _farpeekb( 0x0040, 0x0049 );
-#else
-   return ( int ) *( ( unsigned char FAR * ) MK_FP( 0x0040, 0x0049 ) );
-#endif
+   return ( int ) HB_PEEK_BYTE( 0x0040, 0x0049 );
 }
 
 static void hb_gt_dos_GetScreenSize( int * piRows, int * piCols )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_GetScreenSize(%p, %p)", piRows, piCols));
 
-#if defined( __WATCOMC__ ) && defined( __386__ )
-   *piRows = ( int ) *( ( unsigned char * ) 0x0484 ) + 1;
-   *piCols = ( int ) *( ( unsigned char * ) 0x044A );
-#elif defined( __DJGPP__ )
-   *piRows = ( int ) _farpeekb( 0x0040, 0x0084 ) + 1;
-   *piCols = ( int ) _farpeekb( 0x0040, 0x004A );
-#else
-   *piRows = ( int ) *( ( unsigned char FAR * ) MK_FP( 0x0040, 0x0084 ) ) + 1;
-   *piCols = ( int ) *( ( unsigned char FAR * ) MK_FP( 0x0040, 0x004A ) );
-#endif
+   *piRows = ( int ) HB_PEEK_BYTE( 0x0040, 0x0084 ) + 1;
+   *piCols = ( int ) HB_PEEK_BYTE( 0x0040, 0x004A );
 }
 
 #if !defined( __DJGPP__ )
@@ -925,13 +911,7 @@ static HB_BOOL hb_gt_dos_GetBlink( PHB_GT pGT )
 
    HB_SYMBOL_UNUSED( pGT );
 
-#if defined( __WATCOMC__ ) && defined( __386__ )
-   return ( *( ( char * ) 0x0465 ) & 0x10 ) != 0;
-#elif defined( __DJGPP__ )
-   return ( _farpeekb( 0x0040, 0x0065 ) & 0x10 ) != 0;
-#else
-   return ( *( ( char FAR * ) MK_FP( 0x0040, 0x0065 ) ) &0x10 ) != 0;
-#endif
+   return ( HB_PEEK_BYTE( 0x0040, 0x0065 ) & 0x10 ) != 0;
 }
 
 static void hb_gt_dos_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
@@ -988,24 +968,15 @@ static const char * hb_gt_dos_Version( PHB_GT pGT, int iType )
 /* some definitions */
 #define INT_VIDEO    0x10
 
-/* TOFIX: Why define another POKE_BYTE() when HB_POKE_BYTE()
-          is already available? */
-#if defined( __DJGPP__ )
-   #define POKE_BYTE( s, o, b ) /* Do nothing */
-   #define outport outportw     /* Use correct function name */
+#if defined( __WATCOMC__ )
+   #define outportb outp        /* Use correct function name */
+   #define outportw outpw       /* Use correct function name */
+   #define inportw  inpw        /* Use correct function name */
+   #define inportb  inp         /* Use correct function name */
 #elif defined( __RSX32__ )
    #define inportb( p ) 0       /* Return 0 */
-   #define outport( p, w )      /* Do nothing */
+   #define outportw( p, w )     /* Do nothing */
    #define outportb( p, b )     /* Do nothing */
-   #define POKE_BYTE( s, o, b )  (*((HB_BYTE FAR *)MK_FP((s),(o)) )=(HB_BYTE)(b))
-#elif defined( __WATCOMC__ )
-   #define outportb outp        /* Use correct function name */
-   #define outport outpw        /* Use correct function name */
-   #define inport inpw          /* Use correct function name */
-   #define inportb inp          /* Use correct function name */
-   #define POKE_BYTE( s, o, b )  (*((HB_BYTE FAR *)MK_FP((s),(o)) )=(HB_BYTE)(b))
-#else
-   #define POKE_BYTE( s, o, b )  (*((HB_BYTE FAR *)MK_FP((s),(o)) )=(HB_BYTE)(b))
 #endif
 
 static void vmode12x40( void )
@@ -1016,7 +987,9 @@ static void vmode12x40( void )
    outportb( 0x03D4, 0x09 );         /* update cursor size / pointers */
    regs.h.al = ( inportb( 0x03D5 ) | 0x80 );
    outportb( 0x03D5, regs.h.al );
-   POKE_BYTE( 0x40, 0x84, 11 );      /* 11 rows number update */
+#if !defined( __DJGPP__ )
+   HB_POKE_BYTE( 0x40, 0x84, 11 );   /* 11 rows number update */
+#endif
 }
 
 static void vmode25x40( void )
@@ -1044,7 +1017,7 @@ static void vmode50x40( void )
    regs.HB_XREGS.bx = 0;                    /* load block 0 (BL = 0) */
    regs.HB_XREGS.ax = 0x1112;               /* load 8x8 double dot char set into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
-   outport( 0x03D4, 0x060A );
+   outportw( 0x03D4, 0x060A );
 }
 
 static void vmode12x80( void )
@@ -1055,7 +1028,9 @@ static void vmode12x80( void )
    outportb( 0x03D4, 0x09 );            /* update cursor size / pointers */
    regs.h.al = ( inportb( 0x03D5 ) | 0x80 );
    outportb( 0x03D5, regs.h.al );
-   POKE_BYTE( 0x40, 0x84, 11 );         /* 11 rows number update */
+#if !defined( __DJGPP__ )
+   HB_POKE_BYTE( 0x40, 0x84, 11 );      /* 11 rows number update */
+#endif
 }
 
 static void vmode25x80( void )
@@ -1093,8 +1068,10 @@ static void vmode43x80( void )
    regs.h.bl = 0x0;                 /* load block 0 */
    regs.HB_XREGS.ax = 0x1112;              /* load 8x8 double dot char set into RAM */
    HB_DOS_INT86( INT_VIDEO, &regs, &regs );
-   outport( 0x03D4, 0x060A );       /* update cursor size / pointers */
-   POKE_BYTE( 0x40, 0x84, 42 );     /* 42 rows number update */
+   outportw( 0x03D4, 0x060A );      /* update cursor size / pointers */
+#if !defined( __DJGPP__ )
+   HB_POKE_BYTE( 0x40, 0x84, 42 );  /* 42 rows number update */
+#endif
 }
 
 static void vmode50x80( void )
@@ -1313,9 +1290,6 @@ static void hb_gt_dos_Refresh( PHB_GT pGT )
 #define HB_BIOS_NUMLOCK    0x20
 #define HB_BIOS_CAPSLOCK   0x40
 #define HB_BIOS_INSERT     0x80
-
-/*   #define HB_PEEK_BYTE(s,o)     ( *( ( HB_UCHAR * ) ( ( (s) << 4 ) | (o) ) ) ) */
-/*   #define HB_POKE_BYTE(s,o,b)   *( ( HB_UCHAR * ) ( ( (s) << 4 ) | (o) ) ) = (b) */
 
 static int hb_gt_dos_getKbdState( void )
 {
