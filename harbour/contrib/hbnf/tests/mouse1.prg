@@ -4,9 +4,9 @@
 
 #require "hbnf"
 
-PROCEDURE Main( nRow, nCol )
+// Pass valid row and column values for different video modes to change modes
 
-   // Pass valid row and column values for different video modes to change modes
+PROCEDURE Main( nRow, nCol )
 
    LOCAL nX, nY, cSavClr
    LOCAL cSavScr := SaveScreen( 0, 0, MaxRow(), MaxCol() )
@@ -27,9 +27,15 @@ PROCEDURE Main( nRow, nCol )
       nCol := Val( nCol )
    ENDIF
 
-   IF  !FT_MINIT()
-      @ MaxRow(), 0 SAY "Mouse driver is not installed!"
+   IF ! SetMode( nRow, nCol )
+      @ MaxRow(), 0 SAY "Mode Change unsuccessful:" + Str( nRow, 2, 0 ) + " by";
+         + Str( nCol, 3, 0 )
+      RETURN
+   ENDIF
 
+   IF Empty( FT_MINIT() )
+      @ MaxRow(), 0 SAY "Mouse driver is not installed!"
+      SetMode( nSaveRow, nSaveCol )
       RETURN
    ENDIF
 
@@ -38,7 +44,7 @@ PROCEDURE Main( nRow, nCol )
    @ 0, 0, MaxRow(), MaxCol() BOX hb_UTF8ToStr( "░░░░░░░░░" )
 
    SetColor( "GR+/RB" )
-// Scroll( 7, 2, 19, 63, 0 )
+   Scroll( 7, 2, 19, 63, 0 )
    @ 7, 2 TO 20, 63
 
    @ 17, 10 TO 19, 40 double

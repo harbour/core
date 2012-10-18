@@ -54,24 +54,17 @@ FUNCTION FT_XBOX( cJustType, ; // "L" -> left, otherwise centered
    LOCAL nNumRows
    LOCAL aLines_[ 8 ]
 
-   IF cJustType == NIL
-      cJustType := ""
-   ENDIF
-   IF cRetWait == NIL
-      cRetWait := ""
-   ENDIF
-   IF cBorType == NIL
-      cBorType := ""
-   ENDIF
+   hb_default( @cJustType, "" )
+   hb_default( @cRetWait , "" )
+   hb_default( @cBorType , "" )
+   hb_default( @cBorColor, "N/W" )
+   hb_default( @cBoxColor, "W/N" )
+   hb_default( @nStartRow, 99 )
+   hb_default( @nStartCol, 99 )
 
-   // validate parameters
-   cJustType := iif( HB_ISSTRING( cJustType ), Upper( cJustType ), "" )
-   cRetWait  := iif( HB_ISSTRING( cRetWait ) , Upper( cRetWait ), "" )
-   cBorType  := iif( HB_ISSTRING( cBorType ) , Upper( cBorType ), "" )
-   cBorColor := iif( HB_ISSTRING( cBoxColor ), cBorColor, "N/W" )
-   cBoxColor := iif( HB_ISSTRING( cBoxColor ), cBoxColor, "W/N" )
-   nStartRow := iif( HB_ISNUMERIC( nStartRow ), nStartRow, 99 )
-   nStartCol := iif( HB_ISNUMERIC( nStartCol ), nStartCol, 99 )
+   cJustType := Upper( cJustType )
+   cRetWait  := Upper( cRetWait )
+   cBorType  := Upper( cBorType )
 
    nNumRows := Min( PCount() - 7, 8 )
 

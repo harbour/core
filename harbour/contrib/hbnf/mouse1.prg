@@ -12,35 +12,16 @@ FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
    LOCAL lDone         // loop flag
    LOCAL nPrs          // number of presses which occurred
 
-   // Initialize any empty arguments
-
-   IF nClick == NIL
-      nClick := 1
-   ENDIF
-
-   IF nButton == NIL
-      nButton := 0
-   ENDIF
-
-   IF nRow == NIL
-      nRow := FT_MGETX()
-   ENDIF
-
-   IF nCol == NIL
-      nCol := FT_MGETY()
-   ENDIF
-
-   IF nInterval == NIL
-      nInterval := 0.5
-   ENDIF
-
-   IF nStart == NIL
-      nStart := Seconds()
-   ENDIF
+   __defaultNIL( @nClick, 1 )
+   __defaultNIL( @nButton, 0 )
+   __defaultNIL( @nInterval, 0.5 )
+   __defaultNIL( @nRow, MRow() )
+   __defaultNIL( @nCol, MCol() )
+   __defaultNIL( @nStart, Seconds() )
 
    nVert := nRow
    nHorz := nCol
-   lDouble := lDone := nClick == 0
+   lDouble := lDone := ( nClick == 0 )
 
    // Wait for first press if requested
 
@@ -73,7 +54,7 @@ FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
 
       lDouble := lDone := .F.
 
-      DO WHILE !lDone
+      DO WHILE ! lDone
 
          FT_MBUTPRS( nButton, @nPrs, @nVert, @nHorz )
          nVert := Int( nVert / 8 )
@@ -94,8 +75,8 @@ FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
 FUNCTION FT_MINREGION( nTR, nLC, nBR, nRC )
 
    RETURN ;
-      FT_MGETX() >= nTR .AND. FT_MGETX() <= nBR .AND. ;
-      FT_MGETY() >= nLC .AND. FT_MGETY() <= nRC
+      MRow() >= nTR .AND. MRow() <= nBR .AND. ;
+      MCol() >= nLC .AND. MCol() <= nRC
 
 FUNCTION FT_MSETSENS( nHoriz, nVert, nDouble )
 
@@ -104,16 +85,9 @@ FUNCTION FT_MSETSENS( nHoriz, nVert, nDouble )
    // Get current values
    FT_MGETSENS( @nCurHoriz, @nCurVert, @nCurDouble )
 
-   // Set defaults if necessary
-   IF ! HB_ISNUMERIC( nHoriz )
-      nHoriz := nCurHoriz
-   ENDIF
-   IF ! HB_ISNUMERIC( nVert )
-      nVert := nCurVert
-   ENDIF
-   IF ! HB_ISNUMERIC( nDouble )
-      nDouble := nCurDouble
-   ENDIF
+   hb_default( @nHoriz, nCurHoriz )
+   hb_default( @nVert, nCurVert )
+   hb_default( @nDouble, nCurDouble )
 
    // Fill the registers
    _mset_sensitive( nHoriz, nVert, nDouble )
@@ -127,9 +101,7 @@ FUNCTION FT_MINIT()
    IF ! t_lMinit
       t_lMinit := ( FT_MRESET() != 0 )
    ELSE
-      // Reset maximum x and y limits
-      FT_MYLIMIT( 0, 8 * 24 )
-      FT_MXLIMIT( 0, 8 * 80 )
+      MSetBounds()
    ENDIF
 
    RETURN t_lMinit
@@ -141,11 +113,9 @@ FUNCTION FT_MRESET()
    t_lCrsState := .F.        // Cursor is off after reset
    lStatus := _m_reset()
 
-   // Reset maximum x and y limits
-   FT_MYLIMIT( 0, 8 * MaxRow() )
-   FT_MXLIMIT( 0, 8 * MaxCol() )
+   MSetBounds()
 
-   RETURN lStatus            // return status code
+   RETURN lStatus
 
 FUNCTION FT_MCURSOR( lState )
 
@@ -153,9 +123,9 @@ FUNCTION FT_MCURSOR( lState )
 
    IF HB_ISLOGICAL( lState )
       IF ( t_lCrsState := lState )
-         FT_MSHOWCRS()
+         MShow()
       ELSE
-         FT_MHIDECRS()
+         MHide()
       ENDIF
    ENDIF
 
@@ -163,7 +133,7 @@ FUNCTION FT_MCURSOR( lState )
 
 FUNCTION FT_MSHOWCRS()
 
-   _mse_showcurs()
+   MShow()
 
    t_lCrsState := .T.
 
@@ -171,7 +141,7 @@ FUNCTION FT_MSHOWCRS()
 
 FUNCTION FT_MHIDECRS() // decrement internal cursor flag and hide cursor
 
-   _mse_mhidecrs()
+   MHide()
 
    t_lCrsState := .F.
 

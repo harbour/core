@@ -60,7 +60,7 @@ HB_FUNC( FT_MGETPAGE )
 {
    int iPage;
 
-#if defined( HB_OS_DOS )
+#if defined( HB_OS_DOS ) && 0
    {
       union REGS regs;
       regs.HB_XREGS.ax = 0x1E;
@@ -78,7 +78,7 @@ HB_FUNC( FT_MGETPAGE )
 
 HB_FUNC( FT_MSETPAGE )
 {
-#if defined( HB_OS_DOS )
+#if defined( HB_OS_DOS ) && 0
    {
       union REGS regs;
       regs.HB_XREGS.ax = 0x1D;
@@ -224,28 +224,6 @@ HB_FUNC( _M_RESET )
    hb_retl( fMouse );
 }
 
-HB_FUNC( _MSE_SHOWCURS )
-{
-#if defined( HB_OS_DOS )
-   {
-      union REGS regs;
-      regs.HB_XREGS.ax = 1;
-      HB_DOS_INT86( 0x33, &regs, &regs );
-   }
-#endif
-}
-
-HB_FUNC( _MSE_MHIDECRS )
-{
-#if defined( HB_OS_DOS )
-   {
-      union REGS regs;
-      regs.HB_XREGS.ax = 2;
-      HB_DOS_INT86( 0x33, &regs, &regs );
-   }
-#endif
-}
-
 HB_FUNC( FT_MGETPOS )
 {
    int iX;
@@ -273,46 +251,6 @@ HB_FUNC( FT_MGETPOS )
    hb_storni( iY, 2 );
 
    hb_retni( iButton );
-}
-
-HB_FUNC( FT_MGETX )
-{
-   int iRow;
-
-#if defined( HB_OS_DOS )
-   {
-      union REGS regs;
-      regs.HB_XREGS.ax = 3;
-      HB_DOS_INT86( 0x33, &regs, &regs );
-      iRow = regs.HB_XREGS.dx / 8;
-   }
-#else
-   {
-      iRow = 0;
-   }
-#endif
-
-   hb_retni( iRow );
-}
-
-HB_FUNC( FT_MGETY )
-{
-   int iCol;
-
-#if defined( HB_OS_DOS )
-   {
-      union REGS regs;
-      regs.HB_XREGS.ax = 3;
-      HB_DOS_INT86( 0x33, &regs, &regs );
-      iCol = regs.HB_XREGS.cx / 8;
-   }
-#else
-   {
-      iCol = 0;
-   }
-#endif
-
-   hb_retni( iCol );
 }
 
 HB_FUNC( FT_MSETPOS )
@@ -477,3 +415,9 @@ HB_FUNC( FT_MGETCOORD )
 
    hb_retni( inButton );
 }
+
+/* NOTE: This is what original NFLib did, returned
+         vertical position (row) as X and
+         horizontal position (col) as Y. [vszakats] */
+HB_FUNC_TRANSLATE( FT_MGETX, MROW )
+HB_FUNC_TRANSLATE( FT_MGETY, MCOL )

@@ -55,7 +55,6 @@
  */
 
 #include "inkey.ch"
-#include "set.ch"
 #include "setcurs.ch"
 
 //

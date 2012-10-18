@@ -25,18 +25,9 @@ FUNCTION FT_AEminlen( aArray, nDimension, nStart, nCount )
 
    LOCAL i, nLast, nMinlen := NIL, nLen
 
-   // Set default parameters as necessary.
-   IF nDimension == NIL
-      nDimension := 1
-   ENDIF
-
-   IF nStart == NIL
-      nStart := 1
-   ENDIF
-
-   IF nCount == NIL
-      nCount := Len( aArray ) - nStart + 1
-   ENDIF
+   __defaultNIL( @nDimension, 1 )
+   __defaultNIL( @nStart, 1 )
+   __defaultNIL( @nCount, Len( aArray ) - nStart + 1 )
 
    nLast := Min( nStart + nCount - 1, Len( aArray ) )
 

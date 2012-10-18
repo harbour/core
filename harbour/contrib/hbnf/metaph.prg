@@ -95,8 +95,8 @@ FUNCTION FT_METAPH( cName, nSize ) //  Calculates the metaphone of a character s
 
    LOCAL cMeta
 
-   cName := iif( cName == NIL, "", cName )  //  catch-all
-   nSize := iif( nSize == NIL, 4,  nSize )  //  default size: 4-bytes
+   __defaultNIL( @cName, "" )  //  catch-all
+   __defaultNIL( @nSize, 4 )   //  default size: 4-bytes
 
    //  Remove non-alpha characters and make upper case.
    //  The string is padded with 1 space at the beginning & end.

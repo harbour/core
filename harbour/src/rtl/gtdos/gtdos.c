@@ -135,7 +135,7 @@
       #define MK_FP( seg, off ) \
          ((void FAR *)(((unsigned long)(seg) << 4)|(unsigned)(off)))
    #endif
-   static unsigned char FAR * s_pScreenAddres;
+   static unsigned char FAR * s_pScreenAddress;
 #endif
 
 #if defined( __WATCOMC__ ) && defined( __386__ )
@@ -250,7 +250,7 @@ HB_BYTE FAR * hb_gt_dos_ScreenPtr( int iRow, int iCol )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_ScreenPtr(%d, %d)", iRow, iCol));
 
-   return s_pScreenAddres + ( ( ( iRow * s_iCols ) + iCol ) << 1 );
+   return s_pScreenAddress + ( ( ( iRow * s_iCols ) + iCol ) << 1 );
 }
 #endif
 
@@ -261,7 +261,7 @@ static void hb_gt_dos_GetScreenContents( PHB_GT pGT )
    HB_BYTE bAttr, bChar, bxAttr;
    HB_USHORT usChar;
 #if !defined( __DJGPP__ )
-   HB_BYTE * pScreenPtr = s_pScreenAddres;
+   HB_BYTE * pScreenPtr = s_pScreenAddress;
 #endif
 
    HB_TRACE(HB_TR_DEBUG, ("hb_gt_dos_GetScreenContents(%p)", pGT));
@@ -808,7 +808,7 @@ static void hb_gt_dos_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
    s_iScreenMode = hb_gt_dos_GetScreenMode();
 #if !defined( __DJGPP__ )
-   s_pScreenAddres = hb_gt_dos_ScreenAddress( pGT );
+   s_pScreenAddress = hb_gt_dos_ScreenAddress( pGT );
 #endif
    hb_gt_dos_GetScreenSize( &s_iRows, &s_iCols );
    hb_gt_dos_GetCursorPosition( &s_iCurRow, &s_iCurCol );
@@ -1185,7 +1185,7 @@ static HB_BOOL hb_gt_dos_SetMode( PHB_GT pGT, int iRows, int iCols )
    }
    s_iScreenMode = hb_gt_dos_GetScreenMode();
 #if !defined( __DJGPP__ )
-   s_pScreenAddres = hb_gt_dos_ScreenAddress( pGT );
+   s_pScreenAddress = hb_gt_dos_ScreenAddress( pGT );
 #endif
    hb_gt_dos_GetCursorPosition( &s_iCurRow, &s_iCurCol );
    s_iCursorStyle = hb_gt_dos_GetCursorStyle();
@@ -1215,7 +1215,7 @@ static HB_BOOL hb_gt_dos_Resume( PHB_GT pGT )
 
    s_iScreenMode = hb_gt_dos_GetScreenMode();
 #if !defined( __DJGPP__ )
-   s_pScreenAddres = hb_gt_dos_ScreenAddress( pGT );
+   s_pScreenAddress = hb_gt_dos_ScreenAddress( pGT );
 #endif
    hb_gt_dos_GetScreenSize( &s_iRows, &s_iCols );
    hb_gt_dos_GetCursorPosition( &s_iCurRow, &s_iCurCol );

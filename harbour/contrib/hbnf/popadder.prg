@@ -263,7 +263,7 @@ FUNCTION FT_Adder()
          _ftAddHelp()
       CASE nKey == K_F10                // <F10> Quit - Return total
          IF lTotalOk                     // Did they finish the calculation
-            IF oGet != NIL .AND. oGet:TYPE == "N"
+            IF oGet != NIL .AND. oGet:type == "N"
                Set( _SET_DECIMALS, nOldDecim )
                SetCursor( nOldCurs )
                IF lTape
@@ -681,7 +681,8 @@ STATIC FUNCTION _ftUpdateTrans( aAdder, lTypeTotal, nAmount )
 
    LOCAL lUseTotal := ( nAmount == NIL )
 
-   nAmount := iif( nAmount == NIL, 0, nAmount )
+   __defaultNIL( @nAmount, 0 )
+
    IF lClAdder                     // Clear the adder (they pressed <DEL> twice
       AAdd( aTrans, Str( 0, 22, nMaxDeci ) + " C" )
       IF lTape                            // If there is a tape Show Clear
@@ -726,7 +727,7 @@ STATIC FUNCTION _ftEraseTotSubTot( aAdder )
 
 STATIC FUNCTION _ftRoundIt( nNumber, nPlaces )
 
-   nPlaces := iif( nPlaces == NIL, 0, nPlaces )
+   __defaultNIL( @nPlaces, 0 )
 
    RETURN iif( nNumber < 0.0, -1.0, 1.0 ) * ;
       Int( Abs( nNumber ) * 10 ^ nPlaces + 0.50 + 10 ^ -12 ) / 10 ^ nPlaces
@@ -849,7 +850,7 @@ STATIC FUNCTION _ftPushMessage( cMessage, lWait, cTitle, cBotTitle, xQuiet, nTop
    LOCAL nOldRow     := Row()
    LOCAL nOldCol     := Col()
    LOCAL nOldCurs    := SetCursor( SC_NONE )
-   LOCAL nWinColor   := iif( nWinColor == NIL, W_CURR, nWinColor )
+   LOCAL nWinColor   := W_CURR
 
    cOldDevic := Set( _SET_DEVICE, "SCREEN" )
    lOldPrint := Set( _SET_PRINTER, .F. )
@@ -863,7 +864,8 @@ STATIC FUNCTION _ftPushMessage( cMessage, lWait, cTitle, cBotTitle, xQuiet, nTop
    nBottom   := nTop + nNumRows + 2
    nLeft     := Int( ( MaxCol() - nWide ) / 2 ) - 3
    nRight    := nLeft + nWide + 4
-   lWait     := iif( lWait == NIL, .F., lWait )
+
+   __defaultNIL( @lWait, .F. )
 
    _ftPushWin( nTop, nLeft, nBottom, nRight, cTitle, cBotTitle, nWinColor )
    DISPMESSAGE cMessage, nTop + 1, nLeft + 2, nBottom - 1, nRight - 2
@@ -917,7 +919,8 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
    nOldCol   := Col()
    nOldCurs  := SetCursor( SC_NONE )
    cOldColor := SetColor()
-   lNoESC    := iif( lNoESC == NIL, .F., lNoESC )
+
+   __defaultNIL( @lNoESC, .F. )
 
    nMessLen  := Len( cMessage ) + nVarLen + 1
    nWide     := iif( nMessLen > 66, 66, iif( nMessLen < 12, 12, nMessLen ) )
@@ -945,11 +948,11 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
 
    // If the input line is character & wider than window SCROLL
    IF lGetOnNextLine .AND. HB_ISSTRING( xVarVal ) .AND. nVarLen > nWide
-      oNewGet:Picture   := "@S" + LTrim( Str( nWide, 4, 0 ) ) + iif( cPict == NIL, "", " " + cPict )
+      oNewGet:Picture := "@S" + hb_ntos( nWide ) + iif( cPict == NIL, "", " " + cPict )
    ENDIF
 
    IF cPict != NIL                       // Use the picture they passed
-      oNewGet:Picture   := cPict
+      oNewGet:Picture := cPict
    ELSE                                  // Else setup default pictures
       IF HB_ISDATE( xVarVal )
          oNewGet:Picture   := "99/99/99"
@@ -1027,7 +1030,7 @@ STATIC FUNCTION _ftError( cMessage, xDontReset )
    LOCAL nOldRow, nOldCol, nOldCurs, nTop, nLeft, nBot, nRight, cOldColor
    LOCAL nOldLastKey, cErrorScr, nMessLen, nWide, nNumRows, nKey
    LOCAL cOldDevic, lOldPrint
-   LOCAL lResetLKey := iif( xDontReset == NIL, .T., .F. )
+   LOCAL lResetLKey := ( xDontReset == NIL )
 
    nOldLastKey := LastKey()
    nOldRow  := Row()
@@ -1074,7 +1077,8 @@ STATIC FUNCTION _ftStuffComma( cStrToStuff, lTrimStuffedStr )
 
    LOCAL nDecPosit, x
 
-   lTrimStuffedStr := iif( lTrimStuffedStr == NIL, .F., lTrimStuffedStr )
+   __defaultNIL( @lTrimStuffedStr, .F. )
+
    IF !( "." $ cStrToStuff )
       cStrToStuff := _ftPosIns( cStrToStuff, ".", iif( "C" $ cStrToStuff .OR. ;
          "E" $ cStrToStuff .OR. "+" $ cStrToStuff .OR. "-" $ cStrToStuff ;
@@ -1114,11 +1118,11 @@ STATIC FUNCTION _ftSetSCRColor( nStd, nEnh, nBord, nBack, nUnsel )
       _ftInitColors()
    ENDIF
 
-   nStd  := iif( nStd   == NIL, 8, nStd )
-   nEnh  := iif( nEnh   == NIL, 8, nEnh )
-   nBord := iif( nBord  == NIL, 8, nBord )
-   nBack := iif( nBack  == NIL, 8, nBack )
-   nUnsel := iif( nUnsel == NIL, nEnh, nUnsel )
+   __defaultNIL( @nStd  , 8 )
+   __defaultNIL( @nEnh  , 8 )
+   __defaultNIL( @nBord , 8 )
+   __defaultNIL( @nBack , 8 )
+   __defaultNIL( @nUnsel, nEnh )
 
    RETURN SetColor( ;
       t_aStdColor[ nStd ] + "," + ;
@@ -1144,7 +1148,7 @@ STATIC FUNCTION _ftSetSCRColor( nStd, nEnh, nBord, nBack, nUnsel )
 
 STATIC FUNCTION _ftPushWin( t, l, b, r, cTitle, cBotTitle, nWinColor )
 
-   LOCAL lAutoWindow := nWinColor == NIL
+   LOCAL lAutoWindow := ( nWinColor == NIL )
 
    nWinColor := iif( nWinColor == NIL, _ftNextWinColor(), nWinColor )
    AAdd( t_aWindow, { t, l, b, r, nWinColor, SaveScreen( t, l, b + 1, r + 2 ), lAutoWindow } )
@@ -1205,12 +1209,12 @@ STATIC FUNCTION _ftPopWin()
 
 STATIC FUNCTION _ftSetWinColor( nWin, nStd, nEnh, nBord, nBack, nUnsel )
 
-   nWin   := iif( nWin   == NIL, t_nWinColor, nWin )
-   nStd   := iif( nStd   == NIL, 7, nStd )
-   nEnh   := iif( nEnh   == NIL, 7, nEnh )
-   nBord  := iif( nBord  == NIL, 7, nBord )
-   nBack  := iif( nBack  == NIL, 7, nBack )
-   nUnsel := iif( nUnsel == NIL, nEnh, nUnsel )
+   __defaultNIL( @nWin  , t_nWinColor )
+   __defaultNIL( @nStd  , 7 )
+   __defaultNIL( @nEnh  , 7 )
+   __defaultNIL( @nBord , 7 )
+   __defaultNIL( @nBack , 7 )
+   __defaultNIL( @nUnsel, nEnh )
 
    RETURN SetColor( ;
       t_aWinColor[ nStd, nWin ] + "," + ;

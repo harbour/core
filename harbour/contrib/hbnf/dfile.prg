@@ -37,20 +37,18 @@ FUNCTION FT_DFSETUP( cInFile, nTop, nLeft, nBottom, nRight, ;
    LOCAL rval
 
    IF hb_FileExists( cInFile )
-      nTop    := iif( HB_ISNUMERIC( nTop )   , nTop,           0 )
-      nLeft   := iif( HB_ISNUMERIC( nLeft )  , nLeft,          0 )
-      nBottom := iif( HB_ISNUMERIC( nBottom ), nBottom, MaxRow() )
-      nRight  := iif( HB_ISNUMERIC( nRight ) , nRight,  MaxCol() )
 
-      nCNormal    := iif( HB_ISNUMERIC( nCNormal )   , nCNormal,     7 )
-      nCHighlight := iif( HB_ISNUMERIC( nCHighlight ), nCHighlight, 15 )
-
-      nStart    := iif( HB_ISNUMERIC( nStart )   , nStart,      1 )
-      nColSkip  := iif( HB_ISNUMERIC( nColSkip ) , nColSkip,    1 )
-      lBrowse   := iif( HB_ISLOGICAL( lBrowse )  , lBrowse,   .F. )
-
-      nRMargin  := iif( HB_ISNUMERIC( nRMargin ) , nRMargin,   255 )
-      nBuffSize := iif( HB_ISNUMERIC( nBuffSize ), nBuffSize, 4096 )
+      hb_default( @nTop        , 0 )
+      hb_default( @nLeft       , 0 )
+      hb_default( @nBottom     , MaxRow() )
+      hb_default( @nRight      , MaxCol() )
+      hb_default( @nCNormal    , 7 )
+      hb_default( @nCHighlight , 15 )
+      hb_default( @nStart      , 1 )
+      hb_default( @nColSkip    , 1 )
+      hb_default( @lBrowse     , .F. )
+      hb_default( @nRMargin    , 255 )
+      hb_default( @nBuffSize   , 4096 )
 
       IF HB_ISARRAY( cExitKeys ) /* Harbour extension */
          IF Len( cExitKeys ) > 25

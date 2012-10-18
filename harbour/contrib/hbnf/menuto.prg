@@ -78,9 +78,7 @@ FUNCTION FT_Prompt( nRow, nCol, cPrompt, cColor, ;
       nUp, nDown, nLeft, nRight, bExecute )
 
    // If the prompt color setting is not specified, use default
-   IF cColor  == NIL
-      cColor  := SetColor()
-   ENDIF
+   __defaultNIL( @cColor, SetColor() )
 
    // If no message is supplied, set message values to NIL
 
@@ -89,11 +87,8 @@ FUNCTION FT_Prompt( nRow, nCol, cPrompt, cColor, ;
       nMsgRow := nMsgCol := cMsgColor := NIL
 
    ELSE
-
       // If message row not supplied, use the default
-      IF nMsgRow == NIL
-         nMsgRow := Set( _SET_MESSAGE )
-      ENDIF
+      __defaultNIL( @nMsgRow, Set( _SET_MESSAGE ) )
 
       // If message column not supplied, use the default
       IF nMsgCol == NIL
@@ -105,18 +100,12 @@ FUNCTION FT_Prompt( nRow, nCol, cPrompt, cColor, ;
       ENDIF
 
       // If message color not specified, use the default
-      IF cMsgColor == NIL
-         cMsgColor := cColor
-      ENDIF
+      __defaultNIL( @cMsgColor, cColor )
    ENDIF
 
    // If trigger values not specifed, set the defaults
-   IF nTrigger       == NIL
-      nTrigger      := 1
-   ENDIF
-   IF cTriggerColor  == NIL
-      cTriggerColor := cColor
-   ENDIF
+   __defaultNIL( @nTrigger, 1 )
+   __defaultNIL( @cTriggerColor, cColor )
 
    // Now add elements to the static arrays -- t_nLevel indicates the recursion
    // level, which allows for nested menus.
@@ -175,7 +164,7 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
 
    nActive := Eval( bGetSet )
 
-   IF ( nActive < 1 .OR. nActive > nCount )
+   IF nActive < 1 .OR. nActive > nCount
       nActive := 1
    ENDIF
 

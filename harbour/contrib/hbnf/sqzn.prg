@@ -24,10 +24,11 @@ FUNCTION ft_sqzn( nValue, nSize, nDecimals )
 
    LOCAL tmpstr, cCompressed, k
 
-   nSize       := iif( nSize     == NIL, 10, nSize )
-   nDecimals   := iif( nDecimals == NIL, 0, nDecimals )
+   __defaultNIL( @nSize, 10 )
+   __defaultNIL( @nDecimals, 0 )
+
    nValue      := nValue * ( 10 ** nDecimals )
-   nSize       := iif( nSize / 2 != Int( nSize / 2 ), nSize + 1, nSize )
+   nSize       := iif( ( nSize / 2 ) != Int( nSize / 2 ), nSize + 1, nSize )
    tmpstr      := Str( Abs( nValue ), nSize )
    tmpstr      := StrTran( tmpstr, " ", "0" )
    cCompressed := hb_BChar( Val( hb_BSubStr( tmpstr, 1, 2 ) ) + iif( nValue < 0, 128, 0 ) )
@@ -40,17 +41,18 @@ FUNCTION ft_sqzn( nValue, nSize, nDecimals )
 
 FUNCTION ft_unsqzn( cCompressed, nSize, nDecimals )
 
-   LOCAL tmp := "", k, cValue, multi := 1
+   LOCAL tmp := "", k, cValue, multi
 
-   nSize       := iif( nSize     == NIL, 10, nSize )
-   nDecimals   := iif( nDecimals == NIL, 0, nDecimals )
-   cCompressed := iif( multi     == -1, hb_BSubStr( cCompressed, 2 ), cCompressed )
-   nSize       := iif( nSize / 2 != Int( nSize / 2 ), nSize + 1, nSize )
+   __defaultNIL( @nSize, 10 )
+   __defaultNIL( @nDecimals, 0 )
+
+   nSize := iif( ( nSize / 2 ) != Int( nSize / 2 ), nSize + 1, nSize )
    IF hb_BCode( cCompressed ) > 127
       tmp   := Str( hb_BCode( cCompressed ) - 128, 2 )
       multi := -1
    ELSE
       tmp   := Str( hb_BCode( cCompressed ), 2 )
+      multi := 1
    ENDIF
 
    FOR k := 2 TO hb_BLen( cCompressed )

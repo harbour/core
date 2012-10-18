@@ -98,7 +98,7 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
       cnBoxString := hb_UTF8ToStrBox( "┌─┐│┘─└│ " )
    ENDIF
 
-   lShadow := iif( lShadow == NIL, .T., lShadow )
+   __defaultNIL( @lShadow, .T. )
 
    cOldScreen := SaveScreen( nBoxTop, nBoxLeft, nBoxBottom + 1, nBoxRight + 2 )
 

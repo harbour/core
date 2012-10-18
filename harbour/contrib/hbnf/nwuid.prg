@@ -40,7 +40,9 @@ FUNCTION FT_NWUID( nConn )
    LOCAL cReqPkt
    LOCAL cRepPkt
 
-   nConn := iif( nConn == NIL, FT_NWLSTAT(), nConn )
+   IF nConn == NIL
+      nConn := FT_NWLSTAT()
+   ENDIF
 
    // Set up request packet
    cReqPkt := hb_BChar( 22 )          // Get Connection Information

@@ -38,8 +38,9 @@ FUNCTION FT_ACCTADJ( dGivenDate, lIsEnd )
       dGivenDate := Date()
    ENDIF
 
-   lIsEnd := iif( HB_ISLOGICAL( lIsEnd ), lIsEnd, .F. )
-   nTemp  := FT_DAYTOBOW( dGivenDate )
+   hb_default( @lIsEnd, .F. )
+
+   nTemp := FT_DAYTOBOW( dGivenDate )
 
    IF nTemp > ( 2 + iif( lIsEnd, 0, 1 ) )
       dGivenDate += 7 - nTemp          // Next Week Start (This Week End + 1)

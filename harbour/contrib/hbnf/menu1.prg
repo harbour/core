@@ -109,7 +109,7 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
    t_nMaxCol := MaxCol()
 
    // row for menu bar
-   nTopRow := iif( nTopRow == NIL, 0, nTopRow )
+   __defaultNIL( @nTopRow, 0 )
 
    AFill( aLastSel, 1 )
    t_aChoices := aOptions
