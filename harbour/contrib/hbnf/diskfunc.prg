@@ -28,7 +28,9 @@
 #include "fileio.ch"
 
 FUNCTION FT_DSKSIZE( cDrive )
+
    RETURN hb_DiskSpace( cDrive + hb_osDriveSeparator(), HB_DISK_TOTAL )
 
 FUNCTION FT_DSKFREE( cDrive )
+
    RETURN hb_DiskSpace( cDrive + hb_osDriveSeparator(), HB_DISK_FREE )

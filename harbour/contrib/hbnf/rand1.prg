@@ -29,6 +29,6 @@ FUNCTION ft_rand1( nMax )
 
    LOCAL m := 100000000, b := 31415621
 
-   t_nSeed := iif( t_nSeed == NIL, Seconds(), t_nSeed )   // init_seed()
+   t_nSeed := iif( t_nSeed == NIL, Seconds(), t_nSeed )
 
    RETURN nMax * ( ( t_nSeed := Mod( t_nSeed * b + 1, m ) ) / m )

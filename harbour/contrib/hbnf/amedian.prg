@@ -47,7 +47,7 @@ FUNCTION FT_AMEDIAN( aArray, nStart, nEnd )
 
    // Determine middle value(s)
    IF ( nTemplen % 2 ) == 0
-      nMiddle1 := aTemparray[ ( nTemplen / 2 ) ]
+      nMiddle1 := aTemparray[ nTemplen / 2 ]
       nMiddle2 := aTemparray[ Int( nTemplen / 2 ) + 1 ]
       nMedian :=  Int( ( nMIddle1 + nMiddle2 ) / 2 )
    ELSE

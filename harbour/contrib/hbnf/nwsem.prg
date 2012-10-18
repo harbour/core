@@ -32,9 +32,8 @@
  *
  */
 
-// --------------------------------------------------------------
-//    Semaphore Package for Novell NetWare
-// --------------------------------------------------------------
+// Semaphore Package for Novell NetWare
+// ------------------------------------
 
 #include "ftint86.ch"
 
@@ -102,9 +101,8 @@ FUNCTION ft_nwSemClose( nHandle )
 
    RETURN _ftnwsem( CLOSE_SEMAPHORE, nHandle )
 
-// ---------------------------------------------------------
+// -----------------------------------------------
 // _ftnwsem() - internal for the semaphore package
-// ---------------------------------------------------------
 
 /* TODO: rewrite in C */
 STATIC FUNCTION _ftnwsem( nOp, nHandle, nTimeout )

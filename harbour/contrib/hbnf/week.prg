@@ -49,7 +49,7 @@ FUNCTION FT_WEEK( dGivenDate, nWeekNum )
       dGivenDate := aRetVal[ 2 ] + ( nWeekNum - 1 ) * 7
    ENDIF
 
-   dGivenDate += ( 6 - FT_DAYTOBOW( dGivenDate ) )       // end of week
+   dGivenDate += 6 - FT_DAYTOBOW( dGivenDate )       // end of week
 
    aRetVal[ 1 ] += StrZero( Int( ( dGivenDate - aRetVal[ 2 ] ) / 7 ) + 1, 2 )
    aRetVal[ 2 ] := Max( dGivenDate - 6, dTemp )

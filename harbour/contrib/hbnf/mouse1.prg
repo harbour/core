@@ -85,8 +85,7 @@ FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
       ENDDO
 
       // make sure we haven't moved
-
-      lDouble := lDouble .AND. ( nVert == nRow .AND. nHorz == nCol )
+      lDouble := lDouble .AND. nVert == nRow .AND. nHorz == nCol
 
    ENDIF
 
@@ -129,7 +128,6 @@ FUNCTION FT_MINIT()
       t_lMinit := ( FT_MRESET() != 0 )
    ELSE
       // Reset maximum x and y limits
-
       FT_MYLIMIT( 0, 8 * 24 )
       FT_MXLIMIT( 0, 8 * 80 )
    ENDIF
@@ -140,14 +138,14 @@ FUNCTION FT_MRESET()
 
    LOCAL lStatus
 
-   t_lCrsState := .F.         // Cursor is off after reset
+   t_lCrsState := .F.        // Cursor is off after reset
    lStatus := _m_reset()
-   // Reset maximum x and y limits
 
+   // Reset maximum x and y limits
    FT_MYLIMIT( 0, 8 * MaxRow() )
    FT_MXLIMIT( 0, 8 * MaxCol() )
 
-   RETURN lStatus          // return status code
+   RETURN lStatus            // return status code
 
 FUNCTION FT_MCURSOR( lState )
 
@@ -169,12 +167,12 @@ FUNCTION FT_MSHOWCRS()
 
    t_lCrsState := .T.
 
-   RETURN NIL              // no output from function
+   RETURN NIL                // no output from function
 
-FUNCTION FT_MHIDECRS()   // decrement internal cursor flag and hide cursor
+FUNCTION FT_MHIDECRS() // decrement internal cursor flag and hide cursor
 
    _mse_mhidecrs()
 
    t_lCrsState := .F.
 
-   RETURN NIL               // no output from function
+   RETURN NIL                // no output from function

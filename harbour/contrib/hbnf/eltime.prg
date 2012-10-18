@@ -28,9 +28,9 @@ FUNCTION FT_ELTIME( cTIME1, cTIME2 )
    LOCAL  nDELSECS, nHRS, nMINS, nSECS, nSECS1, nSECS2
 
    nSECS1   := ( Val( SubStr( cTIME1, 1, 2 ) ) * 3600 ) + ;
-      ( Val( SubStr( cTIME1, 4, 2 ) ) * 60 ) + ( Val( SubStr( cTIME1, 7 ) ) )
+      ( Val( SubStr( cTIME1, 4, 2 ) ) * 60 ) + Val( SubStr( cTIME1, 7 ) )
    nSECS2   := ( Val( SubStr( cTIME2, 1, 2 ) ) * 3600 ) + ;
-      ( Val( SubStr( cTIME2, 4, 2 ) ) * 60 ) + ( Val( SubStr( cTIME2, 7 ) ) )
+      ( Val( SubStr( cTIME2, 4, 2 ) ) * 60 ) + Val( SubStr( cTIME2, 7 ) )
    nDELSECS := Abs( nSECS2 - nSECS1 )
    nHRS     := Int( nDELSECS / 3600 )
    nMINS    := Int( ( nDELSECS - nHRS * 3600 ) / 60 )

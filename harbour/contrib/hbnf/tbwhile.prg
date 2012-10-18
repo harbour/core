@@ -58,7 +58,7 @@
 #include "set.ch"
 #include "setcurs.ch"
 
-/* ------------------------------------------------------------------- */
+//
 
 FUNCTION FT_BRWSWHL( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
       cColorList, cColorShad, nTop, nLeft, nBottom, nRight )
@@ -79,7 +79,7 @@ FUNCTION FT_BRWSWHL( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
 
    lKeepScrn := PCount() > 6
 
-   SEEK cKey
+   dbSeek( cKey )
    IF ! Found() .OR. LastRec() == 0
       RETURN 0
    ENDIF
@@ -144,7 +144,7 @@ FUNCTION FT_BRWSWHL( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
 
    IF ! lKeepScrn
       SetColor( cColorBack )
-      CLS
+      hb_Scroll()
    ENDIF
 
    /* make a window shadow */
@@ -156,6 +156,7 @@ FUNCTION FT_BRWSWHL( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
 
    lMore := .T.
    DO WHILE lMore
+
       /* stabilize the display */
       nKey := 0
       DispBegin()
@@ -175,8 +176,7 @@ FUNCTION FT_BRWSWHL( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
          // up-to-date data in case we are on a network.
          DispBegin()
          b:refreshCurrent()
-         DO WHILE ! b:stabilize()
-         ENDDO
+         b:forceStable()
          DispEnd()
 
          /* everything's done. just wait for a key */
@@ -263,7 +263,7 @@ FUNCTION FT_BRWSWHL( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
 
    RETURN nPassRec
 
-/* -------------------------------------------------------------------- */
+//
 
 STATIC FUNCTION TbSkipWhil( n, bWhileCond )
 
@@ -297,15 +297,15 @@ STATIC FUNCTION TbSkipWhil( n, bWhileCond )
 
    RETURN i
 
-/* -------------------------------------------------------------------- */
+//
 
 STATIC FUNCTION TbWhileTop( cKey )
 
-   SEEK cKey
+   dbSeek( cKey )
 
    RETURN NIL
 
-/* -------------------------------------------------------------------- */
+//
 
 STATIC FUNCTION TbWhileBot( cKey )
 
@@ -316,9 +316,7 @@ STATIC FUNCTION TbWhileBot( cKey )
    // string cKey by one ascii character.  After SEEKing the new string,
    // back up one record to get to the last record which matches cKey.
 
-   LOCAL cSoftSave := Set( _SET_SOFTSEEK, .T. )
-   SEEK Left( cKey, Len( cKey ) - 1 ) + Chr( Asc( Right( cKey, 1 ) ) + 1 )
-   Set( _SET_SOFTSEEK, cSoftSave )
-   SKIP -1
+   dbSeek( Left( cKey, Len( cKey ) - 1 ) + Chr( Asc( Right( cKey, 1 ) ) + 1 ), .T. )
+   dbSkip( -1 )
 
    RETURN NIL

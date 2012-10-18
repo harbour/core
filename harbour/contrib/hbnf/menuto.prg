@@ -78,7 +78,6 @@ FUNCTION FT_Prompt( nRow, nCol, cPrompt, cColor, ;
       nUp, nDown, nLeft, nRight, bExecute )
 
    // If the prompt color setting is not specified, use default
-
    IF cColor  == NIL
       cColor  := SetColor()
    ENDIF
@@ -92,13 +91,11 @@ FUNCTION FT_Prompt( nRow, nCol, cPrompt, cColor, ;
    ELSE
 
       // If message row not supplied, use the default
-
       IF nMsgRow == NIL
          nMsgRow := Set( _SET_MESSAGE )
       ENDIF
 
       // If message column not supplied, use the default
-
       IF nMsgCol == NIL
          IF Set( _SET_MCENTER )
             nMsgCol := Int( ( MaxCol() + 1 - Len( cPrompt ) ) / 2 )
@@ -108,14 +105,12 @@ FUNCTION FT_Prompt( nRow, nCol, cPrompt, cColor, ;
       ENDIF
 
       // If message color not specified, use the default
-
       IF cMsgColor == NIL
          cMsgColor := cColor
       ENDIF
    ENDIF
 
    // If trigger values not specifed, set the defaults
-
    IF nTrigger       == NIL
       nTrigger      := 1
    ENDIF
@@ -125,7 +120,6 @@ FUNCTION FT_Prompt( nRow, nCol, cPrompt, cColor, ;
 
    // Now add elements to the static arrays -- t_nLevel indicates the recursion
    // level, which allows for nested menus.
-
    AAdd(          t_aRow[ t_nLevel ], nRow          )
    AAdd(          t_aCol[ t_nLevel ], nCol          )
    AAdd(       t_aPrompt[ t_nLevel ], cPrompt       )
@@ -146,7 +140,6 @@ FUNCTION FT_Prompt( nRow, nCol, cPrompt, cColor, ;
    AAdd(      t_aExecute[ t_nLevel ], bExecute      )
 
    // Now display the prompt for the sake of compatibility
-
    DispBegin()
    hb_DispOutAt( nRow, nCol, cPrompt, cColor )
    hb_DispOutAt( nRow, nCol - 1 + nTrigger, cTrigger, cTriggerColor )
@@ -252,17 +245,14 @@ FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
       DispEnd()
 
       // Wait for a keystroke
-
       nKey := Inkey( 0 )
 
       // If the key was an alphabetic char, convert to uppercase
-
       IF isBetween( nKey, 97, 122 )
          nKey -= 32
       ENDIF
 
       // Set nPrev to the currently active menu item
-
       nPrev := nActive
 
       DO CASE

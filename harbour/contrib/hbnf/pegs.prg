@@ -90,7 +90,7 @@ FUNCTION FT_PEGS()
    */
 
    scanblock := {| a | a[ 2 ] == move2 }
-   CLS
+   hb_Scroll()
    SetColor( "w/r" )
    hb_DispBox( 22, 31, 24, 48, hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
    hb_DispOutAt( 23, 33, "Your move:" )
@@ -163,7 +163,7 @@ FUNCTION FT_PEGS()
 
    RETURN NIL
 
-//--------------------------------------------------------------------*
+//
 
 STATIC FUNCTION DrawBox( board_, nelement )
 
@@ -179,7 +179,7 @@ STATIC FUNCTION DrawBox( board_, nelement )
 
    RETURN NIL
 
-//--------------------------------------------------------------------*
+//
 
 STATIC FUNCTION err_msg( msg )
 
@@ -194,7 +194,7 @@ STATIC FUNCTION err_msg( msg )
 
    RETURN NIL
 
-//--------------------------------------------------------------------*
+//
 
 STATIC FUNCTION moremoves( board_ )
 

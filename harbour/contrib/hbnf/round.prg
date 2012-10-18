@@ -89,7 +89,7 @@ FUNCTION FT_ROUND( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
 
          nResult := Int( nResult / nRoundToAmount ) * nRoundToAmount
 
-      OTHERWISE                      // Round Normally
+      OTHERWISE                         // Round Normally
 
          nResult := Int( ( nResult + nRoundToAmount / 2 ) / nRoundToAmount ) * ;
             nRoundToAmount

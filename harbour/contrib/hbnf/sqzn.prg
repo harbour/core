@@ -47,10 +47,10 @@ FUNCTION ft_unsqzn( cCompressed, nSize, nDecimals )
    cCompressed := iif( multi     == -1, hb_BSubStr( cCompressed, 2 ), cCompressed )
    nSize       := iif( nSize / 2 != Int( nSize / 2 ), nSize + 1, nSize )
    IF hb_BCode( cCompressed ) > 127
-      tmp         := Str( hb_BCode( cCompressed ) - 128, 2 )
-      multi       := -1
+      tmp   := Str( hb_BCode( cCompressed ) - 128, 2 )
+      multi := -1
    ELSE
-      tmp         := Str( hb_BCode( cCompressed ), 2 )
+      tmp   := Str( hb_BCode( cCompressed ), 2 )
    ENDIF
 
    FOR k := 2 TO hb_BLen( cCompressed )

@@ -20,17 +20,20 @@
  *
  */
 
-STATIC sc_ones  := { "",     " One",   " Two",   " Three", " Four", " Five", ;
+STATIC sc_ones  := { ;
+      "",     " One",   " Two",   " Three", " Four", " Five", ;
       " Six", " Seven", " Eight", " Nine" ;
       }
 
-STATIC sc_teens := { " Ten",      " Eleven",    " Twelve", ;
+STATIC sc_teens := { ;
+      " Ten",      " Eleven",    " Twelve", ;
       " Thirteen", " Fourteen",  " Fifteen", ;
       " Sixteen",  " Seventeen", " Eighteen", ;
       " Nineteen" ;
       }
 
-STATIC sc_tens  :=  { "", "", " Twenty", " Thirty", " Forty", " Fifty", ;
+STATIC sc_tens  :=  { ;
+      "", "", " Twenty", " Thirty", " Forty", " Fifty", ;
       " Sixty", " Seventy", " Eighty", " Ninety"  }
 
 STATIC sc_qualifiers := { "", " Thousand", " Million", " Billion", " Trillion" }

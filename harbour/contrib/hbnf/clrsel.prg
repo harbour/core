@@ -47,11 +47,7 @@
  *  Thanks to Brian Loesgen for offering ideas and helping to tweak
  *  the code.
  *
- *
  */
-
-//------------------------------------------------
-// Pre-processor stuff
 
 #include "setcurs.ch"
 #include "inkey.ch"
@@ -69,25 +65,6 @@
 
 #translate BkGrnd( <t>, <l>, <b>, <r>, <c> ) =>;
       hb_DispBox( <t>, <l>, <b>, <r>, Replicate( <c>, 9 ) )
-
-//------------------------------------------------
-//  Demo of FT_ClrSel()
-
-/*
- *     To run the sample program:
- *
- *     Compile :   Clipper ClrSel /n /m /w /dFT_TEST
- *     Link    :   Rtlink FILE ClrSel LIB NanFor [/PLL:Fullbase]
- *                                         .OR.  [/PLL:Base50]
- *
- *     ClrSel MONO      To force monochrome mode
- *     ClrSel NOSNOW    To prevent CGA snowstorms
- *     ClrSel EGA       43 line mode
- *     ClrSel VGA       50 line mode
- *
- */
-
-//------------------------------------------------
 
 FUNCTION FT_ClrSel( aClrs, lColour, cChr )
 
@@ -115,7 +92,7 @@ FUNCTION FT_ClrSel( aClrs, lColour, cChr )
 
    SetCursor( SC_NONE )
    SetColor( iif( lColour, "GR+/N,,N/N", "W+/N,,N/N" ) )
-   CLS
+   hb_Scroll()
 
    //.... initialize the colour palette
    aClrPal := _ftInitPal( iif( lColour, aClrTab, aClrBW ) )
@@ -167,7 +144,7 @@ FUNCTION FT_ClrSel( aClrs, lColour, cChr )
 
    RETURN iif( nChoice == 1, aClrs, aClrOld )
 
-//------------------------------------------------
+//
 
 // Highlight the current selected aChoice element
 // Return -> NIL
@@ -180,7 +157,7 @@ STATIC FUNCTION _ftHiLite( nRow, nCol, cStr, nLen )
 
    RETURN NIL
 
-//------------------------------------------------
+//
 
 // Colour selection for specific type of colour setting
 // Return -> aOpt with modified colour strings
@@ -292,7 +269,7 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
 
    RETURN aOpt
 
-//------------------------------------------------
+//
 
 // Show an example of the colour setting
 // Return -> NIL
@@ -404,7 +381,7 @@ STATIC FUNCTION _ftShowIt( aOpt )
 
    RETURN NIL
 
-//------------------------------------------------
+//
 
 // select the colour combination from aClrPal and place in cClr
 // cClr is the current colour being modified
@@ -482,7 +459,7 @@ STATIC FUNCTION _ftClrSel( aClrPal, cClr, nElem, aOpt )
 
    RETURN cClr
 
-//------------------------------------------------
+//
 
 // Place a colour setting in the colour string
 // Return -> modified colour string
@@ -495,7 +472,7 @@ STATIC FUNCTION _ftClrPut( cClrStr, nElem, cClr )
 
    RETURN _ftArr2Chr( aClr )
 
-//------------------------------------------------
+//
 
 // Select the character to be used for the desktop background
 // Return -> same array with new character
@@ -550,7 +527,7 @@ STATIC FUNCTION _ftDeskChar( aOpt )
 
    RETURN aOpt
 
-//------------------------------------------------
+//
 
 // Convert a chr string to an array
 // Return -> array
@@ -575,7 +552,7 @@ STATIC FUNCTION _ftChr2Arr( cString, cDelim )
 
    RETURN aArray
 
-//------------------------------------------------
+//
 
 // convert an array to a chr string
 // Return -> string
@@ -591,7 +568,7 @@ STATIC FUNCTION _ftArr2Chr( aArray, cDelim )
 
    RETURN cString
 
-//------------------------------------------------
+//
 
 // Paint the palette on the screen
 // Return -> NIL
@@ -617,7 +594,7 @@ STATIC FUNCTION _ftShowPal( aClrPal, cChr )
 
    RETURN NIL
 
-//------------------------------------------------
+//
 
 // Initialise the colour palette based on the passed colour table aClrTab
 // Load the palette with colours
@@ -639,7 +616,7 @@ STATIC FUNCTION _ftInitPal( aClrTab )
 
    RETURN aClrPal
 
-//------------------------------------------------
+//
 
 // Compares the contents of 2 arrays
 // Return -> logical
