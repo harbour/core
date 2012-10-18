@@ -76,7 +76,10 @@
 #include "hbapierr.h"
 
 
-#define PADDING    129
+/* Special CodeWords */
+#define PADDING               129
+#define PAIR_OF_DIGITS        130  /* 00..99 encoded as 130..229 */
+#define SHIFT_EXTENDED_ASCII  235  /* Shift to extended ASCII for 1 character */
 
 #define SIZE_COUNT  30
 
@@ -130,24 +133,24 @@ static int _datamatrix_isdigit( char ch )
    return '0' <= ch && ch <= '9';
 }
 
-static int _datamatrix_encode( const char * szCode, int iLen, char * pCW )
+static int _datamatrix_encode( const char * szCode, int iLen, unsigned char * pCW )
 {
    int i, iPos = 0;
    for( i = 0; i < iLen; i++ )
    {
       if( _datamatrix_isdigit( szCode[ i ] ) && i < iLen - 1 && _datamatrix_isdigit( szCode[ i + 1 ] ) )
       {
-         pCW[ iPos++ ] = ( szCode[ i ] - '0' ) * 10 + szCode[ i + 1 ] - '0' + 130;
+         pCW[ iPos++ ] = ( unsigned char ) ( ( szCode[ i ] - '0' ) * 10 + szCode[ i + 1 ] - '0' + PAIR_OF_DIGITS );
          i++;
       }
       else if( ( unsigned char ) szCode[ i ] <= 127 )
       {
-         pCW[ iPos++ ] = szCode[ i ] + 1;
+         pCW[ iPos++ ] = ( unsigned char ) szCode[ i ] + 1;
       }
       else
       {
-         pCW[ iPos++ ] = '\xEB'; /* Shift to extended ASCII for 1 character */
-         pCW[ iPos++ ] = szCode[ i ] - 127;
+         pCW[ iPos++ ] = SHIFT_EXTENDED_ASCII;
+         pCW[ iPos++ ] = ( unsigned char ) szCode[ i ] - 127;
       }
    }
    return iPos;
@@ -178,7 +181,7 @@ static void _reed_solomon_encode( unsigned char * pData, int iDataLen, unsigned 
    }
 }
 
-static void _datamatrix_reed_solomon( char * pData, const DATAMATRIX_SIZE * pSize )
+static void _datamatrix_reed_solomon( unsigned char * pData, const DATAMATRIX_SIZE * pSize )
 {
    int * pPoly, * pExp, * pLog;
    int i, j, iBits, iMod, iPoly, iECLen, iIndex, iBlocks;
@@ -233,7 +236,7 @@ static void _datamatrix_reed_solomon( char * pData, const DATAMATRIX_SIZE * pSiz
 
       /* Copy to temporary buffer */
       for( j = i; j < pSize->iDataSize; j += iBlocks )
-         data[ k++ ] = ( unsigned char ) pData[ j ];
+         data[ k++ ] = pData[ j ];
 
       /* Calculate Reed-Solomon ECC for one block */
       _reed_solomon_encode( data, k, ecc, pSize->iBlockErrorSize, pPoly, pExp, pLog, iMod );
@@ -241,7 +244,7 @@ static void _datamatrix_reed_solomon( char * pData, const DATAMATRIX_SIZE * pSiz
       /* Copy ECC to codeword array */
       k = pSize->iBlockErrorSize;
       for( j = i; j < pSize->iBlockErrorSize * iBlocks; j += iBlocks )
-         pData[ pSize->iDataSize + j ] = ( char ) ecc[ --k ];
+         pData[ pSize->iDataSize + j ] = ecc[ --k ];
    }
 
    hb_xfree( pExp );
@@ -325,7 +328,7 @@ static void _datamatrix_place_d( int * pArr, int iPRow, int iPCol, int iIndex )
    _datamatrix_place_bit( pArr, iPRow, iPCol,         1, iPCol - 1, ( iIndex << 3 ) + 0 );
 }
 
-static void _datamatrix_do_placement( PHB_BITBUFFER pBits, char * pCW, const DATAMATRIX_SIZE * pSize )
+static void _datamatrix_do_placement( PHB_BITBUFFER pBits, unsigned char * pCW, const DATAMATRIX_SIZE * pSize )
 {
    int * pArr;
    int i, iR, iC, iPRow, iPCol;
@@ -404,7 +407,7 @@ PHB_ZEBRA hb_zebra_create_datamatrix( const char * szCode, HB_SIZE nLen, int iFl
 {
    PHB_ZEBRA  pZebra;
    const DATAMATRIX_SIZE * pSize;
-   char *     pCW;
+   unsigned char * pCW;
    int        i, j, iDataCount, iErrorSize, iLen = ( int ) nLen;
 
    pZebra = hb_zebra_create();
@@ -416,7 +419,7 @@ PHB_ZEBRA hb_zebra_create_datamatrix( const char * szCode, HB_SIZE nLen, int iFl
       return pZebra;
    }
 
-   pCW = ( char * ) hb_xgrab( sizeof( char ) * iLen * 2 );
+   pCW = ( unsigned char * ) hb_xgrab( sizeof( char ) * iLen * 2 );
    iDataCount = _datamatrix_encode( szCode, iLen, pCW );
 
    if( iDataCount > 3116 )
@@ -448,10 +451,10 @@ PHB_ZEBRA hb_zebra_create_datamatrix( const char * szCode, HB_SIZE nLen, int iFl
 
    iErrorSize = ( pSize->iDataSize + 2 ) / pSize->iBlockSize * pSize->iBlockErrorSize;
 
-   pCW = ( char * ) hb_xrealloc( pCW, pSize->iDataSize + iErrorSize );
+   pCW = ( unsigned char * ) hb_xrealloc( pCW, pSize->iDataSize + iErrorSize );
    for( i = iDataCount; i < pSize->iDataSize; i++ )
    {
-      pCW[ i ] = ( char ) ( unsigned char ) PADDING;
+      pCW[ i ] = PADDING;
    }
 
    /* Reed-Solomon error correction */
@@ -460,7 +463,7 @@ PHB_ZEBRA hb_zebra_create_datamatrix( const char * szCode, HB_SIZE nLen, int iFl
 #if 0
    for( i = 0; i < pSize->iDataSize + iErrorSize; i++ )
    {
-      HB_TRACE( HB_TR_ALWAYS, ("cw=%d", ( unsigned char ) pCW[ i ] ));
+      HB_TRACE( HB_TR_ALWAYS, ("cw=%d", pCW[ i ] ));
    }
 #endif
 

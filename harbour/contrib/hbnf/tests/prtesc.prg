@@ -6,10 +6,6 @@
 
 PROCEDURE Main( cParm1 )
 
-   //-------------------------------------------------------
-   // Sample routine to test function from command line
-   //-------------------------------------------------------
-
    IF PCount() > 0
       ? FT_ESCCODE( cParm1 )
    ELSE

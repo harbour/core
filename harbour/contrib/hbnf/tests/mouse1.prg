@@ -39,6 +39,8 @@ PROCEDURE Main( nRow, nCol )
       RETURN
    ENDIF
 
+   SET CURSOR OFF
+
    // ..... Set up the screen
    cSavClr := SetColor( "w/n" )
    @ 0, 0, MaxRow(), MaxCol() BOX hb_UTF8ToStr( "░░░░░░░░░" )

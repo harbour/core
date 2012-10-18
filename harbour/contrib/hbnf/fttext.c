@@ -382,14 +382,12 @@ static long _ft_skip( long iRecs )
             ft_text->last_off[ ft_text->area ]  = ft_text->offset[ ft_text->area ];
             ft_text->error[ ft_text->area ]     = hb_fsError();
             break;
-
          }
 
          iBytesRemaining = iBytesRead;
          /* parse the buffer while there's still stuff in it */
          do
          {
-
             /* get count of chars in this line */
             iByteCount = _findeol( cPtr, iBytesRemaining );
 
@@ -476,7 +474,6 @@ static long _ft_skip( long iRecs )
             /* parse the buffer while there's still stuff in it */
             do
             {
-
                /* get count of chars in this line */
                iByteCount = _findbol( cPtr, iBytesRemaining );
 
@@ -495,7 +492,6 @@ static long _ft_skip( long iRecs )
                }
                else
                {
-
                   /* no more CRLFs in this buffer so we're either at
                      BOF or record crosses buffer boundary */
                   /* check for BOF */
@@ -520,7 +516,6 @@ static long _ft_skip( long iRecs )
       }
       else
       {
-
          ft_text->offset[ ft_text->area ] = 0;
          ft_text->recno[ ft_text->area ]  = 1;
          ft_text->isBof[ ft_text->area ]  = HB_TRUE;
@@ -840,19 +835,17 @@ HB_FUNC( FT_FGOTO )
 }
 
 /*----------------------------------------------------------------------
+   In-line assembler routine to parse a buffer
+   for a CRLF pair
 
-   _findeol()  -  In-line assembler routine to parse a buffer
-                  for a CRLF pair
+   Returns count to first character _after_ next
+   CRLF pair (beginning of next line).  Current line
+   will contain the trailing CRLF.  1Ah and trailing
+   LFs will be ignored (included in count).
 
-                   Returns count to first character _after_ next
-                   CRLF pair (beginning of next line).  Current line
-                   will contain the trailing CRLF.  1Ah and trailing
-                  LFs will be ignored (included in count).
-
-                  If no CRLF found return is zero.  (could mean EOF or
-                  line is longer than buffer end)
-
-   ------------------------------------------------------------------------*/
+   If no CRLF found return is zero.  (could mean EOF or
+   line is longer than buffer end)
+ */
 static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len )
 {
    HB_ISIZ tmp;
@@ -869,17 +862,15 @@ static HB_ISIZ _findeol( char * buf, HB_ISIZ buf_len )
 }
 
 /*----------------------------------------------------------------------
+   In-line assembler routine to parse a buffer
+   for a CRLF pair
 
-   _findbol()  -  In-line assembler routine to parse a buffer
-                  for a CRLF pair
-
-                   buf pointer points at beginning of search (end
-                    of the buffer), all searches are conducted
-                   backwards, returns No. of characters betw.
-                   initial position and first character _after_
-                   the preceding CRLF pair (beginning of line).
-
-   ------------------------------------------------------------------------*/
+   buf pointer points at beginning of search (end
+    of the buffer), all searches are conducted
+   backwards, returns No. of characters betw.
+   initial position and first character _after_
+   the preceding CRLF pair (beginning of line).
+ */
 static HB_ISIZ _findbol( char * buf, HB_ISIZ buf_len )
 {
    HB_ISIZ tmp = buf_len - 1;

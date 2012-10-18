@@ -160,6 +160,18 @@ HB_FUNC( MSETBOUNDS )
 
 #endif
 
+HB_FUNC( HB_MGETBOUNDS )
+{
+   int iTop, iLeft, iBottom, iRight;
+
+   hb_mouseGetBounds( &iTop, &iLeft, &iBottom, &iRight );
+
+   hb_storni( iTop, 1 );
+   hb_storni( iLeft, 2 );
+   hb_storni( iBottom, 3 );
+   hb_storni( iRight, 4 );
+}
+
 HB_FUNC( HB_MMIDDLEDOWN )
 {
    hb_retl( hb_mouseButtonState( HB_MBUTTON_MIDDLE ) );

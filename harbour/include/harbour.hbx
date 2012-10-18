@@ -674,6 +674,7 @@ DYNAMIC hb_MemoWrit
 DYNAMIC hb_MethodName
 DYNAMIC hb_milliSeconds
 DYNAMIC hb_Minute
+DYNAMIC hb_MGetBounds
 DYNAMIC hb_MMiddleDown
 DYNAMIC hb_mtvm
 DYNAMIC hb_mutexCreate

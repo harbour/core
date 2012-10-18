@@ -162,24 +162,23 @@ static long hb_hbfskip( PFT_TEXT ft_text, char * buffer, HB_SIZE bufsize, int re
    }
    else
    {
-      recs           = -recs;
-      ft_text->isEof[ ft_text->area ]  = HB_FALSE;
+      recs = -recs;
+      ft_text->isEof[ ft_text->area ] = HB_FALSE;
 
       if( ( ft_text->recno[ ft_text->area ] - recs ) < 1 )
          return 1;
 
       for( y = recs; y > 0; --y )
       {
-         if( ft_text->offset[ ft_text->area ] - bufsize < 0 )
+         read_pos = ( size_t ) ( ft_text->offset[ ft_text->area ] - bufsize );
+
+         if( read_pos < 0 )
          {
             read_pos = 0;
             read_len = ( size_t ) ft_text->offset[ ft_text->area ];
          }
          else
-         {
-            read_pos = ( size_t ) ( ft_text->offset[ ft_text->area ] - bufsize );
             read_len = bufsize;
-         }
 
          hb_fsSeekLarge( ft_text->handles[ ft_text->area ], read_pos, FS_SET );
          read_len = hb_fsReadLarge( ft_text->handles[ ft_text->area ], buffer, read_len );
@@ -400,7 +399,6 @@ HB_FUNC( HB_FINFO )                     /* used for debugging */
    It does its own skip and read, so an entire file can be read
    sequentially with just this function.
    -BH
-   --------------------------------------------------
  */
 HB_FUNC( HB_FREADANDSKIP )
 {
