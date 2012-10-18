@@ -116,26 +116,6 @@ HB_FUNC( _FT_TEMPFIL )
    }
 }
 
-HB_FUNC( FT_INP )
-{
-#if defined( HB_OS_DOS )
-   {
-       int iTODO;
-   }
-#endif
-   hb_retni( 0 );
-}
-
-HB_FUNC( FT_OUTP )
-{
-#if defined( HB_OS_DOS )
-   {
-       int iTODO;
-   }
-#endif
-   hb_retl( HB_FALSE );
-}
-
 HB_FUNC( FT_REBOOT )
 {
 #if defined( HB_OS_DOS )

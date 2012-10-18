@@ -988,6 +988,8 @@ static const char * hb_gt_dos_Version( PHB_GT pGT, int iType )
 /* some definitions */
 #define INT_VIDEO    0x10
 
+/* TOFIX: Why define another POKE_BYTE() when HB_POKE_BYTE()
+          is already available? */
 #if defined( __DJGPP__ )
    #define POKE_BYTE( s, o, b ) /* Do nothing */
    #define outport outportw     /* Use correct function name */
@@ -1010,38 +1012,38 @@ static void vmode12x40( void )
 {
    union REGS regs;
    regs.HB_XREGS.ax = 0x0001;               /* video mode 40 cols */
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    outportb( 0x03D4, 0x09 );         /* update cursor size / pointers */
    regs.h.al = ( inportb( 0x03D5 ) | 0x80 );
    outportb( 0x03D5, regs.h.al );
-   POKE_BYTE( 0x40, 0x84, 11);       /* 11 rows number update */
+   POKE_BYTE( 0x40, 0x84, 11 );      /* 11 rows number update */
 }
 
 static void vmode25x40( void )
 {
    union REGS regs;
    regs.HB_XREGS.ax = 0x0001;
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
 }
 
 static void vmode28x40( void )
 {
    union REGS regs;
    regs.HB_XREGS.ax = 0x0001;               /* video mode 40 cols */
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    regs.HB_XREGS.bx = 0;                    /* load block 0 (BL = 0) */
    regs.HB_XREGS.ax = 0x1111;               /* load 8x8 monochrome char set into RAM */
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
 }
 
 static void vmode50x40( void )
 {
    union REGS regs;
    regs.HB_XREGS.ax = 0x0001;
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    regs.HB_XREGS.bx = 0;                    /* load block 0 (BL = 0) */
    regs.HB_XREGS.ax = 0x1112;               /* load 8x8 double dot char set into RAM */
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    outport( 0x03D4, 0x060A );
 }
 
@@ -1049,11 +1051,11 @@ static void vmode12x80( void )
 {
    union REGS regs;
    regs.HB_XREGS.ax = 0x0003;                  /* mode in AL, if bit 7 is on, No CLS */
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    outportb( 0x03D4, 0x09 );            /* update cursor size / pointers */
    regs.h.al = ( inportb( 0x03D5 ) | 0x80 );
    outportb( 0x03D5, regs.h.al );
-   POKE_BYTE( 0x40, 0x84, 11);          /* 11 rows number update */
+   POKE_BYTE( 0x40, 0x84, 11 );         /* 11 rows number update */
 }
 
 static void vmode25x80( void )
@@ -1061,22 +1063,22 @@ static void vmode25x80( void )
    union REGS regs;
    regs.HB_XREGS.ax = 0x1202;              /* select 350 scan line mode */
    regs.h.bl = 0x30;
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    regs.HB_XREGS.ax = 0x0083;              /* mode in AL, if higher bit is on, No CLS */
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    regs.HB_XREGS.bx = 0;                   /* load block 0 (BL = 0) */
    regs.HB_XREGS.ax = 0x1114;              /* load 8x14 VGA char set into RAM */
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
 }
 
 static void vmode28x80( void )
 {
    union REGS regs;
    regs.HB_XREGS.ax = 0x0003;              /* mode in AL, if higher bit is on, No CLS */
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    regs.HB_XREGS.bx = 0;                   /* load block 0 (BL = 0) */
    regs.HB_XREGS.ax = 0x1111;              /* load 8x8 monochrome char set into RAM */
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
 }
 
 static void vmode43x80( void )
@@ -1084,15 +1086,15 @@ static void vmode43x80( void )
    union REGS regs;
    regs.HB_XREGS.ax = 0x1201;              /*  select 350 scan line mode */
    regs.h.bl = 0x30;
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    regs.HB_XREGS.ax = 0x0003;              /* mode in AL, if higher bit is on, No CLS */
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    regs.h.bh = 0x1;                 /* bytes per character */
    regs.h.bl = 0x0;                 /* load block 0 */
    regs.HB_XREGS.ax = 0x1112;              /* load 8x8 double dot char set into RAM */
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    outport( 0x03D4, 0x060A );       /* update cursor size / pointers */
-   POKE_BYTE( 0x40, 0x84, 42);      /* 42 rows number update */
+   POKE_BYTE( 0x40, 0x84, 42 );     /* 42 rows number update */
 }
 
 static void vmode50x80( void )
@@ -1100,12 +1102,12 @@ static void vmode50x80( void )
    union REGS regs;
    regs.HB_XREGS.ax = 0x1202;               /*  select 400 scan line mode */
    regs.h.bl = 0x30;
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    regs.HB_XREGS.ax = 0x0003;               /* mode in AL, if bit 7 is on, No CLS */
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
    regs.HB_XREGS.bx = 0;                    /* load block 0 (BL = 0) */
    regs.HB_XREGS.ax = 0x1112;               /* load 8x8 double dot char set into RAM */
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
 }
 
 /***************************************************************************
@@ -1139,7 +1141,7 @@ static HB_USHORT hb_gt_dos_GetDisplay( void )
    union REGS regs;
 
    regs.HB_XREGS.ax = 0x1A00;
-   HB_DOS_INT86( INT_VIDEO, &regs, &regs);
+   HB_DOS_INT86( INT_VIDEO, &regs, &regs );
 
    return ( regs.h.al == 0x1A ) ? regs.h.bl : 0xFF;
 }
@@ -1158,13 +1160,13 @@ static HB_BOOL hb_gt_dos_SetMode( PHB_GT pGT, int iRows, int iCols )
    if( iCols == 40 )
    {
       if( iRows == 12 )
-          vmode12x40();
+         vmode12x40();
       else if( iRows == 25 )
-          vmode25x40();
+         vmode25x40();
       else if( iRows == 28 )
-          vmode28x40();
+         vmode28x40();
       else if( iRows == 50 )
-          vmode50x40();
+         vmode50x40();
    }
 
    if( bIsVGA )
@@ -1172,15 +1174,15 @@ static HB_BOOL hb_gt_dos_SetMode( PHB_GT pGT, int iRows, int iCols )
       if( iCols == 80)
       {
          if( iRows == 12 )
-             vmode12x80();
+            vmode12x80();
          else if( iRows == 25 )
-             vmode25x80();
+            vmode25x80();
          else if( iRows == 28 )
-             vmode28x80();
+            vmode28x80();
          else if( iRows == 43 )
-             vmode43x80();
+            vmode43x80();
          else if( iRows == 50 )
-             vmode50x80();
+            vmode50x80();
       }
 
       if( iCols > 80 && bIsVesa )
@@ -1312,8 +1314,8 @@ static void hb_gt_dos_Refresh( PHB_GT pGT )
 #define HB_BIOS_CAPSLOCK   0x40
 #define HB_BIOS_INSERT     0x80
 
-//   #define HB_PEEK_BYTE(s,o)     ( *( ( HB_UCHAR * ) ( ( (s) << 4 ) | (o) ) ) )
-//   #define HB_POKE_BYTE(s,o,b)   *( ( HB_UCHAR * ) ( ( (s) << 4 ) | (o) ) ) = (b)
+/*   #define HB_PEEK_BYTE(s,o)     ( *( ( HB_UCHAR * ) ( ( (s) << 4 ) | (o) ) ) ) */
+/*   #define HB_POKE_BYTE(s,o,b)   *( ( HB_UCHAR * ) ( ( (s) << 4 ) | (o) ) ) = (b) */
 
 static int hb_gt_dos_getKbdState( void )
 {

@@ -38,7 +38,6 @@ numlock.c
 origin.c
 page.c
 peek.c
-poke.c
 proper.c
 prtscr.c
 putkey.c

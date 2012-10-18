@@ -33,7 +33,7 @@ HB_FUNC( FT_SETRATE )
 {
 #if defined( HB_OS_DOS )
    {
-      union REGS registers;
+      union REGS regs;
       int iSpeed = 0;
       int iRepeat = 0;
 
@@ -53,11 +53,11 @@ HB_FUNC( FT_SETRATE )
             break;
       }
 
-      registers.h.ah = 0x03;
-      registers.h.al = 0x05;
-      registers.h.bh = iSpeed;
-      registers.h.bl = iRepeat;
-      HB_DOS_INT86( 0x16, &registers, &registers );
+      regs.h.ah = 0x03;
+      regs.h.al = 0x05;
+      regs.h.bh = iSpeed;
+      regs.h.bl = iRepeat;
+      HB_DOS_INT86( 0x16, &regs, &regs );
    }
 #endif
 }
