@@ -52,16 +52,17 @@
  */
 
 FUNCTION SHOWTIME( nRow, nCol, lNoSec, cColor, l12, lAmPm )
+
    THREAD STATIC t_hTimer := NIL
 
-   IF HB_ISNUMERIC( nRow ) .AND. nRow >= 0 .AND. nRow <= MAXROW( .T. )
+   IF HB_ISNUMERIC( nRow ) .AND. nRow >= 0 .AND. nRow <= MaxRow( .T. )
       IF t_hTimer != NIL
-         HB_IDLEDEL( t_hTimer )
+         hb_idleDel( t_hTimer )
       ENDIF
-      t_hTimer := HB_IDLEADD( {|| __HBCT_DSPTIME( nRow, nCol, lNoSec, cColor, ;
-                                                  l12, lAmPm ) } )
+      t_hTimer := hb_idleAdd( {|| __HBCT_DSPTIME( nRow, nCol, lNoSec, cColor, ;
+         l12, lAmPm ) } )
    ELSEIF t_hTimer != NIL
-      HB_IDLEDEL( t_hTimer )
+      hb_idleDel( t_hTimer )
       t_hTimer := NIL
    ENDIF
 

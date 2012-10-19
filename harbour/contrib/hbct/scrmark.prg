@@ -56,6 +56,7 @@
  */
 
 FUNCTION SCREENMARK( cSearch, xAttr, lUpperLower, lAll, cForward, cTrailing )
+
    LOCAL lFound := .F.
    LOCAL nCount := 1
    LOCAL nAt, nLen, nLast, nRow, nCol, nEnd, nCols
@@ -74,26 +75,26 @@ FUNCTION SCREENMARK( cSearch, xAttr, lUpperLower, lAll, cForward, cTrailing )
       cTrailing := NIL
    ENDIF
 
-   nCols := MAXCOL()
-   cScreen := SCREENTEXT( 0, 0, MAXROW(), nCols++ )
-   nLen := LEN( cSearch )
-   nLast := LEN( cScreen ) - nLen + 1
+   nCols := MaxCol()
+   cScreen := SCREENTEXT( 0, 0, MaxRow(), nCols++ )
+   nLen := Len( cSearch )
+   nLast := Len( cScreen ) - nLen + 1
 
    IF ! lUpperLower
-      cSearch := UPPER( cSearch )
-      cScreen := UPPER( cScreen )
+      cSearch := Upper( cSearch )
+      cScreen := Upper( cScreen )
    ENDIF
 
    DO WHILE ( nAt := ATNUM( cSearch, cScreen, nCount ) ) != 0
       IF ( nAt == 1 .OR. cForward == NIL .OR. ;
-           SUBSTR( cScreen, nAt, 1 ) $ cForward ) .AND. ;
-         ( nAt == nLast .OR. cTrailing == NIL .OR. ;
-           SUBSTR( cScreen, nAt + nLen ) $ cTrailing )
+            SubStr( cScreen, nAt, 1 ) $ cForward ) .AND. ;
+            ( nAt == nLast .OR. cTrailing == NIL .OR. ;
+            SubStr( cScreen, nAt + nLen ) $ cTrailing )
          lFound := .T.
          --nAt
-         nRow := INT( nAt / nCols )
-         nCol := INT( nAt % nCols )
-         nEnd := nCol + LEN( cSearch ) - 1
+         nRow := Int( nAt / nCols )
+         nCol := Int( nAt % nCols )
+         nEnd := nCol + Len( cSearch ) - 1
          COLORWIN( nRow, nCol, nRow, nEnd, xAttr )
          DO WHILE nEnd >= nCols
             nEnd -= nCols

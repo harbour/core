@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * [S|G]ETKX[LAT|TAB] CA-Tools functions (USE IT AT YOUR OWN RISK)
+ * [S|G]ETKX[LAT|TAB] CA-T*ols functions (USE IT AT YOUR OWN RISK)
  *
  * Copyright 2012 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
@@ -64,7 +64,7 @@
 STATIC s_hTrs := { => }
 STATIC s_hMutex := hb_mutexCreate()
 
-STATIC sc_hCnv := {;
+STATIC sc_hCnv := { ;
    KS_DISABLE        => 0                 ,;
    KS_A              => hb_keyCode( "A" ) ,;
    KS_B              => hb_keyCode( "B" ) ,;
@@ -330,6 +330,7 @@ FUNCTION __hbct_key_c_to_n( cKey )
    RETURN NIL
 
 FUNCTION __hbct_key_n_to_c( nKey )
+
    LOCAL hKey
 
    IF HB_ISNUMERIC( nKey )
@@ -352,6 +353,7 @@ FUNCTION setkxlat( cOrgKeyValue, cNewKeyValue )
    RETURN hbct_setkxlat( __hbct_key_c_to_n( cOrgKeyValue ), __hbct_key_c_to_n( cNewKeyValue ) )
 
 FUNCTION getkxlat( cKeyValue )
+
    LOCAL xKey := hbct_getkxlat( __hbct_key_c_to_n( cKeyValue ) )
 
    /* doc is unclear. should this return a numeric in these cases? */
@@ -362,6 +364,7 @@ FUNCTION getkxlat( cKeyValue )
    RETURN __hbct_key_n_to_c( xKey )
 
 FUNCTION setkxtab( cTrs )
+
    LOCAL hTrs := { => }
    LOCAL tmp
 
@@ -374,6 +377,7 @@ FUNCTION setkxtab( cTrs )
    RETURN hbct_setkxtab( hTrs )
 
 FUNCTION getkxtab()
+
    LOCAL cTrs := ""
    LOCAL hTrs := hbct_getkxtab()
    LOCAL hKey
@@ -387,6 +391,7 @@ FUNCTION getkxtab()
 /* Harbour extensions using standard numeric key values */
 
 FUNCTION hbct_setkxlat( nOrgKeyValue, nNewKeyValue )
+
    LOCAL lAccepted := .F.
 
    IF PCount() == 0
@@ -427,6 +432,7 @@ FUNCTION hbct_setkxlat( nOrgKeyValue, nNewKeyValue )
    RETURN lAccepted
 
 FUNCTION hbct_getkxlat( nKeyValue )
+
    LOCAL nNewValue := 0
 
    IF HB_ISNUMERIC( nKeyValue )
@@ -444,6 +450,7 @@ FUNCTION hbct_getkxlat( nKeyValue )
    RETURN nNewValue
 
 FUNCTION hbct_setkxtab( hTrs )
+
    LOCAL lAccepted := .F.
 
    IF HB_ISHASH( hTrs )
@@ -465,6 +472,7 @@ FUNCTION hbct_setkxtab( hTrs )
    RETURN lAccepted
 
 FUNCTION hbct_getkxtab()
+
    LOCAL xRetVal
 
    IF hb_mutexLock( s_hMutex )

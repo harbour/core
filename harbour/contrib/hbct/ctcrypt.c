@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * CRYPT() CA-Tools compatible function
+ * CRYPT() CA-T*ols compatible function
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

@@ -53,6 +53,7 @@
 THREAD STATIC t_hIdle
 
 FUNCTION KeyTime( nKey, cClockTime )
+
    LOCAL nHour, nMin, nSec, nLast
 
    IF t_hIdle != NIL
@@ -62,17 +63,18 @@ FUNCTION KeyTime( nKey, cClockTime )
 
    IF HB_ISNUMERIC( nKey ) .AND. HB_ISSTRING( cClockTime )
       nHour := Val( SubStr( cClockTime, 1, 2 ) )
-      nMin  := Val( SubStr( cClockTime, 4, 2 ) )
-      nSec  := Val( SubStr( cClockTime, 7, 2 ) )
+      nMin := Val( SubStr( cClockTime, 4, 2 ) )
+      nSec := Val( SubStr( cClockTime, 7, 2 ) )
       nLast := -1
       t_hIdle := hb_idleAdd( {|| doKeyTime( nKey, cClockTime, nHour, nMin, nSec, ;
-                                            @nLast ) } )
+         @nLast ) } )
       RETURN .T.
    ENDIF
 
    RETURN .F.
 
 STATIC PROCEDURE doKeyTime( nKey, cClockTime, nHour, nMin, nSec, nLast )
+
    LOCAL ccTime := Time()
    LOCAL nHr := Val( SubStr( ccTime, 1, 2 ) )
    LOCAL nMn := Val( SubStr( ccTime, 4, 2 ) )

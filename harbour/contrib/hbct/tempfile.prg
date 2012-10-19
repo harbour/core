@@ -53,6 +53,7 @@
 #include "fileio.ch"
 
 FUNCTION TempFile( cDir, cExt, nAttr )
+
    LOCAL cName
    LOCAL fhnd
 

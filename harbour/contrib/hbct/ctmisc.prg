@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Misc CA-Tools functions
+ * Misc CA-T*ols functions
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
@@ -55,8 +55,6 @@
 
 #include "hbmemory.ch"
 
-MEMVAR GetList
-
 FUNCTION AlloFree( lMode )
 
    IF ! HB_ISLOGICAL( lMode )
@@ -66,6 +64,7 @@ FUNCTION AlloFree( lMode )
    RETURN Memory( iif( lMode, HB_MEM_CHAR, HB_MEM_BLOCK ) )
 
 FUNCTION CENTER( c, n, p, lMode )
+
    LOCAL cRet
 
    IF ! HB_ISNUMERIC( n )
@@ -97,23 +96,28 @@ FUNCTION CSETCURS( l )
    RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
 
 FUNCTION CSETKEY( n )
+
    RETURN SetKey( n )
 
 FUNCTION CSETCENT( nCentury )
-   RETURN __SETCENTURY( nCentury )
+
+   RETURN __SetCentury( nCentury )
 
 FUNCTION LTOC( l )
+
    RETURN iif( l, "T", "F" )
 
 FUNCTION DOSPARAM()
+
    LOCAL cRet := ""
-   LOCAL nCount := HB_ARGC(), i
+   LOCAL nCount := hb_argc(), i
 
    FOR i := 1 TO nCount
-      cRet += iif( i == 1, "", " " ) + HB_ARGV( i )
+      cRet += iif( i == 1, "", " " ) + hb_argv( i )
    NEXT
 
    RETURN cRet
 
 FUNCTION EXENAME()
-   RETURN HB_PROGNAME()
+
+   RETURN hb_ProgName()

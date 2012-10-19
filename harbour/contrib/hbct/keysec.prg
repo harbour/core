@@ -53,6 +53,7 @@
 THREAD STATIC t_hIdle
 
 FUNCTION KeySec( nKey, nTime, nCounter, lMode )
+
    LOCAL nSeconds
 
    IF t_hIdle != NIL
@@ -76,13 +77,14 @@ FUNCTION KeySec( nKey, nTime, nCounter, lMode )
 
       nSeconds := hb_milliSeconds()
       t_hIdle := hb_idleAdd( {|| doKeySec( nKey, nTime, lMode, ;
-                                           @nCounter, @nSeconds ) } )
+         @nCounter, @nSeconds ) } )
       RETURN .T.
    ENDIF
 
    RETURN .F.
 
 STATIC PROCEDURE doKeySec( nKey, nTime, lMode, nCounter, nSeconds )
+
    LOCAL nSec := hb_milliSeconds()
 
    IF lMode .AND. ! Empty( NextKey() )

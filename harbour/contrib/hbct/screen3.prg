@@ -54,16 +54,21 @@
  */
 
 FUNCTION CLEAREOL( nRow, nCol, xAttr, xChar )
+
    IF ! HB_ISNUMERIC( nRow )
-      nRow := ROW()
+      nRow := Row()
    ENDIF
-   RETURN CLEARWIN( nRow, nCol, nRow, /*MAXCOL()*/, xAttr, xChar )
+
+   RETURN CLEARWIN( nRow, nCol, nRow, /* MaxCol() */, xAttr, xChar )
 
 FUNCTION CLEOL( nRow, nCol )
+
    IF ! HB_ISNUMERIC( nRow )
-      nRow := ROW()
+      nRow := Row()
    ENDIF
-   RETURN CLEARWIN( nRow, nCol, nRow, /*MAXCOL()*/, 7 /*"W/N"*/, " " )
+
+   RETURN CLEARWIN( nRow, nCol, nRow, /* MaxCol() */, 7 /* "W/N" */, " " )
 
 FUNCTION CLWIN( nRow, nCol )
-   RETURN CLEARWIN( nRow, nCol, /*MAXROW()*/, /*MAXCOL()*/, 7 /*"W/N"*/, " " )
+
+   RETURN CLEARWIN( nRow, nCol, /* MaxRow() */, /* MaxCol() */, 7 /* "W/N" */, " " )

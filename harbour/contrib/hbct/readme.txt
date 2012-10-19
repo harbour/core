@@ -5,7 +5,7 @@
 CA-T**ls Compatible Library for Harbour
 =======================================
 
-The goal of this library is to provide the functionality 
+The goal of this library is to provide the functionality
 of the original CA-T**ls 3 Library for CA-Cl*pper.
 
 Viktor Szakats (harbour syenar.net)
@@ -19,7 +19,7 @@ Directories: ./     contains all the source files, include files, make files
              alt    contains alternative function implementations (not
                     all are complete, be aware !), mostly in
                     Harbour, if the function is implemented in C and vice
-                    versa. 
+                    versa.
 
 Changes and Enhancements over the original CA-T**ls 3 Library
 Martin Vogel <vogel@inttec.de>
@@ -47,7 +47,7 @@ Martin Vogel <vogel@inttec.de>
 
 + CHARSUB()    subtracts corresponding ASCII values
 
-+ COSH()       hyperbolic cosine 
++ COSH()       hyperbolic cosine
 
 + CSETARGERR() set behaviour on argument errors
 
@@ -71,7 +71,7 @@ Martin Vogel <vogel@inttec.de>
 
 + SINH()       hyperbolic sine
 
-* TABPACK()    new 4th, 5th and 6th parameter to let one set the carriage-return-line-feed string, 
+* TABPACK()    new 4th, 5th and 6th parameter to let one set the carriage-return-line-feed string,
 * TABEXPAND()  the tab character and the chr(141)[soft line feed] behaviour
 
 + TANH()       hyperbolic tangent
@@ -93,9 +93,6 @@ Martin Vogel <vogel@inttec.de>
 * TOKENUPPER() New 4th parameter <nSkipWidth>
 
 * WEEK()       New 2nd parameter <lSWN>; week() function can either return
-               "simple week number" of week number defined by ISO 6801 
+               "simple week number" of week number defined by ISO 6801
 
 + WORDREM()    remove double characters from a string
-
-
-

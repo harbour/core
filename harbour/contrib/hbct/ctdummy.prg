@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Dummy CA-Tools functions
+ * Dummy CA-T*ols functions
  *
  * Copyright 2008 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
@@ -51,6 +51,7 @@
  */
 
 FUNCTION dsetkbios( lNewKeyboardMode )
+
    THREAD STATIC t_lKeyboardMode := .T.
 
    HB_SYMBOL_UNUSED( lNewKeyboardMode )

@@ -52,6 +52,7 @@
  */
 
 FUNCTION TIMETOSEC( cTime )
+
    LOCAL nSec := 0
    LOCAL nLen, i, aLim, aMod, nInd, n
 
@@ -64,7 +65,7 @@ FUNCTION TIMETOSEC( cTime )
          aLim := { 24, 60, 60, 100 }
          aMod := { 3600, 60, 1, 1 / 100 }
          FOR i := 1 TO nLen STEP 3
-            IF IsDigit( SubStr( cTime, i,     1 ) ) .AND. ;
+            IF IsDigit( SubStr( cTime, i    , 1 ) ) .AND. ;
                IsDigit( SubStr( cTime, i + 1, 1 ) ) .AND. ;
                ( i == nLen - 1 .OR. SubStr( cTime, i + 2, 1 ) == ":" ) .AND. ;
                ( n := Val( SubStr( cTime, i, 2 ) ) ) < aLim[ nInd ]
@@ -81,6 +82,7 @@ FUNCTION TIMETOSEC( cTime )
    RETURN Round( nSec, 2 ) /* round FL val to be sure that you can compare it */
 
 FUNCTION SECTOTIME( nSec, lHundr )
+
    LOCAL i, h, n
 
    n := iif( ! HB_ISNUMERIC( nSec ), Seconds(), nSec )
@@ -101,5 +103,7 @@ FUNCTION SECTOTIME( nSec, lHundr )
    RETURN h
 
 FUNCTION MILLISEC( nDelay )
-   HB_IDLESLEEP( nDelay / 1000 )
+
+   hb_idleSleep( nDelay / 1000 )
+
    RETURN ""

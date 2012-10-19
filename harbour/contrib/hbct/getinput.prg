@@ -54,8 +54,9 @@
  */
 
 FUNCTION GETINPUT( xVar, nRow, nCol, lSay, xPrompt )
-   LOCAL nCursorRow := ROW()
-   LOCAL nCursorCol := COL()
+
+   LOCAL nCursorRow := Row()
+   LOCAL nCursorCol := Col()
    LOCAL GetList := {}
 
    IF ! HB_ISNUMERIC( nRow )
@@ -68,21 +69,21 @@ FUNCTION GETINPUT( xVar, nRow, nCol, lSay, xPrompt )
       lSay := .F.
    ENDIF
 
-   SETPOS( nRow, nCol )
+   SetPos( nRow, nCol )
    IF xPrompt != Nil
-      DEVOUT( xPrompt )
-      nRow := ROW()
-      nCol := COL() + 1
+      DevOut( xPrompt )
+      nRow := Row()
+      nCol := Col() + 1
    ENDIF
 
    @ nRow, nCol GET xVar
    READ
 
    IF lSay
-      SETPOS( nRow, nCol )
-      DEVOUT( xVar )
+      SetPos( nRow, nCol )
+      DevOut( xVar )
    ENDIF
 
-   SETPOS( nCursorRow, nCursorCol )
+   SetPos( nCursorRow, nCursorCol )
 
    RETURN xVar

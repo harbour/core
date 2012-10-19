@@ -56,43 +56,59 @@
 MEMVAR GetList
 
 FUNCTION SAVEGETS()
+
    LOCAL aGetList := GetList
+
    GetList := {}
+
    RETURN aGetList
 
 FUNCTION RESTGETS( aGetList )
+
    RETURN ( GetList := aGetList ) != NIL
 
 FUNCTION COUNTGETS()
-   RETURN LEN( GetList )
+
+   RETURN Len( GetList )
 
 FUNCTION CURRENTGET()
+
    LOCAL oActive := GetActive()
-   RETURN ASCAN( GetList, {| oGet | oGet == oActive } )
+
+   RETURN AScan( GetList, {| oGet | oGet == oActive } )
 
 FUNCTION GETFLDROW( nField )
+
    LOCAL oGet
+
    IF ! HB_ISNUMERIC( nField )
       oGet := GetActive()
-   ELSEIF nField >= 1 .AND. nField <= LEN( GetList )
+   ELSEIF nField >= 1 .AND. nField <= Len( GetList )
       oGet := GetList[ nField ]
    ENDIF
+
    RETURN iif( oGet != NIL, oGet:Row, -1 )
 
 FUNCTION GETFLDCOL( nField )
+
    LOCAL oGet
+
    IF ! HB_ISNUMERIC( nField )
       oGet := GetActive()
-   ELSEIF nField >= 1 .AND. nField <= LEN( GetList )
+   ELSEIF nField >= 1 .AND. nField <= Len( GetList )
       oGet := GetList[ nField ]
    ENDIF
+
    RETURN iif( oGet != NIL, oGet:Col, -1 )
 
 FUNCTION GETFLDVAR( nField )
+
    LOCAL oGet
+
    IF ! HB_ISNUMERIC( nField )
       oGet := GetActive()
-   ELSEIF nField >= 1 .AND. nField <= LEN( GetList )
+   ELSEIF nField >= 1 .AND. nField <= Len( GetList )
       oGet := GetList[ nField ]
    ENDIF
+
    RETURN iif( oGet != NIL, oGet:Name, -1 )

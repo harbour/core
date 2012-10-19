@@ -50,8 +50,11 @@
  */
 
 FUNCTION SAVESETKEY()
-   RETURN HB_SETKEYSAVE()
+
+   RETURN hb_SetKeySave()
 
 FUNCTION RESTSETKEY( aSavedTraps )
-   HB_SETKEYSAVE( aSavedTraps )
+
+   hb_SetKeySave( aSavedTraps )
+
    RETURN .T.

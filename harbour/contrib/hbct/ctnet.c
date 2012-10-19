@@ -73,7 +73,7 @@
  * Return the shared resource name connected to a <cLocalDevice>.
  * The original parameter <nDevice> in CA-Cl*pper Tools was changed to <cLocalName> in
  * xHarbour because in Windows Network I didn't find a number table like in MS-DOS. See
- * CA-Tools help for more details.
+ * CA-T*ols help for more details.
  *
  * NETWORK() -> lSuccess
  * Return true if a PC-LAN/MS-NET or Netware type is active.
