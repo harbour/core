@@ -35,17 +35,9 @@ HB_FUNC( FT_PRTSCR )
    #define pbyte *( ( char * ) 0x00400100 )
 
    if( HB_ISLOG( 1 ) )
-   {
-      if( hb_parl( 1 ) )
-         pbyte = 0;
-      else
-         pbyte = 1;
-   }
+      pbyte = hb_parl( 1 ) ? 0 : 1;
 
-   if( pbyte == 1 )
-      hb_retl( HB_FALSE );
-   else
-      hb_retl( HB_TRUE );
+   hb_retl( pbyte != 1 );
 #else
    hb_retl( HB_FALSE );
 #endif
