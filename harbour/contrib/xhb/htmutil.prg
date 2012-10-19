@@ -47,7 +47,7 @@
 #include "html.ch"
 #include "hbclass.ch"
 
-STATIC s_aGreek := {}
+THREAD STATIC t_aGreek := {}
 
 /****
 *
@@ -178,7 +178,7 @@ PROCEDURE htmlBrowse( oHtm, cAction, lUseLinks )
       oHtm:TableHead( aFlds[ i, 1 ] )
    NEXT
 
-   WHILE !( EOF() )
+   WHILE ! EOF()
 
       // each row has a different color...
       IF n == 0
@@ -733,10 +733,19 @@ METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
 
    RETURN Self
 
-//*** EOF ***//
+/****
+*
+*     InitGreek()
+*
+*     Initializes the international languages support.
+*
+*     Uses GREEK_ALPHABET array as a match pattern. Replace with your
+*     own character set.
+*/
 
+FUNCTION initGreek()
 
-#define GREEK_ALPHABET  {;
+   LOCAL aGreek := { ;
       hb_BChar( 193 ), ;
       hb_BChar( 194 ), ;
       hb_BChar( 195 ), ;
@@ -806,22 +815,9 @@ METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
       hb_BChar( 219 )  ;
       }
 
-/****
-*
-*     InitGreek()
-*
-*     Initializes the international languages support.
-*
-*     Uses GREEK_ALPHABET array as a match pattern. Replace with your
-*     own character set.
-*/
-
-FUNCTION initGreek()
-
    LOCAL i
    LOCAL n
-   LOCAL aGreek := GREEK_ALPHABET
-   LOCAL aArr   := Array( 255 )
+   LOCAL aArr := Array( 255 )
 
    FOR i := 1 TO 255
       aArr[ i ] := hb_BChar( i )
@@ -855,11 +851,11 @@ FUNCTION Greek2Html( cText )
    LOCAL i
    LOCAL cStr := ""
 
-   IF Empty( s_aGreek )
-      s_aGreek := initGreek()
+   IF Empty( t_aGreek )
+      t_aGreek := initGreek()
    ENDIF
    FOR I := 1 TO Len( cText )
-      cStr += s_aGreek[ Asc( Substr( cText, i, 1 ) ) ]
+      cStr += t_aGreek[ Asc( Substr( cText, i, 1 ) ) ] /* TOFIX: for unicode */
    NEXT
 
    RETURN cStr

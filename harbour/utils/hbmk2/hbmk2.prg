@@ -1015,6 +1015,7 @@ STATIC FUNCTION hbmk_harbour_dirlayout_detect( hbmk, /* @ */ l_cHB_INSTALL_PREFI
 /* This stage needs COMP and PLAT to be filled */
 STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk, l_cHB_INSTALL_PREFIX )
    LOCAL tmp
+   LOCAL lDOSWinTokens
 
    IF Empty( hbmk[ _HBMK_cHB_INSTALL_BIN ] )
       /* Autodetect multi-compiler/platform bin structure (also .dlls are in bin dir on non-*nix platforms) */
@@ -1086,10 +1087,11 @@ STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk, l_cHB_INSTALL_PREFIX )
       #if defined( __PLATFORM__WINDOWS ) .OR. ;
           defined( __PLATFORM__DOS ) .OR. ;
           defined( __PLATFORM__OS2 )
-      FOR EACH tmp IN hb_ATokens( hbmk[ _HBMK_cHB_INSTALL_ADD ], hb_osPathListSeparator(), .T., .T. )
+         lDOSWinTokens := .T.
       #else
-      FOR EACH tmp IN hb_ATokens( hbmk[ _HBMK_cHB_INSTALL_ADD ], hb_osPathListSeparator() )
+         lDOSWinTokens := NIL
       #endif
+      FOR EACH tmp IN hb_ATokens( hbmk[ _HBMK_cHB_INSTALL_ADD ], hb_osPathListSeparator(), lDOSWinTokens, lDOSWinTokens )
          IF ! Empty( tmp )
             AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( PathSepToSelf( tmp ) ) ) + "%{hb_name}" )
          ENDIF
@@ -10373,9 +10375,7 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
    LOCAL cChar
    LOCAL lSkipQuote
    LOCAL cRetVal
-#ifndef USE_FOREACH_ON_STRINGS
    LOCAL nPos
-#endif
 
    LOCAL cExpr := "hbmk_KEYW( hbmk, cFileName, '%1' )"
    LOCAL cExprWithValue := "hbmk_KEYW( hbmk, cFileName, '%1', '%2', '%3' )"
@@ -10409,22 +10409,16 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
          cValue := NIL
          cOperator := ""
          lSkipQuote := .F.
-#ifdef USE_FOREACH_ON_STRINGS
-         FOR EACH cChar IN cFilterSrc
-#else
-         FOR nPos := 1 TO Len( cFilterSrc )
+
+         FOR nPos := 1 TO Len( cFilterSrc ) /* USE_FOREACH_ON_STRINGS */
             cChar := SubStr( cFilterSrc, nPos, 1 )
-#endif
+
             IF cValue == NIL
                IF iif( Empty( cKeyword ),;
                      HB_ISFIRSTIDCHAR( cChar ),;
                      HB_ISNEXTIDCHAR( cChar ) )
                   cKeyword += cChar
-#ifdef USE_FOREACH_ON_STRINGS
-               ELSEIF cChar $ "=<>" .AND. SubStr( cFilterSrc, cChar:__enumIndex() + 1, 1 ) == "'"
-#else
                ELSEIF cChar $ "=<>" .AND. SubStr( cFilterSrc, nPos + 1, 1 ) == "'"
-#endif
                   cOperator := cChar
                   cValue := ""
                   lSkipQuote := .T.
