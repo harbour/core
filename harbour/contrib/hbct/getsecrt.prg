@@ -142,7 +142,7 @@ STATIC PROCEDURE _SECRET( _cGetSecret, lHide, oGet, oGetList )
                lHide := .T.
                LOOP
             ELSEIF ! ( cKey := hb_keyChar( nKey ) ) == ""
-               IF SET( _SET_INSERT )
+               IF Set( _SET_INSERT )
                   _cGetSecret := Stuff( Left( _cGetSecret, nLen - 1 ), ;
                      oGet:pos, 0, cKey )
                ELSE
@@ -153,7 +153,7 @@ STATIC PROCEDURE _SECRET( _cGetSecret, lHide, oGet, oGetList )
             GetApplyKey( oGet, nKey )
          ENDDO
 
-         IF !GetPostValidate( oGet )
+         IF ! GetPostValidate( oGet )
             oGet:exitState := GE_NOEXIT
          ENDIF
       ENDDO
