@@ -2,21 +2,25 @@
  * $Id$
  */
 
-/* -------------------------------------------------------------------- */
-/* NOTE: Following comments are control commands for the generator.     */
-/*       Do not edit them unless you know what you are doing.           */
-/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
-/*                  // HB_FUNC_EXCLUDE <func>                           */
-/* -------------------------------------------------------------------- */
+/* --------------------------------------------------------------------
+ * NOTE: Following comments are control commands for the generator.
+ *       Do not edit them unless you know what you are doing.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
 
 // HB_FUNC_INCLUDE HB_LANG_*
-// HB_FUNC_EXCLUDE HB_LANG_?????
 
-/* -------------------------------------------------------------------- */
-/* WARNING: Automatically generated code below. DO NOT EDIT!            */
-/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */
-/*          compiler family. [vszakats]                                 */
-/* -------------------------------------------------------------------- */
+// HB_FUNC_EXCLUDE HB_LANG_?????
+// HB_FUNC_EXCLUDE HB_LANG_RUKOI8
+// HB_FUNC_EXCLUDE HB_LANG_UAKOI8
+// HB_FUNC_EXCLUDE HB_LANG_ZHB5
+// HB_FUNC_EXCLUDE HB_LANG_ZHGB
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT!
+ *          Regenerate with HB_REBUILD_EXTERN=yes build option.
+ */
 
 #ifndef __HBEXTERN_CH__HBLANG__
 #define __HBEXTERN_CH__HBLANG__
@@ -35,6 +39,7 @@ DYNAMIC HB_LANG_CA
 DYNAMIC HB_LANG_CS
 DYNAMIC HB_LANG_DE
 DYNAMIC HB_LANG_EL
+DYNAMIC HB_LANG_EN
 DYNAMIC HB_LANG_EO
 DYNAMIC HB_LANG_ES
 DYNAMIC HB_LANG_EU
@@ -55,8 +60,8 @@ DYNAMIC HB_LANG_RO
 DYNAMIC HB_LANG_RU
 DYNAMIC HB_LANG_SK
 DYNAMIC HB_LANG_SL
-DYNAMIC HB_LANG_SR_LAT
 DYNAMIC HB_LANG_SR_CYR
+DYNAMIC HB_LANG_SR_LAT
 DYNAMIC HB_LANG_SV
 DYNAMIC HB_LANG_TR
 DYNAMIC HB_LANG_UK

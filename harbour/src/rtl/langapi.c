@@ -55,10 +55,6 @@
 #include "hbapicdp.h"
 #include "hbapierr.h"
 
-/* Language name: English */
-/* ISO language code (2 chars): EN */
-/* Codepage: 437 */
-
 static HB_LANG s_lang_en =
 {
    {

@@ -2,19 +2,19 @@
  * $Id$
  */
 
-/* -------------------------------------------------------------------- */
-/* NOTE: Following comments are control commands for the generator.     */
-/*       Do not edit them unless you know what you are doing.           */
-/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
-/*                  // HB_FUNC_EXCLUDE <func>                           */
-/* -------------------------------------------------------------------- */
+/* --------------------------------------------------------------------
+ * NOTE: Following comments are control commands for the generator.
+ *       Do not edit them unless you know what you are doing.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
 
 // HB_FUNC_EXCLUDE WIN_OLESERVERINIT
 
-/* -------------------------------------------------------------------- */
-/* WARNING: Automatically generated code below. DO NOT EDIT!            */
-/*          Regenerate using hbmk2 '-hbx=' option.                      */
-/* -------------------------------------------------------------------- */
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT!
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
 
 #ifndef __HBEXTERN_CH__HBWIN__
 #define __HBEXTERN_CH__HBWIN__

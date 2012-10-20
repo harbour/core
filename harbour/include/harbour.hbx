@@ -2,12 +2,12 @@
  * $Id$
  */
 
-/* -------------------------------------------------------------------- */
-/* NOTE: Following comments are control commands for the generator.     */
-/*       Do not edit them unless you know what you are doing.           */
-/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
-/*                  // HB_FUNC_EXCLUDE <func>                           */
-/* -------------------------------------------------------------------- */
+/* --------------------------------------------------------------------
+ * NOTE: Following comments are control commands for the generator.
+ *       Do not edit them unless you know what you are doing.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
 
 // HB_FUNC_EXCLUDE __HB_EXTERN__
 // HB_FUNC_EXCLUDE HB_CODEPAGE_*
@@ -26,11 +26,10 @@
 // HB_FUNC_EXCLUDE HBTIMESTAMP
 // HB_FUNC_EXCLUDE HB_MT
 
-/* -------------------------------------------------------------------- */
-/* WARNING: Automatically generated code below. DO NOT EDIT!            */
-/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */
-/*          compiler family. [vszakats]                                 */
-/* -------------------------------------------------------------------- */
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT!
+ *          Regenerate with HB_REBUILD_EXTERN=yes build option.
+ */
 
 #ifndef __HBEXTERN_CH__HARBOUR__
 #define __HBEXTERN_CH__HARBOUR__
@@ -672,9 +671,9 @@ DYNAMIC hb_MD5File
 DYNAMIC hb_MemoRead
 DYNAMIC hb_MemoWrit
 DYNAMIC hb_MethodName
+DYNAMIC hb_MGetBounds
 DYNAMIC hb_milliSeconds
 DYNAMIC hb_Minute
-DYNAMIC hb_MGetBounds
 DYNAMIC hb_MMiddleDown
 DYNAMIC hb_mtvm
 DYNAMIC hb_mutexCreate
@@ -1353,6 +1352,7 @@ DYNAMIC __dbUnlock
 DYNAMIC __dbUpdate
 DYNAMIC __dbUse
 DYNAMIC __dbZap
+DYNAMIC __defaultNIL
 DYNAMIC __DefPath
 DYNAMIC __Dir
 DYNAMIC __dynSCount
@@ -1382,10 +1382,9 @@ DYNAMIC __HBArray
 DYNAMIC __HBBlock
 DYNAMIC __HBCharacter
 DYNAMIC __HBDate
-DYNAMIC __defaultNIL
+DYNAMIC __hbdoc_DirLastModified
 DYNAMIC __hbdoc_FilterOut
 DYNAMIC __hbdoc_FromSource
-DYNAMIC __hbdoc_DirLastModified
 DYNAMIC __hbdoc_LoadDir
 DYNAMIC __hbdoc_LoadHBD
 DYNAMIC __hbdoc_SaveHBD
@@ -1490,10 +1489,10 @@ DYNAMIC __wapi_GetACP
 DYNAMIC __wapi_GetOEMCP
 DYNAMIC __XHelp
 DYNAMIC __XRestScreen
-DYNAMIC __XSaveScreen
+DYNAMIC __XSaveGetAttr
 DYNAMIC __XSaveGetChar
 DYNAMIC __XSaveGetColor
-DYNAMIC __XSaveGetAttr
+DYNAMIC __XSaveScreen
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HARBOUR__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

@@ -612,9 +612,10 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
 
    LOCAL cSelfName := _HB_SELF_PREFIX + Upper( hb_FNameName( cOutputName ) ) + _HB_SELF_SUFFIX
 
-   LOCAL cLine := "/* -------------------------------------------------------------------- */" + hb_eol()
-   LOCAL cHelp := "/*          Syntax: // HB_FUNC_INCLUDE <func>                           */" + hb_eol() +;
-                  "/*                  // HB_FUNC_EXCLUDE <func>                           */" + hb_eol()
+   LOCAL cLine := "/* " + Replicate( "-", 68 ) + hb_eol()
+   LOCAL cHelp := " *          Syntax: // HB_FUNC_INCLUDE <func>" + hb_eol() +;
+                  " *                  // HB_FUNC_EXCLUDE <func>" + hb_eol() +;
+                  " */" + hb_eol()
 
    __hb_extern_get_exception_list( cOutputName, @aInclude, @aExclude, @hDynamic )
 
@@ -625,17 +626,15 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
       Empty( aExclude )
       cExtern += hb_eol()
       cExtern += cLine
-      cExtern += "/* NOTE: You can add manual override which functions to include or      */" + hb_eol()
-      cExtern += "/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */" + hb_eol()
+      cExtern += " * NOTE: You can add manual override which functions to include or" + hb_eol()
+      cExtern += " *       exclude from automatically generated EXTERNAL/DYNAMIC list." + hb_eol()
       cExtern += cHelp
-      cExtern += cLine
    ELSE
       cExtern += hb_eol()
       cExtern += cLine
-      cExtern += "/* NOTE: Following comments are control commands for the generator.     */" + hb_eol()
-      cExtern += "/*       Do not edit them unless you know what you are doing.           */" + hb_eol()
+      cExtern += " * NOTE: Following comments are control commands for the generator." + hb_eol()
+      cExtern += " *       Do not edit them unless you know what you are doing." + hb_eol()
       cExtern += cHelp
-      cExtern += cLine
       IF ! Empty( aInclude )
          cExtern += hb_eol()
          FOR EACH tmp IN aInclude
@@ -651,10 +650,9 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
    ENDIF
    cExtern += hb_eol()
    cExtern += cLine
-   cExtern += "/* WARNING: Automatically generated code below. DO NOT EDIT!            */" + hb_eol()
-   cExtern += "/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */" + hb_eol()
-   cExtern += "/*          compiler family. [vszakats]                                 */" + hb_eol()
-   cExtern += cLine
+   cExtern += " * WARNING: Automatically generated code below. DO NOT EDIT!" + hb_eol()
+   cExtern += " *          Regenerate with HB_REBUILD_EXTERN=yes build option." + hb_eol()
+   cExtern += " */" + hb_eol()
    cExtern += hb_eol()
    cExtern += "#ifndef " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + hb_eol()
    cExtern += "#define " + "__HBEXTERN_CH__" + Upper( hb_FNameName( cOutputName ) ) + "__" + hb_eol()

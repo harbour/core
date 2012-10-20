@@ -2,23 +2,22 @@
  * $Id$
  */
 
-/* -------------------------------------------------------------------- */
-/* NOTE: Following comments are control commands for the generator.     */
-/*       Do not edit them unless you know what you are doing.           */
-/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
-/*                  // HB_FUNC_EXCLUDE <func>                           */
-/* -------------------------------------------------------------------- */
+/* --------------------------------------------------------------------
+ * NOTE: Following comments are control commands for the generator.
+ *       Do not edit them unless you know what you are doing.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
 
 // HB_FUNC_INCLUDE HB_CODEPAGE_*
 
 // HB_FUNC_EXCLUDE HB_CODEPAGE_BIG5
 // HB_FUNC_EXCLUDE HB_CODEPAGE_CP950
 
-/* -------------------------------------------------------------------- */
-/* WARNING: Automatically generated code below. DO NOT EDIT!            */
-/*          Regenerate with HB_REBUILD_EXTERN=yes while using GCC       */
-/*          compiler family. [vszakats]                                 */
-/* -------------------------------------------------------------------- */
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT!
+ *          Regenerate with HB_REBUILD_EXTERN=yes build option.
+ */
 
 #ifndef __HBEXTERN_CH__HBCPAGE__
 #define __HBEXTERN_CH__HBCPAGE__
