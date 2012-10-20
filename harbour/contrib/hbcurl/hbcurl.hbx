@@ -2,17 +2,17 @@
  * $Id$
  */
 
-/* -------------------------------------------------------------------- */
-/* NOTE: You can add manual override which functions to include or      */
-/*       exclude from automatically generated EXTERNAL/DYNAMIC list.    */
-/*          Syntax: // HB_FUNC_INCLUDE <func>                           */
-/*                  // HB_FUNC_EXCLUDE <func>                           */
-/* -------------------------------------------------------------------- */
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
 
-/* -------------------------------------------------------------------- */
-/* WARNING: Automatically generated code below. DO NOT EDIT!            */
-/*          Regenerate using hbmk2 '-hbx=' option.                      */
-/* -------------------------------------------------------------------- */
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT!
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
 
 #ifndef __HBEXTERN_CH__HBCURL__
 #define __HBEXTERN_CH__HBCURL__
