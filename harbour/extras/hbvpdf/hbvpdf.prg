@@ -6,33 +6,31 @@
 
 #include "fileio.ch"
 
+#define CRLF ( Chr( 13 ) + Chr( 10 ) )
+
 THREAD STATIC t_aReport
-                                                                              /*
-===========================================================                 */
-function pdfInit()                                                            /*
-=============================================================                 */
+
+// ---------------
+function pdfInit()
 
 t_aReport := array( PARAMLEN )
 
 return t_aReport
-                                                                              /*
-=============================================================                 */
-function pdfWidth( _nWidth )                                                  /*
-=============================================================                 */
+
+// -------------------------
+function pdfWidth( _nWidth )
 
 t_aReport[ REPORTWIDTH ] := _nWidth
 
 return nil
-                                                                              /*
-=============================================================                 */
-function pdfTextWidth( cStr )                                                 /*
-=============================================================                 */
+
+// --------------------------
+function pdfTextWidth( cStr )
 
 return pdfLen( cStr ) / 25.4
-                                                                              /*
-=============================================================                 */
-function pdfAtSay( cString, nRow, nCol, cUnits, lExact, cId )                 /*
-=============================================================                 */
+
+// ----------------------------------------------------------
+function pdfAtSay( cString, nRow, nCol, cUnits, lExact, cId )
 local _nFont, lReverse, nAt
 
 __defaultNIL( @nRow, t_aReport[ REPORTLINE ] )
@@ -99,10 +97,9 @@ __defaultNIL( @cId, "" )
       ENDIF
    ENDIF
 return nil
-                                                                              /*
-==================                                                            */
-function pdfBold()                                                            /*
-==================                                                            */
+
+// ---------------
+function pdfBold()
    IF pdfGetFontInfo("NAME") == "Times"
       t_aReport[ FONTNAME ] := 2
    ELSEIF pdfGetFontInfo("NAME") == "Helvetica"
@@ -115,10 +112,9 @@ function pdfBold()                                                            /*
       aadd( t_aReport[ FONTS ], { t_aReport[ FONTNAME ], ++t_aReport[ NEXTOBJ ] } )
    ENDIF
 return nil
-                                                                              /*
-========================                                                      */
-function pdfBoldItalic()                                                      /*
-========================                                                      */
+
+// ---------------------
+function pdfBoldItalic()
    IF pdfGetFontInfo("NAME") == "Times"
       t_aReport[ FONTNAME ] := 4
    ELSEIF pdfGetFontInfo("NAME") == "Helvetica"
@@ -131,22 +127,19 @@ function pdfBoldItalic()                                                      /*
       aadd( t_aReport[ FONTS ], { t_aReport[ FONTNAME ], ++t_aReport[ NEXTOBJ ] } )
    ENDIF
 return nil
-                                                                              /*
-===================================================                           */
-function pdfBookAdd( cTitle, nLevel, nPage, nLine )                           /*
-===================================================                           */
+
+// ------------------------------------------------
+function pdfBookAdd( cTitle, nLevel, nPage, nLine )
    aadd( t_aReport[ BOOKMARK ], { nLevel, alltrim( cTitle ), 0, 0, 0, 0, 0, 0, nPage, iif( nLevel == 1, t_aReport[ PAGEY ], t_aReport[ PAGEY ] - nLine * 72 / t_aReport[ LPI ] ) })
 return Nil
-                                                                              /*
-========================                                                      */
-function pdfBookClose( )                                                      /*
-========================                                                      */
+
+// ---------------------
+function pdfBookClose( )
    t_aReport[ BOOKMARK ] := nil
 return Nil
-                                                                              /*
-=================================================                             */
-static function pdfBookCount( nRecno, nCurLevel )                             /*
-=================================================                             */
+
+// ----------------------------------------------
+static function pdfBookCount( nRecno, nCurLevel )
 local nTempLevel, nCount := 0, nLen := len( t_aReport[ BOOKMARK ] )
    ++nRecno
    while nRecno <= nLen
@@ -161,10 +154,9 @@ local nTempLevel, nCount := 0, nLen := len( t_aReport[ BOOKMARK ] )
       ++nRecno
    enddo
 return -1 * nCount
-                                                                              /*
-=======================================================                       */
-static function pdfBookFirst( nRecno, nCurLevel, nObj )                       /*
-=======================================================                       */
+
+// ----------------------------------------------------
+static function pdfBookFirst( nRecno, nCurLevel, nObj )
 local nFirst := 0, nLen := len( t_aReport[ BOOKMARK ] )
    ++nRecno
    IF nRecno <= nLen
@@ -173,10 +165,9 @@ local nFirst := 0, nLen := len( t_aReport[ BOOKMARK ] )
       ENDIF
    ENDIF
 return iif( nFirst == 0, nFirst, nObj + nFirst )
-                                                                              /*
-======================================================                        */
-static function pdfBookLast( nRecno, nCurLevel, nObj )                        /*
-======================================================                        */
+
+// ---------------------------------------------------
+static function pdfBookLast( nRecno, nCurLevel, nObj )
 local nLast := 0, nLen := len( t_aReport[ BOOKMARK ] )
    ++nRecno
    IF nRecno <= nLen
@@ -190,10 +181,9 @@ local nLast := 0, nLen := len( t_aReport[ BOOKMARK ] )
       ENDIF
    ENDIF
 return iif( nLast == 0, nLast, nObj + nLast )
-                                                                              /*
-======================================================                        */
-static function pdfBookNext( nRecno, nCurLevel, nObj )                        /*
-======================================================                        */
+
+// ---------------------------------------------------
+static function pdfBookNext( nRecno, nCurLevel, nObj )
 local nTempLevel, nNext := 0, nLen := len( t_aReport[ BOOKMARK ] )
    ++nRecno
    while nRecno <= nLen
@@ -209,16 +199,14 @@ local nTempLevel, nNext := 0, nLen := len( t_aReport[ BOOKMARK ] )
       ++nRecno
    enddo
 return iif( nNext == 0, nNext, nObj + nNext )
-                                                                              /*
-=======================                                                       */
-function pdfBookOpen( )                                                       /*
-=======================                                                       */
+
+// --------------------
+function pdfBookOpen( )
    t_aReport[ BOOKMARK ] := {}
 return Nil
-                                                                              /*
-========================================================                      */
-static function pdfBookParent( nRecno, nCurLevel, nObj )                      /*
-========================================================                      */
+
+// -----------------------------------------------------
+static function pdfBookParent( nRecno, nCurLevel, nObj )
 local nTempLevel
 local nParent := 0
    --nRecno
@@ -231,10 +219,9 @@ local nParent := 0
       --nRecno
    enddo
 return iif( nParent == 0, nObj - 1, nObj + nParent )
-                                                                              /*
-======================================================                        */
-static function pdfBookPrev( nRecno, nCurLevel, nObj )                        /*
-======================================================                        */
+
+// ---------------------------------------------------
+static function pdfBookPrev( nRecno, nCurLevel, nObj )
 local nTempLevel
 local nPrev := 0
    --nRecno
@@ -251,10 +238,9 @@ local nPrev := 0
       --nRecno
    enddo
 return iif( nPrev == 0, nPrev, nObj + nPrev )
-                                                                              /*
-===============================================================               */
-function pdfBox( x1, y1, x2, y2, nBorder, nShade, cUnits, cColor, cId )       /*
-===============================================================               */
+
+// ------------------------------------------------------------
+function pdfBox( x1, y1, x2, y2, nBorder, nShade, cUnits, cColor, cId )
 local cBoxColor
 __defaultNIL( @nBorder, 0 )
 __defaultNIL( @nShade, 0 )
@@ -316,10 +302,9 @@ __defaultNIL( @cColor, "" )
 
 return nil
 
-                                                                                              /*
-===============================================================                               */
-function pdfBox1( nTop, nLeft, nBottom, nRight, nBorderWidth, cBorderColor, cBoxColor )       /*
-===============================================================                               */
+
+// ------------------------------------------------------------
+function pdfBox1( nTop, nLeft, nBottom, nRight, nBorderWidth, cBorderColor, cBoxColor )
 __defaultNIL( @nBorderWidth, 0.5 )
 __defaultNIL( @cBorderColor, Chr( 0 ) + Chr( 0 ) + Chr( 0 ) )
 __defaultNIL( @cBoxColor, Chr( 255 ) + Chr( 255 ) + Chr( 255 ) )
@@ -342,10 +327,9 @@ __defaultNIL( @cBoxColor, Chr( 255 ) + Chr( 255 ) + Chr( 255 ) )
                          " re" + ;
                          CRLF + "B"
 return nil
-                                                                              /*
-==============================================================                */
-function pdfCenter( cString, nRow, nCol, cUnits, lExact, cId )                /*
-==============================================================                */
+
+// -----------------------------------------------------------
+function pdfCenter( cString, nRow, nCol, cUnits, lExact, cId )
 local nLen, nAt
 __defaultNIL( @nRow, t_aReport[ REPORTLINE ] )
 __defaultNIL( @cUnits, "R" )
@@ -369,20 +353,18 @@ __defaultNIL( @nCol, iif( cUnits == "R", t_aReport[ REPORTWIDTH ] / 2, t_aReport
    ENDIF
    pdfAtSay( cString, pdfR2M( nRow ), iif( cUnits == "R", t_aReport[ PDFLEFT ] + ( t_aReport[ PAGEX ] / 72 * 25.4 - 2 * t_aReport[ PDFLEFT ] ) * nCol / t_aReport[ REPORTWIDTH ], nCol ) - nLen, "M", lExact )
 return nil
-                                                                              /*
-====================================                                          */
-static function pdfCheckLine( nRow )                                          /*
-====================================                                          */
+
+// ---------------------------------
+static function pdfCheckLine( nRow )
    IF nRow + t_aReport[ PDFTOP ] > t_aReport[ PDFBOTTOM ]
       pdfNewPage()
       nRow := t_aReport[ REPORTLINE ]
    ENDIF
    t_aReport[ REPORTLINE ] := nRow
 return nil
-                                                                              /*
-===================                                                           */
-function pdfClose()                                                           /*
-===================                                                           */
+
+// ----------------
+function pdfClose()
 local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
 
    FIELD FIRST, PREV, NEXT, LAST, COUNT, PARENT, PAGE, COORD, TITLE, LEVEL
@@ -522,10 +504,9 @@ local nI, cTemp, nCurLevel, nObj1, nLast, nCount, nFirst, nRecno, nBooklen
    t_aReport := nil
 
 return nil
-                                                                              /*
-==============================                                                */
-static function pdfClosePage()                                                /*
-==============================                                                */
+
+// ---------------------------
+static function pdfClosePage()
 local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
 
    aadd( t_aReport[ REFS ], t_aReport[ DOCLEN ] )
@@ -709,10 +690,9 @@ local cTemp, cBuffer, nBuffer, nRead, nI, k, nImage, nFont, nImageHandle
    t_aReport[ PAGEBUFFER ] := ""
 
 return nil
-                                                                              /*
-========================================                                      */
-static function pdfGetFontInfo( cParam )                                      /*
-========================================                                      */
+
+// -------------------------------------
+static function pdfGetFontInfo( cParam )
 local cRet
    IF cParam == "NAME"
       IF left( t_aReport[ TYPE1 ][ t_aReport[ FONTNAME ] ], 5 ) == "Times"
@@ -726,10 +706,9 @@ local cRet
       cRet := int(( t_aReport[ FONTNAME ] - 1 ) % 4)
    ENDIF
 return cRet
-                                                                              /*
-====================================================================          */
-function pdfImage( cFile, nRow, nCol, cUnits, nHeight, nWidth, cId )          /*
-====================================================================          */
+
+// -----------------------------------------------------------------
+function pdfImage( cFile, nRow, nCol, cUnits, nHeight, nWidth, cId )
 
 __defaultNIL( @nRow, t_aReport[ REPORTLINE ] )
 __defaultNIL( @nCol, 0 )
@@ -762,10 +741,9 @@ __defaultNIL( @cId, "" )
    aadd( t_aReport[ PAGEIMAGES ], { cFile, nRow, nCol, nHeight, nWidth } )
 
 return nil
-                                                                              /*
-====================                                                          */
-function pdfItalic()                                                          /*
-====================                                                          */
+
+// -----------------
+function pdfItalic()
    IF pdfGetFontInfo("NAME") == "Times"
       t_aReport[ FONTNAME ] := 3
    ELSEIF pdfGetFontInfo("NAME") == "Helvetica"
@@ -778,10 +756,9 @@ function pdfItalic()                                                          /*
       aadd( t_aReport[ FONTS ], { t_aReport[ FONTNAME ], ++t_aReport[ NEXTOBJ ] } )
    ENDIF
 return nil
-                                                                              /*
-==========================                                                    */
-function pdfLen( cString )                                                    /*
-==========================                                                    */
+
+// -----------------------
+function pdfLen( cString )
 local nWidth := 0.00, nI, nLen, nArr, nAdd := ( t_aReport[ FONTNAME ] - 1 ) % 4
 
    nLen := len( cString )
@@ -803,25 +780,21 @@ local nWidth := 0.00, nI, nLen, nArr, nAdd := ( t_aReport[ FONTNAME ] - 1 ) % 4
    endif
 
 return nWidth
-                                                                              /*
-============================                                                  */
-static function pdfM2R( mm )                                                  /*
-============================                                                  */
+
+// -------------------------
+static function pdfM2R( mm )
 return int( t_aReport[ LPI ] * mm / 25.4 )
-                                                                              /*
-===========================                                                   */
-static function pdfM2X( n )                                                   /*
-===========================                                                   */
+
+// ------------------------
+static function pdfM2X( n )
 return n * 72 / 25.4
-                                                                              /*
-===========================                                                   */
-static function pdfM2Y( n )                                                   /*
-===========================                                                   */
+
+// ------------------------
+static function pdfM2Y( n )
 return t_aReport[ PAGEY ] -  n * 72 / 25.4
-                                                                              /*
-========================                                                      */
-function pdfNewLine( n )                                                      /*
-========================                                                      */
+
+// ---------------------
+function pdfNewLine( n )
 __defaultNIL( @n, 1 )
    IF t_aReport[ REPORTLINE ] + n + t_aReport[ PDFTOP ] > t_aReport[ PDFBOTTOM ]
       pdfNewPage()
@@ -830,10 +803,9 @@ __defaultNIL( @n, 1 )
       t_aReport[ REPORTLINE ] += n
    ENDIF
 return t_aReport[ REPORTLINE ]
-                                                                                          /*
-==========================================================================================*/
-function pdfNewPage( _cPageSize, _cPageOrient, _nLpi, _cFontName, _nFontType, _nFontSize )/*
-==========================================================================================*/
+
+// ---------------------------------------------------------------------------------------
+function pdfNewPage( _cPageSize, _cPageOrient, _nLpi, _cFontName, _nFontType, _nFontSize )
 
 __defaultNIL( @_cPageSize, t_aReport[ PAGESIZE ] )
 __defaultNIL( @_cPageOrient, t_aReport[ PAGEORIENT ] )
@@ -863,10 +835,9 @@ __defaultNIL( @_nFontSize, t_aReport[ FONTSIZE ] )
    t_aReport[ FONTNAMEPREV ] := 0
    t_aReport[ FONTSIZEPREV ] := 0
 return nil
-                                                                              /*
-====================                                                          */
-function pdfNormal()                                                          /*
-====================                                                          */
+
+// -----------------
+function pdfNormal()
    IF pdfGetFontInfo("NAME") == "Times"
       t_aReport[ FONTNAME ] := 1
    ELSEIF pdfGetFontInfo("NAME") == "Helvetica"
@@ -879,10 +850,9 @@ function pdfNormal()                                                          /*
       aadd( t_aReport[ FONTS ], { t_aReport[ FONTNAME ], ++t_aReport[ NEXTOBJ ] } )
    ENDIF
 return nil
-                                                                              /*
-==========================================                                    */
-function pdfOpen( cFile, nLen, lOptimize )                                    /*
-==========================================                                    */
+
+// ---------------------------------------
+function pdfOpen( cFile, nLen, lOptimize )
 local cTemp, nI, nJ, n1, n2 := 896, n12
 __defaultNIL( @nLen, 200 )
 __defaultNIL( @lOptimize, .F. )
@@ -942,10 +912,9 @@ __defaultNIL( @lOptimize, .F. )
    fwrite( t_aReport[ HANDLE ], cTemp )
 
 return nil
-                                                                              /*
-==================================                                            */
-function pdfPageSize( _cPageSize, _nWidth, _nHeight )                         /*
-==================================                                            */
+
+// -------------------------------
+function pdfPageSize( _cPageSize, _nWidth, _nHeight )
 local nSize, aSize, nWidth, nHeight
 
    aSize := { { "LETTER",    8.50, 11.00 }, ;
@@ -1011,44 +980,38 @@ local nSize, aSize, nWidth, nHeight
    ENDIF
 
    return nil
-                                                                              /*
-======================================                                        */
-function pdfPageOrient( _cPageOrient )                                        /*
-======================================                                        */
+
+// -----------------------------------
+function pdfPageOrient( _cPageOrient )
 __defaultNIL( @_cPageOrient, "P" )
 
    t_aReport[ PAGEORIENT ] := _cPageOrient
    pdfPageSize( t_aReport[ PAGESIZE ] )
 return nil
-                                                                              /*
-==============================                                                */
-static function pdfR2D( nRow )                                                /*
-==============================                                                */
+
+// ---------------------------
+static function pdfR2D( nRow )
 return t_aReport[ PAGEY ] - nRow * 72 / t_aReport[ LPI ]
 
-                                                                              /*
-==============================                                                */
-static function pdfR2M( nRow )                                                /*
-==============================                                                */
+
+// ---------------------------
+static function pdfR2M( nRow )
 return 25.4 * nRow / t_aReport[ LPI ]
-                                                                              /*
-===========================                                                   */
-function pdfPageNumber( n )                                                   /*
-===========================                                                   */
+
+// ------------------------
+function pdfPageNumber( n )
 __defaultNIL( @n, 0 )
    IF n > 0
       t_aReport[ REPORTPAGE ] := n // NEW !!!
    ENDIF
 return t_aReport[ REPORTPAGE ]
-                                                                              /*
-==============================                                                */
-function pdfReverse( cString )                                                /*
-==============================                                                */
+
+// ---------------------------
+function pdfReverse( cString )
 return cString + Chr( 255 )
-                                                                              /*
-=============================================================                 */
-function pdfRJust( cString, nRow, nCol, cUnits, lExact, cId )                 /*
-=============================================================                 */
+
+// ----------------------------------------------------------
+function pdfRJust( cString, nRow, nCol, cUnits, lExact, cId )
 local nLen, nAdj := 1.0, nAt
 __defaultNIL( @nRow, t_aReport[ REPORTLINE ] )
 __defaultNIL( @cUnits, "R" )
@@ -1072,10 +1035,9 @@ __defaultNIL( @lExact, .F. )
    ENDIF
    pdfAtSay( cString, pdfR2M( nRow ), iif( cUnits == "R", t_aReport[ PDFLEFT ] + ( t_aReport[ PAGEX ] / 72 * 25.4 - 2 * t_aReport[ PDFLEFT ] ) * nCol / t_aReport[ REPORTWIDTH ] - nAdj, nCol ) - nLen, "M", lExact )
 return nil
-                                                                              /*
-==================================================                            */
-function pdfSetFont( _cFont, _nType, _nSize, cId )                            /*
-==================================================                            */
+
+// -----------------------------------------------
+function pdfSetFont( _cFont, _nType, _nSize, cId )
 
 __defaultNIL( @_cFont, "Times" )
 __defaultNIL( @_nType, 0 )
@@ -1102,10 +1064,9 @@ __defaultNIL( @_nSize, 10 )
       aadd( t_aReport[ FONTS ], { t_aReport[ FONTNAME ], ++t_aReport[ NEXTOBJ ] } )
    ENDIF
 return nil
-                                                                              /*
-=========================                                                     */
-function pdfSetLPI(_nLpi)                                                     /*
-=========================                                                     */
+
+// ----------------------
+function pdfSetLPI(_nLpi)
 local cLpi := hb_ntos(_nLpi)
 __defaultNIL( @_nLpi, 6 )
 
@@ -1114,22 +1075,19 @@ __defaultNIL( @_nLpi, 6 )
 
    pdfPageSize( t_aReport[ PAGESIZE ] )
 return nil
-                                                                              /*
-==============================                                                */
-function pdfStringB( cString )                                                /*
-==============================                                                */
+
+// ---------------------------
+function pdfStringB( cString )
    cString := strtran( cString, "(", "\(" )
    cString := strtran( cString, ")", "\)" )
 return cString
-                                                                              /*
-==============================================================================*/
-function pdfTextCount( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits )/*
-==============================================================================*/
+
+// ---------------------------------------------------------------------------
+function pdfTextCount( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits )
 return pdfText( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, .F. )
-                                                                                 /*
-=================================================================================*/
-function pdfText( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, cColor, lPrint )/*
-=================================================================================*/
+
+// ------------------------------------------------------------------------------
+function pdfText( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, cColor, lPrint )
 local cDelim := Chr( 0 ) + chr( 9 ) + chr( 10 ) + chr( 13 ) + chr( 26 ) + chr( 32 ) + chr( 138 ) + chr( 141 )
 local nI, cTemp, cToken, k, nL, nRow, nLines, nLineLen, nStart
 local lParagraph, nSpace, nNew, nTokenLen, nCRLF, nTokens, nLen
@@ -1240,10 +1198,9 @@ __defaultNIL( @cColor, "" )
    enddo
 
 return nLines
-                                                                                                                                         /*
-=========================================================================================================================================*/
-static function pdfTextPrint( nI, nLeft, lParagraph, nJustify, nSpace, nNew, nLength, nLineLen, nLines, nStart, cString, cDelim, cColor, lPrint )/*
-=========================================================================================================================================*/
+
+// --------------------------------------------------------------------------------------------------------------------------------------
+static function pdfTextPrint( nI, nLeft, lParagraph, nJustify, nSpace, nNew, nLength, nLineLen, nLines, nStart, cString, cDelim, cColor, lPrint )
 local nFinish, nL, nB, nJ, cToken, nRow
 
    nFinish := nI
@@ -1286,10 +1243,9 @@ local nFinish, nL, nB, nJ, cToken, nRow
    nLineLen += nSpace * nNew
 
 return nil
-                                                                              /*
-======================================================                        */
-static function pdfTextNextPara( cString, cDelim, nI )                        /*
-======================================================                        */
+
+// ---------------------------------------------------
+static function pdfTextNextPara( cString, cDelim, nI )
 local nAt, cAt, nCRLF, nNew, nRat, nRet := 0
    // check if next spaces paragraph(s)
    nAt := attoken( cString, cDelim, nI ) + len( token( cString, cDelim, nI ) )
@@ -1301,20 +1257,17 @@ local nAt, cAt, nCRLF, nNew, nRat, nRet := 0
       nRet := nCRLF
    ENDIF
 return nRet
-                                                                              /*
-================================                                              */
-function pdfUnderLine( cString )                                              /*
-================================                                              */
+
+// -----------------------------
+function pdfUnderLine( cString )
 return cString + chr( 254 )
-                                                                              /*
-===========================                                                   */
-static function pdfX2M( n )                                                   /*
-===========================                                                   */
+
+// ------------------------
+static function pdfX2M( n )
 return n * 25.4 / 72
-                                                                              /*
-===================================                                           */
-static function TimeAsAMPM( cTime )                                           /*
-===================================                                           */
+
+// --------------------------------
+static function TimeAsAMPM( cTime )
    IF VAL(cTime) < 12
       cTime += " am"
    ELSEIF VAL(cTime) == 12

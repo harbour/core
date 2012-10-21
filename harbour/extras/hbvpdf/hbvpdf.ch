@@ -2,8 +2,6 @@
  * $Id$
  */
 
-#define CRLF ( Chr( 13 ) + Chr( 10 ) )
-
 #define NORMAL        0
 #define BOLD          1
 #define ITALIC        2
