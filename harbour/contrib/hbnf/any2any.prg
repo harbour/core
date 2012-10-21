@@ -23,7 +23,6 @@
  *
  */
 
-#define BLOCKIFY( x )                {|| x }
 #define CASE_AT( x, y, z )           z[ At( x, y ) + 1 ]
 #define NULL                         ""
 #define EARLIEST_DATE                SToD( "01000101" )
@@ -105,7 +104,7 @@ FUNCTION FT_XTOY( xValueToConvert, cTypeToConvertTo, lWantYesNo )
    CASE cTypeToConvertTo == "B" .AND. ; // They Want a Code Block
       ! HB_ISBLOCK( xValueToConvert )
 
-      xValueToConvert := BLOCKIFY( xValueToConvert )
+      xValueToConvert := {|| xValueToConvert }
 
    ENDCASE
 

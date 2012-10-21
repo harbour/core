@@ -164,7 +164,6 @@
 typedef struct
 {
    int        area;
-   int        doInt; /* for debugging purposes */
    /* arrays used by the text workareas */
    long       recno[ TEXT_WORKAREAS ];
    HB_FOFFSET offset[ TEXT_WORKAREAS ];
@@ -181,8 +180,7 @@ static void s_fttext_init_init( void * cargo )
 {
    PFT_TEXT ft_text = ( PFT_TEXT ) cargo;
 
-   ft_text->area  = 0;
-   ft_text->doInt = 0;
+   ft_text->area = 0;
 }
 
 static HB_TSD_NEW( s_fttext, sizeof( FT_TEXT ), s_fttext_init_init, NULL );
@@ -195,13 +193,6 @@ static int _del_buff( PFT_TEXT ft_text, HB_ISIZ iLen );
 static long _ft_skip( long recs );
 static int _writeLine( PFT_TEXT ft_text, const char * theData, HB_SIZE iDataLen );
 static HB_BOOL _writeeol( HB_FHANDLE fhnd );
-
-HB_FUNC( FTSETINT )
-{
-   PFT_TEXT ft_text = ( PFT_TEXT ) hb_stackGetTSD( &s_fttext );
-
-   ft_text->doInt ^= 0xFF;
-}
 
 HB_FUNC( FT_FOFFSET )
 {
