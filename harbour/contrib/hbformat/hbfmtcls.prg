@@ -69,6 +69,15 @@
 //   5. ".T.," / ".F.," gets wrongly corrected to ".T. ," / ".F. ,"
 //   6. "end class" is converted to "end CLASS" instead of "END CLASS"
 //   7. in PP commands "<var>" should not be converted to "< var >"
+//   8. Certain lines outside any procs f.e. at beginning of file, sometimes
+//      will be indented to one level:
+//      ---
+//      /* a1 */
+//      REQUEST a1
+//      ANNOUNCE a3
+//      STATIC a4
+//      THREAD STATIC a5
+//      ---
 
 CREATE CLASS HBFORMATCODE
 
@@ -807,7 +816,8 @@ METHOD File2Array( cFileName ) CLASS HBFORMATCODE
 
 METHOD Array2File( cFileName, aFile ) CLASS HBFORMATCODE
 
-   LOCAL handle, i, nLen := Len( aFile ), cName, cBakName, cPath
+   LOCAL i, nLen := Len( aFile ), cName, cBakName, cPath
+   LOCAL cFile
 
    cName := iif( ( i := RAt( ".", cFileName ) ) == 0, cFileName, SubStr( cFileName, 1, i - 1 ) )
    IF Empty( ::cExtSave )
@@ -827,18 +837,21 @@ METHOD Array2File( cFileName, aFile ) CLASS HBFORMATCODE
       cFileName := cPath + Lower( iif( i == 0, cFileName, SubStr( cFileName, i + 1 ) ) )
    ENDIF
 
-   handle := FCreate( cFileName )
+   cFile := ""
    FOR i := 1 TO nLen
       IF aFile[ i ] == NIL
          EXIT
       ENDIF
       IF i < nLen .OR. ! Empty( aFile[ i ] )
-         FWrite( handle, aFile[ i ] + ::cEol )
+         cFile += aFile[ i ] + ::cEol
       ENDIF
    NEXT
-   FClose( handle )
 
-   RETURN .T.
+   DO WHILE Right( cFile, Len( ::cEol ) * 2 ) == Replicate( ::cEol, 2 )
+      cFile := hb_StrShrink( cFile, Len( ::cEol ) )
+   ENDDO
+
+   RETURN hb_MemoWrit( cFileName, cFile )
 
 STATIC FUNCTION rf_AINS( arr, nItem, cItem )
 

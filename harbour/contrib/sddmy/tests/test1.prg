@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "sddmy"
+
 #include "dbinfo.ch"
 #include "error.ch"
 

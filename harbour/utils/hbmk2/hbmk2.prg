@@ -1690,8 +1690,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ENDSWITCH
    CASE hbmk[ _HBMK_cPLAT ] == "dos"
 #if ! defined( __PLATFORM__UNIX )
-      aCOMPDET := { { {|| FindInPath( "gcc"      ) }, "djgpp"  },;
-                    { {|| FindInPath( "wcc386"   ) }, "watcom" } }
+      aCOMPDET := { ;
+         { {|| FindInPath( "gcc"      ) }, "djgpp"  },;
+         { {|| FindInPath( "wcc386"   ) }, "watcom" } }
 #endif
       aCOMPSUP := { "djgpp", "gcc", "watcom" }
       l_aLIBHBGT := { "gtdos" }
@@ -1702,8 +1703,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       cOptPrefix := "-/"
    CASE hbmk[ _HBMK_cPLAT ] == "os2"
 #if ! defined( __PLATFORM__UNIX )
-      aCOMPDET := { { {|| FindInPath( "gcc"      ) }, "gcc"    },;
-                    { {|| FindInPath( "wcc386"   ) }, "watcom" } }
+      aCOMPDET := { ;
+         { {|| FindInPath( "gcc"      ) }, "gcc"    },;
+         { {|| FindInPath( "wcc386"   ) }, "watcom" } }
 #endif
       aCOMPSUP := { "gcc", "gccomf", "watcom" }
       l_aLIBHBGT := { "gtos2" }
@@ -1716,35 +1718,37 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       /* Order is significant.
          watcom also keeps a cl.exe in its binary dir. */
 #if ! defined( __PLATFORM__UNIX )
-      aCOMPDET := { { {|| FindInPath( "arm-mingw32ce-gcc"       ) }, "mingwarm", "arm-mingw32ce-",, "wce" } ,;
-                    { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-",, "wce" } ,;
-                    { {|| FindInSamePath( "cygstart.exe", "gcc" ) }, "gcc",,, "cygwin" },;
-                    { {|| FindInPath( "gcc-dw2" ) }, "mingw", "", "-dw2" },; /* tdragon DWARF-2 build */
-                    { {|| FindInPath( "x86_64-pc-mingw32-gcc"   ) }, "mingw64" },; /* Equation Solution build */
-                    { {|| FindInPath( "i686-w64-mingw32-gcc"    ) }, "mingw64", "i686-w64-mingw32-" },; /* mingw-w64 build */
-                    { {|| FindInSamePath( "x86_64-w64-mingw32-gcc.exe", "gcc" ) }, "mingw64" },; /* mingw-w64 TDM build */
-                    { {|| FindInPath( "x86_64-w64-mingw32-gcc"  ) }, "mingw64", "x86_64-w64-mingw32-" },; /* mingw-w64 build */
-                    { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] ) }, "mingw" },;
-                    { {|| iif( Empty( GetEnv( "WATCOM" ) ),;
-                               NIL ,;
-                               FindInPath( "wcc386" ) ) }, "watcom" },;
-                    { {|| FindInPath( "clarm.exe"  ) }, "msvcarm" },;
-                    { {|| FindInPath( "armasm.exe" ) }, "msvcarm" },;
-                    { {|| FindInPath( "ml64.exe"   ) }, "msvc64" },;
-                    { {|| FindInPath( "ias.exe"    ) }, "msvcia64" },;
-                    { {|| iif( FindInPath( "wcc386"   ) == NIL,;
-                               FindInPath( "cl.exe"   ),;
-                               NIL )                      }, "msvc"    },;
-                    { {|| _BCC_BIN_DETECT()        }, "bcc"    },;
-                    { {|| iif( FindInPath( "dbgeng.lib", GetEnv( "LIB" ) ) != NIL .AND. ( tmp1 := FindInPath( "pocc.exe" ) ) != NIL, tmp1, NIL ) }, "pocc64"  },;
-                    { {|| FindInPath( "pocc.exe" ) }, "pocc"   },;
-                    { {|| iif( ( tmp1 := FindInPath( "icl.exe" ) ) != NIL .AND. "itanium" $ Lower( tmp1 ), tmp1, NIL ) }, "iccia64" },;
-                    { {|| FindInPath( "icl.exe"  ) }, "icc"    },;
-                    { {|| FindInPath( "xCC.exe"  ) }, "xcc"    },;
-                    { {|| FindInPath( "dmc.exe"  ) }, "dmc"    }}
+      aCOMPDET := { ;
+         { {|| FindInPath( "arm-mingw32ce-gcc"       ) }, "mingwarm", "arm-mingw32ce-",, "wce" } ,;
+         { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-",, "wce" } ,;
+         { {|| FindInSamePath( "cygstart.exe", "gcc" ) }, "gcc",,, "cygwin" },;
+         { {|| FindInPath( "gcc-dw2" ) }, "mingw", "", "-dw2" },; /* tdragon DWARF-2 build */
+         { {|| FindInPath( "x86_64-pc-mingw32-gcc"   ) }, "mingw64" },; /* Equation Solution build */
+         { {|| FindInPath( "i686-w64-mingw32-gcc"    ) }, "mingw64", "i686-w64-mingw32-" },; /* mingw-w64 build */
+         { {|| FindInSamePath( "x86_64-w64-mingw32-gcc.exe", "gcc" ) }, "mingw64" },; /* mingw-w64 TDM build */
+         { {|| FindInPath( "x86_64-w64-mingw32-gcc"  ) }, "mingw64", "x86_64-w64-mingw32-" },; /* mingw-w64 build */
+         { {|| FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] ) }, "mingw" },;
+         { {|| iif( Empty( GetEnv( "WATCOM" ) ),;
+                    NIL ,;
+                    FindInPath( "wcc386" ) ) }, "watcom" },;
+         { {|| FindInPath( "clarm.exe"  ) }, "msvcarm" },;
+         { {|| FindInPath( "armasm.exe" ) }, "msvcarm" },;
+         { {|| FindInPath( "ml64.exe"   ) }, "msvc64" },;
+         { {|| FindInPath( "ias.exe"    ) }, "msvcia64" },;
+         { {|| iif( FindInPath( "wcc386"   ) == NIL,;
+                    FindInPath( "cl.exe"   ),;
+                    NIL )                      }, "msvc"    },;
+         { {|| _BCC_BIN_DETECT()        }, "bcc"    },;
+         { {|| iif( FindInPath( "dbgeng.lib", GetEnv( "LIB" ) ) != NIL .AND. ( tmp1 := FindInPath( "pocc.exe" ) ) != NIL, tmp1, NIL ) }, "pocc64"  },;
+         { {|| FindInPath( "pocc.exe" ) }, "pocc"   },;
+         { {|| iif( ( tmp1 := FindInPath( "icl.exe" ) ) != NIL .AND. "itanium" $ Lower( tmp1 ), tmp1, NIL ) }, "iccia64" },;
+         { {|| FindInPath( "icl.exe"  ) }, "icc"    },;
+         { {|| FindInPath( "xCC.exe"  ) }, "xcc"    },;
+         { {|| FindInPath( "dmc.exe"  ) }, "dmc"    }}
 #endif
-      aCOMPSUP := { "mingw", "msvc", "bcc", "watcom", "icc", "pocc", "xcc",;
-                    "mingw64", "msvc64", "msvcia64", "iccia64", "pocc64" }
+      aCOMPSUP := { ;
+         "mingw", "msvc", "bcc", "watcom", "icc", "pocc", "xcc",;
+         "mingw64", "msvc64", "msvcia64", "iccia64", "pocc64" }
       l_aLIBHBGT := { "gtwin", "gtwvt", "gtgui" }
       hbmk[ _HBMK_cGTDEFAULT ] := "gtwin"
       hbmk[ _HBMK_cDynLibPrefix ] := ""
@@ -1756,15 +1760,16 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       l_aLIBSYSMISC := { "winspool", "comctl32", "comdlg32", "shell32", "uuid", "ole32", "oleaut32", "mpr", "winmm", "mapi32", "imm32", "msimg32", "wininet" }
    CASE hbmk[ _HBMK_cPLAT ] == "wce"
 #if ! defined( __PLATFORM__UNIX )
-      aCOMPDET := { { {|| FindInPath( "clarm.exe"  ) }, "msvcarm" },;
-                    { {|| FindInPath( "armasm.exe" ) }, "msvcarm" },;
-                    { {|| FindInPath( "pocc.exe"   ) }, "poccarm" },;
-                    { {|| FindInPath( "arm-mingw32ce-gcc"       ) }, "mingwarm", "arm-mingw32ce-" } ,;
-                    { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-" } ,;
-                    { {|| FindInPath( "i386-mingw32ce-gcc"      ) }, "mingw"   , "i386-mingw32ce-" } ,;
-                    { {|| iif( ! Empty( hbmk[ _HBMK_cCCPREFIX ] ) .OR. ! Empty( hbmk[ _HBMK_cCCPOSTFIX ] ),;
-                          FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] ),;
-                          NIL ) }, "mingwarm" } }
+      aCOMPDET := { ;
+         { {|| FindInPath( "clarm.exe"  ) }, "msvcarm" },;
+         { {|| FindInPath( "armasm.exe" ) }, "msvcarm" },;
+         { {|| FindInPath( "pocc.exe"   ) }, "poccarm" },;
+         { {|| FindInPath( "arm-mingw32ce-gcc"       ) }, "mingwarm", "arm-mingw32ce-" } ,;
+         { {|| FindInPath( "arm-wince-mingw32ce-gcc" ) }, "mingwarm", "arm-wince-mingw32ce-" } ,;
+         { {|| FindInPath( "i386-mingw32ce-gcc"      ) }, "mingw"   , "i386-mingw32ce-" } ,;
+         { {|| iif( ! Empty( hbmk[ _HBMK_cCCPREFIX ] ) .OR. ! Empty( hbmk[ _HBMK_cCCPOSTFIX ] ),;
+               FindInPath( hbmk[ _HBMK_cCCPREFIX ] + "gcc" + hbmk[ _HBMK_cCCPOSTFIX ] ),;
+               NIL ) }, "mingwarm" } }
 #endif
       aCOMPSUP := { "mingwarm", "msvcarm", "poccarm" }
       l_aLIBHBGT := { "gtwvt", "gtgui" }
@@ -4085,8 +4090,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          DO CASE
          CASE _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] )
             /* NOTE: Newer xhb versions use "-x.y.z" version numbers. */
-            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "xharbourmt",;
-                                                      "xharbour" ) }
+            l_aLIBSHARED := { iif( hbmk[ _HBMK_lMT ], "xharbourmt", "xharbour" ) }
          OTHERWISE
             l_aLIBSHARED := { cHarbourDyn + cDL_Version_Alter + hbmk_DYNSUFFIX( hbmk ) }
          ENDCASE
@@ -5426,15 +5430,16 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          RETURN _ERRLEV_OK
       ENDIF
 
-      tmp := { "platform"   => hbmk[ _HBMK_cPLAT ],;
-               "compiler"   => hbmk[ _HBMK_cCOMP ],;
-               "cpu"        => hbmk[ _HBMK_cCPU ],;
-               "buildname"  => hbmk[ _HBMK_cBUILD ],;
-               "targetname" => hbmk_TARGETNAME( hbmk ),;
-               "targettype" => hbmk_TARGETTYPE( hbmk ),;
-               "dynprefix"  => iif( Empty( l_cDynLibDir ), "", l_cDynLibDir + hbmk[ _HBMK_cDynLibPrefix ] ),;
-               "dynsuffix"  => hbmk_DYNSUFFIX( hbmk ),;
-               "inc"        => iif( hbmk[ _HBMK_lINC ], "yes", "no" ) }
+      tmp := { ;
+         "platform"   => hbmk[ _HBMK_cPLAT ],;
+         "compiler"   => hbmk[ _HBMK_cCOMP ],;
+         "cpu"        => hbmk[ _HBMK_cCPU ],;
+         "buildname"  => hbmk[ _HBMK_cBUILD ],;
+         "targetname" => hbmk_TARGETNAME( hbmk ),;
+         "targettype" => hbmk_TARGETTYPE( hbmk ),;
+         "dynprefix"  => iif( Empty( l_cDynLibDir ), "", l_cDynLibDir + hbmk[ _HBMK_cDynLibPrefix ] ),;
+         "dynsuffix"  => hbmk_DYNSUFFIX( hbmk ),;
+         "inc"        => iif( hbmk[ _HBMK_lINC ], "yes", "no" ) }
 
       IF ! Empty( hbmk[ _HBMK_cPROGNAME ] )
          tmp[ "outputname" ] := PathSepToForward( hbmk[ _HBMK_cPROGNAME ] )
@@ -7267,8 +7272,9 @@ STATIC PROCEDURE DoLinkCalc( hbmk )
       ENDIF
       hb_FNameSplit( hbmk[ _HBMK_cPROGNAME ],, @cName, @cExt )
 
-      tmp := { /* <cNewFileName>    */ hb_PathNormalize( PathMakeAbsolute( tmp, hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ) ) ),;
-               /* <cTargetFileName> */ hb_FNameMerge( cDir, cName, cExt ) }
+      tmp := { ;
+         /* <cNewFileName>    */ hb_PathNormalize( PathMakeAbsolute( tmp, hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ) ) ),;
+         /* <cTargetFileName> */ hb_FNameMerge( cDir, cName, cExt ) }
    NEXT
 
    RETURN

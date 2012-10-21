@@ -71,7 +71,7 @@ PROCEDURE CLIPPER530()
  * basic VM settings like public variable GetList and ErrorBlock() by
  * calling ErrorSys() function.
  */
-PROCEDURE __HBVMINIT()
+PROCEDURE __HBVMInit()
 
    MEMVAR GetList
 

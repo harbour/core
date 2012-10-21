@@ -126,7 +126,7 @@ PROCEDURE __dbgAltDEntry()
       where ALTD() was called can have no debugger info - stop
       on first LINE with debugged info
     */
-   __dbgINVOKEDEBUG( Set( _SET_DEBUG ) )
+   __dbgInvokeDebug( Set( _SET_DEBUG ) )
 
    RETURN
 
@@ -494,17 +494,17 @@ METHOD BarDisplay() CLASS HBDebugger
 
    hb_Scroll( ::nMaxRow, 0, ::nMaxRow, ::nMaxCol )
 
-   hb_dispOutAt( ::nMaxRow,  0, "F1-Help F2-Zoom F3-Repeat F4-User F5-Go F6-WA F7-Here F8-Step F9-BkPt F10-Trace", cClrItem )
-   hb_dispOutAt( ::nMaxRow,  0, "F1", cClrHotKey )
-   hb_dispOutAt( ::nMaxRow,  8, "F2", cClrHotKey )
-   hb_dispOutAt( ::nMaxRow, 16, "F3", cClrHotKey )
-   hb_dispOutAt( ::nMaxRow, 26, "F4", cClrHotKey )
-   hb_dispOutAt( ::nMaxRow, 34, "F5", cClrHotKey )
-   hb_dispOutAt( ::nMaxRow, 40, "F6", cClrHotKey )
-   hb_dispOutAt( ::nMaxRow, 46, "F7", cClrHotKey )
-   hb_dispOutAt( ::nMaxRow, 54, "F8", cClrHotKey )
-   hb_dispOutAt( ::nMaxRow, 62, "F9", cClrHotKey )
-   hb_dispOutAt( ::nMaxRow, 70, "F10", cClrHotKey )
+   hb_DispOutAt( ::nMaxRow,  0, "F1-Help F2-Zoom F3-Repeat F4-User F5-Go F6-WA F7-Here F8-Step F9-BkPt F10-Trace", cClrItem )
+   hb_DispOutAt( ::nMaxRow,  0, "F1", cClrHotKey )
+   hb_DispOutAt( ::nMaxRow,  8, "F2", cClrHotKey )
+   hb_DispOutAt( ::nMaxRow, 16, "F3", cClrHotKey )
+   hb_DispOutAt( ::nMaxRow, 26, "F4", cClrHotKey )
+   hb_DispOutAt( ::nMaxRow, 34, "F5", cClrHotKey )
+   hb_DispOutAt( ::nMaxRow, 40, "F6", cClrHotKey )
+   hb_DispOutAt( ::nMaxRow, 46, "F7", cClrHotKey )
+   hb_DispOutAt( ::nMaxRow, 54, "F8", cClrHotKey )
+   hb_DispOutAt( ::nMaxRow, 62, "F9", cClrHotKey )
+   hb_DispOutAt( ::nMaxRow, 70, "F10", cClrHotKey )
 
    DispEnd()
 
@@ -544,7 +544,7 @@ METHOD BuildCommandWindow() CLASS HBDebugger
    ::oWndCommand:bGotFocus   := {|| ::oGet:SetFocus() }
    ::oWndCommand:bLostFocus  := {|| ::oGet:KillFocus(), SetCursor( SC_NONE ) }
    ::oWndCommand:bKeyPressed := {| nKey | ::CommandWindowProcessKey( nKey ) }
-   ::oWndCommand:bPainted    := {|| hb_dispOutAt( ::oWndCommand:nBottom - 1,;
+   ::oWndCommand:bPainted    := {|| hb_DispOutAt( ::oWndCommand:nBottom - 1,;
                              ::oWndCommand:nLeft + 1, "> ", __DbgColors()[ 2 ] ),;
                              ::oGet:setColor( __DbgColors()[ 2 ] ):display(),;
                              hb_ClrArea( ::oWndCommand:nTop + 1, ::oWndCommand:nLeft + 1,;
@@ -713,9 +713,10 @@ METHOD Colors() CLASS HBDebugger
 
    LOCAL oWndColors := HBDbWindow():New( 4, 5, 16, ::nMaxCol - 5,;
                                         "Debugger Colors[1..11]", ::ClrModal() )
-   LOCAL aColors := { "Border", "Text", "Text High", "Text PPO", "Text Selected",;
-                      "Text High Sel.", "Text PPO Sel.", "Menu", "Menu High",;
-                      "Menu Selected", "Menu High Sel." }
+   LOCAL aColors := { ;
+      "Border", "Text", "Text High", "Text PPO", "Text Selected",;
+      "Text High Sel.", "Text PPO Sel.", "Menu", "Menu High",;
+      "Menu Selected", "Menu High Sel." }
 
    LOCAL oBrwColors := HBDbBrowser():New( oWndColors:nTop + 1, oWndColors:nLeft + 1,;
                                           oWndColors:nBottom - 1, oWndColors:nRight - 1 )
@@ -779,7 +780,7 @@ METHOD CommandWindowProcessKey( nKey ) CLASS HBDebugger
       cCommand := RTrim( ::oGet:getValue() )
       IF ! Empty( cCommand )
          IF ( n := hb_AScan( ::aLastCommands, cCommand, , , .T. ) ) > 0 .AND. n < Len( ::aLastCommands )
-            HB_ADel( ::aLastCommands, n, .T. )
+            hb_ADel( ::aLastCommands, n, .T. )
          ENDIF
          ::nCommand := Len( ::aLastCommands )
          ::aLastCommands[ ::nCommand ] := cCommand
@@ -788,7 +789,7 @@ METHOD CommandWindowProcessKey( nKey ) CLASS HBDebugger
          ::oWndCommand:ScrollUp( 1 )
          ::DoCommand( cCommand )
       ENDIF
-      hb_dispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, "> ", ;
+      hb_DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, "> ", ;
                     __DbgColors()[ 2 ] )
       ::oGet:setValue( "" ):display()
       EXIT
@@ -1051,11 +1052,11 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
    ENDCASE
 
    IF ::lActive
-      hb_dispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, ;
+      hb_DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, ;
                  Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 1 ), ;
                  __DbgColors()[ 2 ] )
       IF !Empty( cResult )
-         hb_dispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3, ;
+         hb_DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3, ;
                      cResult, __DbgColors()[ 2 ] )
          ::oWndCommand:ScrollUp( 1 )
       ENDIF
@@ -1278,7 +1279,7 @@ METHOD HandleEvent() CLASS HBDebugger
       IF ::nSpeed != 0
          Inkey( ::nSpeed / 10 )
       ENDIF
-      IF __dbgINVOKEDEBUG()  //NextKey() == K_ALT_D
+      IF __dbgInvokeDebug()  // NextKey() == K_ALT_D
          ::lAnimate := .F.
       ELSE
          ::Step()
@@ -1524,7 +1525,7 @@ METHOD InputBox( cMsg, uValue, bValid, lEditable ) CLASS HBDebugger
 
    ELSE
 
-      hb_dispOutAt( nTop + 1, nLeft + 1, __dbgValToStr( uValue ), "," + __DbgColors()[ 5 ] )
+      hb_DispOutAt( nTop + 1, nLeft + 1, __dbgValToStr( uValue ), "," + __DbgColors()[ 5 ] )
       SetPos( nTop + 1, nLeft + 1 )
 
       lExit := .F.
@@ -1652,7 +1653,7 @@ METHOD LoadCallStack() CLASS HBDebugger
          // a procedure with debug info
          ::aProcStack[ i - nDebugLevel + 1 ] := ::aCallStack[ nPos ]
       ELSE
-         ::aProcStack[ i - nDebugLevel + 1 ] := { , ProcName( i ) + "(" + hb_NToS( ProcLine( i ) ) + ")", , nLevel, , }
+         ::aProcStack[ i - nDebugLevel + 1 ] := { , ProcName( i ) + "(" + hb_ntos( ProcLine( i ) ) + ")", , nLevel, , }
       ENDIF
    NEXT
 
@@ -2285,11 +2286,11 @@ METHOD SaveSettings() CLASS HBDebugger
       ENDIF
 
       IF ::nSpeed != 0
-         cInfo += "Run Speed " + hb_NToS( ::nSpeed ) + hb_eol()
+         cInfo += "Run Speed " + hb_ntos( ::nSpeed ) + hb_eol()
       ENDIF
 
       IF ::nTabWidth != 4
-         cInfo += "Options Tab " + hb_NToS( ::nTabWidth ) + hb_eol()
+         cInfo += "Options Tab " + hb_ntos( ::nTabWidth ) + hb_eol()
       ENDIF
 
       IF ::lShowStatics
@@ -2326,7 +2327,7 @@ METHOD SaveSettings() CLASS HBDebugger
 
       IF ! Empty( ::aBreakPoints )
          FOR n := 1 TO Len( ::aBreakPoints )
-            cInfo += "BP " + hb_NToS( ::aBreakPoints[ n ][ 1 ] ) + " " + ;
+            cInfo += "BP " + hb_ntos( ::aBreakPoints[ n ][ 1 ] ) + " " + ;
                      AllTrim( ::aBreakPoints[ n ][ 2 ] ) + hb_eol()
          NEXT
       ENDIF
@@ -2334,10 +2335,10 @@ METHOD SaveSettings() CLASS HBDebugger
       /* This part of the script must be executed after all windows are created */
       FOR n := 1 TO Len( ::aWindows )
          oWnd := ::aWindows[ n ]
-         cInfo += "Window Size " + hb_NToS( oWnd:nBottom - oWnd:nTop + 1 ) + " "
-         cInfo += hb_NToS( oWnd:nRight - oWnd:nLeft + 1 ) + hb_eol()
-         cInfo += "Window Move " + hb_NToS( oWnd:nTop ) + " "
-         cInfo += hb_NToS( oWnd:nLeft ) + hb_eol()
+         cInfo += "Window Size " + hb_ntos( oWnd:nBottom - oWnd:nTop + 1 ) + " "
+         cInfo += hb_ntos( oWnd:nRight - oWnd:nLeft + 1 ) + hb_eol()
+         cInfo += "Window Move " + hb_ntos( oWnd:nTop ) + " "
+         cInfo += hb_ntos( oWnd:nLeft ) + hb_eol()
          cInfo += "Window Next" + hb_eol()
       NEXT
 
@@ -2364,7 +2365,7 @@ METHOD Show() CLASS HBDebugger
    ::oPullDown:Display()
    ::oWndCode:Show( .T. )
    ::oWndCommand:Show()
-   hb_dispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, ">" )
+   hb_DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, ">" )
 
    ::BarDisplay()
 
@@ -2618,7 +2619,7 @@ METHOD ShowVars() CLASS HBDebugger
                                ::oBrwVars:Cargo[ 1 ] - nOld }
 
       oCol := HBDbColumnNew( "", ;
-           {|| PadR( hb_NToS( ::oBrwVars:Cargo[ 1 ] - 1 ) + ") " + ;
+           {|| PadR( hb_ntos( ::oBrwVars:Cargo[ 1 ] - 1 ) + ") " + ;
                      ::VarGetInfo( ::aVars[ Max( ::oBrwVars:Cargo[ 1 ], 1 ) ] ), ;
                      ::oWndVars:nWidth() - 2 ) } )
       ::oBrwVars:AddColumn( oCol )
@@ -2857,15 +2858,16 @@ METHOD ViewSets() CLASS HBDebugger
 
    LOCAL oWndSets := HBDbWindow():New( 1, 8, ::nMaxRow - 2, ::nMaxCol - 8,;
                                       "System Settings[1..47]", ::ClrModal() )
-   LOCAL aSets := { "Exact", "Fixed", "Decimals", "DateFormat", "Epoch", "Path",;
-                    "Default", "Exclusive", "SoftSeek", "Unique", "Deleted",;
-                    "Cancel", "Debug", "TypeAhead", "Color", "Cursor", "Console",;
-                    "Alternate", "AltFile", "Device", "Extra", "ExtraFile",;
-                    "Printer", "PrintFile", "Margin", "Bell", "Confirm", "Escape",;
-                    "Insert", "Exit", "Intensity", "ScoreBoard", "Delimeters",;
-                    "DelimChars", "Wrap", "Message", "MCenter", "ScrollBreak",;
-                    "EventMask", "VideoMode", "MBlockSize", "MFileExt",;
-                    "StrictRead", "Optimize", "Autopen", "Autorder", "AutoShare" }
+   LOCAL aSets := { ;
+      "Exact", "Fixed", "Decimals", "DateFormat", "Epoch", "Path",;
+      "Default", "Exclusive", "SoftSeek", "Unique", "Deleted",;
+      "Cancel", "Debug", "TypeAhead", "Color", "Cursor", "Console",;
+      "Alternate", "AltFile", "Device", "Extra", "ExtraFile",;
+      "Printer", "PrintFile", "Margin", "Bell", "Confirm", "Escape",;
+      "Insert", "Exit", "Intensity", "ScoreBoard", "Delimeters",;
+      "DelimChars", "Wrap", "Message", "MCenter", "ScrollBreak",;
+      "EventMask", "VideoMode", "MBlockSize", "MFileExt",;
+      "StrictRead", "Optimize", "Autopen", "Autorder", "AutoShare" }
 
    LOCAL oBrwSets := HBDbBrowser():new( oWndSets:nTop + 1, oWndSets:nLeft + 1,;
                                         oWndSets:nBottom - 1, oWndSets:nRight - 1 )
@@ -3080,7 +3082,7 @@ METHOD WatchpointsShow() CLASS HBDebugger
 
       oCol := HBDbColumnNew( "", ;
          {|| PadR( iif( Len( ::aWatch ) > 0, ;
-                      hb_NToS( ::oBrwPnt:Cargo[ 1 ] - 1 ) + ") " + ;
+                      hb_ntos( ::oBrwPnt:Cargo[ 1 ] - 1 ) + ") " + ;
                       ::WatchGetInfo( Max( ::oBrwPnt:Cargo[ 1 ], 1 ) ), ;
                       " " ), ;
                   ::oWndPnt:nWidth() - 2 ) } )

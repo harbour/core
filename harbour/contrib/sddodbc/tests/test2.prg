@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "sddodbc"
+
 #include "simpleio.ch"
 #include "hbrddsql.ch"
 

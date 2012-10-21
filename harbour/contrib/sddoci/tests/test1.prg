@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "sddoci"
+
 #include "simpleio.ch"
 #include "hbrddsql.ch"
 
