@@ -61,9 +61,9 @@
 #include "ct.h"
 
 /* static const data */
-static const char * s_pcSeparatorStr =
+static const char * sc_pcSeparatorStr =
    "\x00" "\x09" "\x0A" "\x0C" "\x1A" "\x20" "\x8A" "\x8C" ",.;:!\?/\\<>()#&%+-*";
-static const HB_SIZE s_sSeparatorStrLen = 26;
+static const HB_SIZE sc_sSeparatorStrLen = 26;
 
 /* static data */
 /* even if these are chars, variable must be int, since we need an extra -1 */
@@ -118,8 +118,8 @@ static void do_token1( int iSwitch )
          pcSeparatorStr = hb_parc( 2 );
       else
       {
-         pcSeparatorStr = ( const char * ) s_pcSeparatorStr;
-         sSeparatorStrLen = s_sSeparatorStrLen;
+         pcSeparatorStr = sc_pcSeparatorStr;
+         sSeparatorStrLen = sc_sSeparatorStrLen;
       }
 
       /* token counter */

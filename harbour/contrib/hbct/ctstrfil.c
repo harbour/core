@@ -58,27 +58,27 @@
 
 #include "ctstrfil.h"
 
-static int s_iFileAttr = HB_FA_NORMAL;
+static HB_FATTR s_nFileAttr = HB_FA_NORMAL;
 static HB_BOOL s_bSafety = HB_FALSE;
 
-void ct_setfcreate( int iFileAttr )
+void ct_setfcreate( HB_FATTR nFileAttr )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "ct_setfcreate(%i)", iFileAttr ) );
-   s_iFileAttr = iFileAttr;
+   HB_TRACE( HB_TR_DEBUG, ( "ct_setfcreate(%u)", nFileAttr ) );
+   s_nFileAttr = nFileAttr;
 }
 
-int ct_getfcreate( void )
+HB_FATTR ct_getfcreate( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_getfcreate()" ) );
-   return s_iFileAttr;
+   return s_nFileAttr;
 }
 
 HB_FUNC( SETFCREATE )
 {
-   hb_retni( ct_getfcreate() );
+   hb_retnl( ct_getfcreate() );
 
    if( HB_ISNUM( 1 ) )
-      ct_setfcreate( hb_parni( 1 ) );
+      ct_setfcreate( hb_parnl( 1 ) );
 }
 
 void ct_setsafety( HB_BOOL bSafety )

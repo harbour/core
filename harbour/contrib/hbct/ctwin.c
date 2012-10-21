@@ -168,7 +168,7 @@ typedef struct
 
 } HB_GTCTW, * PHB_GTCTW;
 
-static const HB_WCHAR s_szFrameW[] = HB_B_SINGLE_W;
+static const HB_WCHAR sc_szFrameW[] = HB_B_SINGLE_W;
 
 static int hb_ctw_CalcShadowWidth( int iRows, int iCols )
 {
@@ -2200,7 +2200,7 @@ static int hb_ctw_gt_Alert( PHB_GT pGT, PHB_ITEM pMessage, PHB_ITEM pOptions,
 
          iPrevWnd = hb_ctw_CurrentWindow( pCTW );
          iWnd = hb_ctw_CreateWindow( pCTW, iTop, iLeft, iBottom, iRight, HB_TRUE, iClrNorm, HB_TRUE );
-         hb_ctw_AddWindowBox( pCTW, iWnd, s_szFrameW, iClrNorm );
+         hb_ctw_AddWindowBox( pCTW, iWnd, sc_szFrameW, iClrNorm );
          HB_GTSELF_SETCURSORSTYLE( pGT, SC_NONE );
          ulLast = 0;
          i = 0;

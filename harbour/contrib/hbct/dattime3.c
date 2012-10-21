@@ -90,7 +90,7 @@ static HB_BOOL _hb_timeValid( const char * szTime, HB_SIZE nLen, int * piDecode 
 
    if( nLen == 2 || nLen == 5 || nLen == 8 || nLen == 11 )
    {
-      static const int  s_iMax[] = { 23, 59, 59, 99 };
+      static const int  sc_iMax[] = { 23, 59, 59, 99 };
       int               i, iVal;
       HB_SIZE           ul;
 
@@ -103,7 +103,7 @@ static HB_BOOL _hb_timeValid( const char * szTime, HB_SIZE nLen, int * piDecode 
       for( ul = 0, i = 0; fValid && ul < nLen; ul += 3, ++i )
       {
          iVal    = 10 * ( szTime[ ul ] - '0' ) + ( szTime[ ul + 1 ] - '0' );
-         fValid  = iVal <= s_iMax[ i ];
+         fValid  = iVal <= sc_iMax[ i ];
          if( piDecode )
             piDecode[ i ] = iVal;
       }

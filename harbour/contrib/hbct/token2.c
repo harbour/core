@@ -209,9 +209,9 @@ static void sTokEnvDel( TOKEN_ENVIRONMENT env )
 /* ================= */
 
 /* static data */
-static const char * spcSeparatorStr =
+static const char * sc_spcSeparatorStr =
    "\x00" "\x09" "\x0A" "\x0C" "\x1A" "\x20" "\x8A" "\x8C" ",.;:!\?/\\<>()#&%+-*";
-static const HB_SIZE ssSeparatorStrLen = 26;
+static const HB_SIZE sc_sSeparatorStrLen = 26;
 
 /* TODO: make thread safe */
 static TOKEN_ENVIRONMENT s_sTokenEnvironment = NULL;
@@ -262,8 +262,8 @@ HB_FUNC( TOKENINIT )
          pcSeparatorStr = hb_parc( 2 );
       else
       {
-         pcSeparatorStr = ( const char * ) spcSeparatorStr;
-         sSeparatorStrLen = ssSeparatorStrLen;
+         pcSeparatorStr = sc_spcSeparatorStr;
+         sSeparatorStrLen = sc_sSeparatorStrLen;
       }
 
       /* skip width */

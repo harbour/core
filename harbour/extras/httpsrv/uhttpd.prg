@@ -1799,7 +1799,7 @@ STATIC PROCEDURE defineServer( hSocket )
    _SERVER[ "SERVER_SOFTWARE"      ] := APP_NAME + " " + APP_VERSION + " (" + OS() + ")"
    _SERVER[ "SERVER_SIGNATURE"     ] := "<address>" + _SERVER[ "SERVER_SOFTWARE" ] + " Server at " + _SERVER[ "SERVER_NAME" ] + " Port " + _SERVER[ "SERVER_PORT" ] + "</address>"
    _SERVER[ "DOCUMENT_ROOT"        ] := s_cDocumentRoot
-   _SERVER[ "SERVER_ADMIN"         ] := "root@localhost"   // TOFIX: put real user
+   _SERVER[ "SERVER_ADMIN"         ] := hb_UserName() + "@" + NetName()
    _SERVER[ "SCRIPT_FILENAME"      ] := NIL
    _SERVER[ "GATEWAY_INTERFACE"    ] := "CGI/1.1"
    _SERVER[ "SCRIPT_URL"           ] := NIL

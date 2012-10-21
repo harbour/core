@@ -276,18 +276,18 @@ const char * ct_at_charset_backward( const char * pcString, HB_SIZE sStrLen,
  *  CSETREF() stuff
  */
 
-static int siRefSwitch = 0;     /* TODO: make this tread safe */
+static int s_iRefSwitch = 0;     /* TODO: make this tread safe */
 
 void ct_setref( int iNewSwitch )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_setref(%i)", iNewSwitch ) );
-   siRefSwitch = iNewSwitch;
+   s_iRefSwitch = iNewSwitch;
 }
 
 int ct_getref( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_getref()" ) );
-   return siRefSwitch;
+   return s_iRefSwitch;
 }
 
 HB_FUNC( CSETREF )
@@ -314,18 +314,18 @@ HB_FUNC( CSETREF )
  * CSETATMUPA() stuff
  */
 
-static int siAtMupaSwitch = 0;  /* TODO: make this tread safe */
+static int s_iAtMupaSwitch = 0;  /* TODO: make this tread safe */
 
 void ct_setatmupa( int iNewSwitch )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_setatmupa(%i)", iNewSwitch ) );
-   siAtMupaSwitch = iNewSwitch;
+   s_iAtMupaSwitch = iNewSwitch;
 }
 
 int ct_getatmupa( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_getatmupa()" ) );
-   return siAtMupaSwitch;
+   return s_iAtMupaSwitch;
 }
 
 HB_FUNC( CSETATMUPA )
@@ -352,31 +352,31 @@ HB_FUNC( CSETATMUPA )
  * SETATLIKE() stuff
  */
 
-static int siAtLikeMode = 0;    /* TODO: make this tread safe */
-static char scAtLikeChar = '?';  /* TODO: make this tread safe */
+static int s_iAtLikeMode = 0;    /* TODO: make this tread safe */
+static char s_cAtLikeChar = '?';  /* TODO: make this tread safe */
 
 void ct_setatlike( int iNewMode )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_setatlike(%i)", iNewMode ) );
-   siAtLikeMode = iNewMode;
+   s_iAtLikeMode = iNewMode;
 }
 
 int ct_getatlike( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_getatlike()" ) );
-   return siAtLikeMode;
+   return s_iAtLikeMode;
 }
 
 void ct_setatlikechar( char cNewChar )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_setatlikechar(\'%c\')", cNewChar ) );
-   scAtLikeChar = cNewChar;
+   s_cAtLikeChar = cNewChar;
 }
 
 char ct_getatlikechar( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_getatlikechar()" ) );
-   return scAtLikeChar;
+   return s_cAtLikeChar;
 }
 
 HB_FUNC( SETATLIKE )

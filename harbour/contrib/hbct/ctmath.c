@@ -73,18 +73,18 @@ int ct_math_exit( void )
 /* ---------------- */
 /*  math precision  */
 /* ---------------- */
-static int s_ct_precision = 16; /* TODO: make this thread safe */
+static int s_iPrecision = 16; /* TODO: make this thread safe */
 
 void ct_setprecision( int iPrecision )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_setprecision (%i)", iPrecision ) );
-   s_ct_precision = iPrecision;
+   s_iPrecision = iPrecision;
 }
 
 int ct_getprecision( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "ct_getprecision()" ) );
-   return s_ct_precision;
+   return s_iPrecision;
 }
 
 HB_FUNC( SETPREC )

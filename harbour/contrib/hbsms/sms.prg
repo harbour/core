@@ -54,8 +54,11 @@
 /* TODO: - Receive support */
 
 /* NOTE: Source of information:
+         http://www.smssolutions.net/tutorials/gsm/sendsmsat/
          http://www.smssolutions.net/tutorials/gsm/receivesmsat/
+         http://www.developershome.com/sms/sendSmsByAtCommands.asp
          http://www.developershome.com/sms/readSmsByAtCommands.asp
+         http://www.dreamfabric.com/sms/
          [vszakats] */
 
 STATIC FUNCTION port_send( h, s )

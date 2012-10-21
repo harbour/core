@@ -56,17 +56,15 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-// TODO: add language module request(s) and an achoice to select different lang modules
+#include "hbextlng.ch"
 
-//:
+PROCEDURE Main( cLang )
 
-PROCEDURE Main()
-
-   //:
    LOCAL cScr
    LOCAL nchoice
    LOCAL c    := .T.
-   LOCAL farr := { "addmonth( ddate )  Add a month to ddate     ", ;
+   LOCAL farr := { ;
+      "addmonth( ddate )  Add a month to ddate     ", ;
       "bom()              Beginning of month       ", ;
       "boq()              Returns first date of qtr", ;
       "boy()              Beginning of year        ", ;
@@ -91,7 +89,11 @@ PROCEDURE Main()
    SET DATE ANSI
    SET CENTURY ON
 
-   cls
+   IF HB_ISSTRING( cLang )
+      hb_langSelect( cLang )
+   ENDIF
+
+   CLS
 
    DO WHILE c
       cScr := SaveScreen( 4, 5, 21, 66 )
