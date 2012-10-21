@@ -99,7 +99,7 @@ HB_BOOL hb_printerIsReady( const char * pszPrinterName )
          bIsPrinter = HB_FALSE;
    }
 
-#elif defined( HB_OS_WIN )
+#else
 
    /* NOTE: Platform independent method, at least it will compile and run
             on any platform, but the result may not be the expected one,
@@ -112,21 +112,15 @@ HB_BOOL hb_printerIsReady( const char * pszPrinterName )
       HB_FHANDLE fhnd;
 
       if( pszPrinterName == NULL )
+#if defined( HB_OS_UNIX )
+         pszPrinterName = "/dev/lp0";
+#else
          pszPrinterName = "LPT1";
+#endif
 
       fhnd = hb_fsOpen( pszPrinterName, FO_WRITE | FO_SHARED | FO_PRIVATE );
       bIsPrinter = ( fhnd != FS_ERROR );
       hb_fsClose( fhnd );
-   }
-
-#else
-
-   {
-      /* TODO */
-
-      HB_SYMBOL_UNUSED( pszPrinterName );
-
-      bIsPrinter = HB_FALSE;
    }
 
 #endif

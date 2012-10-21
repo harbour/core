@@ -3187,7 +3187,7 @@ char * hb_socketGetHostName( const void * pSockAddr, unsigned len )
  * IFACEs
  */
 #if defined( HB_OS_WIN ) || ( defined( SIOCGIFCONF ) && \
-    !( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) ) )
+    !( ( defined( HB_OS_LINUX ) || defined( HB_OS_DOS ) ) && defined( __WATCOMC__ ) ) )
 static void hb_socketArraySetInetAddr( PHB_ITEM pItem, HB_SIZE nPos,
                                        const void * pSockAddr, unsigned len )
 {
@@ -3213,7 +3213,7 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
  *       of 'struct ifreq' and SIOCGIF*
  */
 #if defined( SIOCGIFCONF ) && \
-    !( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) )
+    !( ( defined( HB_OS_LINUX ) || defined( HB_OS_DOS ) ) && defined( __WATCOMC__ ) )
    struct ifconf ifc;
    struct ifreq * pifr;
    char * buf, * ptr;

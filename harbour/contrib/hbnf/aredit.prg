@@ -160,7 +160,4 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
    ENDDO
    RestScreen( nTop, nLeft, nBot, nRight, cSaveWin )
 
-   // if no bGetFunc then ESC returns 0, otherwise return value of last element
-   // TOFIX: ValType() never returns NIL
-   RETURN iif( ValType( bGetFunc ) == NIL .AND. nKey == K_ESC, ;
-      0, ar[ b:colPos, nElem ] )
+   RETURN ar[ b:colPos, nElem ]
