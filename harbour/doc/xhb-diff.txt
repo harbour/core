@@ -1486,7 +1486,7 @@ messages.
 
 In the future we plan to introduce real class objects like in Class(y) and
 some other languages (i.e. XBASE++) so it's important for portability to
-rite code which is Class(y) friendly and never use class function directly
+write code which is Class(y) friendly and never use class function directly
 as constructor, i.e. instead of writing code like:
       o := mycls( p1, p2, p3 )
 programmer should use:

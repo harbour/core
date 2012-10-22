@@ -1474,6 +1474,7 @@ again:
 
       if( pTerm->key_flag != 0 && nKey != 0 )
       {
+
          nKey |= pTerm->key_flag;
          pTerm->key_flag = 0;
       }
@@ -1481,9 +1482,12 @@ again:
 #ifdef HB_GT_UNICODE_BUF
       if( !pTerm->fUTF8 )
       {
-         int u = HB_GTSELF_KEYTRANS( pTerm->pGT, nKey );
-         if( u )
-            nKey = HB_INKEY_NEW_UNICODE( u );
+         if( nKey != 0 )
+         {
+            int u = HB_GTSELF_KEYTRANS( pTerm->pGT, nKey );
+            if( u )
+               return HB_INKEY_NEW_UNICODE( u );
+         }
       }
       else if( nKey >= 32 && nKey <= 255 )
       {

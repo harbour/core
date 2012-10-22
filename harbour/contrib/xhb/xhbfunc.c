@@ -288,7 +288,7 @@ HB_FUNC_EXTERN( NETNAME );
 
 HB_FUNC( XHB_NETNAME )
 {
-   if( HB_ISNUM( 1 ) && hb_parni( 1 ) == 1 )
+   if( hb_parni( 1 ) == 1 )
       HB_FUNC_EXEC( HB_USERNAME )
    else
       HB_FUNC_EXEC( NETNAME )
