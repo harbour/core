@@ -71,12 +71,12 @@ PROCEDURE Main()
 
    ? [  ]
    cStr := charnot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) )
-   for ni := 1 TO Len( cStr )
+   FOR ni := 1 TO Len( cStr )
       ?? "chr(" + AllTrim( Str( Asc( SubStr( cStr, ni, 1 ) ) ) ) + ")"
       IF ni < Len( cStr )
          ?? "+"
       ENDIF
-   next ni
+   NEXT
    ?
 
    ? [  charnot(charnot("This is a test!")) == "This is a test!" ?]

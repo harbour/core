@@ -63,7 +63,7 @@ PROCEDURE Main()
    FOR n := 1 TO 1000
       ? Str( n, 20, 15 ) + ": " + Str( mantissa( n ), 20, 15 ) + " " + Str( exponent( n ), 4 )
       ? Str( Sqrt( n ), 20, 15 ) + ": " + Str( mantissa( Sqrt( n ) ), 20, 15 ) + " " + Str( exponent( Sqrt( n ) ), 4 )
-   NEXT n
+   NEXT
 
    // The call to str( infinity(.T.) ), generate a GPF.
 // ?? Str( infinity( .T. ) ) + Str( mantissa( infinity( .T. ) ) ) + Str( exponent( infinity( .T. ) ) )

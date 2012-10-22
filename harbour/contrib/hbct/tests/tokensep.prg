@@ -68,19 +68,19 @@ PROCEDURE Main()
    ? [  Tokenizing the string "] + cStr + ["]
    ? [    with skip width == 1 and ".,!" as tokenizer list:]
    ?
-   for ni := 1 TO numtoken( cStr, ".,!", 1 )
+   FOR ni := 1 TO numtoken( cStr, ".,!", 1 )
       ? [    Token #] + AllTrim( Str( ni ) ) + [("] + token( cStr, ".,!", ni, 1 ) + ;
-         [") is tokenized by "] + tokensep( .F. ) + [" and "] + tokensep( .T. ) + ["] )
-   next ni
+         [") is tokenized by "] + tokensep( .F. ) + [" and "] + tokensep( .T. ) + ["]
+   NEXT
 
    ?
    ? [  Tokenizing the string "] + cStr + ["]
    ? [    with skip width == 3 and ".,!" as tokenizer list:]
    ?
-   for ni := 1 TO numtoken( cStr, ".,!", 3 )
+   FOR ni := 1 TO numtoken( cStr, ".,!", 3 )
       ? [    Token #] + AllTrim( Str( ni ) ) + [("] + token( cStr, ".,!", ni, 3 ) + ;
-         [") is tokenized by "] + tokensep( .F. ) + [" and "] + tokensep( .T. ) + ["] )
-   next ni
+         [") is tokenized by "] + tokensep( .F. ) + [" and "] + tokensep( .T. ) + ["]
+   NEXT
 
    ?
    ? "End test of TOKENSEP()"

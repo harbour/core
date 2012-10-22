@@ -61,9 +61,9 @@ PROCEDURE Main()
    ? "Begin test of ASCIISUM()"
    ?
 
-   ? [  asciisum(replicate("A", 10000)) == 650000 ? --> ] + Str( asciisum(Replicate("A",10000 ) ) )
-   ? [  asciisum("0123456789") == 525              ? --> ] + Str( asciisum("0123456789" ) )
-   ? [  asciisum(nil) == 0                         ? --> ] + Str( asciisum(nil ) )
+   ? [  asciisum(replicate("A", 10000)) == 650000 ? --> ] + Str( asciisum( Replicate( "A", 10000 ) ) )
+   ? [  asciisum("0123456789") == 525             ? --> ] + Str( asciisum( "0123456789" ) )
+   ? [  asciisum(NIL) == 0                        ? --> ] + Str( asciisum( NIL ) )
 
    ?
    ? "End test of ASCIISUM()"

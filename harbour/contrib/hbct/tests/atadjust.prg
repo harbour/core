@@ -56,7 +56,8 @@
 
 PROCEDURE Main()
 
-   LOCAL aStr := { "Introduction: 1", ;
+   LOCAL aStr := { ;
+      "Introduction: 1", ;
       "Theory: 5", ;
       "Material and Methods: 13", ;
       "Results: 19", ;
@@ -70,29 +71,29 @@ PROCEDURE Main()
    ?
 
    ? "  Original strings:"
-   for ni := 1 TO Len( aStr )
-      ? Space( 4 ) + aStr[ni]
-   next
+   FOR ni := 1 TO Len( aStr )
+      ? Space( 4 ) + aStr[ ni ]
+   NEXT
    ?
 
    ? '  ATADJUST(":", aStr[ni], 21,,, ".") yields'
-   for ni := 1 TO Len( aStr )
-      ? Space( 4 ) + atadjust( ":", aStr[ni], 21, 1,,"." )
-   next
+   FOR ni := 1 TO Len( aStr )
+      ? Space( 4 ) + atadjust( ":", aStr[ ni ], 21, 1,, "." )
+   NEXT
    ?
 
    ? '  ATADJUST(":", aStr[ni], 10, 1,, ".") yields'
-   for ni := 1 TO Len( aStr )
-      ? Space( 4 ) + atadjust( ":", aStr[ni], 10, 1,,"." )
-   next
+   FOR ni := 1 TO Len( aStr )
+      ? Space( 4 ) + atadjust( ":", aStr[ ni ], 10, 1,, "." )
+   NEXT
    ?
 
    ? '  SETATLIKE(CT_SETATLIKE_WILDCARD, ":")'
    ? '  ATADJUST(":", aStr[ni], 10, 1,, ".") yields now'
    setatlike( CT_SETATLIKE_WILDCARD, ":" )
-   for ni := 1 TO Len( aStr )
-      ? Space( 4 ) + atadjust( ":", aStr[ni], 10, 1,,"." )
-   next
+   FOR ni := 1 TO Len( aStr )
+      ? Space( 4 ) + atadjust( ":", aStr[ ni ], 10, 1,, "." )
+   NEXT
    ?
 
    ? "End test of ATADJUST()"

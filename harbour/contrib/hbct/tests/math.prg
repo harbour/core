@@ -64,52 +64,52 @@ PROCEDURE Main()
    ?
 
    ? "FLOOR( 1.9 ) = 1       // CT3"
-   ? Space( 4 ), FLOOR( 1.9 ), "  <-- CT for Harbour"
+   ? Space( 5 ), FLOOR( 1.9 ), "  <-- CT for Harbour"
    ?
 
    ? "FLOOR( 1.1 ) = 1       // CT3"
-   ? Space( 4 ), FLOOR( 1.1 ), "  <-- CT for Harbour"
+   ? Space( 5 ), FLOOR( 1.1 ), "  <-- CT for Harbour"
    ?
 
    ? "FLOOR( 0.9 ) = 0       // CT3"
-   ? Space( 4 ), FLOOR( 0.9 ), "  <-- CT for Harbour"
+   ? Space( 5 ), FLOOR( 0.9 ), "  <-- CT for Harbour"
    ?
 
    ? "FLOOR( -0.1 ) = -1       // CT3"
-   ? Space( 6 ), FLOOR( -0.1 ), "  <-- CT for Harbour"
+   ? Space( 7 ), FLOOR( -0.1 ), "  <-- CT for Harbour"
    ?
 
    ? "FLOOR( -0.9 ) = -1       // CT3"
-   ? Space( 6 ), FLOOR( -0.9 ), "  <-- CT for Harbour"
+   ? Space( 7 ), FLOOR( -0.9 ), "  <-- CT for Harbour"
    ?
 
    ? "FLOOR( -1.1 ) = -2       // CT3"
-   ? Space( 6 ), FLOOR( -1.1 ), "  <-- CT for Harbour"
+   ? Space( 7 ), FLOOR( -1.1 ), "  <-- CT for Harbour"
    ?
    WAIT4()
 
    ? "CEILING( 1.9 ) = 2       // CT3"
-   ? Space( 6 ), CEILING( 1.9 ), "  <-- CT for Harbour"
+   ? Space( 7 ), CEILING( 1.9 ), "  <-- CT for Harbour"
    ?
 
    ? "CEILING( 1.1 ) = 2       // CT3"
-   ? Space( 6 ), CEILING( 1.1 ), "  <-- CT for Harbour"
+   ? Space( 7 ), CEILING( 1.1 ), "  <-- CT for Harbour"
    ?
 
    ? "CEILING( 0.9 ) = 1       // CT3"
-   ? Space( 6 ), CEILING( 0.9 ), "  <-- CT for Harbour"
+   ? Space( 7 ), CEILING( 0.9 ), "  <-- CT for Harbour"
    ?
 
    ? "CEILING( -0.1 ) = 0       // CT3"
-   ? Space( 7 ), CEILING( -0.1 ), "  <-- CT for Harbour"
+   ? Space( 8 ), CEILING( -0.1 ), "  <-- CT for Harbour"
    ?
 
    ? "CEILING( -0.9 ) = 0       // CT3"
-   ? Space( 7 ), CEILING( -0.9 ), "  <-- CT for Harbour"
+   ? Space( 8 ), CEILING( -0.9 ), "  <-- CT for Harbour"
    ?
 
    ? "CEILING( -1.1 ) = -1       // CT3"
-   ? Space( 8 ), CEILING( -1.1 ), "  <-- CT for Harbour"
+   ? Space( 9 ), CEILING( -1.1 ), "  <-- CT for Harbour"
    ?
 
    WAIT4()
@@ -159,7 +159,7 @@ PROCEDURE Main()
    ? Space( 2 ), FACT( 0 ), "  <-- CT for Harbour"
    ?
 
-   CTEXIT()
+   ctexit()
 
    RETURN
 

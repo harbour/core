@@ -64,7 +64,7 @@ PROCEDURE Main()
    // simple tests
    ? "Simple tests:"
    ? [  charlist("Hello World !") == "Helo Wrd!" ? -> "] + charlist( "Hello World !" ) + ["]
-   ? [  charlist(nil) == "" ? -> "] + charlist( nil ) + ["]
+   ? [  charlist(NIL) == "" ? -> "] + charlist( NIL ) + ["]
 
    ? "End test of CHARLIST()"
    ?

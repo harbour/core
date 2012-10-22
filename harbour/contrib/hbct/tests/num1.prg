@@ -57,7 +57,7 @@ PROCEDURE Main()
    ctinit()
 
    SET DECIMAL TO 14
-   CLS
+
    ?? "Test of Numeric functions - part 1"
 
    ? "CELSIUS( 33.8 ) =   1             // CT3"
@@ -90,15 +90,11 @@ PROCEDURE Main()
    ? "FAHRENHEIT( -155 ) = -247             // CT3"
    ?  Space( 14 ), FAHRENHEIT( -155 ), " <-- CT for Harbour "
    ?
-   ? "   PRESS ANY KEY"
-
-   Inkey( 0 )
-
 
    ?  "INFINITY()       // CT3"
    ?  Space( 8 ), Str( INFINITY(), 30, 15 ), "  <-- CT for Harbour"
    ?
 
-   CTEXIT()
+   ctexit()
 
    RETURN

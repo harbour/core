@@ -70,13 +70,13 @@ PROCEDURE Main()
    ? [  chr(0)+chr(0)+chr(0)+chr(1)+chr(2)+chr(4)+chr(8)+chr(16) ? -->]
 
    ? [  ]
-   cStr :=  charshr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
-   for ni := 1 TO Len( cStr )
+   cStr := charshr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
+   FOR ni := 1 TO Len( cStr )
       ?? "chr(" + AllTrim( Str( Asc( SubStr( cStr, ni, 1 ) ) ) ) + ")"
       IF ni < Len( cStr )
          ?? "+"
       ENDIF
-   next ni
+   NEXT
    ?
 
    ? "End test of CHARSHR()"

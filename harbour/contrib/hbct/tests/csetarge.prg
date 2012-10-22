@@ -61,6 +61,8 @@ PROCEDURE main
 
    ctinit()
 
+   CLS
+
    ? "Begin test of CSETARGERR()"
    ?
 
@@ -201,7 +203,7 @@ FUNCTION myerrhandler( oerr )
 
    LOCAL ni, nDigit
 
-   MEMVAR INPUT
+   LOCAL cInput
 
    ? "    Error handler called:"
    ? "      err:severity.....:", oerr:severity
@@ -224,12 +226,10 @@ FUNCTION myerrhandler( oerr )
 
    IF oerr:canSubstitute
 
-      PRIVATE Input := ""
-
       ? "    Error handler can substitute return value, so please"
-      ACCEPT "    type in return value <Return for default>: " TO Input
+      ACCEPT "    type in return value <Return for default>: " TO cInput
 
-      IF Empty( Input )
+      IF Empty( cInput )
          ? "    You have chosen the default return value. Ok, this should "
          ? "    be now problem, since the last digit of err:subCode indicates"
          ? "    the type of the return value:"
@@ -242,49 +242,49 @@ FUNCTION myerrhandler( oerr )
          DO CASE
          CASE nDigit == 0
             ?? "NIL."
-            Input := NIL
+            cInput  := NIL
 
          CASE nDigit == 1
             ?? "String."
-            Input := ""
+            cInput := ""
 
          CASE nDigit == 2
             ?? "Integer."
-            Input := 0
+            cInput := 0
 
          CASE nDigit == 3
             ?? "Float."
-            Input := 0.0
+            cInput := 0.0
 
          CASE nDigit == 4
             ?? "Boolean."
-            Input := .F.
+            cInput := .F.
 
          CASE nDigit == 5
             ?? "Date."
-            Input := CToD( "" )
+            cInput := CToD( "" )
 
          CASE nDigit == 6
             ?? "Block."
-            Input := {|| NIL }
+            cInput := {|| NIL }
 
          CASE nDigit == 7
             ?? "Array."
-            Input := {}
+            cInput := {}
 
          CASE nDigit == 8
             ?? "Object."
-            Input := GetNew()
+            cInput := GetNew()
 
          CASE nDigit == 9
             ?? "<don't know, NIL would be best."
-            Input := NIL
+            cInput := NIL
 
          ENDCASE
 
       ENDIF
 
-      RETURN INPUT
+      RETURN cInput
 
    ENDIF
 

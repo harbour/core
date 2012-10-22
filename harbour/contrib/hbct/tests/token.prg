@@ -69,27 +69,27 @@ PROCEDURE Main()
    // Some simple tests
    ? "  Simple tests:"
    ? [    token("Hello, World!") == "World" ? -----------> "] + token( "Hello, World!" ) + ["]
-   ? [    token("Hello, World!",,2,1) == "" ? -----------> "] + token( "Hello, World!",,2,1 ) + ["]
-   ? [    token("Hello, World!",",",2,1) == " World!" ? -> "] + token( "Hello, World!",",",2,1 ) + ["]
-   ? [    token("Hello, World!"," ",2,1) == "World!" ? --> "] + token( "Hello, World!"," ",2,1 ) + ["]
+   ? [    token("Hello, World!",,2,1) == "" ? -----------> "] + token( "Hello, World!",, 2, 1 ) + ["]
+   ? [    token("Hello, World!",",",2,1) == " World!" ? -> "] + token( "Hello, World!", ",", 2, 1 ) + ["]
+   ? [    token("Hello, World!"," ",2,1) == "World!" ? --> "] + token( "Hello, World!", " ", 2, 1 ) + ["]
    ?
 
    ? [  Tokenizing the string "] + cStr + ["]
    ? [    with skip width == 1 and ".,!" as tokenizer list:]
    ?
-   for ni := 1 TO numtoken( cStr, ".,!", 1 )
+   FOR ni := 1 TO numtoken( cStr, ".,!", 1 )
       ? [    Token #] + AllTrim( Str( ni ) ) + [("] + token( cStr, ".,!", ni, 1, @cPre, @cPost ) + ;
-         [") @ pos ] + Str( npos := attoken( cStr, ".,!", ni, 1 ), 3 ) + [, tokenized by "] + cPre + [" and "] + cPost + [" is ] + iif( SubStr( cStr,npos,1 ) $ ".,!", "", "not " ) + "empty" )
-   next ni
+         [") @ pos ] + Str( npos := attoken( cStr, ".,!", ni, 1 ), 3 ) + [, tokenized by "] + cPre + [" and "] + cPost + [" is ] + iif( SubStr( cStr, npos, 1 ) $ ".,!", "", "not " ) + "empty"
+   NEXT
 
    ?
    ? [  Tokenizing the string "] + cStr + ["]
    ? [    with skip width == 3 and ".,!" as tokenizer list:]
    ?
-   for ni := 1 TO numtoken( cStr, ".,!", 3 )
+   FOR ni := 1 TO numtoken( cStr, ".,!", 3 )
       ? [    Token #] + AllTrim( Str( ni ) ) + [("] + token( cStr, ".,!", ni, 3, @cPre, @cPost ) + ;
-         [") @ pos ] + Str( npos := attoken( cStr, ".,!", ni, 3 ), 3 ) + [, tokenized by "] + cPre + [" and "] + cPost + [" is ] + iif( SubStr( cStr,npos,1 ) $ ".,!", "", "not " ) + "empty." )
-   next ni
+         [") @ pos ] + Str( npos := attoken( cStr, ".,!", ni, 3 ), 3 ) + [, tokenized by "] + cPre + [" and "] + cPost + [" is ] + iif( SubStr( cStr, npos, 1 ) $ ".,!", "", "not " ) + "empty."
+   NEXT
 
    ?
    ? "End test of TOKEN()"

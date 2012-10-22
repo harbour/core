@@ -64,7 +64,7 @@ PROCEDURE Main()
    // simple tests
    ? "Simple tests:"
    ? [  charslist("Hello World !") == " !HWdelor" ? -> "] + charslist( "Hello World !" ) + ["]
-   ? [  charslist(nil) == "" ? -> "] + charslist( nil ) + ["]
+   ? [  charslist(NIL) == "" ? -> "] + charslist( NIL ) + ["]
 
    ? "End test of CHARSLIST()"
    ?
