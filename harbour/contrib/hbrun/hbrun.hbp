@@ -6,10 +6,10 @@
 
 -o${hb_name}
 
-# Build in shared mode for these platforms because the
+# Build in shared mode for these platforms because
 # it's required for dynamic extension loading. (only
 # do that if HB_BUILD_CONTRIB_DYN is enabled, so there
-# are actually some dynamic extensions to load.)
+# are actual dynamic extensions to load.)
 {_HB_BUILD_&(!(HB_BUILD_DYN='no')&!(HB_BUILD_CONTRIB_DYN='no')&(win|wce|os2))}-shared
 
 -DHBMK_WITH_ALL_EMBEDDED_HEADERS

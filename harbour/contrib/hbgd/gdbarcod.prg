@@ -103,7 +103,7 @@ METHOD New( nTypeCode ) CLASS TCode
       ::LeftHand_Odd  := { "0011001", "0010011", "0111101", "0100011", "0110001", "0101111", "0111011", "0110111", "0001011", "0001101" }
       ::LeftHand_Even := { "0110011", "0011011", "0100001", "0011101", "0111001", "0000101", "0010001", "0001001", "0010111", "0100111" }
       ::Right_Hand    := { "1100110", "1101100", "1000010", "1011100", "1001110", "1010000", "1000100", "1001000", "1110100", "1110010" }
-      ::Parity        := { "OOEOEE",  "OOEEOE",  "OOEEEO",  "OEOOEE",  "OEEOOE",  "OEEEOO",  "OEOEOE",  "OEOEEO",  "OEEOEO", "OOOOOO"  }
+      ::Parity        := { "OOEOEE",  "OOEEOE",  "OOEEEO",  "OEOOEE",  "OEEOOE",  "OEEEOO",  "OEOEOE",  "OEOEEO",  "OEEOEO",  "OOOOOO"  }
       ::keys          := { "1", "2", "3", "4", "5", "6", "7", "8", "9", "0" }
 
    ELSEIF nTypeCode == 128
@@ -184,7 +184,7 @@ METHOD Draw13( cText )  CLASS TCode
    LOCAL ii, jj
    LOCAL xParity
 
-   ::Settext( ctext )
+   ::Settext( cText )
 
    // Valid characters
    IF ! ::CheckCode()
@@ -267,24 +267,24 @@ METHOD Draw13( cText )  CLASS TCode
             nChk := 10 - jj
          ENDIF
 
+         cText += Str( nChk, 1 )
+
          IF nChk == 0
             nChk := 10
          ENDIF
 
          ::DrawSingleBar( ::Right_Hand[ nChk ] )
 
-         // Now,  finish bar
+         // Now, finish bar
          ::maxHeight := ::maxHeight + 9
          ::DrawSingleBar( "101" )
 
          ::lastX := ::positionX
          ::lastY := ::maxHeight
 
-         ctext += Str( nChk, 1 ) // TOFIX? nChk can be 10 at this point, is this intended?
-
          // Draw Text
          IF ::lDrawValue
-            ::Settext( ctext )
+            ::Settext( cText )
             ::DrawText13()
          ENDIF
 
@@ -317,7 +317,7 @@ METHOD Draw8( cText ) CLASS TCode
    LOCAL nchkSum := 0
    LOCAL nChk    := 0
 
-   ::Settext( ctext )
+   ::Settext( cText )
 
    // Valid characters
    IF !::CheckCode()
@@ -383,11 +383,11 @@ METHOD Draw8( cText ) CLASS TCode
       ::lastX := ::positionX
       ::lastY := ::maxHeight
 
-      ctext += Str( nChk, 1 )
+      cText += Str( nChk, 1 )
 
       // Draw text
       IF ::lDrawValue
-         ::Settext( ctext )
+         ::Settext( cText )
          ::DrawText8()
       ENDIF
 
@@ -591,7 +591,7 @@ METHOD Draw128( cText, cModeCode ) CLASS TCode
 
       // Draw Text
       IF ::lDrawValue
-         ::Settext( ctext )
+         ::Settext( cText )
          ::DrawText()
       ENDIF
 
