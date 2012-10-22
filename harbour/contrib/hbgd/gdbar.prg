@@ -100,8 +100,8 @@ CREATE CLASS TBarCode FROM GDImage
 
    // Methods
 
-   METHOD CreateBar( sx, sy, filename, ccolor )
-   METHOD Configure( nmaxHeight, aFillColor, aBackColor, nres, ntextfont, lbook, lDrawValue )
+   METHOD CreateBar( sx, sy, filename, cColor )
+   METHOD Configure( nMaxHeight, aFillColor, aBackColor, nRes, nTextFont, lBook, lDrawValue )
    METHOD Allocate()
    METHOD DrawError( ptext )
    METHOD DrawSingleBar( pcode )
@@ -112,28 +112,28 @@ CREATE CLASS TBarCode FROM GDImage
    METHOD SetText( ptext )
    METHOD ResetColor()
    METHOD CheckCode()
-   METHOD CheckValInArray( cchar )
+   METHOD CheckValInArray( cChar )
 
 ENDCLASS
 
-METHOD CreateBar( sx, sy, filename, ccolor ) CLASS TBarCode
+METHOD CreateBar( sx, sy, filename, cColor ) CLASS TBarCode
 
    ::Create( sx, sy )
 
-   hb_default( @ccolor, { 255, 255, 255 } )
+   hb_default( @cColor, { 255, 255, 255 } )
 
-   ::SetColor( ccolor[ 1 ], ccolor[ 2 ], ccolor[ 3 ] )
+   ::SetColor( cColor[ 1 ], cColor[ 2 ], cColor[ 3 ] )
 
    ::error     := 0
    ::positionY := 0
    ::imWidth   := sx
 
    IF ! Empty( filename )
-      ::filename  := filename
+      ::filename := filename
    ENDIF
 
-   ::FillColor  := ::SetColor( ::color_f[ 1 ], ::color_f[ 2 ], ::color_f[ 3 ] )
-   ::BackColor  := ::SetColor( ::color_b[ 1 ], ::color_b[ 2 ], ::color_b[ 3 ] )
+   ::FillColor := ::SetColor( ::color_f[ 1 ], ::color_f[ 2 ], ::color_f[ 3 ] )
+   ::BackColor := ::SetColor( ::color_b[ 1 ], ::color_b[ 2 ], ::color_b[ 3 ] )
 
    ::Setfont( "Arial" )
 
@@ -152,20 +152,20 @@ METHOD CreateBar( sx, sy, filename, ccolor ) CLASS TBarCode
 
    RETURN Self
 
-METHOD Configure( nmaxHeight, aFillColor, aBackColor, nres, ntextfont, lbook, lDrawValue ) CLASS TBarCode
+METHOD Configure( nMaxHeight, aFillColor, aBackColor, nRes, nTextFont, lBook, lDrawValue ) CLASS TBarCode
 
-   hb_default( @lbook      , .F. )
+   hb_default( @lBook      , .F. )
    hb_default( @lDrawValue , .T. )
-   hb_default( @nmaxHeight , 25 )
-   hb_default( @ntextfont  , 2 )
-   hb_default( @nres       , 2 )
+   hb_default( @nMaxHeight , 25 )
+   hb_default( @nTextFont  , 2 )
+   hb_default( @nRes       , 2 )
    hb_default( @aBackColor , { 255, 255, 255 } )
    hb_default( @aFillColor , { 0, 0, 0 } )
 
-   ::book       := lbook
-   ::maxHeight  := nmaxHeight
-   ::res        := nres
-   ::textfont   := ntextfont
+   ::book       := lBook
+   ::maxHeight  := nMaxHeight
+   ::res        := nRes
+   ::textfont   := nTextFont
    ::lDrawValue := lDrawValue
 
    ::color_b    := AClone( aBackColor )
@@ -181,8 +181,8 @@ METHOD SetText( ptext )  CLASS TBarCode
 
 METHOD ResetColor() CLASS TBarCode
 
-   ::FillColor  := ::SetColor( ::color_f[ 1 ], ::color_f[ 2 ], ::color_f[ 3 ] )
-   ::BackColor  := ::SetColor( ::color_b[ 1 ], ::color_b[ 2 ], ::color_b[ 3 ] )
+   ::FillColor := ::SetColor( ::color_f[ 1 ], ::color_f[ 2 ], ::color_f[ 3 ] )
+   ::BackColor := ::SetColor( ::color_b[ 1 ], ::color_b[ 2 ], ::color_b[ 3 ] )
 
    RETURN NIL
 
@@ -202,12 +202,11 @@ METHOD DrawSingleBar( pcode ) CLASS TBarCode
    FOR j := 1 TO Len( pcode )
 
       FOR i := 1 TO ::res
-         ::Line( ::positionX + i, ::positionY, ::positionX + i, ( ::positionY + ::maxHeight ), ;
+         ::Line( ::positionX + i, ::positionY, ::positionX + i, ::positionY + ::maxHeight, ;
             iif( SubStr( pcode, j, 1 ) $ "0", ::BackColor, ::FillColor  ) )
       NEXT
 
       ::NextX()
-
    NEXT
 
    RETURN NIL
@@ -229,7 +228,7 @@ METHOD DrawSingleI25( pcode ) CLASS TBarCode
    FOR j := 1 TO Len( pcode )
 
       imgBar := iif( j % 2 == 0, ::FillColor, ::BackColor )
-      imgWid := iif( SubStr( pcode,j,1 ) == "0", widthSlimBar, widthFatBar )
+      imgWid := iif( SubStr( pcode, j, 1 ) == "0", widthSlimBar, widthFatBar )
 
       end_y := ::maxHeight
 
@@ -237,7 +236,6 @@ METHOD DrawSingleI25( pcode ) CLASS TBarCode
          ::Line( ::positionX, 1, ::positionX, end_y, imgBar )
          ::nextX( .T. )
       NEXT
-
    NEXT
 
    RETURN NIL
@@ -246,9 +244,9 @@ METHOD DrawError( ptext ) CLASS TBarCode
 
    ::Say( 5, ::error * 15, ptext, ::FillColor )
 
-   ::error ++
+   ::error++
 
-   ::lastX := iif( ( ::GetFontWidth() * Len(ptext ) ) > ::lastX, ( ::GetFontWidth() * Len(ptext ) ), ::lastX )
+   ::lastX := Max( ::GetFontWidth() * Len( ptext ), ::lastX )
    ::lastY := ::error * 15
 
    RETURN NIL
@@ -258,7 +256,7 @@ METHOD nextX( lI25 ) CLASS TBarCode
    hb_default( @li25, .F. )
 
    IF li25
-      ::positionX ++
+      ::positionX++
    ELSE
       ::positionX += ::res
    ENDIF
@@ -273,15 +271,15 @@ METHOD DrawText( lIsI25 ) CLASS TBarCode
 
    IF lIsI25
       If ::textfont != 0
-         xPosition  := 10 * ::GetFontWidth()
-         ::say(  xPosition, ::maxHeight, "*" + ::text + "*", ::FillColor )
-         ::lastY    := ::maxHeight + ::GetFontHeight()
+         xPosition := 10 * ::GetFontWidth()
+         ::say( xPosition, ::maxHeight, "*" + ::text + "*", ::FillColor )
+         ::lastY := ::maxHeight + ::GetFontHeight()
       ENDIF
    ELSE
       If ::textfont != 0
-         xPosition  := ( ::positionX / 2 ) - ( Len( ::text ) / 2 ) * ::GetFontWidth()
-         ::say(  xPosition, ::maxHeight, ::text, ::FillColor )
-         ::lastY    := ::maxHeight + ::GetFontHeight()
+         xPosition := ( ::positionX / 2 ) - ( Len( ::text ) / 2 ) * ::GetFontWidth()
+         ::say( xPosition, ::maxHeight, ::text, ::FillColor )
+         ::lastY := ::maxHeight + ::GetFontHeight()
       ENDIF
    ENDIF
 
@@ -294,29 +292,20 @@ METHOD CheckCode() CLASS TBarCode
 
    FOR i := 1 TO Len( ::text )
       IF HB_ISSTRING( ::CheckValInArray( SubStr( ::text, i, 1 ) ) )
-         ::DrawError( "Character  " + SubStr( ::text, i, 1 ) + " not allowed ." )
+         ::DrawError( "Character " + SubStr( ::text, i, 1 ) + " not allowed." )
          lRet := .F.
       ENDIF
    NEXT
 
    RETURN lRet
 
-METHOD CheckValInArray( cchar ) CLASS TBarCode
+METHOD CheckValInArray( cChar ) CLASS TBarCode
 
-   LOCAL npos
-   LOCAL uret
+   LOCAL nPos := AScan( ::keys, {| x | SubStr( x, 1, 1 ) == cChar } )
 
-   npos := AScan( ::keys, {| x | SubStr( x, 1, 1 ) == cchar } )
+   RETURN iif( nPos > 0, nPos, NIL )
 
-   IF npos > 0
-      uret := npos
-   ELSE
-      uret := NIL
-   ENDIF
-
-   RETURN uret
-
-METHOD Finish( image_style, quality, nFG  ) CLASS TBarCode
+METHOD Finish( image_style, quality, nFG ) CLASS TBarCode
 
    hb_default( @image_style, IMG_FORMAT_PNG )
    hb_default( @quality    , 95 )
@@ -336,9 +325,7 @@ METHOD Finish( image_style, quality, nFG  ) CLASS TBarCode
       ELSEIF image_style == IMG_FORMAT_GIF
          ::OutputGif()
       ENDIF
-
    ELSE
-
       IF image_style == IMG_FORMAT_PNG
          ::SavePng(  ::filename )
       ELSEIF image_style == IMG_FORMAT_JPEG
@@ -348,7 +335,6 @@ METHOD Finish( image_style, quality, nFG  ) CLASS TBarCode
       ELSEIF image_style == IMG_FORMAT_GIF
          ::SaveGif( ::filename )
       ENDIF
-
    ENDIF
 
    RETURN .T.
