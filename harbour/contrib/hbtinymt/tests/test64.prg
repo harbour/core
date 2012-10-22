@@ -4,6 +4,8 @@
 
 #require "hbtinymt"
 
+#include "simpleio.ch"
+
 PROCEDURE Main()
 
    SET DECIMAL TO 0
@@ -27,13 +29,13 @@ PROCEDURE Main()
 STATIC PROCEDURE TestMatrix( cDescription, bBlock )
    LOCAL i, j
 
-   OutStd( cDescription + hb_eol() )
+   ? cDescription
    FOR i := 1 TO 10
       FOR j := 1 TO 5
-         OutStd( Eval( bBlock ) )
+         ? Eval( bBlock )
       NEXT
-      OutStd( hb_eol() )
+      ?
    NEXT
-   OutStd( hb_eol() )
+   ?
 
    RETURN

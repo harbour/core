@@ -61,17 +61,17 @@ PROCEDURE Main()
    SET DECIMALS TO 15
 
    FOR n := 1 TO 1000
-      OutStd( Str( n, 20, 15 ) + ": " + Str( mantissa( n ), 20, 15 ) + " " + Str( exponent( n ), 4 ) + hb_eol() )
-      OutStd( Str( Sqrt( n ), 20, 15 ) + ": " + Str( mantissa( Sqrt( n ) ), 20, 15 ) + " " + Str( exponent( Sqrt( n ) ), 4 ) + hb_eol() )
+      ? Str( n, 20, 15 ) + ": " + Str( mantissa( n ), 20, 15 ) + " " + Str( exponent( n ), 4 )
+      ? Str( Sqrt( n ), 20, 15 ) + ": " + Str( mantissa( Sqrt( n ) ), 20, 15 ) + " " + Str( exponent( Sqrt( n ) ), 4 )
    NEXT n
 
    // The call to str( infinity(.T.) ), generate a GPF.
-// OutStd( Str( infinity( .T. ) ) + Str( mantissa( infinity( .T. ) ) ) + Str( exponent( infinity( .T. ) ) ) )
-// OutStd( Str( infinity( .T. ) ) )
+// ?? Str( infinity( .T. ) ) + Str( mantissa( infinity( .T. ) ) ) + Str( exponent( infinity( .T. ) ) )
+// ?? Str( infinity( .T. ) )
 
-   OutStd( "       infinity(.T.): " + Str( mantissa( infinity( .T. ) ), 20, 15 ) + " " )
-   OutStd( Str( exponent( infinity( .T. ) ), 4 ) + hb_eol() )
+   ?? "       infinity(.T.): " + Str( mantissa( infinity( .T. ) ), 20, 15 ) + " "
+   ? Str( exponent( infinity( .T. ) ), 4 )
 
-   CTEXIT()
+   ctexit()
 
    RETURN

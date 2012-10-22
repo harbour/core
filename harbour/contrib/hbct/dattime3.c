@@ -64,12 +64,12 @@
 #endif
 #include <time.h>
 
-/* TODO: make it MT safe */
-static double  s_dTimeSet       = 0;
-static double  s_dTimeCounter   = 0;
-
 HB_FUNC( WAITPERIOD )
 {
+   /* TODO: make it MT safe */
+   static double s_dTimeSet     = 0;
+   static double s_dTimeCounter = 0;
+
    double d = hb_dateSeconds();
 
    if( hb_pcount() > 0 )

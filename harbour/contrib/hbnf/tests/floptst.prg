@@ -10,9 +10,9 @@ PROCEDURE Main( cArg1 )
 
    IF HB_ISSTRING( cArg1 )
       nErrCode := FT_FLOPTST( Asc( Upper( cArg1 ) ) - Asc( "A" ) )
-      OutStd( "Return Code is " + hb_ntos( nErrCode ) + hb_eol() )
+      ? "Return Code is " + hb_ntos( nErrCode )
    ELSE
-      OutStd( "Usage: floptst cDrive" + hb_eol() + " where cDrive is 'A' or 'B' etc..." + hb_eol() )
+      ? "Usage: floptst cDrive" + hb_eol() + " where cDrive is 'A' or 'B' etc..."
    ENDIF
 
    RETURN

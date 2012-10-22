@@ -3,7 +3,6 @@
  */
 
 // Testing Harbour dates management.
-#include "set.ch"
 
 PROCEDURE Main()
 
@@ -11,6 +10,7 @@ PROCEDURE Main()
    LOCAL dDate := Date()
 
    SET DATE ANSI
+   SET CENTURY ON
 
    FOR i := 7 TO 49 STEP 7
       CheckDate( dDate )
@@ -21,16 +21,14 @@ PROCEDURE Main()
 
 FUNCTION CheckDate( dDate )
 
-   OutStd( "Testing date:", dDate, hb_eol() )
-   OutStd( "Days in month..:", daysinmonth( dDate ), hb_eol() )
-   OutStd( "Day of year....:", doy( dDate ), hb_eol() )
-   OutStd( "Begin of month.:", bom( dDate ), hb_eol() )
-   OutStd( "End of month...:", eom( dDate ), hb_eol() )
-   OutStd( "Week of month..:", wom( dDate ), hb_eol() )
-   OutStd( "Week of year...:", woy( dDate ), hb_eol() )
-   OutStd( "Begin of year..:", boy( dDate ), hb_eol() )
-   OutStd( "End of year....:", eoy( dDate ), hb_eol() )
-   __Accept( "Press ENTER to continue..." )
-   OutStd( Chr( 10 ), Chr( 10 ) )
+   ? "Testing date:", dDate
+   ? "Days in month..:", daysinmonth( dDate )
+   ? "Day of year....:", doy( dDate )
+   ? "Begin of month.:", bom( dDate )
+   ? "End of month...:", eom( dDate )
+   ? "Week of month..:", wom( dDate )
+   ? "Begin of year..:", boy( dDate )
+   ? "End of year....:", eoy( dDate )
+   ?
 
    RETURN NIL

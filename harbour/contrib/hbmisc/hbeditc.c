@@ -9,6 +9,8 @@
   2) NextWord() doesn't work correctly
   3) If text contains color escape codes then deleting or inserting
      of characters doesn't work correctly in the line that contains it
+  4) Doesn't handle OS-specific EOL (only CRLG)
+  5) Unicode support
 
   To fix:
   ------
@@ -447,7 +449,7 @@ static HB_ISIZ InsText( PHB_EDITOR pEd, char * adres, HB_ISIZ line )
       {
          /* there is enough free room in text buffer
           */
-         if( ( adres[ dl - 1 ] != '\n' ) && ( adres[ dl - 2 ] != '\r' ) )
+         if( adres[ dl - 1 ] != '\n' && adres[ dl - 2 ] != '\r' )
          {
             /* There is no CRLF at the end of inserted text -
              * we have to add CRLF to separate it from existing text
@@ -467,7 +469,7 @@ static HB_ISIZ InsText( PHB_EDITOR pEd, char * adres, HB_ISIZ line )
          if( adres[ dl - 1 ] == '\r' )
             adres[ dl - 1 ] = ' ';
 
-         if( ( adres[ dl - 1 ] != '\n' ) && ( adres[ dl - 2 ] != '\r' ) )
+         if( adres[ dl - 1 ] != '\n' && adres[ dl - 2 ] != '\r' )
          {
             addCRLF = HB_TRUE;
             dl += 2;
@@ -724,9 +726,9 @@ HB_FUNC( ED_GETTEXT )
       help = buffer;
       if( mietka != HB_CHAR_SOFT1 )
       {
-         while( help !=NULL )
+         while( help != NULL )
          {
-            help = strstr( buffer, "\x8D\n" );   /* CHR(141)+CHR(10) */
+            help = strstr( buffer, "\x8D\n" );   /* Chr( 141 ) + Chr( 10 ) */
             if( help )
                help[ 0 ] = '\r';
          }
@@ -1667,7 +1669,7 @@ static void FormatParagraph( PHB_EDITOR pEd )
          hb_strncpy( pom, pEd->begin + pEd->current_line, dl + rdl + 10 );
          pom[ pEd->line_length + rdl + 1 ] = '\0';
          tmp = strchr( pom, '\n' );
-         if( tmp && ( * ( tmp - 1 ) == HB_CHAR_SOFT1 ) )
+         if( tmp && ( *( tmp - 1 ) == HB_CHAR_SOFT1 ) )
          {
             tmp--;
             cor++;
@@ -1843,7 +1845,7 @@ static void BackSpace( PHB_EDITOR pEd, HB_BOOL fInsert )
 
             /* find the first space in current line (the new line will
              * be wrapped eventually at this position) */
-            if( ( w = strchr ( tmp, ' ') ) != 0 )
+            if( ( w = strchr( tmp, ' ' ) ) != 0 )
                ww = w - tmp;
             else
                ww = nLen + rdl;
@@ -1891,7 +1893,7 @@ static void BackSpace( PHB_EDITOR pEd, HB_BOOL fInsert )
             }
          }
       }
-      FormatParagraph ( pEd );
+      FormatParagraph( pEd );
 
       pEd->fStable        = HB_FALSE;
       pEd->next_stabil    = pEd->first_display;
@@ -1967,10 +1969,10 @@ static void NextWord( PHB_EDITOR pEd )
       GotoNextNonEmptyLine( pEd );
    else
    {
-      *tmp ='\0';
+      *tmp = '\0';
       hb_strncpy( tmp, pEd->begin + pEd->current_line + ccc,
                   nLen - pEd->cursor_col - pEd->first_col );
-      if( (adr = strchr( tmp, ' ' ) ) == NULL )
+      if( ( adr = strchr( tmp, ' ' ) ) == NULL )
       {
          GotoNextNonEmptyLine( pEd );
          if( ! pEd->fStable )
@@ -1999,7 +2001,7 @@ static void NextWord( PHB_EDITOR pEd )
    }
 
    if( pEd->begin[ ( pEd->current_line +
-                     pEd->cursor_col + pEd->first_col ) ] == ' ')
+                     pEd->cursor_col + pEd->first_col ) ] == ' ' )
       NextWord( pEd );
 }
 
@@ -2038,7 +2040,7 @@ static void PreviousWord( PHB_EDITOR pEd )
 
    for( i = pEd->first_col + pEd->cursor_col - 2; i >= 0; i-- )
    {
-      if( pEd->begin[ pEd->current_line + i ] == ' ')
+      if( pEd->begin[ pEd->current_line + i ] == ' ' )
       {
          pom = i;
          break;
@@ -2047,7 +2049,7 @@ static void PreviousWord( PHB_EDITOR pEd )
          pom = -1;
    }
 
-   if(pom < 0)
+   if( pom < 0 )
    {
       Home( pEd );
       while( GetLineLength( pEd, pEd->current_line, &rdl ) == 0 )
@@ -2074,7 +2076,7 @@ static void PreviousWord( PHB_EDITOR pEd )
       }
       if( pEd->cursor_col < 0 )
       {
-         pEd->first_col      = pEd->cursor_col - (pEd->right - pEd->left);
+         pEd->first_col      = pEd->cursor_col - ( pEd->right - pEd->left );
          pEd->fStable        = HB_FALSE;
          pEd->next_stabil    = pEd->first_display;
          pEd->stabil         = pEd->bottom - pEd->top + 1;
@@ -2084,7 +2086,7 @@ static void PreviousWord( PHB_EDITOR pEd )
    }
 
    if( pEd->begin[ pEd->current_line + pEd->cursor_col +
-                          pEd->first_col ] == ' ')
+                          pEd->first_col ] == ' ' )
       PreviousWord( pEd );
 }
 

@@ -13,8 +13,7 @@ PROCEDURE Main()
    LOCAL x
 
    FOR x := 1 TO 100
-      OutStd( Int( ft_rand1(100 ) ) )
-      OutStd( hb_eol() )
+      ? Int( ft_rand1( 100 ) )
    NEXT
 
    RETURN

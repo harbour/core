@@ -52,13 +52,16 @@ PROCEDURE DrawFlake( lOpenPoly )
       s_nAngle += Pi() * 2 / nSides
    NEXT
 
-   OutStd( hb_strFormat( "Drawing %d vertices%s", Len( s_aCoords ), hb_eol() ) )
+   ? hb_StrFormat( "Drawing %d vertices", Len( s_aCoords ) )
 
    /** In green */
    gdColor := gdImageColorAllocate( gdImage, 0, 255, 0 )
-   iif( lOpenPoly,;
-        gdImageOpenPolygon( gdImage, s_aCoords, gdColor ),;
-        gdImagePolygon( gdImage, s_aCoords, gdColor ) )
+
+   IF lOpenPoly
+      gdImageOpenPolygon( gdImage, s_aCoords, gdColor )
+   ELSE
+      gdImagePolygon( gdImage, s_aCoords, gdColor )
+   ENDIF
 
    /* Regular flake, initial state */
    s_nCoordX := 200
@@ -71,13 +74,16 @@ PROCEDURE DrawFlake( lOpenPoly )
       s_nAngle += Pi() * 2 / nSides
    NEXT
 
-   OutStd( hb_strFormat( "Drawing %d vertices%s", Len( s_aCoords ), hb_eol() ) )
+   ? hb_StrFormat( "Drawing %d vertices", Len( s_aCoords ) )
 
    /** In yellow */
    gdColor := gdImageColorAllocate( gdImage, 255, 255, 0 )
-   iif( lOpenPoly,;
-        gdImageOpenPolygon( gdImage, s_aCoords, gdColor ),;
-        gdImagePolygon( gdImage, s_aCoords, gdColor ) )
+
+   IF lOpenPoly
+      gdImageOpenPolygon( gdImage, s_aCoords, gdColor )
+   ELSE
+      gdImagePolygon( gdImage, s_aCoords, gdColor )
+   ENDIF
 
    gdImagePng( gdImage, IMAGES_OUT + cImageName )
    gdImageDestroy( gdImage )
