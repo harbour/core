@@ -486,6 +486,10 @@ HB_FUNC( FBFETCH )
       {
          hb_retnl( isc_sqlcode( status ) );
          return;
+         }
+         else {
+         hb_retnl( -1 );
+         return ;
       }
    }
 
