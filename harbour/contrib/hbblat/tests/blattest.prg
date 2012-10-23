@@ -52,8 +52,6 @@
 
 #require "hbblat"
 
-#include "hbblat.ch"
-
 #define ADDRESS_FROM   "yourname@domain.com"         // put here your address from
 #define ADDRESS_TO     "hbblat_test@fsgiudice.com"   // this mail can be used for tests
 //#define ADDRESS_CC     "another@domain.com"
@@ -62,7 +60,7 @@
 
 PROCEDURE Main()
 
-   //LOCAL cCmd
+// LOCAL cCmd
    LOCAL nRet
    LOCAL oBlat := HBBlat():New()
 

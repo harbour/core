@@ -18,9 +18,6 @@
 -depincpathlocal=bzip2:3rd/bz2
 -depfinish=bzip2
 
--instfile=inc:hbbz2.ch
--instfile=inc:hbbz2.hbx
-
 hbbz2.hbx
 
 core.c

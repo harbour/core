@@ -19,9 +19,6 @@
 -depincpath=odbc:/usr/include
 -depincpath=odbc:/usr/local/include
 
--instfile=inc:sql.ch
--instfile=inc:hbodbc.hbx
-
 hbodbc.hbx
 
 odbc.c

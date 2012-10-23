@@ -21,10 +21,6 @@ hbct.hbc
 -depimplibs=gd:../bin/bgd.dll{!(msvc|pocc|mingw)|hbdyn}
 -depimplibs=gd:../lib/bgd.lib{(msvc|pocc|mingw)&!hbdyn}
 
--instfile=inc:gd.ch
--instfile=inc:gdextern.ch
--instfile=inc:hbgd.hbx
-
 hbgd.hbx
 
 gdwrp.c

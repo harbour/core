@@ -9,11 +9,6 @@
 
 -w3 -es2
 
--instfile=inc:dll.ch
--instfile=inc:dmlb.ch
--instfile=inc:hbxpp.ch
--instfile=inc:thread.ch
-
 hbxpp.hbx
 
 binnumx.c

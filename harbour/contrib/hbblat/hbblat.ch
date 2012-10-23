@@ -73,29 +73,6 @@ Code Description
 12   -server or -f options not specified and not found in registry
 13   Error opening temporary file in temp directory
 
-Gensock Error Code Descriptions
-
-      case 4001: printf("Error: Malloc failed (possibly out of memory)."); break;
-      case 4002: printf("Error: Error sending data."); break;
-      case 4003: printf("Error: Error initializing gensock.dll."); break;
-      case 4004: printf("Error: Version not supported."); break;
-      case 4005: printf("Error: The winsock version specified by gensock is not supported by this winsock.dll."); break;
-      case 4006: printf("Error: Network not ready."); break;
-      case 4007: printf("Error: Can't resolve (mailserver) hostname."); break;
-      case 4008: printf("Error: Can't create a socket (too many simultaneous links?)"); break;
-      case 4009: printf("Error: Error reading socket."); break;
-      case 4010: printf("Error: Not a socket."); break;
-      case 4011: printf("Error: Busy."); break;
-      case 4012: printf("Error: Error closing socket."); break;
-      case 4013: printf("Error: Wait a bit (possible timeout)."); break;
-      case 4014: printf("Error: Can't resolve service."); break;
-      case 4015: printf("Error: Can't connect to mailserver (timed out if winsock.dll error 10060)"); break;
-      case 4016: printf("Error: Connection to mailserver was dropped."); break;
-      case 4017: printf("Error: Mail server refused connection."); break;
-      default:   printf("error %d in function '%s'", retval, function);
-
-
-
 */
 
 
@@ -107,7 +84,7 @@ Gensock Error Code Descriptions
   Numeric Errors
 */
 
-#define BLAT_ERR_UNKNONW                                 -1
+#define BLAT_ERR_UNKNONW                               ( -1 )
 
 #define BLAT_SUCCESS                                      0
 #define BLAT_ERR_MESSAGE_NOT_ACCEPTED                     1
@@ -170,31 +147,31 @@ Gensock Error Code Descriptions
   BLAT ERRORS
 */
 
-#define BLAT_ERR_CANT_MALLOC                 4001
-#define BLAT_ERR_SENDING_DATA                4002
-#define BLAT_ERR_INITIALIZING                4003
-#define BLAT_ERR_VER_NOT_SUPPORTED           4004
-#define BLAT_ERR_EINVAL                      4005
-#define BLAT_ERR_SYS_NOT_READY               4006
-#define BLAT_ERR_CANT_RESOLVE_HOSTNAME       4007
-#define BLAT_ERR_CANT_GET_SOCKET             4008
-#define BLAT_ERR_READING_SOCKET              4009
-#define BLAT_ERR_NOT_A_SOCKET                4010
-#define BLAT_ERR_BUSY                        4011
-#define BLAT_ERR_CLOSING                     4012
-#define BLAT_WAIT_A_BIT                      4013
-#define BLAT_ERR_CANT_RESOLVE_SERVICE        4014
-#define BLAT_ERR_CANT_CONNECT                4015
-#define BLAT_ERR_NOT_CONNECTED               4016
-#define BLAT_ERR_CONNECTION_REFUSED          4017
+#define BLAT_ERR_CANT_MALLOC                 4001  // "Malloc failed (possibly out of memory)."
+#define BLAT_ERR_SENDING_DATA                4002  // "Error sending data."
+#define BLAT_ERR_INITIALIZING                4003  // "Error initializing gensock.dll."
+#define BLAT_ERR_VER_NOT_SUPPORTED           4004  // "Version not supported."
+#define BLAT_ERR_EINVAL                      4005  // "The winsock version specified by gensock is not supported by this winsock.dll."
+#define BLAT_ERR_SYS_NOT_READY               4006  // "Network not ready."
+#define BLAT_ERR_CANT_RESOLVE_HOSTNAME       4007  // "Can't resolve (mailserver) hostname."
+#define BLAT_ERR_CANT_GET_SOCKET             4008  // "Can't create a socket (too many simultaneous links?)"
+#define BLAT_ERR_READING_SOCKET              4009  // "Error reading socket."
+#define BLAT_ERR_NOT_A_SOCKET                4010  // "Not a socket."
+#define BLAT_ERR_BUSY                        4011  // "Busy."
+#define BLAT_ERR_CLOSING                     4012  // "Error closing socket."
+#define BLAT_WAIT_A_BIT                      4013  // "Wait a bit (possible timeout)."
+#define BLAT_ERR_CANT_RESOLVE_SERVICE        4014  // "Can't resolve service."
+#define BLAT_ERR_CANT_CONNECT                4015  // "Can't connect to mailserver (timed out if winsock.dll error 10060)"
+#define BLAT_ERR_NOT_CONNECTED               4016  // "Connection to mailserver was dropped."
+#define BLAT_ERR_CONNECTION_REFUSED          4017  // "Mail server refused connection."
 
-#define BLAT_ERR_NO_ERROR_CODE               -5000   /* this is returned by misbehaving stacks that
-                                                      * fail, but don't set an error code
-                                                      */
+#define BLAT_ERR_NO_ERROR_CODE               ( -5000 )  /* this is returned by misbehaving stacks that
+                                                         * fail, but don't set an error code
+                                                         */
 
 
-#define BLAT_TRY_INFINITE_KEY                -1
-#define BLAT_TRY_INFINITE_VALUE             'INFINITE'
+#define BLAT_TRY_INFINITE_KEY                ( -1 )
+#define BLAT_TRY_INFINITE_VALUE              "INFINITE"
 
 
 #endif // _HBBLAT_CH
