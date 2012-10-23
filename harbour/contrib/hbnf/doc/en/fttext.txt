@@ -184,7 +184,7 @@
  *     IF ft_fUse( "text.c" ) < 0     // open text file
  *        err := ft_fError()
  *        ? 'Error opening file "rext.c", error code (' + ;
- *                  LTrim( Str( err ) ) + ')'
+ *                  hb_ntos( err ) + ')'
  *     ENDIF
  *
  *  $SEEALSO$

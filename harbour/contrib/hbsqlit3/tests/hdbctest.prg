@@ -22,25 +22,25 @@ PROCEDURE Main()
       ? "dropped"
    ENDIF
 
-   ? 'Creating test table...'
-   cSql := 'CREATE TABLE test('
-   cSql += '     Code integer not null primary key, '
-   cSql += '     dept Integer, '
-   cSql += '     Name Varchar(40), '
-   cSql += '     Sales boolean, '
-   cSql += '     Tax Float4, '
-   cSql += '     Salary Double Precision, '
-   cSql += '     Budget Numeric(12,2), '
-   cSql += '     Discount Numeric (5,2), '
-   cSql += '     Creation Date, '
-   cSql += '     Description text ) '
+   ? "Creating test table..."
+   cSql := "CREATE TABLE test("
+   cSql += "     Code integer not null primary key, "
+   cSql += "     dept Integer, "
+   cSql += "     Name Varchar (40), "
+   cSql += "     Sales boolean, "
+   cSql += "     Tax Float4, "
+   cSql += "     Salary Double Precision, "
+   cSql += "     Budget Numeric (12,2), "
+   cSql += "     Discount Numeric (5,2), "
+   cSql += "     Creation Date, "
+   cSql += "     Description text ) "
 
    oStmt := oConn:createStatement()
    oStmt:executeUpdate( cSql )
    oStmt:Close()
    ? "created"
 
-   ? 'Inserting, declared transaction control '
+   ? "Inserting, declared transaction control "
    oConn:StartTransaction()
 
    ? "Inserting using direct statement..."
@@ -50,7 +50,7 @@ PROCEDURE Main()
    ? Time()
    FOR n := 1 TO _NUMROWS_
       cSql := "INSERT INTO test(code, dept, name, sales, tax, salary, budget, Discount, Creation, Description) "
-      cSql += "VALUES( " + str( n ) + ", 2, 'TEST', '" + iif( n % 2 != 0, "y", "n" ) + "', 5, 3000, 1500.2, 7.5, '12-22-2003', 'Short Description ')"
+      cSql += "VALUES( " + Str( n ) + ", 2, 'TEST', '" + iif( n % 2 != 0, "y", "n" ) + "', 5, 3000, 1500.2, 7.5, '12-22-2003', 'Short Description ')"
 
       oStmt := oConn:createStatement()
       oStmt:executeUpdate( cSql )
@@ -59,7 +59,7 @@ PROCEDURE Main()
    NEXT
    ? Time()
 
-/*
+#if 0
    ? "Creating prepared statement"
 
    ? Time()
@@ -75,13 +75,14 @@ PROCEDURE Main()
       oStmt:SetNumber( 7, 1500 )
       oStmt:SetNumber( 8, 7.5 )
       oStmt:SetDate( 9, Date() )
-      oStmt:SetString( 10, "Short' Description" )
+      oStmt:SetString( 10, "Short Description" )
       oStmt:executeUpdate()
    NEXT
 
    oStmt:close()
    ? Time()
-*/
+#endif
+
    oConn:Commit()
 
    oStmt := oConn:createStatement()
@@ -171,7 +172,7 @@ PROCEDURE Main()
    oRs:close()
    oStmt:close()
 
-/*
+#if 0
    ? "Creating query prepared statement"
 
    oStmt := oConn:prepareStatement( "SELECT code FROM test WHERE name = $1" )
@@ -186,12 +187,11 @@ PROCEDURE Main()
    DO WHILE oRs:next()
       FOR n := 1 TO 1
          ? oRs:getString( n )
-      next
+      NEXT
    ENDDO
 
    oStmt:close()
-
-*/
+#endif
 
    oConn:Close()
 

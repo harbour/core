@@ -2,6 +2,10 @@
  * $Id$
  */
 
+#ifndef __HARBOUR__
+   #define hb_ntos( n ) LTrim( Str( n ) )
+#endif
+
 PROCEDURE Main()
 
    LOCAL oError := ErrorNew()
@@ -46,7 +50,7 @@ FUNCTION xToStr( xValue )
    CASE cType == "C" .OR. cType == "M"
       RETURN xValue
    CASE cType == "N"
-      RETURN AllTrim( Str( xValue ) )
+      RETURN hb_ntos( xValue )
    CASE cType == "D"
       RETURN DToC( xValue )
    CASE cType == "L"

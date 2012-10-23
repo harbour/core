@@ -1567,7 +1567,7 @@ METHOD K_Del() CLASS XHBEditor
 
       // in case of softcr, reparse the paragraph.
       //
-      IF ::aText[ ::nRow ]:lSoftCR == .T.
+      IF ::aText[ ::nRow ]:lSoftCR
          IF !( Right( ::aText[ ::nRow ]:cText, 1 ) == " " )
             ::aText[ ::nRow ]:cText += " "
          ENDIF
@@ -1653,7 +1653,7 @@ METHOD K_Tab() CLASS XHBEditor
 
             ::aText[ ::nRow ]:cText := ::aText[ ::nRow ]:cText + ::GetLine( ::nRow + 1 )
             ::RemoveLine( ::nRow + 1 )
-            ::aText[ ::nRow ]:lSoftCR := !lHardCR  // .T. if lHardCR == .F.
+            ::aText[ ::nRow ]:lSoftCR := ! lHardCR  // .T. if ! lHardCR
 
             ::SplitLine( ::nRow )
             ::RefreshWindow()

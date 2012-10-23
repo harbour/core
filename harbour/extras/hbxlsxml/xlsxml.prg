@@ -8,7 +8,7 @@
  * Copyright 2011 Fausto Di Creddo Trautwein, ftwein@yahoo.com.br
  * www - http://www.xharbour.org http://harbour-project.org
  *
- * Thanks TO Robert F Greer, PHP original version
+ * Thanks to Robert F Greer, PHP original version
  * http://sourceforge.net/projects/excelwriterxml/
  *
  * This program is free software; you can redistribute it AND/OR modify
@@ -113,20 +113,20 @@ METHOD ExcelWriterXML:new( fileName )
 
 METHOD ExcelWriterXML:setOverwriteFile( overwrite )
 
-   IF ! HB_ISLOGICAL( overwrite )
-      ::overwriteFile := .F.
-   ELSE
+   IF HB_ISLOGICAL( overwrite )
       ::overwriteFile := overwrite
+   ELSE
+      ::overwriteFile := .F.
    ENDIF
 
    RETURN NIL
 
 METHOD ExcelWriterXML:showErrorSheet( show )
 
-   IF ! HB_ISLOGICAL( show )
-      ::lShowErrorSheet := .T.
-   ELSE
+   IF HB_ISLOGICAL( show )
       ::lShowErrorSheet := show
+   ELSE
+      ::lShowErrorSheet := .T.
    ENDIF
 
    RETURN NIL
@@ -135,7 +135,8 @@ METHOD ExcelWriterXML:addError( cFunction, cMessage )
 
    LOCAL tmp
 
-   tmp := { "FUNCTION" => cFunction, ;
+   tmp := { ;
+      "FUNCTION" => cFunction, ;
       "MESSAGE"  => cMessage  }
 
    ::formatErrors += tmp
@@ -242,19 +243,19 @@ METHOD ExcelWriterXML:writeData( target )
    ENDIF
 
    fileExists := hb_FileExists( target )
-   IF ( fileExists == .T. .AND. ::overwriteFile == .F. )
+   IF fileExists .AND. ! ::overwriteFile
       ::cError := target + " exists and overwriteFile is set to false"
       ::errors := .T.
       RETURN .F.
    ENDIF
    handle := hb_FCreate( target, FC_NORMAL, FO_EXCLUSIVE )
-   IF handle == - 1
+   IF handle == F_ERROR
       ::cError := "Not able to open " + target + " for writing"
       ::errors := .T.
       RETURN .F.
    ENDIF
 
-   IF ::lShowErrorSheet == .T.
+   IF ::lShowErrorSheet
       format := ::addStyle( "formatErrorsHeader" )
       format:setFontBold()
       format:bgColor( "red" )

@@ -54,6 +54,10 @@
 
 #include "ct.ch"
 
+#ifndef __HARBOUR__
+   #define hb_ntos( n ) LTrim( Str( n ) )
+#endif
+
 PROCEDURE Main()
 
    LOCAL cStr := ".,.This.,.is.,.a.,.test!"
@@ -78,7 +82,7 @@ PROCEDURE Main()
    ? [    with skip width == 1 and ".,!" as tokenizer list:]
    ?
    FOR ni := 1 TO numtoken( cStr, ".,!", 1 )
-      ? [    Token #] + AllTrim( Str( ni ) ) + [("] + token( cStr, ".,!", ni, 1, @cPre, @cPost ) + ;
+      ? [    Token #] + hb_ntos( ni ) + [("] + token( cStr, ".,!", ni, 1, @cPre, @cPost ) + ;
          [") @ pos ] + Str( npos := attoken( cStr, ".,!", ni, 1 ), 3 ) + [, tokenized by "] + cPre + [" and "] + cPost + [" is ] + iif( SubStr( cStr, npos, 1 ) $ ".,!", "", "not " ) + "empty"
    NEXT
 
@@ -87,7 +91,7 @@ PROCEDURE Main()
    ? [    with skip width == 3 and ".,!" as tokenizer list:]
    ?
    FOR ni := 1 TO numtoken( cStr, ".,!", 3 )
-      ? [    Token #] + AllTrim( Str( ni ) ) + [("] + token( cStr, ".,!", ni, 3, @cPre, @cPost ) + ;
+      ? [    Token #] + hb_ntos( ni ) + [("] + token( cStr, ".,!", ni, 3, @cPre, @cPost ) + ;
          [") @ pos ] + Str( npos := attoken( cStr, ".,!", ni, 3 ), 3 ) + [, tokenized by "] + cPre + [" and "] + cPost + [" is ] + iif( SubStr( cStr, npos, 1 ) $ ".,!", "", "not " ) + "empty."
    NEXT
 

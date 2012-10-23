@@ -139,9 +139,9 @@
  *
  *    FT_NWSEMEX( nHandle, @nValue, @nOpenCnt )
  *    ? "Semaphore test -> Open at [" + ;
- *      AllTrim( Str( nOpenCnt ) ) + ;
- *      "] stations, value is [" + ;
- *      AllTrim( Str( nValue ) ) + "]"
+ *       hb_ntos( nOpenCnt ) + ;
+ *       "] stations, value is [" + ;
+ *       hb_ntos( nValue ) + "]"
  *  $SEEALSO$
  *      FT_NWSEMOPEN() FT_NWSEMWAIT() FT_NWSEMSIG() FT_NWSEMCLOSE() FT_NWSEMLOCK()
  *  $END$

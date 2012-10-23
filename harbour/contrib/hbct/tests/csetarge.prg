@@ -52,6 +52,9 @@
  *
  */
 
+#ifndef __HARBOUR__
+   #define hb_ntos( n ) LTrim( Str( n ) )
+#endif
 
 #include "ct.ch"
 
@@ -238,7 +241,7 @@ FUNCTION myerrhandler( oerr )
          ? "      6 is Block,  7 is Array,    8 is Object"
          ? "      9 is unknown"
          nDigit := Int( oerr:subCode % 10 )
-         ? "    Here it's a " + AllTrim( Str( nDigit ) ) + ", so I return a "
+         ? "    Here it's a " + hb_ntos( nDigit ) + ", so I return a "
          DO CASE
          CASE nDigit == 0
             ?? "NIL."

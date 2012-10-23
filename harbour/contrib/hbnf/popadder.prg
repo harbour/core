@@ -253,7 +253,7 @@ FUNCTION FT_Adder()
             CLEAR TYPEAHEAD
          ELSE
             _ftError( "there are " + iif( nTotTran > 0, "only " + ;
-               LTrim( Str( nTotTran, 3, 0 ) ), "no" ) + ;
+               hb_ntos( nTotTran ), "no" ) + ;
                " transactions entered so far." + ;
                " No need to scroll!" )
          ENDIF

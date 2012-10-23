@@ -105,7 +105,7 @@ FUNCTION tp_inkey( ... )
    RETURN inkey( ... )
 
 FUNCTION tp_idle( lNewval )
-   IF lNewval == .T.
+   IF lNewval != NIL .AND. lNewval
       RETURN .T.
    ENDIF
    RETURN .F.

@@ -13,7 +13,7 @@
 
 PROCEDURE Main()
 
-   LOCAL nMode := 1, nRow, lSuccess
+   LOCAL nMode := 1, nRow
    LOCAL aVModes := { ;
       { 12, 40, " 12 x 40 " }, ;
       { 25, 40, " 25 x 40 " }, ;
@@ -41,9 +41,8 @@ PROCEDURE Main()
       MENU TO nMode
 
       IF nMode > 0
-         lSuccess := SetMode( aVModes[ nMode ][ HB_VROW ], aVModes[ nMode ][ HB_VCOL ] )
 
-         IF lSuccess == .T.
+         IF SetMode( aVModes[ nMode ][ HB_VROW ], aVModes[ nMode ][ HB_VCOL ] )
             TESTBOX( aVModes[ nMode ][ HB_PROMPT ] )
          ELSE
             @ MaxRow(), 0 SAY HB_NOT_SUPPORTED

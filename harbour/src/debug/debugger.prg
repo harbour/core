@@ -3198,7 +3198,7 @@ STATIC PROCEDURE SetsKeyPressed( nKey, oBrwSets, nSets, oWnd, cCaption, bEdit )
 
    RefreshVarsS( oBrwSets )
 
-   oWnd:SetCaption( cCaption + "[" + RTrim( Str( oBrwSets:Cargo[ 1 ] ) ) + ".." + RTrim( Str( nSets ) ) + "]" )
+   oWnd:SetCaption( cCaption + "[" + hb_ntos( oBrwSets:Cargo[ 1 ] ) + ".." + hb_ntos( nSets ) + "]" )
 
    RETURN
 

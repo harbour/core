@@ -2725,8 +2725,7 @@ METHOD wvtScrollbar:GetPos()
 
 METHOD wvtScrollbar:SetTooltip()
 
-   ::Tooltip := LTrim( Str( ::nCurrent, 12, 0 ) ) + " / " + ;
-      LTrim( Str( ::nTotal, 12, 0 ) )
+   ::Tooltip := hb_ntos( Int( ::nCurrent ) ) + " / " + hb_ntos( Int( ::nTotal ) )
 
    Wvt_SetToolTip( ::nTop, ::nLeft, ::nBottom, ::nRight, ::Tooltip )
 

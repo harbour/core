@@ -236,7 +236,7 @@ METHOD ReadHeaders( lClear ) CLASS tIPClientHTTP
    ::nLength := -1
    ::bChunked := .F.
    cLine := ::InetRecvLine( ::SocketCon, @nPos, 500 )
-   IF ! lClear == .F. .AND. ! Empty( ::hHeaders )
+   IF lClear != NIL .AND. lClear .AND. ! Empty( ::hHeaders )
       ::hHeaders := { => }
    ENDIF
    DO WHILE ::InetErrorCode( ::SocketCon ) == 0 .AND. ! Empty( cLine )

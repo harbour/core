@@ -251,7 +251,7 @@ PROCEDURE Main()
 
    WAIT4()
 
-   CTEXIT()
+   ctexit()
 
    RETURN
 

@@ -54,6 +54,10 @@
 
 #include "ct.ch"
 
+#ifndef __HARBOUR__
+   #define hb_ntos( n ) LTrim( Str( n ) )
+#endif
+
 PROCEDURE Main()
 
    LOCAL ni, cStr
@@ -72,7 +76,7 @@ PROCEDURE Main()
    ? [  ]
    cStr := charrlr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
    FOR ni := 1 TO Len( cStr )
-      ?? "chr(" + AllTrim( Str( Asc( SubStr( cStr, ni, 1 ) ) ) ) + ")"
+      ?? "chr(" + hb_ntos( Asc( SubStr( cStr, ni, 1 ) ) ) + ")"
       IF ni < Len( cStr )
          ?? "+"
       ENDIF

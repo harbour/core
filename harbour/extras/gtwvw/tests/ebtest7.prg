@@ -459,7 +459,7 @@ STATIC PROCEDURE ToCloseWindow( nwinnum, lPermitted )
 
    // allow to close topmost window only
    lPermitted := ( nwinnum == wvw_nnumwindows() - 1 )
-   IF !lpermitted
+   IF ! lpermitted
       MyMessageBox( nwinnum, "Window " + hb_ntos( nwinnum ) + " is not allowed to be closed, yet" + hb_eol() + ;
          "Please close window " + hb_ntos( wvw_nnumwindows() - 1 ) + " first" )
    ENDIF
@@ -470,13 +470,13 @@ STATIC PROCEDURE ToCloseWindow( nwinnum, lPermitted )
 
 STATIC FUNCTION nGetIndex( aEBGets, nEBId )
 
-   RETURN AScan( aEBGets, {| x | x[__GET_NEBID] == nEBId } )
+   RETURN AScan( aEBGets, {| x | x[ __GET_NEBID ] == nEBId } )
 
 // returns index to aEBGets array containing editbox that is/was in focus
 
 STATIC FUNCTION nFocused( aEBGets )
 
-   RETURN AScan( aEBGets, {| x | x[__GET_LFOCUSED] == .T. } )
+   RETURN AScan( aEBGets, {| x | x[ __GET_LFOCUSED ] } )
 
 #define EN_SETFOCUS         0x0100
 
@@ -631,7 +631,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
             IF CB == "." .OR. CB == ","
                pc++
             ENDIF
-         NEXT x
+         NEXT
 
          // RL 89
          IF Left( InBuffer, 1 ) == "." .OR. Left( InBuffer, 1 ) == ","
@@ -645,8 +645,8 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
                fnb := x
                EXIT
             ENDIF
-         NEXT x
-      ENDIF //pcount()>1
+         NEXT
+      ENDIF
    ENDIF
 
    BackInBuffer := InBuffer
@@ -735,7 +735,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
          OutBuffer := OutBuffer + CM
 
       ENDCASE
-   NEXT x
+   NEXT
 
    // Replace Content
    IF ! ( BackInBuffer == OutBuffer )
@@ -746,7 +746,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
       //pc>1 means we must to JUMP to the decimal point
 
       // RL 104
-      IF NegativeZero == .T.
+      IF NegativeZero
          Output := Transform( GetValFromText( wvw_ebgettext( mnwinnum, mnebid ), mcvaltype ), Mask )
 
          //x better:
@@ -762,7 +762,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
       ENDIF
 
    ELSE
-      IF pFlag == .T.
+      IF pFlag
          ncp := At( ".", wvw_ebgettext( mnwinnum, mnebid ) )
          wvw_ebsetsel( mnwinnum, mnebid, ncp, ncp )
       ELSE
@@ -784,7 +784,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
             ELSE
                EXIT
             ENDIF
-         NEXT x
+         NEXT
       ENDIF
    ENDIF
 
@@ -810,7 +810,7 @@ STATIC FUNCTION CharMaskTekstOK( cString, cvaltype, cMask )
          OTHERWISE
             // lPassed:=.T.
          ENDCASE
-      NEXT i
+      NEXT
       RETURN .T.
    ENDIF
 
@@ -819,7 +819,7 @@ STATIC FUNCTION CharMaskTekstOK( cString, cvaltype, cMask )
       CM := SubStr( cMask, x, 1 )
       DO CASE
          // JK
-      CASE ( CM ) == "A" .OR. ( CM ) == "!"
+      CASE CM == "A" .OR. CM == "!"
          IF IsAlpha( CB ) .OR. CB == " "
             // lPassed := .T.
          ELSE
@@ -840,7 +840,7 @@ STATIC FUNCTION CharMaskTekstOK( cString, cvaltype, cMask )
       OTHERWISE
          // lPassed := .T.
       ENDCASE
-   NEXT i
+   NEXT
 
    RETURN .T. //lPassed
 
@@ -868,7 +868,7 @@ STATIC FUNCTION GetValFromText( Text, mcvaltype )
       IF c $ "0123456789" .OR. c $ ".-"
          s += c
       ENDIF
-   NEXT x
+   NEXT
 
    IF Left( AllTrim( Text ), 1 ) == "(" .OR.  Right( AllTrim( Text ), 2 ) == "DB"
       s := "-" + s
@@ -900,7 +900,7 @@ STATIC FUNCTION GetNumMask( Text, mcvaltype )
       IF c == "$" .OR. c == "*"
          s += "9"
       ENDIF
-   NEXT i
+   NEXT
 
    RETURN s
 

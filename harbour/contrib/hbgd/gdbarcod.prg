@@ -87,7 +87,7 @@ CREATE CLASS TCode FROM TBarCode
 
    // Utils
 
-   METHOD FindCharCode( cstring, cChar )
+   METHOD FindCharCode( cString, cChar )
    METHOD MixCode( value )
    METHOD Findcode( uval )
 
@@ -399,15 +399,15 @@ METHOD DrawText8() CLASS TCode
 
    RETURN NIL
 
-METHOD FindCharCode( cstring, cChar ) CLASS TCode
+METHOD FindCharCode( cString, cChar ) CLASS TCode
 
    LOCAL i
    LOCAL nC   := 0
    LOCAL nret := 0
 
-   FOR i := 1 TO Len( cstring )
+   FOR i := 1 TO Len( cString )
 
-      IF SubStr( cstring, i, 1 ) == cChar
+      IF SubStr( cString, i, 1 ) == cChar
          ++nC
          nRet := nC
          EXIT

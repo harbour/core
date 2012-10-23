@@ -114,10 +114,13 @@ FUNCTION CStrToVal( cExp, cType )
 
 FUNCTION StringToLiteral( cString )
 
-   LOCAL lDouble := .F., lSingle := .F.
+   LOCAL lDouble := .F.
+   LOCAL lSingle := .F.
 
    IF hb_regexHas( "\n|\r", cString ) .OR. ;
-         ( ( lDouble := '"' $ cString ) .AND. ( lSingle := "'" $ cString ) .AND. hb_regexHas( "\[|\]", cString ) )
+         ( ( lDouble := '"' $ cString ) .AND. ;
+           ( lSingle := "'" $ cString ) .AND. ;
+           hb_regexHas( "\[|\]", cString ) )
 
       cString := StrTran( cString, '"', '\"' )
       cString := StrTran( cString, Chr( 10 ), "\n" )
@@ -126,9 +129,9 @@ FUNCTION StringToLiteral( cString )
       //TraceLog( cString )
 
       RETURN 'E"' + cString + '"'
-   ELSEIF lDouble == .F.
+   ELSEIF ! lDouble
       RETURN '"' + cString + '"'
-   ELSEIF lSingle == .F.
+   ELSEIF ! lSingle
       RETURN "'" + cString + "'"
    ENDIF
 

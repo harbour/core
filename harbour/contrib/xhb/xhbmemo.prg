@@ -505,7 +505,7 @@ FUNCTION xhb_MemoEdit( cString,;
 
    // 2006/AUG/06 - E.F. Clipper's  <cUserFunction> in .T. or. F. is samething.
    //
-   IF !HB_ISLOGICAL( xUDF ) //.OR. cUserFunction == .T.
+   IF !HB_ISLOGICAL( xUDF ) // .OR. cUserFunction
 
       oEd:Edit()
 

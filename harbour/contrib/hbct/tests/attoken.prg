@@ -52,6 +52,10 @@
  *
  */
 
+#ifndef __HARBOUR__
+   #define hb_ntos( n ) LTrim( Str( n ) )
+#endif
+
 #include "ct.ch"
 
 PROCEDURE Main()
@@ -76,7 +80,7 @@ PROCEDURE Main()
    ? "    Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 )
    ?
    FOR ni := 1 TO numtoken( cStr, ".!", 1 )
-      ? [    Token #] + AllTrim( Str( ni ) ) + [("] + token( cStr, ".!", ni, 1 ) + [")]
+      ? [    Token #] + hb_ntos( ni ) + [("] + token( cStr, ".!", ni, 1 ) + [")]
       ? "          starts at pos " + Str( npos := attoken( cStr, ".!", ni, 1 ), 3 ) + ;
          " and is " + iif( SubStr( cStr, npos, 1 ) $ ".!", "", "not " ) + "an empty token."
    NEXT

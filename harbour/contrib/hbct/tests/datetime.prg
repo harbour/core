@@ -70,7 +70,7 @@ PROCEDURE Main( cLang )
       "ctodow()            Day name to day number    ", ;
       "ctomonth()          Month name to number      ", ;
       "daysInMonth()       number of days in xMonth  ", ;
-      "daystomonth(dDate)  Returns num days TO month ", ;
+      "daystomonth(dDate)  Returns num days to month ", ;
       "dmy( dDate, lmode)  date as DD month YY       ", ;
       "doy( dDate )        Returns day of the year   ", ;
       "eom( dDate )        Returns last day of month ", ;
@@ -97,7 +97,7 @@ PROCEDURE Main( cLang )
    DO WHILE c
       cScr := SaveScreen( 2, 5, 24, 66 )
 
-      @  2, 5 TO 24, 66
+      @ 2, 5 TO 24, 66
       nChoice := AChoice( 3, 7, 23, 65, farr,,, nChoice )
 
       IF Empty( nChoice )
@@ -489,7 +489,7 @@ FUNCTION dInMonthtest()
       ELSE
 
          @ 10, 40 SAY "The day number is " + ;
-            LTrim( Str( daysInMonth( nMonth, IsAffirm( cLeap ) ) ) )
+            hb_ntos( daysInMonth( nMonth, IsAffirm( cLeap ) ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -547,7 +547,7 @@ FUNCTION d2month()
          c := .F.
       ELSE
          @ 11, 10 SAY "The day number is " +  ;
-            LTrim( Str( daystomonth( nMonth, IsAffirm( cLeap ) ) ) )
+            hb_ntos( daystomonth( nMonth, IsAffirm( cLeap ) ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -653,7 +653,7 @@ FUNCTION doytest()
          c := .F.
       ELSE
          @ 11, 10 SAY "The day of the date entered is " + ;
-            LTrim( Str( doy( dDate ) ) )
+            hb_ntos( doy( dDate ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -913,7 +913,8 @@ FUNCTION lastdayomtest()
          iif( Empty( dDate ), dDate := Val( cMth ), dDate )
 
          @ 12, 10 SAY "The number of days in the month is " + ;
-            LTrim( Str( lastdayom( dDate ) ) )
+            hb_ntos( lastdayom( dDate ) )
+
          SET CURSOR OFF
          Inkey( 0 )
          SET CURSOR ON
@@ -1113,7 +1114,7 @@ FUNCTION qtrtest()
       ELSE
 
          @  8, 10 SAY "The quarter number is " + ;
-            PadR( LTrim( Str( quarter( dDate ) ) ), 10 )
+            hb_ntos( quarter( dDate ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -1244,8 +1245,8 @@ FUNCTION weektest()
          c := .F.
       ELSE
 
-         @  8, 10 SAY "The week number is " + ;
-            PadR( LTrim( Str( week( dDate, IsAffirm( cMode ) ) ) ), 10 )
+         @ 8, 10 SAY "The week number is " + ;
+            hb_ntos( week( dDate, IsAffirm( cMode ) ) )
 
          SET CURSOR OFF
          Inkey( 0 )

@@ -309,7 +309,7 @@ FUNCTION MemoEdit( cString,;
    oEd:MemoInit( xUserFunction )
    oEd:display()
 
-   IF ! HB_ISLOGICAL( xUserFunction ) .OR. xUserFunction == .T.
+   IF ! HB_ISLOGICAL( xUserFunction ) .OR. xUserFunction
       nOldCursor := SetCursor( iif( Set( _SET_INSERT ), SC_INSERT, SC_NORMAL ) )
       oEd:Edit()
       IF oEd:Changed() .AND. oEd:Saved()

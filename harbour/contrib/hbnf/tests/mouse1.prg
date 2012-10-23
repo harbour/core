@@ -4,6 +4,10 @@
 
 #require "hbnf"
 
+#ifndef __HARBOUR__
+   #define hb_ntos( n ) LTrim( Str( n ) )
+#endif
+
 // Pass valid row and column values for different video modes to change modes
 
 PROCEDURE Main( nRow, nCol )
@@ -59,8 +63,8 @@ PROCEDURE Main( nRow, nCol )
    // ..... Start the demo
 
    @ MaxRow(), 0 SAY "Driver version: " + ;
-      AllTrim( Str( FT_MVERSION( @nMinor, @nType, @nIRQ ), 2, 0 ) ) + "." + ;
-      AllTrim( Str( nMinor, 2, 0 ) )
+      hb_ntos( FT_MVERSION( @nMinor, @nType, @nIRQ ) ) + "." + ;
+      hb_ntos( nMinor )
    @ Row(), Col() SAY " " + aType[ nType ] + " mouse using IRQ " + Str( nIRQ, 1, 0 )
 
    FT_MGETSENS( @nHoriz, @nVert, @nDouble )  // Get the current sensitivities

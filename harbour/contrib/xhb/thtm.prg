@@ -1201,7 +1201,7 @@ METHOD CLOSE() CLASS THtml
 
    FWrite( ::nh, ::cStr )
 
-   IF !::lCgi
+   IF ! ::lCgi
       FClose( ::nH )
    ENDIF
 
@@ -1299,11 +1299,11 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
       cStr += ' bordercolor=' + cClrBorder
    ENDIF
 
-   IF lRuleCols == .T.
+   IF lRuleCols
       cStr += " RULES=COLS"
-   ELSEIF lRuleRows == .T.
+   ELSEIF lRuleRows
       cStr += " RULES=ROWS"
-   ELSEIF lRules == .T.
+   ELSEIF lRules != NIL .AND. lRules
       cStr += " RULES=ALL"
    ENDIF
 
@@ -1505,13 +1505,13 @@ METHOD NewTableCell( cAlign, cColor, ;
       cStr += " ROWSPAN=" + '"' + nRowspan + '"'
    ENDIF
 
-   IF lWrap == .F.
+   IF ! lWrap
       cStr += " NOWRAP"
    ENDIF
 
    cStr += ">"
 
-   IF !lNoFont
+   IF ! lNoFont
       cStr += '<FONT '
 
       IF nSize != NIL
@@ -1522,7 +1522,7 @@ METHOD NewTableCell( cAlign, cColor, ;
          cStr += ' COLOR=' + cFntColor
       ENDIF
 
-      IF !Empty( cFont )
+      IF ! Empty( cFont )
          cStr += ' FACE="' + cFont + '"' + ">"
       ELSE
          cStr += ">"

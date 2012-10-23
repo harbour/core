@@ -100,7 +100,7 @@ METHOD PROCEDURE CopyTo( oTargetStream ) CLASS TStream
    LOCAL nRead
    LOCAL nPosition
 
-   IF oTargetStream:lCanWrite == .F.
+   IF ! oTargetStream:lCanWrite
       Throw( xhb_ErrorNew( "Stream", 0, 1001, ProcName(), "Target not writable.", HB_aParams() ) )
    ENDIF
 

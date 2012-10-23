@@ -2,6 +2,10 @@
  * $Id$
  */
 
+#ifndef __HARBOUR__
+   #define hb_ntos( n ) LTrim( Str( n ) )
+#endif
+
 PROCEDURE Main( nPass )
 
    LOCAL aTest
@@ -13,7 +17,7 @@ PROCEDURE Main( nPass )
       nPass := Val( nPass )
    ENDIF
 
-   ? "Testing aSort with " + Str( nPass ) + " loops."
+   ? "Testing aSort with " + hb_ntos( nPass ) + " loops."
    ?
    aTest := aMkArray( nPass )
    aOrig := AClone( aTest )
@@ -67,7 +71,7 @@ FUNCTION xToStr( xValue )
    CASE cType == "C" .OR. cType == "M"
       RETURN xValue
    CASE cType == "N"
-      RETURN AllTrim( Str( xValue ) )
+      RETURN hb_ntos( xValue )
    CASE cType == "D"
       RETURN DToC( xValue )
    CASE cType == "L"

@@ -101,6 +101,6 @@ PROCEDURE Main()
    ? "  PRESS ANY KEY"
    Inkey( 0 )
 
-   CTEXIT()
+   ctexit()
 
    RETURN
