@@ -482,15 +482,8 @@ HB_FUNC( FBFETCH )
       /* TOFIX */
       fetch_stat = isc_dsql_fetch( status, &stmt, dialect, sqlda );
 
-      if( fetch_stat != 100L )
-      {
-         hb_retnl( isc_sqlcode( status ) );
-         return;
-         }
-         else {
-         hb_retnl( -1 );
-         return ;
-      }
+      hb_retnl( fetch_stat == 100L ? isc_sqlcode( status ) : -1 );
+      return;
    }
 
    hb_retnl( 0 );
