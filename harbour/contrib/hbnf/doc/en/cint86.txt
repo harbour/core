@@ -111,7 +111,7 @@
  *     * Pay attention here, this is crucial.  Note how to set up the string
  *     * so it appears in DS:DX.
  *
- *     aRegs[ DS ] := "C:\MISC\MYFILE.XXX"
+ *     aRegs[ DS ] := "C:\misc\myfile.xxx"
  *     aRegs[ DX ] := REG_DS
  *     FT_INT86( 33, aRegs )        // Make the call to the DOS interrupt
  *

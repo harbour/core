@@ -16,9 +16,6 @@
 -depincpathlocal=lzf:3rd/liblzf
 -depfinish=lzf
 
--instfile=inc:hblzf.ch
--instfile=inc:hblzf.hbx
-
 hblzf.hbx
 
 core.c

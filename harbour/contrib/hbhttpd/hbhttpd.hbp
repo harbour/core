@@ -9,8 +9,6 @@
 
 -w3 -es2
 
--instfile=inc:hbhttpd.hbx
-
 hbhttpd.hbx
 
 core.prg

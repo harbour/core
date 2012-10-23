@@ -4435,7 +4435,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             cDefPrefix := "@"
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "dos"
-            /* workaround for not included automatically CLIB in pure C mode DOS builds */
+            /* workaround for not included automatically CLIB in pure C mode MS-DOS builds */
             AAdd( l_aLIBSYS, "clib3r" )
          ENDIF
          cBin_Lib := "wlib" + hbmk[ _HBMK_cCCEXT ]

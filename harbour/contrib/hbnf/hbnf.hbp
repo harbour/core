@@ -9,9 +9,6 @@
 
 -w3 -es2
 
--instfile=inc:ftmenuto.ch
--instfile=inc:hbnf.hbx
-
 hbnf.hbx
 
 alt.c

@@ -50,8 +50,8 @@ What this means is:
   targets.
 * The only sources in this directory are C sources (three files).
 * The library name is "vm". This will be translated to a real file
-  name depending on the rules file: "libvm.a" on Unix, "VM.LIB" on
-  DOS.
+  name depending on the rules file: "libvm.a" on Unix, "vm.lib" on
+  Windows.
 * The final line includes the rules file. In this case, we include a
   set of rules to build a library.
 
@@ -188,30 +188,13 @@ For Borland C++ 5.5
 For Borland C++ 3.x
   HB_PLATFORM       dos
 
-For DJGPP (GCC port for DOS)
+For DJGPP (GCC port for MS-DOS)
   HB_PLATFORM       dos
   HB_COMPILER       djgpp
 
 For Watcom C/C++ 10.x (default Makefile creates DOS4G extender executables)
   HB_PLATFORM       dos
   HB_COMPILER       watcom
-  Note: It is possible that you will have to increase the space reserved for
-        DOS environment variables in order to successfuly run make utility
-        (Add for example:
-         SHELL=C:\COMMAND.COM C:\ E=2048 /P
-         to your CONFIG.SYS )
-
-If you issue a "make install", it will try to install your doc, header,
-executable and library files into directories given by
-
-  HB_INSTALL_BIN
-  HB_INSTALL_DOC
-  HB_INSTALL_LIB
-  HB_INSTALL_INC
-
-You can set those as environment variables too. There is no default for
-HB_INSTALL_DOC, so if you don't define it, then the doc files will not be
-installed.
 
 The most used targets are these:
 
@@ -225,27 +208,13 @@ The most used targets are these:
 
 NOTES
 =====
-In order to get a clean build after making source changes or after
-receiving updated source files, you must use the following two steps:
 
-1) make clean
-3) make
-
-Without the first step, changes to the Harbour compiler and/or various
-include files will not be reflected in any object modules created from
-Harbour source code.
+See INSTALL about details.
 
 
-To rebuild only a part of Harbour, go to the appropriate source directory
-and then run 'make'. For example, to rebuild all of Harbour, but not
-the test programs, change to the 'source' directory. To rebuild only the
-test programs, change to the 'test' directory.
-
-
-If you are using a DOS-based operating system, then you can build any
-program in tests/working by using the build batch file. For example,
-'build scroll' will rebuild the scroll.prg program and then run it. This
-can also be used for modules that aren't in the Makefile. You can also
-pass parameters to the program. For example, 'build readfile harbour.ini'
-will rebuild the readfile.prg program and run it with 'harbour.ini' as a
-command line parameter.
+You can build and/or run any program in tests/working by using hbmk2
+and hbrun. For example, 'hbmk2 scroll.prg -run' will build the scroll.prg
+program and then run it. 'hbrun scroll.prg' will run the program as
+a script. You can also pass parameters to the program. For example,
+'hbrun readfile.prg harbour.ini' will rebuild the readfile.prg program
+and run it with 'harbour.ini' as a command line parameter.

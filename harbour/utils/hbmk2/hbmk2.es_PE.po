@@ -849,7 +849,7 @@ msgstr "Comando para compresión:"
 #: hbmk2.prg:4604
 #, c-format
 msgid "Warning: Copying target to %1$s failed with %2$s."
-msgstr "Advertencia: Copiando destino a %1$s fallo con error DOS #%2$s."
+msgstr "Advertencia: Copiando destino a %1$s fallo con error OS #%2$s."
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format

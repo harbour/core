@@ -16,9 +16,6 @@
 -depincpathlocal=minilzo:3rd/minilzo
 -depfinish=minilzo
 
--instfile=inc:hbmlzo.ch
--instfile=inc:hbmlzo.hbx
-
 hbmlzo.hbx
 
 core.c

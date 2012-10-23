@@ -16,9 +16,6 @@
 -depincpathlocal=mxml:3rd/minixml
 -depfinish=mxml
 
--instfile=inc:hbmxml.ch
--instfile=inc:hbmxml.hbx
-
 hbmxml.hbx
 
 core.c

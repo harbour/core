@@ -6,8 +6,8 @@ uHTTPD micro web server
 
 Build it without GD: hbmk2 uhttpd.hbp   modules.hbp
 Build it with    GD: hbmk2 uhttpdgd.hbp modulesg.hbp
-  [ This one needs bgd.dll. Please download it from:
-  http://www.libgd.org/releases/gd-latest-win32.zip ]
+  [ This one needs GD lib. Please download it from:
+    http://www.libgd.org/ ]
 
 To see accepted parameters run: uhttpd -?
 Parameters can also be defined using uhttpd.ini file.

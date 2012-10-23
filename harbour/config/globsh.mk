@@ -190,7 +190,7 @@ endif
 
 ifeq ($(HB_SHELL),dos)
 
-# NOTE: DOS command line length has a limit of 126 characters.
+# NOTE: MS-DOS command line length has a limit of 126 characters.
 #       When using DJGPP GNU Make to invoke other DJGPP tools this limit
 #       is about 13KB, as they do special trick to overcome it.
 #       See these DJGPP FAQs:

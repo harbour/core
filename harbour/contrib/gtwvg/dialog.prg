@@ -244,7 +244,7 @@ METHOD WvgDialog:getFrameState()
 
 METHOD WvgDialog:menuBar()
 
-   IF !( HB_ISOBJECT( ::oMenu ) )
+   IF ! HB_ISOBJECT( ::oMenu )
       ::oMenu := WvgMenuBar():New( self ):create()
    ENDIF
 

@@ -9,8 +9,6 @@
 
 -w3 -es2
 
--instfile=inc:hbgt.hbx
-
 hbgt.hbx
 
 asciisgt.c

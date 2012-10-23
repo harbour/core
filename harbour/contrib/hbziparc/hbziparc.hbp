@@ -9,8 +9,6 @@
 
 -w3 -es2
 
--instfile=inc:hbziparc.hbx
-
 hbziparc.hbx
 
 ziparc.prg

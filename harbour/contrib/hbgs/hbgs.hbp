@@ -21,8 +21,6 @@
 -depimplibs=gs:${HB_WITH_GS_BIN}/gsdll2.dll{os2}
 -depimplibd=gs:gs
 
--instfile=inc:hbgs.hbx
-
 hbgs.hbx
 
 core.c

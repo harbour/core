@@ -89,7 +89,7 @@
  *     Call this function to determine if the disk inserted is the correct
  *     one before any other function.
  * $EXAMPLES$
- *     IF hb_ZipTestPK( "A:\test22.zip" ) == 114
+ *     IF hb_ZipTestPK( "test22.zip" ) == 114
  *        ? "Invalid Diskette"
  *     ENDIF
  * $STATUS$
@@ -345,11 +345,11 @@
  *
  *        hb_SetDiskZip( {| nDisk | Alert( "Please insert disk no " + Str( nDisk, 3 ) ) } )
  *
- *        IF hb_ZipFileByPKSpan( "A:\test.zip", "test.prg" )
+ *        IF hb_ZipFileByPKSpan( "test.zip", "test.prg" )
  *           ? "File was successfully created"
  *        ENDIF
  *
- *        IF hb_ZipFileByPKSpan( "A:\test1.zip", { "test.prg", "test.hbp" } )
+ *        IF hb_ZipFileByPKSpan( "test1.zip", { "test.prg", "test.hbp" } )
  *           ? "File was successfully created"
  *        ENDIF
  *
@@ -361,8 +361,7 @@
  *        nLen   := Len( aFiles )
  *        aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "." )
  *        GaugeDisplay( aGauge )
- *        // assuming F: is a Zip Drive
- *        hb_ZipFileByPKSpan( "F:\test33.zip", aFiles, 9, {| cFile, nPos | GaugeUpdate( aGauge, nPos / nLen ) },, "hello" )
+ *        hb_ZipFileByPKSpan( "test33.zip", aFiles, 9, {| cFile, nPos | GaugeUpdate( aGauge, nPos / nLen ) },, "hello" )
  *        RETURN
  * $STATUS$
  *     R
@@ -522,12 +521,12 @@
  *
  *        LOCAL aExtract := hb_GetFilesInZip( "test.zip" )  // extract all files in zip
  *
- *        IF hb_UnzipFile( "test.zip",,,, ".\", aExtract )
+ *        IF hb_UnzipFile( "test.zip",,,, "." + hb_ps(), aExtract )
  *           ? "File was successfully extracted"
  *        ENDIF
  *
  *        aExtract := hb_GetFilesInZip( "test2.zip" )  // extract all files in zip
- *        IF hb_UnzipFile( "test2.zip", {| cFile | QOut( cFile ) },,, ".\", aExtract )
+ *        IF hb_UnzipFile( "test2.zip", {| cFile | QOut( cFile ) },,, "." + hb_ps(), aExtract )
  *           ? "File was successfully extracted"
  *        ENDIF
  *        RETURN
@@ -566,7 +565,7 @@
  * $DESCRIPTION$
  *     This  function removes files from an Zip archive.
  * $EXAMPLES$
- *     ? "has the file zipnew.i been deleted ", iif( hb_ZipDeleteFiles( "\test23.zip", "zipnew.i" ), "Yes", "No" )
+ *     ? "has the file zipnew.i been deleted ", iif( hb_ZipDeleteFiles( "test23.zip", "zipnew.i" ), "Yes", "No" )
  * $STATUS$
  *     R
  * $COMPLIANCE$

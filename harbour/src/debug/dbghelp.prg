@@ -554,8 +554,8 @@ STATIC FUNCTION GetTopics()
         "    Open...",;
         "    Specify a file to be opened in the Code window",;
         "",;
-        "    DOS Access",;
-        "    Shell to the DOS environment",;
+        "    OS Access",;
+        "    Shell to the OS environment",;
         "",;
         "    Exit    Alt-X",;
         "    Exit the debugger" }

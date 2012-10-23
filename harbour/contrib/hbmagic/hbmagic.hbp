@@ -15,9 +15,6 @@
 -depincpath=libmagic:/usr/include
 -depincpath=libmagic:/opt/local/include
 
--instfile=inc:hbmagic.ch
--instfile=inc:hbmagic.hbx
-
 hbmagic.hbx
 
 core.c

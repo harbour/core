@@ -354,31 +354,31 @@ METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
    CASE nMessage == WM_INITDIALOG
       ::hWnd := hWnd
 
-      IF !Empty( ::title )
+      IF ! Empty( ::title )
          WVG_SetWindowText( ::hWnd, ::title )
       ENDIF
-      IF !( ::buttonCancel )
+      IF ! ::buttonCancel
          WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,IDCANCEL ), .F. )
       ENDIF
-      IF !( ::buttonApply )
+      IF ! ::buttonApply
          WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1026 ), .F. )
       ENDIF
-      IF !( ::buttonHelp )
+      IF ! ::buttonHelp
          WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1038 ), .F. )
       ENDIF
-      IF !( ::strikeOut )
+      IF ! ::strikeOut
          WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1040 ), .F. )
       ENDIF
-      IF !( ::underscore )
+      IF ! ::underscore
          WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1041 ), .F. )
       ENDIF
-      IF !( ::name )
+      IF ! ::name
          WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1136 ), .F. )
       ENDIF
-      IF !( ::style )
+      IF ! ::style
          WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1137 ), .F. )
       ENDIF
-      IF !( ::size )
+      IF ! ::size
          WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1138 ), .F. )
       ENDIF
 

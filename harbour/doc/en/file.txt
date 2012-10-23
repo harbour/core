@@ -958,7 +958,7 @@
  *      SET DEFAULT TO settings.
  *  $EXAMPLES$
  *      COPY FILE C:\harbour\tests\adirtest.prg TO C:\temp\adirtest.prg
- *      COPY FILE C:\harbour\utils\hbdoc\gennf.prg TO LPT1
+ *      COPY FILE C:\harbour\tests\adirtest.prg TO LPT1
  *  $STATUS$
  *      R
  *  $COMPLIANCE$

@@ -100,7 +100,7 @@ Follow are the various directories that exist under the Harbour tree.
 |   |   |
 |   |   +---gtcrs       - GT subsystem based on ncurses.
 |   |   |
-|   |   +---gtdos       - GT subsystem for DOS compilers.
+|   |   +---gtdos       - GT subsystem for MS-DOS compilers.
 |   |   |
 |   |   +---gtgui       - Minimal GT for Windows GUI programs.
 |   |   |

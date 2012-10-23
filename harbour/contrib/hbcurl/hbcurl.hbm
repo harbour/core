@@ -15,9 +15,6 @@
 -depcontrol=curl:${HB_WITH_CURL}
 -depincpath=curl:/usr/include
 
--instfile=inc:hbcurl.ch
--instfile=inc:hbcurl.hbx
-
 hbcurl.hbx
 
 core.c

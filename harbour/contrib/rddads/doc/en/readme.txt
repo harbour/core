@@ -16,27 +16,22 @@
  *      The RDD was written by Alexander Kresin <alex@belacy.belgorod.su>
  *      Additional code and documentation was added by
  *      Brian Hays <bhays@abacuslaw.com>.
-
+ *
  *      Your Harbour application can access a remote database server for a
  *      true client/server architecture, or it can use the "local server"
- *      adsloc32.dll for stand-alone or even small network installations.
+ *      for stand-alone or even small network installations.
  *
- *      <b>For using this RDD you need to have:   </b></par>
- *      <b>ace32.dll    ( Advantage Client Engine ),   </b></par>
- *      <b>axcws32.dll  ( communication layer for remote server ) or   </b></par>
- *      <b>adsloc32.dll ( local server )   </b></par>
+ *      For using this RDD you need to have all required dynamic libraries
+ *      installed on your system.
  *
- *      You need also to create ace32.lib with the help of implib.exe:
- *      implib ace32.lib ace32.dll
+ *      For building executables don't forget to include rddads.hbc in your
+ *      hbmk2 project.
  *
- *      For building executables don't forget to include the ace32.lib and
- *      rddads.lib in the make file or link script.
+ *      You also need to include in your prg file following lines:
  *
- *      You also need to include in your PRG file following lines:
- *
- *      REQUEST ADS   </par>
- *      rddRegister( "ADS", 1 )   </par>
- *      rddsetdefault( "ADS" )   </par>
+ *      REQUEST ADS
+ *      rddRegister( "ADS", 1 )
+ *      rddsetdefault( "ADS" )
  *
  *      By default RDDADS is tuned for remote server and cdx indexes. To
  *      change this you may use these commands defined in ads.ch:
@@ -51,7 +46,7 @@
  *      or functions AdsSetServerType(), AdsSetFileType().
  *      See the header file ads.ch for details.
  *
- *      Note that the default local server (adsloc32.dll) is useable for
+ *      Note that the default local server is useable for
  *      file sharing on a small network.  The default DLL is limited to
  *      5 users, but an unlimited version is available from Extended Systems.
  *
@@ -118,7 +113,7 @@
  *      setting to match Harbour's.
  *
  *      INDEXING and Progress Displays:
- *      ace32.dll does not support the EVAL/EVERY clauses. Remember, there
+ *      Remote server does not support the EVAL/EVERY clauses. Remember, there
  *      is an external process doing the indexing that knows nothing of
  *      Harbour expressions or codeblocks. Even with Local Server it's the
  *      DLLs doing all the indexing. So to do progress meters

@@ -9,9 +9,6 @@
 
 -w3 -es2
 
--instfile=inc:telepath.ch
--instfile=inc:hbtpathy.hbx
-
 hbtpathy.hbx
 
 telepath.prg

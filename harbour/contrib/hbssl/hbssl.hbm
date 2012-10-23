@@ -34,9 +34,6 @@
 # For _fileno() in openssl/applink.c
 -c=gnu90
 
--instfile=inc:hbssl.ch
--instfile=inc:hbssl.hbx
-
 hbssl.hbx
 
 ssl_hb.c

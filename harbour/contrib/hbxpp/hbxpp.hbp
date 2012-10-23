@@ -12,9 +12,7 @@
 -instfile=inc:dll.ch
 -instfile=inc:dmlb.ch
 -instfile=inc:hbxpp.ch
--instfile=inc:hbxppext.ch
 -instfile=inc:thread.ch
--instfile=inc:hbxpp.hbx
 
 hbxpp.hbx
 

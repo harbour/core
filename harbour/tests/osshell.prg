@@ -4,9 +4,7 @@
  */
 
 //
-// DosShell
-//
-// This program shell to DOS
+// This program shells to OS
 //
 // Written by Eddie Runia <eddie@runia.com>
 // www - http://harbour-project.org

@@ -2474,7 +2474,7 @@ STATIC FUNCTION uhttpd_DefError( oError )
 
    cMessage := ErrorMessage( oError )
    IF ! Empty( oError:osCode )
-      cDOSError := "(DOS Error " + hb_NToS( oError:osCode ) + ")"
+      cDOSError := "(OS Error " + hb_ntos( oError:osCode ) + ")"
    ENDIF
 
    // ;
@@ -2482,7 +2482,7 @@ STATIC FUNCTION uhttpd_DefError( oError )
    cCallstack := ""
    n := 1
    DO WHILE ! Empty( ProcName( ++n ) )
-      cCallstack += "Called from " + ProcName( n ) + "(" + hb_NToS( ProcLine( n ) ) + ")  ;"
+      cCallstack += "Called from " + ProcName( n ) + "(" + hb_ntos( ProcLine( n ) ) + ")  ;"
    ENDDO
 
    // Build buttons
@@ -2568,7 +2568,7 @@ STATIC FUNCTION ErrorMessage( oError )
 
    // add subsystem's error code if available
    IF HB_ISNUMERIC( oError:subCode )
-      cMessage += "/" + hb_NToS( oError:subCode )
+      cMessage += "/" + hb_ntos( oError:subCode )
    ELSE
       cMessage += "/???"
    ENDIF

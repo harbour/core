@@ -16,9 +16,6 @@
 -depincpathlocal=expat:3rd/expat
 -depfinish=expat
 
--instfile=inc:hbexpat.ch
--instfile=inc:hbexpat.hbx
-
 -cflag=-DXML_STATIC
 
 hbexpat.hbx

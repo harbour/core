@@ -16,9 +16,6 @@
 -depincpathlocal=xdiff:3rd/libxdiff
 -depfinish=xdiff
 
--instfile=inc:hbxdiff.ch
--instfile=inc:hbxdiff.hbx
-
 hbxdiff.hbx
 
 core.c

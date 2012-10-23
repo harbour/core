@@ -19,9 +19,6 @@
 -depincpath=freeimage:/opt/local/include
 -depimplibs=freeimage:../Dist/FreeImage.dll
 
--instfile=inc:freeimag.ch
--instfile=inc:hbfimage.hbx
-
 # For FreeImage headers
 -c=gnu90
 

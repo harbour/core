@@ -18,7 +18,7 @@ implementation of the _gt functions. These are functions named with
 gtxxxxxx convention and are called by the _gt functions in gtapi.c.
 I've provided the following files to implement the console functions:
 
-gtdos.c - DOS implemenation
+gtdos.c - MS-DOS implemenation
 gtwin.c - Windows implementation
 gtos2.c - OS/2 implementation
 gtxxx.c - Generic template for implementation
@@ -257,7 +257,7 @@ gtpca  - It's PCANSI terminal GT - it works in similar way to ANSI GT
          Now GTTRM can make all GTPCA job and much more.
          Supported by all platforms.
 
-gtdos  - GT driver for DOS - it uses BIOS and direct hardware screen output
+gtdos  - GT driver for MS-DOS - it uses BIOS and direct hardware screen output
          so it's very similar to Clipper one - in practice due to the same
          environment you will noticed that all small details of Clipper
          GT drivers are replicated here. You can think about it like 100%
@@ -284,7 +284,7 @@ gttrm  - it's like GTCRS and GTSLN but it does not use any external
          terminal library like SLANG or CURSES and it does not use
          any external database to extract terminal capabilities so
          it can be compiled on any POSIX system - I'll add support
-         also for DOS/Windows in the future. It should automatically
+         also for MS-DOS/Windows in the future. It should automatically
          detect UTF-8 terminal mode and switch internally to Unicode
          mode if necessary. In theory is less functional then GTCRS
          and GTSLN because I hard coded escape sequences only for few
@@ -316,9 +316,9 @@ GTWVG  - GUI emulation of GTWVT. It implements itself on top of GTWVT.
          Also all IO commands can be rendered on top of the GUI elements
 gtxwc  - GT driver for X-Window. It's like GTWVT but for nixes.
          Additionaly it has set of predefined vector characters
-         (box and arrowd drawing characters) which can be used
+         (box and arrow drawing characters) which can be used
          instead of the one defined in font. It means that you
-         will have all boxes and arrows you know from DOS ans CP437
+         will have all boxes and arrows you know from MS-DOS and CP437
          even if you chose font which does not have them. Additionally
          it support some simple graphic output. See tests/gfx.prg
          for simple program which demonstrates it.
@@ -327,7 +327,7 @@ gtxwc  - GT driver for X-Window. It's like GTWVT but for nixes.
 gtalleg- GT driver which uses alegro library for input/output.
          It's also GUI driver which support HB_GFX*() drawing.
          Multi platform, works on all platforms for which allegro
-         library has been ported: MS-Win, DOS, VESA, X11, FB, SDL, ...
+         library has been ported: MS-Win, MS-DOS, VESA, X11, FB, SDL, ...
 
 gtgui  - pseudo GT driver which adds to GTNUL Clipboard and Tone
          functionality. If you are using some MS-Windows GUI library

@@ -8,7 +8,7 @@ ifneq ($(HB_PLATFORM),)
 ifneq ($(HB_COMPILER),)
 
 ifeq ($(HB_HOST_PLAT),dos)
-   # do not use rules for parallel processing in DOS
+   # do not use rules for parallel processing in MS-DOS
    JOB_SRV := NO
 else
    # these make versions does not work correctly with

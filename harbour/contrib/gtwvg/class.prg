@@ -577,7 +577,7 @@ METHOD wvtDialog:Inkey()
          ::lEventHandled := ::aObjects[ ::nUseObj ]:ShowPopup()
       ENDIF
 
-      IF !( ::lEventHandled )
+      IF ! ::lEventHandled
          IF ::nCurObj > 0
             IF !Empty( ::aDialogKeys )
                IF ( n := AScan( ::aDialogKeys, {| e_ | e_[ 1 ] == ::nKey } ) ) > 0
@@ -599,7 +599,7 @@ METHOD wvtDialog:Inkey()
          ENDIF
       ENDIF
 
-      IF !( ::lEventHandled )
+      IF ! ::lEventHandled
          IF HB_ISBLOCK( SetKey( ::nKey ) )
             Eval( SetKey( ::nKey ) )
          ENDIF
@@ -1566,7 +1566,7 @@ METHOD WvtLabel:Create( lConfg )
    ::hFont := Wvt_CreateFont( ::cFont, ::nFontHeight, ::nFontWidth, ::nFontWeight, ::lItalic, ;
       ::lUnderline, ::lStrikeout, ::nCharSet, ::nFontQuality, ::nAngle )
    IF ::hFont != 0
-      IF !( lConfg )
+      IF ! lConfg
          ::bPaint := {|| Wvt_DrawLabelObj( ::nTop, ::nLeft, ::nBottom, ::nRight, ;
             ::Text, ::nAlignHorz, ::nAlignVert, ::nTextColor, ::nBackColor, ::hFont ) }
          AAdd( ::aPaint, { ::bPaint, { WVT_BLOCK_LABEL, ::nTop, ::nLeft, ::nBottom, ::nRight } } )
@@ -1828,7 +1828,7 @@ METHOD WvtToolBar:HoverOn()
 
 METHOD WvtToolBar:HoverOff()
 
-   IF ::lFloating .AND. !( ::lHidden )
+   IF ::lFloating .AND. ! ::lHidden
       ::lHidden := .T.
       ::lActive := .F.
       AEval( ::aObjects, {| o | o:lActive := ::lActive } )
@@ -3279,7 +3279,7 @@ METHOD WvtProgressBar:Create()
 
 METHOD WvtProgressBar:Display( nCurrent, nTotal )
 
-   IF !( ::lActive )
+   IF ! ::lActive
       RETURN Self
    ENDIF
 

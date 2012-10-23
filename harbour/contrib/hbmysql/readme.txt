@@ -3,7 +3,7 @@
  */
 
                 +---------------------------------------------------------------+
-                | 22/november/2001 - Harbour MySQL access classes - readme file |
+                | 2001/November/22 - Harbour MySQL access classes - readme file |
                 +---------------------------------------------------------------+
 
 
@@ -13,7 +13,7 @@ This is work in progress, so it has to be fully tested and needs a few more meth
 This set of files gives you a mean to access a MySQL server, I've developed and tested them on a OS/2 platform,
 In their present state MySQL classes are made up of these files:
 
-mysql.c     :  low level wrapper around MySQL client API. It requires libmysqlclient.a library
+mysql.c     :  low level wrapper around MySQL client API.
 mysql.ch    :  clipper level defines of MySQL types
 tmysql.prg  :  MySQL access classes
 test.prg    :  a little test program which wont work for you :-) since it uses a .dbf file not
@@ -25,7 +25,7 @@ test.prg    :  a little test program which wont work for you :-) since it uses a
 
 2) Add hbmysql.hbc to your hbmk2 command line (you can also try to
    recompile programs in utils and tests subdirs just to test everything)
-   and be sure to have libmysql.dll in your PATH.
+   and be sure to have MySQL dynamic libraries configured.
 
 
                               +---------------------+

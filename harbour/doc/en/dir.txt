@@ -52,8 +52,8 @@
  *      __Dir( "*.dbf" )         // list all DBF file in current directory
  *
  *      // list all PRG files in Harbour Run-Time library
- *      // for DOS compatible operating systems
- *      __Dir( "C:\harbour\source\rtl\*.prg" )
+ *      // for MS-DOS compatible operating systems
+ *      __Dir( "src\rtl\*.prg" )
  *
  *      // list all files in the public section on a Unix like machine
  *      __Dir( "/pub" )
@@ -107,11 +107,11 @@
  *      dir   "*.dbf"          // list all DBF file in current directory
  *
  *      // list all PRG files in Harbour Run-Time library
- *      // for DOS compatible operating systems
- *        Dir  "C:\harbour\source\rtl\*.prg"
+ *      // for MS-DOS compatible operating systems
+ *      Dir "src\rtl\*.prg"
  *
  *      // list all files in the public section on a Unix like machine
- *        Dir  "/pub"
+ *      Dir  "/pub"
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
