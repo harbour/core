@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( DE850M )
+ * National Collation Support Module (DE850M)
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

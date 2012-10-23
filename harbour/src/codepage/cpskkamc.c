@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( SKKAMC )
+ * National Collation Support Module (SKKAMC)
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

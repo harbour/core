@@ -95,7 +95,7 @@ usually set the HB_USER_CFLAGS environment variable like this:
 
   export HB_USER_CFLAGS='-DHARBOUR_USE_WIN_GTAPI -DHB_TR_LEVEL=HB_TR_INFO'
 
-or for other OS (eg: DOS, WIN9x)
+or for other OS (eg: MS-DOS, Windows)
 
   SET HB_USER_CFLAGS=-DHARBOUR_USR_WIN_GTAPI -DHB_TR_LEVEL_INFO
 
@@ -105,7 +105,7 @@ can set an environment variable like this:
 
   export HB_TR_LEVEL=HB_TR_WARNING
 
-or for other OS (eg: DOS, WIN9x)
+or for other OS (eg: MS-DOS, Windows)
 
   SET HB_TR_LEVEL=HB_TR_WARNING
 

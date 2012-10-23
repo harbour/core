@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( Greek ISO )
+ * National Collation Support Module (ELISO)
  *
  * Copyright 2004 Pete Dionisopoulos <pete_westg@yahoo.gr>
  * www - http://harbour-project.org

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( SR646 )
+ * National Collation Support Module (SR646)
  *
  * Copyright 2011 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

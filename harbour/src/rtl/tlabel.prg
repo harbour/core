@@ -406,7 +406,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
    IF nReadCount == 0
       nFileError := F_EMPTY             // File is empty
    ELSE
-      nFileError := FError()            // Check for DOS errors
+      nFileError := FError()            // Check for OS errors
    ENDIF
 
    IF nFileError == 0

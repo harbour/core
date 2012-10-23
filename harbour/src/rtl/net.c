@@ -116,7 +116,7 @@
 
 /* NOTE: Clipper will only return a maximum of 15 bytes from this function.
          And it will be padded with spaces. Harbour does the same on the
-         DOS platform.
+         MS-DOS platform.
          [vszakats] */
 
 /* NOTE: The caller must free the returned buffer. [vszakats] */

@@ -436,7 +436,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
       /* Handling HB_FA_LABEL doesn't need any special tricks
-         under the DOS platform. */
+         under the MS-DOS platform. */
 
       if( ffind->bFirst )
       {

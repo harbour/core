@@ -82,7 +82,7 @@ HB_EXTERN_BEGIN
 #define FXO_DEFAULTS  0x1000   /* Use SET command defaults    */
 #define FXO_DEVICERAW 0x2000   /* Open devices in raw mode    */
 /* Harbour extension */
-#define FXO_SHARELOCK 0x4000   /* emulate DOS SH_DENY* mode in POSIX OS */
+#define FXO_SHARELOCK 0x4000   /* emulate MS-DOS SH_DENY* mode in POSIX OS */
 #define FXO_COPYNAME  0x8000   /* copy final szPath into pFilename */
 
 /* these definitions should be cleared,
@@ -171,7 +171,7 @@ extern HB_EXPORT HB_BOOL    hb_fsGetAttr     ( const char * pszFileName, HB_FATT
 extern HB_EXPORT HB_BOOL    hb_fsSetAttr     ( const char * pszFileName, HB_FATTR ulAttr );
 extern HB_EXPORT HB_BOOL    hb_fsGetCWD      ( char * pszBuffer, HB_SIZE nSize );
 extern HB_EXPORT HB_BOOL    hb_fsSetCWD      ( const char * pszDirName );
-extern HB_EXPORT void       hb_fsSetError    ( HB_ERRCODE uiError ); /* set the file system DOS error number */
+extern HB_EXPORT void       hb_fsSetError    ( HB_ERRCODE uiError ); /* set the file system OS error number */
 extern HB_EXPORT void       hb_fsSetIOError  ( HB_BOOL fResult, HB_USHORT uiOperation ); /* set the file system error number after IO operation */
 extern HB_EXPORT HB_BOOL    hb_fsTruncAt     ( HB_FHANDLE hFileHandle, HB_FOFFSET nOffset ); /* truncate file to given size */
 extern HB_EXPORT HB_USHORT  hb_fsWrite       ( HB_FHANDLE hFileHandle, const void * pBuff, HB_USHORT uiCount ); /* write to an open file from a buffer (<=64K) */
@@ -206,8 +206,8 @@ extern HB_EXPORT char *     hb_fsLinkRead    ( const char * pszFileName ); /* re
 #  elif defined( HB_OS_LINUX ) && \
         !defined( __WATCOMC__ ) && !defined( HB_USE_BSDLOCKS )
       /* default usage of BSD locks in *BSD systems for emulating
-       * DOS/Windows DENY_* flags has been disabled because tests
-       * on FreeBSD 6.2 and MacOSX shows that this implementation
+       * MS-DOS/Windows DENY_* flags has been disabled because tests
+       * on FreeBSD 6.2 and OS X shows that this implementation
        * can create self deadlock when used simultaneously with
        * POSIX locks - thanks to Phil and Lorenzo for locating the
        * problem and tests [druzus]

@@ -572,7 +572,7 @@ HB_FUNC( FT_FDELETE )
    }
    while( iBytesRead > 0 );
 
-   /* move DOS EOF marker */
+   /* move legacy EOF marker */
    hb_fsSeekLarge( ft_text->handles[ ft_text->area ], srcPtr, FS_SET );
    hb_fsWrite( ft_text->handles[ ft_text->area ], Buff, 0 );
 
@@ -671,7 +671,7 @@ HB_FUNC( FT_FAPPEND )
 
    if( ! ft_text->error[ ft_text->area ] )
    {
-      /* move DOS eof marker */
+      /* move legacy EOF marker */
       hb_fsWrite( ft_text->handles[ ft_text->area ], buff, 0 );
       ft_text->error[ ft_text->area ] = hb_fsError();
    }
@@ -986,7 +986,7 @@ static int _ins_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
       iLenRemaining  -= iLen;
    }
 
-   /* store length in bytes, set EOF marker for DOS */
+   /* store length in bytes, set legacy EOF marker */
    ft_text->lastbyte[ ft_text->area ] = hb_fsSeekLarge( ft_text->handles[ ft_text->area ], fpWrite, FS_SET );
    hb_fsWrite( ft_text->handles[ ft_text->area ], WriteBuff, 0 );
 
@@ -1042,7 +1042,7 @@ static int _del_buff( PFT_TEXT ft_text, HB_ISIZ iLen )
       fpRead   += WriteLen;
    }
 
-   /* store length in bytes, set EOF marker for DOS */
+   /* store length in bytes, set legacy EOF marker */
    ft_text->lastbyte[ ft_text->area ] = hb_fsSeekLarge( ft_text->handles[ ft_text->area ], fpWrite, FS_SET );
    hb_fsWrite( ft_text->handles[ ft_text->area ], WriteBuff, 0 );
 

@@ -69,7 +69,7 @@ HB_FUNC( PRINTSTAT )
 
 #if defined( HB_OS_DOS )
 
-   /* NOTE: DOS specific solution, using BIOS interrupt */
+   /* NOTE: MS-DOS specific solution, using BIOS interrupt */
 
    union REGS regs;
 

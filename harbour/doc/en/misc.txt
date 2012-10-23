@@ -40,8 +40,6 @@
  *      C
  *  $PLATFORMS$
  *      All
- *  $FILES$
- *      src/rtl/version.c
  *  $END$
  */
 
@@ -75,7 +73,6 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      src/rtl/version.c
  *      Library is rtl
  *  $SEEALSO$
  *      OS()
@@ -119,7 +116,6 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *     src/rtl/gete.c
  *      Library is rtl
  *  $SEEALSO$
  *     GETE
@@ -165,7 +161,6 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *     src/rtl/gete.c
  *      Library is rtl
  *  $SEEALSO$
  *     GETENV
@@ -219,7 +214,6 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      src/rtl/gete.c
  *      Library is rtl
  *  $SEEALSO$
  *     GETENV, GETE
@@ -245,14 +239,14 @@
  *      This command runs an external program. Ensure that
  *      you have enough free memory to be able to run the external
  *      program. Do not use it to run 'Terminate and Stay Resident' programs
- *      (in case of DOS) since that causes several problems.
+ *      (in case of MS-DOS) since that causes several problems.
  *
  *      Note: This function is what the RUN command preprocesses into.
  *            It is considered bad form to use this function directly.
  *            Use the RUN command instead.
  *  $EXAMPLES$
  *      __run( "edit " + cMyTextFile )    // Runs an external editor
- *      __run( "command" )                // Gives a DOS shell (DOS only)
+ *      __run( "command" )                // Gives a OS shell
  *  $TESTS$
  *
  *  $STATUS$
@@ -262,7 +256,6 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      src/rtl/run.c
  *      Library is rtl
  *  $SEEALSO$
  *      RUN
@@ -348,7 +341,7 @@
  *      (in case of DOS) since that causes several problems.
  *  $EXAMPLES$
  *      RUN ( "edit " + cMyTextFile )  // Runs an external editor
- *      RUN command                    // Gives a DOS shell (DOS only)
+ *      RUN command                    // Gives a OS shell
  *  $TESTS$
  *
  *  $STATUS$
@@ -358,7 +351,6 @@
  *  $PLATFORMS$
  *      All
  *  $FILES$
- *      src/rtl/run.c
  *      Library is rtl
  *  $SEEALSO$
  *      RUN

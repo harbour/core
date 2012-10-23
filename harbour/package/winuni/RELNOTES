@@ -157,8 +157,8 @@ Changes since previous (2.0.0beta2 20090624) release:
 - MinGW x64 updated to 4.5.0 (20090905)
 - Finalizing ActiveX/OLE2 support.
 - Timestamp/datetime support in core.
-- Added MT support for dos platform.
-- Added socket support for dos platform (via WATTCP lib).
+- Added MT support for MS-DOS platform.
+- Added socket support for MS-DOS platform (via WATTCP lib).
 - Added hbnetio lib client/server file I/O implementation.
 - hbxbp lib about feature complete.
 - wce/msvcarm target improvements, sunpro compiler support.
@@ -177,13 +177,13 @@ Changes since previous (2.0.0beta1 20090609) release:
 - Harbour updated to r11508 (from r11287)
 - New User's Forum linked
 - upx compressor included in install package
-- DOS cross build libs included in install package
+- MS-DOS cross build libs included in install package
 - preparation to host 3rd party packages inside Harbour directory tree
 - new "zero-conf" library install system in preparation
 - hbmk2: lots of minor refinements, support for all free compilers
   in embedded form, support spaces in filenames/paths, all Harbour
   supported C compilers have now complete support in hbmk2
-- DOS support tested and required fixes applied
+- MS-DOS support tested and required fixes applied
 - embedded compilers moved to 'comp' subdir
 - support for latest MinGW x64 and MSVS 2010 compilers
 - extended INSTALL with new examples and app build quick guide

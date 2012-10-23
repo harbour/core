@@ -54,7 +54,7 @@ PROCEDURE Main( cFrom, cTo )
    RETURN
 
 //
-// Generic DOS file handler
+// Generic file handler
 //
 
 CREATE CLASS TTextFile
@@ -101,7 +101,7 @@ METHOD New( cFileName, cMode, nBlock ) CLASS TTextFile
    ELSEIF ::cMode == "W"
       ::hFile := FCreate( cFileName )
    ELSE
-      ? "DosFile Init: Unknown file mode:", ::cMode
+      ? "File Init: Unknown file mode:", ::cMode
    ENDIF
 
    ::nError := FError()
@@ -123,7 +123,7 @@ METHOD Dispose() CLASS TTextFile
    IF ::hFile != F_ERROR
       IF ! FClose( ::hFile )
          ::nError := FError()
-         ? "Dos Error closing ", ::cFileName, " Code ", ::nError
+         ? "OS Error closing ", ::cFileName, " Code ", ::nError
       ENDIF
    ENDIF
 
@@ -141,7 +141,7 @@ METHOD Read() CLASS TTextFile
    LOCAL nEoFPos
 
    IF ::hFile == F_ERROR
-      ? "DosFile:Read : No file open"
+      ? "File:Read : No file open"
    ELSEIF !( ::cMode == "R" )
       ? "File ", ::cFileName, " not open for reading"
    ELSEIF ! ::lEoF
@@ -194,7 +194,7 @@ METHOD WriteLn( xTxt, lCRLF ) CLASS TTextFile
    LOCAL cBlock
 
    IF ::hFile == F_ERROR
-      ? "DosFile:Write : No file open"
+      ? "File:Write : No file open"
    ELSEIF !( ::cMode == "W" )
       ? "File ", ::cFileName, " not opened for writing"
    ELSE
@@ -220,7 +220,7 @@ METHOD Goto( nLine ) CLASS TTextFile
    LOCAL nWhere := 1
 
    IF Empty( ::hFile )
-      ? "DosFile:Goto : No file open"
+      ? "File:Goto : No file open"
    ELSEIF !( ::cMode == "R" )
       ? "File ", ::cFileName, " not open for reading"
    ELSE

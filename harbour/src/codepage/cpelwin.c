@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( Greek WIN )
+ * National Collation Support Module (ELWIN)
  *
  * Copyright 2004 Pete Dionisopoulos <pete_westg@yahoo.gr>
  * www - http://harbour-project.org

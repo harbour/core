@@ -67,8 +67,6 @@
  *      in NanForum library.
  *  $PLATFORMS$
  *      All
- *  $FILES$
- *      src/rtl/idle.c
  *  $SEEALSO$
  *      HB_IDLEDEL(),HB_IDLESTATE()
  *  $END$
@@ -110,8 +108,6 @@
  *      H
  *  $PLATFORMS$
  *      All
- *  $FILES$
- *      src/rtl/idle.c
  *  $SEEALSO$
  *      HB_IDLEADD(),HB_IDLESTATE()
  *  $END$
@@ -145,7 +141,7 @@
  *      nTask1 := hb_idleAdd( {|| SayTime() } )
  *      nTask2 := hb_idleAdd( {|| SaveScreen() } )
  *      DO WHILE ! bFinished
- *        bFinished := DOSomethingVeryImportant()
+ *        bFinished := DoSomethingVeryImportant()
  *        hb_idleState()
  *      ENDDO
  *      cbAction := hb_idleDel( nTask1 )
@@ -157,8 +153,6 @@
  *      in NanForum library.
  *  $PLATFORMS$
  *      All
- *  $FILES$
- *      src/rtl/idle.c
  *  $SEEALSO$
  *      HB_IDLEADD(),HB_IDLEDEL()
  *  $END$
@@ -199,8 +193,6 @@
  *      H
  *  $PLATFORMS$
  *      All
- *  $FILES$
- *      src/rtl/idle.c
  *  $SEEALSO$
  *      HB_IDLEADD(),HB_IDLEDEL(),HB_IDLESTATE()
  *  $END$

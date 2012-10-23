@@ -138,7 +138,6 @@
  *      MEMOREAD() does not use the settings SET DEFAULT or SET PATH to
  *      search for <cFileName>.
  *      It searches for <cFileName> in the current directory.
- *      If the file is not found, then MEMOREAD() searches in the DOS path.
  *
  *      Over a network, MEMOREAD() attempts to open <cFileName> in read-only
  *      mode and shared.  If the file is used in mode exclusive by another
@@ -205,7 +204,6 @@
  *      HB_MEMOREAD() does not use the settings SET DEFAULT or SET PATH to
  *      search for <cFileName>.
  *      It searches for <cFileName> in the current directory.
- *      If the file is not found, then HB_MEMOREAD() searches in the DOS path.
  *
  *      Over a network, HB_MEMOREAD() attempts to open <cFileName> in read-only
  *      mode and shared.  If the file is used in mode exclusive by another

@@ -278,7 +278,7 @@ PHB_DYNS hb_dynsymNew( PHB_SYMB pSymbol )
              * binaries with multiple symbols by
              *    -Wl,--allow-multiple-definition
              * when whole module cannot be cleanly replaced.
-             * OpenWatcom for Linux, DOS and Windows (I haven't tested OS2
+             * OpenWatcom for Linux, MS-DOS and Windows (I haven't tested OS2
              * version), POCC and XCC (with /FORCE:MULTIPLE) also update
              * addresses in such case.
              *

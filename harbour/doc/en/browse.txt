@@ -148,7 +148,7 @@
  *      ---------------------------------------------
  *
  *      <table>
- *       Dbedit.ch      Meaning
+ *       dbedit.ch      Meaning
  *
  *       DE_IDLE        DBEDIT() is idle, all movement keys have been handled.
  *       DE_HITTOP      Attempt to cursor past top of file.
@@ -164,7 +164,7 @@
  *      ---------------------------   </par>
  *
  *      <table>
- *       Dbedit.ch    Value   Meaning
+ *       dbedit.ch    Value   Meaning
  *
  *       DE_ABORT     0       Abort DBEDIT().
  *       DE_CONT      1       Continue DBEDIT() as is.

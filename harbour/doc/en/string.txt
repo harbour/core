@@ -241,8 +241,7 @@
  *  $STATUS$
  *      R
  *  $COMPLIANCE$
- *      This function is sensitive to HB_CLP_STRICT settings during the
- *      compilation of src/rtl/at.c
+ *      This function is sensitive to HB_CLP_STRICT settings during build.
  *
  *      <nStart> and <nEnd> are Harbour extensions and do not exist if
  *      HB_CLP_STRICT is defined. In that case, the whole string is searched.

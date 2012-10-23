@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( Greek MS-DOS 737 )
+ * National Collation Support Module (EL737)
  *
  * Copyright 2004 Pete Dionisopoulos <pete_westg@yahoo.gr>
  * www - http://harbour-project.org
@@ -51,7 +51,7 @@
  */
 
 #define HB_CP_ID        EL737
-#define HB_CP_INFO      "Greek DOS CP-737"
+#define HB_CP_INFO      "Greek CP-737"
 #define HB_CP_UNITB     HB_UNITB_737
 #define HB_CP_ACSORT    HB_CDP_ACSORT_EQUAL
 #define HB_CP_UPPER     "€~ê‚ƒ„~ë…†~ì‡ˆ~í‰Š‹Œ~î‘‘’“~ï”•–—~ğ"

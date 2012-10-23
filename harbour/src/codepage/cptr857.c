@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( Turkish -- DOS )
+ * National Collation Support Module (TR857)
  *
  * Copyright 2006 Bicahi Esgici <esgici@yahoo.com>
  * www - http://harbour-project.org

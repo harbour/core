@@ -126,7 +126,7 @@ CREATE CLASS WIN_PRN
    METHOD GetTextHeight( cString )
    METHOD DrawBitMap( oBmp )
 
-   /* Clipper DOS compatible functions. */
+   /* Clipper compatible functions. */
    METHOD SetPrc( nRow, nCol )   // Based on ::LineHeight and current ::CharWidth
    METHOD PRow()
    METHOD PCol()

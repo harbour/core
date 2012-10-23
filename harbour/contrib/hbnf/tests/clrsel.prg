@@ -8,10 +8,10 @@
 
 PROCEDURE Main( cVidMode )
 
-   LOCAL nRowDos := Row()
-   LOCAL nColDos := Col()
-   LOCAL aEnvDos := FT_SaveSets()
-   LOCAL cScrDos := SaveScreen( 0, 0, MaxRow(), MaxCol() )
+   LOCAL nRowOri := Row()
+   LOCAL nColOri := Col()
+   LOCAL aEnvOri := FT_SaveSets()
+   LOCAL cScrOri := SaveScreen( 0, 0, MaxRow(), MaxCol() )
    LOCAL lColour
    LOCAL aClrs
 
@@ -48,10 +48,10 @@ PROCEDURE Main( cVidMode )
 
    HB_SYMBOL_UNUSED( aClrs )
 
-   //.... restore the DOS environment
-   FT_RestSets( aEnvDos )
-   RestScreen( 0, 0, MaxRow(), MaxCol(), cScrDos )
-   SetPos( nRowDos, nColDos )
+   //.... restore the original environment
+   FT_RestSets( aEnvOri )
+   RestScreen( 0, 0, MaxRow(), MaxCol(), cScrOri )
+   SetPos( nRowOri, nColOri )
    SetBlink( .F. )  // doesn't appear to be reset from FT_RestSets
 
    RETURN

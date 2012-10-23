@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( Italian MS-DOS cp 437 )
+ * National Collation Support Module (IT437)
  *
  * Copyright 2004 Maurilio Longo - <maurilio.longo@libero.it>
  *

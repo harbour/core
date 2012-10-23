@@ -9,18 +9,17 @@ int main( void )
    const char * test = "Testing GT API Functions";
    const char * test2 = "This message wraps!";
 
+   void * scr;
+   HB_SIZE size;
+
    /* NOTE: always have to initialze video subsystem */
    hb_gtInit( 0, 0, 0 );
 
-   /* save screen (doesn't work under DOS) */
-   /*
-   void * scr;
-   HB_SIZE size;
+   /* save screen */
 
    hb_gtRectSize( 1, 1, hb_gtMaxRow(), hb_gtMaxCol(), &size );
    scr = hb_xgrab( size );
    hb_gtSave( 1, 1, hb_gtMaxRow() - 1, hb_gtMaxCol() - 1, scr );
-   */
 
    /* writing text */
    hb_gtSetPos( 3, 3 );
@@ -67,11 +66,9 @@ int main( void )
    hb_gtSetCursor( SC_SPECIAL2 );
    hb_inkey( HB_TRUE, 0.0, INKEY_ALL );
 
-   /* restore screen (doesn't work under DOS) */
-   /*
+   /* restore screen */
    hb_gtRest( 1, 1, hb_gtMaxRow() - 1, hb_gtMaxCol() - 1, scr );
    hb_xfree( scr );
-   */
 
    return 0;
 }

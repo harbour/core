@@ -135,16 +135,12 @@
  *      hb_gcFree() function or it will be automatically deallocated
  *      by the GC if it is not locked or if it is not referenced by some
  *      harbour level variable.
- *  $EXAMPLES$
- *      See src/vm/arrays.c
  *  $STATUS$
  *      C
  *  $COMPLIANCE$
  *      H
  *  $PLATFORMS$
  *      All
- *  $FILES$
- *      src/vm/garbage.c
  *  $SEEALSO$
  *      hb_gcFree()
  *  $END$
@@ -171,16 +167,12 @@
  *  $DESCRIPTION$
  *      hb_gcFree() is used to deallocate the memory that was
  *      allocated with the hb_gcAlloc() function.
- *  $EXAMPLES$
- *      See src/vm/arrays.c
  *  $STATUS$
  *      C
  *  $COMPLIANCE$
  *      H
  *  $PLATFORMS$
  *      All
- *  $FILES$
- *      src/vm/garbage.c
  *  $SEEALSO$
  *      hb_gcAlloc()
  *  $END$
@@ -214,8 +206,6 @@
  *      H
  *  $PLATFORMS$
  *      All
- *  $FILES$
- *      src/vm/garbage.c
  *  $SEEALSO$
  *      hb_gcAlloc(),hb_gcFree()
  *  $END$
@@ -258,8 +248,6 @@
  *      H
  *  $PLATFORMS$
  *      All
- *  $FILES$
- *      src/vm/garbage.c
  *  $SEEALSO$
  *      hb_gcAlloc(),hb_gcFree()
  *  $END$
@@ -289,8 +277,6 @@
  *      H
  *  $PLATFORMS$
  *      All
- *  $FILES$
- *      src/vm/garbage.c
  *  $SEEALSO$
  *      hb_gcCollectAll()
  *  $END$

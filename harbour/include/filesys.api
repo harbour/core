@@ -68,7 +68,7 @@ typedef FHANDLE * FHANDLEP;
 
 #define FHANDLE_DEFINED
 
-/* DOS predefined standard handles */
+/* Predefined standard I/O handles */
 
 #define STDIN                   0
 #define STDOUT                  1

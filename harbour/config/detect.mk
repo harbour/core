@@ -124,7 +124,7 @@ _DET_INC_HEAD := /X11/Xlib.h
 
 include $(TOP)$(ROOT)config/detfun.mk
 
-# Detect WATTCP/WATT-32 in DOS builds
+# Detect WATTCP/WATT-32 in MS-DOS builds
 
 _DET_DSP_NAME := wattcp/watt-32
 _DET_VAR_INC_ := HB_INC_WATT

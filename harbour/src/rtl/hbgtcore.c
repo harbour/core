@@ -737,7 +737,7 @@ static void hb_gt_def_Tone( PHB_GT pGT, double dFrequency, double dDuration )
    HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( dFrequency );
 
-   /* convert Clipper (DOS) timer tick units to seconds ( x / 18.2 ) */
+   /* convert Clipper (MS-DOS) timer tick units to seconds ( x / 18.2 ) */
    hb_idleSleep( dDuration / 18.2 );
 }
 

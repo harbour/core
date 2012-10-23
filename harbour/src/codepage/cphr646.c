@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( HR646 )
+ * National Collation Support Module (HR646)
  *
  * Copyright 2003 Vlado Miholic <Vladimir.Miholic@sk.hinet.hr>
  * www - http://harbour-project.org

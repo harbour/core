@@ -54,9 +54,8 @@
  *      =================   </par>
  *
  *          /es or /es0 - all warnings are ignored and exit code returned by
- *                        the compiler (accessed by DOS ERRORLEVEL command)
- *                        is equal to 0 if there are no errors in compiled
- *                        source file.
+ *                        the compiler is equal to 0 if there are no errors
+ *                        in compiled source file.
  *
  *          /es1        - any warnings generate a non-zero exit code, but
  *                        output is still created.

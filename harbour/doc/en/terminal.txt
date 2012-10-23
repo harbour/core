@@ -366,7 +366,7 @@
  *      (or thinks it is running on, if an OS emulator is being used).
  *
  *      Under HB_OS_UNIX operating system the return value is the
- *      Line-Feed character (0x0a, Chr( 10) ); with other operating systems
+ *      Line-Feed character (0x0a, Chr( 10 ) ); with other operating systems
  *      (like DOS) the return value is the Carriage-Return plus Line-Feed
  *      characters (0x0d 0x0a, Chr( 13 ) + Chr( 10 )).
  *  $EXAMPLES$

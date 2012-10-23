@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module (Italian Windows-1252)
+ * National Collation Support Module (ITWIN)
  *
  * Copyright 2008 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

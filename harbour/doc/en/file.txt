@@ -37,7 +37,7 @@
  *  $ARGUMENTS$
  *      <cFile> Name of file to open.
  *
- *      <nMode> Dos file open mode.
+ *      <nMode> File open mode.
  *  $RETURNS$
  *      <nHandle> A file handle.
  *  $DESCRIPTION$
@@ -158,7 +158,7 @@
  *  $SYNTAX$
  *      FREAD( <nHandle>, @<cBuffer>, <nBytes> ) --> nBytes
  *  $ARGUMENTS$
- *      <nHandle>     Dos file handle
+ *      <nHandle>     File handle
 
  *      <cBuffer>  Character expression passed by reference.
 
@@ -223,7 +223,7 @@
  *  $SYNTAX$
  *     FWRITE( <nHandle>, <cBuffer>, [<nBytes>] ) --> nBytesWritten
  *  $ARGUMENTS$
- *     <nHandle>  DOS file handle number.
+ *     <nHandle>  File handle number.
 
  *     <cBuffer>  Character expression to be written.
 
@@ -236,12 +236,12 @@
  *      bytes in <cBuffer> to write.
 
  *      The returned value is the number of bytes successfully written to the
- *      DOS file. If the returned value is 0, an error has occurred (unless
+ *      file. If the returned value is 0, an error has occurred (unless
  *      this is intended). A successful write occurs when the number returned
- *      by FWRITE() is equal to either LEN( <cBuffer>) or <nBytes>.
+ *      by FWrite() is equal to either Len( <cBuffer> ) or <nBytes>.
 
  *      The value of <cBuffer> is the string or variable to be written to the
- *      open DOS file <nHandle>.
+ *      open file <nHandle>.
 
  *      The value of <nBytes> is the number of bytes to write out to the file.
  *      The disk write begins with the current file position in <nHandle>. If
@@ -281,7 +281,7 @@
  *  $SYNTAX$
  *      FERROR() --> <nErrorCode>
  *  $RETURNS$
- *      <nErrorCode> Value of the DOS error last encountered by a
+ *      <nErrorCode> Value of the OS error last encountered by a
  *      low-level file function.
  *
  *      FERROR() Return Values
@@ -315,7 +315,7 @@
  *      #include "fileio.ch"
  *      nHandle := FCreate( "temp.txt", FC_NORMAL )
  *      IF FError() != 0
- *         ? "Cannot create file, DOS error ", FError()
+ *         ? "Cannot create file, OS error ", FError()
  *      ENDIF
  *  $STATUS$
  *     R
@@ -342,12 +342,12 @@
  *  $SYNTAX$
  *     FCLOSE( <nHandle> ) --> <lSuccess>
  *  $ARGUMENTS$
- *     <nHandle> DOS file handle
+ *     <nHandle> File handle
  *  $RETURNS$
  *     <lSuccess>  Logical TRUE (.T.) or FALSE (.F.)
  *  $DESCRIPTION$
- *     This function closes an open file with a dos file handle
- *     of <nHandle> and writes the associated DOS buffer to the
+ *     This function closes an open file with a file handle
+ *     of <nHandle> and writes the associated buffers to the
  *     disk. The <nHandle> value is derived from the FCREATE()
  *     or FOPEN() function.
  *  $EXAMPLES$
@@ -449,7 +449,7 @@
  *      renamed, this function will search the default drive and directory
  *      or the drive and path specified in <cOldFile>. It will not search
  *      directories named by the SET PATH TO and SET DEFAULT TO commands
- *      or by the DOS PATH statement.
+ *      or by the PATH environment variable.
 
  *      If the file specified in <cNewFile> exists or the file is open,
  *      the function will be unable to rename the file. If the function
@@ -488,7 +488,7 @@
  *  $SYNTAX$
  *      FSEEK( <nHandle>, <nOffset>, [<nOrigin>] ) --> nPosition
  *  $ARGUMENTS$
- *     <nHandle> DOS file handle.
+ *     <nHandle> File handle.
 
  *     <nOffset> The number of bytes to move.
 
@@ -496,7 +496,7 @@
  *  $RETURNS$
  *      <nPosition> the current position relative to begin-of-file
  *  $DESCRIPTION$
- *      This function sets the file pointer in the file whose DOS file
+ *      This function sets the file pointer in the file whose file
  *      handle is <nHandle> and moves the file pointer by <expN2> bytes
  *      from the file position designated by <nOrigin>. The returned value
  *      is the relative position of the file pointer to the beginning-of-file
@@ -568,20 +568,21 @@
  *  $SYNTAX$
  *      FILE( <cFileSpec> ) --> lExists
  *  $ARGUMENTS$
- *      <cFileSpec> Dos Skeleton or file name to find.
+ *      <cFileSpec> Filename skeleton or file name to find.
  *  $RETURNS$
  *      <lExists> a logical true (.T.) if the file exists or logical
  *      false (.F.).
  *  $DESCRIPTION$
  *      This function return a logical true (.T.) if the given filename
  *      <cFileSpec> exist.
-
- *      Dos skeletons symbols may be used in the filename in <cFileSpec>,
+ *
+ *      Filename skeletons symbols may be used in the filename in <cFileSpec>,
  *      as may the drive and/or path name. If a path is not explicitly
- *      specified, FILE() will look for the file in the SET DEFAULT path,
+ *      specified, File() will look for the file in the SET DEFAULT path,
  *      then in each SET PATH path, until the file is found or there are
- *      no more paths to search. The DOS PATH is never searched and the
- *      current drive/directory is only searched if SET DEFAULT is blank.
+ *      no more paths to search. The PATH environment variable is never
+ *      searched and the current drive/directory is only searched if
+ *      SET DEFAULT is blank.
  *  $EXAMPLES$
  *      ? File( "C:\harbour\doc\compiler.txt" )
  *      ? File( "C:/harbour/doc/subcodes.txt" )
@@ -610,14 +611,14 @@
  *  $SYNTAX$
  *      FREADSTR(<nHandle>, <nBytes>) --> cString
  *  $ARGUMENTS$
- *      <nHandle> DOS file handle number.
+ *      <nHandle> File handle number.
  *
  *      <nBytes>  Number of bytes to read.
  *  $RETURNS$
  *      <cString> an character expression
  *  $DESCRIPTION$
  *      This function returns a character string of <nBytes> bytes from a
- *      file whose DOS file handle is <nHandle>.
+ *      file whose file handle is <nHandle>.
 
  *      The value of the file handle <nHandle> is obtained from either the
  *      FOPEN() or FCREATE() functions.

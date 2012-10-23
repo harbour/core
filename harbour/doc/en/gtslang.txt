@@ -12,10 +12,10 @@ because of some bugs they have.
 
 The main OS it is developed to be used on is Linux. Slang was ported to
 other OSes so it should be possible to use it on other systems too. I've
-also successfully compiled and testd gtsln under DOS but I don't think it
+also successfully compiled and testd gtsln under MS-DOS but I don't think it
 makes any sense to use it on that system instead of gtdos, due to its
-limitations and incompatibilities with CA-Cl*pper (see below), so I removed DOS
-support.
+limitations and incompatibilities with CA-Cl*pper (see below), so I removed
+MS-DOS support.
 
 A gt Slang driver is a second driver which can be used on Unix based OSes.
 The first one is a gt driver based on a curses library (gtcrs). Due to the
@@ -99,12 +99,12 @@ occupy. So commands like :
 
 should write boxes well. However commands like :
 
-            @ Y, X SAY CHR( <OneOfBoxDrawingChar> )
+            @ Y, X SAY Chr( <OneOfBoxDrawingChar> )
 
 will draw a nation char when it occupies the same code as
 <OneOfBoxDrawingChar> occupies. I don't know a better solution in this
 case. Any ideas are welcome.
-This implementation works better than it would ever work in DOS where
+This implementation works better than it would ever work in MS-DOS where
 there is no way to do such tricks (because there is only one glyph's
 character set without VGA tricks).
 

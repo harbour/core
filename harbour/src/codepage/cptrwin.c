@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module ( Turkish -- Win )
+ * National Collation Support Module (TRWIN)
  *
  * Copyright 2006 Bicahi Esgici <esgici@yahoo.com>
  * www - http://harbour-project.org

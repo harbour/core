@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module (French Windows-1252)
+ * National Collation Support Module (FRWIN)
  *
  * Copyright 2008 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

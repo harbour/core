@@ -71,7 +71,7 @@ PROCEDURE Main( cCmdLine )
    FT_FILL( aOptions[ 4 ], "D. This EXITs Too"                   , {|| .F. }, .T. )
 
    FT_FILL( aOptions[ 5 ], "A. Does Nothing"                     , {|| .T. }, .T. )
-   FT_FILL( aOptions[ 5 ], "B. Exit To DOS"                      , {|| .F. }, .T. )
+   FT_FILL( aOptions[ 5 ], "B. Exit Application"                 , {|| .F. }, .T. )
 
    // main routine starts here
    SET SCOREBOARD OFF

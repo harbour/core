@@ -35,7 +35,7 @@
  *      columns specified.
  *      Note that there are only a real few combination or rows/cols pairs
  *      that produce the video mode change.
- *      The followings are availables for DOS:
+ *      The followings are availables for GTDOS:
  *
  *      <table>
  *         12 rows x 40 columns   12 rows x 80 columns
@@ -58,7 +58,7 @@
  *      returned by MAXROW() and MAXCOL().
  *  $EXAMPLES$
  *      // The first example change to a 12 lines of display mode:
- *      IF SETMODE( 12, 40)
+ *      IF SetMode( 12, 40)
  *         ? "Hey man are you blind ?"
  *      ELSE
  *         ? "Mom bring me my glasses!"

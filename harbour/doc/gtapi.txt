@@ -82,8 +82,8 @@ The following functions don't work in gtapi.c:
 _gtSave
 _gtRestore
 
-You get garbage on the screen in DOS mode. Two Harbour functions are
-included in the gtapi.c file, ROW() and COL() to get started.
+Two Harbour functions are included in the gtapi.c file,
+ROW() and COL() to get started.
 
 You also may notice that I didn't include any NanFor document headers or
 even any cvs macros. The jury is still out on that so I'll leave that to the

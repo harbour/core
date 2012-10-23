@@ -971,7 +971,7 @@ METHOD LoadReportFile( cFrmFile AS STRING ) CLASS HBReportForm
          IF nBytesRead == 0
             nFileError := F_EMPTY        // file is empty
          ELSE
-            nFileError := FError()       // check for DOS errors
+            nFileError := FError()       // check for OS errors
          ENDIF
 
          IF nFileError == F_OK
@@ -1156,7 +1156,7 @@ METHOD GetExpr( nPointer AS NUMERIC ) CLASS HBReportForm
    // Stuff for dBASE compatability.
    IF nPointer != 65535
 
-      // Convert DOS FILE offset to CLIPPER string offset
+      // Convert FILE offset to CLIPPER string offset
       nPointer++
 
       // Calculate offset into OFFSETS_BUFF

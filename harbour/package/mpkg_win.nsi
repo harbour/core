@@ -6,7 +6,7 @@
 ; Copyright 2009 Viktor Szakats (harbour syenar.net)
 ; See COPYING for licensing terms.
 ;
-; Harbour Nullsoft installer script (for Windows/DOS)
+; Harbour Nullsoft installer script (for Windows/MS-DOS)
 ; [ Do not try to use this script directly. It won't work. ]
 ;
 ; Please read INSTALL for further information.
@@ -81,7 +81,7 @@ Section "Main components" hb_main
   File /nonfatal "$%HB_INSTALL_PREFIX%\INSTALL"
   File /nonfatal "$%HB_INSTALL_PREFIX%\NEWS"
   File /nonfatal "$%HB_INSTALL_PREFIX%\TODO"
-  ; Let it work also for DOS packages where short filename is used here
+  ; Let it work also for MS-DOS packages where short filename is used here
   File /nonfatal "$%HB_INSTALL_PREFIX%\Change*"
 
   SetOutPath $INSTDIR\bin

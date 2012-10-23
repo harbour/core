@@ -477,7 +477,7 @@
    #define HB_OS_OPT_DELIM_LIST         "-"
    #define HB_ISOPTSEP( c )             ( ( c ) == '-' )
 #else
-   /* we are assuming here the DOS compatible OS */
+   /* we are assuming here an MS-DOS/Windows compatible OS */
    #define HB_OS_PATH_LIST_SEP_CHR      ';'
    #define HB_OS_PATH_DELIM_CHR         '\\'
    #define HB_OS_PATH_DELIM_CHR_STRING  "\\"
